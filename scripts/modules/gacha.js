@@ -1750,21 +1750,11 @@ function buildGachaDisplayData(results) {
   return { aggregated, focus, newEntries, rarityColorMap };
 }
 
-const GACHA_ANIMATION_CONFETTI_COUNT = 110;
-const GACHA_ANIMATION_COLOR_SHIFT_DELAY = 1500;
+const GACHA_ANIMATION_CONFETTI_COUNT = 150;
 const GACHA_ANIMATION_REVEAL_DELAY = 3000;
 const GACHA_CONFETTI_BASE_RARITY_ID = 'commun';
 const DEFAULT_GACHA_CONFETTI_COLOR = '#4f7ec2';
-const GACHA_CONFETTI_SHAPES = [
-  { className: 'crit-confetti--circle', widthFactor: 1, heightFactor: 1 },
-  { className: 'crit-confetti--oval', widthFactor: 1.4, heightFactor: 1 },
-  { className: 'crit-confetti--heart', widthFactor: 1.1, heightFactor: 1.1 },
-  { className: 'crit-confetti--star', widthFactor: 1.2, heightFactor: 1.2 },
-  { className: 'crit-confetti--square', widthFactor: 1, heightFactor: 1 },
-  { className: 'crit-confetti--triangle', widthFactor: 1.15, heightFactor: 1.3 },
-  { className: 'crit-confetti--rectangle', widthFactor: 1.8, heightFactor: 0.7 },
-  { className: 'crit-confetti--hexagon', widthFactor: 1.1, heightFactor: 1 }
-];
+const DEFAULT_GACHA_CONFETTI_RGB = { r: 79, g: 126, b: 194 };
 let gachaAnimationInProgress = false;
 let gachaRollMode = 1;
 
@@ -2031,11 +2021,18 @@ function wait(duration) {
 }
 
 const gachaConfettiState = {
-  container: null,
-  nodes: [],
-  baseColor: null,
-  targetColor: null,
-  colorShiftTimeoutId: null
+  canvas: null,
+  ctx: null,
+  particles: [],
+  animationFrameId: null,
+  handleResize: null,
+  resizeObserver: null,
+  dpr: 1,
+  width: 0,
+  height: 0,
+  centerX: 0,
+  centerY: 0,
+  baseColorRgb: DEFAULT_GACHA_CONFETTI_RGB
 };
 
 function normalizeHexColor(value) {
@@ -2084,15 +2081,6 @@ function darkenRgb(color, amount) {
   return mixRgb(color, { r: 0, g: 0, b: 0 }, amount);
 }
 
-function rgbToCss(color) {
-  return `rgb(${color.r}, ${color.g}, ${color.b})`;
-}
-
-function rgbaToCss(color, alpha) {
-  const clampedAlpha = Math.max(0, Math.min(1, Number(alpha) || 0));
-  return `rgba(${color.r}, ${color.g}, ${color.b}, ${clampedAlpha})`;
-}
-
 function rgbToHex(color) {
   if (!color || typeof color.r !== 'number' || typeof color.g !== 'number' || typeof color.b !== 'number') {
     return null;
@@ -2131,96 +2119,196 @@ function applyPeriodicCellCollectionColor(cell, isOwned) {
   }
 }
 
-function applyGachaConfettiColor(confetti, color) {
-  if (!confetti) return;
-  const rgb = parseHexColorToRgb(color) || parseHexColorToRgb(DEFAULT_GACHA_CONFETTI_COLOR);
-  if (!rgb) return;
-  const highlight = lightenRgb(rgb, 0.35);
-  const shadow = darkenRgb(rgb, 0.32);
-  const glow = lightenRgb(rgb, 0.22);
-  const halo = lightenRgb(rgb, 0.5);
-  const storedAngle = Number.parseFloat(confetti.dataset.gradientAngle);
-  const gradientAngle = Number.isFinite(storedAngle) ? storedAngle : Math.random() * 360;
-  confetti.dataset.gradientAngle = gradientAngle.toFixed(2);
-  confetti.style.background = `linear-gradient(${gradientAngle.toFixed(2)}deg, ${rgbToCss(highlight)}, ${rgbToCss(shadow)})`;
-  confetti.style.boxShadow = `0 0 18px ${rgbaToCss(glow, 0.45)}, 0 0 40px ${rgbaToCss(halo, 0.22)}`;
-}
-
 function resolveGachaConfettiColor(input, fallback = DEFAULT_GACHA_CONFETTI_COLOR) {
   return normalizeHexColor(input) || normalizeHexColor(fallback) || DEFAULT_GACHA_CONFETTI_COLOR;
 }
 
-function createGachaConfettiNode(baseColor) {
-  const confetti = document.createElement('span');
-  const baseSize = 26 + Math.random() * 26;
-  const shape = pickRandom(GACHA_CONFETTI_SHAPES);
-  const width = baseSize * shape.widthFactor;
-  const height = baseSize * shape.heightFactor;
-  confetti.className = `gacha-confetti ${shape.className}`;
-  confetti.style.width = `${width.toFixed(2)}px`;
-  confetti.style.height = `${height.toFixed(2)}px`;
+function clamp01(value) {
+  if (!Number.isFinite(value)) return 0;
+  if (value <= 0) return 0;
+  if (value >= 1) return 1;
+  return value;
+}
 
-  const direction = Math.random() < 0.5 ? -1 : 1;
-  const travelDistance = 260 + Math.random() * 260;
-  const endX = travelDistance * direction;
-  const endY = (Math.random() - 0.5) * 280;
-  const midX = endX * (0.36 + Math.random() * 0.22);
-  const midY = endY * 0.5 + (Math.random() - 0.5) * 80;
+function lerpRgbColor(from, to, t) {
+  const amount = clamp01(t);
+  const mixChannel = (start, end) => {
+    const value = start + (end - start) * amount;
+    return Math.max(0, Math.min(255, Math.round(value)));
+  };
+  return {
+    r: mixChannel(from.r, to.r),
+    g: mixChannel(from.g, to.g),
+    b: mixChannel(from.b, to.b)
+  };
+}
 
-  const rotationStart = Math.random() * 360;
-  const spin = direction * (160 + Math.random() * 220);
-  const rotationMid = rotationStart + spin * 0.38;
-  const rotationEnd = rotationStart + spin;
-  const scale = 0.85 + Math.random() * 0.45;
-  const duration = 1.6 + Math.random() * 1.2;
-  const delay = Math.random() * 1.8;
+function getNow() {
+  if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+    return performance.now();
+  }
+  return Date.now();
+}
 
-  confetti.style.setProperty('--confetti-mid-x', `${midX.toFixed(2)}px`);
-  confetti.style.setProperty('--confetti-mid-y', `${midY.toFixed(2)}px`);
-  confetti.style.setProperty('--confetti-end-x', `${endX.toFixed(2)}px`);
-  confetti.style.setProperty('--confetti-end-y', `${endY.toFixed(2)}px`);
-  confetti.style.setProperty('--confetti-scale', scale.toFixed(2));
-  confetti.style.setProperty('--confetti-start-rotation', `${rotationStart.toFixed(2)}deg`);
-  confetti.style.setProperty('--confetti-mid-rotation', `${rotationMid.toFixed(2)}deg`);
-  confetti.style.setProperty('--confetti-end-rotation', `${rotationEnd.toFixed(2)}deg`);
-  confetti.style.setProperty('--confetti-delay', `${delay.toFixed(2)}s`);
-  confetti.style.setProperty('--confetti-duration', `${duration.toFixed(2)}s`);
-  confetti.style.animationDuration = `${duration.toFixed(2)}s`;
-  confetti.style.animationDelay = `${delay.toFixed(2)}s`;
+function ensureGachaConfettiCanvas() {
+  const canvas = elements.gachaAnimationConfetti;
+  if (!canvas || typeof canvas.getContext !== 'function') {
+    return false;
+  }
+  const context = canvas.getContext('2d');
+  if (!context) {
+    return false;
+  }
+  if (gachaConfettiState.canvas !== canvas) {
+    gachaConfettiState.canvas = canvas;
+    gachaConfettiState.ctx = context;
+  }
+  if (typeof window !== 'undefined') {
+    if (!gachaConfettiState.handleResize) {
+      gachaConfettiState.handleResize = () => updateGachaConfettiCanvasSize();
+      window.addEventListener('resize', gachaConfettiState.handleResize);
+    }
+    if (!gachaConfettiState.resizeObserver && typeof ResizeObserver !== 'undefined') {
+      gachaConfettiState.resizeObserver = new ResizeObserver(() => {
+        updateGachaConfettiCanvasSize();
+      });
+      gachaConfettiState.resizeObserver.observe(canvas);
+    }
+  }
+  updateGachaConfettiCanvasSize();
+  return true;
+}
 
-  confetti.dataset.gradientAngle = (Math.random() * 360).toFixed(2);
-  applyGachaConfettiColor(confetti, baseColor);
+function updateGachaConfettiCanvasSize() {
+  const { canvas, ctx } = gachaConfettiState;
+  if (!canvas || !ctx) {
+    return;
+  }
+  const rect = canvas.getBoundingClientRect();
+  const width = Math.max(1, rect.width || canvas.offsetWidth || 1);
+  const height = Math.max(1, rect.height || canvas.offsetHeight || 1);
+  const dpr = typeof window !== 'undefined' && Number.isFinite(window.devicePixelRatio)
+    ? window.devicePixelRatio
+    : 1;
+  canvas.width = Math.max(1, Math.round(width * dpr));
+  canvas.height = Math.max(1, Math.round(height * dpr));
+  canvas.style.width = `${width}px`;
+  canvas.style.height = `${height}px`;
+  gachaConfettiState.dpr = dpr;
+  gachaConfettiState.width = width;
+  gachaConfettiState.height = height;
+  gachaConfettiState.centerX = width / 2;
+  gachaConfettiState.centerY = height / 2;
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.globalCompositeOperation = 'source-over';
+}
 
-  return confetti;
+function createGachaConfettiParticle(finalColorRgb, birthTime) {
+  const now = Number.isFinite(birthTime) ? birthTime : getNow();
+  return {
+    birth: now,
+    life: 2600 + Math.random() * 1400,
+    angle: Math.random() * Math.PI * 2,
+    speed: 1.5 + Math.random() * 3.5,
+    size: 3 + Math.random() * 4,
+    spiralFactor: 0.45 + Math.random() * 0.55,
+    wobbleAmplitude: 8 + Math.random() * 24,
+    wobbleFrequency: 1.5 + Math.random() * 2.5,
+    spinPhase: Math.random() * Math.PI * 2,
+    drift: (Math.random() - 0.5) * 0.3,
+    finalColor: finalColorRgb
+  };
+}
+
+function easeOutCubic(t) {
+  const value = 1 - clamp01(t);
+  return 1 - value * value * value;
+}
+
+function drawGachaConfettiParticle(particle, now) {
+  const { ctx, centerX, centerY, baseColorRgb } = gachaConfettiState;
+  if (!ctx) {
+    return false;
+  }
+  const age = now - particle.birth;
+  if (age <= 0) {
+    return true;
+  }
+  if (age >= particle.life) {
+    return false;
+  }
+  const progress = clamp01(age / particle.life);
+  const eased = easeOutCubic(progress);
+  const radius = particle.speed * age * 0.03;
+  const angle = particle.angle + eased * Math.PI * 6 * particle.spiralFactor;
+  const baseX = centerX + Math.cos(angle) * (radius + 6);
+  const baseY = centerY + Math.sin(angle) * (radius + 6) + age * particle.drift * 0.08;
+  const wobble = Math.sin(progress * Math.PI * particle.wobbleFrequency + particle.spinPhase) * particle.wobbleAmplitude;
+  const x = baseX + Math.cos(angle) * wobble * 0.2;
+  const y = baseY + wobble;
+  const color = lerpRgbColor(baseColorRgb, particle.finalColor, eased);
+  const alpha = Math.pow(1 - progress, 1.25);
+  ctx.beginPath();
+  ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${(alpha * 0.9).toFixed(3)})`;
+  ctx.arc(x, y, particle.size, 0, Math.PI * 2);
+  ctx.fill();
+  return true;
+}
+
+function renderGachaConfettiFrame(now) {
+  const state = gachaConfettiState;
+  if (!state.canvas || !state.ctx) {
+    state.animationFrameId = null;
+    state.particles = [];
+    return;
+  }
+  const timestamp = Number.isFinite(now) ? now : getNow();
+  const { ctx, canvas, dpr } = state;
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.globalCompositeOperation = 'lighter';
+  state.particles = state.particles.filter(particle => drawGachaConfettiParticle(particle, timestamp));
+  ctx.globalCompositeOperation = 'source-over';
+  if (state.particles.length && typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
+    state.animationFrameId = window.requestAnimationFrame(renderGachaConfettiFrame);
+  } else {
+    state.animationFrameId = null;
+  }
 }
 
 function stopGachaConfettiAnimation() {
-  if (gachaConfettiState.colorShiftTimeoutId != null) {
-    clearTimeout(gachaConfettiState.colorShiftTimeoutId);
-    gachaConfettiState.colorShiftTimeoutId = null;
+  const state = gachaConfettiState;
+  if (typeof window !== 'undefined' && typeof window.cancelAnimationFrame === 'function' && state.animationFrameId != null) {
+    window.cancelAnimationFrame(state.animationFrameId);
   }
-  if (gachaConfettiState.container) {
-    gachaConfettiState.container.innerHTML = '';
+  state.animationFrameId = null;
+  state.particles = [];
+  const { ctx, canvas, dpr } = state;
+  if (ctx && canvas) {
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.setTransform(dpr || 1, 0, 0, dpr || 1, 0, 0);
+    ctx.globalCompositeOperation = 'source-over';
   }
-  gachaConfettiState.container = null;
-  gachaConfettiState.nodes = [];
-  gachaConfettiState.baseColor = null;
-  gachaConfettiState.targetColor = null;
 }
 
 function startGachaConfettiAnimation(outcome) {
-  if (!elements.gachaAnimationConfetti) {
+  if (!ensureGachaConfettiCanvas()) {
     stopGachaConfettiAnimation();
     return;
   }
   stopGachaConfettiAnimation();
+  updateGachaConfettiCanvasSize();
 
-  const container = elements.gachaAnimationConfetti;
   const baseRarityColor = resolveGachaConfettiColor(
     GACHA_RARITY_MAP.get(GACHA_CONFETTI_BASE_RARITY_ID)?.color,
     DEFAULT_GACHA_CONFETTI_COLOR
   );
   const baseColor = baseRarityColor || DEFAULT_GACHA_CONFETTI_COLOR;
+  const baseColorRgb = parseHexColorToRgb(baseColor) || DEFAULT_GACHA_CONFETTI_RGB;
 
   const paletteSet = new Set();
   if (Array.isArray(outcome?.confettiColors)) {
@@ -2246,32 +2334,28 @@ function startGachaConfettiAnimation(outcome) {
     paletteSet.add(baseColor);
   }
 
-  const palette = Array.from(paletteSet);
-  const shouldShift = palette.length === 1 && palette[0] !== baseColor;
-
-  const fragment = document.createDocumentFragment();
-  const nodes = [];
-  for (let i = 0; i < GACHA_ANIMATION_CONFETTI_COUNT; i += 1) {
-    const color = shouldShift ? baseColor : palette[i % palette.length] || baseColor;
-    const confetti = createGachaConfettiNode(color);
-    fragment.appendChild(confetti);
-    nodes.push(confetti);
+  const paletteRgb = Array.from(paletteSet)
+    .map(color => parseHexColorToRgb(color) || baseColorRgb)
+    .filter(Boolean);
+  if (!paletteRgb.length) {
+    paletteRgb.push(baseColorRgb);
   }
-  container.appendChild(fragment);
 
-  gachaConfettiState.container = container;
-  gachaConfettiState.nodes = nodes;
-  gachaConfettiState.baseColor = shouldShift ? baseColor : null;
-  gachaConfettiState.targetColor = shouldShift ? palette[0] : null;
+  gachaConfettiState.baseColorRgb = baseColorRgb;
 
-  if (shouldShift && palette[0] !== baseColor) {
-    gachaConfettiState.colorShiftTimeoutId = window.setTimeout(() => {
-      gachaConfettiState.colorShiftTimeoutId = null;
-      if (!gachaConfettiState.nodes.length) {
-        return;
-      }
-      gachaConfettiState.nodes.forEach(node => applyGachaConfettiColor(node, palette[0]));
-    }, GACHA_ANIMATION_COLOR_SHIFT_DELAY);
+  const now = getNow();
+  const particles = [];
+  const paletteLength = paletteRgb.length;
+  for (let i = 0; i < GACHA_ANIMATION_CONFETTI_COUNT; i += 1) {
+    const color = paletteRgb[paletteLength > 0 ? i % paletteLength : 0] || baseColorRgb;
+    particles.push(createGachaConfettiParticle(color, now));
+  }
+  gachaConfettiState.particles = particles;
+
+  if (typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
+    gachaConfettiState.animationFrameId = window.requestAnimationFrame(renderGachaConfettiFrame);
+  } else {
+    renderGachaConfettiFrame(now);
   }
 }
 
