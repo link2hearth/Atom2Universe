@@ -411,74 +411,30 @@
     return sanitized;
   }
 
-  const DEFAULT_CRIT_CONFETTI_COLORS = Object.freeze([
-    '#ff8ba7', '#ffd166', '#6fffe9', '#a5b4ff', '#ff9ff3',
-    '#70d6ff', '#fcd5ce', '#caffbf', '#bdb2ff', '#ffe066'
+  const DEFAULT_CRIT_ATOM_IMAGES = Object.freeze([
+    'Assets/Image/Atom.png'
   ]);
 
-  function sanitizeConfettiColors(raw) {
+  function sanitizeCritAtomImages(raw) {
     const candidates = Array.isArray(raw) ? raw : [];
-    const seen = new Set();
     const sanitized = [];
     candidates.forEach(entry => {
       const value = typeof entry === 'string'
         ? entry
-        : (entry && typeof entry === 'object' ? entry.color ?? entry.value ?? null : null);
+        : (entry && typeof entry === 'object'
+          ? entry.src ?? entry.url ?? entry.path ?? entry.href ?? null
+          : null);
       if (!value) {
         return;
       }
       const normalized = String(value).trim();
-      if (!normalized || seen.has(normalized)) {
+      if (!normalized || sanitized.includes(normalized)) {
         return;
       }
-      seen.add(normalized);
       sanitized.push(normalized);
     });
     if (!sanitized.length) {
-      return [...DEFAULT_CRIT_CONFETTI_COLORS];
-    }
-    return sanitized;
-  }
-
-  const DEFAULT_CRIT_CONFETTI_SHAPES = Object.freeze([
-    { className: 'crit-confetti--circle', widthFactor: 1, heightFactor: 1 },
-    { className: 'crit-confetti--oval', widthFactor: 1.4, heightFactor: 1 },
-    { className: 'crit-confetti--heart', widthFactor: 1.1, heightFactor: 1.1 },
-    { className: 'crit-confetti--star', widthFactor: 1.2, heightFactor: 1.2 },
-    { className: 'crit-confetti--square', widthFactor: 1, heightFactor: 1 },
-    { className: 'crit-confetti--triangle', widthFactor: 1.15, heightFactor: 1.3 },
-    { className: 'crit-confetti--rectangle', widthFactor: 1.8, heightFactor: 0.7 },
-    { className: 'crit-confetti--hexagon', widthFactor: 1.1, heightFactor: 1 }
-  ]);
-
-  function sanitizeConfettiShapes(raw) {
-    const base = Array.isArray(raw) ? raw : [];
-    const sanitized = [];
-    base.forEach(entry => {
-      if (!entry || typeof entry !== 'object') {
-        return;
-      }
-      const rawClassName = entry.className ?? entry.class ?? entry.name ?? entry.id;
-      const className = rawClassName ? String(rawClassName).trim() : '';
-      if (!className) {
-        return;
-      }
-      const width = Number(entry.widthFactor ?? entry.width ?? entry.w ?? entry.scaleX ?? entry.scale ?? entry.size ?? 1);
-      const height = Number(entry.heightFactor ?? entry.height ?? entry.h ?? entry.scaleY ?? entry.scale ?? entry.size ?? 1);
-      const normalizedWidth = Number.isFinite(width) && width > 0 ? width : 1;
-      const normalizedHeight = Number.isFinite(height) && height > 0 ? height : 1;
-      sanitized.push({
-        className,
-        widthFactor: normalizedWidth,
-        heightFactor: normalizedHeight
-      });
-    });
-    if (!sanitized.length) {
-      return DEFAULT_CRIT_CONFETTI_SHAPES.map(entry => ({
-        className: entry.className,
-        widthFactor: entry.widthFactor,
-        heightFactor: entry.heightFactor
-      }));
+      return [...DEFAULT_CRIT_ATOM_IMAGES];
     }
     return sanitized;
   }
@@ -493,9 +449,7 @@
 
   const GLOW_STOPS = sanitizeGlowStops(existingAppData?.GLOW_STOPS ?? global.GLOW_STOPS);
 
-  const CRIT_CONFETTI_COLORS = sanitizeConfettiColors(existingAppData?.CRIT_CONFETTI_COLORS ?? global.CRIT_CONFETTI_COLORS);
-
-  const CRIT_CONFETTI_SHAPES = sanitizeConfettiShapes(existingAppData?.CRIT_CONFETTI_SHAPES ?? global.CRIT_CONFETTI_SHAPES);
+  const CRIT_ATOM_IMAGES = sanitizeCritAtomImages(existingAppData?.CRIT_ATOM_IMAGES ?? global.CRIT_ATOM_IMAGES);
 
   const appData = existingAppData ? { ...existingAppData } : {};
   appData.DEFAULT_ATOM_SCALE_TROPHY_DATA = DEFAULT_ATOM_SCALE_TROPHY_DATA;
@@ -508,17 +462,7 @@
   appData.MUSIC_FALLBACK_TRACKS = [...MUSIC_FALLBACK_TRACKS];
   appData.DEFAULT_GLOW_STOPS = DEFAULT_GLOW_STOPS.map(entry => ({ stop: entry.stop, color: [...entry.color] }));
   appData.GLOW_STOPS = GLOW_STOPS.map(entry => ({ stop: entry.stop, color: [...entry.color] }));
-  appData.DEFAULT_CRIT_CONFETTI_COLORS = [...DEFAULT_CRIT_CONFETTI_COLORS];
-  appData.CRIT_CONFETTI_COLORS = [...CRIT_CONFETTI_COLORS];
-  appData.DEFAULT_CRIT_CONFETTI_SHAPES = DEFAULT_CRIT_CONFETTI_SHAPES.map(entry => ({
-    className: entry.className,
-    widthFactor: entry.widthFactor,
-    heightFactor: entry.heightFactor
-  }));
-  appData.CRIT_CONFETTI_SHAPES = CRIT_CONFETTI_SHAPES.map(entry => ({
-    className: entry.className,
-    widthFactor: entry.widthFactor,
-    heightFactor: entry.heightFactor
-  }));
+  appData.DEFAULT_CRIT_ATOM_IMAGES = [...DEFAULT_CRIT_ATOM_IMAGES];
+  appData.CRIT_ATOM_IMAGES = [...CRIT_ATOM_IMAGES];
   global.APP_DATA = appData;
 })(typeof globalThis !== 'undefined' ? globalThis : window);
