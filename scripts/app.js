@@ -1450,7 +1450,6 @@ const elements = {
   metauxMovesValue: document.getElementById('metauxMovesValue'),
   metauxMessage: document.getElementById('metauxMessage'),
   metauxReshuffleButton: document.getElementById('metauxReshuffleButton'),
-  themeSelect: document.getElementById('themeSelect'),
   musicTrackSelect: document.getElementById('musicTrackSelect'),
   musicTrackStatus: document.getElementById('musicTrackStatus'),
   musicVolumeSlider: document.getElementById('musicVolumeSlider'),
@@ -1531,6 +1530,9 @@ function updateBigBangVisibility() {
   if (!unlocked && gameState.bigBangButtonVisible) {
     gameState.bigBangButtonVisible = false;
   }
+  if (!elements.bigBangOptionToggle && unlocked && !gameState.bigBangButtonVisible) {
+    gameState.bigBangButtonVisible = true;
+  }
   if (elements.bigBangOptionCard) {
     elements.bigBangOptionCard.hidden = !unlocked;
   }
@@ -1538,7 +1540,8 @@ function updateBigBangVisibility() {
     elements.bigBangOptionToggle.disabled = !unlocked;
     elements.bigBangOptionToggle.checked = unlocked && gameState.bigBangButtonVisible === true;
   }
-  const shouldShowButton = unlocked && gameState.bigBangButtonVisible === true;
+  const shouldShowButton = unlocked
+    && (elements.bigBangOptionToggle ? gameState.bigBangButtonVisible === true : true);
   if (elements.navBigBangButton) {
     elements.navBigBangButton.toggleAttribute('hidden', !shouldShowButton);
     elements.navBigBangButton.setAttribute('aria-hidden', shouldShowButton ? 'false' : 'true');
@@ -6744,27 +6747,22 @@ function showToast(message) {
   }, 2200);
 }
 
-function applyTheme(theme) {
+function applyTheme() {
   document.body.classList.remove('theme-dark', 'theme-light', 'theme-neon');
-  switch (theme) {
-    case 'light':
-      document.body.classList.add('theme-light');
-      break;
-    case 'neon':
-      document.body.classList.add('theme-neon');
-      break;
-    default:
-      document.body.classList.add('theme-dark');
-      break;
+  document.body.classList.add('theme-dark');
+  const appliedTheme = 'dark';
+  if (elements.themeSelect) {
+    elements.themeSelect.value = appliedTheme;
   }
-  elements.themeSelect.value = theme;
-  gameState.theme = theme;
+  gameState.theme = appliedTheme;
 }
 
-elements.themeSelect.addEventListener('change', event => {
-  applyTheme(event.target.value);
-  showToast('Thème mis à jour');
-});
+if (elements.themeSelect) {
+  elements.themeSelect.addEventListener('change', () => {
+    applyTheme();
+    showToast('Thème mis à jour');
+  });
+}
 
 if (elements.musicTrackSelect) {
   elements.musicTrackSelect.addEventListener('change', event => {
@@ -7066,7 +7064,7 @@ function resetGame() {
   setTicketStarAverageIntervalSeconds(gameState.ticketStarAverageIntervalSeconds);
   resetFrenzyState({ skipApply: true });
   resetTicketStarState({ reschedule: true });
-  applyTheme(DEFAULT_THEME);
+  applyTheme();
   musicPlayer.stop();
   musicPlayer.setVolume(DEFAULT_MUSIC_VOLUME, { silent: true });
   recalcProduction();
@@ -7088,7 +7086,7 @@ function loadGame() {
       gameState.theme = DEFAULT_THEME;
       gameState.stats = createInitialStats();
       gameState.shopUnlocks = new Set();
-      applyTheme(DEFAULT_THEME);
+      applyTheme();
       recalcProduction();
       renderShop();
       updateUI();
@@ -7389,7 +7387,7 @@ function loadGame() {
     }
     evaluatePageUnlocks({ save: false, deferUI: true });
     getShopUnlockSet();
-    applyTheme(gameState.theme);
+    applyTheme();
     recalcProduction();
     renderShop();
     updateBigBangVisibility();
