@@ -70,6 +70,54 @@
     floor: 'floor'
   };
 
+  const ENERGY_BALL_SPRITE = (() => {
+    if (typeof Image === 'undefined') {
+      return {
+        image: null,
+        loaded: false,
+        frameWidth: 32,
+        frameHeight: 32,
+        trailHeight: 128,
+        normalTrailOffsetY: 32,
+        speedTrailOffsetY: 160,
+        colorCount: 6
+      };
+    }
+    const image = new Image();
+    image.src = 'Assets/Sprites/energy_ball.png';
+    const sprite = {
+      image,
+      loaded: false,
+      frameWidth: 32,
+      frameHeight: 32,
+      trailHeight: 128,
+      normalTrailOffsetY: 32,
+      speedTrailOffsetY: 160,
+      colorCount: 6
+    };
+    const markLoaded = () => {
+      sprite.loaded = true;
+    };
+    if (typeof image.decode === 'function') {
+      image.decode().then(markLoaded).catch(() => {
+        sprite.loaded = image.complete && image.naturalWidth > 0;
+      });
+    }
+    image.addEventListener('load', markLoaded, { once: true });
+    image.addEventListener('error', () => {
+      sprite.loaded = false;
+    }, { once: true });
+    if (image.complete && image.naturalWidth > 0) {
+      sprite.loaded = true;
+    }
+    return sprite;
+  })();
+
+  const getRandomEnergyBallVariant = () => {
+    const count = Math.max(1, ENERGY_BALL_SPRITE.colorCount || 1);
+    return Math.floor(Math.random() * count);
+  };
+
   const FALLBACK_SIMPLE_PARTICLES = [
     {
       id: 'quarkRed',
@@ -1589,6 +1637,7 @@
         vy: 0,
         radius,
         electricSeed: Math.random() * Math.PI * 2,
+        spriteIndex: getRandomEnergyBallVariant(),
         attachedToPaddle: attachToPaddle,
         inPlay: !attachToPaddle,
         trail: [],
@@ -1772,7 +1821,9 @@
       ball.trail.push({
         x: ball.x,
         y: ball.y,
-        time: now
+        time: now,
+        vx: ball.vx,
+        vy: ball.vy
       });
       const maxPoints = BALL_TRAIL_MAX_POINTS;
       while (ball.trail.length > maxPoints) {
@@ -2789,104 +2840,186 @@
         : { r: 150, g: 220, b: 255 };
       const trailBlurBoost = speedTrailActive ? 1.35 : 1;
       const trailRadiusBoost = speedTrailActive ? 1.25 : 1;
+      const energySpriteReady = ENERGY_BALL_SPRITE.loaded && ENERGY_BALL_SPRITE.image;
 
       this.balls.forEach(ball => {
         const electricSeed = typeof ball.electricSeed === 'number' ? ball.electricSeed : 0;
         const pulse = 0.55 + 0.35 * Math.sin(time * 7.1 + electricSeed);
         const trail = Array.isArray(ball.trail) ? ball.trail : [];
         if (trail.length > 0) {
+          if (energySpriteReady) {
+            const sprite = ENERGY_BALL_SPRITE;
+            const variantCount = Math.max(1, sprite.colorCount || 1);
+            const colorIndex = typeof ball.spriteIndex === 'number'
+              ? Math.max(0, Math.min(variantCount - 1, Math.floor(ball.spriteIndex)))
+              : 0;
+            const srcX = colorIndex * sprite.frameWidth;
+            const srcY = speedTrailActive ? sprite.speedTrailOffsetY : sprite.normalTrailOffsetY;
+            const scale = ball.radius / 16;
+            const destWidth = sprite.frameWidth * scale;
+            const destHeight = sprite.trailHeight * scale;
+            ctx.save();
+            ctx.globalCompositeOperation = 'lighter';
+            trail.forEach(point => {
+              if (!point || typeof point.time !== 'number') return;
+              const age = renderTimestamp - point.time;
+              if (age < 0) return;
+              const lifeRatio = clamp(1 - age / 260, 0, 1);
+              if (lifeRatio <= 0) return;
+              const alphaBase = speedTrailActive ? 0.35 : 0.28;
+              const alpha = alphaBase * lifeRatio;
+              if (alpha <= 0) return;
+              const vx = typeof point.vx === 'number' ? point.vx : ball.vx;
+              const vy = typeof point.vy === 'number' ? point.vy : ball.vy;
+              let rotation = 0;
+              if (vx !== 0 || vy !== 0) {
+                rotation = Math.atan2(-vx, -vy);
+              }
+              ctx.save();
+              ctx.translate(point.x, point.y);
+              ctx.rotate(rotation);
+              ctx.globalAlpha = alpha;
+              ctx.drawImage(
+                sprite.image,
+                srcX,
+                srcY,
+                sprite.frameWidth,
+                sprite.trailHeight,
+                -destWidth / 2,
+                0,
+                destWidth,
+                destHeight
+              );
+              ctx.restore();
+            });
+            ctx.restore();
+          } else {
+            ctx.save();
+            ctx.globalCompositeOperation = 'lighter';
+            ctx.fillStyle = trailFillColor;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
+            trail.forEach(point => {
+              if (!point || typeof point.time !== 'number') return;
+              const age = renderTimestamp - point.time;
+              if (age < 0) return;
+              const lifeRatio = clamp(1 - age / 260, 0, 1);
+              if (lifeRatio <= 0) return;
+              const alphaBase = speedTrailActive ? 0.12 : 0.08;
+              const alphaRange = speedTrailActive ? 0.28 : 0.2;
+              const alpha = alphaBase + lifeRatio * alphaRange;
+              ctx.globalAlpha = alpha;
+              const blur = ball.radius * (1.1 + (1 - lifeRatio) * 0.9 * trailBlurBoost);
+              ctx.shadowBlur = blur;
+              const glowAlpha = Math.min(1, 0.25 + lifeRatio * (speedTrailActive ? 0.45 : 0.35));
+              ctx.shadowColor = `rgba(${trailGlowColor.r}, ${trailGlowColor.g}, ${trailGlowColor.b}, ${glowAlpha})`;
+              const radius = ball.radius * (0.85 + lifeRatio * 0.35 * trailRadiusBoost);
+              ctx.beginPath();
+              ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
+              ctx.fill();
+            });
+            ctx.restore();
+          }
+        }
+        if (energySpriteReady) {
+          const sprite = ENERGY_BALL_SPRITE;
+          const variantCount = Math.max(1, sprite.colorCount || 1);
+          const colorIndex = typeof ball.spriteIndex === 'number'
+            ? Math.max(0, Math.min(variantCount - 1, Math.floor(ball.spriteIndex)))
+            : 0;
+          const scale = ball.radius / 16;
+          const destWidth = sprite.frameWidth * scale;
+          const destHeight = sprite.frameHeight * scale;
+          const destX = ball.x - destWidth / 2;
+          const destY = ball.y - destHeight / 2;
           ctx.save();
           ctx.globalCompositeOperation = 'lighter';
-          ctx.fillStyle = trailFillColor;
-          ctx.shadowOffsetX = 0;
-          ctx.shadowOffsetY = 0;
-          trail.forEach(point => {
-            if (!point || typeof point.time !== 'number') return;
-            const age = renderTimestamp - point.time;
-            if (age < 0) return;
-            const lifeRatio = clamp(1 - age / 260, 0, 1);
-            if (lifeRatio <= 0) return;
-            const alphaBase = speedTrailActive ? 0.12 : 0.08;
-            const alphaRange = speedTrailActive ? 0.28 : 0.2;
-            const alpha = alphaBase + lifeRatio * alphaRange;
-            ctx.globalAlpha = alpha;
-            const blur = ball.radius * (1.1 + (1 - lifeRatio) * 0.9 * trailBlurBoost);
-            ctx.shadowBlur = blur;
-            const glowAlpha = Math.min(1, 0.25 + lifeRatio * (speedTrailActive ? 0.45 : 0.35));
-            ctx.shadowColor = `rgba(${trailGlowColor.r}, ${trailGlowColor.g}, ${trailGlowColor.b}, ${glowAlpha})`;
-            const radius = ball.radius * (0.85 + lifeRatio * 0.35 * trailRadiusBoost);
+          const glowRadius = ball.radius * (1.25 + pulse * 0.3);
+          ctx.globalAlpha = 0.3 + pulse * 0.25;
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.65)';
+          ctx.beginPath();
+          ctx.arc(ball.x, ball.y, glowRadius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+          ctx.drawImage(
+            sprite.image,
+            colorIndex * sprite.frameWidth,
+            0,
+            sprite.frameWidth,
+            sprite.frameHeight,
+            destX,
+            destY,
+            destWidth,
+            destHeight
+          );
+        } else {
+          const gradient = ctx.createRadialGradient(
+            ball.x - ball.radius / 3,
+            ball.y - ball.radius / 3,
+            ball.radius * 0.2,
+            ball.x,
+            ball.y,
+            ball.radius
+          );
+          gradient.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
+          gradient.addColorStop(1, 'rgba(120, 200, 255, 0.9)');
+          ctx.fillStyle = gradient;
+          ctx.beginPath();
+          ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.save();
+          ctx.globalCompositeOperation = 'lighter';
+          const auraOuterRadius = ball.radius * (1.6 + 0.28 * Math.sin(time * 3.4 + electricSeed * 1.7));
+          const auraGradient = ctx.createRadialGradient(
+            ball.x,
+            ball.y,
+            ball.radius * 0.45,
+            ball.x,
+            ball.y,
+            auraOuterRadius
+          );
+          auraGradient.addColorStop(0, `rgba(150, 220, 255, ${0.18 + pulse * 0.2})`);
+          auraGradient.addColorStop(0.8, `rgba(90, 180, 255, ${0.08 + pulse * 0.18})`);
+          auraGradient.addColorStop(1, 'rgba(30, 120, 255, 0)');
+          ctx.fillStyle = auraGradient;
+          ctx.beginPath();
+          ctx.arc(ball.x, ball.y, auraOuterRadius, 0, Math.PI * 2);
+          ctx.fill();
+
+          const arcCount = 4;
+          const arcLineWidth = Math.max(0.8, ball.radius * 0.18);
+          ctx.lineWidth = arcLineWidth;
+          ctx.lineCap = 'round';
+          for (let i = 0; i < arcCount; i += 1) {
+            const segmentSeed = electricSeed + i * 2.318;
+            const baseAngle = segmentSeed + time * 4.2 + Math.sin(time * 2.1 + segmentSeed) * 0.4;
+            const innerRadius = ball.radius * (0.92 + 0.12 * Math.sin(time * 5.3 + segmentSeed * 1.4));
+            const outerRadius = ball.radius * (1.45 + 0.3 * Math.sin(time * 3.8 + segmentSeed * 2.2));
             ctx.beginPath();
-            ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
-            ctx.fill();
-          });
+            ctx.moveTo(
+              ball.x + Math.cos(baseAngle) * innerRadius,
+              ball.y + Math.sin(baseAngle) * innerRadius
+            );
+            const jaggedSteps = 3;
+            for (let step = 1; step <= jaggedSteps; step += 1) {
+              const progress = step / jaggedSteps;
+              const noise = Math.sin((time + step) * 6.4 + segmentSeed * (step + 1)) * 0.35;
+              const angle = baseAngle + noise * 0.55;
+              const radius = innerRadius + (outerRadius - innerRadius) * progress + noise * ball.radius * 0.22;
+              ctx.lineTo(ball.x + Math.cos(angle) * radius, ball.y + Math.sin(angle) * radius);
+            }
+            ctx.strokeStyle = `rgba(170, 240, 255, ${0.18 + pulse * 0.28})`;
+            ctx.stroke();
+          }
+
+          const ringRadius = ball.radius * (1.18 + 0.08 * Math.sin(time * 4.6 + electricSeed));
+          ctx.strokeStyle = `rgba(150, 220, 255, ${0.2 + pulse * 0.3})`;
+          ctx.lineWidth = Math.max(1, ball.radius * 0.24);
+          ctx.beginPath();
+          ctx.arc(ball.x, ball.y, ringRadius, 0, Math.PI * 2);
+          ctx.stroke();
           ctx.restore();
         }
-        const gradient = ctx.createRadialGradient(
-          ball.x - ball.radius / 3,
-          ball.y - ball.radius / 3,
-          ball.radius * 0.2,
-          ball.x,
-          ball.y,
-          ball.radius
-        );
-        gradient.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
-        gradient.addColorStop(1, 'rgba(120, 200, 255, 0.9)');
-        ctx.fillStyle = gradient;
-        ctx.beginPath();
-        ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.save();
-        ctx.globalCompositeOperation = 'lighter';
-        const auraOuterRadius = ball.radius * (1.6 + 0.28 * Math.sin(time * 3.4 + electricSeed * 1.7));
-        const auraGradient = ctx.createRadialGradient(
-          ball.x,
-          ball.y,
-          ball.radius * 0.45,
-          ball.x,
-          ball.y,
-          auraOuterRadius
-        );
-        auraGradient.addColorStop(0, `rgba(150, 220, 255, ${0.18 + pulse * 0.2})`);
-        auraGradient.addColorStop(0.8, `rgba(90, 180, 255, ${0.08 + pulse * 0.18})`);
-        auraGradient.addColorStop(1, 'rgba(30, 120, 255, 0)');
-        ctx.fillStyle = auraGradient;
-        ctx.beginPath();
-        ctx.arc(ball.x, ball.y, auraOuterRadius, 0, Math.PI * 2);
-        ctx.fill();
-
-        const arcCount = 4;
-        const arcLineWidth = Math.max(0.8, ball.radius * 0.18);
-        ctx.lineWidth = arcLineWidth;
-        ctx.lineCap = 'round';
-        for (let i = 0; i < arcCount; i += 1) {
-          const segmentSeed = electricSeed + i * 2.318;
-          const baseAngle = segmentSeed + time * 4.2 + Math.sin(time * 2.1 + segmentSeed) * 0.4;
-          const innerRadius = ball.radius * (0.92 + 0.12 * Math.sin(time * 5.3 + segmentSeed * 1.4));
-          const outerRadius = ball.radius * (1.45 + 0.3 * Math.sin(time * 3.8 + segmentSeed * 2.2));
-          ctx.beginPath();
-          ctx.moveTo(
-            ball.x + Math.cos(baseAngle) * innerRadius,
-            ball.y + Math.sin(baseAngle) * innerRadius
-          );
-          const jaggedSteps = 3;
-          for (let step = 1; step <= jaggedSteps; step += 1) {
-            const progress = step / jaggedSteps;
-            const noise = Math.sin((time + step) * 6.4 + segmentSeed * (step + 1)) * 0.35;
-            const angle = baseAngle + noise * 0.55;
-            const radius = innerRadius + (outerRadius - innerRadius) * progress + noise * ball.radius * 0.22;
-            ctx.lineTo(ball.x + Math.cos(angle) * radius, ball.y + Math.sin(angle) * radius);
-          }
-          ctx.strokeStyle = `rgba(170, 240, 255, ${0.18 + pulse * 0.28})`;
-          ctx.stroke();
-        }
-
-        const ringRadius = ball.radius * (1.18 + 0.08 * Math.sin(time * 4.6 + electricSeed));
-        ctx.strokeStyle = `rgba(150, 220, 255, ${0.2 + pulse * 0.3})`;
-        ctx.lineWidth = Math.max(1, ball.radius * 0.24);
-        ctx.beginPath();
-        ctx.arc(ball.x, ball.y, ringRadius, 0, Math.PI * 2);
-        ctx.stroke();
-        ctx.restore();
       });
     }
 
