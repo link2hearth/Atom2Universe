@@ -2693,7 +2693,8 @@ const ticketStarState = {
   width: 0,
   height: 0,
   nextSpawnTime: performance.now() + computeTicketStarDelay(),
-  spawnTime: 0
+  spawnTime: 0,
+  lastSpawnEdge: null
 };
 
 function resetTicketStarState(options = {}) {
@@ -2709,6 +2710,7 @@ function resetTicketStarState(options = {}) {
   ticketStarState.width = 0;
   ticketStarState.height = 0;
   ticketStarState.spawnTime = 0;
+  ticketStarState.lastSpawnEdge = null;
   const now = performance.now();
   if (!isTicketStarFeatureUnlocked()) {
     ticketStarState.nextSpawnTime = Number.POSITIVE_INFINITY;
@@ -2746,6 +2748,7 @@ function collectTicketStar(event) {
   ticketStarState.velocity.y = 0;
   ticketStarState.position.x = 0;
   ticketStarState.position.y = 0;
+  ticketStarState.lastSpawnEdge = null;
   ticketStarState.nextSpawnTime = performance.now() + computeTicketStarDelay();
   saveGame();
 }
@@ -2789,7 +2792,15 @@ function spawnTicketStar(now = performance.now()) {
   let startX = Math.random() * maxX;
   let startY = Math.random() * maxY;
   const edges = ['top', 'right', 'bottom', 'left'];
-  const edge = edges[Math.floor(Math.random() * edges.length)] ?? 'top';
+  let edgePool = edges;
+  if (ticketStarState.lastSpawnEdge && edges.length > 1) {
+    const filtered = edges.filter(entry => entry !== ticketStarState.lastSpawnEdge);
+    if (filtered.length) {
+      edgePool = filtered;
+    }
+  }
+  const edge = edgePool[Math.floor(Math.random() * edgePool.length)] ?? 'top';
+  ticketStarState.lastSpawnEdge = edge;
   let angle;
   switch (edge) {
     case 'top':
@@ -2837,6 +2848,7 @@ function updateTicketStar(deltaSeconds, now = performance.now()) {
       ticketStarState.element = null;
       ticketStarState.active = false;
       ticketStarState.spawnTime = 0;
+      ticketStarState.lastSpawnEdge = null;
     }
     ticketStarState.nextSpawnTime = Number.POSITIVE_INFINITY;
     return;
@@ -2855,6 +2867,7 @@ function updateTicketStar(deltaSeconds, now = performance.now()) {
     ticketStarState.active = false;
     ticketStarState.nextSpawnTime = now + computeTicketStarDelay();
     ticketStarState.spawnTime = 0;
+    ticketStarState.lastSpawnEdge = null;
     return;
   }
   const layer = elements.ticketLayer;
