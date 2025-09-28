@@ -412,7 +412,14 @@
   }
 
   const DEFAULT_CRIT_ATOM_IMAGES = Object.freeze([
-    'Assets/Image/Atom.png'
+    'Assets/Image/Atom.png',
+    'Assets/Image/Atom0.png',
+    'Assets/Image/Atom1.png',
+    'Assets/Image/Atom2.png',
+    'Assets/Image/Atom3.png',
+    'Assets/Image/Atom4.png',
+    'Assets/Image/Atom5.png',
+    'Assets/Image/Atom6.png'
   ]);
 
   function sanitizeCritAtomImages(raw) {
