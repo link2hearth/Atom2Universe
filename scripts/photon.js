@@ -69,7 +69,7 @@
     getBarHeight() {
       const height = this.viewportHeight || 0;
       if (!height) return 0;
-      return clamp(height * 0.23, 120, 180);
+      return clamp(height * 0.14, 70, 110);
     }
 
     getBarSpeed() {
