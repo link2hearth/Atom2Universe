@@ -30,6 +30,22 @@ const MUSIC_FALLBACK_TRACKS = Array.isArray(APP_DATA.MUSIC_FALLBACK_TRACKS)
       ? [...APP_DATA.DEFAULT_MUSIC_FALLBACK_TRACKS]
       : [];
 
+const BRICK_SKIN_CHOICES = Object.freeze(['original', 'metallic', 'neon']);
+
+const BRICK_SKIN_TOAST_MESSAGES = Object.freeze({
+  original: 'Skin original appliqué.',
+  metallic: 'Skin Metallic appliqué.',
+  neon: 'Skin Néon appliqué.'
+});
+
+function normalizeBrickSkinSelection(rawValue) {
+  const value = typeof rawValue === 'string' ? rawValue.trim().toLowerCase() : '';
+  if (BRICK_SKIN_CHOICES.includes(value)) {
+    return value;
+  }
+  return 'original';
+}
+
 function createInitialStats() {
   const now = Date.now();
   return {
@@ -670,6 +686,7 @@ const DEFAULT_STATE = {
   pageUnlocks: createInitialPageUnlockState(),
   lastSave: Date.now(),
   theme: DEFAULT_THEME,
+  arcadeBrickSkin: 'original',
   stats: createInitialStats(),
   production: createEmptyProductionBreakdown(),
   productionBase: createEmptyProductionBreakdown(),
@@ -711,6 +728,7 @@ const gameState = {
   fusionBonuses: createInitialFusionBonuses(),
   pageUnlocks: createInitialPageUnlockState(),
   theme: DEFAULT_THEME,
+  arcadeBrickSkin: 'original',
   stats: createInitialStats(),
   production: createEmptyProductionBreakdown(),
   productionBase: createEmptyProductionBreakdown(),
@@ -737,6 +755,9 @@ const gameState = {
 };
 
 applyFrenzySpawnChanceBonus(gameState.frenzySpawnBonus);
+if (typeof setParticulesBrickSkinPreference === 'function') {
+  setParticulesBrickSkinPreference(gameState.arcadeBrickSkin);
+}
 
 function ensureApsCritState() {
   if (!gameState.apsCrit || typeof gameState.apsCrit !== 'object') {
@@ -1374,6 +1395,7 @@ function unlockTrophy(def) {
   recalcProduction();
   updateGoalsUI();
   updateBigBangVisibility();
+  updateBrickSkinOption();
   updateBrandPortalState({ animate: def.id === ARCADE_TROPHY_ID });
   updatePrimaryNavigationLocks();
   evaluatePageUnlocks({ save: false });
@@ -1489,6 +1511,9 @@ const elements = {
   musicTrackSelect: document.getElementById('musicTrackSelect'),
   musicTrackStatus: document.getElementById('musicTrackStatus'),
   musicVolumeSlider: document.getElementById('musicVolumeSlider'),
+  brickSkinOptionCard: document.getElementById('brickSkinOptionCard'),
+  brickSkinSelect: document.getElementById('brickSkinSelect'),
+  brickSkinStatus: document.getElementById('brickSkinStatus'),
   resetButton: document.getElementById('resetButton'),
   bigBangOptionCard: document.getElementById('bigBangOptionCard'),
   bigBangOptionToggle: document.getElementById('bigBangNavToggle'),
@@ -1527,6 +1552,25 @@ const elements = {
   devkitToggleShop: document.getElementById('devkitToggleShop'),
   devkitToggleGacha: document.getElementById('devkitToggleGacha')
 };
+
+function updateBrickSkinOption() {
+  if (!elements.brickSkinOptionCard || !elements.brickSkinSelect) {
+    return;
+  }
+  const unlocked = isArcadeUnlocked();
+  elements.brickSkinOptionCard.hidden = !unlocked;
+  elements.brickSkinOptionCard.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
+  elements.brickSkinSelect.disabled = !unlocked;
+  const selection = normalizeBrickSkinSelection(gameState.arcadeBrickSkin);
+  if (elements.brickSkinSelect.value !== selection) {
+    elements.brickSkinSelect.value = selection;
+  }
+  if (elements.brickSkinStatus) {
+    elements.brickSkinStatus.textContent = unlocked
+      ? 'Choisissez l’apparence des briques de Particules.'
+      : 'Débloquez le trophée « Ruée vers le million » pour personnaliser vos briques.';
+  }
+}
 
 function updatePageUnlockUI() {
   const unlocks = getPageUnlockState();
@@ -6824,6 +6868,7 @@ function updateUI() {
   updatePrimaryNavigationLocks();
   updatePageUnlockUI();
   updateBigBangVisibility();
+  updateBrickSkinOption();
   updateBrandPortalState();
   updateMetauxCreditsUI();
   if (elements.statusAtoms) {
@@ -6874,6 +6919,29 @@ if (elements.themeSelect) {
   elements.themeSelect.addEventListener('change', () => {
     applyTheme();
     showToast('Thème mis à jour');
+  });
+}
+
+if (elements.brickSkinSelect) {
+  elements.brickSkinSelect.addEventListener('change', event => {
+    const selection = normalizeBrickSkinSelection(event.target.value);
+    if (!isArcadeUnlocked()) {
+      updateBrickSkinOption();
+      return;
+    }
+    const previous = normalizeBrickSkinSelection(gameState.arcadeBrickSkin);
+    if (selection === previous) {
+      elements.brickSkinSelect.value = selection;
+      return;
+    }
+    gameState.arcadeBrickSkin = selection;
+    if (typeof setParticulesBrickSkinPreference === 'function') {
+      setParticulesBrickSkinPreference(selection);
+    }
+    updateBrickSkinOption();
+    saveGame();
+    const message = BRICK_SKIN_TOAST_MESSAGES[selection] || 'Skin mis à jour.';
+    showToast(message);
   });
 }
 
@@ -7011,6 +7079,7 @@ function serializeState() {
       };
     })(),
     theme: gameState.theme,
+    arcadeBrickSkin: normalizeBrickSkinSelection(gameState.arcadeBrickSkin),
     stats: {
       session: {
         atomsGained: stats.session.atomsGained.toJSON(),
@@ -7149,6 +7218,7 @@ function resetGame() {
     fusionBonuses: createInitialFusionBonuses(),
     pageUnlocks: createInitialPageUnlockState(),
     theme: DEFAULT_THEME,
+    arcadeBrickSkin: 'original',
     stats: createInitialStats(),
     production: createEmptyProductionBreakdown(),
     productionBase: createEmptyProductionBreakdown(),
@@ -7178,6 +7248,9 @@ function resetGame() {
   resetFrenzyState({ skipApply: true });
   resetTicketStarState({ reschedule: true });
   applyTheme();
+  if (typeof setParticulesBrickSkinPreference === 'function') {
+    setParticulesBrickSkinPreference(gameState.arcadeBrickSkin);
+  }
   musicPlayer.stop();
   musicPlayer.setVolume(DEFAULT_MUSIC_VOLUME, { silent: true });
   recalcProduction();
@@ -7441,6 +7514,14 @@ function loadGame() {
     }
     gameState.fusionBonuses = fusionBonuses;
     gameState.theme = data.theme || DEFAULT_THEME;
+    const storedBrickSkin = data.arcadeBrickSkin
+      ?? data.particulesBrickSkin
+      ?? data.brickSkin
+      ?? null;
+    gameState.arcadeBrickSkin = normalizeBrickSkinSelection(storedBrickSkin);
+    if (typeof setParticulesBrickSkinPreference === 'function') {
+      setParticulesBrickSkinPreference(gameState.arcadeBrickSkin);
+    }
     const parseStoredVolume = raw => {
       const numeric = Number(raw);
       if (!Number.isFinite(numeric)) {

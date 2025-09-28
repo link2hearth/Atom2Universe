@@ -212,6 +212,17 @@
 
   const GENERIC_BRICK_SKINS = new Set(['metallic', 'neon']);
 
+  const normalizeBrickSkinKey = value => {
+    if (value == null) {
+      return null;
+    }
+    const normalized = String(value).trim().toLowerCase();
+    if (!normalized || normalized === 'original' || normalized === 'default') {
+      return null;
+    }
+    return BRICK_SPRITE_SHEETS[normalized] ? normalized : null;
+  };
+
   const FALLBACK_SIMPLE_PARTICLES = [
     {
       id: 'quarkUp',
@@ -690,14 +701,7 @@
         max: readNumber(brickTypeLevelFactor.max, 0.2)
       }
     },
-    skin: (() => {
-      const requested = readString(bricksConfig.skin, null);
-      if (!requested) {
-        return null;
-      }
-      const normalized = requested.trim().toLowerCase();
-      return BRICK_SPRITE_SHEETS[normalized] ? normalized : null;
-    })()
+    skin: normalizeBrickSkinKey(readString(bricksConfig.skin, null))
   };
 
   const particlesConfig = readObject(ARCADE_CONFIG.particles);
@@ -1081,7 +1085,11 @@
 
       this.ctx = context;
       this.enabled = true;
-      this.brickSkin = SETTINGS.bricks.skin;
+      const initialBrickSkin = normalizeBrickSkinKey(
+        options.brickSkin != null ? options.brickSkin : SETTINGS.bricks.skin
+      );
+      this.brickSkin = initialBrickSkin;
+      SETTINGS.bricks.skin = initialBrickSkin;
       this.gridCols = GRID_COLS;
       this.gridRows = GRID_ROWS;
       this.maxLives = MAX_LIVES;
@@ -1819,6 +1827,7 @@
         id: `${type}-${row}-${col}-${Math.random().toString(36).slice(2, 7)}`,
         type,
         particle: assignedParticle,
+        baseParticle: particle,
         row,
         col,
         relX,
@@ -1832,6 +1841,22 @@
         revealedAt: 0,
         dissipated: false
       };
+    }
+
+    setBrickSkin(skinKey) {
+      const normalized = normalizeBrickSkinKey(skinKey);
+      this.brickSkin = normalized;
+      SETTINGS.bricks.skin = normalized;
+      if (Array.isArray(this.bricks)) {
+        this.bricks.forEach(brick => {
+          if (!brick) {
+            return;
+          }
+          const source = brick.baseParticle || brick.particle;
+          brick.particle = cloneParticleWithSkin(source, this.brickSkin);
+        });
+      }
+      this.render();
     }
 
     prepareServe() {
