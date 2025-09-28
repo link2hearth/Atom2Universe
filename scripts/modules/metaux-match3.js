@@ -251,7 +251,6 @@ class MetauxMatch3Game {
     this.messageElement = options.messageElement || null;
     this.onSessionEnd = typeof options.onSessionEnd === 'function' ? options.onSessionEnd : null;
     this.comboSound = MACH3_COMBO_SOUND;
-    this.lastComboSoundLevel = 0;
     this.board = Array.from({ length: METAUX_ROWS }, () => Array(METAUX_COLS).fill(null));
     this.tiles = Array.from({ length: METAUX_ROWS }, () => Array(METAUX_COLS).fill(null));
     this.initialized = false;
@@ -601,6 +600,9 @@ class MetauxMatch3Game {
       return;
     }
     const matchGroups = this.extractMatchGroups(matches);
+    if (matchGroups.some(group => group.size >= 3)) {
+      this.playMach3ComboSound();
+    }
     this.applyMatchRewards(matchGroups);
     this.comboChain += 1;
     if (this.comboChain >= 3 && this.comboChain !== this.lastComboSoundLevel) {
@@ -1058,11 +1060,12 @@ class MetauxMatch3Game {
       if (visited.has(key)) {
         continue;
       }
-      const group = { type: info.type };
+      const group = { type: info.type, size: 0 };
       const stack = [info];
       visited.add(key);
       while (stack.length) {
         const current = stack.pop();
+        group.size += 1;
         for (const [dRow, dCol] of directions) {
           const nextRow = current.row + dRow;
           const nextCol = current.col + dCol;
