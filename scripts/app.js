@@ -7519,7 +7519,8 @@ function loadGame() {
           showToast(`Progression hors ligne : +${offlineGain.toString()} atomes`);
         }
       }
-      if (diff > 0) {
+      const hasFirstTrophy = getUnlockedTrophySet().has(ARCADE_TROPHY_ID);
+      if (diff > 0 && hasFirstTrophy) {
         const offlineTickets = gameState.offlineTickets || {
           secondsPerTicket: OFFLINE_TICKET_CONFIG.secondsPerTicket,
           capSeconds: OFFLINE_TICKET_CONFIG.capSeconds,
@@ -7557,6 +7558,14 @@ function loadGame() {
           secondsPerTicket,
           capSeconds,
           progressSeconds
+        };
+      } else if (!hasFirstTrophy) {
+        const secondsPerTicket = OFFLINE_TICKET_CONFIG.secondsPerTicket;
+        const capSeconds = Math.max(OFFLINE_TICKET_CONFIG.capSeconds, secondsPerTicket);
+        gameState.offlineTickets = {
+          secondsPerTicket,
+          capSeconds,
+          progressSeconds: 0
         };
       }
     }
