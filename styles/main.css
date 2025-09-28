@@ -70,6 +70,23 @@ body.view-arcade main {
   justify-content: center;
 }
 
+body.view-photon {
+  background: radial-gradient(140% 180% at 50% 0%, #141d45 0%, #070918 48%, #01030a 100%);
+}
+
+body.view-photon .app-header {
+  display: none;
+}
+
+body.view-photon .status-bar {
+  display: none;
+}
+
+body.view-photon main {
+  width: 100%;
+  justify-content: center;
+}
+
 body.theme-light .app-header {
   background: rgba(246, 247, 251, 0.78);
   border-bottom-color: rgba(12, 16, 32, 0.08);
@@ -589,6 +606,20 @@ main {
   min-height: 100vh;
 }
 
+.page--photon {
+  display: none;
+  width: 100%;
+  max-width: 100%;
+  padding: clamp(1.4rem, 4vw, 2.6rem);
+}
+
+.page--photon.active {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
 .arcade-header {
   display: flex;
   align-items: center;
@@ -636,6 +667,241 @@ main {
   display: flex;
   align-items: stretch;
   gap: clamp(0.28rem, 0.77vw, 0.55rem);
+}
+
+.photon-window {
+  width: min(460px, 92vw);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.9rem, 2vw, 1.3rem);
+  padding: clamp(1.2rem, 3vw, 1.8rem);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(160deg, rgba(20, 28, 56, 0.92), rgba(6, 10, 28, 0.92));
+  box-shadow: 0 24px 48px rgba(6, 10, 34, 0.55);
+  position: relative;
+}
+
+.photon-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.photon-title {
+  margin: 0;
+  font-family: 'Audiowide', 'Orbitron', sans-serif;
+  font-size: clamp(1.3rem, 2vw, 1.5rem);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.photon-close-button {
+  appearance: none;
+  border: none;
+  background: rgba(255, 255, 255, 0.08);
+  color: inherit;
+  width: clamp(2.1rem, 4vw, 2.4rem);
+  height: clamp(2.1rem, 4vw, 2.4rem);
+  border-radius: 999px;
+  font-size: 1.45rem;
+  line-height: 1;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.photon-close-button:hover,
+.photon-close-button:focus-visible {
+  background: rgba(255, 255, 255, 0.16);
+  transform: translateY(-1px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+}
+
+.photon-close-button:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.3);
+  outline-offset: 3px;
+}
+
+.photon-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 30%, rgba(42, 54, 96, 0.6), rgba(6, 10, 28, 0.95));
+  cursor: pointer;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  transition: box-shadow 0.25s ease;
+  touch-action: manipulation;
+}
+
+.photon-stage--blue {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04), 0 0 32px rgba(86, 166, 255, 0.32);
+}
+
+.photon-stage--red {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04), 0 0 32px rgba(255, 107, 141, 0.28);
+}
+
+.photon-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.photon-hud {
+  position: absolute;
+  top: clamp(0.7rem, 2vw, 1.2rem);
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(6, 10, 24, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  font-variant-numeric: tabular-nums;
+}
+
+.photon-hud__label {
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+.photon-hud__value {
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.photon-hint {
+  position: absolute;
+  bottom: clamp(1rem, 2.5vw, 1.6rem);
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  font-size: 0.92rem;
+  text-align: center;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(8, 12, 32, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(6px);
+  opacity: 0.82;
+}
+
+.photon-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(4, 6, 16, 0.7);
+  backdrop-filter: blur(6px);
+  padding: 1.6rem;
+  text-align: center;
+}
+
+.photon-overlay[hidden] {
+  display: none;
+}
+
+.photon-overlay__panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: clamp(1.2rem, 3vw, 1.6rem);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(10, 14, 32, 0.82);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+}
+
+.photon-overlay__message {
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.4;
+}
+
+.photon-overlay__button {
+  appearance: none;
+  border: none;
+  border-radius: 999px;
+  padding: 0.65rem 1.4rem;
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: linear-gradient(120deg, #56a6ff, #ff6b8d);
+  color: #05070c;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.photon-overlay__button:hover,
+.photon-overlay__button:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 32px rgba(86, 166, 255, 0.4);
+}
+
+.photon-overlay__button:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.45);
+  outline-offset: 3px;
+}
+
+.option-card--photon {
+  gap: 1rem;
+}
+
+.photon-launch-button {
+  align-self: flex-start;
+  appearance: none;
+  border: none;
+  border-radius: 999px;
+  padding: 0.6rem 1.4rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: linear-gradient(120deg, #56a6ff, #ff6b8d);
+  color: #05070c;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.photon-launch-button:hover,
+.photon-launch-button:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 32px rgba(86, 166, 255, 0.35);
+  filter: brightness(1.05);
+}
+
+.photon-launch-button:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.4);
+  outline-offset: 3px;
+}
+
+@media (max-width: 520px) {
+  .photon-window {
+    border-radius: 20px;
+    padding: clamp(1rem, 4vw, 1.4rem);
+  }
+
+  .photon-stage {
+    border-radius: 18px;
+  }
+
+  .photon-overlay__panel {
+    border-radius: 18px;
+  }
 }
 
 .arcade-header__brand:hover,
