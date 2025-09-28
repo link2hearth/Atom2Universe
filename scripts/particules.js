@@ -187,10 +187,30 @@
     rows: 3
   });
 
+  const METALLIC_BRICK_SPRITE_SHEET = createSpriteSheet({
+    src: 'Assets/Sprites/metallic_bricks.png',
+    frameWidth: 64,
+    frameHeight: 32,
+    columns: 12,
+    rows: 3
+  });
+
+  const NEON_BRICK_SPRITE_SHEET = createSpriteSheet({
+    src: 'Assets/Sprites/neon_bricks.png',
+    frameWidth: 64,
+    frameHeight: 32,
+    columns: 12,
+    rows: 3
+  });
+
   const BRICK_SPRITE_SHEETS = {
     quarks: QUARK_SPRITE_SHEET,
-    particles: PARTICLE_SPRITE_SHEET
+    particles: PARTICLE_SPRITE_SHEET,
+    metallic: METALLIC_BRICK_SPRITE_SHEET,
+    neon: NEON_BRICK_SPRITE_SHEET
   };
+
+  const GENERIC_BRICK_SKINS = new Set(['metallic', 'neon']);
 
   const FALLBACK_SIMPLE_PARTICLES = [
     {
@@ -669,7 +689,15 @@
         bonus: readNumber(brickTypeLevelFactor.bonus, 0.2),
         max: readNumber(brickTypeLevelFactor.max, 0.2)
       }
-    }
+    },
+    skin: (() => {
+      const requested = readString(bricksConfig.skin, null);
+      if (!requested) {
+        return null;
+      }
+      const normalized = requested.trim().toLowerCase();
+      return BRICK_SPRITE_SHEETS[normalized] ? normalized : null;
+    })()
   };
 
   const particlesConfig = readObject(ARCADE_CONFIG.particles);
@@ -907,6 +935,90 @@
     ? list[Math.floor(Math.random() * list.length)]
     : null);
 
+  const normalizeSpriteColumns = columns => {
+    if (!Array.isArray(columns)) {
+      return [];
+    }
+    return columns
+      .map(value => (typeof value === 'number' ? value : Number(value)))
+      .filter(Number.isFinite)
+      .map(value => Math.max(0, Math.floor(value)));
+  };
+
+  const pickColumn = (pool, sheetColumnCount = null) => {
+    if (!Array.isArray(pool) || pool.length === 0) {
+      return null;
+    }
+    const index = Math.floor(Math.random() * pool.length);
+    const value = pool[index];
+    if (!Number.isFinite(value)) {
+      return null;
+    }
+    const numeric = Math.floor(value);
+    if (typeof sheetColumnCount === 'number' && sheetColumnCount > 0) {
+      return Math.max(0, Math.min(sheetColumnCount - 1, numeric));
+    }
+    return Math.max(0, numeric);
+  };
+
+  const cloneParticleWithSkin = (particle, skinKey) => {
+    if (!particle || typeof particle !== 'object') {
+      return particle;
+    }
+    const clone = { ...particle };
+    if (!clone.sprite || typeof clone.sprite !== 'object') {
+      return clone;
+    }
+    const sprite = { ...clone.sprite };
+    const normalizedColumns = normalizeSpriteColumns(sprite.columns);
+    if (normalizedColumns.length > 0) {
+      sprite.columns = normalizedColumns;
+    } else if ('columns' in sprite) {
+      delete sprite.columns;
+    }
+
+    const requestedSkin = typeof skinKey === 'string' ? skinKey.trim().toLowerCase() : null;
+    const hasSkinOverride = requestedSkin && BRICK_SPRITE_SHEETS[requestedSkin];
+    if (hasSkinOverride) {
+      const sheet = BRICK_SPRITE_SHEETS[requestedSkin];
+      const totalColumns = Math.max(1, Math.floor(sheet.columns || 1));
+      sprite.sheet = requestedSkin;
+      const columnPool = (() => {
+        if (GENERIC_BRICK_SKINS.has(requestedSkin)) {
+          if (normalizedColumns.length > 0) {
+            return normalizedColumns;
+          }
+          return Array.from({ length: totalColumns }, (_, columnIndex) => columnIndex);
+        }
+        if (Number.isFinite(sprite.column)) {
+          return [Math.floor(sprite.column)];
+        }
+        if (normalizedColumns.length > 0) {
+          return normalizedColumns;
+        }
+        return [];
+      })();
+      const chosenColumn = pickColumn(columnPool, totalColumns)
+        ?? (Number.isFinite(sprite.column)
+          ? Math.max(0, Math.min(totalColumns - 1, Math.floor(sprite.column)))
+          : 0);
+      sprite.column = chosenColumn;
+    } else {
+      if (normalizedColumns.length > 0) {
+        const chosenColumn = pickColumn(normalizedColumns);
+        if (Number.isFinite(chosenColumn)) {
+          sprite.column = chosenColumn;
+        }
+      }
+      if (Number.isFinite(sprite.column)) {
+        sprite.column = Math.max(0, Math.floor(sprite.column));
+      }
+    }
+
+    clone.sprite = sprite;
+    return clone;
+  };
+
   const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 
   class ParticulesGame {
@@ -969,6 +1081,7 @@
 
       this.ctx = context;
       this.enabled = true;
+      this.brickSkin = SETTINGS.bricks.skin;
       this.gridCols = GRID_COLS;
       this.gridRows = GRID_ROWS;
       this.maxLives = MAX_LIVES;
@@ -1693,10 +1806,11 @@
     }
 
     createBrick({ row, col, relX, relY, relWidth, relHeight, type, particle }) {
+      const assignedParticle = cloneParticleWithSkin(particle, this.brickSkin);
       const maxHits = (() => {
         if (type === BRICK_TYPES.RESISTANT) {
-          const minHits = Math.max(2, Math.floor(particle?.minHits || 2));
-          const max = Math.max(minHits, Math.floor(particle?.maxHits || minHits));
+          const minHits = Math.max(2, Math.floor(assignedParticle?.minHits || particle?.minHits || 2));
+          const max = Math.max(minHits, Math.floor(assignedParticle?.maxHits || particle?.maxHits || minHits));
           return Math.floor(Math.random() * (max - minHits + 1)) + minHits;
         }
         return 1;
@@ -1704,7 +1818,7 @@
       return {
         id: `${type}-${row}-${col}-${Math.random().toString(36).slice(2, 7)}`,
         type,
-        particle,
+        particle: assignedParticle,
         row,
         col,
         relX,

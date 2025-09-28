@@ -943,7 +943,8 @@ const GAME_CONFIG = {
             bonus: 0.2,
             max: 0.2
           }
-        }
+        },
+        skin: null
       },
       particles: {
         simple: [
