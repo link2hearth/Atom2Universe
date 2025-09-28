@@ -193,6 +193,46 @@ const METAUX_TIMER_PENALTY_WINDOW_MS = Math.max(
 const METAUX_TIMER_PENALTY_AMOUNT = Math.max(0, METAUX_TIMER_CONFIG.penaltyAmountSeconds);
 const METAUX_TIMER_TICK_INTERVAL = METAUX_TIMER_CONFIG.tickIntervalMs;
 
+function createSoundPool(src, poolSize = 4) {
+  if (!src || typeof Audio === 'undefined') {
+    return { play: () => {} };
+  }
+  const size = Math.max(1, Math.floor(poolSize) || 1);
+  const pool = Array.from({ length: size }, () => {
+    const audio = new Audio(src);
+    audio.preload = 'auto';
+    audio.setAttribute('preload', 'auto');
+    return audio;
+  });
+  let index = 0;
+  return {
+    play(playbackRate = 1) {
+      const audio = pool[index];
+      index = (index + 1) % pool.length;
+      try {
+        audio.currentTime = 0;
+        if (audio.playbackRate !== playbackRate) {
+          audio.playbackRate = playbackRate;
+        }
+        const playPromise = audio.play();
+        if (playPromise && typeof playPromise.catch === 'function') {
+          playPromise.catch(() => {});
+        }
+      } catch (error) {
+        // Ignore playback issues (e.g. autoplay restrictions)
+      }
+    }
+  };
+}
+
+const MACH3_COMBO_SOUND = (() => {
+  const MACH3_SOUND_SRC = 'Assets/Sounds/Mach3.mp3';
+  if (typeof window === 'undefined' || typeof Audio === 'undefined') {
+    return { play: () => {} };
+  }
+  return createSoundPool(MACH3_SOUND_SRC, 4);
+})();
+
 class MetauxMatch3Game {
   constructor(options = {}) {
     this.boardElement = options.boardElement || null;
@@ -210,6 +250,8 @@ class MetauxMatch3Game {
     this.movesElement = options.movesElement || null;
     this.messageElement = options.messageElement || null;
     this.onSessionEnd = typeof options.onSessionEnd === 'function' ? options.onSessionEnd : null;
+    this.comboSound = MACH3_COMBO_SOUND;
+    this.lastComboSoundLevel = 0;
     this.board = Array.from({ length: METAUX_ROWS }, () => Array(METAUX_COLS).fill(null));
     this.tiles = Array.from({ length: METAUX_ROWS }, () => Array(METAUX_COLS).fill(null));
     this.initialized = false;
@@ -549,6 +591,7 @@ class MetauxMatch3Game {
 
   startCascade(initialMatches) {
     this.comboChain = 0;
+    this.lastComboSoundLevel = 0;
     this.resolveCascade(initialMatches);
   }
 
@@ -560,6 +603,10 @@ class MetauxMatch3Game {
     const matchGroups = this.extractMatchGroups(matches);
     this.applyMatchRewards(matchGroups);
     this.comboChain += 1;
+    if (this.comboChain >= 3 && this.comboChain !== this.lastComboSoundLevel) {
+      this.playMach3ComboSound();
+      this.lastComboSoundLevel = this.comboChain;
+    }
     this.stats.totalCleared += matches.length;
     matches.forEach(position => {
       const tile = this.tiles[position.row][position.col];
@@ -599,6 +646,7 @@ class MetauxMatch3Game {
       this.updateMessage('Alignement complet ! De nouveaux lingots tombent.');
     }
     this.comboChain = 0;
+    this.lastComboSoundLevel = 0;
     this.processing = false;
     if (this.gameOver) {
       return;
@@ -1301,6 +1349,12 @@ class MetauxMatch3Game {
   updateMessage(message) {
     if (this.messageElement) {
       this.messageElement.textContent = message || '';
+    }
+  }
+
+  playMach3ComboSound() {
+    if (this.comboSound && typeof this.comboSound.play === 'function') {
+      this.comboSound.play();
     }
   }
 }
