@@ -1840,7 +1840,29 @@ function updateGachaUI() {
 }
 
 
+let particulesBrickSkinPreference = null;
 let particulesGame = null;
+
+function normalizeParticulesBrickSkin(value) {
+  if (value == null) {
+    return null;
+  }
+  const normalized = String(value).trim().toLowerCase();
+  if (!normalized || normalized === 'original' || normalized === 'default') {
+    return null;
+  }
+  if (normalized === 'metallic' || normalized === 'neon') {
+    return normalized;
+  }
+  return null;
+}
+
+function setParticulesBrickSkinPreference(value) {
+  particulesBrickSkinPreference = normalizeParticulesBrickSkin(value);
+  if (particulesGame && typeof particulesGame.setBrickSkin === 'function') {
+    particulesGame.setBrickSkin(particulesBrickSkinPreference);
+  }
+}
 
 function initParticulesGame() {
   if (particulesGame || !elements.arcadeCanvas || typeof ParticulesGame !== 'function') {
@@ -1856,6 +1878,7 @@ function initParticulesGame() {
     livesLabel: elements.arcadeLivesValue,
     scoreLabel: elements.arcadeScoreValue,
     comboLabel: elements.arcadeComboMessage,
+    brickSkin: particulesBrickSkinPreference,
     formatTicketLabel,
     formatBonusTicketLabel,
     onTicketsEarned: (count = 0) => {
