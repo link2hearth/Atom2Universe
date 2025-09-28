@@ -216,7 +216,7 @@
     (LASER_SPRITE_SHEET.columns || 1) * (LASER_SPRITE_SHEET.rows || 1)
   );
   const LASER_FRAME_DURATION_MS = 1000 / 15;
-  const LASER_SCALE_MULTIPLIER = 3;
+  const LASER_SCALE_MULTIPLIER = 8;
 
   const BRICK_SPRITE_SHEETS = {
     quarks: QUARK_SPRITE_SHEET,
