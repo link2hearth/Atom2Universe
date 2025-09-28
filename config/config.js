@@ -1573,60 +1573,60 @@ const GAME_CONFIG = {
     ],
     weeklyRarityWeights: {
       monday: {
-        commun: 40,
-        essentiel: 24,
-        stellaire: 18,
-        singulier: 8,
-        mythique: 6,
-        irreel: 4
+        commun: 50,
+        essentiel: 20,
+        stellaire: 20,
+        singulier: 10,
+        mythique: 0,
+        irreel: 0
       },
       tuesday: {
-        commun: 33,
-        essentiel: 30,
-        stellaire: 19,
-        singulier: 8,
-        mythique: 6,
-        irreel: 4
+        commun: 50,
+        essentiel: 20,
+        stellaire: 20,
+        singulier: 0,
+        mythique: 10,
+        irreel: 0
       },
       wednesday: {
-        commun: 32,
-        essentiel: 23,
-        stellaire: 23,
-        singulier: 9,
-        mythique: 7,
-        irreel: 6
+        commun: 50,
+        essentiel: 20,
+        stellaire: 20,
+        singulier: 0,
+        mythique: 0,
+        irreel: 10
       },
       thursday: {
-        commun: 34,
-        essentiel: 22,
-        stellaire: 19,
-        singulier: 11,
-        mythique: 8,
-        irreel: 6
+        commun: 50,
+        essentiel: 20,
+        stellaire: 20,
+        singulier: 10,
+        mythique: 0,
+        irreel: 0
       },
       friday: {
-        commun: 30,
-        essentiel: 22,
+        commun: 50,
+        essentiel: 20,
         stellaire: 20,
-        singulier: 10,
+        singulier: 0,
         mythique: 10,
-        irreel: 8
+        irreel: 0
       },
       saturday: {
-        commun: 28,
-        essentiel: 23,
-        stellaire: 19,
-        singulier: 10,
-        mythique: 9,
-        irreel: 11
+        commun: 50,
+        essentiel: 20,
+        stellaire: 20,
+        singulier: 0,
+        mythique: 0,
+        irreel: 10
       },
       sunday: {
-        commun: 35,
+        commun: 50,
         essentiel: 25,
-        stellaire: 20,
-        singulier: 8,
-        mythique: 7,
-        irreel: 5
+        stellaire: 22,
+        singulier: 1,
+        mythique: 1,
+        irreel: 1
       }
     }
   },
@@ -1639,7 +1639,7 @@ const GAME_CONFIG = {
    * - rewardTickets : nombre de tickets octroyés par clic.
    */
   ticketStar: {
-    averageSpawnIntervalSeconds: 60,
+    averageSpawnIntervalSeconds: 600,
     speedPixelsPerSecond: 90,
     size: 72,
     rewardTickets: 1
