@@ -1442,6 +1442,7 @@ const elements = {
   gachaRarityList: document.getElementById('gachaRarityList'),
   gachaOwnedSummary: document.getElementById('gachaOwnedSummary'),
   gachaSunButton: document.getElementById('gachaSunButton'),
+  gachaFeaturedInfo: document.getElementById('gachaFeaturedInfo'),
   gachaTicketCounter: document.getElementById('gachaTicketCounter'),
   gachaTicketModeButton: document.getElementById('gachaTicketModeButton'),
   gachaTicketModeLabel: document.getElementById('gachaTicketModeLabel'),
