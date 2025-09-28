@@ -1709,43 +1709,12 @@ body.theme-neon .gacha-ticket-counter {
 .gacha-confetti-layer {
   position: absolute;
   inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
   pointer-events: none;
   z-index: 0;
-}
-
-.gacha-confetti {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  display: block;
-  opacity: 0;
-  border-radius: 0.4rem;
-  transform: translate(-50%, -50%) scale(0.85);
-  transform-origin: center;
-  pointer-events: none;
-  --confetti-mid-x: 0px;
-  --confetti-mid-y: 0px;
-  --confetti-end-x: 0px;
-  --confetti-end-y: 0px;
-  --confetti-scale: 1;
-  --confetti-start-rotation: 0deg;
-  --confetti-mid-rotation: 0deg;
-  --confetti-end-rotation: 0deg;
-  --confetti-delay: 0s;
-  --confetti-duration: 2.1s;
-  background: linear-gradient(135deg, rgba(79, 126, 194, 0.9), rgba(32, 64, 120, 0.95));
-  background-size: 150% 150%;
-  background-position: center;
-  box-shadow:
-    0 0 18px rgba(120, 167, 242, 0.4),
-    0 0 36px rgba(120, 167, 242, 0.18);
-  filter: saturate(1.2);
-  animation: gacha-confetti-shoot var(--confetti-duration, 2.1s) ease-out forwards;
-  animation-delay: var(--confetti-delay, 0s);
-  transition: background 0.6s ease, box-shadow 0.6s ease, filter 0.6s ease;
-  mix-blend-mode: screen;
-  will-change: transform, opacity;
 }
 
 .gacha-overlay {
@@ -1918,34 +1887,6 @@ body.theme-neon .gacha-ticket-counter {
 .gacha-animation-layer.show-result .gacha-continue-hint {
   opacity: 0.75;
   transform: translateY(0);
-}
-
-@keyframes gacha-confetti-shoot {
-  0% {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0.35) rotate(var(--confetti-start-rotation, 0deg));
-  }
-  15% {
-    opacity: 1;
-  }
-  55% {
-    opacity: 1;
-    transform: translate(
-        calc(-50% + var(--confetti-mid-x, 0px)),
-        calc(-50% + var(--confetti-mid-y, 0px))
-      )
-      scale(var(--confetti-scale, 1))
-      rotate(var(--confetti-mid-rotation, 0deg));
-  }
-  100% {
-    opacity: 0;
-    transform: translate(
-        calc(-50% + var(--confetti-end-x, 0px)),
-        calc(-50% + var(--confetti-end-y, 0px))
-      )
-      scale(var(--confetti-scale, 1))
-      rotate(var(--confetti-end-rotation, 0deg));
-  }
 }
 
 @keyframes gacha-pulse {
