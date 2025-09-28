@@ -599,8 +599,8 @@ const GAME_CONFIG = {
     basePerSecond: { type: 'number', value: 0 },
     offlineCapSeconds: 60 * 60 * 12,
     offlineTickets: {
-      secondsPerTicket: 60 * 15,
-      capSeconds: 60 * 60 * 24
+      secondsPerTicket: 60 * 60,
+      capSeconds: 60 * 60 * 12
     },
     defaultTheme: 'dark',
     crit: {
@@ -750,7 +750,7 @@ const GAME_CONFIG = {
         detectionMessageDurationMs: 2600,
         dissipateMessage: 'Le graviton s’est dissipé…',
         dissipateMessageDurationMs: 2800,
-        captureMessage: 'Graviton capturé ! Ticket spécial +1',
+        captureMessage: 'Graviton capturé !',
         captureMessageDurationMs: 3600
       },
       lingerBonus: {
