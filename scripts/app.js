@@ -1473,7 +1473,7 @@ const elements = {
   infoBonusSubtitle: document.getElementById('infoBonusSubtitle'),
   infoElementBonuses: document.getElementById('infoElementBonuses'),
   infoShopBonuses: document.getElementById('infoShopBonuses'),
-  critConfettiLayer: null,
+  critAtomLayer: null,
   devkitOverlay: document.getElementById('devkitOverlay'),
   devkitPanel: document.getElementById('devkitPanel'),
   devkitClose: document.getElementById('devkitCloseButton'),
@@ -3936,101 +3936,195 @@ function initStarfield() {
   elements.starfield.appendChild(fragment);
 }
 
-const CRIT_CONFETTI_COLORS = (() => {
-  const source = Array.isArray(APP_DATA.CRIT_CONFETTI_COLORS) && APP_DATA.CRIT_CONFETTI_COLORS.length
-    ? APP_DATA.CRIT_CONFETTI_COLORS
-    : Array.isArray(APP_DATA.DEFAULT_CRIT_CONFETTI_COLORS) && APP_DATA.DEFAULT_CRIT_CONFETTI_COLORS.length
-      ? APP_DATA.DEFAULT_CRIT_CONFETTI_COLORS
+const CRIT_ATOM_IMAGES = (() => {
+  const source = Array.isArray(APP_DATA.CRIT_ATOM_IMAGES) && APP_DATA.CRIT_ATOM_IMAGES.length
+    ? APP_DATA.CRIT_ATOM_IMAGES
+    : Array.isArray(APP_DATA.DEFAULT_CRIT_ATOM_IMAGES) && APP_DATA.DEFAULT_CRIT_ATOM_IMAGES.length
+      ? APP_DATA.DEFAULT_CRIT_ATOM_IMAGES
       : [];
   if (!source.length) {
-    return ['#ffffff'];
+    return ['Assets/Image/Atom.png'];
   }
   return source.map(value => String(value));
 })();
 
-const CRIT_CONFETTI_SHAPES = (() => {
-  const source = Array.isArray(APP_DATA.CRIT_CONFETTI_SHAPES) && APP_DATA.CRIT_CONFETTI_SHAPES.length
-    ? APP_DATA.CRIT_CONFETTI_SHAPES
-    : Array.isArray(APP_DATA.DEFAULT_CRIT_CONFETTI_SHAPES) && APP_DATA.DEFAULT_CRIT_CONFETTI_SHAPES.length
-      ? APP_DATA.DEFAULT_CRIT_CONFETTI_SHAPES
-      : [];
-  if (!source.length) {
-    return [{ className: 'crit-confetti--circle', widthFactor: 1, heightFactor: 1 }];
-  }
-  return source
-    .map(entry => ({
-      className: String(entry?.className ?? ''),
-      widthFactor: Number(entry?.widthFactor) || 1,
-      heightFactor: Number(entry?.heightFactor) || 1
-    }))
-    .filter(entry => entry.className);
-})();
+const CRIT_ATOM_LIFETIME_MS = 6000;
+const CRIT_ATOM_FADE_MS = 600;
 
-function ensureCritConfettiLayer() {
-  if (elements.critConfettiLayer && elements.critConfettiLayer.isConnected) {
-    return elements.critConfettiLayer;
+function ensureCritAtomLayer() {
+  if (elements.critAtomLayer && elements.critAtomLayer.isConnected) {
+    return elements.critAtomLayer;
   }
   const layer = document.createElement('div');
-  layer.className = 'crit-confetti-layer';
+  layer.className = 'crit-atom-layer';
   layer.setAttribute('aria-hidden', 'true');
   document.body.appendChild(layer);
-  elements.critConfettiLayer = layer;
+  elements.critAtomLayer = layer;
   return layer;
 }
 
 function pickRandom(array) {
+  if (!Array.isArray(array) || array.length === 0) {
+    return undefined;
+  }
   return array[Math.floor(Math.random() * array.length)];
 }
 
-function createCritConfettiNode() {
-  const confetti = document.createElement('span');
-  const baseSize = (12 + Math.random() * 18) * 0.3;
-  const shape = pickRandom(CRIT_CONFETTI_SHAPES);
-  const width = baseSize * shape.widthFactor;
-  const height = baseSize * shape.heightFactor;
-  confetti.className = `crit-confetti ${shape.className}`;
-  confetti.style.width = `${width.toFixed(2)}px`;
-  confetti.style.height = `${height.toFixed(2)}px`;
+function clamp(value, min, max) {
+  return Math.min(Math.max(value, min), max);
+}
 
-  const startX = Math.random() * 100;
-  const startY = Math.random() * 100;
-  confetti.style.left = `${startX.toFixed(2)}%`;
-  confetti.style.top = `${startY.toFixed(2)}%`;
+function spawnCriticalAtom(multiplier = 1) {
+  const layer = ensureCritAtomLayer();
+  if (!layer) return;
 
-  const driftX = (Math.random() - 0.5) * 200;
-  const driftY = 80 + Math.random() * 140;
-  const endX = driftX + (Math.random() - 0.5) * 120;
-  const endY = driftY + 60 + Math.random() * 90;
+  const safeMultiplier = Math.max(1, Number(multiplier) || 1);
+  const fallbackImage = 'Assets/Image/Atom.png';
+  const imageSource = pickRandom(CRIT_ATOM_IMAGES) || fallbackImage;
 
-  const rotationStart = Math.random() * 360;
-  const rotationEnd = rotationStart + (Math.random() * 220 - 110);
-  const spin = 50 + Math.random() * 160;
-  const scale = 0.85 + Math.random() * 0.55;
-  const duration = 2.8 + Math.random() * 0.5;
-  const delay = Math.random() * 0.25;
+  const atom = document.createElement('img');
+  atom.src = imageSource;
+  atom.alt = '';
+  atom.className = 'crit-atom';
+  atom.setAttribute('aria-hidden', 'true');
 
-  confetti.style.setProperty('--confetti-drift-x', `${driftX.toFixed(2)}px`);
-  confetti.style.setProperty('--confetti-drift-y', `${driftY.toFixed(2)}px`);
-  confetti.style.setProperty('--confetti-end-x', `${endX.toFixed(2)}px`);
-  confetti.style.setProperty('--confetti-end-y', `${endY.toFixed(2)}px`);
-  confetti.style.setProperty('--confetti-rotation', `${rotationStart.toFixed(2)}deg`);
-  confetti.style.setProperty('--confetti-end-rotation', `${rotationEnd.toFixed(2)}deg`);
-  confetti.style.setProperty('--confetti-spin', `${spin.toFixed(2)}deg`);
-  confetti.style.setProperty('--confetti-scale', scale.toFixed(3));
-  confetti.style.setProperty('--confetti-duration', `${duration.toFixed(2)}s`);
-  confetti.style.setProperty('--confetti-delay', `${delay.toFixed(2)}s`);
+  const buttonSize = elements.atomButton ? elements.atomButton.offsetWidth : Math.min(window.innerWidth, window.innerHeight) * 0.2;
+  const normalizedSize = clamp(buttonSize * (0.62 + Math.min(safeMultiplier, 6) * 0.04), 64, 160);
+  atom.style.setProperty('--crit-atom-size', `${normalizedSize.toFixed(2)}px`);
 
-  const colorA = pickRandom(CRIT_CONFETTI_COLORS);
-  let colorB = pickRandom(CRIT_CONFETTI_COLORS);
-  if (colorA === colorB) {
-    colorB = pickRandom(CRIT_CONFETTI_COLORS);
+  const baseScale = 0.78 + Math.random() * 0.18;
+  const baseRotation = Math.random() * 360;
+  atom.style.setProperty('--crit-atom-scale', baseScale.toFixed(3));
+  atom.style.setProperty('--crit-atom-x', '0px');
+  atom.style.setProperty('--crit-atom-y', '0px');
+  atom.style.setProperty('--crit-atom-rotation', `${baseRotation.toFixed(2)}deg`);
+
+  layer.appendChild(atom);
+
+  const layerRect = layer.getBoundingClientRect();
+  const viewportWidth = layerRect.width || window.innerWidth;
+  const viewportHeight = layerRect.height || window.innerHeight;
+  const atomRect = atom.getBoundingClientRect();
+  const atomWidth = atomRect.width || normalizedSize;
+  const atomHeight = atomRect.height || normalizedSize;
+
+  const buttonRect = elements.atomButton ? elements.atomButton.getBoundingClientRect() : null;
+  const startX = (buttonRect ? buttonRect.left + buttonRect.width / 2 : viewportWidth / 2)
+    - layerRect.left - atomWidth / 2;
+  const startY = (buttonRect ? buttonRect.top + buttonRect.height / 2 : viewportHeight / 2)
+    - layerRect.top - atomHeight / 2;
+
+  let x = clamp(startX, 0, Math.max(0, viewportWidth - atomWidth));
+  let y = clamp(startY, 0, Math.max(0, viewportHeight - atomHeight));
+  let rotation = baseRotation;
+
+  atom.style.setProperty('--crit-atom-x', `${x.toFixed(2)}px`);
+  atom.style.setProperty('--crit-atom-y', `${y.toFixed(2)}px`);
+  atom.style.setProperty('--crit-atom-rotation', `${rotation.toFixed(2)}deg`);
+
+  requestAnimationFrame(() => {
+    atom.classList.add('is-active');
+  });
+
+  const maxX = Math.max(0, viewportWidth - atomWidth);
+  const maxY = Math.max(0, viewportHeight - atomHeight);
+  let vx = (Math.random() * 2 - 1) * (240 + Math.random() * 220);
+  if (Math.abs(vx) < 160) {
+    vx = 160 * (Math.random() < 0.5 ? -1 : 1);
   }
-  const gradientAngle = Math.floor(Math.random() * 360);
-  confetti.style.background = `linear-gradient(${gradientAngle}deg, ${colorA}, ${colorB})`;
+  let vy = -(360 + Math.random() * 240);
+  const gravity = 900;
+  const bounceLoss = 0.72 + Math.random() * 0.08;
+  const wallLoss = 0.78 + Math.random() * 0.1;
+  const floorFriction = 0.88;
+  const rotationVelocity = (Math.random() * 160 + 80) * (Math.random() < 0.5 ? -1 : 1);
 
-  confetti.style.setProperty('--confetti-lifetime', (duration + delay).toFixed(2));
+  const startTime = performance.now();
+  let lastTime = startTime;
+  let frameId = null;
+  let active = true;
 
-  return confetti;
+  function updateAtomPosition(now) {
+    if (!active) {
+      return;
+    }
+    const elapsed = now - startTime;
+    const delta = Math.min((now - lastTime) / 1000, 0.04);
+    lastTime = now;
+
+    vy += gravity * delta;
+    x += vx * delta;
+    y += vy * delta;
+    rotation += rotationVelocity * delta;
+
+    if (x <= 0) {
+      x = 0;
+      vx = Math.abs(vx) * wallLoss;
+    } else if (x >= maxX) {
+      x = maxX;
+      vx = -Math.abs(vx) * wallLoss;
+    }
+
+    if (y <= 0) {
+      y = 0;
+      vy = Math.abs(vy) * wallLoss;
+    } else if (y >= maxY) {
+      y = maxY;
+      if (Math.abs(vy) > 80) {
+        vy = -Math.abs(vy) * bounceLoss;
+      } else {
+        vy = 0;
+      }
+      vx *= floorFriction;
+    }
+
+    atom.style.setProperty('--crit-atom-x', `${x.toFixed(2)}px`);
+    atom.style.setProperty('--crit-atom-y', `${y.toFixed(2)}px`);
+    atom.style.setProperty('--crit-atom-rotation', `${rotation.toFixed(2)}deg`);
+
+    if (elapsed < CRIT_ATOM_LIFETIME_MS) {
+      frameId = requestAnimationFrame(updateAtomPosition);
+    }
+  }
+
+  frameId = requestAnimationFrame(now => {
+    lastTime = now;
+    updateAtomPosition(now);
+  });
+
+  const fadeTimeout = window.setTimeout(() => {
+    atom.classList.add('is-fading');
+    atom.style.setProperty('--crit-atom-scale', `${(baseScale * 0.6).toFixed(3)}`);
+  }, Math.max(0, CRIT_ATOM_LIFETIME_MS - CRIT_ATOM_FADE_MS));
+
+  const removalTimeout = window.setTimeout(() => {
+    cleanup();
+  }, CRIT_ATOM_LIFETIME_MS);
+
+  function cleanup() {
+    if (!active) {
+      return;
+    }
+    active = false;
+    window.clearTimeout(fadeTimeout);
+    window.clearTimeout(removalTimeout);
+    if (frameId) {
+      cancelAnimationFrame(frameId);
+    }
+    if (atom.isConnected) {
+      atom.remove();
+    }
+  }
+
+  atom.addEventListener('transitionend', event => {
+    if (event.propertyName !== 'opacity') {
+      return;
+    }
+    const elapsed = performance.now() - startTime;
+    if (elapsed + 16 >= CRIT_ATOM_LIFETIME_MS) {
+      cleanup();
+    }
+  });
 }
 
 const critBannerState = {
@@ -4156,26 +4250,7 @@ function showCritBanner(input) {
 }
 
 function showCriticalIndicator(multiplier) {
-  const layer = ensureCritConfettiLayer();
-  if (!layer) return;
-  const safeMultiplier = Math.max(1, Number(multiplier) || 1);
-  const baseCount = 26;
-  const extraCount = Math.min(42, Math.round((safeMultiplier - 1) * 8));
-  const totalConfetti = baseCount + extraCount;
-  const fragment = document.createDocumentFragment();
-
-  for (let i = 0; i < totalConfetti; i += 1) {
-    const confetti = createCritConfettiNode();
-    fragment.appendChild(confetti);
-    const lifetime = Number(confetti.style.getPropertyValue('--confetti-lifetime')) || 3;
-    setTimeout(() => {
-      if (confetti.isConnected) {
-        confetti.remove();
-      }
-    }, (lifetime + 0.3) * 1000);
-  }
-
-  layer.appendChild(fragment);
+  spawnCriticalAtom(multiplier);
 }
 
 function applyCriticalHit(baseAmount) {
