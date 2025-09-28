@@ -216,6 +216,7 @@
     (LASER_SPRITE_SHEET.columns || 1) * (LASER_SPRITE_SHEET.rows || 1)
   );
   const LASER_FRAME_DURATION_MS = 1000 / 15;
+  const LASER_SCALE_MULTIPLIER = 3;
 
   const BRICK_SPRITE_SHEETS = {
     quarks: QUARK_SPRITE_SHEET,
@@ -2484,8 +2485,10 @@
       const leftX = this.paddle.x + this.paddle.width * 0.25;
       const rightX = this.paddle.x + this.paddle.width * 0.75;
       const originY = this.paddle.y;
-      const width = Math.max(4, this.ballRadius * 0.4);
-      const height = Math.max(14, this.ballRadius * 1.6);
+      const baseWidth = Math.max(4, this.ballRadius * 0.4);
+      const baseHeight = Math.max(14, this.ballRadius * 1.6);
+      const width = baseWidth * LASER_SCALE_MULTIPLIER;
+      const height = baseHeight * LASER_SCALE_MULTIPLIER;
       this.lasers.push({
         x: leftX,
         y: originY,
