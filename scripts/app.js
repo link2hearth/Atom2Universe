@@ -1508,6 +1508,14 @@ const elements = {
   metauxMovesValue: document.getElementById('metauxMovesValue'),
   metauxMessage: document.getElementById('metauxMessage'),
   metauxReshuffleButton: document.getElementById('metauxReshuffleButton'),
+  photonOpenButton: document.getElementById('photonOpenButton'),
+  photonCloseButton: document.getElementById('photonCloseButton'),
+  photonStage: document.getElementById('photonStage'),
+  photonCanvas: document.getElementById('photonCanvas'),
+  photonOverlay: document.getElementById('photonOverlay'),
+  photonOverlayMessage: document.getElementById('photonOverlayMessage'),
+  photonOverlayButton: document.getElementById('photonOverlayButton'),
+  photonScoreValue: document.getElementById('photonScoreValue'),
   musicTrackSelect: document.getElementById('musicTrackSelect'),
   musicTrackStatus: document.getElementById('musicTrackStatus'),
   musicVolumeSlider: document.getElementById('musicVolumeSlider'),
@@ -1570,6 +1578,91 @@ function updateBrickSkinOption() {
       ? 'Choisissez l’apparence des briques de Particules.'
       : 'Débloquez le trophée « Ruée vers le million » pour personnaliser vos briques.';
   }
+}
+
+function updatePhotonStageColor(color) {
+  if (!elements.photonStage) {
+    return;
+  }
+  elements.photonStage.dataset.color = color;
+  elements.photonStage.classList.toggle('photon-stage--blue', color === 'blue');
+  elements.photonStage.classList.toggle('photon-stage--red', color === 'red');
+}
+
+function formatPhotonScore(score) {
+  const numeric = Number.isFinite(Number(score)) ? Number(score) : 0;
+  return numeric.toLocaleString('fr-FR');
+}
+
+function updatePhotonScore(score) {
+  if (elements.photonScoreValue) {
+    elements.photonScoreValue.textContent = formatPhotonScore(score);
+  }
+}
+
+function showPhotonOverlay({ message, actionLabel = 'Commencer' } = {}) {
+  if (!elements.photonOverlay) {
+    return;
+  }
+  if (elements.photonOverlayMessage && typeof message === 'string') {
+    elements.photonOverlayMessage.textContent = message;
+  }
+  if (elements.photonOverlayButton && typeof actionLabel === 'string') {
+    elements.photonOverlayButton.textContent = actionLabel;
+  }
+  elements.photonOverlay.hidden = false;
+  elements.photonOverlay.removeAttribute('hidden');
+}
+
+function hidePhotonOverlay() {
+  if (!elements.photonOverlay) {
+    return;
+  }
+  elements.photonOverlay.hidden = true;
+  elements.photonOverlay.setAttribute('hidden', 'true');
+}
+
+function isPhotonOverlayVisible() {
+  return Boolean(elements.photonOverlay) && elements.photonOverlay.hidden === false;
+}
+
+function ensurePhotonGame() {
+  if (photonGame || !elements.photonCanvas || typeof PhotonGame !== 'function') {
+    return photonGame;
+  }
+  photonGame = new PhotonGame({
+    canvas: elements.photonCanvas,
+    onScoreChange: score => {
+      updatePhotonScore(score);
+    },
+    onColorChange: color => {
+      updatePhotonStageColor(color === 'red' ? 'red' : 'blue');
+    },
+    onGameOver: result => {
+      const gained = Number.isFinite(Number(result?.score)) ? Number(result.score) : 0;
+      const formatted = gained.toLocaleString('fr-FR');
+      showPhotonOverlay({
+        message: `Couleur incorrecte ! Score : ${formatted}`,
+        actionLabel: 'Rejouer'
+      });
+    }
+  });
+  updatePhotonStageColor('blue');
+  updatePhotonScore(0);
+  return photonGame;
+}
+
+function preparePhotonNewGame() {
+  const game = ensurePhotonGame();
+  if (game) {
+    game.stop();
+  }
+  updatePhotonStageColor('blue');
+  updatePhotonScore(0);
+  showPhotonOverlay({
+    message: 'Synchronisez le halo avec la couleur du faisceau lorsqu’il touche le sol lumineux.',
+    actionLabel: 'Commencer'
+  });
 }
 
 function updatePageUnlockUI() {
@@ -3575,6 +3668,7 @@ function renderProductionBreakdown(container, entry, context = null) {
 }
 
 let toastElement = null;
+let photonGame = null;
 let apsCritPulseTimeoutId = null;
 
 const APS_CRIT_TIMER_EPSILON = 1e-3;
@@ -4390,6 +4484,9 @@ function showPage(pageId) {
     return;
   }
   const now = performance.now();
+  if (pageId === 'photon') {
+    ensurePhotonGame();
+  }
   elements.pages.forEach(page => {
     const isActive = page.id === pageId;
     page.classList.toggle('active', isActive);
@@ -4402,6 +4499,7 @@ function showPage(pageId) {
   document.body.classList.toggle('view-game', pageId === 'game');
   document.body.classList.toggle('view-arcade', pageId === 'arcade');
   document.body.classList.toggle('view-metaux', pageId === 'metaux');
+  document.body.classList.toggle('view-photon', pageId === 'photon');
   if (pageId === 'metaux') {
     initMetauxGame();
   }
@@ -4417,6 +4515,13 @@ function showPage(pageId) {
       metauxGame.onEnter();
     } else {
       metauxGame.onLeave();
+    }
+  }
+  if (photonGame) {
+    if (pageId === 'photon') {
+      photonGame.onEnter();
+    } else {
+      photonGame.onLeave();
     }
   }
   if (pageId === 'game' && (typeof document === 'undefined' || !document.hidden)) {
@@ -4442,6 +4547,9 @@ document.addEventListener('visibilitychange', () => {
     if (particulesGame && document.body?.dataset.activePage === 'arcade') {
       particulesGame.onLeave();
     }
+    if (photonGame && document.body?.dataset.activePage === 'photon') {
+      photonGame.onLeave();
+    }
   } else if (isGamePageActive()) {
     gamePageVisibleSince = performance.now();
     if (particulesGame && document.body?.dataset.activePage === 'arcade') {
@@ -4449,6 +4557,9 @@ document.addEventListener('visibilitychange', () => {
     }
   } else if (particulesGame && document.body?.dataset.activePage === 'arcade') {
     particulesGame.onEnter();
+  } else if (document.body?.dataset.activePage === 'photon') {
+    ensurePhotonGame();
+    photonGame?.onEnter();
   }
 });
 
@@ -4752,6 +4863,50 @@ if (elements.arcadeBonusTicketButton) {
   });
 }
 
+if (elements.photonOpenButton) {
+  elements.photonOpenButton.addEventListener('click', () => {
+    preparePhotonNewGame();
+    showPage('photon');
+  });
+}
+
+if (elements.photonCloseButton) {
+  elements.photonCloseButton.addEventListener('click', () => {
+    if (photonGame) {
+      photonGame.stop();
+    }
+    updatePhotonStageColor('blue');
+    updatePhotonScore(0);
+    hidePhotonOverlay();
+    showPage('options');
+  });
+}
+
+if (elements.photonOverlayButton) {
+  elements.photonOverlayButton.addEventListener('click', () => {
+    const game = ensurePhotonGame();
+    if (!game) {
+      return;
+    }
+    hidePhotonOverlay();
+    game.start();
+  });
+}
+
+if (elements.photonStage) {
+  elements.photonStage.addEventListener('pointerdown', event => {
+    if (event.target.closest('.photon-overlay')) {
+      return;
+    }
+    const game = ensurePhotonGame();
+    if (!game || isPhotonOverlayVisible()) {
+      return;
+    }
+    event.preventDefault();
+    game.toggleColor();
+  });
+}
+
 renderPeriodicTable();
 renderGachaRarityList();
 renderFusionList();
@@ -4791,6 +4946,12 @@ document.addEventListener('click', event => {
 document.addEventListener('selectstart', event => {
   if (isGamePageActive()) {
     event.preventDefault();
+  }
+});
+
+window.addEventListener('resize', () => {
+  if (photonGame) {
+    photonGame.resize();
   }
 });
 

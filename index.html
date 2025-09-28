@@ -384,6 +384,36 @@
       </div>
     </section>
 
+    <section id="photon" class="page page--photon" aria-label="Photon" hidden>
+      <div class="photon-window">
+        <header class="photon-header">
+          <h2 class="photon-title">Photon</h2>
+          <button
+            class="photon-close-button"
+            id="photonCloseButton"
+            type="button"
+            aria-label="Fermer Photon et retourner aux options"
+          >
+            ×
+          </button>
+        </header>
+        <div class="photon-stage" id="photonStage" role="application" aria-label="Zone de jeu Photon">
+          <canvas class="photon-canvas" id="photonCanvas" width="360" height="640"></canvas>
+          <div class="photon-hud" aria-live="polite">
+            <span class="photon-hud__label">Score</span>
+            <span class="photon-hud__value" id="photonScoreValue">0</span>
+          </div>
+          <p class="photon-hint">Cliquez ou touchez pour inverser la couleur du halo.</p>
+          <div class="photon-overlay" id="photonOverlay" hidden>
+            <div class="photon-overlay__panel" role="dialog" aria-modal="true" aria-labelledby="photonOverlayMessage">
+              <p class="photon-overlay__message" id="photonOverlayMessage">Prêt à synchroniser les photons ?</p>
+              <button type="button" class="photon-overlay__button" id="photonOverlayButton">Commencer</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section id="metaux" class="page page--metaux" aria-label="Métaux" hidden>
       <button
         class="metaux-exit-button"
@@ -489,6 +519,11 @@
             Débloquez le trophée « Ruée vers le million » pour personnaliser vos briques.
           </p>
         </div>
+        <div class="option-card option-card--photon">
+          <h3>Photon</h3>
+          <p class="option-note">Synchronisez la couleur du halo avec les faisceaux lumineux qui tombent.</p>
+          <button type="button" id="photonOpenButton" class="photon-launch-button">Lancer Photon</button>
+        </div>
       </div>
       <div class="options-reset">
         <button id="resetButton" class="danger">Réinitialiser</button>
@@ -555,6 +590,7 @@
   <script src="config/config.js"></script>
   <script src="scripts/utils.js"></script>
   <script src="scripts/particules.js"></script>
+  <script src="scripts/photon.js"></script>
   <script src="scripts/modules/layered-number.js"></script>
   <script src="scripts/modules/game-data.js"></script>
   <script src="scripts/modules/gacha.js"></script>
