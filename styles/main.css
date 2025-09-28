@@ -4757,9 +4757,14 @@ body.theme-neon .devkit-panel__footer kbd {
 
 .metaux-tile {
   --tile-color: rgba(255, 255, 255, 0.55);
+  --tile-image: none;
   position: relative;
   border-radius: 10px;
-  background: linear-gradient(155deg, rgba(20, 24, 42, 0.92), rgba(10, 12, 28, 0.7));
+  background-color: rgba(12, 15, 30, 0.82);
+  background-image: var(--tile-image, none);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow:
     0 14px 26px rgba(0, 0, 0, 0.32),
@@ -4787,7 +4792,7 @@ body.theme-neon .devkit-panel__footer kbd {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: linear-gradient(140deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0));
+  background: linear-gradient(140deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0));
   pointer-events: none;
 }
 
@@ -4803,7 +4808,16 @@ body.theme-neon .devkit-panel__footer kbd {
 }
 
 .metaux-tile span {
-  position: relative;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
   z-index: 1;
 }
 
@@ -4849,6 +4863,28 @@ body.theme-neon .devkit-panel__footer kbd {
   pointer-events: none;
   box-shadow: none;
   border-color: transparent;
+  background-image: none;
+}
+
+.metaux-tile[data-type='or'] {
+  --tile-image: url('../Assets/Sprites/Or.png');
+}
+
+.metaux-tile[data-type='argent'] {
+  --tile-image: url('../Assets/Sprites/Argent.png');
+}
+
+.metaux-tile[data-type='bronze'] {
+  --tile-image: url('../Assets/Sprites/Bronze.png');
+}
+
+.metaux-tile[data-type='platine'],
+.metaux-tile[data-type='cuivre'] {
+  --tile-image: url('../Assets/Sprites/Cuivre.png');
+}
+
+.metaux-tile[data-type='diamant'] {
+  --tile-image: url('../Assets/Sprites/Diamant.png');
 }
 
 .metaux-message {
