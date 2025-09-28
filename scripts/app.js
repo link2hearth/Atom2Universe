@@ -12,6 +12,8 @@ const FALLBACK_TROPHIES = Array.isArray(APP_DATA.FALLBACK_TROPHIES)
   ? APP_DATA.FALLBACK_TROPHIES
   : [];
 
+const SHOP_UNLOCK_THRESHOLD = new LayeredNumber(15);
+
 const MUSIC_SUPPORTED_EXTENSIONS = Array.isArray(APP_DATA.MUSIC_SUPPORTED_EXTENSIONS)
   && APP_DATA.MUSIC_SUPPORTED_EXTENSIONS.length
     ? [...APP_DATA.MUSIC_SUPPORTED_EXTENSIONS]
@@ -1012,6 +1014,7 @@ const TROPHY_MAP = new Map(TROPHY_DEFS.map(def => [def.id, def]));
 const BIG_BANG_TROPHY_ID = 'scaleObservableUniverse';
 const ARCADE_TROPHY_ID = 'millionAtoms';
 const INFO_TROPHY_ID = 'scaleSandGrain';
+const GOALS_UNLOCK_TROPHY_ID = ARCADE_TROPHY_ID;
 const LOCKABLE_PAGE_IDS = new Set(['gacha', 'tableau', 'fusion', 'info']);
 
 function getPageUnlockState() {
@@ -1022,6 +1025,15 @@ function getPageUnlockState() {
 }
 
 function isPageUnlocked(pageId) {
+  if (pageId === 'shop') {
+    const atoms = gameState.atoms instanceof LayeredNumber
+      ? gameState.atoms
+      : toLayeredValue(gameState.atoms, 0);
+    return atoms.compare(SHOP_UNLOCK_THRESHOLD) >= 0;
+  }
+  if (pageId === 'goals') {
+    return getUnlockedTrophySet().has(GOALS_UNLOCK_TROPHY_ID);
+  }
   if (!LOCKABLE_PAGE_IDS.has(pageId)) {
     return true;
   }
@@ -1118,6 +1130,26 @@ function getUnlockedTrophySet() {
   const list = Array.isArray(gameState.trophies) ? gameState.trophies : [];
   gameState.trophies = new Set(list);
   return gameState.trophies;
+}
+
+function setNavButtonLockState(button, unlocked) {
+  if (!button) {
+    return;
+  }
+  button.hidden = !unlocked;
+  button.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
+  button.disabled = !unlocked;
+  button.setAttribute('aria-disabled', unlocked ? 'false' : 'true');
+  if (!unlocked) {
+    button.classList.remove('active');
+  }
+}
+
+function ensureActivePageUnlocked() {
+  const activePage = document.body?.dataset?.activePage;
+  if (activePage && !isPageUnlocked(activePage) && activePage !== 'game') {
+    showPage('game');
+  }
 }
 
 function getUnlockedTrophyIds() {
@@ -1343,6 +1375,7 @@ function unlockTrophy(def) {
   updateGoalsUI();
   updateBigBangVisibility();
   updateBrandPortalState({ animate: def.id === ARCADE_TROPHY_ID });
+  updatePrimaryNavigationLocks();
   evaluatePageUnlocks({ save: false });
   return true;
 }
@@ -1364,10 +1397,12 @@ function evaluateTrophies() {
 const elements = {
   brandPortal: document.getElementById('brandPortal'),
   navButtons: document.querySelectorAll('.nav-button'),
+  navShopButton: document.querySelector('.nav-button[data-target="shop"]'),
   navGachaButton: document.querySelector('.nav-button[data-target="gacha"]'),
   navTableButton: document.querySelector('.nav-button[data-target="tableau"]'),
   navFusionButton: document.querySelector('.nav-button[data-target="fusion"]'),
   navInfoButton: document.querySelector('.nav-button[data-target="info"]'),
+  navGoalsButton: document.querySelector('.nav-button[data-target="goals"]'),
   navBigBangButton: document.getElementById('navBigBangButton'),
   pages: document.querySelectorAll('.page'),
   statusAtoms: document.getElementById('statusAtoms'),
@@ -1502,23 +1537,24 @@ function updatePageUnlockUI() {
   ];
 
   buttonConfig.forEach(([pageId, button]) => {
-    if (!button) {
-      return;
-    }
     const unlocked = unlocks?.[pageId] === true;
-    button.hidden = !unlocked;
-    button.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
-    button.disabled = !unlocked;
-    button.setAttribute('aria-disabled', unlocked ? 'false' : 'true');
-    if (!unlocked) {
-      button.classList.remove('active');
-    }
+    setNavButtonLockState(button, unlocked);
   });
 
-  const activePage = document.body?.dataset?.activePage;
-  if (activePage && !isPageUnlocked(activePage) && activePage !== 'game') {
-    showPage('game');
-  }
+  ensureActivePageUnlocked();
+}
+
+function updatePrimaryNavigationLocks() {
+  const atoms = gameState.atoms instanceof LayeredNumber
+    ? gameState.atoms
+    : toLayeredValue(gameState.atoms, 0);
+  const shopUnlocked = atoms.compare(SHOP_UNLOCK_THRESHOLD) >= 0;
+  setNavButtonLockState(elements.navShopButton, shopUnlocked);
+
+  const goalsUnlocked = getUnlockedTrophySet().has(GOALS_UNLOCK_TROPHY_ID);
+  setNavButtonLockState(elements.navGoalsButton, goalsUnlocked);
+
+  ensureActivePageUnlocked();
 }
 
 function isBigBangTrophyUnlocked() {
@@ -6784,6 +6820,7 @@ function pulseApsCritPanel() {
 }
 
 function updateUI() {
+  updatePrimaryNavigationLocks();
   updatePageUnlockUI();
   updateBigBangVisibility();
   updateBrandPortalState();
