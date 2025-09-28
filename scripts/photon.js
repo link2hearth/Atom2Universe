@@ -63,13 +63,13 @@
     getBarWidth() {
       const width = this.viewportWidth || 0;
       if (!width) return 0;
-      return clamp(width * 0.42, 120, 220);
+      return clamp(width * 0.78, 200, 1100);
     }
 
     getBarHeight() {
       const height = this.viewportHeight || 0;
       if (!height) return 0;
-      return clamp(height * 0.14, 70, 110);
+      return clamp(height * 0.08, 42, 80);
     }
 
     getBarSpeed() {
@@ -81,7 +81,7 @@
     getHaloHeight() {
       const height = this.viewportHeight || 0;
       if (!height) return 140;
-      return clamp(height * 0.22, 110, 180);
+      return clamp(height * 0.12, 60, 100);
     }
 
     resize() {

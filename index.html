@@ -387,6 +387,10 @@
     <section id="photon" class="page page--photon" aria-label="Photon" hidden>
       <header class="photon-topbar">
         <h2 class="photon-title">Photon</h2>
+        <div class="photon-hud" aria-live="polite">
+          <span class="photon-hud__label">Score</span>
+          <span class="photon-hud__value" id="photonScoreValue">0</span>
+        </div>
         <button
           class="photon-close-button"
           id="photonCloseButton"
@@ -399,10 +403,6 @@
       <div class="photon-content">
         <div class="photon-stage" id="photonStage" role="application" aria-label="Zone de jeu Photon">
           <canvas class="photon-canvas" id="photonCanvas" width="360" height="640"></canvas>
-          <div class="photon-hud" aria-live="polite">
-            <span class="photon-hud__label">Score</span>
-            <span class="photon-hud__value" id="photonScoreValue">0</span>
-          </div>
           <p class="photon-hint">Cliquez ou touchez pour inverser la couleur du halo.</p>
           <div class="photon-overlay" id="photonOverlay" hidden>
             <div class="photon-overlay__panel" role="dialog" aria-modal="true" aria-labelledby="photonOverlayMessage">
