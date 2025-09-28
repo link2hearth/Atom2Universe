@@ -28,6 +28,23 @@ Les bâtiments sont regroupés par rôle (manuel, automatique, hybride) et se re
 
 ---
 
+## 🕹️ Mini-jeux d’arcade
+
+Deux expériences annexes viennent dynamiser la progression en apportant tickets, crédits Mach3 et bonus thématiques :
+
+### Particules
+
+* Accessible depuis l’onglet Arcade, ce casse-briques cosmique reprend les codes d’un brick breaker avec HUD dédié (niveau, vies, score) et zones d’interaction adaptées clavier/souris/tactile.【F:index.html†L158-L266】
+* Terminer un niveau sans perdre de vie octroie des tickets de gacha, directement injectés dans l’inventaire et annoncés via un toast.【F:scripts/particules.js†L2532-L2555】【F:scripts/modules/gacha.js†L1845-L1883】
+* Les gravitons apparaissant au fil des manches peuvent être capturés pour gagner des tickets spéciaux convertis en crédits Mach3, utiles au second mini-jeu.【F:scripts/particules.js†L1980-L2056】【F:scripts/particules.js†L2345-L2350】【F:scripts/modules/gacha.js†L1871-L1880】
+
+### Mach3 (Métaux)
+
+* Jeu de match-3 en temps limité basé sur une grille 9×16 et cinq types de gemmes métalliques ; chaque alignement ajoute du temps tandis que la pression monte avec un chrono à 6 secondes extensibles.【F:scripts/modules/metaux-match3.js†L4-L118】
+* Une partie consomme un crédit Mach3 ; le compteur de crédits est alimenté par Particules et affiché dans l’interface Arcade ainsi que sur l’écran de fin de partie pour planifier vos runs.【F:index.html†L424-L477】【F:scripts/app.js†L1608-L1705】
+
+---
+
 ## 🎟️ Tickets de gacha
 
 Le gacha ne consomme plus d’atomes : chaque tirage coûte **1 ticket**.
@@ -54,6 +71,13 @@ Le gacha ne consomme plus d’atomes : chaque tirage coûte **1 ticket**.
 | **Singularité minérale** | 7 % | Cristaux rarissimes difficiles à stabiliser. |
 | **Mythe quantique** | 4 % | Éléments quasi légendaires, aux effets systémiques. |
 | **Irréel** | 2 % | Créations synthétiques, jamais observées naturellement. |
+
+---
+
+### Pity journalier
+
+Chaque journée met en avant une rareté précise : le système ajuste automatiquement les poids de tirage pour garantir une montée en probabilité des familles mises en vedette (Singularité minérale les lundis et jeudis, Mythe quantique les mardis et vendredis, Irréel les mercredis et samedis, mix équilibré le dimanche).【F:scripts/modules/gacha.js†L107-L209】【F:config/config.js†L1528-L1612】
+Le libellé de mise en avant est reflété dans l’interface gacha et se réinitialise à chaque changement de jour, offrant une forme de pity journalier : si vous ciblez une rareté spécifique, il suffit de jouer le jour associé pour profiter de chances renforcées, puis patienter jusqu’au prochain cycle si la session n’a pas produit le résultat attendu.【F:scripts/modules/gacha.js†L109-L217】
 
 ---
 
