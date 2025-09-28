@@ -1121,6 +1121,51 @@ const GAME_CONFIG = {
           bonusTicketPlural: 'tickets Mach3'
         }
       }
+    },
+    photon: {
+      colors: {
+        blue: {
+          bar: '#56a6ff',
+          barEdge: '#9ed2ff',
+          haloInner: 'rgba(86, 166, 255, 0.88)',
+          haloMid: 'rgba(86, 166, 255, 0.4)',
+          haloOuter: 'rgba(86, 166, 255, 0.08)'
+        },
+        red: {
+          bar: '#ff6b8d',
+          barEdge: '#ffc2d1',
+          haloInner: 'rgba(255, 107, 141, 0.9)',
+          haloMid: 'rgba(255, 107, 141, 0.42)',
+          haloOuter: 'rgba(255, 107, 141, 0.08)'
+        }
+      },
+      colorOrder: ['blue', 'red'],
+      bars: {
+        desiredCount: 3,
+        spawnGap: 90
+      },
+      geometry: {
+        barWidthRatio: 0.78,
+        barWidthMin: 200,
+        barWidthMax: 1100,
+        barHeightRatio: 0.08,
+        barHeightMin: 42,
+        barHeightMax: 80,
+        haloHeightRatio: 0.12,
+        haloHeightMin: 60,
+        haloHeightMax: 100
+      },
+      speed: {
+        baseRatio: 0.78,
+        min: 180,
+        max: 320,
+        initialReduction: 0.3,
+        ramp: {
+          intervalSeconds: 10,
+          increment: 0.01,
+          maxBonus: 0.5
+        }
+      }
     }
   },
 

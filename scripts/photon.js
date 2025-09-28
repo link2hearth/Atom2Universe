@@ -1,5 +1,12 @@
 (() => {
-  const COLOR_DEFS = {
+  const GLOBAL_CONFIG = typeof globalThis !== 'undefined' ? globalThis.GAME_CONFIG : null;
+  const PHOTON_CONFIG_SOURCE =
+    GLOBAL_CONFIG && typeof GLOBAL_CONFIG === 'object' && GLOBAL_CONFIG.arcade
+      && typeof GLOBAL_CONFIG.arcade === 'object'
+      ? GLOBAL_CONFIG.arcade.photon
+      : null;
+
+  const DEFAULT_COLOR_DEFS = {
     blue: {
       bar: '#56a6ff',
       barEdge: '#9ed2ff',
@@ -15,6 +22,201 @@
       haloOuter: 'rgba(255, 107, 141, 0.08)'
     }
   };
+
+  const DEFAULT_BAR_SETTINGS = {
+    desiredCount: 3,
+    spawnGap: 90
+  };
+
+  const DEFAULT_GEOMETRY_SETTINGS = {
+    barWidthRatio: 0.78,
+    barWidthMin: 200,
+    barWidthMax: 1100,
+    barHeightRatio: 0.08,
+    barHeightMin: 42,
+    barHeightMax: 80,
+    haloHeightRatio: 0.12,
+    haloHeightMin: 60,
+    haloHeightMax: 100
+  };
+
+  const DEFAULT_SPEED_SETTINGS = {
+    baseRatio: 0.78,
+    min: 180,
+    max: 320,
+    initialReduction: 0.3,
+    ramp: {
+      intervalSeconds: 10,
+      increment: 0.01,
+      maxBonus: 0.5
+    }
+  };
+
+  const isPlainObject = value => value && typeof value === 'object' && !Array.isArray(value);
+
+  const readNumber = (value, fallback, { min, max } = {}) => {
+    const numeric = Number(value);
+    if (!Number.isFinite(numeric)) {
+      return fallback;
+    }
+    let result = numeric;
+    if (typeof min === 'number') {
+      result = Math.max(min, result);
+    }
+    if (typeof max === 'number') {
+      result = Math.min(max, result);
+    }
+    return result;
+  };
+
+  const toPositiveInteger = (value, fallback) => {
+    const numeric = Number(value);
+    return Number.isInteger(numeric) && numeric > 0 ? numeric : fallback;
+  };
+
+  const source = isPlainObject(PHOTON_CONFIG_SOURCE) ? PHOTON_CONFIG_SOURCE : null;
+
+  const COLOR_DEFS = (() => {
+    const overrides = source && isPlainObject(source.colors) ? source.colors : null;
+    if (!overrides) {
+      return DEFAULT_COLOR_DEFS;
+    }
+    const entries = Object.entries(DEFAULT_COLOR_DEFS).map(([key, value]) => {
+      const override = overrides[key];
+      if (isPlainObject(override)) {
+        return [key, { ...value, ...override }];
+      }
+      return [key, value];
+    });
+    Object.entries(overrides).forEach(([key, value]) => {
+      if (!DEFAULT_COLOR_DEFS[key] && isPlainObject(value)) {
+        entries.push([key, { ...value }]);
+      }
+    });
+    return entries.reduce((acc, [key, value]) => {
+      acc[key] = value;
+      return acc;
+    }, {});
+  })();
+
+  const BARS_CONFIG = (() => {
+    const barsSource = source && isPlainObject(source.bars) ? source.bars : null;
+    const desiredCount = toPositiveInteger(
+      barsSource?.desiredCount ?? source?.desiredBarCount,
+      DEFAULT_BAR_SETTINGS.desiredCount
+    );
+    const spawnGap = readNumber(
+      barsSource?.spawnGap ?? source?.spawnGap,
+      DEFAULT_BAR_SETTINGS.spawnGap,
+      { min: 10 }
+    );
+    return {
+      desiredCount,
+      spawnGap
+    };
+  })();
+
+  const GEOMETRY_CONFIG = (() => {
+    const geometrySource = source && isPlainObject(source.geometry) ? source.geometry : null;
+    return {
+      barWidthRatio: readNumber(
+        geometrySource?.barWidthRatio,
+        DEFAULT_GEOMETRY_SETTINGS.barWidthRatio,
+        { min: 0.1, max: 1 }
+      ),
+      barWidthMin: readNumber(
+        geometrySource?.barWidthMin,
+        DEFAULT_GEOMETRY_SETTINGS.barWidthMin,
+        { min: 1 }
+      ),
+      barWidthMax: readNumber(
+        geometrySource?.barWidthMax,
+        DEFAULT_GEOMETRY_SETTINGS.barWidthMax,
+        { min: 1 }
+      ),
+      barHeightRatio: readNumber(
+        geometrySource?.barHeightRatio,
+        DEFAULT_GEOMETRY_SETTINGS.barHeightRatio,
+        { min: 0.02, max: 0.3 }
+      ),
+      barHeightMin: readNumber(
+        geometrySource?.barHeightMin,
+        DEFAULT_GEOMETRY_SETTINGS.barHeightMin,
+        { min: 1 }
+      ),
+      barHeightMax: readNumber(
+        geometrySource?.barHeightMax,
+        DEFAULT_GEOMETRY_SETTINGS.barHeightMax,
+        { min: 1 }
+      ),
+      haloHeightRatio: readNumber(
+        geometrySource?.haloHeightRatio,
+        DEFAULT_GEOMETRY_SETTINGS.haloHeightRatio,
+        { min: 0.05, max: 0.3 }
+      ),
+      haloHeightMin: readNumber(
+        geometrySource?.haloHeightMin,
+        DEFAULT_GEOMETRY_SETTINGS.haloHeightMin,
+        { min: 1 }
+      ),
+      haloHeightMax: readNumber(
+        geometrySource?.haloHeightMax,
+        DEFAULT_GEOMETRY_SETTINGS.haloHeightMax,
+        { min: 1 }
+      )
+    };
+  })();
+
+  const SPEED_CONFIG = (() => {
+    const speedSource = source && isPlainObject(source.speed) ? source.speed : null;
+    const rampSource = speedSource && isPlainObject(speedSource.ramp) ? speedSource.ramp : null;
+    const minSpeed = readNumber(speedSource?.min, DEFAULT_SPEED_SETTINGS.min, { min: 0 });
+    const maxSpeed = readNumber(speedSource?.max, DEFAULT_SPEED_SETTINGS.max, { min: minSpeed });
+    return {
+      baseRatio: readNumber(
+        speedSource?.baseRatio,
+        DEFAULT_SPEED_SETTINGS.baseRatio,
+        { min: 0.01 }
+      ),
+      min: minSpeed,
+      max: Math.max(minSpeed, maxSpeed),
+      initialReduction: readNumber(
+        speedSource?.initialReduction,
+        DEFAULT_SPEED_SETTINGS.initialReduction,
+        { min: 0, max: 0.95 }
+      ),
+      ramp: {
+        intervalSeconds: readNumber(
+          rampSource?.intervalSeconds,
+          DEFAULT_SPEED_SETTINGS.ramp.intervalSeconds,
+          { min: 0.1 }
+        ),
+        increment: readNumber(
+          rampSource?.increment,
+          DEFAULT_SPEED_SETTINGS.ramp.increment,
+          { min: 0 }
+        ),
+        maxBonus: readNumber(
+          rampSource?.maxBonus,
+          DEFAULT_SPEED_SETTINGS.ramp.maxBonus,
+          { min: 0 }
+        )
+      }
+    };
+  })();
+
+  const COLOR_ORDER = (() => {
+    if (source && Array.isArray(source.colorOrder)) {
+      const filtered = source.colorOrder.filter(color => COLOR_DEFS[color]);
+      if (filtered.length >= 2) {
+        return filtered;
+      }
+    }
+    const defaultOrder = ['blue', 'red'].filter(color => COLOR_DEFS[color]);
+    const remaining = Object.keys(COLOR_DEFS).filter(color => !defaultOrder.includes(color));
+    const combined = [...defaultOrder, ...remaining];
+    return combined.length >= 2 ? combined : Object.keys(COLOR_DEFS);
+  })();
 
   const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 
@@ -43,14 +245,17 @@
 
       this.viewportWidth = 0;
       this.viewportHeight = 0;
-      this.currentColor = 'blue';
+      this.colorOrder = COLOR_ORDER.length ? COLOR_ORDER : ['blue', 'red'];
+      this.currentColorIndex = 0;
+      this.currentColor = this.colorOrder[this.currentColorIndex] ?? 'blue';
       this.score = 0;
       this.bars = [];
-      this.desiredBarCount = 3;
-      this.spawnGap = 90;
+      this.desiredBarCount = BARS_CONFIG.desiredCount;
+      this.spawnGap = BARS_CONFIG.spawnGap;
       this.state = 'idle';
       this.lastTimestamp = 0;
       this.animationFrame = null;
+      this.elapsedTime = 0;
 
       this._tick = this._tick.bind(this);
 
@@ -63,25 +268,51 @@
     getBarWidth() {
       const width = this.viewportWidth || 0;
       if (!width) return 0;
-      return clamp(width * 0.78, 200, 1100);
+      return clamp(
+        width * GEOMETRY_CONFIG.barWidthRatio,
+        GEOMETRY_CONFIG.barWidthMin,
+        GEOMETRY_CONFIG.barWidthMax
+      );
     }
 
     getBarHeight() {
       const height = this.viewportHeight || 0;
       if (!height) return 0;
-      return clamp(height * 0.08, 42, 80);
+      return clamp(
+        height * GEOMETRY_CONFIG.barHeightRatio,
+        GEOMETRY_CONFIG.barHeightMin,
+        GEOMETRY_CONFIG.barHeightMax
+      );
     }
 
     getBarSpeed() {
       const height = this.viewportHeight || 0;
-      if (!height) return 180;
-      return clamp(height * 0.78, 180, 320);
+      if (!height) {
+        return SPEED_CONFIG.min * this.getSpeedMultiplier();
+      }
+      const base = clamp(height * SPEED_CONFIG.baseRatio, SPEED_CONFIG.min, SPEED_CONFIG.max);
+      return base * this.getSpeedMultiplier();
     }
 
     getHaloHeight() {
       const height = this.viewportHeight || 0;
       if (!height) return 140;
-      return clamp(height * 0.12, 60, 100);
+      return clamp(
+        height * GEOMETRY_CONFIG.haloHeightRatio,
+        GEOMETRY_CONFIG.haloHeightMin,
+        GEOMETRY_CONFIG.haloHeightMax
+      );
+    }
+
+    getSpeedMultiplier() {
+      const baseMultiplier = Math.max(0, 1 - SPEED_CONFIG.initialReduction);
+      const ramp = SPEED_CONFIG.ramp;
+      if (!ramp || ramp.intervalSeconds <= 0 || ramp.increment <= 0) {
+        return baseMultiplier;
+      }
+      const steps = Math.floor((this.elapsedTime || 0) / ramp.intervalSeconds);
+      const cappedBonus = Math.min(ramp.maxBonus, steps * ramp.increment);
+      return baseMultiplier * (1 + Math.max(0, cappedBonus));
     }
 
     resize() {
@@ -122,7 +353,8 @@
       const startY = Number.isFinite(topMost)
         ? Math.min(-barHeight, topMost - (barHeight + this.spawnGap))
         : -barHeight;
-      const color = Math.random() < 0.5 ? 'blue' : 'red';
+      const palette = this.colorOrder.length ? this.colorOrder : ['blue', 'red'];
+      const color = palette[Math.floor(Math.random() * palette.length)] ?? this.currentColor;
       this.bars.push({
         color,
         y: startY,
@@ -138,7 +370,9 @@
       this.stopLoop();
       this.state = 'running';
       this.score = 0;
-      this.currentColor = 'blue';
+      this.currentColorIndex = 0;
+      this.currentColor = this.colorOrder[this.currentColorIndex] ?? this.currentColor;
+      this.elapsedTime = 0;
       this.bars = [];
       this.onColorChange(this.currentColor);
       this.onScoreChange(this.score);
@@ -152,7 +386,9 @@
       this.stopLoop();
       this.state = 'idle';
       this.bars = [];
-      this.currentColor = 'blue';
+      this.currentColorIndex = 0;
+      this.currentColor = this.colorOrder[this.currentColorIndex] ?? this.currentColor;
+      this.elapsedTime = 0;
       this.onColorChange(this.currentColor);
       this.render();
     }
@@ -193,7 +429,11 @@
       if (this.state !== 'running') {
         return;
       }
-      this.currentColor = this.currentColor === 'blue' ? 'red' : 'blue';
+      if (!this.colorOrder.length) {
+        return;
+      }
+      this.currentColorIndex = (this.currentColorIndex + 1) % this.colorOrder.length;
+      this.currentColor = this.colorOrder[this.currentColorIndex];
       this.onColorChange(this.currentColor);
       this.render();
     }
@@ -223,6 +463,7 @@
       if (deltaSeconds <= 0 || !Number.isFinite(deltaSeconds)) {
         return;
       }
+      this.elapsedTime += deltaSeconds;
       const speed = this.getBarSpeed();
       let activeIndex = -1;
       let activeBottom = -Infinity;
