@@ -508,16 +508,6 @@
             La musique démarre automatiquement après votre première interaction.
           </p>
         </div>
-        <div class="option-card option-card--sound">
-          <h3>Studio sonore</h3>
-          <p class="option-note">
-            Créez, testez et assignez vos effets audio grâce à Tone.js, même hors ligne.
-          </p>
-          <div class="option-row">
-            <button type="button" id="soundDesignerOpenButton" class="primary">Ouvrir le studio</button>
-            <span class="option-note" id="soundDesignerStatus" role="status"></span>
-          </div>
-        </div>
         <div class="option-card option-card--minigame">
           <h3>Mini-jeux</h3>
           <p class="option-note">
@@ -598,136 +588,13 @@
     </div>
   </div>
 
-  <div
-    class="sound-designer-overlay"
-    id="soundDesignerOverlay"
-    hidden
-    aria-hidden="true"
-  >
-    <div
-      class="sound-designer-panel"
-      id="soundDesignerPanel"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="soundDesignerTitle"
-      tabindex="-1"
-    >
-      <header class="sound-designer-panel__header">
-        <h2 id="soundDesignerTitle">Studio sonore</h2>
-        <button
-          type="button"
-          class="sound-designer-panel__close"
-          id="soundDesignerCloseButton"
-          aria-label="Fermer le studio sonore"
-        >
-          ×
-        </button>
-      </header>
-      <p class="sound-designer-intro" id="soundDesignerIntro">
-        Composez des effets personnalisés pour vos clics et critiques. Les paramètres sont enregistrés localement.
-      </p>
-      <div class="sound-designer-grid">
-        <form id="soundDesignerForm" class="sound-designer-form" autocomplete="off">
-          <fieldset class="sound-designer-fieldset">
-            <legend>Paramètres de l’effet</legend>
-            <label class="sound-designer-field">
-              <span>Nom</span>
-              <input type="text" id="soundDesignerName" maxlength="48" required />
-            </label>
-            <label class="sound-designer-field">
-              <span>Affecter à</span>
-              <select id="soundDesignerTarget">
-                <option value="">Aucun</option>
-                <option value="pop">Clic principal</option>
-                <option value="crit">Coup critique</option>
-              </select>
-            </label>
-            <label class="sound-designer-field">
-              <span>Type d’oscillateur</span>
-              <select id="soundDesignerOscillator">
-                <option value="sine">Sinusoïdal</option>
-                <option value="square">Carré</option>
-                <option value="triangle">Triangle</option>
-                <option value="sawtooth">Dent de scie</option>
-              </select>
-            </label>
-            <div class="sound-designer-field sound-designer-field--range">
-              <label for="soundDesignerFrequency">Fréquence</label>
-              <div class="sound-designer-range">
-                <input type="range" id="soundDesignerFrequency" min="80" max="2000" step="1" />
-                <output id="soundDesignerFrequencyValue" for="soundDesignerFrequency">440 Hz</output>
-              </div>
-            </div>
-            <div class="sound-designer-field sound-designer-field--range">
-              <label for="soundDesignerDuration">Durée</label>
-              <div class="sound-designer-range">
-                <input type="range" id="soundDesignerDuration" min="0.1" max="2" step="0.01" />
-                <output id="soundDesignerDurationValue" for="soundDesignerDuration">0.4 s</output>
-              </div>
-            </div>
-            <div class="sound-designer-field sound-designer-field--range">
-              <label for="soundDesignerAttack">Attaque</label>
-              <div class="sound-designer-range">
-                <input type="range" id="soundDesignerAttack" min="0" max="1" step="0.01" />
-                <output id="soundDesignerAttackValue" for="soundDesignerAttack">0.01 s</output>
-              </div>
-            </div>
-            <div class="sound-designer-field sound-designer-field--range">
-              <label for="soundDesignerDecay">Déclin</label>
-              <div class="sound-designer-range">
-                <input type="range" id="soundDesignerDecay" min="0" max="1.5" step="0.01" />
-                <output id="soundDesignerDecayValue" for="soundDesignerDecay">0.2 s</output>
-              </div>
-            </div>
-            <div class="sound-designer-field sound-designer-field--range">
-              <label for="soundDesignerSustain">Maintien</label>
-              <div class="sound-designer-range">
-                <input type="range" id="soundDesignerSustain" min="0" max="1" step="0.01" />
-                <output id="soundDesignerSustainValue" for="soundDesignerSustain">0.6</output>
-              </div>
-            </div>
-            <div class="sound-designer-field sound-designer-field--range">
-              <label for="soundDesignerRelease">Relâchement</label>
-              <div class="sound-designer-range">
-                <input type="range" id="soundDesignerRelease" min="0" max="2" step="0.01" />
-                <output id="soundDesignerReleaseValue" for="soundDesignerRelease">0.4 s</output>
-              </div>
-            </div>
-            <div class="sound-designer-field sound-designer-field--range">
-              <label for="soundDesignerVolume">Volume</label>
-              <div class="sound-designer-range">
-                <input type="range" id="soundDesignerVolume" min="-36" max="6" step="1" />
-                <output id="soundDesignerVolumeValue" for="soundDesignerVolume">0 dB</output>
-              </div>
-            </div>
-          </fieldset>
-          <div class="sound-designer-actions">
-            <button type="button" id="soundDesignerNew" class="sound-designer-button">Nouvel effet</button>
-            <button type="button" id="soundDesignerPreview" class="sound-designer-button">Prévisualiser</button>
-            <button type="submit" class="primary">Enregistrer</button>
-            <button type="button" id="soundDesignerDelete" class="danger" hidden>Supprimer</button>
-          </div>
-        </form>
-        <section class="sound-designer-presets" aria-live="polite">
-          <header class="sound-designer-presets__header">
-            <h3>Bibliothèque</h3>
-            <p class="sound-designer-presets__subtitle">Vos effets enregistrés et leurs affectations.</p>
-          </header>
-          <div id="soundDesignerPresetList" class="sound-designer-presets__list"></div>
-        </section>
-      </div>
-    </div>
-  </div>
-
   <script src="config/config.js"></script>
-  <script src="scripts/vendor/tone.min.js"></script>
   <script src="scripts/utils.js"></script>
   <script src="scripts/particules.js"></script>
   <script src="scripts/modules/layered-number.js"></script>
   <script src="scripts/modules/game-data.js"></script>
   <script src="scripts/modules/gacha.js"></script>
   <script src="scripts/modules/info.js"></script>
-  <script src="scripts/modules/sound-designer.js"></script>
   <script src="scripts/modules/metaux-match3.js"></script>
   <script src="scripts/modules/app-data.js"></script>
   <script src="scripts/app.js"></script>
