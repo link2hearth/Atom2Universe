@@ -45,6 +45,12 @@
     if (Array.isArray(clone.colors)) {
       clone.colors = [...clone.colors];
     }
+    if (clone.sprite && typeof clone.sprite === 'object') {
+      clone.sprite = { ...clone.sprite };
+      if (Array.isArray(clone.sprite.columns)) {
+        clone.sprite.columns = [...clone.sprite.columns];
+      }
+    }
     return clone;
   };
   const cloneVisual = visual => {
@@ -118,62 +124,160 @@
     return Math.floor(Math.random() * count);
   };
 
+  const createSpriteSheet = ({
+    src,
+    frameWidth,
+    frameHeight,
+    columns = 1,
+    rows = 1
+  }) => {
+    const normalizedColumns = Math.max(1, Math.floor(columns));
+    const normalizedRows = Math.max(1, Math.floor(rows));
+    if (typeof Image === 'undefined') {
+      return {
+        image: null,
+        loaded: false,
+        frameWidth,
+        frameHeight,
+        columns: normalizedColumns,
+        rows: normalizedRows
+      };
+    }
+    const image = new Image();
+    image.src = src;
+    const sheet = {
+      image,
+      loaded: false,
+      frameWidth,
+      frameHeight,
+      columns: normalizedColumns,
+      rows: normalizedRows
+    };
+    const markLoaded = () => {
+      sheet.loaded = true;
+    };
+    if (typeof image.decode === 'function') {
+      image.decode().then(markLoaded).catch(() => {
+        sheet.loaded = image.complete && image.naturalWidth > 0;
+      });
+    }
+    image.addEventListener('load', markLoaded, { once: true });
+    image.addEventListener('error', () => {
+      sheet.loaded = false;
+    }, { once: true });
+    if (image.complete && image.naturalWidth > 0) {
+      sheet.loaded = true;
+    }
+    return sheet;
+  };
+
+  const QUARK_SPRITE_SHEET = createSpriteSheet({
+    src: 'Assets/Sprites/quarks.png',
+    frameWidth: 64,
+    frameHeight: 32,
+    columns: 6,
+    rows: 3
+  });
+
+  const PARTICLE_SPRITE_SHEET = createSpriteSheet({
+    src: 'Assets/Sprites/particles.png',
+    frameWidth: 64,
+    frameHeight: 32,
+    columns: 6,
+    rows: 3
+  });
+
+  const BRICK_SPRITE_SHEETS = {
+    quarks: QUARK_SPRITE_SHEET,
+    particles: PARTICLE_SPRITE_SHEET
+  };
+
   const FALLBACK_SIMPLE_PARTICLES = [
     {
-      id: 'quarkRed',
+      id: 'quarkUp',
       family: 'quark',
       quarkColor: 'red',
-      colors: ['#ff4d6a', '#ff859b'],
-      symbol: 'qᵣ',
-      symbolColor: '#fff'
+      colors: ['#ff6c7a', '#ff2d55'],
+      symbol: 'u',
+      symbolColor: '#fff5f8',
+      sprite: { sheet: 'quarks', column: 0 }
     },
     {
-      id: 'quarkGreen',
+      id: 'quarkDown',
       family: 'quark',
       quarkColor: 'green',
-      colors: ['#45c77b', '#7ae0a4'],
-      symbol: 'qᵍ',
-      symbolColor: '#08291a'
+      colors: ['#7ef37d', '#2bc84a'],
+      symbol: 'd',
+      symbolColor: '#03210f',
+      sprite: { sheet: 'quarks', column: 1 }
     },
     {
-      id: 'quarkBlue',
+      id: 'quarkStrange',
       family: 'quark',
       quarkColor: 'blue',
-      colors: ['#4f7bff', '#87a7ff'],
-      symbol: 'qᵇ',
-      symbolColor: '#0c163a'
+      colors: ['#7ac3ff', '#2f82ff'],
+      symbol: 's',
+      symbolColor: '#021639',
+      sprite: { sheet: 'quarks', column: 2 }
     },
     {
-      id: 'electron',
-      family: 'lepton',
-      colors: ['#dadfea', '#f5f6fb'],
-      symbol: 'e⁻',
-      symbolColor: '#1c2136'
+      id: 'quarkCharm',
+      family: 'quark',
+      quarkColor: 'red',
+      colors: ['#ffb36c', '#ff7b2d'],
+      symbol: 'c',
+      symbolColor: '#241002',
+      sprite: { sheet: 'quarks', column: 3 }
     },
     {
-      id: 'muon',
-      family: 'lepton',
-      colors: ['#cbbdfd', '#e6deff'],
-      symbol: 'μ',
-      symbolColor: '#2c1446'
+      id: 'quarkTop',
+      family: 'quark',
+      quarkColor: 'green',
+      colors: ['#a78bff', '#6c4dff'],
+      symbol: 't',
+      symbolColor: '#160835',
+      sprite: { sheet: 'quarks', column: 4 }
     },
     {
-      id: 'neutrino',
-      family: 'lepton',
-      colors: ['#bfc5cc', '#e0e4e8'],
-      symbol: 'ν',
-      symbolColor: '#222733'
+      id: 'quarkBottom',
+      family: 'quark',
+      quarkColor: 'blue',
+      colors: ['#6ce7ff', '#2ab3ff'],
+      symbol: 'b',
+      symbolColor: '#03202c',
+      sprite: { sheet: 'quarks', column: 5 }
     }
   ];
   const FALLBACK_RESISTANT_PARTICLES = [
     {
-      id: 'photon',
+      id: 'higgs',
       family: 'boson',
-      colors: ['#ffd447', '#ffb347'],
-      symbol: 'γ',
-      symbolColor: '#3e2500',
+      colors: ['#ffe680', '#f7c948'],
+      symbol: 'H⁰',
+      symbolColor: '#4d3100',
+      minHits: 3,
+      maxHits: 3,
+      sprite: { sheet: 'particles', column: 0 }
+    },
+    {
+      id: 'bosonW',
+      family: 'boson',
+      colors: ['#8ec5ff', '#4b92ff'],
+      symbol: 'W',
+      symbolColor: '#04193a',
       minHits: 2,
-      maxHits: 2
+      maxHits: 3,
+      sprite: { sheet: 'particles', column: 1 }
+    },
+    {
+      id: 'bosonZ',
+      family: 'boson',
+      colors: ['#ffd291', '#ffb74b'],
+      symbol: 'Z⁰',
+      symbolColor: '#3a1b00',
+      minHits: 2,
+      maxHits: 3,
+      sprite: { sheet: 'particles', column: 2 }
     },
     {
       id: 'gluon',
@@ -182,26 +286,18 @@
       symbol: 'g',
       symbolColor: '#9fa5ff',
       minHits: 3,
-      maxHits: 3
+      maxHits: 3,
+      sprite: { sheet: 'particles', column: 3 }
     },
     {
-      id: 'wz',
+      id: 'photon',
       family: 'boson',
-      colors: ['#a874ff', '#7c4dff'],
-      symbol: 'w/z',
-      symbolColor: '#f6f1ff',
-      symbolScale: 0.85,
+      colors: ['#ffd447', '#ffb347'],
+      symbol: 'γ',
+      symbolColor: '#3e2500',
       minHits: 2,
-      maxHits: 3
-    },
-    {
-      id: 'higgs',
-      family: 'boson',
-      colors: ['#ffe680', '#f7c948'],
-      symbol: 'H⁰',
-      symbolColor: '#4d3100',
-      minHits: 3,
-      maxHits: 3
+      maxHits: 2,
+      sprite: { sheet: 'particles', column: 4 }
     }
   ];
   const FALLBACK_BONUS_PARTICLES = [
@@ -210,21 +306,24 @@
       family: 'lepton',
       colors: ['#f6f6ff', '#dcdcf9'],
       symbol: 'e⁺',
-      symbolColor: '#312a5c'
+      symbolColor: '#312a5c',
+      sprite: { sheet: 'particles', column: 5 }
     },
     {
       id: 'tau',
       family: 'lepton',
       colors: ['#b89bff', '#d9c9ff'],
       symbol: 'τ',
-      symbolColor: '#1f0b45'
+      symbolColor: '#1f0b45',
+      sprite: { sheet: 'particles', column: 5 }
     },
     {
       id: 'sterileNeutrino',
       family: 'lepton',
       colors: ['#c3c7d4', '#eff1f6'],
       symbol: 'νₛ',
-      symbolColor: '#1f2535'
+      symbolColor: '#1f2535',
+      sprite: { sheet: 'particles', column: 5 }
     }
   ];
   const FALLBACK_GRAVITON_PARTICLE = {
@@ -2077,7 +2176,7 @@
       if (brick.hitsRemaining <= 0) {
         brick.active = false;
         this.handleBrickDestroyed(brick);
-      } else if (brick.type === BRICK_TYPES.RESISTANT) {
+      } else if (brick.type === BRICK_TYPES.RESISTANT && !brick.particle?.sprite) {
         brick.relHeight *= 0.98;
       }
     }
@@ -2665,6 +2764,7 @@
       ctx.fillRect(0, 0, this.width, this.height);
 
       const hasRoundRect = typeof ctx.roundRect === 'function';
+      const originalImageSmoothing = ctx.imageSmoothingEnabled;
       this.bricks.forEach(brick => {
         if (!brick.active || (brick.hidden && brick.type === BRICK_TYPES.GRAVITON)) return;
         const x = brick.relX * this.width;
@@ -2677,38 +2777,87 @@
             gradient.addColorStop(index / (brick.particle.colors.length - 1 || 1), color);
           });
           ctx.fillStyle = gradient;
-        } else {
+          const radius = Math.min(16, h * 0.4);
+          if (hasRoundRect) {
+            ctx.beginPath();
+            ctx.roundRect(x, y, w, h, radius);
+            ctx.fill();
+          } else {
+            ctx.fillRect(x, y, w, h);
+          }
+          return;
+        }
+
+        let spriteDrawn = false;
+        const spriteInfo = brick.particle?.sprite;
+        if (spriteInfo?.sheet) {
+          const sheet = BRICK_SPRITE_SHEETS[spriteInfo.sheet];
+          const baseColumn = Array.isArray(spriteInfo.columns) && spriteInfo.columns.length > 0
+            ? spriteInfo.columns[0]
+            : spriteInfo.column;
+          if (sheet && sheet.loaded && sheet.image && Number.isFinite(baseColumn)) {
+            const frameWidth = sheet.frameWidth;
+            const frameHeight = sheet.frameHeight;
+            if (frameWidth > 0 && frameHeight > 0) {
+              const columnIndex = Math.max(0, Math.min(sheet.columns - 1, Math.floor(baseColumn)));
+              let rowIndex = 0;
+              if (sheet.rows > 1) {
+                const hitsTaken = Math.max(0, brick.maxHits - brick.hitsRemaining);
+                rowIndex = Math.max(0, Math.min(sheet.rows - 1, hitsTaken));
+              }
+              const srcX = columnIndex * frameWidth;
+              const srcY = rowIndex * frameHeight;
+              ctx.imageSmoothingEnabled = false;
+              ctx.drawImage(
+                sheet.image,
+                srcX,
+                srcY,
+                frameWidth,
+                frameHeight,
+                x,
+                y,
+                w,
+                h
+              );
+              ctx.imageSmoothingEnabled = originalImageSmoothing;
+              spriteDrawn = true;
+            }
+          }
+        }
+
+        if (!spriteDrawn) {
           const colors = brick.particle?.colors || ['#6c8cff', '#3b4da6'];
           const gradient = ctx.createLinearGradient(x, y, x, y + h);
           gradient.addColorStop(0, colors[0]);
           gradient.addColorStop(1, colors[1] || colors[0]);
           ctx.fillStyle = gradient;
-        }
-        const radius = Math.min(16, h * 0.4);
-        if (hasRoundRect) {
-          ctx.beginPath();
-          ctx.roundRect(x, y, w, h, radius);
-          ctx.fill();
-        } else {
-          ctx.fillRect(x, y, w, h);
-        }
-        if (brick.particle?.symbol) {
-          ctx.fillStyle = brick.particle.symbolColor || '#ffffff';
-          const symbolScale = typeof brick.particle.symbolScale === 'number'
-            ? brick.particle.symbolScale
-            : 1;
-          const baseFontSize = Math.max(12, h * 0.55);
-          ctx.font = `${Math.max(12, baseFontSize * symbolScale)}px 'Orbitron', 'Inter', sans-serif`;
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillText(brick.particle.symbol, x + w / 2, y + h / 2 + h * 0.04);
-        }
-        if (brick.type === BRICK_TYPES.RESISTANT && brick.maxHits > 1 && brick.hitsRemaining > 0) {
-          const ratio = brick.hitsRemaining / brick.maxHits;
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.18)';
-          ctx.fillRect(x, y + h - h * ratio, w, h * ratio * 0.12);
+          const radius = Math.min(16, h * 0.4);
+          if (hasRoundRect) {
+            ctx.beginPath();
+            ctx.roundRect(x, y, w, h, radius);
+            ctx.fill();
+          } else {
+            ctx.fillRect(x, y, w, h);
+          }
+          if (brick.particle?.symbol) {
+            ctx.fillStyle = brick.particle.symbolColor || '#ffffff';
+            const symbolScale = typeof brick.particle.symbolScale === 'number'
+              ? brick.particle.symbolScale
+              : 1;
+            const baseFontSize = Math.max(12, h * 0.55);
+            ctx.font = `${Math.max(12, baseFontSize * symbolScale)}px 'Orbitron', 'Inter', sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(brick.particle.symbol, x + w / 2, y + h / 2 + h * 0.04);
+          }
+          if (brick.type === BRICK_TYPES.RESISTANT && brick.maxHits > 1 && brick.hitsRemaining > 0) {
+            const ratio = brick.hitsRemaining / brick.maxHits;
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.18)';
+            ctx.fillRect(x, y + h - h * ratio, w, h * ratio * 0.12);
+          }
         }
       });
+      ctx.imageSmoothingEnabled = originalImageSmoothing;
 
       this.powerUps.forEach(powerUp => {
         const visuals = POWER_UP_VISUALS[powerUp.type] || DEFAULT_POWER_UP_VISUAL;
