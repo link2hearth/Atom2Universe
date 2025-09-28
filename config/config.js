@@ -948,60 +948,90 @@ const GAME_CONFIG = {
       particles: {
         simple: [
           {
-            id: 'quarkRed',
+            id: 'quarkUp',
             family: 'quark',
             quarkColor: 'red',
-            colors: ['#ff4d6a', '#ff859b'],
-            symbol: 'qᵣ',
-            symbolColor: '#fff'
+            colors: ['#ff6c7a', '#ff2d55'],
+            symbol: 'u',
+            symbolColor: '#fff5f8',
+            sprite: { sheet: 'quarks', column: 0 }
           },
           {
-            id: 'quarkGreen',
+            id: 'quarkDown',
             family: 'quark',
             quarkColor: 'green',
-            colors: ['#45c77b', '#7ae0a4'],
-            symbol: 'qᵍ',
-            symbolColor: '#08291a'
+            colors: ['#7ef37d', '#2bc84a'],
+            symbol: 'd',
+            symbolColor: '#03210f',
+            sprite: { sheet: 'quarks', column: 1 }
           },
           {
-            id: 'quarkBlue',
+            id: 'quarkStrange',
             family: 'quark',
             quarkColor: 'blue',
-            colors: ['#4f7bff', '#87a7ff'],
-            symbol: 'qᵇ',
-            symbolColor: '#0c163a'
+            colors: ['#7ac3ff', '#2f82ff'],
+            symbol: 's',
+            symbolColor: '#021639',
+            sprite: { sheet: 'quarks', column: 2 }
           },
           {
-            id: 'electron',
-            family: 'lepton',
-            colors: ['#dadfea', '#f5f6fb'],
-            symbol: 'e⁻',
-            symbolColor: '#1c2136'
+            id: 'quarkCharm',
+            family: 'quark',
+            quarkColor: 'red',
+            colors: ['#ffb36c', '#ff7b2d'],
+            symbol: 'c',
+            symbolColor: '#241002',
+            sprite: { sheet: 'quarks', column: 3 }
           },
           {
-            id: 'muon',
-            family: 'lepton',
-            colors: ['#cbbdfd', '#e6deff'],
-            symbol: 'μ',
-            symbolColor: '#2c1446'
+            id: 'quarkTop',
+            family: 'quark',
+            quarkColor: 'green',
+            colors: ['#a78bff', '#6c4dff'],
+            symbol: 't',
+            symbolColor: '#160835',
+            sprite: { sheet: 'quarks', column: 4 }
           },
           {
-            id: 'neutrino',
-            family: 'lepton',
-            colors: ['#bfc5cc', '#e0e4e8'],
-            symbol: 'ν',
-            symbolColor: '#222733'
+            id: 'quarkBottom',
+            family: 'quark',
+            quarkColor: 'blue',
+            colors: ['#6ce7ff', '#2ab3ff'],
+            symbol: 'b',
+            symbolColor: '#03202c',
+            sprite: { sheet: 'quarks', column: 5 }
           }
         ],
         resistant: [
           {
-            id: 'photon',
+            id: 'higgs',
             family: 'boson',
-            colors: ['#ffd447', '#ffb347'],
-            symbol: 'γ',
-            symbolColor: '#3e2500',
+            colors: ['#ffe680', '#f7c948'],
+            symbol: 'H⁰',
+            symbolColor: '#4d3100',
+            minHits: 3,
+            maxHits: 3,
+            sprite: { sheet: 'particles', column: 0 }
+          },
+          {
+            id: 'bosonW',
+            family: 'boson',
+            colors: ['#8ec5ff', '#4b92ff'],
+            symbol: 'W',
+            symbolColor: '#04193a',
             minHits: 2,
-            maxHits: 2
+            maxHits: 3,
+            sprite: { sheet: 'particles', column: 1 }
+          },
+          {
+            id: 'bosonZ',
+            family: 'boson',
+            colors: ['#ffd291', '#ffb74b'],
+            symbol: 'Z⁰',
+            symbolColor: '#3a1b00',
+            minHits: 2,
+            maxHits: 3,
+            sprite: { sheet: 'particles', column: 2 }
           },
           {
             id: 'gluon',
@@ -1010,26 +1040,18 @@ const GAME_CONFIG = {
             symbol: 'g',
             symbolColor: '#9fa5ff',
             minHits: 3,
-            maxHits: 3
+            maxHits: 3,
+            sprite: { sheet: 'particles', column: 3 }
           },
           {
-            id: 'wz',
+            id: 'photon',
             family: 'boson',
-            colors: ['#a874ff', '#7c4dff'],
-            symbol: 'w/z',
-            symbolColor: '#f6f1ff',
-            symbolScale: 0.85,
+            colors: ['#ffd447', '#ffb347'],
+            symbol: 'γ',
+            symbolColor: '#3e2500',
             minHits: 2,
-            maxHits: 3
-          },
-          {
-            id: 'higgs',
-            family: 'boson',
-            colors: ['#ffe680', '#f7c948'],
-            symbol: 'H⁰',
-            symbolColor: '#4d3100',
-            minHits: 3,
-            maxHits: 3
+            maxHits: 2,
+            sprite: { sheet: 'particles', column: 4 }
           }
         ],
         bonus: [
@@ -1038,21 +1060,24 @@ const GAME_CONFIG = {
             family: 'lepton',
             colors: ['#f6f6ff', '#dcdcf9'],
             symbol: 'e⁺',
-            symbolColor: '#312a5c'
+            symbolColor: '#312a5c',
+            sprite: { sheet: 'particles', column: 5 }
           },
           {
             id: 'tau',
             family: 'lepton',
             colors: ['#b89bff', '#d9c9ff'],
             symbol: 'τ',
-            symbolColor: '#1f0b45'
+            symbolColor: '#1f0b45',
+            sprite: { sheet: 'particles', column: 5 }
           },
           {
             id: 'sterileNeutrino',
             family: 'lepton',
             colors: ['#c3c7d4', '#eff1f6'],
             symbol: 'νₛ',
-            symbolColor: '#1f2535'
+            symbolColor: '#1f2535',
+            sprite: { sheet: 'particles', column: 5 }
           }
         ],
         graviton: {
