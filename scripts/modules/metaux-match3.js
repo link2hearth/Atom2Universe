@@ -590,6 +590,7 @@ class MetauxMatch3Game {
 
   startCascade(initialMatches) {
     this.comboChain = 0;
+    this.lastComboSoundLevel = 0;
     this.resolveCascade(initialMatches);
   }
 
@@ -604,6 +605,10 @@ class MetauxMatch3Game {
     }
     this.applyMatchRewards(matchGroups);
     this.comboChain += 1;
+    if (this.comboChain >= 3 && this.comboChain !== this.lastComboSoundLevel) {
+      this.playMach3ComboSound();
+      this.lastComboSoundLevel = this.comboChain;
+    }
     this.stats.totalCleared += matches.length;
     matches.forEach(position => {
       const tile = this.tiles[position.row][position.col];
@@ -643,6 +648,7 @@ class MetauxMatch3Game {
       this.updateMessage('Alignement complet ! De nouveaux lingots tombent.');
     }
     this.comboChain = 0;
+    this.lastComboSoundLevel = 0;
     this.processing = false;
     if (this.gameOver) {
       return;
