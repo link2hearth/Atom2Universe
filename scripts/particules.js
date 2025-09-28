@@ -203,6 +203,20 @@
     rows: 3
   });
 
+  const LASER_SPRITE_SHEET = createSpriteSheet({
+    src: 'Assets/Sprites/bullet.png',
+    frameWidth: 128,
+    frameHeight: 128,
+    columns: 8,
+    rows: 4
+  });
+
+  const LASER_ANIMATION_FRAME_COUNT = Math.max(
+    1,
+    (LASER_SPRITE_SHEET.columns || 1) * (LASER_SPRITE_SHEET.rows || 1)
+  );
+  const LASER_FRAME_DURATION_MS = 1000 / 15;
+
   const BRICK_SPRITE_SHEETS = {
     quarks: QUARK_SPRITE_SHEET,
     particles: PARTICLE_SPRITE_SHEET,
@@ -2214,6 +2228,15 @@
       for (let i = this.lasers.length - 1; i >= 0; i -= 1) {
         const laser = this.lasers[i];
         laser.y += velocity * delta;
+        if (LASER_ANIMATION_FRAME_COUNT > 1) {
+          laser.frameElapsed = (laser.frameElapsed || 0) + delta;
+          if (laser.frameElapsed >= LASER_FRAME_DURATION_MS) {
+            const framesAdvanced = Math.floor(laser.frameElapsed / LASER_FRAME_DURATION_MS);
+            laser.frame = (laser.frame || 0) + framesAdvanced;
+            laser.frame %= LASER_ANIMATION_FRAME_COUNT;
+            laser.frameElapsed -= framesAdvanced * LASER_FRAME_DURATION_MS;
+          }
+        }
         if (laser.y + laser.height < 0) {
           this.lasers.splice(i, 1);
           continue;
@@ -2463,8 +2486,22 @@
       const originY = this.paddle.y;
       const width = Math.max(4, this.ballRadius * 0.4);
       const height = Math.max(14, this.ballRadius * 1.6);
-      this.lasers.push({ x: leftX, y: originY, width, height });
-      this.lasers.push({ x: rightX, y: originY, width, height });
+      this.lasers.push({
+        x: leftX,
+        y: originY,
+        width,
+        height,
+        frame: 0,
+        frameElapsed: 0
+      });
+      this.lasers.push({
+        x: rightX,
+        y: originY,
+        width,
+        height,
+        frame: 0,
+        frameElapsed: 0
+      });
     }
 
     checkLaserCollisions(laser) {
@@ -3057,11 +3094,33 @@
       });
 
       this.lasers.forEach(laser => {
-        const gradient = ctx.createLinearGradient(laser.x, laser.y, laser.x, laser.y - laser.height);
-        gradient.addColorStop(0, 'rgba(180, 240, 255, 0.9)');
-        gradient.addColorStop(1, 'rgba(120, 200, 255, 0.2)');
-        ctx.fillStyle = gradient;
-        ctx.fillRect(laser.x - laser.width / 2, laser.y - laser.height, laser.width, laser.height);
+        const left = laser.x - laser.width / 2;
+        const top = laser.y - laser.height;
+        if (LASER_SPRITE_SHEET.loaded && LASER_SPRITE_SHEET.image) {
+          const frameIndex = (laser.frame || 0) % LASER_ANIMATION_FRAME_COUNT;
+          const columns = LASER_SPRITE_SHEET.columns || 1;
+          const column = frameIndex % columns;
+          const row = Math.floor(frameIndex / columns);
+          const sx = column * LASER_SPRITE_SHEET.frameWidth;
+          const sy = row * LASER_SPRITE_SHEET.frameHeight;
+          ctx.drawImage(
+            LASER_SPRITE_SHEET.image,
+            sx,
+            sy,
+            LASER_SPRITE_SHEET.frameWidth,
+            LASER_SPRITE_SHEET.frameHeight,
+            left,
+            top,
+            laser.width,
+            laser.height
+          );
+        } else {
+          const gradient = ctx.createLinearGradient(laser.x, laser.y, laser.x, laser.y - laser.height);
+          gradient.addColorStop(0, 'rgba(180, 240, 255, 0.9)');
+          gradient.addColorStop(1, 'rgba(120, 200, 255, 0.2)');
+          ctx.fillStyle = gradient;
+          ctx.fillRect(left, top, laser.width, laser.height);
+        }
       });
 
       const floorHeight = Math.max(
