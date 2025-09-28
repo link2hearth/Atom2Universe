@@ -1537,6 +1537,20 @@ body.theme-light .fusion-log.fusion-log--failure {
   display: flex;
 }
 
+.gacha-featured-info {
+  position: absolute;
+  top: clamp(1rem, 3vw, 2rem);
+  left: clamp(1rem, 3vw, 2rem);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.78);
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+}
+
 .gacha-ticket-counter {
   position: absolute;
   top: clamp(1rem, 3vw, 2rem);
@@ -1609,10 +1623,18 @@ body.theme-light .gacha-ticket-counter {
   box-shadow: 0 12px 24px rgba(10, 14, 28, 0.12);
 }
 
+body.theme-light .gacha-featured-info {
+  color: rgba(12, 16, 32, 0.65);
+}
+
 body.theme-neon .gacha-ticket-counter {
   background: rgba(70, 90, 220, 0.65);
   color: #f6f8ff;
   box-shadow: 0 14px 32px rgba(40, 60, 160, 0.45);
+}
+
+body.theme-neon .gacha-featured-info {
+  color: rgba(232, 236, 255, 0.82);
 }
 
 .gacha-sun-button {

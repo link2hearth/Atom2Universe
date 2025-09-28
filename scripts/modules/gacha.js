@@ -106,6 +106,15 @@ const BASE_GACHA_RARITY_ID_SET = new Set(BASE_GACHA_RARITIES.map(entry => entry.
 
 const WEEKDAY_KEYS = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 
+const GACHA_FEATURED_LABELS_BY_DAY = Object.freeze({
+  monday: '+Singularité Minérale',
+  thursday: '+Singularité Minérale',
+  tuesday: '+Mythe Quantique',
+  friday: '+Mythe Quantique',
+  wednesday: '+Iréel',
+  saturday: '+Iréel'
+});
+
 function sanitizeWeeklyRarityWeights(rawWeights) {
   const sanitized = {};
   WEEKDAY_KEYS.forEach(day => {
@@ -196,7 +205,33 @@ function refreshGachaRarities(date = new Date(), { force = false } = {}) {
     GACHA_RARITY_MAP.set(entry.id, entry);
   });
   activeGachaWeightDayKey = dayKey;
+  updateGachaFeaturedInfo(dayKey);
   return true;
+}
+
+function getGachaFeaturedLabelForDayKey(dayKey) {
+  if (!dayKey) {
+    return null;
+  }
+  return GACHA_FEATURED_LABELS_BY_DAY[dayKey] ?? null;
+}
+
+function updateGachaFeaturedInfo(dayKey = WEEKDAY_KEYS[new Date().getDay()] ?? null) {
+  if (typeof elements === 'undefined' || !elements) {
+    return;
+  }
+  const featuredInfo = elements.gachaFeaturedInfo;
+  if (!featuredInfo) {
+    return;
+  }
+  const label = getGachaFeaturedLabelForDayKey(dayKey);
+  if (label) {
+    featuredInfo.textContent = label;
+    featuredInfo.hidden = false;
+  } else {
+    featuredInfo.textContent = '';
+    featuredInfo.hidden = true;
+  }
 }
 
 function getCurrentGachaTotalWeight() {
@@ -1759,6 +1794,7 @@ let gachaAnimationInProgress = false;
 let gachaRollMode = 1;
 
 function updateGachaUI() {
+  updateGachaFeaturedInfo();
   const available = Math.max(0, Math.floor(Number(gameState.gachaTickets) || 0));
   if (elements.gachaTicketValue) {
     elements.gachaTicketValue.textContent = formatTicketLabel(available);
