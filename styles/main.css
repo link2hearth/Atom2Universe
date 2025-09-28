@@ -4076,6 +4076,7 @@ body.theme-neon .devkit-panel__footer kbd {
   --metaux-pop-duration: 220ms;
   --metaux-pop-scale: 1.18;
   --metaux-pop-glow-opacity: 0.8;
+  --metaux-shake-duration: 320ms;
   display: grid;
   grid-template-columns: repeat(var(--metaux-cols, 16), minmax(0, 1fr));
   gap: clamp(0.18rem, 0.45vw, 0.34rem);
@@ -4333,6 +4334,27 @@ body.theme-neon .devkit-panel__footer kbd {
   }
 }
 
+@keyframes metaux-tile-shake {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  20% {
+    transform: translate3d(1px, -1px, 0) rotate(-0.5deg);
+  }
+  40% {
+    transform: translate3d(-1px, 1px, 0) rotate(0.5deg);
+  }
+  60% {
+    transform: translate3d(1px, 1px, 0) rotate(-0.35deg);
+  }
+  80% {
+    transform: translate3d(-1px, -1px, 0) rotate(0.35deg);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+}
+
 .metaux-tile {
   --tile-color: rgba(255, 255, 255, 0.55);
   --tile-image: none;
@@ -4411,6 +4433,10 @@ body.theme-neon .devkit-panel__footer kbd {
 
 .metaux-tile.is-target {
   cursor: grabbing;
+}
+
+.metaux-tile.is-shaking {
+  animation: metaux-tile-shake var(--metaux-shake-duration, 320ms) ease-in-out;
 }
 
 .metaux-tile.is-clearing {

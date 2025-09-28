@@ -6,6 +6,7 @@ const DEFAULT_METAUX_CONFIG = {
   cols: 16,
   clearDelayMs: 220,
   refillDelayMs: 120,
+  neighborShakeDurationMs: 320,
   popEffect: {
     durationMs: 220,
     scale: 1.18,
@@ -115,10 +116,25 @@ const METAUX_MATCH_POP_EFFECT = {
   )
 };
 const METAUX_CLEAR_STEP_DELAY = Math.max(METAUX_CLEAR_DELAY, METAUX_MATCH_POP_EFFECT.durationMs);
+const METAUX_NEIGHBOR_SHAKE_DURATION = toNonNegativeInteger(
+  METAUX_CONFIG.neighborShakeDurationMs,
+  DEFAULT_METAUX_CONFIG.neighborShakeDurationMs
+);
 const METAUX_MAX_SHUFFLE_ATTEMPTS = toPositiveInteger(
   METAUX_CONFIG.maxShuffleAttempts,
   DEFAULT_METAUX_CONFIG.maxShuffleAttempts
 );
+
+const METAUX_NEIGHBOR_OFFSETS = [
+  { row: -1, col: 0 },
+  { row: 1, col: 0 },
+  { row: 0, col: -1 },
+  { row: 0, col: 1 },
+  { row: -1, col: -1 },
+  { row: -1, col: 1 },
+  { row: 1, col: -1 },
+  { row: 1, col: 1 }
+];
 
 const METAUX_TIMER_SOURCE =
   METAUX_CONFIG.timer && typeof METAUX_CONFIG.timer === 'object' ? METAUX_CONFIG.timer : {};
@@ -201,6 +217,7 @@ class MetauxMatch3Game {
     this.dragState = null;
     this.comboChain = 0;
     this.gameOver = false;
+    this.tileShakeTimeouts = new Map();
     this.timerState = {
       current: METAUX_TIMER_CONFIG.initialSeconds,
       max: METAUX_TIMER_CONFIG.maxSeconds,
@@ -258,6 +275,7 @@ class MetauxMatch3Game {
       '--metaux-pop-glow-opacity',
       String(METAUX_MATCH_POP_EFFECT.glowOpacity)
     );
+    this.boardElement.style.setProperty('--metaux-shake-duration', `${METAUX_NEIGHBOR_SHAKE_DURATION}ms`);
     this.boardElement.dataset.rows = String(METAUX_ROWS);
     this.boardElement.dataset.cols = String(METAUX_COLS);
     const fragment = document.createDocumentFragment();
@@ -357,6 +375,7 @@ class MetauxMatch3Game {
     tile.dataset.type = type || '';
     const labelElement = tile._label || tile.firstElementChild;
     if (!type) {
+      this.clearTileShakeEffect(row, col);
       tile.classList.add('is-empty');
       tile.style.removeProperty('--tile-color');
       if (labelElement) {
@@ -548,6 +567,7 @@ class MetauxMatch3Game {
         tile.classList.add('is-clearing');
       }
     });
+    this.triggerNeighborShake(matches);
     window.setTimeout(() => {
       matches.forEach(position => {
         this.board[position.row][position.col] = null;
@@ -770,6 +790,7 @@ class MetauxMatch3Game {
     if (!success) {
       this.populateBoard();
     }
+    this.clearAllShakeEffects();
     this.refreshBoard();
     this.stats.reshuffles += 1;
     this.updateStats();
@@ -813,6 +834,7 @@ class MetauxMatch3Game {
       : 'Utilisez un crédit Mach3 pour lancer une nouvelle partie.';
     this.pauseTimer();
     this.clearDragState();
+    this.clearAllShakeEffects();
     this.processing = false;
     this.comboChain = 0;
     this.gameOver = true;
@@ -837,6 +859,7 @@ class MetauxMatch3Game {
     this.comboChain = 0;
     this.processing = false;
     this.gameOver = false;
+    this.clearAllShakeEffects();
     const now = this.getNow();
     this.lastMatchPerType = new Map(METAUX_TILE_TYPES.map(type => [type.id, now]));
     this.resetTimerState();
@@ -1167,10 +1190,84 @@ class MetauxMatch3Game {
     }
     this.pauseTimer();
     this.clearDragState();
+    this.clearAllShakeEffects();
     this.populateBoard();
     this.refreshBoard();
     this.prepareNewSession();
     this.updateMessage('Nouvelle session : enchaînez les alliages !');
+  }
+
+  getTileKey(row, col) {
+    return `${row}:${col}`;
+  }
+
+  clearTileShakeEffect(row, col) {
+    const key = this.getTileKey(row, col);
+    const timeoutId = this.tileShakeTimeouts.get(key);
+    if (timeoutId != null) {
+      window.clearTimeout(timeoutId);
+      this.tileShakeTimeouts.delete(key);
+    }
+    const tile = this.tiles[row] && this.tiles[row][col];
+    if (tile) {
+      tile.classList.remove('is-shaking');
+    }
+  }
+
+  clearAllShakeEffects() {
+    this.tileShakeTimeouts.forEach(timeoutId => {
+      if (timeoutId != null) {
+        window.clearTimeout(timeoutId);
+      }
+    });
+    this.tileShakeTimeouts.clear();
+    for (let row = 0; row < METAUX_ROWS; row += 1) {
+      for (let col = 0; col < METAUX_COLS; col += 1) {
+        const tile = this.tiles[row][col];
+        if (tile) {
+          tile.classList.remove('is-shaking');
+        }
+      }
+    }
+  }
+
+  triggerNeighborShake(matchPositions) {
+    if (!Array.isArray(matchPositions) || !matchPositions.length) {
+      return;
+    }
+    const matchSet = new Set(matchPositions.map(position => this.getTileKey(position.row, position.col)));
+    matchPositions.forEach(position => {
+      METAUX_NEIGHBOR_OFFSETS.forEach(offset => {
+        const neighborRow = position.row + offset.row;
+        const neighborCol = position.col + offset.col;
+        if (!this.isValidPosition(neighborRow, neighborCol)) {
+          return;
+        }
+        const neighborKey = this.getTileKey(neighborRow, neighborCol);
+        if (matchSet.has(neighborKey)) {
+          return;
+        }
+        if (!this.board[neighborRow][neighborCol]) {
+          return;
+        }
+        const tile = this.tiles[neighborRow][neighborCol];
+        if (!tile || tile.classList.contains('is-clearing')) {
+          return;
+        }
+        const existingTimeout = this.tileShakeTimeouts.get(neighborKey);
+        if (existingTimeout != null) {
+          window.clearTimeout(existingTimeout);
+        }
+        tile.classList.remove('is-shaking');
+        void tile.offsetWidth;
+        tile.classList.add('is-shaking');
+        const timeoutId = window.setTimeout(() => {
+          this.tileShakeTimeouts.delete(neighborKey);
+          tile.classList.remove('is-shaking');
+        }, METAUX_NEIGHBOR_SHAKE_DURATION);
+        this.tileShakeTimeouts.set(neighborKey, timeoutId);
+      });
+    });
   }
 
   isSessionRunning() {
