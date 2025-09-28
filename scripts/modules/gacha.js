@@ -1750,8 +1750,8 @@ function buildGachaDisplayData(results) {
   return { aggregated, focus, newEntries, rarityColorMap };
 }
 
-const GACHA_ANIMATION_CONFETTI_COUNT = 110;
-const GACHA_ANIMATION_REVEAL_DELAY = 3000;
+const GACHA_ANIMATION_CONFETTI_COUNT = 150;
+const GACHA_ANIMATION_REVEAL_DELAY = 2500;
 const GACHA_CONFETTI_BASE_RARITY_ID = 'commun';
 const DEFAULT_GACHA_CONFETTI_COLOR = '#4f7ec2';
 const DEFAULT_GACHA_CONFETTI_RGB = { r: 79, g: 126, b: 194 };
@@ -2209,15 +2209,15 @@ function createGachaConfettiParticle(finalColorRgb, birthTime) {
   const now = Number.isFinite(birthTime) ? birthTime : getNow();
   return {
     birth: now,
-    life: 1800 + Math.random() * 900,
+    life: 2600 + Math.random() * 1400,
     angle: Math.random() * Math.PI * 2,
-    speed: 2 + Math.random() * 4,
+    speed: 1.5 + Math.random() * 3.5,
     size: 3 + Math.random() * 4,
-    spiralFactor: 0.8 + Math.random() * 0.8,
+    spiralFactor: 0.45 + Math.random() * 0.55,
     wobbleAmplitude: 8 + Math.random() * 24,
-    wobbleFrequency: 2 + Math.random() * 3,
+    wobbleFrequency: 1.5 + Math.random() * 2.5,
     spinPhase: Math.random() * Math.PI * 2,
-    drift: (Math.random() - 0.5) * 0.4,
+    drift: (Math.random() - 0.5) * 0.3,
     finalColor: finalColorRgb
   };
 }
