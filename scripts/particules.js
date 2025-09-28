@@ -849,13 +849,12 @@
   const LEVEL_LINGER_CHANCE = LINGER_BONUS_CONFIG.chance;
   const LEVEL_LINGER_MESSAGE = LINGER_BONUS_CONFIG.message;
   const LEVEL_LINGER_MESSAGE_DURATION = LINGER_BONUS_CONFIG.messageDurationMs;
+  const LEVEL_START_FLOOR_DURATION_MS = 2000;
 
   const START_OVERLAY_MESSAGE = SETTINGS.ui.start.message;
   const START_OVERLAY_BUTTON = SETTINGS.ui.start.buttonLabel;
   const PAUSE_OVERLAY_MESSAGE = SETTINGS.ui.pause.message;
   const PAUSE_OVERLAY_BUTTON = SETTINGS.ui.pause.buttonLabel;
-  const LIFE_LOST_MESSAGE = SETTINGS.ui.lifeLost.message;
-  const LIFE_LOST_BUTTON = SETTINGS.ui.lifeLost.buttonLabel;
   const LEVEL_CLEARED_TEMPLATE = SETTINGS.ui.levelCleared.template;
   const LEVEL_CLEARED_BUTTON = SETTINGS.ui.levelCleared.buttonLabel;
   const LEVEL_CLEARED_REWARD_TEMPLATE = SETTINGS.ui.levelCleared.rewardTemplate;
@@ -1099,6 +1098,7 @@
       this.ticketsEarned = 0;
       this.specialTicketsEarned = 0;
       this.pendingLevelAdvance = false;
+      this.pendingFloorShieldBonus = false;
       this.pointerActive = false;
       this.pendingResume = false;
       this.running = false;
@@ -1344,6 +1344,7 @@
       this.ballSpeedMultiplier = 1;
       this.paddleBounceAnimation = null;
       this.lives = this.maxLives;
+      this.pendingFloorShieldBonus = true;
       this.bricks = this.generateBricks();
       this.resetComboChain();
       this.prepareServe();
@@ -1923,6 +1924,12 @@
         }
       });
       if (launched) {
+        if (this.pendingFloorShieldBonus) {
+          this.activatePowerUp(POWER_UP_IDS.FLOOR, {
+            duration: LEVEL_START_FLOOR_DURATION_MS
+          });
+          this.pendingFloorShieldBonus = false;
+        }
         this.startAnimation();
       }
       return launched;
@@ -2578,7 +2585,7 @@
       }
     }
 
-    activatePowerUp(type) {
+    activatePowerUp(type, options = {}) {
       if (type === POWER_UP_IDS.MULTIBALL) {
         this.maybePulseForPowerUp(type);
         this.spawnAdditionalBalls();
@@ -2587,14 +2594,23 @@
       const now = typeof performance !== 'undefined' ? performance.now() : Date.now();
       const existing = this.effects.get(type);
       const effectConfig = POWER_UP_EFFECTS[type];
-      const duration = effectConfig?.duration ?? 0;
+      const durationOverride = typeof options.duration === 'number' ? options.duration : null;
+      const intervalOverride = typeof options.interval === 'number' ? options.interval : null;
+      const duration = durationOverride != null ? durationOverride : effectConfig?.duration ?? 0;
       if (existing) {
         existing.expiresAt = now + duration;
-        existing.interval = effectConfig?.interval ?? existing.interval;
+        const nextInterval = intervalOverride != null
+          ? intervalOverride
+          : effectConfig?.interval ?? existing.interval;
+        if (nextInterval != null) {
+          existing.interval = nextInterval;
+        }
       } else {
         const newEffect = {
           expiresAt: now + duration,
-          interval: effectConfig?.interval ?? LASER_INTERVAL_MS,
+          interval: intervalOverride != null
+            ? intervalOverride
+            : effectConfig?.interval ?? LASER_INTERVAL_MS,
           cooldown: 0
         };
         this.effects.set(type, newEffect);
@@ -2701,11 +2717,8 @@
       this.updateHud();
       if (this.lives > 0) {
         this.prepareServe();
-        this.showOverlay({
-          message: LIFE_LOST_MESSAGE,
-          buttonLabel: LIFE_LOST_BUTTON,
-          action: 'resume'
-        });
+        this.hideOverlay();
+        this.render();
       } else {
         this.gameOver();
       }
