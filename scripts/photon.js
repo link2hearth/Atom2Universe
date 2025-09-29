@@ -54,14 +54,14 @@
 
   const BAR_TEXTURE_SPECS = {
     blue: {
-      src: 'assets/image/Grille.png',
-      naturalWidth: 1920,
-      naturalHeight: 227
-    },
-    red: {
       src: 'assets/image/Bulle.png',
       naturalWidth: 1233,
       naturalHeight: 325
+    },
+    red: {
+            src: 'assets/image/Grille.png',
+      naturalWidth: 1920,
+      naturalHeight: 227
     }
   };
 
@@ -311,7 +311,7 @@
     const normalizedSeed = Number.isFinite(seed) ? seed : 0.35;
     const baseSeed = normalizedSeed * 7919 + width * 0.017 + height * 0.029;
     const area = Math.max(width * height, 1);
-    const bubbleCount = Math.max(12, Math.floor(area / 9000));
+    const bubbleCount = Math.max(42, Math.floor(area / 9000));
     const maxRadius = clamp(height * 0.32, 12, height * 0.55);
 
     ctx.save();
