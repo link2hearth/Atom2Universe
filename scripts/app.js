@@ -579,7 +579,11 @@ function collectFrenzy(type, now = performance.now()) {
   } else {
     durationText = `${rawSeconds.toFixed(1)}s`;
   }
-  showToast(`${info.label} ${`×${FRENZY_CONFIG.multiplier}`} pendant ${durationText} !`);
+  showToast(t('scripts.app.frenzyToast', {
+    label: info.label,
+    multiplier: FRENZY_CONFIG.multiplier,
+    duration: durationText
+  }));
 }
 
 function updateFrenzies(delta, now = performance.now()) {
@@ -1102,7 +1106,7 @@ function unlockPage(pageId, options = {}) {
   if (options.announce) {
     const message = typeof options.announce === 'string'
       ? options.announce
-      : 'Nouvelle page débloquée !';
+      : t('scripts.app.pageUnlocked');
     showToast(message);
   }
   return true;
@@ -1404,7 +1408,7 @@ function unlockTrophy(def) {
   const unlocked = getUnlockedTrophySet();
   if (unlocked.has(def.id)) return false;
   unlocked.add(def.id);
-  showToast(`Trophée débloqué : ${def.name} !`);
+  showToast(t('scripts.app.trophies.unlocked', { name: def.name }));
   recalcProduction();
   updateGoalsUI();
   updateBigBangVisibility();
@@ -2912,20 +2916,20 @@ function toggleDevKit() {
 function handleDevKitAtomsSubmission(value) {
   const amount = parseDevKitLayeredInput(value);
   if (!(amount instanceof LayeredNumber) || amount.isZero() || amount.sign <= 0) {
-    showToast('Valeur d’atome invalide.');
+    showToast(t('scripts.app.devkit.invalidAtoms'));
     return;
   }
   gainAtoms(amount);
   updateUI();
   saveGame();
   updateDevKitUI();
-  showToast(`DevKit : +${amount.toString()} atomes`);
+  showToast(t('scripts.app.devkit.atomsAdded', { amount: amount.toString() }));
 }
 
 function handleDevKitAutoSubmission(value) {
   const amount = parseDevKitLayeredInput(value);
   if (!(amount instanceof LayeredNumber) || amount.isZero() || amount.sign <= 0) {
-    showToast('Bonus APS invalide.');
+    showToast(t('scripts.app.devkit.invalidAps'));
     return;
   }
   const nextBonus = getDevKitAutoFlatBonus().add(amount);
@@ -2934,12 +2938,12 @@ function handleDevKitAutoSubmission(value) {
   updateUI();
   saveGame();
   updateDevKitUI();
-  showToast(`DevKit : APS +${amount.toString()}`);
+  showToast(t('scripts.app.devkit.apsAdded', { amount: amount.toString() }));
 }
 
 function resetDevKitAutoBonus() {
   if (getDevKitAutoFlatBonus().isZero()) {
-    showToast('Aucun bonus APS à réinitialiser.');
+    showToast(t('scripts.app.devkit.noApsToReset'));
     return;
   }
   setDevKitAutoFlatBonus(LayeredNumber.zero());
@@ -2947,21 +2951,21 @@ function resetDevKitAutoBonus() {
   updateUI();
   saveGame();
   updateDevKitUI();
-  showToast('DevKit : bonus APS remis à zéro');
+  showToast(t('scripts.app.devkit.apsReset'));
 }
 
 function handleDevKitTicketSubmission(value) {
   const numeric = parseDevKitInteger(value);
   if (!Number.isFinite(numeric) || numeric <= 0) {
-    showToast('Nombre de tickets invalide.');
+    showToast(t('scripts.app.devkit.invalidTickets'));
     return;
   }
   const gained = gainGachaTickets(numeric);
   updateUI();
   saveGame();
   showToast(gained === 1
-    ? 'DevKit : 1 ticket de tirage ajouté'
-    : `DevKit : ${gained} tickets de tirage ajoutés`);
+    ? t('scripts.app.devkit.ticketAdded.single')
+    : t('scripts.app.devkit.ticketAdded.multiple', { count: gained }));
 }
 
 function devkitUnlockAllTrophies() {
@@ -2979,9 +2983,9 @@ function devkitUnlockAllTrophies() {
     updateGoalsUI();
     evaluatePageUnlocks({ save: false });
     saveGame();
-    showToast(`DevKit : ${newlyUnlocked} succès débloqués !`);
+    showToast(t('scripts.app.devkit.trophiesUnlocked', { count: newlyUnlocked }));
   } else {
-    showToast('Tous les succès sont déjà débloqués.');
+    showToast(t('scripts.app.devkit.allTrophiesUnlocked'));
   }
 }
 
@@ -3035,8 +3039,8 @@ function devkitUnlockAllElements() {
   saveGame();
   updateDevKitUI();
   showToast(newlyOwned > 0
-    ? `DevKit : ${newlyOwned} éléments ajoutés à la collection !`
-    : 'La collection était déjà complète.');
+    ? t('scripts.app.devkit.elementsAdded', { count: newlyOwned })
+    : t('scripts.app.devkit.collectionComplete'));
 }
 
 function toggleDevKitCheat(key) {
@@ -3048,13 +3052,13 @@ function toggleDevKitCheat(key) {
   if (key === 'freeShop') {
     updateShopAffordability();
     showToast(DEVKIT_STATE.cheats[key]
-      ? 'DevKit : magasin gratuit activé'
-      : 'DevKit : magasin gratuit désactivé');
+      ? t('scripts.app.devkit.freeShopEnabled')
+      : t('scripts.app.devkit.freeShopDisabled'));
   } else if (key === 'freeGacha') {
     updateGachaUI();
     showToast(DEVKIT_STATE.cheats[key]
-      ? 'DevKit : tirages gratuits activés'
-      : 'DevKit : tirages gratuits désactivés');
+      ? t('scripts.app.devkit.freeGachaEnabled')
+      : t('scripts.app.devkit.freeGachaDisabled'));
   }
 }
 
@@ -4744,10 +4748,10 @@ if (elements.devkitUnlockInfo) {
     event.preventDefault();
     const unlocked = unlockPage('info', {
       save: true,
-      announce: 'DevKit : page Infos débloquée !'
+      announce: t('scripts.app.devkit.infoPageUnlocked')
     });
     if (!unlocked) {
-      showToast('Page Infos déjà débloquée.');
+      showToast(t('scripts.app.devkit.infoPageAlready'));
     }
     updateDevKitUI();
   });
@@ -4838,13 +4842,17 @@ function handleMetauxSessionEnd(summary) {
   pulseApsCritPanel();
   const messageParts = [];
   if (chronoAdded > 0) {
-    messageParts.push(`Chrono +${chronoAdded.toLocaleString('fr-FR')} s`);
+    messageParts.push(t('scripts.app.metaux.chronoBonus', {
+      value: chronoAdded.toLocaleString('fr-FR')
+    }));
   }
   if (matchesEarned > 0) {
-    messageParts.push(`Multi +${matchesEarned.toLocaleString('fr-FR')}`);
+    messageParts.push(t('scripts.app.metaux.multiBonus', {
+      value: matchesEarned.toLocaleString('fr-FR')
+    }));
   }
   if (messageParts.length) {
-    showToast(`Métaux : ${messageParts.join(' · ')}`);
+    showToast(t('scripts.app.metaux.toast', { details: messageParts.join(' · ') }));
   }
   saveGame();
 }
@@ -4897,16 +4905,16 @@ if (elements.metauxNewGameButton) {
     initMetauxGame();
     const credits = getMetauxCreditCount();
     if (!metauxGame) {
-      showToast('Forge indisponible pour le moment.');
+      showToast(t('scripts.app.metaux.unavailable'));
       return;
     }
     if (isMetauxSessionRunning()) {
-      showToast('Une partie est déjà en cours. Terminez-la avant de relancer.');
+      showToast(t('scripts.app.metaux.gameInProgress'));
       updateMetauxCreditsUI();
       return;
     }
     if (credits <= 0) {
-      showToast('Aucun crédit Mach3 disponible.');
+      showToast(t('scripts.app.metaux.noCredits'));
       updateMetauxCreditsUI();
       return;
     }
@@ -6940,20 +6948,20 @@ function attemptPurchase(def, quantity = 1) {
   const remainingLevels = getRemainingUpgradeCapacity(def);
   const cappedOut = Number.isFinite(remainingLevels) && remainingLevels <= 0;
   if (cappedOut) {
-    showToast('Niveau maximum atteint.');
+    showToast(t('scripts.app.shop.maxLevel'));
     return;
   }
   const finalAmount = Number.isFinite(remainingLevels)
     ? Math.min(buyAmount, remainingLevels)
     : buyAmount;
   if (!Number.isFinite(finalAmount) || finalAmount <= 0) {
-    showToast('Niveau maximum atteint.');
+    showToast(t('scripts.app.shop.maxLevel'));
     return;
   }
   const cost = computeUpgradeCost(def, finalAmount);
   const shopFree = isDevKitShopFree();
   if (!shopFree && gameState.atoms.compare(cost) < 0) {
-    showToast('Pas assez d’atomes.');
+    showToast(t('scripts.app.shop.notEnoughAtoms'));
     return;
   }
   if (!shopFree) {
@@ -6966,10 +6974,18 @@ function attemptPurchase(def, quantity = 1) {
   gameState.upgrades[def.id] = normalizedLevel + finalAmount;
   recalcProduction();
   updateUI();
-  const limitSuffix = finalAmount < buyAmount ? ' (limite atteinte)' : '';
+  const limitSuffix = finalAmount < buyAmount ? t('scripts.app.shop.limitSuffix') : '';
   showToast(shopFree
-    ? `DevKit : "${def.name}" ×${finalAmount} débloqué gratuitement !${limitSuffix}`
-    : `Amélioration "${def.name}" x${finalAmount} achetée !${limitSuffix}`);
+    ? t('scripts.app.shop.devkitFreePurchase', {
+      name: def.name,
+      quantity: finalAmount,
+      suffix: limitSuffix
+    })
+    : t('scripts.app.shop.purchase', {
+      name: def.name,
+      quantity: finalAmount,
+      suffix: limitSuffix
+    }));
 }
 
 function updateMilestone() {
@@ -7194,7 +7210,7 @@ function applyTheme() {
 if (elements.themeSelect) {
   elements.themeSelect.addEventListener('change', () => {
     applyTheme();
-    showToast('Thème mis à jour');
+    showToast(t('scripts.app.themeUpdated'));
   });
 }
 
@@ -7238,9 +7254,9 @@ if (elements.musicTrackSelect) {
     const currentTrack = musicPlayer.getCurrentTrack();
     if (currentTrack) {
       if (currentTrack.placeholder) {
-        showToast('Le fichier de cette piste est manquant.');
+        showToast(t('scripts.app.music.fileMissing'));
       } else {
-        showToast(`Lecture : ${currentTrack.displayName}`);
+        showToast(t('scripts.app.music.nowPlaying', { name: currentTrack.displayName }));
       }
     }
     updateMusicStatus();
@@ -7255,7 +7271,7 @@ if (elements.musicVolumeSlider) {
     musicPlayer.setVolume(normalized);
     gameState.musicVolume = normalized;
     if (announce) {
-      showToast(`Volume musique : ${Math.round(normalized * 100)} %`);
+      showToast(t('scripts.app.music.volumeLabel', { value: Math.round(normalized * 100) }));
     }
   };
   elements.musicVolumeSlider.addEventListener('input', event => {
@@ -7271,15 +7287,15 @@ elements.resetButton.addEventListener('click', () => {
   const promptMessage = `Réinitialisation complète du jeu. Tapez "${confirmationWord}" pour confirmer.\nCette action est irréversible.`;
   const response = prompt(promptMessage);
   if (response == null) {
-    showToast('Réinitialisation annulée');
+    showToast(t('scripts.app.reset.cancelled'));
     return;
   }
   if (response.trim().toUpperCase() !== confirmationWord) {
-    showToast('Mot de confirmation incorrect');
+    showToast(t('scripts.app.reset.invalid'));
     return;
   }
   resetGame();
-  showToast('Progression réinitialisée');
+  showToast(t('scripts.app.reset.done'));
 });
 
 if (elements.bigBangOptionToggle) {
@@ -7294,7 +7310,9 @@ if (elements.bigBangOptionToggle) {
     gameState.bigBangButtonVisible = enabled;
     updateBigBangVisibility();
     saveGame();
-    showToast(enabled ? 'Bouton Big Bang affiché' : 'Bouton Big Bang masqué');
+    showToast(enabled
+      ? t('scripts.app.bigBangToggle.shown')
+      : t('scripts.app.bigBangToggle.hidden'));
   });
 }
 
@@ -7873,7 +7891,7 @@ function loadGame() {
         if (multiplier > 0) {
           const offlineGain = gameState.perSecond.multiplyNumber(capped * multiplier);
           gainAtoms(offlineGain, 'offline');
-          showToast(`Progression hors ligne : +${offlineGain.toString()} atomes`);
+          showToast(t('scripts.app.offline.progressAtoms', { amount: offlineGain.toString() }));
         }
       }
       const hasFirstTrophy = getUnlockedTrophySet().has(ARCADE_TROPHY_ID);
@@ -7906,8 +7924,10 @@ function loadGame() {
             : 0;
           gameState.gachaTickets = currentTickets + ticketsEarned;
           evaluatePageUnlocks({ save: false, deferUI: true });
-          const unit = ticketsEarned === 1 ? 'ticket' : 'tickets';
-          showToast(`Tickets hors ligne : +${ticketsEarned} ${unit}`);
+          const unit = ticketsEarned === 1
+            ? t('scripts.app.offlineTickets.ticketSingular')
+            : t('scripts.app.offlineTickets.ticketPlural');
+          showToast(t('scripts.app.offline.tickets', { count: ticketsEarned, unit }));
           progressSeconds -= ticketsEarned * secondsPerTicket;
           progressSeconds = Math.max(0, Math.min(progressSeconds, capSeconds));
         }
