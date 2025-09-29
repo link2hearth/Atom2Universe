@@ -486,6 +486,26 @@
 
   settings.ticketReward = readNumber(ARCADE_CONFIG.ticketReward, 1, { min: 0, round: 'floor' });
 
+  const levelSpeedBonusConfig = readObject(
+    ARCADE_CONFIG.levelSpeedBonus ?? ARCADE_CONFIG.speedBonus
+  );
+  settings.levelSpeedBonus = {
+    thresholdSeconds: readNumber(
+      levelSpeedBonusConfig.thresholdSeconds
+        ?? levelSpeedBonusConfig.threshold
+        ?? ARCADE_CONFIG.levelSpeedBonusSeconds,
+      25,
+      { min: 0 }
+    ),
+    bonusTickets: readNumber(
+      levelSpeedBonusConfig.bonusTickets
+        ?? levelSpeedBonusConfig.tickets
+        ?? levelSpeedBonusConfig.reward,
+      1,
+      { min: 0, round: 'floor' }
+    )
+  };
+
   const gridConfig = readObject(ARCADE_CONFIG.grid);
   settings.grid = {
     cols: readNumber(gridConfig.columns ?? gridConfig.cols ?? gridConfig.colonnes, 14, { min: 1, round: 'round' }),
@@ -790,7 +810,11 @@
       template: readString(uiLevelClearedConfig.template, 'Niveau {level} terminé !{reward}'),
       buttonLabel: readString(uiLevelClearedConfig.buttonLabel, 'Continuer'),
       rewardTemplate: readString(uiLevelClearedConfig.rewardTemplate, ' {reward} obtenu !'),
-      noReward: readString(uiLevelClearedConfig.noReward, ' Aucun ticket cette fois.')
+      noReward: readString(uiLevelClearedConfig.noReward, ' Aucun ticket cette fois.'),
+      speedBonusTemplate: readString(
+        uiLevelClearedConfig.speedBonusTemplate,
+        ' Bonus vitesse : +{bonus} !'
+      )
     },
     gameOver: {
       withTickets: readString(uiGameOverConfig.withTickets, 'Partie terminée ! Tickets gagnés : {tickets}{bonus}.'),
@@ -808,6 +832,8 @@
   const SETTINGS = settings;
 
   const ARCADE_TICKET_REWARD = SETTINGS.ticketReward;
+  const LEVEL_SPEED_BONUS_THRESHOLD_SECONDS = SETTINGS.levelSpeedBonus.thresholdSeconds;
+  const LEVEL_SPEED_BONUS_TICKETS = SETTINGS.levelSpeedBonus.bonusTickets;
   const GRID_COLS = SETTINGS.grid.cols;
   const GRID_ROWS = SETTINGS.grid.rows;
   const MAX_LIVES = SETTINGS.maxLives;
@@ -912,7 +938,7 @@
   const LEVEL_CLEARED_TEMPLATE = SETTINGS.ui.levelCleared.template;
   const LEVEL_CLEARED_BUTTON = SETTINGS.ui.levelCleared.buttonLabel;
   const LEVEL_CLEARED_REWARD_TEMPLATE = SETTINGS.ui.levelCleared.rewardTemplate;
-  const LEVEL_CLEARED_NO_REWARD = SETTINGS.ui.levelCleared.noReward;
+  const LEVEL_CLEARED_SPEED_BONUS_TEMPLATE = SETTINGS.ui.levelCleared.speedBonusTemplate;
   const GAME_OVER_WITH_TICKETS = SETTINGS.ui.gameOver.withTickets;
   const GAME_OVER_WITHOUT_TICKETS = SETTINGS.ui.gameOver.withoutTickets;
   const GAME_OVER_BUTTON = SETTINGS.ui.gameOver.buttonLabel;
@@ -2830,16 +2856,36 @@
       this.powerUps = [];
       this.lasers = [];
       const completedLevel = this.level;
-      const reward = this.lives === this.maxLives ? ARCADE_TICKET_REWARD : 0;
-      if (reward > 0) {
-        this.ticketsEarned += reward;
-        if (this.onTicketsEarned) {
-          this.onTicketsEarned(reward, { level: completedLevel, score: this.score });
-        }
+      const now = typeof performance !== 'undefined' ? performance.now() : Date.now();
+      const completionSeconds = this.levelStartedAt > 0
+        ? (now - this.levelStartedAt) / 1000
+        : null;
+      const baseReward = Math.max(1, Math.floor(ARCADE_TICKET_REWARD) || 0);
+      const speedBonus = completionSeconds != null
+        && completionSeconds < LEVEL_SPEED_BONUS_THRESHOLD_SECONDS
+        ? LEVEL_SPEED_BONUS_TICKETS
+        : 0;
+      const totalReward = baseReward + speedBonus;
+      this.ticketsEarned += totalReward;
+      if (this.onTicketsEarned) {
+        this.onTicketsEarned(totalReward, {
+          level: completedLevel,
+          score: this.score,
+          speedBonus,
+          completionSeconds
+        });
       }
-      const rewardLabel = reward > 0
-        ? LEVEL_CLEARED_REWARD_TEMPLATE.replace('{reward}', this.formatTicketLabel(reward))
-        : LEVEL_CLEARED_NO_REWARD;
+      let rewardLabel = LEVEL_CLEARED_REWARD_TEMPLATE.replace(
+        '{reward}',
+        this.formatTicketLabel(totalReward)
+      );
+      if (speedBonus > 0 && LEVEL_CLEARED_SPEED_BONUS_TEMPLATE) {
+        const bonusLabel = LEVEL_CLEARED_SPEED_BONUS_TEMPLATE.replace(
+          '{bonus}',
+          this.formatTicketLabel(speedBonus)
+        );
+        rewardLabel += bonusLabel;
+      }
       const message = LEVEL_CLEARED_TEMPLATE
         .replace('{level}', completedLevel)
         .replace('{reward}', rewardLabel);
