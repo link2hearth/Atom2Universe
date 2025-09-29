@@ -98,6 +98,56 @@ function translateCollectionTarget(target) {
   return target;
 }
 
+function resolveConfigLabel(label, fallback = null) {
+  const normalized = typeof label === 'string' ? label.trim() : '';
+  const fallbackValue = typeof fallback === 'string' ? fallback.trim() : '';
+  if (!normalized) {
+    return { text: fallbackValue || null, isFallback: true };
+  }
+  if (normalized.startsWith('scripts.')) {
+    const translated = translateOrDefault(normalized, fallbackValue);
+    const trimmed = typeof translated === 'string' ? translated.trim() : '';
+    if (trimmed && trimmed !== normalized) {
+      return { text: trimmed, isFallback: false };
+    }
+    if (fallbackValue) {
+      return { text: fallbackValue, isFallback: true };
+    }
+    return { text: null, isFallback: true };
+  }
+  return { text: normalized, isFallback: false };
+}
+
+function getDefaultAddLabel(context, addConfig = {}) {
+  if (context === 'perCopy') {
+    return {
+      text: translateCollectionLabel('perCopy', 'Par copie'),
+      includeRequireAllUnique: true
+    };
+  }
+  if (context === 'setBonus') {
+    const requiresFullCollection = (
+      addConfig.requireAllUnique
+      && (!Number.isFinite(addConfig.minCopies) || addConfig.minCopies <= 1)
+      && (!Number.isFinite(addConfig.minUnique) || addConfig.minUnique <= 0)
+    );
+    if (requiresFullCollection) {
+      return {
+        text: translateCollectionLabel('fullCollection', 'Collection complète'),
+        includeRequireAllUnique: false
+      };
+    }
+    return {
+      text: translateCollectionLabel('collectionBonus', 'Bonus de collection'),
+      includeRequireAllUnique: true
+    };
+  }
+  return {
+    text: translateCollectionLabel('generic', 'Bonus'),
+    includeRequireAllUnique: true
+  };
+}
+
 function compareTextLocalized(a, b, options) {
   const api = getI18nApi();
   if (api && typeof api.compareText === 'function') {
@@ -292,30 +342,32 @@ function describeAddConfig(addConfig, context, options = {}) {
     ? options.overrideLabel.trim()
     : null;
 
+  const defaultLabelInfo = getDefaultAddLabel(context, addConfig);
   let includeRequireAllUnique = true;
-  let baseLabel = (() => {
-    if (typeof addConfig.label === 'string' && addConfig.label.trim()) {
-      return addConfig.label.trim();
+  let baseLabel = null;
+
+  const configLabelInfo = resolveConfigLabel(addConfig.label, defaultLabelInfo.text);
+  if (configLabelInfo.text) {
+    baseLabel = configLabelInfo.text;
+    if (configLabelInfo.isFallback) {
+      includeRequireAllUnique = defaultLabelInfo.includeRequireAllUnique;
     }
-    if (overrideLabel) {
-      return overrideLabel;
-    }
-    if (context === 'perCopy') {
-      return translateCollectionLabel('perCopy', 'Par copie');
-    }
-    if (context === 'setBonus') {
-      if (
-        addConfig.requireAllUnique
-        && (!Number.isFinite(addConfig.minCopies) || addConfig.minCopies <= 1)
-        && (!Number.isFinite(addConfig.minUnique) || addConfig.minUnique <= 0)
-      ) {
-        includeRequireAllUnique = false;
-        return translateCollectionLabel('fullCollection', 'Collection complète');
+  }
+
+  if (!baseLabel) {
+    const overrideLabelInfo = resolveConfigLabel(overrideLabel, defaultLabelInfo.text);
+    if (overrideLabelInfo.text) {
+      baseLabel = overrideLabelInfo.text;
+      if (overrideLabelInfo.isFallback) {
+        includeRequireAllUnique = defaultLabelInfo.includeRequireAllUnique;
       }
-      return translateCollectionLabel('collectionBonus', 'Bonus de collection');
     }
-    return translateCollectionLabel('generic', 'Bonus');
-  })();
+  }
+
+  if (!baseLabel) {
+    baseLabel = defaultLabelInfo.text;
+    includeRequireAllUnique = defaultLabelInfo.includeRequireAllUnique;
+  }
 
   const thresholdText = formatBonusThreshold(addConfig, context, { includeRequireAllUnique });
   const effects = [];
@@ -554,9 +606,9 @@ function describeMultiplierConfig(multiplierConfig, labelOverride = null) {
   if (!parts.length) {
     return null;
   }
-  const labelPrefix = labelOverride && labelOverride.trim()
-    ? labelOverride.trim()
-    : translateCollectionLabel('multiplier', `Multiplicateur ${localizedTarget}`, { target: localizedTarget });
+  const defaultLabel = translateCollectionLabel('multiplier', `Multiplicateur ${localizedTarget}`, { target: localizedTarget });
+  const resolvedLabel = resolveConfigLabel(labelOverride, defaultLabel);
+  const labelPrefix = resolvedLabel.text || defaultLabel;
   return `${labelPrefix} : ${parts.join(' · ')}`;
 }
 
@@ -607,13 +659,15 @@ function describeRarityMultiplierBonus(bonusConfig, labelOverride = null) {
     value: amountText,
     suffix
   });
-  if (labelOverride && labelOverride.trim()) {
-    return `${labelOverride.trim()} : ${detail}`;
-  }
-  const prefix = translateCollectionLabel('rarityMultiplier', 'Multiplicateur de rareté', {
+  const defaultPrefix = translateCollectionLabel('rarityMultiplier', 'Multiplicateur de rareté', {
     target: localizedTarget
   });
-  return `${prefix} ${detail}`.trim();
+  const resolvedLabel = resolveConfigLabel(labelOverride, defaultPrefix);
+  if (resolvedLabel.text && !resolvedLabel.isFallback) {
+    return `${resolvedLabel.text} : ${detail}`;
+  }
+  const effectivePrefix = resolvedLabel.text || defaultPrefix;
+  return `${effectivePrefix} ${detail}`.trim();
 }
 
 function describeMythiqueSpecials(groupConfig) {
