@@ -595,7 +595,35 @@
         "prompt": "Sélectionnez une recette pour tenter votre première fusion."
       },
       "table": {
-        "placeholder": "Le tableau périodique sera bientôt disponible."
+        "placeholder": "Le tableau périodique sera bientôt disponible.",
+        "aria": {
+          "nameWithSymbol": "{name} ({symbol})",
+          "name": "{name}",
+          "symbol": "{symbol}",
+          "atomicNumber": "Numéro atomique {number}",
+          "atomicMass": "Masse atomique {mass}",
+          "family": "Famille {family}"
+        },
+        "info": {
+          "ownedAria": "Copies actives\u00a0: {active}. Collectées au total\u00a0: {lifetime}.",
+          "ownedTitle": "Copies actives\u00a0: {active}\nCollectées au total\u00a0: {lifetime}"
+        },
+        "collection": {
+          "progress": "Collection\u00a0: {owned} / {total} éléments",
+          "summary": "Collection\u00a0: {owned} / {total} éléments ({ratio}\u00a0%)"
+        },
+        "bonuses": {
+          "apcFlat": "APC +{value}",
+          "apsFlat": "APS +{value}",
+          "apcMult": "APC {value}",
+          "apsMult": "APS {value}",
+          "critChance": "Chance critique +{value}",
+          "critMultiplier": "Dégâts critiques +{value}×",
+          "ticketInterval": "Toutes les {duration}",
+          "offline": "Gains hors ligne {value}",
+          "frenzy": "Chance de frénésie {value}",
+          "overflow": "Bonus excédentaires +{value}"
+        }
       },
       "collection": {
         "pending": "Collection en préparation"

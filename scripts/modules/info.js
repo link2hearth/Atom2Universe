@@ -140,7 +140,11 @@ function formatElementTicketInterval(seconds) {
   if (!duration) {
     return null;
   }
-  return `Toutes les ${duration}`;
+  return translateOrDefault(
+    'scripts.app.table.bonuses.ticketInterval',
+    `Toutes les ${duration}`,
+    { duration }
+  );
 }
 
 const COLLECTION_BONUS_OVERVIEW_CACHE = new Map();

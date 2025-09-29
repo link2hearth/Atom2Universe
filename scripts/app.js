@@ -3618,13 +3618,18 @@ function updateElementInfoPanel(definition) {
     const displayCount = formatIntegerLocalized(count);
     const lifetimeDisplay = formatIntegerLocalized(lifetimeCount);
     elements.elementInfoOwnedCount.textContent = displayCount;
-    elements.elementInfoOwnedCount.setAttribute(
-      'aria-label',
-      `Copies actives\u00a0: ${displayCount}. Collectées au total\u00a0: ${lifetimeDisplay}`
+    const ownedAria = translateOrDefault(
+      'scripts.app.table.info.ownedAria',
+      `Copies actives\u00a0: ${displayCount}. Collectées au total\u00a0: ${lifetimeDisplay}`,
+      { active: displayCount, lifetime: lifetimeDisplay }
     );
-    const titleCountLabel = `${displayCount} copie${count > 1 ? 's' : ''} active${count > 1 ? 's' : ''}`;
-    const titleLifetimeLabel = `${lifetimeDisplay} collectée${lifetimeCount > 1 ? 's' : ''} au total`;
-    elements.elementInfoOwnedCount.setAttribute('title', `${titleCountLabel}\n${titleLifetimeLabel}`);
+    elements.elementInfoOwnedCount.setAttribute('aria-label', ownedAria);
+    const ownedTitle = translateOrDefault(
+      'scripts.app.table.info.ownedTitle',
+      `Copies actives\u00a0: ${displayCount}\nCollectées au total\u00a0: ${lifetimeDisplay}`,
+      { active: displayCount, lifetime: lifetimeDisplay }
+    );
+    elements.elementInfoOwnedCount.setAttribute('title', ownedTitle);
   }
   if (elements.elementInfoCollection) {
     const rarityId = entry?.rarity || elementRarityIndex.get(definition.id);
@@ -3722,27 +3727,63 @@ function updateElementInfoPanel(definition) {
           const fallbackParts = [];
           const clickFlat = formatElementFlatBonus(summary.clickFlatTotal);
           if (clickFlat) {
-            fallbackParts.push(`APC +${clickFlat}`);
+            fallbackParts.push(
+              translateOrDefault(
+                'scripts.app.table.bonuses.apcFlat',
+                `APC +${clickFlat}`,
+                { value: clickFlat }
+              )
+            );
           }
           const autoFlat = formatElementFlatBonus(summary.autoFlatTotal);
           if (autoFlat) {
-            fallbackParts.push(`APS +${autoFlat}`);
+            fallbackParts.push(
+              translateOrDefault(
+                'scripts.app.table.bonuses.apsFlat',
+                `APS +${autoFlat}`,
+                { value: autoFlat }
+              )
+            );
           }
           const clickMult = formatElementMultiplierDisplay(summary.multiplierPerClick);
           if (clickMult) {
-            fallbackParts.push(`APC ${clickMult}`);
+            fallbackParts.push(
+              translateOrDefault(
+                'scripts.app.table.bonuses.apcMult',
+                `APC ${clickMult}`,
+                { value: clickMult }
+              )
+            );
           }
           const autoMult = formatElementMultiplierDisplay(summary.multiplierPerSecond);
           if (autoMult) {
-            fallbackParts.push(`APS ${autoMult}`);
+            fallbackParts.push(
+              translateOrDefault(
+                'scripts.app.table.bonuses.apsMult',
+                `APS ${autoMult}`,
+                { value: autoMult }
+              )
+            );
           }
           const critChance = formatElementCritChanceBonus(summary.critChanceAdd);
           if (critChance) {
-            fallbackParts.push(`Chance critique +${critChance}`);
+            fallbackParts.push(
+              translateOrDefault(
+                'scripts.app.table.bonuses.critChance',
+                `Chance critique +${critChance}`,
+                { value: critChance }
+              )
+            );
           }
           const critMult = formatElementCritMultiplierBonus(summary.critMultiplierAdd);
           if (critMult) {
-            fallbackParts.push(`Dégâts critiques +${critMult}×`);
+            fallbackParts.push(
+              translateOrDefault(
+                'scripts.app.table.bonuses.critMultiplier',
+                `Dégâts critiques +${critMult}×`,
+                { value: critMult }
+              )
+            );
           }
           const ticketInterval = formatElementTicketInterval(summary.ticketIntervalSeconds);
           if (ticketInterval) {
@@ -3750,17 +3791,35 @@ function updateElementInfoPanel(definition) {
           }
           const offlineMult = formatElementMultiplierDisplay(summary.offlineMultiplier);
           if (offlineMult && offlineMult !== '×1') {
-            fallbackParts.push(`Gains hors-ligne ${offlineMult}`);
+            fallbackParts.push(
+              translateOrDefault(
+                'scripts.app.table.bonuses.offline',
+                `Gains hors-ligne ${offlineMult}`,
+                { value: offlineMult }
+              )
+            );
           }
           const frenzyMult = formatElementMultiplierDisplay(summary.frenzyChanceMultiplier);
           if (frenzyMult && frenzyMult !== '×1') {
-            fallbackParts.push(`Chance de frénésie ${frenzyMult}`);
+            fallbackParts.push(
+              translateOrDefault(
+                'scripts.app.table.bonuses.frenzy',
+                `Chance de frénésie ${frenzyMult}`,
+                { value: frenzyMult }
+              )
+            );
           }
           const overflowDuplicates = Number(summary.overflowDuplicates);
           if (Number.isFinite(overflowDuplicates) && overflowDuplicates > 0) {
             const overflowText = formatElementFlatBonus(overflowDuplicates);
             if (overflowText) {
-              fallbackParts.push(`Bonus excédentaires +${overflowText}`);
+              fallbackParts.push(
+                translateOrDefault(
+                  'scripts.app.table.bonuses.overflow',
+                  `Bonus excédentaires +${overflowText}`,
+                  { value: overflowText }
+                )
+              );
             }
           }
           if (fallbackParts.length) {
@@ -3893,19 +3952,59 @@ function renderPeriodicTable() {
     const massText = formatAtomicMass(def.atomicMass);
     const labelParts = [];
     if (displayName) {
-      labelParts.push(displaySymbol ? `${displayName} (${displaySymbol})` : displayName);
+      if (displaySymbol) {
+        labelParts.push(
+          translateOrDefault(
+            'scripts.app.table.aria.nameWithSymbol',
+            `${displayName} (${displaySymbol})`,
+            { name: displayName, symbol: displaySymbol }
+          )
+        );
+      } else {
+        labelParts.push(
+          translateOrDefault(
+            'scripts.app.table.aria.name',
+            displayName,
+            { name: displayName }
+          )
+        );
+      }
     } else if (displaySymbol) {
-      labelParts.push(displaySymbol);
+      labelParts.push(
+        translateOrDefault(
+          'scripts.app.table.aria.symbol',
+          displaySymbol,
+          { symbol: displaySymbol }
+        )
+      );
     }
     if (def.atomicNumber != null) {
-      labelParts.push(`numéro atomique ${def.atomicNumber}`);
+      labelParts.push(
+        translateOrDefault(
+          'scripts.app.table.aria.atomicNumber',
+          `numéro atomique ${def.atomicNumber}`,
+          { number: def.atomicNumber }
+        )
+      );
     }
     if (massText) {
-      labelParts.push(`masse atomique ${massText}`);
+      labelParts.push(
+        translateOrDefault(
+          'scripts.app.table.aria.atomicMass',
+          `masse atomique ${massText}`,
+          { mass: massText }
+        )
+      );
     }
     if (def.category) {
       const categoryLabel = CATEGORY_LABELS[def.category] || def.category;
-      labelParts.push(`famille ${categoryLabel}`);
+      labelParts.push(
+        translateOrDefault(
+          'scripts.app.table.aria.family',
+          `famille ${categoryLabel}`,
+          { family: categoryLabel }
+        )
+      );
     }
     cell.setAttribute('aria-label', labelParts.join(', '));
 
@@ -3948,7 +4047,13 @@ function updateCollectionDisplay() {
 
   if (elements.collectionProgress) {
     if (total > 0) {
-      elements.collectionProgress.textContent = `Collection\u00a0: ${ownedCount} / ${total} éléments`;
+      const ownedDisplay = formatIntegerLocalized(ownedCount);
+      const totalDisplay = formatIntegerLocalized(total);
+      elements.collectionProgress.textContent = translateOrDefault(
+        'scripts.app.table.collection.progress',
+        `Collection\u00a0: ${ownedDisplay} / ${totalDisplay} éléments`,
+        { owned: ownedDisplay, total: totalDisplay }
+      );
     } else {
       elements.collectionProgress.textContent = t('scripts.app.collection.pending');
     }
@@ -3956,13 +4061,26 @@ function updateCollectionDisplay() {
 
   if (elements.gachaOwnedSummary) {
     if (total > 0) {
+      const ownedDisplay = formatIntegerLocalized(ownedCount);
+      const totalDisplay = formatIntegerLocalized(total);
       const ratio = (ownedCount / total) * 100;
-      const formatted = ratio >= 99.95
-        ? '100'
-        : ratio >= 10
-          ? ratio.toFixed(1).replace('.', ',')
-          : ratio.toFixed(2).replace('.', ',');
-      elements.gachaOwnedSummary.textContent = `Collection\u00a0: ${ownedCount} / ${total} éléments (${formatted}\u00a0%)`;
+      let ratioValue = ratio;
+      let ratioOptions = { maximumFractionDigits: 2 };
+      if (!Number.isFinite(ratioValue) || ratioValue < 0) {
+        ratioValue = 0;
+      }
+      if (ratioValue >= 99.95) {
+        ratioValue = 100;
+        ratioOptions = { maximumFractionDigits: 0 };
+      } else if (ratioValue >= 10) {
+        ratioOptions = { maximumFractionDigits: 1 };
+      }
+      const ratioDisplay = formatNumberLocalized(ratioValue, ratioOptions);
+      elements.gachaOwnedSummary.textContent = translateOrDefault(
+        'scripts.app.table.collection.summary',
+        `Collection\u00a0: ${ownedDisplay} / ${totalDisplay} éléments (${ratioDisplay}\u00a0%)`,
+        { owned: ownedDisplay, total: totalDisplay, ratio: ratioDisplay }
+      );
     } else {
       elements.gachaOwnedSummary.textContent = t('scripts.app.collection.pending');
     }
@@ -7929,6 +8047,7 @@ if (elements.themeSelect) {
 
 if (typeof window !== 'undefined') {
   window.addEventListener('i18n:languagechange', () => {
+    renderPeriodicTable();
     updateUI();
   });
 }

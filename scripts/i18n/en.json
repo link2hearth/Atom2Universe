@@ -610,7 +610,35 @@
         "prompt": "Select a recipe to attempt your first fusion."
       },
       "table": {
-        "placeholder": "The periodic table will be available soon."
+        "placeholder": "The periodic table will be available soon.",
+        "aria": {
+          "nameWithSymbol": "{name} ({symbol})",
+          "name": "{name}",
+          "symbol": "{symbol}",
+          "atomicNumber": "Atomic number {number}",
+          "atomicMass": "Atomic mass {mass}",
+          "family": "{family} family"
+        },
+        "info": {
+          "ownedAria": "Active copies: {active}. Total collected: {lifetime}.",
+          "ownedTitle": "Active copies: {active}\nTotal collected: {lifetime}"
+        },
+        "collection": {
+          "progress": "Collection: {owned} / {total} elements",
+          "summary": "Collection: {owned} / {total} elements ({ratio} %)"
+        },
+        "bonuses": {
+          "apcFlat": "APC +{value}",
+          "apsFlat": "APS +{value}",
+          "apcMult": "APC {value}",
+          "apsMult": "APS {value}",
+          "critChance": "Critical chance +{value}",
+          "critMultiplier": "Critical damage +{value}×",
+          "ticketInterval": "Every {duration}",
+          "offline": "Offline gains {value}",
+          "frenzy": "Frenzy chance {value}",
+          "overflow": "Overflow bonuses +{value}"
+        }
       },
       "collection": {
         "pending": "Collection in progress"
