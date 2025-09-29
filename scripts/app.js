@@ -7975,19 +7975,50 @@ function loop(now) {
 
 window.addEventListener('beforeunload', saveGame);
 
-loadGame();
-musicPlayer.init({
-  preferredTrackId: gameState.musicTrackId,
-  autoplay: gameState.musicEnabled !== false,
-  volume: gameState.musicVolume
-});
-musicPlayer.ready().then(() => {
-  refreshMusicControls();
-});
-recalcProduction();
-evaluateTrophies();
-renderShop();
-renderGoals();
-updateUI();
-initStarfield();
-requestAnimationFrame(loop);
+function startApp() {
+  loadGame();
+  musicPlayer.init({
+    preferredTrackId: gameState.musicTrackId,
+    autoplay: gameState.musicEnabled !== false,
+    volume: gameState.musicVolume
+  });
+  musicPlayer.ready().then(() => {
+    refreshMusicControls();
+  });
+  recalcProduction();
+  evaluateTrophies();
+  renderShop();
+  renderGoals();
+  updateUI();
+  initStarfield();
+  requestAnimationFrame(loop);
+}
+
+function initializeApp() {
+  const i18n = globalThis.i18n;
+  if (i18n && typeof i18n.setLanguage === 'function') {
+    const defaultLanguage = GLOBAL_CONFIG?.language
+      ?? APP_DATA?.DEFAULT_LANGUAGE
+      ?? document.documentElement.lang
+      ?? 'fr';
+    i18n
+      .setLanguage(defaultLanguage)
+      .catch((error) => {
+        console.error('Unable to load language resources', error);
+      })
+      .finally(() => {
+        if (typeof i18n.updateTranslations === 'function') {
+          i18n.updateTranslations(document);
+        }
+        startApp();
+      });
+    return;
+  }
+  startApp();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeApp, { once: true });
+} else {
+  initializeApp();
+}
