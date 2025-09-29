@@ -896,9 +896,34 @@ const CATEGORY_LABEL_KEYS = {
   actinide: 'scripts.gameData.categories.actinide'
 };
 
-const CATEGORY_LABELS = Object.fromEntries(
-  Object.entries(CATEGORY_LABEL_KEYS).map(([key, messageKey]) => [key, gameDataTranslate(messageKey)])
-);
+function formatCategoryFallbackLabel(id) {
+  if (!id) {
+    return '';
+  }
+  return id
+    .split(/[-_\s]+/)
+    .filter(Boolean)
+    .map(segment => segment.charAt(0).toUpperCase() + segment.slice(1))
+    .join(' ');
+}
+
+const CATEGORY_LABELS = {};
+Object.entries(CATEGORY_LABEL_KEYS).forEach(([key, messageKey]) => {
+  Object.defineProperty(CATEGORY_LABELS, key, {
+    enumerable: true,
+    configurable: true,
+    get() {
+      const translated = gameDataTranslate(messageKey);
+      if (typeof translated === 'string') {
+        const trimmed = translated.trim();
+        if (trimmed && trimmed !== messageKey) {
+          return trimmed;
+        }
+      }
+      return formatCategoryFallbackLabel(key);
+    }
+  });
+});
 
 const ELEMENT_GROUP_BONUS_CONFIG = (() => {
   const result = new Map();
@@ -1423,7 +1448,9 @@ const ELEMENT_FAMILY_POOLS = (() => {
     if (!pools.has(familyId)) {
       pools.set(familyId, {
         elementIds: [],
-        label: CATEGORY_LABELS[familyId] || familyId
+        get label() {
+          return CATEGORY_LABELS[familyId] || formatCategoryFallbackLabel(familyId);
+        }
       });
     }
     pools.get(familyId).elementIds.push(def.id);
