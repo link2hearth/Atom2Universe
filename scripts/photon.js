@@ -52,6 +52,21 @@
     }
   };
 
+  const BAR_TEXTURE_SPECS = {
+    blue: {
+      src: 'assets/image/Grille.png',
+      naturalWidth: 1920,
+      naturalHeight: 227
+    },
+    red: {
+      src: 'assets/image/Bulle.png',
+      naturalWidth: 1233,
+      naturalHeight: 325
+    }
+  };
+
+  const WIDTH_SHRINK_RATIO = 0.25;
+
   const isPlainObject = value => value && typeof value === 'object' && !Array.isArray(value);
 
   const readNumber = (value, fallback, { min, max } = {}) => {
@@ -259,10 +274,41 @@
 
       this._tick = this._tick.bind(this);
 
+      this.barTextures = {};
+      this.loadBarTextures();
+
       if (this.context && this.canvas) {
         this.resize();
         this.render();
       }
+    }
+
+    loadBarTextures() {
+      if (typeof Image === 'undefined') {
+        this.barTextures = {};
+        return;
+      }
+      this.barTextures = {};
+      Object.entries(BAR_TEXTURE_SPECS).forEach(([key, spec]) => {
+        const image = new Image();
+        const entry = {
+          image,
+          loaded: false,
+          error: false,
+          spec
+        };
+        image.addEventListener('load', () => {
+          entry.loaded = true;
+          if (this.context) {
+            this.render();
+          }
+        });
+        image.addEventListener('error', () => {
+          entry.error = true;
+        });
+        image.src = spec.src;
+        this.barTextures[key] = entry;
+      });
     }
 
     getBarWidth() {
@@ -528,21 +574,32 @@
       ctx.fillStyle = backgroundGradient;
       ctx.fillRect(0, 0, width, height);
 
-      const barWidth = this.getBarWidth();
-      const barX = (width - barWidth) / 2;
+      const baseBarWidth = this.getBarWidth();
+      const baseBarX = (width - baseBarWidth) / 2;
       for (const bar of this.bars) {
         const colors = COLOR_DEFS[bar.color] || COLOR_DEFS.blue;
-        const barGradient = ctx.createLinearGradient(barX, bar.y, barX + barWidth, bar.y + bar.height);
-        barGradient.addColorStop(0, colors.barEdge);
-        barGradient.addColorStop(0.2, colors.bar);
-        barGradient.addColorStop(0.8, colors.bar);
-        barGradient.addColorStop(1, colors.barEdge);
-        drawRoundedRect(ctx, barX, bar.y, barWidth, bar.height, Math.min(28, barWidth / 4));
-        ctx.fillStyle = barGradient;
-        ctx.fill();
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
-        ctx.lineWidth = 2;
-        ctx.stroke();
+        const progress = clamp((bar.y + bar.height) / Math.max(1, height), 0, 1);
+        const widthFactor = 1 - WIDTH_SHRINK_RATIO * progress;
+        const targetWidth = Math.max(1, width * widthFactor);
+        const drawX = (width - targetWidth) / 2;
+        const drawHeight = bar.height;
+        const textureEntry = this.barTextures[bar.color];
+        if (textureEntry && textureEntry.loaded) {
+          ctx.imageSmoothingEnabled = true;
+          ctx.drawImage(textureEntry.image, drawX, bar.y, targetWidth, drawHeight);
+        } else {
+          const barGradient = ctx.createLinearGradient(drawX, bar.y, drawX + targetWidth, bar.y + drawHeight);
+          barGradient.addColorStop(0, colors.barEdge);
+          barGradient.addColorStop(0.2, colors.bar);
+          barGradient.addColorStop(0.8, colors.bar);
+          barGradient.addColorStop(1, colors.barEdge);
+          drawRoundedRect(ctx, drawX, bar.y, targetWidth, drawHeight, Math.min(28, targetWidth / 4));
+          ctx.fillStyle = barGradient;
+          ctx.fill();
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        }
       }
 
       const haloHeight = this.getHaloHeight();
@@ -572,7 +629,7 @@
       baseLineGradient.addColorStop(0, 'rgba(255, 255, 255, 0.25)');
       baseLineGradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
       ctx.fillStyle = baseLineGradient;
-      ctx.fillRect(barX * 0.2, haloTop - 6, width - barX * 0.4, 12);
+      ctx.fillRect(baseBarX * 0.2, haloTop - 6, width - baseBarX * 0.4, 12);
 
       ctx.restore();
     }
