@@ -134,6 +134,7 @@
         "exitAria": "Leave the Metals mini-game",
         "timerLabel": "Timer",
         "timerMax": "Max 6 s",
+        "boardAria": "Metals mini-game grid",
         "endTitle": "Forge complete",
         "summary": {
           "time": "Time spent",

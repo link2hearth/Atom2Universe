@@ -134,6 +134,7 @@
         "exitAria": "Quitter le mini-jeu Métaux",
         "timerLabel": "Chrono",
         "timerMax": "Max 6 s",
+        "boardAria": "Grille du mini-jeu Métaux",
         "endTitle": "Forge terminée",
         "summary": {
           "time": "Temps passé",
