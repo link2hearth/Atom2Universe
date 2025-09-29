@@ -435,32 +435,6 @@
           },
           "description": "Atteignez {target} atomes cumulés, {flavor}."
         },
-        "uiText": {
-          "options": {
-            "welcomeCard": {
-              "title": "Bienvenue",
-              "intro": "Bienvenue dans Atom to Univers, commencez en cliquant pour gagner des Atomes (APC Atoms Par Clic), achetez des améliorations dans le magasin et automatisez la récolte (APS Atoms Par Seconde). Débloquez des minis jeux au fur et à mesure de votre progression. L’objectif est d’accumuler le plus possible d’Atomes pour fabriquer un Univers.",
-              "details": {
-                "particles": {
-                  "label": "Mini Jeu Particules :",
-                  "description": "Collisionnez les particules élémentaires afin de gagner des tickets de tirage pour le Gacha, et des crédits pour le mini jeu Mach3."
-                },
-                "gacha": {
-                  "label": "Gacha :",
-                  "description": "Grâce à vos tickets gagnez des Atomes du tableau périodique des éléments, leurs collections vous octroieront des bonus de APS et APC notamment."
-                },
-                "match3": {
-                  "label": "Mini jeu Mach3 :",
-                  "description": "C’est un jeu de Match 3, alignez le Cuivre, le Bronze, l’Argent, l’Or et le Carbone (Diamant) le plus vite possible avant que le timer atteigne 0. Plus votre score sera grand, plus grand sera votre bonus de production d’APS."
-                },
-                "photon": {
-                  "label": "Mini jeu Photon :",
-                  "description": "Incarnez un Photon qui change d’état afin de passer entre des mailles, ou dans des trous le plus longtemps possible. Ajoutera un bonus plus tard."
-                }
-              }
-            }
-          }
-        },
         "arcade": {
           "particules": {
             "graviton": {
@@ -489,6 +463,32 @@
       },
       "scripts": {
         "config": {
+          "uiText": {
+            "options": {
+              "welcomeCard": {
+                "title": "Bienvenue",
+                "intro": "Bienvenue dans Atom to Univers, commencez en cliquant pour gagner des Atomes (APC Atoms Par Clic), achetez des améliorations dans le magasin et automatisez la récolte (APS Atoms Par Seconde). Débloquez des minis jeux au fur et à mesure de votre progression. L’objectif est d’accumuler le plus possible d’Atomes pour fabriquer un Univers.",
+                "details": {
+                  "particles": {
+                    "label": "Mini Jeu Particules :",
+                    "description": "Collisionnez les particules élémentaires afin de gagner des tickets de tirage pour le Gacha, et des crédits pour le mini jeu Mach3."
+                  },
+                  "gacha": {
+                    "label": "Gacha :",
+                    "description": "Grâce à vos tickets gagnez des Atomes du tableau périodique des éléments, leurs collections vous octroieront des bonus de APS et APC notamment."
+                  },
+                  "match3": {
+                    "label": "Mini jeu Mach3 :",
+                    "description": "C’est un jeu de Match 3, alignez le Cuivre, le Bronze, l’Argent, l’Or et le Carbone (Diamant) le plus vite possible avant que le timer atteigne 0. Plus votre score sera grand, plus grand sera votre bonus de production d’APS."
+                  },
+                  "photon": {
+                    "label": "Mini jeu Photon :",
+                    "description": "Incarnez un Photon qui change d’état afin de passer entre des mailles, ou dans des trous le plus longtemps possible. Ajoutera un bonus plus tard."
+                  }
+                }
+              }
+            }
+          },
           "elementBonuses": {
             "essentiel": {
               "perCopy": "Essentiel planétaire · récoltes essentielles",
@@ -1454,32 +1454,6 @@
           },
           "description": "Reach {target} cumulative atoms, {flavor}."
         },
-        "uiText": {
-          "options": {
-            "welcomeCard": {
-              "title": "Welcome",
-              "intro": "Welcome to Atom to Univers. Start by clicking to earn Atoms (APC Atoms Per Click), purchase upgrades in the shop, and automate harvesting (APS Atoms Per Second). Unlock mini-games as you progress. The goal is to gather as many Atoms as possible to forge a Universe.",
-              "details": {
-                "particles": {
-                  "label": "Particles mini-game:",
-                  "description": "Collide elementary particles to earn draw tickets for the Gacha and credits for the Mach3 mini-game."
-                },
-                "gacha": {
-                  "label": "Gacha:",
-                  "description": "Spend your tickets to obtain atoms from the periodic table; completing collections grants APS and APC bonuses among others."
-                },
-                "match3": {
-                  "label": "Mach3 mini-game:",
-                  "description": "A Match 3 game—line up Copper, Bronze, Silver, Gold, and Carbon (Diamond) as quickly as possible before the timer hits 0. Higher scores mean higher APS production bonuses."
-                },
-                "photon": {
-                  "label": "Photon mini-game:",
-                  "description": "Play as a Photon switching states to slip between meshes or through holes for as long as possible. Bonus to be added later."
-                }
-              }
-            }
-          }
-        },
         "arcade": {
           "particules": {
             "graviton": {
@@ -1508,6 +1482,32 @@
       },
       "scripts": {
         "config": {
+          "uiText": {
+            "options": {
+              "welcomeCard": {
+                "title": "Welcome",
+                "intro": "Welcome to Atom to Univers. Start by clicking to earn Atoms (APC Atoms Per Click), purchase upgrades in the shop, and automate harvesting (APS Atoms Per Second). Unlock mini-games as you progress. The goal is to gather as many Atoms as possible to forge a Universe.",
+                "details": {
+                  "particles": {
+                    "label": "Particles mini-game:",
+                    "description": "Collide elementary particles to earn draw tickets for the Gacha and credits for the Mach3 mini-game."
+                  },
+                  "gacha": {
+                    "label": "Gacha:",
+                    "description": "Spend your tickets to obtain atoms from the periodic table; completing collections grants APS and APC bonuses among others."
+                  },
+                  "match3": {
+                    "label": "Mach3 mini-game:",
+                    "description": "A Match 3 game—line up Copper, Bronze, Silver, Gold, and Carbon (Diamond) as quickly as possible before the timer hits 0. Higher scores mean higher APS production bonuses."
+                  },
+                  "photon": {
+                    "label": "Photon mini-game:",
+                    "description": "Play as a Photon switching states to slip between meshes or through holes for as long as possible. Bonus to be added later."
+                  }
+                }
+              }
+            }
+          },
           "elementBonuses": {
             "essentiel": {
               "perCopy": "Planetary Essential · Essential harvests",
