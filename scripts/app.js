@@ -1,4 +1,13 @@
 const APP_DATA = typeof globalThis !== 'undefined' && globalThis.APP_DATA ? globalThis.APP_DATA : {};
+const GLOBAL_CONFIG =
+  typeof globalThis !== 'undefined' && globalThis.GAME_CONFIG ? globalThis.GAME_CONFIG : {};
+const OPTIONS_WELCOME_CARD =
+  GLOBAL_CONFIG
+  && GLOBAL_CONFIG.uiText
+  && GLOBAL_CONFIG.uiText.options
+  && GLOBAL_CONFIG.uiText.options.welcomeCard
+    ? GLOBAL_CONFIG.uiText.options.welcomeCard
+    : null;
 
 const ATOM_SCALE_TROPHY_DATA = Array.isArray(APP_DATA.ATOM_SCALE_TROPHY_DATA)
   ? APP_DATA.ATOM_SCALE_TROPHY_DATA
@@ -1520,6 +1529,8 @@ const elements = {
   musicTrackSelect: document.getElementById('musicTrackSelect'),
   musicTrackStatus: document.getElementById('musicTrackStatus'),
   musicVolumeSlider: document.getElementById('musicVolumeSlider'),
+  optionsWelcomeTitle: document.getElementById('optionsWelcomeTitle'),
+  optionsWelcomeIntro: document.getElementById('optionsWelcomeIntro'),
   optionsArcadeDetails: document.getElementById('optionsArcadeDetails'),
   brickSkinOptionCard: document.getElementById('brickSkinOptionCard'),
   brickSkinSelect: document.getElementById('brickSkinSelect'),
@@ -1562,6 +1573,67 @@ const elements = {
   devkitToggleShop: document.getElementById('devkitToggleShop'),
   devkitToggleGacha: document.getElementById('devkitToggleGacha')
 };
+
+function renderOptionsWelcomeContent() {
+  const copy = OPTIONS_WELCOME_CARD;
+  if (elements.optionsWelcomeTitle) {
+    const titleText =
+      copy && typeof copy.title === 'string' && copy.title.trim().length
+        ? copy.title
+        : 'Bienvenue';
+    elements.optionsWelcomeTitle.textContent = titleText;
+  }
+  if (elements.optionsWelcomeIntro) {
+    const container = elements.optionsWelcomeIntro;
+    container.innerHTML = '';
+    const paragraphs =
+      copy && Array.isArray(copy.introParagraphs)
+        ? copy.introParagraphs
+        : copy && typeof copy.intro === 'string'
+          ? [copy.intro]
+          : [];
+    paragraphs.forEach(paragraph => {
+      if (typeof paragraph !== 'string' || !paragraph.trim()) {
+        return;
+      }
+      const node = document.createElement('p');
+      node.textContent = paragraph;
+      container.appendChild(node);
+    });
+  }
+  if (elements.optionsArcadeDetails) {
+    const container = elements.optionsArcadeDetails;
+    container.innerHTML = '';
+    const details =
+      copy && Array.isArray(copy.unlockedDetails)
+        ? copy.unlockedDetails
+        : [];
+    details.forEach(detail => {
+      if (!detail || typeof detail !== 'object') {
+        return;
+      }
+      const label = typeof detail.label === 'string' ? detail.label : null;
+      const description = typeof detail.description === 'string' ? detail.description : null;
+      if (!label && !description) {
+        return;
+      }
+      const paragraph = document.createElement('p');
+      if (label) {
+        const strong = document.createElement('strong');
+        strong.textContent = label;
+        paragraph.appendChild(strong);
+        if (description) {
+          paragraph.appendChild(document.createTextNode(` ${description}`));
+        }
+      } else {
+        paragraph.textContent = description;
+      }
+      container.appendChild(paragraph);
+    });
+  }
+}
+
+renderOptionsWelcomeContent();
 
 function updateBrickSkinOption() {
   if (!elements.brickSkinOptionCard || !elements.brickSkinSelect) {

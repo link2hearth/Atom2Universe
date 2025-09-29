@@ -572,6 +572,43 @@ function createAtomScaleTrophies() {
 
 const GAME_CONFIG = {
   /**
+   * Textes affichés dans l'interface utilisateur.
+   * Centralisés ici pour faciliter leur édition sans toucher au HTML.
+   */
+  uiText: {
+    options: {
+      welcomeCard: {
+        title: 'Bienvenue',
+        introParagraphs: [
+          "Bienvenue dans Atom to Univers, commencez en cliquant pour gagner des Atomes (APC Atoms Par Clic), achetez des améliorations dans le magasin et automatisez la récolte (APS Atoms Par Seconde). Débloquez des minis jeux au fur et à mesure de votre progression. L’objectif est d’accumuler le plus possible d’Atomes pour fabriquer un Univers."
+        ],
+        unlockedDetails: [
+          {
+            label: 'Mini Jeu Particules :',
+            description:
+              'Collisionnez les particules élémentaires afin de gagner des tickets de tirage pour la Gacha, et des crédits pour le mini jeu Mach3.'
+          },
+          {
+            label: 'Gacha :',
+            description:
+              'Grâce à vos tickets gagnez des Atomes du tableau périodique des éléments, leurs collections vous octroieront des bonus de APS et APC notamment.'
+          },
+          {
+            label: 'Mini jeu Mach3 :',
+            description:
+              "C’est un jeu de Match 3, alignez le Cuivre, le Bronze, l’Argent, l’Or et le Carbone (Diamant) le plus vite possible avant que le timer atteigne 0. Plus votre score sera grand, plus grand sera votre bonus de production d’APS."
+          },
+          {
+            label: 'Mini jeu Photon :',
+            description:
+              'Incarnez un Photon qui change d’état afin de passer entre des mailles, ou dans des trous le plus longtemps possible. Ajoutera un bonus plus tard.'
+          }
+        ]
+      }
+    }
+  },
+
+  /**
    * Paramètres du système de grands nombres et des layers.
    * - layer1Threshold : passage automatique au layer 1 lorsque l'exposant dépasse ce seuil.
    * - layer1Downshift : retour au layer 0 quand la valeur redescend sous ce niveau.
