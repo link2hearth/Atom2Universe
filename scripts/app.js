@@ -1977,7 +1977,29 @@ function renderOptionsWelcomeContent() {
   }
 }
 
-renderOptionsWelcomeContent();
+function refreshOptionsWelcomeContent() {
+  renderOptionsWelcomeContent();
+  updateOptionsIntroDetails();
+}
+
+function subscribeOptionsWelcomeContentUpdates() {
+  const api = getI18nApi();
+  if (api && typeof api.onLanguageChanged === 'function') {
+    api.onLanguageChanged(() => {
+      refreshOptionsWelcomeContent();
+    });
+    return;
+  }
+  if (typeof globalThis !== 'undefined'
+    && typeof globalThis.addEventListener === 'function') {
+    globalThis.addEventListener('i18n:languagechange', () => {
+      refreshOptionsWelcomeContent();
+    });
+  }
+}
+
+refreshOptionsWelcomeContent();
+subscribeOptionsWelcomeContentUpdates();
 
 function updateLanguageSelectorValue(language) {
   if (!elements.languageSelect) {
@@ -8020,8 +8042,7 @@ if (elements.languageSelect) {
           i18n.updateTranslations(document);
         }
         updateLanguageSelectorValue(requestedLanguage);
-        renderOptionsWelcomeContent();
-        updateOptionsIntroDetails();
+        refreshOptionsWelcomeContent();
         updateBrickSkinOption();
         updateUI();
         showToast(t('scripts.app.language.updated'));
