@@ -152,6 +152,18 @@ function formatDurationLocalized(value, options) {
   return formatNumberLocalized(value, Object.assign({ style: 'unit', unit: 'second', unitDisplay: 'short' }, options));
 }
 
+function formatTrophyBonusValue(value) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) {
+    return '0';
+  }
+  const rounded = Math.round(numeric);
+  if (Math.abs(numeric - rounded) <= 1e-9) {
+    return formatIntegerLocalized(rounded);
+  }
+  return formatNumberLocalized(numeric, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
 function compareTextLocalized(a, b, options) {
   const api = getI18nApi();
   if (api && typeof api.compareText === 'function') {
@@ -1242,7 +1254,9 @@ function normalizeTrophyDefinition(entry, index) {
     condition,
     reward,
     rewardText: reward.description || null,
-    order: Number.isFinite(Number(entry.order)) ? Number(entry.order) : index
+    order: Number.isFinite(Number(entry.order)) ? Number(entry.order) : index,
+    targetText: typeof entry.targetText === 'string' ? entry.targetText : null,
+    flavor: typeof entry.flavor === 'string' ? entry.flavor : null
   };
 }
 
@@ -1612,7 +1626,8 @@ function unlockTrophy(def) {
   const unlocked = getUnlockedTrophySet();
   if (unlocked.has(def.id)) return false;
   unlocked.add(def.id);
-  showToast(t('scripts.app.trophies.unlocked', { name: def.name }));
+  const trophyTexts = getTrophyDisplayTexts(def);
+  showToast(t('scripts.app.trophies.unlocked', { name: trophyTexts.name }));
   recalcProduction();
   updateGoalsUI();
   updateBigBangVisibility();
@@ -5465,7 +5480,9 @@ function computeUpgradeCost(def, quantity = 1) {
 
 function formatShopCost(cost) {
   const value = cost instanceof LayeredNumber ? cost : new LayeredNumber(cost);
-  return `${value.toString()} atomes`;
+  return translateOrDefault('scripts.app.shop.costLabel', `${value.toString()} atomes`, {
+    value: value.toString()
+  });
 }
 
 function recalcProduction() {
@@ -6821,12 +6838,13 @@ function recalcProduction() {
     const level = getUpgradeLevel(gameState.upgrades, def.id);
     if (!level) return;
     const effects = def.effect(level, gameState.upgrades);
+    const displayName = getLocalizedUpgradeName(def);
 
     if (effects.clickAdd != null) {
       const value = normalizeProductionUnit(effects.clickAdd);
       if (!value.isZero()) {
         clickShopAddition = clickShopAddition.add(value);
-        clickDetails.additions.push({ id: def.id, label: def.name, level, value: value.clone(), source: 'shop' });
+        clickDetails.additions.push({ id: def.id, label: displayName, level, value: value.clone(), source: 'shop' });
       }
     }
 
@@ -6834,7 +6852,7 @@ function recalcProduction() {
       const value = normalizeProductionUnit(effects.autoAdd);
       if (!value.isZero()) {
         autoShopAddition = autoShopAddition.add(value);
-        autoDetails.additions.push({ id: def.id, label: def.name, level, value: value.clone(), source: 'shop' });
+        autoDetails.additions.push({ id: def.id, label: displayName, level, value: value.clone(), source: 'shop' });
       }
     }
 
@@ -6847,7 +6865,7 @@ function recalcProduction() {
       if (!isLayeredOne(multiplierValue)) {
         clickDetails.multipliers.push({
           id: def.id,
-          label: def.name,
+          label: displayName,
           level,
           value: multiplierValue.clone(),
           source: 'shop'
@@ -6864,7 +6882,7 @@ function recalcProduction() {
       if (!isLayeredOne(multiplierValue)) {
         autoDetails.multipliers.push({
           id: def.id,
-          label: def.name,
+          label: displayName,
           level,
           value: multiplierValue.clone(),
           source: 'shop'
@@ -7037,6 +7055,119 @@ LayeredNumber.prototype.addNumber = function (num) {
   return this.add(new LayeredNumber(num));
 };
 
+function getShopBuildingTexts(def) {
+  if (!def || typeof def !== 'object') {
+    return { name: '', description: '' };
+  }
+  const id = typeof def.id === 'string' ? def.id.trim() : '';
+  const baseKey = id ? `config.shop.buildings.${id}` : '';
+  const fallbackName = typeof def.name === 'string' ? def.name : id;
+  let name = fallbackName;
+  if (baseKey) {
+    const translatedName = translateOrDefault(`${baseKey}.name`, fallbackName);
+    if (translatedName) {
+      name = translatedName;
+    }
+  }
+  const fallbackDescription = typeof def.effectSummary === 'string' && def.effectSummary.trim()
+    ? def.effectSummary.trim()
+    : (typeof def.description === 'string' ? def.description.trim() : '');
+  let description = '';
+  if (baseKey) {
+    description =
+      translateOrDefault(`${baseKey}.effectSummary`, '')
+      || translateOrDefault(`${baseKey}.effect`, '')
+      || translateOrDefault(`${baseKey}.description`, '');
+  }
+  if (!description) {
+    description = fallbackDescription;
+  }
+  return { name, description };
+}
+
+function getShopActionLabel(level) {
+  const isUpgrade = Number.isFinite(level) && Number(level) > 0;
+  const key = isUpgrade ? 'scripts.app.shop.actionUpgrade' : 'scripts.app.shop.actionBuy';
+  const fallback = isUpgrade ? 'Améliorer' : 'Acheter';
+  return translateOrDefault(key, fallback);
+}
+
+function formatShopLevelLabel(level, maxLevel, capReached) {
+  const resolvedLevel = Number.isFinite(level) ? Math.max(0, Math.floor(level)) : 0;
+  const params = { level: formatIntegerLocalized(resolvedLevel) };
+  let label;
+  if (Number.isFinite(maxLevel)) {
+    params.max = formatIntegerLocalized(Math.max(0, Math.floor(maxLevel)));
+    label = translateOrDefault(
+      'scripts.app.shop.levelLabelWithMax',
+      `Niveau ${params.level} / ${params.max}`,
+      params
+    );
+    if (capReached) {
+      const suffix = translateOrDefault('scripts.app.shop.levelMaxSuffix', ' (max)');
+      label += suffix;
+    }
+  } else {
+    label = translateOrDefault('scripts.app.shop.levelLabel', `Niveau ${params.level}`, params);
+  }
+  return label;
+}
+
+function getShopLimitSuffix(limited) {
+  if (!limited) {
+    return '';
+  }
+  return translateOrDefault('scripts.app.shop.limitSuffix', ' (limité aux niveaux restants)');
+}
+
+function formatShopPriceText({ isFree, limitedQuantity, quantity, priceText }) {
+  if (isFree) {
+    return translateOrDefault('scripts.app.shop.free', 'Gratuit');
+  }
+  if (limitedQuantity) {
+    return translateOrDefault(
+      'scripts.app.shop.priceLimited',
+      `Limité à x${quantity} — ${priceText}`,
+      { quantity: formatIntegerLocalized(quantity), price: priceText }
+    );
+  }
+  return priceText;
+}
+
+function formatShopAriaLabel({ state, action, name, quantity, limitNote, costValue }) {
+  const params = {
+    action: action || '',
+    name: name || '',
+    quantity: formatIntegerLocalized(Number.isFinite(quantity) ? quantity : Number(quantity) || 0),
+    limitNote: limitNote || ''
+  };
+  const fallbackQuantity = `×${params.quantity}${params.limitNote}`;
+  if (state === 'free') {
+    return translateOrDefault(
+      'scripts.app.shop.ariaActionFree',
+      `${params.action} ${params.name} ${fallbackQuantity} (gratuit)`,
+      params
+    );
+  }
+  params.cost = costValue || '';
+  if (state === 'cost') {
+    return translateOrDefault(
+      'scripts.app.shop.ariaActionCost',
+      `${params.action} ${params.name} ${fallbackQuantity} (coût ${params.cost} atomes)`,
+      params
+    );
+  }
+  return translateOrDefault(
+    'scripts.app.shop.ariaActionInsufficient',
+    `${params.action} ${params.name} ${fallbackQuantity} (atomes insuffisants)`,
+    params
+  );
+}
+
+function getLocalizedUpgradeName(def) {
+  return getShopBuildingTexts(def).name;
+}
+
 function buildShopItem(def) {
   const item = document.createElement('article');
   item.className = 'shop-item';
@@ -7047,7 +7178,8 @@ function buildShopItem(def) {
   header.className = 'shop-item__header';
 
   const title = document.createElement('h3');
-  title.textContent = def.name;
+  const texts = getShopBuildingTexts(def);
+  title.textContent = texts.name;
 
   const level = document.createElement('span');
   level.className = 'shop-item__level';
@@ -7056,7 +7188,7 @@ function buildShopItem(def) {
 
   const desc = document.createElement('p');
   desc.className = 'shop-item__description';
-  desc.textContent = def.effectSummary || def.description || '';
+  desc.textContent = texts.description;
 
   const actions = document.createElement('div');
   actions.className = 'shop-item__actions';
@@ -7091,7 +7223,7 @@ function buildShopItem(def) {
 
   item.append(header, desc, actions);
 
-  return { root: item, level, description: desc, buttons: buttonMap };
+  return { root: item, title, level, description: desc, buttons: buttonMap };
 }
 
 function updateShopVisibility() {
@@ -7127,19 +7259,22 @@ function updateShopAffordability() {
   UPGRADE_DEFS.forEach(def => {
     const row = shopRows.get(def.id);
     if (!row) return;
+    const texts = getShopBuildingTexts(def);
+    if (row.title) {
+      row.title.textContent = texts.name;
+    }
+    if (row.description) {
+      row.description.textContent = texts.description;
+    }
     const level = getUpgradeLevel(gameState.upgrades, def.id);
     const maxLevel = resolveUpgradeMaxLevel(def);
     const remainingLevels = getRemainingUpgradeCapacity(def);
     const hasFiniteCap = Number.isFinite(maxLevel);
     const capReached = Number.isFinite(remainingLevels) && remainingLevels <= 0;
-    if (hasFiniteCap) {
-      const baseLabel = `Niveau ${level} / ${maxLevel}`;
-      row.level.textContent = capReached ? `${baseLabel} (max)` : baseLabel;
-    } else {
-      row.level.textContent = `Niveau ${level}`;
-    }
+    row.level.textContent = formatShopLevelLabel(level, maxLevel, capReached);
     let anyAffordable = false;
-    const actionLabel = level > 0 ? 'Améliorer' : 'Acheter';
+    const actionLabel = getShopActionLabel(level);
+    const displayName = texts.name;
     const shopFree = isDevKitShopFree();
 
     SHOP_PURCHASE_AMOUNTS.forEach(quantity => {
@@ -7152,7 +7287,11 @@ function updateShopAffordability() {
         entry.price.textContent = t('scripts.app.shop.limitReached');
         entry.button.disabled = true;
         entry.button.classList.remove('is-ready');
-        const ariaLabel = `${def.name} a atteint son niveau maximum`;
+        const ariaLabel = translateOrDefault(
+          'scripts.app.shop.ariaMaxLevel',
+          `${displayName} a atteint son niveau maximum`,
+          { name: displayName }
+        );
         entry.button.setAttribute('aria-label', ariaLabel);
         entry.button.title = ariaLabel;
         return;
@@ -7167,15 +7306,13 @@ function updateShopAffordability() {
 
       const cost = computeUpgradeCost(def, effectiveQuantity);
       const affordable = shopFree || gameState.atoms.compare(cost) >= 0;
-      let priceText;
-      if (shopFree) {
-        priceText = 'Gratuit';
-      } else if (limited) {
-        priceText = `Limité à x${effectiveQuantity} — ${formatShopCost(cost)}`;
-      } else {
-        priceText = formatShopCost(cost);
-      }
-      entry.price.textContent = priceText;
+      const costDisplay = formatShopCost(cost);
+      entry.price.textContent = formatShopPriceText({
+        isFree: shopFree,
+        limitedQuantity: limited,
+        quantity: limited ? effectiveQuantity : baseQuantity,
+        priceText: costDisplay
+      });
       const enabled = affordable && effectiveQuantity > 0;
       entry.button.disabled = !enabled;
       entry.button.classList.toggle('is-ready', enabled);
@@ -7183,12 +7320,15 @@ function updateShopAffordability() {
         anyAffordable = true;
       }
       const displayQuantity = limited ? effectiveQuantity : baseQuantity;
-      const limitNote = limited ? ' (limité aux niveaux restants)' : '';
-      const ariaLabel = enabled
-        ? shopFree
-          ? `${actionLabel} ${def.name} ×${displayQuantity}${limitNote} (gratuit)`
-          : `${actionLabel} ${def.name} ×${displayQuantity}${limitNote} (coût ${cost.toString()} atomes)`
-        : `${actionLabel} ${def.name} ×${displayQuantity}${limitNote} (atomes insuffisants)`;
+      const limitNote = getShopLimitSuffix(limited);
+      const ariaLabel = formatShopAriaLabel({
+        state: enabled ? (shopFree ? 'free' : 'cost') : 'insufficient',
+        action: actionLabel,
+        name: displayName,
+        quantity: displayQuantity,
+        limitNote,
+        costValue: cost.toString()
+      });
       entry.button.setAttribute('aria-label', ariaLabel);
       entry.button.title = ariaLabel;
     });
@@ -7212,6 +7352,121 @@ function renderShop() {
   updateShopAffordability();
 }
 
+function getTrophyRewardParams(def) {
+  if (!def || typeof def !== 'object' || !def.reward) {
+    return null;
+  }
+  const params = {};
+  const reward = def.reward;
+  const bonusCandidates = [
+    reward.trophyMultiplierAdd,
+    reward.trophyMultiplierBonus,
+    reward.trophyMultiplier,
+    reward.trophyBonus
+  ];
+  const bonusValue = bonusCandidates.find(value => Number.isFinite(Number(value)));
+  if (bonusValue != null && Number.isFinite(Number(bonusValue))) {
+    const numeric = Number(bonusValue);
+    params.bonus = formatTrophyBonusValue(numeric);
+    params.total = formatTrophyBonusValue(1 + numeric);
+  }
+  let multiplierValue = null;
+  if (reward.multiplier != null) {
+    if (typeof reward.multiplier === 'number') {
+      multiplierValue = reward.multiplier;
+    } else if (reward.multiplier instanceof LayeredNumber) {
+      multiplierValue = reward.multiplier.toNumber();
+    } else if (typeof reward.multiplier === 'object') {
+      multiplierValue = reward.multiplier.global
+        ?? reward.multiplier.all
+        ?? reward.multiplier.total
+        ?? reward.multiplier.perClick
+        ?? reward.multiplier.click
+        ?? reward.multiplier.perSecond
+        ?? reward.multiplier.auto;
+    }
+  }
+  if (multiplierValue != null && Number.isFinite(Number(multiplierValue))) {
+    params.multiplier = formatNumberLocalized(Number(multiplierValue), {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  }
+  return Object.keys(params).length ? params : null;
+}
+
+function getTrophyTranslationBases(id) {
+  if (typeof id !== 'string' || !id) {
+    return [];
+  }
+  const bases = [`config.trophies.${id}`];
+  if (id.startsWith('scale')) {
+    bases.push(`config.trophies.presets.${id}`);
+  }
+  return bases;
+}
+
+function translateTrophyField(def, field, fallback, params) {
+  const bases = getTrophyTranslationBases(def?.id);
+  for (const base of bases) {
+    const key = `${base}.${field}`;
+    const translated = translateOrDefault(key, '', params);
+    if (translated) {
+      return translated;
+    }
+  }
+  return fallback || '';
+}
+
+function getTrophyDisplayTexts(def) {
+  if (!def || typeof def !== 'object') {
+    return { name: '', description: '', reward: '' };
+  }
+  const fallbackName = typeof def.name === 'string' ? def.name : '';
+  const fallbackDescription = typeof def.description === 'string' ? def.description : '';
+  const fallbackReward = typeof def.rewardText === 'string'
+    ? def.rewardText
+    : (def.reward && typeof def.reward.description === 'string' ? def.reward.description : '');
+
+  let name = translateTrophyField(def, 'name', fallbackName);
+  if (!name) {
+    name = fallbackName;
+  }
+
+  let descriptionParams = null;
+  if (def.targetText || def.flavor) {
+    descriptionParams = {
+      target: def.targetText || '',
+      flavor: def.flavor || ''
+    };
+  }
+  let description = '';
+  if (descriptionParams) {
+    description = translateOrDefault('config.trophies.description', '', descriptionParams);
+  }
+  if (!description) {
+    description = translateTrophyField(def, 'description', '', descriptionParams);
+  }
+  if (!description) {
+    description = fallbackDescription;
+  }
+
+  const rewardParams = getTrophyRewardParams(def);
+  let rewardText = translateTrophyField(def, 'reward', '', rewardParams);
+  if (!rewardText && rewardParams) {
+    rewardText = translateOrDefault('config.trophies.reward.description', '', rewardParams);
+  }
+  if (!rewardText) {
+    rewardText = fallbackReward;
+  }
+
+  return {
+    name,
+    description,
+    reward: rewardText
+  };
+}
+
 function buildGoalCard(def) {
   const card = document.createElement('article');
   card.className = 'goal-card';
@@ -7225,25 +7480,25 @@ function buildGoalCard(def) {
   header.className = 'goal-card__header';
 
   const title = document.createElement('h3');
-  title.textContent = def.name;
+  const texts = getTrophyDisplayTexts(def);
+  title.textContent = texts.name;
   title.className = 'goal-card__title';
 
   header.append(title);
 
   const description = document.createElement('p');
   description.className = 'goal-card__description';
-  description.textContent = def.description || '';
+  description.textContent = texts.description || '';
 
   card.append(header, description);
 
-  if (def.rewardText) {
-    const reward = document.createElement('p');
-    reward.className = 'goal-card__reward';
-    reward.textContent = def.rewardText;
-    card.appendChild(reward);
-  }
+  const reward = document.createElement('p');
+  reward.className = 'goal-card__reward';
+  reward.textContent = texts.reward || '';
+  reward.hidden = !texts.reward;
+  card.appendChild(reward);
 
-  return { root: card };
+  return { root: card, title, description, reward };
 }
 
 function renderGoals() {
@@ -7263,7 +7518,36 @@ function renderGoals() {
     fragment.appendChild(card.root);
   });
   elements.goalsList.appendChild(fragment);
+  refreshGoalCardTexts();
   updateGoalsUI();
+}
+
+function refreshGoalCardTexts() {
+  if (!trophyCards.size) {
+    return;
+  }
+  TROPHY_DEFS.forEach(def => {
+    const card = trophyCards.get(def.id);
+    if (!card) {
+      return;
+    }
+    const texts = getTrophyDisplayTexts(def);
+    if (card.title) {
+      card.title.textContent = texts.name;
+    }
+    if (card.description) {
+      card.description.textContent = texts.description || '';
+    }
+    if (card.reward) {
+      if (texts.reward) {
+        card.reward.textContent = texts.reward;
+        card.reward.hidden = false;
+      } else {
+        card.reward.textContent = '';
+        card.reward.hidden = true;
+      }
+    }
+  });
 }
 
 function attemptPurchase(def, quantity = 1) {
@@ -7297,15 +7581,16 @@ function attemptPurchase(def, quantity = 1) {
   gameState.upgrades[def.id] = normalizedLevel + finalAmount;
   recalcProduction();
   updateUI();
-  const limitSuffix = finalAmount < buyAmount ? t('scripts.app.shop.limitSuffix') : '';
+  const limitSuffix = finalAmount < buyAmount ? getShopLimitSuffix(true) : '';
+  const displayName = getLocalizedUpgradeName(def);
   showToast(shopFree
     ? t('scripts.app.shop.devkitFreePurchase', {
-      name: def.name,
+      name: displayName,
       quantity: finalAmount,
       suffix: limitSuffix
     })
     : t('scripts.app.shop.purchase', {
-      name: def.name,
+      name: displayName,
       quantity: finalAmount,
       suffix: limitSuffix
     }));
@@ -7502,6 +7787,7 @@ function updateUI() {
   updateFusionUI();
   updateShopAffordability();
   updateMilestone();
+  refreshGoalCardTexts();
   updateGoalsUI();
   updateInfoPanels();
 }

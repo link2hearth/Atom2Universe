@@ -503,12 +503,23 @@
           "shop": {
             "limitReached": "Limite atteinte",
             "free": "Gratuit",
+            "actionBuy": "Acheter",
+            "actionUpgrade": "Améliorer",
+            "levelLabel": "Niveau {level}",
+            "levelLabelWithMax": "Niveau {level} / {max}",
+            "levelMaxSuffix": " (max)",
+            "ariaMaxLevel": "{name} a atteint son niveau maximum",
+            "ariaActionFree": "{action} {name} ×{quantity}{limitNote} (gratuit)",
+            "ariaActionCost": "{action} {name} ×{quantity}{limitNote} (coût {cost} atomes)",
+            "ariaActionInsufficient": "{action} {name} ×{quantity}{limitNote} (atomes insuffisants)",
+            "priceLimited": "Limité à x{quantity} — {price}",
             "limitSuffix": " (limité aux niveaux restants)",
             "maxLevel": "Niveau maximum atteint.",
             "notEnoughAtoms": "Pas assez d’atomes.",
             "devkitFreePurchase": "DevKit : \"{name}\" ×{quantity} débloqué gratuitement !{suffix}",
             "purchase": "Amélioration \"{name}\" ×{quantity} achetée !{suffix}",
-            "milestoneHint": "Continuez à explorer des ordres de grandeur toujours plus vastes !"
+            "milestoneHint": "Continuez à explorer des ordres de grandeur toujours plus vastes !",
+            "costLabel": "{value} atomes"
           },
           "themeUpdated": "Thème mis à jour",
           "language": {
@@ -811,6 +822,16 @@
               "name": "Tempête tri-phasée",
               "description": "Déclenchez 1 000 frénésies cumulées.",
               "reward": "Active la triple frénésie et ajoute un bonus global ×{multiplier}."
+            },
+            "ticketHarvester": {
+              "name": "Collecteur d’étoiles",
+              "description": "Complétez les collections Commun cosmique et Essentiel planétaire.",
+              "reward": "Sur l’écran principal, les étoiles à tickets se récoltent seules après 3 secondes."
+            },
+            "alloyMastery": {
+              "name": "Maîtres des alliages",
+              "description": "Réussissez toutes les fusions d’alliages métalliques disponibles.",
+              "reward": "Ajoute +10 au multiplicateur de trophées."
             }
           }
         },
@@ -1443,12 +1464,23 @@
           "shop": {
             "limitReached": "Limit reached",
             "free": "Free",
+            "actionBuy": "Buy",
+            "actionUpgrade": "Upgrade",
+            "levelLabel": "Level {level}",
+            "levelLabelWithMax": "Level {level} / {max}",
+            "levelMaxSuffix": " (max)",
+            "ariaMaxLevel": "{name} has reached its maximum level",
+            "ariaActionFree": "{action} {name} ×{quantity}{limitNote} (free)",
+            "ariaActionCost": "{action} {name} ×{quantity}{limitNote} (cost {cost} atoms)",
+            "ariaActionInsufficient": "{action} {name} ×{quantity}{limitNote} (not enough atoms)",
+            "priceLimited": "Limited to x{quantity} — {price}",
             "limitSuffix": " (limited to remaining levels)",
             "maxLevel": "Maximum level reached.",
             "notEnoughAtoms": "Not enough atoms.",
             "devkitFreePurchase": "DevKit: \"{name}\" ×{quantity} unlocked for free!{suffix}",
             "purchase": "Upgrade \"{name}\" ×{quantity} purchased!{suffix}",
-            "milestoneHint": "Keep exploring ever larger orders of magnitude!"
+            "milestoneHint": "Keep exploring ever larger orders of magnitude!",
+            "costLabel": "{value} atoms"
           },
           "themeUpdated": "Theme updated",
           "language": {
@@ -1751,6 +1783,16 @@
               "name": "Tri-Phase Tempest",
               "description": "Trigger 1,000 total frenzies.",
               "reward": "Activates triple frenzy and adds a global ×{multiplier} bonus."
+            },
+            "ticketHarvester": {
+              "name": "Star Collector",
+              "description": "Complete the Cosmic Common and Planetary Essential collections.",
+              "reward": "On the main screen, ticket stars collect themselves after 3 seconds."
+            },
+            "alloyMastery": {
+              "name": "Alloy Masters",
+              "description": "Complete every available metal alloy fusion.",
+              "reward": "Adds +10 to the trophy multiplier."
             }
           }
         },
