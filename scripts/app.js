@@ -1395,6 +1395,7 @@ function unlockTrophy(def) {
   recalcProduction();
   updateGoalsUI();
   updateBigBangVisibility();
+  updateOptionsIntroDetails();
   updateBrickSkinOption();
   updateBrandPortalState({ animate: def.id === ARCADE_TROPHY_ID });
   updatePrimaryNavigationLocks();
@@ -1519,6 +1520,7 @@ const elements = {
   musicTrackSelect: document.getElementById('musicTrackSelect'),
   musicTrackStatus: document.getElementById('musicTrackStatus'),
   musicVolumeSlider: document.getElementById('musicVolumeSlider'),
+  optionsArcadeDetails: document.getElementById('optionsArcadeDetails'),
   brickSkinOptionCard: document.getElementById('brickSkinOptionCard'),
   brickSkinSelect: document.getElementById('brickSkinSelect'),
   brickSkinStatus: document.getElementById('brickSkinStatus'),
@@ -1578,6 +1580,15 @@ function updateBrickSkinOption() {
       ? 'Choisissez l’apparence des briques de Particules.'
       : 'Débloquez le trophée « Ruée vers le million » pour personnaliser vos briques.';
   }
+}
+
+function updateOptionsIntroDetails() {
+  if (!elements.optionsArcadeDetails) {
+    return;
+  }
+  const unlocked = isArcadeUnlocked();
+  elements.optionsArcadeDetails.hidden = !unlocked;
+  elements.optionsArcadeDetails.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
 }
 
 function updatePhotonStageColor(color) {
@@ -7029,6 +7040,7 @@ function updateUI() {
   updatePrimaryNavigationLocks();
   updatePageUnlockUI();
   updateBigBangVisibility();
+  updateOptionsIntroDetails();
   updateBrickSkinOption();
   updateBrandPortalState();
   updateMetauxCreditsUI();
