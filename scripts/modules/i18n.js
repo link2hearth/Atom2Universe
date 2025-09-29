@@ -42,6 +42,42 @@
     return DEFAULT_LANGUAGE;
   }
 
+  function cloneResource(resource) {
+    if (!resource || typeof resource !== 'object') {
+      return null;
+    }
+    try {
+      return JSON.parse(JSON.stringify(resource));
+    } catch (error) {
+      console.warn('Unable to clone embedded language resource', error);
+      return null;
+    }
+  }
+
+  function getEmbeddedResource(lang) {
+    if (!lang) {
+      return null;
+    }
+    const store = global.APP_EMBEDDED_I18N;
+    if (!store || typeof store !== 'object') {
+      return null;
+    }
+    const normalized = normalizeLanguageCode(lang);
+    if (normalized && store[normalized] && typeof store[normalized] === 'object') {
+      const cloned = cloneResource(store[normalized]);
+      if (cloned) {
+        return cloned;
+      }
+    }
+    if (store[lang] && typeof store[lang] === 'object') {
+      const cloned = cloneResource(store[lang]);
+      if (cloned) {
+        return cloned;
+      }
+    }
+    return null;
+  }
+
   function getValueFromPath(source, path) {
     if (!source || typeof source !== 'object') {
       return undefined;
@@ -123,11 +159,31 @@
   }
 
   async function fetchLanguageResource(lang) {
-    const response = await global.fetch(`${LANGUAGE_PATH}/${lang}.json`);
-    if (!response.ok) {
-      throw new Error(`Unable to load language resource: ${lang}`);
+    if (typeof global.fetch === 'function') {
+      try {
+        const response = await global.fetch(`${LANGUAGE_PATH}/${lang}.json`);
+        if (!response.ok) {
+          throw new Error(`Unable to load language resource: ${lang}`);
+        }
+        const data = await response.json();
+        if (data && typeof data === 'object') {
+          return data;
+        }
+        throw new Error(`Invalid language resource format for ${lang}`);
+      } catch (error) {
+        const embedded = getEmbeddedResource(lang);
+        if (embedded) {
+          console.warn(`Falling back to embedded language resource for ${lang}`, error);
+          return embedded;
+        }
+        throw error;
+      }
     }
-    return response.json();
+    const embedded = getEmbeddedResource(lang);
+    if (embedded) {
+      return embedded;
+    }
+    throw new Error(`Unable to load language resource: ${lang}`);
   }
 
   function getResolvedLocale(lang) {
