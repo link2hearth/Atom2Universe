@@ -520,14 +520,25 @@ body.theme-neon .status-bar {
 }
 
 .nav-button {
-  background: rgba(255, 255, 255, 0.08);
+  --nav-button-bg: rgba(255, 255, 255, 0.08);
+  --nav-button-bg-light: rgba(12, 16, 32, 0.08);
+  --nav-button-bg-neon: rgba(120, 140, 255, 0.18);
+  --nav-button-color: inherit;
+  --nav-button-color-light: inherit;
+  --nav-button-color-neon: inherit;
+  --nav-button-active-bg: var(--accent);
+  --nav-button-active-bg-neon: linear-gradient(120deg, #7affff, #9f7aff);
+  --nav-button-active-color: #05070c;
+  --nav-button-active-color-light: #f7f9ff;
+  --nav-button-active-color-neon: #04030c;
+  background: var(--nav-button-bg);
   border: none;
-  color: inherit;
+  color: var(--nav-button-color);
   font-family: 'Audiowide', 'Orbitron', sans-serif;
-  font-size: 0.9rem;
+  font-size: 0.63rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  padding: 0.31rem 0.84rem;
+  padding: 0.22rem 0.59rem;
   border-radius: 999px;
   cursor: pointer;
   transition: transform var(--transition), box-shadow var(--transition), background var(--transition), color var(--transition);
@@ -544,25 +555,154 @@ body.theme-neon .status-bar {
 }
 
 .nav-button.active {
-  background: var(--accent);
-  color: #05070c;
+  background: var(--nav-button-active-bg);
+  color: var(--nav-button-active-color);
 }
 
 body.theme-light .nav-button {
-  background: rgba(12,16,32,0.08);
+  background: var(--nav-button-bg-light);
+  color: var(--nav-button-color-light);
 }
 
 body.theme-light .nav-button.active {
-  color: #f7f9ff;
+  color: var(--nav-button-active-color-light);
 }
 
 body.theme-neon .nav-button {
-  background: rgba(120, 140, 255, 0.18);
+  background: var(--nav-button-bg-neon);
+  color: var(--nav-button-color-neon);
 }
 
 body.theme-neon .nav-button.active {
-  background: linear-gradient(120deg, #7affff, #9f7aff);
-  color: #04030c;
+  background: var(--nav-button-active-bg-neon);
+  color: var(--nav-button-active-color-neon);
+}
+
+/* Individual navigation button palettes */
+.nav-button[data-target="arcade"] {
+  --nav-button-bg: linear-gradient(135deg, #8ef7a3 0%, #caffbf 100%);
+  --nav-button-bg-light: linear-gradient(135deg, #69e58d 0%, #b8f8c9 100%);
+  --nav-button-bg-neon: linear-gradient(135deg, rgba(142, 247, 163, 0.85) 0%, rgba(202, 255, 191, 0.9) 100%);
+  --nav-button-color: #06381c;
+  --nav-button-color-light: #042315;
+  --nav-button-color-neon: #042315;
+  --nav-button-active-bg: #5ce08d;
+  --nav-button-active-bg-neon: linear-gradient(135deg, #5ce08d 0%, #9fffbf 100%);
+  --nav-button-active-color: #042414;
+  --nav-button-active-color-light: #02160c;
+  --nav-button-active-color-neon: #02160c;
+}
+
+.nav-button[data-target="shop"] {
+  --nav-button-bg: linear-gradient(135deg, #ffd784 0%, #ffb94f 100%);
+  --nav-button-bg-light: linear-gradient(135deg, #ffc96a 0%, #ffa93a 100%);
+  --nav-button-bg-neon: linear-gradient(135deg, rgba(255, 215, 132, 0.82) 0%, rgba(255, 185, 79, 0.9) 100%);
+  --nav-button-color: #3f2200;
+  --nav-button-color-light: #2b1700;
+  --nav-button-color-neon: #3f2200;
+  --nav-button-active-bg: #ffb347;
+  --nav-button-active-bg-neon: linear-gradient(135deg, #ffb347 0%, #ffd27d 100%);
+  --nav-button-active-color: #301800;
+  --nav-button-active-color-light: #1f0f00;
+  --nav-button-active-color-neon: #1f0f00;
+}
+
+.nav-button[data-target="gacha"] {
+  --nav-button-bg: linear-gradient(135deg, #ff9fe6 0%, #ffd0f4 100%);
+  --nav-button-bg-light: linear-gradient(135deg, #ff86d9 0%, #ffc2f0 100%);
+  --nav-button-bg-neon: linear-gradient(135deg, rgba(255, 159, 230, 0.86) 0%, rgba(255, 208, 244, 0.92) 100%);
+  --nav-button-color: #5a0c46;
+  --nav-button-color-light: #3f0831;
+  --nav-button-color-neon: #3f0831;
+  --nav-button-active-bg: #ff73d4;
+  --nav-button-active-bg-neon: linear-gradient(135deg, #ff73d4 0%, #ffb3ec 100%);
+  --nav-button-active-color: #3d0c2d;
+  --nav-button-active-color-light: #28081f;
+  --nav-button-active-color-neon: #28081f;
+}
+
+.nav-button[data-target="tableau"] {
+  --nav-button-bg: linear-gradient(135deg, #7defff 0%, #d5fbff 100%);
+  --nav-button-bg-light: linear-gradient(135deg, #63d9f0 0%, #c0f5ff 100%);
+  --nav-button-bg-neon: linear-gradient(135deg, rgba(125, 239, 255, 0.85) 0%, rgba(213, 251, 255, 0.9) 100%);
+  --nav-button-color: #04323d;
+  --nav-button-color-light: #022229;
+  --nav-button-color-neon: #022229;
+  --nav-button-active-bg: #4fd4ec;
+  --nav-button-active-bg-neon: linear-gradient(135deg, #4fd4ec 0%, #8af2ff 100%);
+  --nav-button-active-color: #02232a;
+  --nav-button-active-color-light: #01181c;
+  --nav-button-active-color-neon: #01181c;
+}
+
+.nav-button[data-target="fusion"] {
+  --nav-button-bg: linear-gradient(135deg, #ffb98a 0%, #ffd0a2 100%);
+  --nav-button-bg-light: linear-gradient(135deg, #ffa367 0%, #ffc78f 100%);
+  --nav-button-bg-neon: linear-gradient(135deg, rgba(255, 185, 138, 0.85) 0%, rgba(255, 208, 162, 0.92) 100%);
+  --nav-button-color: #4d1c00;
+  --nav-button-color-light: #331200;
+  --nav-button-color-neon: #331200;
+  --nav-button-active-bg: #ff9354;
+  --nav-button-active-bg-neon: linear-gradient(135deg, #ff9354 0%, #ffc18d 100%);
+  --nav-button-active-color: #361100;
+  --nav-button-active-color-light: #220a00;
+  --nav-button-active-color-neon: #220a00;
+}
+
+.nav-button[data-target="info"] {
+  --nav-button-bg: linear-gradient(135deg, #c7a4ff 0%, #f0d9ff 100%);
+  --nav-button-bg-light: linear-gradient(135deg, #b18cff 0%, #e4c2ff 100%);
+  --nav-button-bg-neon: linear-gradient(135deg, rgba(199, 164, 255, 0.86) 0%, rgba(240, 217, 255, 0.92) 100%);
+  --nav-button-color: #2b0b5a;
+  --nav-button-color-light: #1d073c;
+  --nav-button-color-neon: #1d073c;
+  --nav-button-active-bg: #a875ff;
+  --nav-button-active-bg-neon: linear-gradient(135deg, #a875ff 0%, #d1adff 100%);
+  --nav-button-active-color: #fdf8ff;
+  --nav-button-active-color-light: #fff9ff;
+  --nav-button-active-color-neon: #fff9ff;
+}
+
+.nav-button[data-target="goals"] {
+  --nav-button-bg: linear-gradient(135deg, #9df3e3 0%, #c4f8ee 100%);
+  --nav-button-bg-light: linear-gradient(135deg, #7de4d3 0%, #b0f2e5 100%);
+  --nav-button-bg-neon: linear-gradient(135deg, rgba(157, 243, 227, 0.85) 0%, rgba(196, 248, 238, 0.92) 100%);
+  --nav-button-color: #0d4238;
+  --nav-button-color-light: #083029;
+  --nav-button-color-neon: #083029;
+  --nav-button-active-bg: #59d9c2;
+  --nav-button-active-bg-neon: linear-gradient(135deg, #59d9c2 0%, #93f4e0 100%);
+  --nav-button-active-color: #073029;
+  --nav-button-active-color-light: #041d1a;
+  --nav-button-active-color-neon: #041d1a;
+}
+
+.nav-button[data-target="bigbang"] {
+  --nav-button-bg: linear-gradient(135deg, #ff9c8a 0%, #ff6f91 100%);
+  --nav-button-bg-light: linear-gradient(135deg, #ff846e 0%, #ff5c7c 100%);
+  --nav-button-bg-neon: linear-gradient(135deg, rgba(255, 156, 138, 0.86) 0%, rgba(255, 111, 145, 0.92) 100%);
+  --nav-button-color: #4d0718;
+  --nav-button-color-light: #330510;
+  --nav-button-color-neon: #330510;
+  --nav-button-active-bg: #ff5f6d;
+  --nav-button-active-bg-neon: linear-gradient(135deg, #ff5f6d 0%, #ff96b0 100%);
+  --nav-button-active-color: #2e040e;
+  --nav-button-active-color-light: #1f0209;
+  --nav-button-active-color-neon: #1f0209;
+}
+
+.nav-button[data-target="options"] {
+  --nav-button-bg: linear-gradient(135deg, #d4deff 0%, #a6b8ff 100%);
+  --nav-button-bg-light: linear-gradient(135deg, #bcc8ff 0%, #94a8ff 100%);
+  --nav-button-bg-neon: linear-gradient(135deg, rgba(212, 222, 255, 0.85) 0%, rgba(166, 184, 255, 0.92) 100%);
+  --nav-button-color: #0e204d;
+  --nav-button-color-light: #0a1533;
+  --nav-button-color-neon: #0a1533;
+  --nav-button-active-bg: #9bb0ff;
+  --nav-button-active-bg-neon: linear-gradient(135deg, #9bb0ff 0%, #c7d2ff 100%);
+  --nav-button-active-color: #08143a;
+  --nav-button-active-color-light: #040a1b;
+  --nav-button-active-color-neon: #040a1b;
 }
 
 main {
