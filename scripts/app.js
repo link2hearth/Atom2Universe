@@ -48,6 +48,129 @@ const BRICK_SKIN_TOAST_KEYS = Object.freeze({
   pastels: 'scripts.app.brickSkins.applied.pastels'
 });
 
+const LANGUAGE_STORAGE_KEY = 'atom2univers.language';
+const AVAILABLE_LANGUAGE_CODES = (() => {
+  const i18n = globalThis.i18n;
+  if (i18n && typeof i18n.getAvailableLanguages === 'function') {
+    const languages = i18n.getAvailableLanguages();
+    if (Array.isArray(languages) && languages.length) {
+      const normalized = languages
+        .map(code => (typeof code === 'string' ? code.trim() : ''))
+        .filter(Boolean);
+      if (normalized.length) {
+        return Object.freeze(normalized);
+      }
+    }
+  }
+  return Object.freeze(['fr', 'en']);
+})();
+
+const DEFAULT_LANGUAGE_CODE = (() => {
+  const primary = AVAILABLE_LANGUAGE_CODES[0];
+  if (typeof primary === 'string' && primary.trim()) {
+    return primary;
+  }
+  return 'fr';
+})();
+
+function normalizeLanguageCode(raw) {
+  if (typeof raw !== 'string') {
+    return '';
+  }
+  return raw.trim().toLowerCase();
+}
+
+function matchAvailableLanguage(raw) {
+  const normalized = normalizeLanguageCode(raw);
+  if (!normalized) {
+    return null;
+  }
+  const directMatch = AVAILABLE_LANGUAGE_CODES.find(code => code.toLowerCase() === normalized);
+  if (directMatch) {
+    return directMatch;
+  }
+  const [base] = normalized.split('-');
+  if (base) {
+    const baseMatch = AVAILABLE_LANGUAGE_CODES.find(code => code.toLowerCase() === base);
+    if (baseMatch) {
+      return baseMatch;
+    }
+  }
+  return null;
+}
+
+function resolveLanguageCode(raw) {
+  return matchAvailableLanguage(raw) ?? DEFAULT_LANGUAGE_CODE;
+}
+
+function getConfigDefaultLanguage() {
+  const configLanguage =
+    GLOBAL_CONFIG?.language
+    ?? APP_DATA?.DEFAULT_LANGUAGE
+    ?? document?.documentElement?.lang;
+  if (configLanguage) {
+    return matchAvailableLanguage(configLanguage) ?? DEFAULT_LANGUAGE_CODE;
+  }
+  return DEFAULT_LANGUAGE_CODE;
+}
+
+function readStoredLanguagePreference() {
+  try {
+    const stored = globalThis.localStorage?.getItem(LANGUAGE_STORAGE_KEY);
+    if (stored) {
+      const matched = matchAvailableLanguage(stored);
+      if (matched) {
+        return matched;
+      }
+    }
+  } catch (error) {
+    console.warn('Unable to read stored language preference', error);
+  }
+  return null;
+}
+
+function writeStoredLanguagePreference(lang) {
+  try {
+    const normalized = resolveLanguageCode(lang);
+    globalThis.localStorage?.setItem(LANGUAGE_STORAGE_KEY, normalized);
+  } catch (error) {
+    console.warn('Unable to persist language preference', error);
+  }
+}
+
+function detectNavigatorLanguage() {
+  const nav = typeof navigator !== 'undefined' ? navigator : null;
+  if (!nav) {
+    return null;
+  }
+  const candidates = [];
+  if (Array.isArray(nav.languages)) {
+    candidates.push(...nav.languages);
+  }
+  if (typeof nav.language === 'string') {
+    candidates.push(nav.language);
+  }
+  for (let index = 0; index < candidates.length; index += 1) {
+    const match = matchAvailableLanguage(candidates[index]);
+    if (match) {
+      return match;
+    }
+  }
+  return null;
+}
+
+function getInitialLanguagePreference() {
+  const stored = readStoredLanguagePreference();
+  if (stored) {
+    return stored;
+  }
+  const navigatorLanguage = detectNavigatorLanguage();
+  if (navigatorLanguage) {
+    return navigatorLanguage;
+  }
+  return getConfigDefaultLanguage();
+}
+
 function normalizeBrickSkinSelection(rawValue) {
   const value = typeof rawValue === 'string' ? rawValue.trim().toLowerCase() : '';
   if (value === 'pastels1' || value === 'pastels2') {
@@ -1535,6 +1658,7 @@ const elements = {
   photonOverlayMessage: document.getElementById('photonOverlayMessage'),
   photonOverlayButton: document.getElementById('photonOverlayButton'),
   photonScoreValue: document.getElementById('photonScoreValue'),
+  languageSelect: document.getElementById('languageSelect'),
   musicTrackSelect: document.getElementById('musicTrackSelect'),
   musicTrackStatus: document.getElementById('musicTrackStatus'),
   musicVolumeSlider: document.getElementById('musicVolumeSlider'),
@@ -1643,6 +1767,39 @@ function renderOptionsWelcomeContent() {
 }
 
 renderOptionsWelcomeContent();
+
+function updateLanguageSelectorValue(language) {
+  if (!elements.languageSelect) {
+    return;
+  }
+  const resolved = resolveLanguageCode(language);
+  if (elements.languageSelect.value !== resolved) {
+    elements.languageSelect.value = resolved;
+  }
+}
+
+function populateLanguageSelectOptions() {
+  if (!elements.languageSelect) {
+    return;
+  }
+  const select = elements.languageSelect;
+  const previousSelection = select.value;
+  select.innerHTML = '';
+  AVAILABLE_LANGUAGE_CODES.forEach(code => {
+    const option = document.createElement('option');
+    option.value = code;
+    option.setAttribute('data-i18n', `index.sections.options.language.options.${code}`);
+    select.appendChild(option);
+  });
+  const i18n = globalThis.i18n;
+  if (i18n && typeof i18n.updateTranslations === 'function') {
+    i18n.updateTranslations(select);
+  }
+  const desiredSelection = AVAILABLE_LANGUAGE_CODES.includes(previousSelection)
+    ? previousSelection
+    : getInitialLanguagePreference();
+  updateLanguageSelectorValue(desiredSelection);
+}
 
 function updateBrickSkinOption() {
   if (!elements.brickSkinOptionCard || !elements.brickSkinSelect) {
@@ -7207,6 +7364,51 @@ function applyTheme() {
   gameState.theme = appliedTheme;
 }
 
+if (elements.languageSelect) {
+  elements.languageSelect.addEventListener('change', event => {
+    const requestedLanguage = resolveLanguageCode(event.target.value);
+    const i18n = globalThis.i18n;
+    if (!i18n || typeof i18n.setLanguage !== 'function') {
+      updateLanguageSelectorValue(requestedLanguage);
+      writeStoredLanguagePreference(requestedLanguage);
+      if (document && document.documentElement) {
+        document.documentElement.lang = requestedLanguage;
+      }
+      return;
+    }
+    const previousLanguage = i18n.getCurrentLanguage ? i18n.getCurrentLanguage() : null;
+    const normalizedPrevious = previousLanguage ? resolveLanguageCode(previousLanguage) : null;
+    if (normalizedPrevious === requestedLanguage) {
+      writeStoredLanguagePreference(requestedLanguage);
+      return;
+    }
+    elements.languageSelect.disabled = true;
+    i18n
+      .setLanguage(requestedLanguage)
+      .then(() => {
+        writeStoredLanguagePreference(requestedLanguage);
+        if (typeof i18n.updateTranslations === 'function') {
+          i18n.updateTranslations(document);
+        }
+        updateLanguageSelectorValue(requestedLanguage);
+        renderOptionsWelcomeContent();
+        updateOptionsIntroDetails();
+        updateBrickSkinOption();
+        updateUI();
+        showToast(t('scripts.app.language.updated'));
+      })
+      .catch(error => {
+        console.error('Unable to change language', error);
+        if (previousLanguage) {
+          updateLanguageSelectorValue(previousLanguage);
+        }
+      })
+      .finally(() => {
+        elements.languageSelect.disabled = false;
+      });
+  });
+}
+
 if (elements.themeSelect) {
   elements.themeSelect.addEventListener('change', () => {
     applyTheme();
@@ -8015,14 +8217,19 @@ function startApp() {
 }
 
 function initializeApp() {
+  populateLanguageSelectOptions();
   const i18n = globalThis.i18n;
   if (i18n && typeof i18n.setLanguage === 'function') {
-    const defaultLanguage = GLOBAL_CONFIG?.language
-      ?? APP_DATA?.DEFAULT_LANGUAGE
-      ?? document.documentElement.lang
-      ?? 'fr';
+    const preferredLanguage = getInitialLanguagePreference();
+    updateLanguageSelectorValue(preferredLanguage);
     i18n
-      .setLanguage(defaultLanguage)
+      .setLanguage(preferredLanguage)
+      .then(() => {
+        const appliedLanguage = i18n.getCurrentLanguage
+          ? i18n.getCurrentLanguage()
+          : preferredLanguage;
+        writeStoredLanguagePreference(appliedLanguage);
+      })
       .catch((error) => {
         console.error('Unable to load language resources', error);
       })
@@ -8030,10 +8237,12 @@ function initializeApp() {
         if (typeof i18n.updateTranslations === 'function') {
           i18n.updateTranslations(document);
         }
+        updateLanguageSelectorValue(i18n.getCurrentLanguage ? i18n.getCurrentLanguage() : preferredLanguage);
         startApp();
       });
     return;
   }
+  updateLanguageSelectorValue(getInitialLanguagePreference());
   startApp();
 }
 

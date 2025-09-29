@@ -181,6 +181,18 @@ Combinez ces leviers pour orchestrer vos pics de production, maximiser les frén
 
 ---
 
+## 🌍 Internationalisation
+
+L’interface repose sur des fichiers JSON (`scripts/i18n/<code>.json`) chargés dynamiquement. Pour ajouter une nouvelle langue :
+
+1. **Dupliquez un fichier de référence** (`scripts/i18n/fr.json` par exemple) vers `scripts/i18n/<code>.json` en conservant la même structure de clés.
+2. **Traduisez chaque entrée** : toutes les clés existantes doivent recevoir une valeur localisée afin d’éviter les retours de clés brutes dans l’interface.
+3. **Enregistrez le code langue** dans `scripts/modules/i18n.js` au sein du tableau `AVAILABLE_LANGUAGES` pour que le sélecteur et le chargeur de ressources prennent en compte cette variante.
+
+Une fois ces étapes terminées, rechargez la page : la langue apparaîtra automatiquement dans le sélecteur d’options et pourra être choisie sans redémarrer la session.
+
+---
+
 ## 🛠️ Implémentation
 
 * **Technologies** : HTML, CSS et JavaScript vanilla.

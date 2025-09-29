@@ -156,6 +156,15 @@
       },
       "options": {
         "title": "Options",
+        "language": {
+          "title": "Language",
+          "label": "Interface language",
+          "options": {
+            "fr": "Français",
+            "en": "English"
+          },
+          "note": "Changes apply immediately."
+        },
         "music": {
           "title": "Music",
           "track": "Now playing",
@@ -498,6 +507,9 @@
         "milestoneHint": "Keep exploring ever larger orders of magnitude!"
       },
       "themeUpdated": "Theme updated",
+      "language": {
+        "updated": "Language updated."
+      },
       "music": {
         "noneAvailable": "No tracks available",
         "noneOption": "None (no music)",
