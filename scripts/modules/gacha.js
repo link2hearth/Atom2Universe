@@ -2222,6 +2222,10 @@ function ensureGachaConfettiCanvas() {
     gachaConfettiState.canvas = canvas;
     gachaConfettiState.ctx = context;
   }
+  if (canvas.style) {
+    canvas.style.removeProperty('width');
+    canvas.style.removeProperty('height');
+  }
   if (typeof window !== 'undefined') {
     if (!gachaConfettiState.handleResize) {
       gachaConfettiState.handleResize = () => updateGachaConfettiCanvasSize();
@@ -2243,16 +2247,39 @@ function updateGachaConfettiCanvasSize() {
   if (!canvas || !ctx) {
     return;
   }
-  const rect = canvas.getBoundingClientRect();
-  const width = Math.max(1, rect.width || canvas.offsetWidth || 1);
-  const height = Math.max(1, rect.height || canvas.offsetHeight || 1);
+  const rect = typeof canvas.getBoundingClientRect === 'function'
+    ? canvas.getBoundingClientRect()
+    : { width: 0, height: 0 };
+  const measuredWidth = Number(rect.width) || 0;
+  const measuredHeight = Number(rect.height) || 0;
+  const fallbackWidth = canvas.offsetWidth || canvas.clientWidth || 0;
+  const fallbackHeight = canvas.offsetHeight || canvas.clientHeight || 0;
+  const width = measuredWidth > 0 ? measuredWidth : (fallbackWidth > 0 ? fallbackWidth : 0);
+  const height = measuredHeight > 0 ? measuredHeight : (fallbackHeight > 0 ? fallbackHeight : 0);
+
+  if (width <= 0 || height <= 0) {
+    gachaConfettiState.width = 0;
+    gachaConfettiState.height = 0;
+    gachaConfettiState.centerX = 0;
+    gachaConfettiState.centerY = 0;
+    return;
+  }
+
   const dpr = typeof window !== 'undefined' && Number.isFinite(window.devicePixelRatio)
     ? window.devicePixelRatio
     : 1;
-  canvas.width = Math.max(1, Math.round(width * dpr));
-  canvas.height = Math.max(1, Math.round(height * dpr));
-  canvas.style.width = `${width}px`;
-  canvas.style.height = `${height}px`;
+  const displayWidth = Math.max(1, Math.round(width));
+  const displayHeight = Math.max(1, Math.round(height));
+  const pixelWidth = Math.max(1, Math.round(displayWidth * dpr));
+  const pixelHeight = Math.max(1, Math.round(displayHeight * dpr));
+
+  if (canvas.width !== pixelWidth) {
+    canvas.width = pixelWidth;
+  }
+  if (canvas.height !== pixelHeight) {
+    canvas.height = pixelHeight;
+  }
+
   gachaConfettiState.dpr = dpr;
   gachaConfettiState.width = width;
   gachaConfettiState.height = height;
@@ -2360,7 +2387,6 @@ function startGachaConfettiAnimation(outcome) {
     return;
   }
   stopGachaConfettiAnimation();
-  updateGachaConfettiCanvasSize();
 
   const baseRarityColor = resolveGachaConfettiColor(
     GACHA_RARITY_MAP.get(GACHA_CONFETTI_BASE_RARITY_ID)?.color,
@@ -2402,20 +2428,38 @@ function startGachaConfettiAnimation(outcome) {
 
   gachaConfettiState.baseColorRgb = baseColorRgb;
 
-  const now = getNow();
-  const particles = [];
-  const paletteLength = paletteRgb.length;
-  for (let i = 0; i < GACHA_ANIMATION_CONFETTI_COUNT; i += 1) {
-    const color = paletteRgb[paletteLength > 0 ? i % paletteLength : 0] || baseColorRgb;
-    particles.push(createGachaConfettiParticle(color, now));
-  }
-  gachaConfettiState.particles = particles;
+  let measureAttempts = 0;
+  const maxMeasureAttempts = 4;
 
-  if (typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
-    gachaConfettiState.animationFrameId = window.requestAnimationFrame(renderGachaConfettiFrame);
-  } else {
-    renderGachaConfettiFrame(now);
-  }
+  const beginAnimation = () => {
+    updateGachaConfettiCanvasSize();
+    const { width, height } = gachaConfettiState;
+    const hasValidSize = width > 2 && height > 2;
+    if (!hasValidSize && measureAttempts < maxMeasureAttempts
+      && typeof window !== 'undefined'
+      && typeof window.requestAnimationFrame === 'function') {
+      measureAttempts += 1;
+      window.requestAnimationFrame(beginAnimation);
+      return;
+    }
+
+    const now = getNow();
+    const particles = [];
+    const paletteLength = paletteRgb.length;
+    for (let i = 0; i < GACHA_ANIMATION_CONFETTI_COUNT; i += 1) {
+      const color = paletteRgb[paletteLength > 0 ? i % paletteLength : 0] || baseColorRgb;
+      particles.push(createGachaConfettiParticle(color, now));
+    }
+    gachaConfettiState.particles = particles;
+
+    if (typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
+      gachaConfettiState.animationFrameId = window.requestAnimationFrame(renderGachaConfettiFrame);
+    } else {
+      renderGachaConfettiFrame(now);
+    }
+  };
+
+  beginAnimation();
 }
 
 function waitForGachaAnimationDismiss(layer, options = {}) {
