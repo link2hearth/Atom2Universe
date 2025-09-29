@@ -470,6 +470,19 @@
       },
       "themeUpdated": "Thème mis à jour",
       "music": {
+        "noneAvailable": "Aucune piste disponible",
+        "noneOption": "Rien (aucune musique)",
+        "addFilesHint": "Ajoutez vos fichiers audio dans Assets/Music pour activer la musique.",
+        "disabled": "Musique désactivée.",
+        "selectTrack": "Sélectionnez une piste pour lancer la musique.",
+        "missingDisplay": "{{name}} (fichier manquant)",
+        "missingSuffix": " (fichier manquant)",
+        "unsupportedSuffix": ". Lecture audio indisponible sur cet appareil.",
+        "errorSuffix": ". Impossible de lire le fichier audio.",
+        "awaitingInteractionSuffix": ". La musique démarre après votre première interaction.",
+        "pausedSuffix": ". Lecture en pause.",
+        "looping": "Lecture en boucle : {{track}}",
+        "volumeLabel": "Volume musique : {{value}}%",
         "muted": "Musique coupée",
         "missing": "Piste introuvable",
         "fileMissing": "Le fichier de cette piste est manquant."
@@ -486,6 +499,12 @@
       },
       "fusion": {
         "prompt": "Sélectionnez une recette pour tenter votre première fusion."
+      },
+      "table": {
+        "placeholder": "Le tableau périodique sera bientôt disponible."
+      },
+      "collection": {
+        "pending": "Collection en préparation"
       },
       "errors": {
         "save": "Erreur de sauvegarde",
@@ -530,6 +549,87 @@
         "friday": "+Mythe Quantique",
         "wednesday": "+Iréel",
         "saturday": "+Iréel"
+      },
+      "rarityProgress": {
+        "unavailable": "Raretés indisponibles",
+        "empty": "Aucun élément",
+        "summary": "{{owned}} / {{total}} éléments"
+      },
+      "fusion": {
+        "successChance": "Chance de réussite : {{chance}}",
+        "availabilityInitial": "Disponible : 0",
+        "tryButton": "Tenter la fusion",
+        "tryButtonAria": "Tenter la fusion {{name}}",
+        "checking": "Vérification des ingrédients…",
+        "stats": "Tentatives : {{attempts}} · Succès : {{successes}}",
+        "successBonus": "Bonus par réussite : {{bonus}}",
+        "noBonus": "Aucun bonus défini",
+        "totalBonus": "Bonus cumulé : {{bonus}}",
+        "apcBonus": "+{{value}} APC",
+        "apsBonus": "+{{value}} APS",
+        "apcTotal": "+{{value}} APC cumulés",
+        "apsTotal": "+{{value}} APS cumulés",
+        "availabilityProgress": "Disponible : {{available}} / {{required}}",
+        "statusReady": "Ingrédients disponibles",
+        "statusMissing": "Ressources insuffisantes",
+        "logMissingResources": "Vous n’avez pas assez de ressources pour cette fusion.",
+        "toastMissingResources": "Ressources insuffisantes pour cette fusion.",
+        "noRewardSummary": "Aucun bonus.",
+        "logSuccess": "Fusion {{name}} réussie ! Bonus obtenu : {{reward}}",
+        "toastSuccess": "Fusion réussie !",
+        "logFailure": "La fusion {{name}} a échoué. Les éléments ont été consommés.",
+        "toastFailure": "Fusion échouée."
+      },
+      "results": {
+        "unavailable": "Synthèse indisponible pour le moment.",
+        "unknownRarity": "Rareté inconnue",
+        "unknownElement": "Élément inconnu",
+        "newTag": "NOUVEAU !",
+        "duplicateTag": "Déjà possédé",
+        "drawLabel": "Tirage x{{count}}",
+        "drawSingle": "Tirage x1",
+        "newSingle": "1 nouvel élément",
+        "newPlural": "{{count}} nouveaux éléments",
+        "duplicateSingle": "1 doublon",
+        "duplicatePlural": "{{count}} doublons"
+      },
+      "tickets": {
+        "single": "ticket",
+        "plural": "tickets",
+        "bonusSingle": "ticket Mach3",
+        "bonusPlural": "tickets Mach3"
+      },
+      "controls": {
+        "modeSingle": "Tirage x1",
+        "modeMulti": "Tirage x{{count}}",
+        "toggleModeAria": "Basculer le mode de tirage (actuel\u00a0: {{mode}})",
+        "toggleModeTitle": "Mode actuel\u00a0: {{mode}}",
+        "drawMulti": "tirage cosmique x{{count}}",
+        "drawSingleLabel": "tirage cosmique",
+        "drawInProgress": "Tirage cosmique en cours",
+        "drawFree": "Déclencher un {{draw}} (gratuit)",
+        "drawPaid": "Déclencher un {{draw}}",
+        "drawLocked": "Tickets insuffisants pour un {{draw}}",
+        "drawTitle": "{{label}} ({{cost}})"
+      },
+      "arcade": {
+        "reward": "+{{reward}} grâce à Particules !",
+        "bonus": "+{{reward}} !"
+      },
+      "errors": {
+        "notEnoughTickets": "Pas assez de tickets de tirage (nécessaire\u00a0: {{cost}}).",
+        "noElements": "Aucun élément disponible dans les chambres de synthèse.",
+        "instableFlux": "Flux instable, impossible de matérialiser un élément."
+      },
+      "toast": {
+        "newSingle": "Nouvel élément obtenu : {{name}} !",
+        "duplicateSingle": "{{name}} rejoint à nouveau votre collection.",
+        "newMultiple": "{{count}} nouveaux éléments découverts !",
+        "duplicateWithRarity": "{{name}} ({{rarity}}) rejoint à nouveau votre collection."
+      },
+      "ticketStar": {
+        "single": "Ticket de tirage obtenu !",
+        "multiple": "+{{count}} tickets de tirage !"
       }
     },
     "info": {
@@ -553,6 +653,36 @@
         "requireUnique": "minimum {{count}} {{unit}}",
         "requireFull": "collection complète requise",
         "rarityAmplify": "Amplifie {{rarity}} : {{effects}}"
+      },
+      "collections": {
+        "complete": "Famille complète",
+        "inProgress": "Famille en cours"
+      },
+      "sections": {
+        "activeBoosts": "Boosts actifs",
+        "specialEffects": "Effets spéciaux",
+        "inactiveBonuses": "Bonus inactifs"
+      },
+      "shop": {
+        "noneAvailable": "Aucune amélioration disponible.",
+        "level": "Niveau {{level}}",
+        "notPurchased": "Non acheté",
+        "bonus": {
+          "apcFlat": "APC +",
+          "apsFlat": "APS +",
+          "apcMult": "APC ×",
+          "apsMult": "APS ×"
+        },
+        "pendingThreshold": "Bonus en attente de seuil.",
+        "locked": "Achetez cette amélioration pour activer ses effets."
+      }
+    },
+    "metaux": {
+      "timer": {
+        "max": "Max {{value}}"
+      },
+      "session": {
+        "start": "Nouvelle session : enchaînez les alliages !"
       }
     }
   }

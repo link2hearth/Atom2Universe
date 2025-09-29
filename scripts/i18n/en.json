@@ -470,6 +470,19 @@
       },
       "themeUpdated": "Theme updated",
       "music": {
+        "noneAvailable": "No tracks available",
+        "noneOption": "None (no music)",
+        "addFilesHint": "Add your audio files to Assets/Music to enable music.",
+        "disabled": "Music disabled.",
+        "selectTrack": "Select a track to start the music.",
+        "missingDisplay": "{{name}} (file missing)",
+        "missingSuffix": " (file missing)",
+        "unsupportedSuffix": ". Audio playback unavailable on this device.",
+        "errorSuffix": ". Unable to play the audio file.",
+        "awaitingInteractionSuffix": ". Music will start after your first interaction.",
+        "pausedSuffix": ". Playback paused.",
+        "looping": "Looping: {{track}}",
+        "volumeLabel": "Music volume: {{value}}%",
         "muted": "Music muted",
         "missing": "Track not found",
         "fileMissing": "The file for this track is missing."
@@ -486,6 +499,12 @@
       },
       "fusion": {
         "prompt": "Select a recipe to attempt your first fusion."
+      },
+      "table": {
+        "placeholder": "The periodic table will be available soon."
+      },
+      "collection": {
+        "pending": "Collection in progress"
       },
       "errors": {
         "save": "Save error",
@@ -530,6 +549,87 @@
         "friday": "+Quantum Myth",
         "wednesday": "+Unreal",
         "saturday": "+Unreal"
+      },
+      "rarityProgress": {
+        "unavailable": "Rarities unavailable",
+        "empty": "No elements",
+        "summary": "{{owned}} / {{total}} elements"
+      },
+      "fusion": {
+        "successChance": "Success chance: {{chance}}",
+        "availabilityInitial": "Available: 0",
+        "tryButton": "Attempt fusion",
+        "tryButtonAria": "Attempt {{name}} fusion",
+        "checking": "Checking ingredients…",
+        "stats": "Attempts: {{attempts}} · Successes: {{successes}}",
+        "successBonus": "Reward per success: {{bonus}}",
+        "noBonus": "No bonus defined",
+        "totalBonus": "Total bonus: {{bonus}}",
+        "apcBonus": "+{{value}} APC",
+        "apsBonus": "+{{value}} APS",
+        "apcTotal": "+{{value}} APC total",
+        "apsTotal": "+{{value}} APS total",
+        "availabilityProgress": "Available: {{available}} / {{required}}",
+        "statusReady": "Ingredients available",
+        "statusMissing": "Insufficient resources",
+        "logMissingResources": "You don't have enough resources for this fusion.",
+        "toastMissingResources": "Not enough resources for this fusion.",
+        "noRewardSummary": "No bonus.",
+        "logSuccess": "{{name}} fusion succeeded! Reward earned: {{reward}}",
+        "toastSuccess": "Fusion succeeded!",
+        "logFailure": "{{name}} fusion failed. Ingredients were consumed.",
+        "toastFailure": "Fusion failed."
+      },
+      "results": {
+        "unavailable": "Synthesis unavailable for now.",
+        "unknownRarity": "Unknown rarity",
+        "unknownElement": "Unknown element",
+        "newTag": "NEW!",
+        "duplicateTag": "Already owned",
+        "drawLabel": "Draw x{{count}}",
+        "drawSingle": "Draw x1",
+        "newSingle": "1 new element",
+        "newPlural": "{{count}} new elements",
+        "duplicateSingle": "1 duplicate",
+        "duplicatePlural": "{{count}} duplicates"
+      },
+      "tickets": {
+        "single": "ticket",
+        "plural": "tickets",
+        "bonusSingle": "Mach3 ticket",
+        "bonusPlural": "Mach3 tickets"
+      },
+      "controls": {
+        "modeSingle": "Draw x1",
+        "modeMulti": "Draw x{{count}}",
+        "toggleModeAria": "Toggle draw mode (current: {{mode}})",
+        "toggleModeTitle": "Current mode: {{mode}}",
+        "drawMulti": "cosmic draw x{{count}}",
+        "drawSingleLabel": "cosmic draw",
+        "drawInProgress": "Cosmic draw in progress",
+        "drawFree": "Trigger a {{draw}} (free)",
+        "drawPaid": "Trigger a {{draw}}",
+        "drawLocked": "Not enough tickets for a {{draw}}",
+        "drawTitle": "{{label}} ({{cost}})"
+      },
+      "arcade": {
+        "reward": "+{{reward}} thanks to Particules!",
+        "bonus": "+{{reward}}!"
+      },
+      "errors": {
+        "notEnoughTickets": "Not enough draw tickets (required: {{cost}}).",
+        "noElements": "No elements available in the synthesis chambers.",
+        "instableFlux": "Unstable flux, unable to materialize an element."
+      },
+      "toast": {
+        "newSingle": "New element obtained: {{name}}!",
+        "duplicateSingle": "{{name}} rejoins your collection.",
+        "newMultiple": "{{count}} new elements discovered!",
+        "duplicateWithRarity": "{{name}} ({{rarity}}) rejoins your collection."
+      },
+      "ticketStar": {
+        "single": "Draw ticket obtained!",
+        "multiple": "+{{count}} draw tickets!"
       }
     },
     "info": {
@@ -553,6 +653,36 @@
         "requireUnique": "at least {{count}} {{unit}}",
         "requireFull": "complete collection required",
         "rarityAmplify": "Amplifies {{rarity}}: {{effects}}"
+      },
+      "collections": {
+        "complete": "Family complete",
+        "inProgress": "Family in progress"
+      },
+      "sections": {
+        "activeBoosts": "Active boosts",
+        "specialEffects": "Special effects",
+        "inactiveBonuses": "Inactive bonuses"
+      },
+      "shop": {
+        "noneAvailable": "No upgrades available.",
+        "level": "Level {{level}}",
+        "notPurchased": "Not purchased",
+        "bonus": {
+          "apcFlat": "APC +",
+          "apsFlat": "APS +",
+          "apcMult": "APC ×",
+          "apsMult": "APS ×"
+        },
+        "pendingThreshold": "Bonus awaiting threshold.",
+        "locked": "Purchase this upgrade to activate its effects."
+      }
+    },
+    "metaux": {
+      "timer": {
+        "max": "Max {{value}}"
+      },
+      "session": {
+        "start": "New session: chain those alloys!"
       }
     }
   }

@@ -1195,7 +1195,9 @@ class MetauxMatch3Game {
       this.timerValueElement.textContent = this.formatSeconds(this.timerState.current, { decimals: 1 });
     }
     if (this.timerMaxElement) {
-      this.timerMaxElement.textContent = `Max ${this.formatSeconds(this.timerState.max, { decimals: 0 })}`;
+      this.timerMaxElement.textContent = t('scripts.metaux.timer.max', {
+        value: this.formatSeconds(this.timerState.max, { decimals: 0 })
+      });
     }
     if (this.timerFillElement) {
       const ratio = this.timerState.max > 0 ? this.timerState.current / this.timerState.max : 0;
@@ -1245,7 +1247,7 @@ class MetauxMatch3Game {
     this.populateBoard();
     this.refreshBoard();
     this.prepareNewSession();
-    this.updateMessage('Nouvelle session : enchaînez les alliages !');
+    this.updateMessage(t('scripts.metaux.session.start'));
   }
 
   getTileKey(row, col) {
