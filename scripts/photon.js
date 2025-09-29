@@ -10,16 +10,52 @@
     blue: {
       bar: '#0b2d6f',
       barEdge: '#3c67b3',
-      haloInner: 'rgba(17, 68, 160, 0.88)',
-      haloMid: 'rgba(17, 68, 160, 0.45)',
-      haloOuter: 'rgba(17, 68, 160, 0.08)'
+      haloInner: 'rgba(70, 145, 255, 0.9)',
+      haloMid: 'rgba(54, 126, 240, 0.52)',
+      haloOuter: 'rgba(44, 108, 228, 0.2)'
     },
     red: {
       bar: '#a01269',
       barEdge: '#e878b6',
-      haloInner: 'rgba(160, 18, 105, 0.9)',
-      haloMid: 'rgba(160, 18, 105, 0.45)',
-      haloOuter: 'rgba(160, 18, 105, 0.08)'
+      haloInner: 'rgba(255, 118, 186, 0.92)',
+      haloMid: 'rgba(238, 84, 158, 0.5)',
+      haloOuter: 'rgba(222, 60, 140, 0.18)'
+    }
+  };
+
+  const DEFAULT_GRID_PALETTE = {
+    stroke: 'rgba(120, 185, 255, 0.38)',
+    shadow: 'rgba(120, 185, 255, 0.25)',
+    dot: 'rgba(173, 212, 255, 0.22)'
+  };
+
+  const DEFAULT_BUBBLE_PALETTE = {
+    highlightInner: 'rgba(255, 228, 236, 0.75)',
+    highlightMid: 'rgba(255, 160, 194, 0.28)',
+    highlightOuter: 'rgba(255, 120, 170, 0.05)',
+    ring: 'rgba(255, 192, 216, 0.28)'
+  };
+
+  const HALO_PATTERN_CONFIG = {
+    default: {
+      type: 'grid'
+    },
+    blue: {
+      type: 'grid',
+      gridPalette: {
+        stroke: 'rgba(110, 185, 255, 0.42)',
+        shadow: 'rgba(86, 162, 255, 0.32)',
+        dot: 'rgba(142, 205, 255, 0.28)'
+      }
+    },
+    red: {
+      type: 'bubble',
+      bubblePalette: {
+        highlightInner: 'rgba(255, 188, 212, 0.84)',
+        highlightMid: 'rgba(255, 132, 190, 0.42)',
+        highlightOuter: 'rgba(255, 96, 170, 0.1)',
+        ring: 'rgba(255, 162, 210, 0.32)'
+      }
     }
   };
 
@@ -255,7 +291,7 @@
     return value - Math.floor(value);
   };
 
-  function drawGridPattern(ctx, seed, x, y, width, height) {
+  function drawGridPattern(ctx, seed, x, y, width, height, palette) {
     const normalizedSeed = Number.isFinite(seed) ? seed : 0.5;
     const baseSeed = normalizedSeed * 9973 + width * 0.015 + height * 0.021;
     const spacing = clamp(Math.min(width, height) / 5, 14, 68);
@@ -264,8 +300,9 @@
 
     ctx.save();
     ctx.lineWidth = Math.max(1, spacing * 0.08);
-    ctx.strokeStyle = 'rgba(120, 185, 255, 0.38)';
-    ctx.shadowColor = 'rgba(120, 185, 255, 0.25)';
+    const gridColors = { ...DEFAULT_GRID_PALETTE, ...(palette || {}) };
+    ctx.strokeStyle = gridColors.stroke;
+    ctx.shadowColor = gridColors.shadow;
     ctx.shadowBlur = spacing * 0.35;
     for (let posX = x + offsetX - spacing * 2; posX <= x + width + spacing * 2; posX += spacing) {
       ctx.beginPath();
@@ -283,7 +320,7 @@
 
     ctx.save();
     const dotRadius = Math.min(spacing * 0.18, 6);
-    ctx.fillStyle = 'rgba(173, 212, 255, 0.22)';
+    ctx.fillStyle = gridColors.dot;
     const cols = Math.ceil(width / spacing) + 2;
     const rows = Math.ceil(height / spacing) + 2;
     for (let col = -1; col < cols; col += 1) {
@@ -307,7 +344,7 @@
     ctx.restore();
   }
 
-  function drawBubblePattern(ctx, seed, x, y, width, height) {
+  function drawBubblePattern(ctx, seed, x, y, width, height, palette) {
     const normalizedSeed = Number.isFinite(seed) ? seed : 0.35;
     const baseSeed = normalizedSeed * 7919 + width * 0.017 + height * 0.029;
     const area = Math.max(width * height, 1);
@@ -316,6 +353,7 @@
 
     ctx.save();
     ctx.globalCompositeOperation = 'lighter';
+    const bubbleColors = { ...DEFAULT_BUBBLE_PALETTE, ...(palette || {}) };
     for (let i = 0; i < bubbleCount; i += 1) {
       const noiseX = seededRandom(baseSeed, i * 1.37);
       const noiseY = seededRandom(baseSeed, i * 2.91);
@@ -332,9 +370,9 @@
         centerY,
         radius
       );
-      gradient.addColorStop(0, 'rgba(255, 228, 236, 0.75)');
-      gradient.addColorStop(0.45, 'rgba(255, 160, 194, 0.28)');
-      gradient.addColorStop(1, 'rgba(255, 120, 170, 0.05)');
+      gradient.addColorStop(0, bubbleColors.highlightInner);
+      gradient.addColorStop(0.45, bubbleColors.highlightMid);
+      gradient.addColorStop(1, bubbleColors.highlightOuter);
       ctx.fillStyle = gradient;
       ctx.beginPath();
       ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
@@ -342,7 +380,7 @@
 
       ctx.globalAlpha = 0.8;
       ctx.lineWidth = Math.max(1, radius * 0.14);
-      ctx.strokeStyle = 'rgba(255, 192, 216, 0.28)';
+      ctx.strokeStyle = bubbleColors.ring;
       ctx.beginPath();
       ctx.arc(centerX - radius * 0.18, centerY - radius * 0.2, radius * 0.46, 0, Math.PI * 2);
       ctx.stroke();
@@ -360,10 +398,12 @@
     ctx.rect(x, y, width, height);
     ctx.clip();
 
-    if (color === 'blue') {
-      drawBubblePattern(ctx, seed, x, y, width, height);
-    } else if (color === 'red') {
-      drawGridPattern(ctx, seed, x, y, width, height);
+    const patternConfig = HALO_PATTERN_CONFIG[color] || HALO_PATTERN_CONFIG.default;
+    const patternType = patternConfig?.type || 'grid';
+    if (patternType === 'bubble') {
+      drawBubblePattern(ctx, seed, x, y, width, height, patternConfig?.bubblePalette);
+    } else {
+      drawGridPattern(ctx, seed, x, y, width, height, patternConfig?.gridPalette);
     }
 
     ctx.restore();
