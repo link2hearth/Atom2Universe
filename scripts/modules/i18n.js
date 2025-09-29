@@ -119,6 +119,23 @@
     return String(value);
   }
 
+  function getResource(key) {
+    if (typeof key !== 'string' || !key.trim()) {
+      return null;
+    }
+    const value = getValueFromPath(resources, key.trim());
+    if (value == null) {
+      return null;
+    }
+    if (typeof value === 'object') {
+      const cloned = cloneResource(value);
+      if (cloned != null) {
+        return cloned;
+      }
+    }
+    return value;
+  }
+
   function updateElementTranslations(root = global.document) {
     if (!root || typeof root.querySelectorAll !== 'function') {
       return;
@@ -397,6 +414,7 @@
 
   const api = {
     t: translate,
+    getResource,
     setLanguage,
     getCurrentLanguage,
     getAvailableLanguages,

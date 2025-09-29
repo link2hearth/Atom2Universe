@@ -1,7 +1,7 @@
 const APP_DATA = typeof globalThis !== 'undefined' && globalThis.APP_DATA ? globalThis.APP_DATA : {};
 const GLOBAL_CONFIG =
   typeof globalThis !== 'undefined' && globalThis.GAME_CONFIG ? globalThis.GAME_CONFIG : {};
-const OPTIONS_WELCOME_CARD =
+const CONFIG_OPTIONS_WELCOME_CARD =
   GLOBAL_CONFIG
   && GLOBAL_CONFIG.uiText
   && GLOBAL_CONFIG.uiText.options
@@ -82,6 +82,31 @@ function normalizeLanguageCode(raw) {
 
 function getI18nApi() {
   return globalThis.i18n;
+}
+
+function translateOrDefault(key, fallback, params) {
+  if (typeof key !== 'string' || !key.trim()) {
+    return fallback;
+  }
+  const api = getI18nApi();
+  const translator = api && typeof api.t === 'function'
+    ? api.t
+    : typeof globalThis !== 'undefined' && typeof globalThis.t === 'function'
+      ? globalThis.t
+      : typeof t === 'function'
+        ? t
+        : null;
+  if (translator) {
+    try {
+      const translated = translator(key, params);
+      if (typeof translated === 'string' && translated && translated !== key) {
+        return translated;
+      }
+    } catch (error) {
+      console.warn('Unable to translate key', key, error);
+    }
+  }
+  return fallback;
 }
 
 function getCurrentLocale() {
@@ -1763,46 +1788,125 @@ const elements = {
   devkitToggleGacha: document.getElementById('devkitToggleGacha')
 };
 
+function getOptionsWelcomeCardCopy() {
+  const api = getI18nApi();
+  if (api && typeof api.getResource === 'function') {
+    const resource = api.getResource('index.uiText.options.welcomeCard');
+    if (resource && typeof resource === 'object') {
+      return resource;
+    }
+  }
+  return CONFIG_OPTIONS_WELCOME_CARD;
+}
+
+function extractWelcomeIntroParagraphs(source) {
+  if (!source || typeof source !== 'object') {
+    return [];
+  }
+  const paragraphs = [];
+  const appendParagraph = value => {
+    if (typeof value !== 'string') {
+      return;
+    }
+    const trimmed = value.trim();
+    if (trimmed) {
+      paragraphs.push(trimmed);
+    }
+  };
+  if (Array.isArray(source.introParagraphs)) {
+    source.introParagraphs.forEach(appendParagraph);
+  }
+  if (Array.isArray(source.intro)) {
+    source.intro.forEach(appendParagraph);
+  } else if (typeof source.intro === 'string') {
+    appendParagraph(source.intro);
+  }
+  return paragraphs;
+}
+
+function extractWelcomeDetails(source) {
+  if (!source || typeof source !== 'object') {
+    return [];
+  }
+  const rawDetails = Array.isArray(source.unlockedDetails)
+    ? source.unlockedDetails
+    : Array.isArray(source.details)
+      ? source.details
+      : source.details && typeof source.details === 'object'
+        ? Object.values(source.details)
+        : [];
+  return rawDetails
+    .map(entry => {
+      if (!entry || typeof entry !== 'object') {
+        return null;
+      }
+      const label = typeof entry.label === 'string' ? entry.label.trim() : '';
+      const description = typeof entry.description === 'string' ? entry.description.trim() : '';
+      if (!label && !description) {
+        return null;
+      }
+      return {
+        label,
+        description
+      };
+    })
+    .filter(Boolean);
+}
+
 function renderOptionsWelcomeContent() {
-  const copy = OPTIONS_WELCOME_CARD;
+  const copy = getOptionsWelcomeCardCopy();
+  const fallbackCopy = CONFIG_OPTIONS_WELCOME_CARD;
+
   if (elements.optionsWelcomeTitle) {
-    const titleText =
-      copy && typeof copy.title === 'string' && copy.title.trim().length
-        ? copy.title
-        : 'Bienvenue';
+    const fallbackTitle = fallbackCopy && typeof fallbackCopy.title === 'string'
+      ? fallbackCopy.title
+      : 'Bienvenue';
+    const titleText = copy && typeof copy.title === 'string' && copy.title.trim()
+      ? copy.title.trim()
+      : translateOrDefault('index.uiText.options.welcomeCard.title', fallbackTitle);
     elements.optionsWelcomeTitle.textContent = titleText;
   }
+
   if (elements.optionsWelcomeIntro) {
     const container = elements.optionsWelcomeIntro;
     container.innerHTML = '';
-    const paragraphs =
-      copy && Array.isArray(copy.introParagraphs)
-        ? copy.introParagraphs
-        : copy && typeof copy.intro === 'string'
-          ? [copy.intro]
-          : [];
+
+    const fallbackParagraphs = extractWelcomeIntroParagraphs(fallbackCopy);
+    let paragraphs = extractWelcomeIntroParagraphs(copy);
+    if (!paragraphs.length) {
+      const translatedIntro = translateOrDefault('index.uiText.options.welcomeCard.intro', '');
+      if (translatedIntro) {
+        paragraphs = [translatedIntro];
+      } else if (fallbackParagraphs.length) {
+        paragraphs = [...fallbackParagraphs];
+      }
+    }
+
     paragraphs.forEach(paragraph => {
       if (typeof paragraph !== 'string' || !paragraph.trim()) {
         return;
       }
       const node = document.createElement('p');
-      node.textContent = paragraph;
+      node.textContent = paragraph.trim();
       container.appendChild(node);
     });
   }
+
   if (elements.optionsArcadeDetails) {
     const container = elements.optionsArcadeDetails;
     container.innerHTML = '';
-    const details =
-      copy && Array.isArray(copy.unlockedDetails)
-        ? copy.unlockedDetails
-        : [];
+
+    const fallbackDetails = extractWelcomeDetails(fallbackCopy);
+    let details = extractWelcomeDetails(copy);
+    if (!details.length && fallbackDetails.length) {
+      details = [...fallbackDetails];
+    }
+
     details.forEach(detail => {
-      if (!detail || typeof detail !== 'object') {
+      if (!detail) {
         return;
       }
-      const label = typeof detail.label === 'string' ? detail.label : null;
-      const description = typeof detail.description === 'string' ? detail.description : null;
+      const { label, description } = detail;
       if (!label && !description) {
         return;
       }
@@ -1870,9 +1974,15 @@ function updateBrickSkinOption() {
     elements.brickSkinSelect.value = selection;
   }
   if (elements.brickSkinStatus) {
-    elements.brickSkinStatus.textContent = unlocked
-      ? 'Choisissez l’apparence des briques de Particules.'
-      : 'Débloquez le trophée « Ruée vers le million » pour personnaliser vos briques.';
+    const unlockedMessage = translateOrDefault(
+      'scripts.app.options.brickSkin.unlocked',
+      'Choisissez l’apparence des briques de Particules.'
+    );
+    const lockedMessage = translateOrDefault(
+      'index.sections.options.brickSkin.note',
+      'Débloquez le trophée « Ruée vers le million » pour personnaliser vos briques.'
+    );
+    elements.brickSkinStatus.textContent = unlocked ? unlockedMessage : lockedMessage;
   }
 }
 
