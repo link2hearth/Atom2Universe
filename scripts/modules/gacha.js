@@ -1,49 +1,76 @@
 const DEFAULT_GACHA_TICKET_COST = 1;
 
+const translate = (() => {
+  const translator = typeof globalThis !== 'undefined' && typeof globalThis.t === 'function'
+    ? globalThis.t.bind(globalThis)
+    : null;
+  if (translator) {
+    return translator;
+  }
+  return (key, params) => {
+    if (typeof key !== 'string' || !key) {
+      return '';
+    }
+    if (!params || typeof params !== 'object') {
+      return key;
+    }
+    return key.replace(/\{\s*([^\s{}]+)\s*\}/g, (match, token) => {
+      const value = params[token];
+      return value == null ? match : String(value);
+    });
+  };
+})();
+
 const DEFAULT_GACHA_RARITIES = [
   {
     id: 'commun',
-    label: 'Commun cosmique',
-    description: 'Les briques fondamentales présentes dans la majorité des nébuleuses.',
+    labelKey: 'scripts.gacha.rarities.commun.label',
+    descriptionKey: 'scripts.gacha.rarities.commun.description',
     weight: 55,
     color: '#4f7ec2'
   },
   {
     id: 'essentiel',
-    label: 'Essentiel planétaire',
-    description: 'Éléments abondants dans les mondes rocheux et les atmosphères habitables.',
+    labelKey: 'scripts.gacha.rarities.essentiel.label',
+    descriptionKey: 'scripts.gacha.rarities.essentiel.description',
     weight: 20,
     color: '#4ba88c'
   },
   {
     id: 'stellaire',
-    label: 'Forge stellaire',
-    description: 'Alliages façonnés au coeur des étoiles et disséminés par les supernovæ.',
+    labelKey: 'scripts.gacha.rarities.stellaire.label',
+    descriptionKey: 'scripts.gacha.rarities.stellaire.description',
     weight: 12,
     color: '#8caf58'
   },
   {
     id: 'singulier',
-    label: 'Singularité minérale',
-    description: 'Cristaux recherchés, rarement concentrés au même endroit.',
+    labelKey: 'scripts.gacha.rarities.singulier.label',
+    descriptionKey: 'scripts.gacha.rarities.singulier.description',
     weight: 7,
     color: '#d08a54'
   },
   {
     id: 'mythique',
-    label: 'Mythe quantique',
-    description: 'Éléments légendaires aux propriétés extrêmes et insaisissables.',
+    labelKey: 'scripts.gacha.rarities.mythique.label',
+    descriptionKey: 'scripts.gacha.rarities.mythique.description',
     weight: 4,
     color: '#c46a9a'
   },
   {
     id: 'irreel',
-    label: 'Irréel',
-    description: 'Synthèses artificielles nées uniquement dans des accélérateurs.',
+    labelKey: 'scripts.gacha.rarities.irreel.label',
+    descriptionKey: 'scripts.gacha.rarities.irreel.description',
     weight: 2,
     color: '#7d6fc9'
   }
-];
+].map(entry => ({
+  id: entry.id,
+  weight: entry.weight,
+  color: entry.color,
+  label: translate(entry.labelKey),
+  description: translate(entry.descriptionKey)
+}));
 
 function sanitizeGachaRarities(rawRarities) {
   const base = Array.isArray(rawRarities) && rawRarities.length

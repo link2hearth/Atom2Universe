@@ -632,6 +632,202 @@
         "multiple": "+{{count}} tickets de tirage !"
       }
     },
+    "appData": {
+      "atomScale": {
+        "trophies": {
+          "description": "Atteignez {target} atomes cumulés, {flavor}.",
+          "reward": "Ajoute +{bonus} au Boost global sur la production manuelle et automatique (×{total} pour ce palier).",
+          "scaleHumanCell": {
+            "name": "Échelle : cellule humaine",
+            "flavor": "l’équivalent d’une cellule humaine « moyenne »"
+          },
+          "scaleSandGrain": {
+            "name": "Échelle : grain de sable",
+            "flavor": "la masse d’un grain de sable (~1 mm)"
+          },
+          "scaleAnt": {
+            "name": "Échelle : fourmi",
+            "flavor": "comparable à une fourmi (~5 mg)"
+          },
+          "scaleWaterDrop": {
+            "name": "Échelle : goutte d’eau",
+            "flavor": "la quantité d’atomes contenue dans une goutte d’eau de 0,05 mL"
+          },
+          "scalePaperclip": {
+            "name": "Échelle : trombone",
+            "flavor": "l’équivalent d’un trombone en fer (~1 g)"
+          },
+          "scaleCoin": {
+            "name": "Échelle : pièce",
+            "flavor": "la masse atomique d’une pièce de monnaie (~7,5 g)"
+          },
+          "scaleApple": {
+            "name": "Échelle : pomme",
+            "flavor": "la masse atomique d’une pomme (~100 g)"
+          },
+          "scaleSmartphone": {
+            "name": "Échelle : smartphone",
+            "flavor": "autant qu’un smartphone moderne (~180 g)"
+          },
+          "scaleWaterLitre": {
+            "name": "Échelle : litre d’eau",
+            "flavor": "l’équivalent d’un litre d’eau (~300 g)"
+          },
+          "scaleHuman": {
+            "name": "Échelle : être humain",
+            "flavor": "comparable à un humain de 70 kg"
+          },
+          "scalePiano": {
+            "name": "Échelle : piano",
+            "flavor": "équivaut à un piano (~450 kg)"
+          },
+          "scaleCar": {
+            "name": "Échelle : voiture compacte",
+            "flavor": "autant qu’une voiture compacte (~1,3 t)"
+          },
+          "scaleElephant": {
+            "name": "Échelle : éléphant",
+            "flavor": "équivaut à un éléphant (~6 t)"
+          },
+          "scaleBoeing747": {
+            "name": "Échelle : Boeing 747",
+            "flavor": "autant qu’un Boeing 747"
+          },
+          "scalePyramid": {
+            "name": "Échelle : pyramide de Khéops",
+            "flavor": "la masse d’atomes de la grande pyramide de Khéops"
+          },
+          "scaleAtmosphere": {
+            "name": "Échelle : atmosphère terrestre",
+            "flavor": "équivaut à l’atmosphère terrestre complète"
+          },
+          "scaleOceans": {
+            "name": "Échelle : océans terrestres",
+            "flavor": "autant que tous les océans de la Terre"
+          },
+          "scaleEarth": {
+            "name": "Échelle : Terre",
+            "flavor": "égale la masse atomique de la planète Terre"
+          },
+          "scaleSun": {
+            "name": "Échelle : Soleil",
+            "flavor": "équivaut au Soleil"
+          },
+          "scaleMilkyWay": {
+            "name": "Échelle : Voie lactée",
+            "flavor": "comparable à la Voie lactée entière"
+          },
+          "scaleLocalGroup": {
+            "name": "Échelle : Groupe local",
+            "flavor": "autant que le Groupe local de galaxies"
+          },
+          "scaleVirgoCluster": {
+            "name": "Échelle : superamas de la Vierge",
+            "flavor": "équivaut au superamas de la Vierge"
+          },
+          "scaleObservableUniverse": {
+            "name": "Échelle : univers observable",
+            "flavor": "atteignez le total estimé d’atomes de l’univers observable"
+          }
+        }
+      },
+      "milestones": {
+        "autoSynthesis": "Collectez {amount} atomes pour débloquer la synthèse automatique.",
+        "quantumGloves": "Atteignez {amount} atomes pour améliorer vos gants quantiques.",
+        "overclock": "Atteignez {amount} atomes pour accéder aux surcadences.",
+        "nextEra": "Accumulez {amount} atomes pour préparer la prochaine ère."
+      },
+      "trophies": {
+        "millionAtoms": {
+          "name": "Ruée vers le million",
+          "description": "Accumulez un total d’un million d’atomes synthétisés.",
+          "reward": "Ajoute +{bonus} au Boost global sur la production manuelle et automatique (×{total} une fois ce succès débloqué)."
+        },
+        "frenzyCollector": {
+          "name": "Convergence frénétique",
+          "description": "Déclenchez 100 frénésies (APC et APS cumulés).",
+          "reward": "Débloque la frénésie multiple : deux frénésies peuvent se cumuler."
+        },
+        "frenzyMaster": {
+          "name": "Tempête tri-phasée",
+          "description": "Déclenchez 1 000 frénésies cumulées.",
+          "reward": "Active la triple frénésie et ajoute un bonus global ×{multiplier}."
+        }
+      }
+    },
+    "gameData": {
+      "fusions": {
+        "defaultName": "Fusion {number}"
+      },
+      "categories": {
+        "alkaliMetal": "métal alcalin",
+        "alkalineEarthMetal": "métal alcalino-terreux",
+        "transitionMetal": "métal de transition",
+        "postTransitionMetal": "métal pauvre",
+        "metalloid": "métalloïde",
+        "nonmetal": "non-métal",
+        "halogen": "halogène",
+        "nobleGas": "gaz noble",
+        "lanthanide": "lanthanide",
+        "actinide": "actinide"
+      }
+    },
+    "particules": {
+      "graviton": {
+        "detected": "Graviton détecté !",
+        "dissipated": "Le graviton s’est dissipé…",
+        "captured": "Graviton capturé ! Ticket spécial +1"
+      },
+      "combos": {
+        "bonusPrefix": "Bonus: ",
+        "quarkPrefix": "Combo quark ! "
+      },
+      "lingerBonus": {
+        "message": "Multiballe bonus !"
+      },
+      "powerUps": {
+        "extend": "Barre allongée",
+        "multiball": "Multiballe",
+        "laser": "Tir laser",
+        "speed": "Accélération",
+        "floor": "Bouclier inférieur"
+      },
+      "ui": {
+        "start": {
+          "message": "Touchez ou cliquez la raquette pour guider la particule et détruire les briques quantiques.",
+          "button": "Commencer"
+        },
+        "pause": {
+          "message": "Partie en pause. Touchez la raquette pour continuer.",
+          "button": "Reprendre"
+        },
+        "lifeLost": {
+          "message": "Particule perdue ! Touchez la raquette pour continuer.",
+          "button": "Reprendre"
+        },
+        "levelCleared": {
+          "template": "Niveau {level} terminé !{reward}",
+          "button": "Continuer",
+          "reward": " {reward} obtenu !",
+          "noReward": " Aucun ticket cette fois.",
+          "speedBonus": " Bonus vitesse : +{bonus} !"
+        },
+        "gameOver": {
+          "withTickets": "Partie terminée ! Tickets gagnés : {tickets}{bonus}.",
+          "withoutTickets": "Partie terminée ! Aucun ticket gagné cette fois-ci.",
+          "button": "Rejouer"
+        },
+        "hud": {
+          "ticketSingular": "ticket",
+          "ticketPlural": "tickets",
+          "bonusTicketSingular": "ticket Mach3",
+          "bonusTicketPlural": "tickets Mach3"
+        },
+        "overlay": {
+          "defaultButton": "Continuer"
+        }
+      }
+    },
     "info": {
       "bonuses": {
         "perCopy": "Par copie",
