@@ -638,6 +638,82 @@
           "offline": "Offline gains {value}",
           "frenzy": "Frenzy chance {value}",
           "overflow": "Overflow bonuses +{value}"
+        },
+        "collection": {
+          "effects": {
+            "apcFlat": "APC +{value}",
+            "apsFlat": "APS +{value}",
+            "apcMultiplier": "APC {value}",
+            "apsMultiplier": "APS {value}",
+            "critChance": "Chance +{value}",
+            "critMultiplier": "Multiplier +{value}×",
+            "critChanceMultiplier": "Chance {value}",
+            "critMultiplierMultiplier": "Multiplier {value}",
+            "critChanceSet": "Chance set to {value}",
+            "critMultiplierSet": "Multiplier set to {value}×",
+            "critCapAdd": "Crit cap +{value}×",
+            "critCapMultiplier": "Crit cap {value}",
+            "critCapSet": "Crit cap set to {value}×",
+            "rarityMultiplierApc": "Rarity multiplier APC {value}",
+            "rarityMultiplierAps": "Rarity multiplier APS {value}",
+            "offline": "Offline collection {value}",
+            "frenzy": "Frenzy chance {value}"
+          },
+          "notes": {
+            "singularityBoost": "Amplified Singularity: effects {value}",
+            "amplify": "Boosts {target}: {effects}",
+            "effects": "{label}: {effects}",
+            "multiplierBase": "{prefix}base {value}",
+            "multiplierIncrement": "{prefix}{value} every {count} {unit}",
+            "multiplierCap": "{prefix}max {value}",
+            "rarityMultiplierDetail": "{prefix}{value}{suffix}"
+          },
+          "labels": {
+            "crit": "Critical",
+            "perCopy": "Per copy",
+            "fullCollection": "Complete collection",
+            "collectionBonus": "Collection bonus",
+            "generic": "Bonus",
+            "critPerUnique": "Critical per unique",
+            "critPerDuplicate": "Critical per duplicate",
+            "multiplier": "Multiplier {target}",
+            "rarityMultiplier": "Rarity multiplier"
+          },
+          "threshold": {
+            "minCopies": "from {count} {unit}",
+            "minUnique": "minimum {count} {unit}",
+            "requireAll": "complete collection required"
+          },
+          "overview": {
+            "ticketReduction": "Reduces ticket star interval by {value}s per unique element",
+            "ticketMinimum": "minimum {value}s",
+            "offlineBase": "base {value}",
+            "offlineIncrement": "{value} per duplicate",
+            "offlineCap": "max {value}",
+            "offlineSummary": "Offline collection {detail}",
+            "overflowFlat": "APC/APS +{value} per duplicate",
+            "overflowThreshold": "beyond {count} {unit}",
+            "frenzyComplete": "Frenzy chance {value} (complete collection required)",
+            "singularitySynergy": "Singularity synergy: Bonus ×2 when the Singularity collection is complete",
+            "stellaireSynergy": "Stellar Forge synergy: Completing the collection doubles all Stellar Forge bonuses"
+          },
+          "units": {
+            "copy": {
+              "singular": "copy",
+              "plural": "copies"
+            },
+            "unique": {
+              "singular": "unique",
+              "plural": "uniques"
+            },
+            "duplicate": {
+              "singular": "duplicate",
+              "plural": "duplicates"
+            }
+          },
+          "targets": {
+            "production": "production"
+          }
         }
       },
       "collection": {

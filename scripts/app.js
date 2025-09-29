@@ -109,6 +109,27 @@ function translateOrDefault(key, fallback, params) {
   return fallback;
 }
 
+function translateCollectionEffect(key, fallback, params) {
+  if (!key) {
+    return fallback;
+  }
+  return translateOrDefault(`scripts.app.table.collection.effects.${key}`, fallback, params);
+}
+
+function translateCollectionNote(key, fallback, params) {
+  if (!key) {
+    return fallback;
+  }
+  return translateOrDefault(`scripts.app.table.collection.notes.${key}`, fallback, params);
+}
+
+function translateCollectionLabel(key, fallback, params) {
+  if (!key) {
+    return fallback;
+  }
+  return translateOrDefault(`scripts.app.table.collection.labels.${key}`, fallback, params);
+}
+
 const PERIODIC_ELEMENT_I18N_BASE = 'scripts.periodic.elements';
 
 function getPeriodicElementTranslationBase(definition) {
@@ -6039,7 +6060,9 @@ function recalcProduction() {
             : rawPerClick;
           const formatted = formatMultiplierTooltip(effective);
           if (formatted) {
-            parts.push(`APC ${formatted}`);
+            parts.push(
+              translateCollectionEffect('apcMultiplier', `APC ${formatted}`, { value: formatted })
+            );
           }
         }
         const rawPerSecond = Number(target.perSecond);
@@ -6049,11 +6072,20 @@ function recalcProduction() {
             : rawPerSecond;
           const formatted = formatMultiplierTooltip(effective);
           if (formatted) {
-            parts.push(`APS ${formatted}`);
+            parts.push(
+              translateCollectionEffect('apsMultiplier', `APS ${formatted}`, { value: formatted })
+            );
           }
         }
         if (parts.length) {
-          notes.push(`Amplifie ${targetLabel} : ${parts.join(' · ')}`);
+          const effectsText = parts.join(' · ');
+          notes.push(
+            translateCollectionNote(
+              'amplify',
+              `Amplifie ${targetLabel} : ${effectsText}`,
+              { target: targetLabel, effects: effectsText }
+            )
+          );
         }
       });
       return notes;
@@ -6106,7 +6138,7 @@ function recalcProduction() {
             hasEffect = true;
             const formatted = formatElementFlatBonus(applied);
             if (formatted) {
-              addLabelEffect(copyLabel, `APC +${formatted}`, 'perCopy');
+              addLabelEffect(copyLabel, translateCollectionEffect('apcFlat', `APC +${formatted}`, { value: formatted }), 'perCopy');
             }
           }
         }
@@ -6122,7 +6154,7 @@ function recalcProduction() {
             hasEffect = true;
             const formatted = formatElementFlatBonus(applied);
             if (formatted) {
-              addLabelEffect(copyLabel, `APS +${formatted}`, 'perCopy');
+              addLabelEffect(copyLabel, translateCollectionEffect('apsFlat', `APS +${formatted}`, { value: formatted }), 'perCopy');
             }
           }
         }
@@ -6138,7 +6170,7 @@ function recalcProduction() {
             hasEffect = true;
             const formatted = formatElementFlatBonus(applied);
             if (formatted) {
-              addLabelEffect(copyLabel, `APC +${formatted}`, 'perCopy');
+              addLabelEffect(copyLabel, translateCollectionEffect('apcFlat', `APC +${formatted}`, { value: formatted }), 'perCopy');
             }
           }
         }
@@ -6154,7 +6186,7 @@ function recalcProduction() {
             hasEffect = true;
             const formatted = formatElementFlatBonus(applied);
             if (formatted) {
-              addLabelEffect(copyLabel, `APS +${formatted}`, 'perCopy');
+              addLabelEffect(copyLabel, translateCollectionEffect('apsFlat', `APS +${formatted}`, { value: formatted }), 'perCopy');
             }
           }
         }
@@ -6170,7 +6202,7 @@ function recalcProduction() {
             hasEffect = true;
             const formatted = formatElementFlatBonus(applied);
             if (formatted) {
-              addLabelEffect(copyLabel, `APC +${formatted}`, 'perCopy');
+              addLabelEffect(copyLabel, translateCollectionEffect('apcFlat', `APC +${formatted}`, { value: formatted }), 'perCopy');
             }
           }
         }
@@ -6186,7 +6218,7 @@ function recalcProduction() {
             hasEffect = true;
             const formatted = formatElementFlatBonus(applied);
             if (formatted) {
-              addLabelEffect(copyLabel, `APS +${formatted}`, 'perCopy');
+              addLabelEffect(copyLabel, translateCollectionEffect('apsFlat', `APS +${formatted}`, { value: formatted }), 'perCopy');
             }
           }
         }
@@ -6252,7 +6284,7 @@ function recalcProduction() {
             setBonusTriggered = true;
             const formatted = formatElementFlatBonus(applied);
             if (formatted) {
-              addLabelEffect(resolvedLabel, `APC +${formatted}`, 'setBonus');
+              addLabelEffect(resolvedLabel, translateCollectionEffect('apcFlat', `APC +${formatted}`, { value: formatted }), 'setBonus');
             }
           }
         }
@@ -6267,7 +6299,7 @@ function recalcProduction() {
             setBonusTriggered = true;
             const formatted = formatElementFlatBonus(applied);
             if (formatted) {
-              addLabelEffect(resolvedLabel, `APS +${formatted}`, 'setBonus');
+              addLabelEffect(resolvedLabel, translateCollectionEffect('apsFlat', `APS +${formatted}`, { value: formatted }), 'setBonus');
             }
           }
         }
@@ -6283,7 +6315,7 @@ function recalcProduction() {
             setBonusTriggered = true;
             const formatted = formatElementFlatBonus(applied);
             if (formatted) {
-              addLabelEffect(resolvedLabel, `APC +${formatted}`, 'setBonus');
+              addLabelEffect(resolvedLabel, translateCollectionEffect('apcFlat', `APC +${formatted}`, { value: formatted }), 'setBonus');
             }
           }
         }
@@ -6299,7 +6331,7 @@ function recalcProduction() {
             setBonusTriggered = true;
             const formatted = formatElementFlatBonus(applied);
             if (formatted) {
-              addLabelEffect(resolvedLabel, `APS +${formatted}`, 'setBonus');
+              addLabelEffect(resolvedLabel, translateCollectionEffect('apsFlat', `APS +${formatted}`, { value: formatted }), 'setBonus');
             }
           }
         }
@@ -6315,7 +6347,7 @@ function recalcProduction() {
             setBonusTriggered = true;
             const formatted = formatElementFlatBonus(applied);
             if (formatted) {
-              addLabelEffect(resolvedLabel, `APC +${formatted}`, 'setBonus');
+              addLabelEffect(resolvedLabel, translateCollectionEffect('apcFlat', `APC +${formatted}`, { value: formatted }), 'setBonus');
             }
           }
         }
@@ -6331,7 +6363,7 @@ function recalcProduction() {
             setBonusTriggered = true;
             const formatted = formatElementFlatBonus(applied);
             if (formatted) {
-              addLabelEffect(resolvedLabel, `APS +${formatted}`, 'setBonus');
+              addLabelEffect(resolvedLabel, translateCollectionEffect('apsFlat', `APS +${formatted}`, { value: formatted }), 'setBonus');
             }
           }
         }
@@ -6386,10 +6418,10 @@ function recalcProduction() {
         const multiplierText = formatMultiplierTooltip(appliedMultiplier);
         if (multiplierText) {
           if (targets.has('perClick')) {
-            addLabelEffect(multiplierLabelResolved, `APC ${multiplierText}`, 'multiplier');
+            addLabelEffect(multiplierLabelResolved, translateCollectionEffect('apcMultiplier', `APC ${multiplierText}`, { value: multiplierText }), 'multiplier');
           }
           if (targets.has('perSecond')) {
-            addLabelEffect(multiplierLabelResolved, `APS ${multiplierText}`, 'multiplier');
+            addLabelEffect(multiplierLabelResolved, translateCollectionEffect('apsMultiplier', `APS ${multiplierText}`, { value: multiplierText }), 'multiplier');
           }
         }
       }
@@ -6424,15 +6456,15 @@ function recalcProduction() {
         }
       }
       if (critApplied) {
-        const critLabel = 'Critique';
+        const critLabel = translateCollectionLabel('crit', 'Critique');
         markLabelActive(critLabel, 'crit');
         const chanceText = formatElementCritChanceBonus(summary.critChanceAdd);
         if (chanceText) {
-          addLabelEffect(critLabel, `Chance +${chanceText}`, 'crit');
+          addLabelEffect(critLabel, translateCollectionEffect('critChance', `Chance +${chanceText}`, { value: chanceText }), 'crit');
         }
         const critMultiplierText = formatElementCritMultiplierBonus(summary.critMultiplierAdd);
         if (critMultiplierText) {
-          addLabelEffect(critLabel, `Multiplicateur +${critMultiplierText}×`, 'crit');
+          addLabelEffect(critLabel, translateCollectionEffect('critMultiplier', `Multiplicateur +${critMultiplierText}×`, { value: critMultiplierText }), 'crit');
         }
       }
     }
@@ -6459,7 +6491,7 @@ function recalcProduction() {
             clickMultiplierValue = updated;
             const display = formatMultiplierTooltip(updated);
             if (display) {
-              addLabelEffect(resolvedLabel, `Multiplicateur de rareté APC ${display}`, 'rarityMultiplier');
+              addLabelEffect(resolvedLabel, translateCollectionEffect('rarityMultiplierApc', `Multiplicateur de rareté APC ${display}`, { value: display }), 'rarityMultiplier');
               labelApplied = true;
             }
           }
@@ -6471,7 +6503,7 @@ function recalcProduction() {
             autoMultiplierValue = updated;
             const display = formatMultiplierTooltip(updated);
             if (display) {
-              addLabelEffect(resolvedLabel, `Multiplicateur de rareté APS ${display}`, 'rarityMultiplier');
+              addLabelEffect(resolvedLabel, translateCollectionEffect('rarityMultiplierAps', `Multiplicateur de rareté APS ${display}`, { value: display }), 'rarityMultiplier');
               labelApplied = true;
             }
           }
@@ -6540,7 +6572,7 @@ function recalcProduction() {
         markLabelActive(offlineLabel, 'offline');
         const offlineText = formatMultiplierTooltip(offlineMultiplier);
         if (offlineText) {
-          addLabelEffect(offlineLabel, `Collecte hors ligne ${offlineText}`, 'offline');
+          addLabelEffect(offlineLabel, translateCollectionEffect('offline', `Collecte hors ligne ${offlineText}`, { value: offlineText }), 'offline');
         }
       }
 
@@ -6561,7 +6593,7 @@ function recalcProduction() {
           summary.clickFlatTotal += overflowClick;
           const formatted = formatElementFlatBonus(overflowClick);
           if (formatted) {
-            addLabelEffect(overflowLabel, `APC +${formatted}`, 'overflow');
+            addLabelEffect(overflowLabel, translateCollectionEffect('apcFlat', `APC +${formatted}`, { value: formatted }), 'overflow');
           }
         }
         const overflowAuto = addAutoElementFlat(
@@ -6576,7 +6608,7 @@ function recalcProduction() {
           summary.autoFlatTotal += overflowAuto;
           const formatted = formatElementFlatBonus(overflowAuto);
           if (formatted) {
-            addLabelEffect(overflowLabel, `APS +${formatted}`, 'overflow');
+            addLabelEffect(overflowLabel, translateCollectionEffect('apsFlat', `APS +${formatted}`, { value: formatted }), 'overflow');
           }
         }
         if (
@@ -6604,7 +6636,7 @@ function recalcProduction() {
         markLabelActive(frenzyLabel, 'frenzy');
         const frenzyText = formatMultiplierTooltip(frenzyMultiplier);
         if (frenzyText) {
-          addLabelEffect(frenzyLabel, `Chance de frénésie ${frenzyText}`, 'frenzy');
+          addLabelEffect(frenzyLabel, translateCollectionEffect('frenzy', `Chance de frénésie ${frenzyText}`, { value: frenzyText }), 'frenzy');
         }
       }
     }
@@ -6620,7 +6652,11 @@ function recalcProduction() {
       markLabelActive(STELLAIRE_SINGULARITY_BONUS_LABEL, 'synergy');
       const singularityText = formatMultiplierTooltip(stellaireSingularityBoost);
       if (singularityText) {
-        addLabelNote(STELLAIRE_SINGULARITY_BONUS_LABEL, `Singularité amplifiée : effets ${singularityText}`, 'synergy');
+        addLabelNote(
+          STELLAIRE_SINGULARITY_BONUS_LABEL,
+          translateCollectionNote('singularityBoost', `Singularité amplifiée : effets ${singularityText}`, { value: singularityText }),
+          'synergy'
+        );
       }
     }
 
@@ -6772,7 +6808,7 @@ function recalcProduction() {
               bonusApplied = true;
               const formatted = formatElementFlatBonus(applied);
               if (formatted) {
-                addLabelEffect(effectLabel, `APC +${formatted}`, 'flat');
+                addLabelEffect(effectLabel, translateCollectionEffect('apcFlat', `APC +${formatted}`, { value: formatted }), 'flat');
               }
             }
           }
@@ -6789,7 +6825,7 @@ function recalcProduction() {
               bonusApplied = true;
               const formatted = formatElementFlatBonus(applied);
               if (formatted) {
-                addLabelEffect(effectLabel, `APS +${formatted}`, 'flat');
+                addLabelEffect(effectLabel, translateCollectionEffect('apsFlat', `APS +${formatted}`, { value: formatted }), 'flat');
               }
             }
           }
@@ -6804,7 +6840,7 @@ function recalcProduction() {
               bonusApplied = true;
               const formatted = formatMultiplierTooltip(applied);
               if (formatted) {
-                addLabelEffect(effectLabel, `APC ${formatted}`, 'multiplier');
+                addLabelEffect(effectLabel, translateCollectionEffect('apcMultiplier', `APC ${formatted}`, { value: formatted }), 'multiplier');
               }
             }
           }
@@ -6819,7 +6855,7 @@ function recalcProduction() {
               bonusApplied = true;
               const formatted = formatMultiplierTooltip(applied);
               if (formatted) {
-                addLabelEffect(effectLabel, `APS ${formatted}`, 'multiplier');
+                addLabelEffect(effectLabel, translateCollectionEffect('apsMultiplier', `APS ${formatted}`, { value: formatted }), 'multiplier');
               }
             }
           }
@@ -6849,7 +6885,7 @@ function recalcProduction() {
             bonusApplied = true;
             const formatted = formatElementCritChanceBonus(critChanceAdd);
             if (formatted) {
-              addLabelEffect(effectLabel, `Chance +${formatted}`, 'crit');
+              addLabelEffect(effectLabel, translateCollectionEffect('critChance', `Chance +${formatted}`, { value: formatted }), 'crit');
             }
           }
           const critMultiplierAdd = resolveCritValue(effects.critMultiplierAdd, ['multiplierAdd', 'powerAdd']);
@@ -6858,7 +6894,7 @@ function recalcProduction() {
             bonusApplied = true;
             const formatted = formatElementCritMultiplierBonus(critMultiplierAdd);
             if (formatted) {
-              addLabelEffect(effectLabel, `Multiplicateur +${formatted}×`, 'crit');
+              addLabelEffect(effectLabel, translateCollectionEffect('critMultiplier', `Multiplicateur +${formatted}×`, { value: formatted }), 'crit');
             }
           }
 
@@ -6867,7 +6903,7 @@ function recalcProduction() {
             bonusApplied = true;
             const formatted = formatMultiplierTooltip(critChanceMult);
             if (formatted) {
-              addLabelEffect(effectLabel, `Chance ${formatted}`, 'crit');
+              addLabelEffect(effectLabel, translateCollectionEffect('critChanceMultiplier', `Chance ${formatted}`, { value: formatted }), 'crit');
             }
           }
           const critMultiplierMult = resolveCritValue(effects.critMultiplierMult, ['multiplierMult', 'powerMult']);
@@ -6875,7 +6911,7 @@ function recalcProduction() {
             bonusApplied = true;
             const formatted = formatMultiplierTooltip(critMultiplierMult);
             if (formatted) {
-              addLabelEffect(effectLabel, `Multiplicateur ${formatted}`, 'crit');
+              addLabelEffect(effectLabel, translateCollectionEffect('critMultiplierMultiplier', `Multiplicateur ${formatted}`, { value: formatted }), 'crit');
             }
           }
           const critChanceSet = resolveCritValue(effects.critChanceSet, ['chanceSet', 'set']);
@@ -6883,7 +6919,7 @@ function recalcProduction() {
             bonusApplied = true;
             const formatted = formatElementCritChanceBonus(critChanceSet);
             if (formatted) {
-              addLabelNote(effectLabel, `Chance fixée à ${formatted}`, 'crit');
+              addLabelNote(effectLabel, translateCollectionNote('critChanceSet', `Chance fixée à ${formatted}`, { value: formatted }), 'crit');
             }
           }
           const critMultiplierSet = resolveCritValue(effects.critMultiplierSet, ['multiplierSet', 'powerSet']);
@@ -6891,7 +6927,7 @@ function recalcProduction() {
             bonusApplied = true;
             const formatted = formatElementCritMultiplierBonus(critMultiplierSet);
             if (formatted) {
-              addLabelNote(effectLabel, `Multiplicateur fixé à ${formatted}×`, 'crit');
+              addLabelNote(effectLabel, translateCollectionNote('critMultiplierSet', `Multiplicateur fixé à ${formatted}×`, { value: formatted }), 'crit');
             }
           }
           const critMaxMultiplierAdd = resolveCritValue(effects.critMaxMultiplierAdd, ['maxMultiplierAdd', 'capAdd']);
@@ -6899,7 +6935,7 @@ function recalcProduction() {
             bonusApplied = true;
             const formatted = formatElementCritMultiplierBonus(critMaxMultiplierAdd);
             if (formatted) {
-              addLabelNote(effectLabel, `Plafond critique +${formatted}×`, 'crit');
+              addLabelNote(effectLabel, translateCollectionNote('critCapAdd', `Plafond critique +${formatted}×`, { value: formatted }), 'crit');
             }
           }
           const critMaxMultiplierMult = resolveCritValue(effects.critMaxMultiplierMult, ['maxMultiplierMult', 'capMult']);
@@ -6907,7 +6943,7 @@ function recalcProduction() {
             bonusApplied = true;
             const formatted = formatMultiplierTooltip(critMaxMultiplierMult);
             if (formatted) {
-              addLabelNote(effectLabel, `Plafond critique ${formatted}`, 'crit');
+              addLabelNote(effectLabel, translateCollectionNote('critCapMultiplier', `Plafond critique ${formatted}`, { value: formatted }), 'crit');
             }
           }
           const critMaxMultiplierSet = resolveCritValue(effects.critMaxMultiplierSet, ['maxMultiplierSet', 'capSet']);
@@ -6915,7 +6951,7 @@ function recalcProduction() {
             bonusApplied = true;
             const formatted = formatElementCritMultiplierBonus(critMaxMultiplierSet);
             if (formatted) {
-              addLabelNote(effectLabel, `Plafond critique fixé à ${formatted}×`, 'crit');
+              addLabelNote(effectLabel, translateCollectionNote('critCapSet', `Plafond critique fixé à ${formatted}×`, { value: formatted }), 'crit');
             }
           }
 

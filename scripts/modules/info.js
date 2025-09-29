@@ -50,6 +50,54 @@ function translateOrDefault(key, fallback = '', params) {
   return fallback;
 }
 
+function translateCollectionEffect(key, fallback, params) {
+  if (!key) {
+    return fallback;
+  }
+  return translateOrDefault(`scripts.app.table.collection.effects.${key}`, fallback, params);
+}
+
+function translateCollectionNote(key, fallback, params) {
+  if (!key) {
+    return fallback;
+  }
+  return translateOrDefault(`scripts.app.table.collection.notes.${key}`, fallback, params);
+}
+
+function translateCollectionLabel(key, fallback, params) {
+  if (!key) {
+    return fallback;
+  }
+  return translateOrDefault(`scripts.app.table.collection.labels.${key}`, fallback, params);
+}
+
+function translateCollectionThreshold(key, fallback, params) {
+  if (!key) {
+    return fallback;
+  }
+  return translateOrDefault(`scripts.app.table.collection.threshold.${key}`, fallback, params);
+}
+
+function translateCollectionOverview(key, fallback, params) {
+  if (!key) {
+    return fallback;
+  }
+  return translateOrDefault(`scripts.app.table.collection.overview.${key}`, fallback, params);
+}
+
+function translateCollectionUnit(unit, count, fallbackSingular, fallbackPlural) {
+  const suffix = count === 1 ? 'singular' : 'plural';
+  const fallback = count === 1 ? fallbackSingular : fallbackPlural;
+  return translateOrDefault(`scripts.app.table.collection.units.${unit}.${suffix}`, fallback, { count });
+}
+
+function translateCollectionTarget(target) {
+  if (target === 'production') {
+    return translateOrDefault('scripts.app.table.collection.targets.production', 'production');
+  }
+  return target;
+}
+
 function compareTextLocalized(a, b, options) {
   const api = getI18nApi();
   if (api && typeof api.compareText === 'function') {
@@ -178,15 +226,21 @@ function formatBonusThreshold(addConfig, context, { includeRequireAllUnique = tr
   const notes = [];
   const { minCopies, minUnique, requireAllUnique } = addConfig;
   if (Number.isFinite(minCopies) && minCopies > 1) {
-    const unit = minCopies === 1 ? 'copie' : 'copies';
-    notes.push(`dès ${minCopies} ${unit}`);
+    const unit = translateCollectionUnit('copy', minCopies, 'copie', 'copies');
+    const countText = formatIntegerLocalized(minCopies);
+    notes.push(
+      translateCollectionThreshold('minCopies', `dès ${countText} ${unit}`, { count: countText, unit })
+    );
   }
   if (Number.isFinite(minUnique) && minUnique > 0) {
-    const unit = minUnique === 1 ? 'unique' : 'uniques';
-    notes.push(`minimum ${minUnique} ${unit}`);
+    const unit = translateCollectionUnit('unique', minUnique, 'unique', 'uniques');
+    const countText = formatIntegerLocalized(minUnique);
+    notes.push(
+      translateCollectionThreshold('minUnique', `minimum ${countText} ${unit}`, { count: countText, unit })
+    );
   }
   if (requireAllUnique && includeRequireAllUnique) {
-    notes.push('collection complète requise');
+    notes.push(translateCollectionThreshold('requireAll', 'collection complète requise'));
   }
   return notes.length ? ` (${notes.join(' · ')})` : '';
 }
@@ -201,19 +255,25 @@ function formatRarityMultiplierNotes(entries) {
     const rarityId = typeof entry.rarityId === 'string' ? entry.rarityId.trim() : '';
     if (!rarityId) return;
     const targetLabel = RARITY_LABEL_MAP.get(rarityId) || rarityId;
-    const parts = [];
-    const clickText = formatElementMultiplierDisplay(entry.perClick);
-    if (clickText && clickText !== '×1') {
-      parts.push(`APC ${clickText}`);
-    }
-    const autoText = formatElementMultiplierDisplay(entry.perSecond);
-    if (autoText && autoText !== '×1') {
-      parts.push(`APS ${autoText}`);
-    }
-    if (parts.length) {
-      notes.push(`Amplifie ${targetLabel} : ${parts.join(' · ')}`);
-    }
-  });
+  const parts = [];
+  const clickText = formatElementMultiplierDisplay(entry.perClick);
+  if (clickText && clickText !== '×1') {
+    parts.push(translateCollectionEffect('apcMultiplier', `APC ${clickText}`, { value: clickText }));
+  }
+  const autoText = formatElementMultiplierDisplay(entry.perSecond);
+  if (autoText && autoText !== '×1') {
+    parts.push(translateCollectionEffect('apsMultiplier', `APS ${autoText}`, { value: autoText }));
+  }
+  if (parts.length) {
+    const effectsText = parts.join(' · ');
+    notes.push(
+      translateCollectionNote('amplify', `Amplifie ${targetLabel} : ${effectsText}`, {
+        target: targetLabel,
+        effects: effectsText
+      })
+    );
+  }
+});
   return notes;
 }
 
@@ -241,7 +301,7 @@ function describeAddConfig(addConfig, context, options = {}) {
       return overrideLabel;
     }
     if (context === 'perCopy') {
-      return 'Par copie';
+      return translateCollectionLabel('perCopy', 'Par copie');
     }
     if (context === 'setBonus') {
       if (
@@ -250,11 +310,11 @@ function describeAddConfig(addConfig, context, options = {}) {
         && (!Number.isFinite(addConfig.minUnique) || addConfig.minUnique <= 0)
       ) {
         includeRequireAllUnique = false;
-        return 'Collection complète';
+        return translateCollectionLabel('fullCollection', 'Collection complète');
       }
-      return 'Bonus de collection';
+      return translateCollectionLabel('collectionBonus', 'Bonus de collection');
     }
-    return 'Bonus';
+    return translateCollectionLabel('generic', 'Bonus');
   })();
 
   const thresholdText = formatBonusThreshold(addConfig, context, { includeRequireAllUnique });
@@ -263,39 +323,47 @@ function describeAddConfig(addConfig, context, options = {}) {
   if (Number.isFinite(clickAdd) && clickAdd !== 0) {
     const value = formatElementFlatBonus(clickAdd);
     if (value) {
-      effects.push(`APC +${value}`);
+      effects.push(translateCollectionEffect('apcFlat', `APC +${value}`, { value }));
     }
   }
   if (Number.isFinite(autoAdd) && autoAdd !== 0) {
     const value = formatElementFlatBonus(autoAdd);
     if (value) {
-      effects.push(`APS +${value}`);
+      effects.push(translateCollectionEffect('apsFlat', `APS +${value}`, { value }));
     }
   }
 
   if (Number.isFinite(uniqueClickAdd) && uniqueClickAdd !== 0) {
     const value = formatElementFlatBonus(uniqueClickAdd);
     if (value) {
-      effects.push(`APC +${value} par élément unique`);
+      effects.push(
+        translateCollectionEffect('apcFlatPerUnique', `APC +${value} par élément unique`, { value })
+      );
     }
   }
   if (Number.isFinite(uniqueAutoAdd) && uniqueAutoAdd !== 0) {
     const value = formatElementFlatBonus(uniqueAutoAdd);
     if (value) {
-      effects.push(`APS +${value} par élément unique`);
+      effects.push(
+        translateCollectionEffect('apsFlatPerUnique', `APS +${value} par élément unique`, { value })
+      );
     }
   }
 
   if (Number.isFinite(duplicateClickAdd) && duplicateClickAdd !== 0) {
     const value = formatElementFlatBonus(duplicateClickAdd);
     if (value) {
-      effects.push(`APC +${value} par doublon`);
+      effects.push(
+        translateCollectionEffect('apcFlatPerDuplicate', `APC +${value} par doublon`, { value })
+      );
     }
   }
   if (Number.isFinite(duplicateAutoAdd) && duplicateAutoAdd !== 0) {
     const value = formatElementFlatBonus(duplicateAutoAdd);
     if (value) {
-      effects.push(`APS +${value} par doublon`);
+      effects.push(
+        translateCollectionEffect('apsFlatPerDuplicate', `APS +${value} par doublon`, { value })
+      );
     }
   }
 
@@ -308,7 +376,11 @@ function describeAddConfig(addConfig, context, options = {}) {
     return [];
   }
 
-  const text = `${baseLabel} : ${effects.join(' · ')}`;
+  const effectsText = effects.join(' · ');
+  const text = translateCollectionNote('effects', `${baseLabel} : ${effectsText}`, {
+    label: baseLabel,
+    effects: effectsText
+  });
   return [thresholdText ? `${text}${thresholdText}` : text];
 }
 
@@ -318,55 +390,63 @@ function describeCritEffect(effect, scopeLabel) {
   if (Number.isFinite(effect.chanceSet) && effect.chanceSet > 0) {
     const text = formatElementCritChanceBonus(effect.chanceSet);
     if (text) {
-      parts.push(`Chance fixée à ${text}`);
+      parts.push(translateCollectionEffect('critChanceSet', `Chance fixée à ${text}`, { value: text }));
     }
   }
   if (Number.isFinite(effect.chanceAdd) && effect.chanceAdd !== 0) {
     const text = formatElementCritChanceBonus(effect.chanceAdd);
     if (text) {
-      parts.push(`Chance +${text}`);
+      parts.push(translateCollectionEffect('critChance', `Chance +${text}`, { value: text }));
     }
   }
   if (Number.isFinite(effect.chanceMult) && effect.chanceMult !== 1 && effect.chanceMult > 0) {
     const text = formatElementMultiplierDisplay(effect.chanceMult);
     if (text && text !== '×1') {
-      parts.push(`Chance ${text}`);
+      parts.push(translateCollectionEffect('critChanceMultiplier', `Chance ${text}`, { value: text }));
     }
   }
   if (Number.isFinite(effect.multiplierSet) && effect.multiplierSet > 0) {
     const text = formatElementCritMultiplierBonus(effect.multiplierSet);
     if (text) {
-      parts.push(`Multiplicateur fixé à ${text}×`);
+      parts.push(
+        translateCollectionEffect('critMultiplierSet', `Multiplicateur fixé à ${text}×`, { value: text })
+      );
     }
   }
   if (Number.isFinite(effect.multiplierAdd) && effect.multiplierAdd !== 0) {
     const text = formatElementCritMultiplierBonus(effect.multiplierAdd);
     if (text) {
-      parts.push(`Multiplicateur +${text}×`);
+      parts.push(translateCollectionEffect('critMultiplier', `Multiplicateur +${text}×`, { value: text }));
     }
   }
   if (Number.isFinite(effect.multiplierMult) && effect.multiplierMult !== 1 && effect.multiplierMult > 0) {
     const text = formatElementMultiplierDisplay(effect.multiplierMult);
     if (text && text !== '×1') {
-      parts.push(`Multiplicateur ${text}`);
+      parts.push(
+        translateCollectionEffect('critMultiplierMultiplier', `Multiplicateur ${text}`, { value: text })
+      );
     }
   }
   if (Number.isFinite(effect.maxMultiplierSet) && effect.maxMultiplierSet > 0) {
     const text = formatElementCritMultiplierBonus(effect.maxMultiplierSet);
     if (text) {
-      parts.push(`Cap critique fixé à ${text}×`);
+      parts.push(
+        translateCollectionEffect('critCapSet', `Cap critique fixé à ${text}×`, { value: text })
+      );
     }
   }
   if (Number.isFinite(effect.maxMultiplierAdd) && effect.maxMultiplierAdd !== 0) {
     const text = formatElementCritMultiplierBonus(effect.maxMultiplierAdd);
     if (text) {
-      parts.push(`Cap critique +${text}×`);
+      parts.push(translateCollectionEffect('critCapAdd', `Cap critique +${text}×`, { value: text }));
     }
   }
   if (Number.isFinite(effect.maxMultiplierMult) && effect.maxMultiplierMult !== 1 && effect.maxMultiplierMult > 0) {
     const text = formatElementMultiplierDisplay(effect.maxMultiplierMult);
     if (text && text !== '×1') {
-      parts.push(`Cap critique ${text}`);
+      parts.push(
+        translateCollectionEffect('critCapMultiplier', `Cap critique ${text}`, { value: text })
+      );
     }
   }
   return parts.length ? `${scopeLabel} : ${parts.join(' · ')}` : null;
@@ -376,13 +456,19 @@ function describeCritConfig(critConfig) {
   if (!critConfig) return [];
   const results = [];
   if (critConfig.perUnique) {
-    const text = describeCritEffect(critConfig.perUnique, 'Critique par unique');
+    const text = describeCritEffect(
+      critConfig.perUnique,
+      translateCollectionLabel('critPerUnique', 'Critique par unique')
+    );
     if (text) {
       results.push(text);
     }
   }
   if (critConfig.perDuplicate) {
-    const text = describeCritEffect(critConfig.perDuplicate, 'Critique par doublon');
+    const text = describeCritEffect(
+      critConfig.perDuplicate,
+      translateCollectionLabel('critPerDuplicate', 'Critique par doublon')
+    );
     if (text) {
       results.push(text);
     }
@@ -404,6 +490,7 @@ function describeMultiplierConfig(multiplierConfig, labelOverride = null) {
     : targets.length === 1
       ? targets[0]
       : 'production';
+  const localizedTarget = translateCollectionTarget(targetLabel);
   const parts = [];
   if (
     Number.isFinite(multiplierConfig.base)
@@ -412,7 +499,14 @@ function describeMultiplierConfig(multiplierConfig, labelOverride = null) {
     const baseText = formatMultiplier(multiplierConfig.base);
     if (baseText && baseText !== '×—') {
       const prefix = targetLabel === 'production' ? '' : `${targetLabel} `;
-      parts.push(`${prefix}base ${baseText}`.trim());
+      const fallback = `${prefix}base ${baseText}`.trim();
+      parts.push(
+        translateCollectionNote('multiplierBase', fallback, {
+          prefix,
+          value: baseText,
+          target: localizedTarget
+        })
+      );
     }
   }
   if (
@@ -423,9 +517,20 @@ function describeMultiplierConfig(multiplierConfig, labelOverride = null) {
   ) {
     const incrementText = formatSignedBonus(multiplierConfig.increment);
     if (incrementText) {
-      const unit = multiplierConfig.every === 1 ? 'copie' : 'copies';
+      const everyValue = Number(multiplierConfig.every);
+      const countText = formatNumberLocalized(everyValue);
+      const unit = translateCollectionUnit('copy', everyValue, 'copie', 'copies');
       const prefix = targetLabel === 'production' ? '' : `${targetLabel} `;
-      parts.push(`${prefix}${incrementText} toutes les ${multiplierConfig.every} ${unit}`.trim());
+      const fallback = `${prefix}${incrementText} toutes les ${countText} ${unit}`.trim();
+      parts.push(
+        translateCollectionNote('multiplierIncrement', fallback, {
+          prefix,
+          value: incrementText,
+          count: countText,
+          unit,
+          target: localizedTarget
+        })
+      );
     }
   }
   if (
@@ -436,16 +541,23 @@ function describeMultiplierConfig(multiplierConfig, labelOverride = null) {
     const capText = formatMultiplier(multiplierConfig.cap);
     if (capText && capText !== '×—') {
       const prefix = targetLabel === 'production' ? '' : `${targetLabel} `;
-      parts.push(`${prefix}max ${capText}`.trim());
+      const fallback = `${prefix}max ${capText}`.trim();
+      parts.push(
+        translateCollectionNote('multiplierCap', fallback, {
+          prefix,
+          value: capText,
+          target: localizedTarget
+        })
+      );
     }
   }
   if (!parts.length) {
     return null;
   }
-  const prefix = labelOverride && labelOverride.trim()
+  const labelPrefix = labelOverride && labelOverride.trim()
     ? labelOverride.trim()
-    : `Multiplicateur ${targetLabel}`;
-  return `${prefix} : ${parts.join(' · ')}`;
+    : translateCollectionLabel('multiplier', `Multiplicateur ${localizedTarget}`, { target: localizedTarget });
+  return `${labelPrefix} : ${parts.join(' · ')}`;
 }
 
 function describeRarityMultiplierBonus(bonusConfig, labelOverride = null) {
@@ -462,27 +574,46 @@ function describeRarityMultiplierBonus(bonusConfig, labelOverride = null) {
     : targets.length === 1
       ? targets[0]
       : 'production';
+  const localizedTarget = translateCollectionTarget(targetLabel);
   const amountText = formatSignedBonus(bonusConfig.amount);
   if (!amountText) {
     return null;
   }
   const notes = [];
   if (Number.isFinite(bonusConfig.uniqueThreshold) && bonusConfig.uniqueThreshold > 0) {
-    const unit = bonusConfig.uniqueThreshold === 1 ? 'unique' : 'uniques';
-    notes.push(`minimum ${bonusConfig.uniqueThreshold} ${unit}`);
+    const threshold = Math.floor(bonusConfig.uniqueThreshold);
+    const countText = formatIntegerLocalized(threshold);
+    const unit = translateCollectionUnit('unique', threshold, 'unique', 'uniques');
+    notes.push(
+      translateCollectionThreshold('minUnique', `minimum ${countText} ${unit}`, { count: countText, unit })
+    );
   }
   if (Number.isFinite(bonusConfig.copyThreshold) && bonusConfig.copyThreshold > 0) {
-    const unit = bonusConfig.copyThreshold === 1 ? 'copie' : 'copies';
-    notes.push(`dès ${bonusConfig.copyThreshold} ${unit}`);
+    const threshold = Math.floor(bonusConfig.copyThreshold);
+    const countText = formatIntegerLocalized(threshold);
+    const unit = translateCollectionUnit('copy', threshold, 'copie', 'copies');
+    notes.push(
+      translateCollectionThreshold('minCopies', `dès ${countText} ${unit}`, { count: countText, unit })
+    );
   }
   const suffix = notes.length ? ` (${notes.join(' · ')})` : '';
-  const detail = targetLabel === 'production'
+  const prefixText = targetLabel === 'production' ? '' : `${localizedTarget} `;
+  const detailFallback = targetLabel === 'production'
     ? `${amountText}${suffix}`
     : `${targetLabel} ${amountText}${suffix}`;
+  const detail = translateCollectionNote('rarityMultiplierDetail', detailFallback, {
+    prefix: prefixText,
+    target: localizedTarget,
+    value: amountText,
+    suffix
+  });
   if (labelOverride && labelOverride.trim()) {
     return `${labelOverride.trim()} : ${detail}`;
   }
-  return `Multiplicateur de rareté ${detail}`;
+  const prefix = translateCollectionLabel('rarityMultiplier', 'Multiplicateur de rareté', {
+    target: localizedTarget
+  });
+  return `${prefix} ${detail}`.trim();
 }
 
 function describeMythiqueSpecials(groupConfig) {
@@ -509,7 +640,13 @@ function describeMythiqueSpecials(groupConfig) {
     const reductionText = formatSmallNumber(MYTHIQUE_TICKET_UNIQUE_REDUCTION_SECONDS);
     const parts = [];
     if (reductionText) {
-      parts.push(`Réduit l’intervalle des étoiles à tickets de ${reductionText}s par élément unique`);
+      parts.push(
+        translateCollectionOverview(
+          'ticketReduction',
+          `Réduit l’intervalle des étoiles à tickets de ${reductionText}s par élément unique`,
+          { value: reductionText }
+        )
+      );
     }
     if (
       Number.isFinite(MYTHIQUE_TICKET_MIN_INTERVAL_SECONDS)
@@ -517,7 +654,9 @@ function describeMythiqueSpecials(groupConfig) {
     ) {
       const minText = formatSmallNumber(MYTHIQUE_TICKET_MIN_INTERVAL_SECONDS);
       if (minText) {
-        parts.push(`minimum ${minText}s`);
+        parts.push(
+          translateCollectionOverview('ticketMinimum', `minimum ${minText}s`, { value: minText })
+        );
       }
     }
     if (parts.length) {
@@ -530,12 +669,16 @@ function describeMythiqueSpecials(groupConfig) {
     if (Number.isFinite(MYTHIQUE_OFFLINE_BASE) && Math.abs(MYTHIQUE_OFFLINE_BASE - 1) > 1e-9) {
       const baseText = formatMultiplier(MYTHIQUE_OFFLINE_BASE);
       if (baseText && baseText !== '×—') {
-        parts.push(`base ${baseText}`);
+        parts.push(
+          translateCollectionOverview('offlineBase', `base ${baseText}`, { value: baseText })
+        );
       }
     }
     const incrementText = formatSignedBonus(MYTHIQUE_OFFLINE_PER_DUPLICATE);
     if (incrementText) {
-      parts.push(`${incrementText} par doublon`);
+      parts.push(
+        translateCollectionOverview('offlineIncrement', `${incrementText} par doublon`, { value: incrementText })
+      );
     }
     if (
       Number.isFinite(MYTHIQUE_OFFLINE_CAP)
@@ -544,11 +687,16 @@ function describeMythiqueSpecials(groupConfig) {
     ) {
       const capText = formatMultiplier(MYTHIQUE_OFFLINE_CAP);
       if (capText && capText !== '×—') {
-        parts.push(`max ${capText}`);
+        parts.push(
+          translateCollectionOverview('offlineCap', `max ${capText}`, { value: capText })
+        );
       }
     }
     if (parts.length) {
-      results.push(`Collecte hors ligne ${parts.join(' · ')}`);
+      const detail = parts.join(' · ');
+      results.push(
+        translateCollectionOverview('offlineSummary', `Collecte hors ligne ${detail}`, { detail })
+      );
     }
   }
 
@@ -563,9 +711,18 @@ function describeMythiqueSpecials(groupConfig) {
       const threshold = Math.max(0, Math.floor(MYTHIQUE_DUPLICATES_FOR_OFFLINE_CAP));
       const thresholdText = formatSmallNumber(threshold);
       const unit = threshold <= 1 ? 'doublon' : 'doublons';
-      const parts = [`APC/APS +${overflowValue} par doublon`];
+      const parts = [
+        translateCollectionOverview('overflowFlat', `APC/APS +${overflowValue} par doublon`, { value: overflowValue })
+      ];
       if (Number.isFinite(threshold) && threshold > 0 && thresholdText) {
-        parts.push(`au-delà de ${thresholdText} ${unit}`);
+        const translatedUnit = translateCollectionUnit('duplicate', threshold, 'doublon', 'doublons');
+        parts.push(
+          translateCollectionOverview(
+            'overflowThreshold',
+            `au-delà de ${thresholdText} ${unit}`,
+            { count: thresholdText, unit: translatedUnit }
+          )
+        );
       }
       results.push(parts.join(' · '));
     }
@@ -577,7 +734,13 @@ function describeMythiqueSpecials(groupConfig) {
   ) {
     const frenzyText = formatMultiplier(MYTHIQUE_FRENZY_SPAWN_BONUS_MULTIPLIER);
     if (frenzyText && frenzyText !== '×—') {
-      results.push(`Chance de frénésie ${frenzyText} (collection complète requise)`);
+      results.push(
+        translateCollectionOverview(
+          'frenzyComplete',
+          `Chance de frénésie ${frenzyText} (collection complète requise)`,
+          { value: frenzyText }
+        )
+      );
     }
   }
 
@@ -648,9 +811,19 @@ function getCollectionBonusOverview(rarityId) {
   }
 
   if (rarityId === 'stellaire') {
-    pushOverview('Synergie Singularité : Bonus ×2 si la collection Singularité minérale est complète');
+    pushOverview(
+      translateCollectionOverview(
+        'singularitySynergy',
+        'Synergie Singularité : Bonus ×2 si la collection Singularité minérale est complète'
+      )
+    );
   } else if (rarityId === 'singulier') {
-    pushOverview('Synergie Forge stellaire : Compléter la collection double tous les bonus Forge stellaire');
+    pushOverview(
+      translateCollectionOverview(
+        'stellaireSynergy',
+        'Synergie Forge stellaire : Compléter la collection double tous les bonus Forge stellaire'
+      )
+    );
   }
 
   let finalOverview = overview;
