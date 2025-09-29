@@ -1840,7 +1840,7 @@ const GAME_CONFIG = {
           duplicateOverflow: 'Mythe quantique · surcharge fractale'
         },
         ticketBonus: {
-          uniqueReductionSeconds: 1,
+          uniqueReductionSeconds: 15,
           minIntervalSeconds: 30
         },
         offlineBonus: {
