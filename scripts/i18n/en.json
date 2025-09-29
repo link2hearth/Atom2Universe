@@ -318,6 +318,34 @@
         }
       }
     },
+    "elementBonuses": {
+      "essentiel": {
+        "perCopy": "Planetary Essential · Essential harvests",
+        "setBonus": "Planetary Essential · Complete collection",
+        "multiplier": "Planetary Essential · Orbital synergy"
+      },
+      "stellaire": {
+        "perCopy": "Stellar Forge · Activated fragments",
+        "setBonus": "Stellar Forge · Perfect forge",
+        "multiplier": "Stellar Forge · Stellar intensity",
+        "labels": {
+          "perCopy": "Stellar Forge · Fragments"
+        }
+      },
+      "singulier": {
+        "perCopy": "Mineral Singularity · Crystalline resonance",
+        "multiplier": "Mineral Singularity · Extreme density"
+      },
+      "mythique": {
+        "setBonus": "Quantum Myth · Ultimate convergence",
+        "ticketBonus": "Quantum Myth · Compressed star",
+        "offlineBonus": "Quantum Myth · Persistent collection",
+        "duplicateOverflow": "Quantum Myth · Fractal overload"
+      },
+      "irreel": {
+        "multiplier": "Unreal · Dimensional catalyst"
+      }
+    },
     "trophies": {
       "presets": {
         "scaleHumanCell": {

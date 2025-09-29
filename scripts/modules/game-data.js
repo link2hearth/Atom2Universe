@@ -241,6 +241,25 @@ function normalizeLabel(value) {
   return trimmed ? trimmed : null;
 }
 
+function translateElementLabel(value) {
+  const normalized = normalizeLabel(value);
+  if (!normalized) {
+    return normalized;
+  }
+  if (normalized.startsWith('scripts.')) {
+    const translated = gameDataTranslate(normalized);
+    if (
+      translated
+      && typeof translated === 'string'
+      && translated.trim()
+      && translated !== normalized
+    ) {
+      return translated.trim();
+    }
+  }
+  return normalized;
+}
+
 function createElementGroupAddConfig(values, options = {}) {
   const {
     defaultMinCopies = 0,
@@ -361,7 +380,7 @@ function normalizeElementGroupAddConfig(raw, options = {}) {
   const requireAllUnique = requireAllUniqueCandidate != null
     ? requireAllUniqueCandidate
     : undefined;
-  const label = normalizeLabel(raw.label);
+  const label = translateElementLabel(raw.label);
   return createElementGroupAddConfig({
     clickAdd,
     autoAdd,
@@ -544,7 +563,7 @@ function normalizeElementGroupMultiplier(raw) {
     targets.add('perClick');
     targets.add('perSecond');
   }
-  const label = normalizeLabel(raw.label);
+  const label = translateElementLabel(raw.label);
   if (increment === 0 && every === 0 && base === 1) {
     return null;
   }
@@ -696,7 +715,7 @@ function normalizeElementGroupCritConfig(raw) {
   const labels = {};
   if (raw.labels && typeof raw.labels === 'object') {
     ['perUnique', 'perDuplicate'].forEach(key => {
-      const normalized = normalizeLabel(raw.labels[key]);
+      const normalized = translateElementLabel(raw.labels[key]);
       if (normalized) {
         labels[key] = normalized;
       }
@@ -790,7 +809,7 @@ function normalizeRarityMultiplierBonus(raw) {
     targets.add('perClick');
     targets.add('perSecond');
   }
-  const label = normalizeLabel(raw.label);
+  const label = translateElementLabel(raw.label);
   return createRarityMultiplierBonusConfig(amountValue, {
     uniqueThreshold,
     copyThreshold,
@@ -827,7 +846,7 @@ function normalizeElementGroupBonus(raw) {
   const labels = {};
   if (raw.labels && typeof raw.labels === 'object') {
     ['perCopy', 'setBonus', 'multiplier', 'rarityMultiplier'].forEach(key => {
-      const normalized = normalizeLabel(raw.labels[key]);
+      const normalized = translateElementLabel(raw.labels[key]);
       if (normalized) {
         labels[key] = normalized;
       }
@@ -1085,7 +1104,7 @@ function normalizeElementFamilyConfig(raw, familyId) {
     return null;
   }
   const defaultLabel = CATEGORY_LABELS[familyId] || familyId;
-  let label = normalizeLabel(raw.label ?? raw.name) || defaultLabel;
+  let label = translateElementLabel(raw.label ?? raw.name) || defaultLabel;
   let bonusEntries;
   if (Array.isArray(raw)) {
     bonusEntries = raw;
