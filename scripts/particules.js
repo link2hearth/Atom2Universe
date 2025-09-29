@@ -171,6 +171,70 @@
     return sheet;
   };
 
+  const createCompositeSpriteSheet = sheets => {
+    const normalizedSheets = Array.isArray(sheets)
+      ? sheets.filter(sheet => sheet && typeof sheet === 'object')
+      : [];
+    if (normalizedSheets.length === 0) {
+      return {
+        image: null,
+        loaded: false,
+        frameWidth: 0,
+        frameHeight: 0,
+        columns: 0,
+        rows: 0,
+        getFrameSource: () => null
+      };
+    }
+
+    const columnMap = [];
+    normalizedSheets.forEach(sheet => {
+      const columnCount = Math.max(1, Math.floor(sheet.columns || 1));
+      for (let columnIndex = 0; columnIndex < columnCount; columnIndex += 1) {
+        columnMap.push({ sheet, column: columnIndex });
+      }
+    });
+
+    const baseSheet = normalizedSheets[0];
+    const composite = {
+      image: null,
+      frameWidth: baseSheet.frameWidth,
+      frameHeight: baseSheet.frameHeight,
+      columns: columnMap.length,
+      rows: normalizedSheets.reduce(
+        (maxRows, sheet) => Math.max(maxRows, Math.floor(sheet.rows || 1)),
+        1
+      ),
+      columnMap,
+      getFrameSource(columnIndex) {
+        if (!Number.isFinite(columnIndex) || columnMap.length === 0) {
+          return null;
+        }
+        const normalizedIndex = Math.max(0, Math.min(columnMap.length - 1, Math.floor(columnIndex)));
+        const entry = columnMap[normalizedIndex];
+        if (!entry) {
+          return null;
+        }
+        return {
+          image: entry.sheet.image,
+          column: Math.max(0, Math.floor(entry.column)),
+          rows: Math.max(1, Math.floor(entry.sheet.rows || composite.rows || 1)),
+          frameWidth: entry.sheet.frameWidth,
+          frameHeight: entry.sheet.frameHeight
+        };
+      }
+    };
+
+    Object.defineProperty(composite, 'loaded', {
+      get() {
+        return columnMap.every(entry => entry.sheet && entry.sheet.loaded);
+      },
+      enumerable: true
+    });
+
+    return composite;
+  };
+
   const QUARK_SPRITE_SHEET = createSpriteSheet({
     src: 'Assets/Sprites/quarks.png',
     frameWidth: 64,
@@ -203,6 +267,25 @@
     rows: 3
   });
 
+  const PASTELS_BRICK_SPRITE_SHEETS = [
+    createSpriteSheet({
+      src: 'Assets/Sprites/Pastels_bricks_1.png',
+      frameWidth: 64,
+      frameHeight: 32,
+      columns: 6,
+      rows: 3
+    }),
+    createSpriteSheet({
+      src: 'Assets/Sprites/Pastels_bricks_2.png',
+      frameWidth: 64,
+      frameHeight: 32,
+      columns: 6,
+      rows: 3
+    })
+  ];
+
+  const PASTELS_BRICK_SPRITE_SHEET = createCompositeSpriteSheet(PASTELS_BRICK_SPRITE_SHEETS);
+
   const LASER_SPRITE_SHEET = createSpriteSheet({
     src: 'Assets/Sprites/bullet.png',
     frameWidth: 128,
@@ -222,7 +305,8 @@
     quarks: QUARK_SPRITE_SHEET,
     particles: PARTICLE_SPRITE_SHEET,
     metallic: METALLIC_BRICK_SPRITE_SHEET,
-    neon: NEON_BRICK_SPRITE_SHEET
+    neon: NEON_BRICK_SPRITE_SHEET,
+    pastels: PASTELS_BRICK_SPRITE_SHEET
   };
 
   const GENERIC_BRICK_SKINS = new Set(['metallic', 'neon']);
@@ -234,6 +318,9 @@
     const normalized = String(value).trim().toLowerCase();
     if (!normalized || normalized === 'original' || normalized === 'default') {
       return null;
+    }
+    if (normalized === 'pastels1' || normalized === 'pastels2') {
+      return 'pastels';
     }
     return BRICK_SPRITE_SHEETS[normalized] ? normalized : null;
   };
@@ -2987,32 +3074,45 @@
           const baseColumn = Array.isArray(spriteInfo.columns) && spriteInfo.columns.length > 0
             ? spriteInfo.columns[0]
             : spriteInfo.column;
-          if (sheet && sheet.loaded && sheet.image && Number.isFinite(baseColumn)) {
-            const frameWidth = sheet.frameWidth;
-            const frameHeight = sheet.frameHeight;
-            if (frameWidth > 0 && frameHeight > 0) {
-              const columnIndex = Math.max(0, Math.min(sheet.columns - 1, Math.floor(baseColumn)));
-              let rowIndex = 0;
-              if (sheet.rows > 1) {
-                const hitsTaken = Math.max(0, brick.maxHits - brick.hitsRemaining);
-                rowIndex = Math.max(0, Math.min(sheet.rows - 1, hitsTaken));
+          if (sheet && sheet.loaded && Number.isFinite(baseColumn)) {
+            const totalColumns = Math.max(1, Math.floor(sheet.columns || 1));
+            const baseFrameWidth = sheet.frameWidth;
+            const baseFrameHeight = sheet.frameHeight;
+            if (baseFrameWidth > 0 && baseFrameHeight > 0) {
+              const columnIndex = Math.max(0, Math.min(totalColumns - 1, Math.floor(baseColumn)));
+              const frameSource = typeof sheet.getFrameSource === 'function'
+                ? sheet.getFrameSource(columnIndex)
+                : null;
+              const frameImage = frameSource?.image ?? sheet.image;
+              const frameWidth = frameSource?.frameWidth ?? baseFrameWidth;
+              const frameHeight = frameSource?.frameHeight ?? baseFrameHeight;
+              const frameColumn = Number.isFinite(frameSource?.column)
+                ? Math.max(0, Math.floor(frameSource.column))
+                : columnIndex;
+              const frameRows = Math.max(1, Math.floor(frameSource?.rows ?? sheet.rows ?? 1));
+              if (frameImage && frameWidth > 0 && frameHeight > 0) {
+                let rowIndex = 0;
+                if (frameRows > 1) {
+                  const hitsTaken = Math.max(0, brick.maxHits - brick.hitsRemaining);
+                  rowIndex = Math.max(0, Math.min(frameRows - 1, hitsTaken));
+                }
+                const srcX = frameColumn * frameWidth;
+                const srcY = rowIndex * frameHeight;
+                ctx.imageSmoothingEnabled = false;
+                ctx.drawImage(
+                  frameImage,
+                  srcX,
+                  srcY,
+                  frameWidth,
+                  frameHeight,
+                  x,
+                  y,
+                  w,
+                  h
+                );
+                ctx.imageSmoothingEnabled = originalImageSmoothing;
+                spriteDrawn = true;
               }
-              const srcX = columnIndex * frameWidth;
-              const srcY = rowIndex * frameHeight;
-              ctx.imageSmoothingEnabled = false;
-              ctx.drawImage(
-                sheet.image,
-                srcX,
-                srcY,
-                frameWidth,
-                frameHeight,
-                x,
-                y,
-                w,
-                h
-              );
-              ctx.imageSmoothingEnabled = originalImageSmoothing;
-              spriteDrawn = true;
             }
           }
         }

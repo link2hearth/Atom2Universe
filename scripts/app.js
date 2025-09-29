@@ -39,16 +39,20 @@ const MUSIC_FALLBACK_TRACKS = Array.isArray(APP_DATA.MUSIC_FALLBACK_TRACKS)
       ? [...APP_DATA.DEFAULT_MUSIC_FALLBACK_TRACKS]
       : [];
 
-const BRICK_SKIN_CHOICES = Object.freeze(['original', 'metallic', 'neon']);
+const BRICK_SKIN_CHOICES = Object.freeze(['original', 'metallic', 'neon', 'pastels']);
 
 const BRICK_SKIN_TOAST_MESSAGES = Object.freeze({
   original: 'Skin original appliqué.',
   metallic: 'Skin Metallic appliqué.',
-  neon: 'Skin Néon appliqué.'
+  neon: 'Skin Néon appliqué.',
+  pastels: 'Skin Pastels appliqué.'
 });
 
 function normalizeBrickSkinSelection(rawValue) {
   const value = typeof rawValue === 'string' ? rawValue.trim().toLowerCase() : '';
+  if (value === 'pastels1' || value === 'pastels2') {
+    return 'pastels';
+  }
   if (BRICK_SKIN_CHOICES.includes(value)) {
     return value;
   }
