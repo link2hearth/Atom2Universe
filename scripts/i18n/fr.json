@@ -269,7 +269,7 @@
         "artificialGalaxy": {
           "name": "Galaxie artificielle",
           "description": "Ingénierie galactique pour une expansion sans fin.",
-          "effect": "Production passive : +5 000 000 APS par niveau (doublée par Bibliothèque ≥300). Chaque niveau augmente l’APS de 10 %. Palier 100 : +50 % APC global."
+          "effect": "Production passive : +5 000 000 APS par niveau (doublée par Bibliothèque ≥300). Palier 100 : +50 % APC global."
         },
         "multiverseSimulator": {
           "name": "Simulateur de Multivers",

@@ -148,7 +148,7 @@ Ce mémo récapitule l’ensemble des bonus actuellement en jeu. Il couvre les b
 | **Sonde interstellaire** | Hybride | +5 000 APS plat/niveau (boosté par les Réacteurs), palier 150 : +10 APC plats par sonde.【F:config/config.js†L148-L172】 |
 | **Station spatiale** | Hybride | +50 000 APS plat/niveau, +5 % APC par station, palier 300 : Supercalculateurs ×2.【F:config/config.js†L174-L189】 |
 | **Forgeron d’étoiles** | Hybride | +500 000 APS plat/niveau (+2 % APS par Station), palier 150 : +25 % APC global.【F:config/config.js†L191-L212】 |
-| **Galaxie artificielle** | Automatique | +5 000 000 APS plat/niveau (doublée par Bibliothèque ≥300), +10 % APS multiplicatif par niveau, palier 100 : +50 % APC global.【F:config/config.js†L215-L242】 |
+| **Galaxie artificielle** | Automatique | +5 000 000 APS plat/niveau (doublée par Bibliothèque ≥300), palier 100 : +50 % APC global.【F:config/config.js†L215-L242】 |
 | **Simulateur de Multivers** | Automatique | +500 000 000 APS plat/niveau et +0,5 % APS global par bâtiment possédé, palier 200 : coûts −5 %.【F:config/config.js†L245-L262】 |
 | **Tisseur de Réalité** | Hybride | +10 000 000 000 APS plat/niveau, bonus de clic plat = 0,1 × bâtiments × niveau, palier 300 : production totale ×2.【F:config/config.js†L265-L290】 |
 | **Architecte Cosmique** | Hybride | +1 000 000 000 000 APS plat/niveau, −1 % coût futur par Architecte, palier 150 : +20 % APC global.【F:config/config.js†L293-L309】 |
