@@ -54,14 +54,14 @@
 
   const BAR_TEXTURE_SPECS = {
     blue: {
-      src: 'assets/image/Grille.png',
-      naturalWidth: 1920,
-      naturalHeight: 227
-    },
-    red: {
       src: 'assets/image/Bulle.png',
       naturalWidth: 1233,
       naturalHeight: 325
+    },
+    red: {
+            src: 'assets/image/Grille.png',
+      naturalWidth: 1920,
+      naturalHeight: 227
     }
   };
 
