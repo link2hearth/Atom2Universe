@@ -171,70 +171,6 @@
     return sheet;
   };
 
-  const createCompositeSpriteSheet = sheets => {
-    const normalizedSheets = Array.isArray(sheets)
-      ? sheets.filter(sheet => sheet && typeof sheet === 'object')
-      : [];
-    if (normalizedSheets.length === 0) {
-      return {
-        image: null,
-        loaded: false,
-        frameWidth: 0,
-        frameHeight: 0,
-        columns: 0,
-        rows: 0,
-        getFrameSource: () => null
-      };
-    }
-
-    const columnMap = [];
-    normalizedSheets.forEach(sheet => {
-      const columnCount = Math.max(1, Math.floor(sheet.columns || 1));
-      for (let columnIndex = 0; columnIndex < columnCount; columnIndex += 1) {
-        columnMap.push({ sheet, column: columnIndex });
-      }
-    });
-
-    const baseSheet = normalizedSheets[0];
-    const composite = {
-      image: null,
-      frameWidth: baseSheet.frameWidth,
-      frameHeight: baseSheet.frameHeight,
-      columns: columnMap.length,
-      rows: normalizedSheets.reduce(
-        (maxRows, sheet) => Math.max(maxRows, Math.floor(sheet.rows || 1)),
-        1
-      ),
-      columnMap,
-      getFrameSource(columnIndex) {
-        if (!Number.isFinite(columnIndex) || columnMap.length === 0) {
-          return null;
-        }
-        const normalizedIndex = Math.max(0, Math.min(columnMap.length - 1, Math.floor(columnIndex)));
-        const entry = columnMap[normalizedIndex];
-        if (!entry) {
-          return null;
-        }
-        return {
-          image: entry.sheet.image,
-          column: Math.max(0, Math.floor(entry.column)),
-          rows: Math.max(1, Math.floor(entry.sheet.rows || composite.rows || 1)),
-          frameWidth: entry.sheet.frameWidth,
-          frameHeight: entry.sheet.frameHeight
-        };
-      }
-    };
-
-    Object.defineProperty(composite, 'loaded', {
-      get() {
-        return columnMap.every(entry => entry.sheet && entry.sheet.loaded);
-      },
-      enumerable: true
-    });
-
-    return composite;
-  };
-
   const QUARK_SPRITE_SHEET = createSpriteSheet({
     src: 'Assets/Sprites/quarks.png',
     frameWidth: 64,
@@ -267,9 +203,9 @@
     rows: 3
   });
 
-  const PASTELS_BRICK_SPRITE_SHEETS = [
-    {
-      key: 'quarks',
+  const PASTELS_BRICK_SPRITE_SHEETS = new Map([
+    ['quarks', {
+      key: 'pastels_quarks',
       sheet: createSpriteSheet({
         src: 'Assets/Sprites/Pastels_bricks_1.png',
         frameWidth: 64,
@@ -277,9 +213,9 @@
         columns: 6,
         rows: 3
       })
-    },
-    {
-      key: 'particles',
+    }],
+    ['particles', {
+      key: 'pastels_particles',
       sheet: createSpriteSheet({
         src: 'Assets/Sprites/Pastels_bricks_2.png',
         frameWidth: 64,
@@ -287,30 +223,8 @@
         columns: 6,
         rows: 3
       })
-    }
-  ];
-
-  const PASTELS_COLUMN_OFFSETS = (() => {
-    const offsets = new Map();
-    let offset = 0;
-    PASTELS_BRICK_SPRITE_SHEETS.forEach(entry => {
-      const sheet = entry?.sheet;
-      if (!sheet || typeof sheet !== 'object') {
-        return;
-      }
-      const columnCount = Math.max(1, Math.floor(sheet.columns || 1));
-      const key = typeof entry?.key === 'string' ? entry.key.trim().toLowerCase() : null;
-      if (key) {
-        offsets.set(key, offset);
-      }
-      offset += columnCount;
-    });
-    return offsets;
-  })();
-
-  const PASTELS_BRICK_SPRITE_SHEET = createCompositeSpriteSheet(
-    PASTELS_BRICK_SPRITE_SHEETS.map(entry => entry.sheet)
-  );
+    }]
+  ]);
 
   const LASER_SPRITE_SHEET = createSpriteSheet({
     src: 'Assets/Sprites/bullet.png',
@@ -331,9 +245,21 @@
     quarks: QUARK_SPRITE_SHEET,
     particles: PARTICLE_SPRITE_SHEET,
     metallic: METALLIC_BRICK_SPRITE_SHEET,
-    neon: NEON_BRICK_SPRITE_SHEET,
-    pastels: PASTELS_BRICK_SPRITE_SHEET
+    neon: NEON_BRICK_SPRITE_SHEET
   };
+
+  PASTELS_BRICK_SPRITE_SHEETS.forEach(entry => {
+    if (!entry || typeof entry !== 'object') {
+      return;
+    }
+    const key = typeof entry.key === 'string' ? entry.key.trim() : '';
+    if (!key) {
+      return;
+    }
+    if (entry.sheet && typeof entry.sheet === 'object') {
+      BRICK_SPRITE_SHEETS[key] = entry.sheet;
+    }
+  });
 
   const GENERIC_BRICK_SKINS = new Set(['metallic', 'neon']);
 
@@ -345,7 +271,7 @@
     if (!normalized || normalized === 'original' || normalized === 'default') {
       return null;
     }
-    if (normalized === 'pastels1' || normalized === 'pastels2') {
+    if (normalized === 'pastels' || normalized === 'pastels1' || normalized === 'pastels2') {
       return 'pastels';
     }
     return BRICK_SPRITE_SHEETS[normalized] ? normalized : null;
@@ -1108,22 +1034,57 @@
     const originalColumn = Number.isFinite(sprite.column) ? Math.floor(sprite.column) : null;
 
     const requestedSkin = typeof skinKey === 'string' ? skinKey.trim().toLowerCase() : null;
-    const hasSkinOverride = requestedSkin && BRICK_SPRITE_SHEETS[requestedSkin];
-    if (hasSkinOverride) {
-      const sheet = BRICK_SPRITE_SHEETS[requestedSkin];
-      const totalColumns = Math.max(1, Math.floor(sheet.columns || 1));
-      const columnOffset = (() => {
-        if (requestedSkin === 'pastels' && originalSheetKey) {
-          return PASTELS_COLUMN_OFFSETS.get(originalSheetKey) || 0;
+    if (requestedSkin === 'pastels' && originalSheetKey) {
+      const pastelEntry = PASTELS_BRICK_SPRITE_SHEETS.get(originalSheetKey);
+      const pastelSheetKey = pastelEntry && typeof pastelEntry.key === 'string'
+        ? pastelEntry.key.trim()
+        : '';
+      const pastelSheet = pastelSheetKey ? BRICK_SPRITE_SHEETS[pastelSheetKey] : null;
+      if (pastelSheet) {
+        const totalColumns = Math.max(1, Math.floor(pastelSheet.columns || 1));
+        const adjustColumn = value => {
+          if (!Number.isFinite(value)) {
+            return null;
+          }
+          return Math.max(0, Math.min(totalColumns - 1, Math.floor(value)));
+        };
+        const adjustedColumns = normalizedColumns
+          .map(adjustColumn)
+          .filter(value => Number.isFinite(value));
+        if (adjustedColumns.length > 0) {
+          sprite.columns = adjustedColumns;
+        } else if ('columns' in sprite) {
+          delete sprite.columns;
         }
-        return 0;
-      })();
+        const baseColumn = adjustColumn(originalColumn);
+        const columnPool = (() => {
+          if (Number.isFinite(baseColumn)) {
+            return [baseColumn];
+          }
+          if (adjustedColumns.length > 0) {
+            return adjustedColumns;
+          }
+          return [];
+        })();
+        const chosenColumn = pickColumn(columnPool, totalColumns)
+          ?? (Number.isFinite(baseColumn)
+            ? baseColumn
+            : 0);
+        sprite.column = chosenColumn;
+        sprite.sheet = pastelSheetKey;
+        clone.sprite = sprite;
+        return clone;
+      }
+    }
+
+    const sheet = requestedSkin ? BRICK_SPRITE_SHEETS[requestedSkin] : null;
+    if (sheet) {
+      const totalColumns = Math.max(1, Math.floor(sheet.columns || 1));
       const adjustColumn = value => {
         if (!Number.isFinite(value)) {
           return null;
         }
-        const adjusted = Math.floor(value) + columnOffset;
-        return Math.max(0, Math.min(totalColumns - 1, adjusted));
+        return Math.max(0, Math.min(totalColumns - 1, Math.floor(value)));
       };
       const adjustedColumns = normalizedColumns
         .map(adjustColumn)
