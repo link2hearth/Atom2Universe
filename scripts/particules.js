@@ -268,23 +268,49 @@
   });
 
   const PASTELS_BRICK_SPRITE_SHEETS = [
-    createSpriteSheet({
-      src: 'Assets/Sprites/Pastels_bricks_1.png',
-      frameWidth: 64,
-      frameHeight: 32,
-      columns: 6,
-      rows: 3
-    }),
-    createSpriteSheet({
-      src: 'Assets/Sprites/Pastels_bricks_2.png',
-      frameWidth: 64,
-      frameHeight: 32,
-      columns: 6,
-      rows: 3
-    })
+    {
+      key: 'quarks',
+      sheet: createSpriteSheet({
+        src: 'Assets/Sprites/Pastels_bricks_1.png',
+        frameWidth: 64,
+        frameHeight: 32,
+        columns: 6,
+        rows: 3
+      })
+    },
+    {
+      key: 'particles',
+      sheet: createSpriteSheet({
+        src: 'Assets/Sprites/Pastels_bricks_2.png',
+        frameWidth: 64,
+        frameHeight: 32,
+        columns: 6,
+        rows: 3
+      })
+    }
   ];
 
-  const PASTELS_BRICK_SPRITE_SHEET = createCompositeSpriteSheet(PASTELS_BRICK_SPRITE_SHEETS);
+  const PASTELS_COLUMN_OFFSETS = (() => {
+    const offsets = new Map();
+    let offset = 0;
+    PASTELS_BRICK_SPRITE_SHEETS.forEach(entry => {
+      const sheet = entry?.sheet;
+      if (!sheet || typeof sheet !== 'object') {
+        return;
+      }
+      const columnCount = Math.max(1, Math.floor(sheet.columns || 1));
+      const key = typeof entry?.key === 'string' ? entry.key.trim().toLowerCase() : null;
+      if (key) {
+        offsets.set(key, offset);
+      }
+      offset += columnCount;
+    });
+    return offsets;
+  })();
+
+  const PASTELS_BRICK_SPRITE_SHEET = createCompositeSpriteSheet(
+    PASTELS_BRICK_SPRITE_SHEETS.map(entry => entry.sheet)
+  );
 
   const LASER_SPRITE_SHEET = createSpriteSheet({
     src: 'Assets/Sprites/bullet.png',
@@ -1076,39 +1102,65 @@
     }
     const sprite = { ...clone.sprite };
     const normalizedColumns = normalizeSpriteColumns(sprite.columns);
-    if (normalizedColumns.length > 0) {
-      sprite.columns = normalizedColumns;
-    } else if ('columns' in sprite) {
-      delete sprite.columns;
-    }
+    const originalSheetKey = typeof sprite.sheet === 'string'
+      ? sprite.sheet.trim().toLowerCase()
+      : null;
+    const originalColumn = Number.isFinite(sprite.column) ? Math.floor(sprite.column) : null;
 
     const requestedSkin = typeof skinKey === 'string' ? skinKey.trim().toLowerCase() : null;
     const hasSkinOverride = requestedSkin && BRICK_SPRITE_SHEETS[requestedSkin];
     if (hasSkinOverride) {
       const sheet = BRICK_SPRITE_SHEETS[requestedSkin];
       const totalColumns = Math.max(1, Math.floor(sheet.columns || 1));
-      sprite.sheet = requestedSkin;
+      const columnOffset = (() => {
+        if (requestedSkin === 'pastels' && originalSheetKey) {
+          return PASTELS_COLUMN_OFFSETS.get(originalSheetKey) || 0;
+        }
+        return 0;
+      })();
+      const adjustColumn = value => {
+        if (!Number.isFinite(value)) {
+          return null;
+        }
+        const adjusted = Math.floor(value) + columnOffset;
+        return Math.max(0, Math.min(totalColumns - 1, adjusted));
+      };
+      const adjustedColumns = normalizedColumns
+        .map(adjustColumn)
+        .filter(value => Number.isFinite(value));
+      if (adjustedColumns.length > 0) {
+        sprite.columns = adjustedColumns;
+      } else if ('columns' in sprite) {
+        delete sprite.columns;
+      }
+      const baseColumn = adjustColumn(originalColumn);
       const columnPool = (() => {
         if (GENERIC_BRICK_SKINS.has(requestedSkin)) {
-          if (normalizedColumns.length > 0) {
-            return normalizedColumns;
+          if (adjustedColumns.length > 0) {
+            return adjustedColumns;
           }
           return Array.from({ length: totalColumns }, (_, columnIndex) => columnIndex);
         }
-        if (Number.isFinite(sprite.column)) {
-          return [Math.floor(sprite.column)];
+        if (Number.isFinite(baseColumn)) {
+          return [baseColumn];
         }
-        if (normalizedColumns.length > 0) {
-          return normalizedColumns;
+        if (adjustedColumns.length > 0) {
+          return adjustedColumns;
         }
         return [];
       })();
       const chosenColumn = pickColumn(columnPool, totalColumns)
-        ?? (Number.isFinite(sprite.column)
-          ? Math.max(0, Math.min(totalColumns - 1, Math.floor(sprite.column)))
+        ?? (Number.isFinite(baseColumn)
+          ? baseColumn
           : 0);
       sprite.column = chosenColumn;
+      sprite.sheet = requestedSkin;
     } else {
+      if (normalizedColumns.length > 0) {
+        sprite.columns = normalizedColumns;
+      } else if ('columns' in sprite) {
+        delete sprite.columns;
+      }
       if (normalizedColumns.length > 0) {
         const chosenColumn = pickColumn(normalizedColumns);
         if (Number.isFinite(chosenColumn)) {
