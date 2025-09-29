@@ -198,10 +198,37 @@ const GACHA_TICKET_COST = Math.max(
   )
 );
 
-const BASE_GACHA_RARITIES = sanitizeGachaRarities(rawGachaConfig.rarities).map(entry => ({
-  ...entry,
-  weight: Math.max(0, Number(entry.weight) || 0)
-}));
+function localizeRarityEntry(entry) {
+  if (!entry || typeof entry !== 'object') {
+    return { id: '', label: '', description: '', weight: 0, color: null };
+  }
+  const id = typeof entry.id === 'string' ? entry.id.trim() : '';
+  const baseKey = id ? `scripts.gacha.rarities.${id}` : '';
+  const fallbackLabel = typeof entry.label === 'string' && entry.label.trim()
+    ? entry.label.trim()
+    : id;
+  const fallbackDescription = typeof entry.description === 'string'
+    ? entry.description
+    : '';
+  const label = baseKey
+    ? translateWithFallback(`${baseKey}.label`, fallbackLabel)
+    : fallbackLabel;
+  const description = baseKey
+    ? translateWithFallback(`${baseKey}.description`, fallbackDescription)
+    : fallbackDescription;
+  return {
+    ...entry,
+    id,
+    label: typeof label === 'string' && label.trim() ? label.trim() : fallbackLabel,
+    description:
+      typeof description === 'string' && description.trim()
+        ? description.trim()
+        : fallbackDescription,
+    weight: Math.max(0, Number(entry.weight) || 0)
+  };
+}
+
+const BASE_GACHA_RARITIES = sanitizeGachaRarities(rawGachaConfig.rarities).map(localizeRarityEntry);
 
 BASE_GACHA_RARITIES.forEach(entry => {
   configuredRarityIds.delete(entry.id);
