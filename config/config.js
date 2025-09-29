@@ -255,7 +255,7 @@ function createShopBuildingDefinitions() {
         const baseAmount = 5e6 * level;
         const rawAutoAdd = baseAmount * productionMultiplier;
         const autoAdd = level > 0 ? Math.max(baseAmount, Math.round(rawAutoAdd)) : 0;
-        const autoMult = Math.pow(1.1, level);
+        const autoMult = Math.pow(1.01, level);
         const clickMult = level >= 100 ? 1.5 : 1;
         const result = { autoAdd };
         if (autoMult > 1) {
