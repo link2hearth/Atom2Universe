@@ -75,7 +75,7 @@ function createShopBuildingDefinitions() {
       name: 'Réacteur nucléaire',
       description: 'Des réacteurs contrôlés libèrent une énergie colossale.',
       effectSummary:
-        'Production passive : +10 APS par niveau (+1 % par 50 Électrons, +20 % si Labos ≥200). Palier 150 : APC global ×2.',
+        'Production passive : +10 APS par niveau (+1 % par 50 Électrons, +20 % si Labos ≥200). Tous les 100 réacteurs : APC global ×2 (cumulatif).',
       category: 'auto',
       baseCost: 1000,
       costScale: 1.15,
@@ -92,7 +92,7 @@ function createShopBuildingDefinitions() {
         const baseAmount = 10 * level;
         const rawAutoAdd = baseAmount * productionMultiplier;
         const autoAdd = level > 0 ? Math.max(baseAmount, Math.round(rawAutoAdd)) : 0;
-        const clickMult = level >= 150 ? 2 : 1;
+        const clickMult = Math.pow(2, Math.floor(level / 100));
         return clickMult > 1
           ? { autoAdd, clickMult }
           : { autoAdd };
@@ -125,7 +125,7 @@ function createShopBuildingDefinitions() {
       name: 'Supercalculateurs',
       description: 'Des centres de calcul quantique optimisent vos gains.',
       effectSummary:
-        'Production passive : +500 APS par niveau (doublée par Stations ≥300). Chaque 25 unités offrent +1 % APS global.',
+        'Production passive : +500 APS par niveau (doublée par Stations ≥300). Tous les 50 Supercalculateurs : APS global ×2 (cumulatif).',
       category: 'auto',
       baseCost: 200_000,
       costScale: 1.15,
@@ -138,7 +138,7 @@ function createShopBuildingDefinitions() {
         const baseAmount = 500 * level;
         const rawAutoAdd = baseAmount * productionMultiplier;
         const autoAdd = level > 0 ? Math.max(baseAmount, Math.round(rawAutoAdd)) : 0;
-        const autoMult = Math.pow(1.01, Math.floor(level / 25));
+        const autoMult = Math.pow(2, Math.floor(level / 50));
         return autoMult > 1
           ? { autoAdd, autoMult }
           : { autoAdd };
@@ -192,7 +192,7 @@ function createShopBuildingDefinitions() {
       name: 'Forgeron d’étoiles',
       description: 'Façonnez des étoiles et dopez votre APC.',
       effectSummary:
-        'Production passive : +500 000 APS par niveau (+2 % APS par Station). Palier 150 : +25 % APC global.',
+        'Production passive : +500 000 APS par niveau (+2 % APS par Station). Tous les 50 Forgerons : APC global ×2 (cumulatif).',
       category: 'hybrid',
       baseCost: 5e10,
       costScale: 1.2,
@@ -205,7 +205,7 @@ function createShopBuildingDefinitions() {
         const baseAmount = 500_000 * level;
         const rawAutoAdd = baseAmount * productionMultiplier;
         const autoAdd = level > 0 ? Math.max(baseAmount, Math.round(rawAutoAdd)) : 0;
-        const clickMult = level >= 150 ? 1.25 : 1;
+        const clickMult = Math.pow(2, Math.floor(level / 50));
         return clickMult > 1
           ? { autoAdd, clickMult }
           : { autoAdd };
@@ -294,7 +294,7 @@ function createShopBuildingDefinitions() {
       name: 'Architecte Cosmique',
       description: 'Réécrivez les plans du cosmos pour réduire les coûts.',
       effectSummary:
-        'Production passive : +1 000 000 000 000 APS par niveau. Réduction de 1 % du coût futur par Architecte. Palier 150 : +20 % APC global.',
+        'Production passive : +1 000 000 000 000 APS par niveau. Réduction de 1 % du coût futur par Architecte. Tous les 50 Architectes : APC global ×2 (cumulatif).',
       category: 'hybrid',
       baseCost: 1e25,
       costScale: 1.25,
@@ -302,7 +302,7 @@ function createShopBuildingDefinitions() {
         const baseAmount = 1e12 * level;
         const rawAutoAdd = baseAmount;
         const autoAdd = level > 0 ? Math.max(baseAmount, Math.round(rawAutoAdd)) : 0;
-        const clickMult = level >= 150 ? 1.2 : 1;
+        const clickMult = Math.pow(2, Math.floor(level / 50));
         return clickMult > 1
           ? { autoAdd, clickMult }
           : { autoAdd };
