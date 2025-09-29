@@ -47,7 +47,7 @@
     initialReduction: 0.3,
     ramp: {
       intervalSeconds: 10,
-      increment: 0.01,
+      increment: 0.05,
       maxBonus: 0.5
     }
   };
