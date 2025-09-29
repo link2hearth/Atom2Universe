@@ -109,6 +109,42 @@ function translateOrDefault(key, fallback, params) {
   return fallback;
 }
 
+const PERIODIC_ELEMENT_I18N_BASE = 'scripts.periodic.elements';
+
+function getPeriodicElementTranslationBase(definition) {
+  const id = typeof definition?.id === 'string' ? definition.id.trim() : '';
+  if (!id) {
+    return '';
+  }
+  return `${PERIODIC_ELEMENT_I18N_BASE}.${id}`;
+}
+
+function translatePeriodicElementField(definition, field, fallback) {
+  if (!field) {
+    return fallback ?? '';
+  }
+  const base = getPeriodicElementTranslationBase(definition);
+  if (!base) {
+    return fallback ?? '';
+  }
+  const translated = translateOrDefault(`${base}.${field}`, fallback ?? '');
+  if (typeof translated === 'string' && translated.trim()) {
+    return translated;
+  }
+  return fallback ?? '';
+}
+
+function getPeriodicElementDisplay(definition) {
+  if (!definition || typeof definition !== 'object') {
+    return { symbol: '', name: '' };
+  }
+  const fallbackSymbol = typeof definition.symbol === 'string' ? definition.symbol : '';
+  const fallbackName = typeof definition.name === 'string' ? definition.name : '';
+  const symbol = translatePeriodicElementField(definition, 'symbol', fallbackSymbol);
+  const name = translatePeriodicElementField(definition, 'name', fallbackName);
+  return { symbol, name };
+}
+
 function getCurrentLocale() {
   const api = getI18nApi();
   if (api && typeof api.getCurrentLocale === 'function') {
@@ -3562,11 +3598,12 @@ function updateElementInfoPanel(definition) {
     elements.elementInfoNumber.textContent =
       definition.atomicNumber != null ? definition.atomicNumber : '—';
   }
+  const { symbol, name } = getPeriodicElementDisplay(definition);
   if (elements.elementInfoSymbol) {
-    elements.elementInfoSymbol.textContent = definition.symbol ?? '';
+    elements.elementInfoSymbol.textContent = symbol ?? '';
   }
   if (elements.elementInfoName) {
-    elements.elementInfoName.textContent = definition.name ?? '';
+    elements.elementInfoName.textContent = name ?? '';
   }
   if (elements.elementInfoCategory) {
     const label = definition.category
@@ -3850,11 +3887,19 @@ function renderPeriodicTable() {
     if (row) {
       cell.style.gridRow = String(row);
     }
+    const { symbol, name } = getPeriodicElementDisplay(def);
+    const displaySymbol = symbol || '';
+    const displayName = name || '';
     const massText = formatAtomicMass(def.atomicMass);
-    const labelParts = [
-      `${def.name} (${def.symbol})`,
-      `numéro atomique ${def.atomicNumber}`
-    ];
+    const labelParts = [];
+    if (displayName) {
+      labelParts.push(displaySymbol ? `${displayName} (${displaySymbol})` : displayName);
+    } else if (displaySymbol) {
+      labelParts.push(displaySymbol);
+    }
+    if (def.atomicNumber != null) {
+      labelParts.push(`numéro atomique ${def.atomicNumber}`);
+    }
     if (massText) {
       labelParts.push(`masse atomique ${massText}`);
     }
@@ -3865,7 +3910,7 @@ function renderPeriodicTable() {
     cell.setAttribute('aria-label', labelParts.join(', '));
 
     cell.innerHTML = `
-      <span class="periodic-element__symbol">${def.symbol}</span>
+      <span class="periodic-element__symbol">${displaySymbol}</span>
       <span class="periodic-element__number">${def.atomicNumber}</span>
     `;
     cell.setAttribute('aria-pressed', 'false');
