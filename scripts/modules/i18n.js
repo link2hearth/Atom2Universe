@@ -25,7 +25,8 @@
     if (typeof message !== 'string' || !params || typeof params !== 'object') {
       return message;
     }
-    return message.replace(/\{\s*([^\s{}]+)\s*\}/g, (match, token) => {
+    const normalizedMessage = message.replace(/\{\{\s*([^{}\s]+)\s*\}\}/g, '{$1}');
+    return normalizedMessage.replace(/\{\s*([^\s{}]+)\s*\}/g, (match, token) => {
       const value = params[token];
       return value == null ? match : String(value);
     });
