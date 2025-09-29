@@ -27,6 +27,29 @@ function formatIntegerLocalized(value) {
   return formatNumberLocalized(value, { maximumFractionDigits: 0, minimumFractionDigits: 0 });
 }
 
+function translateOrDefault(key, fallback = '', params) {
+  if (typeof key !== 'string' || !key.trim()) {
+    return fallback;
+  }
+  const api = getI18nApi();
+  const translator = api && typeof api.t === 'function'
+    ? api.t.bind(api)
+    : (typeof globalThis !== 'undefined' && typeof globalThis.t === 'function'
+        ? globalThis.t
+        : (typeof t === 'function' ? t : null));
+  if (translator) {
+    try {
+      const translated = translator(key, params);
+      if (typeof translated === 'string' && translated && translated !== key) {
+        return translated;
+      }
+    } catch (error) {
+      console.warn('Unable to translate key', key, error);
+    }
+  }
+  return fallback;
+}
+
 function compareTextLocalized(a, b, options) {
   const api = getI18nApi();
   if (api && typeof api.compareText === 'function') {
@@ -1052,6 +1075,36 @@ function formatShopMultiplierBonus(value) {
   return isLayeredOne(layered) ? null : formatMultiplier(layered);
 }
 
+function getShopBuildingTexts(def) {
+  if (!def || typeof def !== 'object') {
+    return { name: '', description: '' };
+  }
+  const id = typeof def.id === 'string' ? def.id.trim() : '';
+  const baseKey = id ? `config.shop.buildings.${id}` : '';
+  const fallbackName = typeof def.name === 'string' && def.name.trim() ? def.name.trim() : id;
+  let name = fallbackName;
+  if (baseKey) {
+    const translatedName = translateOrDefault(`${baseKey}.name`, fallbackName);
+    if (translatedName) {
+      name = translatedName;
+    }
+  }
+  const fallbackDescription = typeof def.effectSummary === 'string' && def.effectSummary.trim()
+    ? def.effectSummary.trim()
+    : (typeof def.description === 'string' ? def.description.trim() : '');
+  let description = '';
+  if (baseKey) {
+    description =
+      translateOrDefault(`${baseKey}.effectSummary`, '')
+      || translateOrDefault(`${baseKey}.effect`, '')
+      || translateOrDefault(`${baseKey}.description`, '');
+  }
+  if (!description) {
+    description = fallbackDescription;
+  }
+  return { name, description };
+}
+
 function collectShopBonusSummaries() {
   const productionBase = gameState.productionBase || createEmptyProductionBreakdown();
   const clickEntry = productionBase.perClick || createEmptyProductionEntry();
@@ -1059,10 +1112,11 @@ function collectShopBonusSummaries() {
 
   const summaries = new Map();
   UPGRADE_DEFS.forEach(def => {
+    const texts = getShopBuildingTexts(def);
     summaries.set(def.id, {
       id: def.id,
-      name: def.name || def.id,
-      effectSummary: def.effectSummary || def.description || '',
+      name: texts.name || def.name || def.id,
+      effectSummary: texts.description || def.effectSummary || def.description || '',
       level: getUpgradeLevel(gameState.upgrades, def.id),
       clickAdd: LayeredNumber.zero(),
       autoAdd: LayeredNumber.zero(),
