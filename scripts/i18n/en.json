@@ -976,6 +976,482 @@
       "session": {
         "start": "New session: chain those alloys!"
       }
+    },
+    "periodic": {
+      "elements": {
+        "element-001-hydrogene": {
+          "symbol": "H",
+          "name": "Hydrogen"
+        },
+        "element-002-helium": {
+          "symbol": "He",
+          "name": "Helium"
+        },
+        "element-003-lithium": {
+          "symbol": "Li",
+          "name": "Lithium"
+        },
+        "element-004-beryllium": {
+          "symbol": "Be",
+          "name": "Beryllium"
+        },
+        "element-005-bore": {
+          "symbol": "B",
+          "name": "Boron"
+        },
+        "element-006-carbone": {
+          "symbol": "C",
+          "name": "Carbon"
+        },
+        "element-007-azote": {
+          "symbol": "N",
+          "name": "Nitrogen"
+        },
+        "element-008-oxygene": {
+          "symbol": "O",
+          "name": "Oxygen"
+        },
+        "element-009-fluor": {
+          "symbol": "F",
+          "name": "Fluorine"
+        },
+        "element-010-neon": {
+          "symbol": "Ne",
+          "name": "Neon"
+        },
+        "element-011-sodium": {
+          "symbol": "Na",
+          "name": "Sodium"
+        },
+        "element-012-magnesium": {
+          "symbol": "Mg",
+          "name": "Magnesium"
+        },
+        "element-013-aluminium": {
+          "symbol": "Al",
+          "name": "Aluminum"
+        },
+        "element-014-silicium": {
+          "symbol": "Si",
+          "name": "Silicon"
+        },
+        "element-015-phosphore": {
+          "symbol": "P",
+          "name": "Phosphorus"
+        },
+        "element-016-soufre": {
+          "symbol": "S",
+          "name": "Sulfur"
+        },
+        "element-017-chlore": {
+          "symbol": "Cl",
+          "name": "Chlorine"
+        },
+        "element-018-argon": {
+          "symbol": "Ar",
+          "name": "Argon"
+        },
+        "element-019-potassium": {
+          "symbol": "K",
+          "name": "Potassium"
+        },
+        "element-020-calcium": {
+          "symbol": "Ca",
+          "name": "Calcium"
+        },
+        "element-021-scandium": {
+          "symbol": "Sc",
+          "name": "Scandium"
+        },
+        "element-022-titane": {
+          "symbol": "Ti",
+          "name": "Titanium"
+        },
+        "element-023-vanadium": {
+          "symbol": "V",
+          "name": "Vanadium"
+        },
+        "element-024-chrome": {
+          "symbol": "Cr",
+          "name": "Chromium"
+        },
+        "element-025-manganese": {
+          "symbol": "Mn",
+          "name": "Manganese"
+        },
+        "element-026-fer": {
+          "symbol": "Fe",
+          "name": "Iron"
+        },
+        "element-027-cobalt": {
+          "symbol": "Co",
+          "name": "Cobalt"
+        },
+        "element-028-nickel": {
+          "symbol": "Ni",
+          "name": "Nickel"
+        },
+        "element-029-cuivre": {
+          "symbol": "Cu",
+          "name": "Copper"
+        },
+        "element-030-zinc": {
+          "symbol": "Zn",
+          "name": "Zinc"
+        },
+        "element-031-gallium": {
+          "symbol": "Ga",
+          "name": "Gallium"
+        },
+        "element-032-germanium": {
+          "symbol": "Ge",
+          "name": "Germanium"
+        },
+        "element-033-arsenic": {
+          "symbol": "As",
+          "name": "Arsenic"
+        },
+        "element-034-selenium": {
+          "symbol": "Se",
+          "name": "Selenium"
+        },
+        "element-035-brome": {
+          "symbol": "Br",
+          "name": "Bromine"
+        },
+        "element-036-krypton": {
+          "symbol": "Kr",
+          "name": "Krypton"
+        },
+        "element-037-rubidium": {
+          "symbol": "Rb",
+          "name": "Rubidium"
+        },
+        "element-038-strontium": {
+          "symbol": "Sr",
+          "name": "Strontium"
+        },
+        "element-039-yttrium": {
+          "symbol": "Y",
+          "name": "Yttrium"
+        },
+        "element-040-zirconium": {
+          "symbol": "Zr",
+          "name": "Zirconium"
+        },
+        "element-041-niobium": {
+          "symbol": "Nb",
+          "name": "Niobium"
+        },
+        "element-042-molybdene": {
+          "symbol": "Mo",
+          "name": "Molybdenum"
+        },
+        "element-043-technetium": {
+          "symbol": "Tc",
+          "name": "Technetium"
+        },
+        "element-044-ruthenium": {
+          "symbol": "Ru",
+          "name": "Ruthenium"
+        },
+        "element-045-rhodium": {
+          "symbol": "Rh",
+          "name": "Rhodium"
+        },
+        "element-046-palladium": {
+          "symbol": "Pd",
+          "name": "Palladium"
+        },
+        "element-047-argent": {
+          "symbol": "Ag",
+          "name": "Silver"
+        },
+        "element-048-cadmium": {
+          "symbol": "Cd",
+          "name": "Cadmium"
+        },
+        "element-049-indium": {
+          "symbol": "In",
+          "name": "Indium"
+        },
+        "element-050-etain": {
+          "symbol": "Sn",
+          "name": "Tin"
+        },
+        "element-051-antimoine": {
+          "symbol": "Sb",
+          "name": "Antimony"
+        },
+        "element-052-tellure": {
+          "symbol": "Te",
+          "name": "Tellurium"
+        },
+        "element-053-iode": {
+          "symbol": "I",
+          "name": "Iodine"
+        },
+        "element-054-xenon": {
+          "symbol": "Xe",
+          "name": "Xenon"
+        },
+        "element-055-cesium": {
+          "symbol": "Cs",
+          "name": "Cesium"
+        },
+        "element-056-baryum": {
+          "symbol": "Ba",
+          "name": "Barium"
+        },
+        "element-057-lanthane": {
+          "symbol": "La",
+          "name": "Lanthanum"
+        },
+        "element-058-cerium": {
+          "symbol": "Ce",
+          "name": "Cerium"
+        },
+        "element-059-praseodyme": {
+          "symbol": "Pr",
+          "name": "Praseodymium"
+        },
+        "element-060-neodyme": {
+          "symbol": "Nd",
+          "name": "Neodymium"
+        },
+        "element-061-promethium": {
+          "symbol": "Pm",
+          "name": "Promethium"
+        },
+        "element-062-samarium": {
+          "symbol": "Sm",
+          "name": "Samarium"
+        },
+        "element-063-europium": {
+          "symbol": "Eu",
+          "name": "Europium"
+        },
+        "element-064-gadolinium": {
+          "symbol": "Gd",
+          "name": "Gadolinium"
+        },
+        "element-065-terbium": {
+          "symbol": "Tb",
+          "name": "Terbium"
+        },
+        "element-066-dysprosium": {
+          "symbol": "Dy",
+          "name": "Dysprosium"
+        },
+        "element-067-holmium": {
+          "symbol": "Ho",
+          "name": "Holmium"
+        },
+        "element-068-erbium": {
+          "symbol": "Er",
+          "name": "Erbium"
+        },
+        "element-069-thulium": {
+          "symbol": "Tm",
+          "name": "Thulium"
+        },
+        "element-070-ytterbium": {
+          "symbol": "Yb",
+          "name": "Ytterbium"
+        },
+        "element-071-lutecium": {
+          "symbol": "Lu",
+          "name": "Lutetium"
+        },
+        "element-072-hafnium": {
+          "symbol": "Hf",
+          "name": "Hafnium"
+        },
+        "element-073-tantale": {
+          "symbol": "Ta",
+          "name": "Tantalum"
+        },
+        "element-074-tungstene": {
+          "symbol": "W",
+          "name": "Tungsten"
+        },
+        "element-075-rhenium": {
+          "symbol": "Re",
+          "name": "Rhenium"
+        },
+        "element-076-osmium": {
+          "symbol": "Os",
+          "name": "Osmium"
+        },
+        "element-077-iridium": {
+          "symbol": "Ir",
+          "name": "Iridium"
+        },
+        "element-078-platine": {
+          "symbol": "Pt",
+          "name": "Platinum"
+        },
+        "element-079-or": {
+          "symbol": "Au",
+          "name": "Gold"
+        },
+        "element-080-mercure": {
+          "symbol": "Hg",
+          "name": "Mercury"
+        },
+        "element-081-thallium": {
+          "symbol": "Tl",
+          "name": "Thallium"
+        },
+        "element-082-plomb": {
+          "symbol": "Pb",
+          "name": "Lead"
+        },
+        "element-083-bismuth": {
+          "symbol": "Bi",
+          "name": "Bismuth"
+        },
+        "element-084-polonium": {
+          "symbol": "Po",
+          "name": "Polonium"
+        },
+        "element-085-astate": {
+          "symbol": "At",
+          "name": "Astatine"
+        },
+        "element-086-radon": {
+          "symbol": "Rn",
+          "name": "Radon"
+        },
+        "element-087-francium": {
+          "symbol": "Fr",
+          "name": "Francium"
+        },
+        "element-088-radium": {
+          "symbol": "Ra",
+          "name": "Radium"
+        },
+        "element-089-actinium": {
+          "symbol": "Ac",
+          "name": "Actinium"
+        },
+        "element-090-thorium": {
+          "symbol": "Th",
+          "name": "Thorium"
+        },
+        "element-091-protactinium": {
+          "symbol": "Pa",
+          "name": "Protactinium"
+        },
+        "element-092-uranium": {
+          "symbol": "U",
+          "name": "Uranium"
+        },
+        "element-093-neptunium": {
+          "symbol": "Np",
+          "name": "Neptunium"
+        },
+        "element-094-plutonium": {
+          "symbol": "Pu",
+          "name": "Plutonium"
+        },
+        "element-095-americium": {
+          "symbol": "Am",
+          "name": "Americium"
+        },
+        "element-096-curium": {
+          "symbol": "Cm",
+          "name": "Curium"
+        },
+        "element-097-berkelium": {
+          "symbol": "Bk",
+          "name": "Berkelium"
+        },
+        "element-098-californium": {
+          "symbol": "Cf",
+          "name": "Californium"
+        },
+        "element-099-einsteinium": {
+          "symbol": "Es",
+          "name": "Einsteinium"
+        },
+        "element-100-fermium": {
+          "symbol": "Fm",
+          "name": "Fermium"
+        },
+        "element-101-mendelevium": {
+          "symbol": "Md",
+          "name": "Mendelevium"
+        },
+        "element-102-nobelium": {
+          "symbol": "No",
+          "name": "Nobelium"
+        },
+        "element-103-lawrencium": {
+          "symbol": "Lr",
+          "name": "Lawrencium"
+        },
+        "element-104-rutherfordium": {
+          "symbol": "Rf",
+          "name": "Rutherfordium"
+        },
+        "element-105-dubnium": {
+          "symbol": "Db",
+          "name": "Dubnium"
+        },
+        "element-106-seaborgium": {
+          "symbol": "Sg",
+          "name": "Seaborgium"
+        },
+        "element-107-bohrium": {
+          "symbol": "Bh",
+          "name": "Bohrium"
+        },
+        "element-108-hassium": {
+          "symbol": "Hs",
+          "name": "Hassium"
+        },
+        "element-109-meitnerium": {
+          "symbol": "Mt",
+          "name": "Meitnerium"
+        },
+        "element-110-darmstadtium": {
+          "symbol": "Ds",
+          "name": "Darmstadtium"
+        },
+        "element-111-roentgenium": {
+          "symbol": "Rg",
+          "name": "Roentgenium"
+        },
+        "element-112-copernicium": {
+          "symbol": "Cn",
+          "name": "Copernicium"
+        },
+        "element-113-nihonium": {
+          "symbol": "Nh",
+          "name": "Nihonium"
+        },
+        "element-114-flerovium": {
+          "symbol": "Fl",
+          "name": "Flerovium"
+        },
+        "element-115-moscovium": {
+          "symbol": "Mc",
+          "name": "Moscovium"
+        },
+        "element-116-livermorium": {
+          "symbol": "Lv",
+          "name": "Livermorium"
+        },
+        "element-117-tennesse": {
+          "symbol": "Ts",
+          "name": "Tennessine"
+        },
+        "element-118-oganesson": {
+          "symbol": "Og",
+          "name": "Oganesson"
+        }
+      }
     }
   }
 }
