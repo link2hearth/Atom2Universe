@@ -250,6 +250,125 @@
     ctx.closePath();
   }
 
+  const seededRandom = (seed, offset = 0) => {
+    const value = Math.sin((seed + offset) * 43758.5453123) * 43758.5453123;
+    return value - Math.floor(value);
+  };
+
+  function drawGridPattern(ctx, seed, x, y, width, height) {
+    const normalizedSeed = Number.isFinite(seed) ? seed : 0.5;
+    const baseSeed = normalizedSeed * 9973 + width * 0.015 + height * 0.021;
+    const spacing = clamp(Math.min(width, height) / 5, 14, 68);
+    const offsetX = (seededRandom(baseSeed, 1.137) - 0.5) * spacing;
+    const offsetY = (seededRandom(baseSeed, 2.731) - 0.5) * spacing;
+
+    ctx.save();
+    ctx.lineWidth = Math.max(1, spacing * 0.08);
+    ctx.strokeStyle = 'rgba(120, 185, 255, 0.38)';
+    ctx.shadowColor = 'rgba(120, 185, 255, 0.25)';
+    ctx.shadowBlur = spacing * 0.35;
+    for (let posX = x + offsetX - spacing * 2; posX <= x + width + spacing * 2; posX += spacing) {
+      ctx.beginPath();
+      ctx.moveTo(posX, y);
+      ctx.lineTo(posX, y + height);
+      ctx.stroke();
+    }
+    for (let posY = y + offsetY - spacing * 2; posY <= y + height + spacing * 2; posY += spacing) {
+      ctx.beginPath();
+      ctx.moveTo(x, posY);
+      ctx.lineTo(x + width, posY);
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    ctx.save();
+    const dotRadius = Math.min(spacing * 0.18, 6);
+    ctx.fillStyle = 'rgba(173, 212, 255, 0.22)';
+    const cols = Math.ceil(width / spacing) + 2;
+    const rows = Math.ceil(height / spacing) + 2;
+    for (let col = -1; col < cols; col += 1) {
+      for (let row = -1; row < rows; row += 1) {
+        if ((col + row) % 2 !== 0) {
+          continue;
+        }
+        const centerX = x + col * spacing + spacing / 2 + offsetX;
+        const centerY = y + row * spacing + spacing / 2 + offsetY;
+        if (centerX < x - spacing || centerX > x + width + spacing) {
+          continue;
+        }
+        if (centerY < y - spacing || centerY > y + height + spacing) {
+          continue;
+        }
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, dotRadius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+    ctx.restore();
+  }
+
+  function drawBubblePattern(ctx, seed, x, y, width, height) {
+    const normalizedSeed = Number.isFinite(seed) ? seed : 0.35;
+    const baseSeed = normalizedSeed * 7919 + width * 0.017 + height * 0.029;
+    const area = Math.max(width * height, 1);
+    const bubbleCount = Math.max(12, Math.floor(area / 9000));
+    const maxRadius = clamp(height * 0.32, 12, height * 0.55);
+
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    for (let i = 0; i < bubbleCount; i += 1) {
+      const noiseX = seededRandom(baseSeed, i * 1.37);
+      const noiseY = seededRandom(baseSeed, i * 2.91);
+      const noiseR = seededRandom(baseSeed, i * 3.73);
+      const centerX = x + noiseX * width;
+      const centerY = y + noiseY * height;
+      const radius = clamp(maxRadius * (0.35 + noiseR * 0.65), height * 0.06, maxRadius);
+      const highlightOffset = radius * 0.35;
+      const gradient = ctx.createRadialGradient(
+        centerX - highlightOffset,
+        centerY - highlightOffset,
+        radius * 0.12,
+        centerX,
+        centerY,
+        radius
+      );
+      gradient.addColorStop(0, 'rgba(255, 228, 236, 0.75)');
+      gradient.addColorStop(0.45, 'rgba(255, 160, 194, 0.28)');
+      gradient.addColorStop(1, 'rgba(255, 120, 170, 0.05)');
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.globalAlpha = 0.8;
+      ctx.lineWidth = Math.max(1, radius * 0.14);
+      ctx.strokeStyle = 'rgba(255, 192, 216, 0.28)';
+      ctx.beginPath();
+      ctx.arc(centerX - radius * 0.18, centerY - radius * 0.2, radius * 0.46, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
+    ctx.restore();
+  }
+
+  function drawHaloPattern(ctx, color, seed, x, y, width, height) {
+    if (!ctx || width <= 0 || height <= 0) {
+      return;
+    }
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(x, y, width, height);
+    ctx.clip();
+
+    if (color === 'blue') {
+      drawBubblePattern(ctx, seed, x, y, width, height);
+    } else if (color === 'red') {
+      drawGridPattern(ctx, seed, x, y, width, height);
+    }
+
+    ctx.restore();
+  }
+
   class PhotonGame {
     constructor({ canvas, onScoreChange, onColorChange, onGameOver } = {}) {
       this.canvas = canvas || null;
@@ -272,10 +391,14 @@
       this.animationFrame = null;
       this.elapsedTime = 0;
 
+      this.haloPatternSeeds = Object.create(null);
+
       this._tick = this._tick.bind(this);
 
       this.barTextures = {};
       this.loadBarTextures();
+
+      this.ensureHaloPatternSeed(this.currentColor);
 
       if (this.context && this.canvas) {
         this.resize();
@@ -309,6 +432,30 @@
         image.src = spec.src;
         this.barTextures[key] = entry;
       });
+    }
+
+    ensureHaloPatternSeed(color) {
+      if (!color) {
+        return;
+      }
+      if (!this.haloPatternSeeds || typeof this.haloPatternSeeds !== 'object') {
+        this.haloPatternSeeds = Object.create(null);
+      }
+      if (Object.prototype.hasOwnProperty.call(this.haloPatternSeeds, color)) {
+        return;
+      }
+      let seed = 0;
+      if (typeof crypto !== 'undefined' && typeof crypto.getRandomValues === 'function') {
+        const buffer = new Uint32Array(1);
+        crypto.getRandomValues(buffer);
+        seed = (buffer[0] % 1000003) / 1000003;
+      } else {
+        seed = Math.random();
+      }
+      if (!Number.isFinite(seed) || seed <= 0) {
+        seed = Math.random() || 0.5;
+      }
+      this.haloPatternSeeds[color] = seed;
     }
 
     getBarWidth() {
@@ -420,6 +567,7 @@
       this.currentColor = this.colorOrder[this.currentColorIndex] ?? this.currentColor;
       this.elapsedTime = 0;
       this.bars = [];
+      this.ensureHaloPatternSeed(this.currentColor);
       this.onColorChange(this.currentColor);
       this.onScoreChange(this.score);
       this.ensureBarSupply();
@@ -435,6 +583,7 @@
       this.currentColorIndex = 0;
       this.currentColor = this.colorOrder[this.currentColorIndex] ?? this.currentColor;
       this.elapsedTime = 0;
+      this.ensureHaloPatternSeed(this.currentColor);
       this.onColorChange(this.currentColor);
       this.render();
     }
@@ -480,6 +629,7 @@
       }
       this.currentColorIndex = (this.currentColorIndex + 1) % this.colorOrder.length;
       this.currentColor = this.colorOrder[this.currentColorIndex];
+      this.ensureHaloPatternSeed(this.currentColor);
       this.onColorChange(this.currentColor);
       this.render();
     }
@@ -605,12 +755,16 @@
       const haloHeight = this.getHaloHeight();
       const haloTop = height - haloHeight;
       const haloColors = COLOR_DEFS[this.currentColor] || COLOR_DEFS.blue;
+      this.ensureHaloPatternSeed(this.currentColor);
       const haloGradient = ctx.createLinearGradient(0, haloTop, 0, height);
       haloGradient.addColorStop(0, haloColors.haloOuter);
       haloGradient.addColorStop(0.45, haloColors.haloMid);
       haloGradient.addColorStop(1, haloColors.haloInner);
       ctx.fillStyle = haloGradient;
       ctx.fillRect(0, haloTop, width, haloHeight);
+
+      const haloSeed = this.haloPatternSeeds?.[this.currentColor];
+      drawHaloPattern(ctx, this.currentColor, haloSeed, 0, haloTop, width, haloHeight);
 
       const haloGlow = ctx.createRadialGradient(
         width / 2,
