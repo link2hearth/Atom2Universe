@@ -432,7 +432,14 @@ class LayeredNumber {
     if (this.layer === 0) {
       const value = this.mantissa * Math.pow(10, this.exponent);
       if (Math.abs(this.exponent) < 6) {
-        return (this.sign * value).toLocaleString('fr-FR', { maximumFractionDigits: 2 });
+        const numeric = this.sign * value;
+        if (globalThis.i18n && typeof globalThis.i18n.formatNumber === 'function') {
+          return globalThis.i18n.formatNumber(numeric, { maximumFractionDigits: 2 });
+        }
+        const locale = globalThis.i18n && typeof globalThis.i18n.getCurrentLocale === 'function'
+          ? globalThis.i18n.getCurrentLocale()
+          : 'fr-FR';
+        return numeric.toLocaleString(locale, { maximumFractionDigits: 2 });
       }
       const mant = (this.sign * this.mantissa).toFixed(2);
       return `${mant}e${this.exponent}`;

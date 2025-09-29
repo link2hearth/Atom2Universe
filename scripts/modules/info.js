@@ -1,3 +1,50 @@
+function getI18nApi() {
+  return globalThis.i18n;
+}
+
+function getCurrentLocale() {
+  const api = getI18nApi();
+  if (api && typeof api.getCurrentLocale === 'function') {
+    return api.getCurrentLocale();
+  }
+  return 'fr-FR';
+}
+
+function formatNumberLocalized(value, options) {
+  const api = getI18nApi();
+  if (api && typeof api.formatNumber === 'function') {
+    const formatted = api.formatNumber(value, options);
+    return formatted !== undefined ? formatted : '';
+  }
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) {
+    return '';
+  }
+  return numeric.toLocaleString(getCurrentLocale(), options);
+}
+
+function formatIntegerLocalized(value) {
+  return formatNumberLocalized(value, { maximumFractionDigits: 0, minimumFractionDigits: 0 });
+}
+
+function compareTextLocalized(a, b, options) {
+  const api = getI18nApi();
+  if (api && typeof api.compareText === 'function') {
+    return api.compareText(a, b, options);
+  }
+  const locale = getCurrentLocale();
+  return String(a ?? '').localeCompare(String(b ?? ''), locale, options);
+}
+
+function toLocaleLower(value) {
+  const api = getI18nApi();
+  if (api && typeof api.toLocaleLowerCase === 'function') {
+    return api.toLocaleLowerCase(value);
+  }
+  const locale = getCurrentLocale();
+  return typeof value === 'string' ? value.toLocaleLowerCase(locale) : '';
+}
+
 function formatElementFlatBonus(value) {
   const numeric = Number(value);
   if (!Number.isFinite(numeric) || numeric === 0) {
@@ -6,7 +53,7 @@ function formatElementFlatBonus(value) {
   try {
     return new LayeredNumber(numeric).toString();
   } catch (err) {
-    return numeric.toLocaleString('fr-FR');
+    return formatNumberLocalized(numeric);
   }
 }
 
@@ -24,7 +71,7 @@ function formatElementMultiplierBonus(value) {
     : numeric >= 10
       ? { maximumFractionDigits: 1 }
       : { maximumFractionDigits: 2 };
-  return numeric.toLocaleString('fr-FR', options);
+  return formatNumberLocalized(numeric, options);
 }
 
 function formatElementCritChanceBonus(value) {
@@ -39,7 +86,7 @@ function formatElementCritChanceBonus(value) {
     : abs >= 10
       ? { maximumFractionDigits: 1 }
       : { maximumFractionDigits: 2 };
-  return percent.toLocaleString('fr-FR', options) + ' %';
+  return `${formatNumberLocalized(percent, options)} %`;
 }
 
 function formatElementCritMultiplierBonus(value) {
@@ -53,7 +100,7 @@ function formatElementCritMultiplierBonus(value) {
     : abs >= 1
       ? { maximumFractionDigits: 1 }
       : { maximumFractionDigits: 2 };
-  return numeric.toLocaleString('fr-FR', options);
+  return formatNumberLocalized(numeric, options);
 }
 
 function formatElementMultiplierDisplay(value) {
@@ -75,6 +122,12 @@ function formatElementTicketInterval(seconds) {
 
 const COLLECTION_BONUS_OVERVIEW_CACHE = new Map();
 
+if (typeof window !== 'undefined') {
+  window.addEventListener('i18n:languagechange', () => {
+    COLLECTION_BONUS_OVERVIEW_CACHE.clear();
+  });
+}
+
 function formatSignedBonus(value, { forcePlus = true } = {}) {
   const numeric = Number(value);
   if (!Number.isFinite(numeric) || numeric === 0) {
@@ -86,7 +139,7 @@ function formatSignedBonus(value, { forcePlus = true } = {}) {
     : abs >= 10
       ? { maximumFractionDigits: 1 }
       : { maximumFractionDigits: 2 };
-  const formatted = numeric.toLocaleString('fr-FR', options);
+  const formatted = formatNumberLocalized(numeric, options);
   if (numeric > 0 && forcePlus) {
     return `+${formatted}`;
   }
@@ -419,7 +472,7 @@ function describeMythiqueSpecials(groupConfig) {
       : abs >= 10
         ? { maximumFractionDigits: 1 }
         : { maximumFractionDigits: 2 };
-    return numeric.toLocaleString('fr-FR', options);
+    return formatNumberLocalized(numeric, options);
   };
 
   if (
@@ -630,7 +683,9 @@ function normalizeCollectionDetailText(text) {
   if (!trimmed) {
     return null;
   }
-  return trimmed.replace(/\s+/g, ' ').toLocaleLowerCase('fr-FR');
+  const collapsed = trimmed.replace(/\s+/g, ' ');
+  const lowered = toLocaleLower(collapsed);
+  return lowered || collapsed.toLowerCase();
 }
 
 function renderElementBonuses() {
@@ -677,7 +732,7 @@ function renderElementBonuses() {
   familyEntries.sort((a, b) => {
     const labelA = typeof a.label === 'string' ? a.label : '';
     const labelB = typeof b.label === 'string' ? b.label : '';
-    return labelA.localeCompare(labelB, 'fr-FR');
+    return compareTextLocalized(labelA, labelB);
   });
 
   const entries = [...rarityEntries, ...familyEntries];
@@ -742,11 +797,11 @@ function renderElementBonuses() {
     const uniqueCount = Number(summary.uniques || 0);
     const totalUnique = Number(summary.totalUnique || 0);
     const uniqueDisplay = totalUnique > 0
-      ? `${uniqueCount.toLocaleString('fr-FR')} / ${totalUnique.toLocaleString('fr-FR')}`
-      : uniqueCount.toLocaleString('fr-FR');
+      ? `${formatIntegerLocalized(uniqueCount)} / ${formatIntegerLocalized(totalUnique)}`
+      : formatIntegerLocalized(uniqueCount);
 
     addCountRow('Éléments uniques', uniqueDisplay);
-    addCountRow('Total', copiesCount.toLocaleString('fr-FR'));
+    addCountRow('Total', formatIntegerLocalized(copiesCount));
 
     if (counts.children.length) {
       meta.appendChild(counts);
@@ -822,7 +877,7 @@ function renderElementBonuses() {
     if (overflowCount > 0) {
       specialEntries.push({
         label: 'Surcharge fractale',
-        value: `${overflowCount.toLocaleString('fr-FR')} doublons`
+        value: `${formatIntegerLocalized(overflowCount)} doublons`
       });
     }
 
@@ -1108,7 +1163,7 @@ function renderShopBonuses() {
     status.className = 'element-bonus-card__status shop-bonus-card__status';
     if (summary.level > 0) {
       status.textContent = t('scripts.info.shop.level', {
-        level: summary.level.toLocaleString('fr-FR')
+        level: formatIntegerLocalized(summary.level)
       });
     } else {
       status.textContent = t('scripts.info.shop.notPurchased');
@@ -1205,7 +1260,7 @@ function updateSessionStats() {
     elements.infoSessionAtoms.textContent = atoms.toString();
   }
   if (elements.infoSessionClicks) {
-    elements.infoSessionClicks.textContent = Number(session.manualClicks || 0).toLocaleString('fr-FR');
+    elements.infoSessionClicks.textContent = formatIntegerLocalized(Number(session.manualClicks || 0));
   }
   if (elements.infoSessionApcAtoms) {
     const apc = getLayeredStat(session, 'apcAtoms');
@@ -1232,7 +1287,7 @@ function updateGlobalStats() {
     elements.infoGlobalAtoms.textContent = gameState.lifetime.toString();
   }
   if (elements.infoGlobalClicks) {
-    elements.infoGlobalClicks.textContent = Number(global.manualClicks || 0).toLocaleString('fr-FR');
+    elements.infoGlobalClicks.textContent = formatIntegerLocalized(Number(global.manualClicks || 0));
   }
   if (elements.infoGlobalApcAtoms) {
     const apc = getLayeredStat(global, 'apcAtoms');

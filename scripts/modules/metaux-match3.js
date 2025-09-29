@@ -1118,7 +1118,7 @@ class MetauxMatch3Game {
       this.endTimeElement.textContent = this.formatDuration(this.timerState.totalElapsedMs);
     }
     if (this.endMatchesElement) {
-      this.endMatchesElement.textContent = this.matchHistory.totalMatches.toLocaleString('fr-FR');
+      this.endMatchesElement.textContent = formatIntegerLocalized(this.matchHistory.totalMatches);
     }
     if (this.endMatchListElement) {
       this.endMatchListElement.innerHTML = '';
@@ -1136,7 +1136,7 @@ class MetauxMatch3Game {
         const value = document.createElement('span');
         value.className = 'metaux-end-screen__color-value';
         const count = this.matchHistory.perType.get(type.id) || 0;
-        value.textContent = count.toLocaleString('fr-FR');
+        value.textContent = formatIntegerLocalized(count);
         item.appendChild(label);
         item.appendChild(value);
         this.endMatchListElement.appendChild(item);
@@ -1213,7 +1213,8 @@ class MetauxMatch3Game {
       minimumFractionDigits: decimals,
       maximumFractionDigits: decimals
     };
-    return `${safeValue.toLocaleString('fr-FR', options)} s`;
+    const formatted = formatNumberLocalized(safeValue, options);
+    return `${formatted} s`;
   }
 
   formatDuration(durationMs) {
@@ -1224,16 +1225,17 @@ class MetauxMatch3Game {
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds - minutes * 60;
     if (minutes > 0) {
-      const secondsText = seconds.toLocaleString('fr-FR', {
+      const secondsText = formatNumberLocalized(seconds, {
         minimumFractionDigits: seconds % 1 === 0 ? 0 : 1,
         maximumFractionDigits: 1
       });
-      return `${minutes.toLocaleString('fr-FR')} min ${secondsText} s`;
+      return `${formatIntegerLocalized(minutes)} min ${secondsText} s`;
     }
-    return `${totalSeconds.toLocaleString('fr-FR', {
+    const formattedSeconds = formatNumberLocalized(totalSeconds, {
       minimumFractionDigits: 1,
       maximumFractionDigits: 1
-    })} s`;
+    });
+    return `${formattedSeconds} s`;
   }
 
   restart() {
@@ -1335,19 +1337,19 @@ class MetauxMatch3Game {
 
   updateStats() {
     if (this.lastComboElement) {
-      this.lastComboElement.textContent = this.stats.lastCombo.toLocaleString('fr-FR');
+      this.lastComboElement.textContent = formatIntegerLocalized(this.stats.lastCombo);
     }
     if (this.bestComboElement) {
-      this.bestComboElement.textContent = this.stats.bestCombo.toLocaleString('fr-FR');
+      this.bestComboElement.textContent = formatIntegerLocalized(this.stats.bestCombo);
     }
     if (this.totalTilesElement) {
-      this.totalTilesElement.textContent = this.stats.totalCleared.toLocaleString('fr-FR');
+      this.totalTilesElement.textContent = formatIntegerLocalized(this.stats.totalCleared);
     }
     if (this.reshufflesElement) {
-      this.reshufflesElement.textContent = this.stats.reshuffles.toLocaleString('fr-FR');
+      this.reshufflesElement.textContent = formatIntegerLocalized(this.stats.reshuffles);
     }
     if (this.movesElement) {
-      this.movesElement.textContent = this.stats.moves.toLocaleString('fr-FR');
+      this.movesElement.textContent = formatIntegerLocalized(this.stats.moves);
     }
   }
 
@@ -1416,3 +1418,40 @@ function getMetauxGame() {
 
 window.initMetauxGame = initMetauxGame;
 window.getMetauxGame = getMetauxGame;
+function getI18nApi() {
+  return globalThis.i18n;
+}
+
+function getCurrentLocale() {
+  const api = getI18nApi();
+  if (api && typeof api.getCurrentLocale === 'function') {
+    return api.getCurrentLocale();
+  }
+  return 'fr-FR';
+}
+
+function formatNumberLocalized(value, options) {
+  const api = getI18nApi();
+  if (api && typeof api.formatNumber === 'function') {
+    return api.formatNumber(value, options) || '';
+  }
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) {
+    return '';
+  }
+  return numeric.toLocaleString(getCurrentLocale(), options);
+}
+
+function formatIntegerLocalized(value) {
+  return formatNumberLocalized(value, { maximumFractionDigits: 0, minimumFractionDigits: 0 });
+}
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('i18n:languagechange', () => {
+    if (metauxGame) {
+      metauxGame.updateTimerUI();
+      metauxGame.updateStats();
+      metauxGame.populateEndScreen();
+    }
+  });
+}
