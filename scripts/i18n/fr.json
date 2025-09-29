@@ -466,6 +466,11 @@
           "generic": "Skin mis à jour."
         }
       },
+      "options": {
+        "brickSkin": {
+          "unlocked": "Choisissez l’apparence des briques de Particules."
+        }
+      },
       "frenzy": "Frénésie",
       "frenzyActivate": "Activer la {label} ({multiplier})",
       "frenzyToast": "{label} ×{multiplier} pendant {duration} !",
