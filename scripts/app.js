@@ -80,6 +80,62 @@ function normalizeLanguageCode(raw) {
   return raw.trim().toLowerCase();
 }
 
+function getI18nApi() {
+  return globalThis.i18n;
+}
+
+function getCurrentLocale() {
+  const api = getI18nApi();
+  if (api && typeof api.getCurrentLocale === 'function') {
+    return api.getCurrentLocale();
+  }
+  return 'fr-FR';
+}
+
+function formatNumberLocalized(value, options) {
+  const api = getI18nApi();
+  if (api && typeof api.formatNumber === 'function') {
+    const formatted = api.formatNumber(value, options);
+    if (formatted !== undefined && formatted !== null) {
+      return formatted;
+    }
+  }
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) {
+    return '';
+  }
+  const locale = getCurrentLocale();
+  try {
+    return numeric.toLocaleString(locale, options);
+  } catch (error) {
+    return numeric.toLocaleString('fr-FR', options);
+  }
+}
+
+function formatIntegerLocalized(value) {
+  return formatNumberLocalized(value, { maximumFractionDigits: 0, minimumFractionDigits: 0 });
+}
+
+function formatDurationLocalized(value, options) {
+  const api = getI18nApi();
+  if (api && typeof api.formatDuration === 'function') {
+    const formatted = api.formatDuration(value, options);
+    if (formatted) {
+      return formatted;
+    }
+  }
+  return formatNumberLocalized(value, Object.assign({ style: 'unit', unit: 'second', unitDisplay: 'short' }, options));
+}
+
+function compareTextLocalized(a, b, options) {
+  const api = getI18nApi();
+  if (api && typeof api.compareText === 'function') {
+    return api.compareText(a, b, options);
+  }
+  const locale = getCurrentLocale();
+  return String(a ?? '').localeCompare(String(b ?? ''), locale, options);
+}
+
 function matchAvailableLanguage(raw) {
   const normalized = normalizeLanguageCode(raw);
   if (!normalized) {
@@ -1434,8 +1490,8 @@ function formatTrophyProgress(def) {
       current,
       target,
       percent,
-      displayCurrent: current.toLocaleString('fr-FR'),
-      displayTarget: clampedTarget.toLocaleString('fr-FR')
+      displayCurrent: formatIntegerLocalized(current),
+      displayTarget: formatIntegerLocalized(clampedTarget)
     };
   }
   if (condition.type === 'collectionRarities') {
@@ -1452,8 +1508,8 @@ function formatTrophyProgress(def) {
       current: owned,
       target: total,
       percent,
-      displayCurrent: owned.toLocaleString('fr-FR'),
-      displayTarget: total.toLocaleString('fr-FR')
+      displayCurrent: formatIntegerLocalized(owned),
+      displayTarget: formatIntegerLocalized(total)
     };
   }
   if (condition.type === 'fusionSuccesses') {
@@ -1470,8 +1526,8 @@ function formatTrophyProgress(def) {
       current: completed,
       target: total,
       percent,
-      displayCurrent: completed.toLocaleString('fr-FR'),
-      displayTarget: total.toLocaleString('fr-FR')
+      displayCurrent: formatIntegerLocalized(completed),
+      displayTarget: formatIntegerLocalized(total)
     };
   }
   const current = gameState.lifetime;
@@ -1840,7 +1896,7 @@ function updatePhotonStageColor(color) {
 
 function formatPhotonScore(score) {
   const numeric = Number.isFinite(Number(score)) ? Number(score) : 0;
-  return numeric.toLocaleString('fr-FR');
+  return formatIntegerLocalized(numeric);
 }
 
 function updatePhotonScore(score) {
@@ -1889,7 +1945,7 @@ function ensurePhotonGame() {
     },
     onGameOver: result => {
       const gained = Number.isFinite(Number(result?.score)) ? Number(result.score) : 0;
-      const formatted = gained.toLocaleString('fr-FR');
+      const formatted = formatIntegerLocalized(gained);
       showPhotonOverlay({
         message: `Couleur incorrecte ! Score : ${formatted}`,
         actionLabel: 'Rejouer'
@@ -2013,7 +2069,7 @@ function updateArcadeTicketDisplay() {
   }
   const bonusCount = Math.max(0, Math.floor(Number(gameState.bonusParticulesTickets) || 0));
   if (elements.arcadeBonusTicketValue) {
-    elements.arcadeBonusTicketValue.textContent = bonusCount.toLocaleString('fr-FR');
+    elements.arcadeBonusTicketValue.textContent = formatIntegerLocalized(bonusCount);
   }
   const bonusLabel = formatMetauxCreditLabel(bonusCount);
   if (elements.arcadeBonusTicketAnnouncement) {
@@ -2044,7 +2100,7 @@ function formatMetauxCreditLabel(count) {
   }
   const numeric = Math.max(0, Math.floor(Number(count) || 0));
   const unit = numeric === 1 ? 'crédit' : 'crédits';
-  return `${numeric.toLocaleString('fr-FR')} ${unit}`;
+  return `${formatIntegerLocalized(numeric)} ${unit}`;
 }
 
 function isMetauxSessionRunning() {
@@ -2554,7 +2610,7 @@ const musicPlayer = (() => {
       .sort((a, b) => {
         const nameA = (a?.displayName || a?.filename || '').toString();
         const nameB = (b?.displayName || b?.filename || '').toString();
-        return nameA.localeCompare(nameB, undefined, { sensitivity: 'base' });
+        return compareTextLocalized(nameA, nameB, { sensitivity: 'base' });
       });
   };
 
@@ -3298,7 +3354,7 @@ function formatMultiplier(value) {
       if (Math.abs(numeric) < 10) {
         options.minimumFractionDigits = 2;
       }
-      return `×${numeric.toLocaleString('fr-FR', options)}`;
+      return `×${formatNumberLocalized(numeric, options)}`;
     }
     return `×${value.toString()}`;
   }
@@ -3311,7 +3367,7 @@ function formatMultiplier(value) {
     if (Math.abs(numeric) < 10) {
       options.minimumFractionDigits = 2;
     }
-    return `×${numeric.toLocaleString('fr-FR', options)}`;
+    return `×${formatNumberLocalized(numeric, options)}`;
   }
   const layered = new LayeredNumber(numeric);
   if (layered.sign <= 0) {
@@ -3397,8 +3453,8 @@ function updateElementInfoPanel(definition) {
   const count = getElementCurrentCount(entry);
   const lifetimeCount = getElementLifetimeCount(entry);
   if (elements.elementInfoOwnedCount) {
-    const displayCount = count.toLocaleString('fr-FR');
-    const lifetimeDisplay = lifetimeCount.toLocaleString('fr-FR');
+    const displayCount = formatIntegerLocalized(count);
+    const lifetimeDisplay = formatIntegerLocalized(lifetimeCount);
     elements.elementInfoOwnedCount.textContent = displayCount;
     elements.elementInfoOwnedCount.setAttribute(
       'aria-label',
@@ -4629,7 +4685,7 @@ function showCritBanner(input) {
   const multiplierValue = Number(options.multiplier ?? options.multiplierValue);
   const hasMultiplier = Number.isFinite(multiplierValue) && multiplierValue > 1;
   const multiplierText = hasMultiplier
-    ? `${multiplierValue.toLocaleString('fr-FR', { maximumFractionDigits: 2 })}×`
+    ? `${formatNumberLocalized(multiplierValue, { maximumFractionDigits: 2 })}×`
     : '';
 
   valueElement.textContent = hasMultiplier
@@ -5000,12 +5056,12 @@ function handleMetauxSessionEnd(summary) {
   const messageParts = [];
   if (chronoAdded > 0) {
     messageParts.push(t('scripts.app.metaux.chronoBonus', {
-      value: chronoAdded.toLocaleString('fr-FR')
+      value: formatIntegerLocalized(chronoAdded)
     }));
   }
   if (matchesEarned > 0) {
     messageParts.push(t('scripts.app.metaux.multiBonus', {
-      value: matchesEarned.toLocaleString('fr-FR')
+      value: formatIntegerLocalized(matchesEarned)
     }));
   }
   if (messageParts.length) {
@@ -5361,7 +5417,7 @@ function recalcProduction() {
       : abs >= 10
         ? { maximumFractionDigits: 1 }
         : { maximumFractionDigits: 2 };
-    return `×${numeric.toLocaleString('fr-FR', options)}`;
+    return `×${formatNumberLocalized(numeric, options)}`;
   };
   const getRarityCounter = rarityId => {
     if (!rarityId) return null;
@@ -7199,8 +7255,8 @@ function updateFrenzyIndicatorFor(type, targetElement, now) {
   const seconds = remaining / 1000;
   const precision = seconds < 10 ? 1 : 0;
   const multiplier = Math.pow(FRENZY_CONFIG.multiplier, stacks);
-  const multiplierText = multiplier.toLocaleString('fr-FR', { maximumFractionDigits: 2 });
-  const timeText = seconds.toLocaleString('fr-FR', {
+  const multiplierText = formatNumberLocalized(multiplier, { maximumFractionDigits: 2 });
+  const timeText = formatNumberLocalized(seconds, {
     minimumFractionDigits: precision,
     maximumFractionDigits: precision
   });
@@ -7220,25 +7276,25 @@ function formatApsCritChrono(seconds) {
     const hours = Math.floor(totalSeconds / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
     const secs = totalSeconds % 60;
-    const parts = [`${hours.toLocaleString('fr-FR')} h`];
+    const parts = [`${formatIntegerLocalized(hours)} h`];
     if (minutes > 0) {
-      parts.push(`${minutes.toLocaleString('fr-FR')} min`);
+      parts.push(`${formatIntegerLocalized(minutes)} min`);
     }
     if (secs > 0) {
-      parts.push(`${secs.toLocaleString('fr-FR')} s`);
+      parts.push(`${formatIntegerLocalized(secs)} s`);
     }
     return parts.join(' ');
   }
   if (totalSeconds >= 60) {
     const minutes = Math.floor(totalSeconds / 60);
     const secs = totalSeconds % 60;
-    const parts = [`${minutes.toLocaleString('fr-FR')} min`];
+    const parts = [`${formatIntegerLocalized(minutes)} min`];
     if (secs > 0) {
-      parts.push(`${secs.toLocaleString('fr-FR')} s`);
+      parts.push(`${formatIntegerLocalized(secs)} s`);
     }
     return parts.join(' ');
   }
-  return `${totalSeconds.toLocaleString('fr-FR')} s`;
+  return `${formatIntegerLocalized(totalSeconds)} s`;
 }
 
 function updateApsCritDisplay() {
@@ -7269,7 +7325,7 @@ function updateApsCritDisplay() {
     elements.statusApsCritChrono.hidden = !isActive;
     elements.statusApsCritChrono.setAttribute('aria-hidden', String(!isActive));
   }
-  const multiplierText = `×${multiplierValue.toLocaleString('fr-FR')}`;
+  const multiplierText = `×${formatNumberLocalized(multiplierValue)}`;
   const multiplierDisplayText = isActive ? multiplierText : '';
   if (elements.statusApsCritMultiplier) {
     elements.statusApsCritMultiplier.textContent = multiplierDisplayText;
@@ -7413,6 +7469,12 @@ if (elements.themeSelect) {
   elements.themeSelect.addEventListener('change', () => {
     applyTheme();
     showToast(t('scripts.app.themeUpdated'));
+  });
+}
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('i18n:languagechange', () => {
+    updateUI();
   });
 }
 

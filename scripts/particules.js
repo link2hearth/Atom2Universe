@@ -23,7 +23,7 @@
   })();
 
   const FALLBACK_NUMBER_LOCALE = 'fr-FR';
-  const resolvedNumberLocale = (() => {
+  let resolvedNumberLocale = (() => {
     const navigatorLanguage = typeof navigator === 'object' && navigator
       ? navigator.language ?? navigator.userLanguage
       : null;
@@ -47,12 +47,31 @@
     if (!Number.isFinite(numeric)) {
       return '0';
     }
+    if (globalThis.i18n && typeof globalThis.i18n.formatNumber === 'function') {
+      const formatted = globalThis.i18n.formatNumber(numeric, options);
+      if (formatted) {
+        return formatted;
+      }
+    }
+    const locale = globalThis.i18n && typeof globalThis.i18n.getCurrentLocale === 'function'
+      ? globalThis.i18n.getCurrentLocale()
+      : resolvedNumberLocale;
     try {
-      return numeric.toLocaleString(resolvedNumberLocale, options);
+      return numeric.toLocaleString(locale, options);
     } catch (error) {
       return numeric.toLocaleString(FALLBACK_NUMBER_LOCALE, options);
     }
   };
+
+  if (typeof window !== 'undefined') {
+    window.addEventListener('i18n:languagechange', event => {
+      if (event?.detail?.locale) {
+        resolvedNumberLocale = event.detail.locale;
+      } else if (globalThis.i18n && typeof globalThis.i18n.getCurrentLocale === 'function') {
+        resolvedNumberLocale = globalThis.i18n.getCurrentLocale();
+      }
+    });
+  }
 
   const readObject = (value, fallback = {}) => (value && typeof value === 'object' ? value : fallback);
   const readNumber = (value, fallback, { min, max, round } = {}) => {

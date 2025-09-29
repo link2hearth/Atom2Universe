@@ -1220,7 +1220,11 @@ function renderGachaRarityList() {
     if (def.weight > 0 && totalWeight > 0) {
       const ratio = (def.weight / totalWeight) * 100;
       const digits = ratio >= 10 ? 1 : 2;
-      chance.textContent = `${ratio.toFixed(digits).replace('.', ',')}\u00a0%`;
+      const formattedRatio = formatNumberLocalized(ratio, {
+        minimumFractionDigits: digits,
+        maximumFractionDigits: digits
+      });
+      chance.textContent = `${formattedRatio}\u00a0%`;
     } else {
       chance.textContent = '—';
     }
@@ -1296,7 +1300,11 @@ function formatFusionChance(chance) {
   const ratio = Math.max(0, Math.min(1, Number(chance) || 0));
   const percent = ratio * 100;
   const digits = percent < 10 ? 1 : 0;
-  return `${percent.toFixed(digits).replace('.', ',')} %`;
+  const formattedPercent = formatNumberLocalized(percent, {
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits
+  });
+  return `${formattedPercent} %`;
 }
 
 function getFusionStateById(fusionId) {
@@ -1357,13 +1365,13 @@ function applyFusionRewards(rewards) {
   const apcIncrement = Number(rewards.apcFlat);
   if (Number.isFinite(apcIncrement) && apcIncrement !== 0) {
     bonuses.apcFlat += apcIncrement;
-    const formatted = apcIncrement.toLocaleString('fr-FR');
+    const formatted = formatNumberLocalized(apcIncrement);
     summaries.push(`+${formatted} APC`);
   }
   const apsIncrement = Number(rewards.apsFlat);
   if (Number.isFinite(apsIncrement) && apsIncrement !== 0) {
     bonuses.apsFlat += apsIncrement;
-    const formatted = apsIncrement.toLocaleString('fr-FR');
+    const formatted = formatNumberLocalized(apsIncrement);
     summaries.push(`+${formatted} APS`);
   }
   return summaries;
@@ -1461,12 +1469,12 @@ function buildFusionCard(definition) {
   const bonusParts = [];
   if (definition.rewards.apcFlat) {
     bonusParts.push(t('scripts.gacha.fusion.apcBonus', {
-      value: definition.rewards.apcFlat.toLocaleString('fr-FR')
+      value: formatNumberLocalized(definition.rewards.apcFlat)
     }));
   }
   if (definition.rewards.apsFlat) {
     bonusParts.push(t('scripts.gacha.fusion.apsBonus', {
-      value: definition.rewards.apsFlat.toLocaleString('fr-FR')
+      value: formatNumberLocalized(definition.rewards.apsFlat)
     }));
   }
   const bonus = document.createElement('p');
@@ -1535,8 +1543,8 @@ function updateFusionUI() {
     card.requirements.forEach(requirement => {
       const entry = gameState.elements?.[requirement.elementId];
       const available = getElementCurrentCount(entry);
-      const availableText = available.toLocaleString('fr-FR');
-      const requiredText = requirement.requiredCount.toLocaleString('fr-FR');
+      const availableText = formatNumberLocalized(available, { maximumFractionDigits: 0 });
+      const requiredText = formatNumberLocalized(requirement.requiredCount, { maximumFractionDigits: 0 });
       requirement.availabilityLabel.textContent = t('scripts.gacha.fusion.availabilityProgress', {
         available: availableText,
         required: requiredText
@@ -1554,13 +1562,13 @@ function updateFusionUI() {
     if (def.rewards.apcFlat) {
       const totalApc = def.rewards.apcFlat * state.successes;
       totalParts.push(t('scripts.gacha.fusion.apcTotal', {
-        value: totalApc.toLocaleString('fr-FR')
+        value: formatNumberLocalized(totalApc)
       }));
     }
     if (def.rewards.apsFlat) {
       const totalAps = def.rewards.apsFlat * state.successes;
       totalParts.push(t('scripts.gacha.fusion.apsTotal', {
-        value: totalAps.toLocaleString('fr-FR')
+        value: formatNumberLocalized(totalAps)
       }));
     }
     card.totalBonus.textContent = t('scripts.gacha.fusion.totalBonus', {
@@ -1755,7 +1763,7 @@ function renderGachaResult(outcome) {
 
 function formatTicketLabel(count) {
   const numeric = Math.max(0, Math.floor(Number(count) || 0));
-  const formatted = numeric.toLocaleString('fr-FR');
+  const formatted = formatIntegerLocalized(numeric);
   const unit = numeric === 1
     ? t('scripts.gacha.tickets.single')
     : t('scripts.gacha.tickets.plural');
@@ -1764,7 +1772,7 @@ function formatTicketLabel(count) {
 
 function formatBonusTicketLabel(count) {
   const numeric = Math.max(0, Math.floor(Number(count) || 0));
-  const formatted = numeric.toLocaleString('fr-FR');
+  const formatted = formatIntegerLocalized(numeric);
   const unit = numeric === 1
     ? t('scripts.gacha.tickets.bonusSingle')
     : t('scripts.gacha.tickets.bonusPlural');
@@ -1794,11 +1802,11 @@ function compareGachaEntries(a, b) {
   const nameA = a?.elementDef?.name || '';
   const nameB = b?.elementDef?.name || '';
   if (nameA && nameB) {
-    return nameA.localeCompare(nameB, 'fr', { sensitivity: 'base' });
+    return compareTextLocalized(nameA, nameB, { sensitivity: 'base' });
   }
   const idA = a?.elementDef?.id || '';
   const idB = b?.elementDef?.id || '';
-  return idA.localeCompare(idB, 'fr', { sensitivity: 'base' });
+  return compareTextLocalized(idA, idB, { sensitivity: 'base' });
 }
 
 function buildGachaDisplayData(results) {
@@ -3063,3 +3071,49 @@ function updateTicketStar(deltaSeconds, now = performance.now()) {
   star.style.transform = `translate(${nextX}px, ${nextY}px)`;
 }
 
+function getI18nApi() {
+  return globalThis.i18n;
+}
+
+function getCurrentLocale() {
+  const api = getI18nApi();
+  if (api && typeof api.getCurrentLocale === 'function') {
+    return api.getCurrentLocale();
+  }
+  return 'fr-FR';
+}
+
+function formatNumberLocalized(value, options) {
+  const api = getI18nApi();
+  if (api && typeof api.formatNumber === 'function') {
+    return api.formatNumber(value, options) || '';
+  }
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) {
+    return '';
+  }
+  return numeric.toLocaleString(getCurrentLocale(), options);
+}
+
+function formatIntegerLocalized(value) {
+  return formatNumberLocalized(value, { maximumFractionDigits: 0, minimumFractionDigits: 0 });
+}
+
+function compareTextLocalized(a, b, options) {
+  const api = getI18nApi();
+  if (api && typeof api.compareText === 'function') {
+    return api.compareText(a, b, options);
+  }
+  const locale = getCurrentLocale();
+  return String(a ?? '').localeCompare(String(b ?? ''), locale, options);
+}
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('i18n:languagechange', () => {
+    if (elements.gachaRarityList) {
+      renderGachaRarityList();
+    }
+    updateFusionUI();
+    updateGachaUI();
+  });
+}

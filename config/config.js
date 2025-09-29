@@ -537,15 +537,33 @@ const ATOM_SCALE_TROPHY_PRESETS = [
 
 globalThis.ATOM_SCALE_TROPHY_DATA = ATOM_SCALE_TROPHY_PRESETS;
 
+function getCurrentLocale() {
+  if (globalThis.i18n && typeof globalThis.i18n.getCurrentLocale === 'function') {
+    return globalThis.i18n.getCurrentLocale();
+  }
+  return 'fr-FR';
+}
+
+function formatLocalizedNumber(value, options) {
+  if (globalThis.i18n && typeof globalThis.i18n.formatNumber === 'function') {
+    return globalThis.i18n.formatNumber(value, options);
+  }
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) {
+    return '';
+  }
+  return numeric.toLocaleString(getCurrentLocale(), options);
+}
+
 function formatAtomScaleBonus(value) {
   if (!Number.isFinite(value)) {
     return '0';
   }
   const roundedInteger = Math.round(value);
   if (Math.abs(value - roundedInteger) <= 1e-9) {
-    return roundedInteger.toLocaleString('fr-FR');
+    return formatLocalizedNumber(roundedInteger);
   }
-  return value.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return formatLocalizedNumber(value, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 function createAtomScaleTrophies() {
