@@ -1744,6 +1744,9 @@ const GAME_CONFIG = {
    *   - offlineBonus : multiplicateur de gains hors-ligne par duplicata.
    *   - duplicateOverflow : gain plat supplémentaire après le plafond.
    *   - frenzyBonus : multiplicateur des chances de frénésie.
+   *   Les blocs `labels` associés peuvent personnaliser l'intitulé affiché
+   *   pour ces bonus via les clés `setBonus`/`frenzyBonus`, `ticketBonus`,
+   *   `offlineBonus` et `duplicateOverflow`.
    */
   elementBonuses: {
     groups: {

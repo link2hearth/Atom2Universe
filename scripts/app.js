@@ -5951,14 +5951,34 @@ function recalcProduction() {
 
     if (rarityId === MYTHIQUE_RARITY_ID) {
       const labels = groupConfig?.labels || {};
-      const resolveLabel = (key, fallback) => {
-        const raw = typeof labels[key] === 'string' ? labels[key].trim() : '';
-        return raw || fallback;
+      const resolveLabel = (keys, fallback) => {
+        const searchKeys = Array.isArray(keys) ? keys : [keys];
+        for (const key of searchKeys) {
+          if (typeof key !== 'string' || !key) {
+            continue;
+          }
+          const raw = typeof labels[key] === 'string' ? labels[key].trim() : '';
+          if (raw) {
+            return raw;
+          }
+        }
+        return fallback;
       };
-      const ticketLabel = resolveLabel('ticketBonus', `${rarityLabel} · accélération quantique`);
-      const offlineLabel = resolveLabel('offlineBonus', `${rarityLabel} · collecte hors ligne`);
-      const overflowLabel = resolveLabel('duplicateOverflow', `${rarityLabel} · surcharge fractale`);
+      const ticketLabel = resolveLabel(
+        ['ticketBonus', 'ticket'],
+        `${rarityLabel} · accélération quantique`
+      );
+      const offlineLabel = resolveLabel(
+        ['offlineBonus', 'offline'],
+        `${rarityLabel} · collecte hors ligne`
+      );
+      const overflowLabel = resolveLabel(
+        ['duplicateOverflow', 'overflow'],
+        `${rarityLabel} · surcharge fractale`
+      );
       const baseTicketSeconds = DEFAULT_TICKET_STAR_INTERVAL_SECONDS;
+      // La réduction de l'intervalle des tickets dépend uniquement des éléments
+      // mythiques uniques possédés, et non du nombre total de copies.
       const ticketSeconds = Math.max(
         MYTHIQUE_TICKET_MIN_INTERVAL_SECONDS,
         baseTicketSeconds - uniqueCount * MYTHIQUE_TICKET_UNIQUE_REDUCTION_SECONDS
@@ -5974,6 +5994,8 @@ function recalcProduction() {
       }
 
       const duplicates = duplicateCount;
+      // Chaque duplicata mythique supplémentaire augmente le multiplicateur
+      // hors ligne jusqu'à atteindre le plafond défini dans la configuration.
       const multiplierDuplicates = Math.min(duplicates, MYTHIQUE_DUPLICATES_FOR_OFFLINE_CAP);
       const offlineMultiplier = Math.min(
         MYTHIQUE_OFFLINE_CAP,
@@ -6034,13 +6056,18 @@ function recalcProduction() {
         summary.overflowDuplicates = 0;
       }
 
+      // Le bonus de frénésie n'est appliqué que lorsque la collection mythique
+      // est entièrement complétée.
       const frenzyMultiplier = summary.isComplete
         ? MYTHIQUE_FRENZY_SPAWN_BONUS_MULTIPLIER
         : 1;
       mythiqueBonuses.frenzyChanceMultiplier = frenzyMultiplier;
       summary.frenzyChanceMultiplier = frenzyMultiplier;
       if (frenzyMultiplier !== 1) {
-        const frenzyLabel = resolveLabel('setBonus', `${rarityLabel} · convergence totale`);
+        const frenzyLabel = resolveLabel(
+          ['frenzyBonus', 'setBonus'],
+          `${rarityLabel} · convergence totale`
+        );
         markLabelActive(frenzyLabel, 'frenzy');
         const frenzyText = formatMultiplierTooltip(frenzyMultiplier);
         if (frenzyText) {
