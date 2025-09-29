@@ -7475,10 +7475,12 @@ function getTrophyDisplayTexts(def) {
   }
 
   let descriptionParams = null;
-  if (def.targetText || def.flavor) {
+  const descriptionTarget = def.targetText || '';
+  const descriptionFlavor = translateTrophyField(def, 'flavor', def.flavor || '');
+  if (descriptionTarget || descriptionFlavor) {
     descriptionParams = {
-      target: def.targetText || '',
-      flavor: def.flavor || ''
+      target: descriptionTarget,
+      flavor: descriptionFlavor
     };
   }
   let description = '';

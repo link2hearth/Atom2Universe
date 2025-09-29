@@ -646,6 +646,8 @@ function createAtomScaleTrophies() {
     return {
       id: entry.id,
       name: entry.name,
+      targetText: entry.targetText,
+      flavor: entry.flavor,
       description: translateOrDefault(
         'scripts.appData.atomScale.trophies.description',
         descriptionFallback,
