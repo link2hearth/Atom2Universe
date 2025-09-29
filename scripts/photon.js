@@ -8,18 +8,18 @@
 
   const DEFAULT_COLOR_DEFS = {
     blue: {
-      bar: '#56a6ff',
-      barEdge: '#9ed2ff',
-      haloInner: 'rgba(86, 166, 255, 0.88)',
-      haloMid: 'rgba(86, 166, 255, 0.4)',
-      haloOuter: 'rgba(86, 166, 255, 0.08)'
+      bar: '#0b2d6f',
+      barEdge: '#3c67b3',
+      haloInner: 'rgba(17, 68, 160, 0.88)',
+      haloMid: 'rgba(17, 68, 160, 0.45)',
+      haloOuter: 'rgba(17, 68, 160, 0.08)'
     },
     red: {
-      bar: '#ff6b8d',
-      barEdge: '#ffc2d1',
-      haloInner: 'rgba(255, 107, 141, 0.9)',
-      haloMid: 'rgba(255, 107, 141, 0.42)',
-      haloOuter: 'rgba(255, 107, 141, 0.08)'
+      bar: '#a01269',
+      barEdge: '#e878b6',
+      haloInner: 'rgba(160, 18, 105, 0.9)',
+      haloMid: 'rgba(160, 18, 105, 0.45)',
+      haloOuter: 'rgba(160, 18, 105, 0.08)'
     }
   };
 
