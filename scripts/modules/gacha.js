@@ -1,6 +1,6 @@
 const DEFAULT_GACHA_TICKET_COST = 1;
 
-const translate = (() => {
+const gachaTranslate = (() => {
   const translator = typeof globalThis !== 'undefined' && typeof globalThis.t === 'function'
     ? globalThis.t.bind(globalThis)
     : null;
@@ -68,8 +68,8 @@ const DEFAULT_GACHA_RARITIES = [
   id: entry.id,
   weight: entry.weight,
   color: entry.color,
-  label: translate(entry.labelKey),
-  description: translate(entry.descriptionKey)
+  label: gachaTranslate(entry.labelKey),
+  description: gachaTranslate(entry.descriptionKey)
 }));
 
 function sanitizeGachaRarities(rawRarities) {

@@ -1,6 +1,6 @@
 const CONFIG = typeof window !== 'undefined' && window.GAME_CONFIG ? window.GAME_CONFIG : {};
 
-const translate = (() => {
+const gameDataTranslate = (() => {
   const translator = typeof globalThis !== 'undefined' && typeof globalThis.t === 'function'
     ? globalThis.t.bind(globalThis)
     : null;
@@ -102,7 +102,7 @@ function normalizeFusionDefinition(entry, index = 0) {
   }
   const name = typeof entry.name === 'string' && entry.name.trim()
     ? entry.name.trim()
-    : translate('scripts.gameData.fusions.defaultName', { number: index + 1 });
+    : gameDataTranslate('scripts.gameData.fusions.defaultName', { number: index + 1 });
   const description = typeof entry.description === 'string' ? entry.description.trim() : '';
   const inputSource = Array.isArray(entry.inputs)
     ? entry.inputs
@@ -878,7 +878,7 @@ const CATEGORY_LABEL_KEYS = {
 };
 
 const CATEGORY_LABELS = Object.fromEntries(
-  Object.entries(CATEGORY_LABEL_KEYS).map(([key, messageKey]) => [key, translate(messageKey)])
+  Object.entries(CATEGORY_LABEL_KEYS).map(([key, messageKey]) => [key, gameDataTranslate(messageKey)])
 );
 
 const ELEMENT_GROUP_BONUS_CONFIG = (() => {
