@@ -1787,13 +1787,13 @@ const GAME_CONFIG = {
         perCopy: {
           uniqueClickAdd: 10,
           duplicateClickAdd: 10,
-          label: 'Essentiel planétaire · récoltes essentielles'
+          label: 'scripts.config.elementBonuses.essentiel.perCopy'
         },
         setBonus: [
           {
             clickAdd: 1000,
             requireAllUnique: true,
-            label: 'Essentiel planétaire · collection complète'
+            label: 'scripts.config.elementBonuses.essentiel.setBonus'
           }
         ],
         multiplier: {
@@ -1801,33 +1801,33 @@ const GAME_CONFIG = {
           increment: 1,
           cap: 100,
           targets: ['perClick', 'perSecond'],
-          label: 'Essentiel planétaire · synergie orbitale'
+          label: 'scripts.config.elementBonuses.essentiel.multiplier'
         }
       },
       stellaire: {
         perCopy: {
           uniqueClickAdd: 50,
           duplicateClickAdd: 50,
-          label: 'Forge stellaire · fragments activés'
+          label: 'scripts.config.elementBonuses.stellaire.perCopy'
         },
         multiplier: {
           every: 15,
           increment: 1,
           cap: 100,
           targets: ['perClick', 'perSecond'],
-          label: 'Forge stellaire · intensité stellaire'
+          label: 'scripts.config.elementBonuses.stellaire.multiplier'
         },
         setBonus: {
           requireAllUnique: true,
-          label: 'Forge stellaire · forge parfaite',
+          label: 'scripts.config.elementBonuses.stellaire.setBonus',
           rarityFlatMultipliers: {
             commun: { perClick: 2 }
           }
         },
         labels: {
-          perCopy: 'Forge stellaire · fragments',
-          setBonus: 'Forge stellaire · forge parfaite',
-          multiplier: 'Forge stellaire · intensité stellaire'
+          perCopy: 'scripts.config.elementBonuses.stellaire.labels.perCopy',
+          setBonus: 'scripts.config.elementBonuses.stellaire.setBonus',
+          multiplier: 'scripts.config.elementBonuses.stellaire.multiplier'
         }
       },
       singulier: {
@@ -1836,26 +1836,26 @@ const GAME_CONFIG = {
           uniqueAutoAdd: 50,
           duplicateClickAdd: 50,
           duplicateAutoAdd: 50,
-          label: 'Singularité minérale · résonance cristalline'
+          label: 'scripts.config.elementBonuses.singulier.perCopy'
         },
         multiplier: {
           every: 10,
           increment: 1,
           cap: 100,
           targets: ['perClick', 'perSecond'],
-          label: 'Singularité minérale · densité extrême'
+          label: 'scripts.config.elementBonuses.singulier.multiplier'
         },
         labels: {
-          perCopy: 'Singularité minérale · résonance cristalline',
-          multiplier: 'Singularité minérale · densité extrême'
+          perCopy: 'scripts.config.elementBonuses.singulier.perCopy',
+          multiplier: 'scripts.config.elementBonuses.singulier.multiplier'
         }
       },
       mythique: {
         labels: {
-          setBonus: 'Mythe quantique · convergence ultime',
-          ticketBonus: 'Mythe quantique · étoile compressée',
-          offlineBonus: 'Mythe quantique · collecte persistante',
-          duplicateOverflow: 'Mythe quantique · surcharge fractale'
+          setBonus: 'scripts.config.elementBonuses.mythique.setBonus',
+          ticketBonus: 'scripts.config.elementBonuses.mythique.ticketBonus',
+          offlineBonus: 'scripts.config.elementBonuses.mythique.offlineBonus',
+          duplicateOverflow: 'scripts.config.elementBonuses.mythique.duplicateOverflow'
         },
         ticketBonus: {
           uniqueReductionSeconds: 15,
@@ -1887,7 +1887,7 @@ const GAME_CONFIG = {
           increment: 1,
           cap: 100,
           targets: ['perClick', 'perSecond'],
-          label: 'Irréel · catalyseur dimensionnel'
+          label: 'scripts.config.elementBonuses.irreel.multiplier'
         }
       }
     }
