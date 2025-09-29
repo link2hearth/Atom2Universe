@@ -710,7 +710,9 @@ function renderElementBonuses() {
     if (summaryType === 'family') {
       const status = document.createElement('span');
       status.className = 'element-bonus-card__status';
-      status.textContent = summary.isComplete ? 'Famille complète' : 'Famille en cours';
+      status.textContent = summary.isComplete
+        ? t('scripts.info.collections.complete')
+        : t('scripts.info.collections.inProgress');
       header.appendChild(status);
     }
 
@@ -911,7 +913,7 @@ function renderElementBonuses() {
 
       const title = document.createElement('h5');
       title.className = 'element-bonus-section__title';
-      title.textContent = 'Boosts actifs';
+      title.textContent = t('scripts.info.sections.activeBoosts');
       section.appendChild(title);
 
       const tags = document.createElement('div');
@@ -938,7 +940,7 @@ function renderElementBonuses() {
 
       const title = document.createElement('h5');
       title.className = 'element-bonus-section__title';
-      title.textContent = 'Effets spéciaux';
+      title.textContent = t('scripts.info.sections.specialEffects');
       section.appendChild(title);
 
       const list = document.createElement('ul');
@@ -967,7 +969,7 @@ function renderElementBonuses() {
     if (!details.children.length) {
       const empty = document.createElement('p');
       empty.className = 'element-bonus-empty';
-      empty.textContent = 'Bonus inactifs';
+      empty.textContent = t('scripts.info.sections.inactiveBonuses');
       details.appendChild(empty);
     }
 
@@ -1069,7 +1071,7 @@ function renderShopBonuses() {
   if (!visibleSummaries.length) {
     const empty = document.createElement('p');
     empty.className = 'element-bonus-empty shop-bonus-empty';
-    empty.textContent = 'Aucune amélioration disponible.';
+    empty.textContent = t('scripts.info.shop.noneAvailable');
     container.appendChild(empty);
     lastVisibleShopBonusIds = new Set();
     return;
@@ -1105,9 +1107,11 @@ function renderShopBonuses() {
     const status = document.createElement('span');
     status.className = 'element-bonus-card__status shop-bonus-card__status';
     if (summary.level > 0) {
-      status.textContent = `Niveau ${summary.level.toLocaleString('fr-FR')}`;
+      status.textContent = t('scripts.info.shop.level', {
+        level: summary.level.toLocaleString('fr-FR')
+      });
     } else {
-      status.textContent = 'Non acheté';
+      status.textContent = t('scripts.info.shop.notPurchased');
     }
     header.appendChild(status);
 
@@ -1140,23 +1144,23 @@ function renderShopBonuses() {
         hasEffect = true;
       };
 
-      appendEffect('APC +', formatShopFlatBonus(summary.clickAdd));
-      appendEffect('APS +', formatShopFlatBonus(summary.autoAdd));
-      appendEffect('APC ×', formatShopMultiplierBonus(summary.clickMult));
-      appendEffect('APS ×', formatShopMultiplierBonus(summary.autoMult));
+      appendEffect(t('scripts.info.shop.bonus.apcFlat'), formatShopFlatBonus(summary.clickAdd));
+      appendEffect(t('scripts.info.shop.bonus.apsFlat'), formatShopFlatBonus(summary.autoAdd));
+      appendEffect(t('scripts.info.shop.bonus.apcMult'), formatShopMultiplierBonus(summary.clickMult));
+      appendEffect(t('scripts.info.shop.bonus.apsMult'), formatShopMultiplierBonus(summary.autoMult));
 
       if (hasEffect) {
         card.appendChild(effects);
       } else {
         const empty = document.createElement('p');
         empty.className = 'element-bonus-empty shop-bonus-empty';
-        empty.textContent = 'Bonus en attente de seuil.';
+        empty.textContent = t('scripts.info.shop.pendingThreshold');
         card.appendChild(empty);
       }
     } else {
       const locked = document.createElement('p');
       locked.className = 'element-bonus-empty shop-bonus-empty';
-      locked.textContent = 'Achetez cette amélioration pour activer ses effets.';
+      locked.textContent = t('scripts.info.shop.locked');
       card.appendChild(locked);
     }
 
