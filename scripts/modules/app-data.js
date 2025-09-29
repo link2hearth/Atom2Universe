@@ -3,169 +3,227 @@
     ? global.APP_DATA
     : null;
 
-  const DEFAULT_ATOM_SCALE_TROPHY_DATA = [
+  const translate = (() => {
+    if (typeof global.t === 'function') {
+      return global.t.bind(global);
+    }
+    if (typeof globalThis !== 'undefined' && typeof globalThis.t === 'function') {
+      return globalThis.t.bind(globalThis);
+    }
+    return (key, params) => {
+      if (typeof key !== 'string' || !key) {
+        return '';
+      }
+      if (!params || typeof params !== 'object') {
+        return key;
+      }
+      return key.replace(/\{\s*([^\s{}]+)\s*\}/g, (match, token) => {
+        const value = params[token];
+        return value == null ? match : String(value);
+      });
+    };
+  })();
+
+  const FALLBACK_NUMBER_LOCALE = 'fr-FR';
+  const resolvedNumberLocale = (() => {
+    const navigatorLanguage = typeof global.navigator === 'object' && global.navigator
+      ? global.navigator.language ?? global.navigator.userLanguage
+      : null;
+    if (navigatorLanguage && typeof navigatorLanguage === 'string' && navigatorLanguage.trim()) {
+      return navigatorLanguage.trim();
+    }
+    const documentLanguage = global.document
+      && global.document.documentElement
+      && typeof global.document.documentElement.lang === 'string'
+        ? global.document.documentElement.lang.trim()
+        : '';
+    if (documentLanguage) {
+      return documentLanguage;
+    }
+    return FALLBACK_NUMBER_LOCALE;
+  })();
+
+  function formatLocaleNumber(value, options) {
+    const numeric = Number(value);
+    if (!Number.isFinite(numeric)) {
+      return '0';
+    }
+    try {
+      return numeric.toLocaleString(resolvedNumberLocale, options);
+    } catch (error) {
+      return numeric.toLocaleString(FALLBACK_NUMBER_LOCALE, options);
+    }
+  }
+
+  const DEFAULT_ATOM_SCALE_TROPHY_SPECS = [
     {
       id: 'scaleHumanCell',
-      name: 'Échelle : cellule humaine',
       targetText: '10^14',
-      flavor: 'l’équivalent d’une cellule humaine « moyenne »',
+      nameKey: 'scripts.appData.atomScale.trophies.scaleHumanCell.name',
+      flavorKey: 'scripts.appData.atomScale.trophies.scaleHumanCell.flavor',
       amount: { type: 'layer0', mantissa: 1, exponent: 14 }
     },
     {
       id: 'scaleSandGrain',
-      name: 'Échelle : grain de sable',
       targetText: '10^19',
-      flavor: 'la masse d’un grain de sable (~1 mm)',
+      nameKey: 'scripts.appData.atomScale.trophies.scaleSandGrain.name',
+      flavorKey: 'scripts.appData.atomScale.trophies.scaleSandGrain.flavor',
       amount: { type: 'layer0', mantissa: 1, exponent: 19 }
     },
     {
       id: 'scaleAnt',
-      name: 'Échelle : fourmi',
       targetText: '10^20',
-      flavor: 'comparable à une fourmi (~5 mg)',
+      nameKey: 'scripts.appData.atomScale.trophies.scaleAnt.name',
+      flavorKey: 'scripts.appData.atomScale.trophies.scaleAnt.flavor',
       amount: { type: 'layer0', mantissa: 1, exponent: 20 }
     },
     {
       id: 'scaleWaterDrop',
-      name: 'Échelle : goutte d’eau',
       targetText: '5 × 10^21',
-      flavor: 'la quantité d’atomes contenue dans une goutte d’eau de 0,05 mL',
+      nameKey: 'scripts.appData.atomScale.trophies.scaleWaterDrop.name',
+      flavorKey: 'scripts.appData.atomScale.trophies.scaleWaterDrop.flavor',
       amount: { type: 'layer0', mantissa: 5, exponent: 21 }
     },
     {
       id: 'scalePaperclip',
-      name: 'Échelle : trombone',
       targetText: '10^22',
-      flavor: 'l’équivalent d’un trombone en fer (~1 g)',
+      nameKey: 'scripts.appData.atomScale.trophies.scalePaperclip.name',
+      flavorKey: 'scripts.appData.atomScale.trophies.scalePaperclip.flavor',
       amount: { type: 'layer0', mantissa: 1, exponent: 22 }
     },
     {
       id: 'scaleCoin',
-      name: 'Échelle : pièce',
       targetText: '10^23',
-      flavor: 'la masse atomique d’une pièce de monnaie (~7,5 g)',
+      nameKey: 'scripts.appData.atomScale.trophies.scaleCoin.name',
+      flavorKey: 'scripts.appData.atomScale.trophies.scaleCoin.flavor',
       amount: { type: 'layer0', mantissa: 1, exponent: 23 }
     },
     {
       id: 'scaleApple',
-      name: 'Échelle : pomme',
       targetText: '10^25',
-      flavor: 'la masse atomique d’une pomme (~100 g)',
+      nameKey: 'scripts.appData.atomScale.trophies.scaleApple.name',
+      flavorKey: 'scripts.appData.atomScale.trophies.scaleApple.flavor',
       amount: { type: 'layer0', mantissa: 1, exponent: 25 }
     },
     {
       id: 'scaleSmartphone',
-      name: 'Échelle : smartphone',
       targetText: '3 × 10^25',
-      flavor: 'autant qu’un smartphone moderne (~180 g)',
+      nameKey: 'scripts.appData.atomScale.trophies.scaleSmartphone.name',
+      flavorKey: 'scripts.appData.atomScale.trophies.scaleSmartphone.flavor',
       amount: { type: 'layer0', mantissa: 3, exponent: 25 }
     },
     {
       id: 'scaleWaterLitre',
-      name: 'Échelle : litre d’eau',
       targetText: '10^26',
-      flavor: 'l’équivalent d’un litre d’eau (~300 g)',
+      nameKey: 'scripts.appData.atomScale.trophies.scaleWaterLitre.name',
+      flavorKey: 'scripts.appData.atomScale.trophies.scaleWaterLitre.flavor',
       amount: { type: 'layer0', mantissa: 1, exponent: 26 }
     },
     {
       id: 'scaleHuman',
-      name: 'Échelle : être humain',
       targetText: '7 × 10^27',
-      flavor: 'comparable à un humain de 70 kg',
+      nameKey: 'scripts.appData.atomScale.trophies.scaleHuman.name',
+      flavorKey: 'scripts.appData.atomScale.trophies.scaleHuman.flavor',
       amount: { type: 'layer0', mantissa: 7, exponent: 27 }
     },
     {
       id: 'scalePiano',
-      name: 'Échelle : piano',
       targetText: '10^29',
-      flavor: 'équivaut à un piano (~450 kg)',
+      nameKey: 'scripts.appData.atomScale.trophies.scalePiano.name',
+      flavorKey: 'scripts.appData.atomScale.trophies.scalePiano.flavor',
       amount: { type: 'layer0', mantissa: 1, exponent: 29 }
     },
     {
       id: 'scaleCar',
-      name: 'Échelle : voiture compacte',
       targetText: '10^30',
-      flavor: 'autant qu’une voiture compacte (~1,3 t)',
+      nameKey: 'scripts.appData.atomScale.trophies.scaleCar.name',
+      flavorKey: 'scripts.appData.atomScale.trophies.scaleCar.flavor',
       amount: { type: 'layer0', mantissa: 1, exponent: 30 }
     },
     {
       id: 'scaleElephant',
-      name: 'Échelle : éléphant',
       targetText: '3 × 10^31',
-      flavor: 'équivaut à un éléphant (~6 t)',
+      nameKey: 'scripts.appData.atomScale.trophies.scaleElephant.name',
+      flavorKey: 'scripts.appData.atomScale.trophies.scaleElephant.flavor',
       amount: { type: 'layer0', mantissa: 3, exponent: 31 }
     },
     {
       id: 'scaleBoeing747',
-      name: 'Échelle : Boeing 747',
       targetText: '10^33',
-      flavor: 'autant qu’un Boeing 747',
+      nameKey: 'scripts.appData.atomScale.trophies.scaleBoeing747.name',
+      flavorKey: 'scripts.appData.atomScale.trophies.scaleBoeing747.flavor',
       amount: { type: 'layer0', mantissa: 1, exponent: 33 }
     },
     {
       id: 'scalePyramid',
-      name: 'Échelle : pyramide de Khéops',
       targetText: '2 × 10^35',
-      flavor: 'la masse d’atomes de la grande pyramide de Khéops',
+      nameKey: 'scripts.appData.atomScale.trophies.scalePyramid.name',
+      flavorKey: 'scripts.appData.atomScale.trophies.scalePyramid.flavor',
       amount: { type: 'layer0', mantissa: 2, exponent: 35 }
     },
     {
       id: 'scaleAtmosphere',
-      name: 'Échelle : atmosphère terrestre',
       targetText: '2 × 10^44',
-      flavor: 'équivaut à l’atmosphère terrestre complète',
+      nameKey: 'scripts.appData.atomScale.trophies.scaleAtmosphere.name',
+      flavorKey: 'scripts.appData.atomScale.trophies.scaleAtmosphere.flavor',
       amount: { type: 'layer0', mantissa: 2, exponent: 44 }
     },
     {
       id: 'scaleOceans',
-      name: 'Échelle : océans terrestres',
       targetText: '10^47',
-      flavor: 'autant que tous les océans de la Terre',
+      nameKey: 'scripts.appData.atomScale.trophies.scaleOceans.name',
+      flavorKey: 'scripts.appData.atomScale.trophies.scaleOceans.flavor',
       amount: { type: 'layer0', mantissa: 1, exponent: 47 }
     },
     {
       id: 'scaleEarth',
-      name: 'Échelle : Terre',
       targetText: '10^50',
-      flavor: 'égale la masse atomique de la planète Terre',
+      nameKey: 'scripts.appData.atomScale.trophies.scaleEarth.name',
+      flavorKey: 'scripts.appData.atomScale.trophies.scaleEarth.flavor',
       amount: { type: 'layer0', mantissa: 1, exponent: 50 }
     },
     {
       id: 'scaleSun',
-      name: 'Échelle : Soleil',
       targetText: '10^57',
-      flavor: 'équivaut au Soleil',
+      nameKey: 'scripts.appData.atomScale.trophies.scaleSun.name',
+      flavorKey: 'scripts.appData.atomScale.trophies.scaleSun.flavor',
       amount: { type: 'layer0', mantissa: 1, exponent: 57 }
     },
     {
       id: 'scaleMilkyWay',
-      name: 'Échelle : Voie lactée',
       targetText: '10^69',
-      flavor: 'comparable à la Voie lactée entière',
+      nameKey: 'scripts.appData.atomScale.trophies.scaleMilkyWay.name',
+      flavorKey: 'scripts.appData.atomScale.trophies.scaleMilkyWay.flavor',
       amount: { type: 'layer0', mantissa: 1, exponent: 69 }
     },
     {
       id: 'scaleLocalGroup',
-      name: 'Échelle : Groupe local',
       targetText: '10^71',
-      flavor: 'autant que le Groupe local de galaxies',
+      nameKey: 'scripts.appData.atomScale.trophies.scaleLocalGroup.name',
+      flavorKey: 'scripts.appData.atomScale.trophies.scaleLocalGroup.flavor',
       amount: { type: 'layer0', mantissa: 1, exponent: 71 }
     },
     {
       id: 'scaleVirgoCluster',
-      name: 'Échelle : superamas de la Vierge',
       targetText: '10^74',
-      flavor: 'équivaut au superamas de la Vierge',
+      nameKey: 'scripts.appData.atomScale.trophies.scaleVirgoCluster.name',
+      flavorKey: 'scripts.appData.atomScale.trophies.scaleVirgoCluster.flavor',
       amount: { type: 'layer0', mantissa: 1, exponent: 74 }
     },
     {
       id: 'scaleObservableUniverse',
-      name: 'Échelle : univers observable',
       targetText: '10^80',
-      flavor: 'atteignez le total estimé d’atomes de l’univers observable',
+      nameKey: 'scripts.appData.atomScale.trophies.scaleObservableUniverse.name',
+      flavorKey: 'scripts.appData.atomScale.trophies.scaleObservableUniverse.flavor',
       amount: { type: 'layer0', mantissa: 1, exponent: 80 }
     }
   ];
+
+  const DEFAULT_ATOM_SCALE_TROPHY_DATA = DEFAULT_ATOM_SCALE_TROPHY_SPECS.map(({ nameKey, flavorKey, ...entry }) => ({
+    ...entry,
+    name: translate(nameKey),
+    flavor: translate(flavorKey)
+  }));
 
   const ATOM_SCALE_TROPHY_DATA = Array.isArray(global.ATOM_SCALE_TROPHY_DATA)
     ? global.ATOM_SCALE_TROPHY_DATA
@@ -177,9 +235,9 @@
     }
     const roundedInteger = Math.round(value);
     if (Math.abs(value - roundedInteger) <= 1e-9) {
-      return roundedInteger.toLocaleString('fr-FR');
+      return formatLocaleNumber(roundedInteger);
     }
-    return value.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return formatLocaleNumber(value, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
 
   function createFallbackAtomScaleTrophies() {
@@ -187,17 +245,24 @@
     return ATOM_SCALE_TROPHY_DATA.map((entry, index) => {
       const displayBonus = formatAtomScaleBonusValue(bonusPerTrophy);
       const displayTotal = formatAtomScaleBonusValue(1 + bonusPerTrophy);
+      const description = translate('scripts.appData.atomScale.trophies.description', {
+        target: entry.targetText,
+        flavor: entry.flavor
+      });
       return {
         id: entry.id,
         name: entry.name,
-        description: `Atteignez ${entry.targetText} atomes cumulés, ${entry.flavor}.`,
+        description,
         condition: {
           type: 'lifetimeAtoms',
           amount: entry.amount
         },
         reward: {
           trophyMultiplierAdd: bonusPerTrophy,
-          description: `Ajoute +${displayBonus} au Boost global sur la production manuelle et automatique (×${displayTotal} pour ce palier).`
+          description: translate('scripts.appData.atomScale.trophies.reward', {
+            bonus: displayBonus,
+            total: displayTotal
+          })
         },
         order: index
       };
@@ -205,46 +270,67 @@
   }
 
   const FALLBACK_MILESTONES = [
-    { amount: 100, text: 'Collectez 100 atomes pour débloquer la synthèse automatique.' },
-    { amount: 1_000, text: 'Atteignez 1 000 atomes pour améliorer vos gants quantiques.' },
-    { amount: 1_000_000, text: 'Atteignez 1 million d’atomes pour accéder aux surcadences.' },
-    { amount: { type: 'layer0', mantissa: 1, exponent: 8 }, text: 'Accumulez 10^8 atomes pour préparer la prochaine ère.' }
+    {
+      amount: 100,
+      text: translate('scripts.appData.milestones.autoSynthesis', {
+        amount: formatLocaleNumber(100)
+      })
+    },
+    {
+      amount: 1_000,
+      text: translate('scripts.appData.milestones.quantumGloves', {
+        amount: formatLocaleNumber(1_000)
+      })
+    },
+    {
+      amount: 1_000_000,
+      text: translate('scripts.appData.milestones.overclock', {
+        amount: formatLocaleNumber(1_000_000)
+      })
+    },
+    {
+      amount: { type: 'layer0', mantissa: 1, exponent: 8 },
+      text: translate('scripts.appData.milestones.nextEra', { amount: '10^8' })
+    }
   ];
 
   const FALLBACK_TROPHIES = [
     ...createFallbackAtomScaleTrophies(),
     {
       id: 'millionAtoms',
-      name: 'Ruée vers le million',
-      description: 'Accumulez un total d’un million d’atomes synthétisés.',
+      name: translate('scripts.appData.trophies.millionAtoms.name'),
+      description: translate('scripts.appData.trophies.millionAtoms.description'),
       condition: {
         type: 'lifetimeAtoms',
         amount: { type: 'number', value: 1_000_000 }
       },
       reward: {
         trophyMultiplierAdd: 0.5,
-        description: 'Ajoute +0,5 au Boost global sur la production manuelle et automatique (×1,50 une fois ce succès débloqué).'
+        description: translate('scripts.appData.trophies.millionAtoms.reward', {
+          bonus: formatAtomScaleBonusValue(0.5),
+          total: formatAtomScaleBonusValue(1.5)
+        })
       },
       order: 1000
     },
     {
       id: 'frenzyCollector',
-      name: 'Convergence frénétique',
-      description: 'Déclenchez 100 frénésies (APC et APS cumulés).',
+      name: translate('scripts.appData.trophies.frenzyCollector.name'),
+      description: translate('scripts.appData.trophies.frenzyCollector.description'),
       condition: {
         type: 'frenzyTotal',
         amount: 100
       },
       reward: {
         frenzyMaxStacks: 2,
-        description: 'Débloque la frénésie multiple : deux frénésies peuvent se cumuler.'
+        description: translate('scripts.appData.trophies.frenzyCollector.reward')
       },
       order: 1010
     },
     {
       id: 'frenzyMaster',
-      name: 'Tempête tri-phasée',
-      description: 'Déclenchez 1 000 frénésies cumulées.',
+      name: translate('scripts.appData.trophies.frenzyMaster.name'),
+      description: translate('scripts.appData.trophies.frenzyMaster.description'),
       condition: {
         type: 'frenzyTotal',
         amount: 1_000
@@ -252,7 +338,9 @@
       reward: {
         frenzyMaxStacks: 3,
         multiplier: { global: 1.05 },
-        description: 'Active la triple frénésie et ajoute un bonus global ×1,05.'
+        description: translate('scripts.appData.trophies.frenzyMaster.reward', {
+          multiplier: formatLocaleNumber(1.05, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+        })
       },
       order: 1020
     }

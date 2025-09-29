@@ -41,11 +41,11 @@ const MUSIC_FALLBACK_TRACKS = Array.isArray(APP_DATA.MUSIC_FALLBACK_TRACKS)
 
 const BRICK_SKIN_CHOICES = Object.freeze(['original', 'metallic', 'neon', 'pastels']);
 
-const BRICK_SKIN_TOAST_MESSAGES = Object.freeze({
-  original: 'Skin original appliqué.',
-  metallic: 'Skin Metallic appliqué.',
-  neon: 'Skin Néon appliqué.',
-  pastels: 'Skin Pastels appliqué.'
+const BRICK_SKIN_TOAST_KEYS = Object.freeze({
+  original: 'scripts.app.brickSkins.applied.original',
+  metallic: 'scripts.app.brickSkins.applied.metallic',
+  neon: 'scripts.app.brickSkins.applied.neon',
+  pastels: 'scripts.app.brickSkins.applied.pastels'
 });
 
 function normalizeBrickSkinSelection(rawValue) {
@@ -2654,20 +2654,20 @@ function updateMusicSelectOptions() {
   if (!tracks.length) {
     const option = document.createElement('option');
     option.value = '';
-    option.textContent = 'Aucune piste disponible';
+    option.textContent = t('scripts.app.music.noneAvailable');
     select.appendChild(option);
     select.disabled = true;
     return;
   }
   const noneOption = document.createElement('option');
   noneOption.value = '';
-  noneOption.textContent = 'Rien (aucune musique)';
+  noneOption.textContent = t('scripts.app.music.noneOption');
   select.appendChild(noneOption);
   tracks.forEach(track => {
     const option = document.createElement('option');
     option.value = track.id;
     option.textContent = track.placeholder
-      ? `${track.displayName} (fichier manquant)`
+      ? t('scripts.app.music.missingDisplay', { name: track.displayName })
       : track.displayName;
     option.dataset.placeholder = track.placeholder ? 'true' : 'false';
     select.appendChild(option);
@@ -2697,31 +2697,31 @@ function updateMusicStatus() {
   }
   const tracks = musicPlayer.getTracks();
   if (!tracks.length) {
-    status.textContent = 'Ajoutez vos fichiers audio dans Assets/Music pour activer la musique.';
+    status.textContent = t('scripts.app.music.addFilesHint');
     return;
   }
   const current = musicPlayer.getCurrentTrack();
   if (!current) {
     if (gameState.musicEnabled === false) {
-      status.textContent = 'Musique désactivée.';
+      status.textContent = t('scripts.app.music.disabled');
     } else {
-      status.textContent = 'Sélectionnez une piste pour lancer la musique.';
+      status.textContent = t('scripts.app.music.selectTrack');
     }
     return;
   }
   const playbackState = musicPlayer.getPlaybackState();
-  let message = `Lecture en boucle : ${current.displayName}`;
+  let message = t('scripts.app.music.looping', { track: current.displayName });
   if (current.placeholder) {
-    message += ' (fichier manquant)';
+    message += t('scripts.app.music.missingSuffix');
   }
   if (playbackState === 'unsupported') {
-    message += '. Lecture audio indisponible sur cet appareil.';
+    message += t('scripts.app.music.unsupportedSuffix');
   } else if (playbackState === 'error') {
-    message += '. Impossible de lire le fichier audio.';
+    message += t('scripts.app.music.errorSuffix');
   } else if (musicPlayer.isAwaitingUserGesture()) {
-    message += '. La musique démarre après votre première interaction.';
+    message += t('scripts.app.music.awaitingInteractionSuffix');
   } else if (playbackState === 'paused' || playbackState === 'idle') {
-    message += '. Lecture en pause.';
+    message += t('scripts.app.music.pausedSuffix');
   }
   status.textContent = message;
 }
@@ -2738,7 +2738,7 @@ function updateMusicVolumeControl() {
   slider.value = String(clamped);
   slider.setAttribute('aria-valuenow', String(clamped));
   slider.setAttribute('aria-valuetext', `${clamped}%`);
-  slider.title = `Volume musique : ${clamped}%`;
+  slider.title = t('scripts.app.music.volumeLabel', { value: clamped });
   const playbackState = musicPlayer.getPlaybackState();
   slider.disabled = playbackState === 'unsupported';
 }
@@ -3460,10 +3460,10 @@ function renderPeriodicTable() {
   if (!periodicElements.length) {
     const placeholder = document.createElement('p');
     placeholder.className = 'periodic-placeholder';
-    placeholder.textContent = 'Le tableau périodique sera bientôt disponible.';
+    placeholder.textContent = t('scripts.app.table.placeholder');
     elements.periodicTable.appendChild(placeholder);
     if (elements.collectionProgress) {
-      elements.collectionProgress.textContent = 'Collection en préparation';
+      elements.collectionProgress.textContent = t('scripts.app.collection.pending');
     }
     selectPeriodicElement(null);
     return;
@@ -3563,7 +3563,7 @@ function updateCollectionDisplay() {
     if (total > 0) {
       elements.collectionProgress.textContent = `Collection\u00a0: ${ownedCount} / ${total} éléments`;
     } else {
-      elements.collectionProgress.textContent = 'Collection en préparation';
+      elements.collectionProgress.textContent = t('scripts.app.collection.pending');
     }
   }
 
@@ -3577,7 +3577,7 @@ function updateCollectionDisplay() {
           : ratio.toFixed(2).replace('.', ',');
       elements.gachaOwnedSummary.textContent = `Collection\u00a0: ${ownedCount} / ${total} éléments (${formatted}\u00a0%)`;
     } else {
-      elements.gachaOwnedSummary.textContent = 'Collection en préparation';
+      elements.gachaOwnedSummary.textContent = t('scripts.app.collection.pending');
     }
   }
 
@@ -6818,7 +6818,7 @@ function updateShopAffordability() {
 
       if (capReached) {
         entry.quantityLabel.textContent = `x${baseQuantity}`;
-        entry.price.textContent = 'Limite atteinte';
+        entry.price.textContent = t('scripts.app.shop.limitReached');
         entry.button.disabled = true;
         entry.button.classList.remove('is-ready');
         const ariaLabel = `${def.name} a atteint son niveau maximum`;
@@ -6980,7 +6980,7 @@ function updateMilestone() {
       return;
     }
   }
-  elements.nextMilestone.textContent = 'Continuez à explorer des ordres de grandeur toujours plus vastes !';
+  elements.nextMilestone.textContent = t('scripts.app.shop.milestoneHint');
 }
 
 function updateGoalsUI() {
@@ -7216,8 +7216,8 @@ if (elements.brickSkinSelect) {
     }
     updateBrickSkinOption();
     saveGame();
-    const message = BRICK_SKIN_TOAST_MESSAGES[selection] || 'Skin mis à jour.';
-    showToast(message);
+    const messageKey = BRICK_SKIN_TOAST_KEYS[selection] || 'scripts.app.brickSkins.applied.generic';
+    showToast(t(messageKey));
   });
 }
 
@@ -7226,12 +7226,12 @@ if (elements.musicTrackSelect) {
     const selectedId = event.target.value;
     if (!selectedId) {
       musicPlayer.stop();
-      showToast('Musique coupée');
+      showToast(t('scripts.app.music.muted'));
       return;
     }
     const success = musicPlayer.playTrackById(selectedId);
     if (!success) {
-      showToast('Piste introuvable');
+      showToast(t('scripts.app.music.missing'));
       updateMusicStatus();
       return;
     }

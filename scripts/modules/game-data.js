@@ -1,5 +1,26 @@
 const CONFIG = typeof window !== 'undefined' && window.GAME_CONFIG ? window.GAME_CONFIG : {};
 
+const translate = (() => {
+  const translator = typeof globalThis !== 'undefined' && typeof globalThis.t === 'function'
+    ? globalThis.t.bind(globalThis)
+    : null;
+  if (translator) {
+    return translator;
+  }
+  return (key, params) => {
+    if (typeof key !== 'string' || !key) {
+      return '';
+    }
+    if (!params || typeof params !== 'object') {
+      return key;
+    }
+    return key.replace(/\{\s*([^\s{}]+)\s*\}/g, (match, token) => {
+      const value = params[token];
+      return value == null ? match : String(value);
+    });
+  };
+})();
+
 const DEFAULT_UPGRADE_MAX_LEVEL = (function resolveDefaultUpgradeMaxLevel() {
   const candidates = [
     CONFIG?.shop?.defaultMaxPurchase,
@@ -81,7 +102,7 @@ function normalizeFusionDefinition(entry, index = 0) {
   }
   const name = typeof entry.name === 'string' && entry.name.trim()
     ? entry.name.trim()
-    : `Fusion ${index + 1}`;
+    : translate('scripts.gameData.fusions.defaultName', { number: index + 1 });
   const description = typeof entry.description === 'string' ? entry.description.trim() : '';
   const inputSource = Array.isArray(entry.inputs)
     ? entry.inputs
@@ -843,18 +864,22 @@ const RAW_ELEMENT_GROUP_BONUS_GROUPS = (() => {
   return rawGroups;
 })();
 
-const CATEGORY_LABELS = {
-  'alkali-metal': 'métal alcalin',
-  'alkaline-earth-metal': 'métal alcalino-terreux',
-  'transition-metal': 'métal de transition',
-  'post-transition-metal': 'métal pauvre',
-  metalloid: 'métalloïde',
-  nonmetal: 'non-métal',
-  halogen: 'halogène',
-  'noble-gas': 'gaz noble',
-  lanthanide: 'lanthanide',
-  actinide: 'actinide'
+const CATEGORY_LABEL_KEYS = {
+  'alkali-metal': 'scripts.gameData.categories.alkaliMetal',
+  'alkaline-earth-metal': 'scripts.gameData.categories.alkalineEarthMetal',
+  'transition-metal': 'scripts.gameData.categories.transitionMetal',
+  'post-transition-metal': 'scripts.gameData.categories.postTransitionMetal',
+  metalloid: 'scripts.gameData.categories.metalloid',
+  nonmetal: 'scripts.gameData.categories.nonmetal',
+  halogen: 'scripts.gameData.categories.halogen',
+  'noble-gas': 'scripts.gameData.categories.nobleGas',
+  lanthanide: 'scripts.gameData.categories.lanthanide',
+  actinide: 'scripts.gameData.categories.actinide'
 };
+
+const CATEGORY_LABELS = Object.fromEntries(
+  Object.entries(CATEGORY_LABEL_KEYS).map(([key, messageKey]) => [key, translate(messageKey)])
+);
 
 const ELEMENT_GROUP_BONUS_CONFIG = (() => {
   const result = new Map();

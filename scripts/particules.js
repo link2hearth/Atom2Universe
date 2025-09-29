@@ -4,6 +4,56 @@
     ? GLOBAL_CONFIG.arcade.particules ?? {}
     : {};
 
+  const translate = (() => {
+    if (typeof globalThis !== 'undefined' && typeof globalThis.t === 'function') {
+      return globalThis.t.bind(globalThis);
+    }
+    return (key, params) => {
+      if (typeof key !== 'string' || !key) {
+        return '';
+      }
+      if (!params || typeof params !== 'object') {
+        return key;
+      }
+      return key.replace(/\{\s*([^\s{}]+)\s*\}/g, (match, token) => {
+        const value = params[token];
+        return value == null ? match : String(value);
+      });
+    };
+  })();
+
+  const FALLBACK_NUMBER_LOCALE = 'fr-FR';
+  const resolvedNumberLocale = (() => {
+    const navigatorLanguage = typeof navigator === 'object' && navigator
+      ? navigator.language ?? navigator.userLanguage
+      : null;
+    if (navigatorLanguage && typeof navigatorLanguage === 'string' && navigatorLanguage.trim()) {
+      return navigatorLanguage.trim();
+    }
+    const documentLanguage = typeof document === 'object'
+      && document
+      && document.documentElement
+      && typeof document.documentElement.lang === 'string'
+        ? document.documentElement.lang.trim()
+        : '';
+    if (documentLanguage) {
+      return documentLanguage;
+    }
+    return FALLBACK_NUMBER_LOCALE;
+  })();
+
+  const formatLocaleNumber = (value, options) => {
+    const numeric = Number(value);
+    if (!Number.isFinite(numeric)) {
+      return '0';
+    }
+    try {
+      return numeric.toLocaleString(resolvedNumberLocale, options);
+    } catch (error) {
+      return numeric.toLocaleString(FALLBACK_NUMBER_LOCALE, options);
+    }
+  };
+
   const readObject = (value, fallback = {}) => (value && typeof value === 'object' ? value : fallback);
   const readNumber = (value, fallback, { min, max, round } = {}) => {
     const numeric = typeof value === 'number' ? value : Number(value);
@@ -568,11 +618,20 @@
       min: readNumber(gravitonSpawnConfig.min, 0.15, { min: 0 }),
       max: readNumber(gravitonSpawnConfig.max, 0.5, { min: 0 })
     },
-    detectionMessage: readString(gravitonConfig.detectionMessage, 'Graviton détecté !'),
+    detectionMessage: readString(
+      gravitonConfig.detectionMessage,
+      translate('scripts.particules.graviton.detected')
+    ),
     detectionMessageDurationMs: readNumber(gravitonConfig.detectionMessageDurationMs, 2600, { min: 0 }),
-    dissipateMessage: readString(gravitonConfig.dissipateMessage, 'Le graviton s’est dissipé…'),
+    dissipateMessage: readString(
+      gravitonConfig.dissipateMessage,
+      translate('scripts.particules.graviton.dissipated')
+    ),
     dissipateMessageDurationMs: readNumber(gravitonConfig.dissipateMessageDurationMs, 2800, { min: 0 }),
-    captureMessage: readString(gravitonConfig.captureMessage, 'Graviton capturé ! Ticket spécial +1'),
+    captureMessage: readString(
+      gravitonConfig.captureMessage,
+      translate('scripts.particules.graviton.captured')
+    ),
     captureMessageDurationMs: readNumber(gravitonConfig.captureMessageDurationMs, 3600, { min: 0 })
   };
 
@@ -583,9 +642,15 @@
     requiredColors: readArray(combosConfig.requiredColors, ['red', 'green', 'blue']),
     powerUpRewards: readArray(combosConfig.powerUpRewards, ['laser', 'extend', 'multiball']),
     chainThreshold: readNumber(combosConfig.chainThreshold, 3, { min: 1, round: 'round' }),
-    bonusMessagePrefix: readString(combosConfig.bonusMessagePrefix, 'Bonus: '),
+    bonusMessagePrefix: readString(
+      combosConfig.bonusMessagePrefix,
+      translate('scripts.particules.combos.bonusPrefix')
+    ),
     bonusMessageDurationMs: readNumber(combosConfig.bonusMessageDurationMs, 2400, { min: 0 }),
-    quarkMessagePrefix: readString(combosConfig.quarkMessagePrefix, 'Combo quark ! '),
+    quarkMessagePrefix: readString(
+      combosConfig.quarkMessagePrefix,
+      translate('scripts.particules.combos.quarkPrefix')
+    ),
     quarkMessageDurationMs: readNumber(combosConfig.quarkMessageDurationMs, 3200, { min: 0 }),
     chainWindowMs: readNumber(combosConfig.chainWindowMs, 520, { min: 0 }),
     shockwave: {
@@ -616,7 +681,10 @@
       { min: 1 }
     ),
     chance: readNumber(lingerBonusConfig.chance, 0.1, { min: 0, max: 1 }),
-    message: readString(lingerBonusConfig.message, 'Multiballe bonus !'),
+    message: readString(
+      lingerBonusConfig.message,
+      translate('scripts.particules.lingerBonus.message')
+    ),
     messageDurationMs: readNumber(lingerBonusConfig.messageDurationMs, 2400, { min: 0 })
   };
 
@@ -653,11 +721,26 @@
     laserIntervalMs,
     ids: resolvedPowerUpIds,
     labels: {
-      [resolvedPowerUpIds.extend]: readString(labelsConfig.extend, 'Barre allongée'),
-      [resolvedPowerUpIds.multiball]: readString(labelsConfig.multiball, 'Multiballe'),
-      [resolvedPowerUpIds.laser]: readString(labelsConfig.laser, 'Tir laser'),
-      [resolvedPowerUpIds.speed]: readString(labelsConfig.speed, 'Accélération'),
-      [resolvedPowerUpIds.floor]: readString(labelsConfig.floor, 'Bouclier inférieur')
+      [resolvedPowerUpIds.extend]: readString(
+        labelsConfig.extend,
+        translate('scripts.particules.powerUps.extend')
+      ),
+      [resolvedPowerUpIds.multiball]: readString(
+        labelsConfig.multiball,
+        translate('scripts.particules.powerUps.multiball')
+      ),
+      [resolvedPowerUpIds.laser]: readString(
+        labelsConfig.laser,
+        translate('scripts.particules.powerUps.laser')
+      ),
+      [resolvedPowerUpIds.speed]: readString(
+        labelsConfig.speed,
+        translate('scripts.particules.powerUps.speed')
+      ),
+      [resolvedPowerUpIds.floor]: readString(
+        labelsConfig.floor,
+        translate('scripts.particules.powerUps.floor')
+      )
     },
     defaultVisual: mapVisual('default'),
     visuals: {
@@ -795,37 +878,88 @@
   const uiHudConfig = readObject(uiConfig.hud);
   settings.ui = {
     start: {
-      message: readString(uiStartConfig.message, 'Touchez ou cliquez la raquette pour guider la particule et détruire les briques quantiques.'),
-      buttonLabel: readString(uiStartConfig.buttonLabel, 'Commencer')
+      message: readString(
+        uiStartConfig.message,
+        translate('scripts.particules.ui.start.message')
+      ),
+      buttonLabel: readString(
+        uiStartConfig.buttonLabel,
+        translate('scripts.particules.ui.start.button')
+      )
     },
     pause: {
-      message: readString(uiPauseConfig.message, 'Partie en pause. Touchez la raquette pour continuer.'),
-      buttonLabel: readString(uiPauseConfig.buttonLabel, 'Reprendre')
+      message: readString(
+        uiPauseConfig.message,
+        translate('scripts.particules.ui.pause.message')
+      ),
+      buttonLabel: readString(
+        uiPauseConfig.buttonLabel,
+        translate('scripts.particules.ui.pause.button')
+      )
     },
     lifeLost: {
-      message: readString(uiLifeLostConfig.message, 'Particule perdue ! Touchez la raquette pour continuer.'),
-      buttonLabel: readString(uiLifeLostConfig.buttonLabel, 'Reprendre')
+      message: readString(
+        uiLifeLostConfig.message,
+        translate('scripts.particules.ui.lifeLost.message')
+      ),
+      buttonLabel: readString(
+        uiLifeLostConfig.buttonLabel,
+        translate('scripts.particules.ui.lifeLost.button')
+      )
     },
     levelCleared: {
-      template: readString(uiLevelClearedConfig.template, 'Niveau {level} terminé !{reward}'),
-      buttonLabel: readString(uiLevelClearedConfig.buttonLabel, 'Continuer'),
-      rewardTemplate: readString(uiLevelClearedConfig.rewardTemplate, ' {reward} obtenu !'),
-      noReward: readString(uiLevelClearedConfig.noReward, ' Aucun ticket cette fois.'),
+      template: readString(
+        uiLevelClearedConfig.template,
+        translate('scripts.particules.ui.levelCleared.template')
+      ),
+      buttonLabel: readString(
+        uiLevelClearedConfig.buttonLabel,
+        translate('scripts.particules.ui.levelCleared.button')
+      ),
+      rewardTemplate: readString(
+        uiLevelClearedConfig.rewardTemplate,
+        translate('scripts.particules.ui.levelCleared.reward')
+      ),
+      noReward: readString(
+        uiLevelClearedConfig.noReward,
+        translate('scripts.particules.ui.levelCleared.noReward')
+      ),
       speedBonusTemplate: readString(
         uiLevelClearedConfig.speedBonusTemplate,
-        ' Bonus vitesse : +{bonus} !'
+        translate('scripts.particules.ui.levelCleared.speedBonus')
       )
     },
     gameOver: {
-      withTickets: readString(uiGameOverConfig.withTickets, 'Partie terminée ! Tickets gagnés : {tickets}{bonus}.'),
-      withoutTickets: readString(uiGameOverConfig.withoutTickets, 'Partie terminée ! Aucun ticket gagné cette fois-ci.'),
-      buttonLabel: readString(uiGameOverConfig.buttonLabel, 'Rejouer')
+      withTickets: readString(
+        uiGameOverConfig.withTickets,
+        translate('scripts.particules.ui.gameOver.withTickets')
+      ),
+      withoutTickets: readString(
+        uiGameOverConfig.withoutTickets,
+        translate('scripts.particules.ui.gameOver.withoutTickets')
+      ),
+      buttonLabel: readString(
+        uiGameOverConfig.buttonLabel,
+        translate('scripts.particules.ui.gameOver.button')
+      )
     },
     hud: {
-      ticketSingular: readString(uiHudConfig.ticketSingular, 'ticket'),
-      ticketPlural: readString(uiHudConfig.ticketPlural, 'tickets'),
-      bonusTicketSingular: readString(uiHudConfig.bonusTicketSingular, 'ticket Mach3'),
-      bonusTicketPlural: readString(uiHudConfig.bonusTicketPlural, 'tickets Mach3')
+      ticketSingular: readString(
+        uiHudConfig.ticketSingular,
+        translate('scripts.particules.ui.hud.ticketSingular')
+      ),
+      ticketPlural: readString(
+        uiHudConfig.ticketPlural,
+        translate('scripts.particules.ui.hud.ticketPlural')
+      ),
+      bonusTicketSingular: readString(
+        uiHudConfig.bonusTicketSingular,
+        translate('scripts.particules.ui.hud.bonusTicketSingular')
+      ),
+      bonusTicketPlural: readString(
+        uiHudConfig.bonusTicketPlural,
+        translate('scripts.particules.ui.hud.bonusTicketPlural')
+      )
     }
   };
 
@@ -1005,13 +1139,13 @@
   const defaultTicketFormatter = value => {
     const numeric = Math.max(0, Math.floor(Number(value) || 0));
     const unit = numeric === 1 ? HUD_TICKET_SINGULAR : HUD_TICKET_PLURAL;
-    return `${numeric.toLocaleString('fr-FR')} ${unit}`;
+    return `${formatLocaleNumber(numeric)} ${unit}`;
   };
 
   const defaultBonusTicketFormatter = value => {
     const numeric = Math.max(0, Math.floor(Number(value) || 0));
     const unit = numeric === 1 ? HUD_BONUS_TICKET_SINGULAR : HUD_BONUS_TICKET_PLURAL;
-    return `${numeric.toLocaleString('fr-FR')} ${unit}`;
+    return `${formatLocaleNumber(numeric)} ${unit}`;
   };
 
   const randomChoice = list => (Array.isArray(list) && list.length > 0
@@ -2933,7 +3067,7 @@
       if (!this.overlay) return;
       const {
         message = '',
-        buttonLabel = 'Continuer',
+        buttonLabel = translate('scripts.particules.ui.overlay.defaultButton'),
         action = 'start'
       } = options;
       this.overlay.hidden = false;

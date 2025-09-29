@@ -1,49 +1,76 @@
 const DEFAULT_GACHA_TICKET_COST = 1;
 
+const translate = (() => {
+  const translator = typeof globalThis !== 'undefined' && typeof globalThis.t === 'function'
+    ? globalThis.t.bind(globalThis)
+    : null;
+  if (translator) {
+    return translator;
+  }
+  return (key, params) => {
+    if (typeof key !== 'string' || !key) {
+      return '';
+    }
+    if (!params || typeof params !== 'object') {
+      return key;
+    }
+    return key.replace(/\{\s*([^\s{}]+)\s*\}/g, (match, token) => {
+      const value = params[token];
+      return value == null ? match : String(value);
+    });
+  };
+})();
+
 const DEFAULT_GACHA_RARITIES = [
   {
     id: 'commun',
-    label: 'Commun cosmique',
-    description: 'Les briques fondamentales présentes dans la majorité des nébuleuses.',
+    labelKey: 'scripts.gacha.rarities.commun.label',
+    descriptionKey: 'scripts.gacha.rarities.commun.description',
     weight: 55,
     color: '#4f7ec2'
   },
   {
     id: 'essentiel',
-    label: 'Essentiel planétaire',
-    description: 'Éléments abondants dans les mondes rocheux et les atmosphères habitables.',
+    labelKey: 'scripts.gacha.rarities.essentiel.label',
+    descriptionKey: 'scripts.gacha.rarities.essentiel.description',
     weight: 20,
     color: '#4ba88c'
   },
   {
     id: 'stellaire',
-    label: 'Forge stellaire',
-    description: 'Alliages façonnés au coeur des étoiles et disséminés par les supernovæ.',
+    labelKey: 'scripts.gacha.rarities.stellaire.label',
+    descriptionKey: 'scripts.gacha.rarities.stellaire.description',
     weight: 12,
     color: '#8caf58'
   },
   {
     id: 'singulier',
-    label: 'Singularité minérale',
-    description: 'Cristaux recherchés, rarement concentrés au même endroit.',
+    labelKey: 'scripts.gacha.rarities.singulier.label',
+    descriptionKey: 'scripts.gacha.rarities.singulier.description',
     weight: 7,
     color: '#d08a54'
   },
   {
     id: 'mythique',
-    label: 'Mythe quantique',
-    description: 'Éléments légendaires aux propriétés extrêmes et insaisissables.',
+    labelKey: 'scripts.gacha.rarities.mythique.label',
+    descriptionKey: 'scripts.gacha.rarities.mythique.description',
     weight: 4,
     color: '#c46a9a'
   },
   {
     id: 'irreel',
-    label: 'Irréel',
-    description: 'Synthèses artificielles nées uniquement dans des accélérateurs.',
+    labelKey: 'scripts.gacha.rarities.irreel.label',
+    descriptionKey: 'scripts.gacha.rarities.irreel.description',
     weight: 2,
     color: '#7d6fc9'
   }
-];
+].map(entry => ({
+  id: entry.id,
+  weight: entry.weight,
+  color: entry.color,
+  label: translate(entry.labelKey),
+  description: translate(entry.descriptionKey)
+}));
 
 function sanitizeGachaRarities(rawRarities) {
   const base = Array.isArray(rawRarities) && rawRarities.length
@@ -106,13 +133,13 @@ const BASE_GACHA_RARITY_ID_SET = new Set(BASE_GACHA_RARITIES.map(entry => entry.
 
 const WEEKDAY_KEYS = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 
-const GACHA_FEATURED_LABELS_BY_DAY = Object.freeze({
-  monday: '+Singularité Minérale',
-  thursday: '+Singularité Minérale',
-  tuesday: '+Mythe Quantique',
-  friday: '+Mythe Quantique',
-  wednesday: '+Iréel',
-  saturday: '+Iréel'
+const GACHA_FEATURED_LABEL_KEYS_BY_DAY = Object.freeze({
+  monday: 'scripts.gacha.featured.monday',
+  thursday: 'scripts.gacha.featured.thursday',
+  tuesday: 'scripts.gacha.featured.tuesday',
+  friday: 'scripts.gacha.featured.friday',
+  wednesday: 'scripts.gacha.featured.wednesday',
+  saturday: 'scripts.gacha.featured.saturday'
 });
 
 function sanitizeWeeklyRarityWeights(rawWeights) {
@@ -213,7 +240,8 @@ function getGachaFeaturedLabelForDayKey(dayKey) {
   if (!dayKey) {
     return null;
   }
-  return GACHA_FEATURED_LABELS_BY_DAY[dayKey] ?? null;
+  const key = GACHA_FEATURED_LABEL_KEYS_BY_DAY[dayKey] ?? null;
+  return key ? t(key) : null;
 }
 
 function updateGachaFeaturedInfo(dayKey = WEEKDAY_KEYS[new Date().getDay()] ?? null) {
@@ -246,7 +274,7 @@ const INFO_BONUS_RARITIES = RARITY_IDS.length > 0
   : ['commun', 'essentiel', 'stellaire', 'singulier', 'mythique', 'irreel'];
 const INFO_BONUS_SUBTITLE = INFO_BONUS_RARITIES.length
   ? INFO_BONUS_RARITIES.map(id => RARITY_LABEL_MAP.get(id) || id).join(' · ')
-  : 'Raretés indisponibles';
+  : t('scripts.gacha.rarityProgress.unavailable');
 
 const rawTicketStarConfig = CONFIG.ticketStar && typeof CONFIG.ticketStar === 'object'
   ? CONFIG.ticketStar
@@ -1220,7 +1248,7 @@ function renderGachaRarityList() {
 
     const summary = document.createElement('p');
     summary.className = 'gacha-rarity__summary';
-    summary.textContent = 'Aucun élément';
+    summary.textContent = t('scripts.gacha.rarityProgress.empty');
 
     item.append(progress, summary);
     elements.gachaRarityList.appendChild(item);
@@ -1257,8 +1285,8 @@ function updateGachaRarityProgress() {
     const percent = total > 0 ? (owned / total) * 100 : 0;
     row.bar.style.width = `${percent}%`;
     row.summary.textContent = total > 0
-      ? `${owned} / ${total} éléments`
-      : 'Aucun élément';
+      ? t('scripts.gacha.rarityProgress.summary', { owned, total })
+      : t('scripts.gacha.rarityProgress.empty');
   });
 }
 
@@ -1356,7 +1384,9 @@ function buildFusionCard(definition) {
 
   const chance = document.createElement('p');
   chance.className = 'fusion-card__chance';
-  chance.textContent = `Chance de réussite : ${formatFusionChance(definition.successChance)}`;
+  chance.textContent = t('scripts.gacha.fusion.successChance', {
+    chance: formatFusionChance(definition.successChance)
+  });
 
   header.append(title, chance);
 
@@ -1391,7 +1421,7 @@ function buildFusionCard(definition) {
 
     const availability = document.createElement('span');
     availability.className = 'fusion-requirement__availability';
-    availability.textContent = 'Disponible : 0';
+    availability.textContent = t('scripts.gacha.fusion.availabilityInitial');
 
     item.append(symbol, name, count, availability);
     requirementList.appendChild(item);
@@ -1410,38 +1440,44 @@ function buildFusionCard(definition) {
   const button = document.createElement('button');
   button.type = 'button';
   button.className = 'fusion-card__button';
-  button.textContent = 'Tenter la fusion';
-  button.setAttribute('aria-label', `Tenter la fusion ${definition.name}`);
+  button.textContent = t('scripts.gacha.fusion.tryButton');
+  button.setAttribute('aria-label', t('scripts.gacha.fusion.tryButtonAria', {
+    name: definition.name
+  }));
   button.addEventListener('click', () => {
     handleFusionAttempt(definition.id);
   });
 
   const status = document.createElement('span');
   status.className = 'fusion-card__feedback fusion-card__status';
-  status.textContent = 'Vérification des ingrédients…';
+  status.textContent = t('scripts.gacha.fusion.checking');
 
   actions.append(button, status);
 
   const stats = document.createElement('p');
   stats.className = 'fusion-card__stats';
-  stats.textContent = 'Tentatives : 0 · Succès : 0';
+  stats.textContent = t('scripts.gacha.fusion.stats', { attempts: 0, successes: 0 });
 
   const bonusParts = [];
   if (definition.rewards.apcFlat) {
-    bonusParts.push(`+${definition.rewards.apcFlat.toLocaleString('fr-FR')} APC`);
+    bonusParts.push(t('scripts.gacha.fusion.apcBonus', {
+      value: definition.rewards.apcFlat.toLocaleString('fr-FR')
+    }));
   }
   if (definition.rewards.apsFlat) {
-    bonusParts.push(`+${definition.rewards.apsFlat.toLocaleString('fr-FR')} APS`);
+    bonusParts.push(t('scripts.gacha.fusion.apsBonus', {
+      value: definition.rewards.apsFlat.toLocaleString('fr-FR')
+    }));
   }
   const bonus = document.createElement('p');
   bonus.className = 'fusion-card__bonus';
   bonus.textContent = bonusParts.length
-    ? `Bonus par réussite : ${bonusParts.join(' · ')}`
-    : 'Aucun bonus défini';
+    ? t('scripts.gacha.fusion.successBonus', { bonus: bonusParts.join(' · ') })
+    : t('scripts.gacha.fusion.noBonus');
 
   const totalBonus = document.createElement('p');
   totalBonus.className = 'fusion-card__feedback fusion-card__total';
-  totalBonus.textContent = 'Bonus cumulé : —';
+  totalBonus.textContent = t('scripts.gacha.fusion.totalBonus', { bonus: '—' });
 
   card.append(bodyFragment, actions, stats, bonus, totalBonus);
 
@@ -1463,7 +1499,7 @@ function renderFusionList() {
   if (!FUSION_DEFS.length) {
     const empty = document.createElement('p');
     empty.className = 'fusion-empty';
-    empty.textContent = 'Aucune fusion disponible pour le moment.';
+    empty.textContent = t('scripts.gacha.fusion.empty');
     empty.setAttribute('role', 'listitem');
     elements.fusionList.appendChild(empty);
     return;
@@ -1476,7 +1512,7 @@ function renderFusionList() {
   });
   elements.fusionList.appendChild(fragment);
   if (elements.fusionLog && !elements.fusionLog.textContent.trim()) {
-    setFusionLog('Sélectionnez une recette pour tenter votre première fusion.');
+    setFusionLog(t('scripts.app.fusion.prompt'));
   }
   updateFusionUI();
 }
@@ -1491,14 +1527,20 @@ function updateFusionUI() {
       return;
     }
     const state = getFusionStateById(def.id);
-    card.stats.textContent = `Tentatives : ${state.attempts} · Succès : ${state.successes}`;
+    card.stats.textContent = t('scripts.gacha.fusion.stats', {
+      attempts: state.attempts,
+      successes: state.successes
+    });
     let canAttempt = true;
     card.requirements.forEach(requirement => {
       const entry = gameState.elements?.[requirement.elementId];
       const available = getElementCurrentCount(entry);
       const availableText = available.toLocaleString('fr-FR');
       const requiredText = requirement.requiredCount.toLocaleString('fr-FR');
-      requirement.availabilityLabel.textContent = `Disponible : ${availableText} / ${requiredText}`;
+      requirement.availabilityLabel.textContent = t('scripts.gacha.fusion.availabilityProgress', {
+        available: availableText,
+        required: requiredText
+      });
       if (available < requirement.requiredCount) {
         canAttempt = false;
       }
@@ -1506,18 +1548,24 @@ function updateFusionUI() {
     card.button.disabled = !canAttempt;
     card.button.setAttribute('aria-disabled', canAttempt ? 'false' : 'true');
     card.status.textContent = canAttempt
-      ? 'Ingrédients disponibles'
-      : 'Ressources insuffisantes';
+      ? t('scripts.gacha.fusion.statusReady')
+      : t('scripts.gacha.fusion.statusMissing');
     const totalParts = [];
     if (def.rewards.apcFlat) {
       const totalApc = def.rewards.apcFlat * state.successes;
-      totalParts.push(`+${totalApc.toLocaleString('fr-FR')} APC cumulés`);
+      totalParts.push(t('scripts.gacha.fusion.apcTotal', {
+        value: totalApc.toLocaleString('fr-FR')
+      }));
     }
     if (def.rewards.apsFlat) {
       const totalAps = def.rewards.apsFlat * state.successes;
-      totalParts.push(`+${totalAps.toLocaleString('fr-FR')} APS cumulés`);
+      totalParts.push(t('scripts.gacha.fusion.apsTotal', {
+        value: totalAps.toLocaleString('fr-FR')
+      }));
     }
-    card.totalBonus.textContent = `Bonus cumulé : ${totalParts.length ? totalParts.join(' · ') : '—'}`;
+    card.totalBonus.textContent = t('scripts.gacha.fusion.totalBonus', {
+      bonus: totalParts.length ? totalParts.join(' · ') : '—'
+    });
   });
 }
 
@@ -1527,8 +1575,8 @@ function handleFusionAttempt(fusionId) {
     return;
   }
   if (!canAttemptFusion(definition)) {
-    setFusionLog('Vous n’avez pas assez de ressources pour cette fusion.', 'failure');
-    showToast('Ressources insuffisantes pour cette fusion.');
+    setFusionLog(t('scripts.gacha.fusion.logMissingResources'), 'failure');
+    showToast(t('scripts.gacha.fusion.toastMissingResources'));
     return;
   }
 
@@ -1558,12 +1606,17 @@ function handleFusionAttempt(fusionId) {
   saveGame();
 
   if (success) {
-    const rewardText = rewardSummary.length ? rewardSummary.join(' · ') : 'Aucun bonus.';
-    setFusionLog(`Fusion ${definition.name} réussie ! Bonus obtenu : ${rewardText}`, 'success');
-    showToast('Fusion réussie !');
+    const rewardText = rewardSummary.length
+      ? rewardSummary.join(' · ')
+      : t('scripts.gacha.fusion.noRewardSummary');
+    setFusionLog(t('scripts.gacha.fusion.logSuccess', {
+      name: definition.name,
+      reward: rewardText
+    }), 'success');
+    showToast(t('scripts.gacha.fusion.toastSuccess'));
   } else {
-    setFusionLog(`La fusion ${definition.name} a échoué. Les éléments ont été consommés.`, 'failure');
-    showToast('Fusion échouée.');
+    setFusionLog(t('scripts.gacha.fusion.logFailure', { name: definition.name }), 'failure');
+    showToast(t('scripts.gacha.fusion.toastFailure'));
   }
 }
 
@@ -1611,7 +1664,7 @@ function renderGachaResult(outcome) {
   container.style.removeProperty('--rarity-color');
 
   if (!outcome || !Array.isArray(outcome.focus) || !outcome.focus.length) {
-    container.textContent = 'Synthèse indisponible pour le moment.';
+    container.textContent = t('scripts.gacha.results.unavailable');
     return;
   }
 
@@ -1637,17 +1690,19 @@ function renderGachaResult(outcome) {
 
     const rarity = document.createElement('span');
     rarity.className = 'gacha-result-card__rarity';
-    rarity.textContent = entry.rarity?.label || entry.rarity?.id || 'Rareté inconnue';
+    rarity.textContent = entry.rarity?.label || entry.rarity?.id || t('scripts.gacha.results.unknownRarity');
 
     const name = document.createElement('span');
     name.className = 'gacha-result-card__name';
-    const baseName = entry.elementDef.name || entry.elementDef.symbol || 'Élément inconnu';
+    const baseName = entry.elementDef.name || entry.elementDef.symbol || t('scripts.gacha.results.unknownElement');
     const symbol = entry.elementDef.symbol && entry.elementDef.name ? ` (${entry.elementDef.symbol})` : '';
     name.textContent = `${baseName}${symbol}`;
 
     const status = document.createElement('span');
     status.className = 'gacha-result-card__status';
-    status.textContent = entry.isNew ? 'NOUVEAU !' : 'Déjà possédé';
+    status.textContent = entry.isNew
+      ? t('scripts.gacha.results.newTag')
+      : t('scripts.gacha.results.duplicateTag');
 
     if (entry.count > 1) {
       const count = document.createElement('span');
@@ -1668,7 +1723,7 @@ function renderGachaResult(outcome) {
   }
 
   if (!grid.children.length) {
-    container.textContent = 'Synthèse indisponible pour le moment.';
+    container.textContent = t('scripts.gacha.results.unavailable');
     return;
   }
 
@@ -1677,17 +1732,21 @@ function renderGachaResult(outcome) {
   const drawCount = Math.max(1, Math.floor(Number(outcome.drawCount) || 0));
   const summary = document.createElement('p');
   summary.className = 'gacha-result__summary';
-  const drawLabel = drawCount > 1 ? `Tirage x${drawCount}` : 'Tirage x1';
+  const drawLabel = drawCount > 1
+    ? t('scripts.gacha.results.drawLabel', { count: drawCount })
+    : t('scripts.gacha.results.drawSingle');
   const duplicateCount = Number(outcome.duplicateCount) || 0;
   const summaryParts = [drawLabel];
   if (newCount > 0) {
     const newLabel = newCount === 1
-      ? '1 nouvel élément'
-      : `${newCount} nouveaux éléments`;
+      ? t('scripts.gacha.results.newSingle')
+      : t('scripts.gacha.results.newPlural', { count: newCount });
     summaryParts.push(newLabel);
   }
   if (duplicateCount > 0) {
-    const duplicateLabel = duplicateCount === 1 ? '1 doublon' : `${duplicateCount} doublons`;
+    const duplicateLabel = duplicateCount === 1
+      ? t('scripts.gacha.results.duplicateSingle')
+      : t('scripts.gacha.results.duplicatePlural', { count: duplicateCount });
     summaryParts.push(duplicateLabel);
   }
   summary.textContent = summaryParts.join(' · ');
@@ -1697,14 +1756,18 @@ function renderGachaResult(outcome) {
 function formatTicketLabel(count) {
   const numeric = Math.max(0, Math.floor(Number(count) || 0));
   const formatted = numeric.toLocaleString('fr-FR');
-  const unit = numeric === 1 ? 'ticket' : 'tickets';
+  const unit = numeric === 1
+    ? t('scripts.gacha.tickets.single')
+    : t('scripts.gacha.tickets.plural');
   return `${formatted} ${unit}`;
 }
 
 function formatBonusTicketLabel(count) {
   const numeric = Math.max(0, Math.floor(Number(count) || 0));
   const formatted = numeric.toLocaleString('fr-FR');
-  const unit = numeric === 1 ? 'ticket Mach3' : 'tickets Mach3';
+  const unit = numeric === 1
+    ? t('scripts.gacha.tickets.bonusSingle')
+    : t('scripts.gacha.tickets.bonusPlural');
   return `${formatted} ${unit}`;
 }
 
@@ -1803,34 +1866,47 @@ function updateGachaUI() {
   }
   updateArcadeTicketDisplay();
   if (elements.gachaTicketModeLabel) {
-    elements.gachaTicketModeLabel.textContent = `Tirage x${gachaRollMode}`;
+    const modeLabel = gachaRollMode > 1
+      ? t('scripts.gacha.controls.modeMulti', { count: gachaRollMode })
+      : t('scripts.gacha.controls.modeSingle');
+    elements.gachaTicketModeLabel.textContent = modeLabel;
   }
   if (elements.gachaTicketModeButton) {
-    const modeLabel = `Tirage x${gachaRollMode}`;
-    elements.gachaTicketModeButton.setAttribute('aria-label', `Basculer le mode de tirage (actuel\u00a0: ${modeLabel})`);
-    elements.gachaTicketModeButton.title = `Mode actuel\u00a0: ${modeLabel}`;
+    const modeLabel = gachaRollMode > 1
+      ? t('scripts.gacha.controls.modeMulti', { count: gachaRollMode })
+      : t('scripts.gacha.controls.modeSingle');
+    elements.gachaTicketModeButton.setAttribute('aria-label', t('scripts.gacha.controls.toggleModeAria', {
+      mode: modeLabel
+    }));
+    elements.gachaTicketModeButton.title = t('scripts.gacha.controls.toggleModeTitle', {
+      mode: modeLabel
+    });
   }
   if (elements.gachaSunButton) {
     const gachaFree = isDevKitGachaFree();
     const totalCost = gachaRollMode * GACHA_TICKET_COST;
     const affordable = gachaFree || available >= totalCost;
     const busy = gachaAnimationInProgress;
-    const costLabel = gachaFree ? 'Gratuit' : formatTicketLabel(totalCost);
-    const drawLabel = gachaRollMode > 1 ? `tirage cosmique x${gachaRollMode}` : 'tirage cosmique';
+    const costLabel = gachaFree ? t('scripts.app.shop.free') : formatTicketLabel(totalCost);
+    const drawLabel = gachaRollMode > 1
+      ? t('scripts.gacha.controls.drawMulti', { count: gachaRollMode })
+      : t('scripts.gacha.controls.drawSingleLabel');
     let label;
     if (busy) {
-      label = 'Tirage cosmique en cours';
+      label = t('scripts.gacha.controls.drawInProgress');
     } else if (gachaFree) {
-      label = `Déclencher un ${drawLabel} (gratuit)`;
+      label = t('scripts.gacha.controls.drawFree', { draw: drawLabel });
     } else if (affordable) {
-      label = `Déclencher un ${drawLabel}`;
+      label = t('scripts.gacha.controls.drawPaid', { draw: drawLabel });
     } else {
-      label = `Tickets insuffisants pour un ${drawLabel}`;
+      label = t('scripts.gacha.controls.drawLocked', { draw: drawLabel });
     }
     elements.gachaSunButton.classList.toggle('is-locked', !affordable || busy);
     elements.gachaSunButton.setAttribute('aria-disabled', !affordable || busy ? 'true' : 'false');
     elements.gachaSunButton.setAttribute('aria-label', label);
-    elements.gachaSunButton.title = gachaFree ? label : `${label} (${costLabel})`;
+    elements.gachaSunButton.title = gachaFree
+      ? label
+      : t('scripts.gacha.controls.drawTitle', { label, cost: costLabel });
     if (busy) {
       elements.gachaSunButton.disabled = true;
     } else if (elements.gachaSunButton.disabled) {
@@ -1892,7 +1968,7 @@ function initParticulesGame() {
       const gained = gainGachaTickets(reward, { unlockTicketStar: true });
       saveGame();
       const rewardLabel = formatTicketLabel(gained);
-      showToast(`+${rewardLabel} grâce à Particules !`);
+      showToast(t('scripts.gacha.arcade.reward', { reward: rewardLabel }));
     },
     onSpecialTicket: (count = 0) => {
       const reward = Math.max(0, Math.floor(Number(count) || 0));
@@ -1902,7 +1978,7 @@ function initParticulesGame() {
       const gained = gainBonusParticulesTickets(reward);
       saveGame();
       const label = formatBonusTicketLabel(gained);
-      showToast(`+${label} !`);
+      showToast(t('scripts.gacha.arcade.bonus', { reward: label }));
     }
   });
   updateArcadeTicketDisplay();
@@ -1922,7 +1998,9 @@ function performGachaRoll(count = 1) {
   const totalCost = drawCount * GACHA_TICKET_COST;
 
   if (!gachaFree && available < totalCost) {
-    showToast(`Pas assez de tickets de tirage (nécessaire\u00a0: ${formatTicketLabel(totalCost)}).`);
+    showToast(t('scripts.gacha.errors.notEnoughTickets', {
+      cost: formatTicketLabel(totalCost)
+    }));
     return null;
   }
 
@@ -1931,7 +2009,7 @@ function performGachaRoll(count = 1) {
     return Array.isArray(pool) && pool.length > 0;
   });
   if (!hasAvailableElements) {
-    showToast('Aucun élément disponible dans les chambres de synthèse.');
+    showToast(t('scripts.gacha.errors.noElements'));
     return null;
   }
 
@@ -1943,13 +2021,13 @@ function performGachaRoll(count = 1) {
   for (let rollIndex = 0; rollIndex < drawCount; rollIndex += 1) {
     const rarity = pickGachaRarity();
     if (!rarity) {
-      showToast('Aucun élément disponible dans les chambres de synthèse.');
+      showToast(t('scripts.gacha.errors.noElements'));
       break;
     }
 
     const elementDef = pickRandomElementFromRarity(rarity.id);
     if (!elementDef) {
-      showToast('Flux instable, impossible de matérialiser un élément.');
+      showToast(t('scripts.gacha.errors.instableFlux'));
       continue;
     }
 
@@ -2034,8 +2112,8 @@ function getGachaToastMessage(outcome) {
     const single = results[0];
     if (!single?.elementDef) return '';
     return single.isNew
-      ? `Nouvel élément obtenu : ${single.elementDef.name} !`
-      : `${single.elementDef.name} rejoint à nouveau votre collection.`;
+      ? t('scripts.gacha.toast.newSingle', { name: single.elementDef.name })
+      : t('scripts.gacha.toast.duplicateSingle', { name: single.elementDef.name });
   }
 
   const newCount = Number.isFinite(Number(outcome.newCount))
@@ -2043,7 +2121,7 @@ function getGachaToastMessage(outcome) {
     : results.reduce((sum, result) => sum + (result.isNew ? 1 : 0), 0);
 
   if (newCount > 1) {
-    return `${newCount} nouveaux éléments découverts !`;
+    return t('scripts.gacha.toast.newMultiple', { count: newCount });
   }
 
   if (newCount === 1) {
@@ -2053,7 +2131,7 @@ function getGachaToastMessage(outcome) {
     const rawNew = results.find(result => result.isNew && result.elementDef);
     const target = focusNew || rawNew;
     if (target?.elementDef) {
-      return `Nouvel élément obtenu : ${target.elementDef.name} !`;
+      return t('scripts.gacha.toast.newSingle', { name: target.elementDef.name });
     }
   }
 
@@ -2063,14 +2141,17 @@ function getGachaToastMessage(outcome) {
   if (focusEntry?.elementDef) {
     const rarityLabel = focusEntry.rarity?.label || focusEntry.rarity?.id;
     if (rarityLabel) {
-      return `${focusEntry.elementDef.name} (${rarityLabel}) rejoint à nouveau votre collection.`;
+      return t('scripts.gacha.toast.duplicateWithRarity', {
+        name: focusEntry.elementDef.name,
+        rarity: rarityLabel
+      });
     }
-    return `${focusEntry.elementDef.name} rejoint à nouveau votre collection.`;
+    return t('scripts.gacha.toast.duplicateSingle', { name: focusEntry.elementDef.name });
   }
 
   const fallback = results[0];
   if (fallback?.elementDef) {
-    return `${fallback.elementDef.name} rejoint à nouveau votre collection.`;
+    return t('scripts.gacha.toast.duplicateSingle', { name: fallback.elementDef.name });
   }
 
   return '';
@@ -2805,7 +2886,9 @@ function collectTicketStar(event) {
     return;
   }
   const gained = gainGachaTickets(TICKET_STAR_CONFIG.rewardTickets);
-  showToast(gained === 1 ? 'Ticket de tirage obtenu !' : `+${gained} tickets de tirage !`);
+  showToast(gained === 1
+    ? t('scripts.gacha.ticketStar.single')
+    : t('scripts.gacha.ticketStar.multiple', { count: gained }));
   if (ticketStarState.element && ticketStarState.element.parentNode) {
     ticketStarState.element.remove();
   }

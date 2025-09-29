@@ -470,6 +470,19 @@
       },
       "themeUpdated": "Thème mis à jour",
       "music": {
+        "noneAvailable": "Aucune piste disponible",
+        "noneOption": "Rien (aucune musique)",
+        "addFilesHint": "Ajoutez vos fichiers audio dans Assets/Music pour activer la musique.",
+        "disabled": "Musique désactivée.",
+        "selectTrack": "Sélectionnez une piste pour lancer la musique.",
+        "missingDisplay": "{{name}} (fichier manquant)",
+        "missingSuffix": " (fichier manquant)",
+        "unsupportedSuffix": ". Lecture audio indisponible sur cet appareil.",
+        "errorSuffix": ". Impossible de lire le fichier audio.",
+        "awaitingInteractionSuffix": ". La musique démarre après votre première interaction.",
+        "pausedSuffix": ". Lecture en pause.",
+        "looping": "Lecture en boucle : {{track}}",
+        "volumeLabel": "Volume musique : {{value}}%",
         "muted": "Musique coupée",
         "missing": "Piste introuvable",
         "fileMissing": "Le fichier de cette piste est manquant."
@@ -486,6 +499,12 @@
       },
       "fusion": {
         "prompt": "Sélectionnez une recette pour tenter votre première fusion."
+      },
+      "table": {
+        "placeholder": "Le tableau périodique sera bientôt disponible."
+      },
+      "collection": {
+        "pending": "Collection en préparation"
       },
       "errors": {
         "save": "Erreur de sauvegarde",
@@ -530,6 +549,283 @@
         "friday": "+Mythe Quantique",
         "wednesday": "+Iréel",
         "saturday": "+Iréel"
+      },
+      "rarityProgress": {
+        "unavailable": "Raretés indisponibles",
+        "empty": "Aucun élément",
+        "summary": "{{owned}} / {{total}} éléments"
+      },
+      "fusion": {
+        "successChance": "Chance de réussite : {{chance}}",
+        "availabilityInitial": "Disponible : 0",
+        "tryButton": "Tenter la fusion",
+        "tryButtonAria": "Tenter la fusion {{name}}",
+        "checking": "Vérification des ingrédients…",
+        "stats": "Tentatives : {{attempts}} · Succès : {{successes}}",
+        "successBonus": "Bonus par réussite : {{bonus}}",
+        "noBonus": "Aucun bonus défini",
+        "totalBonus": "Bonus cumulé : {{bonus}}",
+        "apcBonus": "+{{value}} APC",
+        "apsBonus": "+{{value}} APS",
+        "apcTotal": "+{{value}} APC cumulés",
+        "apsTotal": "+{{value}} APS cumulés",
+        "availabilityProgress": "Disponible : {{available}} / {{required}}",
+        "statusReady": "Ingrédients disponibles",
+        "statusMissing": "Ressources insuffisantes",
+        "logMissingResources": "Vous n’avez pas assez de ressources pour cette fusion.",
+        "toastMissingResources": "Ressources insuffisantes pour cette fusion.",
+        "noRewardSummary": "Aucun bonus.",
+        "logSuccess": "Fusion {{name}} réussie ! Bonus obtenu : {{reward}}",
+        "toastSuccess": "Fusion réussie !",
+        "logFailure": "La fusion {{name}} a échoué. Les éléments ont été consommés.",
+        "toastFailure": "Fusion échouée."
+      },
+      "results": {
+        "unavailable": "Synthèse indisponible pour le moment.",
+        "unknownRarity": "Rareté inconnue",
+        "unknownElement": "Élément inconnu",
+        "newTag": "NOUVEAU !",
+        "duplicateTag": "Déjà possédé",
+        "drawLabel": "Tirage x{{count}}",
+        "drawSingle": "Tirage x1",
+        "newSingle": "1 nouvel élément",
+        "newPlural": "{{count}} nouveaux éléments",
+        "duplicateSingle": "1 doublon",
+        "duplicatePlural": "{{count}} doublons"
+      },
+      "tickets": {
+        "single": "ticket",
+        "plural": "tickets",
+        "bonusSingle": "ticket Mach3",
+        "bonusPlural": "tickets Mach3"
+      },
+      "controls": {
+        "modeSingle": "Tirage x1",
+        "modeMulti": "Tirage x{{count}}",
+        "toggleModeAria": "Basculer le mode de tirage (actuel\u00a0: {{mode}})",
+        "toggleModeTitle": "Mode actuel\u00a0: {{mode}}",
+        "drawMulti": "tirage cosmique x{{count}}",
+        "drawSingleLabel": "tirage cosmique",
+        "drawInProgress": "Tirage cosmique en cours",
+        "drawFree": "Déclencher un {{draw}} (gratuit)",
+        "drawPaid": "Déclencher un {{draw}}",
+        "drawLocked": "Tickets insuffisants pour un {{draw}}",
+        "drawTitle": "{{label}} ({{cost}})"
+      },
+      "arcade": {
+        "reward": "+{{reward}} grâce à Particules !",
+        "bonus": "+{{reward}} !"
+      },
+      "errors": {
+        "notEnoughTickets": "Pas assez de tickets de tirage (nécessaire\u00a0: {{cost}}).",
+        "noElements": "Aucun élément disponible dans les chambres de synthèse.",
+        "instableFlux": "Flux instable, impossible de matérialiser un élément."
+      },
+      "toast": {
+        "newSingle": "Nouvel élément obtenu : {{name}} !",
+        "duplicateSingle": "{{name}} rejoint à nouveau votre collection.",
+        "newMultiple": "{{count}} nouveaux éléments découverts !",
+        "duplicateWithRarity": "{{name}} ({{rarity}}) rejoint à nouveau votre collection."
+      },
+      "ticketStar": {
+        "single": "Ticket de tirage obtenu !",
+        "multiple": "+{{count}} tickets de tirage !"
+      }
+    },
+    "appData": {
+      "atomScale": {
+        "trophies": {
+          "description": "Atteignez {target} atomes cumulés, {flavor}.",
+          "reward": "Ajoute +{bonus} au Boost global sur la production manuelle et automatique (×{total} pour ce palier).",
+          "scaleHumanCell": {
+            "name": "Échelle : cellule humaine",
+            "flavor": "l’équivalent d’une cellule humaine « moyenne »"
+          },
+          "scaleSandGrain": {
+            "name": "Échelle : grain de sable",
+            "flavor": "la masse d’un grain de sable (~1 mm)"
+          },
+          "scaleAnt": {
+            "name": "Échelle : fourmi",
+            "flavor": "comparable à une fourmi (~5 mg)"
+          },
+          "scaleWaterDrop": {
+            "name": "Échelle : goutte d’eau",
+            "flavor": "la quantité d’atomes contenue dans une goutte d’eau de 0,05 mL"
+          },
+          "scalePaperclip": {
+            "name": "Échelle : trombone",
+            "flavor": "l’équivalent d’un trombone en fer (~1 g)"
+          },
+          "scaleCoin": {
+            "name": "Échelle : pièce",
+            "flavor": "la masse atomique d’une pièce de monnaie (~7,5 g)"
+          },
+          "scaleApple": {
+            "name": "Échelle : pomme",
+            "flavor": "la masse atomique d’une pomme (~100 g)"
+          },
+          "scaleSmartphone": {
+            "name": "Échelle : smartphone",
+            "flavor": "autant qu’un smartphone moderne (~180 g)"
+          },
+          "scaleWaterLitre": {
+            "name": "Échelle : litre d’eau",
+            "flavor": "l’équivalent d’un litre d’eau (~300 g)"
+          },
+          "scaleHuman": {
+            "name": "Échelle : être humain",
+            "flavor": "comparable à un humain de 70 kg"
+          },
+          "scalePiano": {
+            "name": "Échelle : piano",
+            "flavor": "équivaut à un piano (~450 kg)"
+          },
+          "scaleCar": {
+            "name": "Échelle : voiture compacte",
+            "flavor": "autant qu’une voiture compacte (~1,3 t)"
+          },
+          "scaleElephant": {
+            "name": "Échelle : éléphant",
+            "flavor": "équivaut à un éléphant (~6 t)"
+          },
+          "scaleBoeing747": {
+            "name": "Échelle : Boeing 747",
+            "flavor": "autant qu’un Boeing 747"
+          },
+          "scalePyramid": {
+            "name": "Échelle : pyramide de Khéops",
+            "flavor": "la masse d’atomes de la grande pyramide de Khéops"
+          },
+          "scaleAtmosphere": {
+            "name": "Échelle : atmosphère terrestre",
+            "flavor": "équivaut à l’atmosphère terrestre complète"
+          },
+          "scaleOceans": {
+            "name": "Échelle : océans terrestres",
+            "flavor": "autant que tous les océans de la Terre"
+          },
+          "scaleEarth": {
+            "name": "Échelle : Terre",
+            "flavor": "égale la masse atomique de la planète Terre"
+          },
+          "scaleSun": {
+            "name": "Échelle : Soleil",
+            "flavor": "équivaut au Soleil"
+          },
+          "scaleMilkyWay": {
+            "name": "Échelle : Voie lactée",
+            "flavor": "comparable à la Voie lactée entière"
+          },
+          "scaleLocalGroup": {
+            "name": "Échelle : Groupe local",
+            "flavor": "autant que le Groupe local de galaxies"
+          },
+          "scaleVirgoCluster": {
+            "name": "Échelle : superamas de la Vierge",
+            "flavor": "équivaut au superamas de la Vierge"
+          },
+          "scaleObservableUniverse": {
+            "name": "Échelle : univers observable",
+            "flavor": "atteignez le total estimé d’atomes de l’univers observable"
+          }
+        }
+      },
+      "milestones": {
+        "autoSynthesis": "Collectez {amount} atomes pour débloquer la synthèse automatique.",
+        "quantumGloves": "Atteignez {amount} atomes pour améliorer vos gants quantiques.",
+        "overclock": "Atteignez {amount} atomes pour accéder aux surcadences.",
+        "nextEra": "Accumulez {amount} atomes pour préparer la prochaine ère."
+      },
+      "trophies": {
+        "millionAtoms": {
+          "name": "Ruée vers le million",
+          "description": "Accumulez un total d’un million d’atomes synthétisés.",
+          "reward": "Ajoute +{bonus} au Boost global sur la production manuelle et automatique (×{total} une fois ce succès débloqué)."
+        },
+        "frenzyCollector": {
+          "name": "Convergence frénétique",
+          "description": "Déclenchez 100 frénésies (APC et APS cumulés).",
+          "reward": "Débloque la frénésie multiple : deux frénésies peuvent se cumuler."
+        },
+        "frenzyMaster": {
+          "name": "Tempête tri-phasée",
+          "description": "Déclenchez 1 000 frénésies cumulées.",
+          "reward": "Active la triple frénésie et ajoute un bonus global ×{multiplier}."
+        }
+      }
+    },
+    "gameData": {
+      "fusions": {
+        "defaultName": "Fusion {number}"
+      },
+      "categories": {
+        "alkaliMetal": "métal alcalin",
+        "alkalineEarthMetal": "métal alcalino-terreux",
+        "transitionMetal": "métal de transition",
+        "postTransitionMetal": "métal pauvre",
+        "metalloid": "métalloïde",
+        "nonmetal": "non-métal",
+        "halogen": "halogène",
+        "nobleGas": "gaz noble",
+        "lanthanide": "lanthanide",
+        "actinide": "actinide"
+      }
+    },
+    "particules": {
+      "graviton": {
+        "detected": "Graviton détecté !",
+        "dissipated": "Le graviton s’est dissipé…",
+        "captured": "Graviton capturé ! Ticket spécial +1"
+      },
+      "combos": {
+        "bonusPrefix": "Bonus: ",
+        "quarkPrefix": "Combo quark ! "
+      },
+      "lingerBonus": {
+        "message": "Multiballe bonus !"
+      },
+      "powerUps": {
+        "extend": "Barre allongée",
+        "multiball": "Multiballe",
+        "laser": "Tir laser",
+        "speed": "Accélération",
+        "floor": "Bouclier inférieur"
+      },
+      "ui": {
+        "start": {
+          "message": "Touchez ou cliquez la raquette pour guider la particule et détruire les briques quantiques.",
+          "button": "Commencer"
+        },
+        "pause": {
+          "message": "Partie en pause. Touchez la raquette pour continuer.",
+          "button": "Reprendre"
+        },
+        "lifeLost": {
+          "message": "Particule perdue ! Touchez la raquette pour continuer.",
+          "button": "Reprendre"
+        },
+        "levelCleared": {
+          "template": "Niveau {level} terminé !{reward}",
+          "button": "Continuer",
+          "reward": " {reward} obtenu !",
+          "noReward": " Aucun ticket cette fois.",
+          "speedBonus": " Bonus vitesse : +{bonus} !"
+        },
+        "gameOver": {
+          "withTickets": "Partie terminée ! Tickets gagnés : {tickets}{bonus}.",
+          "withoutTickets": "Partie terminée ! Aucun ticket gagné cette fois-ci.",
+          "button": "Rejouer"
+        },
+        "hud": {
+          "ticketSingular": "ticket",
+          "ticketPlural": "tickets",
+          "bonusTicketSingular": "ticket Mach3",
+          "bonusTicketPlural": "tickets Mach3"
+        },
+        "overlay": {
+          "defaultButton": "Continuer"
+        }
       }
     },
     "info": {
@@ -553,6 +849,36 @@
         "requireUnique": "minimum {{count}} {{unit}}",
         "requireFull": "collection complète requise",
         "rarityAmplify": "Amplifie {{rarity}} : {{effects}}"
+      },
+      "collections": {
+        "complete": "Famille complète",
+        "inProgress": "Famille en cours"
+      },
+      "sections": {
+        "activeBoosts": "Boosts actifs",
+        "specialEffects": "Effets spéciaux",
+        "inactiveBonuses": "Bonus inactifs"
+      },
+      "shop": {
+        "noneAvailable": "Aucune amélioration disponible.",
+        "level": "Niveau {{level}}",
+        "notPurchased": "Non acheté",
+        "bonus": {
+          "apcFlat": "APC +",
+          "apsFlat": "APS +",
+          "apcMult": "APC ×",
+          "apsMult": "APS ×"
+        },
+        "pendingThreshold": "Bonus en attente de seuil.",
+        "locked": "Achetez cette amélioration pour activer ses effets."
+      }
+    },
+    "metaux": {
+      "timer": {
+        "max": "Max {{value}}"
+      },
+      "session": {
+        "start": "Nouvelle session : enchaînez les alliages !"
       }
     }
   }
