@@ -816,18 +816,18 @@
         },
         "frenzyCollector": {
           "name": "Convergence frénétique",
-          "description": "Déclenchez 100 frénésies (APC et APS cumulés).",
-          "reward": "Débloque la frénésie multiple : deux frénésies peuvent se cumuler."
+          "description": "Déclenchez un total de 100 frénésies (APC et APS cumulés).",
+          "reward": "Débloque la frénésie multiple : deux frénésies peuvent se cumuler simultanément."
         },
         "frenzyMaster": {
           "name": "Tempête tri-phasée",
-          "description": "Déclenchez 1 000 frénésies cumulées.",
+          "description": "Déclenchez un total de 1 000 frénésies.",
           "reward": "Active la triple frénésie et ajoute un bonus global ×{multiplier}."
         },
         "ticketHarvester": {
           "name": "Collecteur d’étoiles",
           "description": "Complétez les collections Commun cosmique et Essentiel planétaire.",
-          "reward": "Sur l’écran principal, les étoiles à tickets se récoltent seules après 3 secondes."
+          "reward": "Sur l’écran principal, les étoiles à tickets se récoltent automatiquement au bout de 3 secondes."
         },
         "alloyMastery": {
           "name": "Maîtres des alliages",

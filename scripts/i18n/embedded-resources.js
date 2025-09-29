@@ -815,18 +815,18 @@
             },
             "frenzyCollector": {
               "name": "Convergence frénétique",
-              "description": "Déclenchez 100 frénésies (APC et APS cumulés).",
-              "reward": "Débloque la frénésie multiple : deux frénésies peuvent se cumuler."
+              "description": "Déclenchez un total de 100 frénésies (APC et APS cumulés).",
+              "reward": "Débloque la frénésie multiple : deux frénésies peuvent se cumuler simultanément."
             },
             "frenzyMaster": {
               "name": "Tempête tri-phasée",
-              "description": "Déclenchez 1 000 frénésies cumulées.",
+              "description": "Déclenchez un total de 1 000 frénésies.",
               "reward": "Active la triple frénésie et ajoute un bonus global ×{multiplier}."
             },
             "ticketHarvester": {
               "name": "Collecteur d’étoiles",
               "description": "Complétez les collections Commun cosmique et Essentiel planétaire.",
-              "reward": "Sur l’écran principal, les étoiles à tickets se récoltent seules après 3 secondes."
+              "reward": "Sur l’écran principal, les étoiles à tickets se récoltent automatiquement au bout de 3 secondes."
             },
             "alloyMastery": {
               "name": "Maîtres des alliages",
@@ -1775,23 +1775,23 @@
               "reward": "Adds +{bonus} to the global manual and automatic production boost (×{total} once unlocked)."
             },
             "frenzyCollector": {
-              "name": "Frenzied Convergence",
-              "description": "Trigger 100 frenzies (APC and APS combined).",
-              "reward": "Unlocks multi-frenzy: two frenzies can stack."
+              "name": "Frenetic Convergence",
+              "description": "Trigger a total of 100 frenzies (APC and APS combined).",
+              "reward": "Unlocks multi-frenzy: up to two frenzies can overlap."
             },
             "frenzyMaster": {
               "name": "Tri-Phase Tempest",
-              "description": "Trigger 1,000 total frenzies.",
-              "reward": "Activates triple frenzy and adds a global ×{multiplier} bonus."
+              "description": "Trigger a cumulative total of 1,000 frenzies.",
+              "reward": "Activates triple frenzy and grants a global ×{multiplier} bonus."
             },
             "ticketHarvester": {
               "name": "Star Collector",
-              "description": "Complete the Cosmic Common and Planetary Essential collections.",
-              "reward": "On the main screen, ticket stars collect themselves after 3 seconds."
+              "description": "Complete both the Cosmic Common and Planetary Essential collections.",
+              "reward": "On the main screen, ticket stars auto-collect after 3 seconds."
             },
             "alloyMastery": {
-              "name": "Alloy Masters",
-              "description": "Complete every available metal alloy fusion.",
+              "name": "Alloy Mastery",
+              "description": "Successfully perform every available metal alloy fusion.",
               "reward": "Adds +10 to the trophy multiplier."
             }
           }
