@@ -1863,12 +1863,26 @@ const elements = {
 function getOptionsWelcomeCardCopy() {
   const api = getI18nApi();
   if (api && typeof api.getResource === 'function') {
-    const resource = api.getResource('index.uiText.options.welcomeCard');
-    if (resource && typeof resource === 'object') {
-      return resource;
+    const resourceKeys = [
+      'config.uiText.options.welcomeCard',
+      'index.uiText.options.welcomeCard'
+    ];
+    for (const key of resourceKeys) {
+      const resource = api.getResource(key);
+      if (resource && typeof resource === 'object') {
+        return resource;
+      }
     }
   }
   return CONFIG_OPTIONS_WELCOME_CARD;
+}
+
+function translateWelcomeCardString(key, fallback) {
+  const preferred = translateOrDefault(`config.uiText.options.welcomeCard.${key}`, null);
+  if (typeof preferred === 'string' && preferred.trim()) {
+    return preferred;
+  }
+  return translateOrDefault(`index.uiText.options.welcomeCard.${key}`, fallback);
 }
 
 function extractWelcomeIntroParagraphs(source) {
@@ -1935,7 +1949,7 @@ function renderOptionsWelcomeContent() {
       : 'Bienvenue';
     const titleText = copy && typeof copy.title === 'string' && copy.title.trim()
       ? copy.title.trim()
-      : translateOrDefault('index.uiText.options.welcomeCard.title', fallbackTitle);
+      : translateWelcomeCardString('title', fallbackTitle);
     elements.optionsWelcomeTitle.textContent = titleText;
   }
 
@@ -1946,7 +1960,7 @@ function renderOptionsWelcomeContent() {
     const fallbackParagraphs = extractWelcomeIntroParagraphs(fallbackCopy);
     let paragraphs = extractWelcomeIntroParagraphs(copy);
     if (!paragraphs.length) {
-      const translatedIntro = translateOrDefault('index.uiText.options.welcomeCard.intro', '');
+      const translatedIntro = translateWelcomeCardString('intro', '');
       if (translatedIntro) {
         paragraphs = [translatedIntro];
       } else if (fallbackParagraphs.length) {
