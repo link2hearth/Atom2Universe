@@ -15,17 +15,21 @@
 <body class="theme-dark">
   <header class="app-header">
     <div class="header-main">
-      <button
-        class="brand brand-button brand--locked"
-        id="brandPortal"
-        type="button"
-        disabled
-        aria-disabled="true"
-      >
+      <button class="brand brand-button" id="brandPortal" type="button">
         Atom2Univers
       </button>
       <nav class="nav-menu" aria-label="Navigation principale">
-        <button class="nav-button active" data-target="game">Atoms</button>
+        <button
+          class="nav-button"
+          data-target="arcade"
+          id="navArcadeButton"
+          hidden
+          aria-hidden="true"
+          disabled
+          aria-disabled="true"
+        >
+          Particules
+        </button>
         <button
           class="nav-button"
           data-target="shop"

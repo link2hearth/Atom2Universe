@@ -539,6 +539,10 @@ body.theme-neon .status-bar {
   box-shadow: 0 8px 16px rgba(0,0,0,0.32);
 }
 
+.nav-button--pulse {
+  animation: brandPortalPulse 1.4s ease-in-out forwards;
+}
+
 .nav-button.active {
   background: var(--accent);
   color: #05070c;

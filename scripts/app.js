@@ -1433,6 +1433,7 @@ function evaluateTrophies() {
 const elements = {
   brandPortal: document.getElementById('brandPortal'),
   navButtons: document.querySelectorAll('.nav-button'),
+  navArcadeButton: document.getElementById('navArcadeButton'),
   navShopButton: document.querySelector('.nav-button[data-target="shop"]'),
   navGachaButton: document.querySelector('.nav-button[data-target="gacha"]'),
   navTableButton: document.querySelector('.nav-button[data-target="tableau"]'),
@@ -1817,14 +1818,15 @@ function isArcadeUnlocked() {
 }
 
 function triggerBrandPortalPulse() {
-  if (!elements.brandPortal) {
+  const pulseTarget = elements.navArcadeButton;
+  if (!pulseTarget) {
     return;
   }
-  elements.brandPortal.classList.add('brand--pulse');
+  pulseTarget.classList.add('nav-button--pulse');
   clearTimeout(triggerBrandPortalPulse.timeoutId);
   triggerBrandPortalPulse.timeoutId = setTimeout(() => {
-    if (elements.brandPortal) {
-      elements.brandPortal.classList.remove('brand--pulse');
+    if (elements.navArcadeButton) {
+      elements.navArcadeButton.classList.remove('nav-button--pulse');
     }
   }, 1600);
 }
@@ -1929,23 +1931,25 @@ function updateMetauxCreditsUI() {
 window.updateMetauxCreditsUI = updateMetauxCreditsUI;
 
 function updateBrandPortalState(options = {}) {
-  if (!elements.brandPortal) {
-    return;
-  }
   const unlocked = isArcadeUnlocked();
-  elements.brandPortal.disabled = !unlocked;
-  elements.brandPortal.setAttribute('aria-disabled', unlocked ? 'false' : 'true');
-  elements.brandPortal.classList.toggle('brand--locked', !unlocked);
-  elements.brandPortal.classList.toggle('brand--portal-ready', unlocked);
-  if (!unlocked) {
-    elements.brandPortal.classList.remove('brand--pulse');
-    elements.brandPortal.dataset.portalReady = 'false';
-    return;
+  if (elements.brandPortal) {
+    elements.brandPortal.disabled = false;
+    elements.brandPortal.setAttribute('aria-disabled', 'false');
+    elements.brandPortal.classList.remove('brand--locked');
+    elements.brandPortal.classList.toggle('brand--portal-ready', unlocked);
   }
-  elements.brandPortal.dataset.portalReady = 'true';
-  updateArcadeTicketDisplay();
-  if (options.animate) {
-    triggerBrandPortalPulse();
+  if (elements.navArcadeButton) {
+    setNavButtonLockState(elements.navArcadeButton, unlocked);
+    if (!unlocked) {
+      elements.navArcadeButton.classList.remove('nav-button--pulse');
+    } else {
+      updateArcadeTicketDisplay();
+      if (options.animate) {
+        triggerBrandPortalPulse();
+      }
+    }
+  } else if (unlocked) {
+    updateArcadeTicketDisplay();
   }
 }
 
@@ -4915,18 +4919,14 @@ if (elements.metauxNewGameButton) {
 
 if (elements.brandPortal) {
   elements.brandPortal.addEventListener('click', () => {
-    if (!isArcadeUnlocked()) {
-      return;
-    }
-    elements.brandPortal.classList.remove('brand--pulse');
-    showPage('arcade');
+    showPage('game');
   });
 }
 
 if (elements.arcadeReturnButton) {
   elements.arcadeReturnButton.addEventListener('click', () => {
     showPage('game');
-    if (isArcadeUnlocked() && elements.brandPortal?.dataset.portalReady === 'true') {
+    if (isArcadeUnlocked()) {
       triggerBrandPortalPulse();
     }
   });
