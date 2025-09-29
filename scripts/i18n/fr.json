@@ -871,94 +871,117 @@
           "description": "Atteignez {target} atomes cumulés, {flavor}.",
           "reward": "Ajoute +{bonus} au Boost global sur la production manuelle et automatique (×{total} pour ce palier).",
           "scaleHumanCell": {
+            "target": "10^14",
             "name": "Échelle : cellule humaine",
             "flavor": "l’équivalent d’une cellule humaine « moyenne »"
           },
           "scaleSandGrain": {
+            "target": "10^19",
             "name": "Échelle : grain de sable",
             "flavor": "la masse d’un grain de sable (~1 mm)"
           },
           "scaleAnt": {
+            "target": "10^20",
             "name": "Échelle : fourmi",
             "flavor": "comparable à une fourmi (~5 mg)"
           },
           "scaleWaterDrop": {
+            "target": "5 × 10^21",
             "name": "Échelle : goutte d’eau",
             "flavor": "la quantité d’atomes contenue dans une goutte d’eau de 0,05 mL"
           },
           "scalePaperclip": {
+            "target": "10^22",
             "name": "Échelle : trombone",
             "flavor": "l’équivalent d’un trombone en fer (~1 g)"
           },
           "scaleCoin": {
+            "target": "10^23",
             "name": "Échelle : pièce",
             "flavor": "la masse atomique d’une pièce de monnaie (~7,5 g)"
           },
           "scaleApple": {
+            "target": "10^25",
             "name": "Échelle : pomme",
             "flavor": "la masse atomique d’une pomme (~100 g)"
           },
           "scaleSmartphone": {
+            "target": "3 × 10^25",
             "name": "Échelle : smartphone",
             "flavor": "autant qu’un smartphone moderne (~180 g)"
           },
           "scaleWaterLitre": {
+            "target": "10^26",
             "name": "Échelle : litre d’eau",
             "flavor": "l’équivalent d’un litre d’eau (~300 g)"
           },
           "scaleHuman": {
+            "target": "7 × 10^27",
             "name": "Échelle : être humain",
             "flavor": "comparable à un humain de 70 kg"
           },
           "scalePiano": {
+            "target": "10^29",
             "name": "Échelle : piano",
             "flavor": "équivaut à un piano (~450 kg)"
           },
           "scaleCar": {
+            "target": "10^30",
             "name": "Échelle : voiture compacte",
             "flavor": "autant qu’une voiture compacte (~1,3 t)"
           },
           "scaleElephant": {
+            "target": "3 × 10^31",
             "name": "Échelle : éléphant",
             "flavor": "équivaut à un éléphant (~6 t)"
           },
           "scaleBoeing747": {
+            "target": "10^33",
             "name": "Échelle : Boeing 747",
             "flavor": "autant qu’un Boeing 747"
           },
           "scalePyramid": {
+            "target": "2 × 10^35",
             "name": "Échelle : pyramide de Khéops",
             "flavor": "la masse d’atomes de la grande pyramide de Khéops"
           },
           "scaleAtmosphere": {
+            "target": "2 × 10^44",
             "name": "Échelle : atmosphère terrestre",
             "flavor": "équivaut à l’atmosphère terrestre complète"
           },
           "scaleOceans": {
+            "target": "10^47",
             "name": "Échelle : océans terrestres",
             "flavor": "autant que tous les océans de la Terre"
           },
           "scaleEarth": {
+            "target": "10^50",
             "name": "Échelle : Terre",
             "flavor": "égale la masse atomique de la planète Terre"
           },
           "scaleSun": {
+            "target": "10^57",
             "name": "Échelle : Soleil",
             "flavor": "équivaut au Soleil"
           },
           "scaleMilkyWay": {
+            "target": "10^69",
             "name": "Échelle : Voie lactée",
             "flavor": "comparable à la Voie lactée entière"
           },
           "scaleLocalGroup": {
+            "target": "10^71",
             "name": "Échelle : Groupe local",
             "flavor": "autant que le Groupe local de galaxies"
           },
           "scaleVirgoCluster": {
+            "target": "10^74",
             "name": "Échelle : superamas de la Vierge",
             "flavor": "équivaut au superamas de la Vierge"
           },
           "scaleObservableUniverse": {
+            "target": "10^80",
             "name": "Échelle : univers observable",
             "flavor": "atteignez le total estimé d’atomes de l’univers observable"
           }

@@ -886,94 +886,117 @@
           "description": "Reach {target} total atoms, {flavor}.",
           "reward": "Adds +{bonus} to the global manual and automatic production boost (×{total} for this tier).",
           "scaleHumanCell": {
+            "target": "10^14",
             "name": "Scale: Human cell",
             "flavor": "roughly equal to an average human cell"
           },
           "scaleSandGrain": {
+            "target": "10^19",
             "name": "Scale: Grain of sand",
             "flavor": "mass of a grain of sand (~1 mm)"
           },
           "scaleAnt": {
+            "target": "10^20",
             "name": "Scale: Ant",
             "flavor": "comparable to an ant (~5 mg)"
           },
           "scaleWaterDrop": {
+            "target": "5 × 10^21",
             "name": "Scale: Water drop",
             "flavor": "atoms in a 0.05 mL drop of water"
           },
           "scalePaperclip": {
+            "target": "10^22",
             "name": "Scale: Paperclip",
             "flavor": "equivalent to an iron paperclip (~1 g)"
           },
           "scaleCoin": {
+            "target": "10^23",
             "name": "Scale: Coin",
             "flavor": "atomic mass of a coin (~7.5 g)"
           },
           "scaleApple": {
+            "target": "10^25",
             "name": "Scale: Apple",
             "flavor": "atomic mass of an apple (~100 g)"
           },
           "scaleSmartphone": {
+            "target": "3 × 10^25",
             "name": "Scale: Smartphone",
             "flavor": "similar to a modern smartphone (~180 g)"
           },
           "scaleWaterLitre": {
+            "target": "10^26",
             "name": "Scale: Liter of water",
             "flavor": "equivalent to a liter of water (~300 g)"
           },
           "scaleHuman": {
+            "target": "7 × 10^27",
             "name": "Scale: Human being",
             "flavor": "comparable to a 70 kg human"
           },
           "scalePiano": {
+            "target": "10^29",
             "name": "Scale: Piano",
             "flavor": "matches a piano (~450 kg)"
           },
           "scaleCar": {
+            "target": "10^30",
             "name": "Scale: Compact car",
             "flavor": "same as a compact car (~1.3 t)"
           },
           "scaleElephant": {
+            "target": "3 × 10^31",
             "name": "Scale: Elephant",
             "flavor": "equivalent to an elephant (~6 t)"
           },
           "scaleBoeing747": {
+            "target": "10^33",
             "name": "Scale: Boeing 747",
             "flavor": "same mass as a Boeing 747"
           },
           "scalePyramid": {
+            "target": "2 × 10^35",
             "name": "Scale: Great Pyramid of Giza",
             "flavor": "atoms of the Great Pyramid of Giza"
           },
           "scaleAtmosphere": {
+            "target": "2 × 10^44",
             "name": "Scale: Earth's atmosphere",
             "flavor": "equal to the full atmosphere of Earth"
           },
           "scaleOceans": {
+            "target": "10^47",
             "name": "Scale: Earth's oceans",
             "flavor": "matches all Earth's oceans"
           },
           "scaleEarth": {
+            "target": "10^50",
             "name": "Scale: Earth",
             "flavor": "equals the atomic mass of planet Earth"
           },
           "scaleSun": {
+            "target": "10^57",
             "name": "Scale: Sun",
             "flavor": "equivalent to the Sun"
           },
           "scaleMilkyWay": {
+            "target": "10^69",
             "name": "Scale: Milky Way",
             "flavor": "comparable to the entire Milky Way"
           },
           "scaleLocalGroup": {
+            "target": "10^71",
             "name": "Scale: Local Group",
             "flavor": "same as the Local Group of galaxies"
           },
           "scaleVirgoCluster": {
+            "target": "10^74",
             "name": "Scale: Virgo Supercluster",
             "flavor": "equivalent to the Virgo Supercluster"
           },
           "scaleObservableUniverse": {
+            "target": "10^80",
             "name": "Scale: Observable universe",
             "flavor": "reach the estimated atoms of the observable universe"
           }

@@ -5,6 +5,32 @@
  */
 const SHOP_MAX_PURCHASE_DEFAULT = 1000;
 
+function translateOrDefault(key, fallback, params) {
+  if (typeof key !== 'string' || !key.trim()) {
+    return fallback;
+  }
+
+  const api = globalThis.i18n;
+  const translator = api && typeof api.t === 'function'
+    ? api.t
+    : typeof globalThis.t === 'function'
+      ? globalThis.t
+      : null;
+
+  if (translator) {
+    try {
+      const translated = translator(key, params);
+      if (typeof translated === 'string' && translated && translated !== key) {
+        return translated;
+      }
+    } catch (error) {
+      console.warn('Unable to translate key', key, error);
+    }
+  }
+
+  return fallback;
+}
+
 function getBuildingLevel(context, id) {
   if (!context || typeof context !== 'object') {
     return 0;
@@ -371,171 +397,218 @@ function createShopBuildingDefinitions() {
   ].map(withDefaults);
 }
 
+function createAtomScalePreset({ id, targetText, amount, name, flavor }) {
+  const baseKey = typeof id === 'string' && id.trim()
+    ? `scripts.appData.atomScale.trophies.${id}`
+    : '';
+
+  return {
+    id,
+    targetText,
+    amount,
+    name,
+    flavor,
+    i18nBaseKey: baseKey
+  };
+}
+
 const ATOM_SCALE_TROPHY_PRESETS = [
-  {
+  createAtomScalePreset({
     id: 'scaleHumanCell',
     name: 'Échelle : cellule humaine',
     targetText: '10^14',
     flavor: 'l’équivalent d’une cellule humaine « moyenne »',
     amount: { type: 'layer0', mantissa: 1, exponent: 14 }
-  },
-  {
+  }),
+  createAtomScalePreset({
     id: 'scaleSandGrain',
     name: 'Échelle : grain de sable',
     targetText: '10^19',
     flavor: 'la masse d’un grain de sable (~1 mm)',
     amount: { type: 'layer0', mantissa: 1, exponent: 19 }
-  },
-  {
+  }),
+  createAtomScalePreset({
     id: 'scaleAnt',
     name: 'Échelle : fourmi',
     targetText: '10^20',
     flavor: 'comparable à une fourmi (~5 mg)',
     amount: { type: 'layer0', mantissa: 1, exponent: 20 }
-  },
-  {
+  }),
+  createAtomScalePreset({
     id: 'scaleWaterDrop',
     name: 'Échelle : goutte d’eau',
     targetText: '5 × 10^21',
     flavor: 'la quantité d’atomes contenue dans une goutte d’eau de 0,05 mL',
     amount: { type: 'layer0', mantissa: 5, exponent: 21 }
-  },
-  {
+  }),
+  createAtomScalePreset({
     id: 'scalePaperclip',
     name: 'Échelle : trombone',
     targetText: '10^22',
     flavor: 'l’équivalent d’un trombone en fer (~1 g)',
     amount: { type: 'layer0', mantissa: 1, exponent: 22 }
-  },
-  {
+  }),
+  createAtomScalePreset({
     id: 'scaleCoin',
     name: 'Échelle : pièce',
     targetText: '10^23',
     flavor: 'la masse atomique d’une pièce de monnaie (~7,5 g)',
     amount: { type: 'layer0', mantissa: 1, exponent: 23 }
-  },
-  {
+  }),
+  createAtomScalePreset({
     id: 'scaleApple',
     name: 'Échelle : pomme',
     targetText: '10^25',
     flavor: 'la masse atomique d’une pomme (~100 g)',
     amount: { type: 'layer0', mantissa: 1, exponent: 25 }
-  },
-  {
+  }),
+  createAtomScalePreset({
     id: 'scaleSmartphone',
     name: 'Échelle : smartphone',
     targetText: '3 × 10^25',
     flavor: 'autant qu’un smartphone moderne (~180 g)',
     amount: { type: 'layer0', mantissa: 3, exponent: 25 }
-  },
-  {
+  }),
+  createAtomScalePreset({
     id: 'scaleWaterLitre',
     name: 'Échelle : litre d’eau',
     targetText: '10^26',
     flavor: 'l’équivalent d’un litre d’eau',
     amount: { type: 'layer0', mantissa: 1, exponent: 26 }
-  },
-  {
+  }),
+  createAtomScalePreset({
     id: 'scaleHuman',
     name: 'Échelle : être humain',
     targetText: '7 × 10^27',
     flavor: 'comparable à un humain de 70 kg',
     amount: { type: 'layer0', mantissa: 7, exponent: 27 }
-  },
-  {
+  }),
+  createAtomScalePreset({
     id: 'scalePiano',
     name: 'Échelle : piano',
     targetText: '10^29',
     flavor: 'équivaut à un piano (~450 kg)',
     amount: { type: 'layer0', mantissa: 1, exponent: 29 }
-  },
-  {
+  }),
+  createAtomScalePreset({
     id: 'scaleCar',
     name: 'Échelle : voiture compacte',
     targetText: '10^30',
     flavor: 'autant qu’une voiture compacte (~1,3 t)',
     amount: { type: 'layer0', mantissa: 1, exponent: 30 }
-  },
-  {
+  }),
+  createAtomScalePreset({
     id: 'scaleElephant',
     name: 'Échelle : éléphant',
     targetText: '3 × 10^31',
     flavor: 'équivaut à un éléphant (~6 t)',
     amount: { type: 'layer0', mantissa: 3, exponent: 31 }
-  },
-  {
+  }),
+  createAtomScalePreset({
     id: 'scaleBoeing747',
     name: 'Échelle : Boeing 747',
     targetText: '10^33',
     flavor: 'autant qu’un Boeing 747',
     amount: { type: 'layer0', mantissa: 1, exponent: 33 }
-  },
-  {
+  }),
+  createAtomScalePreset({
     id: 'scalePyramid',
     name: 'Échelle : pyramide de Khéops',
     targetText: '2 × 10^35',
     flavor: 'la masse d’atomes de la grande pyramide de Khéops',
     amount: { type: 'layer0', mantissa: 2, exponent: 35 }
-  },
-  {
+  }),
+  createAtomScalePreset({
     id: 'scaleAtmosphere',
     name: 'Échelle : atmosphère terrestre',
     targetText: '2 × 10^44',
     flavor: 'équivaut à l’atmosphère terrestre complète',
     amount: { type: 'layer0', mantissa: 2, exponent: 44 }
-  },
-  {
+  }),
+  createAtomScalePreset({
     id: 'scaleOceans',
     name: 'Échelle : océans terrestres',
     targetText: '10^47',
     flavor: 'autant que tous les océans de la Terre',
     amount: { type: 'layer0', mantissa: 1, exponent: 47 }
-  },
-  {
+  }),
+  createAtomScalePreset({
     id: 'scaleEarth',
     name: 'Échelle : Terre',
     targetText: '10^50',
     flavor: 'égale la masse atomique de la planète Terre',
     amount: { type: 'layer0', mantissa: 1, exponent: 50 }
-  },
-  {
+  }),
+  createAtomScalePreset({
     id: 'scaleSun',
     name: 'Échelle : Soleil',
     targetText: '10^57',
     flavor: 'équivaut au Soleil',
     amount: { type: 'layer0', mantissa: 1, exponent: 57 }
-  },
-  {
+  }),
+  createAtomScalePreset({
     id: 'scaleMilkyWay',
     name: 'Échelle : Voie lactée',
     targetText: '10^69',
     flavor: 'comparable à la Voie lactée entière',
     amount: { type: 'layer0', mantissa: 1, exponent: 69 }
-  },
-  {
+  }),
+  createAtomScalePreset({
     id: 'scaleLocalGroup',
     name: 'Échelle : Groupe local',
     targetText: '10^71',
     flavor: 'autant que le Groupe local de galaxies',
     amount: { type: 'layer0', mantissa: 1, exponent: 71 }
-  },
-  {
+  }),
+  createAtomScalePreset({
     id: 'scaleVirgoCluster',
     name: 'Échelle : superamas de la Vierge',
     targetText: '10^74',
     flavor: 'équivaut au superamas de la Vierge',
     amount: { type: 'layer0', mantissa: 1, exponent: 74 }
-  },
-  {
+  }),
+  createAtomScalePreset({
     id: 'scaleObservableUniverse',
     name: 'Échelle : univers observable',
     targetText: '10^80',
     flavor: 'atteignez le total estimé d’atomes de l’univers observable',
     amount: { type: 'layer0', mantissa: 1, exponent: 80 }
-  }
+  })
 ];
 
-globalThis.ATOM_SCALE_TROPHY_DATA = ATOM_SCALE_TROPHY_PRESETS;
+function resolveAtomScalePreset(entry) {
+  if (!entry || typeof entry !== 'object') {
+    return null;
+  }
+
+  const { id, targetText, amount, name, flavor, i18nBaseKey } = entry;
+  const fallbackName = typeof name === 'string' ? name : '';
+  const fallbackFlavor = typeof flavor === 'string' ? flavor : '';
+  const fallbackTarget = typeof targetText === 'string' ? targetText : '';
+  const resolvedName = i18nBaseKey
+    ? translateOrDefault(`${i18nBaseKey}.name`, fallbackName)
+    : fallbackName;
+  const resolvedFlavor = i18nBaseKey
+    ? translateOrDefault(`${i18nBaseKey}.flavor`, fallbackFlavor)
+    : fallbackFlavor;
+  const resolvedTarget = i18nBaseKey
+    ? translateOrDefault(`${i18nBaseKey}.target`, fallbackTarget)
+    : fallbackTarget;
+
+  return {
+    id,
+    targetText: resolvedTarget,
+    amount,
+    name: resolvedName,
+    flavor: resolvedFlavor
+  };
+}
+
+const RESOLVED_ATOM_SCALE_TROPHY_PRESETS = ATOM_SCALE_TROPHY_PRESETS
+  .map(resolveAtomScalePreset)
+  .filter(Boolean);
+
+globalThis.ATOM_SCALE_TROPHY_DATA = RESOLVED_ATOM_SCALE_TROPHY_PRESETS;
 
 function getCurrentLocale() {
   if (globalThis.i18n && typeof globalThis.i18n.getCurrentLocale === 'function') {
@@ -568,20 +641,31 @@ function formatAtomScaleBonus(value) {
 
 function createAtomScaleTrophies() {
   const bonusPerTrophy = 2;
-  return ATOM_SCALE_TROPHY_PRESETS.map((entry, index) => {
+  return RESOLVED_ATOM_SCALE_TROPHY_PRESETS.map((entry, index) => {
     const displayBonus = formatAtomScaleBonus(bonusPerTrophy);
     const displayTotal = formatAtomScaleBonus(1 + bonusPerTrophy);
+    const descriptionFallback = `Atteignez ${entry.targetText} atomes cumulés, ${entry.flavor}.`;
+    const rewardFallback = `Ajoute +${displayBonus} au Boost global sur la production manuelle et automatique (×${displayTotal} pour ce palier).`;
+
     return {
       id: entry.id,
       name: entry.name,
-      description: `Atteignez ${entry.targetText} atomes cumulés, ${entry.flavor}.`,
+      description: translateOrDefault(
+        'scripts.appData.atomScale.trophies.description',
+        descriptionFallback,
+        { target: entry.targetText, flavor: entry.flavor }
+      ),
       condition: {
         type: 'lifetimeAtoms',
         amount: entry.amount
       },
       reward: {
         trophyMultiplierAdd: bonusPerTrophy,
-        description: `Ajoute +${displayBonus} au Boost global sur la production manuelle et automatique (×${displayTotal} pour ce palier).`
+        description: translateOrDefault(
+          'scripts.appData.atomScale.trophies.reward',
+          rewardFallback,
+          { bonus: displayBonus, total: displayTotal }
+        )
       },
       order: index
     };
