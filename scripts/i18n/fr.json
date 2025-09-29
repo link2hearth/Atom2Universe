@@ -556,6 +556,7 @@
         "summary": "{owned} / {total} éléments"
       },
       "fusion": {
+        "empty": "Aucune recette de fusion disponible",
         "successChance": "Chance de réussite : {chance}",
         "availabilityInitial": "Disponible : 0",
         "tryButton": "Tenter la fusion",
