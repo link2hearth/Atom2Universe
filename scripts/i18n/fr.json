@@ -623,6 +623,82 @@
           "offline": "Gains hors ligne {value}",
           "frenzy": "Chance de frénésie {value}",
           "overflow": "Bonus excédentaires +{value}"
+        },
+        "collection": {
+          "effects": {
+            "apcFlat": "APC +{value}",
+            "apsFlat": "APS +{value}",
+            "apcMultiplier": "APC {value}",
+            "apsMultiplier": "APS {value}",
+            "critChance": "Chance +{value}",
+            "critMultiplier": "Multiplicateur +{value}×",
+            "critChanceMultiplier": "Chance {value}",
+            "critMultiplierMultiplier": "Multiplicateur {value}",
+            "critChanceSet": "Chance fixée à {value}",
+            "critMultiplierSet": "Multiplicateur fixé à {value}×",
+            "critCapAdd": "Plafond critique +{value}×",
+            "critCapMultiplier": "Plafond critique {value}",
+            "critCapSet": "Plafond critique fixé à {value}×",
+            "rarityMultiplierApc": "Multiplicateur de rareté APC {value}",
+            "rarityMultiplierAps": "Multiplicateur de rareté APS {value}",
+            "offline": "Collecte hors ligne {value}",
+            "frenzy": "Chance de frénésie {value}"
+          },
+          "notes": {
+            "singularityBoost": "Singularité amplifiée : effets {value}",
+            "amplify": "Amplifie {target} : {effects}",
+            "effects": "{label} : {effects}",
+            "multiplierBase": "{prefix}base {value}",
+            "multiplierIncrement": "{prefix}{value} toutes les {count} {unit}",
+            "multiplierCap": "{prefix}max {value}",
+            "rarityMultiplierDetail": "{prefix}{value}{suffix}"
+          },
+          "labels": {
+            "crit": "Critique",
+            "perCopy": "Par copie",
+            "fullCollection": "Collection complète",
+            "collectionBonus": "Bonus de collection",
+            "generic": "Bonus",
+            "critPerUnique": "Critique par unique",
+            "critPerDuplicate": "Critique par doublon",
+            "multiplier": "Multiplicateur {target}",
+            "rarityMultiplier": "Multiplicateur de rareté"
+          },
+          "threshold": {
+            "minCopies": "dès {count} {unit}",
+            "minUnique": "minimum {count} {unit}",
+            "requireAll": "collection complète requise"
+          },
+          "overview": {
+            "ticketReduction": "Réduit l’intervalle des étoiles à tickets de {value}s par élément unique",
+            "ticketMinimum": "minimum {value}s",
+            "offlineBase": "base {value}",
+            "offlineIncrement": "{value} par doublon",
+            "offlineCap": "max {value}",
+            "offlineSummary": "Collecte hors ligne {detail}",
+            "overflowFlat": "APC/APS +{value} par doublon",
+            "overflowThreshold": "au-delà de {count} {unit}",
+            "frenzyComplete": "Chance de frénésie {value} (collection complète requise)",
+            "singularitySynergy": "Synergie Singularité : Bonus ×2 si la collection Singularité minérale est complète",
+            "stellaireSynergy": "Synergie Forge stellaire : Compléter la collection double tous les bonus Forge stellaire"
+          },
+          "units": {
+            "copy": {
+              "singular": "copie",
+              "plural": "copies"
+            },
+            "unique": {
+              "singular": "unique",
+              "plural": "uniques"
+            },
+            "duplicate": {
+              "singular": "doublon",
+              "plural": "doublons"
+            }
+          },
+          "targets": {
+            "production": "production"
+          }
         }
       },
       "collection": {
