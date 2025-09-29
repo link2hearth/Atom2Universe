@@ -1863,7 +1863,7 @@ const elements = {
 function getOptionsWelcomeCardCopy() {
   const api = getI18nApi();
   if (api && typeof api.getResource === 'function') {
-    const resource = api.getResource('index.uiText.options.welcomeCard');
+    const resource = api.getResource('scripts.config.uiText.options.welcomeCard');
     if (resource && typeof resource === 'object') {
       return resource;
     }
@@ -1935,7 +1935,7 @@ function renderOptionsWelcomeContent() {
       : 'Bienvenue';
     const titleText = copy && typeof copy.title === 'string' && copy.title.trim()
       ? copy.title.trim()
-      : translateOrDefault('index.uiText.options.welcomeCard.title', fallbackTitle);
+      : translateOrDefault('scripts.config.uiText.options.welcomeCard.title', fallbackTitle);
     elements.optionsWelcomeTitle.textContent = titleText;
   }
 
@@ -1946,7 +1946,7 @@ function renderOptionsWelcomeContent() {
     const fallbackParagraphs = extractWelcomeIntroParagraphs(fallbackCopy);
     let paragraphs = extractWelcomeIntroParagraphs(copy);
     if (!paragraphs.length) {
-      const translatedIntro = translateOrDefault('index.uiText.options.welcomeCard.intro', '');
+      const translatedIntro = translateOrDefault('scripts.config.uiText.options.welcomeCard.intro', '');
       if (translatedIntro) {
         paragraphs = [translatedIntro];
       } else if (fallbackParagraphs.length) {
