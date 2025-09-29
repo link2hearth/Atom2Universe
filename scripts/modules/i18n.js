@@ -1,9 +1,36 @@
 (function initI18n(global) {
-  const DEFAULT_LANGUAGE = 'fr';
+  const AVAILABLE_LANGUAGES = Object.freeze(['fr', 'en']);
+  const DEFAULT_LANGUAGE = AVAILABLE_LANGUAGES[0] || 'fr';
   const LANGUAGE_PATH = './scripts/i18n';
 
   let currentLanguage = DEFAULT_LANGUAGE;
   let resources = {};
+
+  function normalizeLanguageCode(raw) {
+    if (typeof raw !== 'string') {
+      return '';
+    }
+    return raw.trim().toLowerCase();
+  }
+
+  function resolveAvailableLanguage(raw) {
+    const normalized = normalizeLanguageCode(raw);
+    if (!normalized) {
+      return DEFAULT_LANGUAGE;
+    }
+    const directMatch = AVAILABLE_LANGUAGES.find((lang) => lang.toLowerCase() === normalized);
+    if (directMatch) {
+      return directMatch;
+    }
+    const [base] = normalized.split('-');
+    if (base) {
+      const baseMatch = AVAILABLE_LANGUAGES.find((lang) => lang.toLowerCase() === base);
+      if (baseMatch) {
+        return baseMatch;
+      }
+    }
+    return DEFAULT_LANGUAGE;
+  }
 
   function getValueFromPath(source, path) {
     if (!source || typeof source !== 'object') {
@@ -94,7 +121,7 @@
   }
 
   async function loadLanguageResource(lang) {
-    const requestedLanguage = typeof lang === 'string' && lang.trim() ? lang.trim() : DEFAULT_LANGUAGE;
+    const requestedLanguage = resolveAvailableLanguage(lang);
     let effectiveLanguage = requestedLanguage;
     const data = await fetchLanguageResource(requestedLanguage).catch((error) => {
       if (requestedLanguage === DEFAULT_LANGUAGE) {
@@ -118,6 +145,10 @@
     return currentLanguage;
   }
 
+  function getAvailableLanguages() {
+    return AVAILABLE_LANGUAGES.slice();
+  }
+
   function updateTranslations(root) {
     updateElementTranslations(root);
   }
@@ -126,6 +157,7 @@
     t: translate,
     setLanguage,
     getCurrentLanguage,
+    getAvailableLanguages,
     updateTranslations
   };
 

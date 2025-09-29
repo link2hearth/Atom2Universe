@@ -156,6 +156,15 @@
       },
       "options": {
         "title": "Options",
+        "language": {
+          "title": "Langue",
+          "label": "Langue de l’interface",
+          "options": {
+            "fr": "Français",
+            "en": "Anglais"
+          },
+          "note": "La modification s’applique immédiatement."
+        },
         "music": {
           "title": "Musique",
           "track": "Piste en lecture",
@@ -498,6 +507,9 @@
         "milestoneHint": "Continuez à explorer des ordres de grandeur toujours plus vastes !"
       },
       "themeUpdated": "Thème mis à jour",
+      "language": {
+        "updated": "Langue mise à jour."
+      },
       "music": {
         "noneAvailable": "Aucune piste disponible",
         "noneOption": "Rien (aucune musique)",
