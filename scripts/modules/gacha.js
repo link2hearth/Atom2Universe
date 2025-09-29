@@ -21,6 +21,89 @@ const gachaTranslate = (() => {
   };
 })();
 
+function translateWithFallback(key, fallback = '', params) {
+  if (typeof key !== 'string' || !key.trim()) {
+    return fallback ?? '';
+  }
+  const api = typeof getI18nApi === 'function' ? getI18nApi() : null;
+  let translator = null;
+  if (api && typeof api.t === 'function') {
+    translator = api.t.bind(api);
+  } else if (typeof globalThis !== 'undefined' && typeof globalThis.t === 'function') {
+    translator = globalThis.t.bind(globalThis);
+  } else if (typeof t === 'function') {
+    translator = t;
+  }
+  if (translator) {
+    try {
+      const translated = translator(key, params);
+      if (typeof translated === 'string' && translated && translated !== key) {
+        return translated;
+      }
+    } catch (error) {
+      console.warn('Unable to translate key', key, error);
+    }
+  }
+  return fallback ?? '';
+}
+
+const GACHA_PERIODIC_ELEMENT_I18N_BASE = 'scripts.periodic.elements';
+
+function getGachaElementTranslationBase(definition) {
+  const id = typeof definition?.id === 'string' ? definition.id.trim() : '';
+  if (!id) {
+    return '';
+  }
+  return `${GACHA_PERIODIC_ELEMENT_I18N_BASE}.${id}`;
+}
+
+function translateGachaElementField(definition, field, fallback) {
+  if (!field) {
+    return fallback ?? '';
+  }
+  const base = getGachaElementTranslationBase(definition);
+  if (!base) {
+    return fallback ?? '';
+  }
+  const key = `${base}.${field}`;
+  const translated = translateWithFallback(key, fallback ?? '');
+  if (typeof translated === 'string' && translated.trim()) {
+    return translated;
+  }
+  return fallback ?? '';
+}
+
+function getGachaPeriodicElementDisplay(definition) {
+  if (!definition || typeof definition !== 'object') {
+    return { symbol: '', name: '' };
+  }
+  const fallbackSymbol = typeof definition.symbol === 'string' ? definition.symbol : '';
+  const fallbackName = typeof definition.name === 'string' ? definition.name : '';
+  const symbol = translateGachaElementField(definition, 'symbol', fallbackSymbol);
+  const name = translateGachaElementField(definition, 'name', fallbackName);
+  return { symbol, name };
+}
+
+function getGachaLocalizedElementName(definition) {
+  if (!definition || typeof definition !== 'object') {
+    return '';
+  }
+  const { name, symbol } = getGachaPeriodicElementDisplay(definition);
+  if (name && name.trim()) {
+    return name.trim();
+  }
+  if (symbol && symbol.trim()) {
+    return symbol.trim();
+  }
+  if (typeof definition.name === 'string' && definition.name.trim()) {
+    return definition.name.trim();
+  }
+  if (typeof definition.symbol === 'string' && definition.symbol.trim()) {
+    return definition.symbol.trim();
+  }
+  return '';
+}
+
 const DEFAULT_GACHA_RARITIES = [
   {
     id: 'commun',
@@ -1702,8 +1785,9 @@ function renderGachaResult(outcome) {
 
     const name = document.createElement('span');
     name.className = 'gacha-result-card__name';
-    const baseName = entry.elementDef.name || entry.elementDef.symbol || t('scripts.gacha.results.unknownElement');
-    const symbol = entry.elementDef.symbol && entry.elementDef.name ? ` (${entry.elementDef.symbol})` : '';
+    const { name: localizedName, symbol: localizedSymbol } = getGachaPeriodicElementDisplay(entry.elementDef);
+    const baseName = localizedName || localizedSymbol || t('scripts.gacha.results.unknownElement');
+    const symbol = localizedSymbol && localizedName ? ` (${localizedSymbol})` : '';
     name.textContent = `${baseName}${symbol}`;
 
     const status = document.createElement('span');
@@ -2119,9 +2203,11 @@ function getGachaToastMessage(outcome) {
   if (results.length === 1) {
     const single = results[0];
     if (!single?.elementDef) return '';
+    const elementName = getGachaLocalizedElementName(single.elementDef)
+      || t('scripts.gacha.results.unknownElement');
     return single.isNew
-      ? t('scripts.gacha.toast.newSingle', { name: single.elementDef.name })
-      : t('scripts.gacha.toast.duplicateSingle', { name: single.elementDef.name });
+      ? t('scripts.gacha.toast.newSingle', { name: elementName })
+      : t('scripts.gacha.toast.duplicateSingle', { name: elementName });
   }
 
   const newCount = Number.isFinite(Number(outcome.newCount))
@@ -2139,7 +2225,9 @@ function getGachaToastMessage(outcome) {
     const rawNew = results.find(result => result.isNew && result.elementDef);
     const target = focusNew || rawNew;
     if (target?.elementDef) {
-      return t('scripts.gacha.toast.newSingle', { name: target.elementDef.name });
+      const elementName = getGachaLocalizedElementName(target.elementDef)
+        || t('scripts.gacha.results.unknownElement');
+      return t('scripts.gacha.toast.newSingle', { name: elementName });
     }
   }
 
@@ -2149,17 +2237,23 @@ function getGachaToastMessage(outcome) {
   if (focusEntry?.elementDef) {
     const rarityLabel = focusEntry.rarity?.label || focusEntry.rarity?.id;
     if (rarityLabel) {
+      const elementName = getGachaLocalizedElementName(focusEntry.elementDef)
+        || t('scripts.gacha.results.unknownElement');
       return t('scripts.gacha.toast.duplicateWithRarity', {
-        name: focusEntry.elementDef.name,
+        name: elementName,
         rarity: rarityLabel
       });
     }
-    return t('scripts.gacha.toast.duplicateSingle', { name: focusEntry.elementDef.name });
+    const elementName = getGachaLocalizedElementName(focusEntry.elementDef)
+      || t('scripts.gacha.results.unknownElement');
+    return t('scripts.gacha.toast.duplicateSingle', { name: elementName });
   }
 
   const fallback = results[0];
   if (fallback?.elementDef) {
-    return t('scripts.gacha.toast.duplicateSingle', { name: fallback.elementDef.name });
+    const elementName = getGachaLocalizedElementName(fallback.elementDef)
+      || t('scripts.gacha.results.unknownElement');
+    return t('scripts.gacha.toast.duplicateSingle', { name: elementName });
   }
 
   return '';
