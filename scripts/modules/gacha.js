@@ -2360,7 +2360,6 @@ function startGachaConfettiAnimation(outcome) {
     return;
   }
   stopGachaConfettiAnimation();
-  updateGachaConfettiCanvasSize();
 
   const baseRarityColor = resolveGachaConfettiColor(
     GACHA_RARITY_MAP.get(GACHA_CONFETTI_BASE_RARITY_ID)?.color,
@@ -2402,20 +2401,38 @@ function startGachaConfettiAnimation(outcome) {
 
   gachaConfettiState.baseColorRgb = baseColorRgb;
 
-  const now = getNow();
-  const particles = [];
-  const paletteLength = paletteRgb.length;
-  for (let i = 0; i < GACHA_ANIMATION_CONFETTI_COUNT; i += 1) {
-    const color = paletteRgb[paletteLength > 0 ? i % paletteLength : 0] || baseColorRgb;
-    particles.push(createGachaConfettiParticle(color, now));
-  }
-  gachaConfettiState.particles = particles;
+  let measureAttempts = 0;
+  const maxMeasureAttempts = 4;
 
-  if (typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
-    gachaConfettiState.animationFrameId = window.requestAnimationFrame(renderGachaConfettiFrame);
-  } else {
-    renderGachaConfettiFrame(now);
-  }
+  const beginAnimation = () => {
+    updateGachaConfettiCanvasSize();
+    const { width, height } = gachaConfettiState;
+    const hasValidSize = width > 2 && height > 2;
+    if (!hasValidSize && measureAttempts < maxMeasureAttempts
+      && typeof window !== 'undefined'
+      && typeof window.requestAnimationFrame === 'function') {
+      measureAttempts += 1;
+      window.requestAnimationFrame(beginAnimation);
+      return;
+    }
+
+    const now = getNow();
+    const particles = [];
+    const paletteLength = paletteRgb.length;
+    for (let i = 0; i < GACHA_ANIMATION_CONFETTI_COUNT; i += 1) {
+      const color = paletteRgb[paletteLength > 0 ? i % paletteLength : 0] || baseColorRgb;
+      particles.push(createGachaConfettiParticle(color, now));
+    }
+    gachaConfettiState.particles = particles;
+
+    if (typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
+      gachaConfettiState.animationFrameId = window.requestAnimationFrame(renderGachaConfettiFrame);
+    } else {
+      renderGachaConfettiFrame(now);
+    }
+  };
+
+  beginAnimation();
 }
 
 function waitForGachaAnimationDismiss(layer, options = {}) {
