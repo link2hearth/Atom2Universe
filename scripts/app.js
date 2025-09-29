@@ -7399,10 +7399,14 @@ function getTrophyTranslationBases(id) {
   if (typeof id !== 'string' || !id) {
     return [];
   }
-  const bases = [`config.trophies.${id}`];
+  const bases = [];
   if (id.startsWith('scale')) {
+    bases.push(`scripts.appData.atomScale.trophies.${id}`);
+    bases.push(`scripts.appData.trophies.presets.${id}`);
     bases.push(`config.trophies.presets.${id}`);
   }
+  bases.push(`scripts.appData.trophies.${id}`);
+  bases.push(`config.trophies.${id}`);
   return bases;
 }
 
@@ -7442,7 +7446,14 @@ function getTrophyDisplayTexts(def) {
   }
   let description = '';
   if (descriptionParams) {
-    description = translateOrDefault('config.trophies.description', '', descriptionParams);
+    description = translateOrDefault(
+      'scripts.appData.atomScale.trophies.description',
+      '',
+      descriptionParams
+    );
+    if (!description) {
+      description = translateOrDefault('config.trophies.description', '', descriptionParams);
+    }
   }
   if (!description) {
     description = translateTrophyField(def, 'description', '', descriptionParams);
@@ -7453,6 +7464,9 @@ function getTrophyDisplayTexts(def) {
 
   const rewardParams = getTrophyRewardParams(def);
   let rewardText = translateTrophyField(def, 'reward', '', rewardParams);
+  if (!rewardText && rewardParams) {
+    rewardText = translateOrDefault('scripts.appData.atomScale.trophies.reward', '', rewardParams);
+  }
   if (!rewardText && rewardParams) {
     rewardText = translateOrDefault('config.trophies.reward.description', '', rewardParams);
   }
