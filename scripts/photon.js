@@ -311,7 +311,7 @@
     const normalizedSeed = Number.isFinite(seed) ? seed : 0.35;
     const baseSeed = normalizedSeed * 7919 + width * 0.017 + height * 0.029;
     const area = Math.max(width * height, 1);
-    const bubbleCount = Math.max(8, Math.floor(area / 18000));
+    const bubbleCount = Math.max(42, Math.floor(area / 9000));
     const maxRadius = clamp(height * 0.32, 12, height * 0.55);
 
     ctx.save();
@@ -361,9 +361,9 @@
     ctx.clip();
 
     if (color === 'blue') {
-      drawGridPattern(ctx, seed, x, y, width, height);
-    } else if (color === 'red') {
       drawBubblePattern(ctx, seed, x, y, width, height);
+    } else if (color === 'red') {
+      drawGridPattern(ctx, seed, x, y, width, height);
     }
 
     ctx.restore();
