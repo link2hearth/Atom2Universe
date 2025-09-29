@@ -200,6 +200,17 @@ Une fois ces étapes terminées, rechargez la page : la langue apparaîtra autom
 * **Accessibilité** : navigation par onglets, compteurs `aria-live`, animations désactivables via classes CSS.
 * **Sauvegarde** : export/import JSON ; le format stocke les tickets, la progression de collection, les multiplicateurs et les paramètres de l’étoile à tickets.
 
+### 🚀 Lancer un serveur local
+
+Un petit lanceur Node.js (`MyLocalServ`) est fourni pour exécuter le jeu en local sans soucis de `fetch` :
+
+```bash
+cd Atom2Univers
+node MyLocalServ.js
+```
+
+Le serveur démarre par défaut sur `http://localhost:8080`. Utilisez `PORT=3000 node MyLocalServ.js` pour changer le port si nécessaire. Appuyez sur `Ctrl+C` pour l’arrêter.
+
 ---
 
 ## 🎯 Objectif
