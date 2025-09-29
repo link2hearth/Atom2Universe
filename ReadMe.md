@@ -200,6 +200,29 @@ Une fois ces étapes terminées, rechargez la page : la langue apparaîtra autom
 * **Accessibilité** : navigation par onglets, compteurs `aria-live`, animations désactivables via classes CSS.
 * **Sauvegarde** : export/import JSON ; le format stocke les tickets, la progression de collection, les multiplicateurs et les paramètres de l’étoile à tickets.
 
+### 🚀 Lancer un serveur local
+
+Le projet inclut un lanceur Node.js (`MyLocalServ`) afin de servir les fichiers statiques sans blocage des requêtes `fetch`. Installez au préalable [Node.js](https://nodejs.org/) (version LTS recommandée), puis choisissez la méthode adaptée à votre système :
+
+#### Windows
+
+* **Double-clic** : ouvrez `MyLocalServ.cmd`. La fenêtre affiche l’URL (`http://localhost:8080` par défaut) et reste ouverte pour vous permettre d’arrêter le serveur proprement.
+* **Terminal** : exécutez la commande ci-dessous pour lancer le serveur depuis l’invite de commandes et, si besoin, préciser un port personnalisé.
+
+```bat
+cd Atom2Univers
+MyLocalServ.cmd 3000
+```
+
+#### macOS / Linux (et terminaux en général)
+
+```bash
+cd Atom2Univers
+node MyLocalServ.js
+```
+
+Le serveur démarre par défaut sur `http://localhost:8080`. Définissez la variable d’environnement `PORT` (ou passez un argument à `MyLocalServ.cmd`) pour changer le port si nécessaire. Appuyez sur `Ctrl+C` pour l’arrêter.
+
 ---
 
 ## 🎯 Objectif
