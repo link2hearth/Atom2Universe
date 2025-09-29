@@ -31,13 +31,13 @@ function createShopBuildingDefinitions() {
       name: 'Électrons libres',
       description: 'Canalisez des électrons pour amplifier chaque clic quantique.',
       effectSummary:
-        'Production manuelle : +1 APC par niveau. Tous les 25 niveaux : +5 % APC.',
+        'Production manuelle : +1 APC par niveau. Tous les 25 niveaux : +10 % APC.',
       category: 'manual',
       baseCost: 15,
       costScale: 1.15,
       effect: (level = 0) => {
         const clickAdd = level > 0 ? level : 0;
-        const streakBonus = Math.pow(1.05, Math.floor(level / 25));
+        const streakBonus = Math.pow(1.10, Math.floor(level / 25));
         const clickMult = streakBonus;
         const result = { clickAdd };
         if (clickMult > 1 && clickAdd > 0) {
@@ -51,7 +51,7 @@ function createShopBuildingDefinitions() {
       name: 'Laboratoire de Physique',
       description: 'Des équipes de chercheurs boostent votre production atomique.',
       effectSummary:
-        'Production passive : +1 APS par niveau. Chaque 10 labos accordent +5 % d’APC global. Accélérateur ≥200 : Labos +20 % APS.',
+        'Production passive : +1 APS par niveau. Chaque 10 labos accordent +10 % d’APC global. Accélérateur ≥200 : Labos +20 % APS.',
       category: 'auto',
       baseCost: 100,
       costScale: 1.15,
@@ -63,7 +63,7 @@ function createShopBuildingDefinitions() {
         }
         const rawAutoAdd = level * productionMultiplier;
         const autoAdd = level > 0 ? Math.max(level, Math.round(rawAutoAdd)) : 0;
-        const clickBonus = Math.pow(1.05, Math.floor(level / 10));
+        const clickBonus = Math.pow(1.10, Math.floor(level / 10));
         return {
           autoAdd,
           clickMult: clickBonus
@@ -103,7 +103,7 @@ function createShopBuildingDefinitions() {
       name: 'Accélérateur de particules',
       description: 'Boostez vos particules pour décupler l’APC.',
       effectSummary:
-        'Production passive : +50 APS par niveau (bonus si ≥100 Supercalculateurs). Chaque niveau octroie +2 % d’APC. Palier 200 : +20 % production des Labos.',
+        'Production passive : +50 APS par niveau (bonus si ≥100 Supercalculateurs). Chaque niveau octroie +5 % d’APC. Palier 200 : +20 % production des Labos.',
       category: 'hybrid',
       baseCost: 12_000,
       costScale: 1.15,
@@ -116,7 +116,7 @@ function createShopBuildingDefinitions() {
         const baseAmount = 50 * level;
         const rawAutoAdd = baseAmount * productionMultiplier;
         const autoAdd = level > 0 ? Math.max(baseAmount, Math.round(rawAutoAdd)) : 0;
-        const clickMult = Math.pow(1.02, level);
+        const clickMult = Math.pow(1.05, level);
         return { autoAdd, clickMult };
       }
     },
@@ -586,7 +586,7 @@ const GAME_CONFIG = {
           {
             label: 'Mini Jeu Particules :',
             description:
-              'Collisionnez les particules élémentaires afin de gagner des tickets de tirage pour la Gacha, et des crédits pour le mini jeu Mach3.'
+              'Collisionnez les particules élémentaires afin de gagner des tickets de tirage pour le Gacha, et des crédits pour le mini jeu Mach3.'
           },
           {
             label: 'Gacha :',
@@ -637,7 +637,7 @@ const GAME_CONFIG = {
     offlineCapSeconds: 60 * 60 * 12,
     offlineTickets: {
       secondsPerTicket: 60 * 60,
-      capSeconds: 60 * 60 * 12
+      capSeconds: 60 * 60 * 50
     },
     defaultTheme: 'dark',
     crit: {
@@ -1129,7 +1129,7 @@ const GAME_CONFIG = {
       ui: {
         start: {
           message:
-            'Touchez ou cliquez la raquette pour guider la particule et détruire les briques quantiques.',
+            'Guidez le palet et renvoyez la particule pour percuter les briques quantiques.',
           buttonLabel: 'Commencer'
         },
         pause: {
@@ -1532,7 +1532,7 @@ const GAME_CONFIG = {
       },
       reward: {
         trophyMultiplierAdd: 0.5,
-        description: 'Ajoute +0,5 au Boost global sur la production manuelle et automatique (×1,50 une fois ce succès débloqué).'
+        description: 'Ajoute +0,5 au Boost global sur la production manuelle et automatique.'
       },
       order: -1
     },
@@ -1602,7 +1602,7 @@ const GAME_CONFIG = {
       },
       reward: {
         trophyMultiplierAdd: 10,
-        description: 'Ajoute +10 au multiplicateur de trophées (×11 une fois ce succès débloqué).'
+        description: 'Ajoute +10 au multiplicateur de trophées.'
       },
       order: 1040
     }
@@ -1749,14 +1749,14 @@ const GAME_CONFIG = {
     groups: {
       commun: {
         perCopy: {
-          clickAdd: 1
+          clickAdd: 5
         },
         setBonus: {
           clickAdd: 500,
           requireAllUnique: true
         },
         multiplier: {
-          every: 50,
+          every: 20,
           increment: 1,
           cap: 100,
           targets: ['perClick', 'perSecond']
@@ -1776,7 +1776,7 @@ const GAME_CONFIG = {
           }
         ],
         multiplier: {
-          every: 30,
+          every: 20,
           increment: 1,
           cap: 100,
           targets: ['perClick', 'perSecond'],
@@ -1786,11 +1786,11 @@ const GAME_CONFIG = {
       stellaire: {
         perCopy: {
           uniqueClickAdd: 50,
-          duplicateClickAdd: 25,
+          duplicateClickAdd: 50,
           label: 'Forge stellaire · fragments activés'
         },
         multiplier: {
-          every: 20,
+          every: 15,
           increment: 1,
           cap: 100,
           targets: ['perClick', 'perSecond'],
@@ -1811,10 +1811,10 @@ const GAME_CONFIG = {
       },
       singulier: {
         perCopy: {
-          uniqueClickAdd: 25,
-          uniqueAutoAdd: 25,
-          duplicateClickAdd: 20,
-          duplicateAutoAdd: 20,
+          uniqueClickAdd: 50,
+          uniqueAutoAdd: 50,
+          duplicateClickAdd: 50,
+          duplicateAutoAdd: 50,
           label: 'Singularité minérale · résonance cristalline'
         },
         multiplier: {
@@ -1838,12 +1838,12 @@ const GAME_CONFIG = {
         },
         ticketBonus: {
           uniqueReductionSeconds: 1,
-          minIntervalSeconds: 5
+          minIntervalSeconds: 30
         },
         offlineBonus: {
           baseMultiplier: 0.01,
           perDuplicate: 0.01,
-          cap: 1
+          cap: 0.5
         },
         duplicateOverflow: {
           flatBonus: 50
