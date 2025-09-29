@@ -39,7 +39,7 @@
         "modeSingle": "Single draw",
         "tickets": {
           "single": "0 ticket",
-          "plural": "{{count}} tickets"
+          "plural": "{count} tickets"
         },
         "sunButton": "Trigger a cosmic draw",
         "sunAlt": "Cosmic sun",
@@ -390,9 +390,9 @@
         }
       },
       "reward": {
-        "description": "Adds +{{bonus}} to the global boost for manual and automatic production (×{{total}} for this tier)."
+        "description": "Adds +{bonus} to the global boost for manual and automatic production (×{total} for this tier)."
       },
-      "description": "Reach {{target}} cumulative atoms, {{flavor}}."
+      "description": "Reach {target} cumulative atoms, {flavor}."
     },
     "uiText": {
       "options": {
@@ -458,7 +458,7 @@
         }
       },
       "frenzy": "Frenzy",
-      "frenzyActivate": "Activate {{label}} ({{multiplier}})",
+      "frenzyActivate": "Activate {label} ({multiplier})",
       "pageUnlocked": "New page unlocked!",
       "shop": {
         "limitReached": "Limit reached",
@@ -475,14 +475,14 @@
         "addFilesHint": "Add your audio files to Assets/Music to enable music.",
         "disabled": "Music disabled.",
         "selectTrack": "Select a track to start the music.",
-        "missingDisplay": "{{name}} (file missing)",
+        "missingDisplay": "{name} (file missing)",
         "missingSuffix": " (file missing)",
         "unsupportedSuffix": ". Audio playback unavailable on this device.",
         "errorSuffix": ". Unable to play the audio file.",
         "awaitingInteractionSuffix": ". Music will start after your first interaction.",
         "pausedSuffix": ". Playback paused.",
-        "looping": "Looping: {{track}}",
-        "volumeLabel": "Music volume: {{value}}%",
+        "looping": "Looping: {track}",
+        "volumeLabel": "Music volume: {value}%",
         "muted": "Music muted",
         "missing": "Track not found",
         "fileMissing": "The file for this track is missing."
@@ -553,31 +553,31 @@
       "rarityProgress": {
         "unavailable": "Rarities unavailable",
         "empty": "No elements",
-        "summary": "{{owned}} / {{total}} elements"
+        "summary": "{owned} / {total} elements"
       },
       "fusion": {
-        "successChance": "Success chance: {{chance}}",
+        "successChance": "Success chance: {chance}",
         "availabilityInitial": "Available: 0",
         "tryButton": "Attempt fusion",
-        "tryButtonAria": "Attempt {{name}} fusion",
+        "tryButtonAria": "Attempt {name} fusion",
         "checking": "Checking ingredients…",
-        "stats": "Attempts: {{attempts}} · Successes: {{successes}}",
-        "successBonus": "Reward per success: {{bonus}}",
+        "stats": "Attempts: {attempts} · Successes: {successes}",
+        "successBonus": "Reward per success: {bonus}",
         "noBonus": "No bonus defined",
-        "totalBonus": "Total bonus: {{bonus}}",
-        "apcBonus": "+{{value}} APC",
-        "apsBonus": "+{{value}} APS",
-        "apcTotal": "+{{value}} APC total",
-        "apsTotal": "+{{value}} APS total",
-        "availabilityProgress": "Available: {{available}} / {{required}}",
+        "totalBonus": "Total bonus: {bonus}",
+        "apcBonus": "+{value} APC",
+        "apsBonus": "+{value} APS",
+        "apcTotal": "+{value} APC total",
+        "apsTotal": "+{value} APS total",
+        "availabilityProgress": "Available: {available} / {required}",
         "statusReady": "Ingredients available",
         "statusMissing": "Insufficient resources",
         "logMissingResources": "You don't have enough resources for this fusion.",
         "toastMissingResources": "Not enough resources for this fusion.",
         "noRewardSummary": "No bonus.",
-        "logSuccess": "{{name}} fusion succeeded! Reward earned: {{reward}}",
+        "logSuccess": "{name} fusion succeeded! Reward earned: {reward}",
         "toastSuccess": "Fusion succeeded!",
-        "logFailure": "{{name}} fusion failed. Ingredients were consumed.",
+        "logFailure": "{name} fusion failed. Ingredients were consumed.",
         "toastFailure": "Fusion failed."
       },
       "results": {
@@ -586,12 +586,12 @@
         "unknownElement": "Unknown element",
         "newTag": "NEW!",
         "duplicateTag": "Already owned",
-        "drawLabel": "Draw x{{count}}",
+        "drawLabel": "Draw x{count}",
         "drawSingle": "Draw x1",
         "newSingle": "1 new element",
-        "newPlural": "{{count}} new elements",
+        "newPlural": "{count} new elements",
         "duplicateSingle": "1 duplicate",
-        "duplicatePlural": "{{count}} duplicates"
+        "duplicatePlural": "{count} duplicates"
       },
       "tickets": {
         "single": "ticket",
@@ -601,35 +601,35 @@
       },
       "controls": {
         "modeSingle": "Draw x1",
-        "modeMulti": "Draw x{{count}}",
-        "toggleModeAria": "Toggle draw mode (current: {{mode}})",
-        "toggleModeTitle": "Current mode: {{mode}}",
-        "drawMulti": "cosmic draw x{{count}}",
+        "modeMulti": "Draw x{count}",
+        "toggleModeAria": "Toggle draw mode (current: {mode})",
+        "toggleModeTitle": "Current mode: {mode}",
+        "drawMulti": "cosmic draw x{count}",
         "drawSingleLabel": "cosmic draw",
         "drawInProgress": "Cosmic draw in progress",
-        "drawFree": "Trigger a {{draw}} (free)",
-        "drawPaid": "Trigger a {{draw}}",
-        "drawLocked": "Not enough tickets for a {{draw}}",
-        "drawTitle": "{{label}} ({{cost}})"
+        "drawFree": "Trigger a {draw} (free)",
+        "drawPaid": "Trigger a {draw}",
+        "drawLocked": "Not enough tickets for a {draw}",
+        "drawTitle": "{label} ({cost})"
       },
       "arcade": {
-        "reward": "+{{reward}} thanks to Particules!",
-        "bonus": "+{{reward}}!"
+        "reward": "+{reward} thanks to Particules!",
+        "bonus": "+{reward}!"
       },
       "errors": {
-        "notEnoughTickets": "Not enough draw tickets (required: {{cost}}).",
+        "notEnoughTickets": "Not enough draw tickets (required: {cost}).",
         "noElements": "No elements available in the synthesis chambers.",
         "instableFlux": "Unstable flux, unable to materialize an element."
       },
       "toast": {
-        "newSingle": "New element obtained: {{name}}!",
-        "duplicateSingle": "{{name}} rejoins your collection.",
-        "newMultiple": "{{count}} new elements discovered!",
-        "duplicateWithRarity": "{{name}} ({{rarity}}) rejoins your collection."
+        "newSingle": "New element obtained: {name}!",
+        "duplicateSingle": "{name} rejoins your collection.",
+        "newMultiple": "{count} new elements discovered!",
+        "duplicateWithRarity": "{name} ({rarity}) rejoins your collection."
       },
       "ticketStar": {
         "single": "Draw ticket obtained!",
-        "multiple": "+{{count}} draw tickets!"
+        "multiple": "+{count} draw tickets!"
       }
     },
     "appData": {
@@ -834,21 +834,21 @@
         "set": "Collection bonus",
         "complete": "Complete collection",
         "bonus": "Bonus",
-        "apcFlat": "APC +{{value}}",
-        "apsFlat": "APS +{{value}}",
-        "apcFlatUnique": "APC +{{value}} per unique element",
-        "apsFlatUnique": "APS +{{value}} per unique element",
-        "apcFlatDuplicate": "APC +{{value}} per duplicate",
-        "apsFlatDuplicate": "APS +{{value}} per duplicate",
-        "apcMultiplier": "APC {{value}}",
-        "apsMultiplier": "APS {{value}}",
-        "critChance": "Crit chance {{value}}",
-        "critMultiplier": "Crit multiplier {{value}}",
-        "ticketInterval": "Every {{duration}}",
-        "requireCopies": "from {{count}} {{unit}}",
-        "requireUnique": "at least {{count}} {{unit}}",
+        "apcFlat": "APC +{value}",
+        "apsFlat": "APS +{value}",
+        "apcFlatUnique": "APC +{value} per unique element",
+        "apsFlatUnique": "APS +{value} per unique element",
+        "apcFlatDuplicate": "APC +{value} per duplicate",
+        "apsFlatDuplicate": "APS +{value} per duplicate",
+        "apcMultiplier": "APC {value}",
+        "apsMultiplier": "APS {value}",
+        "critChance": "Crit chance {value}",
+        "critMultiplier": "Crit multiplier {value}",
+        "ticketInterval": "Every {duration}",
+        "requireCopies": "from {count} {unit}",
+        "requireUnique": "at least {count} {unit}",
         "requireFull": "complete collection required",
-        "rarityAmplify": "Amplifies {{rarity}}: {{effects}}"
+        "rarityAmplify": "Amplifies {rarity}: {effects}"
       },
       "collections": {
         "complete": "Family complete",
@@ -861,7 +861,7 @@
       },
       "shop": {
         "noneAvailable": "No upgrades available.",
-        "level": "Level {{level}}",
+        "level": "Level {level}",
         "notPurchased": "Not purchased",
         "bonus": {
           "apcFlat": "APC +",
@@ -875,7 +875,7 @@
     },
     "metaux": {
       "timer": {
-        "max": "Max {{value}}"
+        "max": "Max {value}"
       },
       "session": {
         "start": "New session: chain those alloys!"
