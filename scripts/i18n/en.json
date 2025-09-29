@@ -459,13 +459,42 @@
       },
       "frenzy": "Frenzy",
       "frenzyActivate": "Activate {label} ({multiplier})",
+      "frenzyToast": "{label} ×{multiplier} for {duration}!",
       "pageUnlocked": "New page unlocked!",
+      "trophies": {
+        "unlocked": "Trophy unlocked: {name}!"
+      },
+      "devkit": {
+        "invalidAtoms": "Invalid atom value.",
+        "atomsAdded": "DevKit: +{amount} atoms",
+        "invalidAps": "Invalid APS bonus.",
+        "apsAdded": "DevKit: APS +{amount}",
+        "noApsToReset": "No APS bonus to reset.",
+        "apsReset": "DevKit: APS bonus reset",
+        "invalidTickets": "Invalid ticket amount.",
+        "ticketAdded": {
+          "single": "DevKit: 1 draw ticket added",
+          "multiple": "DevKit: {count} draw tickets added"
+        },
+        "trophiesUnlocked": "DevKit: {count} achievements unlocked!",
+        "allTrophiesUnlocked": "All achievements are already unlocked.",
+        "elementsAdded": "DevKit: {count} elements added to the collection!",
+        "collectionComplete": "The collection was already complete.",
+        "freeShopEnabled": "DevKit: free shop enabled",
+        "freeShopDisabled": "DevKit: free shop disabled",
+        "freeGachaEnabled": "DevKit: free draws enabled",
+        "freeGachaDisabled": "DevKit: free draws disabled",
+        "infoPageUnlocked": "DevKit: Info page unlocked!",
+        "infoPageAlready": "Info page already unlocked."
+      },
       "shop": {
         "limitReached": "Limit reached",
         "free": "Free",
         "limitSuffix": " (limited to remaining levels)",
         "maxLevel": "Maximum level reached.",
         "notEnoughAtoms": "Not enough atoms.",
+        "devkitFreePurchase": "DevKit: \"{name}\" ×{quantity} unlocked for free!{suffix}",
+        "purchase": "Upgrade \"{name}\" ×{quantity} purchased!{suffix}",
         "milestoneHint": "Keep exploring ever larger orders of magnitude!"
       },
       "themeUpdated": "Theme updated",
@@ -485,7 +514,8 @@
         "volumeLabel": "Music volume: {value}%",
         "muted": "Music muted",
         "missing": "Track not found",
-        "fileMissing": "The file for this track is missing."
+        "fileMissing": "The file for this track is missing.",
+        "nowPlaying": "Now playing: {name}"
       },
       "reset": {
         "keyword": "RESET",
@@ -496,6 +526,14 @@
       "bigBangToggle": {
         "shown": "Big Bang button shown",
         "hidden": "Big Bang button hidden"
+      },
+      "metaux": {
+        "chronoBonus": "Timer +{value} s",
+        "multiBonus": "Multiplier +{value}",
+        "toast": "Metals: {details}",
+        "unavailable": "Forge unavailable at the moment.",
+        "gameInProgress": "A game is already in progress. Finish it before starting a new one.",
+        "noCredits": "No Mach3 credit available."
       },
       "fusion": {
         "prompt": "Select a recipe to attempt your first fusion."
@@ -509,6 +547,10 @@
       "errors": {
         "save": "Save error",
         "load": "Load error"
+      },
+      "offline": {
+        "progressAtoms": "Offline progress: +{amount} atoms",
+        "tickets": "Offline tickets: +{count} {unit}"
       },
       "offlineTickets": {
         "ticketSingular": "ticket",

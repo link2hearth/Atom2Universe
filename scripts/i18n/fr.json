@@ -459,13 +459,42 @@
       },
       "frenzy": "Frénésie",
       "frenzyActivate": "Activer la {label} ({multiplier})",
+      "frenzyToast": "{label} ×{multiplier} pendant {duration} !",
       "pageUnlocked": "Nouvelle page débloquée !",
+      "trophies": {
+        "unlocked": "Trophée débloqué : {name} !"
+      },
+      "devkit": {
+        "invalidAtoms": "Valeur d’atome invalide.",
+        "atomsAdded": "DevKit : +{amount} atomes",
+        "invalidAps": "Bonus APS invalide.",
+        "apsAdded": "DevKit : APS +{amount}",
+        "noApsToReset": "Aucun bonus APS à réinitialiser.",
+        "apsReset": "DevKit : bonus APS remis à zéro",
+        "invalidTickets": "Nombre de tickets invalide.",
+        "ticketAdded": {
+          "single": "DevKit : 1 ticket de tirage ajouté",
+          "multiple": "DevKit : {count} tickets de tirage ajoutés"
+        },
+        "trophiesUnlocked": "DevKit : {count} succès débloqués !",
+        "allTrophiesUnlocked": "Tous les succès sont déjà débloqués.",
+        "elementsAdded": "DevKit : {count} éléments ajoutés à la collection !",
+        "collectionComplete": "La collection était déjà complète.",
+        "freeShopEnabled": "DevKit : magasin gratuit activé",
+        "freeShopDisabled": "DevKit : magasin gratuit désactivé",
+        "freeGachaEnabled": "DevKit : tirages gratuits activés",
+        "freeGachaDisabled": "DevKit : tirages gratuits désactivés",
+        "infoPageUnlocked": "DevKit : page Infos débloquée !",
+        "infoPageAlready": "Page Infos déjà débloquée."
+      },
       "shop": {
         "limitReached": "Limite atteinte",
         "free": "Gratuit",
         "limitSuffix": " (limité aux niveaux restants)",
         "maxLevel": "Niveau maximum atteint.",
         "notEnoughAtoms": "Pas assez d’atomes.",
+        "devkitFreePurchase": "DevKit : \"{name}\" ×{quantity} débloqué gratuitement !{suffix}",
+        "purchase": "Amélioration \"{name}\" ×{quantity} achetée !{suffix}",
         "milestoneHint": "Continuez à explorer des ordres de grandeur toujours plus vastes !"
       },
       "themeUpdated": "Thème mis à jour",
@@ -485,7 +514,8 @@
         "volumeLabel": "Volume musique : {value}%",
         "muted": "Musique coupée",
         "missing": "Piste introuvable",
-        "fileMissing": "Le fichier de cette piste est manquant."
+        "fileMissing": "Le fichier de cette piste est manquant.",
+        "nowPlaying": "Lecture : {name}"
       },
       "reset": {
         "keyword": "RESET",
@@ -496,6 +526,14 @@
       "bigBangToggle": {
         "shown": "Bouton Big Bang affiché",
         "hidden": "Bouton Big Bang masqué"
+      },
+      "metaux": {
+        "chronoBonus": "Chrono +{value} s",
+        "multiBonus": "Multi +{value}",
+        "toast": "Métaux : {details}",
+        "unavailable": "Forge indisponible pour le moment.",
+        "gameInProgress": "Une partie est déjà en cours. Terminez-la avant de relancer.",
+        "noCredits": "Aucun crédit Mach3 disponible."
       },
       "fusion": {
         "prompt": "Sélectionnez une recette pour tenter votre première fusion."
@@ -509,6 +547,10 @@
       "errors": {
         "save": "Erreur de sauvegarde",
         "load": "Erreur de chargement"
+      },
+      "offline": {
+        "progressAtoms": "Progression hors ligne : +{amount} atomes",
+        "tickets": "Tickets hors ligne : +{count} {unit}"
       },
       "offlineTickets": {
         "ticketSingular": "ticket",
