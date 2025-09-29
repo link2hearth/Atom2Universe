@@ -1236,7 +1236,7 @@ const FALLBACK_UPGRADES = (function createFallbackUpgrades() {
       name: 'Galaxie artificielle',
       description: 'Ingénierie galactique pour une expansion sans fin.',
       effectSummary:
-        'Production passive : +5 000 000 APS par niveau (doublée par Bibliothèque ≥300). Chaque niveau augmente l’APS de 10 %. Palier 100 : +50 % APC global.',
+        'Production passive : +5 000 000 APS par niveau (doublée par Bibliothèque ≥300). Palier 100 : +50 % APC global.',
       category: 'auto',
       baseCost: 1e13,
       costScale: 1.2,
@@ -1249,12 +1249,8 @@ const FALLBACK_UPGRADES = (function createFallbackUpgrades() {
         const baseAmount = 5e6 * level;
         const rawAutoAdd = baseAmount * productionMultiplier;
         const autoAdd = level > 0 ? Math.max(baseAmount, Math.round(rawAutoAdd)) : 0;
-        const autoMult = Math.pow(1.1, level);
         const clickMult = level >= 100 ? 1.5 : 1;
         const result = { autoAdd };
-        if (autoMult > 1) {
-          result.autoMult = autoMult;
-        }
         if (clickMult > 1) {
           result.clickMult = clickMult;
         }
