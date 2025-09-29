@@ -519,12 +519,23 @@
       "shop": {
         "limitReached": "Limit reached",
         "free": "Free",
+        "actionBuy": "Buy",
+        "actionUpgrade": "Upgrade",
+        "levelLabel": "Level {level}",
+        "levelLabelWithMax": "Level {level} / {max}",
+        "levelMaxSuffix": " (max)",
+        "ariaMaxLevel": "{name} has reached its maximum level",
+        "ariaActionFree": "{action} {name} ×{quantity}{limitNote} (free)",
+        "ariaActionCost": "{action} {name} ×{quantity}{limitNote} (cost {cost} atoms)",
+        "ariaActionInsufficient": "{action} {name} ×{quantity}{limitNote} (not enough atoms)",
+        "priceLimited": "Limited to x{quantity} — {price}",
         "limitSuffix": " (limited to remaining levels)",
         "maxLevel": "Maximum level reached.",
         "notEnoughAtoms": "Not enough atoms.",
         "devkitFreePurchase": "DevKit: \"{name}\" ×{quantity} unlocked for free!{suffix}",
         "purchase": "Upgrade \"{name}\" ×{quantity} purchased!{suffix}",
-        "milestoneHint": "Keep exploring ever larger orders of magnitude!"
+        "milestoneHint": "Keep exploring ever larger orders of magnitude!",
+        "costLabel": "{value} atoms"
       },
       "themeUpdated": "Theme updated",
       "language": {
@@ -827,6 +838,16 @@
           "name": "Tri-Phase Tempest",
           "description": "Trigger 1,000 total frenzies.",
           "reward": "Activates triple frenzy and adds a global ×{multiplier} bonus."
+        },
+        "ticketHarvester": {
+          "name": "Star Collector",
+          "description": "Complete the Cosmic Common and Planetary Essential collections.",
+          "reward": "On the main screen, ticket stars collect themselves after 3 seconds."
+        },
+        "alloyMastery": {
+          "name": "Alloy Masters",
+          "description": "Complete every available metal alloy fusion.",
+          "reward": "Adds +10 to the trophy multiplier."
         }
       }
     },
