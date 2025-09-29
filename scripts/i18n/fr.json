@@ -484,6 +484,36 @@
     }
   },
   "scripts": {
+    "config": {
+      "elementBonuses": {
+        "essentiel": {
+          "perCopy": "Essentiel planétaire · récoltes essentielles",
+          "setBonus": "Essentiel planétaire · collection complète",
+          "multiplier": "Essentiel planétaire · synergie orbitale"
+        },
+        "stellaire": {
+          "perCopy": "Forge stellaire · fragments activés",
+          "setBonus": "Forge stellaire · forge parfaite",
+          "multiplier": "Forge stellaire · intensité stellaire",
+          "labels": {
+            "perCopy": "Forge stellaire · fragments"
+          }
+        },
+        "singulier": {
+          "perCopy": "Singularité minérale · résonance cristalline",
+          "multiplier": "Singularité minérale · densité extrême"
+        },
+        "mythique": {
+          "setBonus": "Mythe quantique · convergence ultime",
+          "ticketBonus": "Mythe quantique · étoile compressée",
+          "offlineBonus": "Mythe quantique · collecte persistante",
+          "duplicateOverflow": "Mythe quantique · surcharge fractale"
+        },
+        "irreel": {
+          "multiplier": "Irréel · catalyseur dimensionnel"
+        }
+      }
+    },
     "app": {
       "brickSkins": {
         "applied": {
