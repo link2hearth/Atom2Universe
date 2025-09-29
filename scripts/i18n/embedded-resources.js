@@ -488,6 +488,36 @@
         }
       },
       "scripts": {
+        "config": {
+          "elementBonuses": {
+            "essentiel": {
+              "perCopy": "Essentiel planétaire · récoltes essentielles",
+              "setBonus": "Essentiel planétaire · collection complète",
+              "multiplier": "Essentiel planétaire · synergie orbitale"
+            },
+            "stellaire": {
+              "perCopy": "Forge stellaire · fragments activés",
+              "setBonus": "Forge stellaire · forge parfaite",
+              "multiplier": "Forge stellaire · intensité stellaire",
+              "labels": {
+                "perCopy": "Forge stellaire · fragments"
+              }
+            },
+            "singulier": {
+              "perCopy": "Singularité minérale · résonance cristalline",
+              "multiplier": "Singularité minérale · densité extrême"
+            },
+            "mythique": {
+              "setBonus": "Mythe quantique · convergence ultime",
+              "ticketBonus": "Mythe quantique · étoile compressée",
+              "offlineBonus": "Mythe quantique · collecte persistante",
+              "duplicateOverflow": "Mythe quantique · surcharge fractale"
+            },
+            "irreel": {
+              "multiplier": "Irréel · catalyseur dimensionnel"
+            }
+          }
+        },
         "app": {
           "brickSkins": {
             "applied": {
@@ -1477,6 +1507,36 @@
         }
       },
       "scripts": {
+        "config": {
+          "elementBonuses": {
+            "essentiel": {
+              "perCopy": "Planetary Essential · Essential harvests",
+              "setBonus": "Planetary Essential · Complete collection",
+              "multiplier": "Planetary Essential · Orbital synergy"
+            },
+            "stellaire": {
+              "perCopy": "Stellar Forge · Activated fragments",
+              "setBonus": "Stellar Forge · Perfect forge",
+              "multiplier": "Stellar Forge · Stellar intensity",
+              "labels": {
+                "perCopy": "Stellar Forge · Fragments"
+              }
+            },
+            "singulier": {
+              "perCopy": "Mineral Singularity · Crystalline resonance",
+              "multiplier": "Mineral Singularity · Extreme density"
+            },
+            "mythique": {
+              "setBonus": "Quantum Myth · Ultimate convergence",
+              "ticketBonus": "Quantum Myth · Compressed star",
+              "offlineBonus": "Quantum Myth · Persistent collection",
+              "duplicateOverflow": "Quantum Myth · Fractal overload"
+            },
+            "irreel": {
+              "multiplier": "Unreal · Dimensional catalyst"
+            }
+          }
+        },
         "app": {
           "brickSkins": {
             "applied": {
