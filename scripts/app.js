@@ -7999,6 +7999,9 @@ function pulseApsCritPanel() {
 }
 
 function updateUI() {
+  if (typeof refreshGachaRarityLocalization === 'function') {
+    refreshGachaRarityLocalization();
+  }
   updatePrimaryNavigationLocks();
   updatePageUnlockUI();
   updateBigBangVisibility();

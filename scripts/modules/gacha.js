@@ -200,31 +200,37 @@ const GACHA_TICKET_COST = Math.max(
 
 function localizeRarityEntry(entry) {
   if (!entry || typeof entry !== 'object') {
-    return { id: '', label: '', description: '', weight: 0, color: null };
+    return {
+      id: '',
+      label: '',
+      labelFallback: '',
+      description: '',
+      descriptionFallback: '',
+      labelKey: null,
+      descriptionKey: null,
+      weight: 0,
+      color: null
+    };
   }
   const id = typeof entry.id === 'string' ? entry.id.trim() : '';
   const baseKey = id ? `scripts.gacha.rarities.${id}` : '';
   const fallbackLabel = typeof entry.label === 'string' && entry.label.trim()
     ? entry.label.trim()
     : id;
-  const fallbackDescription = typeof entry.description === 'string'
-    ? entry.description
+  const fallbackDescription = typeof entry.description === 'string' && entry.description.trim()
+    ? entry.description.trim()
     : '';
-  const label = baseKey
-    ? translateWithFallback(`${baseKey}.label`, fallbackLabel)
-    : fallbackLabel;
-  const description = baseKey
-    ? translateWithFallback(`${baseKey}.description`, fallbackDescription)
-    : fallbackDescription;
   return {
     ...entry,
     id,
-    label: typeof label === 'string' && label.trim() ? label.trim() : fallbackLabel,
-    description:
-      typeof description === 'string' && description.trim()
-        ? description.trim()
-        : fallbackDescription,
-    weight: Math.max(0, Number(entry.weight) || 0)
+    label: fallbackLabel,
+    labelFallback: fallbackLabel,
+    labelKey: baseKey ? `${baseKey}.label` : null,
+    description: fallbackDescription,
+    descriptionFallback: fallbackDescription,
+    descriptionKey: baseKey ? `${baseKey}.description` : null,
+    weight: Math.max(0, Number(entry.weight) || 0),
+    color: entry.color ? String(entry.color) : null
   };
 }
 
@@ -323,7 +329,6 @@ function getEffectiveGachaRaritiesForDate(date = new Date()) {
   return effective;
 }
 
-let GACHA_RARITIES = [];
 const GACHA_RARITY_MAP = new Map();
 let activeGachaWeightDayKey = null;
 
@@ -336,11 +341,13 @@ function refreshGachaRarities(date = new Date(), { force = false } = {}) {
     return false;
   }
   const effective = getEffectiveGachaRaritiesForDate(targetDate);
+  effective.forEach(applyLocalizedRarity);
   GACHA_RARITIES = effective;
   GACHA_RARITY_MAP.clear();
   GACHA_RARITIES.forEach(entry => {
     GACHA_RARITY_MAP.set(entry.id, entry);
   });
+  refreshGachaRarityLocalization({ force: true });
   activeGachaWeightDayKey = dayKey;
   updateGachaFeaturedInfo(dayKey);
   return true;
@@ -378,13 +385,94 @@ function getCurrentGachaTotalWeight() {
 
 const RARITY_IDS = BASE_GACHA_RARITIES.map(entry => entry.id);
 const GACHA_RARITY_ORDER = new Map(RARITY_IDS.map((id, index) => [id, index]));
-const RARITY_LABEL_MAP = new Map(BASE_GACHA_RARITIES.map(entry => [entry.id, entry.label || entry.id]));
+const RARITY_LABEL_MAP = new Map();
 const INFO_BONUS_RARITIES = RARITY_IDS.length > 0
   ? [...RARITY_IDS]
   : ['commun', 'essentiel', 'stellaire', 'singulier', 'mythique', 'irreel'];
-const INFO_BONUS_SUBTITLE = INFO_BONUS_RARITIES.length
-  ? INFO_BONUS_RARITIES.map(id => RARITY_LABEL_MAP.get(id) || id).join(' · ')
-  : t('scripts.gacha.rarityProgress.unavailable');
+let INFO_BONUS_SUBTITLE = '';
+let lastLocalizedRarityLanguage = null;
+let GACHA_RARITIES = [];
+
+function applyLocalizedRarity(entry) {
+  if (!entry || typeof entry !== 'object') {
+    return entry;
+  }
+  const labelFallback = typeof entry.labelFallback === 'string' && entry.labelFallback.trim()
+    ? entry.labelFallback.trim()
+    : (typeof entry.label === 'string' ? entry.label : entry.id);
+  const descriptionFallback = typeof entry.descriptionFallback === 'string' && entry.descriptionFallback.trim()
+    ? entry.descriptionFallback.trim()
+    : (typeof entry.description === 'string' ? entry.description : '');
+  const label = entry.labelKey
+    ? translateWithFallback(entry.labelKey, labelFallback)
+    : labelFallback;
+  const description = entry.descriptionKey
+    ? translateWithFallback(entry.descriptionKey, descriptionFallback)
+    : descriptionFallback;
+  entry.labelFallback = labelFallback;
+  entry.descriptionFallback = descriptionFallback;
+  entry.label = typeof label === 'string' && label.trim() ? label.trim() : labelFallback;
+  entry.description = typeof description === 'string' && description.trim()
+    ? description.trim()
+    : descriptionFallback;
+  return entry;
+}
+
+function getActiveLanguageCode() {
+  const api = getI18nApi();
+  if (api && typeof api.getCurrentLanguage === 'function') {
+    const lang = api.getCurrentLanguage();
+    if (typeof lang === 'string' && lang.trim()) {
+      return lang.trim();
+    }
+  }
+  if (typeof document !== 'undefined' && document.documentElement?.lang) {
+    return document.documentElement.lang;
+  }
+  return '';
+}
+
+function updateLocalizedRarityData({ includeEffective = false, force = false } = {}) {
+  const currentLanguage = getActiveLanguageCode();
+  if (!force && currentLanguage && currentLanguage === lastLocalizedRarityLanguage) {
+    return;
+  }
+  BASE_GACHA_RARITIES.forEach(applyLocalizedRarity);
+  if (includeEffective && Array.isArray(GACHA_RARITIES)) {
+    GACHA_RARITIES.forEach(applyLocalizedRarity);
+  }
+  RARITY_LABEL_MAP.clear();
+  BASE_GACHA_RARITIES.forEach(entry => {
+    RARITY_LABEL_MAP.set(entry.id, entry.label || entry.id);
+  });
+  if (INFO_BONUS_RARITIES.length) {
+    INFO_BONUS_SUBTITLE = INFO_BONUS_RARITIES
+      .map(id => RARITY_LABEL_MAP.get(id) || id)
+      .join(' · ');
+  } else {
+    INFO_BONUS_SUBTITLE = translateWithFallback(
+      'scripts.gacha.rarityProgress.unavailable',
+      'Rarities unavailable'
+    );
+  }
+  RARITY_IDS.forEach(rarityId => {
+    const stepId = `rarityMultiplier:${rarityId}`;
+    const step = PRODUCTION_STEP_DEFINITIONS.get(stepId);
+    if (step) {
+      const rarityLabel = RARITY_LABEL_MAP.get(rarityId) || rarityId;
+      step.label = `Rareté ${rarityLabel}`;
+    }
+  });
+  lastLocalizedRarityLanguage = currentLanguage || null;
+}
+
+function refreshGachaRarityLocalization(options = {}) {
+  updateLocalizedRarityData({ includeEffective: true, ...options });
+  return {
+    labelMap: RARITY_LABEL_MAP,
+    subtitle: INFO_BONUS_SUBTITLE
+  };
+}
 
 const rawTicketStarConfig = CONFIG.ticketStar && typeof CONFIG.ticketStar === 'object'
   ? CONFIG.ticketStar
@@ -459,6 +547,8 @@ defineProductionStep(
   { source: 'trophyMultiplier' }
 );
 defineProductionStep('total', 'total', '= Total');
+
+updateLocalizedRarityData({ includeEffective: false, force: true });
 
 RARITY_IDS.forEach(rarityId => {
   const rarityLabel = RARITY_LABEL_MAP.get(rarityId) || rarityId;
@@ -3230,7 +3320,9 @@ function compareTextLocalized(a, b, options) {
 }
 
 if (typeof window !== 'undefined') {
+  window.refreshGachaRarityLocalization = refreshGachaRarityLocalization;
   window.addEventListener('i18n:languagechange', () => {
+    refreshGachaRarityLocalization({ force: true });
     if (elements.gachaRarityList) {
       renderGachaRarityList();
     }
