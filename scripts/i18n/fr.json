@@ -1,0 +1,558 @@
+{
+  "index": {
+    "meta": {
+      "title": "Atom to Univers"
+    },
+    "navigation": {
+      "primary": "Navigation principale",
+      "items": {
+        "arcade": "Particules",
+        "shop": "Shop",
+        "gacha": "Gacha",
+        "table": "Table",
+        "fusion": "Fusion",
+        "info": "Infos",
+        "goals": "Goals",
+        "bigbang": "Big Bang",
+        "options": "Options"
+      }
+    },
+    "status": {
+      "totalAtoms": "Total d'atomes",
+      "apc": "APC",
+      "aps": "APS"
+    },
+    "sections": {
+      "game": {
+        "aria": "Chambre de création atomique",
+        "atomButton": {
+          "aria": "Créer des atomes",
+          "alt": "Illustration d'un atome vibrant"
+        }
+      },
+      "shop": {
+        "title": "Boutique quantique"
+      },
+      "gacha": {
+        "title": "Portail de tirage cosmique",
+        "toggleAria": "Basculer le mode de tirage (actuel : Tirage x1)",
+        "modeSingle": "Tirage x1",
+        "tickets": {
+          "single": "0 ticket",
+          "plural": "{{count}} tickets"
+        },
+        "sunButton": "Déclencher un tirage cosmique",
+        "sunAlt": "Soleil cosmique",
+        "continue": "Cliquer pour continuer"
+      },
+      "arcade": {
+        "aria": "Particules",
+        "header": {
+          "aria": "Navigation du jeu Particules",
+          "tickets": "Tickets",
+          "mach3": "Mach3",
+          "mach3Announcement": "Mach3 : 0 crédits"
+        },
+        "hud": {
+          "level": "Niveau",
+          "lives": "Vies",
+          "score": "Score",
+          "combo": ""
+        },
+        "canvasAria": "Zone de jeu Particules",
+        "overlay": {
+          "message": "Touchez ou cliquez la raquette pour guider la particule et détruire les briques quantiques.",
+          "button": "Commencer"
+        }
+      },
+      "table": {
+        "aria": "Tableau périodique des éléments",
+        "placeholder": "Sélectionnez un élément pour afficher ses propriétés.",
+        "details": {
+          "family": "Famille",
+          "collection": "Collection"
+        }
+      },
+      "fusion": {
+        "title": "Chambre de fusion moléculaire",
+        "intro": "Combinez vos éléments pour tenter de former des molécules inédites. Les ingrédients sont prélevés sur vos stocks actuels et la réussite n’est jamais garantie."
+      },
+      "info": {
+        "title": "Informations de progression",
+        "aps": {
+          "title": "Production automatique (APS)",
+          "subtitle": "Synthèse par seconde",
+          "aria": "Détail du calcul APS"
+        },
+        "apc": {
+          "title": "Production manuelle (APC)",
+          "subtitle": "Atomes par clic",
+          "aria": "Détail du calcul APC"
+        },
+        "progress": {
+          "title": "Progression",
+          "subtitle": "Session & globale",
+          "session": {
+            "title": "Session",
+            "atoms": "Atomes gagnés",
+            "clicks": "Clics manuels",
+            "apc": "Atomes via APC",
+            "aps": "Atomes via APS",
+            "offline": "Atomes hors ligne",
+            "duration": "Durée en ligne"
+          },
+          "global": {
+            "title": "Globale",
+            "atoms": "Atomes gagnés",
+            "clicks": "Clics manuels",
+            "apc": "Atomes via APC",
+            "aps": "Atomes via APS",
+            "offline": "Atomes hors ligne",
+            "duration": "Durée de jeu"
+          }
+        },
+        "shop": {
+          "title": "Bonus boutique",
+          "subtitle": "Effets cumulés du magasin"
+        },
+        "elements": {
+          "title": "Bonus éléments",
+          "subtitle": "Commun cosmique · Essentiel planétaire · Forge stellaire · Singularité minérale · Mythe quantique · Irréel"
+        }
+      },
+      "photon": {
+        "title": "Photon",
+        "aria": "Photon",
+        "scoreLabel": "Score",
+        "closeAria": "Fermer Photon et retourner aux options",
+        "stageAria": "Zone de jeu Photon",
+        "overlayMessage": "Prêt à synchroniser les photons ?",
+        "button": "Commencer"
+      },
+      "metaux": {
+        "aria": "Métaux",
+        "exitAria": "Quitter le mini-jeu Métaux",
+        "timerLabel": "Chrono",
+        "timerMax": "Max 6 s",
+        "endTitle": "Forge terminée",
+        "summary": {
+          "time": "Temps passé",
+          "matches": "Matches"
+        },
+        "colorsTitle": "Couleurs travaillées",
+        "newGame": "Nouvelle partie",
+        "newGameCredits": "Mach3 : 0",
+        "return": "Retour"
+      },
+      "goals": {
+        "title": "Objectifs & trophées",
+        "intro": "Surveillez vos succès galactiques et débloquez des bonus permanents.",
+        "empty": "Aucun trophée complété pour le moment. Terminez des objectifs pour les afficher ici."
+      },
+      "bigbang": {
+        "title": "Big Bang",
+        "description": "A venir"
+      },
+      "options": {
+        "title": "Options",
+        "music": {
+          "title": "Musique",
+          "track": "Piste en lecture",
+          "loading": "Chargement...",
+          "volume": "Volume",
+          "note": "La musique démarre automatiquement après votre première interaction."
+        },
+        "brickSkin": {
+          "title": "Skin des briques",
+          "appearance": "Apparence",
+          "options": {
+            "original": "Original",
+            "metallic": "Metallic",
+            "neon": "Néon",
+            "pastels": "Pastels"
+          },
+          "note": "Débloquez le trophée « Ruée vers le million » pour personnaliser vos briques."
+        },
+        "photon": {
+          "title": "Photon",
+          "note": "Synchronisez la couleur du halo avec les faisceaux lumineux qui tombent.",
+          "button": "Lancer Photon"
+        },
+        "reset": "Réinitialiser"
+      },
+      "devkit": {
+        "title": "DevKit quantique",
+        "close": "Fermer le DevKit",
+        "intro": "Outils de triche pour expérimentations rapides. Les changements sont immédiats.",
+        "resources": {
+          "title": "Ressources",
+          "giveAtoms": "Donner des atomes",
+          "atomsPlaceholder": "ex : 1e9",
+          "add": "Ajouter",
+          "increaseAuto": "Augmenter les APS plats",
+          "autoPlaceholder": "ex : 250000",
+          "increase": "Augmenter",
+          "autoBonusLabel": "Bonus APS actuel :",
+          "reset": "Réinitialiser",
+          "giveTickets": "Donner des tickets de tirage",
+          "ticketsPlaceholder": "ex : 50"
+        },
+        "unlocks": {
+          "title": "Déblocages instantanés",
+          "trophies": "Débloquer tous les succès",
+          "elements": "Débloquer tout le tableau périodique",
+          "info": "Débloquer la page Infos"
+        },
+        "modes": {
+          "title": "Modes persistants",
+          "shop": "Magasin gratuit : désactivé",
+          "gacha": "Tirages gratuits : désactivés",
+          "note": "Les modes restent actifs tant que la session est ouverte (raccourci F9)."
+        },
+        "footer": "Appuyez sur F9 pour ouvrir ou fermer le DevKit."
+      }
+    }
+  },
+  "config": {
+    "shop": {
+      "buildings": {
+        "freeElectrons": {
+          "name": "Électrons libres",
+          "description": "Canalisez des électrons pour amplifier chaque clic quantique.",
+          "effect": "Production manuelle : +1 APC par niveau. Tous les 25 niveaux : +10 % APC."
+        },
+        "physicsLab": {
+          "name": "Laboratoire de Physique",
+          "description": "Des équipes de chercheurs boostent votre production atomique.",
+          "effect": "Production passive : +1 APS par niveau. Chaque 10 labos accordent +10 % d’APC global. Accélérateur ≥200 : Labos +20 % APS."
+        },
+        "nuclearReactor": {
+          "name": "Réacteur nucléaire",
+          "description": "Des réacteurs contrôlés libèrent une énergie colossale.",
+          "effect": "Production passive : +10 APS par niveau (+1 % par 50 Électrons, +20 % si Labos ≥200). Tous les 100 réacteurs : APC global ×2 (cumulatif)."
+        },
+        "particleAccelerator": {
+          "name": "Accélérateur de particules",
+          "description": "Boostez vos particules pour décupler l’APC.",
+          "effect": "Production passive : +50 APS par niveau (bonus si ≥100 Supercalculateurs). Chaque niveau octroie +5 % d’APC. Palier 200 : +20 % production des Labos."
+        },
+        "supercomputer": {
+          "name": "Supercalculateurs",
+          "description": "Des centres de calcul quantique optimisent vos gains.",
+          "effect": "Production passive : +500 APS par niveau (doublée par Stations ≥300). Tous les 50 Supercalculateurs : APS global ×2 (cumulatif)."
+        },
+        "interstellarProbe": {
+          "name": "Sonde interstellaire",
+          "description": "Explorez la galaxie pour récolter toujours plus.",
+          "effect": "Production passive : +5 000 APS par niveau (boostée par Réacteurs). À 150 exemplaires : chaque sonde ajoute +10 APC."
+        },
+        "spaceStation": {
+          "name": "Station spatiale",
+          "description": "Des bases orbitales coordonnent votre expansion.",
+          "effect": "Production passive : +50 000 APS par niveau. Chaque Station accorde +5 % d’APC. Palier 300 : Supercalculateurs +100 %."
+        },
+        "starForge": {
+          "name": "Forgeron d’étoiles",
+          "description": "Façonnez des étoiles et dopez votre APC.",
+          "effect": "Production passive : +500 000 APS par niveau (+2 % APS par Station). Tous les 50 Forgerons : APC global ×2 (cumulatif)."
+        },
+        "artificialGalaxy": {
+          "name": "Galaxie artificielle",
+          "description": "Ingénierie galactique pour une expansion sans fin.",
+          "effect": "Production passive : +5 000 000 APS par niveau (doublée par Bibliothèque ≥300). Chaque niveau augmente l’APS de 10 %. Palier 100 : +50 % APC global."
+        },
+        "multiverseSimulator": {
+          "name": "Simulateur de Multivers",
+          "description": "Simulez l’infini pour optimiser chaque seconde.",
+          "effect": "Production passive : +500 000 000 APS par niveau. Synergie : +0,5 % APS global par bâtiment possédé. Palier 200 : coûts des bâtiments −5 %."
+        },
+        "realityWeaver": {
+          "name": "Tisseur de Réalité",
+          "description": "Tissez les lois physiques à votre avantage.",
+          "effect": "Production passive : +10 000 000 000 APS par niveau. Bonus clic arrondi : +0,1 × bâtiments × niveau. Palier 300 : production totale ×2."
+        },
+        "cosmicArchitect": {
+          "name": "Architecte Cosmique",
+          "description": "Réécrivez les plans du cosmos pour réduire les coûts.",
+          "effect": "Production passive : +1 000 000 000 000 APS par niveau. Réduction de 1 % du coût futur par Architecte. Tous les 50 Architectes : APC global ×2 (cumulatif)."
+        },
+        "parallelUniverse": {
+          "name": "Univers parallèle",
+          "description": "Expérimentez des réalités alternatives à haut rendement.",
+          "effect": "Production passive : +100 000 000 000 000 APS par niveau."
+        },
+        "omniverseLibrary": {
+          "name": "Bibliothèque de l’Omnivers",
+          "description": "Compilez le savoir infini pour booster toute production.",
+          "effect": "Production passive : +10 000 000 000 000 000 APS par niveau. +2 % boost global par Univers parallèle. Palier 300 : Galaxies artificielles ×2."
+        },
+        "quantumOverseer": {
+          "name": "Grand Ordonnateur Quantique",
+          "description": "Ordonnez le multivers et atteignez la singularité.",
+          "effect": "Production passive : +1 000 000 000 000 000 000 APS par niveau. Palier 100 : double définitivement tous les gains."
+        }
+      }
+    },
+    "trophies": {
+      "presets": {
+        "scaleHumanCell": {
+          "name": "Échelle : cellule humaine",
+          "flavor": "l’équivalent d’une cellule humaine « moyenne »"
+        },
+        "scaleSandGrain": {
+          "name": "Échelle : grain de sable",
+          "flavor": "la masse d’un grain de sable (~1 mm)"
+        },
+        "scaleAnt": {
+          "name": "Échelle : fourmi",
+          "flavor": "comparable à une fourmi (~5 mg)"
+        },
+        "scaleWaterDrop": {
+          "name": "Échelle : goutte d’eau",
+          "flavor": "la quantité d’atomes contenue dans une goutte d’eau de 0,05 mL"
+        },
+        "scalePaperclip": {
+          "name": "Échelle : trombone",
+          "flavor": "l’équivalent d’un trombone en fer (~1 g)"
+        },
+        "scaleCoin": {
+          "name": "Échelle : pièce",
+          "flavor": "la masse atomique d’une pièce de monnaie (~7,5 g)"
+        },
+        "scaleApple": {
+          "name": "Échelle : pomme",
+          "flavor": "la masse atomique d’une pomme (~100 g)"
+        },
+        "scaleSmartphone": {
+          "name": "Échelle : smartphone",
+          "flavor": "autant qu’un smartphone moderne (~180 g)"
+        },
+        "scaleWaterLitre": {
+          "name": "Échelle : litre d’eau",
+          "flavor": "l’équivalent d’un litre d’eau"
+        },
+        "scaleHuman": {
+          "name": "Échelle : être humain",
+          "flavor": "comparable à un humain de 70 kg"
+        },
+        "scalePiano": {
+          "name": "Échelle : piano",
+          "flavor": "équivaut à un piano (~450 kg)"
+        },
+        "scaleCar": {
+          "name": "Échelle : voiture compacte",
+          "flavor": "autant qu’une voiture compacte (~1,3 t)"
+        },
+        "scaleElephant": {
+          "name": "Échelle : éléphant",
+          "flavor": "équivaut à un éléphant (~6 t)"
+        },
+        "scaleBoeing747": {
+          "name": "Échelle : Boeing 747",
+          "flavor": "autant qu’un Boeing 747"
+        },
+        "scalePyramid": {
+          "name": "Échelle : pyramide de Khéops",
+          "flavor": "la masse d’atomes de la grande pyramide de Khéops"
+        },
+        "scaleAtmosphere": {
+          "name": "Échelle : atmosphère terrestre",
+          "flavor": "équivaut à l’atmosphère terrestre complète"
+        },
+        "scaleOceans": {
+          "name": "Échelle : océans terrestres",
+          "flavor": "autant que tous les océans de la Terre"
+        },
+        "scaleEarth": {
+          "name": "Échelle : Terre",
+          "flavor": "égale la masse atomique de la planète Terre"
+        },
+        "scaleSun": {
+          "name": "Échelle : Soleil",
+          "flavor": "équivaut au Soleil"
+        },
+        "scaleMilkyWay": {
+          "name": "Échelle : Voie lactée",
+          "flavor": "comparable à la Voie lactée entière"
+        },
+        "scaleLocalGroup": {
+          "name": "Échelle : Groupe local",
+          "flavor": "autant que le Groupe local de galaxies"
+        },
+        "scaleVirgoCluster": {
+          "name": "Échelle : superamas de la Vierge",
+          "flavor": "équivaut au superamas de la Vierge"
+        },
+        "scaleObservableUniverse": {
+          "name": "Échelle : univers observable",
+          "flavor": "atteignez le total estimé d’atomes de l’univers observable"
+        }
+      },
+      "reward": {
+        "description": "Ajoute +{{bonus}} au Boost global sur la production manuelle et automatique (×{{total}} pour ce palier)."
+      },
+      "description": "Atteignez {{target}} atomes cumulés, {{flavor}}."
+    },
+    "uiText": {
+      "options": {
+        "welcomeCard": {
+          "title": "Bienvenue",
+          "intro": "Bienvenue dans Atom to Univers, commencez en cliquant pour gagner des Atomes (APC Atoms Par Clic), achetez des améliorations dans le magasin et automatisez la récolte (APS Atoms Par Seconde). Débloquez des minis jeux au fur et à mesure de votre progression. L’objectif est d’accumuler le plus possible d’Atomes pour fabriquer un Univers.",
+          "details": {
+            "particles": {
+              "label": "Mini Jeu Particules :",
+              "description": "Collisionnez les particules élémentaires afin de gagner des tickets de tirage pour le Gacha, et des crédits pour le mini jeu Mach3."
+            },
+            "gacha": {
+              "label": "Gacha :",
+              "description": "Grâce à vos tickets gagnez des Atomes du tableau périodique des éléments, leurs collections vous octroieront des bonus de APS et APC notamment."
+            },
+            "match3": {
+              "label": "Mini jeu Mach3 :",
+              "description": "C’est un jeu de Match 3, alignez le Cuivre, le Bronze, l’Argent, l’Or et le Carbone (Diamant) le plus vite possible avant que le timer atteigne 0. Plus votre score sera grand, plus grand sera votre bonus de production d’APS."
+            },
+            "photon": {
+              "label": "Mini jeu Photon :",
+              "description": "Incarnez un Photon qui change d’état afin de passer entre des mailles, ou dans des trous le plus longtemps possible. Ajoutera un bonus plus tard."
+            }
+          }
+        }
+      }
+    },
+    "arcade": {
+      "particules": {
+        "graviton": {
+          "detection": "Graviton détecté !",
+          "dissipate": "Le graviton s’est dissipé…",
+          "capture": "Graviton capturé !"
+        },
+        "lingerBonus": {
+          "message": "Multiballe bonus !"
+        },
+        "combos": {
+          "bonusPrefix": "Bonus: ",
+          "quarkPrefix": "Combo quark ! "
+        },
+        "powerUps": {
+          "labels": {
+            "extend": "Barre allongée",
+            "multiball": "Multiballe",
+            "laser": "Tir laser",
+            "speed": "Accélération",
+            "floor": "Bouclier inférieur"
+          }
+        }
+      }
+    }
+  },
+  "scripts": {
+    "app": {
+      "brickSkins": {
+        "applied": {
+          "original": "Skin original appliqué.",
+          "metallic": "Skin Metallic appliqué.",
+          "neon": "Skin Néon appliqué.",
+          "pastels": "Skin Pastels appliqué.",
+          "generic": "Skin mis à jour."
+        }
+      },
+      "frenzy": "Frénésie",
+      "frenzyActivate": "Activer la {{label}} ({{multiplier}})",
+      "pageUnlocked": "Nouvelle page débloquée !",
+      "shop": {
+        "limitReached": "Limite atteinte",
+        "free": "Gratuit",
+        "limitSuffix": " (limité aux niveaux restants)",
+        "maxLevel": "Niveau maximum atteint.",
+        "notEnoughAtoms": "Pas assez d’atomes.",
+        "milestoneHint": "Continuez à explorer des ordres de grandeur toujours plus vastes !"
+      },
+      "themeUpdated": "Thème mis à jour",
+      "music": {
+        "muted": "Musique coupée",
+        "missing": "Piste introuvable",
+        "fileMissing": "Le fichier de cette piste est manquant."
+      },
+      "reset": {
+        "keyword": "RESET",
+        "cancelled": "Réinitialisation annulée",
+        "invalid": "Mot de confirmation incorrect",
+        "done": "Progression réinitialisée"
+      },
+      "bigBangToggle": {
+        "shown": "Bouton Big Bang affiché",
+        "hidden": "Bouton Big Bang masqué"
+      },
+      "fusion": {
+        "prompt": "Sélectionnez une recette pour tenter votre première fusion."
+      },
+      "errors": {
+        "save": "Erreur de sauvegarde",
+        "load": "Erreur de chargement"
+      },
+      "offlineTickets": {
+        "ticketSingular": "ticket",
+        "ticketPlural": "tickets"
+      }
+    },
+    "gacha": {
+      "rarities": {
+        "commun": {
+          "label": "Commun cosmique",
+          "description": "Les briques fondamentales présentes dans la majorité des nébuleuses."
+        },
+        "essentiel": {
+          "label": "Essentiel planétaire",
+          "description": "Éléments abondants dans les mondes rocheux et les atmosphères habitables."
+        },
+        "stellaire": {
+          "label": "Forge stellaire",
+          "description": "Alliages façonnés au coeur des étoiles et disséminés par les supernovæ."
+        },
+        "singulier": {
+          "label": "Singularité minérale",
+          "description": "Cristaux recherchés, rarement concentrés au même endroit."
+        },
+        "mythique": {
+          "label": "Mythe quantique",
+          "description": "Éléments légendaires aux propriétés extrêmes et insaisissables."
+        },
+        "irreel": {
+          "label": "Irréel",
+          "description": "Synthèses artificielles nées uniquement dans des accélérateurs."
+        }
+      },
+      "featured": {
+        "monday": "+Singularité Minérale",
+        "thursday": "+Singularité Minérale",
+        "tuesday": "+Mythe Quantique",
+        "friday": "+Mythe Quantique",
+        "wednesday": "+Iréel",
+        "saturday": "+Iréel"
+      }
+    },
+    "info": {
+      "bonuses": {
+        "perCopy": "Par copie",
+        "set": "Bonus de collection",
+        "complete": "Collection complète",
+        "bonus": "Bonus",
+        "apcFlat": "APC +{{value}}",
+        "apsFlat": "APS +{{value}}",
+        "apcFlatUnique": "APC +{{value}} par élément unique",
+        "apsFlatUnique": "APS +{{value}} par élément unique",
+        "apcFlatDuplicate": "APC +{{value}} par doublon",
+        "apsFlatDuplicate": "APS +{{value}} par doublon",
+        "apcMultiplier": "APC {{value}}",
+        "apsMultiplier": "APS {{value}}",
+        "critChance": "Chance critique {{value}}",
+        "critMultiplier": "Multiplicateur critique {{value}}",
+        "ticketInterval": "Toutes les {{duration}}",
+        "requireCopies": "dès {{count}} {{unit}}",
+        "requireUnique": "minimum {{count}} {{unit}}",
+        "requireFull": "collection complète requise",
+        "rarityAmplify": "Amplifie {{rarity}} : {{effects}}"
+      }
+    }
+  }
+}
