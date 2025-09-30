@@ -815,26 +815,30 @@ main {
   margin: 0 auto;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   gap: clamp(0.55rem, 1.6vw, 1.2rem);
   flex-wrap: wrap;
 }
 
-.page--arcade .bannierearcade__nav-group {
+.bannierearcade__nav-group,
+.bannierearcade__status-group {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+}
+
+.bannierearcade__nav-group {
   gap: clamp(0.55rem, 1.6vw, 1.2rem);
-  flex-wrap: wrap;
 }
 
-.page--arcade .bannierearcade__status-group {
+.bannierearcade__status-group {
   margin-left: auto;
-  flex-wrap: wrap;
-  justify-content: flex-end;
+  align-items: stretch;
   gap: clamp(0.28rem, 0.77vw, 0.55rem);
+  justify-content: flex-end;
 }
 
-.page--arcade .bannierearcade__status-group .arcade-header__status {
+.bannierearcade__status-group .arcade-header__status {
   flex: 0 1 auto;
 }
 
@@ -984,6 +988,8 @@ body.theme-neon .bannierearcade {
 
 .page--photon {
   --photon-topbar-height: clamp(1.8rem, 6vh, 3rem);
+  --photon-banner-height: clamp(3.2rem, 10vw, 4.5rem);
+  --photon-interface-height: calc(var(--photon-topbar-height) + var(--photon-banner-height));
   --photon-stage-padding: clamp(0.4rem, 2vw, 1.4rem);
   display: none;
   width: 100%;
@@ -994,6 +1000,7 @@ body.theme-neon .bannierearcade {
 .page--photon.active {
   display: flex;
   flex-direction: column;
+  gap: clamp(0.75rem, 2vw, 1.6rem);
   min-height: 100vh;
 }
 
@@ -1055,10 +1062,12 @@ body.theme-neon .bannierearcade {
   gap: clamp(0.4rem, 1.5vw, 1.2rem);
   min-height: var(--photon-topbar-height);
   padding: clamp(0.45rem, 1.4vw, 0.9rem) clamp(0.8rem, 2.4vw, 1.6rem);
-  width: 100%;
-  background: linear-gradient(140deg, rgba(20, 28, 56, 0.88), rgba(6, 10, 26, 0.9));
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 18px 36px rgba(5, 8, 22, 0.45);
+  width: min(960px, 94vw);
+  margin: 0 auto;
+  border-radius: clamp(0.9rem, 2.2vw, 1.4rem);
+  background: linear-gradient(140deg, rgba(20, 28, 56, 0.82), rgba(6, 10, 26, 0.9));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 18px 36px rgba(5, 8, 22, 0.38);
   backdrop-filter: blur(12px);
   z-index: 2;
 }
@@ -1066,6 +1075,8 @@ body.theme-neon .bannierearcade {
 .photon-content {
   flex: 1;
   width: 100%;
+  max-width: min(960px, 94vw);
+  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1119,14 +1130,14 @@ body.theme-neon .bannierearcade {
   width: min(
     92vw,
     calc(
-      (100vh - var(--photon-topbar-height) - (var(--photon-stage-padding) * 2))
+      (100vh - var(--photon-interface-height) - (var(--photon-stage-padding) * 2))
         * var(--photon-stage-aspect-width)
         / var(--photon-stage-aspect-height)
     )
   );
   height: min(
     calc(92vw * var(--photon-stage-aspect-height) / var(--photon-stage-aspect-width)),
-    calc(100vh - var(--photon-topbar-height) - (var(--photon-stage-padding) * 2))
+    calc(100vh - var(--photon-interface-height) - (var(--photon-stage-padding) * 2))
   );
   aspect-ratio: calc(var(--photon-stage-aspect-width) / var(--photon-stage-aspect-height));
   border-radius: 20px;
@@ -1296,7 +1307,6 @@ body.theme-neon .bannierearcade {
 @media (max-width: 520px) {
   .photon-topbar {
     padding: clamp(0.6rem, 4vw, 1rem) clamp(0.8rem, 5vw, 1.4rem);
-    border-bottom-width: 0;
     box-shadow: 0 12px 24px rgba(5, 8, 22, 0.38);
   }
 

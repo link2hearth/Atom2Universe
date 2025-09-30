@@ -1771,11 +1771,11 @@ const elements = {
   gachaAnimationConfetti: document.getElementById('gachaAnimationConfetti'),
   gachaContinueHint: document.getElementById('gachaContinueHint'),
   arcadeReturnButton: document.getElementById('arcadeReturnButton'),
-  arcadeTicketButton: document.getElementById('arcadeTicketButton'),
-  arcadeTicketValue: document.getElementById('arcadeTicketValue'),
-  arcadeBonusTicketButton: document.getElementById('arcadeBonusTicketButton'),
-  arcadeBonusTicketValue: document.getElementById('arcadeBonusTicketValue'),
-  arcadeBonusTicketAnnouncement: document.getElementById('arcadeBonusTicketAnnouncement'),
+  arcadeTicketButtons: document.querySelectorAll('[data-arcade-ticket-button]'),
+  arcadeTicketValues: document.querySelectorAll('[data-arcade-ticket-value]'),
+  arcadeBonusTicketButtons: document.querySelectorAll('[data-arcade-bonus-button]'),
+  arcadeBonusTicketValues: document.querySelectorAll('[data-arcade-bonus-value]'),
+  arcadeBonusTicketAnnouncements: document.querySelectorAll('[data-arcade-bonus-announcement]'),
   arcadeCanvas: document.getElementById('arcadeGameCanvas'),
   arcadeParticleLayer: document.getElementById('arcadeParticleLayer'),
   arcadeOverlay: document.getElementById('arcadeOverlay'),
@@ -2257,43 +2257,53 @@ function triggerBrandPortalPulse() {
 }
 
 function updateArcadeTicketDisplay() {
-  if (!elements.arcadeTicketValue) {
-    return;
-  }
   const available = Math.max(0, Math.floor(Number(gameState.gachaTickets) || 0));
-  elements.arcadeTicketValue.textContent = formatTicketLabel(available);
-  if (elements.arcadeTicketButton) {
-    const label = formatTicketLabel(available);
+  const ticketLabel = formatTicketLabel(available);
+  if (elements.arcadeTicketValues?.length) {
+    elements.arcadeTicketValues.forEach(valueElement => {
+      valueElement.textContent = ticketLabel;
+    });
+  }
+  if (elements.arcadeTicketButtons?.length) {
     const gachaUnlocked = isPageUnlocked('gacha');
-    elements.arcadeTicketButton.disabled = !gachaUnlocked;
-    elements.arcadeTicketButton.setAttribute('aria-disabled', gachaUnlocked ? 'false' : 'true');
-    if (gachaUnlocked) {
-      elements.arcadeTicketButton.setAttribute('aria-label', `Ouvrir le portail Gacha (${label})`);
-      elements.arcadeTicketButton.title = `Tickets disponibles : ${label}`;
-    } else {
-      elements.arcadeTicketButton.setAttribute('aria-label', 'Portail Gacha verrouillé');
-      elements.arcadeTicketButton.title = 'Obtenez un ticket de tirage pour débloquer le portail Gacha';
-    }
+    elements.arcadeTicketButtons.forEach(button => {
+      button.disabled = !gachaUnlocked;
+      button.setAttribute('aria-disabled', gachaUnlocked ? 'false' : 'true');
+      if (gachaUnlocked) {
+        button.setAttribute('aria-label', `Ouvrir le portail Gacha (${ticketLabel})`);
+        button.title = `Tickets disponibles : ${ticketLabel}`;
+      } else {
+        button.setAttribute('aria-label', 'Portail Gacha verrouillé');
+        button.title = 'Obtenez un ticket de tirage pour débloquer le portail Gacha';
+      }
+    });
   }
   const bonusCount = Math.max(0, Math.floor(Number(gameState.bonusParticulesTickets) || 0));
-  if (elements.arcadeBonusTicketValue) {
-    elements.arcadeBonusTicketValue.textContent = formatIntegerLocalized(bonusCount);
-  }
+  const bonusValue = formatIntegerLocalized(bonusCount);
   const bonusLabel = formatMetauxCreditLabel(bonusCount);
-  if (elements.arcadeBonusTicketAnnouncement) {
-    elements.arcadeBonusTicketAnnouncement.textContent = `Mach3 : ${bonusLabel}`;
+  if (elements.arcadeBonusTicketValues?.length) {
+    elements.arcadeBonusTicketValues.forEach(valueElement => {
+      valueElement.textContent = bonusValue;
+    });
   }
-  if (elements.arcadeBonusTicketButton) {
+  if (elements.arcadeBonusTicketAnnouncements?.length) {
+    elements.arcadeBonusTicketAnnouncements.forEach(announcement => {
+      announcement.textContent = `Mach3 : ${bonusLabel}`;
+    });
+  }
+  if (elements.arcadeBonusTicketButtons?.length) {
     const hasCredits = bonusCount > 0;
-    elements.arcadeBonusTicketButton.disabled = !hasCredits;
-    elements.arcadeBonusTicketButton.setAttribute('aria-disabled', hasCredits ? 'false' : 'true');
-    if (hasCredits) {
-      elements.arcadeBonusTicketButton.title = `Lancer Métaux — ${bonusLabel}`;
-      elements.arcadeBonusTicketButton.setAttribute('aria-label', `Ouvrir Métaux (Mach3 : ${bonusLabel})`);
-    } else {
-      elements.arcadeBonusTicketButton.title = 'Attrapez un graviton pour gagner un Mach3.';
-      elements.arcadeBonusTicketButton.setAttribute('aria-label', 'Mach3 indisponible — attrapez un graviton.');
-    }
+    elements.arcadeBonusTicketButtons.forEach(button => {
+      button.disabled = !hasCredits;
+      button.setAttribute('aria-disabled', hasCredits ? 'false' : 'true');
+      if (hasCredits) {
+        button.title = `Lancer Métaux — ${bonusLabel}`;
+        button.setAttribute('aria-label', `Ouvrir Métaux (Mach3 : ${bonusLabel})`);
+      } else {
+        button.title = 'Attrapez un graviton pour gagner un Mach3.';
+        button.setAttribute('aria-label', 'Mach3 indisponible — attrapez un graviton.');
+      }
+    });
   }
   updateMetauxCreditsUI();
 }
@@ -5323,21 +5333,25 @@ if (elements.arcadeReturnButton) {
   });
 }
 
-if (elements.arcadeTicketButton) {
-  elements.arcadeTicketButton.addEventListener('click', () => {
-    if (!isPageUnlocked('gacha')) {
-      return;
-    }
-    showPage('gacha');
+if (elements.arcadeTicketButtons?.length) {
+  elements.arcadeTicketButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      if (!isPageUnlocked('gacha')) {
+        return;
+      }
+      showPage('gacha');
+    });
   });
 }
 
-if (elements.arcadeBonusTicketButton) {
-  elements.arcadeBonusTicketButton.addEventListener('click', () => {
-    if (elements.arcadeBonusTicketButton.disabled) {
-      return;
-    }
-    showPage('metaux');
+if (elements.arcadeBonusTicketButtons?.length) {
+  elements.arcadeBonusTicketButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      if (button.disabled) {
+        return;
+      }
+      showPage('metaux');
+    });
   });
 }
 
