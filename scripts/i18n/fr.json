@@ -157,7 +157,18 @@
         "closeAria": "Fermer Photon et retourner aux options",
         "stageAria": "Zone de jeu Photon",
         "overlayMessage": "Prêt à synchroniser les photons ?",
-        "button": "Commencer"
+        "button": "Commencer",
+        "modeLabel": "Mode",
+        "modes": {
+          "classic": "Classique",
+          "single": "Flux unique",
+          "hold": "Maintien"
+        },
+        "modeDescriptions": {
+          "classic": "Plusieurs faisceaux apparaissent en même temps. Alternez rapidement entre les couleurs.",
+          "single": "Un seul faisceau descend à la fois mais plus vite. Anticipez pour garder le rythme.",
+          "hold": "Les faisceaux mixtes exigent de maintenir le clic pendant leur passage tout en gardant la bonne couleur."
+        }
       },
       "metaux": {
         "aria": "Métaux",
@@ -558,6 +569,18 @@
         "brickSkin": {
           "unlocked": "Choisissez l’apparence des briques de Particules."
         }
+      },
+      "photon": {
+        "instructions": {
+          "classic": "Synchronisez le halo avec la couleur du faisceau lorsqu’il touche le sol lumineux.",
+          "single": "Un seul faisceau descend à la fois : adaptez le halo dès qu’il s’approche du sol lumineux.",
+          "hold": "Des faisceaux mixtes apparaissent : maintenez le clic pendant leur passage en plus de changer la couleur du halo."
+        },
+        "gameOver": {
+          "color": "Couleur incorrecte ! Score : {score}",
+          "hold": "Maintenez le clic pour franchir la barrière mixte ! Score : {score}"
+        },
+        "retry": "Rejouer"
       },
       "frenzy": "Frénésie",
       "frenzyActivate": "Activer la {label} ({multiplier})",

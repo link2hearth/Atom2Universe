@@ -620,6 +620,42 @@
         </div>
       </div>
       <div class="photon-content">
+        <div class="photon-interface">
+          <div class="photon-interface__row">
+            <div class="photon-score" aria-live="polite">
+              <span
+                class="photon-score__label"
+                data-i18n="index.sections.photon.scoreLabel"
+              >Score</span>
+              <span class="photon-score__value" id="photonScoreValue">0</span>
+            </div>
+            <label class="photon-mode" for="photonModeSelect">
+              <span
+                class="photon-mode__label"
+                data-i18n="index.sections.photon.modeLabel"
+              >Mode</span>
+              <select class="photon-mode__select" id="photonModeSelect">
+                <option value="classic" data-i18n="index.sections.photon.modes.classic">
+                  Classique
+                </option>
+                <option value="single" data-i18n="index.sections.photon.modes.single">
+                  Flux unique
+                </option>
+                <option value="hold" data-i18n="index.sections.photon.modes.hold">
+                  Maintien
+                </option>
+              </select>
+            </label>
+          </div>
+          <p
+            class="photon-mode__description"
+            id="photonModeDescription"
+            aria-live="polite"
+            data-i18n="index.sections.photon.modeDescriptions.classic"
+          >
+            Plusieurs faisceaux apparaissent en même temps. Alternez rapidement entre les couleurs.
+          </p>
+        </div>
         <div
           class="photon-stage"
           id="photonStage"
