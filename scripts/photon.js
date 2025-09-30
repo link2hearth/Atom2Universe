@@ -67,6 +67,16 @@
 
   const WIDTH_SHRINK_RATIO = 0.25;
 
+  const HOLD_BAR_STYLE = {
+    gradient: [
+      { offset: 0, color: 'rgba(255, 116, 196, 0.85)' },
+      { offset: 0.5, color: 'rgba(99, 140, 255, 0.78)' },
+      { offset: 1, color: 'rgba(64, 216, 255, 0.7)' }
+    ],
+    indicatorColor: 'rgba(255, 255, 255, 0.85)',
+    overlayOpacity: 0.55
+  };
+
   const isPlainObject = value => value && typeof value === 'object' && !Array.isArray(value);
 
   const readNumber = (value, fallback, { min, max } = {}) => {
@@ -130,6 +140,44 @@
       spawnGap
     };
   })();
+
+  const DEFAULT_MODE_ID = 'classic';
+
+  const MODE_DEFINITIONS = {
+    classic: {
+      id: 'classic',
+      desiredBarCount: BARS_CONFIG.desiredCount,
+      spawnGapMultiplier: 1,
+      speedMultiplier: 1,
+      holdBarChance: 0,
+      holdCooldown: 0,
+      instructionKey: 'scripts.app.photon.instructions.classic',
+      descriptionKey: 'index.sections.photon.modeDescriptions.classic',
+      labelKey: 'index.sections.photon.modes.classic'
+    },
+    single: {
+      id: 'single',
+      desiredBarCount: 1,
+      spawnGapMultiplier: 1,
+      speedMultiplier: 1.35,
+      holdBarChance: 0,
+      holdCooldown: 0,
+      instructionKey: 'scripts.app.photon.instructions.single',
+      descriptionKey: 'index.sections.photon.modeDescriptions.single',
+      labelKey: 'index.sections.photon.modes.single'
+    },
+    hold: {
+      id: 'hold',
+      desiredBarCount: BARS_CONFIG.desiredCount,
+      spawnGapMultiplier: 1,
+      speedMultiplier: 1.05,
+      holdBarChance: 0.35,
+      holdCooldown: 2,
+      instructionKey: 'scripts.app.photon.instructions.hold',
+      descriptionKey: 'index.sections.photon.modeDescriptions.hold',
+      labelKey: 'index.sections.photon.modes.hold'
+    }
+  };
 
   const GEOMETRY_CONFIG = (() => {
     const geometrySource = source && isPlainObject(source.geometry) ? source.geometry : null;
@@ -370,7 +418,7 @@
   }
 
   class PhotonGame {
-    constructor({ canvas, onScoreChange, onColorChange, onGameOver } = {}) {
+    constructor({ canvas, onScoreChange, onColorChange, onGameOver, onPointerStateChange } = {}) {
       this.canvas = canvas || null;
       this.context = this.canvas ? this.canvas.getContext('2d') : null;
       this.onScoreChange = typeof onScoreChange === 'function' ? onScoreChange : () => {};
@@ -386,12 +434,38 @@
       this.bars = [];
       this.desiredBarCount = BARS_CONFIG.desiredCount;
       this.spawnGap = BARS_CONFIG.spawnGap;
+      this.baseDesiredBarCount = Math.max(
+        1,
+        Number.isFinite(this.desiredBarCount)
+          ? Math.floor(this.desiredBarCount)
+          : DEFAULT_BAR_SETTINGS.desiredCount
+      );
+      this.baseSpawnGap = Math.max(
+        10,
+        Number.isFinite(this.spawnGap) ? this.spawnGap : DEFAULT_BAR_SETTINGS.spawnGap
+      );
       this.state = 'idle';
       this.lastTimestamp = 0;
       this.animationFrame = null;
       this.elapsedTime = 0;
 
       this.haloPatternSeeds = Object.create(null);
+
+      this.mode = DEFAULT_MODE_ID;
+      this.modeSettings = MODE_DEFINITIONS[this.mode] || MODE_DEFINITIONS[DEFAULT_MODE_ID];
+      this.modeSpeedMultiplier = 1;
+      this.modeHoldChance = 0;
+      this.modeHoldCooldown = 0;
+      this.pendingHoldCooldown = 0;
+
+      this.pointerActive = false;
+      this.activePointerId = null;
+      this.onPointerStateChange = typeof onPointerStateChange === 'function'
+        ? onPointerStateChange
+        : () => {};
+
+      this.applyModeSettings();
+      this.onPointerStateChange(false);
 
       this._tick = this._tick.bind(this);
 
@@ -458,6 +532,96 @@
       this.haloPatternSeeds[color] = seed;
     }
 
+    getMode() {
+      return this.mode;
+    }
+
+    getModeDefinition(modeId = this.mode) {
+      if (modeId && Object.prototype.hasOwnProperty.call(MODE_DEFINITIONS, modeId)) {
+        return MODE_DEFINITIONS[modeId];
+      }
+      return MODE_DEFINITIONS[DEFAULT_MODE_ID];
+    }
+
+    applyModeSettings() {
+      const definition = this.getModeDefinition();
+      this.modeSettings = definition;
+      const desired = toPositiveInteger(definition?.desiredBarCount, this.baseDesiredBarCount);
+      this.desiredBarCount = Math.max(1, desired);
+      const spawnMultiplier = Number.isFinite(definition?.spawnGapMultiplier)
+        ? Math.max(0.1, definition.spawnGapMultiplier)
+        : 1;
+      this.spawnGap = this.baseSpawnGap * spawnMultiplier;
+      const speedMultiplier = Number.isFinite(definition?.speedMultiplier)
+        ? Math.max(0.1, definition.speedMultiplier)
+        : 1;
+      this.modeSpeedMultiplier = speedMultiplier;
+      const holdChance = Number.isFinite(definition?.holdBarChance)
+        ? clamp(definition.holdBarChance, 0, 1)
+        : 0;
+      this.modeHoldChance = holdChance;
+      const cooldownRaw = Number.isFinite(definition?.holdCooldown)
+        ? Math.max(0, Math.floor(definition.holdCooldown))
+        : 0;
+      this.modeHoldCooldown = holdChance > 0 ? Math.max(1, cooldownRaw) : 0;
+      this.pendingHoldCooldown = this.modeHoldChance > 0 ? this.modeHoldCooldown : 0;
+    }
+
+    setMode(modeId) {
+      const definition = this.getModeDefinition(modeId);
+      const nextId = typeof definition?.id === 'string' ? definition.id : DEFAULT_MODE_ID;
+      this.mode = nextId;
+      this.applyModeSettings();
+      this.setPointerActive(false);
+      this.bars = [];
+      if (this.state === 'running') {
+        this.ensureBarSupply();
+      }
+      this.render();
+    }
+
+    setPointerActive(active) {
+      const next = Boolean(active);
+      if (this.pointerActive === next) {
+        return;
+      }
+      this.pointerActive = next;
+      if (!next) {
+        this.activePointerId = null;
+      }
+      this.onPointerStateChange(next);
+    }
+
+    handlePointerDown(event) {
+      if (event && typeof event.button === 'number' && event.button !== 0) {
+        return;
+      }
+      if (this.state !== 'running') {
+        this.setPointerActive(false);
+        return;
+      }
+      if (event && typeof event.pointerId === 'number') {
+        this.activePointerId = event.pointerId;
+      } else {
+        this.activePointerId = null;
+      }
+      this.setPointerActive(true);
+      this.toggleColor();
+    }
+
+    handlePointerUp(event) {
+      if (
+        event
+        && typeof event.pointerId === 'number'
+        && this.activePointerId != null
+        && event.pointerId !== this.activePointerId
+      ) {
+        return;
+      }
+      this.activePointerId = null;
+      this.setPointerActive(false);
+    }
+
     getBarWidth() {
       const width = this.viewportWidth || 0;
       if (!width) return 0;
@@ -480,11 +644,14 @@
 
     getBarSpeed() {
       const height = this.viewportHeight || 0;
+      const modeMultiplier = Number.isFinite(this.modeSpeedMultiplier)
+        ? this.modeSpeedMultiplier
+        : 1;
       if (!height) {
-        return SPEED_CONFIG.min * this.getSpeedMultiplier();
+        return SPEED_CONFIG.min * this.getSpeedMultiplier() * modeMultiplier;
       }
       const base = clamp(height * SPEED_CONFIG.baseRatio, SPEED_CONFIG.min, SPEED_CONFIG.max);
-      return base * this.getSpeedMultiplier();
+      return base * this.getSpeedMultiplier() * modeMultiplier;
     }
 
     getHaloHeight() {
@@ -547,13 +714,27 @@
         ? Math.min(-barHeight, topMost - (barHeight + this.spawnGap))
         : -barHeight;
       const palette = this.colorOrder.length ? this.colorOrder : ['blue', 'red'];
+      let requiresHold = false;
+      if (this.modeHoldChance > 0) {
+        if (this.pendingHoldCooldown > 0) {
+          this.pendingHoldCooldown = Math.max(0, this.pendingHoldCooldown - 1);
+        } else if (Math.random() < this.modeHoldChance) {
+          requiresHold = true;
+          this.pendingHoldCooldown = this.modeHoldCooldown;
+        }
+      }
       const color = palette[Math.floor(Math.random() * palette.length)] ?? this.currentColor;
-      this.bars.push({
+      const bar = {
         color,
         y: startY,
         height: barHeight,
-        resolved: false
-      });
+        resolved: false,
+        requiresHold
+      };
+      if (requiresHold) {
+        bar.holdSeed = Math.random();
+      }
+      this.bars.push(bar);
     }
 
     start() {
@@ -567,6 +748,9 @@
       this.currentColor = this.colorOrder[this.currentColorIndex] ?? this.currentColor;
       this.elapsedTime = 0;
       this.bars = [];
+      this.setPointerActive(false);
+      this.activePointerId = null;
+      this.pendingHoldCooldown = this.modeHoldChance > 0 ? this.modeHoldCooldown : 0;
       this.ensureHaloPatternSeed(this.currentColor);
       this.onColorChange(this.currentColor);
       this.onScoreChange(this.score);
@@ -583,6 +767,7 @@
       this.currentColorIndex = 0;
       this.currentColor = this.colorOrder[this.currentColorIndex] ?? this.currentColor;
       this.elapsedTime = 0;
+      this.setPointerActive(false);
       this.ensureHaloPatternSeed(this.currentColor);
       this.onColorChange(this.currentColor);
       this.render();
@@ -594,6 +779,7 @@
       }
       this.state = 'paused';
       this.stopLoop();
+      this.setPointerActive(false);
     }
 
     resume() {
@@ -602,6 +788,7 @@
       }
       this.state = 'running';
       this.lastTimestamp = performance.now();
+      this.setPointerActive(false);
       this.animationFrame = requestAnimationFrame(this._tick);
     }
 
@@ -676,10 +863,17 @@
       if (activeIndex >= 0) {
         const activeBar = this.bars[activeIndex];
         if (activeBar && !activeBar.resolved && activeBar.y + activeBar.height >= haloTop) {
-          if (activeBar.color === this.currentColor) {
+          if (activeBar.requiresHold) {
+            if (this.pointerActive) {
+              this.resolveActiveBar(activeIndex);
+            } else {
+              this.triggerGameOver('hold');
+              return;
+            }
+          } else if (activeBar.color === this.currentColor) {
             this.resolveActiveBar(activeIndex);
           } else {
-            this.triggerGameOver();
+            this.triggerGameOver('color');
             return;
           }
         }
@@ -698,11 +892,69 @@
       this.ensureBarSupply();
     }
 
-    triggerGameOver() {
+    triggerGameOver(reason = 'color') {
       this.state = 'gameover';
       this.stopLoop();
+      this.setPointerActive(false);
       this.render();
-      this.onGameOver({ score: this.score, color: this.currentColor });
+      this.onGameOver({ score: this.score, color: this.currentColor, reason });
+    }
+
+    renderHoldBar(ctx, bar, drawX, drawWidth, drawHeight) {
+      if (!ctx || drawWidth <= 0 || drawHeight <= 0) {
+        return;
+      }
+      ctx.save();
+      const radius = Math.min(28, drawWidth / 4);
+      const gradient = ctx.createLinearGradient(drawX, bar.y, drawX + drawWidth, bar.y + drawHeight);
+      for (const stop of HOLD_BAR_STYLE.gradient) {
+        gradient.addColorStop(stop.offset, stop.color);
+      }
+      drawRoundedRect(ctx, drawX, bar.y, drawWidth, drawHeight, radius);
+      ctx.fillStyle = gradient;
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.16)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      const redTexture = this.barTextures.red;
+      const blueTexture = this.barTextures.blue;
+      if ((redTexture && redTexture.loaded) || (blueTexture && blueTexture.loaded)) {
+        ctx.save();
+        ctx.imageSmoothingEnabled = true;
+        ctx.globalCompositeOperation = 'screen';
+        ctx.globalAlpha = HOLD_BAR_STYLE.overlayOpacity;
+        if (redTexture && redTexture.loaded) {
+          ctx.drawImage(redTexture.image, drawX, bar.y, drawWidth, drawHeight);
+        }
+        if (blueTexture && blueTexture.loaded) {
+          ctx.drawImage(blueTexture.image, drawX, bar.y, drawWidth, drawHeight);
+        }
+        ctx.restore();
+      }
+
+      const indicatorHeight = Math.min(drawHeight * 0.45, 48);
+      const indicatorWidth = indicatorHeight * 0.62;
+      const indicatorX = drawX + drawWidth / 2 - indicatorWidth / 2;
+      const indicatorY = bar.y + drawHeight / 2 - indicatorHeight / 2;
+      const segmentWidth = indicatorWidth * 0.34;
+      const gap = indicatorWidth * 0.2;
+      const indicatorRadius = Math.min(segmentWidth * 0.45, indicatorHeight * 0.3);
+
+      ctx.fillStyle = HOLD_BAR_STYLE.indicatorColor;
+      drawRoundedRect(ctx, indicatorX, indicatorY, segmentWidth, indicatorHeight, indicatorRadius);
+      ctx.fill();
+      drawRoundedRect(
+        ctx,
+        indicatorX + segmentWidth + gap,
+        indicatorY,
+        segmentWidth,
+        indicatorHeight,
+        indicatorRadius
+      );
+      ctx.fill();
+
+      ctx.restore();
     }
 
     render() {
@@ -727,12 +979,16 @@
       const baseBarWidth = this.getBarWidth();
       const baseBarX = (width - baseBarWidth) / 2;
       for (const bar of this.bars) {
-        const colors = COLOR_DEFS[bar.color] || COLOR_DEFS.blue;
         const progress = clamp((bar.y + bar.height) / Math.max(1, height), 0, 1);
         const widthFactor = 1 - WIDTH_SHRINK_RATIO * progress;
         const targetWidth = Math.max(1, width * widthFactor);
         const drawX = (width - targetWidth) / 2;
         const drawHeight = bar.height;
+        if (bar.requiresHold) {
+          this.renderHoldBar(ctx, bar, drawX, targetWidth, drawHeight);
+          continue;
+        }
+        const colors = COLOR_DEFS[bar.color] || COLOR_DEFS.blue;
         const textureEntry = this.barTextures[bar.color];
         if (textureEntry && textureEntry.loaded) {
           ctx.imageSmoothingEnabled = true;
@@ -790,4 +1046,6 @@
   }
 
   window.PhotonGame = PhotonGame;
+  PhotonGame.MODES = MODE_DEFINITIONS;
+  PhotonGame.DEFAULT_MODE_ID = DEFAULT_MODE_ID;
 })();

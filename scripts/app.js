@@ -1813,6 +1813,9 @@ const elements = {
   photonOverlay: document.getElementById('photonOverlay'),
   photonOverlayMessage: document.getElementById('photonOverlayMessage'),
   photonOverlayButton: document.getElementById('photonOverlayButton'),
+  photonScoreValue: document.getElementById('photonScoreValue'),
+  photonModeSelect: document.getElementById('photonModeSelect'),
+  photonModeDescription: document.getElementById('photonModeDescription'),
   languageSelect: document.getElementById('languageSelect'),
   musicTrackSelect: document.getElementById('musicTrackSelect'),
   musicTrackStatus: document.getElementById('musicTrackStatus'),
@@ -2105,6 +2108,89 @@ function formatPhotonScore(score) {
   return formatIntegerLocalized(numeric);
 }
 
+const PHOTON_MODE_DESCRIPTION_FALLBACKS = Object.freeze({
+  classic: 'Plusieurs faisceaux apparaissent en même temps. Alternez rapidement entre les couleurs.',
+  single: 'Un seul faisceau descend à la fois mais plus vite. Anticipez pour rester synchronisé.',
+  hold: 'Des faisceaux mixtes demandent de maintenir le clic pendant leur passage tout en gérant les couleurs.'
+});
+
+const PHOTON_MODE_INSTRUCTION_FALLBACKS = Object.freeze({
+  classic: 'Synchronisez le halo avec la couleur du faisceau lorsqu’il touche le sol lumineux.',
+  single: 'Un seul faisceau descend à la fois : adaptez le halo dès qu’il s’approche du sol lumineux.',
+  hold: 'Des faisceaux mixtes apparaissent : maintenez le clic pendant leur passage en plus de changer la couleur du halo.'
+});
+
+const PHOTON_GAME_OVER_FALLBACKS = Object.freeze({
+  color: score => `Couleur incorrecte ! Score : ${score}`,
+  hold: score => `Maintenez le clic pour franchir la barrière mixte ! Score : ${score}`
+});
+
+function resolvePhotonModeId(modeId) {
+  const modes = typeof PhotonGame === 'function' ? PhotonGame.MODES : null;
+  if (modes && modeId && Object.prototype.hasOwnProperty.call(modes, modeId)) {
+    return modeId;
+  }
+  const fallbackId = typeof PhotonGame?.DEFAULT_MODE_ID === 'string'
+    ? PhotonGame.DEFAULT_MODE_ID
+    : 'classic';
+  if (modes && Object.prototype.hasOwnProperty.call(modes, fallbackId)) {
+    return fallbackId;
+  }
+  return 'classic';
+}
+
+function getPhotonSelectedMode() {
+  const raw = elements.photonModeSelect?.value;
+  return resolvePhotonModeId(raw);
+}
+
+function updatePhotonModeSelect(modeId) {
+  const resolved = resolvePhotonModeId(modeId);
+  if (elements.photonModeSelect && elements.photonModeSelect.value !== resolved) {
+    elements.photonModeSelect.value = resolved;
+  }
+  return resolved;
+}
+
+function updatePhotonModeDescription(modeId) {
+  const resolved = resolvePhotonModeId(modeId);
+  if (!elements.photonModeDescription) {
+    return;
+  }
+  const fallback = PHOTON_MODE_DESCRIPTION_FALLBACKS[resolved]
+    ?? PHOTON_MODE_DESCRIPTION_FALLBACKS.classic;
+  elements.photonModeDescription.textContent = translateOrDefault(
+    `index.sections.photon.modeDescriptions.${resolved}`,
+    fallback
+  );
+}
+
+function getPhotonModeInstruction(modeId) {
+  const resolved = resolvePhotonModeId(modeId);
+  const fallback = PHOTON_MODE_INSTRUCTION_FALLBACKS[resolved]
+    ?? PHOTON_MODE_INSTRUCTION_FALLBACKS.classic;
+  return translateOrDefault(
+    `scripts.app.photon.instructions.${resolved}`,
+    fallback
+  );
+}
+
+function getPhotonGameOverMessage(reason, formattedScore) {
+  const key = reason === 'hold' ? 'hold' : 'color';
+  const fallbackFactory = PHOTON_GAME_OVER_FALLBACKS[key]
+    ?? PHOTON_GAME_OVER_FALLBACKS.color;
+  const fallback = fallbackFactory(formattedScore);
+  return translateOrDefault(
+    `scripts.app.photon.gameOver.${key}`,
+    fallback,
+    { score: formattedScore }
+  );
+}
+
+function getPhotonRetryLabel() {
+  return translateOrDefault('scripts.app.photon.retry', 'Rejouer');
+}
+
 function updatePhotonScore(score) {
   if (elements.photonScoreValue) {
     elements.photonScoreValue.textContent = formatPhotonScore(score);
@@ -2152,27 +2238,43 @@ function ensurePhotonGame() {
     onGameOver: result => {
       const gained = Number.isFinite(Number(result?.score)) ? Number(result.score) : 0;
       const formatted = formatIntegerLocalized(gained);
+      const message = getPhotonGameOverMessage(result?.reason, formatted);
       showPhotonOverlay({
-        message: `Couleur incorrecte ! Score : ${formatted}`,
-        actionLabel: 'Rejouer'
+        message,
+        actionLabel: getPhotonRetryLabel()
       });
+    },
+    onPointerStateChange: holding => {
+      if (!elements.photonStage) {
+        return;
+      }
+      elements.photonStage.classList.toggle('photon-stage--holding', Boolean(holding));
     }
   });
+  const initialMode = getPhotonSelectedMode();
+  photonGame.setMode(initialMode);
+  updatePhotonModeSelect(initialMode);
+  updatePhotonModeDescription(initialMode);
   updatePhotonStageColor('blue');
   updatePhotonScore(0);
   return photonGame;
 }
 
-function preparePhotonNewGame() {
+function preparePhotonNewGame(modeId = getPhotonSelectedMode()) {
+  const resolvedMode = updatePhotonModeSelect(modeId);
   const game = ensurePhotonGame();
   if (game) {
+    game.setMode(resolvedMode);
     game.stop();
   }
+  updatePhotonModeDescription(resolvedMode);
   updatePhotonStageColor('blue');
   updatePhotonScore(0);
+  const instruction = getPhotonModeInstruction(resolvedMode);
+  const startLabel = translateOrDefault('index.sections.photon.button', 'Commencer');
   showPhotonOverlay({
-    message: 'Synchronisez le halo avec la couleur du faisceau lorsqu’il touche le sol lumineux.',
-    actionLabel: 'Commencer'
+    message: instruction,
+    actionLabel: startLabel
   });
 }
 
@@ -5369,12 +5471,29 @@ if (elements.photonOverlayButton) {
     if (!game) {
       return;
     }
+    const mode = getPhotonSelectedMode();
+    game.setMode(mode);
     hidePhotonOverlay();
     game.start();
   });
 }
 
+if (elements.photonModeSelect) {
+  elements.photonModeSelect.addEventListener('change', () => {
+    const mode = getPhotonSelectedMode();
+    updatePhotonModeDescription(mode);
+    preparePhotonNewGame(mode);
+  });
+}
+
 if (elements.photonStage) {
+  const handlePhotonPointerUp = event => {
+    if (!photonGame) {
+      return;
+    }
+    photonGame.handlePointerUp(event);
+  };
+
   elements.photonStage.addEventListener('pointerdown', event => {
     if (event.target.closest('.photon-overlay')) {
       return;
@@ -5384,9 +5503,23 @@ if (elements.photonStage) {
       return;
     }
     event.preventDefault();
-    game.toggleColor();
+    game.handlePointerDown(event);
   });
+
+  ['pointerup', 'pointercancel', 'pointerleave'].forEach(type => {
+    elements.photonStage.addEventListener(type, handlePhotonPointerUp);
+  });
+
+  if (typeof window !== 'undefined') {
+    ['pointerup', 'pointercancel'].forEach(type => {
+      window.addEventListener(type, handlePhotonPointerUp);
+    });
+  }
 }
+
+const initialPhotonMode = getPhotonSelectedMode();
+updatePhotonModeSelect(initialPhotonMode);
+updatePhotonModeDescription(initialPhotonMode);
 
 renderPeriodicTable();
 renderGachaRarityList();
