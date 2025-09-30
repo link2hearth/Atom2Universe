@@ -111,6 +111,15 @@ body.theme-neon .app-header {
   border-bottom-color: rgba(90, 120, 255, 0.22);
 }
 
+body.view-metaux .app-header {
+  display: none;
+}
+
+body.view-metaux main {
+  width: 100%;
+  justify-content: center;
+}
+
 .header-main {
   padding: var(--header-padding-y) var(--header-padding-x);
   display: flex;
