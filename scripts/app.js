@@ -1808,7 +1808,6 @@ const elements = {
   metauxMessage: document.getElementById('metauxMessage'),
   metauxReshuffleButton: document.getElementById('metauxReshuffleButton'),
   photonOpenButton: document.getElementById('photonOpenButton'),
-  photonCloseButton: document.getElementById('photonCloseButton'),
   photonStage: document.getElementById('photonStage'),
   photonCanvas: document.getElementById('photonCanvas'),
   photonOverlay: document.getElementById('photonOverlay'),
@@ -5361,18 +5360,6 @@ if (elements.photonOpenButton) {
   elements.photonOpenButton.addEventListener('click', () => {
     preparePhotonNewGame();
     showPage('photon');
-  });
-}
-
-if (elements.photonCloseButton) {
-  elements.photonCloseButton.addEventListener('click', () => {
-    if (photonGame) {
-      photonGame.stop();
-    }
-    updatePhotonStageColor('blue');
-    updatePhotonScore(0);
-    hidePhotonOverlay();
-    showPage('options');
   });
 }
 
