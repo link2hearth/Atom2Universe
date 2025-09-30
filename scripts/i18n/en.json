@@ -850,6 +850,7 @@
         }
       },
       "featured": {
+        "today": "Today",
         "monday": "+Mineral Singularity",
         "thursday": "+Mineral Singularity",
         "tuesday": "+Quantum Myth",

@@ -707,6 +707,7 @@
             }
           },
           "featured": {
+            "today": "Aujourd'hui",
             "monday": "+Singularité Minérale",
             "thursday": "+Singularité Minérale",
             "tuesday": "+Mythe Quantique",
@@ -1763,6 +1764,7 @@
             }
           },
           "featured": {
+            "today": "Today",
             "monday": "+Mineral Singularity",
             "thursday": "+Mineral Singularity",
             "tuesday": "+Quantum Myth",

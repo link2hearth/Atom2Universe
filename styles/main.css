@@ -2078,14 +2078,95 @@ body.theme-light .fusion-log.fusion-log--failure {
   position: absolute;
   top: clamp(1rem, 3vw, 2rem);
   left: clamp(1rem, 3vw, 2rem);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.2rem;
   font-family: 'Orbitron', sans-serif;
   font-size: 0.75rem;
   letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.78);
+  color: rgba(255, 178, 200, 0.82);
   pointer-events: none;
   user-select: none;
-  white-space: nowrap;
+  white-space: normal;
+  text-transform: none;
+  isolation: isolate;
+  --gacha-featured-gradient: linear-gradient(130deg, #ff5f6d 0%, #ff9966 28%, #ff70a6 58%, #c377ff 100%);
+  --gacha-featured-glow: rgba(255, 118, 182, 0.4);
+  --gacha-featured-glow-strong: rgba(203, 118, 255, 0.45);
+}
+
+.gacha-featured-info__smoke {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: clamp(160px, 20vw, 256px);
+  height: clamp(160px, 20vw, 256px);
+  transform: translate(-50%, -50%);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.75;
+  filter: blur(0.4px) drop-shadow(0 0.8rem 1.8rem rgba(220, 60, 140, 0.35));
+  mix-blend-mode: screen;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.gacha-featured-info__day,
+.gacha-featured-info__label {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.05rem 0;
+  background: var(--gacha-featured-gradient);
+  background-size: 220% 220%;
+  background-position: 0% 50%;
+  color: rgba(255, 208, 220, 0.88);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow:
+    0 0.22rem 0.65rem rgba(0, 0, 0, 0.42),
+    0 0.28rem 0.8rem var(--gacha-featured-glow);
+  filter: drop-shadow(0 0.6rem 1.5rem rgba(255, 110, 180, 0.32));
+  animation: gachaFeaturedGradientShift 9s ease-in-out infinite;
+}
+
+.gacha-featured-info__day {
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  opacity: 0.94;
+  animation-duration: 12s;
+}
+
+.gacha-featured-info__label {
+  font-size: 0.96rem;
+  letter-spacing: 0.12em;
+  text-shadow:
+    0 0.22rem 0.65rem rgba(0, 0, 0, 0.45),
+    0 0.35rem 1.15rem var(--gacha-featured-glow-strong);
+}
+
+@keyframes gachaFeaturedGradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gacha-featured-info__day,
+  .gacha-featured-info__label {
+    animation: none;
+  }
 }
 
 .gacha-ticket-counter {
@@ -2161,7 +2242,9 @@ body.theme-light .gacha-ticket-counter {
 }
 
 body.theme-light .gacha-featured-info {
-  color: rgba(12, 16, 32, 0.65);
+  color: rgba(210, 72, 120, 0.8);
+  --gacha-featured-glow: rgba(255, 122, 182, 0.42);
+  --gacha-featured-glow-strong: rgba(192, 128, 255, 0.42);
 }
 
 body.theme-neon .gacha-ticket-counter {
@@ -2171,7 +2254,9 @@ body.theme-neon .gacha-ticket-counter {
 }
 
 body.theme-neon .gacha-featured-info {
-  color: rgba(232, 236, 255, 0.82);
+  color: rgba(255, 214, 246, 0.86);
+  --gacha-featured-glow: rgba(255, 138, 216, 0.48);
+  --gacha-featured-glow-strong: rgba(176, 156, 255, 0.52);
 }
 
 .gacha-sun-button {

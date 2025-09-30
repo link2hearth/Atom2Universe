@@ -1,5 +1,88 @@
 const DEFAULT_GACHA_TICKET_COST = 1;
 
+const GACHA_SMOKE_FRAME_COUNT = 91;
+const GACHA_SMOKE_FRAME_RATE = 8;
+const GACHA_SMOKE_FRAME_PAD = 4;
+const GACHA_SMOKE_ASSET_PATH = 'Assets/Sprites/Smoke';
+
+const gachaSmokeAnimationState = {
+  timer: null,
+  frame: 0,
+  element: null,
+  reducedMotion: false
+};
+
+function prefersReducedMotion() {
+  if (typeof matchMedia !== 'function') {
+    return false;
+  }
+  try {
+    return matchMedia('(prefers-reduced-motion: reduce)').matches;
+  } catch (error) {
+    return false;
+  }
+}
+
+function formatGachaSmokeFrame(frameIndex) {
+  const normalized = ((frameIndex % GACHA_SMOKE_FRAME_COUNT) + GACHA_SMOKE_FRAME_COUNT) % GACHA_SMOKE_FRAME_COUNT;
+  return String(normalized).padStart(GACHA_SMOKE_FRAME_PAD, '0');
+}
+
+function applyGachaSmokeFrame(element, frameIndex) {
+  if (!element) {
+    return;
+  }
+  const frameName = formatGachaSmokeFrame(frameIndex);
+  element.style.backgroundImage = `url('${GACHA_SMOKE_ASSET_PATH}/${frameName}.png')`;
+}
+
+function stopGachaFeaturedSmokeAnimation() {
+  if (gachaSmokeAnimationState.timer != null) {
+    clearInterval(gachaSmokeAnimationState.timer);
+  }
+  gachaSmokeAnimationState.timer = null;
+  gachaSmokeAnimationState.frame = 0;
+  if (gachaSmokeAnimationState.element) {
+    gachaSmokeAnimationState.element.style.backgroundImage = '';
+  }
+  gachaSmokeAnimationState.element = null;
+  gachaSmokeAnimationState.reducedMotion = false;
+}
+
+function startGachaFeaturedSmokeAnimation(element) {
+  if (!element) {
+    return;
+  }
+  stopGachaFeaturedSmokeAnimation();
+  gachaSmokeAnimationState.element = element;
+  gachaSmokeAnimationState.reducedMotion = prefersReducedMotion();
+  gachaSmokeAnimationState.frame = 0;
+  applyGachaSmokeFrame(element, gachaSmokeAnimationState.frame);
+  if (gachaSmokeAnimationState.reducedMotion) {
+    return;
+  }
+  const frameDuration = 1000 / GACHA_SMOKE_FRAME_RATE;
+  gachaSmokeAnimationState.timer = setInterval(() => {
+    const target = gachaSmokeAnimationState.element;
+    if (!target) {
+      stopGachaFeaturedSmokeAnimation();
+      return;
+    }
+    gachaSmokeAnimationState.frame = (gachaSmokeAnimationState.frame + 1) % GACHA_SMOKE_FRAME_COUNT;
+    applyGachaSmokeFrame(target, gachaSmokeAnimationState.frame);
+  }, frameDuration);
+}
+
+function createGachaFeaturedSmokeBackdrop() {
+  if (typeof document === 'undefined') {
+    return null;
+  }
+  const element = document.createElement('span');
+  element.className = 'gacha-featured-info__smoke';
+  startGachaFeaturedSmokeAnimation(element);
+  return element;
+}
+
 const gachaTranslate = (() => {
   const translator = typeof globalThis !== 'undefined' && typeof globalThis.t === 'function'
     ? globalThis.t.bind(globalThis)
@@ -371,10 +454,29 @@ function updateGachaFeaturedInfo(dayKey = WEEKDAY_KEYS[new Date().getDay()] ?? n
   }
   const label = getGachaFeaturedLabelForDayKey(dayKey);
   if (label) {
-    featuredInfo.textContent = label;
+    stopGachaFeaturedSmokeAnimation();
+    featuredInfo.innerHTML = '';
+    const todayText = t('scripts.gacha.featured.today');
+    const fragment = document.createDocumentFragment();
+    const smokeBackdrop = createGachaFeaturedSmokeBackdrop();
+    if (smokeBackdrop) {
+      fragment.appendChild(smokeBackdrop);
+    }
+    if (typeof todayText === 'string' && todayText.trim()) {
+      const dayElement = document.createElement('span');
+      dayElement.className = 'gacha-featured-info__day';
+      dayElement.textContent = todayText.trim();
+      fragment.appendChild(dayElement);
+    }
+    const labelElement = document.createElement('span');
+    labelElement.className = 'gacha-featured-info__label';
+    labelElement.textContent = label;
+    fragment.appendChild(labelElement);
+    featuredInfo.appendChild(fragment);
     featuredInfo.hidden = false;
   } else {
-    featuredInfo.textContent = '';
+    stopGachaFeaturedSmokeAnimation();
+    featuredInfo.innerHTML = '';
     featuredInfo.hidden = true;
   }
 }
