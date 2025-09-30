@@ -193,6 +193,11 @@ const METAUX_TIMER_PENALTY_WINDOW_MS = Math.max(
 const METAUX_TIMER_PENALTY_AMOUNT = Math.max(0, METAUX_TIMER_CONFIG.penaltyAmountSeconds);
 const METAUX_TIMER_TICK_INTERVAL = METAUX_TIMER_CONFIG.tickIntervalMs;
 
+const METAUX_ORIENTATION = Object.freeze({
+  LANDSCAPE: 'landscape',
+  PORTRAIT: 'portrait'
+});
+
 function createSoundPool(src, poolSize = 4) {
   if (!src || typeof Audio === 'undefined') {
     return { play: () => {} };
@@ -274,6 +279,10 @@ class MetauxMatch3Game {
     this.boundPointerMove = this.onPointerMove.bind(this);
     this.boundPointerUp = this.onPointerUp.bind(this);
     this.boundPointerCancel = this.onPointerCancel.bind(this);
+    this.boundOrientationChange = this.handleOrientationChange.bind(this);
+    this.orientationMediaQuery = null;
+    this.orientation = METAUX_ORIENTATION.LANDSCAPE;
+    this.orientationListenersAttached = false;
   }
 
   initialize() {
@@ -281,10 +290,12 @@ class MetauxMatch3Game {
       return;
     }
     this.buildBoard();
+    this.updateOrientationMode({ force: true });
     this.populateBoard();
     this.refreshBoard();
     this.initialized = true;
     this.enterIdleState();
+    this.setupOrientationListeners();
   }
 
   onEnter() {
@@ -309,7 +320,6 @@ class MetauxMatch3Game {
     }
     this.boardElement.style.setProperty('--metaux-cols', METAUX_COLS);
     this.boardElement.style.setProperty('--metaux-rows', METAUX_ROWS);
-    this.boardElement.style.gridTemplateColumns = `repeat(${METAUX_COLS}, minmax(0, 1fr))`;
     this.boardElement.style.setProperty('--metaux-pop-duration', `${METAUX_MATCH_POP_EFFECT.durationMs}ms`);
     this.boardElement.style.setProperty('--metaux-pop-scale', String(METAUX_MATCH_POP_EFFECT.scale));
     this.boardElement.style.setProperty(
@@ -317,8 +327,6 @@ class MetauxMatch3Game {
       String(METAUX_MATCH_POP_EFFECT.glowOpacity)
     );
     this.boardElement.style.setProperty('--metaux-shake-duration', `${METAUX_NEIGHBOR_SHAKE_DURATION}ms`);
-    this.boardElement.dataset.rows = String(METAUX_ROWS);
-    this.boardElement.dataset.cols = String(METAUX_COLS);
     const fragment = document.createDocumentFragment();
     for (let row = 0; row < METAUX_ROWS; row += 1) {
       for (let col = 0; col < METAUX_COLS; col += 1) {
@@ -326,6 +334,7 @@ class MetauxMatch3Game {
         tile.className = 'metaux-tile is-empty';
         tile.dataset.row = String(row);
         tile.dataset.col = String(col);
+        this.applyTilePosition(tile, row, col);
         tile.setAttribute('role', 'button');
         tile.setAttribute('tabindex', '-1');
         tile.addEventListener('pointerdown', this.boundPointerDown);
@@ -412,6 +421,7 @@ class MetauxMatch3Game {
     if (!tile) {
       return;
     }
+    this.applyTilePosition(tile, row, col);
     tile.classList.remove('is-selected', 'is-target', 'is-clearing', 'is-empty');
     tile.dataset.type = type || '';
     const labelElement = tile._label || tile.firstElementChild;
@@ -463,8 +473,7 @@ class MetauxMatch3Game {
       return;
     }
     event.preventDefault();
-    const rect = this.boardElement ? this.boardElement.getBoundingClientRect() : { width: 0 };
-    const threshold = Math.max(rect.width / METAUX_COLS / 2, 10);
+    const threshold = this.getPointerThreshold();
     this.clearDragState();
     this.dragState = {
       row,
@@ -494,11 +503,13 @@ class MetauxMatch3Game {
     }
     let targetRow = this.dragState.row;
     let targetCol = this.dragState.col;
-    if (Math.abs(dx) > Math.abs(dy)) {
-      targetCol += dx > 0 ? 1 : -1;
-    } else {
-      targetRow += dy > 0 ? 1 : -1;
+    const direction = this.getPointerDirection(dx, dy);
+    if (!direction) {
+      this.setHoverTarget(null);
+      return;
     }
+    targetRow += direction.row;
+    targetCol += direction.col;
     if (!this.isValidPosition(targetRow, targetCol) || !this.board[targetRow][targetCol]) {
       this.setHoverTarget(null);
       return;
@@ -659,6 +670,25 @@ class MetauxMatch3Game {
   }
 
   applyGravity() {
+    if (this.isPortraitMode()) {
+      for (let row = 0; row < METAUX_ROWS; row += 1) {
+        let writeCol = METAUX_COLS - 1;
+        for (let col = METAUX_COLS - 1; col >= 0; col -= 1) {
+          const value = this.board[row][col];
+          if (value) {
+            this.board[row][writeCol] = value;
+            if (writeCol !== col) {
+              this.board[row][col] = null;
+            }
+            writeCol -= 1;
+          }
+        }
+        for (let fillCol = writeCol; fillCol >= 0; fillCol -= 1) {
+          this.board[row][fillCol] = null;
+        }
+      }
+      return;
+    }
     for (let col = 0; col < METAUX_COLS; col += 1) {
       let writeRow = METAUX_ROWS - 1;
       for (let row = METAUX_ROWS - 1; row >= 0; row -= 1) {
@@ -678,6 +708,16 @@ class MetauxMatch3Game {
   }
 
   fillEmptySpaces() {
+    if (this.isPortraitMode()) {
+      for (let row = 0; row < METAUX_ROWS; row += 1) {
+        for (let col = 0; col < METAUX_COLS; col += 1) {
+          if (!this.board[row][col]) {
+            this.board[row][col] = this.generateTileFor(row, col);
+          }
+        }
+      }
+      return;
+    }
     for (let col = 0; col < METAUX_COLS; col += 1) {
       for (let row = 0; row < METAUX_ROWS; row += 1) {
         if (!this.board[row][col]) {
@@ -1363,6 +1403,148 @@ class MetauxMatch3Game {
     if (this.comboSound && typeof this.comboSound.play === 'function') {
       this.comboSound.play();
     }
+  }
+
+  setupOrientationListeners() {
+    if (this.orientationListenersAttached || typeof window === 'undefined') {
+      return;
+    }
+    window.addEventListener('resize', this.boundOrientationChange);
+    window.addEventListener('orientationchange', this.boundOrientationChange);
+    if (typeof window.matchMedia === 'function') {
+      try {
+        this.orientationMediaQuery = window.matchMedia('(orientation: portrait)');
+        const media = this.orientationMediaQuery;
+        if (media) {
+          if (typeof media.addEventListener === 'function') {
+            media.addEventListener('change', this.boundOrientationChange);
+          } else if (typeof media.addListener === 'function') {
+            media.addListener(this.boundOrientationChange);
+          }
+        }
+      } catch (error) {
+        console.warn('Unable to attach orientation media query listener', error);
+      }
+    }
+    this.orientationListenersAttached = true;
+    this.handleOrientationChange();
+  }
+
+  handleOrientationChange() {
+    this.updateOrientationMode();
+  }
+
+  computeOrientationMode() {
+    if (typeof window === 'undefined') {
+      return METAUX_ORIENTATION.LANDSCAPE;
+    }
+    const width = window.innerWidth || 0;
+    const height = window.innerHeight || 0;
+    if (height > width && width > 0) {
+      return METAUX_ORIENTATION.PORTRAIT;
+    }
+    if (width === 0 && height > 0) {
+      return METAUX_ORIENTATION.PORTRAIT;
+    }
+    return METAUX_ORIENTATION.LANDSCAPE;
+  }
+
+  updateOrientationMode({ force = false } = {}) {
+    const mode = this.computeOrientationMode();
+    if (!force && mode === this.orientation) {
+      return;
+    }
+    this.orientation = mode;
+    this.updateBoardOrientationStyles();
+    this.clearDragState();
+  }
+
+  updateBoardOrientationStyles() {
+    if (!this.boardElement) {
+      return;
+    }
+    const { rows, cols } = this.getVisualDimensions();
+    this.boardElement.classList.toggle('is-portrait', this.isPortraitMode());
+    this.boardElement.style.gridTemplateColumns = `repeat(${cols}, minmax(0, 1fr))`;
+    this.boardElement.style.setProperty('--metaux-visual-rows', String(rows));
+    this.boardElement.style.setProperty('--metaux-visual-cols', String(cols));
+    this.boardElement.style.setProperty('--metaux-aspect-rows', String(rows));
+    this.boardElement.style.setProperty('--metaux-aspect-cols', String(cols));
+    this.boardElement.dataset.rows = String(rows);
+    this.boardElement.dataset.cols = String(cols);
+    this.refreshTilePositions();
+  }
+
+  refreshTilePositions() {
+    for (let row = 0; row < METAUX_ROWS; row += 1) {
+      for (let col = 0; col < METAUX_COLS; col += 1) {
+        const tile = this.tiles[row][col];
+        if (tile) {
+          this.applyTilePosition(tile, row, col);
+        }
+      }
+    }
+  }
+
+  applyTilePosition(tile, row, col) {
+    if (!tile) {
+      return;
+    }
+    const position = this.getVisualPosition(row, col);
+    tile.style.gridRowStart = String(position.row);
+    tile.style.gridColumnStart = String(position.col);
+  }
+
+  getVisualDimensions() {
+    if (this.isPortraitMode()) {
+      return { rows: METAUX_COLS, cols: METAUX_ROWS };
+    }
+    return { rows: METAUX_ROWS, cols: METAUX_COLS };
+  }
+
+  isPortraitMode() {
+    return this.orientation === METAUX_ORIENTATION.PORTRAIT;
+  }
+
+  getVisualPosition(row, col) {
+    if (this.isPortraitMode()) {
+      return {
+        row: col + 1,
+        col: METAUX_ROWS - row
+      };
+    }
+    return {
+      row: row + 1,
+      col: col + 1
+    };
+  }
+
+  getPointerThreshold() {
+    if (!this.boardElement) {
+      return 10;
+    }
+    const rect = this.boardElement.getBoundingClientRect();
+    const { rows, cols } = this.getVisualDimensions();
+    const cellWidth = cols > 0 ? rect.width / cols : rect.width;
+    const cellHeight = rows > 0 ? rect.height / rows : rect.height;
+    const validWidth = Number.isFinite(cellWidth) ? Math.abs(cellWidth) : 0;
+    const validHeight = Number.isFinite(cellHeight) ? Math.abs(cellHeight) : 0;
+    const base = validWidth && validHeight ? Math.min(validWidth, validHeight) : validWidth || validHeight;
+    const threshold = base > 0 ? base / 2 : 0;
+    return Math.max(10, threshold);
+  }
+
+  getPointerDirection(dx, dy) {
+    if (this.isPortraitMode()) {
+      if (Math.abs(dy) >= Math.abs(dx)) {
+        return { row: 0, col: dy > 0 ? 1 : -1 };
+      }
+      return { row: dx > 0 ? -1 : 1, col: 0 };
+    }
+    if (Math.abs(dx) > Math.abs(dy)) {
+      return { row: 0, col: dx > 0 ? 1 : -1 };
+    }
+    return { row: dy > 0 ? 1 : -1, col: 0 };
   }
 }
 
