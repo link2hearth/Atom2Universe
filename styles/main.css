@@ -4578,13 +4578,17 @@ body.theme-neon .devkit-panel__footer kbd {
   --metaux-pop-scale: 1.18;
   --metaux-pop-glow-opacity: 0.8;
   --metaux-shake-duration: 320ms;
+  --metaux-visual-cols: var(--metaux-cols, 16);
+  --metaux-visual-rows: var(--metaux-rows, 9);
+  --metaux-aspect-cols: var(--metaux-visual-cols);
+  --metaux-aspect-rows: var(--metaux-visual-rows);
   display: grid;
-  grid-template-columns: repeat(var(--metaux-cols, 16), minmax(0, 1fr));
+  grid-template-columns: repeat(var(--metaux-visual-cols), minmax(0, 1fr));
   gap: clamp(0.18rem, 0.45vw, 0.34rem);
   width: min(
     90vw,
     1280px,
-    calc((100vh - var(--metaux-vertical-space)) * var(--metaux-cols, 16) / var(--metaux-rows, 9))
+    calc((100vh - var(--metaux-vertical-space)) * var(--metaux-aspect-cols) / var(--metaux-aspect-rows))
   );
   max-height: calc(100vh - var(--metaux-vertical-space));
   padding: clamp(0.6rem, 1.6vw, 1.1rem);
