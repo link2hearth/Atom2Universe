@@ -988,7 +988,7 @@ body.theme-neon .bannierearcade {
 
 .page--photon {
   --photon-banner-height: clamp(3.2rem, 10vw, 4.5rem);
-  --photon-interface-height: 0;
+  --photon-interface-height: 0px;
   --photon-stage-padding: clamp(0.4rem, 2vw, 1.4rem);
   display: none;
   width: 100%;
@@ -1070,19 +1070,19 @@ body.theme-neon .bannierearcade {
   --photon-stage-aspect-width: 9;
   --photon-stage-aspect-height: 16;
   position: relative;
+  aspect-ratio: calc(var(--photon-stage-aspect-width) / var(--photon-stage-aspect-height));
   width: min(
     92vw,
     calc(
-      (100vh - var(--photon-interface-height) - (var(--photon-stage-padding) * 2))
-        * var(--photon-stage-aspect-width)
-        / var(--photon-stage-aspect-height)
+      100vh
+        - var(--photon-interface-height)
+        - var(--photon-stage-padding)
+        - var(--photon-stage-padding)
     )
   );
-  height: min(
-    calc(92vw * var(--photon-stage-aspect-height) / var(--photon-stage-aspect-width)),
-    calc(100vh - var(--photon-interface-height) - (var(--photon-stage-padding) * 2))
+  max-height: calc(
+    100vh - var(--photon-interface-height) - var(--photon-stage-padding) - var(--photon-stage-padding)
   );
-  aspect-ratio: calc(var(--photon-stage-aspect-width) / var(--photon-stage-aspect-height));
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   overflow: hidden;
