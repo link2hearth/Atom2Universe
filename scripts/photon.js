@@ -141,7 +141,11 @@
     };
   })();
 
-  const DEFAULT_MODE_ID = 'classic';
+  const DEFAULT_MODE_ID = 'single';
+
+  const MODE_ROTATION_ORDER = ['single', 'classic', 'hold'];
+  const MODE_CHANGE_MIN_SECONDS = 10;
+  const MODE_CHANGE_SUCCESS_THRESHOLD = 10;
 
   const MODE_DEFINITIONS = {
     classic: {
@@ -418,7 +422,14 @@
   }
 
   class PhotonGame {
-    constructor({ canvas, onScoreChange, onColorChange, onGameOver, onPointerStateChange } = {}) {
+    constructor({
+      canvas,
+      onScoreChange,
+      onColorChange,
+      onGameOver,
+      onPointerStateChange,
+      onModeChange
+    } = {}) {
       this.canvas = canvas || null;
       this.context = this.canvas ? this.canvas.getContext('2d') : null;
       this.onScoreChange = typeof onScoreChange === 'function' ? onScoreChange : () => {};
@@ -453,18 +464,28 @@
 
       this.mode = DEFAULT_MODE_ID;
       this.modeSettings = MODE_DEFINITIONS[this.mode] || MODE_DEFINITIONS[DEFAULT_MODE_ID];
+      this.modeSequence = MODE_ROTATION_ORDER.filter(modeId => MODE_DEFINITIONS[modeId]);
+      if (!this.modeSequence.length) {
+        this.modeSequence = [DEFAULT_MODE_ID];
+      }
+      this.modeIndex = Math.max(0, this.modeSequence.indexOf(this.mode));
+      this.autoRotateModes = this.modeSequence.length > 1;
       this.modeSpeedMultiplier = 1;
       this.modeHoldChance = 0;
       this.modeHoldCooldown = 0;
       this.pendingHoldCooldown = 0;
+      this.modeChangeTimer = 0;
+      this.resolvedSinceModeChange = 0;
 
       this.pointerActive = false;
       this.activePointerId = null;
       this.onPointerStateChange = typeof onPointerStateChange === 'function'
         ? onPointerStateChange
         : () => {};
+      this.onModeChange = typeof onModeChange === 'function' ? onModeChange : () => {};
 
       this.applyModeSettings();
+      this.resetModeProgress();
       this.onPointerStateChange(false);
 
       this._tick = this._tick.bind(this);
@@ -567,17 +588,55 @@
       this.pendingHoldCooldown = this.modeHoldChance > 0 ? this.modeHoldCooldown : 0;
     }
 
-    setMode(modeId) {
+    resetModeProgress() {
+      this.modeChangeTimer = 0;
+      this.resolvedSinceModeChange = 0;
+    }
+
+    setMode(modeId, options = {}) {
+      const { preserveBars = false, resetProgress = true } = options;
       const definition = this.getModeDefinition(modeId);
       const nextId = typeof definition?.id === 'string' ? definition.id : DEFAULT_MODE_ID;
       this.mode = nextId;
+      const nextIndex = this.modeSequence.indexOf(nextId);
+      this.modeIndex = nextIndex >= 0 ? nextIndex : 0;
       this.applyModeSettings();
-      this.setPointerActive(false);
-      this.bars = [];
-      if (this.state === 'running') {
-        this.ensureBarSupply();
+      if (resetProgress) {
+        this.resetModeProgress();
       }
+      if (!preserveBars) {
+        this.bars = [];
+        this.setPointerActive(false);
+      }
+      this.ensureBarSupply();
+      this.onModeChange(this.mode, this.modeSettings);
       this.render();
+    }
+
+    canAdvanceMode() {
+      if (!this.autoRotateModes || this.state !== 'running') {
+        return false;
+      }
+      return (
+        this.modeChangeTimer >= MODE_CHANGE_MIN_SECONDS
+        && this.resolvedSinceModeChange >= MODE_CHANGE_SUCCESS_THRESHOLD
+      );
+    }
+
+    advanceMode() {
+      if (!this.autoRotateModes) {
+        return;
+      }
+      const currentIndex = this.modeSequence.indexOf(this.mode);
+      const nextIndex = currentIndex >= 0
+        ? (currentIndex + 1) % this.modeSequence.length
+        : 0;
+      const nextId = this.modeSequence[nextIndex] ?? this.mode;
+      if (nextId === this.mode) {
+        this.resetModeProgress();
+        return;
+      }
+      this.setMode(nextId, { preserveBars: true, resetProgress: true });
     }
 
     setPointerActive(active) {
@@ -747,6 +806,7 @@
       this.currentColorIndex = 0;
       this.currentColor = this.colorOrder[this.currentColorIndex] ?? this.currentColor;
       this.elapsedTime = 0;
+      this.resetModeProgress();
       this.bars = [];
       this.setPointerActive(false);
       this.activePointerId = null;
@@ -767,6 +827,7 @@
       this.currentColorIndex = 0;
       this.currentColor = this.colorOrder[this.currentColorIndex] ?? this.currentColor;
       this.elapsedTime = 0;
+      this.resetModeProgress();
       this.setPointerActive(false);
       this.ensureHaloPatternSeed(this.currentColor);
       this.onColorChange(this.currentColor);
@@ -847,6 +908,7 @@
         return;
       }
       this.elapsedTime += deltaSeconds;
+      this.modeChangeTimer += deltaSeconds;
       const speed = this.getBarSpeed();
       let activeIndex = -1;
       let activeBottom = -Infinity;
@@ -888,6 +950,12 @@
       if (removed.length) {
         this.score += 1;
         this.onScoreChange(this.score);
+        if (this.state === 'running' && this.autoRotateModes) {
+          this.resolvedSinceModeChange += removed.length;
+          if (this.canAdvanceMode()) {
+            this.advanceMode();
+          }
+        }
       }
       this.ensureBarSupply();
     }

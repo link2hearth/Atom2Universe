@@ -1814,7 +1814,7 @@ const elements = {
   photonOverlayMessage: document.getElementById('photonOverlayMessage'),
   photonOverlayButton: document.getElementById('photonOverlayButton'),
   photonScoreValue: document.getElementById('photonScoreValue'),
-  photonModeSelect: document.getElementById('photonModeSelect'),
+  photonModeValue: document.getElementById('photonModeValue'),
   photonModeDescription: document.getElementById('photonModeDescription'),
   languageSelect: document.getElementById('languageSelect'),
   musicTrackSelect: document.getElementById('musicTrackSelect'),
@@ -2120,6 +2120,12 @@ const PHOTON_MODE_INSTRUCTION_FALLBACKS = Object.freeze({
   hold: 'Des faisceaux mixtes apparaissent : maintenez le clic pendant leur passage en plus de changer la couleur du halo.'
 });
 
+const PHOTON_MODE_LABEL_FALLBACKS = Object.freeze({
+  classic: 'Classique',
+  single: 'Flux unique',
+  hold: 'Maintien'
+});
+
 const PHOTON_GAME_OVER_FALLBACKS = Object.freeze({
   color: score => `Couleur incorrecte ! Score : ${score}`,
   hold: score => `Maintenez le clic pour franchir la barrière mixte ! Score : ${score}`
@@ -2132,24 +2138,11 @@ function resolvePhotonModeId(modeId) {
   }
   const fallbackId = typeof PhotonGame?.DEFAULT_MODE_ID === 'string'
     ? PhotonGame.DEFAULT_MODE_ID
-    : 'classic';
+    : 'single';
   if (modes && Object.prototype.hasOwnProperty.call(modes, fallbackId)) {
     return fallbackId;
   }
-  return 'classic';
-}
-
-function getPhotonSelectedMode() {
-  const raw = elements.photonModeSelect?.value;
-  return resolvePhotonModeId(raw);
-}
-
-function updatePhotonModeSelect(modeId) {
-  const resolved = resolvePhotonModeId(modeId);
-  if (elements.photonModeSelect && elements.photonModeSelect.value !== resolved) {
-    elements.photonModeSelect.value = resolved;
-  }
-  return resolved;
+  return 'single';
 }
 
 function updatePhotonModeDescription(modeId) {
@@ -2163,6 +2156,34 @@ function updatePhotonModeDescription(modeId) {
     `index.sections.photon.modeDescriptions.${resolved}`,
     fallback
   );
+  return resolved;
+}
+
+function updatePhotonModeLabel(modeId) {
+  const resolved = resolvePhotonModeId(modeId);
+  if (!elements.photonModeValue) {
+    return resolved;
+  }
+  const definition = PhotonGame?.MODES?.[resolved];
+  const labelKey = typeof definition?.labelKey === 'string'
+    ? definition.labelKey
+    : `index.sections.photon.modes.${resolved}`;
+  const fallback = PHOTON_MODE_LABEL_FALLBACKS[resolved]
+    ?? PHOTON_MODE_LABEL_FALLBACKS.classic
+    ?? resolved;
+  elements.photonModeValue.textContent = translateOrDefault(labelKey, fallback);
+  return resolved;
+}
+
+function updatePhotonModeUI(modeId) {
+  const resolved = resolvePhotonModeId(modeId);
+  updatePhotonModeLabel(resolved);
+  updatePhotonModeDescription(resolved);
+  return resolved;
+}
+
+function getPhotonDefaultMode() {
+  return resolvePhotonModeId(PhotonGame?.DEFAULT_MODE_ID);
 }
 
 function getPhotonModeInstruction(modeId) {
@@ -2249,28 +2270,30 @@ function ensurePhotonGame() {
         return;
       }
       elements.photonStage.classList.toggle('photon-stage--holding', Boolean(holding));
+    },
+    onModeChange: modeId => {
+      updatePhotonModeUI(modeId);
     }
   });
-  const initialMode = getPhotonSelectedMode();
-  photonGame.setMode(initialMode);
-  updatePhotonModeSelect(initialMode);
-  updatePhotonModeDescription(initialMode);
+  const initialMode = getPhotonDefaultMode();
+  photonGame.setMode(initialMode, { resetProgress: true });
   updatePhotonStageColor('blue');
   updatePhotonScore(0);
+  updatePhotonModeUI(initialMode);
   return photonGame;
 }
 
-function preparePhotonNewGame(modeId = getPhotonSelectedMode()) {
-  const resolvedMode = updatePhotonModeSelect(modeId);
+function preparePhotonNewGame() {
+  const defaultMode = getPhotonDefaultMode();
   const game = ensurePhotonGame();
   if (game) {
-    game.setMode(resolvedMode);
     game.stop();
+    game.setMode(defaultMode, { resetProgress: true });
   }
-  updatePhotonModeDescription(resolvedMode);
+  updatePhotonModeUI(defaultMode);
   updatePhotonStageColor('blue');
   updatePhotonScore(0);
-  const instruction = getPhotonModeInstruction(resolvedMode);
+  const instruction = getPhotonModeInstruction(defaultMode);
   const startLabel = translateOrDefault('index.sections.photon.button', 'Commencer');
   showPhotonOverlay({
     message: instruction,
@@ -5471,18 +5494,11 @@ if (elements.photonOverlayButton) {
     if (!game) {
       return;
     }
-    const mode = getPhotonSelectedMode();
-    game.setMode(mode);
+    const defaultMode = getPhotonDefaultMode();
+    game.setMode(defaultMode, { resetProgress: true });
+    updatePhotonModeUI(defaultMode);
     hidePhotonOverlay();
     game.start();
-  });
-}
-
-if (elements.photonModeSelect) {
-  elements.photonModeSelect.addEventListener('change', () => {
-    const mode = getPhotonSelectedMode();
-    updatePhotonModeDescription(mode);
-    preparePhotonNewGame(mode);
   });
 }
 
@@ -5517,9 +5533,8 @@ if (elements.photonStage) {
   }
 }
 
-const initialPhotonMode = getPhotonSelectedMode();
-updatePhotonModeSelect(initialPhotonMode);
-updatePhotonModeDescription(initialPhotonMode);
+const initialPhotonMode = getPhotonDefaultMode();
+updatePhotonModeUI(initialPhotonMode);
 
 renderPeriodicTable();
 renderGachaRarityList();
