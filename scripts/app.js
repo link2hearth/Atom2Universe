@@ -1814,7 +1814,6 @@ const elements = {
   photonOverlay: document.getElementById('photonOverlay'),
   photonOverlayMessage: document.getElementById('photonOverlayMessage'),
   photonOverlayButton: document.getElementById('photonOverlayButton'),
-  photonScoreValue: document.getElementById('photonScoreValue'),
   languageSelect: document.getElementById('languageSelect'),
   musicTrackSelect: document.getElementById('musicTrackSelect'),
   musicTrackStatus: document.getElementById('musicTrackStatus'),
@@ -5250,6 +5249,9 @@ if (elements.arcadeHubCardButtons?.length) {
       const target = button.dataset.pageTarget;
       if (!target || !isPageUnlocked(target)) {
         return;
+      }
+      if (target === 'photon') {
+        preparePhotonNewGame();
       }
       showPage(target);
     });
