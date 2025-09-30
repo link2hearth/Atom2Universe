@@ -835,6 +835,7 @@
         }
       },
       "featured": {
+        "today": "Aujourd'hui",
         "monday": "+Singularité Minérale",
         "thursday": "+Singularité Minérale",
         "tuesday": "+Mythe Quantique",
