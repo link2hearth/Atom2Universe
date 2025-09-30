@@ -6,7 +6,7 @@
     "navigation": {
       "primary": "Navigation principale",
       "items": {
-        "arcade": "Particules",
+        "arcade": "Arcade",
         "shop": "Shop",
         "gacha": "Gacha",
         "table": "Table",
@@ -21,6 +21,11 @@
       "totalAtoms": "Total d'atomes",
       "apc": "APC",
       "aps": "APS"
+    },
+    "arcadeBanner": {
+      "aria": "Raccourcis Arcade",
+      "arcadeButton": "Arcade",
+      "gameButton": "Clicker"
     },
     "sections": {
       "game": {
@@ -46,7 +51,7 @@
         "continue": "Cliquer pour continuer"
       },
       "arcade": {
-        "aria": "Particules",
+        "aria": "Mini-jeu Particules",
         "header": {
           "aria": "Navigation du jeu Particules",
           "tickets": "Tickets",
@@ -63,6 +68,31 @@
         "overlay": {
           "message": "Touchez ou cliquez la raquette pour guider la particule et détruire les briques quantiques.",
           "button": "Commencer"
+        }
+      },
+      "arcadeHub": {
+        "aria": "Hall de sélection des mini-jeux",
+        "title": "Arcade",
+        "subtitle": "Choisissez un mini-jeu pour prolonger l'expérience Atom2Univers.",
+        "cards": {
+          "particules": {
+            "aria": "Accéder au mini-jeu Particules",
+            "title": "Particules",
+            "description": "Renvoyez la particule quantique pour décrocher des tickets de gacha et des crédits Mach3.",
+            "cta": "Jouer"
+          },
+          "metaux": {
+            "aria": "Accéder au mini-jeu Métaux",
+            "title": "Métaux",
+            "description": "Alignez les alliages Mach3 pour forger des bonus et améliorer votre production.",
+            "cta": "Forger"
+          },
+          "photon": {
+            "aria": "Accéder au mini-jeu Photon",
+            "title": "Photon",
+            "description": "Contrôlez le flux lumineux et évitez les interférences pour maximiser votre score.",
+            "cta": "Lancer"
+          }
         }
       },
       "table": {
@@ -221,7 +251,7 @@
         },
         "footer": "Appuyez sur F9 pour ouvrir ou fermer le DevKit."
       }
-    }
+    },
   },
   "config": {
     "shop": {

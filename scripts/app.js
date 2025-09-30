@@ -1338,6 +1338,9 @@ function getPageUnlockState() {
 }
 
 function isPageUnlocked(pageId) {
+  if (pageId === 'arcadeHub' || pageId === 'arcade') {
+    return isArcadeUnlocked();
+  }
   if (pageId === 'shop') {
     const atoms = gameState.atoms instanceof LayeredNumber
       ? gameState.atoms
@@ -1778,6 +1781,8 @@ const elements = {
   arcadeOverlay: document.getElementById('arcadeOverlay'),
   arcadeOverlayMessage: document.getElementById('arcadeOverlayMessage'),
   arcadeOverlayButton: document.getElementById('arcadeOverlayButton'),
+  arcadeHubCardButtons: document.querySelectorAll('.arcade-hub-card__button'),
+  arcadeBannerButtons: document.querySelectorAll('.bannierearcade__button'),
   arcadeLevelValue: document.getElementById('arcadeLevelValue'),
   arcadeLivesValue: document.getElementById('arcadeLivesValue'),
   arcadeScoreValue: document.getElementById('arcadeScoreValue'),
@@ -4953,6 +4958,7 @@ function showPage(pageId) {
   document.body.dataset.activePage = pageId;
   document.body.classList.toggle('view-game', pageId === 'game');
   document.body.classList.toggle('view-arcade', pageId === 'arcade');
+  document.body.classList.toggle('view-arcade-hub', pageId === 'arcadeHub');
   document.body.classList.toggle('view-metaux', pageId === 'metaux');
   document.body.classList.toggle('view-photon', pageId === 'photon');
   if (pageId === 'metaux') {
@@ -5228,6 +5234,30 @@ elements.navButtons.forEach(btn => {
     showPage(target);
   });
 });
+
+if (elements.arcadeHubCardButtons?.length) {
+  elements.arcadeHubCardButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const target = button.dataset.pageTarget;
+      if (!target || !isPageUnlocked(target)) {
+        return;
+      }
+      showPage(target);
+    });
+  });
+}
+
+if (elements.arcadeBannerButtons?.length) {
+  elements.arcadeBannerButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const target = button.dataset.pageTarget;
+      if (!target || !isPageUnlocked(target)) {
+        return;
+      }
+      showPage(target);
+    });
+  });
+}
 
 if (elements.metauxOpenButton) {
   elements.metauxOpenButton.addEventListener('click', () => {

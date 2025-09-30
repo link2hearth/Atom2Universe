@@ -10,7 +10,7 @@
         "navigation": {
           "primary": "Navigation principale",
           "items": {
-            "arcade": "Particules",
+            "arcade": "Arcade",
             "shop": "Shop",
             "gacha": "Gacha",
             "table": "Table",
@@ -25,6 +25,11 @@
           "totalAtoms": "Total d'atomes",
           "apc": "APC",
           "aps": "APS"
+        },
+        "arcadeBanner": {
+          "aria": "Raccourcis Arcade",
+          "arcadeButton": "Arcade",
+          "gameButton": "Clicker"
         },
         "sections": {
           "game": {
@@ -50,7 +55,7 @@
             "continue": "Cliquer pour continuer"
           },
           "arcade": {
-            "aria": "Particules",
+            "aria": "Mini-jeu Particules",
             "header": {
               "aria": "Navigation du jeu Particules",
               "tickets": "Tickets",
@@ -67,6 +72,31 @@
             "overlay": {
               "message": "Touchez ou cliquez la raquette pour guider la particule et détruire les briques quantiques.",
               "button": "Commencer"
+            }
+          },
+          "arcadeHub": {
+            "aria": "Hall de sélection des mini-jeux",
+            "title": "Arcade",
+            "subtitle": "Choisissez un mini-jeu pour prolonger l'expérience Atom2Univers.",
+            "cards": {
+              "particules": {
+                "aria": "Accéder au mini-jeu Particules",
+                "title": "Particules",
+                "description": "Renvoyez la particule quantique pour décrocher des tickets de gacha et des crédits Mach3.",
+                "cta": "Jouer"
+              },
+              "metaux": {
+                "aria": "Accéder au mini-jeu Métaux",
+                "title": "Métaux",
+                "description": "Alignez les alliages Mach3 pour forger des bonus et améliorer votre production.",
+                "cta": "Forger"
+              },
+              "photon": {
+                "aria": "Accéder au mini-jeu Photon",
+                "title": "Photon",
+                "description": "Contrôlez le flux lumineux et évitez les interférences pour maximiser votre score.",
+                "cta": "Lancer"
+              }
             }
           },
           "table": {
@@ -1029,7 +1059,7 @@
         "navigation": {
           "primary": "Main navigation",
           "items": {
-            "arcade": "Particles",
+            "arcade": "Arcade",
             "shop": "Shop",
             "gacha": "Gacha",
             "table": "Table",
@@ -1044,6 +1074,11 @@
           "totalAtoms": "Total atoms",
           "apc": "APC",
           "aps": "APS"
+        },
+        "arcadeBanner": {
+          "aria": "Arcade shortcuts",
+          "arcadeButton": "Arcade",
+          "gameButton": "Clicker"
         },
         "sections": {
           "game": {
@@ -1069,7 +1104,7 @@
             "continue": "Click to continue"
           },
           "arcade": {
-            "aria": "Particles",
+            "aria": "Particles mini-game",
             "header": {
               "aria": "Particles mini-game navigation",
               "tickets": "Tickets",
@@ -1086,6 +1121,31 @@
             "overlay": {
               "message": "Tap or click the paddle to guide the particle and shatter the quantum bricks.",
               "button": "Start"
+            }
+          },
+          "arcadeHub": {
+            "aria": "Mini-game selection hub",
+            "title": "Arcade",
+            "subtitle": "Pick a bonus mini-game to extend your Atom2Univers session.",
+            "cards": {
+              "particules": {
+                "aria": "Open the Particles mini-game",
+                "title": "Particles",
+                "description": "Deflect the quantum particle to earn gacha tickets and Mach3 credits.",
+                "cta": "Play"
+              },
+              "metaux": {
+                "aria": "Open the Metals mini-game",
+                "title": "Metals",
+                "description": "Match alloys in Mach3 mode to forge bonuses and boost production.",
+                "cta": "Forge"
+              },
+              "photon": {
+                "aria": "Open the Photon mini-game",
+                "title": "Photon",
+                "description": "Channel the light stream and dodge interferences to maximise your score.",
+                "cta": "Launch"
+              }
             }
           },
           "table": {

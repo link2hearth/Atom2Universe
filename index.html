@@ -19,7 +19,7 @@
       <nav class="nav-menu" data-i18n="aria-label:index.navigation.primary">
         <button
           class="nav-button"
-          data-target="arcade"
+          data-target="arcadeHub"
           id="navArcadeButton"
           hidden
           aria-hidden="true"
@@ -185,11 +185,99 @@
     </section>
 
     <section
+      id="arcadeHub"
+      class="page page--arcade-hub"
+      data-i18n="aria-label:index.sections.arcadeHub.aria"
+      hidden
+    >
+      <div
+        class="bannierearcade"
+        role="navigation"
+        data-i18n="aria-label:index.arcadeBanner.aria"
+        aria-label=""
+      >
+        <button
+          type="button"
+          class="bannierearcade__button"
+          data-page-target="arcadeHub"
+          data-i18n="index.arcadeBanner.arcadeButton"
+        ></button>
+        <button
+          type="button"
+          class="bannierearcade__button bannierearcade__button--secondary"
+          data-page-target="game"
+          data-i18n="index.arcadeBanner.gameButton"
+        ></button>
+      </div>
+      <header class="arcade-hub__header">
+        <h2 class="arcade-hub__title" data-i18n="index.sections.arcadeHub.title"></h2>
+        <p class="arcade-hub__subtitle" data-i18n="index.sections.arcadeHub.subtitle"></p>
+      </header>
+      <div class="arcade-hub__grid">
+        <article class="arcade-hub-card" data-i18n="aria-label:index.sections.arcadeHub.cards.particules.aria">
+          <header class="arcade-hub-card__header">
+            <h3 class="arcade-hub-card__title" data-i18n="index.sections.arcadeHub.cards.particules.title"></h3>
+            <p class="arcade-hub-card__description" data-i18n="index.sections.arcadeHub.cards.particules.description"></p>
+          </header>
+          <button
+            type="button"
+            class="arcade-hub-card__button"
+            data-page-target="arcade"
+            data-i18n="index.sections.arcadeHub.cards.particules.cta"
+          ></button>
+        </article>
+        <article class="arcade-hub-card" data-i18n="aria-label:index.sections.arcadeHub.cards.metaux.aria">
+          <header class="arcade-hub-card__header">
+            <h3 class="arcade-hub-card__title" data-i18n="index.sections.arcadeHub.cards.metaux.title"></h3>
+            <p class="arcade-hub-card__description" data-i18n="index.sections.arcadeHub.cards.metaux.description"></p>
+          </header>
+          <button
+            type="button"
+            class="arcade-hub-card__button"
+            data-page-target="metaux"
+            data-i18n="index.sections.arcadeHub.cards.metaux.cta"
+          ></button>
+        </article>
+        <article class="arcade-hub-card" data-i18n="aria-label:index.sections.arcadeHub.cards.photon.aria">
+          <header class="arcade-hub-card__header">
+            <h3 class="arcade-hub-card__title" data-i18n="index.sections.arcadeHub.cards.photon.title"></h3>
+            <p class="arcade-hub-card__description" data-i18n="index.sections.arcadeHub.cards.photon.description"></p>
+          </header>
+          <button
+            type="button"
+            class="arcade-hub-card__button"
+            data-page-target="photon"
+            data-i18n="index.sections.arcadeHub.cards.photon.cta"
+          ></button>
+        </article>
+      </div>
+    </section>
+
+    <section
       id="arcade"
       class="page page--arcade"
       data-i18n="aria-label:index.sections.arcade.aria"
       hidden
     >
+      <div
+        class="bannierearcade"
+        role="navigation"
+        data-i18n="aria-label:index.arcadeBanner.aria"
+        aria-label=""
+      >
+        <button
+          type="button"
+          class="bannierearcade__button"
+          data-page-target="arcadeHub"
+          data-i18n="index.arcadeBanner.arcadeButton"
+        ></button>
+        <button
+          type="button"
+          class="bannierearcade__button bannierearcade__button--secondary"
+          data-page-target="game"
+          data-i18n="index.arcadeBanner.gameButton"
+        ></button>
+      </div>
       <header
         class="arcade-header"
         data-i18n="aria-label:index.sections.arcade.header.aria"
@@ -455,6 +543,25 @@
       data-i18n="aria-label:index.sections.photon.aria"
       hidden
     >
+      <div
+        class="bannierearcade"
+        role="navigation"
+        data-i18n="aria-label:index.arcadeBanner.aria"
+        aria-label=""
+      >
+        <button
+          type="button"
+          class="bannierearcade__button"
+          data-page-target="arcadeHub"
+          data-i18n="index.arcadeBanner.arcadeButton"
+        ></button>
+        <button
+          type="button"
+          class="bannierearcade__button bannierearcade__button--secondary"
+          data-page-target="game"
+          data-i18n="index.arcadeBanner.gameButton"
+        ></button>
+      </div>
       <header class="photon-topbar">
         <h2 class="photon-title" data-i18n="index.sections.photon.title"></h2>
         <div class="photon-hud" aria-live="polite">
@@ -503,6 +610,25 @@
       data-i18n="aria-label:index.sections.metaux.aria"
       hidden
     >
+      <div
+        class="bannierearcade"
+        role="navigation"
+        data-i18n="aria-label:index.arcadeBanner.aria"
+        aria-label=""
+      >
+        <button
+          type="button"
+          class="bannierearcade__button"
+          data-page-target="arcadeHub"
+          data-i18n="index.arcadeBanner.arcadeButton"
+        ></button>
+        <button
+          type="button"
+          class="bannierearcade__button bannierearcade__button--secondary"
+          data-page-target="game"
+          data-i18n="index.arcadeBanner.gameButton"
+        ></button>
+      </div>
       <button
         class="metaux-exit-button"
         id="metauxExitButton"
