@@ -246,7 +246,9 @@
           "autoBonusLabel": "Current APS bonus:",
           "reset": "Reset",
           "giveTickets": "Give draw tickets",
-          "ticketsPlaceholder": "e.g. 50"
+          "ticketsPlaceholder": "e.g. 50",
+          "giveMach3Tickets": "Give Mach3 tickets",
+          "mach3TicketsPlaceholder": "e.g. 5"
         },
         "unlocks": {
           "title": "Instant unlocks",
@@ -615,6 +617,11 @@
         "ticketAdded": {
           "single": "DevKit: 1 draw ticket added",
           "multiple": "DevKit: {count} draw tickets added"
+        },
+        "invalidMach3Tickets": "Invalid Mach3 ticket amount.",
+        "mach3TicketAdded": {
+          "single": "DevKit: 1 Mach3 ticket added",
+          "multiple": "DevKit: {count} Mach3 tickets added"
         },
         "trophiesUnlocked": "DevKit: {count} achievements unlocked!",
         "allTrophiesUnlocked": "All achievements are already unlocked.",

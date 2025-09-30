@@ -239,7 +239,9 @@
               "autoBonusLabel": "Bonus APS actuel :",
               "reset": "Réinitialiser",
               "giveTickets": "Donner des tickets de tirage",
-              "ticketsPlaceholder": "ex : 50"
+              "ticketsPlaceholder": "ex : 50",
+              "giveMach3Tickets": "Donner des tickets Mach3",
+              "mach3TicketsPlaceholder": "ex : 5"
             },
             "unlocks": {
               "title": "Déblocages instantanés",
@@ -576,6 +578,11 @@
             "ticketAdded": {
               "single": "DevKit : 1 ticket de tirage ajouté",
               "multiple": "DevKit : {count} tickets de tirage ajoutés"
+            },
+            "invalidMach3Tickets": "Nombre de tickets Mach3 invalide.",
+            "mach3TicketAdded": {
+              "single": "DevKit : 1 ticket Mach3 ajouté",
+              "multiple": "DevKit : {count} tickets Mach3 ajoutés"
             },
             "trophiesUnlocked": "DevKit : {count} succès débloqués !",
             "allTrophiesUnlocked": "Tous les succès sont déjà débloqués.",
@@ -1288,7 +1295,9 @@
               "autoBonusLabel": "Current APS bonus:",
               "reset": "Reset",
               "giveTickets": "Give draw tickets",
-              "ticketsPlaceholder": "e.g. 50"
+              "ticketsPlaceholder": "e.g. 50",
+              "giveMach3Tickets": "Give Mach3 tickets",
+              "mach3TicketsPlaceholder": "e.g. 5"
             },
             "unlocks": {
               "title": "Instant unlocks",
@@ -1625,6 +1634,11 @@
             "ticketAdded": {
               "single": "DevKit: 1 draw ticket added",
               "multiple": "DevKit: {count} draw tickets added"
+            },
+            "invalidMach3Tickets": "Invalid Mach3 ticket amount.",
+            "mach3TicketAdded": {
+              "single": "DevKit: 1 Mach3 ticket added",
+              "multiple": "DevKit: {count} Mach3 tickets added"
             },
             "trophiesUnlocked": "DevKit: {count} achievements unlocked!",
             "allTrophiesUnlocked": "All achievements are already unlocked.",

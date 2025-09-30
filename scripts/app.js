@@ -1858,6 +1858,8 @@ const elements = {
   devkitAutoReset: document.getElementById('devkitResetAuto'),
   devkitTicketsForm: document.getElementById('devkitTicketsForm'),
   devkitTicketsInput: document.getElementById('devkitTicketsInput'),
+  devkitMach3TicketsForm: document.getElementById('devkitMach3TicketsForm'),
+  devkitMach3TicketsInput: document.getElementById('devkitMach3TicketsInput'),
   devkitUnlockTrophies: document.getElementById('devkitUnlockTrophies'),
   devkitUnlockElements: document.getElementById('devkitUnlockElements'),
   devkitUnlockInfo: document.getElementById('devkitUnlockInfo'),
@@ -3520,6 +3522,20 @@ function handleDevKitTicketSubmission(value) {
   showToast(gained === 1
     ? t('scripts.app.devkit.ticketAdded.single')
     : t('scripts.app.devkit.ticketAdded.multiple', { count: gained }));
+}
+
+function handleDevKitMach3TicketSubmission(value) {
+  const numeric = parseDevKitInteger(value);
+  if (!Number.isFinite(numeric) || numeric <= 0) {
+    showToast(t('scripts.app.devkit.invalidMach3Tickets'));
+    return;
+  }
+  const gained = gainBonusParticulesTickets(numeric);
+  updateUI();
+  saveGame();
+  showToast(gained === 1
+    ? t('scripts.app.devkit.mach3TicketAdded.single')
+    : t('scripts.app.devkit.mach3TicketAdded.multiple', { count: gained }));
 }
 
 function devkitUnlockAllTrophies() {
@@ -5223,6 +5239,17 @@ if (elements.devkitTicketsForm) {
     handleDevKitTicketSubmission(value);
     if (elements.devkitTicketsInput) {
       elements.devkitTicketsInput.value = '';
+    }
+  });
+}
+
+if (elements.devkitMach3TicketsForm) {
+  elements.devkitMach3TicketsForm.addEventListener('submit', event => {
+    event.preventDefault();
+    const value = elements.devkitMach3TicketsInput ? elements.devkitMach3TicketsInput.value : '';
+    handleDevKitMach3TicketSubmission(value);
+    if (elements.devkitMach3TicketsInput) {
+      elements.devkitMach3TicketsInput.value = '';
     }
   });
 }
