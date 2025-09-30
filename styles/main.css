@@ -988,7 +988,7 @@ body.theme-neon .bannierearcade {
 
 .page--photon {
   --photon-banner-height: clamp(3.2rem, 10vw, 4.5rem);
-  --photon-interface-height: 0;
+  --photon-layout-gap: clamp(0.75rem, 2vw, 1.6rem);
   --photon-stage-padding: clamp(0.4rem, 2vw, 1.4rem);
   display: none;
   width: 100%;
@@ -999,7 +999,7 @@ body.theme-neon .bannierearcade {
 .page--photon.active {
   display: flex;
   flex-direction: column;
-  gap: clamp(0.75rem, 2vw, 1.6rem);
+  gap: var(--photon-layout-gap);
   min-height: 100vh;
 }
 
@@ -1056,8 +1056,6 @@ body.theme-neon .bannierearcade {
 .photon-content {
   flex: 1;
   width: 100%;
-  max-width: min(960px, 94vw);
-  margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1069,20 +1067,19 @@ body.theme-neon .bannierearcade {
 .photon-stage {
   --photon-stage-aspect-width: 9;
   --photon-stage-aspect-height: 16;
+  --photon-available-height: calc(
+    100vh - var(--photon-banner-height) - var(--photon-layout-gap) - (var(--photon-stage-padding) * 2)
+  );
   position: relative;
+  aspect-ratio: calc(var(--photon-stage-aspect-width) / var(--photon-stage-aspect-height));
   width: min(
-    92vw,
+    calc(100vw - (var(--photon-stage-padding) * 2)),
     calc(
-      (100vh - var(--photon-interface-height) - (var(--photon-stage-padding) * 2))
-        * var(--photon-stage-aspect-width)
-        / var(--photon-stage-aspect-height)
+      max(18rem, var(--photon-available-height))
+        * (var(--photon-stage-aspect-width) / var(--photon-stage-aspect-height))
     )
   );
-  height: min(
-    calc(92vw * var(--photon-stage-aspect-height) / var(--photon-stage-aspect-width)),
-    calc(100vh - var(--photon-interface-height) - (var(--photon-stage-padding) * 2))
-  );
-  aspect-ratio: calc(var(--photon-stage-aspect-width) / var(--photon-stage-aspect-height));
+  max-height: max(18rem, var(--photon-available-height));
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   overflow: hidden;
