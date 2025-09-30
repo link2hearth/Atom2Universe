@@ -1808,13 +1808,11 @@ const elements = {
   metauxMessage: document.getElementById('metauxMessage'),
   metauxReshuffleButton: document.getElementById('metauxReshuffleButton'),
   photonOpenButton: document.getElementById('photonOpenButton'),
-  photonCloseButton: document.getElementById('photonCloseButton'),
   photonStage: document.getElementById('photonStage'),
   photonCanvas: document.getElementById('photonCanvas'),
   photonOverlay: document.getElementById('photonOverlay'),
   photonOverlayMessage: document.getElementById('photonOverlayMessage'),
   photonOverlayButton: document.getElementById('photonOverlayButton'),
-  photonScoreValue: document.getElementById('photonScoreValue'),
   languageSelect: document.getElementById('languageSelect'),
   musicTrackSelect: document.getElementById('musicTrackSelect'),
   musicTrackStatus: document.getElementById('musicTrackStatus'),
@@ -5251,6 +5249,9 @@ if (elements.arcadeHubCardButtons?.length) {
       if (!target || !isPageUnlocked(target)) {
         return;
       }
+      if (target === 'photon') {
+        preparePhotonNewGame();
+      }
       showPage(target);
     });
   });
@@ -5359,18 +5360,6 @@ if (elements.photonOpenButton) {
   elements.photonOpenButton.addEventListener('click', () => {
     preparePhotonNewGame();
     showPage('photon');
-  });
-}
-
-if (elements.photonCloseButton) {
-  elements.photonCloseButton.addEventListener('click', () => {
-    if (photonGame) {
-      photonGame.stop();
-    }
-    updatePhotonStageColor('blue');
-    updatePhotonScore(0);
-    hidePhotonOverlay();
-    showPage('options');
   });
 }
 
