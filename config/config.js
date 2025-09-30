@@ -1298,6 +1298,9 @@ const GAME_CONFIG = {
           increment: 0.05,
           maxBonus: 0.5
         }
+      },
+      input: {
+        longPressThresholdMs: 200
       }
     }
   },

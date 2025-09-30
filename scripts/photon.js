@@ -52,6 +52,10 @@
     }
   };
 
+  const DEFAULT_INPUT_SETTINGS = {
+    longPressThresholdMs: 200
+  };
+
   const BAR_TEXTURE_SPECS = {
     blue: {
       src: 'assets/image/Bulle.png',
@@ -97,6 +101,13 @@
   const toPositiveInteger = (value, fallback) => {
     const numeric = Number(value);
     return Number.isInteger(numeric) && numeric > 0 ? numeric : fallback;
+  };
+
+  const getTimestamp = () => {
+    if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+      return performance.now();
+    }
+    return Date.now();
   };
 
   const source = isPlainObject(PHOTON_CONFIG_SOURCE) ? PHOTON_CONFIG_SOURCE : null;
@@ -269,6 +280,20 @@
           { min: 0 }
         )
       }
+    };
+  })();
+
+  const INPUT_CONFIG = (() => {
+    const inputSource = source && isPlainObject(source.input) ? source.input : null;
+    const rawThreshold = inputSource?.longPressThresholdMs
+      ?? inputSource?.holdThresholdMs
+      ?? inputSource?.longClickThresholdMs;
+    return {
+      longPressThresholdMs: readNumber(
+        rawThreshold,
+        DEFAULT_INPUT_SETTINGS.longPressThresholdMs,
+        { min: 0, max: 2000 }
+      )
     };
   })();
 
@@ -479,6 +504,14 @@
 
       this.pointerActive = false;
       this.activePointerId = null;
+      this.longPressThresholdMs = Math.max(
+        0,
+        Number.isFinite(INPUT_CONFIG.longPressThresholdMs)
+          ? INPUT_CONFIG.longPressThresholdMs
+          : DEFAULT_INPUT_SETTINGS.longPressThresholdMs
+      );
+      this.pointerDownTimestamp = null;
+      this.pointerTriggeredToggle = false;
       this.onPointerStateChange = typeof onPointerStateChange === 'function'
         ? onPointerStateChange
         : () => {};
@@ -639,7 +672,7 @@
       this.setMode(nextId, { preserveBars: true, resetProgress: true });
     }
 
-    setPointerActive(active) {
+    setPointerActive(active, { resetHoldState = true } = {}) {
       const next = Boolean(active);
       if (this.pointerActive === next) {
         return;
@@ -647,6 +680,10 @@
       this.pointerActive = next;
       if (!next) {
         this.activePointerId = null;
+        if (resetHoldState) {
+          this.pointerDownTimestamp = null;
+          this.pointerTriggeredToggle = false;
+        }
       }
       this.onPointerStateChange(next);
     }
@@ -657,6 +694,8 @@
       }
       if (this.state !== 'running') {
         this.setPointerActive(false);
+        this.pointerDownTimestamp = null;
+        this.pointerTriggeredToggle = false;
         return;
       }
       if (event && typeof event.pointerId === 'number') {
@@ -664,8 +703,13 @@
       } else {
         this.activePointerId = null;
       }
+      this.pointerDownTimestamp = getTimestamp();
+      this.pointerTriggeredToggle = false;
       this.setPointerActive(true);
-      this.toggleColor();
+      if (this.longPressThresholdMs <= 0) {
+        this.toggleColor();
+        this.pointerTriggeredToggle = true;
+      }
     }
 
     handlePointerUp(event) {
@@ -677,8 +721,26 @@
       ) {
         return;
       }
+      const hadPointerDown = this.pointerDownTimestamp != null;
+      const now = getTimestamp();
+      const pressDuration = hadPointerDown ? Math.max(0, now - this.pointerDownTimestamp) : 0;
+      const threshold = Math.max(
+        0,
+        Number.isFinite(this.longPressThresholdMs) ? this.longPressThresholdMs : 0
+      );
+      const shouldToggleColor = hadPointerDown
+        && !this.pointerTriggeredToggle
+        && (threshold <= 0 || pressDuration < threshold);
+
       this.activePointerId = null;
-      this.setPointerActive(false);
+      this.setPointerActive(false, { resetHoldState: false });
+
+      if (shouldToggleColor) {
+        this.toggleColor();
+      }
+
+      this.pointerDownTimestamp = null;
+      this.pointerTriggeredToggle = false;
     }
 
     getBarWidth() {
