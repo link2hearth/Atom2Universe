@@ -779,7 +779,7 @@ main {
   --arcade-padding-top: clamp(0rem, 0.12vw, 0.08rem);
   --arcade-padding-bottom: clamp(0.55rem, 1.8vw, 0.9rem);
   --arcade-stage-spacing: clamp(0.15rem, 0.9vh, 0.45rem);
-  --arcade-header-height: clamp(1.6rem, 3.2vh, 2.1rem);
+  --arcade-header-height: 0rem;
   --arcade-vertical-offset: calc(
     var(--arcade-padding-top) + var(--arcade-padding-bottom) + var(--arcade-stage-spacing) * 2 + var(--arcade-header-height)
   );
@@ -818,6 +818,24 @@ main {
   justify-content: center;
   gap: clamp(0.55rem, 1.6vw, 1.2rem);
   flex-wrap: wrap;
+}
+
+.page--arcade .bannierearcade__nav-group {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.55rem, 1.6vw, 1.2rem);
+  flex-wrap: wrap;
+}
+
+.page--arcade .bannierearcade__status-group {
+  margin-left: auto;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: clamp(0.28rem, 0.77vw, 0.55rem);
+}
+
+.page--arcade .bannierearcade__status-group .arcade-header__status {
+  flex: 0 1 auto;
 }
 
 .bannierearcade__button {

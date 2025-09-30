@@ -268,59 +268,49 @@
         aria-label=""
       >
         <div class="bannierearcade__inner">
-          <button
-            type="button"
-            class="bannierearcade__button"
-            data-page-target="arcadeHub"
-            data-i18n="index.arcadeBanner.arcadeButton"
-          ></button>
-          <button
-            type="button"
-            class="bannierearcade__button bannierearcade__button--secondary"
-            data-page-target="game"
-            data-i18n="index.arcadeBanner.gameButton"
-          ></button>
+          <div class="bannierearcade__nav-group" role="presentation">
+            <button
+              type="button"
+              class="bannierearcade__button"
+              data-page-target="arcadeHub"
+              data-i18n="index.arcadeBanner.arcadeButton"
+            ></button>
+            <button
+              type="button"
+              class="bannierearcade__button bannierearcade__button--secondary"
+              data-page-target="game"
+              data-i18n="index.arcadeBanner.gameButton"
+            ></button>
+          </div>
+          <div class="bannierearcade__status-group arcade-header__status-group" role="presentation">
+            <button class="arcade-header__status" id="arcadeTicketButton" type="button">
+              <span class="arcade-header__status-label" data-i18n="index.sections.arcade.header.tickets"></span>
+              <span
+                class="arcade-header__status-value"
+                id="arcadeTicketValue"
+                data-i18n="index.sections.gacha.tickets.single"
+              ></span>
+            </button>
+            <button
+              class="arcade-header__status arcade-header__status--bonus"
+              id="arcadeBonusTicketButton"
+              type="button"
+              aria-describedby="arcadeBonusTicketAnnouncement"
+              aria-disabled="true"
+              disabled
+            >
+              <span class="arcade-header__status-label" data-i18n="index.sections.arcade.header.mach3"></span>
+              <span class="arcade-header__status-value" id="arcadeBonusTicketValue">0</span>
+            </button>
+            <span
+              id="arcadeBonusTicketAnnouncement"
+              class="visually-hidden"
+              aria-live="polite"
+              data-i18n="index.sections.arcade.header.mach3Announcement"
+            ></span>
+          </div>
         </div>
       </div>
-      <header
-        class="arcade-header"
-        data-i18n="aria-label:index.sections.arcade.header.aria"
-      >
-        <button
-          class="arcade-header__brand brand brand-button arcade-header__brand--primary"
-          id="arcadeReturnButton"
-          type="button"
-        >
-          <span class="arcade-header__brand-text">Atom2Univers</span>
-        </button>
-        <div class="arcade-header__status-group" role="presentation">
-          <button class="arcade-header__status" id="arcadeTicketButton" type="button">
-            <span class="arcade-header__status-label" data-i18n="index.sections.arcade.header.tickets"></span>
-            <span
-              class="arcade-header__status-value"
-              id="arcadeTicketValue"
-              data-i18n="index.sections.gacha.tickets.single"
-            ></span>
-          </button>
-          <button
-            class="arcade-header__status arcade-header__status--bonus"
-            id="arcadeBonusTicketButton"
-            type="button"
-            aria-describedby="arcadeBonusTicketAnnouncement"
-            aria-disabled="true"
-            disabled
-          >
-            <span class="arcade-header__status-label" data-i18n="index.sections.arcade.header.mach3"></span>
-            <span class="arcade-header__status-value" id="arcadeBonusTicketValue">0</span>
-          </button>
-          <span
-            id="arcadeBonusTicketAnnouncement"
-            class="visually-hidden"
-            aria-live="polite"
-            data-i18n="index.sections.arcade.header.mach3Announcement"
-          ></span>
-        </div>
-      </header>
 
       <div class="arcade-content">
         <div class="arcade-stage">
