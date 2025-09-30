@@ -1788,7 +1788,6 @@ const elements = {
   arcadeScoreValue: document.getElementById('arcadeScoreValue'),
   arcadeComboMessage: document.getElementById('arcadeComboMessage'),
   metauxOpenButton: document.getElementById('metauxOpenButton'),
-  metauxExitButton: document.getElementById('metauxExitButton'),
   metauxReturnButton: document.getElementById('metauxReturnButton'),
   metauxBoard: document.getElementById('metauxBoard'),
   metauxTimerValue: document.getElementById('metauxTimerValue'),
@@ -5262,12 +5261,6 @@ if (elements.arcadeBannerButtons?.length) {
 if (elements.metauxOpenButton) {
   elements.metauxOpenButton.addEventListener('click', () => {
     showPage('metaux');
-  });
-}
-
-if (elements.metauxExitButton) {
-  elements.metauxExitButton.addEventListener('click', () => {
-    showPage('game');
   });
 }
 
