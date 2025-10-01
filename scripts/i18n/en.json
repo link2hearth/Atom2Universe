@@ -33,6 +33,12 @@
         "atomButton": {
           "aria": "Create atoms",
           "alt": "Illustration of a vibrant atom"
+        },
+        "apcFrenzyCounter": {
+          "bestEmpty": "Record: —",
+          "bestSingleRecord": "Record (single frenzy): {count} clicks",
+          "bestMultiRecord": "Record (multi frenzy): {count} clicks ({frenzies} frenzies)",
+          "bestMultiRecordSingle": "Record (multi frenzy): {count} clicks (1 frenzy)"
         }
       },
       "shop": {

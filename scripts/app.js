@@ -332,6 +332,54 @@ function normalizeBrickSkinSelection(rawValue) {
   return 'original';
 }
 
+function createInitialApcFrenzyStats() {
+  return {
+    totalClicks: 0,
+    best: {
+      clicks: 0,
+      frenziesUsed: 0
+    },
+    bestSingle: {
+      clicks: 0
+    }
+  };
+}
+
+function normalizeApcFrenzyStats(raw) {
+  const base = createInitialApcFrenzyStats();
+  if (!raw || typeof raw !== 'object') {
+    return base;
+  }
+  const total = Number(raw.totalClicks ?? raw.total ?? 0);
+  base.totalClicks = Number.isFinite(total) ? Math.max(0, Math.floor(total)) : 0;
+  const bestRaw = raw.best && typeof raw.best === 'object' ? raw.best : {};
+  const bestClicks = Number(bestRaw.clicks ?? bestRaw.count ?? 0);
+  const bestFrenzies = Number(bestRaw.frenziesUsed ?? bestRaw.frenzies ?? 0);
+  base.best.clicks = Number.isFinite(bestClicks) ? Math.max(0, Math.floor(bestClicks)) : 0;
+  base.best.frenziesUsed = Number.isFinite(bestFrenzies) ? Math.max(0, Math.floor(bestFrenzies)) : 0;
+  const bestSingleRaw = raw.bestSingle && typeof raw.bestSingle === 'object' ? raw.bestSingle : {};
+  const bestSingleClicks = Number(bestSingleRaw.clicks ?? bestSingleRaw.count ?? 0);
+  base.bestSingle.clicks = Number.isFinite(bestSingleClicks)
+    ? Math.max(0, Math.floor(bestSingleClicks))
+    : 0;
+  if ((!raw.bestSingle || typeof raw.bestSingle !== 'object') && base.best.frenziesUsed <= 1) {
+    base.bestSingle.clicks = Math.max(base.bestSingle.clicks, base.best.clicks);
+  }
+  return base;
+}
+
+function ensureApcFrenzyStats(store) {
+  if (!store || typeof store !== 'object') {
+    return createInitialApcFrenzyStats();
+  }
+  if (!store.apcFrenzy || typeof store.apcFrenzy !== 'object') {
+    store.apcFrenzy = createInitialApcFrenzyStats();
+    return store.apcFrenzy;
+  }
+  store.apcFrenzy = normalizeApcFrenzyStats(store.apcFrenzy);
+  return store.apcFrenzy;
+}
+
 function createInitialStats() {
   const now = Date.now();
   return {
@@ -347,7 +395,8 @@ function createInitialStats() {
         perClick: 0,
         perSecond: 0,
         total: 0
-      }
+      },
+      apcFrenzy: createInitialApcFrenzyStats()
     },
     global: {
       apcAtoms: LayeredNumber.zero(),
@@ -360,7 +409,8 @@ function createInitialStats() {
         perClick: 0,
         perSecond: 0,
         total: 0
-      }
+      },
+      apcFrenzy: createInitialApcFrenzyStats()
     }
   };
 }
@@ -593,7 +643,10 @@ const frenzyState = {
     effectUntil: 0,
     currentMultiplier: 1,
     effects: [],
-    currentStacks: 0
+    currentStacks: 0,
+    currentClickCount: 0,
+    frenziesUsedInChain: 0,
+    isActive: false
   },
   perSecond: {
     token: null,
@@ -601,7 +654,8 @@ const frenzyState = {
     effectUntil: 0,
     currentMultiplier: 1,
     effects: [],
-    currentStacks: 0
+    currentStacks: 0,
+    isActive: false
   },
   spawnAccumulator: 0
 };
@@ -629,6 +683,188 @@ function getFrenzyStackCount(type, now = performance.now()) {
   const entry = frenzyState[type];
   if (!entry || !Array.isArray(entry.effects)) return entry && entry.effectUntil > now ? 1 : 0;
   return entry.effects.filter(expire => expire > now).length;
+}
+
+function isApcFrenzyActive(now = performance.now()) {
+  return getFrenzyStackCount('perClick', now) > 0;
+}
+
+let apcFrenzyValuePulseTimeoutId = null;
+
+function pulseApcFrenzyValue() {
+  const valueElement = elements.apcFrenzyCounterValue;
+  if (!valueElement) {
+    return;
+  }
+  valueElement.classList.remove('apc-frenzy-counter__value--pulse');
+  void valueElement.offsetWidth;
+  valueElement.classList.add('apc-frenzy-counter__value--pulse');
+  if (apcFrenzyValuePulseTimeoutId != null) {
+    clearTimeout(apcFrenzyValuePulseTimeoutId);
+  }
+  apcFrenzyValuePulseTimeoutId = setTimeout(() => {
+    valueElement.classList.remove('apc-frenzy-counter__value--pulse');
+    apcFrenzyValuePulseTimeoutId = null;
+  }, 260);
+}
+
+function formatApcFrenzySingleRecordText(bestClicks) {
+  const clicks = Math.max(0, Math.floor(bestClicks || 0));
+  if (clicks <= 0) {
+    return translateOrDefault(
+      'index.sections.game.apcFrenzyCounter.bestEmpty',
+      'Record : —'
+    );
+  }
+  const clicksText = formatIntegerLocalized(clicks);
+  return translateOrDefault(
+    'index.sections.game.apcFrenzyCounter.bestSingleRecord',
+    `Record (1 frénésie) : ${clicksText} clics`,
+    { count: clicksText }
+  );
+}
+
+function formatApcFrenzyMultiRecordText(bestClicks, frenziesUsed) {
+  const clicks = Math.max(0, Math.floor(bestClicks || 0));
+  if (clicks <= 0) {
+    return translateOrDefault(
+      'index.sections.game.apcFrenzyCounter.bestEmpty',
+      'Record : —'
+    );
+  }
+  const frenzies = Math.max(1, Math.floor(frenziesUsed || 0));
+  const clicksText = formatIntegerLocalized(clicks);
+  if (frenzies <= 1) {
+    return translateOrDefault(
+      'index.sections.game.apcFrenzyCounter.bestMultiRecordSingle',
+      `Record (multi frénésie) : ${clicksText} clics (1 frénésie)`,
+      { count: clicksText }
+    );
+  }
+  const frenzyCountText = formatIntegerLocalized(frenzies);
+  return translateOrDefault(
+    'index.sections.game.apcFrenzyCounter.bestMultiRecord',
+    `Record (multi frénésie) : ${clicksText} clics (${frenzyCountText} frén.)`,
+    { count: clicksText, frenzies: frenzyCountText }
+  );
+}
+
+function updateApcFrenzyCounterDisplay(now = performance.now()) {
+  const container = elements.apcFrenzyCounter;
+  if (!container) {
+    return;
+  }
+  const entry = frenzyState.perClick;
+  const active = isApcFrenzyActive(now);
+  const currentCount = entry ? Math.max(0, Math.floor(entry.currentClickCount || 0)) : 0;
+  let bestSingleClicks = 0;
+  let bestChainClicks = 0;
+  let bestChainFrenzies = 0;
+  if (gameState.stats) {
+    const sessionStats = ensureApcFrenzyStats(gameState.stats.session);
+    const globalStats = ensureApcFrenzyStats(gameState.stats.global);
+    bestSingleClicks = Math.max(0, Math.floor(globalStats.bestSingle?.clicks || 0));
+    bestChainClicks = Math.max(0, Math.floor(globalStats.best?.clicks || 0));
+    bestChainFrenzies = Math.max(0, Math.floor(globalStats.best?.frenziesUsed || 0));
+    // Ensure session stats reference stays normalized for future updates.
+    gameState.stats.session.apcFrenzy = sessionStats;
+    gameState.stats.global.apcFrenzy = globalStats;
+  }
+  if (elements.apcFrenzyCounterBestSingle) {
+    elements.apcFrenzyCounterBestSingle.textContent = formatApcFrenzySingleRecordText(bestSingleClicks);
+  }
+  if (elements.apcFrenzyCounterBestMulti) {
+    elements.apcFrenzyCounterBestMulti.textContent = formatApcFrenzyMultiRecordText(
+      bestChainClicks,
+      bestChainFrenzies
+    );
+  }
+  container.hidden = !active;
+  container.setAttribute('aria-hidden', String(!active));
+  container.classList.toggle('is-active', active);
+  container.classList.toggle('is-idle', !active);
+  if (!active) {
+    return;
+  }
+  if (elements.apcFrenzyCounterValue) {
+    elements.apcFrenzyCounterValue.textContent = formatIntegerLocalized(currentCount);
+  }
+}
+
+function registerApcFrenzyClick(now = performance.now()) {
+  const entry = frenzyState.perClick;
+  if (!entry || !isApcFrenzyActive(now)) {
+    return;
+  }
+  entry.currentClickCount = Math.max(0, Math.floor(entry.currentClickCount || 0)) + 1;
+  pulseApcFrenzyValue();
+  updateApcFrenzyCounterDisplay(now);
+}
+
+function handleApcFrenzyActivated(wasActive, now = performance.now()) {
+  const entry = frenzyState.perClick;
+  if (!entry) {
+    return;
+  }
+  if (!wasActive) {
+    entry.currentClickCount = 0;
+    entry.frenziesUsedInChain = 0;
+  }
+  entry.frenziesUsedInChain = Math.max(0, Math.floor(entry.frenziesUsedInChain || 0)) + 1;
+  entry.isActive = true;
+  updateApcFrenzyCounterDisplay(now);
+}
+
+function applyApcFrenzyRunToStats(runClicks, frenziesUsed) {
+  if (!gameState.stats) {
+    return;
+  }
+  const sanitizedClicks = Math.max(0, Math.floor(runClicks || 0));
+  if (sanitizedClicks <= 0) {
+    return;
+  }
+  const sanitizedFrenzies = Math.max(1, Math.floor(frenziesUsed || 0));
+  const applyToStore = store => {
+    if (!store || typeof store !== 'object') {
+      return;
+    }
+    const statsEntry = ensureApcFrenzyStats(store);
+    statsEntry.totalClicks = Math.max(0, Math.floor(statsEntry.totalClicks || 0)) + sanitizedClicks;
+    const currentBestClicks = Math.max(0, Math.floor(statsEntry.best?.clicks || 0));
+    const currentBestFrenzies = Math.max(0, Math.floor(statsEntry.best?.frenziesUsed || 0)) || 0;
+    const currentBestSingle = Math.max(0, Math.floor(statsEntry.bestSingle?.clicks || 0));
+    if (
+      sanitizedClicks > currentBestClicks
+      || (
+        sanitizedClicks === currentBestClicks
+        && sanitizedFrenzies < Math.max(1, currentBestFrenzies || Infinity)
+      )
+    ) {
+      statsEntry.best = { clicks: sanitizedClicks, frenziesUsed: sanitizedFrenzies };
+    }
+    if (sanitizedFrenzies <= 1 && sanitizedClicks > currentBestSingle) {
+      statsEntry.bestSingle = { clicks: sanitizedClicks };
+    }
+  };
+  applyToStore(gameState.stats.session);
+  applyToStore(gameState.stats.global);
+}
+
+function finalizeApcFrenzyRun(now = performance.now()) {
+  const entry = frenzyState.perClick;
+  if (!entry) {
+    return;
+  }
+  const runClicks = Math.max(0, Math.floor(entry.currentClickCount || 0));
+  const frenziesUsed = Math.max(0, Math.floor(entry.frenziesUsedInChain || 0));
+  if (runClicks > 0) {
+    applyApcFrenzyRunToStats(runClicks, frenziesUsed);
+    saveGame();
+  }
+  entry.currentClickCount = 0;
+  entry.frenziesUsedInChain = 0;
+  entry.isActive = false;
+  updateApcFrenzyCounterDisplay(now);
 }
 
 function pruneFrenzyEffects(entry, now = performance.now()) {
@@ -822,6 +1058,7 @@ function collectFrenzy(type, now = performance.now()) {
   if (!Array.isArray(entry.effects)) {
     entry.effects = [];
   }
+  const wasActive = entry.effects.length > 0;
   const duration = FRENZY_CONFIG.effectDurationMs;
   const expireAt = now + duration;
   const maxStacks = getTrophyFrenzyCap();
@@ -839,6 +1076,10 @@ function collectFrenzy(type, now = performance.now()) {
   registerFrenzyTrigger(type);
   evaluateTrophies();
   updateUI();
+
+  if (type === 'perClick') {
+    handleApcFrenzyActivated(wasActive, now);
+  }
 
   const rawSeconds = FRENZY_CONFIG.effectDurationMs / 1000;
   let durationText;
@@ -877,11 +1118,17 @@ function updateFrenzies(delta, now = performance.now()) {
   FRENZY_TYPES.forEach(type => {
     const entry = frenzyState[type];
     if (!entry) return;
+    const wasActive = entry.isActive === true || getFrenzyStackCount(type, now) > 0;
     if (entry.token && now >= entry.tokenExpire) {
       clearFrenzyToken(type);
     }
     const removed = pruneFrenzyEffects(entry, now);
-    if (removed) {
+    const isActive = getFrenzyStackCount(type, now) > 0;
+    entry.isActive = isActive;
+    if (type === 'perClick' && wasActive && !isActive) {
+      finalizeApcFrenzyRun(now);
+    }
+    if (removed || wasActive !== isActive) {
       needsUpdate = true;
     }
   });
@@ -902,6 +1149,9 @@ function resetFrenzyState(options = {}) {
     entry.currentMultiplier = 1;
     entry.effects = [];
     entry.currentStacks = 0;
+    entry.currentClickCount = 0;
+    entry.frenziesUsedInChain = 0;
+    entry.isActive = false;
   });
   frenzyState.spawnAccumulator = 0;
   if (!skipApply) {
@@ -931,6 +1181,7 @@ function parseStats(saved) {
     stats.global.apcAtoms = LayeredNumber.fromJSON(saved.global.apcAtoms);
     stats.global.apsAtoms = LayeredNumber.fromJSON(saved.global.apsAtoms);
     stats.global.offlineAtoms = LayeredNumber.fromJSON(saved.global.offlineAtoms);
+    stats.global.apcFrenzy = normalizeApcFrenzyStats(saved.global.apcFrenzy);
     const globalStart = typeof saved.global.startedAt === 'number'
       ? Number(saved.global.startedAt)
       : null;
@@ -952,7 +1203,8 @@ function parseStats(saved) {
     manualClicks: 0,
     onlineTimeMs: 0,
     startedAt: Date.now(),
-    frenzyTriggers: { perClick: 0, perSecond: 0, total: 0 }
+    frenzyTriggers: { perClick: 0, perSecond: 0, total: 0 },
+    apcFrenzy: createInitialApcFrenzyStats()
   };
 
   return stats;
@@ -1740,6 +1992,10 @@ const elements = {
   atomVisual: document.querySelector('.atom-visual'),
   frenzyLayer: document.getElementById('frenzyLayer'),
   ticketLayer: document.getElementById('ticketLayer'),
+  apcFrenzyCounter: document.getElementById('apcFrenzyCounter'),
+  apcFrenzyCounterValue: document.getElementById('apcFrenzyCounterValue'),
+  apcFrenzyCounterBestSingle: document.getElementById('apcFrenzyCounterBestSingle'),
+  apcFrenzyCounterBestMulti: document.getElementById('apcFrenzyCounterBestMulti'),
   starfield: document.querySelector('.starfield'),
   shopList: document.getElementById('shopList'),
   periodicTable: document.getElementById('periodicTable'),
@@ -5060,6 +5316,7 @@ function handleManualAtomClick() {
   const critResult = applyCriticalHit(baseAmount);
   gainAtoms(critResult.amount, 'apc');
   registerManualClick();
+  registerApcFrenzyClick();
   soundEffects.pop.play();
   if (critResult.isCritical) {
     gameState.lastCritical = {
@@ -8039,6 +8296,7 @@ function updateUI() {
   }
   updateApsCritDisplay();
   updateFrenzyIndicators();
+  updateApcFrenzyCounterDisplay();
   updateGachaUI();
   updateCollectionDisplay();
   updateFusionUI();
@@ -8241,6 +8499,8 @@ function serializeState() {
   const globalApc = getLayeredStat(stats.global, 'apcAtoms');
   const globalAps = getLayeredStat(stats.global, 'apsAtoms');
   const globalOffline = getLayeredStat(stats.global, 'offlineAtoms');
+  const sessionFrenzyStats = ensureApcFrenzyStats(stats.session);
+  const globalFrenzyStats = ensureApcFrenzyStats(stats.global);
   return {
     atoms: gameState.atoms.toJSON(),
     lifetime: gameState.lifetime.toJSON(),
@@ -8304,6 +8564,16 @@ function serializeState() {
           perClick: stats.session.frenzyTriggers?.perClick || 0,
           perSecond: stats.session.frenzyTriggers?.perSecond || 0,
           total: stats.session.frenzyTriggers?.total || 0
+        },
+        apcFrenzy: {
+          totalClicks: sessionFrenzyStats.totalClicks || 0,
+          best: {
+            clicks: sessionFrenzyStats.best?.clicks || 0,
+            frenziesUsed: sessionFrenzyStats.best?.frenziesUsed || 0
+          },
+          bestSingle: {
+            clicks: sessionFrenzyStats.bestSingle?.clicks || 0
+          }
         }
       },
       global: {
@@ -8317,6 +8587,16 @@ function serializeState() {
           perClick: stats.global.frenzyTriggers?.perClick || 0,
           perSecond: stats.global.frenzyTriggers?.perSecond || 0,
           total: stats.global.frenzyTriggers?.total || 0
+        },
+        apcFrenzy: {
+          totalClicks: globalFrenzyStats.totalClicks || 0,
+          best: {
+            clicks: globalFrenzyStats.best?.clicks || 0,
+            frenziesUsed: globalFrenzyStats.best?.frenziesUsed || 0
+          },
+          bestSingle: {
+            clicks: globalFrenzyStats.bestSingle?.clicks || 0
+          }
         }
       }
     },

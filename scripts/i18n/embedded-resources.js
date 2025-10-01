@@ -37,6 +37,12 @@
             "atomButton": {
               "aria": "Créer des atomes",
               "alt": "Illustration d'un atome vibrant"
+            },
+            "apcFrenzyCounter": {
+              "bestEmpty": "Record : —",
+              "bestSingleRecord": "Record (1 frénésie) : {count} clics",
+              "bestMultiRecord": "Record (multi frénésie) : {count} clics ({frenzies} frén.)",
+              "bestMultiRecordSingle": "Record (multi frénésie) : {count} clics (1 frénésie)"
             }
           },
           "shop": {
@@ -1094,6 +1100,12 @@
             "atomButton": {
               "aria": "Create atoms",
               "alt": "Illustration of a vibrant atom"
+            },
+            "apcFrenzyCounter": {
+              "bestEmpty": "Record: —",
+              "bestSingleRecord": "Record (single frenzy): {count} clicks",
+              "bestMultiRecord": "Record (multi frenzy): {count} clicks ({frenzies} frenzies)",
+              "bestMultiRecordSingle": "Record (multi frenzy): {count} clicks (1 frenzy)"
             }
           },
           "shop": {
