@@ -156,7 +156,8 @@
           "air": "Airborne! Aim for the next slope."
         },
         "controls": {
-          "hold": "Hold to dive"
+          "hold": "Hold to dive",
+          "reset": "Reset run"
         }
       },
       "table": {

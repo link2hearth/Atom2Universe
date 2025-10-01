@@ -4,6 +4,8 @@
   const DIVE_MULTIPLIER = 1.65;
   const BASE_PUSH_ACCEL = 14;
   const START_GROUND_SPEED = 90;
+  const INITIAL_LAUNCH_SPEED = 220;
+  const INITIAL_LAUNCH_HEIGHT_OFFSET = 12;
   const MIN_LANDING_SPEED = 18;
   const GROUND_DRAG = 0.972;
   const HOLDING_DRAG = 0.948;
@@ -199,6 +201,7 @@
       this.speedElement = options.speedElement || null;
       this.altitudeElement = options.altitudeElement || null;
       this.statusElement = options.statusElement || null;
+      this.resetButton = options.resetButton || null;
 
       this.pixelRatio = 1;
       this.viewWidth = 0;
@@ -240,6 +243,7 @@
       this.handlePointerCancel = this.handlePointerCancel.bind(this);
       this.handleKeyDown = this.handleKeyDown.bind(this);
       this.handleKeyUp = this.handleKeyUp.bind(this);
+      this.handleResetClick = this.handleResetClick.bind(this);
       this.tick = this.tick.bind(this);
 
       this.attachEvents();
@@ -259,6 +263,9 @@
         pointerTarget.addEventListener('pointercancel', this.handlePointerCancel);
         pointerTarget.addEventListener('pointerleave', this.handlePointerCancel);
       }
+      if (this.resetButton) {
+        this.resetButton.addEventListener('click', this.handleResetClick);
+      }
       if (typeof document !== 'undefined') {
         document.addEventListener('keydown', this.handleKeyDown);
         document.addEventListener('keyup', this.handleKeyUp);
@@ -275,6 +282,9 @@
         pointerTarget.removeEventListener('pointerup', this.handlePointerUp);
         pointerTarget.removeEventListener('pointercancel', this.handlePointerCancel);
         pointerTarget.removeEventListener('pointerleave', this.handlePointerCancel);
+      }
+      if (this.resetButton) {
+        this.resetButton.removeEventListener('click', this.handleResetClick);
       }
       if (typeof document !== 'undefined') {
         document.removeEventListener('keydown', this.handleKeyDown);
@@ -362,11 +372,22 @@
       this.activePointers.clear();
       this.lastTimestamp = null;
       this.statusState = null;
+      this.applyInitialLaunch();
       this.updateHud(0);
     }
 
     resetState() {
       this.resetTerrain();
+    }
+
+    applyInitialLaunch() {
+      const launchAngle = degToRad(-52);
+      this.player.onGround = false;
+      this.player.speed = INITIAL_LAUNCH_SPEED;
+      this.player.vx = Math.cos(launchAngle) * INITIAL_LAUNCH_SPEED;
+      this.player.vy = Math.sin(launchAngle) * INITIAL_LAUNCH_SPEED;
+      this.player.y -= INITIAL_LAUNCH_HEIGHT_OFFSET;
+      this.pendingRelease = false;
     }
 
     handlePointerDown(event) {
@@ -438,6 +459,14 @@
       }
     }
 
+    handleResetClick(event) {
+      event.preventDefault();
+      this.restart();
+      if (typeof event.target?.blur === 'function') {
+        event.target.blur();
+      }
+    }
+
     start() {
       if (this.running) {
         return;
@@ -457,6 +486,13 @@
         this.frameHandle = null;
       }
       this.lastTimestamp = null;
+    }
+
+    restart() {
+      this.resetState();
+      if (!this.running) {
+        this.render(0);
+      }
     }
 
     onEnter() {
