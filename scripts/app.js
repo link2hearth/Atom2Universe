@@ -332,6 +332,43 @@ function normalizeBrickSkinSelection(rawValue) {
   return 'original';
 }
 
+function createInitialApcFrenzyStats() {
+  return {
+    totalClicks: 0,
+    best: {
+      clicks: 0,
+      frenziesUsed: 0
+    }
+  };
+}
+
+function normalizeApcFrenzyStats(raw) {
+  const base = createInitialApcFrenzyStats();
+  if (!raw || typeof raw !== 'object') {
+    return base;
+  }
+  const total = Number(raw.totalClicks ?? raw.total ?? 0);
+  base.totalClicks = Number.isFinite(total) ? Math.max(0, Math.floor(total)) : 0;
+  const bestRaw = raw.best && typeof raw.best === 'object' ? raw.best : {};
+  const bestClicks = Number(bestRaw.clicks ?? bestRaw.count ?? 0);
+  const bestFrenzies = Number(bestRaw.frenziesUsed ?? bestRaw.frenzies ?? 0);
+  base.best.clicks = Number.isFinite(bestClicks) ? Math.max(0, Math.floor(bestClicks)) : 0;
+  base.best.frenziesUsed = Number.isFinite(bestFrenzies) ? Math.max(0, Math.floor(bestFrenzies)) : 0;
+  return base;
+}
+
+function ensureApcFrenzyStats(store) {
+  if (!store || typeof store !== 'object') {
+    return createInitialApcFrenzyStats();
+  }
+  if (!store.apcFrenzy || typeof store.apcFrenzy !== 'object') {
+    store.apcFrenzy = createInitialApcFrenzyStats();
+    return store.apcFrenzy;
+  }
+  store.apcFrenzy = normalizeApcFrenzyStats(store.apcFrenzy);
+  return store.apcFrenzy;
+}
+
 function createInitialStats() {
   const now = Date.now();
   return {
@@ -347,7 +384,8 @@ function createInitialStats() {
         perClick: 0,
         perSecond: 0,
         total: 0
-      }
+      },
+      apcFrenzy: createInitialApcFrenzyStats()
     },
     global: {
       apcAtoms: LayeredNumber.zero(),
@@ -360,7 +398,8 @@ function createInitialStats() {
         perClick: 0,
         perSecond: 0,
         total: 0
-      }
+      },
+      apcFrenzy: createInitialApcFrenzyStats()
     }
   };
 }
@@ -593,7 +632,10 @@ const frenzyState = {
     effectUntil: 0,
     currentMultiplier: 1,
     effects: [],
-    currentStacks: 0
+    currentStacks: 0,
+    currentClickCount: 0,
+    frenziesUsedInChain: 0,
+    isActive: false
   },
   perSecond: {
     token: null,
@@ -601,7 +643,8 @@ const frenzyState = {
     effectUntil: 0,
     currentMultiplier: 1,
     effects: [],
-    currentStacks: 0
+    currentStacks: 0,
+    isActive: false
   },
   spawnAccumulator: 0
 };
@@ -629,6 +672,172 @@ function getFrenzyStackCount(type, now = performance.now()) {
   const entry = frenzyState[type];
   if (!entry || !Array.isArray(entry.effects)) return entry && entry.effectUntil > now ? 1 : 0;
   return entry.effects.filter(expire => expire > now).length;
+}
+
+function isApcFrenzyActive(now = performance.now()) {
+  return getFrenzyStackCount('perClick', now) > 0;
+}
+
+let apcFrenzyValuePulseTimeoutId = null;
+
+function pulseApcFrenzyValue() {
+  const valueElement = elements.apcFrenzyCounterValue;
+  if (!valueElement) {
+    return;
+  }
+  valueElement.classList.remove('apc-frenzy-counter__value--pulse');
+  void valueElement.offsetWidth;
+  valueElement.classList.add('apc-frenzy-counter__value--pulse');
+  if (apcFrenzyValuePulseTimeoutId != null) {
+    clearTimeout(apcFrenzyValuePulseTimeoutId);
+  }
+  apcFrenzyValuePulseTimeoutId = setTimeout(() => {
+    valueElement.classList.remove('apc-frenzy-counter__value--pulse');
+    apcFrenzyValuePulseTimeoutId = null;
+  }, 260);
+}
+
+function formatApcFrenzyBestText(bestClicks, frenziesUsed) {
+  const clicksText = formatIntegerLocalized(bestClicks);
+  const frenzies = Math.max(0, Math.floor(frenziesUsed));
+  if (frenzies <= 0 || bestClicks <= 0) {
+    return translateOrDefault(
+      'index.sections.game.apcFrenzyCounter.bestEmpty',
+      'Record : —'
+    );
+  }
+  const frenzyCountText = formatIntegerLocalized(Math.max(1, frenzies));
+  const params = { count: clicksText, frenzies: frenzyCountText };
+  if (frenzies === 1) {
+    return translateOrDefault(
+      'index.sections.game.apcFrenzyCounter.bestSingle',
+      `Record : ${clicksText} clics (1 frénésie)`,
+      params
+    );
+  }
+  return translateOrDefault(
+    'index.sections.game.apcFrenzyCounter.best',
+    `Record : ${clicksText} clics (${frenzyCountText} frén.)`,
+    params
+  );
+}
+
+function updateApcFrenzyCounterDisplay(now = performance.now()) {
+  const container = elements.apcFrenzyCounter;
+  if (!container) {
+    return;
+  }
+  const entry = frenzyState.perClick;
+  const active = isApcFrenzyActive(now);
+  const currentCount = entry ? Math.max(0, Math.floor(entry.currentClickCount || 0)) : 0;
+  let totalClicks = 0;
+  let bestClicks = 0;
+  let bestFrenzies = 0;
+  if (gameState.stats) {
+    const sessionStats = ensureApcFrenzyStats(gameState.stats.session);
+    const globalStats = ensureApcFrenzyStats(gameState.stats.global);
+    // Keep session normalized but display global progress to emphasize long-term goals.
+    totalClicks = Math.max(0, Math.floor(globalStats.totalClicks || 0));
+    bestClicks = Math.max(0, Math.floor(globalStats.best?.clicks || 0));
+    bestFrenzies = Math.max(0, Math.floor(globalStats.best?.frenziesUsed || 0));
+    // Ensure session stats reference stays normalized for future updates.
+    gameState.stats.session.apcFrenzy = sessionStats;
+    gameState.stats.global.apcFrenzy = globalStats;
+  }
+  const shouldShow = active || totalClicks > 0 || bestClicks > 0;
+  container.hidden = !shouldShow;
+  container.setAttribute('aria-hidden', String(!shouldShow));
+  if (!shouldShow) {
+    return;
+  }
+  container.classList.toggle('is-active', active);
+  container.classList.toggle('is-idle', !active);
+  if (elements.apcFrenzyCounterValue) {
+    elements.apcFrenzyCounterValue.textContent = formatIntegerLocalized(currentCount);
+  }
+  if (elements.apcFrenzyCounterTotal) {
+    const totalText = formatIntegerLocalized(totalClicks);
+    elements.apcFrenzyCounterTotal.textContent = translateOrDefault(
+      'index.sections.game.apcFrenzyCounter.total',
+      `Total cumulé : ${totalText} clics`,
+      { count: totalText }
+    );
+  }
+  if (elements.apcFrenzyCounterBest) {
+    elements.apcFrenzyCounterBest.textContent = formatApcFrenzyBestText(bestClicks, bestFrenzies);
+  }
+}
+
+function registerApcFrenzyClick(now = performance.now()) {
+  const entry = frenzyState.perClick;
+  if (!entry || !isApcFrenzyActive(now)) {
+    return;
+  }
+  entry.currentClickCount = Math.max(0, Math.floor(entry.currentClickCount || 0)) + 1;
+  pulseApcFrenzyValue();
+  updateApcFrenzyCounterDisplay(now);
+}
+
+function handleApcFrenzyActivated(wasActive, now = performance.now()) {
+  const entry = frenzyState.perClick;
+  if (!entry) {
+    return;
+  }
+  if (!wasActive) {
+    entry.currentClickCount = 0;
+    entry.frenziesUsedInChain = 0;
+  }
+  entry.frenziesUsedInChain = Math.max(0, Math.floor(entry.frenziesUsedInChain || 0)) + 1;
+  entry.isActive = true;
+  updateApcFrenzyCounterDisplay(now);
+}
+
+function applyApcFrenzyRunToStats(runClicks, frenziesUsed) {
+  if (!gameState.stats) {
+    return;
+  }
+  const sanitizedClicks = Math.max(0, Math.floor(runClicks || 0));
+  if (sanitizedClicks <= 0) {
+    return;
+  }
+  const sanitizedFrenzies = Math.max(1, Math.floor(frenziesUsed || 0));
+  const applyToStore = store => {
+    if (!store || typeof store !== 'object') {
+      return;
+    }
+    const statsEntry = ensureApcFrenzyStats(store);
+    statsEntry.totalClicks = Math.max(0, Math.floor(statsEntry.totalClicks || 0)) + sanitizedClicks;
+    const currentBestClicks = Math.max(0, Math.floor(statsEntry.best?.clicks || 0));
+    const currentBestFrenzies = Math.max(0, Math.floor(statsEntry.best?.frenziesUsed || 0)) || 0;
+    if (
+      sanitizedClicks > currentBestClicks
+      || (
+        sanitizedClicks === currentBestClicks
+        && sanitizedFrenzies < Math.max(1, currentBestFrenzies || Infinity)
+      )
+    ) {
+      statsEntry.best = { clicks: sanitizedClicks, frenziesUsed: sanitizedFrenzies };
+    }
+  };
+  applyToStore(gameState.stats.session);
+  applyToStore(gameState.stats.global);
+}
+
+function finalizeApcFrenzyRun(now = performance.now()) {
+  const entry = frenzyState.perClick;
+  if (!entry) {
+    return;
+  }
+  const runClicks = Math.max(0, Math.floor(entry.currentClickCount || 0));
+  const frenziesUsed = Math.max(0, Math.floor(entry.frenziesUsedInChain || 0));
+  if (runClicks > 0) {
+    applyApcFrenzyRunToStats(runClicks, frenziesUsed);
+    saveGame();
+  }
+  entry.currentClickCount = 0;
+  entry.frenziesUsedInChain = 0;
+  entry.isActive = false;
+  updateApcFrenzyCounterDisplay(now);
 }
 
 function pruneFrenzyEffects(entry, now = performance.now()) {
@@ -822,6 +1031,7 @@ function collectFrenzy(type, now = performance.now()) {
   if (!Array.isArray(entry.effects)) {
     entry.effects = [];
   }
+  const wasActive = entry.effects.length > 0;
   const duration = FRENZY_CONFIG.effectDurationMs;
   const expireAt = now + duration;
   const maxStacks = getTrophyFrenzyCap();
@@ -839,6 +1049,10 @@ function collectFrenzy(type, now = performance.now()) {
   registerFrenzyTrigger(type);
   evaluateTrophies();
   updateUI();
+
+  if (type === 'perClick') {
+    handleApcFrenzyActivated(wasActive, now);
+  }
 
   const rawSeconds = FRENZY_CONFIG.effectDurationMs / 1000;
   let durationText;
@@ -877,11 +1091,17 @@ function updateFrenzies(delta, now = performance.now()) {
   FRENZY_TYPES.forEach(type => {
     const entry = frenzyState[type];
     if (!entry) return;
+    const wasActive = entry.isActive === true || getFrenzyStackCount(type, now) > 0;
     if (entry.token && now >= entry.tokenExpire) {
       clearFrenzyToken(type);
     }
     const removed = pruneFrenzyEffects(entry, now);
-    if (removed) {
+    const isActive = getFrenzyStackCount(type, now) > 0;
+    entry.isActive = isActive;
+    if (type === 'perClick' && wasActive && !isActive) {
+      finalizeApcFrenzyRun(now);
+    }
+    if (removed || wasActive !== isActive) {
       needsUpdate = true;
     }
   });
@@ -902,6 +1122,9 @@ function resetFrenzyState(options = {}) {
     entry.currentMultiplier = 1;
     entry.effects = [];
     entry.currentStacks = 0;
+    entry.currentClickCount = 0;
+    entry.frenziesUsedInChain = 0;
+    entry.isActive = false;
   });
   frenzyState.spawnAccumulator = 0;
   if (!skipApply) {
@@ -931,6 +1154,7 @@ function parseStats(saved) {
     stats.global.apcAtoms = LayeredNumber.fromJSON(saved.global.apcAtoms);
     stats.global.apsAtoms = LayeredNumber.fromJSON(saved.global.apsAtoms);
     stats.global.offlineAtoms = LayeredNumber.fromJSON(saved.global.offlineAtoms);
+    stats.global.apcFrenzy = normalizeApcFrenzyStats(saved.global.apcFrenzy);
     const globalStart = typeof saved.global.startedAt === 'number'
       ? Number(saved.global.startedAt)
       : null;
@@ -952,7 +1176,8 @@ function parseStats(saved) {
     manualClicks: 0,
     onlineTimeMs: 0,
     startedAt: Date.now(),
-    frenzyTriggers: { perClick: 0, perSecond: 0, total: 0 }
+    frenzyTriggers: { perClick: 0, perSecond: 0, total: 0 },
+    apcFrenzy: createInitialApcFrenzyStats()
   };
 
   return stats;
@@ -1740,6 +1965,10 @@ const elements = {
   atomVisual: document.querySelector('.atom-visual'),
   frenzyLayer: document.getElementById('frenzyLayer'),
   ticketLayer: document.getElementById('ticketLayer'),
+  apcFrenzyCounter: document.getElementById('apcFrenzyCounter'),
+  apcFrenzyCounterValue: document.getElementById('apcFrenzyCounterValue'),
+  apcFrenzyCounterTotal: document.getElementById('apcFrenzyCounterTotal'),
+  apcFrenzyCounterBest: document.getElementById('apcFrenzyCounterBest'),
   starfield: document.querySelector('.starfield'),
   shopList: document.getElementById('shopList'),
   periodicTable: document.getElementById('periodicTable'),
@@ -5060,6 +5289,7 @@ function handleManualAtomClick() {
   const critResult = applyCriticalHit(baseAmount);
   gainAtoms(critResult.amount, 'apc');
   registerManualClick();
+  registerApcFrenzyClick();
   soundEffects.pop.play();
   if (critResult.isCritical) {
     gameState.lastCritical = {
@@ -8039,6 +8269,7 @@ function updateUI() {
   }
   updateApsCritDisplay();
   updateFrenzyIndicators();
+  updateApcFrenzyCounterDisplay();
   updateGachaUI();
   updateCollectionDisplay();
   updateFusionUI();
@@ -8241,6 +8472,8 @@ function serializeState() {
   const globalApc = getLayeredStat(stats.global, 'apcAtoms');
   const globalAps = getLayeredStat(stats.global, 'apsAtoms');
   const globalOffline = getLayeredStat(stats.global, 'offlineAtoms');
+  const sessionFrenzyStats = ensureApcFrenzyStats(stats.session);
+  const globalFrenzyStats = ensureApcFrenzyStats(stats.global);
   return {
     atoms: gameState.atoms.toJSON(),
     lifetime: gameState.lifetime.toJSON(),
@@ -8304,6 +8537,13 @@ function serializeState() {
           perClick: stats.session.frenzyTriggers?.perClick || 0,
           perSecond: stats.session.frenzyTriggers?.perSecond || 0,
           total: stats.session.frenzyTriggers?.total || 0
+        },
+        apcFrenzy: {
+          totalClicks: sessionFrenzyStats.totalClicks || 0,
+          best: {
+            clicks: sessionFrenzyStats.best?.clicks || 0,
+            frenziesUsed: sessionFrenzyStats.best?.frenziesUsed || 0
+          }
         }
       },
       global: {
@@ -8317,6 +8557,13 @@ function serializeState() {
           perClick: stats.global.frenzyTriggers?.perClick || 0,
           perSecond: stats.global.frenzyTriggers?.perSecond || 0,
           total: stats.global.frenzyTriggers?.total || 0
+        },
+        apcFrenzy: {
+          totalClicks: globalFrenzyStats.totalClicks || 0,
+          best: {
+            clicks: globalFrenzyStats.best?.clicks || 0,
+            frenziesUsed: globalFrenzyStats.best?.frenziesUsed || 0
+          }
         }
       }
     },

@@ -33,6 +33,13 @@
         "atomButton": {
           "aria": "Créer des atomes",
           "alt": "Illustration d'un atome vibrant"
+        },
+        "apcFrenzyCounter": {
+          "label": "Frénésie APC",
+          "total": "Total cumulé : {count} clics",
+          "best": "Record : {count} clics ({frenzies} frén.)",
+          "bestSingle": "Record : {count} clics (1 frénésie)",
+          "bestEmpty": "Record : —"
         }
       },
       "shop": {
