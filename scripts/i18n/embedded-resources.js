@@ -39,11 +39,10 @@
               "alt": "Illustration d'un atome vibrant"
             },
             "apcFrenzyCounter": {
-              "label": "Frénésie APC",
-              "total": "Total cumulé : {count} clics",
-              "best": "Record : {count} clics ({frenzies} frén.)",
-              "bestSingle": "Record : {count} clics (1 frénésie)",
-              "bestEmpty": "Record : —"
+              "bestEmpty": "Record : —",
+              "bestSingleRecord": "Record (1 frénésie) : {count} clics",
+              "bestMultiRecord": "Record (multi frénésie) : {count} clics ({frenzies} frén.)",
+              "bestMultiRecordSingle": "Record (multi frénésie) : {count} clics (1 frénésie)"
             }
           },
           "shop": {
@@ -1103,11 +1102,10 @@
               "alt": "Illustration of a vibrant atom"
             },
             "apcFrenzyCounter": {
-              "label": "APC Frenzy",
-              "total": "Total clicks: {count}",
-              "best": "Record: {count} clicks ({frenzies} frenzies)",
-              "bestSingle": "Record: {count} clicks (1 frenzy)",
-              "bestEmpty": "Record: —"
+              "bestEmpty": "Record: —",
+              "bestSingleRecord": "Record (single frenzy): {count} clicks",
+              "bestMultiRecord": "Record (multi frenzy): {count} clicks ({frenzies} frenzies)",
+              "bestMultiRecordSingle": "Record (multi frenzy): {count} clicks (1 frenzy)"
             }
           },
           "shop": {

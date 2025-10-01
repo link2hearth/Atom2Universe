@@ -35,11 +35,10 @@
           "alt": "Illustration of a vibrant atom"
         },
         "apcFrenzyCounter": {
-          "label": "APC Frenzy",
-          "total": "Total clicks: {count}",
-          "best": "Record: {count} clicks ({frenzies} frenzies)",
-          "bestSingle": "Record: {count} clicks (1 frenzy)",
-          "bestEmpty": "Record: —"
+          "bestEmpty": "Record: —",
+          "bestSingleRecord": "Record (single frenzy): {count} clicks",
+          "bestMultiRecord": "Record (multi frenzy): {count} clicks ({frenzies} frenzies)",
+          "bestMultiRecordSingle": "Record (multi frenzy): {count} clicks (1 frenzy)"
         }
       },
       "shop": {

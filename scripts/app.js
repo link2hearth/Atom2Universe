@@ -338,6 +338,9 @@ function createInitialApcFrenzyStats() {
     best: {
       clicks: 0,
       frenziesUsed: 0
+    },
+    bestSingle: {
+      clicks: 0
     }
   };
 }
@@ -354,6 +357,14 @@ function normalizeApcFrenzyStats(raw) {
   const bestFrenzies = Number(bestRaw.frenziesUsed ?? bestRaw.frenzies ?? 0);
   base.best.clicks = Number.isFinite(bestClicks) ? Math.max(0, Math.floor(bestClicks)) : 0;
   base.best.frenziesUsed = Number.isFinite(bestFrenzies) ? Math.max(0, Math.floor(bestFrenzies)) : 0;
+  const bestSingleRaw = raw.bestSingle && typeof raw.bestSingle === 'object' ? raw.bestSingle : {};
+  const bestSingleClicks = Number(bestSingleRaw.clicks ?? bestSingleRaw.count ?? 0);
+  base.bestSingle.clicks = Number.isFinite(bestSingleClicks)
+    ? Math.max(0, Math.floor(bestSingleClicks))
+    : 0;
+  if ((!raw.bestSingle || typeof raw.bestSingle !== 'object') && base.best.frenziesUsed <= 1) {
+    base.bestSingle.clicks = Math.max(base.bestSingle.clicks, base.best.clicks);
+  }
   return base;
 }
 
@@ -697,28 +708,44 @@ function pulseApcFrenzyValue() {
   }, 260);
 }
 
-function formatApcFrenzyBestText(bestClicks, frenziesUsed) {
-  const clicksText = formatIntegerLocalized(bestClicks);
-  const frenzies = Math.max(0, Math.floor(frenziesUsed));
-  if (frenzies <= 0 || bestClicks <= 0) {
+function formatApcFrenzySingleRecordText(bestClicks) {
+  const clicks = Math.max(0, Math.floor(bestClicks || 0));
+  if (clicks <= 0) {
     return translateOrDefault(
       'index.sections.game.apcFrenzyCounter.bestEmpty',
       'Record : —'
     );
   }
-  const frenzyCountText = formatIntegerLocalized(Math.max(1, frenzies));
-  const params = { count: clicksText, frenzies: frenzyCountText };
-  if (frenzies === 1) {
+  const clicksText = formatIntegerLocalized(clicks);
+  return translateOrDefault(
+    'index.sections.game.apcFrenzyCounter.bestSingleRecord',
+    `Record (1 frénésie) : ${clicksText} clics`,
+    { count: clicksText }
+  );
+}
+
+function formatApcFrenzyMultiRecordText(bestClicks, frenziesUsed) {
+  const clicks = Math.max(0, Math.floor(bestClicks || 0));
+  if (clicks <= 0) {
     return translateOrDefault(
-      'index.sections.game.apcFrenzyCounter.bestSingle',
-      `Record : ${clicksText} clics (1 frénésie)`,
-      params
+      'index.sections.game.apcFrenzyCounter.bestEmpty',
+      'Record : —'
     );
   }
+  const frenzies = Math.max(1, Math.floor(frenziesUsed || 0));
+  const clicksText = formatIntegerLocalized(clicks);
+  if (frenzies <= 1) {
+    return translateOrDefault(
+      'index.sections.game.apcFrenzyCounter.bestMultiRecordSingle',
+      `Record (multi frénésie) : ${clicksText} clics (1 frénésie)`,
+      { count: clicksText }
+    );
+  }
+  const frenzyCountText = formatIntegerLocalized(frenzies);
   return translateOrDefault(
-    'index.sections.game.apcFrenzyCounter.best',
-    `Record : ${clicksText} clics (${frenzyCountText} frén.)`,
-    params
+    'index.sections.game.apcFrenzyCounter.bestMultiRecord',
+    `Record (multi frénésie) : ${clicksText} clics (${frenzyCountText} frén.)`,
+    { count: clicksText, frenzies: frenzyCountText }
   );
 }
 
@@ -730,41 +757,37 @@ function updateApcFrenzyCounterDisplay(now = performance.now()) {
   const entry = frenzyState.perClick;
   const active = isApcFrenzyActive(now);
   const currentCount = entry ? Math.max(0, Math.floor(entry.currentClickCount || 0)) : 0;
-  let totalClicks = 0;
-  let bestClicks = 0;
-  let bestFrenzies = 0;
+  let bestSingleClicks = 0;
+  let bestChainClicks = 0;
+  let bestChainFrenzies = 0;
   if (gameState.stats) {
     const sessionStats = ensureApcFrenzyStats(gameState.stats.session);
     const globalStats = ensureApcFrenzyStats(gameState.stats.global);
-    // Keep session normalized but display global progress to emphasize long-term goals.
-    totalClicks = Math.max(0, Math.floor(globalStats.totalClicks || 0));
-    bestClicks = Math.max(0, Math.floor(globalStats.best?.clicks || 0));
-    bestFrenzies = Math.max(0, Math.floor(globalStats.best?.frenziesUsed || 0));
+    bestSingleClicks = Math.max(0, Math.floor(globalStats.bestSingle?.clicks || 0));
+    bestChainClicks = Math.max(0, Math.floor(globalStats.best?.clicks || 0));
+    bestChainFrenzies = Math.max(0, Math.floor(globalStats.best?.frenziesUsed || 0));
     // Ensure session stats reference stays normalized for future updates.
     gameState.stats.session.apcFrenzy = sessionStats;
     gameState.stats.global.apcFrenzy = globalStats;
   }
-  const shouldShow = active || totalClicks > 0 || bestClicks > 0;
-  container.hidden = !shouldShow;
-  container.setAttribute('aria-hidden', String(!shouldShow));
-  if (!shouldShow) {
-    return;
+  if (elements.apcFrenzyCounterBestSingle) {
+    elements.apcFrenzyCounterBestSingle.textContent = formatApcFrenzySingleRecordText(bestSingleClicks);
   }
-  container.classList.toggle('is-active', active);
-  container.classList.toggle('is-idle', !active);
-  if (elements.apcFrenzyCounterValue) {
-    elements.apcFrenzyCounterValue.textContent = formatIntegerLocalized(currentCount);
-  }
-  if (elements.apcFrenzyCounterTotal) {
-    const totalText = formatIntegerLocalized(totalClicks);
-    elements.apcFrenzyCounterTotal.textContent = translateOrDefault(
-      'index.sections.game.apcFrenzyCounter.total',
-      `Total cumulé : ${totalText} clics`,
-      { count: totalText }
+  if (elements.apcFrenzyCounterBestMulti) {
+    elements.apcFrenzyCounterBestMulti.textContent = formatApcFrenzyMultiRecordText(
+      bestChainClicks,
+      bestChainFrenzies
     );
   }
-  if (elements.apcFrenzyCounterBest) {
-    elements.apcFrenzyCounterBest.textContent = formatApcFrenzyBestText(bestClicks, bestFrenzies);
+  container.hidden = !active;
+  container.setAttribute('aria-hidden', String(!active));
+  container.classList.toggle('is-active', active);
+  container.classList.toggle('is-idle', !active);
+  if (!active) {
+    return;
+  }
+  if (elements.apcFrenzyCounterValue) {
+    elements.apcFrenzyCounterValue.textContent = formatIntegerLocalized(currentCount);
   }
 }
 
@@ -809,6 +832,7 @@ function applyApcFrenzyRunToStats(runClicks, frenziesUsed) {
     statsEntry.totalClicks = Math.max(0, Math.floor(statsEntry.totalClicks || 0)) + sanitizedClicks;
     const currentBestClicks = Math.max(0, Math.floor(statsEntry.best?.clicks || 0));
     const currentBestFrenzies = Math.max(0, Math.floor(statsEntry.best?.frenziesUsed || 0)) || 0;
+    const currentBestSingle = Math.max(0, Math.floor(statsEntry.bestSingle?.clicks || 0));
     if (
       sanitizedClicks > currentBestClicks
       || (
@@ -817,6 +841,9 @@ function applyApcFrenzyRunToStats(runClicks, frenziesUsed) {
       )
     ) {
       statsEntry.best = { clicks: sanitizedClicks, frenziesUsed: sanitizedFrenzies };
+    }
+    if (sanitizedFrenzies <= 1 && sanitizedClicks > currentBestSingle) {
+      statsEntry.bestSingle = { clicks: sanitizedClicks };
     }
   };
   applyToStore(gameState.stats.session);
@@ -1967,8 +1994,8 @@ const elements = {
   ticketLayer: document.getElementById('ticketLayer'),
   apcFrenzyCounter: document.getElementById('apcFrenzyCounter'),
   apcFrenzyCounterValue: document.getElementById('apcFrenzyCounterValue'),
-  apcFrenzyCounterTotal: document.getElementById('apcFrenzyCounterTotal'),
-  apcFrenzyCounterBest: document.getElementById('apcFrenzyCounterBest'),
+  apcFrenzyCounterBestSingle: document.getElementById('apcFrenzyCounterBestSingle'),
+  apcFrenzyCounterBestMulti: document.getElementById('apcFrenzyCounterBestMulti'),
   starfield: document.querySelector('.starfield'),
   shopList: document.getElementById('shopList'),
   periodicTable: document.getElementById('periodicTable'),
@@ -8543,6 +8570,9 @@ function serializeState() {
           best: {
             clicks: sessionFrenzyStats.best?.clicks || 0,
             frenziesUsed: sessionFrenzyStats.best?.frenziesUsed || 0
+          },
+          bestSingle: {
+            clicks: sessionFrenzyStats.bestSingle?.clicks || 0
           }
         }
       },
@@ -8563,6 +8593,9 @@ function serializeState() {
           best: {
             clicks: globalFrenzyStats.best?.clicks || 0,
             frenziesUsed: globalFrenzyStats.best?.frenziesUsed || 0
+          },
+          bestSingle: {
+            clicks: globalFrenzyStats.bestSingle?.clicks || 0
           }
         }
       }
