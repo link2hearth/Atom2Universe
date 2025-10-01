@@ -2,11 +2,12 @@
   const PIXELS_PER_METER = 60;
   const BASE_GRAVITY = 900;
   const DIVE_MULTIPLIER = 1.65;
-  const BASE_PUSH_ACCEL = 40;
-  const MIN_GROUND_SPEED = 140;
-  const GROUND_DRAG = 0.985;
-  const HOLDING_DRAG = 0.965;
-  const AIR_DRAG = 0.995;
+  const BASE_PUSH_ACCEL = 14;
+  const START_GROUND_SPEED = 90;
+  const MIN_LANDING_SPEED = 18;
+  const GROUND_DRAG = 0.972;
+  const HOLDING_DRAG = 0.948;
+  const AIR_DRAG = 0.993;
   const JUMP_BASE = 180;
   const JUMP_SPEED_RATIO = 0.4;
   const MAX_JUMP_IMPULSE = 380;
@@ -208,7 +209,7 @@
       this.player = {
         x: 0,
         y: 0,
-        speed: MIN_GROUND_SPEED,
+        speed: START_GROUND_SPEED,
         vx: 0,
         vy: 0,
         onGround: true
@@ -349,7 +350,7 @@
       this.terrain.reset(startX, startX + span);
       this.player.x = 0;
       this.player.y = this.terrain.getHeight(this.player.x);
-      this.player.speed = MIN_GROUND_SPEED;
+      this.player.speed = START_GROUND_SPEED;
       this.player.vx = 0;
       this.player.vy = 0;
       this.player.onGround = true;
@@ -489,23 +490,34 @@
 
       if (this.player.onGround) {
         const slopeAngle = this.terrain.getSlopeAngle(this.player.x);
+        const tangentX = Math.cos(slopeAngle);
+        const tangentY = Math.sin(slopeAngle);
         const gravityAccel = BASE_GRAVITY * (this.isPressing ? DIVE_MULTIPLIER : 1);
-        const slopeAccel = gravityAccel * Math.sin(slopeAngle);
-        this.player.speed += (slopeAccel + BASE_PUSH_ACCEL) * delta;
+        const slopeAccel = -gravityAccel * Math.sin(slopeAngle);
+        const pushAccel = this.isPressing ? BASE_PUSH_ACCEL : 0;
+        const acceleration = slopeAccel + pushAccel;
+        this.player.speed += acceleration * delta;
         const dragFactor = this.isPressing ? HOLDING_DRAG : GROUND_DRAG;
         const decay = Math.pow(dragFactor, delta * 60);
         this.player.speed *= decay;
-        this.player.speed = Math.max(this.player.speed, MIN_GROUND_SPEED);
-        this.player.x += this.player.speed * delta;
+        if (this.player.speed < 0.001) {
+          this.player.speed = 0;
+        }
+        this.player.vx = this.player.speed * tangentX;
+        this.player.vy = this.player.speed * tangentY;
+        this.player.x += this.player.vx * delta;
         this.player.y = this.terrain.getHeight(this.player.x);
-        if (!this.isPressing && this.pendingRelease && slopeAngle < -degToRad(6)) {
-          const jumpImpulse = clamp(JUMP_BASE + this.player.speed * JUMP_SPEED_RATIO, JUMP_BASE, MAX_JUMP_IMPULSE);
-          const vx = this.player.speed * Math.cos(slopeAngle);
-          const vy = this.player.speed * Math.sin(slopeAngle) - jumpImpulse;
+        if (!this.isPressing && this.pendingRelease && slopeAngle < -degToRad(6) && this.player.speed > 0) {
+          const alongSlopeSpeed = Math.max(this.player.speed, Math.hypot(this.player.vx, this.player.vy));
+          const jumpImpulse = clamp(
+            JUMP_BASE + alongSlopeSpeed * JUMP_SPEED_RATIO,
+            JUMP_BASE,
+            MAX_JUMP_IMPULSE
+          );
           this.player.onGround = false;
-          this.player.vx = vx;
-          this.player.vy = vy;
-          this.player.speed = Math.hypot(vx, vy);
+          this.player.vy -= jumpImpulse;
+          this.player.y -= 1.5;
+          this.player.speed = Math.hypot(this.player.vx, this.player.vy);
           this.pendingRelease = false;
         }
       } else {
@@ -522,9 +534,10 @@
           const tangentX = Math.cos(slopeAngle);
           const tangentY = Math.sin(slopeAngle);
           const projectedSpeed = this.player.vx * tangentX + this.player.vy * tangentY;
-          this.player.speed = clamp(projectedSpeed, MIN_GROUND_SPEED * 0.6, Math.max(projectedSpeed, MIN_GROUND_SPEED));
-          this.player.vx = 0;
-          this.player.vy = 0;
+          const dampened = Math.max(Math.abs(projectedSpeed) * 0.85, 0);
+          this.player.speed = dampened < MIN_LANDING_SPEED ? 0 : dampened;
+          this.player.vx = this.player.speed * tangentX;
+          this.player.vy = this.player.speed * tangentY;
           this.player.onGround = true;
           this.pendingRelease = false;
         }
@@ -532,6 +545,7 @@
 
       if (!this.player.onGround) {
         this.pendingRelease = false;
+        this.player.speed = Math.hypot(this.player.vx, this.player.vy);
       }
 
       this.distanceTravelled = Math.max(this.distanceTravelled, this.player.x);
@@ -554,9 +568,7 @@
         return;
       }
       const distanceMeters = Math.max(0, this.distanceTravelled) / PIXELS_PER_METER;
-      const speed = this.player.onGround
-        ? this.player.speed
-        : Math.hypot(this.player.vx, this.player.vy);
+      const speed = Math.hypot(this.player.vx, this.player.vy);
       const speedKmh = Math.max(0, speed / PIXELS_PER_METER * 3.6);
       const groundY = this.terrain.getHeight(this.player.x);
       const altitude = clamp((groundY - this.player.y) / PIXELS_PER_METER, 0, 9999);
