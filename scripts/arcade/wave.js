@@ -1,18 +1,18 @@
 (() => {
   const PIXELS_PER_METER = 60;
   const BASE_GRAVITY = 900;
-  const DIVE_MULTIPLIER = 1.65;
-  const BASE_PUSH_ACCEL = 14;
+  const DIVE_MULTIPLIER = 2.35;
+  const BASE_PUSH_ACCEL = 22;
   const START_GROUND_SPEED = 90;
   const INITIAL_LAUNCH_SPEED = 360;
   const INITIAL_LAUNCH_HEIGHT_OFFSET = 12;
   const START_SCREEN_X_RATIO = 0.05;
   const START_HEIGHT_RATIO = 0.12;
   const START_MIN_CLEARANCE = 48;
-  const MIN_LANDING_SPEED = 18;
+  const MIN_LANDING_SPEED = 16;
   const GROUND_DRAG = 0.972;
-  const HOLDING_DRAG = 0.948;
-  const AIR_DRAG = 0.993;
+  const HOLDING_DRAG = 0.985;
+  const AIR_DRAG = 0.996;
   const JUMP_BASE = 180;
   const JUMP_SPEED_RATIO = 0.4;
   const MAX_JUMP_IMPULSE = 380;
@@ -633,10 +633,22 @@
           this.pendingRelease = false;
         }
       } else {
-        this.player.vy += BASE_GRAVITY * delta;
+        const gravityAccel = BASE_GRAVITY * (this.isPressing ? DIVE_MULTIPLIER : 1);
+        this.player.vy += gravityAccel * delta;
         const drag = Math.pow(AIR_DRAG, delta * 60);
         this.player.vx *= drag;
         this.player.vy *= drag;
+        if (this.isPressing) {
+          const slopeAngle = this.terrain.getSlopeAngle(this.player.x);
+          const tangentX = Math.cos(slopeAngle);
+          const tangentY = Math.sin(slopeAngle);
+          const divePull = Math.max(0, -tangentY);
+          if (divePull > 0) {
+            const diveAccel = gravityAccel * divePull * delta * 0.35;
+            this.player.vx += tangentX * diveAccel;
+            this.player.vy += tangentY * diveAccel;
+          }
+        }
         this.player.x += this.player.vx * delta;
         this.player.y += this.player.vy * delta;
         const groundY = this.terrain.getHeight(this.player.x);
@@ -646,7 +658,7 @@
           const tangentX = Math.cos(slopeAngle);
           const tangentY = Math.sin(slopeAngle);
           const projectedSpeed = this.player.vx * tangentX + this.player.vy * tangentY;
-          const dampened = Math.max(Math.abs(projectedSpeed) * 0.85, 0);
+          const dampened = Math.max(Math.abs(projectedSpeed) * 0.92, 0);
           this.player.speed = dampened < MIN_LANDING_SPEED ? 0 : dampened;
           this.player.vx = this.player.speed * tangentX;
           this.player.vy = this.player.speed * tangentY;
