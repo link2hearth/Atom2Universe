@@ -344,6 +344,8 @@
       this.playButton = elements.playButton;
       this.stopButton = elements.stopButton;
       this.status = elements.status;
+      this.volumeSlider = elements.volumeSlider;
+      this.volumeValue = elements.volumeValue;
 
       this.audioContext = null;
       this.masterGain = null;
@@ -355,6 +357,7 @@
       this.finishTimeout = null;
       this.libraryTracks = [];
 
+      this.masterVolume = 0.8;
       this.maxGain = 0.32;
       this.waveCache = new Map();
       this.noiseBuffer = null;
@@ -362,6 +365,16 @@
       this.schedulerState = null;
       this.scheduleAheadTime = 0.25;
       this.scheduleIntervalSeconds = 0.03;
+
+      if (this.volumeSlider) {
+        const sliderValue = Number.parseFloat(this.volumeSlider.value);
+        if (Number.isFinite(sliderValue)) {
+          this.masterVolume = Math.max(0, Math.min(1, sliderValue / 100));
+        } else {
+          this.volumeSlider.value = String(Math.round(this.masterVolume * 100));
+        }
+      }
+      this.setMasterVolume(this.masterVolume, false);
 
       this.bindEvents();
       this.updateButtons();
@@ -406,6 +419,39 @@
         });
       }
 
+      if (this.volumeSlider) {
+        this.volumeSlider.addEventListener('input', () => {
+          const sliderValue = Number.parseFloat(this.volumeSlider.value);
+          if (!Number.isFinite(sliderValue)) {
+            return;
+          }
+          this.setMasterVolume(Math.max(0, Math.min(1, sliderValue / 100)), false);
+        });
+      }
+
+    }
+
+    setMasterVolume(value, syncSlider = true) {
+      const clamped = Math.max(0, Math.min(1, value));
+      this.masterVolume = clamped;
+      if (this.volumeSlider && syncSlider) {
+        const sliderValue = Math.round(clamped * 100);
+        if (Number.parseInt(this.volumeSlider.value, 10) !== sliderValue) {
+          this.volumeSlider.value = String(sliderValue);
+        }
+      }
+      if (this.volumeValue) {
+        this.volumeValue.textContent = `${Math.round(clamped * 100)}%`;
+      }
+      if (this.masterGain) {
+        const time = this.audioContext ? this.audioContext.currentTime : 0;
+        try {
+          this.masterGain.gain.cancelScheduledValues(time);
+        } catch (error) {
+          // Ignore cancellation errors if the context is not ready yet
+        }
+        this.masterGain.gain.setValueAtTime(clamped, time);
+      }
     }
 
     setStatus(message, state = 'idle') {
@@ -440,10 +486,11 @@
         this.waveCache = new Map();
         this.noiseBuffer = null;
         this.masterGain = this.audioContext.createGain();
-        this.masterGain.gain.value = 1;
+        this.masterGain.gain.value = this.masterVolume;
         this.masterGain.connect(this.audioContext.destination);
         this.schedulerInterval = null;
         this.schedulerState = null;
+        this.setMasterVolume(this.masterVolume, false);
       }
       if (this.audioContext.state === 'suspended') {
         await this.audioContext.resume();
@@ -624,11 +671,17 @@
       switch (family) {
         case 0: // Pianos / Chromatic Perc.
           return {
-            type: 'pulse',
-            dutyCycle: 0.25,
-            envelope: { ...baseEnvelope, decay: 0.04, sustain: 0.5 },
-            vibrato: { depth: 3, rate: 5.5 },
-            volume: 0.9,
+            type: 'triangle',
+            envelope: {
+              ...baseEnvelope,
+              attack: 0.01,
+              decay: 0.12,
+              sustain: 0.45,
+              release: Math.max(0.22, note.duration * 0.6),
+            },
+            vibrato: { depth: 2.5, rate: 5 },
+            volume: 0.85,
+            filter: { type: 'lowpass', frequency: 2200, Q: 0.7 },
           };
         case 1: // Orgues
           return {
@@ -822,12 +875,37 @@
         voice.lfoGain = lfoGain;
       }
 
-      osc.connect(gainNode).connect(this.masterGain);
+      let lastNode = osc;
+      if (instrument.filter) {
+        const filter = this.audioContext.createBiquadFilter();
+        if (instrument.filter.type) {
+          filter.type = instrument.filter.type;
+        }
+        if (Number.isFinite(instrument.filter.frequency)) {
+          filter.frequency.setValueAtTime(instrument.filter.frequency, startAt);
+        }
+        if (Number.isFinite(instrument.filter.Q)) {
+          filter.Q.setValueAtTime(instrument.filter.Q, startAt);
+        }
+        lastNode.connect(filter);
+        lastNode = filter;
+        voice.filterNode = filter;
+      }
+
+      lastNode.connect(gainNode);
+      gainNode.connect(this.masterGain);
 
       this.liveVoices.add(voice);
       osc.onended = () => {
         this.liveVoices.delete(voice);
         gainNode.disconnect();
+        if (voice.filterNode) {
+          try {
+            voice.filterNode.disconnect();
+          } catch (error) {
+            // Ignore disconnect issues
+          }
+        }
         if (voice.lfoGain) {
           voice.lfoGain.disconnect();
         }
@@ -1156,6 +1234,8 @@
     playButton: document.getElementById('chiptunePlayButton'),
     stopButton: document.getElementById('chiptuneStopButton'),
     status: document.getElementById('chiptuneStatus'),
+    volumeSlider: document.getElementById('chiptuneVolumeSlider'),
+    volumeValue: document.getElementById('chiptuneVolumeValue'),
   };
 
   if (elements.fileInput && elements.playButton && elements.stopButton && elements.status) {
