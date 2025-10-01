@@ -794,7 +794,7 @@ const GAME_CONFIG = {
     refillDelayMs: 120,
     popEffect: {
       durationMs: 220,
-      scale: 1.18,
+      scale: 1.22,
       glowOpacity: 0.8
     },
     maxShuffleAttempts: 120,
@@ -821,7 +821,7 @@ const GAME_CONFIG = {
         id: 'platine',
         label: 'Pt',
         color: '#45A9E2',
-        image: 'Assets/Image/Bronze.png'
+        image: 'Assets/Image/Cuivre.png'
       },
       {
         id: 'diamant',
@@ -834,7 +834,7 @@ const GAME_CONFIG = {
       initialSeconds: 6,
       maxSeconds: 6,
       matchRewardSeconds: 2,
-      penaltyWindowSeconds: 30,
+      penaltyWindowSeconds: 20,
       penaltyAmountSeconds: 1,
       minMaxSeconds: 1,
       tickIntervalMs: 100

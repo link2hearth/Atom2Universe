@@ -36,7 +36,7 @@ const DEFAULT_METAUX_CONFIG = {
       id: 'platine',
       label: 'Platine',
       color: '#A6D3E3',
-      image: 'Assets/Image/Bronze.png'
+      image: 'Assets/Image/Cuivre.png'
     },
     {
       id: 'diamant',
