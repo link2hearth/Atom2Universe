@@ -444,6 +444,8 @@
       this.resetPitchButton = elements.resetPitchButton;
       this.articulationSlider = elements.articulationSlider;
       this.articulationValue = elements.articulationValue;
+      this.speedSlider = elements.speedSlider;
+      this.speedValue = elements.speedValue;
 
       const hasWindow = typeof window !== 'undefined';
       if (hasWindow) {
@@ -483,7 +485,7 @@
       this.waveCache = new Map();
       this.noiseBuffer = null;
       this.reverbBuffer = null;
-      this.reverbDefaultSend = 0.18;
+      this.reverbDefaultSend = 0.12;
       this.schedulerInterval = null;
       this.schedulerState = null;
       this.scheduleAheadTime = 0.25;
@@ -502,6 +504,10 @@
       this.detuneMin = -100;
       this.detuneMax = 100;
       this.articulationSetting = 70;
+      this.playbackSpeed = 1;
+      this.activePlaybackSpeed = 1;
+      this.speedMin = 0.5;
+      this.speedMax = 2;
 
       if (this.volumeSlider) {
         const sliderValue = Number.parseFloat(this.volumeSlider.value);
@@ -537,9 +543,18 @@
           this.articulationSlider.value = String(this.articulationSetting);
         }
       }
+      if (this.speedSlider) {
+        const sliderValue = Number.parseInt(this.speedSlider.value, 10);
+        if (Number.isFinite(sliderValue)) {
+          this.playbackSpeed = this.clampPlaybackSpeed(sliderValue / 100);
+        } else {
+          this.speedSlider.value = '100';
+        }
+      }
       this.setTransposeSemitones(this.transposeSemitones, { syncSlider: true, refreshVoices: false });
       this.setFineDetuneCents(this.fineDetuneCents, { syncSlider: true, refreshVoices: false });
       this.setArticulation(this.articulationSetting, { syncSlider: true, refresh: false });
+      this.setPlaybackSpeed(this.playbackSpeed, { syncSlider: true });
 
       this.bindEvents();
       this.updateButtons();
@@ -621,6 +636,16 @@
             return;
           }
           this.setArticulation(sliderValue);
+        });
+      }
+
+      if (this.speedSlider) {
+        this.speedSlider.addEventListener('input', () => {
+          const sliderValue = Number.parseInt(this.speedSlider.value, 10);
+          if (!Number.isFinite(sliderValue)) {
+            return;
+          }
+          this.setPlaybackSpeed(sliderValue / 100);
         });
       }
 
@@ -743,6 +768,93 @@
       }
       if (refresh) {
         this.refreshLiveVoicesArticulation?.();
+      }
+    }
+
+    clampPlaybackSpeed(value) {
+      const normalized = Number.isFinite(value) ? value : 1;
+      return Math.max(this.speedMin, Math.min(this.speedMax, normalized));
+    }
+
+    formatPlaybackSpeedLabel(ratio) {
+      const clamped = this.clampPlaybackSpeed(ratio);
+      const percent = Math.round(clamped * 100);
+      if (Math.abs(percent - 100) <= 1) {
+        return 'Tempo normal (100%)';
+      }
+      if (percent < 100) {
+        return `Tempo ralenti (${percent}%)`;
+      }
+      return `Tempo accéléré (${percent}%)`;
+    }
+
+    formatSpeedFactor(ratio) {
+      const clamped = this.clampPlaybackSpeed(ratio);
+      return `tempo ×${clamped.toFixed(2)}`;
+    }
+
+    getEffectiveDuration(timeline = this.timeline, speed = null) {
+      if (!timeline || !Number.isFinite(timeline.duration)) {
+        return 0;
+      }
+      const ratioSource = Number.isFinite(speed)
+        ? speed
+        : (this.playing ? this.activePlaybackSpeed : this.playbackSpeed);
+      const ratio = this.clampPlaybackSpeed(ratioSource || 1);
+      if (ratio <= 0) {
+        return timeline.duration;
+      }
+      return timeline.duration / ratio;
+    }
+
+    formatDurationWithSpeed(seconds, options = {}) {
+      if (!Number.isFinite(seconds)) {
+        return '';
+      }
+      const { speed = null, includeFactor = true } = options;
+      const ratioSource = Number.isFinite(speed)
+        ? speed
+        : (this.playing ? this.activePlaybackSpeed : this.playbackSpeed);
+      const ratio = this.clampPlaybackSpeed(ratioSource || 1);
+      const base = MidiTimeline.formatDuration(seconds / (ratio || 1));
+      if (!includeFactor || Math.abs(ratio - 1) < 0.005) {
+        return base;
+      }
+      return `${base} · ${this.formatSpeedFactor(ratio)}`;
+    }
+
+    setPlaybackSpeed(value, options = {}) {
+      const { syncSlider = true } = options;
+      const clamped = this.clampPlaybackSpeed(Number.isFinite(value) ? value : this.playbackSpeed || 1);
+      this.playbackSpeed = clamped;
+      const percent = Math.round(clamped * 100);
+      const label = this.formatPlaybackSpeedLabel(clamped);
+      if (this.speedSlider && syncSlider) {
+        const current = Number.parseInt(this.speedSlider.value, 10);
+        if (!Number.isFinite(current) || current !== percent) {
+          this.speedSlider.value = String(percent);
+        }
+      }
+      if (this.speedSlider) {
+        this.speedSlider.setAttribute('aria-valuetext', label);
+      }
+      if (this.speedValue) {
+        this.speedValue.textContent = label;
+      }
+      this.updateReadyStatusMessage();
+    }
+
+    updateReadyStatusMessage() {
+      if (!this.timeline || !this.currentTitle) {
+        return;
+      }
+      const summary = this.formatTimelineSummary(this.timeline, this.timelineAnalysis);
+      const message = summary
+        ? `Prêt : ${this.currentTitle} — ${summary}`
+        : `Prêt : ${this.currentTitle} (${this.formatDurationWithSpeed(this.timeline.duration)})`;
+      this.readyStatusMessage = message;
+      if (!this.playing) {
+        this.setStatus(message, 'success');
       }
     }
 
@@ -897,7 +1009,7 @@
         return '';
       }
       const segments = [];
-      const durationLabel = MidiTimeline.formatDuration(timeline.duration);
+      const durationLabel = this.formatDurationWithSpeed(timeline.duration);
       if (durationLabel) {
         segments.push(durationLabel);
       }
@@ -990,7 +1102,8 @@
         return;
       }
 
-      const totalDuration = Number.isFinite(this.timeline.duration) ? this.timeline.duration : 0;
+      const speed = this.activePlaybackSpeed || this.playbackSpeed || 1;
+      const totalDuration = this.getEffectiveDuration(this.timeline, speed);
       const requestFrame = this.requestFrame || ((callback) => window.setTimeout(callback, 100));
 
       const update = () => {
@@ -1001,9 +1114,14 @@
         const now = this.audioContext.currentTime;
         const elapsed = Math.max(0, now - this.playStartTime);
         const clampedElapsed = totalDuration > 0 ? Math.min(totalDuration, elapsed) : elapsed;
-        const progressLabel = totalDuration > 0
+        let progressLabel = totalDuration > 0
           ? `${this.formatClock(clampedElapsed)} / ${this.formatClock(totalDuration)}`
           : this.formatClock(clampedElapsed);
+        if (Math.abs(speed - 1) >= 0.01) {
+          progressLabel = progressLabel
+            ? `${progressLabel} · ${this.formatSpeedFactor(speed)}`
+            : this.formatSpeedFactor(speed);
+        }
         let message = `Lecture en cours : ${this.currentTitle}`;
         if (progressLabel) {
           message += ` — ${progressLabel}`;
@@ -1225,12 +1343,13 @@
         const summary = this.formatTimelineSummary(timeline, this.timelineAnalysis);
         const message = summary
           ? `Prêt : ${this.currentTitle} — ${summary}`
-          : `Prêt : ${this.currentTitle} (${MidiTimeline.formatDuration(timeline.duration)})`;
+          : `Prêt : ${this.currentTitle} (${this.formatDurationWithSpeed(timeline.duration)})`;
         this.readyStatusMessage = message;
         this.setStatus(message, 'success');
       } catch (error) {
         throw error;
       }
+      this.updateReadyStatusMessage();
       this.updateButtons();
     }
 
@@ -1347,7 +1466,7 @@
       const convolver = this.audioContext.createConvolver();
       convolver.normalize = true;
       if (!this.reverbBuffer || this.reverbBuffer.sampleRate !== this.audioContext.sampleRate) {
-        this.reverbBuffer = this.buildReverbImpulse(1.4, 2.1);
+        this.reverbBuffer = this.buildReverbImpulse(0.9, 1.6);
       }
       convolver.buffer = this.reverbBuffer;
       return convolver;
@@ -1378,236 +1497,329 @@
       const family = Math.floor(program / 8);
 
       const baseEnvelope = {
-        attack: Math.max(0.006, Math.min(0.12, 0.02 + (note.rawVelocity ? (0.06 * (1 - note.rawVelocity)) : 0))),
-        decay: 0.22,
-        sustain: 0.6,
-        release: Math.max(0.24, Math.min(0.8, note.duration * 0.75)),
+        attack: Math.max(0.0035, Math.min(0.06, 0.006 + (note.rawVelocity ? (0.03 * (1 - note.rawVelocity)) : 0))),
+        decay: 0.12,
+        sustain: 0.4,
+        release: Math.max(0.14, Math.min(0.5, note.duration * 0.55)),
+      };
+
+      const mergeEnvelope = (overrides = {}) => ({
+        ...baseEnvelope,
+        ...(overrides || {}),
+      });
+
+      const createPulseDefinition = (options = {}) => {
+        const {
+          gain = 0.74,
+          layers,
+          filter,
+          lfo,
+          reverbSend = 0.14,
+          envelope,
+        } = options;
+        return {
+          gain,
+          layers: Array.isArray(layers) && layers.length ? layers : [
+            { type: 'pulse', dutyCycle: 0.35, detune: -7, gain: 0.55 },
+            { type: 'pulse', dutyCycle: 0.65, detune: 7, gain: 0.55 },
+          ],
+          filter: filter ?? { type: 'lowpass', frequency: 5800, Q: 0.65 },
+          lfo: lfo ?? { rate: 4.6, vibratoDepth: 4.2, tremoloDepth: 0.03 },
+          reverbSend,
+          envelope: mergeEnvelope(envelope),
+        };
+      };
+
+      const createSoftDefinition = (options = {}) => {
+        const {
+          gain = 0.68,
+          layers,
+          filter,
+          lfo,
+          reverbSend = 0.1,
+          envelope,
+        } = options;
+        return {
+          gain,
+          layers: Array.isArray(layers) && layers.length ? layers : [
+            { type: 'triangle', detune: -6, gain: 0.5 },
+            { type: 'triangle', detune: 6, gain: 0.5 },
+            { type: 'pulse', dutyCycle: 0.5, detune: 0, gain: 0.25 },
+          ],
+          filter: filter ?? { type: 'lowpass', frequency: 5200, Q: 0.6 },
+          lfo: lfo ?? { rate: 4.2, vibratoDepth: 3.2, tremoloDepth: 0.02 },
+          reverbSend,
+          envelope: mergeEnvelope(envelope),
+        };
+      };
+
+      const createBassDefinition = (options = {}) => {
+        const {
+          gain = 0.8,
+          layers,
+          filter,
+          lfo,
+          reverbSend = 0.08,
+          envelope,
+        } = options;
+        return {
+          gain,
+          layers: Array.isArray(layers) && layers.length ? layers : [
+            { type: 'square', detune: -12, gain: 0.6 },
+            { type: 'square', detune: 0, gain: 0.55 },
+            { type: 'triangle', detune: 0, gain: 0.35 },
+          ],
+          filter: filter ?? { type: 'lowpass', frequency: 3200, Q: 0.75 },
+          lfo: lfo ?? { rate: 4.8, vibratoDepth: 2.4, tremoloDepth: 0 },
+          reverbSend,
+          envelope: mergeEnvelope({ sustain: 0.48, release: 0.22, ...(envelope || {}) }),
+        };
+      };
+
+      const createPluckDefinition = (options = {}) => {
+        const {
+          gain = 0.72,
+          layers,
+          filter,
+          lfo,
+          reverbSend = 0.1,
+          envelope,
+        } = options;
+        return {
+          gain,
+          layers: Array.isArray(layers) && layers.length ? layers : [
+            { type: 'pulse', dutyCycle: 0.28, detune: -5, gain: 0.5 },
+            { type: 'pulse', dutyCycle: 0.72, detune: 5, gain: 0.5 },
+          ],
+          filter: filter ?? { type: 'highpass', frequency: 180, Q: 0.6 },
+          lfo: lfo ?? { rate: 5.6, vibratoDepth: 2.2, tremoloDepth: 0.05 },
+          reverbSend,
+          envelope: mergeEnvelope({ decay: 0.06, sustain: 0.18, release: 0.16, ...(envelope || {}) }),
+        };
+      };
+
+      const mergeEnvelope = (overrides = {}) => ({
+        ...baseEnvelope,
+        ...(overrides || {}),
+      });
+
+      const createPulseDefinition = (options = {}) => {
+        const {
+          gain = 0.74,
+          layers,
+          filter,
+          lfo,
+          reverbSend = 0.14,
+          envelope,
+        } = options;
+        return {
+          gain,
+          layers: Array.isArray(layers) && layers.length ? layers : [
+            { type: 'pulse', dutyCycle: 0.35, detune: -7, gain: 0.55 },
+            { type: 'pulse', dutyCycle: 0.65, detune: 7, gain: 0.55 },
+          ],
+          filter: filter ?? { type: 'lowpass', frequency: 5800, Q: 0.65 },
+          lfo: lfo ?? { rate: 4.6, vibratoDepth: 4.2, tremoloDepth: 0.03 },
+          reverbSend,
+          envelope: mergeEnvelope(envelope),
+        };
+      };
+
+      const createSoftDefinition = (options = {}) => {
+        const {
+          gain = 0.68,
+          layers,
+          filter,
+          lfo,
+          reverbSend = 0.1,
+          envelope,
+        } = options;
+        return {
+          gain,
+          layers: Array.isArray(layers) && layers.length ? layers : [
+            { type: 'triangle', detune: -6, gain: 0.5 },
+            { type: 'triangle', detune: 6, gain: 0.5 },
+            { type: 'pulse', dutyCycle: 0.5, detune: 0, gain: 0.25 },
+          ],
+          filter: filter ?? { type: 'lowpass', frequency: 5200, Q: 0.6 },
+          lfo: lfo ?? { rate: 4.2, vibratoDepth: 3.2, tremoloDepth: 0.02 },
+          reverbSend,
+          envelope: mergeEnvelope(envelope),
+        };
+      };
+
+      const createBassDefinition = (options = {}) => {
+        const {
+          gain = 0.8,
+          layers,
+          filter,
+          lfo,
+          reverbSend = 0.08,
+          envelope,
+        } = options;
+        return {
+          gain,
+          layers: Array.isArray(layers) && layers.length ? layers : [
+            { type: 'square', detune: -12, gain: 0.6 },
+            { type: 'square', detune: 0, gain: 0.55 },
+            { type: 'triangle', detune: 0, gain: 0.35 },
+          ],
+          filter: filter ?? { type: 'lowpass', frequency: 3200, Q: 0.75 },
+          lfo: lfo ?? { rate: 4.8, vibratoDepth: 2.4, tremoloDepth: 0 },
+          reverbSend,
+          envelope: mergeEnvelope({ sustain: 0.48, release: 0.22, ...(envelope || {}) }),
+        };
+      };
+
+      const createPluckDefinition = (options = {}) => {
+        const {
+          gain = 0.72,
+          layers,
+          filter,
+          lfo,
+          reverbSend = 0.1,
+          envelope,
+        } = options;
+        return {
+          gain,
+          layers: Array.isArray(layers) && layers.length ? layers : [
+            { type: 'pulse', dutyCycle: 0.28, detune: -5, gain: 0.5 },
+            { type: 'pulse', dutyCycle: 0.72, detune: 5, gain: 0.5 },
+          ],
+          filter: filter ?? { type: 'highpass', frequency: 180, Q: 0.6 },
+          lfo: lfo ?? { rate: 5.6, vibratoDepth: 2.2, tremoloDepth: 0.05 },
+          reverbSend,
+          envelope: mergeEnvelope({ decay: 0.06, sustain: 0.18, release: 0.16, ...(envelope || {}) }),
+        };
       };
 
       const definitions = {
-        default: {
-          gain: 0.82,
+        default: createPulseDefinition({
+          envelope: { decay: 0.08, sustain: 0.36, release: 0.18 },
+          reverbSend: 0.12,
+        }),
+        0: createPulseDefinition({
+          lfo: { rate: 5.2, vibratoDepth: 5.5, tremoloDepth: 0.04 },
+          envelope: { decay: 0.1, sustain: 0.34, release: 0.2 },
+          reverbSend: 0.13,
+        }),
+        1: createSoftDefinition({
+          envelope: { decay: 0.11, sustain: 0.32, release: 0.2 },
+          reverbSend: 0.11,
+        }),
+        2: createSoftDefinition({
           layers: [
-            { type: 'triangle', detune: -5, gain: 0.38 },
-            { type: 'triangle', detune: 5, gain: 0.38 },
-            { type: 'sine', detune: 0, gain: 0.32 },
+            { type: 'triangle', detune: -7, gain: 0.46 },
+            { type: 'triangle', detune: 7, gain: 0.46 },
+            { type: 'pulse', dutyCycle: 0.45, detune: 0, gain: 0.28 },
           ],
-          filter: { type: 'lowpass', frequency: 3400, Q: 0.7 },
-          lfo: { rate: 4.8, vibratoDepth: 10, tremoloDepth: 0.08 },
-          reverbSend: 0.28,
-          envelope: { ...baseEnvelope, decay: 0.2, sustain: 0.62, release: 0.42 },
-          chorus: { rate: 0.7, depth: 0.006, delay: 0.022, mix: 0.25, feedback: 0.12, spread: 0.35 },
-        },
-        0: {
-          gain: 0.86,
+          lfo: { rate: 4.8, vibratoDepth: 4.8, tremoloDepth: 0.03 },
+          envelope: { sustain: 0.44, release: 0.22 },
+          reverbSend: 0.12,
+        }),
+        3: createPulseDefinition({
+          filter: { type: 'bandpass', frequency: 4600, Q: 0.85 },
+          lfo: { rate: 5.4, vibratoDepth: 4.5, tremoloDepth: 0.04 },
+          envelope: { decay: 0.09, sustain: 0.34, release: 0.2 },
+          reverbSend: 0.12,
+        }),
+        4: createPluckDefinition({
+          filter: { type: 'bandpass', frequency: 3600, Q: 0.9 },
+          envelope: { decay: 0.05, sustain: 0.16, release: 0.15 },
+          reverbSend: 0.09,
+        }),
+        5: createBassDefinition({
+          lfo: { rate: 4.4, vibratoDepth: 1.8, tremoloDepth: 0.02 },
+          envelope: { sustain: 0.5, release: 0.24 },
+        }),
+        6: createBassDefinition({
           layers: [
-            { type: 'sine', detune: 0, gain: 0.28 },
-            { type: 'triangle', detune: -5, gain: 0.46 },
-            { type: 'triangle', detune: 5, gain: 0.46 },
-            { type: 'sawtooth', detune: 12, gain: 0.12 },
+            { type: 'square', detune: -9, gain: 0.58 },
+            { type: 'square', detune: 9, gain: 0.58 },
+            { type: 'triangle', detune: 0, gain: 0.35 },
           ],
-          filter: { type: 'lowpass', frequency: 4200, Q: 0.7 },
-          lfo: { rate: 5.2, vibratoDepth: 4, tremoloDepth: 0.03 },
-          reverbSend: 0.32,
-          envelope: { ...baseEnvelope, attack: 0.01, decay: 0.28, sustain: 0.45, release: 0.55 },
-          chorus: { rate: 0.6, depth: 0.005, delay: 0.024, mix: 0.18, feedback: 0.08, spread: 0.25 },
-        },
-        1: {
-          gain: 0.78,
+          filter: { type: 'lowpass', frequency: 2800, Q: 0.8 },
+          envelope: { sustain: 0.52, release: 0.26 },
+          reverbSend: 0.09,
+        }),
+        7: createPulseDefinition({
           layers: [
-            { type: 'sine', detune: 0, gain: 0.35 },
-            { type: 'triangle', detune: -7, gain: 0.36 },
-            { type: 'triangle', detune: 7, gain: 0.36 },
+            { type: 'pulse', dutyCycle: 0.32, detune: -6, gain: 0.5 },
+            { type: 'pulse', dutyCycle: 0.68, detune: 6, gain: 0.5 },
+            { type: 'triangle', detune: 0, gain: 0.22 },
           ],
-          filter: { type: 'lowpass', frequency: 5200, Q: 0.75 },
-          lfo: { rate: 4.4, vibratoDepth: 2, tremoloDepth: 0 },
-          reverbSend: 0.26,
-          envelope: { ...baseEnvelope, attack: 0.004, decay: 0.26, sustain: 0.32, release: 0.4 },
-        },
-        2: {
-          gain: 0.82,
+          lfo: { rate: 5.8, vibratoDepth: 6, tremoloDepth: 0.05 },
+          envelope: { decay: 0.1, sustain: 0.4, release: 0.22 },
+          reverbSend: 0.13,
+        }),
+        8: createPluckDefinition({
           layers: [
-            { type: 'sine', detune: -12, gain: 0.3 },
-            { type: 'sine', detune: 0, gain: 0.3 },
-            { type: 'triangle', detune: 7, gain: 0.3 },
-            { type: 'triangle', detune: -7, gain: 0.3 },
+            { type: 'pulse', dutyCycle: 0.24, detune: -4, gain: 0.5 },
+            { type: 'pulse', dutyCycle: 0.76, detune: 4, gain: 0.5 },
+            { type: 'triangle', detune: 0, gain: 0.2 },
           ],
-          filter: { type: 'lowpass', frequency: 3600, Q: 0.6 },
-          lfo: { rate: 5.6, vibratoDepth: 8, tremoloDepth: 0.12 },
-          reverbSend: 0.24,
-          envelope: { ...baseEnvelope, attack: 0.012, decay: 0.16, sustain: 0.7, release: 0.5 },
-          chorus: { rate: 0.9, depth: 0.007, delay: 0.03, mix: 0.3, feedback: 0.15, spread: 0.45 },
-        },
-        3: {
-          gain: 0.82,
+          lfo: { rate: 5.8, vibratoDepth: 2.6, tremoloDepth: 0.05 },
+          envelope: { decay: 0.05, sustain: 0.16, release: 0.14 },
+          reverbSend: 0.11,
+        }),
+        9: createSoftDefinition({
+          lfo: { rate: 5.4, vibratoDepth: 4.5, tremoloDepth: 0.03 },
+          envelope: { decay: 0.12, sustain: 0.36, release: 0.22 },
+          reverbSend: 0.13,
+        }),
+        10: createPulseDefinition({
           layers: [
-            { type: 'triangle', detune: -9, gain: 0.38 },
-            { type: 'triangle', detune: 9, gain: 0.38 },
-            { type: 'sawtooth', detune: 0, gain: 0.24 },
-            { type: 'sine', detune: 0, gain: 0.24 },
+            { type: 'pulse', dutyCycle: 0.38, detune: -7, gain: 0.5 },
+            { type: 'pulse', dutyCycle: 0.62, detune: 7, gain: 0.5 },
+            { type: 'triangle', detune: 0, gain: 0.24 },
           ],
-          filter: { type: 'lowpass', frequency: 3200, Q: 0.85 },
-          lfo: { rate: 5, vibratoDepth: 6, tremoloDepth: 0.06 },
-          reverbSend: 0.22,
-          envelope: { ...baseEnvelope, attack: 0.007, decay: 0.18, sustain: 0.48, release: 0.4 },
-        },
-        4: {
-          gain: 0.88,
+          filter: { type: 'lowpass', frequency: 5400, Q: 0.7 },
+          lfo: { rate: 5.6, vibratoDepth: 5.5, tremoloDepth: 0.04 },
+          envelope: { decay: 0.1, sustain: 0.4, release: 0.22 },
+          reverbSend: 0.12,
+        }),
+        11: createBassDefinition({
           layers: [
-            { type: 'sawtooth', detune: -12, gain: 0.32 },
-            { type: 'sawtooth', detune: 0, gain: 0.32 },
-            { type: 'triangle', detune: 0, gain: 0.36 },
+            { type: 'square', detune: -12, gain: 0.6 },
+            { type: 'square', detune: 0, gain: 0.55 },
+            { type: 'pulse', dutyCycle: 0.5, detune: 12, gain: 0.25 },
           ],
-          filter: { type: 'lowpass', frequency: 2400, Q: 0.9 },
-          lfo: { rate: 4, vibratoDepth: 4, tremoloDepth: 0.04 },
-          reverbSend: 0.18,
-          envelope: { ...baseEnvelope, attack: 0.012, decay: 0.14, sustain: 0.65, release: 0.32 },
-        },
-        5: {
-          gain: 0.88,
+          filter: { type: 'lowpass', frequency: 2600, Q: 0.85 },
+          envelope: { sustain: 0.5, release: 0.28 },
+          reverbSend: 0.1,
+        }),
+        12: createSoftDefinition({
           layers: [
-            { type: 'triangle', detune: -14, gain: 0.32 },
-            { type: 'triangle', detune: 14, gain: 0.32 },
-            { type: 'sawtooth', detune: -7, gain: 0.22 },
-            { type: 'sawtooth', detune: 7, gain: 0.22 },
-            { type: 'sine', detune: 0, gain: 0.28 },
+            { type: 'triangle', detune: -5, gain: 0.48 },
+            { type: 'triangle', detune: 5, gain: 0.48 },
+            { type: 'pulse', dutyCycle: 0.52, detune: 0, gain: 0.22 },
           ],
-          filter: { type: 'lowpass', frequency: 3600, Q: 0.8 },
-          lfo: { rate: 5.4, vibratoDepth: 16, tremoloDepth: 0.14 },
-          reverbSend: 0.34,
-          envelope: { ...baseEnvelope, attack: 0.028, decay: 0.22, sustain: 0.74, release: 0.65 },
-          chorus: { rate: 0.75, depth: 0.01, delay: 0.028, mix: 0.38, feedback: 0.18, spread: 0.6 },
-        },
-        6: {
-          gain: 0.82,
+          filter: { type: 'lowpass', frequency: 5000, Q: 0.65 },
+          lfo: { rate: 4.2, vibratoDepth: 2.8, tremoloDepth: 0.02 },
+          envelope: { sustain: 0.36, release: 0.2 },
+          reverbSend: 0.11,
+        }),
+        13: createPulseDefinition({
+          filter: { type: 'bandpass', frequency: 3400, Q: 1 },
+          lfo: { rate: 6.2, vibratoDepth: 4.2, tremoloDepth: 0.05 },
+          envelope: { decay: 0.08, sustain: 0.3, release: 0.18 },
+          reverbSend: 0.1,
+        }),
+        14: createSoftDefinition({
+          lfo: { rate: 4.8, vibratoDepth: 4, tremoloDepth: 0.03 },
+          envelope: { decay: 0.1, sustain: 0.34, release: 0.2 },
+          reverbSend: 0.12,
+        }),
+        15: createPulseDefinition({
           layers: [
-            { type: 'sawtooth', detune: -9, gain: 0.3 },
-            { type: 'sawtooth', detune: 9, gain: 0.3 },
-            { type: 'triangle', detune: -3, gain: 0.24 },
-            { type: 'triangle', detune: 3, gain: 0.24 },
-            { type: 'sine', detune: 0, gain: 0.32 },
+            { type: 'pulse', dutyCycle: 0.26, detune: -6, gain: 0.52 },
+            { type: 'pulse', dutyCycle: 0.74, detune: 6, gain: 0.52 },
+            { type: 'triangle', detune: 0, gain: 0.2 },
           ],
-          filter: { type: 'lowpass', frequency: 3200, Q: 0.7 },
-          lfo: { rate: 4.4, vibratoDepth: 14, tremoloDepth: 0.18 },
-          reverbSend: 0.36,
-          envelope: { ...baseEnvelope, attack: 0.04, decay: 0.26, sustain: 0.8, release: 0.7 },
-          chorus: { rate: 0.5, depth: 0.012, delay: 0.032, mix: 0.42, feedback: 0.2, spread: 0.65 },
-        },
-        7: {
-          gain: 0.84,
-          layers: [
-            { type: 'sawtooth', detune: -8, gain: 0.32 },
-            { type: 'sawtooth', detune: 8, gain: 0.32 },
-            { type: 'triangle', detune: 0, gain: 0.28 },
-            { type: 'sine', detune: 0, gain: 0.22 },
-          ],
-          filter: { type: 'lowpass', frequency: 3400, Q: 0.95 },
-          lfo: { rate: 5.8, vibratoDepth: 12, tremoloDepth: 0.16 },
-          reverbSend: 0.28,
-          envelope: { ...baseEnvelope, attack: 0.018, decay: 0.24, sustain: 0.66, release: 0.5 },
-        },
-        8: {
-          gain: 0.82,
-          layers: [
-            { type: 'pulse', dutyCycle: 0.42, detune: -6, gain: 0.32 },
-            { type: 'pulse', dutyCycle: 0.46, detune: 6, gain: 0.32 },
-            { type: 'triangle', detune: 0, gain: 0.28 },
-            { type: 'sine', detune: 0, gain: 0.22 },
-          ],
-          filter: { type: 'lowpass', frequency: 3000, Q: 1.05 },
-          lfo: { rate: 5.6, vibratoDepth: 18, tremoloDepth: 0.12 },
-          reverbSend: 0.26,
-          envelope: { ...baseEnvelope, attack: 0.016, decay: 0.2, sustain: 0.6, release: 0.48 },
-          chorus: { rate: 0.85, depth: 0.006, delay: 0.024, mix: 0.22, feedback: 0.12, spread: 0.4 },
-        },
-        9: {
-          gain: 0.8,
-          layers: [
-            { type: 'sine', detune: 0, gain: 0.4 },
-            { type: 'triangle', detune: -5, gain: 0.3 },
-            { type: 'triangle', detune: 5, gain: 0.3 },
-          ],
-          filter: { type: 'lowpass', frequency: 3600, Q: 0.6 },
-          lfo: { rate: 5.2, vibratoDepth: 10, tremoloDepth: 0.1 },
-          reverbSend: 0.32,
-          envelope: { ...baseEnvelope, attack: 0.012, decay: 0.2, sustain: 0.58, release: 0.6 },
-        },
-        10: {
-          gain: 0.78,
-          layers: [
-            { type: 'sawtooth', detune: -7, gain: 0.34 },
-            { type: 'sawtooth', detune: 7, gain: 0.34 },
-            { type: 'triangle', detune: 0, gain: 0.26 },
-            { type: 'sine', detune: 0, gain: 0.2 },
-          ],
-          filter: { type: 'lowpass', frequency: 3600, Q: 0.75 },
-          lfo: { rate: 5.8, vibratoDepth: 16, tremoloDepth: 0.14 },
-          reverbSend: 0.26,
-          envelope: { ...baseEnvelope, attack: 0.014, decay: 0.2, sustain: 0.62, release: 0.52 },
-        },
-        11: {
-          gain: 0.82,
-          layers: [
-            { type: 'sawtooth', detune: -9, gain: 0.3 },
-            { type: 'sawtooth', detune: 9, gain: 0.3 },
-            { type: 'triangle', detune: -3, gain: 0.26 },
-            { type: 'triangle', detune: 3, gain: 0.26 },
-            { type: 'sine', detune: 0, gain: 0.28 },
-          ],
-          filter: { type: 'lowpass', frequency: 3000, Q: 0.7 },
-          lfo: { rate: 4.2, vibratoDepth: 14, tremoloDepth: 0.2 },
-          reverbSend: 0.36,
-          envelope: { ...baseEnvelope, attack: 0.05, decay: 0.26, sustain: 0.82, release: 0.8 },
-          chorus: { rate: 0.45, depth: 0.012, delay: 0.034, mix: 0.45, feedback: 0.2, spread: 0.7 },
-        },
-        12: {
-          gain: 0.78,
-          layers: [
-            { type: 'triangle', detune: -8, gain: 0.32 },
-            { type: 'triangle', detune: 8, gain: 0.32 },
-            { type: 'sine', detune: 0, gain: 0.3 },
-          ],
-          filter: { type: 'lowpass', frequency: 3000, Q: 0.85 },
-          lfo: { rate: 5.2, vibratoDepth: 8, tremoloDepth: 0.08 },
-          reverbSend: 0.3,
-          envelope: { ...baseEnvelope, attack: 0.01, decay: 0.18, sustain: 0.5, release: 0.46 },
-        },
-        13: {
-          gain: 0.76,
-          layers: [
-            { type: 'sawtooth', detune: -12, gain: 0.3 },
-            { type: 'sawtooth', detune: 0, gain: 0.3 },
-            { type: 'triangle', detune: 0, gain: 0.28 },
-          ],
-          filter: { type: 'bandpass', frequency: 2200, Q: 1.1 },
-          lfo: { rate: 6, vibratoDepth: 12, tremoloDepth: 0.1 },
-          reverbSend: 0.22,
-          envelope: { ...baseEnvelope, attack: 0.006, decay: 0.22, sustain: 0.4, release: 0.36 },
-        },
-        14: {
-          gain: 0.74,
-          layers: [
-            { type: 'sine', detune: 0, gain: 0.4 },
-            { type: 'triangle', detune: -7, gain: 0.3 },
-            { type: 'triangle', detune: 7, gain: 0.3 },
-          ],
-          filter: { type: 'lowpass', frequency: 2800, Q: 0.9 },
-          lfo: { rate: 5, vibratoDepth: 10, tremoloDepth: 0.1 },
-          reverbSend: 0.28,
-          envelope: { ...baseEnvelope, attack: 0.015, decay: 0.22, sustain: 0.55, release: 0.5 },
-        },
-        15: {
-          gain: 0.8,
-          layers: [
-            { type: 'sawtooth', detune: -5, gain: 0.34 },
-            { type: 'sawtooth', detune: 5, gain: 0.34 },
-            { type: 'triangle', detune: 0, gain: 0.32 },
-          ],
-          filter: { type: 'lowpass', frequency: 3200, Q: 0.7 },
-          lfo: { rate: 5.4, vibratoDepth: 12, tremoloDepth: 0.12 },
-          reverbSend: 0.24,
-          envelope: { ...baseEnvelope, attack: 0.012, decay: 0.2, sustain: 0.58, release: 0.46 },
-        },
+          lfo: { rate: 5.4, vibratoDepth: 5.8, tremoloDepth: 0.05 },
+          envelope: { decay: 0.09, sustain: 0.38, release: 0.22 },
+          reverbSend: 0.13,
+        }),
       };
 
       const definition = definitions[family] || definitions.default;
@@ -1858,18 +2070,20 @@
       };
     }
 
-    scheduleNote(note, baseTime) {
+    scheduleNote(note, baseTime, speedParam = this.activePlaybackSpeed || 1) {
       if (!this.audioContext || !this.masterGain) {
         return;
       }
 
+      const speed = this.clampPlaybackSpeed(speedParam || 1);
       if (note.channel === 9) {
-        this.schedulePercussion(note, baseTime);
+        this.schedulePercussion(note, baseTime, speed);
         return;
       }
 
       const now = this.audioContext.currentTime;
-      const startAt = Math.max(baseTime + note.startTime, now + 0.001);
+      const startOffset = Number.isFinite(note.startTime) ? note.startTime : 0;
+      const startAt = Math.max(baseTime + (startOffset / speed), now + 0.001);
       const velocity = Math.max(0.08, Math.min(1, note.velocity || 0.2));
 
       const instrument = this.getInstrumentSettings(note);
@@ -1890,11 +2104,16 @@
 
       const peakGain = Math.min(1, velocity * this.maxGain * (instrument.gain || instrument.volume || 1));
       const envelope = instrument.envelope || {};
-      const attack = Math.max(0.002, envelope.attack || 0.01);
-      const decay = Math.max(0.01, envelope.decay || 0.06);
+      const attack = Math.max(0.002, (envelope.attack || 0.01) / speed);
+      const decay = Math.max(0.01, (envelope.decay || 0.06) / speed);
       const sustainLevel = Math.min(1, Math.max(0, envelope.sustain ?? 0.6));
-      const releaseDuration = Math.max(0.12, envelope.release || Math.min(0.9, note.duration * 0.8));
-      const stopAt = startAt + note.duration;
+      const timelineDuration = Math.max(0.02, Number.isFinite(note.duration) ? note.duration : 0.12);
+      const duration = Math.max(0.02, timelineDuration / speed);
+      const releaseBase = Number.isFinite(envelope.release)
+        ? envelope.release
+        : Math.min(0.9, timelineDuration * 0.8);
+      const releaseDuration = Math.max(0.08, releaseBase / speed);
+      const stopAt = startAt + duration;
       const attackEnd = Math.min(stopAt, startAt + attack);
       const decayEnd = Math.min(stopAt, attackEnd + decay);
 
@@ -2150,22 +2369,25 @@
       }
     }
 
-    schedulePercussion(note, baseTime) {
+    schedulePercussion(note, baseTime, speedParam = this.activePlaybackSpeed || 1) {
       if (!this.audioContext || !this.masterGain) {
         return;
       }
 
+      const speed = this.clampPlaybackSpeed(speedParam || 1);
       const now = this.audioContext.currentTime;
-      const startAt = Math.max(baseTime + note.startTime, now + 0.001);
+      const startOffset = Number.isFinite(note.startTime) ? note.startTime : 0;
+      const startAt = Math.max(baseTime + (startOffset / speed), now + 0.001);
       const velocity = Math.max(0.1, Math.min(1, note.velocity));
       const settings = this.getPercussionSettings(note);
       const envelope = settings.envelope || {};
-      const attack = Math.max(0.001, envelope.attack || 0.005);
-      const decay = Math.max(0.01, envelope.decay || 0.05);
+      const attack = Math.max(0.001, (envelope.attack || 0.005) / speed);
+      const decay = Math.max(0.01, (envelope.decay || 0.05) / speed);
       const sustainLevel = Math.max(0, Math.min(1, envelope.sustain ?? 0.0001));
-      const release = Math.max(0.02, envelope.release || 0.08);
       const baseDuration = Math.max(0.05, settings.duration || note.duration || 0.18);
-      const stopAt = startAt + baseDuration;
+      const duration = Math.max(0.04, baseDuration / speed);
+      const release = Math.max(0.02, (envelope.release || 0.08) / speed);
+      const stopAt = startAt + duration;
       const totalStop = stopAt + release;
 
       const gainNode = this.audioContext.createGain();
@@ -2362,6 +2584,9 @@
         this.playing = true;
         this.updateButtons();
 
+        this.activePlaybackSpeed = this.playbackSpeed;
+        const playbackSpeed = this.activePlaybackSpeed || 1;
+        const effectiveDuration = this.getEffectiveDuration(this.timeline, playbackSpeed);
         const startTime = context.currentTime + 0.05;
         this.playStartTime = startTime;
         this.startScheduler(startTime);
@@ -2372,7 +2597,7 @@
           this.stop(false);
           this.setStatus(`Lecture terminée : ${this.currentTitle}`, 'success');
           this.scheduleReadyStatusRestore();
-        }, Math.ceil((this.timeline.duration + 0.6) * 1000));
+        }, Math.ceil(((effectiveDuration || 0) + 0.6) * 1000));
 
         this.setStatus(`Lecture en cours : ${this.currentTitle}`, 'success');
       } catch (error) {
@@ -2481,6 +2706,7 @@
 
       const wasPlaying = this.playing;
       this.playing = false;
+      this.activePlaybackSpeed = this.playbackSpeed;
       this.updateButtons();
 
       if (manual && wasPlaying) {
@@ -2496,6 +2722,7 @@
       this.schedulerState = {
         startTime,
         index: 0,
+        speed: this.activePlaybackSpeed || 1,
       };
       this.processScheduler();
       if (this.schedulerInterval) {
@@ -2519,7 +2746,8 @@
         return;
       }
 
-      const { startTime } = this.schedulerState;
+      const { startTime, speed: schedulerSpeed } = this.schedulerState;
+      const speed = this.clampPlaybackSpeed(schedulerSpeed || 1);
       const notes = this.timeline.notes;
       if (!Array.isArray(notes) || !notes.length) {
         this.stopScheduler();
@@ -2532,11 +2760,12 @@
 
       while (index < notes.length) {
         const note = notes[index];
-        const noteStart = startTime + note.startTime;
+        const offset = Number.isFinite(note.startTime) ? note.startTime : 0;
+        const noteStart = startTime + (offset / speed);
         if (noteStart > windowEnd) {
           break;
         }
-        this.scheduleNote(note, startTime);
+        this.scheduleNote(note, startTime, speed);
         index += 1;
       }
 
@@ -2565,6 +2794,8 @@
     resetPitchButton: document.getElementById('chiptuneResetPitchButton'),
     articulationSlider: document.getElementById('chiptuneArticulationSlider'),
     articulationValue: document.getElementById('chiptuneArticulationValue'),
+    speedSlider: document.getElementById('chiptuneSpeedSlider'),
+    speedValue: document.getElementById('chiptuneSpeedValue'),
   };
 
   if (elements.fileInput && elements.playButton && elements.stopButton && elements.status) {
