@@ -10,8 +10,8 @@
   const START_HEIGHT_RATIO = 0.12;
   const START_MIN_CLEARANCE = 48;
   const MIN_LANDING_SPEED = 22;
-  const GROUND_DRAG = 0.9935;
-  const HOLDING_DRAG = 0.9975;
+  const GROUND_DRAG = 0.9978;
+  const HOLDING_DRAG = 0.9991;
   const AIR_DRAG = 0.999;
   const DIVE_PULL_STRENGTH = 0.85;
   const JUMP_BASE = 180;
@@ -26,6 +26,13 @@
   const CAMERA_LERP_MIN = 0.08;
   const CAMERA_LERP_MAX = 0.25;
   const MAX_FRAME_DELTA = 1 / 30;
+  const AIR_PRESS_FORWARD_IMPULSE = 120;
+  const AIR_PRESS_DOWN_IMPULSE = 260;
+  const GROUND_PRESS_FORWARD_IMPULSE = 140;
+  const DOWNHILL_IMPULSE_MULTIPLIER = 1.35;
+  const UPHILL_DECEL_FACTOR_MIN = 0.35;
+  const UPHILL_DECEL_SPEED = 420;
+  const UPHILL_DRAG_BONUS = 0.9995;
 
   const degToRad = degrees => (degrees * Math.PI) / 180;
 
@@ -532,8 +539,32 @@
       this.isPressing = pressed;
       if (!pressed) {
         this.pendingRelease = this.player.onGround;
+        return;
+      }
+      this.pendingRelease = false;
+      this.applyPressImpulse();
+    }
+
+    applyPressImpulse() {
+      if (!this.player) {
+        return;
+      }
+      if (this.player.onGround) {
+        const slopeAngle = this.terrain.getSlopeAngle(this.player.x);
+        const tangentX = Math.cos(slopeAngle);
+        const tangentY = Math.sin(slopeAngle);
+        let impulse = GROUND_PRESS_FORWARD_IMPULSE;
+        if (slopeAngle < 0) {
+          const slopePull = clamp(Math.abs(Math.sin(slopeAngle)), 0.2, 1);
+          impulse *= 1 + (DOWNHILL_IMPULSE_MULTIPLIER - 1) * slopePull;
+        }
+        this.player.vx += tangentX * impulse;
+        this.player.vy += tangentY * impulse;
+        this.player.speed = Math.hypot(this.player.vx, this.player.vy);
       } else {
-        this.pendingRelease = false;
+        this.player.vx += AIR_PRESS_FORWARD_IMPULSE;
+        this.player.vy += AIR_PRESS_DOWN_IMPULSE;
+        this.player.speed = Math.hypot(this.player.vx, this.player.vy);
       }
     }
 
@@ -607,11 +638,21 @@
         const tangentX = Math.cos(slopeAngle);
         const tangentY = Math.sin(slopeAngle);
         const gravityAccel = BASE_GRAVITY * (this.isPressing ? DIVE_MULTIPLIER : 1);
-        const slopeAccel = -gravityAccel * Math.sin(slopeAngle);
+        let slopeAccel = -gravityAccel * Math.sin(slopeAngle);
+        if (slopeAngle > 0 && this.player.speed > 0) {
+          const speedRatio = clamp(this.player.speed / UPHILL_DECEL_SPEED, 0, 1);
+          const retentionFactor = lerp(1, UPHILL_DECEL_FACTOR_MIN, speedRatio);
+          slopeAccel *= retentionFactor;
+        }
         const pushAccel = this.isPressing ? BASE_PUSH_ACCEL : BASE_PUSH_ACCEL * 0.12;
         const acceleration = slopeAccel + pushAccel;
         this.player.speed += acceleration * delta;
-        const dragFactor = this.isPressing ? HOLDING_DRAG : GROUND_DRAG;
+        let dragFactor = this.isPressing ? HOLDING_DRAG : GROUND_DRAG;
+        if (slopeAngle > 0 && this.player.speed > 0) {
+          const speedRatio = clamp(this.player.speed / UPHILL_DECEL_SPEED, 0, 1);
+          const boostedDrag = lerp(dragFactor, UPHILL_DRAG_BONUS, speedRatio);
+          dragFactor = Math.max(dragFactor, boostedDrag);
+        }
         const decay = Math.pow(dragFactor, delta * 60);
         this.player.speed *= decay;
         if (this.player.speed < 0.001) {
