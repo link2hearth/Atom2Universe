@@ -1023,140 +1023,139 @@
       const family = Math.floor(program / 8);
 
       const baseEnvelope = {
-        attack: Math.max(0.005, Math.min(0.06, 0.012 + (note.rawVelocity ? (0.04 * (1 - note.rawVelocity)) : 0))),
-        decay: 0.1,
-        sustain: 0.65,
-        release: Math.max(0.22, Math.min(0.8, note.duration * 0.85)),
+        attack: Math.max(0.008, Math.min(0.08, 0.018 + (note.rawVelocity ? (0.045 * (1 - note.rawVelocity)) : 0))),
+        decay: 0.16,
+        sustain: 0.55,
+        release: Math.max(0.18, Math.min(0.5, note.duration * 0.65)),
       };
 
       const definitions = {
         default: {
-          gain: 0.9,
+          gain: 0.82,
           layers: [
-            { type: 'sawtooth', detune: -6, gain: 0.45 },
-            { type: 'sawtooth', detune: 6, gain: 0.45 },
-            { type: 'triangle', detune: 0, gain: 0.2 },
+            { type: 'triangle', detune: -4, gain: 0.45 },
+            { type: 'triangle', detune: 4, gain: 0.45 },
+            { type: 'sine', detune: 0, gain: 0.3 },
           ],
-          filter: { type: 'lowpass', frequency: 4200, Q: 0.7 },
-          lfo: { rate: 5.2, vibratoDepth: 18, tremoloDepth: 0.12 },
-          reverbSend: 0.35,
+          filter: { type: 'lowpass', frequency: 3200, Q: 0.65 },
+          lfo: { rate: 4.6, vibratoDepth: 12, tremoloDepth: 0.08 },
+          reverbSend: 0.42,
           envelope: { ...baseEnvelope },
         },
         0: {
-          gain: 0.85,
+          gain: 0.76,
           layers: [
-            { type: 'triangle', detune: -4, gain: 0.55 },
-            { type: 'triangle', detune: 4, gain: 0.55 },
-            { type: 'sawtooth', detune: 0, gain: 0.35 },
+            { type: 'sine', detune: -2, gain: 0.5 },
+            { type: 'triangle', detune: 2, gain: 0.5 },
+            { type: 'triangle', detune: -12, gain: 0.2 },
           ],
-          filter: { type: 'lowpass', frequency: 3600, Q: 0.9 },
-          lfo: { rate: 5.5, vibratoDepth: 14, tremoloDepth: 0.1 },
-          reverbSend: 0.32,
+          filter: { type: 'lowpass', frequency: 2600, Q: 0.85 },
+          lfo: { rate: 4.2, vibratoDepth: 6, tremoloDepth: 0.05 },
+          reverbSend: 0.38,
           envelope: {
             ...baseEnvelope,
-            attack: Math.max(0.003, baseEnvelope.attack * 0.7),
-            decay: 0.18,
-            sustain: 0.5,
+            attack: Math.max(0.006, baseEnvelope.attack * 0.6),
+            decay: 0.22,
+            sustain: 0.48,
           },
         },
         1: {
-          gain: 0.88,
-          layers: [
-            { type: 'pulse', dutyCycle: 0.33, detune: -2, gain: 0.5 },
-            { type: 'pulse', dutyCycle: 0.42, detune: 2, gain: 0.5 },
-            { type: 'triangle', detune: 0, gain: 0.25 },
-          ],
-          filter: { type: 'lowpass', frequency: 3900, Q: 0.6 },
-          lfo: { rate: 4.4, vibratoDepth: 18, tremoloDepth: 0.18 },
-          reverbSend: 0.28,
-          envelope: { ...baseEnvelope, decay: 0.14, sustain: 0.72, release: Math.max(0.4, note.duration) },
-        },
-        2: {
-          gain: 0.82,
-          layers: [
-            { type: 'pulse', dutyCycle: 0.22, detune: -7, gain: 0.6 },
-            { type: 'pulse', dutyCycle: 0.18, detune: 7, gain: 0.5 },
-            { type: 'triangle', detune: 0, gain: 0.2 },
-          ],
-          filter: { type: 'lowpass', frequency: 3400, Q: 0.9 },
-          lfo: { rate: 6.2, vibratoDepth: 20, tremoloDepth: 0.12 },
-          reverbSend: 0.26,
-          envelope: { ...baseEnvelope, decay: 0.08, sustain: 0.48, release: Math.max(0.25, note.duration * 0.5) },
-        },
-        3: {
-          gain: 1,
-          layers: [
-            { type: 'triangle', detune: -3, gain: 0.55 },
-            { type: 'triangle', detune: 3, gain: 0.55 },
-            { type: 'sine', detune: -12, gain: 0.2 },
-          ],
-          filter: { type: 'lowpass', frequency: 2800, Q: 1 },
-          lfo: { rate: 3.8, vibratoDepth: 10, tremoloDepth: 0.06 },
-          reverbSend: 0.22,
-          envelope: { ...baseEnvelope, decay: 0.12, sustain: 0.62, release: Math.max(0.32, note.duration * 0.7) },
-        },
-        4: {
-          gain: 0.78,
-          layers: [
-            { type: 'sawtooth', detune: -12, gain: 0.45 },
-            { type: 'sawtooth', detune: 12, gain: 0.45 },
-            { type: 'triangle', detune: 0, gain: 0.35 },
-            { type: 'sine', detune: 7, gain: 0.15 },
-          ],
-          filter: { type: 'lowpass', frequency: 3600, Q: 0.8 },
-          lfo: { rate: 5.1, vibratoDepth: 24, tremoloDepth: 0.18 },
-          reverbSend: 0.42,
-          envelope: { ...baseEnvelope, attack: Math.max(0.015, baseEnvelope.attack * 1.4), decay: 0.14, sustain: 0.72 },
-        },
-        5: {
           gain: 0.8,
           layers: [
-            { type: 'sawtooth', detune: -15, gain: 0.4 },
-            { type: 'sawtooth', detune: 15, gain: 0.4 },
-            { type: 'pulse', dutyCycle: 0.48, detune: 0, gain: 0.3 },
-            { type: 'triangle', detune: 7, gain: 0.2 },
-          ],
-          filter: { type: 'lowpass', frequency: 3200, Q: 0.7 },
-          lfo: { rate: 5.4, vibratoDepth: 28, tremoloDepth: 0.22 },
-          reverbSend: 0.48,
-          envelope: { ...baseEnvelope, attack: Math.max(0.02, baseEnvelope.attack * 1.6), decay: 0.18, sustain: 0.78 },
-        },
-        6: {
-          gain: 0.92,
-          layers: [
-            { type: 'sawtooth', detune: -9, gain: 0.5 },
-            { type: 'sawtooth', detune: 9, gain: 0.5 },
-            { type: 'pulse', dutyCycle: 0.28, detune: 0, gain: 0.25 },
-          ],
-          filter: { type: 'lowpass', frequency: 3800, Q: 0.9 },
-          lfo: { rate: 5.6, vibratoDepth: 20, tremoloDepth: 0.2 },
-          reverbSend: 0.34,
-          envelope: { ...baseEnvelope, attack: Math.max(0.012, baseEnvelope.attack), decay: 0.12, sustain: 0.6 },
-        },
-        7: {
-          gain: 0.94,
-          layers: [
-            { type: 'pulse', dutyCycle: 0.18, detune: -6, gain: 0.55 },
-            { type: 'pulse', dutyCycle: 0.22, detune: 6, gain: 0.55 },
-            { type: 'sawtooth', detune: 0, gain: 0.25 },
-          ],
-          filter: { type: 'bandpass', frequency: 4200, Q: 1.1 },
-          lfo: { rate: 6.8, vibratoDepth: 30, tremoloDepth: 0.16 },
-          reverbSend: 0.3,
-          envelope: { ...baseEnvelope, decay: 0.1, sustain: 0.55, release: Math.max(0.26, note.duration * 0.6) },
-        },
-        8: {
-          gain: 0.72,
-          layers: [
-            { type: 'sawtooth', detune: -18, gain: 0.4 },
-            { type: 'sawtooth', detune: 18, gain: 0.4 },
-            { type: 'triangle', detune: 0, gain: 0.35 },
-            { type: 'sine', detune: 10, gain: 0.18 },
+            { type: 'triangle', detune: -6, gain: 0.45 },
+            { type: 'triangle', detune: 6, gain: 0.45 },
+            { type: 'sine', detune: 0, gain: 0.35 },
           ],
           filter: { type: 'lowpass', frequency: 3000, Q: 0.7 },
-          lfo: { rate: 4.4, vibratoDepth: 22, tremoloDepth: 0.24 },
-          reverbSend: 0.52,
-          envelope: { ...baseEnvelope, attack: Math.max(0.028, baseEnvelope.attack * 2.4), decay: 0.22, sustain: 0.82, release: Math.max(0.6, note.duration) },
+          lfo: { rate: 4.8, vibratoDepth: 10, tremoloDepth: 0.1 },
+          reverbSend: 0.4,
+          envelope: { ...baseEnvelope, decay: 0.18, sustain: 0.65, release: Math.max(0.32, note.duration * 0.8) },
+        },
+        2: {
+          gain: 0.78,
+          layers: [
+            { type: 'pulse', dutyCycle: 0.32, detune: -4, gain: 0.42 },
+            { type: 'pulse', dutyCycle: 0.36, detune: 4, gain: 0.42 },
+            { type: 'sine', detune: 0, gain: 0.3 },
+          ],
+          filter: { type: 'lowpass', frequency: 2600, Q: 0.85 },
+          lfo: { rate: 5.4, vibratoDepth: 16, tremoloDepth: 0.08 },
+          reverbSend: 0.36,
+          envelope: { ...baseEnvelope, decay: 0.12, sustain: 0.52, release: Math.max(0.28, note.duration * 0.6) },
+        },
+        3: {
+          gain: 0.9,
+          layers: [
+            { type: 'triangle', detune: -3, gain: 0.5 },
+            { type: 'triangle', detune: 3, gain: 0.5 },
+            { type: 'sine', detune: -12, gain: 0.25 },
+          ],
+          filter: { type: 'lowpass', frequency: 2400, Q: 1 },
+          lfo: { rate: 3.6, vibratoDepth: 8, tremoloDepth: 0.05 },
+          reverbSend: 0.34,
+          envelope: { ...baseEnvelope, decay: 0.18, sustain: 0.58, release: Math.max(0.3, note.duration * 0.6) },
+        },
+        4: {
+          gain: 0.74,
+          layers: [
+            { type: 'triangle', detune: -12, gain: 0.5 },
+            { type: 'triangle', detune: 12, gain: 0.5 },
+            { type: 'sine', detune: 0, gain: 0.3 },
+          ],
+          filter: { type: 'lowpass', frequency: 2400, Q: 0.85 },
+          lfo: { rate: 4.2, vibratoDepth: 18, tremoloDepth: 0.14 },
+          reverbSend: 0.38,
+          envelope: { ...baseEnvelope, attack: Math.max(0.014, baseEnvelope.attack * 1.2), decay: 0.18, sustain: 0.66 },
+        },
+        5: {
+          gain: 0.78,
+          layers: [
+            { type: 'triangle', detune: -7, gain: 0.5 },
+            { type: 'triangle', detune: 7, gain: 0.5 },
+            { type: 'sine', detune: 0, gain: 0.35 },
+            { type: 'sawtooth', detune: 0, gain: 0.18 },
+          ],
+          filter: { type: 'lowpass', frequency: 2800, Q: 0.75 },
+          lfo: { rate: 4.8, vibratoDepth: 20, tremoloDepth: 0.18 },
+          reverbSend: 0.5,
+          envelope: { ...baseEnvelope, attack: Math.max(0.02, baseEnvelope.attack * 1.6), decay: 0.2, sustain: 0.74 },
+        },
+        6: {
+          gain: 0.84,
+          layers: [
+            { type: 'sawtooth', detune: -6, gain: 0.35 },
+            { type: 'sawtooth', detune: 6, gain: 0.35 },
+            { type: 'triangle', detune: 0, gain: 0.4 },
+          ],
+          filter: { type: 'lowpass', frequency: 3000, Q: 0.85 },
+          lfo: { rate: 5, vibratoDepth: 18, tremoloDepth: 0.16 },
+          reverbSend: 0.32,
+          envelope: { ...baseEnvelope, attack: Math.max(0.014, baseEnvelope.attack), decay: 0.16, sustain: 0.62 },
+        },
+        7: {
+          gain: 0.86,
+          layers: [
+            { type: 'pulse', dutyCycle: 0.26, detune: -5, gain: 0.4 },
+            { type: 'pulse', dutyCycle: 0.28, detune: 5, gain: 0.4 },
+            { type: 'triangle', detune: 0, gain: 0.3 },
+          ],
+          filter: { type: 'lowpass', frequency: 3200, Q: 0.8 },
+          lfo: { rate: 5.8, vibratoDepth: 18, tremoloDepth: 0.14 },
+          reverbSend: 0.34,
+          envelope: { ...baseEnvelope, decay: 0.14, sustain: 0.56, release: Math.max(0.24, note.duration * 0.55) },
+        },
+        8: {
+          gain: 0.7,
+          layers: [
+            { type: 'triangle', detune: -8, gain: 0.45 },
+            { type: 'triangle', detune: 8, gain: 0.45 },
+            { type: 'sine', detune: 0, gain: 0.35 },
+            { type: 'sawtooth', detune: 14, gain: 0.18 },
+          ],
+          filter: { type: 'lowpass', frequency: 2600, Q: 0.75 },
+          lfo: { rate: 3.6, vibratoDepth: 14, tremoloDepth: 0.18 },
+          reverbSend: 0.58,
+          envelope: { ...baseEnvelope, attack: Math.max(0.03, baseEnvelope.attack * 2.3), decay: 0.24, sustain: 0.78, release: Math.max(0.48, note.duration * 0.85) },
         },
       };
 
@@ -1165,7 +1164,7 @@
         ...definition,
         envelope: {
           ...definition.envelope,
-          release: Math.max(definition.envelope.release || 0.25, Math.min(1.6, note.duration * 0.9)),
+          release: Math.max(definition.envelope.release || 0.2, Math.min(1.1, note.duration * 0.55)),
         },
         reverbSend: Number.isFinite(definition.reverbSend)
           ? definition.reverbSend
@@ -1388,7 +1387,7 @@
           filter.Q.setValueAtTime(instrument.filter.Q, startAt);
         }
         if (Number.isFinite(instrument.filter.frequency)) {
-          const velocityInfluence = 1 + (velocity * 0.8);
+          const velocityInfluence = 1 + (velocity * 0.4);
           filter.frequency.setValueAtTime(instrument.filter.frequency * velocityInfluence, startAt);
         }
         lastNode.connect(filter);
