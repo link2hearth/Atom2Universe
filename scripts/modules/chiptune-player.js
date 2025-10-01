@@ -435,6 +435,13 @@
       this.status = elements.status;
       this.volumeSlider = elements.volumeSlider;
       this.volumeValue = elements.volumeValue;
+      this.transposeSlider = elements.transposeSlider;
+      this.transposeValue = elements.transposeValue;
+      this.fineTuneSlider = elements.fineTuneSlider;
+      this.fineTuneValue = elements.fineTuneValue;
+      this.octaveDownButton = elements.octaveDownButton;
+      this.octaveUpButton = elements.octaveUpButton;
+      this.resetPitchButton = elements.resetPitchButton;
 
       this.audioContext = null;
       this.masterGain = null;
@@ -468,6 +475,12 @@
         attack: 0.003,
         release: 0.25,
       };
+      this.transposeSemitones = 0;
+      this.fineDetuneCents = 0;
+      this.transposeMin = -24;
+      this.transposeMax = 24;
+      this.detuneMin = -100;
+      this.detuneMax = 100;
 
       if (this.volumeSlider) {
         const sliderValue = Number.parseFloat(this.volumeSlider.value);
@@ -478,6 +491,25 @@
         }
       }
       this.setMasterVolume(this.masterVolume, false);
+
+      if (this.transposeSlider) {
+        const sliderValue = Number.parseInt(this.transposeSlider.value, 10);
+        if (Number.isFinite(sliderValue)) {
+          this.transposeSemitones = this.clampTranspose(sliderValue);
+        } else {
+          this.transposeSlider.value = '0';
+        }
+      }
+      if (this.fineTuneSlider) {
+        const sliderValue = Number.parseInt(this.fineTuneSlider.value, 10);
+        if (Number.isFinite(sliderValue)) {
+          this.fineDetuneCents = this.clampFineDetune(sliderValue);
+        } else {
+          this.fineTuneSlider.value = '0';
+        }
+      }
+      this.setTransposeSemitones(this.transposeSemitones, { syncSlider: true, refreshVoices: false });
+      this.setFineDetuneCents(this.fineDetuneCents, { syncSlider: true, refreshVoices: false });
 
       this.bindEvents();
       this.updateButtons();
@@ -532,6 +564,45 @@
         });
       }
 
+      if (this.transposeSlider) {
+        this.transposeSlider.addEventListener('input', () => {
+          const sliderValue = Number.parseInt(this.transposeSlider.value, 10);
+          if (!Number.isFinite(sliderValue)) {
+            return;
+          }
+          this.setTransposeSemitones(sliderValue);
+        });
+      }
+
+      if (this.fineTuneSlider) {
+        this.fineTuneSlider.addEventListener('input', () => {
+          const sliderValue = Number.parseInt(this.fineTuneSlider.value, 10);
+          if (!Number.isFinite(sliderValue)) {
+            return;
+          }
+          this.setFineDetuneCents(sliderValue);
+        });
+      }
+
+      if (this.octaveDownButton) {
+        this.octaveDownButton.addEventListener('click', () => {
+          this.setTransposeSemitones(this.transposeSemitones - 12);
+        });
+      }
+
+      if (this.octaveUpButton) {
+        this.octaveUpButton.addEventListener('click', () => {
+          this.setTransposeSemitones(this.transposeSemitones + 12);
+        });
+      }
+
+      if (this.resetPitchButton) {
+        this.resetPitchButton.addEventListener('click', () => {
+          this.setTransposeSemitones(0);
+          this.setFineDetuneCents(0);
+        });
+      }
+
     }
 
     setMasterVolume(value, syncSlider = true) {
@@ -554,6 +625,109 @@
           // Ignore cancellation errors if the context is not ready yet
         }
         this.masterGain.gain.setValueAtTime(clamped, time);
+      }
+    }
+
+    clampTranspose(value) {
+      return Math.max(this.transposeMin, Math.min(this.transposeMax, Math.round(value)));
+    }
+
+    clampFineDetune(value) {
+      return Math.max(this.detuneMin, Math.min(this.detuneMax, Math.round(value)));
+    }
+
+    setTransposeSemitones(value, options = {}) {
+      const { syncSlider = true, refreshVoices = true } = options;
+      const clamped = this.clampTranspose(Number.isFinite(value) ? value : 0);
+      this.transposeSemitones = clamped;
+      const label = this.formatSemitoneLabel(clamped);
+      if (this.transposeSlider && syncSlider) {
+        const currentValue = Number.parseInt(this.transposeSlider.value, 10);
+        if (!Number.isFinite(currentValue) || currentValue !== clamped) {
+          this.transposeSlider.value = String(clamped);
+        }
+      }
+      if (this.transposeSlider) {
+        this.transposeSlider.setAttribute('aria-valuetext', label);
+      }
+      if (this.transposeValue) {
+        this.transposeValue.textContent = label;
+      }
+      if (refreshVoices) {
+        this.refreshLiveVoicesPitch();
+      }
+    }
+
+    setFineDetuneCents(value, options = {}) {
+      const { syncSlider = true, refreshVoices = true } = options;
+      const clamped = this.clampFineDetune(Number.isFinite(value) ? value : 0);
+      this.fineDetuneCents = clamped;
+      const label = this.formatCentsLabel(clamped);
+      if (this.fineTuneSlider && syncSlider) {
+        const currentValue = Number.parseInt(this.fineTuneSlider.value, 10);
+        if (!Number.isFinite(currentValue) || currentValue !== clamped) {
+          this.fineTuneSlider.value = String(clamped);
+        }
+      }
+      if (this.fineTuneSlider) {
+        this.fineTuneSlider.setAttribute('aria-valuetext', label);
+      }
+      if (this.fineTuneValue) {
+        this.fineTuneValue.textContent = label;
+      }
+      if (refreshVoices) {
+        this.refreshLiveVoicesPitch();
+      }
+    }
+
+    formatSemitoneLabel(value) {
+      const normalized = Number.isFinite(value) ? Math.round(value) : 0;
+      if (normalized === 0) {
+        return '0 demi-ton';
+      }
+      const sign = normalized > 0 ? '+' : '−';
+      const abs = Math.abs(normalized);
+      if (abs % 12 === 0) {
+        const octaves = abs / 12;
+        const unit = octaves > 1 ? 'octaves' : 'octave';
+        return `${sign}${octaves} ${unit}`;
+      }
+      return `${sign}${abs} demi-ton${abs > 1 ? 's' : ''}`;
+    }
+
+    formatCentsLabel(value) {
+      const normalized = Number.isFinite(value) ? Math.round(value) : 0;
+      if (normalized === 0) {
+        return '0 cent';
+      }
+      const sign = normalized > 0 ? '+' : '−';
+      const abs = Math.abs(normalized);
+      return `${sign}${abs} cent${abs > 1 ? 's' : ''}`;
+    }
+
+    refreshLiveVoicesPitch() {
+      if (!this.audioContext || !this.liveVoices || this.liveVoices.size === 0) {
+        return;
+      }
+      const time = this.audioContext.currentTime;
+      for (const voice of this.liveVoices) {
+        if (!voice || voice.type !== 'melodic' || typeof voice.baseMidiNote !== 'number') {
+          continue;
+        }
+        const frequency = this.midiNoteToFrequency(voice.baseMidiNote);
+        if (!Number.isFinite(frequency) || frequency <= 0) {
+          continue;
+        }
+        for (const osc of voice.oscillators || []) {
+          if (!osc || !osc.frequency) {
+            continue;
+          }
+          try {
+            osc.frequency.setValueAtTime(frequency, time);
+          } catch (error) {
+            // Ignore frequency update issues
+          }
+        }
       }
     }
 
@@ -760,7 +934,14 @@
     }
 
     midiNoteToFrequency(note) {
-      return 440 * Math.pow(2, (note - 69) / 12);
+      const transpose = Number.isFinite(this.transposeSemitones) ? this.transposeSemitones : 0;
+      const fine = Number.isFinite(this.fineDetuneCents) ? this.fineDetuneCents : 0;
+      const baseNote = note + transpose;
+      const base = 440 * Math.pow(2, (baseNote - 69) / 12);
+      if (fine === 0) {
+        return base;
+      }
+      return base * Math.pow(2, fine / 1200);
     }
 
     getPulseWave(dutyCycle) {
@@ -1129,6 +1310,7 @@
         gainNode: null,
         oscillators: [],
         nodes: [voiceInput],
+        baseMidiNote: note.note,
       };
 
       this.liveVoices.add(voice);
@@ -1726,6 +1908,13 @@
     status: document.getElementById('chiptuneStatus'),
     volumeSlider: document.getElementById('chiptuneVolumeSlider'),
     volumeValue: document.getElementById('chiptuneVolumeValue'),
+    transposeSlider: document.getElementById('chiptuneTransposeSlider'),
+    transposeValue: document.getElementById('chiptuneTransposeValue'),
+    fineTuneSlider: document.getElementById('chiptuneFineTuneSlider'),
+    fineTuneValue: document.getElementById('chiptuneFineTuneValue'),
+    octaveDownButton: document.getElementById('chiptuneOctaveDownButton'),
+    octaveUpButton: document.getElementById('chiptuneOctaveUpButton'),
+    resetPitchButton: document.getElementById('chiptuneResetPitchButton'),
   };
 
   if (elements.fileInput && elements.playButton && elements.stopButton && elements.status) {

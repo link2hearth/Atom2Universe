@@ -1124,6 +1124,21 @@
             <input type="range" id="chiptuneVolumeSlider" min="0" max="100" step="1" value="80" />
             <span class="option-value" id="chiptuneVolumeValue" aria-live="polite">80%</span>
           </div>
+          <div class="option-row option-row--slider">
+            <label for="chiptuneTransposeSlider">Transposition</label>
+            <input type="range" id="chiptuneTransposeSlider" min="-24" max="24" step="1" value="0" />
+            <span class="option-value" id="chiptuneTransposeValue" aria-live="polite">0 demi-ton</span>
+          </div>
+          <div class="option-row option-row--slider">
+            <label for="chiptuneFineTuneSlider">Réglage fin</label>
+            <input type="range" id="chiptuneFineTuneSlider" min="-100" max="100" step="1" value="0" />
+            <span class="option-value" id="chiptuneFineTuneValue" aria-live="polite">0 cent</span>
+          </div>
+          <div class="option-row option-row--buttons option-row--pitch">
+            <button type="button" id="chiptuneOctaveDownButton">Octave −</button>
+            <button type="button" id="chiptuneOctaveUpButton">Octave +</button>
+            <button type="button" id="chiptuneResetPitchButton">Réinitialiser</button>
+          </div>
           <div class="option-row option-row--buttons">
             <button type="button" id="chiptunePlayButton" disabled>Lecture</button>
             <button type="button" id="chiptuneStopButton" disabled>Stop</button>

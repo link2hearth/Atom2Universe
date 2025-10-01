@@ -37,6 +37,16 @@
   color: rgba(255, 255, 255, 0.85);
 }
 
+.option-card--chiptune .option-row--pitch {
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.option-card--chiptune .option-row--pitch button {
+  flex: 1 1 30%;
+  min-width: 110px;
+}
+
 .option-card--chiptune .option-row--buttons button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
