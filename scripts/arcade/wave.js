@@ -285,9 +285,38 @@
       if (!this.canvas) {
         return;
       }
+      const stage = this.stage || this.canvas;
       const ratio = clamp(typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1, 1, 3);
-      const width = (this.stage || this.canvas).clientWidth || 1;
-      const height = (this.stage || this.canvas).clientHeight || Math.max(280, width * 0.6);
+      const fallbackWidth = this.viewWidth && this.viewWidth > 0 ? this.viewWidth : this.canvas.clientWidth || 1;
+      let width = stage?.clientWidth || fallbackWidth || 1;
+      const viewportWidth =
+        typeof window !== 'undefined' && Number.isFinite(window.innerWidth) && window.innerWidth > 0
+          ? window.innerWidth
+          : 960;
+      if (!Number.isFinite(width) || width <= 1) {
+        const containerWidth = stage?.parentElement?.clientWidth || viewportWidth;
+        width = clamp(containerWidth, 280, 960);
+      }
+
+      const minimumHeight = Math.max(280, width * 0.6);
+      const viewportHeight =
+        typeof window !== 'undefined' && Number.isFinite(window.innerHeight) && window.innerHeight > 0
+          ? window.innerHeight
+          : minimumHeight * 1.5;
+      const maximumHeight = Math.max(minimumHeight, viewportHeight * 0.9);
+
+      let height = stage?.clientHeight || this.viewHeight || minimumHeight;
+      if (!Number.isFinite(height) || height <= 0) {
+        height = minimumHeight;
+      }
+      height = clamp(height, minimumHeight, maximumHeight);
+
+      if (stage && stage !== this.canvas) {
+        stage.style.height = `${height}px`;
+      }
+      this.canvas.style.width = '100%';
+      this.canvas.style.height = '100%';
+
       this.pixelRatio = ratio;
       this.viewWidth = width;
       this.viewHeight = height;
