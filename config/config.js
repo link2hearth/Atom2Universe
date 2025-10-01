@@ -803,31 +803,31 @@ const GAME_CONFIG = {
         id: 'bronze',
         label: 'Cu',
         color: '#F8A436',
-        image: 'assets/image/Bronze.png'
+        image: 'Assets/Image/Bronze.png'
       },
       {
         id: 'argent',
         label: 'Ag',
         color: '#1C8213',
-        image: 'assets/image/Argent.png'
+        image: 'Assets/Image/Argent.png'
       },
       {
         id: 'or',
         label: 'Au',
         color: '#E6C838',
-        image: 'assets/image/Or.png'
+        image: 'Assets/Image/Or.png'
       },
       {
         id: 'platine',
         label: 'Pt',
         color: '#45A9E2',
-        image: 'assets/image/Bronze.png'
+        image: 'Assets/Image/Cuivre.png'
       },
       {
         id: 'diamant',
         label: 'C',
         color: '#E9F6FD',
-        image: 'assets/image/Diamant.png'
+        image: 'Assets/Image/Diamant.png'
       }
     ],
     timer: {

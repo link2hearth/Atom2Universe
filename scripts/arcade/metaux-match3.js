@@ -18,31 +18,31 @@ const DEFAULT_METAUX_CONFIG = {
       id: 'bronze',
       label: 'Bronze',
       color: '#C77E36',
-      image: 'assets/image/Bronze.png'
+      image: 'Assets/Image/Bronze.png'
     },
     {
       id: 'argent',
       label: 'Argent',
       color: '#ADBECA',
-      image: 'assets/image/Argent.png'
+      image: 'Assets/Image/Argent.png'
     },
     {
       id: 'or',
       label: 'Or',
       color: '#E6C838',
-      image: 'assets/image/Or.png'
+      image: 'Assets/Image/Or.png'
     },
     {
       id: 'platine',
       label: 'Platine',
       color: '#A6D3E3',
-      image: 'assets/image/Bronze.png'
+      image: 'Assets/Image/Cuivre.png'
     },
     {
       id: 'diamant',
       label: 'Diamant',
       color: '#82D9FF',
-      image: 'assets/image/Diamant.png'
+      image: 'Assets/Image/Diamant.png'
     }
   ],
   timer: {
