@@ -99,6 +99,12 @@
             "description": "Contrôlez le flux lumineux et évitez les interférences pour maximiser votre score.",
             "cta": "Lancer"
           },
+          "wave": {
+            "aria": "Accéder au mini-jeu Glisse quantique",
+            "title": "Glisse quantique",
+            "description": "Plongez dans les vallées, relâchez sur les bosses et surfez sur les collines infinies.",
+            "cta": "Glisser"
+          },
           "quantum2048": {
             "aria": "Accéder au mini-jeu Fusion 2048",
             "title": "Fusion 2048",
@@ -132,6 +138,26 @@
           "defeat": "Plus aucun mouvement possible. Relancez une partie."
         },
         "board": "Plateau Fusion 2048"
+      },
+      "wave": {
+        "aria": "Mini-jeu Glisse quantique",
+        "canvasAria": "Zone de glisse quantique",
+        "hud": {
+          "distance": "Distance",
+          "distanceUnit": "m",
+          "speed": "Vitesse",
+          "speedUnit": "km/h",
+          "altitude": "Altitude",
+          "altitudeUnit": "m"
+        },
+        "status": {
+          "ready": "Relâchez sur la montée pour décoller.",
+          "hold": "Maintenez pour piquer et accélérer.",
+          "air": "En vol ! Cherchez la prochaine pente."
+        },
+        "controls": {
+          "hold": "Maintenir pour plonger"
+        }
       },
       "table": {
         "aria": "Tableau périodique des éléments",

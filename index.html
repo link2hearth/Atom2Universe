@@ -289,6 +289,18 @@
             data-i18n="index.sections.arcadeHub.cards.photon.cta"
           ></button>
         </article>
+        <article class="arcade-hub-card" data-i18n="aria-label:index.sections.arcadeHub.cards.wave.aria">
+          <header class="arcade-hub-card__header">
+            <h3 class="arcade-hub-card__title" data-i18n="index.sections.arcadeHub.cards.wave.title"></h3>
+            <p class="arcade-hub-card__description" data-i18n="index.sections.arcadeHub.cards.wave.description"></p>
+          </header>
+          <button
+            type="button"
+            class="arcade-hub-card__button"
+            data-page-target="wave"
+            data-i18n="index.sections.arcadeHub.cards.wave.cta"
+          ></button>
+        </article>
         <article class="arcade-hub-card" data-i18n="aria-label:index.sections.arcadeHub.cards.quantum2048.aria">
           <header class="arcade-hub-card__header">
             <h3 class="arcade-hub-card__title" data-i18n="index.sections.arcadeHub.cards.quantum2048.title"></h3>
@@ -406,6 +418,100 @@
               ></button>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section
+      id="wave"
+      class="page page--wave"
+      data-i18n="aria-label:index.sections.wave.aria"
+      hidden
+    >
+      <div class="bannierearcade" role="navigation" data-i18n="aria-label:index.arcadeBanner.aria" aria-label="">
+        <div class="bannierearcade__inner">
+          <div class="bannierearcade__nav-group" role="presentation">
+            <button
+              type="button"
+              class="bannierearcade__button"
+              data-page-target="arcadeHub"
+              data-i18n="index.arcadeBanner.arcadeButton"
+            ></button>
+            <button
+              type="button"
+              class="bannierearcade__button bannierearcade__button--secondary"
+              data-page-target="game"
+              data-i18n="index.arcadeBanner.gameButton"
+            ></button>
+          </div>
+          <div class="bannierearcade__status-group arcade-header__status-group" role="presentation">
+            <button class="arcade-header__status" type="button" data-arcade-ticket-button>
+              <span class="arcade-header__status-label" data-i18n="index.sections.arcade.header.tickets"></span>
+              <span
+                class="arcade-header__status-value"
+                data-arcade-ticket-value
+                data-i18n="index.sections.gacha.tickets.single"
+              ></span>
+            </button>
+            <button
+              class="arcade-header__status arcade-header__status--bonus"
+              type="button"
+              data-arcade-bonus-button
+              aria-describedby="arcadeBonusTicketAnnouncementWave"
+              aria-disabled="true"
+              disabled
+            >
+              <span class="arcade-header__status-label" data-i18n="index.sections.arcade.header.mach3"></span>
+              <span class="arcade-header__status-value" data-arcade-bonus-value>0</span>
+            </button>
+            <span
+              id="arcadeBonusTicketAnnouncementWave"
+              class="visually-hidden"
+              data-arcade-bonus-announcement
+              data-i18n="index.sections.arcade.header.mach3Announcement"
+            ></span>
+          </div>
+        </div>
+      </div>
+      <div class="wave-stage" id="waveStage">
+        <canvas
+          id="waveCanvas"
+          class="wave-stage__canvas"
+          role="presentation"
+          data-i18n="aria-label:index.sections.wave.canvasAria"
+        ></canvas>
+        <dl class="wave-hud" role="presentation">
+          <div class="wave-hud__item">
+            <dt class="wave-hud__label" data-i18n="index.sections.wave.hud.distance"></dt>
+            <dd class="wave-hud__value">
+              <span class="wave-hud__metric" id="waveDistanceValue">0</span>
+              <span class="wave-hud__unit" data-i18n="index.sections.wave.hud.distanceUnit"></span>
+            </dd>
+          </div>
+          <div class="wave-hud__item">
+            <dt class="wave-hud__label" data-i18n="index.sections.wave.hud.speed"></dt>
+            <dd class="wave-hud__value">
+              <span class="wave-hud__metric" id="waveSpeedValue">0</span>
+              <span class="wave-hud__unit" data-i18n="index.sections.wave.hud.speedUnit"></span>
+            </dd>
+          </div>
+          <div class="wave-hud__item">
+            <dt class="wave-hud__label" data-i18n="index.sections.wave.hud.altitude"></dt>
+            <dd class="wave-hud__value">
+              <span class="wave-hud__metric" id="waveAltitudeValue">0</span>
+              <span class="wave-hud__unit" data-i18n="index.sections.wave.hud.altitudeUnit"></span>
+            </dd>
+          </div>
+        </dl>
+        <p
+          class="wave-status"
+          id="waveStatusMessage"
+          aria-live="polite"
+          data-i18n="index.sections.wave.status.ready"
+        ></p>
+        <div class="wave-controls-hint" aria-hidden="true">
+          <kbd>Space</kbd>
+          <span data-i18n="index.sections.wave.controls.hold"></span>
         </div>
       </div>
     </section>
@@ -1072,6 +1178,7 @@
   <script src="scripts/resources/periodic-elements.js"></script>
   <script src="scripts/arcade/particules.js"></script>
   <script src="scripts/arcade/photon.js"></script>
+  <script src="scripts/arcade/wave.js"></script>
   <script src="scripts/arcade/quantum-2048.js"></script>
   <script src="scripts/i18n/embedded-resources.js"></script>
   <script src="scripts/modules/i18n.js"></script>

@@ -103,6 +103,12 @@
                 "description": "Contrôlez le flux lumineux et évitez les interférences pour maximiser votre score.",
                 "cta": "Lancer"
               },
+              "wave": {
+                "aria": "Accéder au mini-jeu Glisse quantique",
+                "title": "Glisse quantique",
+                "description": "Plongez dans les vallées, relâchez sur les bosses et surfez sur les collines infinies.",
+                "cta": "Glisser"
+              },
               "quantum2048": {
                 "aria": "Accéder au mini-jeu Fusion 2048",
                 "title": "Fusion 2048",
@@ -136,6 +142,26 @@
             "defeat": "Plus aucun mouvement possible. Relancez une partie."
           },
           "board": "Plateau Fusion 2048"
+        },
+        "wave": {
+          "aria": "Mini-jeu Glisse quantique",
+          "canvasAria": "Zone de glisse quantique",
+          "hud": {
+            "distance": "Distance",
+            "distanceUnit": "m",
+            "speed": "Vitesse",
+            "speedUnit": "km/h",
+            "altitude": "Altitude",
+            "altitudeUnit": "m"
+          },
+          "status": {
+            "ready": "Relâchez sur la montée pour décoller.",
+            "hold": "Maintenez pour piquer et accélérer.",
+            "air": "En vol ! Cherchez la prochaine pente."
+          },
+          "controls": {
+            "hold": "Maintenir pour plonger"
+          }
         },
         "table": {
           "aria": "Tableau périodique des éléments",
@@ -1207,6 +1233,12 @@
                 "description": "Channel the light stream and dodge interferences to maximise your score.",
                 "cta": "Launch"
               },
+              "wave": {
+                "aria": "Open the Quantum Glide mini-game",
+                "title": "Quantum Glide",
+                "description": "Dive into valleys, release on crests and surf endlessly generated hills.",
+                "cta": "Ride"
+              },
               "quantum2048": {
                 "aria": "Open the Fusion 2048 mini-game",
                 "title": "Fusion 2048",
@@ -1240,6 +1272,26 @@
             "defeat": "No moves left. Try again."
           },
           "board": "Fusion 2048 board"
+        },
+        "wave": {
+          "aria": "Quantum Glide mini-game",
+          "canvasAria": "Quantum Glide playfield",
+          "hud": {
+            "distance": "Distance",
+            "distanceUnit": "m",
+            "speed": "Speed",
+            "speedUnit": "km/h",
+            "altitude": "Altitude",
+            "altitudeUnit": "m"
+          },
+          "status": {
+            "ready": "Release on the uphill to take off.",
+            "hold": "Hold to dive and build speed.",
+            "air": "Airborne! Aim for the next slope."
+          },
+          "controls": {
+            "hold": "Hold to dive"
+          }
         },
         "table": {
           "aria": "Periodic table of elements",
