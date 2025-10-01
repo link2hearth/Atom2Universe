@@ -445,6 +445,19 @@
       this.articulationSlider = elements.articulationSlider;
       this.articulationValue = elements.articulationValue;
 
+      const hasWindow = typeof window !== 'undefined';
+      if (hasWindow) {
+        this.requestFrame = typeof window.requestAnimationFrame === 'function'
+          ? window.requestAnimationFrame.bind(window)
+          : (callback) => window.setTimeout(callback, 100);
+        this.cancelFrame = typeof window.cancelAnimationFrame === 'function'
+          ? window.cancelAnimationFrame.bind(window)
+          : (handle) => window.clearTimeout(handle);
+      } else {
+        this.requestFrame = () => 0;
+        this.cancelFrame = () => {};
+      }
+
       this.audioContext = null;
       this.masterGain = null;
       this.masterLimiter = null;
@@ -453,12 +466,17 @@
       this.reverbMix = null;
       this.reverbNode = null;
       this.timeline = null;
+      this.timelineAnalysis = null;
       this.currentTitle = '';
       this.playing = false;
       this.pendingTimers = new Set();
       this.liveVoices = new Set();
       this.finishTimeout = null;
       this.libraryTracks = [];
+      this.readyStatusMessage = '';
+      this.lastStatusMessage = null;
+      this.playStartTime = null;
+      this.progressRaf = null;
 
       this.masterVolume = 0.8;
       this.maxGain = 0.26;
@@ -768,6 +786,266 @@
       return `${descriptor} (${normalized}%)`;
     }
 
+    analyzeTimeline(timeline) {
+      if (!timeline || !Array.isArray(timeline.notes) || !timeline.notes.length) {
+        return null;
+      }
+
+      let noteCount = 0;
+      const melodicChannels = new Set();
+      const programSet = new Set();
+      let hasPercussion = false;
+      let percussionCount = 0;
+      let minNote = Infinity;
+      let maxNote = -Infinity;
+      let velocitySum = 0;
+      let velocitySamples = 0;
+      const events = [];
+
+      for (const note of timeline.notes) {
+        if (!note) {
+          continue;
+        }
+        noteCount += 1;
+        const channel = Number.isFinite(note.channel) ? note.channel : 0;
+        const isPercussion = channel === 9;
+        if (isPercussion) {
+          hasPercussion = true;
+          percussionCount += 1;
+        } else {
+          melodicChannels.add(channel);
+          if (Number.isFinite(note.note)) {
+            if (note.note < minNote) {
+              minNote = note.note;
+            }
+            if (note.note > maxNote) {
+              maxNote = note.note;
+            }
+          }
+        }
+
+        if (Number.isFinite(note.program)) {
+          programSet.add(note.program);
+        }
+
+        if (Number.isFinite(note.rawVelocity)) {
+          velocitySum += Math.max(0, Math.min(1, note.rawVelocity));
+          velocitySamples += 1;
+        } else if (Number.isFinite(note.velocity)) {
+          velocitySum += Math.max(0, Math.min(1, note.velocity));
+          velocitySamples += 1;
+        }
+
+        const startTime = Number.isFinite(note.startTime) ? note.startTime : 0;
+        const duration = Number.isFinite(note.duration) ? Math.max(0, note.duration) : 0;
+        const endTime = startTime + duration;
+
+        events.push({ time: startTime, type: 'start', channel: isPercussion ? 'perc' : 'mel' });
+        events.push({ time: endTime, type: 'end', channel: isPercussion ? 'perc' : 'mel' });
+      }
+
+      events.sort((a, b) => {
+        if (a.time === b.time) {
+          if (a.type === b.type) {
+            return 0;
+          }
+          return a.type === 'end' ? -1 : 1;
+        }
+        return a.time - b.time;
+      });
+
+      let active = 0;
+      let activeMelodic = 0;
+      let peak = 0;
+      let peakMelodic = 0;
+      for (const event of events) {
+        if (event.type === 'start') {
+          active += 1;
+          if (event.channel === 'mel') {
+            activeMelodic += 1;
+          }
+          if (active > peak) {
+            peak = active;
+          }
+          if (activeMelodic > peakMelodic) {
+            peakMelodic = activeMelodic;
+          }
+        } else {
+          active = Math.max(0, active - 1);
+          if (event.channel === 'mel') {
+            activeMelodic = Math.max(0, activeMelodic - 1);
+          }
+        }
+      }
+
+      return {
+        noteCount,
+        melodicChannelCount: melodicChannels.size,
+        hasPercussion,
+        percussionCount,
+        programCount: programSet.size,
+        minNote: Number.isFinite(minNote) ? minNote : null,
+        maxNote: Number.isFinite(maxNote) ? maxNote : null,
+        averageVelocity: velocitySamples ? velocitySum / velocitySamples : null,
+        peakPolyphony: peak,
+        peakMelodicPolyphony: peakMelodic,
+      };
+    }
+
+    formatTimelineSummary(timeline, analysis) {
+      if (!timeline) {
+        return '';
+      }
+      const segments = [];
+      const durationLabel = MidiTimeline.formatDuration(timeline.duration);
+      if (durationLabel) {
+        segments.push(durationLabel);
+      }
+
+      if (analysis && Number.isFinite(analysis.noteCount)) {
+        const noteLabel = `${analysis.noteCount} note${analysis.noteCount > 1 ? 's' : ''}`;
+        segments.push(noteLabel);
+
+        if (analysis.melodicChannelCount || analysis.hasPercussion) {
+          let channelLabel = '';
+          if (analysis.melodicChannelCount) {
+            const count = analysis.melodicChannelCount;
+            const channelWord = count > 1 ? 'canaux' : 'canal';
+            channelLabel = `${count} ${channelWord} mélodique${count > 1 ? 's' : ''}`;
+          }
+          if (analysis.hasPercussion) {
+            channelLabel = channelLabel
+              ? `${channelLabel} + percussions`
+              : 'Percussions';
+          }
+          if (channelLabel) {
+            segments.push(channelLabel);
+          }
+        }
+
+        if (Number.isFinite(analysis.peakPolyphony) && analysis.peakPolyphony > 0) {
+          segments.push(`Polyphonie max ${analysis.peakPolyphony}`);
+        }
+
+        if (Number.isFinite(analysis.minNote) && Number.isFinite(analysis.maxNote)) {
+          const rangeLabel = this.formatNoteRange(analysis.minNote, analysis.maxNote);
+          if (rangeLabel) {
+            segments.push(`Plage ${rangeLabel}`);
+          }
+        }
+      }
+
+      return segments.join(' · ');
+    }
+
+    formatMidiNoteName(noteNumber) {
+      if (!Number.isFinite(noteNumber)) {
+        return '';
+      }
+      const noteNames = ['Do', 'Do♯', 'Ré', 'Ré♯', 'Mi', 'Fa', 'Fa♯', 'Sol', 'Sol♯', 'La', 'La♯', 'Si'];
+      const normalized = Math.round(noteNumber);
+      const pitchClass = ((normalized % 12) + 12) % 12;
+      const octave = Math.floor(normalized / 12) - 1;
+      return `${noteNames[pitchClass]}${octave}`;
+    }
+
+    formatNoteRange(minNote, maxNote) {
+      if (!Number.isFinite(minNote) || !Number.isFinite(maxNote)) {
+        return '';
+      }
+      const minLabel = this.formatMidiNoteName(minNote);
+      const maxLabel = this.formatMidiNoteName(maxNote);
+      if (!minLabel || !maxLabel) {
+        return '';
+      }
+      if (Math.round(minNote) === Math.round(maxNote)) {
+        return minLabel;
+      }
+      return `${minLabel} → ${maxLabel}`;
+    }
+
+    formatClock(seconds) {
+      if (!Number.isFinite(seconds)) {
+        return '0:00';
+      }
+      const total = Math.max(0, seconds);
+      const hours = Math.floor(total / 3600);
+      const minutes = Math.floor((total % 3600) / 60);
+      const secs = Math.floor(total % 60);
+      const secondsText = secs.toString().padStart(2, '0');
+      if (hours > 0) {
+        const minutesText = minutes.toString().padStart(2, '0');
+        return `${hours}:${minutesText}:${secondsText}`;
+      }
+      return `${minutes}:${secondsText}`;
+    }
+
+    startProgressMonitor(startTime) {
+      if (!this.timeline || !this.status) {
+        return;
+      }
+      this.stopProgressMonitor();
+      this.playStartTime = Number.isFinite(startTime) ? startTime : null;
+      if (!Number.isFinite(this.playStartTime)) {
+        return;
+      }
+
+      const totalDuration = Number.isFinite(this.timeline.duration) ? this.timeline.duration : 0;
+      const requestFrame = this.requestFrame || ((callback) => window.setTimeout(callback, 100));
+
+      const update = () => {
+        if (!this.playing || !this.audioContext) {
+          this.progressRaf = null;
+          return;
+        }
+        const now = this.audioContext.currentTime;
+        const elapsed = Math.max(0, now - this.playStartTime);
+        const clampedElapsed = totalDuration > 0 ? Math.min(totalDuration, elapsed) : elapsed;
+        const progressLabel = totalDuration > 0
+          ? `${this.formatClock(clampedElapsed)} / ${this.formatClock(totalDuration)}`
+          : this.formatClock(clampedElapsed);
+        let message = `Lecture en cours : ${this.currentTitle}`;
+        if (progressLabel) {
+          message += ` — ${progressLabel}`;
+        }
+        if (this.status.textContent !== message) {
+          this.status.textContent = message;
+        }
+        this.status.classList.remove('is-error');
+        this.status.classList.add('is-success');
+        this.progressRaf = requestFrame(update);
+      };
+
+      this.progressRaf = requestFrame(update);
+    }
+
+    stopProgressMonitor() {
+      if (this.progressRaf !== null) {
+        const cancelFrame = this.cancelFrame || ((handle) => window.clearTimeout(handle));
+        try {
+          cancelFrame(this.progressRaf);
+        } catch (error) {
+          // Ignore cancellation issues
+        }
+        this.progressRaf = null;
+      }
+      this.playStartTime = null;
+    }
+
+    scheduleReadyStatusRestore(delay = 2200) {
+      if (!this.readyStatusMessage || typeof window === 'undefined' || typeof window.setTimeout !== 'function') {
+        return;
+      }
+      const timeout = Math.max(0, Number.isFinite(delay) ? delay : 0);
+      const timerId = window.setTimeout(() => {
+        this.pendingTimers.delete(timerId);
+        if (!this.playing && this.readyStatusMessage) {
+          this.setStatus(this.readyStatusMessage, 'success');
+        }
+      }, timeout);
+      this.pendingTimers.add(timerId);
+    }
+
     getArticulationFactor() {
       return Math.max(0, Math.min(1, (Number.isFinite(this.articulationSetting) ? this.articulationSetting : 0) / 100));
     }
@@ -809,6 +1087,7 @@
       } else if (state === 'success') {
         this.status.classList.add('is-success');
       }
+      this.lastStatusMessage = { message, state };
     }
 
     updateButtons() {
@@ -934,12 +1213,21 @@
     }
 
     async loadFromBuffer(buffer, label) {
+      this.timeline = null;
+      this.timelineAnalysis = null;
+      this.readyStatusMessage = '';
       try {
         const midi = MidiParser.parse(buffer);
         const timeline = MidiTimeline.fromMidi(midi);
         this.timeline = timeline;
         this.currentTitle = label || 'MIDI inconnu';
-        this.setStatus(`Prêt : ${this.currentTitle} (${MidiTimeline.formatDuration(timeline.duration)})`, 'success');
+        this.timelineAnalysis = this.analyzeTimeline(timeline);
+        const summary = this.formatTimelineSummary(timeline, this.timelineAnalysis);
+        const message = summary
+          ? `Prêt : ${this.currentTitle} — ${summary}`
+          : `Prêt : ${this.currentTitle} (${MidiTimeline.formatDuration(timeline.duration)})`;
+        this.readyStatusMessage = message;
+        this.setStatus(message, 'success');
       } catch (error) {
         throw error;
       }
@@ -1878,18 +2166,22 @@
         this.updateButtons();
 
         const startTime = context.currentTime + 0.05;
+        this.playStartTime = startTime;
         this.startScheduler(startTime);
+        this.startProgressMonitor(startTime);
 
         this.finishTimeout = window.setTimeout(() => {
           this.finishTimeout = null;
           this.stop(false);
           this.setStatus(`Lecture terminée : ${this.currentTitle}`, 'success');
+          this.scheduleReadyStatusRestore();
         }, Math.ceil((this.timeline.duration + 0.6) * 1000));
 
         this.setStatus(`Lecture en cours : ${this.currentTitle}`, 'success');
       } catch (error) {
         console.error(error);
         this.setStatus(`Lecture impossible : ${error.message}`, 'error');
+        this.stopProgressMonitor();
         this.playing = false;
         this.updateButtons();
       }
@@ -1900,6 +2192,8 @@
         window.clearTimeout(this.finishTimeout);
         this.finishTimeout = null;
       }
+
+      this.stopProgressMonitor();
 
       this.stopScheduler();
 
@@ -1981,6 +2275,7 @@
 
       if (manual && wasPlaying) {
         this.setStatus(`Lecture stoppée : ${this.currentTitle}`);
+        this.scheduleReadyStatusRestore();
       }
     }
 
