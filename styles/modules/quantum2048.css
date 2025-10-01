@@ -6,6 +6,7 @@
   flex-direction: column;
   min-height: 100%;
   gap: var(--arcade-stage-spacing);
+  padding-top: 0;
 }
 
 .page--quantum2048.active {
