@@ -1,3 +1,7 @@
+.view-quantum2048 .app-header {
+  display: none;
+}
+
 .page--quantum2048 {
   flex-direction: column;
   min-height: 100%;
@@ -283,6 +287,10 @@
   background: rgba(6, 10, 28, 0.82);
   backdrop-filter: blur(6px);
   z-index: 3;
+}
+
+.quantum2048-overlay[hidden] {
+  display: none !important;
 }
 
 .quantum2048-overlay__content {
