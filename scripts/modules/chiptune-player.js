@@ -1209,8 +1209,10 @@
     }
 
     updateButtons() {
+      const hasTimeline = this.timeline && Array.isArray(this.timeline.notes) && this.timeline.notes.length > 0;
       if (this.playButton) {
-        this.playButton.disabled = !this.timeline || this.playing;
+        const disabled = !hasTimeline || this.playing;
+        this.playButton.disabled = disabled;
       }
       if (this.stopButton) {
         this.stopButton.disabled = !this.playing;
@@ -1347,10 +1349,14 @@
         this.readyStatusMessage = message;
         this.setStatus(message, 'success');
       } catch (error) {
+        this.timeline = null;
+        this.timelineAnalysis = null;
+        this.readyStatusMessage = '';
         throw error;
+      } finally {
+        this.updateReadyStatusMessage();
+        this.updateButtons();
       }
-      this.updateReadyStatusMessage();
-      this.updateButtons();
     }
 
     async loadLibrary() {
