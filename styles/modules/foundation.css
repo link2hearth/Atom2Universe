@@ -61,44 +61,12 @@ body.view-arcade {
   background: radial-gradient(140% 160% at 50% 0%, #1a1e48 0%, #070918 55%, #01020a 100%);
 }
 
-body.view-arcade .app-header {
-  display: none;
-}
-
-body.view-arcade main {
-  width: 100%;
-  justify-content: center;
-}
-
 body.view-arcade-hub {
   background: radial-gradient(140% 160% at 50% 0%, #1a1e48 0%, #070918 55%, #01020a 100%);
 }
 
-body.view-arcade-hub .app-header,
-body.view-arcade-hub .status-bar {
-  display: none;
-}
-
-body.view-arcade-hub main {
-  width: 100%;
-  justify-content: center;
-}
-
 body.view-photon {
   background: radial-gradient(140% 180% at 50% 0%, #141d45 0%, #070918 48%, #01030a 100%);
-}
-
-body.view-photon .app-header {
-  display: none;
-}
-
-body.view-photon .status-bar {
-  display: none;
-}
-
-body.view-photon main {
-  width: 100%;
-  justify-content: center;
 }
 
 body.theme-light .app-header {
@@ -111,11 +79,12 @@ body.theme-neon .app-header {
   border-bottom-color: rgba(90, 120, 255, 0.22);
 }
 
-body.view-metaux .app-header {
+body[data-page-group="arcade"] .app-header,
+body[data-page-group="arcade"] .status-bar {
   display: none;
 }
 
-body.view-metaux main {
+body[data-page-group="arcade"] main {
   width: 100%;
   justify-content: center;
 }
@@ -225,10 +194,6 @@ body.theme-neon .brand--portal-ready {
   padding: var(--status-padding-y) var(--header-padding-x);
   gap: clamp(0.4rem, 0.8vw, 0.8rem);
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-body.view-metaux .status-bar {
-  display: none;
 }
 
 .status-item {

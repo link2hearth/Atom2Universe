@@ -18,11 +18,6 @@
   display: flex;
 }
 
-.view-wave .nav-menu,
-.view-wave .status-bar {
-  display: none;
-}
-
 .wave-stage {
   position: relative;
   flex: 1 1 auto;

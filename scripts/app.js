@@ -5445,6 +5445,17 @@ function showPage(pageId) {
     btn.classList.toggle('active', btn.dataset.target === pageId);
   });
   document.body.dataset.activePage = pageId;
+  const activePageElement = typeof document !== 'undefined'
+    ? document.getElementById(pageId)
+    : null;
+  const rawPageGroup = activePageElement?.dataset?.pageGroup || 'clicker';
+  const normalizedPageGroup = typeof rawPageGroup === 'string'
+    ? rawPageGroup.trim().toLowerCase()
+    : '';
+  const activePageGroup = normalizedPageGroup === 'arcade'
+    ? 'arcade'
+    : 'clicker';
+  document.body.dataset.pageGroup = activePageGroup;
   document.body.classList.toggle('view-game', pageId === 'game');
   document.body.classList.toggle('view-arcade', pageId === 'arcade');
   document.body.classList.toggle('view-arcade-hub', pageId === 'arcadeHub');
