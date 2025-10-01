@@ -440,7 +440,27 @@
       this.pendingRelease = false;
     }
 
+    isEventFromControls(event) {
+      const target = event?.target;
+      if (!target) {
+        return false;
+      }
+      if (this.resetButton && (target === this.resetButton || this.resetButton.contains(target))) {
+        return true;
+      }
+      if (typeof target.closest === 'function') {
+        const controls = target.closest('.wave-controls');
+        if (controls && this.stage?.contains?.(controls)) {
+          return true;
+        }
+      }
+      return false;
+    }
+
     handlePointerDown(event) {
+      if (this.isEventFromControls(event)) {
+        return;
+      }
       if (event.pointerType === 'mouse' && event.button !== 0) {
         return;
       }
@@ -453,6 +473,9 @@
     }
 
     handlePointerUp(event) {
+      if (this.isEventFromControls(event)) {
+        return;
+      }
       if (this.activePointers.has(event.pointerId)) {
         this.activePointers.delete(event.pointerId);
       }
@@ -469,6 +492,9 @@
     }
 
     handlePointerCancel(event) {
+      if (this.isEventFromControls(event)) {
+        return;
+      }
       if (this.activePointers.has(event.pointerId)) {
         this.activePointers.delete(event.pointerId);
       }
