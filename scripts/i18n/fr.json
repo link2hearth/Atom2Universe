@@ -111,6 +111,9 @@
         "aria": "Mini-jeu Fusion 2048",
         "title": "Fusion 2048",
         "subtitle": "Choisissez votre grille et combinez les tuiles pour atteindre l’objectif sélectionné.",
+        "banner": {
+          "goalLabel": "Objectif"
+        },
         "controls": {
           "size": "Taille de la grille",
           "target": "Objectif à atteindre",
