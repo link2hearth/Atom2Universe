@@ -24,7 +24,7 @@
 }
 
 .quantum2048-panel {
-  flex: 0 1 clamp(280px, 28vw, 360px);
+  flex: 0 1 clamp(180px, 14vw, 220px);
   display: flex;
   flex-direction: column;
   gap: clamp(0.9rem, 1.8vw, 1.5rem);
