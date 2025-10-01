@@ -18,9 +18,9 @@
   display: flex;
 }
 
-.page--wave .bannierearcade {
-  margin-inline: auto;
-  max-width: min(960px, 100%);
+.view-wave .nav-menu,
+.view-wave .status-bar {
+  display: none;
 }
 
 .wave-stage {
