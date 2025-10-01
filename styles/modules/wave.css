@@ -4,11 +4,18 @@
 }
 
 .page--wave {
-  display: flex;
+  display: none;
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
   flex-direction: column;
   gap: clamp(0.75rem, 2vw, 1.5rem);
   padding-inline: clamp(0.75rem, 2vw, 2rem);
   padding-block: clamp(1rem, 3vh, 2.5rem);
+}
+
+.page--wave.active {
+  display: flex;
 }
 
 .page--wave .bannierearcade {
