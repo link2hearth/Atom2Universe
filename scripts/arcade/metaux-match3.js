@@ -476,8 +476,10 @@ class MetauxMatch3Game {
     if (image) {
       const normalized = this.normalizeTileImage(image);
       tile.style.setProperty('--tile-image', normalized);
+      tile.style.backgroundImage = normalized;
     } else {
       tile.style.removeProperty('--tile-image');
+      tile.style.removeProperty('background-image');
     }
     tile.setAttribute('aria-label', label);
   }
