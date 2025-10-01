@@ -280,4 +280,11 @@ body.theme-neon .arcade-hud__combo {
   box-shadow: 0 18px 34px rgba(120, 220, 255, 0.55);
 }
 
-.arcade-overlay[hidden] {
+.arcade-overlay[hidden],
+.arcade-overlay[aria-hidden="true"] {
+  display: none !important;
+}
+
+.arcade-overlay[aria-hidden="true"] {
+  pointer-events: none;
+}
