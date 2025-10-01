@@ -442,6 +442,8 @@
       this.octaveDownButton = elements.octaveDownButton;
       this.octaveUpButton = elements.octaveUpButton;
       this.resetPitchButton = elements.resetPitchButton;
+      this.articulationSlider = elements.articulationSlider;
+      this.articulationValue = elements.articulationValue;
 
       this.audioContext = null;
       this.masterGain = null;
@@ -481,6 +483,7 @@
       this.transposeMax = 24;
       this.detuneMin = -100;
       this.detuneMax = 100;
+      this.articulationSetting = 70;
 
       if (this.volumeSlider) {
         const sliderValue = Number.parseFloat(this.volumeSlider.value);
@@ -508,8 +511,17 @@
           this.fineTuneSlider.value = '0';
         }
       }
+      if (this.articulationSlider) {
+        const sliderValue = Number.parseInt(this.articulationSlider.value, 10);
+        if (Number.isFinite(sliderValue)) {
+          this.articulationSetting = this.clampArticulation(sliderValue);
+        } else {
+          this.articulationSlider.value = String(this.articulationSetting);
+        }
+      }
       this.setTransposeSemitones(this.transposeSemitones, { syncSlider: true, refreshVoices: false });
       this.setFineDetuneCents(this.fineDetuneCents, { syncSlider: true, refreshVoices: false });
+      this.setArticulation(this.articulationSetting, { syncSlider: true, refresh: false });
 
       this.bindEvents();
       this.updateButtons();
@@ -584,6 +596,16 @@
         });
       }
 
+      if (this.articulationSlider) {
+        this.articulationSlider.addEventListener('input', () => {
+          const sliderValue = Number.parseInt(this.articulationSlider.value, 10);
+          if (!Number.isFinite(sliderValue)) {
+            return;
+          }
+          this.setArticulation(sliderValue);
+        });
+      }
+
       if (this.octaveDownButton) {
         this.octaveDownButton.addEventListener('click', () => {
           this.setTransposeSemitones(this.transposeSemitones - 12);
@@ -636,6 +658,10 @@
       return Math.max(this.detuneMin, Math.min(this.detuneMax, Math.round(value)));
     }
 
+    clampArticulation(value) {
+      return Math.max(0, Math.min(100, Math.round(value)));
+    }
+
     setTransposeSemitones(value, options = {}) {
       const { syncSlider = true, refreshVoices = true } = options;
       const clamped = this.clampTranspose(Number.isFinite(value) ? value : 0);
@@ -680,6 +706,28 @@
       }
     }
 
+    setArticulation(value, options = {}) {
+      const { syncSlider = true, refresh = false } = options;
+      const clamped = this.clampArticulation(Number.isFinite(value) ? value : this.articulationSetting);
+      this.articulationSetting = clamped;
+      const label = this.formatArticulationLabel(clamped);
+      if (this.articulationSlider && syncSlider) {
+        const currentValue = Number.parseInt(this.articulationSlider.value, 10);
+        if (!Number.isFinite(currentValue) || currentValue !== clamped) {
+          this.articulationSlider.value = String(clamped);
+        }
+      }
+      if (this.articulationSlider) {
+        this.articulationSlider.setAttribute('aria-valuetext', label);
+      }
+      if (this.articulationValue) {
+        this.articulationValue.textContent = label;
+      }
+      if (refresh) {
+        this.refreshLiveVoicesArticulation?.();
+      }
+    }
+
     formatSemitoneLabel(value) {
       const normalized = Number.isFinite(value) ? Math.round(value) : 0;
       if (normalized === 0) {
@@ -703,6 +751,25 @@
       const sign = normalized > 0 ? '+' : '−';
       const abs = Math.abs(normalized);
       return `${sign}${abs} cent${abs > 1 ? 's' : ''}`;
+    }
+
+    formatArticulationLabel(value) {
+      const normalized = this.clampArticulation(Number.isFinite(value) ? value : this.articulationSetting);
+      let descriptor = 'Équilibré';
+      if (normalized <= 20) {
+        descriptor = 'Soutenu (orgue)';
+      } else if (normalized <= 45) {
+        descriptor = 'Doux';
+      } else if (normalized <= 75) {
+        descriptor = 'Piano';
+      } else {
+        descriptor = 'Piano pincé';
+      }
+      return `${descriptor} (${normalized}%)`;
+    }
+
+    getArticulationFactor() {
+      return Math.max(0, Math.min(1, (Number.isFinite(this.articulationSetting) ? this.articulationSetting : 0) / 100));
     }
 
     refreshLiveVoicesPitch() {
@@ -1160,16 +1227,91 @@
       };
 
       const definition = definitions[family] || definitions.default;
-      return {
-        ...definition,
-        envelope: {
-          ...definition.envelope,
-          release: Math.max(definition.envelope.release || 0.2, Math.min(1.1, note.duration * 0.55)),
-        },
-        reverbSend: Number.isFinite(definition.reverbSend)
-          ? definition.reverbSend
-          : this.reverbDefaultSend,
+      const articulation = this.getArticulationFactor();
+
+      const envelope = {
+        ...definition.envelope,
       };
+      const attackBase = Number.isFinite(envelope.attack) ? envelope.attack : baseEnvelope.attack;
+      const decayBase = Number.isFinite(envelope.decay) ? envelope.decay : baseEnvelope.decay;
+      const sustainBase = Number.isFinite(envelope.sustain) ? envelope.sustain : baseEnvelope.sustain;
+      const releaseBase = Number.isFinite(envelope.release) ? envelope.release : baseEnvelope.release;
+
+      const attackScale = 1 - (articulation * 0.4);
+      const decayScale = 1 - (articulation * 0.42);
+      const sustainCeiling = 0.36 + ((1 - articulation) * 0.28);
+      const sustainFloor = 0.18 + ((1 - articulation) * 0.05);
+      const releaseFloor = 0.14 + ((1 - articulation) * 0.08);
+      const releaseCeiling = 0.45 + ((1 - articulation) * 0.45);
+      const durationFactor = 0.32 + ((1 - articulation) * 0.22);
+      const durationRelease = Math.min(releaseCeiling, Math.max(releaseFloor, note.duration * durationFactor));
+
+      envelope.attack = Math.max(0.0035, attackBase * attackScale);
+      envelope.decay = Math.max(0.04, decayBase * decayScale);
+      const sustainValue = Number.isFinite(sustainBase) ? sustainBase : sustainCeiling;
+      envelope.sustain = Math.max(sustainFloor, Math.min(sustainCeiling, sustainValue));
+      const releaseValue = Number.isFinite(releaseBase) ? releaseBase : durationRelease;
+      envelope.release = Math.max(releaseFloor, Math.min(releaseCeiling, Math.max(releaseValue, durationRelease)));
+
+      let filter = null;
+      if (definition.filter) {
+        filter = { ...definition.filter };
+        if (filter.type === 'lowpass') {
+          const brightnessBoost = 1 + (articulation * 0.4);
+          const baseFrequency = Number.isFinite(filter.frequency) ? filter.frequency : 2600;
+          filter.frequency = Math.min(6500, baseFrequency * brightnessBoost);
+          if (Number.isFinite(filter.Q)) {
+            filter.Q = Math.max(0.55, Math.min(1.3, filter.Q * (0.95 - (articulation * 0.12))));
+          }
+        }
+      }
+
+      let lfo = null;
+      if (definition.lfo) {
+        lfo = { ...definition.lfo };
+        if (Number.isFinite(lfo.vibratoDepth)) {
+          lfo.vibratoDepth = Math.max(0, lfo.vibratoDepth * (0.35 + ((1 - articulation) * 0.65)));
+          if (lfo.vibratoDepth < 0.5) {
+            lfo.vibratoDepth = 0;
+          }
+        }
+        if (Number.isFinite(lfo.tremoloDepth)) {
+          lfo.tremoloDepth = Math.max(0, lfo.tremoloDepth * (0.4 + ((1 - articulation) * 0.6)));
+          if (lfo.tremoloDepth < 0.02) {
+            lfo.tremoloDepth = 0;
+          }
+        }
+      }
+
+      const baseReverbSend = Number.isFinite(definition.reverbSend)
+        ? definition.reverbSend
+        : this.reverbDefaultSend;
+      const reverbScale = 0.45 + ((1 - articulation) * 0.55);
+      const reverbSend = Math.max(0, baseReverbSend * reverbScale);
+
+      const baseGain = Number.isFinite(definition.gain)
+        ? definition.gain
+        : Number.isFinite(definition.volume)
+          ? definition.volume
+          : 1;
+      const gainAdjustment = 0.92 + (articulation * 0.16);
+      const gain = Math.min(1.05, baseGain * gainAdjustment);
+
+      const instrument = {
+        ...definition,
+        gain,
+        envelope,
+        reverbSend,
+      };
+
+      if (filter) {
+        instrument.filter = filter;
+      }
+      if (lfo) {
+        instrument.lfo = lfo;
+      }
+
+      return instrument;
     }
 
     getLfoSettings(instrument) {
@@ -1916,6 +2058,8 @@
     octaveDownButton: document.getElementById('chiptuneOctaveDownButton'),
     octaveUpButton: document.getElementById('chiptuneOctaveUpButton'),
     resetPitchButton: document.getElementById('chiptuneResetPitchButton'),
+    articulationSlider: document.getElementById('chiptuneArticulationSlider'),
+    articulationValue: document.getElementById('chiptuneArticulationValue'),
   };
 
   if (elements.fileInput && elements.playButton && elements.stopButton && elements.status) {
