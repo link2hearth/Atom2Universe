@@ -349,6 +349,7 @@
 
       this.audioContext = null;
       this.masterGain = null;
+      this.masterLimiter = null;
       this.timeline = null;
       this.currentTitle = '';
       this.playing = false;
@@ -365,6 +366,13 @@
       this.schedulerState = null;
       this.scheduleAheadTime = 0.25;
       this.scheduleIntervalSeconds = 0.03;
+      this.limiterSettings = {
+        threshold: -8,
+        knee: 10,
+        ratio: 6,
+        attack: 0.003,
+        release: 0.25,
+      };
 
       if (this.volumeSlider) {
         const sliderValue = Number.parseFloat(this.volumeSlider.value);
@@ -487,7 +495,26 @@
         this.noiseBuffer = null;
         this.masterGain = this.audioContext.createGain();
         this.masterGain.gain.value = this.masterVolume;
-        this.masterGain.connect(this.audioContext.destination);
+        if (typeof this.audioContext.createDynamicsCompressor === 'function') {
+          this.masterLimiter = this.audioContext.createDynamicsCompressor();
+          const {
+            threshold,
+            knee,
+            ratio,
+            attack,
+            release,
+          } = this.limiterSettings;
+          this.masterLimiter.threshold.setValueAtTime(threshold, this.audioContext.currentTime);
+          this.masterLimiter.knee.setValueAtTime(knee, this.audioContext.currentTime);
+          this.masterLimiter.ratio.setValueAtTime(ratio, this.audioContext.currentTime);
+          this.masterLimiter.attack.setValueAtTime(attack, this.audioContext.currentTime);
+          this.masterLimiter.release.setValueAtTime(release, this.audioContext.currentTime);
+          this.masterGain.connect(this.masterLimiter);
+          this.masterLimiter.connect(this.audioContext.destination);
+        } else {
+          this.masterLimiter = null;
+          this.masterGain.connect(this.audioContext.destination);
+        }
         this.schedulerInterval = null;
         this.schedulerState = null;
         this.setMasterVolume(this.masterVolume, false);
