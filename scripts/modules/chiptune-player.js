@@ -463,7 +463,7 @@
       this.waveCache = new Map();
       this.noiseBuffer = null;
       this.reverbBuffer = null;
-      this.reverbDefaultSend = 0.3;
+      this.reverbDefaultSend = 0.18;
       this.schedulerInterval = null;
       this.schedulerState = null;
       this.scheduleAheadTime = 0.25;
@@ -774,7 +774,7 @@
         this.reverbSend.gain.value = 1;
 
         this.reverbMix = this.audioContext.createGain();
-        this.reverbMix.gain.value = 0.45;
+        this.reverbMix.gain.value = 0.25;
 
         this.reverbNode = this.createReverbNode();
 
@@ -992,13 +992,13 @@
       const convolver = this.audioContext.createConvolver();
       convolver.normalize = true;
       if (!this.reverbBuffer || this.reverbBuffer.sampleRate !== this.audioContext.sampleRate) {
-        this.reverbBuffer = this.buildReverbImpulse(2.6, 3.2);
+        this.reverbBuffer = this.buildReverbImpulse(1.4, 2.1);
       }
       convolver.buffer = this.reverbBuffer;
       return convolver;
     }
 
-    buildReverbImpulse(durationSeconds = 2.6, decay = 3.2) {
+    buildReverbImpulse(durationSeconds = 1.4, decay = 2.1) {
       if (!this.audioContext) {
         return null;
       }
@@ -1039,7 +1039,7 @@
           ],
           filter: { type: 'lowpass', frequency: 3200, Q: 0.65 },
           lfo: { rate: 4.6, vibratoDepth: 12, tremoloDepth: 0.08 },
-          reverbSend: 0.42,
+          reverbSend: 0.24,
           envelope: { ...baseEnvelope },
         },
         0: {
@@ -1051,7 +1051,7 @@
           ],
           filter: { type: 'lowpass', frequency: 2600, Q: 0.85 },
           lfo: { rate: 4.2, vibratoDepth: 6, tremoloDepth: 0.05 },
-          reverbSend: 0.38,
+          reverbSend: 0.22,
           envelope: {
             ...baseEnvelope,
             attack: Math.max(0.006, baseEnvelope.attack * 0.6),
@@ -1068,7 +1068,7 @@
           ],
           filter: { type: 'lowpass', frequency: 3000, Q: 0.7 },
           lfo: { rate: 4.8, vibratoDepth: 10, tremoloDepth: 0.1 },
-          reverbSend: 0.4,
+          reverbSend: 0.24,
           envelope: { ...baseEnvelope, decay: 0.18, sustain: 0.65, release: Math.max(0.32, note.duration * 0.8) },
         },
         2: {
@@ -1080,7 +1080,7 @@
           ],
           filter: { type: 'lowpass', frequency: 2600, Q: 0.85 },
           lfo: { rate: 5.4, vibratoDepth: 16, tremoloDepth: 0.08 },
-          reverbSend: 0.36,
+          reverbSend: 0.2,
           envelope: { ...baseEnvelope, decay: 0.12, sustain: 0.52, release: Math.max(0.28, note.duration * 0.6) },
         },
         3: {
@@ -1092,7 +1092,7 @@
           ],
           filter: { type: 'lowpass', frequency: 2400, Q: 1 },
           lfo: { rate: 3.6, vibratoDepth: 8, tremoloDepth: 0.05 },
-          reverbSend: 0.34,
+          reverbSend: 0.18,
           envelope: { ...baseEnvelope, decay: 0.18, sustain: 0.58, release: Math.max(0.3, note.duration * 0.6) },
         },
         4: {
@@ -1104,7 +1104,7 @@
           ],
           filter: { type: 'lowpass', frequency: 2400, Q: 0.85 },
           lfo: { rate: 4.2, vibratoDepth: 18, tremoloDepth: 0.14 },
-          reverbSend: 0.38,
+          reverbSend: 0.22,
           envelope: { ...baseEnvelope, attack: Math.max(0.014, baseEnvelope.attack * 1.2), decay: 0.18, sustain: 0.66 },
         },
         5: {
@@ -1117,7 +1117,7 @@
           ],
           filter: { type: 'lowpass', frequency: 2800, Q: 0.75 },
           lfo: { rate: 4.8, vibratoDepth: 20, tremoloDepth: 0.18 },
-          reverbSend: 0.5,
+          reverbSend: 0.28,
           envelope: { ...baseEnvelope, attack: Math.max(0.02, baseEnvelope.attack * 1.6), decay: 0.2, sustain: 0.74 },
         },
         6: {
@@ -1129,7 +1129,7 @@
           ],
           filter: { type: 'lowpass', frequency: 3000, Q: 0.85 },
           lfo: { rate: 5, vibratoDepth: 18, tremoloDepth: 0.16 },
-          reverbSend: 0.32,
+          reverbSend: 0.2,
           envelope: { ...baseEnvelope, attack: Math.max(0.014, baseEnvelope.attack), decay: 0.16, sustain: 0.62 },
         },
         7: {
@@ -1141,7 +1141,7 @@
           ],
           filter: { type: 'lowpass', frequency: 3200, Q: 0.8 },
           lfo: { rate: 5.8, vibratoDepth: 18, tremoloDepth: 0.14 },
-          reverbSend: 0.34,
+          reverbSend: 0.2,
           envelope: { ...baseEnvelope, decay: 0.14, sustain: 0.56, release: Math.max(0.24, note.duration * 0.55) },
         },
         8: {
@@ -1154,7 +1154,7 @@
           ],
           filter: { type: 'lowpass', frequency: 2600, Q: 0.75 },
           lfo: { rate: 3.6, vibratoDepth: 14, tremoloDepth: 0.18 },
-          reverbSend: 0.58,
+          reverbSend: 0.32,
           envelope: { ...baseEnvelope, attack: Math.max(0.03, baseEnvelope.attack * 2.3), decay: 0.24, sustain: 0.78, release: Math.max(0.48, note.duration * 0.85) },
         },
       };
@@ -1454,8 +1454,9 @@
         voice.nodes.push(panNode);
       }
 
-      const reverbAmount = Math.max(0, Math.min(1, instrument.reverbSend ?? this.reverbDefaultSend));
-      const dryAmount = Math.max(0, 1 - (reverbAmount * 0.65));
+      const baseReverbSend = instrument.reverbSend ?? this.reverbDefaultSend;
+      const reverbAmount = Math.max(0, Math.min(1, baseReverbSend * 0.7));
+      const dryAmount = Math.max(0, 1 - (reverbAmount * 0.5));
 
       const dryGain = this.audioContext.createGain();
       dryGain.gain.setValueAtTime(dryAmount, startAt);
@@ -1472,7 +1473,7 @@
         reverbGain.connect(this.reverbSend);
         voice.reverbGain = reverbGain;
       } else {
-        dryGain.gain.setValueAtTime(Math.min(1, dryAmount + (reverbAmount * 0.5)), startAt);
+        dryGain.gain.setValueAtTime(Math.min(1, dryAmount + (reverbAmount * 0.35)), startAt);
       }
 
       voice.cleanup = () => {
@@ -1701,8 +1702,9 @@
         voice.nodes.push(panNode);
       }
 
-      const reverbAmount = Math.max(0, Math.min(1, (note.reverb ?? this.reverbDefaultSend) * 0.9));
-      const dryAmount = Math.max(0, 1 - (reverbAmount * 0.6));
+      const basePercussionReverb = note.reverb ?? this.reverbDefaultSend;
+      const reverbAmount = Math.max(0, Math.min(1, basePercussionReverb * 0.7));
+      const dryAmount = Math.max(0, 1 - (reverbAmount * 0.45));
 
       const dryGain = this.audioContext.createGain();
       dryGain.gain.setValueAtTime(dryAmount, startAt);
@@ -1717,7 +1719,7 @@
         reverbGain.connect(this.reverbSend);
         voice.nodes.push(reverbGain);
       } else {
-        dryGain.gain.setValueAtTime(Math.min(1, dryAmount + (reverbAmount * 0.4)), startAt);
+        dryGain.gain.setValueAtTime(Math.min(1, dryAmount + (reverbAmount * 0.3)), startAt);
       }
     }
 
