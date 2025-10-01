@@ -4,8 +4,11 @@
   const DIVE_MULTIPLIER = 1.65;
   const BASE_PUSH_ACCEL = 14;
   const START_GROUND_SPEED = 90;
-  const INITIAL_LAUNCH_SPEED = 220;
+  const INITIAL_LAUNCH_SPEED = 360;
   const INITIAL_LAUNCH_HEIGHT_OFFSET = 12;
+  const START_SCREEN_X_RATIO = 0.05;
+  const START_HEIGHT_RATIO = 0.12;
+  const START_MIN_CLEARANCE = 48;
   const MIN_LANDING_SPEED = 18;
   const GROUND_DRAG = 0.972;
   const HOLDING_DRAG = 0.948;
@@ -401,13 +404,17 @@
       const span = this.viewWidth * 3;
       const startX = -this.viewWidth;
       this.terrain.reset(startX, startX + span);
-      this.player.x = 0;
-      this.player.y = this.terrain.getHeight(this.player.x);
+      const startScreenX = this.viewWidth * START_SCREEN_X_RATIO;
+      this.player.x = startX + startScreenX;
+      const groundY = this.terrain.getHeight(this.player.x);
+      const safeGroundY = Math.max(0, groundY - START_MIN_CLEARANCE);
+      const desiredHeight = Math.max(0, this.viewHeight * START_HEIGHT_RATIO);
+      this.player.y = Math.min(desiredHeight, safeGroundY);
       this.player.speed = START_GROUND_SPEED;
       this.player.vx = 0;
       this.player.vy = 0;
       this.player.onGround = true;
-      this.cameraX = this.player.x - this.viewWidth * 0.35;
+      this.cameraX = this.player.x - this.viewWidth * START_SCREEN_X_RATIO;
       this.distanceTravelled = 0;
       this.pendingRelease = false;
       this.isPressing = false;
@@ -424,12 +431,12 @@
     }
 
     applyInitialLaunch() {
-      const launchAngle = degToRad(-52);
+      const launchAngle = degToRad(20);
       this.player.onGround = false;
       this.player.speed = INITIAL_LAUNCH_SPEED;
       this.player.vx = Math.cos(launchAngle) * INITIAL_LAUNCH_SPEED;
       this.player.vy = Math.sin(launchAngle) * INITIAL_LAUNCH_SPEED;
-      this.player.y -= INITIAL_LAUNCH_HEIGHT_OFFSET;
+      this.player.y = Math.max(0, this.player.y - INITIAL_LAUNCH_HEIGHT_OFFSET);
       this.pendingRelease = false;
     }
 
@@ -633,7 +640,7 @@
     }
 
     updateCamera(delta) {
-      const desired = this.player.x - this.viewWidth * 0.35;
+      const desired = this.player.x - this.viewWidth * START_SCREEN_X_RATIO;
       if (!Number.isFinite(this.cameraX)) {
         this.cameraX = desired;
         return;
