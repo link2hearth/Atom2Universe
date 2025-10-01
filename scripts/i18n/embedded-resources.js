@@ -160,7 +160,8 @@
             "air": "En vol ! Cherchez la prochaine pente."
           },
           "controls": {
-            "hold": "Maintenir pour plonger"
+            "hold": "Maintenir pour plonger",
+            "reset": "Relancer la partie"
           }
         },
         "table": {
@@ -1289,9 +1290,10 @@
             "hold": "Hold to dive and build speed.",
             "air": "Airborne! Aim for the next slope."
           },
-          "controls": {
-            "hold": "Hold to dive"
-          }
+        "controls": {
+          "hold": "Hold to dive",
+          "reset": "Reset run"
+        }
         },
         "table": {
           "aria": "Periodic table of elements",

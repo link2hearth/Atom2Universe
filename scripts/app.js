@@ -2073,6 +2073,7 @@ const elements = {
   waveSpeedValue: document.getElementById('waveSpeedValue'),
   waveAltitudeValue: document.getElementById('waveAltitudeValue'),
   waveStatusMessage: document.getElementById('waveStatusMessage'),
+  waveResetButton: document.getElementById('waveResetButton'),
   quantum2048Board: document.getElementById('quantum2048Board'),
   quantum2048Tiles: document.getElementById('quantum2048Tiles'),
   quantum2048Grid: document.getElementById('quantum2048Grid'),
@@ -2553,7 +2554,8 @@ function ensureWaveGame() {
     distanceElement: elements.waveDistanceValue,
     speedElement: elements.waveSpeedValue,
     altitudeElement: elements.waveAltitudeValue,
-    statusElement: elements.waveStatusMessage
+    statusElement: elements.waveStatusMessage,
+    resetButton: elements.waveResetButton
   });
   return waveGame;
 }

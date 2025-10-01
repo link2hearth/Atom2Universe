@@ -523,9 +523,22 @@
           aria-live="polite"
           data-i18n="index.sections.wave.status.ready"
         ></p>
-        <div class="wave-controls-hint" aria-hidden="true">
-          <kbd>Space</kbd>
-          <span data-i18n="index.sections.wave.controls.hold"></span>
+        <div class="wave-controls">
+          <button
+            type="button"
+            id="waveResetButton"
+            class="wave-controls__reset"
+            data-i18n="index.sections.wave.controls.reset"
+          >
+            Relancer
+          </button>
+          <div class="wave-controls-hint" aria-hidden="true">
+            <span data-i18n="index.sections.wave.controls.hold"></span>
+            <span class="visually-hidden">—</span>
+            <kbd>Space</kbd>
+            <span aria-hidden="true">/</span>
+            <kbd>↓</kbd>
+          </div>
         </div>
       </div>
     </section>
