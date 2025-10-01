@@ -10,14 +10,21 @@
 
   const DEFAULT_CONFIG = {
     gridSizes: [3, 4, 5, 6],
-    targetValues: [32, 64, 128, 256, 512, 1024, 2048],
+    targetValues: [16, 32, 64, 128, 256, 512, 1024, 2048],
     defaultGridSize: 4,
     recommendedTargetBySize: {
-      3: 128,
+      3: 64,
       4: 256,
       5: 1024,
       6: 2048
     },
+    targetPoolsBySize: {
+      3: [16, 32, 64],
+      4: [64, 128, 256, 512],
+      5: [128, 256, 512, 1024],
+      6: [128, 256, 512, 1024, 2048]
+    },
+    randomizeGames: true,
     spawnValues: [2, 4],
     spawnWeights: [0.9, 0.1]
   };
@@ -48,6 +55,39 @@
         })
       : [];
 
+    const baseTargetValues = targetValues.length ? targetValues : DEFAULT_CONFIG.targetValues;
+    const targetValueSet = new Set(baseTargetValues);
+    const poolSource = config.targetPoolsBySize && typeof config.targetPoolsBySize === 'object'
+      ? config.targetPoolsBySize
+      : DEFAULT_CONFIG.targetPoolsBySize;
+    const targetPoolsBySize = {};
+    Object.keys(poolSource).forEach(key => {
+      const size = Number.parseInt(key, 10);
+      const pool = Array.isArray(poolSource[key]) ? poolSource[key] : [];
+      const sanitizedPool = toUniquePositiveIntegers(pool);
+      if (!Number.isFinite(size) || size <= 0 || !sanitizedPool.length) {
+        return;
+      }
+      targetPoolsBySize[size] = sanitizedPool;
+      sanitizedPool.forEach(value => targetValueSet.add(value));
+    });
+
+    if (!Object.keys(targetPoolsBySize).length) {
+      Object.keys(DEFAULT_CONFIG.targetPoolsBySize).forEach(key => {
+        const size = Number.parseInt(key, 10);
+        const pool = DEFAULT_CONFIG.targetPoolsBySize[key];
+        if (!Number.isFinite(size) || size <= 0 || !Array.isArray(pool)) {
+          return;
+        }
+        const sanitizedPool = toUniquePositiveIntegers(pool);
+        if (!sanitizedPool.length) {
+          return;
+        }
+        targetPoolsBySize[size] = sanitizedPool;
+        sanitizedPool.forEach(value => targetValueSet.add(value));
+      });
+    }
+
     const recommendedSource = config.recommendedTargetBySize && typeof config.recommendedTargetBySize === 'object'
       ? config.recommendedTargetBySize
       : DEFAULT_CONFIG.recommendedTargetBySize;
@@ -60,13 +100,28 @@
       }
     });
 
+    const normalizedTargetValues = Array.from(targetValueSet).sort((a, b) => a - b);
+    Object.keys(recommendedTargetBySize).forEach(key => {
+      const size = Number.parseInt(key, 10);
+      const allowedPool = targetPoolsBySize[size] || normalizedTargetValues;
+      if (!allowedPool.includes(recommendedTargetBySize[size])) {
+        if (allowedPool.length) {
+          recommendedTargetBySize[size] = allowedPool[allowedPool.length - 1];
+        } else {
+          delete recommendedTargetBySize[size];
+        }
+      }
+    });
+
     return {
       gridSizes: gridSizes.length ? gridSizes : DEFAULT_CONFIG.gridSizes,
-      targetValues: targetValues.length ? targetValues : DEFAULT_CONFIG.targetValues,
+      targetValues: normalizedTargetValues,
       defaultGridSize: DEFAULT_CONFIG.gridSizes.includes(config.defaultGridSize)
         ? config.defaultGridSize
         : DEFAULT_CONFIG.defaultGridSize,
       recommendedTargetBySize,
+      targetPoolsBySize,
+      randomizeGames: config.randomizeGames !== false,
       spawnValues: spawnValues.length ? spawnValues : DEFAULT_CONFIG.spawnValues,
       spawnWeights: spawnWeights.length ? spawnWeights : DEFAULT_CONFIG.spawnWeights
     };
@@ -170,9 +225,11 @@
       this.handleTargetChange = this.handleTargetChange.bind(this);
       this.handleRestart = this.handleRestart.bind(this);
       this.handleOverlayAction = this.handleOverlayAction.bind(this);
+      this.handleResize = this.handleResize.bind(this);
+      this.resizeFrame = null;
 
       this.setupControls();
-      this.startNewGame({ announce: false });
+      this.startNewGame({ announce: false, randomize: this.config.randomizeGames !== false });
     }
 
     normalizeSize(value) {
@@ -193,26 +250,104 @@
     }
 
     normalizeTarget(target, forSize) {
+      const size = Number.isFinite(forSize) ? forSize : this.size;
+      const allowedTargets = this.getAllowedTargets(size);
       const parsed = Number.parseInt(target, 10);
-      if (Number.isFinite(parsed) && this.config.targetValues.includes(parsed)) {
+      if (Number.isFinite(parsed) && allowedTargets.includes(parsed)) {
         return parsed;
       }
-      const recommended = this.getRecommendedTarget(forSize ?? this.size);
-      if (Number.isFinite(recommended) && this.config.targetValues.includes(recommended)) {
+      const recommended = this.getRecommendedTarget(size);
+      if (Number.isFinite(recommended)) {
         return recommended;
       }
-      return this.config.targetValues[0];
+      return allowedTargets[0] ?? this.config.targetValues[0];
+    }
+
+    getAllowedTargets(size) {
+      if (!Number.isFinite(size)) {
+        return this.config.targetValues.slice();
+      }
+      const pool = this.config.targetPoolsBySize?.[size];
+      if (Array.isArray(pool) && pool.length) {
+        return pool.filter(value => this.config.targetValues.includes(value));
+      }
+      return this.config.targetValues.slice();
     }
 
     getRecommendedTarget(size) {
       if (!Number.isFinite(size)) {
         return null;
       }
+      const allowed = this.getAllowedTargets(size);
       const mapped = this.config.recommendedTargetBySize[size];
-      if (Number.isFinite(mapped) && this.config.targetValues.includes(mapped)) {
+      if (Number.isFinite(mapped) && allowed.includes(mapped)) {
         return mapped;
       }
-      return null;
+      return allowed.length ? allowed[allowed.length - 1] : null;
+    }
+
+    pickRandomSizeAndTarget() {
+      const sizes = Array.isArray(this.config.gridSizes) ? this.config.gridSizes : [];
+      if (!sizes.length) {
+        return { size: this.config.defaultGridSize, target: this.getRecommendedTarget(this.config.defaultGridSize) };
+      }
+      const size = sizes[Math.floor(Math.random() * sizes.length)];
+      const allowedTargets = this.getAllowedTargets(size);
+      const targetPool = allowedTargets.length ? allowedTargets : this.config.targetValues;
+      const targetIndex = Math.floor(Math.random() * targetPool.length);
+      const target = targetPool[targetIndex] ?? this.getRecommendedTarget(size) ?? this.config.targetValues[0];
+      return { size, target };
+    }
+
+    calculateBoardSize() {
+      if (typeof window === 'undefined' || !this.boardElement) {
+        return null;
+      }
+      const viewportWidth = Math.max(window.innerWidth || 0, document.documentElement?.clientWidth || 0);
+      const viewportHeight = Math.max(window.innerHeight || 0, document.documentElement?.clientHeight || 0);
+      let availableWidth = viewportWidth;
+      let availableHeight = viewportHeight;
+      const parent = this.boardElement.parentElement;
+      if (parent && parent.getBoundingClientRect) {
+        const rect = parent.getBoundingClientRect();
+        if (Number.isFinite(rect?.width) && rect.width > 0) {
+          availableWidth = rect.width;
+        }
+        if (Number.isFinite(rect?.height) && rect.height > 0) {
+          availableHeight = rect.height;
+        }
+        if (window.getComputedStyle) {
+          const styles = window.getComputedStyle(parent);
+          const paddingLeft = Number.parseFloat(styles.paddingLeft) || 0;
+          const paddingRight = Number.parseFloat(styles.paddingRight) || 0;
+          const paddingTop = Number.parseFloat(styles.paddingTop) || 0;
+          const paddingBottom = Number.parseFloat(styles.paddingBottom) || 0;
+          availableWidth -= paddingLeft + paddingRight;
+          availableHeight -= paddingTop + paddingBottom;
+        }
+      }
+      if (!Number.isFinite(availableWidth) || availableWidth <= 0) {
+        availableWidth = viewportWidth;
+      }
+      if (!Number.isFinite(availableHeight) || availableHeight <= 0) {
+        availableHeight = viewportHeight;
+      }
+      availableWidth = Math.max(availableWidth, 0);
+      availableHeight = Math.max(availableHeight, 0);
+
+      const candidates = [availableWidth, availableHeight];
+      if (Number.isFinite(viewportWidth) && viewportWidth > 0) {
+        candidates.push(viewportWidth * 0.92);
+      }
+      if (Number.isFinite(viewportHeight) && viewportHeight > 0) {
+        candidates.push(viewportHeight * 0.92);
+      }
+      const positiveCandidates = candidates.filter(value => Number.isFinite(value) && value > 0);
+      if (!positiveCandidates.length) {
+        return null;
+      }
+      const baseSize = Math.min(...positiveCandidates);
+      return Math.max(Math.round(baseSize), 0);
     }
 
     getSpawnDistribution() {
@@ -274,7 +409,9 @@
       const recommended = this.getRecommendedTarget(this.size);
       const previousValue = this.targetSelect.value;
       this.targetSelect.innerHTML = '';
-      this.config.targetValues.forEach(value => {
+      const targetPool = this.getAllowedTargets(this.size);
+      const values = targetPool.length ? targetPool : this.config.targetValues;
+      values.forEach(value => {
         const option = document.createElement('option');
         option.value = String(value);
         const formatted = formatInteger(value);
@@ -298,26 +435,45 @@
       const normalized = this.normalizeSize(value);
       const recommended = this.getRecommendedTarget(normalized);
       const nextTarget = this.normalizeTarget(recommended ?? this.target, normalized);
-      this.startNewGame({ size: normalized, target: nextTarget });
+      this.startNewGame({ size: normalized, target: nextTarget, randomize: false });
     }
 
     handleTargetChange(event) {
       const value = Number.parseInt(event?.target?.value, 10);
       const normalized = this.normalizeTarget(value, this.size);
-      this.startNewGame({ target: normalized, size: this.size });
+      this.startNewGame({ target: normalized, size: this.size, randomize: false });
     }
 
     handleRestart() {
-      this.startNewGame({ size: this.size, target: this.target });
+      this.startNewGame({
+        size: this.size,
+        target: this.target,
+        randomize: this.config.randomizeGames !== false
+      });
     }
 
     handleOverlayAction() {
-      this.startNewGame({ size: this.size, target: this.target });
+      this.startNewGame({
+        size: this.size,
+        target: this.target,
+        randomize: this.config.randomizeGames !== false
+      });
     }
 
-    startNewGame({ size = this.size, target = this.target, announce = true } = {}) {
-      const normalizedSize = this.normalizeSize(size);
-      const normalizedTarget = this.normalizeTarget(target, normalizedSize);
+    startNewGame({ size = this.size, target = this.target, announce = true, randomize = false } = {}) {
+      let nextSize = size;
+      let nextTarget = target;
+      if (randomize) {
+        const random = this.pickRandomSizeAndTarget();
+        if (Number.isFinite(random?.size) && random.size > 0) {
+          nextSize = random.size;
+        }
+        if (Number.isFinite(random?.target) && random.target > 0) {
+          nextTarget = random.target;
+        }
+      }
+      const normalizedSize = this.normalizeSize(nextSize);
+      const normalizedTarget = this.normalizeTarget(nextTarget, normalizedSize);
       const sizeChanged = normalizedSize !== this.size;
       this.size = normalizedSize;
       this.target = normalizedTarget;
@@ -355,9 +511,26 @@
       }
     }
 
+    handleResize() {
+      if (typeof window === 'undefined') {
+        return;
+      }
+      if (this.resizeFrame) {
+        window.cancelAnimationFrame(this.resizeFrame);
+      }
+      this.resizeFrame = window.requestAnimationFrame(() => {
+        this.resizeFrame = null;
+        this.updateBoardGeometry(false);
+      });
+    }
+
     updateBoardGeometry(forceRebuild = false) {
       if (!this.boardElement) {
         return;
+      }
+      const boardSize = this.calculateBoardSize();
+      if (Number.isFinite(boardSize) && boardSize > 0) {
+        this.boardElement.style.setProperty('--quantum2048-board-size', `${boardSize}px`);
       }
       const gapRem = this.size >= 6 ? 0.32 : this.size === 5 ? 0.38 : 0.45;
       const fontScale = clamp(4 / (this.size + 0.25), 0.52, 1.2);
@@ -694,7 +867,11 @@
       if (this.isOverlayVisible()) {
         if (key === 'Enter' || key === ' ' || code === 'Space') {
           event.preventDefault();
-          this.startNewGame({ size: this.size, target: this.target });
+          this.startNewGame({
+            size: this.size,
+            target: this.target,
+            randomize: this.config.randomizeGames !== false
+          });
         }
         return;
       }
@@ -736,6 +913,10 @@
       }
       this.active = true;
       document.addEventListener('keydown', this.handleKeydown);
+      if (typeof window !== 'undefined') {
+        window.addEventListener('resize', this.handleResize);
+        this.handleResize();
+      }
       this.setStatus(this.gameOver ? 'defeat' : this.hasWon ? 'victory' : 'ready');
     }
 
@@ -745,6 +926,13 @@
       }
       this.active = false;
       document.removeEventListener('keydown', this.handleKeydown);
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('resize', this.handleResize);
+        if (this.resizeFrame) {
+          window.cancelAnimationFrame(this.resizeFrame);
+          this.resizeFrame = null;
+        }
+      }
     }
   }
 

@@ -152,9 +152,9 @@
 
 .quantum2048-board {
   position: relative;
-  flex: 1 1 clamp(280px, 40vw, 560px);
-  max-width: min(560px, 92vw);
-  aspect-ratio: 1;
+  flex: 0 0 var(--quantum2048-board-size, clamp(280px, 40vw, 560px));
+  width: var(--quantum2048-board-size, clamp(280px, 40vw, 560px));
+  height: var(--quantum2048-board-size, clamp(280px, 40vw, 560px));
   border-radius: 1.8rem;
   background: radial-gradient(circle at top, rgba(44, 58, 130, 0.82), rgba(14, 18, 52, 0.95));
   box-shadow: 0 28px 60px rgba(6, 8, 28, 0.6);
