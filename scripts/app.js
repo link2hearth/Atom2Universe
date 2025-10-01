@@ -636,6 +636,8 @@ function cloneProductionEntry(entry) {
   return clone;
 }
 
+const APC_FRENZY_COUNTER_GRACE_MS = 3000;
+
 const frenzyState = {
   perClick: {
     token: null,
@@ -646,7 +648,9 @@ const frenzyState = {
     currentStacks: 0,
     currentClickCount: 0,
     frenziesUsedInChain: 0,
-    isActive: false
+    isActive: false,
+    visibleUntil: 0,
+    lastDisplayedCount: 0
   },
   perSecond: {
     token: null,
@@ -756,7 +760,7 @@ function updateApcFrenzyCounterDisplay(now = performance.now()) {
   }
   const entry = frenzyState.perClick;
   const active = isApcFrenzyActive(now);
-  const currentCount = entry ? Math.max(0, Math.floor(entry.currentClickCount || 0)) : 0;
+  let currentCount = entry ? Math.max(0, Math.floor(entry.currentClickCount || 0)) : 0;
   let bestSingleClicks = 0;
   let bestChainClicks = 0;
   let bestChainFrenzies = 0;
@@ -779,11 +783,24 @@ function updateApcFrenzyCounterDisplay(now = performance.now()) {
       bestChainFrenzies
     );
   }
-  container.hidden = !active;
-  container.setAttribute('aria-hidden', String(!active));
+  let shouldDisplay = active;
+  if (entry) {
+    if (active) {
+      entry.visibleUntil = Math.max(entry.visibleUntil || 0, now + APC_FRENZY_COUNTER_GRACE_MS);
+      entry.lastDisplayedCount = currentCount;
+    } else if (Number.isFinite(entry.visibleUntil) && entry.visibleUntil > now) {
+      shouldDisplay = true;
+      currentCount = Math.max(0, Math.floor(entry.lastDisplayedCount || 0));
+    } else {
+      entry.visibleUntil = 0;
+      entry.lastDisplayedCount = Math.max(0, Math.floor(entry.lastDisplayedCount || 0));
+    }
+  }
+  container.hidden = !shouldDisplay;
+  container.setAttribute('aria-hidden', String(!shouldDisplay));
   container.classList.toggle('is-active', active);
   container.classList.toggle('is-idle', !active);
-  if (!active) {
+  if (!shouldDisplay) {
     return;
   }
   if (elements.apcFrenzyCounterValue) {
@@ -797,6 +814,7 @@ function registerApcFrenzyClick(now = performance.now()) {
     return;
   }
   entry.currentClickCount = Math.max(0, Math.floor(entry.currentClickCount || 0)) + 1;
+  entry.lastDisplayedCount = entry.currentClickCount;
   pulseApcFrenzyValue();
   updateApcFrenzyCounterDisplay(now);
 }
@@ -809,6 +827,7 @@ function handleApcFrenzyActivated(wasActive, now = performance.now()) {
   if (!wasActive) {
     entry.currentClickCount = 0;
     entry.frenziesUsedInChain = 0;
+    entry.lastDisplayedCount = 0;
   }
   entry.frenziesUsedInChain = Math.max(0, Math.floor(entry.frenziesUsedInChain || 0)) + 1;
   entry.isActive = true;
@@ -861,6 +880,8 @@ function finalizeApcFrenzyRun(now = performance.now()) {
     applyApcFrenzyRunToStats(runClicks, frenziesUsed);
     saveGame();
   }
+  entry.lastDisplayedCount = runClicks;
+  entry.visibleUntil = Math.max(entry.visibleUntil || 0, now + APC_FRENZY_COUNTER_GRACE_MS);
   entry.currentClickCount = 0;
   entry.frenziesUsedInChain = 0;
   entry.isActive = false;
@@ -1152,6 +1173,8 @@ function resetFrenzyState(options = {}) {
     entry.currentClickCount = 0;
     entry.frenziesUsedInChain = 0;
     entry.isActive = false;
+    entry.visibleUntil = 0;
+    entry.lastDisplayedCount = 0;
   });
   frenzyState.spawnAccumulator = 0;
   if (!skipApply) {
