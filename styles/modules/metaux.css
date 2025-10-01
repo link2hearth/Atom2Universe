@@ -551,7 +551,7 @@
 
 .metaux-tile[data-type='platine'],
 .metaux-tile[data-type='cuivre'] {
-  --tile-image: url('../../assets/image/Bronze.png');
+  --tile-image: url('../../assets/image/Cuivre.png');
 }
 
 .metaux-tile[data-type='diamant'] {
