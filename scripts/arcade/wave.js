@@ -14,6 +14,10 @@
   const JUMP_SPEED_RATIO = 0.4;
   const MAX_JUMP_IMPULSE = 380;
   const TERRAIN_SAMPLE_SPACING = 36;
+  const MIN_WAVE_WAVELENGTH = 280;
+  const MAX_WAVE_WAVELENGTH = 560;
+  const MIN_AMPLITUDE_RATIO = 0.16;
+  const MAX_AMPLITUDE_RATIO = 0.32;
   const CAMERA_LERP_MIN = 0.08;
   const CAMERA_LERP_MAX = 0.25;
   const MAX_FRAME_DELTA = 1 / 30;
@@ -72,9 +76,18 @@
       this.minY = 120;
       this.maxY = 480;
       this.baseLevel = 320;
+      this.defaultBaseLevel = this.baseLevel;
+      this.verticalSpan = this.maxY - this.minY;
       this.currentX = 0;
       this.currentY = this.baseLevel;
       this.segmentCount = 0;
+      this.minAmplitude = 48;
+      this.maxAmplitude = 120;
+      this.minWavelength = MIN_WAVE_WAVELENGTH;
+      this.maxWavelength = MAX_WAVE_WAVELENGTH;
+      this.currentAmplitude = 72;
+      this.phase = 0;
+      this.phaseSpeed = (Math.PI * 2) / 420;
     }
 
     configure({ minY, maxY, baseLevel, sampleSpacing } = {}) {
@@ -92,13 +105,33 @@
       } else {
         this.baseLevel = clamp(this.baseLevel, this.minY + 20, this.maxY - 20);
       }
+      this.defaultBaseLevel = this.baseLevel;
+      this.verticalSpan = Math.max(60, this.maxY - this.minY);
+      const minAmplitude = Math.max(24, this.verticalSpan * MIN_AMPLITUDE_RATIO);
+      const maxAmplitude = Math.max(minAmplitude + 12, this.verticalSpan * MAX_AMPLITUDE_RATIO);
+      this.minAmplitude = minAmplitude;
+      this.maxAmplitude = maxAmplitude;
+      const minWave = Math.max(this.sampleSpacing * 6, this.verticalSpan * 1.1, MIN_WAVE_WAVELENGTH);
+      const maxWave = Math.max(minWave + this.sampleSpacing * 3, this.verticalSpan * 2.4, MAX_WAVE_WAVELENGTH);
+      this.minWavelength = minWave;
+      this.maxWavelength = maxWave;
       this.currentY = clamp(this.currentY ?? this.baseLevel, this.minY, this.maxY);
     }
 
     reset(startX, endX) {
       this.points = [];
       this.currentX = startX;
-      this.currentY = this.baseLevel;
+      const baseOffset = randomInRange(-this.verticalSpan * 0.08, this.verticalSpan * 0.08);
+      this.baseLevel = clamp(this.defaultBaseLevel + baseOffset, this.minY + 24, this.maxY - 24);
+      this.currentAmplitude = randomInRange(this.minAmplitude, this.maxAmplitude);
+      const initialWavelength = randomInRange(this.minWavelength, this.maxWavelength);
+      this.phaseSpeed = (Math.PI * 2) / Math.max(60, initialWavelength);
+      this.phase = randomInRange(0, Math.PI * 2);
+      this.currentY = clamp(
+        this.baseLevel + Math.sin(this.phase) * this.currentAmplitude,
+        this.minY,
+        this.maxY
+      );
       this.segmentCount = 0;
       this.points.push({ x: this.currentX, y: this.currentY });
       this.ensure(endX);
@@ -120,26 +153,36 @@
     }
 
     appendSegment() {
-      const length = randomInRange(260, 520);
-      const amplitude = randomInRange(36, 112);
-      const steps = Math.max(8, Math.round(length / this.sampleSpacing));
-      const direction = Math.random() < 0.5 ? -1 : 1;
-      const baseShift = randomInRange(-80, 80);
+      const length = randomInRange(this.minWavelength, this.maxWavelength);
+      const steps = Math.max(16, Math.round(length / this.sampleSpacing));
+      const stepLength = length / steps;
+      const verticalSpan = this.verticalSpan || this.maxY - this.minY;
+      const baseShift = randomInRange(-verticalSpan * 0.12, verticalSpan * 0.12);
       const nextBase = clamp(this.baseLevel + baseShift, this.minY + 30, this.maxY - 30);
-      const startY = this.currentY;
+      const nextAmplitude = randomInRange(this.minAmplitude, this.maxAmplitude);
+      const nextPhaseSpeed = (Math.PI * 2) / Math.max(60, length);
+      const startBase = this.baseLevel;
+      const startAmplitude = this.currentAmplitude;
+      const startPhaseSpeed = this.phaseSpeed;
 
       for (let index = 1; index <= steps; index += 1) {
         const t = index / steps;
         const eased = easeInOutSine(t);
-        const wave = Math.sin(t * Math.PI);
-        const base = lerp(startY, nextBase, eased);
-        const y = clamp(base + wave * amplitude * direction, this.minY, this.maxY);
-        this.currentX += length / steps;
+        const base = lerp(startBase, nextBase, eased);
+        const amplitude = lerp(startAmplitude, nextAmplitude, eased);
+        const phaseSpeed = lerp(startPhaseSpeed, nextPhaseSpeed, eased);
+        this.phase += phaseSpeed * stepLength;
+        const y = clamp(base + Math.sin(this.phase) * amplitude, this.minY, this.maxY);
+        this.currentX += stepLength;
         this.currentY = y;
         this.points.push({ x: this.currentX, y });
       }
 
       this.baseLevel = nextBase;
+      this.currentAmplitude = nextAmplitude;
+      this.phaseSpeed = nextPhaseSpeed;
+      const fullTurn = Math.PI * 2;
+      this.phase = ((this.phase % fullTurn) + fullTurn) % fullTurn;
       this.segmentCount += 1;
     }
 
