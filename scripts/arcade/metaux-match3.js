@@ -14,11 +14,36 @@ const DEFAULT_METAUX_CONFIG = {
   },
   maxShuffleAttempts: 120,
   tileTypes: [
-    { id: 'bronze', label: 'Bronze', color: '#C77E36' },
-    { id: 'argent', label: 'Argent', color: '#ADBECA' },
-    { id: 'or', label: 'Or', color: '#E6C838' },
-    { id: 'platine', label: 'Platine', color: '#A6D3E3' },
-    { id: 'diamant', label: 'Diamant', color: '#82D9FF' }
+    {
+      id: 'bronze',
+      label: 'Bronze',
+      color: '#C77E36',
+      image: 'Assets/Image/Bronze.png'
+    },
+    {
+      id: 'argent',
+      label: 'Argent',
+      color: '#ADBECA',
+      image: 'Assets/Image/Argent.png'
+    },
+    {
+      id: 'or',
+      label: 'Or',
+      color: '#E6C838',
+      image: 'Assets/Image/Or.png'
+    },
+    {
+      id: 'platine',
+      label: 'Platine',
+      color: '#A6D3E3',
+      image: 'Assets/Image/Bronze.png'
+    },
+    {
+      id: 'diamant',
+      label: 'Diamant',
+      color: '#82D9FF',
+      image: 'Assets/Image/Diamant.png'
+    }
   ],
   timer: {
     initialSeconds: 6,
@@ -75,7 +100,8 @@ const METAUX_TILE_TYPES_SOURCE = Array.isArray(METAUX_CONFIG.tileTypes) && METAU
       .map(type => ({
         id: typeof type.id === 'string' ? type.id : '',
         label: typeof type.label === 'string' ? type.label : type.id,
-        color: typeof type.color === 'string' ? type.color : null
+        color: typeof type.color === 'string' ? type.color : null,
+        image: typeof type.image === 'string' ? type.image : null
       }))
       .filter(type => type.id)
   : null;
@@ -429,6 +455,7 @@ class MetauxMatch3Game {
       this.clearTileShakeEffect(row, col);
       tile.classList.add('is-empty');
       tile.style.removeProperty('--tile-color');
+      tile.style.removeProperty('--tile-image');
       if (labelElement) {
         labelElement.textContent = '';
       }
@@ -437,6 +464,7 @@ class MetauxMatch3Game {
     }
     const label = this.getTypeLabel(type);
     const color = this.getTypeColor(type);
+    const image = this.getTypeImage(type);
     if (labelElement) {
       labelElement.textContent = label;
     }
@@ -444,6 +472,12 @@ class MetauxMatch3Game {
       tile.style.setProperty('--tile-color', color);
     } else {
       tile.style.removeProperty('--tile-color');
+    }
+    if (image) {
+      const normalized = this.normalizeTileImage(image);
+      tile.style.setProperty('--tile-image', normalized);
+    } else {
+      tile.style.removeProperty('--tile-image');
     }
     tile.setAttribute('aria-label', label);
   }
@@ -456,6 +490,26 @@ class MetauxMatch3Game {
   getTypeColor(type) {
     const found = METAUX_TYPE_MAP.get(type);
     return found && found.color ? found.color : null;
+  }
+
+  getTypeImage(type) {
+    const found = METAUX_TYPE_MAP.get(type);
+    return found && found.image ? found.image : null;
+  }
+
+  normalizeTileImage(value) {
+    if (typeof value !== 'string') {
+      return 'none';
+    }
+    const trimmed = value.trim();
+    if (!trimmed) {
+      return 'none';
+    }
+    if (trimmed.startsWith('url(')) {
+      return trimmed;
+    }
+    const escaped = trimmed.replace(/"/g, '\\"');
+    return `url("${escaped}")`;
   }
 
   onPointerDown(event) {
