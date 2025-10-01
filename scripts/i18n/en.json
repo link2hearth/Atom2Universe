@@ -111,6 +111,9 @@
         "aria": "Fusion 2048 mini-game",
         "title": "Fusion 2048",
         "subtitle": "Pick your grid and merge tiles until you reach the selected goal.",
+        "banner": {
+          "goalLabel": "Goal"
+        },
         "controls": {
           "size": "Grid size",
           "target": "Goal to reach",
