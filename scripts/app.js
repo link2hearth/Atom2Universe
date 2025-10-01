@@ -2075,7 +2075,7 @@ const elements = {
   quantum2048MovesValue: document.getElementById('quantum2048MovesValue'),
   quantum2048GoalValue: document.getElementById('quantum2048GoalValue'),
   quantum2048Status: document.getElementById('quantum2048Status'),
-  quantum2048RestartButton: document.getElementById('quantum2048RestartButton'),
+  quantum2048RestartButton: document.getElementById('quantum2048GoalDisplay'),
   quantum2048Overlay: document.getElementById('quantum2048Overlay'),
   quantum2048OverlayMessage: document.getElementById('quantum2048OverlayMessage'),
   quantum2048OverlayButton: document.getElementById('quantum2048OverlayButton'),
