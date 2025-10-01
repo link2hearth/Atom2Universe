@@ -487,6 +487,23 @@ function updateGachaFeaturedInfo(dayKey = WEEKDAY_KEYS[new Date().getDay()] ?? n
   }
   const label = getGachaFeaturedLabelForDayKey(dayKey);
   if (label) {
+    const normalizedDayKey = typeof dayKey === 'string' ? dayKey : '';
+    const previousLabel = featuredInfo.dataset?.featuredLabel ?? '';
+    const previousDayKey = featuredInfo.dataset?.featuredDayKey ?? '';
+    if (previousLabel === label && previousDayKey === normalizedDayKey) {
+      if (featuredInfo.hidden) {
+        featuredInfo.hidden = false;
+      }
+      const activeSmokeElement = gachaSmokeAnimationState.element;
+      const hasSmokeElement = featuredInfo.querySelector('.gacha-featured-info__smoke');
+      if (!hasSmokeElement || (activeSmokeElement && activeSmokeElement !== hasSmokeElement)) {
+        const smokeBackdrop = createGachaFeaturedSmokeBackdrop();
+        if (smokeBackdrop) {
+          featuredInfo.prepend(smokeBackdrop);
+        }
+      }
+      return;
+    }
     stopGachaFeaturedSmokeAnimation();
     featuredInfo.innerHTML = '';
     const todayText = t('scripts.gacha.featured.today');
@@ -506,10 +523,18 @@ function updateGachaFeaturedInfo(dayKey = WEEKDAY_KEYS[new Date().getDay()] ?? n
     labelElement.textContent = label;
     fragment.appendChild(labelElement);
     featuredInfo.appendChild(fragment);
+    if (featuredInfo.dataset) {
+      featuredInfo.dataset.featuredLabel = label;
+      featuredInfo.dataset.featuredDayKey = normalizedDayKey;
+    }
     featuredInfo.hidden = false;
   } else {
     stopGachaFeaturedSmokeAnimation();
     featuredInfo.innerHTML = '';
+    if (featuredInfo.dataset) {
+      delete featuredInfo.dataset.featuredLabel;
+      delete featuredInfo.dataset.featuredDayKey;
+    }
     featuredInfo.hidden = true;
   }
 }
