@@ -74,6 +74,17 @@
         "overlay": {
           "message": "Touchez ou cliquez la raquette pour guider la particule et détruire les briques quantiques.",
           "button": "Commencer"
+        },
+        "portal": {
+          "quantum2048": {
+            "title": "Fusion 2048",
+            "description": "Composez des réactions en chaîne sur des grilles modulables pour atteindre la tuile visée.",
+            "detailSize": "Grilles disponibles",
+            "detailSizes": "3×3 · 4×4 · 5×5 · 6×6",
+            "detailTargets": "Objectifs",
+            "detailRange": "De 32 à 2048",
+            "cta": "Fusionner"
+          }
         }
       },
       "arcadeHub": {
@@ -100,6 +111,29 @@
             "cta": "Lancer"
           }
         }
+      },
+      "quantum2048": {
+        "aria": "Mini-jeu Fusion 2048",
+        "title": "Fusion 2048",
+        "subtitle": "Choisissez votre grille et combinez les tuiles pour atteindre l’objectif sélectionné.",
+        "controls": {
+          "size": "Taille de la grille",
+          "target": "Objectif à atteindre",
+          "restart": "Nouvelle partie"
+        },
+        "stats": {
+          "group": "Statistiques de la manche",
+          "score": "Score",
+          "best": "Meilleure tuile",
+          "moves": "Mouvements",
+          "goal": "Objectif"
+        },
+        "status": {
+          "ready": "Fusionnez les tuiles pour atteindre {target}.",
+          "victory": "Objectif atteint ! Continuez votre ascension.",
+          "defeat": "Plus aucun mouvement possible. Relancez une partie."
+        },
+        "board": "Plateau Fusion 2048"
       },
       "table": {
         "aria": "Tableau périodique des éléments",
@@ -502,6 +536,15 @@
             "speed": "Accélération",
             "floor": "Bouclier inférieur"
           }
+        }
+      },
+      "quantum2048": {
+        "sizeOption": "{size}×{size}",
+        "targetOption": "{value}",
+        "targetRecommended": "Recommandé",
+        "overlay": {
+          "defeat": "Plus de mouvements ! Score : {score}",
+          "retry": "Rejouer"
         }
       }
     }

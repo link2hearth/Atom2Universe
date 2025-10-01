@@ -78,6 +78,17 @@
             "overlay": {
               "message": "Touchez ou cliquez la raquette pour guider la particule et détruire les briques quantiques.",
               "button": "Commencer"
+            },
+            "portal": {
+              "quantum2048": {
+                "title": "Fusion 2048",
+                "description": "Composez des réactions en chaîne sur des grilles modulables pour atteindre la tuile visée.",
+                "detailSize": "Grilles disponibles",
+                "detailSizes": "3×3 · 4×4 · 5×5 · 6×6",
+                "detailTargets": "Objectifs",
+                "detailRange": "De 32 à 2048",
+                "cta": "Fusionner"
+              }
             }
           },
           "arcadeHub": {
@@ -101,14 +112,37 @@
                 "aria": "Accéder au mini-jeu Photon",
                 "title": "Photon",
                 "description": "Contrôlez le flux lumineux et évitez les interférences pour maximiser votre score.",
-                "cta": "Lancer"
-              }
+              "cta": "Lancer"
             }
+          }
+        },
+        "quantum2048": {
+          "aria": "Mini-jeu Fusion 2048",
+          "title": "Fusion 2048",
+          "subtitle": "Choisissez votre grille et combinez les tuiles pour atteindre l’objectif sélectionné.",
+          "controls": {
+            "size": "Taille de la grille",
+            "target": "Objectif à atteindre",
+            "restart": "Nouvelle partie"
           },
-          "table": {
-            "aria": "Tableau périodique des éléments",
-            "placeholder": "Sélectionnez un élément pour afficher ses propriétés.",
-            "details": {
+          "stats": {
+            "group": "Statistiques de la manche",
+            "score": "Score",
+            "best": "Meilleure tuile",
+            "moves": "Mouvements",
+            "goal": "Objectif"
+          },
+          "status": {
+            "ready": "Fusionnez les tuiles pour atteindre {target}.",
+            "victory": "Objectif atteint ! Continuez votre ascension.",
+            "defeat": "Plus aucun mouvement possible. Relancez une partie."
+          },
+          "board": "Plateau Fusion 2048"
+        },
+        "table": {
+          "aria": "Tableau périodique des éléments",
+          "placeholder": "Sélectionnez un élément pour afficher ses propriétés.",
+          "details": {
               "family": "Famille",
               "collection": "Collection"
             }
@@ -495,6 +529,15 @@
                 "speed": "Accélération",
                 "floor": "Bouclier inférieur"
               }
+            }
+          },
+          "quantum2048": {
+            "sizeOption": "{size}×{size}",
+            "targetOption": "{value}",
+            "targetRecommended": "Recommandé",
+            "overlay": {
+              "defeat": "Plus de mouvements ! Score : {score}",
+              "retry": "Rejouer"
             }
           }
         }
@@ -1141,6 +1184,17 @@
             "overlay": {
               "message": "Tap or click the paddle to guide the particle and shatter the quantum bricks.",
               "button": "Start"
+            },
+            "portal": {
+              "quantum2048": {
+                "title": "Fusion 2048",
+                "description": "Chain reactions on modular grids to reach the requested tile.",
+                "detailSize": "Grid sizes",
+                "detailSizes": "3×3 · 4×4 · 5×5 · 6×6",
+                "detailTargets": "Objectives",
+                "detailRange": "From 32 up to 2048",
+                "cta": "Play"
+              }
             }
           },
           "arcadeHub": {
@@ -1164,14 +1218,37 @@
                 "aria": "Open the Photon mini-game",
                 "title": "Photon",
                 "description": "Channel the light stream and dodge interferences to maximise your score.",
-                "cta": "Launch"
-              }
+              "cta": "Launch"
             }
+          }
+        },
+        "quantum2048": {
+          "aria": "Fusion 2048 mini-game",
+          "title": "Fusion 2048",
+          "subtitle": "Pick your grid and merge tiles until you reach the selected goal.",
+          "controls": {
+            "size": "Grid size",
+            "target": "Goal to reach",
+            "restart": "New run"
           },
-          "table": {
-            "aria": "Periodic table of elements",
-            "placeholder": "Select an element to display its properties.",
-            "details": {
+          "stats": {
+            "group": "Run statistics",
+            "score": "Score",
+            "best": "Best tile",
+            "moves": "Moves",
+            "goal": "Goal"
+          },
+          "status": {
+            "ready": "Merge tiles to reach {target}.",
+            "victory": "Goal reached! Keep pushing further.",
+            "defeat": "No moves left. Try again."
+          },
+          "board": "Fusion 2048 board"
+        },
+        "table": {
+          "aria": "Periodic table of elements",
+          "placeholder": "Select an element to display its properties.",
+          "details": {
               "family": "Family",
               "collection": "Collection"
             }
