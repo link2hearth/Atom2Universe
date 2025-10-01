@@ -357,6 +357,11 @@
 
       this.maxGain = 0.32;
       this.waveCache = new Map();
+      this.noiseBuffer = null;
+      this.schedulerInterval = null;
+      this.schedulerState = null;
+      this.scheduleAheadTime = 0.25;
+      this.scheduleIntervalSeconds = 0.03;
 
       this.bindEvents();
       this.updateButtons();
@@ -433,9 +438,12 @@
         }
         this.audioContext = new AudioContextClass();
         this.waveCache = new Map();
+        this.noiseBuffer = null;
         this.masterGain = this.audioContext.createGain();
         this.masterGain.gain.value = 1;
         this.masterGain.connect(this.audioContext.destination);
+        this.schedulerInterval = null;
+        this.schedulerState = null;
       }
       if (this.audioContext.state === 'suspended') {
         await this.audioContext.resume();
@@ -584,6 +592,24 @@
       return wave;
     }
 
+    getNoiseBuffer() {
+      if (!this.audioContext) {
+        return null;
+      }
+      if (this.noiseBuffer && this.noiseBuffer.sampleRate === this.audioContext.sampleRate) {
+        return this.noiseBuffer;
+      }
+      const durationSeconds = 1.5;
+      const length = Math.max(1, Math.floor(this.audioContext.sampleRate * durationSeconds));
+      const buffer = this.audioContext.createBuffer(1, length, this.audioContext.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < length; i += 1) {
+        data[i] = (Math.random() * 2) - 1;
+      }
+      this.noiseBuffer = buffer;
+      return buffer;
+    }
+
     getInstrumentSettings(note) {
       const program = Number.isFinite(note.program) ? note.program : 0;
 
@@ -676,11 +702,67 @@
       }
     }
 
+    getPercussionSettings(note) {
+      const key = note.note;
+
+      if (key === 35 || key === 36) {
+        return {
+          volume: 1.1,
+          duration: 0.32,
+          envelope: { attack: 0.001, decay: 0.08, sustain: 0.0001, release: 0.12 },
+          tone: { type: 'sine', frequency: 110, frequencyEnd: 55, level: 1.2 },
+          noise: { level: 0.45, filter: { type: 'lowpass', frequency: 1400, Q: 0.8 } },
+        };
+      }
+
+      if (key === 38 || key === 40) {
+        return {
+          volume: 1,
+          duration: 0.26,
+          envelope: { attack: 0.001, decay: 0.06, sustain: 0.0001, release: 0.16 },
+          tone: { type: 'triangle', frequency: 220, frequencyEnd: 140, level: 0.45, filter: { type: 'lowpass', frequency: 1200, Q: 0.7 } },
+          noise: { level: 1.1, filter: { type: 'bandpass', frequency: 3200, Q: 0.9 } },
+        };
+      }
+
+      if (key === 42 || key === 44 || key === 46) {
+        return {
+          volume: 0.8,
+          duration: 0.18,
+          envelope: { attack: 0.001, decay: 0.04, sustain: 0.0001, release: 0.08 },
+          noise: { level: 1.2, filter: { type: 'highpass', frequency: 6500, Q: 0.7 } },
+        };
+      }
+
+      if (key === 49 || key === 57) {
+        return {
+          volume: 0.9,
+          duration: 0.4,
+          envelope: { attack: 0.001, decay: 0.12, sustain: 0.0001, release: 0.22 },
+          tone: { type: 'square', frequency: 330, frequencyEnd: 200, level: 0.6 },
+          noise: { level: 0.6, filter: { type: 'bandpass', frequency: 1900, Q: 1.1 } },
+        };
+      }
+
+      return {
+        volume: 0.75,
+        duration: 0.22,
+        envelope: { attack: 0.001, decay: 0.06, sustain: 0.0001, release: 0.12 },
+        noise: { level: 1, filter: { type: 'bandpass', frequency: 2600, Q: 0.8 } },
+      };
+    }
+
     scheduleNote(note, baseTime) {
       if (!this.audioContext || !this.masterGain) {
         return;
       }
-      const startAt = baseTime + note.startTime;
+
+      if (note.channel === 9) {
+        this.schedulePercussion(note, baseTime);
+        return;
+      }
+      const now = this.audioContext.currentTime;
+      const startAt = Math.max(baseTime + note.startTime, now + 0.001);
       const velocity = Math.max(0.1, Math.min(1, note.velocity));
 
       const instrument = this.getInstrumentSettings(note);
@@ -719,6 +801,7 @@
 
       osc.frequency.setValueAtTime(frequency, startAt);
       const voice = {
+        type: 'melodic',
         osc,
         gainNode,
         startTime: startAt,
@@ -757,6 +840,168 @@
       osc.stop(stopAt + releaseDuration);
     }
 
+    schedulePercussion(note, baseTime) {
+      if (!this.audioContext || !this.masterGain) {
+        return;
+      }
+
+      const now = this.audioContext.currentTime;
+      const startAt = Math.max(baseTime + note.startTime, now + 0.001);
+      const velocity = Math.max(0.1, Math.min(1, note.velocity));
+      const settings = this.getPercussionSettings(note);
+      const envelope = settings.envelope || {};
+      const attack = Math.max(0.001, envelope.attack || 0.005);
+      const decay = Math.max(0.01, envelope.decay || 0.05);
+      const sustainLevel = Math.max(0, Math.min(1, envelope.sustain ?? 0.0001));
+      const release = Math.max(0.02, envelope.release || 0.08);
+      const baseDuration = Math.max(0.05, settings.duration || note.duration || 0.18);
+      const stopAt = startAt + baseDuration;
+      const totalStop = stopAt + release;
+
+      const gainNode = this.audioContext.createGain();
+      const peakGain = Math.min(1, velocity * this.maxGain * (settings.volume || 0.75));
+      const attackEnd = startAt + attack;
+      const decayEnd = attackEnd + decay;
+      gainNode.gain.cancelScheduledValues(startAt);
+      gainNode.gain.setValueAtTime(0.0001, startAt);
+      gainNode.gain.linearRampToValueAtTime(peakGain, attackEnd);
+      gainNode.gain.exponentialRampToValueAtTime(Math.max(0.0001, peakGain * sustainLevel), decayEnd);
+      gainNode.gain.setValueAtTime(Math.max(0.0001, peakGain * sustainLevel), stopAt);
+      gainNode.gain.exponentialRampToValueAtTime(0.0001, totalStop);
+      gainNode.connect(this.masterGain);
+
+      const voice = {
+        type: 'percussion',
+        startTime: startAt,
+        stopTime: totalStop,
+        gainNode,
+        sources: [],
+        nodes: [],
+      };
+
+      this.liveVoices.add(voice);
+
+      const cleanup = () => {
+        if (voice.cleaned) {
+          return;
+        }
+        voice.cleaned = true;
+        this.liveVoices.delete(voice);
+        for (const node of voice.nodes) {
+          try {
+            node.disconnect();
+          } catch (error) {
+            // Ignore disconnect issues
+          }
+        }
+        try {
+          gainNode.disconnect();
+        } catch (error) {
+          // Ignore disconnect issues
+        }
+      };
+      voice.cleanup = cleanup;
+
+      let activeSources = 0;
+      const registerNode = (node) => {
+        voice.nodes.push(node);
+        return node;
+      };
+      const scheduleSource = (source, chainNodes = []) => {
+        registerNode(source);
+        voice.sources.push(source);
+        let previous = source;
+        for (const node of chainNodes) {
+          registerNode(node);
+          previous.connect(node);
+          previous = node;
+        }
+        previous.connect(gainNode);
+        activeSources += 1;
+        source.start(startAt);
+        source.stop(totalStop);
+        source.onended = () => {
+          try {
+            source.disconnect();
+          } catch (error) {
+            // Ignore disconnect issues
+          }
+          activeSources -= 1;
+          if (activeSources <= 0) {
+            cleanup();
+          }
+        };
+      };
+
+      if (settings.noise) {
+        const noiseBuffer = this.getNoiseBuffer();
+        if (noiseBuffer) {
+          const noise = this.audioContext.createBufferSource();
+          noise.buffer = noiseBuffer;
+          noise.loop = true;
+          const chain = [];
+          if (settings.noise.filter) {
+            const filter = this.audioContext.createBiquadFilter();
+            if (settings.noise.filter.type) {
+              filter.type = settings.noise.filter.type;
+            } else {
+              filter.type = 'bandpass';
+            }
+            if (Number.isFinite(settings.noise.filter.frequency)) {
+              filter.frequency.setValueAtTime(settings.noise.filter.frequency, startAt);
+            }
+            if (Number.isFinite(settings.noise.filter.Q)) {
+              filter.Q.setValueAtTime(settings.noise.filter.Q, startAt);
+            }
+            chain.push(filter);
+          }
+          const noiseGain = this.audioContext.createGain();
+          noiseGain.gain.setValueAtTime(Math.max(0.0001, settings.noise.level ?? 1), startAt);
+          chain.push(noiseGain);
+          scheduleSource(noise, chain);
+        }
+      }
+
+      if (settings.tone) {
+        const osc = this.audioContext.createOscillator();
+        osc.type = settings.tone.type || 'sine';
+        if (Number.isFinite(settings.tone.frequency)) {
+          osc.frequency.setValueAtTime(settings.tone.frequency, startAt);
+        }
+        if (Number.isFinite(settings.tone.frequencyEnd)) {
+          const endFrequency = Math.max(10, settings.tone.frequencyEnd);
+          osc.frequency.exponentialRampToValueAtTime(endFrequency, stopAt);
+        }
+        if (Number.isFinite(settings.tone.detune)) {
+          osc.detune.setValueAtTime(settings.tone.detune, startAt);
+        }
+        const chain = [];
+        if (settings.tone.filter) {
+          const filter = this.audioContext.createBiquadFilter();
+          if (settings.tone.filter.type) {
+            filter.type = settings.tone.filter.type;
+          } else {
+            filter.type = 'lowpass';
+          }
+          if (Number.isFinite(settings.tone.filter.frequency)) {
+            filter.frequency.setValueAtTime(settings.tone.filter.frequency, startAt);
+          }
+          if (Number.isFinite(settings.tone.filter.Q)) {
+            filter.Q.setValueAtTime(settings.tone.filter.Q, startAt);
+          }
+          chain.push(filter);
+        }
+        const toneGain = this.audioContext.createGain();
+        toneGain.gain.setValueAtTime(Math.max(0.0001, settings.tone.level ?? 1), startAt);
+        chain.push(toneGain);
+        scheduleSource(osc, chain);
+      }
+
+      if (!activeSources) {
+        cleanup();
+      }
+    }
+
     async play() {
       if (!this.timeline || !this.timeline.notes.length) {
         this.setStatus('Aucune donnée MIDI à lire.', 'error');
@@ -770,17 +1015,7 @@
         this.updateButtons();
 
         const startTime = context.currentTime + 0.05;
-        for (const note of this.timeline.notes) {
-          const delay = Math.max(0, (startTime + note.startTime - context.currentTime) * 1000);
-          const timerId = window.setTimeout(() => {
-            this.pendingTimers.delete(timerId);
-            if (!this.playing) {
-              return;
-            }
-            this.scheduleNote(note, startTime);
-          }, delay);
-          this.pendingTimers.add(timerId);
-        }
+        this.startScheduler(startTime);
 
         this.finishTimeout = window.setTimeout(() => {
           this.finishTimeout = null;
@@ -803,6 +1038,8 @@
         this.finishTimeout = null;
       }
 
+      this.stopScheduler();
+
       for (const timerId of this.pendingTimers) {
         window.clearTimeout(timerId);
       }
@@ -812,17 +1049,31 @@
         const now = this.audioContext.currentTime;
         for (const voice of this.liveVoices) {
           try {
-            if (now < voice.startTime) {
-              voice.osc.stop(voice.startTime);
-            } else {
+            if (voice.type === 'percussion') {
+              const stopAt = now < voice.startTime ? voice.startTime : now + 0.12;
               voice.gainNode.gain.cancelScheduledValues(now);
               voice.gainNode.gain.setValueAtTime(voice.gainNode.gain.value, now);
-              voice.gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
-              voice.osc.stop(now + 0.12);
-            }
-            if (voice.lfo) {
-              const stopAt = now < voice.startTime ? voice.startTime : now + 0.12;
-              voice.lfo.stop(stopAt);
+              voice.gainNode.gain.exponentialRampToValueAtTime(0.0001, stopAt);
+              for (const source of voice.sources) {
+                try {
+                  source.stop(stopAt);
+                } catch (error) {
+                  // Ignore stop issues
+                }
+              }
+            } else if (voice.osc) {
+              if (now < voice.startTime) {
+                voice.osc.stop(voice.startTime);
+              } else {
+                voice.gainNode.gain.cancelScheduledValues(now);
+                voice.gainNode.gain.setValueAtTime(voice.gainNode.gain.value, now);
+                voice.gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
+                voice.osc.stop(now + 0.12);
+              }
+              if (voice.lfo) {
+                const stopAt = now < voice.startTime ? voice.startTime : now + 0.12;
+                voice.lfo.stop(stopAt);
+              }
             }
           } catch (error) {
             // Ignorer les erreurs liées à l'état de l'oscillateur
@@ -837,6 +1088,64 @@
 
       if (manual && wasPlaying) {
         this.setStatus(`Lecture stoppée : ${this.currentTitle}`);
+      }
+    }
+
+    startScheduler(startTime) {
+      if (!this.audioContext || !this.timeline) {
+        return;
+      }
+      this.schedulerState = {
+        startTime,
+        index: 0,
+      };
+      this.processScheduler();
+      if (this.schedulerInterval) {
+        window.clearInterval(this.schedulerInterval);
+      }
+      this.schedulerInterval = window.setInterval(() => {
+        this.processScheduler();
+      }, Math.max(4, Math.floor(this.scheduleIntervalSeconds * 1000)));
+    }
+
+    stopScheduler() {
+      if (this.schedulerInterval) {
+        window.clearInterval(this.schedulerInterval);
+        this.schedulerInterval = null;
+      }
+      this.schedulerState = null;
+    }
+
+    processScheduler() {
+      if (!this.playing || !this.schedulerState || !this.audioContext || !this.timeline) {
+        return;
+      }
+
+      const { startTime } = this.schedulerState;
+      const notes = this.timeline.notes;
+      if (!Array.isArray(notes) || !notes.length) {
+        this.stopScheduler();
+        return;
+      }
+
+      let index = this.schedulerState.index;
+      const currentTime = this.audioContext.currentTime;
+      const windowEnd = currentTime + this.scheduleAheadTime;
+
+      while (index < notes.length) {
+        const note = notes[index];
+        const noteStart = startTime + note.startTime;
+        if (noteStart > windowEnd) {
+          break;
+        }
+        this.scheduleNote(note, startTime);
+        index += 1;
+      }
+
+      this.schedulerState.index = index;
+
+      if (index >= notes.length) {
+        this.stopScheduler();
       }
     }
   }
