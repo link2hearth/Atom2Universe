@@ -799,11 +799,36 @@ const GAME_CONFIG = {
     },
     maxShuffleAttempts: 120,
     tileTypes: [
-      { id: 'bronze', label: 'Cu', color: '#F8A436' },
-      { id: 'argent', label: 'Ag', color: '#1C8213' },
-      { id: 'or', label: 'Au', color: '#E6C838' },
-      { id: 'platine', label: 'Pt', color: '#45A9E2' },
-      { id: 'diamant', label: 'C', color: '#E9F6FD' }
+      {
+        id: 'bronze',
+        label: 'Cu',
+        color: '#F8A436',
+        image: 'assets/image/Bronze.png'
+      },
+      {
+        id: 'argent',
+        label: 'Ag',
+        color: '#1C8213',
+        image: 'assets/image/Argent.png'
+      },
+      {
+        id: 'or',
+        label: 'Au',
+        color: '#E6C838',
+        image: 'assets/image/Or.png'
+      },
+      {
+        id: 'platine',
+        label: 'Pt',
+        color: '#45A9E2',
+        image: 'assets/image/Bronze.png'
+      },
+      {
+        id: 'diamant',
+        label: 'C',
+        color: '#E9F6FD',
+        image: 'assets/image/Diamant.png'
+      }
     ],
     timer: {
       initialSeconds: 6,

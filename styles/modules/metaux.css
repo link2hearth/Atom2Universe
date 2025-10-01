@@ -538,24 +538,24 @@
 }
 
 .metaux-tile[data-type='or'] {
-  --tile-image: url('../Assets/Sprites/Or.png');
+  --tile-image: url('../../assets/image/Or.png');
 }
 
 .metaux-tile[data-type='argent'] {
-  --tile-image: url('../Assets/Sprites/Argent.png');
+  --tile-image: url('../../assets/image/Argent.png');
 }
 
 .metaux-tile[data-type='bronze'] {
-  --tile-image: url('../Assets/Sprites/Bronze.png');
+  --tile-image: url('../../assets/image/Bronze.png');
 }
 
 .metaux-tile[data-type='platine'],
 .metaux-tile[data-type='cuivre'] {
-  --tile-image: url('../Assets/Sprites/Cuivre.png');
+  --tile-image: url('../../assets/image/Bronze.png');
 }
 
 .metaux-tile[data-type='diamant'] {
-  --tile-image: url('../Assets/Sprites/Diamant.png');
+  --tile-image: url('../../assets/image/Diamant.png');
 }
 
 .metaux-message {
