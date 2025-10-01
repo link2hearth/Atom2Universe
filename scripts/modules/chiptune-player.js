@@ -679,7 +679,7 @@
               sustain: 0.45,
               release: Math.max(0.22, note.duration * 0.6),
             },
-            vibrato: { depth: 2.5, rate: 5 },
+            lfo: { rate: 5, vibratoDepth: 14, tremoloDepth: 0.12 },
             volume: 0.85,
             filter: { type: 'lowpass', frequency: 2200, Q: 0.7 },
           };
@@ -688,7 +688,7 @@
             type: 'pulse',
             dutyCycle: 0.375,
             envelope: { ...baseEnvelope, decay: 0.08, sustain: 0.7, release: Math.max(0.2, note.duration * 0.9) },
-            vibrato: { depth: 4, rate: 4.5 },
+            lfo: { rate: 4.5, vibratoDepth: 18, tremoloDepth: 0.18 },
             volume: 0.85,
           };
         case 2: // Guitares
@@ -696,21 +696,21 @@
             type: 'pulse',
             dutyCycle: 0.18,
             envelope: { ...baseEnvelope, decay: 0.05, sustain: 0.45 },
-            vibrato: { depth: 6, rate: 6.5 },
+            lfo: { rate: 6.5, vibratoDepth: 24, tremoloDepth: 0.1 },
             volume: 0.82,
           };
         case 3: // Basses
           return {
             type: 'triangle',
             envelope: { ...baseEnvelope, decay: 0.08, sustain: 0.55 },
-            vibrato: { depth: 2, rate: 4 },
+            lfo: { rate: 4, vibratoDepth: 12, tremoloDepth: 0.05 },
             volume: 1,
           };
         case 4: // Cordes
           return {
             type: 'sawtooth',
             envelope: { ...baseEnvelope, attack: 0.02, decay: 0.12, sustain: 0.65 },
-            vibrato: { depth: 5, rate: 5 },
+            lfo: { rate: 5, vibratoDepth: 20, tremoloDepth: 0.16 },
             volume: 0.75,
           };
         case 5: // Ensembles
@@ -718,7 +718,7 @@
             type: 'pulse',
             dutyCycle: 0.44,
             envelope: { ...baseEnvelope, attack: 0.018, decay: 0.12, sustain: 0.7 },
-            vibrato: { depth: 8, rate: 5.2 },
+            lfo: { rate: 5.2, vibratoDepth: 26, tremoloDepth: 0.22 },
             volume: 0.78,
           };
         case 6: // Cuivres
@@ -726,7 +726,7 @@
             type: 'pulse',
             dutyCycle: 0.22,
             envelope: { ...baseEnvelope, attack: 0.015, decay: 0.08, sustain: 0.5 },
-            vibrato: { depth: 7, rate: 5.8 },
+            lfo: { rate: 5.8, vibratoDepth: 22, tremoloDepth: 0.18 },
             volume: 0.9,
           };
         case 7: // Leads
@@ -734,14 +734,14 @@
             type: 'pulse',
             dutyCycle: 0.12,
             envelope: { ...baseEnvelope, decay: 0.05, sustain: 0.4 },
-            vibrato: { depth: 10, rate: 6.8 },
+            lfo: { rate: 6.8, vibratoDepth: 32, tremoloDepth: 0.12 },
             volume: 0.92,
           };
         case 8: // Pad
           return {
             type: 'sawtooth',
             envelope: { ...baseEnvelope, attack: 0.03, decay: 0.16, sustain: 0.75, release: Math.max(0.3, note.duration) },
-            vibrato: { depth: 6, rate: 4.2 },
+            lfo: { rate: 4.2, vibratoDepth: 18, tremoloDepth: 0.2 },
             volume: 0.7,
           };
         default:
@@ -749,10 +749,34 @@
             type: 'pulse',
             dutyCycle: 0.5,
             envelope: baseEnvelope,
-            vibrato: { depth: 3, rate: 5 },
+            lfo: { rate: 5, vibratoDepth: 18, tremoloDepth: 0.1 },
             volume: 0.85,
           };
       }
+    }
+
+    getLfoSettings(instrument) {
+      if (instrument && instrument.lfo) {
+        const { lfo } = instrument;
+        return {
+          rate: Math.max(0.1, lfo.rate || 5),
+          vibratoDepth: Math.max(0, lfo.vibratoDepth || 0),
+          tremoloDepth: Math.max(0, Math.min(0.95, lfo.tremoloDepth || 0)),
+          waveform: lfo.waveform || 'sine',
+        };
+      }
+
+      if (instrument && instrument.vibrato) {
+        const { vibrato } = instrument;
+        return {
+          rate: Math.max(0.1, vibrato.rate || 5),
+          vibratoDepth: Math.max(0, vibrato.depth || 0),
+          tremoloDepth: 0,
+          waveform: vibrato.waveform || 'sine',
+        };
+      }
+
+      return null;
     }
 
     getPercussionSettings(note) {
@@ -822,6 +846,7 @@
       const osc = this.audioContext.createOscillator();
       const gainNode = this.audioContext.createGain();
       const frequency = this.midiNoteToFrequency(note.note);
+      const lfoSettings = this.getLfoSettings(instrument);
 
       if (instrument.type === 'pulse') {
         const wave = this.getPulseWave(instrument.dutyCycle || 0.5);
@@ -861,18 +886,26 @@
         stopTime: stopAt + releaseDuration,
       };
 
-      let lfo = null;
-      let lfoGain = null;
-      if (instrument.vibrato && instrument.vibrato.depth > 0 && instrument.vibrato.rate > 0) {
-        lfo = this.audioContext.createOscillator();
-        lfoGain = this.audioContext.createGain();
-        lfo.frequency.setValueAtTime(instrument.vibrato.rate, startAt);
-        lfoGain.gain.setValueAtTime(instrument.vibrato.depth, startAt);
-        lfo.connect(lfoGain).connect(osc.frequency);
-        lfo.start(startAt);
-        lfo.stop(stopAt + releaseDuration);
-        voice.lfo = lfo;
-        voice.lfoGain = lfoGain;
+      const hasVibrato = lfoSettings && lfoSettings.vibratoDepth > 0;
+      const hasTremolo = lfoSettings && lfoSettings.tremoloDepth > 0;
+      const needsLfo = lfoSettings && (hasVibrato || hasTremolo);
+
+      let lfoOscillator = null;
+      let vibratoGain = null;
+      if (needsLfo) {
+        lfoOscillator = this.audioContext.createOscillator();
+        lfoOscillator.type = lfoSettings.waveform || 'sine';
+        lfoOscillator.frequency.setValueAtTime(lfoSettings.rate, startAt);
+      }
+
+      if (lfoOscillator && hasVibrato) {
+        vibratoGain = this.audioContext.createGain();
+        const depthInCents = lfoSettings.vibratoDepth;
+        const depthFactor = Math.max(0, Math.pow(2, depthInCents / 1200) - 1);
+        const depthHz = frequency * depthFactor;
+        vibratoGain.gain.setValueAtTime(depthHz, startAt);
+        lfoOscillator.connect(vibratoGain).connect(osc.frequency);
+        voice.lfoGain = vibratoGain;
       }
 
       let lastNode = osc;
@@ -892,6 +925,29 @@
         voice.filterNode = filter;
       }
 
+      if (lfoOscillator && hasTremolo) {
+        const tremoloNode = this.audioContext.createGain();
+        tremoloNode.gain.setValueAtTime(1, startAt);
+        lastNode.connect(tremoloNode);
+        lastNode = tremoloNode;
+
+        const tremoloGain = this.audioContext.createGain();
+        const tremoloDepth = Math.max(0, Math.min(0.95, lfoSettings.tremoloDepth));
+        const tremoloScale = tremoloDepth / 2;
+        tremoloGain.gain.setValueAtTime(tremoloScale, startAt);
+        lfoOscillator.connect(tremoloGain).connect(tremoloNode.gain);
+
+        const tremoloOffset = this.audioContext.createConstantSource();
+        tremoloOffset.offset.setValueAtTime(1 - tremoloScale, startAt);
+        tremoloOffset.connect(tremoloNode.gain);
+        tremoloOffset.start(startAt);
+        tremoloOffset.stop(stopAt + releaseDuration);
+
+        voice.tremoloNode = tremoloNode;
+        voice.tremoloGain = tremoloGain;
+        voice.tremoloOffset = tremoloOffset;
+      }
+
       lastNode.connect(gainNode);
       gainNode.connect(this.masterGain);
 
@@ -906,16 +962,50 @@
             // Ignore disconnect issues
           }
         }
+        if (voice.tremoloNode) {
+          try {
+            voice.tremoloNode.disconnect();
+          } catch (error) {
+            // Ignore disconnect issues
+          }
+        }
+        if (voice.tremoloGain) {
+          try {
+            voice.tremoloGain.disconnect();
+          } catch (error) {
+            // Ignore disconnect issues
+          }
+        }
+        if (voice.tremoloOffset) {
+          try {
+            voice.tremoloOffset.disconnect();
+          } catch (error) {
+            // Ignore disconnect issues
+          }
+        }
         if (voice.lfoGain) {
-          voice.lfoGain.disconnect();
+          try {
+            voice.lfoGain.disconnect();
+          } catch (error) {
+            // Ignore disconnect issues
+          }
         }
         if (voice.lfo) {
-          voice.lfo.disconnect();
+          try {
+            voice.lfo.disconnect();
+          } catch (error) {
+            // Ignore disconnect issues
+          }
         }
       };
 
       osc.start(startAt);
       osc.stop(stopAt + releaseDuration);
+      if (lfoOscillator && (hasVibrato || hasTremolo)) {
+        lfoOscillator.start(startAt);
+        lfoOscillator.stop(stopAt + releaseDuration);
+        voice.lfo = lfoOscillator;
+      }
     }
 
     schedulePercussion(note, baseTime) {
