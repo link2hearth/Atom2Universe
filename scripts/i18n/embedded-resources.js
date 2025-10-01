@@ -78,17 +78,6 @@
             "overlay": {
               "message": "Touchez ou cliquez la raquette pour guider la particule et détruire les briques quantiques.",
               "button": "Commencer"
-            },
-            "portal": {
-              "quantum2048": {
-                "title": "Fusion 2048",
-                "description": "Composez des réactions en chaîne sur des grilles modulables pour atteindre la tuile visée.",
-                "detailSize": "Grilles disponibles",
-                "detailSizes": "3×3 · 4×4 · 5×5 · 6×6",
-                "detailTargets": "Objectifs",
-                "detailRange": "De 32 à 2048",
-                "cta": "Fusionner"
-              }
             }
           },
           "arcadeHub": {
@@ -112,10 +101,16 @@
                 "aria": "Accéder au mini-jeu Photon",
                 "title": "Photon",
                 "description": "Contrôlez le flux lumineux et évitez les interférences pour maximiser votre score.",
-              "cta": "Lancer"
+                "cta": "Lancer"
+              },
+              "quantum2048": {
+                "aria": "Accéder au mini-jeu Fusion 2048",
+                "title": "Fusion 2048",
+                "description": "Composez des réactions en chaîne sur la grille choisie pour atteindre la tuile objectif.",
+                "cta": "Fusionner"
+              }
             }
-          }
-        },
+          },
         "quantum2048": {
           "aria": "Mini-jeu Fusion 2048",
           "title": "Fusion 2048",
@@ -1184,17 +1179,6 @@
             "overlay": {
               "message": "Tap or click the paddle to guide the particle and shatter the quantum bricks.",
               "button": "Start"
-            },
-            "portal": {
-              "quantum2048": {
-                "title": "Fusion 2048",
-                "description": "Chain reactions on modular grids to reach the requested tile.",
-                "detailSize": "Grid sizes",
-                "detailSizes": "3×3 · 4×4 · 5×5 · 6×6",
-                "detailTargets": "Objectives",
-                "detailRange": "From 32 up to 2048",
-                "cta": "Play"
-              }
             }
           },
           "arcadeHub": {
@@ -1218,10 +1202,16 @@
                 "aria": "Open the Photon mini-game",
                 "title": "Photon",
                 "description": "Channel the light stream and dodge interferences to maximise your score.",
-              "cta": "Launch"
+                "cta": "Launch"
+              },
+              "quantum2048": {
+                "aria": "Open the Fusion 2048 mini-game",
+                "title": "Fusion 2048",
+                "description": "Trigger chain reactions on your chosen grid to reach the requested tile.",
+                "cta": "Play"
+              }
             }
-          }
-        },
+          },
         "quantum2048": {
           "aria": "Fusion 2048 mini-game",
           "title": "Fusion 2048",

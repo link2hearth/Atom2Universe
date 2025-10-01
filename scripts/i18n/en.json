@@ -74,17 +74,6 @@
         "overlay": {
           "message": "Tap or click the paddle to guide the particle and shatter the quantum bricks.",
           "button": "Start"
-        },
-        "portal": {
-          "quantum2048": {
-            "title": "Fusion 2048",
-            "description": "Chain reactions on modular grids to reach the requested tile.",
-            "detailSize": "Grid sizes",
-            "detailSizes": "3×3 · 4×4 · 5×5 · 6×6",
-            "detailTargets": "Objectives",
-            "detailRange": "From 32 up to 2048",
-            "cta": "Play"
-          }
         }
       },
       "arcadeHub": {
@@ -109,6 +98,12 @@
             "title": "Photon",
             "description": "Channel the light stream and dodge interferences to maximise your score.",
             "cta": "Launch"
+          },
+          "quantum2048": {
+            "aria": "Open the Fusion 2048 mini-game",
+            "title": "Fusion 2048",
+            "description": "Trigger chain reactions on your chosen grid to reach the requested tile.",
+            "cta": "Play"
           }
         }
       },

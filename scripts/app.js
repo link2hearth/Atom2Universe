@@ -2081,7 +2081,6 @@ const elements = {
   quantum2048Overlay: document.getElementById('quantum2048Overlay'),
   quantum2048OverlayMessage: document.getElementById('quantum2048OverlayMessage'),
   quantum2048OverlayButton: document.getElementById('quantum2048OverlayButton'),
-  quantum2048OpenButton: document.getElementById('quantum2048OpenButton'),
   metauxOpenButton: document.getElementById('metauxOpenButton'),
   metauxReturnButton: document.getElementById('metauxReturnButton'),
   metauxBoard: document.getElementById('metauxBoard'),
@@ -5744,6 +5743,9 @@ if (elements.arcadeHubCardButtons?.length) {
       if (target === 'photon') {
         preparePhotonNewGame();
       }
+      if (target === 'quantum2048') {
+        ensureQuantum2048Game();
+      }
       showPage(target);
     });
   });
@@ -5758,13 +5760,6 @@ if (elements.arcadeBannerButtons?.length) {
       }
       showPage(target);
     });
-  });
-}
-
-if (elements.quantum2048OpenButton) {
-  elements.quantum2048OpenButton.addEventListener('click', () => {
-    ensureQuantum2048Game();
-    showPage('quantum2048');
   });
 }
 
