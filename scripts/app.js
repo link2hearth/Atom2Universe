@@ -2067,6 +2067,12 @@ const elements = {
   arcadeLivesValue: document.getElementById('arcadeLivesValue'),
   arcadeScoreValue: document.getElementById('arcadeScoreValue'),
   arcadeComboMessage: document.getElementById('arcadeComboMessage'),
+  waveStage: document.getElementById('waveStage'),
+  waveCanvas: document.getElementById('waveCanvas'),
+  waveDistanceValue: document.getElementById('waveDistanceValue'),
+  waveSpeedValue: document.getElementById('waveSpeedValue'),
+  waveAltitudeValue: document.getElementById('waveAltitudeValue'),
+  waveStatusMessage: document.getElementById('waveStatusMessage'),
   quantum2048Board: document.getElementById('quantum2048Board'),
   quantum2048Tiles: document.getElementById('quantum2048Tiles'),
   quantum2048Grid: document.getElementById('quantum2048Grid'),
@@ -2532,6 +2538,24 @@ function hidePhotonOverlay() {
 
 function isPhotonOverlayVisible() {
   return Boolean(elements.photonOverlay) && elements.photonOverlay.hidden === false;
+}
+
+function ensureWaveGame() {
+  if (waveGame || typeof WaveGame !== 'function') {
+    return waveGame;
+  }
+  if (!elements.waveCanvas) {
+    return null;
+  }
+  waveGame = new WaveGame({
+    canvas: elements.waveCanvas,
+    stage: elements.waveStage,
+    distanceElement: elements.waveDistanceValue,
+    speedElement: elements.waveSpeedValue,
+    altitudeElement: elements.waveAltitudeValue,
+    statusElement: elements.waveStatusMessage
+  });
+  return waveGame;
 }
 
 function ensurePhotonGame() {
@@ -4584,6 +4608,7 @@ function renderProductionBreakdown(container, entry, context = null) {
 }
 
 let toastElement = null;
+let waveGame = null;
 let photonGame = null;
 let quantum2048Game = null;
 let apsCritPulseTimeoutId = null;
@@ -5402,6 +5427,9 @@ function showPage(pageId) {
     return;
   }
   const now = performance.now();
+  if (pageId === 'wave') {
+    ensureWaveGame();
+  }
   if (pageId === 'photon') {
     ensurePhotonGame();
   }
@@ -5422,6 +5450,7 @@ function showPage(pageId) {
   document.body.classList.toggle('view-arcade-hub', pageId === 'arcadeHub');
   document.body.classList.toggle('view-metaux', pageId === 'metaux');
   document.body.classList.toggle('view-photon', pageId === 'photon');
+  document.body.classList.toggle('view-wave', pageId === 'wave');
   document.body.classList.toggle('view-quantum2048', pageId === 'quantum2048');
   if (pageId === 'metaux') {
     initMetauxGame();
@@ -5445,6 +5474,13 @@ function showPage(pageId) {
       photonGame.onEnter();
     } else {
       photonGame.onLeave();
+    }
+  }
+  if (waveGame) {
+    if (pageId === 'wave') {
+      waveGame.onEnter();
+    } else {
+      waveGame.onLeave();
     }
   }
   if (quantum2048Game) {
@@ -5480,6 +5516,9 @@ document.addEventListener('visibilitychange', () => {
     if (photonGame && document.body?.dataset.activePage === 'photon') {
       photonGame.onLeave();
     }
+    if (waveGame && document.body?.dataset.activePage === 'wave') {
+      waveGame.onLeave();
+    }
     if (quantum2048Game && document.body?.dataset.activePage === 'quantum2048') {
       quantum2048Game.onLeave();
     }
@@ -5493,6 +5532,9 @@ document.addEventListener('visibilitychange', () => {
   } else if (document.body?.dataset.activePage === 'photon') {
     ensurePhotonGame();
     photonGame?.onEnter();
+  } else if (document.body?.dataset.activePage === 'wave') {
+    ensureWaveGame();
+    waveGame?.onEnter();
   } else if (document.body?.dataset.activePage === 'quantum2048') {
     ensureQuantum2048Game();
     quantum2048Game?.onEnter();
@@ -5730,6 +5772,9 @@ if (elements.arcadeHubCardButtons?.length) {
       }
       if (target === 'photon') {
         preparePhotonNewGame();
+      }
+      if (target === 'wave') {
+        ensureWaveGame();
       }
       if (target === 'quantum2048') {
         ensureQuantum2048Game();

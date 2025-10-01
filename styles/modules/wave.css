@@ -1,0 +1,184 @@
+.view-wave .app-header {
+  background: radial-gradient(circle at top, rgba(50, 96, 214, 0.28), rgba(6, 10, 25, 0.92));
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.page--wave {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.75rem, 2vw, 1.5rem);
+  padding-inline: clamp(0.75rem, 2vw, 2rem);
+  padding-block: clamp(1rem, 3vh, 2.5rem);
+}
+
+.page--wave .bannierearcade {
+  margin-inline: auto;
+  max-width: min(960px, 100%);
+}
+
+.wave-stage {
+  position: relative;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  align-items: stretch;
+  margin-inline: auto;
+  width: min(960px, 100%);
+  min-height: clamp(280px, 52vh, 520px);
+  border-radius: clamp(1rem, 2.5vw, 1.75rem);
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(7, 12, 35, 0.95) 0%, rgba(3, 5, 14, 0.98) 60%, rgba(2, 3, 8, 1) 100%);
+  box-shadow: 0 24px 60px rgba(6, 12, 40, 0.45), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.wave-stage__canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+}
+
+.wave-hud {
+  position: absolute;
+  top: clamp(0.75rem, 2vw, 1.5rem);
+  left: clamp(0.75rem, 2vw, 1.5rem);
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: clamp(0.5rem, 1.5vw, 1rem) clamp(1.25rem, 4vw, 2.75rem);
+  padding: clamp(0.5rem, 1.5vw, 1rem);
+  border-radius: clamp(0.75rem, 2vw, 1.25rem);
+  background: linear-gradient(135deg, rgba(7, 16, 38, 0.88), rgba(17, 58, 128, 0.65));
+  backdrop-filter: blur(12px);
+  color: var(--color-text, #f4f7ff);
+}
+
+.wave-hud__item {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.1rem, 0.6vw, 0.25rem);
+  min-width: clamp(72px, 18vw, 120px);
+}
+
+.wave-hud__label {
+  font-size: clamp(0.65rem, 1.35vw, 0.85rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.wave-hud__value {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(0.2rem, 0.9vw, 0.4rem);
+  font-family: 'Orbitron', 'Audiowide', system-ui, sans-serif;
+  font-size: clamp(1.1rem, 3vw, 2rem);
+  font-weight: 600;
+}
+
+.wave-hud__unit {
+  font-size: clamp(0.6rem, 1.4vw, 0.85rem);
+  opacity: 0.75;
+}
+
+.wave-status {
+  position: absolute;
+  inset-inline: clamp(0.75rem, 3vw, 2rem);
+  bottom: clamp(0.75rem, 2.4vw, 2rem);
+  padding: clamp(0.65rem, 2vw, 1.25rem) clamp(1rem, 3vw, 2rem);
+  border-radius: clamp(0.75rem, 2vw, 1.5rem);
+  background: linear-gradient(160deg, rgba(10, 22, 52, 0.85), rgba(18, 75, 160, 0.55));
+  color: var(--color-text, #f4f7ff);
+  font-size: clamp(0.85rem, 2.2vw, 1.1rem);
+  font-weight: 500;
+  text-align: center;
+  box-shadow: 0 18px 44px rgba(4, 10, 28, 0.4);
+  pointer-events: none;
+}
+
+.wave-controls-hint {
+  position: absolute;
+  top: clamp(0.75rem, 2vw, 1.5rem);
+  right: clamp(0.75rem, 2vw, 1.5rem);
+  padding: clamp(0.4rem, 1.6vw, 0.85rem) clamp(0.75rem, 2vw, 1.25rem);
+  border-radius: clamp(0.6rem, 1.8vw, 1rem);
+  background: rgba(6, 16, 40, 0.76);
+  color: var(--color-text, #f4f7ff);
+  font-size: clamp(0.65rem, 1.5vw, 0.85rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+.wave-controls-hint kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.8em;
+  padding: 0.2em 0.45em;
+  border-radius: 0.5em;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 0.85em;
+  font-weight: 600;
+}
+
+body.theme-light .wave-stage {
+  background: linear-gradient(180deg, rgba(225, 238, 255, 0.95) 0%, rgba(86, 128, 214, 0.95) 55%, rgba(23, 50, 120, 0.98) 100%);
+  box-shadow: 0 24px 60px rgba(51, 72, 128, 0.35), inset 0 0 0 1px rgba(0, 32, 96, 0.08);
+}
+
+body.theme-light .wave-hud,
+body.theme-light .wave-status,
+body.theme-light .wave-controls-hint {
+  color: #061431;
+  background: rgba(255, 255, 255, 0.78);
+}
+
+body.theme-light .wave-hud {
+  box-shadow: 0 18px 36px rgba(26, 54, 112, 0.25);
+}
+
+body.theme-light .wave-status {
+  box-shadow: 0 18px 36px rgba(26, 54, 112, 0.25);
+}
+
+body.theme-neon .wave-stage {
+  background: linear-gradient(180deg, rgba(6, 4, 26, 0.98) 0%, rgba(14, 8, 52, 0.96) 55%, rgba(4, 2, 20, 1) 100%);
+}
+
+body.theme-neon .wave-hud {
+  background: linear-gradient(135deg, rgba(16, 30, 68, 0.9), rgba(112, 50, 184, 0.62));
+}
+
+@media (max-width: 720px) {
+  .wave-hud {
+    grid-template-columns: repeat(2, auto);
+  }
+
+  .wave-controls-hint {
+    display: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .wave-stage {
+    min-height: clamp(240px, 58vh, 420px);
+  }
+
+  .wave-hud {
+    position: static;
+    margin: clamp(0.5rem, 2vw, 0.75rem);
+    justify-content: center;
+    text-align: center;
+  }
+
+  .wave-status {
+    position: static;
+    margin: 0 clamp(0.5rem, 2vw, 0.75rem) clamp(0.5rem, 3vw, 1rem);
+  }
+}
