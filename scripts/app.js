@@ -797,6 +797,7 @@ function updateApcFrenzyCounterDisplay(now = performance.now()) {
     }
   }
   container.hidden = !shouldDisplay;
+  container.style.display = shouldDisplay ? '' : 'none';
   container.setAttribute('aria-hidden', String(!shouldDisplay));
   container.classList.toggle('is-active', active);
   container.classList.toggle('is-idle', !active);
