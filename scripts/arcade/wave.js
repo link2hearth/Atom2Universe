@@ -17,6 +17,7 @@
   const JUMP_BASE = 180;
   const JUMP_SPEED_RATIO = 0.4;
   const MAX_JUMP_IMPULSE = 380;
+  const AUTO_JUMP_SPEED_THRESHOLD = 120;
   const TERRAIN_SAMPLE_SPACING = 36;
   const MIN_WAVE_WAVELENGTH = 280;
   const MAX_WAVE_WAVELENGTH = 560;
@@ -620,7 +621,10 @@
         this.player.vy = this.player.speed * tangentY;
         this.player.x += this.player.vx * delta;
         this.player.y = this.terrain.getHeight(this.player.x);
-        if (!this.isPressing && this.pendingRelease && slopeAngle < -degToRad(6) && this.player.speed > 0) {
+        const crestingSlope = slopeAngle < -degToRad(6);
+        const autoJumpReady = crestingSlope && this.player.speed >= AUTO_JUMP_SPEED_THRESHOLD;
+        const manualJumpReady = !this.isPressing && this.pendingRelease && crestingSlope && this.player.speed > 0;
+        if (autoJumpReady || manualJumpReady) {
           const alongSlopeSpeed = Math.max(this.player.speed, Math.hypot(this.player.vx, this.player.vy));
           const jumpImpulse = clamp(
             JUMP_BASE + alongSlopeSpeed * JUMP_SPEED_RATIO,
