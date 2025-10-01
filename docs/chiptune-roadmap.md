@@ -8,9 +8,9 @@
 - Il n'existe pas de paramétrage pour ajuster le mixage global (limiteur, filtre, panoramique).
 
 ## Liste des tâches proposées
-1. **Introduire des timbres chiptune variés** en tirant parti des évènements de changement de programme pour sélectionner des formes d'onde, largeurs d'impulsion et enveloppes adaptées (terminé).
-2. Ajouter un rendu dédié aux percussions du canal 10 via un générateur de bruit et des enveloppes rapides.
-3. Mettre en place un planificateur audio à fenêtre glissante (look-ahead) pour réduire la dépendance à `setTimeout` et fiabiliser le timing.
+1. **Introduire des timbres chiptune variés** en tirant parti des évènements de changement de programme pour sélectionner des formes d'onde, largeurs d'impulsion et enveloppes adaptées (**terminé**).
+2. **Ajouter un rendu dédié aux percussions du canal 10** via un générateur de bruit et des enveloppes rapides (**terminé** : bruit blanc mis en cache, presets de timbres et nettoyage des voix dédiées).
+3. **Mettre en place un planificateur audio à fenêtre glissante (look-ahead)** pour réduire la dépendance à `setTimeout` et fiabiliser le timing (**terminé** : ordonnancement par tranches de 250 ms avec rattrapage automatique en cas de retard).
 4. Implémenter un LFO optionnel (vibrato/tremolo) configurable par programme pour apporter du mouvement aux notes tenues.
 5. Ajouter un contrôle de mixage global (limiteur doux ou compresseur simple) pour éviter la saturation lorsque plusieurs notes se superposent.
 
