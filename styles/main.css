@@ -1555,10 +1555,13 @@ body.theme-neon .arcade-side-card__button {
 }
 
 .page--quantum2048 {
-  display: flex;
   flex-direction: column;
   min-height: 100%;
   gap: var(--arcade-stage-spacing);
+}
+
+.page--quantum2048.active {
+  display: flex;
 }
 
 .quantum2048-content {
