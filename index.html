@@ -392,6 +392,153 @@
             </div>
           </div>
         </div>
+        <aside class="arcade-side-panel">
+          <article class="arcade-side-card" aria-labelledby="arcadeQuantumTitle">
+            <header class="arcade-side-card__header">
+              <h3
+                id="arcadeQuantumTitle"
+                class="arcade-side-card__title"
+                data-i18n="index.sections.arcade.portal.quantum2048.title"
+              ></h3>
+              <p
+                class="arcade-side-card__description"
+                data-i18n="index.sections.arcade.portal.quantum2048.description"
+              ></p>
+            </header>
+            <dl class="arcade-side-card__details">
+              <div class="arcade-side-card__detail">
+                <dt data-i18n="index.sections.arcade.portal.quantum2048.detailSize"></dt>
+                <dd data-i18n="index.sections.arcade.portal.quantum2048.detailSizes"></dd>
+              </div>
+              <div class="arcade-side-card__detail">
+                <dt data-i18n="index.sections.arcade.portal.quantum2048.detailTargets"></dt>
+                <dd data-i18n="index.sections.arcade.portal.quantum2048.detailRange"></dd>
+              </div>
+            </dl>
+            <button
+              type="button"
+              id="quantum2048OpenButton"
+              class="arcade-side-card__button"
+              data-i18n="index.sections.arcade.portal.quantum2048.cta"
+            ></button>
+          </article>
+        </aside>
+      </div>
+    </section>
+
+    <section
+      id="quantum2048"
+      class="page page--quantum2048"
+      data-i18n="aria-label:index.sections.quantum2048.aria"
+      hidden
+    >
+      <div class="bannierearcade" role="navigation" data-i18n="aria-label:index.arcadeBanner.aria" aria-label="">
+        <div class="bannierearcade__inner">
+          <div class="bannierearcade__nav-group" role="presentation">
+            <button
+              type="button"
+              class="bannierearcade__button"
+              data-page-target="arcadeHub"
+              data-i18n="index.arcadeBanner.arcadeButton"
+            ></button>
+            <button
+              type="button"
+              class="bannierearcade__button bannierearcade__button--secondary"
+              data-page-target="game"
+              data-i18n="index.arcadeBanner.gameButton"
+            ></button>
+          </div>
+          <div class="bannierearcade__status-group arcade-header__status-group" role="presentation">
+            <button class="arcade-header__status" type="button" data-arcade-ticket-button>
+              <span class="arcade-header__status-label" data-i18n="index.sections.arcade.header.tickets"></span>
+              <span
+                class="arcade-header__status-value"
+                data-arcade-ticket-value
+                data-i18n="index.sections.gacha.tickets.single"
+              ></span>
+            </button>
+            <button
+              class="arcade-header__status arcade-header__status--bonus"
+              type="button"
+              data-arcade-bonus-button
+              aria-describedby="arcadeBonusTicketAnnouncement2048"
+              aria-disabled="true"
+              disabled
+            >
+              <span class="arcade-header__status-label" data-i18n="index.sections.arcade.header.mach3"></span>
+              <span class="arcade-header__status-value" data-arcade-bonus-value>0</span>
+            </button>
+            <span
+              id="arcadeBonusTicketAnnouncement2048"
+              class="visually-hidden"
+              data-arcade-bonus-announcement
+              data-i18n="index.sections.arcade.header.mach3Announcement"
+            ></span>
+          </div>
+        </div>
+      </div>
+      <div class="quantum2048-content">
+        <aside class="quantum2048-panel">
+          <header class="quantum2048-panel__header">
+            <h2 class="quantum2048-panel__title" data-i18n="index.sections.quantum2048.title"></h2>
+            <p class="quantum2048-panel__subtitle" data-i18n="index.sections.quantum2048.subtitle"></p>
+          </header>
+          <div class="quantum2048-controls">
+            <label for="quantum2048SizeSelect" data-i18n="index.sections.quantum2048.controls.size"></label>
+            <select id="quantum2048SizeSelect" class="quantum2048-select"></select>
+          </div>
+          <div class="quantum2048-controls">
+            <label for="quantum2048TargetSelect" data-i18n="index.sections.quantum2048.controls.target"></label>
+            <select id="quantum2048TargetSelect" class="quantum2048-select"></select>
+          </div>
+          <button
+            type="button"
+            id="quantum2048RestartButton"
+            class="quantum2048-action"
+            data-i18n="index.sections.quantum2048.controls.restart"
+          ></button>
+          <div class="quantum2048-stats" role="group" aria-labelledby="quantum2048StatsLabel">
+            <h3 id="quantum2048StatsLabel" class="visually-hidden" data-i18n="index.sections.quantum2048.stats.group"></h3>
+            <div class="quantum2048-stat">
+              <span class="quantum2048-stat__label" data-i18n="index.sections.quantum2048.stats.score"></span>
+              <strong class="quantum2048-stat__value" id="quantum2048ScoreValue">0</strong>
+            </div>
+            <div class="quantum2048-stat">
+              <span class="quantum2048-stat__label" data-i18n="index.sections.quantum2048.stats.best"></span>
+              <strong class="quantum2048-stat__value" id="quantum2048BestValue">0</strong>
+            </div>
+            <div class="quantum2048-stat">
+              <span class="quantum2048-stat__label" data-i18n="index.sections.quantum2048.stats.moves"></span>
+              <strong class="quantum2048-stat__value" id="quantum2048MovesValue">0</strong>
+            </div>
+            <div class="quantum2048-stat quantum2048-stat--goal">
+              <span class="quantum2048-stat__label" data-i18n="index.sections.quantum2048.stats.goal"></span>
+              <strong class="quantum2048-stat__value" id="quantum2048GoalValue">0</strong>
+            </div>
+          </div>
+          <p class="quantum2048-status" id="quantum2048Status" aria-live="polite"></p>
+        </aside>
+        <div
+          class="quantum2048-board"
+          id="quantum2048Board"
+          role="application"
+          aria-label="2048"
+          data-i18n="aria-label:index.sections.quantum2048.board"
+        >
+          <div class="quantum2048-board__background" id="quantum2048Grid" aria-hidden="true"></div>
+          <div class="quantum2048-board__tiles" id="quantum2048Tiles" aria-hidden="true"></div>
+          <div class="quantum2048-overlay" id="quantum2048Overlay" hidden>
+            <div class="quantum2048-overlay__content">
+              <p class="quantum2048-overlay__message" id="quantum2048OverlayMessage"></p>
+              <button
+                type="button"
+                class="quantum2048-overlay__button"
+                id="quantum2048OverlayButton"
+                data-i18n="scripts.arcade.quantum2048.overlay.retry"
+              ></button>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -963,6 +1110,7 @@
   <script src="scripts/resources/periodic-elements.js"></script>
   <script src="scripts/arcade/particules.js"></script>
   <script src="scripts/arcade/photon.js"></script>
+  <script src="scripts/arcade/quantum-2048.js"></script>
   <script src="scripts/i18n/embedded-resources.js"></script>
   <script src="scripts/modules/i18n.js"></script>
   <script src="scripts/modules/layered-number.js"></script>

@@ -1255,6 +1255,19 @@ const GAME_CONFIG = {
         }
       }
     },
+    quantum2048: {
+      gridSizes: [3, 4, 5, 6],
+      targetValues: [32, 64, 128, 256, 512, 1024, 2048],
+      defaultGridSize: 4,
+      recommendedTargetBySize: {
+        3: 128,
+        4: 256,
+        5: 1024,
+        6: 2048
+      },
+      spawnValues: [2, 4],
+      spawnWeights: [0.9, 0.1]
+    },
     photon: {
       colors: {
         blue: {

@@ -2067,6 +2067,21 @@ const elements = {
   arcadeLivesValue: document.getElementById('arcadeLivesValue'),
   arcadeScoreValue: document.getElementById('arcadeScoreValue'),
   arcadeComboMessage: document.getElementById('arcadeComboMessage'),
+  quantum2048Board: document.getElementById('quantum2048Board'),
+  quantum2048Tiles: document.getElementById('quantum2048Tiles'),
+  quantum2048Grid: document.getElementById('quantum2048Grid'),
+  quantum2048SizeSelect: document.getElementById('quantum2048SizeSelect'),
+  quantum2048TargetSelect: document.getElementById('quantum2048TargetSelect'),
+  quantum2048ScoreValue: document.getElementById('quantum2048ScoreValue'),
+  quantum2048BestValue: document.getElementById('quantum2048BestValue'),
+  quantum2048MovesValue: document.getElementById('quantum2048MovesValue'),
+  quantum2048GoalValue: document.getElementById('quantum2048GoalValue'),
+  quantum2048Status: document.getElementById('quantum2048Status'),
+  quantum2048RestartButton: document.getElementById('quantum2048RestartButton'),
+  quantum2048Overlay: document.getElementById('quantum2048Overlay'),
+  quantum2048OverlayMessage: document.getElementById('quantum2048OverlayMessage'),
+  quantum2048OverlayButton: document.getElementById('quantum2048OverlayButton'),
+  quantum2048OpenButton: document.getElementById('quantum2048OpenButton'),
   metauxOpenButton: document.getElementById('metauxOpenButton'),
   metauxReturnButton: document.getElementById('metauxReturnButton'),
   metauxBoard: document.getElementById('metauxBoard'),
@@ -2563,6 +2578,32 @@ function ensurePhotonGame() {
   updatePhotonScore(0);
   updatePhotonModeUI(initialMode);
   return photonGame;
+}
+
+function ensureQuantum2048Game() {
+  if (quantum2048Game || typeof Quantum2048Game !== 'function') {
+    return quantum2048Game;
+  }
+  if (!elements.quantum2048Board) {
+    return null;
+  }
+  quantum2048Game = new Quantum2048Game({
+    boardElement: elements.quantum2048Board,
+    tilesContainer: elements.quantum2048Tiles,
+    backgroundContainer: elements.quantum2048Grid,
+    sizeSelect: elements.quantum2048SizeSelect,
+    targetSelect: elements.quantum2048TargetSelect,
+    scoreElement: elements.quantum2048ScoreValue,
+    bestElement: elements.quantum2048BestValue,
+    movesElement: elements.quantum2048MovesValue,
+    goalElement: elements.quantum2048GoalValue,
+    statusElement: elements.quantum2048Status,
+    restartButton: elements.quantum2048RestartButton,
+    overlayElement: elements.quantum2048Overlay,
+    overlayMessageElement: elements.quantum2048OverlayMessage,
+    overlayButtonElement: elements.quantum2048OverlayButton
+  });
+  return quantum2048Game;
 }
 
 function preparePhotonNewGame() {
@@ -4557,6 +4598,7 @@ function renderProductionBreakdown(container, entry, context = null) {
 
 let toastElement = null;
 let photonGame = null;
+let quantum2048Game = null;
 let apsCritPulseTimeoutId = null;
 
 const APS_CRIT_TIMER_EPSILON = 1e-3;
@@ -5376,6 +5418,9 @@ function showPage(pageId) {
   if (pageId === 'photon') {
     ensurePhotonGame();
   }
+  if (pageId === 'quantum2048') {
+    ensureQuantum2048Game();
+  }
   elements.pages.forEach(page => {
     const isActive = page.id === pageId;
     page.classList.toggle('active', isActive);
@@ -5390,6 +5435,7 @@ function showPage(pageId) {
   document.body.classList.toggle('view-arcade-hub', pageId === 'arcadeHub');
   document.body.classList.toggle('view-metaux', pageId === 'metaux');
   document.body.classList.toggle('view-photon', pageId === 'photon');
+  document.body.classList.toggle('view-quantum2048', pageId === 'quantum2048');
   if (pageId === 'metaux') {
     initMetauxGame();
   }
@@ -5412,6 +5458,13 @@ function showPage(pageId) {
       photonGame.onEnter();
     } else {
       photonGame.onLeave();
+    }
+  }
+  if (quantum2048Game) {
+    if (pageId === 'quantum2048') {
+      quantum2048Game.onEnter();
+    } else {
+      quantum2048Game.onLeave();
     }
   }
   if (pageId === 'game' && (typeof document === 'undefined' || !document.hidden)) {
@@ -5440,6 +5493,9 @@ document.addEventListener('visibilitychange', () => {
     if (photonGame && document.body?.dataset.activePage === 'photon') {
       photonGame.onLeave();
     }
+    if (quantum2048Game && document.body?.dataset.activePage === 'quantum2048') {
+      quantum2048Game.onLeave();
+    }
   } else if (isGamePageActive()) {
     gamePageVisibleSince = performance.now();
     if (particulesGame && document.body?.dataset.activePage === 'arcade') {
@@ -5450,6 +5506,9 @@ document.addEventListener('visibilitychange', () => {
   } else if (document.body?.dataset.activePage === 'photon') {
     ensurePhotonGame();
     photonGame?.onEnter();
+  } else if (document.body?.dataset.activePage === 'quantum2048') {
+    ensureQuantum2048Game();
+    quantum2048Game?.onEnter();
   }
 });
 
@@ -5699,6 +5758,13 @@ if (elements.arcadeBannerButtons?.length) {
       }
       showPage(target);
     });
+  });
+}
+
+if (elements.quantum2048OpenButton) {
+  elements.quantum2048OpenButton.addEventListener('click', () => {
+    ensureQuantum2048Game();
+    showPage('quantum2048');
   });
 }
 
