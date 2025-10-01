@@ -486,6 +486,7 @@
       this.noiseBuffer = null;
       this.reverbBuffer = null;
       this.reverbDefaultSend = 0.12;
+      this.sccWaveform = typeof window !== 'undefined' ? window.SccWaveform || null : null;
       this.schedulerInterval = null;
       this.schedulerState = null;
       this.scheduleAheadTime = 0.25;
@@ -849,14 +850,15 @@
         return;
       }
       const summary = this.formatTimelineSummary(this.timeline, this.timelineAnalysis);
-      const message = summary
-        ? `Prêt : ${this.currentTitle} — ${summary}`
-        : `Prêt : ${this.currentTitle} (${this.formatDurationWithSpeed(this.timeline.duration)})`;
-      this.readyStatusMessage = message;
-      if (!this.playing) {
-        this.setStatus(message, 'success');
+        const baseMessage = summary
+          ? `Prêt : ${this.currentTitle} — ${summary}`
+          : `Prêt : ${this.currentTitle} (${this.formatDurationWithSpeed(this.timeline.duration)})`;
+        const message = this.sccWaveform ? `${baseMessage} — moteur SCC` : baseMessage;
+        this.readyStatusMessage = message;
+        if (!this.playing) {
+          this.setStatus(message, 'success');
+        }
       }
-    }
 
     formatSemitoneLabel(value) {
       const normalized = Number.isFinite(value) ? Math.round(value) : 0;
@@ -1447,6 +1449,50 @@
       return wave;
     }
 
+    getSccWave() {
+      if (!this.audioContext || !this.sccWaveform) {
+        return null;
+      }
+      const sampleRate = Math.round(this.audioContext.sampleRate || 0);
+      const key = `scc:${sampleRate}`;
+      if (this.waveCache.has(key)) {
+        return this.waveCache.get(key);
+      }
+      let wave = null;
+      if (typeof this.sccWaveform.getPeriodicWave === 'function') {
+        wave = this.sccWaveform.getPeriodicWave(this.audioContext);
+      }
+      if (!wave && typeof this.sccWaveform.createPeriodicWave === 'function') {
+        wave = this.sccWaveform.createPeriodicWave(this.audioContext);
+      }
+      if (wave) {
+        this.waveCache.set(key, wave);
+      }
+      return wave;
+    }
+
+    shouldUseSccWaveform(instrument, layer) {
+      if (!this.sccWaveform) {
+        return false;
+      }
+      if (layer && layer.disableSccWaveform) {
+        return false;
+      }
+      const layerPreference = layer?.waveform;
+      if (layerPreference === 'scc') {
+        return true;
+      }
+      if (layerPreference === 'analog') {
+        return false;
+      }
+      const instrumentPreference = instrument?.waveform;
+      if (instrumentPreference === 'scc') {
+        const layerType = (layer && layer.type) || instrument?.type;
+        return layerType === 'pulse' || layerType === 'square' || typeof layerType === 'undefined';
+      }
+      return false;
+    }
+
     getNoiseBuffer() {
       if (!this.audioContext) {
         return null;
@@ -1525,6 +1571,7 @@
         } = options;
         return {
           gain,
+          waveform: options.waveform ?? 'scc',
           layers: Array.isArray(layers) && layers.length ? layers : [
             { type: 'pulse', dutyCycle: 0.35, detune: -7, gain: 0.55 },
             { type: 'pulse', dutyCycle: 0.65, detune: 7, gain: 0.55 },
@@ -1593,6 +1640,7 @@
         } = options;
         return {
           gain,
+          waveform: options.waveform ?? 'scc',
           layers: Array.isArray(layers) && layers.length ? layers : [
             { type: 'pulse', dutyCycle: 0.28, detune: -5, gain: 0.5 },
             { type: 'pulse', dutyCycle: 0.72, detune: 5, gain: 0.5 },
@@ -1620,6 +1668,7 @@
         } = options;
         return {
           gain,
+          waveform: options.waveform ?? 'scc',
           layers: Array.isArray(layers) && layers.length ? layers : [
             { type: 'pulse', dutyCycle: 0.35, detune: -7, gain: 0.55 },
             { type: 'pulse', dutyCycle: 0.65, detune: 7, gain: 0.55 },
@@ -1688,6 +1737,7 @@
         } = options;
         return {
           gain,
+          waveform: options.waveform ?? 'scc',
           layers: Array.isArray(layers) && layers.length ? layers : [
             { type: 'pulse', dutyCycle: 0.28, detune: -5, gain: 0.5 },
             { type: 'pulse', dutyCycle: 0.72, detune: 5, gain: 0.5 },
@@ -2156,14 +2206,28 @@
 
       const connectOscillator = (layer) => {
         const osc = this.audioContext.createOscillator();
-        if (layer.type === 'pulse') {
-          const wave = this.getPulseWave(layer.dutyCycle || instrument.dutyCycle || 0.5);
-          if (wave) {
-            osc.setPeriodicWave(wave);
-          } else {
-            osc.type = 'square';
+        const useSccWave = this.shouldUseSccWaveform(instrument, layer);
+        let configured = false;
+        if (useSccWave) {
+          const sccWave = this.getSccWave();
+          if (sccWave) {
+            osc.setPeriodicWave(sccWave);
+            configured = true;
           }
-        } else {
+        }
+        if (!configured) {
+          if (layer.type === 'pulse') {
+            const wave = this.getPulseWave(layer.dutyCycle || instrument.dutyCycle || 0.5);
+            if (wave) {
+              osc.setPeriodicWave(wave);
+              configured = true;
+            } else {
+              osc.type = 'square';
+              configured = true;
+            }
+          }
+        }
+        if (!configured) {
           osc.type = layer.type || instrument.type || 'sawtooth';
         }
         osc.frequency.setValueAtTime(frequency, startAt);
