@@ -10,15 +10,19 @@
     { frequency: 660, volume: 50 },
   ];
 
-  const RAW_WAVETABLE = [
-    18, 21, 24, 26, 28, 29, 30, 31,
-    31, 30, 29, 27, 25, 22, 19, 15,
-    10, 4, -1, -6, -10, -13, -16, -18,
-    -19, -20, -20, -19, -17, -14, -10, -4,
-  ];
+  const SHARED_WAVEFORM = typeof window !== 'undefined' ? window.SccWaveform : null;
+
+  const RAW_WAVETABLE = SHARED_WAVEFORM?.rawTable
+    ? Array.from(SHARED_WAVEFORM.rawTable)
+    : [
+      18, 21, 24, 26, 28, 29, 30, 31,
+      31, 30, 29, 27, 25, 22, 19, 15,
+      10, 4, -1, -6, -10, -13, -16, -18,
+      -19, -20, -20, -19, -17, -14, -10, -4,
+    ];
 
   function normaliseWaveTable(rawTable) {
-    const length = rawTable.length;
+    const length = Array.isArray(rawTable) ? rawTable.length : 0;
     if (!length) {
       return new Array(32).fill(0);
     }
@@ -28,9 +32,14 @@
     return centered.map((value) => value / maxMagnitude);
   }
 
-  const NORMALISED_WAVETABLE = normaliseWaveTable(RAW_WAVETABLE);
+  const NORMALISED_WAVETABLE = SHARED_WAVEFORM?.table
+    ? Array.from(SHARED_WAVEFORM.table)
+    : normaliseWaveTable(RAW_WAVETABLE);
 
   function createPeriodicWaveFromSamples(context, samples) {
+    if (!context || typeof context.createPeriodicWave !== 'function') {
+      return null;
+    }
     const sampleCount = samples.length;
     const real = new Float32Array(sampleCount);
     const imag = new Float32Array(sampleCount);
@@ -49,6 +58,27 @@
     }
 
     return context.createPeriodicWave(real, imag, { disableNormalization: true });
+  }
+
+  function getPeriodicWaveForContext(context) {
+    if (!context) {
+      return null;
+    }
+    if (SHARED_WAVEFORM) {
+      if (typeof SHARED_WAVEFORM.getPeriodicWave === 'function') {
+        const sharedWave = SHARED_WAVEFORM.getPeriodicWave(context);
+        if (sharedWave) {
+          return sharedWave;
+        }
+      }
+      if (typeof SHARED_WAVEFORM.createPeriodicWave === 'function') {
+        const createdWave = SHARED_WAVEFORM.createPeriodicWave(context);
+        if (createdWave) {
+          return createdWave;
+        }
+      }
+    }
+    return createPeriodicWaveFromSamples(context, NORMALISED_WAVETABLE);
   }
 
   class SccSynth {
@@ -160,7 +190,7 @@
       this.masterGain = this.audioContext.createGain();
       this.masterGain.gain.value = this.percentToGain(this.masterVolume);
       this.masterGain.connect(this.audioContext.destination);
-      this.periodicWave = createPeriodicWaveFromSamples(this.audioContext, NORMALISED_WAVETABLE);
+      this.periodicWave = getPeriodicWaveForContext(this.audioContext);
     }
 
     percentToGain(value) {
