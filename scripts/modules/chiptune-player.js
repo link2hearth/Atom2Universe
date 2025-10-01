@@ -147,59 +147,72 @@
           const eventType = statusByte & 0xf0;
           const channel = statusByte & 0x0f;
 
-          if (eventType === 0xc0 || eventType === 0xd0) {
-            // Program change / channel pressure (un seul octet de données)
+        if (eventType === 0xc0 || eventType === 0xd0) {
+          // Program change / channel pressure (un seul octet de données)
+          events.push({
+            type: 'program',
+            program: data1,
+            channel,
+            ticks: absoluteTicks,
+            order,
+          });
+          order += 1;
+          continue;
+        }
+
+        const data2 = reader.readUint8();
+
+        if (eventType === 0x90) {
+          if (data2 === 0) {
             events.push({
-              type: 'program',
-              program: data1,
+              type: 'noteOff',
+              note: data1,
+              velocity: 0,
               channel,
               ticks: absoluteTicks,
               order,
             });
-            order += 1;
-            continue;
-          }
-
-          const data2 = reader.readUint8();
-
-          if (eventType === 0x90) {
-            if (data2 === 0) {
-              events.push({
-                type: 'noteOff',
-                note: data1,
-                velocity: 0,
-                channel,
-                ticks: absoluteTicks,
-                order,
-              });
-            } else {
-              events.push({
-                type: 'noteOn',
-                note: data1,
-                velocity: data2,
-                channel,
-                ticks: absoluteTicks,
-                order,
-              });
-            }
-            order += 1;
-            continue;
-          }
-
-          if (eventType === 0x80) {
+          } else {
             events.push({
-              type: 'noteOff',
+              type: 'noteOn',
               note: data1,
               velocity: data2,
               channel,
               ticks: absoluteTicks,
               order,
             });
-            order += 1;
-            continue;
           }
+          order += 1;
+          continue;
+        }
 
-          // Ignorer les autres évènements canal (CC, pitch bend...)
+        if (eventType === 0x80) {
+          events.push({
+            type: 'noteOff',
+            note: data1,
+            velocity: data2,
+            channel,
+            ticks: absoluteTicks,
+            order,
+          });
+          order += 1;
+          continue;
+        }
+
+        if (eventType === 0xb0) {
+          events.push({
+            type: 'control',
+            controller: data1,
+            value: data2,
+            channel,
+            ticks: absoluteTicks,
+            order,
+          });
+          order += 1;
+          continue;
+        }
+
+        // Ignorer les autres évènements canal (pitch bend, aftertouch polyphonique...)
         }
 
         reader.offset = trackEnd;
@@ -236,25 +249,75 @@
       let currentTime = 0;
       let lastTick = 0;
       const activeNotes = new Map();
-      const channelPrograms = new Map();
+      const channelStates = new Map();
       const notes = [];
+
+      const getChannelState = (channel) => {
+        if (!channelStates.has(channel)) {
+          channelStates.set(channel, {
+            program: 0,
+            volume: 1,
+            expression: 1,
+            pan: 0,
+            reverb: 0.35,
+            sustain: false,
+            sustainedNotes: new Map(),
+          });
+        }
+        return channelStates.get(channel);
+      };
+
+      const registerActiveStack = (channel, note) => {
+        const key = `${channel}:${note}`;
+        if (!activeNotes.has(key)) {
+          activeNotes.set(key, []);
+        }
+        return activeNotes.get(key);
+      };
+
+      const finalizePending = (pending, endTime, minimum = 0.08) => {
+        const duration = Math.max(minimum, endTime - pending.time);
+        notes.push({
+          note: pending.note,
+          startTime: pending.time,
+          duration,
+          velocity: pending.velocity,
+          channel: pending.channel,
+          program: pending.program,
+          pan: pending.pan,
+          reverb: pending.reverb,
+          channelVolume: pending.channelVolume,
+          expression: pending.expression,
+          rawVelocity: pending.rawVelocity,
+        });
+      };
+
+      const releaseSustained = (state, releaseTime) => {
+        if (!state || !state.sustainedNotes) {
+          return;
+        }
+        for (const stack of state.sustainedNotes.values()) {
+          while (stack.length) {
+            const entry = stack.shift();
+            const targetEnd = Math.max(releaseTime, entry.offTime + 0.05);
+            finalizePending(entry.pending, targetEnd, 0.1);
+          }
+        }
+        state.sustainedNotes.clear();
+      };
 
       const flushRemainingNotes = (fallback) => {
         for (const stack of activeNotes.values()) {
           while (stack.length) {
             const pending = stack.shift();
-            const duration = Math.max(0.12, fallback - pending.time);
-            notes.push({
-              note: pending.note,
-              startTime: pending.time,
-              duration,
-              velocity: pending.velocity,
-              channel: pending.channel,
-              program: pending.program,
-            });
+            finalizePending(pending, fallback, 0.12);
           }
         }
         activeNotes.clear();
+        for (const state of channelStates.values()) {
+          releaseSustained(state, fallback);
+          state.sustain = false;
+        }
       };
 
       for (const event of parsed.events) {
@@ -270,43 +333,69 @@
         }
 
         if (event.type === 'program') {
-          channelPrograms.set(event.channel, event.program);
+          const state = getChannelState(event.channel);
+          state.program = event.program;
           continue;
         }
 
         if (event.type !== 'noteOn' && event.type !== 'noteOff') {
+          if (event.type === 'control') {
+            const state = getChannelState(event.channel);
+            if (event.controller === 7) {
+              state.volume = Math.max(0, Math.min(2, event.value / 127));
+            } else if (event.controller === 11) {
+              state.expression = Math.max(0, Math.min(2, event.value / 127));
+            } else if (event.controller === 10) {
+              const normalized = event.value / 127;
+              state.pan = Math.max(-1, Math.min(1, (normalized * 2) - 1));
+            } else if (event.controller === 64) {
+              const sustainOn = event.value >= 64;
+              if (sustainOn) {
+                state.sustain = true;
+              } else if (state.sustain) {
+                state.sustain = false;
+                releaseSustained(state, currentTime);
+              }
+            } else if (event.controller === 91) {
+              state.reverb = Math.max(0, Math.min(1, event.value / 127));
+            }
+          }
           continue;
         }
 
-        const key = `${event.channel}:${event.note}`;
-        if (!activeNotes.has(key)) {
-          activeNotes.set(key, []);
-        }
+        const state = getChannelState(event.channel);
+        const stack = registerActiveStack(event.channel, event.note);
 
         if (event.type === 'noteOn') {
-          const program = channelPrograms.has(event.channel)
-            ? channelPrograms.get(event.channel)
-            : 0;
-          activeNotes.get(key).push({
+          const velocityBase = Math.max(0, Math.min(1, event.velocity / 127));
+          const volumeFactor = Math.max(0, Math.min(2, state.volume * state.expression));
+          const velocity = Math.max(0.02, Math.min(1, velocityBase * volumeFactor));
+          stack.push({
             time: currentTime,
-            velocity: event.velocity / 127,
+            velocity,
             note: event.note,
             channel: event.channel,
-            program,
+            program: state.program || 0,
+            pan: state.pan,
+            reverb: state.reverb,
+            channelVolume: state.volume,
+            expression: state.expression,
+            rawVelocity: velocityBase,
           });
         } else {
-          const stack = activeNotes.get(key);
           if (stack && stack.length) {
             const pending = stack.shift();
-            const duration = Math.max(0.08, currentTime - pending.time);
-            notes.push({
-              note: event.note,
-              startTime: pending.time,
-              duration,
-              velocity: pending.velocity,
-              channel: pending.channel,
-              program: pending.program,
-            });
+            if (state.sustain) {
+              if (!state.sustainedNotes.has(event.note)) {
+                state.sustainedNotes.set(event.note, []);
+              }
+              state.sustainedNotes.get(event.note).push({
+                pending,
+                offTime: currentTime,
+              });
+            } else {
+              finalizePending(pending, currentTime, 0.08);
+            }
           }
         }
       }
@@ -350,6 +439,10 @@
       this.audioContext = null;
       this.masterGain = null;
       this.masterLimiter = null;
+      this.dryBus = null;
+      this.reverbSend = null;
+      this.reverbMix = null;
+      this.reverbNode = null;
       this.timeline = null;
       this.currentTitle = '';
       this.playing = false;
@@ -359,9 +452,11 @@
       this.libraryTracks = [];
 
       this.masterVolume = 0.8;
-      this.maxGain = 0.32;
+      this.maxGain = 0.26;
       this.waveCache = new Map();
       this.noiseBuffer = null;
+      this.reverbBuffer = null;
+      this.reverbDefaultSend = 0.3;
       this.schedulerInterval = null;
       this.schedulerState = null;
       this.scheduleAheadTime = 0.25;
@@ -493,8 +588,33 @@
         this.audioContext = new AudioContextClass();
         this.waveCache = new Map();
         this.noiseBuffer = null;
+        this.reverbBuffer = null;
+
         this.masterGain = this.audioContext.createGain();
         this.masterGain.gain.value = this.masterVolume;
+
+        this.dryBus = this.audioContext.createGain();
+        this.dryBus.gain.value = 1;
+
+        this.reverbSend = this.audioContext.createGain();
+        this.reverbSend.gain.value = 1;
+
+        this.reverbMix = this.audioContext.createGain();
+        this.reverbMix.gain.value = 0.45;
+
+        this.reverbNode = this.createReverbNode();
+
+        if (this.reverbNode) {
+          this.reverbSend.connect(this.reverbNode);
+          this.reverbNode.connect(this.reverbMix);
+          this.reverbMix.connect(this.masterGain);
+        } else {
+          this.reverbSend = null;
+          this.reverbMix = null;
+        }
+
+        this.dryBus.connect(this.masterGain);
+
         if (typeof this.audioContext.createDynamicsCompressor === 'function') {
           this.masterLimiter = this.audioContext.createDynamicsCompressor();
           const {
@@ -684,102 +804,192 @@
       return buffer;
     }
 
+    createReverbNode() {
+      if (!this.audioContext || typeof this.audioContext.createConvolver !== 'function') {
+        return null;
+      }
+      const convolver = this.audioContext.createConvolver();
+      convolver.normalize = true;
+      if (!this.reverbBuffer || this.reverbBuffer.sampleRate !== this.audioContext.sampleRate) {
+        this.reverbBuffer = this.buildReverbImpulse(2.6, 3.2);
+      }
+      convolver.buffer = this.reverbBuffer;
+      return convolver;
+    }
+
+    buildReverbImpulse(durationSeconds = 2.6, decay = 3.2) {
+      if (!this.audioContext) {
+        return null;
+      }
+      const sampleRate = this.audioContext.sampleRate;
+      const length = Math.max(1, Math.floor(durationSeconds * sampleRate));
+      const impulse = this.audioContext.createBuffer(2, length, sampleRate);
+      const left = impulse.getChannelData(0);
+      const right = impulse.getChannelData(1);
+      for (let i = 0; i < length; i += 1) {
+        const progress = i / length;
+        const envelope = Math.pow(1 - progress, decay);
+        const noiseL = ((Math.random() * 2) - 1) * envelope;
+        const noiseR = ((Math.random() * 2) - 1) * envelope;
+        left[i] = noiseL;
+        right[i] = (noiseL * 0.35) + (noiseR * 0.65);
+      }
+      return impulse;
+    }
+
     getInstrumentSettings(note) {
       const program = Number.isFinite(note.program) ? note.program : 0;
+      const family = Math.floor(program / 8);
 
       const baseEnvelope = {
-        attack: 0.012,
-        decay: 0.06,
-        sustain: 0.6,
-        release: Math.max(0.16, Math.min(0.5, note.duration * 0.7)),
+        attack: Math.max(0.005, Math.min(0.06, 0.012 + (note.rawVelocity ? (0.04 * (1 - note.rawVelocity)) : 0))),
+        decay: 0.1,
+        sustain: 0.65,
+        release: Math.max(0.22, Math.min(0.8, note.duration * 0.85)),
       };
 
-      const family = Math.floor(program / 8);
-      switch (family) {
-        case 0: // Pianos / Chromatic Perc.
-          return {
-            type: 'triangle',
-            envelope: {
-              ...baseEnvelope,
-              attack: 0.01,
-              decay: 0.12,
-              sustain: 0.45,
-              release: Math.max(0.22, note.duration * 0.6),
-            },
-            lfo: { rate: 5, vibratoDepth: 14, tremoloDepth: 0.12 },
-            volume: 0.85,
-            filter: { type: 'lowpass', frequency: 2200, Q: 0.7 },
-          };
-        case 1: // Orgues
-          return {
-            type: 'pulse',
-            dutyCycle: 0.375,
-            envelope: { ...baseEnvelope, decay: 0.08, sustain: 0.7, release: Math.max(0.2, note.duration * 0.9) },
-            lfo: { rate: 4.5, vibratoDepth: 18, tremoloDepth: 0.18 },
-            volume: 0.85,
-          };
-        case 2: // Guitares
-          return {
-            type: 'pulse',
-            dutyCycle: 0.18,
-            envelope: { ...baseEnvelope, decay: 0.05, sustain: 0.45 },
-            lfo: { rate: 6.5, vibratoDepth: 24, tremoloDepth: 0.1 },
-            volume: 0.82,
-          };
-        case 3: // Basses
-          return {
-            type: 'triangle',
-            envelope: { ...baseEnvelope, decay: 0.08, sustain: 0.55 },
-            lfo: { rate: 4, vibratoDepth: 12, tremoloDepth: 0.05 },
-            volume: 1,
-          };
-        case 4: // Cordes
-          return {
-            type: 'sawtooth',
-            envelope: { ...baseEnvelope, attack: 0.02, decay: 0.12, sustain: 0.65 },
-            lfo: { rate: 5, vibratoDepth: 20, tremoloDepth: 0.16 },
-            volume: 0.75,
-          };
-        case 5: // Ensembles
-          return {
-            type: 'pulse',
-            dutyCycle: 0.44,
-            envelope: { ...baseEnvelope, attack: 0.018, decay: 0.12, sustain: 0.7 },
-            lfo: { rate: 5.2, vibratoDepth: 26, tremoloDepth: 0.22 },
-            volume: 0.78,
-          };
-        case 6: // Cuivres
-          return {
-            type: 'pulse',
-            dutyCycle: 0.22,
-            envelope: { ...baseEnvelope, attack: 0.015, decay: 0.08, sustain: 0.5 },
-            lfo: { rate: 5.8, vibratoDepth: 22, tremoloDepth: 0.18 },
-            volume: 0.9,
-          };
-        case 7: // Leads
-          return {
-            type: 'pulse',
-            dutyCycle: 0.12,
-            envelope: { ...baseEnvelope, decay: 0.05, sustain: 0.4 },
-            lfo: { rate: 6.8, vibratoDepth: 32, tremoloDepth: 0.12 },
-            volume: 0.92,
-          };
-        case 8: // Pad
-          return {
-            type: 'sawtooth',
-            envelope: { ...baseEnvelope, attack: 0.03, decay: 0.16, sustain: 0.75, release: Math.max(0.3, note.duration) },
-            lfo: { rate: 4.2, vibratoDepth: 18, tremoloDepth: 0.2 },
-            volume: 0.7,
-          };
-        default:
-          return {
-            type: 'pulse',
-            dutyCycle: 0.5,
-            envelope: baseEnvelope,
-            lfo: { rate: 5, vibratoDepth: 18, tremoloDepth: 0.1 },
-            volume: 0.85,
-          };
-      }
+      const definitions = {
+        default: {
+          gain: 0.9,
+          layers: [
+            { type: 'sawtooth', detune: -6, gain: 0.45 },
+            { type: 'sawtooth', detune: 6, gain: 0.45 },
+            { type: 'triangle', detune: 0, gain: 0.2 },
+          ],
+          filter: { type: 'lowpass', frequency: 4200, Q: 0.7 },
+          lfo: { rate: 5.2, vibratoDepth: 18, tremoloDepth: 0.12 },
+          reverbSend: 0.35,
+          envelope: { ...baseEnvelope },
+        },
+        0: {
+          gain: 0.85,
+          layers: [
+            { type: 'triangle', detune: -4, gain: 0.55 },
+            { type: 'triangle', detune: 4, gain: 0.55 },
+            { type: 'sawtooth', detune: 0, gain: 0.35 },
+          ],
+          filter: { type: 'lowpass', frequency: 3600, Q: 0.9 },
+          lfo: { rate: 5.5, vibratoDepth: 14, tremoloDepth: 0.1 },
+          reverbSend: 0.32,
+          envelope: {
+            ...baseEnvelope,
+            attack: Math.max(0.003, baseEnvelope.attack * 0.7),
+            decay: 0.18,
+            sustain: 0.5,
+          },
+        },
+        1: {
+          gain: 0.88,
+          layers: [
+            { type: 'pulse', dutyCycle: 0.33, detune: -2, gain: 0.5 },
+            { type: 'pulse', dutyCycle: 0.42, detune: 2, gain: 0.5 },
+            { type: 'triangle', detune: 0, gain: 0.25 },
+          ],
+          filter: { type: 'lowpass', frequency: 3900, Q: 0.6 },
+          lfo: { rate: 4.4, vibratoDepth: 18, tremoloDepth: 0.18 },
+          reverbSend: 0.28,
+          envelope: { ...baseEnvelope, decay: 0.14, sustain: 0.72, release: Math.max(0.4, note.duration) },
+        },
+        2: {
+          gain: 0.82,
+          layers: [
+            { type: 'pulse', dutyCycle: 0.22, detune: -7, gain: 0.6 },
+            { type: 'pulse', dutyCycle: 0.18, detune: 7, gain: 0.5 },
+            { type: 'triangle', detune: 0, gain: 0.2 },
+          ],
+          filter: { type: 'lowpass', frequency: 3400, Q: 0.9 },
+          lfo: { rate: 6.2, vibratoDepth: 20, tremoloDepth: 0.12 },
+          reverbSend: 0.26,
+          envelope: { ...baseEnvelope, decay: 0.08, sustain: 0.48, release: Math.max(0.25, note.duration * 0.5) },
+        },
+        3: {
+          gain: 1,
+          layers: [
+            { type: 'triangle', detune: -3, gain: 0.55 },
+            { type: 'triangle', detune: 3, gain: 0.55 },
+            { type: 'sine', detune: -12, gain: 0.2 },
+          ],
+          filter: { type: 'lowpass', frequency: 2800, Q: 1 },
+          lfo: { rate: 3.8, vibratoDepth: 10, tremoloDepth: 0.06 },
+          reverbSend: 0.22,
+          envelope: { ...baseEnvelope, decay: 0.12, sustain: 0.62, release: Math.max(0.32, note.duration * 0.7) },
+        },
+        4: {
+          gain: 0.78,
+          layers: [
+            { type: 'sawtooth', detune: -12, gain: 0.45 },
+            { type: 'sawtooth', detune: 12, gain: 0.45 },
+            { type: 'triangle', detune: 0, gain: 0.35 },
+            { type: 'sine', detune: 7, gain: 0.15 },
+          ],
+          filter: { type: 'lowpass', frequency: 3600, Q: 0.8 },
+          lfo: { rate: 5.1, vibratoDepth: 24, tremoloDepth: 0.18 },
+          reverbSend: 0.42,
+          envelope: { ...baseEnvelope, attack: Math.max(0.015, baseEnvelope.attack * 1.4), decay: 0.14, sustain: 0.72 },
+        },
+        5: {
+          gain: 0.8,
+          layers: [
+            { type: 'sawtooth', detune: -15, gain: 0.4 },
+            { type: 'sawtooth', detune: 15, gain: 0.4 },
+            { type: 'pulse', dutyCycle: 0.48, detune: 0, gain: 0.3 },
+            { type: 'triangle', detune: 7, gain: 0.2 },
+          ],
+          filter: { type: 'lowpass', frequency: 3200, Q: 0.7 },
+          lfo: { rate: 5.4, vibratoDepth: 28, tremoloDepth: 0.22 },
+          reverbSend: 0.48,
+          envelope: { ...baseEnvelope, attack: Math.max(0.02, baseEnvelope.attack * 1.6), decay: 0.18, sustain: 0.78 },
+        },
+        6: {
+          gain: 0.92,
+          layers: [
+            { type: 'sawtooth', detune: -9, gain: 0.5 },
+            { type: 'sawtooth', detune: 9, gain: 0.5 },
+            { type: 'pulse', dutyCycle: 0.28, detune: 0, gain: 0.25 },
+          ],
+          filter: { type: 'lowpass', frequency: 3800, Q: 0.9 },
+          lfo: { rate: 5.6, vibratoDepth: 20, tremoloDepth: 0.2 },
+          reverbSend: 0.34,
+          envelope: { ...baseEnvelope, attack: Math.max(0.012, baseEnvelope.attack), decay: 0.12, sustain: 0.6 },
+        },
+        7: {
+          gain: 0.94,
+          layers: [
+            { type: 'pulse', dutyCycle: 0.18, detune: -6, gain: 0.55 },
+            { type: 'pulse', dutyCycle: 0.22, detune: 6, gain: 0.55 },
+            { type: 'sawtooth', detune: 0, gain: 0.25 },
+          ],
+          filter: { type: 'bandpass', frequency: 4200, Q: 1.1 },
+          lfo: { rate: 6.8, vibratoDepth: 30, tremoloDepth: 0.16 },
+          reverbSend: 0.3,
+          envelope: { ...baseEnvelope, decay: 0.1, sustain: 0.55, release: Math.max(0.26, note.duration * 0.6) },
+        },
+        8: {
+          gain: 0.72,
+          layers: [
+            { type: 'sawtooth', detune: -18, gain: 0.4 },
+            { type: 'sawtooth', detune: 18, gain: 0.4 },
+            { type: 'triangle', detune: 0, gain: 0.35 },
+            { type: 'sine', detune: 10, gain: 0.18 },
+          ],
+          filter: { type: 'lowpass', frequency: 3000, Q: 0.7 },
+          lfo: { rate: 4.4, vibratoDepth: 22, tremoloDepth: 0.24 },
+          reverbSend: 0.52,
+          envelope: { ...baseEnvelope, attack: Math.max(0.028, baseEnvelope.attack * 2.4), decay: 0.22, sustain: 0.82, release: Math.max(0.6, note.duration) },
+        },
+      };
+
+      const definition = definitions[family] || definitions.default;
+      return {
+        ...definition,
+        envelope: {
+          ...definition.envelope,
+          release: Math.max(definition.envelope.release || 0.25, Math.min(1.6, note.duration * 0.9)),
+        },
+        reverbSend: Number.isFinite(definition.reverbSend)
+          ? definition.reverbSend
+          : this.reverbDefaultSend,
+      };
     }
 
     getLfoSettings(instrument) {
@@ -865,57 +1075,36 @@
         this.schedulePercussion(note, baseTime);
         return;
       }
+
       const now = this.audioContext.currentTime;
       const startAt = Math.max(baseTime + note.startTime, now + 0.001);
-      const velocity = Math.max(0.1, Math.min(1, note.velocity));
+      const velocity = Math.max(0.08, Math.min(1, note.velocity || 0.2));
 
       const instrument = this.getInstrumentSettings(note);
-      const osc = this.audioContext.createOscillator();
-      const gainNode = this.audioContext.createGain();
       const frequency = this.midiNoteToFrequency(note.note);
       const lfoSettings = this.getLfoSettings(instrument);
-
-      if (instrument.type === 'pulse') {
-        const wave = this.getPulseWave(instrument.dutyCycle || 0.5);
-        if (wave) {
-          osc.setPeriodicWave(wave);
-        } else {
-          osc.type = 'square';
-        }
-      } else {
-        osc.type = instrument.type;
-      }
-
-      const peakGain = Math.min(1, velocity * this.maxGain * (instrument.volume || 1));
-      const envelope = instrument.envelope || {};
-      const attack = Math.max(0.001, envelope.attack || 0.01);
-      const decay = Math.max(0.005, envelope.decay || 0.05);
-      const sustainLevel = Math.min(1, Math.max(0, envelope.sustain ?? 0.5));
-      const releaseDuration = Math.max(0.06, envelope.release || Math.min(0.5, note.duration * 0.6));
-      const stopAt = startAt + note.duration;
-
-      const attackEnd = Math.min(stopAt, startAt + attack);
-      const decayEnd = Math.min(stopAt, attackEnd + decay);
-
-      gainNode.gain.cancelScheduledValues(startAt);
-      gainNode.gain.setValueAtTime(0.0001, startAt);
-      gainNode.gain.linearRampToValueAtTime(peakGain, attackEnd);
-      gainNode.gain.linearRampToValueAtTime(Math.max(0.0001, peakGain * sustainLevel), decayEnd);
-      gainNode.gain.setValueAtTime(Math.max(0.0001, peakGain * sustainLevel), stopAt);
-      gainNode.gain.exponentialRampToValueAtTime(0.0001, stopAt + releaseDuration);
-
-      osc.frequency.setValueAtTime(frequency, startAt);
-      const voice = {
-        type: 'melodic',
-        osc,
-        gainNode,
-        startTime: startAt,
-        stopTime: stopAt + releaseDuration,
-      };
 
       const hasVibrato = lfoSettings && lfoSettings.vibratoDepth > 0;
       const hasTremolo = lfoSettings && lfoSettings.tremoloDepth > 0;
       const needsLfo = lfoSettings && (hasVibrato || hasTremolo);
+
+      const layers = Array.isArray(instrument.layers) && instrument.layers.length
+        ? instrument.layers
+        : [{ type: instrument.type || 'sawtooth', dutyCycle: instrument.dutyCycle, detune: 0, gain: 1 }];
+      const totalLayerGain = layers.reduce((sum, layer) => sum + Math.max(0, layer.gain ?? 1), 0) || 1;
+
+      const voiceInput = this.audioContext.createGain();
+      voiceInput.gain.setValueAtTime(1, startAt);
+
+      const peakGain = Math.min(1, velocity * this.maxGain * (instrument.gain || instrument.volume || 1));
+      const envelope = instrument.envelope || {};
+      const attack = Math.max(0.002, envelope.attack || 0.01);
+      const decay = Math.max(0.01, envelope.decay || 0.06);
+      const sustainLevel = Math.min(1, Math.max(0, envelope.sustain ?? 0.6));
+      const releaseDuration = Math.max(0.12, envelope.release || Math.min(0.9, note.duration * 0.8));
+      const stopAt = startAt + note.duration;
+      const attackEnd = Math.min(stopAt, startAt + attack);
+      const decayEnd = Math.min(stopAt, attackEnd + decay);
 
       let lfoOscillator = null;
       let vibratoGain = null;
@@ -931,29 +1120,104 @@
         const depthFactor = Math.max(0, Math.pow(2, depthInCents / 1200) - 1);
         const depthHz = frequency * depthFactor;
         vibratoGain.gain.setValueAtTime(depthHz, startAt);
-        lfoOscillator.connect(vibratoGain).connect(osc.frequency);
-        voice.lfoGain = vibratoGain;
       }
 
-      let lastNode = osc;
+      const voice = {
+        type: 'melodic',
+        startTime: startAt,
+        stopTime: stopAt + releaseDuration,
+        gainNode: null,
+        oscillators: [],
+        nodes: [voiceInput],
+      };
+
+      this.liveVoices.add(voice);
+
+      let activeOscillators = 0;
+
+      const connectOscillator = (layer) => {
+        const osc = this.audioContext.createOscillator();
+        if (layer.type === 'pulse') {
+          const wave = this.getPulseWave(layer.dutyCycle || instrument.dutyCycle || 0.5);
+          if (wave) {
+            osc.setPeriodicWave(wave);
+          } else {
+            osc.type = 'square';
+          }
+        } else {
+          osc.type = layer.type || instrument.type || 'sawtooth';
+        }
+        osc.frequency.setValueAtTime(frequency, startAt);
+        if (Number.isFinite(layer.detune)) {
+          osc.detune.setValueAtTime(layer.detune * 100, startAt);
+        }
+
+        const layerGain = this.audioContext.createGain();
+        const normalizedGain = Math.max(0, layer.gain ?? 1) / totalLayerGain;
+        layerGain.gain.setValueAtTime(normalizedGain, startAt);
+
+        osc.connect(layerGain).connect(voiceInput);
+
+        if (vibratoGain) {
+          vibratoGain.connect(osc.frequency);
+        }
+
+        activeOscillators += 1;
+        voice.oscillators.push(osc);
+        voice.nodes.push(layerGain);
+
+        osc.onended = () => {
+          activeOscillators -= 1;
+          try {
+            osc.disconnect();
+          } catch (error) {
+            // Ignore disconnect issues
+          }
+          try {
+            layerGain.disconnect();
+          } catch (error) {
+            // Ignore disconnect issues
+          }
+          if (activeOscillators <= 0) {
+            voice.cleanup?.();
+          }
+        };
+
+        osc.start(startAt);
+        osc.stop(stopAt + releaseDuration + 0.02);
+      };
+
+      for (const layer of layers) {
+        connectOscillator(layer);
+      }
+
+      if (vibratoGain && lfoOscillator) {
+        lfoOscillator.connect(vibratoGain);
+        voice.lfoGain = vibratoGain;
+        voice.nodes.push(vibratoGain);
+      }
+
+      let lastNode = voiceInput;
+
       if (instrument.filter) {
         const filter = this.audioContext.createBiquadFilter();
-        if (instrument.filter.type) {
-          filter.type = instrument.filter.type;
-        }
-        if (Number.isFinite(instrument.filter.frequency)) {
-          filter.frequency.setValueAtTime(instrument.filter.frequency, startAt);
-        }
+        filter.type = instrument.filter.type || 'lowpass';
         if (Number.isFinite(instrument.filter.Q)) {
           filter.Q.setValueAtTime(instrument.filter.Q, startAt);
+        }
+        if (Number.isFinite(instrument.filter.frequency)) {
+          const velocityInfluence = 1 + (velocity * 0.8);
+          filter.frequency.setValueAtTime(instrument.filter.frequency * velocityInfluence, startAt);
         }
         lastNode.connect(filter);
         lastNode = filter;
         voice.filterNode = filter;
+        voice.nodes.push(filter);
       }
 
+      let tremoloNode = null;
       if (lfoOscillator && hasTremolo) {
-        const tremoloNode = this.audioContext.createGain();
+        tremoloNode = this.audioContext.createGain();
         tremoloNode.gain.setValueAtTime(1, startAt);
         lastNode.connect(tremoloNode);
         lastNode = tremoloNode;
@@ -968,37 +1232,80 @@
         tremoloOffset.offset.setValueAtTime(1 - tremoloScale, startAt);
         tremoloOffset.connect(tremoloNode.gain);
         tremoloOffset.start(startAt);
-        tremoloOffset.stop(stopAt + releaseDuration);
+        tremoloOffset.stop(stopAt + releaseDuration + 0.05);
 
         voice.tremoloNode = tremoloNode;
         voice.tremoloGain = tremoloGain;
         voice.tremoloOffset = tremoloOffset;
+        voice.nodes.push(tremoloNode, tremoloGain, tremoloOffset);
       }
 
-      lastNode.connect(gainNode);
-      gainNode.connect(this.masterGain);
+      const envelopeGain = this.audioContext.createGain();
+      voice.gainNode = envelopeGain;
+      voice.nodes.push(envelopeGain);
+      lastNode.connect(envelopeGain);
 
-      this.liveVoices.add(voice);
-      osc.onended = () => {
+      envelopeGain.gain.cancelScheduledValues(startAt);
+      envelopeGain.gain.setValueAtTime(0.0001, startAt);
+      envelopeGain.gain.linearRampToValueAtTime(peakGain, attackEnd);
+      envelopeGain.gain.linearRampToValueAtTime(Math.max(0.0001, peakGain * sustainLevel), decayEnd);
+      envelopeGain.gain.setValueAtTime(Math.max(0.0001, peakGain * sustainLevel), stopAt);
+      envelopeGain.gain.exponentialRampToValueAtTime(0.0001, stopAt + releaseDuration);
+
+      let outputNode = envelopeGain;
+      let panNode = null;
+      const panValue = Math.max(-1, Math.min(1, Number.isFinite(note.pan) ? note.pan : 0));
+      if (typeof this.audioContext.createStereoPanner === 'function') {
+        panNode = this.audioContext.createStereoPanner();
+        panNode.pan.setValueAtTime(panValue, startAt);
+        outputNode.connect(panNode);
+        outputNode = panNode;
+        voice.panNode = panNode;
+        voice.nodes.push(panNode);
+      } else if (typeof this.audioContext.createPanner === 'function') {
+        panNode = this.audioContext.createPanner();
+        panNode.panningModel = 'equalpower';
+        const x = panValue;
+        panNode.setPosition(x, 0, 1 - Math.abs(x));
+        outputNode.connect(panNode);
+        outputNode = panNode;
+        voice.panNode = panNode;
+        voice.nodes.push(panNode);
+      }
+
+      const reverbAmount = Math.max(0, Math.min(1, instrument.reverbSend ?? this.reverbDefaultSend));
+      const dryAmount = Math.max(0, 1 - (reverbAmount * 0.65));
+
+      const dryGain = this.audioContext.createGain();
+      dryGain.gain.setValueAtTime(dryAmount, startAt);
+      voice.nodes.push(dryGain);
+
+      outputNode.connect(dryGain);
+      dryGain.connect(this.dryBus || this.masterGain);
+
+      if (this.reverbSend) {
+        const reverbGain = this.audioContext.createGain();
+        reverbGain.gain.setValueAtTime(reverbAmount, startAt);
+        voice.nodes.push(reverbGain);
+        outputNode.connect(reverbGain);
+        reverbGain.connect(this.reverbSend);
+        voice.reverbGain = reverbGain;
+      } else {
+        dryGain.gain.setValueAtTime(Math.min(1, dryAmount + (reverbAmount * 0.5)), startAt);
+      }
+
+      voice.cleanup = () => {
+        if (voice.cleaned) {
+          return;
+        }
+        voice.cleaned = true;
         this.liveVoices.delete(voice);
-        gainNode.disconnect();
-        if (voice.filterNode) {
-          try {
-            voice.filterNode.disconnect();
-          } catch (error) {
-            // Ignore disconnect issues
+        for (const node of voice.nodes) {
+          if (!node) {
+            continue;
           }
-        }
-        if (voice.tremoloNode) {
           try {
-            voice.tremoloNode.disconnect();
-          } catch (error) {
-            // Ignore disconnect issues
-          }
-        }
-        if (voice.tremoloGain) {
-          try {
-            voice.tremoloGain.disconnect();
+            node.disconnect();
           } catch (error) {
             // Ignore disconnect issues
           }
@@ -1026,12 +1333,11 @@
         }
       };
 
-      osc.start(startAt);
-      osc.stop(stopAt + releaseDuration);
       if (lfoOscillator && (hasVibrato || hasTremolo)) {
-        lfoOscillator.start(startAt);
-        lfoOscillator.stop(stopAt + releaseDuration);
         voice.lfo = lfoOscillator;
+        this.audioContext.resume?.();
+        lfoOscillator.start(startAt);
+        lfoOscillator.stop(stopAt + releaseDuration + 0.05);
       }
     }
 
@@ -1063,7 +1369,6 @@
       gainNode.gain.exponentialRampToValueAtTime(Math.max(0.0001, peakGain * sustainLevel), decayEnd);
       gainNode.gain.setValueAtTime(Math.max(0.0001, peakGain * sustainLevel), stopAt);
       gainNode.gain.exponentialRampToValueAtTime(0.0001, totalStop);
-      gainNode.connect(this.masterGain);
 
       const voice = {
         type: 'percussion',
@@ -1195,6 +1500,44 @@
       if (!activeSources) {
         cleanup();
       }
+
+      let outputNode = gainNode;
+      let panNode = null;
+      const panValue = Math.max(-1, Math.min(1, Number.isFinite(note.pan) ? note.pan : 0));
+      if (typeof this.audioContext.createStereoPanner === 'function') {
+        panNode = this.audioContext.createStereoPanner();
+        panNode.pan.setValueAtTime(panValue, startAt);
+        outputNode.connect(panNode);
+        outputNode = panNode;
+        voice.nodes.push(panNode);
+      } else if (typeof this.audioContext.createPanner === 'function') {
+        panNode = this.audioContext.createPanner();
+        panNode.panningModel = 'equalpower';
+        const x = panValue;
+        panNode.setPosition(x, 0, 1 - Math.abs(x));
+        outputNode.connect(panNode);
+        outputNode = panNode;
+        voice.nodes.push(panNode);
+      }
+
+      const reverbAmount = Math.max(0, Math.min(1, (note.reverb ?? this.reverbDefaultSend) * 0.9));
+      const dryAmount = Math.max(0, 1 - (reverbAmount * 0.6));
+
+      const dryGain = this.audioContext.createGain();
+      dryGain.gain.setValueAtTime(dryAmount, startAt);
+      outputNode.connect(dryGain);
+      dryGain.connect(this.dryBus || this.masterGain);
+      voice.nodes.push(dryGain);
+
+      if (this.reverbSend) {
+        const reverbGain = this.audioContext.createGain();
+        reverbGain.gain.setValueAtTime(reverbAmount, startAt);
+        outputNode.connect(reverbGain);
+        reverbGain.connect(this.reverbSend);
+        voice.nodes.push(reverbGain);
+      } else {
+        dryGain.gain.setValueAtTime(Math.min(1, dryAmount + (reverbAmount * 0.4)), startAt);
+      }
     }
 
     async play() {
@@ -1256,18 +1599,48 @@
                   // Ignore stop issues
                 }
               }
-            } else if (voice.osc) {
-              if (now < voice.startTime) {
-                voice.osc.stop(voice.startTime);
-              } else {
-                voice.gainNode.gain.cancelScheduledValues(now);
-                voice.gainNode.gain.setValueAtTime(voice.gainNode.gain.value, now);
-                voice.gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
-                voice.osc.stop(now + 0.12);
+            } else if (voice.type === 'melodic') {
+              const oscillators = Array.isArray(voice.oscillators) && voice.oscillators.length
+                ? voice.oscillators
+                : (voice.osc ? [voice.osc] : []);
+              const fadeStart = now < voice.startTime ? voice.startTime : now;
+              const fadeEnd = fadeStart + 0.12;
+              if (voice.gainNode && voice.gainNode.gain) {
+                try {
+                  voice.gainNode.gain.cancelScheduledValues(fadeStart);
+                } catch (error) {
+                  // Ignore cancellation errors
+                }
+                const currentValue = voice.gainNode.gain.value;
+                voice.gainNode.gain.setValueAtTime(currentValue, fadeStart);
+                voice.gainNode.gain.exponentialRampToValueAtTime(0.0001, fadeEnd);
+              }
+              for (const osc of oscillators) {
+                try {
+                  if (fadeStart <= voice.startTime) {
+                    osc.stop(voice.startTime);
+                  } else {
+                    osc.stop(fadeEnd + 0.02);
+                  }
+                } catch (error) {
+                  // Ignore stop issues
+                }
               }
               if (voice.lfo) {
-                const stopAt = now < voice.startTime ? voice.startTime : now + 0.12;
-                voice.lfo.stop(stopAt);
+                try {
+                  const stopAt = fadeStart <= voice.startTime ? voice.startTime : fadeEnd;
+                  voice.lfo.stop(stopAt);
+                } catch (error) {
+                  // Ignore stop issues
+                }
+              }
+              if (voice.tremoloOffset) {
+                try {
+                  const stopAt = fadeStart <= voice.startTime ? voice.startTime : fadeEnd;
+                  voice.tremoloOffset.stop(stopAt);
+                } catch (error) {
+                  // Ignore stop issues
+                }
               }
             }
           } catch (error) {
