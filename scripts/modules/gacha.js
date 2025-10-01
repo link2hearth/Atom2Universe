@@ -3,13 +3,15 @@ const DEFAULT_GACHA_TICKET_COST = 1;
 const GACHA_SMOKE_FRAME_COUNT = 91;
 const GACHA_SMOKE_FRAME_RATE = 8;
 const GACHA_SMOKE_FRAME_PAD = 4;
-const GACHA_SMOKE_ASSET_PATH = 'Assets/Sprites/Smoke';
+const GACHA_SMOKE_ASSET_PATH = 'assets/sprites/fumée';
 
 const gachaSmokeAnimationState = {
   timer: null,
   frame: 0,
   element: null,
-  reducedMotion: false
+  reducedMotion: false,
+  lastUpdate: 0,
+  timerType: null
 };
 
 function prefersReducedMotion() {
@@ -33,12 +35,17 @@ function applyGachaSmokeFrame(element, frameIndex) {
     return;
   }
   const frameName = formatGachaSmokeFrame(frameIndex);
-  element.style.backgroundImage = `url('${GACHA_SMOKE_ASSET_PATH}/${frameName}.png')`;
+  const frameUrl = encodeURI(`${GACHA_SMOKE_ASSET_PATH}/${frameName}.png`);
+  element.style.backgroundImage = `url('${frameUrl}')`;
 }
 
 function stopGachaFeaturedSmokeAnimation() {
   if (gachaSmokeAnimationState.timer != null) {
-    clearInterval(gachaSmokeAnimationState.timer);
+    if (gachaSmokeAnimationState.timerType === 'timeout' && typeof clearTimeout === 'function') {
+      clearTimeout(gachaSmokeAnimationState.timer);
+    } else if (typeof cancelAnimationFrame === 'function') {
+      cancelAnimationFrame(gachaSmokeAnimationState.timer);
+    }
   }
   gachaSmokeAnimationState.timer = null;
   gachaSmokeAnimationState.frame = 0;
@@ -47,6 +54,8 @@ function stopGachaFeaturedSmokeAnimation() {
   }
   gachaSmokeAnimationState.element = null;
   gachaSmokeAnimationState.reducedMotion = false;
+  gachaSmokeAnimationState.lastUpdate = 0;
+  gachaSmokeAnimationState.timerType = null;
 }
 
 function startGachaFeaturedSmokeAnimation(element) {
@@ -57,20 +66,44 @@ function startGachaFeaturedSmokeAnimation(element) {
   gachaSmokeAnimationState.element = element;
   gachaSmokeAnimationState.reducedMotion = prefersReducedMotion();
   gachaSmokeAnimationState.frame = 0;
+  gachaSmokeAnimationState.lastUpdate = typeof performance !== 'undefined'
+    ? performance.now()
+    : Date.now();
   applyGachaSmokeFrame(element, gachaSmokeAnimationState.frame);
   if (gachaSmokeAnimationState.reducedMotion) {
     return;
   }
   const frameDuration = 1000 / GACHA_SMOKE_FRAME_RATE;
-  gachaSmokeAnimationState.timer = setInterval(() => {
+  gachaSmokeAnimationState.timerType = typeof requestAnimationFrame === 'function' ? 'raf' : 'timeout';
+  const step = (timestamp) => {
     const target = gachaSmokeAnimationState.element;
     if (!target) {
       stopGachaFeaturedSmokeAnimation();
       return;
     }
-    gachaSmokeAnimationState.frame = (gachaSmokeAnimationState.frame + 1) % GACHA_SMOKE_FRAME_COUNT;
-    applyGachaSmokeFrame(target, gachaSmokeAnimationState.frame);
-  }, frameDuration);
+    const now = timestamp ?? (typeof performance !== 'undefined' ? performance.now() : Date.now());
+    const elapsed = now - gachaSmokeAnimationState.lastUpdate;
+    if (elapsed >= frameDuration) {
+      const framesToAdvance = Math.max(1, Math.floor(elapsed / frameDuration));
+      gachaSmokeAnimationState.lastUpdate = now - (elapsed % frameDuration);
+      gachaSmokeAnimationState.frame = (gachaSmokeAnimationState.frame + framesToAdvance) % GACHA_SMOKE_FRAME_COUNT;
+      applyGachaSmokeFrame(target, gachaSmokeAnimationState.frame);
+    }
+    if (gachaSmokeAnimationState.timerType === 'timeout') {
+      gachaSmokeAnimationState.timer = setTimeout(() => {
+        step(typeof performance !== 'undefined' ? performance.now() : Date.now());
+      }, frameDuration);
+    } else {
+      gachaSmokeAnimationState.timer = requestAnimationFrame(step);
+    }
+  };
+  if (gachaSmokeAnimationState.timerType === 'timeout') {
+    gachaSmokeAnimationState.timer = setTimeout(() => {
+      step(typeof performance !== 'undefined' ? performance.now() : Date.now());
+    }, frameDuration);
+  } else {
+    gachaSmokeAnimationState.timer = requestAnimationFrame(step);
+  }
 }
 
 function createGachaFeaturedSmokeBackdrop() {
