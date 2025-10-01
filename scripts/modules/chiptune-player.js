@@ -236,6 +236,7 @@
       let currentTime = 0;
       let lastTick = 0;
       const activeNotes = new Map();
+      const channelPrograms = new Map();
       const notes = [];
 
       const flushRemainingNotes = (fallback) => {
@@ -248,6 +249,8 @@
               startTime: pending.time,
               duration,
               velocity: pending.velocity,
+              channel: pending.channel,
+              program: pending.program,
             });
           }
         }
@@ -266,6 +269,11 @@
           continue;
         }
 
+        if (event.type === 'program') {
+          channelPrograms.set(event.channel, event.program);
+          continue;
+        }
+
         if (event.type !== 'noteOn' && event.type !== 'noteOff') {
           continue;
         }
@@ -276,10 +284,15 @@
         }
 
         if (event.type === 'noteOn') {
+          const program = channelPrograms.has(event.channel)
+            ? channelPrograms.get(event.channel)
+            : 0;
           activeNotes.get(key).push({
             time: currentTime,
             velocity: event.velocity / 127,
             note: event.note,
+            channel: event.channel,
+            program,
           });
         } else {
           const stack = activeNotes.get(key);
@@ -291,6 +304,8 @@
               startTime: pending.time,
               duration,
               velocity: pending.velocity,
+              channel: pending.channel,
+              program: pending.program,
             });
           }
         }
@@ -341,6 +356,7 @@
       this.libraryTracks = [];
 
       this.maxGain = 0.32;
+      this.waveCache = new Map();
 
       this.bindEvents();
       this.updateButtons();
@@ -416,6 +432,7 @@
           throw new Error('API Web Audio non disponible dans ce navigateur.');
         }
         this.audioContext = new AudioContextClass();
+        this.waveCache = new Map();
         this.masterGain = this.audioContext.createGain();
         this.masterGain.gain.value = 1;
         this.masterGain.connect(this.audioContext.destination);
@@ -544,38 +561,196 @@
       return 440 * Math.pow(2, (note - 69) / 12);
     }
 
+    getPulseWave(dutyCycle) {
+      if (!this.audioContext) {
+        return null;
+      }
+      const clamped = Math.min(0.95, Math.max(0.05, dutyCycle));
+      const key = `pulse:${clamped.toFixed(3)}`;
+      if (this.waveCache.has(key)) {
+        return this.waveCache.get(key);
+      }
+      const harmonics = 32;
+      const real = new Float32Array(harmonics);
+      const imag = new Float32Array(harmonics);
+      for (let i = 1; i < harmonics; i += 1) {
+        const numerator = Math.sin(Math.PI * i * clamped);
+        const coefficient = (2 / (i * Math.PI)) * numerator;
+        real[i] = coefficient;
+        imag[i] = 0;
+      }
+      const wave = this.audioContext.createPeriodicWave(real, imag, { disableNormalization: true });
+      this.waveCache.set(key, wave);
+      return wave;
+    }
+
+    getInstrumentSettings(note) {
+      const program = Number.isFinite(note.program) ? note.program : 0;
+
+      const baseEnvelope = {
+        attack: 0.012,
+        decay: 0.06,
+        sustain: 0.6,
+        release: Math.max(0.16, Math.min(0.5, note.duration * 0.7)),
+      };
+
+      const family = Math.floor(program / 8);
+      switch (family) {
+        case 0: // Pianos / Chromatic Perc.
+          return {
+            type: 'pulse',
+            dutyCycle: 0.25,
+            envelope: { ...baseEnvelope, decay: 0.04, sustain: 0.5 },
+            vibrato: { depth: 3, rate: 5.5 },
+            volume: 0.9,
+          };
+        case 1: // Orgues
+          return {
+            type: 'pulse',
+            dutyCycle: 0.375,
+            envelope: { ...baseEnvelope, decay: 0.08, sustain: 0.7, release: Math.max(0.2, note.duration * 0.9) },
+            vibrato: { depth: 4, rate: 4.5 },
+            volume: 0.85,
+          };
+        case 2: // Guitares
+          return {
+            type: 'pulse',
+            dutyCycle: 0.18,
+            envelope: { ...baseEnvelope, decay: 0.05, sustain: 0.45 },
+            vibrato: { depth: 6, rate: 6.5 },
+            volume: 0.82,
+          };
+        case 3: // Basses
+          return {
+            type: 'triangle',
+            envelope: { ...baseEnvelope, decay: 0.08, sustain: 0.55 },
+            vibrato: { depth: 2, rate: 4 },
+            volume: 1,
+          };
+        case 4: // Cordes
+          return {
+            type: 'sawtooth',
+            envelope: { ...baseEnvelope, attack: 0.02, decay: 0.12, sustain: 0.65 },
+            vibrato: { depth: 5, rate: 5 },
+            volume: 0.75,
+          };
+        case 5: // Ensembles
+          return {
+            type: 'pulse',
+            dutyCycle: 0.44,
+            envelope: { ...baseEnvelope, attack: 0.018, decay: 0.12, sustain: 0.7 },
+            vibrato: { depth: 8, rate: 5.2 },
+            volume: 0.78,
+          };
+        case 6: // Cuivres
+          return {
+            type: 'pulse',
+            dutyCycle: 0.22,
+            envelope: { ...baseEnvelope, attack: 0.015, decay: 0.08, sustain: 0.5 },
+            vibrato: { depth: 7, rate: 5.8 },
+            volume: 0.9,
+          };
+        case 7: // Leads
+          return {
+            type: 'pulse',
+            dutyCycle: 0.12,
+            envelope: { ...baseEnvelope, decay: 0.05, sustain: 0.4 },
+            vibrato: { depth: 10, rate: 6.8 },
+            volume: 0.92,
+          };
+        case 8: // Pad
+          return {
+            type: 'sawtooth',
+            envelope: { ...baseEnvelope, attack: 0.03, decay: 0.16, sustain: 0.75, release: Math.max(0.3, note.duration) },
+            vibrato: { depth: 6, rate: 4.2 },
+            volume: 0.7,
+          };
+        default:
+          return {
+            type: 'pulse',
+            dutyCycle: 0.5,
+            envelope: baseEnvelope,
+            vibrato: { depth: 3, rate: 5 },
+            volume: 0.85,
+          };
+      }
+    }
+
     scheduleNote(note, baseTime) {
       if (!this.audioContext || !this.masterGain) {
         return;
       }
       const startAt = baseTime + note.startTime;
-      const releaseDuration = Math.max(0.1, Math.min(0.5, note.duration * 0.6));
       const velocity = Math.max(0.1, Math.min(1, note.velocity));
 
+      const instrument = this.getInstrumentSettings(note);
       const osc = this.audioContext.createOscillator();
       const gainNode = this.audioContext.createGain();
-      osc.type = 'square';
-      osc.frequency.setValueAtTime(this.midiNoteToFrequency(note.note), startAt);
+      const frequency = this.midiNoteToFrequency(note.note);
 
-      const peakGain = velocity * this.maxGain;
-      gainNode.gain.setValueAtTime(0.0001, startAt);
-      gainNode.gain.exponentialRampToValueAtTime(peakGain, startAt + 0.02);
+      if (instrument.type === 'pulse') {
+        const wave = this.getPulseWave(instrument.dutyCycle || 0.5);
+        if (wave) {
+          osc.setPeriodicWave(wave);
+        } else {
+          osc.type = 'square';
+        }
+      } else {
+        osc.type = instrument.type;
+      }
+
+      const peakGain = Math.min(1, velocity * this.maxGain * (instrument.volume || 1));
+      const envelope = instrument.envelope || {};
+      const attack = Math.max(0.001, envelope.attack || 0.01);
+      const decay = Math.max(0.005, envelope.decay || 0.05);
+      const sustainLevel = Math.min(1, Math.max(0, envelope.sustain ?? 0.5));
+      const releaseDuration = Math.max(0.06, envelope.release || Math.min(0.5, note.duration * 0.6));
       const stopAt = startAt + note.duration;
-      gainNode.gain.setValueAtTime(peakGain, stopAt);
+
+      const attackEnd = Math.min(stopAt, startAt + attack);
+      const decayEnd = Math.min(stopAt, attackEnd + decay);
+
+      gainNode.gain.cancelScheduledValues(startAt);
+      gainNode.gain.setValueAtTime(0.0001, startAt);
+      gainNode.gain.linearRampToValueAtTime(peakGain, attackEnd);
+      gainNode.gain.linearRampToValueAtTime(Math.max(0.0001, peakGain * sustainLevel), decayEnd);
+      gainNode.gain.setValueAtTime(Math.max(0.0001, peakGain * sustainLevel), stopAt);
       gainNode.gain.exponentialRampToValueAtTime(0.0001, stopAt + releaseDuration);
 
-      osc.connect(gainNode).connect(this.masterGain);
-
+      osc.frequency.setValueAtTime(frequency, startAt);
       const voice = {
         osc,
         gainNode,
         startTime: startAt,
         stopTime: stopAt + releaseDuration,
       };
+
+      let lfo = null;
+      let lfoGain = null;
+      if (instrument.vibrato && instrument.vibrato.depth > 0 && instrument.vibrato.rate > 0) {
+        lfo = this.audioContext.createOscillator();
+        lfoGain = this.audioContext.createGain();
+        lfo.frequency.setValueAtTime(instrument.vibrato.rate, startAt);
+        lfoGain.gain.setValueAtTime(instrument.vibrato.depth, startAt);
+        lfo.connect(lfoGain).connect(osc.frequency);
+        lfo.start(startAt);
+        lfo.stop(stopAt + releaseDuration);
+        voice.lfo = lfo;
+        voice.lfoGain = lfoGain;
+      }
+
+      osc.connect(gainNode).connect(this.masterGain);
+
       this.liveVoices.add(voice);
       osc.onended = () => {
         this.liveVoices.delete(voice);
         gainNode.disconnect();
+        if (voice.lfoGain) {
+          voice.lfoGain.disconnect();
+        }
+        if (voice.lfo) {
+          voice.lfo.disconnect();
+        }
       };
 
       osc.start(startAt);
@@ -644,6 +819,10 @@
               voice.gainNode.gain.setValueAtTime(voice.gainNode.gain.value, now);
               voice.gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
               voice.osc.stop(now + 0.12);
+            }
+            if (voice.lfo) {
+              const stopAt = now < voice.startTime ? voice.startTime : now + 0.12;
+              voice.lfo.stop(stopAt);
             }
           } catch (error) {
             // Ignorer les erreurs liées à l'état de l'oscillateur
