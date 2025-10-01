@@ -1103,6 +1103,28 @@
           </div>
           <p class="option-note" id="musicTrackStatus" data-i18n="index.sections.options.music.note"></p>
         </div>
+        <div class="option-card option-card--chiptune">
+          <h3>Module chiptune 8‑bit</h3>
+          <p class="option-note">
+            Chargez un fichier MIDI à piste unique pour le jouer avec un synthé carré façon années 80/90. Placez vos morceaux dans
+            <code>Assets/Chiptune</code> pour les retrouver rapidement dans la liste locale.
+          </p>
+          <div class="option-row">
+            <label for="chiptuneLibrarySelect">Bibliothèque locale</label>
+            <select id="chiptuneLibrarySelect" disabled>
+              <option value="">Sélectionnez un morceau</option>
+            </select>
+          </div>
+          <div class="option-row">
+            <label for="chiptuneFileInput">Fichier MIDI</label>
+            <input type="file" id="chiptuneFileInput" accept=".mid,.midi" />
+          </div>
+          <div class="option-row option-row--buttons">
+            <button type="button" id="chiptunePlayButton" disabled>Lecture</button>
+            <button type="button" id="chiptuneStopButton" disabled>Stop</button>
+          </div>
+          <p class="option-note" id="chiptuneStatus">Aucun morceau chargé pour le moment.</p>
+        </div>
         <div class="option-card" id="brickSkinOptionCard" hidden aria-hidden="true">
           <h3 data-i18n="index.sections.options.brickSkin.title"></h3>
           <div class="option-row">
@@ -1256,6 +1278,7 @@
   <script src="scripts/arcade/gacha.js"></script>
   <script src="scripts/modules/info.js"></script>
   <script src="scripts/arcade/metaux-match3.js"></script>
+  <script src="scripts/modules/chiptune-player.js"></script>
   <script src="scripts/modules/app-data.js"></script>
   <script src="scripts/app.js"></script>
 </body>

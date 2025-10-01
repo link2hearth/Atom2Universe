@@ -1,0 +1,38 @@
+/* Styles spécifiques au lecteur chiptune 8-bit */
+.option-card--chiptune {
+  border: 1px solid rgba(120, 200, 255, 0.18);
+  box-shadow: 0 16px 36px rgba(90, 200, 255, 0.12);
+}
+
+.option-card--chiptune .option-row--buttons {
+  flex-wrap: nowrap;
+  gap: 0.6rem;
+}
+
+.option-card--chiptune .option-row--buttons button {
+  flex: 1 1 auto;
+  min-width: 120px;
+}
+
+.option-card--chiptune select {
+  width: 100%;
+  max-width: 100%;
+}
+
+.option-card--chiptune .option-row--buttons button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.option-card--chiptune #chiptuneStatus {
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.option-card--chiptune #chiptuneStatus.is-error {
+  color: var(--danger);
+}
+
+.option-card--chiptune #chiptuneStatus.is-success {
+  color: #7ef7ff;
+}
