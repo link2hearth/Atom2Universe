@@ -1,0 +1,48 @@
+.arcade-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(0.28rem, 0.77vw, 0.55rem);
+  min-height: var(--arcade-header-height);
+  padding: clamp(0.24rem, 0.7vw, 0.45rem) clamp(0.4rem, 1vw, 0.6rem);
+  border-radius: 0.85rem;
+  background: linear-gradient(140deg, rgba(18, 24, 56, 0.78), rgba(8, 12, 34, 0.82));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 20px rgba(6, 10, 32, 0.28);
+}
+
+.arcade-header__brand {
+  flex-shrink: 0;
+  padding-inline: clamp(0.42rem, 0.88vw, 0.72rem);
+  padding-block: clamp(0.25rem, 0.58vw, 0.43rem);
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+  font-size: clamp(0.55rem, 1.15vw, 0.72rem);
+  letter-spacing: 0.1em;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.arcade-header__brand--primary {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+.arcade-header__brand-text {
+  display: inline-block;
+  background: linear-gradient(120deg, #ffd166, #ff8ba7, #70d6ff, #caffbf, #bdb2ff, #ffd166);
+  background-size: 240% 240%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: statusMainSheen 8s linear infinite;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.28);
+}
+
+.arcade-header__status-group {
+  display: flex;
+  align-items: stretch;
+  gap: clamp(0.28rem, 0.77vw, 0.55rem);
+}
