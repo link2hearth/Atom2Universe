@@ -452,15 +452,18 @@
               <span class="arcade-header__status-label" data-i18n="index.sections.arcade.header.mach3"></span>
               <span class="arcade-header__status-value" data-arcade-bonus-value>0</span>
             </button>
-            <div
+            <button
               class="arcade-header__status arcade-header__status--info"
               id="quantum2048GoalDisplay"
-              role="status"
-              aria-live="polite"
+              type="button"
             >
+              <span
+                class="visually-hidden"
+                data-i18n="index.sections.quantum2048.controls.restart"
+              ></span>
               <span class="arcade-header__status-label" data-i18n="index.sections.quantum2048.banner.goalLabel"></span>
-              <span class="arcade-header__status-value" id="quantum2048GoalValue">0</span>
-            </div>
+              <span class="arcade-header__status-value" id="quantum2048GoalValue" aria-live="polite">0</span>
+            </button>
             <span
               id="arcadeBonusTicketAnnouncement2048"
               class="visually-hidden"
@@ -471,34 +474,6 @@
         </div>
       </div>
       <div class="quantum2048-content">
-        <aside class="quantum2048-panel">
-          <header class="quantum2048-panel__header">
-            <h2 class="quantum2048-panel__title" data-i18n="index.sections.quantum2048.title"></h2>
-            <p class="quantum2048-panel__subtitle" data-i18n="index.sections.quantum2048.subtitle"></p>
-          </header>
-          <button
-            type="button"
-            id="quantum2048RestartButton"
-            class="quantum2048-action"
-            data-i18n="index.sections.quantum2048.controls.restart"
-          ></button>
-          <div class="quantum2048-stats" role="group" aria-labelledby="quantum2048StatsLabel">
-            <h3 id="quantum2048StatsLabel" class="visually-hidden" data-i18n="index.sections.quantum2048.stats.group"></h3>
-            <div class="quantum2048-stat">
-              <span class="quantum2048-stat__label" data-i18n="index.sections.quantum2048.stats.score"></span>
-              <strong class="quantum2048-stat__value" id="quantum2048ScoreValue">0</strong>
-            </div>
-            <div class="quantum2048-stat">
-              <span class="quantum2048-stat__label" data-i18n="index.sections.quantum2048.stats.best"></span>
-              <strong class="quantum2048-stat__value" id="quantum2048BestValue">0</strong>
-            </div>
-            <div class="quantum2048-stat">
-              <span class="quantum2048-stat__label" data-i18n="index.sections.quantum2048.stats.moves"></span>
-              <strong class="quantum2048-stat__value" id="quantum2048MovesValue">0</strong>
-            </div>
-          </div>
-          <p class="quantum2048-status" id="quantum2048Status" aria-live="polite"></p>
-        </aside>
         <div
           class="quantum2048-board"
           id="quantum2048Board"
@@ -519,6 +494,12 @@
               ></button>
             </div>
           </div>
+        </div>
+        <div class="quantum2048-hud">
+          <header class="quantum2048-hud__header">
+            <h2 class="quantum2048-hud__title" data-i18n="index.sections.quantum2048.title"></h2>
+            <p class="quantum2048-hud__subtitle" data-i18n="index.sections.quantum2048.subtitle"></p>
+          </header>
         </div>
       </div>
     </section>
