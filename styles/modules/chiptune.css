@@ -19,6 +19,24 @@
   max-width: 100%;
 }
 
+.option-card--chiptune .option-row--slider {
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: nowrap;
+}
+
+.option-card--chiptune .option-row--slider input[type='range'] {
+  flex: 1 1 auto;
+  min-width: 140px;
+}
+
+.option-card--chiptune .option-row--slider .option-value {
+  min-width: 3ch;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.85);
+}
+
 .option-card--chiptune .option-row--buttons button:disabled {
   opacity: 0.5;
   cursor: not-allowed;

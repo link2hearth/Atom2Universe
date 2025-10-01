@@ -1119,6 +1119,11 @@
             <label for="chiptuneFileInput">Fichier MIDI</label>
             <input type="file" id="chiptuneFileInput" accept=".mid,.midi" />
           </div>
+          <div class="option-row option-row--slider">
+            <label for="chiptuneVolumeSlider">Volume général</label>
+            <input type="range" id="chiptuneVolumeSlider" min="0" max="100" step="1" value="80" />
+            <span class="option-value" id="chiptuneVolumeValue" aria-live="polite">80%</span>
+          </div>
           <div class="option-row option-row--buttons">
             <button type="button" id="chiptunePlayButton" disabled>Lecture</button>
             <button type="button" id="chiptuneStopButton" disabled>Stop</button>

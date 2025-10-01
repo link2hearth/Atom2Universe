@@ -15,3 +15,9 @@
 5. Ajouter un contrôle de mixage global (limiteur doux ou compresseur simple) pour éviter la saturation lorsque plusieurs notes se superposent.
 
 Chaque point pourra être détaillé au fur et à mesure des itérations afin d'ajuster le périmètre selon les retours d'écoute.
+
+## Vérification des étapes réalisées
+
+- ✅ **Étape 1** – Les changements de programme sont convertis en timbres spécifiques avec enveloppes, vibratos et formes d'onde adaptés via `getInstrumentSettings`, assurant la variété attendue pour les instruments mélodiques.
+- ✅ **Étape 2** – Le canal 10 bénéficie d'un moteur de percussions dédié (`getPercussionSettings`) qui combine bruit filtré et composantes tonales pour les principaux coups de batterie.
+- ✅ **Étape 3** – Le séquençage audio repose sur un planificateur à fenêtre glissante (`processScheduler`) qui précharge les notes 250 ms à l'avance pour fiabiliser le timing.
