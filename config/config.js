@@ -794,7 +794,7 @@ const GAME_CONFIG = {
     refillDelayMs: 120,
     popEffect: {
       durationMs: 220,
-      scale: 1.18,
+      scale: 1.22,
       glowOpacity: 0.8
     },
     maxShuffleAttempts: 120,
@@ -803,38 +803,38 @@ const GAME_CONFIG = {
         id: 'bronze',
         label: 'Cu',
         color: '#F8A436',
-        image: 'styles/assets/sprites/bronze.svg'
+        image: 'assets/image/Bronze.png'
       },
       {
         id: 'argent',
         label: 'Ag',
         color: '#1C8213',
-        image: 'styles/assets/sprites/argent.svg'
+        image: 'assets/image/Argent.png'
       },
       {
         id: 'or',
         label: 'Au',
         color: '#E6C838',
-        image: 'styles/assets/sprites/or.svg'
+        image: 'assets/image/Or.png'
       },
       {
         id: 'platine',
         label: 'Pt',
         color: '#45A9E2',
-        image: 'styles/assets/sprites/platine.svg'
+        image: 'assets/image/Bronze.png'
       },
       {
         id: 'diamant',
         label: 'C',
         color: '#E9F6FD',
-        image: 'styles/assets/sprites/diamant.svg'
+        image: 'assets/image/Diamant.png'
       }
     ],
     timer: {
       initialSeconds: 6,
       maxSeconds: 6,
       matchRewardSeconds: 2,
-      penaltyWindowSeconds: 30,
+      penaltyWindowSeconds: 20,
       penaltyAmountSeconds: 1,
       minMaxSeconds: 1,
       tickIntervalMs: 100
