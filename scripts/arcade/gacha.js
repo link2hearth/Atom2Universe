@@ -1,7 +1,7 @@
 const DEFAULT_GACHA_TICKET_COST = 1;
 
 const GACHA_SMOKE_FRAME_COUNT = 91;
-const GACHA_SMOKE_FRAME_RATE = 8;
+const GACHA_SMOKE_FRAME_RATE = 12;
 const GACHA_SMOKE_FRAME_PAD = 4;
 const GACHA_SMOKE_ASSET_PATH = 'assets/sprites/Smoke';
 
@@ -11,8 +11,34 @@ const gachaSmokeAnimationState = {
   element: null,
   reducedMotion: false,
   lastUpdate: 0,
-  timerType: null
+  timerType: null,
+  lastFrameUrl: ''
 };
+
+let gachaSmokeFramesPreloaded = false;
+const gachaSmokePreloadedImages = [];
+
+function getGachaSmokeFrameUrl(frameIndex) {
+  const frameName = formatGachaSmokeFrame(frameIndex);
+  return encodeURI(`${GACHA_SMOKE_ASSET_PATH}/${frameName}.png`);
+}
+
+function preloadGachaSmokeFrames() {
+  if (gachaSmokeFramesPreloaded || typeof Image !== 'function') {
+    return;
+  }
+  gachaSmokeFramesPreloaded = true;
+  for (let index = 0; index < GACHA_SMOKE_FRAME_COUNT; index += 1) {
+    const image = new Image();
+    try {
+      image.decoding = 'async';
+    } catch (error) {
+      // Ignore if the browser does not support setting decoding.
+    }
+    image.src = getGachaSmokeFrameUrl(index);
+    gachaSmokePreloadedImages.push(image);
+  }
+}
 
 function prefersReducedMotion() {
   if (typeof matchMedia !== 'function') {
@@ -34,9 +60,12 @@ function applyGachaSmokeFrame(element, frameIndex) {
   if (!element) {
     return;
   }
-  const frameName = formatGachaSmokeFrame(frameIndex);
-  const frameUrl = encodeURI(`${GACHA_SMOKE_ASSET_PATH}/${frameName}.png`);
-  element.style.backgroundImage = `url('${frameUrl}')`;
+  const frameUrl = getGachaSmokeFrameUrl(frameIndex);
+  if (frameUrl === gachaSmokeAnimationState.lastFrameUrl) {
+    return;
+  }
+  gachaSmokeAnimationState.lastFrameUrl = frameUrl;
+  element.style.backgroundImage = `url("${frameUrl}")`;
 }
 
 function stopGachaFeaturedSmokeAnimation() {
@@ -56,6 +85,7 @@ function stopGachaFeaturedSmokeAnimation() {
   gachaSmokeAnimationState.reducedMotion = false;
   gachaSmokeAnimationState.lastUpdate = 0;
   gachaSmokeAnimationState.timerType = null;
+  gachaSmokeAnimationState.lastFrameUrl = '';
 }
 
 function startGachaFeaturedSmokeAnimation(element) {
@@ -69,6 +99,7 @@ function startGachaFeaturedSmokeAnimation(element) {
   gachaSmokeAnimationState.lastUpdate = typeof performance !== 'undefined'
     ? performance.now()
     : Date.now();
+  preloadGachaSmokeFrames();
   applyGachaSmokeFrame(element, gachaSmokeAnimationState.frame);
   if (gachaSmokeAnimationState.reducedMotion) {
     return;
