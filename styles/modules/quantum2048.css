@@ -23,6 +23,11 @@
   flex-wrap: wrap;
 }
 
+.page--quantum2048 .quantum2048-panel,
+.page--quantum2048 .bannierearcade__status-group {
+  display: none;
+}
+
 .quantum2048-panel {
   flex: 0 1 clamp(180px, 14vw, 220px);
   display: flex;
