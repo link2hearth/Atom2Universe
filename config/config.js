@@ -91,7 +91,7 @@ function createShopBuildingDefinitions() {
       name: 'Réacteur nucléaire',
       description: 'Des réacteurs contrôlés libèrent une énergie colossale.',
       effectSummary:
-        'Production passive : +10 APS par niveau (+1 % par 50 Électrons, +20 % si Labos ≥200). Tous les 100 réacteurs : APC global ×2 (cumulatif).',
+        'Production passive : +10 APS par niveau (+1 % par 50 Électrons, +20 % si Labos ≥200).',
       category: 'auto',
       baseCost: 1000,
       costScale: 1.15,
@@ -108,10 +108,7 @@ function createShopBuildingDefinitions() {
         const baseAmount = 10 * level;
         const rawAutoAdd = baseAmount * productionMultiplier;
         const autoAdd = level > 0 ? Math.max(baseAmount, Math.round(rawAutoAdd)) : 0;
-        const clickMult = Math.pow(2, Math.floor(level / 100));
-        return clickMult > 1
-          ? { autoAdd, clickMult }
-          : { autoAdd };
+        return { autoAdd };
       }
     },
     {
@@ -119,7 +116,7 @@ function createShopBuildingDefinitions() {
       name: 'Accélérateur de particules',
       description: 'Boostez vos particules pour décupler l’APC.',
       effectSummary:
-        'Production passive : +50 APS par niveau (bonus si ≥100 Supercalculateurs). Chaque niveau octroie +5 % d’APC. Palier 200 : +20 % production des Labos.',
+        'Production passive : +50 APS par niveau (bonus si ≥100 Supercalculateurs). Palier 200 : +20 % production des Labos.',
       category: 'hybrid',
       baseCost: 12_000,
       costScale: 1.15,
@@ -132,8 +129,7 @@ function createShopBuildingDefinitions() {
         const baseAmount = 50 * level;
         const rawAutoAdd = baseAmount * productionMultiplier;
         const autoAdd = level > 0 ? Math.max(baseAmount, Math.round(rawAutoAdd)) : 0;
-        const clickMult = Math.pow(1.05, level);
-        return { autoAdd, clickMult };
+        return { autoAdd };
       }
     },
     {

@@ -349,14 +349,14 @@
         "nuclearReactor": {
           "name": "Nuclear Reactor",
           "description": "Controlled reactors unleash colossal energy.",
-          "effect": "Passive production: +10 APS per level (+1% per 50 Electrons, +20% if Labs ≥200). Every 100 reactors: global APC ×2 (cumulative).",
-          "effectSummary": "Passive production +10 APS per level. +1% APS per 50 Free Electrons, +20% APS if Labs ≥200. Every 100 reactors: global APC ×2."
+          "effect": "Passive production: +10 APS per level (+1% per 50 Electrons, +20% if Labs ≥200).",
+          "effectSummary": "Passive production +10 APS per level. +1% APS per 50 Free Electrons, +20% APS if Labs ≥200."
         },
         "particleAccelerator": {
           "name": "Particle Accelerator",
           "description": "Boost your particles to multiply APC.",
-          "effect": "Passive production: +50 APS per level (bonus if ≥100 Supercomputers). Each level grants +5% APC. Tier 200: +20% Lab production.",
-          "effectSummary": "Passive production +50 APS per level (+50% if ≥100 Supercomputers). Each level adds +5% APC. Tier 200: Physics Labs +20% APS."
+          "effect": "Passive production: +50 APS per level (bonus if ≥100 Supercomputers). Tier 200: +20% Lab production.",
+          "effectSummary": "Passive production +50 APS per level (+50% if ≥100 Supercomputers). Tier 200: Physics Labs +20% APS."
         },
         "supercomputer": {
           "name": "Supercomputers",

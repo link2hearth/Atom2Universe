@@ -347,12 +347,12 @@
         "nuclearReactor": {
           "name": "Réacteur nucléaire",
           "description": "Des réacteurs contrôlés libèrent une énergie colossale.",
-          "effect": "Production passive : +10 APS par niveau (+1 % par 50 Électrons, +20 % si Labos ≥200). Tous les 100 réacteurs : APC global ×2 (cumulatif)."
+          "effect": "Production passive : +10 APS par niveau (+1 % par 50 Électrons, +20 % si Labos ≥200)."
         },
         "particleAccelerator": {
           "name": "Accélérateur de particules",
           "description": "Boostez vos particules pour décupler l’APC.",
-          "effect": "Production passive : +50 APS par niveau (bonus si ≥100 Supercalculateurs). Chaque niveau octroie +5 % d’APC. Palier 200 : +20 % production des Labos."
+          "effect": "Production passive : +50 APS par niveau (bonus si ≥100 Supercalculateurs). Palier 200 : +20 % production des Labos."
         },
         "supercomputer": {
           "name": "Supercalculateurs",
