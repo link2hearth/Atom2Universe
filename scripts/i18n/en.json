@@ -118,7 +118,8 @@
         "title": "Fusion 2048",
         "subtitle": "Pick your grid and merge tiles until you reach the selected goal.",
         "banner": {
-          "goalLabel": "Goal"
+          "goalLabel": "Goal",
+          "universeLabel": "Parallel universe"
         },
         "controls": {
           "size": "Grid size",
@@ -131,11 +132,6 @@
           "best": "Best tile",
           "moves": "Moves",
           "goal": "Goal"
-        },
-        "status": {
-          "ready": "Merge tiles to reach {target}.",
-          "victory": "Goal reached! Keep pushing further.",
-          "defeat": "No moves left. Try again."
         },
         "board": "Fusion 2048 board"
       },

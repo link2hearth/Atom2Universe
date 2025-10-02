@@ -29,6 +29,9 @@
     spawnWeights: [0.9, 0.1]
   };
 
+  const UNIVERSE_TRANSITION_DELAY_MS = 850;
+  const UNIVERSE_DEFEAT_EXTRA_DELAY_MS = 250;
+
   function toUniquePositiveIntegers(list) {
     if (!Array.isArray(list)) {
       return [];
@@ -187,7 +190,7 @@
         bestElement,
         movesElement,
         goalElement,
-        statusElement,
+        parallelUniverseElement,
         restartButton,
         overlayElement,
         overlayMessageElement,
@@ -204,7 +207,7 @@
       this.bestElement = bestElement || null;
       this.movesElement = movesElement || null;
       this.goalElement = goalElement || null;
-      this.statusElement = statusElement || null;
+      this.parallelUniverseElement = parallelUniverseElement || null;
       this.restartButton = restartButton || null;
       this.overlayElement = overlayElement || null;
       this.overlayMessageElement = overlayMessageElement || null;
@@ -219,6 +222,8 @@
       this.hasWon = false;
       this.gameOver = false;
       this.active = false;
+      this.parallelUniverseCount = 0;
+      this.transitionTimeout = null;
 
       this.handleKeydown = this.handleKeydown.bind(this);
       this.handleSizeChange = this.handleSizeChange.bind(this);
@@ -229,7 +234,8 @@
       this.resizeFrame = null;
 
       this.setupControls();
-      this.startNewGame({ announce: false, randomize: this.config.randomizeGames !== false });
+      this.updateParallelUniverseDisplay();
+      this.startNewGame({ randomize: this.config.randomizeGames !== false });
     }
 
     normalizeSize(value) {
@@ -460,7 +466,45 @@
       });
     }
 
-    startNewGame({ size = this.size, target = this.target, announce = true, randomize = false } = {}) {
+    clearTransitionTimeout() {
+      if (this.transitionTimeout != null && typeof window !== 'undefined') {
+        window.clearTimeout(this.transitionTimeout);
+      }
+      this.transitionTimeout = null;
+    }
+
+    updateParallelUniverseDisplay() {
+      if (this.parallelUniverseElement) {
+        this.parallelUniverseElement.textContent = formatInteger(this.parallelUniverseCount);
+      }
+    }
+
+    adjustParallelUniverse(delta = 0) {
+      if (!Number.isFinite(delta) || delta === 0) {
+        this.updateParallelUniverseDisplay();
+        return;
+      }
+      this.parallelUniverseCount = Math.max(0, this.parallelUniverseCount + delta);
+      this.updateParallelUniverseDisplay();
+    }
+
+    scheduleUniverseShift(delta, options = {}) {
+      const { delay = UNIVERSE_TRANSITION_DELAY_MS } = options;
+      this.adjustParallelUniverse(delta);
+      const launchNext = () => {
+        this.transitionTimeout = null;
+        this.startNewGame({ randomize: true });
+      };
+      if (typeof window === 'undefined' || !Number.isFinite(delay) || delay <= 0) {
+        launchNext();
+        return;
+      }
+      this.clearTransitionTimeout();
+      this.transitionTimeout = window.setTimeout(launchNext, delay);
+    }
+
+    startNewGame({ size = this.size, target = this.target, randomize = false } = {}) {
+      this.clearTransitionTimeout();
       let nextSize = size;
       let nextTarget = target;
       if (randomize) {
@@ -506,9 +550,6 @@
       }
       this.renderTiles({ spawned });
       this.updateStats();
-      if (announce !== false) {
-        this.setStatus('ready');
-      }
     }
 
     handleResize() {
@@ -769,50 +810,25 @@
       if (this.goalElement) {
         this.goalElement.textContent = formatInteger(this.target);
       }
-    }
-
-    setStatus(state) {
-      if (!this.statusElement) {
-        return;
-      }
-      this.statusElement.classList.remove('quantum2048-status--success', 'quantum2048-status--warning');
-      let message = '';
-      const targetValue = formatInteger(this.target);
-      switch (state) {
-        case 'victory':
-          message = translate('index.sections.quantum2048.status.victory', 'Objectif atteint ! Continuez votre ascension.');
-          this.statusElement.classList.add('quantum2048-status--success');
-          break;
-        case 'defeat':
-          message = translate('index.sections.quantum2048.status.defeat', 'Plus aucun mouvement possible. Relancez une partie.');
-          this.statusElement.classList.add('quantum2048-status--warning');
-          break;
-        default:
-          message = translate(
-            'index.sections.quantum2048.status.ready',
-            `Fusionnez les tuiles pour atteindre ${targetValue}.`,
-            { target: targetValue }
-          );
-          break;
-      }
-      this.statusElement.textContent = message;
+      this.updateParallelUniverseDisplay();
     }
 
     handleVictory() {
+      if (this.hasWon || this.gameOver) {
+        return;
+      }
       this.hasWon = true;
-      this.setStatus('victory');
+      this.gameOver = true;
+      this.scheduleUniverseShift(1);
     }
 
     handleDefeat() {
+      if (this.gameOver) {
+        return;
+      }
       this.gameOver = true;
-      this.setStatus('defeat');
-      this.showOverlay(
-        translate(
-          'scripts.arcade.quantum2048.overlay.defeat',
-          'Plus de mouvements ! Score : {score}',
-          { score: formatInteger(this.score) }
-        )
-      );
+      this.hideOverlay();
+      this.scheduleUniverseShift(-1, { delay: UNIVERSE_TRANSITION_DELAY_MS + UNIVERSE_DEFEAT_EXTRA_DELAY_MS });
     }
 
     canMove() {
@@ -917,7 +933,6 @@
         window.addEventListener('resize', this.handleResize);
         this.handleResize();
       }
-      this.setStatus(this.gameOver ? 'defeat' : this.hasWon ? 'victory' : 'ready');
     }
 
     onLeave() {
