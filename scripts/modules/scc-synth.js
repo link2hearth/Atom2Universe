@@ -1,13 +1,13 @@
 (function () {
   'use strict';
 
-  const DEFAULT_MASTER_VOLUME = 60;
+  const DEFAULT_MASTER_VOLUME = 45;
   const DEFAULT_VOICE_SETTINGS = [
-    { frequency: 220, volume: 70 },
-    { frequency: 330, volume: 65 },
-    { frequency: 440, volume: 60 },
-    { frequency: 550, volume: 55 },
-    { frequency: 660, volume: 50 },
+    { frequency: 220, volume: 55 },
+    { frequency: 330, volume: 50 },
+    { frequency: 440, volume: 45 },
+    { frequency: 550, volume: 40 },
+    { frequency: 660, volume: 35 },
   ];
 
   const SHARED_WAVEFORM = typeof window !== 'undefined' ? window.SccWaveform : null;
@@ -90,6 +90,7 @@
       this.voices = [];
       this.voiceSettings = DEFAULT_VOICE_SETTINGS.map((voice) => ({ ...voice }));
       this.masterVolume = DEFAULT_MASTER_VOLUME;
+      this.voiceMixNormalisation = this.calculateVoiceMixNormalisation();
       this.running = false;
       this.supported = typeof window !== 'undefined' && !!(window.AudioContext || window.webkitAudioContext);
 
@@ -193,10 +194,25 @@
       this.periodicWave = getPeriodicWaveForContext(this.audioContext);
     }
 
+    calculateVoiceMixNormalisation() {
+      const voiceCount = Math.max(this.voiceSettings.length, 1);
+      return 1 / Math.sqrt(voiceCount);
+    }
+
     percentToGain(value) {
       const percent = this.clampPercent(value);
+      if (percent <= 0) {
+        return 0;
+      }
       const normalised = percent / 100;
-      return Math.pow(normalised, 1.2);
+      const minDecibels = -48;
+      const decibels = minDecibels + (0 - minDecibels) * normalised;
+      return Math.pow(10, decibels / 20);
+    }
+
+    voiceGain(value) {
+      const baseGain = this.percentToGain(value);
+      return baseGain * this.voiceMixNormalisation;
     }
 
     setVoiceFrequency(index, frequency) {
@@ -215,7 +231,7 @@
       this.updateVolumeDisplay(index);
       if (this.running && this.voices[index]) {
         const now = this.audioContext.currentTime;
-        const gainValue = this.percentToGain(clampedVolume);
+        const gainValue = this.voiceGain(clampedVolume);
         this.voices[index].gain.gain.setTargetAtTime(gainValue, now, 0.02);
       }
     }
@@ -300,7 +316,7 @@
         oscillator.setPeriodicWave(this.periodicWave);
         oscillator.frequency.value = settings.frequency;
         const gainNode = this.audioContext.createGain();
-        gainNode.gain.value = this.percentToGain(settings.volume);
+        gainNode.gain.value = this.voiceGain(settings.volume);
         oscillator.connect(gainNode);
         gainNode.connect(this.masterGain);
         oscillator.start();
