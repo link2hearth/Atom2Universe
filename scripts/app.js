@@ -6053,20 +6053,8 @@ function getRemainingUpgradeCapacity(definition) {
   return Math.max(0, remaining);
 }
 
-function computeGlobalCostModifier(defId) {
-  let modifier = 1;
-  const architectLevel = getUpgradeLevel(gameState.upgrades, 'cosmicArchitect');
-  if (architectLevel > 0) {
-    modifier *= Math.pow(0.99, architectLevel);
-  }
-  const simulatorLevel = getUpgradeLevel(gameState.upgrades, 'multiverseSimulator');
-  if (simulatorLevel >= 200) {
-    modifier *= 0.95;
-  }
-  if (!Number.isFinite(modifier) || modifier <= 0) {
-    modifier = 0.05;
-  }
-  return Math.max(0.05, modifier);
+function computeGlobalCostModifier() {
+  return 1;
 }
 
 function computeUpgradeCost(def, quantity = 1) {
@@ -6075,7 +6063,7 @@ function computeUpgradeCost(def, quantity = 1) {
   }
   const level = getUpgradeLevel(gameState.upgrades, def.id);
   const baseScale = def.costScale ?? 1;
-  const modifier = computeGlobalCostModifier(def.id);
+  const modifier = computeGlobalCostModifier();
   const baseCost = def.baseCost;
   const buyAmount = Math.max(1, Math.floor(Number(quantity) || 0));
 

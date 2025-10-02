@@ -329,62 +329,62 @@
             "freeElectrons": {
               "name": "Électrons libres",
               "description": "Canalisez des électrons pour amplifier chaque clic quantique.",
-              "effect": "Production manuelle : +1 APC par niveau. Tous les 25 niveaux : +10 % APC."
+              "effect": "Production manuelle : +1 APC par niveau."
             },
             "physicsLab": {
               "name": "Laboratoire de Physique",
               "description": "Des équipes de chercheurs boostent votre production atomique.",
-              "effect": "Production passive : +1 APS par niveau. Chaque 10 labos accordent +10 % d’APC global. Accélérateur ≥200 : Labos +20 % APS."
+              "effect": "Production passive : +1 APS par niveau."
             },
             "nuclearReactor": {
               "name": "Réacteur nucléaire",
               "description": "Des réacteurs contrôlés libèrent une énergie colossale.",
-              "effect": "Production passive : +10 APS par niveau (+1 % par 50 Électrons, +20 % si Labos ≥200)."
+              "effect": "Production passive : +10 APS par niveau."
             },
             "particleAccelerator": {
               "name": "Accélérateur de particules",
-              "description": "Boostez vos particules pour décupler l’APC.",
-              "effect": "Production passive : +50 APS par niveau (bonus si ≥100 Supercalculateurs). Palier 200 : +20 % production des Labos."
+              "description": "Boostez vos particules pour intensifier la production passive.",
+              "effect": "Production passive : +50 APS par niveau."
             },
             "supercomputer": {
               "name": "Supercalculateurs",
               "description": "Des centres de calcul quantique optimisent vos gains.",
-              "effect": "Production passive : +500 APS par niveau (doublée par Stations ≥300). Tous les 50 Supercalculateurs : APS global ×2 (cumulatif)."
+              "effect": "Production passive : +500 APS par niveau."
             },
             "interstellarProbe": {
               "name": "Sonde interstellaire",
               "description": "Explorez la galaxie pour récolter toujours plus.",
-              "effect": "Production passive : +5 000 APS par niveau (boostée par Réacteurs). À 150 exemplaires : chaque sonde ajoute +10 APC."
+              "effect": "Production passive : +5 000 APS par niveau."
             },
             "spaceStation": {
               "name": "Station spatiale",
               "description": "Des bases orbitales coordonnent votre expansion.",
-              "effect": "Production passive : +50 000 APS par niveau. Chaque Station accorde +5 % d’APC. Palier 300 : Supercalculateurs +100 %."
+              "effect": "Production passive : +50 000 APS par niveau."
             },
             "starForge": {
               "name": "Forgeron d’étoiles",
-              "description": "Façonnez des étoiles et dopez votre APC.",
-              "effect": "Production passive : +500 000 APS par niveau (+2 % APS par Station). Tous les 50 Forgerons : APC global ×2 (cumulatif)."
+              "description": "Façonnez des étoiles et dopez votre production passive.",
+              "effect": "Production passive : +500 000 APS par niveau."
             },
             "artificialGalaxy": {
               "name": "Galaxie artificielle",
               "description": "Ingénierie galactique pour une expansion sans fin.",
-              "effect": "Production passive : +5 000 000 APS par niveau (doublée par Bibliothèque ≥300). Palier 100 : +50 % APC global."
+              "effect": "Production passive : +5 000 000 APS par niveau."
             },
             "multiverseSimulator": {
               "name": "Simulateur de Multivers",
               "description": "Simulez l’infini pour optimiser chaque seconde.",
-              "effect": "Production passive : +500 000 000 APS par niveau. Palier 200 : coûts des bâtiments −5 %."
+              "effect": "Production passive : +500 000 000 APS par niveau."
             },
             "realityWeaver": {
               "name": "Tisseur de Réalité",
               "description": "Tissez les lois physiques à votre avantage.",
-              "effect": "Production passive : +10 000 000 000 APS par niveau. Bonus clic arrondi : +0,1 × bâtiments × niveau. Palier 300 : production totale ×2."
+              "effect": "Production passive : +10 000 000 000 APS par niveau."
             },
             "cosmicArchitect": {
               "name": "Architecte Cosmique",
-              "description": "Réécrivez les plans du cosmos pour réduire les coûts.",
-              "effect": "Production passive : +1 000 000 000 000 APS par niveau. Réduction de 1 % du coût futur par Architecte. Tous les 50 Architectes : APC global ×2 (cumulatif)."
+              "description": "Réécrivez les plans du cosmos pour libérer une énergie infinie.",
+              "effect": "Production passive : +1 000 000 000 000 APS par niveau."
             },
             "parallelUniverse": {
               "name": "Univers parallèle",
@@ -394,12 +394,12 @@
             "omniverseLibrary": {
               "name": "Bibliothèque de l’Omnivers",
               "description": "Compilez le savoir infini pour booster toute production.",
-              "effect": "Production passive : +10 000 000 000 000 000 APS par niveau. +2 % boost global par Univers parallèle. Palier 300 : Galaxies artificielles ×2."
+              "effect": "Production passive : +10 000 000 000 000 000 APS par niveau."
             },
             "quantumOverseer": {
               "name": "Grand Ordonnateur Quantique",
               "description": "Ordonnez le multivers et atteignez la singularité.",
-              "effect": "Production passive : +1 000 000 000 000 000 000 APS par niveau. Palier 100 : double définitivement tous les gains."
+              "effect": "Production passive : +1 000 000 000 000 000 000 APS par niveau."
             }
           }
         },
@@ -1541,62 +1541,62 @@
             "freeElectrons": {
               "name": "Free Electrons",
               "description": "Channel electrons to boost every quantum click.",
-              "effect": "Manual production: +1 APC per level. Every 25 levels: +10% APC."
+              "effect": "Manual production: +1 APC per level."
             },
             "physicsLab": {
               "name": "Physics Laboratory",
               "description": "Research teams supercharge your atomic production.",
-              "effect": "Passive production: +1 APS per level. Every 10 labs grant +10% global APC. Accelerator ≥200: Labs +20% APS."
+              "effect": "Passive production: +1 APS per level."
             },
             "nuclearReactor": {
               "name": "Nuclear Reactor",
               "description": "Controlled reactors unleash colossal energy.",
-              "effect": "Passive production: +10 APS per level (+1% per 50 Electrons, +20% if Labs ≥200)."
+              "effect": "Passive production: +10 APS per level."
             },
             "particleAccelerator": {
               "name": "Particle Accelerator",
-              "description": "Boost your particles to multiply APC.",
-              "effect": "Passive production: +50 APS per level (bonus if ≥100 Supercomputers). Tier 200: +20% Lab production."
+              "description": "Boost your particles to intensify passive output.",
+              "effect": "Passive production: +50 APS per level."
             },
             "supercomputer": {
               "name": "Supercomputers",
               "description": "Quantum compute centers optimize your gains.",
-              "effect": "Passive production: +500 APS per level (doubled by Stations ≥300). Every 50 Supercomputers: global APS ×2 (cumulative)."
+              "effect": "Passive production: +500 APS per level."
             },
             "interstellarProbe": {
               "name": "Interstellar Probe",
               "description": "Explore the galaxy to gather even more.",
-              "effect": "Passive production: +5,000 APS per level (boosted by Reactors). At 150 copies: each probe adds +10 APC."
+              "effect": "Passive production: +5,000 APS per level."
             },
             "spaceStation": {
               "name": "Space Station",
               "description": "Orbital bases coordinate your expansion.",
-              "effect": "Passive production: +50,000 APS per level. Each Station grants +5% APC. Tier 300: Supercomputers +100%."
+              "effect": "Passive production: +50,000 APS per level."
             },
             "starForge": {
               "name": "Star Forger",
-              "description": "Forge stars and turbocharge your APC.",
-              "effect": "Passive production: +500,000 APS per level (+2% APS per Station). Every 50 Forgers: global APC ×2 (cumulative)."
+              "description": "Forge stars and ramp up your passive production.",
+              "effect": "Passive production: +500,000 APS per level."
             },
             "artificialGalaxy": {
               "name": "Artificial Galaxy",
               "description": "Galactic engineering for endless expansion.",
-              "effect": "Passive production: +5,000,000 APS per level (doubled by Library ≥300). Tier 100: +50% global APC."
+              "effect": "Passive production: +5,000,000 APS per level."
             },
             "multiverseSimulator": {
               "name": "Multiverse Simulator",
               "description": "Simulate infinity to optimize every second.",
-              "effect": "Passive production: +500,000,000 APS per level. Tier 200: building costs −5%."
+              "effect": "Passive production: +500,000,000 APS per level."
             },
             "realityWeaver": {
               "name": "Reality Weaver",
               "description": "Weave physical laws to your advantage.",
-              "effect": "Passive production: +10,000,000,000 APS per level. Tier 300: total production ×2."
+              "effect": "Passive production: +10,000,000,000 APS per level."
             },
             "cosmicArchitect": {
               "name": "Cosmic Architect",
-              "description": "Rewrite the cosmos to cut future costs.",
-              "effect": "Passive production: +1,000,000,000,000 APS per level. Reduces future costs by 1% per Architect. Every 50 Architects: global APC ×2 (cumulative)."
+              "description": "Rewrite the cosmos to unleash infinite energy.",
+              "effect": "Passive production: +1,000,000,000,000 APS per level."
             },
             "parallelUniverse": {
               "name": "Parallel Universe",
@@ -1606,12 +1606,12 @@
             "omniverseLibrary": {
               "name": "Omniverse Library",
               "description": "Compile infinite knowledge to boost all output.",
-              "effect": "Passive production: +10,000,000,000,000,000 APS per level. +2% global boost per Parallel Universe. Tier 300: Artificial Galaxies ×2."
+              "effect": "Passive production: +10,000,000,000,000,000 APS per level."
             },
             "quantumOverseer": {
               "name": "Grand Quantum Overseer",
               "description": "Order the multiverse and reach singularity.",
-              "effect": "Passive production: +1,000,000,000,000,000,000 APS per level. Tier 100: permanently doubles all gains."
+              "effect": "Passive production: +1,000,000,000,000,000,000 APS per level."
             }
           }
         },
