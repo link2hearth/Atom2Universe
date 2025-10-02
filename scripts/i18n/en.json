@@ -391,8 +391,8 @@
         "multiverseSimulator": {
           "name": "Multiverse Simulator",
           "description": "Simulate infinity to optimize every second.",
-          "effect": "Passive production: +500,000,000 APS per level. Synergy: +0.5% global APS per owned building. Tier 200: building costs −5%.",
-          "effectSummary": "Passive production +500,000,000 APS per level. Synergy: +0.5% global APS per owned building. Tier 200: all building costs −5%."
+          "effect": "Passive production: +500,000,000 APS per level. Tier 200: building costs −5%.",
+          "effectSummary": "Passive production +500,000,000 APS per level. Tier 200: all building costs −5%."
         },
         "realityWeaver": {
           "name": "Reality Weaver",
