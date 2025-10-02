@@ -1453,7 +1453,7 @@ const FALLBACK_UPGRADES = (function createFallbackUpgrades() {
       name: 'Simulateur de Multivers',
       description: 'Simulez l’infini pour optimiser chaque seconde.',
       effectSummary:
-        'Production passive : +500 000 000 APS par niveau. Synergie : +0,5 % APS global par bâtiment possédé. Palier 200 : coûts des bâtiments −5 %.',
+        'Production passive : +500 000 000 APS par niveau. Palier 200 : coûts des bâtiments −5 %.',
       category: 'auto',
       baseCost: 1e16,
       costScale: 1.2,
@@ -1461,11 +1461,7 @@ const FALLBACK_UPGRADES = (function createFallbackUpgrades() {
         const baseAmount = 5e8 * level;
         const rawAutoAdd = baseAmount;
         const autoAdd = level > 0 ? Math.max(baseAmount, Math.round(rawAutoAdd)) : 0;
-        const totalBuildings = getTotal(context);
-        const autoMult = totalBuildings > 0 ? Math.pow(1.005, totalBuildings) : 1;
-        return autoMult > 1
-          ? { autoAdd, autoMult }
-          : { autoAdd };
+        return { autoAdd };
       }
     },
     {
