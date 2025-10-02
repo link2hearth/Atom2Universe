@@ -387,7 +387,7 @@
         "realityWeaver": {
           "name": "Tisseur de Réalité",
           "description": "Tissez les lois physiques à votre avantage.",
-          "effect": "Production passive : +10 000 000 000 APS par niveau. Bonus clic arrondi : +0,1 × bâtiments × niveau. Palier 300 : production totale ×2."
+          "effect": "Production passive : +10 000 000 000 APS par niveau. Palier 300 : production totale ×2."
         },
         "cosmicArchitect": {
           "name": "Architecte Cosmique",

@@ -397,8 +397,8 @@
         "realityWeaver": {
           "name": "Reality Weaver",
           "description": "Weave physical laws to your advantage.",
-          "effect": "Passive production: +10,000,000,000 APS per level. Rounded click bonus: +0.1 × buildings × level. Tier 300: total production ×2.",
-          "effectSummary": "Passive production +10,000,000,000 APS per level. Rounded click bonus: +0.1 × buildings × level. Tier 300: total production ×2."
+          "effect": "Passive production: +10,000,000,000 APS per level. Tier 300: total production ×2.",
+          "effectSummary": "Passive production +10,000,000,000 APS per level. Tier 300: total production ×2."
         },
         "cosmicArchitect": {
           "name": "Cosmic Architect",
