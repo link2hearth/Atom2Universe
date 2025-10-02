@@ -1131,22 +1131,24 @@
             <input type="range" id="chiptuneSpeedSlider" min="50" max="200" step="5" value="100" />
             <span class="option-value" id="chiptuneSpeedValue" aria-live="polite">Tempo normal (100%)</span>
           </div>
-          <div class="option-row">
-            <label for="chiptuneEngineSelect">Moteur sonore</label>
-            <select id="chiptuneEngineSelect">
-              <option value="hifi">SoundFont Hi-Fi</option>
-              <option value="scc">SCC (MSX)</option>
-              <option value="n163">Namco 163 (N163)</option>
-              <option value="ym2413">Yamaha OPLL (YM2413)</option>
-              <option value="sid">MOS SID (6581/8580)</option>
-              <option value="original">Original</option>
-            </select>
-          </div>
-          <div class="option-row">
-            <label for="chiptuneSoundFontSelect">SoundFont</label>
-            <select id="chiptuneSoundFontSelect">
-              <option value="">Chargement des SoundFonts…</option>
-            </select>
+          <div class="option-row option-row--dual-select">
+            <div class="option-field">
+              <label for="chiptuneEngineSelect">Moteur sonore</label>
+              <select id="chiptuneEngineSelect">
+                <option value="hifi">SoundFont Hi-Fi</option>
+                <option value="scc">SCC (MSX)</option>
+                <option value="n163">Namco 163 (N163)</option>
+                <option value="ym2413">Yamaha OPLL (YM2413)</option>
+                <option value="sid">MOS SID (6581/8580)</option>
+                <option value="original">Original</option>
+              </select>
+            </div>
+            <div class="option-field">
+              <label for="chiptuneSoundFontSelect">SoundFont</label>
+              <select id="chiptuneSoundFontSelect">
+                <option value="">Chargement des SoundFonts…</option>
+              </select>
+            </div>
           </div>
           <div class="option-row option-row--buttons option-row--pitch">
             <button type="button" id="chiptuneOctaveDownButton">Octave −</button>

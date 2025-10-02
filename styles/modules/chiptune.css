@@ -14,6 +14,23 @@
   min-width: 120px;
 }
 
+.option-card--chiptune .option-row--dual-select {
+  align-items: flex-start;
+}
+
+.option-card--chiptune .option-row--dual-select .option-field {
+  flex: 1 1 50%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.option-card--chiptune .option-row--dual-select label {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
 .option-card--chiptune select {
   width: 100%;
   max-width: 100%;
