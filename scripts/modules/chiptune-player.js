@@ -67,6 +67,670 @@
 
   const N163_WAVETABLES = buildN163Tables();
 
+  const DEFAULT_SOUNDFONTS = Object.freeze([
+    Object.freeze({
+      id: 'classical-oboe',
+      name: 'Classical Oboe',
+      file: 'Assets/Music/Classical_Oboe.sf2',
+      default: true,
+    }),
+  ]);
+
+  class SoundFont {
+    constructor(arrayBuffer) {
+      if (!arrayBuffer || !arrayBuffer.byteLength) {
+        throw new Error('SoundFont vide.');
+      }
+      this.buffer = arrayBuffer;
+      this.view = new DataView(arrayBuffer);
+      this.sampleData = null;
+      this.sampleHeaders = [];
+      this.phdr = [];
+      this.pbag = [];
+      this.pgen = [];
+      this.inst = [];
+      this.ibag = [];
+      this.igen = [];
+      this.regionsByPreset = new Map();
+      this.bufferCache = new Map();
+      this.name = '';
+      this.parse();
+    }
+
+    readFourCC(offset) {
+      if (offset < 0 || offset + 4 > this.view.byteLength) {
+        return '';
+      }
+      let result = '';
+      for (let i = 0; i < 4; i += 1) {
+        result += String.fromCharCode(this.view.getUint8(offset + i));
+      }
+      return result;
+    }
+
+    readString(offset, length) {
+      let result = '';
+      for (let i = 0; i < length && offset + i < this.view.byteLength; i += 1) {
+        const code = this.view.getUint8(offset + i);
+        if (code === 0) {
+          break;
+        }
+        result += String.fromCharCode(code);
+      }
+      return result.trim();
+    }
+
+    parse() {
+      if (this.readFourCC(0) !== 'RIFF') {
+        throw new Error('En-tête SoundFont invalide.');
+      }
+      const riffSize = this.view.getUint32(4, true);
+      if (this.readFourCC(8) !== 'sfbk') {
+        throw new Error('Format SoundFont non supporté.');
+      }
+      const limit = Math.min(this.buffer.byteLength, riffSize + 8);
+      let offset = 12;
+      while (offset + 8 <= limit) {
+        const chunkId = this.readFourCC(offset);
+        const chunkSize = this.view.getUint32(offset + 4, true);
+        const chunkStart = offset + 8;
+        if (chunkId === 'LIST') {
+          const listType = this.readFourCC(chunkStart);
+          const listStart = chunkStart + 4;
+          const listSize = chunkSize - 4;
+          if (listType === 'INFO') {
+            this.parseInfo(listStart, listSize);
+          } else if (listType === 'sdta') {
+            this.parseSdta(listStart, listSize);
+          } else if (listType === 'pdta') {
+            this.parsePdta(listStart, listSize);
+          }
+        }
+        const advance = chunkStart + chunkSize + (chunkSize % 2 ? 1 : 0);
+        offset = Math.max(offset + 8, advance);
+      }
+      this.buildInstrumentZones();
+      this.buildPresetRegions();
+    }
+
+    parseInfo(start, size) {
+      const end = Math.min(this.buffer.byteLength, start + size);
+      let offset = start;
+      while (offset + 8 <= end) {
+        const id = this.readFourCC(offset);
+        const chunkSize = this.view.getUint32(offset + 4, true);
+        const chunkStart = offset + 8;
+        if (id === 'INAM') {
+          this.name = this.readString(chunkStart, chunkSize);
+        }
+        const advance = chunkStart + chunkSize + (chunkSize % 2 ? 1 : 0);
+        offset = Math.max(offset + 8, advance);
+      }
+    }
+
+    parseSdta(start, size) {
+      const end = Math.min(this.buffer.byteLength, start + size);
+      let offset = start;
+      while (offset + 8 <= end) {
+        const id = this.readFourCC(offset);
+        const chunkSize = this.view.getUint32(offset + 4, true);
+        const chunkStart = offset + 8;
+        if (id === 'smpl') {
+          this.sampleData = new Int16Array(this.buffer, chunkStart, Math.floor(chunkSize / 2));
+        }
+        const advance = chunkStart + chunkSize + (chunkSize % 2 ? 1 : 0);
+        offset = Math.max(offset + 8, advance);
+      }
+    }
+
+    parsePdta(start, size) {
+      const end = Math.min(this.buffer.byteLength, start + size);
+      let offset = start;
+      while (offset + 8 <= end) {
+        const id = this.readFourCC(offset);
+        const chunkSize = this.view.getUint32(offset + 4, true);
+        const chunkStart = offset + 8;
+        switch (id) {
+          case 'phdr':
+            this.parsePhdr(chunkStart, chunkSize);
+            break;
+          case 'pbag':
+            this.parsePbag(chunkStart, chunkSize);
+            break;
+          case 'pgen':
+            this.parsePgen(chunkStart, chunkSize);
+            break;
+          case 'inst':
+            this.parseInst(chunkStart, chunkSize);
+            break;
+          case 'ibag':
+            this.parseIbag(chunkStart, chunkSize);
+            break;
+          case 'igen':
+            this.parseIgen(chunkStart, chunkSize);
+            break;
+          case 'shdr':
+            this.parseShdr(chunkStart, chunkSize);
+            break;
+          default:
+            break;
+        }
+        const advance = chunkStart + chunkSize + (chunkSize % 2 ? 1 : 0);
+        offset = Math.max(offset + 8, advance);
+      }
+    }
+
+    parsePhdr(start, size) {
+      const count = Math.floor(size / 38);
+      const entries = [];
+      for (let i = 0; i < count; i += 1) {
+        const base = start + (i * 38);
+        entries.push({
+          name: this.readString(base, 20),
+          preset: this.view.getUint16(base + 20, true),
+          bank: this.view.getUint16(base + 22, true),
+          bagIndex: this.view.getUint16(base + 24, true),
+        });
+      }
+      this.phdr = entries;
+    }
+
+    parsePbag(start, size) {
+      const count = Math.floor(size / 4);
+      const entries = new Array(count);
+      for (let i = 0; i < count; i += 1) {
+        const base = start + (i * 4);
+        entries[i] = {
+          generatorIndex: this.view.getUint16(base, true),
+          modulatorIndex: this.view.getUint16(base + 2, true),
+        };
+      }
+      this.pbag = entries;
+    }
+
+    parsePgen(start, size) {
+      const count = Math.floor(size / 4);
+      const entries = new Array(count);
+      for (let i = 0; i < count; i += 1) {
+        const base = start + (i * 4);
+        entries[i] = {
+          operator: this.view.getUint16(base, true),
+          amount: this.view.getInt16(base + 2, true),
+        };
+      }
+      this.pgen = entries;
+    }
+
+    parseInst(start, size) {
+      const count = Math.floor(size / 22);
+      const entries = new Array(count);
+      for (let i = 0; i < count; i += 1) {
+        const base = start + (i * 22);
+        entries[i] = {
+          name: this.readString(base, 20),
+          bagIndex: this.view.getUint16(base + 20, true),
+        };
+      }
+      this.inst = entries;
+    }
+
+    parseIbag(start, size) {
+      const count = Math.floor(size / 4);
+      const entries = new Array(count);
+      for (let i = 0; i < count; i += 1) {
+        const base = start + (i * 4);
+        entries[i] = {
+          generatorIndex: this.view.getUint16(base, true),
+          modulatorIndex: this.view.getUint16(base + 2, true),
+        };
+      }
+      this.ibag = entries;
+    }
+
+    parseIgen(start, size) {
+      const count = Math.floor(size / 4);
+      const entries = new Array(count);
+      for (let i = 0; i < count; i += 1) {
+        const base = start + (i * 4);
+        entries[i] = {
+          operator: this.view.getUint16(base, true),
+          amount: this.view.getInt16(base + 2, true),
+        };
+      }
+      this.igen = entries;
+    }
+
+    parseShdr(start, size) {
+      const count = Math.floor(size / 46);
+      const entries = new Array(count);
+      for (let i = 0; i < count; i += 1) {
+        const base = start + (i * 46);
+        entries[i] = {
+          name: this.readString(base, 20),
+          start: this.view.getUint32(base + 20, true),
+          end: this.view.getUint32(base + 24, true),
+          startLoop: this.view.getUint32(base + 28, true),
+          endLoop: this.view.getUint32(base + 32, true),
+          sampleRate: this.view.getUint32(base + 36, true),
+          originalPitch: this.view.getUint8(base + 40),
+          pitchCorrection: this.view.getInt8(base + 41),
+          sampleLink: this.view.getUint16(base + 42, true),
+          sampleType: this.view.getUint16(base + 44, true),
+        };
+      }
+      this.sampleHeaders = entries;
+    }
+
+    buildInstrumentZones() {
+      this.instrumentZones = [];
+      this.instrumentGlobals = [];
+      const count = Math.max(0, this.inst.length - 1);
+      for (let i = 0; i < count; i += 1) {
+        const instrument = this.inst[i];
+        const nextInstrument = this.inst[i + 1];
+        const zoneStart = instrument ? instrument.bagIndex : 0;
+        const zoneEnd = nextInstrument ? nextInstrument.bagIndex : this.ibag.length;
+        let globalZone = this.createZoneDefaults();
+        const zones = [];
+        for (let zoneIndex = zoneStart; zoneIndex < zoneEnd; zoneIndex += 1) {
+          const bag = this.ibag[zoneIndex];
+          const nextBag = this.ibag[zoneIndex + 1];
+          const genStart = bag ? bag.generatorIndex : 0;
+          const genEnd = nextBag ? nextBag.generatorIndex : this.igen.length;
+          const zoneData = this.collectGeneratorValues(this.igen, genStart, genEnd);
+          if (typeof zoneData.sampleID !== 'number') {
+            globalZone = this.mergeZoneData(globalZone, zoneData);
+            continue;
+          }
+          const merged = this.mergeZoneData(globalZone, zoneData);
+          merged.sampleHeader = this.sampleHeaders[merged.sampleID];
+          zones.push(merged);
+        }
+        this.instrumentGlobals[i] = globalZone;
+        this.instrumentZones[i] = zones;
+      }
+    }
+
+    buildPresetRegions() {
+      this.regionsByPreset.clear();
+      const count = Math.max(0, this.phdr.length - 1);
+      for (let i = 0; i < count; i += 1) {
+        const preset = this.phdr[i];
+        const nextPreset = this.phdr[i + 1];
+        const zoneStart = preset ? preset.bagIndex : 0;
+        const zoneEnd = nextPreset ? nextPreset.bagIndex : this.pbag.length;
+        let presetGlobal = this.createZoneDefaults();
+        const regions = [];
+        for (let zoneIndex = zoneStart; zoneIndex < zoneEnd; zoneIndex += 1) {
+          const bag = this.pbag[zoneIndex];
+          const nextBag = this.pbag[zoneIndex + 1];
+          const genStart = bag ? bag.generatorIndex : 0;
+          const genEnd = nextBag ? nextBag.generatorIndex : this.pgen.length;
+          const zoneData = this.collectGeneratorValues(this.pgen, genStart, genEnd);
+          if (typeof zoneData.instrument !== 'number') {
+            presetGlobal = this.mergeZoneData(presetGlobal, zoneData);
+            continue;
+          }
+          const instrumentIndex = zoneData.instrument;
+          const instrumentZones = this.instrumentZones[instrumentIndex] || [];
+          const instrumentGlobal = this.instrumentGlobals[instrumentIndex] || this.createZoneDefaults();
+          const presetApplied = this.mergeZoneData(presetGlobal, zoneData);
+          for (const instZone of instrumentZones) {
+            const combined = this.mergeZoneData(this.mergeZoneData(presetApplied, instrumentGlobal), instZone);
+            const region = this.finalizeRegion(combined);
+            if (region) {
+              regions.push(region);
+            }
+          }
+        }
+        const key = `${preset.bank}:${preset.preset}`;
+        this.regionsByPreset.set(key, regions);
+      }
+    }
+
+    createZoneDefaults() {
+      return {
+        keyRange: { lo: 0, hi: 127 },
+        velRange: { lo: 0, hi: 127 },
+        startOffset: 0,
+        endOffset: 0,
+        startLoopOffset: 0,
+        endLoopOffset: 0,
+        coarseTune: 0,
+        fineTune: 0,
+        scaleTuning: 100,
+        attenuation: 0,
+        pan: null,
+        sampleModes: 0,
+        rootKey: null,
+        exclusiveClass: 0,
+        reverbSend: null,
+        chorusSend: null,
+        volumeEnvelope: {},
+      };
+    }
+
+    collectGeneratorValues(generators, start, end) {
+      const result = {};
+      const limit = Math.min(generators.length, end);
+      for (let index = Math.max(0, start); index < limit; index += 1) {
+        const entry = generators[index];
+        if (!entry) {
+          continue;
+        }
+        const amount = entry.amount;
+        switch (entry.operator) {
+          case 0:
+            result.startOffset = (result.startOffset || 0) + amount;
+            break;
+          case 1:
+            result.endOffset = (result.endOffset || 0) + amount;
+            break;
+          case 2:
+            result.startLoopOffset = (result.startLoopOffset || 0) + amount;
+            break;
+          case 3:
+            result.endLoopOffset = (result.endLoopOffset || 0) + amount;
+            break;
+          case 4:
+            result.startOffset = (result.startOffset || 0) + (amount * 32768);
+            break;
+          case 12:
+            result.endOffset = (result.endOffset || 0) + (amount * 32768);
+            break;
+          case 45:
+            result.startLoopOffset = (result.startLoopOffset || 0) + (amount * 32768);
+            break;
+          case 50:
+            result.endLoopOffset = (result.endLoopOffset || 0) + (amount * 32768);
+            break;
+          case 15:
+            result.chorusSend = amount / 1000;
+            break;
+          case 16:
+            result.reverbSend = amount / 1000;
+            break;
+          case 17:
+            result.pan = amount / 500;
+            break;
+          case 33:
+            result.volumeEnvelope = { ...(result.volumeEnvelope || {}), delay: amount };
+            break;
+          case 34:
+            result.volumeEnvelope = { ...(result.volumeEnvelope || {}), attack: amount };
+            break;
+          case 35:
+            result.volumeEnvelope = { ...(result.volumeEnvelope || {}), hold: amount };
+            break;
+          case 36:
+            result.volumeEnvelope = { ...(result.volumeEnvelope || {}), decay: amount };
+            break;
+          case 37:
+            result.volumeEnvelope = { ...(result.volumeEnvelope || {}), sustain: amount };
+            break;
+          case 38:
+            result.volumeEnvelope = { ...(result.volumeEnvelope || {}), release: amount };
+            break;
+          case 41:
+            result.instrument = amount;
+            break;
+          case 43:
+            result.keyRange = this.decodeRange(amount);
+            break;
+          case 44:
+            result.velRange = this.decodeRange(amount);
+            break;
+          case 48:
+            result.attenuation = (result.attenuation || 0) + amount;
+            break;
+          case 51:
+            result.coarseTune = (result.coarseTune || 0) + amount;
+            break;
+          case 52:
+            result.fineTune = (result.fineTune || 0) + amount;
+            break;
+          case 53:
+            result.sampleID = amount;
+            break;
+          case 54:
+            result.sampleModes = amount;
+            break;
+          case 56:
+            result.scaleTuning = amount;
+            break;
+          case 57:
+            result.exclusiveClass = amount;
+            break;
+          case 58:
+            result.rootKey = amount;
+            break;
+          default:
+            break;
+        }
+      }
+      return result;
+    }
+
+    decodeRange(amount) {
+      const value = amount & 0xffff;
+      return {
+        lo: value & 0xff,
+        hi: (value >>> 8) & 0xff,
+      };
+    }
+
+    mergeZoneData(base, source) {
+      const target = {
+        ...base,
+        keyRange: { ...base.keyRange },
+        velRange: { ...base.velRange },
+        volumeEnvelope: { ...(base.volumeEnvelope || {}) },
+      };
+      if (source.keyRange) {
+        target.keyRange.lo = Math.max(target.keyRange.lo, source.keyRange.lo);
+        target.keyRange.hi = Math.min(target.keyRange.hi, source.keyRange.hi);
+        if (target.keyRange.lo > target.keyRange.hi) {
+          target.keyRange.lo = target.keyRange.hi;
+        }
+      }
+      if (source.velRange) {
+        target.velRange.lo = Math.max(target.velRange.lo, source.velRange.lo);
+        target.velRange.hi = Math.min(target.velRange.hi, source.velRange.hi);
+        if (target.velRange.lo > target.velRange.hi) {
+          target.velRange.lo = target.velRange.hi;
+        }
+      }
+      if (Number.isFinite(source.startOffset)) {
+        target.startOffset = (target.startOffset || 0) + source.startOffset;
+      }
+      if (Number.isFinite(source.endOffset)) {
+        target.endOffset = (target.endOffset || 0) + source.endOffset;
+      }
+      if (Number.isFinite(source.startLoopOffset)) {
+        target.startLoopOffset = (target.startLoopOffset || 0) + source.startLoopOffset;
+      }
+      if (Number.isFinite(source.endLoopOffset)) {
+        target.endLoopOffset = (target.endLoopOffset || 0) + source.endLoopOffset;
+      }
+      if (Number.isFinite(source.coarseTune)) {
+        target.coarseTune = (target.coarseTune || 0) + source.coarseTune;
+      }
+      if (Number.isFinite(source.fineTune)) {
+        target.fineTune = (target.fineTune || 0) + source.fineTune;
+      }
+      if (Number.isFinite(source.scaleTuning)) {
+        target.scaleTuning = source.scaleTuning;
+      }
+      if (Number.isFinite(source.attenuation)) {
+        target.attenuation = (target.attenuation || 0) + source.attenuation;
+      }
+      if (Number.isFinite(source.pan)) {
+        target.pan = source.pan;
+      }
+      if (typeof source.sampleModes === 'number') {
+        target.sampleModes = source.sampleModes;
+      }
+      if (Number.isFinite(source.rootKey)) {
+        target.rootKey = source.rootKey;
+      }
+      if (Number.isFinite(source.exclusiveClass)) {
+        target.exclusiveClass = source.exclusiveClass;
+      }
+      if (typeof source.sampleID === 'number') {
+        target.sampleID = source.sampleID;
+      }
+      if (source.sampleHeader) {
+        target.sampleHeader = source.sampleHeader;
+      }
+      if (source.reverbSend !== null && source.reverbSend !== undefined) {
+        target.reverbSend = source.reverbSend;
+      }
+      if (source.chorusSend !== null && source.chorusSend !== undefined) {
+        target.chorusSend = source.chorusSend;
+      }
+      if (source.volumeEnvelope) {
+        target.volumeEnvelope = { ...target.volumeEnvelope, ...source.volumeEnvelope };
+      }
+      if (typeof source.instrument === 'number') {
+        target.instrument = source.instrument;
+      }
+      return target;
+    }
+
+    finalizeRegion(zone) {
+      if (!this.sampleData || !zone || typeof zone.sampleID !== 'number') {
+        return null;
+      }
+      const sampleHeader = zone.sampleHeader || this.sampleHeaders[zone.sampleID];
+      if (!sampleHeader) {
+        return null;
+      }
+      const dataLength = this.sampleData.length;
+      const start = this.clampIndex(sampleHeader.start + (zone.startOffset || 0), 0, dataLength - 1);
+      const endRaw = sampleHeader.end + (zone.endOffset || 0);
+      const end = this.clampIndex(endRaw, start + 1, dataLength);
+      const loopStartRaw = sampleHeader.startLoop + (zone.startLoopOffset || 0);
+      const loopEndRaw = sampleHeader.endLoop + (zone.endLoopOffset || 0);
+      const loopStart = this.clampIndex(loopStartRaw, start, end);
+      const loopEnd = this.clampIndex(loopEndRaw, loopStart + 1, end);
+      const rootKey = Number.isFinite(zone.rootKey) ? zone.rootKey : sampleHeader.originalPitch;
+      const envelope = this.convertEnvelope(zone.volumeEnvelope);
+      return {
+        keyRange: zone.keyRange,
+        velRange: zone.velRange,
+        sampleId: zone.sampleID,
+        sampleRate: sampleHeader.sampleRate || 44100,
+        sampleStart: start,
+        sampleEnd: end,
+        loopStart,
+        loopEnd,
+        hasLoop: Boolean((zone.sampleModes & 1) && loopEnd > loopStart + 2),
+        rootKey,
+        coarseTune: zone.coarseTune || 0,
+        fineTune: zone.fineTune || 0,
+        scaleTuning: Number.isFinite(zone.scaleTuning) ? zone.scaleTuning : 100,
+        pitchCorrection: sampleHeader.pitchCorrection || 0,
+        attenuation: zone.attenuation || 0,
+        pan: Number.isFinite(zone.pan) ? zone.pan : 0,
+        exclusiveClass: zone.exclusiveClass || 0,
+        reverbSend: zone.reverbSend,
+        chorusSend: zone.chorusSend,
+        volumeEnvelope: envelope,
+        sampleName: sampleHeader.name || '',
+      };
+    }
+
+    clampIndex(value, min, max) {
+      const clamped = Math.max(min, Math.min(max, value));
+      return Number.isFinite(clamped) ? clamped : min;
+    }
+
+    convertEnvelope(data) {
+      if (!data) {
+        return null;
+      }
+      const envelope = {};
+      if (Number.isFinite(data.attack)) {
+        const seconds = this.timecentsToSeconds(data.attack);
+        if (Number.isFinite(seconds)) {
+          envelope.attack = Math.max(0.001, seconds);
+        }
+      }
+      if (Number.isFinite(data.decay)) {
+        const seconds = this.timecentsToSeconds(data.decay);
+        if (Number.isFinite(seconds)) {
+          envelope.decay = Math.max(0.01, seconds);
+        }
+      }
+      if (Number.isFinite(data.release)) {
+        const seconds = this.timecentsToSeconds(data.release);
+        if (Number.isFinite(seconds)) {
+          envelope.release = Math.max(0.02, seconds);
+        }
+      }
+      if (Number.isFinite(data.sustain)) {
+        const sustainLevel = Math.pow(10, -data.sustain / 200);
+        envelope.sustain = Math.max(0, Math.min(1, sustainLevel));
+      }
+      return Object.keys(envelope).length ? envelope : null;
+    }
+
+    timecentsToSeconds(value) {
+      if (!Number.isFinite(value)) {
+        return null;
+      }
+      return Math.pow(2, value / 1200);
+    }
+
+    getRegions({ bank = 0, program = 0, key = 60, velocity = 100 } = {}) {
+      const normalizedBank = Number.isFinite(bank) ? Math.max(0, Math.min(16383, bank)) : 0;
+      const normalizedProgram = Number.isFinite(program) ? Math.max(0, Math.min(127, program)) : 0;
+      const presetKey = `${normalizedBank}:${normalizedProgram}`;
+      const regions = this.regionsByPreset.get(presetKey) || [];
+      const keyValue = Math.max(0, Math.min(127, Number.isFinite(key) ? Math.round(key) : 60));
+      const velocityValue = Math.max(0, Math.min(127, Number.isFinite(velocity) ? Math.round(velocity) : 100));
+      const matches = [];
+      for (const region of regions) {
+        if (!region) {
+          continue;
+        }
+        if (keyValue < region.keyRange.lo || keyValue > region.keyRange.hi) {
+          continue;
+        }
+        if (velocityValue < region.velRange.lo || velocityValue > region.velRange.hi) {
+          continue;
+        }
+        matches.push(region);
+      }
+      return matches;
+    }
+
+    getRegionBuffer(audioContext, region) {
+      if (!audioContext || !region || !this.sampleData) {
+        return null;
+      }
+      const cacheKey = `${region.sampleId}:${region.sampleStart}:${region.sampleEnd}:${audioContext.sampleRate}`;
+      if (this.bufferCache.has(cacheKey)) {
+        return this.bufferCache.get(cacheKey);
+      }
+      const length = Math.max(1, region.sampleEnd - region.sampleStart);
+      const buffer = audioContext.createBuffer(1, length, audioContext.sampleRate);
+      const channelData = buffer.getChannelData(0);
+      const maxSamples = Math.min(length, this.sampleData.length - region.sampleStart);
+      for (let i = 0; i < maxSamples; i += 1) {
+        const sample = this.sampleData[region.sampleStart + i] || 0;
+        channelData[i] = Math.max(-1, Math.min(1, sample / 32768));
+      }
+      if (maxSamples < length) {
+        for (let i = maxSamples; i < length; i += 1) {
+          channelData[i] = 0;
+        }
+      }
+      this.bufferCache.set(cacheKey, buffer);
+      return buffer;
+    }
+  }
+
   class StreamReader {
     constructor(buffer) {
       this.view = new DataView(buffer);
@@ -513,6 +1177,7 @@
       this.speedSlider = elements.speedSlider;
       this.speedValue = elements.speedValue;
       this.engineSelect = elements.engineSelect;
+      this.soundFontSelect = elements.soundFontSelect;
 
       const hasWindow = typeof window !== 'undefined';
       if (hasWindow) {
@@ -555,6 +1220,15 @@
       this.reverbDefaultSend = 0.12;
       this.sccWaveform = typeof window !== 'undefined' ? window.SccWaveform || null : null;
       this.engineMode = this.sccWaveform ? 'scc' : 'n163';
+      this.soundFontList = DEFAULT_SOUNDFONTS.map(font => ({ ...font }));
+      this.soundFontFallback = DEFAULT_SOUNDFONTS;
+      this.soundFontCache = new Map();
+      this.activeSoundFont = null;
+      this.activeSoundFontId = null;
+      this.selectedSoundFontId = null;
+      this.selectedSoundFontLabel = '';
+      this.currentSoundFontLabel = '';
+      this.loadingSoundFont = null;
       this.schedulerInterval = null;
       this.schedulerState = null;
       this.scheduleAheadTime = 0.25;
@@ -577,6 +1251,8 @@
       this.activePlaybackSpeed = 1;
       this.speedMin = 0.5;
       this.speedMax = 2;
+
+      this.populateSoundFonts(this.soundFontList, false);
 
       if (this.volumeSlider) {
         const sliderValue = Number.parseFloat(this.volumeSlider.value);
@@ -622,7 +1298,7 @@
       }
       if (this.engineSelect) {
         const hasScc = Boolean(this.sccWaveform);
-        const validModes = new Set(['original', 'scc', 'n163', 'ym2413', 'sid']);
+        const validModes = new Set(['original', 'scc', 'n163', 'ym2413', 'sid', 'hifi']);
         const requestedValue = typeof this.engineSelect.value === 'string' ? this.engineSelect.value : '';
         let initialValue = validModes.has(requestedValue)
           ? requestedValue
@@ -651,6 +1327,7 @@
 
       this.bindEvents();
       this.updateButtons();
+      this.loadSoundFonts();
       this.loadLibrary();
     }
 
@@ -745,6 +1422,15 @@
       if (this.engineSelect) {
         this.engineSelect.addEventListener('change', () => {
           this.setEngineMode(this.engineSelect.value);
+        });
+      }
+
+      if (this.soundFontSelect) {
+        this.soundFontSelect.addEventListener('change', () => {
+          const value = typeof this.soundFontSelect.value === 'string' ? this.soundFontSelect.value : '';
+          const normalized = value && value.trim() ? value.trim() : null;
+          const wasPlaying = this.playing;
+          this.setSoundFontSelection(normalized, { autoLoad: this.engineMode === 'hifi', stopPlayback: wasPlaying });
         });
       }
 
@@ -953,6 +1639,8 @@
         normalized = 'n163';
       } else if (value === 'sid') {
         normalized = 'sid';
+      } else if (value === 'hifi') {
+        normalized = 'hifi';
       } else if (value === 'scc' && hasScc) {
         normalized = 'scc';
       }
@@ -965,6 +1653,11 @@
         if (sccOption) {
           sccOption.disabled = !hasScc;
         }
+      }
+      if (normalized === 'hifi' && this.selectedSoundFontId) {
+        this.ensureSoundFontReady().catch((error) => {
+          console.error('Unable to prepare SoundFont', error);
+        });
       }
       if (this.playing) {
         this.updateReadyStatusMessage();
@@ -986,6 +1679,10 @@
       }
       if (this.engineMode === 'sid') {
         return 'moteur MOS SID';
+      }
+      if (this.engineMode === 'hifi') {
+        const label = this.currentSoundFontLabel || this.selectedSoundFontLabel;
+        return label ? `moteur Hi-Fi SoundFont (${label})` : 'moteur Hi-Fi SoundFont';
       }
       return 'moteur original';
     }
@@ -1518,6 +2215,174 @@
       }
     }
 
+    async loadSoundFonts() {
+      try {
+        const response = await fetch('resources/chiptune/soundfonts.json', { cache: 'no-cache' });
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        const payload = await response.json();
+        const fonts = Array.isArray(payload?.soundfonts) ? payload.soundfonts : [];
+        this.populateSoundFonts(fonts, false);
+      } catch (error) {
+        console.error('Unable to load soundfont manifest', error);
+        this.populateSoundFonts(this.soundFontFallback || [], true);
+      }
+    }
+
+    populateSoundFonts(list, errored) {
+      const sanitized = (Array.isArray(list) ? list : [])
+        .map((item) => ({
+          id: typeof item?.id === 'string' ? item.id : '',
+          name: typeof item?.name === 'string' && item.name ? item.name : '',
+          file: typeof item?.file === 'string' ? item.file : '',
+          default: Boolean(item?.default),
+        }))
+        .filter((item) => item.id && item.file);
+
+      if (sanitized.length) {
+        this.soundFontList = sanitized;
+      } else if (!this.soundFontList || !this.soundFontList.length) {
+        this.soundFontList = (this.soundFontFallback || []).map((font) => ({ ...font }));
+      }
+
+      const select = this.soundFontSelect;
+      if (select) {
+        while (select.options.length > 0) {
+          select.remove(0);
+        }
+        const placeholder = document.createElement('option');
+        placeholder.value = '';
+        if (this.soundFontList.length) {
+          placeholder.textContent = 'Sélectionnez une SoundFont';
+          placeholder.disabled = true;
+          placeholder.hidden = true;
+        } else {
+          placeholder.textContent = errored
+            ? 'Aucune SoundFont disponible'
+            : 'Aucune SoundFont déclarée';
+        }
+        select.append(placeholder);
+        for (const item of this.soundFontList) {
+          const option = document.createElement('option');
+          option.value = item.id;
+          option.textContent = item.name || item.id;
+          select.append(option);
+        }
+        select.disabled = this.soundFontList.length === 0;
+      }
+
+      const previousId = this.selectedSoundFontId;
+      const preferred = this.soundFontList.find((item) => item.id === previousId)
+        || this.soundFontList.find((item) => item.default)
+        || this.soundFontList[0]
+        || null;
+
+      const selectedId = preferred ? preferred.id : null;
+      this.setSoundFontSelection(selectedId, { autoLoad: false, stopPlayback: false });
+    }
+
+    setSoundFontSelection(id, options = {}) {
+      const { autoLoad = false, stopPlayback = false } = options;
+      const normalized = typeof id === 'string' && id ? id : null;
+      this.selectedSoundFontId = normalized;
+      const entry = normalized ? this.soundFontList.find((item) => item.id === normalized) : null;
+      this.selectedSoundFontLabel = entry?.name || '';
+
+      if (this.soundFontSelect) {
+        const targetValue = normalized || '';
+        if (this.soundFontSelect.value !== targetValue) {
+          this.soundFontSelect.value = targetValue;
+        }
+        this.soundFontSelect.disabled = this.soundFontList.length === 0;
+      }
+
+      if (normalized && this.soundFontCache.has(normalized)) {
+        this.activeSoundFont = this.soundFontCache.get(normalized) || null;
+        this.activeSoundFontId = this.activeSoundFont ? normalized : null;
+        this.currentSoundFontLabel = this.activeSoundFont ? (this.selectedSoundFontLabel || normalized) : '';
+      } else if (!normalized || this.activeSoundFontId !== normalized) {
+        this.activeSoundFont = null;
+        this.activeSoundFontId = null;
+        this.currentSoundFontLabel = '';
+      }
+
+      if (stopPlayback && this.playing) {
+        this.stop(true);
+      }
+
+      if (autoLoad && normalized && this.engineMode === 'hifi') {
+        this.ensureSoundFontReady().catch((error) => {
+          console.error('Unable to load SoundFont', error);
+        });
+      } else {
+        this.updateReadyStatusMessage();
+      }
+    }
+
+    getCurrentSoundFontInfo() {
+      if (!this.selectedSoundFontId) {
+        return null;
+      }
+      return this.soundFontList.find((item) => item.id === this.selectedSoundFontId) || null;
+    }
+
+    async ensureSoundFontReady() {
+      if (this.engineMode !== 'hifi') {
+        return null;
+      }
+      const info = this.getCurrentSoundFontInfo();
+      if (!info) {
+        throw new Error('Aucune SoundFont sélectionnée.');
+      }
+      if (this.soundFontCache.has(info.id)) {
+        const cached = this.soundFontCache.get(info.id);
+        this.activeSoundFont = cached;
+        this.activeSoundFontId = info.id;
+        this.currentSoundFontLabel = info.name || info.id;
+        this.updateReadyStatusMessage();
+        return cached;
+      }
+      if (this.loadingSoundFont && this.loadingSoundFont.id === info.id) {
+        return this.loadingSoundFont.promise;
+      }
+
+      const loadPromise = (async () => {
+        this.setStatus(`Chargement de la SoundFont « ${info.name || info.id} »…`);
+        try {
+          const response = await fetch(info.file, { cache: 'no-cache' });
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+          }
+          const data = await response.arrayBuffer();
+          const font = new SoundFont(data);
+          this.soundFontCache.set(info.id, font);
+          if (this.selectedSoundFontId === info.id) {
+            this.activeSoundFont = font;
+            this.activeSoundFontId = info.id;
+            this.currentSoundFontLabel = info.name || info.id;
+            this.updateReadyStatusMessage();
+            this.scheduleReadyStatusRestore(1600);
+          }
+          this.setStatus(`SoundFont chargée : ${info.name || info.id}`, 'success');
+          return font;
+        } catch (error) {
+          this.activeSoundFont = null;
+          this.activeSoundFontId = null;
+          this.currentSoundFontLabel = '';
+          this.setStatus(`Impossible de charger la SoundFont : ${error.message}`, 'error');
+          throw error;
+        } finally {
+          if (this.loadingSoundFont && this.loadingSoundFont.id === info.id) {
+            this.loadingSoundFont = null;
+          }
+        }
+      })();
+
+      this.loadingSoundFont = { id: info.id, promise: loadPromise };
+      return loadPromise;
+    }
+
     async loadLibrary() {
       if (!this.librarySelect) {
         return;
@@ -1780,6 +2645,13 @@
         ...baseEnvelope,
         ...(overrides || {}),
       });
+
+      if (this.engineMode === 'hifi') {
+        const hiFiInstrument = this.getHiFiInstrumentSettings(note, { program, family, baseEnvelope });
+        if (hiFiInstrument) {
+          return hiFiInstrument;
+        }
+      }
 
       if (this.engineMode === 'n163') {
         return this.getN163InstrumentSettings(note, { family, baseEnvelope });
@@ -2100,6 +2972,73 @@
       }
 
       return instrument;
+    }
+
+    getHiFiInstrumentSettings(note, context = {}) {
+      if (!this.activeSoundFont || !this.selectedSoundFontId) {
+        return null;
+      }
+      const program = Number.isFinite(context.program) ? context.program : 0;
+      const baseEnvelope = context.baseEnvelope || {};
+      const info = this.getCurrentSoundFontInfo();
+      if (!info) {
+        return null;
+      }
+      const midiNote = Number.isFinite(note.note) ? Math.round(note.note) : 60;
+      const key = Math.max(0, Math.min(127, midiNote));
+      const velocityBase = Number.isFinite(note.rawVelocity)
+        ? Math.max(0, Math.min(1, note.rawVelocity))
+        : (Number.isFinite(note.velocity) ? Math.max(0, Math.min(1, note.velocity)) : 0.6);
+      const velocity = Math.max(0, Math.min(127, Math.round(velocityBase * 127)));
+      const bank = note.channel === 9 ? 128 : 0;
+
+      let regions;
+      try {
+        regions = this.activeSoundFont.getRegions({ bank, program, key, velocity });
+      } catch (error) {
+        console.error('Unable to resolve SoundFont regions', error);
+        return null;
+      }
+
+      if (!Array.isArray(regions) || !regions.length) {
+        return null;
+      }
+
+      const preparedRegions = regions.map((region) => ({
+        ...region,
+        gain: Number.isFinite(region.attenuation) ? Math.pow(10, -region.attenuation / 200) : 1,
+      }));
+
+      const averagePan = preparedRegions.reduce((acc, region) => acc + (Number.isFinite(region.pan) ? region.pan : 0), 0) / (preparedRegions.length || 1);
+
+      let envelope = null;
+      for (const region of preparedRegions) {
+        if (region.volumeEnvelope) {
+          envelope = {
+            ...baseEnvelope,
+            ...region.volumeEnvelope,
+          };
+          break;
+        }
+      }
+
+      if (!envelope) {
+        envelope = { ...baseEnvelope };
+      }
+
+      const reverbSend = preparedRegions.reduce((max, region) => {
+        const value = Number.isFinite(region.reverbSend) ? region.reverbSend : 0;
+        return Math.max(max, value);
+      }, this.reverbDefaultSend);
+
+      return {
+        type: 'soundfont',
+        gain: 1,
+        envelope,
+        reverbSend: Number.isFinite(reverbSend) ? reverbSend : this.reverbDefaultSend,
+        pan: averagePan || 0,
+        regions: preparedRegions,
+      };
     }
 
     getN163InstrumentSettings(note, context) {
@@ -3384,15 +4323,12 @@
       const hasTremolo = lfoSettings && lfoSettings.tremoloDepth > 0;
       const needsLfo = lfoSettings && (hasVibrato || hasTremolo);
 
-      const layers = Array.isArray(instrument.layers) && instrument.layers.length
-        ? instrument.layers
-        : [{ type: instrument.type || 'sine', dutyCycle: instrument.dutyCycle, detune: 0, gain: 1 }];
-      const totalLayerGain = layers.reduce((sum, layer) => sum + Math.max(0, layer.gain ?? 1), 0) || 1;
-
-      const voiceInput = this.audioContext.createGain();
-      voiceInput.gain.setValueAtTime(1, startAt);
-
-      let peakGain = Math.min(1, velocity * this.maxGain * (instrument.gain || instrument.volume || 1));
+      const instrumentGain = Number.isFinite(instrument?.gain)
+        ? instrument.gain
+        : Number.isFinite(instrument?.volume)
+          ? instrument.volume
+          : 1;
+      let peakGain = Math.min(1, velocity * this.maxGain * instrumentGain);
       const envelope = instrument.envelope || {};
       const attack = Math.max(0.002, (envelope.attack || 0.01) / speed);
       const decay = Math.max(0.01, (envelope.decay || 0.06) / speed);
@@ -3413,6 +4349,29 @@
       const stopAt = startAt + duration;
       const attackEnd = Math.min(stopAt, startAt + attack);
       const decayEnd = Math.min(stopAt, attackEnd + decay);
+
+      if (instrument && instrument.type === 'soundfont' && Array.isArray(instrument.regions) && instrument.regions.length) {
+        this.scheduleSoundFontVoice(note, instrument, {
+          startAt,
+          stopAt,
+          velocity,
+          peakGain,
+          sustainLevel,
+          attackEnd,
+          decayEnd,
+          releaseDuration,
+          sustainProfile,
+        });
+        return;
+      }
+
+      const layers = Array.isArray(instrument.layers) && instrument.layers.length
+        ? instrument.layers
+        : [{ type: instrument.type || 'sine', dutyCycle: instrument.dutyCycle, detune: 0, gain: 1 }];
+      const totalLayerGain = layers.reduce((sum, layer) => sum + Math.max(0, layer.gain ?? 1), 0) || 1;
+
+      const voiceInput = this.audioContext.createGain();
+      voiceInput.gain.setValueAtTime(1, startAt);
 
       let lfoOscillator = null;
       let vibratoGain = null;
@@ -3598,7 +4557,9 @@
 
       let outputNode = envelopeGain;
       let panNode = null;
-      const panValue = Math.max(-1, Math.min(1, Number.isFinite(note.pan) ? note.pan : 0));
+      const basePan = Number.isFinite(note.pan) ? note.pan : 0;
+      const instrumentPan = Number.isFinite(instrument?.pan) ? instrument.pan : 0;
+      const panValue = Math.max(-1, Math.min(1, basePan + instrumentPan));
       if (typeof this.audioContext.createStereoPanner === 'function') {
         panNode = this.audioContext.createStereoPanner();
         panNode.pan.setValueAtTime(panValue, startAt);
@@ -3697,6 +4658,198 @@
         lfoOscillator.start(startAt);
         lfoOscillator.stop(stopAt + releaseDuration + 0.05);
       }
+    }
+
+    scheduleSoundFontVoice(note, instrument, context = {}) {
+      if (!this.audioContext || !this.masterGain) {
+        return;
+      }
+      const regions = Array.isArray(instrument?.regions) ? instrument.regions : [];
+      if (!regions.length || !this.activeSoundFont) {
+        return;
+      }
+
+      const {
+        startAt,
+        stopAt,
+        velocity = 0.5,
+        peakGain = 0.5,
+        sustainLevel = 0.6,
+        attackEnd = startAt,
+        decayEnd = stopAt,
+        releaseDuration = 0.2,
+        sustainProfile = null,
+      } = context;
+
+      const voiceInput = this.audioContext.createGain();
+      voiceInput.gain.setValueAtTime(1, startAt);
+
+      const voice = {
+        type: 'melodic',
+        startTime: startAt,
+        stopTime: stopAt + releaseDuration,
+        gainNode: null,
+        oscillators: [],
+        effectOscillators: [],
+        nodes: [voiceInput],
+        baseMidiNote: note.note,
+      };
+
+      this.liveVoices.add(voice);
+
+      let activeSources = 0;
+
+      for (const region of regions) {
+        const buffer = this.activeSoundFont.getRegionBuffer(this.audioContext, region);
+        if (!buffer) {
+          continue;
+        }
+
+        const source = this.audioContext.createBufferSource();
+        source.buffer = buffer;
+
+        const transpose = Number.isFinite(this.transposeSemitones) ? this.transposeSemitones : 0;
+        const targetNote = (Number.isFinite(note.note) ? note.note : 0) + transpose;
+        const scale = Number.isFinite(region.scaleTuning) ? region.scaleTuning : 100;
+        const rootKey = Number.isFinite(region.rootKey) ? region.rootKey : 60;
+        const centsFromKey = (targetNote - rootKey) * scale;
+        const coarseCents = (region.coarseTune || 0) * 100;
+        const fineCents = region.fineTune || 0;
+        const correction = region.pitchCorrection || 0;
+        const fineDetune = Number.isFinite(this.fineDetuneCents) ? this.fineDetuneCents : 0;
+        const totalCents = centsFromKey + coarseCents + fineCents + correction + fineDetune;
+        const baseRate = region.sampleRate ? (region.sampleRate / this.audioContext.sampleRate) : 1;
+        const playbackRate = Math.pow(2, totalCents / 1200) * baseRate;
+        source.playbackRate.setValueAtTime(Math.max(0.001, playbackRate), startAt);
+
+        if (region.hasLoop) {
+          const loopStartFrames = Math.max(0, region.loopStart - region.sampleStart);
+          const loopEndFrames = Math.max(loopStartFrames + 1, region.loopEnd - region.sampleStart);
+          source.loop = true;
+          source.loopStart = Math.max(0, Math.min(loopStartFrames, buffer.length - 1)) / this.audioContext.sampleRate;
+          source.loopEnd = Math.max(source.loopStart + 0.002, Math.min(loopEndFrames, buffer.length) / this.audioContext.sampleRate);
+        }
+
+        const layerGain = this.audioContext.createGain();
+        const regionGain = Number.isFinite(region.gain) ? region.gain : 1;
+        layerGain.gain.setValueAtTime(Math.max(0, Math.min(1.5, regionGain)), startAt);
+        source.connect(layerGain).connect(voiceInput);
+
+        activeSources += 1;
+        voice.oscillators.push(source);
+        voice.nodes.push(layerGain);
+
+        source.onended = () => {
+          activeSources -= 1;
+          try {
+            source.disconnect();
+          } catch (error) {
+            // Ignore disconnect issues
+          }
+          try {
+            layerGain.disconnect();
+          } catch (error) {
+            // Ignore disconnect issues
+          }
+          if (activeSources <= 0) {
+            voice.cleanup?.();
+          }
+        };
+
+        source.start(startAt);
+        source.stop(stopAt + releaseDuration + 0.05);
+      }
+
+      if (activeSources <= 0) {
+        try {
+          voiceInput.disconnect();
+        } catch (error) {
+          // Ignore disconnect issues
+        }
+        this.liveVoices.delete(voice);
+        return;
+      }
+
+      let lastNode = voiceInput;
+
+      lastNode = this.applyInstrumentEffects(lastNode, instrument, voice, startAt, stopAt, releaseDuration) || lastNode;
+
+      const envelopeGain = this.audioContext.createGain();
+      voice.gainNode = envelopeGain;
+      voice.nodes.push(envelopeGain);
+      lastNode.connect(envelopeGain);
+
+      envelopeGain.gain.cancelScheduledValues(startAt);
+      envelopeGain.gain.setValueAtTime(0.0001, startAt);
+      envelopeGain.gain.linearRampToValueAtTime(peakGain, attackEnd);
+      envelopeGain.gain.linearRampToValueAtTime(Math.max(0.0001, peakGain * sustainLevel), decayEnd);
+      envelopeGain.gain.setValueAtTime(Math.max(0.0001, peakGain * sustainLevel), stopAt);
+      envelopeGain.gain.exponentialRampToValueAtTime(0.0001, stopAt + releaseDuration);
+
+      let outputNode = envelopeGain;
+      let panNode = null;
+      const basePan = Number.isFinite(note.pan) ? note.pan : 0;
+      const instrumentPan = Number.isFinite(instrument?.pan) ? instrument.pan : 0;
+      const panValue = Math.max(-1, Math.min(1, basePan + instrumentPan));
+      if (typeof this.audioContext.createStereoPanner === 'function') {
+        panNode = this.audioContext.createStereoPanner();
+        panNode.pan.setValueAtTime(panValue, startAt);
+        outputNode.connect(panNode);
+        outputNode = panNode;
+        voice.panNode = panNode;
+        voice.nodes.push(panNode);
+      } else if (typeof this.audioContext.createPanner === 'function') {
+        panNode = this.audioContext.createPanner();
+        panNode.panningModel = 'equalpower';
+        const x = panValue;
+        panNode.setPosition(x, 0, 1 - Math.abs(x));
+        outputNode.connect(panNode);
+        outputNode = panNode;
+        voice.panNode = panNode;
+        voice.nodes.push(panNode);
+      }
+
+      const baseReverbSend = Number.isFinite(instrument.reverbSend)
+        ? instrument.reverbSend
+        : this.reverbDefaultSend;
+      const reverbScale = Number.isFinite(sustainProfile?.reverbScale) ? sustainProfile.reverbScale : 1;
+      const reverbAmount = Math.max(0, Math.min(1, baseReverbSend * 0.7 * reverbScale));
+      const dryAmount = Math.max(0, 1 - (reverbAmount * 0.5));
+
+      const dryGain = this.audioContext.createGain();
+      dryGain.gain.setValueAtTime(dryAmount, startAt);
+      voice.nodes.push(dryGain);
+      outputNode.connect(dryGain);
+      dryGain.connect(this.dryBus || this.masterGain);
+
+      if (this.reverbSend) {
+        const reverbGain = this.audioContext.createGain();
+        reverbGain.gain.setValueAtTime(reverbAmount, startAt);
+        voice.nodes.push(reverbGain);
+        outputNode.connect(reverbGain);
+        reverbGain.connect(this.reverbSend);
+        voice.reverbGain = reverbGain;
+      } else {
+        dryGain.gain.setValueAtTime(Math.min(1, dryAmount + (reverbAmount * 0.35)), startAt);
+      }
+
+      voice.cleanup = () => {
+        if (voice.cleaned) {
+          return;
+        }
+        voice.cleaned = true;
+        this.liveVoices.delete(voice);
+        for (const node of voice.nodes) {
+          if (!node) {
+            continue;
+          }
+          try {
+            node.disconnect();
+          } catch (error) {
+            // Ignore disconnect issues
+          }
+        }
+      };
     }
 
     schedulePercussion(note, baseTime, speedParam = this.activePlaybackSpeed || 1) {
@@ -3911,6 +5064,25 @@
       try {
         const context = await this.ensureContext();
         this.stop();
+
+        if (this.engineMode === 'hifi') {
+          try {
+            await this.ensureSoundFontReady();
+          } catch (error) {
+            console.error(error);
+            this.setStatus(`SoundFont indisponible : ${error.message}`, 'error');
+            this.playing = false;
+            this.updateButtons();
+            return;
+          }
+          if (!this.activeSoundFont) {
+            this.setStatus('Aucune SoundFont prête pour le mode Hi-Fi.', 'error');
+            this.playing = false;
+            this.updateButtons();
+            return;
+          }
+        }
+
         this.playing = true;
         this.updateButtons();
 
@@ -4127,6 +5299,7 @@
     speedSlider: document.getElementById('chiptuneSpeedSlider'),
     speedValue: document.getElementById('chiptuneSpeedValue'),
     engineSelect: document.getElementById('chiptuneEngineSelect'),
+    soundFontSelect: document.getElementById('chiptuneSoundFontSelect'),
   };
 
   if (elements.fileInput && elements.playButton && elements.stopButton && elements.status) {
