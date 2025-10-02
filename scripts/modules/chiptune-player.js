@@ -4233,6 +4233,10 @@
     getPercussionSettings(note) {
       const key = note.note;
 
+      if (!Number.isFinite(key) || key < 35 || key > 81) {
+        return null;
+      }
+
       if (key === 35 || key === 36) {
         return {
           volume: 1.1,
@@ -4343,17 +4347,22 @@
       }
 
       const speed = this.clampPlaybackSpeed(speedParam || 1);
-      if (note.channel === 9) {
-        this.schedulePercussion(note, baseTime, speed);
-        return;
-      }
-
       const now = this.audioContext.currentTime;
       const startOffset = Number.isFinite(note.startTime) ? note.startTime : 0;
       const startAt = Math.max(baseTime + (startOffset / speed), now + 0.001);
       const velocity = Math.max(0.08, Math.min(1, note.velocity || 0.2));
 
       const instrument = this.getInstrumentSettings(note);
+      if (note.channel === 9) {
+        const usesSoundFont = instrument && instrument.type === 'soundfont';
+        if (!usesSoundFont) {
+          if (this.engineMode === 'hifi' && !instrument) {
+            return;
+          }
+          this.schedulePercussion(note, baseTime, speed);
+          return;
+        }
+      }
       if (!instrument) {
         return;
       }
@@ -4904,6 +4913,9 @@
       const startAt = Math.max(baseTime + (startOffset / speed), now + 0.001);
       const velocity = Math.max(0.1, Math.min(1, note.velocity));
       const settings = this.getPercussionSettings(note);
+      if (!settings) {
+        return;
+      }
       const envelope = settings.envelope || {};
       const attack = Math.max(0.001, (envelope.attack || 0.005) / speed);
       const decay = Math.max(0.01, (envelope.decay || 0.05) / speed);
