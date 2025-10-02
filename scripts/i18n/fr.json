@@ -22,11 +22,6 @@
       "apc": "APC",
       "aps": "APS"
     },
-    "arcadeBanner": {
-      "aria": "Raccourcis Arcade",
-      "arcadeButton": "Arcade",
-      "gameButton": "Clicker"
-    },
     "sections": {
       "game": {
         "aria": "Chambre de création atomique",
@@ -58,12 +53,6 @@
       },
       "arcade": {
         "aria": "Mini-jeu Particules",
-        "header": {
-          "aria": "Navigation du jeu Particules",
-          "tickets": "Tickets",
-          "mach3": "Mach3",
-          "mach3Announcement": "Mach3 : 0 crédits"
-        },
         "hud": {
           "level": "Niveau",
           "lives": "Vies",
@@ -118,8 +107,7 @@
         "title": "Fusion 2048",
         "subtitle": "Choisissez votre grille et combinez les tuiles pour atteindre l’objectif sélectionné.",
         "banner": {
-          "goalLabel": "Objectif",
-          "universeLabel": "Univers parallèle"
+          "goalLabel": "Objectif"
         },
         "controls": {
           "size": "Taille de la grille",

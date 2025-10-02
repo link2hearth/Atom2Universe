@@ -26,11 +26,6 @@
           "apc": "APC",
           "aps": "APS"
         },
-        "arcadeBanner": {
-          "aria": "Raccourcis Arcade",
-          "arcadeButton": "Arcade",
-          "gameButton": "Clicker"
-        },
         "sections": {
           "game": {
             "aria": "Chambre de création atomique",
@@ -62,12 +57,6 @@
           },
           "arcade": {
             "aria": "Mini-jeu Particules",
-            "header": {
-              "aria": "Navigation du jeu Particules",
-              "tickets": "Tickets",
-              "mach3": "Mach3",
-              "mach3Announcement": "Mach3 : 0 crédits"
-            },
             "hud": {
               "level": "Niveau",
               "lives": "Vies",
@@ -122,8 +111,7 @@
           "title": "Fusion 2048",
           "subtitle": "Choisissez votre grille et combinez les tuiles pour atteindre l’objectif sélectionné.",
           "banner": {
-            "goalLabel": "Objectif",
-            "universeLabel": "Univers parallèle"
+            "goalLabel": "Objectif"
           },
           "controls": {
             "size": "Taille de la grille",
@@ -1230,11 +1218,6 @@
           "apc": "APC",
           "aps": "APS"
         },
-        "arcadeBanner": {
-          "aria": "Arcade shortcuts",
-          "arcadeButton": "Arcade",
-          "gameButton": "Clicker"
-        },
         "sections": {
           "game": {
             "aria": "Atomic creation chamber",
@@ -1266,12 +1249,6 @@
           },
           "arcade": {
             "aria": "Particles mini-game",
-            "header": {
-              "aria": "Particles mini-game navigation",
-              "tickets": "Tickets",
-              "mach3": "Mach3",
-              "mach3Announcement": "Mach3: 0 credits"
-            },
             "hud": {
               "level": "Level",
               "lives": "Lives",
@@ -1326,8 +1303,7 @@
           "title": "Fusion 2048",
           "subtitle": "Pick your grid and merge tiles until you reach the selected goal.",
           "banner": {
-            "goalLabel": "Goal",
-            "universeLabel": "Parallel universe"
+            "goalLabel": "Goal"
           },
           "controls": {
             "size": "Grid size",
