@@ -1,4 +1,9 @@
 {
   "_comment": "Ajoutez vos morceaux dans Assets/Chiptune et référencez-les ici.",
-  "tracks": []
+  "tracks": [
+    {
+  "name": "Test",
+  "file": "Assets/Chiptune/Test.mid"
+}
+  ]
 }
