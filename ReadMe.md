@@ -1,230 +1,81 @@
 # 🧪 Atom → Univers
 
-**Atom → Univers** est un idle/clicker cosmique. Chaque clic forge des atomes, chaque atome alimente vos laboratoires, et votre objectif ultime reste d’atteindre \(10^{80}\) atomes afin de reconstituer un univers entier.
+Atom → Univers est un idle/clicker cosmique actuellement jouable en français et en anglais. La boucle principale combine le clic manuel, la production passive, la chasse aux frénésies et une collection d’éléments débloquée via un gacha alimenté par plusieurs mini-jeux. Le développement est toujours en cours, mais l’ensemble des systèmes listés ci-dessous est implémenté dans le dépôt.
 
-Le jeu combine plusieurs boucles complémentaires :
-
-* **Clic manuel (APC)** : appuyez sur l’atome central pour générer instantanément des ressources.
-* **Production passive (APS)** : investissez dans des bâtiments scientifiques qui produisent automatiquement.
-* **Moments de frénésie** : capturez les orbes de frénésie pour multiplier temporairement vos gains.
-* **Collection** : utilisez des tickets pour déclencher le gacha et étendre votre tableau périodique, chaque élément offrant des bonus croissants.
-
----
-
-## ⚙️ Ressources & progression
-
-* Les atomes servent à acheter des améliorations, débloquer de nouveaux bâtiments et augmenter la puissance de vos clics.
-* Une arithmétique à couches gère les très grands nombres : notation classique, scientifique, puis double exponentielle (`ee`). Il n’existe pas de plafond théorique.
-* Les sauvegardes utilisent un export/import JSON qui retient mantisses et exposants pour les sessions hors ligne.
+## Sommaire
+1. [Boucle de jeu et ressources](#boucle-de-jeu-et-ressources)
+2. [Boutique scientifique](#boutique-scientifique)
+3. [Collections, gacha et tickets](#collections-gacha-et-tickets)
+4. [Succès, trophées et objectifs](#succès-trophées-et-objectifs)
+5. [Fusion moléculaire](#fusion-moléculaire)
+6. [Mini-jeux d’arcade](#mini-jeux-darcade)
+7. [Infos, DevKit et options](#infos-devkit-et-options)
+8. [Sauvegardes, hors-ligne et grands nombres](#sauvegardes-hors-ligne-et-grands-nombres)
+9. [Internationalisation](#internationalisation)
+10. [Lancer le projet en local](#lancer-le-projet-en-local)
 
 ---
 
-## 🏭 Bâtiments scientifiques
+## Boucle de jeu et ressources
+- **Page principale** : le bouton d’atome déclenche la production par clic (APC) tandis que les compteurs de l’en-tête suivent les gains manuels, passifs et les critiques.【F:index.html†L18-L84】
+- **Frénésies** : des orbes temporaires peuvent apparaître aussi bien pour l’APC que pour l’APS. Elles durent 30 s, appliquent un multiplicateur ×2 et peuvent se cumuler selon les trophées débloqués.【F:config/config.js†L612-L643】
+- **Système critique** : chaque session démarre avec 5 % de chances de critique ×2 et un plafond de multiplicateur à ×100, modifiés ensuite par les bonus d’éléments et d’événements.【F:config/config.js†L666-L686】
+- **Progression** : les valeurs de base (1 atome par clic, 0 APS) sont ajustées par les bâtiments, les collections et les mini-jeux ; l’intervalle moyen de la “star” à tickets est initialement de 60 s.【F:config/config.js†L655-L705】【F:scripts/app.js†L1270-L1283】
 
-Les bâtiments sont regroupés par rôle (manuel, automatique, hybride) et se renforcent via des synergies spécifiques :
+## Boutique scientifique
+La boutique regroupe quinze bâtiments (manuel, automatique ou hybrides) avec des paliers et synergies spécifiques. Quelques repères :
+- **Électrons libres** : +1 APC par niveau, bonus de 10 % APC tous les 25 niveaux.【F:config/config.js†L38-L63】
+- **Laboratoire de Physique** : +1 APS par niveau, +10 % APC tous les 10 labos, +20 % APS si l’Accélérateur ≥200.【F:config/config.js†L64-L101】
+- **Réacteur nucléaire** : +10 APS par niveau, +1 % APS par 50 Électrons, +20 % APS si les Labos ≥200, APC ×2 tous les 100 réacteurs.【F:config/config.js†L102-L143】
+- **Accélérateur de particules** : +50 APS par niveau (×1,5 si ≥100 Supercalculateurs), +5 % APC par niveau, renforce les Labos au palier 200.【F:config/config.js†L144-L189】
+- **Chaîne tardive** : Stations spatiales, Forgerons d’étoiles, Galaxies artificielles, Simulateur de Multivers, Tisseur de Réalité, Architecte Cosmique, Univers parallèles, Bibliothèque de l’Omnivers et Grand Ordonnateur quantique étendent la production jusqu’aux 10^18 APS par niveau et offrent des multiplicateurs globaux ou des réductions de coût permanentes.【F:config/config.js†L190-L368】
 
-* Plusieurs bonus croisés existent, par exemple l’Accélérateur de particules qui renforce les Laboratoires de physique, ou les Supercalculateurs boostés par les Stations orbitales.
-* Les descriptions détaillées se trouvent directement en jeu et dans `game-config.js`.
+Chaque carte de boutique est décrite et générée dynamiquement à partir de `GAME_CONFIG`, ce qui permet d’ajuster facilement l’équilibrage sans modifier la logique d’interface.【F:scripts/app.js†L6017-L6105】
 
----
+## Collections, gacha et tickets
+- **Tickets** : la “star” apparaît automatiquement, peut être améliorée par la rareté Mythe quantique (−1 s par élément unique, minimum 5 s) et offre un mode de collecte automatique via les trophées dédiés.【F:scripts/app.js†L1270-L1318】【F:config/config.js†L990-L1014】【F:config/config.js†L810-L827】
+- **Portail gacha** : chaque tirage coûte 1 ticket (ou peut être gratuit via le DevKit). Les probabilités de base et la rareté mise à l’honneur changent selon le jour (pity journalier).【F:scripts/arcade/gacha.js†L107-L217】【F:config/config.js†L1528-L1612】
+- **Raretés & bonus** : six familles d’éléments apportent des bonus plats, multiplicatifs ou utilitaires (intervalle de tickets, critique, hors-ligne…). Les caps de progression sont précisés pour chaque groupe.【F:config/config.js†L910-L1034】
+- **Tableau périodique** : la liste complète des éléments et leurs méta-données se trouve dans `scripts/resources/periodic-elements.js` et alimente la collection affichée dans l’onglet dédié.【F:scripts/resources/periodic-elements.js†L1-L210】
 
-## 🕹️ Mini-jeux d’arcade
+## Succès, trophées et objectifs
+- **Trophées d’échelle atomique** : 21 jalons de 10^14 à 10^80 octroient chacun +2 au multiplicateur global et contextualisent la progression.【F:config/config.js†L409-L608】
+- **Succès thématiques** : la ruée vers le million, les frénésies (100/1 000), la collecte automatique des étoiles et d’autres objectifs octroient des bonus permanents (multiplicateurs, nouveaux emplacements de frénésie, auto-collecte…).【F:config/config.js†L745-L827】
+- **Panneau “Objectifs”** : la navigation inclut une page dédiée qui récapitule ces jalons et se déverrouille avec la progression pour guider les priorités.【F:index.html†L35-L69】【F:scripts/app.js†L1607-L1699】
 
-Deux expériences annexes viennent dynamiser la progression en apportant tickets, crédits Mach3 et bonus thématiques :
+## Fusion moléculaire
+Un onglet “Fusion” présente des recettes consommant des éléments du gacha pour octroyer des bonus plats APC/APS. Chaque carte affiche chances de réussite, prérequis, état de la collection et historique de tentatives.【F:index.html†L700-L748】【F:config/config.js†L1396-L1514】【F:scripts/arcade/gacha.js†L1684-L1884】
 
-### Particules
+## Mini-jeux d’arcade
+L’onglet Arcade propose trois expériences qui alimentent les tickets et bonus :
+- **Particules** (brick breaker) : niveaux successifs, HUD complet, tickets de gacha en récompense de niveau parfait, gravitons convertis en crédits Mach3 et en annonces toast.【F:index.html†L158-L266】【F:scripts/arcade/particules.js†L1980-L2056】【F:scripts/arcade/particules.js†L2532-L2555】
+- **Mach3 – Métaux** : grille 9×16, cinq gemmes, timer de 6 s extensible, consommation d’un crédit Mach3 par partie et bonus APS proportionnel aux performances.【F:index.html†L424-L477】【F:scripts/arcade/metaux-match3.js†L4-L118】【F:scripts/app.js†L1608-L1705】
+- **Photon** : runner basé sur un photon alternant entre deux états pour traverser des obstacles, trois modes (single/classic/hold), score en temps réel et rotation automatique des modes. Aucun bonus permanent n’est encore rattaché, comme indiqué dans le texte d’interface.【F:index.html†L880-L1036】【F:scripts/arcade/photon.js†L1-L210】【F:config/config.js†L686-L705】
 
-* Accessible depuis l’onglet Arcade, ce casse-briques cosmique reprend les codes d’un brick breaker avec HUD dédié (niveau, vies, score) et zones d’interaction adaptées clavier/souris/tactile.【F:index.html†L158-L266】
-* Terminer un niveau sans perdre de vie octroie des tickets de gacha, directement injectés dans l’inventaire et annoncés via un toast.【F:scripts/arcade/particules.js†L2532-L2555】【F:scripts/arcade/gacha.js†L1845-L1883】
-* Les gravitons apparaissant au fil des manches peuvent être capturés pour gagner des tickets spéciaux convertis en crédits Mach3, utiles au second mini-jeu.【F:scripts/arcade/particules.js†L1980-L2056】【F:scripts/arcade/particules.js†L2345-L2350】【F:scripts/arcade/gacha.js†L1871-L1880】
+## Infos, DevKit et options
+- **Page Infos** : breakdown complet des gains APC/APS, statistiques de session et globales, liste des bonus actifs par source.【F:index.html†L714-L804】【F:scripts/app.js†L7522-L7569】
+- **DevKit quantique** : accessible via F9, permet d’ajouter des ressources, tickets, crédits Mach3 ou de passer le magasin/gacha en mode gratuit pour les tests. Les actions mettent à jour l’UI et consignent les gains via des toasts dédiés.【F:index.html†L1163-L1269】【F:scripts/app.js†L3727-L3957】
+- **Options** : thèmes visuels, langue, import/export de sauvegarde et paramètres audio sont gérés via l’onglet Options (chargement dynamiques par `app.js`).【F:index.html†L35-L69】【F:scripts/app.js†L5435-L5712】
 
-### Mach3 (Métaux)
+## Sauvegardes, hors-ligne et grands nombres
+- Les sauvegardes sont automatiques (localStorage) et incluent tickets, fusions, bonus, statistiques et paramètres.【F:scripts/app.js†L8820-L9137】
+- Les gains hors-ligne prennent en compte jusqu’à 12 h d’absence et peuvent générer des tickets supplémentaires en fonction du temps écoulé.【F:config/config.js†L655-L705】【F:scripts/app.js†L9246-L9258】
+- Le moteur de grands nombres bascule vers des layers exponentiels au-delà de 1e6, ce qui garantit une progression fluide jusqu’à 10^80 et plus.【F:config/config.js†L594-L643】
 
-* Jeu de match-3 en temps limité basé sur une grille 9×16 et cinq types de gemmes métalliques ; chaque alignement ajoute du temps tandis que la pression monte avec un chrono à 6 secondes extensibles.【F:scripts/arcade/metaux-match3.js†L4-L118】
-* Une partie consomme un crédit Mach3 ; le compteur de crédits est alimenté par Particules et affiché dans l’interface Arcade ainsi que sur l’écran de fin de partie pour planifier vos runs.【F:index.html†L424-L477】【F:scripts/app.js†L1608-L1705】
+## Internationalisation
+Le jeu charge dynamiquement les ressources depuis `scripts/i18n/<code>.json`. Ajouter une langue consiste à dupliquer un fichier existant, traduire les clés, puis enregistrer le code dans `AVAILABLE_LANGUAGES` pour affichage dans le sélecteur.【F:scripts/i18n/fr.json†L1-L340】【F:scripts/modules/i18n.js†L33-L142】
 
----
-
-## 🎟️ Tickets de gacha
-
-Le gacha ne consomme plus d’atomes : chaque tirage coûte **1 ticket**.
-
-### Collecte des tickets
-
-* Une **étoile de tickets** apparaît sur l’écran principal toutes les ~60 secondes (intervalle moyen). Cliquez dessus pour obtenir des tickets.
-* Les éléments de rareté **Mythe quantique** réduisent cet intervalle d’1 s par élément unique, jusqu’à un minimum de 5 s.
-* Certaines récompenses d’événements ou de DevKit peuvent également octroyer des tickets bonus.
-
-### Tirages
-
-* Un bouton dédié lance une animation cosmique et consomme automatiquement 1 ticket (sauf modes gratuits spéciaux).
-* Les éléments tirés s’ajoutent à votre collection : les nouveaux éléments octroient des bonus “unique”, tandis que les doublons activent des effets “duplicate”.
-* Chaque tirage affiche la rareté, le nom de l’élément et l’état de votre collection (nouveau/doublon/max).
-
-### Raretés et probabilités
-
-| Rareté | Poids | Description |
-| --- | --- | --- |
-| **Commun cosmique** | 55 % | Les éléments omniprésents dans les nébuleuses. |
-| **Essentiel planétaire** | 20 % | Les fondations des mondes rocheux et océaniques. |
-| **Forge stellaire** | 12 % | Alliages forgés au cœur des étoiles actives. |
-| **Singularité minérale** | 7 % | Cristaux rarissimes difficiles à stabiliser. |
-| **Mythe quantique** | 4 % | Éléments quasi légendaires, aux effets systémiques. |
-| **Irréel** | 2 % | Créations synthétiques, jamais observées naturellement. |
-
----
-
-### Pity journalier
-
-Chaque journée met en avant une rareté précise : le système ajuste automatiquement les poids de tirage pour garantir une montée en probabilité des familles mises en vedette (Singularité minérale les lundis et jeudis, Mythe quantique les mardis et vendredis, Irréel les mercredis et samedis, mix équilibré le dimanche).【F:scripts/arcade/gacha.js†L107-L209】【F:config/config.js†L1528-L1612】
-Le libellé de mise en avant est reflété dans l’interface gacha et se réinitialise à chaque changement de jour, offrant une forme de pity journalier : si vous ciblez une rareté spécifique, il suffit de jouer le jour associé pour profiter de chances renforcées, puis patienter jusqu’au prochain cycle si la session n’a pas produit le résultat attendu.【F:scripts/arcade/gacha.js†L109-L217】
-
----
-
-## 💠 Bonus par rareté
-
-Chaque groupe de rareté dispose d’une configuration propre. Les bonus sont cumulés par élément, puis complétés par des récompenses de collection :
-
-### Commun cosmique
-
-* **Par copie** : +1 atome par clic.
-* **Collection complète** : +500 APC plats.
-* **Accumulation** : toutes les 50 copies, +1 au multiplicateur global (APC & APS).
-
-### Essentiel planétaire
-
-* **Par élément unique** : +10 APC plats. Les doublons donnent également +10 APC.
-* **Collection complète** : +1 000 APC plats.
-* **Accumulation** : toutes les 30 copies, +1 au multiplicateur global (APC & APS).
-
-### Forge stellaire
-
-* **Par élément unique** : +50 APC plats.
-* **Par doublon** : +25 APC plats.
-* **Collection complète** : multiplie par 2 les bonus plats apportés par les Commun cosmique.
-* **Accumulation** : toutes les 20 copies, +1 au multiplicateur global (APC & APS).
-
-### Singularité minérale
-
-* **Par élément unique** : +25 APC et +25 APS plats.
-* **Par doublon** : +20 APC et +20 APS plats.
-* **Accumulation** : toutes les 10 copies, +1 au multiplicateur global (APC & APS).
-
-### Mythe quantique
-
-* **Réduction des tickets** : chaque élément unique réduit de 1 s l’intervalle d’apparition de l’étoile à tickets (minimum 5 s).
-* **Hors-ligne** : chaque doublon ajoute +1 % de gains hors-ligne (jusqu’à +100 %). Au-delà du plafond, chaque doublon offre +50 APC et +50 APS plats.
-* **Collection complète** : +50 % de chances supplémentaires de déclencher une frénésie.
-
-### Irréel
-
-* **Par élément unique** : +1 % de chance de critique (cumulatif).
-* **Par doublon** : +1 % au multiplicateur de critique.
-* **Accumulation** : toutes les 5 copies, +1 au multiplicateur global (APC & APS).
+## Lancer le projet en local
+Le dépôt contient uniquement des fichiers statiques. Pour tester le jeu en local :
+1. Installez une version LTS de Node.js (ou utilisez Python si vous préférez).
+2. Depuis la racine du projet, lancez un serveur statique, par exemple :
+   ```bash
+   npx serve .
+   # ou
+   python -m http.server 8080
+   ```
+3. Ouvrez `http://localhost:3000` (ou le port choisi) dans votre navigateur. Les requêtes `fetch` du jeu nécessitent un serveur HTTP et ne fonctionnent pas en ouvrant directement `index.html`.
 
 ---
 
-## 📈 Progression de collection (recommandation indicative)
-
-* **Début** : sécuriser les Commun cosmique et Essentiel planétaire pour accélérer les clics.
-* **Milieu de partie** : les Forge stellaire et Singularité minérale installent de véritables moteurs APS/APC.
-* **Fin de partie** : Mythe quantique et Irréel débloquent la gestion avancée des tickets, du hors-ligne, des critiques et des frénésies.
-
----
-
-## 🧰 Encart spécial : bonus & modificateurs cumulés
-
-Ce mémo récapitule l’ensemble des bonus actuellement en jeu. Il couvre les bâtiments de la boutique, les collections d’éléments, les succès et la fusion moléculaire, ainsi que leurs effets sur l’APC, l’APS, les frénésies, les critiques ou la génération de tickets.
-
-### 🏪 Boutique scientifique
-
-| Bâtiment | Rôle | Bonus principaux |
-| --- | --- | --- |
-| **Électrons libres** | Manuel | +1 APC plat/niveau, +5 % APC tous les 25 niveaux.【F:config/config.js†L30-L47】 |
-| **Laboratoire de Physique** | Automatique | +1 APS plat/niveau, +5 % APC tous les 10 labos, +20 % APS si l’Accélérateur ≥200.【F:config/config.js†L50-L70】 |
-| **Réacteur nucléaire** | Automatique | +10 APS plat/niveau, +1 % APS par 50 Électrons, +20 % APS si les Labos ≥200, palier 150 : APC global ×2.【F:config/config.js†L74-L100】 |
-| **Accélérateur de particules** | Hybride | +50 APS plat/niveau (boosté par ≥100 Supercalculateurs), +2 % APC par niveau, palier 200 : +20 % APS pour les Labos.【F:config/config.js†L102-L121】 |
-| **Supercalculateurs** | Automatique | +500 APS plat/niveau, doublés par les Stations ≥300, +1 % APS global tous les 25 niveaux.【F:config/config.js†L124-L145】 |
-| **Sonde interstellaire** | Hybride | +5 000 APS plat/niveau (boosté par les Réacteurs), palier 150 : +10 APC plats par sonde.【F:config/config.js†L148-L172】 |
-| **Station spatiale** | Hybride | +50 000 APS plat/niveau, +5 % APC par station, palier 300 : Supercalculateurs ×2.【F:config/config.js†L174-L189】 |
-| **Forgeron d’étoiles** | Hybride | +500 000 APS plat/niveau (+2 % APS par Station), palier 150 : +25 % APC global.【F:config/config.js†L191-L212】 |
-| **Galaxie artificielle** | Automatique | +5 000 000 APS plat/niveau (doublée par Bibliothèque ≥300), palier 100 : +50 % APC global.【F:config/config.js†L215-L242】 |
-| **Simulateur de Multivers** | Automatique | +500 000 000 APS plat/niveau et +0,5 % APS global par bâtiment possédé, palier 200 : coûts −5 %.【F:config/config.js†L245-L262】 |
-| **Tisseur de Réalité** | Hybride | +10 000 000 000 APS plat/niveau, bonus de clic plat = 0,1 × bâtiments × niveau, palier 300 : production totale ×2.【F:config/config.js†L265-L290】 |
-| **Architecte Cosmique** | Hybride | +1 000 000 000 000 APS plat/niveau, −1 % coût futur par Architecte, palier 150 : +20 % APC global.【F:config/config.js†L293-L309】 |
-| **Univers parallèle** | Automatique | +100 000 000 000 000 APS plat/niveau.【F:config/config.js†L312-L325】 |
-| **Bibliothèque de l’Omnivers** | Hybride | +10 000 000 000 000 000 APS plat/niveau, +2 % boost global par Univers parallèle, palier 300 : Galaxies artificielles ×2.【F:config/config.js†L328-L349】 |
-| **Grand Ordonnateur Quantique** | Hybride | +1 000 000 000 000 000 000 APS plat/niveau, palier 100 : double définitivement APC & APS.【F:config/config.js†L353-L368】 |
-
-### 🧬 Collections d’éléments
-
-* **Commun cosmique** : +1 APC plat par copie, set complet : +500 APC, multiplicateur global (APC & APS) +1 tous les 50 exemplaires (jusqu’à +100).【F:config/config.js†L910-L928】
-* **Essentiel planétaire** : +10 APC plats par élément unique ou doublon, set complet : +1 000 APC, multiplicateur global +1 tous les 30 exemplaires (cap 100).【F:config/config.js†L929-L948】
-* **Forge stellaire** : +50 APC plats par unique, +25 APC par doublon, set complet : double les bonus plats des Commun cosmique, multiplicateur global +1 tous les 20 exemplaires (cap 100).【F:config/config.js†L949-L968】
-* **Singularité minérale** : +25 APC/APS plats par unique, +20 APC/APS par doublon, multiplicateur global +1 tous les 10 exemplaires (cap 100).【F:config/config.js†L969-L989】
-* **Mythe quantique** : −1 s sur l’intervalle de l’étoile à tickets par élément unique (min 5 s), +1 % de gains hors-ligne par doublon (jusqu’à +100 %), puis +50 APC/APS plats au-delà, set complet : +50 % de chances de frénésie.【F:config/config.js†L990-L1014】
-* **Irréel** : +1 % de chance de critique par unique, +1 % sur le multiplicateur de critique par doublon, multiplicateur global +1 tous les 5 exemplaires (cap 100).【F:config/config.js†L1015-L1034】
-
-### 🏆 Succès & trophées
-
-* **Échelles atomiques (21 paliers)** : de la cellule humaine (10^14) à l’univers observable (10^80), chaque trophée ajoute +2 au boost global de production.【F:config/config.js†L409-L608】
-* **Ruée vers le million** : atteindre 1 000 000 d’atomes synthétisés ajoute +0,5 au boost global.【F:config/config.js†L745-L776】
-* **Convergence frénétique** : déclencher 100 frénésies augmente la réserve maximale de frénésies simultanées à 2.【F:config/config.js†L777-L793】
-* **Tempête tri-phasée** : déclencher 1 000 frénésies porte la réserve à 3 et applique un multiplicateur global ×1,05.【F:config/config.js†L794-L809】
-* **Collecteur d’étoiles** : compléter les raretés Commun cosmique & Essentiel planétaire active la collecte automatique des étoiles à tickets après 3 s.【F:config/config.js†L810-L827】
-
-### ⚗️ Fusion moléculaire
-
-* **Molécule d’eau (H₂O)** : consomme 2 Hydrogènes et 1 Oxygène avec 50 % de réussite pour octroyer +100 APC plats immédiats.【F:config/config.js†L713-L741】
-
-Combinez ces leviers pour orchestrer vos pics de production, maximiser les frénésies et sécuriser les ressources critiques tout au long de la montée vers 10^80 atomes.
-
----
-
-## 🌍 Internationalisation
-
-L’interface repose sur des fichiers JSON (`scripts/i18n/<code>.json`) chargés dynamiquement. Pour ajouter une nouvelle langue :
-
-1. **Dupliquez un fichier de référence** (`scripts/i18n/fr.json` par exemple) vers `scripts/i18n/<code>.json` en conservant la même structure de clés.
-2. **Traduisez chaque entrée** : toutes les clés existantes doivent recevoir une valeur localisée afin d’éviter les retours de clés brutes dans l’interface.
-3. **Enregistrez le code langue** dans `scripts/modules/i18n.js` au sein du tableau `AVAILABLE_LANGUAGES` pour que le sélecteur et le chargeur de ressources prennent en compte cette variante.
-
-Une fois ces étapes terminées, rechargez la page : la langue apparaîtra automatiquement dans le sélecteur d’options et pourra être choisie sans redémarrer la session.
-
----
-
-## 🛠️ Implémentation
-
-* **Technologies** : HTML, CSS et JavaScript vanilla.
-* **Configuration** : `game-config.js` centralise l’équilibrage (bâtiments, gacha, bonus) ; `periodic-elements.js` référence les 118 éléments.
-* **Accessibilité** : navigation par onglets, compteurs `aria-live`, animations désactivables via classes CSS.
-* **Sauvegarde** : export/import JSON ; le format stocke les tickets, la progression de collection, les multiplicateurs et les paramètres de l’étoile à tickets.
-
-### 🚀 Lancer un serveur local
-
-Le projet inclut un lanceur Node.js (`MyLocalServ`) afin de servir les fichiers statiques sans blocage des requêtes `fetch`. Installez au préalable [Node.js](https://nodejs.org/) (version LTS recommandée), puis choisissez la méthode adaptée à votre système :
-
-#### Windows
-
-* **Double-clic** : ouvrez `MyLocalServ.cmd`. La fenêtre affiche l’URL (`http://localhost:8080` par défaut) et reste ouverte pour vous permettre d’arrêter le serveur proprement.
-* **Terminal** : exécutez la commande ci-dessous pour lancer le serveur depuis l’invite de commandes et, si besoin, préciser un port personnalisé.
-
-```bat
-cd Atom2Univers
-MyLocalServ.cmd 3000
-```
-
-#### macOS / Linux (et terminaux en général)
-
-```bash
-cd Atom2Univers
-node MyLocalServ.js
-```
-
-Le serveur démarre par défaut sur `http://localhost:8080`. Définissez la variable d’environnement `PORT` (ou passez un argument à `MyLocalServ.cmd`) pour changer le port si nécessaire. Appuyez sur `Ctrl+C` pour l’arrêter.
-
----
-
-## 🎯 Objectif
-
-Collectez, automatisez, déclenchez des frénésies et maîtrisez la synthèse élémentaire via les tickets pour franchir l’échelle des grands nombres… jusqu’à reconstituer l’univers tout entier.
+Bon jeu et bon click !
