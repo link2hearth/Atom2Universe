@@ -126,6 +126,9 @@
           "target": "Goal to reach",
           "restart": "New run"
         },
+        "progress": {
+          "label": "Parallel universe No:\u00a0"
+        },
         "stats": {
           "group": "Run statistics",
           "score": "Score",

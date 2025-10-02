@@ -1,0 +1,10 @@
+{
+  "soundfonts": [
+    {
+      "id": "classical-oboe",
+      "name": "Classical Oboe",
+      "file": "Assets/Music/Classical_Oboe.sf2",
+      "default": true
+    }
+  ]
+}
