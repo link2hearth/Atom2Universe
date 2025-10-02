@@ -25,6 +25,15 @@
   const MAX_AMPLITUDE_RATIO = 0.18;
   const CAMERA_LERP_MIN = 0.08;
   const CAMERA_LERP_MAX = 0.25;
+  const CAMERA_SCALE_LERP_MIN = 0.05;
+  const CAMERA_SCALE_LERP_MAX = 0.18;
+  const CAMERA_VERTICAL_LERP_MIN = 0.08;
+  const CAMERA_VERTICAL_LERP_MAX = 0.22;
+  const MIN_CAMERA_SCALE = 0.55;
+  const MIN_VISIBLE_SPAN_RATIO = 0.9;
+  const MAX_VISIBLE_SPAN_RATIO = 2.8;
+  const CAMERA_TOP_MARGIN_RATIO = 0.18;
+  const CAMERA_BOTTOM_MARGIN_RATIO = 0.28;
   const MAX_FRAME_DELTA = 1 / 30;
   const AIR_PRESS_FORWARD_IMPULSE = 120;
   const AIR_PRESS_DOWN_IMPULSE = 260;
@@ -262,6 +271,8 @@
       this.viewWidth = 0;
       this.viewHeight = 0;
       this.cameraX = 0;
+      this.cameraY = 0;
+      this.cameraScale = 1;
 
       this.terrain = new TerrainGenerator();
       this.player = {
@@ -391,6 +402,8 @@
       if (this.ctx) {
         this.ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
       }
+      this.cameraScale = 1;
+      this.cameraY = 0;
       const minY = height * 0.7;
       const maxY = height * 0.95;
       const baseLevel = height * 0.9;
@@ -410,10 +423,13 @@
     }
 
     resetTerrain() {
-      const span = this.viewWidth * 3;
-      const startX = -this.viewWidth;
+      this.cameraScale = 1;
+      this.cameraY = 0;
+      const worldWidth = this.viewWidth / Math.max(this.cameraScale, MIN_CAMERA_SCALE);
+      const span = worldWidth * 3;
+      const startX = -worldWidth;
       this.terrain.reset(startX, startX + span);
-      const startScreenX = this.viewWidth * START_SCREEN_X_RATIO;
+      const startScreenX = worldWidth * START_SCREEN_X_RATIO;
       this.player.x = startX + startScreenX;
       const groundY = this.terrain.getHeight(this.player.x);
       const safeGroundY = Math.max(0, groundY - START_MIN_CLEARANCE);
@@ -423,7 +439,7 @@
       this.player.vx = 0;
       this.player.vy = 0;
       this.player.onGround = true;
-      this.cameraX = this.player.x - this.viewWidth * START_SCREEN_X_RATIO;
+      this.cameraX = this.player.x - worldWidth * START_SCREEN_X_RATIO;
       this.distanceTravelled = 0;
       this.pendingRelease = false;
       this.isPressing = false;
@@ -628,8 +644,9 @@
     }
 
     update(delta) {
-      const targetMaxX = this.cameraX + this.viewWidth * 2.6;
-      const pruneBefore = this.cameraX - this.viewWidth * 1.2;
+      const viewWorldWidth = this.viewWidth / this.cameraScale;
+      const targetMaxX = this.cameraX + viewWorldWidth * 2.6;
+      const pruneBefore = this.cameraX - viewWorldWidth * 1.2;
       this.terrain.ensure(targetMaxX);
       this.terrain.prune(pruneBefore);
 
@@ -724,13 +741,42 @@
     }
 
     updateCamera(delta) {
-      const desired = this.player.x - this.viewWidth * START_SCREEN_X_RATIO;
+      const groundY = this.terrain.getHeight(this.player.x);
+      const topMargin = this.viewHeight * CAMERA_TOP_MARGIN_RATIO;
+      const bottomMargin = this.viewHeight * CAMERA_BOTTOM_MARGIN_RATIO;
+      const desiredTop = Math.max(0, this.player.y - topMargin);
+      const desiredBottom = groundY + bottomMargin;
+      const rawSpan = Math.max(desiredBottom - desiredTop, this.viewHeight * MIN_VISIBLE_SPAN_RATIO);
+      const clampedSpan = clamp(rawSpan, this.viewHeight * MIN_VISIBLE_SPAN_RATIO, this.viewHeight * MAX_VISIBLE_SPAN_RATIO);
+      const desiredScale = clamp(this.viewHeight / clampedSpan, MIN_CAMERA_SCALE, 1);
+      const scaleLerp = clamp(delta * 4.5, CAMERA_SCALE_LERP_MIN, CAMERA_SCALE_LERP_MAX);
+      if (!Number.isFinite(this.cameraScale)) {
+        this.cameraScale = desiredScale;
+      } else {
+        this.cameraScale += (desiredScale - this.cameraScale) * scaleLerp;
+      }
+      this.cameraScale = clamp(this.cameraScale, MIN_CAMERA_SCALE, 1);
+
+      const viewWorldHeight = this.viewHeight / this.cameraScale;
+      const lowerBound = Math.max(0, desiredBottom - viewWorldHeight);
+      const upperBound = Math.max(lowerBound, desiredTop);
+      const desiredCameraY = clamp(desiredTop, lowerBound, upperBound);
+      const verticalLerp = clamp(delta * 4.5, CAMERA_VERTICAL_LERP_MIN, CAMERA_VERTICAL_LERP_MAX);
+      if (!Number.isFinite(this.cameraY)) {
+        this.cameraY = desiredCameraY;
+      } else {
+        this.cameraY += (desiredCameraY - this.cameraY) * verticalLerp;
+      }
+      this.cameraY = Math.max(0, this.cameraY);
+
+      const viewWorldWidth = this.viewWidth / this.cameraScale;
+      const desiredX = this.player.x - viewWorldWidth * START_SCREEN_X_RATIO;
       if (!Number.isFinite(this.cameraX)) {
-        this.cameraX = desired;
+        this.cameraX = desiredX;
         return;
       }
       const lerpFactor = clamp(delta * 4.6, CAMERA_LERP_MIN, CAMERA_LERP_MAX);
-      this.cameraX += (desired - this.cameraX) * lerpFactor;
+      this.cameraX += (desiredX - this.cameraX) * lerpFactor;
     }
 
     updateHud() {
@@ -799,24 +845,27 @@
       if (!points.length) {
         return;
       }
-      const startX = this.cameraX - this.viewWidth * 0.25;
-      const endX = this.cameraX + this.viewWidth * 1.1;
+      const scale = this.cameraScale;
+      const viewWorldWidth = this.viewWidth / scale;
+      const startX = this.cameraX - viewWorldWidth * 0.25;
+      const endX = this.cameraX + viewWorldWidth * 1.1;
       ctx.save();
       ctx.beginPath();
-      ctx.moveTo(startX - this.cameraX, this.viewHeight);
+      ctx.moveTo((startX - this.cameraX) * scale, this.viewHeight);
       for (let index = 0; index < points.length; index += 1) {
         const point = points[index];
         if (point.x < startX) {
           continue;
         }
         if (point.x > endX) {
-          ctx.lineTo(endX - this.cameraX, this.viewHeight);
+          ctx.lineTo((endX - this.cameraX) * scale, this.viewHeight);
           break;
         }
-        const screenX = point.x - this.cameraX;
-        ctx.lineTo(screenX, point.y);
+        const screenX = (point.x - this.cameraX) * scale;
+        const screenY = (point.y - this.cameraY) * scale;
+        ctx.lineTo(screenX, screenY);
       }
-      ctx.lineTo(endX - this.cameraX, this.viewHeight);
+      ctx.lineTo((endX - this.cameraX) * scale, this.viewHeight);
       ctx.closePath();
 
       const fillGradient = ctx.createLinearGradient(0, this.viewHeight * 0.4, 0, this.viewHeight);
@@ -834,32 +883,41 @@
     }
 
     drawPlayer(ctx) {
+      const scale = this.cameraScale;
       const radius = clamp(this.viewHeight * 0.04, 12, 28);
-      const x = this.player.x - this.cameraX;
-      const y = this.player.y;
+      const scaledRadius = Math.max(radius * scale, 6);
+      const x = (this.player.x - this.cameraX) * scale;
+      const y = (this.player.y - this.cameraY) * scale;
       ctx.save();
       ctx.translate(x, y);
 
-      const shadowGradient = ctx.createRadialGradient(0, radius * 0.6, radius * 0.35, 0, radius, radius * 1.1);
+      const shadowGradient = ctx.createRadialGradient(
+        0,
+        scaledRadius * 0.6,
+        scaledRadius * 0.35,
+        0,
+        scaledRadius,
+        scaledRadius * 1.1
+      );
       shadowGradient.addColorStop(0, 'rgba(0, 0, 0, 0.4)');
       shadowGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
       ctx.fillStyle = shadowGradient;
       ctx.beginPath();
-      ctx.ellipse(0, radius * 0.8, radius * 1.2, radius * 0.45, 0, 0, Math.PI * 2);
+      ctx.ellipse(0, scaledRadius * 0.8, scaledRadius * 1.2, scaledRadius * 0.45, 0, 0, Math.PI * 2);
       ctx.fill();
 
-      ctx.translate(0, -radius * 0.4);
-      const bodyGradient = ctx.createRadialGradient(0, -radius * 0.2, radius * 0.2, 0, 0, radius);
+      ctx.translate(0, -scaledRadius * 0.4);
+      const bodyGradient = ctx.createRadialGradient(0, -scaledRadius * 0.2, scaledRadius * 0.2, 0, 0, scaledRadius);
       bodyGradient.addColorStop(0, '#f8fbff');
       bodyGradient.addColorStop(0.55, '#9ad7ff');
       bodyGradient.addColorStop(1, '#2a6ed8');
       ctx.fillStyle = bodyGradient;
       ctx.beginPath();
-      ctx.arc(0, 0, radius, 0, Math.PI * 2);
+      ctx.arc(0, 0, scaledRadius, 0, Math.PI * 2);
       ctx.fill();
 
-      const trailLength = clamp(radius * 3, 30, 60);
-      const trailWidth = radius * 0.45;
+      const trailLength = clamp(scaledRadius * 3, 30, 60);
+      const trailWidth = scaledRadius * 0.45;
       const trailGradient = ctx.createLinearGradient(-trailLength, 0, 0, 0);
       trailGradient.addColorStop(0, 'rgba(92, 208, 255, 0)');
       trailGradient.addColorStop(0.65, 'rgba(92, 208, 255, 0.2)');
