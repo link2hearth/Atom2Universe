@@ -2674,6 +2674,7 @@
         if (hiFiInstrument) {
           return hiFiInstrument;
         }
+        return null;
       }
 
       if (this.engineMode === 'n163') {
@@ -4339,6 +4340,9 @@
       const velocity = Math.max(0.08, Math.min(1, note.velocity || 0.2));
 
       const instrument = this.getInstrumentSettings(note);
+      if (!instrument) {
+        return;
+      }
       const frequency = this.midiNoteToFrequency(note.note);
       const lfoSettings = this.getLfoSettings(instrument);
 
