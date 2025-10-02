@@ -17,13 +17,13 @@
 
 .option-card--chiptune .option-row--selectors {
   align-items: flex-start;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 0.75rem;
 }
 
 .option-card--chiptune .option-row--selectors .option-field {
-  flex: 1 1 25%;
-  max-width: 25%;
+  flex: 1 1 33.333%;
+  max-width: 33.333%;
   min-width: 160px;
   display: flex;
   flex-direction: column;
@@ -47,6 +47,9 @@
 }
 
 @media (max-width: 720px) {
+  .option-card--chiptune .option-row--selectors {
+    flex-wrap: wrap;
+  }
   .option-card--chiptune .option-row--selectors .option-field {
     flex: 1 1 240px;
     max-width: 100%;
