@@ -167,8 +167,8 @@ Ce mémo récapitule l’ensemble des bonus actuellement en jeu. Il couvre les b
 
 ### 🏆 Succès & trophées
 
-* **Échelles atomiques (21 paliers)** : de la cellule humaine (10^14) à l’univers observable (10^80), chaque trophée ajoute +2 au boost global de production (soit ×3 par palier obtenu).【F:config/config.js†L409-L608】
-* **Ruée vers le million** : atteindre 1 000 000 d’atomes synthétisés ajoute +0,5 au boost global (×1,5 une fois débloqué).【F:config/config.js†L745-L776】
+* **Échelles atomiques (21 paliers)** : de la cellule humaine (10^14) à l’univers observable (10^80), chaque trophée ajoute +2 au boost global de production.【F:config/config.js†L409-L608】
+* **Ruée vers le million** : atteindre 1 000 000 d’atomes synthétisés ajoute +0,5 au boost global.【F:config/config.js†L745-L776】
 * **Convergence frénétique** : déclencher 100 frénésies augmente la réserve maximale de frénésies simultanées à 2.【F:config/config.js†L777-L793】
 * **Tempête tri-phasée** : déclencher 1 000 frénésies porte la réserve à 3 et applique un multiplicateur global ×1,05.【F:config/config.js†L794-L809】
 * **Collecteur d’étoiles** : compléter les raretés Commun cosmique & Essentiel planétaire active la collecte automatique des étoiles à tickets après 3 s.【F:config/config.js†L810-L827】
