@@ -31,6 +31,35 @@
 
   const UNIVERSE_TRANSITION_DELAY_MS = 850;
   const UNIVERSE_DEFEAT_EXTRA_DELAY_MS = 250;
+  const PARALLEL_UNIVERSE_STORAGE_KEY = 'atom2univers.quantum2048.parallelUniverses';
+
+  function readStoredParallelUniverses(defaultValue = 0) {
+    if (typeof window === 'undefined' || !window.localStorage) {
+      return defaultValue;
+    }
+    try {
+      const raw = window.localStorage.getItem(PARALLEL_UNIVERSE_STORAGE_KEY);
+      if (raw == null) {
+        return defaultValue;
+      }
+      const parsed = Number.parseInt(raw, 10);
+      return Number.isFinite(parsed) && parsed >= 0 ? parsed : defaultValue;
+    } catch (error) {
+      return defaultValue;
+    }
+  }
+
+  function writeStoredParallelUniverses(value) {
+    if (typeof window === 'undefined' || !window.localStorage) {
+      return;
+    }
+    try {
+      const normalized = Math.max(0, Number.parseInt(value, 10) || 0);
+      window.localStorage.setItem(PARALLEL_UNIVERSE_STORAGE_KEY, String(normalized));
+    } catch (error) {
+      // Ignore storage errors (e.g., private mode)
+    }
+  }
 
   function toUniquePositiveIntegers(list) {
     if (!Array.isArray(list)) {
@@ -222,7 +251,7 @@
       this.hasWon = false;
       this.gameOver = false;
       this.active = false;
-      this.parallelUniverseCount = 0;
+      this.parallelUniverseCount = readStoredParallelUniverses(0);
       this.transitionTimeout = null;
 
       this.handleKeydown = this.handleKeydown.bind(this);
@@ -485,6 +514,7 @@
         return;
       }
       this.parallelUniverseCount = Math.max(0, this.parallelUniverseCount + delta);
+      writeStoredParallelUniverses(this.parallelUniverseCount);
       this.updateParallelUniverseDisplay();
     }
 
