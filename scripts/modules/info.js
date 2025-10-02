@@ -1512,26 +1512,28 @@ function renderShopBonuses() {
 
 function computeRarityMultiplierProduct(store) {
   if (!store) return LayeredNumber.one();
+  const accumulate = raw => {
+    const numeric = Number(raw);
+    if (!Number.isFinite(numeric) || numeric <= 0) {
+      return 0;
+    }
+    return numeric - 1;
+  };
+  let bonusTotal = 0;
   if (store instanceof Map) {
-    let product = LayeredNumber.one();
     store.forEach(raw => {
-      const numeric = Number(raw);
-      if (Number.isFinite(numeric) && numeric > 0) {
-        product = product.multiplyNumber(numeric);
-      }
+      bonusTotal += accumulate(raw);
     });
-    return product;
+  } else if (typeof store === 'object' && store !== null) {
+    Object.values(store).forEach(raw => {
+      bonusTotal += accumulate(raw);
+    });
   }
-  if (typeof store === 'object' && store !== null) {
-    return Object.values(store).reduce((product, raw) => {
-      const numeric = Number(raw);
-      if (Number.isFinite(numeric) && numeric > 0) {
-        return product.multiplyNumber(numeric);
-      }
-      return product;
-    }, LayeredNumber.one());
+  const total = 1 + bonusTotal;
+  if (!Number.isFinite(total) || total <= 0) {
+    return LayeredNumber.one();
   }
-  return LayeredNumber.one();
+  return new LayeredNumber(total);
 }
 
 function updateSessionStats() {
