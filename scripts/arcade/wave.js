@@ -34,6 +34,7 @@
   const MAX_VISIBLE_SPAN_RATIO = 2.8;
   const CAMERA_TOP_MARGIN_RATIO = 0.18;
   const CAMERA_BOTTOM_MARGIN_RATIO = 0.28;
+  const GROUND_INFLUENCE_RATIO = 0.35;
   const MAX_FRAME_DELTA = 1 / 30;
   const AIR_PRESS_FORWARD_IMPULSE = 120;
   const AIR_PRESS_DOWN_IMPULSE = 260;
@@ -745,7 +746,7 @@
       const topMargin = this.viewHeight * CAMERA_TOP_MARGIN_RATIO;
       const bottomMargin = this.viewHeight * CAMERA_BOTTOM_MARGIN_RATIO;
       const desiredTop = Math.max(0, this.player.y - topMargin);
-      const desiredBottom = groundY + bottomMargin;
+      const desiredBottom = Math.max(this.player.y + bottomMargin, groundY + bottomMargin * GROUND_INFLUENCE_RATIO);
       const rawSpan = Math.max(desiredBottom - desiredTop, this.viewHeight * MIN_VISIBLE_SPAN_RATIO);
       const clampedSpan = clamp(rawSpan, this.viewHeight * MIN_VISIBLE_SPAN_RATIO, this.viewHeight * MAX_VISIBLE_SPAN_RATIO);
       const desiredScale = clamp(this.viewHeight / clampedSpan, MIN_CAMERA_SCALE, 1);
