@@ -1033,26 +1033,13 @@
         </div>
         <div class="option-card option-card--chiptune">
           <h3>Module Musique Midi</h3>
-          <div class="option-row">
-            <label for="chiptuneLibrarySelect">Bibliothèque locale</label>
-            <select id="chiptuneLibrarySelect" disabled>
-              <option value="">Sélectionnez un morceau</option>
-            </select>
-          </div>
-          <div class="option-row">
-            <label for="chiptuneFileInput">Fichier MIDI</label>
-            <input type="file" id="chiptuneFileInput" accept=".mid,.midi" />
-          </div>
-          <div class="option-row option-row--slider">
-            <label for="chiptuneVolumeSlider">Volume général</label>
-            <input type="range" id="chiptuneVolumeSlider" min="0" max="100" step="1" value="80" />
-            <span class="option-value" id="chiptuneVolumeValue" aria-live="polite">80%</span>
-
-            <label for="chiptuneSpeedSlider">Vitesse de lecture</label>
-            <input type="range" id="chiptuneSpeedSlider" min="50" max="200" step="5" value="100" />
-            <span class="option-value" id="chiptuneSpeedValue" aria-live="polite">Tempo normal (100%)</span>
-          </div>
-          <div class="option-row option-row--dual-select">
+          <div class="option-row option-row--selectors">
+            <div class="option-field option-field--wide">
+              <label for="chiptuneLibrarySelect">Bibliothèque locale</label>
+              <select id="chiptuneLibrarySelect" disabled>
+                <option value="">Sélectionnez un morceau</option>
+              </select>
+            </div>
             <div class="option-field">
               <label for="chiptuneEngineSelect">Moteur sonore</label>
               <select id="chiptuneEngineSelect">
@@ -1070,6 +1057,19 @@
                 <option value="">Chargement des SoundFonts…</option>
               </select>
             </div>
+          </div>
+          <div class="option-row">
+            <label for="chiptuneFileInput">Fichier MIDI</label>
+            <input type="file" id="chiptuneFileInput" accept=".mid,.midi" />
+          </div>
+          <div class="option-row option-row--slider">
+            <label for="chiptuneVolumeSlider">Volume général</label>
+            <input type="range" id="chiptuneVolumeSlider" min="0" max="100" step="1" value="80" />
+            <span class="option-value" id="chiptuneVolumeValue" aria-live="polite">80%</span>
+
+            <label for="chiptuneSpeedSlider">Vitesse de lecture</label>
+            <input type="range" id="chiptuneSpeedSlider" min="50" max="200" step="5" value="100" />
+            <span class="option-value" id="chiptuneSpeedValue" aria-live="polite">Tempo normal (100%)</span>
           </div>
           <div class="option-row option-row--buttons option-row--pitch">
             <button type="button" id="chiptuneOctaveDownButton">Octave −</button>

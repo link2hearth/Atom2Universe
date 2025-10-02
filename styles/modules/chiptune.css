@@ -14,19 +14,29 @@
   min-width: 120px;
 }
 
-.option-card--chiptune .option-row--dual-select {
+
+.option-card--chiptune .option-row--selectors {
   align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 0.75rem;
 }
 
-.option-card--chiptune .option-row--dual-select .option-field {
-  flex: 1 1 50%;
-  min-width: 0;
+.option-card--chiptune .option-row--selectors .option-field {
+  flex: 1 1 25%;
+  max-width: 25%;
+  min-width: 160px;
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
 }
 
-.option-card--chiptune .option-row--dual-select label {
+.option-card--chiptune .option-row--selectors .option-field--wide {
+  flex-basis: 50%;
+  max-width: 50%;
+  min-width: 220px;
+}
+
+.option-card--chiptune .option-row--selectors label {
   font-size: 0.9rem;
   font-weight: 600;
 }
@@ -34,6 +44,13 @@
 .option-card--chiptune select {
   width: 100%;
   max-width: 100%;
+}
+
+@media (max-width: 720px) {
+  .option-card--chiptune .option-row--selectors .option-field {
+    flex: 1 1 240px;
+    max-width: 100%;
+  }
 }
 
 .option-card--chiptune .option-row--slider {
