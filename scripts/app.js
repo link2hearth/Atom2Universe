@@ -2063,7 +2063,6 @@ const elements = {
   arcadeOverlayMessage: document.getElementById('arcadeOverlayMessage'),
   arcadeOverlayButton: document.getElementById('arcadeOverlayButton'),
   arcadeHubCardButtons: document.querySelectorAll('.arcade-hub-card__button'),
-  arcadeBannerButtons: document.querySelectorAll('.bannierearcade__button'),
   arcadeLevelValue: document.getElementById('arcadeLevelValue'),
   arcadeLivesValue: document.getElementById('arcadeLivesValue'),
   arcadeScoreValue: document.getElementById('arcadeScoreValue'),
@@ -5784,18 +5783,6 @@ if (elements.arcadeHubCardButtons?.length) {
       }
       if (target === 'quantum2048') {
         ensureQuantum2048Game();
-      }
-      showPage(target);
-    });
-  });
-}
-
-if (elements.arcadeBannerButtons?.length) {
-  elements.arcadeBannerButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      const target = button.dataset.pageTarget;
-      if (!target || !isPageUnlocked(target)) {
-        return;
       }
       showPage(target);
     });
