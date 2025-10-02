@@ -29,6 +29,9 @@
     spawnWeights: [0.9, 0.1]
   };
 
+  const UNIVERSE_TRANSITION_DELAY_MS = 850;
+  const UNIVERSE_DEFEAT_EXTRA_DELAY_MS = 250;
+
   function toUniquePositiveIntegers(list) {
     if (!Array.isArray(list)) {
       return [];
@@ -187,6 +190,7 @@
         bestElement,
         movesElement,
         goalElement,
+        parallelUniverseElement,
         statusElement,
         restartButton,
         overlayElement,
@@ -204,6 +208,7 @@
       this.bestElement = bestElement || null;
       this.movesElement = movesElement || null;
       this.goalElement = goalElement || null;
+      this.parallelUniverseElement = parallelUniverseElement || null;
       this.statusElement = statusElement || null;
       this.restartButton = restartButton || null;
       this.overlayElement = overlayElement || null;
@@ -219,6 +224,8 @@
       this.hasWon = false;
       this.gameOver = false;
       this.active = false;
+      this.parallelUniverseCount = 0;
+      this.transitionTimeout = null;
 
       this.handleKeydown = this.handleKeydown.bind(this);
       this.handleSizeChange = this.handleSizeChange.bind(this);
@@ -229,6 +236,7 @@
       this.resizeFrame = null;
 
       this.setupControls();
+      this.updateParallelUniverseDisplay();
       this.startNewGame({ announce: false, randomize: this.config.randomizeGames !== false });
     }
 
@@ -460,7 +468,45 @@
       });
     }
 
+    clearTransitionTimeout() {
+      if (this.transitionTimeout != null && typeof window !== 'undefined') {
+        window.clearTimeout(this.transitionTimeout);
+      }
+      this.transitionTimeout = null;
+    }
+
+    updateParallelUniverseDisplay() {
+      if (this.parallelUniverseElement) {
+        this.parallelUniverseElement.textContent = formatInteger(this.parallelUniverseCount);
+      }
+    }
+
+    adjustParallelUniverse(delta = 0) {
+      if (!Number.isFinite(delta) || delta === 0) {
+        this.updateParallelUniverseDisplay();
+        return;
+      }
+      this.parallelUniverseCount = Math.max(0, this.parallelUniverseCount + delta);
+      this.updateParallelUniverseDisplay();
+    }
+
+    scheduleUniverseShift(delta, options = {}) {
+      const { delay = UNIVERSE_TRANSITION_DELAY_MS } = options;
+      this.adjustParallelUniverse(delta);
+      const launchNext = () => {
+        this.transitionTimeout = null;
+        this.startNewGame({ randomize: true });
+      };
+      if (typeof window === 'undefined' || !Number.isFinite(delay) || delay <= 0) {
+        launchNext();
+        return;
+      }
+      this.clearTransitionTimeout();
+      this.transitionTimeout = window.setTimeout(launchNext, delay);
+    }
+
     startNewGame({ size = this.size, target = this.target, announce = true, randomize = false } = {}) {
+      this.clearTransitionTimeout();
       let nextSize = size;
       let nextTarget = target;
       if (randomize) {
@@ -769,6 +815,7 @@
       if (this.goalElement) {
         this.goalElement.textContent = formatInteger(this.target);
       }
+      this.updateParallelUniverseDisplay();
     }
 
     setStatus(state) {
@@ -799,20 +846,23 @@
     }
 
     handleVictory() {
+      if (this.hasWon || this.gameOver) {
+        return;
+      }
       this.hasWon = true;
+      this.gameOver = true;
       this.setStatus('victory');
+      this.scheduleUniverseShift(1);
     }
 
     handleDefeat() {
+      if (this.gameOver) {
+        return;
+      }
       this.gameOver = true;
       this.setStatus('defeat');
-      this.showOverlay(
-        translate(
-          'scripts.arcade.quantum2048.overlay.defeat',
-          'Plus de mouvements ! Score : {score}',
-          { score: formatInteger(this.score) }
-        )
-      );
+      this.hideOverlay();
+      this.scheduleUniverseShift(-1, { delay: UNIVERSE_TRANSITION_DELAY_MS + UNIVERSE_DEFEAT_EXTRA_DELAY_MS });
     }
 
     canMove() {

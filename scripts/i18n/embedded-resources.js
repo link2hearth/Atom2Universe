@@ -129,6 +129,9 @@
             "target": "Objectif à atteindre",
             "restart": "Nouvelle partie"
           },
+          "progress": {
+            "label": "Univers parallèle n°\u00a0:"
+          },
           "stats": {
             "group": "Statistiques de la manche",
             "score": "Score",
@@ -1341,6 +1344,9 @@
             "size": "Grid size",
             "target": "Goal to reach",
             "restart": "New run"
+          },
+          "progress": {
+            "label": "Parallel universe No:\u00a0"
           },
           "stats": {
             "group": "Run statistics",

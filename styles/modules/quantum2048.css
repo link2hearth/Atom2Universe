@@ -80,6 +80,53 @@
   opacity: 0.8;
 }
 
+.quantum2048-hud__stats {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.55rem, 1.4vw, 0.95rem);
+  width: 100%;
+}
+
+.quantum2048-hud__stat {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(0.4rem, 1vw, 0.6rem);
+  font-size: clamp(0.85rem, 1.6vw, 1.05rem);
+  color: rgba(226, 232, 255, 0.78);
+}
+
+.quantum2048-hud__stat-label {
+  font-family: var(--font-sans, inherit);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.quantum2048-hud__stat-value {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  font-size: clamp(1.25rem, 2.2vw, 1.8rem);
+  color: #ffffff;
+}
+
+.quantum2048-hud__status {
+  margin: 0;
+  min-height: 1.4em;
+  font-size: clamp(0.85rem, 1.6vw, 1.05rem);
+  line-height: 1.6;
+  color: rgba(220, 226, 255, 0.78);
+  transition: color 160ms ease;
+}
+
+.quantum2048-status--success {
+  color: #8ff2c8;
+}
+
+.quantum2048-status--warning {
+  color: #ffb7a1;
+}
+
 .quantum2048-board {
   position: relative;
   flex: 0 0 var(--quantum2048-board-size, clamp(280px, 40vw, 560px));
@@ -276,6 +323,26 @@ body.theme-light .quantum2048-hud__subtitle {
   color: rgba(18, 28, 72, 0.72);
 }
 
+body.theme-light .quantum2048-hud__stat {
+  color: rgba(28, 38, 78, 0.68);
+}
+
+body.theme-light .quantum2048-hud__stat-value {
+  color: #1f2c66;
+}
+
+body.theme-light .quantum2048-hud__status {
+  color: rgba(20, 32, 72, 0.82);
+}
+
+body.theme-light .quantum2048-status--success {
+  color: #1f8f58;
+}
+
+body.theme-light .quantum2048-status--warning {
+  color: #cb5b40;
+}
+
 body.theme-light .quantum2048-board {
   background: radial-gradient(circle at top, rgba(228, 234, 255, 0.92), rgba(176, 188, 240, 0.95));
   box-shadow: 0 28px 52px rgba(32, 42, 88, 0.28);
@@ -309,6 +376,22 @@ body.theme-neon .page--quantum2048 #quantum2048GoalDisplay {
 
 body.theme-neon .quantum2048-board {
   background: radial-gradient(circle at top, rgba(60, 30, 140, 0.9), rgba(22, 16, 68, 0.96));
+}
+
+body.theme-neon .quantum2048-hud__stat {
+  color: rgba(220, 226, 255, 0.86);
+}
+
+body.theme-neon .quantum2048-hud__status {
+  color: rgba(220, 226, 255, 0.86);
+}
+
+body.theme-neon .quantum2048-status--success {
+  color: #74ffd5;
+}
+
+body.theme-neon .quantum2048-status--warning {
+  color: #ff8f78;
 }
 
 body.theme-neon .quantum2048-overlay__content {
