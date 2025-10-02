@@ -23,14 +23,13 @@ Atom → Univers est un idle/clicker cosmique actuellement jouable en français 
 - **Progression** : les valeurs de base (1 atome par clic, 0 APS) sont ajustées par les bâtiments, les collections et les mini-jeux ; l’intervalle moyen de la “star” à tickets est initialement de 60 s.【F:config/config.js†L655-L705】【F:scripts/app.js†L1270-L1283】
 
 ## Boutique scientifique
-La boutique regroupe quinze bâtiments (manuel, automatique ou hybrides) avec des paliers et synergies spécifiques. Quelques repères :
-- **Électrons libres** : +1 APC par niveau, bonus de 10 % APC tous les 25 niveaux.【F:config/config.js†L38-L63】
-- **Laboratoire de Physique** : +1 APS par niveau, +10 % APC tous les 10 labos, +20 % APS si l’Accélérateur ≥200.【F:config/config.js†L64-L101】
-- **Réacteur nucléaire** : +10 APS par niveau, +1 % APS par 50 Électrons, +20 % APS si les Labos ≥200, APC ×2 tous les 100 réacteurs.【F:config/config.js†L102-L143】
-- **Accélérateur de particules** : +50 APS par niveau (×1,5 si ≥100 Supercalculateurs), +5 % APC par niveau, renforce les Labos au palier 200.【F:config/config.js†L144-L189】
-- **Chaîne tardive** : Stations spatiales, Forgerons d’étoiles, Galaxies artificielles, Simulateur de Multivers, Tisseur de Réalité, Architecte Cosmique, Univers parallèles, Bibliothèque de l’Omnivers et Grand Ordonnateur quantique étendent la production jusqu’aux 10^18 APS par niveau et offrent des multiplicateurs globaux ou des réductions de coût permanentes.【F:config/config.js†L190-L368】
+La boutique regroupe quinze bâtiments (manuel, automatique ou hybrides). Chaque carte n’accorde désormais plus que des gains plats d’APC et/ou d’APS, sans multiplicateurs, synergies croisées ni réductions de coûts supplémentaires.【F:config/config.js†L45-L268】【F:scripts/app.js†L6056-L6078】
+- **Électrons libres** : +1 APC par niveau.【F:config/config.js†L45-L58】
+- **Laboratoire de Physique** : +1 APS par niveau.【F:config/config.js†L59-L72】
+- **Réacteur nucléaire** : +10 APS par niveau.【F:config/config.js†L73-L87】
+- **Chaîne tardive** : du Forgeron d’étoiles au Grand Ordonnateur quantique, chaque bâtiment ajoute simplement son APS plat annoncé par niveau.【F:config/config.js†L149-L268】
 
-Chaque carte de boutique est décrite et générée dynamiquement à partir de `GAME_CONFIG`, ce qui permet d’ajuster facilement l’équilibrage sans modifier la logique d’interface.【F:scripts/app.js†L6017-L6105】
+Chaque carte de boutique est décrite et générée dynamiquement à partir de `GAME_CONFIG`, ce qui permet d’ajuster facilement l’équilibrage sans modifier la logique d’interface.【F:scripts/app.js†L6089-L7576】
 
 ## Collections, gacha et tickets
 - **Tickets** : la “star” apparaît automatiquement, peut être améliorée par la rareté Mythe quantique (−1 s par élément unique, minimum 5 s) et offre un mode de collecte automatique via les trophées dédiés.【F:scripts/app.js†L1270-L1318】【F:config/config.js†L990-L1014】【F:config/config.js†L810-L827】
