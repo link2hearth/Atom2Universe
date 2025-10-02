@@ -1007,7 +1007,89 @@
         },
         "gameData": {
           "fusions": {
-            "defaultName": "Fusion {number}"
+            "defaultName": "Fusion {number}",
+            "recipes": {
+              "hydrogen": {
+                "name": "Hydrogène (H₂)",
+                "description": "Associez 2 atomes d’Hydrogène pour créer une molécule de dihydrogène."
+              },
+              "nitrogen": {
+                "name": "Azote (N₂)",
+                "description": "Combinez 2 atomes d’Azote pour former du diazote."
+              },
+              "oxygen": {
+                "name": "Oxygène (O₂)",
+                "description": "Assemblez 2 atomes d’Oxygène pour produire du dioxygène."
+              },
+              "fluorine": {
+                "name": "Fluor (F₂)",
+                "description": "Fusionnez 2 atomes de Fluor pour générer une molécule de difluor."
+              },
+              "chlorine": {
+                "name": "Chlore (Cl₂)",
+                "description": "Associez 2 atomes de Chlore pour obtenir du dichlore."
+              },
+              "bromine": {
+                "name": "Brome (Br₂)",
+                "description": "Combinez 2 atomes de Brome pour produire du dibrome."
+              },
+              "iodine": {
+                "name": "Iode (I₂)",
+                "description": "Assemblez 2 atomes d’Iode pour créer du diiode."
+              },
+              "sulfur": {
+                "name": "Soufre (S₈)",
+                "description": "Regroupez 8 atomes de Soufre pour former une couronne cyclique S₈."
+              },
+              "phosphorus": {
+                "name": "Phosphore (P₄)",
+                "description": "Fusionnez 4 atomes de Phosphore pour synthétiser du tétraphosphore."
+              },
+              "water": {
+                "name": "Molécule d’eau (H₂O)",
+                "description": "Combinez 2 Hydrogènes et 1 Oxygène pour tenter de former de l’eau."
+              },
+              "sodiumChloride": {
+                "name": "Chlorure de sodium (NaCl)",
+                "description": "Combinez Sodium et Chlore pour cristalliser du sel."
+              },
+              "siliconDioxide": {
+                "name": "Dioxyde de silicium (SiO₂)",
+                "description": "Associez Silicium et Oxygène pour obtenir du quartz."
+              },
+              "bronzeAlloy": {
+                "name": "Bronze (alliage Cu-Sn)",
+                "description": "Alliez ~88 % de Cuivre avec ~12 % d’Étain pour obtenir un bronze protohistorique."
+              },
+              "stainlessSteel18_8": {
+                "name": "Acier inoxydable 18/8",
+                "description": "Combinez ~70 % de Fer, ~18 % de Chrome et ~8 % de Nickel pour former l’inox 18/8."
+              },
+              "duraluminAlloy": {
+                "name": "Duralumin (alliage Al-Cu-Mn)",
+                "description": "Assemblez ~95 % d’Aluminium avec ~4 % de Cuivre et des traces de Manganèse/Magnésium (~1 %)."
+              },
+              "laitonAlloy": {
+                "name": "Laiton (alliage Cu-Zn)",
+                "description": "Mélangez ~65 % de Cuivre et ~35 % de Zinc pour façonner un laiton de plomberie."
+              },
+              "leadAcidAlloy": {
+                "name": "Alliage plomb-acide",
+                "description": "Solidifiez ~93 % de Plomb avec ~7 % d’Antimoine pour vos batteries au plomb."
+              },
+              "ti6Al4VAlloy": {
+                "name": "Alliage Ti-6Al-4V",
+                "description": "Fusionnez ~90 % de Titane avec ~6 % d’Aluminium et ~4 % de Vanadium pour l’aéronautique."
+              },
+              "roseGoldAlloy": {
+                "name": "Or rose (alliage Au-Cu-Ag)",
+                "description": "Alliez ~75 % d’Or, ~22 % de Cuivre et ~3 % d’Argent pour une teinte rosée 18 carats."
+              },
+              "platinumIridiumAlloy": {
+                "name": "Alliage platine-iridium",
+                "description": "Combinez ~70 % de Platine avec ~30 % d’Iridium pour une référence de métrologie."
+              }
+            }
           },
           "categories": {
             "alkaliMetal": "métal alcalin",
@@ -2129,7 +2211,89 @@
         },
         "gameData": {
           "fusions": {
-            "defaultName": "Fusion {number}"
+            "defaultName": "Fusion {number}",
+            "recipes": {
+              "hydrogen": {
+                "name": "Hydrogen (H₂)",
+                "description": "Combine 2 Hydrogen atoms to create a dihydrogen molecule."
+              },
+              "nitrogen": {
+                "name": "Nitrogen (N₂)",
+                "description": "Merge 2 Nitrogen atoms to form dinitrogen."
+              },
+              "oxygen": {
+                "name": "Oxygen (O₂)",
+                "description": "Assemble 2 Oxygen atoms to produce dioxygen."
+              },
+              "fluorine": {
+                "name": "Fluorine (F₂)",
+                "description": "Fuse 2 Fluorine atoms to generate a difluorine molecule."
+              },
+              "chlorine": {
+                "name": "Chlorine (Cl₂)",
+                "description": "Pair 2 Chlorine atoms to obtain dichlorine."
+              },
+              "bromine": {
+                "name": "Bromine (Br₂)",
+                "description": "Combine 2 Bromine atoms to produce dibromine."
+              },
+              "iodine": {
+                "name": "Iodine (I₂)",
+                "description": "Assemble 2 Iodine atoms to create diiodine."
+              },
+              "sulfur": {
+                "name": "Sulfur (S₈)",
+                "description": "Gather 8 Sulfur atoms to form an S₈ crown."
+              },
+              "phosphorus": {
+                "name": "Phosphorus (P₄)",
+                "description": "Fuse 4 Phosphorus atoms to synthesize tetraphosphorus."
+              },
+              "water": {
+                "name": "Water molecule (H₂O)",
+                "description": "Combine 2 Hydrogens and 1 Oxygen to try forming water."
+              },
+              "sodiumChloride": {
+                "name": "Sodium chloride (NaCl)",
+                "description": "Combine Sodium and Chlorine to crystallize salt."
+              },
+              "siliconDioxide": {
+                "name": "Silicon dioxide (SiO₂)",
+                "description": "Pair Silicon and Oxygen to obtain quartz."
+              },
+              "bronzeAlloy": {
+                "name": "Bronze (Cu-Sn alloy)",
+                "description": "Blend ~88% Copper with ~12% Tin to craft a protohistoric bronze."
+              },
+              "stainlessSteel18_8": {
+                "name": "Stainless steel 18/8",
+                "description": "Mix ~70% Iron, ~18% Chromium, and ~8% Nickel to forge 18/8 stainless steel."
+              },
+              "duraluminAlloy": {
+                "name": "Duralumin (Al-Cu-Mn alloy)",
+                "description": "Assemble ~95% Aluminum with ~4% Copper and traces of Manganese/Magnesium (~1%)."
+              },
+              "laitonAlloy": {
+                "name": "Brass (Cu-Zn alloy)",
+                "description": "Mix ~65% Copper and ~35% Zinc to shape plumbing brass."
+              },
+              "leadAcidAlloy": {
+                "name": "Lead-acid alloy",
+                "description": "Solidify ~93% Lead with ~7% Antimony for lead-acid batteries."
+              },
+              "ti6Al4VAlloy": {
+                "name": "Ti-6Al-4V alloy",
+                "description": "Fuse ~90% Titanium with ~6% Aluminum and ~4% Vanadium for aerospace use."
+              },
+              "roseGoldAlloy": {
+                "name": "Rose gold (Au-Cu-Ag alloy)",
+                "description": "Alloy ~75% Gold, ~22% Copper, and ~3% Silver for an 18-karat rose hue."
+              },
+              "platinumIridiumAlloy": {
+                "name": "Platinum-iridium alloy",
+                "description": "Combine ~70% Platinum with ~30% Iridium for a metrology reference."
+              }
+            }
           },
           "categories": {
             "alkaliMetal": "Alkali metal",

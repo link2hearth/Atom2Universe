@@ -21,6 +21,23 @@ const gameDataTranslate = (() => {
   };
 })();
 
+function translateGameDataKey(key, fallback = '', params) {
+  const trimmedFallback = typeof fallback === 'string' ? fallback.trim() : '';
+  if (typeof key === 'string') {
+    const normalizedKey = key.trim();
+    if (normalizedKey) {
+      const translated = gameDataTranslate(normalizedKey, params);
+      if (typeof translated === 'string') {
+        const trimmedTranslation = translated.trim();
+        if (trimmedTranslation && trimmedTranslation !== normalizedKey) {
+          return trimmedTranslation;
+        }
+      }
+    }
+  }
+  return trimmedFallback;
+}
+
 const DEFAULT_UPGRADE_MAX_LEVEL = (function resolveDefaultUpgradeMaxLevel() {
   const candidates = [
     CONFIG?.shop?.defaultMaxPurchase,
@@ -100,10 +117,26 @@ function normalizeFusionDefinition(entry, index = 0) {
   if (!id) {
     id = `fusion-${index + 1}`;
   }
-  const name = typeof entry.name === 'string' && entry.name.trim()
+  const translationBaseKey = typeof entry.translationKey === 'string'
+    ? entry.translationKey.trim()
+    : '';
+  const explicitNameKey = typeof entry.nameKey === 'string' ? entry.nameKey.trim() : '';
+  const explicitDescriptionKey = typeof entry.descriptionKey === 'string'
+    ? entry.descriptionKey.trim()
+    : '';
+  const nameFallback = typeof entry.name === 'string' && entry.name.trim()
     ? entry.name.trim()
     : gameDataTranslate('scripts.gameData.fusions.defaultName', { number: index + 1 });
-  const description = typeof entry.description === 'string' ? entry.description.trim() : '';
+  const descriptionFallback = typeof entry.description === 'string' ? entry.description.trim() : '';
+  const name = translateGameDataKey(
+    explicitNameKey || (translationBaseKey ? `${translationBaseKey}.name` : ''),
+    nameFallback,
+    { number: index + 1 }
+  );
+  const description = translateGameDataKey(
+    explicitDescriptionKey || (translationBaseKey ? `${translationBaseKey}.description` : ''),
+    descriptionFallback
+  );
   const inputSource = Array.isArray(entry.inputs)
     ? entry.inputs
     : (Array.isArray(entry.ingredients) ? entry.ingredients : []);
