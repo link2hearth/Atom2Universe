@@ -2070,11 +2070,6 @@ const elements = {
   arcadeComboMessage: document.getElementById('arcadeComboMessage'),
   waveStage: document.getElementById('waveStage'),
   waveCanvas: document.getElementById('waveCanvas'),
-  waveDistanceValue: document.getElementById('waveDistanceValue'),
-  waveSpeedValue: document.getElementById('waveSpeedValue'),
-  waveAltitudeValue: document.getElementById('waveAltitudeValue'),
-  waveStatusMessage: document.getElementById('waveStatusMessage'),
-  waveResetButton: document.getElementById('waveResetButton'),
   quantum2048Board: document.getElementById('quantum2048Board'),
   quantum2048Tiles: document.getElementById('quantum2048Tiles'),
   quantum2048Grid: document.getElementById('quantum2048Grid'),
@@ -2552,12 +2547,7 @@ function ensureWaveGame() {
   }
   waveGame = new WaveGame({
     canvas: elements.waveCanvas,
-    stage: elements.waveStage,
-    distanceElement: elements.waveDistanceValue,
-    speedElement: elements.waveSpeedValue,
-    altitudeElement: elements.waveAltitudeValue,
-    statusElement: elements.waveStatusMessage,
-    resetButton: elements.waveResetButton
+    stage: elements.waveStage
   });
   return waveGame;
 }
