@@ -122,7 +122,8 @@
           "title": "Fusion 2048",
           "subtitle": "Choisissez votre grille et combinez les tuiles pour atteindre l’objectif sélectionné.",
           "banner": {
-            "goalLabel": "Objectif"
+            "goalLabel": "Objectif",
+            "universeLabel": "Univers parallèle"
           },
           "controls": {
             "size": "Taille de la grille",
@@ -138,11 +139,6 @@
             "best": "Meilleure tuile",
             "moves": "Mouvements",
             "goal": "Objectif"
-          },
-          "status": {
-            "ready": "Fusionnez les tuiles pour atteindre {target}.",
-            "victory": "Objectif atteint ! Continuez votre ascension.",
-            "defeat": "Plus aucun mouvement possible. Relancez une partie."
           },
           "board": "Plateau Fusion 2048"
         },
@@ -1338,7 +1334,8 @@
           "title": "Fusion 2048",
           "subtitle": "Pick your grid and merge tiles until you reach the selected goal.",
           "banner": {
-            "goalLabel": "Goal"
+            "goalLabel": "Goal",
+            "universeLabel": "Parallel universe"
           },
           "controls": {
             "size": "Grid size",
@@ -1354,11 +1351,6 @@
             "best": "Best tile",
             "moves": "Moves",
             "goal": "Goal"
-          },
-          "status": {
-            "ready": "Merge tiles to reach {target}.",
-            "victory": "Goal reached! Keep pushing further.",
-            "defeat": "No moves left. Try again."
           },
           "board": "Fusion 2048 board"
         },
