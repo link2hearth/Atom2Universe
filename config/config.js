@@ -39,16 +39,6 @@ function getBuildingLevel(context, id) {
   return Number.isFinite(value) && value > 0 ? value : 0;
 }
 
-function getTotalBuildings(context) {
-  if (!context || typeof context !== 'object') {
-    return 0;
-  }
-  return Object.values(context).reduce((acc, value) => {
-    const numeric = Number(value);
-    return acc + (Number.isFinite(numeric) && numeric > 0 ? numeric : 0);
-  }, 0);
-}
-
 function createShopBuildingDefinitions() {
   const withDefaults = def => ({ maxLevel: SHOP_MAX_PURCHASE_DEFAULT, ...def });
   return [
@@ -284,22 +274,16 @@ function createShopBuildingDefinitions() {
       name: 'Tisseur de Réalité',
       description: 'Tissez les lois physiques à votre avantage.',
       effectSummary:
-        'Production passive : +10 000 000 000 APS par niveau. Bonus clic arrondi : +0,1 × bâtiments × niveau. Palier 300 : production totale ×2.',
+        'Production passive : +10 000 000 000 APS par niveau. Palier 300 : production totale ×2.',
       category: 'hybrid',
       baseCost: 1e20,
       costScale: 1.25,
-      effect: (level = 0, context = {}) => {
-        const totalBuildings = getTotalBuildings(context);
+      effect: (level = 0) => {
         const baseAmount = 1e10 * level;
         const rawAutoAdd = baseAmount;
         const autoAdd = level > 0 ? Math.max(baseAmount, Math.round(rawAutoAdd)) : 0;
-        const rawClickAdd = totalBuildings > 0 ? 0.1 * totalBuildings * level : 0;
-        const clickAdd = rawClickAdd > 0 ? Math.max(1, Math.round(rawClickAdd)) : 0;
         const globalMult = level >= 300 ? 2 : 1;
         const result = { autoAdd };
-        if (clickAdd > 0) {
-          result.clickAdd = clickAdd;
-        }
         if (globalMult > 1) {
           result.autoMult = globalMult;
           result.clickMult = globalMult;
