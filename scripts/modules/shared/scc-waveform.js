@@ -13,21 +13,26 @@
 
   const existing = globalScope.SccWaveform || {};
 
-  const DEFAULT_RAW_TABLE = [
-    18, 21, 24, 26, 28, 29, 30, 31,
-    31, 30, 29, 27, 25, 22, 19, 15,
-    10, 4, -1, -6, -10, -13, -16, -18,
-    -19, -20, -20, -19, -17, -14, -10, -4,
-  ];
+  const TABLE_LENGTH = 32;
 
-  const rawTable = Array.isArray(existing.rawTable) && existing.rawTable.length === 32
+  function createSineTable(length) {
+    const table = new Array(length);
+    for (let i = 0; i < length; i += 1) {
+      table[i] = Math.sin((2 * Math.PI * i) / length);
+    }
+    return table;
+  }
+
+  const DEFAULT_RAW_TABLE = createSineTable(TABLE_LENGTH);
+
+  const rawTable = Array.isArray(existing.rawTable) && existing.rawTable.length === TABLE_LENGTH
     ? existing.rawTable.slice()
     : DEFAULT_RAW_TABLE.slice();
 
   function normaliseWaveTable(raw) {
     const length = Array.isArray(raw) ? raw.length : 0;
     if (!length) {
-      return new Array(32).fill(0);
+      return new Array(TABLE_LENGTH).fill(0);
     }
     const mean = raw.reduce((acc, value) => acc + value, 0) / length;
     const centered = raw.map((value) => value - mean);

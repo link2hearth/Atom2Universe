@@ -1482,15 +1482,11 @@
       if (layerPreference === 'scc') {
         return true;
       }
-      if (layerPreference === 'analog') {
+      if (layerPreference && layerPreference !== 'auto') {
         return false;
       }
       const instrumentPreference = instrument?.waveform;
-      if (instrumentPreference === 'scc') {
-        const layerType = (layer && layer.type) || instrument?.type;
-        return layerType === 'pulse' || layerType === 'square' || typeof layerType === 'undefined';
-      }
-      return false;
+      return instrumentPreference === 'scc';
     }
 
     getNoiseBuffer() {
@@ -1571,7 +1567,7 @@
         } = options;
         return {
           gain,
-          waveform: options.waveform ?? 'scc',
+          waveform: options.waveform ?? 'analog',
           layers: Array.isArray(layers) && layers.length ? layers : [
             { type: 'pulse', dutyCycle: 0.35, detune: -7, gain: 0.55 },
             { type: 'pulse', dutyCycle: 0.65, detune: 7, gain: 0.55 },
@@ -1618,8 +1614,8 @@
         return {
           gain,
           layers: Array.isArray(layers) && layers.length ? layers : [
-            { type: 'square', detune: -12, gain: 0.6 },
-            { type: 'square', detune: 0, gain: 0.55 },
+            { type: 'sine', detune: -12, gain: 0.6 },
+            { type: 'sine', detune: 0, gain: 0.55 },
             { type: 'triangle', detune: 0, gain: 0.35 },
           ],
           filter: filter ?? { type: 'lowpass', frequency: 3200, Q: 0.75 },
@@ -1640,7 +1636,7 @@
         } = options;
         return {
           gain,
-          waveform: options.waveform ?? 'scc',
+          waveform: options.waveform ?? 'analog',
           layers: Array.isArray(layers) && layers.length ? layers : [
             { type: 'pulse', dutyCycle: 0.28, detune: -5, gain: 0.5 },
             { type: 'pulse', dutyCycle: 0.72, detune: 5, gain: 0.5 },
@@ -1693,8 +1689,8 @@
         }),
         6: createBassDefinition({
           layers: [
-            { type: 'square', detune: -9, gain: 0.58 },
-            { type: 'square', detune: 9, gain: 0.58 },
+            { type: 'sine', detune: -9, gain: 0.58 },
+            { type: 'sine', detune: 9, gain: 0.58 },
             { type: 'triangle', detune: 0, gain: 0.35 },
           ],
           filter: { type: 'lowpass', frequency: 2800, Q: 0.8 },
@@ -1739,8 +1735,8 @@
         }),
         11: createBassDefinition({
           layers: [
-            { type: 'square', detune: -12, gain: 0.6 },
-            { type: 'square', detune: 0, gain: 0.55 },
+            { type: 'sine', detune: -12, gain: 0.6 },
+            { type: 'sine', detune: 0, gain: 0.55 },
             { type: 'pulse', dutyCycle: 0.5, detune: 12, gain: 0.25 },
           ],
           filter: { type: 'lowpass', frequency: 2600, Q: 0.85 },
@@ -2016,7 +2012,7 @@
           volume: 0.9,
           duration: 0.4,
           envelope: { attack: 0.001, decay: 0.12, sustain: 0.0001, release: 0.22 },
-          tone: { type: 'square', frequency: 330, frequencyEnd: 200, level: 0.6 },
+          tone: { type: 'sine', frequency: 330, frequencyEnd: 200, level: 0.6 },
           noise: { level: 0.6, filter: { type: 'bandpass', frequency: 1900, Q: 1.1 } },
         };
       }
@@ -2055,7 +2051,7 @@
 
       const layers = Array.isArray(instrument.layers) && instrument.layers.length
         ? instrument.layers
-        : [{ type: instrument.type || 'sawtooth', dutyCycle: instrument.dutyCycle, detune: 0, gain: 1 }];
+        : [{ type: instrument.type || 'sine', dutyCycle: instrument.dutyCycle, detune: 0, gain: 1 }];
       const totalLayerGain = layers.reduce((sum, layer) => sum + Math.max(0, layer.gain ?? 1), 0) || 1;
 
       const voiceInput = this.audioContext.createGain();
@@ -2119,19 +2115,12 @@
           }
         }
         if (!configured) {
-          if (layer.type === 'pulse') {
-            const wave = this.getPulseWave(layer.dutyCycle || instrument.dutyCycle || 0.5);
-            if (wave) {
-              osc.setPeriodicWave(wave);
-              configured = true;
-            } else {
-              osc.type = 'square';
-              configured = true;
-            }
+          let analogType = layer?.type ?? instrument?.type ?? 'sine';
+          if (analogType === 'pulse' || analogType === 'square' || analogType === 'sawtooth') {
+            analogType = 'sine';
           }
-        }
-        if (!configured) {
-          osc.type = layer.type || instrument.type || 'sawtooth';
+          osc.type = analogType;
+          configured = true;
         }
         osc.frequency.setValueAtTime(frequency, startAt);
         if (Number.isFinite(layer.detune)) {

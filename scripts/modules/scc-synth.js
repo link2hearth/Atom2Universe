@@ -11,20 +11,26 @@
   ];
 
   const SHARED_WAVEFORM = typeof window !== 'undefined' ? window.SccWaveform : null;
+  const WAVETABLE_LENGTH = 32;
 
-  const RAW_WAVETABLE = SHARED_WAVEFORM?.rawTable
+  function createSineTable(length) {
+    const table = new Array(length);
+    for (let i = 0; i < length; i += 1) {
+      table[i] = Math.sin((2 * Math.PI * i) / length);
+    }
+    return table;
+  }
+
+  const DEFAULT_SINE_WAVETABLE = createSineTable(WAVETABLE_LENGTH);
+
+  const RAW_WAVETABLE = Array.isArray(SHARED_WAVEFORM?.rawTable) && SHARED_WAVEFORM.rawTable.length === WAVETABLE_LENGTH
     ? Array.from(SHARED_WAVEFORM.rawTable)
-    : [
-      18, 21, 24, 26, 28, 29, 30, 31,
-      31, 30, 29, 27, 25, 22, 19, 15,
-      10, 4, -1, -6, -10, -13, -16, -18,
-      -19, -20, -20, -19, -17, -14, -10, -4,
-    ];
+    : DEFAULT_SINE_WAVETABLE.slice();
 
   function normaliseWaveTable(rawTable) {
     const length = Array.isArray(rawTable) ? rawTable.length : 0;
     if (!length) {
-      return new Array(32).fill(0);
+      return new Array(WAVETABLE_LENGTH).fill(0);
     }
     const mean = rawTable.reduce((acc, value) => acc + value, 0) / length;
     const centered = rawTable.map((value) => value - mean);
@@ -32,7 +38,7 @@
     return centered.map((value) => value / maxMagnitude);
   }
 
-  const NORMALISED_WAVETABLE = SHARED_WAVEFORM?.table
+  const NORMALISED_WAVETABLE = Array.isArray(SHARED_WAVEFORM?.table) && SHARED_WAVEFORM.table.length === RAW_WAVETABLE.length
     ? Array.from(SHARED_WAVEFORM.table)
     : normaliseWaveTable(RAW_WAVETABLE);
 
