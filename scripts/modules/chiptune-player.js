@@ -69,27 +69,27 @@
 
   const DEFAULT_SOUNDFONTS = Object.freeze([
     Object.freeze({
-      id: 'classical-oboe',
-      name: 'Classical Oboe',
-      file: 'Assets/Music/Classical_Oboe.sf2',
+      id: 'GeneralUser-GS',
+      name: 'GeneralUser-GS',
+      file: 'Assets/Music/GeneralUser-GS.sf2',
       default: true,
     }),
     Object.freeze({
-      id: 'CC0_Soundfont',
-      name: 'CC0 SoundFont',
-      file: 'Assets/Music/CC0_Soundfont.sf2',
+      id: 'Piano',
+      name: 'Piano',
+      file: 'Assets/Music/Piano.sf2',
       default: false,
     }),
         Object.freeze({
-      id: 'Symphony',
-      name: 'Symphony',
-      file: 'Assets/Music/Symphony.sf2',
+      id: 'Classical_Oboe',
+      name: 'Classical_Oboe',
+      file: 'Assets/Music/Classical_Oboe.sf2',
       default: false,
     }),
     Object.freeze({
-      id: 'S_J_Orchestral_GM',
-      name: 'S. J. Orchestral GM',
-      file: 'Assets/Music/Orchestral.sf2',
+      id: 'merlin',
+      name: 'merlin',
+      file: 'Assets/Music/merlin.sf2',
       default: false,
     }),
   ]);
