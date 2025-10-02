@@ -74,6 +74,18 @@
       file: 'Assets/Music/Classical_Oboe.sf2',
       default: true,
     }),
+    Object.freeze({
+      id: 'CC0_Soundfont',
+      name: 'CC0 SoundFont',
+      file: 'Assets/Music/CC0_Soundfont.sf2',
+      default: false,
+    }),
+    Object.freeze({
+      id: 'S_J_Orchestral_GM',
+      name: 'S. J. Orchestral GM',
+      file: 'Assets/Music/S_J_Orchestral_GM.sf2',
+      default: false,
+    }),
   ]);
 
   class SoundFont {
