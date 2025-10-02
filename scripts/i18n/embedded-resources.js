@@ -528,7 +528,7 @@
             }
           },
           "reward": {
-            "description": "Ajoute +{bonus} au Boost global sur la production manuelle et automatique (×{total} pour ce palier)."
+            "description": "Ajoute +{bonus} au Boost global sur la production manuelle et automatique."
           },
           "description": "Atteignez {target} atomes cumulés, {flavor}."
         },
@@ -876,7 +876,7 @@
           "atomScale": {
             "trophies": {
               "description": "Atteignez {target} atomes cumulés, {flavor}.",
-              "reward": "Ajoute +{bonus} au Boost global sur la production manuelle et automatique (×{total} pour ce palier).",
+              "reward": "Ajoute +{bonus} au Boost global sur la production manuelle et automatique.",
               "scaleHumanCell": {
                 "name": "Échelle : cellule humaine",
                 "flavor": "l’équivalent d’une cellule humaine « moyenne »"
@@ -911,7 +911,7 @@
               },
               "scaleWaterLitre": {
                 "name": "Échelle : litre d’eau",
-                "flavor": "l’équivalent d’un litre d’eau (~300 g)"
+                "flavor": "l’équivalent d’un litre d’eau (1 kilogramme)"
               },
               "scaleHuman": {
                 "name": "Échelle : être humain",
@@ -981,7 +981,7 @@
             "millionAtoms": {
               "name": "Ruée vers le million",
               "description": "Accumulez un total d’un million d’atomes synthétisés.",
-              "reward": "Ajoute +{bonus} au Boost global sur la production manuelle et automatique (×{total} une fois ce succès débloqué)."
+              "reward": "Ajoute +{bonus} au Boost global sur la production manuelle et automatique."
             },
             "frenzyCollector": {
               "name": "Convergence frénétique",
@@ -1659,7 +1659,7 @@
             }
           },
           "reward": {
-            "description": "Adds +{bonus} to the global boost for manual and automatic production (×{total} for this tier)."
+            "description": "Adds +{bonus} to the global boost for manual and automatic production."
           },
           "description": "Reach {target} cumulative atoms, {flavor}."
         },
@@ -1998,7 +1998,7 @@
           "atomScale": {
             "trophies": {
               "description": "Reach {target} total atoms, {flavor}.",
-              "reward": "Adds +{bonus} to the global manual and automatic production boost (×{total} for this tier).",
+              "reward": "Adds +{bonus} to the global manual and automatic production boost.",
               "scaleHumanCell": {
                 "name": "Scale: Human cell",
                 "flavor": "roughly equal to an average human cell"
@@ -2033,7 +2033,7 @@
               },
               "scaleWaterLitre": {
                 "name": "Scale: Liter of water",
-                "flavor": "equivalent to a liter of water (~300 g)"
+                "flavor": "equivalent to a liter of water (1 Kilograms)"
               },
               "scaleHuman": {
                 "name": "Scale: Human being",
@@ -2103,7 +2103,7 @@
             "millionAtoms": {
               "name": "Million Rush",
               "description": "Accumulate a total of one million synthesized atoms.",
-              "reward": "Adds +{bonus} to the global manual and automatic production boost (×{total} once unlocked)."
+              "reward": "Adds +{bonus} to the global manual and automatic production boost."
             },
             "frenzyCollector": {
               "name": "Frenetic Convergence",

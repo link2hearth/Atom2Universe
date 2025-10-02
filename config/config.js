@@ -637,7 +637,7 @@ function createAtomScaleTrophies() {
     const displayBonus = formatAtomScaleBonus(bonusPerTrophy);
     const displayTotal = formatAtomScaleBonus(1 + bonusPerTrophy);
     const descriptionFallback = `Atteignez ${entry.targetText} atomes cumulés, ${entry.flavor}.`;
-    const rewardFallback = `Ajoute +${displayBonus} au Boost global sur la production manuelle et automatique (×${displayTotal} pour ce palier).`;
+    const rewardFallback = `Ajoute +${displayBonus} au Boost global sur la production manuelle et automatique.`;
 
     return {
       id: entry.id,
