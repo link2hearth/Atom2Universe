@@ -1108,20 +1108,6 @@
           <div id="optionsWelcomeIntro" class="option-welcome-intro"></div>
           <div id="optionsArcadeDetails" class="option-note" hidden aria-hidden="true"></div>
         </div>
-        <div class="option-card">
-          <h3 data-i18n="index.sections.options.music.title"></h3>
-          <div class="option-row">
-            <label for="musicTrackSelect" data-i18n="index.sections.options.music.track"></label>
-            <select id="musicTrackSelect" disabled>
-              <option data-i18n="index.sections.options.music.loading"></option>
-            </select>
-          </div>
-          <div class="option-row">
-            <label for="musicVolumeSlider" data-i18n="index.sections.options.music.volume"></label>
-            <input type="range" id="musicVolumeSlider" min="0" max="100" step="1" value="50" />
-          </div>
-          <p class="option-note" id="musicTrackStatus" data-i18n="index.sections.options.music.note"></p>
-        </div>
         <div class="option-card option-card--chiptune">
           <h3>Module Musique Midi</h3>
           <div class="option-row">
@@ -1146,11 +1132,11 @@
           <div class="option-row">
             <label for="chiptuneEngineSelect">Moteur sonore</label>
             <select id="chiptuneEngineSelect">
+              <option value="hifi">SoundFont Hi-Fi</option>
               <option value="scc">SCC (MSX)</option>
               <option value="n163">Namco 163 (N163)</option>
               <option value="ym2413">Yamaha OPLL (YM2413)</option>
               <option value="sid">MOS SID (6581/8580)</option>
-              <option value="hifi">SoundFont Hi-Fi</option>
               <option value="original">Original</option>
             </select>
           </div>

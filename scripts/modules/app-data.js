@@ -367,14 +367,7 @@
 
   const DEFAULT_MUSIC_SUPPORTED_EXTENSIONS = Object.freeze(['mp3', 'ogg', 'wav', 'webm', 'm4a']);
 
-  const DEFAULT_MUSIC_FALLBACK_TRACKS = Object.freeze([
-    'Piste1.mp3',
-    'Piste2.mp3',
-    'Piste3.mp3',
-    'Piste4.mp3',
-    'Piste5.mp3',
-    'Piste6.mp3'
-  ]);
+  const DEFAULT_MUSIC_FALLBACK_TRACKS = Object.freeze([]);
 
   function sanitizeMusicExtensions(raw) {
     const candidates = Array.isArray(raw)

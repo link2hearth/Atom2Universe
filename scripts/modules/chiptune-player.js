@@ -1237,7 +1237,7 @@
       this.reverbBuffer = null;
       this.reverbDefaultSend = 0.12;
       this.sccWaveform = typeof window !== 'undefined' ? window.SccWaveform || null : null;
-      this.engineMode = this.sccWaveform ? 'scc' : 'n163';
+      this.engineMode = 'hifi';
       this.soundFontList = DEFAULT_SOUNDFONTS.map(font => ({ ...font }));
       this.soundFontFallback = DEFAULT_SOUNDFONTS;
       this.soundFontCache = new Map();
@@ -1320,9 +1320,9 @@
         const requestedValue = typeof this.engineSelect.value === 'string' ? this.engineSelect.value : '';
         let initialValue = validModes.has(requestedValue)
           ? requestedValue
-          : (hasScc ? 'scc' : 'n163');
-        if (initialValue === 'scc' && !hasScc) {
-          initialValue = 'n163';
+          : 'hifi';
+        if (!validModes.has(initialValue)) {
+          initialValue = hasScc ? 'scc' : 'n163';
         }
         if (!validModes.has(initialValue)) {
           initialValue = 'original';
@@ -1336,7 +1336,7 @@
         }
         this.setEngineMode(initialValue, { syncSelect: false });
       } else {
-        this.engineMode = this.sccWaveform ? 'scc' : 'n163';
+        this.engineMode = 'hifi';
       }
       this.setTransposeSemitones(this.transposeSemitones, { syncSlider: true, refreshVoices: false });
       this.setFineDetuneCents(this.fineDetuneCents, { syncSlider: true, refreshVoices: false });
