@@ -1074,20 +1074,15 @@
       <h2 id="options-title" data-i18n="index.sections.options.title"></h2>
       <div class="options-grid">
         <div class="option-card option-card--intro">
-          <h3 id="optionsWelcomeTitle"></h3>
-          <div id="optionsWelcomeIntro" class="option-welcome-intro"></div>
-          <div id="optionsArcadeDetails" class="option-note" hidden aria-hidden="true"></div>
-        </div>
-        <div class="option-card">
-          <h3 data-i18n="index.sections.options.language.title"></h3>
-          <div class="option-row">
-            <label for="languageSelect" data-i18n="index.sections.options.language.label"></label>
-            <select id="languageSelect">
+          <div class="option-card__header option-card__header--welcome">
+            <h3 id="optionsWelcomeTitle"></h3>
+            <select id="languageSelect" data-i18n="aria-label:index.sections.options.language.label">
               <option value="fr" data-i18n="index.sections.options.language.options.fr"></option>
               <option value="en" data-i18n="index.sections.options.language.options.en"></option>
             </select>
           </div>
-          <p class="option-note" data-i18n="index.sections.options.language.note"></p>
+          <div id="optionsWelcomeIntro" class="option-welcome-intro"></div>
+          <div id="optionsArcadeDetails" class="option-note" hidden aria-hidden="true"></div>
         </div>
         <div class="option-card">
           <h3 data-i18n="index.sections.options.music.title"></h3>
@@ -1150,115 +1145,6 @@
             <button type="button" id="chiptuneStopButton" disabled>Stop</button>
           </div>
           <p class="option-note" id="chiptuneStatus">Aucun morceau chargé pour le moment.</p>
-        </div>
-        <div class="option-card option-card--scc">
-          <h3>Synthé SCC expérimental</h3>
-          <p class="option-note scc-description">
-            Recréez l'esprit du Konami SCC en jouant avec cinq oscillateurs à table d'onde de 32 échantillons. Lancez le synthé,
-            ajustez la fréquence et le volume de chaque voix puis composez vos propres textures rétro.
-          </p>
-          <div class="scc-master-controls">
-            <div class="scc-master-slider">
-              <label for="sccMasterVolume">Volume principal</label>
-              <input type="range" id="sccMasterVolume" min="0" max="100" step="1" value="45" />
-              <span id="sccMasterVolumeValue">45%</span>
-            </div>
-          </div>
-          <div class="scc-voices">
-            <div class="scc-voice" data-voice="1">
-              <h4>Voie 1</h4>
-              <label class="scc-control-label" for="sccVoice1Frequency">
-                Fréquence
-                <span id="sccVoice1FrequencyValue">220 Hz</span>
-              </label>
-              <input type="range" id="sccVoice1Frequency" min="80" max="2000" step="1" value="220" />
-              <label class="scc-control-label" for="sccVoice1Volume">
-                Volume
-                <span id="sccVoice1VolumeValue">55%</span>
-              </label>
-              <input type="range" id="sccVoice1Volume" min="0" max="100" step="1" value="55" />
-            </div>
-            <div class="scc-voice" data-voice="2">
-              <h4>Voie 2</h4>
-              <label class="scc-control-label" for="sccVoice2Frequency">
-                Fréquence
-                <span id="sccVoice2FrequencyValue">330 Hz</span>
-              </label>
-              <input type="range" id="sccVoice2Frequency" min="80" max="2000" step="1" value="330" />
-              <label class="scc-control-label" for="sccVoice2Volume">
-                Volume
-                <span id="sccVoice2VolumeValue">50%</span>
-              </label>
-              <input type="range" id="sccVoice2Volume" min="0" max="100" step="1" value="50" />
-            </div>
-            <div class="scc-voice" data-voice="3">
-              <h4>Voie 3</h4>
-              <label class="scc-control-label" for="sccVoice3Frequency">
-                Fréquence
-                <span id="sccVoice3FrequencyValue">440 Hz</span>
-              </label>
-              <input type="range" id="sccVoice3Frequency" min="80" max="2000" step="1" value="440" />
-              <label class="scc-control-label" for="sccVoice3Volume">
-                Volume
-                <span id="sccVoice3VolumeValue">45%</span>
-              </label>
-              <input type="range" id="sccVoice3Volume" min="0" max="100" step="1" value="45" />
-            </div>
-            <div class="scc-voice" data-voice="4">
-              <h4>Voie 4</h4>
-              <label class="scc-control-label" for="sccVoice4Frequency">
-                Fréquence
-                <span id="sccVoice4FrequencyValue">550 Hz</span>
-              </label>
-              <input type="range" id="sccVoice4Frequency" min="80" max="2000" step="1" value="550" />
-              <label class="scc-control-label" for="sccVoice4Volume">
-                Volume
-                <span id="sccVoice4VolumeValue">40%</span>
-              </label>
-              <input type="range" id="sccVoice4Volume" min="0" max="100" step="1" value="40" />
-            </div>
-            <div class="scc-voice" data-voice="5">
-              <h4>Voie 5</h4>
-              <label class="scc-control-label" for="sccVoice5Frequency">
-                Fréquence
-                <span id="sccVoice5FrequencyValue">660 Hz</span>
-              </label>
-              <input type="range" id="sccVoice5Frequency" min="80" max="2000" step="1" value="660" />
-              <label class="scc-control-label" for="sccVoice5Volume">
-                Volume
-                <span id="sccVoice5VolumeValue">35%</span>
-              </label>
-              <input type="range" id="sccVoice5Volume" min="0" max="100" step="1" value="35" />
-            </div>
-          </div>
-          <div class="option-row option-row--buttons">
-            <button type="button" id="sccStartButton">Activer les voix</button>
-            <button type="button" id="sccStopButton" disabled>Tout couper</button>
-          </div>
-          <p class="option-note" id="sccStatus">Aucune voix active.</p>
-        </div>
-        <div class="option-card" id="brickSkinOptionCard" hidden aria-hidden="true">
-          <h3 data-i18n="index.sections.options.brickSkin.title"></h3>
-          <div class="option-row">
-            <label for="brickSkinSelect" data-i18n="index.sections.options.brickSkin.appearance"></label>
-            <select id="brickSkinSelect" disabled>
-              <option value="original" data-i18n="index.sections.options.brickSkin.options.original"></option>
-              <option value="metallic" data-i18n="index.sections.options.brickSkin.options.metallic"></option>
-              <option value="neon" data-i18n="index.sections.options.brickSkin.options.neon"></option>
-              <option value="pastels" data-i18n="index.sections.options.brickSkin.options.pastels"></option>
-            </select>
-          </div>
-          <p class="option-note" id="brickSkinStatus" data-i18n="index.sections.options.brickSkin.note"></p>
-        </div>
-        <div class="option-card option-card--photon">
-          <h3 data-i18n="index.sections.options.photon.title"></h3>
-          <p class="option-note" data-i18n="index.sections.options.photon.note"></p>
-          <button
-            type="button"
-            id="photonOpenButton"
-            class="photon-launch-button"
-            data-i18n="index.sections.options.photon.button"
-          ></button>
         </div>
       </div>
       <div class="options-reset">
