@@ -1029,6 +1029,7 @@
   const BALL_GHOST_BLUR_FACTOR = SETTINGS.ball.ghostBlurFactor;
   const BALL_GHOST_REMOVE_DELAY_MS = SETTINGS.ball.ghostRemoveDelayMs;
   const BALL_SPEED_FACTOR = SETTINGS.ball.speedFactor;
+  const BALL_SPEED_GROWTH_LEVEL_CAP = 9;
   const BALL_MIN_SPEED_PER_MS = SETTINGS.ball.minSpeedPerMs;
   const BALL_FOLLOW_OFFSET_RATIO = SETTINGS.ball.followOffsetRatio;
   const DEFAULT_POWER_UP_VISUAL = SETTINGS.powerUps.defaultVisual;
@@ -1062,6 +1063,7 @@
   const COMBO_SHOCKWAVE = SETTINGS.combos.shockwave;
   const FLOOR_SHIELD_CONFIG = SETTINGS.powerUps.floorShield;
   const BONUS_DISTRIBUTION = SETTINGS.bricks.bonusDistribution;
+  const BONUS_DISTRIBUTION_REDUCTION_FACTOR = 0.5;
   const PATTERN_WEIGHTS = SETTINGS.bricks.patterns;
   const ORGANIC_CONFIG = SETTINGS.bricks.organic;
   const SINGLE_GAP_CONFIG = SETTINGS.bricks.singleGap;
@@ -1750,7 +1752,12 @@
         BONUS_DISTRIBUTION.minRatio,
         BONUS_DISTRIBUTION.maxRatio
       );
-      const desiredCount = Math.max(1, Math.round(eligible.length * desiredRatio));
+      const adjustedRatio = clamp(
+        desiredRatio * BONUS_DISTRIBUTION_REDUCTION_FACTOR,
+        BONUS_DISTRIBUTION.minRatio * BONUS_DISTRIBUTION_REDUCTION_FACTOR,
+        BONUS_DISTRIBUTION.maxRatio * BONUS_DISTRIBUTION_REDUCTION_FACTOR
+      );
+      const desiredCount = Math.max(1, Math.round(eligible.length * adjustedRatio));
       if (existingBonus >= desiredCount) {
         return bricks;
       }
@@ -2189,9 +2196,13 @@
 
     getBallSpeed() {
       const base = (this.width + this.height) / (2 * Math.max(this.pixelRatio, 0.5));
+      const effectiveLevel = Math.min(
+        Math.max(0, this.level - 1),
+        BALL_SPEED_GROWTH_LEVEL_CAP
+      );
       const levelMultiplier = Math.pow(
         1 + this.ballSettings.speedGrowthRatio,
-        Math.max(0, this.level - 1)
+        effectiveLevel
       );
       const ratio = this.ballSettings.baseSpeedRatio * levelMultiplier;
       const speedPerMillisecond = base * ratio * BALL_SPEED_FACTOR * this.ballSpeedMultiplier;
