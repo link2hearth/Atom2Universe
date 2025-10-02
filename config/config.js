@@ -1401,6 +1401,7 @@ const GAME_CONFIG = {
     {
       id: 'hydrogen',
       name: 'Hydrogène (H₂)',
+      translationKey: 'scripts.gameData.fusions.recipes.hydrogen',
       description: 'Associez 2 atomes d’Hydrogène pour créer une molécule de dihydrogène.',
       inputs: [
         { elementId: 'element-001-hydrogene', count: 2 }
@@ -1413,6 +1414,7 @@ const GAME_CONFIG = {
     {
       id: 'nitrogen',
       name: 'Azote (N₂)',
+      translationKey: 'scripts.gameData.fusions.recipes.nitrogen',
       description: 'Combinez 2 atomes d’Azote pour former du diazote.',
       inputs: [
         { elementId: 'element-007-azote', count: 2 }
@@ -1425,6 +1427,7 @@ const GAME_CONFIG = {
     {
       id: 'oxygen',
       name: 'Oxygène (O₂)',
+      translationKey: 'scripts.gameData.fusions.recipes.oxygen',
       description: 'Assemblez 2 atomes d’Oxygène pour produire du dioxygène.',
       inputs: [
         { elementId: 'element-008-oxygene', count: 2 }
@@ -1437,6 +1440,7 @@ const GAME_CONFIG = {
     {
       id: 'fluorine',
       name: 'Fluor (F₂)',
+      translationKey: 'scripts.gameData.fusions.recipes.fluorine',
       description: 'Fusionnez 2 atomes de Fluor pour générer une molécule de difluor.',
       inputs: [
         { elementId: 'element-009-fluor', count: 2 }
@@ -1449,6 +1453,7 @@ const GAME_CONFIG = {
     {
       id: 'chlorine',
       name: 'Chlore (Cl₂)',
+      translationKey: 'scripts.gameData.fusions.recipes.chlorine',
       description: 'Associez 2 atomes de Chlore pour obtenir du dichlore.',
       inputs: [
         { elementId: 'element-017-chlore', count: 2 }
@@ -1461,6 +1466,7 @@ const GAME_CONFIG = {
     {
       id: 'bromine',
       name: 'Brome (Br₂)',
+      translationKey: 'scripts.gameData.fusions.recipes.bromine',
       description: 'Combinez 2 atomes de Brome pour produire du dibrome.',
       inputs: [
         { elementId: 'element-035-brome', count: 2 }
@@ -1473,6 +1479,7 @@ const GAME_CONFIG = {
     {
       id: 'iodine',
       name: 'Iode (I₂)',
+      translationKey: 'scripts.gameData.fusions.recipes.iodine',
       description: 'Assemblez 2 atomes d’Iode pour créer du diiode.',
       inputs: [
         { elementId: 'element-053-iode', count: 2 }
@@ -1485,6 +1492,7 @@ const GAME_CONFIG = {
     {
       id: 'sulfur',
       name: 'Soufre (S₈)',
+      translationKey: 'scripts.gameData.fusions.recipes.sulfur',
       description: 'Regroupez 8 atomes de Soufre pour former une couronne cyclique S₈.',
       inputs: [
         { elementId: 'element-016-soufre', count: 8 }
@@ -1497,6 +1505,7 @@ const GAME_CONFIG = {
     {
       id: 'phosphorus',
       name: 'Phosphore (P₄)',
+      translationKey: 'scripts.gameData.fusions.recipes.phosphorus',
       description: 'Fusionnez 4 atomes de Phosphore pour synthétiser du tétraphosphore.',
       inputs: [
         { elementId: 'element-015-phosphore', count: 4 }
@@ -1509,6 +1518,7 @@ const GAME_CONFIG = {
     {
       id: 'water',
       name: 'Molécule d’eau (H₂O)',
+      translationKey: 'scripts.gameData.fusions.recipes.water',
       description: 'Combinez 2 Hydrogènes et 1 Oxygène pour tenter de former de l’eau.',
       inputs: [
         { elementId: 'element-001-hydrogene', count: 2 },
@@ -1522,6 +1532,7 @@ const GAME_CONFIG = {
     {
       id: 'sodiumChloride',
       name: 'Chlorure de sodium (NaCl)',
+      translationKey: 'scripts.gameData.fusions.recipes.sodiumChloride',
       description: 'Combinez Sodium et Chlore pour cristalliser du sel.',
       inputs: [
         { elementId: 'element-011-sodium', count: 1 },
@@ -1535,6 +1546,7 @@ const GAME_CONFIG = {
     {
       id: 'siliconDioxide',
       name: 'Dioxyde de silicium (SiO₂)',
+      translationKey: 'scripts.gameData.fusions.recipes.siliconDioxide',
       description: 'Associez Silicium et Oxygène pour obtenir du quartz.',
       inputs: [
         { elementId: 'element-014-silicium', count: 1 },
@@ -1548,6 +1560,7 @@ const GAME_CONFIG = {
     {
       id: 'bronzeAlloy',
       name: 'Bronze (alliage Cu-Sn)',
+      translationKey: 'scripts.gameData.fusions.recipes.bronzeAlloy',
       description: 'Alliez ~88 % de Cuivre avec ~12 % d’Étain pour obtenir un bronze protohistorique.',
       inputs: [
         { elementId: 'element-029-cuivre', count: 9 },
@@ -1561,6 +1574,7 @@ const GAME_CONFIG = {
     {
       id: 'stainlessSteel18_8',
       name: 'Acier inoxydable 18/8',
+      translationKey: 'scripts.gameData.fusions.recipes.stainlessSteel18_8',
       description: 'Combinez ~70 % de Fer, ~18 % de Chrome et ~8 % de Nickel pour former l’inox 18/8.',
       inputs: [
         { elementId: 'element-026-fer', count: 7 },
@@ -1575,6 +1589,7 @@ const GAME_CONFIG = {
     {
       id: 'duraluminAlloy',
       name: 'Duralumin (alliage Al-Cu-Mn)',
+      translationKey: 'scripts.gameData.fusions.recipes.duraluminAlloy',
       description: 'Assemblez ~95 % d’Aluminium avec ~4 % de Cuivre et des traces de Manganèse/Magnésium (~1 %).',
       inputs: [
         { elementId: 'element-013-aluminium', count: 8 },
@@ -1589,6 +1604,7 @@ const GAME_CONFIG = {
     {
       id: 'laitonAlloy',
       name: 'Laiton (alliage Cu-Zn)',
+      translationKey: 'scripts.gameData.fusions.recipes.laitonAlloy',
       description: 'Mélangez ~65 % de Cuivre et ~35 % de Zinc pour façonner un laiton de plomberie.',
       inputs: [
         { elementId: 'element-029-cuivre', count: 7 },
@@ -1602,6 +1618,7 @@ const GAME_CONFIG = {
     {
       id: 'leadAcidAlloy',
       name: 'Alliage plomb-acide',
+      translationKey: 'scripts.gameData.fusions.recipes.leadAcidAlloy',
       description: 'Solidifiez ~93 % de Plomb avec ~7 % d’Antimoine pour vos batteries au plomb.',
       inputs: [
         { elementId: 'element-082-plomb', count: 9 },
@@ -1615,6 +1632,7 @@ const GAME_CONFIG = {
     {
       id: 'ti6Al4VAlloy',
       name: 'Alliage Ti-6Al-4V',
+      translationKey: 'scripts.gameData.fusions.recipes.ti6Al4VAlloy',
       description: 'Fusionnez ~90 % de Titane avec ~6 % d’Aluminium et ~4 % de Vanadium pour l’aéronautique.',
       inputs: [
         { elementId: 'element-022-titane', count: 8 },
@@ -1629,6 +1647,7 @@ const GAME_CONFIG = {
     {
       id: 'roseGoldAlloy',
       name: 'Or rose (alliage Au-Cu-Ag)',
+      translationKey: 'scripts.gameData.fusions.recipes.roseGoldAlloy',
       description: 'Alliez ~75 % d’Or, ~22 % de Cuivre et ~3 % d’Argent pour une teinte rosée 18 carats.',
       inputs: [
         { elementId: 'element-079-or', count: 7 },
@@ -1643,6 +1662,7 @@ const GAME_CONFIG = {
     {
       id: 'platinumIridiumAlloy',
       name: 'Alliage platine-iridium',
+      translationKey: 'scripts.gameData.fusions.recipes.platinumIridiumAlloy',
       description: 'Combinez ~70 % de Platine avec ~30 % d’Iridium pour une référence de métrologie.',
       inputs: [
         { elementId: 'element-078-platine', count: 7 },
