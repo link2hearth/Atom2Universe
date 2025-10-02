@@ -1,6 +1,72 @@
 (function () {
   'use strict';
 
+  const N163_TABLE_LENGTH = 32;
+  const N163_WAVE_GENERATORS = {
+    default(index, length) {
+      const phase = (index / length) * 2 * Math.PI;
+      const value = (Math.sin(phase) * 0.72) + (Math.sin(phase * 2) * 0.28);
+      return value * 0.85;
+    },
+    bright(index, length) {
+      const phase = index / length;
+      const base = (phase < 0.5 ? 1 : -1) * 0.9;
+      const bend = Math.sin(phase * 2 * Math.PI) * 0.35;
+      return (base * 0.75) + bend;
+    },
+    hollow(index, length) {
+      const phase = (index / length) * 2 * Math.PI;
+      return (Math.sin(phase) * 0.55) - (Math.sin(phase * 3) * 0.35);
+    },
+    reed(index, length) {
+      const phase = (index / length) * 2 * Math.PI;
+      return (Math.sin(phase) * 0.6) + (Math.sin(phase * 5) * 0.18);
+    },
+    bell(index, length) {
+      const phase = (index / length) * 2 * Math.PI;
+      return (Math.sin(phase) * 0.5) + (Math.sin(phase * 7) * 0.32);
+    },
+    bass(index, length) {
+      const phase = index / length;
+      const saw = ((phase * 2) % 2) - 1;
+      return (saw * 0.75) + (Math.sin(phase * 2 * Math.PI) * 0.25);
+    },
+    airy(index, length) {
+      const phase = (index / length) * 2 * Math.PI;
+      return (Math.sin(phase) * 0.4) + (Math.sin(phase * 2) * 0.22) + (Math.sin(phase * 4) * 0.12);
+    },
+    pulse(index, length) {
+      const phase = index / length;
+      const duty = 0.31;
+      return phase < duty ? 0.85 : -0.85;
+    },
+    brass(index, length) {
+      const phase = (index / length) * 2 * Math.PI;
+      return (Math.sin(phase) * 0.7) + (Math.sin(phase * 2) * 0.4) + (Math.sin(phase * 3) * 0.2);
+    },
+  };
+
+  const quantizeN163Sample = (value) => {
+    const steps = 31;
+    const normalized = Math.max(-1, Math.min(1, value));
+    const scaled = Math.round(((normalized + 1) / 2) * steps);
+    return (scaled / steps) * 2 - 1;
+  };
+
+  const buildN163Tables = () => {
+    const tables = {};
+    for (const [name, generator] of Object.entries(N163_WAVE_GENERATORS)) {
+      const table = new Float32Array(N163_TABLE_LENGTH);
+      for (let i = 0; i < N163_TABLE_LENGTH; i += 1) {
+        table[i] = quantizeN163Sample(generator(i, N163_TABLE_LENGTH));
+      }
+      tables[name] = table;
+    }
+    return Object.freeze(tables);
+  };
+
+  const N163_WAVETABLES = buildN163Tables();
+
   class StreamReader {
     constructor(buffer) {
       this.view = new DataView(buffer);
@@ -488,7 +554,7 @@
       this.reverbBuffer = null;
       this.reverbDefaultSend = 0.12;
       this.sccWaveform = typeof window !== 'undefined' ? window.SccWaveform || null : null;
-      this.engineMode = this.sccWaveform ? 'scc' : 'original';
+      this.engineMode = this.sccWaveform ? 'scc' : 'n163';
       this.schedulerInterval = null;
       this.schedulerState = null;
       this.scheduleAheadTime = 0.25;
@@ -556,13 +622,13 @@
       }
       if (this.engineSelect) {
         const hasScc = Boolean(this.sccWaveform);
-        const validModes = new Set(['original', 'scc', 'ym2413']);
+        const validModes = new Set(['original', 'scc', 'n163', 'ym2413']);
         const requestedValue = typeof this.engineSelect.value === 'string' ? this.engineSelect.value : '';
         let initialValue = validModes.has(requestedValue)
           ? requestedValue
-          : (hasScc ? 'scc' : 'ym2413');
+          : (hasScc ? 'scc' : 'n163');
         if (initialValue === 'scc' && !hasScc) {
-          initialValue = 'ym2413';
+          initialValue = 'n163';
         }
         if (!validModes.has(initialValue)) {
           initialValue = 'original';
@@ -576,7 +642,7 @@
         }
         this.setEngineMode(initialValue, { syncSelect: false });
       } else {
-        this.engineMode = this.sccWaveform ? 'scc' : 'original';
+        this.engineMode = this.sccWaveform ? 'scc' : 'n163';
       }
       this.setTransposeSemitones(this.transposeSemitones, { syncSlider: true, refreshVoices: false });
       this.setFineDetuneCents(this.fineDetuneCents, { syncSlider: true, refreshVoices: false });
@@ -883,6 +949,8 @@
       let normalized = 'original';
       if (value === 'ym2413') {
         normalized = 'ym2413';
+      } else if (value === 'n163') {
+        normalized = 'n163';
       } else if (value === 'scc' && hasScc) {
         normalized = 'scc';
       }
@@ -907,6 +975,9 @@
     getEngineLabel() {
       if (this.engineMode === 'scc' && this.sccWaveform) {
         return 'moteur SCC';
+      }
+      if (this.engineMode === 'n163') {
+        return 'moteur Namco 163';
       }
       if (this.engineMode === 'ym2413') {
         return 'moteur Yamaha YM2413';
@@ -1552,6 +1623,62 @@
       return wave;
     }
 
+    createPeriodicWaveFromTable(table) {
+      if (!this.audioContext || !table || !table.length) {
+        return null;
+      }
+      const harmonics = table.length;
+      const real = new Float32Array(harmonics);
+      const imag = new Float32Array(harmonics);
+      for (let k = 0; k < harmonics; k += 1) {
+        let sumReal = 0;
+        let sumImag = 0;
+        for (let n = 0; n < harmonics; n += 1) {
+          const sample = table[n];
+          const phase = (2 * Math.PI * k * n) / harmonics;
+          sumReal += sample * Math.cos(phase);
+          sumImag += sample * Math.sin(phase);
+        }
+        real[k] = sumReal / harmonics;
+        imag[k] = sumImag / harmonics;
+      }
+      real[0] = 0;
+      imag[0] = 0;
+      return this.audioContext.createPeriodicWave(real, imag, { disableNormalization: true });
+    }
+
+    getN163Wave(identifier = 'default') {
+      if (!this.audioContext) {
+        return null;
+      }
+      const table = N163_WAVETABLES[identifier] || N163_WAVETABLES.default;
+      if (!table) {
+        return null;
+      }
+      const key = `n163:${identifier}`;
+      if (this.waveCache.has(key)) {
+        return this.waveCache.get(key);
+      }
+      const wave = this.createPeriodicWaveFromTable(table);
+      if (wave) {
+        this.waveCache.set(key, wave);
+      }
+      return wave;
+    }
+
+    shouldUseN163Waveform(instrument, layer) {
+      if (this.engineMode !== 'n163') {
+        return false;
+      }
+      const layerPreference = layer?.waveform;
+      if (layerPreference === 'analog' || layerPreference === 'original') {
+        return false;
+      }
+      const layerId = layer?.n163Wave;
+      const instrumentId = instrument?.n163Wave;
+      return Boolean(layerId || instrumentId);
+    }
+
     shouldUseSccWaveform(instrument, layer) {
       if (this.engineMode !== 'scc') {
         return false;
@@ -1648,6 +1775,10 @@
         ...baseEnvelope,
         ...(overrides || {}),
       });
+
+      if (this.engineMode === 'n163') {
+        return this.getN163InstrumentSettings(note, { family, baseEnvelope });
+      }
 
       if (this.engineMode === 'ym2413') {
         return this.getYm2413InstrumentSettings(note, { family, baseEnvelope });
@@ -1950,6 +2081,351 @@
         gain,
         envelope,
         reverbSend,
+      };
+
+      if (filter) {
+        instrument.filter = filter;
+      }
+      if (lfo) {
+        instrument.lfo = lfo;
+      }
+
+      return instrument;
+    }
+
+    getN163InstrumentSettings(note, context) {
+      const { family, baseEnvelope } = context || {};
+
+      const envelopeSource = baseEnvelope || {
+        attack: 0.008,
+        decay: 0.08,
+        sustain: 0.36,
+        release: 0.22,
+      };
+
+      const mergeEnvelope = (overrides = {}) => ({
+        ...envelopeSource,
+        ...(overrides || {}),
+      });
+
+      const createWaveDefinition = (options = {}) => {
+        const {
+          gain = 0.68,
+          layers,
+          filter,
+          lfo,
+          reverbSend = 0.08,
+          envelope,
+          wave = 'default',
+          chorus,
+        } = options;
+        const resolvedLayers = Array.isArray(layers) && layers.length
+          ? layers
+          : [
+            { type: 'sine', n163Wave: wave, detune: -4, gain: 0.5 },
+            { type: 'sine', n163Wave: wave, detune: 4, gain: 0.5 },
+          ];
+        const normalizedLayers = resolvedLayers.map(layer => ({
+          ...layer,
+          n163Wave: layer?.n163Wave || wave,
+        }));
+        const definition = {
+          gain,
+          waveform: 'n163',
+          n163Wave: wave,
+          layers: normalizedLayers,
+          filter: filter ? { ...filter } : null,
+          lfo: lfo ? { ...lfo } : { rate: 4.6, vibratoDepth: 3.2, tremoloDepth: 0.02, waveform: 'triangle' },
+          reverbSend,
+          envelope: mergeEnvelope(envelope),
+        };
+        if (chorus) {
+          definition.chorus = { ...chorus };
+        }
+        return definition;
+      };
+
+      const definitions = {
+        default: createWaveDefinition({
+          wave: 'default',
+          layers: [
+            { type: 'sine', n163Wave: 'default', detune: -3, gain: 0.52 },
+            { type: 'sine', n163Wave: 'default', detune: 3, gain: 0.52 },
+          ],
+          lfo: { rate: 4.8, vibratoDepth: 3.4, tremoloDepth: 0.02, waveform: 'triangle' },
+          envelope: { decay: 0.09, sustain: 0.34, release: 0.18 },
+          reverbSend: 0.08,
+        }),
+        0: createWaveDefinition({
+          wave: 'bright',
+          layers: [
+            { type: 'sine', n163Wave: 'bright', detune: -4, gain: 0.5 },
+            { type: 'sine', n163Wave: 'bright', detune: 4, gain: 0.5 },
+            { type: 'sine', n163Wave: 'bell', detune: 9, gain: 0.16 },
+          ],
+          lfo: { rate: 5.2, vibratoDepth: 3.6, tremoloDepth: 0.03, waveform: 'triangle' },
+          envelope: { decay: 0.08, sustain: 0.3, release: 0.18 },
+          reverbSend: 0.07,
+        }),
+        1: createWaveDefinition({
+          wave: 'hollow',
+          layers: [
+            { type: 'sine', n163Wave: 'hollow', detune: -5, gain: 0.5 },
+            { type: 'sine', n163Wave: 'hollow', detune: 5, gain: 0.5 },
+          ],
+          filter: { type: 'highpass', frequency: 240, Q: 0.65 },
+          envelope: { decay: 0.06, sustain: 0.22, release: 0.16 },
+          reverbSend: 0.06,
+        }),
+        2: createWaveDefinition({
+          wave: 'reed',
+          layers: [
+            { type: 'sine', n163Wave: 'reed', detune: -3, gain: 0.5 },
+            { type: 'sine', n163Wave: 'reed', detune: 3, gain: 0.5 },
+            { type: 'sine', n163Wave: 'hollow', detune: 12, gain: 0.22 },
+          ],
+          filter: { type: 'lowpass', frequency: 3200, Q: 0.8 },
+          lfo: { rate: 3.8, vibratoDepth: 2.4, tremoloDepth: 0.02, waveform: 'triangle' },
+          envelope: { sustain: 0.48, release: 0.3 },
+          reverbSend: 0.07,
+        }),
+        3: createWaveDefinition({
+          wave: 'pulse',
+          layers: [
+            { type: 'sine', n163Wave: 'pulse', detune: -6, gain: 0.52 },
+            { type: 'sine', n163Wave: 'pulse', detune: 6, gain: 0.52 },
+          ],
+          filter: { type: 'highpass', frequency: 260, Q: 0.7 },
+          lfo: { rate: 5.2, vibratoDepth: 3.6, tremoloDepth: 0.03, waveform: 'triangle' },
+          envelope: { decay: 0.07, sustain: 0.26, release: 0.18 },
+          reverbSend: 0.06,
+        }),
+        4: createWaveDefinition({
+          wave: 'bass',
+          layers: [
+            { type: 'sine', n163Wave: 'bass', detune: -7, gain: 0.58 },
+            { type: 'sine', n163Wave: 'bass', detune: 7, gain: 0.58 },
+          ],
+          filter: { type: 'lowpass', frequency: 2600, Q: 0.7 },
+          lfo: { rate: 4.2, vibratoDepth: 1.8, tremoloDepth: 0, waveform: 'triangle' },
+          envelope: { sustain: 0.46, release: 0.22 },
+          reverbSend: 0.05,
+        }),
+        5: createWaveDefinition({
+          wave: 'airy',
+          layers: [
+            { type: 'sine', n163Wave: 'airy', detune: -4, gain: 0.48 },
+            { type: 'sine', n163Wave: 'airy', detune: 4, gain: 0.48 },
+            { type: 'sine', n163Wave: 'reed', detune: 9, gain: 0.18 },
+          ],
+          filter: { type: 'lowpass', frequency: 3800, Q: 0.9 },
+          lfo: { rate: 4.4, vibratoDepth: 3.2, tremoloDepth: 0.03, waveform: 'sine' },
+          envelope: { decay: 0.11, sustain: 0.42, release: 0.24 },
+          reverbSend: 0.09,
+        }),
+        6: createWaveDefinition({
+          wave: 'airy',
+          layers: [
+            { type: 'sine', n163Wave: 'airy', detune: -5, gain: 0.5 },
+            { type: 'sine', n163Wave: 'airy', detune: 5, gain: 0.5 },
+            { type: 'sine', n163Wave: 'bright', detune: 10, gain: 0.16 },
+          ],
+          filter: { type: 'lowpass', frequency: 3400, Q: 0.85 },
+          lfo: { rate: 4.2, vibratoDepth: 3.4, tremoloDepth: 0.03, waveform: 'triangle' },
+          envelope: { decay: 0.1, sustain: 0.44, release: 0.3 },
+          reverbSend: 0.12,
+        }),
+        7: createWaveDefinition({
+          wave: 'brass',
+          layers: [
+            { type: 'sine', n163Wave: 'brass', detune: -6, gain: 0.5 },
+            { type: 'sine', n163Wave: 'brass', detune: 6, gain: 0.5 },
+            { type: 'sine', n163Wave: 'bright', detune: 12, gain: 0.2 },
+          ],
+          filter: { type: 'bandpass', frequency: 3600, Q: 0.95 },
+          lfo: { rate: 5, vibratoDepth: 4.6, tremoloDepth: 0.04, waveform: 'triangle' },
+          envelope: { decay: 0.11, sustain: 0.36, release: 0.22 },
+          reverbSend: 0.09,
+        }),
+        8: createWaveDefinition({
+          wave: 'reed',
+          layers: [
+            { type: 'sine', n163Wave: 'reed', detune: -4, gain: 0.5 },
+            { type: 'sine', n163Wave: 'reed', detune: 4, gain: 0.5 },
+            { type: 'sine', n163Wave: 'hollow', detune: 9, gain: 0.18 },
+          ],
+          filter: { type: 'bandpass', frequency: 3200, Q: 0.9 },
+          lfo: { rate: 4.4, vibratoDepth: 3.8, tremoloDepth: 0.03, waveform: 'triangle' },
+          envelope: { decay: 0.12, sustain: 0.42, release: 0.24 },
+          reverbSend: 0.08,
+        }),
+        9: createWaveDefinition({
+          wave: 'bell',
+          layers: [
+            { type: 'sine', n163Wave: 'bell', detune: -2, gain: 0.5 },
+            { type: 'sine', n163Wave: 'bell', detune: 2, gain: 0.5 },
+            { type: 'sine', n163Wave: 'airy', detune: 12, gain: 0.2 },
+          ],
+          lfo: { rate: 4.6, vibratoDepth: 2.4, tremoloDepth: 0.04, waveform: 'sine' },
+          envelope: { decay: 0.12, sustain: 0.4, release: 0.26 },
+          reverbSend: 0.1,
+        }),
+        10: createWaveDefinition({
+          wave: 'pulse',
+          layers: [
+            { type: 'sine', n163Wave: 'pulse', detune: -5, gain: 0.5 },
+            { type: 'sine', n163Wave: 'pulse', detune: 5, gain: 0.5 },
+            { type: 'sine', n163Wave: 'bright', detune: 12, gain: 0.22 },
+          ],
+          lfo: { rate: 5.4, vibratoDepth: 4.8, tremoloDepth: 0.04, waveform: 'triangle' },
+          envelope: { decay: 0.1, sustain: 0.34, release: 0.18 },
+          reverbSend: 0.08,
+        }),
+        11: createWaveDefinition({
+          wave: 'airy',
+          layers: [
+            { type: 'sine', n163Wave: 'airy', detune: -3, gain: 0.5 },
+            { type: 'sine', n163Wave: 'airy', detune: 3, gain: 0.5 },
+            { type: 'sine', n163Wave: 'bell', detune: 7, gain: 0.18 },
+          ],
+          filter: { type: 'lowpass', frequency: 3000, Q: 0.8 },
+          lfo: { rate: 3.6, vibratoDepth: 2.8, tremoloDepth: 0.03, waveform: 'sine' },
+          envelope: { attack: 0.012, decay: 0.15, sustain: 0.46, release: 0.32 },
+          reverbSend: 0.13,
+        }),
+        12: createWaveDefinition({
+          wave: 'hollow',
+          layers: [
+            { type: 'sine', n163Wave: 'hollow', detune: -4, gain: 0.48 },
+            { type: 'sine', n163Wave: 'bell', detune: 4, gain: 0.48 },
+          ],
+          filter: { type: 'bandpass', frequency: 2800, Q: 1.1 },
+          lfo: { rate: 5.6, vibratoDepth: 4.2, tremoloDepth: 0.04, waveform: 'sine' },
+          envelope: { decay: 0.11, sustain: 0.28, release: 0.24 },
+          reverbSend: 0.1,
+        }),
+        13: createWaveDefinition({
+          wave: 'reed',
+          layers: [
+            { type: 'sine', n163Wave: 'reed', detune: -6, gain: 0.5 },
+            { type: 'sine', n163Wave: 'pulse', detune: 6, gain: 0.45 },
+          ],
+          filter: { type: 'bandpass', frequency: 3400, Q: 0.95 },
+          lfo: { rate: 4.8, vibratoDepth: 3.4, tremoloDepth: 0.03, waveform: 'triangle' },
+          envelope: { decay: 0.09, sustain: 0.3, release: 0.2 },
+          reverbSend: 0.07,
+        }),
+        14: createWaveDefinition({
+          wave: 'bright',
+          layers: [
+            { type: 'sine', n163Wave: 'bright', detune: -4, gain: 0.5 },
+            { type: 'sine', n163Wave: 'bright', detune: 4, gain: 0.5 },
+          ],
+          filter: { type: 'highpass', frequency: 280, Q: 0.65 },
+          envelope: { decay: 0.06, sustain: 0.2, release: 0.14 },
+          reverbSend: 0.06,
+        }),
+        15: createWaveDefinition({
+          wave: 'bell',
+          layers: [
+            { type: 'sine', n163Wave: 'bell', detune: -3, gain: 0.5 },
+            { type: 'sine', n163Wave: 'bell', detune: 3, gain: 0.5 },
+            { type: 'sine', n163Wave: 'airy', detune: 9, gain: 0.16 },
+          ],
+          filter: { type: 'bandpass', frequency: 3600, Q: 1.05 },
+          lfo: { rate: 5.8, vibratoDepth: 4.4, tremoloDepth: 0.05, waveform: 'triangle' },
+          envelope: { decay: 0.12, sustain: 0.28, release: 0.24 },
+          reverbSend: 0.11,
+        }),
+      };
+
+      const definition = Object.prototype.hasOwnProperty.call(definitions, family)
+        ? definitions[family]
+        : definitions.default;
+
+      const articulation = this.getArticulationFactor();
+
+      const envelope = {
+        ...definition.envelope,
+      };
+
+      const attackBase = Number.isFinite(envelope.attack) ? envelope.attack : envelopeSource.attack;
+      const decayBase = Number.isFinite(envelope.decay) ? envelope.decay : envelopeSource.decay;
+      const sustainBase = Number.isFinite(envelope.sustain) ? envelope.sustain : envelopeSource.sustain;
+      const releaseBase = Number.isFinite(envelope.release) ? envelope.release : envelopeSource.release;
+
+      const attackScale = 0.75 + ((1 - articulation) * 0.25);
+      const decayScale = 0.6 + ((1 - articulation) * 0.35);
+      const sustainCeiling = 0.42 + ((1 - articulation) * 0.36);
+      const sustainFloor = 0.14 + ((1 - articulation) * 0.08);
+      const releaseFloor = 0.12 + ((1 - articulation) * 0.08);
+      const releaseCeiling = 0.5 + ((1 - articulation) * 0.45);
+      const durationFactor = 0.35 + ((1 - articulation) * 0.3);
+      const durationRelease = Math.min(releaseCeiling, Math.max(releaseFloor, note.duration * durationFactor));
+
+      envelope.attack = Math.max(0.0025, attackBase * attackScale);
+      envelope.decay = Math.max(0.03, decayBase * decayScale);
+      const sustainValue = Number.isFinite(sustainBase) ? sustainBase : sustainCeiling;
+      envelope.sustain = Math.max(sustainFloor, Math.min(sustainCeiling, sustainValue));
+      const releaseValue = Number.isFinite(releaseBase) ? releaseBase : durationRelease;
+      envelope.release = Math.max(releaseFloor, Math.min(releaseCeiling, Math.max(releaseValue, durationRelease)));
+
+      let filter = null;
+      if (definition.filter) {
+        filter = { ...definition.filter };
+        if (filter.type === 'lowpass') {
+          const brightnessBoost = 1 + (articulation * 0.5);
+          const baseFrequency = Number.isFinite(filter.frequency) ? filter.frequency : 3200;
+          filter.frequency = Math.min(6200, baseFrequency * brightnessBoost);
+          if (Number.isFinite(filter.Q)) {
+            filter.Q = Math.max(0.55, Math.min(1.2, filter.Q * (0.85 - (articulation * 0.15))));
+          }
+        } else if (filter.type === 'bandpass' && Number.isFinite(filter.frequency)) {
+          const spread = 1 + (articulation * 0.2);
+          filter.frequency = Math.min(7200, filter.frequency * spread);
+        }
+      }
+
+      let lfo = null;
+      if (definition.lfo) {
+        lfo = { ...definition.lfo };
+        if (Number.isFinite(lfo.vibratoDepth)) {
+          lfo.vibratoDepth = Math.max(0, lfo.vibratoDepth * (0.4 + ((1 - articulation) * 0.6)));
+          if (lfo.vibratoDepth < 0.4) {
+            lfo.vibratoDepth = 0;
+          }
+        }
+        if (Number.isFinite(lfo.tremoloDepth)) {
+          lfo.tremoloDepth = Math.max(0, lfo.tremoloDepth * (0.35 + ((1 - articulation) * 0.55)));
+          if (lfo.tremoloDepth < 0.015) {
+            lfo.tremoloDepth = 0;
+          }
+        }
+      }
+
+      const baseReverbSend = Number.isFinite(definition.reverbSend)
+        ? definition.reverbSend
+        : this.reverbDefaultSend;
+      const reverbScale = 0.3 + ((1 - articulation) * 0.5);
+      const reverbSend = Math.max(0, baseReverbSend * reverbScale);
+
+      const baseGain = Number.isFinite(definition.gain)
+        ? definition.gain
+        : Number.isFinite(definition.volume)
+          ? definition.volume
+          : 1;
+      const gainAdjustment = 0.9 + (articulation * 0.14);
+      const gain = Math.min(1, baseGain * gainAdjustment);
+
+      const instrument = {
+        ...definition,
+        gain,
+        envelope,
+        reverbSend,
+        layers: (definition.layers || []).map(layer => ({
+          ...layer,
+          n163Wave: layer?.n163Wave || definition.n163Wave || 'default',
+        })),
       };
 
       if (filter) {
@@ -2593,11 +3069,20 @@
       const connectOscillator = (layer) => {
         const osc = this.audioContext.createOscillator();
         const useSccWave = this.shouldUseSccWaveform(instrument, layer);
+        const useN163Wave = this.shouldUseN163Waveform(instrument, layer);
         let configured = false;
         if (useSccWave) {
           const sccWave = this.getSccWave();
           if (sccWave) {
             osc.setPeriodicWave(sccWave);
+            configured = true;
+          }
+        }
+        if (!configured && useN163Wave) {
+          const waveId = layer?.n163Wave || instrument?.n163Wave || 'default';
+          const n163Wave = this.getN163Wave(waveId);
+          if (n163Wave) {
+            osc.setPeriodicWave(n163Wave);
             configured = true;
           }
         }
