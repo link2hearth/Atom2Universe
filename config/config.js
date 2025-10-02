@@ -4,6 +4,7 @@
  * sont rassemblées ici pour faciliter les modifications futures.
  */
 const SHOP_MAX_PURCHASE_DEFAULT = 1000;
+const COLLECTION_MULTIPLIER_LABEL_KEY = 'scripts.config.elementBonuses.collectionMultiplier';
 
 function translateOrDefault(key, fallback, params) {
   if (typeof key !== 'string' || !key.trim()) {
@@ -1800,7 +1801,8 @@ const GAME_CONFIG = {
         multiplier: {
           every: 20,
           increment: 1,
-          targets: ['perClick', 'perSecond']
+          targets: ['perClick', 'perSecond'],
+          label: COLLECTION_MULTIPLIER_LABEL_KEY
         }
       },
       essentiel: {
@@ -1820,7 +1822,7 @@ const GAME_CONFIG = {
           every: 20,
           increment: 1,
           targets: ['perClick', 'perSecond'],
-          label: 'scripts.config.elementBonuses.essentiel.multiplier'
+          label: COLLECTION_MULTIPLIER_LABEL_KEY
         }
       },
       stellaire: {
@@ -1833,7 +1835,7 @@ const GAME_CONFIG = {
           every: 15,
           increment: 1,
           targets: ['perClick', 'perSecond'],
-          label: 'scripts.config.elementBonuses.stellaire.multiplier'
+          label: COLLECTION_MULTIPLIER_LABEL_KEY
         },
         setBonus: {
           requireAllUnique: true,
@@ -1845,7 +1847,7 @@ const GAME_CONFIG = {
         labels: {
           perCopy: 'scripts.config.elementBonuses.stellaire.labels.perCopy',
           setBonus: 'scripts.config.elementBonuses.stellaire.setBonus',
-          multiplier: 'scripts.config.elementBonuses.stellaire.multiplier'
+          multiplier: COLLECTION_MULTIPLIER_LABEL_KEY
         }
       },
       singulier: {
@@ -1860,11 +1862,11 @@ const GAME_CONFIG = {
           every: 10,
           increment: 1,
           targets: ['perClick', 'perSecond'],
-          label: 'scripts.config.elementBonuses.singulier.multiplier'
+          label: COLLECTION_MULTIPLIER_LABEL_KEY
         },
         labels: {
           perCopy: 'scripts.config.elementBonuses.singulier.perCopy',
-          multiplier: 'scripts.config.elementBonuses.singulier.multiplier'
+          multiplier: COLLECTION_MULTIPLIER_LABEL_KEY
         }
       },
       mythique: {
@@ -1903,7 +1905,7 @@ const GAME_CONFIG = {
           every: 5,
           increment: 1,
           targets: ['perClick', 'perSecond'],
-          label: 'scripts.config.elementBonuses.irreel.multiplier'
+          label: COLLECTION_MULTIPLIER_LABEL_KEY
         }
       }
     }
