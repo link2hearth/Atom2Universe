@@ -1800,7 +1800,6 @@ const GAME_CONFIG = {
         multiplier: {
           every: 20,
           increment: 1,
-          cap: 100,
           targets: ['perClick', 'perSecond']
         }
       },
@@ -1820,7 +1819,6 @@ const GAME_CONFIG = {
         multiplier: {
           every: 20,
           increment: 1,
-          cap: 100,
           targets: ['perClick', 'perSecond'],
           label: 'scripts.config.elementBonuses.essentiel.multiplier'
         }
@@ -1834,7 +1832,6 @@ const GAME_CONFIG = {
         multiplier: {
           every: 15,
           increment: 1,
-          cap: 100,
           targets: ['perClick', 'perSecond'],
           label: 'scripts.config.elementBonuses.stellaire.multiplier'
         },
@@ -1862,7 +1859,6 @@ const GAME_CONFIG = {
         multiplier: {
           every: 10,
           increment: 1,
-          cap: 100,
           targets: ['perClick', 'perSecond'],
           label: 'scripts.config.elementBonuses.singulier.multiplier'
         },
@@ -1906,7 +1902,6 @@ const GAME_CONFIG = {
         multiplier: {
           every: 5,
           increment: 1,
-          cap: 100,
           targets: ['perClick', 'perSecond'],
           label: 'scripts.config.elementBonuses.irreel.multiplier'
         }

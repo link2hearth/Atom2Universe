@@ -6777,16 +6777,13 @@ function recalcProduction() {
     }
 
     if (groupConfig.multiplier) {
-      const { base, every, increment, cap, targets, label: multiplierLabelOverride } = groupConfig.multiplier;
+      const { base, every, increment, targets, label: multiplierLabelOverride } = groupConfig.multiplier;
       let finalMultiplier = Number.isFinite(base) && base > 0 ? base : 1;
       if (copyCount > 0 && every > 0 && increment !== 0) {
         const steps = Math.floor(copyCount / every);
         if (steps > 0) {
           finalMultiplier += steps * increment;
         }
-      }
-      if (Number.isFinite(cap)) {
-        finalMultiplier = Math.min(finalMultiplier, cap);
       }
       if (!Number.isFinite(finalMultiplier) || finalMultiplier <= 0) {
         finalMultiplier = 1;
