@@ -47,19 +47,13 @@ function createShopBuildingDefinitions() {
       name: 'Électrons libres',
       description: 'Canalisez des électrons pour amplifier chaque clic quantique.',
       effectSummary:
-        'Production manuelle : +1 APC par niveau. Tous les 25 niveaux : +10 % APC.',
+        'Production manuelle : +1 APC par niveau.',
       category: 'manual',
       baseCost: 15,
       costScale: 1.15,
       effect: (level = 0) => {
         const clickAdd = level > 0 ? level : 0;
-        const streakBonus = Math.pow(1.10, Math.floor(level / 25));
-        const clickMult = streakBonus;
-        const result = { clickAdd };
-        if (clickMult > 1 && clickAdd > 0) {
-          result.clickMult = clickMult;
-        }
-        return result;
+        return { clickAdd };
       }
     },
     {
@@ -67,23 +61,13 @@ function createShopBuildingDefinitions() {
       name: 'Laboratoire de Physique',
       description: 'Des équipes de chercheurs boostent votre production atomique.',
       effectSummary:
-        'Production passive : +1 APS par niveau. Chaque 10 labos accordent +10 % d’APC global. Accélérateur ≥200 : Labos +20 % APS.',
+        'Production passive : +1 APS par niveau.',
       category: 'auto',
       baseCost: 100,
       costScale: 1.15,
-      effect: (level = 0, context = {}) => {
-        const acceleratorLevel = getBuildingLevel(context, 'particleAccelerator');
-        let productionMultiplier = 1;
-        if (acceleratorLevel >= 200) {
-          productionMultiplier *= 1.2;
-        }
-        const rawAutoAdd = level * productionMultiplier;
-        const autoAdd = level > 0 ? Math.max(level, Math.round(rawAutoAdd)) : 0;
-        const clickBonus = Math.pow(1.10, Math.floor(level / 10));
-        return {
-          autoAdd,
-          clickMult: clickBonus
-        };
+      effect: (level = 0) => {
+        const autoAdd = level > 0 ? level : 0;
+        return { autoAdd };
       }
     },
     {
@@ -91,23 +75,13 @@ function createShopBuildingDefinitions() {
       name: 'Réacteur nucléaire',
       description: 'Des réacteurs contrôlés libèrent une énergie colossale.',
       effectSummary:
-        'Production passive : +10 APS par niveau (+1 % par 50 Électrons, +20 % si Labos ≥200).',
+        'Production passive : +10 APS par niveau.',
       category: 'auto',
       baseCost: 1000,
       costScale: 1.15,
-      effect: (level = 0, context = {}) => {
-        const electronLevel = getBuildingLevel(context, 'freeElectrons');
-        const labLevel = getBuildingLevel(context, 'physicsLab');
-        let productionMultiplier = 1;
-        if (electronLevel > 0) {
-          productionMultiplier *= 1 + 0.01 * Math.floor(electronLevel / 50);
-        }
-        if (labLevel >= 200) {
-          productionMultiplier *= 1.2;
-        }
+      effect: (level = 0) => {
         const baseAmount = 10 * level;
-        const rawAutoAdd = baseAmount * productionMultiplier;
-        const autoAdd = level > 0 ? Math.max(baseAmount, Math.round(rawAutoAdd)) : 0;
+        const autoAdd = level > 0 ? baseAmount : 0;
         return { autoAdd };
       }
     },
@@ -116,19 +90,13 @@ function createShopBuildingDefinitions() {
       name: 'Accélérateur de particules',
       description: 'Boostez vos particules pour décupler l’APC.',
       effectSummary:
-        'Production passive : +50 APS par niveau (bonus si ≥100 Supercalculateurs). Palier 200 : +20 % production des Labos.',
+        'Production passive : +50 APS par niveau.',
       category: 'hybrid',
       baseCost: 12_000,
       costScale: 1.15,
-      effect: (level = 0, context = {}) => {
-        const supercomputerLevel = getBuildingLevel(context, 'supercomputer');
-        let productionMultiplier = 1;
-        if (supercomputerLevel >= 100) {
-          productionMultiplier *= 1.5;
-        }
+      effect: (level = 0) => {
         const baseAmount = 50 * level;
-        const rawAutoAdd = baseAmount * productionMultiplier;
-        const autoAdd = level > 0 ? Math.max(baseAmount, Math.round(rawAutoAdd)) : 0;
+        const autoAdd = level > 0 ? baseAmount : 0;
         return { autoAdd };
       }
     },
@@ -137,23 +105,14 @@ function createShopBuildingDefinitions() {
       name: 'Supercalculateurs',
       description: 'Des centres de calcul quantique optimisent vos gains.',
       effectSummary:
-        'Production passive : +500 APS par niveau (doublée par Stations ≥300). Tous les 50 Supercalculateurs : APS global ×2 (cumulatif).',
+        'Production passive : +500 APS par niveau.',
       category: 'auto',
       baseCost: 200_000,
       costScale: 1.15,
-      effect: (level = 0, context = {}) => {
-        const stationLevel = getBuildingLevel(context, 'spaceStation');
-        let productionMultiplier = 1;
-        if (stationLevel >= 300) {
-          productionMultiplier *= 2;
-        }
+      effect: (level = 0) => {
         const baseAmount = 500 * level;
-        const rawAutoAdd = baseAmount * productionMultiplier;
-        const autoAdd = level > 0 ? Math.max(baseAmount, Math.round(rawAutoAdd)) : 0;
-        const autoMult = Math.pow(2, Math.floor(level / 50));
-        return autoMult > 1
-          ? { autoAdd, autoMult }
-          : { autoAdd };
+        const autoAdd = level > 0 ? baseAmount : 0;
+        return { autoAdd };
       }
     },
     {
@@ -161,25 +120,14 @@ function createShopBuildingDefinitions() {
       name: 'Sonde interstellaire',
       description: 'Explorez la galaxie pour récolter toujours plus.',
       effectSummary:
-        'Production passive : +5 000 APS par niveau (boostée par Réacteurs). À 150 exemplaires : chaque sonde ajoute +10 APC.',
+        'Production passive : +5 000 APS par niveau.',
       category: 'hybrid',
       baseCost: 5e6,
       costScale: 1.2,
-      effect: (level = 0, context = {}) => {
-        const reactorLevel = getBuildingLevel(context, 'nuclearReactor');
-        let productionMultiplier = 1;
-        if (reactorLevel > 0) {
-          productionMultiplier *= 1 + 0.001 * reactorLevel;
-        }
+      effect: (level = 0) => {
         const baseAmount = 5000 * level;
-        const rawAutoAdd = baseAmount * productionMultiplier;
-        const autoAdd = level > 0 ? Math.max(baseAmount, Math.round(rawAutoAdd)) : 0;
-        const clickAdd = level >= 150 ? level * 10 : 0;
-        const result = { autoAdd };
-        if (clickAdd > 0) {
-          result.clickAdd = clickAdd;
-        }
-        return result;
+        const autoAdd = level > 0 ? baseAmount : 0;
+        return { autoAdd };
       }
     },
     {
@@ -187,16 +135,14 @@ function createShopBuildingDefinitions() {
       name: 'Station spatiale',
       description: 'Des bases orbitales coordonnent votre expansion.',
       effectSummary:
-        'Production passive : +50 000 APS par niveau. Chaque Station accorde +5 % d’APC. Palier 300 : Supercalculateurs +100 %.',
+        'Production passive : +50 000 APS par niveau.',
       category: 'hybrid',
       baseCost: 1e8,
       costScale: 1.2,
       effect: (level = 0) => {
         const baseAmount = 50_000 * level;
-        const rawAutoAdd = baseAmount;
-        const autoAdd = level > 0 ? Math.max(baseAmount, Math.round(rawAutoAdd)) : 0;
-        const clickMult = Math.pow(1.05, level);
-        return { autoAdd, clickMult };
+        const autoAdd = level > 0 ? baseAmount : 0;
+        return { autoAdd };
       }
     },
     {
@@ -204,23 +150,14 @@ function createShopBuildingDefinitions() {
       name: 'Forgeron d’étoiles',
       description: 'Façonnez des étoiles et dopez votre APC.',
       effectSummary:
-        'Production passive : +500 000 APS par niveau (+2 % APS par Station). Tous les 50 Forgerons : APC global ×2 (cumulatif).',
+        'Production passive : +500 000 APS par niveau.',
       category: 'hybrid',
       baseCost: 5e10,
       costScale: 1.2,
-      effect: (level = 0, context = {}) => {
-        const stationLevel = getBuildingLevel(context, 'spaceStation');
-        let productionMultiplier = 1;
-        if (stationLevel > 0) {
-          productionMultiplier *= 1 + 0.02 * stationLevel;
-        }
+      effect: (level = 0) => {
         const baseAmount = 500_000 * level;
-        const rawAutoAdd = baseAmount * productionMultiplier;
-        const autoAdd = level > 0 ? Math.max(baseAmount, Math.round(rawAutoAdd)) : 0;
-        const clickMult = Math.pow(2, Math.floor(level / 50));
-        return clickMult > 1
-          ? { autoAdd, clickMult }
-          : { autoAdd };
+        const autoAdd = level > 0 ? baseAmount : 0;
+        return { autoAdd };
       }
     },
     {
@@ -228,25 +165,14 @@ function createShopBuildingDefinitions() {
       name: 'Galaxie artificielle',
       description: 'Ingénierie galactique pour une expansion sans fin.',
       effectSummary:
-        'Production passive : +5 000 000 APS par niveau (doublée par Bibliothèque ≥300). Palier 100 : +50 % APC global.',
+        'Production passive : +5 000 000 APS par niveau.',
       category: 'auto',
       baseCost: 1e13,
       costScale: 1.2,
-      effect: (level = 0, context = {}) => {
-        const libraryLevel = getBuildingLevel(context, 'omniverseLibrary');
-        let productionMultiplier = 1;
-        if (libraryLevel >= 300) {
-          productionMultiplier *= 2;
-        }
+      effect: (level = 0) => {
         const baseAmount = 5e6 * level;
-        const rawAutoAdd = baseAmount * productionMultiplier;
-        const autoAdd = level > 0 ? Math.max(baseAmount, Math.round(rawAutoAdd)) : 0;
-        const clickMult = level >= 100 ? 1.5 : 1;
-        const result = { autoAdd };
-        if (clickMult > 1) {
-          result.clickMult = clickMult;
-        }
-        return result;
+        const autoAdd = level > 0 ? baseAmount : 0;
+        return { autoAdd };
       }
     },
     {
@@ -254,14 +180,13 @@ function createShopBuildingDefinitions() {
       name: 'Simulateur de Multivers',
       description: 'Simulez l’infini pour optimiser chaque seconde.',
       effectSummary:
-        'Production passive : +500 000 000 APS par niveau. Palier 200 : coûts des bâtiments −5 %.',
+        'Production passive : +500 000 000 APS par niveau.',
       category: 'auto',
       baseCost: 1e16,
       costScale: 1.2,
-      effect: (level = 0, context = {}) => {
+      effect: (level = 0) => {
         const baseAmount = 5e8 * level;
-        const rawAutoAdd = baseAmount;
-        const autoAdd = level > 0 ? Math.max(baseAmount, Math.round(rawAutoAdd)) : 0;
+        const autoAdd = level > 0 ? baseAmount : 0;
         return { autoAdd };
       }
     },
@@ -270,21 +195,14 @@ function createShopBuildingDefinitions() {
       name: 'Tisseur de Réalité',
       description: 'Tissez les lois physiques à votre avantage.',
       effectSummary:
-        'Production passive : +10 000 000 000 APS par niveau. Palier 300 : production totale ×2.',
+        'Production passive : +10 000 000 000 APS par niveau.',
       category: 'hybrid',
       baseCost: 1e20,
       costScale: 1.25,
       effect: (level = 0) => {
         const baseAmount = 1e10 * level;
-        const rawAutoAdd = baseAmount;
-        const autoAdd = level > 0 ? Math.max(baseAmount, Math.round(rawAutoAdd)) : 0;
-        const globalMult = level >= 300 ? 2 : 1;
-        const result = { autoAdd };
-        if (globalMult > 1) {
-          result.autoMult = globalMult;
-          result.clickMult = globalMult;
-        }
-        return result;
+        const autoAdd = level > 0 ? baseAmount : 0;
+        return { autoAdd };
       }
     },
     {
@@ -292,18 +210,14 @@ function createShopBuildingDefinitions() {
       name: 'Architecte Cosmique',
       description: 'Réécrivez les plans du cosmos pour réduire les coûts.',
       effectSummary:
-        'Production passive : +1 000 000 000 000 APS par niveau. Réduction de 1 % du coût futur par Architecte. Tous les 50 Architectes : APC global ×2 (cumulatif).',
+        'Production passive : +1 000 000 000 000 APS par niveau.',
       category: 'hybrid',
       baseCost: 1e25,
       costScale: 1.25,
       effect: (level = 0) => {
         const baseAmount = 1e12 * level;
-        const rawAutoAdd = baseAmount;
-        const autoAdd = level > 0 ? Math.max(baseAmount, Math.round(rawAutoAdd)) : 0;
-        const clickMult = Math.pow(2, Math.floor(level / 50));
-        return clickMult > 1
-          ? { autoAdd, clickMult }
-          : { autoAdd };
+        const autoAdd = level > 0 ? baseAmount : 0;
+        return { autoAdd };
       }
     },
     {
@@ -317,8 +231,7 @@ function createShopBuildingDefinitions() {
       costScale: 1.25,
       effect: (level = 0) => {
         const baseAmount = 1e14 * level;
-        const rawAutoAdd = baseAmount;
-        const autoAdd = level > 0 ? Math.max(baseAmount, Math.round(rawAutoAdd)) : 0;
+        const autoAdd = level > 0 ? baseAmount : 0;
         return { autoAdd };
       }
     },
@@ -327,23 +240,13 @@ function createShopBuildingDefinitions() {
       name: 'Bibliothèque de l’Omnivers',
       description: 'Compilez le savoir infini pour booster toute production.',
       effectSummary:
-        'Production passive : +10 000 000 000 000 000 APS par niveau. +2 % boost global par Univers parallèle. Palier 300 : Galaxies artificielles ×2.',
+        'Production passive : +10 000 000 000 000 000 APS par niveau.',
       category: 'hybrid',
       baseCost: 1e36,
       costScale: 1.25,
-      effect: (level = 0, context = {}) => {
+      effect: (level = 0) => {
         const baseAmount = 1e16 * level;
-        const rawAutoAdd = baseAmount;
-        const autoAdd = level > 0 ? Math.max(baseAmount, Math.round(rawAutoAdd)) : 0;
-        const parallelLevel = getBuildingLevel(context, 'parallelUniverse');
-        const globalBoost = parallelLevel > 0 ? Math.pow(1.02, parallelLevel) : 1;
-        if (globalBoost > 1) {
-          return {
-            autoAdd,
-            autoMult: globalBoost,
-            clickMult: globalBoost
-          };
-        }
+        const autoAdd = level > 0 ? baseAmount : 0;
         return { autoAdd };
       }
     },
@@ -352,18 +255,14 @@ function createShopBuildingDefinitions() {
       name: 'Grand Ordonnateur Quantique',
       description: 'Ordonnez le multivers et atteignez la singularité.',
       effectSummary:
-        'Production passive : +1 000 000 000 000 000 000 APS par niveau. Palier 100 : double définitivement tous les gains.',
+        'Production passive : +1 000 000 000 000 000 000 APS par niveau.',
       category: 'hybrid',
       baseCost: 1e42,
       costScale: 1.25,
       effect: (level = 0) => {
         const baseAmount = 1e18 * level;
-        const rawAutoAdd = baseAmount;
-        const autoAdd = level > 0 ? Math.max(baseAmount, Math.round(rawAutoAdd)) : 0;
-        const globalMult = level >= 100 ? 2 : 1;
-        return globalMult > 1
-          ? { autoAdd, autoMult: globalMult, clickMult: globalMult }
-          : { autoAdd };
+        const autoAdd = level > 0 ? baseAmount : 0;
+        return { autoAdd };
       }
     }
   ].map(withDefaults);
