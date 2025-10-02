@@ -19,10 +19,10 @@
   const MAX_JUMP_IMPULSE = 380;
   const AUTO_JUMP_SPEED_THRESHOLD = 120;
   const TERRAIN_SAMPLE_SPACING = 36;
-  const MIN_WAVE_WAVELENGTH = 280;
-  const MAX_WAVE_WAVELENGTH = 560;
-  const MIN_AMPLITUDE_RATIO = 0.16;
-  const MAX_AMPLITUDE_RATIO = 0.32;
+  const MIN_WAVE_WAVELENGTH = 520;
+  const MAX_WAVE_WAVELENGTH = 960;
+  const MIN_AMPLITUDE_RATIO = 0.08;
+  const MAX_AMPLITUDE_RATIO = 0.18;
   const CAMERA_LERP_MIN = 0.08;
   const CAMERA_LERP_MAX = 0.25;
   const MAX_FRAME_DELTA = 1 / 30;
@@ -169,7 +169,7 @@
       const steps = Math.max(16, Math.round(length / this.sampleSpacing));
       const stepLength = length / steps;
       const verticalSpan = this.verticalSpan || this.maxY - this.minY;
-      const baseShift = randomInRange(-verticalSpan * 0.12, verticalSpan * 0.12);
+      const baseShift = randomInRange(-verticalSpan * 0.04, verticalSpan * 0.04);
       const nextBase = clamp(this.baseLevel + baseShift, this.minY + 30, this.maxY - 30);
       const nextAmplitude = randomInRange(this.minAmplitude, this.maxAmplitude);
       const nextPhaseSpeed = (Math.PI * 2) / Math.max(60, length);
@@ -391,9 +391,9 @@
       if (this.ctx) {
         this.ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
       }
-      const minY = height * 0.38;
-      const maxY = height * 0.82;
-      const baseLevel = height * 0.68;
+      const minY = height * 0.7;
+      const maxY = height * 0.95;
+      const baseLevel = height * 0.9;
       this.terrain.configure({ minY, maxY, baseLevel, sampleSpacing: TERRAIN_SAMPLE_SPACING });
       this.refreshSky();
       this.resetTerrain();
