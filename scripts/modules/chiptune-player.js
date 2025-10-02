@@ -80,10 +80,16 @@
       file: 'Assets/Music/CC0_Soundfont.sf2',
       default: false,
     }),
+        Object.freeze({
+      id: 'Symphony',
+      name: 'Symphony',
+      file: 'Assets/Music/Symphony.sf2',
+      default: false,
+    }),
     Object.freeze({
       id: 'S_J_Orchestral_GM',
       name: 'S. J. Orchestral GM',
-      file: 'Assets/Music/S_J_Orchestral_GM.sf2',
+      file: 'Assets/Music/Orchestral.sf2',
       default: false,
     }),
   ]);
