@@ -35,6 +35,7 @@
   const CAMERA_TOP_MARGIN_RATIO = 0.18;
   const CAMERA_BOTTOM_MARGIN_RATIO = 0.28;
   const GROUND_INFLUENCE_RATIO = 0.35;
+  const MAX_WAVE_TOP_SCREEN_RATIO = 0.45; // highest visible crest stays within the bottom 45% of the screen
   const MAX_FRAME_DELTA = 1 / 30;
   const AIR_PRESS_FORWARD_IMPULSE = 120;
   const AIR_PRESS_DOWN_IMPULSE = 260;
@@ -746,27 +747,68 @@
       const topMargin = this.viewHeight * CAMERA_TOP_MARGIN_RATIO;
       const bottomMargin = this.viewHeight * CAMERA_BOTTOM_MARGIN_RATIO;
       const desiredTop = Math.max(0, this.player.y - topMargin);
-      const desiredBottom = Math.max(this.player.y + bottomMargin, groundY + bottomMargin * GROUND_INFLUENCE_RATIO);
+      const desiredBottom = Math.max(
+        this.player.y + bottomMargin,
+        groundY + bottomMargin * GROUND_INFLUENCE_RATIO
+      );
       const rawSpan = Math.max(desiredBottom - desiredTop, this.viewHeight * MIN_VISIBLE_SPAN_RATIO);
-      const clampedSpan = clamp(rawSpan, this.viewHeight * MIN_VISIBLE_SPAN_RATIO, this.viewHeight * MAX_VISIBLE_SPAN_RATIO);
-      const desiredScale = clamp(this.viewHeight / clampedSpan, MIN_CAMERA_SCALE, 1);
+      const clampedSpan = clamp(
+        rawSpan,
+        this.viewHeight * MIN_VISIBLE_SPAN_RATIO,
+        this.viewHeight * MAX_VISIBLE_SPAN_RATIO
+      );
+      const crestScreenLimit = this.viewHeight * (1 - MAX_WAVE_TOP_SCREEN_RATIO);
+      let targetScale = clamp(this.viewHeight / clampedSpan, MIN_CAMERA_SCALE, 1);
+
+      for (let attempt = 0; attempt < 3; attempt += 1) {
+        const previewViewHeight = this.viewHeight / targetScale;
+        const previewLowerBound = Math.max(0, desiredBottom - previewViewHeight);
+        const previewUpperBound = Math.max(previewLowerBound, desiredTop);
+        const baseCameraY = clamp(desiredTop, previewLowerBound, previewUpperBound);
+        const crestCameraLimit = groundY - crestScreenLimit / targetScale;
+        const previewCameraY = Number.isFinite(crestCameraLimit)
+          ? Math.max(0, Math.min(baseCameraY, crestCameraLimit))
+          : Math.max(0, baseCameraY);
+        const crestScreenY = (groundY - previewCameraY) * targetScale;
+        if (crestScreenY < crestScreenLimit && groundY > previewCameraY) {
+          const requiredScale = clamp(
+            crestScreenLimit / (groundY - previewCameraY),
+            MIN_CAMERA_SCALE,
+            1
+          );
+          if (requiredScale > targetScale + 1e-4) {
+            targetScale = requiredScale;
+            continue;
+          }
+        }
+        break;
+      }
+
       const scaleLerp = clamp(delta * 4.5, CAMERA_SCALE_LERP_MIN, CAMERA_SCALE_LERP_MAX);
       if (!Number.isFinite(this.cameraScale)) {
-        this.cameraScale = desiredScale;
+        this.cameraScale = targetScale;
       } else {
-        this.cameraScale += (desiredScale - this.cameraScale) * scaleLerp;
+        const nextScale = this.cameraScale + (targetScale - this.cameraScale) * scaleLerp;
+        this.cameraScale = targetScale > this.cameraScale ? Math.max(targetScale, nextScale) : nextScale;
       }
       this.cameraScale = clamp(this.cameraScale, MIN_CAMERA_SCALE, 1);
 
       const viewWorldHeight = this.viewHeight / this.cameraScale;
       const lowerBound = Math.max(0, desiredBottom - viewWorldHeight);
       const upperBound = Math.max(lowerBound, desiredTop);
-      const desiredCameraY = clamp(desiredTop, lowerBound, upperBound);
+      const baseCameraY = clamp(desiredTop, lowerBound, upperBound);
+      const crestCameraLimit = groundY - crestScreenLimit / this.cameraScale;
+      let desiredCameraY = Number.isFinite(crestCameraLimit)
+        ? Math.max(0, Math.min(baseCameraY, crestCameraLimit))
+        : Math.max(0, baseCameraY);
       const verticalLerp = clamp(delta * 4.5, CAMERA_VERTICAL_LERP_MIN, CAMERA_VERTICAL_LERP_MAX);
       if (!Number.isFinite(this.cameraY)) {
         this.cameraY = desiredCameraY;
       } else {
         this.cameraY += (desiredCameraY - this.cameraY) * verticalLerp;
+      }
+      if (Number.isFinite(crestCameraLimit)) {
+        this.cameraY = Math.min(this.cameraY, Math.max(0, crestCameraLimit));
       }
       this.cameraY = Math.max(0, this.cameraY);
 
