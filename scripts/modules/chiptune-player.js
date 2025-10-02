@@ -1430,7 +1430,12 @@
           const value = typeof this.soundFontSelect.value === 'string' ? this.soundFontSelect.value : '';
           const normalized = value && value.trim() ? value.trim() : null;
           const wasPlaying = this.playing;
-          this.setSoundFontSelection(normalized, { autoLoad: this.engineMode === 'hifi', stopPlayback: wasPlaying });
+          const shouldActivateHiFi = Boolean(normalized) && this.engineMode !== 'hifi';
+          this.setSoundFontSelection(normalized, { autoLoad: !shouldActivateHiFi && this.engineMode === 'hifi', stopPlayback: wasPlaying });
+          if (shouldActivateHiFi) {
+            this.setEngineMode('hifi');
+            this.setStatus('Mode Hi-Fi activé automatiquement pour utiliser la SoundFont.', 'success');
+          }
         });
       }
 
