@@ -460,33 +460,6 @@
               data-i18n="index.arcadeBanner.gameButton"
             ></button>
           </div>
-          <div class="bannierearcade__status-group arcade-header__status-group" role="presentation">
-            <button class="arcade-header__status" type="button" data-arcade-ticket-button>
-              <span class="arcade-header__status-label" data-i18n="index.sections.arcade.header.tickets"></span>
-              <span
-                class="arcade-header__status-value"
-                data-arcade-ticket-value
-                data-i18n="index.sections.gacha.tickets.single"
-              ></span>
-            </button>
-            <button
-              class="arcade-header__status arcade-header__status--bonus"
-              type="button"
-              data-arcade-bonus-button
-              aria-describedby="arcadeBonusTicketAnnouncementWave"
-              aria-disabled="true"
-              disabled
-            >
-              <span class="arcade-header__status-label" data-i18n="index.sections.arcade.header.mach3"></span>
-              <span class="arcade-header__status-value" data-arcade-bonus-value>0</span>
-            </button>
-            <span
-              id="arcadeBonusTicketAnnouncementWave"
-              class="visually-hidden"
-              data-arcade-bonus-announcement
-              data-i18n="index.sections.arcade.header.mach3Announcement"
-            ></span>
-          </div>
         </div>
       </div>
       <div class="wave-stage" id="waveStage">
@@ -496,52 +469,6 @@
           role="presentation"
           data-i18n="aria-label:index.sections.wave.canvasAria"
         ></canvas>
-        <dl class="wave-hud" role="presentation">
-          <div class="wave-hud__item">
-            <dt class="wave-hud__label" data-i18n="index.sections.wave.hud.distance"></dt>
-            <dd class="wave-hud__value">
-              <span class="wave-hud__metric" id="waveDistanceValue">0</span>
-              <span class="wave-hud__unit" data-i18n="index.sections.wave.hud.distanceUnit"></span>
-            </dd>
-          </div>
-          <div class="wave-hud__item">
-            <dt class="wave-hud__label" data-i18n="index.sections.wave.hud.speed"></dt>
-            <dd class="wave-hud__value">
-              <span class="wave-hud__metric" id="waveSpeedValue">0</span>
-              <span class="wave-hud__unit" data-i18n="index.sections.wave.hud.speedUnit"></span>
-            </dd>
-          </div>
-          <div class="wave-hud__item">
-            <dt class="wave-hud__label" data-i18n="index.sections.wave.hud.altitude"></dt>
-            <dd class="wave-hud__value">
-              <span class="wave-hud__metric" id="waveAltitudeValue">0</span>
-              <span class="wave-hud__unit" data-i18n="index.sections.wave.hud.altitudeUnit"></span>
-            </dd>
-          </div>
-        </dl>
-        <p
-          class="wave-status"
-          id="waveStatusMessage"
-          aria-live="polite"
-          data-i18n="index.sections.wave.status.ready"
-        ></p>
-        <div class="wave-controls">
-          <button
-            type="button"
-            id="waveResetButton"
-            class="wave-controls__reset"
-            data-i18n="index.sections.wave.controls.reset"
-          >
-            Relancer
-          </button>
-          <div class="wave-controls-hint" aria-hidden="true">
-            <span data-i18n="index.sections.wave.controls.hold"></span>
-            <span class="visually-hidden">—</span>
-            <kbd>Space</kbd>
-            <span aria-hidden="true">/</span>
-            <kbd>↓</kbd>
-          </div>
-        </div>
       </div>
     </section>
 
