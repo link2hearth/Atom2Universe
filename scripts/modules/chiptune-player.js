@@ -556,18 +556,25 @@
       }
       if (this.engineSelect) {
         const hasScc = Boolean(this.sccWaveform);
-        const initialValue = this.engineSelect.value === 'original' ? 'original' : 'scc';
-        if (!hasScc) {
-          const sccOption = this.engineSelect.querySelector('option[value="scc"]');
-          if (sccOption) {
-            sccOption.disabled = true;
-          }
+        const validModes = new Set(['original', 'scc', 'ym2413']);
+        const requestedValue = typeof this.engineSelect.value === 'string' ? this.engineSelect.value : '';
+        let initialValue = validModes.has(requestedValue)
+          ? requestedValue
+          : (hasScc ? 'scc' : 'ym2413');
+        if (initialValue === 'scc' && !hasScc) {
+          initialValue = 'ym2413';
         }
-        const normalizedInitial = hasScc ? initialValue : 'original';
-        if (this.engineSelect.value !== normalizedInitial) {
-          this.engineSelect.value = normalizedInitial;
+        if (!validModes.has(initialValue)) {
+          initialValue = 'original';
         }
-        this.setEngineMode(normalizedInitial, { syncSelect: false });
+        const sccOption = this.engineSelect.querySelector('option[value="scc"]');
+        if (sccOption) {
+          sccOption.disabled = !hasScc;
+        }
+        if (this.engineSelect.value !== initialValue) {
+          this.engineSelect.value = initialValue;
+        }
+        this.setEngineMode(initialValue, { syncSelect: false });
       } else {
         this.engineMode = this.sccWaveform ? 'scc' : 'original';
       }
@@ -873,7 +880,12 @@
     setEngineMode(value, options = {}) {
       const { syncSelect = true } = options;
       const hasScc = Boolean(this.sccWaveform);
-      const normalized = value === 'scc' && hasScc ? 'scc' : 'original';
+      let normalized = 'original';
+      if (value === 'ym2413') {
+        normalized = 'ym2413';
+      } else if (value === 'scc' && hasScc) {
+        normalized = 'scc';
+      }
       this.engineMode = normalized;
       if (this.engineSelect && syncSelect) {
         if (this.engineSelect.value !== normalized) {
@@ -895,6 +907,9 @@
     getEngineLabel() {
       if (this.engineMode === 'scc' && this.sccWaveform) {
         return 'moteur SCC';
+      }
+      if (this.engineMode === 'ym2413') {
+        return 'moteur Yamaha YM2413';
       }
       return 'moteur original';
     }
@@ -1634,6 +1649,10 @@
         ...(overrides || {}),
       });
 
+      if (this.engineMode === 'ym2413') {
+        return this.getYm2413InstrumentSettings(note, { family, baseEnvelope });
+      }
+
       const createPulseDefinition = (options = {}) => {
         const {
           gain = 0.74,
@@ -1925,6 +1944,332 @@
           : 1;
       const gainAdjustment = 0.92 + (articulation * 0.16);
       const gain = Math.min(1.05, baseGain * gainAdjustment);
+
+      const instrument = {
+        ...definition,
+        gain,
+        envelope,
+        reverbSend,
+      };
+
+      if (filter) {
+        instrument.filter = filter;
+      }
+      if (lfo) {
+        instrument.lfo = lfo;
+      }
+
+      return instrument;
+    }
+
+    getYm2413InstrumentSettings(note, context) {
+      const { family, baseEnvelope } = context || {};
+
+      const envelopeSource = baseEnvelope || {
+        attack: 0.01,
+        decay: 0.12,
+        sustain: 0.4,
+        release: 0.24,
+      };
+
+      const mergeEnvelope = (overrides = {}) => ({
+        ...envelopeSource,
+        ...(overrides || {}),
+      });
+
+      const createFmDefinition = (options = {}) => {
+        const {
+          gain = 0.76,
+          layers,
+          filter,
+          lfo,
+          reverbSend = 0.14,
+          envelope,
+          chorus,
+        } = options;
+        const definition = {
+          gain,
+          waveform: 'fm',
+          layers: Array.isArray(layers) && layers.length ? layers : [
+            { type: 'sine', detune: -4, gain: 0.5 },
+            { type: 'sine', detune: 4, gain: 0.5 },
+            { type: 'sine', detune: 12, gain: 0.22 },
+          ],
+          filter: filter ?? { type: 'lowpass', frequency: 5200, Q: 0.85 },
+          lfo: lfo ?? { rate: 5.3, vibratoDepth: 5.1, tremoloDepth: 0.04 },
+          reverbSend,
+          envelope: mergeEnvelope(envelope),
+        };
+        if (chorus) {
+          definition.chorus = { ...chorus };
+        }
+        return definition;
+      };
+
+      const definitions = {
+        default: createFmDefinition({
+          layers: [
+            { type: 'sine', detune: -4, gain: 0.5 },
+            { type: 'sine', detune: 4, gain: 0.5 },
+            { type: 'sine', detune: 12, gain: 0.22 },
+          ],
+          filter: { type: 'lowpass', frequency: 5200, Q: 0.85 },
+          lfo: { rate: 5.3, vibratoDepth: 5.1, tremoloDepth: 0.04 },
+          reverbSend: 0.12,
+        }),
+        0: createFmDefinition({
+          layers: [
+            { type: 'sine', detune: -6, gain: 0.48 },
+            { type: 'sine', detune: 6, gain: 0.48 },
+            { type: 'sine', detune: 12, gain: 0.24 },
+            { type: 'sine', detune: 19, gain: 0.12 },
+          ],
+          filter: { type: 'lowpass', frequency: 4800, Q: 0.9 },
+          envelope: { decay: 0.14, sustain: 0.26, release: 0.24 },
+          reverbSend: 0.11,
+        }),
+        1: createFmDefinition({
+          layers: [
+            { type: 'sine', detune: -8, gain: 0.42 },
+            { type: 'sine', detune: 8, gain: 0.42 },
+            { type: 'sine', detune: 19, gain: 0.18 },
+          ],
+          filter: { type: 'highpass', frequency: 240, Q: 0.7 },
+          envelope: { decay: 0.08, sustain: 0.18, release: 0.18 },
+          reverbSend: 0.08,
+        }),
+        2: createFmDefinition({
+          layers: [
+            { type: 'sine', detune: -2, gain: 0.5 },
+            { type: 'sine', detune: 2, gain: 0.5 },
+            { type: 'sine', detune: 7, gain: 0.28 },
+          ],
+          filter: { type: 'lowpass', frequency: 3800, Q: 1.05 },
+          envelope: { decay: 0.18, sustain: 0.5, release: 0.42 },
+          lfo: { rate: 4.6, vibratoDepth: 3.8, tremoloDepth: 0.05 },
+          chorus: { mix: 0.3, rate: 0.6, depth: 0.014, delay: 0.024, feedback: 0.12, spread: 0.5 },
+          reverbSend: 0.15,
+        }),
+        3: createFmDefinition({
+          layers: [
+            { type: 'sine', detune: -5, gain: 0.46 },
+            { type: 'sine', detune: 5, gain: 0.46 },
+            { type: 'sine', detune: 17, gain: 0.2 },
+          ],
+          filter: { type: 'highpass', frequency: 320, Q: 0.8 },
+          envelope: { decay: 0.11, sustain: 0.22, release: 0.2 },
+          reverbSend: 0.09,
+        }),
+        4: createFmDefinition({
+          layers: [
+            { type: 'sine', detune: -12, gain: 0.6 },
+            { type: 'sine', detune: -5, gain: 0.42 },
+            { type: 'sine', detune: 0, gain: 0.32 },
+          ],
+          filter: { type: 'lowpass', frequency: 2600, Q: 0.9 },
+          envelope: { sustain: 0.5, release: 0.22 },
+          lfo: { rate: 4.2, vibratoDepth: 2.8, tremoloDepth: 0 },
+          reverbSend: 0.07,
+        }),
+        5: createFmDefinition({
+          layers: [
+            { type: 'sine', detune: -4, gain: 0.48 },
+            { type: 'sine', detune: 4, gain: 0.48 },
+            { type: 'sine', detune: 9, gain: 0.28 },
+          ],
+          filter: { type: 'lowpass', frequency: 4200, Q: 0.95 },
+          envelope: { decay: 0.2, sustain: 0.58, release: 0.48 },
+          chorus: { mix: 0.34, rate: 0.55, depth: 0.016, delay: 0.028, feedback: 0.15, spread: 0.55 },
+          reverbSend: 0.16,
+        }),
+        6: createFmDefinition({
+          layers: [
+            { type: 'sine', detune: -7, gain: 0.46 },
+            { type: 'sine', detune: 7, gain: 0.46 },
+            { type: 'sine', detune: 14, gain: 0.22 },
+          ],
+          filter: { type: 'lowpass', frequency: 4400, Q: 0.9 },
+          envelope: { decay: 0.2, sustain: 0.52, release: 0.46 },
+          chorus: { mix: 0.36, rate: 0.65, depth: 0.015, delay: 0.026, feedback: 0.14, spread: 0.6 },
+          lfo: { rate: 4.8, vibratoDepth: 4.6, tremoloDepth: 0.04 },
+          reverbSend: 0.17,
+        }),
+        7: createFmDefinition({
+          layers: [
+            { type: 'sine', detune: -6, gain: 0.5 },
+            { type: 'sine', detune: 6, gain: 0.5 },
+            { type: 'sine', detune: 18, gain: 0.22 },
+          ],
+          filter: { type: 'lowpass', frequency: 5200, Q: 0.8 },
+          envelope: { decay: 0.18, sustain: 0.4, release: 0.32 },
+          lfo: { rate: 5.6, vibratoDepth: 5.4, tremoloDepth: 0.05 },
+          reverbSend: 0.13,
+        }),
+        8: createFmDefinition({
+          layers: [
+            { type: 'sine', detune: -3, gain: 0.44 },
+            { type: 'sine', detune: 3, gain: 0.44 },
+            { type: 'sine', detune: 11, gain: 0.26 },
+          ],
+          filter: { type: 'lowpass', frequency: 3600, Q: 1.05 },
+          envelope: { decay: 0.16, sustain: 0.48, release: 0.38 },
+          reverbSend: 0.12,
+        }),
+        9: createFmDefinition({
+          layers: [
+            { type: 'sine', detune: -2, gain: 0.48 },
+            { type: 'sine', detune: 2, gain: 0.48 },
+            { type: 'sine', detune: 15, gain: 0.18 },
+          ],
+          filter: { type: 'lowpass', frequency: 6000, Q: 0.75 },
+          envelope: { decay: 0.18, sustain: 0.46, release: 0.4 },
+          lfo: { rate: 4.2, vibratoDepth: 3.4, tremoloDepth: 0.03 },
+          reverbSend: 0.14,
+        }),
+        10: createFmDefinition({
+          layers: [
+            { type: 'sine', detune: 0, gain: 0.48 },
+            { type: 'sine', detune: 7, gain: 0.42 },
+            { type: 'sine', detune: 19, gain: 0.22 },
+          ],
+          filter: { type: 'lowpass', frequency: 5400, Q: 0.88 },
+          envelope: { decay: 0.14, sustain: 0.32, release: 0.3 },
+          lfo: { rate: 6, vibratoDepth: 6, tremoloDepth: 0.05 },
+          reverbSend: 0.11,
+        }),
+        11: createFmDefinition({
+          layers: [
+            { type: 'sine', detune: -5, gain: 0.44 },
+            { type: 'sine', detune: 5, gain: 0.44 },
+            { type: 'sine', detune: 12, gain: 0.28 },
+          ],
+          filter: { type: 'lowpass', frequency: 4000, Q: 0.95 },
+          envelope: { decay: 0.24, sustain: 0.62, release: 0.58 },
+          chorus: { mix: 0.4, rate: 0.5, depth: 0.018, delay: 0.03, feedback: 0.16, spread: 0.6 },
+          reverbSend: 0.18,
+        }),
+        12: createFmDefinition({
+          layers: [
+            { type: 'sine', detune: -9, gain: 0.38 },
+            { type: 'sine', detune: 9, gain: 0.38 },
+            { type: 'sine', detune: 21, gain: 0.24 },
+          ],
+          filter: { type: 'bandpass', frequency: 3200, Q: 1.1 },
+          envelope: { decay: 0.12, sustain: 0.28, release: 0.26 },
+          lfo: { rate: 5.8, vibratoDepth: 5.6, tremoloDepth: 0.05 },
+          reverbSend: 0.12,
+        }),
+        13: createFmDefinition({
+          layers: [
+            { type: 'sine', detune: -6, gain: 0.42 },
+            { type: 'sine', detune: 6, gain: 0.42 },
+            { type: 'sine', detune: 14, gain: 0.24 },
+          ],
+          filter: { type: 'lowpass', frequency: 3400, Q: 0.9 },
+          envelope: { decay: 0.18, sustain: 0.36, release: 0.32 },
+          reverbSend: 0.11,
+        }),
+        14: createFmDefinition({
+          layers: [
+            { type: 'sine', detune: -8, gain: 0.4 },
+            { type: 'sine', detune: 8, gain: 0.4 },
+            { type: 'sine', detune: 20, gain: 0.22 },
+          ],
+          filter: { type: 'highpass', frequency: 420, Q: 0.75 },
+          envelope: { decay: 0.1, sustain: 0.2, release: 0.2 },
+          reverbSend: 0.09,
+        }),
+        15: createFmDefinition({
+          layers: [
+            { type: 'sine', detune: 0, gain: 0.4 },
+            { type: 'sine', detune: 12, gain: 0.3 },
+            { type: 'sine', detune: 24, gain: 0.2 },
+          ],
+          filter: { type: 'bandpass', frequency: 2800, Q: 1 },
+          envelope: { decay: 0.14, sustain: 0.24, release: 0.28 },
+          lfo: { rate: 6.4, vibratoDepth: 6.2, tremoloDepth: 0.05 },
+          reverbSend: 0.12,
+        }),
+      };
+
+      const definition = Object.prototype.hasOwnProperty.call(definitions, family)
+        ? definitions[family]
+        : definitions.default;
+      const articulation = this.getArticulationFactor();
+
+      const envelope = {
+        ...definition.envelope,
+      };
+
+      const attackBase = Number.isFinite(envelope.attack) ? envelope.attack : envelopeSource.attack;
+      const decayBase = Number.isFinite(envelope.decay) ? envelope.decay : envelopeSource.decay;
+      const sustainBase = Number.isFinite(envelope.sustain) ? envelope.sustain : envelopeSource.sustain;
+      const releaseBase = Number.isFinite(envelope.release) ? envelope.release : envelopeSource.release;
+
+      const noteDuration = Number.isFinite(note?.duration) ? Math.max(0.02, note.duration) : 0.24;
+
+      const attackScale = Math.max(0.4, 1 - (articulation * 0.55));
+      const decayScale = Math.max(0.4, 1 - (articulation * 0.45));
+      const sustainCeiling = 0.6 + ((1 - articulation) * 0.25);
+      const sustainFloor = 0.2 + ((1 - articulation) * 0.12);
+      const releaseFloor = 0.2 + ((1 - articulation) * 0.1);
+      const releaseCeiling = 0.85 + ((1 - articulation) * 0.4);
+      const durationFactor = 0.38 + ((1 - articulation) * 0.3);
+      const durationRelease = Math.min(releaseCeiling, Math.max(releaseFloor, noteDuration * durationFactor));
+
+      envelope.attack = Math.max(0.003, attackBase * attackScale);
+      envelope.decay = Math.max(0.035, decayBase * decayScale);
+      const sustainValue = Number.isFinite(sustainBase) ? sustainBase : sustainCeiling;
+      envelope.sustain = Math.max(sustainFloor, Math.min(sustainCeiling, sustainValue));
+      const releaseValue = Number.isFinite(releaseBase) ? releaseBase : durationRelease;
+      envelope.release = Math.max(releaseFloor, Math.min(releaseCeiling, Math.max(releaseValue, durationRelease)));
+
+      let filter = null;
+      if (definition.filter) {
+        filter = { ...definition.filter };
+        if (filter.type === 'lowpass') {
+          const brightnessBoost = 0.9 + (articulation * 0.9);
+          const baseFrequency = Number.isFinite(filter.frequency) ? filter.frequency : 3600;
+          filter.frequency = Math.min(7200, baseFrequency * brightnessBoost);
+          if (Number.isFinite(filter.Q)) {
+            filter.Q = Math.max(0.55, Math.min(1.4, filter.Q * (0.85 + (articulation * 0.2))));
+          }
+        } else if (filter.type === 'highpass') {
+          const baseFrequency = Number.isFinite(filter.frequency) ? filter.frequency : 220;
+          const openness = 0.8 + (articulation * 0.6);
+          filter.frequency = Math.min(3200, baseFrequency * openness);
+        }
+      }
+
+      let lfo = null;
+      if (definition.lfo) {
+        lfo = { ...definition.lfo };
+        if (Number.isFinite(lfo.vibratoDepth)) {
+          lfo.vibratoDepth = Math.max(0, lfo.vibratoDepth * (0.5 + ((1 - articulation) * 0.5)));
+          if (lfo.vibratoDepth < 0.4) {
+            lfo.vibratoDepth = 0;
+          }
+        }
+        if (Number.isFinite(lfo.tremoloDepth)) {
+          lfo.tremoloDepth = Math.max(0, lfo.tremoloDepth * (0.55 + ((1 - articulation) * 0.45)));
+          if (lfo.tremoloDepth < 0.015) {
+            lfo.tremoloDepth = 0;
+          }
+        }
+      }
+
+      const baseReverbSend = Number.isFinite(definition.reverbSend)
+        ? definition.reverbSend
+        : this.reverbDefaultSend;
+      const reverbScale = 0.4 + ((1 - articulation) * 0.6);
+      const reverbSend = Math.max(0, baseReverbSend * reverbScale);
+
+      const baseGain = Number.isFinite(definition.gain)
+        ? definition.gain
+        : Number.isFinite(definition.volume)
+          ? definition.volume
+          : 1;
+      const gain = Math.min(1.1, baseGain * (0.88 + (articulation * 0.22)));
 
       const instrument = {
         ...definition,
