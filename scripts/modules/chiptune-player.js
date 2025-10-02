@@ -2689,6 +2689,18 @@
         return this.getYm2413InstrumentSettings(note, { family, baseEnvelope });
       }
 
+      const defaultWaveform = this.engineMode === 'scc' ? 'scc' : 'analog';
+
+      const withLayerDefaults = (sourceLayers, fallbackLayers) => {
+        const baseLayers = Array.isArray(sourceLayers) && sourceLayers.length
+          ? sourceLayers
+          : fallbackLayers;
+        return baseLayers.map(layer => ({
+          waveform: defaultWaveform,
+          ...layer,
+        }));
+      };
+
       const createPulseDefinition = (options = {}) => {
         const {
           gain = 0.74,
@@ -2700,11 +2712,11 @@
         } = options;
         return {
           gain,
-          waveform: options.waveform ?? 'analog',
-          layers: Array.isArray(layers) && layers.length ? layers : [
+          waveform: options.waveform ?? defaultWaveform,
+          layers: withLayerDefaults(layers, [
             { type: 'pulse', dutyCycle: 0.35, detune: -7, gain: 0.55 },
             { type: 'pulse', dutyCycle: 0.65, detune: 7, gain: 0.55 },
-          ],
+          ]),
           filter: filter ?? { type: 'lowpass', frequency: 5800, Q: 0.65 },
           lfo: lfo ?? { rate: 4.6, vibratoDepth: 4.2, tremoloDepth: 0.03 },
           reverbSend,
@@ -2723,11 +2735,12 @@
         } = options;
         return {
           gain,
-          layers: Array.isArray(layers) && layers.length ? layers : [
+          waveform: options.waveform ?? defaultWaveform,
+          layers: withLayerDefaults(layers, [
             { type: 'triangle', detune: -6, gain: 0.5 },
             { type: 'triangle', detune: 6, gain: 0.5 },
             { type: 'pulse', dutyCycle: 0.5, detune: 0, gain: 0.25 },
-          ],
+          ]),
           filter: filter ?? { type: 'lowpass', frequency: 5200, Q: 0.6 },
           lfo: lfo ?? { rate: 4.2, vibratoDepth: 3.2, tremoloDepth: 0.02 },
           reverbSend,
@@ -2746,11 +2759,12 @@
         } = options;
         return {
           gain,
-          layers: Array.isArray(layers) && layers.length ? layers : [
+          waveform: options.waveform ?? defaultWaveform,
+          layers: withLayerDefaults(layers, [
             { type: 'sine', detune: -12, gain: 0.6 },
             { type: 'sine', detune: 0, gain: 0.55 },
             { type: 'triangle', detune: 0, gain: 0.35 },
-          ],
+          ]),
           filter: filter ?? { type: 'lowpass', frequency: 3200, Q: 0.75 },
           lfo: lfo ?? { rate: 4.8, vibratoDepth: 2.4, tremoloDepth: 0 },
           reverbSend,
@@ -2769,11 +2783,11 @@
         } = options;
         return {
           gain,
-          waveform: options.waveform ?? 'analog',
-          layers: Array.isArray(layers) && layers.length ? layers : [
+          waveform: options.waveform ?? defaultWaveform,
+          layers: withLayerDefaults(layers, [
             { type: 'pulse', dutyCycle: 0.28, detune: -5, gain: 0.5 },
             { type: 'pulse', dutyCycle: 0.72, detune: 5, gain: 0.5 },
-          ],
+          ]),
           filter: filter ?? { type: 'highpass', frequency: 180, Q: 0.6 },
           lfo: lfo ?? { rate: 5.6, vibratoDepth: 2.2, tremoloDepth: 0.05 },
           reverbSend,
