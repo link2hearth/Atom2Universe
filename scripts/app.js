@@ -2001,6 +2001,7 @@ const elements = {
   navGoalsButton: document.querySelector('.nav-button[data-target="goals"]'),
   navBigBangButton: document.getElementById('navBigBangButton'),
   pages: document.querySelectorAll('.page'),
+  statusAtomsButton: document.getElementById('statusAtomsButton'),
   statusAtoms: document.getElementById('statusAtoms'),
   statusApc: document.getElementById('statusApc'),
   statusAps: document.getElementById('statusAps'),
@@ -5863,6 +5864,15 @@ if (elements.metauxNewGameButton) {
 
 if (elements.brandPortal) {
   elements.brandPortal.addEventListener('click', () => {
+    showPage('game');
+  });
+}
+
+if (elements.statusAtomsButton) {
+  elements.statusAtomsButton.addEventListener('click', () => {
+    if (document?.body?.dataset?.activePage === 'game') {
+      return;
+    }
     showPage('game');
   });
 }

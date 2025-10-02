@@ -421,6 +421,25 @@ body.theme-neon .brand--portal-ready {
   font-size: clamp(0.92rem, 1.6vw, 1.2rem);
 }
 
+.status-atoms-button {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.status-atoms-button:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.6);
+  outline-offset: 0.25rem;
+}
+
 .status-frenzy-indicator {
   font-family: 'Orbitron', sans-serif;
   font-size: clamp(0.55rem, 0.9vw, 0.72rem);
