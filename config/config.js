@@ -88,7 +88,7 @@ function createShopBuildingDefinitions() {
     {
       id: 'particleAccelerator',
       name: 'Accélérateur de particules',
-      description: 'Boostez vos particules pour décupler l’APC.',
+      description: 'Boostez vos particules pour intensifier la production passive.',
       effectSummary:
         'Production passive : +50 APS par niveau.',
       category: 'hybrid',
@@ -148,7 +148,7 @@ function createShopBuildingDefinitions() {
     {
       id: 'starForge',
       name: 'Forgeron d’étoiles',
-      description: 'Façonnez des étoiles et dopez votre APC.',
+      description: 'Façonnez des étoiles et dopez votre production passive.',
       effectSummary:
         'Production passive : +500 000 APS par niveau.',
       category: 'hybrid',
@@ -208,7 +208,7 @@ function createShopBuildingDefinitions() {
     {
       id: 'cosmicArchitect',
       name: 'Architecte Cosmique',
-      description: 'Réécrivez les plans du cosmos pour réduire les coûts.',
+      description: 'Réécrivez les plans du cosmos pour libérer une énergie infinie.',
       effectSummary:
         'Production passive : +1 000 000 000 000 APS par niveau.',
       category: 'hybrid',
