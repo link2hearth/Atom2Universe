@@ -12,6 +12,12 @@
       "file": "Assets/Music/Piano.sf2",
       "default": false
     },
+      {
+      "id": "Patria",
+      "name": "Patria",
+      "file": "Assets/Music/Patria.sf2",
+      "default": false
+    },
     {
       "id": "Classical_Oboe",
       "name": "Classical_Oboe",
