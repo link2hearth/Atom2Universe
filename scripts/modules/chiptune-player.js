@@ -446,6 +446,7 @@
       this.articulationValue = elements.articulationValue;
       this.speedSlider = elements.speedSlider;
       this.speedValue = elements.speedValue;
+      this.engineSelect = elements.engineSelect;
 
       const hasWindow = typeof window !== 'undefined';
       if (hasWindow) {
@@ -487,6 +488,7 @@
       this.reverbBuffer = null;
       this.reverbDefaultSend = 0.12;
       this.sccWaveform = typeof window !== 'undefined' ? window.SccWaveform || null : null;
+      this.engineMode = this.sccWaveform ? 'scc' : 'original';
       this.schedulerInterval = null;
       this.schedulerState = null;
       this.scheduleAheadTime = 0.25;
@@ -551,6 +553,23 @@
         } else {
           this.speedSlider.value = '100';
         }
+      }
+      if (this.engineSelect) {
+        const hasScc = Boolean(this.sccWaveform);
+        const initialValue = this.engineSelect.value === 'original' ? 'original' : 'scc';
+        if (!hasScc) {
+          const sccOption = this.engineSelect.querySelector('option[value="scc"]');
+          if (sccOption) {
+            sccOption.disabled = true;
+          }
+        }
+        const normalizedInitial = hasScc ? initialValue : 'original';
+        if (this.engineSelect.value !== normalizedInitial) {
+          this.engineSelect.value = normalizedInitial;
+        }
+        this.setEngineMode(normalizedInitial, { syncSelect: false });
+      } else {
+        this.engineMode = this.sccWaveform ? 'scc' : 'original';
       }
       this.setTransposeSemitones(this.transposeSemitones, { syncSlider: true, refreshVoices: false });
       this.setFineDetuneCents(this.fineDetuneCents, { syncSlider: true, refreshVoices: false });
@@ -647,6 +666,12 @@
             return;
           }
           this.setPlaybackSpeed(sliderValue / 100);
+        });
+      }
+
+      if (this.engineSelect) {
+        this.engineSelect.addEventListener('change', () => {
+          this.setEngineMode(this.engineSelect.value);
         });
       }
 
@@ -845,20 +870,64 @@
       this.updateReadyStatusMessage();
     }
 
+    setEngineMode(value, options = {}) {
+      const { syncSelect = true } = options;
+      const hasScc = Boolean(this.sccWaveform);
+      const normalized = value === 'scc' && hasScc ? 'scc' : 'original';
+      this.engineMode = normalized;
+      if (this.engineSelect && syncSelect) {
+        if (this.engineSelect.value !== normalized) {
+          this.engineSelect.value = normalized;
+        }
+        const sccOption = this.engineSelect.querySelector('option[value="scc"]');
+        if (sccOption) {
+          sccOption.disabled = !hasScc;
+        }
+      }
+      if (this.playing) {
+        this.updateReadyStatusMessage();
+        this.setStatus(this.buildPlayingStatusMessage(), 'success');
+      } else {
+        this.updateReadyStatusMessage();
+      }
+    }
+
+    getEngineLabel() {
+      if (this.engineMode === 'scc' && this.sccWaveform) {
+        return 'moteur SCC';
+      }
+      return 'moteur original';
+    }
+
+    buildPlayingStatusMessage(extra = '') {
+      let message = this.currentTitle
+        ? `Lecture en cours : ${this.currentTitle}`
+        : 'Lecture en cours';
+      const engineLabel = this.getEngineLabel();
+      if (engineLabel) {
+        message += ` — ${engineLabel}`;
+      }
+      if (extra) {
+        message += ` — ${extra}`;
+      }
+      return message;
+    }
+
     updateReadyStatusMessage() {
       if (!this.timeline || !this.currentTitle) {
         return;
       }
       const summary = this.formatTimelineSummary(this.timeline, this.timelineAnalysis);
-        const baseMessage = summary
-          ? `Prêt : ${this.currentTitle} — ${summary}`
-          : `Prêt : ${this.currentTitle} (${this.formatDurationWithSpeed(this.timeline.duration)})`;
-        const message = this.sccWaveform ? `${baseMessage} — moteur SCC` : baseMessage;
-        this.readyStatusMessage = message;
-        if (!this.playing) {
-          this.setStatus(message, 'success');
-        }
+      const baseMessage = summary
+        ? `Prêt : ${this.currentTitle} — ${summary}`
+        : `Prêt : ${this.currentTitle} (${this.formatDurationWithSpeed(this.timeline.duration)})`;
+      const engineLabel = this.getEngineLabel();
+      const message = engineLabel ? `${baseMessage} — ${engineLabel}` : baseMessage;
+      this.readyStatusMessage = message;
+      if (!this.playing) {
+        this.setStatus(message, 'success');
       }
+    }
 
     formatSemitoneLabel(value) {
       const normalized = Number.isFinite(value) ? Math.round(value) : 0;
@@ -1124,10 +1193,7 @@
             ? `${progressLabel} · ${this.formatSpeedFactor(speed)}`
             : this.formatSpeedFactor(speed);
         }
-        let message = `Lecture en cours : ${this.currentTitle}`;
-        if (progressLabel) {
-          message += ` — ${progressLabel}`;
-        }
+        const message = this.buildPlayingStatusMessage(progressLabel);
         if (this.status.textContent !== message) {
           this.status.textContent = message;
         }
@@ -1472,21 +1538,33 @@
     }
 
     shouldUseSccWaveform(instrument, layer) {
+      if (this.engineMode !== 'scc') {
+        return false;
+      }
       if (!this.sccWaveform) {
         return false;
       }
-      if (layer && layer.disableSccWaveform) {
+      if (instrument?.disableSccWaveform || layer?.disableSccWaveform) {
         return false;
       }
       const layerPreference = layer?.waveform;
       if (layerPreference === 'scc') {
         return true;
       }
+      if (layerPreference === 'analog' || layerPreference === 'original') {
+        return false;
+      }
       if (layerPreference && layerPreference !== 'auto') {
         return false;
       }
       const instrumentPreference = instrument?.waveform;
-      return instrumentPreference === 'scc';
+      if (instrumentPreference === 'analog' || instrumentPreference === 'original') {
+        return false;
+      }
+      if (instrumentPreference === 'scc') {
+        return true;
+      }
+      return true;
     }
 
     getNoiseBuffer() {
@@ -2025,6 +2103,63 @@
       };
     }
 
+    getSustainProfile(note, frequency, durationSeconds) {
+      const profile = {
+        gainScale: 1,
+        sustainScale: 1,
+        releaseScale: 1,
+        reverbScale: 1,
+      };
+
+      const duration = Number.isFinite(durationSeconds) ? Math.max(0, durationSeconds) : 0;
+      if (!Number.isFinite(frequency) || frequency <= 0 || duration <= 0.55) {
+        return profile;
+      }
+
+      const baseVelocity = Number.isFinite(note?.rawVelocity)
+        ? Math.max(0, Math.min(1, note.rawVelocity))
+        : (Number.isFinite(note?.velocity) ? Math.max(0, Math.min(1, note.velocity)) : 0.6);
+
+      const isLow = frequency < 260;
+      const isVeryLow = frequency < 150;
+      const isSub = frequency < 95;
+
+      if (isLow) {
+        const effectiveDuration = Math.max(0, duration - 0.55);
+        if (effectiveDuration <= 0) {
+          return profile;
+        }
+        const normalizedDuration = Math.min(1, effectiveDuration / 4.5);
+        const velocityInfluence = 0.7 + (baseVelocity * 0.45);
+        const gainDepth = isSub ? 0.72 : (isVeryLow ? 0.56 : 0.42);
+        const sustainDepth = isSub ? 0.78 : (isVeryLow ? 0.6 : 0.48);
+        const releaseDepth = isSub ? 0.68 : (isVeryLow ? 0.55 : 0.45);
+        const reverbDepth = isSub ? 0.65 : (isVeryLow ? 0.5 : 0.4);
+
+        const attenuation = normalizedDuration * gainDepth * velocityInfluence;
+        const sustainAttenuation = normalizedDuration * sustainDepth;
+        const releaseAttenuation = normalizedDuration * releaseDepth;
+        const reverbAttenuation = normalizedDuration * reverbDepth;
+
+        profile.gainScale = Math.max(0.28, 1 - attenuation);
+        profile.sustainScale = Math.max(0.22, 1 - sustainAttenuation);
+        profile.releaseScale = Math.max(0.38, 1 - releaseAttenuation);
+        profile.reverbScale = Math.max(0.35, 1 - reverbAttenuation);
+        return profile;
+      }
+
+      if (duration > 2.8) {
+        const normalizedDuration = Math.min(1, (duration - 2.8) / 4.2);
+        const gentleDepth = 0.22 + (baseVelocity * 0.18);
+        profile.gainScale = Math.max(0.45, 1 - (normalizedDuration * gentleDepth));
+        profile.sustainScale = Math.max(0.4, 1 - (normalizedDuration * 0.35));
+        profile.releaseScale = Math.max(0.5, 1 - (normalizedDuration * 0.45));
+        profile.reverbScale = Math.max(0.5, 1 - (normalizedDuration * 0.4));
+      }
+
+      return profile;
+    }
+
     scheduleNote(note, baseTime, speedParam = this.activePlaybackSpeed || 1) {
       if (!this.audioContext || !this.masterGain) {
         return;
@@ -2057,17 +2192,24 @@
       const voiceInput = this.audioContext.createGain();
       voiceInput.gain.setValueAtTime(1, startAt);
 
-      const peakGain = Math.min(1, velocity * this.maxGain * (instrument.gain || instrument.volume || 1));
+      let peakGain = Math.min(1, velocity * this.maxGain * (instrument.gain || instrument.volume || 1));
       const envelope = instrument.envelope || {};
       const attack = Math.max(0.002, (envelope.attack || 0.01) / speed);
       const decay = Math.max(0.01, (envelope.decay || 0.06) / speed);
-      const sustainLevel = Math.min(1, Math.max(0, envelope.sustain ?? 0.6));
+      let sustainLevel = Math.min(1, Math.max(0, envelope.sustain ?? 0.6));
       const timelineDuration = Math.max(0.02, Number.isFinite(note.duration) ? note.duration : 0.12);
       const duration = Math.max(0.02, timelineDuration / speed);
       const releaseBase = Number.isFinite(envelope.release)
         ? envelope.release
         : Math.min(0.9, timelineDuration * 0.8);
-      const releaseDuration = Math.max(0.08, releaseBase / speed);
+      let releaseDuration = Math.max(0.08, releaseBase / speed);
+      const sustainProfile = this.getSustainProfile(note, frequency, duration);
+      const gainScale = Number.isFinite(sustainProfile?.gainScale) ? sustainProfile.gainScale : 1;
+      const sustainScale = Number.isFinite(sustainProfile?.sustainScale) ? sustainProfile.sustainScale : 1;
+      const releaseScale = Number.isFinite(sustainProfile?.releaseScale) ? sustainProfile.releaseScale : 1;
+      peakGain = Math.min(1, peakGain * gainScale);
+      sustainLevel = Math.min(1, Math.max(0.05, sustainLevel * sustainScale));
+      releaseDuration = Math.max(0.04, releaseDuration * releaseScale);
       const stopAt = startAt + duration;
       const attackEnd = Math.min(stopAt, startAt + attack);
       const decayEnd = Math.min(stopAt, attackEnd + decay);
@@ -2251,7 +2393,8 @@
       }
 
       const baseReverbSend = instrument.reverbSend ?? this.reverbDefaultSend;
-      const reverbAmount = Math.max(0, Math.min(1, baseReverbSend * 0.7));
+      const reverbScale = Number.isFinite(sustainProfile?.reverbScale) ? sustainProfile.reverbScale : 1;
+      const reverbAmount = Math.max(0, Math.min(1, baseReverbSend * 0.7 * reverbScale));
       const dryAmount = Math.max(0, 1 - (reverbAmount * 0.5));
 
       const dryGain = this.audioContext.createGain();
@@ -2561,7 +2704,7 @@
           this.scheduleReadyStatusRestore();
         }, Math.ceil(((effectiveDuration || 0) + 0.6) * 1000));
 
-        this.setStatus(`Lecture en cours : ${this.currentTitle}`, 'success');
+        this.setStatus(this.buildPlayingStatusMessage(), 'success');
       } catch (error) {
         console.error(error);
         this.setStatus(`Lecture impossible : ${error.message}`, 'error');
@@ -2758,6 +2901,7 @@
     articulationValue: document.getElementById('chiptuneArticulationValue'),
     speedSlider: document.getElementById('chiptuneSpeedSlider'),
     speedValue: document.getElementById('chiptuneSpeedValue'),
+    engineSelect: document.getElementById('chiptuneEngineSelect'),
   };
 
   if (elements.fileInput && elements.playButton && elements.stopButton && elements.status) {
