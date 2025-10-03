@@ -44,6 +44,7 @@
   const UPHILL_DECEL_FACTOR_MIN = 0.35;
   const UPHILL_DECEL_SPEED = 420;
   const UPHILL_DRAG_BONUS = 0.9995;
+  const UPHILL_PRESS_GRACE_DURATION = 2;
 
   const degToRad = degrees => (degrees * Math.PI) / 180;
 
@@ -288,6 +289,7 @@
 
       this.distanceTravelled = 0;
       this.isPressing = false;
+      this.currentPressDuration = 0;
       this.pendingRelease = false;
       this.keyboardPressed = false;
       this.activePointers = new Set();
@@ -445,6 +447,7 @@
       this.distanceTravelled = 0;
       this.pendingRelease = false;
       this.isPressing = false;
+      this.currentPressDuration = 0;
       this.keyboardPressed = false;
       this.activePointers.clear();
       this.lastTimestamp = null;
@@ -556,9 +559,11 @@
       }
       this.isPressing = pressed;
       if (!pressed) {
+        this.currentPressDuration = 0;
         this.pendingRelease = this.player.onGround;
         return;
       }
+      this.currentPressDuration = 0;
       this.pendingRelease = false;
       this.applyPressImpulse();
     }
@@ -652,11 +657,20 @@
       this.terrain.ensure(targetMaxX);
       this.terrain.prune(pruneBefore);
 
+      if (this.isPressing) {
+        this.currentPressDuration += delta;
+      } else if (this.currentPressDuration !== 0) {
+        this.currentPressDuration = 0;
+      }
+
       if (this.player.onGround) {
         const slopeAngle = this.terrain.getSlopeAngle(this.player.x);
         const tangentX = Math.cos(slopeAngle);
         const tangentY = Math.sin(slopeAngle);
-        const gravityAccel = BASE_GRAVITY * (this.isPressing ? DIVE_MULTIPLIER : 1);
+        const uphillPressGraceActive =
+          this.isPressing && slopeAngle > 0 && this.currentPressDuration < UPHILL_PRESS_GRACE_DURATION;
+        const pressingPenaltyActive = this.isPressing && !uphillPressGraceActive;
+        const gravityAccel = BASE_GRAVITY * (pressingPenaltyActive ? DIVE_MULTIPLIER : 1);
         let slopeAccel = -gravityAccel * Math.sin(slopeAngle);
         if (slopeAngle > 0 && this.player.speed > 0) {
           const speedRatio = clamp(this.player.speed / UPHILL_DECEL_SPEED, 0, 1);
@@ -666,7 +680,7 @@
         const pushAccel = this.isPressing ? BASE_PUSH_ACCEL : BASE_PUSH_ACCEL * 0.12;
         const acceleration = slopeAccel + pushAccel;
         this.player.speed += acceleration * delta;
-        let dragFactor = this.isPressing ? HOLDING_DRAG : GROUND_DRAG;
+        let dragFactor = pressingPenaltyActive ? HOLDING_DRAG : GROUND_DRAG;
         if (slopeAngle > 0 && this.player.speed > 0) {
           const speedRatio = clamp(this.player.speed / UPHILL_DECEL_SPEED, 0, 1);
           const boostedDrag = lerp(dragFactor, UPHILL_DRAG_BONUS, speedRatio);
