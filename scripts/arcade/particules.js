@@ -653,13 +653,38 @@
 
   const gravitonConfig = readObject(ARCADE_CONFIG.graviton);
   const gravitonSpawnConfig = readObject(gravitonConfig.spawnChance);
+  const gravitonSpawnOverrides = readArray(gravitonSpawnConfig.overrides, []).map(override => {
+    const data = readObject(override);
+    const chance = readNumber(data.chance, Number.NaN, { min: 0, max: 1 });
+    const exactLevel = readNumber(data.level, Number.NaN, { min: 1, round: 'round' });
+    const minLevel = readNumber(data.minLevel, Number.NaN, { min: 1, round: 'round' });
+    const maxLevel = readNumber(data.maxLevel, Number.NaN, { min: 1, round: 'round' });
+    const hasExact = Number.isFinite(exactLevel);
+    const hasMin = Number.isFinite(minLevel);
+    const hasMax = Number.isFinite(maxLevel);
+    if (!Number.isFinite(chance) || (!hasExact && !hasMin && !hasMax)) {
+      return null;
+    }
+    const normalized = { chance };
+    if (hasExact) {
+      normalized.level = exactLevel;
+    }
+    if (hasMin) {
+      normalized.minLevel = minLevel;
+    }
+    if (hasMax) {
+      normalized.maxLevel = maxLevel;
+    }
+    return normalized;
+  }).filter(Boolean);
   settings.graviton = {
     lifetimeMs: readNumber(gravitonConfig.lifetimeMs, 10000, { min: 0 }),
     spawnChance: {
-      base: readNumber(gravitonSpawnConfig.base, 0.15, { min: 0 }),
-      perLevel: readNumber(gravitonSpawnConfig.perLevel, 0.05, { min: 0 }),
-      min: readNumber(gravitonSpawnConfig.min, 0.15, { min: 0 }),
-      max: readNumber(gravitonSpawnConfig.max, 0.5, { min: 0 })
+      base: readNumber(gravitonSpawnConfig.base, 0.01, { min: 0 }),
+      perLevel: readNumber(gravitonSpawnConfig.perLevel, 0.0025, { min: 0 }),
+      min: readNumber(gravitonSpawnConfig.min, 0.005, { min: 0 }),
+      max: readNumber(gravitonSpawnConfig.max, 0.1, { min: 0 }),
+      overrides: gravitonSpawnOverrides
     },
     detectionMessage: readString(
       gravitonConfig.detectionMessage,
@@ -2062,11 +2087,25 @@
         return bricks;
       }
       const spawnConfig = SETTINGS.graviton.spawnChance;
-      const gravitonChance = clamp(
+      let gravitonChance = clamp(
         spawnConfig.base + (this.level - 1) * spawnConfig.perLevel,
         spawnConfig.min,
         spawnConfig.max
       );
+      const overrides = Array.isArray(spawnConfig.overrides) ? spawnConfig.overrides : [];
+      for (const override of overrides) {
+        const { level, minLevel, maxLevel, chance } = override;
+        const matchesExact = Number.isFinite(level) ? this.level === level : true;
+        if (!matchesExact) {
+          continue;
+        }
+        const matchesMin = Number.isFinite(minLevel) ? this.level >= minLevel : true;
+        const matchesMax = Number.isFinite(maxLevel) ? this.level <= maxLevel : true;
+        if (matchesMin && matchesMax && Number.isFinite(chance)) {
+          gravitonChance = clamp(chance, 0, 1);
+          break;
+        }
+      }
       if (Math.random() >= gravitonChance) {
         return bricks;
       }
