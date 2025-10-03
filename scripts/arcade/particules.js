@@ -5,17 +5,41 @@
     : {};
 
   const translate = (() => {
-    if (typeof globalThis !== 'undefined' && typeof globalThis.t === 'function') {
-      return globalThis.t.bind(globalThis);
+    const hasTranslator = typeof globalThis !== 'undefined' && typeof globalThis.t === 'function';
+    if (hasTranslator) {
+      const translator = globalThis.t.bind(globalThis);
+      return (key, params) => {
+        if (typeof key !== 'string' || !key.trim()) {
+          return '';
+        }
+        const normalizedKey = key.trim();
+        const translated = translator(normalizedKey, params);
+        if (typeof translated === 'string') {
+          const trimmed = translated.trim();
+          if (!trimmed) {
+            return normalizedKey;
+          }
+          const stripped = trimmed.replace(/^!+/, '').replace(/!+$/, '');
+          if (trimmed === normalizedKey || stripped === normalizedKey) {
+            return normalizedKey;
+          }
+          return translated;
+        }
+        if (translated != null) {
+          return translated;
+        }
+        return normalizedKey;
+      };
     }
     return (key, params) => {
       if (typeof key !== 'string' || !key) {
         return '';
       }
+      const normalizedKey = key.trim();
       if (!params || typeof params !== 'object') {
-        return key;
+        return normalizedKey;
       }
-      return key.replace(/\{\s*([^\s{}]+)\s*\}/g, (match, token) => {
+      return normalizedKey.replace(/\{\s*([^\s{}]+)\s*\}/g, (match, token) => {
         const value = params[token];
         return value == null ? match : String(value);
       });

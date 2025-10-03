@@ -11,6 +11,7 @@ function translateOrDefault(key, fallback, params) {
     return fallback;
   }
 
+  const normalizedKey = key.trim();
   const api = globalThis.i18n;
   const translator = api && typeof api.t === 'function'
     ? api.t
@@ -20,12 +21,33 @@ function translateOrDefault(key, fallback, params) {
 
   if (translator) {
     try {
-      const translated = translator(key, params);
-      if (typeof translated === 'string' && translated && translated !== key) {
+      const translated = translator(normalizedKey, params);
+      if (typeof translated === 'string') {
+        const trimmed = translated.trim();
+        if (!trimmed) {
+          return fallback;
+        }
+        const stripped = trimmed.replace(/^!+/, '').replace(/!+$/, '');
+        if (trimmed !== normalizedKey && stripped !== normalizedKey) {
+          return translated;
+        }
+      } else if (translated != null) {
         return translated;
       }
     } catch (error) {
-      console.warn('Unable to translate key', key, error);
+      console.warn('Unable to translate key', normalizedKey, error);
+      return fallback;
+    }
+  }
+
+  if (typeof fallback === 'string') {
+    return fallback;
+  }
+
+  if (typeof key === 'string') {
+    const stripped = key.trim();
+    if (stripped) {
+      return stripped;
     }
   }
 
