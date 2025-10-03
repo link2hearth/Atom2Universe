@@ -1275,7 +1275,7 @@
             const screenY = (point.y - this.cameraY) * scale;
             const vx = Number.isFinite(point.vx) ? point.vx : 0;
             const vy = Number.isFinite(point.vy) ? point.vy : 0;
-            const rotation = vx === 0 && vy === 0 ? 0 : Math.atan2(-vx, -vy);
+            const rotation = vx === 0 && vy === 0 ? 0 : Math.atan2(-vy, -vx);
             effectiveColors.forEach(color => {
               const alpha = (0.25 + lifeRatio * 0.45) * color.alpha;
               if (alpha <= 0) {
