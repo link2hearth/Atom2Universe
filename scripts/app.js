@@ -2224,7 +2224,6 @@ const elements = {
   arcadeComboMessage: document.getElementById('arcadeComboMessage'),
   waveStage: document.getElementById('waveStage'),
   waveCanvas: document.getElementById('waveCanvas'),
-  waveClickOverlay: document.getElementById('waveClickOverlay'),
   waveTicketLayer: document.getElementById('waveTicketLayer'),
   waveFrenzyLayer: document.getElementById('waveFrenzyLayer'),
   waveApcFrenzyCounter: document.getElementById('waveApcFrenzyCounter'),
