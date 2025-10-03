@@ -275,7 +275,8 @@
           "title": "Déblocages instantanés",
           "trophies": "Débloquer tous les succès",
           "elements": "Débloquer tout le tableau périodique",
-          "info": "Débloquer la page Infos"
+          "infoLocked": "Débloquer la page Infos",
+          "infoUnlocked": "Page Infos débloquée"
         },
         "modes": {
           "title": "Modes persistants",

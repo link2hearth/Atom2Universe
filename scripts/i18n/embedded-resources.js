@@ -279,7 +279,8 @@
               "title": "Déblocages instantanés",
               "trophies": "Débloquer tous les succès",
               "elements": "Débloquer tout le tableau périodique",
-              "info": "Débloquer la page Infos"
+              "infoLocked": "Débloquer la page Infos",
+              "infoUnlocked": "Page Infos débloquée"
             },
             "modes": {
               "title": "Modes persistants",
@@ -1449,7 +1450,8 @@
               "title": "Instant unlocks",
               "trophies": "Unlock every achievement",
               "elements": "Unlock the entire periodic table",
-              "info": "Unlock the Info page"
+              "infoLocked": "Unlock the Info page",
+              "infoUnlocked": "Info page unlocked"
             },
             "modes": {
               "title": "Persistent modes",
