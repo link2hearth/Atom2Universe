@@ -93,8 +93,35 @@
             "title": "Fusion 2048",
             "description": "Trigger chain reactions on your chosen grid to reach the requested tile.",
             "cta": "Play"
+          },
+          "sudoku": {
+            "aria": "Open the Quantum Sudoku mini-game",
+            "title": "Quantum Sudoku",
+            "description": "Solve freshly generated grids or let the solver reveal a flawless solution.",
+            "cta": "Solve"
           }
         }
+      },
+      "sudoku": {
+        "aria": "Quantum Sudoku mini-game",
+        "title": "Quantum Sudoku",
+        "subtitle": "Pick a difficulty, fill the grid and keep track of conflicts as you play.",
+        "toolbar": {
+          "aria": "Sudoku controls",
+          "level": "Difficulty",
+          "generate": "Generate grid",
+          "validate": "Validate",
+          "solve": "Solve",
+          "clear": "Clear",
+          "options": {
+            "facile": "Easy (~40 clues)",
+            "moyen": "Medium (~32)",
+            "difficile": "Hard (~26)"
+          }
+        },
+        "board": "Sudoku grid",
+        "cellLabel": "Sudoku cell",
+        "note": "Tip: only digits 1–9 are accepted. Validation highlights duplicates in rows, columns and 3×3 boxes. The solver uses backtracking and generation ensures a single-solution puzzle."
       },
       "quantum2048": {
         "aria": "Fusion 2048 mini-game",
@@ -538,6 +565,18 @@
         "overlay": {
           "defeat": "No more moves! Score: {score}",
           "retry": "Retry"
+        }
+      },
+      "sudoku": {
+        "status": {
+          "generating": "Generating…",
+          "generated": "{level} grid generated (clues: {clues}).",
+          "errors": "Conflicts detected: {count}.",
+          "noError": "No conflicts detected yet.",
+          "conflictBeforeSolve": "Conflicts found. Fix them before solving.",
+          "solved": "Solution found ✔︎",
+          "noSolution": "No solution found (or the puzzle is invalid).",
+          "cleared": "Grid cleared."
         }
       }
     }

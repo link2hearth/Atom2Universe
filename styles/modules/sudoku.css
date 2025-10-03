@@ -1,0 +1,306 @@
+.page--sudoku {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1.5rem, 3vw, 3rem) var(--page-padding-x, clamp(1rem, 4vw, 3rem));
+}
+
+.page--sudoku.active {
+  display: flex;
+}
+
+.sudoku-content {
+  width: min(100%, 720px);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: clamp(1.2rem, 2.4vw, 2rem);
+  background: rgba(8, 11, 19, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  padding: clamp(1.4rem, 3vw, 2.4rem);
+  box-shadow: 0 24px 60px rgba(5, 12, 38, 0.45);
+  backdrop-filter: blur(18px);
+}
+
+body.theme-light .sudoku-content {
+  background: rgba(247, 248, 252, 0.86);
+  border-color: rgba(12, 16, 32, 0.08);
+  box-shadow: 0 18px 48px rgba(8, 12, 26, 0.18);
+}
+
+body.theme-neon .sudoku-content {
+  background: rgba(10, 12, 44, 0.75);
+  border-color: rgba(88, 112, 255, 0.25);
+}
+
+.sudoku-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sudoku-title {
+  font-size: clamp(1.4rem, 2.8vw, 2rem);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  margin: 0;
+}
+
+.sudoku-subtitle {
+  margin: 0;
+  font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+  color: rgba(235, 240, 255, 0.76);
+}
+
+body.theme-light .sudoku-subtitle {
+  color: rgba(18, 22, 42, 0.68);
+}
+
+.sudoku-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(0.55rem, 1.8vw, 1rem);
+}
+
+.sudoku-toolbar__label {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.sudoku-toolbar__select,
+.sudoku-toolbar__button {
+  appearance: none;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  padding: 0.55rem 0.9rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+  cursor: pointer;
+  min-height: 2.6rem;
+}
+
+.sudoku-toolbar__select {
+  cursor: pointer;
+  padding-right: 2.5rem;
+}
+
+.sudoku-toolbar__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.sudoku-toolbar__button:hover,
+.sudoku-toolbar__select:hover {
+  border-color: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.12);
+}
+
+.sudoku-toolbar__button:focus-visible,
+.sudoku-toolbar__select:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.55);
+  outline-offset: 2px;
+}
+
+.sudoku-toolbar__button--primary {
+  background: linear-gradient(120deg, #00ad8c, #00c6d0);
+  border-color: transparent;
+  color: #fff;
+}
+
+.sudoku-toolbar__button--danger {
+  background: linear-gradient(120deg, #c0392b, #e3533f);
+  border-color: transparent;
+  color: #fff;
+}
+
+body.theme-light .sudoku-toolbar__select,
+body.theme-light .sudoku-toolbar__button {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(12, 16, 32, 0.12);
+  color: #060a1a;
+}
+
+body.theme-light .sudoku-toolbar__button--primary {
+  background: linear-gradient(120deg, #00a57c, #00b7c4);
+  color: #fff;
+}
+
+body.theme-light .sudoku-toolbar__button--danger {
+  background: linear-gradient(120deg, #c0392b, #e96553);
+  color: #fff;
+}
+
+body.theme-neon .sudoku-toolbar__select,
+body.theme-neon .sudoku-toolbar__button {
+  background: rgba(16, 20, 54, 0.92);
+  border-color: rgba(86, 120, 255, 0.38);
+}
+
+.sudoku-status {
+  margin-left: auto;
+  padding: 0.45rem 0.75rem;
+  border-radius: 0.75rem;
+  font-size: 0.9rem;
+  background: rgba(30, 42, 82, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.sudoku-status[hidden] {
+  display: none;
+}
+
+.sudoku-status--ok {
+  background: rgba(34, 180, 116, 0.18);
+  border-color: rgba(34, 180, 116, 0.45);
+  color: #3ee6a1;
+}
+
+.sudoku-status--error {
+  background: rgba(224, 82, 64, 0.2);
+  border-color: rgba(224, 82, 64, 0.45);
+  color: #ff9c92;
+}
+
+body.theme-light .sudoku-status {
+  background: rgba(230, 234, 246, 0.9);
+  border-color: rgba(12, 16, 32, 0.12);
+  color: rgba(12, 16, 32, 0.7);
+}
+
+body.theme-light .sudoku-status--ok {
+  background: rgba(40, 166, 115, 0.14);
+  border-color: rgba(40, 166, 115, 0.38);
+  color: #0e6f48;
+}
+
+body.theme-light .sudoku-status--error {
+  background: rgba(214, 86, 66, 0.16);
+  border-color: rgba(214, 86, 66, 0.38);
+  color: #9a281f;
+}
+
+:root {
+  --sudoku-cell-size: clamp(2.3rem, 5vw, 2.85rem);
+  --sudoku-subgrid-border: 2px;
+  --sudoku-border-color: rgba(255, 255, 255, 0.24);
+  --sudoku-subgrid-color: rgba(255, 255, 255, 0.48);
+  --sudoku-fixed-color: rgba(255, 255, 255, 0.92);
+  --sudoku-fixed-text: #12162a;
+}
+
+body.theme-light {
+  --sudoku-border-color: rgba(12, 16, 32, 0.18);
+  --sudoku-subgrid-color: rgba(12, 16, 32, 0.32);
+  --sudoku-fixed-color: rgba(255, 255, 255, 0.98);
+  --sudoku-fixed-text: #12162a;
+}
+
+body.theme-neon {
+  --sudoku-border-color: rgba(110, 142, 255, 0.32);
+  --sudoku-subgrid-color: rgba(130, 168, 255, 0.6);
+}
+
+.sudoku-grid {
+  --sudoku-grid-size: calc(var(--sudoku-cell-size) * 9);
+  display: grid;
+  grid-template-columns: repeat(9, var(--sudoku-cell-size));
+  grid-template-rows: repeat(9, var(--sudoku-cell-size));
+  border: 2px solid var(--sudoku-subgrid-color);
+  border-radius: 18px;
+  overflow: hidden;
+  width: var(--sudoku-grid-size);
+  align-self: center;
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.12);
+}
+
+.sudoku-cell {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  border: 1px solid var(--sudoku-border-color);
+  background: rgba(3, 7, 18, 0.75);
+}
+
+.sudoku-cell[data-r="2"],
+.sudoku-cell[data-r="5"] {
+  border-bottom: var(--sudoku-subgrid-border) solid var(--sudoku-subgrid-color);
+}
+
+.sudoku-cell[data-c="2"],
+.sudoku-cell[data-c="5"] {
+  border-right: var(--sudoku-subgrid-border) solid var(--sudoku-subgrid-color);
+}
+
+.sudoku-cell input {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: transparent;
+  color: inherit;
+  text-align: center;
+  font: 700 clamp(1.2rem, 3vw, 1.8rem) 'Roboto Mono', 'Fira Mono', 'Courier New', monospace;
+  text-transform: uppercase;
+}
+
+.sudoku-cell input:focus-visible {
+  outline: 3px solid rgba(0, 173, 140, 0.55);
+  outline-offset: -3px;
+  background: rgba(0, 173, 140, 0.2);
+}
+
+.sudoku-cell.fixed {
+  background: var(--sudoku-fixed-color);
+  color: var(--sudoku-fixed-text);
+}
+
+.sudoku-cell.fixed input {
+  font-weight: 800;
+}
+
+.sudoku-cell.error {
+  background: rgba(224, 82, 64, 0.24);
+}
+
+.sudoku-cell.ok {
+  background: rgba(34, 180, 116, 0.18);
+}
+
+.sudoku-note {
+  margin: 0;
+  font-size: clamp(0.85rem, 1.4vw, 1rem);
+  line-height: 1.6;
+  color: rgba(235, 240, 255, 0.68);
+}
+
+body.theme-light .sudoku-note {
+  color: rgba(18, 22, 42, 0.64);
+}
+
+@media (max-width: 640px) {
+  .sudoku-content {
+    padding: clamp(1rem, 4vw, 1.6rem);
+    border-radius: 16px;
+  }
+
+  .sudoku-grid {
+    --sudoku-cell-size: clamp(2.15rem, 8vw, 2.6rem);
+  }
+
+  .sudoku-toolbar__label {
+    width: 100%;
+  }
+
+  .sudoku-status {
+    width: 100%;
+    margin-left: 0;
+  }
+}
