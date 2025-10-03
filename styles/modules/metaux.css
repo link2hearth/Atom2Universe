@@ -524,16 +524,6 @@
   --tile-image: url('../../Assets/Image/Diamant.png');
 }
 
-.metaux-message {
-  margin: 0;
-  min-height: 1.5rem;
-  font-size: 0.85rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.72);
-  text-align: center;
-}
-
 .metaux-sidebar {
   display: flex;
   flex-direction: column;

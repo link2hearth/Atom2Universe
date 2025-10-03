@@ -278,7 +278,6 @@ class MetauxMatch3Game {
     this.totalTilesElement = options.totalTilesElement || null;
     this.reshufflesElement = options.reshufflesElement || null;
     this.movesElement = options.movesElement || null;
-    this.messageElement = options.messageElement || null;
     this.timerContainerElement = this.timerValueElement
       ? this.timerValueElement.closest('.metaux-timer')
       : null;
@@ -719,8 +718,6 @@ class MetauxMatch3Game {
     this.updateStats();
     if (this.comboChain > 1) {
       this.updateMessage(`Combo x${this.comboChain} ! Réaction en chaîne réussie.`);
-    } else if (this.comboChain === 1) {
-      this.updateMessage('Alignement complet ! De nouveaux lingots tombent.');
     }
     this.comboChain = 0;
     this.lastComboSoundLevel = 0;
@@ -1480,11 +1477,7 @@ class MetauxMatch3Game {
     }
   }
 
-  updateMessage(message) {
-    if (this.messageElement) {
-      this.messageElement.textContent = message || '';
-    }
-  }
+  updateMessage() {}
 
   playMach3ComboSound() {
     if (this.comboSound && typeof this.comboSound.play === 'function') {
@@ -1668,7 +1661,6 @@ function initMetauxGame() {
     totalTilesElement: elements.metauxTotalTilesValue,
     reshufflesElement: elements.metauxReshufflesValue,
     movesElement: elements.metauxMovesValue,
-    messageElement: elements.metauxMessage,
     onSessionEnd:
       typeof window !== 'undefined' && typeof window.handleMetauxSessionEnd === 'function'
         ? window.handleMetauxSessionEnd
