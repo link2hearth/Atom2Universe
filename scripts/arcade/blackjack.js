@@ -6,6 +6,7 @@
   const GLOBAL_CONFIG = typeof globalThis !== 'undefined' ? globalThis.GAME_CONFIG : null;
   const DEFAULT_DECK_COUNT = 8;
   const DEFAULT_DEALER_HIT_SOFT_17 = false;
+  const DEFAULT_BET_AMOUNTS = Object.freeze([10, 20, 50, 100]);
 
   const RANKS = [
     { id: 'A', value: 11 },
@@ -88,6 +89,32 @@
       ? GLOBAL_CONFIG.arcade.blackjack.dealerHitSoft17
       : null;
     return Boolean(configValue ?? DEFAULT_DEALER_HIT_SOFT_17);
+  }
+
+  function getBetOptions() {
+    const config = GLOBAL_CONFIG && GLOBAL_CONFIG.arcade && GLOBAL_CONFIG.arcade.blackjack
+      ? GLOBAL_CONFIG.arcade.blackjack.betOptions
+      : null;
+    const source = Array.isArray(config) ? config : DEFAULT_BET_AMOUNTS;
+    const seen = new Set();
+    const normalized = [];
+    for (let i = 0; i < source.length; i += 1) {
+      const numeric = Number(source[i]);
+      if (!Number.isFinite(numeric) || numeric <= 0) {
+        continue;
+      }
+      const value = Math.floor(numeric);
+      if (value <= 0 || seen.has(value)) {
+        continue;
+      }
+      seen.add(value);
+      normalized.push(value);
+    }
+    if (!normalized.length) {
+      return [...DEFAULT_BET_AMOUNTS];
+    }
+    normalized.sort((a, b) => a - b);
+    return normalized;
   }
 
   function createFreshShoe(deckCount) {
@@ -217,6 +244,10 @@
     const dealerTotalElement = document.getElementById('blackjackDealerTotalValue');
     const playerTotalElement = document.getElementById('blackjackPlayerTotalValue');
     const statusElement = document.getElementById('blackjackStatus');
+    const betSectionElement = document.getElementById('blackjackBet');
+    const betOptionsElement = document.getElementById('blackjackBetOptions');
+    const betCurrentElement = document.getElementById('blackjackCurrentBet');
+    const betBalanceElement = document.getElementById('blackjackAtomsBalance');
     const newRoundButton = document.getElementById('blackjackNewRound');
     const hitButton = document.getElementById('blackjackHit');
     const standButton = document.getElementById('blackjackStand');
@@ -233,6 +264,10 @@
       !dealerTotalElement ||
       !playerTotalElement ||
       !statusElement ||
+      !betSectionElement ||
+      !betOptionsElement ||
+      !betCurrentElement ||
+      !betBalanceElement ||
       !newRoundButton ||
       !hitButton ||
       !standButton ||
@@ -254,6 +289,256 @@
     let dealerCards = [];
     const stats = { wins: 0, losses: 0, pushes: 0 };
     const hiddenCardLabel = translate('index.sections.blackjack.hiddenCard', 'Hidden card');
+    const betOptions = getBetOptions();
+    const betButtons = [];
+    let selectedBet = null;
+    let activeBet = null;
+    let balanceIntervalId = null;
+    let currentStatusKey = 'intro';
+
+    function formatBetAmount(amount) {
+      const numeric = Number(amount);
+      if (!Number.isFinite(numeric)) {
+        return '0';
+      }
+      if (typeof formatNumberLocalized === 'function') {
+        try {
+          const formatted = formatNumberLocalized(numeric, { maximumFractionDigits: 0 });
+          if (formatted) {
+            return formatted;
+          }
+        } catch (error) {
+          // Ignore formatting errors and fallback to locale string.
+        }
+      }
+      if (typeof numeric.toLocaleString === 'function') {
+        return numeric.toLocaleString();
+      }
+      return `${numeric}`;
+    }
+
+    function translateBetOptionLabel(amountLabel) {
+      return translate(
+        'index.sections.blackjack.bet.option',
+        `${amountLabel} atoms`,
+        { amount: amountLabel }
+      );
+    }
+
+    function getGameAtoms() {
+      if (typeof gameState === 'undefined') {
+        return null;
+      }
+      const atoms = gameState.atoms;
+      if (atoms instanceof LayeredNumber) {
+        return atoms;
+      }
+      if (typeof LayeredNumber === 'function') {
+        try {
+          return new LayeredNumber(atoms);
+        } catch (error) {
+          return null;
+        }
+      }
+      return null;
+    }
+
+    function createLayeredBet(amount) {
+      if (typeof LayeredNumber !== 'function') {
+        return null;
+      }
+      const numeric = Number(amount);
+      if (!Number.isFinite(numeric) || numeric <= 0) {
+        return null;
+      }
+      try {
+        return new LayeredNumber(numeric);
+      } catch (error) {
+        return null;
+      }
+    }
+
+    function canAffordBet(amount) {
+      const atoms = getGameAtoms();
+      const bet = createLayeredBet(amount);
+      if (!atoms || !bet) {
+        return false;
+      }
+      return atoms.compare(bet) >= 0;
+    }
+
+    function setSelectedBet(amount) {
+      if (amount == null) {
+        selectedBet = null;
+      } else {
+        const numeric = Number(amount);
+        selectedBet = Number.isFinite(numeric) && numeric > 0 ? Math.floor(numeric) : null;
+      }
+      for (let i = 0; i < betButtons.length; i += 1) {
+        const button = betButtons[i];
+        const buttonAmount = Number(button.dataset.bet);
+        const isSelected = selectedBet === buttonAmount;
+        button.classList.toggle('blackjack-bet__option--selected', isSelected);
+        button.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+      }
+      if (betCurrentElement) {
+        betCurrentElement.textContent = selectedBet != null
+          ? formatBetAmount(selectedBet)
+          : translate('index.sections.blackjack.bet.none', 'None');
+      }
+    }
+
+    function updateBetButtons() {
+      for (let i = 0; i < betButtons.length; i += 1) {
+        const button = betButtons[i];
+        const amount = Number(button.dataset.bet);
+        const disable = roundActive || !canAffordBet(amount);
+        button.disabled = disable;
+        button.classList.toggle('blackjack-bet__option--unavailable', !roundActive && disable);
+      }
+    }
+
+    function ensureSelectedBetAffordable() {
+      if (roundActive) {
+        return;
+      }
+      if (selectedBet != null && canAffordBet(selectedBet)) {
+        return;
+      }
+      for (let i = 0; i < betOptions.length; i += 1) {
+        const option = betOptions[i];
+        if (canAffordBet(option)) {
+          setSelectedBet(option);
+          return;
+        }
+      }
+      if (selectedBet != null) {
+        setSelectedBet(null);
+      }
+    }
+
+    function updateBalanceDisplay() {
+      const atoms = getGameAtoms();
+      if (betBalanceElement) {
+        betBalanceElement.textContent = atoms ? atoms.toString() : '0';
+      }
+      if (!roundActive) {
+        ensureSelectedBetAffordable();
+        let hasAffordable = false;
+        for (let i = 0; i < betOptions.length; i += 1) {
+          if (canAffordBet(betOptions[i])) {
+            hasAffordable = true;
+            break;
+          }
+        }
+        if (currentStatusKey === 'intro' && !hasAffordable) {
+          setStatus('insufficientAtoms', 'Not enough atoms for this bet.');
+        } else if (currentStatusKey === 'insufficientAtoms' && hasAffordable) {
+          setStatus('intro', 'Start a new round to challenge the dealer.');
+        }
+      }
+      updateBetButtons();
+    }
+
+    function initializeBetOptions() {
+      const previousSelection = selectedBet;
+      betButtons.length = 0;
+      betOptionsElement.innerHTML = '';
+      const optionsAria = translate(
+        'index.sections.blackjack.bet.optionsAria',
+        'Available bet amounts'
+      );
+      if (optionsAria) {
+        betOptionsElement.setAttribute('aria-label', optionsAria);
+      }
+      for (let i = 0; i < betOptions.length; i += 1) {
+        const amount = betOptions[i];
+        const label = formatBetAmount(amount);
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'blackjack-bet__option';
+        button.dataset.bet = `${amount}`;
+        button.textContent = label;
+        button.setAttribute('aria-pressed', 'false');
+        button.setAttribute('aria-label', translateBetOptionLabel(label));
+        button.addEventListener('click', () => {
+          if (roundActive) {
+            return;
+          }
+          if (!canAffordBet(amount)) {
+            setStatus('insufficientAtoms', 'Not enough atoms for this bet.');
+            if (typeof showToast === 'function') {
+              showToast(translate(
+                'scripts.arcade.blackjack.status.insufficientAtoms',
+                'Not enough atoms for this bet.'
+              ));
+            }
+            return;
+          }
+          setSelectedBet(amount);
+          updateBetButtons();
+        });
+        betOptionsElement.appendChild(button);
+        betButtons.push(button);
+      }
+      setSelectedBet(previousSelection);
+      ensureSelectedBetAffordable();
+      updateBetButtons();
+    }
+
+    function startBalanceUpdates() {
+      if (balanceIntervalId != null || typeof window === 'undefined') {
+        return;
+      }
+      balanceIntervalId = window.setInterval(() => {
+        if (typeof document !== 'undefined' && document.hidden) {
+          return;
+        }
+        updateBalanceDisplay();
+      }, 1000);
+    }
+
+    function settleBet(outcomeKey) {
+      if (!activeBet) {
+        activeBet = null;
+        updateBalanceDisplay();
+        return;
+      }
+      let multiplier = 0;
+      switch (outcomeKey) {
+        case 'playerWins':
+        case 'dealerBust':
+        case 'win':
+          multiplier = 2;
+          break;
+        case 'blackjack':
+          multiplier = 2;
+          break;
+        case 'push':
+        case 'pushBlackjack':
+          multiplier = 1;
+          break;
+        default:
+          multiplier = 0;
+          break;
+      }
+      if (multiplier > 0 && typeof gameState !== 'undefined') {
+        const payout = activeBet.multiplyNumber(multiplier);
+        gameState.atoms = gameState.atoms.add(payout);
+        if (typeof updateUI === 'function') {
+          updateUI();
+        }
+        if (typeof saveGame === 'function') {
+          saveGame();
+        }
+      }
+      activeBet = null;
+      updateBalanceDisplay();
+    }
+
+    initializeBetOptions();
+    updateBalanceDisplay();
+    startBalanceUpdates();
 
     function ensureShoeReady() {
       const deckCount = getDeckCount();
@@ -346,9 +631,15 @@
       newRoundButton.disabled = roundActive;
       hitButton.disabled = !roundActive || !playerTurn;
       standButton.disabled = !roundActive || !playerTurn;
+      updateBetButtons();
     }
 
     function setStatus(key, fallback, params) {
+      if (typeof key === 'string' && key) {
+        currentStatusKey = key;
+      } else {
+        currentStatusKey = '';
+      }
       statusElement.textContent = translate(
         `scripts.arcade.blackjack.status.${key}`,
         fallback,
@@ -356,7 +647,7 @@
       );
     }
 
-    function finishRound(resultKey, fallback, params) {
+    function finishRound(resultKey, fallback, params, payoutKey) {
       roundActive = false;
       playerTurn = false;
       dealerReveal = true;
@@ -365,6 +656,7 @@
       if (resultKey) {
         setStatus(resultKey, fallback, params);
       }
+      settleBet(payoutKey);
       updateButtons();
       updateStatsDisplay();
     }
@@ -375,13 +667,13 @@
       if (playerInfo.isBlackjack || dealerInfo.isBlackjack) {
         if (playerInfo.isBlackjack && dealerInfo.isBlackjack) {
           stats.pushes += 1;
-          finishRound('pushBlackjack', 'Push: both reveal blackjack.', {});
+          finishRound('pushBlackjack', 'Push: both reveal blackjack.', {}, 'pushBlackjack');
         } else if (playerInfo.isBlackjack) {
           stats.wins += 1;
-          finishRound('playerBlackjack', 'Blackjack! You win.', {});
+          finishRound('playerBlackjack', 'Blackjack! You win.', {}, 'blackjack');
         } else {
           stats.losses += 1;
-          finishRound('dealerBlackjack', 'Dealer blackjack. You lose.', {});
+          finishRound('dealerBlackjack', 'Dealer blackjack. You lose.', {}, 'lose');
         }
         return true;
       }
@@ -395,19 +687,19 @@
       const dealerTotal = formatHandTotal(dealerInfo, { empty: '0' });
       if (playerInfo.isBust) {
         stats.losses += 1;
-        finishRound('playerBust', 'Bust! Dealer wins with {dealer}.', { dealer: dealerTotal });
+        finishRound('playerBust', 'Bust! Dealer wins with {dealer}.', { dealer: dealerTotal }, 'lose');
       } else if (dealerInfo.isBust) {
         stats.wins += 1;
-        finishRound('dealerBust', 'Dealer busts with {dealer}. You win!', { dealer: dealerTotal, player: playerTotal });
+        finishRound('dealerBust', 'Dealer busts with {dealer}. You win!', { dealer: dealerTotal, player: playerTotal }, 'dealerBust');
       } else if (playerInfo.total > dealerInfo.total) {
         stats.wins += 1;
-        finishRound('playerWins', 'You win {player} vs {dealer}.', { player: playerTotal, dealer: dealerTotal });
+        finishRound('playerWins', 'You win {player} vs {dealer}.', { player: playerTotal, dealer: dealerTotal }, 'playerWins');
       } else if (dealerInfo.total > playerInfo.total) {
         stats.losses += 1;
-        finishRound('dealerWins', 'Dealer wins {dealer} vs {player}.', { player: playerTotal, dealer: dealerTotal });
+        finishRound('dealerWins', 'Dealer wins {dealer} vs {player}.', { player: playerTotal, dealer: dealerTotal }, 'lose');
       } else {
         stats.pushes += 1;
-        finishRound('push', 'Push at {total}.', { total: playerTotal });
+        finishRound('push', 'Push at {total}.', { total: playerTotal }, 'push');
       }
     }
 
@@ -431,6 +723,43 @@
 
     function startNewRound() {
       ensureShoeReady();
+      if (selectedBet == null) {
+        setStatus('selectBet', 'Select a bet before starting a round.');
+        if (typeof showToast === 'function') {
+          showToast(translate(
+            'scripts.arcade.blackjack.status.selectBet',
+            'Select a bet before starting a round.'
+          ));
+        }
+        return;
+      }
+      if (!canAffordBet(selectedBet)) {
+        setStatus('insufficientAtoms', 'Not enough atoms for this bet.');
+        if (typeof showToast === 'function') {
+          showToast(translate(
+            'scripts.arcade.blackjack.status.insufficientAtoms',
+            'Not enough atoms for this bet.'
+          ));
+        }
+        updateBalanceDisplay();
+        return;
+      }
+      const layeredBet = createLayeredBet(selectedBet);
+      if (!layeredBet) {
+        setStatus('insufficientAtoms', 'Not enough atoms for this bet.');
+        return;
+      }
+      activeBet = layeredBet;
+      if (typeof gameState !== 'undefined') {
+        gameState.atoms = gameState.atoms.subtract(layeredBet);
+        if (typeof updateUI === 'function') {
+          updateUI();
+        }
+        if (typeof saveGame === 'function') {
+          saveGame();
+        }
+      }
+      updateBalanceDisplay();
       roundActive = true;
       playerTurn = true;
       updateButtons();
@@ -481,10 +810,18 @@
     hitButton.addEventListener('click', handleHit);
     standButton.addEventListener('click', handleStand);
 
+    if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+      window.addEventListener('i18n:languagechange', () => {
+        initializeBetOptions();
+        updateBalanceDisplay();
+      });
+    }
+
     updateShoeDisplay();
     updateTotals();
     updateStatsDisplay();
     updateButtons();
     setStatus('intro', 'Start a new round to challenge the dealer.');
+    updateBalanceDisplay();
   });
 })();

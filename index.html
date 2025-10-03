@@ -475,6 +475,38 @@
           </section>
         </div>
         <p class="blackjack-status" id="blackjackStatus" role="status" aria-live="polite"></p>
+        <section
+          class="blackjack-bet"
+          id="blackjackBet"
+          aria-labelledby="blackjackBetTitle"
+        >
+          <h3
+            class="blackjack-bet__title"
+            id="blackjackBetTitle"
+            data-i18n="index.sections.blackjack.bet.title"
+          ></h3>
+          <div
+            class="blackjack-bet__options"
+            id="blackjackBetOptions"
+            role="group"
+            aria-labelledby="blackjackBetTitle"
+            data-i18n="aria-label:index.sections.blackjack.bet.optionsAria"
+          ></div>
+          <p class="blackjack-bet__summary">
+            <span
+              class="blackjack-bet__summary-label"
+              data-i18n="index.sections.blackjack.bet.current"
+            ></span>
+            <span class="blackjack-bet__summary-value" id="blackjackCurrentBet">0</span>
+          </p>
+          <p class="blackjack-bet__summary">
+            <span
+              class="blackjack-bet__summary-label"
+              data-i18n="index.sections.blackjack.bet.balance"
+            ></span>
+            <span class="blackjack-bet__summary-value" id="blackjackAtomsBalance">0</span>
+          </p>
+        </section>
         <div
           class="blackjack-controls"
           role="group"
