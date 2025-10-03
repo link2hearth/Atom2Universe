@@ -176,6 +176,11 @@
         "details": {
           "family": "Family",
           "collection": "Collection"
+        },
+        "summary": {
+          "title": "Element totals",
+          "current": "Current",
+          "lifetime": "Lifetime collected"
         }
       },
       "fusion": {
@@ -792,24 +797,7 @@
         },
         "collection": {
           "progress": "Collection: {owned} / {total} elements",
-          "summary": "Collection: {owned} / {total} elements ({ratio} %)"
-        },
-        "summaryTile": {
-          "aria": "Current total: {current} · Lifetime total: {lifetime}"
-        },
-        "bonuses": {
-          "apcFlat": "APC +{value}",
-          "apsFlat": "APS +{value}",
-          "apcMult": "APC {value}",
-          "apsMult": "APS {value}",
-          "critChance": "Critical chance +{value}",
-          "critMultiplier": "Critical damage +{value}×",
-          "ticketInterval": "Every {duration}",
-          "offline": "Offline gains {value}",
-          "frenzy": "Frenzy chance {value}",
-          "overflow": "Overflow bonuses +{value}"
-        },
-        "collection": {
+          "summary": "Collection: {owned} / {total} elements ({ratio} %)",
           "effects": {
             "apcFlat": "APC +{value}",
             "apsFlat": "APS +{value}",
@@ -884,6 +872,21 @@
           "targets": {
             "production": "production"
           }
+        },
+        "summaryTile": {
+          "aria": "Current total: {current} · Lifetime total: {lifetime}"
+        },
+        "bonuses": {
+          "apcFlat": "APC +{value}",
+          "apsFlat": "APS +{value}",
+          "apcMult": "APC {value}",
+          "apsMult": "APS {value}",
+          "critChance": "Critical chance +{value}",
+          "critMultiplier": "Critical damage +{value}×",
+          "ticketInterval": "Every {duration}",
+          "offline": "Offline gains {value}",
+          "frenzy": "Frenzy chance {value}",
+          "overflow": "Overflow bonuses +{value}"
         }
       },
       "collection": {

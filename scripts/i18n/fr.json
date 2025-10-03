@@ -176,6 +176,11 @@
         "details": {
           "family": "Famille",
           "collection": "Collection"
+        },
+        "summary": {
+          "title": "Total des éléments",
+          "current": "Actuels",
+          "lifetime": "Collectés au total"
         }
       },
       "fusion": {
@@ -777,24 +782,7 @@
         },
         "collection": {
           "progress": "Collection\u00a0: {owned} / {total} éléments",
-          "summary": "Collection\u00a0: {owned} / {total} éléments ({ratio}\u00a0%)"
-        },
-        "summaryTile": {
-          "aria": "Total actuel\u00a0: {current} · Total historique\u00a0: {lifetime}"
-        },
-        "bonuses": {
-          "apcFlat": "APC +{value}",
-          "apsFlat": "APS +{value}",
-          "apcMult": "APC {value}",
-          "apsMult": "APS {value}",
-          "critChance": "Chance critique +{value}",
-          "critMultiplier": "Dégâts critiques +{value}×",
-          "ticketInterval": "Toutes les {duration}",
-          "offline": "Gains hors ligne {value}",
-          "frenzy": "Chance de frénésie {value}",
-          "overflow": "Bonus excédentaires +{value}"
-        },
-        "collection": {
+          "summary": "Collection\u00a0: {owned} / {total} éléments ({ratio}\u00a0%)",
           "effects": {
             "apcFlat": "APC +{value}",
             "apsFlat": "APS +{value}",
@@ -869,6 +857,21 @@
           "targets": {
             "production": "production"
           }
+        },
+        "summaryTile": {
+          "aria": "Total actuel\u00a0: {current} · Total historique\u00a0: {lifetime}"
+        },
+        "bonuses": {
+          "apcFlat": "APC +{value}",
+          "apsFlat": "APS +{value}",
+          "apcMult": "APC {value}",
+          "apsMult": "APS {value}",
+          "critChance": "Chance critique +{value}",
+          "critMultiplier": "Dégâts critiques +{value}×",
+          "ticketInterval": "Toutes les {duration}",
+          "offline": "Gains hors ligne {value}",
+          "frenzy": "Chance de frénésie {value}",
+          "overflow": "Bonus excédentaires +{value}"
         }
       },
       "collection": {
