@@ -214,10 +214,16 @@
     const validateButton = document.getElementById('sudokuValidate');
     const solveButton = document.getElementById('sudokuSolve');
     const clearButton = document.getElementById('sudokuClear');
+    const padElement = document.getElementById('sudokuPad');
 
-    if (!statusElement || !levelSelect || !generateButton || !validateButton || !solveButton || !clearButton) {
+    if (!statusElement || !levelSelect || !generateButton || !validateButton || !solveButton || !clearButton || !padElement) {
       return;
     }
+
+    const padButtons = Array.from(padElement.querySelectorAll('.sudoku-pad__button'));
+
+    let activeInput = null;
+    let selectedPadValue = null;
 
     let currentFixedMask = createEmptyBoard().map(row => row.map(() => false));
 
@@ -245,6 +251,7 @@
 
     function loadBoardToGrid(board, fixedMask) {
       gridElement.innerHTML = '';
+      activeInput = null;
       currentFixedMask = fixedMask
         ? fixedMask.map(row => row.slice())
         : createEmptyBoard().map(row => row.map(() => false));
@@ -281,6 +288,21 @@
           gridElement.appendChild(cell);
         }
       }
+    }
+
+    function updatePadSelection() {
+      padButtons.forEach(button => {
+        button.classList.toggle('is-active', button.dataset.value === selectedPadValue);
+      });
+    }
+
+    function applySelectionToInput(input, selection) {
+      if (!input || input.readOnly || selection === null) {
+        return;
+      }
+      const finalValue = selection === 'clear' ? '' : selection;
+      input.value = finalValue;
+      input.dispatchEvent(new Event('input', { bubbles: true }));
     }
 
     function validateBoard(board) {
@@ -407,6 +429,46 @@
         'ok'
       );
     }
+
+    padButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const value = button.dataset.value ?? null;
+        const isSameSelection = selectedPadValue === value;
+        selectedPadValue = isSameSelection ? null : value;
+        updatePadSelection();
+        const appliedValue = isSameSelection ? value : selectedPadValue;
+        if (activeInput) {
+          activeInput.focus();
+          applySelectionToInput(activeInput, appliedValue);
+        }
+      });
+    });
+
+    gridElement.addEventListener('focusin', event => {
+      if (event.target instanceof HTMLInputElement) {
+        activeInput = event.target;
+      }
+    });
+
+    gridElement.addEventListener('focusout', event => {
+      if (activeInput === event.target) {
+        activeInput = null;
+      }
+    });
+
+    gridElement.addEventListener('click', event => {
+      const cell = event.target.closest('.sudoku-cell');
+      if (!cell) {
+        return;
+      }
+      const input = cell.querySelector('input');
+      if (!input || input.readOnly) {
+        return;
+      }
+      input.focus();
+      activeInput = input;
+      applySelectionToInput(input, selectedPadValue);
+    });
 
     generateButton.addEventListener('click', onGenerate);
     validateButton.addEventListener('click', onValidate);
