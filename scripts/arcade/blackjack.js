@@ -244,7 +244,6 @@
     const dealerTotalElement = document.getElementById('blackjackDealerTotalValue');
     const playerTotalElement = document.getElementById('blackjackPlayerTotalValue');
     const statusElement = document.getElementById('blackjackStatus');
-    const betSectionElement = document.getElementById('blackjackBet');
     const betOptionsElement = document.getElementById('blackjackBetOptions');
     const betCurrentElement = document.getElementById('blackjackCurrentBet');
     const betBalanceElement = document.getElementById('blackjackAtomsBalance');
@@ -263,20 +262,10 @@
       !playerCardsElement ||
       !dealerTotalElement ||
       !playerTotalElement ||
-      !statusElement ||
-      !betSectionElement ||
       !betOptionsElement ||
-      !betCurrentElement ||
-      !betBalanceElement ||
       !newRoundButton ||
       !hitButton ||
-      !standButton ||
-      !deckInfoElement ||
-      !shoeStateElement ||
-      !shoeRemainingElement ||
-      !winsElement ||
-      !lossesElement ||
-      !pushesElement
+      !standButton
     ) {
       return;
     }
@@ -550,22 +539,28 @@
 
     function updateShoeDisplay() {
       const deckCount = getDeckCount();
-      deckInfoElement.textContent = translate(
-        'scripts.arcade.blackjack.shoe.decks',
-        `${deckCount} decks`,
-        { count: deckCount }
-      );
+      if (deckInfoElement) {
+        deckInfoElement.textContent = translate(
+          'scripts.arcade.blackjack.shoe.decks',
+          `${deckCount} decks`,
+          { count: deckCount }
+        );
+      }
       const remaining = shoe ? countRemainingCards(shoe) : deckCount * CARDS.length;
-      shoeRemainingElement.textContent = translate(
-        'scripts.arcade.blackjack.shoe.remaining',
-        `${remaining} cards remaining`,
-        { count: remaining }
-      );
+      if (shoeRemainingElement) {
+        shoeRemainingElement.textContent = translate(
+          'scripts.arcade.blackjack.shoe.remaining',
+          `${remaining} cards remaining`,
+          { count: remaining }
+        );
+      }
       const stateKey = shoe && !hasCompleteSet(shoe) ? 'reshuffle' : 'fresh';
-      shoeStateElement.textContent = translate(
-        `scripts.arcade.blackjack.shoe.status.${stateKey}`,
-        stateKey === 'fresh' ? 'Shoe ready' : 'Reshuffle on next draw'
-      );
+      if (shoeStateElement) {
+        shoeStateElement.textContent = translate(
+          `scripts.arcade.blackjack.shoe.status.${stateKey}`,
+          stateKey === 'fresh' ? 'Shoe ready' : 'Reshuffle on next draw'
+        );
+      }
     }
 
     function drawCard() {
@@ -622,9 +617,15 @@
     }
 
     function updateStatsDisplay() {
-      winsElement.textContent = `${stats.wins}`;
-      lossesElement.textContent = `${stats.losses}`;
-      pushesElement.textContent = `${stats.pushes}`;
+      if (winsElement) {
+        winsElement.textContent = `${stats.wins}`;
+      }
+      if (lossesElement) {
+        lossesElement.textContent = `${stats.losses}`;
+      }
+      if (pushesElement) {
+        pushesElement.textContent = `${stats.pushes}`;
+      }
     }
 
     function updateButtons() {
@@ -640,11 +641,13 @@
       } else {
         currentStatusKey = '';
       }
-      statusElement.textContent = translate(
-        `scripts.arcade.blackjack.status.${key}`,
-        fallback,
-        params
-      );
+      if (statusElement) {
+        statusElement.textContent = translate(
+          `scripts.arcade.blackjack.status.${key}`,
+          fallback,
+          params
+        );
+      }
     }
 
     function finishRound(resultKey, fallback, params, payoutKey) {
