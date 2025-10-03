@@ -435,6 +435,22 @@
       this.render(0);
     }
 
+    triggerManualAtomClick() {
+      let handler = null;
+      if (typeof globalThis !== 'undefined' && typeof globalThis.handleManualAtomClick === 'function') {
+        handler = globalThis.handleManualAtomClick;
+      } else if (typeof handleManualAtomClick === 'function') {
+        handler = handleManualAtomClick;
+      }
+      if (typeof handler === 'function') {
+        try {
+          handler({ contextId: 'wave' });
+        } catch (error) {
+          console.warn('Unable to trigger manual click from Wave game', error);
+        }
+      }
+    }
+
     attachEvents() {
       if (typeof window !== 'undefined') {
         window.addEventListener('resize', this.handleResize);
@@ -805,6 +821,9 @@
     setPressingState(pressed) {
       if (pressed === this.isPressing) {
         return;
+      }
+      if (pressed) {
+        this.triggerManualAtomClick();
       }
       this.isPressing = pressed;
       if (!pressed) {
