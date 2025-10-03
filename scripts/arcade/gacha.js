@@ -3222,7 +3222,7 @@ function shouldAutoCollectTicketStar(now = performance.now()) {
   if (!ticketStarState.active) {
     return false;
   }
-  if (!isGamePageActive()) {
+  if (!isClickerInteractionPageActive()) {
     return false;
   }
   if (typeof document !== 'undefined' && document.hidden) {
@@ -3249,6 +3249,32 @@ const ticketStarState = {
   spawnTime: 0,
   lastSpawnEdge: null
 };
+
+function resolveTicketLayer() {
+  if (typeof getActiveTicketLayerElement === 'function') {
+    const layer = getActiveTicketLayerElement();
+    if (layer) {
+      return layer;
+    }
+  }
+  if (typeof document !== 'undefined') {
+    const fallback = document.getElementById('ticketLayer');
+    if (fallback) {
+      return fallback;
+    }
+  }
+  return null;
+}
+
+function isClickerInteractionPageActive() {
+  if (typeof document !== 'undefined') {
+    const activePage = document.body?.dataset?.activePage;
+    if (activePage === 'wave') {
+      return true;
+    }
+  }
+  return typeof isGamePageActive === 'function' ? isGamePageActive() : false;
+}
 
 function resetTicketStarState(options = {}) {
   if (ticketStarState.element && ticketStarState.element.parentNode) {
@@ -3313,11 +3339,11 @@ function spawnTicketStar(now = performance.now()) {
     ticketStarState.nextSpawnTime = now + computeTicketStarDelay();
     return;
   }
-  if (!elements.ticketLayer) {
+  const layer = resolveTicketLayer();
+  if (!layer) {
     ticketStarState.nextSpawnTime = now + computeTicketStarDelay();
     return;
   }
-  const layer = elements.ticketLayer;
   const layerWidth = layer.clientWidth;
   const layerHeight = layer.clientHeight;
   if (layerWidth <= 0 || layerHeight <= 0) {
@@ -3392,7 +3418,8 @@ function spawnTicketStar(now = performance.now()) {
 }
 
 function updateTicketStar(deltaSeconds, now = performance.now()) {
-  if (!elements.ticketLayer) {
+  const layer = resolveTicketLayer();
+  if (!layer) {
     return;
   }
   if (!isTicketStarFeatureUnlocked()) {
@@ -3425,7 +3452,6 @@ function updateTicketStar(deltaSeconds, now = performance.now()) {
     ticketStarState.lastSpawnEdge = null;
     return;
   }
-  const layer = elements.ticketLayer;
   const width = layer.clientWidth;
   const height = layer.clientHeight;
   if (width <= 0 || height <= 0) {
