@@ -1,36 +1,79 @@
 (function () {
   'use strict';
 
+  function isMeaningfulTranslation(value, key) {
+    if (value == null) {
+      return false;
+    }
+    if (typeof value === 'string') {
+      const trimmed = value.trim();
+      if (!trimmed) {
+        return false;
+      }
+      return trimmed !== key;
+    }
+    return true;
+  }
+
+  function formatTemplate(message, params = {}) {
+    if (typeof message !== 'string' || !message) {
+      return message;
+    }
+    const normalizedMessage = message.replace(/\{\{\s*([^{}\s]+)\s*\}\}/g, '{$1}');
+    return normalizedMessage.replace(/\{\s*([^\s{}]+)\s*\}/g, (match, token) => {
+      if (Object.prototype.hasOwnProperty.call(params, token)) {
+        const replacement = params[token];
+        return replacement == null ? '' : String(replacement);
+      }
+      return match;
+    });
+  }
+
   function translateMessage(key, fallback, params = {}) {
+    const formattedFallback = typeof fallback === 'string'
+      ? formatTemplate(fallback, params)
+      : fallback;
+
     if (typeof key !== 'string' || !key.trim()) {
-      return fallback;
+      return formattedFallback;
     }
+
     const normalizedKey = key.trim();
+
     if (typeof globalThis.translateOrDefault === 'function') {
-      return globalThis.translateOrDefault(normalizedKey, fallback, params);
+      try {
+        const translated = globalThis.translateOrDefault(normalizedKey, formattedFallback, params);
+        if (isMeaningfulTranslation(translated, normalizedKey)) {
+          return translated;
+        }
+      } catch (error) {
+        console.warn('Unable to translate key with translateOrDefault', normalizedKey, error);
+      }
     }
+
     const api = globalThis.i18n;
     const translator = api && typeof api.t === 'function'
       ? api.t.bind(api)
       : typeof globalThis.t === 'function'
         ? globalThis.t
         : null;
+
     if (translator) {
       try {
         const translated = translator(normalizedKey, params);
-        if (typeof translated === 'string') {
-          const trimmed = translated.trim();
-          if (trimmed) {
-            return translated;
-          }
-        } else if (translated != null) {
+        if (isMeaningfulTranslation(translated, normalizedKey)) {
           return translated;
         }
       } catch (error) {
         console.warn('Unable to translate key', normalizedKey, error);
       }
     }
-    return fallback;
+
+    if (formattedFallback != null && formattedFallback !== '') {
+      return formattedFallback;
+    }
+
+    return normalizedKey;
   }
 
   function getLocalizedResource(path) {
