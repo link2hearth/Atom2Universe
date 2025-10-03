@@ -1287,6 +1287,7 @@
               if (rotation !== 0) {
                 ctx.rotate(rotation);
               }
+              ctx.scale(1, -1);
               ctx.globalAlpha = clamp(alpha, 0, 1);
               ctx.drawImage(
                 sprite.image,
@@ -1295,7 +1296,7 @@
                 sprite.frameWidth,
                 sprite.trailHeight,
                 -destWidth / 2,
-                0,
+                -destHeight,
                 destWidth,
                 destHeight
               );
