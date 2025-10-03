@@ -2114,7 +2114,6 @@ const elements = {
   metauxTotalTilesValue: document.getElementById('metauxTotalTilesValue'),
   metauxReshufflesValue: document.getElementById('metauxReshufflesValue'),
   metauxMovesValue: document.getElementById('metauxMovesValue'),
-  metauxMessage: document.getElementById('metauxMessage'),
   metauxReshuffleButton: document.getElementById('metauxReshuffleButton'),
   languageSelect: document.getElementById('languageSelect'),
   musicTrackSelect: document.getElementById('musicTrackSelect'),
