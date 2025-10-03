@@ -1136,7 +1136,8 @@ const GAME_CONFIG = {
           template: 'Niveau {level} terminé !{reward}',
           buttonLabel: 'Continuer',
           rewardTemplate: ' {reward} obtenu !',
-          noReward: ' Aucun ticket cette fois.'
+          noReward: ' Aucun ticket cette fois.',
+          speedBonusTemplate: ' Bonus vitesse : +{bonus} !'
         },
         gameOver: {
           withTickets: 'Partie terminée ! Tickets gagnés : {tickets}{bonus}.',
