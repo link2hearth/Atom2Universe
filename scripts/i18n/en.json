@@ -284,6 +284,23 @@
           },
           "note": "Unlock the “Rush to a Million” trophy to customize your bricks."
         },
+        "chiptune": {
+          "progress": {
+            "label": "Playback position",
+            "empty": "No track loaded"
+          },
+          "usage": {
+            "title": "MIDI programs in use",
+            "summaryEmpty": "No program detected",
+            "summarySingle": "1 program in use",
+            "summaryMultiple": "{count} programs in use",
+            "percussionActive": "Percussion active",
+            "percussionInactive": "Percussion inactive",
+            "note": "Numbers refer to General MIDI program numbers (0 to 127).",
+            "rowUsed": "Program {program} in use",
+            "rowUnused": "Program {program} inactive"
+          }
+        },
         "reset": "Reset"
       },
       "devkit": {

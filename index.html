@@ -875,6 +875,35 @@
             <button type="button" id="chiptuneStopButton" disabled>Stop</button>
           </div>
           <p class="option-note" id="chiptuneStatus">Aucun morceau chargé pour le moment.</p>
+          <div class="option-row option-row--progress">
+            <label for="chiptuneProgressSlider" id="chiptuneProgressLabel" data-i18n="index.sections.options.chiptune.progress.label"></label>
+            <input
+              type="range"
+              id="chiptuneProgressSlider"
+              min="0"
+              max="0"
+              step="0.01"
+              value="0"
+              disabled
+              aria-labelledby="chiptuneProgressLabel"
+            />
+            <span class="option-value" id="chiptuneProgressValue" aria-live="polite" data-i18n="index.sections.options.chiptune.progress.empty"></span>
+          </div>
+          <div class="option-row option-row--usage">
+            <div class="chiptune-usage" role="group" aria-labelledby="chiptuneUsageTitle">
+              <div class="chiptune-usage__header">
+                <span id="chiptuneUsageTitle" data-i18n="index.sections.options.chiptune.usage.title"></span>
+                <span id="chiptuneUsageSummary" class="chiptune-usage__summary" aria-live="polite" data-i18n="index.sections.options.chiptune.usage.summaryEmpty"></span>
+              </div>
+              <div
+                id="chiptuneProgramUsage"
+                class="chiptune-usage__grid"
+                role="grid"
+                aria-labelledby="chiptuneUsageTitle"
+              ></div>
+              <p class="option-note chiptune-usage__note" data-i18n="index.sections.options.chiptune.usage.note"></p>
+            </div>
+          </div>
         </div>
       </div>
       <div class="options-reset">
