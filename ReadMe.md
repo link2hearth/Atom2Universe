@@ -49,7 +49,6 @@ Un onglet “Fusion” présente des recettes consommant des éléments du gacha
 L’onglet Arcade propose trois expériences qui alimentent les tickets et bonus :
 - **Particules** (brick breaker) : niveaux successifs, HUD complet, tickets de gacha en récompense de niveau parfait, gravitons convertis en crédits Mach3 et en annonces toast.【F:index.html†L158-L266】【F:scripts/arcade/particules.js†L1980-L2056】【F:scripts/arcade/particules.js†L2532-L2555】
 - **Mach3 – Métaux** : grille 9×16, cinq gemmes, timer de 6 s extensible, consommation d’un crédit Mach3 par partie et bonus APS proportionnel aux performances.【F:index.html†L424-L477】【F:scripts/arcade/metaux-match3.js†L4-L118】【F:scripts/app.js†L1608-L1705】
-- **Photon** : runner basé sur un photon alternant entre deux états pour traverser des obstacles, trois modes (single/classic/hold), score en temps réel et rotation automatique des modes. Aucun bonus permanent n’est encore rattaché, comme indiqué dans le texte d’interface.【F:index.html†L880-L1036】【F:scripts/arcade/photon.js†L1-L210】【F:config/config.js†L686-L705】
 
 ## Infos, DevKit et options
 - **Page Infos** : breakdown complet des gains APC/APS, statistiques de session et globales, liste des bonus actifs par source.【F:index.html†L714-L804】【F:scripts/app.js†L7522-L7569】

@@ -236,18 +236,6 @@
             data-i18n="index.sections.arcadeHub.cards.metaux.cta"
           ></button>
         </article>
-        <article class="arcade-hub-card" data-i18n="aria-label:index.sections.arcadeHub.cards.photon.aria">
-          <header class="arcade-hub-card__header">
-            <h3 class="arcade-hub-card__title" data-i18n="index.sections.arcadeHub.cards.photon.title"></h3>
-            <p class="arcade-hub-card__description" data-i18n="index.sections.arcadeHub.cards.photon.description"></p>
-          </header>
-          <button
-            type="button"
-            class="arcade-hub-card__button"
-            data-page-target="photon"
-            data-i18n="index.sections.arcadeHub.cards.photon.cta"
-          ></button>
-        </article>
         <article class="arcade-hub-card" data-i18n="aria-label:index.sections.arcadeHub.cards.wave.aria">
           <header class="arcade-hub-card__header">
             <h3 class="arcade-hub-card__title" data-i18n="index.sections.arcadeHub.cards.wave.title"></h3>
@@ -609,40 +597,6 @@
     </section>
 
     <section
-      id="photon"
-      class="page page--photon"
-      data-page-group="arcade"
-      data-i18n="aria-label:index.sections.photon.aria"
-      hidden
-    >
-      <div class="photon-content">
-        <div
-          class="photon-stage"
-          id="photonStage"
-          role="application"
-          data-i18n="aria-label:index.sections.photon.stageAria"
-        >
-          <canvas class="photon-canvas" id="photonCanvas" width="360" height="640"></canvas>
-          <div class="photon-overlay" id="photonOverlay" hidden>
-            <div class="photon-overlay__panel" role="dialog" aria-modal="true" aria-labelledby="photonOverlayMessage">
-              <p
-                class="photon-overlay__message"
-                id="photonOverlayMessage"
-                data-i18n="index.sections.photon.overlayMessage"
-              ></p>
-              <button
-                type="button"
-                class="photon-overlay__button"
-                id="photonOverlayButton"
-                data-i18n="index.sections.photon.button"
-              ></button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section
       id="metaux"
       class="page page--metaux"
       data-page-group="arcade"
@@ -922,7 +876,6 @@
   <script src="config/config.js"></script>
   <script src="scripts/resources/periodic-elements.js"></script>
   <script src="scripts/arcade/particules.js"></script>
-  <script src="scripts/arcade/photon.js"></script>
   <script src="scripts/arcade/wave.js"></script>
   <script src="scripts/arcade/quantum-2048.js"></script>
   <script src="scripts/i18n/embedded-resources.js"></script>

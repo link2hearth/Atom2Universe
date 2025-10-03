@@ -569,11 +569,6 @@ const GAME_CONFIG = {
             label: 'Mini jeu Mach3 :',
             description:
               "C’est un jeu de Match 3, alignez le Cuivre, le Bronze, l’Argent, l’Or et le Carbone (Diamant) le plus vite possible avant que le timer atteigne 0. Plus votre score sera grand, plus grand sera votre bonus de production d’APS."
-          },
-          {
-            label: 'Mini jeu Photon :',
-            description:
-              'Incarnez un Photon qui change d’état afin de passer entre des mailles, ou dans des trous le plus longtemps possible. Ajoutera un bonus plus tard.'
           }
         ]
       }
@@ -1176,54 +1171,6 @@ const GAME_CONFIG = {
       spawnValues: [2, 4],
       spawnWeights: [0.9, 0.1]
     },
-    photon: {
-      colors: {
-        blue: {
-          bar: '#56a6ff',
-          barEdge: '#9ed2ff',
-          haloInner: 'rgba(86, 166, 255, 0.88)',
-          haloMid: 'rgba(86, 166, 255, 0.4)',
-          haloOuter: 'rgba(86, 166, 255, 0.08)'
-        },
-        red: {
-          bar: '#ff6b8d',
-          barEdge: '#ffc2d1',
-          haloInner: 'rgba(255, 107, 141, 0.9)',
-          haloMid: 'rgba(255, 107, 141, 0.42)',
-          haloOuter: 'rgba(255, 107, 141, 0.08)'
-        }
-      },
-      colorOrder: ['blue', 'red'],
-      bars: {
-        desiredCount: 3,
-        spawnGap: 90
-      },
-      geometry: {
-        barWidthRatio: 0.78,
-        barWidthMin: 200,
-        barWidthMax: 1100,
-        barHeightRatio: 0.08,
-        barHeightMin: 42,
-        barHeightMax: 80,
-        haloHeightRatio: 0.12,
-        haloHeightMin: 60,
-        haloHeightMax: 100
-      },
-      speed: {
-        baseRatio: 0.78,
-        min: 180,
-        max: 320,
-        initialReduction: 0.3,
-        ramp: {
-          intervalSeconds: 10,
-          increment: 0.05,
-          maxBonus: 0.5
-        }
-      },
-      input: {
-        longPressThresholdMs: 200
-      }
-    }
   },
 
   /**
