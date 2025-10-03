@@ -1578,7 +1578,7 @@
             "interstellarProbe": {
               "name": "Interstellar Probe",
               "description": "Explore the galaxy to gather even more.",
-              "effect": "Passive production: +5,000 APS per level."
+              "effect": "Passive production: +5,000 APS per level. Bonus: with 50+ Free Electrons, every building level adds +100 APC."
             },
             "spaceStation": {
               "name": "Space Station",
