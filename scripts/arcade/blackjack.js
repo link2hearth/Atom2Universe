@@ -261,6 +261,12 @@
   onReady(() => {
     const dealerCardsElement = document.getElementById('blackjackDealerCards');
     const playerCardsElement = document.getElementById('blackjackPlayerCards');
+    const dealerHandElement = dealerCardsElement
+      ? dealerCardsElement.closest('.blackjack-hand')
+      : null;
+    const playerHandElement = playerCardsElement
+      ? playerCardsElement.closest('.blackjack-hand')
+      : null;
     const dealerTotalElement = document.getElementById('blackjackDealerTotalValue');
     const playerTotalElement = document.getElementById('blackjackPlayerTotalValue');
     const statusElement = document.getElementById('blackjackStatus');
@@ -789,6 +795,35 @@
       }
     }
 
+    const HAND_OUTCOME_CLASSES = [
+      'blackjack-hand--win',
+      'blackjack-hand--lose',
+      'blackjack-hand--push'
+    ];
+
+    const HAND_OUTCOME_CLASS_MAP = {
+      win: 'blackjack-hand--win',
+      lose: 'blackjack-hand--lose',
+      push: 'blackjack-hand--push'
+    };
+
+    function applyHandOutcome(element, outcome) {
+      if (!element) {
+        return;
+      }
+      for (let i = 0; i < HAND_OUTCOME_CLASSES.length; i += 1) {
+        element.classList.remove(HAND_OUTCOME_CLASSES[i]);
+      }
+      if (outcome && HAND_OUTCOME_CLASS_MAP[outcome]) {
+        element.classList.add(HAND_OUTCOME_CLASS_MAP[outcome]);
+      }
+    }
+
+    function updateHandOutcomes(playerOutcome, dealerOutcome) {
+      applyHandOutcome(playerHandElement, playerOutcome);
+      applyHandOutcome(dealerHandElement, dealerOutcome);
+    }
+
     function updateButtons() {
       newRoundButton.disabled = roundActive;
       hitButton.disabled = !roundActive || !playerTurn;
@@ -820,9 +855,32 @@
       if (resultKey) {
         setStatus(resultKey, fallback, params);
       }
+      applyRoundOutcome(resultKey);
       settleBet(payoutKey);
       updateButtons();
       updateStatsDisplay();
+    }
+
+    function applyRoundOutcome(resultKey) {
+      switch (resultKey) {
+        case 'playerBlackjack':
+        case 'dealerBust':
+        case 'playerWins':
+          updateHandOutcomes('win', 'lose');
+          break;
+        case 'dealerBlackjack':
+        case 'playerBust':
+        case 'dealerWins':
+          updateHandOutcomes('lose', 'win');
+          break;
+        case 'pushBlackjack':
+        case 'push':
+          updateHandOutcomes('push', 'push');
+          break;
+        default:
+          updateHandOutcomes(null, null);
+          break;
+      }
     }
 
     function resolveInitialBlackjack() {
@@ -930,6 +988,7 @@
       dealerReveal = false;
       playerCards = [];
       dealerCards = [];
+      updateHandOutcomes(null, null);
       playerCards.push(drawCard());
       dealerCards.push(drawCard());
       playerCards.push(drawCard());
