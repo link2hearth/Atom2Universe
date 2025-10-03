@@ -575,6 +575,20 @@
         }
       },
       "scripts": {
+        "arcade": {
+          "sudoku": {
+            "status": {
+              "generating": "Génération en cours…",
+              "generated": "Grille {level} générée (indices : {clues}).",
+              "errors": "Erreurs détectées : {count}.",
+              "noError": "Aucune erreur pour l'instant.",
+              "conflictBeforeSolve": "Il y a des conflits. Corrigez avant de résoudre.",
+              "solved": "Solution trouvée ✔︎",
+              "noSolution": "Pas de solution trouvée (ou puzzle invalide).",
+              "cleared": "Grille vidée."
+            }
+          }
+        },
         "config": {
           "uiText": {
             "options": {
@@ -1789,6 +1803,20 @@
         }
       },
       "scripts": {
+        "arcade": {
+          "sudoku": {
+            "status": {
+              "generating": "Generating…",
+              "generated": "{level} grid generated (clues: {clues}).",
+              "errors": "Conflicts detected: {count}.",
+              "noError": "No conflicts detected yet.",
+              "conflictBeforeSolve": "Conflicts found. Fix them before solving.",
+              "solved": "Solution found ✔︎",
+              "noSolution": "No solution found (or the puzzle is invalid).",
+              "cleared": "Grid cleared."
+            }
+          }
+        },
         "config": {
           "uiText": {
             "options": {
