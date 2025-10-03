@@ -83,9 +83,9 @@
             "cta": "Forge"
           },
           "wave": {
-            "aria": "Open the Quantum Glide mini-game",
-            "title": "Quantum Glide",
-            "description": "Dive into valleys, release on crests and surf endlessly generated hills.",
+            "aria": "Open the Photon mini-game",
+            "title": "Photon",
+            "description": "Become a photon surfing its cosmic wave.",
             "cta": "Ride"
           },
           "quantum2048": {
@@ -150,8 +150,8 @@
         "board": "Fusion 2048 board"
       },
       "wave": {
-        "aria": "Quantum Glide mini-game",
-        "canvasAria": "Quantum Glide playfield",
+        "aria": "Photon mini-game",
+        "canvasAria": "Photon playfield",
         "hud": {
           "distance": "Distance",
           "distanceUnit": "m",

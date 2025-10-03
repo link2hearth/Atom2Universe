@@ -87,10 +87,10 @@
                 "cta": "Forger"
               },
               "wave": {
-                "aria": "Accéder au mini-jeu Glisse quantique",
-                "title": "Glisse quantique",
-                "description": "Plongez dans les vallées, relâchez sur les bosses et surfez sur les collines infinies.",
-                "cta": "Glisser"
+                "aria": "Accéder au mini-jeu Photon",
+                "title": "Photon",
+                "description": "Incarnez un photon surfant son onde cosmique.",
+                "cta": "Surfer"
               },
               "quantum2048": {
                 "aria": "Accéder au mini-jeu Fusion 2048",
@@ -154,8 +154,8 @@
           "board": "Plateau Fusion 2048"
         },
         "wave": {
-          "aria": "Mini-jeu Glisse quantique",
-          "canvasAria": "Zone de glisse quantique",
+          "aria": "Mini-jeu Photon",
+          "canvasAria": "Zone de jeu Photon",
           "hud": {
             "distance": "Distance",
             "distanceUnit": "m",
@@ -1326,9 +1326,9 @@
                 "cta": "Forge"
               },
               "wave": {
-                "aria": "Open the Quantum Glide mini-game",
-                "title": "Quantum Glide",
-                "description": "Dive into valleys, release on crests and surf endlessly generated hills.",
+                "aria": "Open the Photon mini-game",
+                "title": "Photon",
+                "description": "Become a photon surfing its cosmic wave.",
                 "cta": "Ride"
               },
               "quantum2048": {
@@ -1393,8 +1393,8 @@
           "board": "Fusion 2048 board"
         },
         "wave": {
-          "aria": "Quantum Glide mini-game",
-          "canvasAria": "Quantum Glide playfield",
+          "aria": "Photon mini-game",
+          "canvasAria": "Photon playfield",
           "hud": {
             "distance": "Distance",
             "distanceUnit": "m",
