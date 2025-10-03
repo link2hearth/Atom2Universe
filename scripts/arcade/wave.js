@@ -25,6 +25,9 @@
   const MAX_AMPLITUDE_RATIO = 0.26;
   const AMPLITUDE_LENGTH_INFLUENCE = 0.85;
   const MAX_WAVE_EXTENSION_FACTOR = 1.75;
+  const WAVE_AMPLITUDE_SPEED_MIN_KMH = 100;
+  const WAVE_AMPLITUDE_SPEED_MAX_KMH = 300;
+  const WAVE_AMPLITUDE_MAX_MULTIPLIER = 3;
   const CAMERA_LERP_MIN = 0.08;
   const CAMERA_LERP_MAX = 0.25;
   const CAMERA_SCALE_LERP_MIN = 0.05;
@@ -114,6 +117,9 @@
       this.currentAmplitude = 72;
       this.phase = 0;
       this.phaseSpeed = (Math.PI * 2) / 420;
+      this.baseMinAmplitude = this.minAmplitude;
+      this.baseMaxAmplitude = this.maxAmplitude;
+      this.amplitudeScale = 1;
     }
 
     configure({ minY, maxY, baseLevel, sampleSpacing } = {}) {
@@ -137,6 +143,9 @@
       const maxAmplitude = Math.max(minAmplitude + 12, this.verticalSpan * MAX_AMPLITUDE_RATIO);
       this.minAmplitude = minAmplitude;
       this.maxAmplitude = maxAmplitude;
+      this.baseMinAmplitude = minAmplitude;
+      this.baseMaxAmplitude = maxAmplitude;
+      this.setAmplitudeScale(this.amplitudeScale || 1);
       const minWave = Math.max(this.sampleSpacing * 6, this.verticalSpan * 1.1, MIN_WAVE_WAVELENGTH);
       const maxWave = Math.max(minWave + this.sampleSpacing * 3, this.verticalSpan * 2.4, MAX_WAVE_WAVELENGTH);
       this.minWavelength = minWave;
@@ -261,6 +270,22 @@
       return Math.atan2(last.y - prev.y, last.x - prev.x);
     }
 
+    setAmplitudeScale(scale = 1) {
+      const normalizedScale = clamp(
+        Number.isFinite(scale) ? scale : 1,
+        1,
+        WAVE_AMPLITUDE_MAX_MULTIPLIER
+      );
+      this.amplitudeScale = normalizedScale;
+      const rawMin = this.baseMinAmplitude * normalizedScale;
+      const rawMax = this.baseMaxAmplitude * normalizedScale;
+      const minAmplitude = Math.max(24, rawMin);
+      const maxAmplitude = Math.max(minAmplitude + 12, rawMax);
+      this.minAmplitude = minAmplitude;
+      this.maxAmplitude = maxAmplitude;
+      this.currentAmplitude = clamp(this.currentAmplitude, this.minAmplitude, this.maxAmplitude);
+    }
+
     getPoints() {
       return this.points;
     }
@@ -301,6 +326,7 @@
       this.keyboardPressed = false;
       this.activePointers = new Set();
       this.statusState = null;
+      this.currentSpeedKmh = 0;
 
       this.skyDots = [];
 
@@ -439,6 +465,7 @@
       const worldWidth = this.viewWidth / Math.max(this.cameraScale, MIN_CAMERA_SCALE);
       const span = worldWidth * 3;
       const startX = -worldWidth;
+      this.terrain.setAmplitudeScale(1);
       this.terrain.reset(startX, startX + span);
       const startScreenX = worldWidth * START_SCREEN_X_RATIO;
       this.player.x = startX + startScreenX;
@@ -460,6 +487,8 @@
       this.lastTimestamp = null;
       this.statusState = null;
       this.applyInitialLaunch();
+      this.updateCurrentSpeed();
+      this.updateTerrainAmplitude(this.currentSpeedKmh);
       this.updateHud(0);
     }
 
@@ -658,6 +687,7 @@
     }
 
     update(delta) {
+      this.updateTerrainAmplitude(this.currentSpeedKmh);
       const viewWorldWidth = this.viewWidth / this.cameraScale;
       const targetMaxX = this.cameraX + viewWorldWidth * 2.6;
       const pruneBefore = this.cameraX - viewWorldWidth * 1.2;
@@ -759,8 +789,38 @@
       }
 
       this.distanceTravelled = Math.max(this.distanceTravelled, this.player.x);
+      const speedKmh = this.updateCurrentSpeed();
+      this.updateTerrainAmplitude(speedKmh);
       this.updateCamera(delta);
       this.updateHud(delta);
+    }
+
+    updateCurrentSpeed() {
+      if (!this.player) {
+        this.currentSpeedKmh = 0;
+        return this.currentSpeedKmh;
+      }
+      const vx = Number.isFinite(this.player.vx) ? this.player.vx : 0;
+      const vy = Number.isFinite(this.player.vy) ? this.player.vy : 0;
+      const speed = Math.hypot(vx, vy);
+      this.player.speed = speed;
+      const speedKmh = Math.max(0, (speed / PIXELS_PER_METER) * 3.6);
+      this.currentSpeedKmh = speedKmh;
+      return speedKmh;
+    }
+
+    updateTerrainAmplitude(speedKmh = 0) {
+      if (!this.terrain || typeof this.terrain.setAmplitudeScale !== 'function') {
+        return;
+      }
+      const normalizedSpeed = clamp(
+        (Math.max(0, speedKmh) - WAVE_AMPLITUDE_SPEED_MIN_KMH) /
+          Math.max(WAVE_AMPLITUDE_SPEED_MAX_KMH - WAVE_AMPLITUDE_SPEED_MIN_KMH, 1),
+        0,
+        1
+      );
+      const scale = normalizedSpeed <= 0 ? 1 : lerp(1, WAVE_AMPLITUDE_MAX_MULTIPLIER, normalizedSpeed);
+      this.terrain.setAmplitudeScale(scale);
     }
 
     updateCamera(delta) {
@@ -848,8 +908,7 @@
         return;
       }
       const distanceMeters = Math.max(0, this.distanceTravelled) / PIXELS_PER_METER;
-      const speed = Math.hypot(this.player.vx, this.player.vy);
-      const speedKmh = Math.max(0, speed / PIXELS_PER_METER * 3.6);
+      const speedKmh = this.currentSpeedKmh;
       const groundY = this.terrain.getHeight(this.player.x);
       const altitude = clamp((groundY - this.player.y) / PIXELS_PER_METER, 0, 9999);
       this.distanceElement.textContent = formatNumber(distanceMeters, 0);
