@@ -5426,6 +5426,7 @@ function showPage(pageId) {
   document.body.classList.toggle('view-metaux', pageId === 'metaux');
   document.body.classList.toggle('view-wave', pageId === 'wave');
   document.body.classList.toggle('view-quantum2048', pageId === 'quantum2048');
+  document.body.classList.toggle('view-sudoku', pageId === 'sudoku');
   if (pageId === 'metaux') {
     initMetauxGame();
   }

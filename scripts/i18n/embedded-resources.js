@@ -97,13 +97,40 @@
                 "title": "Fusion 2048",
                 "description": "Composez des réactions en chaîne sur la grille choisie pour atteindre la tuile objectif.",
                 "cta": "Fusionner"
+              },
+              "sudoku": {
+                "aria": "Accéder au mini-jeu Sudoku quantique",
+                "title": "Sudoku quantique",
+                "description": "Résolvez des grilles générées aléatoirement ou laissez l'ordinateur trouver la solution parfaite.",
+                "cta": "Résoudre"
               }
             }
           },
-        "quantum2048": {
-          "aria": "Mini-jeu Fusion 2048",
-          "title": "Fusion 2048",
-          "subtitle": "Choisissez votre grille et combinez les tuiles pour atteindre l’objectif sélectionné.",
+          "sudoku": {
+            "aria": "Mini-jeu Sudoku quantique",
+            "title": "Sudoku quantique",
+            "subtitle": "Choisissez votre niveau de difficulté, remplissez la grille et vérifiez votre progression en temps réel.",
+            "toolbar": {
+              "aria": "Contrôles du Sudoku",
+              "level": "Niveau",
+              "generate": "Générer une grille",
+              "validate": "Valider",
+              "solve": "Résoudre",
+              "clear": "Vider",
+              "options": {
+                "facile": "Facile (~40 indices)",
+                "moyen": "Moyen (~32)",
+                "difficile": "Difficile (~26)"
+              }
+            },
+            "board": "Grille Sudoku",
+            "cellLabel": "Case de Sudoku",
+            "note": "Astuce : utilisez les chiffres 1 à 9. La validation détecte les doublons dans les lignes, colonnes et blocs 3×3. La résolution applique un backtracking tandis que la génération produit une grille à solution unique."
+          },
+          "quantum2048": {
+            "aria": "Mini-jeu Fusion 2048",
+            "title": "Fusion 2048",
+            "subtitle": "Choisissez votre grille et combinez les tuiles pour atteindre l’objectif sélectionné.",
           "banner": {
             "goalLabel": "Objectif"
           },
@@ -527,6 +554,18 @@
             "overlay": {
               "defeat": "Plus de mouvements ! Score : {score}",
               "retry": "Rejouer"
+            }
+          },
+          "sudoku": {
+            "status": {
+              "generating": "Génération en cours…",
+              "generated": "Grille {level} générée (indices : {clues}).",
+              "errors": "Erreurs détectées : {count}.",
+              "noError": "Aucune erreur pour l'instant.",
+              "conflictBeforeSolve": "Il y a des conflits. Corrigez avant de résoudre.",
+              "solved": "Solution trouvée ✔︎",
+              "noSolution": "Pas de solution trouvée (ou puzzle invalide).",
+              "cleared": "Grille vidée."
             }
           }
         }
@@ -1268,13 +1307,40 @@
                 "title": "Fusion 2048",
                 "description": "Trigger chain reactions on your chosen grid to reach the requested tile.",
                 "cta": "Play"
+              },
+              "sudoku": {
+                "aria": "Open the Quantum Sudoku mini-game",
+                "title": "Quantum Sudoku",
+                "description": "Solve freshly generated grids or let the solver reveal a flawless solution.",
+                "cta": "Solve"
               }
             }
           },
-        "quantum2048": {
-          "aria": "Fusion 2048 mini-game",
-          "title": "Fusion 2048",
-          "subtitle": "Pick your grid and merge tiles until you reach the selected goal.",
+          "sudoku": {
+            "aria": "Quantum Sudoku mini-game",
+            "title": "Quantum Sudoku",
+            "subtitle": "Pick a difficulty, fill the grid and keep track of conflicts as you play.",
+            "toolbar": {
+              "aria": "Sudoku controls",
+              "level": "Difficulty",
+              "generate": "Generate grid",
+              "validate": "Validate",
+              "solve": "Solve",
+              "clear": "Clear",
+              "options": {
+                "facile": "Easy (~40 clues)",
+                "moyen": "Medium (~32)",
+                "difficile": "Hard (~26)"
+              }
+            },
+            "board": "Sudoku grid",
+            "cellLabel": "Sudoku cell",
+            "note": "Tip: only digits 1–9 are accepted. Validation highlights duplicates in rows, columns and 3×3 boxes. The solver uses backtracking and generation ensures a single-solution puzzle."
+          },
+          "quantum2048": {
+            "aria": "Fusion 2048 mini-game",
+            "title": "Fusion 2048",
+            "subtitle": "Pick your grid and merge tiles until you reach the selected goal.",
           "banner": {
             "goalLabel": "Goal"
           },
@@ -1689,6 +1755,27 @@
                 "speed": "Acceleration",
                 "floor": "Lower shield"
               }
+            }
+          },
+          "quantum2048": {
+            "sizeOption": "{size}×{size}",
+            "targetOption": "{value}",
+            "targetRecommended": "Recommended",
+            "overlay": {
+              "defeat": "No more moves! Score: {score}",
+              "retry": "Retry"
+            }
+          },
+          "sudoku": {
+            "status": {
+              "generating": "Generating…",
+              "generated": "{level} grid generated (clues: {clues}).",
+              "errors": "Conflicts detected: {count}.",
+              "noError": "No conflicts detected yet.",
+              "conflictBeforeSolve": "Conflicts found. Fix them before solving.",
+              "solved": "Solution found ✔︎",
+              "noSolution": "No solution found (or the puzzle is invalid).",
+              "cleared": "Grid cleared."
             }
           }
         }
