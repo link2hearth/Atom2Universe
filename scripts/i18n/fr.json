@@ -155,6 +155,14 @@
           "hit": "Tirer",
           "stand": "Rester"
         },
+        "bet": {
+          "title": "Mise",
+          "current": "Mise actuelle\u00a0:",
+          "balance": "Atomes disponibles\u00a0:",
+          "none": "Aucune",
+          "option": "{amount} atomes",
+          "optionsAria": "Montants de mise disponibles"
+        },
         "shoe": {
           "label": "Sabot"
         },
@@ -793,7 +801,9 @@
           "playerWins": "Victoire {player} contre {dealer}.",
           "dealerWins": "Défaite {dealer} contre {player}.",
           "push": "Égalité à {total}.",
-          "dealerTurn": "Tour du croupier…"
+          "dealerTurn": "Tour du croupier…",
+          "insufficientAtoms": "Pas assez d'Atomes pour cette mise.",
+          "selectBet": "Sélectionnez une mise avant de lancer une manche."
         },
         "totals": {
           "bust": "Brûlé ({total})",

@@ -155,6 +155,14 @@
           "hit": "Hit",
           "stand": "Stand"
         },
+        "bet": {
+          "title": "Bet",
+          "current": "Current bet:",
+          "balance": "Atoms available:",
+          "none": "None",
+          "option": "{amount} atoms",
+          "optionsAria": "Available bet amounts"
+        },
         "shoe": {
           "label": "Shoe"
         },
@@ -799,17 +807,19 @@
       "blackjack": {
         "status": {
           "intro": "Start a new round to challenge the dealer.",
-          "playerTurn": "Hit to draw or Stand to hold.",
-          "playerBlackjack": "Blackjack! You win.",
-          "dealerBlackjack": "Dealer blackjack. You lose.",
-          "pushBlackjack": "Push: both reveal blackjack.",
-          "playerBust": "Bust! Dealer wins with {dealer}.",
-          "dealerBust": "Dealer busts with {dealer}. You win!",
-          "playerWins": "You win {player} vs {dealer}.",
-          "dealerWins": "Dealer wins {dealer} vs {player}.",
-          "push": "Push at {total}.",
-          "dealerTurn": "Dealer plays…"
-        },
+        "playerTurn": "Hit to draw or Stand to hold.",
+        "playerBlackjack": "Blackjack! You win.",
+        "dealerBlackjack": "Dealer blackjack. You lose.",
+        "pushBlackjack": "Push: both reveal blackjack.",
+        "playerBust": "Bust! Dealer wins with {dealer}.",
+        "dealerBust": "Dealer busts with {dealer}. You win!",
+        "playerWins": "You win {player} vs {dealer}.",
+        "dealerWins": "Dealer wins {dealer} vs {player}.",
+        "push": "Push at {total}.",
+        "dealerTurn": "Dealer plays…",
+        "insufficientAtoms": "Not enough atoms for this bet.",
+        "selectBet": "Select a bet before starting a round."
+      },
         "totals": {
           "bust": "Bust ({total})",
           "soft": "{hard} / {soft}",
