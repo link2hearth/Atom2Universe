@@ -187,9 +187,12 @@
       this.baseMinAmplitude = this.minAmplitude;
       this.baseMaxAmplitude = this.maxAmplitude;
       this.amplitudeScale = 1;
+      this.baseMinY = this.minY;
+      this.baseMaxY = this.maxY;
+      this.viewHeight = 600;
     }
 
-    configure({ minY, maxY, baseLevel, sampleSpacing } = {}) {
+    configure({ minY, maxY, baseLevel, sampleSpacing, viewHeight } = {}) {
       if (typeof sampleSpacing === 'number') {
         this.sampleSpacing = Math.max(12, sampleSpacing);
       }
@@ -205,6 +208,11 @@
         this.baseLevel = clamp(this.baseLevel, this.minY + 20, this.maxY - 20);
       }
       this.defaultBaseLevel = this.baseLevel;
+      if (typeof viewHeight === 'number' && Number.isFinite(viewHeight) && viewHeight > 0) {
+        this.viewHeight = viewHeight;
+      }
+      this.baseMinY = this.minY;
+      this.baseMaxY = this.maxY;
       this.verticalSpan = Math.max(60, this.maxY - this.minY);
       const minAmplitude = Math.max(24, this.verticalSpan * MIN_AMPLITUDE_RATIO);
       const maxAmplitude = Math.max(minAmplitude + 12, this.verticalSpan * MAX_AMPLITUDE_RATIO);
@@ -224,7 +232,8 @@
       this.points = [];
       this.currentX = startX;
       const baseOffset = randomInRange(-this.verticalSpan * 0.08, this.verticalSpan * 0.08);
-      this.baseLevel = clamp(this.defaultBaseLevel + baseOffset, this.minY + 24, this.maxY - 24);
+      const baseMargin = Math.max(36, this.maxAmplitude * 0.6);
+      this.baseLevel = clamp(this.defaultBaseLevel + baseOffset, this.minY + baseMargin, this.maxY - baseMargin);
       this.currentAmplitude = randomInRange(this.minAmplitude, this.maxAmplitude);
       const initialWavelength = randomInRange(this.minWavelength, this.maxWavelength);
       this.phaseSpeed = (Math.PI * 2) / Math.max(60, initialWavelength);
@@ -257,7 +266,8 @@
     appendSegment() {
       const verticalSpan = this.verticalSpan || this.maxY - this.minY;
       const baseShift = randomInRange(-verticalSpan * 0.04, verticalSpan * 0.04);
-      const nextBase = clamp(this.baseLevel + baseShift, this.minY + 30, this.maxY - 30);
+      const baseMargin = Math.max(30, this.maxAmplitude * 0.6);
+      const nextBase = clamp(this.baseLevel + baseShift, this.minY + baseMargin, this.maxY - baseMargin);
       const nextAmplitude = randomInRange(this.minAmplitude, this.maxAmplitude);
       const amplitudeRange = Math.max(1, this.maxAmplitude - this.minAmplitude);
       const amplitudeRatio = clamp((nextAmplitude - this.minAmplitude) / amplitudeRange, 0, 1);
@@ -351,10 +361,42 @@
       this.minAmplitude = minAmplitude;
       this.maxAmplitude = maxAmplitude;
       this.currentAmplitude = clamp(this.currentAmplitude, this.minAmplitude, this.maxAmplitude);
+      this.updateAdaptiveBounds(normalizedScale);
     }
 
     getPoints() {
       return this.points;
+    }
+
+    updateAdaptiveBounds(scale = 1) {
+      const viewHeight = Number.isFinite(this.viewHeight) && this.viewHeight > 0 ? this.viewHeight : this.maxY;
+      const amplitudeBudget = Math.max(this.baseMaxAmplitude * scale, this.baseMinAmplitude * scale);
+      const crestPadding = Math.max(48, amplitudeBudget * 0.35);
+      const troughPadding = Math.max(64, amplitudeBudget * 0.45);
+      const desiredMin = Math.max(0, this.defaultBaseLevel - amplitudeBudget - crestPadding);
+      const desiredMax = Math.min(viewHeight * 1.75, this.defaultBaseLevel + amplitudeBudget + troughPadding);
+      const baseMinY = typeof this.baseMinY === 'number' ? this.baseMinY : desiredMin;
+      const baseMaxY = typeof this.baseMaxY === 'number' ? this.baseMaxY : desiredMax;
+      this.minY = Math.min(baseMinY, desiredMin);
+      this.maxY = Math.max(baseMaxY, desiredMax);
+      if (!(this.maxY > this.minY + 60)) {
+        this.maxY = this.minY + Math.max(120, amplitudeBudget * 2.2);
+      }
+      const safeMargin = Math.max(36, amplitudeBudget * 0.7);
+      const safeMin = this.minY + safeMargin;
+      const safeMax = this.maxY - safeMargin;
+      if (safeMin >= safeMax) {
+        const midpoint = (this.minY + this.maxY) / 2;
+        this.baseLevel = midpoint;
+        this.defaultBaseLevel = midpoint;
+      } else {
+        const candidateBase = Number.isFinite(this.baseLevel) ? this.baseLevel : this.defaultBaseLevel;
+        const clampedBase = clamp(candidateBase, safeMin, safeMax);
+        this.baseLevel = clampedBase;
+        this.defaultBaseLevel = clampedBase;
+      }
+      this.verticalSpan = Math.max(60, this.maxY - this.minY);
+      this.currentY = clamp(this.currentY ?? this.baseLevel, this.minY, this.maxY);
     }
   }
 
@@ -540,7 +582,13 @@
       const minY = height * 0.7;
       const maxY = height * 0.95;
       const baseLevel = height * 0.9;
-      this.terrain.configure({ minY, maxY, baseLevel, sampleSpacing: TERRAIN_SAMPLE_SPACING });
+      this.terrain.configure({
+        minY,
+        maxY,
+        baseLevel,
+        sampleSpacing: TERRAIN_SAMPLE_SPACING,
+        viewHeight: height
+      });
       this.refreshSky();
       this.resetTerrain();
     }
