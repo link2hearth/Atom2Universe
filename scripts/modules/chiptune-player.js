@@ -1,20 +1,6 @@
 (function () {
   'use strict';
 
-  function isMeaningfulTranslation(value, key) {
-    if (value == null) {
-      return false;
-    }
-    if (typeof value === 'string') {
-      const trimmed = value.trim();
-      if (!trimmed) {
-        return false;
-      }
-      return trimmed !== key;
-    }
-    return true;
-  }
-
   function formatTemplate(message, params = {}) {
     if (typeof message !== 'string' || !message) {
       return message;
@@ -29,69 +15,40 @@
     });
   }
 
+  const ENGLISH_MESSAGES = new Map([
+    ['index.sections.options.chiptune.errors.midiIncompleteVlq', 'Incomplete MIDI frame (VLQ).'],
+    ['index.sections.options.chiptune.errors.midiHeaderInvalid', 'Invalid MIDI header.'],
+    ['index.sections.options.chiptune.errors.midiHeaderIncomplete', 'Incomplete MIDI header.'],
+    ['index.sections.options.chiptune.errors.midiNoTracks', 'The MIDI file contains no tracks.'],
+    ['index.sections.options.chiptune.errors.midiMissingStatus', 'Missing MIDI status byte for an event.'],
+    ['index.sections.options.chiptune.errors.midiNoUsableTrack', 'No usable MIDI track found.'],
+    ['index.sections.options.chiptune.errors.midiNoPlayableNotes', 'The file contains no playable notes.'],
+    ['index.sections.options.chiptune.errors.midiResolution', 'Invalid MIDI resolution.'],
+    ['index.sections.options.chiptune.errors.soundFontEmpty', 'Empty SoundFont.'],
+    ['index.sections.options.chiptune.errors.soundFontHeader', 'Invalid SoundFont header.'],
+    ['index.sections.options.chiptune.errors.soundFontFormat', 'Unsupported SoundFont format.'],
+    ['index.sections.options.chiptune.errors.soundFontMissingSelection', 'No SoundFont selected.'],
+    ['index.sections.options.chiptune.errors.webAudioUnavailable', 'The Web Audio API is not available in this browser.'],
+  ]);
+
   function translateMessage(key, fallback, params = {}) {
-    const formattedFallback = typeof fallback === 'string'
-      ? formatTemplate(fallback, params)
+    const normalizedKey = typeof key === 'string' ? key.trim() : '';
+    const baseMessage = normalizedKey && ENGLISH_MESSAGES.has(normalizedKey)
+      ? ENGLISH_MESSAGES.get(normalizedKey)
       : fallback;
-
-    if (typeof key !== 'string' || !key.trim()) {
-      return formattedFallback;
+    if (typeof baseMessage === 'string') {
+      return formatTemplate(baseMessage, params);
     }
-
-    const normalizedKey = key.trim();
-
-    if (typeof globalThis.translateOrDefault === 'function') {
-      try {
-        const translated = globalThis.translateOrDefault(normalizedKey, formattedFallback, params);
-        if (isMeaningfulTranslation(translated, normalizedKey)) {
-          return translated;
-        }
-      } catch (error) {
-        console.warn('Unable to translate key with translateOrDefault', normalizedKey, error);
-      }
+    if (baseMessage != null) {
+      return baseMessage;
     }
-
-    const api = globalThis.i18n;
-    const translator = api && typeof api.t === 'function'
-      ? api.t.bind(api)
-      : typeof globalThis.t === 'function'
-        ? globalThis.t
-        : null;
-
-    if (translator) {
-      try {
-        const translated = translator(normalizedKey, params);
-        if (isMeaningfulTranslation(translated, normalizedKey)) {
-          return translated;
-        }
-      } catch (error) {
-        console.warn('Unable to translate key', normalizedKey, error);
-      }
+    if (normalizedKey) {
+      return normalizedKey;
     }
-
-    if (formattedFallback != null && formattedFallback !== '') {
-      return formattedFallback;
-    }
-
-    return normalizedKey;
+    return '';
   }
 
-  function getLocalizedResource(path) {
-    if (!path) {
-      return null;
-    }
-    const api = globalThis.i18n;
-    if (api && typeof api.getResource === 'function') {
-      try {
-        return api.getResource(path);
-      } catch (error) {
-        console.warn('Unable to read localized resource', path, error);
-      }
-    }
-    return null;
-  }
-
-  const DEFAULT_NOTE_NAMES = Object.freeze(['Do', 'Do♯', 'Ré', 'Ré♯', 'Mi', 'Fa', 'Fa♯', 'Sol', 'Sol♯', 'La', 'La♯', 'Si']);
+  const DEFAULT_NOTE_NAMES = Object.freeze(['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B']);
 
   const N163_TABLE_LENGTH = 32;
   const N163_WAVE_GENERATORS = {
@@ -1622,7 +1579,7 @@
           this.setSoundFontSelection(normalized, { autoLoad: !shouldActivateHiFi && this.engineMode === 'hifi', stopPlayback: wasPlaying });
           if (shouldActivateHiFi) {
             this.setEngineMode('hifi');
-          this.setStatusMessage('index.sections.options.chiptune.status.autoHiFi', 'Mode Hi-Fi activé automatiquement pour utiliser la SoundFont.', {}, 'success');
+            this.setStatusMessage('index.sections.options.chiptune.status.autoHiFi', 'Hi-Fi mode enabled automatically to use the SoundFont.', {}, 'success');
           }
         });
       }
@@ -1758,17 +1715,17 @@
       const clamped = this.clampPlaybackSpeed(ratio);
       const percent = Math.round(clamped * 100);
       if (Math.abs(percent - 100) <= 1) {
-        return this.translate('index.sections.options.chiptune.labels.speedNormal', 'Tempo normal (100%)');
+        return this.translate('index.sections.options.chiptune.labels.speedNormal', 'Normal tempo (100%)');
       }
       if (percent < 100) {
-        return this.translate('index.sections.options.chiptune.labels.speedSlow', 'Tempo ralenti ({value}%)', { value: percent });
+        return this.translate('index.sections.options.chiptune.labels.speedSlow', 'Slower tempo ({value}%)', { value: percent });
       }
-      return this.translate('index.sections.options.chiptune.labels.speedFast', 'Tempo accéléré ({value}%)', { value: percent });
+      return this.translate('index.sections.options.chiptune.labels.speedFast', 'Faster tempo ({value}%)', { value: percent });
     }
 
     formatSpeedFactor(ratio) {
       const clamped = this.clampPlaybackSpeed(ratio);
-      return this.translate('index.sections.options.chiptune.labels.speedFactor', 'tempo ×{value}', { value: clamped.toFixed(2) });
+      return this.translate('index.sections.options.chiptune.labels.speedFactor', 'Tempo ×{value}', { value: clamped.toFixed(2) });
     }
 
     getEffectiveDuration(timeline = this.timeline, speed = null) {
@@ -1944,7 +1901,7 @@
     formatSemitoneLabel(value) {
       const normalized = Number.isFinite(value) ? Math.round(value) : 0;
       if (normalized === 0) {
-        return this.translate('index.sections.options.chiptune.labels.transposeZero', '0 demi-ton');
+        return this.translate('index.sections.options.chiptune.labels.transposeZero', '0 semitone');
       }
       const sign = normalized > 0 ? '+' : '−';
       const abs = Math.abs(normalized);
@@ -1962,8 +1919,8 @@
         ? 'index.sections.options.chiptune.labels.transposeSemitones'
         : 'index.sections.options.chiptune.labels.transposeSemitone';
       const fallback = abs > 1
-        ? `${sign}${abs} demi-tons`
-        : `${sign}${abs} demi-ton`;
+        ? `${sign}${abs} semitones`
+        : `${sign}${abs} semitone`;
       return this.translate(key, fallback, { sign, count: abs });
     }
 
@@ -1985,15 +1942,15 @@
 
     formatArticulationLabel(value) {
       const normalized = this.clampArticulation(Number.isFinite(value) ? value : this.articulationSetting);
-      let descriptor = this.translate('index.sections.options.chiptune.labels.articulationBalanced', 'Équilibré');
+      let descriptor = this.translate('index.sections.options.chiptune.labels.articulationBalanced', 'Balanced');
       if (normalized <= 20) {
-        descriptor = this.translate('index.sections.options.chiptune.labels.articulationSustained', 'Soutenu (orgue)');
+        descriptor = this.translate('index.sections.options.chiptune.labels.articulationSustained', 'Sustained (organ)');
       } else if (normalized <= 45) {
-        descriptor = this.translate('index.sections.options.chiptune.labels.articulationSoft', 'Doux');
+        descriptor = this.translate('index.sections.options.chiptune.labels.articulationSoft', 'Soft');
       } else if (normalized <= 75) {
         descriptor = this.translate('index.sections.options.chiptune.labels.articulationPiano', 'Piano');
       } else {
-        descriptor = this.translate('index.sections.options.chiptune.labels.articulationPlucked', 'Piano pincé');
+        descriptor = this.translate('index.sections.options.chiptune.labels.articulationPlucked', 'Plucked piano');
       }
       return this.translate('index.sections.options.chiptune.labels.articulationValue', '{label} ({value}%)', { label: descriptor, value: normalized });
     }
@@ -2455,12 +2412,12 @@
               ? 'index.sections.options.chiptune.summary.melodicChannelsMultiple'
               : 'index.sections.options.chiptune.summary.melodicChannelsSingle';
             const melodicFallback = count > 1
-              ? `${count} canaux mélodiques`
-              : `${count} canal mélodique`;
+              ? `${count} melodic channels`
+              : `${count} melodic channel`;
             channelLabel = this.translate(melodicKey, melodicFallback, { count });
           }
           if (analysis.hasPercussion) {
-            const percussionLabel = this.translate('index.sections.options.chiptune.summary.percussion', 'Percussions');
+            const percussionLabel = this.translate('index.sections.options.chiptune.summary.percussion', 'Percussion');
             channelLabel = channelLabel
               ? this.translate('index.sections.options.chiptune.summary.channelsWithPercussion', '{channels} + {percussion}', { channels: channelLabel, percussion: percussionLabel })
               : percussionLabel;
@@ -2471,13 +2428,13 @@
         }
 
         if (Number.isFinite(analysis.peakPolyphony) && analysis.peakPolyphony > 0) {
-          segments.push(this.translate('index.sections.options.chiptune.summary.polyphony', 'Polyphonie max {value}', { value: analysis.peakPolyphony }));
+          segments.push(this.translate('index.sections.options.chiptune.summary.polyphony', 'Maximum polyphony {value}', { value: analysis.peakPolyphony }));
         }
 
         if (Number.isFinite(analysis.minNote) && Number.isFinite(analysis.maxNote)) {
           const rangeLabel = this.formatNoteRange(analysis.minNote, analysis.maxNote);
           if (rangeLabel) {
-            segments.push(this.translate('index.sections.options.chiptune.summary.range', 'Plage {range}', { range: rangeLabel }));
+            segments.push(this.translate('index.sections.options.chiptune.summary.range', 'Range {range}', { range: rangeLabel }));
           }
         }
       }
@@ -2489,10 +2446,7 @@
       if (!Number.isFinite(noteNumber)) {
         return '';
       }
-      const resource = getLocalizedResource('index.sections.options.chiptune.notes.names');
-      const noteNames = Array.isArray(resource) && resource.length >= 12
-        ? resource
-        : DEFAULT_NOTE_NAMES;
+      const noteNames = DEFAULT_NOTE_NAMES;
       const normalized = Math.round(noteNumber);
       const pitchClass = ((normalized % 12) + 12) % 12;
       const octave = Math.floor(normalized / 12) - 1;
