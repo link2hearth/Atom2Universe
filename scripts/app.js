@@ -2174,6 +2174,7 @@ const elements = {
   statusApsFrenzy: document.getElementById('statusApsFrenzy'),
   atomButton: document.getElementById('atomButton'),
   atomVisual: document.querySelector('.atom-visual'),
+  atomImage: document.querySelector('#atomButton .atom-image'),
   frenzyLayer: document.getElementById('frenzyLayer'),
   ticketLayer: document.getElementById('ticketLayer'),
   apcFrenzyCounter: document.getElementById('apcFrenzyCounter'),
@@ -4703,9 +4704,34 @@ function getAtomVisualElement() {
 
   if (resolved) {
     elements.atomVisual = resolved;
+    const image = resolved.querySelector('.atom-image');
+    if (image) {
+      elements.atomImage = image;
+    }
+  } else {
+    elements.atomVisual = null;
   }
 
-  return resolved;
+  return resolved || null;
+}
+
+function getAtomImageElement() {
+  const current = elements.atomImage;
+  if (current?.isConnected) {
+    return current;
+  }
+  const visual = getAtomVisualElement();
+  if (!visual) {
+    elements.atomImage = null;
+    return null;
+  }
+  const resolved = visual.querySelector('.atom-image');
+  if (resolved) {
+    elements.atomImage = resolved;
+    return resolved;
+  }
+  elements.atomImage = null;
+  return null;
 }
 
 function isGamePageActive() {
@@ -5041,6 +5067,7 @@ function animateAtomPress(options = {}) {
 }
 
 const STAR_COUNT = CONFIG.presentation?.starfield?.starCount ?? 60;
+const ATOM_IMAGE_FALLBACK = 'Assets/Image/Atom.png';
 
 function initStarfield() {
   if (!elements.starfield) return;
@@ -5067,9 +5094,27 @@ const CRIT_ATOM_IMAGES = (() => {
       ? APP_DATA.DEFAULT_CRIT_ATOM_IMAGES
       : [];
   if (!source.length) {
-    return ['Assets/Image/Atom.png'];
+    return [ATOM_IMAGE_FALLBACK];
   }
   return source.map(value => String(value));
+})();
+
+const ATOM_BUTTON_IMAGES = (() => {
+  const unique = new Set();
+  CRIT_ATOM_IMAGES.forEach(value => {
+    if (typeof value === 'string') {
+      const normalized = value.trim();
+      if (normalized) {
+        unique.add(normalized);
+      }
+    }
+  });
+  if (!unique.size) {
+    unique.add(ATOM_IMAGE_FALLBACK);
+  } else if (!unique.has(ATOM_IMAGE_FALLBACK)) {
+    unique.add(ATOM_IMAGE_FALLBACK);
+  }
+  return Array.from(unique);
 })();
 
 const CRIT_ATOM_LIFETIME_MS = 6000;
@@ -5094,6 +5139,26 @@ function pickRandom(array) {
   return array[Math.floor(Math.random() * array.length)];
 }
 
+function randomizeAtomButtonImage() {
+  const image = getAtomImageElement();
+  if (!image) {
+    return;
+  }
+  const current = image.dataset.atomImage || image.getAttribute('src') || ATOM_IMAGE_FALLBACK;
+  let next = pickRandom(ATOM_BUTTON_IMAGES) || ATOM_IMAGE_FALLBACK;
+  if (ATOM_BUTTON_IMAGES.length > 1) {
+    let attempts = 0;
+    while (next === current && attempts < 4) {
+      next = pickRandom(ATOM_BUTTON_IMAGES) || ATOM_IMAGE_FALLBACK;
+      attempts += 1;
+    }
+  }
+  if (image.getAttribute('src') !== next) {
+    image.setAttribute('src', next);
+  }
+  image.dataset.atomImage = next;
+}
+
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
 }
@@ -5103,7 +5168,7 @@ function spawnCriticalAtom(multiplier = 1) {
   if (!layer) return;
 
   const safeMultiplier = Math.max(1, Number(multiplier) || 1);
-  const fallbackImage = 'Assets/Image/Atom.png';
+  const fallbackImage = ATOM_IMAGE_FALLBACK;
   const imageSource = pickRandom(CRIT_ATOM_IMAGES) || fallbackImage;
 
   const atom = document.createElement('img');
@@ -5478,6 +5543,9 @@ function showPage(pageId) {
   document.body.classList.toggle('view-wave', pageId === 'wave');
   document.body.classList.toggle('view-quantum2048', pageId === 'quantum2048');
   document.body.classList.toggle('view-sudoku', pageId === 'sudoku');
+  if (pageId === 'game') {
+    randomizeAtomButtonImage();
+  }
   if (pageId === 'metaux') {
     initMetauxGame();
   }
@@ -9291,6 +9359,7 @@ function startApp() {
   renderShop();
   renderGoals();
   updateUI();
+  randomizeAtomButtonImage();
   initStarfield();
   requestAnimationFrame(loop);
 }

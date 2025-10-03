@@ -519,7 +519,12 @@
     'Assets/Image/Atom3.png',
     'Assets/Image/Atom4.png',
     'Assets/Image/Atom5.png',
-    'Assets/Image/Atom6.png'
+    'Assets/Image/Atom6.png',
+    'Assets/Image/Atom7.png',
+    'Assets/Image/Atom8.png',
+    'Assets/Image/Atom9.png',
+    'Assets/Image/Atom10.png',
+    'Assets/Image/Atom11.png'
   ]);
 
   function sanitizeCritAtomImages(raw) {
