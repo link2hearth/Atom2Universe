@@ -3,6 +3,13 @@
     return;
   }
 
+  const GLOBAL_CONFIG = typeof globalThis !== 'undefined' ? globalThis.GAME_CONFIG : null;
+  const DEFAULT_LEVEL_CLUE_RANGES = Object.freeze({
+    facile: Object.freeze({ min: 30, max: 34 }),
+    moyen: Object.freeze({ min: 24, max: 28 }),
+    difficile: Object.freeze({ min: 18, max: 22 })
+  });
+
   function onReady(callback) {
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', callback, { once: true });
@@ -11,7 +18,31 @@
     }
   }
 
-  const LEVEL_CLUES = Object.freeze({ facile: 40, moyen: 32, difficile: 26 });
+  function getConfiguredClueRange(level) {
+    const fallback = DEFAULT_LEVEL_CLUE_RANGES[level] || DEFAULT_LEVEL_CLUE_RANGES.moyen;
+    if (!GLOBAL_CONFIG || !GLOBAL_CONFIG.arcade || !GLOBAL_CONFIG.arcade.sudoku) {
+      return fallback;
+    }
+    const ranges = GLOBAL_CONFIG.arcade.sudoku.levelClues;
+    if (!ranges || typeof ranges !== 'object') {
+      return fallback;
+    }
+    const entry = ranges[level] || null;
+    const min = entry && Number.isFinite(entry.min) ? entry.min : fallback.min;
+    const max = entry && Number.isFinite(entry.max) ? entry.max : fallback.max;
+    const normalizedMin = Math.max(17, Math.min(min, max));
+    const normalizedMax = Math.max(normalizedMin, max);
+    return { min: normalizedMin, max: normalizedMax };
+  }
+
+  function pickClueCount(level) {
+    const range = getConfiguredClueRange(level);
+    if (range.min === range.max) {
+      return range.min;
+    }
+    const span = range.max - range.min + 1;
+    return range.min + Math.floor(Math.random() * span);
+  }
 
   function createEmptyBoard() {
     return Array.from({ length: 9 }, () => Array(9).fill(0));
@@ -40,53 +71,85 @@
     return true;
   }
 
-  function findEmptyCell(board) {
-    for (let i = 0; i < 9; i += 1) {
-      for (let j = 0; j < 9; j += 1) {
-        if (board[i][j] === 0) {
-          return [i, j];
+  function getCandidates(board, row, col) {
+    const candidates = [];
+    for (let value = 1; value <= 9; value += 1) {
+      if (isValid(board, row, col, value)) {
+        candidates.push(value);
+      }
+    }
+    return candidates;
+  }
+
+  function selectNextCell(board) {
+    let bestRow = -1;
+    let bestCol = -1;
+    let bestCandidates = null;
+    for (let row = 0; row < 9; row += 1) {
+      for (let col = 0; col < 9; col += 1) {
+        if (board[row][col] !== 0) {
+          continue;
+        }
+        const candidates = getCandidates(board, row, col);
+        if (candidates.length === 0) {
+          return { row, col, candidates };
+        }
+        if (!bestCandidates || candidates.length < bestCandidates.length) {
+          bestRow = row;
+          bestCol = col;
+          bestCandidates = candidates;
+          if (candidates.length === 1) {
+            return { row, col, candidates };
+          }
         }
       }
     }
-    return null;
+    if (!bestCandidates) {
+      return null;
+    }
+    return { row: bestRow, col: bestCol, candidates: bestCandidates };
   }
 
   function solveBoard(board) {
-    const position = findEmptyCell(board);
-    if (!position) {
+    const nextCell = selectNextCell(board);
+    if (!nextCell) {
       return true;
     }
-    const [row, col] = position;
-    for (let value = 1; value <= 9; value += 1) {
-      if (isValid(board, row, col, value)) {
-        board[row][col] = value;
-        if (solveBoard(board)) {
-          return true;
-        }
-        board[row][col] = 0;
+    const { row, col, candidates } = nextCell;
+    if (!candidates.length) {
+      return false;
+    }
+    const options = shuffled(candidates);
+    for (let i = 0; i < options.length; i += 1) {
+      board[row][col] = options[i];
+      if (solveBoard(board)) {
+        return true;
       }
+      board[row][col] = 0;
     }
     return false;
   }
 
   function countSolutions(board, limit = 2) {
-    const position = findEmptyCell(board);
-    if (!position) {
+    const nextCell = selectNextCell(board);
+    if (!nextCell) {
       return 1;
     }
-    const [row, col] = position;
+    const { row, col, candidates } = nextCell;
+    if (!candidates.length) {
+      return 0;
+    }
     let count = 0;
-    for (let value = 1; value <= 9; value += 1) {
-      if (isValid(board, row, col, value)) {
-        board[row][col] = value;
-        count += countSolutions(board, limit);
-        if (count >= limit) {
-          board[row][col] = 0;
-          return count;
-        }
+    const options = shuffled(candidates);
+    for (let i = 0; i < options.length; i += 1) {
+      board[row][col] = options[i];
+      count += countSolutions(board, limit);
+      if (count >= limit) {
         board[row][col] = 0;
+        return count;
       }
     }
+    board[row][col] = 0;
     return count;
   }
 
@@ -135,8 +198,7 @@
 
   function makePuzzleFromSolution(solution, targetClues) {
     const puzzle = cloneBoard(solution);
-    const positions = Array.from({ length: 81 }, (_, index) => index);
-    shuffled(positions);
+    const positions = shuffled(Array.from({ length: 81 }, (_, index) => index));
     let removals = 81 - targetClues;
     for (let i = 0; i < positions.length && removals > 0; i += 1) {
       const index = positions[i];
@@ -147,8 +209,7 @@
         continue;
       }
       puzzle[row][col] = 0;
-      const testBoard = cloneBoard(puzzle);
-      const solutionCount = countSolutions(testBoard, 2);
+      const solutionCount = countSolutions(puzzle, 2);
       if (solutionCount !== 1) {
         puzzle[row][col] = backup;
       } else {
@@ -160,7 +221,7 @@
 
   function generateRandomPuzzle(level) {
     const solution = generateFullSolution();
-    const clues = LEVEL_CLUES[level] ?? LEVEL_CLUES.moyen;
+    const clues = pickClueCount(level);
     return makePuzzleFromSolution(solution, clues);
   }
 

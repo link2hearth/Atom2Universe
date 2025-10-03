@@ -1174,6 +1174,17 @@ const GAME_CONFIG = {
         }
       }
     },
+    sudoku: {
+      /**
+       * Nombre d'indices laissés dans les grilles générées selon la difficulté.
+       * Les valeurs min / max permettent d'introduire de la variété sans éditer le code.
+       */
+      levelClues: {
+        facile: { min: 30, max: 34 },
+        moyen: { min: 24, max: 28 },
+        difficile: { min: 18, max: 22 }
+      }
+    },
     quantum2048: {
       gridSizes: [3, 4, 5, 6],
       targetValues: [16, 32, 64, 128, 256, 512, 1024, 2048],
