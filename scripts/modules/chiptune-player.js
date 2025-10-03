@@ -1196,6 +1196,10 @@
       this.speedValue = elements.speedValue;
       this.engineSelect = elements.engineSelect;
       this.soundFontSelect = elements.soundFontSelect;
+      this.progressSlider = elements.progressSlider;
+      this.progressValue = elements.progressValue;
+      this.programUsageContainer = elements.programUsageContainer;
+      this.programUsageSummary = elements.programUsageSummary;
 
       const hasWindow = typeof window !== 'undefined';
       if (hasWindow) {
@@ -1228,7 +1232,13 @@
       this.readyStatusMessage = '';
       this.lastStatusMessage = null;
       this.playStartTime = null;
+      this.playStartOffset = 0;
       this.progressRaf = null;
+      this.progressDuration = 0;
+      this.progressMonitorSpeed = 1;
+      this.pendingSeekSeconds = 0;
+      this.lastKnownPosition = 0;
+      this.isScrubbing = false;
 
       this.masterVolume = 0.8;
       this.maxGain = 0.26;
@@ -1271,6 +1281,9 @@
       this.speedMax = 2;
 
       this.populateSoundFonts(this.soundFontList, false);
+
+      this.initializeProgressControls();
+      this.initializeProgramUsageGrid();
 
       if (this.volumeSlider) {
         const sliderValue = Number.parseFloat(this.volumeSlider.value);
@@ -1342,6 +1355,9 @@
       this.setFineDetuneCents(this.fineDetuneCents, { syncSlider: true, refreshVoices: false });
       this.setArticulation(this.articulationSetting, { syncSlider: true, refresh: false });
       this.setPlaybackSpeed(this.playbackSpeed, { syncSlider: true });
+
+      this.refreshProgressControls();
+      this.updateProgramUsage(null);
 
       this.bindEvents();
       this.updateButtons();
@@ -1434,6 +1450,60 @@
             return;
           }
           this.setPlaybackSpeed(sliderValue / 100);
+        });
+      }
+
+      if (this.progressSlider) {
+        const getSliderSeconds = () => {
+          const rawValue = Number.parseFloat(this.progressSlider.value);
+          return Number.isFinite(rawValue) ? rawValue : 0;
+        };
+
+        const handleInput = () => {
+          if (!this.timeline) {
+            return;
+          }
+          const seconds = getSliderSeconds();
+          this.pendingSeekSeconds = Math.max(0, seconds);
+          this.updateProgressDisplay(seconds, this.progressDuration || this.getTimelineDuration(), this.activePlaybackSpeed || this.playbackSpeed, {
+            allowSliderUpdate: false,
+            fromUser: true,
+          });
+        };
+
+        const commitSeek = () => {
+          const seconds = getSliderSeconds();
+          this.seekTo(seconds, { fromUser: true });
+        };
+
+        const startScrub = () => {
+          this.isScrubbing = true;
+        };
+
+        const finishScrub = () => {
+          this.isScrubbing = false;
+        };
+
+        this.progressSlider.addEventListener('input', handleInput);
+        this.progressSlider.addEventListener('change', () => {
+          finishScrub();
+          commitSeek();
+        });
+
+        ['pointerdown', 'mousedown', 'touchstart'].forEach((eventName) => {
+          this.progressSlider.addEventListener(eventName, startScrub, { passive: true });
+        });
+
+        ['pointerup', 'pointercancel', 'mouseup', 'touchend', 'touchcancel'].forEach((eventName) => {
+          this.progressSlider.addEventListener(eventName, finishScrub, { passive: true });
+        });
+
+        this.progressSlider.addEventListener('blur', finishScrub);
+        this.progressSlider.addEventListener('keyup', (event) => {
+          if (event?.key === 'Enter' || event?.key === ' ') {
+            finishScrub();
+            commitSeek();
+          }
         });
       }
 
@@ -1780,6 +1850,259 @@
       return `${descriptor} (${normalized}%)`;
     }
 
+    translate(key, fallback, params = {}) {
+      if (typeof key !== 'string' || !key.trim()) {
+        return fallback;
+      }
+      const trimmedKey = key.trim();
+      const api = globalThis.i18n;
+      const translator = api && typeof api.t === 'function'
+        ? api.t.bind(api)
+        : typeof globalThis.t === 'function'
+          ? globalThis.t
+          : null;
+      if (translator) {
+        try {
+          const translated = translator(trimmedKey, params);
+          if (typeof translated === 'string') {
+            const cleaned = translated.trim();
+            if (cleaned) {
+              return translated;
+            }
+          } else if (translated != null) {
+            return translated;
+          }
+        } catch (error) {
+          console.warn('Unable to translate key', trimmedKey, error);
+        }
+      }
+      return fallback;
+    }
+
+    initializeProgressControls() {
+      if (this.progressSlider) {
+        this.progressSlider.min = '0';
+        this.progressSlider.max = '0';
+        this.progressSlider.step = '0.01';
+        this.progressSlider.value = '0';
+        this.progressSlider.disabled = true;
+      }
+      if (this.progressValue) {
+        this.progressValue.textContent = this.translate(
+          'index.sections.options.chiptune.progress.empty',
+          'Aucun morceau chargé'
+        );
+      }
+    }
+
+    getTimelineDuration(timeline = this.timeline) {
+      if (!timeline || !Number.isFinite(timeline.duration)) {
+        return 0;
+      }
+      return Math.max(0, timeline.duration);
+    }
+
+    refreshProgressControls(timeline = this.timeline) {
+      const duration = this.getTimelineDuration(timeline);
+      this.progressDuration = duration;
+      const hasTimeline = Boolean(timeline) && duration > 0;
+      const speed = this.playing ? (this.activePlaybackSpeed || this.playbackSpeed || 1) : (this.playbackSpeed || 1);
+      let position = this.playing ? this.lastKnownPosition : this.pendingSeekSeconds;
+      if (!Number.isFinite(position)) {
+        position = 0;
+      }
+      position = hasTimeline ? Math.max(0, Math.min(duration, position)) : 0;
+      if (this.progressSlider) {
+        this.progressSlider.disabled = !hasTimeline;
+        this.progressSlider.min = '0';
+        this.progressSlider.max = hasTimeline ? String(duration) : '0';
+        this.progressSlider.step = hasTimeline ? '0.01' : '1';
+        if (!this.isScrubbing) {
+          this.progressSlider.value = String(position);
+        }
+      }
+      this.lastKnownPosition = position;
+      this.updateProgressDisplay(position, duration, speed, { allowSliderUpdate: false });
+      if (!hasTimeline) {
+        this.pendingSeekSeconds = 0;
+        this.lastKnownPosition = 0;
+      }
+    }
+
+    updateProgressDisplay(position, duration, speed, options = {}) {
+      const { allowSliderUpdate = true, fromUser = false } = options;
+      const total = Number.isFinite(duration) && duration > 0 ? duration : 0;
+      const clamped = total > 0
+        ? Math.max(0, Math.min(total, Number.isFinite(position) ? position : 0))
+        : Math.max(0, Number.isFinite(position) ? position : 0);
+      this.lastKnownPosition = clamped;
+      const effectiveSpeed = Number.isFinite(speed) ? speed : 1;
+
+      if (this.progressValue) {
+        let label = '';
+        if (total > 0) {
+          label = `${this.formatClock(clamped)} / ${this.formatClock(total)}`;
+        } else if (this.timeline) {
+          label = this.formatClock(clamped);
+        } else {
+          label = this.translate('index.sections.options.chiptune.progress.empty', 'Aucun morceau chargé');
+        }
+        if (this.playing && Math.abs(effectiveSpeed - 1) >= 0.01 && label) {
+          label = `${label} · ${this.formatSpeedFactor(effectiveSpeed)}`;
+        }
+        this.progressValue.textContent = label;
+      }
+
+      if (allowSliderUpdate && this.progressSlider && !this.isScrubbing) {
+        const sliderValue = total > 0 ? clamped : 0;
+        this.progressSlider.value = String(sliderValue);
+      }
+
+      if (!fromUser && !this.playing) {
+        this.pendingSeekSeconds = clamped;
+      }
+    }
+
+    initializeProgramUsageGrid() {
+      if (!this.programUsageContainer) {
+        this.programUsageCells = null;
+        return;
+      }
+      const doc = this.programUsageContainer.ownerDocument || document;
+      this.programUsageContainer.textContent = '';
+      const fragment = doc.createDocumentFragment();
+      this.programUsageCells = new Array(128);
+      for (let program = 0; program < 128; program += 1) {
+        const row = doc.createElement('div');
+        row.className = 'chiptune-usage__row';
+        row.setAttribute('role', 'row');
+        row.setAttribute('data-program', String(program));
+
+        const programCell = doc.createElement('span');
+        programCell.className = 'chiptune-usage__program';
+        programCell.setAttribute('role', 'gridcell');
+        programCell.textContent = program.toString().padStart(3, '0');
+
+        const statusCell = doc.createElement('span');
+        statusCell.className = 'chiptune-usage__status';
+        statusCell.setAttribute('role', 'gridcell');
+        statusCell.setAttribute('aria-hidden', 'true');
+        statusCell.textContent = '—';
+
+        row.append(programCell, statusCell);
+        fragment.append(row);
+        this.programUsageCells[program] = { row, status: statusCell };
+      }
+      this.programUsageContainer.append(fragment);
+    }
+
+    updateProgramUsage(timeline) {
+      if (!Array.isArray(this.programUsageCells)) {
+        return;
+      }
+      const usedPrograms = new Set();
+      let percussionUsed = false;
+      const notes = timeline && Array.isArray(timeline.notes) ? timeline.notes : [];
+      for (const note of notes) {
+        if (!note) {
+          continue;
+        }
+        const channel = Number.isFinite(note.channel) ? note.channel : 0;
+        if (channel === 9) {
+          percussionUsed = true;
+          continue;
+        }
+        if (Number.isFinite(note.program)) {
+          const programNumber = Math.max(0, Math.min(127, Math.round(note.program)));
+          usedPrograms.add(programNumber);
+        }
+      }
+
+      for (let program = 0; program < this.programUsageCells.length; program += 1) {
+        const entry = this.programUsageCells[program];
+        if (!entry) {
+          continue;
+        }
+        const isUsed = usedPrograms.has(program);
+        entry.row.classList.toggle('is-used', isUsed);
+        entry.row.setAttribute('aria-label', this.translate(
+          isUsed
+            ? 'index.sections.options.chiptune.usage.rowUsed'
+            : 'index.sections.options.chiptune.usage.rowUnused',
+          isUsed
+            ? `Programme ${program} utilisé`
+            : `Programme ${program} inactif`,
+          { program }
+        ));
+        entry.row.setAttribute('data-used', isUsed ? 'true' : 'false');
+        entry.status.textContent = isUsed ? '✖' : '—';
+      }
+
+      if (this.programUsageSummary) {
+        const count = usedPrograms.size;
+        let summaryKey = 'index.sections.options.chiptune.usage.summaryEmpty';
+        let summaryFallback = 'Aucun programme détecté';
+        if (count === 1) {
+          summaryKey = 'index.sections.options.chiptune.usage.summarySingle';
+          summaryFallback = '1 programme utilisé';
+        } else if (count > 1) {
+          summaryKey = 'index.sections.options.chiptune.usage.summaryMultiple';
+          summaryFallback = `${count} programmes utilisés`;
+        }
+        let summary = this.translate(summaryKey, summaryFallback, { count });
+        if (timeline) {
+          const percussionKey = percussionUsed
+            ? 'index.sections.options.chiptune.usage.percussionActive'
+            : 'index.sections.options.chiptune.usage.percussionInactive';
+          const percussionFallback = percussionUsed ? 'Percussions actives' : 'Percussions inactives';
+          const percussionLabel = this.translate(percussionKey, percussionFallback);
+          summary = summary
+            ? `${summary} · ${percussionLabel}`
+            : percussionLabel;
+        }
+        this.programUsageSummary.textContent = summary;
+      }
+    }
+
+    findTimelineIndexAt(seconds) {
+      if (!this.timeline || !Array.isArray(this.timeline.notes)) {
+        return 0;
+      }
+      const target = Math.max(0, Number.isFinite(seconds) ? seconds : 0);
+      const notes = this.timeline.notes;
+      let low = 0;
+      let high = notes.length;
+      while (low < high) {
+        const mid = Math.floor((low + high) / 2);
+        const note = notes[mid];
+        const start = Number.isFinite(note?.startTime) ? note.startTime : 0;
+        if (start < target) {
+          low = mid + 1;
+        } else {
+          high = mid;
+        }
+      }
+      return low;
+    }
+
+    seekTo(seconds, options = {}) {
+      if (!this.timeline) {
+        return;
+      }
+      const { fromUser = false } = options;
+      const duration = this.progressDuration || this.getTimelineDuration();
+      const normalized = Number.isFinite(seconds) ? seconds : 0;
+      const clamped = duration > 0 ? Math.max(0, Math.min(duration, normalized)) : 0;
+      this.pendingSeekSeconds = clamped;
+      const speed = this.playing ? (this.activePlaybackSpeed || this.playbackSpeed || 1) : (this.playbackSpeed || 1);
+      this.updateProgressDisplay(clamped, duration, speed, { fromUser: true });
+      if (this.playing) {
+        this.play({ offset: clamped });
+      } else if (fromUser) {
+        this.updateReadyStatusMessage();
+      }
+    }
+
     analyzeTimeline(timeline) {
       if (!timeline || !Array.isArray(timeline.notes) || !timeline.notes.length) {
         return null;
@@ -1974,7 +2297,7 @@
       return `${minutes}:${secondsText}`;
     }
 
-    startProgressMonitor(startTime) {
+    startProgressMonitor(startTime, offsetSeconds = 0, speedOverride = null, timelineDuration = null) {
       if (!this.timeline || !this.status) {
         return;
       }
@@ -1984,8 +2307,15 @@
         return;
       }
 
-      const speed = this.activePlaybackSpeed || this.playbackSpeed || 1;
-      const totalDuration = this.getEffectiveDuration(this.timeline, speed);
+      const speed = this.clampPlaybackSpeed(Number.isFinite(speedOverride) ? speedOverride : (this.activePlaybackSpeed || this.playbackSpeed || 1));
+      const offset = Math.max(0, Number.isFinite(offsetSeconds) ? offsetSeconds : 0);
+      const totalDuration = Number.isFinite(timelineDuration) && timelineDuration > 0
+        ? timelineDuration
+        : this.getTimelineDuration(this.timeline);
+      this.playStartOffset = offset;
+      this.progressMonitorSpeed = speed;
+      this.progressDuration = totalDuration;
+      this.updateProgressDisplay(offset, totalDuration, speed);
       const requestFrame = this.requestFrame || ((callback) => window.setTimeout(callback, 100));
 
       const update = () => {
@@ -1995,14 +2325,14 @@
         }
         const now = this.audioContext.currentTime;
         const elapsed = Math.max(0, now - this.playStartTime);
-        const clampedElapsed = totalDuration > 0 ? Math.min(totalDuration, elapsed) : elapsed;
+        const timelineElapsed = offset + (elapsed * speed);
+        const clampedElapsed = totalDuration > 0 ? Math.min(totalDuration, timelineElapsed) : timelineElapsed;
+        this.updateProgressDisplay(clampedElapsed, totalDuration, speed, { allowSliderUpdate: true });
         let progressLabel = totalDuration > 0
           ? `${this.formatClock(clampedElapsed)} / ${this.formatClock(totalDuration)}`
           : this.formatClock(clampedElapsed);
-        if (Math.abs(speed - 1) >= 0.01) {
-          progressLabel = progressLabel
-            ? `${progressLabel} · ${this.formatSpeedFactor(speed)}`
-            : this.formatSpeedFactor(speed);
+        if (Math.abs(speed - 1) >= 0.01 && progressLabel) {
+          progressLabel = `${progressLabel} · ${this.formatSpeedFactor(speed)}`;
         }
         const message = this.buildPlayingStatusMessage(progressLabel);
         if (this.status.textContent !== message) {
@@ -2027,6 +2357,8 @@
         this.progressRaf = null;
       }
       this.playStartTime = null;
+      this.playStartOffset = 0;
+      this.progressMonitorSpeed = this.playbackSpeed || 1;
     }
 
     scheduleReadyStatusRestore(delay = 2200) {
@@ -2227,14 +2559,26 @@
           : `Prêt : ${this.currentTitle} (${this.formatDurationWithSpeed(timeline.duration)})`;
         this.readyStatusMessage = message;
         this.setStatus(message, 'success');
+        this.pendingSeekSeconds = 0;
+        this.lastKnownPosition = 0;
+        this.refreshProgressControls(timeline);
+        this.updateProgramUsage(timeline);
       } catch (error) {
         this.timeline = null;
         this.timelineAnalysis = null;
         this.readyStatusMessage = '';
+        this.pendingSeekSeconds = 0;
+        this.lastKnownPosition = 0;
+        this.refreshProgressControls(null);
+        this.updateProgramUsage(null);
         throw error;
       } finally {
         this.updateReadyStatusMessage();
         this.updateButtons();
+        if (!this.timeline) {
+          this.refreshProgressControls(null);
+          this.updateProgramUsage(null);
+        }
       }
     }
 
@@ -5108,7 +5452,8 @@
       }
     }
 
-    async play() {
+    async play(options = {}) {
+      const { offset = null } = options;
       if (!this.timeline || !this.timeline.notes.length) {
         this.setStatus('Aucune donnée MIDI à lire.', 'error');
         return;
@@ -5116,7 +5461,7 @@
 
       try {
         const context = await this.ensureContext();
-        this.stop();
+        this.stop(false, { preservePosition: true });
 
         if (this.engineMode === 'hifi') {
           try {
@@ -5141,11 +5486,23 @@
 
         this.activePlaybackSpeed = this.playbackSpeed;
         const playbackSpeed = this.activePlaybackSpeed || 1;
+        const timelineDuration = this.getTimelineDuration(this.timeline);
+        const requestedOffset = Number.isFinite(offset) ? offset : this.pendingSeekSeconds;
+        const startOffset = timelineDuration > 0
+          ? Math.max(0, Math.min(timelineDuration, Number.isFinite(requestedOffset) ? requestedOffset : 0))
+          : 0;
         const effectiveDuration = this.getEffectiveDuration(this.timeline, playbackSpeed);
         const startTime = context.currentTime + 0.05;
-        this.playStartTime = startTime;
-        this.startScheduler(startTime);
-        this.startProgressMonitor(startTime);
+        const schedulerStartTime = startTime - (startOffset / playbackSpeed);
+        this.playStartTime = schedulerStartTime;
+        this.playStartOffset = startOffset;
+        this.progressMonitorSpeed = playbackSpeed;
+        this.progressDuration = timelineDuration;
+        this.lastKnownPosition = startOffset;
+        this.pendingSeekSeconds = startOffset;
+        this.refreshProgressControls(this.timeline);
+        this.startScheduler(schedulerStartTime, startOffset);
+        this.startProgressMonitor(schedulerStartTime, startOffset, playbackSpeed, timelineDuration);
 
         this.finishTimeout = window.setTimeout(() => {
           this.finishTimeout = null;
@@ -5164,7 +5521,8 @@
       }
     }
 
-    stop(manual = false) {
+    stop(manual = false, options = {}) {
+      const { preservePosition = false } = options;
       if (this.finishTimeout) {
         window.clearTimeout(this.finishTimeout);
         this.finishTimeout = null;
@@ -5264,20 +5622,37 @@
       this.activePlaybackSpeed = this.playbackSpeed;
       this.updateButtons();
 
+      const duration = this.progressDuration || this.getTimelineDuration();
+      if (!preservePosition) {
+        if (manual) {
+          this.pendingSeekSeconds = 0;
+          this.lastKnownPosition = 0;
+        } else if (duration > 0) {
+          this.pendingSeekSeconds = 0;
+          this.lastKnownPosition = Math.max(0, Math.min(duration, this.lastKnownPosition || 0));
+        } else {
+          this.pendingSeekSeconds = 0;
+          this.lastKnownPosition = 0;
+        }
+      }
+      this.refreshProgressControls(this.timeline);
+
       if (manual && wasPlaying) {
         this.setStatus(`Lecture stoppée : ${this.currentTitle}`);
         this.scheduleReadyStatusRestore();
       }
     }
 
-    startScheduler(startTime) {
+    startScheduler(startTime, offsetSeconds = 0) {
       if (!this.audioContext || !this.timeline) {
         return;
       }
+      const startOffset = Math.max(0, Number.isFinite(offsetSeconds) ? offsetSeconds : 0);
       this.schedulerState = {
         startTime,
-        index: 0,
+        index: this.findTimelineIndexAt(startOffset),
         speed: this.activePlaybackSpeed || 1,
+        offset: startOffset,
       };
       this.processScheduler();
       if (this.schedulerInterval) {
@@ -5353,6 +5728,10 @@
     speedValue: document.getElementById('chiptuneSpeedValue'),
     engineSelect: document.getElementById('chiptuneEngineSelect'),
     soundFontSelect: document.getElementById('chiptuneSoundFontSelect'),
+    progressSlider: document.getElementById('chiptuneProgressSlider'),
+    progressValue: document.getElementById('chiptuneProgressValue'),
+    programUsageContainer: document.getElementById('chiptuneProgramUsage'),
+    programUsageSummary: document.getElementById('chiptuneUsageSummary'),
   };
 
   if (elements.fileInput && elements.playButton && elements.stopButton && elements.status) {

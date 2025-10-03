@@ -284,6 +284,23 @@
           },
           "note": "Débloquez le trophée « Ruée vers le million » pour personnaliser vos briques."
         },
+        "chiptune": {
+          "progress": {
+            "label": "Position de lecture",
+            "empty": "Aucun morceau chargé"
+          },
+          "usage": {
+            "title": "Programmes MIDI utilisés",
+            "summaryEmpty": "Aucun programme détecté",
+            "summarySingle": "1 programme utilisé",
+            "summaryMultiple": "{count} programmes utilisés",
+            "percussionActive": "Percussions actives",
+            "percussionInactive": "Percussions inactives",
+            "note": "Les numéros correspondent aux programmes General MIDI (0 à 127).",
+            "rowUsed": "Programme {program} utilisé",
+            "rowUnused": "Programme {program} inactif"
+          }
+        },
         "reset": "Réinitialiser"
       },
       "devkit": {
