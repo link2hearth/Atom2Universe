@@ -51,6 +51,73 @@
   const UPHILL_DRAG_BONUS = 0.9995;
   const UPHILL_PRESS_GRACE_DURATION = 2;
 
+  const BALL_COLOR_CHANGE_INTERVAL_MS = 60000;
+  const BALL_COLOR_TRANSITION_MS = 5000;
+  const BALL_TRAIL_MAX_POINTS = 36;
+  const BALL_TRAIL_MAX_AGE_MS = 320;
+  const BALL_TRAIL_SAMPLE_INTERVAL_MS = 30;
+
+  const ENERGY_BALL_SPRITE = (() => {
+    if (typeof Image === 'undefined') {
+      return {
+        image: null,
+        loaded: false,
+        frameWidth: 32,
+        frameHeight: 32,
+        trailHeight: 128,
+        normalTrailOffsetY: 32,
+        speedTrailOffsetY: 160,
+        colorCount: 6
+      };
+    }
+    const image = new Image();
+    image.src = 'Assets/Sprites/energy_ball.png';
+    const sprite = {
+      image,
+      loaded: false,
+      frameWidth: 32,
+      frameHeight: 32,
+      trailHeight: 128,
+      normalTrailOffsetY: 32,
+      speedTrailOffsetY: 160,
+      colorCount: 6
+    };
+    const markLoaded = () => {
+      sprite.loaded = true;
+    };
+    if (typeof image.decode === 'function') {
+      image.decode().then(markLoaded).catch(() => {
+        sprite.loaded = image.complete && image.naturalWidth > 0;
+      });
+    }
+    image.addEventListener('load', markLoaded, { once: true });
+    image.addEventListener('error', () => {
+      sprite.loaded = false;
+    }, { once: true });
+    if (image.complete && image.naturalWidth > 0) {
+      sprite.loaded = true;
+    }
+    return sprite;
+  })();
+
+  const ENERGY_BALL_FALLBACK_COLORS = [
+    { core: '#f3fbff', rim: '#6fd0ff', trail: 'rgba(104, 214, 255, 0.75)', glow: 'rgba(140, 220, 255, 0.7)' },
+    { core: '#f5fff3', rim: '#5fe074', trail: 'rgba(120, 246, 160, 0.75)', glow: 'rgba(136, 246, 184, 0.7)' },
+    { core: '#fff7ef', rim: '#ffb34d', trail: 'rgba(255, 196, 120, 0.75)', glow: 'rgba(255, 204, 136, 0.7)' },
+    { core: '#fff0fb', rim: '#f172ff', trail: 'rgba(252, 140, 255, 0.75)', glow: 'rgba(252, 168, 255, 0.7)' },
+    { core: '#f0f6ff', rim: '#9b89ff', trail: 'rgba(168, 156, 255, 0.75)', glow: 'rgba(176, 164, 255, 0.7)' },
+    { core: '#f8ffef', rim: '#9ded3f', trail: 'rgba(180, 244, 96, 0.75)', glow: 'rgba(196, 248, 132, 0.7)' }
+  ];
+
+  const getFallbackEnergyBallColor = index => {
+    if (!Array.isArray(ENERGY_BALL_FALLBACK_COLORS) || !ENERGY_BALL_FALLBACK_COLORS.length) {
+      return { core: '#f8fbff', rim: '#9ad7ff', trail: 'rgba(92, 208, 255, 0.7)', glow: 'rgba(150, 220, 255, 0.65)' };
+    }
+    const normalized = Number.isFinite(index) ? Math.floor(index) : 0;
+    const palette = ENERGY_BALL_FALLBACK_COLORS[((normalized % ENERGY_BALL_FALLBACK_COLORS.length) + ENERGY_BALL_FALLBACK_COLORS.length) % ENERGY_BALL_FALLBACK_COLORS.length];
+    return palette || ENERGY_BALL_FALLBACK_COLORS[0];
+  };
+
   const degToRad = degrees => (degrees * Math.PI) / 180;
 
   function translate(key, fallback, params) {
@@ -316,7 +383,8 @@
         speed: START_GROUND_SPEED,
         vx: 0,
         vy: 0,
-        onGround: true
+        onGround: true,
+        trail: []
       };
 
       this.distanceTravelled = 0;
@@ -327,6 +395,17 @@
       this.activePointers = new Set();
       this.statusState = null;
       this.currentSpeedKmh = 0;
+
+      this.elapsedTimeMs = 0;
+      this.lastTrailSampleMs = -Infinity;
+      this.ballColorState = {
+        currentIndex: 0,
+        previousIndex: null,
+        lastChangeMs: 0,
+        nextChangeMs: BALL_COLOR_CHANGE_INTERVAL_MS,
+        transitionEndMs: 0,
+        colorCount: Math.max(1, ENERGY_BALL_SPRITE.colorCount || 1)
+      };
 
       this.skyDots = [];
 
@@ -487,6 +566,8 @@
       this.lastTimestamp = null;
       this.statusState = null;
       this.applyInitialLaunch();
+      this.resetBallVisualState();
+      this.captureTrailPoint(true);
       this.updateCurrentSpeed();
       this.updateTerrainAmplitude(this.currentSpeedKmh);
       this.updateHud(0);
@@ -504,6 +585,127 @@
       this.player.vy = Math.sin(launchAngle) * INITIAL_LAUNCH_SPEED;
       this.player.y = Math.max(0, this.player.y - INITIAL_LAUNCH_HEIGHT_OFFSET);
       this.pendingRelease = false;
+    }
+
+    getBallRadius() {
+      return clamp(this.viewHeight * 0.04, 12, 28);
+    }
+
+    resetBallVisualState() {
+      this.elapsedTimeMs = 0;
+      this.lastTrailSampleMs = -Infinity;
+      if (this.player && typeof this.player === 'object') {
+        this.player.trail = [];
+      }
+      const colorCount = Math.max(1, ENERGY_BALL_SPRITE.colorCount || 1);
+      this.ballColorState = {
+        currentIndex: 0,
+        previousIndex: null,
+        lastChangeMs: 0,
+        nextChangeMs: BALL_COLOR_CHANGE_INTERVAL_MS,
+        transitionEndMs: 0,
+        colorCount
+      };
+    }
+
+    updateBallColorState() {
+      if (!this.ballColorState || typeof this.ballColorState !== 'object') {
+        this.resetBallVisualState();
+      }
+      const state = this.ballColorState;
+      const now = Number.isFinite(this.elapsedTimeMs) ? this.elapsedTimeMs : 0;
+      const colorCount = Math.max(1, ENERGY_BALL_SPRITE.colorCount || state.colorCount || 1);
+      state.colorCount = colorCount;
+      if (!Number.isFinite(state.nextChangeMs)) {
+        const base = Number.isFinite(state.lastChangeMs) ? state.lastChangeMs : now;
+        state.nextChangeMs = base + BALL_COLOR_CHANGE_INTERVAL_MS;
+      }
+      while (now >= state.nextChangeMs) {
+        const nextIndex = (Number.isFinite(state.currentIndex) ? state.currentIndex : 0) + 1;
+        const normalizedNext = ((nextIndex % colorCount) + colorCount) % colorCount;
+        state.previousIndex = Number.isFinite(state.currentIndex)
+          ? ((Math.floor(state.currentIndex) % colorCount) + colorCount) % colorCount
+          : 0;
+        state.currentIndex = normalizedNext;
+        state.lastChangeMs = state.nextChangeMs;
+        state.transitionEndMs = state.lastChangeMs + BALL_COLOR_TRANSITION_MS;
+        state.nextChangeMs += BALL_COLOR_CHANGE_INTERVAL_MS;
+      }
+      if (state.previousIndex != null && now >= state.transitionEndMs) {
+        state.previousIndex = null;
+        state.transitionEndMs = 0;
+      }
+    }
+
+    captureTrailPoint(force = false) {
+      if (!this.player || typeof this.player !== 'object') {
+        return;
+      }
+      if (!Array.isArray(this.player.trail)) {
+        this.player.trail = [];
+      }
+      const now = Number.isFinite(this.elapsedTimeMs) ? this.elapsedTimeMs : 0;
+      const elapsedSinceSample = now - this.lastTrailSampleMs;
+      const shouldSample = force || elapsedSinceSample >= BALL_TRAIL_SAMPLE_INTERVAL_MS;
+      if (shouldSample) {
+        const radius = this.getBallRadius();
+        const centerOffset = radius * 0.4;
+        this.player.trail.push({
+          x: this.player.x,
+          y: this.player.y - centerOffset,
+          vx: this.player.vx,
+          vy: this.player.vy,
+          radius,
+          time: now
+        });
+        this.lastTrailSampleMs = now;
+      }
+      const trail = this.player.trail;
+      const maxAge = BALL_TRAIL_MAX_AGE_MS;
+      while (trail.length > BALL_TRAIL_MAX_POINTS) {
+        trail.shift();
+      }
+      while (trail.length && now - trail[0].time > maxAge) {
+        trail.shift();
+      }
+    }
+
+    updateBallTrail(force = false) {
+      this.captureTrailPoint(force);
+    }
+
+    getActiveBallColors(now = Number.isFinite(this.elapsedTimeMs) ? this.elapsedTimeMs : 0) {
+      const state = this.ballColorState;
+      const colors = [];
+      const colorCount = Math.max(1, ENERGY_BALL_SPRITE.colorCount || (state?.colorCount) || 1);
+      const normalizeIndex = value => {
+        const numeric = Number.isFinite(value) ? Math.floor(value) : 0;
+        return ((numeric % colorCount) + colorCount) % colorCount;
+      };
+      const mergeColor = (index, alpha) => {
+        if (!Number.isFinite(alpha) || alpha <= 0) {
+          return;
+        }
+        const normalized = normalizeIndex(index);
+        const clampedAlpha = clamp(alpha, 0, 1);
+        const existing = activeMap.get(normalized);
+        if (existing == null || clampedAlpha > existing) {
+          activeMap.set(normalized, clampedAlpha);
+        }
+      };
+      const activeMap = new Map();
+      const currentIndex = state && typeof state === 'object' ? normalizeIndex(state.currentIndex) : 0;
+      mergeColor(currentIndex, 1);
+      if (state && typeof state === 'object' && state.previousIndex != null) {
+        const duration = Math.max(1, BALL_COLOR_TRANSITION_MS);
+        const elapsed = now - (Number.isFinite(state.lastChangeMs) ? state.lastChangeMs : now);
+        const progress = clamp(elapsed / duration, 0, 1);
+        const alpha = 1 - progress;
+        if (alpha > 0) {
+          mergeColor(state.previousIndex, alpha);
+        }
+      }
+      return Array.from(activeMap.entries()).map(([index, alpha]) => ({ index, alpha }));
     }
 
     isEventFromControls(event) {
@@ -687,6 +889,10 @@
     }
 
     update(delta) {
+      const numericDelta = Number.isFinite(delta) ? delta : 0;
+      const deltaMs = Math.max(0, numericDelta) * 1000;
+      this.elapsedTimeMs += deltaMs;
+      this.updateBallColorState();
       this.updateTerrainAmplitude(this.currentSpeedKmh);
       const viewWorldWidth = this.viewWidth / this.cameraScale;
       const targetMaxX = this.cameraX + viewWorldWidth * 2.6;
@@ -793,6 +999,7 @@
       this.updateTerrainAmplitude(speedKmh);
       this.updateCamera(delta);
       this.updateHud(delta);
+      this.updateBallTrail(false);
     }
 
     updateCurrentSpeed() {
@@ -1007,13 +1214,27 @@
 
     drawPlayer(ctx) {
       const scale = this.cameraScale;
-      const radius = clamp(this.viewHeight * 0.04, 12, 28);
+      const radius = this.getBallRadius();
       const scaledRadius = Math.max(radius * scale, 6);
-      const x = (this.player.x - this.cameraX) * scale;
-      const y = (this.player.y - this.cameraY) * scale;
-      ctx.save();
-      ctx.translate(x, y);
+      const baseScreenX = (this.player.x - this.cameraX) * scale;
+      const baseScreenY = (this.player.y - this.cameraY) * scale;
+      const centerOffsetWorld = radius * 0.4;
+      const centerScreenY = (this.player.y - centerOffsetWorld - this.cameraY) * scale;
+      const spriteReady = ENERGY_BALL_SPRITE.loaded && ENERGY_BALL_SPRITE.image;
+      const colors = this.getActiveBallColors();
+      const effectiveColors = colors.length ? colors : [{ index: 0, alpha: 1 }];
+      const nowMs = Number.isFinite(this.elapsedTimeMs) ? this.elapsedTimeMs : 0;
+      const timeSeconds = nowMs / 1000;
+      const pulse = 0.55 + 0.35 * Math.sin(timeSeconds * 7.1);
+      const trailPoints = Array.isArray(this.player?.trail) ? this.player.trail : [];
+      const variantCount = Math.max(1, ENERGY_BALL_SPRITE.colorCount || effectiveColors.length || 1);
+      const normalizeSpriteIndex = value => {
+        const numeric = Number.isFinite(value) ? Math.floor(value) : 0;
+        return ((numeric % variantCount) + variantCount) % variantCount;
+      };
 
+      ctx.save();
+      ctx.translate(baseScreenX, baseScreenY);
       const shadowGradient = ctx.createRadialGradient(
         0,
         scaledRadius * 0.6,
@@ -1028,28 +1249,172 @@
       ctx.beginPath();
       ctx.ellipse(0, scaledRadius * 0.8, scaledRadius * 1.2, scaledRadius * 0.45, 0, 0, Math.PI * 2);
       ctx.fill();
+      ctx.restore();
 
-      ctx.translate(0, -scaledRadius * 0.4);
-      const bodyGradient = ctx.createRadialGradient(0, -scaledRadius * 0.2, scaledRadius * 0.2, 0, 0, scaledRadius);
-      bodyGradient.addColorStop(0, '#f8fbff');
-      bodyGradient.addColorStop(0.55, '#9ad7ff');
-      bodyGradient.addColorStop(1, '#2a6ed8');
-      ctx.fillStyle = bodyGradient;
-      ctx.beginPath();
-      ctx.arc(0, 0, scaledRadius, 0, Math.PI * 2);
-      ctx.fill();
+      if (trailPoints.length) {
+        if (spriteReady) {
+          const sprite = ENERGY_BALL_SPRITE;
+          const spriteScale = (scaledRadius * 2) / sprite.frameWidth;
+          const destWidth = sprite.frameWidth * spriteScale;
+          const destHeight = sprite.trailHeight * spriteScale;
+          ctx.save();
+          ctx.globalCompositeOperation = 'lighter';
+          trailPoints.forEach(point => {
+            if (!point || typeof point.time !== 'number') {
+              return;
+            }
+            const age = nowMs - point.time;
+            if (age < 0 || age > BALL_TRAIL_MAX_AGE_MS) {
+              return;
+            }
+            const lifeRatio = clamp(1 - age / BALL_TRAIL_MAX_AGE_MS, 0, 1);
+            if (lifeRatio <= 0) {
+              return;
+            }
+            const screenX = (point.x - this.cameraX) * scale;
+            const screenY = (point.y - this.cameraY) * scale;
+            const vx = Number.isFinite(point.vx) ? point.vx : 0;
+            const vy = Number.isFinite(point.vy) ? point.vy : 0;
+            const rotation = vx === 0 && vy === 0 ? 0 : Math.atan2(-vx, -vy);
+            effectiveColors.forEach(color => {
+              const alpha = (0.25 + lifeRatio * 0.45) * color.alpha;
+              if (alpha <= 0) {
+                return;
+              }
+              const spriteIndex = normalizeSpriteIndex(color.index);
+              ctx.save();
+              ctx.translate(screenX, screenY);
+              if (rotation !== 0) {
+                ctx.rotate(rotation);
+              }
+              ctx.scale(1, -1);
+              ctx.globalAlpha = clamp(alpha, 0, 1);
+              ctx.drawImage(
+                sprite.image,
+                spriteIndex * sprite.frameWidth,
+                sprite.normalTrailOffsetY,
+                sprite.frameWidth,
+                sprite.trailHeight,
+                -destWidth / 2,
+                -destHeight,
+                destWidth,
+                destHeight
+              );
+              ctx.restore();
+            });
+          });
+          ctx.restore();
+        } else {
+          ctx.save();
+          ctx.globalCompositeOperation = 'lighter';
+          trailPoints.forEach(point => {
+            if (!point || typeof point.time !== 'number') {
+              return;
+            }
+            const age = nowMs - point.time;
+            if (age < 0 || age > BALL_TRAIL_MAX_AGE_MS) {
+              return;
+            }
+            const lifeRatio = clamp(1 - age / BALL_TRAIL_MAX_AGE_MS, 0, 1);
+            if (lifeRatio <= 0) {
+              return;
+            }
+            const screenX = (point.x - this.cameraX) * scale;
+            const screenY = (point.y - this.cameraY) * scale;
+            effectiveColors.forEach(color => {
+              const palette = getFallbackEnergyBallColor(color.index);
+              const alpha = (0.12 + lifeRatio * 0.38) * color.alpha;
+              if (alpha <= 0) {
+                return;
+              }
+              ctx.save();
+              ctx.globalAlpha = clamp(alpha, 0, 1);
+              ctx.fillStyle = palette.trail;
+              const radiusMultiplier = 0.7 + lifeRatio * 0.6;
+              ctx.beginPath();
+              ctx.arc(screenX, screenY, scaledRadius * radiusMultiplier, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.restore();
+            });
+          });
+          ctx.restore();
+        }
+      }
 
-      const trailLength = clamp(scaledRadius * 3, 30, 60);
-      const trailWidth = scaledRadius * 0.45;
-      const trailGradient = ctx.createLinearGradient(-trailLength, 0, 0, 0);
-      trailGradient.addColorStop(0, 'rgba(92, 208, 255, 0)');
-      trailGradient.addColorStop(0.65, 'rgba(92, 208, 255, 0.2)');
-      trailGradient.addColorStop(1, 'rgba(92, 208, 255, 0.6)');
-      ctx.fillStyle = trailGradient;
-      ctx.beginPath();
-      ctx.roundRect(-trailLength, -trailWidth * 0.5, trailLength, trailWidth, trailWidth * 0.5);
-      ctx.fill();
-
+      ctx.save();
+      ctx.translate(baseScreenX, centerScreenY);
+      if (spriteReady) {
+        const sprite = ENERGY_BALL_SPRITE;
+        const spriteScale = (scaledRadius * 2) / sprite.frameWidth;
+        const destWidth = sprite.frameWidth * spriteScale;
+        const destHeight = sprite.frameHeight * spriteScale;
+        ctx.save();
+        ctx.globalCompositeOperation = 'lighter';
+        effectiveColors.forEach(color => {
+          const alpha = clamp(color.alpha, 0, 1);
+          if (alpha <= 0) {
+            return;
+          }
+          const glowAlpha = (0.22 + pulse * 0.28) * alpha;
+          if (glowAlpha <= 0) {
+            return;
+          }
+          ctx.globalAlpha = clamp(glowAlpha, 0, 1);
+          const glowRadius = scaledRadius * (1.2 + pulse * 0.35);
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+          ctx.beginPath();
+          ctx.arc(0, 0, glowRadius, 0, Math.PI * 2);
+          ctx.fill();
+        });
+        ctx.restore();
+        effectiveColors.forEach(color => {
+          const alpha = clamp(color.alpha, 0, 1);
+          if (alpha <= 0) {
+            return;
+          }
+          const spriteIndex = normalizeSpriteIndex(color.index);
+          ctx.save();
+          ctx.globalAlpha = alpha;
+          ctx.drawImage(
+            sprite.image,
+            spriteIndex * sprite.frameWidth,
+            0,
+            sprite.frameWidth,
+            sprite.frameHeight,
+            -destWidth / 2,
+            -destHeight / 2,
+            destWidth,
+            destHeight
+          );
+          ctx.restore();
+        });
+      } else {
+        effectiveColors.forEach(color => {
+          const alpha = clamp(color.alpha, 0, 1);
+          if (alpha <= 0) {
+            return;
+          }
+          const palette = getFallbackEnergyBallColor(color.index);
+          ctx.save();
+          ctx.globalCompositeOperation = 'lighter';
+          ctx.globalAlpha = alpha;
+          const gradient = ctx.createRadialGradient(
+            -scaledRadius * 0.25,
+            -scaledRadius * 0.25,
+            scaledRadius * 0.2,
+            0,
+            0,
+            scaledRadius
+          );
+          gradient.addColorStop(0, palette.core);
+          gradient.addColorStop(1, palette.rim);
+          ctx.fillStyle = gradient;
+          ctx.beginPath();
+          ctx.arc(0, 0, scaledRadius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        });
+      }
       ctx.restore();
     }
   }
