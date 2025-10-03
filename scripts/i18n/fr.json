@@ -207,9 +207,9 @@
           "time": "Temps passé",
           "matches": "Matches"
         },
-        "colorsTitle": "Couleurs travaillées",
         "newGame": "Nouvelle partie",
         "newGameCredits": "Mach3 : 0",
+        "freePlay": "Partie libre",
         "return": "Retour"
       },
       "goals": {
@@ -1271,10 +1271,12 @@
     },
     "metaux": {
       "timer": {
-        "max": "Max {value}"
+        "max": "Max {value}",
+        "free": "Mode libre"
       },
       "session": {
-        "start": "Nouvelle session : enchaînez les alliages !"
+        "start": "Nouvelle session : enchaînez les alliages !",
+        "free": "Session libre : expérimentez sans pression !"
       }
     },
     "periodic": {
