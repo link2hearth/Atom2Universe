@@ -110,6 +110,7 @@
           "aria": "Sudoku controls",
           "level": "Difficulty",
           "generate": "Generate grid",
+          "check": "Check",
           "options": {
             "facile": "Easy",
             "moyen": "Medium",
