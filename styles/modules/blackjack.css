@@ -1,8 +1,11 @@
 .page--blackjack {
   padding: clamp(1rem, 2vw, 2.5rem) clamp(0.75rem, 2vw, 2rem);
-  display: flex;
   justify-content: center;
   color: var(--color-text-primary, #f0f4ff);
+}
+
+.page--blackjack.active {
+  display: flex;
 }
 
 .blackjack {
