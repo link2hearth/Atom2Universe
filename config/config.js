@@ -62,6 +62,24 @@ function getBuildingLevel(context, id) {
   return Number.isFinite(value) && value > 0 ? value : 0;
 }
 
+const SHOP_BUILDING_IDS = [
+  'freeElectrons',
+  'physicsLab',
+  'nuclearReactor',
+  'particleAccelerator',
+  'supercomputer',
+  'interstellarProbe',
+  'spaceStation',
+  'starForge',
+  'artificialGalaxy',
+  'multiverseSimulator',
+  'realityWeaver',
+  'cosmicArchitect',
+  'parallelUniverse',
+  'omniverseLibrary',
+  'quantumOverseer'
+];
+
 function createShopBuildingDefinitions() {
   const withDefaults = def => ({ maxLevel: SHOP_MAX_PURCHASE_DEFAULT, ...def });
   return [
@@ -143,14 +161,32 @@ function createShopBuildingDefinitions() {
       name: 'Sonde interstellaire',
       description: 'Explorez la galaxie pour récolter toujours plus.',
       effectSummary:
-        'Production passive : +5 000 APS par niveau.',
+        'Production passive : +5 000 APS par niveau. Bonus conditionnel : avec 50 Électrons libres ou plus, chaque niveau de bâtiment ajoute +100 APC.',
       category: 'hybrid',
       baseCost: 5e6,
       costScale: 1.2,
-      effect: (level = 0) => {
+      effect: (level = 0, context = null) => {
         const baseAmount = 5000 * level;
         const autoAdd = level > 0 ? baseAmount : 0;
-        return { autoAdd };
+        let clickAdd = 0;
+        if (level > 0) {
+          const freeElectronLevel = getBuildingLevel(context, 'freeElectrons');
+          if (freeElectronLevel >= 50) {
+            const totalPurchased = SHOP_BUILDING_IDS.reduce(
+              (sum, buildingId) => sum + getBuildingLevel(context, buildingId),
+              0
+            );
+            if (totalPurchased > 0) {
+              const bonusPerUnit = 100;
+              clickAdd = totalPurchased * bonusPerUnit * level;
+            }
+          }
+        }
+        const result = { autoAdd };
+        if (clickAdd > 0) {
+          result.clickAdd = clickAdd;
+        }
+        return result;
       }
     },
     {
