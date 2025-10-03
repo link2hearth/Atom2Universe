@@ -833,55 +833,55 @@
           <div id="optionsArcadeDetails" class="option-note" hidden aria-hidden="true"></div>
         </div>
         <div class="option-card option-card--chiptune">
-          <h3>Module Musique Midi</h3>
+          <h3 data-i18n="index.sections.options.chiptune.title">Module Musique Midi</h3>
           <div class="option-row option-row--selectors">
             <div class="option-field option-field--wide">
-              <label for="chiptuneLibrarySelect">Bibliothèque locale</label>
+              <label for="chiptuneLibrarySelect" data-i18n="index.sections.options.chiptune.labels.library">Bibliothèque locale</label>
               <select id="chiptuneLibrarySelect" disabled>
-                <option value="">Sélectionnez un morceau</option>
+                <option value="" data-i18n="index.sections.options.chiptune.library.placeholder">Sélectionnez un morceau</option>
               </select>
             </div>
             <div class="option-field">
-              <label for="chiptuneEngineSelect">Moteur sonore</label>
+              <label for="chiptuneEngineSelect" data-i18n="index.sections.options.chiptune.labels.engine">Moteur sonore</label>
               <select id="chiptuneEngineSelect">
-                <option value="hifi">SoundFont Hi-Fi</option>
-                <option value="scc">SCC (MSX)</option>
-                <option value="n163">Namco 163 (N163)</option>
-                <option value="ym2413">Yamaha OPLL (YM2413)</option>
-                <option value="sid">MOS SID (6581/8580)</option>
-                <option value="original">Original</option>
+                <option value="hifi" data-i18n="index.sections.options.chiptune.engineOptions.hifi">SoundFont Hi-Fi</option>
+                <option value="scc" data-i18n="index.sections.options.chiptune.engineOptions.scc">SCC (MSX)</option>
+                <option value="n163" data-i18n="index.sections.options.chiptune.engineOptions.n163">Namco 163 (N163)</option>
+                <option value="ym2413" data-i18n="index.sections.options.chiptune.engineOptions.ym2413">Yamaha OPLL (YM2413)</option>
+                <option value="sid" data-i18n="index.sections.options.chiptune.engineOptions.sid">MOS SID (6581/8580)</option>
+                <option value="original" data-i18n="index.sections.options.chiptune.engineOptions.original">Original</option>
               </select>
             </div>
             <div class="option-field">
-              <label for="chiptuneSoundFontSelect">SoundFont</label>
+              <label for="chiptuneSoundFontSelect" data-i18n="index.sections.options.chiptune.labels.soundFont">SoundFont</label>
               <select id="chiptuneSoundFontSelect">
-                <option value="">Chargement des SoundFonts…</option>
+                <option value="" data-i18n="index.sections.options.chiptune.soundfonts.loading">Chargement des SoundFonts…</option>
               </select>
             </div>
           </div>
           <div class="option-row">
-            <label for="chiptuneFileInput">Fichier MIDI</label>
+            <label for="chiptuneFileInput" data-i18n="index.sections.options.chiptune.labels.file">Fichier MIDI</label>
             <input type="file" id="chiptuneFileInput" accept=".mid,.midi" />
           </div>
           <div class="option-row option-row--slider">
-            <label for="chiptuneVolumeSlider">Volume général</label>
+            <label for="chiptuneVolumeSlider" data-i18n="index.sections.options.chiptune.labels.volume">Volume général</label>
             <input type="range" id="chiptuneVolumeSlider" min="0" max="100" step="1" value="80" />
             <span class="option-value" id="chiptuneVolumeValue" aria-live="polite">80%</span>
 
-            <label for="chiptuneSpeedSlider">Vitesse de lecture</label>
+            <label for="chiptuneSpeedSlider" data-i18n="index.sections.options.chiptune.labels.speed">Vitesse de lecture</label>
             <input type="range" id="chiptuneSpeedSlider" min="50" max="200" step="5" value="100" />
-            <span class="option-value" id="chiptuneSpeedValue" aria-live="polite">Tempo normal (100%)</span>
+            <span class="option-value" id="chiptuneSpeedValue" aria-live="polite" data-i18n="index.sections.options.chiptune.labels.speedNormal">Tempo normal (100%)</span>
           </div>
           <div class="option-row option-row--buttons option-row--pitch">
-            <button type="button" id="chiptuneOctaveDownButton">Octave −</button>
-            <button type="button" id="chiptuneOctaveUpButton">Octave +</button>
-            <button type="button" id="chiptuneResetPitchButton">Réinitialiser</button>
+            <button type="button" id="chiptuneOctaveDownButton" data-i18n="index.sections.options.chiptune.controls.octaveDown">Octave −</button>
+            <button type="button" id="chiptuneOctaveUpButton" data-i18n="index.sections.options.chiptune.controls.octaveUp">Octave +</button>
+            <button type="button" id="chiptuneResetPitchButton" data-i18n="index.sections.options.chiptune.controls.resetPitch">Réinitialiser</button>
           </div>
           <div class="option-row option-row--buttons">
-            <button type="button" id="chiptunePlayButton" disabled>Lecture</button>
-            <button type="button" id="chiptuneStopButton" disabled>Stop</button>
+            <button type="button" id="chiptunePlayButton" disabled data-i18n="index.sections.options.chiptune.controls.play">Lecture</button>
+            <button type="button" id="chiptuneStopButton" disabled data-i18n="index.sections.options.chiptune.controls.stop">Stop</button>
           </div>
-          <p class="option-note" id="chiptuneStatus">Aucun morceau chargé pour le moment.</p>
+          <p class="option-note" id="chiptuneStatus" data-i18n="index.sections.options.chiptune.status.noneLoaded">Aucun morceau chargé pour le moment.</p>
           <div class="option-row option-row--progress">
             <label for="chiptuneProgressSlider" id="chiptuneProgressLabel" data-i18n="index.sections.options.chiptune.progress.label"></label>
             <input

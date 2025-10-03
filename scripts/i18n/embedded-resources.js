@@ -720,6 +720,150 @@
           "language": {
             "updated": "Langue mise à jour."
           },
+          "chiptune": {
+            "title": "Module Musique Midi",
+            "labels": {
+              "library": "Bibliothèque locale",
+              "engine": "Moteur sonore",
+              "soundFont": "SoundFont",
+              "file": "Fichier MIDI",
+              "volume": "Volume général",
+              "speed": "Vitesse de lecture",
+              "speedNormal": "Tempo normal (100%)",
+              "transposeZero": "0 demi-ton",
+              "transposeOctave": "{sign}{count} octave",
+              "transposeOctaves": "{sign}{count} octaves",
+              "transposeSemitone": "{sign}{count} demi-ton",
+              "transposeSemitones": "{sign}{count} demi-tons",
+              "detuneZero": "0 cent",
+              "detuneCent": "{sign}{count} cent",
+              "detuneCents": "{sign}{count} cents",
+              "articulationBalanced": "Équilibré",
+              "articulationSustained": "Soutenu (orgue)",
+              "articulationSoft": "Doux",
+              "articulationPiano": "Piano",
+              "articulationPlucked": "Piano pincé",
+              "articulationValue": "{label} ({value}%)",
+              "speedSlow": "Tempo ralenti ({value}%)",
+              "speedFast": "Tempo accéléré ({value}%)",
+              "speedFactor": "tempo ×{value}"
+            },
+            "engineOptions": {
+              "hifi": "SoundFont Hi-Fi",
+              "scc": "SCC (MSX)",
+              "n163": "Namco 163 (N163)",
+              "ym2413": "Yamaha OPLL (YM2413)",
+              "sid": "MOS SID (6581/8580)",
+              "original": "Original"
+            },
+            "engineLabels": {
+              "scc": "moteur SCC",
+              "n163": "moteur Namco 163",
+              "ym2413": "moteur Yamaha YM2413",
+              "sid": "moteur MOS SID",
+              "hifi": "moteur Hi-Fi SoundFont",
+              "hifiWithName": "moteur Hi-Fi SoundFont ({name})",
+              "original": "moteur original"
+            },
+            "soundfonts": {
+              "loading": "Chargement des SoundFonts…",
+              "placeholder": "Sélectionnez une SoundFont",
+              "noneAvailable": "Aucune SoundFont disponible",
+              "noneDeclared": "Aucune SoundFont déclarée"
+            },
+            "library": {
+              "placeholder": "Sélectionnez un morceau",
+              "empty": "Aucun morceau local pour le moment",
+              "unavailable": "Bibliothèque locale indisponible"
+            },
+            "controls": {
+              "octaveDown": "Octave −",
+              "octaveUp": "Octave +",
+              "resetPitch": "Réinitialiser",
+              "play": "Lecture",
+              "stop": "Stop"
+            },
+            "status": {
+              "noneLoaded": "Aucun morceau chargé pour le moment.",
+              "trackNotFound": "Impossible de trouver le morceau sélectionné.",
+              "autoHiFi": "Mode Hi-Fi activé automatiquement pour utiliser la SoundFont.",
+              "loadingFile": "Chargement de « {name} »…",
+              "fileError": "Impossible de lire le fichier : {error}",
+              "loadingTrack": "Chargement de « {name} »…",
+              "trackError": "Impossible de charger le morceau : {error}",
+              "loadingSoundFont": "Chargement de la SoundFont « {name} »…",
+              "soundFontReady": "SoundFont chargée : {name}",
+              "soundFontError": "Impossible de charger la SoundFont : {error}",
+              "soundFontUnavailable": "SoundFont indisponible : {error}",
+              "soundFontMissing": "Aucune SoundFont prête pour le mode Hi-Fi.",
+              "noMidiData": "Aucune donnée MIDI à lire.",
+              "playbackComplete": "Lecture terminée : {title}",
+              "playbackError": "Lecture impossible : {error}",
+              "playbackStopped": "Lecture stoppée : {title}",
+              "playing": "Lecture en cours",
+              "playingWithTitle": "Lecture en cours : {title}",
+              "readyWithSummary": "Prêt : {title} — {summary}",
+              "readyWithDuration": "Prêt : {title} ({duration})",
+              "unknownTitle": "MIDI inconnu"
+            },
+            "summary": {
+              "notesSingle": "{count} note",
+              "notesMultiple": "{count} notes",
+              "melodicChannelsSingle": "{count} canal mélodique",
+              "melodicChannelsMultiple": "{count} canaux mélodiques",
+              "percussion": "Percussions",
+              "channelsWithPercussion": "{channels} + {percussion}",
+              "polyphony": "Polyphonie max {value}",
+              "range": "Plage {range}",
+              "rangeDetail": "{min} → {max}"
+            },
+            "notes": {
+              "names": [
+                "Do",
+                "Do♯",
+                "Ré",
+                "Ré♯",
+                "Mi",
+                "Fa",
+                "Fa♯",
+                "Sol",
+                "Sol♯",
+                "La",
+                "La♯",
+                "Si"
+              ]
+            },
+            "progress": {
+              "label": "Position de lecture",
+              "empty": "Aucun morceau chargé"
+            },
+            "usage": {
+              "title": "Programmes MIDI utilisés",
+              "summaryEmpty": "Aucun programme détecté",
+              "summarySingle": "1 programme utilisé",
+              "summaryMultiple": "{count} programmes utilisés",
+              "percussionActive": "Percussions actives",
+              "percussionInactive": "Percussions inactives",
+              "note": "Les numéros correspondent aux programmes General MIDI (0 à 127).",
+              "rowUsed": "Programme {program} utilisé",
+              "rowUnused": "Programme {program} inactif"
+            },
+            "errors": {
+              "soundFontEmpty": "SoundFont vide.",
+              "soundFontHeader": "En-tête SoundFont invalide.",
+              "soundFontFormat": "Format SoundFont non supporté.",
+              "midiIncompleteVlq": "Trame MIDI incomplète (VLQ).",
+              "midiHeaderInvalid": "En-tête MIDI invalide.",
+              "midiHeaderIncomplete": "En-tête MIDI incomplet.",
+              "midiNoTracks": "Le fichier MIDI ne contient aucune piste.",
+              "midiMissingStatus": "Status MIDI manquant pour un évènement.",
+              "midiNoUsableTrack": "Aucune piste MIDI exploitable.",
+              "midiNoPlayableNotes": "Le fichier ne contient pas de notes jouables.",
+              "midiResolution": "Résolution MIDI invalide.",
+              "webAudioUnavailable": "API Web Audio non disponible dans ce navigateur.",
+              "soundFontMissingSelection": "Aucune SoundFont sélectionnée."
+            }
+          },
           "music": {
             "noneAvailable": "Aucune piste disponible",
             "noneOption": "Rien (aucune musique)",
@@ -1620,6 +1764,150 @@
                 "en": "English"
               },
               "note": "Changes apply immediately."
+            },
+            "chiptune": {
+              "title": "MIDI Music Module",
+              "labels": {
+                "library": "Local library",
+                "engine": "Audio engine",
+                "soundFont": "SoundFont",
+                "file": "MIDI file",
+                "volume": "Master volume",
+                "speed": "Playback speed",
+                "speedNormal": "Normal tempo (100%)",
+                "transposeZero": "0 semitone",
+                "transposeOctave": "{sign}{count} octave",
+                "transposeOctaves": "{sign}{count} octaves",
+                "transposeSemitone": "{sign}{count} semitone",
+                "transposeSemitones": "{sign}{count} semitones",
+                "detuneZero": "0 cent",
+                "detuneCent": "{sign}{count} cent",
+                "detuneCents": "{sign}{count} cents",
+                "articulationBalanced": "Balanced",
+                "articulationSustained": "Sustained (organ)",
+                "articulationSoft": "Soft",
+                "articulationPiano": "Piano",
+                "articulationPlucked": "Plucked piano",
+                "articulationValue": "{label} ({value}%)",
+                "speedSlow": "Playback slowed ({value}%)",
+                "speedFast": "Playback sped up ({value}%)",
+                "speedFactor": "tempo ×{value}"
+              },
+              "engineOptions": {
+                "hifi": "SoundFont Hi-Fi",
+                "scc": "SCC (MSX)",
+                "n163": "Namco 163 (N163)",
+                "ym2413": "Yamaha OPLL (YM2413)",
+                "sid": "MOS SID (6581/8580)",
+                "original": "Original"
+              },
+              "engineLabels": {
+                "scc": "SCC engine",
+                "n163": "Namco 163 engine",
+                "ym2413": "Yamaha YM2413 engine",
+                "sid": "MOS SID engine",
+                "hifi": "Hi-Fi SoundFont engine",
+                "hifiWithName": "Hi-Fi SoundFont engine ({name})",
+                "original": "Original engine"
+              },
+              "soundfonts": {
+                "loading": "Loading SoundFonts…",
+                "placeholder": "Choose a SoundFont",
+                "noneAvailable": "No SoundFont available",
+                "noneDeclared": "No SoundFont declared"
+              },
+              "library": {
+                "placeholder": "Select a track",
+                "empty": "No local tracks yet",
+                "unavailable": "Local library unavailable"
+              },
+              "controls": {
+                "octaveDown": "Octave −",
+                "octaveUp": "Octave +",
+                "resetPitch": "Reset",
+                "play": "Play",
+                "stop": "Stop"
+              },
+              "status": {
+                "noneLoaded": "No track loaded yet.",
+                "trackNotFound": "Unable to locate the selected track.",
+                "autoHiFi": "Hi-Fi mode enabled automatically to use the SoundFont.",
+                "loadingFile": "Loading “{name}”…",
+                "fileError": "Unable to read the file: {error}",
+                "loadingTrack": "Loading “{name}”…",
+                "trackError": "Unable to load the track: {error}",
+                "loadingSoundFont": "Loading SoundFont “{name}”…",
+                "soundFontReady": "SoundFont ready: {name}",
+                "soundFontError": "Unable to load the SoundFont: {error}",
+                "soundFontUnavailable": "SoundFont unavailable: {error}",
+                "soundFontMissing": "No SoundFont ready for Hi-Fi mode.",
+                "noMidiData": "No MIDI data to play.",
+                "playbackComplete": "Playback finished: {title}",
+                "playbackError": "Playback failed: {error}",
+                "playbackStopped": "Playback stopped: {title}",
+                "playing": "Now playing",
+                "playingWithTitle": "Now playing: {title}",
+                "readyWithSummary": "Ready: {title} — {summary}",
+                "readyWithDuration": "Ready: {title} ({duration})",
+                "unknownTitle": "Untitled MIDI"
+              },
+              "summary": {
+                "notesSingle": "{count} note",
+                "notesMultiple": "{count} notes",
+                "melodicChannelsSingle": "{count} melodic channel",
+                "melodicChannelsMultiple": "{count} melodic channels",
+                "percussion": "Percussion",
+                "channelsWithPercussion": "{channels} + {percussion}",
+                "polyphony": "Peak polyphony {value}",
+                "range": "Range {range}",
+                "rangeDetail": "{min} → {max}"
+              },
+              "notes": {
+                "names": [
+                  "C",
+                  "C♯",
+                  "D",
+                  "D♯",
+                  "E",
+                  "F",
+                  "F♯",
+                  "G",
+                  "G♯",
+                  "A",
+                  "A♯",
+                  "B"
+                ]
+              },
+              "progress": {
+                "label": "Playback position",
+                "empty": "No track loaded"
+              },
+              "usage": {
+                "title": "MIDI programs in use",
+                "summaryEmpty": "No program detected",
+                "summarySingle": "1 program in use",
+                "summaryMultiple": "{count} programs in use",
+                "percussionActive": "Percussion active",
+                "percussionInactive": "Percussion inactive",
+                "note": "Numbers refer to General MIDI program numbers (0 to 127).",
+                "rowUsed": "Program {program} in use",
+                "rowUnused": "Program {program} inactive"
+              },
+              "errors": {
+                "soundFontEmpty": "Empty SoundFont.",
+                "soundFontHeader": "Invalid SoundFont header.",
+                "soundFontFormat": "Unsupported SoundFont format.",
+                "midiIncompleteVlq": "Incomplete MIDI frame (VLQ).",
+                "midiHeaderInvalid": "Invalid MIDI header.",
+                "midiHeaderIncomplete": "Incomplete MIDI header.",
+                "midiNoTracks": "The MIDI file contains no tracks.",
+                "midiMissingStatus": "Missing MIDI status byte for an event.",
+                "midiNoUsableTrack": "No usable MIDI track found.",
+                "midiNoPlayableNotes": "The file contains no playable notes.",
+                "midiResolution": "Invalid MIDI resolution.",
+                "webAudioUnavailable": "Web Audio API is not available in this browser.",
+                "soundFontMissingSelection": "No SoundFont selected."
+              }
             },
             "music": {
               "title": "Music",

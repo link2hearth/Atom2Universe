@@ -1,6 +1,55 @@
 (function () {
   'use strict';
 
+  function translateMessage(key, fallback, params = {}) {
+    if (typeof key !== 'string' || !key.trim()) {
+      return fallback;
+    }
+    const normalizedKey = key.trim();
+    if (typeof globalThis.translateOrDefault === 'function') {
+      return globalThis.translateOrDefault(normalizedKey, fallback, params);
+    }
+    const api = globalThis.i18n;
+    const translator = api && typeof api.t === 'function'
+      ? api.t.bind(api)
+      : typeof globalThis.t === 'function'
+        ? globalThis.t
+        : null;
+    if (translator) {
+      try {
+        const translated = translator(normalizedKey, params);
+        if (typeof translated === 'string') {
+          const trimmed = translated.trim();
+          if (trimmed) {
+            return translated;
+          }
+        } else if (translated != null) {
+          return translated;
+        }
+      } catch (error) {
+        console.warn('Unable to translate key', normalizedKey, error);
+      }
+    }
+    return fallback;
+  }
+
+  function getLocalizedResource(path) {
+    if (!path) {
+      return null;
+    }
+    const api = globalThis.i18n;
+    if (api && typeof api.getResource === 'function') {
+      try {
+        return api.getResource(path);
+      } catch (error) {
+        console.warn('Unable to read localized resource', path, error);
+      }
+    }
+    return null;
+  }
+
+  const DEFAULT_NOTE_NAMES = Object.freeze(['Do', 'Do♯', 'Ré', 'Ré♯', 'Mi', 'Fa', 'Fa♯', 'Sol', 'Sol♯', 'La', 'La♯', 'Si']);
+
   const N163_TABLE_LENGTH = 32;
   const N163_WAVE_GENERATORS = {
     default(index, length) {
@@ -97,7 +146,7 @@
   class SoundFont {
     constructor(arrayBuffer) {
       if (!arrayBuffer || !arrayBuffer.byteLength) {
-        throw new Error('SoundFont vide.');
+        throw new Error(translateMessage('index.sections.options.chiptune.errors.soundFontEmpty', 'Empty SoundFont.'));
       }
       this.buffer = arrayBuffer;
       this.view = new DataView(arrayBuffer);
@@ -140,11 +189,11 @@
 
     parse() {
       if (this.readFourCC(0) !== 'RIFF') {
-        throw new Error('En-tête SoundFont invalide.');
+        throw new Error(translateMessage('index.sections.options.chiptune.errors.soundFontHeader', 'Invalid SoundFont header.'));
       }
       const riffSize = this.view.getUint32(4, true);
       if (this.readFourCC(8) !== 'sfbk') {
-        throw new Error('Format SoundFont non supporté.');
+        throw new Error(translateMessage('index.sections.options.chiptune.errors.soundFontFormat', 'Unsupported SoundFont format.'));
       }
       const limit = Math.min(this.buffer.byteLength, riffSize + 8);
       let offset = 12;
@@ -787,7 +836,7 @@
       let byte;
       do {
         if (this.offset >= this.length) {
-          throw new Error('Trame MIDI incomplète (VLQ).');
+          throw new Error(translateMessage('index.sections.options.chiptune.errors.midiIncompleteVlq', 'Incomplete MIDI frame (VLQ).'));
         }
         byte = this.readUint8();
         value = (value << 7) | (byte & 0x7f);
@@ -805,11 +854,11 @@
       const reader = new StreamReader(buffer);
       const headerId = reader.readString(4);
       if (headerId !== 'MThd') {
-        throw new Error('En-tête MIDI invalide.');
+        throw new Error(translateMessage('index.sections.options.chiptune.errors.midiHeaderInvalid', 'Invalid MIDI header.'));
       }
       const headerLength = reader.readUint32();
       if (headerLength < 6) {
-        throw new Error('En-tête MIDI incomplet.');
+        throw new Error(translateMessage('index.sections.options.chiptune.errors.midiHeaderIncomplete', 'Incomplete MIDI header.'));
       }
       const formatType = reader.readUint16();
       const trackCount = reader.readUint16();
@@ -819,7 +868,7 @@
       }
 
       if (trackCount < 1) {
-        throw new Error('Le fichier MIDI ne contient aucune piste.');
+        throw new Error(translateMessage('index.sections.options.chiptune.errors.midiNoTracks', 'The MIDI file contains no tracks.'));
       }
 
       const tracks = [];
@@ -883,7 +932,7 @@
           let data1;
           if (statusByte < 0x80) {
             if (runningStatus === null) {
-              throw new Error('Status MIDI manquant pour un évènement.');
+              throw new Error(translateMessage('index.sections.options.chiptune.errors.midiMissingStatus', 'Missing MIDI status byte for an event.'));
             }
             data1 = statusByte;
             statusByte = runningStatus;
@@ -968,7 +1017,7 @@
       }
 
       if (!tracks.length) {
-        throw new Error('Aucune piste MIDI exploitable.');
+        throw new Error(translateMessage('index.sections.options.chiptune.errors.midiNoUsableTrack', 'No usable MIDI track found.'));
       }
 
       const events = tracks
@@ -986,10 +1035,10 @@
   class MidiTimeline {
     static fromMidi(parsed) {
       if (!parsed.events.length) {
-        throw new Error('Le fichier ne contient pas de notes jouables.');
+        throw new Error(translateMessage('index.sections.options.chiptune.errors.midiNoPlayableNotes', 'The file contains no playable notes.'));
       }
       if (!parsed.division) {
-        throw new Error('Résolution MIDI invalide.');
+        throw new Error(translateMessage('index.sections.options.chiptune.errors.midiResolution', 'Invalid MIDI resolution.'));
       }
 
       const secondsPerBeatDefault = 500000 / 1e6;
@@ -1384,7 +1433,7 @@
           }
           const track = this.libraryTracks.find(item => item.file === file);
           if (!track) {
-            this.setStatus('Impossible de trouver le morceau sélectionné.', 'error');
+            this.setStatus(this.translate('index.sections.options.chiptune.status.trackNotFound', 'Unable to locate the selected track.'), 'error');
             return;
           }
           this.loadFromLibrary(track);
@@ -1522,7 +1571,7 @@
           this.setSoundFontSelection(normalized, { autoLoad: !shouldActivateHiFi && this.engineMode === 'hifi', stopPlayback: wasPlaying });
           if (shouldActivateHiFi) {
             this.setEngineMode('hifi');
-            this.setStatus('Mode Hi-Fi activé automatiquement pour utiliser la SoundFont.', 'success');
+          this.setStatus(this.translate('index.sections.options.chiptune.status.autoHiFi', 'Mode Hi-Fi activé automatiquement pour utiliser la SoundFont.'), 'success');
           }
         });
       }
@@ -1658,17 +1707,17 @@
       const clamped = this.clampPlaybackSpeed(ratio);
       const percent = Math.round(clamped * 100);
       if (Math.abs(percent - 100) <= 1) {
-        return 'Tempo normal (100%)';
+        return this.translate('index.sections.options.chiptune.labels.speedNormal', 'Tempo normal (100%)');
       }
       if (percent < 100) {
-        return `Tempo ralenti (${percent}%)`;
+        return this.translate('index.sections.options.chiptune.labels.speedSlow', 'Tempo ralenti ({value}%)', { value: percent });
       }
-      return `Tempo accéléré (${percent}%)`;
+      return this.translate('index.sections.options.chiptune.labels.speedFast', 'Tempo accéléré ({value}%)', { value: percent });
     }
 
     formatSpeedFactor(ratio) {
       const clamped = this.clampPlaybackSpeed(ratio);
-      return `tempo ×${clamped.toFixed(2)}`;
+      return this.translate('index.sections.options.chiptune.labels.speedFactor', 'tempo ×{value}', { value: clamped.toFixed(2) });
     }
 
     getEffectiveDuration(timeline = this.timeline, speed = null) {
@@ -1762,36 +1811,40 @@
 
     getEngineLabel() {
       if (this.engineMode === 'scc' && this.sccWaveform) {
-        return 'moteur SCC';
+        return this.translate('index.sections.options.chiptune.engineLabels.scc', 'SCC engine');
       }
       if (this.engineMode === 'n163') {
-        return 'moteur Namco 163';
+        return this.translate('index.sections.options.chiptune.engineLabels.n163', 'Namco 163 engine');
       }
       if (this.engineMode === 'ym2413') {
-        return 'moteur Yamaha YM2413';
+        return this.translate('index.sections.options.chiptune.engineLabels.ym2413', 'Yamaha YM2413 engine');
       }
       if (this.engineMode === 'sid') {
-        return 'moteur MOS SID';
+        return this.translate('index.sections.options.chiptune.engineLabels.sid', 'MOS SID engine');
       }
       if (this.engineMode === 'hifi') {
         const label = this.currentSoundFontLabel || this.selectedSoundFontLabel;
-        return label ? `moteur Hi-Fi SoundFont (${label})` : 'moteur Hi-Fi SoundFont';
+        if (label) {
+          return this.translate('index.sections.options.chiptune.engineLabels.hifiWithName', 'Hi-Fi SoundFont engine ({name})', { name: label });
+        }
+        return this.translate('index.sections.options.chiptune.engineLabels.hifi', 'Hi-Fi SoundFont engine');
       }
-      return 'moteur original';
+      return this.translate('index.sections.options.chiptune.engineLabels.original', 'Original engine');
     }
 
     buildPlayingStatusMessage(extra = '') {
-      let message = this.currentTitle
-        ? `Lecture en cours : ${this.currentTitle}`
-        : 'Lecture en cours';
+      const base = this.currentTitle
+        ? this.translate('index.sections.options.chiptune.status.playingWithTitle', 'Now playing: {title}', { title: this.currentTitle })
+        : this.translate('index.sections.options.chiptune.status.playing', 'Now playing');
+      const segments = [base];
       const engineLabel = this.getEngineLabel();
       if (engineLabel) {
-        message += ` — ${engineLabel}`;
+        segments.push(engineLabel);
       }
       if (extra) {
-        message += ` — ${extra}`;
+        segments.push(extra);
       }
-      return message;
+      return segments.filter(Boolean).join(' — ');
     }
 
     updateReadyStatusMessage() {
@@ -1799,9 +1852,10 @@
         return;
       }
       const summary = this.formatTimelineSummary(this.timeline, this.timelineAnalysis);
+      const durationLabel = this.formatDurationWithSpeed(this.timeline.duration);
       const baseMessage = summary
-        ? `Prêt : ${this.currentTitle} — ${summary}`
-        : `Prêt : ${this.currentTitle} (${this.formatDurationWithSpeed(this.timeline.duration)})`;
+        ? this.translate('index.sections.options.chiptune.status.readyWithSummary', 'Ready: {title} — {summary}', { title: this.currentTitle, summary })
+        : this.translate('index.sections.options.chiptune.status.readyWithDuration', 'Ready: {title} ({duration})', { title: this.currentTitle, duration: durationLabel });
       const engineLabel = this.getEngineLabel();
       const message = engineLabel ? `${baseMessage} — ${engineLabel}` : baseMessage;
       this.readyStatusMessage = message;
@@ -1813,70 +1867,62 @@
     formatSemitoneLabel(value) {
       const normalized = Number.isFinite(value) ? Math.round(value) : 0;
       if (normalized === 0) {
-        return '0 demi-ton';
+        return this.translate('index.sections.options.chiptune.labels.transposeZero', '0 demi-ton');
       }
       const sign = normalized > 0 ? '+' : '−';
       const abs = Math.abs(normalized);
       if (abs % 12 === 0) {
         const octaves = abs / 12;
-        const unit = octaves > 1 ? 'octaves' : 'octave';
-        return `${sign}${octaves} ${unit}`;
+        const key = octaves > 1
+          ? 'index.sections.options.chiptune.labels.transposeOctaves'
+          : 'index.sections.options.chiptune.labels.transposeOctave';
+        const fallback = octaves > 1
+          ? `${sign}${octaves} octaves`
+          : `${sign}${octaves} octave`;
+        return this.translate(key, fallback, { sign, count: octaves });
       }
-      return `${sign}${abs} demi-ton${abs > 1 ? 's' : ''}`;
+      const key = abs > 1
+        ? 'index.sections.options.chiptune.labels.transposeSemitones'
+        : 'index.sections.options.chiptune.labels.transposeSemitone';
+      const fallback = abs > 1
+        ? `${sign}${abs} demi-tons`
+        : `${sign}${abs} demi-ton`;
+      return this.translate(key, fallback, { sign, count: abs });
     }
 
     formatCentsLabel(value) {
       const normalized = Number.isFinite(value) ? Math.round(value) : 0;
       if (normalized === 0) {
-        return '0 cent';
+        return this.translate('index.sections.options.chiptune.labels.detuneZero', '0 cent');
       }
       const sign = normalized > 0 ? '+' : '−';
       const abs = Math.abs(normalized);
-      return `${sign}${abs} cent${abs > 1 ? 's' : ''}`;
+      const key = abs > 1
+        ? 'index.sections.options.chiptune.labels.detuneCents'
+        : 'index.sections.options.chiptune.labels.detuneCent';
+      const fallback = abs > 1
+        ? `${sign}${abs} cents`
+        : `${sign}${abs} cent`;
+      return this.translate(key, fallback, { sign, count: abs });
     }
 
     formatArticulationLabel(value) {
       const normalized = this.clampArticulation(Number.isFinite(value) ? value : this.articulationSetting);
-      let descriptor = 'Équilibré';
+      let descriptor = this.translate('index.sections.options.chiptune.labels.articulationBalanced', 'Équilibré');
       if (normalized <= 20) {
-        descriptor = 'Soutenu (orgue)';
+        descriptor = this.translate('index.sections.options.chiptune.labels.articulationSustained', 'Soutenu (orgue)');
       } else if (normalized <= 45) {
-        descriptor = 'Doux';
+        descriptor = this.translate('index.sections.options.chiptune.labels.articulationSoft', 'Doux');
       } else if (normalized <= 75) {
-        descriptor = 'Piano';
+        descriptor = this.translate('index.sections.options.chiptune.labels.articulationPiano', 'Piano');
       } else {
-        descriptor = 'Piano pincé';
+        descriptor = this.translate('index.sections.options.chiptune.labels.articulationPlucked', 'Piano pincé');
       }
-      return `${descriptor} (${normalized}%)`;
+      return this.translate('index.sections.options.chiptune.labels.articulationValue', '{label} ({value}%)', { label: descriptor, value: normalized });
     }
 
     translate(key, fallback, params = {}) {
-      if (typeof key !== 'string' || !key.trim()) {
-        return fallback;
-      }
-      const trimmedKey = key.trim();
-      const api = globalThis.i18n;
-      const translator = api && typeof api.t === 'function'
-        ? api.t.bind(api)
-        : typeof globalThis.t === 'function'
-          ? globalThis.t
-          : null;
-      if (translator) {
-        try {
-          const translated = translator(trimmedKey, params);
-          if (typeof translated === 'string') {
-            const cleaned = translated.trim();
-            if (cleaned) {
-              return translated;
-            }
-          } else if (translated != null) {
-            return translated;
-          }
-        } catch (error) {
-          console.warn('Unable to translate key', trimmedKey, error);
-        }
-      }
-      return fallback;
+      return translateMessage(key, fallback, params);
     }
 
     initializeProgressControls() {
@@ -1890,7 +1936,7 @@
       if (this.progressValue) {
         this.progressValue.textContent = this.translate(
           'index.sections.options.chiptune.progress.empty',
-          'Aucun morceau chargé'
+          'No track loaded'
         );
       }
     }
@@ -1945,7 +1991,7 @@
         } else if (this.timeline) {
           label = this.formatClock(clamped);
         } else {
-          label = this.translate('index.sections.options.chiptune.progress.empty', 'Aucun morceau chargé');
+          label = this.translate('index.sections.options.chiptune.progress.empty', 'No track loaded');
         }
         if (this.playing && Math.abs(effectiveSpeed - 1) >= 0.01 && label) {
           label = `${label} · ${this.formatSpeedFactor(effectiveSpeed)}`;
@@ -2030,8 +2076,8 @@
             ? 'index.sections.options.chiptune.usage.rowUsed'
             : 'index.sections.options.chiptune.usage.rowUnused',
           isUsed
-            ? `Programme ${program} utilisé`
-            : `Programme ${program} inactif`,
+            ? `Program ${program} in use`
+            : `Program ${program} inactive`,
           { program }
         ));
         entry.row.setAttribute('data-used', isUsed ? 'true' : 'false');
@@ -2041,20 +2087,20 @@
       if (this.programUsageSummary) {
         const count = usedPrograms.size;
         let summaryKey = 'index.sections.options.chiptune.usage.summaryEmpty';
-        let summaryFallback = 'Aucun programme détecté';
+        let summaryFallback = 'No program detected';
         if (count === 1) {
           summaryKey = 'index.sections.options.chiptune.usage.summarySingle';
-          summaryFallback = '1 programme utilisé';
+          summaryFallback = '1 program in use';
         } else if (count > 1) {
           summaryKey = 'index.sections.options.chiptune.usage.summaryMultiple';
-          summaryFallback = `${count} programmes utilisés`;
+          summaryFallback = `${count} programs in use`;
         }
         let summary = this.translate(summaryKey, summaryFallback, { count });
         if (timeline) {
           const percussionKey = percussionUsed
             ? 'index.sections.options.chiptune.usage.percussionActive'
             : 'index.sections.options.chiptune.usage.percussionInactive';
-          const percussionFallback = percussionUsed ? 'Percussions actives' : 'Percussions inactives';
+          const percussionFallback = percussionUsed ? 'Percussion active' : 'Percussion inactive';
           const percussionLabel = this.translate(percussionKey, percussionFallback);
           summary = summary
             ? `${summary} · ${percussionLabel}`
@@ -2220,20 +2266,30 @@
       }
 
       if (analysis && Number.isFinite(analysis.noteCount)) {
-        const noteLabel = `${analysis.noteCount} note${analysis.noteCount > 1 ? 's' : ''}`;
-        segments.push(noteLabel);
+        const count = analysis.noteCount;
+        const noteKey = count > 1
+          ? 'index.sections.options.chiptune.summary.notesMultiple'
+          : 'index.sections.options.chiptune.summary.notesSingle';
+        const noteFallback = count > 1 ? `${count} notes` : `${count} note`;
+        segments.push(this.translate(noteKey, noteFallback, { count }));
 
         if (analysis.melodicChannelCount || analysis.hasPercussion) {
           let channelLabel = '';
           if (analysis.melodicChannelCount) {
             const count = analysis.melodicChannelCount;
-            const channelWord = count > 1 ? 'canaux' : 'canal';
-            channelLabel = `${count} ${channelWord} mélodique${count > 1 ? 's' : ''}`;
+            const melodicKey = count > 1
+              ? 'index.sections.options.chiptune.summary.melodicChannelsMultiple'
+              : 'index.sections.options.chiptune.summary.melodicChannelsSingle';
+            const melodicFallback = count > 1
+              ? `${count} canaux mélodiques`
+              : `${count} canal mélodique`;
+            channelLabel = this.translate(melodicKey, melodicFallback, { count });
           }
           if (analysis.hasPercussion) {
+            const percussionLabel = this.translate('index.sections.options.chiptune.summary.percussion', 'Percussions');
             channelLabel = channelLabel
-              ? `${channelLabel} + percussions`
-              : 'Percussions';
+              ? this.translate('index.sections.options.chiptune.summary.channelsWithPercussion', '{channels} + {percussion}', { channels: channelLabel, percussion: percussionLabel })
+              : percussionLabel;
           }
           if (channelLabel) {
             segments.push(channelLabel);
@@ -2241,13 +2297,13 @@
         }
 
         if (Number.isFinite(analysis.peakPolyphony) && analysis.peakPolyphony > 0) {
-          segments.push(`Polyphonie max ${analysis.peakPolyphony}`);
+          segments.push(this.translate('index.sections.options.chiptune.summary.polyphony', 'Polyphonie max {value}', { value: analysis.peakPolyphony }));
         }
 
         if (Number.isFinite(analysis.minNote) && Number.isFinite(analysis.maxNote)) {
           const rangeLabel = this.formatNoteRange(analysis.minNote, analysis.maxNote);
           if (rangeLabel) {
-            segments.push(`Plage ${rangeLabel}`);
+            segments.push(this.translate('index.sections.options.chiptune.summary.range', 'Plage {range}', { range: rangeLabel }));
           }
         }
       }
@@ -2259,7 +2315,10 @@
       if (!Number.isFinite(noteNumber)) {
         return '';
       }
-      const noteNames = ['Do', 'Do♯', 'Ré', 'Ré♯', 'Mi', 'Fa', 'Fa♯', 'Sol', 'Sol♯', 'La', 'La♯', 'Si'];
+      const resource = getLocalizedResource('index.sections.options.chiptune.notes.names');
+      const noteNames = Array.isArray(resource) && resource.length >= 12
+        ? resource
+        : DEFAULT_NOTE_NAMES;
       const normalized = Math.round(noteNumber);
       const pitchClass = ((normalized % 12) + 12) % 12;
       const octave = Math.floor(normalized / 12) - 1;
@@ -2278,7 +2337,7 @@
       if (Math.round(minNote) === Math.round(maxNote)) {
         return minLabel;
       }
-      return `${minLabel} → ${maxLabel}`;
+      return this.translate('index.sections.options.chiptune.summary.rangeDetail', '{min} → {max}', { min: minLabel, max: maxLabel });
     }
 
     formatClock(seconds) {
@@ -2434,7 +2493,7 @@
       if (!this.audioContext) {
         const AudioContextClass = window.AudioContext || window.webkitAudioContext;
         if (!AudioContextClass) {
-          throw new Error('API Web Audio non disponible dans ce navigateur.');
+          throw new Error(translateMessage('index.sections.options.chiptune.errors.webAudioUnavailable', 'API Web Audio non disponible dans ce navigateur.'));
         }
         this.audioContext = new AudioContextClass();
         this.waveCache = new Map();
@@ -2498,13 +2557,13 @@
 
     async loadFromFile(file) {
       this.stop();
-      this.setStatus(`Chargement de « ${file.name} »...`);
+      this.setStatus(this.translate('index.sections.options.chiptune.status.loadingFile', 'Loading “{name}”…', { name: file.name }));
       try {
         const buffer = await file.arrayBuffer();
         await this.loadFromBuffer(buffer, file.name);
       } catch (error) {
         console.error(error);
-        this.setStatus(`Impossible de lire le fichier : ${error.message}`, 'error');
+        this.setStatus(this.translate('index.sections.options.chiptune.status.fileError', 'Unable to read the file: {error}', { error: error.message }), 'error');
         this.timeline = null;
         this.updateButtons();
       } finally {
@@ -2520,7 +2579,7 @@
     async loadFromLibrary(track) {
       this.stop();
       const label = track.name || track.file;
-      this.setStatus(`Chargement de « ${label} »...`);
+      this.setStatus(this.translate('index.sections.options.chiptune.status.loadingTrack', 'Loading “{name}”…', { name: label }));
       if (this.fileInput) {
         this.fileInput.value = '';
       }
@@ -2529,7 +2588,7 @@
         await this.loadFromBuffer(buffer, label);
       } catch (error) {
         console.error(error);
-        this.setStatus(`Impossible de charger le morceau : ${error.message}`, 'error');
+        this.setStatus(this.translate('index.sections.options.chiptune.status.trackError', 'Unable to load the track: {error}', { error: error.message }), 'error');
         this.timeline = null;
         this.updateButtons();
       }
@@ -2551,12 +2610,13 @@
         const midi = MidiParser.parse(buffer);
         const timeline = MidiTimeline.fromMidi(midi);
         this.timeline = timeline;
-        this.currentTitle = label || 'MIDI inconnu';
+        this.currentTitle = label || this.translate('index.sections.options.chiptune.status.unknownTitle', 'Untitled MIDI');
         this.timelineAnalysis = this.analyzeTimeline(timeline);
         const summary = this.formatTimelineSummary(timeline, this.timelineAnalysis);
+        const durationText = this.formatDurationWithSpeed(timeline.duration);
         const message = summary
-          ? `Prêt : ${this.currentTitle} — ${summary}`
-          : `Prêt : ${this.currentTitle} (${this.formatDurationWithSpeed(timeline.duration)})`;
+          ? this.translate('index.sections.options.chiptune.status.readyWithSummary', 'Ready: {title} — {summary}', { title: this.currentTitle, summary })
+          : this.translate('index.sections.options.chiptune.status.readyWithDuration', 'Ready: {title} ({duration})', { title: this.currentTitle, duration: durationText });
         this.readyStatusMessage = message;
         this.setStatus(message, 'success');
         this.pendingSeekSeconds = 0;
@@ -2621,13 +2681,16 @@
         const placeholder = document.createElement('option');
         placeholder.value = '';
         if (this.soundFontList.length) {
-          placeholder.textContent = 'Sélectionnez une SoundFont';
+          placeholder.textContent = this.translate('index.sections.options.chiptune.soundfonts.placeholder', 'Choose a SoundFont');
           placeholder.disabled = true;
           placeholder.hidden = true;
         } else {
-          placeholder.textContent = errored
-            ? 'Aucune SoundFont disponible'
-            : 'Aucune SoundFont déclarée';
+          placeholder.textContent = this.translate(
+            errored
+              ? 'index.sections.options.chiptune.soundfonts.noneAvailable'
+              : 'index.sections.options.chiptune.soundfonts.noneDeclared',
+            errored ? 'No SoundFont available' : 'No SoundFont declared'
+          );
         }
         select.append(placeholder);
         for (const item of this.soundFontList) {
@@ -2700,7 +2763,7 @@
       }
       const info = this.getCurrentSoundFontInfo();
       if (!info) {
-        throw new Error('Aucune SoundFont sélectionnée.');
+        throw new Error(this.translate('index.sections.options.chiptune.errors.soundFontMissingSelection', 'No SoundFont selected.'));
       }
       if (this.soundFontCache.has(info.id)) {
         const cached = this.soundFontCache.get(info.id);
@@ -2715,7 +2778,7 @@
       }
 
       const loadPromise = (async () => {
-        this.setStatus(`Chargement de la SoundFont « ${info.name || info.id} »…`);
+        this.setStatus(this.translate('index.sections.options.chiptune.status.loadingSoundFont', 'Loading SoundFont “{name}”…', { name: info.name || info.id }));
         try {
           const response = await fetch(info.file, { cache: 'no-cache' });
           if (!response.ok) {
@@ -2731,13 +2794,13 @@
             this.updateReadyStatusMessage();
             this.scheduleReadyStatusRestore(1600);
           }
-          this.setStatus(`SoundFont chargée : ${info.name || info.id}`, 'success');
+          this.setStatus(this.translate('index.sections.options.chiptune.status.soundFontReady', 'SoundFont ready: {name}', { name: info.name || info.id }), 'success');
           return font;
         } catch (error) {
           this.activeSoundFont = null;
           this.activeSoundFontId = null;
           this.currentSoundFontLabel = '';
-          this.setStatus(`Impossible de charger la SoundFont : ${error.message}`, 'error');
+          this.setStatus(this.translate('index.sections.options.chiptune.status.soundFontError', 'Unable to load the SoundFont: {error}', { error: error.message }), 'error');
           throw error;
         } finally {
           if (this.loadingSoundFont && this.loadingSoundFont.id === info.id) {
@@ -2796,11 +2859,14 @@
       this.librarySelect.disabled = this.libraryTracks.length === 0;
 
       if (this.libraryTracks.length === 0) {
-        this.librarySelect.options[0].textContent = errored
-          ? 'Bibliothèque locale indisponible'
-          : 'Aucun morceau local pour le moment';
+        this.librarySelect.options[0].textContent = this.translate(
+          errored
+            ? 'index.sections.options.chiptune.library.unavailable'
+            : 'index.sections.options.chiptune.library.empty',
+          errored ? 'Local library unavailable' : 'No local tracks yet'
+        );
       } else {
-        this.librarySelect.options[0].textContent = 'Sélectionnez un morceau';
+        this.librarySelect.options[0].textContent = this.translate('index.sections.options.chiptune.library.placeholder', 'Select a track');
       }
     }
 
@@ -5455,7 +5521,7 @@
     async play(options = {}) {
       const { offset = null } = options;
       if (!this.timeline || !this.timeline.notes.length) {
-        this.setStatus('Aucune donnée MIDI à lire.', 'error');
+        this.setStatus(this.translate('index.sections.options.chiptune.status.noMidiData', 'No MIDI data to play.'), 'error');
         return;
       }
 
@@ -5468,13 +5534,13 @@
             await this.ensureSoundFontReady();
           } catch (error) {
             console.error(error);
-            this.setStatus(`SoundFont indisponible : ${error.message}`, 'error');
+            this.setStatus(this.translate('index.sections.options.chiptune.status.soundFontUnavailable', 'SoundFont unavailable: {error}', { error: error.message }), 'error');
             this.playing = false;
             this.updateButtons();
             return;
           }
           if (!this.activeSoundFont) {
-            this.setStatus('Aucune SoundFont prête pour le mode Hi-Fi.', 'error');
+            this.setStatus(this.translate('index.sections.options.chiptune.status.soundFontMissing', 'No SoundFont ready for Hi-Fi mode.'), 'error');
             this.playing = false;
             this.updateButtons();
             return;
@@ -5507,14 +5573,14 @@
         this.finishTimeout = window.setTimeout(() => {
           this.finishTimeout = null;
           this.stop(false);
-          this.setStatus(`Lecture terminée : ${this.currentTitle}`, 'success');
+          this.setStatus(this.translate('index.sections.options.chiptune.status.playbackComplete', 'Playback finished: {title}', { title: this.currentTitle }), 'success');
           this.scheduleReadyStatusRestore();
         }, Math.ceil(((effectiveDuration || 0) + 0.6) * 1000));
 
         this.setStatus(this.buildPlayingStatusMessage(), 'success');
       } catch (error) {
         console.error(error);
-        this.setStatus(`Lecture impossible : ${error.message}`, 'error');
+        this.setStatus(this.translate('index.sections.options.chiptune.status.playbackError', 'Playback failed: {error}', { error: error.message }), 'error');
         this.stopProgressMonitor();
         this.playing = false;
         this.updateButtons();
@@ -5638,7 +5704,7 @@
       this.refreshProgressControls(this.timeline);
 
       if (manual && wasPlaying) {
-        this.setStatus(`Lecture stoppée : ${this.currentTitle}`);
+        this.setStatus(this.translate('index.sections.options.chiptune.status.playbackStopped', 'Playback stopped: {title}', { title: this.currentTitle }));
         this.scheduleReadyStatusRestore();
       }
     }
