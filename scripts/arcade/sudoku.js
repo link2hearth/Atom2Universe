@@ -222,7 +222,11 @@
   function generateRandomPuzzle(level) {
     const solution = generateFullSolution();
     const clues = pickClueCount(level);
-    return makePuzzleFromSolution(solution, clues);
+    const puzzle = makePuzzleFromSolution(solution, clues);
+    return {
+      puzzle,
+      solution
+    };
   }
 
   function parseGridToBoard(container) {
@@ -285,20 +289,84 @@
     let selectedPadValue = null;
 
     let currentFixedMask = createEmptyBoard().map(row => row.map(() => false));
+    let solutionBoard = createEmptyBoard();
+    let showMistakes = levelSelect.value === 'facile';
+    let lastMistakeSet = new Set();
+    let lastMistakeCount = 0;
+    let lastStatusMessage = '';
+    let lastStatusKind = 'info';
+    let lastStatusOptionsBuilder = null;
+    let lastStatusMessageBuilder = null;
+    let lastStatusMeta = {};
+    let lastStatusIsMistakeMessage = false;
 
-    function setStatus(message, kind = 'info') {
+    function refreshStatus() {
+      if (lastStatusIsMistakeMessage && lastMistakeCount === 0) {
+        setStatus(formatStatus('noError', "Aucune erreur pour l'instant."), 'ok');
+        return;
+      }
+      if (typeof lastStatusMessageBuilder === 'function') {
+        setStatus(lastStatusMessageBuilder, lastStatusKind, lastStatusOptionsBuilder, lastStatusMeta);
+        return;
+      }
+      if (typeof lastStatusMessage !== 'string' || !lastStatusMessage.trim()) {
+        setStatus('');
+        return;
+      }
+      setStatus(lastStatusMessage, lastStatusKind, lastStatusOptionsBuilder, lastStatusMeta);
+    }
+
+    function setStatus(message, kind = 'info', optionsBuilder = null, meta = null) {
       if (!statusElement) {
         return;
       }
-      if (typeof message === 'string' && message.trim()) {
-        statusElement.textContent = message;
+      const resolvedMessage = typeof message === 'function' ? message() : message;
+      lastStatusMessageBuilder = typeof message === 'function' ? message : null;
+      lastStatusMessage = typeof resolvedMessage === 'string' ? resolvedMessage : '';
+      lastStatusKind = kind;
+      lastStatusOptionsBuilder = optionsBuilder;
+      lastStatusMeta = meta && typeof meta === 'object' ? { ...meta } : {};
+      lastStatusIsMistakeMessage = Boolean(lastStatusMeta.isMistakeMessage);
+
+      if (typeof resolvedMessage === 'string' && resolvedMessage.trim()) {
         statusElement.hidden = false;
         statusElement.classList.toggle('sudoku-status--ok', kind === 'ok');
         statusElement.classList.toggle('sudoku-status--error', kind === 'error');
+        statusElement.replaceChildren();
+
+        const messageSpan = document.createElement('span');
+        messageSpan.className = 'sudoku-status__message';
+        messageSpan.textContent = resolvedMessage;
+        statusElement.appendChild(messageSpan);
+
+        const options = typeof optionsBuilder === 'function' ? optionsBuilder() : optionsBuilder;
+        if (options && options.button) {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'sudoku-status__action';
+          button.textContent = options.button.label;
+          if (options.button.ariaLabel) {
+            button.setAttribute('aria-label', options.button.ariaLabel);
+          }
+          if (typeof options.button.pressed === 'boolean') {
+            button.setAttribute('aria-pressed', String(options.button.pressed));
+          }
+          if (typeof options.button.onClick === 'function') {
+            button.addEventListener('click', event => {
+              options.button.onClick(event);
+            });
+          }
+          statusElement.appendChild(button);
+        }
       } else {
         statusElement.textContent = '';
         statusElement.hidden = true;
         statusElement.classList.remove('sudoku-status--ok', 'sudoku-status--error');
+        lastStatusMessage = '';
+        lastStatusOptionsBuilder = null;
+        lastStatusMessageBuilder = null;
+        lastStatusMeta = {};
+        lastStatusIsMistakeMessage = false;
       }
     }
 
@@ -306,6 +374,69 @@
       gridElement.querySelectorAll('.sudoku-cell').forEach(cell => {
         cell.classList.remove('error', 'ok');
       });
+    }
+
+    function refreshMistakeVisibility() {
+      const cells = gridElement.querySelectorAll('.sudoku-cell');
+      cells.forEach((cell, index) => {
+        const isMistake = lastMistakeSet.has(index);
+        cell.classList.toggle('mistake', showMistakes && isMistake);
+      });
+    }
+
+    function getMistakePositions(board) {
+      if (!Array.isArray(board) || board.length !== 9) {
+        return [];
+      }
+      if (!Array.isArray(solutionBoard) || solutionBoard.length !== 9) {
+        return [];
+      }
+      const mistakes = [];
+      for (let row = 0; row < 9; row += 1) {
+        for (let col = 0; col < 9; col += 1) {
+          if (currentFixedMask[row][col]) {
+            continue;
+          }
+          const value = board[row][col];
+          if (!value) {
+            continue;
+          }
+          const expected = solutionBoard[row] ? solutionBoard[row][col] : 0;
+          if (expected && expected !== value) {
+            mistakes.push({ row, col });
+          }
+        }
+      }
+      return mistakes;
+    }
+
+    function updateMistakeHighlights(board) {
+      const workingBoard = board || parseGridToBoard(gridElement);
+      const mistakes = getMistakePositions(workingBoard);
+      lastMistakeCount = mistakes.length;
+      lastMistakeSet = new Set(mistakes.map(({ row, col }) => row * 9 + col));
+      refreshMistakeVisibility();
+      return mistakes;
+    }
+
+    function buildMistakeStatusOptions() {
+      if (!lastMistakeCount) {
+        return null;
+      }
+      return {
+        button: {
+          label: formatStatus(
+            showMistakes ? 'hideMistakes' : 'showMistakes',
+            showMistakes ? 'Masquer les cases incorrectes' : 'Afficher les cases incorrectes'
+          ),
+          pressed: showMistakes,
+          onClick: () => {
+            showMistakes = !showMistakes;
+            refreshMistakeVisibility();
+            refreshStatus();
+          }
+        }
+      };
     }
 
     function loadBoardToGrid(board, fixedMask) {
@@ -339,6 +470,8 @@
           input.addEventListener('input', event => {
             const sanitized = event.target.value.replace(/[^1-9]/g, '');
             event.target.value = sanitized.slice(-1);
+            updateMistakeHighlights();
+            refreshStatus();
           });
           input.addEventListener('focus', () => {
             cell.classList.remove('error', 'ok');
@@ -347,6 +480,8 @@
           gridElement.appendChild(cell);
         }
       }
+
+      updateMistakeHighlights(board);
     }
 
     function updatePadSelection() {
@@ -431,10 +566,22 @@
     function onValidate() {
       clearHighlights();
       const board = parseGridToBoard(gridElement);
+      const mistakes = updateMistakeHighlights(board);
       const errors = validateBoard(board);
       if (errors.length) {
         highlightErrors(errors);
-        setStatus(formatStatus('errors', 'Erreurs détectées : {count}.', { count: errors.length }), 'error');
+      }
+
+      if (errors.length || mistakes.length) {
+        const useErrors = errors.length > 0;
+        const errorCount = errors.length;
+        const messageBuilder = () =>
+          formatStatus(
+            useErrors ? 'errors' : 'mistakes',
+            useErrors ? 'Erreurs détectées : {count}.' : 'Cases incorrectes : {count}.',
+            { count: useErrors ? errorCount : lastMistakeCount }
+          );
+        setStatus(messageBuilder, 'error', buildMistakeStatusOptions, { isMistakeMessage: !useErrors });
       } else {
         setStatus(formatStatus('noError', "Aucune erreur pour l'instant."), 'ok');
       }
@@ -447,7 +594,11 @@
         ? levelSelect.options[levelSelect.selectedIndex].textContent.trim()
         : level;
       setStatus(formatStatus('generating', 'Génération en cours…'));
-      const puzzle = generateRandomPuzzle(level);
+      const { puzzle, solution } = generateRandomPuzzle(level);
+      solutionBoard = cloneBoard(solution);
+      showMistakes = level === 'facile';
+      lastMistakeSet = new Set();
+      lastMistakeCount = 0;
       const fixedMask = puzzle.map(row => row.map(value => value !== 0));
       loadBoardToGrid(puzzle, fixedMask);
       const clues = puzzle.flat().filter(value => value !== 0).length;
@@ -458,6 +609,7 @@
         }),
         'ok'
       );
+      refreshMistakeVisibility();
     }
 
     padButtons.forEach(button => {
