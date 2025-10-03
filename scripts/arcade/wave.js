@@ -398,6 +398,7 @@
 
       this.elapsedTimeMs = 0;
       this.lastTrailSampleMs = -Infinity;
+      this.lastTrailRotation = 0;
       this.ballColorState = {
         currentIndex: 0,
         previousIndex: null,
@@ -610,6 +611,7 @@
     resetBallVisualState() {
       this.elapsedTimeMs = 0;
       this.lastTrailSampleMs = -Infinity;
+      this.lastTrailRotation = 0;
       if (this.player && typeof this.player === 'object') {
         this.player.trail = [];
       }
@@ -666,11 +668,20 @@
       if (shouldSample) {
         const radius = this.getBallRadius();
         const centerOffset = radius * 0.4;
+        const vx = Number.isFinite(this.player.vx) ? this.player.vx : 0;
+        const vy = Number.isFinite(this.player.vy) ? this.player.vy : 0;
+        let rotation = Number.isFinite(this.lastTrailRotation) ? this.lastTrailRotation : 0;
+        const speedSq = vx * vx + vy * vy;
+        if (speedSq > 0.001) {
+          rotation = Math.atan2(vx, -vy);
+          this.lastTrailRotation = rotation;
+        }
         this.player.trail.push({
           x: this.player.x,
           y: this.player.y - centerOffset,
-          vx: this.player.vx,
-          vy: this.player.vy,
+          vx,
+          vy,
+          rotation,
           radius,
           time: now
         });
@@ -1294,7 +1305,15 @@
             const screenY = (point.y - this.cameraY) * scale;
             const vx = Number.isFinite(point.vx) ? point.vx : 0;
             const vy = Number.isFinite(point.vy) ? point.vy : 0;
-            const rotation = vx === 0 && vy === 0 ? 0 : Math.atan2(-vy, -vx);
+            const storedRotation = Number.isFinite(point.rotation) ? point.rotation : null;
+            const rotation =
+              storedRotation != null
+                ? storedRotation
+                : vx === 0 && vy === 0
+                ? Number.isFinite(this.lastTrailRotation)
+                  ? this.lastTrailRotation
+                  : 0
+                : Math.atan2(vx, -vy);
             effectiveColors.forEach(color => {
               const alpha = (0.25 + lifeRatio * 0.45) * color.alpha;
               if (alpha <= 0) {
