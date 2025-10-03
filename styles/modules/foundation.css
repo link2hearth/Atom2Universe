@@ -191,6 +191,13 @@ body.theme-neon .brand--portal-ready {
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+body.view-arcade .status-bar,
+body.view-metaux .status-bar,
+body.view-photon .status-bar,
+body.view-quantum2048 .status-bar {
+  display: none;
+}
+
 .status-item {
   display: flex;
   flex-direction: column;
