@@ -272,16 +272,14 @@
     const statusElement = document.getElementById('sudokuStatus');
     const levelSelect = document.getElementById('sudokuLevel');
     const generateButton = document.getElementById('sudokuGenerate');
-    const validateButton = document.getElementById('sudokuValidate');
-    const solveButton = document.getElementById('sudokuSolve');
-    const clearButton = document.getElementById('sudokuClear');
+    const padValidateButton = document.getElementById('sudokuPadValidate');
     const padElement = document.getElementById('sudokuPad');
 
-    if (!statusElement || !levelSelect || !generateButton || !validateButton || !solveButton || !clearButton || !padElement) {
+    if (!statusElement || !levelSelect || !generateButton || !padValidateButton || !padElement) {
       return;
     }
 
-    const padButtons = Array.from(padElement.querySelectorAll('.sudoku-pad__button'));
+    const padButtons = Array.from(padElement.querySelectorAll('.sudoku-pad__button[data-value]'));
 
     let activeInput = null;
     let selectedPadValue = null;
@@ -442,35 +440,6 @@
       }
     }
 
-    function onSolve() {
-      clearHighlights();
-      const board = parseGridToBoard(gridElement);
-      const errors = validateBoard(board);
-      if (errors.length) {
-        highlightErrors(errors);
-        setStatus(
-          formatStatus('conflictBeforeSolve', 'Il y a des conflits. Corrigez avant de résoudre.'),
-          'error'
-        );
-        return;
-      }
-      const attempt = cloneBoard(board);
-      const solved = solveBoard(attempt);
-      if (solved) {
-        loadBoardToGrid(attempt, currentFixedMask);
-        gridElement.querySelectorAll('.sudoku-cell').forEach(cell => cell.classList.add('ok'));
-        setStatus(formatStatus('solved', 'Solution trouvée ✔︎'), 'ok');
-      } else {
-        setStatus(formatStatus('noSolution', 'Pas de solution trouvée (ou puzzle invalide).'), 'error');
-      }
-    }
-
-    function onClear() {
-      clearHighlights();
-      loadBoardToGrid(createEmptyBoard());
-      setStatus(formatStatus('cleared', 'Grille vidée.'));
-    }
-
     function onGenerate() {
       clearHighlights();
       const level = levelSelect.value || 'moyen';
@@ -532,9 +501,7 @@
     });
 
     generateButton.addEventListener('click', onGenerate);
-    validateButton.addEventListener('click', onValidate);
-    solveButton.addEventListener('click', onSolve);
-    clearButton.addEventListener('click', onClear);
+    padValidateButton.addEventListener('click', onValidate);
 
     loadBoardToGrid(createEmptyBoard());
     setStatus('');
