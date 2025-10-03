@@ -278,8 +278,16 @@
     let dealerCards = [];
     const stats = { wins: 0, losses: 0, pushes: 0 };
     const hiddenCardLabel = translate('index.sections.blackjack.hiddenCard', 'Hidden card');
-    const betOptions = getBetOptions();
+    const configuredBetOptions = getBetOptions();
+    const baseBetOptions = configuredBetOptions.length > 1
+      ? configuredBetOptions.slice(1)
+      : configuredBetOptions.slice();
     const betButtons = [];
+    let betOptions = baseBetOptions.map(value => value);
+    let betMultiplier = 1;
+    let multiplyButton = null;
+    let divideButton = null;
+    let selectedBaseBet = null;
     let selectedBet = null;
     let activeBet = null;
     let balanceIntervalId = null;
@@ -356,12 +364,32 @@
       return atoms.compare(bet) >= 0;
     }
 
-    function setSelectedBet(amount) {
+    function setSelectedBet(amount, baseAmount) {
       if (amount == null) {
         selectedBet = null;
+        selectedBaseBet = null;
       } else {
         const numeric = Number(amount);
-        selectedBet = Number.isFinite(numeric) && numeric > 0 ? Math.floor(numeric) : null;
+        if (Number.isFinite(numeric) && numeric > 0) {
+          selectedBet = Math.floor(numeric);
+          if (baseAmount != null) {
+            const numericBase = Number(baseAmount);
+            if (Number.isFinite(numericBase) && numericBase > 0) {
+              selectedBaseBet = Math.floor(numericBase);
+            } else if (betMultiplier > 0) {
+              selectedBaseBet = Math.floor(selectedBet / betMultiplier);
+            } else {
+              selectedBaseBet = null;
+            }
+          } else if (betMultiplier > 0) {
+            selectedBaseBet = Math.floor(selectedBet / betMultiplier);
+          } else {
+            selectedBaseBet = null;
+          }
+        } else {
+          selectedBet = null;
+          selectedBaseBet = null;
+        }
       }
       for (let i = 0; i < betButtons.length; i += 1) {
         const button = betButtons[i];
@@ -377,6 +405,63 @@
       }
     }
 
+    function updateBetOptionValues() {
+      betOptions = baseBetOptions.map(amount => amount * betMultiplier);
+      for (let i = 0; i < betButtons.length; i += 1) {
+        const button = betButtons[i];
+        const amount = betOptions[i];
+        button.dataset.bet = `${amount}`;
+        const label = formatBetAmount(amount);
+        button.textContent = label;
+        button.setAttribute('aria-label', translateBetOptionLabel(label));
+      }
+    }
+
+    function updateMultiplierLabels() {
+      const formattedMultiplier = formatBetAmount(betMultiplier);
+      if (multiplyButton) {
+        const aria = translate(
+          'index.sections.blackjack.bet.scale.multiplyAria',
+          `Multiply bet options by 10 (current multiplier: ×${formattedMultiplier})`,
+          { multiplier: formattedMultiplier }
+        );
+        multiplyButton.disabled = roundActive;
+        multiplyButton.setAttribute('aria-label', aria);
+        multiplyButton.title = aria;
+      }
+      if (divideButton) {
+        const disabled = roundActive || betMultiplier <= 1;
+        const aria = translate(
+          'index.sections.blackjack.bet.scale.divideAria',
+          `Divide bet options by 10 (current multiplier: ×${formattedMultiplier})`,
+          { multiplier: formattedMultiplier }
+        );
+        divideButton.disabled = disabled;
+        divideButton.setAttribute('aria-label', aria);
+        divideButton.title = aria;
+      }
+    }
+
+    function setBetMultiplier(newMultiplier) {
+      const numeric = Number(newMultiplier);
+      const normalized = Number.isFinite(numeric) && numeric > 0 ? Math.max(1, Math.floor(numeric)) : betMultiplier;
+      if (normalized === betMultiplier) {
+        updateMultiplierLabels();
+        return;
+      }
+      betMultiplier = normalized;
+      updateBetOptionValues();
+      if (selectedBaseBet != null) {
+        const scaledSelection = selectedBaseBet * betMultiplier;
+        setSelectedBet(scaledSelection, selectedBaseBet);
+      } else if (selectedBet != null) {
+        setSelectedBet(selectedBet);
+      }
+      ensureSelectedBetAffordable();
+      updateBetButtons();
+      updateMultiplierLabels();
+    }
+
     function updateBetButtons() {
       for (let i = 0; i < betButtons.length; i += 1) {
         const button = betButtons[i];
@@ -385,6 +470,7 @@
         button.disabled = disable;
         button.classList.toggle('blackjack-bet__option--unavailable', !roundActive && disable);
       }
+      updateMultiplierLabels();
     }
 
     function ensureSelectedBetAffordable() {
@@ -397,7 +483,7 @@
       for (let i = 0; i < betOptions.length; i += 1) {
         const option = betOptions[i];
         if (canAffordBet(option)) {
-          setSelectedBet(option);
+          setSelectedBet(option, baseBetOptions[i] ?? option);
           return;
         }
       }
@@ -430,7 +516,7 @@
     }
 
     function initializeBetOptions() {
-      const previousSelection = selectedBet;
+      const previousBaseSelection = selectedBaseBet;
       betButtons.length = 0;
       betOptionsElement.innerHTML = '';
       const optionsAria = translate(
@@ -440,21 +526,65 @@
       if (optionsAria) {
         betOptionsElement.setAttribute('aria-label', optionsAria);
       }
-      for (let i = 0; i < betOptions.length; i += 1) {
-        const amount = betOptions[i];
-        const label = formatBetAmount(amount);
+
+      const scaleGroup = document.createElement('div');
+      scaleGroup.className = 'blackjack-bet__scale';
+      scaleGroup.setAttribute('role', 'group');
+      const scaleAria = translate(
+        'index.sections.blackjack.bet.scale.groupAria',
+        'Adjust bet multiplier'
+      );
+      if (scaleAria) {
+        scaleGroup.setAttribute('aria-label', scaleAria);
+      }
+
+      multiplyButton = document.createElement('button');
+      multiplyButton.type = 'button';
+      multiplyButton.className = 'blackjack-bet__option blackjack-bet__scale-button';
+      multiplyButton.textContent = translate(
+        'index.sections.blackjack.bet.scale.multiplyLabel',
+        '×10'
+      );
+      multiplyButton.setAttribute('aria-pressed', 'false');
+      multiplyButton.addEventListener('click', () => {
+        if (roundActive) {
+          return;
+        }
+        setBetMultiplier(betMultiplier * 10);
+      });
+      scaleGroup.appendChild(multiplyButton);
+
+      divideButton = document.createElement('button');
+      divideButton.type = 'button';
+      divideButton.className = 'blackjack-bet__option blackjack-bet__scale-button';
+      divideButton.textContent = translate(
+        'index.sections.blackjack.bet.scale.divideLabel',
+        '÷10'
+      );
+      divideButton.setAttribute('aria-pressed', 'false');
+      divideButton.addEventListener('click', () => {
+        if (roundActive || betMultiplier <= 1) {
+          return;
+        }
+        setBetMultiplier(betMultiplier / 10);
+      });
+      scaleGroup.appendChild(divideButton);
+
+      betOptionsElement.appendChild(scaleGroup);
+
+      for (let i = 0; i < baseBetOptions.length; i += 1) {
+        const baseAmount = baseBetOptions[i];
         const button = document.createElement('button');
         button.type = 'button';
         button.className = 'blackjack-bet__option';
-        button.dataset.bet = `${amount}`;
-        button.textContent = label;
+        button.dataset.baseBet = `${baseAmount}`;
         button.setAttribute('aria-pressed', 'false');
-        button.setAttribute('aria-label', translateBetOptionLabel(label));
         button.addEventListener('click', () => {
           if (roundActive) {
             return;
           }
-          if (!canAffordBet(amount)) {
+          const scaledAmount = baseAmount * betMultiplier;
+          if (!canAffordBet(scaledAmount)) {
             setStatus('insufficientAtoms', 'Not enough atoms for this bet.');
             if (typeof showToast === 'function') {
               showToast(translate(
@@ -464,13 +594,24 @@
             }
             return;
           }
-          setSelectedBet(amount);
+          setSelectedBet(scaledAmount, baseAmount);
           updateBetButtons();
         });
         betOptionsElement.appendChild(button);
         betButtons.push(button);
       }
-      setSelectedBet(previousSelection);
+
+      updateBetOptionValues();
+
+      if (previousBaseSelection != null) {
+        const restored = previousBaseSelection * betMultiplier;
+        setSelectedBet(restored, previousBaseSelection);
+      } else if (selectedBet != null) {
+        setSelectedBet(selectedBet);
+      } else {
+        setSelectedBet(null);
+      }
+
       ensureSelectedBetAffordable();
       updateBetButtons();
     }

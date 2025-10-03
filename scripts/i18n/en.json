@@ -161,7 +161,14 @@
           "balance": "Atoms available:",
           "none": "None",
           "option": "{amount} atoms",
-          "optionsAria": "Available bet amounts"
+          "optionsAria": "Available bet amounts",
+          "scale": {
+            "groupAria": "Adjust bet multiplier",
+            "multiplyLabel": "×10",
+            "multiplyAria": "Multiply bet options by 10 (current multiplier: ×{multiplier})",
+            "divideLabel": "÷10",
+            "divideAria": "Divide bet options by 10 (current multiplier: ×{multiplier})"
+          }
         },
         "shoe": {
           "label": "Shoe"
