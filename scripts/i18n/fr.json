@@ -752,6 +752,11 @@
       },
       "table": {
         "placeholder": "Le tableau périodique sera bientôt disponible.",
+        "summary": {
+          "title": "Total des éléments",
+          "current": "Actuels",
+          "lifetime": "Collectés au total"
+        },
         "aria": {
           "nameWithSymbol": "{name} ({symbol})",
           "name": "{name}",
@@ -767,6 +772,9 @@
         "collection": {
           "progress": "Collection\u00a0: {owned} / {total} éléments",
           "summary": "Collection\u00a0: {owned} / {total} éléments ({ratio}\u00a0%)"
+        },
+        "summaryTile": {
+          "aria": "Total actuel\u00a0: {current} · Total historique\u00a0: {lifetime}"
         },
         "bonuses": {
           "apcFlat": "APC +{value}",

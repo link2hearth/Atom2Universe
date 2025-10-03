@@ -177,6 +177,11 @@
         "table": {
           "aria": "Tableau périodique des éléments",
           "placeholder": "Sélectionnez un élément pour afficher ses propriétés.",
+          "summary": {
+            "title": "Total des éléments",
+            "current": "Actuels",
+            "lifetime": "Collectés au total"
+          },
           "details": {
               "family": "Famille",
               "collection": "Collection"
@@ -746,7 +751,15 @@
             "prompt": "Sélectionnez une recette pour tenter votre première fusion."
           },
           "table": {
-            "placeholder": "Le tableau périodique sera bientôt disponible."
+            "placeholder": "Le tableau périodique sera bientôt disponible.",
+            "summary": {
+              "title": "Total des éléments",
+              "current": "Actuels",
+              "lifetime": "Collectés au total"
+            },
+            "summaryTile": {
+              "aria": "Total actuel\u00a0: {current} · Total historique\u00a0: {lifetime}"
+            }
           },
           "collection": {
             "pending": "Collection en préparation"
@@ -1403,6 +1416,11 @@
         "table": {
           "aria": "Periodic table of elements",
           "placeholder": "Select an element to display its properties.",
+          "summary": {
+            "title": "Element totals",
+            "current": "Current",
+            "lifetime": "Lifetime collected"
+          },
           "details": {
               "family": "Family",
               "collection": "Collection"
@@ -1972,7 +1990,15 @@
             "prompt": "Select a recipe to attempt your first fusion."
           },
           "table": {
-            "placeholder": "The periodic table will be available soon."
+            "placeholder": "The periodic table will be available soon.",
+            "summary": {
+              "title": "Element totals",
+              "current": "Current",
+              "lifetime": "Lifetime collected"
+            },
+            "summaryTile": {
+              "aria": "Current total: {current} · Lifetime total: {lifetime}"
+            }
           },
           "collection": {
             "pending": "Collection in progress"
