@@ -1439,6 +1439,7 @@
           const spriteIndex = normalizeSpriteIndex(color.index);
           ctx.save();
           ctx.globalAlpha = alpha;
+          ctx.scale(1, -1);
           ctx.drawImage(
             sprite.image,
             spriteIndex * sprite.frameWidth,
@@ -1446,9 +1447,9 @@
             sprite.frameWidth,
             sprite.frameHeight,
             -destWidth / 2,
-            -destHeight / 2,
+            destHeight / 2,
             destWidth,
-            destHeight
+            -destHeight
           );
           ctx.restore();
         });
