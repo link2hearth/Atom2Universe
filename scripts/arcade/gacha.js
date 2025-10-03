@@ -2247,10 +2247,14 @@ let gachaRollMode = 1;
 function updateGachaUI() {
   updateGachaFeaturedInfo();
   const available = Math.max(0, Math.floor(Number(gameState.gachaTickets) || 0));
+  const formattedCount = formatIntegerLocalized(available);
   if (elements.gachaTicketValue) {
-    elements.gachaTicketValue.textContent = formatTicketLabel(available);
+    elements.gachaTicketValue.textContent = formattedCount;
   } else if (elements.gachaTicketCounter) {
-    elements.gachaTicketCounter.textContent = formatTicketLabel(available);
+    elements.gachaTicketCounter.textContent = formattedCount;
+  }
+  if (elements.gachaTicketCounter) {
+    elements.gachaTicketCounter.setAttribute('aria-label', formatTicketLabel(available));
   }
   updateArcadeTicketDisplay();
   if (elements.gachaTicketModeLabel) {

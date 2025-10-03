@@ -171,6 +171,11 @@
 
 .gacha-ticket-counter__value {
   white-space: nowrap;
+  font-family: 'Seven Segment', 'Orbitron', sans-serif;
+  font-size: 0.7em;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1;
 }
 
 body.theme-light .gacha-ticket-counter {
