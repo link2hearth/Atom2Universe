@@ -290,9 +290,14 @@
 
     let currentFixedMask = createEmptyBoard().map(row => row.map(() => false));
     let solutionBoard = createEmptyBoard();
-    let showMistakes = levelSelect.value === 'facile';
+    let currentLevel = levelSelect.value || 'moyen';
+    let showMistakes = currentLevel === 'facile';
+    let showConflicts = currentLevel === 'facile';
+    let allowMistakeHints = currentLevel === 'facile';
     let lastMistakeSet = new Set();
     let lastMistakeCount = 0;
+    let lastConflictSet = new Set();
+    let lastConflictCount = 0;
     let lastStatusMessage = '';
     let lastStatusKind = 'info';
     let lastStatusOptionsBuilder = null;
@@ -301,6 +306,19 @@
     let lastStatusIsMistakeMessage = false;
 
     function refreshStatus() {
+      if (lastStatusMeta.isConflictMessage && lastConflictCount === 0) {
+        if (lastMistakeCount > 0) {
+          const messageBuilder = () =>
+            formatStatus('mistakes', 'Cases incorrectes : {count}.', { count: lastMistakeCount });
+          setStatus(messageBuilder, 'error', buildMistakeStatusOptions, {
+            isMistakeMessage: true,
+            isConflictMessage: false
+          });
+        } else {
+          setStatus(formatStatus('noError', "Aucune erreur pour l'instant."), 'ok');
+        }
+        return;
+      }
       if (lastStatusIsMistakeMessage && lastMistakeCount === 0) {
         setStatus(formatStatus('noError', "Aucune erreur pour l'instant."), 'ok');
         return;
@@ -351,6 +369,10 @@
           if (typeof options.button.pressed === 'boolean') {
             button.setAttribute('aria-pressed', String(options.button.pressed));
           }
+          if (typeof options.button.disabled === 'boolean') {
+            button.disabled = options.button.disabled;
+            button.classList.toggle('is-disabled', options.button.disabled);
+          }
           if (typeof options.button.onClick === 'function') {
             button.addEventListener('click', event => {
               options.button.onClick(event);
@@ -374,6 +396,8 @@
       gridElement.querySelectorAll('.sudoku-cell').forEach(cell => {
         cell.classList.remove('error', 'ok');
       });
+      lastConflictSet = new Set();
+      lastConflictCount = 0;
     }
 
     function refreshMistakeVisibility() {
@@ -381,6 +405,14 @@
       cells.forEach((cell, index) => {
         const isMistake = lastMistakeSet.has(index);
         cell.classList.toggle('mistake', showMistakes && isMistake);
+      });
+    }
+
+    function refreshConflictHighlights() {
+      const cells = gridElement.querySelectorAll('.sudoku-cell');
+      cells.forEach((cell, index) => {
+        const isConflict = lastConflictSet.has(index);
+        cell.classList.toggle('error', showConflicts && isConflict);
       });
     }
 
@@ -416,10 +448,28 @@
       lastMistakeCount = mistakes.length;
       lastMistakeSet = new Set(mistakes.map(({ row, col }) => row * 9 + col));
       refreshMistakeVisibility();
-      return mistakes;
+      return { workingBoard, mistakes };
+    }
+
+    function updateConflictState(board, conflicts) {
+      const workingBoard = board || parseGridToBoard(gridElement);
+      const entries = Array.isArray(conflicts) ? conflicts : validateBoard(workingBoard);
+      const indices = new Set();
+      entries.forEach(({ row, col }) => {
+        if (Number.isInteger(row) && Number.isInteger(col)) {
+          indices.add(row * 9 + col);
+        }
+      });
+      lastConflictSet = indices;
+      lastConflictCount = indices.size;
+      refreshConflictHighlights();
+      return entries;
     }
 
     function buildMistakeStatusOptions() {
+      if (!allowMistakeHints) {
+        return null;
+      }
       if (!lastMistakeCount) {
         return null;
       }
@@ -433,6 +483,27 @@
           onClick: () => {
             showMistakes = !showMistakes;
             refreshMistakeVisibility();
+            refreshStatus();
+          }
+        }
+      };
+    }
+
+    function buildConflictStatusOptions() {
+      return {
+        button: {
+          label: formatStatus(
+            showConflicts ? 'hideConflicts' : 'showConflicts',
+            showConflicts ? 'Masquer les conflits' : 'Afficher les conflits'
+          ),
+          pressed: showConflicts,
+          disabled: lastConflictCount === 0,
+          onClick: () => {
+            if (lastConflictCount === 0 && !showConflicts) {
+              return;
+            }
+            showConflicts = !showConflicts;
+            refreshConflictHighlights();
             refreshStatus();
           }
         }
@@ -470,7 +541,8 @@
           input.addEventListener('input', event => {
             const sanitized = event.target.value.replace(/[^1-9]/g, '');
             event.target.value = sanitized.slice(-1);
-            updateMistakeHighlights();
+            const { workingBoard } = updateMistakeHighlights();
+            updateConflictState(workingBoard);
             refreshStatus();
           });
           input.addEventListener('focus', () => {
@@ -481,7 +553,8 @@
         }
       }
 
-      updateMistakeHighlights(board);
+      const { workingBoard } = updateMistakeHighlights(board);
+      updateConflictState(workingBoard);
     }
 
     function updatePadSelection() {
@@ -552,36 +625,25 @@
       return errors;
     }
 
-    function highlightErrors(errors) {
-      const cells = gridElement.querySelectorAll('.sudoku-cell');
-      errors.forEach(({ row, col }) => {
-        const index = row * 9 + col;
-        const cell = cells[index];
-        if (cell) {
-          cell.classList.add('error');
-        }
-      });
-    }
-
     function onValidate() {
       clearHighlights();
       const board = parseGridToBoard(gridElement);
-      const mistakes = updateMistakeHighlights(board);
-      const errors = validateBoard(board);
-      if (errors.length) {
-        highlightErrors(errors);
-      }
+      const { mistakes } = updateMistakeHighlights(board);
+      const conflicts = updateConflictState(board, validateBoard(board));
 
-      if (errors.length || mistakes.length) {
-        const useErrors = errors.length > 0;
-        const errorCount = errors.length;
+      if (conflicts.length || mistakes.length) {
+        const hasConflicts = conflicts.length > 0;
         const messageBuilder = () =>
           formatStatus(
-            useErrors ? 'errors' : 'mistakes',
-            useErrors ? 'Erreurs détectées : {count}.' : 'Cases incorrectes : {count}.',
-            { count: useErrors ? errorCount : lastMistakeCount }
+            hasConflicts ? 'errors' : 'mistakes',
+            hasConflicts ? 'Erreurs détectées : {count}.' : 'Cases incorrectes : {count}.',
+            { count: hasConflicts ? lastConflictCount : lastMistakeCount }
           );
-        setStatus(messageBuilder, 'error', buildMistakeStatusOptions, { isMistakeMessage: !useErrors });
+        const optionsBuilder = hasConflicts ? buildConflictStatusOptions : buildMistakeStatusOptions;
+        setStatus(messageBuilder, 'error', optionsBuilder, {
+          isMistakeMessage: !hasConflicts,
+          isConflictMessage: hasConflicts
+        });
       } else {
         setStatus(formatStatus('noError', "Aucune erreur pour l'instant."), 'ok');
       }
@@ -596,9 +658,14 @@
       setStatus(formatStatus('generating', 'Génération en cours…'));
       const { puzzle, solution } = generateRandomPuzzle(level);
       solutionBoard = cloneBoard(solution);
+      currentLevel = level;
       showMistakes = level === 'facile';
+      allowMistakeHints = level === 'facile';
+      showConflicts = level === 'facile';
       lastMistakeSet = new Set();
       lastMistakeCount = 0;
+      lastConflictSet = new Set();
+      lastConflictCount = 0;
       const fixedMask = puzzle.map(row => row.map(value => value !== 0));
       loadBoardToGrid(puzzle, fixedMask);
       const clues = puzzle.flat().filter(value => value !== 0).length;
@@ -610,6 +677,7 @@
         'ok'
       );
       refreshMistakeVisibility();
+      refreshConflictHighlights();
     }
 
     padButtons.forEach(button => {

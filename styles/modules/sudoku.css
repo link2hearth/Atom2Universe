@@ -176,6 +176,12 @@ body.theme-neon .sudoku-toolbar__button {
   outline-offset: 2px;
 }
 
+.sudoku-status__action:disabled,
+.sudoku-status__action.is-disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .sudoku-main {
   display: flex;
   flex-direction: column;
