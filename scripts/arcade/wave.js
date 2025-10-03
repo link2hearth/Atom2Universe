@@ -752,8 +752,34 @@
       return false;
     }
 
+    isEventFromInteractiveOverlay(event) {
+      const isInteractive = node => {
+        if (!node || typeof node.closest !== 'function') {
+          return false;
+        }
+        return Boolean(node.closest('.ticket-star, .frenzy-token'));
+      };
+
+      if (isInteractive(event?.target)) {
+        return true;
+      }
+
+      if (typeof event?.composedPath === 'function') {
+        const path = event.composedPath();
+        if (Array.isArray(path)) {
+          for (const node of path) {
+            if (isInteractive(node)) {
+              return true;
+            }
+          }
+        }
+      }
+
+      return false;
+    }
+
     handlePointerDown(event) {
-      if (this.isEventFromControls(event)) {
+      if (this.isEventFromControls(event) || this.isEventFromInteractiveOverlay(event)) {
         return;
       }
       if (event.pointerType === 'mouse' && event.button !== 0) {
@@ -768,7 +794,7 @@
     }
 
     handlePointerUp(event) {
-      if (this.isEventFromControls(event)) {
+      if (this.isEventFromControls(event) || this.isEventFromInteractiveOverlay(event)) {
         return;
       }
       if (this.activePointers.has(event.pointerId)) {
@@ -787,7 +813,7 @@
     }
 
     handlePointerCancel(event) {
-      if (this.isEventFromControls(event)) {
+      if (this.isEventFromControls(event) || this.isEventFromInteractiveOverlay(event)) {
         return;
       }
       if (this.activePointers.has(event.pointerId)) {
