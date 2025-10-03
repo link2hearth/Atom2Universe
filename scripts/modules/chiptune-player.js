@@ -2066,6 +2066,8 @@
         row.className = 'chiptune-usage__row';
         row.setAttribute('role', 'row');
         row.setAttribute('data-program', String(program));
+        row.hidden = true;
+        row.setAttribute('aria-hidden', 'true');
 
         const programCell = doc.createElement('span');
         programCell.className = 'chiptune-usage__program';
@@ -2113,6 +2115,7 @@
           continue;
         }
         const isUsed = usedPrograms.has(program);
+        entry.row.hidden = !isUsed;
         entry.row.classList.toggle('is-used', isUsed);
         entry.row.setAttribute('aria-label', this.translate(
           isUsed
@@ -2123,6 +2126,7 @@
             : `Program ${program} inactive`,
           { program }
         ));
+        entry.row.setAttribute('aria-hidden', isUsed ? 'false' : 'true');
         entry.row.setAttribute('data-used', isUsed ? 'true' : 'false');
         entry.status.textContent = isUsed ? '✖' : '—';
       }
