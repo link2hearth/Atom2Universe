@@ -284,6 +284,9 @@
     }
 
     const padButtons = Array.from(padElement.querySelectorAll('.sudoku-pad__button[data-value]'));
+    const conflictToggleButton = document.createElement('button');
+    conflictToggleButton.type = 'button';
+    conflictToggleButton.className = 'sudoku-status__action sudoku-status__action--conflicts';
 
     let activeInput = null;
     let selectedPadValue = null;
@@ -305,12 +308,35 @@
     let lastStatusMeta = {};
     let lastStatusIsMistakeMessage = false;
 
+    function updateConflictButtonState() {
+      const labelKey = showConflicts ? 'hideConflicts' : 'showConflicts';
+      const fallback = showConflicts ? 'Masquer les conflits' : 'Afficher les conflits';
+      const label = formatStatus(labelKey, fallback);
+      conflictToggleButton.textContent = label;
+      conflictToggleButton.setAttribute('aria-label', label);
+      conflictToggleButton.setAttribute('aria-pressed', String(showConflicts));
+      const shouldDisable = lastConflictCount === 0 && !showConflicts;
+      conflictToggleButton.disabled = shouldDisable;
+      conflictToggleButton.classList.toggle('is-disabled', shouldDisable);
+    }
+
+    conflictToggleButton.addEventListener('click', () => {
+      if (lastConflictCount === 0 && !showConflicts) {
+        return;
+      }
+      showConflicts = !showConflicts;
+      updateConflictButtonState();
+      refreshConflictHighlights();
+      refreshStatus();
+    });
+
     function refreshStatus() {
       if (lastStatusMeta.isConflictMessage && lastConflictCount === 0) {
         if (lastMistakeCount > 0) {
           const messageBuilder = () =>
             formatStatus('mistakes', 'Cases incorrectes : {count}.', { count: lastMistakeCount });
-          setStatus(messageBuilder, 'error', buildMistakeStatusOptions, {
+          const severity = currentLevel === 'facile' ? 'error' : 'info';
+          setStatus(messageBuilder, severity, buildMistakeStatusOptions, {
             isMistakeMessage: true,
             isConflictMessage: false
           });
@@ -346,50 +372,48 @@
       lastStatusMeta = meta && typeof meta === 'object' ? { ...meta } : {};
       lastStatusIsMistakeMessage = Boolean(lastStatusMeta.isMistakeMessage);
 
-      if (typeof resolvedMessage === 'string' && resolvedMessage.trim()) {
-        statusElement.hidden = false;
-        statusElement.classList.toggle('sudoku-status--ok', kind === 'ok');
-        statusElement.classList.toggle('sudoku-status--error', kind === 'error');
-        statusElement.replaceChildren();
+      const hasMessage = typeof resolvedMessage === 'string' && resolvedMessage.trim().length > 0;
+      statusElement.hidden = false;
+      statusElement.classList.toggle('sudoku-status--ok', hasMessage && kind === 'ok');
+      statusElement.classList.toggle('sudoku-status--error', hasMessage && kind === 'error');
+      if (!hasMessage) {
+        statusElement.classList.remove('sudoku-status--ok', 'sudoku-status--error');
+      }
+      statusElement.replaceChildren();
 
+      if (hasMessage) {
         const messageSpan = document.createElement('span');
         messageSpan.className = 'sudoku-status__message';
         messageSpan.textContent = resolvedMessage;
         statusElement.appendChild(messageSpan);
-
-        const options = typeof optionsBuilder === 'function' ? optionsBuilder() : optionsBuilder;
-        if (options && options.button) {
-          const button = document.createElement('button');
-          button.type = 'button';
-          button.className = 'sudoku-status__action';
-          button.textContent = options.button.label;
-          if (options.button.ariaLabel) {
-            button.setAttribute('aria-label', options.button.ariaLabel);
-          }
-          if (typeof options.button.pressed === 'boolean') {
-            button.setAttribute('aria-pressed', String(options.button.pressed));
-          }
-          if (typeof options.button.disabled === 'boolean') {
-            button.disabled = options.button.disabled;
-            button.classList.toggle('is-disabled', options.button.disabled);
-          }
-          if (typeof options.button.onClick === 'function') {
-            button.addEventListener('click', event => {
-              options.button.onClick(event);
-            });
-          }
-          statusElement.appendChild(button);
-        }
-      } else {
-        statusElement.textContent = '';
-        statusElement.hidden = true;
-        statusElement.classList.remove('sudoku-status--ok', 'sudoku-status--error');
-        lastStatusMessage = '';
-        lastStatusOptionsBuilder = null;
-        lastStatusMessageBuilder = null;
-        lastStatusMeta = {};
-        lastStatusIsMistakeMessage = false;
       }
+
+      const options = typeof optionsBuilder === 'function' ? optionsBuilder() : optionsBuilder;
+      if (options && options.button) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'sudoku-status__action';
+        button.textContent = options.button.label;
+        if (options.button.ariaLabel) {
+          button.setAttribute('aria-label', options.button.ariaLabel);
+        }
+        if (typeof options.button.pressed === 'boolean') {
+          button.setAttribute('aria-pressed', String(options.button.pressed));
+        }
+        if (typeof options.button.disabled === 'boolean') {
+          button.disabled = options.button.disabled;
+          button.classList.toggle('is-disabled', options.button.disabled);
+        }
+        if (typeof options.button.onClick === 'function') {
+          button.addEventListener('click', event => {
+            options.button.onClick(event);
+          });
+        }
+        statusElement.appendChild(button);
+      }
+
+      updateConflictButtonState();
+      statusElement.appendChild(conflictToggleButton);
     }
 
     function clearHighlights() {
@@ -463,6 +487,7 @@
       lastConflictSet = indices;
       lastConflictCount = indices.size;
       refreshConflictHighlights();
+      updateConflictButtonState();
       return entries;
     }
 
@@ -483,27 +508,6 @@
           onClick: () => {
             showMistakes = !showMistakes;
             refreshMistakeVisibility();
-            refreshStatus();
-          }
-        }
-      };
-    }
-
-    function buildConflictStatusOptions() {
-      return {
-        button: {
-          label: formatStatus(
-            showConflicts ? 'hideConflicts' : 'showConflicts',
-            showConflicts ? 'Masquer les conflits' : 'Afficher les conflits'
-          ),
-          pressed: showConflicts,
-          disabled: lastConflictCount === 0,
-          onClick: () => {
-            if (lastConflictCount === 0 && !showConflicts) {
-              return;
-            }
-            showConflicts = !showConflicts;
-            refreshConflictHighlights();
             refreshStatus();
           }
         }
@@ -639,8 +643,9 @@
             hasConflicts ? 'Erreurs détectées : {count}.' : 'Cases incorrectes : {count}.',
             { count: hasConflicts ? lastConflictCount : lastMistakeCount }
           );
-        const optionsBuilder = hasConflicts ? buildConflictStatusOptions : buildMistakeStatusOptions;
-        setStatus(messageBuilder, 'error', optionsBuilder, {
+        const severity = currentLevel === 'facile' ? 'error' : 'info';
+        const optionsBuilder = hasConflicts ? null : buildMistakeStatusOptions;
+        setStatus(messageBuilder, severity, optionsBuilder, {
           isMistakeMessage: !hasConflicts,
           isConflictMessage: hasConflicts
         });
@@ -655,9 +660,6 @@
       const levelLabel = levelSelect.options[levelSelect.selectedIndex]
         ? levelSelect.options[levelSelect.selectedIndex].textContent.trim()
         : level;
-      setStatus(formatStatus('generating', 'Génération en cours…'));
-      const { puzzle, solution } = generateRandomPuzzle(level);
-      solutionBoard = cloneBoard(solution);
       currentLevel = level;
       showMistakes = level === 'facile';
       allowMistakeHints = level === 'facile';
@@ -666,6 +668,10 @@
       lastMistakeCount = 0;
       lastConflictSet = new Set();
       lastConflictCount = 0;
+      updateConflictButtonState();
+      setStatus(formatStatus('generating', 'Génération en cours…'));
+      const { puzzle, solution } = generateRandomPuzzle(level);
+      solutionBoard = cloneBoard(solution);
       const fixedMask = puzzle.map(row => row.map(value => value !== 0));
       loadBoardToGrid(puzzle, fixedMask);
       const clues = puzzle.flat().filter(value => value !== 0).length;
@@ -724,6 +730,7 @@
     padValidateButton.addEventListener('click', onValidate);
 
     loadBoardToGrid(createEmptyBoard());
+    updateConflictButtonState();
     setStatus('');
   });
 })();
