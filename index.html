@@ -341,10 +341,6 @@
       hidden
     >
       <div class="sudoku-content">
-        <header class="sudoku-header">
-          <h2 class="sudoku-title" data-i18n="index.sections.sudoku.title"></h2>
-          <p class="sudoku-subtitle" data-i18n="index.sections.sudoku.subtitle"></p>
-        </header>
         <div
           class="sudoku-toolbar"
           role="toolbar"
@@ -362,14 +358,37 @@
           <button type="button" id="sudokuClear" class="sudoku-toolbar__button sudoku-toolbar__button--danger" data-i18n="index.sections.sudoku.toolbar.clear"></button>
           <span id="sudokuStatus" class="sudoku-status" role="status" aria-live="polite" hidden></span>
         </div>
-        <div
-          id="sudokuGrid"
-          class="sudoku-grid"
-          role="grid"
-          data-i18n="aria-label:index.sections.sudoku.board"
-          aria-live="off"
-        ></div>
-        <p class="sudoku-note" data-i18n="index.sections.sudoku.note"></p>
+        <div class="sudoku-main">
+          <div
+            id="sudokuGrid"
+            class="sudoku-grid"
+            role="grid"
+            data-i18n="aria-label:index.sections.sudoku.board"
+            aria-live="off"
+          ></div>
+          <div
+            id="sudokuPad"
+            class="sudoku-pad"
+            role="group"
+            data-i18n="aria-label:index.sections.sudoku.pad.aria"
+          >
+            <button type="button" class="sudoku-pad__button" data-value="1">1</button>
+            <button type="button" class="sudoku-pad__button" data-value="2">2</button>
+            <button type="button" class="sudoku-pad__button" data-value="3">3</button>
+            <button type="button" class="sudoku-pad__button" data-value="4">4</button>
+            <button type="button" class="sudoku-pad__button" data-value="5">5</button>
+            <button type="button" class="sudoku-pad__button" data-value="6">6</button>
+            <button type="button" class="sudoku-pad__button" data-value="7">7</button>
+            <button type="button" class="sudoku-pad__button" data-value="8">8</button>
+            <button type="button" class="sudoku-pad__button" data-value="9">9</button>
+            <button
+              type="button"
+              class="sudoku-pad__button sudoku-pad__button--clear"
+              data-value="clear"
+              data-i18n="index.sections.sudoku.pad.clear"
+            ></button>
+          </div>
+        </div>
       </div>
     </section>
 

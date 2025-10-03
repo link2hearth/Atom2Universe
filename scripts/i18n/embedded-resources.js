@@ -125,7 +125,11 @@
             },
             "board": "Grille Sudoku",
             "cellLabel": "Case de Sudoku",
-            "note": "Astuce : utilisez les chiffres 1 à 9. La validation détecte les doublons dans les lignes, colonnes et blocs 3×3. La résolution applique un backtracking tandis que la génération produit une grille à solution unique."
+            "note": "Astuce : utilisez les chiffres 1 à 9. La validation détecte les doublons dans les lignes, colonnes et blocs 3×3. La résolution applique un backtracking tandis que la génération produit une grille à solution unique.",
+            "pad": {
+              "aria": "Sélection des chiffres du Sudoku",
+              "clear": "Effacer"
+            }
           },
           "quantum2048": {
             "aria": "Mini-jeu Fusion 2048",
@@ -1335,7 +1339,11 @@
             },
             "board": "Sudoku grid",
             "cellLabel": "Sudoku cell",
-            "note": "Tip: only digits 1–9 are accepted. Validation highlights duplicates in rows, columns and 3×3 boxes. The solver uses backtracking and generation ensures a single-solution puzzle."
+            "note": "Tip: only digits 1–9 are accepted. Validation highlights duplicates in rows, columns and 3×3 boxes. The solver uses backtracking and generation ensures a single-solution puzzle.",
+            "pad": {
+              "aria": "Sudoku number picker",
+              "clear": "Clear cell"
+            }
           },
           "quantum2048": {
             "aria": "Fusion 2048 mini-game",

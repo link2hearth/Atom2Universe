@@ -10,11 +10,11 @@
 }
 
 .sudoku-content {
-  width: min(100%, 720px);
+  width: min(100%, 860px);
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: clamp(1.2rem, 2.4vw, 2rem);
+  gap: clamp(1rem, 2vw, 1.8rem);
   background: rgba(8, 11, 19, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 18px;
@@ -32,29 +32,6 @@ body.theme-light .sudoku-content {
 body.theme-neon .sudoku-content {
   background: rgba(10, 12, 44, 0.75);
   border-color: rgba(88, 112, 255, 0.25);
-}
-
-.sudoku-header {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.sudoku-title {
-  font-size: clamp(1.4rem, 2.8vw, 2rem);
-  font-weight: 700;
-  letter-spacing: 0.01em;
-  margin: 0;
-}
-
-.sudoku-subtitle {
-  margin: 0;
-  font-size: clamp(0.95rem, 1.5vw, 1.1rem);
-  color: rgba(235, 240, 255, 0.76);
-}
-
-body.theme-light .sudoku-subtitle {
-  color: rgba(18, 22, 42, 0.68);
 }
 
 .sudoku-toolbar {
@@ -168,6 +145,14 @@ body.theme-neon .sudoku-toolbar__button {
   color: #ff9c92;
 }
 
+.sudoku-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1.2rem, 2.2vw, 2rem);
+}
+
 body.theme-light .sudoku-status {
   background: rgba(230, 234, 246, 0.9);
   border-color: rgba(12, 16, 32, 0.12);
@@ -218,6 +203,78 @@ body.theme-neon {
   width: var(--sudoku-grid-size);
   align-self: center;
   box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.12);
+}
+
+.sudoku-pad {
+  display: grid;
+  width: min(100%, 420px);
+  grid-template-columns: repeat(3, minmax(3rem, 1fr));
+  gap: clamp(0.6rem, 1.4vw, 0.9rem);
+  align-self: center;
+}
+
+.sudoku-pad__button {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  font-size: clamp(1.1rem, 2vw, 1.35rem);
+  min-height: clamp(3rem, 9vw, 3.6rem);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.sudoku-pad__button:hover,
+.sudoku-pad__button:focus-visible {
+  border-color: rgba(255, 255, 255, 0.32);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.12);
+  outline: none;
+}
+
+.sudoku-pad__button.is-active {
+  border-color: rgba(0, 196, 208, 0.65);
+  box-shadow: 0 0 0 2px rgba(0, 196, 208, 0.25);
+  background: linear-gradient(120deg, rgba(0, 196, 208, 0.35), rgba(0, 173, 140, 0.35));
+}
+
+.sudoku-pad__button--clear {
+  font-size: clamp(0.9rem, 1.6vw, 1.05rem);
+  grid-column: span 3;
+  font-weight: 600;
+}
+
+body.theme-light .sudoku-pad__button {
+  background: rgba(255, 255, 255, 0.94);
+  border-color: rgba(12, 16, 32, 0.12);
+  color: #050a1c;
+}
+
+body.theme-light .sudoku-pad__button:hover,
+body.theme-light .sudoku-pad__button:focus-visible {
+  border-color: rgba(12, 16, 32, 0.26);
+  box-shadow: 0 0 0 2px rgba(12, 16, 32, 0.12);
+}
+
+body.theme-light .sudoku-pad__button.is-active {
+  background: linear-gradient(120deg, rgba(0, 165, 124, 0.12), rgba(0, 183, 196, 0.12));
+  border-color: rgba(0, 165, 124, 0.45);
+  box-shadow: 0 0 0 2px rgba(0, 165, 124, 0.12);
+}
+
+body.theme-neon .sudoku-pad__button {
+  background: rgba(16, 20, 54, 0.92);
+  border-color: rgba(86, 120, 255, 0.38);
+}
+
+body.theme-neon .sudoku-pad__button.is-active {
+  background: linear-gradient(120deg, rgba(88, 112, 255, 0.18), rgba(0, 196, 208, 0.25));
+  border-color: rgba(88, 112, 255, 0.65);
 }
 
 .sudoku-cell {
@@ -273,21 +330,43 @@ body.theme-neon {
   background: rgba(34, 180, 116, 0.18);
 }
 
-.sudoku-note {
-  margin: 0;
-  font-size: clamp(0.85rem, 1.4vw, 1rem);
-  line-height: 1.6;
-  color: rgba(235, 240, 255, 0.68);
-}
+@media (min-aspect-ratio: 16/9) {
+  .sudoku-content {
+    width: min(100%, 960px);
+  }
 
-body.theme-light .sudoku-note {
-  color: rgba(18, 22, 42, 0.64);
+  .sudoku-main {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(2rem, 4vw, 3rem);
+  }
+
+  .sudoku-pad {
+    align-self: stretch;
+    width: auto;
+    max-width: 240px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-auto-rows: minmax(3rem, 1fr);
+  }
+
+  .sudoku-pad__button--clear {
+    grid-column: span 3;
+  }
 }
 
 @media (max-width: 640px) {
   .sudoku-content {
     padding: clamp(1rem, 4vw, 1.6rem);
     border-radius: 16px;
+  }
+
+  .sudoku-main {
+    gap: clamp(1rem, 4vw, 1.4rem);
+  }
+
+  .sudoku-pad {
+    width: 100%;
   }
 
   .sudoku-grid {
