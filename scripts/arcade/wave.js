@@ -19,10 +19,12 @@
   const MAX_JUMP_IMPULSE = 380;
   const AUTO_JUMP_SPEED_THRESHOLD = 120;
   const TERRAIN_SAMPLE_SPACING = 36;
-  const MIN_WAVE_WAVELENGTH = 520;
-  const MAX_WAVE_WAVELENGTH = 960;
-  const MIN_AMPLITUDE_RATIO = 0.08;
-  const MAX_AMPLITUDE_RATIO = 0.18;
+  const MIN_WAVE_WAVELENGTH = 640;
+  const MAX_WAVE_WAVELENGTH = 1240;
+  const MIN_AMPLITUDE_RATIO = 0.12;
+  const MAX_AMPLITUDE_RATIO = 0.26;
+  const AMPLITUDE_LENGTH_INFLUENCE = 0.85;
+  const MAX_WAVE_EXTENSION_FACTOR = 1.75;
   const CAMERA_LERP_MIN = 0.08;
   const CAMERA_LERP_MAX = 0.25;
   const CAMERA_SCALE_LERP_MIN = 0.05;
@@ -177,13 +179,18 @@
     }
 
     appendSegment() {
-      const length = randomInRange(this.minWavelength, this.maxWavelength);
-      const steps = Math.max(16, Math.round(length / this.sampleSpacing));
-      const stepLength = length / steps;
       const verticalSpan = this.verticalSpan || this.maxY - this.minY;
       const baseShift = randomInRange(-verticalSpan * 0.04, verticalSpan * 0.04);
       const nextBase = clamp(this.baseLevel + baseShift, this.minY + 30, this.maxY - 30);
       const nextAmplitude = randomInRange(this.minAmplitude, this.maxAmplitude);
+      const amplitudeRange = Math.max(1, this.maxAmplitude - this.minAmplitude);
+      const amplitudeRatio = clamp((nextAmplitude - this.minAmplitude) / amplitudeRange, 0, 1);
+      const baseLength = randomInRange(this.minWavelength, this.maxWavelength);
+      const lengthBonus = amplitudeRatio * (this.maxWavelength - this.minWavelength) * AMPLITUDE_LENGTH_INFLUENCE;
+      const maxExtendedLength = this.maxWavelength * MAX_WAVE_EXTENSION_FACTOR;
+      const length = clamp(baseLength + lengthBonus, this.minWavelength, maxExtendedLength);
+      const steps = Math.max(16, Math.round(length / this.sampleSpacing));
+      const stepLength = length / steps;
       const nextPhaseSpeed = (Math.PI * 2) / Math.max(60, length);
       const startBase = this.baseLevel;
       const startAmplitude = this.currentAmplitude;
