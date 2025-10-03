@@ -88,6 +88,7 @@ function translateOrDefault(key, fallback, params) {
   if (typeof key !== 'string' || !key.trim()) {
     return fallback;
   }
+  const normalizedKey = key.trim();
   const api = getI18nApi();
   const translator = api && typeof api.t === 'function'
     ? api.t
@@ -98,13 +99,30 @@ function translateOrDefault(key, fallback, params) {
         : null;
   if (translator) {
     try {
-      const translated = translator(key, params);
-      if (typeof translated === 'string' && translated && translated !== key) {
+      const translated = translator(normalizedKey, params);
+      if (typeof translated === 'string') {
+        const trimmed = translated.trim();
+        if (!trimmed) {
+          return fallback;
+        }
+        const stripped = trimmed.replace(/^!+/, '').replace(/!+$/, '');
+        if (trimmed !== normalizedKey && stripped !== normalizedKey) {
+          return translated;
+        }
+      } else if (translated != null) {
         return translated;
       }
     } catch (error) {
-      console.warn('Unable to translate key', key, error);
+      console.warn('Unable to translate key', normalizedKey, error);
+      return fallback;
     }
+  }
+  if (typeof fallback === 'string') {
+    return fallback;
+  }
+  const strippedKey = normalizedKey;
+  if (strippedKey) {
+    return strippedKey;
   }
   return fallback;
 }
