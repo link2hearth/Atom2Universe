@@ -99,6 +99,12 @@
             "title": "Sudoku quantique",
             "description": "Résolvez des grilles générées aléatoirement ou laissez l'ordinateur trouver la solution parfaite.",
             "cta": "Résoudre"
+          },
+          "blackjack": {
+            "aria": "Ouvrir le mini-jeu Blackjack quantique",
+            "title": "Blackjack quantique",
+            "description": "Affrontez le croupier avec un sabot de huit paquets qui se régénère dès qu'une carte unique s'épuise.",
+            "cta": "Distribuer"
           }
         }
       },
@@ -125,6 +131,39 @@
           "clear": "Effacer",
           "ok": "OK"
         }
+      },
+      "blackjack": {
+        "aria": "Mini-jeu Blackjack quantique",
+        "title": "Blackjack quantique",
+        "subtitle": "Défiez le croupier avec un sabot de huit paquets qui se reconstitue dès qu'une carte manque.",
+        "tableAria": "Table de blackjack",
+        "dealer": {
+          "label": "Croupier",
+          "cards": "Cartes du croupier"
+        },
+        "player": {
+          "label": "Joueur",
+          "cards": "Cartes du joueur"
+        },
+        "totals": {
+          "dealer": "Total croupier\u00a0:",
+          "player": "Total joueur\u00a0:"
+        },
+        "controls": {
+          "aria": "Commandes du blackjack",
+          "new": "Nouvelle manche",
+          "hit": "Tirer",
+          "stand": "Rester"
+        },
+        "shoe": {
+          "label": "Sabot"
+        },
+        "scoreboard": {
+          "wins": "Victoires",
+          "losses": "Défaites",
+          "pushes": "Égalités"
+        },
+        "hiddenCard": "Carte cachée"
       },
       "quantum2048": {
         "aria": "Mini-jeu Fusion 2048",
@@ -741,6 +780,57 @@
           "noSolution": "Pas de solution trouvée (ou puzzle invalide).",
           "cleared": "Grille vidée."
         }
+      },
+      "blackjack": {
+        "status": {
+          "intro": "Lancez une nouvelle manche pour défier le croupier.",
+          "playerTurn": "Tirez une carte ou restez pour laisser jouer le croupier.",
+          "playerBlackjack": "Blackjack ! Vous gagnez.",
+          "dealerBlackjack": "Blackjack du croupier. Vous perdez.",
+          "pushBlackjack": "Égalité : blackjack des deux côtés.",
+          "playerBust": "Vous dépassez 21 ! Le croupier gagne avec {dealer}.",
+          "dealerBust": "Le croupier saute avec {dealer}. Victoire !",
+          "playerWins": "Victoire {player} contre {dealer}.",
+          "dealerWins": "Défaite {dealer} contre {player}.",
+          "push": "Égalité à {total}.",
+          "dealerTurn": "Tour du croupier…"
+        },
+        "totals": {
+          "bust": "Brûlé ({total})",
+          "soft": "{hard} / {soft}",
+          "blackjack": "Blackjack",
+          "hidden": "Caché"
+        },
+        "shoe": {
+          "decks": "{count} paquets",
+          "remaining": "{count} cartes restantes",
+          "status": {
+            "fresh": "Sabot prêt",
+            "reshuffle": "Remélange à la prochaine pioche"
+          }
+        },
+        "ranks": {
+          "A": "As",
+          "2": "Deux",
+          "3": "Trois",
+          "4": "Quatre",
+          "5": "Cinq",
+          "6": "Six",
+          "7": "Sept",
+          "8": "Huit",
+          "9": "Neuf",
+          "10": "Dix",
+          "J": "Valet",
+          "Q": "Dame",
+          "K": "Roi"
+        },
+        "suits": {
+          "spades": "pique",
+          "hearts": "cœur",
+          "diamonds": "carreau",
+          "clubs": "trèfle"
+        },
+        "cardLabel": "{rank} de {suit}"
       }
     },
     "config": {

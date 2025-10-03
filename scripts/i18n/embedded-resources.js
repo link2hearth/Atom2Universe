@@ -103,6 +103,12 @@
                 "title": "Sudoku quantique",
                 "description": "Résolvez des grilles générées aléatoirement ou laissez l'ordinateur trouver la solution parfaite.",
                 "cta": "Résoudre"
+              },
+              "blackjack": {
+                "aria": "Accéder au mini-jeu Blackjack quantique",
+                "title": "Blackjack quantique",
+                "description": "Affrontez le croupier avec un sabot de huit paquets qui se régénère dès qu'une carte unique s'épuise.",
+                "cta": "Distribuer"
               }
             }
           },
@@ -128,6 +134,39 @@
               "clear": "Effacer",
               "ok": "OK"
             }
+          },
+          "blackjack": {
+            "aria": "Mini-jeu Blackjack quantique",
+            "title": "Blackjack quantique",
+            "subtitle": "Défiez le croupier avec un sabot de huit paquets qui se reconstitue dès qu'une carte manque.",
+            "tableAria": "Table de blackjack",
+            "dealer": {
+              "label": "Croupier",
+              "cards": "Cartes du croupier"
+            },
+            "player": {
+              "label": "Joueur",
+              "cards": "Cartes du joueur"
+            },
+            "totals": {
+              "dealer": "Total croupier\u00a0:",
+              "player": "Total joueur\u00a0:"
+            },
+            "controls": {
+              "aria": "Commandes du blackjack",
+              "new": "Nouvelle manche",
+              "hit": "Tirer",
+              "stand": "Rester"
+            },
+            "shoe": {
+              "label": "Sabot"
+            },
+            "scoreboard": {
+              "wins": "Victoires",
+              "losses": "Défaites",
+              "pushes": "Égalités"
+            },
+            "hiddenCard": "Carte cachée"
           },
           "quantum2048": {
             "aria": "Mini-jeu Fusion 2048",
@@ -600,6 +639,57 @@
               "noSolution": "Pas de solution trouvée (ou puzzle invalide).",
               "cleared": "Grille vidée."
             }
+          },
+          "blackjack": {
+            "status": {
+              "intro": "Lancez une nouvelle manche pour défier le croupier.",
+              "playerTurn": "Tirez une carte ou restez pour laisser jouer le croupier.",
+              "playerBlackjack": "Blackjack ! Vous gagnez.",
+              "dealerBlackjack": "Blackjack du croupier. Vous perdez.",
+              "pushBlackjack": "Égalité : blackjack des deux côtés.",
+              "playerBust": "Vous dépassez 21 ! Le croupier gagne avec {dealer}.",
+              "dealerBust": "Le croupier saute avec {dealer}. Victoire !",
+              "playerWins": "Victoire {player} contre {dealer}.",
+              "dealerWins": "Défaite {dealer} contre {player}.",
+              "push": "Égalité à {total}.",
+              "dealerTurn": "Tour du croupier…"
+            },
+            "totals": {
+              "bust": "Brûlé ({total})",
+              "soft": "{hard} / {soft}",
+              "blackjack": "Blackjack",
+              "hidden": "Caché"
+            },
+            "shoe": {
+              "decks": "{count} paquets",
+              "remaining": "{count} cartes restantes",
+              "status": {
+                "fresh": "Sabot prêt",
+                "reshuffle": "Remélange à la prochaine pioche"
+              }
+            },
+            "ranks": {
+              "A": "As",
+              "2": "Deux",
+              "3": "Trois",
+              "4": "Quatre",
+              "5": "Cinq",
+              "6": "Six",
+              "7": "Sept",
+              "8": "Huit",
+              "9": "Neuf",
+              "10": "Dix",
+              "J": "Valet",
+              "Q": "Dame",
+              "K": "Roi"
+            },
+            "suits": {
+              "spades": "pique",
+              "hearts": "cœur",
+              "diamonds": "carreau",
+              "clubs": "trèfle"
+            },
+            "cardLabel": "{rank} de {suit}"
           }
         },
         "config": {
@@ -1598,6 +1688,12 @@
                 "title": "Quantum Sudoku",
                 "description": "Solve freshly generated grids or let the solver reveal a flawless solution.",
                 "cta": "Solve"
+              },
+              "blackjack": {
+                "aria": "Open the Quantum Blackjack mini-game",
+                "title": "Quantum Blackjack",
+                "description": "Face the dealer with an eight-deck shoe that reshuffles as soon as a unique card runs out.",
+                "cta": "Deal"
               }
             }
           },
@@ -1623,6 +1719,39 @@
               "clear": "Clear",
               "ok": "OK"
             }
+          },
+          "blackjack": {
+            "aria": "Quantum Blackjack mini-game",
+            "title": "Quantum Blackjack",
+            "subtitle": "Challenge the dealer with an eight-deck shoe that refreshes whenever a unique card runs out.",
+            "tableAria": "Blackjack table",
+            "dealer": {
+              "label": "Dealer",
+              "cards": "Dealer cards"
+            },
+            "player": {
+              "label": "Player",
+              "cards": "Player cards"
+            },
+            "totals": {
+              "dealer": "Dealer total:\u00a0",
+              "player": "Player total:\u00a0"
+            },
+            "controls": {
+              "aria": "Blackjack controls",
+              "new": "New round",
+              "hit": "Hit",
+              "stand": "Stand"
+            },
+            "shoe": {
+              "label": "Shoe"
+            },
+            "scoreboard": {
+              "wins": "Wins",
+              "losses": "Losses",
+              "pushes": "Pushes"
+            },
+            "hiddenCard": "Hidden card"
           },
           "quantum2048": {
             "aria": "Fusion 2048 mini-game",
@@ -2239,6 +2368,57 @@
               "noSolution": "No solution found (or the puzzle is invalid).",
               "cleared": "Grid cleared."
             }
+          },
+          "blackjack": {
+            "status": {
+              "intro": "Start a new round to challenge the dealer.",
+              "playerTurn": "Hit to draw or Stand to hold.",
+              "playerBlackjack": "Blackjack! You win.",
+              "dealerBlackjack": "Dealer blackjack. You lose.",
+              "pushBlackjack": "Push: both reveal blackjack.",
+              "playerBust": "Bust! Dealer wins with {dealer}.",
+              "dealerBust": "Dealer busts with {dealer}. You win!",
+              "playerWins": "You win {player} vs {dealer}.",
+              "dealerWins": "Dealer wins {dealer} vs {player}.",
+              "push": "Push at {total}.",
+              "dealerTurn": "Dealer plays…"
+            },
+            "totals": {
+              "bust": "Bust ({total})",
+              "soft": "{hard} / {soft}",
+              "blackjack": "Blackjack",
+              "hidden": "Hidden"
+            },
+            "shoe": {
+              "decks": "{count} decks",
+              "remaining": "{count} cards remaining",
+              "status": {
+                "fresh": "Shoe ready",
+                "reshuffle": "Reshuffle on next draw"
+              }
+            },
+            "ranks": {
+              "A": "Ace",
+              "2": "Two",
+              "3": "Three",
+              "4": "Four",
+              "5": "Five",
+              "6": "Six",
+              "7": "Seven",
+              "8": "Eight",
+              "9": "Nine",
+              "10": "Ten",
+              "J": "Jack",
+              "Q": "Queen",
+              "K": "King"
+            },
+            "suits": {
+              "spades": "Spades",
+              "hearts": "Hearts",
+              "diamonds": "Diamonds",
+              "clubs": "Clubs"
+            },
+            "cardLabel": "{rank} of {suit}"
           }
         },
         "config": {

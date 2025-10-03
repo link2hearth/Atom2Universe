@@ -776,6 +776,10 @@ const GAME_CONFIG = {
    * (vitesses, probabilités, textes, etc.) afin de centraliser les réglages.
    */
   arcade: {
+    blackjack: {
+      decks: 8,
+      dealerHitSoft17: false
+    },
     particules: {
       ticketReward: 1,
       grid: {

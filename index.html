@@ -278,6 +278,21 @@
             data-i18n="index.sections.arcadeHub.cards.sudoku.cta"
           ></button>
         </article>
+        <article class="arcade-hub-card" data-i18n="aria-label:index.sections.arcadeHub.cards.blackjack.aria">
+          <header class="arcade-hub-card__header">
+            <h3 class="arcade-hub-card__title" data-i18n="index.sections.arcadeHub.cards.blackjack.title"></h3>
+            <p
+              class="arcade-hub-card__description"
+              data-i18n="index.sections.arcadeHub.cards.blackjack.description"
+            ></p>
+          </header>
+          <button
+            type="button"
+            class="arcade-hub-card__button"
+            data-page-target="blackjack"
+            data-i18n="index.sections.arcadeHub.cards.blackjack.cta"
+          ></button>
+        </article>
       </div>
     </section>
 
@@ -407,6 +422,115 @@
               <button type="button" class="sudoku-pad__button" data-value="9">9</button>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section
+      id="blackjack"
+      class="page page--blackjack"
+      data-page-group="arcade"
+      data-i18n="aria-label:index.sections.blackjack.aria"
+      hidden
+    >
+      <div class="blackjack">
+        <header class="blackjack__header">
+          <h2 class="blackjack__title" data-i18n="index.sections.blackjack.title"></h2>
+          <p class="blackjack__subtitle" data-i18n="index.sections.blackjack.subtitle"></p>
+        </header>
+        <div
+          class="blackjack-table"
+          role="group"
+          data-i18n="aria-label:index.sections.blackjack.tableAria"
+        >
+          <section class="blackjack-hand blackjack-hand--dealer">
+            <header class="blackjack-hand__header">
+              <h3 class="blackjack-hand__title" data-i18n="index.sections.blackjack.dealer.label"></h3>
+              <p class="blackjack-hand__total">
+                <span data-i18n="index.sections.blackjack.totals.dealer"></span>
+                <span id="blackjackDealerTotalValue">0</span>
+              </p>
+            </header>
+            <ul
+              class="blackjack-cards"
+              id="blackjackDealerCards"
+              aria-live="polite"
+              data-i18n="aria-label:index.sections.blackjack.dealer.cards"
+            ></ul>
+          </section>
+          <section class="blackjack-hand blackjack-hand--player">
+            <header class="blackjack-hand__header">
+              <h3 class="blackjack-hand__title" data-i18n="index.sections.blackjack.player.label"></h3>
+              <p class="blackjack-hand__total">
+                <span data-i18n="index.sections.blackjack.totals.player"></span>
+                <span id="blackjackPlayerTotalValue">0</span>
+              </p>
+            </header>
+            <ul
+              class="blackjack-cards"
+              id="blackjackPlayerCards"
+              aria-live="polite"
+              data-i18n="aria-label:index.sections.blackjack.player.cards"
+            ></ul>
+          </section>
+        </div>
+        <p class="blackjack-status" id="blackjackStatus" role="status" aria-live="polite"></p>
+        <div
+          class="blackjack-controls"
+          role="group"
+          data-i18n="aria-label:index.sections.blackjack.controls.aria"
+        >
+          <button
+            type="button"
+            class="blackjack-button"
+            id="blackjackNewRound"
+            data-i18n="index.sections.blackjack.controls.new"
+          ></button>
+          <button
+            type="button"
+            class="blackjack-button"
+            id="blackjackHit"
+            data-i18n="index.sections.blackjack.controls.hit"
+            disabled
+          ></button>
+          <button
+            type="button"
+            class="blackjack-button"
+            id="blackjackStand"
+            data-i18n="index.sections.blackjack.controls.stand"
+            disabled
+          ></button>
+        </div>
+        <div class="blackjack-metrics">
+          <div class="blackjack-shoe">
+            <span class="blackjack-shoe__label" data-i18n="index.sections.blackjack.shoe.label"></span>
+            <span class="blackjack-shoe__value" id="blackjackDeckInfo"></span>
+            <span class="blackjack-shoe__value" id="blackjackShoeState"></span>
+            <span class="blackjack-shoe__value" id="blackjackShoeRemaining"></span>
+          </div>
+          <ul class="blackjack-scoreboard">
+            <li class="blackjack-scoreboard__item">
+              <span
+                class="blackjack-scoreboard__label"
+                data-i18n="index.sections.blackjack.scoreboard.wins"
+              ></span>
+              <span class="blackjack-scoreboard__value" id="blackjackWins">0</span>
+            </li>
+            <li class="blackjack-scoreboard__item">
+              <span
+                class="blackjack-scoreboard__label"
+                data-i18n="index.sections.blackjack.scoreboard.losses"
+              ></span>
+              <span class="blackjack-scoreboard__value" id="blackjackLosses">0</span>
+            </li>
+            <li class="blackjack-scoreboard__item">
+              <span
+                class="blackjack-scoreboard__label"
+                data-i18n="index.sections.blackjack.scoreboard.pushes"
+              ></span>
+              <span class="blackjack-scoreboard__value" id="blackjackPushes">0</span>
+            </li>
+          </ul>
         </div>
       </div>
     </section>
@@ -1043,6 +1167,7 @@
   <script src="scripts/arcade/particules.js"></script>
   <script src="scripts/arcade/wave.js"></script>
   <script src="scripts/arcade/sudoku.js"></script>
+  <script src="scripts/arcade/blackjack.js"></script>
   <script src="scripts/arcade/quantum-2048.js"></script>
   <script src="scripts/i18n/embedded-resources.js"></script>
   <script src="scripts/modules/i18n.js"></script>
