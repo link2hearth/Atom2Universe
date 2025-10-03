@@ -273,13 +273,16 @@ class MetauxMatch3Game {
     this.endScreenElement = options.endScreenElement || null;
     this.endTimeElement = options.endTimeElement || null;
     this.endMatchesElement = options.endMatchesElement || null;
-    this.endMatchListElement = options.endMatchListElement || null;
     this.lastComboElement = options.lastComboElement || null;
     this.bestComboElement = options.bestComboElement || null;
     this.totalTilesElement = options.totalTilesElement || null;
     this.reshufflesElement = options.reshufflesElement || null;
     this.movesElement = options.movesElement || null;
     this.messageElement = options.messageElement || null;
+    this.timerContainerElement = this.timerValueElement
+      ? this.timerValueElement.closest('.metaux-timer')
+      : null;
+    this.sessionMode = 'credit';
     this.onSessionEnd = typeof options.onSessionEnd === 'function' ? options.onSessionEnd : null;
     this.comboSound = MACH3_COMBO_SOUND;
     this.board = Array.from({ length: METAUX_ROWS }, () => Array(METAUX_COLS).fill(null));
@@ -330,8 +333,13 @@ class MetauxMatch3Game {
       return;
     }
     if (this.boardElement && !this.gameOver) {
-      this.startTimer();
-      this.updateMessage('Repérez un alignement et glissez pour fusionner les métaux.');
+      if (!this.isFreePlayMode()) {
+        this.startTimer();
+        this.updateMessage('Repérez un alignement et glissez pour fusionner les métaux.');
+      } else {
+        this.updateTimerModeUI();
+        this.updateTimerUI();
+      }
     }
   }
 
@@ -991,6 +999,8 @@ class MetauxMatch3Game {
     this.matchHistory = this.createEmptyMatchHistory();
     this.lastMatchPerType = new Map(METAUX_TILE_TYPES.map(type => [type.id, this.getNow()]));
     this.resetStats();
+    this.sessionMode = 'credit';
+    this.updateTimerModeUI();
     this.updateStats();
     this.updateTimerUI();
     this.showEndScreen();
@@ -1010,7 +1020,18 @@ class MetauxMatch3Game {
     this.lastMatchPerType = new Map(METAUX_TILE_TYPES.map(type => [type.id, now]));
     this.resetTimerState();
     this.hideEndScreen();
-    this.startTimer();
+    const freeMode = this.isFreePlayMode();
+    if (freeMode) {
+      this.stopTimer();
+      this.timerState.max = 0;
+      this.timerState.current = 0;
+      this.timerState.totalElapsedMs = 0;
+      this.timerState.running = false;
+    } else {
+      this.startTimer();
+    }
+    this.updateTimerModeUI();
+    this.updateTimerUI();
     this.updateStats();
   }
 
@@ -1020,7 +1041,6 @@ class MetauxMatch3Game {
     this.timerState.current = METAUX_TIMER_CONFIG.initialSeconds;
     this.timerState.totalElapsedMs = 0;
     this.timerState.lastUpdate = null;
-    this.updateTimerUI();
   }
 
   startTimer() {
@@ -1216,31 +1236,12 @@ class MetauxMatch3Game {
     if (this.endMatchesElement) {
       this.endMatchesElement.textContent = formatIntegerLocalized(this.matchHistory.totalMatches);
     }
-    if (this.endMatchListElement) {
-      this.endMatchListElement.innerHTML = '';
-      METAUX_TILE_TYPES.forEach(type => {
-        const item = document.createElement('li');
-        item.className = 'metaux-end-screen__color-row';
-        const label = document.createElement('span');
-        label.className = 'metaux-end-screen__color-label';
-        label.textContent = this.getTypeLabel(type.id);
-        if (type.color) {
-          label.style.setProperty('--match-color', type.color);
-        } else {
-          label.style.removeProperty('--match-color');
-        }
-        const value = document.createElement('span');
-        value.className = 'metaux-end-screen__color-value';
-        const count = this.matchHistory.perType.get(type.id) || 0;
-        value.textContent = formatIntegerLocalized(count);
-        item.appendChild(label);
-        item.appendChild(value);
-        this.endMatchListElement.appendChild(item);
-      });
-    }
   }
 
   notifySessionEnd() {
+    if (this.isFreePlayMode()) {
+      return;
+    }
     if (typeof this.onSessionEnd !== 'function') {
       return;
     }
@@ -1286,17 +1287,40 @@ class MetauxMatch3Game {
     }
   }
 
+  updateTimerModeUI() {
+    if (this.timerContainerElement) {
+      this.timerContainerElement.classList.toggle('is-free-play', this.isFreePlayMode());
+    }
+  }
+
+  isFreePlayMode() {
+    return this.sessionMode === 'free';
+  }
+
+  isSessionRunning() {
+    return this.initialized && !this.gameOver;
+  }
+
   updateTimerUI() {
+    const freeMode = this.isFreePlayMode();
     if (this.timerValueElement) {
-      this.timerValueElement.textContent = this.formatSeconds(this.timerState.current, { decimals: 1 });
+      this.timerValueElement.textContent = freeMode
+        ? t('scripts.metaux.timer.free')
+        : this.formatSeconds(this.timerState.current, { decimals: 1 });
     }
     if (this.timerMaxElement) {
-      this.timerMaxElement.textContent = t('scripts.metaux.timer.max', {
-        value: this.formatSeconds(this.timerState.max, { decimals: 0 })
-      });
+      if (freeMode) {
+        this.timerMaxElement.textContent = '';
+        this.timerMaxElement.hidden = true;
+      } else {
+        this.timerMaxElement.hidden = false;
+        this.timerMaxElement.textContent = t('scripts.metaux.timer.max', {
+          value: this.formatSeconds(this.timerState.max, { decimals: 0 })
+        });
+      }
     }
     if (this.timerFillElement) {
-      const ratio = this.timerState.max > 0 ? this.timerState.current / this.timerState.max : 0;
+      const ratio = !freeMode && this.timerState.max > 0 ? this.timerState.current / this.timerState.max : 0;
       const clampedRatio = clamp(ratio, 0, 1);
       this.timerFillElement.style.transform = `scaleX(${clampedRatio})`;
       this.timerFillElement.style.width = `${clampedRatio * 100}%`;
@@ -1334,7 +1358,9 @@ class MetauxMatch3Game {
     return `${formattedSeconds} s`;
   }
 
-  restart() {
+  restart(options = {}) {
+    const freeMode = Boolean(options?.freePlay);
+    this.sessionMode = freeMode ? 'free' : 'credit';
     if (!this.initialized) {
       this.initialize();
       return;
@@ -1345,7 +1371,12 @@ class MetauxMatch3Game {
     this.populateBoard();
     this.refreshBoard();
     this.prepareNewSession();
-    this.updateMessage(t('scripts.metaux.session.start'));
+    const messageKey = freeMode ? 'scripts.metaux.session.free' : 'scripts.metaux.session.start';
+    this.updateMessage(t(messageKey));
+  }
+
+  startFreePlay() {
+    this.restart({ freePlay: true });
   }
 
   getTileKey(row, col) {
@@ -1632,7 +1663,6 @@ function initMetauxGame() {
     endScreenElement: elements.metauxEndScreen,
     endTimeElement: elements.metauxEndTimeValue,
     endMatchesElement: elements.metauxEndMatchesValue,
-    endMatchListElement: elements.metauxEndMatchList,
     lastComboElement: elements.metauxLastComboValue,
     bestComboElement: elements.metauxBestComboValue,
     totalTilesElement: elements.metauxTotalTilesValue,

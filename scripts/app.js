@@ -2105,8 +2105,8 @@ const elements = {
   metauxEndScreen: document.getElementById('metauxEndScreen'),
   metauxEndTimeValue: document.getElementById('metauxEndTimeValue'),
   metauxEndMatchesValue: document.getElementById('metauxEndMatchesValue'),
-  metauxEndMatchList: document.getElementById('metauxEndMatchesList'),
   metauxNewGameButton: document.getElementById('metauxNewGameButton'),
+  metauxFreePlayButton: document.getElementById('metauxFreePlayButton'),
   metauxNewGameCredits: document.getElementById('metauxNewGameCredits'),
   metauxCreditStatus: document.getElementById('metauxCreditStatus'),
   metauxLastComboValue: document.getElementById('metauxLastComboValue'),
@@ -2602,14 +2602,28 @@ function updateMetauxCreditsUI() {
     elements.metauxNewGameButton.title = tooltip;
     elements.metauxNewGameButton.setAttribute('aria-label', `${available > 0 ? 'Nouvelle partie' : 'Crédit indisponible'} — ${tooltip}`);
   }
+  if (elements.metauxFreePlayButton) {
+    const disabled = active;
+    elements.metauxFreePlayButton.disabled = disabled;
+    elements.metauxFreePlayButton.setAttribute('aria-disabled', disabled ? 'true' : 'false');
+    const tooltip = disabled
+      ? 'Partie en cours… Terminez-la avant de relancer.'
+      : 'Partie libre : aucun crédit requis.';
+    elements.metauxFreePlayButton.title = tooltip;
+    const label = (elements.metauxFreePlayButton.textContent || '').trim() || 'Free Play';
+    elements.metauxFreePlayButton.setAttribute('aria-label', `${label} — ${tooltip}`);
+  }
   if (elements.metauxCreditStatus) {
     let statusText = '';
+    const freeMode = metauxGame && typeof metauxGame.isFreePlayMode === 'function' && metauxGame.isFreePlayMode();
     if (active) {
-      statusText = 'Forge en cours… Utilisez vos déplacements pour créer des alliages !';
+      statusText = freeMode
+        ? 'Partie libre en cours — expérimentez sans pression.'
+        : 'Forge en cours… Utilisez vos déplacements pour créer des alliages !';
     } else if (available > 0) {
       statusText = `Crédits disponibles : ${formatMetauxCreditLabel(available)}.`;
     } else {
-      statusText = 'Aucun crédit Mach3 disponible. Jouez à Atom2Univers pour en gagner.';
+      statusText = 'Aucun crédit Mach3 disponible. Lancez une partie libre ou jouez à Atom2Univers pour en gagner.';
     }
     elements.metauxCreditStatus.textContent = statusText;
     elements.metauxCreditStatus.hidden = false;
@@ -5617,6 +5631,27 @@ if (elements.metauxNewGameButton) {
     metauxGame.restart();
     updateMetauxCreditsUI();
     saveGame();
+  });
+}
+
+if (elements.metauxFreePlayButton) {
+  elements.metauxFreePlayButton.addEventListener('click', () => {
+    initMetauxGame();
+    if (!metauxGame) {
+      showToast(t('scripts.app.metaux.unavailable'));
+      return;
+    }
+    if (isMetauxSessionRunning()) {
+      showToast(t('scripts.app.metaux.gameInProgress'));
+      updateMetauxCreditsUI();
+      return;
+    }
+    if (typeof metauxGame.startFreePlay === 'function') {
+      metauxGame.startFreePlay();
+    } else {
+      metauxGame.restart({ freePlay: true });
+    }
+    updateMetauxCreditsUI();
   });
 }
 

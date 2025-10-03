@@ -207,9 +207,9 @@
           "time": "Time spent",
           "matches": "Matches"
         },
-        "colorsTitle": "Processed colors",
         "newGame": "New game",
         "newGameCredits": "Mach3: 0",
+        "freePlay": "Free play",
         "return": "Back"
       },
       "goals": {
@@ -1286,10 +1286,12 @@
     },
     "metaux": {
       "timer": {
-        "max": "Max {value}"
+        "max": "Max {value}",
+        "free": "Free mode"
       },
       "session": {
-        "start": "New session: chain those alloys!"
+        "start": "New session: chain those alloys!",
+        "free": "Free session: experiment without pressure!"
       }
     },
     "periodic": {

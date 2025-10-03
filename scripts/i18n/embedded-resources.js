@@ -211,9 +211,9 @@
               "time": "Temps passé",
               "matches": "Matches"
             },
-            "colorsTitle": "Couleurs travaillées",
             "newGame": "Nouvelle partie",
             "newGameCredits": "Mach3 : 0",
+            "freePlay": "Partie libre",
             "return": "Retour"
           },
           "goals": {
@@ -1162,10 +1162,12 @@
         },
         "metaux": {
           "timer": {
-            "max": "Max {value}"
+            "max": "Max {value}",
+            "free": "Mode libre"
           },
           "session": {
-            "start": "Nouvelle session : enchaînez les alliages !"
+            "start": "Nouvelle session : enchaînez les alliages !",
+            "free": "Session libre : expérimentez sans pression !"
           }
         }
       }
@@ -1379,9 +1381,9 @@
               "time": "Time spent",
               "matches": "Matches"
             },
-            "colorsTitle": "Processed colors",
             "newGame": "New game",
             "newGameCredits": "Mach3: 0",
+            "freePlay": "Free play",
             "return": "Back"
           },
           "goals": {
@@ -2321,10 +2323,12 @@
         },
         "metaux": {
           "timer": {
-            "max": "Max {value}"
+            "max": "Max {value}",
+            "free": "Free mode"
           },
           "session": {
-            "start": "New session: chain those alloys!"
+            "start": "New session: chain those alloys!",
+            "free": "Free session: experiment without pressure!"
           }
         }
       }
