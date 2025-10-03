@@ -110,6 +110,7 @@
           "aria": "Contrôles du Sudoku",
           "level": "Niveau",
           "generate": "Générer une grille",
+          "check": "Check",
           "options": {
             "facile": "Facile",
             "moyen": "Moyen",
