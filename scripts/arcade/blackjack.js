@@ -149,34 +149,54 @@
   }
 
   function evaluateHand(cards) {
-    let hardTotal = 0;
-    let aceCount = 0;
+    let totals = [0];
+    let hasAce = false;
+    let hasTenValue = false;
+
     for (let i = 0; i < cards.length; i += 1) {
-      if (cards[i].isAce) {
-        hardTotal += 1;
-        aceCount += 1;
+      const card = cards[i];
+      if (!card) {
+        continue;
+      }
+      if (card.isAce) {
+        hasAce = true;
+        const nextTotals = [];
+        for (let j = 0; j < totals.length; j += 1) {
+          const base = totals[j];
+          nextTotals.push(base + 1);
+          nextTotals.push(base + 11);
+        }
+        totals = nextTotals;
       } else {
-        hardTotal += cards[i].baseValue;
+        if (card.baseValue === 10) {
+          hasTenValue = true;
+        }
+        for (let j = 0; j < totals.length; j += 1) {
+          totals[j] += card.baseValue;
+        }
       }
     }
-    let bestTotal = hardTotal;
-    let softAces = aceCount;
-    while (softAces > 0 && bestTotal + 10 <= 21) {
-      bestTotal += 10;
-      softAces -= 1;
+
+    const uniqueTotals = Array.from(new Set(totals)).sort((a, b) => a - b);
+    const hardTotal = uniqueTotals[0] ?? 0;
+    const validTotals = uniqueTotals.filter(total => total <= 21);
+    const bestTotal = validTotals.length
+      ? validTotals[validTotals.length - 1]
+      : uniqueTotals[0] ?? 0;
+    const isBust = bestTotal > 21;
+    const isSoft = !isBust && validTotals.length > 1;
+    if (!hasTenValue) {
+      hasTenValue = cards.some(card => card && !card.isAce && card.baseValue === 10);
     }
-    const finalTotal = bestTotal;
-    const bust = finalTotal > 21;
-    const usedSoftAce = !bust && aceCount > softAces;
-    const hasAce = aceCount > 0;
-    const hasTenValue = cards.some(card => !card.isAce && card.baseValue === 10);
-    const isBlackjack = cards.length === 2 && hasAce && hasTenValue && !bust && finalTotal === 21;
+    const isBlackjack =
+      cards.length === 2 && hasAce && hasTenValue && !isBust && bestTotal === 21;
+
     return {
-      total: bust ? hardTotal : finalTotal,
+      total: bestTotal,
       hardTotal,
-      isSoft: usedSoftAce,
+      isSoft,
       isBlackjack,
-      isBust: bust,
+      isBust,
       cardCount: cards.length
     };
   }
