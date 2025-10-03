@@ -646,6 +646,15 @@ function updateLocalizedRarityData({ includeEffective = false, force = false } =
       'Rarities unavailable'
     );
   }
+  const collectionStep = PRODUCTION_STEP_DEFINITIONS.get('collectionMultiplier');
+  if (collectionStep) {
+    collectionStep.label = translateWithFallback(
+      typeof COLLECTION_MULTIPLIER_LABEL_KEY === 'string'
+        ? COLLECTION_MULTIPLIER_LABEL_KEY
+        : 'scripts.config.elementBonuses.collectionMultiplier',
+      'Multiplicateur de collection'
+    );
+  }
   RARITY_IDS.forEach(rarityId => {
     const stepId = `rarityMultiplier:${rarityId}`;
     const step = PRODUCTION_STEP_DEFINITIONS.get(stepId);
@@ -737,6 +746,17 @@ defineProductionStep(
   'Multiplicateur trophées',
   { source: 'trophyMultiplier' }
 );
+defineProductionStep(
+  'collectionMultiplier',
+  'multiplier',
+  translateWithFallback(
+    typeof COLLECTION_MULTIPLIER_LABEL_KEY === 'string'
+      ? COLLECTION_MULTIPLIER_LABEL_KEY
+      : 'scripts.config.elementBonuses.collectionMultiplier',
+    'Multiplicateur de collection'
+  ),
+  { source: 'collectionMultiplier' }
+);
 defineProductionStep('total', 'total', '= Total');
 
 updateLocalizedRarityData({ includeEffective: false, force: true });
@@ -758,8 +778,8 @@ const DEFAULT_PRODUCTION_STEP_IDS = [
   'fusionFlat',
   'shopBonus1',
   'shopBonus2',
+  'collectionMultiplier',
   'frenzy',
-  ...RARITY_IDS.map(id => `rarityMultiplier:${id}`),
   'trophyMultiplier',
   'total'
 ];
@@ -775,6 +795,11 @@ function resolveProductionStepOrder(configOrder) {
       normalizedId = 'shopBonus1';
     } else if (id === 'shopMultiplier2' || id === 'shopMultiplierSecondary') {
       normalizedId = 'shopBonus2';
+    } else if (id === 'rarityMultiplier') {
+      normalizedId = 'collectionMultiplier';
+    }
+    if (normalizedId.startsWith('rarityMultiplier:')) {
+      normalizedId = 'collectionMultiplier';
     }
     if (seen.has(normalizedId)) return;
     const base = PRODUCTION_STEP_DEFINITIONS.get(normalizedId);
@@ -797,9 +822,8 @@ function resolveProductionStepOrder(configOrder) {
       if (typeof item === 'object') {
         const type = item.type ?? item.kind;
         if ((type === 'rarity' || type === 'rarityMultiplier') && item.rarity) {
-          const rarityId = String(item.rarity).trim();
           const label = typeof item.label === 'string' ? item.label.trim() : null;
-          pushStep(`rarityMultiplier:${rarityId}`, label);
+          pushStep('collectionMultiplier', label);
           return;
         }
         const rawId = item.id ?? item.key ?? item.step;

@@ -1220,13 +1220,8 @@ const GAME_CONFIG = {
       'fusionFlat',
       'shopBonus1',
       'shopBonus2',
+      'collectionMultiplier',
       'frenzy',
-      'rarityMultiplier:commun',
-      'rarityMultiplier:essentiel',
-      'rarityMultiplier:stellaire',
-      'rarityMultiplier:singulier',
-      'rarityMultiplier:mythique',
-      'rarityMultiplier:irreel',
       'trophyMultiplier',
       'total'
     ]

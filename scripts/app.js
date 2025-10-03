@@ -562,6 +562,7 @@ function createEmptyProductionEntry() {
         familyMultiplier: LayeredNumber.one(),
         frenzy: LayeredNumber.one(),
         apsCrit: LayeredNumber.one(),
+        collectionMultiplier: LayeredNumber.one(),
         rarityMultipliers
       }
     }
@@ -647,6 +648,9 @@ function cloneProductionEntry(entry) {
         apsCrit: entry.sources?.multipliers?.apsCrit instanceof LayeredNumber
           ? entry.sources.multipliers.apsCrit.clone()
           : toMultiplierLayered(entry.sources?.multipliers?.apsCrit ?? 1),
+        collectionMultiplier: entry.sources?.multipliers?.collectionMultiplier instanceof LayeredNumber
+          ? entry.sources.multipliers.collectionMultiplier.clone()
+          : toMultiplierLayered(entry.sources?.multipliers?.collectionMultiplier ?? 1),
         rarityMultipliers: cloneRarityMultipliers(entry.sources?.multipliers?.rarityMultipliers)
       }
     }
@@ -4484,6 +4488,16 @@ function getMultiplierSourceValue(entry, step) {
     }
     return LayeredNumber.one();
   }
+  if (step.source === 'collectionMultiplier') {
+    const rawCollection = multipliers.collectionMultiplier;
+    if (rawCollection instanceof LayeredNumber) {
+      return rawCollection;
+    }
+    if (rawCollection == null) {
+      return LayeredNumber.one();
+    }
+    return toMultiplierLayered(rawCollection);
+  }
   const raw = multipliers[step.source];
   if (raw instanceof LayeredNumber) {
     return raw;
@@ -7485,6 +7499,9 @@ function recalcProduction() {
 
   const clickRarityProduct = computeRarityMultiplierProduct(clickRarityMultipliers);
   const autoRarityProduct = computeRarityMultiplierProduct(autoRarityMultipliers);
+
+  clickDetails.sources.multipliers.collectionMultiplier = clickRarityProduct.clone();
+  autoDetails.sources.multipliers.collectionMultiplier = autoRarityProduct.clone();
 
   const clickTotalAddition = clickShopAddition
     .add(clickElementAddition)
