@@ -1288,10 +1288,13 @@
       this.speedValue = elements.speedValue;
       this.engineSelect = elements.engineSelect;
       this.soundFontSelect = elements.soundFontSelect;
+      this.progressLabel = elements.progressLabel;
       this.progressSlider = elements.progressSlider;
       this.progressValue = elements.progressValue;
       this.programUsageContainer = elements.programUsageContainer;
       this.programUsageSummary = elements.programUsageSummary;
+      this.programUsageTitle = elements.programUsageTitle;
+      this.programUsageNote = elements.programUsageNote;
 
       const hasWindow = typeof window !== 'undefined';
       if (hasWindow) {
@@ -1320,6 +1323,7 @@
       this.pendingTimers = new Set();
       this.liveVoices = new Set();
       this.finishTimeout = null;
+      this.languageChangeUnsubscribe = null;
       this.libraryTracks = [];
       this.readyStatusMessage = '';
       this.lastStatusMessage = null;
@@ -1449,12 +1453,13 @@
       this.setPlaybackSpeed(this.playbackSpeed, { syncSlider: true });
 
       this.refreshProgressControls();
-      this.updateProgramUsage(null);
+      this.refreshStaticTexts();
 
       this.bindEvents();
       this.updateButtons();
       this.loadSoundFonts();
       this.loadLibrary();
+      this.subscribeToLanguageChanges();
     }
 
     bindEvents() {
@@ -1969,6 +1974,12 @@
     }
 
     initializeProgressControls() {
+      if (this.progressLabel) {
+        this.progressLabel.textContent = this.translate(
+          'index.sections.options.chiptune.progress.label',
+          'Playback position'
+        );
+      }
       if (this.progressSlider) {
         this.progressSlider.min = '0';
         this.progressSlider.max = '0';
@@ -2018,6 +2029,42 @@
       }
     }
 
+    subscribeToLanguageChanges() {
+      if (typeof this.languageChangeUnsubscribe === 'function') {
+        try {
+          this.languageChangeUnsubscribe();
+        } catch (error) {
+          console.warn('Unable to remove previous language listener', error);
+        }
+      }
+      this.languageChangeUnsubscribe = null;
+
+      const api = typeof globalThis !== 'undefined' ? globalThis.i18n : null;
+      const handler = () => {
+        this.refreshStaticTexts();
+        this.refreshProgressControls();
+        this.setPlaybackSpeed(this.playbackSpeed, { syncSlider: false });
+        this.setTransposeSemitones(this.transposeSemitones, { syncSlider: false, refreshVoices: false });
+        this.setFineDetuneCents(this.fineDetuneCents, { syncSlider: false, refreshVoices: false });
+        this.setArticulation(this.articulationSetting, { syncSlider: false, refresh: false });
+      };
+
+      if (api && typeof api.onLanguageChanged === 'function') {
+        const unsubscribe = api.onLanguageChanged(handler);
+        if (typeof unsubscribe === 'function') {
+          this.languageChangeUnsubscribe = unsubscribe;
+        }
+        return;
+      }
+
+      if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
+        globalThis.addEventListener('i18n:languagechange', handler);
+        this.languageChangeUnsubscribe = () => {
+          globalThis.removeEventListener('i18n:languagechange', handler);
+        };
+      }
+    }
+
     updateProgressDisplay(position, duration, speed, options = {}) {
       const { allowSliderUpdate = true, fromUser = false } = options;
       const total = Number.isFinite(duration) && duration > 0 ? duration : 0;
@@ -2054,43 +2101,19 @@
 
     initializeProgramUsageGrid() {
       if (!this.programUsageContainer) {
-        this.programUsageCells = null;
         return;
       }
-      const doc = this.programUsageContainer.ownerDocument || document;
       this.programUsageContainer.textContent = '';
-      const fragment = doc.createDocumentFragment();
-      this.programUsageCells = new Array(128);
-      for (let program = 0; program < 128; program += 1) {
-        const row = doc.createElement('div');
-        row.className = 'chiptune-usage__row';
-        row.setAttribute('role', 'row');
-        row.setAttribute('data-program', String(program));
-        row.hidden = true;
-        row.setAttribute('aria-hidden', 'true');
-
-        const programCell = doc.createElement('span');
-        programCell.className = 'chiptune-usage__program';
-        programCell.setAttribute('role', 'gridcell');
-        programCell.textContent = program.toString().padStart(3, '0');
-
-        const statusCell = doc.createElement('span');
-        statusCell.className = 'chiptune-usage__status';
-        statusCell.setAttribute('role', 'gridcell');
-        statusCell.setAttribute('aria-hidden', 'true');
-        statusCell.textContent = '—';
-
-        row.append(programCell, statusCell);
-        fragment.append(row);
-        this.programUsageCells[program] = { row, status: statusCell };
-      }
-      this.programUsageContainer.append(fragment);
     }
 
     updateProgramUsage(timeline) {
-      if (!Array.isArray(this.programUsageCells)) {
+      if (!this.programUsageContainer) {
+        if (this.programUsageSummary) {
+          this.programUsageSummary.textContent = '';
+        }
         return;
       }
+      const doc = this.programUsageContainer.ownerDocument || document;
       const usedPrograms = new Set();
       let percussionUsed = false;
       const notes = timeline && Array.isArray(timeline.notes) ? timeline.notes : [];
@@ -2109,30 +2132,42 @@
         }
       }
 
-      for (let program = 0; program < this.programUsageCells.length; program += 1) {
-        const entry = this.programUsageCells[program];
-        if (!entry) {
-          continue;
+      const programs = Array.from(usedPrograms).sort((a, b) => a - b);
+      this.programUsageContainer.textContent = '';
+      if (programs.length > 0) {
+        const fragment = doc.createDocumentFragment();
+        for (const program of programs) {
+          const row = doc.createElement('div');
+          row.className = 'chiptune-usage__row is-used';
+          row.setAttribute('role', 'row');
+          row.setAttribute('data-program', String(program));
+          row.hidden = false;
+          row.setAttribute('aria-hidden', 'false');
+          row.setAttribute('aria-label', this.translate(
+            'index.sections.options.chiptune.usage.rowUsed',
+            `Program ${program} in use`,
+            { program }
+          ));
+
+          const programCell = doc.createElement('span');
+          programCell.className = 'chiptune-usage__program';
+          programCell.setAttribute('role', 'gridcell');
+          programCell.textContent = program.toString().padStart(3, '0');
+
+          const statusCell = doc.createElement('span');
+          statusCell.className = 'chiptune-usage__status';
+          statusCell.setAttribute('role', 'gridcell');
+          statusCell.setAttribute('aria-hidden', 'true');
+          statusCell.textContent = '✖';
+
+          row.append(programCell, statusCell);
+          fragment.append(row);
         }
-        const isUsed = usedPrograms.has(program);
-        entry.row.hidden = !isUsed;
-        entry.row.classList.toggle('is-used', isUsed);
-        entry.row.setAttribute('aria-label', this.translate(
-          isUsed
-            ? 'index.sections.options.chiptune.usage.rowUsed'
-            : 'index.sections.options.chiptune.usage.rowUnused',
-          isUsed
-            ? `Program ${program} in use`
-            : `Program ${program} inactive`,
-          { program }
-        ));
-        entry.row.setAttribute('aria-hidden', isUsed ? 'false' : 'true');
-        entry.row.setAttribute('data-used', isUsed ? 'true' : 'false');
-        entry.status.textContent = isUsed ? '✖' : '—';
+        this.programUsageContainer.append(fragment);
       }
 
       if (this.programUsageSummary) {
-        const count = usedPrograms.size;
+        const count = programs.length;
         let summaryKey = 'index.sections.options.chiptune.usage.summaryEmpty';
         let summaryFallback = 'No program detected';
         if (count === 1) {
@@ -2155,6 +2190,28 @@
         }
         this.programUsageSummary.textContent = summary;
       }
+    }
+
+    refreshStaticTexts() {
+      if (this.progressLabel) {
+        this.progressLabel.textContent = this.translate(
+          'index.sections.options.chiptune.progress.label',
+          'Playback position'
+        );
+      }
+      if (this.programUsageTitle) {
+        this.programUsageTitle.textContent = this.translate(
+          'index.sections.options.chiptune.usage.title',
+          'MIDI programs in use'
+        );
+      }
+      if (this.programUsageNote) {
+        this.programUsageNote.textContent = this.translate(
+          'index.sections.options.chiptune.usage.note',
+          'Numbers refer to General MIDI program numbers (0 to 127).'
+        );
+      }
+      this.updateProgramUsage(this.timeline);
     }
 
     findTimelineIndexAt(seconds) {
@@ -5841,10 +5898,13 @@
     speedValue: document.getElementById('chiptuneSpeedValue'),
     engineSelect: document.getElementById('chiptuneEngineSelect'),
     soundFontSelect: document.getElementById('chiptuneSoundFontSelect'),
+    progressLabel: document.getElementById('chiptuneProgressLabel'),
     progressSlider: document.getElementById('chiptuneProgressSlider'),
     progressValue: document.getElementById('chiptuneProgressValue'),
     programUsageContainer: document.getElementById('chiptuneProgramUsage'),
     programUsageSummary: document.getElementById('chiptuneUsageSummary'),
+    programUsageTitle: document.getElementById('chiptuneUsageTitle'),
+    programUsageNote: document.getElementById('chiptuneUsageNote'),
   };
 
   if (elements.fileInput && elements.playButton && elements.stopButton && elements.status) {
