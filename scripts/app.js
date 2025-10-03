@@ -682,6 +682,136 @@ const frenzyState = {
   spawnAccumulator: 0
 };
 
+function getClickerContexts() {
+  const contexts = [
+    {
+      id: 'game',
+      pageId: 'game',
+      button: elements.atomButton,
+      anchor: elements.atomButton,
+      frenzyLayer: elements.frenzyLayer,
+      ticketLayer: elements.ticketLayer,
+      counter: {
+        container: elements.apcFrenzyCounter,
+        value: elements.apcFrenzyCounterValue,
+        bestSingle: elements.apcFrenzyCounterBestSingle,
+        bestMulti: elements.apcFrenzyCounterBestMulti
+      }
+    },
+    {
+      id: 'wave',
+      pageId: 'wave',
+      button: null,
+      anchor: elements.waveStage || elements.waveCanvas,
+      frenzyLayer: elements.waveFrenzyLayer,
+      ticketLayer: elements.waveTicketLayer,
+      counter: {
+        container: elements.waveApcFrenzyCounter,
+        value: elements.waveApcFrenzyCounterValue,
+        bestSingle: elements.waveApcFrenzyCounterBestSingle,
+        bestMulti: elements.waveApcFrenzyCounterBestMulti
+      }
+    }
+  ];
+
+  return contexts.filter(context => {
+    const anchorConnected = context.anchor && context.anchor.isConnected;
+    const layerConnected = context.frenzyLayer && context.frenzyLayer.isConnected;
+    const counterConnected = context.counter?.container && context.counter.container.isConnected;
+    const ticketConnected = context.ticketLayer && context.ticketLayer.isConnected;
+    return anchorConnected || layerConnected || counterConnected || ticketConnected;
+  });
+}
+
+function getClickerContextById(id) {
+  if (!id) {
+    return null;
+  }
+  const normalized = String(id).trim().toLowerCase();
+  if (!normalized) {
+    return null;
+  }
+  return getClickerContexts().find(context => context.id === normalized || context.pageId === normalized) || null;
+}
+
+function getActiveClickerContext() {
+  const contexts = getClickerContexts();
+  const activePage = document.body?.dataset?.activePage;
+  if (activePage) {
+    const active = contexts.find(context => context.pageId === activePage && context.anchor?.isConnected);
+    if (active) {
+      return active;
+    }
+  }
+  const fallback = contexts.find(context => context.pageId === 'game' && context.anchor?.isConnected);
+  if (fallback) {
+    return fallback;
+  }
+  return contexts.find(context => context.anchor?.isConnected) || null;
+}
+
+function getActiveFrenzyContext() {
+  const contexts = getClickerContexts();
+  const activePage = document.body?.dataset?.activePage;
+  if (activePage) {
+    const active = contexts.find(context => context.pageId === activePage
+      && context.frenzyLayer?.isConnected
+      && context.anchor?.isConnected);
+    if (active) {
+      return active;
+    }
+  }
+  const fallback = contexts.find(context => context.pageId === 'game'
+    && context.frenzyLayer?.isConnected
+    && context.anchor?.isConnected);
+  if (fallback) {
+    return fallback;
+  }
+  return contexts.find(context => context.frenzyLayer?.isConnected && context.anchor?.isConnected) || null;
+}
+
+function getCounterContexts() {
+  return getClickerContexts().filter(context => context.counter?.container);
+}
+
+function getActiveTicketLayerElement() {
+  const contexts = getClickerContexts();
+  const activePage = document.body?.dataset?.activePage;
+  if (activePage) {
+    const active = contexts.find(context => context.pageId === activePage && context.ticketLayer?.isConnected);
+    if (active) {
+      return active.ticketLayer;
+    }
+  }
+  const fallback = contexts.find(context => context.pageId === 'game' && context.ticketLayer?.isConnected);
+  if (fallback) {
+    return fallback.ticketLayer;
+  }
+  const any = contexts.find(context => context.ticketLayer?.isConnected);
+  return any ? any.ticketLayer : null;
+}
+
+if (typeof globalThis !== 'undefined') {
+  globalThis.getActiveTicketLayerElement = getActiveTicketLayerElement;
+}
+
+function resolveManualClickContext(contextId = null) {
+  const explicit = getClickerContextById(contextId);
+  if (explicit && explicit.anchor?.isConnected) {
+    return explicit;
+  }
+  const active = getActiveClickerContext();
+  if (active) {
+    return active;
+  }
+  return getClickerContextById('game');
+}
+
+function isManualClickContextActive() {
+  const activePage = document.body?.dataset?.activePage;
+  return activePage === 'game' || activePage === 'wave';
+}
+
 function getFrenzyMultiplier(type, now = performance.now()) {
   if (!FRENZY_TYPES.includes(type)) {
     return 1;
@@ -711,23 +841,28 @@ function isApcFrenzyActive(now = performance.now()) {
   return getFrenzyStackCount('perClick', now) > 0;
 }
 
-let apcFrenzyValuePulseTimeoutId = null;
+const apcFrenzyValuePulseTimeoutIds = new Map();
 
-function pulseApcFrenzyValue() {
-  const valueElement = elements.apcFrenzyCounterValue;
-  if (!valueElement) {
-    return;
-  }
-  valueElement.classList.remove('apc-frenzy-counter__value--pulse');
-  void valueElement.offsetWidth;
-  valueElement.classList.add('apc-frenzy-counter__value--pulse');
-  if (apcFrenzyValuePulseTimeoutId != null) {
-    clearTimeout(apcFrenzyValuePulseTimeoutId);
-  }
-  apcFrenzyValuePulseTimeoutId = setTimeout(() => {
+function pulseApcFrenzyValue(targetContext = null) {
+  const contexts = targetContext ? [targetContext] : getCounterContexts();
+  contexts.forEach(context => {
+    const valueElement = context?.counter?.value;
+    if (!valueElement) {
+      return;
+    }
     valueElement.classList.remove('apc-frenzy-counter__value--pulse');
-    apcFrenzyValuePulseTimeoutId = null;
-  }, 260);
+    void valueElement.offsetWidth;
+    valueElement.classList.add('apc-frenzy-counter__value--pulse');
+    const key = context?.id || context?.pageId || valueElement.id;
+    if (apcFrenzyValuePulseTimeoutIds.has(key)) {
+      clearTimeout(apcFrenzyValuePulseTimeoutIds.get(key));
+    }
+    const timeoutId = setTimeout(() => {
+      valueElement.classList.remove('apc-frenzy-counter__value--pulse');
+      apcFrenzyValuePulseTimeoutIds.delete(key);
+    }, 260);
+    apcFrenzyValuePulseTimeoutIds.set(key, timeoutId);
+  });
 }
 
 function formatApcFrenzySingleRecordText(bestClicks) {
@@ -772,10 +907,6 @@ function formatApcFrenzyMultiRecordText(bestClicks, frenziesUsed) {
 }
 
 function updateApcFrenzyCounterDisplay(now = performance.now()) {
-  const container = elements.apcFrenzyCounter;
-  if (!container) {
-    return;
-  }
   const entry = frenzyState.perClick;
   const active = isApcFrenzyActive(now);
   let currentCount = entry ? Math.max(0, Math.floor(entry.currentClickCount || 0)) : 0;
@@ -792,49 +923,53 @@ function updateApcFrenzyCounterDisplay(now = performance.now()) {
     gameState.stats.session.apcFrenzy = sessionStats;
     gameState.stats.global.apcFrenzy = globalStats;
   }
-  if (elements.apcFrenzyCounterBestSingle) {
-    elements.apcFrenzyCounterBestSingle.textContent = formatApcFrenzySingleRecordText(bestSingleClicks);
-  }
-  if (elements.apcFrenzyCounterBestMulti) {
-    elements.apcFrenzyCounterBestMulti.textContent = formatApcFrenzyMultiRecordText(
-      bestChainClicks,
-      bestChainFrenzies
-    );
-  }
-  let shouldDisplay = active;
-  if (entry) {
-    if (active) {
-      entry.visibleUntil = Math.max(entry.visibleUntil || 0, now + APC_FRENZY_COUNTER_GRACE_MS);
-      entry.lastDisplayedCount = currentCount;
-    } else if (Number.isFinite(entry.visibleUntil) && entry.visibleUntil > now) {
-      shouldDisplay = true;
-      currentCount = Math.max(0, Math.floor(entry.lastDisplayedCount || 0));
-    } else {
-      entry.visibleUntil = 0;
-      entry.lastDisplayedCount = Math.max(0, Math.floor(entry.lastDisplayedCount || 0));
+  const contexts = getCounterContexts();
+  contexts.forEach(context => {
+    const { container, value, bestSingle, bestMulti } = context?.counter || {};
+    if (bestSingle) {
+      bestSingle.textContent = formatApcFrenzySingleRecordText(bestSingleClicks);
     }
-  }
-  container.hidden = !shouldDisplay;
-  container.style.display = shouldDisplay ? '' : 'none';
-  container.setAttribute('aria-hidden', String(!shouldDisplay));
-  container.classList.toggle('is-active', active);
-  container.classList.toggle('is-idle', !active);
-  if (!shouldDisplay) {
-    return;
-  }
-  if (elements.apcFrenzyCounterValue) {
-    elements.apcFrenzyCounterValue.textContent = formatIntegerLocalized(currentCount);
-  }
+    if (bestMulti) {
+      bestMulti.textContent = formatApcFrenzyMultiRecordText(bestChainClicks, bestChainFrenzies);
+    }
+    if (!container) {
+      return;
+    }
+    const contextActive = document.body?.dataset?.activePage === context.pageId;
+    let displayCount = currentCount;
+    let shouldDisplay = active;
+    if (entry) {
+      if (active) {
+        entry.visibleUntil = Math.max(entry.visibleUntil || 0, now + APC_FRENZY_COUNTER_GRACE_MS);
+        entry.lastDisplayedCount = currentCount;
+      } else if (Number.isFinite(entry.visibleUntil) && entry.visibleUntil > now) {
+        shouldDisplay = true;
+        displayCount = Math.max(0, Math.floor(entry.lastDisplayedCount || 0));
+      } else {
+        entry.visibleUntil = 0;
+        entry.lastDisplayedCount = Math.max(0, Math.floor(entry.lastDisplayedCount || 0));
+      }
+    }
+    const isVisible = shouldDisplay && contextActive;
+    container.hidden = !isVisible;
+    container.style.display = isVisible ? '' : 'none';
+    container.setAttribute('aria-hidden', String(!isVisible));
+    container.classList.toggle('is-active', active && contextActive);
+    container.classList.toggle('is-idle', !(active && contextActive));
+    if (value) {
+      value.textContent = formatIntegerLocalized(isVisible ? displayCount : currentCount);
+    }
+  });
 }
 
-function registerApcFrenzyClick(now = performance.now()) {
+function registerApcFrenzyClick(now = performance.now(), context = null) {
   const entry = frenzyState.perClick;
   if (!entry || !isApcFrenzyActive(now)) {
     return;
   }
   entry.currentClickCount = Math.max(0, Math.floor(entry.currentClickCount || 0)) + 1;
   entry.lastDisplayedCount = entry.currentClickCount;
-  pulseApcFrenzyValue();
+  pulseApcFrenzyValue(context);
   updateApcFrenzyCounterDisplay(now);
 }
 
@@ -1009,17 +1144,17 @@ function clearFrenzyToken(type, immediate = false) {
   }
 }
 
-function positionFrenzyToken(type, token) {
-  if (!elements.frenzyLayer || !elements.atomButton) return false;
-  const containerRect = elements.frenzyLayer.getBoundingClientRect();
-  const atomRect = elements.atomButton.getBoundingClientRect();
-  if (!containerRect.width || !containerRect.height || !atomRect.width || !atomRect.height) {
+function positionFrenzyToken(context, type, token) {
+  if (!context?.frenzyLayer || !context.anchor) return false;
+  const containerRect = context.frenzyLayer.getBoundingClientRect();
+  const anchorRect = context.anchor.getBoundingClientRect();
+  if (!containerRect.width || !containerRect.height || !anchorRect.width || !anchorRect.height) {
     return false;
   }
 
-  const centerX = atomRect.left + atomRect.width / 2;
-  const centerY = atomRect.top + atomRect.height / 2;
-  const baseSize = Math.max(atomRect.width, atomRect.height);
+  const centerX = anchorRect.left + anchorRect.width / 2;
+  const centerY = anchorRect.top + anchorRect.height / 2;
+  const baseSize = Math.max(anchorRect.width, anchorRect.height);
   const minRadius = baseSize * 0.45;
   const maxRadius = baseSize * 1.25;
   const radiusRange = Math.max(maxRadius - minRadius, minRadius);
@@ -1041,7 +1176,8 @@ function positionFrenzyToken(type, token) {
 function spawnFrenzyToken(type, now = performance.now()) {
   const info = FRENZY_TYPE_INFO[type];
   if (!info) return;
-  if (!elements.frenzyLayer || !elements.atomButton) return;
+  const context = getActiveFrenzyContext();
+  if (!context?.frenzyLayer || !context.anchor) return;
   if (FRENZY_CONFIG.displayDurationMs <= 0) return;
 
   const token = document.createElement('button');
@@ -1064,20 +1200,21 @@ function spawnFrenzyToken(type, now = performance.now()) {
     collectFrenzy(type);
   });
 
-  if (!positionFrenzyToken(type, token)) {
+  if (!positionFrenzyToken(context, type, token)) {
     return;
   }
 
-  elements.frenzyLayer.appendChild(token);
+  context.frenzyLayer.appendChild(token);
   frenzyState[type].token = token;
   frenzyState[type].tokenExpire = now + FRENZY_CONFIG.displayDurationMs;
 }
 
 function attemptFrenzySpawn(type, now = performance.now()) {
   if (!FRENZY_TYPES.includes(type)) return;
-  if (!isGamePageActive()) return;
+  if (!isManualClickContextActive()) return;
   if (typeof document !== 'undefined' && document.hidden) return;
-  if (!elements.frenzyLayer || !elements.atomButton) return;
+  const context = getActiveFrenzyContext();
+  if (!context?.frenzyLayer || !context.anchor) return;
   const entry = frenzyState[type];
   if (entry.token) return;
   const chance = getEffectiveFrenzySpawnChance(type);
@@ -2087,6 +2224,12 @@ const elements = {
   arcadeComboMessage: document.getElementById('arcadeComboMessage'),
   waveStage: document.getElementById('waveStage'),
   waveCanvas: document.getElementById('waveCanvas'),
+  waveTicketLayer: document.getElementById('waveTicketLayer'),
+  waveFrenzyLayer: document.getElementById('waveFrenzyLayer'),
+  waveApcFrenzyCounter: document.getElementById('waveApcFrenzyCounter'),
+  waveApcFrenzyCounterValue: document.getElementById('waveApcFrenzyCounterValue'),
+  waveApcFrenzyCounterBestSingle: document.getElementById('waveApcFrenzyCounterBestSingle'),
+  waveApcFrenzyCounterBestMulti: document.getElementById('waveApcFrenzyCounterBestMulti'),
   quantum2048Board: document.getElementById('quantum2048Board'),
   quantum2048Tiles: document.getElementById('quantum2048Tiles'),
   quantum2048Grid: document.getElementById('quantum2048Grid'),
@@ -4829,9 +4972,12 @@ function registerFrenzyTrigger(type) {
 }
 
 function animateAtomPress(options = {}) {
-  if (!elements.atomButton) return;
-  const { critical = false, multiplier = 1 } = options;
-  const button = elements.atomButton;
+  const { critical = false, multiplier = 1, context = null } = options;
+  let button = context?.button;
+  if (!button && !context) {
+    button = elements.atomButton;
+  }
+  if (!button) return;
   if (critical) {
     soundEffects.crit.play();
     button.classList.add('is-critical');
@@ -5197,14 +5343,16 @@ function applyCriticalHit(baseAmount) {
   return { amount: critAmount, isCritical: true, multiplier: effectiveMultiplier };
 }
 
-function handleManualAtomClick() {
+function handleManualAtomClick(options = {}) {
+  const contextId = options?.contextId;
+  const context = resolveManualClickContext(contextId);
   const baseAmount = gameState.perClick instanceof LayeredNumber
     ? gameState.perClick
     : toLayeredNumber(gameState.perClick ?? 0, 0);
   const critResult = applyCriticalHit(baseAmount);
   gainAtoms(critResult.amount, 'apc');
   registerManualClick();
-  registerApcFrenzyClick();
+  registerApcFrenzyClick(performance.now(), context);
   soundEffects.pop.play();
   if (critResult.isCritical) {
     gameState.lastCritical = {
@@ -5219,7 +5367,16 @@ function handleManualAtomClick() {
       multiplier: critResult.multiplier
     });
   }
-  animateAtomPress({ critical: critResult.isCritical, multiplier: critResult.multiplier });
+  animateAtomPress({
+    critical: critResult.isCritical,
+    multiplier: critResult.multiplier,
+    context
+  });
+}
+
+if (typeof globalThis !== 'undefined') {
+  globalThis.handleManualAtomClick = handleManualAtomClick;
+  globalThis.isManualClickContextActive = isManualClickContextActive;
 }
 
 function shouldTriggerGlobalClick(event) {
@@ -5300,7 +5457,8 @@ function showPage(pageId) {
       quantum2048Game.onLeave();
     }
   }
-  if (pageId === 'game' && (typeof document === 'undefined' || !document.hidden)) {
+  const manualPageActive = pageId === 'game' || pageId === 'wave';
+  if (manualPageActive && (typeof document === 'undefined' || !document.hidden)) {
     gamePageVisibleSince = now;
   } else {
     gamePageVisibleSince = null;
@@ -5318,28 +5476,38 @@ document.addEventListener('visibilitychange', () => {
   if (typeof document === 'undefined') {
     return;
   }
+  const activePage = document.body?.dataset.activePage;
   if (document.hidden) {
     gamePageVisibleSince = null;
-    if (particulesGame && document.body?.dataset.activePage === 'arcade') {
+    if (particulesGame && activePage === 'arcade') {
       particulesGame.onLeave();
     }
-    if (waveGame && document.body?.dataset.activePage === 'wave') {
+    if (waveGame && activePage === 'wave') {
       waveGame.onLeave();
     }
-    if (quantum2048Game && document.body?.dataset.activePage === 'quantum2048') {
+    if (quantum2048Game && activePage === 'quantum2048') {
       quantum2048Game.onLeave();
     }
-  } else if (isGamePageActive()) {
+    return;
+  }
+
+  if (isManualClickContextActive()) {
     gamePageVisibleSince = performance.now();
-    if (particulesGame && document.body?.dataset.activePage === 'arcade') {
+    if (particulesGame && activePage === 'arcade') {
       particulesGame.onEnter();
     }
-  } else if (particulesGame && document.body?.dataset.activePage === 'arcade') {
+    if (activePage === 'wave') {
+      ensureWaveGame();
+      waveGame?.onEnter();
+    }
+  } else if (particulesGame && activePage === 'arcade') {
     particulesGame.onEnter();
-  } else if (document.body?.dataset.activePage === 'wave') {
+  } else if (activePage === 'wave') {
     ensureWaveGame();
     waveGame?.onEnter();
-  } else if (document.body?.dataset.activePage === 'quantum2048') {
+  }
+
+  if (activePage === 'quantum2048') {
     ensureQuantum2048Game();
     quantum2048Game?.onEnter();
   }
@@ -5709,7 +5877,7 @@ renderFusionList();
 if (elements.atomButton) {
   elements.atomButton.addEventListener('click', event => {
     event.stopPropagation();
-    handleManualAtomClick();
+    handleManualAtomClick({ contextId: 'game' });
   });
   elements.atomButton.addEventListener('dragstart', event => {
     event.preventDefault();
@@ -5735,11 +5903,11 @@ if (elements.gachaTicketModeButton) {
 
 document.addEventListener('click', event => {
   if (!shouldTriggerGlobalClick(event)) return;
-  handleManualAtomClick();
+  handleManualAtomClick({ contextId: 'game' });
 });
 
 document.addEventListener('selectstart', event => {
-  if (isGamePageActive()) {
+  if (isManualClickContextActive()) {
     event.preventDefault();
   }
 });

@@ -332,6 +332,21 @@
           role="presentation"
           data-i18n="aria-label:index.sections.wave.canvasAria"
         ></canvas>
+        <div class="ticket-layer" id="waveTicketLayer" aria-hidden="true"></div>
+        <div class="frenzy-layer" id="waveFrenzyLayer" aria-hidden="true"></div>
+        <div
+          class="apc-frenzy-counter"
+          id="waveApcFrenzyCounter"
+          aria-live="polite"
+          aria-hidden="true"
+          hidden
+        >
+          <span class="apc-frenzy-counter__value" id="waveApcFrenzyCounterValue">0</span>
+          <div class="apc-frenzy-counter__summary">
+            <span class="apc-frenzy-counter__summary-item" id="waveApcFrenzyCounterBestSingle"></span>
+            <span class="apc-frenzy-counter__summary-item" id="waveApcFrenzyCounterBestMulti"></span>
+          </div>
+        </div>
       </div>
     </section>
 
