@@ -164,7 +164,14 @@
               "balance": "Atomes disponibles\u00a0:",
               "none": "Aucune",
               "option": "{amount} atomes",
-              "optionsAria": "Montants de mise disponibles"
+              "optionsAria": "Montants de mise disponibles",
+              "scale": {
+                "groupAria": "Ajuster le multiplicateur de mise",
+                "multiplyLabel": "×10",
+                "multiplyAria": "Multiplier les mises par 10 (multiplicateur actuel\u00a0: ×{multiplier})",
+                "divideLabel": "÷10",
+                "divideAria": "Diviser les mises par 10 (multiplicateur actuel\u00a0: ×{multiplier})"
+              }
             },
             "shoe": {
               "label": "Sabot"
@@ -1759,7 +1766,14 @@
               "balance": "Atoms available:",
               "none": "None",
               "option": "{amount} atoms",
-              "optionsAria": "Available bet amounts"
+              "optionsAria": "Available bet amounts",
+              "scale": {
+                "groupAria": "Adjust bet multiplier",
+                "multiplyLabel": "×10",
+                "multiplyAria": "Multiply bet options by 10 (current multiplier: ×{multiplier})",
+                "divideLabel": "÷10",
+                "divideAria": "Divide bet options by 10 (current multiplier: ×{multiplier})"
+              }
             },
             "shoe": {
               "label": "Shoe"

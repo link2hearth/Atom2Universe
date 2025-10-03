@@ -125,6 +125,19 @@
   gap: 0.6rem;
 }
 
+.blackjack-bet__scale {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.blackjack-bet__scale-button {
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.5rem 0.65rem;
+}
+
 .blackjack-bet__option {
   font: inherit;
   font-weight: 600;
