@@ -1319,13 +1319,14 @@
       this.timeline = null;
       this.timelineAnalysis = null;
       this.currentTitle = '';
+      this.currentTitleDescriptor = null;
       this.playing = false;
       this.pendingTimers = new Set();
       this.liveVoices = new Set();
       this.finishTimeout = null;
       this.languageChangeUnsubscribe = null;
       this.libraryTracks = [];
-      this.readyStatusMessage = '';
+      this.readyStatusMessage = null;
       this.lastStatusMessage = null;
       this.playStartTime = null;
       this.playStartOffset = 0;
@@ -1483,7 +1484,7 @@
           }
           const track = this.libraryTracks.find(item => item.file === file);
           if (!track) {
-            this.setStatus(this.translate('index.sections.options.chiptune.status.trackNotFound', 'Unable to locate the selected track.'), 'error');
+            this.setStatusMessage('index.sections.options.chiptune.status.trackNotFound', 'Unable to locate the selected track.', {}, 'error');
             return;
           }
           this.loadFromLibrary(track);
@@ -1621,7 +1622,7 @@
           this.setSoundFontSelection(normalized, { autoLoad: !shouldActivateHiFi && this.engineMode === 'hifi', stopPlayback: wasPlaying });
           if (shouldActivateHiFi) {
             this.setEngineMode('hifi');
-          this.setStatus(this.translate('index.sections.options.chiptune.status.autoHiFi', 'Mode Hi-Fi activé automatiquement pour utiliser la SoundFont.'), 'success');
+          this.setStatusMessage('index.sections.options.chiptune.status.autoHiFi', 'Mode Hi-Fi activé automatiquement pour utiliser la SoundFont.', {}, 'success');
           }
         });
       }
@@ -1853,7 +1854,7 @@
       }
       if (this.playing) {
         this.updateReadyStatusMessage();
-        this.setStatus(this.buildPlayingStatusMessage(), 'success');
+        this.setStatus('', 'success', { type: 'playing', extra: '' });
       } else {
         this.updateReadyStatusMessage();
       }
@@ -1897,20 +1898,46 @@
       return segments.filter(Boolean).join(' — ');
     }
 
-    updateReadyStatusMessage() {
+    generateReadyStatusMessage() {
       if (!this.timeline || !this.currentTitle) {
-        return;
+        return '';
       }
       const summary = this.formatTimelineSummary(this.timeline, this.timelineAnalysis);
       const durationLabel = this.formatDurationWithSpeed(this.timeline.duration);
-      const baseMessage = summary
-        ? this.translate('index.sections.options.chiptune.status.readyWithSummary', 'Ready: {title} — {summary}', { title: this.currentTitle, summary })
-        : this.translate('index.sections.options.chiptune.status.readyWithDuration', 'Ready: {title} ({duration})', { title: this.currentTitle, duration: durationLabel });
+      const hasSummary = Boolean(summary);
+      const baseKey = hasSummary
+        ? 'index.sections.options.chiptune.status.readyWithSummary'
+        : 'index.sections.options.chiptune.status.readyWithDuration';
+      const baseFallback = hasSummary
+        ? 'Ready: {title} — {summary}'
+        : 'Ready: {title} ({duration})';
+      const params = hasSummary
+        ? { title: this.currentTitle, summary }
+        : { title: this.currentTitle, duration: durationLabel };
+      const baseMessage = this.translate(baseKey, baseFallback, params);
       const engineLabel = this.getEngineLabel();
-      const message = engineLabel ? `${baseMessage} — ${engineLabel}` : baseMessage;
-      this.readyStatusMessage = message;
-      if (!this.playing) {
-        this.setStatus(message, 'success');
+      return engineLabel ? `${baseMessage} — ${engineLabel}` : baseMessage;
+    }
+
+    updateReadyStatusMessage() {
+      if (!this.timeline || !this.currentTitle) {
+        this.readyStatusMessage = null;
+        return;
+      }
+      const message = this.generateReadyStatusMessage();
+      if (message) {
+        this.readyStatusMessage = {
+          message,
+          descriptor: { type: 'ready' },
+        };
+        if (!this.playing) {
+          this.setStatus(message, 'success', this.readyStatusMessage.descriptor);
+        }
+      } else {
+        this.readyStatusMessage = null;
+        if (!this.playing) {
+          this.setStatus('', 'idle');
+        }
       }
     }
 
@@ -2044,6 +2071,9 @@
       const api = typeof globalThis !== 'undefined' ? globalThis.i18n : null;
       const handler = () => {
         this.refreshStaticTexts();
+        this.refreshCurrentTitle();
+        this.refreshReadyStatusCache();
+        this.refreshStatusText();
         this.refreshProgressControls();
         this.setPlaybackSpeed(this.playbackSpeed, { syncSlider: false });
         this.setTransposeSemitones(this.transposeSemitones, { syncSlider: false, refreshVoices: false });
@@ -2543,6 +2573,14 @@
         }
         this.status.classList.remove('is-error');
         this.status.classList.add('is-success');
+        this.lastStatusMessage = {
+          descriptor: {
+            type: 'playing',
+            extra: typeof progressLabel === 'string' ? progressLabel : '',
+          },
+          state: 'success',
+          message,
+        };
         this.progressRaf = requestFrame(update);
       };
 
@@ -2572,7 +2610,8 @@
       const timerId = window.setTimeout(() => {
         this.pendingTimers.delete(timerId);
         if (!this.playing && this.readyStatusMessage) {
-          this.setStatus(this.readyStatusMessage, 'success');
+          const { message = '', descriptor = null } = this.readyStatusMessage;
+          this.setStatus(message, 'success', descriptor || { type: 'ready' });
         }
       }, timeout);
       this.pendingTimers.add(timerId);
@@ -2608,18 +2647,122 @@
       }
     }
 
-    setStatus(message, state = 'idle') {
-      if (!this.status) {
+    refreshCurrentTitle() {
+      if (!this.currentTitleDescriptor) {
         return;
       }
-      this.status.textContent = message;
+      const { key, fallback, params } = this.currentTitleDescriptor;
+      this.currentTitle = this.translate(key, fallback, params);
+    }
+
+    refreshReadyStatusCache() {
+      if (!this.readyStatusMessage || !this.readyStatusMessage.descriptor) {
+        return;
+      }
+      if (this.readyStatusMessage.descriptor.type !== 'ready') {
+        return;
+      }
+      const message = this.generateReadyStatusMessage();
+      this.readyStatusMessage.message = message;
+    }
+
+    cloneStatusDescriptor(descriptor) {
+      if (!descriptor || typeof descriptor !== 'object') {
+        return null;
+      }
+      const cloned = { ...descriptor };
+      if (descriptor.params && typeof descriptor.params === 'object') {
+        cloned.params = { ...descriptor.params };
+      }
+      return cloned;
+    }
+
+    resolveStatusDescriptor(descriptor) {
+      if (!descriptor || typeof descriptor !== 'object') {
+        return '';
+      }
+      const type = descriptor.type || 'translation';
+      if (type === 'translation') {
+        const { key, fallback, params } = descriptor;
+        return this.translate(key, fallback, params);
+      }
+      if (type === 'playing') {
+        const extra = typeof descriptor.extra === 'string' ? descriptor.extra : '';
+        return this.buildPlayingStatusMessage(extra);
+      }
+      if (type === 'ready') {
+        return this.generateReadyStatusMessage();
+      }
+      if (typeof descriptor.message === 'string') {
+        return descriptor.message;
+      }
+      return '';
+    }
+
+    setStatusMessage(key, fallback, params = {}, state = 'idle') {
+      if (!key && !fallback) {
+        this.setStatus('', state);
+        return;
+      }
+      const descriptor = {
+        type: 'translation',
+        key,
+        fallback,
+      };
+      if (params && typeof params === 'object' && Object.keys(params).length > 0) {
+        descriptor.params = { ...params };
+      }
+      this.setStatus('', state, descriptor);
+    }
+
+    refreshStatusText() {
+      if (!this.status || !this.lastStatusMessage) {
+        return;
+      }
+      const { descriptor = null, message = '', state = 'idle' } = this.lastStatusMessage;
+      let nextMessage = message || '';
+      if (descriptor) {
+        nextMessage = this.resolveStatusDescriptor(descriptor);
+        if (descriptor.type === 'ready' && this.readyStatusMessage) {
+          this.readyStatusMessage.message = nextMessage;
+        }
+      }
+      this.status.textContent = nextMessage;
       this.status.classList.remove('is-error', 'is-success');
       if (state === 'error') {
         this.status.classList.add('is-error');
       } else if (state === 'success') {
         this.status.classList.add('is-success');
       }
-      this.lastStatusMessage = { message, state };
+      this.lastStatusMessage.message = nextMessage;
+    }
+
+    setStatus(message, state = 'idle', descriptor = null) {
+      if (!this.status) {
+        return;
+      }
+      let resolvedMessage = '';
+      if (descriptor) {
+        resolvedMessage = this.resolveStatusDescriptor(descriptor) || '';
+      } else if (message != null) {
+        resolvedMessage = String(message);
+      }
+      this.status.textContent = resolvedMessage;
+      this.status.classList.remove('is-error', 'is-success');
+      if (state === 'error') {
+        this.status.classList.add('is-error');
+      } else if (state === 'success') {
+        this.status.classList.add('is-success');
+      }
+      if (descriptor) {
+        this.lastStatusMessage = {
+          descriptor: this.cloneStatusDescriptor(descriptor),
+          state,
+          message: resolvedMessage,
+        };
+      } else {
+        this.lastStatusMessage = { message: resolvedMessage, state };
+      }
     }
 
     updateButtons() {
@@ -2701,14 +2844,17 @@
 
     async loadFromFile(file) {
       this.stop();
-      this.setStatus(this.translate('index.sections.options.chiptune.status.loadingFile', 'Loading “{name}”…', { name: file.name }));
+      this.setStatusMessage('index.sections.options.chiptune.status.loadingFile', 'Loading “{name}”…', { name: file.name });
       try {
         const buffer = await file.arrayBuffer();
         await this.loadFromBuffer(buffer, file.name);
       } catch (error) {
         console.error(error);
-        this.setStatus(this.translate('index.sections.options.chiptune.status.fileError', 'Unable to read the file: {error}', { error: error.message }), 'error');
+        this.setStatusMessage('index.sections.options.chiptune.status.fileError', 'Unable to read the file: {error}', { error: error.message }, 'error');
         this.timeline = null;
+        this.readyStatusMessage = null;
+        this.currentTitle = '';
+        this.currentTitleDescriptor = null;
         this.updateButtons();
       } finally {
         if (this.fileInput) {
@@ -2723,7 +2869,7 @@
     async loadFromLibrary(track) {
       this.stop();
       const label = track.name || track.file;
-      this.setStatus(this.translate('index.sections.options.chiptune.status.loadingTrack', 'Loading “{name}”…', { name: label }));
+      this.setStatusMessage('index.sections.options.chiptune.status.loadingTrack', 'Loading “{name}”…', { name: label });
       if (this.fileInput) {
         this.fileInput.value = '';
       }
@@ -2732,8 +2878,11 @@
         await this.loadFromBuffer(buffer, label);
       } catch (error) {
         console.error(error);
-        this.setStatus(this.translate('index.sections.options.chiptune.status.trackError', 'Unable to load the track: {error}', { error: error.message }), 'error');
+        this.setStatusMessage('index.sections.options.chiptune.status.trackError', 'Unable to load the track: {error}', { error: error.message }, 'error');
         this.timeline = null;
+        this.readyStatusMessage = null;
+        this.currentTitle = '';
+        this.currentTitleDescriptor = null;
         this.updateButtons();
       }
     }
@@ -2749,20 +2898,35 @@
     async loadFromBuffer(buffer, label) {
       this.timeline = null;
       this.timelineAnalysis = null;
-      this.readyStatusMessage = '';
+      this.readyStatusMessage = null;
       try {
         const midi = MidiParser.parse(buffer);
         const timeline = MidiTimeline.fromMidi(midi);
         this.timeline = timeline;
-        this.currentTitle = label || this.translate('index.sections.options.chiptune.status.unknownTitle', 'Untitled MIDI');
+        if (label) {
+          this.currentTitle = label;
+          this.currentTitleDescriptor = null;
+        } else {
+          this.currentTitleDescriptor = {
+            key: 'index.sections.options.chiptune.status.unknownTitle',
+            fallback: 'Untitled MIDI',
+          };
+          this.currentTitle = this.translate(
+            this.currentTitleDescriptor.key,
+            this.currentTitleDescriptor.fallback
+          );
+        }
         this.timelineAnalysis = this.analyzeTimeline(timeline);
-        const summary = this.formatTimelineSummary(timeline, this.timelineAnalysis);
-        const durationText = this.formatDurationWithSpeed(timeline.duration);
-        const message = summary
-          ? this.translate('index.sections.options.chiptune.status.readyWithSummary', 'Ready: {title} — {summary}', { title: this.currentTitle, summary })
-          : this.translate('index.sections.options.chiptune.status.readyWithDuration', 'Ready: {title} ({duration})', { title: this.currentTitle, duration: durationText });
-        this.readyStatusMessage = message;
-        this.setStatus(message, 'success');
+        const readyMessage = this.generateReadyStatusMessage();
+        if (readyMessage) {
+          this.readyStatusMessage = {
+            message: readyMessage,
+            descriptor: { type: 'ready' },
+          };
+          this.setStatus(readyMessage, 'success', this.readyStatusMessage.descriptor);
+        } else {
+          this.readyStatusMessage = null;
+        }
         this.pendingSeekSeconds = 0;
         this.lastKnownPosition = 0;
         this.refreshProgressControls(timeline);
@@ -2770,7 +2934,9 @@
       } catch (error) {
         this.timeline = null;
         this.timelineAnalysis = null;
-        this.readyStatusMessage = '';
+        this.readyStatusMessage = null;
+        this.currentTitle = '';
+        this.currentTitleDescriptor = null;
         this.pendingSeekSeconds = 0;
         this.lastKnownPosition = 0;
         this.refreshProgressControls(null);
@@ -2923,7 +3089,7 @@
       }
 
       const loadPromise = (async () => {
-        this.setStatus(this.translate('index.sections.options.chiptune.status.loadingSoundFont', 'Loading SoundFont “{name}”…', { name: info.name || info.id }));
+        this.setStatusMessage('index.sections.options.chiptune.status.loadingSoundFont', 'Loading SoundFont “{name}”…', { name: info.name || info.id });
         try {
           const response = await fetch(info.file, { cache: 'no-cache' });
           if (!response.ok) {
@@ -2939,13 +3105,13 @@
             this.updateReadyStatusMessage();
             this.scheduleReadyStatusRestore(1600);
           }
-          this.setStatus(this.translate('index.sections.options.chiptune.status.soundFontReady', 'SoundFont ready: {name}', { name: info.name || info.id }), 'success');
+          this.setStatusMessage('index.sections.options.chiptune.status.soundFontReady', 'SoundFont ready: {name}', { name: info.name || info.id }, 'success');
           return font;
         } catch (error) {
           this.activeSoundFont = null;
           this.activeSoundFontId = null;
           this.currentSoundFontLabel = '';
-          this.setStatus(this.translate('index.sections.options.chiptune.status.soundFontError', 'Unable to load the SoundFont: {error}', { error: error.message }), 'error');
+          this.setStatusMessage('index.sections.options.chiptune.status.soundFontError', 'Unable to load the SoundFont: {error}', { error: error.message }, 'error');
           throw error;
         } finally {
           if (this.loadingSoundFont && this.loadingSoundFont.id === info.id) {
@@ -5667,7 +5833,7 @@
     async play(options = {}) {
       const { offset = null } = options;
       if (!this.timeline || !this.timeline.notes.length) {
-        this.setStatus(this.translate('index.sections.options.chiptune.status.noMidiData', 'No MIDI data to play.'), 'error');
+        this.setStatusMessage('index.sections.options.chiptune.status.noMidiData', 'No MIDI data to play.', {}, 'error');
         return;
       }
 
@@ -5680,13 +5846,13 @@
             await this.ensureSoundFontReady();
           } catch (error) {
             console.error(error);
-            this.setStatus(this.translate('index.sections.options.chiptune.status.soundFontUnavailable', 'SoundFont unavailable: {error}', { error: error.message }), 'error');
+            this.setStatusMessage('index.sections.options.chiptune.status.soundFontUnavailable', 'SoundFont unavailable: {error}', { error: error.message }, 'error');
             this.playing = false;
             this.updateButtons();
             return;
           }
           if (!this.activeSoundFont) {
-            this.setStatus(this.translate('index.sections.options.chiptune.status.soundFontMissing', 'No SoundFont ready for Hi-Fi mode.'), 'error');
+            this.setStatusMessage('index.sections.options.chiptune.status.soundFontMissing', 'No SoundFont ready for Hi-Fi mode.', {}, 'error');
             this.playing = false;
             this.updateButtons();
             return;
@@ -5719,14 +5885,14 @@
         this.finishTimeout = window.setTimeout(() => {
           this.finishTimeout = null;
           this.stop(false);
-          this.setStatus(this.translate('index.sections.options.chiptune.status.playbackComplete', 'Playback finished: {title}', { title: this.currentTitle }), 'success');
+          this.setStatusMessage('index.sections.options.chiptune.status.playbackComplete', 'Playback finished: {title}', { title: this.currentTitle }, 'success');
           this.scheduleReadyStatusRestore();
         }, Math.ceil(((effectiveDuration || 0) + 0.6) * 1000));
 
-        this.setStatus(this.buildPlayingStatusMessage(), 'success');
+        this.setStatus('', 'success', { type: 'playing', extra: '' });
       } catch (error) {
         console.error(error);
-        this.setStatus(this.translate('index.sections.options.chiptune.status.playbackError', 'Playback failed: {error}', { error: error.message }), 'error');
+        this.setStatusMessage('index.sections.options.chiptune.status.playbackError', 'Playback failed: {error}', { error: error.message }, 'error');
         this.stopProgressMonitor();
         this.playing = false;
         this.updateButtons();
@@ -5850,7 +6016,7 @@
       this.refreshProgressControls(this.timeline);
 
       if (manual && wasPlaying) {
-        this.setStatus(this.translate('index.sections.options.chiptune.status.playbackStopped', 'Playback stopped: {title}', { title: this.currentTitle }));
+        this.setStatusMessage('index.sections.options.chiptune.status.playbackStopped', 'Playback stopped: {title}', { title: this.currentTitle });
         this.scheduleReadyStatusRestore();
       }
     }
