@@ -767,6 +767,11 @@
       },
       "table": {
         "placeholder": "The periodic table will be available soon.",
+        "summary": {
+          "title": "Element totals",
+          "current": "Current",
+          "lifetime": "Lifetime collected"
+        },
         "aria": {
           "nameWithSymbol": "{name} ({symbol})",
           "name": "{name}",
@@ -782,6 +787,9 @@
         "collection": {
           "progress": "Collection: {owned} / {total} elements",
           "summary": "Collection: {owned} / {total} elements ({ratio} %)"
+        },
+        "summaryTile": {
+          "aria": "Current total: {current} · Lifetime total: {lifetime}"
         },
         "bonuses": {
           "apcFlat": "APC +{value}",

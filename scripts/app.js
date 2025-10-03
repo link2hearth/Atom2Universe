@@ -2195,6 +2195,9 @@ const elements = {
   elementInfoOwnedCount: document.getElementById('elementInfoOwnedCount'),
   elementInfoCollection: document.getElementById('elementInfoCollection'),
   collectionProgress: document.getElementById('elementCollectionProgress'),
+  collectionSummaryTile: document.getElementById('elementCollectionSummary'),
+  collectionSummaryCurrent: document.getElementById('elementCollectionCurrentTotal'),
+  collectionSummaryLifetime: document.getElementById('elementCollectionLifetimeTotal'),
   nextMilestone: document.getElementById('nextMilestone'),
   goalsList: document.getElementById('goalsList'),
   goalsEmpty: document.getElementById('goalsEmpty'),
@@ -4186,8 +4189,12 @@ function selectPeriodicElement(id, { focus = false } = {}) {
 function renderPeriodicTable() {
   if (!elements.periodicTable) return;
   const infoPanel = elements.elementInfoPanel;
+  const summaryTile = elements.collectionSummaryTile;
   if (infoPanel) {
     infoPanel.remove();
+  }
+  if (summaryTile) {
+    summaryTile.remove();
   }
 
   elements.periodicTable.innerHTML = '';
@@ -4195,6 +4202,9 @@ function renderPeriodicTable() {
 
   if (infoPanel) {
     elements.periodicTable.appendChild(infoPanel);
+  }
+  if (summaryTile) {
+    elements.periodicTable.appendChild(summaryTile);
   }
 
   if (!periodicElements.length) {
@@ -4346,6 +4356,12 @@ function updateCollectionDisplay() {
     return total + (hasElementLifetime(entry) ? 1 : 0);
   }, 0);
   const total = TOTAL_ELEMENT_COUNT || elementEntries.length;
+  const lifetimeTotal = elementEntries.reduce((sum, entry) => {
+    return sum + getElementLifetimeCount(entry);
+  }, 0);
+  const currentTotal = elementEntries.reduce((sum, entry) => {
+    return sum + getElementCurrentCount(entry);
+  }, 0);
 
   if (elements.collectionProgress) {
     if (total > 0) {
@@ -4386,6 +4402,27 @@ function updateCollectionDisplay() {
     } else {
       elements.gachaOwnedSummary.textContent = t('scripts.app.collection.pending');
     }
+  }
+
+  const currentDisplay = formatIntegerLocalized(currentTotal);
+  const lifetimeDisplay = formatIntegerLocalized(lifetimeTotal);
+
+  if (elements.collectionSummaryCurrent) {
+    elements.collectionSummaryCurrent.textContent = currentDisplay;
+  }
+
+  if (elements.collectionSummaryLifetime) {
+    elements.collectionSummaryLifetime.textContent = lifetimeDisplay;
+  }
+
+  if (elements.collectionSummaryTile) {
+    const summaryLabel = translateOrDefault(
+      'scripts.app.table.summaryTile.aria',
+      `Total actuel\u00a0: ${currentDisplay} · Total historique\u00a0: ${lifetimeDisplay}`,
+      { current: currentDisplay, lifetime: lifetimeDisplay }
+    );
+    elements.collectionSummaryTile.setAttribute('aria-label', summaryLabel);
+    elements.collectionSummaryTile.setAttribute('title', summaryLabel);
   }
 
   periodicCells.forEach((cell, id) => {
