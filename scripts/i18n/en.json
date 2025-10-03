@@ -586,6 +586,20 @@
     }
   },
   "scripts": {
+    "arcade": {
+      "sudoku": {
+        "status": {
+          "generating": "Generating…",
+          "generated": "{level} grid generated (clues: {clues}).",
+          "errors": "Conflicts detected: {count}.",
+          "noError": "No conflicts detected yet.",
+          "conflictBeforeSolve": "Conflicts found. Fix them before solving.",
+          "solved": "Solution found ✔︎",
+          "noSolution": "No solution found (or the puzzle is invalid).",
+          "cleared": "Grid cleared."
+        }
+      }
+    },
     "config": {
       "uiText": {
         "options": {
