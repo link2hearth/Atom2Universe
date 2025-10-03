@@ -114,13 +114,10 @@
               "aria": "Contrôles du Sudoku",
               "level": "Niveau",
               "generate": "Générer une grille",
-              "validate": "Valider",
-              "solve": "Résoudre",
-              "clear": "Vider",
               "options": {
-                "facile": "Facile (~40 indices)",
-                "moyen": "Moyen (~32)",
-                "difficile": "Difficile (~26)"
+                "facile": "Facile",
+                "moyen": "Moyen",
+                "difficile": "Difficile"
               }
             },
             "board": "Grille Sudoku",
@@ -128,7 +125,8 @@
             "note": "Astuce : utilisez les chiffres 1 à 9. La validation détecte les doublons dans les lignes, colonnes et blocs 3×3. La résolution applique un backtracking tandis que la génération produit une grille à solution unique.",
             "pad": {
               "aria": "Sélection des chiffres du Sudoku",
-              "clear": "Effacer"
+              "clear": "Effacer",
+              "ok": "OK"
             }
           },
           "quantum2048": {
@@ -1342,13 +1340,10 @@
               "aria": "Sudoku controls",
               "level": "Difficulty",
               "generate": "Generate grid",
-              "validate": "Validate",
-              "solve": "Solve",
-              "clear": "Clear",
               "options": {
-                "facile": "Easy (~40 clues)",
-                "moyen": "Medium (~32)",
-                "difficile": "Hard (~26)"
+                "facile": "Easy",
+                "moyen": "Medium",
+                "difficile": "Hard"
               }
             },
             "board": "Sudoku grid",
@@ -1356,7 +1351,8 @@
             "note": "Tip: only digits 1–9 are accepted. Validation highlights duplicates in rows, columns and 3×3 boxes. The solver uses backtracking and generation ensures a single-solution puzzle.",
             "pad": {
               "aria": "Sudoku number picker",
-              "clear": "Clear cell"
+              "clear": "Clear",
+              "ok": "OK"
             }
           },
           "quantum2048": {

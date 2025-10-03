@@ -110,13 +110,10 @@
           "aria": "Contrôles du Sudoku",
           "level": "Niveau",
           "generate": "Générer une grille",
-          "validate": "Valider",
-          "solve": "Résoudre",
-          "clear": "Vider",
           "options": {
-            "facile": "Facile (~40 indices)",
-            "moyen": "Moyen (~32)",
-            "difficile": "Difficile (~26)"
+            "facile": "Facile",
+            "moyen": "Moyen",
+            "difficile": "Difficile"
           }
         },
         "board": "Grille Sudoku",
@@ -124,7 +121,8 @@
         "note": "Astuce : utilisez les chiffres 1 à 9. La validation détecte les doublons dans les lignes, colonnes et blocs 3×3. La résolution applique un backtracking tandis que la génération produit une grille à solution unique.",
         "pad": {
           "aria": "Sélection des chiffres du Sudoku",
-          "clear": "Effacer"
+          "clear": "Effacer",
+          "ok": "OK"
         }
       },
       "quantum2048": {
