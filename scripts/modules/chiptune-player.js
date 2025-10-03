@@ -1353,6 +1353,7 @@
       this.selectedSoundFontLabel = '';
       this.currentSoundFontLabel = '';
       this.loadingSoundFont = null;
+      this.soundFontLoadErrored = false;
       this.schedulerInterval = null;
       this.schedulerState = null;
       this.scheduleAheadTime = 0.25;
@@ -1375,6 +1376,7 @@
       this.activePlaybackSpeed = 1;
       this.speedMin = 0.5;
       this.speedMax = 2;
+      this.libraryLoadErrored = false;
 
       this.populateSoundFonts(this.soundFontList, false);
 
@@ -2211,6 +2213,44 @@
           'Numbers refer to General MIDI program numbers (0 to 127).'
         );
       }
+      if (this.soundFontSelect && this.soundFontSelect.options.length > 0) {
+        const placeholder = this.soundFontSelect.options[0];
+        if (placeholder) {
+          if (this.soundFontList && this.soundFontList.length) {
+            placeholder.textContent = this.translate(
+              'index.sections.options.chiptune.soundfonts.placeholder',
+              'Choose a SoundFont'
+            );
+            placeholder.disabled = true;
+            placeholder.hidden = true;
+          } else {
+            const key = this.soundFontLoadErrored
+              ? 'index.sections.options.chiptune.soundfonts.noneAvailable'
+              : 'index.sections.options.chiptune.soundfonts.noneDeclared';
+            const fallback = this.soundFontLoadErrored ? 'No SoundFont available' : 'No SoundFont declared';
+            placeholder.textContent = this.translate(key, fallback);
+            placeholder.disabled = false;
+            placeholder.hidden = false;
+          }
+        }
+      }
+      if (this.librarySelect && this.librarySelect.options.length > 0) {
+        const placeholder = this.librarySelect.options[0];
+        if (placeholder) {
+          if (this.libraryTracks && this.libraryTracks.length) {
+            placeholder.textContent = this.translate(
+              'index.sections.options.chiptune.library.placeholder',
+              'Select a track'
+            );
+          } else {
+            const key = this.libraryLoadErrored
+              ? 'index.sections.options.chiptune.library.unavailable'
+              : 'index.sections.options.chiptune.library.empty';
+            const fallback = this.libraryLoadErrored ? 'Local library unavailable' : 'No local tracks yet';
+            placeholder.textContent = this.translate(key, fallback);
+          }
+        }
+      }
       this.updateProgramUsage(this.timeline);
     }
 
@@ -2762,6 +2802,7 @@
     }
 
     populateSoundFonts(list, errored) {
+      this.soundFontLoadErrored = Boolean(errored);
       const sanitized = (Array.isArray(list) ? list : [])
         .map((item) => ({
           id: typeof item?.id === 'string' ? item.id : '',
@@ -2936,6 +2977,7 @@
     }
 
     populateLibrary(tracks, errored) {
+      this.libraryLoadErrored = Boolean(errored);
       this.libraryTracks = tracks
         .filter(item => item && typeof item.file === 'string')
         .map(item => ({
