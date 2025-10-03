@@ -3555,9 +3555,11 @@ function updateDevKitUI() {
     const unlocked = isPageUnlocked('info');
     elements.devkitUnlockInfo.disabled = unlocked;
     elements.devkitUnlockInfo.setAttribute('aria-disabled', unlocked ? 'true' : 'false');
-    elements.devkitUnlockInfo.textContent = unlocked
-      ? 'Page Infos débloquée'
-      : 'Débloquer la page Infos';
+    const i18nKey = unlocked
+      ? 'index.sections.devkit.unlocks.infoUnlocked'
+      : 'index.sections.devkit.unlocks.infoLocked';
+    elements.devkitUnlockInfo.setAttribute('data-i18n', i18nKey);
+    elements.devkitUnlockInfo.textContent = t(i18nKey);
   }
 }
 

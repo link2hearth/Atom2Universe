@@ -275,7 +275,8 @@
           "title": "Instant unlocks",
           "trophies": "Unlock every achievement",
           "elements": "Unlock the entire periodic table",
-          "info": "Unlock the Info page"
+          "infoLocked": "Unlock the Info page",
+          "infoUnlocked": "Info page unlocked"
         },
         "modes": {
           "title": "Persistent modes",
