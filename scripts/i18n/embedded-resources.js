@@ -177,16 +177,16 @@
         "table": {
           "aria": "Tableau périodique des éléments",
           "placeholder": "Sélectionnez un élément pour afficher ses propriétés.",
+          "details": {
+            "family": "Famille",
+            "collection": "Collection"
+          },
           "summary": {
             "title": "Total des éléments",
             "current": "Actuels",
             "lifetime": "Collectés au total"
-          },
-          "details": {
-              "family": "Famille",
-              "collection": "Collection"
-            }
-          },
+          }
+        },
           "fusion": {
             "title": "Chambre de fusion moléculaire",
             "intro": "Combinez vos éléments pour tenter de former des molécules inédites. Les ingrédients sont prélevés sur vos stocks actuels et la réussite n’est jamais garantie."
@@ -767,8 +767,110 @@
               "current": "Actuels",
               "lifetime": "Collectés au total"
             },
+            "aria": {
+              "nameWithSymbol": "{name} ({symbol})",
+              "name": "{name}",
+              "symbol": "{symbol}",
+              "atomicNumber": "Numéro atomique {number}",
+              "atomicMass": "Masse atomique {mass}",
+              "family": "Famille {family}"
+            },
+            "info": {
+              "ownedAria": "Copies actives\u00a0: {active}. Collectées au total\u00a0: {lifetime}.",
+              "ownedTitle": "Copies actives\u00a0: {active}\nCollectées au total\u00a0: {lifetime}"
+            },
+            "collection": {
+              "progress": "Collection\u00a0: {owned} / {total} éléments",
+              "summary": "Collection\u00a0: {owned} / {total} éléments ({ratio}\u00a0%)",
+              "effects": {
+                "apcFlat": "APC +{value}",
+                "apsFlat": "APS +{value}",
+                "apcMultiplier": "APC {value}",
+                "apsMultiplier": "APS {value}",
+                "critChance": "Chance +{value}",
+                "critMultiplier": "Multiplicateur +{value}×",
+                "critChanceMultiplier": "Chance {value}",
+                "critMultiplierMultiplier": "Multiplicateur {value}",
+                "critChanceSet": "Chance fixée à {value}",
+                "critMultiplierSet": "Multiplicateur fixé à {value}×",
+                "critCapAdd": "Plafond critique +{value}×",
+                "critCapMultiplier": "Plafond critique {value}",
+                "critCapSet": "Plafond critique fixé à {value}×",
+                "rarityMultiplierApc": "Multiplicateur de rareté APC {value}",
+                "rarityMultiplierAps": "Multiplicateur de rareté APS {value}",
+                "offline": "Collecte hors ligne {value}",
+                "frenzy": "Chance de frénésie {value}"
+              },
+              "notes": {
+                "singularityBoost": "Singularité amplifiée : effets {value}",
+                "amplify": "Amplifie {target} : {effects}",
+                "effects": "{label} : {effects}",
+                "multiplierBase": "{prefix}base {value}",
+                "multiplierIncrement": "{prefix}{value} toutes les {count} {unit}",
+                "multiplierCap": "{prefix}max {value}",
+                "rarityMultiplierDetail": "{prefix}{value}{suffix}"
+              },
+              "labels": {
+                "crit": "Critique",
+                "perCopy": "Par copie",
+                "fullCollection": "Collection complète",
+                "collectionBonus": "Bonus de collection",
+                "generic": "Bonus",
+                "critPerUnique": "Critique par unique",
+                "critPerDuplicate": "Critique par doublon",
+                "multiplier": "Multiplicateur {target}",
+                "rarityMultiplier": "Multiplicateur de rareté"
+              },
+              "threshold": {
+                "minCopies": "dès {count} {unit}",
+                "minUnique": "minimum {count} {unit}",
+                "requireAll": "collection complète requise"
+              },
+              "overview": {
+                "ticketReduction": "Réduit l’intervalle des étoiles à tickets de {value}s par élément unique",
+                "ticketMinimum": "minimum {value}s",
+                "offlineBase": "base {value}",
+                "offlineIncrement": "{value} par doublon",
+                "offlineCap": "max {value}",
+                "offlineSummary": "Collecte hors ligne {detail}",
+                "overflowFlat": "APC/APS +{value} par doublon",
+                "overflowThreshold": "au-delà de {count} {unit}",
+                "frenzyComplete": "Chance de frénésie {value} (collection complète requise)",
+                "singularitySynergy": "Synergie Singularité : Bonus ×2 si la collection Singularité minérale est complète",
+                "stellaireSynergy": "Synergie Forge stellaire : Compléter la collection double tous les bonus Forge stellaire"
+              },
+              "units": {
+                "copy": {
+                  "singular": "copie",
+                  "plural": "copies"
+                },
+                "unique": {
+                  "singular": "unique",
+                  "plural": "uniques"
+                },
+                "duplicate": {
+                  "singular": "doublon",
+                  "plural": "doublons"
+                }
+              },
+              "targets": {
+                "production": "production"
+              }
+            },
             "summaryTile": {
               "aria": "Total actuel\u00a0: {current} · Total historique\u00a0: {lifetime}"
+            },
+            "bonuses": {
+              "apcFlat": "APC +{value}",
+              "apsFlat": "APS +{value}",
+              "apcMult": "APC {value}",
+              "apsMult": "APS {value}",
+              "critChance": "Chance critique +{value}",
+              "critMultiplier": "Dégâts critiques +{value}×",
+              "ticketInterval": "Toutes les {duration}",
+              "offline": "Gains hors ligne {value}",
+              "frenzy": "Chance de frénésie {value}",
+              "overflow": "Bonus excédentaires +{value}"
             }
           },
           "collection": {
@@ -1426,16 +1528,16 @@
         "table": {
           "aria": "Periodic table of elements",
           "placeholder": "Select an element to display its properties.",
+          "details": {
+            "family": "Family",
+            "collection": "Collection"
+          },
           "summary": {
             "title": "Element totals",
             "current": "Current",
             "lifetime": "Lifetime collected"
-          },
-          "details": {
-              "family": "Family",
-              "collection": "Collection"
-            }
-          },
+          }
+        },
           "fusion": {
             "title": "Molecular fusion chamber",
             "intro": "Combine your elements to attempt creating brand new molecules. Ingredients are taken from your current stock and success is never guaranteed."
@@ -2016,8 +2118,110 @@
               "current": "Current",
               "lifetime": "Lifetime collected"
             },
+            "aria": {
+              "nameWithSymbol": "{name} ({symbol})",
+              "name": "{name}",
+              "symbol": "{symbol}",
+              "atomicNumber": "Atomic number {number}",
+              "atomicMass": "Atomic mass {mass}",
+              "family": "{family} family"
+            },
+            "info": {
+              "ownedAria": "Active copies: {active}. Total collected: {lifetime}.",
+              "ownedTitle": "Active copies: {active}\nTotal collected: {lifetime}"
+            },
+            "collection": {
+              "progress": "Collection: {owned} / {total} elements",
+              "summary": "Collection: {owned} / {total} elements ({ratio} %)",
+              "effects": {
+                "apcFlat": "APC +{value}",
+                "apsFlat": "APS +{value}",
+                "apcMultiplier": "APC {value}",
+                "apsMultiplier": "APS {value}",
+                "critChance": "Chance +{value}",
+                "critMultiplier": "Multiplier +{value}×",
+                "critChanceMultiplier": "Chance {value}",
+                "critMultiplierMultiplier": "Multiplier {value}",
+                "critChanceSet": "Chance set to {value}",
+                "critMultiplierSet": "Multiplier set to {value}×",
+                "critCapAdd": "Crit cap +{value}×",
+                "critCapMultiplier": "Crit cap {value}",
+                "critCapSet": "Crit cap set to {value}×",
+                "rarityMultiplierApc": "Rarity multiplier APC {value}",
+                "rarityMultiplierAps": "Rarity multiplier APS {value}",
+                "offline": "Offline collection {value}",
+                "frenzy": "Frenzy chance {value}"
+              },
+              "notes": {
+                "singularityBoost": "Amplified Singularity: effects {value}",
+                "amplify": "Boosts {target}: {effects}",
+                "effects": "{label}: {effects}",
+                "multiplierBase": "{prefix}base {value}",
+                "multiplierIncrement": "{prefix}{value} every {count} {unit}",
+                "multiplierCap": "{prefix}max {value}",
+                "rarityMultiplierDetail": "{prefix}{value}{suffix}"
+              },
+              "labels": {
+                "crit": "Critical",
+                "perCopy": "Per copy",
+                "fullCollection": "Complete collection",
+                "collectionBonus": "Collection bonus",
+                "generic": "Bonus",
+                "critPerUnique": "Critical per unique",
+                "critPerDuplicate": "Critical per duplicate",
+                "multiplier": "Multiplier {target}",
+                "rarityMultiplier": "Rarity multiplier"
+              },
+              "threshold": {
+                "minCopies": "from {count} {unit}",
+                "minUnique": "minimum {count} {unit}",
+                "requireAll": "complete collection required"
+              },
+              "overview": {
+                "ticketReduction": "Reduces ticket star interval by {value}s per unique element",
+                "ticketMinimum": "minimum {value}s",
+                "offlineBase": "base {value}",
+                "offlineIncrement": "{value} per duplicate",
+                "offlineCap": "max {value}",
+                "offlineSummary": "Offline collection {detail}",
+                "overflowFlat": "APC/APS +{value} per duplicate",
+                "overflowThreshold": "beyond {count} {unit}",
+                "frenzyComplete": "Frenzy chance {value} (complete collection required)",
+                "singularitySynergy": "Singularity synergy: Bonus ×2 when the Singularity collection is complete",
+                "stellaireSynergy": "Stellar Forge synergy: Completing the collection doubles all Stellar Forge bonuses"
+              },
+              "units": {
+                "copy": {
+                  "singular": "copy",
+                  "plural": "copies"
+                },
+                "unique": {
+                  "singular": "unique",
+                  "plural": "uniques"
+                },
+                "duplicate": {
+                  "singular": "duplicate",
+                  "plural": "duplicates"
+                }
+              },
+              "targets": {
+                "production": "production"
+              }
+            },
             "summaryTile": {
               "aria": "Current total: {current} · Lifetime total: {lifetime}"
+            },
+            "bonuses": {
+              "apcFlat": "APC +{value}",
+              "apsFlat": "APS +{value}",
+              "apcMult": "APC {value}",
+              "apsMult": "APS {value}",
+              "critChance": "Critical chance +{value}",
+              "critMultiplier": "Critical damage +{value}×",
+              "ticketInterval": "Every {duration}",
+              "offline": "Offline gains {value}",
+              "frenzy": "Frenzy chance {value}",
+              "overflow": "Overflow bonuses +{value}"
             }
           },
           "collection": {
