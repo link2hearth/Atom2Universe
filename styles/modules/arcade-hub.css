@@ -139,20 +139,3 @@
   outline: 2px solid rgba(17, 19, 33, 0.45);
   outline-offset: 2px;
 }
-
-.page--photon {
-  --photon-banner-height: clamp(3.2rem, 10vw, 4.5rem);
-  --photon-layout-gap: clamp(0.75rem, 2vw, 1.6rem);
-  --photon-stage-padding: clamp(0.4rem, 2vw, 1.4rem);
-  display: none;
-  width: 100%;
-  max-width: 100%;
-  padding: 0;
-}
-
-.page--photon.active {
-  display: flex;
-  flex-direction: column;
-  gap: var(--photon-layout-gap);
-  min-height: 100vh;
-}

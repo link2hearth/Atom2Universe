@@ -86,12 +86,6 @@
                 "description": "Alignez les alliages Mach3 pour forger des bonus et améliorer votre production.",
                 "cta": "Forger"
               },
-              "photon": {
-                "aria": "Accéder au mini-jeu Photon",
-                "title": "Photon",
-                "description": "Contrôlez le flux lumineux et évitez les interférences pour maximiser votre score.",
-                "cta": "Lancer"
-              },
               "wave": {
                 "aria": "Accéder au mini-jeu Glisse quantique",
                 "title": "Glisse quantique",
@@ -206,15 +200,6 @@
               "subtitle": "Commun cosmique · Essentiel planétaire · Forge stellaire · Singularité minérale · Mythe quantique · Irréel"
             }
           },
-          "photon": {
-            "title": "Photon",
-            "aria": "Photon",
-            "scoreLabel": "Score",
-            "closeAria": "Fermer Photon et retourner aux options",
-            "stageAria": "Zone de jeu Photon",
-            "overlayMessage": "Prêt à synchroniser les photons ?",
-            "button": "Commencer"
-          },
           "metaux": {
             "aria": "Métaux",
             "exitAria": "Quitter le mini-jeu Métaux",
@@ -268,11 +253,6 @@
                 "pastels": "Pastels"
               },
               "note": "Débloquez le trophée « Ruée vers le million » pour personnaliser vos briques."
-            },
-            "photon": {
-              "title": "Photon",
-              "note": "Synchronisez la couleur du halo avec les faisceaux lumineux qui tombent.",
-              "button": "Lancer Photon"
             },
             "reset": "Réinitialiser"
           },
@@ -569,10 +549,6 @@
                   "match3": {
                     "label": "Mini jeu Mach3 :",
                     "description": "C’est un jeu de Match 3, alignez le Cuivre, le Bronze, l’Argent, l’Or et le Carbone (Diamant) le plus vite possible avant que le timer atteigne 0. Plus votre score sera grand, plus grand sera votre bonus de production d’APS."
-                  },
-                  "photon": {
-                    "label": "Mini jeu Photon :",
-                    "description": "Incarnez un Photon qui change d’état afin de passer entre des mailles, ou dans des trous le plus longtemps possible. Ajoutera un bonus plus tard."
                   }
                 }
               }
@@ -1278,12 +1254,6 @@
                 "description": "Match alloys in Mach3 mode to forge bonuses and boost production.",
                 "cta": "Forge"
               },
-              "photon": {
-                "aria": "Open the Photon mini-game",
-                "title": "Photon",
-                "description": "Channel the light stream and dodge interferences to maximise your score.",
-                "cta": "Launch"
-              },
               "wave": {
                 "aria": "Open the Quantum Glide mini-game",
                 "title": "Quantum Glide",
@@ -1398,15 +1368,6 @@
               "subtitle": "Cosmic common · Planetary essential · Stellar forge · Mineral singularity · Quantum myth · Unreal"
             }
           },
-          "photon": {
-            "title": "Photon",
-            "aria": "Photon",
-            "scoreLabel": "Score",
-            "closeAria": "Close Photon and return to options",
-            "stageAria": "Photon play area",
-            "overlayMessage": "Ready to sync the photons?",
-            "button": "Start"
-          },
           "metaux": {
             "aria": "Metals",
             "exitAria": "Leave the Metals mini-game",
@@ -1460,11 +1421,6 @@
                 "pastels": "Pastels"
               },
               "note": "Unlock the “Rush to a Million” trophy to customize your bricks."
-            },
-            "photon": {
-              "title": "Photon",
-              "note": "Match the halo color with the falling light beams.",
-              "button": "Launch Photon"
             },
             "reset": "Reset"
           },
@@ -1752,10 +1708,6 @@
                   "match3": {
                     "label": "Mach3 mini-game:",
                     "description": "A Match 3 game—line up Copper, Bronze, Silver, Gold, and Carbon (Diamond) as quickly as possible before the timer hits 0. Higher scores mean higher APS production bonuses."
-                  },
-                  "photon": {
-                    "label": "Photon mini-game:",
-                    "description": "Play as a Photon switching states to slip between meshes or through holes for as long as possible. Bonus to be added later."
                   }
                 }
               }

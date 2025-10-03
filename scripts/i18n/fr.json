@@ -82,12 +82,6 @@
             "description": "Alignez les alliages Mach3 pour forger des bonus et améliorer votre production.",
             "cta": "Forger"
           },
-          "photon": {
-            "aria": "Accéder au mini-jeu Photon",
-            "title": "Photon",
-            "description": "Contrôlez le flux lumineux et évitez les interférences pour maximiser votre score.",
-            "cta": "Lancer"
-          },
           "wave": {
             "aria": "Accéder au mini-jeu Glisse quantique",
             "title": "Glisse quantique",
@@ -202,26 +196,6 @@
           "subtitle": "Commun cosmique · Essentiel planétaire · Forge stellaire · Singularité minérale · Mythe quantique · Irréel"
         }
       },
-      "photon": {
-        "title": "Photon",
-        "aria": "Photon",
-        "scoreLabel": "Score",
-        "closeAria": "Fermer Photon et retourner aux options",
-        "stageAria": "Zone de jeu Photon",
-        "overlayMessage": "Prêt à synchroniser les photons ?",
-        "button": "Commencer",
-        "modeLabel": "Mode",
-        "modes": {
-          "classic": "Classique",
-          "single": "Flux unique",
-          "hold": "Maintien"
-        },
-        "modeDescriptions": {
-          "classic": "Plusieurs faisceaux apparaissent en même temps. Alternez rapidement entre les couleurs.",
-          "single": "Un seul faisceau descend à la fois mais plus vite. Anticipez pour garder le rythme.",
-          "hold": "Les faisceaux mixtes exigent de maintenir le clic pendant leur passage tout en gardant la bonne couleur."
-        }
-      },
       "metaux": {
         "aria": "Métaux",
         "exitAria": "Quitter le mini-jeu Métaux",
@@ -275,11 +249,6 @@
             "pastels": "Pastels"
           },
           "note": "Débloquez le trophée « Ruée vers le million » pour personnaliser vos briques."
-        },
-        "photon": {
-          "title": "Photon",
-          "note": "Synchronisez la couleur du halo avec les faisceaux lumineux qui tombent.",
-          "button": "Lancer Photon"
         },
         "reset": "Réinitialiser"
       },
@@ -576,10 +545,6 @@
               "match3": {
                 "label": "Mini jeu Mach3 :",
                 "description": "C’est un jeu de Match 3, alignez le Cuivre, le Bronze, l’Argent, l’Or et le Carbone (Diamant) le plus vite possible avant que le timer atteigne 0. Plus votre score sera grand, plus grand sera votre bonus de production d’APS."
-              },
-              "photon": {
-                "label": "Mini jeu Photon :",
-                "description": "Incarnez un Photon qui change d’état afin de passer entre des mailles, ou dans des trous le plus longtemps possible. Ajoutera un bonus plus tard."
               }
             }
           }
@@ -628,18 +593,6 @@
         "brickSkin": {
           "unlocked": "Choisissez l’apparence des briques de Particules."
         }
-      },
-      "photon": {
-        "instructions": {
-          "classic": "Synchronisez le halo avec la couleur du faisceau lorsqu’il touche le sol lumineux.",
-          "single": "Un seul faisceau descend à la fois : adaptez le halo dès qu’il s’approche du sol lumineux.",
-          "hold": "Des faisceaux mixtes apparaissent : maintenez le clic pendant leur passage en plus de changer la couleur du halo."
-        },
-        "gameOver": {
-          "color": "Couleur incorrecte ! Score : {score}",
-          "hold": "Maintenez le clic pour franchir la barrière mixte ! Score : {score}"
-        },
-        "retry": "Rejouer"
       },
       "frenzy": "Frénésie",
       "frenzyActivate": "Activer la {label} ({multiplier})",

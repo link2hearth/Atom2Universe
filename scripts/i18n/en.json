@@ -82,12 +82,6 @@
             "description": "Match alloys in Mach3 mode to forge bonuses and boost production.",
             "cta": "Forge"
           },
-          "photon": {
-            "aria": "Open the Photon mini-game",
-            "title": "Photon",
-            "description": "Channel the light stream and dodge interferences to maximise your score.",
-            "cta": "Launch"
-          },
           "wave": {
             "aria": "Open the Quantum Glide mini-game",
             "title": "Quantum Glide",
@@ -202,26 +196,6 @@
           "subtitle": "Cosmic common · Planetary essential · Stellar forge · Mineral singularity · Quantum myth · Unreal"
         }
       },
-      "photon": {
-        "title": "Photon",
-        "aria": "Photon",
-        "scoreLabel": "Score",
-        "closeAria": "Close Photon and return to options",
-        "stageAria": "Photon play area",
-        "overlayMessage": "Ready to sync the photons?",
-        "button": "Start",
-        "modeLabel": "Mode",
-        "modes": {
-          "classic": "Classic",
-          "single": "Single beam",
-          "hold": "Hold gate"
-        },
-        "modeDescriptions": {
-          "classic": "Multiple beams fall at once. Swap colors quickly to keep the rhythm.",
-          "single": "Only one beam descends at a time but moves faster. Stay sharp.",
-          "hold": "Mixed beams merge both patterns. Hold the click while they cross the halo."
-        }
-      },
       "metaux": {
         "aria": "Metals",
         "exitAria": "Leave the Metals mini-game",
@@ -275,11 +249,6 @@
             "pastels": "Pastels"
           },
           "note": "Unlock the “Rush to a Million” trophy to customize your bricks."
-        },
-        "photon": {
-          "title": "Photon",
-          "note": "Match the halo color with the falling light beams.",
-          "button": "Launch Photon"
         },
         "reset": "Reset"
       },
@@ -591,10 +560,6 @@
               "match3": {
                 "label": "Mach3 mini-game:",
                 "description": "A Match 3 game—line up Copper, Bronze, Silver, Gold, and Carbon (Diamond) as quickly as possible before the timer hits 0. Higher scores mean higher APS production bonuses."
-              },
-              "photon": {
-                "label": "Photon mini-game:",
-                "description": "Play as a Photon switching states to slip between meshes or through holes for as long as possible. Bonus to be added later."
               }
             }
           }
@@ -643,18 +608,6 @@
         "brickSkin": {
           "unlocked": "Choose the appearance of Particles bricks."
         }
-      },
-      "photon": {
-        "instructions": {
-          "classic": "Match the halo color with the beam when it reaches the luminous floor.",
-          "single": "A single, faster beam descends at a time—switch the halo as soon as it nears the floor.",
-          "hold": "Mixed beams demand that you hold the click while they pass, in addition to swapping colors."
-        },
-        "gameOver": {
-          "color": "Wrong color! Score: {score}",
-          "hold": "Hold the click to clear the mixed barrier! Score: {score}"
-        },
-        "retry": "Retry"
       },
       "frenzy": "Frenzy",
       "frenzyActivate": "Activate {label} ({multiplier})",
