@@ -828,10 +828,15 @@ const GAME_CONFIG = {
       graviton: {
         lifetimeMs: 10000,
         spawnChance: {
-          base: 0.15,
-          perLevel: 0.05,
-          min: 0.15,
-          max: 0.5
+          base: 0.01,
+          perLevel: 0.0025,
+          min: 0.005,
+          max: 0.1,
+          overrides: [
+            { level: 8, chance: 0.02 },
+            { level: 10, chance: 0.05 },
+            { minLevel: 11, chance: 0.1 }
+          ]
         },
         detectionMessage: 'Graviton détecté !',
         detectionMessageDurationMs: 2600,
