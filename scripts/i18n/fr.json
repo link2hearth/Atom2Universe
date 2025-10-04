@@ -2822,8 +2822,15 @@
           "symbol": "Bi",
           "name": "Bismuth",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Métal lourd irisé mais non toxique, le bismuth allie densité, dilatation singulière et douceur chimique.",
+            "paragraphs": [
+              "Présentation — Symbole “Bi”, numéro atomique 83, le bismuth est un métal blanc argenté à reflets rosés, dense (9,78 g/cm³), cassant et faiblement conducteur. Il fond à 271 °C et se dilate en se solidifiant, un comportement rare qu’il partage avec l’eau. Connu depuis le Moyen Âge et longtemps confondu avec l’étain et le plomb, il fut reconnu comme élément distinct au XVIᵉ siècle par Georgius Agricola. Son nom dérive probablement de l’allemand médiéval Wismut, issu de weiß Masse, “masse blanche”.",
+              "Origines cosmiques — Le bismuth est un élément terminal de la nucléosynthèse stellaire. Il naît du processus lent de capture de neutrons (s-process) dans les géantes rouges et constitue l’un des derniers éléments quasi stables avant la radioactivité spontanée. Son isotope principal, ^209Bi, longtemps considéré comme parfaitement stable, est en réalité faiblement radioactif avec une demi-vie supérieure à 10¹⁹ ans, soit plus d’un milliard de fois l’âge de l’univers.",
+              "Origine terrestre — Sur Terre, le bismuth est rare (environ 0,2 ppm dans la croûte) et se rencontre souvent avec les minerais de plomb, de cuivre et d’argent. Il apparaît également dans la bismuthinite (Bi₂S₃) et la bismite (Bi₂O₃). La Chine en est aujourd’hui le principal producteur. Malgré sa densité élevée et sa proximité chimique avec des métaux toxiques, le bismuth est biocompatible et non cumulatif dans l’organisme, ce qui en fait un substitut sûr pour de nombreuses applications.",
+              "Usages — Le bismuth remplace avantageusement le plomb dans les alliages à bas point de fusion, les munitions non polluantes, les soudures électroniques et certains verres optiques. En médecine, le sous-salicylate de bismuth traite les troubles gastriques, tandis que d’autres sels de bismuth servent d’agents antibactériens. Sa dilatation à la solidification le rend précieux dans les alliages fusibles dédiés aux dispositifs de sécurité thermique, et ses composés oxydés jouent le rôle de catalyseurs ou de pigments nacrés. Ses cristaux irisés en escalier nourrissent aussi l’art et la médiation scientifique.",
+              "Molécules associées — Parmi ses composés notables figurent le sous-salicylate de bismuth, le trioxyde de bismuth (Bi₂O₃) et les subnitrates (BiONO₃) utilisés en pharmacie. Le pentachlorure de bismuth (BiCl₅) et le tribromure (BiBr₃) interviennent en chimie organique, tandis que les oxydes mixtes de bismuth jouent un rôle en catalyse et en photocatalyse. Sa chimie, proche de celle de l’antimoine, se distingue par des composés plus stables et moins toxiques.",
+              "Conclusion — Paradoxe heureux du tableau périodique, le bismuth est un métal lourd mais bienveillant, brillant et presque intemporel. Forgé dans les étoiles, il offre une alternative douce à des éléments toxiques, et ses cristaux irisés rappellent que la chimie sait aussi créer de la beauté."
+            ],
             "sources": []
           }
         },
@@ -2831,8 +2838,15 @@
           "symbol": "Po",
           "name": "Polonium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Métal aussi discret que redoutable, le polonium conjugue rareté extrême et radioactivité fulgurante héritée des Curie.",
+            "paragraphs": [
+              "Présentation — Symbole “Po”, numéro atomique 84, le polonium est un métal argenté, mou, très rare et hautement radioactif. Il s’oxyde rapidement à l’air et se sublime facilement. Tous ses isotopes sont instables ; le plus stable, ^210Po, possède une demi-vie de 138 jours. Marie Curie le baptisa en hommage à sa Pologne natale, faisant de sa découverte le premier élément identifié uniquement par sa radioactivité.",
+              "Origines cosmiques — Le polonium se forme dans les supernovae et les étoiles à neutrons par le processus rapide de capture de neutrons (r-process), aux côtés des autres éléments lourds radioactifs. Sur Terre, il apparaît aussi comme produit de désintégration de l’uranium et du radon. Éphémère par nature, il est continuellement généré dans les roches radioactives mais disparaît aussi vite qu’il naît.",
+              "Origine terrestre — À l’échelle planétaire, le polonium n’existe qu’à l’état de traces, de l’ordre de quelques centaines de microgrammes dans toute la croûte terrestre à un instant donné. On le trouve dans les minerais d’uranium et de thorium, dont il est extrait par des procédés radiologiques complexes. En laboratoire, il est obtenu par irradiation neutronique du bismuth, ce qui produit l’isotope ^210Po. Sa radioactivité intense, dominée par l’émission alpha, le rend dangereux même à doses infinitésimales.",
+              "Usages — Les usages civils du polonium sont très limités en raison de sa toxicité extrême et de sa courte demi-vie. Il alimente certains générateurs thermoélectriques (RTG) où la chaleur de ^210Po est convertie en électricité pour des satellites ou équipements militaires. Il a aussi servi dans des sources antistatiques et quelques instruments scientifiques pour neutraliser les charges électriques, mais sa manipulation reste strictement encadrée tant son ingestion ou inhalation est létale.",
+              "Molécules associées — Les composés du polonium sont rares et mal connus pour des raisons de sécurité. On identifie le dioxyde de polonium (PoO₂), plusieurs halogénures (PoCl₂, PoCl₄) et quelques chalcogénures avec le soufre ou le sélénium. Leur chimie rappelle celle du tellure et du bismuth, mais leur instabilité radioactive limite les études en dehors de laboratoires fortement contrôlés.",
+              "Conclusion — À la croisée de la chimie et de l’histoire, le polonium naît des étoiles, fut révélé par les Curie et ouvrit la voie à la science nucléaire. Métal invisible et mortel, il symbolise la beauté dangereuse d’un savoir poussé jusqu’à ses limites."
+            ],
             "sources": []
           }
         },
