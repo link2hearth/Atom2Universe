@@ -2176,8 +2176,15 @@
           "symbol": "Br",
           "name": "Bromine",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A reddish-brown liquid halogen, bromine pairs corrosive reactivity with key roles in industry and biology.",
+            "paragraphs": [
+              "Symbol 'Br', atomic number 35, bromine is a reddish-brown halogen and the only nonmetal that is liquid at room temperature alongside mercury. Pungent and irritating in odor, it literally fumes in open air. Discovered in 1826 in Mediterranean brines, bromine is a paradoxical element: corrosive and dangerous yet indispensable to many chemical and biological processes.",
+              "Like the other halogens, bromine is forged in massive stars and supernovae, mainly through slow neutron capture (the s-process). It is then dispersed into the interstellar medium, where it bonds with lighter elements. Its presence in meteorites attests to its cosmic age and early incorporation into terrestrial matter.",
+              "On Earth, bromine is relatively scarce in the crust but abundant in the oceans. It occurs there as bromide ions (Br⁻), averaging about 65 mg per liter of seawater. It is also found in salt lakes, salterns, and concentrated groundwater deposits. Bromine is chiefly extracted from these saline waters by oxidizing bromide. In small doses, certain marine organisms use bromine in their metabolism, proving that even the most corrosive halogens have a role in life.",
+              "Bromine long served for its powerful chemical properties. In the twentieth century it was used in fire extinguishing agents, leaded fuels, and silver halide photography. Today bromine remains important in flame retardants, specific pharmaceutical applications, and as a chemical reagent. In marine biology, organobromine compounds are produced naturally by algae and sponges, often as defensive mechanisms.",
+              "Bromine compounds are varied and often reactive: metal bromides (NaBr, KBr), hydrobromic acid (HBr), and bromates (BrO₃⁻). Silver bromide (AgBr), which is light sensitive, was the foundation of film photography. In organic chemistry, bromides are classic reagents for introducing bromine atoms into molecules thanks to their controllable reactivity. In nature, compounds such as bromoform (CHBr₃) or brominated halomethanes showcase the vibrant chemistry of the oceans.",
+              "Bromine is a halogen of contrasts: a fuming, toxic liquid yet also valuable to science and biology. Born in the stars and concentrated in the seas, it embodies the boundary between violent chemistry and vital chemistry. Through its often controversial uses, it reminds us that the power of matter lies less in its nature than in how humanity channels it."
+            ],
             "sources": []
           }
         },
@@ -2185,8 +2192,15 @@
           "symbol": "Kr",
           "name": "Krypton",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A discreet noble gas of the atmosphere, krypton combines chemical inertia with cutting-edge scientific applications.",
+            "paragraphs": [
+              "Krypton is one of the most discreet noble gases in our atmosphere. Symbol Kr, atomic number 36, it is colorless, odorless, and chemically inert. It accounts for barely one part per million of air, making it rare yet not entirely out of reach.",
+              "Krypton is produced in massive stars, mainly through the slow neutron capture process (s-process) and the rapid capture process (r-process) that occur during stellar evolution and explosions. Scattered through interstellar space, every atom of terrestrial krypton is a witness to stellar alchemy.",
+              "On Earth, krypton is present in trace proportions in the atmosphere. It is recovered mainly by fractionally distilling liquid air, alongside other rare gases such as argon and xenon. Even though it is scarce, this method yields enough for industrial and scientific uses.",
+              "Krypton owes its usefulness to its inertia and electrical properties. It appears in certain discharge lamps and krypton lighting used for beacons, specialized diodes, and projection lamps, and it once underpinned metrology: before 1983 the definition of the meter relied on the wavelength emitted by the isotope 86Kr. It also finds applications in medical imaging and nuclear research, where specific krypton isotopes help detect atomic reactions.",
+              "Like all noble gases, krypton forms few compounds. Under special conditions it can nevertheless react with very electropositive elements. The first known compound, krypton difluoride (KrF₂), was discovered in 1963; highly oxidizing and unstable, it exists only under laboratory conditions.",
+              "A rare gas of the air and a traveler of the stars, krypton embodies the silent nobility of its chemical family. Invisible yet capable of providing light or scientific reference, it shows that rarity does not preclude importance and that chemistry has its hidden gems."
+            ],
             "sources": []
           }
         },

@@ -2161,8 +2161,15 @@
           "symbol": "Br",
           "name": "Brome",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Halogène liquide rouge-brun, le brome allie une chimie corrosive à des rôles clés dans l’industrie et le vivant.",
+            "paragraphs": [
+              "Symbole « Br », numéro atomique 35, le brome est un halogène rouge-brun, le seul élément non métallique liquide à température ambiante avec le mercure. D’une odeur piquante et irritante, il fume littéralement à l’air libre. Découvert en 1826 dans des eaux salines méditerranéennes, le brome est un élément paradoxal : corrosif, dangereux, mais aussi indispensable à de nombreux processus chimiques et biologiques.",
+              "Le brome, comme les autres halogènes, est produit dans les étoiles massives et lors des supernovae, principalement par capture lente de neutrons (processus s). Il est ensuite dispersé dans le milieu interstellaire, où il s’associe à d’autres éléments légers. Son existence dans les météorites témoigne de son ancienneté cosmique et de son intégration précoce dans la matière terrestre.",
+              "Sur Terre, le brome est relativement rare dans la croûte, mais très abondant dans les océans. Il s’y trouve sous forme d’ions bromure (Br⁻), en moyenne à raison de 65 mg par litre d’eau de mer. On le retrouve aussi dans les lacs salés, les marais salants et les gisements d’eaux souterraines concentrées. On l’extrait principalement de ces eaux salines, par oxydation du bromure. À petite dose, certains organismes marins utilisent le brome dans leur métabolisme, preuve que même les halogènes les plus corrosifs ont un rôle dans la vie.",
+              "Le brome a longtemps été utilisé pour ses propriétés chimiques puissantes. Au XXᵉ siècle, il servait dans les agents extincteurs, les carburants au plomb et les produits de photographie argentique. Aujourd’hui, le brome reste utilisé dans les retardateurs de flamme, dans certaines applications pharmaceutiques et comme réactif chimique. En biologie marine, des composés organobromés sont produits naturellement par des algues et des éponges, souvent comme mécanismes de défense.",
+              "Les composés du brome sont variés et souvent réactifs : bromures métalliques (NaBr, KBr), acide bromhydrique (HBr) et bromates (BrO₃⁻). Le bromure d’argent (AgBr), sensible à la lumière, a été la base de la photographie argentique. En chimie organique, les bromures sont des réactifs classiques pour introduire des atomes de brome dans les molécules, grâce à leur réactivité contrôlable. Dans la nature, certains composés comme le bromoforme (CHBr₃) ou les halométhanes bromés témoignent de la chimie marine vivante.",
+              "Le brome est un halogène de contrastes : liquide fumant et toxique, mais aussi précieux pour la science et la biologie. Né des étoiles, concentré dans les mers, il incarne la frontière entre chimie violente et chimie vitale. À travers ses usages, souvent controversés, il rappelle que la puissance de la matière tient moins à sa nature qu’à la manière dont l’humanité la canalise."
+            ],
             "sources": []
           }
         },
@@ -2170,8 +2177,15 @@
           "symbol": "Kr",
           "name": "Krypton",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Gaz noble discret de l’atmosphère, le krypton associe inertie chimique et applications scientifiques de pointe.",
+            "paragraphs": [
+              "Le krypton est l’un des gaz nobles les plus discrets de notre atmosphère. Symbole Kr, numéro atomique 36, il est incolore, inodore et chimiquement inerte. On en trouve à peine une partie par million dans l’air, ce qui en fait un élément rare mais pas totalement inaccessible.",
+              "Le krypton est produit dans les étoiles massives, principalement par le processus s (capture lente de neutrons) et le processus r (capture rapide) qui surviennent lors de l’évolution et de l’explosion des étoiles. Dispersé dans l’espace interstellaire, chaque atome de krypton terrestre est un témoin de l’alchimie stellaire.",
+              "Sur Terre, le krypton se trouve en petites proportions dans l’atmosphère. On le récupère principalement par la distillation fractionnée de l’air liquide, en même temps que d’autres gaz rares comme l’argon et le xénon. Bien qu’il soit rare, cette méthode permet d’en extraire suffisamment pour ses usages industriels et scientifiques.",
+              "Le krypton doit son utilité à son inertie et à ses propriétés électriques. On le retrouve dans certains types de lampes à décharge et d’éclairage au krypton, ainsi que dans des standards de mesure : avant 1983, la définition du mètre reposait sur la longueur d’onde émise par l’isotope 86Kr. Il a aussi des applications en imagerie médicale et en recherche nucléaire, certains isotopes du krypton jouant un rôle dans la détection de réactions atomiques.",
+              "Comme tous les gaz nobles, le krypton forme peu de composés. Sous conditions particulières, il peut néanmoins réagir avec des éléments très électropositifs. Le premier composé connu a été découvert en 1963 : le difluorure de krypton (KrF₂), très oxydant et instable, ne subsiste que dans des conditions de laboratoire.",
+              "Gaz rare de l’air et voyageur des étoiles, le krypton incarne la noblesse silencieuse de sa famille chimique. Invisible mais capable d’éclairer ou de servir de référence scientifique, il rappelle que la rareté n’empêche pas l’importance et que la chimie a ses joyaux cachés."
+            ],
             "sources": []
           }
         },
