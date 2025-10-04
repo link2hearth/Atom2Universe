@@ -2274,8 +2274,15 @@
           "symbol": "Nb",
           "name": "Niobium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Silvery-gray niobium (Nb, 41) balances lightness, strength, and stability to power cutting-edge technologies.",
+            "paragraphs": [
+              "Symbol \u201cNb\u201d, atomic number 41, niobium is a silvery-gray metal that is ductile and highly resistant to corrosion and heat. Discovered in 1801 by English chemist Charles Hatchett, it was first mistaken for tantalum, its chemical neighbor. Only in 1846 were the two clearly distinguished, and in 1950 the name \u201cniobium\u201d became internationally official. A metal of patience and precision, niobium combines lightness, strength, and stability — an ideal trio for high-tech applications.",
+              "Niobium forms in supernovae and in slow neutron-capture processes (the s-process) alongside other heavy transition metals. Its relative scarcity in the universe reflects the sporadic nature of these nuclear reactions. Trace amounts turn up in iron and stony meteorites, evidence of its stellar heritage. Its isotopic stability makes it a valuable witness to ancient nucleosynthesis environments.",
+              "On Earth, niobium is rare (about 20 ppm in the crust), yet it concentrates in a few specific minerals: coltan (columbite-tantalite), pyrochlore, and euxenite. These ores often contain tantalum, explaining their historical confusion. The largest deposits lie in Brazil and Canada, which together supply more than 90% of world production. Despite its rarity, niobium is not considered a critical resource because its sources are concentrated yet stable.",
+              "Niobium is a metal for advanced engineering. Added in very small amounts to steel, it significantly boosts strength and toughness, making it a choice material for pipelines, aircraft structures, and bridges. Its alloys with titanium and zirconium appear in superalloys for jet engines. Niobium truly shines in superconductivity: the superconducting magnets of particle accelerators (like those at CERN), MRI machines, and tokamaks (experimental fusion reactors) rely on niobium-titanium (NbTi) or niobium-tin (Nb\u2083Sn) wires.",
+              "Niobium pentoxide (Nb\u2082O\u2085) is a cornerstone compound in niobium chemistry, used to produce electronic capacitors and specialty glasses. Halides such as niobium pentachloride (NbCl\u2085) act as precursors for refining the pure metal. In ceramics and optics, lithium niobate (LiNbO\u2083) is an essential piezoelectric and electro-optic material for lasers and telecommunications devices. Niobium stands out for the diversity of its compounds, from reactor cores to delicate light waves.",
+              "Niobium is a metal of balance: solid without being heavy, stable yet responsive to the right partners, rare but indispensable. Born in stars and extracted from deep rocks, it now supports the most advanced technologies — the ones that probe matter, the human body, and the universe. From steel structures to superconducting magnetic fields, niobium embodies the quiet power of modern science."
+            ],
             "sources": []
           }
         },
@@ -2283,8 +2290,15 @@
           "symbol": "Mo",
           "name": "Molybdenum",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Dense, high-melting molybdenum (Mo, 42) fortifies alloys while quietly sustaining the chemistry of life.",
+            "paragraphs": [
+              "Symbol \u201cMo\u201d, atomic number 42, molybdenum is a silvery-gray metal that is dense, hard, and endowed with a very high melting point (2,623 \u00b0C). Its name comes from the Greek molybdos, meaning \u201clead,\u201d because it was long confused with that metal. Only at the end of the 18th century, thanks to Swedish chemist Carl Wilhelm Scheele, was molybdenum identified as a distinct element. Today it is recognized as a strategic metal, indispensable for specialty steels and — more surprisingly — for the metabolism of almost all life forms.",
+              "Molybdenum is forged in stellar nucleosynthesis, forming during supernovae and through both slow and rapid neutron-capture reactions (the s- and r-processes). Its presence in meteorites attests to its cosmic antiquity: some isotopes, such as ^92Mo and ^100Mo, can be created only under the extreme conditions of stellar explosions. It stands among the heavy transition metals that link the chemistry of stars to that of rocky planets.",
+              "On Earth, molybdenum is relatively rare (about 1.2 ppm in the crust), yet it concentrates in certain ores, chiefly molybdenite (MoS\u2082), a black-silver sulfide that is the near-exclusive source of the element. Smaller amounts also occur in wulfenite (PbMoO\u2084). Chile, the United States, and China are the main producers, and extraction often accompanies copper mining, with which molybdenum frequently coexists.",
+              "Molybdenum is first and foremost an alloy enhancer: a few percent added to steel markedly improve resistance to heat, corrosion, and pressure. It appears in stainless steels, turbines, drills, pipelines, and military hardware. It also features in solid lubricants (molybdenum disulfide, MoS\u2082, acts as a slippery protective film), in petrochemical catalysis, and in electrodes. Yet molybdenum has a second, quieter mission: it is a biologically essential element. As a cofactor, it enables enzymes that fix nitrogen in plants and detoxify certain compounds in animals.",
+              "Molybdenite (MoS\u2082) is both the principal natural ore and a high-performance engineering material, also used in lubricants. Molybdenum trioxide (MoO\u2083) is a common catalyst in the chemical industry. In living organisms, the molybdenum cofactor (Moco) is an organometallic complex critical to several enzymes, notably nitrate reductases and xanthine oxidases. This dual metallic and biological life makes its chemistry particularly rich.",
+              "Molybdenum bridges inert matter and living systems: a smith for the toughest alloys, yet a discreet cofactor of metabolism. Born in supernovae, present in rocks, and essential within cells, it perfectly illustrates the continuity between the physical laws of the cosmos and the biochemical machinery of life. A metal of strength and finesse, molybdenum is a true universal craftsman."
+            ],
             "sources": []
           }
         },
