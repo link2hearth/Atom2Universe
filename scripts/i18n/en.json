@@ -2803,8 +2803,15 @@
           "symbol": "Au",
           "name": "Gold",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Solar and immutable, gold bridges stellar cataclysms and human technology, uniting symbolism with cutting-edge applications.",
+            "paragraphs": [
+              "Overview — With symbol “Au” and atomic number 79, gold is a brilliant yellow metal that is dense (19.32 g/cm³), soft, and malleable enough for a single gram to be drawn into wire several kilometers long or beaten into micrometer-thin foil. Its symbol comes from the Latin word aurum, meaning “dawn” or “shining light.” Known since prehistory, it was likely the first metal worked by humankind. Untarnished by air, water, or most acids, it embodies chemical perfection.",
+              "Cosmic origins — Gold forms in neutron-star mergers and supernovae through the rapid neutron-capture process (r-process). It is a direct product of the universe’s most violent events. Its terrestrial abundance remains partly mysterious: much of Earth’s gold likely arrived via meteorites after the planet’s core formed, because most primordial gold sank toward Earth’s center during differentiation. Each atom of gold is therefore literally a fragment of a star.",
+              "Terrestrial origin — On Earth, gold is rare (about 0.004 ppm in the crust), yet it often occurs in native metallic form, setting it apart from most other metals. It is extracted from quartz veins, placer deposits, and sometimes alongside copper or tellurium. Today’s leading producers are China, Australia, Russia, and Canada. Its chemical stability lets it persist unchanged for millions of years within rocks or sediments.",
+              "Uses — Gold is universally recognized as a monetary and ornamental standard, but its technological importance is equally significant. In electronics, its conductivity, resistance to oxidation, and ductility make it ideal for electrical contacts, microprocessor interconnects, and high-reliability printed circuits. In medicine, it appears in certain anti-inflammatory treatments (gold salts) and in dental or surgical implants for its perfect biocompatibility. In optics, thin gold films reflect infrared light, notably in astronaut visors and satellites. Finally, it retains its symbolic role in jewelry, currency, and decorations as a universal expression of purity and permanence.",
+              "Associated molecules — Gold forms several stable compounds, especially with halogens and sulfur: gold(III) chloride (AuCl₃) and sodium tetrachloroaurate (Na[AuCl₄]) are used in analytical chemistry and catalysis. Colloidal gold, made of nanoparticles, serves biology and nanotechnology thanks to its remarkable optical and electronic properties. In heterogeneous catalysis, gold nanoparticles on oxide supports can accelerate low-temperature oxidation reactions, redefining the chemical role of a metal long considered “inert.”",
+              "Conclusion — Gold is the metal of sun and time: born from stellar cataclysms, immutable on a human scale, infinitely malleable yet chemically indestructible. At the crossroads of myth and science, it symbolizes both permanence and transformation. From ancient crowns to our computer circuits, it links cosmic light to modern engineering. Gold is tangible perfection—the material that never tarnishes."
+            ],
             "sources": []
           }
         },
@@ -2812,8 +2819,15 @@
           "symbol": "Hg",
           "name": "Mercury",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A fascinating yet hazardous liquid metal, mercury connects stellar forges to human instruments while reminding us of science’s cost.",
+            "paragraphs": [
+              "Overview — With symbol “Hg” and atomic number 80, mercury is a silvery metal that is liquid at room temperature, dense (13.53 g/cm³), volatile, and an excellent conductor of electricity. Its symbol stems from the Latin hydrargyrum, “liquid silver,” itself derived from the Greek hydrargyros (hydor = water, argyros = silver). Known since antiquity, it already appeared in ancient Chinese and Indian writings and was often linked to the Roman god Mercury for its mobility and shine.",
+              "Cosmic origins — Mercury forms in massive stars through slow and rapid neutron-capture processes (s-process and r-process). It results from the nucleosynthesis cycles of heavy elements, alongside gold and lead. Traces found in some meteorites show that it was already part of the proto-solar nebula that birthed the planetary system. Its relative scarcity on Earth reflects the element’s volatility during the planet’s formation.",
+              "Terrestrial origin — On Earth, mercury is rare (about 0.08 ppm in the crust). It is encountered mainly as cinnabar (HgS), a bright red sulfide and the principal ore mined since antiquity. The most famous deposits lie in Almadén (Spain) and Idrija (Slovenia), two sites exploited for over 2,000 years. Mercury is obtained by heating cinnabar, which releases the metal as condensed vapor.",
+              "Uses — Mercury long held industrial and scientific importance. It was used in thermometers, barometers, discharge lamps, and switches thanks to its fluidity and regular expansion. In chemistry it forms amalgams (alloys with other metals), notably for gold extraction or dental fillings—applications now abandoned because of its toxicity. It also played a major role in metrology and electricity: mercury-vapor lamps illuminated 20th-century cities, and mercury batteries powered early portable devices. Today, its uses are tightly regulated, limited to scientific instruments and specific medical applications.",
+              "Associated molecules — Mercury sulfide (HgS) exists in two forms: red (cinnabar) and black (metacinnabar). Mercuric chloride (HgCl₂) and mercurous chloride (Hg₂Cl₂) were once used in medicine but are now banned. Mercury(II) oxide (HgO) and organomercury compounds (such as methylmercury) are infamous for their high toxicity: they bioaccumulate and cause severe neurological disorders, tragically exemplified by Japan’s Minamata disaster.",
+              "Conclusion — Mercury is a dual element: captivating for its beauty and physical singularity yet dangerous because of its chemistry. A liquid metal symbolizing agility to the ancients, it revealed itself as a stealthy poison to living beings. Born from the stars and extracted from red cinnabar, it has accompanied human history as a mirror of our relationship with matter—between mastery and excess. Mercury remains a brilliant, troubling reminder of the power—and the price—of scientific curiosity."
+            ],
             "sources": []
           }
         },
