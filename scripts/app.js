@@ -216,6 +216,66 @@ function formatIntegerLocalized(value) {
   return formatNumberLocalized(value, { maximumFractionDigits: 0, minimumFractionDigits: 0 });
 }
 
+function formatLayeredLocalized(value, options = {}) {
+  const numberOptions = options.numberFormatOptions || {
+    maximumFractionDigits: 0,
+    minimumFractionDigits: 0
+  };
+  const mantissaDigits = Number.isFinite(options.mantissaDigits)
+    ? Math.min(4, Math.max(0, Math.floor(options.mantissaDigits)))
+    : 1;
+
+  const formatSmall = numeric => formatNumberLocalized(numeric, numberOptions);
+
+  const toLayered = input => {
+    if (input instanceof LayeredNumber) {
+      return input;
+    }
+    if (typeof LayeredNumber === 'function') {
+      try {
+        return new LayeredNumber(input);
+      } catch (error) {
+        return null;
+      }
+    }
+    return null;
+  };
+
+  const layered = toLayered(value);
+
+  if (layered) {
+    if (layered.sign === 0) {
+      return formatSmall(0);
+    }
+    if (layered.layer === 0) {
+      if (Math.abs(layered.exponent) < 6) {
+        const numeric = layered.sign * layered.mantissa * Math.pow(10, layered.exponent);
+        return formatSmall(numeric);
+      }
+      const mantissa = layered.sign * layered.mantissa;
+      return `${mantissa.toFixed(mantissaDigits)}e${layered.exponent}`;
+    }
+    if (layered.layer === 1) {
+      const exponent = Math.floor(layered.value);
+      const fractional = layered.value - exponent;
+      const mantissa = layered.sign * Math.pow(10, fractional);
+      return `${mantissa.toFixed(mantissaDigits)}e${exponent}`;
+    }
+    return layered.toString();
+  }
+
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) {
+    return formatSmall(0);
+  }
+  if (Math.abs(numeric) >= 1e6) {
+    const exponent = Math.floor(Math.log10(Math.abs(numeric)));
+    const mantissa = numeric / Math.pow(10, exponent);
+    return `${mantissa.toFixed(mantissaDigits)}e${exponent}`;
+  }
+  return formatSmall(numeric);
+}
+
 function formatDurationLocalized(value, options) {
   const api = getI18nApi();
   if (api && typeof api.formatDuration === 'function') {
@@ -2024,8 +2084,14 @@ function formatTrophyProgress(def) {
       current,
       target,
       percent,
-      displayCurrent: formatIntegerLocalized(current),
-      displayTarget: formatIntegerLocalized(clampedTarget)
+      displayCurrent: formatLayeredLocalized(current, {
+        numberFormatOptions: { maximumFractionDigits: 0, minimumFractionDigits: 0 },
+        mantissaDigits: 1
+      }),
+      displayTarget: formatLayeredLocalized(clampedTarget, {
+        numberFormatOptions: { maximumFractionDigits: 0, minimumFractionDigits: 0 },
+        mantissaDigits: 1
+      })
     };
   }
   if (condition.type === 'collectionRarities') {
@@ -2042,8 +2108,14 @@ function formatTrophyProgress(def) {
       current: owned,
       target: total,
       percent,
-      displayCurrent: formatIntegerLocalized(owned),
-      displayTarget: formatIntegerLocalized(total)
+      displayCurrent: formatLayeredLocalized(owned, {
+        numberFormatOptions: { maximumFractionDigits: 0, minimumFractionDigits: 0 },
+        mantissaDigits: 1
+      }),
+      displayTarget: formatLayeredLocalized(total, {
+        numberFormatOptions: { maximumFractionDigits: 0, minimumFractionDigits: 0 },
+        mantissaDigits: 1
+      })
     };
   }
   if (condition.type === 'fusionSuccesses') {
@@ -2060,8 +2132,14 @@ function formatTrophyProgress(def) {
       current: completed,
       target: total,
       percent,
-      displayCurrent: formatIntegerLocalized(completed),
-      displayTarget: formatIntegerLocalized(total)
+      displayCurrent: formatLayeredLocalized(completed, {
+        numberFormatOptions: { maximumFractionDigits: 0, minimumFractionDigits: 0 },
+        mantissaDigits: 1
+      }),
+      displayTarget: formatLayeredLocalized(total, {
+        numberFormatOptions: { maximumFractionDigits: 0, minimumFractionDigits: 0 },
+        mantissaDigits: 1
+      })
     };
   }
   const current = gameState.lifetime;
@@ -2084,8 +2162,14 @@ function formatTrophyProgress(def) {
     current,
     target,
     percent,
-    displayCurrent: current.toString(),
-    displayTarget: target.toString()
+    displayCurrent: formatLayeredLocalized(current, {
+      numberFormatOptions: { maximumFractionDigits: 0, minimumFractionDigits: 0 },
+      mantissaDigits: 1
+    }),
+    displayTarget: formatLayeredLocalized(target, {
+      numberFormatOptions: { maximumFractionDigits: 0, minimumFractionDigits: 0 },
+      mantissaDigits: 1
+    })
   };
 }
 

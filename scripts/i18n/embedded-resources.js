@@ -714,7 +714,7 @@
             "options": {
               "welcomeCard": {
                 "title": "Bienvenue",
-                "intro": "Bienvenue dans Atom to Univers, commencez en cliquant pour gagner des Atomes (APC Atoms Par Clic), achetez des améliorations dans le magasin et automatisez la récolte (APS Atoms Par Seconde). Débloquez des minis jeux au fur et à mesure de votre progression. L’objectif est d’accumuler le plus possible d’Atomes pour fabriquer un Univers.",
+                "intro": "Bienvenue dans Atom to Univers, commencez en cliquant pour gagner des Atomes (APC Atoms Par Clic), achetez des améliorations dans le magasin et automatisez la récolte (APS Atoms Par Seconde). Débloquez des minis jeux au fur et à mesure de votre progression. L’objectif est d’accumuler le plus possible d’Atomes pour fabriquer un Univers. Les grands nombres utilisent une notation abrégée très simple : 1.0e6 signifie 1 000 000 (1.0 × 10^6) et le chiffre après \u00ab e \u00bb indique combien de zéros suivent.",
                 "details": {
                   "particles": {
                     "label": "Mini Jeu Particules :",
@@ -2460,7 +2460,7 @@
             "options": {
               "welcomeCard": {
                 "title": "Welcome",
-                "intro": "Welcome to Atom to Univers. Start by clicking to earn Atoms (APC Atoms Per Click), purchase upgrades in the shop, and automate harvesting (APS Atoms Per Second). Unlock mini-games as you progress. The goal is to gather as many Atoms as possible to forge a Universe.",
+                "intro": "Welcome to Atom to Univers. Start by clicking to earn Atoms (APC Atoms Per Click), purchase upgrades in the shop, and automate harvesting (APS Atoms Per Second). Unlock mini-games as you progress. The goal is to gather as many Atoms as possible to forge a Universe. Large values use an easy scientific-style notation: 1.0e6 means 1,000,000 (1.0 × 10^6) and the number after \u201ce\u201d tells you how many zeros follow.",
                 "details": {
                   "particles": {
                     "label": "Particles mini-game:",
