@@ -2756,8 +2756,15 @@
           "symbol": "Yb",
           "name": "Ytterbium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "With symbol “Yb” and atomic number 70, ytterbium is a silvery, pliable lanthanide born in Ytterby yet vital to precision technologies.",
+            "paragraphs": [
+              "Overview — Bearing symbol “Yb” and atomic number 70, ytterbium is a silvery, soft, and lustrous lanthanide. Jean Charles Galissard de Marignac discovered it in 1878 and it was finally isolated in pure form in the early twentieth century; like yttrium, terbium, and erbium it honors the Swedish village of Ytterby.",
+              "Cosmic origins — Like most lanthanides, ytterbium arises from the slow (s-process) and rapid (r-process) neutron-capture cycles inside massive stars. Its seven natural isotopes, including Yb-174, were forged in those stellar furnaces before being folded into the primordial rocks of the Solar System.",
+              "Terrestrial origin — Present at roughly 3 ppm in Earth’s crust, ytterbium occurs within monazite, xenotime, and especially gadolinite. It never appears natively; instead it is extracted through ion-exchange or solvent-extraction methods alongside other rare earths such as yttrium and lutetium.",
+              "Uses — A multitasking element, ytterbium dopes fiber lasers and Yb:YAG crystals used in surgery, precision cutting, and scientific research. Select isotopes underpin state-of-the-art optical atomic clocks, while its compounds contribute to electronic alloys and luminescent materials.",
+              "Molecules and properties — Ytterbium predominantly adopts the +3 oxidation state but can also exist in a divalent (+2) form, a valuable handle for reductive chemistry. Its oxide Yb₂O₃ supports advanced optical and electronic ceramics. Soft and paramagnetic at room temperature, it shows near-superconducting behavior in certain alloys at cryogenic temperatures.",
+              "Conclusion — The last child of Ytterby, ytterbium is a metal of quiet elegance: born in the stars, named for Scandinavia, and indispensable to the lasers, optical clocks, and fiber networks of the modern world."
+            ],
             "sources": []
           }
         },
@@ -2765,8 +2772,15 @@
           "symbol": "Lu",
           "name": "Lutetium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "With symbol “Lu” and atomic number 71, lutetium is a dense, understated lanthanide—scarce in Earth’s crust yet central to nuclear medicine and advanced optics.",
+            "paragraphs": [
+              "Overview — Bearing symbol “Lu” and atomic number 71, lutetium is a silvery, dense, and resilient metal often regarded as the most “noble” lanthanide. Discovered in 1907 by Georges Urbain, Carl Auer von Welsbach, and Charles James, it closes the rare-earth series and draws its name from Lutetia, the Latin name of Paris.",
+              "Cosmic origins — Lutetium is born in the explosive deaths of massive stars through the rapid neutron-capture (r-) process. Its stable isotopes, notably Lu-175, together with the radioactive isotope Lu-176, bear witness to those violent nucleosynthetic episodes and serve as markers for dating cosmic and geological events.",
+              "Terrestrial origin — Extremely scarce (about 0.5 ppm), lutetium is dispersed within monazite and xenotime alongside other rare earths. Extracting it demands lengthy, costly separations from ytterbium, to which it is chemically similar, explaining its high price and highly targeted applications.",
+              "Uses — A high-tech metal, lutetium yields the therapeutic radioisotope Lu-177 used in nuclear medicine to treat cancers such as neuroendocrine tumors and prostate cancer. Its oxide Lu₂O₃ acts as a substrate for laser crystals and scintillators in medical imaging and particle-physics research, and it also appears as a catalyst in ultra-precise chemical reactions.",
+              "Molecules and properties — Almost invariably trivalent (Lu³⁺), lutetium forms a white, chemically robust oxide, Lu₂O₃, prized in cutting-edge optical materials. As a metal it is paramagnetic, boasts the highest density among the lanthanides (≈9.8 g/cm³), and features a compact hexagonal crystal structure that underpins its exceptional cohesion.",
+              "Conclusion — The series’ finale but far from anecdotal, lutetium embodies the culmination of lanthanide chemistry: rare, exacting, and forward-looking, it links the light of supernovae to medical laboratories and closes the rare-earth saga with the quiet poise of essential elements."
+            ],
             "sources": []
           }
         },
