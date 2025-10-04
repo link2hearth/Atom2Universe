@@ -3076,8 +3076,14 @@
           "symbol": "Th",
           "name": "Thorium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A silvery-gray actinide with natural radioactivity, thorium blends stellar origins with the promise of thorium–uranium fuel cycles.",
+            "paragraphs": [
+              "Symbol “Th” and atomic number 90, thorium is a silvery-gray, malleable, and ductile actinide metal. Its dominant isotope ^232Th has a half-life of about 14 billion years, giving it a diffuse yet persistent presence in Earth’s crust.",
+              "Cosmically it is forged by rapid neutron-capture (r-process) events such as supernovae or neutron-star mergers before mixing into the solar nebula. On Earth it has been present since planetary formation, concentrating in heavy minerals like monazite or thorite that supply industrial extraction.",
+              "Historically thorium was used in gas lamp mantles, high-index optical glasses, and certain alloys or welding electrodes. Today its main appeal lies in the thorium–uranium-233 fuel cycle, explored for safer and more abundant nuclear reactors, although commercialization remains limited and tightly regulated.",
+              "Chemically thorium favors the +4 oxidation state in solution and forms compounds such as ThO₂, Th(NO₃)₄, and ThCl₄. Thorium dioxide is notable for its extremely high melting point and stability, underpinning past refractory and optical applications.",
+              "As both an ancient and contemporary actinide, thorium requires handling protocols tailored to its radioactivity. Its fertile energy potential continues to drive research into alternative nuclear fuels at the crossroads of cosmic heritage and modern innovation."
+            ],
             "sources": []
           }
         },
@@ -3085,8 +3091,14 @@
           "symbol": "Pa",
           "name": "Protactinium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A dense, highly radioactive actinide, protactinium is a research element that emerges as a transient product of uranium decay chains.",
+            "paragraphs": [
+              "Symbol “Pa” and atomic number 91, protactinium is a silvery-gray actinide metal whose most abundant natural isotope, ^231Pa, has a half-life of roughly 32,760 years.",
+              "It originates in rapid neutron-capture events in stellar environments before becoming trapped in the primordial Solar System material. Within Earth’s crust it arises mainly from uranium and thorium decay chains, persisting only at ppt-to-ppm levels in ores such as monazite or uraninite.",
+              "Because of its scarcity, toxicity, and radioactivity, protactinium has virtually no industrial uses. It is studied in nuclear research as a tracer and as an intermediate in thorium–uranium fuel cycles, and it is isolated only in tiny amounts from irradiated nuclear fuel.",
+              "Its chemistry is dominated by the +5 oxidation state, although +4, +3, and +2 states appear under specific conditions. Laboratory-characterized compounds include Pa₂O₅, PaO₂, and various halides and nitrates, all requiring shielded, glovebox handling.",
+              "A rare yet scientifically valuable element, protactinium illuminates natural decay series and certain dating techniques, but strict radiological controls confine its use to specialized research contexts."
+            ],
             "sources": []
           }
         },

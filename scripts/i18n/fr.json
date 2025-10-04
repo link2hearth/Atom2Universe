@@ -3059,8 +3059,14 @@
           "symbol": "Th",
           "name": "Thorium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Actinide gris argenté naturellement radioactif, le thorium mêle héritage stellaire et potentiel de combustible dans le cycle thorium–uranium.",
+            "paragraphs": [
+              "Symbole “Th” et numéro atomique 90, le thorium est un métal actinide gris argenté, malléable et ductile. Son isotope dominant, ^232Th, affiche une demi-vie d’environ 14 milliards d’années, ce qui en fait une présence diffuse mais durable dans la croûte terrestre.",
+              "Cosmiquement, il naît du processus r lors de supernovae et de collisions d’étoiles à neutrons avant de s’incorporer à la nébuleuse solaire. Sur Terre, il persiste depuis la formation planétaire et se concentre dans des minéraux lourds comme la monazite ou la thorite exploités pour son extraction.",
+              "Historiquement, le thorium a servi dans les manchons à gaz, les verres optiques à haut indice et certains alliages ou électrodes. Aujourd’hui, son intérêt majeur réside dans le cycle thorium–uranium-233, étudié pour des réacteurs nucléaires plus sûrs et plus abondants, même si l’industrialisation reste limitée et fortement encadrée.",
+              "Chimiquement, le thorium adopte surtout l’état d’oxydation +4 en solution et forme des composés tels que ThO₂, Th(NO₃)₄ ou ThCl₄. Le dioxyde de thorium, extrêmement réfractaire et stable, a longtemps été recherché pour ses propriétés optiques et thermiques.",
+              "Actinide à la fois ancestral et contemporain, le thorium exige des protocoles de manipulation adaptés à sa radioactivité. Son potentiel énergétique fertile nourrit encore les recherches sur des combustibles alternatifs, à l’interface entre héritage cosmique et innovations nucléaires."
+            ],
             "sources": []
           }
         },
@@ -3068,8 +3074,14 @@
           "symbol": "Pa",
           "name": "Protactinium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Actinide dense et très radioactif, le protactinium demeure un élément de recherche issu des chaînes de désintégration de l’uranium.",
+            "paragraphs": [
+              "Symbole “Pa” et numéro atomique 91, le protactinium est un métal actinide argenté-gris dont l’isotope naturel le plus courant, ^231Pa, possède une demi-vie d’environ 32 760 ans.",
+              "Formé par capture rapide de neutrons lors d’événements stellaires, il s’est retrouvé piégé dans la matière primitive du Système solaire. Dans la croûte terrestre, il apparaît surtout comme produit de désintégration de l’uranium et du thorium, présent à l’état de traces ppt à ppm dans des minerais comme la monazite ou l’uraninite.",
+              "En raison de sa rareté, de sa toxicité et de sa radioactivité, le protactinium n’a quasiment pas d’usage industriel. Il reste étudié en recherche nucléaire, notamment comme traceur ou intermédiaire du cycle thorium–uranium, et n’est isolé qu’en très petites quantités à partir de combustibles irradiés.",
+              "Sa chimie est dominée par l’état d’oxydation +5, mais les états +4, +3 et +2 peuvent apparaître dans des conditions spécifiques. Les oxydes Pa₂O₅ et PaO₂, ainsi que des halogénures et nitrates, sont connus en laboratoire, leur manipulation requérant blindage et confinement stricts.",
+              "Élément rare mais scientifique, le protactinium éclaire les chaînes de désintégration naturelles et certaines méthodes de datation, au prix de protocoles radiologiques rigoureux qui limitent toute application au domaine de la recherche."
+            ],
             "sources": []
           }
         },
