@@ -3154,8 +3154,13 @@
           "symbol": "Mt",
           "name": "Meitnerium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A superheavy synthetic element discovered in 1982, meitnerium honors physicist Lise Meitner.",
+            "paragraphs": [
+              "Meitnerium, symbol Mt and atomic number 109, is a superheavy element confirmed in 1982. It was named in honor of physicist Lise Meitner, co-discoverer of nuclear fission.",
+              "It is a synthetic element produced by bombarding heavy nuclei in a particle accelerator. The isotopes observed so far decay within milliseconds, ruling out any natural occurrence.",
+              "Classified alongside cobalt and iridium, it is expected to be a dense, heavy transition metal. Its lifetime is too short for direct chemical studies, leaving it with no practical applications and value only for science.",
+              "Meitnerium stands as a tribute to a major figure in nuclear physics and a new milestone in the periodic table. Fleeting and inaccessible, it marks humanity’s progress in probing the limits of matter."
+            ],
             "sources": []
           }
         },
@@ -3163,8 +3168,13 @@
           "symbol": "Ds",
           "name": "Darmstadtium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Discovered in 1994, the superheavy element darmstadtium bears the name of the German city where it was created.",
+            "paragraphs": [
+              "Darmstadtium, symbol Ds and atomic number 110, is a superheavy element confirmed in 1994. It was named after Darmstadt, Germany, where it was discovered at the GSI Helmholtz Centre for Heavy Ion Research.",
+              "It is an artificial element produced in the laboratory by fusing heavy nuclei. Its known isotopes are extremely unstable, with half-lives ranging from milliseconds to about a second.",
+              "Classed among the transition metals of the nickel and platinum group, it may share some of their properties, but its very short lifetime prevents any experimental chemistry. It has no use beyond fundamental research.",
+              "Darmstadtium is a short-lived element that showcases the achievements of modern nuclear physics. Its name recalls the site of its discovery, highlighting Darmstadt’s role in exploring the frontiers of the periodic table."
+            ],
             "sources": []
           }
         },

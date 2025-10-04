@@ -3137,8 +3137,13 @@
           "symbol": "Mt",
           "name": "Meitnérium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Élément superlourd synthétique découvert en 1982, le meitnerium rend hommage à la physicienne Lise Meitner.",
+            "paragraphs": [
+              "Le meitnerium, symbole Mt et numéro atomique 109, est un élément superlourd confirmé en 1982. Il a été nommé en hommage à la physicienne Lise Meitner, co-découvreuse de la fission nucléaire.",
+              "C’est un élément synthétique, produit en bombardant des noyaux lourds dans un accélérateur de particules. Ses isotopes observés se désintègrent en quelques millisecondes, ce qui exclut toute existence naturelle.",
+              "Classé dans la famille du cobalt et de l’iridium, il est supposé être un métal de transition dense et lourd. Sa durée de vie trop brève interdit toute étude chimique directe. Il n’a donc aucun usage pratique, son intérêt est exclusivement scientifique.",
+              "Le meitnerium est un hommage à une grande figure de la physique nucléaire et une borne supplémentaire du tableau périodique. Fugace et inaccessible, il marque la progression de la recherche sur les limites de la matière."
+            ],
             "sources": []
           }
         },
@@ -3146,8 +3151,13 @@
           "symbol": "Ds",
           "name": "Darmstadtium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Élément superlourd découvert en 1994, le darmstadtium porte le nom de la ville allemande où il a vu le jour.",
+            "paragraphs": [
+              "Le darmstadtium, symbole Ds et numéro atomique 110, est un élément superlourd confirmé en 1994. Il doit son nom à la ville de Darmstadt, en Allemagne, où il a été découvert au GSI Helmholtz Centre for Heavy Ion Research.",
+              "C’est un élément artificiel, produit en laboratoire par fusion de noyaux lourds. Ses isotopes connus sont extrêmement instables, avec des demi-vies de l’ordre de la milliseconde à la seconde.",
+              "Classé parmi les métaux de transition du groupe du nickel et du platine, il pourrait partager certaines de leurs propriétés, mais sa durée de vie trop brève interdit toute étude expérimentale. Il n’a aucun usage en dehors de la recherche fondamentale.",
+              "Le darmstadtium est un élément éphémère, témoin des succès de la physique nucléaire moderne. Son nom rappelle le lieu de sa découverte, soulignant le rôle de Darmstadt dans l’exploration des frontières du tableau périodique."
+            ],
             "sources": []
           }
         },
