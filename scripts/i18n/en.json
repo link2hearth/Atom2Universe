@@ -1665,8 +1665,15 @@
           "symbol": "He",
           "name": "Helium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Second on the periodic table, helium is an exceptionally light and remarkably stable noble gas.",
+            "paragraphs": [
+              "Symbol \"He\", atomic number 2: helium is the second element of the periodic table and the second most abundant in the universe. As a noble gas—colorless, odorless, and tasteless—it stands out for its lightness and chemical stability. Unlike its neighbor hydrogen, it dislikes reacting; it prefers to float quietly, indifferent to chemical squabbles. The result is a discreet element, rare on Earth yet essential in the cosmos.",
+              "Helium has a dual origin. Much of it was forged during the first minutes after the Big Bang, in primordial nucleosynthesis alongside hydrogen. Since then it has continued to form in the hearts of stars as the product of hydrogen fusion. When four protons join together, they create a helium nucleus and release an enormous amount of energy. In other words, every ray of sunlight we receive is a bill of light paid for with hydrogen transformed into helium.",
+              "On Earth, helium is scarce in the atmosphere because its low mass allows it to escape into space. Most of the reserves we can exploit come from deep geological layers, where helium is produced by the radioactive decay of heavy elements such as uranium and thorium. The gas accumulates in underground pockets, often mixed with natural gas, from which it is extracted for our scientific and technical needs.",
+              "Helium has found uses that go far beyond party balloons. In cryogenics it is indispensable for cooling superconducting magnets, such as those in MRI scanners or particle accelerators. Its low density and non-flammability make it a safer substitute for hydrogen in modern airships. It also appears in breathing mixtures for deep diving, where it reduces risks linked to nitrogen. In short, this light gas delivers heavyweight applications.",
+              "Here is a special case: helium is a noble gas, so it resists bonding. Unlike oxygen or hydrogen, it stays solitary—no stable molecules bear its name, or almost none. The rare helium compounds known, such as the HeH⁺ ion, are observed mostly in laboratories or in interstellar space, not in everyday life. This lack of attachment makes it a chemically unique element: the eternal loner of chemistry.",
+              "From the great forge of the Big Bang to the underground pockets of our planet, helium tells both a cosmic and terrestrial story. Its lightness sends it skyward, its stability makes it elusive, yet its usefulness is immense. Whether cooling scientific machines or floating inside a colorful balloon, it reminds us that even the quietest elements hold an essential place in our universe."
+            ],
             "sources": []
           }
         },
