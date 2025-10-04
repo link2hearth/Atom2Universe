@@ -3220,8 +3220,13 @@
           "symbol": "Nh",
           "name": "Nihonium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Nihonium is a synthetic superheavy element discovered by a Japanese team—the first element found in Asia—and it exists only for a fleeting moment.",
+            "paragraphs": [
+              "Nihonium, symbol Nh and atomic number 113, is a superheavy element officially recognized in 2016. Its name comes from Nihon, the Japanese word for “Japan,” honoring the RIKEN researchers who first identified it.",
+              "It is an artificial element produced by bombarding bismuth with zinc nuclei in a particle accelerator. Its known isotopes have half-lives ranging from milliseconds to a few seconds, far too brief for it to occur naturally.",
+              "Classified alongside thallium in the periodic table, it could theoretically share some heavy-metal properties, but no direct chemical experiment has yet been conclusive. It has no practical use—its value is purely scientific.",
+              "Nihonium is the first element discovered in Asia, and its name reflects that origin. Even though it exists only for an instant, it marks an important milestone in exploring superheavy elements and expanding the periodic table through global collaboration."
+            ],
             "sources": []
           }
         },
@@ -3229,8 +3234,13 @@
           "symbol": "Fl",
           "name": "Flerovium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Flerovium is a synthetic superheavy element named after the Flerov Laboratory, offering key insights into nuclear stability at the limits of the periodic table.",
+            "paragraphs": [
+              "Flerovium, symbol Fl and atomic number 114, is a superheavy element officially recognized in 2012. It is named for the Flerov Laboratory of Nuclear Reactions, honoring physicist Georgy Flerov, a pioneer of nuclear physics research.",
+              "Like other elements in its category, it is synthetic, created by colliding heavy nuclei in particle accelerators. Its known isotopes have half-lives of only a few seconds at most, making it one of the “longest-lived” superheavy elements while still preventing reliable direct chemical experiments.",
+              "It is classified with carbon and lead in the periodic table, but its actual chemistry remains hypothetical because of its instability. There are no practical uses; each synthesis of flerovium primarily yields data about the limits of nuclear stability and the structure of superheavy elements.",
+              "Flerovium is a milestone on the periodic table—fleeting yet essential for understanding the boundaries of matter. Its name and existence highlight the decisive contribution of Russian nuclear research to exploring the ultimate elements."
+            ],
             "sources": []
           }
         },
