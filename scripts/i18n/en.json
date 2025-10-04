@@ -2696,8 +2696,15 @@
           "symbol": "Er",
           "name": "Erbium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A rose-tinted rare-earth metal, erbium bridges Ytterby’s heritage with medical lasers and long-haul fiber optics.",
+            "paragraphs": [
+              "Overview — With symbol “Er” and atomic number 68, erbium is a silvery, malleable lanthanide that stays fairly stable in air. Discovered in 1843 by Carl Gustaf Mosander and named after the Swedish village of Ytterby, it is one of the few elements whose salts display a pink signature.",
+              "Cosmic origins — Like its lanthanide neighbors, erbium was forged by the r-process—rapid neutron capture in supernovae and neutron-star mergers. Those stellar cataclysms created its isotopes long before the solar system formed, seeding the interstellar dust that built Earth.",
+              "Terrestrial origin — On Earth it hides alongside fellow rare earths in minerals such as monazite, xenotime, and gadolinite. Erbium never occurs native; it is extracted through ion-exchange separations. At roughly 2.8 ppm in the crust it is moderately abundant for a lanthanide, dominated by stable isotope Er-166.",
+              "Uses — The Er³⁺ ion is a star of telecommunications, emitting at 1.55 µm—the transmission window of optical fibers. Erbium-doped fiber amplifiers (EDFAs) underpin long-distance Internet links, while erbium lasers serve dermatology, dentistry, and ophthalmology. The element also tints glass and crystal with a delicate pink hue.",
+              "Molecules and properties — Erbium is chiefly trivalent in its compounds. Its oxide Er₂O₃ is a pale pink powder used in optical glasses and ceramics. The metal is paramagnetic at room temperature and turns antiferromagnetic when cooled; fine electronic transitions in its ions give rise to its unique luminescence.",
+              "Conclusion — Born from stars and named for a Scandinavian village, erbium connects cosmic light to streams of information: quiet yet essential, it helps the planet glow at light speed."
+            ],
             "sources": []
           }
         },
@@ -2705,8 +2712,15 @@
           "symbol": "Tm",
           "name": "Thulium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A rare and understated lanthanide, thulium links the legend of Thule with infrared lasers and gamma sources.",
+            "paragraphs": [
+              "Overview — Bearing symbol “Tm” and atomic number 69, thulium is a silvery, soft, and malleable metal. Per Teodor Cleve identified it in 1879, naming it after the mythical far-northern land of Thule—a fitting nod to an element that stayed obscure for decades.",
+              "Cosmic origins — Like its lanthanide siblings it forms through the r-process in supernova explosions and neutron-star mergers. The thulium atoms we isolate today are stellar relics, forged long before the solar system emerged.",
+              "Terrestrial origin — Thulium is among the rarest lanthanides, averaging only about 0.5 ppm in Earth’s crust. It always accompanies other rare earths in monazite and xenotime minerals and is isolated through ion-exchange and solvent-extraction techniques. Its sole natural isotope, Tm-169, is stable, while radioactive isotopes can be produced artificially.",
+              "Uses — Despite its scarcity it has niche roles: isotope Tm-170 provides gamma radiation for industrial radiography and some medical treatments, and Tm³⁺ ions dope infrared lasers (Tm:YAG, Tm:YLF) near 2 µm, ideal for laser-assisted surgery. Thulium also enters certain superconducting alloys and specialized electronic ceramics.",
+              "Molecules and properties — Thulium mainly adopts the +3 oxidation state. Its oxide Tm₂O₃ is a white powder valued for optical materials. Metallic thulium is paramagnetic at room temperature but becomes ferromagnetic below 30 K, and its ions exhibit a pale blue-green luminescence prized in photonics research.",
+              "Conclusion — Inspired by a northern myth yet born in stars, thulium is a metal from the edge of the world: rare, discreet, but treasured for the light it brings to laboratories, medicine, and precision technologies."
+            ],
             "sources": []
           }
         },
