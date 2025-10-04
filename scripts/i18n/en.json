@@ -2514,8 +2514,16 @@
           "symbol": "Cs",
           "name": "Cesium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Super-reactive alkali metal that melts at 28.4 °C, cesium underpins the atomic clocks defining modern timekeeping.",
+            "paragraphs": [
+              "Symbol \"Cs\" and atomic number 55, cesium is an alkali metal so soft it can be cut with a knife and shimmers from silvery white to golden. Discovered in 1860 by Robert Bunsen and Gustav Kirchhoff via spectroscopy, it revealed intense blue emission lines that inspired its Latin name caesius.",
+              "In stars, cesium forms during supernovae and the slow neutron-capture process (s-process) in red giants. Stable isotopes appear in meteorites, while radioactive varieties such as ^137Cs born from nuclear fission act as tracers for fallout studies.",
+              "On Earth the element is scarce (around 3 ppm in the crust) and concentrates in minerals like pollucite, a hydrated silicate from granitic pegmatites whose largest deposit lies at Bernic Lake in Canada. Because of its extreme reactivity, cesium never occurs free in nature and reacts instantly with oxygen, water, or carbon dioxide.",
+              "Cesium's claim to fame is the definition of the SI second: the ^133Cs atomic clock counts 9,192,631,770 hyperfine oscillations to mark each second. That standard drives GPS navigation, global network synchronization, and cutting-edge physics experiments.",
+              "The element also appears in photoelectric cells, vacuum tubes, specialized lamps, and dense, non-toxic drilling fluids such as cesium formate. Research labs rely on it for laser cooling setups and quantum physics devices.",
+              "Key compounds include cesium chloride (CsCl), cesium nitrate (CsNO₃), and cesium carbonate (Cs₂CO₃), common reagents and electrolytes. Radioactive cesium-137, a gamma emitter, serves in radiotherapy and instruments yet remains a notorious pollutant after nuclear accidents.",
+              "Forged in stars and harnessed by metrology, cesium bridges raw chemical violence with absolute precision—a hazardous metal that lets us measure the steadfast flow of time."
+            ],
             "sources": []
           }
         },
@@ -2523,8 +2531,16 @@
           "symbol": "Ba",
           "name": "Barium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Dense, reactive alkaline-earth metal, barium spans fireworks and radiology thanks to compounds that balance toxicity and utility.",
+            "paragraphs": [
+              "Symbol \"Ba\" and atomic number 56, barium is a soft, silvery metal so reactive that it tarnishes instantly and must be stored under oil. Humphry Davy isolated it in 1808 by electrolysis, naming it after the Greek barys, \"heavy,\" in reference to the heft of its minerals.",
+              "Inside red giant stars, barium forms through the slow neutron-capture process that transforms cesium and rubidium; explosive events such as supernovae or neutron-star mergers also forge a share via the r-process. Its abundance in ancient stars tracks the chemical enrichment history of the galaxy.",
+              "On Earth the element averages about 425 ppm in the crust and appears chiefly as dense barite (BaSO₄) or the rarer witherite (BaCO₃). While the Ba²⁺ ion is toxic, insoluble salts like barium sulfate are chemically inert and safe to handle.",
+              "Medicine relies on that insolubility: barium sulfate, opaque to X-rays, becomes the \"barium meal\" that outlines the digestive tract without being absorbed. Barium also strengthens high-index optical glass, ceramics, paints, and the heavy drilling muds used in oil wells.",
+              "In pyrotechnics, salts such as barium nitrate (Ba(NO₃)₂) yield the vivid green flames of fireworks. Specialized compounds like barium titanate (BaTiO₃) provide piezoelectric and dielectric properties essential to sensors and capacitors.",
+              "Other notable compounds include barium carbonate (BaCO₃), barium chloride (BaCl₂), and barium peroxide (BaO₂), once a route to pure oxygen. Managing barium chemistry is all about controlling solubility and keeping the reactive ion in check.",
+              "Forged among stars and harnessed on Earth, barium embodies contrast: toxic in its soluble form yet life-saving in radiology, a heavy element that colors the night sky and sharpens our view inside the human body."
+            ],
             "sources": []
           }
         },

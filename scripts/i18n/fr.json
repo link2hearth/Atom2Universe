@@ -2497,8 +2497,16 @@
           "symbol": "Cs",
           "name": "Césium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Métal alcalin ultra réactif qui fond à 28,4 °C, le césium sert de référence aux horloges atomiques modernes.",
+            "paragraphs": [
+              "Symbole « Cs », numéro atomique 55, le césium est un métal alcalin très tendre, argenté à doré, qui fond à seulement 28,4 °C. Si mou qu’il se coupe au couteau et si réactif qu’il s’enflamme au contact de l’air ou de l’eau, il fut identifié en 1860 par Robert Bunsen et Gustav Kirchhoff grâce à la spectroscopie, qui révéla ses fameuses raies bleues.",
+              "Dans les étoiles, le césium naît lors des supernovae et du processus de capture lente de neutrons (s-process) des géantes rouges. On retrouve ses isotopes stables dans les météorites, tandis que des isotopes radioactifs comme le ^137Cs issus de la fission nucléaire servent de traceurs pour étudier les retombées radioactives.",
+              "Sur Terre, l’élément reste rare (environ 3 ppm dans la croûte) et se concentre dans la pollucite, un silicate hydraté des pegmatites granitiques, dont le plus grand gisement est à Bernic Lake, au Canada. À cause de sa réactivité extrême, il n’existe jamais sous forme libre et réagit instantanément avec l’oxygène, l’eau ou le dioxyde de carbone.",
+              "Le césium est surtout connu pour définir la seconde du Système international : l’horloge atomique au ^133Cs s’appuie sur 9 192 631 770 oscillations de transition hyperfine. Ce standard temporel alimente la navigation GPS, la synchronisation des réseaux et de nombreuses expériences de physique.",
+              "On l’emploie aussi dans les cellules photoélectriques, les tubes à vide, certaines lampes et les fluides de forage, comme le formiate de césium, dense et non toxique. En laboratoire, il intervient dans les dispositifs de refroidissement laser et les expériences de physique quantique.",
+              "Parmi ses composés clés figurent le chlorure de césium (CsCl), le nitrate (CsNO₃) et le carbonate (Cs₂CO₃), utilisés comme réactifs ou électrolytes. L’isotope radioactif césium-137, émetteur gamma, sert en radiothérapie et dans les instruments de mesure, mais reste un contaminant majeur en cas d’accident nucléaire.",
+              "Né des étoiles et dompté par la métrologie, le césium incarne la rencontre entre violence chimique et précision absolue : un métal dangereux mais indispensable pour mesurer l’infiniment stable."
+            ],
             "sources": []
           }
         },
@@ -2506,8 +2514,16 @@
           "symbol": "Ba",
           "name": "Baryum",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Métal alcalino-terreux dense et réactif, le baryum passe des feux d’artifice aux examens radiologiques grâce à ses composés contrastés.",
+            "paragraphs": [
+              "Symbole « Ba », numéro atomique 56, le baryum est un métal argenté, tendre et très réactif qui s’oxyde dès qu’il touche l’air et doit être conservé sous huile. Découvert en 1808 par Humphry Davy par électrolyse, il tire son nom du grec barys, « lourd », en référence à la densité de ses minéraux.",
+              "Dans les étoiles géantes rouges, le baryum naît du processus lent de capture de neutrons, transformant du césium et du rubidium ; des événements plus violents comme les supernovae ou les collisions d’étoiles à neutrons en produisent aussi une fraction via le r-process. Sa présence dans les vieilles étoiles sert de marqueur des cycles d’enrichissement galactique.",
+              "Sur Terre, sa teneur moyenne atteint environ 425 ppm dans la croûte et il se rencontre surtout sous forme de barite (BaSO₄) très dense ou de withérite (BaCO₃) plus rare. L’ion Ba²⁺ est toxique, mais ses sels insolubles comme le sulfate de baryum sont chimiquement inertes et sans danger.",
+              "L’application la plus connue est médicale : le sulfate de baryum, opaque aux rayons X, compose la « pape barytée » qui permet d’imager le tube digestif sans absorption par l’organisme. Le baryum intervient aussi dans les verres optiques à haut indice, les céramiques, les peintures et les boues de forage pétrolier.",
+              "En pyrotechnie, ses sels comme le nitrate de baryum (Ba(NO₃)₂) produisent les flammes vertes caractéristiques des feux d’artifice. Certains composés spécialisés, tels que les titanates de baryum (BaTiO₃), offrent des propriétés piézoélectriques et diélectriques cruciales pour les capteurs et condensateurs.",
+              "Parmi ses autres composés clés figurent le carbonate (BaCO₃), le chlorure (BaCl₂) et le péroxyde de baryum (BaO₂), autrefois utilisé pour générer de l’oxygène pur. Cette chimie contraste avec la dangerosité de l’ion libre : tout est question de solubilité et de manipulation.",
+              "Élément dense né des étoiles, à la fois toxique et salvateur, le baryum incarne le contraste : il alourdit les boues de forage, colore le ciel nocturne et éclaire les médecins lorsqu’ils scrutent l’intérieur du corps."
+            ],
             "sources": []
           }
         },
