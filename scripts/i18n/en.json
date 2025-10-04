@@ -1697,8 +1697,15 @@
           "symbol": "Be",
           "name": "Beryllium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A light yet exceptionally stiff alkaline earth metal, beryllium pairs rarity, strength, and X-ray transparency, making it a prized material for cutting-edge technologies.",
+            "paragraphs": [
+              "With symbol \"Be\" and atomic number 4, beryllium is a steel-gray metal that is light but extremely rigid. It belongs to the alkaline earth metals alongside magnesium and calcium. Rare and discreet in daily life, it combines low mass, strength, and transparency to X-rays, which has made it valuable for highly specialized fields.",
+              "Beryllium has a singular story in the cosmos. Unlike hydrogen, helium, or even lithium, it was not produced in significant quantities during the Big Bang. Inside stars it is so fragile that fusion destroys it quickly, so its main origin is cosmic spallation, when energetic cosmic rays shatter carbon and oxygen nuclei to create lighter elements.",
+              "On Earth, beryllium is scarce. It occurs in minerals such as beryl, the source of emeralds and aquamarines. It is not found in native form because it readily reacts with oxygen and silicon to form very stable minerals, limiting its presence to a tiny fraction of the crust yet enough to supply specialized uses.",
+              "Beryllium is chosen where its unique properties are indispensable. Its rigidity and lightness make it a material of choice for aeronautics, aerospace, and certain defense equipment. Transparent to X-rays, it serves as a window in X-ray tubes and scientific instruments, and when alloyed with copper it yields a conductive yet resilient material for demanding electrical components. Its use is nonetheless constrained by the toxicity of its dust, which can cause chronic berylliosis.",
+              "Beryllium mainly forms simple ionic or covalent compounds. Beryllium oxide (BeO) is a prized ceramic thanks to its combination of thermal conductivity and electrical insulation. Beryllium chloride (BeCl₂) and beryllium fluoride (BeF₂) are chemical intermediates, while its association with aluminum and silicon in beryl produces gemstones.",
+              "Rare, fragile within stars yet robust in our technologies, beryllium is a paradoxical element. Born of cosmic collisions and discreet in terrestrial minerals, it has earned an essential place in cutting-edge instruments. Behind sparkling gems and space components stands this singular metal, proof that even the rarest elements find their role in the story of matter."
+            ],
             "sources": []
           }
         },

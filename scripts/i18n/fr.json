@@ -1682,8 +1682,15 @@
           "symbol": "Be",
           "name": "Béryllium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Métal alcalino-terreux léger mais ultra rigide, le béryllium associe rareté, résistance et transparence aux rayons X, ce qui en fait un matériau prisé des technologies de pointe.",
+            "paragraphs": [
+              "Symbole \"Be\", numéro atomique 4, le béryllium est un métal gris acier, léger mais extrêmement rigide. Il fait partie des métaux alcalino-terreux aux côtés du magnésium et du calcium. Rare et discret, on ne le croise pas au quotidien, mais il combine légèreté, solidité et transparence aux rayons X, ce qui l'a rendu précieux dans des domaines très pointus.",
+              "Le béryllium est un élément singulier dans l’histoire du cosmos. Contrairement à l’hydrogène, à l’hélium ou même au lithium, il n’a pas été produit en quantité significative lors du Big Bang. Dans les étoiles, il est si fragile qu’il est rapidement détruit par fusion, d’où son origine principale : la spallation cosmique, lorsque des rayons cosmiques énergétiques fragmentent des noyaux de carbone et d’oxygène pour créer des éléments plus légers.",
+              "Sur Terre, le béryllium est rare. On le trouve dans des minéraux comme le béryl, source d’émeraudes et d’aigues-marines. Il n’existe pas à l’état natif car il réagit volontiers avec l’oxygène et le silicium pour former des minéraux très stables, ce qui limite sa présence à une fraction minuscule de la croûte terrestre mais suffisante pour des usages spécialisés.",
+              "Le béryllium est choisi lorsque ses propriétés uniques sont indispensables. Sa rigidité et sa légèreté en font un matériau de choix pour l’aéronautique, l’aérospatial ou certains équipements militaires. Transparent aux rayons X, il sert de fenêtre dans les tubes et instruments scientifiques, et allié au cuivre il donne un matériau à la fois conducteur et résistant pour des composants électriques exigeants. Son exploitation est toutefois freinée par la toxicité de ses poussières, responsables de la bérylliose.",
+              "Le béryllium forme surtout des composés ioniques ou covalents simples. L’oxyde de béryllium (BeO) est une céramique très prisée pour sa conductivité thermique et son isolation électrique. Le chlorure (BeCl₂) et le fluorure (BeF₂) de béryllium servent d’intermédiaires en chimie, tandis que son association avec l’aluminium et le silicium dans le béryl donne des pierres précieuses.",
+              "Rare, fragile dans les étoiles mais robuste dans nos technologies, le béryllium est un élément paradoxal. Issu des chocs cosmiques et discret dans les minéraux terrestres, il a trouvé une place essentielle dans les instruments de pointe. Derrière les gemmes étincelantes ou les composants spatiaux se cache ce métal singulier qui illustre comment les éléments les plus rares trouvent leur rôle dans l’histoire de la matière."
+            ],
             "sources": []
           }
         },
