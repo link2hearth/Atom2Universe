@@ -320,6 +320,19 @@
     let currentStatusKey = 'intro';
 
     function formatBetAmount(amount) {
+      if (typeof formatLayeredLocalized === 'function') {
+        try {
+          const formatted = formatLayeredLocalized(amount, {
+            numberFormatOptions: { maximumFractionDigits: 0, minimumFractionDigits: 0 },
+            mantissaDigits: 1
+          });
+          if (formatted) {
+            return formatted;
+          }
+        } catch (error) {
+          // Ignore formatting errors and fallback to locale string.
+        }
+      }
       const numeric = Number(amount);
       if (!Number.isFinite(numeric)) {
         return '0';
