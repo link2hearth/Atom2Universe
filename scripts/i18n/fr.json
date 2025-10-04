@@ -2033,8 +2033,15 @@
           "symbol": "Co",
           "name": "Cobalt",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Métal magnétique gris argenté, le cobalt relie légendes minières, pigments bleus et technologies modernes par sa polyvalence.",
+            "paragraphs": [
+              "Symbole « Co », numéro atomique 27, le cobalt est un métal gris argenté, dur et magnétique. Son nom vient de l’allemand \"Kobold\", lutin malicieux des mineurs médiévaux, car ses minerais promettaient de l’argent mais n’offraient que des vapeurs toxiques. Aujourd’hui pourtant, ce métal indispensable colore les verres, alimente nos batteries et joue un rôle discret mais vital dans notre organisme.",
+              "Forgé dans les étoiles massives puis dispersé par les supernovae, le cobalt fait partie de la grande famille des métaux de transition cosmiques. Son isotope radioactif 60Co, produit artificiellement, sert de source gamma et révèle la puissance énergétique cachée dans ce métal né des explosions stellaires.",
+              "Sur Terre, le cobalt se rencontre rarement pur : il accompagne le nickel, le cuivre ou l’arsenic dans des minerais comme la cobaltite ou l’érythrite. La République démocratique du Congo en est aujourd’hui le principal producteur, donnant à ce métal une dimension géopolitique majeure, entre héritage des pigments bleus et cœur des technologies modernes.",
+              "Le cobalt multiplie les usages. Dans les alliages, il apporte dureté et résistance à la chaleur pour les turbines ou les outils de coupe. Dans les batteries lithium-ion, ses oxydes constituent des cathodes stratégiques pour l’électronique et les véhicules électriques. L’isotope radioactif 60Co sert en radiothérapie ou en stérilisation industrielle, tandis qu’au cœur du vivant il se cache dans la vitamine B12 essentielle au sang et au système nerveux.",
+              "Ce métal forme de nombreux oxydes et sels — CoO, Co₃O₄, chlorure ou sulfate de cobalt — employés comme pigments, catalyseurs ou précurseurs chimiques. Le fameux bleu cobalt naît de ses composés alumino-silicatés, et la cobalamine (vitamine B12) enchâsse un atome de cobalt dans une structure organique indispensable au métabolisme.",
+              "Redouté autrefois, recherché aujourd’hui et indispensable à la vie, le cobalt illustre la dualité des éléments. Né des étoiles, caché dans les roches puis moteur silencieux de nos technologies, il relie vitraux médiévaux et batteries modernes en tissant un lien entre art, science et vie."
+            ],
             "sources": []
           }
         },
@@ -2042,8 +2049,15 @@
           "symbol": "Ni",
           "name": "Nickel",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Métal blanc argenté, dur et inoxydable, le nickel unit météorites, noyau terrestre et technologies modernes par sa ténacité.",
+            "paragraphs": [
+              "Symbole « Ni », numéro atomique 28, le nickel est un métal blanc argenté, dur, ductile et résistant à la corrosion. Son nom, \"Kupfernickel\" ou cuivre du diable, rappelle les mineurs qui le croyaient ensorcelé tant il refusait de livrer le cuivre espéré. Devenu métal stratégique, il est essentiel aux alliages inoxydables, aux batteries et même au cœur de notre planète.",
+              "Comme le fer et le cobalt, le nickel se forge dans les étoiles massives lors des ultimes étapes de fusion nucléaire. Abondant dans les supernovae de type Ia sous forme d’isotopes radioactifs comme 56Ni, il éclaire l’explosion stellaire avant de se désintégrer en fer. On le retrouve dans les météorites métalliques allié au fer, témoignage tangible de la matière primordiale du système solaire.",
+              "Sur Terre, le nickel s’allie intimement au fer pour composer le noyau métallique de la planète, moteur du champ magnétique terrestre. Dans la croûte, il apparaît dans des minerais comme la pentlandite ou la garnierite, exploités en Russie, au Canada, en Australie ou en Indonésie. Les météorites ferreuses ont d’ailleurs révélé sa présence et inspiré la compréhension de la différenciation planétaire.",
+              "Métal d’alliage par excellence, le nickel confère résistance, ductilité et éclat à l’acier inoxydable et aux superalliages capables de supporter des températures extrêmes, notamment dans les turbines aéronautiques. En électrochimie, il est au cœur des batteries nickel-cadmium, nickel-métal-hydrure et des formulations lithium-nickel des véhicules électriques, sans oublier le nickelage qui protège les surfaces de la corrosion.",
+              "Le nickel engendre des composés variés — oxyde NiO, chlorure NiCl₂, sulfate NiSO₄ — souvent colorés et utiles en catalyse. Le nickel métallique active des réactions d’hydrogénation comme le procédé de Sabatier, tandis que certaines enzymes microbiennes, dont l’uréase, attestent de son rôle biologique discret mais réel.",
+              "Métal à la fois cosmique et terrestre, compagnon du fer dans le noyau planétaire comme dans les météorites, le nickel incarne une continuité entre la chimie des étoiles, la structure de la Terre et l’innovation humaine. Des profondeurs du noyau aux batteries des véhicules électriques, il relie les origines du monde à son avenir."
+            ],
             "sources": []
           }
         },
