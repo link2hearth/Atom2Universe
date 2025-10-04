@@ -2643,8 +2643,15 @@
           "symbol": "Gd",
           "name": "Gadolinium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Symbole Gd, numéro atomique 64, le gadolinium est un lanthanide argenté et ductile devenu un pilier des technologies médicales modernes.",
+            "paragraphs": [
+              "Découvert en 1880 par le chimiste suisse Jean Charles Galissard de Marignac puis isolé par Paul-Émile Lecoq de Boisbaudran, ce métal rend hommage au Finlandais Johan Gadolin, pionnier de la chimie des terres rares, et relie l'histoire des laboratoires à celle des innovations contemporaines.",
+              "Comme ses voisins lanthanides, le gadolinium naît des réactions nucléaires stellaires : processus s dans les étoiles géantes rouges et processus r lors des supernovae ou des fusions d'étoiles à neutrons, qui ont semé ses atomes dans les météorites et les roches terrestres.",
+              "Sur notre planète, il se cache dans la monazite, la bastnäsite ou la gadolinite qui porte aussi le nom de Gadolin ; avec environ 6,2 parties par million dans la croûte terrestre, il exige des procédés d'extraction des terres rares pour être isolé.",
+              "Ses sels, notamment les chélates de chlorure de gadolinium utilisés en IRM, améliorent le contraste des images médicales grâce à leur paramagnétisme, tandis que les isotopes Gd-155 et Gd-157 servent d'absorbeurs de neutrons dans les réacteurs et que ses alliages magnétiques ou magnétocaloriques ouvrent la voie à des systèmes cryogéniques innovants.",
+              "Trivalent dans la plupart de ses composés, le gadolinium est ferromagnétique à basse température, paramagnétique à température ambiante et même supraconducteur dans des conditions extrêmes ; son oxyde Gd₂O₃ alimente phosphores, verres spéciaux et matériaux magnétiques, tandis que les complexes médicaux comme le gadopentétate ou le gadobutrol sont conçus pour rester stables et non toxiques.",
+              "Né des étoiles et dédié à un savant nordique, le gadolinium incarne la rencontre du cosmos et de la médecine : métal de contraste et de précision, il aide à voir l'invisible tout en nourrissant les innovations magnétiques et énergétiques d'aujourd'hui."
+            ],
             "sources": []
           }
         },
@@ -2652,8 +2659,15 @@
           "symbol": "Tb",
           "name": "Terbium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Symbole Tb, numéro atomique 65, le terbium est un lanthanide argenté et malléable dont les lueurs vertes ont marqué l'histoire des écrans modernes.",
+            "paragraphs": [
+              "Découvert en 1843 par Carl Gustaf Mosander dans le minerai d'ytterbite, il porte le nom du village suédois d'Ytterby, gisement mythique qui a donné quatre éléments au tableau périodique et illustre le lien intime entre géologie scandinave et chimie des terres rares.",
+              "Produit de la nucléosynthèse stellaire, le terbium résulte principalement du processus r lors des supernovae ou des fusions d'étoiles à neutrons ; des traces dans les météorites primitives prouvent qu'il baignait déjà le nuage de poussières à l'origine du système solaire.",
+              "Sur Terre, il accompagne la monazite et la bastnäsite avec une abondance moyenne d'environ 1,2 partie par million dans la croûte, et son extraction industrielle repose sur des séparations par échange d'ions ou extraction liquide-liquide pour le distinguer du gadolinium et du dysprosium.",
+              "Ses composés luminescents, tels que Tb₄O₇ ou les phosphates dopés, donnent la teinte verte éclatante des tubes fluorescents, LED et écrans, tandis que les alliages magnétostrictifs comme le terfenol-D transforment les champs magnétiques en vibrations contrôlées pour les actionneurs, capteurs ultrasoniques et systèmes sonar.",
+              "Principalement trivalent, le terbium forme aussi l'oxyde mixte Tb₄O₇ contenant Tb³⁺ et Tb⁴⁺, affiche une luminescence verte intense sous UV et passe d'un comportement paramagnétique à ferromagnétique sous environ 220 K, des propriétés qui en font un matériau de choix pour les lasers solides.",
+              "Entre feu stellaire et village nordique, le terbium reste un métal rare mais essentiel : discret dans les minerais, rayonnant dans nos technologies, il relie la poésie des terres rares aux couleurs de la vie moderne."
+            ],
             "sources": []
           }
         },

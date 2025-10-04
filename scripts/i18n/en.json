@@ -2660,8 +2660,15 @@
           "symbol": "Gd",
           "name": "Gadolinium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Symbol Gd, atomic number 64, gadolinium is a silvery, ductile lanthanide that has become a mainstay of modern medical technology.",
+            "paragraphs": [
+              "Discovered in 1880 by Swiss chemist Jean Charles Galissard de Marignac and later isolated by Paul-Émile Lecoq de Boisbaudran, the metal honors Finnish pioneer Johan Gadolin and bridges laboratory history with contemporary innovation.",
+              "Like its lanthanide neighbors, gadolinium is forged in stellar nuclear reactions: the slow neutron-capture process inside red giants and the rapid process during supernovae or neutron-star mergers, which scattered its atoms into meteorites and terrestrial rocks.",
+              "On Earth it hides within monazite, bastnäsite, and gadolinite—also named after Gadolin—and, at roughly 6.2 parts per million in the crust, demands rare-earth extraction techniques to isolate it.",
+              "Its salts, especially gadolinium chloride chelates used in MRI scans, boost image contrast through paramagnetism, while isotopes Gd-155 and Gd-157 serve as valuable neutron absorbers in reactors and its magnetic or magnetocaloric alloys enable advanced cryogenic systems.",
+              "Predominantly trivalent, gadolinium is ferromagnetic at low temperature, paramagnetic at room temperature, and even superconducting under extreme conditions; its oxide Gd₂O₃ feeds phosphors, specialty glasses, and magnetic materials, and medical complexes such as gadopentetate or gadobutrol are engineered to remain stable and non-toxic.",
+              "Born among the stars and named for a Nordic scholar, gadolinium embodies the meeting of cosmos and medicine: a metal of contrast and precision that helps reveal the invisible while powering today’s magnetic and energy innovations."
+            ],
             "sources": []
           }
         },
@@ -2669,8 +2676,15 @@
           "symbol": "Tb",
           "name": "Terbium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Symbol Tb, atomic number 65, terbium is a silvery, malleable lanthanide whose vivid green glow shaped the story of modern displays.",
+            "paragraphs": [
+              "Discovered in 1843 by Carl Gustaf Mosander within ytterbite ore, it takes its name from the Swedish village of Ytterby—the legendary deposit that yielded four elements and linked Scandinavian geology to the chemistry of rare earths.",
+              "A product of stellar nucleosynthesis, terbium arises mainly from the rapid neutron-capture process during supernovae or neutron-star mergers; traces in primitive meteorites show it already permeated the dust cloud that formed the solar system.",
+              "On Earth it accompanies monazite and bastnäsite with an average abundance near 1.2 parts per million in the crust, and industrial extraction relies on ion-exchange or solvent-extraction steps to separate it from gadolinium and dysprosium.",
+              "Its luminescent compounds, such as Tb₄O₇ or doped phosphates, create the bright green hue of fluorescent tubes, LEDs, and screens, while magnetostrictive alloys like Terfenol-D convert magnetic fields into controlled motion for actuators, ultrasonic sensors, and sonar systems.",
+              "Mostly trivalent, terbium also forms the mixed oxide Tb₄O₇ containing Tb³⁺ and Tb⁴⁺, emits an intense green luminescence under UV light, and shifts from paramagnetic to ferromagnetic behavior below about 220 K—properties that make it a prized material for solid-state lasers.",
+              "From stellar fire to a quiet Nordic village, terbium remains a rare yet essential metal: modest in ores, radiant in technology, it links the poetry of rare earths to the colors of modern life."
+            ],
             "sources": []
           }
         },
