@@ -3140,8 +3140,14 @@
           "symbol": "Pu",
           "name": "Plutonium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A dense, highly radioactive actinide, plutonium embodies global challenges across energy, military strategy, and safety.",
+            "paragraphs": [
+              "Symbol \"Pu\", atomic number 94, plutonium is a dense actinide metal that appears silvery when metallic but is commonly handled as oxides. Its headline isotopes, ^239Pu (half-life ≈ 24,110 years) and ^238Pu (half-life ≈ 87.7 years), showcase intense radioactivity and physico-chemical properties that shift with oxidation state.",
+              "Discovered and isolated in the early 1940s by the teams led by Glenn Seaborg and Edwin McMillan, plutonium occurs only in trace natural amounts. It is chiefly manufactured in nuclear reactors through neutron capture on ^238U, following the chain ^238U → ^239U → ^239Np → ^239Pu, although rare geological events or historic atmospheric tests have yielded minute traces.",
+              "Its uses are sharply contrasted: ^239Pu is a fissile isotope central to nuclear weapons, certain reactors, and MOX fuel, whereas ^238Pu powers radioisotope thermoelectric generators for space exploration and any system requiring long-lived autonomy. Plutonium also sits at the heart of research into fuel cycles, reprocessing, and transmutation under stringent safety and non-proliferation frameworks.",
+              "Chemically, plutonium spans several oxidation states (primarily +3 to +6) and forms a wide range of compounds: plutonium dioxide PuO₂ — the stable form for fuel and storage — halides, nitrates, and solution complexes. Its redox chemistry governs solubility, environmental mobility, and waste management, while the alpha-emitting isotopes’ radiotoxicity demands strict exposure controls.",
+              "Strategic yet problematic, plutonium concentrates immense energetic and destructive potential alongside major safety, waste-management, and diplomatic challenges. Its production, use, and confinement are bound by rigorous international regulations to contain technical, health, and political risks."
+            ],
             "sources": []
           }
         },
@@ -3149,8 +3155,14 @@
           "symbol": "Am",
           "name": "Americium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A synthetic, silvery, radioactive actinide, americium combines targeted applications with stringent radioprotection demands.",
+            "paragraphs": [
+              "Symbol \"Am\", atomic number 95, americium is a synthetic actinide that appears silvery when reduced to metal. Dominant isotopes ^241Am (half-life ≈ 432 years) and ^243Am (half-life ≈ 7,370 years) make it a highly radioactive element that is scarce in nature yet plentiful as a reactor by-product.",
+              "Discovered in 1944 by Glenn Seaborg’s team and named after the American continent, americium arises mainly through successive neutron captures on plutonium and other actinides inside reactors. Only minute traces may appear in certain radioactive deposits, leaving its production almost entirely anthropogenic.",
+              "Despite its radiotoxicity, ^241Am underpins real-world uses: ionizing sources within smoke detectors, ^241Am–Be neutron sources for calibration, industrial prospecting, and geophysics, along with roles in actinide chemistry and nuclear physics research. Every application nevertheless demands strict radioprotection and confinement protocols.",
+              "Chemically, americium favors the +3 oxidation state in solution, forming compounds such as Am₂O₃, AmO₂, nitrates, and halides. Its chemistry, akin to that of lanthanides and other trivalent actinides, is pivotal for actinide separation and nuclear waste management studies, while organometallic complexes largely remain within research laboratories.",
+              "A typically anthropogenic element, americium enables specialized instruments yet requires rigorous health safeguards against inhalation or ingestion risks. It exemplifies how nuclear science turns a radioactive by-product into a useful but tightly confined resource."
+            ],
             "sources": []
           }
         },
