@@ -2062,8 +2062,15 @@
           "symbol": "Co",
           "name": "Cobalt",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Silvery, magnetic transition metal, cobalt bridges mining legends, cobalt-blue pigments, and modern tech through its versatility.",
+            "paragraphs": [
+              "Symbol \"Co\", atomic number 27, cobalt is a silvery-gray metal that is hard and magnetic. Its name comes from the German \"Kobold\", a mischievous goblin feared by medieval miners because cobalt ores mimicked silver yet released toxic fumes. Today this indispensable metal colors glass, powers batteries, and plays a discreet but vital role in the human body.",
+              "Forged in massive stars and scattered by supernovae, cobalt belongs to the cosmic family of transition metals. Its radioactive isotope 60Co, produced artificially, serves as a gamma source and showcases the energetic power hidden within this metal born from stellar explosions.",
+              "On Earth, cobalt is rarely found pure; it accompanies nickel, copper, or arsenic in minerals such as cobaltite and erythrite. The Democratic Republic of the Congo is now the main producer, giving cobalt major geopolitical weight between the legacy of blue pigments and the core of modern technologies.",
+              "Cobalt wears many hats. In alloys it adds hardness and heat resistance for turbines or cutting tools. In lithium-ion batteries its oxides form strategic cathodes for electronics and electric vehicles. Radioactive 60Co is used in radiotherapy and industrial sterilization, while in living organisms cobalt hides inside vitamin B12, essential for red blood cells and nervous system function.",
+              "The metal forms numerous oxides and salts—CoO, Co₃O₄, cobalt chloride or sulfate—used as pigments, catalysts, or chemical precursors. Famous cobalt blue arises from its aluminosilicate compounds, and cobalamin (vitamin B12) cages a cobalt atom within an organic framework vital to metabolism.",
+              "Once feared, now sought after and indispensable to life, cobalt captures the duality of the elements. Born in stars, concealed in rocks, and a silent driver of technology, it links medieval stained glass to modern batteries, weaving connections between art, science, and life."
+            ],
             "sources": []
           }
         },
@@ -2071,8 +2078,15 @@
           "symbol": "Ni",
           "name": "Nickel",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Silvery-white, hard, corrosion-resistant metal, nickel ties meteorites, Earth’s core, and modern technologies together with its resilience.",
+            "paragraphs": [
+              "Symbol \"Ni\", atomic number 28, nickel is a silvery-white metal that is hard, ductile, and resistant to corrosion. Its name, \"Kupfernickel\" or devil’s copper, recalls miners who thought the ore bewitched because it refused to yield copper. Now a strategic metal, it is essential for stainless alloys, batteries, and even the heart of our planet.",
+              "Like iron and cobalt, nickel is forged in massive stars during the final stages of nuclear fusion. Abundant in type Ia supernovae as radioactive isotopes such as 56Ni, it powers the stellar explosion’s glow before decaying into iron. It is found in metallic meteorites alloyed with iron, a tangible reminder of the primordial matter of the solar system.",
+              "On Earth, nickel bonds closely with iron to compose the planet’s metallic core, sustaining the geomagnetic field. In the crust it occurs in minerals like pentlandite or garnierite, mined in Russia, Canada, Australia, and Indonesia. Iron meteorites revealed its presence and inspired our understanding of planetary differentiation.",
+              "An alloying metal par excellence, nickel imparts strength, ductility, and luster to stainless steel and to superalloys that withstand extreme temperatures, notably in aircraft turbines. In electrochemistry it sits at the center of nickel-cadmium, nickel-metal hydride, and lithium-nickel battery chemistries for electric vehicles, and nickel plating shields surfaces from corrosion.",
+              "Nickel yields a variety of compounds—nickel oxide NiO, nickel chloride NiCl₂, nickel sulfate NiSO₄—often colorful and valuable in catalysis. Metallic nickel drives hydrogenation reactions such as the Sabatier process, while certain microbial enzymes, including urease, prove that it also plays a discreet but real biological role.",
+              "A metal that is both cosmic and terrestrial, partnering with iron in planetary cores and meteorites alike, nickel embodies continuity between stellar chemistry, Earth’s structure, and human innovation. From the deep core to electric vehicle batteries, it is the metallic thread linking the world’s origins to its future."
+            ],
             "sources": []
           }
         },
