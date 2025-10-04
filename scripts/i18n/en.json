@@ -2016,8 +2016,15 @@
           "symbol": "Mn",
           "name": "Manganese",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A discreet gray yet vital metal, manganese links supernovae, photosynthesis, and steel alloys.",
+            "paragraphs": [
+              "Overview — Symbol \"Mn\", atomic number 25, manganese is a gray metal that is hard yet brittle, less shiny than its neighbors but immensely important. Discovered in the 18th century, its name comes from the Latin magnesia nigra, a black ore rich in manganese oxide. Present in trace amounts in our bodies and soils alike, it is indispensable to life, metallurgy, and even the chemistry of photosynthesis.",
+              "Cosmic origins — Manganese forms in massive stars through nuclear fusion and especially during type Ia supernovae (explosions of white dwarfs in binary systems). These cosmic events disperse manganese into interstellar space, where it mingles with other transition metals. Its presence in meteorites confirms it was part of Earth’s original material, a legacy of stellar explosions.",
+              "Terrestrial origin — On Earth, manganese is relatively abundant: it is the 12th most common element in the crust. It occurs mainly as oxides (pyrolusite, MnO₂) and in sedimentary deposits. Huge polymetallic nodules rich in manganese even blanket the seafloor. In living organisms it plays an essential biological role: it is an enzymatic cofactor and, above all, a key player in photosynthesis via the “manganese cluster” that lets plants split water molecules to release oxygen.",
+              "Uses — Manganese is first and foremost an ally of metallurgy. In small amounts it is indispensable for producing steel, making it harder and tougher. Its oxides serve as decolorizing or coloring agents for glass and as components of alkaline batteries (the cathode of zinc batteries is often MnO₂). In agriculture, manganese salts act as micronutrients for crops. In living beings it is vital in tiny doses but toxic in excess: overexposure to manganese can trigger neurological disorders.",
+              "Associated molecules — Manganese dioxide (MnO₂) is the most common and useful compound, used in batteries and as a catalyst. Potassium permanganate (KMnO₄), with its intense purple color, is a powerful oxidizer employed as a disinfectant and chemical reagent. In biology, enzymes such as manganese superoxide dismutase (Mn-SOD) shield cells against free radicals. These many forms highlight the versatility of manganese in both chemistry and life.",
+              "Conclusion — Manganese is an element of the shadows: not as shiny as chromium nor as magnetic as iron, yet absolutely indispensable. Born in stars, spread through soils and oceans, it feeds plant life, strengthens steel, and powers our batteries. Between photosynthesis and industry, it perfectly embodies the discreet but vital role of transition metals."
+            ],
             "sources": []
           }
         },
@@ -2025,8 +2032,15 @@
           "symbol": "Fe",
           "name": "Iron",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A foundational metal for planets and civilizations alike, iron ties Earth’s core, industrial steel, and the respiration of life.",
+            "paragraphs": [
+              "Overview — Symbol \"Fe\" (from Latin ferrum), atomic number 26, iron is the metal par excellence: strong, ductile, magnetic, and indispensable both to human civilization and to life itself. It forms the skeleton of skyscrapers and bridges, yet also sits at the heart of our blood, carrying the oxygen that keeps us alive. Silvery gray when pure, orange when rusted, iron encapsulates the history of Earth and humanity.",
+              "Cosmic origins — Iron holds a special place in stellar chemistry. In nuclear fusion, lighter elements release energy as they fuse, but beyond iron the process reverses: fusion consumes energy. In other words, iron is the natural “end point” of stellar fusion. When a massive star reaches the stage where its core collapses, the buildup of iron often seals its fate. The resulting supernovae scatter iron through space, enriching the gas and dust clouds that will form planets. Every iron atom in our blood is thus a fragment of a dead star.",
+              "Terrestrial origin — Iron is among the most abundant elements on Earth. It makes up most of the planet’s core (allied with nickel), responsible for the magnetic field that shields us. In the crust it appears in ores such as hematite (Fe₂O₃) and magnetite (Fe₃O₄). Since antiquity, humanity has mined these ores to forge tools, weapons, and infrastructure. The Iron Age marked a decisive turning point in history, paving the way for empires and modern technologies.",
+              "Uses — Iron is omnipresent in civilization. Alloyed with carbon it becomes steel, the foundational material of our cities, bridges, machines, and ships. Thanks to its magnetism it is essential to motors, transformers, and hard drives. In living organisms it plays an equally crucial role: it is the central atom of heme in hemoglobin, allowing red blood cells to transport oxygen. Without iron, there would be no respiration, no complex life. From construction to biology, it supports both society and our bodies.",
+              "Associated molecules — Iron oxides (Fe₂O₃, Fe₃O₄) are the main ores mined and also serve as pigments (ochres, reds, blacks). Iron forms a wide variety of salts—chlorides, sulfates, carbonates—used in chemistry and agriculture. Its most emblematic compounds, however, are biological: heme, the iron complex in hemoglobin and myoglobin, and the iron-sulfur clusters of enzymes, pillars of bioenergetics. More than any other metal, iron unites geology, technology, and biology.",
+              "Conclusion — Iron is the element of foundations and flows. The foundation of planets, because it builds their cores. The foundation of civilizations, because it forged our weapons, tools, and cities. The flow of life, because it transports oxygen in our blood. Born in dying stars, hidden in Earth’s core, present in every heartbeat, it embodies like no other the power and universality of matter. Iron is not just a metal: it is the blood of stars and the skeleton of the world."
+            ],
             "sources": []
           }
         },
