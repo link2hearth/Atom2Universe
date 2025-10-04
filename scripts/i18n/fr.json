@@ -3269,8 +3269,15 @@
           "symbol": "Ts",
           "name": "Tennesse",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Symbole Ts, numéro atomique 117, le tennessine est un halogène superlourd produit uniquement en laboratoire depuis sa découverte en 2010.",
+            "paragraphs": [
+              "Découvert en 2010 par une collaboration russo-américaine, il honore l’État du Tennessee et l’Oak Ridge National Laboratory impliqué dans sa synthèse, tout en restant un élément extrêmement instable et fugace.",
+              "Le tennessine n’existe pas dans la nature : trop instable pour survivre à l’échelle cosmique, il est créé en bombardant du berkelium-249 avec des ions de calcium-48.",
+              "Sur Terre, seuls quelques atomes ont été obtenus dans des accélérateurs nucléaires, ses isotopes observés (^293Ts et ^294Ts) se désintégrant en moins d’une seconde par émission alpha.",
+              "Aucun usage pratique n’est connu : le tennessine sert uniquement à sonder les limites de la stabilité nucléaire et la structure du tableau périodique en quête de l’« île de stabilité » théorique.",
+              "Aucun composé n’a encore été observé, mais les modèles prédisent une chimie atypique pour un halogène, potentiellement moins réactive et plus « métallique » sous l’effet de sa masse et de phénomènes relativistes.",
+              "Éphémère et artificiel, le tennessine est surtout un jalon scientifique rappelant la recherche constante des physiciens pour repousser les frontières du tableau périodique."
+            ],
             "sources": []
           }
         },
@@ -3278,8 +3285,15 @@
           "symbol": "Og",
           "name": "Oganesson",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Symbole Og, numéro atomique 118, l’oganesson est un gaz noble superlourd dont l’existence fugace n’a été confirmée qu’en laboratoire.",
+            "paragraphs": [
+              "Découvert entre 2002 et 2006 par une équipe russo-américaine, il rend hommage au physicien Iouri Oganessian, spécialiste des éléments superlourds, et se distingue par une instabilité extrême.",
+              "Inexistant dans l’univers observable, l’oganesson se désintègre en moins d’une milliseconde et n’est produit qu’en bombardant du californium-249 avec des ions de calcium-48.",
+              "Aucun gisement terrestre ne l’abrite : seuls quelques atomes synthétisés dans des laboratoires spécialisés attestent de sa présence avant qu’il ne disparaisse.",
+              "Dépourvu d’applications pratiques, il représente un outil de recherche pour comprendre la limite de stabilité des noyaux et tester l’hypothèse de l’« île de stabilité ».",
+              "Aucun composé n’a été détecté, mais les calculs théoriques suggèrent une chimie plus riche qu’attendue pour un gaz noble, avec la possible formation de molécules comme OgF₂.",
+              "Frontière ultime du tableau périodique, l’oganesson montre que la matière réserve encore des territoires inexplorés aux expériences de physique nucléaire."
+            ],
             "sources": []
           }
         }
