@@ -2416,8 +2416,15 @@
           "symbol": "In",
           "name": "Indium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Rare, silvery-white and highly malleable, indium (In, 49) is now essential to displays and optoelectronic technologies.",
+            "paragraphs": [
+              "Symbol \"In\", atomic number 49, indium is a silvery-white metal, very malleable, melting at 156 °C, and emitting a characteristic squeak when bent—a sound caused by its internal crystals breaking. Discovered in 1863 by German chemists Ferdinand Reich and Hieronymous Richter, it was named for the indigo-blue spectral line observed during its analysis. Though rare, it has become a key component of displays, sensors, and optoelectronic devices.",
+              "Indium forms in stars mainly through the slow neutron capture (s-process) and rapid capture (r-process) typical of red giants and supernovae. Its low cosmic abundance places it among the rare metals created in small quantities during the final stages of nucleosynthesis. It is found in meteorites and interstellar dust alongside cadmium and tin, attesting to its shared origin with other post-iron metals.",
+              "On Earth, indium is extremely scarce (about 0.05 ppm in the crust). It does not create its own ore but occurs in trace amounts in sphalerite (ZnS) and other zinc, lead, and tin ores. It is therefore recovered as a by-product of zinc refining. The main producers are China, Canada, and Japan. Although reserves are limited, consumption remains moderate because only tiny quantities are required for its applications.",
+              "Indium is a metal of the digital age. Its primary use is as indium tin oxide (ITO), a transparent and conductive material used in LCD, OLED, and touchscreens as well as in photovoltaic cells. It is also employed in low-melting alloys, electronic solders, and reflective coatings (high-performance mirrors). In research, it serves as a radioactive tracer (isotope ^111In) in nuclear medicine, notably to track white blood cells in the body.",
+              "The main indium compounds are indium oxide (In₂O₃) and especially indium tin oxide (In₂O₃ + SnO₂), the famous ITO of displays. Indium arsenide (InAs) and indium phosphide (InP) are semiconductors used in lasers, diodes, and high-frequency telecommunications. Indium trichloride (InCl₃) is a mild catalyst in organic chemistry.",
+              "Indium is a metal of the future forged in the stars of the past. Rare and discreet, it nonetheless sits at the heart of the digital revolution: without it there would be no touchscreens, smartphones, or transparent solar panels. Its destiny mirrors our era—a chemistry of precision, invisible yet omnipresent. Lunar and technological, indium embodies the meeting of light, matter, and human ingenuity."
+            ],
             "sources": []
           }
         },
@@ -2425,8 +2432,15 @@
           "symbol": "Sn",
           "name": "Tin",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A silvery-white metal of bronze and solder, tin (Sn, 50) bridges ancient metallurgy and modern electronics.",
+            "paragraphs": [
+              "Symbol \"Sn\", atomic number 50, tin is a silvery-white metal that is soft and malleable and barely tarnishes in air. It melts at a moderate temperature (232 °C) and emits a crystalline crackle when bent, known as the \"tin cry\". Known since Antiquity, it was among the first metals mastered by humanity, combined with copper to form bronze—an alloy that gave its name to an entire technological era. The symbol Sn comes from the Latin word stannum, which already referred to tin in Roman times.",
+              "Tin was born in massive stars during the slow neutron capture process (s-process), mainly in red giants. It also results from the rapid process (r-process) in supernovae, like other heavy metals. Present in meteorites and cosmic dust, it shares a common origin with lead and indium. In a sense, every ancient bronze artifact is the heir to a speck of stardust.",
+              "On Earth, tin is moderately rare, with a concentration of about 2 ppm in the crust. It is found primarily in cassiterite (SnO₂), its main ore, often associated with tungsten and tantalum. Major historical and current deposits are located in Southeast Asia (Malaysia, Indonesia, China), Bolivia, and parts of Central Africa. It is relatively easy to extract, which explains its very early use.",
+              "Tin is a discreet yet ubiquitous metal. It is mainly used to form alloys, especially bronze (copper + tin) and electronic solders (tin-lead alloys, now replaced by lead-free versions based on tin-silver-copper). It is also used in anticorrosion coatings, such as tinplate (steel coated with tin used for food cans), and in float glass, where a thin layer of liquid tin ensures the flatness of molten glass. In organic chemistry, some of its compounds (organotin) have been used as catalysts and plastic stabilizers, although their toxicity has led to progressive bans.",
+              "Tin dioxide (SnO₂) is its most common oxide and serves as a transparent conductive material in certain sensors and coatings. Halides such as tin chloride (SnCl₂) are used in catalysis and surface treatment. Tin-based alloys make up most modern electronic solders. There is also an allotrope known as \"tin pest\", where the metal turns into an unstable gray powder at low temperatures—a dreaded phenomenon in cold climates.",
+              "Tin is a metal of fidelity and transition: modest, stable, indispensable. Born in the stars, it has accompanied humanity from early metallurgy to modern microelectronics. Its role, often behind the scenes, is nevertheless crucial—it unites, connects, and protects. From ancient bronze to printed circuits, tin illustrates the continuity between the blacksmith’s hand and the engineer’s touch."
+            ],
             "sources": []
           }
         },

@@ -2399,8 +2399,15 @@
           "symbol": "In",
           "name": "Indium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Métal blanc argenté rare et malléable, l’indium (In, 49) est devenu indispensable aux écrans et aux technologies optoélectroniques.",
+            "paragraphs": [
+              "Symbole “In”, numéro atomique 49, l’indium est un métal blanc argenté, très malléable, fondant à 156 °C, et qui émet un cri caractéristique lorsqu’on le plie — un son dû à la rupture de ses cristaux internes. Découvert en 1863 par les chimistes allemands Ferdinand Reich et Hieronymous Richter, il doit son nom au bleu indigo de sa raie spectrale, observée lors de son analyse (d’où indium). Bien que rare, il est devenu un composant clé des écrans, des capteurs et des dispositifs optoélectroniques.",
+              "L’indium se forme dans les étoiles, principalement par les processus de capture lente de neutrons (s-process) et rapide (r-process), typiques des géantes rouges et des supernovae. Sa faible abondance cosmique le range parmi les métaux rares formés en petites quantités lors des cycles finaux de la nucléosynthèse. On le retrouve dans les météorites et les poussières interstellaires, associé au cadmium et à l’étain, témoignant de son origine commune avec les autres métaux post-fer.",
+              "Sur Terre, l’indium est extrêmement rare (environ 0,05 ppm dans la croûte). Il ne forme pas de minerai propre mais se trouve en traces dans la sphalérite (ZnS) et d’autres minerais de zinc, de plomb et d’étain. Il est donc récupéré comme sous-produit du raffinage du zinc. Les principaux producteurs sont la Chine, le Canada et le Japon. Bien que ses réserves soient limitées, sa consommation reste modérée, car ses usages nécessitent de très faibles quantités.",
+              "L’indium est un métal du numérique. Son principal usage est sous forme d’oxyde d’indium-étain (ITO), un matériau transparent et conducteur, utilisé dans les écrans LCD, OLED et tactiles, ainsi que dans les cellules photovoltaïques. Il sert aussi dans les alliages à bas point de fusion, les soudures électroniques et les revêtements réfléchissants (miroirs à haute performance). En recherche, il est utilisé comme traceur radioactif (isotope ^111In) en médecine nucléaire, notamment pour suivre les globules blancs dans le corps.",
+              "Les principaux composés de l’indium sont l’oxyde d’indium (In₂O₃) et surtout l’oxyde d’indium-étain (In₂O₃ + SnO₂), qui forme le fameux ITO des écrans. L’arséniure d’indium (InAs) et le phosphure d’indium (InP) sont des semi-conducteurs utilisés dans les lasers, les diodes et les télécommunications à haute fréquence. L’indium trichlorure (InCl₃) est un catalyseur doux en chimie organique.",
+              "L’indium est un métal du futur forgé dans le passé des étoiles. Rare et discret, il est pourtant au cœur de la révolution numérique : sans lui, pas d’écrans tactiles, de smartphones ni de panneaux solaires transparents. Son destin reflète celui de notre époque — une chimie de précision, invisible mais omniprésente. Élément lunaire et technologique, l’indium incarne la rencontre entre la lumière, la matière et l’intelligence humaine."
+            ],
             "sources": []
           }
         },
@@ -2408,8 +2415,15 @@
           "symbol": "Sn",
           "name": "Étain",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Métal blanc argenté du bronze et des soudures, l’étain (Sn, 50) relie la métallurgie antique à l’électronique moderne.",
+            "paragraphs": [
+              "Symbole “Sn”, numéro atomique 50, l’étain est un métal blanc argenté, tendre et malléable, peu altérable à l’air. Il fond à une température modérée (232 °C) et émet un craquement cristallin lorsqu’on le plie, appelé le “cri de l’étain”. Connu depuis l’Antiquité, il fut l’un des tout premiers métaux maîtrisés par l’humanité, associé au cuivre pour former le bronze — un alliage qui a donné son nom à toute une ère technologique. Le symbole Sn vient du mot latin stannum, qui désignait l’étain dès l’époque romaine.",
+              "L’étain est né dans les étoiles massives, au cours du processus lent de capture de neutrons (s-process), principalement dans les géantes rouges. Il résulte aussi du processus rapide (r-process) dans les supernovae, comme les autres métaux lourds. Présent dans les météorites et la poussière cosmique, il témoigne d’une origine commune avec le plomb et l’indium. En un sens, chaque morceau de bronze antique est l’héritier direct d’une poussière d’étoile.",
+              "Sur Terre, l’étain est modérément rare, avec une concentration d’environ 2 ppm dans la croûte terrestre. Il se trouve principalement dans la cassitérite (SnO₂), son principal minerai, souvent associé au tungstène et au tantale. Les grands gisements historiques et actuels se situent en Asie du Sud-Est (Malaisie, Indonésie, Chine), en Bolivie et dans certaines régions d’Afrique centrale. C’est un métal relativement facile à extraire, ce qui explique son usage très ancien.",
+              "L’étain est un métal discret mais omniprésent. Il est surtout utilisé pour former des alliages, notamment le bronze (cuivre + étain) et les soudures électroniques (alliages d’étain et de plomb, aujourd’hui remplacés par des versions sans plomb à base d’étain-argent-cuivre). Il sert aussi dans les revêtements anticorrosion, comme le fer-blanc (acier recouvert d’étain, utilisé pour les boîtes de conserve), et dans les verres “float”, où une fine couche d’étain liquide assure la planéité du verre en fusion. En chimie organique, certains de ses composés (organostanniques) ont eu des usages comme catalyseurs et stabilisants de plastiques, bien que leur toxicité ait conduit à leur interdiction progressive.",
+              "Le dioxyde d’étain (SnO₂) est son oxyde le plus courant et sert de matériau conducteur transparent dans certains capteurs et revêtements. Les halogénures, comme le chlorure d’étain (SnCl₂), sont employés en catalyse et en traitement de surface. Les alliages à base d’étain, quant à eux, constituent la majorité des soudures électroniques modernes. Il existe aussi une forme allotropique appelée “peste de l’étain”, où le métal se transforme en une poudre grise instable à basse température, phénomène redouté dans les climats froids.",
+              "L’étain est un métal de fidélité et de transition : modeste, stable, indispensable. Né des étoiles, il a accompagné l’humanité depuis la métallurgie primitive jusqu’à la microélectronique moderne. Son rôle, souvent en retrait, est pourtant crucial — il unit, relie, protège. Du bronze antique aux circuits imprimés, l’étain illustre la continuité entre la main du forgeron et celle de l’ingénieur."
+            ],
             "sources": []
           }
         },
