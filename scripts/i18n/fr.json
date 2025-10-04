@@ -2403,8 +2403,16 @@
           "symbol": "Sb",
           "name": "Antimoine",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Symbole Sb, numéro atomique 51, l’antimoine est un métalloïde gris argenté, cassant, semi-brillant, souvent rencontré sous forme de sulfure noir (stibine, Sb₂S₃). Il conduit l’électricité modérément et fond à 631 °C.",
+            "paragraphs": [
+              "Connu depuis l’Antiquité, il fut utilisé pour des cosmétiques, des remèdes et des alliages bien avant que sa nature chimique ne soit comprise. Longtemps perçu comme une substance alchimique mi-métal mi-non-métal, on lui attribuait des vertus mystiques et médicinales.",
+              "Le symbole Sb vient du mot latin stibium, lui-même issu du grec ancien stíbi (στῖβι) qui désignait la poudre de stibine utilisée comme fard pour les yeux, notamment en Égypte sous le nom de kohl. Le mot « antimoine » dérive du grec médiéval antimonos, « qui n’est pas seul », peut-être relayé par l’arabe al-ithmid, et il a aussi inspiré la légende selon laquelle l’élément « tue les moines ».",
+              "L’antimoine est formé dans les étoiles massives et les supernovae par les processus lent et rapide de capture de neutrons (s-process et r-process), tout comme l’étain et le tellure voisins. Sa faible abondance cosmique reflète la rareté de ces réactions dans les cycles stellaires avancés.",
+              "Sur Terre, l’antimoine est rare (environ 0,2 ppm dans la croûte), mais il forme des gisements spécifiques, principalement sous forme de stibine (Sb₂S₃), son minerai principal. On le trouve aussi dans la valentinite (Sb₂O₃) et la sénarmontite, les principaux producteurs contemporains étant la Chine, la Russie et le Tadjikistan.",
+              "L’antimoine est utilisé dans de nombreux alliages pour durcir le plomb, notamment dans les caractères d’imprimerie, les batteries et les projectiles. Ses composés servent de retardateurs de flamme dans les plastiques, les textiles et certains appareils électroniques, et ils interviennent aussi dans la fabrication de semi-conducteurs et de détecteurs infrarouges.",
+              "Le trioxide d’antimoine (Sb₂O₃) est le composé le plus produit, utilisé comme stabilisant et retardateur de flamme. La stibine naturelle (Sb₂S₃) reste un matériau photoconducteur d’intérêt, tandis que les antimoniures de gallium (GaSb) et d’indium (InSb) sont essentiels aux dispositifs infrarouges et thermiques.",
+              "L’antimoine est un élément double : métal et non-métal, poison et médicament, ancien et moderne. Né des étoiles et exploité par les civilisations anciennes, il symbolise le passage de l’alchimie à la chimie et témoigne du lien continu entre langue, science et histoire."
+            ],
             "sources": []
           }
         },
@@ -2412,8 +2420,16 @@
           "symbol": "Te",
           "name": "Tellure",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Symbole Te, numéro atomique 52, le tellure est un métalloïde gris argenté, cassant et légèrement brillant, à la conductivité électrique médiocre.",
+            "paragraphs": [
+              "Son nom vient du latin tellus, « la Terre », choisi en 1798 par le chimiste allemand Martin Heinrich Klaproth pour faire écho au sélénium (« lune ») découvert peu après. Rare et mystérieux, il oscille entre les mondes métalliques et non métalliques, avec une chimie aussi variée que singulière.",
+              "Le tellure est produit dans les supernovae et les collisions d’étoiles à neutrons lors du processus rapide de capture de neutrons (r-process). On le retrouve dans les météorites et la poussière interstellaire, souvent associé au sélénium et à l’antimoine, témoignant d’une genèse commune dans les cendres stellaires.",
+              "Sur Terre, le tellure est extrêmement rare, environ 0,005 ppm dans la croûte, ce qui en fait l’un des solides naturels les plus rares. Il se trouve principalement dans les minerais d’or sous forme de tellurures comme la calavérite (AuTe₂) et la sylvanite ((Au,Ag)Te₂), mais aussi dans certains minerais de cuivre et de plomb.",
+              "La majorité du tellure est récupérée comme sous-produit de la métallurgie du cuivre, sa rareté et son extraction complexe en faisant un métal stratégique même utilisé en petites quantités.",
+              "Le tellure sert dans des alliages métalliques, notamment avec le plomb et l’acier, pour améliorer l’usinabilité et la résistance à la corrosion. Il joue un rôle majeur en thermoélectricité, ses composés comme le tellurure de bismuth (Bi₂Te₃) convertissant efficacement la chaleur en électricité, et le tellurure de cadmium (CdTe) étant utilisé dans les panneaux solaires à couche mince.",
+              "Le dioxyde de tellure (TeO₂) est un solide cristallin utilisé dans les verres spéciaux et les dispositifs optiques, tandis que les tellurures métalliques (CdTe, Bi₂Te₃, PbTe) sont au cœur des applications électroniques et photovoltaïques. Les composés organotelluriques, bien que rares, sont étudiés en chimie fine et en catalyse.",
+              "Élément d’équilibre, le tellure est né des explosions stellaires, fondu dans les minerais d’or et de cuivre, et convertit aujourd’hui chaleur et lumière en électricité. Entre métal et lune, entre Terre et étoiles, il illustre la continuité entre géologie, physique et technologies humaines."
+            ],
             "sources": []
           }
         },

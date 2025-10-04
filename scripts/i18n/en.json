@@ -2420,8 +2420,16 @@
           "symbol": "Sb",
           "name": "Antimony",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Symbol Sb, atomic number 51, antimony is a silvery-gray, brittle, semi-lustrous metalloid most often encountered as the black sulfide stibnite (Sb₂S₃). It conducts electricity moderately and melts at 631 °C.",
+            "paragraphs": [
+              "Known since antiquity, it was used in cosmetics, remedies, and alloys long before its chemical nature was understood. Regarded for centuries as an alchemical substance neither fully metal nor non-metal, it was credited with mystical and medicinal virtues.",
+              "The symbol Sb comes from the Latin word stibium, itself from the Ancient Greek stíbi (στῖβι) for the stibnite powder used as eye makeup, notably in Egypt under the name kohl. The word “antimony” likely stems from the Medieval Greek antimonos, “not alone,” perhaps relayed through the Arabic al-ithmid, and it inspired the colourful but inaccurate legend that the element “kills monks.”",
+              "Antimony forms in massive stars and supernovae through the slow and rapid neutron-capture processes (s-process and r-process), like its neighbours tin and tellurium. Its low cosmic abundance reflects how rarely these reactions occur during late stellar evolution.",
+              "On Earth, antimony is scarce (about 0.2 ppm in the crust) yet concentrates in specific deposits, primarily as stibnite (Sb₂S₃), its main ore. It is also found in valentinite (Sb₂O₃) and senarmontite, with modern production led by China, Russia, and Tajikistan.",
+              "Antimony is blended into many alloys to harden lead, including type metal, batteries, and ammunition. Its compounds act as flame retardants in plastics, textiles, and electronics, and they contribute to semiconductors and infrared detectors.",
+              "Antimony trioxide (Sb₂O₃) is the most-produced compound, serving as a stabiliser and flame retardant. Natural stibnite (Sb₂S₃) remains an interesting photoconductive material, while gallium antimonide (GaSb) and indium antimonide (InSb) are mainstays of infrared and thermal devices.",
+              "Antimony is a dual element: metal and non-metal, poison and medicine, ancient and modern. Born in stars and exploited by early civilisations, it marks the passage from alchemy to chemistry and highlights the continuous links between language, science, and history."
+            ],
             "sources": []
           }
         },
@@ -2429,8 +2437,16 @@
           "symbol": "Te",
           "name": "Tellurium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Symbol Te, atomic number 52, tellurium is a silvery-gray, brittle, slightly lustrous metalloid with poor electrical conductivity.",
+            "paragraphs": [
+              "Its name comes from the Latin tellus, “Earth,” chosen in 1798 by German chemist Martin Heinrich Klaproth to echo selenium (“Moon”), discovered soon after. Rare and enigmatic, it straddles the boundary between metals and non-metals with an unusually diverse chemistry.",
+              "Tellurium is produced in supernovae and neutron-star mergers during the rapid neutron-capture process (r-process). It is found in meteorites and interstellar dust, often alongside selenium and antimony, attesting to a shared origin in stellar ashes.",
+              "On Earth, tellurium is extremely rare—around 0.005 ppm in the crust—making it one of the scarcest solid elements. It occurs mainly in gold ores as tellurides such as calaverite (AuTe₂) and sylvanite ((Au,Ag)Te₂), but also in certain copper and lead ores.",
+              "Most tellurium is recovered as a by-product of copper refining, and its scarcity plus the complexity of extraction make it a strategic metal even though only small quantities are used.",
+              "Tellurium enters precision alloys, especially with lead and steel, to improve machinability and corrosion resistance. It plays a key role in thermoelectrics, with compounds like bismuth telluride (Bi₂Te₃) efficiently converting heat into electricity, and cadmium telluride (CdTe) powering thin-film solar panels.",
+              "Tellurium dioxide (TeO₂) is a crystalline solid used in specialised glasses and optical devices, while metallic tellurides (CdTe, Bi₂Te₃, PbTe) underpin electronic and photovoltaic applications. Organotellurium compounds, though uncommon, are studied in fine chemistry and catalysis.",
+              "A balancing element, tellurium was born from stellar explosions, concentrated in gold and copper ores, and now helps transform heat and light into electricity. Between metal and moon, between Earth and stars, it exemplifies the continuum linking geology, physics, and human technology."
+            ],
             "sources": []
           }
         },
