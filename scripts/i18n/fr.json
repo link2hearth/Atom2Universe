@@ -2661,8 +2661,15 @@
           "symbol": "Dy",
           "name": "Dysprosium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Métal lanthanide dense et magnétique, le dysprosium est devenu un allié clé des aimants de haute performance et des technologies énergétiques.",
+            "paragraphs": [
+              "Symbole Dy, numéro atomique 66, le dysprosium est un métal argenté, souple et étonnamment dense pour un lanthanide. Découvert en 1886 par Paul-Émile Lecoq de Boisbaudran, il doit son nom au grec \"dusprositos\" — “difficile à obtenir” — qui rappelle la ténacité nécessaire pour l’isoler.",
+              "Produit par le processus r, lors des supernovae ou des fusions d’étoiles à neutrons, le dysprosium est né dans les mêmes forges stellaires que l’or et le platine. Les traces retrouvées dans les météorites témoignent de son héritage cosmique très ancien.",
+              "Sur Terre, on le rencontre surtout dans la monazite, la bastnäsite et la xénotime. Présent à environ 5 ppm dans la croûte, il n’est pas rare mais sa séparation des autres terres rares exige des procédés modernes d’échange d’ions et d’extraction par solvant.",
+              "Le dysprosium renforce les aimants permanents à base de néodyme-fer-bore, assurant leur résistance à la chaleur pour les éoliennes, les moteurs électriques ou la robotique. On le retrouve aussi dans les barres de contrôle des réacteurs nucléaires, certains verres optiques et divers dispositifs optoélectroniques et infrarouges.",
+              "Il adopte principalement l’état d’oxydation +3, formant des sels et oxydes comme Dy₂O₃ utilisés dans les céramiques et verres spéciaux. Paramagnétique à température ambiante, il devient antiferromagnétique ou ferromagnétique selon la température et possède l’un des moments magnétiques les plus élevés de tous les éléments.",
+              "Longtemps “difficile à obtenir”, le dysprosium est devenu un pilier de la transition énergétique. Forgé par les étoiles et extrait avec patience, il relie la physique nucléaire aux technologies vertes modernes."
+            ],
             "sources": []
           }
         },
@@ -2670,8 +2677,15 @@
           "symbol": "Ho",
           "name": "Holmium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Lanthanide au moment magnétique record, le holmium relie astrophysique, lasers médicaux et alliages de précision.",
+            "paragraphs": [
+              "Symbole Ho, numéro atomique 67, le holmium est un métal argenté, brillant et relativement mou. Découvert en 1878 par Per Teodor Cleve, il rend hommage à Stockholm (Holmia) et détient le moment magnétique le plus élevé parmi les éléments naturels.",
+              "Comme de nombreux lanthanides, il naît du processus r lors des supernovae et fusions d’étoiles à neutrons. Ses isotopes stables, notamment Ho-165, sont ainsi des poussières d’étoiles formées bien avant la naissance du Soleil.",
+              "Terrestrement, le holmium se cache dans la monazite, la bastnäsite ou la gadolinite aux côtés de l’yttrium et des autres terres rares. Présent à environ 1,3 ppm dans la croûte, il n’existe pas à l’état natif et s’obtient par séparation chimique de ses voisins.",
+              "Son moment magnétique exceptionnel en fait un composant d’alliages et d’aimants permanents de haute précision. Le radioisotope Ho-166 est employé en thérapies ciblées, tandis que les lasers Ho:YAG délivrent une lumière infrarouge prisée en chirurgie urologique ou orthopédique.",
+              "Trivalent dans la plupart de ses composés, il forme des oxydes comme Ho₂O₃ utilisés en optique. Paramagnétique à température ambiante, il devient ferromagnétique autour de 20 K, et ses ions Ho³⁺ donnent aux verres des teintes jaunes ou rouges pâles utiles en filtres et lasers.",
+              "Baptisé d’après Stockholm mais né des étoiles, le holmium demeure discret tout en étant crucial pour voir, découper ou contrôler l’invisible grâce à son magnétisme extrême et à ses applications photoniques."
+            ],
             "sources": []
           }
         },
