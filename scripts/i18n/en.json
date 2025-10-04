@@ -1713,8 +1713,15 @@
           "symbol": "B",
           "name": "Boron",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A discreet yet versatile metalloid, boron pairs rarity and hardness with a rich chemistry that links everyday life to cutting-edge technologies.",
+            "paragraphs": [
+              "Symbol \"B\" and atomic number 5, boron is a metalloid: not quite a metal, not quite a nonmetal, but a hybrid element with unique properties. As a pure substance it is a blackish or brown solid that is hard, light, and scarce. Yet its compounds, called borates, slip in everywhere: in heat-resistant glass, in detergents, in fertilizers, and even in certain biological reactions. A discreet element with astonishing versatility.",
+              "Like beryllium, boron was not produced in significant amounts during the Big Bang, and it is too fragile to survive the nuclear reactions that power stellar cores. Its main cosmic origin is spallation: cosmic rays strike nuclei of carbon, nitrogen, or oxygen and fragment them into lighter elements such as lithium, beryllium, and boron. Boron was therefore born not in stellar furnaces but in the great collisions of interstellar particles.",
+              "On Earth, boron is relatively rare. It concentrates chiefly in deposits of borates formed in arid, salt-rich environments such as evaporated lakes. The largest known reserves lie in Turkey, the United States (California), and South America. Although it accounts for only a tiny fraction of the Earth's crust, it has long been accessible and mined for its interesting chemical properties.",
+              "Boron and its compounds have many practical uses. In borosilicate glass (as in Pyrex) it brings remarkable resistance to heat and thermal shock. In detergents, borates act as cleaning and disinfecting agents. In agriculture, boron is an essential trace element: plants need it to grow, even in small amounts. In high-tech industry it helps produce ultra-resilient materials such as boron carbide—one of the hardest known solids—and high-performance magnets based on neodymium-iron-boron alloys.",
+              "Boron compounds are numerous and varied. Boric acid (H₃BO₃) is used as a mild antiseptic or as an industrial additive. Borates such as borax (Na₂B₄O₇·10H₂O) appear in detergents, enamels, and many chemical applications. In materials science, boron carbide (B₄C) is prized for its exceptional hardness, serving in body armor and nuclear shielding. Modern chemistry also relies on organoboron compounds, which play a central role in synthesizing new molecules, particularly for pharmaceuticals.",
+              "Born from cosmic rays rather than stars, rare yet indispensable, boron is an element that keeps a low profile. From kitchen glassware to advanced materials and plant growth, it bridges everyday chemistry and high technology. This hybrid metalloid perfectly illustrates how so-called minor elements can have a major impact."
+            ],
             "sources": []
           }
         },
@@ -1722,8 +1729,15 @@
           "symbol": "C",
           "name": "Carbon",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "An element of contrasts, carbon links diamonds and graphite, the living cycle and modern industries, by building the immense diversity of organic chemistry.",
+            "paragraphs": [
+              "Symbol \"C\" and atomic number 6, carbon is the element of contrasts: as much the soft black of graphite as the transparent near-indestructibility of diamond. It forms the backbone of all organic chemistry, the molecular skeleton of living beings. Modest on the periodic table, it nonetheless stands at the heart of life, industry, and even stars: without carbon, no complex molecules, no biology, no humanity.",
+              "Carbon did not form during the Big Bang: the young universe produced only hydrogen, helium, and a little lithium. Carbon was forged later inside stars through nuclear fusion. The key mechanism is the triple-alpha process, in which three helium nuclei fuse to create a carbon nucleus. When massive stars die and explode as supernovae, they disperse this carbon into space, enriching the interstellar clouds that spawned planets and, ultimately, the chemistry of life.",
+              "On Earth, carbon takes countless forms. In elemental form it appears as graphite—pencil lead and natural lubricant—or as diamond, a crystal of unrivaled hardness. Combined with other elements it is everywhere: in atmospheric carbon dioxide, in carbonate rocks, in subsurface hydrocarbons, and above all in the organic molecules that make up living organisms. This ubiquitous element cycles continuously among atmosphere, oceans, soils, and living beings as part of the carbon cycle.",
+              "Carbon has as many uses as it has faces. As graphite it serves in electrodes, batteries, and as a lubricant. As diamond it shines in jewelry yet also excels as an industrial material for cutting and polishing. Spun into carbon fibers it reinforces our most advanced materials. Its compounds are equally diverse: carbon monoxide (CO) as a reducing agent in steelmaking, hydrocarbons as energy sources, and the entire realm of organic chemistry underpinning plastics, medicines, and countless other materials.",
+              "Carbon is the most sociable element on the table: with its four available bonds it builds infinite molecular architectures. Methane (CH₄) is the simplest example, but the great organic families showcase its creativity—proteins, sugars, lipids, DNA, every building block of life rests on a carbon framework. It also pairs with minerals, from calcium carbonate (CaCO₃) in limestone and shells to carbon dioxide (CO₂) in the air. Carbon is both the basis of life and a cornerstone of geology.",
+              "Carbon is far more than an element: it is the connecting thread between stars and life. Born in stellar furnaces, it settled on Earth to become diamond and graphite, rock and molecule, the skeleton of all biology. Within the simplicity of its four bonds hides an infinite wealth of combinations that make it the architect of living matter. With every breath and every movement, we express a little of this ancient cosmic traveler."
+            ],
             "sources": []
           }
         },
