@@ -3123,8 +3123,14 @@
           "symbol": "Pu",
           "name": "Plutonium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Actinide dense et radioactif, le plutonium concentre des enjeux énergétiques, militaires et de sûreté à l’échelle mondiale.",
+            "paragraphs": [
+              "Symbole « Pu », numéro atomique 94, le plutonium est un métal actinide dense, argenté à l’état métallique mais couramment rencontré sous forme d’oxydes. Ses isotopes phares, ^239Pu (demi-vie ≈ 24 110 ans) et ^238Pu (demi-vie ≈ 87,7 ans), illustrent une radioactivité intense et des propriétés physico-chimiques qui varient selon l’état d’oxydation.",
+              "Découvert et isolé au début des années 1940 par les équipes de Glenn Seaborg et Edwin McMillan, le plutonium n’est présent qu’en traces dans la nature. Il est surtout produit artificiellement dans les réacteurs nucléaires par captures neutroniques sur ^238U, selon la chaîne ^238U → ^239U → ^239Np → ^239Pu, même si quelques traces peuvent apparaître lors d’événements géologiques rares ou d’essais atmosphériques historiques.",
+              "Ses usages sont contrastés : ^239Pu est un isotope fissile central pour les armes nucléaires, certains réacteurs et le combustible MOX, tandis que ^238Pu sert de source de chaleur dans les générateurs thermoélectriques à radioisotope pour l’exploration spatiale ou toute application nécessitant une longue autonomie. Le plutonium est également au cœur des recherches sur le cycle du combustible, le retraitement et la transmutation, dans un cadre très strict de sûreté et de non-prolifération.",
+              "Chimiquement, le plutonium adopte plusieurs états d’oxydation (principalement de +3 à +6) et forme des composés variés : dioxyde PuO₂ — forme stable pour le combustible et le stockage —, halogénures, nitrates ou complexes en solution. Sa chimie redox gouverne sa solubilité, sa mobilité environnementale et la gestion des déchets, tandis que la radiotoxicité des isotopes émetteurs alpha impose une maîtrise rigoureuse des expositions.",
+              "Élément stratégique autant que problématique, le plutonium concentre d’immenses potentiels énergétiques et destructeurs, mais aussi des défis majeurs de sûreté, de gestion des déchets et de diplomatie. Sa production, son usage et son confinement font l’objet de réglementations internationales et de contrôles sévères pour contenir les risques techniques, sanitaires et politiques."
+            ],
             "sources": []
           }
         },
@@ -3132,8 +3138,14 @@
           "symbol": "Am",
           "name": "Américium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Actinide synthétique argenté et radioactif, l’américium allie applications ciblées et exigences strictes de radioprotection.",
+            "paragraphs": [
+              "Symbole « Am », numéro atomique 95, l’américium est un actinide synthétique argenté lorsqu’il est réduit en métal. Isotopes dominants, ^241Am (demi-vie ≈ 432 ans) et ^243Am (demi-vie ≈ 7 370 ans) incarnent un élément hautement radioactif, rarement naturel mais abondant comme produit des réacteurs.",
+              "Découvert en 1944 par l’équipe de Glenn Seaborg et nommé en référence au continent américain, l’américium se forme principalement par captures neutroniques successives sur le plutonium et d’autres actinides dans les réacteurs. Des traces minuscules peuvent se retrouver dans certains dépôts radioactifs, mais sa production reste quasi exclusivement anthropique.",
+              "Malgré la radiotoxicité, ^241Am connaît des usages concrets : source ionisante dans les détecteurs de fumée, sources neutroniques ^241Am–Be pour la calibration, la prospection ou la géophysique, et objet d’étude en chimie et physique des actinides. Chaque application impose néanmoins des protocoles de radioprotection et de confinement très stricts.",
+              "Sur le plan chimique, l’américium adopte surtout l’état d’oxydation +3 en solution et forme des composés tels que Am₂O₃, AmO₂, nitrates et halogénures. Sa chimie, proche de celle des lanthanides et des actinides trivalents, constitue un terrain d’étude central pour la séparation chimique des actinides et la gestion des déchets nucléaires ; certains complexes organométalliques ne dépassent toutefois pas le stade de la recherche.",
+              "Typiquement anthropique, l’américium rend possible des instruments spécialisés tout en exigeant un encadrement sanitaire rigoureux face aux risques d’inhalation ou d’ingestion. Il illustre la manière dont la science nucléaire convertit un sous-produit radioactif en ressource utile, mais soigneusement confinée."
+            ],
             "sources": []
           }
         },
