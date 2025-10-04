@@ -1795,8 +1795,15 @@
           "symbol": "Na",
           "name": "Sodium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Explosive as a pure alkali metal, sodium in its salts keeps our nerves firing and entire industries running.",
+            "paragraphs": [
+              "Symbol \"Na\" (from the Latin natrium) and atomic number 11, sodium is a lightweight, silvery, soft alkali metal you could slice with a knife. Highly reactive, it ignites on contact with water, releasing hydrogen and producing a basic solution. In pure form it is hazardous to handle, yet in salts it becomes indispensable to life: without sodium there would be no nerve conduction, no heartbeat, no perfectly seasoned soup.",
+              "Sodium is a child of the stars. It forms mainly inside massive stars through nuclear fusion reactions involving neon and hydrogen. At the end of their lives those stars expel sodium into space through supernova explosions, enriching the interstellar medium. Long before our planet existed, this element slipped into the stardust that built Earth. Its presence in meteorites confirms its ancient role in the cosmic history of matter.",
+              "On Earth, sodium is extremely abundant but almost always found as salts. The most familiar is sodium chloride (NaCl), or table salt, which makes up a large share of seawater and salt deposits. Sodium also hides in numerous minerals (soda ash, albite, cryolite). Metallic sodium had to wait until the early 19th century and Humphry Davy’s electrolysis to be isolated. Yet that form is not where it shines: its starring role is within salts and solutions.",
+              "Sodium and its compounds are everywhere. NaCl is vital for food, preservation, and chemistry. Sodium carbonate (soda ash, Na₂CO₃) is essential for producing glass and detergents. Sodium hydroxide (caustic soda, NaOH) underpins the chemical industry, used to make paper, soap, and countless compounds. Highly reactive metallic sodium has niche uses as a heat-transfer fluid in certain nuclear reactors. And in science and engineering, the famous yellow glow of sodium lamps long lit our nights.",
+              "Sodium loves ionic bonds: NaCl (table salt), NaOH (caustic soda), Na₂CO₃ (sodium carbonate), NaHCO₃ (sodium bicarbonate, the \"little baking soda\" we keep at home). In the human body, sodium is key to ionic balance and nerve impulses, circulating in plasma and other fluids. Its compounds are at once ordinary—sitting in our kitchens—and fundamental to our physiology.",
+              "Sodium is a dual element: explosive and unstable when pure, yet familiar and vital as salts. From the ocean to our cells, from glassmaking to soap, it showcases chemistry in its most everyday, universal form. Born in stars and active in life, it reminds us that a humble grain of salt is really a fragment of cosmic history."
+            ],
             "sources": []
           }
         },
@@ -1804,8 +1811,15 @@
           "symbol": "Mg",
           "name": "Magnesium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A lightweight metal forged in stars, magnesium ties chlorophyll, alloys, fireworks, and our own health together.",
+            "paragraphs": [
+              "At first glance magnesium hardly looks like a flamboyant hero. It is a light, pale gray metal rarely seen in ingots, more often dissolved in seawater, tucked inside our cells, or blended into an aircraft part. Yet behind that discreet face hides a vital element for both stars and humans. Symbol \"Mg\" and atomic number 12, it is one of those quiet companions structuring our universe and our health.",
+              "Like many elements, magnesium was born in stellar interiors. Through nuclear fusion in stellar cores, atoms of carbon and neon combine to form magnesium. When massive stars explode as supernovae, they scatter this light metal across space, enriching the interstellar gas that will form planets, oceans—and our bones. Every grain of magnesium we ingest carries the signature of a star that died billions of years ago.",
+              "On Earth, magnesium is plentiful but rarely alone: it hides in rocks, in minerals such as dolomite and magnesite, and especially in seawater, which contains it in colossal amounts. It is among the ten most common elements in Earth’s crust. For us, its chief biological role is essential: there is no chlorophyll without magnesium. Nestled at the heart of the green molecule, it lets plants capture light and turn sunlight into energy.",
+              "Magnesium is a multitasker. In our bodies it participates in more than 300 enzymatic reactions, supporting muscles, nerves, and even bone strength. In industry it truly shines—literally, as dazzling fireworks prove. As an alloying metal it reinforces aluminum in aircraft and cars while keeping the structure light. It also appears in medicines, whether to calm cramps or neutralize excess acidity.",
+              "Paired with oxygen, it forms magnesium oxide (MgO), used as a refractory lining in furnaces. Combined with sulfur it yields magnesium sulfate (the famous \"Epsom salt\") for medical and cosmetic uses. In biology its key role sits in chlorophyll, where it stands at the center of the plant life cycle. In short, magnesium is never far when matter needs to link up with energy.",
+              "Cosmic in origin and universal in presence, magnesium is a metal, a nutrient, and a spark of light all at once. It bridges stars and plants, rocks and our cells, high-performance alloys and fireworks. A discreet element, certainly, yet one that illuminates our world with multiple uses and an unsuspected beauty."
+            ],
             "sources": []
           }
         },
