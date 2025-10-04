@@ -2098,8 +2098,15 @@
           "symbol": "Ga",
           "name": "Gallium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A silvery metal that can almost melt in your hand, gallium is a rare resource now essential to modern optoelectronics.",
+            "paragraphs": [
+              "Symbol \"Ga\", atomic number 31, gallium is a silvery, soft metal that melts at only 29.8 °C. Solid at room temperature yet liquid with the slightest warmth, it resolidifies into striking crystalline structures. Discovered in 1875 by Paul-Émile Lecoq de Boisbaudran and named after Gaul, it has become a key metal for modern electronics and optics.",
+              "Gallium forms in massive stars, notably during supernovae and through neutron-capture processes in red giants. As a secondary product of stellar nucleosynthesis, it records the mixing of stellar generations and appears in trace amounts in meteorites as well as in Earth’s crust.",
+              "On Earth, gallium is rare: it has no dedicated ore and occurs only in tiny quantities within bauxite, sphalerite, and other minerals. It is recovered mainly as a by-product of aluminum and zinc extraction, and its unusual properties make it a singular material that sits between metal and technological fluid.",
+              "A strategic metal, gallium is chiefly used in semiconductors such as gallium arsenide (GaAs) and gallium nitride (GaN), which are vital for laser diodes, LEDs, high-efficiency solar panels, and microwave circuits. It also appears in infrared detectors, 5G components, space technologies, and even as a non-toxic laboratory substitute for mercury.",
+              "Gallium chemistry is dominated by its oxides (Ga₂O₃) and semiconductor materials such as GaAs and GaN. Gallium nitride stands out for its thermal and electrical stability that powers modern white and blue LEDs, while gallium trichloride (GaCl₃) serves as a catalyst in organic chemistry. Some iron-mimicking compounds are being studied for antibacterial properties as well.",
+              "A metal of paradox and promise, gallium is solid yet melts at a touch, scarce yet indispensable, discreet yet central to the technological revolution. Born in stars and extracted from dusty terrestrial ores, it lights up our screens, networks, and cities, embodying the transition from raw matter to smart materials."
+            ],
             "sources": []
           }
         },
@@ -2107,8 +2114,15 @@
           "symbol": "Ge",
           "name": "Germanium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A gray, brittle metalloid, germanium is scarce yet remains a quiet pillar of electronics and infrared technology.",
+            "paragraphs": [
+              "Symbol \"Ge\", atomic number 32, germanium is a gray-silver, brittle, semiconducting metalloid. Discovered in 1886 by Clemens Winkler and named in honor of Germania, it moved from laboratory curiosity to foundational element of electronics and telecommunications even before the age of silicon.",
+              "Germanium forms through the slow capture of neutrons in stars, an s-process of nucleosynthesis completed in supernova explosions or in the winds of red giants. Found in both iron and stony meteorites, it testifies to its role in the primordial mix of the solar system despite its modest cosmic abundance.",
+              "Within Earth’s crust, germanium averages barely 1.5 ppm and appears only as traces in sphalerite, coal, or certain copper ores. It is extracted mainly as a by-product of zinc refining or coal processing, giving it the status of a strategic element with industrial and geopolitical ramifications.",
+              "A historic semiconductor, germanium was used for the first transistors of the 1950s before silicon took over. It remains prized for infrared devices, detectors, lenses, and optical fibers thanks to its transparency to IR waves, and in SiGe alloys it boosts the performance of modern microprocessors.",
+              "Its chemistry highlights oxides (GeO₂, GeO) and halides (GeCl₄, GeF₄), with germanium tetrachloride being a key precursor for silica-based optical fibers. Organogermanium compounds are also explored for antioxidant properties, though their use remains experimental, reflecting a chemistry that bridges silicon and tin.",
+              "A metalloid bridging rock and light, germanium was born in stars, concentrated by chance in a few ores, and pioneered modern electronics. Fragile yet forward-looking, it continues to shape invisible revolutions, from nanoscale structures to the fibers that carry our communications."
+            ],
             "sources": []
           }
         },

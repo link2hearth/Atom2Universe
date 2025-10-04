@@ -2083,8 +2083,15 @@
           "symbol": "Ga",
           "name": "Gallium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Métal argenté capable de fondre presque dans la main, le gallium est une ressource rare devenue indispensable aux technologies optoélectroniques modernes.",
+            "paragraphs": [
+              "Symbole \"Ga\", numéro atomique 31, le gallium est un métal argenté et tendre qui fond à seulement 29,8 °C. Solide à température ambiante mais liquide dès qu’on le réchauffe, il se resolidifie en formant de belles structures cristallines. Découvert en 1875 par Paul-Émile Lecoq de Boisbaudran, il doit son nom à la Gaule et s’est imposé comme un métal clé de l’électronique et de l’optique moderne.",
+              "Le gallium se forme dans les étoiles massives, notamment lors des supernovae et des processus de capture de neutrons dans les géantes rouges. Produit secondaire de la nucléosynthèse stellaire, il témoigne du brassage des générations d’étoiles et se retrouve en traces dans les météorites comme dans la croûte terrestre.",
+              "Sur Terre, le gallium est rare : il ne possède pas de minerai dédié et ne se rencontre qu’en faible quantité dans la bauxite, la sphalérite et d’autres minéraux. On le récupère comme sous-produit de l’extraction de l’aluminium et du zinc, et ses propriétés atypiques en font un matériau singulier, à la croisée du métal et du fluide technologique.",
+              "Métal stratégique, le gallium est surtout utilisé dans les semi-conducteurs sous forme d’arséniure (GaAs) ou de nitrure (GaN), matériaux essentiels pour les diodes laser, les LED, les panneaux solaires à haut rendement et les circuits micro-ondes. On le retrouve dans les détecteurs infrarouges, les composants 5G, les technologies spatiales et même comme substitut non toxique du mercure en laboratoire.",
+              "Les composés du gallium sont dominés par ses oxydes (Ga₂O₃) et ses semi-conducteurs, notamment le GaAs et le GaN. Le nitrure de gallium brille par sa stabilité thermique et électrique qui fonde la génération moderne de LED blanches et bleues, tandis que le gallium trichlorure (GaCl₃) sert de catalyseur en chimie organique. Certains composés imitant le fer sont aussi étudiés pour leurs propriétés antibactériennes.",
+              "Métal de paradoxe et d’avenir, le gallium est solide mais fondant au toucher, rare mais indispensable, discret mais central dans la révolution technologique. Né dans les étoiles et extrait des poussières métalliques terrestres, il éclaire nos écrans, nos réseaux et nos villes en incarnant la transition entre matière brute et intelligence matérielle."
+            ],
             "sources": []
           }
         },
@@ -2092,8 +2099,15 @@
           "symbol": "Ge",
           "name": "Germanium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Métalloïde gris et cassant, le germanium est rare mais reste un pilier discret de l’électronique et des technologies infrarouges.",
+            "paragraphs": [
+              "Symbole \"Ge\", numéro atomique 32, le germanium est un métalloïde gris argenté, cassant et semi-conducteur. Découvert en 1886 par Clemens Winkler et baptisé en hommage à Germania, il est passé de curiosité de laboratoire à élément fondamental de l’électronique et des télécommunications avant même l’ère du silicium.",
+              "Le germanium se forme par capture lente de neutrons dans les étoiles, un processus de nucléosynthèse s qui s’achève dans les supernovae ou les vents des géantes rouges. Présent dans les météorites ferreuses et pierreuses, il atteste de sa participation au mélange originel du système solaire malgré une abondance cosmique modeste.",
+              "Dans la croûte terrestre, le germanium ne dépasse guère 1,5 ppm et ne se trouve qu’en traces dans la sphalérite, la houille ou certains minerais de cuivre. On l’extrait surtout comme sous-produit du raffinage du zinc ou du charbon, ce qui lui confère un statut d’élément stratégique aux ramifications industrielles et géopolitiques.",
+              "Semi-conducteur historique, le germanium a servi à fabriquer les premiers transistors des années 1950 avant d’être supplanté par le silicium. Il reste prisé pour les dispositifs infrarouges, les détecteurs, les lentilles et les fibres optiques grâce à sa transparence aux ondes IR, et en alliage SiGe il améliore les performances des microprocesseurs actuels.",
+              "Sa chimie met en avant oxydes (GeO₂, GeO) et halogénures (GeCl₄, GeF₄), le tétrachlorure de germanium étant un précurseur majeur des fibres optiques à base de silice dopée. Des composés organogermaniques sont explorés pour leurs propriétés antioxydantes, même si leur usage reste expérimental, reflétant une chimie intermédiaire entre silicium et étain.",
+              "Métalloïde de transition entre roche et lumière, le germanium est né des étoiles, concentré par hasard dans quelques minerais et pionnier de l’électronique moderne. Fragile mais visionnaire, il continue de façonner des révolutions invisibles, des nanostructures aux fibres qui transportent nos communications."
+            ],
             "sources": []
           }
         },
