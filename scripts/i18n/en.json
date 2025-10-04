@@ -3200,8 +3200,14 @@
           "symbol": "Cf",
           "name": "Californium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Californium is an ultra-rare synthetic actinide prized as a compact neutron source despite its high cost and radiological hazards.",
+            "paragraphs": [
+              "Overview — Symbol \"Cf\", atomic number 98, californium is a synthetic transuranic actinide. When prepared in bulk it is a silvery metal, highly radioactive, and exists only through human production in extremely limited quantities. Several isotopes are known; among them ^252Cf is the isotope most used industrially, while ^251Cf is the most stable known (half-life ≈ 898 years).",
+              "Origins (cosmic & terrestrial) — Cosmically, californium arises from the same heavy nucleosynthesis (r-process) as other heavy elements, but it does not persist naturally because most of its isotopes are short-lived. On Earth it is entirely produced by prolonged neutron irradiation of actinides (curium, berkelium, etc.) in high-flux reactors or synthesized in accelerators; it was first created at Berkeley in 1950. Commercial production remains very limited and concentrated (e.g., Oak Ridge, USA and RIAR, Russia).",
+              "Uses — The most exploited property is the neutron emission of ^252Cf (a very high neutron flux per microgram). This makes the isotope valuable as a portable neutron source for neutron radiography, neutron activation (elemental analysis), ore and hydrocarbon detection, reactor start-up, and a few specialized medical applications. Limited production and high costs restrict its use to situations where no practical alternative exists.",
+              "Chemistry & associated compounds — Chemically, californium behaves like the other heavy actinides: it preferentially adopts the +3 oxidation state in solution and forms oxides (Cf₂O₃), halides, and nitrates in the laboratory. Its chemistry is mostly studied on microgram scales to understand actinide behavior and to optimize their separation or recycling; handling requires specialized radiological facilities.",
+              "Conclusion — Californium is a niche material of very high scientific and technological value: produced in tiny amounts, it serves as an indispensable neutron source in several industrial and scientific domains. Its cost, radioactivity, and scarce production make it a strategic element under strict regulation."
+            ],
             "sources": []
           }
         },
@@ -3209,8 +3215,14 @@
           "symbol": "Es",
           "name": "Einsteinium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Born from nuclear explosions, einsteinium is a synthetic actinide reserved for fundamental research on heavy actinides and superheavy elements.",
+            "paragraphs": [
+              "Overview — Symbol \"Es\", atomic number 99, einsteinium is a radioactive, silvery actinide metal produced artificially in very small quantities. Discovered in 1952 in the fallout of the first American thermonuclear explosion (Ivy Mike), it was first identified in the debris of the hydrogen bomb. The most stable known isotope is ^252Es, with a half-life of about 471 days.",
+              "Origins — Einsteinium does not occur naturally on Earth; it is entirely synthetic. It forms in nuclear explosions or in reactors with extremely high neutron fluxes by irradiating curium or plutonium followed by several neutron captures and beta decays. Its discovery was kept secret for several years because of its military origin.",
+              "Uses — Applications of einsteinium are essentially scientific. Its intense radioactivity and minuscule production (a few micrograms at most) restrict it to research on heavy actinides and the synthesis of superheavy elements: einsteinium was notably used to produce mendelevium (Md, 101). Outside these contexts of fundamental nuclear research, it has no industrial use.",
+              "Chemistry & associated compounds — Einsteinium mainly adopts the +3 oxidation state in solution, forming oxides (Es₂O₃), halides, and complexes similar to those of its neighbors curium and californium. Because of its strong alpha emission it self-heats at room temperature, complicating handling: even a few micrograms must be manipulated in radioprotected and thermally controlled environments.",
+              "Conclusion — Einsteinium is a symbol of twentieth-century nuclear science: born in the fire of a thermonuclear explosion, named in honor of Albert Einstein, and used to create other elements beyond the periodic table. Invisible in everyday life, it embodies the boundary between atomic physics and the creation of new forms of matter."
+            ],
             "sources": []
           }
         },
