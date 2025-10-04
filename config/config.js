@@ -602,6 +602,25 @@ function createAtomScaleTrophies() {
 
 const GAME_CONFIG = {
   /**
+   * Paramètres du système de langues.
+   * - languages : liste des codes langues disponibles et leur locale associée.
+   * - defaultLanguage : langue chargée par défaut lors du démarrage du jeu.
+   * - path : répertoire contenant les fichiers JSON de traduction.
+   * - fetchOptions : options passées à fetch() (cache désactivé pour éviter les 304 persistants).
+   */
+  i18n: {
+    languages: [
+      { code: 'fr', locale: 'fr-FR' },
+      { code: 'en', locale: 'en-US' }
+    ],
+    defaultLanguage: 'fr',
+    path: './scripts/i18n',
+    fetchOptions: {
+      cache: 'no-store'
+    }
+  },
+
+  /**
    * Textes affichés dans l'interface utilisateur.
    * Centralisés ici pour faciliter leur édition sans toucher au HTML.
    */
