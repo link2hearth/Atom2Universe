@@ -2963,8 +2963,14 @@
           "symbol": "Ac",
           "name": "Actinium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A rare, intensely radioactive actinide, actinium bridges stellar nucleosynthesis and the most targeted nuclear therapies.",
+            "paragraphs": [
+              "Symbol \"Ac\", atomic number 89, actinium is a silvery to gray actinide metal discovered by André-Louis Debierne at the turn of the 20th century. Present only in trace amounts in Earth’s crust, it was among the first radioactive elements identified after uranium and thorium.",
+              "Cosmically, actinium is forged by neutron-capture processes in extreme stellar environments before being trapped in the primordial material of the Solar System. On Earth it occurs only in infinitesimal quantities within uranium and thorium ores, where it appears as an intermediate product in certain decay chains.",
+              "Its uses remain rare and tightly regulated. The isotope ^225Ac, with a half-life of about ten days, is studied as a source of targeted alpha therapy against certain cancers, while ^227Ac still serves occasionally as a neutron source or research material. Its intense radioactivity and scarcity rule out any routine industrial application.",
+              "Chemically, actinium almost exclusively adopts the +3 oxidation state in solution, mirroring trivalent lanthanides. Compounds such as Ac₂O₃, AcCl₃, or Ac(NO₃)₃ shed light on actinide chemistry and guide the separation and containment strategies required for radioactive waste management.",
+              "Actinium is therefore both a precious witness to stellar reactions and a cutting-edge research tool, yet its extreme radioactivity enforces stringent radiological protocols that confine its use to highly specialized contexts."
+            ],
             "sources": []
           }
         },
@@ -3098,8 +3104,13 @@
           "symbol": "Rf",
           "name": "Rutherfordium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A fully artificial superheavy element, rutherfordium pushes transition-metal chemistry to the frontiers of nuclear physics.",
+            "paragraphs": [
+              "Symbol \"Rf\" and atomic number 104, rutherfordium is a superheavy element confirmed in 1997 and named in honor of physicist Ernest Rutherford, a pioneer of nuclear science.",
+              "It does not occur naturally: every atom is produced in the laboratory by colliding heavy nuclei. Its isotopes survive only a few seconds to several minutes at best, granting just enough time for chemical and spectrometric experiments.",
+              "Belonging to the group of titanium and zirconium, rutherfordium behaves like a typical transition metal according to experiments carried out on mere atoms. Its blistering radioactivity and minuscule production keep it exclusively within the realm of fundamental research.",
+              "As the first representative of the superheavy element series, it links the familiar chemistry of transition metals with the exploration of relativistic effects governing the most massive nuclei, illustrating the continuum between the foundations of atomic science and the quest for its extreme limits."
+            ],
             "sources": []
           }
         },
