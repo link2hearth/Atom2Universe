@@ -2739,8 +2739,15 @@
           "symbol": "Yb",
           "name": "Ytterbium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Symbole “Yb” et numéro atomique 70, l’ytterbium est un lanthanide argenté et souple, né à Ytterby mais tourné vers les technologies de précision.",
+            "paragraphs": [
+              "Présentation — Symbole “Yb”, numéro atomique 70, l’ytterbium est un métal argenté, souple et brillant appartenant à la série des lanthanides. Découvert en 1878 par Jean Charles Galissard de Marignac et isolé pur au début du XXᵉ siècle, il partage avec l’yttrium, le terbium et l’erbium un nom inspiré du village suédois d’Ytterby.",
+              "Origines cosmiques — Comme la plupart des lanthanides, l’ytterbium naît des processus s (captures lentes de neutrons) et r (captures rapides) au cœur des étoiles massives. Ses sept isotopes naturels, dont Yb-174, se sont formés dans ces forges stellaires avant d’être incorporés aux roches primitives du Système solaire.",
+              "Origine terrestre — Présent à environ 3 ppm dans la croûte, l’ytterbium se trouve dans la monazite, la xénotime et surtout la gadolinite. Jamais natif, il est extrait par séparation ionique ou par extraction par solvant, en tandem avec d’autres terres rares comme l’yttrium et le lutécium.",
+              "Usages — Élément multitâche, l’ytterbium dope les lasers à fibre et les cristaux Yb:YAG dédiés à la chirurgie, à la découpe de précision et à la recherche. Certains de ses isotopes alimentent des horloges atomiques optiques ultra-précises, et ses composés interviennent dans des alliages électroniques et des matériaux luminescents.",
+              "Molécules et propriétés associées — L’ytterbium adopte surtout l’état d’oxydation +3, mais peut aussi exister en forme divalente (+2), précieux levier pour la chimie de réduction. Son oxyde Yb₂O₃ sert aux céramiques optiques et électroniques. Tendre et paramagnétique à température ambiante, il révèle à basse température des comportements quasi supraconducteurs dans certains alliages.",
+              "Conclusion — Dernier des enfants d’Ytterby, l’ytterbium est un métal d’élégance silencieuse : né des étoiles, baptisé par la Scandinavie et indispensable aux lasers, aux horloges atomiques et aux fibres optiques du monde moderne."
+            ],
             "sources": []
           }
         },
@@ -2748,8 +2755,15 @@
           "symbol": "Lu",
           "name": "Lutécium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Symbole “Lu” et numéro atomique 71, le lutécium est un lanthanide dense et discret, rare dans la croûte mais majeur pour la médecine nucléaire et l’optique avancée.",
+            "paragraphs": [
+              "Présentation — Symbole “Lu”, numéro atomique 71, le lutécium est un métal argenté, dense et résistant souvent qualifié de plus “noble” des lanthanides. Découvert en 1907 par Georges Urbain, Carl Auer von Welsbach et Charles James, il clôt la série des terres rares et tire son nom de Lutetia, l’ancien nom latin de Paris.",
+              "Origines cosmiques — Le lutécium naît des explosions d’étoiles massives via le processus r de capture rapide de neutrons. Ses isotopes stables, notamment Lu-175, et l’isotope radioactif Lu-176 témoignent de ces instants violents de la nucléosynthèse et servent de marqueurs pour dater certains événements cosmiques et géologiques.",
+              "Origine terrestre — Extrêmement rare (environ 0,5 ppm), le lutécium est disséminé dans la monazite et la xénotime aux côtés d’autres terres rares. Son extraction exige des procédés longs et coûteux pour le séparer de l’ytterbium, auquel il ressemble étroitement, ce qui explique son prix élevé et ses usages ciblés.",
+              "Usages — Métal de haute technologie, le lutécium fournit l’isotope radioactif Lu-177 utilisé en médecine nucléaire pour traiter certains cancers, notamment les tumeurs neuroendocrines et la prostate. Son oxyde Lu₂O₃ sert de substrat pour les cristaux laser et les scintillateurs en imagerie médicale et en physique des particules, et il apparaît comme catalyseur dans des réactions chimiques de très haute précision.",
+              "Molécules et propriétés associées — Quasi toujours trivalent (Lu³⁺), le lutécium forme un oxyde blanc, Lu₂O₃, remarquablement stable et apprécié dans les matériaux optiques. Métalliquement, il est paramagnétique, possède la densité la plus élevée des lanthanides (≈9,8 g/cm³) et affiche une structure hexagonale compacte qui lui confère une cohésion exceptionnelle.",
+              "Conclusion — Dernier de la série mais loin d’être anecdotique, le lutécium incarne l’aboutissement de la chimie des lanthanides : rare, précis et tourné vers l’avenir, il relie la lumière des supernovae aux laboratoires médicaux et conclut la saga des terres rares avec la discrétion des éléments essentiels."
+            ],
             "sources": []
           }
         },
