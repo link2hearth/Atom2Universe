@@ -299,6 +299,7 @@
         "newGame": "New game",
         "newGameCredits": "Mach3: 0",
         "freePlay": "Free play",
+        "freePlayExitButton": "Quit free play",
         "return": "Back"
       },
       "goals": {
@@ -1620,7 +1621,8 @@
     "metaux": {
       "timer": {
         "max": "Max {value}",
-        "free": "Free mode"
+        "free": "Free mode",
+        "exitHint": "Show the summary and leave free play."
       },
       "session": {
         "start": "New session: chain those alloys!",

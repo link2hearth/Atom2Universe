@@ -2334,9 +2334,11 @@ const elements = {
   metauxOpenButton: document.getElementById('metauxOpenButton'),
   metauxReturnButton: document.getElementById('metauxReturnButton'),
   metauxBoard: document.getElementById('metauxBoard'),
+  metauxTimerLabel: document.getElementById('metauxTimerLabel'),
   metauxTimerValue: document.getElementById('metauxTimerValue'),
   metauxTimerFill: document.getElementById('metauxTimerFill'),
   metauxTimerMaxValue: document.getElementById('metauxTimerMaxValue'),
+  metauxFreePlayExitButton: document.getElementById('metauxFreePlayExitButton'),
   metauxEndScreen: document.getElementById('metauxEndScreen'),
   metauxEndTimeValue: document.getElementById('metauxEndTimeValue'),
   metauxEndMatchesValue: document.getElementById('metauxEndMatchesValue'),
@@ -6042,6 +6044,29 @@ if (elements.metauxFreePlayButton) {
       metauxGame.restart({ freePlay: true });
     }
     updateMetauxCreditsUI();
+  });
+}
+
+if (elements.metauxFreePlayExitButton) {
+  elements.metauxFreePlayExitButton.addEventListener('click', () => {
+    initMetauxGame();
+    if (!metauxGame) {
+      showToast(t('scripts.app.metaux.unavailable'));
+      return;
+    }
+    if (typeof metauxGame.isFreePlayMode === 'function' && !metauxGame.isFreePlayMode()) {
+      return;
+    }
+    if (metauxGame.processing) {
+      showToast('Patientez, la réaction en chaîne est en cours.');
+      return;
+    }
+    if (typeof metauxGame.endFreePlaySession === 'function') {
+      const ended = metauxGame.endFreePlaySession({ showEndScreen: true });
+      if (ended && typeof window.updateMetauxCreditsUI === 'function') {
+        window.updateMetauxCreditsUI();
+      }
+    }
   });
 }
 

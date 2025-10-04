@@ -302,6 +302,7 @@
             "newGame": "Nouvelle partie",
             "newGameCredits": "Mach3 : 0",
             "freePlay": "Partie libre",
+            "freePlayExitButton": "Quitter le mode libre",
             "return": "Retour"
           },
           "goals": {
@@ -2075,7 +2076,8 @@
         "metaux": {
           "timer": {
             "max": "Max {value}",
-            "free": "Mode libre"
+            "free": "Mode libre",
+            "exitHint": "Afficher le récapitulatif et quitter le mode libre."
           },
           "session": {
             "start": "Nouvelle session : enchaînez les alliages !",
@@ -2384,6 +2386,7 @@
             "newGame": "New game",
             "newGameCredits": "Mach3: 0",
             "freePlay": "Free play",
+            "freePlayExitButton": "Quit free play",
             "return": "Back"
           },
           "goals": {
@@ -4157,7 +4160,8 @@
         "metaux": {
           "timer": {
             "max": "Max {value}",
-            "free": "Free mode"
+            "free": "Free mode",
+            "exitHint": "Show the summary and leave free play."
           },
           "session": {
             "start": "New session: chain those alloys!",

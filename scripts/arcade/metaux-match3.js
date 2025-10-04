@@ -270,6 +270,8 @@ class MetauxMatch3Game {
     this.timerValueElement = options.timerValueElement || null;
     this.timerFillElement = options.timerFillElement || null;
     this.timerMaxElement = options.timerMaxElement || null;
+    this.timerLabelElement = options.timerLabelElement || null;
+    this.freePlayExitButtonElement = options.freePlayExitButton || null;
     this.endScreenElement = options.endScreenElement || null;
     this.endTimeElement = options.endTimeElement || null;
     this.endMatchesElement = options.endMatchesElement || null;
@@ -280,6 +282,12 @@ class MetauxMatch3Game {
     this.movesElement = options.movesElement || null;
     this.timerContainerElement = this.timerValueElement
       ? this.timerValueElement.closest('.metaux-timer')
+      : null;
+    this.timerContainerDefaultRole = this.timerContainerElement
+      ? this.timerContainerElement.getAttribute('role')
+      : null;
+    this.timerContainerDefaultAriaLive = this.timerContainerElement
+      ? this.timerContainerElement.getAttribute('aria-live')
       : null;
     this.sessionMode = 'credit';
     this.onSessionEnd = typeof options.onSessionEnd === 'function' ? options.onSessionEnd : null;
@@ -300,6 +308,7 @@ class MetauxMatch3Game {
       lastUpdate: null,
       totalElapsedMs: 0
     };
+    this.freePlaySessionStart = null;
     this.lastMatchPerType = new Map();
     this.matchHistory = this.createEmptyMatchHistory();
     this.resetStats();
@@ -311,6 +320,11 @@ class MetauxMatch3Game {
     this.orientationMediaQuery = null;
     this.orientation = METAUX_ORIENTATION.LANDSCAPE;
     this.orientationListenersAttached = false;
+    if (this.freePlayExitButtonElement) {
+      this.freePlayExitButtonElement.hidden = true;
+      this.freePlayExitButtonElement.disabled = true;
+      this.freePlayExitButtonElement.setAttribute('aria-disabled', 'true');
+    }
   }
 
   initialize() {
@@ -997,6 +1011,7 @@ class MetauxMatch3Game {
     this.lastMatchPerType = new Map(METAUX_TILE_TYPES.map(type => [type.id, this.getNow()]));
     this.resetStats();
     this.sessionMode = 'credit';
+    this.freePlaySessionStart = null;
     this.updateTimerModeUI();
     this.updateStats();
     this.updateTimerUI();
@@ -1024,8 +1039,10 @@ class MetauxMatch3Game {
       this.timerState.current = 0;
       this.timerState.totalElapsedMs = 0;
       this.timerState.running = false;
+      this.freePlaySessionStart = this.getNow();
     } else {
       this.startTimer();
+      this.freePlaySessionStart = null;
     }
     this.updateTimerModeUI();
     this.updateTimerUI();
@@ -1284,9 +1301,100 @@ class MetauxMatch3Game {
     }
   }
 
+  endFreePlaySession({ showEndScreen = true } = {}) {
+    if (!this.initialized || !this.isFreePlayMode()) {
+      return false;
+    }
+    if (this.processing) {
+      return false;
+    }
+    if (this.gameOver) {
+      if (showEndScreen && this.endScreenElement && this.endScreenElement.hidden) {
+        this.populateEndScreen();
+        this.showEndScreen();
+      }
+      return false;
+    }
+    this.pauseTimer();
+    this.clearDragState();
+    this.clearAllShakeEffects();
+    this.processing = false;
+    this.gameOver = true;
+    if (this.freePlaySessionStart != null) {
+      const elapsed = Math.max(0, this.getNow() - this.freePlaySessionStart);
+      this.timerState.totalElapsedMs = elapsed;
+    }
+    this.timerState.current = 0;
+    this.timerState.max = 0;
+    this.timerState.running = false;
+    this.timerState.lastUpdate = null;
+    this.freePlaySessionStart = null;
+    this.updateStats();
+    this.populateEndScreen();
+    if (showEndScreen) {
+      this.showEndScreen();
+    }
+    this.updateTimerModeUI();
+    this.updateTimerUI();
+    return true;
+  }
+
   updateTimerModeUI() {
+    const freeMode = this.isFreePlayMode();
     if (this.timerContainerElement) {
-      this.timerContainerElement.classList.toggle('is-free-play', this.isFreePlayMode());
+      this.timerContainerElement.classList.toggle('is-free-play', freeMode);
+      if (freeMode) {
+        this.timerContainerElement.setAttribute('role', 'group');
+        this.timerContainerElement.setAttribute('aria-live', 'off');
+      } else {
+        if (this.timerContainerDefaultRole) {
+          this.timerContainerElement.setAttribute('role', this.timerContainerDefaultRole);
+        } else {
+          this.timerContainerElement.removeAttribute('role');
+        }
+        if (this.timerContainerDefaultAriaLive) {
+          this.timerContainerElement.setAttribute('aria-live', this.timerContainerDefaultAriaLive);
+        } else {
+          this.timerContainerElement.removeAttribute('aria-live');
+        }
+      }
+    }
+    if (this.timerLabelElement) {
+      const labelKey = freeMode ? 'scripts.metaux.timer.free' : 'index.sections.metaux.timerLabel';
+      this.timerLabelElement.textContent = t(labelKey);
+    }
+    if (this.timerValueElement) {
+      if (freeMode) {
+        this.timerValueElement.setAttribute('aria-hidden', 'true');
+      } else {
+        this.timerValueElement.removeAttribute('aria-hidden');
+      }
+    }
+    if (this.freePlayExitButtonElement) {
+      this.freePlayExitButtonElement.hidden = !freeMode;
+      const disabled = !freeMode || this.gameOver;
+      this.freePlayExitButtonElement.disabled = disabled;
+      this.freePlayExitButtonElement.setAttribute('aria-disabled', disabled ? 'true' : 'false');
+      if (freeMode) {
+        const rawLabel = t('index.sections.metaux.freePlayExitButton');
+        const label = rawLabel && rawLabel.trim().length > 0
+          ? rawLabel
+          : (this.freePlayExitButtonElement.textContent || '').trim();
+        if (label) {
+          this.freePlayExitButtonElement.setAttribute('aria-label', label);
+        } else {
+          this.freePlayExitButtonElement.removeAttribute('aria-label');
+        }
+        const hint = t('scripts.metaux.timer.exitHint');
+        if (hint && hint.trim().length > 0) {
+          this.freePlayExitButtonElement.title = hint;
+        } else {
+          this.freePlayExitButtonElement.removeAttribute('title');
+        }
+      } else {
+        this.freePlayExitButtonElement.removeAttribute('aria-label');
+        this.freePlayExitButtonElement.removeAttribute('title');
+      }
     }
   }
 
@@ -1650,9 +1758,11 @@ function initMetauxGame() {
   }
   metauxGame = new MetauxMatch3Game({
     boardElement: elements.metauxBoard,
+    timerLabelElement: elements.metauxTimerLabel,
     timerValueElement: elements.metauxTimerValue,
     timerFillElement: elements.metauxTimerFill,
     timerMaxElement: elements.metauxTimerMaxValue,
+    freePlayExitButton: elements.metauxFreePlayExitButton,
     endScreenElement: elements.metauxEndScreen,
     endTimeElement: elements.metauxEndTimeValue,
     endMatchesElement: elements.metauxEndMatchesValue,
@@ -1709,6 +1819,7 @@ function formatIntegerLocalized(value) {
 if (typeof window !== 'undefined') {
   window.addEventListener('i18n:languagechange', () => {
     if (metauxGame) {
+      metauxGame.updateTimerModeUI();
       metauxGame.updateTimerUI();
       metauxGame.updateStats();
       metauxGame.populateEndScreen();
