@@ -33,6 +33,39 @@
 
   function translateMessage(key, fallback, params = {}) {
     const normalizedKey = typeof key === 'string' ? key.trim() : '';
+
+    if (normalizedKey) {
+      const globalScope = typeof globalThis !== 'undefined'
+        ? globalThis
+        : typeof window !== 'undefined'
+          ? window
+          : typeof self !== 'undefined'
+            ? self
+            : typeof global !== 'undefined'
+              ? global
+              : null;
+
+      if (globalScope) {
+        let translator = null;
+        if (globalScope.i18n && typeof globalScope.i18n.t === 'function') {
+          translator = globalScope.i18n.t.bind(globalScope.i18n);
+        } else if (typeof globalScope.t === 'function') {
+          translator = globalScope.t.bind(globalScope);
+        }
+
+        if (translator) {
+          try {
+            const translated = translator(normalizedKey, params);
+            if (translated != null && translated !== normalizedKey) {
+              return translated;
+            }
+          } catch (error) {
+            // Fallback to built-in messages if translation fails
+          }
+        }
+      }
+    }
+
     const baseMessage = normalizedKey && ENGLISH_MESSAGES.has(normalizedKey)
       ? ENGLISH_MESSAGES.get(normalizedKey)
       : fallback;
