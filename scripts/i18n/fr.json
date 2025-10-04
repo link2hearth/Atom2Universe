@@ -2840,8 +2840,15 @@
           "symbol": "At",
           "name": "Astate",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Symbole \"At\", numéro atomique 85, l’astate est un halogène radioactif au comportement chimique intermédiaire entre l’iode et le tellure.",
+            "paragraphs": [
+              "Il est solide à température ambiante et probablement métalloïde — un statut singulier pour un halogène. Découvert en 1940 à l’université de Berkeley par Dale R. Corson, K. R. MacKenzie et Emilio Segrè, il fut nommé astate du grec astatos, signifiant \"instable\". Ce nom est parfaitement approprié : tous ses isotopes sont radioactifs, et aucun n’a une demi-vie supérieure à quelques heures.",
+              "L’astate se forme dans les supernovae et les collisions d’étoiles à neutrons, au sein du processus rapide de capture de neutrons (r-process), mais il est immédiatement entraîné vers la désintégration en éléments plus stables comme le bismuth ou le polonium. Sur Terre, il est constamment recréé en quantité infime par la désintégration naturelle de l’uranium et du thorium, mais se volatilise ou se transforme presque aussitôt. Son existence est donc transitoire, comme un souffle dans le cycle radioactif des éléments lourds.",
+              "L’astate est le plus rare des éléments naturels de la croûte terrestre : à tout moment, la planète n’en contient qu’environ un microgramme au total. Il n’a pas de gisement ni de forme stable identifiable dans la nature. En laboratoire, il est produit artificiellement par bombardement du bismuth avec des particules alpha, une méthode utilisée pour obtenir l’isotope ^211At, le plus stable (demi-vie de 7,2 heures). Son étude expérimentale reste extrêmement difficile, car sa radioactivité détruit rapidement les échantillons et les instruments d’observation.",
+              "L’astate n’a aucune application industrielle ou chimique classique, mais il suscite un grand intérêt en médecine nucléaire. L’isotope ^211At, émetteur de particules alpha, est étudié pour des thérapies ciblées contre le cancer — une approche dite thérapie alpha dirigée (TAT). Son avantage : une puissance destructrice localisée, capable de tuer des cellules tumorales sans affecter les tissus sains voisins. Ces recherches en sont encore au stade expérimental, mais elles placent l’astate parmi les isotopes médicaux les plus prometteurs.",
+              "Les composés de l’astate sont mal connus, mais on a pu identifier quelques halogénures (AtCl, AtBr, AtI) et des composés d’oxydation comme l’acide atostique (HAtO₃), analogues à ceux de l’iode. L’astate forme également des liaisons covalentes stables avec certains métaux lourds, ce qui renforce sa réputation de métalloïde à la limite du non-métal. La majorité de ses propriétés chimiques sont déduites de calculs théoriques et d’expériences fugitives.",
+              "L’astate est l’un des joyaux cachés du tableau périodique : invisible, instable, mais profondément intrigant. Dernier des halogènes, il marque la frontière entre le chimique et le nucléaire, entre la matière éphémère et l’énergie pure. Né des étoiles et sans demeure durable sur Terre, il incarne la fugacité même de la matière. Dans un monde dominé par les éléments stables, l’astate nous rappelle que tout atome, même le plus rare, est une brève victoire contre le temps."
+            ],
             "sources": []
           }
         },
@@ -2849,8 +2856,15 @@
           "symbol": "Rn",
           "name": "Radon",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Symbole \"Rn\", numéro atomique 86, le radon est un gaz noble lourd, radioactif et incolore.",
+            "paragraphs": [
+              "Contrairement à ses cousins stables comme l’argon ou le xénon, il est instable et se désintègre en émettant des particules radioactives. On le trouve rarement mentionné dans la vie quotidienne, et pourtant il est bien présent sur Terre — parfois jusque dans nos maisons, où il peut poser des risques sanitaires.",
+              "Comme les autres gaz nobles lourds, le radon trouve ses origines dans la nucléosynthèse stellaire et les événements cataclysmiques comme les supernovae. Mais il se distingue par sa nature instable : tous ses isotopes sont radioactifs, si bien que le radon cosmique disparaît rapidement et doit être constamment régénéré par désintégration d’éléments plus lourds. On peut donc dire qu’il est un produit secondaire du grand cycle des éléments, plus qu’un héritier durable des étoiles.",
+              "Sur Terre, le radon est produit naturellement par la désintégration radioactive de l’uranium et du thorium présents dans les roches et les sols. L’isotope le plus stable et le plus courant est le radon-222, issu de la chaîne de désintégration de l’uranium-238, avec une demi-vie d’environ 3,8 jours. Il s’échappe des sols, surtout dans les régions granitiques ou volcaniques, et peut s’accumuler dans les espaces clos (maisons, caves, mines). C’est là qu’il devient un risque pour la santé, car ses descendants radioactifs peuvent être inhalés et contribuer au développement de cancers pulmonaires.",
+              "En raison de sa radioactivité, le radon n’a pas d’usages industriels courants comme le néon ou le xénon. Toutefois, il a été utilisé dans le passé en médecine, notamment dans certaines formes anciennes de radiothérapie, grâce à ses émissions alpha. Aujourd’hui, cet usage a presque disparu, remplacé par des isotopes mieux maîtrisés et plus sûrs. Le radon reste cependant un objet d’étude en géologie (il peut servir de traceur de la présence d’uranium) et en sismologie, car ses variations d’émission dans le sol ont parfois été corrélées à l’activité tectonique.",
+              "Comme les autres gaz nobles, le radon est peu réactif. Mais, sous conditions expérimentales, il peut former quelques composés rares, par exemple le fluorure de radon (RnF₂). Ces molécules sont très instables et ne survivent pas longtemps à cause de la radioactivité du radon. En pratique, il reste donc un gaz monoatomique, insaisissable et fugitif.",
+              "Gaz noble mais pas inoffensif, le radon est à la fois un témoin des processus radioactifs terrestres et une menace invisible pour la santé humaine. Sa rareté et son instabilité le distinguent au sein de sa famille, faisant de lui un élément plus \"sombre\" que ses cousins lumineux. Héritier des roches, voyageur souterrain, il rappelle que la chimie des gaz nobles ne rime pas toujours avec inertie et sécurité."
+            ],
             "sources": []
           }
         },
