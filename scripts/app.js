@@ -4180,10 +4180,27 @@ function updateElementInfoPanel(definition) {
     elements.elementInfoName.textContent = name ?? '';
   }
   if (elements.elementInfoCategory) {
-    const label = definition.category
+    const hasCategory = Boolean(definition.category);
+    const label = hasCategory
       ? CATEGORY_LABELS[definition.category] || definition.category
       : '—';
     elements.elementInfoCategory.textContent = label;
+    const familyLabel = translateOrDefault(
+      'index.sections.table.details.family',
+      'Famille'
+    );
+    if (familyLabel) {
+      const description = `${familyLabel} : ${label}`;
+      elements.elementInfoCategory.setAttribute('aria-label', description);
+      if (hasCategory) {
+        elements.elementInfoCategory.setAttribute('title', description);
+      } else {
+        elements.elementInfoCategory.removeAttribute('title');
+      }
+    } else {
+      elements.elementInfoCategory.removeAttribute('aria-label');
+      elements.elementInfoCategory.removeAttribute('title');
+    }
   }
   const entry = gameState.elements?.[definition.id];
   const count = getElementCurrentCount(entry);

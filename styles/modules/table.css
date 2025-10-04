@@ -327,9 +327,18 @@
   line-height: 1.2;
 }
 
-.element-info-panel__value.element-info-panel__category,
 .element-info-panel__value.element-info-panel__collection {
   font-size: clamp(0.64rem, 1.125vw, 0.75rem);
+}
+
+.element-info-panel__category {
+  font-size: clamp(0.54rem, 1.05vw, 0.68rem);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.75;
+  flex: 1;
+  text-align: center;
+  white-space: nowrap;
 }
 
 .element-info-panel__collection {
