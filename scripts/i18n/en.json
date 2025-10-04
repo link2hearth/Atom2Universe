@@ -2212,8 +2212,15 @@
           "symbol": "Y",
           "name": "Yttrium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Silver-gray metal born from ancient stars, yttrium powers modern displays, lasers, and targeted therapies.",
+            "paragraphs": [
+              "Symbol \"Y\" with atomic number 39, yttrium is a silver-gray metal that is slightly lustrous, malleable, and stable in dry air. Discovered in 1794 by Johan Gadolin in an ore from the Swedish village of Ytterby, it shares that birthplace with other \"rare earths\" such as terbium, erbium, and ytterbium. Although it does not formally belong to the lanthanide series, its chemistry is so similar that it is often grouped with them.",
+              "Yttrium forms inside aging stars through the slow neutron capture process (s-process) in red giants, and it is also forged in supernovae that scatter heavy elements throughout the galaxy. Its presence in meteorites and stellar spectra makes it a tracer of the universe’s chemical enrichment cycles, a witness to the patient work of multiple stellar generations.",
+              "On Earth, yttrium is relatively rare yet widely distributed. It occurs alongside rare-earth ores such as monazite and bastnäsite, as well as minerals like gadolinite, the very source that revealed it. There are no \"pure\" yttrium deposits: it is recovered as a by-product when processing rare earths, with an average abundance of about 30 ppm in the Earth’s crust.",
+              "Yttrium has secured a key role in modern technologies. Its oxides and compounds color screens and LEDs, producing the red of cathode-ray tubes and the glow of white diodes. Yttrium aluminum garnet (Y₃Al₅O₁₂, or YAG) acts as a crystal for lasers and precision optics, while its high-temperature alloys strengthen jet engines.",
+              "In nuclear medicine, the isotope yttrium-90 is used in targeted cancer therapies, notably for treating liver tumors. Yttrium oxide (Y₂O₃) remains the most common compound, serving as a red phosphor in displays. YAG garnet and yttrium vanadate (YVO₄), often doped with europium or neodymium, place the metal at the heart of advanced materials science.",
+              "A metal of shadow and light, yttrium stays invisible to the naked eye yet appears in every pixel, every laser beam, and countless medical images. Born from ancient stars and concentrated in Nordic minerals, it shows how rarity and complexity can yield precision and beauty."
+            ],
             "sources": []
           }
         },
@@ -2221,8 +2228,15 @@
           "symbol": "Zr",
           "name": "Zirconium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Silver-gray metal famed for its corrosion resistance, zirconium anchors nuclear reactors and advanced ceramics.",
+            "paragraphs": [
+              "Symbol \"Zr\" with atomic number 40, zirconium is a silver-gray metal that is bright, ductile, and remarkably resistant to corrosion. Discovered in 1789 by Martin Heinrich Klaproth in the mineral zircon, it takes its name from the Arabic \"zargun\" (“golden” or “brightly colored”), a word used for the gem long before the metal was isolated. Once seen merely as a gemstone component, it is now a strategic metal for demanding applications.",
+              "Zirconium is forged in massive stars, chiefly through the slow neutron capture process but also during supernovae via the rapid process. Its presence in meteorites and in the oldest known stars points to a very ancient stellar origin. Certain isotopes, such as ⁹⁶Zr, even guide astrophysicists as they study how heavy elements are synthesized.",
+              "On Earth, zirconium occurs mainly in the mineral zircon (ZrSiO₄), which is extremely stable and resistant to chemical weathering. These crystals are among the oldest known: some grains are over 4.3 billion years old, nearly as ancient as the planet itself. It also appears in baddeleyite (ZrO₂), with major deposits in Australia, South Africa, and India. Although fairly abundant at roughly 165 ppm in the crust, it is dispersed and rarely concentrated.",
+              "Its exceptional resistance to corrosion, even in acidic and alkaline environments, makes zirconium indispensable in nuclear reactors: fuel cladding is often made from zircaloy alloys that endure heat while capturing very few neutrons. Industry also relies on it for high-temperature furnaces, catalysts, and certain medical implants.",
+              "Its oxide, zirconia (ZrO₂), is a very hard ceramic used for dental prosthetics, technical blades, and synthetic “diamond” gemstones. Zirconium tetrachloride (ZrCl₄) is a key intermediate for producing the pure metal, while zirconium silicate (ZrSiO₄), or zircon, doubles as a gemstone and a geological dating tool because it traps uranium and thorium.",
+              "Both ancient and modern, zirconium links the mineral archives of the past with the cutting-edge technologies of today. Born in stars, preserved in Earth’s oldest rocks, and vital to future reactors, it embodies durability and purity against time, heat, and harsh chemistry."
+            ],
             "sources": []
           }
         },
