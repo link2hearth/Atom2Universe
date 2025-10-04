@@ -3063,8 +3063,18 @@
           "symbol": "U",
           "name": "Uranium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Métal lourd et naturellement radioactif, l’uranium alimente l’énergie nucléaire tout en imposant des exigences strictes de sûreté et de gestion.",
+            "paragraphs": [
+              "Symbole « U », numéro atomique 92, l’uranium est un métal lourd, dense et faiblement métallique au toucher, naturellement radioactif. Dans la nature il se rencontre surtout sous forme d’oxydes et de minerais comme l’uraninite ou la carnotite, et ses isotopes dominants ^238U et ^235U possèdent des demi-vies de 4,47×10^9 et 7,04×10^8 ans respectivement, ce qui en fait un traceur géologique durable.",
+              "Cosmiquement, l’uranium naît lors du processus r dans des événements stellaires extrêmes — supernovae ou collisions d’étoiles à neutrons — avant d’être incorporé au nuage à l’origine du Système solaire. Sur Terre, il est présent depuis la formation de la planète, à raison d’environ 2,8 ppm en moyenne dans la croûte, avec des gisements exploitables identifiés et surveillés par les agences internationales.",
+              "Son usage le plus connu est énergétique : après concentration et enrichissement pour augmenter la fraction de ^235U, l’uranium sert de combustible dans l’immense majorité des réacteurs commerciaux. Il intervient aussi dans la fabrication d’armes nucléaires, dans certains blindages ou projectiles en uranium appauvri, et dans la production d’isotopes à usage médical ou industriel via irradiation.",
+              "Chimiquement, l’uranium est un métal réactif qui adopte couramment les états U⁴⁺ et UO₂²⁺ (uranyle). On le rencontre sous forme de dioxyde UO₂ — combustible standard —, d’oxydes, de nitrates ou de fluorures, l’hexafluorure UF₆ étant la forme gazeuse utilisée pour l’enrichissement. Son comportement dépend étroitement du pH et du potentiel redox, paramètres centraux pour la gestion des déchets et la remédiation des sites miniers.",
+              "Élément double, l’uranium représente à la fois une ressource énergétique majeure et une source de risques radiologiques, environnementaux et géopolitiques qui réclament des garanties robustes. Les réserves identifiées suffisent au parc nucléaire actuel et projeté, mais l’exploitation économique et la sûreté restent des défis techniques et politiques permanents.",
+              "Chronologie synthétique : 1789 – Klaproth identifie l’oxyde d’un nouvel élément ; 1896 – Becquerel découvre la radioactivité dans des sels d’uranium ; 1938–1939 – Hahn, Strassmann, Meitner et Frisch révèlent la fission ; 1942 – Chicago Pile-1 réalise la première réaction en chaîne contrôlée ; 1945 – l’arme nucléaire Little Boy emploie de l’uranium enrichi ; 1954–1956 – Obninsk puis Calder Hall inaugurent la production électrique civile ; depuis, l’uranium reste au cœur des débats sur énergie, sécurité et déchets.",
+              "Cycle du combustible : extraction des minerais (uraninite, carnotite, monazite, etc.) → concassage et concentration en yellowcake (U₃O₈) → conversion en UF₆ pour le transport et l’enrichissement → enrichissement (3–5 % ^235U pour les réacteurs, >85 % pour l’armement) → fabrication des pastilles d’UO₂ et des assemblages combustibles → irradiation en réacteur avec production d’énergie et de transuraniens → stockage intermédiaire en piscines puis en conteneurs secs → éventuel retraitement par PUREX → conditionnement et stockage définitif des déchets de haute activité.",
+              "Enjeux techniques, sanitaires et géopolitiques : sûreté et radioprotection pour la manipulation, le transport et le stockage ; risques de prolifération liés aux mêmes technologies d’enrichissement ; économie dépendante du coût du minerai, de l’enrichissement et des choix technologiques ; gestion à long terme des déchets et acceptabilité sociale ; alternatives étudiées (cycles fermés, surgénérateurs, cycle thorium) mais encore difficiles à déployer.",
+              "Repères numériques : enrichissement typique du combustible civil 3–5 % ^235U, niveau militaire >85–90 % ; demi-vies clés ^238U ≈ 4,47×10^9 ans et ^235U ≈ 7,04×10^8 ans ; UF₆, hexafluorure d’uranium, forme gazeuse industrielle indispensable mais corrosive employée pour l’enrichissement."
+            ],
             "sources": []
           }
         },
@@ -3072,8 +3082,14 @@
           "symbol": "Np",
           "name": "Neptunium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Métal transuranien argenté et radioactif, le neptunium relie la chimie de l’uranium et du plutonium au cœur du cycle nucléaire.",
+            "paragraphs": [
+              "Symbole « Np », numéro atomique 93, le neptunium est un métal dense, radioactif et faiblement malléable. Premier élément transuranien découvert, il a été identifié en 1940 à Berkeley par Edwin McMillan et Philip Abelson, et son isotope le plus stable ^237Np possède une demi-vie d’environ 2,14 millions d’années.",
+              "Cosmiquement, le neptunium peut naître par captures de neutrons dans des environnements stellaires, mais ses demi-vies trop courtes empêchent toute accumulation depuis la naissance du Système solaire. Sur Terre, il est essentiellement produit artificiellement par irradiation de l’uranium dans les réacteurs, suivant la chaîne ^238U(n,γ)^239U → ^239Np → ^239Pu ; seules des traces naturelles ont été détectées dans certains minerais.",
+              "Le neptunium n’a pas d’usage industriel massif, mais il joue un rôle scientifique majeur. Il sert de référence pour la radioprotection et l’étude de la chimie des actinides, constitue un précurseur du plutonium-238 utilisé dans les générateurs thermoélectriques des sondes spatiales et a été étudié dans la recherche sur les réacteurs rapides et le recyclage du combustible.",
+              "Chimiquement, le neptunium adopte plusieurs états d’oxydation allant de +3 à +7. Il forme des oxydes comme NpO₂, des halogénures tels que NpF₆ ou NpCl₄ et des complexes analogues à ceux de l’uranium et du plutonium. L’étude de ces espèces en solution aide à comprendre la mobilité et le confinement des actinides lourds dans le cycle du combustible et dans l’environnement.",
+              "Premier maillon de la série des transuraniens, le neptunium éclaire la transition entre l’uranium d’origine et le plutonium qu’il engendre. Rare dans la nature mais indispensable à la science nucléaire, il illustre les enjeux du contrôle et du recyclage des matières radioactives les plus lourdes."
+            ],
             "sources": []
           }
         },

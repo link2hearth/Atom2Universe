@@ -3080,8 +3080,18 @@
           "symbol": "U",
           "name": "Uranium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A heavy, naturally radioactive metal, uranium powers nuclear energy while demanding stringent safety and waste controls.",
+            "paragraphs": [
+              "Symbol “U”, atomic number 92, uranium is a dense, heavy metal with a slightly metallic luster and intrinsic radioactivity. In nature it occurs mainly as oxides and ores such as uraninite or carnotite, and its dominant isotopes ^238U and ^235U have half-lives of 4.47×10^9 and 7.04×10^8 years respectively, making it a long-lived geological tracer.",
+              "Cosmically, uranium is forged through rapid neutron-capture (r-process) events in extreme stellar environments—supernovae or neutron-star mergers—before being incorporated into the nebula that formed the Solar System. On Earth it has been present since the planet’s birth, averaging about 2.8 ppm in the crust, with exploitable deposits surveyed and monitored by international agencies.",
+              "Its most prominent use is energetic: after concentration and enrichment to raise the ^235U fraction, uranium fuels the vast majority of commercial nuclear reactors. It also enters nuclear weapons, certain armor and penetrators made of depleted uranium, and the irradiation chains that produce medical or industrial isotopes.",
+              "Chemically, uranium is a reactive metal that commonly adopts U⁴⁺ and UO₂²⁺ (uranyl) states. It appears as uranium dioxide UO₂—the standard fuel form—as well as other oxides, nitrates, and fluorides; hexafluoride UF₆ is the gaseous form used for enrichment. Its behavior strongly depends on pH and redox potential, parameters central to waste management and mine-site remediation.",
+              "A dual-nature element, uranium is simultaneously a major energy resource and a source of radiological, environmental, and geopolitical risk that requires robust safeguards. Known reserves are sufficient for current and projected reactor fleets, yet economic viability and safety remain ongoing technical and political challenges.",
+              "Synthetic timeline: 1789 – Klaproth identifies the oxide of a new element; 1896 – Becquerel discovers radioactivity in uranium salts; 1938–1939 – Hahn, Strassmann, Meitner, and Frisch reveal fission; 1942 – Chicago Pile-1 achieves the first self-sustained chain reaction; 1945 – the Little Boy bomb uses highly enriched uranium; 1954–1956 – Obninsk then Calder Hall inaugurate commercial nuclear power; since then uranium has sat at the heart of debates on energy, security, and waste.",
+              "Fuel cycle: mining of ores (uraninite, carnotite, monazite, etc.) → crushing and milling to produce yellowcake (U₃O₈) → conversion to UF₆ for transport and enrichment → enrichment (3–5% ^235U for reactors, >85% for weapons) → fabrication of UO₂ pellets and fuel assemblies → reactor irradiation producing energy and transuranics → interim storage in pools then dry casks → optional PUREX reprocessing → conditioning and final disposal of high-level waste.",
+              "Technical, health, and geopolitical challenges: safety and radioprotection during handling, transport, and storage; proliferation risks tied to the same enrichment technologies; economics governed by ore prices, enrichment costs, and technology choices; long-term waste management and public acceptance; alternative pathways under study (closed fuel cycles, fast breeders, thorium cycles) that remain difficult to deploy.",
+              "Key figures: typical civilian fuel enrichment 3–5% ^235U, weapons-grade >85–90%; key half-lives ^238U ≈ 4.47×10^9 years and ^235U ≈ 7.04×10^8 years; UF₆—uranium hexafluoride—is the indispensable yet corrosive gaseous form used for enrichment."
+            ],
             "sources": []
           }
         },
@@ -3089,8 +3099,14 @@
           "symbol": "Np",
           "name": "Neptunium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A silvery, radioactive transuranium metal, neptunium bridges uranium chemistry and the birth of plutonium in the nuclear cycle.",
+            "paragraphs": [
+              "Symbol “Np”, atomic number 93, neptunium is a dense, radioactive metal with modest malleability. The first transuranium element ever identified, it was discovered in 1940 at Berkeley by Edwin McMillan and Philip Abelson, and its most stable isotope ^237Np has a half-life of about 2.14 million years.",
+              "Cosmically, neptunium can form through neutron captures in stellar environments, but its short half-lives prevent any primordial accumulation from surviving since the Solar System formed. On Earth it is chiefly artificial, produced by irradiating uranium in reactors via the chain ^238U(n,γ)^239U → ^239Np → ^239Pu; only trace natural occurrences have been detected in certain ores.",
+              "Neptunium has no mass-market industrial application, yet it plays a significant scientific role. It serves as a reference material for radioprotection and actinide chemistry studies, as a precursor to plutonium-238 used in space probe radioisotope generators, and as a subject in research on fast reactors and nuclear fuel recycling.",
+              "Chemically, neptunium adopts multiple oxidation states from +3 to +7. It forms oxides such as NpO₂, halides like NpF₆ and NpCl₄, and complexes analogous to those of uranium and plutonium. Investigating these species in solution helps elucidate the mobility and confinement of heavy actinides within the fuel cycle and the environment.",
+              "As the first link in the transuranium series, neptunium illuminates the transition between source uranium and the plutonium it begets. Scarce in nature but indispensable to nuclear science, it encapsulates the challenges of controlling and recycling the heaviest radioactive materials."
+            ],
             "sources": []
           }
         },
