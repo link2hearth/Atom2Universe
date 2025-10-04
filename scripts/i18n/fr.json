@@ -2207,8 +2207,15 @@
           "symbol": "Rb",
           "name": "Rubidium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Métal alcalin ultra-réactif aux flammes violettes, le rubidium relie horloges atomiques et datations géologiques.",
+            "paragraphs": [
+              "Symbole “Rb”, numéro atomique 37, le rubidium est un métal alcalin doux et argenté, extrêmement réactif à l’air et à l’eau. Il fond légèrement au-dessus de la température ambiante (39 °C) et dégage une flamme violette caractéristique. Découvert en 1861 par Robert Bunsen et Gustav Kirchhoff, il doit son nom au latin rubidius, “rouge profond”, en référence aux raies rouges de son spectre d’émission.",
+              "Le rubidium est produit dans les étoiles par les processus de capture lente et rapide de neutrons (s et r). Ses isotopes stables naissent dans les étoiles géantes rouges, tandis que l’isotope radioactif ^87Rb provient des supernovae. Avec sa demi-vie de près de 49 milliards d’années, ^87Rb permet de dater les roches anciennes grâce à la méthode rubidium-strontium : chaque atome terrestre porte la mémoire de plusieurs générations d’étoiles.",
+              "Sur Terre, le rubidium est présent à environ 90 ppm dans la croûte et se loge dans des minéraux riches en potassium comme la lépidolite, la pollucite ou les feldspaths, où il remplace partiellement les ions K⁺. On ne le trouve jamais sous forme libre, car il réagit instantanément avec l’air et l’eau. Il est principalement obtenu comme sous-produit de l’extraction du lithium ou du césium : rare mais largement dispersé, sans gisements dédiés.",
+              "Le rubidium n’a pas d’applications massives, mais il brille dans des domaines de pointe. Sa transition atomique stabilise des horloges extrêmement précises qui synchronisent GPS et télécommunications. En recherche, il permet de produire des gaz ultrafroids et des condensats de Bose-Einstein, explorant la matière quantique proche du zéro absolu. Ses sels interviennent aussi dans certains verres spéciaux et dispositifs de photoémission.",
+              "Comme le potassium, le rubidium forme des composés ioniques simples : chlorure (RbCl), nitrate (RbNO₃), carbonate (Rb₂CO₃), tous très solubles dans l’eau et rarement utilisés hors laboratoire. Le rubidium métallique, très réactif, sert dans certaines cellules photoélectriques. En géologie, l’isotope ^87Rb se désintègre lentement en ^87Sr, fournissant une horloge naturelle pour mesurer l’âge de roches terrestres et lunaires.",
+              "Discret mais fascinant, le rubidium naît des étoiles, reste rare sur Terre et s’avère insaisissable à l’air libre, tout en offrant une précision atomique quand on le maîtrise. Dans les horloges, il mesure le temps ; dans les laboratoires, il sonde l’infiniment froid. Des forges stellaires à la physique quantique, il prouve qu’un élément marginal peut devenir une clé pour comprendre le monde et le temps."
+            ],
             "sources": []
           }
         },
@@ -2216,8 +2223,15 @@
           "symbol": "Sr",
           "name": "Strontium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Métal alcalino-terreux flamboyant, le strontium relie feux d’artifice rouges, datations isotopiques et santé osseuse.",
+            "paragraphs": [
+              "Symbole “Sr”, numéro atomique 38, le strontium est un métal alcalino-terreux argenté, tendre et réactif. Découvert à la fin du XVIIIᵉ siècle en Écosse, il tire son nom du village de Strontian, où son minerai fut identifié. Proche du calcium et du baryum, il s’oxyde à l’air, réagit vigoureusement avec l’eau et libère une flamme rouge écarlate spectaculaire lorsqu’il brûle.",
+              "Le strontium se forme dans les étoiles géantes rouges par capture lente de neutrons (processus s) et dans les supernovae par capture rapide (processus r). On le détecte dans les météorites comme dans certaines étoiles très anciennes, où il sert de traceur des cycles de nucléosynthèse. À l’instar du rubidium voisin, chaque atome de strontium raconte la richesse des réactions qui sculptent la matière entre la vie et la mort des étoiles.",
+              "Sur Terre, le strontium est répandu à environ 370 ppm dans la croûte et se rencontre surtout dans la célestine (SrSO₄) et la strontianite (SrCO₃). Chimique cousin du calcium, il peut le remplacer dans des minéraux ou des tissus biologiques. Le rapport isotopique ^87Sr/^86Sr est un outil géologique majeur pour dater et tracer roches, fossiles et même migrations, tandis que des traces de strontium s’accumulent dans les os et les dents.",
+              "Les feux d’artifice doivent leur rouge vif aux sels de strontium, notamment le nitrate et le carbonate. L’élément intervient aussi dans les verres spéciaux pour tubes cathodiques, écrans ou optiques, ainsi que dans certaines céramiques. L’isotope radioactif ^90Sr, produit par l’activité nucléaire, a alimenté des générateurs thermoélectriques pour sondes spatiales, mais il est redouté en contamination car il imite le calcium et se fixe dans les os. À l’inverse, le strontium stable est étudié en médecine pour renforcer la densité osseuse contre l’ostéoporose.",
+              "Les composés du strontium sont dominés par ses sels : carbonate (SrCO₃) pour les céramiques et feux d’artifice, nitrate (Sr(NO₃)₂) pour la flamme rouge, titanate (SrTiO₃) aux propriétés électroniques et optiques remarquables. En géochimie, les rapports de ^87Sr et ^86Sr permettent de retracer l’origine des roches, des coquillages et même des déplacements humains anciens.",
+              "Modeste métal gris dans la nature mais flamboyant dans le ciel, le strontium est né des étoiles et inscrit dans les roches. Il éclaire nos célébrations et nos recherches, de la géochronologie à la médecine en passant par la pyrotechnie. Messager du temps et créateur de lumière, il incarne la beauté tranquille des alcalino-terreux."
+            ],
             "sources": []
           }
         },
