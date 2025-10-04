@@ -1,27 +1,130 @@
 (function initI18n(global) {
-  const AVAILABLE_LANGUAGES = Object.freeze(['fr', 'en']);
-  const DEFAULT_LANGUAGE = AVAILABLE_LANGUAGES[0] || 'fr';
-  const LANGUAGE_PATH = './scripts/i18n';
-
-  const LANGUAGE_LOCALE_OVERRIDES = Object.freeze({
-    fr: 'fr-FR',
-    en: 'en-US'
-  });
-
-  let currentLanguage = DEFAULT_LANGUAGE;
-  let currentResolvedLocale = LANGUAGE_LOCALE_OVERRIDES[currentLanguage] || currentLanguage;
-  let resources = {};
-  const numberFormatterCache = new Map();
-  const dateTimeFormatterCache = new Map();
-  const collatorCache = new Map();
-  const languageChangeListeners = new Set();
-
   function normalizeLanguageCode(raw) {
     if (typeof raw !== 'string') {
       return '';
     }
     return raw.trim().toLowerCase();
   }
+
+  const DEFAULT_LANGUAGES = Object.freeze(['fr', 'en']);
+  const DEFAULT_LANGUAGE_FALLBACK = DEFAULT_LANGUAGES[0];
+  const DEFAULT_LOCALE_OVERRIDES = Object.freeze({ fr: 'fr-FR', en: 'en-US' });
+
+  const globalConfig = global && typeof global.GAME_CONFIG === 'object' ? global.GAME_CONFIG : null;
+  const rawI18nConfig = globalConfig && typeof globalConfig.i18n === 'object' ? globalConfig.i18n : {};
+
+  const LANGUAGE_DEFINITIONS = (() => {
+    const entries = Array.isArray(rawI18nConfig.languages) ? rawI18nConfig.languages : null;
+    if (!entries || !entries.length) {
+      return null;
+    }
+    const sanitized = [];
+    entries.forEach((entry) => {
+      if (typeof entry === 'string') {
+        const code = normalizeLanguageCode(entry);
+        if (code) {
+          sanitized.push({ code, locale: undefined });
+        }
+        return;
+      }
+      if (entry && typeof entry === 'object') {
+        const code = normalizeLanguageCode(entry.code);
+        if (!code) {
+          return;
+        }
+        const locale = typeof entry.locale === 'string' && entry.locale.trim() ? entry.locale.trim() : undefined;
+        sanitized.push({ code, locale });
+      }
+    });
+    return sanitized.length ? sanitized : null;
+  })();
+
+  const AVAILABLE_LANGUAGES = (() => {
+    const base = LANGUAGE_DEFINITIONS
+      ? LANGUAGE_DEFINITIONS.map(({ code }) => code)
+      : Array.from(DEFAULT_LANGUAGES);
+    const unique = Array.from(new Set(base.filter(Boolean)));
+    return Object.freeze(unique.length ? unique : Array.from(DEFAULT_LANGUAGES));
+  })();
+
+  const DEFAULT_LANGUAGE = (() => {
+    const configured = typeof rawI18nConfig.defaultLanguage === 'string'
+      ? normalizeLanguageCode(rawI18nConfig.defaultLanguage)
+      : '';
+    if (configured && AVAILABLE_LANGUAGES.includes(configured)) {
+      return configured;
+    }
+    const primary = AVAILABLE_LANGUAGES[0];
+    return primary || DEFAULT_LANGUAGE_FALLBACK;
+  })();
+
+  const LANGUAGE_LOCALE_OVERRIDES = (() => {
+    const overrides = {};
+    if (LANGUAGE_DEFINITIONS) {
+      LANGUAGE_DEFINITIONS.forEach(({ code, locale }) => {
+        if (code && locale) {
+          overrides[code] = locale;
+        }
+      });
+    }
+    const configOverrides = rawI18nConfig.localeOverrides;
+    if (configOverrides && typeof configOverrides === 'object') {
+      Object.keys(configOverrides).forEach((key) => {
+        const normalizedKey = normalizeLanguageCode(key);
+        const value = configOverrides[key];
+        if (normalizedKey && typeof value === 'string' && value.trim()) {
+          overrides[normalizedKey] = value.trim();
+        }
+      });
+    }
+    Object.keys(DEFAULT_LOCALE_OVERRIDES).forEach((key) => {
+      if (!overrides[key]) {
+        overrides[key] = DEFAULT_LOCALE_OVERRIDES[key];
+      }
+    });
+    return Object.freeze(overrides);
+  })();
+
+  const LANGUAGE_PATH = (() => {
+    const rawPath = typeof rawI18nConfig.path === 'string' ? rawI18nConfig.path.trim() : '';
+    if (rawPath) {
+      return rawPath.replace(/\\/g, '/').replace(/\/+$/, '');
+    }
+    return './scripts/i18n';
+  })();
+
+  const LANGUAGE_FETCH_OPTIONS = (() => {
+    const options = { cache: 'no-store' };
+    const rawOptions = rawI18nConfig.fetchOptions && typeof rawI18nConfig.fetchOptions === 'object'
+      ? rawI18nConfig.fetchOptions
+      : rawI18nConfig.fetch && typeof rawI18nConfig.fetch === 'object'
+        ? rawI18nConfig.fetch
+        : null;
+    if (rawOptions) {
+      if (typeof rawOptions.cache === 'string' && rawOptions.cache.trim()) {
+        options.cache = rawOptions.cache.trim();
+      }
+      if (typeof rawOptions.credentials === 'string' && rawOptions.credentials.trim()) {
+        options.credentials = rawOptions.credentials.trim();
+      }
+      if (typeof rawOptions.mode === 'string' && rawOptions.mode.trim()) {
+        options.mode = rawOptions.mode.trim();
+      }
+      if (rawOptions.headers && typeof rawOptions.headers === 'object') {
+        options.headers = { ...rawOptions.headers };
+      }
+    }
+    return options;
+  })();
+
+  let currentLanguage = DEFAULT_LANGUAGE;
+  let currentResolvedLocale = LANGUAGE_LOCALE_OVERRIDES[currentLanguage] || currentLanguage;
+  let resources = {};
+  const languageResourceCache = new Map();
+  const numberFormatterCache = new Map();
+  const dateTimeFormatterCache = new Map();
+  const collatorCache = new Map();
+  const languageChangeListeners = new Set();
 
   function resolveAvailableLanguage(raw) {
     const normalized = normalizeLanguageCode(raw);
@@ -52,6 +155,78 @@
       console.warn('Unable to clone embedded language resource', error);
       return null;
     }
+  }
+
+  function getCachedResource(lang) {
+    const normalized = normalizeLanguageCode(lang);
+    const key = normalized || (typeof lang === 'string' ? lang.trim() : '');
+    if (!key) {
+      return null;
+    }
+    if (languageResourceCache.has(key)) {
+      return cloneResource(languageResourceCache.get(key));
+    }
+    const store = global.APP_EMBEDDED_I18N;
+    if (store && typeof store === 'object') {
+      const direct = store[key] || store[normalized];
+      if (direct && typeof direct === 'object') {
+        const cloned = cloneResource(direct);
+        if (cloned) {
+          languageResourceCache.set(key, cloned);
+          return cloneResource(cloned);
+        }
+      }
+    }
+    return null;
+  }
+
+  function rememberLoadedResource(lang, data) {
+    if (!lang || !data || typeof data !== 'object') {
+      return;
+    }
+    const normalized = normalizeLanguageCode(lang);
+    const key = normalized || lang;
+    if (!key) {
+      return;
+    }
+    const cloned = cloneResource(data);
+    if (!cloned) {
+      return;
+    }
+    languageResourceCache.set(key, cloned);
+    const store = global.APP_EMBEDDED_I18N && typeof global.APP_EMBEDDED_I18N === 'object'
+      ? global.APP_EMBEDDED_I18N
+      : (global.APP_EMBEDDED_I18N = {});
+    store[key] = cloned;
+  }
+
+  function deepMerge(target, source) {
+    if (!target || typeof target !== 'object') {
+      target = {};
+    }
+    if (!source || typeof source !== 'object') {
+      return target;
+    }
+    Object.keys(source).forEach((key) => {
+      const value = source[key];
+      if (value && typeof value === 'object' && !Array.isArray(value)) {
+        const base = target[key];
+        const nextTarget = base && typeof base === 'object' && !Array.isArray(base) ? base : {};
+        target[key] = deepMerge({ ...nextTarget }, value);
+      } else {
+        target[key] = value;
+      }
+    });
+    return target;
+  }
+
+  function mergeLanguageResources(base, override) {
+    const baseClone = base && typeof base === 'object' ? cloneResource(base) : {};
+    if (!override || typeof override !== 'object') {
+      return baseClone || {};
+    }
+    const overrideClone = cloneResource(override) || {};
+    return deepMerge(baseClone || {}, overrideClone);
   }
 
   function getEmbeddedResource(lang) {
@@ -176,31 +351,52 @@
   }
 
   async function fetchLanguageResource(lang) {
+    const normalized = normalizeLanguageCode(lang);
+    const key = normalized || (typeof lang === 'string' ? lang.trim() : '');
+    if (!key) {
+      throw new Error('Invalid language code');
+    }
+    const url = `${LANGUAGE_PATH}/${key}.json`;
     if (typeof global.fetch === 'function') {
       try {
-        const response = await global.fetch(`${LANGUAGE_PATH}/${lang}.json`);
-        if (!response.ok) {
-          throw new Error(`Unable to load language resource: ${lang}`);
+        const response = await global.fetch(url, LANGUAGE_FETCH_OPTIONS);
+        if (response.ok) {
+          const data = await response.json();
+          if (data && typeof data === 'object') {
+            return data;
+          }
+          throw new Error(`Invalid language resource format for ${key}`);
         }
-        const data = await response.json();
-        if (data && typeof data === 'object') {
-          return data;
+        if (response.status === 304) {
+          const cached = getCachedResource(key);
+          if (cached) {
+            return cached;
+          }
         }
-        throw new Error(`Invalid language resource format for ${lang}`);
+        throw new Error(`Unable to load language resource: ${key} (status ${response.status})`);
       } catch (error) {
-        const embedded = getEmbeddedResource(lang);
+        const cached = getCachedResource(key);
+        if (cached) {
+          console.warn(`Falling back to cached language resource for ${key}`, error);
+          return cached;
+        }
+        const embedded = getEmbeddedResource(key);
         if (embedded) {
-          console.warn(`Falling back to embedded language resource for ${lang}`, error);
+          console.warn(`Falling back to embedded language resource for ${key}`, error);
           return embedded;
         }
         throw error;
       }
     }
-    const embedded = getEmbeddedResource(lang);
+    const cached = getCachedResource(key);
+    if (cached) {
+      return cached;
+    }
+    const embedded = getEmbeddedResource(key);
     if (embedded) {
       return embedded;
     }
-    throw new Error(`Unable to load language resource: ${lang}`);
+    throw new Error(`Unable to load language resource: ${key}`);
   }
 
   function getResolvedLocale(lang) {
@@ -384,7 +580,12 @@
       return fetchLanguageResource(DEFAULT_LANGUAGE);
     });
 
-    resources = data && typeof data === 'object' ? data : {};
+    const fetchedResource = data && typeof data === 'object' ? data : {};
+    const embeddedBase = getEmbeddedResource(effectiveLanguage);
+    const cachedBase = getCachedResource(effectiveLanguage);
+    const base = mergeLanguageResources(embeddedBase, cachedBase);
+    resources = mergeLanguageResources(base, fetchedResource);
+    rememberLoadedResource(effectiveLanguage, resources);
     currentLanguage = effectiveLanguage;
     initializeIntl(currentLanguage);
     applyLanguageToDocument(currentLanguage);
