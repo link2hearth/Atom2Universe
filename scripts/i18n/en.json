@@ -1681,8 +1681,15 @@
           "symbol": "Li",
           "name": "Lithium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Symbol \"Li\", atomic number 3: lithium is a lightweight, silvery, and highly reactive alkali metal.",
+            "paragraphs": [
+              "Symbol \"Li\", atomic number 3, lithium is a small alkali metal—silvery, featherlight, yet lively as a will-o'-the-wisp. It is the lightest of all metals, so light it floats on water. In nature it never appears pure: too unstable, it prefers to hide inside minerals or brines. Yet this discreet element has become one of the stars of 21st-century life, powering our phones, computers, and electric cars.",
+              "Lithium has a peculiar history. A small fraction formed right after the Big Bang alongside hydrogen and helium, but in far lower quantities. Since then its abundance has remained low because it is fragile: stellar reactions tend to destroy it rather than create it. A few cosmic processes—cosmic-ray collisions or particular stages of stellar evolution—still forge some. The result is that lithium is much rarer than its neighbors in the universe, a fact that continues to intrigue astrophysicists.",
+              "On Earth, lithium does not appear in pure metallic deposits; it is found mainly in minerals such as spodumene and petalite or in the concentrated brines of salt deserts, especially in South America. It is relatively rare in the crust yet not impossible to find, concentrating in specific geological environments and in the oceans. Long relegated to laboratory curiosity, it is now a strategic resource sought after for energy and technology.",
+              "Lithium rose to fame thanks to the rechargeable batteries that bear its name. Light and highly electropositive, it stores and releases energy with great efficiency, making it the central element in our smartphones, laptops, and electric vehicles. Its uses do not stop there. Industry relies on it to craft ceramics and specialty glass. In medicine, certain lithium salts are mood stabilizers, particularly in treating bipolar disorder. It also features in nuclear applications and as an additive in lubricating greases.",
+              "Lithium favors simple yet useful combinations. Its salts—lithium carbonate (Li₂CO₃), lithium hydroxide (LiOH), lithium chloride (LiCl)—are the most common. They serve medical, industrial, or energy applications. In batteries, lithium oxides and compounds such as LiCoO₂ or LiFePO₄ take center stage, enabling lithium ions to shuttle back and forth between electrodes.",
+              "Born in the universe’s earliest instants yet rare and fragile, lithium has found a second life on Earth as a precious resource. From 19th-century laboratories to 21st-century batteries, it shows how a discreet element can become a pillar of modernity. Tiny in appearance, this metal now carries a significant share of humanity’s energy future on its ions."
+            ],
             "sources": []
           }
         },
