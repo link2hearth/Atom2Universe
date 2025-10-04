@@ -2914,8 +2914,15 @@
           "symbol": "Fr",
           "name": "Francium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Métal alcalin aussi rare qu’éphémère, le francium est un élément radioactif qui naît du radium et disparaît en quelques minutes.",
+            "paragraphs": [
+              "Symbole “Fr”, numéro atomique 87, le francium est un métal alcalin hautement radioactif, voisin du césium et du rubidium. Son existence est si éphémère qu’on n’en a jamais observé d’échantillon macroscopique : tout ce qu’on connaît de lui vient d’expériences sur quelques atomes à la fois. Il fondrait probablement autour de 27 °C et serait liquide dans des conditions ambiantes légèrement chaudes. Découvert en 1939 au laboratoire Curie par la physicienne Marguerite Perey, ancienne assistante de Marie Curie, il fut nommé francium en hommage à la France — dernier élément découvert dans la nature et nommé pour un pays.",
+              "Le francium se forme fugacement dans les supernovae et les réactions de fission naturelles du thorium et de l’uranium. Il appartient à la chaîne de désintégration de l’actinium : chaque atome de francium naît du radium et se transforme en astatine ou en radon après quelques minutes. Ces isotopes sont donc éphémères, participant à un cycle continu de naissance et de disparition. Dans l’univers, le francium n’existe qu’en traces instantanées dans les zones riches en radioéléments.",
+              "Sur Terre, le francium est l’un des éléments les plus rares : on estime qu’il n’en existe jamais plus de 20 à 30 grammes dans toute la croûte terrestre à un instant donné. Il est produit naturellement dans les minerais d’uranium et de thorium, où il résulte de la désintégration du radium-223. Sa courte demi-vie (22 minutes pour l’isotope le plus stable, ^223Fr) empêche toute accumulation. Le francium ne peut donc être observé qu’en laboratoire, par production artificielle via le bombardement du thorium ou du radium par des protons.",
+              "Le francium n’a aucune application industrielle ou médicale, sa rareté et sa radioactivité rendant impossible toute manipulation à grande échelle. Il est étudié uniquement en physique atomique, notamment pour tester les modèles de la structure électronique relativiste et les symétries fondamentales de l’interaction faible. Les expériences menées sur quelques milliers d’atomes piégés par laser ont permis d’affiner les prédictions théoriques sur les métaux alcalins lourds.",
+              "Aucun composé stable du francium n’a jamais été isolé. Par analogie avec ses voisins, on prévoit l’existence d’ions Fr⁺ et de sels comme le chlorure de francium (FrCl) ou l’hydroxyde de francium (FrOH), encore plus basiques que ceux du césium. En pratique, ces composés ne subsistent que quelques secondes, détruits par la désintégration radioactive du métal lui-même.",
+              "Le francium est un élément frontière, à la limite de ce que la nature peut maintenir stable. Né du radium et voué à disparaître presque aussitôt, il incarne la fugacité absolue de la matière. Découvert par une scientifique française dans la lignée des Curie, il reste un symbole national et scientifique : un atome éphémère, témoin du génie humain capable de déceler, dans un éclat de désintégration, la trace d’un métal qui n’existe presque pas."
+            ],
             "sources": []
           }
         },
@@ -2923,8 +2930,15 @@
           "symbol": "Ra",
           "name": "Radium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Métal alcalino-terreux extrêmement radioactif, le radium brille d’une lueur historique entre découvertes des Curie et dangers sanitaires.",
+            "paragraphs": [
+              "Symbole “Ra”, numéro atomique 88, le radium est un métal alcalino-terreux blanc argenté, brillant lorsqu’il est fraîchement isolé, mais qui noircit à l’air en raison de la formation d’oxyde. Il est hautement radioactif et chimiquement proche du baryum et du calcium. Découvert en 1898 par Pierre et Marie Curie à partir de la pechblende (uraninite), il fut isolé sous forme métallique en 1910 par Marie Curie et André Debierne. Son nom vient du latin radius, “rayon”, en référence à la luminescence qu’il émet spontanément dans l’obscurité.",
+              "Le radium est un produit transitoire de la désintégration de l’uranium et du thorium. Dans les étoiles massives, il se forme lors du processus rapide de capture de neutrons (r-process), mais n’existe jamais longtemps : ses isotopes se désintègrent rapidement vers le radon, le francium et le plomb. Il appartient ainsi à la famille radioactive naturelle de l’uranium-238, qui aboutit finalement à la stabilité du plomb-206.",
+              "Sur Terre, le radium est rare (environ 1 partie pour 10¹² d’uranium), présent uniquement sous forme de traces dans les minerais uranifères, notamment la pechblende. À la fin du XIXᵉ siècle, les Curie ont traité plusieurs tonnes de minerai pour isoler quelques milligrammes de radium, dans un travail titanesque. Aujourd’hui, il est obtenu par extraction à partir des résidus d’uranium ou par production artificielle dans les réacteurs nucléaires. Son isotope le plus stable, ^226Ra, a une demi-vie de 1 600 ans.",
+              "Le radium fut d’abord célébré comme une merveille scientifique. Sa luminescence spontanée a conduit à sa diffusion dans les peintures phosphorescentes des montres et des instruments militaires au début du XXᵉ siècle. Il fut aussi utilisé dans les premiers traitements radiothérapeutiques, avant d’être remplacé par le cobalt-60 et d’autres isotopes plus sûrs. Aujourd’hui, le radium n’a plus d’usage industriel courant : son extrême radioactivité et sa toxicité ont conduit à son abandon. Cependant, il demeure un élément de référence en radiophysique, et son étude historique a jeté les bases de la médecine nucléaire et de la dosimétrie modernes.",
+              "Les composés du radium sont analogues à ceux du baryum : chlorure de radium (RaCl₂), bromure (RaBr₂), carbonate (RaCO₃) et sulfate (RaSO₄). Tous sont très radioactifs et luminescents en raison de la désintégration du métal. Le radium émet spontanément du radon (^222Rn), un gaz noble radioactif qui s’accumule dans les roches et les sous-sols, source naturelle d’exposition pour l’homme.",
+              "Le radium est un métal à double visage : il a illuminé la science autant qu’il a brûlé ceux qui l’ont approché. Découvert par les Curie au prix d’efforts surhumains, il a offert au monde la preuve tangible de la puissance contenue dans la matière. Mais il a aussi rappelé le prix du savoir, lorsque la fascination pour sa lumière a conduit à des drames sanitaires. Aujourd’hui encore, le radium incarne l’aube de la radioactivité — ce moment où la curiosité humaine a mis au jour l’énergie des étoiles."
+            ],
             "sources": []
           }
         },
