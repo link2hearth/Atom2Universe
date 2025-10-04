@@ -2946,8 +2946,14 @@
           "symbol": "Ac",
           "name": "Actinium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Actinide rare et très radioactif, l’actinium relie les processus stellaires aux thérapies nucléaires les plus ciblées.",
+            "paragraphs": [
+              "Symbole \"Ac\", numéro atomique 89, l’actinium est un métal actinide d’aspect argenté à gris découvert par André-Louis Debierne à la charnière des XIXᵉ et XXᵉ siècles. Présent seulement à l’état de traces dans la croûte terrestre, il figure parmi les premiers éléments radioactifs identifiés après l’uranium et le thorium.",
+              "Cosmiquement, l’actinium naît des processus de capture de neutrons dans les environnements stellaires extrêmes avant d’être piégé dans la matière primitive du Système solaire. Sur Terre, on ne le rencontre qu’en quantité infinitésimale dans les minerais d’uranium et de thorium, où il apparaît comme produit intermédiaire de certaines chaînes de désintégration.",
+              "Ses usages restent rares et très encadrés. L’isotope ^225Ac, dont la demi-vie avoisine dix jours, est étudié comme source d’alpha-thérapie ciblée contre certains cancers, tandis que ^227Ac sert encore ponctuellement de source de neutrons ou de matériau de recherche. Sa radioactivité intense et sa rareté excluent tout emploi industriel courant.",
+              "Sur le plan chimique, l’actinium adopte essentiellement l’état d’oxydation +3 en solution, comparable à celui des lanthanides trivalents. Des composés tels que Ac₂O₃, AcCl₃ ou Ac(NO₃)₃ éclairent la chimie des actinides et guident les stratégies de séparation ou de confinement nécessaires au traitement des déchets radioactifs.",
+              "Ainsi, l’actinium demeure un témoin précieux des réactions stellaires et un outil de recherche de pointe, mais son extrême radioactivité impose des protocoles radiologiques stricts qui limitent son utilisation à des contextes hautement spécialisés."
+            ],
             "sources": []
           }
         },
@@ -3081,8 +3087,13 @@
           "symbol": "Rf",
           "name": "Rutherfordium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Élément superlourd entièrement artificiel, le rutherfordium prolonge la chimie des métaux de transition jusqu’aux frontières de la physique nucléaire.",
+            "paragraphs": [
+              "Symbole \"Rf\" et numéro atomique 104, le rutherfordium est un élément superlourd confirmé en 1997 et baptisé en hommage au physicien Ernest Rutherford, pionnier de la physique nucléaire.",
+              "Il n’existe pas à l’état naturel : chaque atome est produit en laboratoire par collision de noyaux lourds. Ses isotopes ne vivent que quelques secondes à quelques minutes pour les plus stables, offrant juste assez de temps pour mener des expériences de chimie et de spectrométrie.",
+              "Appartenant au groupe du titane et du zirconium, le rutherfordium se comporte comme un métal de transition classique selon les expériences menées sur quelques atomes. Sa radioactivité fulgurante et sa production infime le réservent toutefois exclusivement à la recherche fondamentale.",
+              "Premier représentant de la série des éléments superlourds, il fait le lien entre la chimie classique des métaux de transition et l’exploration des effets relativistes qui gouvernent les noyaux les plus massifs, illustrant la continuité entre les fondations de la science atomique et la quête de ses limites extrêmes."
+            ],
             "sources": []
           }
         },
