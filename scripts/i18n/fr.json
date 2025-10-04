@@ -2143,8 +2143,15 @@
           "symbol": "As",
           "name": "Arsenic",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Symbole \"As\", métalloïde gris argenté, l’arsenic oscille entre poison historique et ressource technologique.",
+            "paragraphs": [
+              "Présentation — Symbole « As », numéro atomique 33, l’arsenic est un métalloïde gris argenté, fragile et éclatant, dont les variétés allotropiques peuvent aussi se teinter de jaune ou de noir. Connu depuis l’Antiquité comme poison indétectable, il révèle pourtant un élément complexe mobilisé en métallurgie, en électronique et même en médecine, où il incarne la frontière mouvante entre toxique et thérapeutique.",
+              "Origines cosmiques — L’arsenic se forme par capture lente de neutrons lors du processus s dans les étoiles, puis est dispersé par les vents stellaires et les supernovae. Présent en traces dans les météorites, il témoigne de la diversité des métalloïdes forgés au fil des générations stellaires, ce qui explique sa faible abondance cosmique mais sa dispersion dans de nombreux environnements.",
+              "Origine terrestre — Sur Terre, l’arsenic apparaît surtout combiné dans des minéraux soufrés tels que la réalgar (As₄S₄), l’orpiment (As₂S₃) ou l’arsénopyrite (FeAsS). Il accompagne souvent le cuivre, l’argent, le plomb ou l’or, et son affinité pour le soufre et les métaux lourds le rend omniprésent dans les districts miniers, où il peut contaminer sols et eaux tout en restant rarement isolé.",
+              "Usages — L’arsenic a longtemps été un instrument de pouvoir et de peur, poison mythique des intrigues royales mais aussi remède à très faibles doses contre des maladies comme la syphilis. Aujourd’hui, ses composés servent surtout la haute technologie : l’arséniure de gallium (GaAs) est un semi-conducteur clé pour les LED, les radars et l’électronique haute fréquence, et l’arsenic intervient encore dans certains alliages, verres optiques ou traitements du bois strictement encadrés.",
+              "Molécules associées — L’arsenic offre une chimie contrastée : oxydes (As₂O₃), sulfures (As₂S₃, As₄S₄) et arsénures comme GaAs ou InAs. Le trioxyde As₂O₃, tristement célèbre poison, est aussi utilisé de façon contrôlée en thérapeutique contre certaines leucémies, tandis que les arsénures soutiennent la microélectronique moderne, illustrant la dualité de l’élément.",
+              "Conclusion — Poison historique devenu outil high-tech et même médicament anticancéreux, l’arsenic est né des étoiles puis dissimulé dans les roches. Il incarne la fine ligne entre danger et utilité, reflet de la chimie dans toute sa complexité et miroir d’une humanité capable du pire comme du meilleur."
+            ],
             "sources": []
           }
         },
@@ -2152,8 +2159,15 @@
           "symbol": "Se",
           "name": "Sélénium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Symbole \"Se\", métalloïde photosensible, le sélénium équilibre nutriment vital, toxicité et technologie lumineuse.",
+            "paragraphs": [
+              "Présentation — Symbole « Se », numéro atomique 34, le sélénium est un métalloïde gris argenté ou rouge selon sa forme, fragile, semi-conducteur et photosensible. Découvert en 1817 par Berzelius et nommé d’après Séléné, déesse de la Lune, il occupe une place singulière : rare et discret, essentiel à très faible dose mais toxique à forte concentration, il joue un rôle clé dans la photoélectricité et l’énergie solaire.",
+              "Origines cosmiques — Le sélénium naît dans les étoiles massives et les supernovae par capture lente de neutrons dans le processus s, aux côtés du germanium et de l’arsenic. Métalloïde de « seconde génération » issu de la mort d’étoiles anciennes, il est dispersé dans la poussière cosmique et se retrouve dans les météorites en compagnie du soufre et du tellure, reliant directement chimie stellaire et chimie terrestre.",
+              "Origine terrestre — La croûte terrestre n’en contient qu’environ 0,05 ppm : il se loge principalement dans des minerais sulfurés associés au cuivre, au plomb, à l’argent ou au nickel, se substituant parfois au soufre. On le récupère comme sous-produit de la métallurgie du cuivre. Dans la biosphère, il devient oligo-élément vital, intégré à des enzymes qui protègent les cellules contre l’oxydation.",
+              "Usages — Le sélénium a servi de premier matériau photoconducteur pour convertir la lumière en électricité, notamment dans les cellules photoélectriques et les photocopieurs. Il colore ou neutralise des verres, forme des pigments rouges et s’emploie comme additif agricole pour corriger les carences. En biologie et en médecine, il est un micronutriment essentiel, composant d’enzymes antioxydantes comme la glutathion peroxydase.",
+              "Molécules associées — Sa chimie comprend oxydes (SeO₂, SeO₃), séléniures (Na₂Se, ZnSe) et acides (H₂Se). Le dioxyde SeO₂ est un oxydant prisé en chimie organique, le séléniure de zinc sert dans les lasers infrarouges et l’optique thermique, et les sélénoprotéines incorporent la sélénocystéine, parfois qualifiée de 21ᵉ acide aminé, preuve de son intégration dans le vivant.",
+              "Conclusion — Élément lunaire par son nom et son comportement, le sélénium navigue entre lumière et ombre. Né des étoiles, protecteur cellulaire et convertisseur de photons, ni métal ni non-métal, ni poison ni remède, il incarne la subtilité d’une chimie naturelle où énergie, matière et vie s’entrelacent."
+            ],
             "sources": []
           }
         },
