@@ -2239,8 +2239,15 @@
           "symbol": "Y",
           "name": "Yttrium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Métal argenté né des étoiles, l’yttrium éclaire nos écrans, nos lasers et certaines thérapies ciblées.",
+            "paragraphs": [
+              "Symbole \"Y\", numéro atomique 39, l’yttrium est un métal gris argenté, légèrement brillant, souple et stable à l’air sec. Découvert en 1794 par Johan Gadolin dans un minerai venu du village suédois d’Ytterby, il partage cette origine avec plusieurs autres « terres rares » comme le terbium, l’erbium et l’ytterbium. Bien qu’il ne fasse pas officiellement partie des lanthanides, sa chimie est si proche qu’on le classe souvent à leurs côtés.",
+              "L’yttrium se forme dans les étoiles âgées, au fil du processus s de capture lente de neutrons dans les géantes rouges, mais aussi dans les supernovae qui dispersent les éléments lourds dans la galaxie. Sa présence détectée dans les météorites et les spectres stellaires en fait un marqueur des cycles d’enrichissement chimique de l’univers, témoin du patient travail de plusieurs générations d’étoiles.",
+              "Sur Terre, l’yttrium reste rare mais largement disséminé. On le trouve associé aux minerais de terres rares, notamment la monazite et la bastnäsite, ainsi qu’à des minéraux comme la gadolinite, celui-là même qui servit à sa découverte. Il n’existe pas de gisement « pur » d’yttrium : il est extrait comme sous-produit lors du traitement des terres rares, avec une abondance moyenne d’environ 30 ppm dans la croûte terrestre.",
+              "L’yttrium a trouvé une place de choix dans les technologies modernes. Ses oxydes et composés sont utilisés dans les écrans et les LED, notamment pour produire le rouge des tubes cathodiques et la lumière des diodes blanches. Le grenat d’yttrium et d’aluminium (Y₃Al₅O₁₂, ou YAG) sert de cristal pour les lasers et les optiques de précision, tandis que ses alliages résistants aux hautes températures équipent les moteurs à réaction.",
+              "En médecine nucléaire, l’isotope yttrium-90 est employé dans certaines thérapies ciblées contre le cancer, notamment pour traiter les tumeurs du foie. L’oxyde d’yttrium (Y₂O₃) demeure le composé le plus courant, utilisé comme phosphore rouge dans les écrans. Le grenat YAG et le vanadate d’yttrium (YVO₄), souvent dopés à l’europium ou au néodyme, placent ce métal au cœur de la science des matériaux avancés.",
+              "Métal de l’ombre et de la lumière, l’yttrium reste invisible à l’œil nu mais présent dans chaque pixel, chaque faisceau laser et de nombreuses images médicales. Né des étoiles anciennes et concentré dans les minéraux nordiques, il illustre comment la rareté et la complexité peuvent donner naissance à la précision et à la beauté."
+            ],
             "sources": []
           }
         },
@@ -2248,8 +2255,15 @@
           "symbol": "Zr",
           "name": "Zirconium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Métal argenté ultrarésistant à la corrosion, le zirconium protège les réacteurs nucléaires et les céramiques de haute technologie.",
+            "paragraphs": [
+              "Symbole \"Zr\", numéro atomique 40, le zirconium est un métal gris argenté, brillant, ductile et remarquablement résistant à la corrosion. Découvert en 1789 par Martin Heinrich Klaproth dans le minéral zircon, il tire son nom de l’arabe \"zargun\" (« doré » ou « éclat brillant »), terme qui désignait déjà la gemme naturelle bien avant l’extraction du métal. Longtemps considéré comme un simple composant de pierre précieuse, il est devenu un métal stratégique pour les applications les plus exigeantes.",
+              "Le zirconium se forme dans les étoiles massives, principalement par le processus s de capture lente de neutrons, mais aussi lors des supernovae via le processus r. Sa présence dans les météorites et dans les plus vieilles étoiles connues témoigne de son origine stellaire très ancienne. Certains isotopes, comme le ⁹⁶Zr, servent même de balises aux astrophysiciens pour mieux comprendre la nucléosynthèse des éléments lourds.",
+              "Sur Terre, le zirconium apparaît surtout dans le minéral zircon (ZrSiO₄), extrêmement stable et résistant à l’altération chimique. Ces cristaux comptent parmi les plus anciens connus : certains grains datent de plus de 4,3 milliards d’années, presque aussi vieux que la planète elle-même. On le rencontre aussi dans la baddeleyite (ZrO₂), avec des gisements majeurs en Australie, en Afrique du Sud et en Inde. Bien qu’abondant à hauteur d’environ 165 ppm dans la croûte terrestre, il reste dispersé et rarement concentré.",
+              "Sa résistance exceptionnelle à la corrosion, y compris dans les milieux acides et alcalins, rend le zirconium indispensable aux réacteurs nucléaires : les gaines de combustible sont souvent en alliage de type zircaloy, capable de supporter la chaleur tout en capturant très peu de neutrons. L’industrie l’emploie aussi dans les fours à haute température, les catalyseurs et certains implants médicaux.",
+              "Son oxyde, la zircone (ZrO₂), est un matériau céramique très dur, utilisé pour les prothèses dentaires, les couteaux techniques et les « diamants » synthétiques de joaillerie. Le tétrachlorure de zirconium (ZrCl₄) est un intermédiaire clé pour produire le métal pur, tandis que le silicate de zirconium (ZrSiO₄), ou zircon, sert à la fois de gemme et d’outil de datation géologique grâce à sa capacité à piéger l’uranium et le thorium.",
+              "Ancien et moderne à la fois, le zirconium relie les archives minérales du passé aux technologies de pointe du présent. Né dans les étoiles, conservé dans les plus vieilles roches terrestres et essentiel aux réacteurs du futur, il incarne la durabilité et la pureté face au temps, à la chaleur et à la chimie."
+            ],
             "sources": []
           }
         },
