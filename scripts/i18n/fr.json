@@ -3213,8 +3213,13 @@
           "symbol": "Nh",
           "name": "Nihonium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Premier élément découvert en Asie, le nihonium est un superlourd synthétique éphémère nommé en hommage à l’équipe japonaise qui l’a identifié.",
+            "paragraphs": [
+              "Le nihonium, symbole Nh et numéro atomique 113, est un élément superlourd officiellement reconnu en 2016. Son nom vient de Nihon, un mot japonais signifiant « Japon », en hommage aux chercheurs de l’institut RIKEN, premiers à l’identifier.",
+              "C’est un élément artificiel, produit en bombardant du bismuth avec des noyaux de zinc dans un accélérateur de particules. Ses isotopes connus ont des demi-vies de quelques millisecondes à quelques secondes, trop brèves pour exister naturellement.",
+              "Classé dans la famille du groupe du thallium, il pourrait théoriquement partager certaines propriétés des métaux lourds, mais aucune expérience chimique directe n’a pu être menée de manière concluante. Il n’a aucun usage pratique : son intérêt est uniquement scientifique.",
+              "Le nihonium est le premier élément découvert en Asie et son nom reflète cette origine. Bien qu’il n’existe que fugitivement, il représente une étape importante dans l’exploration des superlourds et dans la contribution internationale au tableau périodique."
+            ],
             "sources": []
           }
         },
@@ -3222,8 +3227,13 @@
           "symbol": "Fl",
           "name": "Flérovium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Élément superlourd synthétique, le flerovium honore l’Institut Flerov et sert de repère pour étudier la stabilité nucléaire aux frontières du tableau périodique.",
+            "paragraphs": [
+              "Le flerovium, symbole Fl et numéro atomique 114, est un élément superlourd officiellement reconnu en 2012. Il doit son nom à l’Institut Flerov des réactions nucléaires, en hommage au physicien Gueorgui Flerov, pionnier de la recherche en physique nucléaire.",
+              "Comme les autres éléments de sa catégorie, il est synthétique, produit par collisions de noyaux lourds dans des accélérateurs de particules. Ses isotopes connus ont des demi-vies de quelques secondes au maximum, ce qui en fait l’un des superlourds les plus « longs » à exister, sans toutefois permettre d’expériences chimiques directes fiables.",
+              "Il est classé dans la famille du carbone et du plomb, mais sa chimie réelle reste hypothétique en raison de son instabilité. Aucun usage pratique n’existe : chaque synthèse de flerovium apporte surtout des données sur les limites de stabilité nucléaire et sur la structure des superlourds.",
+              "Le flerovium est un jalon du tableau périodique, éphémère mais essentiel pour comprendre les frontières de la matière. Son nom et son existence rappellent la contribution décisive de la recherche nucléaire russe à l’exploration des éléments ultimes."
+            ],
             "sources": []
           }
         },
