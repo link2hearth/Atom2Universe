@@ -1838,8 +1838,15 @@
           "symbol": "Al",
           "name": "Aluminum",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Lightweight and endlessly recyclable, aluminum was forged in stars and now spans everything from packaging to aircraft.",
+            "paragraphs": [
+              "Symbol \"Al\", atomic number 13, aluminum is a lightweight, malleable, silvery metal that is surprisingly resistant to corrosion. It is one of the most abundant elements in Earth’s crust, yet it is almost never found in pure form in nature—it hides inside minerals. Today it is everywhere in daily life, from soda cans to airplanes, via power cables and packaging. A metal discreet in appearance, yet omnipresent in use.",
+              "Aluminum is a product of the stars. It forms inside massive stars through nuclear fusion, especially during the reactions that transform neon and magnesium. When a star explodes as a supernova it spreads aluminum through space, enriching interstellar clouds that will later form planets. Radioactive isotopes of aluminum (such as 26Al) are even found in primitive meteorites, witnesses to the first moments of the solar system.",
+              "On Earth, aluminum is extremely abundant: it is the third most common element in the crust, after oxygen and silicon. It is found mainly in aluminosilicate minerals and in bauxite, today’s principal industrial source. In metallic form, however, it is absent from nature—too reactive, it prefers to combine with other elements. Only in the 19th century did we learn to extract it efficiently, thanks to the Hall–Héroult process, an electrolysis of alumina (Al₂O₃) dissolved in cryolite.",
+              "Aluminum has become a universal metal. Light and strong, it is used heavily in aerospace, automobiles, and construction. A good electrical conductor, it lines high-voltage power lines. Resistant to corrosion thanks to its thin protective oxide layer, it is perfect for food packaging and cookware. Its alloys make it even stronger, opening the door to structural applications. Infinitely recyclable, it is also one of the industry’s “greenest” metals, even if its initial production requires a great deal of energy.",
+              "Aluminum combines readily. Aluminum oxide (Al₂O₃), called alumina, is used as an abrasive (corundum) or as a refractory material. Aluminum sulfate, combined with potassium, yields alum, employed since antiquity for tanning and dyeing. Aluminosilicates make up a large portion of Earth’s rocks. In organic chemistry, aluminum compounds (such as alkylaluminums) serve as catalysts.",
+              "Aluminum embodies the quintessential modern element: omnipresent, useful, recyclable, born in the stars yet turned into the fabric of our cities and technologies. Whether hidden in an ancient mineral or forged into a high-tech alloy, it shows how an abundant but discreet element can transform society. Behind every lightweight can or powerful aircraft, there is always a trace of stardust."
+            ],
             "sources": []
           }
         },
@@ -1847,8 +1854,15 @@
           "symbol": "Si",
           "name": "Silicon",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "An omnipresent metalloid in Earth’s crust, silicon bridges ancient rocks and today’s digital technologies.",
+            "paragraphs": [
+              "Symbol \"Si\", atomic number 14, silicon is a gray, lustrous metalloid, harder than aluminum but more brittle than steel. It is never found pure in nature; instead, with oxygen it forms the immense family of silicates that make up most of Earth’s crust. Silicon is therefore literally under our feet. Yet it also sits at the heart of modernity: it is the king element of electronics and the digital era.",
+              "Silicon is forged inside massive stars through the nuclear fusion of oxygen. In the final stages of their lives these stars produce large quantities of silicon before collapsing as supernovae. Those explosions scatter silicon into space, where it condenses into interstellar dust. Primitive meteorites show that it was already present during the formation of the solar system, playing a key role in building rocky planets.",
+              "On Earth, silicon is omnipresent. It is the second most abundant element in the crust, after oxygen. Together they form silica (SiO₂), found in sand, quartz, and numerous rocks. Silicates (such as feldspar, mica, or olivine) are the main constituents of terrestrial geology. Pure silicon, by contrast, is a human invention: extracted from silica by reduction, it paved the way for modern industry, notably microelectronics.",
+              "Silicon leads a double life. On the traditional side it is the main ingredient of glass, ceramics, and concrete—the pillars of human construction. On the modern side it is the heart of electronics: the quintessential semiconductor used to manufacture transistors, integrated circuits, and computer chips. Without it there would be no computers, smartphones, or Internet. It is also indispensable to solar panels, which turn light into electricity. Silicon thus links millennia-old architecture with futuristic technologies.",
+              "Silicon dioxide (SiO₂) is its most widespread form, present in quartz, sand, and glass. Silicates (aluminosilicates, orthosilicates, etc.) are the major components of minerals and rocks. In modern chemistry we also rely on silicones, organosilicon polymers with many applications: adhesives, lubricants, medical implants, cookware. These materials show just how easily silicon can be both stone and plastic.",
+              "Silicon is a bridge between Earth and the future. Born in the stars, it built our continents as rock, and today it builds our virtual worlds as electronic chips. Omnipresent and versatile, it embodies matter in two dimensions: geological foundation and technological foundation. In every grain of sand and every bit of information, silicon is there—discreet yet essential."
+            ],
             "sources": []
           }
         },
