@@ -2321,8 +2321,15 @@
           "symbol": "Rh",
           "name": "Rhodium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Métal du groupe du platine, le rhodium allie rareté extrême, éclat immuable et un rôle catalytique essentiel contre la pollution.",
+            "paragraphs": [
+              "Symbole \"Rh\", numéro atomique 45, le rhodium est un métal blanc argenté au lustre exceptionnel, dur, inaltérable et presque indestructible sur le plan chimique. Découvert en 1803 par William Hyde Wollaston, il doit son nom au grec rhodon (« rose ») et conjugue rareté extrême et importance technologique.",
+              "Né des phénomènes les plus violents de l’univers — supernovae et collisions d’étoiles à neutrons — le rhodium résulte du processus rapide de capture de neutrons. Sa présence dans les météorites et les vieilles étoiles témoigne d’une formation très précoce dans l’histoire cosmique, bien avant la naissance du système solaire.",
+              "Sur Terre, le rhodium est rarissime (environ 0,001 ppm) et apparaît surtout en association avec les autres métaux du groupe du platine dans les minerais de cuivre et de nickel. Les gisements sud-africains, russes ou canadiens l’extraient comme sous-produit du raffinage du platine via des séparations chimiques complexes.",
+              "Sa première vocation est la catalyse : dans les pots catalytiques automobiles, il réduit les oxydes d’azote toxiques et protège l’air que nous respirons. On le retrouve aussi en joaillerie pour plaquer l’or blanc ou l’argent, leur offrant un éclat durable, ainsi que dans l’industrie pour les thermocouples, contacts électriques et miroirs optiques ultra-réfléchissants.",
+              "Le rhodium forme des complexes organométalliques essentiels à la chimie fine : le chlorure de rhodium (RhCl₃) mène à des catalyseurs célèbres comme le complexe de Wilkinson, moteur de nombreuses hydrogénations sélectives. Ses oxydes et halogénures, bien que délicats, sont étudiés pour leurs propriétés catalytiques uniques.",
+              "Métal de la perfection, le rhodium relie des cataclysmes stellaires à nos technologies : il purifie les gaz d’échappement, sublime les bijoux et accélère les réactions de synthèse. Sa rareté extrême souligne la valeur de chaque milligramme exploité avec précision."
+            ],
             "sources": []
           }
         },
@@ -2330,8 +2337,15 @@
           "symbol": "Pd",
           "name": "Palladium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Métal blanc précieux du groupe du platine, le palladium conjugue catalyse universelle, électronique fine et appétit pour l’hydrogène.",
+            "paragraphs": [
+              "Symbole \"Pd\", numéro atomique 46, le palladium est un métal blanc argenté, brillant, ductile et très résistant à la corrosion. Découvert en 1803 par William Hyde Wollaston, il doit son nom à l’astéroïde Pallas et s’est imposé comme un métal rare mais crucial pour les technologies modernes.",
+              "Comme ses voisins du groupe du platine, le palladium se forge dans les supernovae et les collisions d’étoiles à neutrons via l’r-process. On le détecte dans les météorites et les étoiles anciennes, signe d’une origine cosmique violente mais précoce qui en fait un composant discret du patrimoine chimique galactique.",
+              "Sur notre planète, le palladium est rare (environ 0,015 ppm) et se niche dans les minerais de nickel et de cuivre aux côtés du platine, du rhodium ou de l’iridium. Les principaux gisements d’Afrique du Sud, de Russie et du Canada l’obtiennent comme sous-produit grâce à des procédés de raffinage et de précipitation sélective exigeants.",
+              "Catalyseur universel, il convertit dans les pots catalytiques automobiles le monoxyde de carbone et les hydrocarbures en CO₂ et en eau, et ses complexes — au cœur des réactions de couplage de Suzuki ou de Heck — ont révolutionné la synthèse organique. Il brille aussi dans les contacts électriques, les capteurs, l’horlogerie haut de gamme, les alliages d’or blanc et les recherches sur le stockage de l’hydrogène.",
+              "Les composés du palladium, du chlorure (PdCl₂) à l’acétate (Pd(OAc)₂) en passant par les complexes phosphiniques tels que Pd(PPh₃)₄, sont devenus des outils incontournables pour construire des liaisons carbone-carbone. À l’état métallique, il forme des hydrures PdHₓ capables d’absorber des volumes impressionnants d’hydrogène.",
+              "Métal de transition par excellence, le palladium relie la violence stellaire aux innovations du XXIᵉ siècle. De la dépollution des moteurs aux laboratoires de catalyse, il incarne une noblesse moderne : aussi rare que polyvalent, aussi discret que déterminant."
+            ],
             "sources": []
           }
         },

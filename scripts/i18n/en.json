@@ -2338,8 +2338,15 @@
           "symbol": "Rh",
           "name": "Rhodium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A platinum-group metal, rhodium pairs extreme rarity with an untarnished shine and indispensable anti-pollution catalysis.",
+            "paragraphs": [
+              "Symbol \"Rh\", atomic number 45, rhodium is a silvery-white metal with exceptional luster, great hardness and remarkable chemical inertness. Discovered in 1803 by William Hyde Wollaston and named after the Greek rhodon (\"rose\"), it combines extreme scarcity with high technological value.",
+              "Forged in the universe’s most violent events — supernovae and neutron-star mergers — rhodium arises from the rapid neutron-capture process. Its signature in meteorites and ancient stars shows that it formed early in cosmic history, long before the Solar System took shape.",
+              "On Earth rhodium is vanishingly rare (about 0.001 ppm) and is found alongside other platinum-group metals in nickel and copper ores. Mines in South Africa, Russia and Canada recover it as a by-product of platinum refining through complex chemical separations.",
+              "Its foremost calling is catalysis: in automotive catalytic converters it reduces toxic nitrogen oxides, helping keep the air breathable. Rhodium also coats white gold and silver jewelry to deliver a cold, durable shine, and it serves industry in thermocouples, electrical contacts and ultra-reflective optical mirrors.",
+              "Rhodium forms organometallic complexes that are vital to fine chemistry: rhodium(III) chloride (RhCl₃) leads to famous catalysts such as Wilkinson’s complex, a workhorse for selective hydrogenations. Its oxides and halides, though delicate, are prized for their singular catalytic behavior.",
+              "A metal of perfection, rhodium links stellar cataclysms to modern technology: it purifies exhaust gases, elevates jewelry and accelerates synthesis reactions. Its extreme rarity underscores the value of every milligram put to precise use."
+            ],
             "sources": []
           }
         },
@@ -2347,8 +2354,15 @@
           "symbol": "Pd",
           "name": "Palladium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A precious white platinum-group metal, palladium blends universal catalysis, precision electronics and a voracious appetite for hydrogen.",
+            "paragraphs": [
+              "Symbol \"Pd\", atomic number 46, palladium is a bright, ductile, corrosion-resistant silver-white metal. Discovered in 1803 by William Hyde Wollaston and named after the asteroid Pallas, it has become a rare yet essential player in modern technologies.",
+              "Like its platinum-group neighbors, palladium is forged in supernovae and neutron-star collisions through the r-process. Its presence in meteorites and ancient stars marks a violent but early cosmic origin that made it a discreet component of the galaxy’s chemical heritage.",
+              "On our planet palladium is scarce (about 0.015 ppm) and hides in nickel and copper ores alongside platinum, rhodium and iridium. Major deposits in South Africa, Russia and Canada extract it as a by-product using demanding refining and selective precipitation steps.",
+              "A universal catalyst, it converts carbon monoxide and hydrocarbons into CO₂ and water inside automotive catalytic converters, while its complexes — the backbone of Suzuki and Heck coupling reactions — have revolutionized organic synthesis. Palladium also shines in electrical contacts, sensors, luxury watchmaking, white-gold alloys and research on hydrogen storage.",
+              "Palladium compounds, from the chloride (PdCl₂) and acetate (Pd(OAc)₂) to phosphine complexes such as Pd(PPh₃)₄, are indispensable tools for building carbon–carbon bonds. In metallic form it yields palladium hydrides (PdHₓ) that can absorb astonishing volumes of hydrogen.",
+              "The archetypal transition metal, palladium bridges stellar violence and twenty-first-century innovation. From cleaner engines to catalysis labs, it embodies modern nobility: as rare as it is versatile, as discreet as it is decisive."
+            ],
             "sources": []
           }
         },
