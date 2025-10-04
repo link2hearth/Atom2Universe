@@ -7622,7 +7622,10 @@ function recalcProduction() {
 
   if (FUSION_DEFS.length) {
     const fusionBonusState = getFusionBonusState();
-    const fusionLabel = 'Fusions moléculaires';
+    const fusionLabel = translateOrDefault(
+      'scripts.app.fusion.bonusLabel',
+      'Fusions moléculaires'
+    );
     const apcBonus = Number(fusionBonusState.apcFlat);
     if (Number.isFinite(apcBonus) && apcBonus !== 0) {
       const value = new LayeredNumber(apcBonus);
@@ -8983,7 +8986,12 @@ function resetGame() {
   recalcProduction();
   renderShop();
   updateUI();
-  setFusionLog('Sélectionnez une recette pour tenter votre première fusion.');
+  setFusionLog(
+    translateOrDefault(
+      'scripts.app.fusion.prompt',
+      'Sélectionnez une recette pour tenter votre première fusion.'
+    )
+  );
   saveGame();
 }
 

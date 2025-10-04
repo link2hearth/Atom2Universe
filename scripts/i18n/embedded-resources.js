@@ -1009,7 +1009,8 @@
             "noCredits": "Aucun crédit Mach3 disponible."
           },
           "fusion": {
-            "prompt": "Sélectionnez une recette pour tenter votre première fusion."
+            "prompt": "Sélectionnez une recette pour tenter votre première fusion.",
+            "bonusLabel": "Fusions moléculaires"
           },
           "table": {
             "placeholder": "Le tableau périodique sera bientôt disponible.",
@@ -1206,6 +1207,9 @@
             "toastSuccess": "Fusion réussie !",
             "logFailure": "La fusion {name} a échoué. Les éléments ont été consommés.",
             "toastFailure": "Fusion échouée."
+          },
+          "productionSteps": {
+            "fusionFlat": "Fusions moléculaires"
           },
           "results": {
             "unavailable": "Synthèse indisponible pour le moment.",
@@ -3087,7 +3091,8 @@
             "noCredits": "No Mach3 credit available."
           },
           "fusion": {
-            "prompt": "Select a recipe to attempt your first fusion."
+            "prompt": "Select a recipe to attempt your first fusion.",
+            "bonusLabel": "Molecular fusions"
           },
           "table": {
             "placeholder": "The periodic table will be available soon.",
@@ -3284,6 +3289,9 @@
             "toastSuccess": "Fusion succeeded!",
             "logFailure": "{name} fusion failed. Ingredients were consumed.",
             "toastFailure": "Fusion failed."
+          },
+          "productionSteps": {
+            "fusionFlat": "Molecular fusions"
           },
           "results": {
             "unavailable": "Synthesis unavailable for now.",

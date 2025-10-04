@@ -1015,7 +1015,8 @@
         "noCredits": "Aucun crédit Mach3 disponible."
       },
       "fusion": {
-        "prompt": "Sélectionnez une recette pour tenter votre première fusion."
+        "prompt": "Sélectionnez une recette pour tenter votre première fusion.",
+        "bonusLabel": "Fusions moléculaires"
       },
       "table": {
         "placeholder": "Le tableau périodique sera bientôt disponible.",
@@ -1212,6 +1213,9 @@
         "toastSuccess": "Fusion réussie !",
         "logFailure": "La fusion {name} a échoué. Les éléments ont été consommés.",
         "toastFailure": "Fusion échouée."
+      },
+      "productionSteps": {
+        "fusionFlat": "Fusions moléculaires"
       },
       "results": {
         "unavailable": "Synthèse indisponible pour le moment.",
