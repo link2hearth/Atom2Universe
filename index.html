@@ -637,7 +637,14 @@
                 <span class="element-info-panel__number" id="elementInfoNumber"></span>
                 <div class="element-info-panel__identity">
                   <div class="element-info-panel__symbol-row">
-                    <span class="element-info-panel__symbol" id="elementInfoSymbol"></span>
+                    <button
+                      class="element-info-panel__symbol element-info-panel__symbol-button"
+                      id="elementInfoSymbol"
+                      type="button"
+                      aria-haspopup="dialog"
+                      aria-expanded="false"
+                      aria-controls="elementDetailsDialog"
+                    ></button>
                     <span class="element-info-panel__category" id="elementInfoCategory"></span>
                     <span class="element-info-panel__owned-count" id="elementInfoOwnedCount"></span>
                   </div>
@@ -1032,6 +1039,36 @@
       </div>
     </section>
   </main>
+
+  <div class="element-details-overlay" id="elementDetailsOverlay" hidden aria-hidden="true">
+    <div class="element-details-overlay__backdrop" data-element-details-close></div>
+    <section
+      class="element-details-overlay__dialog"
+      id="elementDetailsDialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="elementDetailsTitle"
+      aria-describedby="elementDetailsBody"
+      tabindex="-1"
+    >
+      <header class="element-details-overlay__header">
+        <h2 class="element-details-overlay__title" id="elementDetailsTitle"></h2>
+        <button
+          class="element-details-overlay__close"
+          id="elementDetailsCloseButton"
+          type="button"
+          data-element-details-close
+          aria-label="Fermer"
+          data-i18n="aria-label:index.sections.table.modal.close"
+        >
+          ×
+        </button>
+      </header>
+      <div class="element-details-overlay__body">
+        <div class="element-details-overlay__content" id="elementDetailsBody"></div>
+      </div>
+    </section>
+  </div>
 
   <div class="devkit-overlay" id="devkitOverlay" hidden aria-hidden="true">
     <div class="devkit-panel" id="devkitPanel" role="dialog" aria-modal="true" aria-labelledby="devkitTitle" tabindex="-1">

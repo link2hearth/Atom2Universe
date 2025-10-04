@@ -184,6 +184,24 @@ function getPeriodicElementDisplay(definition) {
   return { symbol, name };
 }
 
+function getPeriodicElementDetails(definition) {
+  if (!definition || typeof definition !== 'object') {
+    return null;
+  }
+  const base = getPeriodicElementTranslationBase(definition);
+  if (!base) {
+    return null;
+  }
+  const api = getI18nApi();
+  if (api && typeof api.getResource === 'function') {
+    const resource = api.getResource(`${base}.details`);
+    if (resource && typeof resource === 'object') {
+      return resource;
+    }
+  }
+  return null;
+}
+
 function getCurrentLocale() {
   const api = getI18nApi();
   if (api && typeof api.getCurrentLocale === 'function') {
@@ -2279,6 +2297,11 @@ const elements = {
   elementInfoCategory: document.getElementById('elementInfoCategory'),
   elementInfoOwnedCount: document.getElementById('elementInfoOwnedCount'),
   elementInfoCollection: document.getElementById('elementInfoCollection'),
+  elementDetailsOverlay: document.getElementById('elementDetailsOverlay'),
+  elementDetailsDialog: document.getElementById('elementDetailsDialog'),
+  elementDetailsTitle: document.getElementById('elementDetailsTitle'),
+  elementDetailsBody: document.getElementById('elementDetailsBody'),
+  elementDetailsCloseButton: document.getElementById('elementDetailsCloseButton'),
   collectionProgress: document.getElementById('elementCollectionProgress'),
   collectionSummaryTile: document.getElementById('elementCollectionSummary'),
   collectionSummaryCurrent: document.getElementById('elementCollectionCurrentTotal'),
@@ -4017,6 +4040,7 @@ const shopRows = new Map();
 let lastVisibleShopBonusIds = new Set();
 const periodicCells = new Map();
 let selectedElementId = null;
+let elementDetailsLastTrigger = null;
 let gamePageVisibleSince = null;
 
 function getShopUnlockSet() {
@@ -4138,6 +4162,205 @@ function formatDuration(ms) {
   return parts.join(' ');
 }
 
+function isElementDetailsModalOpen() {
+  return Boolean(elements.elementDetailsOverlay && !elements.elementDetailsOverlay.hasAttribute('hidden'));
+}
+
+function updateElementDetailsModalContent(definition) {
+  if (!definition || !elements.elementDetailsOverlay) {
+    return;
+  }
+  const { symbol, name } = getPeriodicElementDisplay(definition);
+  const displaySymbol = symbol || '';
+  const displayName = name || '';
+  const atomicNumber = definition.atomicNumber != null ? definition.atomicNumber : '';
+  if (elements.elementDetailsTitle) {
+    let titleKey = 'index.sections.table.modal.titleFallback';
+    let fallbackTitle = atomicNumber ? `Element ${atomicNumber}` : 'Element details';
+    if (displayName && displaySymbol) {
+      titleKey = 'index.sections.table.modal.title';
+      fallbackTitle = `${displayName} (${displaySymbol})`;
+    } else if (displayName) {
+      titleKey = 'index.sections.table.modal.titleNameOnly';
+      fallbackTitle = displayName;
+    } else if (displaySymbol) {
+      titleKey = 'index.sections.table.modal.titleSymbolOnly';
+      fallbackTitle = displaySymbol;
+    }
+    const titleText = translateOrDefault(titleKey, fallbackTitle, {
+      name: displayName,
+      symbol: displaySymbol,
+      number: atomicNumber || definition.id || '',
+    });
+    elements.elementDetailsTitle.textContent = titleText;
+  }
+  if (elements.elementDetailsBody) {
+    const container = elements.elementDetailsBody;
+    const fallbackText = t('index.sections.table.modal.comingSoon');
+    container.innerHTML = '';
+    container.classList.remove('element-details-overlay__content--placeholder');
+    const details = getPeriodicElementDetails(definition);
+
+    const summaryText = typeof details?.summary === 'string' ? details.summary.trim() : '';
+    const bodyText = typeof details?.body === 'string' ? details.body.trim() : '';
+    const paragraphTexts = Array.isArray(details?.paragraphs)
+      ? details.paragraphs
+          .map(paragraph => (typeof paragraph === 'string' ? paragraph.trim() : ''))
+          .filter(text => text.length)
+      : [];
+    const sources = Array.isArray(details?.sources)
+      ? details.sources
+          .map(source => (typeof source === 'string' ? source.trim() : ''))
+          .filter(text => text.length)
+      : [];
+
+    let hasContent = false;
+    const fragment = document.createDocumentFragment();
+
+    if (summaryText) {
+      const summary = document.createElement('p');
+      summary.className = 'element-details-overlay__summary';
+      summary.textContent = summaryText;
+      fragment.appendChild(summary);
+      hasContent = true;
+    }
+
+    const effectiveParagraphs = paragraphTexts.length ? paragraphTexts : (bodyText ? [bodyText] : []);
+    effectiveParagraphs.forEach(text => {
+      const paragraph = document.createElement('p');
+      paragraph.className = 'element-details-overlay__paragraph';
+      paragraph.textContent = text;
+      fragment.appendChild(paragraph);
+      hasContent = true;
+    });
+
+    if (sources.length) {
+      const sourcesWrapper = document.createElement('div');
+      sourcesWrapper.className = 'element-details-overlay__sources';
+
+      const label = document.createElement('p');
+      label.className = 'element-details-overlay__sources-label';
+      label.textContent = t('index.sections.table.modal.sourcesLabel');
+      sourcesWrapper.appendChild(label);
+
+      const list = document.createElement('ul');
+      list.className = 'element-details-overlay__sources-list';
+      sources.forEach(text => {
+        const item = document.createElement('li');
+        item.className = 'element-details-overlay__sources-item';
+        item.textContent = text;
+        list.appendChild(item);
+      });
+      sourcesWrapper.appendChild(list);
+      fragment.appendChild(sourcesWrapper);
+      hasContent = true;
+    }
+
+    if (hasContent) {
+      container.appendChild(fragment);
+    } else {
+      const placeholder = document.createElement('p');
+      placeholder.className = 'element-details-overlay__placeholder';
+      placeholder.textContent = fallbackText;
+      container.appendChild(placeholder);
+      container.classList.add('element-details-overlay__content--placeholder');
+    }
+  }
+  elements.elementDetailsOverlay.dataset.elementId = definition.id;
+  if (elements.elementDetailsDialog) {
+    elements.elementDetailsDialog.dataset.elementId = definition.id;
+  }
+}
+
+function openElementDetailsModal(elementId, { trigger = null } = {}) {
+  if (!elements.elementDetailsOverlay || !periodicElementIndex.has(elementId)) {
+    return;
+  }
+  const definition = periodicElementIndex.get(elementId);
+  updateElementDetailsModalContent(definition);
+  elements.elementDetailsOverlay.hidden = false;
+  elements.elementDetailsOverlay.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('element-details-modal-open');
+  elementDetailsLastTrigger = trigger || document.activeElement || elements.elementInfoSymbol;
+  if (elements.elementInfoSymbol) {
+    elements.elementInfoSymbol.setAttribute('aria-expanded', 'true');
+  }
+  if (elements.elementDetailsDialog) {
+    elements.elementDetailsDialog.focus({ preventScroll: true });
+  }
+  if (elements.elementDetailsCloseButton) {
+    const closeLabel = t('index.sections.table.modal.close');
+    if (closeLabel) {
+      elements.elementDetailsCloseButton.setAttribute('aria-label', closeLabel);
+    }
+  }
+  document.addEventListener('keydown', handleElementDetailsKeydown, true);
+}
+
+function closeElementDetailsModal({ restoreFocus = true } = {}) {
+  if (!isElementDetailsModalOpen()) {
+    return;
+  }
+  elements.elementDetailsOverlay.hidden = true;
+  elements.elementDetailsOverlay.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('element-details-modal-open');
+  if (elements.elementInfoSymbol) {
+    elements.elementInfoSymbol.setAttribute('aria-expanded', 'false');
+  }
+  if (elements.elementDetailsOverlay.dataset.elementId) {
+    delete elements.elementDetailsOverlay.dataset.elementId;
+  }
+  if (elements.elementDetailsDialog?.dataset?.elementId) {
+    delete elements.elementDetailsDialog.dataset.elementId;
+  }
+  document.removeEventListener('keydown', handleElementDetailsKeydown, true);
+  const lastTrigger = elementDetailsLastTrigger;
+  elementDetailsLastTrigger = null;
+  if (restoreFocus && lastTrigger && typeof lastTrigger.focus === 'function') {
+    lastTrigger.focus({ preventScroll: true });
+  }
+}
+
+function handleElementDetailsKeydown(event) {
+  if (!isElementDetailsModalOpen()) {
+    return;
+  }
+  if (event.key === 'Escape') {
+    event.preventDefault();
+    closeElementDetailsModal();
+    return;
+  }
+  if (event.key === 'Tab' && elements.elementDetailsDialog) {
+    const focusableSelectors = [
+      'button:not([disabled])',
+      '[href]',
+      'input:not([disabled])',
+      'select:not([disabled])',
+      'textarea:not([disabled])',
+      '[tabindex]:not([tabindex="-1"])',
+    ];
+    const focusable = Array.from(
+      elements.elementDetailsDialog.querySelectorAll(focusableSelectors.join(','))
+    ).filter(el => !(el.hasAttribute('disabled') || el.getAttribute('aria-hidden') === 'true'));
+    if (!focusable.length) {
+      event.preventDefault();
+      elements.elementDetailsDialog.focus({ preventScroll: true });
+      return;
+    }
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey) {
+      if (document.activeElement === first || document.activeElement === elements.elementDetailsDialog) {
+        event.preventDefault();
+        last.focus({ preventScroll: true });
+      }
+    } else if (document.activeElement === last) {
+      event.preventDefault();
+      first.focus({ preventScroll: true });
+    }
+  }
+}
+
 function updateElementInfoPanel(definition) {
   const panel = elements.elementInfoPanel;
   const placeholder = elements.elementInfoPlaceholder;
@@ -4145,6 +4368,19 @@ function updateElementInfoPanel(definition) {
   if (!panel) return;
 
   if (!definition) {
+    if (elements.elementInfoSymbol) {
+      elements.elementInfoSymbol.textContent = '';
+      elements.elementInfoSymbol.disabled = true;
+      elements.elementInfoSymbol.setAttribute('aria-expanded', 'false');
+      elements.elementInfoSymbol.removeAttribute('aria-label');
+      elements.elementInfoSymbol.removeAttribute('title');
+      if (elements.elementInfoSymbol.dataset.elementId) {
+        delete elements.elementInfoSymbol.dataset.elementId;
+      }
+    }
+    if (isElementDetailsModalOpen()) {
+      closeElementDetailsModal({ restoreFocus: false });
+    }
     if (panel.dataset.category) {
       delete panel.dataset.category;
     }
@@ -4176,7 +4412,36 @@ function updateElementInfoPanel(definition) {
   }
   const { symbol, name } = getPeriodicElementDisplay(definition);
   if (elements.elementInfoSymbol) {
-    elements.elementInfoSymbol.textContent = symbol ?? '';
+    const symbolButton = elements.elementInfoSymbol;
+    const displaySymbol = symbol ?? '';
+    symbolButton.textContent = displaySymbol;
+    const hasSymbol = Boolean(displaySymbol);
+    const hasName = Boolean(name);
+    symbolButton.disabled = !(hasSymbol || hasName);
+    if (!symbolButton.disabled) {
+      const openLabel = hasName
+        ? translateOrDefault(
+            'index.sections.table.modal.open',
+            `Open detailed sheet for ${name}`,
+            { name, symbol: displaySymbol }
+          )
+        : translateOrDefault(
+            'index.sections.table.modal.openSymbol',
+            `Open detailed sheet for ${displaySymbol}`,
+            { symbol: displaySymbol }
+          );
+      symbolButton.setAttribute('aria-label', openLabel);
+      symbolButton.setAttribute('title', openLabel);
+      symbolButton.dataset.elementId = definition.id;
+    } else {
+      symbolButton.removeAttribute('aria-label');
+      symbolButton.removeAttribute('title');
+      if (symbolButton.dataset.elementId) {
+        delete symbolButton.dataset.elementId;
+      }
+    }
+    const openElementId = elements.elementDetailsOverlay?.dataset?.elementId || null;
+    symbolButton.setAttribute('aria-expanded', openElementId === definition.id ? 'true' : 'false');
   }
   if (elements.elementInfoName) {
     elements.elementInfoName.textContent = name ?? '';
@@ -4257,6 +4522,13 @@ function updateElementInfoPanel(definition) {
         : bonusDetails.join(' · ');
     } else {
       elements.elementInfoCollection.textContent = rarityLabel;
+    }
+  }
+
+  if (isElementDetailsModalOpen()) {
+    const openId = elements.elementDetailsOverlay?.dataset?.elementId;
+    if (openId === definition.id) {
+      updateElementDetailsModalContent(definition);
     }
   }
 }
@@ -6113,6 +6385,26 @@ if (elements.arcadeBonusTicketButtons?.length) {
       }
       showPage('metaux');
     });
+  });
+}
+
+if (elements.elementInfoSymbol) {
+  elements.elementInfoSymbol.addEventListener('click', event => {
+    if (elements.elementInfoSymbol.disabled || !selectedElementId) {
+      return;
+    }
+    event.preventDefault();
+    openElementDetailsModal(selectedElementId, { trigger: elements.elementInfoSymbol });
+  });
+}
+
+if (elements.elementDetailsOverlay) {
+  elements.elementDetailsOverlay.addEventListener('click', event => {
+    const target = event.target.closest('[data-element-details-close]');
+    if (target) {
+      event.preventDefault();
+      closeElementDetailsModal();
+    }
   });
 }
 
