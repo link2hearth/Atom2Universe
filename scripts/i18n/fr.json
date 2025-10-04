@@ -2465,8 +2465,15 @@
           "symbol": "I",
           "name": "Iode",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Halogène violet qui se sublime aisément, l’iode (I, 53) relie la chimie des algues marines à un rôle biologique vital.",
+            "paragraphs": [
+              "Symbole “I”, numéro atomique 53, l’iode est un halogène solide gris violacé qui se sublime en vapeurs pourpres caractéristiques. Découvert en 1811 par Bernard Courtois dans les cendres d’algues, il doit son nom au grec ioeidès, “violet”, et se distingue par une réactivité plus douce que celle des autres halogènes.",
+              "L’iode naît dans les supernovae et les collisions d’étoiles à neutrons via le processus rapide de capture de neutrons (r-process). Sa présence dans les météorites et l’isotope radioactif ^129I, à longue demi-vie, en font un traceur précieux de la nucléosynthèse stellaire et des premiers planétésimaux.",
+              "Sur Terre, l’iode est rare dans la croûte (environ 0,4 ppm) mais concentré dans les océans sous forme d’ions iodure (I⁻) et iodate (IO₃⁻). Les algues et microorganismes en accumulent de grandes quantités, tandis que les gisements industriels proviennent de saumures naturelles et des nitrates chiliens.",
+              "Indispensable à la synthèse des hormones thyroïdiennes T₃ et T₄, l’iode est au cœur de la santé publique, notamment via l’iodation du sel pour prévenir les carences. En médecine, il sert d’antiseptique, d’agent de contraste et, sous forme radioactive ^131I, au diagnostic et au traitement des maladies de la thyroïde.",
+              "Parmi ses composés majeurs figurent les iodures alcalins comme KI, l’acide iodhydrique HI et l’ion triiodure I₃⁻, reconnaissable à sa teinte brune. Les composés organoiodés exploitent sa forte absorption des rayons X, tandis que les isotopes ^127I et ^131I servent de traceurs en biologie, médecine et hydrologie.",
+              "Halogène venu des étoiles mais ancré dans les océans, l’iode incarne le lien entre chimie cosmique et équilibre hormonal des vertébrés. Discret dans la matière mais spectaculaire lorsqu’il s’élève en vapeurs violettes, il demeure un protecteur et un révélateur essentiel de la vie."
+            ],
             "sources": []
           }
         },
@@ -2474,8 +2481,15 @@
           "symbol": "Xe",
           "name": "Xénon",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Gaz noble rare et lumineux, le xénon (Xe, 54) associe inertie chimique et propriétés physiques remarquables.",
+            "paragraphs": [
+              "Symbole “Xe”, numéro atomique 54, le xénon est un gaz noble incolore, inodore et très peu abondant dans l’atmosphère (environ 0,087 ppm). Découvert en 1898 par William Ramsay et Morris Travers, il doit son nom au grec xenos, “étranger”, qui souligne sa rareté et ses propriétés atypiques.",
+              "Le xénon est produit lors des supernovae et des collisions d’étoiles à neutrons par les processus s, r et p de capture de neutrons et de protons. Ses nombreux isotopes, stables ou radioactifs, reflètent ces mécanismes et servent d’empreintes pour retracer l’évolution des gaz primitifs du système solaire.",
+              "Sur Terre, le xénon est isolé par distillation fractionnée de l’air liquide, ne fournissant que quelques grammes par tonne d’atmosphère traitée. On en détecte aussi des traces dans certaines eaux souterraines et émissions volcaniques, tandis que les isotopes ^133Xe et ^135Xe issus de la fission nucléaire sont utilisés comme traceurs.",
+              "Ses usages reposent sur sa lumière et sa neutralité : lampes à décharge haute intensité, projecteurs de cinéma et phares automobiles émettent un éclat blanc proche de celui du soleil. En médecine, son inertie en fait un gaz anesthésiant bien toléré, et en propulsion spatiale il sert de carburant pour les moteurs ioniques à haute efficacité.",
+              "Bien qu’inerte, le xénon forme des composés avec des éléments très électronégatifs tels que le fluor et l’oxygène : XeF₄, XeF₆ ou XeO₄ ont démontré, dès les années 1960, que les gaz nobles pouvaient entrer en chimie sous conditions contrôlées. Ces molécules continuent d’alimenter la recherche en chimie des gaz nobles et en physique quantique.",
+              "Élément d’élégance et de précision, le xénon naît des cataclysmes stellaires avant d’illuminer nos routes, nos écrans et nos diagnostics. Invisible mais lumineux, rare mais indispensable, il incarne la beauté silencieuse des gaz nobles, entre paix chimique et énergie cosmique."
+            ],
             "sources": []
           }
         },
