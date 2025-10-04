@@ -1646,9 +1646,16 @@
           "symbol": "H",
           "name": "Hydrogen",
           "details": {
-            "summary": "",
-            "paragraphs": [],
-            "sources": []
+            "summary": "Hydrogen is the first element in the periodic table and forms an extremely light diatomic gas.",
+            "paragraphs": [
+              "Made of a single proton orbited by one electron, it accounts for roughly 75% of the observable universe’s baryonic mass.",
+              "On Earth it is seldom found in pure form; instead it binds within water, hydrocarbons, and countless biomolecules.",
+              "In Atom → Univers, completing the hydrogen collection unlocks the earliest fusions and lays the groundwork for more elaborate molecules."
+            ],
+            "sources": [
+              "https://www.britannica.com/science/hydrogen-chemical-element",
+              "https://nssdc.gsfc.nasa.gov/planetary/factsheet/hydrogenfact.html"
+            ]
           }
         },
         "element-002-helium": {

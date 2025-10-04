@@ -1635,9 +1635,16 @@
               "symbol": "H",
               "name": "Hydrogène",
               "details": {
-                "summary": "",
-                "paragraphs": [],
-                "sources": []
+                "summary": "Premier élément du tableau périodique, l’hydrogène est un gaz diatomique extrêmement léger.",
+                "paragraphs": [
+                  "Constitué d’un proton et d’un électron, il représente environ 75 % de la masse baryonique de l’Univers observable.",
+                  "Sur Terre, on le rencontre rarement à l’état libre ; il se combine dans l’eau, les hydrocarbures et d’innombrables biomolécules.",
+                  "Dans Atom → Univers, compléter la collection d’hydrogène débloque les premières fusions et sert de base aux molécules plus complexes."
+                ],
+                "sources": [
+                  "https://www.larousse.fr/encyclopedie/divers/hydrogene/110473",
+                  "https://www.cnrs.fr/fr/le-cnrs-explique/hydrogene-lenergie-du-futur"
+                ]
               }
             },
             "element-002-helium": {
@@ -4345,9 +4352,16 @@
               "symbol": "H",
               "name": "Hydrogen",
               "details": {
-                "summary": "",
-                "paragraphs": [],
-                "sources": []
+                "summary": "Hydrogen is the first element in the periodic table and forms an extremely light diatomic gas.",
+                "paragraphs": [
+                  "Made of a single proton orbited by one electron, it accounts for roughly 75% of the observable universe’s baryonic mass.",
+                  "On Earth it is seldom found in pure form; instead it binds within water, hydrocarbons, and countless biomolecules.",
+                  "In Atom → Univers, completing the hydrogen collection unlocks the earliest fusions and lays the groundwork for more elaborate molecules."
+                ],
+                "sources": [
+                  "https://www.britannica.com/science/hydrogen-chemical-element",
+                  "https://nssdc.gsfc.nasa.gov/planetary/factsheet/hydrogenfact.html"
+                ]
               }
             },
             "element-002-helium": {
