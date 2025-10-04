@@ -1646,11 +1646,14 @@
           "symbol": "H",
           "name": "Hydrogen",
           "details": {
-            "summary": "Hydrogen is the first element in the periodic table and forms an extremely light diatomic gas.",
+            "summary": "Number 1 in the periodic table, hydrogen is the simplest and most abundant element in the universe.",
             "paragraphs": [
-              "Made of a single proton orbited by one electron, it accounts for roughly 75% of the observable universe’s baryonic mass.",
-              "On Earth it is seldom found in pure form; instead it binds within water, hydrocarbons, and countless biomolecules.",
-              "In Atom → Univers, completing the hydrogen collection unlocks the earliest fusions and lays the groundwork for more elaborate molecules."
+              "A single proton, a single electron: it's hard to be more minimalist. Yet behind that simplicity lies a fundamental role. Hydrogen is the basic building block of matter, the fuel of stars, and one of the constituents of the water that flows on Earth. Invisible, colorless, and highly flammable, it is discreet in appearance but omnipresent in reality.",
+              "Hydrogen was born almost at the same time as the universe itself. Right after the Big Bang, about 13.8 billion years ago, matter organized primarily into hydrogen and helium. Even today, hydrogen accounts for about 75% of the baryonic mass of the universe. In stars, it is the fuel of nuclear fusion: four hydrogen atoms merge to form a helium nucleus, releasing the energy that makes the Sun and every star in the Milky Way shine.",
+              "On Earth, hydrogen rarely exists in pure form (H₂) because its lightness lets it escape the atmosphere with ease. We mostly find it combined with other elements: in water (H₂O), in hydrocarbons (oil, natural gas), or in the organic molecules that make up living beings. It circulates through the biosphere, geosphere, and hydrosphere as an inseparable companion to carbon and oxygen.",
+              "Hydrogen has countless applications. Historically, it inflated the first balloons and airships—until its high flammability made it infamous, as during the Hindenburg disaster in 1937. Today it is a key reagent in the chemical industry (producing ammonia for fertilizers, hydrogenating oils). And tomorrow? It is seen as a serious candidate for clean energy: fuel cells transform hydrogen into electricity while emitting only water.",
+              "It is impossible to talk about hydrogen without mentioning water, H₂O, which covers 70% of our planet. It also sits at the heart of hydrocarbons (methane CH₄, gasoline, petroleum) and thus of the energy that powers our societies. In organic chemistry it is everywhere, attached to the carbon framework of our proteins, lipids, and sugars. In short, hydrogen is a universal companion, slipping into almost every molecule that matters for life and for our technologies.",
+              "Born from the Big Bang, burned by stars, omnipresent in our cells: hydrogen is the common thread of matter and energy. It is the smallest of the elements, but without it there would be no water, no stars, no life. In short, it is the invisible giant supporting the entire edifice of the cosmos and of our daily lives."
             ],
             "sources": [
               "https://www.britannica.com/science/hydrogen-chemical-element",
