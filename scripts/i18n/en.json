@@ -3118,8 +3118,13 @@
           "symbol": "Db",
           "name": "Dubnium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A synthetic superheavy element confirmed in 1997, dubnium honors the Russian science city of Dubna where its discovery was achieved.",
+            "paragraphs": [
+              "Dubnium, symbol \"Db\" and atomic number 105, is a superheavy element confirmed in 1997. It takes its name from the science city of Dubna in Russia, home to the Joint Institute for Nuclear Research, a major contributor to its discovery.",
+              "It is a synthetic element produced by bombarding heavy nuclei in a particle accelerator. Its isotopes decay within seconds at most, preventing any lasting natural presence.",
+              "Dubnium belongs to the family of transition metals in the group of tantalum and niobium. Limited chemical studies have confirmed this behavior. No practical use is possible because of its radioactivity and scarcity.",
+              "Dubnium marks an important milestone in international research on heavy elements. Its name honors a key scientific center in the synthesis of superheavy elements, symbolizing collaboration between laboratories worldwide."
+            ],
             "sources": []
           }
         },
@@ -3127,8 +3132,13 @@
           "symbol": "Sg",
           "name": "Seaborgium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Confirmed in 1993, seaborgium honors chemist Glenn T. Seaborg and briefly extends transition-metal chemistry beyond uranium.",
+            "paragraphs": [
+              "Seaborgium, symbol \"Sg\" and atomic number 106, is a superheavy element confirmed in 1993. It pays tribute to American chemist Glenn T. Seaborg, one of the discoverers of many transuranium elements.",
+              "It is an artificial element obtained by nuclear fusion of heavy nuclei. All its isotopes are unstable, with half-lives ranging from a few milliseconds to about a minute for the most durable.",
+              "Seaborgium belongs to the group of tungsten and molybdenum. A handful of chemical experiments have confirmed that it shares some of their properties, behaving like a typical transition metal. Its rarity and radioactivity confine it to pure research.",
+              "Seaborgium is one of the few superheavy elements whose chemistry has been briefly observed. Fleeting yet instructive, it bears the name of a researcher who profoundly shaped the history of the periodic table."
+            ],
             "sources": []
           }
         },
