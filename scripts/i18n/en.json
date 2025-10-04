@@ -2707,8 +2707,15 @@
           "symbol": "Ta",
           "name": "Tantalum",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A strategic metal that is dense and nearly inert, tantalum connects stellar forges with miniaturized capacitors and biocompatible implants.",
+            "paragraphs": [
+              "Overview — With symbol “Ta” and atomic number 73, tantalum is a blue-gray metal that is extremely dense (16.7 g/cm³), ductile, and corrosion-resistant. Discovered in 1802 by Swedish chemist Anders Gustaf Ekeberg, it was named after the mythological figure Tantalus, condemned to eternal hunger and thirst—a nod to the metal’s resistance to chemical attack. Even when immersed in acid it remains “untouchable,” making it one of the most stable metals in nature.",
+              "Cosmic origins — Tantalum forms in supernovae and neutron-star collisions through the rapid neutron-capture process (r-process), but also partly through the s-process in aging stars. Its stable isotopes (notably ^181Ta) attest to its birth within the most energetic zones of nucleosynthesis. Traces of tantalum have been identified in certain iron meteorites, where it accompanies tungsten and niobium.",
+              "Terrestrial origin — On Earth, tantalum is rare (about 2 ppm in the crust). It is found mainly in coltan (a mixture of columbite [(Fe,Mn)(Nb,Ta)₂O₆] and tantalite [(Fe,Mn)(Ta,Nb)₂O₆)]), from which it is extracted alongside its chemical neighbor niobium. Major deposits lie in the Democratic Republic of the Congo, Rwanda, Brazil, and Australia. Tantalum is considered a critical metal because of its scarcity and the geographic concentration of its resources in politically unstable regions.",
+              "Uses — Tantalum is foremost a high-performance metal. It is used in tantalum capacitors—miniaturized components essential to phones, computers, medical implants, and space equipment—because they offer high storage capacity and exceptional reliability. Its corrosion resistance also makes it a material of choice for surgical instruments, bone implants, and catheters, as it is fully biocompatible. In industry it enters superalloys for turbines, reactors, and rocket engines, where it boosts mechanical and thermal strength. Finally, its very high melting point (3,017 °C) and chemical stability make it valuable for crucibles, heating elements, and heavy-chemical processing equipment.",
+              "Associated molecules — Key tantalum compounds include tantalum pentoxide (Ta₂O₅), used in capacitors and high-refractive-index optical glass, and tantalum pentachloride (TaCl₅), a precursor in organometallic chemistry. Tantalum carbides (TaC) and nitrides (TaN) are ultra-resistant materials employed in hard coatings and electronic components. These compounds combine hardness, stability, and electrical conductivity—qualities rarely united in a single element.",
+              "Conclusion — Tantalum is a metal of integrity: unalterable, reliable, and irreplaceable. Born from stellar explosions, it travels through Earth’s crust hidden in heavy minerals before becoming the invisible heart of our technologies. Its mythological name suits its nature: patient, resilient, and unwavering in the face of time and chemistry. From the cosmos to integrated circuits, tantalum is a silent pillar of the modern world."
+            ],
             "sources": []
           }
         },
@@ -2716,8 +2723,15 @@
           "symbol": "W",
           "name": "Tungsten",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A metal forged for extremes, tungsten spans stellar foundries to the alloys, filaments, and shields that brave the harshest heat.",
+            "paragraphs": [
+              "Overview — With symbol “W” and atomic number 74, tungsten is a steel-gray metal that is very dense (19.3 g/cm³, almost as much as gold) and has the highest melting point of any pure metal: 3,422 °C. Its symbol “W” comes from its German name Wolfram, which also gives its principal ore wolframite. Discovered as an oxide in 1781 by Carl Wilhelm Scheele, it was isolated as a metal in 1783 by Spanish brothers Juan José and Fausto de Elhuyar. The name “tungsten” literally means “heavy stone” in Swedish (tung sten).",
+              "Cosmic origins — Tungsten forms in massive stars through the slow neutron-capture process (s-process), but also during supernovae and neutron-star collisions via the r-process. It belongs to the heavy metals produced late in nucleosynthesis. The radioactive isotope ^182W, produced from the decay of hafnium (^182Hf), is an isotopic marker used to date the formation of Earth’s core and differentiated meteorites, making tungsten a key tool in planetary geochemistry.",
+              "Terrestrial origin — On Earth, tungsten is relatively rare (1.25 ppm in the crust) yet highly concentrated in certain ores: wolframite ((Fe,Mn)WO₄) and scheelite (CaWO₄). These deposits are found mainly in China (which produces over 80% of the world’s tungsten), Russia, and Central Africa. The metal is extracted by chemically reducing tungsten trioxide (WO₃) with hydrogen or carbon.",
+              "Uses — Tungsten is the metal for extreme conditions. Thanks to its record melting point, it is used in lamp filaments, electrodes, electrical contacts, and heating elements for very high-temperature furnaces. Its exceptional density makes it a non-toxic substitute for lead in projectiles and counterweights. It also enters ultra-strong alloys, notably high-speed steels and tungsten carbides (WC), which serve as cutting materials for industrial tools and drills. In military and space applications, it is used for armor, armor-piercing warheads, and satellite components, where its thermal and mechanical strength is unrivaled.",
+              "Associated molecules — Major tungsten compounds include tungsten trioxide (WO₃), tetrachloride (WCl₄), and especially tungsten carbide (WC), famed for its hardness comparable to diamond. Organometallic tungsten complexes such as tungsten carbonyl (W(CO)₆) play roles in catalysis and surface chemistry. Tungsten oxides and bronzes are also studied for their electrochromic properties and their use in smart glazing.",
+              "Conclusion — Tungsten is the archetype of a performance metal. Born in the stars and forged to endure every terrestrial stress, it combines density, stability, and stamina. From nineteenth-century light bulbs to twenty-first-century thrusters, it has accompanied technological progress toward mastering fire and light. A metal of absolute strength, tungsten embodies the physical limit of endurance."
+            ],
             "sources": []
           }
         },
