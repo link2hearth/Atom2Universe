@@ -2835,8 +2835,15 @@
           "symbol": "Tl",
           "name": "Thallium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A hyper-toxic heavy metal born of the slow neutron-capture process, thallium now survives in tightly controlled optical and nuclear-medicine niches.",
+            "paragraphs": [
+              "Overview — Symbol “Tl”, atomic number 81, thallium is a bluish-gray metal that is soft, malleable, and melts at 304 °C. In air it quickly tarnishes by forming an oxide. Discovered in 1861 by British chemist William Crookes thanks to spectroscopy, it takes its name from the Greek thallos, “green shoot”, in reference to the bright green emission line seen in its spectrum. It was one of the first elements discovered through spectral analysis, a revolutionary method at the time.",
+              "Cosmic origins — Thallium is produced in supernovae and neutron-star collisions through the slow neutron-capture process (s-process), which turns mercury and lead into heavier isotopes. Its natural isotopes, ^203Tl and ^205Tl, are stable, but radioactive thallium (such as ^201Tl) is used as a medical tracer. Its presence in metallic and stony meteorites testifies to its cosmic formation alongside neighboring heavy metals.",
+              "Terrestrial origin — On Earth, thallium is rare (0.7 ppm in the crust). It is found mainly in copper, lead, and zinc ores, where it partially replaces those metals in crystal lattices. It can also concentrate in certain iron and sulfur ores. Thallium is generally obtained as a metallurgical by-product of lead and zinc refining. Its geological distribution is diffuse, yet it tends to accumulate in mine tailings and contaminated soils.",
+              "Uses — Thallium has seen many uses, now largely abandoned because of its extreme toxicity. It was employed in rat poisons and insecticides until the 1970s before being banned almost everywhere. In optics, its compounds (notably thallium halides) served to make high-index glass and infrared crystals. In electronics, thallium appears in semiconductors (such as Tl₂S and TlBrI) and infrared detectors. In nuclear medicine, the radioactive isotope ^201Tl is used for cardiac scintigraphy because it behaves like potassium in the body, allowing doctors to evaluate blood flow in heart muscle.",
+              "Associated molecules — The most important compounds include thallium sulfate (Tl₂SO₄), once notorious—infamously—as a poison, and thallium chloride (TlCl). Mixed thallium halides, such as TlBrI, have applications in optoelectronics and radiation detection. In the lab, thallium nitrate (TlNO₃) and thallium oxide (Tl₂O₃) are used as specialized reagents. All of these compounds demand strict handling, however, because thallium severely disrupts potassium-related biological enzymes.",
+              "Conclusion — Thallium is a paradoxical element: soft to the touch, bright to the eye, yet deadly in the smallest dose. Born from the stars like gold and lead, it captivated scientists with its subtle chemistry before being sidelined for its toxicity. Today it survives only in laboratories, infrared devices, and nuclear medicine, where its properties are carefully controlled. Thallium reminds us that beauty and danger can share the same matter—a green glow, promise, and poison."
+            ],
             "sources": []
           }
         },
@@ -2844,8 +2851,15 @@
           "symbol": "Pb",
           "name": "Lead",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "An ancient stellar metal, lead remains useful yet tightly regulated because of a toxicity that has shadowed human history.",
+            "paragraphs": [
+              "Overview — Symbol “Pb”, atomic number 82, lead is a bluish-gray metal, very dense (11.34 g/cm³), soft, malleable, and easy to melt (at just 327 °C). Its symbol “Pb” comes from the Latin plumbum, which also gave us the word “plumbing”. Known since prehistory, it was among the first metals exploited by humans, often associated with silver in ores. Its low chemical reactivity and ease of casting made it a favored material for pipes, pigments, and weapons—until its toxicity was understood.",
+              "Cosmic origins — Lead is one of the heavy metals naturally produced at the end of the radioactive decay chains of uranium and thorium, and also through the slow neutron-capture process (s-process) in red giant stars. It is one of the “terminal elements” of stellar nucleosynthesis, a natural stopping point where nuclear reactions cease making heavier nuclei. Stable lead (^204Pb, ^206Pb, ^207Pb, ^208Pb) thus records the nuclear ages of the universe.",
+              "Terrestrial origin — On Earth, lead is moderately abundant (about 14 ppm in the crust), mainly as galena (PbS), its primary ore. It is also found in cerussite (PbCO₃) and anglesite (PbSO₄). The largest deposits lie in Australia, China, and Peru. It is one of the most extracted metals in history, with evidence of mining going back more than 6,000 years. The Romans used it extensively for water pipes, amphorae, and pigments, unaware of its dangers.",
+              "Uses — Lead has had extremely varied applications. Thanks to its malleability, corrosion resistance, and density, it has been used in plumbing, roofing, ammunition, and lead-acid batteries, which are still widely used in vehicles. Its shielding power against radiation makes it a favored protective material in laboratories and hospitals. In the past it also appeared in paints, household pipes, and even leaded gasoline (to raise the octane rating), uses now banned in most countries. Phasing lead out of consumer products was one of the great public-health advances of the 20th century.",
+              "Associated molecules — The main lead compounds are lead dioxide (PbO₂), an oxidant used in batteries, and lead salts such as the carbonate (PbCO₃) and chromate (PbCrO₄), once employed as pigments (white and yellow lead). Tetraethyllead (Pb(C₂H₅)₄), the gasoline additive, was an industrial breakthrough but also an environmental catastrophe. These compounds are now replaced by non-toxic alternatives.",
+              "Conclusion — Lead is a metal of history—of technology as much as toxicology. Born in the stars, cast into Roman aqueducts and modern batteries, it has accompanied humanity since its beginnings before revealing its invisible cost: poisoning bodies and the environment. Today it remains useful, but tightly regulated, a reminder that the most docile material can become the most dangerous when we forget moderation."
+            ],
             "sources": []
           }
         },
