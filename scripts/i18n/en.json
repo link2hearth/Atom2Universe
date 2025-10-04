@@ -2903,8 +2903,15 @@
           "symbol": "Fr",
           "name": "Francium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "An alkali metal as rare as it is fleeting, francium is a radioactive element born from radium that vanishes within minutes.",
+            "paragraphs": [
+              "Symbol \"Fr\", atomic number 87, francium is a highly radioactive alkali metal related to cesium and rubidium. Its existence is so fleeting that no macroscopic sample has ever been observed: everything we know comes from experiments on just a few atoms at a time. It would probably melt around 27 °C and would be liquid under slightly warm ambient conditions. Discovered in 1939 at the Curie laboratory by physicist Marguerite Perey, former assistant to Marie Curie, it was named francium in tribute to France—the last element discovered in nature and named for a country.",
+              "Francium forms only fleetingly in supernovae and in the natural fission reactions of thorium and uranium. It belongs to the decay chain of actinium: each atom of francium is born from radium and transforms into astatine or radon after just a few minutes. These isotopes are therefore ephemeral, part of a continuous cycle of birth and disappearance. In the universe, francium exists only as momentary traces in regions rich in radioactive elements.",
+              "On Earth, francium is one of the rarest elements: it is estimated that no more than 20 to 30 grams exist in the entire crust at any given time. It is produced naturally in uranium and thorium ores, where it results from the decay of radium-223. Its short half-life (22 minutes for the most stable isotope, ^223Fr) prevents any accumulation. Francium can therefore only be observed in the laboratory, produced artificially by bombarding thorium or radium with protons.",
+              "Francium has no industrial or medical applications, its rarity and radioactivity making any large-scale handling impossible. It is studied solely in atomic physics, notably to test models of relativistic electronic structure and the fundamental symmetries of the weak interaction. Experiments on a few thousand laser-trapped atoms have refined theoretical predictions about heavy alkali metals.",
+              "No stable compound of francium has ever been isolated. By analogy with its neighbors, scientists predict the existence of Fr⁺ ions and salts such as francium chloride (FrCl) or francium hydroxide (FrOH), even more basic than those of cesium. In practice these compounds survive only a few seconds before being destroyed by the radioactive decay of the metal itself.",
+              "Francium is a frontier element, on the edge of what nature can keep stable. Born from radium and destined to disappear almost immediately, it embodies the absolute fleetingness of matter. Discovered by a French scientist in the Curie lineage, it remains both a national and scientific symbol: an ephemeral atom that proves human ingenuity can detect, in a flash of decay, the trace of a metal that barely exists."
+            ],
             "sources": []
           }
         },
@@ -2912,8 +2919,15 @@
           "symbol": "Ra",
           "name": "Radium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "An extremely radioactive alkaline earth metal, radium shines with historic brilliance between Curie discoveries and health hazards.",
+            "paragraphs": [
+              "Symbol \"Ra\", atomic number 88, radium is a silvery-white alkaline earth metal that shines when freshly isolated but darkens in air because an oxide forms. It is highly radioactive and chemically close to barium and calcium. Discovered in 1898 by Pierre and Marie Curie from pitchblende (uraninite), it was isolated in metallic form in 1910 by Marie Curie and André Debierne. Its name comes from the Latin radius, \"ray\", in reference to the luminescence it emits spontaneously in the dark.",
+              "Radium is a transient product of the decay of uranium and thorium. In massive stars it forms during the rapid neutron-capture process (r-process), but it never lasts long: its isotopes quickly decay toward radon, francium, and lead. It thus belongs to the natural radioactive family of uranium-238, which ultimately ends in the stability of lead-206.",
+              "On Earth, radium is rare (about 1 part per 10¹² of uranium), present only as traces in uranium ores, especially pitchblende. At the end of the 19th century, the Curies processed several tons of ore to isolate a few milligrams of radium in a titanic effort. Today it is obtained by extracting uranium residues or by artificial production in nuclear reactors. Its most stable isotope, ^226Ra, has a half-life of 1,600 years.",
+              "Radium was first celebrated as a scientific wonder. Its spontaneous luminescence led to its use in phosphorescent paints for watches and military instruments in the early 20th century. It was also used in early radiotherapy treatments before being replaced by cobalt-60 and other, safer isotopes. Today radium no longer has common industrial uses: its extreme radioactivity and toxicity forced its abandonment. Nevertheless, it remains a reference element in radiophysics, and its historical study laid the foundations of modern nuclear medicine and dosimetry.",
+              "Radium compounds are analogous to those of barium: radium chloride (RaCl₂), bromide (RaBr₂), carbonate (RaCO₃), and sulfate (RaSO₄). All are highly radioactive and luminescent because of the metal’s decay. Radium spontaneously emits radon (^222Rn), a radioactive noble gas that accumulates in rocks and basements and is a natural source of exposure for humans.",
+              "Radium is a metal with a double face: it illuminated science as much as it burned those who approached it. Discovered by the Curies through superhuman efforts, it offered the world tangible proof of the power contained within matter. But it also reminded us of the cost of knowledge when fascination with its glow led to health disasters. Even today, radium embodies the dawn of radioactivity—the moment when human curiosity brought the energy of the stars to light."
+            ],
             "sources": []
           }
         },
