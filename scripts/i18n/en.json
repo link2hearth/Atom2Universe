@@ -1030,7 +1030,8 @@
         "noCredits": "No Mach3 credit available."
       },
       "fusion": {
-        "prompt": "Select a recipe to attempt your first fusion."
+        "prompt": "Select a recipe to attempt your first fusion.",
+        "bonusLabel": "Molecular fusions"
       },
       "table": {
         "placeholder": "The periodic table will be available soon.",
@@ -1227,6 +1228,9 @@
         "toastSuccess": "Fusion succeeded!",
         "logFailure": "{name} fusion failed. Ingredients were consumed.",
         "toastFailure": "Fusion failed."
+      },
+      "productionSteps": {
+        "fusionFlat": "Molecular fusions"
       },
       "results": {
         "unavailable": "Synthesis unavailable for now.",

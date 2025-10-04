@@ -736,7 +736,12 @@ function defineProductionStep(id, type, label, extra = {}) {
 defineProductionStep('baseFlat', 'base', 'Base flat', { source: 'baseFlat' });
 defineProductionStep('shopFlat', 'flat', 'Magasin', { source: 'shopFlat' });
 defineProductionStep('elementFlat', 'flat', 'Éléments', { source: 'elementFlat' });
-defineProductionStep('fusionFlat', 'flat', 'Fusions', { source: 'fusionFlat' });
+defineProductionStep(
+  'fusionFlat',
+  'flat',
+  translateWithFallback('scripts.gacha.productionSteps.fusionFlat', 'Fusions'),
+  { source: 'fusionFlat' }
+);
 defineProductionStep('shopBonus1', 'multiplier', 'Bonus shop 1', { source: 'shopBonus1' });
 defineProductionStep('shopBonus2', 'multiplier', 'Bonus shop 2', { source: 'shopBonus2' });
 defineProductionStep('frenzy', 'multiplier', 'Frénésie', { source: 'frenzy' });
