@@ -2140,21 +2140,37 @@
             "sources": []
           }
         },
+
         "element-033-arsenic": {
           "symbol": "As",
           "name": "Arsenic",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Symbol 'As', a silvery metalloid, arsenic straddles legendary poison lore and advanced technology.",
+            "paragraphs": [
+              "Overview — Symbol 'As', atomic number 33, arsenic is a brittle, metallic-looking metalloid whose allotropes can also appear yellow or black. Feared since antiquity as a perfect, undetectable poison, it nonetheless proves to be a complex element used in metallurgy, electronics and even medicine, standing on the shifting border between toxic and therapeutic.",
+              "Cosmic origins — Arsenic forms through slow neutron capture in the s-process within stars, then is dispersed by stellar winds and supernovae. Found in trace amounts in meteorites, it records the diversity of metalloids forged across stellar generations, explaining its low cosmic abundance yet widespread distribution in many environments.",
+              "Terrestrial origin — On Earth, arsenic is mostly bound in sulfur-rich minerals such as realgar (As₄S₄), orpiment (As₂S₃) or arsenopyrite (FeAsS). It commonly accompanies copper, silver, lead or gold, and its affinity for sulfur and heavy metals makes it pervasive in mining districts, where it can contaminate soils and waters while rarely appearing alone.",
+              "Uses — Long an instrument of power and fear, arsenic was a legendary poison in royal intrigues yet also a medicine in minuscule doses against diseases such as syphilis. Today its compounds serve high technology above all: gallium arsenide (GaAs) is a key semiconductor for LEDs, radar and high-frequency circuits, and arsenic still contributes to certain alloys, optical glasses and strictly regulated wood treatments.",
+              "Associated molecules — Arsenic chemistry spans oxides (As₂O₃), sulfides (As₂S₃, As₄S₄) and arsenides such as GaAs or InAs. Arsenic trioxide, infamous as a toxin, is also administered in controlled doses to treat specific leukemias, while arsenides underpin modern microelectronics—another illustration of the element’s dual nature.",
+              "Conclusion — A historic poison turned high-tech tool and even anti-cancer drug, arsenic was born in the stars and hidden in rocks. It embodies the fine line between danger and usefulness, reflecting chemistry in all its complexity and mirroring humanity’s capacity for both the worst and the best."
+            ],
             "sources": []
           }
         },
+
         "element-034-selenium": {
           "symbol": "Se",
           "name": "Selenium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Symbol 'Se', a photosensitive metalloid, selenium balances vital nutrient, toxicity and light-powered technology.",
+            "paragraphs": [
+              "Overview — Symbol 'Se', atomic number 34, selenium is a brittle, photosensitive metalloid that appears gray-silver or red depending on its form. Discovered in 1817 by Berzelius and named after Selene, the Greek moon goddess, it occupies a singular niche: rare and discreet, essential at trace levels yet toxic in excess, it plays a key role in photoelectricity and solar technology.",
+              "Cosmic origins — Selenium arises in massive stars and supernovae through slow neutron capture in the s-process alongside germanium and arsenic. As a 'second-generation' metalloid born from the deaths of earlier stars, it spreads with cosmic dust and occurs in meteorites with sulfur and tellurium, directly linking stellar chemistry to terrestrial chemistry.",
+              "Terrestrial origin — Earth’s crust holds only about 0.05 ppm of it. Selenium resides mainly in sulfide ores associated with copper, lead, silver or nickel, sometimes substituting for sulfur. It is recovered as a by-product of copper metallurgy. In the biosphere it becomes a vital trace element, incorporated into enzymes that shield cells from oxidative stress.",
+              "Uses — Selenium was one of the first photoconductive materials able to turn light into electricity, used in photoelectric cells and photocopiers. It colors or neutralizes glass, provides red pigments and serves as an agricultural additive to remedy soil deficiencies. In biology and medicine it is an essential micronutrient, forming part of antioxidant enzymes such as glutathione peroxidase.",
+              "Associated molecules — Its chemistry includes oxides (SeO₂, SeO₃), selenides (Na₂Se, ZnSe) and acids (H₂Se). Selenium dioxide is a valued oxidant in organic synthesis, zinc selenide appears in infrared lasers and thermal optics, and selenoproteins incorporate selenocysteine—often dubbed the 21st natural amino acid—highlighting its integration into life.",
+              "Conclusion — Lunar in both name and behavior, selenium moves between light and shadow. Born of stars, a cellular guardian and converter of photons, neither metal nor nonmetal, neither poison nor cure, it embodies the subtle chemistry where energy, matter and life intertwine."
+            ],
             "sources": []
           }
         },
