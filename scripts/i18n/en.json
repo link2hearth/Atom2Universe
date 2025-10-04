@@ -2320,8 +2320,15 @@
           "symbol": "Tc",
           "name": "Technetium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Symbol “Tc”, atomic number 43, technetium is a silvery gray, lustrous metal chemically close to manganese and rhenium.",
+            "paragraphs": [
+              "Its name comes from the Greek technetos, “artificial,” because it was the first element of the periodic table produced by humans before being found in nature. Completely radioactive, it has no stable isotopes, which explains its natural scarcity. Born in laboratories before being spotted in stars, it perfectly embodies the link between human research and cosmic chemistry.",
+              "Cosmic origins: Technetium is a fleeting product of stellar nucleosynthesis. It forms through neutron capture in red giant stars, where it can be observed directly in the light spectrum of some of them—a major discovery that confirmed that stars forge elements. It is also one of the few elements whose presence in stellar atmospheres proves that nucleosynthesis is underway. Its isotopes, notably ^99Tc, are also formed in supernovae and during the fission of uranium in terrestrial nuclear reactors.",
+              "Terrestrial origin: On Earth, technetium is extremely rare in its natural state because it decays quickly on geological timescales. Only minute traces exist in uranium ores, produced by the spontaneous fission of ^238U. Most of the technetium found on Earth comes from human production: it was first synthesized in 1937 by Emilio Segrè and Carlo Perrier from molybdenum bombarded with deuterons. Even today, it has no exploitable natural deposits.",
+              "Uses: Technetium has few industrial applications but enormous importance in nuclear medicine. The isotope technetium-99m (the “m” for metastable) is used in about 80% of scintigraphy exams. Its short half-life (6 hours) and moderate gamma emission make it an ideal tracer for medical imaging of the heart, bones, kidneys, and brain. In research, some of its compounds are used to study corrosion, surface chemistry, and the behavior of radioactive metals.",
+              "Associated molecules: Technetium compounds are mainly oxidized species: pertechnetate (TcO₄⁻) is the analogue of permanganate (MnO₄⁻), soluble and easy to identify. Technetium can adopt several oxidation states, from +4 to +7, which makes it chemically versatile. In medicine, it is often bound to specific organic molecules that target an organ or particular tissue, enabling highly selective imaging of the human body.",
+              "Conclusion: Technetium is a paradoxical metal—nonexistent in a stable form, yet very present in stars and at the heart of hospitals. The first “artificial” element discovered eventually proved that nature makes it too, revealing how stars manufacture the elements. At the crossroads of nuclear physics, medicine, and astronomy, technetium symbolizes human curiosity: an element that has been invented, observed, and understood."
+            ],
             "sources": []
           }
         },
@@ -2329,8 +2336,15 @@
           "symbol": "Ru",
           "name": "Ruthenium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Symbol “Ru”, atomic number 44, ruthenium is a silvery white metal that is hard, dense, and resistant to corrosion.",
+            "paragraphs": [
+              "Discovered in 1844 by Russian chemist Karl Ernst Claus, it was named ruthenium in honor of Ruthenia, the former Latin name of Russia. A member of the platinum group, it shares with its cousins (rhodium, palladium, osmium, iridium, and platinum) a rare chemical nobility and remarkable stability, even in the most aggressive environments.",
+              "Cosmic origins: Ruthenium forms in massive stars during the slow and rapid neutron capture processes (s- and r-processes), as well as during neutron star collisions. It is a “post-supernova” metal, a product of the final stages of stellar life. The isotopes of ruthenium present on Earth are all of ancient cosmic origin, and it appears in trace amounts in certain iron meteorites, often alongside osmium and iridium. Its scarcity thus stems directly from the randomness of stellar explosions.",
+              "Terrestrial origin: On Earth, ruthenium is extremely rare—about 0.001 ppm in the crust. It is always associated with other platinum-group metals in platinum, nickel, and copper ores. The richest deposits lie in South Africa, Russia, and Canada. It is extracted as a by-product of refining platinum or nickel, often in tiny quantities but sufficient for its specialized uses.",
+              "Uses: Ruthenium is an exceptional metal used wherever precision and stability are essential. In metallurgy, a few percent added to platinum or palladium increase their hardness and wear resistance, notably in electrical contacts and measuring instruments. In catalysis, it speeds up key chemical reactions such as hydrogenation and ammonia synthesis while remaining more affordable than platinum. In electronics, it is used to manufacture resistive memories (ReRAM) and ultra-thin conductive coatings. In fine chemistry, its organometallic complexes (notably those in the Grubbs catalyst, Nobel Prize in Chemistry 2005) have revolutionized the synthesis of complex molecules.",
+              "Associated molecules: Ruthenium oxides (RuO₂, RuO₄) are among its most important compounds. Ruthenium dioxide (RuO₂) is an excellent conductor used in resistors and electrodes. Ruthenium tetroxide (RuO₄), highly oxidizing, is used in electron microscopy to stain and stabilize biological tissues. In catalysis, ruthenium-carbon or ruthenium-phosphine complexes enable highly precise chemical transformations, opening the door to green chemistry and modern pharmaceutical syntheses.",
+              "Conclusion: Ruthenium is an elite metal—rare, refined, and profoundly useful. Born from stellar explosions, isolated from the most precious metals on Earth, it shines in domains where materials must be stable, precise, and durable. Invisible to the general public yet ubiquitous in cutting-edge science and industry, it symbolizes the union between cosmic nobility and human rigor. Ruthenium combines the solidity of platinum with the finesse of modern engineering in a single element."
+            ],
             "sources": []
           }
         },
