@@ -3260,8 +3260,14 @@
           "symbol": "No",
           "name": "Nobelium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "An artificial transuranic actinide honoring Alfred Nobel, nobelium exists only as highly radioactive atoms created in laboratories.",
+            "paragraphs": [
+              "Overview — Nobelium (symbol No, atomic number 102) is an artificial transuranic actinide officially recognized in 1966 and named after Alfred Nobel; all known isotopes are unstable with half-lives ranging from milliseconds to a few hours.",
+              "Origins — Nobelium has no natural occurrence: it is produced in laboratories through fusion reactions (bombarding heavy targets with light ions) or by irradiation in very high-flux reactors, yielding only vanishing amounts of matter—mere atoms or nanograms.",
+              "Properties and uses — Nobelium has no industrial or technological applications; its limited production and intense radioactivity confine it to research, where experiments focus on measuring nuclear properties and a handful of chemical behaviors at extremely small scales.",
+              "Chemistry and associated compounds — The scarce chemical studies point to behavior similar to other heavy actinides with a dominant +3 oxidation state in solution; only simple compounds such as halides or oxides have been investigated experimentally, without any usable quantities.",
+              "Conclusion — Nobelium remains a laboratory element, another milestone in exploring actinides and nuclear structure: a historical nod to Alfred Nobel whose value today is purely scientific within specialized facilities."
+            ],
             "sources": []
           }
         },
@@ -3269,8 +3275,14 @@
           "symbol": "Lr",
           "name": "Lawrencium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "The last actinide, lawrencium is an artificial transuranic element named for Ernest O. Lawrence and produced only in infinitesimal amounts.",
+            "paragraphs": [
+              "Overview — Lawrencium (symbol Lr, atomic number 103) is a radioactive artificial transuranic element and the final official member of the actinide series; in metallic form it would appear silvery, yet it is observed only atom by atom or at nanoscopic scales in laboratories.",
+              "Origins — First synthesized in the early 1960s at Berkeley and named in honor of cyclotron inventor Ernest O. Lawrence, lawrencium does not exist naturally; it is created by fusing light ions with heavy targets in accelerators or by intense irradiation of actinides in specialized reactors, yielding just a few atoms to a few nanograms.",
+              "Uses — Lawrencium has no industrial role and serves purely as a research tool to probe the chemistry and physics of superheavy elements, test theoretical predictions on electronic structure and relativistic effects, and refine detection and analysis methods in nuclear science.",
+              "Chemistry and associated compounds — Its chemistry remains largely unexplored because of extreme scarcity and short-lived isotopes; nonetheless, it is expected to favor a +3 oxidation state in solution like most actinides, while relativistic effects on its outer electrons make it fundamentally intriguing.",
+              "Conclusion — As a symbolic milestone of the periodic table dedicated to an accelerator pioneer, lawrencium marks the boundary between classical chemistry and the study of nuclei and electrons under extreme conditions, with each synthesized atom revealing a little more about matter."
+            ],
             "sources": []
           }
         },
