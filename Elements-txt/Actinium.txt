@@ -1,0 +1,14 @@
+Présentation
+L’actinium, symbole Ac, numéro atomique 89, est un métal actinide radioactif d’aspect argenté à gris. Découvert par André-Louis Debierne à la toute fin du XIXᵉ siècle (1899–1900), il est présent en très faibles quantités dans la croûte terrestre et porte la particularité d’être l’un des premiers éléments radioactifs identifiés après l’uranium et le thorium.
+
+Origine (cosmique & terrestre)
+Cosmiquement, l’actinium se forme, comme les autres éléments lourds, par des processus de capture de neutrons en milieu stellaire (processus r) et s’est incorporé au matériau du Système solaire primitif. Terrestrement, il se retrouve principalement en traces dans les minerais d’uranium et de thorium : il apparaît comme produit de désintégration dans certaines chaînes radioactives et peut être isolé en très faibles quantités lors du traitement des minerais. Les concentrations naturelles sont extrêmement faibles (trace dans les minerais radioactifs).
+
+Usages
+Les usages de l’actinium sont limités et contrôlés. L’isotope ^225Ac (demi-vie ~10 jours) suscite un intérêt médical croissant comme source d’alpha-thérapie ciblée contre certains cancers (thérapies à base d’émetteurs alpha). D’autres isotopes (par ex. ^227Ac, demi-vie ≈ 21,8 ans) ont été utilisés comme sources radioactives en recherche et, historiquement, pour générer des neutrons en association avec du beryllium. En dehors de ces applications spécialisées, l’actinium n’a pas d’usage industriel courant du fait de sa rareté et de sa radioactivité.
+
+Chimie et composés associés
+Chimiquement, l’actinium se comporte essentiellement comme un ion Ac³⁺ en solution, analogue aux lanthanides trivalents. Les composés courants étudiés en laboratoire incluent Ac₂O₃, AcCl₃, Ac(NO₃)₃, etc. Sa chimie aqueuse et ses complexes sont utiles pour comprendre la chimie des actinides trivalents et pour concevoir des méthodes de séparation et de confinement dans le traitement des déchets radioactifs. La manipulation exige des installations et protocoles radiologiques stricts.
+
+Conclusion
+Actinium est un actinide naturellement rare mais scientifiquement important : témoin des processus stellaires, trace dans les minerais terrestres et aujourd’hui surtout intéressant pour la recherche et des applications médicales très ciblées. Sa radioactivité et sa rareté imposent des précautions rigoureuses et limitent son emploi à des usages hautement spécialisés.

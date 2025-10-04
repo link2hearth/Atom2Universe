@@ -1,0 +1,14 @@
+Présentation
+Le lawrencium, symbole Lr, numéro atomique 103, est un élément transuranien radioactif et artificiel. C’est le dernier élément officiellement rangé dans la série des actinides. À l’état métallique (préparé en traces), il serait argenté, mais on ne le rencontre qu’à l’échelle atomique ou nanoscopique en laboratoire.
+
+Origine
+Il a été synthétisé pour la première fois au début des années 1960 (travaux à Berkeley) et baptisé en hommage à Ernest O. Lawrence, inventeur du cyclotron. Le lawrencium n’existe pas naturellement ; il est produit par fusion de noyaux légers sur des cibles lourdes dans des accélérateurs ou par irradiation intense d’actinides dans des réacteurs spécialisés. Les quantités fabriquées sont infimes (quelques atomes à quelques nanogrammes).
+
+Usages
+Aucun usage industriel ou pratique : le lawrencium est strictement un outil de recherche. Il sert principalement à expérimenter la chimie et la physique des éléments superlourds, vérifier des prédictions théoriques (structure électronique, effets relativistes) et affiner les méthodes de détection et d’analyse en physique nucléaire.
+
+Chimie et composés associés
+La chimie du lawrencium est très peu explorée à cause de son extrême rareté et de la brièveté de ses isotopes. On s’attend classiquement à un état d’oxydation +3 en solution, analogue à la plupart des actinides, et des premières études expérimentales cherchent à confirmer ce comportement. Les effets relativistes sur les électrons externes rendent néanmoins sa chimie intéressante d’un point de vue fondamental.
+
+Conclusion
+Le lawrencium est une borne symbolique du tableau périodique : élément de laboratoire, nommément dédié à un pionnier des accélérateurs, il marque la frontière entre la chimie classique et l’étude des noyaux et électrons soumis à des effets extrêmes. Sa valeur est purement scientifique — chaque atome synthétisé éclaire un peu plus la nature de la matière.

@@ -1,0 +1,14 @@
+Présentation
+Le californium, symbole Cf, numéro atomique 98, est un actinide transuranien synthétique. Métal argenté quand il est préparé en quantité, il est fortement radioactif et n’existe que par production humaine en quantités extrêmement limitées. Plusieurs isotopes sont connus ; parmi eux ^252Cf est le plus utilisé industriellement, tandis que ^251Cf est l’isotope le plus stable connu (demi-vie ≈ 898 ans). 
+
+Origine (cosmique & terrestre)
+Cosmiquement, le californium résulte des mêmes processus de nucléosynthèse lourde (processus r) que les autres éléments lourds, mais il ne subsiste pas naturellement à cause de la brièveté de la plupart de ses isotopes. Terrestrement, il est entièrement produit par irradiation neutronique prolongée d’actinides (curium, berkelium, etc.) dans des réacteurs à haut flux ou synthétisé en accélérateurs ; il a été d’abord créé à Berkeley en 1950. La production commerciale reste très limitée et concentrée (ex. Oak Ridge, USA et RIAR, Russie). 
+
+Usages
+La propriété la plus exploitée est l’émission de neutrons de ^252Cf (fort flux neutronique par microgramme). Cela rend cet isotope précieux comme source neutronique portable pour la radiographie neutronique, l’activation neutronique (analyse élémentaire), la détection de minerais/hydrocarbures, le démarrage de réacteurs et quelques applications médicales spécialisées. La production restreinte et le coût élevé limitent cependant son usage à des applications où aucune alternative pratique n’existe. 
+
+Chimie et composés associés
+Chimiquement, le californium se montre comparable aux autres actinides lourds : il adopte préférentiellement l’état +3 en solution et forme des oxydes (Cf₂O₃), halogénures et nitrates en laboratoire. Sa chimie est surtout étudiée à l’échelle microscopique pour comprendre le comportement des actinides et optimiser leur séparation/réci­clage ; les manipulations exigent des installations radiologiques spécialisées. 
+
+Conclusion
+Le californium est un matériau de niche à très haute valeur scientifique et technologique : produit en quantités minimes, il sert de source neutronique indispensable dans plusieurs domaines industriels et scientifiques. Son coût, sa radioactivité et la rareté de production en font un élément stratégique et strictement réglementé. 

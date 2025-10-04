@@ -1,0 +1,14 @@
+Présentation
+L’einsteinium, symbole Es, numéro atomique 99, est un métal actinide radioactif, argenté, produit artificiellement en très petites quantités. Découvert en 1952 dans les retombées de la première explosion thermonucléaire américaine (Ivy Mike), il fut identifié pour la première fois dans les débris de la bombe à hydrogène. L’isotope le plus stable connu est ^252Es, dont la demi-vie est d’environ 471 jours.
+
+Origine
+L’einsteinium n’existe pas naturellement sur Terre : il est entièrement synthétique. Il se forme dans les explosions nucléaires ou dans des réacteurs à très haut flux neutronique, par irradiation de curium ou de plutonium suivie de plusieurs captures neutroniques et désintégrations bêta. Sa découverte fut tenue secrète pendant plusieurs années en raison de son origine militaire.
+
+Usages
+Les applications de l’einsteinium sont essentiellement scientifiques. Sa radioactivité intense et sa production minuscule (quelques microgrammes au maximum) le réservent à la recherche sur les actinides lourds et la synthèse d’éléments superlourds : l’einsteinium a notamment servi à produire le mendelevium (Md, 101). En dehors de ces contextes de recherche nucléaire fondamentale, il n’a aucun usage industriel.
+
+Chimie et composés associés
+L’einsteinium adopte principalement l’état d’oxydation +3 en solution, formant des oxydes (Es₂O₃), halogénures et complexes similaires à ceux de ses voisins curium et californium. En raison de sa forte émission alpha, il s’échauffe spontanément à température ambiante, ce qui complique sa manipulation : même quelques microgrammes doivent être manipulés dans des environnements radioprotégés et thermiquement contrôlés.
+
+Conclusion
+L’einsteinium est un symbole de la science nucléaire du XXᵉ siècle : né dans le feu d’une explosion thermonucléaire, nommé en hommage à Albert Einstein, et utilisé pour créer d’autres éléments au-delà du tableau périodique. Invisible au quotidien, il incarne la frontière entre la physique de l’atome et la création de nouvelles formes de matière.

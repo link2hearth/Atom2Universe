@@ -1,0 +1,17 @@
+Présentation
+Symbole “Ba”, numéro atomique 56, le baryum est un métal argenté, tendre et très réactif. Exposé à l’air, il s’oxyde immédiatement et doit être conservé sous huile. Il fond à 727 °C et forme facilement des composés ioniques. Découvert en 1808 par Sir Humphry Davy, qui l’isola par électrolyse, il doit son nom au grec barys, “lourd”, en raison de la densité inhabituelle de ses composés minéraux. Le baryum ne se trouve jamais à l’état pur dans la nature, car il réagit violemment avec l’eau et l’oxygène.
+
+Origines cosmiques
+Le baryum se forme dans les étoiles géantes rouges par le processus lent de capture de neutrons (s-process), où il résulte de la transformation de noyaux de césium et de rubidium. On le retrouve également, en moindre quantité, dans les produits du processus rapide (r-process) lors des supernovae et des collisions d’étoiles à neutrons. Sa présence dans certaines étoiles anciennes permet d’étudier les cycles d’enrichissement chimique de la galaxie.
+
+Origine terrestre
+Sur Terre, le baryum est modérément abondant (environ 425 ppm dans la croûte). Il se trouve principalement sous forme de barite (BaSO₄), un sulfate blanc très dense, et de witherite (BaCO₃), un carbonate plus rare. Ces minéraux sont exploités dans de nombreux pays, notamment en Chine, en Inde et aux États-Unis. L’ion baryum (Ba²⁺) est toxique, mais ses sels insolubles, comme le sulfate de baryum, sont chimiquement inertes et sans danger.
+
+Usages
+Le baryum a de nombreuses applications industrielles et scientifiques. Son sulfate (BaSO₄), opaque aux rayons X, est utilisé en imagerie médicale : la “pape barytée” permet de visualiser le tube digestif sans risque, car ce composé est insoluble et non absorbé par l’organisme. Le baryum entre aussi dans la fabrication de verres optiques à haut indice de réfraction, de céramiques, et de peintures. En pyrotechnie, ses sels (notamment le nitrate de baryum, Ba(NO₃)₂) produisent les flammes vertes caractéristiques des feux d’artifice. Il est également utilisé comme additif dans les forages pétroliers, où la barite sert à alourdir les boues de forage.
+
+Molécules associées
+Les composés du baryum sont dominés par le sulfate (BaSO₄), le carbonate (BaCO₃), le nitrate (Ba(NO₃)₂) et le chlorure (BaCl₂). Le péroxyde de baryum (BaO₂) est un oxydant puissant autrefois utilisé dans la production d’oxygène pur. Certains composés, comme les titanates de baryum (BaTiO₃), possèdent des propriétés piézoélectriques et diélectriques, essentielles dans les condensateurs, capteurs et composants électroniques.
+
+Conclusion
+Le baryum est un métal de contraste — au sens propre comme au figuré. D’un côté, sa chimie vive et ses sels toxiques rappellent la prudence ; de l’autre, son sulfate inerte sauve des vies en radiologie. Né des étoiles, dense et réactif, il s’est imposé comme un outil de lumière et d’image, aussi présent dans les feux d’artifice que dans les diagnostics médicaux. Élément lourd au service de la clarté, le baryum relie la chimie du feu à celle de la vie.

@@ -1,0 +1,14 @@
+Présentation
+L’américium, symbole Am, numéro atomique 95, est un actinide synthétique de couleur argentée lorsqu’il est réduit en métal. C’est un élément radioactif dont les isotopes usuels incluent ^241Am (demi-vie ≈ 432 ans) et ^243Am (demi-vie ≈ 7 370 ans). Il est surtout connu comme produit artificiel issu des réacteurs nucléaires plutôt que comme constituant naturel significatif.
+
+Origine
+Découvert en 1944 dans le cadre des travaux menés par Glenn Seaborg et son équipe, l’américium a été nommé en référence au continent américain. Il se forme principalement par irradiation neutronique de plutonium et d’autres actinides dans les réacteurs : des captures neutroniques et des désintégrations successives transforment des isotopes de plutonium en isotopes d’américium. Des traces très faibles peuvent apparaître dans certains dépôts radioactifs, mais sa production industrielle reste d’origine humaine.
+
+Usages
+Malgré sa radioactivité, l’américium a des usages concrets et contrôlés. Le plus répandu est ^241Am dans les détecteurs de fumée ioniques (capteurs de ionisation) — il fournit une source d’ions permettant la détection de particules de combustion. On utilise aussi ^241Am–Be comme source de neutrons pour la calibration d’instruments, la prospection industrielle et des applications de géophysique. En recherche, certains isotopes servent d’objets d’étude en chimie des actinides et en physique nucléaire. Sa manipulation exige toutefois des conditions strictes de radioprotection.
+
+Chimie et composés associés
+L’américium présente principalement l’état d’oxydation +3 en solution, formant des composés tels que Am₂O₃, AmO₂ (oxydes), des nitrates et des halogénures. Sa chimie voisine de celle des lanthanides et des autres actinides trivalents en fait un sujet d’intérêt pour comprendre la séparation chimique des actinides et la gestion des déchets. Des complexes organométalliques ont été étudiés en laboratoire, mais ils n’ont pas d’applications industrielles courantes.
+
+Conclusion
+L’américium est un actinide typiquement anthropique : utile dans des applications ciblées (détecteurs de fumée, sources neutroniques, recherche) mais exigeant une gestion prudente à cause de sa radioactivité et de sa toxicité potentielle par inhalation/ingestion. Sa place pratique est donc celle d’un matériau spécialisé et réglementé, essentiel dans certains instruments mais soigneusement confiné.

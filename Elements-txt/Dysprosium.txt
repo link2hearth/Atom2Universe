@@ -1,0 +1,17 @@
+Présentation
+Symbole Dy, numéro atomique 66, le dysprosium est un métal argenté, souple, et étonnamment dense pour un lanthanide. Découvert en 1886 par le chimiste français Paul-Émile Lecoq de Boisbaudran, il a fallu attendre le XXᵉ siècle pour l’isoler pur, tant sa séparation des autres terres rares était complexe. Son nom, tiré du grec dusprositos — “difficile à obtenir” — est à la fois une boutade et un hommage à la ténacité des chimistes. Et aujourd’hui encore, ce métal “introuvable” s’est rendu indispensable dans plusieurs technologies modernes.
+
+Origines cosmiques
+Le dysprosium est un produit du processus r, c’est-à-dire de la capture rapide de neutrons lors des supernovae ou des fusions d’étoiles à neutrons. Ces événements cataclysmiques produisent les éléments les plus lourds du tableau périodique, parmi lesquels les lanthanides. Le dysprosium est ainsi né des mêmes forges stellaires que l’or ou le platine, et les traces qu’on en trouve dans les météorites attestent de son ancienneté cosmique.
+
+Origine terrestre
+Sur Terre, le dysprosium se trouve dans les minerais de monazite et de bastnäsite, mais aussi dans la xénotime. Il représente environ 5 parties par million de la croûte terrestre. Ce n’est donc pas un élément rarissime, mais son extraction est ardue, car il est chimiquement presque indiscernable de ses voisins terbium et holmium. Les méthodes modernes d’échange d’ions et d’extraction par solvant ont enfin permis d’obtenir du dysprosium de haute pureté, essentiel aux industries de pointe.
+
+Usages
+Le dysprosium est avant tout un métal du magnétisme. Il est utilisé pour renforcer les aimants permanents à base de néodyme-fer-bore (NdFeB), car il améliore leur résistance à la chaleur sans altérer leur puissance — indispensable pour les moteurs d’éoliennes, voitures électriques et robots industriels. Ses alliages sont aussi employés dans les barres de contrôle des réacteurs nucléaires, car certains de ses isotopes, comme Dy-164, absorbent efficacement les neutrons. En optique, ses sels confèrent des teintes jaunes à certains verres, et en électronique, on le retrouve dans des dispositifs optoélectriques et infrarouges.
+
+Molécules et propriétés associées
+Le dysprosium adopte principalement l’état d’oxydation +3, formant des sels et oxydes typiques des lanthanides. L’oxyde de dysprosium (Dy₂O₃) est utilisé dans les céramiques et les verres spéciaux. Métalliquement, le dysprosium est paramagnétique à température ambiante, mais devient antiferromagnétique ou ferromagnétique selon la température et la structure du cristal. Il possède également un moment magnétique exceptionnellement élevé — l’un des plus forts de tous les éléments — ce qui explique son rôle central dans les aimants puissants et stables.
+
+Conclusion
+Longtemps “difficile à obtenir”, le dysprosium est aujourd’hui un métal clé de la transition énergétique et des technologies vertes. Né des explosions d’étoiles, caché dans les roches, il relie la physique nucléaire aux énergies renouvelables. Fidèle à son nom, il a résisté à la découverte, mais pas à l’utilité : c’est un élément d’exception, à la fois rare, fort et indispensable.

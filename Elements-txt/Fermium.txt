@@ -1,0 +1,14 @@
+Présentation
+Le fermium, symbole Fm, numéro atomique 100, est un métal actinide radioactif découvert en 1952, en même temps que l’einsteinium, dans les retombées de l’explosion thermonucléaire Ivy Mike. Il a été nommé en hommage au physicien Enrico Fermi, pionnier de la physique nucléaire et de la première réaction en chaîne contrôlée. L’isotope le plus stable connu est ^257Fm, dont la demi-vie atteint environ 100 jours.
+
+Origine
+Le fermium n’existe pas à l’état naturel. Il est produit artificiellement lors d’explosions nucléaires ou par irradiation prolongée de curium ou de plutonium dans des réacteurs à haut flux neutronique. Les isotopes plus légers du fermium se forment par captures successives de neutrons et désintégrations bêta à partir d’éléments plus légers de la série des actinides.
+
+Usages
+Comme son voisin l’einsteinium, le fermium n’a pas d’usage industriel ou médical. Ses quantités produites sont infimes, et il sert presque exclusivement à la recherche fondamentale. Il a joué un rôle clé dans l’étude des actinides lourds et dans les expériences de synthèse des éléments trans-fémiques (au-delà du numéro atomique 100). Sa production annuelle mondiale se limite à quelques atomes ou nanogrammes.
+
+Chimie et composés associés
+Le fermium est principalement connu sous l’état d’oxydation +3, formant des composés comme Fm₂O₃ ou FmCl₃. Sa chimie, très proche de celle de l’einsteinium, est étudiée pour comprendre la transition entre les actinides “classiques” et les éléments encore plus lourds. Sa radioactivité très intense rend toute manipulation délicate : même une quantité minime s’échauffe par désintégration alpha.
+
+Conclusion
+Le fermium est un élément purement scientifique : né dans les conditions extrêmes d’une explosion thermonucléaire, il porte le nom d’un chercheur qui a ouvert la voie à la physique moderne du noyau. Invisible au monde ordinaire, il représente la curiosité humaine poussée jusqu’à la création d’atomes impossibles à trouver dans la nature.

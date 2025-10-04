@@ -1,0 +1,17 @@
+Présentation
+Symbole Er, numéro atomique 68, le erbium est un métal argenté, malléable et plutôt stable à l’air — un lanthanide typique par son comportement, mais unique par ses applications optiques. Découvert en 1843 par le chimiste suédois Carl Gustaf Mosander, il tire son nom, comme plusieurs de ses cousins, du village suédois d’Ytterby, véritable berceau des terres rares. C’est l’un des rares éléments à avoir une couleur caractéristique : ses sels sont roses, ce qui en a fait un matériau apprécié autant en science qu’en esthétique.
+
+Origines cosmiques
+L’erbium, comme les autres lanthanides, est né du processus r — la capture rapide de neutrons dans les supernovae et les fusions d’étoiles à neutrons. Ces réactions nucléaires extrêmes ont forgé les atomes lourds bien avant la naissance du système solaire. L’erbium présent sur Terre provient de ces événements anciens, incorporé dans les nuages de poussières interstellaires qui ont formé notre planète. C’est littéralement un fragment d’étoile recyclé.
+
+Origine terrestre
+Sur Terre, l’erbium est toujours associé aux autres terres rares dans des minerais comme la monazite, la xénotime ou la gadolinite. Il n’existe pas sous forme native, mais il est extrait et purifié grâce à des techniques de séparation ionique. Sa concentration moyenne dans la croûte terrestre est d’environ 2,8 parties par million, ce qui le rend modérément abondant parmi les lanthanides. Son isotope stable principal est Er-166, accompagné de plusieurs isotopes naturels non radioactifs.
+
+Usages
+L’erbium est l’un des lanthanides les plus utilisés en optique et en télécommunications. Son ion Er³⁺ émet une lumière rose à violet pâle et surtout une émission infrarouge à 1,55 micromètre, la longueur d’onde utilisée dans les fibres optiques. Les amplificateurs à fibre dopée à l’erbium (EDFA) sont essentiels aux réseaux Internet à haut débit : c’est grâce à eux que les signaux lumineux peuvent voyager sur des milliers de kilomètres sans perte. En médecine, les lasers à erbium (Er:YAG) sont employés pour la dermatologie, la chirurgie dentaire et l’ophtalmologie, car leur faisceau est absorbé efficacement par l’eau et permet une coupe précise et peu invasive. On l’utilise aussi pour teinter le verre et le cristal d’une teinte rosée décorative.
+
+Molécules et propriétés associées
+L’erbium se présente principalement à l’état trivalent (Er³⁺) dans ses composés. Son oxyde, Er₂O₃, est une poudre rose pâle utilisée dans les verres et céramiques optiques. Métalliquement, l’erbium est paramagnétique à température ambiante, et antiferromagnétique à basse température. Ses ions présentent des transitions électroniques fines qui expliquent leurs propriétés luminescentes uniques — c’est ce qui le rend si précieux dans les dispositifs laser et les fibres amplificatrices.
+
+Conclusion
+Né du cœur des étoiles, baptisé d’un village scandinave et aujourd’hui pilier de l’Internet mondial, l’erbium incarne la beauté utile : un métal rose, à la fois délicat et technologique. Il relie la lumière cosmique à la lumière de l’information, et prouve que même les éléments discrets peuvent illuminer la planète entière — parfois, littéralement, à la vitesse de la lumière.

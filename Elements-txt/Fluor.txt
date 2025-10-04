@@ -1,0 +1,17 @@
+Présentation
+Symbole “F”, numéro atomique 9, le fluor est un halogène, le plus électronégatif de tous les éléments connus. Sous sa forme élémentaire, c’est un gaz jaune-verdâtre, hautement toxique et corrosif. Mais dans ses composés, il devient familier : on le retrouve dans le fluorure des pâtes à dents, dans les réfrigérants, et dans des matériaux ultrarésistants comme le téflon. Extrêmement réactif, le fluor est l’un des chimistes les plus agressifs du tableau périodique.
+
+Origines cosmiques
+Le fluor est relativement rare dans l’univers. Sa formation résulte de processus stellaires particuliers, notamment dans les étoiles géantes rouges et lors de certaines étapes des supernovae. Il peut aussi se former dans les étoiles de type Wolf-Rayet (très massives et chaudes), où des réactions nucléaires complexes génèrent de petites quantités de fluor. Ces étoiles, en dispersant leur matière en fin de vie, ont semé cet élément dans les nuages interstellaires, permettant sa présence sur Terre, bien que toujours en proportions modestes.
+
+Origine terrestre
+Sur Terre, le fluor n’existe pratiquement jamais sous sa forme élémentaire (F₂), trop réactive. On le trouve surtout dans des minéraux comme la fluorine (CaF₂) ou la cryolite (Na₃AlF₆). Ces minéraux constituent les principales sources industrielles du fluor et de ses dérivés. Dans l’environnement naturel, on le retrouve aussi en faibles concentrations dissoutes dans l’eau, où il peut contribuer à la santé dentaire… ou poser problème s’il est présent en excès.
+
+Usages
+Le fluor a une gamme d’usages impressionnante, grâce à sa chimie très particulière. Sous forme de fluorure de sodium (NaF), il est utilisé en petites quantités dans les dentifrices et parfois dans l’eau potable, pour renforcer l’émail dentaire. Dans l’industrie, les fluorures servent dans la métallurgie de l’aluminium. Ses composés organofluorés sont devenus incontournables : le téflon (PTFE) est célèbre pour ses propriétés antiadhésives, les gaz réfrigérants fluorés ont longtemps dominé la réfrigération (avant d’être restreints pour des raisons environnementales), et certains médicaments intègrent des atomes de fluor pour en renforcer l’efficacité. Mais attention : son extrême réactivité et la toxicité de certains dérivés en font aussi un élément à manipuler avec précaution.
+
+Molécules associées
+Les fluorures inorganiques sont les plus courants : CaF₂ (fluorine), NaF (fluorure de sodium), HF (acide fluorhydrique, redoutable pour attaquer le verre et manipuler les métaux). Les composés organofluorés sont d’une importance croissante : polymères fluorés comme le téflon, gaz fluorocarbonés (CFC, HFC) utilisés en réfrigération, ou encore médicaments fluorés qui exploitent la stabilité de la liaison carbone-fluor. Dans la nature, on trouve aussi des traces de fluorure dans l’eau et dans certains tissus biologiques.
+
+Conclusion
+Le fluor est un paradoxe chimique : à l’état pur, un gaz toxique et dangereux, mais dans ses composés, un allié du quotidien, de la cuisine à la dentisterie en passant par la haute technologie. Forcé par sa réactivité à rester toujours accompagné, il illustre la puissance des extrêmes : minuscule par sa présence, immense par son impact.

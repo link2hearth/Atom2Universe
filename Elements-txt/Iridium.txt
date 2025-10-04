@@ -1,0 +1,18 @@
+Présentation
+Symbole “Ir”, numéro atomique 77, l’iridium est un métal blanc argenté, très dense (22,56 g/cm³), dur, cassant à froid mais ductile à chaud, et exceptionnellement résistant à la corrosion. Découvert en 1803 par Smithson Tennant, en même temps que l’osmium, il doit son nom au latin iris, “arc-en-ciel”, car ses sels produisent une grande variété de couleurs vives. C’est l’un des métaux les plus nobles connus : il résiste à presque tous les acides et à l’oxydation, même à haute température.
+
+Origines cosmiques
+L’iridium se forme dans les supernovae et les collisions d’étoiles à neutrons, au cours du processus rapide de capture de neutrons (r-process), aux côtés du platine et de l’or. Il appartient au groupe des éléments lourds dits “du platine”, forgés dans les ultimes instants de la vie des étoiles massives. Il a aussi une importance historique majeure : la présence d’une couche mondiale enrichie en iridium, datée de 66 millions d’années, marque l’impact de la météorite du Chicxulub, responsable de l’extinction des dinosaures. Ce “pic d’iridium” est devenu un marqueur géologique global — une signature chimique du désastre.
+
+Origine terrestre
+Sur Terre, l’iridium est extrêmement rare dans la croûte (0,001 ppm), mais plus abondant dans le manteau profond et dans les météorites ferreuses. Il est généralement récupéré comme sous-produit du raffinage du nickel et du platine, dans les gisements d’Afrique du Sud, de Russie et du Canada. L’iridium est aussi présent, en trace, dans les alliages naturels avec l’osmium (osmiridium), utilisés autrefois pour des pièces mécaniques de haute précision.
+
+Usages
+L’iridium est utilisé là où la stabilité absolue est requise. En métrologie, il formait autrefois, allié au platine, le mètre-étalon international conservé à Sèvres, choisi pour sa résistance à l’usure et à l’oxydation. Dans l’industrie, il est employé pour les contacts électriques, les creusets de croissance des cristaux, et les bougies d’allumage haut de gamme.
+Ses alliages avec le platine et le rhodium servent dans les thermocouples et les fours de laboratoire pouvant dépasser 2 000 °C. En catalyse, certains complexes d’iridium jouent un rôle clé dans la chimie fine et l’hydrogénation. Enfin, sa stabilité chimique le rend utile dans la fabrication de dispositifs médicaux implantables, résistants à la corrosion biologique.
+
+Molécules associées
+Les principaux composés de l’iridium sont les oxydes (IrO₂, conducteur et catalyseur remarquable) et les halogénures (IrCl₃, IrF₆). En chimie organométallique, le tris-acétylacétonate d’iridium (Ir(acac)₃) et les complexes phosphiniques d’iridium(I) sont des catalyseurs de choix pour les réactions d’hydrogénation et de couplage. Certains complexes luminescents d’iridium(III), comme les Ir(ppy)₃, sont utilisés dans les écrans OLED, où ils produisent des émissions lumineuses très efficaces.
+
+Conclusion
+L’iridium est un métal du temps long : né des étoiles, témoin des extinctions, et garant de la précision humaine. Il a survécu aux cataclysmes terrestres et cosmologiques, et continue d’être un étalon de stabilité dans les laboratoires modernes. À la fois relique des étoiles mortes et symbole de durabilité, l’iridium est la matière même de la mémoire géologique et scientifique — un métal immuable, témoin des extrêmes.

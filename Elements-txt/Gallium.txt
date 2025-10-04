@@ -1,0 +1,17 @@
+Présentation
+Symbole “Ga”, numéro atomique 31, le gallium est un métal argenté, tendre, capable de fondre dans la main — à seulement 29,8 °C. Il est solide à température ambiante, mais devient liquide au moindre réchauffement, et se solidifie à nouveau en formant de belles structures cristallines. Découvert en 1875 par le chimiste français Paul-Émile Lecoq de Boisbaudran, il tire son nom de Gallia, la Gaule, en hommage à la France. Rare et discret, il s’est imposé comme un métal clé de l’électronique et de l’optique moderne.
+
+Origines cosmiques
+Le gallium se forme dans les étoiles massives, notamment lors des supernovae et des processus de capture de neutrons dans les géantes rouges. Comme beaucoup d’éléments intermédiaires, il est un produit secondaire de la nucléosynthèse stellaire et témoigne du brassage des générations d’étoiles. On le retrouve en faibles quantités dans les météorites et dans la croûte terrestre, preuve de son origine cosmique partagée avec les métaux de transition voisins.
+
+Origine terrestre
+Sur Terre, le gallium est rare : il ne forme pas de minerai propre mais se trouve en trace dans la bauxite, la sphalérite (minerai de zinc) et d’autres minéraux. Il est principalement récupéré comme sous-produit de l’extraction de l’aluminium et du zinc. Ses propriétés atypiques — notamment sa capacité à rester liquide sur une large plage de température — en font un matériau unique, à la croisée du métal et du fluide technologique.
+
+Usages
+Le gallium est devenu un métal stratégique. Son principal usage est dans les semi-conducteurs, notamment sous forme d’arséniure de gallium (GaAs) et de nitrure de gallium (GaN), matériaux essentiels pour les diodes laser, les LED, les panneaux solaires à haut rendement et les circuits micro-ondes. Il est utilisé dans les détecteurs infrarouges, les composants 5G et même dans les technologies spatiales. En laboratoire, il sert aussi de substitut non toxique au mercure pour certaines expériences. Le gallium est ainsi un métal du XXIᵉ siècle : discret mais indispensable à la lumière, à l’énergie et aux communications.
+
+Molécules associées
+Les composés du gallium sont dominés par ses oxydes (Ga₂O₃) et ses semi-conducteurs comme le GaAs et le GaN. Le nitrure de gallium est particulièrement remarquable : très stable thermiquement et électriquement, il est la base des LED blanches et bleues modernes. Le gallium trichlorure (GaCl₃) sert de catalyseur en chimie organique. En biologie, certains composés du gallium sont étudiés pour leurs propriétés antibactériennes, car ils imitent le fer et perturbent le métabolisme microbien.
+
+Conclusion
+Le gallium est un métal de paradoxe et d’avenir : solide mais fondant au toucher, rare mais indispensable, discret mais au cœur de la révolution technologique. Né dans les étoiles et extrait des poussières métalliques terrestres, il illumine aujourd’hui nos écrans, nos réseaux et nos villes. Élément fluide, flexible et lumineux, il incarne la transition entre la matière brute du passé et l’intelligence matérielle du futur.

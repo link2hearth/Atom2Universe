@@ -1,0 +1,17 @@
+Présentation
+Symbole “Cd”, numéro atomique 48, le cadmium est un métal blanc argenté, mou et ductile, chimiquement proche du zinc. Découvert en 1817 en Allemagne par Friedrich Stromeyer, il doit son nom au latin cadmia, qui désignait autrefois la calamine, un minerai de zinc dont il fut isolé. D’abord considéré comme une curiosité métallique, le cadmium devint un composant essentiel de pigments, d’alliages et surtout de batteries — avant d’être reconnu comme un polluant majeur.
+
+Origines cosmiques
+Le cadmium est né dans les étoiles, produit à la fois par le processus lent (s) dans les géantes rouges et par le processus rapide (r) lors des supernovae et des collisions d’étoiles à neutrons. Il fait partie des métaux lourds formés tardivement dans la nucléosynthèse stellaire. Sa présence dans les météorites témoigne d’une distribution ancienne et stable, commune à celle de l’argent et de l’indium.
+
+Origine terrestre
+Sur Terre, le cadmium est rare (environ 0,1 ppm dans la croûte), et il ne forme pas de minéraux propres : il est toujours présent comme impureté naturelle du zinc dans la sphalérite (ZnS), mais aussi dans les minerais de plomb et de cuivre. Il est extrait principalement comme sous-produit du raffinage du zinc. Cette origine “accidentelle” explique à la fois sa diffusion industrielle et son lien constant avec la métallurgie lourde.
+
+Usages
+Le cadmium a longtemps été un métal utile avant d’être considéré comme toxique. Il fut d’abord employé dans les pigments (jaune de cadmium, rouge de cadmium), appréciés pour leur intensité et leur stabilité à la lumière. Ensuite dans les alliages de brasage, dans les revêtements anticorrosion (plaquage des aciers), et surtout dans les batteries nickel-cadmium (Ni-Cd), très répandues au XXᵉ siècle avant leur interdiction progressive. En électronique et en nucléaire, il est encore utilisé pour sa capacité à absorber les neutrons, ce qui le rend précieux pour certains systèmes de contrôle dans les réacteurs. Aujourd’hui, la plupart de ses usages sont strictement réglementés, notamment en Europe, en raison de sa toxicité.
+
+Molécules associées
+Les principaux composés du cadmium incluent l’oxyde (CdO), le sulfure (CdS) et le tellurure (CdTe). Le sulfure de cadmium (CdS) est un pigment jaune vif encore utilisé dans certaines applications artistiques ou industrielles. Le tellurure de cadmium (CdTe) est, paradoxalement, un matériau d’avenir : il entre dans la fabrication de panneaux solaires à couches minces, où il convertit la lumière en électricité avec un excellent rendement. Le chlorure de cadmium (CdCl₂), lui, est un catalyseur en synthèse organique.
+
+Conclusion
+Le cadmium est un métal d’avertissement : symbole de la puissance et des excès de la chimie industrielle. Né des étoiles, utile dans les pigments et les batteries, il a aussi enseigné à l’humanité la nécessité de la précaution et du recyclage. Aujourd’hui, ses composés servent encore dans les technologies solaires et les laboratoires, mais sous une surveillance stricte. Métal brillant et lourd de sens, le cadmium illustre la fine frontière entre progrès et poison.

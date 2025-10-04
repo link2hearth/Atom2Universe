@@ -1,0 +1,18 @@
+Présentation
+Symbole “Bi”, numéro atomique 83, le bismuth est un métal blanc argenté à reflets rosés, dense (9,78 g/cm³), cassant et faiblement conducteur. Il fond à 271 °C et présente une dilatation inhabituelle en se solidifiant, comme l’eau. Connu depuis le Moyen Âge, il fut longtemps confondu avec l’étain et le plomb avant d’être reconnu comme élément distinct au XVIᵉ siècle par Georgius Agricola. Son nom vient probablement de l’allemand médiéval Wismut (de weiß Masse, “masse blanche”).
+
+Origines cosmiques
+Le bismuth est un élément terminal dans la nucléosynthèse stellaire. Il est produit par le processus lent de capture de neutrons (s-process) dans les étoiles géantes rouges, et constitue l’un des derniers éléments stables formés naturellement avant le début de la radioactivité spontanée. En effet, son isotope principal, ^209Bi, a longtemps été considéré comme parfaitement stable — on sait aujourd’hui qu’il est faiblement radioactif, avec une demi-vie supérieure à 10¹⁹ ans, soit plus d’un milliard de fois l’âge de l’univers.
+
+Origine terrestre
+Sur Terre, le bismuth est rare (environ 0,2 ppm dans la croûte), souvent présent dans les minerais de plomb, de cuivre et d’argent. On le trouve aussi sous forme de bismuthinite (Bi₂S₃) et de bismite (Bi₂O₃). La Chine est aujourd’hui le principal producteur mondial. Fait remarquable : malgré sa densité élevée et sa proximité chimique avec des métaux toxiques, le bismuth est biocompatible et non cumulatif dans l’organisme, ce qui en fait un substitut idéal pour des usages médicaux et technologiques sûrs.
+
+Usages
+Le bismuth est utilisé dans de nombreux domaines où sa non-toxicité le distingue. Il remplace avantageusement le plomb dans les alliages à bas point de fusion, les munitions non polluantes, les soudures électroniques et certains verres optiques. En médecine, le sous-salicylate de bismuth est un traitement courant contre les troubles gastriques, et d’autres sels de bismuth sont employés comme agents antibactériens.
+Grâce à sa dilatation lors de la solidification, il entre aussi dans les alliages fusibles utilisés pour les dispositifs de sécurité thermique (sprinklers, fusibles). En chimie, ses composés oxydés servent de catalyseurs et de pigments nacrés. Enfin, le bismuth cristallise souvent en structures géométriques colorées — des escaliers métalliques irisés qui ont fait sa renommée dans le monde artistique et pédagogique.
+
+Molécules associées
+Les composés les plus notables sont le sous-salicylate de bismuth, le trioxyde de bismuth (Bi₂O₃), et les subnitrates (BiONO₃), employés en pharmacie. Le pentachlorure de bismuth (BiCl₅) et le tribromure (BiBr₃) sont utilisés en chimie organique. En catalyse, les oxydes mixtes de bismuth jouent un rôle dans l’oxydation sélective et la photocatalyse. Sa chimie est proche de celle de l’antimoine, mais ses composés sont nettement plus stables et moins toxiques.
+
+Conclusion
+Le bismuth est le paradoxe heureux du tableau périodique : un métal lourd mais bienveillant, brillant mais inoffensif, stable jusqu’à défier le temps. Né dans les entrailles des étoiles, il incarne la version pacifique d’une famille d’éléments souvent toxiques. Entre la rigueur du laboratoire et la beauté de ses cristaux irisés, le bismuth rappelle que la chimie peut aussi produire de la grâce — un métal de lumière et de calme au cœur du monde des denses.
