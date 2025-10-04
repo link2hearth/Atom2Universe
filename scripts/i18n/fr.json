@@ -1919,8 +1919,15 @@
           "symbol": "K",
           "name": "Potassium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Métal alcalin réactif et vital, le potassium relie la forge stellaire aux électrolytes de nos cellules.",
+            "paragraphs": [
+              "Symbole “K” (du latin kalium), numéro atomique 19, le potassium est un métal alcalin argenté, léger et mou, tranchable au couteau. Il réagit violemment avec l’eau, libérant de l’hydrogène et des flammes, et ne se trouve jamais à l’état natif mais sous forme de sels abondants. Redouté des alchimistes, il est chéri des biologistes : électrolyte essentiel, il est indispensable au fonctionnement cellulaire.",
+              "Le potassium est forgé dans les étoiles massives, notamment lors des réactions de fusion qui transforment le silicium et l’argon en éléments plus lourds. Lors des supernovae, il est éjecté dans l’espace et intégré aux nuages de matière qui formeront les planètes. Ses isotopes, comme le K-40 à longue période radioactive, servent d’horloge naturelle aux géologues grâce à la datation potassium-argon.",
+              "Sur Terre, le potassium est omniprésent mais uniquement sous forme de sels. On le rencontre dans des minéraux comme l’orthose, la sylvine ou la carnallite, ainsi que dans les sols, les rivières et les océans. Ion intracellulaire majeur, il régule l’équilibre hydrique et électrique des cellules ; les plantes l’absorbent pour grandir et les animaux, nous compris, l’obtiennent par l’alimentation.",
+              "Indispensable à l’agriculture, le potassium entre dans les engrais via des sels comme le chlorure de potassium (KCl), composant du fameux trio NPK. En chimie, ses composés servent à fabriquer savons, verre, explosifs ou engrais spécialisés, tandis que le métal lui-même, extrêmement réactif, est utilisé comme agent réducteur en laboratoire et dans certains procédés industriels.",
+              "Les sels potassiques sont variés et précieux. Le chlorure de potassium (KCl) sert d’engrais et de substitut de sel alimentaire ; le carbonate de potassium (K₂CO₃) intervient dans la verrerie et la saponification ; le permanganate de potassium (KMnO₄), d’un violet profond, est un oxydant puissant pour la désinfection et la chimie. Dans le vivant, l’ion K⁺ baigne tous les fluides intracellulaires et stabilise le potentiel électrique des membranes.",
+              "Élément de feu et de vie, le potassium relie l’énergie des supernovae aux impulsions électriques de nos nerfs. Chaque récolte agricole, chaque signal nerveux témoigne de sa présence discrète mais incontournable."
+            ],
             "sources": []
           }
         },
@@ -1928,8 +1935,15 @@
           "symbol": "Ca",
           "name": "Calcium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Métal alcalino-terreux omniprésent, le calcium bâtit nos os, nos falaises et une bonne part de nos villes.",
+            "paragraphs": [
+              "Symbole “Ca”, numéro atomique 20, le calcium est un métal gris argenté, malléable et assez réactif, prompt à s’oxyder à l’air et à réagir avec l’eau. Dans la nature, on ne le rencontre jamais pur mais sous forme de composés : il constitue nos os, nos dents, les coquillages et même les montagnes calcaires. Métal discret mais omniprésent, il se situe au cœur de la biologie comme de la géologie terrestres.",
+              "Le calcium naît au sein d’étoiles massives, principalement lors des dernières phases de fusion où carbone et oxygène s’assemblent en éléments plus lourds. Les supernovae le libèrent ensuite dans l’espace, où il se mêle à la matière interstellaire prête à forger des planètes. Sa présence dans les météorites primitives atteste qu’il faisait déjà partie du mélange originel du système solaire.",
+              "Cinquième élément le plus abondant de la croûte terrestre, le calcium se trouve dans une multitude de minéraux : calcite et aragonite (CaCO₃), gypse (CaSO₄·2H₂O), fluorite (CaF₂), apatite (Ca₅(PO₄)₃F). Dans les océans, les ions Ca²⁺ sont captés par les organismes marins pour édifier coquilles et squelettes, qui s’accumulent en dépôts donnant naissance aux falaises et aux grottes calcaires.",
+              "Vital pour les êtres vivants, le calcium renforce os et dents, intervient dans la contraction musculaire, la coagulation sanguine et la transmission nerveuse. Dans l’industrie, ses composés sont tout aussi essentiels : carbonate de calcium pour ciment, plâtre et chaux ; fluorure de calcium en métallurgie ; gypse dans la construction. Le calcium métallique, plus rare, sert de réducteur pour produire d’autres métaux.",
+              "Les composés calciques sont omniprésents : le carbonate de calcium (CaCO₃) forme calcaires, craie et marbre ; le sulfate de calcium (CaSO₄·2H₂O) est le gypse du plâtre ; le fluorure de calcium (CaF₂) constitue la fluorite industrielle. Dans le vivant, les ions Ca²⁺ sont stockés dans les os, circulent dans le sang et orchestrent des signaux cellulaires essentiels.",
+              "Bâtisseur universel, le calcium relie étoiles, océans et civilisations. Chaque os, chaque falaise, chaque arche de pierre témoigne de ce métal discret qui façonne la Terre autant que nos vies."
+            ],
             "sources": []
           }
         },

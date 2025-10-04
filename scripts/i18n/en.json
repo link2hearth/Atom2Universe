@@ -1934,8 +1934,15 @@
           "symbol": "K",
           "name": "Potassium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A reactive, life-critical alkali metal, potassium links stellar forges to the electrolytes in our cells.",
+            "paragraphs": [
+              "Symbol \"K\" (from the Latin kalium), atomic number 19, potassium is a silvery, lightweight, soft alkali metal you can slice with a knife. It reacts violently with water, releasing hydrogen and flames, and is therefore never found in native form—only as abundant salts. Feared by alchemists but cherished by biologists, potassium is an essential electrolyte without which cells cannot operate.",
+              "Potassium is forged in massive stars during fusion reactions that transform silicon and argon into heavier elements. When supernovae explode they hurl potassium into space, mixing it into the clouds of matter that will form planets. Its isotopes, such as long-lived radioactive K-40, serve geologists as natural clocks through potassium-argon dating.",
+              "On Earth, potassium is widespread but exists only as salts. It appears in minerals such as orthoclase, sylvite, and carnallite, and circulates through soils, rivers, and oceans. As a major intracellular ion it regulates water balance and electrical gradients in cells; plants absorb K⁺ to grow, and animals—including us—obtain it through their diet.",
+              "Indispensable to agriculture, potassium enters fertilizers via salts like potassium chloride (KCl), part of the famed NPK trio. In chemistry its compounds help make soaps, glass, explosives, and specialty fertilizers, while the metal itself—extremely reactive—serves as a reducing agent in laboratories and certain industrial processes.",
+              "Potassium salts are varied and valuable. Potassium chloride (KCl) works as a fertilizer and even a table salt substitute; potassium carbonate (K₂CO₃) supports glassmaking and soap production; potassium permanganate (KMnO₄), a deep purple solid, is a powerful oxidizer for disinfection and chemistry. In living organisms the K⁺ ion bathes intracellular fluids and stabilizes membrane potentials.",
+              "An element of fire and of life, potassium ties the energy of supernovae to the electrical impulses of our nerves. Every harvest and every nerve signal bears witness to its discreet yet indispensable presence."
+            ],
             "sources": []
           }
         },
@@ -1943,8 +1950,15 @@
           "symbol": "Ca",
           "name": "Calcium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "An omnipresent alkaline-earth metal, calcium builds our bones, cliffs, and much of our cities.",
+            "paragraphs": [
+              "Symbol \"Ca\", atomic number 20, calcium is a silvery gray, malleable, fairly reactive metal that quickly oxidizes in air and reacts vigorously with water. In nature it never appears pure but always as compounds: it makes up our bones, our teeth, seashells, and even limestone mountains. A discreet yet ubiquitous metal, it sits at the crossroads of terrestrial biology and geology.",
+              "Calcium is born inside massive stars, mainly during the late fusion stages where carbon and oxygen assemble into heavier elements. Supernovae then release it into space, blending it with interstellar matter ready to form planets. Its presence in primitive meteorites proves it already belonged to the original mix of the solar system.",
+              "The fifth most abundant element in Earth’s crust, calcium occurs in a multitude of minerals: calcite and aragonite (CaCO₃), gypsum (CaSO₄·2H₂O), fluorite (CaF₂), apatite (Ca₅(PO₄)₃F). In the oceans, Ca²⁺ ions are captured by marine organisms to build shells and skeletons, which accumulate into deposits that give rise to cliffs and limestone caves.",
+              "Vital to living beings, calcium strengthens bones and teeth, supports muscle contraction, blood clotting, and nerve transmission. In industry its compounds are equally essential: calcium carbonate for cement, plaster, and lime; calcium fluoride for metallurgy; gypsum for construction. Metallic calcium, though rarer, serves as a reducing agent to produce other metals.",
+              "Calcium compounds are everywhere: calcium carbonate (CaCO₃) forms limestone, chalk, and marble; calcium sulfate (CaSO₄·2H₂O) is gypsum, the base of plaster; calcium fluoride (CaF₂) is fluorite, an important industrial mineral. In living systems Ca²⁺ ions are stored in bones, circulate in blood, and drive critical cellular signals.",
+              "A universal builder, calcium connects stars, oceans, and civilizations. Every bone, cliff, and stone arch bears witness to this quiet metal that shapes Earth as surely as it shapes our lives."
+            ],
             "sources": []
           }
         },
