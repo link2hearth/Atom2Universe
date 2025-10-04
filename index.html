@@ -829,7 +829,11 @@
       <div class="metaux-content">
         <div class="metaux-board-wrapper">
           <div class="metaux-timer" id="metauxTimer" role="timer" aria-live="polite">
-            <span class="metaux-timer__label" data-i18n="index.sections.metaux.timerLabel"></span>
+            <span
+              class="metaux-timer__label"
+              id="metauxTimerLabel"
+              data-i18n="index.sections.metaux.timerLabel"
+            ></span>
             <span
               class="metaux-timer__max"
               id="metauxTimerMaxValue"
@@ -839,6 +843,14 @@
               <div class="metaux-timer__bar-fill" id="metauxTimerFill"></div>
             </div>
             <span class="metaux-timer__value" id="metauxTimerValue">6,0&nbsp;s</span>
+            <button
+              type="button"
+              id="metauxFreePlayExitButton"
+              class="metaux-timer__free-exit"
+              hidden
+            >
+              <span data-i18n="index.sections.metaux.freePlayExitButton"></span>
+            </button>
           </div>
           <div
             class="metaux-board"
