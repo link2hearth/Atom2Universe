@@ -2356,8 +2356,15 @@
           "symbol": "Ag",
           "name": "Silver",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A bright white metal and unmatched conductor, silver links stellar explosions, terrestrial ores, and uses ranging from electronics to jewelry.",
+            "paragraphs": [
+              "Overview — Symbol “Ag”, atomic number 47, silver is a bright white, ductile, malleable metal and the best conductor of electricity and heat among all known elements. Its name comes from the Latin argentum, itself from an Indo-European root meaning “white” or “shining.” Used for more than 5,000 years, it has served as currency, ornament, antimicrobial weapon, and today as a conductor in cutting-edge electronics. Silver is both matter and symbol: purity, exchange, clarity.",
+              "Cosmic origins — Silver forms in supernovae and neutron-star collisions through the r- and p-processes that capture neutrons and protons. These violent events disperse silver with other precious metals, such as gold and platinum, into the interstellar medium. We detect it in meteorites and in some ancient stars, where its presence helps measure cycles of galactic enrichment. In a sense, every silver jewel is a cooled fragment of a stellar explosion.",
+              "Terrestrial origin — On Earth, silver is rare (about 0.08 ppm in the crust), yet it sometimes appears in native form, an exceptional trait for a metal. It also occurs in ores such as argentite (Ag₂S) and cerargyrite (AgCl), and is often associated with gold, lead, and copper. Today the main producers are Mexico, China, and Peru. For millennia, silver was extracted from lead ores (argentiferous galena), and its metallurgy shaped the history of Mediterranean and pre-Columbian civilizations.",
+              "Uses — In electronics it is found in printed circuits, electrical contacts, solar panels, and batteries thanks to its unrivaled conductivity. In analog photography its salts (notably silver bromide, AgBr) formed the heart of photosensitive films for more than a century. In medicine its ions have antibacterial properties: they appear in certain dressings, filters, and coatings for medical equipment. In jewelry and coinage it remains a symbol of purity and stability. Finally, it plays an emerging role in nanotechnologies, where silver nanoparticles are studied for their electrical and antimicrobial properties.",
+              "Associated molecules — The most important compounds are the silver halides: chloride (AgCl), bromide (AgBr), and iodide (AgI), all light-sensitive and essential to photography. Silver nitrate (AgNO₃) is a classic chemical reagent and antiseptic. In metallic form, silver alloys with copper and palladium to increase hardness without dulling its shine. In catalysis it drives the oxidation of ethylene to ethylene oxide, a precursor to polyethylene glycol.",
+              "Conclusion — Silver embodies the union of beauty and function. A lunar metal born in the stars, it reflects the world’s light while carrying it as electrons. Present in ancient temples, currencies, electronic circuits, and hospitals, it has crossed the ages without losing its gleam. Between art and science, symbol and technology, silver remains a faithful mirror of human civilization."
+            ],
             "sources": []
           }
         },
@@ -2365,8 +2372,15 @@
           "symbol": "Cd",
           "name": "Cadmium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A silvery-white, ductile yet toxic metal, cadmium spans stellar furnaces, pigments, batteries, and tightly monitored technologies.",
+            "paragraphs": [
+              "Overview — Symbol “Cd”, atomic number 48, cadmium is a silvery-white, soft, ductile metal chemically close to zinc. Discovered in 1817 in Germany by Friedrich Stromeyer, it takes its name from the Latin cadmia, which once referred to calamine, a zinc ore from which it was isolated. First considered a metallic curiosity, cadmium became essential to pigments, alloys, and especially batteries—before being recognized as a major pollutant.",
+              "Cosmic origins — Cadmium was born in stars, produced both by the slow (s) process in red giants and by the rapid (r) process during supernovae and neutron-star collisions. It belongs to the heavy metals formed late in stellar nucleosynthesis. Its presence in meteorites points to an ancient, stable distribution shared with silver and indium.",
+              "Terrestrial origin — On Earth, cadmium is rare (about 0.1 ppm in the crust) and never forms its own minerals: it is always present as a natural impurity in zinc, particularly in sphalerite (ZnS), as well as in lead and copper ores. It is extracted mainly as a by-product of zinc refining. This “accidental” origin explains both its industrial spread and its constant link to heavy metallurgy.",
+              "Uses — Cadmium long served as a useful metal before being deemed toxic. It was first employed in pigments (cadmium yellow, cadmium red), prized for their intensity and lightfastness. Then it appeared in brazing alloys, anticorrosion coatings (steel plating), and especially in nickel-cadmium (Ni-Cd) batteries, ubiquitous in the twentieth century before their gradual ban. In electronics and nuclear technology it is still used for its ability to absorb neutrons, making it valuable for certain reactor control systems. Today most of its applications are strictly regulated, notably in Europe, because of its toxicity.",
+              "Associated molecules — Major cadmium compounds include the oxide (CdO), sulfide (CdS), and telluride (CdTe). Cadmium sulfide (CdS) is a bright yellow pigment still used in specific artistic or industrial applications. Cadmium telluride (CdTe) is, paradoxically, a material of the future: it is used to build thin-film solar panels that convert light to electricity with excellent efficiency. Cadmium chloride (CdCl₂) serves as a catalyst in organic synthesis.",
+              "Conclusion — Cadmium is a cautionary metal, symbolizing both the power and the excesses of industrial chemistry. Born in the stars and useful in pigments and batteries, it also taught humanity the need for precaution and recycling. Today its compounds still serve solar technologies and laboratories, but under strict oversight. Shiny and weighty in meaning, cadmium illustrates the fine line between progress and poison."
+            ],
             "sources": []
           }
         },
