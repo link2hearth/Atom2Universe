@@ -1777,8 +1777,15 @@
           "symbol": "F",
           "name": "Fluorine",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A fiercely reactive halogen, fluorine is dangerous in its elemental form yet indispensable through the fluorides and polymers that shape daily life.",
+            "paragraphs": [
+              "Symbol “F” with atomic number 9, fluorine is a halogen and the most electronegative element known. In its elemental state it is a yellow-green gas, highly toxic and corrosive. Yet in its compounds it becomes familiar: it appears in toothpaste fluoride, in refrigerants, and in ultra-resistant materials such as Teflon. Extremely reactive, fluorine is one of the most aggressive chemists on the periodic table.",
+              "Fluorine is relatively rare in the universe. It forms through particular stellar processes, especially in red giant stars and during certain stages of supernovae. It can also arise in Wolf-Rayet stars—very massive and hot—where complex nuclear reactions generate small amounts of fluorine. As these stars shed their matter at the end of their lives, they seeded the element into interstellar clouds, allowing it to reach Earth, though always in modest proportions.",
+              "On Earth, fluorine almost never appears as elemental F₂ because it is too reactive. Instead it is found in minerals such as fluorite (CaF₂) or cryolite (Na₃AlF₆). These minerals are the main industrial sources of fluorine and its derivatives. In natural environments it also appears in low concentrations dissolved in water, where it can support dental health—or cause issues when present in excess.",
+              "Fluorine boasts an impressive range of uses thanks to its unusual chemistry. In the form of sodium fluoride (NaF) it is added in small quantities to toothpaste and sometimes to drinking water to strengthen tooth enamel. In industry, fluorides assist with aluminum metallurgy. Organofluorine compounds have become essential: Teflon (PTFE) is famous for its non-stick properties, fluorinated refrigerant gases long dominated cooling systems (before being restricted for environmental reasons), and certain medicines include fluorine atoms to boost their effectiveness. Still, its extreme reactivity and the toxicity of some derivatives mean it must be handled with care.",
+              "Inorganic fluorides are the most common: CaF₂ (fluorite), NaF (sodium fluoride), HF (hydrofluoric acid, notorious for attacking glass and etching metals). Organofluorine compounds are increasingly important: fluorinated polymers such as Teflon, fluorocarbon gases (CFCs, HFCs) used in refrigeration, and fluorinated pharmaceuticals that leverage the stability of the carbon–fluorine bond. In nature, traces of fluoride also occur in water and in certain biological tissues.",
+              "Fluorine is a chemical paradox: a toxic, dangerous gas in its pure state, yet a daily ally through its compounds—from kitchens to dentistry to high tech. Forced by its reactivity to stay in company, it exemplifies the power of extremes: tiny in abundance, immense in impact."
+            ],
             "sources": []
           }
         },
@@ -1786,8 +1793,15 @@
           "symbol": "Ne",
           "name": "Neon",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A discreet noble gas, neon stays invisible in air yet bursts into vibrant light the moment an electric discharge excites it.",
+            "paragraphs": [
+              "Blinking red above a bar or casting a blue halo over an old cinema, neon is the element that gave chemistry its cabaret flair. Symbol “Ne” with atomic number 10, it belongs to the noble gas family. Transparent, colorless, and odorless in air, it truly reveals itself when electrified, lighting up and coloring our nights.",
+              "Like oxygen and magnesium, neon is born in the hearts of massive stars. When helium fuses into carbon and oxygen, part of that alchemy also produces neon. During supernova explosions, this rare gas is flung into the cosmos, enriching interstellar clouds. Today, even though neon is among the most abundant elements in the universe, it remains extremely discreet on Earth.",
+              "Earth’s atmosphere contains just a pinch of neon—about 0.0018% by volume. Instead it is harvested from rocks and especially from natural gas reserves for industrial use. Like all noble gases, neon is chemically unreactive: it prefers to remain alone as isolated atoms rather than bind with other elements. The result is an absence of true neon molecules, just the lone atom standing proud and independent.",
+              "Lighting is of course neon’s most famous application. Classic “neon lights” use electrical discharges to excite the gas and produce a characteristic red-orange glow. In practice many illuminated signs labeled “neon” actually contain other gases (argon, mercury) to obtain different colors. Neon also has quieter roles: as an ultra-cold refrigerant, in certain scientific instruments, and as a protective gas in electronics.",
+              "Or rather, the absence of associated molecules! As a quintessential noble gas, neon distinguishes itself through chemical stability. It resists bonding with others: no natural compounds are known, aside from rare laboratory experiments that trap it under extreme conditions. Its “molecule” is simply the atom itself.",
+              "A discreet, almost indifferent element, neon rarely attracts attention in nature. But when it meets electricity it transforms into a luminous performer. Heir to the stars and herald of urban nights, it perfectly illustrates the strange alliance between atomic simplicity and spectacular shine."
+            ],
             "sources": []
           }
         },
