@@ -2771,8 +2771,15 @@
           "symbol": "Ir",
           "name": "Iridium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Forged in stellar cataclysms, iridium is an ultra-noble metal anchoring humanity’s standards of stability and precision.",
+            "paragraphs": [
+              "Overview — With symbol “Ir” and atomic number 77, iridium is a silvery-white metal that is extremely dense (22.56 g/cm³), hard, brittle when cold yet ductile when hot, and exceptionally resistant to corrosion. Discovered in 1803 by Smithson Tennant alongside osmium, it takes its name from the Latin iris, “rainbow,” because its salts display vivid colors. As one of the noblest metals, it withstands almost all acids and oxidation even at high temperature.",
+              "Cosmic origins — Iridium forms in supernovae and neutron star collisions through the rapid neutron-capture process (r-process), together with platinum and gold. Belonging to the platinum-group metals, it is born in the final moments of massive stars. The famous iridium-enriched layer dated to 66 million years ago, linked to the Chicxulub impact, stands as a global geological marker of the dinosaurs’ extinction.",
+              "Terrestrial origin — On Earth, iridium is extremely scarce in the crust (0.001 ppm) but more abundant in the deep mantle and in iron meteorites. It is recovered as a by-product of nickel and platinum refining in South Africa, Russia, and Canada, and occurs in traces within natural alloys with osmium (osmiridium) once prized for precision mechanical parts.",
+              "Uses — Iridium is chosen wherever absolute stability is required. Allied with platinum, it once formed the international meter prototype kept at Sèvres. It appears in electrical contacts, crystal-growth crucibles, and premium spark plugs, as well as in thermocouples and laboratory furnaces exceeding 2,000 °C. Its catalytic complexes are valuable in fine chemistry and in corrosion-resistant medical implants.",
+              "Associated molecules — Key compounds include conductive, catalytic oxides (IrO₂) and halides (IrCl₃, IrF₆). In organometallic chemistry, tris(acetylacetonato)iridium (Ir(acac)₃), phosphine iridium(I) complexes, and luminescent iridium(III) complexes such as Ir(ppy)₃ support hydrogenation, coupling reactions, and OLED displays.",
+              "Conclusion — A metal of deep time, iridium records cosmic cataclysms while underpinning human precision. Both relic of dead stars and emblem of durability, it remains an immutable material from geological archives to modern laboratories."
+            ],
             "sources": []
           }
         },
@@ -2780,8 +2787,15 @@
           "symbol": "Pt",
           "name": "Platinum",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Born from stellar explosions, platinum is a noble metal blending purity, catalysis, and luxury for technology and health alike.",
+            "paragraphs": [
+              "Overview — With symbol “Pt” and atomic number 78, platinum is a silvery-white metal that is ductile, malleable, and very dense (21.45 g/cm³). Melting at 1,768 °C and resisting most acids and oxidation, it was already crafted by pre-Columbian artisans in South America. Rediscovered in the 18th century by Spanish explorers, it was nicknamed platina, “little silver,” because it resembled the more common metal.",
+              "Cosmic origins — Forged in supernovae and neutron star collisions via the rapid neutron-capture process, platinum belongs to the stellar family of heavy metals alongside gold and iridium. Isotopes found in meteorites attest to its cosmic antiquity and serve as tracers of planetary differentiation: every gram on Earth is literally condensed stardust.",
+              "Terrestrial origin — Scarce in the crust (about 0.005 ppm), platinum concentrates in magmatic deposits associated with nickel, copper, and the other platinum-group metals. It also occurs in native form within auriferous alluvium. South Africa, Russia, and Canada are the main producers, extracting it from complex sulfide ores and purifying it via electrochemical processes.",
+              "Uses — Ubiquitous in catalysis, chemistry, medicine, and luxury, platinum is essential to automotive catalytic converters that turn harmful gases into harmless products. It contributes to nitric acid, silicone, and numerous organic compounds. In medicine, complexes such as cisplatin (Pt(NH₃)₂Cl₂) act as anticancer agents able to bind tumor DNA. Its durability also benefits jewelry, electrical contacts, thermocouples, and laboratory or optical-glass equipment.",
+              "Associated molecules — Platinum’s chemistry spans many oxidation states: ammonium hexachloroplatinate ((NH₄)₂[PtCl₆]) is a classical starting point, while organometallic complexes like Pt(PPh₃)₄ support homogeneous catalysis. Platinum dioxide (PtO₂), known as Adams’ catalyst, is employed for hydrogenating alkenes, showcasing the metal’s versatility.",
+              "Conclusion — A symbol of permanence, platinum blends purity, power, and usefulness from jewelry to scientific research. Born of the stars and vital to cutting-edge technologies as well as human health, it embodies mastered, enduring nobility."
+            ],
             "sources": []
           }
         },

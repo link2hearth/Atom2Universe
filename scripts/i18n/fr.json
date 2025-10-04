@@ -2754,8 +2754,15 @@
           "symbol": "Ir",
           "name": "Iridium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Métal noble forgé dans les cataclysmes stellaires, l’iridium demeure l’étalon de la stabilité et de la précision humaines.",
+            "paragraphs": [
+              "Présentation — Symbole “Ir”, numéro atomique 77, l’iridium est un métal blanc argenté, très dense (22,56 g/cm³), dur, cassant à froid mais ductile à chaud, et exceptionnellement résistant à la corrosion. Découvert en 1803 par Smithson Tennant aux côtés de l’osmium, il doit son nom au latin iris, “arc-en-ciel”, car ses sels offrent une palette de couleurs vives. Métal parmi les plus nobles, il résiste à presque tous les acides et à l’oxydation même à haute température.",
+              "Origines cosmiques — L’iridium se forme dans les supernovae et les collisions d’étoiles à neutrons via le processus rapide de capture de neutrons (r-process), aux côtés du platine et de l’or. Appartenant au groupe des métaux du platine, il naît dans les ultimes instants des étoiles massives. La célèbre couche enrichie en iridium datée de 66 millions d’années, liée à l’impact de Chicxulub, constitue un marqueur géologique mondial de l’extinction des dinosaures.",
+              "Origine terrestre — Sur Terre, l’iridium est extrêmement rare dans la croûte (0,001 ppm) mais plus abondant dans le manteau profond et les météorites ferreuses. Il est récupéré comme sous-produit du raffinage du nickel et du platine en Afrique du Sud, en Russie et au Canada, et se rencontre en traces dans les alliages naturels avec l’osmium (osmiridium) autrefois prisés pour les pièces mécaniques de précision.",
+              "Usages — L’iridium est choisi lorsque la stabilité absolue est requise. Alliée au platine, il a servi au mètre-étalon international conservé à Sèvres. On le retrouve dans les contacts électriques, les creusets de croissance de cristaux et les bougies d’allumage haut de gamme, ainsi que dans les thermocouples et fours de laboratoire dépassant 2 000 °C. Ses complexes catalytiques sont précieux en chimie fine et dans la fabrication de dispositifs médicaux implantables résistants à la corrosion biologique.",
+              "Molécules associées — Ses principaux composés incluent les oxydes conducteurs et catalytiques (IrO₂) et les halogénures (IrCl₃, IrF₆). En chimie organométallique, le tris-acétylacétonate d’iridium (Ir(acac)₃), les complexes phosphiniques d’iridium(I) et les complexes luminescents d’iridium(III) comme Ir(ppy)₃ sont employés pour l’hydrogénation, le couplage et les écrans OLED.",
+              "Conclusion — Métal du temps long, l’iridium témoigne des cataclysmes cosmiques tout en garantissant la précision humaine. À la fois relique d’étoiles mortes et symbole de durabilité, il demeure un matériau immuable, présent des archives géologiques aux laboratoires modernes."
+            ],
             "sources": []
           }
         },
@@ -2763,8 +2770,15 @@
           "symbol": "Pt",
           "name": "Platine",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Métal noble venu des étoiles, le platine conjugue pureté, catalyse et luxe pour les technologies comme pour la santé.",
+            "paragraphs": [
+              "Présentation — Symbole “Pt”, numéro atomique 78, le platine est un métal blanc argenté, ductile, malléable et très dense (21,45 g/cm³). Fondant à 1 768 °C et presque inaltérable aux acides et à l’oxydation, il était déjà travaillé par les artisans précolombiens d’Amérique du Sud. Redécouvert au XVIIIᵉ siècle par les explorateurs espagnols, il fut surnommé platina, “petit argent”, en raison de sa ressemblance avec le métal plus commun.",
+              "Origines cosmiques — Forgé dans les supernovae et les collisions d’étoiles à neutrons via le r-process, le platine appartient à la famille stellaire des métaux lourds avec l’or et l’iridium. Les isotopes retrouvés dans les météorites attestent de son ancienneté cosmique et servent de traceurs de la différenciation planétaire : chaque gramme terrestre est littéralement une poussière d’étoile condensée.",
+              "Origine terrestre — Rare dans la croûte (environ 0,005 ppm), le platine se concentre dans des gisements magmatiques associés au nickel, au cuivre et aux autres métaux du groupe du platine. On le rencontre aussi à l’état natif dans les alluvions aurifères. L’Afrique du Sud, la Russie et le Canada en sont les principaux producteurs, l’extrayant de minerais sulfurés complexes puis le purifiant par procédés électrochimiques.",
+              "Usages — Métal omniprésent en catalyse, en chimie, en médecine et dans le luxe, le platine est indispensable aux pots catalytiques automobiles où il convertit les gaz nocifs en produits inoffensifs. Il intervient dans la production d’acide nitrique, de silicones et de nombreux composés organiques. En médecine, des complexes comme le cisplatine (Pt(NH₃)₂Cl₂) sont des agents anticancéreux capables de lier l’ADN tumoral. Sa résistance fait aussi le bonheur des bijoutiers, des contacts électriques, des thermocouples et des équipements de laboratoire ou de fusion du verre optique.",
+              "Molécules associées — Sa chimie couvre de nombreux états d’oxydation : le tétrachloroplatinate d’ammonium ((NH₄)₂[PtCl₆]) sert de point de départ classique, tandis que les complexes organométalliques tels que Pt(PPh₃)₄ alimentent la catalyse homogène. Le dioxyde de platine (PtO₂), ou catalyseur d’Adams, est utilisé pour l’hydrogénation des alcènes, illustrant la polyvalence du métal.",
+              "Conclusion — Élement de la permanence, le platine unit pureté, puissance et utilité, des bijoux à la recherche scientifique. Né des étoiles et indispensable aux technologies de pointe comme à la santé humaine, il incarne une noblesse maîtrisée et durable."
+            ],
             "sources": []
           }
         },
