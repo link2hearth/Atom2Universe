@@ -2194,8 +2194,15 @@
           "symbol": "Rb",
           "name": "Rubidium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "An ultra-reactive alkali metal with violet flames, rubidium bridges atomic clocks and geologic dating.",
+            "paragraphs": [
+              "Symbol \"Rb\", atomic number 37, rubidium is a soft, silvery alkali metal that reacts violently with air and water. It melts just above room temperature (39 °C) and burns with a characteristic violet flame. Discovered in 1861 by Robert Bunsen and Gustav Kirchhoff, it takes its name from the Latin rubidius, meaning \"deep red\", in reference to the crimson lines in its emission spectrum.",
+              "Rubidium is produced in stars through slow and rapid neutron capture (the s- and r-processes). Its stable isotopes arise in red giant stars, while the radioactive isotope ^87Rb is forged in supernovae. With a half-life close to 49 billion years, ^87Rb makes it possible to date ancient rocks via the rubidium–strontium method: every terrestrial atom carries the memory of multiple generations of stars.",
+              "On Earth, rubidium occurs at about 90 ppm in the crust and hides in potassium-rich minerals such as lepidolite, pollucite, and feldspars, where it partially substitutes for K⁺ ions. It is never found in native form because it reacts instantly with air and water. Industrially, it is obtained mainly as a by-product of lithium or cesium extraction—rare yet widely dispersed, with no dedicated \"rubidium mines\".",
+              "Rubidium has no mass-market applications, but it shines in high-tech niches. Its atomic transition stabilizes extremely precise clocks that synchronize GPS constellations and telecommunications networks. In research, it enables the production of ultracold gases and Bose–Einstein condensates, probing quantum matter near absolute zero. Its salts also appear in certain specialty glasses and photoemissive devices.",
+              "Like potassium, rubidium forms simple ionic compounds: chloride (RbCl), nitrate (RbNO₃), carbonate (Rb₂CO₃), all highly soluble in water and seldom used outside the laboratory. Metallic rubidium, exceptionally reactive, serves in some photoelectric cells. In geology, the isotope ^87Rb decays slowly to ^87Sr, providing a natural clock to measure the age of terrestrial and lunar rocks.",
+              "Discreet yet fascinating, rubidium is born in stars, remains scarce on Earth, and is elusive in open air, while offering atomic precision when tamed. In clocks it measures time; in laboratories it explores the ultracold. From stellar forges to quantum physics, it shows how a marginal element can become a key to understanding the world and time itself."
+            ],
             "sources": []
           }
         },
@@ -2203,8 +2210,15 @@
           "symbol": "Sr",
           "name": "Strontium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A flamboyant alkaline-earth metal, strontium ties crimson fireworks to isotopic dating and bone health.",
+            "paragraphs": [
+              "Symbol \"Sr\", atomic number 38, strontium is a soft, reactive, silvery alkaline-earth metal. Discovered in late 18th-century Scotland, it is named after the village of Strontian where its ore was first identified. Chemically akin to calcium and barium, it oxidizes in air, reacts vigorously with water, and glows with a spectacular scarlet flame when it burns.",
+              "Strontium forms in red giant stars through slow neutron capture (the s-process) and in supernovae through rapid capture (the r-process). It is detected in meteorites and even in very old stars, where it traces cycles of nucleosynthesis. Like neighboring rubidium, every atom of strontium tells of the reactions that sculpt matter between the life and death of stars.",
+              "On Earth, strontium is fairly abundant—about 370 ppm in the crust—and occurs mainly in the minerals celestine (SrSO₄) and strontianite (SrCO₃). As a chemical cousin of calcium, it can substitute for it in minerals and biological tissues. The isotopic ratio ^87Sr/^86Sr is a major geologic tool for dating and tracing rocks, fossils, and even migrations, while traces of strontium accumulate in bones and teeth.",
+              "Fireworks owe their vivid red to strontium salts, notably the nitrate and carbonate. The element also strengthens specialty glasses for cathode-ray tubes, displays, and optics, and appears in certain ceramics. The radioactive isotope ^90Sr, produced by nuclear activity, has powered thermoelectric generators for space probes but is feared as a contaminant because it mimics calcium and lodges in bones. Conversely, stable strontium is studied in medicine to improve bone density against osteoporosis.",
+              "Strontium chemistry is dominated by its salts: carbonate (SrCO₃) for ceramics and pyrotechnics, nitrate (Sr(NO₃)₂) for crimson flames, titanate (SrTiO₃) with remarkable electronic and optical properties. In geochemistry, the ratios of ^87Sr and ^86Sr reveal the origin of rocks, shells, and even ancient human movements.",
+              "A modest gray metal in nature yet flamboyant in the sky, strontium is born in stars and recorded in rocks. It illuminates celebrations and research alike, from geochronology to medicine and pyrotechnics. A messenger of time and maker of light, it embodies the quiet beauty of the alkaline-earth family."
+            ],
             "sources": []
           }
         },
