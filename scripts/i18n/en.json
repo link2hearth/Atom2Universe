@@ -3202,8 +3202,13 @@
           "symbol": "Rg",
           "name": "Roentgenium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A synthetic superheavy element named for Wilhelm Röntgen, roentgenium survives only milliseconds in the lab.",
+            "paragraphs": [
+              "Discovered in 2004, roentgenium (Rg, atomic number 111) is a superheavy element named in honor of Wilhelm Röntgen, the physicist who revealed X-rays to the scientific world.",
+              "Entirely synthetic, it is produced by bombarding heavy nuclei in particle accelerators. The isotopes created decay within a few milliseconds, which explains its total absence in nature.",
+              "Roentgenium sits in the same column as gold and silver in the periodic table, hinting at similar metallic properties, but its vanishingly short lifetime prevents any chemical study or practical use.",
+              "A pure laboratory product, it chiefly symbolizes the current limits of nuclear synthesis and keeps Röntgen’s legacy alive rather than serving as an exploitable resource."
+            ],
             "sources": []
           }
         },
@@ -3211,8 +3216,13 @@
           "symbol": "Cn",
           "name": "Copernicium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Copernicium is a superheavy element dedicated to Nicolaus Copernicus that exists only fleetingly in the particle accelerators that create it.",
+            "paragraphs": [
+              "Officially recognized in 2009, copernicium (Cn, atomic number 112) pays tribute to astronomer Nicolaus Copernicus and the cosmological revolution he set in motion.",
+              "It is produced artificially by fusing heavy nuclei inside particle accelerators. Even its most stable isotopes last only a few minutes, far too short a time for it to arise naturally.",
+              "Classed alongside mercury, it might share certain metallic properties, yet its extreme rarity and radioactivity prevent direct observation of its chemistry or any practical application.",
+              "As an experimental milestone on the periodic table, copernicium serves primarily as a scientific marker and echoes how discoveries reshape our understanding of the universe."
+            ],
             "sources": []
           }
         },

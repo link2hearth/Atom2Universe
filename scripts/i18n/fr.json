@@ -3185,8 +3185,13 @@
           "symbol": "Rg",
           "name": "Roentgenium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Élément superlourd synthétique honorant Wilhelm Röntgen, le roentgenium ne survit que quelques millisecondes en laboratoire.",
+            "paragraphs": [
+              "Découvert en 2004, le roentgenium (Rg, numéro atomique 111) est un élément superlourd baptisé en hommage à Wilhelm Röntgen, le physicien qui révéla les rayons X au monde scientifique.",
+              "Entièrement synthétique, il est obtenu en bombardant des noyaux lourds dans des accélérateurs de particules. Les isotopes créés se désintègrent en quelques millisecondes, ce qui explique son absence totale dans la nature.",
+              "Le roentgenium occupe la même colonne que l’or et l’argent dans le tableau périodique, suggérant des propriétés métalliques similaires, mais sa durée de vie infinitésimale empêche toute étude chimique et tout usage concret.",
+              "Pur produit de laboratoire, il symbolise surtout les limites actuelles de la synthèse nucléaire et perpétue la mémoire de Röntgen plutôt qu’il ne constitue une ressource exploitable."
+            ],
             "sources": []
           }
         },
@@ -3194,8 +3199,13 @@
           "symbol": "Cn",
           "name": "Copernicium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Le copernicium, élément superlourd dédié à Nicolas Copernic, n’existe que fugacement dans les accélérateurs où il est synthétisé.",
+            "paragraphs": [
+              "Officiellement reconnu en 2009, le copernicium (Cn, numéro atomique 112) rend hommage à l’astronome Nicolas Copernic et à la révolution cosmologique qu’il a initiée.",
+              "Il est produit artificiellement par fusion de noyaux lourds dans des accélérateurs de particules. Même ses isotopes les plus stables ne vivent que quelques minutes, durée insuffisante pour qu’il se forme naturellement.",
+              "Classé aux côtés du mercure, il pourrait partager certaines propriétés métalliques, mais sa rareté extrême et sa radioactivité empêchent toute observation directe de son comportement chimique ou toute application pratique.",
+              "Comme borne expérimentale du tableau périodique, le copernicium sert avant tout de jalon scientifique et rappelle le rôle des découvertes dans notre compréhension de l’univers."
+            ],
             "sources": []
           }
         },
