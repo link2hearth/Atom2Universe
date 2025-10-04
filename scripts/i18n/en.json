@@ -3266,8 +3266,15 @@
           "symbol": "Ts",
           "name": "Tennessine",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Element 117, symbol Ts, is a superheavy halogen created only in laboratories since its 2010 discovery.",
+            "paragraphs": [
+              "Synthesized in 2010 by a Russian–American collaboration, it honors the state of Tennessee and the Oak Ridge National Laboratory while remaining an extremely unstable, short-lived element.",
+              "Tennessine does not occur naturally: it is far too unstable to persist in the cosmos and is created by bombarding berkelium-249 with calcium-48 ions.",
+              "On Earth only a handful of atoms have been produced in nuclear accelerators, with the observed isotopes (^293Ts and ^294Ts) decaying in under a second via alpha emission.",
+              "It has no practical uses; instead, tennessine helps probe the limits of nuclear stability and the structure of the periodic table in the hunt for the theorized “island of stability”.",
+              "No compounds have been observed yet, but models predict unusual halogen chemistry, potentially less reactive and more “metallic” because of its mass and relativistic effects.",
+              "Ephemeral and human-made, tennessine stands as a scientific milestone marking how far physicists can push the periodic table."
+            ],
             "sources": []
           }
         },
@@ -3275,8 +3282,15 @@
           "symbol": "Og",
           "name": "Oganesson",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Element 118, symbol Og, is an ultraheavy noble gas whose fleeting existence has only been confirmed in the laboratory.",
+            "paragraphs": [
+              "Discovered between 2002 and 2006 by a Russian–American team, it honors physicist Yuri Oganessian and is remarkable for its extreme instability.",
+              "Absent from the observable universe, oganesson decays in less than a millisecond and is produced by bombarding californium-249 with calcium-48 ions.",
+              "No terrestrial deposit contains it; only a few atoms synthesized in specialized facilities attest to its presence before they vanish.",
+              "With no practical applications, oganesson serves researchers probing the limits of nuclear stability and testing the proposed “island of stability”.",
+              "No compounds have been detected, yet theoretical calculations suggest richer-than-expected noble-gas chemistry, possibly including molecules such as OgF₂.",
+              "As the current edge of the periodic table, oganesson shows that matter still holds unexplored territories for nuclear physics experiments."
+            ],
             "sources": []
           }
         }
