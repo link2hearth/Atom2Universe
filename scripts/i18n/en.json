@@ -2564,8 +2564,15 @@
           "symbol": "Ce",
           "name": "Cerium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "An abundant, shape-shifting lanthanide, cerium bridges stardust origins with modern technologies from flints to catalytic converters.",
+            "paragraphs": [
+              "Symbol Ce, atomic number 58, cerium is a silvery, soft metal that gleams until air quickly tarnishes it. Discovered in 1803, it was named for Ceres, the Roman goddess of harvests, as well as the dwarf planet found in the same year. As the most abundant lanthanide, cerium is a true Swiss army knife of modern chemistry.",
+              "Like lanthanum, cerium comes from stellar furnaces. It formed through slow neutron capture (the s-process) within red giant stars, then was hurled into space by stellar winds or supernova blasts. Those lanthanide-rich dust grains mixed into the interstellar clouds that birthed our solar system, so the cerium in today’s rocks and catalysts truly hails from long-extinct stars.",
+              "On Earth, cerium never appears in native form but is plentiful in rare-earth ores such as bastnäsite, monazite, and cerite—named in its honor. It accounts for about 0.0046% of the crust, more than lead or tin. Isolating cerium took more than a century after its discovery because its chemistry clings tightly to that of its lanthanide siblings.",
+              "Cerium is an industrial chameleon. It is the key ingredient in lighter flints (the «mischmetal» alloy), where it ignites in a shower of sparks. Its most strategic role lies in catalytic converters: cerium dioxide (CeO₂) can trap and release oxygen, helping transform exhaust gases into less toxic compounds. Cerium also polishes optics, tunes specialty glass—especially UV-filtering lenses—and powers certain fuel cells and incandescent lamps.",
+              "Cerium can stably switch between +3 and +4 oxidation states, making it remarkably versatile. Cerium dioxide (CeO₂) is one of its flagship compounds: a pale-yellow ceramic with outstanding redox properties. That ability to shuttle between Ce³⁺ and Ce⁴⁺ underpins its catalytic value and high-tech materials. As a metal, cerium stays ductile, malleable, and reactive—a metal eager to play with oxygen.",
+              "Born in stars and embedded in our machines, cerium embodies the bond between cosmic chemistry and human technology. From catalytic converters to optical workshops, it showcases the hidden wealth of the lanthanides—a modest-looking powder that helps clean our air and light our world."
+            ],
             "sources": []
           }
         },
@@ -2573,8 +2580,15 @@
           "symbol": "Pr",
           "name": "Praseodymium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A discreet lanthanide, praseodymium lends its cosmic green touch to high-performance magnets, protective glass, and advanced alloys.",
+            "paragraphs": [
+              "Symbol Pr, atomic number 59, praseodymium is a silvery, malleable metal that behaves capriciously in air: it tarnishes quickly, forming a thin green film that inspired its name—from the Greek prasios didymos, “green twin.” Discovered in 1885 by Austrian chemist Carl Auer von Welsbach, it emerged from painstakingly splitting “didymium,” once mistaken for a single element. Praseodymium rarely makes headlines, yet it literally shines in cutting-edge technologies.",
+              "Like its lanthanide neighbors, praseodymium was forged through stellar nucleosynthesis. Slow neutron capture in the inner layers of red giants—and occasionally the r-process during supernovae or neutron-star mergers—created the element before scattering it across the cosmos. Those extreme events seeded the primitive rocks that eventually formed Earth.",
+              "On our planet, praseodymium always travels with its lanthanide kin. It appears mainly in bastnäsite and monazite ores rich in rare earths. While not truly scarce—its crustal abundance rivals copper—it is challenging to isolate because its chemistry closely mirrors that of neodymium, its atomic-number-60 “twin.”",
+              "Praseodymium finds its flagship uses in high-performance permanent magnets, especially neodymium-iron-boron (Nd₂Fe₁₄B) magnets where partial substitution boosts heat resistance. It also colors glass and enamel a delicate yellow-green and goes into welder’s glasses that filter intense light without distorting colors. In aerospace, magnesium alloys doped with praseodymium deliver excellent mechanical and thermal resilience.",
+              "In ionic form, praseodymium typically adopts the +3 oxidation state, yielding salts and oxides with a characteristic green hue. Praseodymium oxide (Pr₆O₁₁) mixes Pr³⁺ and Pr⁴⁺ states, enabling redox reactions. In glass and ceramics, it imparts warm tones and absorbs ultraviolet rays. As a metal, it is paramagnetic at room temperature and behaves like a textbook lanthanide: ductile, reactive, and chemically close to neodymium.",
+              "Born among stars yet hidden in rocks, praseodymium is a quiet but essential player in modern technology. Without it, our electric motors, protective lenses, and precision alloys would perform far worse. It remains both rare and familiar—a “green twin” from the depths of space now beating at the heart of our machines and inventions."
+            ],
             "sources": []
           }
         },
