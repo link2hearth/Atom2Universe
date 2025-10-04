@@ -2707,8 +2707,15 @@
           "symbol": "Er",
           "name": "Erbium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Métal rose des terres rares, l’erbium fait le lien entre Ytterby, les lasers médicaux et les fibres optiques de l’Internet.",
+            "paragraphs": [
+              "Présentation — Symbole “Er”, numéro atomique 68, l’erbium est un métal argenté, malléable et relativement stable à l’air. Découvert en 1843 par Carl Gustaf Mosander, il doit son nom au village suédois d’Ytterby, berceau des terres rares, et se distingue par la coloration rose de ses sels.",
+              "Origines cosmiques — Comme les autres lanthanides, l’erbium est né du processus r, la capture rapide de neutrons dans les supernovae et les fusions d’étoiles à neutrons. Ces cataclysmes stellaires ont forgé ses isotopes bien avant la formation du système solaire, avant que les poussières interstellaires ne donnent naissance à la Terre.",
+              "Origine terrestre — Sur notre planète, l’erbium se trouve mélangé à ses cousins dans des minerais comme la monazite, la xénotime ou la gadolinite. Il n’existe pas à l’état natif, mais s’extrait par séparation ionique ; avec une abondance d’environ 2,8 ppm, il est modérément répandu parmi les lanthanides, dominé par l’isotope stable Er-166.",
+              "Usages — L’ion Er³⁺ est la star des télécommunications : il émet dans l’infrarouge à 1,55 µm, la longueur d’onde des fibres optiques. Les amplificateurs à fibre dopée à l’erbium (EDFA) soutiennent les réseaux Internet longue distance, tandis que les lasers à erbium servent en dermatologie, en chirurgie dentaire et en ophtalmologie. On l’emploie aussi pour teinter verres et cristaux d’un rose délicat.",
+              "Molécules et propriétés associées — L’erbium est principalement trivalent dans ses composés. Son oxyde Er₂O₃, poudre rose pâle, entre dans les verres et céramiques optiques. Le métal est paramagnétique à température ambiante et devient antiferromagnétique à basse température ; ses transitions électroniques fines expliquent ses propriétés luminescentes uniques.",
+              "Conclusion — Né des étoiles et baptisé d’un village scandinave, l’erbium relie la lumière cosmique à celle de l’information : discret mais indispensable, il illumine la planète à la vitesse de la lumière."
+            ],
             "sources": []
           }
         },
@@ -2716,8 +2723,15 @@
           "symbol": "Tm",
           "name": "Thulium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Lanthanide rare et discret, le thulium relie la légende de Thulé aux lasers infrarouges et aux sources gamma.",
+            "paragraphs": [
+              "Présentation — Symbole “Tm”, numéro atomique 69, le thulium est un métal argenté, tendre et malléable. Découvert en 1879 par Per Teodor Cleve, il porte le nom de Thulé, terre mythique des confins nordiques, reflétant son caractère mystérieux et longtemps méconnu.",
+              "Origines cosmiques — Comme ses voisins lanthanides, il est forgé par le processus r dans les supernovae et les fusions d’étoiles à neutrons. Les atomes de thulium que nous manipulons aujourd’hui sont des reliques stellaires, nées bien avant le système solaire.",
+              "Origine terrestre — Le thulium est l’un des plus rares lanthanides, avec une abondance moyenne d’environ 0,5 ppm dans la croûte. Toujours associé aux autres terres rares dans la monazite ou la xénotime, il est isolé par échange d’ions et extraction par solvant. Son unique isotope naturel, Tm-169, est stable, tandis que des isotopes radioactifs peuvent être produits artificiellement.",
+              "Usages — Malgré sa rareté, il a trouvé des applications de niche : l’isotope Tm-170 sert de source gamma en radiographie industrielle et en médecine, tandis que les ions Tm³⁺ dopent des lasers infrarouges (Tm:YAG, Tm:YLF) autour de 2 µm, utiles pour la chirurgie assistée par laser. Le thulium intervient aussi dans certains alliages supraconducteurs et céramiques électroniques spécialisées.",
+              "Molécules et propriétés associées — Le thulium adopte principalement l’état d’oxydation +3. Son oxyde Tm₂O₃, poudre blanche, est prisé pour les matériaux optiques. Métallique, il est paramagnétique à température ambiante et devient ferromagnétique sous 30 K ; ses ions affichent une luminescence bleu-vert pâle recherchée en recherche photonique.",
+              "Conclusion — Inspiré par un mythe nordique et né des étoiles, le thulium est un métal du bout du monde : rare, discret, mais précieux pour la lumière qu’il apporte aux laboratoires, aux soins et aux technologies de précision."
+            ],
             "sources": []
           }
         },
