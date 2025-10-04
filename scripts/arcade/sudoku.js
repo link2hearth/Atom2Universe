@@ -318,20 +318,12 @@
     let lastStatusIsMistakeMessage = false;
 
     function updateConflictButtonState() {
-      const isEasyLevel = currentLevel === 'facile';
-      conflictToggleButton.hidden = !isEasyLevel;
-      if (!isEasyLevel) {
-        return;
-      }
-      const labelKey = showConflicts ? 'hideConflicts' : 'showConflicts';
-      const fallback = showConflicts ? 'Masquer les conflits' : 'Afficher les conflits';
-      const label = formatStatus(labelKey, fallback);
-      conflictToggleButton.textContent = label;
-      conflictToggleButton.setAttribute('aria-label', label);
-      conflictToggleButton.setAttribute('aria-pressed', String(showConflicts));
-      const shouldDisable = lastConflictCount === 0 && !showConflicts;
-      conflictToggleButton.disabled = shouldDisable;
-      conflictToggleButton.classList.toggle('is-disabled', shouldDisable);
+      conflictToggleButton.hidden = true;
+      conflictToggleButton.textContent = '';
+      conflictToggleButton.removeAttribute('aria-label');
+      conflictToggleButton.setAttribute('aria-pressed', 'false');
+      conflictToggleButton.disabled = true;
+      conflictToggleButton.classList.add('is-disabled');
     }
 
     conflictToggleButton.addEventListener('click', () => {
