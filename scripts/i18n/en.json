@@ -2094,8 +2094,15 @@
           "symbol": "Cu",
           "name": "Copper",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Symbol 'Cu', atomic number 29, copper is a reddish-orange, malleable metal and excellent conductor that humanity has worked with since prehistory.",
+            "paragraphs": [
+              "Its warm glow made it one of the first metals shaped by humans, long before iron or steel, an ancient emblem linking nature, craft and life.",
+              "Copper is forged in massive stars during their final fusion stages and in supernova explosions, and also through neutron capture in red giants. These cosmic events spread copper into interstellar dust that later formed Earth and the rocky planets.",
+              "On Earth it appears in many ores such as chalcopyrite (CuFeS₂), malachite (Cu₂CO₃(OH)₂), azurite (Cu₃(CO₃)₂(OH)₂) or cuprite (Cu₂O), and even occurs in native form. That accessibility made copper one of humanity’s first known metals, ushering in the Copper Age and then the Bronze Age.",
+              "As the metal of energy and communications, copper permeates cables, motors, transformers and electronic circuits, as well as heating and cooling systems. Its natural antimicrobial properties see it used on hospital surfaces and in plumbing, while its alloys—bronze and brass—shaped history and now underpin the energy transition.",
+              "Copper chemistry is rich: oxides (Cu₂O, CuO), sulfates (CuSO₄), carbonates and organic complexes have served as pigments, fungicides and industrial tools. In living organisms, enzymes such as cytochrome oxidase rely on copper for cellular respiration and oxygen transport, notably in blue-blooded animals like octopuses.",
+              "Born in the stars, crafted by civilizations and vital to both technology and biology, copper now carries the electricity of the modern world and has linked energy with life for millennia."
+            ],
             "sources": []
           }
         },
@@ -2103,8 +2110,15 @@
           "symbol": "Zn",
           "name": "Zinc",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Symbol 'Zn', atomic number 30, zinc is a bluish-gray metal that stays mostly in the background yet is essential as both a protector of metals and a vital nutrient.",
+            "paragraphs": [
+              "Brittle when cold but malleable when hot, it has accompanied people since antiquity in alloys with copper or steel—a quiet partner valued more for utility than for shine.",
+              "Zinc forms in massive stars during the last stages of nuclear fusion, in type II supernovae and even in certain, more energetic hypernovae. Cast into interstellar space, it later joins rocky planets and records multiple generations of stars.",
+              "The 24th most abundant element in Earth’s crust, it is found mainly in sphalerite (ZnS), often alongside lead, silver or copper, and is easily extracted by roasting and reduction. Long used in alloys, it was isolated as a metal only in the 18th century before becoming indispensable for shielding metals and supporting health.",
+              "Its best-known role is galvanization: a zinc coating guards iron and steel by oxidizing in their place, while the metal also forms alloys such as brass and zamak and powers zinc-carbon or zinc-air batteries. Nutritionally, it participates in more than 300 enzymatic reactions, bolsters the immune system and aids wound healing.",
+              "Among its signature compounds, zinc oxide (ZnO) serves as a white pigment and UV filter, zinc chloride (ZnCl₂) acts as a catalyst or industrial adhesive, and zinc sulfate (ZnSO₄) provides pharmaceutical and nutritional benefits. In biology, zinc stabilizes DNA via 'zinc fingers' and regulates gene expression.",
+              "A silent guardian, zinc sacrifices itself to preserve the structures it shields—from metals to organisms—embodying the quiet nobility of modest yet indispensable elements."
+            ],
             "sources": []
           }
         },

@@ -2079,8 +2079,15 @@
           "symbol": "Cu",
           "name": "Cuivre",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Symbole \"Cu\", numéro atomique 29, le cuivre est un métal rouge-orangé, malléable et excellent conducteur façonné par l’humanité depuis la préhistoire.",
+            "paragraphs": [
+              "Son éclat chaleureux en a fait l’un des premiers métaux façonnés par l’homme, bien avant le fer ou l’acier, symbole ancien du lien entre nature, technique et vie.",
+              "Le cuivre est forgé dans les étoiles massives, au cours des dernières étapes de fusion nucléaire et lors des explosions de supernovae, ainsi que par capture de neutrons dans les géantes rouges. Ces phénomènes cosmiques dispersent le cuivre dans la poussière interstellaire, dont sont issues la Terre et les planètes rocheuses.",
+              "Sur Terre, il se présente dans de nombreux minerais comme la chalcopyrite (CuFeS₂), la malachite (Cu₂CO₃(OH)₂), l’azurite (Cu₃(CO₃)₂(OH)₂) ou la cuprite (Cu₂O), mais existe aussi à l’état natif. Cette disponibilité a fait du cuivre l’un des premiers métaux connus de l’humanité, donnant naissance à l’Âge du Cuivre puis à l’Âge du Bronze.",
+              "Métal de l’énergie et des communications, le cuivre est omniprésent dans les câbles, moteurs, transformateurs et circuits électroniques, ainsi que dans les systèmes de chauffage et de refroidissement. Antibactérien naturel, il s’emploie aussi dans les surfaces hospitalières et la plomberie, tandis que ses alliages — bronze et laiton — ont façonné l’histoire et soutiennent la transition énergétique.",
+              "Sa chimie est riche : oxydes (Cu₂O, CuO), sulfates (CuSO₄), carbonates et complexes organiques ont servi de pigments, de fongicides et d’outils industriels. Dans le vivant, des enzymes comme la cytochrome oxydase utilisent le cuivre pour la respiration cellulaire et le transport de l’oxygène, notamment chez les animaux à sang bleu comme les poulpes.",
+              "Né des étoiles, travaillé par les civilisations et vital à l’échelle technologique comme biologique, le cuivre conduit aujourd’hui l’électricité du monde moderne et relie énergie et vie depuis des millénaires."
+            ],
             "sources": []
           }
         },
@@ -2088,8 +2095,15 @@
           "symbol": "Zn",
           "name": "Zinc",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Symbole \"Zn\", numéro atomique 30, le zinc est un métal gris bleuté, discret mais essentiel, à la fois protecteur des métaux et nutriment vital.",
+            "paragraphs": [
+              "Cassant à froid mais malléable à chaud, il accompagne les humains depuis l’Antiquité en alliage avec le cuivre ou l’acier, allié silencieux dont l’utilité prime sur l’éclat.",
+              "Le zinc naît dans les étoiles massives durant les dernières étapes de fusion nucléaire, dans les supernovae de type II et même dans certaines hypernovae plus énergétiques. Dispersé dans le milieu interstellaire, il rejoint ensuite les planètes rocheuses et témoigne de plusieurs générations d’étoiles.",
+              "Vingt-quatrième élément le plus abondant de la croûte terrestre, il se trouve surtout dans la sphalérite (ZnS), souvent associée au plomb, à l’argent ou au cuivre, et s’extrait aisément par grillage et réduction. Longtemps utilisé dans les alliages, il n’a été isolé sous forme métallique qu’au XVIIIᵉ siècle avant de devenir incontournable pour protéger les métaux et soutenir la santé.",
+              "Son rôle le plus connu est la galvanisation : une couche de zinc protège fer et acier en s’oxydant à leur place, tandis qu’il entre dans des alliages comme le laiton ou le zamak et alimente des piles zinc-carbone ou zinc-air. Côté nutrition, il intervient dans plus de 300 réactions enzymatiques, soutient le système immunitaire et favorise la cicatrisation.",
+              "Parmi ses composés phares, l’oxyde de zinc (ZnO) sert de pigment blanc et de filtre UV, le chlorure de zinc (ZnCl₂) agit comme catalyseur ou adhésif, et le sulfate de zinc (ZnSO₄) joue un rôle pharmaceutique et nutritionnel. En biologie, il stabilise l’ADN via les « doigts de zinc » et régule l’expression génétique.",
+              "Gardien silencieux, le zinc se sacrifie pour préserver les structures qu’il protège, depuis les métaux jusqu’aux organismes, illustrant la noblesse des éléments modestes mais indispensables."
+            ],
             "sources": []
           }
         },
