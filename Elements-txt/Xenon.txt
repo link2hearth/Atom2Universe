@@ -1,0 +1,17 @@
+Présentation
+Symbole “Xe”, numéro atomique 54, le xénon est un gaz noble incolore, inodore et chimiquement inerte, présent en très faible quantité dans l’atmosphère terrestre (environ 0,087 ppm). Découvert en 1898 par les chimistes britanniques William Ramsay et Morris Travers, il doit son nom au grec xenos, “étranger”, en raison de sa rareté et de son comportement atypique. Il fait partie de la famille des gaz nobles, aux côtés de l’hélium, du néon, de l’argon, du krypton et du radon, et se distingue par sa densité et ses propriétés physiques uniques.
+
+Origines cosmiques
+Le xénon est produit lors des supernovae et des collisions d’étoiles à neutrons, à travers les processus s, r et p de capture de neutrons et de protons. Ses nombreux isotopes, stables ou radioactifs, reflètent ces différents mécanismes nucléaires. On trouve du xénon dans l’atmosphère des planètes géantes, dans les glaces cométaires et dans les météorites. Son abondance isotopique dans les gaz primitifs du système solaire est d’ailleurs utilisée comme indicateur de l’évolution planétaire — y compris celle de l’atmosphère terrestre.
+
+Origine terrestre
+Sur Terre, le xénon se trouve dans l’atmosphère, où il est isolé par distillation fractionnée de l’air liquide. Il est extrêmement rare : on en obtient seulement quelques grammes par tonne d’air. On le retrouve aussi, en traces, dans certaines eaux souterraines et dans les gaz volcaniques. Les isotopes radioactifs du xénon, comme ^133Xe et ^135Xe, apparaissent dans les réacteurs nucléaires et servent de traceurs pour surveiller les essais ou les fuites radioactives, car ils résultent directement de la fission de l’uranium et du plutonium.
+
+Usages
+Le xénon a des usages très variés, tous fondés sur ses propriétés physiques remarquables. Il est utilisé dans les lampes à décharge haute intensité (lampes au xénon, projecteurs de cinéma, phares automobiles), où il produit une lumière blanche très proche de celle du soleil. En médecine, le xénon est employé comme gaz anesthésiant, car il est chimiquement neutre, non toxique et offre une excellente tolérance physiologique. Dans la recherche spatiale, le xénon sert de carburant pour les moteurs ioniques, qui propulsent lentement mais efficacement les sondes interplanétaires. Enfin, ses isotopes radioactifs sont utilisés pour la tomographie par émission de photons et le suivi atmosphérique des activités nucléaires.
+
+Molécules associées
+Bien qu’il soit un gaz noble, le xénon peut former des composés stables avec des éléments très électronegatifs comme le fluor et l’oxygène. On connaît ainsi le tétrafluorure de xénon (XeF₄), l’hexafluorure (XeF₆) et le tetroxyde (XeO₄). Ces composés, découverts dans les années 1960, ont démontré que même les gaz “inertes” pouvaient participer à des réactions chimiques dans des conditions adaptées. Le xénon est ainsi devenu un sujet d’étude majeur en chimie des gaz nobles et en physique quantique.
+
+Conclusion
+Le xénon est un élément d’élégance et de précision : invisible mais lumineux, rare mais indispensable. Né des explosions d’étoiles, piégé dans l’atmosphère terrestre, il éclaire nos routes, nos films et nos diagnostics médicaux. Inerte dans la chimie ordinaire mais actif dans la physique des hautes énergies, il incarne la beauté silencieuse des gaz nobles — celle d’une matière paisible, forgée par les cataclysmes du cosmos.

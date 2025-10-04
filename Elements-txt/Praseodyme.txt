@@ -1,0 +1,17 @@
+Présentation
+Symbole Pr, numéro atomique 59, le praséodyme est un métal argenté, malléable et un peu capricieux à l’air libre : il s’oxyde vite, formant une fine pellicule verte qui lui a valu son nom — du grec prasios didymos, “jumeau vert”. Découvert en 1885 par le chimiste autrichien Carl Auer von Welsbach, il est né d’une séparation minutieuse du “didyme”, un mélange autrefois pris pour un élément unique. Le praséodyme n’est pas très célèbre du grand public, mais il brille — au sens propre — dans de nombreuses technologies de pointe.
+
+Origines cosmiques
+Comme ses voisins lanthanides, le praséodyme est né de la nucléosynthèse stellaire. Il s’est formé par capture lente de neutrons (processus s) dans les couches internes des étoiles géantes rouges, et parfois par le processus r lors des explosions de supernovae ou des fusions d’étoiles à neutrons. Ces événements extrêmes ont disséminé le praséodyme à travers le cosmos, où il a fini par s’incorporer dans les roches primitives qui ont formé la Terre.
+
+Origine terrestre
+Sur notre planète, le praséodyme se rencontre toujours accompagné de ses cousins lanthanides. On le trouve principalement dans les minerais de bastnäsite et de monazite, riches en terres rares. Il n’est pas rare à proprement parler — sa concentration dans la croûte terrestre est similaire à celle du cuivre — mais il est difficile à isoler, car ses propriétés chimiques sont très proches de celles du néodyme, son “jumeau” de numéro 60.
+
+Usages
+Le praséodyme trouve ses principales applications dans les aimants permanents de haute performance, notamment ceux à base de néodyme-fer-bore (Nd₂Fe₁₄B), où il peut remplacer partiellement le néodyme pour améliorer la résistance à la chaleur. Il est aussi utilisé pour colorer le verre et l’émail d’un jaune-vert délicat, et pour fabriquer des verres de soudure filtrant la lumière intense sans déformer les couleurs. Dans l’industrie aéronautique, certains alliages de magnésium contenant du praséodyme présentent une excellente résistance mécanique et thermique.
+
+Molécules et propriétés associées
+Sous forme ionique, le praséodyme adopte principalement l’état d’oxydation +3, donnant naissance à des sels et oxydes d’un vert caractéristique. L’oxyde de praséodyme (Pr₆O₁₁) est un composé mixte où coexistent les états Pr³⁺ et Pr⁴⁺, d’où sa capacité à participer à des réactions d’oxydoréduction. Dans les verres et céramiques, il confère une teinte chaude et absorbe les ultraviolets. Métalliquement, il est paramagnétique à température ambiante et se comporte comme un lanthanide typique : ductile, réactif, et chimiquement proche du néodyme.
+
+Conclusion
+Issu des étoiles, caché dans les roches, le praséodyme est un maillon discret mais indispensable de la technologie moderne. Sans lui, nos moteurs électriques, nos verres filtrants et nos alliages de précision seraient moins performants. C’est un élément à la fois rare et familier — un “jumeau vert” venu du fond des étoiles, aujourd’hui au cœur de nos machines et de nos inventions.

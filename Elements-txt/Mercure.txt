@@ -1,0 +1,18 @@
+Présentation
+Symbole “Hg”, numéro atomique 80, le mercure est un métal argenté liquide à température ambiante, dense (13,53 g/cm³), volatil et excellent conducteur de l’électricité. Son symbole vient du latin hydrargyrum, “argent liquide”, lui-même dérivé du grec hydrargyros (hydor = eau, argyros = argent). Connu depuis l’Antiquité, il était déjà mentionné dans les écrits chinois et indiens anciens, souvent associé au dieu romain Mercure pour sa mobilité et son éclat.
+
+Origines cosmiques
+Le mercure se forme dans les étoiles massives par des processus de capture lente et rapide de neutrons (s-process et r-process). Il résulte des cycles de nucléosynthèse des éléments lourds, tout comme l’or et le plomb. On le retrouve en traces dans certaines météorites, ce qui indique qu’il faisait déjà partie du nuage proto-solaire à l’origine du système planétaire. Sa rareté relative sur Terre reflète la volatilité de l’élément lors de la formation de la planète.
+
+Origine terrestre
+Sur Terre, le mercure est rare (environ 0,08 ppm dans la croûte). Il se rencontre principalement sous forme de cinabre (HgS), un sulfure rouge vif, principal minerai exploité depuis l’Antiquité. Les gisements les plus célèbres se trouvent à Almaden (Espagne) et à Idrija (Slovénie), deux sites exploités depuis plus de 2 000 ans. Le mercure est obtenu par chauffage du cinabre, qui libère le métal sous forme de vapeur condensée.
+
+Usages
+Le mercure a longtemps été un métal d’importance industrielle et scientifique. Il fut utilisé dans les thermomètres, baromètres, ampoules à décharge et interrupteurs, grâce à sa fluidité et sa dilatation régulière. En chimie, il entre dans la fabrication d’amalgames (alliages avec d’autres métaux), notamment pour l’orpaillage ou les obturations dentaires — des usages aujourd’hui délaissés en raison de sa toxicité.
+Il a aussi joué un rôle majeur dans la métrologie et l’électricité : les lampes à vapeur de mercure ont éclairé les villes du XXᵉ siècle, et les piles au mercure ont alimenté les premiers appareils portables. Aujourd’hui, ses applications sont strictement encadrées, limitées aux instruments scientifiques et à certaines utilisations médicales spécifiques.
+
+Molécules associées
+Le sulfure de mercure (HgS) existe sous deux formes : rouge (cinabre) et noire (métacinnabre). Le chlorure mercurique (HgCl₂) et le chlorure mercureux (Hg₂Cl₂) furent autrefois employés en médecine, mais sont désormais proscrits. L’oxyde de mercure (HgO) et les composés organomercuriels (comme le méthylmercure) sont connus pour leur grande toxicité : ces formes se bioaccumulent et provoquent des troubles neurologiques graves, comme l’a tristement illustré la catastrophe de Minamata au Japon.
+
+Conclusion
+Le mercure est un élément double : fascinant par sa beauté et sa singularité physique, mais dangereux par sa chimie. Métal liquide, symbole d’agilité pour les anciens, il s’est révélé un poison insidieux pour le vivant. Né des étoiles, extrait du cinabre rouge, il a traversé l’histoire humaine en miroir de notre rapport à la matière : entre maîtrise et excès. Le mercure demeure un rappel brillant et troublant de la puissance — et du prix — de la curiosité scientifique.

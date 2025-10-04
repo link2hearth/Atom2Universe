@@ -1,0 +1,17 @@
+Présentation
+Symbole “Y”, numéro atomique 39, l’yttrium est un métal gris argenté, légèrement brillant, souple et stable à l’air sec. Découvert en 1794 par Johan Gadolin dans un minerai suédois provenant du village d’Ytterby, il partage cette origine géographique avec plusieurs autres “terres rares” comme le terbium, l’erbium et l’ytterbium. Bien qu’il n’appartienne pas strictement à la série des lanthanides, il est chimiquement si proche qu’il est souvent classé parmi eux. Métal de la précision et de la lumière, l’yttrium est devenu indispensable dans l’électronique, les lasers et la science des matériaux.
+
+Origines cosmiques
+L’yttrium se forme dans les étoiles âgées, au cours du processus de capture lente de neutrons (s-process) dans les géantes rouges, mais aussi dans les supernovae qui dispersent les éléments lourds dans la galaxie. Sa présence, confirmée dans les météorites et les spectres stellaires, en fait un marqueur des cycles d’enrichissement chimique de l’univers. Dans la poussière cosmique, l’yttrium témoigne du patient travail de plusieurs générations d’étoiles.
+
+Origine terrestre
+Sur Terre, l’yttrium est relativement rare, mais largement distribué. On le trouve associé aux minerais de terres rares, notamment la monazite et la bastnäsite, ainsi qu’à des minéraux comme la gadolinite (celui-là même qui servit à sa découverte). Il n’existe pas de gisement “pur” d’yttrium : il est récupéré comme sous-produit du traitement des terres rares. Son abondance moyenne dans la croûte terrestre est d’environ 30 ppm.
+
+Usages
+L’yttrium a trouvé sa place dans les technologies modernes. Ses oxydes et composés sont utilisés dans les écrans et les LEDs, notamment pour produire la couleur rouge des téléviseurs cathodiques et des diodes blanches. Le grenat d’yttrium et d’aluminium (Y₃Al₅O₁₂, ou YAG) est un cristal utilisé dans les lasers et les optiques de précision. Ses alliages sont résistants aux hautes températures, ce qui les rend utiles dans les moteurs à réaction. En médecine nucléaire, l’isotope yttrium-90 est employé dans certaines thérapies ciblées contre le cancer, notamment pour traiter les tumeurs du foie.
+
+Molécules associées
+L’oxyde d’yttrium (Y₂O₃) est le composé le plus courant et le plus utilisé, notamment comme phosphore rouge dans les écrans. Le grenat d’yttrium et d’aluminium (YAG) sert dans les lasers solides et les céramiques transparentes. Le vanadate d’yttrium (YVO₄) est un autre matériau optique précieux, souvent dopé avec des éléments comme l’europium ou le néodyme pour ajuster ses propriétés lumineuses. Ces composés placent l’yttrium au cœur de la science des matériaux avancés.
+
+Conclusion
+L’yttrium est un métal de l’ombre et de la lumière : invisible à l’œil nu, mais présent dans chaque pixel, chaque faisceau laser, chaque image brillante. Né des étoiles anciennes, concentré dans les minéraux nordiques, il illustre comment la rareté et la complexité peuvent donner naissance à la précision et à la beauté. Sans lui, nos écrans seraient ternes et nos instruments optiques moins fins. L’yttrium, c’est la clarté moderne, issue des profondeurs du cosmos et du savoir humain.

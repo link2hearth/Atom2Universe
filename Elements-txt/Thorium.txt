@@ -1,0 +1,14 @@
+Présentation
+Le thorium, symbole Th, numéro atomique 90, est un métal actinide gris argenté, malléable et ductile. Il est naturellement radioactif : l’isotope le plus abondant et le plus stable est le thorium-232, dont la demi-vie est d’environ 1,4×10¹⁰ ans (≈ 14 milliards d’années). On le trouve dans la croûte terrestre plutôt que sous forme pure — il est un constituant discret mais significatif des minéraux lourds.
+
+Origine (cosmique & terrestre)
+Cosmiquement, le thorium est produit par des processus de capture de neutrons rapides (processus r) lors d’événements stellaires violents (supernovae, collisions d’étoiles à neutrons) et s’est incorporé aux nuages de matière qui ont formé le Système solaire. Terrestrement, il est présent depuis la formation de la planète et se concentre dans certains minéraux (monazite, thorite, autres phosphates et oxydes). Ce sont ces minéraux qui permettent aujourd’hui son extraction industrielle.
+
+Usages
+Le thorium a plusieurs usages historiques et potentiels : il a été employé dans les manchons pour lampes à gaz (mantles), dans certains verres et lentilles haut indice (verres au thorium), et comme additif dans certains alliages ou électrodes de soudage (sous forme d’oxydes). Le plus notable aujourd’hui est son potentiel en cycle nucléaire : le thorium-232 est fertile — après capture d’un neutron il devient ^233Th → ^233Pa → ^233U, un isotope fissile utilisable comme combustible. Des recherches portent sur des réacteurs utilisant le cycle thorium–uranium-233 pour améliorer sécurité et disponibilité des ressources, mais l’exploitation commerciale reste limitée. Par ailleurs, du fait de sa radioactivité, la manipulation et l’élimination des déchets requièrent des précautions spécifiques.
+
+Molécules et chimie associées
+Chimiquement, le thorium se comporte comme un métal lourd ; en solution il est habituellement tétravalent (Th⁴⁺). Ses composés courants incluent dioxyde de thorium (ThO₂), nitrates (Th(NO₃)₄) et chlorures (ThCl₄). ThO₂ est notable pour sa très haute température de fusion et sa stabilité chimique, d’où son usage historique dans des applications réfractaires et optiques. La chimie organothorique existe en recherche mais n’a pas d’applications industrielles courantes.
+
+Conclusion
+Le thorium est un actinide à la fois ancien (héritage des étoiles) et très terrestre (concentré dans des minéraux exploités). Sa longue demi-vie lui confère une présence durable mais radioactive, ce qui impose des règles strictes de gestion. Scientifiquement et technologiquement, son principal intérêt contemporain est le cycle thorium comme voie alternative pour produire du combustible nucléaire — une option porteuse mais encore largement expérimentale.

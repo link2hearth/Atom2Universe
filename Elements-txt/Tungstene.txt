@@ -1,0 +1,18 @@
+Présentation
+Symbole “W”, numéro atomique 74, le tungstène est un métal gris acier, très dense (19,3 g/cm³, presque autant que l’or) et doté du point de fusion le plus élevé de tous les métaux purs : 3 422 °C. Son symbole “W” vient de son nom allemand Wolfram, d’où dérive aussi le terme wolframite, son principal minerai. Découvert sous forme d’oxyde en 1781 par Carl Wilhelm Scheele, il fut isolé comme métal en 1783 par les frères espagnols Juan José et Fausto de Elhuyar. Son nom “tungstène” signifie littéralement “pierre lourde” en suédois (tung sten).
+
+Origines cosmiques
+Le tungstène se forme dans les étoiles massives au cours du processus de capture lente de neutrons (s-process), mais aussi lors des supernovae et des collisions d’étoiles à neutrons par le r-process. Il fait partie des métaux lourds produits tardivement dans la nucléosynthèse. L’isotope radioactif ^182W, issu de la désintégration du hafnium (^182Hf), est un marqueur isotopique utilisé pour dater la formation du noyau terrestre et des météorites différenciées, faisant du tungstène un outil clé en géochimie planétaire.
+
+Origine terrestre
+Sur Terre, le tungstène est relativement rare (1,25 ppm dans la croûte), mais très concentré dans certains minerais : la wolframite ((Fe,Mn)WO₄) et la scheelite (CaWO₄). Ces gisements se trouvent principalement en Chine (qui produit plus de 80 % du tungstène mondial), en Russie et en Afrique centrale. Le métal est extrait par réduction chimique du trioxyde de tungstène (WO₃) avec de l’hydrogène ou du carbone.
+
+Usages
+Le tungstène est le métal des conditions extrêmes. Grâce à son point de fusion record, il est utilisé dans les filaments d’ampoules, les électrodes, les contacts électriques et les éléments de chauffage pour les fours à très haute température. Sa densité exceptionnelle en fait un substitut non toxique au plomb dans les projectiles et les contrepoids.
+Il entre aussi dans la composition d’alliages ultrarésistants, notamment les aciers rapides et les carbures de tungstène (WC), matériaux de coupe des outils industriels et des foreuses. Dans le domaine militaire et spatial, il est utilisé pour les blindages, les têtes d’obus perforantes et les composants de satellites, où sa résistance thermique et mécanique est inégalée.
+
+Molécules associées
+Les principaux composés du tungstène sont le trioxyde de tungstène (WO₃), le tétrachlorure (WCl₄) et surtout le carbure de tungstène (WC), célèbre pour sa dureté comparable à celle du diamant. Les complexes organométalliques du tungstène, comme le carbonyle de tungstène (W(CO)₆), jouent un rôle en catalyse et en chimie des surfaces. Ses oxydes et bronzes de tungstène sont aussi étudiés pour leurs propriétés électrochromes et leur utilisation dans les vitrages intelligents.
+
+Conclusion
+Le tungstène est l’archétype du métal de performance. Né dans les étoiles et forgé pour résister à toutes les contraintes terrestres, il allie densité, stabilité et endurance. De l’ampoule du XIXᵉ siècle aux propulseurs du XXIᵉ, il a accompagné l’évolution de la technologie vers la maîtrise du feu et de la lumière. Élément de force absolue, le tungstène incarne la limite physique du métal — l’endurance pure.

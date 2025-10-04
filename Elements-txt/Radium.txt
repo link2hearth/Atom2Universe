@@ -1,0 +1,18 @@
+Présentation
+Symbole “Ra”, numéro atomique 88, le radium est un métal alcalino-terreux blanc argenté, brillant lorsqu’il est fraîchement isolé, mais qui noircit à l’air en raison de la formation d’oxyde. Il est hautement radioactif et chimiquement proche du baryum et du calcium. Découvert en 1898 par Pierre et Marie Curie à partir de la pechblende (uraninite), il fut isolé sous forme métallique en 1910 par Marie Curie et André Debierne. Son nom vient du latin radius, “rayon”, en référence à la luminescence qu’il émet spontanément dans l’obscurité.
+
+Origines cosmiques
+Le radium est un produit transitoire de la désintégration de l’uranium et du thorium. Dans les étoiles massives, il se forme lors du processus rapide de capture de neutrons (r-process), mais n’existe jamais longtemps : ses isotopes se désintègrent rapidement vers le radon, le francium et le plomb. Il appartient ainsi à la famille radioactive naturelle de l’uranium-238, qui aboutit finalement à la stabilité du plomb-206.
+
+Origine terrestre
+Sur Terre, le radium est rare (environ 1 partie pour 10¹² d’uranium), présent uniquement sous forme de traces dans les minerais uranifères, notamment la pechblende. À la fin du XIXᵉ siècle, les Curie ont traité plusieurs tonnes de minerai pour isoler quelques milligrammes de radium, dans un travail titanesque. Aujourd’hui, il est obtenu par extraction à partir des résidus d’uranium ou par production artificielle dans les réacteurs nucléaires. Son isotope le plus stable, ^226Ra, a une demi-vie de 1 600 ans.
+
+Usages
+Le radium fut d’abord célébré comme une merveille scientifique. Sa luminescence spontanée a conduit à sa diffusion dans les peintures phosphorescentes des montres et des instruments militaires au début du XXᵉ siècle. Il fut aussi utilisé dans les premiers traitements radiothérapeutiques, avant d’être remplacé par le cobalt-60 et d’autres isotopes plus sûrs.
+Aujourd’hui, le radium n’a plus d’usage industriel courant : son extrême radioactivité et sa toxicité ont conduit à son abandon. Cependant, il demeure un élément de référence en radiophysique, et son étude historique a jeté les bases de la médecine nucléaire et de la dosimétrie modernes.
+
+Molécules associées
+Les composés du radium sont analogues à ceux du baryum : chlorure de radium (RaCl₂), bromure (RaBr₂), carbonate (RaCO₃) et sulfate (RaSO₄). Tous sont très radioactifs et luminescents en raison de la désintégration du métal. Le radium émet spontanément du radon (^222Rn), un gaz noble radioactif qui s’accumule dans les roches et les sous-sols, source naturelle d’exposition pour l’homme.
+
+Conclusion
+Le radium est un métal à double visage : il a illuminé la science autant qu’il a brûlé ceux qui l’ont approché. Découvert par les Curie au prix d’efforts surhumains, il a offert au monde la preuve tangible de la puissance contenue dans la matière. Mais il a aussi rappelé le prix du savoir, lorsque la fascination pour sa lumière a conduit à des drames sanitaires. Aujourd’hui encore, le radium incarne l’aube de la radioactivité — ce moment où la curiosité humaine a mis au jour l’énergie des étoiles.

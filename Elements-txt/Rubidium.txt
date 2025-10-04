@@ -1,0 +1,17 @@
+Présentation
+Symbole “Rb”, numéro atomique 37, le rubidium est un métal alcalin doux et argenté, extrêmement réactif à l’air et à l’eau. Il fond légèrement au-dessus de la température ambiante (39 °C), un peu comme le gallium, et dégage une flamme violette caractéristique. Découvert en 1861 par les chimistes allemands Robert Bunsen et Gustav Kirchhoff, son nom vient du latin rubidius, signifiant “rouge profond”, en référence aux raies rouges qu’il produit dans son spectre d’émission.
+
+Origines cosmiques
+Le rubidium est produit dans les étoiles par les processus de capture lente et rapide de neutrons (s et r). Ses isotopes stables se forment dans les étoiles géantes rouges, tandis que son isotope radioactif ^87Rb résulte des supernovae. Cet isotope, avec une demi-vie de près de 49 milliards d’années, est utilisé pour dater les roches anciennes par la méthode rubidium-strontium, l’une des plus précieuses en géochronologie. Chaque atome de rubidium terrestre porte donc en lui la mémoire de plusieurs générations d’étoiles.
+
+Origine terrestre
+Sur Terre, le rubidium est présent en petites quantités dans la croûte, à raison d’environ 90 ppm. Il se trouve dans des minéraux riches en potassium, comme la lépidolite, la pollucite et les feldspaths, où il remplace partiellement les ions K⁺. On ne le trouve jamais sous forme libre, car il réagit immédiatement avec l’air et l’eau. Il est principalement obtenu comme sous-produit de l’extraction du lithium ou du césium. Bien que rare, il est assez largement dispersé et n’existe pas de “gisements de rubidium” au sens strict.
+
+Usages
+Le rubidium n’a pas d’applications massives, mais ses usages sont remarquables dans des domaines de pointe. Il sert dans les horloges atomiques, où la fréquence de transition de l’atome de rubidium fournit une mesure du temps extrêmement stable — ces horloges synchronisent des systèmes GPS et des réseaux de télécommunication. En recherche, le rubidium est utilisé pour produire des gaz ultrafroids et des condensats de Bose-Einstein, des états quantiques de la matière à température proche du zéro absolu. Ses sels ont aussi quelques applications dans les verres spéciaux et la photoémission.
+
+Molécules associées
+Le rubidium forme des composés ioniques simples, analogues à ceux du potassium : chlorure (RbCl), nitrate (RbNO₃), carbonate (Rb₂CO₃). Ces sels sont très solubles dans l’eau et peu utilisés en dehors du laboratoire. Le rubidium métallique est parfois employé dans les cellules photoélectriques, où sa grande réactivité facilite l’émission d’électrons. En géologie, l’isotope ^87Rb est utilisé pour la datation, car il se désintègre lentement en ^87Sr (strontium), un processus qui a permis de mesurer l’âge de certaines roches terrestres et lunaires.
+
+Conclusion
+Le rubidium est un élément discret mais fascinant : né des étoiles, rare sur Terre, réactif au point d’être insaisissable, mais d’une précision atomique lorsqu’il est dompté. Dans ses horloges, il mesure le temps ; dans les laboratoires, il sonde la matière quantique. De la fusion stellaire à la physique de l’infiniment froid, le rubidium illustre à merveille comment un élément marginal du tableau périodique peut devenir une clé pour comprendre le monde et le temps lui-même.

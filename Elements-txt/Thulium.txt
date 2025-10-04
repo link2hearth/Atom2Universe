@@ -1,0 +1,17 @@
+Présentation
+Symbole Tm, numéro atomique 69, le thulium est un métal argenté, tendre et malléable, appartenant à la famille des lanthanides. Découvert en 1879 par le chimiste suédois Per Teodor Cleve (le même qui avait découvert le holmium), il doit son nom à Thulé (Thule en latin), une terre mythique du bout du monde évoquée par les anciens Grecs et Romains — probablement inspirée par la Scandinavie. Un nom évocateur pour un métal discret, longtemps resté méconnu, mais qui cache des propriétés étonnantes.
+
+Origines cosmiques
+Comme ses voisins lanthanides, le thulium est né dans les explosions de supernovae et les fusions d’étoiles à neutrons, via le processus r (capture rapide de neutrons). Ces réactions nucléaires violentes ont donné naissance aux éléments lourds de l’univers, dont le thulium, bien avant la formation du système solaire. Les atomes de thulium que nous extrayons aujourd’hui sont donc d’antiques reliques stellaires, formés dans les feux cosmiques d’étoiles disparues.
+
+Origine terrestre
+Sur Terre, le thulium est l’un des lanthanides les plus rares : sa concentration moyenne dans la croûte terrestre n’est que d’environ 0,5 partie par million. Il est toujours associé à d’autres terres rares dans les minerais de monazite et de xénotime. Il n’existe pas à l’état natif, mais il est isolé industriellement grâce à des procédés d’échange d’ions et d’extraction par solvant. Son isotope naturel unique, Tm-169, est stable, mais des isotopes radioactifs peuvent être produits artificiellement pour certaines applications médicales.
+
+Usages
+Malgré sa rareté, le thulium a trouvé plusieurs usages remarquables. Son isotope Tm-170 est une source de rayonnement gamma utilisée en radiographie industrielle et parfois en traitements médicaux. En optique et en photonique, le thulium-dopé (Tm³⁺) est utilisé dans les lasers infrarouges, notamment les lasers Tm:YAG ou Tm:YLF, qui émettent autour de 2 micromètres — une longueur d’onde idéale pour certaines chirurgies au laser, car elle interagit fortement avec l’eau et les tissus biologiques. Le thulium entre aussi dans certains alliages supraconducteurs et dans les céramiques pour dispositifs électroniques spécialisés.
+
+Molécules et propriétés associées
+Le thulium est trivalent dans la plupart de ses composés (Tm³⁺). Son oxyde, Tm₂O₃, est une poudre blanche utilisée dans les matériaux optiques et les lasers. Métalliquement, il est paramagnétique à température ambiante, mais devient ferromagnétique à très basse température (en dessous de 30 K). Il est stable à l’air sec, mais s’oxyde lentement en présence d’humidité. Ses ions présentent des transitions électroniques fines responsables d’une luminescence bleu-vert pâle, utilisée en recherche optique.
+
+Conclusion
+Né du mythe de Thulé et des étoiles elles-mêmes, le thulium est un métal du bout du monde — rare, discret, mais d’une beauté scientifique singulière. Il éclaire les laboratoires, soigne par la lumière, et incarne cette élégance typique des lanthanides : celle d’une matière presque invisible, mais essentielle à la précision et à la connaissance. Du Nord mythique à la science moderne, le thulium est un lien entre légende et lumière.

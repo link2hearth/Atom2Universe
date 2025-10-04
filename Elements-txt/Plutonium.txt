@@ -1,0 +1,19 @@
+Présentation
+Le plutonium, symbole Pu, numéro atomique 94, est un métal actinide dense, argenté à l’état métallique mais souvent rencontré sous forme d’oxydes. Plusieurs isotopes existent ; les plus évoqués sont ^239Pu (demi-vie ≈ 24 110 ans) et ^238Pu (demi-vie ≈ 87,7 ans). C’est un élément hautement radioactif et chimiquement complexe, dont les propriétés varient selon l’isotope et l’état d’oxydation. 
+
+Origine
+Découvert et isolé au début des années 1940 (travaux de Seaborg, McMillan et collègues), le plutonium n’est que très faiblement présent à l’état naturel ; il est principalement produit artificiellement en réacteurs nucléaires par capture neutronique sur ^238U (série ^238U → ^239U → ^239Np → ^239Pu). Certains isotopes peuvent aussi apparaître en traces dans des processus géologiques très rares ou lors d’essais nucléaires atmosphériques historiques. 
+
+Usages
+Le plutonium a des usages très contrastés :
+
+^239Pu est un isotope fissile crucial (armes nucléaires, mais aussi combustible dans certains réacteurs et dans le MOX — combustible mélangeant UO₂ et PuO₂).
+
+^238Pu est employé comme source de chaleur dans les générateurs thermoélectriques à radioisotope (RTG) pour l’exploration spatiale et certains dispositifs nécessitant une longue autonomie sans maintenance.
+Par ailleurs, le plutonium intervient dans la recherche sur les cycles de combustible, le retraitement et la transmutation des déchets. Ces usages imposent des mesures strictes de sûreté, de protection radiologique et de non-prolifération. 
+
+Chimie et composés associés
+Chimiquement, le plutonium présente plusieurs états d’oxydation (principalement +3 à +6) et forme des composés bien connus : dioxyde de plutonium (PuO₂) — stable et utilisé comme forme de combustible ou de stockage —, halogénures, nitrates, complexes en solution, etc. Sa chimie redox est complexe : les états d’oxydation influencent fortement sa solubilité, sa mobilité environnementale et le comportement des déchets. En outre, certains isotopes (émissions alpha) posent des risques importants en cas d’inhalation ou d’ingestion. 
+
+Conclusion
+Le plutonium est un élément à la fois stratégique et problématique : capable de produire une grande quantité d’énergie (ou de destruction) mais responsable de défis majeurs en matière de sûreté, de gestion des déchets radioactifs et de non-prolifération. Sa production, son usage et son stockage sont encadrés par des réglementations internationales et des contrôles rigoureux, car les enjeux techniques, sanitaires et politiques qui l’entourent sont considérables. 

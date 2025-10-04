@@ -1,0 +1,17 @@
+Présentation
+Symbole “Tc”, numéro atomique 43, le technétium est un métal gris argenté, brillant, chimiquement proche du manganèse et du rhénium. Son nom vient du grec technetos, “artificiel”, car il fut le premier élément de la table périodique produit par l’homme avant d’être trouvé dans la nature. Entièrement radioactif, il ne possède aucun isotope stable, ce qui explique sa rareté naturelle. Né dans les laboratoires avant d’être retrouvé dans les étoiles, il incarne à merveille le lien entre la recherche humaine et la chimie cosmique.
+
+Origines cosmiques
+Le technétium est un produit éphémère de la nucléosynthèse stellaire. Il se forme par capture de neutrons dans les étoiles géantes rouges, où il peut être observé directement dans le spectre lumineux de certaines d’entre elles — une découverte majeure qui a confirmé que les étoiles fabriquent des éléments. C’est d’ailleurs l’un des rares éléments dont la présence dans les atmosphères stellaires prouve que la nucléosynthèse est en cours. Ses isotopes, notamment ^99Tc, sont également formés dans les supernovae et lors de la fission de l’uranium dans les réacteurs nucléaires terrestres.
+
+Origine terrestre
+Sur Terre, le technétium est extrêmement rare à l’état naturel, car il se désintègre rapidement à l’échelle géologique. On n’en trouve que des traces infimes dans les minerais d’uranium, issues de la fission spontanée du ^238U. La majeure partie du technétium terrestre provient de la production humaine : il fut synthétisé pour la première fois en 1937 par Emilio Segrè et Carlo Perrier à partir de molybdène bombardé de deutons. Aujourd’hui encore, il n’a pas de gisements naturels exploitables.
+
+Usages
+Le technétium a peu d’applications industrielles, mais une importance capitale en médecine nucléaire. L’isotope technétium-99m (le “m” pour métastable) est utilisé dans environ 80 % des examens scintigraphiques. Sa courte demi-vie (6 heures) et son rayonnement gamma modéré en font un traceur idéal pour l’imagerie médicale du cœur, des os, des reins et du cerveau. En recherche, certains de ses composés servent à étudier la corrosion, la chimie des surfaces et le comportement des métaux radioactifs.
+
+Molécules associées
+Les composés du technétium sont principalement oxydés : le pertechnétate (TcO₄⁻) est l’analogue du permanganate (MnO₄⁻), soluble et facilement identifiable. Le technétium peut adopter plusieurs états d’oxydation, du +4 au +7, ce qui le rend chimiquement polyvalent. En médecine, il est souvent lié à des molécules organiques spécifiques qui ciblent un organe ou un tissu particulier, permettant une imagerie très sélective du corps humain.
+
+Conclusion
+Le technétium est un métal paradoxal : inexistant à l’état stable, mais bien présent dans les étoiles et au cœur des hôpitaux. Premier élément “artificiel” découvert, il a pourtant prouvé que la nature le produisait elle aussi, révélant la fabrique des éléments dans les étoiles. À la croisée de la physique nucléaire, de la médecine et de l’astronomie, le technétium est un symbole de la curiosité humaine : un élément à la fois inventé, observé et compris.

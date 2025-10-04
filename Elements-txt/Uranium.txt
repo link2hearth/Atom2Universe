@@ -1,0 +1,90 @@
+Présentation
+L’uranium (symbole U, numéro atomique 92) est un métal lourd, dense et faiblement métallique au toucher, naturellement radioactif. Dans la nature il existe surtout sous forme d’oxydes et de minerais (par ex. uraninite, carnotite, et monazite avec d’autres terres rares) ; les isotopes naturels d’intérêt sont principalement ^238U et ^235U (avec aussi ^234U en trace). ^238U a une demi-vie de l’ordre de 4,47×10^9 ans, et ^235U d’environ 7,04×10^8 ans, ce qui explique à la fois la présence de radioactivité à l’échelle géologique et l’usage de certains isotopes pour la datation radiométrique. 
+
+Origines (cosmique & terrestre)
+Cosmiquement, l’uranium se forme lors de processus de capture rapide de neutrons (processus r) dans des événements stellaires très énergétiques — supernovae ou collisions d’étoiles à neutrons — et s’est incorporé au nuage poussiéreux qui a donné naissance au Système solaire. Terrestrement, il est présent depuis la formation de la planète : la croûte terrestre en contient en moyenne quelques parties par million (≈ 2,8 ppm) et des gisements économiquement exploitables se concentrent dans certaines formations géologiques ; de vastes ressources ont été recensées et évaluées par les agences internationales. 
+
+Usages
+L’usage le plus connu est énergétique : après concentration et enrichissement (augmentation de la fraction de ^235U), l’uranium sert de combustible dans la quasi-totalité des réacteurs commerciaux (centrales nucléaires) pour produire de l’électricité. Il intervient aussi dans la fabrication d’armes nucléaires (utilisation de ^235U fortement enrichi ou de ^239Pu issu de ^238U), en génie militaire (caractéristiques balistiques du tungstène/de l’uranium appauvri) et dans la production d’isotopes à usage médical ou industriel via irradiation. Enfin, des usages historiques ou mineurs existent (colorants céramiques anciens, recherche, blindage), mais le cœur de son intérêt contemporain reste le cycle du combustible nucléaire. 
+
+Chimie et composés associés
+Chimiquement, l’uranium se comporte comme un métal réactif : il forme couramment des ions U⁴⁺ et UO₂²⁺ (uranyle). Les composés usuels comprennent dioxyde d’uranium (UO₂) — forme standard du combustible nucléaire —, divers oxydes, nitrates et fluorures (UF₆ est la forme gazeuse utilisée pour l’enrichissement par centrifugation). Dans l’environnement, l’uranium est mobilisé ou fixé selon le pH et la présence d’oxydants/réducteurs ; sa chimie complexe conditionne le comportement des déchets et la remédiation des sites miniers. Les chaînes de décroissance de ^238U et ^235U produisent plusieurs descendants radioactifs (Ra, Rn, Pb, …), dont certains (notamment le radon) posent des enjeux sanitaires locaux. 
+
+Conclusion
+L’uranium est un élément double : ressource énergétique aux implications technologiques majeures — production d’électricité et applications nucléaires — et source de risques (radioactivité, gestion des déchets, prolifération) qui exigent une réglementation et des garanties robustes. Sa disponibilité géologique est bien documentée et suffisante pour soutenir le parc nucléaire actuel et projeté, mais l’exploitation économique et la sûreté restent des défis techniques et politiques centraux. 
+
+Chronologie synthétique
+
+1789 : Découverte — Martin Heinrich Klaproth identifie un oxyde d’un nouvel élément dans un minerai (plus tard nommé uranium).
+
+1896 : Radioactivité — Henri Becquerel observe l’émission spontanée de rayonnements par des sels d’uranium, ouvrant la physique nucléaire.
+
+1938–1939 : Fission — Otto Hahn et Fritz Strassmann détectent la fission de noyaux d’uranium ; Lise Meitner et Otto Frisch expliquent le phénomène.
+
+1942 : Réaction en chaîne contrôlée — Chicago Pile-1 (Enrico Fermi) réalise la première réaction nucléaire auto-entretenue.
+
+1945 : Applications militaires — l’arme nucléaire (Little Boy, Hiroshima) utilise de l’uranium hautement enrichi.
+
+1954–1956 : Énergie civile — Obninsk (URSS, 1954) et Calder Hall (Royaume-Uni, 1956) marquent les débuts de la production électrique nucléaire commerciale.
+
+Depuis : l’uranium reste au cœur des débats techniques, économiques, sanitaires et géopolitiques liés à l’énergie, la sécurité et la gestion des déchets.
+
+Le cycle du combustible (étapes clés)
+
+Extraction (minage)
+
+Minerais (uraninite, carnotite, monazite, etc.) extraits en mines souterraines, à ciel ouvert ou via lixiviation in situ.
+
+Concassage / mouture / concentration (milling)
+
+Production du concentré appelé yellowcake (principalement U₃O₈).
+
+Conversion
+
+Le yellowcake est transformé en UF₆ (hexafluorure d’uranium) pour le transport et l’enrichissement (UF₆ est gazeux à température contrôlée).
+
+Enrichissement
+
+Augmentation de la fraction en ^235U : combustible pour réacteurs civils ≈ 3–5 % ^235U ; armement ≈ >85–90 % (HEU). Méthodes : centrifugation (courante), diffusion autrefois.
+
+Fabrication du combustible
+
+UF₆ enrichi → conversion chimique → pastilles d’oxyde d’uranium (UO₂) → assemblages combustibles pour réacteurs.
+
+Irradiation en réacteur
+
+Fission : libération d’énergie, transformation isotopique (production de transuraniens comme le plutonium). Après “burnup”, le combustible est irradié et devient hautement radioactif.
+
+Stockage temporaire
+
+Piscines de refroidissement (quelques années) puis stockage en conteneurs sec (casks) pour le stockage intermédiaire.
+
+Traitement / retraitement (optionnel)
+
+Procédé PUREX (extraction) permet de séparer uranium, plutonium et déchets hautement radioactifs : l’uranium et le plutonium peuvent être recyclés (MOX — combustible mixte). Beaucoup de pays choisissent toutefois le stockage direct sans retraitement.
+
+Conditionnement et stockage définitif
+
+Déchets de haute activité nécessitent confinement le long terme (solutions géologiques profondes, conditionnement et surveillance). La gestion sûre des déchets reste un défi technologique et sociopolitique majeur.
+
+Enjeux techniques, sanitaires et géopolitiques (brefs)
+
+Sûreté & radioprotection : manipulation, transport et stockage exigent normes strictes ; les descendants radioactifs (radon, produits de fission) imposent contrôles sanitaires.
+
+Prolifération : les mêmes technologies d’enrichissement et de séparation peuvent produire du matériel utilisable à des fins militaires — c’est pourquoi existent contrôles et garanties (AIEA, traités).
+
+Ressources & économie : ressources connues suffisantes pour le parc actuel, mais l’économie dépend du coût du minerai, de l’enrichissement et des choix technologiques (réacteurs thermiques vs surgénérateurs).
+
+Déchets : stockage sûr à long terme (géologique) et acceptabilité sociale demeurent des enjeux non résolus dans plusieurs pays.
+
+Alternatives : cycles fermés (retraitement + surgénérateurs), ou cycles thorium, offrent des voies différentes mais posent aussi des défis techniques et politiques.
+
+Quelques repères numériques utiles
+
+Enrichissement réacteur typique : 3–5 % ^235U.
+
+Enrichissement armement : >85–90 % ^235U (HEU).
+
+Demi-vies clés : ^238U ≈ 4,47×10⁹ ans, ^235U ≈ 7,04×10⁸ ans.
+
+UF₆ : produit industriel clé pour l’enrichissement (attention : corrosif et chimiqueement réactif).

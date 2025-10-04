@@ -1,0 +1,14 @@
+Présentation
+Le protactinium, symbole Pa, numéro atomique 91, est un métal actinide dense et radioactif, d’aspect argenté grisâtre. L’isotope naturel le plus abondant est le ^231Pa, qui est relativement long-vécu (demi-vie ≈ 3,276×10^4 ans). 
+
+Origine (cosmique & terrestre)
+Cosmiquement, le protactinium se forme par des processus de capture de neutrons lors d’événements stellaires (processus r) et s’est incorporé au matériau du Système solaire primitif. Sur Terre, il apparaît principalement comme produit de désintégration dans les chaînes de l’uranium (notamment ^235U → ^231Pa) et se trouve en très faibles concentrations dans certains minerais d’uranium et de thorium (monazite, uraninite). Les concentrations typiques dans la croûte sont de l’ordre du ppt–ppm selon les gisements. 
+
+Usages
+Du fait de sa rareté, de sa forte radioactivité et de sa toxicité, le protactinium n’a pas d’usage industriel courant. Il est principalement étudié en recherche nucléaire (traçage, études de désintégration) et apparaît comme intermédiaire indésirable dans certains cycles thorium–uranium (par exemple ^233Pa lors du transurannation du cycle thorium). L’extraction commerciale est limitée et il est généralement produit/isolé à partir de combustibles nucléaires irradiés. 
+
+Chimie et composés
+Chimiquement, Pa adopte surtout l’état d’oxydation +5 (mais aussi +4, +3 et +2 dans des conditions particulières). Des oxydes (Pa₂O₅, PaO₂), halogénures et composés organométalliques ont été caractérisés en laboratoire ; le pentoxyde Pa₂O₅ et les chlorures/nitrates de Pa sont des espèces connues. La manipulation exige des conditions spéciales (glovebox, blindage) pour limiter les risques radiologiques. 
+
+Conclusion
+Protactinium est l’un des actinides naturels mais très rare et dangereux : important pour la recherche fondamentale et certains protocoles de datation/océanographie, mais sans application commerciale courante. Sa présence tellurique provient surtout des chaînes de désintégration de l’uranium, et toute manipulation exige des précautions radiologiques strictes. 
