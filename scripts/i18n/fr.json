@@ -3129,8 +3129,13 @@
           "symbol": "Bh",
           "name": "Bohrium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Élément superlourd entièrement artificiel, le bohrium rend hommage à Niels Bohr et reste un sujet fugace d'étude en laboratoire.",
+            "paragraphs": [
+              "Le bohrium, symbole \"Bh\" et numéro atomique 107, est un élément superlourd confirmé en 1981. Il a été nommé en l’honneur du physicien danois Niels Bohr, figure majeure de la physique atomique.",
+              "C’est un élément artificiel, créé dans des accélérateurs de particules en fusionnant des noyaux lourds. Ses isotopes ont des demi-vies très courtes, de l’ordre de la seconde ou moins, ce qui le rend inexistant à l’état naturel.",
+              "Le bohrium fait partie du groupe du manganèse, et les simulations indiquent qu’il pourrait se comporter comme un métal de transition typique. Cependant, sa radioactivité empêche toute étude chimique approfondie et aucun usage pratique n’en découle.",
+              "Le bohrium illustre la poursuite méthodique de la recherche sur les éléments superlourds. Portant le nom d’un pionnier de la physique atomique, il relie symboliquement les fondations de la théorie quantique à l’exploration contemporaine de la matière."
+            ],
             "sources": []
           }
         },
@@ -3138,8 +3143,13 @@
           "symbol": "Hs",
           "name": "Hassium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Élément superlourd artificiel découvert en Hesse, le hassium n’existe qu’en laboratoire malgré des propriétés cohérentes avec son groupe du tableau périodique.",
+            "paragraphs": [
+              "Le hassium, symbole \"Hs\" et numéro atomique 108, est un élément superlourd confirmé en 1984. Il doit son nom au Land de Hesse (Allemagne), où il a été synthétisé pour la première fois.",
+              "Il est artificiel, produit dans des accélérateurs de particules par fusion de noyaux lourds. Ses isotopes ont des demi-vies allant de millisecondes à quelques minutes pour les plus stables.",
+              "Le hassium appartient au groupe des métaux du fer (groupe 8). Des expériences limitées suggèrent qu’il se comporte effectivement comme un métal de transition, pouvant former des oxydes volatils. Toutefois, il reste inaccessible à toute application pratique.",
+              "Le hassium confirme que même les éléments superlourds peuvent parfois montrer des propriétés chimiques cohérentes avec leur position dans le tableau. Éphémère, il reste avant tout un objet d’étude scientifique et un jalon dans l’exploration des éléments ultimes."
+            ],
             "sources": []
           }
         },
