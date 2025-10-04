@@ -2466,8 +2466,15 @@
           "symbol": "I",
           "name": "Iodine",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A violet halogen that readily sublimes, iodine (I, 53) bridges seaweed chemistry with vital biology.",
+            "paragraphs": [
+              "With symbol \"I\" and atomic number 53, iodine is a grey-violet solid halogen that sublimes into vivid purple vapors. Discovered in 1811 by Bernard Courtois while processing seaweed ash, it was named from the Greek ioeidès, \"violet,\" and stands out as a milder, more stable member of the halogen family.",
+              "Iodine is forged in supernovae and neutron-star mergers through rapid neutron capture (the r-process). Its occurrence in meteorites and the long-lived radioisotope ^129I make it a valuable tracer of stellar nucleosynthesis and early planetesimal history.",
+              "On Earth, iodine is scarce in the crust (about 0.4 ppm) but concentrated in oceans as iodide (I⁻) and iodate (IO₃⁻) ions. Marine algae and microorganisms accumulate it efficiently, while commercial production taps natural brines and Chilean nitrate deposits.",
+              "Essential for synthesizing thyroid hormones T₃ and T₄, iodine underpins public health, notably via iodized salt to prevent deficiencies. In medicine it acts as an antiseptic, a contrast agent, and, as radioactive ^131I, a diagnostic and therapeutic tool for thyroid disorders.",
+              "Key compounds include alkali iodides such as KI, hydrogen iodide (HI), and the brown triiodide ion I₃⁻. Organoiodine molecules leverage iodine’s strong X-ray absorption, and the isotopes ^127I and ^131I serve as tracers across biology, medicine, and hydrology.",
+              "Born in the stars yet concentrated in the sea, iodine links cosmic chemistry with the hormonal balance of vertebrates. Quiet within matter but spectacular as violet vapor, it remains a protective and revealing element of life."
+            ],
             "sources": []
           }
         },
@@ -2475,8 +2482,15 @@
           "symbol": "Xe",
           "name": "Xenon",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A rare, luminous noble gas, xenon (Xe, 54) pairs chemical inertness with remarkable physical properties.",
+            "paragraphs": [
+              "With symbol \"Xe\" and atomic number 54, xenon is a colorless, odorless noble gas present at only about 0.087 ppm in Earth’s atmosphere. Discovered in 1898 by William Ramsay and Morris Travers, it takes its name from the Greek xenos, \"stranger,\" highlighting its rarity and unusual behavior.",
+              "Xenon is produced in supernovae and neutron-star collisions via the s-, r-, and p-processes of neutron and proton capture. Its many stable and radioactive isotopes record these mechanisms and act as fingerprints for tracking the evolution of primordial solar system gases.",
+              "On Earth, xenon is obtained by fractional distillation of liquid air, yielding only a few grams per ton processed. Trace amounts also appear in certain groundwater and volcanic emissions, while fission-born isotopes ^133Xe and ^135Xe are tracked to monitor nuclear activity.",
+              "Its applications rely on its light and neutrality: high-intensity discharge lamps, cinema projectors, and automotive headlights emit a white glow close to sunlight. In medicine, xenon’s inertness makes it a well-tolerated anesthetic, and in space propulsion it fuels highly efficient ion engines.",
+              "Despite its inert reputation, xenon forms compounds with highly electronegative elements such as fluorine and oxygen—XeF₄, XeF₆, and XeO₄ proved in the 1960s that noble gases can enter chemistry under controlled conditions. These molecules continue to drive research in noble-gas chemistry and quantum physics.",
+              "An element of elegance and precision, xenon is born of stellar cataclysms before lighting our roads, films, and medical diagnostics. Invisible yet radiant, rare yet indispensable, it embodies the quiet beauty of noble gases between chemical calm and cosmic energy."
+            ],
             "sources": []
           }
         },
