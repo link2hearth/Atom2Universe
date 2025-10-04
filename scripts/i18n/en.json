@@ -2867,8 +2867,15 @@
           "symbol": "Bi",
           "name": "Bismuth",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Shimmering yet gentle, bismuth is a heavy metal whose iridescent crystals, benign chemistry, and expansion on freezing make it uniquely friendly among dense elements.",
+            "paragraphs": [
+              "Overview — With symbol “Bi” and atomic number 83, bismuth is a silvery-white metal with rosy iridescence, dense (9.78 g/cm³), brittle, and a poor conductor. It melts at 271 °C and expands as it solidifies, a rare behavior shared with water. Known since the Middle Ages and long confused with tin and lead, it was recognized as a distinct element in the 16th century by Georgius Agricola. Its name likely comes from the Middle High German Wismut, from weiß Masse, “white mass.”",
+              "Cosmic origins — Bismuth marks the terminus of stellar nucleosynthesis. It forms through the slow neutron-capture process (s-process) inside red giant stars and stands among the last quasi-stable elements before spontaneous radioactivity. Its main isotope, ^209Bi, once thought perfectly stable, is in fact weakly radioactive with a half-life above 10¹⁹ years—over a billion times the age of the universe.",
+              "Terrestrial origin — On Earth bismuth is scarce (around 0.2 ppm in the crust) and commonly occurs with ores of lead, copper, and silver. It also appears as bismuthinite (Bi₂S₃) and bismite (Bi₂O₃). China is today the leading producer. Despite its high density and chemical kinship with toxic metals, bismuth is biocompatible and non-bioaccumulative, making it a safe substitute in many technologies.",
+              "Uses — Bismuth readily replaces lead in low-melting alloys, non-toxic ammunition, electronic solders, and specialty optical glasses. In medicine, bismuth subsalicylate treats gastrointestinal disorders, while other bismuth salts act as antibacterial agents. Its expansion upon solidifying makes it valuable in fusible alloys for thermal safety devices, and its oxidized compounds serve as catalysts and pearlescent pigments. The metal’s staircase-like iridescent crystals have also become icons for art and science outreach.",
+              "Associated molecules — Notable compounds include bismuth subsalicylate, bismuth(III) oxide (Bi₂O₃), and subnitrates (BiONO₃) used in pharmaceuticals. Bismuth pentachloride (BiCl₅) and tribromide (BiBr₃) appear in organic synthesis, while mixed bismuth oxides support selective oxidation and photocatalysis. Its chemistry resembles that of antimony, yet its compounds are markedly more stable and less toxic.",
+              "Conclusion — A fortunate paradox of the periodic table, bismuth is a heavy metal that behaves gently, gleaming while remaining almost timeless. Forged in the stars, it offers a benign alternative to toxic elements, and its iridescent crystals show how chemistry can produce grace."
+            ],
             "sources": []
           }
         },
@@ -2876,8 +2883,15 @@
           "symbol": "Po",
           "name": "Polonium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Elusive and formidable, polonium is an ultra-rare metal whose intense radioactivity links stellar cataclysms to the dawn of nuclear science.",
+            "paragraphs": [
+              "Overview — Symbol “Po”, atomic number 84, polonium is a soft, silvery metal that is extremely rare and highly radioactive. It oxidizes quickly in air and readily sublimes. All of its isotopes are unstable; the most stable, ^210Po, has a half-life of 138 days. Marie Curie named it in honor of her native Poland, making its discovery the first element identified solely through radioactivity.",
+              "Cosmic origins — Polonium forms in supernovae and neutron-star environments via the rapid neutron-capture process (r-process), alongside other heavy radioactive elements. On Earth it also arises as a decay product of uranium and radon. Fleeting by nature, it is continuously generated in radioactive rocks yet vanishes almost as soon as it appears.",
+              "Terrestrial origin — Planet-wide, polonium exists only in traces—on the order of a few hundred micrograms across the entire crust at any moment. It occurs within uranium and thorium ores, from which it is isolated through complex radiochemical procedures. In laboratories it is produced by neutron irradiation of bismuth, yielding ^210Po. Its intense alpha radioactivity makes it hazardous even in microscopic quantities.",
+              "Uses — Civilian uses of polonium are extremely limited because of its lethal toxicity and short half-life. It powers certain radioisotope thermoelectric generators (RTGs) where the heat from ^210Po is converted to electricity for satellites or military hardware. It has also served in antistatic sources and specialized instruments to neutralize electric charges, but handling is tightly regulated since inhaling or ingesting minute amounts is fatal.",
+              "Associated molecules — Polonium compounds are few and poorly studied for safety reasons. Identified species include polonium dioxide (PoO₂), several halides (PoCl₂, PoCl₄), and chalcogenides with sulfur or selenium. Their chemistry resembles that of tellurium and bismuth, yet their radioactive instability confines research to heavily controlled facilities.",
+              "Conclusion — Sitting at the crossroads of chemistry and history, polonium is born of stars, revealed by the Curies, and opened the path to nuclear science. Invisible yet deadly, it embodies the dangerous beauty of knowledge pushed to its limits."
+            ],
             "sources": []
           }
         },
