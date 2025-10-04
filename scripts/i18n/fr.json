@@ -3101,8 +3101,13 @@
           "symbol": "Db",
           "name": "Dubnium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Élément superlourd synthétique confirmé en 1997, le dubnium rend hommage à la cité scientifique de Doubna où sa découverte s'est concrétisée.",
+            "paragraphs": [
+              "Le dubnium, symbole \"Db\", numéro atomique 105, est un élément superlourd confirmé en 1997. Il porte le nom de la ville scientifique de Doubna (ou Dubna), en Russie, où se trouve le Joint Institute for Nuclear Research, acteur majeur de sa découverte.",
+              "C’est un élément synthétique, produit par bombardement de noyaux lourds dans un accélérateur de particules. Ses isotopes se désintègrent en quelques secondes au maximum, ce qui empêche toute existence naturelle durable.",
+              "Le dubnium appartient à la famille des métaux de transition du groupe du tantale et du niobium. Des études chimiques limitées ont confirmé ce comportement. Aucun usage pratique n’est possible en raison de sa radioactivité et de sa rareté.",
+              "Le dubnium marque une étape importante de la recherche internationale sur les éléments lourds. Son nom rend hommage à un centre scientifique clé dans la synthèse des superlourds, symbole de collaboration entre laboratoires du monde entier."
+            ],
             "sources": []
           }
         },
@@ -3110,8 +3115,13 @@
           "symbol": "Sg",
           "name": "Seaborgium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Élément superlourd confirmé en 1993, le seaborgium honore le chimiste Glenn T. Seaborg et prolonge brièvement la chimie des métaux de transition au-delà de l'uranium.",
+            "paragraphs": [
+              "Le seaborgium, symbole \"Sg\", numéro atomique 106, est un élément superlourd confirmé en 1993. Il rend hommage au chimiste américain Glenn T. Seaborg, l’un des découvreurs de nombreux éléments transuraniens.",
+              "C’est un élément artificiel, obtenu par fusion nucléaire de noyaux lourds. Ses isotopes sont tous instables, avec des demi-vies variant de quelques millisecondes à une minute environ pour les plus durables.",
+              "Le seaborgium appartient au groupe du tungstène et du molybdène. Quelques expériences chimiques ont confirmé qu’il partage certaines de leurs propriétés, se comportant comme un métal de transition typique. Sa rareté et sa radioactivité le limitent à la recherche pure.",
+              "Le seaborgium est l’un des rares éléments superlourds dont la chimie a pu être brièvement observée. Fugace mais instructif, il porte le nom d’un chercheur qui a profondément marqué l’histoire du tableau périodique."
+            ],
             "sources": []
           }
         },
