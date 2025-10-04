@@ -2582,8 +2582,15 @@
           "symbol": "Nd",
           "name": "Neodymium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Symbol Nd, atomic number 60, neodymium is a silvery, discreet lanthanide whose magnetic power fuels a wide range of modern technologies.",
+            "paragraphs": [
+              "Symbol Nd, atomic number 60, neodymium is a silvery, malleable metal with a faint pink hue that belongs to the lanthanide family. Its name comes from the Greek neos didymos, \"new twin\", because Carl Auer von Welsbach isolated it in 1885 alongside praseodymium while separating \"didymium\". Although the general public often ignores its existence, everyone benefits from it daily: in the magnets inside our earbuds, hard drives, electric motors and even certain medical instruments.",
+              "Like other rare-earth elements, neodymium was forged in stellar nuclear reactions. It is produced by both the s-process (slow neutron capture in red giant stars) and the r-process (rapid neutron capture during cataclysmic events such as supernovae or neutron-star mergers). These titanic events seeded the universe with the heavy atoms needed to form planets, including Earth, whose rare-earth deposits still bear the memory of those cosmic forges.",
+              "On Earth, neodymium is mainly found in the minerals bastnäsite (a lanthanum and cerium fluorocarbonate) and monazite (a rare-earth phosphate). Despite being classified as a \"rare earth\", it is not truly rare: its concentration in the crust is comparable to that of nickel. What makes it \"rare\" is the difficulty of extracting and purifying it, because it is always mixed with other lanthanides.",
+              "Neodymium is one of the most valuable metals of the 21st century. It sits at the heart of NdFeB (neodymium-iron-boron) magnets, the most powerful currently known. They appear everywhere: in aircraft motors, wind-turbine generators, hard drives, earbuds, loudspeakers and electric vehicles. Neodymium also colors glass and crystals, giving them purple to pink shades. In neodymium lasers (Nd:YAG, neodymium-doped yttrium aluminum garnet), it provides a highly stable beam used in surgery, precision engraving and rangefinding.",
+              "Neodymium almost always adopts the +3 oxidation state, forming colorful salts and oxides. Neodymium oxide (Nd₂O₃) is a pink or violet solid used in glass and optical filters. The pure metal is paramagnetic, but its alloys (especially with iron and boron) become ferromagnetic and extraordinarily strong. Its compounds also absorb specific wavelengths of light, which underpins their precise optical applications.",
+              "Neodymium is both a metal of the present and of the future: born from stellar violence, it now powers the silent motors of electric cars and the crystalline songs of loudspeakers. A metal of movement and light, it perfectly illustrates the paradoxical destiny of the lanthanides: invisible in everyday life yet indispensable to modern technology. From the hearts of supernovae to the cores of our machines, neodymium embodies the hidden strength of matter."
+            ],
             "sources": []
           }
         },
@@ -2591,8 +2598,15 @@
           "symbol": "Pm",
           "name": "Promethium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Symbol Pm, atomic number 61, promethium is the only naturally radioactive lanthanide—a brilliant yet fleeting metal born from atomic fire.",
+            "paragraphs": [
+              "Symbol Pm, atomic number 61, promethium is a lanthanide unlike any other: it is the only element in the series that is naturally radioactive. This silvery, lustrous metal is highly unstable and almost absent in nature on Earth. Its name honors Prometheus, the titan from Greek mythology who stole fire from the gods to offer it to humanity—a nod to the power and danger contained in radioactivity and nuclear science. It is a poetic tribute to an element born of atomic fire.",
+              "Promethium forms in stars but does not linger there for long: its isotopes have short half-lives (the most stable, Pm-145, survives only about 17.7 years) and rapidly decay. Even so, traces have been detected in novae and some variable stars, confirmed spectroscopically—proof that radioactive elements can continually form and vanish throughout the stellar cycle.",
+              "On Earth, promethium is virtually absent in nature: only a few micrograms occur in uranium or thorium ores, produced by spontaneous fission. Chemists Jacob Marinsky, Lawrence Glendenin and Charles Coryell discovered it artificially in 1945 at Oak Ridge Laboratory (Tennessee) while analyzing uranium fission products. It is therefore a \"reactor-born\" element, a true child of nuclear research.",
+              "Its applications are rare but precise. Certain isotopes, notably Pm-147, serve as beta emitters in luminescent paints, thickness gauges, low-power nuclear batteries and even some space devices. However, its radioactivity and scarcity severely limit its use: promethium remains primarily a research material, valuable to nuclear physics and to the study of radioactive lanthanides.",
+              "Chemically, promethium behaves like its neighbors, almost always adopting the +3 oxidation state. Its salts—such as promethium chloride or nitrate—are pink, resembling those of neodymium or samarium, yet they emit a bluish glow due to beta decay. The metal is paramagnetic, malleable and reactive with air, but the challenge of handling meaningful quantities means its practical properties are still poorly documented.",
+              "Promethium is a lanthanide apart: elusive, brilliant and bearing a name rich in symbolism. Born in stellar explosions and rediscovered in nuclear reactors, it represents the frontier between stable matter and pure energy. Like its mythological namesake, it embodies knowledge stolen from the gods’ fire—fascinating, powerful and to be wielded with care."
+            ],
             "sources": []
           }
         },
