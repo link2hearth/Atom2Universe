@@ -3231,8 +3231,13 @@
           "symbol": "Mc",
           "name": "Moscovium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Élément superlourd synthétique de numéro atomique 115, nommé en hommage à la région de Moscou.",
+            "paragraphs": [
+              "Le moscovium, symbole Mc, numéro atomique 115, est un élément superlourd du tableau périodique. Il a été officiellement reconnu en 2016 et porte le nom de la région de Moscou, en hommage aux laboratoires russes impliqués dans sa découverte.",
+              "C’est un élément synthétique, produit en laboratoire par fusion nucléaire de noyaux lourds. Ses isotopes observés ont des demi-vies très courtes, généralement inférieures à une demi-seconde, ce qui empêche toute présence naturelle durable.",
+              "Classé dans la famille des pnictogènes (comme l’azote et le bismuth), il pourrait théoriquement partager certaines de leurs propriétés. Mais sa brièveté d’existence ne permet pas d’étudier réellement sa chimie. Il n’a donc aucun usage pratique, et son intérêt est purement scientifique.",
+              "Le moscovium illustre la quête des éléments superlourds : un fragment de matière qui n’existe qu’un instant, assez pour confirmer son existence mais trop peu pour être exploré. Une étape de plus dans la cartographie des frontières du tableau périodique."
+            ],
             "sources": []
           }
         },
@@ -3240,8 +3245,13 @@
           "symbol": "Lv",
           "name": "Livermorium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Élément superlourd synthétique de numéro atomique 116, dédié au Lawrence Livermore National Laboratory.",
+            "paragraphs": [
+              "Le livermorium, symbole Lv, numéro atomique 116, est un élément superlourd du tableau périodique. Son nom rend hommage au Lawrence Livermore National Laboratory (États-Unis), qui participa à sa découverte confirmée en 2011.",
+              "Le livermorium est un élément artificiel, produit en laboratoire par collisions nucléaires entre noyaux lourds. Ses isotopes connus ont des demi-vies de l’ordre de la seconde ou moins, ce qui le rend inaccessible en dehors des expériences de physique nucléaire.",
+              "En théorie, il appartient à la famille des chalcogènes (comme l’oxygène et le soufre), mais son instabilité ne permet aucune étude chimique directe. Aucun usage pratique n’existe : son intérêt est uniquement scientifique, lié à l’exploration des limites de la stabilité nucléaire.",
+              "Éphémère et insaisissable, le livermorium n’existe que quelques instants après sa création. Plus qu’une substance exploitable, il est une borne avancée du tableau périodique, témoignant de la curiosité humaine à repousser les frontières de la matière."
+            ],
             "sources": []
           }
         },

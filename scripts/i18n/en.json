@@ -3248,8 +3248,13 @@
           "symbol": "Mc",
           "name": "Moscovium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Synthetic superheavy element 115 named in honor of the Moscow region.",
+            "paragraphs": [
+              "Moscovium, symbol Mc and atomic number 115, is a superheavy element of the periodic table. It was officially recognized in 2016 and takes its name from the Moscow region, honoring the Russian laboratories involved in its discovery.",
+              "It is a synthetic element produced in laboratories by nuclear fusion of heavy nuclei. The observed isotopes have very short half-lives, generally below half a second, preventing any lasting natural presence.",
+              "Classed within the pnictogen family (like nitrogen and bismuth), it could theoretically share some of their properties. However, its brief existence keeps chemists from studying it in practice, leaving it without practical uses and of purely scientific interest.",
+              "Moscovium embodies the quest for superheavy elements: a fragment of matter that exists only for an instant, long enough to confirm its reality but too short to explore it. It marks another step in charting the frontiers of the periodic table."
+            ],
             "sources": []
           }
         },
@@ -3257,8 +3262,13 @@
           "symbol": "Lv",
           "name": "Livermorium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Synthetic superheavy element 116 dedicated to the Lawrence Livermore National Laboratory.",
+            "paragraphs": [
+              "Livermorium, symbol Lv and atomic number 116, is a superheavy element of the periodic table. Its name honors the Lawrence Livermore National Laboratory (United States), which helped confirm its discovery in 2011.",
+              "Livermorium is an artificial element produced in laboratories by nuclear collisions between heavy nuclei. Its known isotopes have half-lives on the order of a second or less, making it inaccessible outside nuclear physics experiments.",
+              "In theory it belongs to the chalcogen family (like oxygen and sulfur), but its instability prevents any direct chemical study. No practical use exists: its value is purely scientific, tied to exploring the limits of nuclear stability.",
+              "Ephemeral and elusive, livermorium survives only moments after its creation. Rather than a usable substance, it stands as an outpost of the periodic table, testifying to humanity’s curiosity to push the boundaries of matter."
+            ],
             "sources": []
           }
         },
