@@ -2518,8 +2518,15 @@
           "symbol": "La",
           "name": "Lanthanum",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "First of the lanthanide family, lanthanum is a silvery metal whose discreet nature belies its importance to modern technologies.",
+            "paragraphs": [
+              "With atomic number 57 and symbol La, it is a silvery, malleable metal that tarnishes quickly in air. Unassuming at first glance, it nonetheless plays a quiet yet crucial role in many modern technologies—from hybrid cars to camera lenses. Its name comes from the Greek lanthanein, “to lie hidden,” a perfect nod to its destiny as a discreet metal that long stayed in the shadows.",
+              "Like most elements heavier than iron, lanthanum was born from stellar cataclysms. It forms through the r- and s-processes, where atomic nuclei capture neutrons inside aging stars or during supernova explosions. These events scatter dust enriched with lanthanides into space, feeding the complex chemistry of future planets. Every trace of terrestrial lanthanum is thus a relic of those ancient cosmic forges.",
+              "On Earth, lanthanum is never found in its pure state. It occurs in several minerals, notably monazite and bastnäsite, often mixed with its lanthanide cousins. Although classed among the “rare earths,” it is not so rare: there is more of it in Earth’s crust than lead. Extracting it is challenging, however, because it must be separated from many metals with similar properties—a delicate task that calls for precise chemical processes.",
+              "Lanthanum truly shines through its specialized applications. It is a component of high-refractive optical glasses used in camera and telescope lenses. It also appears in “mischmetal” alloys for lighter flints and in certain alloys destined for the nickel–metal hydride batteries of hybrid vehicles. In catalysis it improves petroleum refining and helps curb pollutant emissions. It even shows up in medicine: lanthanum carbonate is used to regulate phosphate levels in the blood of patients with kidney failure.",
+              "In metallic form, lanthanum oxidizes rapidly in air, forming a thin layer of lanthanum oxide (La₂O₃) that is highly stable and useful for ceramics and catalysts. Its trivalent ions (La³⁺) play a central role in numerous industrial compounds. Its electronic and magnetic properties are typical of the lanthanides: a stable core, valence electrons that are easily mobilized, and a refined chemistry halfway between metallic strength and ionic subtlety.",
+              "Born in the stars and hidden in rocks, lanthanum is a quiet pioneer of technological progress. First in a fascinating series, it embodies the spirit of the lanthanides: rare, complex metals that are nonetheless indispensable to our modern world. From the light of supernovae to that of our camera lenses, lanthanum links cosmic origins with the gaze we cast toward the future."
+            ],
             "sources": []
           }
         },
@@ -2653,8 +2660,16 @@
           "symbol": "Hf",
           "name": "Hafnium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "With symbol “Hf” and atomic number 72, hafnium is a dense, corrosion-resistant silvery metal closely tied to zirconium.",
+            "paragraphs": [
+              "It sits in the same column as titanium and zirconium and resembles the latter so closely that the two were long confused. Discovered in 1923 in Copenhagen by Dirk Coster and George de Hevesy, it takes its name from Hafnia, the old Latin name of the Danish capital.",
+              "Hafnium is produced through slow neutron capture (the s-process) in red giant stars, and to a lesser extent by the rapid process (r-process) in supernovae. It forms alongside zirconium and tungsten within neutron-rich stellar layers. Its long-lived radioactive isotope ^182Hf has been vital to cosmochronology, helping date the differentiation of Earth’s core and of meteorites.",
+              "On Earth, hafnium is scarce—about 3.3 ppm in the crust—and never occurs alone. It always accompanies zirconium within zircon minerals (ZrSiO₄), where it typically makes up 1 to 3% of the mass. Separating it from zirconium is difficult because their chemical properties are nearly identical. Major producers include Australia, China, and the United States, where hafnium is obtained as a by-product of zircon processing for the nuclear industry.",
+              "Hafnium’s properties make it invaluable in extreme environments. Its exceptional heat resistance, chemical stability, and ability to absorb neutrons make it essential for control rods in nuclear reactors, where it regulates fission. In metallurgy it enters nickel- and tantalum-based superalloys used for aircraft turbines and rocket engines.",
+              "In electronics, hafnium dioxide (HfO₂) revolutionized microfabrication: it now serves as a high-permittivity (high-k) dielectric material in next-generation CMOS transistors, replacing traditional silicon dioxide. Hafnium thus plays a discreet yet central role in the ongoing miniaturization of modern computing.",
+              "Key compounds include hafnium dioxide (HfO₂), tetrachloride (HfCl₄), and carbides and nitrides (HfC, HfN), among the most refractory materials known and capable of withstanding more than 3,800 °C. Hafnium carbide is even envisioned for protective coatings on hypersonic vehicles and atmospheric re-entry tiles.",
+              "Hafnium is a frontier metal—poised between fire and stability, between nuclear physics and quantum electronics. Born in the stars and forever linked with its sibling zirconium, it shields reactors, circuits, and engines from the harshest conditions. Rare, robust, and elegant, it epitomizes twenty-first-century chemistry: precision at extreme temperatures."
+            ],
             "sources": []
           }
         },

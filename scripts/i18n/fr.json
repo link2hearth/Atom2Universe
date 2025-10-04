@@ -2501,8 +2501,15 @@
           "symbol": "La",
           "name": "Lanthane",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Premier de la famille des lanthanides, le lanthane est un métal argenté discret mais indispensable à de nombreuses technologies modernes.",
+            "paragraphs": [
+              "Numéro atomique 57, symbole La, il est un métal argenté, malléable, qui ternit vite à l’air. S’il ne paie pas de mine à première vue, il joue pourtant un rôle discret mais crucial dans de nombreuses technologies modernes — de la voiture hybride aux lentilles de caméra. Son nom vient du grec lanthanein, “être caché” : un clin d’œil parfait à son destin de métal discret, longtemps resté dans l’ombre.",
+              "Comme la plupart des éléments plus lourds que le fer, le lanthane est né des cataclysmes stellaires. Il se forme lors des processus dits r et s, où des noyaux atomiques capturent des neutrons dans le cœur des étoiles vieillissantes ou lors des explosions de supernovae. Ces événements dispersent des poussières enrichies de lanthanides dans l’espace, contribuant à la chimie complexe des futures planètes. Ainsi, chaque trace de lanthane terrestre est un vestige de ces antiques forges cosmiques.",
+              "Sur Terre, le lanthane n’existe pas sous forme pure. Il se trouve dans plusieurs minéraux, notamment la monazite et la bastnäsite, souvent mêlé à ses cousins lanthanides. Bien que classé parmi les “terres rares”, il n’est pas si rare : on en trouve plus dans la croûte terrestre que du plomb. Son extraction, cependant, est complexe, car il faut le séparer de nombreux autres métaux aux propriétés voisines — une tâche délicate qui demande des procédés chimiques précis.",
+              "Le lanthane brille surtout par ses usages spécialisés. Il entre dans la composition des verres optiques à haute réfraction utilisés pour les lentilles de caméras et les télescopes. Il est également présent dans les alliages de métaux “mischmetal” pour les briquets, et dans certains alliages destinés aux batteries nickel-hydrure métallique des véhicules hybrides. En catalyse, il améliore le raffinage du pétrole et aide à réduire les émissions polluantes. On le retrouve même en médecine : le carbonate de lanthane est utilisé pour réguler le taux de phosphate dans le sang de certains patients atteints d’insuffisance rénale.",
+              "Sous forme métallique, le lanthane s’oxyde rapidement à l’air, formant une fine couche d’oxyde de lanthane (La₂O₃), très stable et utile dans la fabrication de céramiques et de catalyseurs. Ses ions trivalents (La³⁺) jouent un rôle central dans de nombreux composés industriels. Ses propriétés électroniques et magnétiques sont typiques des lanthanides : un cœur stable, des électrons de valence facilement mobilisables, et une chimie fine, à mi-chemin entre la force métallique et la subtilité ionique.",
+              "Né dans les étoiles, caché dans les roches, le lanthane est un pionnier silencieux du progrès technologique. Premier d’une série fascinante, il incarne à lui seul l’esprit des lanthanides : des métaux rares, complexes, mais indispensables à notre monde moderne. De la lumière des supernovae à celle des lentilles de nos caméras, le lanthane relie les origines cosmiques à nos regards tournés vers l’avenir."
+            ],
             "sources": []
           }
         },
@@ -2636,8 +2643,16 @@
           "symbol": "Hf",
           "name": "Hafnium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Symbole “Hf” et numéro atomique 72, le hafnium est un métal gris argenté dense et résistant à la corrosion, intimement lié au zirconium.",
+            "paragraphs": [
+              "Il appartient à la même colonne que le titane et le zirconium, et partage avec ce dernier une ressemblance chimique si étroite qu’ils furent longtemps confondus. Découvert en 1923 à Copenhague par Dirk Coster et George de Hevesy, il tire son nom de Hafnia, l’ancien nom latin de la capitale danoise.",
+              "Le hafnium est produit par les processus de capture lente (s-process) dans les étoiles géantes rouges, et dans une moindre mesure par le processus rapide (r-process) des supernovae. Il se forme parallèlement au zirconium et au tungstène, dans les couches stellaires riches en neutrons. Son isotope ^182Hf, radioactif à longue demi-vie, a joué un rôle clé en cosmochronologie, permettant de dater la différenciation du noyau terrestre et des météorites.",
+              "Sur Terre, le hafnium est rare (environ 3,3 ppm dans la croûte), et n’existe jamais seul : il accompagne toujours le zirconium dans les minéraux de zircon (ZrSiO₄), où il représente typiquement 1 à 3 % de la masse. Sa séparation du zirconium est difficile, car leurs propriétés chimiques sont presque identiques. Les principaux producteurs sont l’Australie, la Chine et les États-Unis, où il est obtenu comme sous-produit du traitement du zircon pour l’industrie nucléaire.",
+              "Le hafnium possède un ensemble de propriétés qui le rendent précieux dans des environnements extrêmes. Sa résistance exceptionnelle à la chaleur, sa stabilité chimique et sa capacité à absorber les neutrons en font un matériau essentiel pour les barres de contrôle des réacteurs nucléaires, où il régule la fission. En métallurgie, il entre dans les superalliages à base de nickel et de tantale utilisés pour les turbines d’avions et les moteurs de fusée.",
+              "Dans le domaine électronique, le dioxyde de hafnium (HfO₂) a révolutionné la microfabrication : il sert aujourd’hui de matériau diélectrique de haute permittivité (high-k) dans les transistors CMOS de nouvelle génération, remplaçant le dioxyde de silicium traditionnel. Le hafnium joue ainsi un rôle discret mais central dans la miniaturisation de l’informatique moderne.",
+              "Les principaux composés incluent le dioxyde de hafnium (HfO₂), le tétrachlorure (HfCl₄) et les carbures et nitrures (HfC, HfN), parmi les matériaux les plus réfractaires connus, capables de résister à plus de 3 800 °C. Le carbure de hafnium est d’ailleurs envisagé pour les revêtements de protection des véhicules hypersoniques et des tuiles thermiques de rentrée atmosphérique.",
+              "Le hafnium est un métal de frontière : entre le feu et la stabilité, entre la physique nucléaire et l’électronique quantique. Né des étoiles, toujours lié à son frère le zirconium, il protège les réacteurs, les circuits et les moteurs des conditions les plus extrêmes. Rare, robuste et élégant, il illustre à merveille la chimie du XXIᵉ siècle — celle de la précision à haute température."
+            ],
             "sources": []
           }
         },
