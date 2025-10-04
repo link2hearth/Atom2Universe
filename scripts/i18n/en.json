@@ -2628,8 +2628,15 @@
           "symbol": "Sm",
           "name": "Samarium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A silvery lanthanide discovered in 1879, samarium is a quiet workhorse prized for heat-proof magnets and for taming neutrons in nuclear science.",
+            "paragraphs": [
+              "With symbol Sm and atomic number 62, samarium is a silvery metal that stays stable at room temperature and is slightly denser than neodymium. Discovered by Paul-Émile Lecoq de Boisbaudran, it takes its name from the mineral samarskite, itself dedicated to Vassili Samarsky-Bykhovets—a rare case of an element honoring a living person at the time of its discovery.",
+              "Like its lanthanide siblings, samarium was forged in stellar furnaces. It forms mainly through slow neutron capture in red giant stars, but also during cataclysmic events such as supernovae or neutron-star mergers before being spread throughout the solar nebula.",
+              "On Earth it hides in monazite and bastnäsite ores. Though not especially scarce, it was among the first lanthanides to be isolated, and today it is extracted chiefly in China, the United States, and Australia using chemical processes that tease apart rare-earth elements.",
+              "Samarium shines through its versatile uses. It is a key ingredient in samarium–cobalt permanent magnets renowned for their resistance to heat and demagnetization, vital for aircraft engines, medical devices, satellites, and missiles. The strongly absorbing isotope Sm-149 serves as a neutron poison in reactors, while samarium oxides support optical and electronic applications.",
+              "Like many lanthanides, samarium prefers the +3 oxidation state, forming salts and oxides such as Sm₂O₃ used in optical glass and catalysts. The metal is paramagnetic at room temperature, turns antiferromagnetic when cooled, and compounds like SmI₂ are prized as selective reducing agents in organic chemistry.",
+              "Not as famous as neodymium nor as mysterious as promethium, samarium embodies the steady reliability of the lanthanides: forged by stars, refined by science, and providing stability and innovation for engines, reactors, and laboratories worldwide."
+            ],
             "sources": []
           }
         },
@@ -2637,8 +2644,15 @@
           "symbol": "Eu",
           "name": "Europium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A reactive, light-emitting lanthanide, europium supplied the vivid red of early color displays and the fluorescent signatures that safeguard modern documents.",
+            "paragraphs": [
+              "With symbol Eu and atomic number 63, europium is a silvery, soft metal that oxidizes so quickly it is often stored under oil. Discovered by Eugène-Anatole Demarçay at the end of the 19th century, it was named after Europe and soon stood out for its luminous personality.",
+              "Europium is born in extreme nuclear events: it is produced predominantly by the rapid neutron-capture process during supernova explosions or neutron-star mergers. Detecting it in ancient stars confirms how those cosmic cataclysms forged the galaxy’s heavy elements.",
+              "On Earth it resides in monazite and bastnäsite alongside other rare-earth elements. Separating it is tricky, yet europium is unique among lanthanides for sustaining two stable oxidation states, +2 and +3, which underpin its remarkable luminescent behavior.",
+              "Europium compounds, notably Eu₂O₃ and EuS, transformed lighting and display technology: the red and blue phosphors of cathode-ray tubes, fluorescent lamps, and modern LEDs owe much of their glow to it. It also hides in euro banknotes as a UV-visible security feature and serves as a tracer or neutron absorber in nuclear applications.",
+              "Chemically, europium forms trivalent and divalent compounds, with doped materials such as Y₂O₂S:Eu²⁺ emitting intense luminescence. The paramagnetic metal oxidizes rapidly, becomes ferromagnetic at low temperature, and Eu³⁺ ions act as probes in luminescence and spectroscopy studies.",
+              "Born from stellar explosions and named for the Old Continent, europium bridges cosmic science and human innovation: unseen in our pockets yet everywhere in our screens, it converts energy into color and lights up daily life."
+            ],
             "sources": []
           }
         },

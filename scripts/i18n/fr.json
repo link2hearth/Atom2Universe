@@ -2611,8 +2611,15 @@
           "symbol": "Sm",
           "name": "Samarium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Lanthanide argenté découvert en 1879, le samarium est un métal discret mais essentiel pour ses aimants robustes et son rôle en science nucléaire.",
+            "paragraphs": [
+              "Symbole Sm, numéro atomique 62, le samarium est un métal argenté et stable à température ambiante, légèrement plus dense que le néodyme. Découvert par Paul-Émile Lecoq de Boisbaudran, il porte le nom du minéral samarskite, lui-même dédié à Vassili Samarsky-Bykhovets : une rareté dans l’histoire de la chimie, où un élément honore une personne encore vivante au moment de sa découverte.",
+              "Le samarium, comme les autres lanthanides, est né dans les forges stellaires. Il se forme surtout par capture lente de neutrons dans les étoiles géantes rouges, mais aussi lors d’événements cataclysmiques comme les supernovae ou les fusions d’étoiles à neutrons, avant d’être disséminé dans la nébuleuse solaire.",
+              "Sur Terre, on le trouve principalement dans les minerais de monazite et de bastnäsite. Sans être véritablement rare, il a été isolé parmi les premiers lanthanides, et s’extrait aujourd’hui surtout en Chine, aux États-Unis et en Australie grâce à des procédés chimiques capables de séparer finement les terres rares.",
+              "Le samarium brille par ses usages multiples. Il entre dans la composition des aimants permanents samarium-cobalt, réputés pour leur résistance à la chaleur et à la démagnétisation, indispensables aux moteurs d’avion, appareils médicaux, satellites et missiles. L’isotope Sm-149, très absorbant, agit comme poison à neutrons dans les réacteurs, tandis que ses oxydes servent en optique et en électronique.",
+              "Comme beaucoup de lanthanides, il adopte surtout l’état d’oxydation +3, formant sels et oxydes tels que Sm₂O₃, utilisé dans les verres optiques et les catalyseurs. Le métal est paramagnétique à température ambiante, devient antiferromagnétique à basse température, et des composés comme SmI₂ sont des réducteurs sélectifs prisés en chimie organique.",
+              "Ni aussi célèbre que le néodyme ni aussi mystérieux que le prométhium, le samarium incarne la fiabilité tranquille des lanthanides : forgé par les étoiles, raffiné par la science, il apporte stabilité et innovation dans les moteurs, les réacteurs et les laboratoires du monde entier."
+            ],
             "sources": []
           }
         },
@@ -2620,8 +2627,15 @@
           "symbol": "Eu",
           "name": "Europium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Lanthanide lumineux et réactif, l’europium est le métal rare qui a apporté sa lueur rouge aux écrans modernes et des signatures fluorescentes à la sécurité.",
+            "paragraphs": [
+              "Symbole Eu, numéro atomique 63, l’europium est un métal argenté, tendre et très réactif à l’air, au point qu’on le conserve souvent sous huile. Découvert par Eugène-Anatole Demarçay à la fin du XIXᵉ siècle, il fut baptisé en hommage à l’Europe et s’est vite distingué par ses propriétés lumineuses.",
+              "L’europium est un pur produit des processus nucléaires extrêmes : il naît surtout du processus r, la capture rapide de neutrons lors des supernovae ou des fusions d’étoiles à neutrons. Sa détection dans des étoiles anciennes atteste du rôle de ces événements dans la formation des éléments lourds de la galaxie.",
+              "Sur Terre, il se cache dans les minerais de monazite et de bastnäsite aux côtés des autres terres rares. Sa séparation reste délicate, mais il se démarque par sa capacité unique parmi les lanthanides à adopter deux états d’oxydation stables, +2 et +3, d’où découlent ses effets luminescents spectaculaires.",
+              "Les composés d’europium, notamment Eu₂O₃ et EuS, ont révolutionné l’affichage : phosphores rouges et bleus des tubes cathodiques, écrans fluorescents et LED modernes lui doivent leur éclat. On le retrouve aussi dans les billets en euro comme agent de sécurité visible sous UV, et dans certains usages nucléaires comme marqueur ou absorbeur de neutrons.",
+              "Chimiquement, l’europium forme des composés trivalents et divalents, avec des matériaux dopés comme Y₂O₂S:Eu²⁺ qui émettent une luminescence intense. Le métal paramagnétique s’oxyde rapidement, devient ferromagnétique à basse température et ses ions Eu³⁺ servent de sondes en luminescence et spectroscopie.",
+              "Né des explosions stellaires et dédié au Vieux Continent, l’europium est l’union parfaite entre science cosmique et innovation humaine : invisible dans nos poches mais omniprésent dans nos écrans, il transforme l’énergie en couleur et éclaire notre quotidien."
+            ],
             "sources": []
           }
         },
