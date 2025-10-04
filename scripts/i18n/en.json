@@ -2692,8 +2692,15 @@
           "symbol": "Dy",
           "name": "Dysprosium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A dense, powerfully magnetic lanthanide, dysprosium underpins high-performance magnets and modern energy technologies.",
+            "paragraphs": [
+              "Symbol Dy, atomic number 66, dysprosium is a silvery, soft metal that is surprisingly dense for a lanthanide. Discovered in 1886 by Paul-Émile Lecoq de Boisbaudran, it takes its name from the Greek \"dusprositos\" — “hard to obtain” — a nod to the persistence needed to isolate it.",
+              "Forged by the r-process during supernovae or neutron-star mergers, dysprosium was born in the same stellar furnaces as gold and platinum. Traces found in meteorites bear witness to its ancient cosmic heritage.",
+              "On Earth it occurs mainly in monazite, bastnäsite, and xenotime. Present at about 5 ppm in the crust, it is not extremely rare, yet separating it from other rare-earths demands modern ion-exchange and solvent-extraction techniques.",
+              "Dysprosium fortifies neodymium-iron-boron permanent magnets, preserving their strength at high temperatures for wind turbines, electric motors, and robotics. It also appears in nuclear-reactor control rods, specialty optical glass, and diverse optoelectronic and infrared devices.",
+              "It most often adopts the +3 oxidation state, forming salts and oxides such as Dy₂O₃ used in ceramics and specialty glass. Paramagnetic at room temperature, it turns antiferromagnetic or ferromagnetic depending on temperature and boasts one of the highest magnetic moments of any element.",
+              "Long “difficult to obtain,” dysprosium has become a pillar of the energy transition. Forged among the stars and extracted with patience, it links nuclear physics to today’s green technologies."
+            ],
             "sources": []
           }
         },
@@ -2701,8 +2708,15 @@
           "symbol": "Ho",
           "name": "Holmium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Holmium holds the record magnetic moment among lanthanides, bridging astrophysics, medical lasers, and precision alloys.",
+            "paragraphs": [
+              "Symbol Ho, atomic number 67, holmium is a silvery, lustrous, and relatively soft metal. Discovered in 1878 by Per Teodor Cleve, it honors Stockholm (Holmia) and carries the highest magnetic moment of all natural elements.",
+              "Like many lanthanides it is born from the r-process in supernovae and neutron-star mergers. Its stable isotopes, notably Ho-165, are literal star dust formed long before the Sun.",
+              "On Earth, holmium hides in monazite, bastnäsite, or gadolinite alongside yttrium and other rare-earths. Present at roughly 1.3 ppm in the crust, it never occurs natively and is obtained by chemically separating it from its neighbors.",
+              "Its exceptional magnetic moment makes it a component of high-precision alloys and permanent magnets. The radioisotope Ho-166 serves in targeted cancer therapies, while Ho:YAG lasers emit infrared light prized for urological and orthopedic surgery.",
+              "Trivalent in most of its compounds, it forms oxides such as Ho₂O₃ used in optics. Paramagnetic at room temperature, it becomes ferromagnetic around 20 K, and Ho³⁺ ions lend glass pale yellow or red hues useful in filters and lasers.",
+              "Named for Stockholm yet born from the stars, holmium stays discreet while proving essential for seeing, cutting, or controlling the invisible through its extreme magnetism and photonic applications."
+            ],
             "sources": []
           }
         },
