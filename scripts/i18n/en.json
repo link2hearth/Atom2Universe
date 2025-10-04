@@ -2739,8 +2739,15 @@
           "symbol": "Re",
           "name": "Rhenium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "An ultra-rare, silver-gray metal discovered in 1925, rhenium is prized for its extreme density and refractory strength, completing the natural periodic table.",
+            "paragraphs": [
+              "Overview — Symbol “Re”, atomic number 75, rhenium is a silver-gray, dense (21.0 g/cm³), ductile metal resistant to heat and corrosion. It has one of the highest melting points of any metal (3,186 °C, just after tungsten and carbon). Discovered in 1925 by German chemists Ida and Walter Noddack and Otto Berg, it is named after the Rhine River (Rhenus in Latin). Its identification filled the last gap in Mendeleev’s table for naturally occurring elements.",
+              "Cosmic origins — Rhenium forms in supernovae and neutron-star mergers via the rapid neutron-capture (r-process) alongside noble metals such as iridium and osmium. Its radioactive isotope ^187Re transforms extremely slowly into ^187Os, a decay used in geochronology to date rocks and meteorites. The rhenium–osmium pair thus acts as a true cosmic clock measuring time since the birth of the solar system.",
+              "Terrestrial origin — On Earth, rhenium is exceedingly rare: about 0.0007 ppm in the crust, making it one of the rarest metals on the planet. It has no dedicated ore and always occurs in trace amounts within molybdenite (MoS₂) and copper ores, from which it is extracted as a metallurgical by-product. The main producers are Chile, the United States, and Kazakhstan. Global annual production reaches only a few dozen tonnes, making it a highly valuable and strategic metal.",
+              "Uses — Rhenium is a high-performance metal essential in extreme environments. It enters nickel-based superalloys for aircraft and rocket turbines, where it improves mechanical strength and thermal stability of parts exposed to more than 1,500 °C. It is also used in heating filaments, electrical contacts, and thermocouples capable of measuring extreme temperatures. In catalysis, rhenium plays a key role in catalytic reforming to produce high-octane fuels and in fine-chemistry reactions where its selectivity is prized. These applications make it a discreet yet technologically vital metal.",
+              "Associated molecules — Rhenium forms a wide variety of compounds: oxides (Re₂O₇), halides (ReCl₅, ReF₆), and organometallic complexes. The most famous is rhenium carbonyl (Re₂(CO)₁₀), a model compound in transition-metal chemistry. Perrhenates (ReO₄⁻) are highly stable anions used in oxidation catalysis and analytical chemistry. Its chemistry resembles that of molybdenum but with greater coordination richness.",
+              "Conclusion — Rhenium is a metal of extremes: rare, dense, and almost indestructible. Born from stellar explosions, it hides in molybdenum veins before ending up in the world’s most advanced turbines and catalysts. The last natural element discovered, it embodies the frontier between classical chemistry and cutting-edge metallurgy. Rhenium is the art of stability where everything else would melt."
+            ],
             "sources": []
           }
         },
@@ -2748,8 +2755,15 @@
           "symbol": "Os",
           "name": "Osmium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "The densest of the noble metals, osmium pairs near-inert metallic strength with the potent danger of its volatile oxide.",
+            "paragraphs": [
+              "Overview — Symbol “Os”, atomic number 76, osmium is a very dense, hard, and brittle metal with a blue to silvery sheen. It belongs to the platinum group metals, with which it is often found. Discovered in 1803 by English chemist Smithson Tennant, it takes its name from the Greek osmé, meaning “smell,” due to the sharp odor released by its volatile oxide, osmium tetroxide (OsO₄). It is a noble metal, nearly completely unalterable in air and chemically inert under ordinary conditions.",
+              "Cosmic origins — Osmium forms in supernovae and neutron-star collisions through the rapid neutron-capture (r-process), alongside platinum and iridium. It is one of the heavy “cosmochemical” metals produced in the final instants of massive stars. Its isotopic proportions in meteorites are used to date the formation of the solar system and to trace extraterrestrial inputs on Earth, since extraterrestrial osmium bears an isotopic signature distinct from that of the terrestrial mantle.",
+              "Terrestrial origin — On Earth, osmium is extremely rare—about 0.001 ppm in the crust. It is almost always alloyed with other platinum-group metals, notably in nickel and copper ores as well as auriferous placer deposits. It is often associated with iridium in a natural alloy called osmiridium, one of the densest materials known. Osmium is produced primarily as a by-product of platinum and nickel refining.",
+              "Uses — Osmium is a niche metal of extreme importance in specialised applications. Alloyed with platinum or iridium, it is used to make electrical contacts, pen tips, compass needles, and precision bearings where wear resistance is critical. Its oxide, osmium tetroxide (OsO₄), is employed in electron microscopy to fix and stain biological membranes because it reacts with lipids and increases contrast, though the compound is highly toxic and volatile and requires meticulous handling. In geochemistry and planetary science, osmium isotopes serve as tracers for studying mantle differentiation processes and meteorite impacts.",
+              "Associated molecules — Osmium tetroxide (OsO₄) is the best-known compound, both useful and hazardous. It is a powerful oxidant, also used in organic chemistry for alkene dihydroxylation (Sharpless reaction). Other notable compounds include halides such as OsCl₄ and osmium carbonyls employed in coordination chemistry studies. The metal also forms remarkably stable alloys with platinum, ruthenium, and iridium.",
+              "Conclusion — Osmium is a metal of records and contrasts: the densest, the hardest among the noble metals, yet among the most dangerous when oxidised. Born of stellar cataclysms, it now hides in precision alloys and electron microscopes. At the boundary between extreme physics and delicate chemistry, osmium embodies the absolute density of matter—the point where stability becomes almost paradoxical."
+            ],
             "sources": []
           }
         },
