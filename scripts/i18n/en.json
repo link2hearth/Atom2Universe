@@ -1745,8 +1745,15 @@
           "symbol": "N",
           "name": "Nitrogen",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A discreet yet omnipresent gas, nitrogen dominates our atmosphere and links soil fertility with the explosive power of chemistry.",
+            "paragraphs": [
+              "Symbol \"N\" and atomic number 7, nitrogen is a colorless, odorless gas that makes up nearly 78% of the air we breathe. Essential to life, it forms the backbone of proteins and DNA while remaining stable enough to pass unnoticed in everyday life.",
+              "Born in intermediate-mass stars, nitrogen results from fusion cycles that transform carbon and oxygen. When these stars die, they release nitrogen into interstellar space, enriching the gas and dust clouds that will eventually form new planets.",
+              "On Earth, nitrogen appears mostly as molecular N₂, a molecule with a very stable triple bond. Only specialized bacteria can break it to fix nitrogen into plant-accessible compounds, powering the nitrogen cycle that links air, soils, waters, and living organisms.",
+              "As a gas, nitrogen provides an inert atmosphere that shields materials and food from oxidation, while liquid nitrogen is indispensable in cryogenics. Above all, its compounds—from Haber-Bosch fertilizers to explosives like nitroglycerin and TNT—show its ambivalence between nourishing and destroying.",
+              "A master of strong bonds, nitrogen is found in ammonia (NH₃), nitrates (NO₃⁻), nitrogen oxides (NO, NO₂), and at the heart of amino acids. Omnipresent yet discreet, it weaves a constant link between air, life, and the most powerful chemical reactions.",
+              "Ubiquitous but low-key, nitrogen is both the invisible framework of our atmosphere and a vital building block of biology, reminding us that context decides whether it feeds fields or fuels explosive chemistry.",
+            ],
             "sources": []
           }
         },
@@ -1754,8 +1761,15 @@
           "symbol": "O",
           "name": "Oxygen",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A life-sustaining gas forged in the stars, oxygen powers our breathing, our flames, and countless industrial uses.",
+            "paragraphs": [
+              "Invisible to the naked eye yet indispensable to life, oxygen (symbol \"O\", atomic number 8) fuels lungs, flames, and industries. Modest on the periodic table, it nevertheless underpins every breath and a multitude of chemical reactions.",
+              "Forged in massive stars by the fusion of helium, oxygen was dispersed through space when those stars exploded as supernovae, long before Earth was born. Those enriched cosmic clouds prepared the chemistry of our future blue planet.",
+              "Atmospheric dioxygen emerged only with the photosynthesis of cyanobacteria during the Great Oxidation Event. That upheaval enabled the rise of respiration, giving certain organisms—including our cellular ancestors—a new source of energy.",
+              "Today oxygen is everywhere: it supports assisted breathing in medicine, intensifies the flames of steelmaking, accompanies divers and astronauts, and stands at the heart of every spectacular combustion.",
+              "Always in good company, oxygen forms major molecules: O₂ for our respiration, O₃ for atmospheric protection, H₂O for the water of life, CO as an industrial hazard, and CO₂ as a resource for plants. Allies or threats, these compounds showcase its versatility.",
+              "From stellar furnaces to primordial oceans, oxygen embodies the bond between the universe and terrestrial life: a cosmic breath turned vital breath, reminding us that each inhalation echoes the stars.",
+            ],
             "sources": []
           }
         },

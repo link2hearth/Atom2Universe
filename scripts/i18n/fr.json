@@ -1730,8 +1730,15 @@
           "symbol": "N",
           "name": "Azote",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Gaz discret mais omniprésent, l’azote domine notre atmosphère et relie la fertilité des sols aux puissances explosives de la chimie.",
+            "paragraphs": [
+              "Symbole \"N\", numéro atomique 7, l’azote est un gaz incolore et inodore qui représente près de 78 % de l’air que nous respirons. Élément essentiel à la vie, il constitue l’ossature des protéines et de l’ADN tout en se montrant assez stable pour passer inaperçu au quotidien.",
+              "Né dans les étoiles de masse intermédiaire, l’azote résulte de cycles de fusion qui transforment le carbone et l’oxygène. Quand ces étoiles meurent, elles dispersent l’azote dans le milieu interstellaire, enrichissant les nuages de gaz et de poussières qui donneront naissance à de nouvelles planètes.",
+              "Sur Terre, l’azote se présente surtout sous forme moléculaire N₂, une molécule à triple liaison très stable. Seules certaines bactéries parviennent à la briser pour fixer l’azote dans des composés assimilables par les plantes, moteur du cycle de l’azote qui relie air, sols, eaux et organismes vivants.",
+              "Sous forme gazeuse, l’azote est utilisé comme atmosphère inerte pour protéger matériaux et aliments, tandis que l’azote liquide est incontournable en cryogénie. Surtout, ses composés — engrais issus du procédé Haber-Bosch ou explosifs comme la nitroglycérine et le TNT — illustrent son ambivalence entre nourrir et détruire.",
+              "Maître des liaisons fortes, l’azote se retrouve dans l’ammoniac (NH₃), les nitrates (NO₃⁻), les oxydes d’azote (NO, NO₂) et au cœur des acides aminés. Omniprésent mais discret, il tisse un lien permanent entre l’air, la vie et les réactions chimiques les plus puissantes.",
+              "Omniprésent mais discret, l’azote est à la fois trame invisible de notre atmosphère et brique vitale de la biologie, rappelant que selon le contexte, il peut nourrir les champs ou alimenter la puissance explosive de la chimie.",
+            ],
             "sources": []
           }
         },
@@ -1739,8 +1746,15 @@
           "symbol": "O",
           "name": "Oxygène",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Gaz vital forgé dans les étoiles, l’oxygène nourrit notre respiration, nos combustions et d’innombrables usages industriels.",
+            "paragraphs": [
+              "Discret à l’œil nu mais indispensable à la vie, l’oxygène (symbole \"O\", numéro atomique 8) nourrit poumons, flammes et industries. Modeste sur le tableau périodique, il soutient pourtant chaque inspiration et une multitude de réactions chimiques.",
+              "Forgé dans les étoiles massives par la fusion de l’hélium, l’oxygène a été dispersé dans l’espace lors des explosions de supernovae, bien avant la naissance de la Terre. Ces nuages cosmiques enrichis ont préparé la chimie de notre future planète bleue.",
+              "Le dioxygène atmosphérique n’a émergé qu’avec la photosynthèse des cyanobactéries, lors de la Grande Oxydation. Ce bouleversement a permis l’essor de la respiration, offrant à certains organismes — dont nos ancêtres cellulaires — une nouvelle source d’énergie.",
+              "Aujourd’hui, l’oxygène est omniprésent : il soutient la respiration assistée en médecine, intensifie les flammes de la sidérurgie, accompagne plongeurs et astronautes et se tient au cœur de chaque combustion spectaculaire.",
+              "Toujours en bonne compagnie, l’oxygène forme des molécules majeures : O₂ pour notre respiration, O₃ pour la protection atmosphérique, H₂O pour l’eau de la vie, CO pour les risques industriels et CO₂ pour la photosynthèse. Alliés ou dangereux, ces composés témoignent de sa polyvalence.",
+              "Des fournaises stellaires aux océans primitifs, l’oxygène incarne le lien entre l’univers et la vie terrestre : un souffle cosmique devenu souffle vital, rappelant que chaque respiration est un écho discret des étoiles.",
+            ],
             "sources": []
           }
         },
