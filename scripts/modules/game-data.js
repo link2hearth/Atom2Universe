@@ -128,15 +128,11 @@ function normalizeFusionDefinition(entry, index = 0) {
     ? entry.name.trim()
     : gameDataTranslate('scripts.gameData.fusions.defaultName', { number: index + 1 });
   const descriptionFallback = typeof entry.description === 'string' ? entry.description.trim() : '';
-  const name = translateGameDataKey(
-    explicitNameKey || (translationBaseKey ? `${translationBaseKey}.name` : ''),
-    nameFallback,
-    { number: index + 1 }
-  );
-  const description = translateGameDataKey(
-    explicitDescriptionKey || (translationBaseKey ? `${translationBaseKey}.description` : ''),
-    descriptionFallback
-  );
+  const nameKey = explicitNameKey || (translationBaseKey ? `${translationBaseKey}.name` : '');
+  const descriptionKey = explicitDescriptionKey || (translationBaseKey ? `${translationBaseKey}.description` : '');
+  const nameParams = { number: index + 1 };
+  const name = translateGameDataKey(nameKey, nameFallback, nameParams);
+  const description = translateGameDataKey(descriptionKey, descriptionFallback);
   const inputSource = Array.isArray(entry.inputs)
     ? entry.inputs
     : (Array.isArray(entry.ingredients) ? entry.ingredients : []);
@@ -192,6 +188,13 @@ function normalizeFusionDefinition(entry, index = 0) {
     rewards: {
       apcFlat,
       apsFlat
+    },
+    localization: {
+      nameKey,
+      nameFallback,
+      nameParams,
+      descriptionKey,
+      descriptionFallback
     }
   };
 }
@@ -201,6 +204,36 @@ const FUSION_DEFS = rawFusionList
   .map((entry, index) => normalizeFusionDefinition(entry, index))
   .filter(Boolean);
 const FUSION_DEFINITION_MAP = new Map(FUSION_DEFS.map(def => [def.id, def]));
+
+function refreshFusionLocalization() {
+  FUSION_DEFS.forEach(def => {
+    if (!def || typeof def !== 'object') {
+      return;
+    }
+    const localization = def.localization;
+    if (!localization || typeof localization !== 'object') {
+      return;
+    }
+    const {
+      nameKey,
+      nameFallback,
+      nameParams,
+      descriptionKey,
+      descriptionFallback
+    } = localization;
+    def.name = translateGameDataKey(nameKey, nameFallback, nameParams);
+    def.description = translateGameDataKey(descriptionKey, descriptionFallback);
+  });
+}
+
+refreshFusionLocalization();
+
+if (typeof window !== 'undefined') {
+  window.refreshFusionLocalization = refreshFusionLocalization;
+  if (typeof window.addEventListener === 'function') {
+    window.addEventListener('i18n:languagechange', refreshFusionLocalization);
+  }
+}
 
 function readNumberProperty(source, candidates) {
   if (!source || typeof source !== 'object') {

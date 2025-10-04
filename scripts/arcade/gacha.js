@@ -3561,10 +3561,13 @@ if (typeof window !== 'undefined') {
   window.refreshGachaRarityLocalization = refreshGachaRarityLocalization;
   window.addEventListener('i18n:languagechange', () => {
     refreshGachaRarityLocalization({ force: true });
+    if (typeof refreshFusionLocalization === 'function') {
+      refreshFusionLocalization();
+    }
     if (elements.gachaRarityList) {
       renderGachaRarityList();
     }
-    updateFusionUI();
+    renderFusionList();
     updateGachaUI();
   });
 }
