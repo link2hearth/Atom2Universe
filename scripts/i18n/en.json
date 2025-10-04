@@ -1998,8 +1998,15 @@
           "symbol": "V",
           "name": "Vanadium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A discreet yet decisive transition metal, vanadium strengthens alloys, bridges starlight to industry, and even shows up in biology.",
+            "paragraphs": [
+              "Symbol \"V\", atomic number 23, vanadium is a silvery-gray metal that is malleable yet strong and naturally resistant to corrosion. Discovered in 1801 in Mexico, it was named after Vanadis, another name for the Norse goddess Freyja, a symbol of beauty and fertility. Little known to the general public, it nonetheless plays a strategic role: small amounts are enough to toughen steels and alloys, and some of its compounds find uses in chemistry, energy, and even biology.",
+              "Vanadium forms inside massive stars during advanced nuclear-fusion processes. When those stars explode as supernovae, they scatter vanadium along with other transition metals throughout the interstellar medium. Its stable isotopes appear in meteorites, evidence that it was part of the primordial material of the solar system. It therefore belongs to the great family of metals forged in stellar cores and dispersed by cosmic explosions.",
+              "On Earth, vanadium is relatively abundant yet dispersed: it appears in more than 60 different minerals (vanadinite, patronite, carnotite, and others), often mixed with uranium or lead. It is also present in small quantities in iron ores, from which it is extracted as a by-product of metallurgy. In marine environments, traces of vanadium occur in certain living organisms, notably algae and fungi. Its abundance is not rare, but refining it to pure metal remains complex.",
+              "Vanadium is most famous for its alloys. Just a few percent of vanadium can dramatically strengthen steel, making it tougher without becoming brittle: the secret behind steels used for tools, springs, pipelines, and certain aerospace components. In modern batteries, vanadium redox flow batteries draw major interest for large-scale energy storage, especially for renewable energy. Vanadium also serves as a catalyst in industrial chemistry (for instance, in producing sulfuric acid).",
+              "Vanadium forms a wide variety of compounds, often colorful and used as pigments or catalysts. Vanadium pentoxide (V₂O₅) is one of the most important, essential to the chemical industry. Vanadates (salts containing VO₄³⁻) sometimes occur in nature and are studied in biology. In certain marine organisms, enzymes called vanadium haloperoxidases use this metal in biochemical reactions—a reminder that even \"industrial\" metals can play roles in living systems.",
+              "Vanadium is a metal of contrasts: discreet in nature yet decisive in its uses. Born in the stars and mingled with terrestrial ores, it has found a place both in human structures and in unexpected biological pathways. From hardened steel to tomorrow’s batteries, it showcases the power of transition metals—elements that, in small doses, can transform materials and technologies."
+            ],
             "sources": []
           }
         },
@@ -2007,8 +2014,15 @@
           "symbol": "Cr",
           "name": "Chromium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A gleaming, color-loving metal, chromium shields alloys from corrosion while hiding compounds as fascinating as they are hazardous.",
+            "paragraphs": [
+              "Symbol \"Cr\", atomic number 24, chromium is a hard, silvery, gleaming metal that resists corrosion and is prized for its sparkling shine. Its name comes from the Greek chroma (\"color\") because its compounds offer a striking palette—from green to red to vivid yellow. Discovered at the end of the 18th century, it became a key alloying metal and industrial colorant. Yet behind its beauty lies a darker side: certain chromium compounds are toxic and polluting.",
+              "Chromium was born in massive stars during silicon-burning fusion processes and in the supernovae that fling these metals into the cosmos. It is part of the transition metals forged in stellar furnaces, and its isotopes are present in primitive meteorites. Like its periodic-table neighbors (vanadium, manganese, iron), it bears witness to the role of supernovae in enriching interstellar matter.",
+              "On Earth, chromium is relatively rare as a pure metal but abundant in mineral form. The main ore is chromite (FeCr₂O₄), the principal source of industrial chromium. It is found chiefly in regions rich in ultrabasic rocks (South Africa, Kazakhstan, India). A strategic metal, it has played a historic role in metallurgy and pigments, as well as in the arts, where its colors long adorned stained glass and paintings.",
+              "Chromium is indispensable to metallurgy. Its best-known role is in stainless steel: 10 to 20% chromium is enough to make steel stainless by forming a protective oxide layer that prevents corrosion. Its colorful compounds (such as bright yellow lead chromate or green chromium oxide) have been used as pigments in painting, ceramics, and stained glass. Chromium is also used in leather tanning, electroplating (decorative or anticorrosion chrome plating), and certain refractory applications. But beware: some compounds, notably hexavalent chromium (Cr(VI)), are highly toxic and carcinogenic.",
+              "Chromium has a chemistry rich in oxidation states. Chromium(III) oxide, Cr₂O₃, is a stable green pigment. Potassium dichromate (K₂Cr₂O₇) is a powerful oxidizing agent, once used in analytical chemistry and as a colorant but now restricted because of its toxicity. Chromates (CrO₄²⁻) yield vivid colors and long served in pigments. Finally, metallic chromium allied with iron remains the foundation of stainless steel—its most enduring and widespread use.",
+              "Chromium is a textbook case of an ambivalent element: brilliant and protective in stainless steel, colorful and dazzling in pigments, yet dangerous in some of its chemical forms. Born among the stars and concentrated in Earth’s rocks, it has marked human history through its beauty and utility while reminding us that chemistry is always a balance between shine and toxicity."
+            ],
             "sources": []
           }
         },
