@@ -1951,8 +1951,15 @@
           "symbol": "Sc",
           "name": "Scandium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Métal de transition léger et rare, le scandium naît des étoiles et renforce des alliages de pointe malgré sa discrétion terrestre.",
+            "paragraphs": [
+              "Présentation — Symbole \"Sc\", numéro atomique 21, le scandium est un métal de transition léger, argenté, qui ternit à l’air et réagit facilement avec l’eau acide. Découvert en 1879 en Suède, il est longtemps resté une curiosité scientifique avant de trouver sa place dans les technologies de pointe.",
+              "Origines cosmiques — Le scandium se forme dans les étoiles massives, au cours de réactions de fusion impliquant le néon, le magnésium et d’autres noyaux intermédiaires. Les supernovae le diffusent ensuite dans l’espace, et sa présence dans les météorites témoigne de son rôle dans le matériau primitif du système solaire.",
+              "Origine terrestre — Rare sur Terre, le scandium n’existe pas en gisements dédiés : il se trouve dispersé dans de nombreux minéraux, souvent aux côtés du thorium, de l’uranium ou des terres rares. L’industrie le récupère comme sous-produit de l’extraction de la bauxite ou de minerais d’uranium, ce qui limite son usage en raison de son coût.",
+              "Usages — L’ajout de petites quantités de scandium à l’aluminium améliore fortement la résistance mécanique, la soudabilité et la résistance à la corrosion de l’alliage. On le retrouve ainsi dans l’aéronautique, le spatial et certains équipements sportifs, ainsi que dans des lampes à halogénures métalliques et en recherche médicale via certains isotopes.",
+              "Molécules associées — Le scandium forme surtout des composés en valence +3, comme l’oxyde de scandium (Sc₂O₃) utilisé en céramique et en optique, ou le chlorure de scandium (ScCl₃) employé en catalyse. Sa chimie, moins variée que celle des terres rares, cible néanmoins des applications de niche à haute performance.",
+              "Conclusion — Discret par son abondance mais brillant par ses propriétés, le scandium est un métal stratégique qui relie les étoiles aux technologies humaines, des lampes de stade aux alliages aéronautiques."
+            ],
             "sources": []
           }
         },
@@ -1960,8 +1967,15 @@
           "symbol": "Ti",
           "name": "Titane",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Métal léger, solide et inoxydable, le titane relie les explosions stellaires aux alliages, pigments et implants qui soutiennent les technologies modernes.",
+            "paragraphs": [
+              "Présentation — Symbole \"Ti\", numéro atomique 22, le titane est un métal léger, solide, argenté et résistant à la corrosion. Découvert en 1791 en Angleterre et baptisé d’après les Titans, il n’existe jamais à l’état pur mais se révèle aujourd’hui incontournable dans les matériaux high-tech.",
+              "Origines cosmiques — Le titane naît dans les étoiles massives lors des étapes avancées de fusion, notamment celles du silicium. Les supernovae le propulsent dans l’espace et son isotope radioactif 44Ti sert de traceur précieux pour comprendre ces explosions stellaires.",
+              "Origine terrestre — Neuvième élément de la croûte terrestre, le titane se rencontre principalement dans l’ilménite (FeTiO₃) et le rutile (TiO₂). Son extraction et son raffinage restent complexes et coûteux, mais des procédés industriels comme celui de Kroll ont permis d’en démocratiser l’usage.",
+              "Usages — Les alliages de titane allient légèreté, robustesse et résistance à la corrosion, ce qui les rend essentiels pour l’aéronautique, le spatial et les sous-marins. Sa biocompatibilité en fait aussi un matériau de choix pour les prothèses, implants et instruments chirurgicaux, tandis que le dioxyde de titane (TiO₂) domine les pigments blancs et sert de filtre anti-UV.",
+              "Molécules associées — Le TiO₂ est le composé le plus courant, utilisé comme pigment, protection solaire et photocatalyseur. Le tétrachlorure de titane (TiCl₄) joue un rôle clé dans la production de métal et de fumées opaques, et des alliages comme le Ti-6Al-4V sont omniprésents dans l’aéronautique et la médecine.",
+              "Conclusion — Métal des dieux moderne, le titane unit origine cosmique et applications humaines, des pigments du quotidien aux avions supersoniques et aux implants de haute précision."
+            ],
             "sources": []
           }
         },

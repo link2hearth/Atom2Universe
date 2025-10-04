@@ -1966,8 +1966,15 @@
           "symbol": "Sc",
           "name": "Scandium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A lightweight, rare transition metal, scandium is born in stars and strengthens cutting-edge alloys despite its low profile on Earth.",
+            "paragraphs": [
+              "Overview — Symbol \"Sc\", atomic number 21, scandium is a light, silvery transition metal that tarnishes in air and reacts readily with acidic water. Discovered in 1879 in Sweden, it long remained a scientific curiosity before finding its place in advanced technologies.",
+              "Cosmic origins — Scandium forms inside massive stars through fusion reactions involving neon, magnesium, and other intermediate nuclei. Supernovae then disperse it into space, and its presence in meteorites shows it was part of the primordial material of the solar system.",
+              "Terrestrial origin — Rare on Earth, scandium never appears in dedicated deposits: it is scattered through numerous minerals, often alongside thorium, uranium, or rare earths. Industry recovers it as a by-product of bauxite or uranium ore extraction, which keeps its cost high and limits its use.",
+              "Uses — Adding small amounts of scandium to aluminum greatly improves the alloy’s mechanical strength, weldability, and corrosion resistance. It therefore appears in aerospace, space applications, and high-end sports equipment, as well as in metal halide lamps and certain medical research isotopes.",
+              "Associated molecules — Scandium chiefly forms +3 valence compounds such as scandium oxide (Sc₂O₃) used in ceramics and optics, or scandium chloride (ScCl₃) used in catalysis. Its chemistry is less varied than neighboring rare earths but still serves high-performance niche applications.",
+              "Conclusion — Modest in abundance yet brilliant in properties, scandium is a strategic metal linking the stars to human technology, from stadium lighting to aerospace alloys."
+            ],
             "sources": []
           }
         },
@@ -1975,8 +1982,15 @@
           "symbol": "Ti",
           "name": "Titanium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A light, strong, corrosion-proof metal, titanium ties stellar explosions to the alloys, pigments, and implants that power modern technology.",
+            "paragraphs": [
+              "Overview — Symbol \"Ti\", atomic number 22, titanium is a light, strong, silvery metal that resists corrosion. Discovered in 1791 in England and named after the Titans, it never occurs in pure form but has become indispensable to high-tech materials.",
+              "Cosmic origins — Titanium is forged in massive stars during advanced fusion stages, especially silicon burning. Supernovae launch it into space, and its radioactive isotope 44Ti acts as a valuable tracer for understanding these stellar explosions.",
+              "Terrestrial origin — The ninth most abundant element in Earth’s crust, titanium is found mainly in ilmenite (FeTiO₃) and rutile (TiO₂). Extracting and refining the pure metal remain complex and costly, yet industrial processes such as the Kroll method have enabled large-scale production.",
+              "Uses — Titanium alloys combine lightness, strength, and corrosion resistance, making them essential for aerospace, spaceflight, and submarines. Its biocompatibility also makes it the material of choice for prostheses, implants, and surgical instruments, while titanium dioxide (TiO₂) dominates white pigments and acts as a UV filter.",
+              "Associated molecules — TiO₂ is the most common compound, used as a pigment, sunscreen, and photocatalyst. Titanium tetrachloride (TiCl₄) is a key intermediate for metal production and opaque smoke, and alloys such as Ti-6Al-4V are ubiquitous in aerospace and medical applications.",
+              "Conclusion — A modern metal of the gods, titanium unites cosmic origins and human innovation, from everyday pigments to supersonic aircraft and precision implants."
+            ],
             "sources": []
           }
         },
