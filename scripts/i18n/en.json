@@ -3158,8 +3158,14 @@
           "symbol": "Cm",
           "name": "Curium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A dense, highly radioactive synthetic actinide, curium honors the Curies while serving as both an energy source and a research tool.",
+            "paragraphs": [
+              "Discovered in 1944 by Glenn Seaborg, Ralph James, and Albert Ghiorso at the University of California, Berkeley, curium (symbol Cm, atomic number 96) is a silvery, dense actinide metal harder than americium, with notable isotopes such as ^242Cm, ^244Cm, and ^248Cm that span very different half-lives.",
+              "Absent from Earth's crust, curium is produced artificially in nuclear reactors through successive neutron captures on plutonium and americium followed by beta decays, with only trace amounts arising in nuclear explosions or dedicated research experiments.",
+              "Its uses are highly specialized: ^244Cm and ^242Cm have powered early radioisotope thermoelectric generators for NASA probes, and its alpha and neutron emissions make it valuable in laboratories, even though intense radioactivity and self-heating prevent industrial-scale applications.",
+              "Chemically, curium most often adopts the +3 oxidation state, forming oxides, halides, nitrates, and aqueous complexes that help scientists understand nuclear fuel cycles and waste separation, while rarer +4 and +6 states appear only under specific conditions.",
+              "As a key milestone among synthetic actinides, curium embodies both the promise and the challenges of modern nuclear chemistry, simultaneously an energy resource, a research subject, and a long-lived waste product."
+            ],
             "sources": []
           }
         },
@@ -3167,8 +3173,14 @@
           "symbol": "Bk",
           "name": "Berkelium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A rare artificial actinide, berkelium is prized as a scientific stepping stone toward heavier elements and for probing actinide chemistry.",
+            "paragraphs": [
+              "Identified in 1949 by Glenn T. Seaborg's team at the University of California, Berkeley, berkelium (symbol Bk, atomic number 97) is a radioactive, silvery, malleable actinide metal that reacts readily with air, and its most stable isotope, ^247Bk, has a half-life of about 1,380 years.",
+              "Entirely synthetic, it is produced in high-flux reactors by successive neutron captures on curium or americium followed by beta decays, with only minuscule quantities formed in nuclear explosions or transmutation experiments, leaving no naturally occurring isotopes on Earth.",
+              "Its applications are chiefly scientific: as a precursor to californium, a valuable neutron source, berkelium-249 has enabled the synthesis of superheavy elements such as tennessine, while scarcity and radioactivity keep it out of everyday industrial use.",
+              "Chemically it favors the +3 oxidation state, forming oxides like Bk₂O₃, halides such as BkCl₃ or BkF₃, and aqueous complexes whose lanthanide-like behavior refines actinide separation techniques.",
+              "Produced in only a few specialized laboratories, berkelium remains a crucial scientific tool for creating heavier elements and exploring actinide behavior at the boundary between experimental chemistry and modern nuclear physics."
+            ],
             "sources": []
           }
         },

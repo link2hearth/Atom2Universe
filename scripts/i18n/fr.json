@@ -3141,8 +3141,14 @@
           "symbol": "Cm",
           "name": "Curium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Actinide synthétique dense et très radioactif, le curium rend hommage au couple Curie tout en servant de source énergétique et d'outil de recherche.",
+            "paragraphs": [
+              "Découvert en 1944 par Glenn Seaborg, Ralph James et Albert Ghiorso à l'Université de Californie à Berkeley, le curium (symbole Cm, numéro atomique 96) est un métal actinide argenté et dense, plus dur que l'américium, dont les isotopes notables incluent ^242Cm, ^244Cm et ^248Cm aux demi-vies très contrastées.",
+              "Totalement absent de la croûte terrestre, le curium est produit artificiellement dans les réacteurs nucléaires par captures neutroniques successives sur le plutonium et l'américium, suivies de désintégrations bêta, et de rares traces peuvent aussi apparaître lors d'explosions nucléaires ou d'expériences de recherche.",
+              "Ses usages restent spécialisés : ^244Cm et ^242Cm ont servi de sources thermiques pour des générateurs thermoélectriques à radioisotope des premières sondes spatiales, tandis que ses émissions alpha et neutroniques en font un outil précieux pour les laboratoires, malgré une radioactivité et une chaleur résiduelle qui limitent toute application industrielle.",
+              "Sur le plan chimique, le curium adopte surtout l'état d'oxydation +3, formant des oxydes, halogénures, nitrates et complexes aqueux étudiés pour mieux comprendre les cycles du combustible nucléaire et la séparation des déchets, même si des états +4 et +6 peuvent être observés dans des conditions particulières.",
+              "Élément clé de la série des actinides synthétiques, le curium incarne à la fois une ressource énergétique, un sujet d'étude et un déchet à longue durée de vie, illustrant la puissance et les défis de la chimie nucléaire moderne."
+            ],
             "sources": []
           }
         },
@@ -3150,8 +3156,14 @@
           "symbol": "Bk",
           "name": "Berkélium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Actinide artificiel rare, le berkélium sert surtout de maillon scientifique vers des éléments plus lourds et à l'étude de la chimie des actinides.",
+            "paragraphs": [
+              "Mis en évidence en 1949 par l'équipe de Glenn T. Seaborg à l'Université de Californie à Berkeley, le berkélium (symbole Bk, numéro atomique 97) est un métal actinide radioactif, argenté, malléable et réactif à l'air, dont l'isotope le plus stable est ^247Bk avec une demi-vie d'environ 1 380 ans.",
+              "Entièrement synthétique, il est obtenu dans des réacteurs à flux neutronique élevé par captures successives sur le curium ou l'américium, avant des désintégrations bêta, et seules des quantités infimes apparaissent lors d'explosions nucléaires ou d'expériences de transmutation, aucun isotope ne subsistant naturellement.",
+              "Ses usages sont principalement scientifiques : précurseur du californium, précieuse source de neutrons, le berkélium-249 a servi à la synthèse d'éléments superlourds comme le tennessine, mais sa rareté et sa radioactivité excluent toute application industrielle courante.",
+              "Chimiquement, il adopte majoritairement l'état d'oxydation +3 et forme des oxydes comme Bk₂O₃, des halogénures tels que BkCl₃ ou BkF₃ ainsi que des complexes aqueux, une chimie proche de celle des lanthanides qui aide à perfectionner les procédés de séparation des actinides.",
+              "Produit seulement dans quelques laboratoires spécialisés, le berkélium demeure un outil scientifique crucial pour créer des éléments plus lourds et comprendre le comportement des actinides, à la frontière entre chimie expérimentale et physique nucléaire."
+            ],
             "sources": []
           }
         },
