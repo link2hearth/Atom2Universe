@@ -1902,8 +1902,15 @@
           "symbol": "Cl",
           "name": "Chlorine",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Symbol \"Cl\", atomic number 17, chlorine is a yellow-green halogen that is essential as chloride ions yet dangerous as a free gas.",
+            "paragraphs": [
+              "Symbol \"Cl\", atomic number 17, chlorine is a yellow-green halogen that exists as a gas with a sharp, irritating smell. Discovered in the 18th century, it was long feared for its toxicity—tragically used as a chemical weapon during World War I. Yet its compounds, especially chloride ions (Cl⁻), are vital to life and the planet’s chemistry. From the ocean to our cells, chlorine is everywhere, quiet when salted yet fiercely aggressive when free.",
+              "Chlorine is produced inside massive stars through nuclear fusion, notably in the processes that transform silicon and sulfur into heavier elements. When a supernova explodes it releases chlorine along with other halogens into the interstellar medium. Mixed with dust and gas, it helped build Earth and its oceans. Its presence in meteorites confirms this ancient cosmic heritage.",
+              "On Earth chlorine is extremely abundant, but never as a free gas—far too corrosive and unstable. It is found mainly as chloride ions (Cl⁻), dissolved in seawater and combined with sodium to form sodium chloride (NaCl), our table salt. Rock salt deposits and the oceans are its great natural reserves. In living organisms chlorine plays a crucial role: chloride ions regulate water and electrical balance in cells, aid digestion (stomach hydrochloric acid), and support nerve transmission.",
+              "Chlorine has two faces. As a gas it is used industrially to bleach, disinfect, and purify drinking water and swimming pools. It is also a major reagent in the chemical industry: it goes into making plastics (PVC), solvents, pharmaceuticals, and pesticides. Its toxicity, however, demands strict precautions. In everyday life it appears mostly as chloride ions: essential to human physiology, they contribute to nerve conduction, osmotic pressure, and gastric acidity.",
+              "Chlorine forms many familiar compounds. Sodium chloride (NaCl), a source of life and seasoning. Hydrochloric acid (HCl), a component of the stomach and an important industrial reagent. Chlorine dioxide (ClO₂), used as a disinfectant. And a wide range of organochlorine compounds, from solvents to pesticides—some useful, others highly polluting. Its chemistry is vast and often ambivalent: beneficial in small doses, harmful or destructive in excess.",
+              "Chlorine perfectly illustrates a double nature: toxic and corrosive in its pure form, yet vital as the chloride ion. Present in the ocean, in our cells, and in countless industrial products, it embodies the thin boundary between poison and necessity. Heir to the stars and rooted in the sea, it is an invisible yet essential player in life and human society."
+            ],
             "sources": []
           }
         },
@@ -1911,8 +1918,15 @@
           "symbol": "Ar",
           "name": "Argon",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Invisible, odorless, and colorless, argon is the quiet noble gas that makes up about 1% of Earth’s atmosphere.",
+            "paragraphs": [
+              "Invisible, odorless, and colorless, argon is the roommate in the air who never makes a sound. Symbol Ar, atomic number 18, it is the third noble gas after helium and neon. Its peculiarity? It is surprisingly common: nearly 1% of our atmosphere, making it the least rare of the rare gases! Always calm, never eager to react, it is the archetype of the chemical spectator.",
+              "Like its neighbors in the noble gas column, argon was born in massive stars during nuclear fusion reactions. When these stars die in supernovae they hurl great quantities of argon into interstellar space. That is how this fundamentally cosmic element ended up trapped in the matter that formed Earth and its atmosphere. Today we find it not only in the air but also in certain volcanic rocks where it accumulates over time.",
+              "Terrestrial argon is largely produced by the radioactive decay of potassium-40 (a natural isotope of potassium). Over billions of years these decays enriched Earth’s atmosphere with argon. Geologists even use this property in the potassium-argon dating method for volcanic rocks. Today argon is isolated industrially by the fractional distillation of liquid air.",
+              "Argon is a master of discretion—and that is precisely why we use it. In arc welding it serves as a shielding gas, surrounding molten metal and preventing oxidation. In the lighting industry it slips into incandescent bulbs to prolong the life of the filament. It also appears in bubble chambers and other particle-physics devices, where its inertia is precious. Finally, it is sometimes used to preserve documents or works of art because it protects materials from reactive air.",
+              "Like any good noble gas, argon loves solitude. No natural molecules, no stable compounds are known. In the laboratory researchers have managed to trap argon atoms under extreme conditions and force a few exotic compounds (such as HArF), but they survive only in very particular environments, far from everyday life. In practice argon stays true to its isolated, inert atomic nature.",
+              "Argon is a paradox: omnipresent in our atmosphere yet totally indifferent to the chemistry around us. A silent spectator, it is nonetheless indispensable whenever we seek to protect, isolate, or preserve. Heir to the stars and witness to geological time, it embodies the quiet nobility of its family—discreet, yet always there when needed."
+            ],
             "sources": []
           }
         },
