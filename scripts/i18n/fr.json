@@ -3213,8 +3213,14 @@
           "symbol": "Fm",
           "name": "Fermium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Actinide synthétique issu de l’essai thermonucléaire Ivy Mike, le fermium honore Enrico Fermi et n’existe qu’en isotopes hautement radioactifs.",
+            "paragraphs": [
+              "Symbole Fm et numéro atomique 100, le fermium est un métal actinide radioactif découvert en 1952 dans les retombées de l’explosion thermonucléaire Ivy Mike aux côtés de l’einsteinium, et nommé en hommage à Enrico Fermi ; son isotope le plus stable, ^257Fm, possède une demi-vie d’environ 100 jours.",
+              "Produit uniquement lors d’explosions nucléaires ou par irradiation prolongée de curium ou de plutonium dans des réacteurs à haut flux neutronique, il résulte de captures successives de neutrons et de désintégrations bêta le long de la chaîne des actinides.",
+              "Comme l’einsteinium, il n’a pas d’usage industriel ou médical : les quantités accessibles sont infimes et servent surtout à la recherche fondamentale sur les actinides lourds et la synthèse des éléments trans-fémiques.",
+              "Sa chimie est dominée par l’état d’oxydation +3, avec des composés tels que Fm₂O₃ ou FmCl₃ ; son intense radioactivité chauffe même des quantités minuscules et complique toute manipulation.",
+              "Né dans des conditions extrêmes et invisible à l’état naturel, le fermium incarne une curiosité scientifique pure en prolongeant la compréhension humaine de la matière au-delà de la nature."
+            ],
             "sources": []
           }
         },
@@ -3222,8 +3228,14 @@
           "symbol": "Md",
           "name": "Mendélévium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Créé atome par atome en 1955 à Berkeley, le mendélévium rend hommage à Dmitri Mendeleïev et ne subsiste qu’en traces radioactives éphémères.",
+            "paragraphs": [
+              "Symbole Md et numéro atomique 101, le mendélévium est un métal actinide radioactif découvert en 1955 à l’Université de Californie à Berkeley par l’équipe d’Albert Ghiorso avec Glenn Seaborg, et dédié à Dmitri Mendeleïev ; son isotope le plus stable, ^258Md, a une demi-vie d’environ 51 jours.",
+              "Élément purement artificiel, il est obtenu en bombardant de l’einsteinium-253 par des ions hélium (^4He) dans un accélérateur de particules, une prouesse expérimentale qui a permis de créer un nouvel élément atome par atome et de suivre ses désintégrations individuelles.",
+              "Ses applications se limitent à la recherche : produit en quantités du millionième de gramme, le mendélévium sert à étudier la stabilité nucléaire et la chimie des actinides extrêmes, jalon vers les éléments superlourds.",
+              "Sa chimie montre surtout l’état d’oxydation +3, mais des états +2 ont été observés, rapprochant son comportement de celui des lanthanides ; des composés tels que MdCl₃ ou Md₂O₃ n’ont été identifiés qu’à des échelles infinitésimales.",
+              "Clin d’œil à l’architecte du tableau périodique, le mendélévium symbolise l’alliance de la prédiction et de la découverte dans l’exploration atomique moderne."
+            ],
             "sources": []
           }
         },

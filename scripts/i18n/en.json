@@ -3230,8 +3230,14 @@
           "symbol": "Fm",
           "name": "Fermium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A synthetic actinide born from the Ivy Mike thermonuclear test, fermium honors Enrico Fermi and exists only as highly radioactive isotopes.",
+            "paragraphs": [
+              "With symbol Fm and atomic number 100, fermium is a radioactive actinide metal discovered in 1952 in the fallout of the Ivy Mike thermonuclear explosion alongside einsteinium, and named for Enrico Fermi; its most stable isotope, ^257Fm, has a half-life of about 100 days.",
+              "It appears only when nuclear explosions or prolonged neutron irradiation of curium or plutonium in high-flux reactors trigger successive neutron captures and beta decays along the actinide series.",
+              "Like einsteinium, it has no industrial or medical use: only minute quantities are produced, serving primarily fundamental research on heavy actinides and the synthesis of trans-fermium elements.",
+              "Its chemistry is dominated by the +3 oxidation state, forming compounds such as Fm₂O₃ or FmCl₃; intense radioactivity heats even tiny samples and makes handling difficult.",
+              "Born in extreme conditions and absent from nature, fermium embodies pure scientific curiosity by extending humanity’s grasp of matter beyond what Earth provides."
+            ],
             "sources": []
           }
         },
@@ -3239,8 +3245,14 @@
           "symbol": "Md",
           "name": "Mendelevium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Created atom by atom in 1955 at Berkeley, mendelevium honors Dmitri Mendeleev and survives only as fleeting radioactive traces.",
+            "paragraphs": [
+              "With symbol Md and atomic number 101, mendelevium is a radioactive actinide metal discovered in 1955 at the University of California, Berkeley by Albert Ghiorso’s team with Glenn Seaborg, and named for Dmitri Mendeleev; its most stable isotope, ^258Md, has a half-life of about 51 days.",
+              "This purely artificial element is produced by bombarding einsteinium-253 with helium ions (^4He) in a particle accelerator, a milestone experiment that created a new element atom by atom and tracked each decay.",
+              "Its applications are confined to research: manufactured in millionths of a gram, mendelevium helps study nuclear stability and the chemistry of extreme actinides on the path to superheavy elements.",
+              "Its chemistry is dominated by the +3 oxidation state, though +2 states have been observed, hinting at lanthanide-like behavior; compounds such as MdCl₃ or Md₂O₃ are known only at infinitesimal scales.",
+              "As a nod to the architect of the periodic table, mendelevium symbolizes the blend of prediction and discovery at the heart of modern atomic exploration."
+            ],
             "sources": []
           }
         },
