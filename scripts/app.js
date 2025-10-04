@@ -184,6 +184,24 @@ function getPeriodicElementDisplay(definition) {
   return { symbol, name };
 }
 
+function getPeriodicElementDetails(definition) {
+  if (!definition || typeof definition !== 'object') {
+    return null;
+  }
+  const base = getPeriodicElementTranslationBase(definition);
+  if (!base) {
+    return null;
+  }
+  const api = getI18nApi();
+  if (api && typeof api.getResource === 'function') {
+    const resource = api.getResource(`${base}.details`);
+    if (resource && typeof resource === 'object') {
+      return resource;
+    }
+  }
+  return null;
+}
+
 function getCurrentLocale() {
   const api = getI18nApi();
   if (api && typeof api.getCurrentLocale === 'function') {
@@ -4177,7 +4195,76 @@ function updateElementDetailsModalContent(definition) {
     elements.elementDetailsTitle.textContent = titleText;
   }
   if (elements.elementDetailsBody) {
-    elements.elementDetailsBody.textContent = t('index.sections.table.modal.comingSoon');
+    const container = elements.elementDetailsBody;
+    const fallbackText = t('index.sections.table.modal.comingSoon');
+    container.innerHTML = '';
+    container.classList.remove('element-details-overlay__content--placeholder');
+    const details = getPeriodicElementDetails(definition);
+
+    const summaryText = typeof details?.summary === 'string' ? details.summary.trim() : '';
+    const bodyText = typeof details?.body === 'string' ? details.body.trim() : '';
+    const paragraphTexts = Array.isArray(details?.paragraphs)
+      ? details.paragraphs
+          .map(paragraph => (typeof paragraph === 'string' ? paragraph.trim() : ''))
+          .filter(text => text.length)
+      : [];
+    const sources = Array.isArray(details?.sources)
+      ? details.sources
+          .map(source => (typeof source === 'string' ? source.trim() : ''))
+          .filter(text => text.length)
+      : [];
+
+    let hasContent = false;
+    const fragment = document.createDocumentFragment();
+
+    if (summaryText) {
+      const summary = document.createElement('p');
+      summary.className = 'element-details-overlay__summary';
+      summary.textContent = summaryText;
+      fragment.appendChild(summary);
+      hasContent = true;
+    }
+
+    const effectiveParagraphs = paragraphTexts.length ? paragraphTexts : (bodyText ? [bodyText] : []);
+    effectiveParagraphs.forEach(text => {
+      const paragraph = document.createElement('p');
+      paragraph.className = 'element-details-overlay__paragraph';
+      paragraph.textContent = text;
+      fragment.appendChild(paragraph);
+      hasContent = true;
+    });
+
+    if (sources.length) {
+      const sourcesWrapper = document.createElement('div');
+      sourcesWrapper.className = 'element-details-overlay__sources';
+
+      const label = document.createElement('p');
+      label.className = 'element-details-overlay__sources-label';
+      label.textContent = t('index.sections.table.modal.sourcesLabel');
+      sourcesWrapper.appendChild(label);
+
+      const list = document.createElement('ul');
+      list.className = 'element-details-overlay__sources-list';
+      sources.forEach(text => {
+        const item = document.createElement('li');
+        item.className = 'element-details-overlay__sources-item';
+        item.textContent = text;
+        list.appendChild(item);
+      });
+      sourcesWrapper.appendChild(list);
+      fragment.appendChild(sourcesWrapper);
+      hasContent = true;
+    }
+
+    if (hasContent) {
+      container.appendChild(fragment);
+    } else {
+      const placeholder = document.createElement('p');
+      placeholder.className = 'element-details-overlay__placeholder';
+      placeholder.textContent = fallbackText;
+      container.appendChild(placeholder);
+      container.classList.add('element-details-overlay__content--placeholder');
+    }
   }
   elements.elementDetailsOverlay.dataset.elementId = definition.id;
   if (elements.elementDetailsDialog) {
