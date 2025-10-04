@@ -236,6 +236,16 @@
           "title": "Total des éléments",
           "current": "Actuels",
           "lifetime": "Collectés au total"
+        },
+        "modal": {
+          "title": "{name} ({symbol})",
+          "titleNameOnly": "{name}",
+          "titleSymbolOnly": "{symbol}",
+          "titleFallback": "Élément {number}",
+          "comingSoon": "À venir",
+          "close": "Fermer",
+          "open": "Ouvrir la fiche détaillée de {name}",
+          "openSymbol": "Ouvrir la fiche détaillée de {symbol}"
         }
       },
       "fusion": {

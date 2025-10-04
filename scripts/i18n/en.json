@@ -236,6 +236,16 @@
           "title": "Element totals",
           "current": "Current",
           "lifetime": "Lifetime collected"
+        },
+        "modal": {
+          "title": "{name} ({symbol})",
+          "titleNameOnly": "{name}",
+          "titleSymbolOnly": "{symbol}",
+          "titleFallback": "Element {number}",
+          "comingSoon": "Coming soon",
+          "close": "Close",
+          "open": "Open detailed sheet for {name}",
+          "openSymbol": "Open detailed sheet for {symbol}"
         }
       },
       "fusion": {
