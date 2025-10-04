@@ -1856,8 +1856,15 @@
           "symbol": "P",
           "name": "Phosphorus",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Symbol \"P\", atomic number 15, phosphorus is a multifaceted nonmetal too reactive to exist freely yet indispensable to life.",
+            "paragraphs": [
+              "Symbol \"P\", atomic number 15, phosphorus is a multifaceted nonmetal. It is never found in nature in its pure form: far too reactive, it prefers to hide in minerals and biological molecules. Discovered in the 17th century in human urine (a striking alchemical accident!), it first fascinated observers with its eerie glow—hence its name, which means \"light bearer\". Today it is known as one of life's essential elements, present in DNA, cell membranes, and the energy currency of our cells.",
+              "Phosphorus is forged inside massive stars through complex high-temperature nuclear reactions, notably from silicon and sulfur. When these stars explode as supernovae they scatter phosphorus into space. In that way it became part of the stardust that formed the solar system. Even though its concentration is low compared with other elements, it plays a biological role far beyond its cosmic abundance.",
+              "On Earth, phosphorus is mainly found in minerals called phosphates (such as apatite). These often sedimentary deposits arise from the accumulation of marine organic matter and phosphate-rich excreta. It is therefore concentrated in certain rocks, but is also recycled constantly through the phosphorus cycle: from rocks to soils, soils to plants, then to animals, and back again. Without phosphorus there is no plant growth or animal life: it is an essential nutrient.",
+              "Phosphorus is vital to agriculture. Most industrial production is used to manufacture phosphate fertilizers that support crop growth worldwide. It also enters the manufacture of chemicals, detergents, and formerly matches (white phosphorus being notoriously dangerous). In everyday life it is discreet yet omnipresent: in our bones, in our DNA, in ATP—the molecule that delivers energy to all our cells.",
+              "Phosphorus exists in several allotropes: white phosphorus, highly reactive and toxic, which ignites spontaneously in air; red phosphorus, more stable, used in matches; and black phosphorus, structurally similar to graphite. Its compounds are crucial: phosphates (PO₄³⁻), building blocks of DNA, bones, and teeth; ATP (adenosine triphosphate), the energy currency of cells; phospholipids, the bricks of cell membranes. Industry also relies on phosphorus pentoxide (P₂O₅) as a powerful desiccant.",
+              "Phosphorus is one of the pillars of life. Born in the stars, it found on Earth a vital biological role spanning plants and humans alike. Feeding the planet, structuring our genes, powering our cells—it is everywhere life organizes and persists. Yet mishandled it becomes dangerous, reminding us how thin the chemical line can be between light and poison. A fiery element and a life giver, phosphorus truly lives up to its name."
+            ],
             "sources": []
           }
         },
@@ -1865,8 +1872,15 @@
           "symbol": "S",
           "name": "Sulfur",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "Symbol \"S\", atomic number 16, sulfur is a yellow nonmetal as pungent in odor as it is crucial to life and industry.",
+            "paragraphs": [
+              "Symbol \"S\", atomic number 16, sulfur is a yellow, brittle nonmetal with a strong character. Its rotten-egg smell, caused by some of its compounds (such as hydrogen sulfide), is familiar near volcanoes and hot springs. Known since antiquity and linked to fire and the underworld, it is nonetheless vital: we find it in our proteins, in fertile soils, and in Earth's geological processes. An ambivalent element, it oscillates between poison and source of life.",
+              "Sulfur is produced in massive stars, especially during silicon fusion. When these stars reach the end of their lives and explode as supernovae, they release large quantities of sulfur into interstellar space. That sulfur then integrates into planets and celestial bodies. Thus sulfur is among the widespread elements in the universe, a witness to stellar labor and an actor in planetary chemistry.",
+              "On Earth, sulfur occurs in many forms. It appears in native form around volcanoes and fumaroles, but is found mostly in minerals (such as pyrite, FeS₂) and in sulfates (such as gypsum, CaSO₄·2H₂O). It plays a central role in the sulfur cycle, which links oceans, atmosphere, soils, and living organisms. This cycle is essential to ecosystem fertility. Bacteria in particular oxidize or reduce its compounds, making sulfur as much a biological player as a geological one.",
+              "Sulfur is a cornerstone of the chemical industry. Its main use is the production of sulfuric acid (H₂SO₄), one of the most manufactured industrial chemicals in the world, indispensable to chemistry, fertilizers, batteries, and refining. Sulfur is also used for the vulcanization of rubber, which gives rubber its strength and elasticity. Its compounds appear in fungicides, historical gunpowder, and certain medicines. On the biological side, sulfur is indispensable: our proteins (through the amino acids cysteine and methionine) cannot exist without it.",
+              "Sulfur forms a vast array of compounds. Hydrogen sulfide (H₂S), a toxic gas with a characteristic odor, is produced by anaerobic bacteria. Sulfates (SO₄²⁻) such as gypsum and anhydrite are common minerals. Sulfuric acid (H₂SO₄) is the undisputed \"star\" of chemical industry. In biology, disulfide bridges (-S-S-) stabilize protein structures, a crucial role in enzyme folding and function.",
+              "Sulfur is a double-faced element: tied to volcanoes and foul smells, yet essential to life and modern technologies. Present in stars, rocks, bacteria, and our own cells, it perfectly illustrates the continuum between cosmic, geological, and biological chemistry. Behind its sulfurous odor it hides a discreet but indispensable role, a yellow thread linking Earth and life."
+            ],
             "sources": []
           }
         },
