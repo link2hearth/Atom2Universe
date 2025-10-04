@@ -3136,8 +3136,13 @@
           "symbol": "Bh",
           "name": "Bohrium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "A fully synthetic superheavy element, bohrium honors Niels Bohr and remains a fleeting subject of laboratory study.",
+            "paragraphs": [
+              "Bohrium, symbol \"Bh\" and atomic number 107, is a superheavy element confirmed in 1981. It was named in honor of Danish physicist Niels Bohr, a major figure in atomic physics.",
+              "It is an artificial element created in particle accelerators by fusing heavy nuclei. Its isotopes have very short half-lives, on the order of a second or less, which means it does not occur naturally.",
+              "Bohrium belongs to the manganese group, and simulations indicate it may behave like a typical transition metal. However, its radioactivity prevents any in-depth chemical study and no practical use arises from it.",
+              "Bohrium illustrates the methodical pursuit of research on superheavy elements. Bearing the name of a pioneer of atomic physics, it symbolically links the foundations of quantum theory to today’s exploration of matter."
+            ],
             "sources": []
           }
         },
@@ -3145,8 +3150,13 @@
           "symbol": "Hs",
           "name": "Hassium",
           "details": {
-            "summary": "",
-            "paragraphs": [],
+            "summary": "An artificial superheavy element discovered in Hesse, hassium exists only in laboratories despite properties consistent with its periodic-table group.",
+            "paragraphs": [
+              "Hassium, symbol \"Hs\" and atomic number 108, is a superheavy element confirmed in 1984. It takes its name from the German state of Hesse, where it was synthesized for the first time.",
+              "It is artificial, produced in particle accelerators by fusing heavy nuclei. Its isotopes have half-lives ranging from milliseconds to a few minutes for the most stable ones.",
+              "Hassium belongs to the group of iron metals (group 8). Limited experiments suggest it indeed behaves like a transition metal and can form volatile oxides. Nonetheless, it remains out of reach for any practical application.",
+              "Hassium confirms that even superheavy elements can sometimes display chemical properties consistent with their position in the table. Ephemeral, it remains above all a subject of scientific study and a milestone in the exploration of the ultimate elements."
+            ],
             "sources": []
           }
         },
