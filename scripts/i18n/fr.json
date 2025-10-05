@@ -421,6 +421,11 @@
               "selectArtist": "Choisissez d'abord un artiste"
             }
           },
+          "trackSlider": {
+            "label": "Explorer les titres",
+            "position": "{current} / {total}",
+            "empty": "Aucun titre"
+          },
           "dropZone": {
             "prompt": "Déposez un fichier MIDI (.mid) ici ou cliquez pour le sélectionner"
           },

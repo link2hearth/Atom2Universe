@@ -73,12 +73,41 @@
 
 .option-card--chiptune .option-row--random {
   gap: 0.6rem;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .option-card--chiptune .option-row--random button {
-  flex: 1 1 50%;
-  min-width: 140px;
+  flex: 1 1 0;
+  min-width: 120px;
+  max-width: 50%;
+}
+
+@media (max-width: 640px) {
+  .option-card--chiptune .option-row--random {
+    flex-wrap: wrap;
+  }
+  .option-card--chiptune .option-row--random button {
+    max-width: 100%;
+  }
+}
+
+.option-card--chiptune .chiptune-track-slider {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.option-card--chiptune .chiptune-track-slider input[type='range'] {
+  flex: 1 1 auto;
+  min-width: 120px;
+}
+
+.option-card--chiptune .chiptune-track-slider__value {
+  min-width: 5ch;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .option-card--chiptune .option-row--slider {
