@@ -190,3 +190,112 @@ body.theme-light select {
   margin: 0;
   opacity: 0.7;
   font-size: 0.9rem;
+}
+
+.option-toggle-card {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: clamp(0.75rem, 1.6vw, 1rem);
+  background: rgba(255, 255, 255, 0.04);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.option-toggle-card__content {
+  flex: 1 1 220px;
+  min-width: 200px;
+}
+
+.option-toggle-card__title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.option-toggle-card__description {
+  margin: 0.35rem 0 0;
+  opacity: 0.75;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.option-toggle-card__control {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 0 0 auto;
+}
+
+.toggle-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.toggle-switch input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-switch__track {
+  width: 2.6rem;
+  height: 1.4rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.28);
+  position: relative;
+  transition: background var(--transition);
+  flex-shrink: 0;
+}
+
+.toggle-switch__track::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform var(--transition);
+  transform: translateX(0);
+}
+
+.toggle-switch input:checked + .toggle-switch__track {
+  background: var(--accent);
+}
+
+.toggle-switch input:checked + .toggle-switch__track::after {
+  transform: translateX(1.2rem);
+}
+
+.toggle-switch__label {
+  font-size: 0.9rem;
+}
+
+body.theme-light .option-toggle-card {
+  background: rgba(12, 16, 32, 0.05);
+  border-color: rgba(12, 16, 32, 0.12);
+}
+
+body.theme-light .toggle-switch__track {
+  background: rgba(12, 16, 32, 0.2);
+}
+
+body.theme-light .toggle-switch input:checked + .toggle-switch__track {
+  background: var(--accent-strong);
+}
+
+body.theme-neon .option-toggle-card {
+  background: rgba(110, 90, 255, 0.12);
+  border-color: rgba(120, 220, 255, 0.32);
+}
+
+body.theme-neon .toggle-switch__track {
+  background: rgba(155, 190, 255, 0.4);
+}

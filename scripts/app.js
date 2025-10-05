@@ -49,6 +49,7 @@ const BRICK_SKIN_TOAST_KEYS = Object.freeze({
 });
 
 const LANGUAGE_STORAGE_KEY = 'atom2univers.language';
+const CLICK_SOUND_STORAGE_KEY = 'atom2univers.options.clickSoundMuted';
 const AVAILABLE_LANGUAGE_CODES = (() => {
   const i18n = globalThis.i18n;
   if (i18n && typeof i18n.getAvailableLanguages === 'function') {
@@ -2392,6 +2393,9 @@ const elements = {
   musicVolumeSlider: document.getElementById('musicVolumeSlider'),
   optionsWelcomeTitle: document.getElementById('optionsWelcomeTitle'),
   optionsWelcomeIntro: document.getElementById('optionsWelcomeIntro'),
+  clickSoundToggleCard: document.getElementById('clickSoundToggleCard'),
+  clickSoundToggle: document.getElementById('clickSoundToggle'),
+  clickSoundToggleStatus: document.getElementById('clickSoundToggleStatus'),
   optionsArcadeDetails: document.getElementById('optionsArcadeDetails'),
   brickSkinOptionCard: document.getElementById('brickSkinOptionCard'),
   brickSkinSelect: document.getElementById('brickSkinSelect'),
@@ -2959,9 +2963,19 @@ function updateBrandPortalState(options = {}) {
 updateBigBangVisibility();
 
 const soundEffects = (() => {
+  let popMuted = false;
   const createSilentPool = () => ({ play: () => {} });
   if (typeof window === 'undefined' || typeof Audio === 'undefined') {
-    return { pop: createSilentPool(), crit: createSilentPool() };
+    return {
+      pop: createSilentPool(),
+      crit: createSilentPool(),
+      setPopMuted(value) {
+        popMuted = !!value;
+      },
+      isPopMuted() {
+        return popMuted;
+      }
+    };
   }
 
   const updatePitchPreservation = (audio, shouldPreserve) => {
@@ -3014,13 +3028,118 @@ const soundEffects = (() => {
   const popPool = createSoundPool(POP_SOUND_SRC, 6);
   const critPool = createSoundPool(POP_SOUND_SRC, 3);
 
-  const fallbackEffects = {
-    pop: { play: () => popPool.play(1) },
-    crit: { play: () => critPool.play(CRIT_PLAYBACK_RATE) }
+  const effects = {
+    pop: {
+      play: () => {
+        if (!popMuted) {
+          popPool.play(1);
+        }
+      }
+    },
+    crit: {
+      play: () => {
+        if (!popMuted) {
+          critPool.play(CRIT_PLAYBACK_RATE);
+        }
+      }
+    },
+    setPopMuted(value) {
+      popMuted = !!value;
+    },
+    isPopMuted() {
+      return popMuted;
+    }
   };
 
-  return fallbackEffects;
+  return effects;
 })();
+
+function readStoredClickSoundMuted() {
+  try {
+    const stored = globalThis.localStorage?.getItem(CLICK_SOUND_STORAGE_KEY);
+    if (stored == null) {
+      return null;
+    }
+    if (stored === '1' || stored === 'true') {
+      return true;
+    }
+    if (stored === '0' || stored === 'false') {
+      return false;
+    }
+  } catch (error) {
+    console.warn('Unable to read click sound preference', error);
+  }
+  return null;
+}
+
+function writeStoredClickSoundMuted(muted) {
+  try {
+    const value = muted ? '1' : '0';
+    globalThis.localStorage?.setItem(CLICK_SOUND_STORAGE_KEY, value);
+  } catch (error) {
+    console.warn('Unable to persist click sound preference', error);
+  }
+}
+
+function updateClickSoundStatusLabel(muted) {
+  if (!elements.clickSoundToggleStatus) {
+    return;
+  }
+  const key = muted
+    ? 'index.sections.options.clickSound.state.off'
+    : 'index.sections.options.clickSound.state.on';
+  const fallback = muted ? 'Click sounds off' : 'Click sounds on';
+  elements.clickSoundToggleStatus.setAttribute('data-i18n', key);
+  elements.clickSoundToggleStatus.textContent = translateOrDefault(key, fallback);
+}
+
+function applyClickSoundMuted(muted, options = {}) {
+  const value = !!muted;
+  const settings = Object.assign({ persist: true, updateControl: true }, options);
+  if (soundEffects && typeof soundEffects.setPopMuted === 'function') {
+    soundEffects.setPopMuted(value);
+  }
+  if (settings.updateControl && elements.clickSoundToggle) {
+    elements.clickSoundToggle.checked = !value;
+  }
+  updateClickSoundStatusLabel(value);
+  if (settings.persist) {
+    writeStoredClickSoundMuted(value);
+  }
+}
+
+function initClickSoundOption() {
+  if (!elements.clickSoundToggle) {
+    return;
+  }
+  const stored = readStoredClickSoundMuted();
+  const initialMuted = stored === null ? false : stored === true;
+  applyClickSoundMuted(initialMuted, { persist: false, updateControl: true });
+  elements.clickSoundToggle.addEventListener('change', () => {
+    const muted = !elements.clickSoundToggle.checked;
+    applyClickSoundMuted(muted, { persist: true, updateControl: false });
+  });
+}
+
+function subscribeClickSoundLanguageUpdates() {
+  const handler = () => {
+    const muted = soundEffects && typeof soundEffects.isPopMuted === 'function'
+      ? soundEffects.isPopMuted()
+      : false;
+    updateClickSoundStatusLabel(muted);
+  };
+  const api = getI18nApi();
+  if (api && typeof api.onLanguageChanged === 'function') {
+    api.onLanguageChanged(handler);
+    return;
+  }
+  if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
+    globalThis.addEventListener('i18n:languagechange', handler);
+  }
+}
+
+initClickSoundOption();
+subscribeClickSoundLanguageUpdates();
 
 const musicPlayer = (() => {
   const MUSIC_DIR = 'Assets/Music/';
