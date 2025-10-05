@@ -2272,7 +2272,7 @@ const elements = {
   statusApsCritChrono: document.getElementById('statusApsCritChrono'),
   statusApsCritMultiplier: document.getElementById('statusApsCritMultiplier'),
   statusApsCritSeparator: document.querySelector('.status-aps-crit-separator'),
-  frenzyBanner: document.getElementById('frenzyBanner'),
+  frenzyStatus: document.getElementById('frenzyStatus'),
   statusApcFrenzy: {
     container: document.getElementById('statusApcFrenzy'),
     multiplier: document.getElementById('statusApcFrenzyMultiplier'),
@@ -8833,7 +8833,7 @@ function updateFrenzyIndicatorFor(type, target, now) {
 function updateFrenzyIndicators(now = performance.now()) {
   const apsActive = updateFrenzyIndicatorFor('perSecond', elements.statusApsFrenzy, now);
   const apcActive = updateFrenzyIndicatorFor('perClick', elements.statusApcFrenzy, now);
-  const statusRoot = elements.frenzyBanner;
+  const statusRoot = elements.frenzyStatus;
   if (statusRoot) {
     const activePage = document.body?.dataset?.activePage;
     const displayAllowed = activePage === 'game' || activePage === 'wave';

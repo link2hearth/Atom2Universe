@@ -546,64 +546,81 @@ body.view-sudoku .status-bar {
   outline-offset: 0.25rem;
 }
 
-.frenzy-banner {
+.frenzy-status {
+  position: fixed;
+  top: clamp(5.25rem, 33vh, 18rem);
+  left: 0;
+  right: 0;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 0 var(--header-padding-x) clamp(0.35rem, 0.9vw, 0.65rem);
-  margin-top: clamp(0.8rem, 6vh, 3rem);
-  gap: clamp(0.8rem, 6vw, 3.8rem);
+  gap: clamp(0.75rem, 7vw, 4rem);
+  padding: 0 clamp(0.9rem, 4vw, 3.2rem);
+  pointer-events: none;
   font-family: 'Orbitron', sans-serif;
-  font-size: clamp(0.58rem, 1.05vw, 0.78rem);
-  color: rgba(220, 236, 255, 0.72);
+  font-size: clamp(0.58rem, 0.98vw, 0.82rem);
+  color: rgba(220, 236, 255, 0.78);
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  pointer-events: none;
   font-variant-numeric: tabular-nums;
+  z-index: 60;
 }
 
-.frenzy-banner[hidden] {
+.frenzy-status[hidden] {
   display: none;
 }
 
-.frenzy-banner__item {
+.frenzy-status__item {
   display: flex;
   flex-direction: column;
-  gap: 0.08rem;
-  min-width: clamp(4.2rem, 16vw, 7.5rem);
-  opacity: 0.82;
+  gap: 0.12rem;
+  padding: clamp(0.3rem, 0.85vw, 0.6rem) clamp(0.45rem, 1.15vw, 0.9rem);
+  border-radius: 0.75rem;
+  background: rgba(6, 12, 28, 0.55);
+  box-shadow: 0 0.8rem 1.6rem rgba(0, 0, 0, 0.26);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+  min-width: clamp(4.6rem, 14vw, 7.2rem);
+  align-items: flex-start;
+  text-align: left;
+  opacity: 0.9;
 }
 
-.frenzy-banner__item[hidden] {
+.frenzy-status__item[hidden] {
   display: none;
 }
 
-.frenzy-banner__item--apc {
-  align-items: flex-start;
-  text-align: left;
-}
-
-.frenzy-banner__item--aps {
+.frenzy-status__item--aps {
   align-items: flex-end;
   text-align: right;
 }
 
-.frenzy-banner__value {
+.frenzy-status__multiplier {
   font-weight: 600;
 }
 
-.frenzy-banner__timer {
-  font-size: clamp(0.52rem, 0.9vw, 0.7rem);
+.frenzy-status__timer {
+  font-size: clamp(0.52rem, 0.9vw, 0.72rem);
   font-weight: 500;
-  opacity: 0.75;
+  opacity: 0.78;
 }
 
-body.theme-light .frenzy-banner {
-  color: rgba(12, 24, 44, 0.68);
+body.theme-light .frenzy-status {
+  color: rgba(12, 24, 44, 0.72);
 }
 
-body.theme-neon .frenzy-banner {
-  color: rgba(190, 236, 255, 0.78);
+body.theme-light .frenzy-status__item {
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 0.65rem 1.4rem rgba(12, 24, 44, 0.12);
+}
+
+body.theme-neon .frenzy-status {
+  color: rgba(190, 236, 255, 0.82);
+}
+
+body.theme-neon .frenzy-status__item {
+  background: rgba(12, 30, 62, 0.46);
+  box-shadow: 0 0.8rem 1.6rem rgba(20, 38, 72, 0.24);
 }
 
 .status-value--main {
