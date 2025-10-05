@@ -103,8 +103,8 @@ body[data-page-group="arcade"] main {
   border: 1px solid rgba(255, 255, 255, 0.18);
   background: rgba(255, 255, 255, 0.08);
   color: inherit;
-  width: clamp(2.2rem, 3vw, 2.6rem);
-  height: clamp(2.2rem, 3vw, 2.6rem);
+  width: clamp(1.1rem, 1.5vw, 1.3rem);
+  height: clamp(1.1rem, 1.5vw, 1.3rem);
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
@@ -117,7 +117,7 @@ body[data-page-group="arcade"] main {
 
 .header-playback-button::before {
   content: '▶';
-  font-size: clamp(1rem, 1.4vw, 1.2rem);
+  font-size: clamp(0.5rem, 0.7vw, 0.6rem);
   line-height: 1;
   transform: translateX(1px);
 }
