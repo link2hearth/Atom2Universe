@@ -337,6 +337,15 @@
           },
           "note": "Changes apply immediately."
         },
+        "clickSound": {
+          "title": "Clicker sound",
+          "description": "Toggle the little \u201cpop\u201d played on each click and during critical hits.",
+          "ariaLabel": "Toggle the clicker pop sound",
+          "state": {
+            "on": "Click sounds on",
+            "off": "Click sounds off"
+          }
+        },
         "music": {
           "title": "Music",
           "track": "Now playing",

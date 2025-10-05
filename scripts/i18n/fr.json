@@ -337,6 +337,15 @@
           },
           "note": "La modification s’applique immédiatement."
         },
+        "clickSound": {
+          "title": "Son du clicker",
+          "description": "Activez ou coupez le petit « pop » joué à chaque clic et lors des critiques.",
+          "ariaLabel": "Activer ou couper le son du clicker",
+          "state": {
+            "on": "Sons actifs",
+            "off": "Sons coupés"
+          }
+        },
         "music": {
           "title": "Musique",
           "track": "Piste en lecture",

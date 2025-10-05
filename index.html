@@ -980,6 +980,36 @@
             </select>
           </div>
           <div id="optionsWelcomeIntro" class="option-welcome-intro"></div>
+          <div class="option-toggle-card" id="clickSoundToggleCard">
+            <div class="option-toggle-card__content">
+              <h4
+                class="option-toggle-card__title"
+                data-i18n="index.sections.options.clickSound.title"
+              ></h4>
+              <p
+                class="option-toggle-card__description"
+                id="clickSoundToggleDescription"
+                data-i18n="index.sections.options.clickSound.description"
+              ></p>
+            </div>
+            <div class="option-toggle-card__control">
+              <label class="toggle-switch">
+                <input
+                  type="checkbox"
+                  id="clickSoundToggle"
+                  checked
+                  data-i18n="aria-label:index.sections.options.clickSound.ariaLabel"
+                  aria-describedby="clickSoundToggleDescription clickSoundToggleStatus"
+                />
+                <span class="toggle-switch__track" aria-hidden="true"></span>
+                <span
+                  class="toggle-switch__label"
+                  id="clickSoundToggleStatus"
+                  data-i18n="index.sections.options.clickSound.state.on"
+                ></span>
+              </label>
+            </div>
+          </div>
           <div id="optionsArcadeDetails" class="option-note" hidden aria-hidden="true"></div>
         </div>
         <div class="option-card option-card--chiptune">
