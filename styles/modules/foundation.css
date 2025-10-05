@@ -551,6 +551,7 @@ body.view-sudoku .status-bar {
   justify-content: space-between;
   align-items: flex-start;
   padding: 0 var(--header-padding-x) clamp(0.35rem, 0.9vw, 0.65rem);
+  margin-top: clamp(0.8rem, 6vh, 3rem);
   gap: clamp(0.8rem, 6vw, 3.8rem);
   font-family: 'Orbitron', sans-serif;
   font-size: clamp(0.58rem, 1.05vw, 0.78rem);
