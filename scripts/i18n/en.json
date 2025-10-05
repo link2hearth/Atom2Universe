@@ -433,6 +433,7 @@
             "octaveUp": "Octave +",
             "resetPitch": "Reset",
             "play": "Play",
+            "skip": "Skip",
             "stop": "Stop",
             "randomAll": "Shuffle (all artists)",
             "randomArtist": "Shuffle (artist)"

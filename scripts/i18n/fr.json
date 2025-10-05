@@ -433,6 +433,7 @@
             "octaveUp": "Octave +",
             "resetPitch": "Réinitialiser",
             "play": "Lecture",
+            "skip": "Suivant",
             "stop": "Stop",
             "randomAll": "Lecture aléatoire (bibliothèque)",
             "randomArtist": "Lecture aléatoire (artiste)"

@@ -10,8 +10,8 @@
 }
 
 .option-card--chiptune .option-row--buttons button {
-  flex: 1 1 auto;
-  min-width: 120px;
+  flex: 1 1 0;
+  min-width: 100px;
 }
 
 
