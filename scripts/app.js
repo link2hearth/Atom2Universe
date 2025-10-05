@@ -2284,6 +2284,7 @@ const elements = {
   apcFrenzyCounterBestSingle: document.getElementById('apcFrenzyCounterBestSingle'),
   apcFrenzyCounterBestMulti: document.getElementById('apcFrenzyCounterBestMulti'),
   starfield: document.querySelector('.starfield'),
+  shopActionsHeader: document.getElementById('shopActionsHeader'),
   shopList: document.getElementById('shopList'),
   periodicTable: document.getElementById('periodicTable'),
   fusionList: document.getElementById('fusionList'),
@@ -8264,6 +8265,31 @@ function formatShopAriaLabel({ state, action, name, quantity, limitNote, costVal
   );
 }
 
+function renderShopPurchaseHeader() {
+  if (!elements.shopActionsHeader) return;
+  const header = elements.shopActionsHeader;
+  header.innerHTML = '';
+  if (!Array.isArray(SHOP_PURCHASE_AMOUNTS) || SHOP_PURCHASE_AMOUNTS.length === 0) {
+    header.hidden = true;
+    return;
+  }
+  header.hidden = false;
+  const fragment = document.createDocumentFragment();
+  const spacer = document.createElement('div');
+  spacer.className = 'shop-actions-header__spacer';
+  fragment.appendChild(spacer);
+  const labels = document.createElement('div');
+  labels.className = 'shop-actions-header__labels';
+  SHOP_PURCHASE_AMOUNTS.forEach(quantity => {
+    const label = document.createElement('span');
+    label.className = 'shop-actions-header__label';
+    label.textContent = `x${quantity}`;
+    labels.appendChild(label);
+  });
+  fragment.appendChild(labels);
+  header.appendChild(fragment);
+}
+
 function getLocalizedUpgradeName(def) {
   return getShopBuildingTexts(def).name;
 }
@@ -8299,15 +8325,11 @@ function buildShopItem(def) {
     button.type = 'button';
     button.className = 'shop-item__action';
 
-    const quantityLabel = document.createElement('span');
-    quantityLabel.className = 'shop-item__action-quantity';
-    quantityLabel.textContent = `x${quantity}`;
-
     const priceLabel = document.createElement('span');
     priceLabel.className = 'shop-item__action-price';
     priceLabel.textContent = '—';
 
-    button.append(quantityLabel, priceLabel);
+    button.append(priceLabel);
     button.addEventListener('click', () => {
       attemptPurchase(def, quantity);
     });
@@ -8316,7 +8338,6 @@ function buildShopItem(def) {
     buttonMap.set(quantity, {
       button,
       price: priceLabel,
-      quantityLabel,
       baseQuantity: quantity
     });
   });
@@ -8383,7 +8404,6 @@ function updateShopAffordability() {
       const baseQuantity = entry.baseQuantity ?? quantity;
 
       if (capReached) {
-        entry.quantityLabel.textContent = `x${baseQuantity}`;
         entry.price.textContent = t('scripts.app.shop.limitReached');
         entry.button.disabled = true;
         entry.button.classList.remove('is-ready');
@@ -8401,8 +8421,6 @@ function updateShopAffordability() {
         ? Math.min(baseQuantity, remainingLevels)
         : baseQuantity;
       const limited = Number.isFinite(remainingLevels) && effectiveQuantity !== baseQuantity;
-
-      entry.quantityLabel.textContent = `x${limited ? effectiveQuantity : baseQuantity}`;
 
       const cost = computeUpgradeCost(def, effectiveQuantity);
       const affordable = shopFree || gameState.atoms.compare(cost) >= 0;
@@ -8440,6 +8458,7 @@ function updateShopAffordability() {
 
 function renderShop() {
   if (!elements.shopList) return;
+  renderShopPurchaseHeader();
   shopRows.clear();
   elements.shopList.innerHTML = '';
   const fragment = document.createDocumentFragment();
