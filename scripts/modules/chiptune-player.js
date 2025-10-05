@@ -6532,7 +6532,7 @@
         const effectiveDuration = this.getEffectiveDuration(this.timeline, playbackSpeed);
         const startTime = context.currentTime + 0.05;
         const schedulerStartTime = startTime - (startOffset / playbackSpeed);
-        this.playStartTime = schedulerStartTime;
+        this.playStartTime = startTime;
         this.playStartOffset = startOffset;
         this.progressMonitorSpeed = playbackSpeed;
         this.progressDuration = timelineDuration;
@@ -6540,7 +6540,7 @@
         this.pendingSeekSeconds = startOffset;
         this.refreshProgressControls(this.timeline);
         this.startScheduler(schedulerStartTime, startOffset);
-        this.startProgressMonitor(schedulerStartTime, startOffset, playbackSpeed, timelineDuration);
+        this.startProgressMonitor(startTime, startOffset, playbackSpeed, timelineDuration);
 
         this.finishTimeout = window.setTimeout(() => {
           this.finishTimeout = null;
