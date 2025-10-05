@@ -1854,6 +1854,416 @@
       ]
     },
     {
+      "id": "mozart",
+      "name": "Wolfgang Amadeus Mozart",
+      "tracks": [
+        {
+          "name": "Contradance n1",
+          "file": "Assets/Chiptune/Mozart/Contradance n1.mid"
+        },
+        {
+          "name": "Contradance n2",
+          "file": "Assets/Chiptune/Mozart/Contradance n2.mid"
+        },
+        {
+          "name": "Contradance n3",
+          "file": "Assets/Chiptune/Mozart/Contradance n3.mid"
+        },
+        {
+          "name": "Early Pieces n1 Andante",
+          "file": "Assets/Chiptune/Mozart/Early Pieces n1 Andante.mid"
+        },
+        {
+          "name": "Early Pieces n10 Air",
+          "file": "Assets/Chiptune/Mozart/Early Pieces n10 Air.mid"
+        },
+        {
+          "name": "Early Pieces n11 Country dance",
+          "file": "Assets/Chiptune/Mozart/Early Pieces n11 Country dance.mid"
+        },
+        {
+          "name": "Early Pieces n12 Rondino",
+          "file": "Assets/Chiptune/Mozart/Early Pieces n12 Rondino.mid"
+        },
+        {
+          "name": "Early Pieces n13 Prelude",
+          "file": "Assets/Chiptune/Mozart/Early Pieces n13 Prelude.mid"
+        },
+        {
+          "name": "Early Pieces n14 Rondo",
+          "file": "Assets/Chiptune/Mozart/Early Pieces n14 Rondo.mid"
+        },
+        {
+          "name": "Early Pieces n15 Andantino",
+          "file": "Assets/Chiptune/Mozart/Early Pieces n15 Andantino.mid"
+        },
+        {
+          "name": "Early Pieces n16 Minuet",
+          "file": "Assets/Chiptune/Mozart/Early Pieces n16 Minuet.mid"
+        },
+        {
+          "name": "Early Pieces n17 Siciliano",
+          "file": "Assets/Chiptune/Mozart/Early Pieces n17 Siciliano.mid"
+        },
+        {
+          "name": "Early Pieces n18 Little Song",
+          "file": "Assets/Chiptune/Mozart/Early Pieces n18 Little Song.mid"
+        },
+        {
+          "name": "Early Pieces n19 Giga",
+          "file": "Assets/Chiptune/Mozart/Early Pieces n19 Giga.mid"
+        },
+        {
+          "name": "Early Pieces n2 Minuet",
+          "file": "Assets/Chiptune/Mozart/Early Pieces n2 Minuet.mid"
+        },
+        {
+          "name": "Early Pieces n20 Presto",
+          "file": "Assets/Chiptune/Mozart/Early Pieces n20 Presto.mid"
+        },
+        {
+          "name": "Early Pieces n3 Little march",
+          "file": "Assets/Chiptune/Mozart/Early Pieces n3 Little march.mid"
+        },
+        {
+          "name": "Early Pieces n4 Minuet",
+          "file": "Assets/Chiptune/Mozart/Early Pieces n4 Minuet.mid"
+        },
+        {
+          "name": "Early Pieces n5 Country Dance",
+          "file": "Assets/Chiptune/Mozart/Early Pieces n5 Country Dance.mid"
+        },
+        {
+          "name": "Early Pieces n6 Llittle minuet",
+          "file": "Assets/Chiptune/Mozart/Early Pieces n6 Llittle minuet.mid"
+        },
+        {
+          "name": "Early Pieces n7 Country dance",
+          "file": "Assets/Chiptune/Mozart/Early Pieces n7 Country dance.mid"
+        },
+        {
+          "name": "Early Pieces n8 Minuet",
+          "file": "Assets/Chiptune/Mozart/Early Pieces n8 Minuet.mid"
+        },
+        {
+          "name": "Early Pieces n9 Allegretto",
+          "file": "Assets/Chiptune/Mozart/Early Pieces n9 Allegretto.mid"
+        },
+        {
+          "name": "K02 Minuet in F",
+          "file": "Assets/Chiptune/Mozart/K02 Minuet in F.mid"
+        },
+        {
+          "name": "K03 Allegro in Bb",
+          "file": "Assets/Chiptune/Mozart/K03 Allegro in Bb.mid"
+        },
+        {
+          "name": "K04 Minuet in F",
+          "file": "Assets/Chiptune/Mozart/K04 Minuet in F.mid"
+        },
+        {
+          "name": "K05 Minuet for Harpsichord",
+          "file": "Assets/Chiptune/Mozart/K05 Minuet for Harpsichord.mid"
+        },
+        {
+          "name": "K19d Piano Sonata Duet",
+          "file": "Assets/Chiptune/Mozart/K19d Piano Sonata Duet.mid"
+        },
+        {
+          "name": "K279 Piano sonata n01 1mov",
+          "file": "Assets/Chiptune/Mozart/K279 Piano sonata n01 1mov.mid"
+        },
+        {
+          "name": "K279 Piano sonata n01 2mov",
+          "file": "Assets/Chiptune/Mozart/K279 Piano sonata n01 2mov.mid"
+        },
+        {
+          "name": "K279 Piano sonata n01 3mov",
+          "file": "Assets/Chiptune/Mozart/K279 Piano sonata n01 3mov.mid"
+        },
+        {
+          "name": "K280 Piano sonata n02 1mov",
+          "file": "Assets/Chiptune/Mozart/K280 Piano sonata n02 1mov.mid"
+        },
+        {
+          "name": "K280 Piano sonata n02 2mov",
+          "file": "Assets/Chiptune/Mozart/K280 Piano sonata n02 2mov.mid"
+        },
+        {
+          "name": "K280 Piano sonata n02 3mov",
+          "file": "Assets/Chiptune/Mozart/K280 Piano sonata n02 3mov.mid"
+        },
+        {
+          "name": "K281 Piano Sonata n03 1mov",
+          "file": "Assets/Chiptune/Mozart/K281 Piano Sonata n03 1mov.mid"
+        },
+        {
+          "name": "K281 Piano Sonata n03 2mov",
+          "file": "Assets/Chiptune/Mozart/K281 Piano Sonata n03 2mov.mid"
+        },
+        {
+          "name": "K281 Piano Sonata n03 3mov",
+          "file": "Assets/Chiptune/Mozart/K281 Piano Sonata n03 3mov.mid"
+        },
+        {
+          "name": "K282 Piano Sonata n04",
+          "file": "Assets/Chiptune/Mozart/K282 Piano Sonata n04 .mid"
+        },
+        {
+          "name": "K284 Piano Sonata n06",
+          "file": "Assets/Chiptune/Mozart/K284 Piano Sonata n06 .mid"
+        },
+        {
+          "name": "K309 Piano Sonata n10 1mov",
+          "file": "Assets/Chiptune/Mozart/K309 Piano Sonata n10 1mov.mid"
+        },
+        {
+          "name": "K309 Piano Sonata n10 2mov",
+          "file": "Assets/Chiptune/Mozart/K309 Piano Sonata n10 2mov.mid"
+        },
+        {
+          "name": "K309 Piano Sonata n10 3mov",
+          "file": "Assets/Chiptune/Mozart/K309 Piano Sonata n10 3mov.mid"
+        },
+        {
+          "name": "K330 Piano Sonata n10 1mov",
+          "file": "Assets/Chiptune/Mozart/K330 Piano Sonata n10 1mov.mid"
+        },
+        {
+          "name": "K330 Piano Sonata n10 2mov",
+          "file": "Assets/Chiptune/Mozart/K330 Piano Sonata n10 2mov.mid"
+        },
+        {
+          "name": "K330 Piano Sonata n10 3mov",
+          "file": "Assets/Chiptune/Mozart/K330 Piano Sonata n10 3mov.mid"
+        },
+        {
+          "name": "K331 Piano Sonata n11",
+          "file": "Assets/Chiptune/Mozart/K331 Piano Sonata n11 .mid"
+        },
+        {
+          "name": "K331 Piano sonata n11 3mov",
+          "file": "Assets/Chiptune/Mozart/K331 Piano sonata n11 3mov.mid"
+        },
+        {
+          "name": "K332 Piano Sonata n12 1mov",
+          "file": "Assets/Chiptune/Mozart/K332 Piano Sonata n12 1mov.mid"
+        },
+        {
+          "name": "K332 Piano Sonata n12 2mov",
+          "file": "Assets/Chiptune/Mozart/K332 Piano Sonata n12 2mov.mid"
+        },
+        {
+          "name": "K332 Piano Sonata n12 3mov",
+          "file": "Assets/Chiptune/Mozart/K332 Piano Sonata n12 3mov.mid"
+        },
+        {
+          "name": "K333 Piano Sonata n13",
+          "file": "Assets/Chiptune/Mozart/K333 Piano Sonata n13 .mid"
+        },
+        {
+          "name": "K333 Piano Sonata n13 1mov",
+          "file": "Assets/Chiptune/Mozart/K333 Piano Sonata n13 1mov.mid"
+        },
+        {
+          "name": "K333 Piano Sonata n13 2mov",
+          "file": "Assets/Chiptune/Mozart/K333 Piano Sonata n13 2mov.mid"
+        },
+        {
+          "name": "K333 Piano Sonata n13 3mov",
+          "file": "Assets/Chiptune/Mozart/K333 Piano Sonata n13 3mov.mid"
+        },
+        {
+          "name": "K354 Piano Variations ''Je Suis Lindor''",
+          "file": "Assets/Chiptune/Mozart/K354 Piano Variations ''Je Suis Lindor''.mid"
+        },
+        {
+          "name": "K357 Piano Sonata 4 Hands",
+          "file": "Assets/Chiptune/Mozart/K357 Piano Sonata 4 Hands.mid"
+        },
+        {
+          "name": "K358 Piano Sonata 4 Hands",
+          "file": "Assets/Chiptune/Mozart/K358 Piano Sonata 4 Hands.mid"
+        },
+        {
+          "name": "K381 Piano Sonata 4 Hands",
+          "file": "Assets/Chiptune/Mozart/K381 Piano Sonata 4 Hands.mid"
+        },
+        {
+          "name": "K393 Solfeggi n1",
+          "file": "Assets/Chiptune/Mozart/K393 Solfeggi n1.mid"
+        },
+        {
+          "name": "K393 Solfeggi n2",
+          "file": "Assets/Chiptune/Mozart/K393 Solfeggi n2.mid"
+        },
+        {
+          "name": "K393 Solfeggi n3",
+          "file": "Assets/Chiptune/Mozart/K393 Solfeggi n3.mid"
+        },
+        {
+          "name": "K393 Solfeggi n4",
+          "file": "Assets/Chiptune/Mozart/K393 Solfeggi n4.mid"
+        },
+        {
+          "name": "K393 Solfeggi n5",
+          "file": "Assets/Chiptune/Mozart/K393 Solfeggi n5.mid"
+        },
+        {
+          "name": "K457 Piano Sonata n14",
+          "file": "Assets/Chiptune/Mozart/K457 Piano Sonata n14 .mid"
+        },
+        {
+          "name": "K497 Piano Sonata 4 Hands",
+          "file": "Assets/Chiptune/Mozart/K497 Piano Sonata 4 Hands.mid"
+        },
+        {
+          "name": "K521 Piano Sonata 4 Hands",
+          "file": "Assets/Chiptune/Mozart/K521 Piano Sonata 4 Hands.mid"
+        },
+        {
+          "name": "K545 Piano Sonata",
+          "file": "Assets/Chiptune/Mozart/K545 Piano Sonata.mid"
+        },
+        {
+          "name": "K570 Piano Sonata 1mov",
+          "file": "Assets/Chiptune/Mozart/K570 Piano Sonata 1mov.mid"
+        },
+        {
+          "name": "K570 Piano Sonata 2mov",
+          "file": "Assets/Chiptune/Mozart/K570 Piano Sonata 2mov.mid"
+        },
+        {
+          "name": "K570 Piano Sonata 3mov",
+          "file": "Assets/Chiptune/Mozart/K570 Piano Sonata 3mov.mid"
+        },
+        {
+          "name": "K576 Piano Sonata n19",
+          "file": "Assets/Chiptune/Mozart/K576 Piano Sonata n19 .mid"
+        },
+        {
+          "name": "Piano Sonata n01 K279",
+          "file": "Assets/Chiptune/Mozart/Piano Sonata n01 K279.mid"
+        },
+        {
+          "name": "Piano Sonata n02 K280",
+          "file": "Assets/Chiptune/Mozart/Piano Sonata n02 K280.mid"
+        },
+        {
+          "name": "Piano Sonata n03 K281",
+          "file": "Assets/Chiptune/Mozart/Piano Sonata n03 K281.mid"
+        },
+        {
+          "name": "Piano Sonata n04 K282",
+          "file": "Assets/Chiptune/Mozart/Piano Sonata n04 K282.mid"
+        },
+        {
+          "name": "Piano Sonata n05 K283",
+          "file": "Assets/Chiptune/Mozart/Piano Sonata n05 K283.mid"
+        },
+        {
+          "name": "Piano Sonata n06 K284",
+          "file": "Assets/Chiptune/Mozart/Piano Sonata n06 K284.mid"
+        },
+        {
+          "name": "Piano Sonata n07 K309",
+          "file": "Assets/Chiptune/Mozart/Piano Sonata n07 K309.mid"
+        },
+        {
+          "name": "Piano Sonata n08 K311",
+          "file": "Assets/Chiptune/Mozart/Piano Sonata n08 K311.mid"
+        },
+        {
+          "name": "Piano Sonata n09 K310",
+          "file": "Assets/Chiptune/Mozart/Piano Sonata n09 K310.mid"
+        },
+        {
+          "name": "Piano Sonata n10 K330",
+          "file": "Assets/Chiptune/Mozart/Piano Sonata n10 K330.mid"
+        },
+        {
+          "name": "Piano Sonata n11 K331",
+          "file": "Assets/Chiptune/Mozart/Piano Sonata n11 K331.mid"
+        },
+        {
+          "name": "Piano Sonata n12 K332",
+          "file": "Assets/Chiptune/Mozart/Piano Sonata n12 K332.mid"
+        },
+        {
+          "name": "Piano Sonata n13 K333",
+          "file": "Assets/Chiptune/Mozart/Piano Sonata n13 K333.mid"
+        },
+        {
+          "name": "Piano Sonata n14 K457",
+          "file": "Assets/Chiptune/Mozart/Piano Sonata n14 K457.mid"
+        },
+        {
+          "name": "Piano Sonata n15 K593-494",
+          "file": "Assets/Chiptune/Mozart/Piano Sonata n15 K593-494.mid"
+        },
+        {
+          "name": "Piano Sonata n16 K545",
+          "file": "Assets/Chiptune/Mozart/Piano Sonata n16 K545.mid"
+        },
+        {
+          "name": "Piano Sonata n17 K547a",
+          "file": "Assets/Chiptune/Mozart/Piano Sonata n17 K547a.mid"
+        },
+        {
+          "name": "Piano Sonata n18 K570",
+          "file": "Assets/Chiptune/Mozart/Piano Sonata n18 K570.mid"
+        },
+        {
+          "name": "Piano Sonata n19 K576",
+          "file": "Assets/Chiptune/Mozart/Piano Sonata n19 K576.mid"
+        },
+        {
+          "name": "Sonatina n21 3mov",
+          "file": "Assets/Chiptune/Mozart/Sonatina n21 3mov.mid"
+        },
+        {
+          "name": "Sonatina n22 4mov",
+          "file": "Assets/Chiptune/Mozart/Sonatina n22 4mov.mid"
+        },
+        {
+          "name": "Sonatina n3 1mov",
+          "file": "Assets/Chiptune/Mozart/Sonatina n3 1mov.mid"
+        },
+        {
+          "name": "Sonatina n3 2mov",
+          "file": "Assets/Chiptune/Mozart/Sonatina n3 2mov.mid"
+        },
+        {
+          "name": "Sonatina n3 3mov",
+          "file": "Assets/Chiptune/Mozart/Sonatina n3 3mov.mid"
+        },
+        {
+          "name": "Viennese Sonatinas K439b n2 1mov",
+          "file": "Assets/Chiptune/Mozart/Viennese Sonatinas K439b n2 1mov.mid"
+        },
+        {
+          "name": "Viennese Sonatinas K439b n2 2mov",
+          "file": "Assets/Chiptune/Mozart/Viennese Sonatinas K439b n2 2mov.mid"
+        },
+        {
+          "name": "Viennese Sonatinas K439b n2 3mov",
+          "file": "Assets/Chiptune/Mozart/Viennese Sonatinas K439b n2 3mov.mid"
+        },
+        {
+          "name": "Viennese Sonatinas K439b n2 4mov",
+          "file": "Assets/Chiptune/Mozart/Viennese Sonatinas K439b n2 4mov.mid"
+        },
+        {
+          "name": "Viennese Sonatinas K439b n6 1mov",
+          "file": "Assets/Chiptune/Mozart/Viennese Sonatinas K439b n6 1mov.mid"
+        },
+        {
+          "name": "Viennese Sonatinas K439b n6 2mov",
+          "file": "Assets/Chiptune/Mozart/Viennese Sonatinas K439b n6 2mov.mid"
+        }
+      ]
+    },
+    {
       "id": "schumann",
       "name": "Robert Schumann",
       "tracks": [
