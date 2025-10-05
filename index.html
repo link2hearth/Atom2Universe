@@ -980,6 +980,20 @@
               <select id="chiptuneTrackSelect" disabled>
                 <option value="" data-i18n="index.sections.options.chiptune.library.tracks.placeholder">Sélectionnez un titre</option>
               </select>
+              <div class="chiptune-track-slider" role="group" aria-live="polite">
+                <input
+                  type="range"
+                  id="chiptuneTrackSlider"
+                  min="0"
+                  max="0"
+                  value="0"
+                  step="1"
+                  disabled
+                  aria-label="Parcourir les titres"
+                  data-i18n-aria-label="index.sections.options.chiptune.trackSlider.label"
+                />
+                <span class="chiptune-track-slider__value" id="chiptuneTrackSliderValue" data-i18n="index.sections.options.chiptune.trackSlider.empty">Aucun titre</span>
+              </div>
             </div>
             <div class="option-field">
               <label for="chiptuneEngineSelect" data-i18n="index.sections.options.chiptune.labels.engine">Moteur sonore</label>

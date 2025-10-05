@@ -154,13 +154,13 @@
       id: 'GeneralUser-GS',
       name: 'GeneralUser-GS',
       file: 'Assets/Music/GeneralUser-GS.sf2',
-      default: true,
+      default: false,
     }),
     Object.freeze({
       id: 'Piano',
       name: 'Piano',
       file: 'Assets/Music/Piano.sf2',
-      default: false,
+      default: true,
     }),
         Object.freeze({
       id: 'Classical_Oboe',
@@ -1262,6 +1262,8 @@
       this.dropZone = elements.dropZone;
       this.artistSelect = elements.artistSelect;
       this.trackSelect = elements.trackSelect;
+      this.trackSlider = elements.trackSlider;
+      this.trackSliderValue = elements.trackSliderValue;
       this.playButton = elements.playButton;
       this.skipButton = elements.skipButton;
       this.stopButton = elements.stopButton;
@@ -1293,6 +1295,7 @@
       this.programUsageSummary = elements.programUsageSummary;
       this.programUsageTitle = elements.programUsageTitle;
       this.programUsageNote = elements.programUsageNote;
+      this.visibleTracks = [];
 
       const hasWindow = typeof window !== 'undefined';
       if (hasWindow) {
@@ -1573,8 +1576,18 @@
             this.setStatusMessage('index.sections.options.chiptune.status.trackNotFound', 'Unable to locate the selected track.', {}, 'error');
             return;
           }
+          this.refreshTrackSlider(track.file);
           this.resetRandomPlayback();
           this.loadFromLibrary(track);
+        });
+      }
+
+      if (this.trackSlider) {
+        this.trackSlider.addEventListener('input', () => {
+          this.handleTrackSliderInput(false);
+        });
+        this.trackSlider.addEventListener('change', () => {
+          this.handleTrackSliderInput(true);
         });
       }
 
@@ -2455,6 +2468,7 @@
           placeholder.textContent = this.translate(key, fallback);
         }
       }
+      this.refreshTrackSlider();
       this.updateProgramUsage(this.timeline);
     }
 
@@ -3061,6 +3075,7 @@
         if (this.trackSelect) {
           this.trackSelect.value = '';
         }
+        this.visibleTracks = [];
         this.refreshStaticTexts();
       }
     }
@@ -3497,7 +3512,8 @@
 
       this.trackSelect.value = targetValue;
       this.trackSelect.disabled = tracks.length === 0;
-      this.updateTrackSelectSize(tracks.length);
+      this.visibleTracks = Array.isArray(tracks) ? tracks.slice() : [];
+      this.updateTrackNavigation(this.visibleTracks, targetValue);
 
       if (placeholder) {
         placeholder.disabled = false;
@@ -3508,17 +3524,85 @@
       this.refreshStaticTexts();
     }
 
-    updateTrackSelectSize(trackCount) {
-      if (!this.trackSelect) {
-        return;
-      }
-      if (Number.isFinite(trackCount) && trackCount > 10) {
-        const size = Math.max(8, Math.min(12, trackCount));
-        this.trackSelect.size = size;
-        this.trackSelect.classList.add('chiptune-select--scrollable');
-      } else {
+    updateTrackNavigation(tracks, selectedValue = '') {
+      if (this.trackSelect) {
         this.trackSelect.removeAttribute('size');
         this.trackSelect.classList.remove('chiptune-select--scrollable');
+      }
+      if (!Array.isArray(tracks)) {
+        this.visibleTracks = [];
+        this.refreshTrackSlider('');
+        return;
+      }
+      const selected = selectedValue || (this.trackSelect ? this.trackSelect.value : '');
+      this.refreshTrackSlider(selected);
+    }
+
+    setTrackSliderValue(position, total) {
+      if (!this.trackSliderValue) {
+        return;
+      }
+      if (!Number.isFinite(total) || total <= 0) {
+        this.trackSliderValue.textContent = this.translate(
+          'index.sections.options.chiptune.trackSlider.empty',
+          'No track available'
+        );
+        return;
+      }
+      const normalizedPosition = Math.min(total, Math.max(1, position + 1));
+      this.trackSliderValue.textContent = this.translate(
+        'index.sections.options.chiptune.trackSlider.position',
+        '{current} / {total}',
+        { current: normalizedPosition, total }
+      );
+    }
+
+    refreshTrackSlider(selectedValue = '') {
+      if (!this.trackSlider) {
+        return;
+      }
+      const tracks = Array.isArray(this.visibleTracks) ? this.visibleTracks : [];
+      if (!tracks.length) {
+        this.trackSlider.min = 0;
+        this.trackSlider.max = 0;
+        this.trackSlider.value = 0;
+        this.trackSlider.step = 1;
+        this.trackSlider.disabled = true;
+        this.setTrackSliderValue(0, 0);
+        return;
+      }
+      const total = tracks.length;
+      const currentValue = selectedValue || (this.trackSelect ? this.trackSelect.value : '');
+      const currentIndex = tracks.findIndex(track => track.file === currentValue);
+      const sliderIndex = currentIndex >= 0 ? currentIndex : Math.max(0, Math.min(total - 1, (this.trackSelect ? this.trackSelect.selectedIndex - 1 : 0)));
+      this.trackSlider.min = 0;
+      this.trackSlider.max = total - 1;
+      this.trackSlider.step = 1;
+      this.trackSlider.value = sliderIndex;
+      this.trackSlider.disabled = total <= 1;
+      this.setTrackSliderValue(sliderIndex, total);
+    }
+
+    handleTrackSliderInput(commitSelection) {
+      if (!this.trackSlider || !this.trackSelect) {
+        return;
+      }
+      const tracks = Array.isArray(this.visibleTracks) ? this.visibleTracks : [];
+      if (!tracks.length) {
+        return;
+      }
+      const sliderIndex = Math.max(0, Math.min(tracks.length - 1, Number.parseInt(this.trackSlider.value, 10) || 0));
+      const track = tracks[sliderIndex];
+      if (!track) {
+        return;
+      }
+      if (this.trackSelect.value !== track.file) {
+        this.trackSelect.value = track.file;
+      }
+      this.setTrackSliderValue(sliderIndex, tracks.length);
+      if (commitSelection) {
+        const event = new Event('change', { bubbles: true });
+        this.trackSelect.dispatchEvent(event);
       }
     }
 
@@ -6704,6 +6788,8 @@
     dropZone: document.getElementById('chiptuneDropZone'),
     artistSelect: document.getElementById('chiptuneArtistSelect'),
     trackSelect: document.getElementById('chiptuneTrackSelect'),
+    trackSlider: document.getElementById('chiptuneTrackSlider'),
+    trackSliderValue: document.getElementById('chiptuneTrackSliderValue'),
     playButton: document.getElementById('chiptunePlayButton'),
     skipButton: document.getElementById('chiptuneSkipButton'),
     stopButton: document.getElementById('chiptuneStopButton'),
