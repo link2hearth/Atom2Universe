@@ -46,8 +46,9 @@ body.theme-neon .page--void {
 
 .apc-frenzy-counter {
   position: fixed;
-  left: 1.5rem;
-  bottom: 1.5rem;
+  left: clamp(1.2rem, 3vw, 2rem);
+  top: 44%;
+  bottom: auto;
   z-index: 35;
   min-width: 0;
   padding: 0;
@@ -57,14 +58,14 @@ body.theme-neon .page--void {
   color: inherit;
   font-family: 'Orbitron', 'Inter', sans-serif;
   opacity: 0.92;
-  transform: scale(1);
+  transform: translateY(-50%) scale(1);
   transition: transform 0.24s ease, opacity 0.24s ease;
   pointer-events: none;
 }
 
 .apc-frenzy-counter.is-active {
   opacity: 1;
-  transform: scale(1.05);
+  transform: translateY(-50%) scale(1.05);
 }
 
 .apc-frenzy-counter__value {
@@ -84,13 +85,13 @@ body:not(.view-game):not(.view-wave) .apc-frenzy-counter {
 
 @keyframes apcFrenzyPulse {
   0% {
-    transform: scale(1);
+    transform: translateY(-50%) scale(1);
   }
   45% {
-    transform: scale(1.24);
+    transform: translateY(-50%) scale(1.24);
   }
   100% {
-    transform: scale(1);
+    transform: translateY(-50%) scale(1);
   }
 }
 
