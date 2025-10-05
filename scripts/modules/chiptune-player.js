@@ -1264,6 +1264,7 @@
       this.trackSelect = elements.trackSelect;
       this.trackSlider = elements.trackSlider;
       this.trackSliderValue = elements.trackSliderValue;
+      this.headerPlaybackButton = elements.headerPlaybackButton;
       this.playButton = elements.playButton;
       this.skipButton = elements.skipButton;
       this.stopButton = elements.stopButton;
@@ -1610,6 +1611,16 @@
 
       if (this.playButton) {
         this.playButton.addEventListener('click', () => {
+          if (this.playing) {
+            this.pause();
+          } else {
+            this.play();
+          }
+        });
+      }
+
+      if (this.headerPlaybackButton) {
+        this.headerPlaybackButton.addEventListener('click', () => {
           if (this.playing) {
             this.pause();
           } else {
@@ -2396,6 +2407,7 @@
       if (this.playButton) {
         this.updatePlayButtonLabel();
       }
+      this.updateHeaderPlaybackButton();
       if (this.progressLabel) {
         this.progressLabel.textContent = this.translate(
           'index.sections.options.chiptune.progress.label',
@@ -2952,11 +2964,15 @@
 
     updateButtons() {
       const hasTimeline = this.timeline && Array.isArray(this.timeline.notes) && this.timeline.notes.length > 0;
+      const disabled = !hasTimeline;
       if (this.playButton) {
-        const disabled = !hasTimeline;
         this.playButton.disabled = disabled;
         this.updatePlayButtonLabel();
       }
+      if (this.headerPlaybackButton) {
+        this.headerPlaybackButton.disabled = disabled;
+      }
+      this.updateHeaderPlaybackButton();
       if (this.stopButton) {
         this.stopButton.disabled = !this.playing;
       }
@@ -2985,6 +3001,29 @@
         this.playButton.setAttribute('data-i18n', key);
         this.playButton.setAttribute('data-state', this.playing ? 'pause' : 'play');
       }
+    }
+
+    updateHeaderPlaybackButton() {
+      if (!this.headerPlaybackButton) {
+        return;
+      }
+      const state = this.playing ? 'pause' : 'play';
+      const key = this.playing
+        ? 'index.sections.options.chiptune.controls.pause'
+        : 'index.sections.options.chiptune.controls.play';
+      const fallback = this.playing ? 'Pause' : 'Play';
+      const label = this.translate(key, fallback);
+      this.headerPlaybackButton.setAttribute('aria-label', label);
+      this.headerPlaybackButton.setAttribute('title', label);
+      this.headerPlaybackButton.setAttribute('aria-pressed', this.playing ? 'true' : 'false');
+      if (this.headerPlaybackButton.dataset) {
+        this.headerPlaybackButton.dataset.state = state;
+        this.headerPlaybackButton.dataset.i18n = `aria-label:${key};title:${key}`;
+      } else {
+        this.headerPlaybackButton.setAttribute('data-state', state);
+        this.headerPlaybackButton.setAttribute('data-i18n', `aria-label:${key};title:${key}`);
+      }
+      this.headerPlaybackButton.classList.toggle('is-playing', this.playing);
     }
 
     async ensureContext() {
@@ -6835,6 +6874,7 @@
     trackSelect: document.getElementById('chiptuneTrackSelect'),
     trackSlider: document.getElementById('chiptuneTrackSlider'),
     trackSliderValue: document.getElementById('chiptuneTrackSliderValue'),
+    headerPlaybackButton: document.getElementById('headerPlaybackToggle'),
     playButton: document.getElementById('chiptunePlayButton'),
     skipButton: document.getElementById('chiptuneSkipButton'),
     stopButton: document.getElementById('chiptuneStopButton'),

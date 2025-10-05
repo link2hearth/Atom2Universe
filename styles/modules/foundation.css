@@ -92,6 +92,110 @@ body[data-page-group="arcade"] main {
   gap: 1.2rem;
 }
 
+.header-brand-group {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(0.5rem, 1vw, 0.75rem);
+}
+
+.header-playback-button {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+  color: inherit;
+  width: clamp(2.2rem, 3vw, 2.6rem);
+  height: clamp(2.2rem, 3vw, 2.6rem);
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  transition: background var(--transition), border-color var(--transition), color var(--transition),
+    transform var(--transition), box-shadow var(--transition);
+}
+
+.header-playback-button::before {
+  content: '▶';
+  font-size: clamp(1rem, 1.4vw, 1.2rem);
+  line-height: 1;
+  transform: translateX(1px);
+}
+
+.header-playback-button[data-state="pause"]::before {
+  content: '⏸';
+  transform: none;
+}
+
+.header-playback-button:hover:not(:disabled),
+.header-playback-button:focus-visible {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.32);
+  transform: translateY(-1px);
+}
+
+.header-playback-button:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.65);
+  outline-offset: 3px;
+}
+
+body.theme-light .header-playback-button {
+  background: rgba(12, 16, 32, 0.08);
+  border-color: rgba(12, 16, 32, 0.12);
+}
+
+body.theme-light .header-playback-button:hover:not(:disabled),
+body.theme-light .header-playback-button:focus-visible {
+  background: rgba(12, 16, 32, 0.16);
+  border-color: rgba(12, 16, 32, 0.28);
+}
+
+body.theme-light .header-playback-button:focus-visible {
+  outline-color: rgba(40, 48, 96, 0.65);
+}
+
+body.theme-neon .header-playback-button {
+  background: rgba(120, 140, 255, 0.18);
+  border-color: rgba(140, 160, 255, 0.28);
+}
+
+body.theme-neon .header-playback-button:hover:not(:disabled),
+body.theme-neon .header-playback-button:focus-visible {
+  background: rgba(140, 160, 255, 0.28);
+  border-color: rgba(160, 180, 255, 0.36);
+}
+
+body.theme-neon .header-playback-button:focus-visible {
+  outline-color: rgba(150, 170, 255, 0.6);
+}
+
+.header-playback-button.is-playing {
+  background: var(--accent);
+  border-color: transparent;
+  color: #05070c;
+  box-shadow: 0 0.6rem 1.4rem rgba(76, 141, 255, 0.35);
+}
+
+body.theme-light .header-playback-button.is-playing {
+  color: #05070c;
+}
+
+body.theme-neon .header-playback-button.is-playing {
+  color: #04030c;
+  box-shadow: 0 0.6rem 1.4rem rgba(122, 140, 255, 0.45);
+}
+
+.header-playback-button:disabled {
+  opacity: 0.48;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.header-playback-button:disabled::before {
+  opacity: 0.7;
+}
+
 .brand {
   font-family: 'Audiowide', 'Orbitron', sans-serif;
   font-size: clamp(1.162rem, 1.89vw, 1.68rem);
