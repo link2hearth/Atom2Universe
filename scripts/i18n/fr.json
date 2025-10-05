@@ -361,7 +361,6 @@
             "library": "Bibliothèque locale",
             "engine": "Moteur sonore",
             "soundFont": "SoundFont",
-            "file": "Fichier MIDI",
             "volume": "Volume général",
             "speed": "Vitesse de lecture",
             "speedNormal": "Tempo normal (100%)",

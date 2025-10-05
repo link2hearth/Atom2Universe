@@ -361,7 +361,6 @@
             "library": "Local library",
             "engine": "Audio engine",
             "soundFont": "SoundFont",
-            "file": "MIDI file",
             "volume": "Master volume",
             "speed": "Playback speed",
             "speedNormal": "Normal tempo (100%)",
