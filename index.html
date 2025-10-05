@@ -1017,9 +1017,14 @@
             <input type="range" id="chiptuneVolumeSlider" min="0" max="100" step="1" value="80" />
             <span class="option-value" id="chiptuneVolumeValue" aria-live="polite">80%</span>
 
-            <label for="chiptuneSpeedSlider" data-i18n="index.sections.options.chiptune.labels.speed">Vitesse de lecture</label>
-            <input type="range" id="chiptuneSpeedSlider" min="50" max="200" step="5" value="100" />
-            <span class="option-value" id="chiptuneSpeedValue" aria-live="polite" data-i18n="index.sections.options.chiptune.labels.speedNormal">Tempo normal (100%)</span>
+            <label for="chiptunePianoOverrideToggle" data-i18n="index.sections.options.chiptune.labels.pianoOverride">Forcer le piano pour les programmes piano</label>
+            <input type="checkbox" id="chiptunePianoOverrideToggle" checked />
+            <span
+              class="option-value"
+              id="chiptunePianoOverrideValue"
+              aria-live="polite"
+              data-i18n="index.sections.options.chiptune.pianoOverride.enabled"
+            >Activé</span>
           </div>
           <div class="option-row option-row--buttons option-row--pitch">
             <button type="button" id="chiptuneOctaveDownButton" data-i18n="index.sections.options.chiptune.controls.octaveDown">Octave −</button>
