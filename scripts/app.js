@@ -2337,6 +2337,7 @@ const elements = {
   arcadeLivesValue: document.getElementById('arcadeLivesValue'),
   arcadeScoreValue: document.getElementById('arcadeScoreValue'),
   arcadeComboMessage: document.getElementById('arcadeComboMessage'),
+  arcadeBrickSkinSelect: document.getElementById('arcadeBrickSkinSelect'),
   waveStage: document.getElementById('waveStage'),
   waveCanvas: document.getElementById('waveCanvas'),
   waveTicketLayer: document.getElementById('waveTicketLayer'),
@@ -2622,26 +2623,38 @@ function populateLanguageSelectOptions() {
 }
 
 function updateBrickSkinOption() {
-  if (!elements.brickSkinOptionCard || !elements.brickSkinSelect) {
-    return;
-  }
   const unlocked = isArcadeUnlocked();
-  elements.brickSkinOptionCard.hidden = !unlocked;
-  elements.brickSkinOptionCard.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
-  elements.brickSkinSelect.disabled = !unlocked;
   const selection = normalizeBrickSkinSelection(gameState.arcadeBrickSkin);
-  if (elements.brickSkinSelect.value !== selection) {
-    elements.brickSkinSelect.value = selection;
+  const unlockedMessage = translateOrDefault(
+    'scripts.app.options.brickSkin.unlocked',
+    'Choisissez l’apparence des briques de Particules.'
+  );
+  const lockedMessage = translateOrDefault(
+    'index.sections.options.brickSkin.note',
+    'Débloquez le trophée « Ruée vers le million » pour personnaliser vos briques.'
+  );
+
+  if (elements.brickSkinOptionCard) {
+    elements.brickSkinOptionCard.hidden = !unlocked;
+    elements.brickSkinOptionCard.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
   }
+
+  if (elements.brickSkinSelect) {
+    elements.brickSkinSelect.disabled = !unlocked;
+    if (elements.brickSkinSelect.value !== selection) {
+      elements.brickSkinSelect.value = selection;
+    }
+  }
+
+  if (elements.arcadeBrickSkinSelect) {
+    elements.arcadeBrickSkinSelect.disabled = !unlocked;
+    if (elements.arcadeBrickSkinSelect.value !== selection) {
+      elements.arcadeBrickSkinSelect.value = selection;
+    }
+    elements.arcadeBrickSkinSelect.title = unlocked ? '' : lockedMessage;
+  }
+
   if (elements.brickSkinStatus) {
-    const unlockedMessage = translateOrDefault(
-      'scripts.app.options.brickSkin.unlocked',
-      'Choisissez l’apparence des briques de Particules.'
-    );
-    const lockedMessage = translateOrDefault(
-      'index.sections.options.brickSkin.note',
-      'Débloquez le trophée « Ruée vers le million » pour personnaliser vos briques.'
-    );
     elements.brickSkinStatus.textContent = unlocked ? unlockedMessage : lockedMessage;
   }
 }
@@ -2653,6 +2666,25 @@ function updateOptionsIntroDetails() {
   const unlocked = isArcadeUnlocked();
   elements.optionsArcadeDetails.hidden = !unlocked;
   elements.optionsArcadeDetails.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
+}
+
+function commitBrickSkinSelection(rawValue) {
+  const selection = normalizeBrickSkinSelection(rawValue);
+  if (!isArcadeUnlocked()) {
+    updateBrickSkinOption();
+    return;
+  }
+  const previous = normalizeBrickSkinSelection(gameState.arcadeBrickSkin);
+  if (selection !== previous) {
+    gameState.arcadeBrickSkin = selection;
+    if (typeof setParticulesBrickSkinPreference === 'function') {
+      setParticulesBrickSkinPreference(selection);
+    }
+    saveGame();
+    const messageKey = BRICK_SKIN_TOAST_KEYS[selection] || 'scripts.app.brickSkins.applied.generic';
+    showToast(t(messageKey));
+  }
+  updateBrickSkinOption();
 }
 
 function ensureWaveGame() {
@@ -8964,24 +8996,13 @@ if (typeof window !== 'undefined') {
 
 if (elements.brickSkinSelect) {
   elements.brickSkinSelect.addEventListener('change', event => {
-    const selection = normalizeBrickSkinSelection(event.target.value);
-    if (!isArcadeUnlocked()) {
-      updateBrickSkinOption();
-      return;
-    }
-    const previous = normalizeBrickSkinSelection(gameState.arcadeBrickSkin);
-    if (selection === previous) {
-      elements.brickSkinSelect.value = selection;
-      return;
-    }
-    gameState.arcadeBrickSkin = selection;
-    if (typeof setParticulesBrickSkinPreference === 'function') {
-      setParticulesBrickSkinPreference(selection);
-    }
-    updateBrickSkinOption();
-    saveGame();
-    const messageKey = BRICK_SKIN_TOAST_KEYS[selection] || 'scripts.app.brickSkins.applied.generic';
-    showToast(t(messageKey));
+    commitBrickSkinSelection(event.target.value);
+  });
+}
+
+if (elements.arcadeBrickSkinSelect) {
+  elements.arcadeBrickSkinSelect.addEventListener('change', event => {
+    commitBrickSkinSelection(event.target.value);
   });
 }
 
