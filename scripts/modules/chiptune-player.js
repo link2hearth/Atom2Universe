@@ -6471,7 +6471,7 @@
     }
 
     async play(options = {}) {
-      const { offset = null } = options;
+      const { offset = null, allowHiFiFallback = true } = options;
       if (!this.timeline || !this.timeline.notes.length) {
         this.setStatusMessage('index.sections.options.chiptune.status.noMidiData', 'No MIDI data to play.', {}, 'error');
         return;
@@ -6486,12 +6486,32 @@
             await this.ensureSoundFontReady();
           } catch (error) {
             console.error(error);
+            if (allowHiFiFallback) {
+              this.setStatusMessage(
+                'index.sections.options.chiptune.status.soundFontAutoFallback',
+                'SoundFont unavailable: {error}. Reverting to original engine.',
+                { error: error.message },
+                'error',
+              );
+              this.setEngineMode('original');
+              return this.play({ offset, allowHiFiFallback: false });
+            }
             this.setStatusMessage('index.sections.options.chiptune.status.soundFontUnavailable', 'SoundFont unavailable: {error}', { error: error.message }, 'error');
             this.playing = false;
             this.updateButtons();
             return;
           }
           if (!this.activeSoundFont) {
+            if (allowHiFiFallback) {
+              this.setStatusMessage(
+                'index.sections.options.chiptune.status.soundFontAutoFallback',
+                'SoundFont unavailable: {error}. Reverting to original engine.',
+                { error: this.translate('index.sections.options.chiptune.errors.soundFontMissingSelection', 'No SoundFont selected.') },
+                'error',
+              );
+              this.setEngineMode('original');
+              return this.play({ offset, allowHiFiFallback: false });
+            }
             this.setStatusMessage('index.sections.options.chiptune.status.soundFontMissing', 'No SoundFont ready for Hi-Fi mode.', {}, 'error');
             this.playing = false;
             this.updateButtons();
@@ -6567,6 +6587,8 @@
         return;
       }
 
+      this.capturePlaybackPosition();
+
       const currentTitle = this.currentTitle;
       this.stop(false, { preservePosition: true, skipRandomReset: true });
 
@@ -6580,6 +6602,29 @@
       this.setStatusMessage(key, fallback, params, 'info');
       this.scheduleReadyStatusRestore();
       this.updateButtons();
+    }
+
+    capturePlaybackPosition() {
+      if (!this.playing || !this.audioContext || !Number.isFinite(this.playStartTime)) {
+        return null;
+      }
+
+      const duration = this.progressDuration || this.getTimelineDuration();
+      const baseSpeed = Number.isFinite(this.progressMonitorSpeed)
+        ? this.progressMonitorSpeed
+        : (this.activePlaybackSpeed || this.playbackSpeed || 1);
+      const startOffset = Number.isFinite(this.playStartOffset) ? this.playStartOffset : 0;
+      const now = this.audioContext.currentTime;
+      const elapsed = Math.max(0, now - this.playStartTime);
+      const position = startOffset + (elapsed * baseSpeed);
+      const clamped = duration > 0
+        ? Math.max(0, Math.min(duration, position))
+        : Math.max(0, position);
+
+      this.lastKnownPosition = clamped;
+      this.pendingSeekSeconds = clamped;
+
+      return clamped;
     }
 
     stop(manual = false, options = {}) {
