@@ -1260,9 +1260,12 @@
     constructor(elements) {
       this.fileInput = elements.fileInput;
       this.dropZone = elements.dropZone;
-      this.librarySelect = elements.librarySelect;
+      this.artistSelect = elements.artistSelect;
+      this.trackSelect = elements.trackSelect;
       this.playButton = elements.playButton;
       this.stopButton = elements.stopButton;
+      this.randomAllButton = elements.randomAllButton;
+      this.randomArtistButton = elements.randomArtistButton;
       this.status = elements.status;
       this.volumeSlider = elements.volumeSlider;
       this.volumeValue = elements.volumeValue;
@@ -1319,7 +1322,9 @@
       this.liveVoices = new Set();
       this.finishTimeout = null;
       this.languageChangeUnsubscribe = null;
-      this.libraryTracks = [];
+      this.libraryArtists = [];
+      this.libraryAllTracks = [];
+      this.currentArtistId = '';
       this.readyStatusMessage = null;
       this.lastStatusMessage = null;
       this.playStartTime = null;
@@ -1543,18 +1548,38 @@
         });
       }
 
-      if (this.librarySelect) {
-        this.librarySelect.addEventListener('change', () => {
-          const file = this.librarySelect.value;
+      if (this.artistSelect) {
+        this.artistSelect.addEventListener('change', () => {
+          const artistId = this.artistSelect.value;
+          this.applyArtistSelection(artistId);
+        });
+      }
+
+      if (this.trackSelect) {
+        this.trackSelect.addEventListener('change', () => {
+          const file = this.trackSelect.value;
           if (!file) {
             return;
           }
-          const track = this.libraryTracks.find(item => item.file === file);
+          const track = this.findTrackByFile(file, this.currentArtistId);
           if (!track) {
             this.setStatusMessage('index.sections.options.chiptune.status.trackNotFound', 'Unable to locate the selected track.', {}, 'error');
             return;
           }
           this.loadFromLibrary(track);
+        });
+      }
+
+      if (this.randomAllButton) {
+        this.randomAllButton.addEventListener('click', () => {
+          this.playRandomTrack();
+        });
+      }
+
+      if (this.randomArtistButton) {
+        this.randomArtistButton.addEventListener('click', () => {
+          const artistId = this.currentArtistId || (this.artistSelect ? this.artistSelect.value : '');
+          this.playRandomTrack(artistId || null);
         });
       }
 
@@ -2372,21 +2397,37 @@
           }
         }
       }
-      if (this.librarySelect && this.librarySelect.options.length > 0) {
-        const placeholder = this.librarySelect.options[0];
+      if (this.artistSelect && this.artistSelect.options.length > 0) {
+        const placeholder = this.artistSelect.options[0];
         if (placeholder) {
-          if (this.libraryTracks && this.libraryTracks.length) {
-            placeholder.textContent = this.translate(
-              'index.sections.options.chiptune.library.placeholder',
-              'Select a track'
-            );
-          } else {
-            const key = this.libraryLoadErrored
-              ? 'index.sections.options.chiptune.library.unavailable'
-              : 'index.sections.options.chiptune.library.empty';
-            const fallback = this.libraryLoadErrored ? 'Local library unavailable' : 'No local tracks yet';
-            placeholder.textContent = this.translate(key, fallback);
+          let key = 'index.sections.options.chiptune.library.artists.placeholder';
+          let fallback = 'Select an artist';
+          if (this.libraryLoadErrored) {
+            key = 'index.sections.options.chiptune.library.artists.unavailable';
+            fallback = 'Local library unavailable';
+          } else if (!this.libraryArtists.length) {
+            key = 'index.sections.options.chiptune.library.artists.empty';
+            fallback = 'No artist available';
           }
+          placeholder.textContent = this.translate(key, fallback);
+        }
+      }
+      if (this.trackSelect && this.trackSelect.options.length > 0) {
+        const placeholder = this.trackSelect.options[0];
+        if (placeholder) {
+          let key = 'index.sections.options.chiptune.library.tracks.placeholder';
+          let fallback = 'Select a track';
+          if (this.libraryLoadErrored) {
+            key = 'index.sections.options.chiptune.library.tracks.unavailable';
+            fallback = 'Local library unavailable';
+          } else if (!this.currentArtistId) {
+            key = 'index.sections.options.chiptune.library.tracks.selectArtist';
+            fallback = 'Choose an artist first';
+          } else if (!this.getTracksForArtist(this.currentArtistId).length) {
+            key = 'index.sections.options.chiptune.library.tracks.empty';
+            fallback = 'No tracks for this artist';
+          }
+          placeholder.textContent = this.translate(key, fallback);
         }
       }
       this.updateProgramUsage(this.timeline);
@@ -2965,9 +3006,10 @@
         if (this.fileInput) {
           this.fileInput.value = '';
         }
-        if (this.librarySelect) {
-          this.librarySelect.value = '';
+        if (this.trackSelect) {
+          this.trackSelect.value = '';
         }
+        this.refreshStaticTexts();
       }
     }
 
@@ -3230,60 +3272,259 @@
     }
 
     async loadLibrary() {
-      if (!this.librarySelect) {
-        return;
-      }
       try {
         const response = await fetch('resources/chiptune/library.json', { cache: 'no-cache' });
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}`);
         }
         const payload = await response.json();
-        const tracks = Array.isArray(payload?.tracks) ? payload.tracks : [];
-        this.populateLibrary(tracks, false);
+        let artists = [];
+        if (Array.isArray(payload?.artists)) {
+          artists = payload.artists;
+        } else if (Array.isArray(payload?.tracks)) {
+          artists = [
+            {
+              id: 'library',
+              name: 'Library',
+              tracks: payload.tracks,
+            },
+          ];
+        }
+        this.populateLibrary(artists, false);
       } catch (error) {
         console.error('Unable to load chiptune library manifest', error);
         this.populateLibrary([], true);
       }
     }
 
-    populateLibrary(tracks, errored) {
+    populateLibrary(artists, errored) {
       this.libraryLoadErrored = Boolean(errored);
-      this.libraryTracks = tracks
-        .filter(item => item && typeof item.file === 'string')
-        .map(item => ({
-          file: item.file,
-          name: typeof item.name === 'string' && item.name ? item.name : null,
-        }));
 
-      if (!this.librarySelect) {
+      const previousArtistId = this.currentArtistId;
+      const previousTrackValue = this.trackSelect ? this.trackSelect.value : '';
+
+      const sanitizedArtists = [];
+      const sanitizedTracks = [];
+      const usedArtistIds = new Set();
+
+      const fallbackArtistName = this.translate('index.sections.options.chiptune.library.unknownArtist', 'Unknown artist');
+
+      const normalizeId = (rawId, fallbackBase) => {
+        const base = typeof rawId === 'string' && rawId.trim()
+          ? rawId.trim()
+          : typeof fallbackBase === 'string' && fallbackBase.trim()
+            ? fallbackBase.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')
+            : '';
+        const initial = base || `artist-${sanitizedArtists.length + 1}`;
+        if (!usedArtistIds.has(initial)) {
+          usedArtistIds.add(initial);
+          return initial;
+        }
+        let suffix = 2;
+        let candidate = `${initial}-${suffix}`;
+        while (usedArtistIds.has(candidate)) {
+          suffix += 1;
+          candidate = `${initial}-${suffix}`;
+        }
+        usedArtistIds.add(candidate);
+        return candidate;
+      };
+
+      if (Array.isArray(artists)) {
+        artists.forEach((artist) => {
+          if (!artist || (typeof artist !== 'object')) {
+            return;
+          }
+          const name = typeof artist.name === 'string' && artist.name.trim()
+            ? artist.name.trim()
+            : fallbackArtistName;
+          const artistId = normalizeId(artist.id, name);
+          const trackList = Array.isArray(artist.tracks) ? artist.tracks : [];
+          const normalizedTracks = trackList
+            .filter(item => item && typeof item.file === 'string')
+            .map(item => {
+              const trackName = typeof item.name === 'string' && item.name.trim()
+                ? item.name.trim()
+                : typeof item.title === 'string' && item.title.trim()
+                  ? item.title.trim()
+                  : item.file.replace(/^.*\//, '');
+              return {
+                file: item.file,
+                name: trackName,
+                artistId,
+                artistName: name,
+              };
+            });
+          sanitizedArtists.push({
+            id: artistId,
+            name,
+            tracks: normalizedTracks,
+          });
+          normalizedTracks.forEach(track => sanitizedTracks.push(track));
+        });
+      }
+
+      this.libraryArtists = sanitizedArtists;
+      this.libraryAllTracks = sanitizedTracks;
+
+      const hasPreviousArtist = sanitizedArtists.some(artist => artist.id === previousArtistId);
+      const hasPreviousTrack = hasPreviousArtist
+        && sanitizedArtists.some(artist => artist.id === previousArtistId
+          && artist.tracks.some(track => track.file === previousTrackValue));
+
+      const nextArtistId = hasPreviousArtist ? previousArtistId : '';
+      this.currentArtistId = nextArtistId;
+
+      if (this.artistSelect) {
+        while (this.artistSelect.options.length > 1) {
+          this.artistSelect.remove(1);
+        }
+
+        for (const artist of this.libraryArtists) {
+          const option = document.createElement('option');
+          option.value = artist.id;
+          option.textContent = artist.name || artist.id;
+          this.artistSelect.append(option);
+        }
+
+        this.artistSelect.disabled = this.libraryArtists.length === 0;
+        this.artistSelect.value = nextArtistId || '';
+      }
+
+      this.populateTrackSelect(nextArtistId, {
+        selectedTrackFile: hasPreviousTrack ? previousTrackValue : '',
+        maintainSelection: hasPreviousTrack,
+      });
+    }
+
+    getTracksForArtist(artistId) {
+      if (!artistId) {
+        return [];
+      }
+      const artist = this.libraryArtists.find(item => item && item.id === artistId);
+      if (!artist || !Array.isArray(artist.tracks)) {
+        return [];
+      }
+      return artist.tracks;
+    }
+
+    populateTrackSelect(artistId, options = {}) {
+      if (!this.trackSelect) {
+        this.updateRandomButtons();
+        this.refreshStaticTexts();
         return;
       }
 
-      while (this.librarySelect.options.length > 1) {
-        this.librarySelect.remove(1);
+      const { selectedTrackFile = '', maintainSelection = false } = options;
+      const placeholder = this.trackSelect.options[0] || null;
+      const previousValue = this.trackSelect.value;
+
+      while (this.trackSelect.options.length > 1) {
+        this.trackSelect.remove(1);
       }
 
-      this.librarySelect.value = '';
-
-      for (const track of this.libraryTracks) {
+      const tracks = this.getTracksForArtist(artistId);
+      for (const track of tracks) {
         const option = document.createElement('option');
         option.value = track.file;
         option.textContent = track.name || track.file.replace(/^.*\//, '');
-        this.librarySelect.append(option);
+        this.trackSelect.append(option);
       }
 
-      this.librarySelect.disabled = this.libraryTracks.length === 0;
+      let targetValue = '';
+      if (selectedTrackFile && tracks.some(track => track.file === selectedTrackFile)) {
+        targetValue = selectedTrackFile;
+      } else if (maintainSelection && previousValue && tracks.some(track => track.file === previousValue)) {
+        targetValue = previousValue;
+      }
 
-      if (this.libraryTracks.length === 0) {
-        this.librarySelect.options[0].textContent = this.translate(
-          errored
-            ? 'index.sections.options.chiptune.library.unavailable'
-            : 'index.sections.options.chiptune.library.empty',
-          errored ? 'Local library unavailable' : 'No local tracks yet'
-        );
+      this.trackSelect.value = targetValue;
+      this.trackSelect.disabled = tracks.length === 0;
+      this.updateTrackSelectSize(tracks.length);
+
+      if (placeholder) {
+        placeholder.disabled = false;
+        placeholder.hidden = false;
+      }
+
+      this.updateRandomButtons();
+      this.refreshStaticTexts();
+    }
+
+    updateTrackSelectSize(trackCount) {
+      if (!this.trackSelect) {
+        return;
+      }
+      if (Number.isFinite(trackCount) && trackCount > 10) {
+        const size = Math.max(8, Math.min(12, trackCount));
+        this.trackSelect.size = size;
+        this.trackSelect.classList.add('chiptune-select--scrollable');
       } else {
-        this.librarySelect.options[0].textContent = this.translate('index.sections.options.chiptune.library.placeholder', 'Select a track');
+        this.trackSelect.removeAttribute('size');
+        this.trackSelect.classList.remove('chiptune-select--scrollable');
+      }
+    }
+
+    applyArtistSelection(artistId, options = {}) {
+      const { selectedTrackFile = '', maintainSelection = false } = options;
+      const artistExists = this.libraryArtists.some(artist => artist.id === artistId);
+      const resolvedArtistId = artistExists ? artistId : '';
+      this.currentArtistId = resolvedArtistId;
+      if (this.artistSelect) {
+        const targetValue = resolvedArtistId || '';
+        if (this.artistSelect.value !== targetValue) {
+          this.artistSelect.value = targetValue;
+        }
+      }
+      this.populateTrackSelect(resolvedArtistId, {
+        selectedTrackFile,
+        maintainSelection,
+      });
+    }
+
+    findTrackByFile(file, artistId = '') {
+      if (!file) {
+        return null;
+      }
+      const artistTracks = artistId ? this.getTracksForArtist(artistId) : [];
+      const matchInArtist = artistTracks.find(track => track.file === file);
+      if (matchInArtist) {
+        return matchInArtist;
+      }
+      return this.libraryAllTracks.find(track => track.file === file) || null;
+    }
+
+    playRandomTrack(artistId = null) {
+      const sourceArtistId = artistId || '';
+      const pool = sourceArtistId
+        ? this.getTracksForArtist(sourceArtistId)
+        : this.libraryAllTracks;
+      if (!Array.isArray(pool) || pool.length === 0) {
+        this.setStatusMessage(
+          'index.sections.options.chiptune.status.randomUnavailable',
+          'No tracks available for random playback.',
+          {},
+          'error',
+        );
+        return;
+      }
+      const index = Math.floor(Math.random() * pool.length);
+      const track = pool[index];
+      if (!track) {
+        return;
+      }
+      this.applyArtistSelection(track.artistId, { selectedTrackFile: track.file });
+      this.loadFromLibrary(track);
+    }
+
+    updateRandomButtons() {
+      const hasTracks = Array.isArray(this.libraryAllTracks) && this.libraryAllTracks.length > 0;
+      if (this.randomAllButton) {
+        this.randomAllButton.disabled = !hasTracks;
+      }
+      const currentArtistTracks = this.getTracksForArtist(this.currentArtistId);
+      if (this.randomArtistButton) {
+        this.randomArtistButton.disabled = !currentArtistTracks.length;
       }
     }
 
@@ -6200,9 +6441,12 @@
   const elements = {
     fileInput: document.getElementById('chiptuneFileInput'),
     dropZone: document.getElementById('chiptuneDropZone'),
-    librarySelect: document.getElementById('chiptuneLibrarySelect'),
+    artistSelect: document.getElementById('chiptuneArtistSelect'),
+    trackSelect: document.getElementById('chiptuneTrackSelect'),
     playButton: document.getElementById('chiptunePlayButton'),
     stopButton: document.getElementById('chiptuneStopButton'),
+    randomAllButton: document.getElementById('chiptuneRandomAllButton'),
+    randomArtistButton: document.getElementById('chiptuneRandomArtistButton'),
     status: document.getElementById('chiptuneStatus'),
     volumeSlider: document.getElementById('chiptuneVolumeSlider'),
     volumeValue: document.getElementById('chiptuneVolumeValue'),
