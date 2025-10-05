@@ -940,6 +940,370 @@
           "file": "Assets/Chiptune/Beethoven/op126 Six Bagatellas.mid"
         }
       ]
+    },
+    {
+      "id": "brahms",
+      "name": "Johannes Brahms",
+      "tracks": [
+        {
+          "name": "2 Polonaises op26 n1",
+          "file": "Assets/Chiptune/Brahms/2 Polonaises op26 n1.mid"
+        },
+        {
+          "name": "Ballad op53",
+          "file": "Assets/Chiptune/Brahms/Ballad op53.mid"
+        },
+        {
+          "name": "Etude op10 n01",
+          "file": "Assets/Chiptune/Brahms/Etude op10 n01.mid"
+        },
+        {
+          "name": "Etude op10 n02",
+          "file": "Assets/Chiptune/Brahms/Etude op10 n02.mid"
+        },
+        {
+          "name": "Etude op10 n03",
+          "file": "Assets/Chiptune/Brahms/Etude op10 n03.mid"
+        },
+        {
+          "name": "Etude op10 n05 ''Black Key''",
+          "file": "Assets/Chiptune/Brahms/Etude op10 n05 ''Black Key''.mid"
+        },
+        {
+          "name": "Etude op10 n06",
+          "file": "Assets/Chiptune/Brahms/Etude op10 n06.mid"
+        },
+        {
+          "name": "Etude op10 n07",
+          "file": "Assets/Chiptune/Brahms/Etude op10 n07.mid"
+        },
+        {
+          "name": "Etude op10 n08",
+          "file": "Assets/Chiptune/Brahms/Etude op10 n08.mid"
+        },
+        {
+          "name": "Etude op10 n09",
+          "file": "Assets/Chiptune/Brahms/Etude op10 n09.mid"
+        },
+        {
+          "name": "Etude op10 n10",
+          "file": "Assets/Chiptune/Brahms/Etude op10 n10.mid"
+        },
+        {
+          "name": "Etude op10 n11",
+          "file": "Assets/Chiptune/Brahms/Etude op10 n11.mid"
+        },
+        {
+          "name": "Etude op10 n12 ''Revolutionary''",
+          "file": "Assets/Chiptune/Brahms/Etude op10 n12 ''Revolutionary''.mid"
+        },
+        {
+          "name": "Etude op25 n01 ''Harp Etude''",
+          "file": "Assets/Chiptune/Brahms/Etude op25 n01 ''Harp Etude''.mid"
+        },
+        {
+          "name": "Etude op25 n02",
+          "file": "Assets/Chiptune/Brahms/Etude op25 n02.mid"
+        },
+        {
+          "name": "Etude op25 n03",
+          "file": "Assets/Chiptune/Brahms/Etude op25 n03.mid"
+        },
+        {
+          "name": "Etude op25 n04",
+          "file": "Assets/Chiptune/Brahms/Etude op25 n04.mid"
+        },
+        {
+          "name": "Etude op25 n05",
+          "file": "Assets/Chiptune/Brahms/Etude op25 n05.mid"
+        },
+        {
+          "name": "Etude op25 n06",
+          "file": "Assets/Chiptune/Brahms/Etude op25 n06.mid"
+        },
+        {
+          "name": "Etude op25 n07",
+          "file": "Assets/Chiptune/Brahms/Etude op25 n07.mid"
+        },
+        {
+          "name": "Etude op25 n08",
+          "file": "Assets/Chiptune/Brahms/Etude op25 n08.mid"
+        },
+        {
+          "name": "Etude op25 n09",
+          "file": "Assets/Chiptune/Brahms/Etude op25 n09.mid"
+        },
+        {
+          "name": "Etude op25 n10",
+          "file": "Assets/Chiptune/Brahms/Etude op25 n10.mid"
+        },
+        {
+          "name": "Etude op25 n11 ''Winter Wind''",
+          "file": "Assets/Chiptune/Brahms/Etude op25 n11 ''Winter Wind''.mid"
+        },
+        {
+          "name": "Fantasie op116 n2",
+          "file": "Assets/Chiptune/Brahms/Fantasie op116 n2.mid"
+        },
+        {
+          "name": "Fantasie op116 n6",
+          "file": "Assets/Chiptune/Brahms/Fantasie op116 n6.mid"
+        },
+        {
+          "name": "Mazurka op30 n2 Drchew",
+          "file": "Assets/Chiptune/Brahms/Mazurka op30 n2 Drchew.mid"
+        },
+        {
+          "name": "Mazurka op33 n2 Drchew",
+          "file": "Assets/Chiptune/Brahms/Mazurka op33 n2 Drchew.mid"
+        },
+        {
+          "name": "Mazurka op67 n3 Drchew",
+          "file": "Assets/Chiptune/Brahms/Mazurka op67 n3 Drchew.mid"
+        },
+        {
+          "name": "Mazurka op68 n2 Drchew",
+          "file": "Assets/Chiptune/Brahms/Mazurka op68 n2 Drchew.mid"
+        },
+        {
+          "name": "Nocturne op09 n2",
+          "file": "Assets/Chiptune/Brahms/Nocturne op09 n2.mid"
+        },
+        {
+          "name": "Nocturne op09 n3",
+          "file": "Assets/Chiptune/Brahms/Nocturne op09 n3.mid"
+        },
+        {
+          "name": "Nocturne op15 n2",
+          "file": "Assets/Chiptune/Brahms/Nocturne op15 n2.mid"
+        },
+        {
+          "name": "Nocturne op15 n3",
+          "file": "Assets/Chiptune/Brahms/Nocturne op15 n3.mid"
+        },
+        {
+          "name": "Nocturne op27 n1",
+          "file": "Assets/Chiptune/Brahms/Nocturne op27 n1.mid"
+        },
+        {
+          "name": "Nocturne op27 n2",
+          "file": "Assets/Chiptune/Brahms/Nocturne op27 n2.mid"
+        },
+        {
+          "name": "Nocturne op32 n1",
+          "file": "Assets/Chiptune/Brahms/Nocturne op32 n1.mid"
+        },
+        {
+          "name": "Nocturne op32 n2",
+          "file": "Assets/Chiptune/Brahms/Nocturne op32 n2.mid"
+        },
+        {
+          "name": "Nocturne op33 n2",
+          "file": "Assets/Chiptune/Brahms/Nocturne op33 n2.mid"
+        },
+        {
+          "name": "Nocturne op33 n4",
+          "file": "Assets/Chiptune/Brahms/Nocturne op33 n4.mid"
+        },
+        {
+          "name": "Nocturne op37 01",
+          "file": "Assets/Chiptune/Brahms/Nocturne op37 01.mid"
+        },
+        {
+          "name": "Nocturne op37 n2",
+          "file": "Assets/Chiptune/Brahms/Nocturne op37 n2.mid"
+        },
+        {
+          "name": "Nocturne op48 n1",
+          "file": "Assets/Chiptune/Brahms/Nocturne op48 n1.mid"
+        },
+        {
+          "name": "Nocturne op48 n2",
+          "file": "Assets/Chiptune/Brahms/Nocturne op48 n2.mid"
+        },
+        {
+          "name": "Nocturne op55 n1",
+          "file": "Assets/Chiptune/Brahms/Nocturne op55 n1.mid"
+        },
+        {
+          "name": "Piano Sonata n1 op1 1mov",
+          "file": "Assets/Chiptune/Brahms/Piano Sonata n1 op1 1mov.mid"
+        },
+        {
+          "name": "Piano Sonata n1 op1 3mov",
+          "file": "Assets/Chiptune/Brahms/Piano Sonata n1 op1 3mov.mid"
+        },
+        {
+          "name": "Piano Sonata n1 op1",
+          "file": "Assets/Chiptune/Brahms/Piano Sonata n1 op1.mid"
+        },
+        {
+          "name": "Piano Sonata n2",
+          "file": "Assets/Chiptune/Brahms/Piano Sonata n2.mid"
+        },
+        {
+          "name": "Piano Sonata n3",
+          "file": "Assets/Chiptune/Brahms/Piano Sonata n3.mid"
+        }
+      ]
+    },
+    {
+      "id": "chopin",
+      "name": "Frédéric Chopin",
+      "tracks": [
+        {
+          "name": "Nocturne op55 n2",
+          "file": "Assets/Chiptune/Chopin/Nocturne op55 n2.mid"
+        },
+        {
+          "name": "Nocturne op62 n2",
+          "file": "Assets/Chiptune/Chopin/Nocturne op62 n2.mid"
+        },
+        {
+          "name": "Nocturne op72 n1",
+          "file": "Assets/Chiptune/Chopin/Nocturne op72 n1.mid"
+        },
+        {
+          "name": "Prelude n01 op28 ''Reunion''",
+          "file": "Assets/Chiptune/Chopin/Prelude n01 op28 ''Reunion''.mid"
+        },
+        {
+          "name": "Prelude n02 op28 ''Presentiment of Death''",
+          "file": "Assets/Chiptune/Chopin/Prelude n02 op28 ''Presentiment of Death''.mid"
+        },
+        {
+          "name": "Prelude n03 op28 ''Thou Art So Like A Flower''",
+          "file": "Assets/Chiptune/Chopin/Prelude n03 op28 ''Thou Art So Like A Flower''.mid"
+        },
+        {
+          "name": "Prelude n04 op28 ''Suffocation''",
+          "file": "Assets/Chiptune/Chopin/Prelude n04 op28 ''Suffocation''.mid"
+        },
+        {
+          "name": "Prelude n05 op28 ''Uncertainty''",
+          "file": "Assets/Chiptune/Chopin/Prelude n05 op28 ''Uncertainty''.mid"
+        },
+        {
+          "name": "Prelude n06 op28 ''Tolling Bells''",
+          "file": "Assets/Chiptune/Chopin/Prelude n06 op28 ''Tolling Bells''.mid"
+        },
+        {
+          "name": "Prelude n07 op28 ''The Polish Dance''",
+          "file": "Assets/Chiptune/Chopin/Prelude n07 op28 ''The Polish Dance''.mid"
+        },
+        {
+          "name": "Prelude n08 op28 ''Desparation''",
+          "file": "Assets/Chiptune/Chopin/Prelude n08 op28 ''Desparation''.mid"
+        },
+        {
+          "name": "Prelude n09 op28 ''Vision''",
+          "file": "Assets/Chiptune/Chopin/Prelude n09 op28 ''Vision''.mid"
+        },
+        {
+          "name": "Prelude n10 op28 ''The Night Moth''",
+          "file": "Assets/Chiptune/Chopin/Prelude n10 op28 ''The Night Moth''.mid"
+        },
+        {
+          "name": "Prelude n11 op28 ''Dragonfly''",
+          "file": "Assets/Chiptune/Chopin/Prelude n11 op28 ''Dragonfly''.mid"
+        },
+        {
+          "name": "Prelude n12 op28 ''Duel''",
+          "file": "Assets/Chiptune/Chopin/Prelude n12 op28 ''Duel''.mid"
+        },
+        {
+          "name": "Prelude n13 op28 ''Loss''",
+          "file": "Assets/Chiptune/Chopin/Prelude n13 op28 ''Loss''.mid"
+        },
+        {
+          "name": "Prelude n14 op28 ''Fear''",
+          "file": "Assets/Chiptune/Chopin/Prelude n14 op28 ''Fear''.mid"
+        },
+        {
+          "name": "Prelude n15 op28 ''Raindrop''",
+          "file": "Assets/Chiptune/Chopin/Prelude n15 op28 ''Raindrop''.mid"
+        },
+        {
+          "name": "Prelude n16 op28 ''Hades''",
+          "file": "Assets/Chiptune/Chopin/Prelude n16 op28 ''Hades''.mid"
+        },
+        {
+          "name": "Prelude n17 op28 ''Scene On the Place of Notre Dame",
+          "file": "Assets/Chiptune/Chopin/Prelude n17 op28 ''Scene On the Place of Notre Dame.mid"
+        },
+        {
+          "name": "Prelude n18 op28 ''Suicide''",
+          "file": "Assets/Chiptune/Chopin/Prelude n18 op28 ''Suicide''.mid"
+        },
+        {
+          "name": "Prelude n19 op28",
+          "file": "Assets/Chiptune/Chopin/Prelude n19 op28.mid"
+        },
+        {
+          "name": "Prelude n20 op28 ''Funeral March''",
+          "file": "Assets/Chiptune/Chopin/Prelude n20 op28 ''Funeral March''.mid"
+        },
+        {
+          "name": "Prelude n21 op28 ''Sunday''",
+          "file": "Assets/Chiptune/Chopin/Prelude n21 op28 ''Sunday''.mid"
+        },
+        {
+          "name": "Prelude n22 op28 ''Impatience''",
+          "file": "Assets/Chiptune/Chopin/Prelude n22 op28 ''Impatience''.mid"
+        },
+        {
+          "name": "Prelude n23 op28 ''A Pleasure Boat''",
+          "file": "Assets/Chiptune/Chopin/Prelude n23 op28 ''A Pleasure Boat''.mid"
+        },
+        {
+          "name": "Prelude n24 op28 ''The Storm''",
+          "file": "Assets/Chiptune/Chopin/Prelude n24 op28 ''The Storm''.mid"
+        },
+        {
+          "name": "Scherzo n1 op20",
+          "file": "Assets/Chiptune/Chopin/Scherzo n1 op20.mid"
+        },
+        {
+          "name": "Scherzo op31",
+          "file": "Assets/Chiptune/Chopin/Scherzo op31.mid"
+        },
+        {
+          "name": "Sonata op35 n1",
+          "file": "Assets/Chiptune/Chopin/Sonata op35 n1 .mid"
+        },
+        {
+          "name": "Sonata op35 n2",
+          "file": "Assets/Chiptune/Chopin/Sonata op35 n2 .mid"
+        },
+        {
+          "name": "Sonata op35 n3",
+          "file": "Assets/Chiptune/Chopin/Sonata op35 n3 .mid"
+        },
+        {
+          "name": "Sonata op35 n4",
+          "file": "Assets/Chiptune/Chopin/Sonata op35 n4 .mid"
+        },
+        {
+          "name": "Tarantella",
+          "file": "Assets/Chiptune/Chopin/Tarantella.mid"
+        },
+        {
+          "name": "Trois Nouvelles Etudes (Op.posth.)",
+          "file": "Assets/Chiptune/Chopin/Trois Nouvelles Etudes (Op.posth.).mid"
+        },
+        {
+          "name": "Waltz in Ab (Op.posth., Brown21)",
+          "file": "Assets/Chiptune/Chopin/Waltz in Ab (Op.posth., Brown21).mid"
+        },
+        {
+          "name": "Waltz op64 n1",
+          "file": "Assets/Chiptune/Chopin/Waltz op64 n1.mid"
+        },
+        {
+          "name": "Waltz op70 n2",
+          "file": "Assets/Chiptune/Chopin/Waltz op70 n2.mid"
+        }
+      ]
     }
   ]
 }
