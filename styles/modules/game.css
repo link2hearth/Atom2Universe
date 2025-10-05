@@ -49,78 +49,33 @@ body.theme-neon .page--void {
   left: 1.5rem;
   bottom: 1.5rem;
   z-index: 35;
-  min-width: 11rem;
-  padding: 0.75rem 1rem;
-  border-radius: 0.75rem;
-  background: rgba(9, 13, 28, 0.78);
-  border: 1px solid rgba(86, 161, 255, 0.24);
-  box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.35);
+  min-width: 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
-  color: #f5f9ff;
+  gap: 0;
+  color: inherit;
   font-family: 'Orbitron', 'Inter', sans-serif;
   opacity: 0.92;
   transform: scale(1);
-  transition: transform 0.24s ease, opacity 0.24s ease, border-color 0.24s ease;
+  transition: transform 0.24s ease, opacity 0.24s ease;
   pointer-events: none;
 }
 
 .apc-frenzy-counter.is-active {
   opacity: 1;
   transform: scale(1.05);
-  border-color: rgba(118, 207, 255, 0.5);
-  box-shadow: 0 1.15rem 2.6rem rgba(40, 115, 255, 0.35);
 }
 
 .apc-frenzy-counter__value {
-  font-size: 2.4rem;
+  font-size: 1.1rem;
   font-weight: 700;
   line-height: 1;
-  color: #ffffff;
-  text-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.45);
+  color: inherit;
 }
 
 .apc-frenzy-counter__value--pulse {
   animation: apcFrenzyPulse 0.26s ease-out;
-}
-
-.apc-frenzy-counter__summary {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-  font-size: 0.78rem;
-  line-height: 1.2;
-}
-
-.apc-frenzy-counter__summary-item {
-  opacity: 0.82;
-}
-
-body.theme-light .apc-frenzy-counter {
-  background: rgba(246, 248, 255, 0.9);
-  color: #0f172a;
-  border-color: rgba(73, 132, 255, 0.3);
-  box-shadow: 0 0.65rem 1.8rem rgba(41, 64, 120, 0.25);
-}
-
-body.theme-light .apc-frenzy-counter__value {
-  color: #132a5c;
-  text-shadow: none;
-}
-
-body.theme-light .apc-frenzy-counter__summary-item {
-  opacity: 0.7;
-}
-
-body.theme-neon .apc-frenzy-counter {
-  background: rgba(15, 0, 45, 0.86);
-  border-color: rgba(255, 0, 199, 0.46);
-  box-shadow: 0 1.3rem 2.8rem rgba(132, 44, 255, 0.42);
-}
-
-body.theme-neon .apc-frenzy-counter__value {
-  color: #ff9bff;
 }
 
 body:not(.view-game):not(.view-wave) .apc-frenzy-counter {
