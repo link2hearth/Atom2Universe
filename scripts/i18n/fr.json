@@ -358,7 +358,8 @@
         "chiptune": {
           "title": "Module Musique Midi",
           "labels": {
-            "library": "Bibliothèque locale",
+            "artist": "Artiste",
+            "track": "Titre",
             "engine": "Moteur sonore",
             "soundFont": "SoundFont",
             "volume": "Volume général",
@@ -407,9 +408,18 @@
             "noneDeclared": "Aucune SoundFont déclarée"
           },
           "library": {
-            "placeholder": "Sélectionnez un morceau",
-            "empty": "Aucun morceau local pour le moment",
-            "unavailable": "Bibliothèque locale indisponible"
+            "unknownArtist": "Artiste inconnu",
+            "artists": {
+              "placeholder": "Sélectionnez un artiste",
+              "empty": "Aucun artiste disponible",
+              "unavailable": "Bibliothèque locale indisponible"
+            },
+            "tracks": {
+              "placeholder": "Sélectionnez un titre",
+              "empty": "Aucun titre pour cet artiste",
+              "unavailable": "Bibliothèque locale indisponible",
+              "selectArtist": "Choisissez d'abord un artiste"
+            }
           },
           "dropZone": {
             "prompt": "Déposez un fichier MIDI (.mid) ici ou cliquez pour le sélectionner"
@@ -423,7 +433,9 @@
             "octaveUp": "Octave +",
             "resetPitch": "Réinitialiser",
             "play": "Lecture",
-            "stop": "Stop"
+            "stop": "Stop",
+            "randomAll": "Lecture aléatoire (bibliothèque)",
+            "randomArtist": "Lecture aléatoire (artiste)"
           },
           "status": {
             "noneLoaded": "Aucun morceau chargé pour le moment.",
@@ -440,6 +452,7 @@
             "soundFontMissing": "Aucune SoundFont prête pour le mode Hi-Fi.",
             "noMidiData": "Aucune donnée MIDI à lire.",
             "unsupportedFile": "Le fichier déposé doit être un MIDI (.mid ou .midi).",
+            "randomUnavailable": "Aucun morceau disponible pour la lecture aléatoire.",
             "playbackComplete": "Lecture terminée : {title}",
             "playbackError": "Lecture impossible : {error}",
             "playbackStopped": "Lecture stoppée : {title}",

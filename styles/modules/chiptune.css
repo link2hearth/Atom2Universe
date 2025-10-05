@@ -36,6 +36,16 @@
   min-width: 220px;
 }
 
+.option-card--chiptune .option-row--selectors .option-field--artist,
+.option-card--chiptune .option-row--selectors .option-field--track {
+  flex-basis: 45%;
+  max-width: 45%;
+}
+
+.option-card--chiptune .option-row--selectors .option-field--track select {
+  min-height: 2.6rem;
+}
+
 .option-card--chiptune .option-row--selectors label {
   font-size: 0.9rem;
   font-weight: 600;
@@ -46,6 +56,11 @@
   max-width: 100%;
 }
 
+.option-card--chiptune select.chiptune-select--scrollable {
+  min-height: 12rem;
+  overflow-y: auto;
+}
+
 @media (max-width: 720px) {
   .option-card--chiptune .option-row--selectors {
     flex-wrap: wrap;
@@ -54,6 +69,16 @@
     flex: 1 1 240px;
     max-width: 100%;
   }
+}
+
+.option-card--chiptune .option-row--random {
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.option-card--chiptune .option-row--random button {
+  flex: 1 1 50%;
+  min-width: 140px;
 }
 
 .option-card--chiptune .option-row--slider {

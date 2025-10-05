@@ -1,9 +1,15 @@
 {
   "_comment": "Ajoutez vos morceaux dans Assets/Chiptune et référencez-les ici.",
-  "tracks": [
+  "artists": [
     {
-  "name": "Test",
-  "file": "Assets/Chiptune/Test.mid"
-}
+      "id": "bach",
+      "name": "Johann Sebastian Bach",
+      "tracks": [
+        {
+          "name": "Menuet en sol majeur (BWV Anh. 114)",
+          "file": "Assets/Chiptune/Bach/01 Menuet.mid"
+        }
+      ]
+    }
   ]
 }
