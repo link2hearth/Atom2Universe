@@ -1277,6 +1277,9 @@
       this.articulationValue = elements.articulationValue;
       this.speedSlider = elements.speedSlider;
       this.speedValue = elements.speedValue;
+      this.pianoOverrideToggle = elements.pianoOverrideToggle;
+      this.pianoOverrideValue = elements.pianoOverrideValue;
+      this.pianoOverrideEnabled = true;
       this.engineSelect = elements.engineSelect;
       this.soundFontSelect = elements.soundFontSelect;
       this.progressLabel = elements.progressLabel;
@@ -1617,6 +1620,13 @@
         });
       }
 
+      if (this.pianoOverrideToggle) {
+        this.pianoOverrideToggle.addEventListener('change', () => {
+          const enabled = Boolean(this.pianoOverrideToggle.checked);
+          this.setPianoOverrideEnabled(enabled, { syncControl: false });
+        });
+      }
+
       if (this.progressSlider) {
         const getSliderSeconds = () => {
           const rawValue = Number.parseFloat(this.progressSlider.value);
@@ -1708,6 +1718,12 @@
           this.setTransposeSemitones(0);
           this.setFineDetuneCents(0);
         });
+      }
+
+      if (this.pianoOverrideToggle) {
+        this.setPianoOverrideEnabled(Boolean(this.pianoOverrideToggle.checked));
+      } else {
+        this.setPianoOverrideEnabled(true, { syncControl: false });
       }
 
     }
@@ -1883,6 +1899,34 @@
       if (this.speedValue) {
         this.speedValue.textContent = label;
       }
+      this.updateReadyStatusMessage();
+    }
+
+    setPianoOverrideEnabled(value, options = {}) {
+      const { syncControl = true } = options;
+      const enabled = Boolean(value);
+      this.pianoOverrideEnabled = enabled;
+
+      if (this.pianoOverrideToggle) {
+        if (syncControl) {
+          this.pianoOverrideToggle.checked = enabled;
+        }
+        this.pianoOverrideToggle.setAttribute('aria-checked', enabled ? 'true' : 'false');
+        if (this.pianoOverrideValue) {
+          this.pianoOverrideToggle.setAttribute('aria-describedby', this.pianoOverrideValue.id);
+        }
+      }
+
+      const key = enabled
+        ? 'index.sections.options.chiptune.pianoOverride.enabled'
+        : 'index.sections.options.chiptune.pianoOverride.disabled';
+      const fallback = enabled ? 'Enabled' : 'Disabled';
+      const label = this.translate(key, fallback);
+
+      if (this.pianoOverrideValue) {
+        this.pianoOverrideValue.textContent = label;
+      }
+
       this.updateReadyStatusMessage();
     }
 
@@ -3799,7 +3843,7 @@
       if (!this.activeSoundFont || !this.selectedSoundFontId) {
         return null;
       }
-      const program = Number.isFinite(context.program) ? context.program : 0;
+      let program = Number.isFinite(context.program) ? context.program : 0;
       const baseEnvelope = context.baseEnvelope || {};
       const info = this.getCurrentSoundFontInfo();
       if (!info) {
@@ -3812,6 +3856,13 @@
         : (Number.isFinite(note.velocity) ? Math.max(0, Math.min(1, note.velocity)) : 0.6);
       const velocity = Math.max(0, Math.min(127, Math.round(velocityBase * 127)));
       const bank = note.channel === 9 ? 128 : 0;
+
+      if (this.pianoOverrideEnabled && bank !== 128) {
+        const normalizedProgram = Math.max(0, Math.min(127, Math.round(program)));
+        if (normalizedProgram <= 7) {
+          program = 0;
+        }
+      }
 
       let regions;
       try {
@@ -6166,6 +6217,8 @@
     articulationValue: document.getElementById('chiptuneArticulationValue'),
     speedSlider: document.getElementById('chiptuneSpeedSlider'),
     speedValue: document.getElementById('chiptuneSpeedValue'),
+    pianoOverrideToggle: document.getElementById('chiptunePianoOverrideToggle'),
+    pianoOverrideValue: document.getElementById('chiptunePianoOverrideValue'),
     engineSelect: document.getElementById('chiptuneEngineSelect'),
     soundFontSelect: document.getElementById('chiptuneSoundFontSelect'),
     progressLabel: document.getElementById('chiptuneProgressLabel'),

@@ -362,6 +362,7 @@
             "engine": "Moteur sonore",
             "soundFont": "SoundFont",
             "volume": "Volume général",
+            "pianoOverride": "Forcer le programme piano pour les pistes piano",
             "speed": "Vitesse de lecture",
             "speedNormal": "Tempo normal (100%)",
             "transposeZero": "0 demi-ton",
@@ -412,6 +413,10 @@
           },
           "dropZone": {
             "prompt": "Déposez un fichier MIDI (.mid) ici ou cliquez pour le sélectionner"
+          },
+          "pianoOverride": {
+            "enabled": "Activé",
+            "disabled": "Désactivé"
           },
           "controls": {
             "octaveDown": "Octave −",
