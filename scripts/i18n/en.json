@@ -456,6 +456,7 @@
             "soundFontReady": "SoundFont ready: {name}",
             "soundFontError": "Unable to load the SoundFont: {error}",
             "soundFontUnavailable": "SoundFont unavailable: {error}",
+            "soundFontAutoFallback": "SoundFont unavailable: {error}. Reverting to original engine.",
             "soundFontMissing": "No SoundFont ready for Hi-Fi mode.",
             "noMidiData": "No MIDI data to play.",
             "unsupportedFile": "Please drop a MIDI file (.mid or .midi).",
