@@ -6587,6 +6587,8 @@
         return;
       }
 
+      this.capturePlaybackPosition();
+
       const currentTitle = this.currentTitle;
       this.stop(false, { preservePosition: true, skipRandomReset: true });
 
@@ -6600,6 +6602,29 @@
       this.setStatusMessage(key, fallback, params, 'info');
       this.scheduleReadyStatusRestore();
       this.updateButtons();
+    }
+
+    capturePlaybackPosition() {
+      if (!this.playing || !this.audioContext || !Number.isFinite(this.playStartTime)) {
+        return null;
+      }
+
+      const duration = this.progressDuration || this.getTimelineDuration();
+      const baseSpeed = Number.isFinite(this.progressMonitorSpeed)
+        ? this.progressMonitorSpeed
+        : (this.activePlaybackSpeed || this.playbackSpeed || 1);
+      const startOffset = Number.isFinite(this.playStartOffset) ? this.playStartOffset : 0;
+      const now = this.audioContext.currentTime;
+      const elapsed = Math.max(0, now - this.playStartTime);
+      const position = startOffset + (elapsed * baseSpeed);
+      const clamped = duration > 0
+        ? Math.max(0, Math.min(duration, position))
+        : Math.max(0, position);
+
+      this.lastKnownPosition = clamped;
+      this.pendingSeekSeconds = clamped;
+
+      return clamped;
     }
 
     stop(manual = false, options = {}) {
