@@ -6621,7 +6621,16 @@
         const startOffset = timelineDuration > 0
           ? Math.max(0, Math.min(timelineDuration, Number.isFinite(requestedOffset) ? requestedOffset : 0))
           : 0;
-        const effectiveDuration = this.getEffectiveDuration(this.timeline, playbackSpeed);
+        const normalizedSpeed = playbackSpeed > 0 ? playbackSpeed : 1;
+        const remainingTimelineDuration = timelineDuration > 0
+          ? Math.max(0, timelineDuration - startOffset)
+          : 0;
+        const effectiveDuration = remainingTimelineDuration > 0
+          ? remainingTimelineDuration / normalizedSpeed
+          : (timelineDuration > 0
+            ? 0
+            : this.getEffectiveDuration(this.timeline, playbackSpeed));
+        const finishDelaySeconds = Math.max(0, (effectiveDuration || 0) + 0.6);
         const startTime = context.currentTime + 0.05;
         const schedulerStartTime = startTime - (startOffset / playbackSpeed);
         this.playStartTime = startTime;
@@ -6662,7 +6671,7 @@
             this.setStatusMessage('index.sections.options.chiptune.status.playbackComplete', 'Playback finished: {title}', { title: this.currentTitle }, 'success');
             this.scheduleReadyStatusRestore();
           }
-        }, Math.ceil(((effectiveDuration || 0) + 0.6) * 1000));
+        }, Math.ceil(finishDelaySeconds * 1000));
 
         this.setStatus('', 'success', { type: 'playing', extra: '' });
       } catch (error) {
