@@ -1304,6 +1304,348 @@
           "file": "Assets/Chiptune/Chopin/Waltz op70 n2.mid"
         }
       ]
+    },
+    {
+      "id": "clementi",
+      "name": "Muzio Clementi",
+      "tracks": [
+        {
+          "name": "clemm",
+          "file": "Assets/Chiptune/Clementi/clemm.mid"
+        },
+        {
+          "name": "clemm2",
+          "file": "Assets/Chiptune/Clementi/clemm2.mid"
+        },
+        {
+          "name": "clemm3",
+          "file": "Assets/Chiptune/Clementi/clemm3.mid"
+        },
+        {
+          "name": "Duettino in C n1 1mov",
+          "file": "Assets/Chiptune/Clementi/Duettino in C n1 1mov.mid"
+        },
+        {
+          "name": "Duettino in C n1 3mov",
+          "file": "Assets/Chiptune/Clementi/Duettino in C n1 3mov.mid"
+        },
+        {
+          "name": "Etude n6",
+          "file": "Assets/Chiptune/Clementi/Etude n6.mid"
+        },
+        {
+          "name": "Etude n8",
+          "file": "Assets/Chiptune/Clementi/Etude n8.mid"
+        },
+        {
+          "name": "Piano Sonata in C Duet",
+          "file": "Assets/Chiptune/Clementi/Piano Sonata in C Duet.mid"
+        },
+        {
+          "name": "Sonata n5 op25 1mov",
+          "file": "Assets/Chiptune/Clementi/Sonata n5 op25 1mov.mid"
+        },
+        {
+          "name": "Sonata n5 op25 2mov",
+          "file": "Assets/Chiptune/Clementi/Sonata n5 op25 2mov.mid"
+        },
+        {
+          "name": "Sonata n5 op25 3mov",
+          "file": "Assets/Chiptune/Clementi/Sonata n5 op25 3mov.mid"
+        },
+        {
+          "name": "sonatina op36 n1 1mov",
+          "file": "Assets/Chiptune/Clementi/sonatina op36 n1 1mov.mid"
+        },
+        {
+          "name": "sonatina op36 n1 2mov",
+          "file": "Assets/Chiptune/Clementi/sonatina op36 n1 2mov.mid"
+        },
+        {
+          "name": "sonatina op36 n1 3mov",
+          "file": "Assets/Chiptune/Clementi/sonatina op36 n1 3mov.mid"
+        },
+        {
+          "name": "sonatina op36 n2 1mov",
+          "file": "Assets/Chiptune/Clementi/sonatina op36 n2 1mov.mid"
+        },
+        {
+          "name": "sonatina op36 n2 2mov",
+          "file": "Assets/Chiptune/Clementi/sonatina op36 n2 2mov.mid"
+        },
+        {
+          "name": "sonatina op36 n2 3mov",
+          "file": "Assets/Chiptune/Clementi/sonatina op36 n2 3mov.mid"
+        },
+        {
+          "name": "sonatina op36 n3 1mov",
+          "file": "Assets/Chiptune/Clementi/sonatina op36 n3 1mov.mid"
+        },
+        {
+          "name": "sonatina op36 n3 2mov",
+          "file": "Assets/Chiptune/Clementi/sonatina op36 n3 2mov.mid"
+        },
+        {
+          "name": "sonatina op36 n3 3mov",
+          "file": "Assets/Chiptune/Clementi/sonatina op36 n3 3mov.mid"
+        },
+        {
+          "name": "sonatina op36 n4 1mov",
+          "file": "Assets/Chiptune/Clementi/sonatina op36 n4 1mov.mid"
+        },
+        {
+          "name": "sonatina op36 n4 2mov",
+          "file": "Assets/Chiptune/Clementi/sonatina op36 n4 2mov.mid"
+        },
+        {
+          "name": "sonatina op36 n4 3mov",
+          "file": "Assets/Chiptune/Clementi/sonatina op36 n4 3mov.mid"
+        },
+        {
+          "name": "sonatina op36 n5 1mov",
+          "file": "Assets/Chiptune/Clementi/sonatina op36 n5 1mov.mid"
+        },
+        {
+          "name": "sonatina op36 n5 2mov",
+          "file": "Assets/Chiptune/Clementi/sonatina op36 n5 2mov.mid"
+        },
+        {
+          "name": "sonatina op36 n5 3mov",
+          "file": "Assets/Chiptune/Clementi/sonatina op36 n5 3mov.mid"
+        },
+        {
+          "name": "sonatina op36 n6 1mov",
+          "file": "Assets/Chiptune/Clementi/sonatina op36 n6 1mov.mid"
+        },
+        {
+          "name": "sonatina op36 n6 2mov",
+          "file": "Assets/Chiptune/Clementi/sonatina op36 n6 2mov.mid"
+        },
+        {
+          "name": "Sonatina op36 n6",
+          "file": "Assets/Chiptune/Clementi/Sonatina op36 n6.mid"
+        },
+        {
+          "name": "Sonatina op37 n1 1mov",
+          "file": "Assets/Chiptune/Clementi/Sonatina op37 n1 1mov.mid"
+        },
+        {
+          "name": "Sonatina op37 n1 2mov",
+          "file": "Assets/Chiptune/Clementi/Sonatina op37 n1 2mov.mid"
+        },
+        {
+          "name": "Sonatina op37 n2 1mov",
+          "file": "Assets/Chiptune/Clementi/Sonatina op37 n2 1mov.mid"
+        },
+        {
+          "name": "Sonatina op37 n2 2mov",
+          "file": "Assets/Chiptune/Clementi/Sonatina op37 n2 2mov.mid"
+        },
+        {
+          "name": "Sonatina op37 n3 1mov",
+          "file": "Assets/Chiptune/Clementi/Sonatina op37 n3 1mov.mid"
+        },
+        {
+          "name": "Sonatina op37 n3 2mov",
+          "file": "Assets/Chiptune/Clementi/Sonatina op37 n3 2mov.mid"
+        },
+        {
+          "name": "Sonatina op38 n1 1mov",
+          "file": "Assets/Chiptune/Clementi/Sonatina op38 n1 1mov.mid"
+        },
+        {
+          "name": "Sonatina op38 n1 2 mov",
+          "file": "Assets/Chiptune/Clementi/Sonatina op38 n1 2 mov.mid"
+        },
+        {
+          "name": "Sonatina op38 n2 1mov",
+          "file": "Assets/Chiptune/Clementi/Sonatina op38 n2 1mov.mid"
+        },
+        {
+          "name": "Sonatina op38 n2 2mov",
+          "file": "Assets/Chiptune/Clementi/Sonatina op38 n2 2mov.mid"
+        },
+        {
+          "name": "Sonatina op38 n3",
+          "file": "Assets/Chiptune/Clementi/Sonatina op38 n3.mid"
+        },
+        {
+          "name": "Studio Gradus Ad Parnassum n16",
+          "file": "Assets/Chiptune/Clementi/Studio Gradus Ad Parnassum n16.mid"
+        },
+        {
+          "name": "Studio Gradus Ad Parnassum n17",
+          "file": "Assets/Chiptune/Clementi/Studio Gradus Ad Parnassum n17.mid"
+        },
+        {
+          "name": "Studio Gradus Ad Parnassum n26",
+          "file": "Assets/Chiptune/Clementi/Studio Gradus Ad Parnassum n26.mid"
+        },
+        {
+          "name": "Studio Gradus Ad Parnassum n65",
+          "file": "Assets/Chiptune/Clementi/Studio Gradus Ad Parnassum n65.mid"
+        }
+      ]
+    },
+    {
+      "id": "czerny",
+      "name": "Carl Czerny",
+      "tracks": [
+        {
+          "name": "Czerny ''Die Schule Der Gelaufigkeit'' op299 n21",
+          "file": "Assets/Chiptune/Czerny/Czerny ''Die Schule Der Gelaufigkeit'' op299 n21.mid"
+        },
+        {
+          "name": "Czerny op33 ''La Ricordanza''",
+          "file": "Assets/Chiptune/Czerny/Czerny op33 ''La Ricordanza''.mid"
+        },
+        {
+          "name": "Dancing the Jig",
+          "file": "Assets/Chiptune/Czerny/Dancing the Jig.mid"
+        },
+        {
+          "name": "Etude Op.299 No.07",
+          "file": "Assets/Chiptune/Czerny/Etude Op.299 No.07.mid"
+        },
+        {
+          "name": "Etude Op.299 No.34",
+          "file": "Assets/Chiptune/Czerny/Etude Op.299 No.34.mid"
+        },
+        {
+          "name": "Etude Op.740 No.1",
+          "file": "Assets/Chiptune/Czerny/Etude Op.740 No.1.mid"
+        },
+        {
+          "name": "Etude Op.740 No.10",
+          "file": "Assets/Chiptune/Czerny/Etude Op.740 No.10.mid"
+        },
+        {
+          "name": "Etude Op.740 No.11",
+          "file": "Assets/Chiptune/Czerny/Etude Op.740 No.11.mid"
+        },
+        {
+          "name": "Etude Op.740 No.12",
+          "file": "Assets/Chiptune/Czerny/Etude Op.740 No.12.mid"
+        },
+        {
+          "name": "Etude Op.740 No.13",
+          "file": "Assets/Chiptune/Czerny/Etude Op.740 No.13.mid"
+        },
+        {
+          "name": "Etude Op.740 No.14",
+          "file": "Assets/Chiptune/Czerny/Etude Op.740 No.14.mid"
+        },
+        {
+          "name": "Etude Op.740 No.15",
+          "file": "Assets/Chiptune/Czerny/Etude Op.740 No.15.mid"
+        },
+        {
+          "name": "Etude Op.740 No.16",
+          "file": "Assets/Chiptune/Czerny/Etude Op.740 No.16.mid"
+        },
+        {
+          "name": "Etude Op.740 No.17",
+          "file": "Assets/Chiptune/Czerny/Etude Op.740 No.17.mid"
+        },
+        {
+          "name": "Etude Op.740 No.18",
+          "file": "Assets/Chiptune/Czerny/Etude Op.740 No.18.mid"
+        },
+        {
+          "name": "Etude Op.740 No.19",
+          "file": "Assets/Chiptune/Czerny/Etude Op.740 No.19.mid"
+        },
+        {
+          "name": "Etude Op.740 No.2",
+          "file": "Assets/Chiptune/Czerny/Etude Op.740 No.2.mid"
+        },
+        {
+          "name": "Etude Op.740 No.27",
+          "file": "Assets/Chiptune/Czerny/Etude Op.740 No.27.mid"
+        },
+        {
+          "name": "Etude Op.740 No.3",
+          "file": "Assets/Chiptune/Czerny/Etude Op.740 No.3.mid"
+        },
+        {
+          "name": "Etude Op.740 No.4",
+          "file": "Assets/Chiptune/Czerny/Etude Op.740 No.4.mid"
+        },
+        {
+          "name": "Etude Op.740 No.44",
+          "file": "Assets/Chiptune/Czerny/Etude Op.740 No.44.mid"
+        },
+        {
+          "name": "Etude Op.740 No.5",
+          "file": "Assets/Chiptune/Czerny/Etude Op.740 No.5.mid"
+        },
+        {
+          "name": "Etude Op.740 No.50",
+          "file": "Assets/Chiptune/Czerny/Etude Op.740 No.50.mid"
+        },
+        {
+          "name": "Etude Op.740 No.6",
+          "file": "Assets/Chiptune/Czerny/Etude Op.740 No.6.mid"
+        },
+        {
+          "name": "Etude Op.740 No.7",
+          "file": "Assets/Chiptune/Czerny/Etude Op.740 No.7.mid"
+        },
+        {
+          "name": "Etude Op.740 No.8",
+          "file": "Assets/Chiptune/Czerny/Etude Op.740 No.8.mid"
+        },
+        {
+          "name": "Etude Op.740 No.9",
+          "file": "Assets/Chiptune/Czerny/Etude Op.740 No.9.mid"
+        }
+      ]
+    },
+    {
+      "id": "haendel",
+      "name": "Georg Friedrich Haendel",
+      "tracks": [
+        {
+          "name": "Allemande",
+          "file": "Assets/Chiptune/Haendel/Allemande.mid"
+        },
+        {
+          "name": "Courante 2 Minuets",
+          "file": "Assets/Chiptune/Haendel/Courante 2 Minuets.mid"
+        },
+        {
+          "name": "Harpsichord Suite n2 in F Hwv427 3mov",
+          "file": "Assets/Chiptune/Haendel/Harpsichord Suite n2 in F Hwv427 3mov.mid"
+        },
+        {
+          "name": "Harpsichord Suite n2 in F Hwv427 4mov",
+          "file": "Assets/Chiptune/Haendel/Harpsichord Suite n2 in F Hwv427 4mov.mid"
+        },
+        {
+          "name": "Harpsichord Suite n3 Hwv428 1mov",
+          "file": "Assets/Chiptune/Haendel/Harpsichord Suite n3 Hwv428 1mov.mid"
+        },
+        {
+          "name": "Harpsichord Suite n3 Hwv428 2mov",
+          "file": "Assets/Chiptune/Haendel/Harpsichord Suite n3 Hwv428 2mov.mid"
+        },
+        {
+          "name": "Harpsichord Suite n3 Hwv428 3mov",
+          "file": "Assets/Chiptune/Haendel/Harpsichord Suite n3 Hwv428 3mov.mid"
+        },
+        {
+          "name": "Harpsichord Suite n3 Hwv428 4mov",
+          "file": "Assets/Chiptune/Haendel/Harpsichord Suite n3 Hwv428 4mov.mid"
+        },
+        {
+          "name": "Harpsichord Suite n3 Hwv428 5mov",
+          "file": "Assets/Chiptune/Haendel/Harpsichord Suite n3 Hwv428 5mov.mid"
+        },
+        {
+          "name": "Harpsichord Suite n3 Hwv428 6mov",
+          "file": "Assets/Chiptune/Haendel/Harpsichord Suite n3 Hwv428 6mov.mid"
+        }
+      ]
     }
   ]
 }
