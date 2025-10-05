@@ -456,6 +456,7 @@
             "soundFontReady": "SoundFont chargée : {name}",
             "soundFontError": "Impossible de charger la SoundFont : {error}",
             "soundFontUnavailable": "SoundFont indisponible : {error}",
+            "soundFontAutoFallback": "SoundFont indisponible : {error}. Retour au moteur original.",
             "soundFontMissing": "Aucune SoundFont prête pour le mode Hi-Fi.",
             "noMidiData": "Aucune donnée MIDI à lire.",
             "unsupportedFile": "Le fichier déposé doit être un MIDI (.mid ou .midi).",

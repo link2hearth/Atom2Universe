@@ -6471,7 +6471,7 @@
     }
 
     async play(options = {}) {
-      const { offset = null } = options;
+      const { offset = null, allowHiFiFallback = true } = options;
       if (!this.timeline || !this.timeline.notes.length) {
         this.setStatusMessage('index.sections.options.chiptune.status.noMidiData', 'No MIDI data to play.', {}, 'error');
         return;
@@ -6486,12 +6486,32 @@
             await this.ensureSoundFontReady();
           } catch (error) {
             console.error(error);
+            if (allowHiFiFallback) {
+              this.setStatusMessage(
+                'index.sections.options.chiptune.status.soundFontAutoFallback',
+                'SoundFont unavailable: {error}. Reverting to original engine.',
+                { error: error.message },
+                'error',
+              );
+              this.setEngineMode('original');
+              return this.play({ offset, allowHiFiFallback: false });
+            }
             this.setStatusMessage('index.sections.options.chiptune.status.soundFontUnavailable', 'SoundFont unavailable: {error}', { error: error.message }, 'error');
             this.playing = false;
             this.updateButtons();
             return;
           }
           if (!this.activeSoundFont) {
+            if (allowHiFiFallback) {
+              this.setStatusMessage(
+                'index.sections.options.chiptune.status.soundFontAutoFallback',
+                'SoundFont unavailable: {error}. Reverting to original engine.',
+                { error: this.translate('index.sections.options.chiptune.errors.soundFontMissingSelection', 'No SoundFont selected.') },
+                'error',
+              );
+              this.setEngineMode('original');
+              return this.play({ offset, allowHiFiFallback: false });
+            }
             this.setStatusMessage('index.sections.options.chiptune.status.soundFontMissing', 'No SoundFont ready for Hi-Fi mode.', {}, 'error');
             this.playing = false;
             this.updateButtons();
