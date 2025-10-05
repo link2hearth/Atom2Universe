@@ -1260,6 +1260,8 @@
     constructor(elements) {
       this.fileInput = elements.fileInput;
       this.dropZone = elements.dropZone;
+      this.folderButton = elements.folderButton;
+      this.folderInput = elements.folderInput;
       this.artistSelect = elements.artistSelect;
       this.trackSelect = elements.trackSelect;
       this.trackSlider = elements.trackSlider;
@@ -1329,6 +1331,9 @@
       this.languageChangeUnsubscribe = null;
       this.libraryArtists = [];
       this.libraryAllTracks = [];
+      this.baseLibraryArtists = [];
+      this.userLibraryArtists = [];
+      this.userLibrarySignatures = new Map();
       this.currentArtistId = '';
       this.readyStatusMessage = null;
       this.lastStatusMessage = null;
@@ -1490,6 +1495,301 @@
         || type === 'audio/mid';
     }
 
+    getFileRelativePath(file) {
+      if (!file) {
+        return '';
+      }
+      const relativePath = typeof file.webkitRelativePath === 'string' && file.webkitRelativePath
+        ? file.webkitRelativePath
+        : typeof file.relativePath === 'string' && file.relativePath
+          ? file.relativePath
+          : typeof file.name === 'string'
+            ? file.name
+            : '';
+      return relativePath.replace(/\\/g, '/');
+    }
+
+    getFolderRootName(files) {
+      if (!Array.isArray(files) || !files.length) {
+        return '';
+      }
+      for (const file of files) {
+        const path = this.getFileRelativePath(file);
+        if (!path) {
+          continue;
+        }
+        const segments = path.split('/');
+        if (segments.length > 1 && segments[0]) {
+          return segments[0];
+        }
+      }
+      const first = files[0];
+      if (first) {
+        const name = typeof first.name === 'string' ? first.name : '';
+        if (name) {
+          return name.replace(/\.[^.]+$/, '') || name;
+        }
+      }
+      return '';
+    }
+
+    slugifyId(value) {
+      if (typeof value !== 'string') {
+        return '';
+      }
+      const trimmed = value.trim();
+      if (!trimmed) {
+        return '';
+      }
+      const normalized = typeof trimmed.normalize === 'function'
+        ? trimmed.normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
+        : trimmed;
+      return normalized
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+    }
+
+    generateUserArtistId(baseName = '') {
+      let base = this.slugifyId(baseName) || 'user-folder';
+      if (!base.startsWith('user-')) {
+        base = `user-${base}`;
+      }
+      if (!base) {
+        base = 'user-folder';
+      }
+      const existingIds = new Set();
+      if (Array.isArray(this.libraryArtists)) {
+        this.libraryArtists.forEach((artist) => {
+          if (artist && typeof artist.id === 'string') {
+            existingIds.add(artist.id);
+          }
+        });
+      }
+      if (Array.isArray(this.userLibraryArtists)) {
+        this.userLibraryArtists.forEach((artist) => {
+          if (artist && typeof artist.id === 'string') {
+            existingIds.add(artist.id);
+          }
+        });
+      }
+      let candidate = base;
+      let suffix = 2;
+      while (existingIds.has(candidate)) {
+        candidate = `${base}-${suffix}`;
+        suffix += 1;
+      }
+      return candidate;
+    }
+
+    buildFolderSignature(files) {
+      if (!Array.isArray(files) || !files.length) {
+        return '';
+      }
+      const paths = files
+        .map(file => this.getFileRelativePath(file))
+        .filter(path => typeof path === 'string' && path);
+      if (!paths.length) {
+        return '';
+      }
+      paths.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+      return paths.map(path => path.toLowerCase()).join('|');
+    }
+
+    trimFolderPrefix(path, folder) {
+      if (typeof path !== 'string') {
+        return '';
+      }
+      const normalizedPath = path.startsWith('/') ? path.slice(1) : path;
+      if (!folder) {
+        return normalizedPath;
+      }
+      const normalizedFolder = folder.replace(/\\/g, '/');
+      const prefix = `${normalizedFolder}/`;
+      if (normalizedPath.startsWith(prefix)) {
+        return normalizedPath.slice(prefix.length) || normalizedPath;
+      }
+      return normalizedPath;
+    }
+
+    findExistingUserArtist(signature, folderName) {
+      if (!Array.isArray(this.userLibraryArtists) || !this.userLibraryArtists.length) {
+        return null;
+      }
+      if (signature && this.userLibrarySignatures.has(signature)) {
+        const existingId = this.userLibrarySignatures.get(signature);
+        const match = this.userLibraryArtists.find(item => item && item.id === existingId);
+        if (match) {
+          return match;
+        }
+      }
+      if (folderName) {
+        const normalized = folderName.toLowerCase();
+        const match = this.userLibraryArtists.find((item) => {
+          if (!item || typeof item.sourceFolder !== 'string') {
+            return false;
+          }
+          return item.sourceFolder.toLowerCase() === normalized;
+        });
+        if (match) {
+          return match;
+        }
+      }
+      return null;
+    }
+
+    registerUserArtist(artist, signature, folderName) {
+      if (!artist || typeof artist !== 'object') {
+        return { replaced: false };
+      }
+      const normalizedSignature = typeof signature === 'string' ? signature : '';
+      const normalizedFolder = typeof folderName === 'string' ? folderName.trim().toLowerCase() : '';
+      let targetIndex = -1;
+      if (typeof artist.id === 'string' && artist.id) {
+        targetIndex = this.userLibraryArtists.findIndex(item => item && item.id === artist.id);
+      }
+      if (targetIndex < 0 && normalizedSignature && this.userLibrarySignatures.has(normalizedSignature)) {
+        const existingId = this.userLibrarySignatures.get(normalizedSignature);
+        targetIndex = this.userLibraryArtists.findIndex(item => item && item.id === existingId);
+      }
+      if (targetIndex < 0 && normalizedFolder) {
+        targetIndex = this.userLibraryArtists.findIndex((item) => {
+          if (!item || typeof item.sourceFolder !== 'string') {
+            return false;
+          }
+          return item.sourceFolder.toLowerCase() === normalizedFolder;
+        });
+      }
+
+      let replaced = false;
+      if (targetIndex >= 0) {
+        const previous = this.userLibraryArtists[targetIndex];
+        if (previous && typeof previous.signature === 'string') {
+          this.userLibrarySignatures.delete(previous.signature);
+        }
+        this.userLibraryArtists.splice(targetIndex, 1, artist);
+        replaced = true;
+      } else {
+        this.userLibraryArtists.push(artist);
+      }
+
+      if (normalizedSignature) {
+        this.userLibrarySignatures.set(normalizedSignature, artist.id);
+      }
+
+      return { replaced };
+    }
+
+    importMidiFolder(files) {
+      if (!Array.isArray(files) || !files.length) {
+        return;
+      }
+      const midiFiles = files.filter(file => this.isMidiFile(file));
+      if (!midiFiles.length) {
+        this.setStatusMessage(
+          'index.sections.options.chiptune.folderImport.statusEmpty',
+          'The selected folder does not contain any MIDI files.',
+          {},
+          'error',
+        );
+        return;
+      }
+      midiFiles.sort((a, b) => {
+        const pathA = this.getFileRelativePath(a);
+        const pathB = this.getFileRelativePath(b);
+        return pathA.localeCompare(pathB, undefined, { sensitivity: 'base' });
+      });
+
+      const signature = this.buildFolderSignature(midiFiles);
+      const folderRoot = this.getFolderRootName(midiFiles);
+      const defaultName = this.translate(
+        'index.sections.options.chiptune.folderImport.defaultName',
+        'Local MIDI folder',
+      );
+      const existing = this.findExistingUserArtist(signature, folderRoot);
+      const suggestedName = existing && typeof existing.name === 'string' && existing.name
+        ? existing.name
+        : folderRoot || defaultName;
+      let artistName = suggestedName || defaultName;
+      const canPrompt = typeof window !== 'undefined'
+        && window
+        && typeof window.prompt === 'function';
+      if (canPrompt) {
+        const promptMessage = this.translate(
+          'index.sections.options.chiptune.folderImport.prompt',
+          'Choose a name for this folder (optional)',
+        );
+        try {
+          const response = window.prompt(promptMessage, artistName);
+          if (response != null) {
+            const trimmed = response.trim();
+            if (trimmed) {
+              artistName = trimmed;
+            }
+          }
+        } catch (error) {
+          // Ignore prompt errors silently
+        }
+      }
+
+      const artistId = existing && typeof existing.id === 'string' && existing.id
+        ? existing.id
+        : this.generateUserArtistId(artistName || folderRoot || defaultName);
+
+      try {
+        const tracks = midiFiles.map((file, index) => {
+          const relativePath = this.getFileRelativePath(file);
+          const displayPath = this.trimFolderPrefix(relativePath, folderRoot)
+            || (typeof file.name === 'string' && file.name)
+            || `Track ${index + 1}`;
+          return {
+            file: `user-track-${artistId}-${index + 1}`,
+            name: displayPath,
+            source: 'user',
+            blob: file,
+            relativePath,
+          };
+        });
+
+        const artist = {
+          id: artistId,
+          name: artistName || defaultName,
+          tracks,
+          source: 'user',
+          signature,
+          sourceFolder: folderRoot || '',
+        };
+
+        const { replaced } = this.registerUserArtist(artist, signature, folderRoot || '');
+
+        this.populateLibrary(
+          [...this.baseLibraryArtists, ...this.userLibraryArtists],
+          this.libraryLoadErrored,
+          {
+            maintainSelection: false,
+            preferredArtistId: artist.id,
+            preferredTrackFile: tracks.length ? tracks[0].file : '',
+          },
+        );
+
+        const key = replaced
+          ? 'index.sections.options.chiptune.folderImport.statusUpdated'
+          : 'index.sections.options.chiptune.folderImport.statusAdded';
+        const fallback = replaced
+          ? 'Folder updated: {name} ({count} tracks)'
+          : 'Folder ready: {name} ({count} tracks)';
+        this.setStatusMessage(key, fallback, { name: artist.name, count: tracks.length }, 'success');
+      } catch (error) {
+        console.error('Unable to import MIDI folder', error);
+        this.setStatusMessage(
+          'index.sections.options.chiptune.folderImport.statusError',
+          'Unable to import the selected folder.',
+          {},
+          'error',
+        );
+      }
+    }
+
     bindEvents() {
       if (this.fileInput) {
         this.fileInput.addEventListener('change', () => {
@@ -1498,6 +1798,24 @@
             return;
           }
           this.loadFromFile(file);
+        });
+      }
+
+      if (this.folderButton) {
+        this.folderButton.addEventListener('click', () => {
+          if (this.folderInput) {
+            this.folderInput.click();
+          }
+        });
+      }
+
+      if (this.folderInput) {
+        this.folderInput.addEventListener('change', () => {
+          const files = this.folderInput.files ? Array.from(this.folderInput.files) : [];
+          if (files.length) {
+            this.importMidiFolder(files);
+          }
+          this.folderInput.value = '';
         });
       }
 
@@ -3126,13 +3444,20 @@
       if (!preserveRandomSession) {
         this.resetRandomPlayback();
       }
-      const label = track.name || track.file;
+      const label = track.name
+        || (typeof track.relativePath === 'string' && track.relativePath)
+        || track.file;
       this.setStatusMessage('index.sections.options.chiptune.status.loadingTrack', 'Loading “{name}”…', { name: label });
       if (this.fileInput) {
         this.fileInput.value = '';
       }
       try {
-        const buffer = await this.fetchArrayBuffer(track.file);
+        let buffer = null;
+        if (track && track.blob && typeof track.blob.arrayBuffer === 'function') {
+          buffer = await track.blob.arrayBuffer();
+        } else {
+          buffer = await this.fetchArrayBuffer(track.file);
+        }
         await this.loadFromBuffer(buffer, label);
       } catch (error) {
         console.error(error);
@@ -3401,19 +3726,29 @@
             },
           ];
         }
-        this.populateLibrary(artists, false);
+        this.baseLibraryArtists = Array.isArray(artists) ? artists : [];
+        this.populateLibrary(
+          [...this.baseLibraryArtists, ...this.userLibraryArtists],
+          false,
+        );
       } catch (error) {
         console.error('Unable to load chiptune library manifest', error);
-        this.populateLibrary([], true);
+        this.baseLibraryArtists = [];
+        this.populateLibrary([...this.userLibraryArtists], true);
       }
     }
 
-    populateLibrary(artists, errored) {
+    populateLibrary(artists, errored, options = {}) {
+      const {
+        maintainSelection = true,
+        preferredArtistId = '',
+        preferredTrackFile = '',
+      } = options;
       this.libraryLoadErrored = Boolean(errored);
       this.resetRandomPlayback();
 
-      const previousArtistId = this.currentArtistId;
-      const previousTrackValue = this.trackSelect ? this.trackSelect.value : '';
+      const previousArtistId = maintainSelection ? this.currentArtistId : '';
+      const previousTrackValue = maintainSelection && this.trackSelect ? this.trackSelect.value : '';
 
       const sanitizedArtists = [];
       const sanitizedTracks = [];
@@ -3452,26 +3787,61 @@
             : fallbackArtistName;
           const artistId = normalizeId(artist.id, name);
           const trackList = Array.isArray(artist.tracks) ? artist.tracks : [];
+          let generatedIndex = 0;
           const normalizedTracks = trackList
-            .filter(item => item && typeof item.file === 'string')
+            .filter(item => item && (typeof item.file === 'string' || (item.blob && typeof item.blob === 'object')))
             .map(item => {
+              generatedIndex += 1;
+              const fallbackId = `user-track-${artistId}-${generatedIndex}`;
+              const fileId = typeof item.file === 'string' && item.file
+                ? item.file
+                : fallbackId;
               const trackName = typeof item.name === 'string' && item.name.trim()
                 ? item.name.trim()
                 : typeof item.title === 'string' && item.title.trim()
                   ? item.title.trim()
-                  : item.file.replace(/^.*\//, '');
-              return {
-                file: item.file,
+                  : fileId.replace(/^.*\//, '');
+              const normalized = {
+                file: fileId,
                 name: trackName,
                 artistId,
                 artistName: name,
               };
+              if (typeof item.source === 'string') {
+                normalized.source = item.source;
+              }
+              if (item && item.blob && typeof item.blob.arrayBuffer === 'function') {
+                normalized.blob = item.blob;
+              }
+              if (typeof item.relativePath === 'string') {
+                normalized.relativePath = item.relativePath;
+              }
+              if (typeof item.id === 'string') {
+                normalized.id = item.id;
+              }
+              if (typeof item.signature === 'string') {
+                normalized.signature = item.signature;
+              }
+              if (typeof item.displayName === 'string') {
+                normalized.displayName = item.displayName;
+              }
+              return normalized;
             });
-          sanitizedArtists.push({
+          const sanitizedArtist = {
             id: artistId,
             name,
             tracks: normalizedTracks,
-          });
+          };
+          if (typeof artist.source === 'string') {
+            sanitizedArtist.source = artist.source;
+          }
+          if (typeof artist.signature === 'string') {
+            sanitizedArtist.signature = artist.signature;
+          }
+          if (typeof artist.sourceFolder === 'string') {
+            sanitizedArtist.sourceFolder = artist.sourceFolder;
+          }
+          sanitizedArtists.push(sanitizedArtist);
           normalizedTracks.forEach(track => sanitizedTracks.push(track));
         });
       }
@@ -3479,12 +3849,19 @@
       this.libraryArtists = sanitizedArtists;
       this.libraryAllTracks = sanitizedTracks;
 
-      const hasPreviousArtist = sanitizedArtists.some(artist => artist.id === previousArtistId);
+      const hasPreviousArtist = previousArtistId
+        && sanitizedArtists.some(artist => artist.id === previousArtistId);
       const hasPreviousTrack = hasPreviousArtist
         && sanitizedArtists.some(artist => artist.id === previousArtistId
           && artist.tracks.some(track => track.file === previousTrackValue));
 
-      const nextArtistId = hasPreviousArtist ? previousArtistId : '';
+      let nextArtistId = '';
+      if (preferredArtistId
+        && sanitizedArtists.some(artist => artist.id === preferredArtistId)) {
+        nextArtistId = preferredArtistId;
+      } else if (hasPreviousArtist && maintainSelection) {
+        nextArtistId = previousArtistId;
+      }
       this.currentArtistId = nextArtistId;
 
       if (this.artistSelect) {
@@ -3503,9 +3880,17 @@
         this.artistSelect.value = nextArtistId || '';
       }
 
+      let nextTrackFile = '';
+      if (preferredTrackFile
+        && sanitizedTracks.some(track => track.file === preferredTrackFile)) {
+        nextTrackFile = preferredTrackFile;
+      } else if (hasPreviousTrack && maintainSelection) {
+        nextTrackFile = previousTrackValue;
+      }
+
       this.populateTrackSelect(nextArtistId, {
-        selectedTrackFile: hasPreviousTrack ? previousTrackValue : '',
-        maintainSelection: hasPreviousTrack,
+        selectedTrackFile: nextTrackFile,
+        maintainSelection: maintainSelection && hasPreviousTrack && !preferredTrackFile,
       });
     }
 
@@ -6932,6 +7317,8 @@
   const elements = {
     fileInput: document.getElementById('chiptuneFileInput'),
     dropZone: document.getElementById('chiptuneDropZone'),
+    folderButton: document.getElementById('chiptuneImportFolderButton'),
+    folderInput: document.getElementById('chiptuneFolderInput'),
     artistSelect: document.getElementById('chiptuneArtistSelect'),
     trackSelect: document.getElementById('chiptuneTrackSelect'),
     trackSlider: document.getElementById('chiptuneTrackSlider'),
