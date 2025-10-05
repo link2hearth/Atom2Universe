@@ -1387,6 +1387,7 @@
       this.randomPlaybackQueue = [];
       this.randomPlaybackCurrentTrack = null;
       this.randomPlaybackPending = false;
+      this.lastRandomPlaybackTrack = null;
 
       this.populateSoundFonts(this.soundFontList, false);
 
@@ -3680,6 +3681,7 @@
       this.randomPlaybackQueue = [];
       this.randomPlaybackCurrentTrack = null;
       this.randomPlaybackPending = false;
+      this.lastRandomPlaybackTrack = null;
       this.updateButtons();
     }
 
@@ -3705,12 +3707,46 @@
       return list;
     }
 
-    initializeRandomPlayback(mode, artistId) {
+    getRandomPlaybackPool(mode, artistId) {
       const normalizedId = mode === 'artist' ? (typeof artistId === 'string' ? artistId : '') : '';
       const pool = mode === 'artist'
         ? this.getTracksForArtist(normalizedId)
         : this.libraryAllTracks;
-      const available = Array.isArray(pool) ? pool.filter(track => track && track.file) : [];
+      return Array.isArray(pool) ? pool.filter(track => track && track.file) : [];
+    }
+
+    getRandomPlaybackCandidates(excludeTrack = null) {
+      if (!this.randomPlaybackMode) {
+        return [];
+      }
+      const mode = this.randomPlaybackMode;
+      const artistId = mode === 'artist' ? this.randomPlaybackArtistId : '';
+      let available = this.getRandomPlaybackPool(mode, artistId);
+      if (!available.length) {
+        return [];
+      }
+      const lastFile = excludeTrack && excludeTrack.file ? excludeTrack.file : '';
+      if (lastFile) {
+        const filtered = available.filter(track => track.file !== lastFile);
+        if (filtered.length) {
+          available = filtered;
+        }
+      }
+      return available;
+    }
+
+    refillRandomPlaybackQueue(excludeTrack = null) {
+      const candidates = this.getRandomPlaybackCandidates(excludeTrack);
+      if (!candidates.length) {
+        return false;
+      }
+      this.randomPlaybackQueue = this.shuffleArray(Array.from(candidates));
+      return this.randomPlaybackQueue.length > 0;
+    }
+
+    initializeRandomPlayback(mode, artistId) {
+      const normalizedId = mode === 'artist' ? (typeof artistId === 'string' ? artistId : '') : '';
+      const available = this.getRandomPlaybackPool(mode, normalizedId);
       if (!available.length) {
         this.setStatusMessage(
           'index.sections.options.chiptune.status.randomUnavailable',
@@ -3720,12 +3756,12 @@
         );
         return false;
       }
-      const queue = this.shuffleArray(Array.from(available));
       this.randomPlaybackMode = mode;
       this.randomPlaybackArtistId = mode === 'artist' ? normalizedId : '';
-      this.randomPlaybackQueue = queue;
+      this.randomPlaybackQueue = this.shuffleArray(Array.from(available));
       this.randomPlaybackCurrentTrack = null;
       this.randomPlaybackPending = false;
+      this.lastRandomPlaybackTrack = null;
       this.updateButtons();
       return true;
     }
@@ -3744,7 +3780,10 @@
       if (this.randomPlaybackPending) {
         return false;
       }
-      return Array.isArray(this.randomPlaybackQueue) && this.randomPlaybackQueue.length > 0;
+      if (Array.isArray(this.randomPlaybackQueue) && this.randomPlaybackQueue.length > 0) {
+        return true;
+      }
+      return this.refillRandomPlaybackQueue(this.lastRandomPlaybackTrack);
     }
 
     completeRandomPlayback() {
@@ -3773,11 +3812,20 @@
           return;
         }
       } else if (!this.randomPlaybackQueue.length) {
-        this.completeRandomPlayback();
-        return;
+        if (!this.refillRandomPlaybackQueue(this.lastRandomPlaybackTrack)) {
+          this.completeRandomPlayback();
+          return;
+        }
       }
 
-      const track = this.dequeueNextRandomTrack();
+      let track = this.dequeueNextRandomTrack();
+      if (!track) {
+        if (!this.refillRandomPlaybackQueue(this.lastRandomPlaybackTrack)) {
+          this.completeRandomPlayback();
+          return;
+        }
+        track = this.dequeueNextRandomTrack();
+      }
       if (!track) {
         this.completeRandomPlayback();
         return;
@@ -3785,6 +3833,7 @@
 
       this.randomPlaybackPending = true;
       this.randomPlaybackCurrentTrack = track;
+      this.lastRandomPlaybackTrack = track;
       this.updateButtons();
       try {
         this.applyArtistSelection(track.artistId, { selectedTrackFile: track.file });
@@ -3819,7 +3868,11 @@
       if (this.randomPlaybackPending) {
         return false;
       }
-      return Array.isArray(this.randomPlaybackQueue) && this.randomPlaybackQueue.length > 0;
+      if (Array.isArray(this.randomPlaybackQueue) && this.randomPlaybackQueue.length > 0) {
+        return true;
+      }
+      const candidates = this.getRandomPlaybackCandidates(this.lastRandomPlaybackTrack);
+      return candidates.length > 0;
     }
 
     async skipRandomTrack() {
@@ -6568,7 +6621,16 @@
         const startOffset = timelineDuration > 0
           ? Math.max(0, Math.min(timelineDuration, Number.isFinite(requestedOffset) ? requestedOffset : 0))
           : 0;
-        const effectiveDuration = this.getEffectiveDuration(this.timeline, playbackSpeed);
+        const normalizedSpeed = playbackSpeed > 0 ? playbackSpeed : 1;
+        const remainingTimelineDuration = timelineDuration > 0
+          ? Math.max(0, timelineDuration - startOffset)
+          : 0;
+        const effectiveDuration = remainingTimelineDuration > 0
+          ? remainingTimelineDuration / normalizedSpeed
+          : (timelineDuration > 0
+            ? 0
+            : this.getEffectiveDuration(this.timeline, playbackSpeed));
+        const finishDelaySeconds = Math.max(0, (effectiveDuration || 0) + 0.6);
         const startTime = context.currentTime + 0.05;
         const schedulerStartTime = startTime - (startOffset / playbackSpeed);
         this.playStartTime = startTime;
@@ -6609,7 +6671,7 @@
             this.setStatusMessage('index.sections.options.chiptune.status.playbackComplete', 'Playback finished: {title}', { title: this.currentTitle }, 'success');
             this.scheduleReadyStatusRestore();
           }
-        }, Math.ceil(((effectiveDuration || 0) + 0.6) * 1000));
+        }, Math.ceil(finishDelaySeconds * 1000));
 
         this.setStatus('', 'success', { type: 'playing', extra: '' });
       } catch (error) {
