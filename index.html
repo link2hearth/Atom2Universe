@@ -15,7 +15,19 @@
 <body class="theme-dark">
   <header class="app-header">
     <div class="header-main">
-      <button class="brand brand-button" id="brandPortal" type="button">Atom2Univers</button>
+      <div class="header-brand-group">
+        <button class="brand brand-button" id="brandPortal" type="button">Atom2Univers</button>
+        <button
+          class="header-playback-button"
+          id="headerPlaybackToggle"
+          type="button"
+          data-state="play"
+          aria-pressed="false"
+          aria-label="Play"
+          title="Play"
+          data-i18n="aria-label:index.sections.options.chiptune.controls.play;title:index.sections.options.chiptune.controls.play"
+        ></button>
+      </div>
       <nav class="nav-menu" data-i18n="aria-label:index.navigation.primary">
         <button
           class="nav-button"
