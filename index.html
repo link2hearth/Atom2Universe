@@ -969,10 +969,16 @@
         <div class="option-card option-card--chiptune">
           <h3 data-i18n="index.sections.options.chiptune.title">Module Musique Midi</h3>
           <div class="option-row option-row--selectors">
-            <div class="option-field option-field--wide">
-              <label for="chiptuneLibrarySelect" data-i18n="index.sections.options.chiptune.labels.library">Bibliothèque locale</label>
-              <select id="chiptuneLibrarySelect" disabled>
-                <option value="" data-i18n="index.sections.options.chiptune.library.placeholder">Sélectionnez un morceau</option>
+            <div class="option-field option-field--wide option-field--artist">
+              <label for="chiptuneArtistSelect" data-i18n="index.sections.options.chiptune.labels.artist">Artiste</label>
+              <select id="chiptuneArtistSelect" disabled>
+                <option value="" data-i18n="index.sections.options.chiptune.library.artists.placeholder">Sélectionnez un artiste</option>
+              </select>
+            </div>
+            <div class="option-field option-field--wide option-field--track">
+              <label for="chiptuneTrackSelect" data-i18n="index.sections.options.chiptune.labels.track">Titre</label>
+              <select id="chiptuneTrackSelect" disabled>
+                <option value="" data-i18n="index.sections.options.chiptune.library.tracks.placeholder">Sélectionnez un titre</option>
               </select>
             </div>
             <div class="option-field">
@@ -989,9 +995,13 @@
             <div class="option-field">
               <label for="chiptuneSoundFontSelect" data-i18n="index.sections.options.chiptune.labels.soundFont">SoundFont</label>
               <select id="chiptuneSoundFontSelect">
-                <option value="" data-i18n="index.sections.options.chiptune.soundfonts.loading">Chargement des SoundFonts…</option>
+              <option value="" data-i18n="index.sections.options.chiptune.soundfonts.loading">Chargement des SoundFonts…</option>
               </select>
             </div>
+          </div>
+          <div class="option-row option-row--buttons option-row--random">
+            <button type="button" id="chiptuneRandomAllButton" disabled data-i18n="index.sections.options.chiptune.controls.randomAll">Lecture aléatoire (bibliothèque)</button>
+            <button type="button" id="chiptuneRandomArtistButton" disabled data-i18n="index.sections.options.chiptune.controls.randomArtist">Lecture aléatoire (artiste)</button>
           </div>
           <div class="option-row option-row--dropzone">
             <input type="file" id="chiptuneFileInput" accept=".mid,.midi" hidden />

@@ -1,9 +1,607 @@
 {
   "_comment": "Ajoutez vos morceaux dans Assets/Chiptune et référencez-les ici.",
-  "tracks": [
+  "artists": [
     {
-  "name": "Test",
-  "file": "Assets/Chiptune/Test.mid"
-}
+      "id": "bach",
+      "name": "Johann Sebastian Bach",
+      "tracks": [
+        {
+          "name": "Menuet en sol majeur (BWV Anh. 114)",
+          "file": "Assets/Chiptune/Bach/01 Menuet.mid"
+        },
+        {
+          "name": "AveMaria",
+          "file": "Assets/Chiptune/Bach/AveMaria.mid"
+        },
+        {
+          "name": "Bwv0733 Fuga Sopra Magnificat",
+          "file": "Assets/Chiptune/Bach/Bwv0733 Fuga Sopra Magnificat.mid"
+        },
+        {
+          "name": "Bwv0787 Sinfonia n1",
+          "file": "Assets/Chiptune/Bach/Bwv0787 Sinfonia n1.mid"
+        },
+        {
+          "name": "Bwv0788 Sinfonia n2",
+          "file": "Assets/Chiptune/Bach/Bwv0788 Sinfonia n2.mid"
+        },
+        {
+          "name": "Bwv0789 Sinfonia n3",
+          "file": "Assets/Chiptune/Bach/Bwv0789 Sinfonia n3.mid"
+        },
+        {
+          "name": "Bwv0790 Sinfonia n4",
+          "file": "Assets/Chiptune/Bach/Bwv0790 Sinfonia n4.mid"
+        },
+        {
+          "name": "Bwv0791 Sinfonia n5",
+          "file": "Assets/Chiptune/Bach/Bwv0791 Sinfonia n5.mid"
+        },
+        {
+          "name": "Bwv0792 Sinfonia n6",
+          "file": "Assets/Chiptune/Bach/Bwv0792 Sinfonia n6.mid"
+        },
+        {
+          "name": "Bwv0793 Sinfonia n7",
+          "file": "Assets/Chiptune/Bach/Bwv0793 Sinfonia n7.mid"
+        },
+        {
+          "name": "Bwv0794 Sinfonia n8",
+          "file": "Assets/Chiptune/Bach/Bwv0794 Sinfonia n8.mid"
+        },
+        {
+          "name": "Bwv0795 Sinfonia n9",
+          "file": "Assets/Chiptune/Bach/Bwv0795 Sinfonia n9.mid"
+        },
+        {
+          "name": "Bwv0796 Sinfonia n10",
+          "file": "Assets/Chiptune/Bach/Bwv0796 Sinfonia n10.mid"
+        },
+        {
+          "name": "Bwv0797 Sinfonia n11",
+          "file": "Assets/Chiptune/Bach/Bwv0797 Sinfonia n11.mid"
+        },
+        {
+          "name": "Bwv0798 Sinfonia n12",
+          "file": "Assets/Chiptune/Bach/Bwv0798 Sinfonia n12.mid"
+        },
+        {
+          "name": "Bwv0799 Sinfonia n13",
+          "file": "Assets/Chiptune/Bach/Bwv0799 Sinfonia n13.mid"
+        },
+        {
+          "name": "Bwv0800 Sinfonia n14",
+          "file": "Assets/Chiptune/Bach/Bwv0800 Sinfonia n14.mid"
+        },
+        {
+          "name": "Bwv0801 Sinfonia n15",
+          "file": "Assets/Chiptune/Bach/Bwv0801 Sinfonia n15.mid"
+        },
+        {
+          "name": "Bwv0806 English Suite n1 01mov",
+          "file": "Assets/Chiptune/Bach/Bwv0806 English Suite n1 01mov .mid"
+        },
+        {
+          "name": "Bwv0806 English Suite n1 02mov",
+          "file": "Assets/Chiptune/Bach/Bwv0806 English Suite n1 02mov .mid"
+        },
+        {
+          "name": "Bwv0806 English Suite n1 03mov",
+          "file": "Assets/Chiptune/Bach/Bwv0806 English Suite n1 03mov .mid"
+        },
+        {
+          "name": "Bwv0806 English Suite n1 04mov",
+          "file": "Assets/Chiptune/Bach/Bwv0806 English Suite n1 04mov .mid"
+        },
+        {
+          "name": "Bwv0806 English Suite n1 05mov",
+          "file": "Assets/Chiptune/Bach/Bwv0806 English Suite n1 05mov.mid"
+        },
+        {
+          "name": "Bwv0806 English Suite n1 06mov",
+          "file": "Assets/Chiptune/Bach/Bwv0806 English Suite n1 06mov .mid"
+        },
+        {
+          "name": "Bwv0806 English Suite n1 07mov",
+          "file": "Assets/Chiptune/Bach/Bwv0806 English Suite n1 07mov .mid"
+        },
+        {
+          "name": "Bwv0806 English Suite n1 08mov",
+          "file": "Assets/Chiptune/Bach/Bwv0806 English Suite n1 08mov .mid"
+        },
+        {
+          "name": "Bwv0811 English Suite n6 1mov",
+          "file": "Assets/Chiptune/Bach/Bwv0811 English Suite n6 1mov.mid"
+        },
+        {
+          "name": "Bwv0811 English Suite n6 2mov",
+          "file": "Assets/Chiptune/Bach/Bwv0811 English Suite n6 2mov.mid"
+        },
+        {
+          "name": "Bwv0811 English Suite n6 3mov",
+          "file": "Assets/Chiptune/Bach/Bwv0811 English Suite n6 3mov.mid"
+        },
+        {
+          "name": "Bwv0811 English Suite n6 4mov",
+          "file": "Assets/Chiptune/Bach/Bwv0811 English Suite n6 4mov.mid"
+        },
+        {
+          "name": "Bwv0811 English Suite n6 5mov",
+          "file": "Assets/Chiptune/Bach/Bwv0811 English Suite n6 5mov.mid"
+        },
+        {
+          "name": "Bwv0811 English Suite n6 6mov",
+          "file": "Assets/Chiptune/Bach/Bwv0811 English Suite n6 6mov.mid"
+        },
+        {
+          "name": "Bwv0811 English Suite n6 7mov",
+          "file": "Assets/Chiptune/Bach/Bwv0811 English Suite n6 7mov.mid"
+        },
+        {
+          "name": "Bwv0811 English Suite n6 8mov",
+          "file": "Assets/Chiptune/Bach/Bwv0811 English Suite n6 8mov.mid"
+        },
+        {
+          "name": "Bwv0910 Toccata",
+          "file": "Assets/Chiptune/Bach/Bwv0910 Toccata.MID"
+        },
+        {
+          "name": "Bwv0911 Toccata",
+          "file": "Assets/Chiptune/Bach/Bwv0911 Toccata.MID"
+        },
+        {
+          "name": "Bwv0912 Toccata",
+          "file": "Assets/Chiptune/Bach/Bwv0912 Toccata.MID"
+        },
+        {
+          "name": "Bwv0913 Toccata",
+          "file": "Assets/Chiptune/Bach/Bwv0913 Toccata.MID"
+        },
+        {
+          "name": "Bwv0914 Toccata",
+          "file": "Assets/Chiptune/Bach/Bwv0914 Toccata.MID"
+        },
+        {
+          "name": "Bwv0915 Toccata",
+          "file": "Assets/Chiptune/Bach/Bwv0915 Toccata.MID"
+        },
+        {
+          "name": "Bwv0916 Toccata",
+          "file": "Assets/Chiptune/Bach/Bwv0916 Toccata.MID"
+        },
+        {
+          "name": "Bwv0933 Little Prelude n1",
+          "file": "Assets/Chiptune/Bach/Bwv0933 Little Prelude n1.mid"
+        },
+        {
+          "name": "Bwv0934 Little Prelude n2",
+          "file": "Assets/Chiptune/Bach/Bwv0934 Little Prelude n2.mid"
+        },
+        {
+          "name": "Bwv0935 Little Prelude n3",
+          "file": "Assets/Chiptune/Bach/Bwv0935 Little Prelude n3.mid"
+        },
+        {
+          "name": "Bwv0936 Little Prelude n4",
+          "file": "Assets/Chiptune/Bach/Bwv0936 Little Prelude n4.mid"
+        },
+        {
+          "name": "Bwv0937 Little Prelude n5",
+          "file": "Assets/Chiptune/Bach/Bwv0937 Little Prelude n5.mid"
+        },
+        {
+          "name": "Bwv0938 Little Prelude n6",
+          "file": "Assets/Chiptune/Bach/Bwv0938 Little Prelude n6.mid"
+        },
+        {
+          "name": "Bwv772 Invention n01",
+          "file": "Assets/Chiptune/Bach/Bwv772 Invention n01.mid"
+        },
+        {
+          "name": "Bwv773 Invention n02",
+          "file": "Assets/Chiptune/Bach/Bwv773 Invention n02.mid"
+        },
+        {
+          "name": "Bwv774 Invention n03",
+          "file": "Assets/Chiptune/Bach/Bwv774 Invention n03.mid"
+        },
+        {
+          "name": "Bwv775 Invention n04",
+          "file": "Assets/Chiptune/Bach/Bwv775 Invention n04.mid"
+        },
+        {
+          "name": "Bwv776 Invention n05",
+          "file": "Assets/Chiptune/Bach/Bwv776 Invention n05.mid"
+        },
+        {
+          "name": "Bwv777 Invention n06",
+          "file": "Assets/Chiptune/Bach/Bwv777 Invention n06.mid"
+        },
+        {
+          "name": "Bwv778 Invention n07",
+          "file": "Assets/Chiptune/Bach/Bwv778 Invention n07.mid"
+        },
+        {
+          "name": "Bwv779 Invention n08",
+          "file": "Assets/Chiptune/Bach/Bwv779 Invention n08 .mid"
+        },
+        {
+          "name": "Bwv780 Invention n09",
+          "file": "Assets/Chiptune/Bach/Bwv780 Invention n09 .mid"
+        },
+        {
+          "name": "Bwv781 Invention n10",
+          "file": "Assets/Chiptune/Bach/Bwv781 Invention n10.mid"
+        },
+        {
+          "name": "Bwv782 Invention n11",
+          "file": "Assets/Chiptune/Bach/Bwv782 Invention n11.mid"
+        },
+        {
+          "name": "Bwv783 Invention n12",
+          "file": "Assets/Chiptune/Bach/Bwv783 Invention n12 .mid"
+        },
+        {
+          "name": "Bwv784 Invention n13",
+          "file": "Assets/Chiptune/Bach/Bwv784 Invention n13 .mid"
+        },
+        {
+          "name": "Bwv785 Invention n14",
+          "file": "Assets/Chiptune/Bach/Bwv785 Invention n14 .mid"
+        },
+        {
+          "name": "Bwv786 Invention n15",
+          "file": "Assets/Chiptune/Bach/Bwv786 Invention n15.mid"
+        },
+        {
+          "name": "Bwv802 Four Inventions (Duettos) Clavier-Übung III n1",
+          "file": "Assets/Chiptune/Bach/Bwv802 Four Inventions (Duettos) Clavier-Übung III n1.mid"
+        },
+        {
+          "name": "Canon Fugue n2",
+          "file": "Assets/Chiptune/Bach/Canon Fugue n2.mid"
+        },
+        {
+          "name": "Canon Fugue n3",
+          "file": "Assets/Chiptune/Bach/Canon Fugue n3.mid"
+        },
+        {
+          "name": "Canon Fugue n4",
+          "file": "Assets/Chiptune/Bach/Canon Fugue n4.mid"
+        },
+        {
+          "name": "Counter Fugue n1",
+          "file": "Assets/Chiptune/Bach/Counter Fugue n1.mid"
+        },
+        {
+          "name": "Double Fugue n1",
+          "file": "Assets/Chiptune/Bach/Double Fugue n1.mid"
+        },
+        {
+          "name": "Double Fugue n2",
+          "file": "Assets/Chiptune/Bach/Double Fugue n2.mid"
+        },
+        {
+          "name": "invent1",
+          "file": "Assets/Chiptune/Bach/invent1.mid"
+        },
+        {
+          "name": "invent10",
+          "file": "Assets/Chiptune/Bach/invent10.mid"
+        },
+        {
+          "name": "invent11",
+          "file": "Assets/Chiptune/Bach/invent11.mid"
+        },
+        {
+          "name": "invent12",
+          "file": "Assets/Chiptune/Bach/invent12.mid"
+        },
+        {
+          "name": "invent13",
+          "file": "Assets/Chiptune/Bach/invent13.mid"
+        },
+        {
+          "name": "invent14",
+          "file": "Assets/Chiptune/Bach/invent14.mid"
+        },
+        {
+          "name": "invent15",
+          "file": "Assets/Chiptune/Bach/invent15.mid"
+        },
+        {
+          "name": "invent2",
+          "file": "Assets/Chiptune/Bach/invent2.mid"
+        },
+        {
+          "name": "invent3",
+          "file": "Assets/Chiptune/Bach/invent3.mid"
+        },
+        {
+          "name": "invent4",
+          "file": "Assets/Chiptune/Bach/invent4.mid"
+        },
+        {
+          "name": "invent5",
+          "file": "Assets/Chiptune/Bach/invent5.mid"
+        },
+        {
+          "name": "invent8",
+          "file": "Assets/Chiptune/Bach/invent8.mid"
+        },
+        {
+          "name": "invent9",
+          "file": "Assets/Chiptune/Bach/invent9.mid"
+        },
+        {
+          "name": "Mirror Fugue n1",
+          "file": "Assets/Chiptune/Bach/Mirror Fugue n1.mid"
+        },
+        {
+          "name": "Mirror Fugue n2",
+          "file": "Assets/Chiptune/Bach/Mirror Fugue n2.mid"
+        },
+        {
+          "name": "Musical Offering n1 Ricercare a 3",
+          "file": "Assets/Chiptune/Bach/Musical Offering n1 Ricercare a 3.MID"
+        },
+        {
+          "name": "Musical Offering n10",
+          "file": "Assets/Chiptune/Bach/Musical Offering n10.MID"
+        },
+        {
+          "name": "Musical Offering n11",
+          "file": "Assets/Chiptune/Bach/Musical Offering n11.MID"
+        },
+        {
+          "name": "Musical Offering n12",
+          "file": "Assets/Chiptune/Bach/Musical Offering n12.MID"
+        },
+        {
+          "name": "Musical Offering n13",
+          "file": "Assets/Chiptune/Bach/Musical Offering n13.MID"
+        },
+        {
+          "name": "Musical Offering n14",
+          "file": "Assets/Chiptune/Bach/Musical Offering n14.MID"
+        },
+        {
+          "name": "Musical Offering n15 Trio-Largo",
+          "file": "Assets/Chiptune/Bach/Musical Offering n15 Trio-Largo.MID"
+        },
+        {
+          "name": "Musical Offering n16 Trio-Allegro",
+          "file": "Assets/Chiptune/Bach/Musical Offering n16 Trio-Allegro.MID"
+        },
+        {
+          "name": "Musical Offering n17 Trio-Andante",
+          "file": "Assets/Chiptune/Bach/Musical Offering n17 Trio-Andante.MID"
+        },
+        {
+          "name": "Musical Offering n18 Trio-Allegro",
+          "file": "Assets/Chiptune/Bach/Musical Offering n18 Trio-Allegro.MID"
+        },
+        {
+          "name": "Musical Offering n19",
+          "file": "Assets/Chiptune/Bach/Musical Offering n19.MID"
+        },
+        {
+          "name": "Musical Offering n2 Canon Perpetuus",
+          "file": "Assets/Chiptune/Bach/Musical Offering n2 Canon Perpetuus.MID"
+        },
+        {
+          "name": "Musical Offering n3",
+          "file": "Assets/Chiptune/Bach/Musical Offering n3.MID"
+        },
+        {
+          "name": "Musical Offering n4",
+          "file": "Assets/Chiptune/Bach/Musical Offering n4.MID"
+        },
+        {
+          "name": "Musical Offering n5",
+          "file": "Assets/Chiptune/Bach/Musical Offering n5.MID"
+        },
+        {
+          "name": "Musical Offering n6",
+          "file": "Assets/Chiptune/Bach/Musical Offering n6.MID"
+        },
+        {
+          "name": "Musical Offering n7",
+          "file": "Assets/Chiptune/Bach/Musical Offering n7.MID"
+        },
+        {
+          "name": "Musical Offering n8",
+          "file": "Assets/Chiptune/Bach/Musical Offering n8.MID"
+        },
+        {
+          "name": "Musical Offering n9 Ricercare a 6",
+          "file": "Assets/Chiptune/Bach/Musical Offering n9 Ricercare a 6.MID"
+        },
+        {
+          "name": "Simple Fugue Inverted Subject n1",
+          "file": "Assets/Chiptune/Bach/Simple Fugue Inverted Subject n1.mid"
+        },
+        {
+          "name": "Simple Fugue Inverted Subject n2",
+          "file": "Assets/Chiptune/Bach/Simple Fugue Inverted Subject n2.mid"
+        },
+        {
+          "name": "Simple Fugue Regular Subject n1",
+          "file": "Assets/Chiptune/Bach/Simple Fugue Regular Subject n1.mid"
+        },
+        {
+          "name": "Simple Fugue Regular Subject n2",
+          "file": "Assets/Chiptune/Bach/Simple Fugue Regular Subject n2.mid"
+        },
+        {
+          "name": "Unfinished Fugue",
+          "file": "Assets/Chiptune/Bach/Unfinished Fugue.mid"
+        },
+        {
+          "name": "Variation 01",
+          "file": "Assets/Chiptune/Bach/Variation 01.mid"
+        },
+        {
+          "name": "Variation 02",
+          "file": "Assets/Chiptune/Bach/Variation 02.mid"
+        },
+        {
+          "name": "Variation 03",
+          "file": "Assets/Chiptune/Bach/Variation 03.mid"
+        },
+        {
+          "name": "Variation 04",
+          "file": "Assets/Chiptune/Bach/Variation 04.mid"
+        },
+        {
+          "name": "Variation 05",
+          "file": "Assets/Chiptune/Bach/Variation 05.mid"
+        },
+        {
+          "name": "Variation 06",
+          "file": "Assets/Chiptune/Bach/Variation 06.mid"
+        },
+        {
+          "name": "Variation 07",
+          "file": "Assets/Chiptune/Bach/Variation 07.mid"
+        },
+        {
+          "name": "Variation 08",
+          "file": "Assets/Chiptune/Bach/Variation 08.mid"
+        },
+        {
+          "name": "Variation 09",
+          "file": "Assets/Chiptune/Bach/Variation 09.mid"
+        },
+        {
+          "name": "Variation 10",
+          "file": "Assets/Chiptune/Bach/Variation 10.mid"
+        },
+        {
+          "name": "Variation 11",
+          "file": "Assets/Chiptune/Bach/Variation 11.mid"
+        },
+        {
+          "name": "Variation 12",
+          "file": "Assets/Chiptune/Bach/Variation 12.mid"
+        },
+        {
+          "name": "Variation 13",
+          "file": "Assets/Chiptune/Bach/Variation 13.mid"
+        },
+        {
+          "name": "Variation 14",
+          "file": "Assets/Chiptune/Bach/Variation 14.mid"
+        },
+        {
+          "name": "Variation 15",
+          "file": "Assets/Chiptune/Bach/Variation 15.mid"
+        },
+        {
+          "name": "Variation 16",
+          "file": "Assets/Chiptune/Bach/Variation 16.mid"
+        },
+        {
+          "name": "Variation 17",
+          "file": "Assets/Chiptune/Bach/Variation 17.mid"
+        },
+        {
+          "name": "Variation 18",
+          "file": "Assets/Chiptune/Bach/Variation 18.mid"
+        },
+        {
+          "name": "Variation 19",
+          "file": "Assets/Chiptune/Bach/Variation 19.mid"
+        },
+        {
+          "name": "Variation 20",
+          "file": "Assets/Chiptune/Bach/Variation 20.mid"
+        },
+        {
+          "name": "Variation 21",
+          "file": "Assets/Chiptune/Bach/Variation 21.mid"
+        },
+        {
+          "name": "Variation 22",
+          "file": "Assets/Chiptune/Bach/Variation 22.mid"
+        },
+        {
+          "name": "Variation 23",
+          "file": "Assets/Chiptune/Bach/Variation 23.mid"
+        },
+        {
+          "name": "Variation 24",
+          "file": "Assets/Chiptune/Bach/Variation 24.mid"
+        },
+        {
+          "name": "Variation 25",
+          "file": "Assets/Chiptune/Bach/Variation 25.mid"
+        },
+        {
+          "name": "Variation 26",
+          "file": "Assets/Chiptune/Bach/Variation 26.mid"
+        },
+        {
+          "name": "Variation 27",
+          "file": "Assets/Chiptune/Bach/Variation 27.mid"
+        },
+        {
+          "name": "Variation 28",
+          "file": "Assets/Chiptune/Bach/Variation 28.mid"
+        },
+        {
+          "name": "Variation 29",
+          "file": "Assets/Chiptune/Bach/Variation 29.mid"
+        },
+        {
+          "name": "Variation 30",
+          "file": "Assets/Chiptune/Bach/Variation 30.mid"
+        },
+        {
+          "name": "WT1_2A",
+          "file": "Assets/Chiptune/Bach/WT1_2A.MID"
+        },
+        {
+          "name": "WT1_4A",
+          "file": "Assets/Chiptune/Bach/WT1_4A.MID"
+        },
+        {
+          "name": "WT1_5A",
+          "file": "Assets/Chiptune/Bach/WT1_5A.MID"
+        },
+        {
+          "name": "WT1_6A",
+          "file": "Assets/Chiptune/Bach/WT1_6A.MID"
+        },
+        {
+          "name": "WT1_7A",
+          "file": "Assets/Chiptune/Bach/WT1_7A.MID"
+        },
+        {
+          "name": "WT1_8A",
+          "file": "Assets/Chiptune/Bach/WT1_8A.MID"
+        },
+        {
+          "name": "WT1_9A",
+          "file": "Assets/Chiptune/Bach/WT1_9A.MID"
+        },
+        {
+          "name": "WT1_X1A",
+          "file": "Assets/Chiptune/Bach/WT1_X1A.MID"
+        },
+        {
+          "name": "WTCII05A",
+          "file": "Assets/Chiptune/Bach/WTCII05A.MID"
+        },
+        {
+          "name": "WTCII06A",
+          "file": "Assets/Chiptune/Bach/WTCII06A.MID"
+        },
+        {
+          "name": "Wtcii06b",
+          "file": "Assets/Chiptune/Bach/Wtcii06b.mid"
+        }
+      ]
+    }
   ]
 }

@@ -358,7 +358,8 @@
         "chiptune": {
           "title": "MIDI Music Module",
           "labels": {
-            "library": "Local library",
+            "artist": "Artist",
+            "track": "Track",
             "engine": "Audio engine",
             "soundFont": "SoundFont",
             "volume": "Master volume",
@@ -407,9 +408,18 @@
             "noneDeclared": "No SoundFont declared"
           },
           "library": {
-            "placeholder": "Select a track",
-            "empty": "No local tracks yet",
-            "unavailable": "Local library unavailable"
+            "unknownArtist": "Unknown artist",
+            "artists": {
+              "placeholder": "Select an artist",
+              "empty": "No artist available",
+              "unavailable": "Local library unavailable"
+            },
+            "tracks": {
+              "placeholder": "Select a track",
+              "empty": "No tracks for this artist",
+              "unavailable": "Local library unavailable",
+              "selectArtist": "Choose an artist first"
+            }
           },
           "dropZone": {
             "prompt": "Drop a MIDI file (.mid) here or click to browse"
@@ -423,7 +433,9 @@
             "octaveUp": "Octave +",
             "resetPitch": "Reset",
             "play": "Play",
-            "stop": "Stop"
+            "stop": "Stop",
+            "randomAll": "Shuffle (all artists)",
+            "randomArtist": "Shuffle (artist)"
           },
           "status": {
             "noneLoaded": "No track loaded yet.",
@@ -440,6 +452,7 @@
             "soundFontMissing": "No SoundFont ready for Hi-Fi mode.",
             "noMidiData": "No MIDI data to play.",
             "unsupportedFile": "Please drop a MIDI file (.mid or .midi).",
+            "randomUnavailable": "No tracks available for random playback.",
             "playbackComplete": "Playback finished: {title}",
             "playbackError": "Playback failed: {error}",
             "playbackStopped": "Playback stopped: {title}",
