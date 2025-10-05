@@ -2272,8 +2272,17 @@ const elements = {
   statusApsCritChrono: document.getElementById('statusApsCritChrono'),
   statusApsCritMultiplier: document.getElementById('statusApsCritMultiplier'),
   statusApsCritSeparator: document.querySelector('.status-aps-crit-separator'),
-  statusApcFrenzy: document.getElementById('statusApcFrenzy'),
-  statusApsFrenzy: document.getElementById('statusApsFrenzy'),
+  frenzyBanner: document.getElementById('frenzyBanner'),
+  statusApcFrenzy: {
+    container: document.getElementById('statusApcFrenzy'),
+    multiplier: document.getElementById('statusApcFrenzyMultiplier'),
+    timer: document.getElementById('statusApcFrenzyTimer')
+  },
+  statusApsFrenzy: {
+    container: document.getElementById('statusApsFrenzy'),
+    multiplier: document.getElementById('statusApsFrenzyMultiplier'),
+    timer: document.getElementById('statusApsFrenzyTimer')
+  },
   atomButton: document.getElementById('atomButton'),
   atomVisual: document.querySelector('.atom-visual'),
   atomImage: document.querySelector('#atomButton .atom-image'),
@@ -5998,6 +6007,7 @@ function showPage(pageId) {
       renderGachaRarityList();
     }
   }
+  updateFrenzyIndicators(now);
 }
 
 document.addEventListener('visibilitychange', () => {
@@ -8763,23 +8773,38 @@ function updateGoalsUI() {
   }
 }
 
-function updateFrenzyIndicatorFor(type, targetElement, now) {
-  if (!targetElement) return;
+function updateFrenzyIndicatorFor(type, target, now) {
+  const container = target?.container ?? target;
+  const multiplierElement = target?.multiplier ?? null;
+  const timerElement = target?.timer ?? null;
+  if (!container) {
+    return false;
+  }
   const entry = frenzyState[type];
   if (!entry) {
-    targetElement.hidden = true;
-    targetElement.textContent = '';
-    delete targetElement.dataset.stacks;
-    return;
+    container.hidden = true;
+    container.setAttribute('aria-hidden', 'true');
+    if (multiplierElement) multiplierElement.textContent = '';
+    if (timerElement) timerElement.textContent = '';
+    if (!multiplierElement && !timerElement) {
+      container.textContent = '';
+    }
+    delete container.dataset.stacks;
+    return false;
   }
   pruneFrenzyEffects(entry, now);
   const stacks = getFrenzyStackCount(type, now);
   const effectUntil = Number(entry.effectUntil) || 0;
   if (stacks <= 0 || effectUntil <= now) {
-    targetElement.hidden = true;
-    targetElement.textContent = '';
-    delete targetElement.dataset.stacks;
-    return;
+    container.hidden = true;
+    container.setAttribute('aria-hidden', 'true');
+    if (multiplierElement) multiplierElement.textContent = '';
+    if (timerElement) timerElement.textContent = '';
+    if (!multiplierElement && !timerElement) {
+      container.textContent = '';
+    }
+    delete container.dataset.stacks;
+    return false;
   }
   const remaining = Math.max(0, effectUntil - now);
   const seconds = remaining / 1000;
@@ -8790,14 +8815,34 @@ function updateFrenzyIndicatorFor(type, targetElement, now) {
     minimumFractionDigits: precision,
     maximumFractionDigits: precision
   });
-  targetElement.textContent = `⚡ ×${multiplierText} · ${timeText}s`;
-  targetElement.hidden = false;
-  targetElement.dataset.stacks = stacks;
+  if (multiplierElement) {
+    multiplierElement.textContent = `×${multiplierText}`;
+  }
+  if (timerElement) {
+    timerElement.textContent = `${timeText}s`;
+  }
+  if (!multiplierElement && !timerElement) {
+    container.textContent = `×${multiplierText} · ${timeText}s`;
+  }
+  container.hidden = false;
+  container.setAttribute('aria-hidden', 'false');
+  container.dataset.stacks = stacks;
+  return true;
 }
 
 function updateFrenzyIndicators(now = performance.now()) {
-  updateFrenzyIndicatorFor('perSecond', elements.statusApsFrenzy, now);
-  updateFrenzyIndicatorFor('perClick', elements.statusApcFrenzy, now);
+  const apsActive = updateFrenzyIndicatorFor('perSecond', elements.statusApsFrenzy, now);
+  const apcActive = updateFrenzyIndicatorFor('perClick', elements.statusApcFrenzy, now);
+  const statusRoot = elements.frenzyBanner;
+  if (statusRoot) {
+    const activePage = document.body?.dataset?.activePage;
+    const displayAllowed = activePage === 'game' || activePage === 'wave';
+    const hasActive = Boolean(apsActive || apcActive);
+    const shouldShow = Boolean(displayAllowed && hasActive);
+    statusRoot.hidden = !shouldShow;
+    statusRoot.style.display = shouldShow ? '' : 'none';
+    statusRoot.setAttribute('aria-hidden', String(!shouldShow));
+  }
 }
 
 function formatApsCritChrono(seconds) {
