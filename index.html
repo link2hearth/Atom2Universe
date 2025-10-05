@@ -84,11 +84,6 @@
             <span class="status-value" id="statusApc">1</span>
           </div>
         </div>
-        <div class="status-item status-item--crit" aria-live="polite">
-          <div class="status-crit-display" id="statusCrit" role="status" aria-atomic="true" hidden>
-            <span class="status-crit-value" id="statusCritValue">+0</span>
-          </div>
-        </div>
       </div>
       <div class="status-item status-item--center" data-i18n="aria-label:index.status.totalAtoms">
         <button class="status-atoms-button" type="button" id="statusAtomsButton">
@@ -1304,6 +1299,18 @@
       <footer class="devkit-panel__footer">
         <p data-i18n="index.sections.devkit.footer"></p>
       </footer>
+    </div>
+  </div>
+
+  <div class="status-crit-floating" aria-live="polite">
+    <div
+      class="status-crit-display status-crit-display--floating"
+      id="statusCrit"
+      role="status"
+      aria-atomic="true"
+      hidden
+    >
+      <span class="status-crit-value" id="statusCritValue">+0</span>
     </div>
   </div>
 

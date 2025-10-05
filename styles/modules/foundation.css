@@ -364,6 +364,31 @@ body.view-sudoku .status-bar {
   overflow: hidden;
 }
 
+.status-crit-floating {
+  position: fixed;
+  left: 50%;
+  bottom: clamp(0.75rem, 2.2vw, 1.6rem);
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  width: min(90vw, 32rem);
+  pointer-events: none;
+  z-index: 70;
+}
+
+.status-crit-display--floating {
+  background: linear-gradient(135deg, rgba(38, 124, 223, 0.22), rgba(96, 198, 255, 0.32));
+  box-shadow: 0 0.55rem 1.5rem rgba(18, 80, 150, 0.28);
+  color: #d9ecff;
+  transform: translateY(45%) scale(0.92);
+}
+
+.status-crit-display--floating::before {
+  inset: auto -40% -38% -40%;
+  background: radial-gradient(68% 85% at 50% 55%, rgba(120, 210, 255, 0.55), rgba(30, 110, 215, 0));
+  transform: translateY(22%);
+}
+
 .status-item--crit-aps {
   align-items: center;
   justify-self: flex-end;
@@ -456,6 +481,10 @@ body.view-sudoku .status-bar {
 .status-crit-display.is-fading {
   opacity: 0;
   transform: translateY(12%) scale(0.9);
+}
+
+.status-crit-display--floating.is-fading {
+  transform: translateY(55%) scale(0.9);
 }
 
 .status-crit-value {
