@@ -548,7 +548,7 @@ body.view-sudoku .status-bar {
 
 .frenzy-status {
   position: fixed;
-  top: clamp(5.25rem, 33vh, 18rem);
+  top: clamp(3.15rem, 19.8vh, 10.8rem);
   left: 0;
   right: 0;
   display: flex;
