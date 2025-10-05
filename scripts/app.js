@@ -2272,7 +2272,7 @@ const elements = {
   statusApsCritChrono: document.getElementById('statusApsCritChrono'),
   statusApsCritMultiplier: document.getElementById('statusApsCritMultiplier'),
   statusApsCritSeparator: document.querySelector('.status-aps-crit-separator'),
-  frenzyStatus: document.getElementById('frenzyStatus'),
+  frenzyBanner: document.getElementById('frenzyBanner'),
   statusApcFrenzy: {
     container: document.getElementById('statusApcFrenzy'),
     multiplier: document.getElementById('statusApcFrenzyMultiplier'),
@@ -6007,6 +6007,7 @@ function showPage(pageId) {
       renderGachaRarityList();
     }
   }
+  updateFrenzyIndicators(now);
 }
 
 document.addEventListener('visibilitychange', () => {
@@ -8782,7 +8783,7 @@ function updateFrenzyIndicatorFor(type, target, now) {
   const entry = frenzyState[type];
   if (!entry) {
     container.hidden = true;
-    container.classList?.remove('is-active');
+    container.setAttribute('aria-hidden', 'true');
     if (multiplierElement) multiplierElement.textContent = '';
     if (timerElement) timerElement.textContent = '';
     if (!multiplierElement && !timerElement) {
@@ -8796,7 +8797,7 @@ function updateFrenzyIndicatorFor(type, target, now) {
   const effectUntil = Number(entry.effectUntil) || 0;
   if (stacks <= 0 || effectUntil <= now) {
     container.hidden = true;
-    container.classList?.remove('is-active');
+    container.setAttribute('aria-hidden', 'true');
     if (multiplierElement) multiplierElement.textContent = '';
     if (timerElement) timerElement.textContent = '';
     if (!multiplierElement && !timerElement) {
@@ -8824,7 +8825,7 @@ function updateFrenzyIndicatorFor(type, target, now) {
     container.textContent = `×${multiplierText} · ${timeText}s`;
   }
   container.hidden = false;
-  container.classList?.add('is-active');
+  container.setAttribute('aria-hidden', 'false');
   container.dataset.stacks = stacks;
   return true;
 }
@@ -8832,11 +8833,15 @@ function updateFrenzyIndicatorFor(type, target, now) {
 function updateFrenzyIndicators(now = performance.now()) {
   const apsActive = updateFrenzyIndicatorFor('perSecond', elements.statusApsFrenzy, now);
   const apcActive = updateFrenzyIndicatorFor('perClick', elements.statusApcFrenzy, now);
-  const statusRoot = elements.frenzyStatus;
+  const statusRoot = elements.frenzyBanner;
   if (statusRoot) {
+    const activePage = document.body?.dataset?.activePage;
+    const displayAllowed = activePage === 'game' || activePage === 'wave';
     const hasActive = Boolean(apsActive || apcActive);
-    statusRoot.hidden = !hasActive;
-    statusRoot.style.display = hasActive ? '' : 'none';
+    const shouldShow = Boolean(displayAllowed && hasActive);
+    statusRoot.hidden = !shouldShow;
+    statusRoot.style.display = shouldShow ? '' : 'none';
+    statusRoot.setAttribute('aria-hidden', String(!shouldShow));
   }
 }
 

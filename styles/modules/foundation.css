@@ -546,96 +546,63 @@ body.view-sudoku .status-bar {
   outline-offset: 0.25rem;
 }
 
-.frenzy-status {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+.frenzy-banner {
+  display: flex;
+  justify-content: space-between;
   align-items: flex-start;
-  padding: 0 var(--header-padding-x) clamp(0.4rem, 0.9vw, 0.8rem);
-  gap: clamp(0.6rem, 3vw, 2.2rem);
+  padding: 0 var(--header-padding-x) clamp(0.35rem, 0.9vw, 0.65rem);
+  gap: clamp(0.8rem, 6vw, 3.8rem);
   font-family: 'Orbitron', sans-serif;
-  font-size: clamp(0.65rem, 1vw, 0.85rem);
-  color: #9cf3ff;
+  font-size: clamp(0.58rem, 1.05vw, 0.78rem);
+  color: rgba(220, 236, 255, 0.72);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   pointer-events: none;
-  opacity: 0.95;
-  transition: opacity 0.24s ease;
+  font-variant-numeric: tabular-nums;
 }
 
-.frenzy-status[hidden] {
+.frenzy-banner[hidden] {
   display: none;
 }
 
-.frenzy-status__item {
+.frenzy-banner__item {
   display: flex;
   flex-direction: column;
-  gap: 0.12rem;
-  min-width: clamp(5.5rem, 18vw, 9.5rem);
-  padding: clamp(0.35rem, 0.9vw, 0.65rem) clamp(0.55rem, 1.6vw, 1rem);
-  border-radius: 0.9rem;
-  border: 1px solid rgba(140, 220, 255, 0.35);
-  background: linear-gradient(130deg, rgba(90, 170, 255, 0.18), rgba(20, 45, 80, 0.42));
-  box-shadow: 0 0 16px rgba(70, 170, 255, 0.18);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  align-items: flex-start;
-  font-variant-numeric: tabular-nums;
-  opacity: 0;
-  transition: opacity 0.24s ease;
+  gap: 0.08rem;
+  min-width: clamp(4.2rem, 16vw, 7.5rem);
+  opacity: 0.82;
 }
 
-.frenzy-status__item.is-active {
-  opacity: 1;
-}
-
-.frenzy-status__item[hidden] {
+.frenzy-banner__item[hidden] {
   display: none;
 }
 
-.frenzy-status__item--apc {
-  justify-self: flex-start;
+.frenzy-banner__item--apc {
+  align-items: flex-start;
   text-align: left;
 }
 
-.frenzy-status__item--aps {
-  justify-self: flex-end;
-  text-align: right;
+.frenzy-banner__item--aps {
   align-items: flex-end;
+  text-align: right;
 }
 
-.frenzy-status__multiplier {
-  font-size: clamp(0.82rem, 1.6vw, 1.1rem);
-  font-weight: 700;
+.frenzy-banner__value {
+  font-weight: 600;
 }
 
-.frenzy-status__timer {
-  font-size: clamp(0.65rem, 1.2vw, 0.9rem);
-  opacity: 0.85;
+.frenzy-banner__timer {
+  font-size: clamp(0.52rem, 0.9vw, 0.7rem);
+  font-weight: 500;
+  opacity: 0.75;
 }
 
-body.theme-light .frenzy-status {
-  color: #0e3760;
+body.theme-light .frenzy-banner {
+  color: rgba(12, 24, 44, 0.68);
 }
 
-body.theme-light .frenzy-status__item {
-  border-color: rgba(0, 110, 190, 0.28);
-  background: linear-gradient(130deg, rgba(160, 210, 255, 0.35), rgba(220, 240, 255, 0.65));
-  box-shadow: 0 0 16px rgba(90, 180, 255, 0.24);
-}
-
-body.theme-neon .frenzy-status {
-  color: #bffaff;
-}
-
-body.theme-neon .frenzy-status__item {
-  border-color: rgba(120, 255, 255, 0.45);
-  background: linear-gradient(140deg, rgba(120, 255, 255, 0.24), rgba(120, 120, 255, 0.32));
-  box-shadow: 0 0 18px rgba(140, 255, 255, 0.28);
-}
-
-body.view-arcade .frenzy-status,
-body.view-metaux .frenzy-status,
-body.view-quantum2048 .frenzy-status,
-body.view-sudoku .frenzy-status {
-  display: none !important;
+body.theme-neon .frenzy-banner {
+  color: rgba(190, 236, 255, 0.78);
 }
 
 .status-value--main {
