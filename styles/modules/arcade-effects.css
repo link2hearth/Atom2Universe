@@ -258,6 +258,64 @@ body.theme-neon .arcade-hud__combo {
   line-height: 1.5;
 }
 
+.arcade-overlay__field {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.35rem, 0.9vw, 0.6rem);
+  width: 100%;
+  text-align: left;
+  align-items: stretch;
+}
+
+.arcade-overlay__label {
+  font-size: clamp(0.62rem, 1.05vw, 0.8rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.78;
+}
+
+.arcade-overlay__select {
+  appearance: none;
+  border-radius: 999px;
+  border: 1px solid rgba(150, 190, 255, 0.45);
+  background: rgba(22, 30, 60, 0.65);
+  color: inherit;
+  font: inherit;
+  padding: clamp(0.4rem, 0.9vw, 0.65rem) clamp(1rem, 2.2vw, 1.5rem);
+  text-align: center;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.arcade-overlay__select:hover,
+.arcade-overlay__select:focus-visible {
+  border-color: rgba(190, 220, 255, 0.65);
+  box-shadow: 0 8px 18px rgba(40, 60, 160, 0.35);
+  outline: none;
+}
+
+.arcade-overlay__select:focus-visible {
+  outline: 2px solid rgba(200, 220, 255, 0.75);
+  outline-offset: 2px;
+}
+
+.arcade-overlay__select:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+  box-shadow: none;
+}
+
+body.theme-light .arcade-overlay__label {
+  color: rgba(20, 28, 64, 0.75);
+}
+
+body.theme-light .arcade-overlay__select {
+  background: rgba(240, 244, 255, 0.88);
+  color: rgba(18, 26, 64, 0.9);
+  border-color: rgba(96, 128, 220, 0.35);
+}
+
 .arcade-overlay__button {
   align-self: center;
   padding: clamp(0.55rem, 1.2vw, 0.85rem) clamp(1.4rem, 3vw, 2.2rem);

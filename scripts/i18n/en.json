@@ -62,6 +62,10 @@
         "canvasAria": "Particles play area",
         "overlay": {
           "message": "Tap or click the paddle to guide the particle and shatter the quantum bricks.",
+          "brickSkin": {
+            "label": "Brick appearance",
+            "aria": "Choose the brick appearance for Particles."
+          },
           "button": "Start"
         }
       },

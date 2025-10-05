@@ -62,6 +62,10 @@
         "canvasAria": "Zone de jeu Particules",
         "overlay": {
           "message": "Touchez ou cliquez la raquette pour guider la particule et détruire les briques quantiques.",
+          "brickSkin": {
+            "label": "Apparence des briques",
+            "aria": "Choisissez l’apparence des briques de Particules."
+          },
           "button": "Commencer"
         }
       },

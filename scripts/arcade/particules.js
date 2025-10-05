@@ -296,28 +296,13 @@
     rows: 3
   });
 
-  const PASTELS_BRICK_SPRITE_SHEETS = new Map([
-    ['quarks', {
-      key: 'pastels_quarks',
-      sheet: createSpriteSheet({
-        src: 'Assets/Sprites/Pastels_bricks_1.png',
-        frameWidth: 64,
-        frameHeight: 32,
-        columns: 6,
-        rows: 3
-      })
-    }],
-    ['particles', {
-      key: 'pastels_particles',
-      sheet: createSpriteSheet({
-        src: 'Assets/Sprites/Pastels_bricks_2.png',
-        frameWidth: 64,
-        frameHeight: 32,
-        columns: 6,
-        rows: 3
-      })
-    }]
-  ]);
+  const PASTELS_BRICK_SPRITE_SHEET = createSpriteSheet({
+    src: 'Assets/Sprites/Pastels_bricks.png',
+    frameWidth: 64,
+    frameHeight: 32,
+    columns: 12,
+    rows: 3
+  });
 
   const LASER_SPRITE_SHEET = createSpriteSheet({
     src: 'Assets/Sprites/bullet.png',
@@ -338,23 +323,11 @@
     quarks: QUARK_SPRITE_SHEET,
     particles: PARTICLE_SPRITE_SHEET,
     metallic: METALLIC_BRICK_SPRITE_SHEET,
-    neon: NEON_BRICK_SPRITE_SHEET
+    neon: NEON_BRICK_SPRITE_SHEET,
+    pastels: PASTELS_BRICK_SPRITE_SHEET
   };
 
-  PASTELS_BRICK_SPRITE_SHEETS.forEach(entry => {
-    if (!entry || typeof entry !== 'object') {
-      return;
-    }
-    const key = typeof entry.key === 'string' ? entry.key.trim() : '';
-    if (!key) {
-      return;
-    }
-    if (entry.sheet && typeof entry.sheet === 'object') {
-      BRICK_SPRITE_SHEETS[key] = entry.sheet;
-    }
-  });
-
-  const GENERIC_BRICK_SKINS = new Set(['metallic', 'neon']);
+  const GENERIC_BRICK_SKINS = new Set(['metallic', 'neon', 'pastels']);
 
   const normalizeBrickSkinKey = value => {
     if (value == null) {
@@ -1258,55 +1231,9 @@
     }
     const sprite = { ...clone.sprite };
     const normalizedColumns = normalizeSpriteColumns(sprite.columns);
-    const originalSheetKey = typeof sprite.sheet === 'string'
-      ? sprite.sheet.trim().toLowerCase()
-      : null;
     const originalColumn = Number.isFinite(sprite.column) ? Math.floor(sprite.column) : null;
 
     const requestedSkin = typeof skinKey === 'string' ? skinKey.trim().toLowerCase() : null;
-    if (requestedSkin === 'pastels' && originalSheetKey) {
-      const pastelEntry = PASTELS_BRICK_SPRITE_SHEETS.get(originalSheetKey);
-      const pastelSheetKey = pastelEntry && typeof pastelEntry.key === 'string'
-        ? pastelEntry.key.trim()
-        : '';
-      const pastelSheet = pastelSheetKey ? BRICK_SPRITE_SHEETS[pastelSheetKey] : null;
-      if (pastelSheet) {
-        const totalColumns = Math.max(1, Math.floor(pastelSheet.columns || 1));
-        const adjustColumn = value => {
-          if (!Number.isFinite(value)) {
-            return null;
-          }
-          return Math.max(0, Math.min(totalColumns - 1, Math.floor(value)));
-        };
-        const adjustedColumns = normalizedColumns
-          .map(adjustColumn)
-          .filter(value => Number.isFinite(value));
-        if (adjustedColumns.length > 0) {
-          sprite.columns = adjustedColumns;
-        } else if ('columns' in sprite) {
-          delete sprite.columns;
-        }
-        const baseColumn = adjustColumn(originalColumn);
-        const columnPool = (() => {
-          if (Number.isFinite(baseColumn)) {
-            return [baseColumn];
-          }
-          if (adjustedColumns.length > 0) {
-            return adjustedColumns;
-          }
-          return [];
-        })();
-        const chosenColumn = pickColumn(columnPool, totalColumns)
-          ?? (Number.isFinite(baseColumn)
-            ? baseColumn
-            : 0);
-        sprite.column = chosenColumn;
-        sprite.sheet = pastelSheetKey;
-        clone.sprite = sprite;
-        return clone;
-      }
-    }
-
     const sheet = requestedSkin ? BRICK_SPRITE_SHEETS[requestedSkin] : null;
     if (sheet) {
       const totalColumns = Math.max(1, Math.floor(sheet.columns || 1));
