@@ -63,8 +63,11 @@
     if (translator) {
       try {
         const result = translator(key, params);
-        if (typeof result === 'string' && result.trim()) {
-          return result;
+        if (typeof result === 'string') {
+          const trimmed = result.trim();
+          if (trimmed && trimmed !== key) {
+            return trimmed;
+          }
         }
       } catch (error) {
         console.warn('Blackjack translation error for', key, error);
