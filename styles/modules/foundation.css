@@ -552,7 +552,7 @@ body.view-sudoku .status-bar {
   left: 0;
   right: 0;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: flex-start;
   gap: clamp(0.75rem, 7vw, 4rem);
   padding: 0 clamp(0.9rem, 4vw, 3.2rem);
@@ -593,6 +593,7 @@ body.view-sudoku .status-bar {
 .frenzy-status__item--aps {
   align-items: flex-end;
   text-align: right;
+  margin-left: auto;
 }
 
 .frenzy-status__multiplier {
