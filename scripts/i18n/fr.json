@@ -453,6 +453,7 @@
             "noMidiData": "Aucune donnée MIDI à lire.",
             "unsupportedFile": "Le fichier déposé doit être un MIDI (.mid ou .midi).",
             "randomUnavailable": "Aucun morceau disponible pour la lecture aléatoire.",
+            "randomComplete": "Lecture aléatoire terminée. Tous les morceaux ont été lus.",
             "playbackComplete": "Lecture terminée : {title}",
             "playbackError": "Lecture impossible : {error}",
             "playbackStopped": "Lecture stoppée : {title}",

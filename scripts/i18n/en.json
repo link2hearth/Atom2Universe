@@ -453,6 +453,7 @@
             "noMidiData": "No MIDI data to play.",
             "unsupportedFile": "Please drop a MIDI file (.mid or .midi).",
             "randomUnavailable": "No tracks available for random playback.",
+            "randomComplete": "Random playback complete. All tracks have been played.",
             "playbackComplete": "Playback finished: {title}",
             "playbackError": "Playback failed: {error}",
             "playbackStopped": "Playback stopped: {title}",

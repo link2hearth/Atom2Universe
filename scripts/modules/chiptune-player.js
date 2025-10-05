@@ -1377,6 +1377,11 @@
       this.speedMin = 0.5;
       this.speedMax = 2;
       this.libraryLoadErrored = false;
+      this.randomPlaybackMode = null;
+      this.randomPlaybackArtistId = null;
+      this.randomPlaybackQueue = [];
+      this.randomPlaybackCurrentTrack = null;
+      this.randomPlaybackPending = false;
 
       this.populateSoundFonts(this.soundFontList, false);
 
@@ -1551,6 +1556,7 @@
       if (this.artistSelect) {
         this.artistSelect.addEventListener('change', () => {
           const artistId = this.artistSelect.value;
+          this.resetRandomPlayback();
           this.applyArtistSelection(artistId);
         });
       }
@@ -1566,20 +1572,25 @@
             this.setStatusMessage('index.sections.options.chiptune.status.trackNotFound', 'Unable to locate the selected track.', {}, 'error');
             return;
           }
+          this.resetRandomPlayback();
           this.loadFromLibrary(track);
         });
       }
 
       if (this.randomAllButton) {
         this.randomAllButton.addEventListener('click', () => {
-          this.playRandomTrack();
+          this.playRandomTrack().catch((error) => {
+            console.error('Unable to start random playback', error);
+          });
         });
       }
 
       if (this.randomArtistButton) {
         this.randomArtistButton.addEventListener('click', () => {
           const artistId = this.currentArtistId || (this.artistSelect ? this.artistSelect.value : '');
-          this.playRandomTrack(artistId || null);
+          this.playRandomTrack(artistId || null).catch((error) => {
+            console.error('Unable to start artist random playback', error);
+          });
         });
       }
 
@@ -2989,6 +3000,7 @@
     }
 
     async loadFromFile(file) {
+      this.resetRandomPlayback();
       this.stop();
       this.setStatusMessage('index.sections.options.chiptune.status.loadingFile', 'Loading “{name}”…', { name: file.name });
       try {
@@ -3013,8 +3025,12 @@
       }
     }
 
-    async loadFromLibrary(track) {
-      this.stop();
+    async loadFromLibrary(track, options = {}) {
+      const { preserveRandomSession = false } = options;
+      this.stop(false, { skipRandomReset: preserveRandomSession });
+      if (!preserveRandomSession) {
+        this.resetRandomPlayback();
+      }
       const label = track.name || track.file;
       this.setStatusMessage('index.sections.options.chiptune.status.loadingTrack', 'Loading “{name}”…', { name: label });
       if (this.fileInput) {
@@ -3299,6 +3315,7 @@
 
     populateLibrary(artists, errored) {
       this.libraryLoadErrored = Boolean(errored);
+      this.resetRandomPlayback();
 
       const previousArtistId = this.currentArtistId;
       const previousTrackValue = this.trackSelect ? this.trackSelect.value : '';
@@ -3494,27 +3511,137 @@
       return this.libraryAllTracks.find(track => track.file === file) || null;
     }
 
-    playRandomTrack(artistId = null) {
-      const sourceArtistId = artistId || '';
-      const pool = sourceArtistId
-        ? this.getTracksForArtist(sourceArtistId)
+    resetRandomPlayback() {
+      this.randomPlaybackMode = null;
+      this.randomPlaybackArtistId = null;
+      this.randomPlaybackQueue = [];
+      this.randomPlaybackCurrentTrack = null;
+      this.randomPlaybackPending = false;
+    }
+
+    isRandomPlaybackSession(mode, artistId) {
+      if (!this.randomPlaybackMode || this.randomPlaybackMode !== mode) {
+        return false;
+      }
+      if (mode === 'artist') {
+        const normalizedId = typeof artistId === 'string' ? artistId : '';
+        return this.randomPlaybackArtistId === normalizedId;
+      }
+      return true;
+    }
+
+    shuffleArray(array) {
+      const list = array;
+      for (let i = list.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const temp = list[i];
+        list[i] = list[j];
+        list[j] = temp;
+      }
+      return list;
+    }
+
+    initializeRandomPlayback(mode, artistId) {
+      const normalizedId = mode === 'artist' ? (typeof artistId === 'string' ? artistId : '') : '';
+      const pool = mode === 'artist'
+        ? this.getTracksForArtist(normalizedId)
         : this.libraryAllTracks;
-      if (!Array.isArray(pool) || pool.length === 0) {
+      const available = Array.isArray(pool) ? pool.filter(track => track && track.file) : [];
+      if (!available.length) {
         this.setStatusMessage(
           'index.sections.options.chiptune.status.randomUnavailable',
           'No tracks available for random playback.',
           {},
           'error',
         );
+        return false;
+      }
+      const queue = this.shuffleArray(Array.from(available));
+      this.randomPlaybackMode = mode;
+      this.randomPlaybackArtistId = mode === 'artist' ? normalizedId : '';
+      this.randomPlaybackQueue = queue;
+      this.randomPlaybackCurrentTrack = null;
+      this.randomPlaybackPending = false;
+      return true;
+    }
+
+    dequeueNextRandomTrack() {
+      if (!Array.isArray(this.randomPlaybackQueue) || !this.randomPlaybackQueue.length) {
+        return null;
+      }
+      return this.randomPlaybackQueue.shift() || null;
+    }
+
+    shouldContinueRandomPlayback() {
+      if (!this.randomPlaybackMode) {
+        return false;
+      }
+      if (this.randomPlaybackPending) {
+        return false;
+      }
+      return Array.isArray(this.randomPlaybackQueue) && this.randomPlaybackQueue.length > 0;
+    }
+
+    completeRandomPlayback() {
+      if (!this.randomPlaybackMode) {
         return;
       }
-      const index = Math.floor(Math.random() * pool.length);
-      const track = pool[index];
+      this.setStatusMessage(
+        'index.sections.options.chiptune.status.randomComplete',
+        'Random playback complete. All tracks have been played.',
+        {},
+        'success',
+      );
+      this.scheduleReadyStatusRestore();
+      this.resetRandomPlayback();
+    }
+
+    async playRandomTrack(artistId = null, options = {}) {
+      const { continueSession = false } = options;
+      const mode = artistId ? 'artist' : 'all';
+      const normalizedArtistId = mode === 'artist'
+        ? (typeof artistId === 'string' ? artistId : '')
+        : '';
+
+      if (!continueSession || !this.isRandomPlaybackSession(mode, normalizedArtistId)) {
+        if (!this.initializeRandomPlayback(mode, normalizedArtistId)) {
+          return;
+        }
+      } else if (!this.randomPlaybackQueue.length) {
+        this.completeRandomPlayback();
+        return;
+      }
+
+      const track = this.dequeueNextRandomTrack();
       if (!track) {
+        this.completeRandomPlayback();
         return;
       }
-      this.applyArtistSelection(track.artistId, { selectedTrackFile: track.file });
-      this.loadFromLibrary(track);
+
+      this.randomPlaybackPending = true;
+      this.randomPlaybackCurrentTrack = track;
+      try {
+        this.applyArtistSelection(track.artistId, { selectedTrackFile: track.file });
+        await this.loadFromLibrary(track, { preserveRandomSession: true });
+        const hasTimeline = this.timeline && Array.isArray(this.timeline.notes) && this.timeline.notes.length;
+        if (!hasTimeline) {
+          if (Array.isArray(this.randomPlaybackQueue) && this.randomPlaybackQueue.length) {
+            this.randomPlaybackPending = false;
+            await this.playRandomTrack(
+              this.randomPlaybackMode === 'artist' ? this.randomPlaybackArtistId : null,
+              { continueSession: true },
+            );
+          } else {
+            this.completeRandomPlayback();
+          }
+          return;
+        }
+        await this.play();
+      } catch (error) {
+        console.error('Unable to play random track', error);
+      } finally {
+        this.randomPlaybackPending = false;
+      }
     }
 
     updateRandomButtons() {
@@ -6237,9 +6364,32 @@
 
         this.finishTimeout = window.setTimeout(() => {
           this.finishTimeout = null;
-          this.stop(false);
-          this.setStatusMessage('index.sections.options.chiptune.status.playbackComplete', 'Playback finished: {title}', { title: this.currentTitle }, 'success');
-          this.scheduleReadyStatusRestore();
+          const hasRandomSession = Boolean(this.randomPlaybackMode);
+          const shouldQueueNext = this.shouldContinueRandomPlayback();
+          const sessionFinished = hasRandomSession
+            && !shouldQueueNext
+            && (!Array.isArray(this.randomPlaybackQueue) || !this.randomPlaybackQueue.length);
+
+          if (shouldQueueNext) {
+            this.stop(false, { skipRandomReset: true });
+          } else {
+            this.stop(false);
+          }
+
+          if (shouldQueueNext) {
+            const nextArtistId = this.randomPlaybackMode === 'artist'
+              ? this.randomPlaybackArtistId
+              : null;
+            this.playRandomTrack(nextArtistId, { continueSession: true }).catch((error) => {
+              console.error('Unable to continue random playback', error);
+              this.completeRandomPlayback();
+            });
+          } else if (sessionFinished) {
+            this.completeRandomPlayback();
+          } else {
+            this.setStatusMessage('index.sections.options.chiptune.status.playbackComplete', 'Playback finished: {title}', { title: this.currentTitle }, 'success');
+            this.scheduleReadyStatusRestore();
+          }
         }, Math.ceil(((effectiveDuration || 0) + 0.6) * 1000));
 
         this.setStatus('', 'success', { type: 'playing', extra: '' });
@@ -6253,7 +6403,7 @@
     }
 
     stop(manual = false, options = {}) {
-      const { preservePosition = false } = options;
+      const { preservePosition = false, skipRandomReset = false } = options;
       if (this.finishTimeout) {
         window.clearTimeout(this.finishTimeout);
         this.finishTimeout = null;
@@ -6367,6 +6517,11 @@
         }
       }
       this.refreshProgressControls(this.timeline);
+
+      this.randomPlaybackCurrentTrack = null;
+      if (manual && !skipRandomReset) {
+        this.resetRandomPlayback();
+      }
 
       if (manual && wasPlaying) {
         this.setStatusMessage('index.sections.options.chiptune.status.playbackStopped', 'Playback stopped: {title}', { title: this.currentTitle });
