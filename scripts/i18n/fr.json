@@ -411,6 +411,9 @@
             "empty": "Aucun morceau local pour le moment",
             "unavailable": "Bibliothèque locale indisponible"
           },
+          "dropZone": {
+            "prompt": "Déposez un fichier MIDI (.mid) ici ou cliquez pour le sélectionner"
+          },
           "controls": {
             "octaveDown": "Octave −",
             "octaveUp": "Octave +",
@@ -432,6 +435,7 @@
             "soundFontUnavailable": "SoundFont indisponible : {error}",
             "soundFontMissing": "Aucune SoundFont prête pour le mode Hi-Fi.",
             "noMidiData": "Aucune donnée MIDI à lire.",
+            "unsupportedFile": "Le fichier déposé doit être un MIDI (.mid ou .midi).",
             "playbackComplete": "Lecture terminée : {title}",
             "playbackError": "Lecture impossible : {error}",
             "playbackStopped": "Lecture stoppée : {title}",

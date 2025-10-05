@@ -411,6 +411,9 @@
             "empty": "No local tracks yet",
             "unavailable": "Local library unavailable"
           },
+          "dropZone": {
+            "prompt": "Drop a MIDI file (.mid) here or click to browse"
+          },
           "controls": {
             "octaveDown": "Octave −",
             "octaveUp": "Octave +",
@@ -432,6 +435,7 @@
             "soundFontUnavailable": "SoundFont unavailable: {error}",
             "soundFontMissing": "No SoundFont ready for Hi-Fi mode.",
             "noMidiData": "No MIDI data to play.",
+            "unsupportedFile": "Please drop a MIDI file (.mid or .midi).",
             "playbackComplete": "Playback finished: {title}",
             "playbackError": "Playback failed: {error}",
             "playbackStopped": "Playback stopped: {title}",
