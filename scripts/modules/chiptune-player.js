@@ -6600,7 +6600,17 @@
       this.updateButtons();
 
       const duration = this.progressDuration || this.getTimelineDuration();
-      if (!preservePosition) {
+      if (preservePosition) {
+        const hasDuration = Number.isFinite(duration) && duration > 0;
+        const referenceDuration = hasDuration ? duration : (this.timeline ? this.getTimelineDuration(this.timeline) : 0);
+        const maxDuration = Number.isFinite(referenceDuration) && referenceDuration > 0 ? referenceDuration : 0;
+        const lastPosition = Number.isFinite(this.lastKnownPosition) ? this.lastKnownPosition : 0;
+        const clampedPosition = maxDuration > 0
+          ? Math.max(0, Math.min(maxDuration, lastPosition))
+          : Math.max(0, lastPosition);
+        this.pendingSeekSeconds = clampedPosition;
+        this.lastKnownPosition = clampedPosition;
+      } else {
         if (manual) {
           this.pendingSeekSeconds = 0;
           this.lastKnownPosition = 0;
