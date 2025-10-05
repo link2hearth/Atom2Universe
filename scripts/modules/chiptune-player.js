@@ -1597,7 +1597,11 @@
 
       if (this.playButton) {
         this.playButton.addEventListener('click', () => {
-          this.play();
+          if (this.playing) {
+            this.pause();
+          } else {
+            this.play();
+          }
         });
       }
 
@@ -2376,6 +2380,9 @@
     }
 
     refreshStaticTexts() {
+      if (this.playButton) {
+        this.updatePlayButtonLabel();
+      }
       if (this.progressLabel) {
         this.progressLabel.textContent = this.translate(
           'index.sections.options.chiptune.progress.label',
@@ -2932,14 +2939,37 @@
     updateButtons() {
       const hasTimeline = this.timeline && Array.isArray(this.timeline.notes) && this.timeline.notes.length > 0;
       if (this.playButton) {
-        const disabled = !hasTimeline || this.playing;
+        const disabled = !hasTimeline;
         this.playButton.disabled = disabled;
+        this.updatePlayButtonLabel();
       }
       if (this.stopButton) {
         this.stopButton.disabled = !this.playing;
       }
       if (this.skipButton) {
         this.skipButton.disabled = !this.canSkipRandomTrack();
+      }
+    }
+
+    updatePlayButtonLabel() {
+      if (!this.playButton) {
+        return;
+      }
+      const key = this.playing
+        ? 'index.sections.options.chiptune.controls.pause'
+        : 'index.sections.options.chiptune.controls.play';
+      const fallback = this.playing ? 'Pause' : 'Play';
+      const label = this.translate(key, fallback);
+      if (this.playButton.textContent !== label) {
+        this.playButton.textContent = label;
+      }
+      this.playButton.setAttribute('aria-label', label);
+      if (this.playButton.dataset) {
+        this.playButton.dataset.i18n = key;
+        this.playButton.dataset.state = this.playing ? 'pause' : 'play';
+      } else {
+        this.playButton.setAttribute('data-i18n', key);
+        this.playButton.setAttribute('data-state', this.playing ? 'pause' : 'play');
       }
     }
 
@@ -6446,6 +6476,26 @@
         this.playing = false;
         this.updateButtons();
       }
+    }
+
+    pause() {
+      if (!this.playing) {
+        return;
+      }
+
+      const currentTitle = this.currentTitle;
+      this.stop(false, { preservePosition: true, skipRandomReset: true });
+
+      const hasTitle = typeof currentTitle === 'string' && currentTitle.trim().length > 0;
+      const key = hasTitle
+        ? 'index.sections.options.chiptune.status.playbackPausedWithTitle'
+        : 'index.sections.options.chiptune.status.playbackPaused';
+      const fallback = hasTitle ? 'Playback paused: {title}' : 'Playback paused.';
+      const params = hasTitle ? { title: currentTitle } : {};
+
+      this.setStatusMessage(key, fallback, params, 'info');
+      this.scheduleReadyStatusRestore();
+      this.updateButtons();
     }
 
     stop(manual = false, options = {}) {
