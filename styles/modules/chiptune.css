@@ -84,6 +84,38 @@
   min-width: 110px;
 }
 
+.option-card--chiptune .option-row--dropzone {
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.chiptune-dropzone {
+  width: 100%;
+  padding: 1rem;
+  border: 2px dashed rgba(120, 200, 255, 0.4);
+  border-radius: 10px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.75);
+  background: rgba(20, 30, 60, 0.4);
+  transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease,
+    box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.chiptune-dropzone:focus-visible {
+  outline: none;
+  border-color: rgba(120, 200, 255, 0.9);
+  box-shadow: 0 0 0 3px rgba(120, 200, 255, 0.35);
+}
+
+.chiptune-dropzone.is-dragover {
+  border-color: rgba(120, 200, 255, 1);
+  background: rgba(40, 70, 120, 0.6);
+  color: rgba(255, 255, 255, 0.95);
+  box-shadow: inset 0 0 0 1px rgba(120, 200, 255, 0.5);
+}
+
 .option-card--chiptune .option-row--buttons button:disabled {
   opacity: 0.5;
   cursor: not-allowed;

@@ -1259,6 +1259,7 @@
   class ChiptunePlayer {
     constructor(elements) {
       this.fileInput = elements.fileInput;
+      this.dropZone = elements.dropZone;
       this.librarySelect = elements.librarySelect;
       this.playButton = elements.playButton;
       this.stopButton = elements.stopButton;
@@ -1455,6 +1456,21 @@
       this.subscribeToLanguageChanges();
     }
 
+    isMidiFile(file) {
+      if (!file) {
+        return false;
+      }
+      const name = typeof file.name === 'string' ? file.name.toLowerCase() : '';
+      if (name.endsWith('.mid') || name.endsWith('.midi')) {
+        return true;
+      }
+      const type = typeof file.type === 'string' ? file.type.toLowerCase() : '';
+      return type === 'audio/midi'
+        || type === 'audio/x-midi'
+        || type === 'audio/smf'
+        || type === 'audio/mid';
+    }
+
     bindEvents() {
       if (this.fileInput) {
         this.fileInput.addEventListener('change', () => {
@@ -1463,6 +1479,64 @@
             return;
           }
           this.loadFromFile(file);
+        });
+      }
+
+      if (this.dropZone) {
+        const prevent = (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+        };
+        const activate = () => {
+          this.dropZone.classList.add('is-dragover');
+        };
+        const deactivate = () => {
+          this.dropZone.classList.remove('is-dragover');
+        };
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+          this.dropZone.addEventListener(eventName, prevent);
+        });
+        ['dragenter', 'dragover'].forEach(eventName => {
+          this.dropZone.addEventListener(eventName, activate);
+        });
+        ['dragleave', 'drop'].forEach(eventName => {
+          this.dropZone.addEventListener(eventName, deactivate);
+        });
+
+        this.dropZone.addEventListener('drop', (event) => {
+          const files = event.dataTransfer && event.dataTransfer.files
+            ? Array.from(event.dataTransfer.files)
+            : [];
+          if (!files.length) {
+            return;
+          }
+          const midiFile = files.find(file => this.isMidiFile(file));
+          if (!midiFile) {
+            this.setStatusMessage(
+              'index.sections.options.chiptune.status.unsupportedFile',
+              'Please drop a MIDI file (.mid or .midi).',
+              {},
+              'error',
+            );
+            return;
+          }
+          this.loadFromFile(midiFile);
+        });
+
+        this.dropZone.addEventListener('click', () => {
+          if (this.fileInput) {
+            this.fileInput.click();
+          }
+        });
+
+        this.dropZone.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            if (this.fileInput) {
+              this.fileInput.click();
+            }
+          }
         });
       }
 
@@ -6074,6 +6148,7 @@
 
   const elements = {
     fileInput: document.getElementById('chiptuneFileInput'),
+    dropZone: document.getElementById('chiptuneDropZone'),
     librarySelect: document.getElementById('chiptuneLibrarySelect'),
     playButton: document.getElementById('chiptunePlayButton'),
     stopButton: document.getElementById('chiptuneStopButton'),
