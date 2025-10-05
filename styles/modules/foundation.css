@@ -546,52 +546,64 @@ body.view-sudoku .status-bar {
   outline-offset: 0.25rem;
 }
 
-.status-frenzy-indicator {
+.frenzy-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0 var(--header-padding-x) clamp(0.35rem, 0.9vw, 0.65rem);
+  margin-top: clamp(0.8rem, 6vh, 3rem);
+  gap: clamp(0.8rem, 6vw, 3.8rem);
   font-family: 'Orbitron', sans-serif;
-  font-size: clamp(0.55rem, 0.9vw, 0.72rem);
-  letter-spacing: 0.1em;
+  font-size: clamp(0.58rem, 1.05vw, 0.78rem);
+  color: rgba(220, 236, 255, 0.72);
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #9cf3ff;
-  padding: 0.14rem 0.5rem;
-  border-radius: 999px;
-  border: 1px solid rgba(140, 220, 255, 0.45);
-  background: linear-gradient(120deg, rgba(90, 170, 255, 0.18), rgba(20, 45, 80, 0.42));
-  text-shadow: 0 0 6px rgba(120, 220, 255, 0.75), 0 0 18px rgba(60, 150, 255, 0.55);
-  box-shadow: 0 0 12px rgba(70, 170, 255, 0.18);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.22rem;
-  animation: frenzyPulse 1.4s ease-in-out infinite;
-  white-space: nowrap;
+  pointer-events: none;
+  font-variant-numeric: tabular-nums;
 }
 
-.status-frenzy-indicator[hidden] {
+.frenzy-banner[hidden] {
   display: none;
 }
 
-body.theme-light .status-frenzy-indicator {
-  color: #0e3760;
-  border-color: rgba(0, 110, 190, 0.32);
-  background: linear-gradient(120deg, rgba(160, 210, 255, 0.35), rgba(220, 240, 255, 0.65));
-  text-shadow: 0 0 10px rgba(90, 180, 255, 0.55);
+.frenzy-banner__item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.08rem;
+  min-width: clamp(4.2rem, 16vw, 7.5rem);
+  opacity: 0.82;
 }
 
-body.theme-neon .status-frenzy-indicator {
-  color: #bffaff;
-  border-color: rgba(120, 255, 255, 0.5);
-  background: linear-gradient(140deg, rgba(120, 255, 255, 0.24), rgba(120, 120, 255, 0.32));
-  text-shadow: 0 0 12px rgba(140, 255, 255, 0.9);
+.frenzy-banner__item[hidden] {
+  display: none;
 }
 
-@keyframes frenzyPulse {
-  0%, 100% {
-    box-shadow: 0 0 10px rgba(80, 190, 255, 0.35), 0 0 24px rgba(40, 120, 255, 0.2);
-    filter: saturate(1.1);
-  }
-  50% {
-    box-shadow: 0 0 18px rgba(120, 230, 255, 0.55), 0 0 40px rgba(20, 180, 255, 0.3);
-    filter: saturate(1.4);
-  }
+.frenzy-banner__item--apc {
+  align-items: flex-start;
+  text-align: left;
+}
+
+.frenzy-banner__item--aps {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.frenzy-banner__value {
+  font-weight: 600;
+}
+
+.frenzy-banner__timer {
+  font-size: clamp(0.52rem, 0.9vw, 0.7rem);
+  font-weight: 500;
+  opacity: 0.75;
+}
+
+body.theme-light .frenzy-banner {
+  color: rgba(12, 24, 44, 0.68);
+}
+
+body.theme-neon .frenzy-banner {
+  color: rgba(190, 236, 255, 0.78);
 }
 
 .status-value--main {

@@ -82,7 +82,6 @@
           <span class="status-label" data-i18n="index.status.apc"></span>
           <div class="status-value-group status-value-group--left">
             <span class="status-value" id="statusApc">1</span>
-            <span class="status-frenzy-indicator" id="statusApcFrenzy" hidden></span>
           </div>
         </div>
         <div class="status-item status-item--crit" aria-live="polite">
@@ -114,12 +113,22 @@
           <span class="status-label" data-i18n="index.status.aps"></span>
           <div class="status-value-group status-value-group--aps">
             <span class="status-value" id="statusAps">0</span>
-            <span class="status-frenzy-indicator" id="statusApsFrenzy" hidden></span>
           </div>
         </div>
       </div>
     </div>
   </header>
+
+  <div class="frenzy-banner" id="frenzyBanner" aria-live="polite" hidden>
+    <div class="frenzy-banner__item frenzy-banner__item--apc" id="statusApcFrenzy" hidden>
+      <span class="frenzy-banner__value" id="statusApcFrenzyMultiplier"></span>
+      <span class="frenzy-banner__timer" id="statusApcFrenzyTimer"></span>
+    </div>
+    <div class="frenzy-banner__item frenzy-banner__item--aps" id="statusApsFrenzy" hidden>
+      <span class="frenzy-banner__value" id="statusApsFrenzyMultiplier"></span>
+      <span class="frenzy-banner__timer" id="statusApsFrenzyTimer"></span>
+    </div>
+  </div>
 
   <main id="pageContainer">
     <section
