@@ -421,6 +421,15 @@
               "selectArtist": "Choisissez d'abord un artiste"
             }
           },
+          "folderImport": {
+            "button": "Ajouter un dossier MIDI local",
+            "prompt": "Choisissez un nom pour ce dossier (optionnel)",
+            "defaultName": "Dossier MIDI local",
+            "statusEmpty": "Le dossier sélectionné ne contient aucun fichier MIDI.",
+            "statusAdded": "Dossier prêt : {name} ({count} morceaux)",
+            "statusUpdated": "Dossier mis à jour : {name} ({count} morceaux)",
+            "statusError": "Impossible d'importer le dossier sélectionné."
+          },
           "trackSlider": {
             "label": "Explorer les titres",
             "position": "{current} / {total}",

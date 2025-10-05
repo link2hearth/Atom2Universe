@@ -1033,6 +1033,22 @@
             <button type="button" id="chiptuneRandomAllButton" disabled data-i18n="index.sections.options.chiptune.controls.randomAll">Lecture aléatoire (bibliothèque)</button>
             <button type="button" id="chiptuneRandomArtistButton" disabled data-i18n="index.sections.options.chiptune.controls.randomArtist">Lecture aléatoire (artiste)</button>
           </div>
+          <div class="option-row option-row--buttons option-row--import">
+            <button
+              type="button"
+              id="chiptuneImportFolderButton"
+              data-i18n="index.sections.options.chiptune.folderImport.button"
+            >Ajouter un dossier MIDI</button>
+            <input
+              type="file"
+              id="chiptuneFolderInput"
+              accept=".mid,.midi"
+              webkitdirectory
+              directory
+              multiple
+              hidden
+            />
+          </div>
           <div class="option-row option-row--dropzone">
             <input type="file" id="chiptuneFileInput" accept=".mid,.midi" hidden />
             <div
