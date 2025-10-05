@@ -1263,6 +1263,7 @@
       this.artistSelect = elements.artistSelect;
       this.trackSelect = elements.trackSelect;
       this.playButton = elements.playButton;
+      this.skipButton = elements.skipButton;
       this.stopButton = elements.stopButton;
       this.randomAllButton = elements.randomAllButton;
       this.randomArtistButton = elements.randomArtistButton;
@@ -1597,6 +1598,12 @@
       if (this.playButton) {
         this.playButton.addEventListener('click', () => {
           this.play();
+        });
+      }
+
+      if (this.skipButton) {
+        this.skipButton.addEventListener('click', () => {
+          this.skipRandomTrack();
         });
       }
 
@@ -2931,6 +2938,9 @@
       if (this.stopButton) {
         this.stopButton.disabled = !this.playing;
       }
+      if (this.skipButton) {
+        this.skipButton.disabled = !this.canSkipRandomTrack();
+      }
     }
 
     async ensureContext() {
@@ -3517,6 +3527,7 @@
       this.randomPlaybackQueue = [];
       this.randomPlaybackCurrentTrack = null;
       this.randomPlaybackPending = false;
+      this.updateButtons();
     }
 
     isRandomPlaybackSession(mode, artistId) {
@@ -3562,6 +3573,7 @@
       this.randomPlaybackQueue = queue;
       this.randomPlaybackCurrentTrack = null;
       this.randomPlaybackPending = false;
+      this.updateButtons();
       return true;
     }
 
@@ -3620,6 +3632,7 @@
 
       this.randomPlaybackPending = true;
       this.randomPlaybackCurrentTrack = track;
+      this.updateButtons();
       try {
         this.applyArtistSelection(track.artistId, { selectedTrackFile: track.file });
         await this.loadFromLibrary(track, { preserveRandomSession: true });
@@ -3627,6 +3640,7 @@
         if (!hasTimeline) {
           if (Array.isArray(this.randomPlaybackQueue) && this.randomPlaybackQueue.length) {
             this.randomPlaybackPending = false;
+            this.updateButtons();
             await this.playRandomTrack(
               this.randomPlaybackMode === 'artist' ? this.randomPlaybackArtistId : null,
               { continueSession: true },
@@ -3641,6 +3655,38 @@
         console.error('Unable to play random track', error);
       } finally {
         this.randomPlaybackPending = false;
+        this.updateButtons();
+      }
+    }
+
+    canSkipRandomTrack() {
+      if (!this.randomPlaybackMode) {
+        return false;
+      }
+      if (this.randomPlaybackPending) {
+        return false;
+      }
+      return Array.isArray(this.randomPlaybackQueue) && this.randomPlaybackQueue.length > 0;
+    }
+
+    async skipRandomTrack() {
+      if (!this.canSkipRandomTrack()) {
+        return;
+      }
+      const nextArtistId = this.randomPlaybackMode === 'artist'
+        ? this.randomPlaybackArtistId
+        : null;
+      this.randomPlaybackPending = true;
+      this.updateButtons();
+      if (this.playing) {
+        this.stop(false, { skipRandomReset: true });
+      }
+      try {
+        await this.playRandomTrack(nextArtistId, { continueSession: true });
+      } catch (error) {
+        console.error('Unable to skip random track', error);
+        this.randomPlaybackPending = false;
+        this.updateButtons();
       }
     }
 
@@ -6599,6 +6645,7 @@
     artistSelect: document.getElementById('chiptuneArtistSelect'),
     trackSelect: document.getElementById('chiptuneTrackSelect'),
     playButton: document.getElementById('chiptunePlayButton'),
+    skipButton: document.getElementById('chiptuneSkipButton'),
     stopButton: document.getElementById('chiptuneStopButton'),
     randomAllButton: document.getElementById('chiptuneRandomAllButton'),
     randomArtistButton: document.getElementById('chiptuneRandomArtistButton'),
