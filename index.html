@@ -295,6 +295,19 @@
         <button
           type="button"
           class="arcade-hub-card"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.balance.aria"
+          data-page-target="balance"
+        >
+          <span
+            class="arcade-hub-card__title"
+            role="heading"
+            aria-level="3"
+            data-i18n="index.sections.arcadeHub.cards.balance.title"
+          ></span>
+        </button>
+        <button
+          type="button"
+          class="arcade-hub-card"
           data-i18n="aria-label:index.sections.arcadeHub.cards.sudoku.aria"
           data-page-target="sudoku"
         >
@@ -692,6 +705,65 @@
           </div>
         </div>
       </div>
+    </section>
+
+    <section
+      id="balance"
+      class="page page--balance"
+      data-page-group="arcade"
+      data-i18n="aria-label:index.sections.balance.aria"
+      hidden
+    >
+      <div class="balance-layout" id="balancePageLayout">
+        <header class="balance-header">
+          <h2 class="balance-title" data-i18n="index.sections.balance.title"></h2>
+          <p class="balance-subtitle" data-i18n="index.sections.balance.subtitle"></p>
+        </header>
+        <div class="balance-main">
+          <div class="balance-stage" id="balanceStage">
+            <div class="balance-board-wrapper">
+              <div class="balance-board" id="balanceBoard" aria-labelledby="balanceBoardLabel">
+                <div
+                  class="balance-board__surface"
+                  id="balanceBoardSurface"
+                  role="presentation"
+                  aria-labelledby="balanceBoardLabel"
+                ></div>
+                <div class="balance-board__beam" aria-hidden="true"></div>
+                <div class="balance-board__pivot" aria-hidden="true"></div>
+              </div>
+              <div class="balance-board-shadow" aria-hidden="true"></div>
+            </div>
+            <p class="balance-hint" id="balanceBoardLabel" data-i18n="index.sections.balance.instructions"></p>
+          </div>
+          <aside class="balance-sidebar">
+            <div class="balance-actions" role="group" aria-labelledby="balanceActionsTitle">
+              <h3 class="balance-actions__title" id="balanceActionsTitle" data-i18n="index.sections.balance.actions.title"></h3>
+              <div class="balance-actions__buttons">
+                <button
+                  type="button"
+                  class="balance-button"
+                  id="balanceResetButton"
+                  data-i18n="index.sections.balance.actions.reset"
+                ></button>
+                <button
+                  type="button"
+                  class="balance-button balance-button--primary"
+                  id="balanceTestButton"
+                  data-i18n="index.sections.balance.actions.test"
+                ></button>
+              </div>
+            </div>
+            <p class="balance-status" id="balanceStatus" role="status" aria-live="polite"></p>
+            <div class="balance-inventory" id="balanceInventory" role="region" aria-labelledby="balanceInventoryTitle">
+              <h3 class="balance-inventory__title" id="balanceInventoryTitle" data-i18n="index.sections.balance.inventory.title"></h3>
+              <p class="balance-inventory__hint" data-i18n="index.sections.balance.inventory.hint"></p>
+              <div class="balance-inventory__list" id="balancePieces" data-i18n="aria-label:index.sections.balance.inventory.list"></div>
+            </div>
+          </aside>
+        </div>
+      </div>
+      <div class="balance-drag-layer" id="balanceDragLayer" aria-hidden="true"></div>
     </section>
 
     <section
@@ -1393,6 +1465,7 @@
   <script src="scripts/resources/periodic-elements.js"></script>
   <script src="scripts/arcade/particules.js"></script>
   <script src="scripts/arcade/wave.js"></script>
+  <script src="scripts/arcade/balance.js"></script>
   <script src="scripts/arcade/math.js"></script>
   <script src="scripts/arcade/sudoku.js"></script>
   <script src="scripts/arcade/blackjack.js"></script>

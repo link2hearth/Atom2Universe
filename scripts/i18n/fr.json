@@ -98,6 +98,12 @@
             "description": "Composez des réactions en chaîne sur la grille choisie pour atteindre la tuile objectif.",
             "cta": "Fusionner"
           },
+          "balance": {
+            "aria": "Accéder au mini-jeu Balance quantique",
+            "title": "Balance quantique",
+            "description": "Disposez des blocs de masses différentes pour stabiliser la plateforme en un seul test parfait.",
+            "cta": "Équilibrer"
+          },
           "math": {
             "aria": "Accéder au mini-jeu Math",
             "title": "Math",
@@ -127,6 +133,25 @@
         "timerLabel": "Temps restant",
         "optionsAria": "Choisir la réponse pour le nombre manquant",
         "next": "Nouvelle opération"
+      },
+      "balance": {
+        "aria": "Mini-jeu Balance quantique",
+        "title": "Balance quantique",
+        "subtitle": "Faites glisser les blocs et répartissez leur masse pour aligner le centre de gravité au-dessus du pivot.",
+        "instructions": "Faites glisser un bloc depuis l'inventaire vers la planche, puis appuyez sur « Tester l'équilibre » pour déclencher la simulation.",
+        "actions": {
+          "title": "Contrôles",
+          "reset": "Réinitialiser les blocs",
+          "test": "Tester l'équilibre"
+        },
+        "inventory": {
+          "title": "Inventaire des blocs",
+          "hint": "Le nombre inscrit sur chaque bloc représente son poids relatif.",
+          "list": "Inventaire des blocs prêts à être placés",
+          "empty": "Tous les blocs sont placés sur la planche.",
+          "status": "{available} blocs prêts à être placés."
+        },
+        "cubeAria": "Bloc de poids {weight}"
       },
       "sudoku": {
         "aria": "Mini-jeu Sudoku quantique",
@@ -863,11 +888,43 @@
           "noSolution": "Pas de solution trouvée (ou puzzle invalide).",
           "cleared": "Grille vidée."
         }
+      },
+      "balance": {
+        "status": {
+          "ready": "Disposez les blocs et lancez un test.",
+          "needBlocks": "Ajoutez au moins un bloc sur la planche avant de lancer le test.",
+          "success": "Équilibre parfait !",
+          "leanLeft": "La planche penche à gauche (écart : {offset} %).",
+          "leanRight": "La planche penche à droite (écart : {offset} %).",
+          "returned": "Bloc renvoyé dans l’inventaire."
+        },
+        "sets": {
+          "equilibrium": "Lot équilibre",
+          "fractal": "Lot fractal",
+          "binary": "Lot binaire",
+          "default": "Lot classique"
+        }
       }
     }
   },
   "scripts": {
     "arcade": {
+      "balance": {
+        "status": {
+          "ready": "Disposez les blocs puis appuyez sur «\u00a0Tester l'équilibre\u00a0».",
+          "needBlocks": "Ajoutez au moins un bloc sur la planche avant de tester.",
+          "success": "Équilibre parfait !",
+          "leanLeft": "La planche penche à gauche (écart\u00a0: {offset}).",
+          "leanRight": "La planche penche à droite (écart\u00a0: {offset}).",
+          "returned": "Bloc renvoyé dans l'inventaire."
+        },
+        "sets": {
+          "default": "Jeu de départ",
+          "equilibrium": "Set Équilibre",
+          "fractal": "Set Fractal",
+          "binary": "Set Binaire"
+        }
+      },
       "math": {
         "status": {
           "prompt": "Choisissez la valeur manquante pour compléter le calcul.",

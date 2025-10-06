@@ -800,6 +800,55 @@ const GAME_CONFIG = {
       dealerHitSoft17: false,
       betOptions: [10, 20, 50, 100]
     },
+    // Paramètres du mini-jeu Balance (plateforme d'équilibre).
+    balance: {
+      board: {
+        widthPx: 640,
+        surfaceHeightPx: 96,
+        pivotHeightPx: 120,
+        tolerance: 0.035,
+        maxTiltDegrees: 18,
+        maxOffsetForTilt: 0.32,
+        testDurationMs: 900,
+        settleDurationMs: 600
+      },
+      cubeSets: [
+        {
+          id: 'equilibrium',
+          labelKey: 'scripts.arcade.balance.sets.equilibrium',
+          cubes: [
+            { id: 'eq-1', weight: 2, widthRatio: 0.16 },
+            { id: 'eq-2', weight: 3, widthRatio: 0.18 },
+            { id: 'eq-3', weight: 4, widthRatio: 0.2 },
+            { id: 'eq-4', weight: 1, widthRatio: 0.12 },
+            { id: 'eq-5', weight: 5, widthRatio: 0.22 }
+          ]
+        },
+        {
+          id: 'fractal',
+          labelKey: 'scripts.arcade.balance.sets.fractal',
+          cubes: [
+            { id: 'fr-1', weight: 6, widthRatio: 0.24 },
+            { id: 'fr-2', weight: 3, widthRatio: 0.16 },
+            { id: 'fr-3', weight: 2, widthRatio: 0.14 },
+            { id: 'fr-4', weight: 1, widthRatio: 0.1 },
+            { id: 'fr-5', weight: 4, widthRatio: 0.18 }
+          ]
+        },
+        {
+          id: 'binary',
+          labelKey: 'scripts.arcade.balance.sets.binary',
+          cubes: [
+            { id: 'bi-1', weight: 5, widthRatio: 0.18 },
+            { id: 'bi-2', weight: 5, widthRatio: 0.18 },
+            { id: 'bi-3', weight: 2, widthRatio: 0.14 },
+            { id: 'bi-4', weight: 3, widthRatio: 0.16 },
+            { id: 'bi-5', weight: 1, widthRatio: 0.1 }
+          ]
+        }
+      ],
+      defaultSetId: 'equilibrium'
+    },
     // Paramètres du mini-jeu Math (progression des opérations).
     math: {
       termCountRange: { min: 4, max: 5 },
