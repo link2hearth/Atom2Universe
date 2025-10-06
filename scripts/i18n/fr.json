@@ -339,7 +339,6 @@
         },
         "clickSound": {
           "title": "Son du clicker",
-          "description": "Activez ou coupez le petit « pop » joué à chaque clic et lors des critiques.",
           "ariaLabel": "Activer ou couper le son du clicker",
           "state": {
             "on": "Sons actifs",
@@ -348,7 +347,6 @@
         },
         "critAtoms": {
           "title": "Atomes critiques animés",
-          "description": "Affiche de petits atomes qui jaillissent lors d’un coup critique. Désactivez-les pour alléger l’affichage.",
           "ariaLabel": "Activer ou couper les atomes animés lors des critiques",
           "state": {
             "on": "Animations critiques actives",

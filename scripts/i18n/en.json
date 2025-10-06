@@ -339,7 +339,6 @@
         },
         "clickSound": {
           "title": "Clicker sound",
-          "description": "Toggle the little \u201cpop\u201d played on each click and during critical hits.",
           "ariaLabel": "Toggle the clicker pop sound",
           "state": {
             "on": "Click sounds on",
@@ -348,7 +347,6 @@
         },
         "critAtoms": {
           "title": "Critical atom bursts",
-          "description": "Show little atom sprites erupting on critical hits. Disable them to reduce on-screen effects.",
           "ariaLabel": "Toggle the critical hit atom bursts",
           "state": {
             "on": "Critical bursts on",
