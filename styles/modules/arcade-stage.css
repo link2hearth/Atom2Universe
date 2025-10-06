@@ -192,9 +192,9 @@ body.theme-neon .arcade-header__status--bonus {
   aspect-ratio: 9 / 16;
   width: min(
     calc(100vw - var(--arcade-padding-x) * 2),
-    max(260px, calc((100vh - var(--arcade-vertical-offset)) * 0.56)),
-    560px
+    calc((100vh - var(--arcade-vertical-offset)) * 9 / 16)
   );
+  min-width: min(280px, calc(100vw - var(--arcade-padding-x) * 2));
   max-height: max(0px, calc(100vh - var(--arcade-vertical-offset)));
 }
 

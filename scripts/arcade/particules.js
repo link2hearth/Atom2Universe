@@ -573,20 +573,56 @@
   };
 
   const gridConfig = readObject(ARCADE_CONFIG.grid);
+  const defaultGridCols = readNumber(
+    gridConfig.columns ?? gridConfig.cols ?? gridConfig.colonnes,
+    14,
+    { min: 1, round: 'round' }
+  );
+  const defaultGridRows = readNumber(
+    gridConfig.rows ?? gridConfig.lignes ?? gridConfig.rowsCount,
+    6,
+    { min: 1, round: 'round' }
+  );
+  const verticalGridConfig = readObject(gridConfig.vertical);
   settings.grid = {
-    cols: readNumber(gridConfig.columns ?? gridConfig.cols ?? gridConfig.colonnes, 14, { min: 1, round: 'round' }),
-    rows: readNumber(gridConfig.rows ?? gridConfig.lignes ?? gridConfig.rowsCount, 6, { min: 1, round: 'round' })
+    cols: defaultGridCols,
+    rows: defaultGridRows,
+    vertical: {
+      cols: readNumber(
+        verticalGridConfig.columns ?? verticalGridConfig.cols ?? verticalGridConfig.colonnes,
+        defaultGridCols,
+        { min: 1, round: 'round' }
+      ),
+      rows: readNumber(
+        verticalGridConfig.rows ?? verticalGridConfig.lignes ?? verticalGridConfig.rowsCount,
+        defaultGridRows,
+        { min: 1, round: 'round' }
+      )
+    }
   };
 
   settings.maxLives = readNumber(ARCADE_CONFIG.maxLives, 3, { min: 1, round: 'round' });
 
   const geometryConfig = readObject(ARCADE_CONFIG.geometry);
+  const defaultPaddingX = readNumber(geometryConfig.paddingX, 0.08);
+  const defaultPaddingY = readNumber(geometryConfig.paddingY, 0.04);
+  const defaultUsableHeight = readNumber(geometryConfig.usableHeight, 0.46);
+  const defaultInnerWidthRatio = readNumber(geometryConfig.innerWidthRatio, 0.92);
+  const defaultInnerHeightRatio = readNumber(geometryConfig.innerHeightRatio, 0.68);
+  const verticalGeometryConfig = readObject(geometryConfig.vertical);
   settings.geometry = {
-    paddingX: readNumber(geometryConfig.paddingX, 0.08),
-    paddingY: readNumber(geometryConfig.paddingY, 0.04),
-    usableHeight: readNumber(geometryConfig.usableHeight, 0.46),
-    innerWidthRatio: readNumber(geometryConfig.innerWidthRatio, 0.92),
-    innerHeightRatio: readNumber(geometryConfig.innerHeightRatio, 0.68)
+    paddingX: defaultPaddingX,
+    paddingY: defaultPaddingY,
+    usableHeight: defaultUsableHeight,
+    innerWidthRatio: defaultInnerWidthRatio,
+    innerHeightRatio: defaultInnerHeightRatio,
+    vertical: {
+      paddingX: readNumber(verticalGeometryConfig.paddingX, defaultPaddingX),
+      paddingY: readNumber(verticalGeometryConfig.paddingY, defaultPaddingY),
+      usableHeight: readNumber(verticalGeometryConfig.usableHeight, defaultUsableHeight),
+      innerWidthRatio: readNumber(verticalGeometryConfig.innerWidthRatio, defaultInnerWidthRatio),
+      innerHeightRatio: readNumber(verticalGeometryConfig.innerHeightRatio, defaultInnerHeightRatio)
+    }
   };
 
   const paddleConfig = readObject(ARCADE_CONFIG.paddle);
@@ -1011,6 +1047,22 @@
   const LEVEL_SPEED_BONUS_TICKETS = SETTINGS.levelSpeedBonus.bonusTickets;
   const GRID_COLS = SETTINGS.grid.cols;
   const GRID_ROWS = SETTINGS.grid.rows;
+  const VERTICAL_GRID_COLS = SETTINGS.grid.vertical?.cols ?? GRID_COLS;
+  const VERTICAL_GRID_ROWS = SETTINGS.grid.vertical?.rows ?? GRID_ROWS;
+  const DEFAULT_GEOMETRY = Object.freeze({
+    paddingX: SETTINGS.geometry.paddingX,
+    paddingY: SETTINGS.geometry.paddingY,
+    usableHeight: SETTINGS.geometry.usableHeight,
+    innerWidthRatio: SETTINGS.geometry.innerWidthRatio,
+    innerHeightRatio: SETTINGS.geometry.innerHeightRatio
+  });
+  const VERTICAL_GEOMETRY = Object.freeze({
+    paddingX: SETTINGS.geometry.vertical?.paddingX ?? DEFAULT_GEOMETRY.paddingX,
+    paddingY: SETTINGS.geometry.vertical?.paddingY ?? DEFAULT_GEOMETRY.paddingY,
+    usableHeight: SETTINGS.geometry.vertical?.usableHeight ?? DEFAULT_GEOMETRY.usableHeight,
+    innerWidthRatio: SETTINGS.geometry.vertical?.innerWidthRatio ?? DEFAULT_GEOMETRY.innerWidthRatio,
+    innerHeightRatio: SETTINGS.geometry.vertical?.innerHeightRatio ?? DEFAULT_GEOMETRY.innerHeightRatio
+  });
   const MAX_LIVES = SETTINGS.maxLives;
   const BRICK_TYPES = Object.freeze({
     SIMPLE: SETTINGS.bricks.types.simple,
@@ -1388,6 +1440,8 @@
       this.quarkComboColors = new Set();
       this.comboMessage = '';
       this.comboMessageExpiry = 0;
+      this.isVertical = false;
+      this.geometrySettings = DEFAULT_GEOMETRY;
       this.ballSpeedMultiplier = 1;
       this.gravitonLifetimeMs = GRAVITON_LIFETIME_MS;
       this.paddleStretchAnimation = null;
@@ -1536,16 +1590,56 @@
       }
       const shouldUseVertical = viewportHeight >= viewportWidth;
       const classList = this.stage.classList;
-      const isCurrentlyVertical = classList.contains('arcade-stage--vertical');
-      if (shouldUseVertical === isCurrentlyVertical) {
-        return false;
-      }
-      if (shouldUseVertical) {
+      const hasVerticalClass = classList.contains('arcade-stage--vertical');
+      if (shouldUseVertical && !hasVerticalClass) {
         classList.add('arcade-stage--vertical');
-      } else {
+      } else if (!shouldUseVertical && hasVerticalClass) {
         classList.remove('arcade-stage--vertical');
       }
-      return true;
+      const targetCols = shouldUseVertical ? VERTICAL_GRID_COLS : GRID_COLS;
+      const targetRows = shouldUseVertical ? VERTICAL_GRID_ROWS : GRID_ROWS;
+      const targetGeometry = shouldUseVertical ? VERTICAL_GEOMETRY : DEFAULT_GEOMETRY;
+      const orientationChanged = this.isVertical !== shouldUseVertical;
+      const gridChanged = this.gridCols !== targetCols || this.gridRows !== targetRows;
+      const geometryChanged = this.geometrySettings !== targetGeometry;
+      this.isVertical = shouldUseVertical;
+      this.gridCols = targetCols;
+      this.gridRows = targetRows;
+      this.geometrySettings = targetGeometry;
+      if (orientationChanged) {
+        this.handleOrientationLayoutChange();
+      } else if (gridChanged || geometryChanged) {
+        this.render();
+      }
+      return orientationChanged || gridChanged || geometryChanged;
+    }
+
+    handleOrientationLayoutChange() {
+      if (!this.enabled) {
+        return;
+      }
+      const hasBricks = Array.isArray(this.bricks) && this.bricks.length > 0;
+      if (!hasBricks) {
+        return;
+      }
+      const wasRunning = this.running;
+      if (wasRunning) {
+        this.stopAnimation();
+      }
+      if (this.effects && typeof this.effects.clear === 'function') {
+        this.effects.clear();
+      }
+      this.powerUps = [];
+      this.lasers = [];
+      this.balls = [];
+      this.clearImpactParticles();
+      this.bricks = this.generateBricks();
+      this.prepareServe();
+      this.updateHud();
+      this.render();
+      if (wasRunning) {
+        this.startAnimation();
+      }
     }
 
     updatePaddleSize() {
@@ -1704,14 +1798,15 @@
     }
 
     getGridGeometry() {
-      const paddingX = SETTINGS.geometry.paddingX;
-      const paddingY = SETTINGS.geometry.paddingY;
+      const geometry = this.geometrySettings || DEFAULT_GEOMETRY;
+      const paddingX = geometry.paddingX;
+      const paddingY = geometry.paddingY;
       const usableWidth = 1 - paddingX * 2;
-      const usableHeight = SETTINGS.geometry.usableHeight;
+      const usableHeight = geometry.usableHeight;
       const brickWidth = usableWidth / this.gridCols;
       const brickHeight = usableHeight / this.gridRows;
-      const innerWidthRatio = SETTINGS.geometry.innerWidthRatio;
-      const innerHeightRatio = SETTINGS.geometry.innerHeightRatio;
+      const innerWidthRatio = geometry.innerWidthRatio;
+      const innerHeightRatio = geometry.innerHeightRatio;
       const horizontalOffset = (1 - innerWidthRatio) / 2;
       const verticalOffset = (1 - innerHeightRatio) / 2;
       return {
