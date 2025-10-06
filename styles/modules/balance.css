@@ -1,0 +1,467 @@
+.page--balance {
+  --balance-board-width: 640px;
+  --balance-board-surface-height: 96px;
+  --balance-pivot-height: 120px;
+  --balance-rotation: 0deg;
+  --balance-tilt-duration: 600ms;
+  --balance-settle-duration: 500ms;
+  --balance-stage-gap: clamp(1.5rem, 2.4vw, 2.5rem);
+  padding: clamp(1.5rem, 2.6vw, 2.75rem) clamp(1.25rem, 2vw, 2.5rem) clamp(2rem, 3vw, 3rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1.5rem, 2.5vw, 2.75rem);
+}
+
+.page--balance.active {
+  display: flex;
+}
+
+.balance-layout {
+  width: min(1100px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: var(--balance-stage-gap);
+}
+
+.balance-header {
+  text-align: center;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.balance-title {
+  font-size: clamp(1.5rem, 3vw, 2.4rem);
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+
+.balance-subtitle {
+  margin: 0;
+  font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+  opacity: 0.82;
+}
+
+.balance-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--balance-stage-gap);
+}
+
+@media (min-width: 900px) {
+  .balance-main {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
+
+.balance-stage {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1rem, 1.6vw, 1.6rem);
+  min-width: 0;
+}
+
+.balance-board-wrapper {
+  position: relative;
+  width: min(100%, var(--balance-board-width));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.balance-board {
+  position: relative;
+  width: 100%;
+  transform-origin: 50% calc(100% + var(--balance-pivot-height));
+  transform: rotate(var(--balance-rotation));
+  transition: transform var(--balance-tilt-duration) cubic-bezier(0.25, 0.8, 0.25, 1);
+  will-change: transform;
+}
+
+.balance-board__surface {
+  position: relative;
+  width: 100%;
+  height: var(--balance-board-surface-height);
+  border-radius: clamp(1.25rem, 2.4vw, 2.6rem);
+  background: linear-gradient(135deg, rgba(92, 122, 255, 0.22), rgba(40, 52, 120, 0.76));
+  border: 1px solid rgba(160, 190, 255, 0.22);
+  box-shadow:
+    0 18px 28px rgba(6, 10, 30, 0.32),
+    0 0 0 1px rgba(140, 170, 255, 0.12) inset,
+    0 0 0 1px rgba(10, 14, 32, 0.4);
+  overflow: visible;
+}
+
+body.theme-light .balance-board__surface {
+  background: linear-gradient(140deg, rgba(120, 160, 255, 0.18), rgba(46, 70, 160, 0.36));
+  border-color: rgba(70, 110, 200, 0.28);
+  box-shadow:
+    0 20px 26px rgba(10, 16, 46, 0.14),
+    0 0 0 1px rgba(90, 130, 220, 0.25) inset,
+    0 0 0 1px rgba(12, 22, 48, 0.12);
+}
+
+.balance-board__surface::after {
+  content: '';
+  position: absolute;
+  inset: 12% 6%;
+  border-radius: clamp(1rem, 2vw, 2rem);
+  background: rgba(255, 255, 255, 0.04);
+  pointer-events: none;
+}
+
+.balance-board__beam {
+  position: absolute;
+  bottom: calc(-1 * clamp(1.1rem, 1.8vw, 1.9rem));
+  left: 12%;
+  right: 12%;
+  height: clamp(0.8rem, 1.2vw, 1.2rem);
+  background: linear-gradient(180deg, rgba(20, 28, 60, 0.65), rgba(10, 14, 32, 0.95));
+  border-radius: 0 0 clamp(1rem, 1.6vw, 1.6rem) clamp(1rem, 1.6vw, 1.6rem);
+  box-shadow:
+    0 6px 20px rgba(5, 8, 20, 0.55),
+    0 0 0 1px rgba(160, 200, 255, 0.1) inset;
+}
+
+body.theme-light .balance-board__beam {
+  background: linear-gradient(180deg, rgba(48, 72, 140, 0.4), rgba(16, 24, 48, 0.78));
+}
+
+.balance-board__pivot {
+  position: absolute;
+  top: calc(100% + clamp(0.2rem, 0.4vw, 0.5rem));
+  left: 50%;
+  transform: translateX(-50%);
+  width: clamp(3.2rem, 6vw, 6.5rem);
+  height: var(--balance-pivot-height);
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+  background: linear-gradient(200deg, rgba(70, 100, 190, 0.88), rgba(20, 26, 60, 0.92));
+  box-shadow:
+    0 18px 30px rgba(6, 12, 28, 0.55),
+    0 0 0 1px rgba(160, 190, 255, 0.22) inset;
+}
+
+body.theme-light .balance-board__pivot {
+  background: linear-gradient(200deg, rgba(120, 160, 255, 0.82), rgba(36, 60, 120, 0.9));
+}
+
+.balance-board-shadow {
+  width: 80%;
+  height: clamp(1.6rem, 2.8vw, 3.2rem);
+  border-radius: 999px;
+  background: radial-gradient(circle at center, rgba(0, 0, 0, 0.38), transparent 68%);
+  filter: blur(1px);
+  transform: translateY(calc(var(--balance-pivot-height) * 0.15));
+  opacity: 0.6;
+}
+
+.balance-hint {
+  margin: 0;
+  text-align: center;
+  font-size: clamp(0.9rem, 1.35vw, 1.05rem);
+  max-width: min(38rem, 92%);
+  opacity: 0.78;
+}
+
+.balance-sidebar {
+  flex: 0 0 clamp(18rem, 26vw, 22rem);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.2rem, 2vw, 1.8rem);
+}
+
+@media (max-width: 899px) {
+  .balance-sidebar {
+    align-self: stretch;
+  }
+}
+
+.balance-actions {
+  display: grid;
+  gap: 0.75rem;
+  padding: clamp(1rem, 1.6vw, 1.2rem);
+  border-radius: 1.1rem;
+  background: rgba(10, 16, 34, 0.55);
+  border: 1px solid rgba(120, 150, 230, 0.18);
+  box-shadow: 0 18px 30px rgba(6, 12, 28, 0.35);
+}
+
+body.theme-light .balance-actions {
+  background: rgba(240, 244, 255, 0.78);
+  border-color: rgba(90, 120, 220, 0.22);
+  box-shadow: 0 14px 24px rgba(12, 18, 36, 0.1);
+}
+
+.balance-actions__title {
+  margin: 0;
+  font-size: clamp(1.05rem, 1.5vw, 1.2rem);
+}
+
+.balance-actions__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.balance-button {
+  appearance: none;
+  border: 1px solid rgba(140, 170, 255, 0.28);
+  border-radius: 999px;
+  padding: 0.55rem 1.35rem;
+  font-size: 0.95rem;
+  line-height: 1.2;
+  cursor: pointer;
+  color: inherit;
+  background: rgba(80, 110, 200, 0.24);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.balance-button:hover,
+.balance-button:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(10, 18, 36, 0.28);
+  border-color: rgba(160, 190, 255, 0.48);
+}
+
+.balance-button:focus-visible {
+  outline: 2px solid rgba(160, 190, 255, 0.65);
+  outline-offset: 3px;
+}
+
+.balance-button--primary {
+  background: linear-gradient(135deg, rgba(110, 160, 255, 0.85), rgba(70, 120, 255, 0.96));
+  border-color: rgba(160, 190, 255, 0.62);
+  box-shadow: 0 16px 26px rgba(20, 40, 90, 0.35);
+}
+
+.balance-button--primary:hover,
+.balance-button--primary:focus-visible {
+  background: linear-gradient(135deg, rgba(130, 180, 255, 0.92), rgba(90, 140, 255, 1));
+}
+
+.balance-status {
+  margin: 0;
+  min-height: 2.5rem;
+  padding: 0.65rem 1rem;
+  border-radius: 0.9rem;
+  font-size: 0.95rem;
+  background: rgba(14, 18, 40, 0.55);
+  border: 1px solid rgba(120, 150, 230, 0.15);
+  box-shadow: inset 0 0 0 1px rgba(80, 110, 200, 0.08);
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.balance-status--success {
+  background: rgba(40, 160, 120, 0.22);
+  border-color: rgba(120, 240, 200, 0.36);
+}
+
+.balance-status--warning {
+  background: rgba(200, 120, 50, 0.25);
+  border-color: rgba(255, 180, 90, 0.4);
+}
+
+.balance-status--error {
+  background: rgba(180, 60, 60, 0.28);
+  border-color: rgba(255, 120, 140, 0.4);
+}
+
+.balance-inventory {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.balance-inventory__title {
+  margin: 0;
+  font-size: clamp(1rem, 1.45vw, 1.15rem);
+}
+
+.balance-inventory__hint {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.75;
+}
+
+.balance-inventory__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  align-items: flex-start;
+  min-height: 3.5rem;
+}
+
+.balance-cube {
+  --cube-width-ratio: 0.16;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: clamp(2.6rem, 4vw, 3.15rem);
+  border-radius: clamp(0.85rem, 1.6vw, 1.4rem);
+  color: #f8fbff;
+  background: linear-gradient(140deg, rgba(120, 170, 255, 0.92), rgba(74, 118, 248, 0.9));
+  box-shadow:
+    0 12px 20px rgba(10, 20, 48, 0.32),
+    inset 0 0 0 1px rgba(180, 210, 255, 0.45);
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  padding: 0.25rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+}
+
+.balance-cube:focus-visible {
+  outline: 2px solid rgba(160, 200, 255, 0.85);
+  outline-offset: 3px;
+}
+
+.balance-cube--inventory {
+  position: relative;
+  width: clamp(3.2rem, calc(var(--cube-width-ratio) * 14rem), 6.5rem);
+}
+
+.balance-cube--board {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(var(--cube-width-ratio) * 100%);
+}
+
+.balance-cube--dragging {
+  z-index: 20;
+  opacity: 0.92;
+  cursor: grabbing;
+  transform: translate(-50%, -50%) scale(1.05);
+  box-shadow:
+    0 24px 32px rgba(6, 12, 28, 0.48),
+    inset 0 0 0 1px rgba(200, 230, 255, 0.55);
+}
+
+.balance-cube__label {
+  position: absolute;
+  bottom: -1.1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  opacity: 0.75;
+}
+
+.balance-drag-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 40;
+}
+
+.page--balance {
+  position: relative;
+}
+
+body.view-balance {
+  background: radial-gradient(140% 160% at 50% 0%, #1b204f 0%, #06081a 55%, #01020a 100%);
+}
+
+body.theme-light.view-balance {
+  background: radial-gradient(160% 160% at 50% -10%, #dde6ff 0%, #f5f7ff 40%, #eef1ff 100%);
+}
+
+.balance-stage--tilt-left .balance-board__surface::after,
+.balance-stage--tilt-right .balance-board__surface::after {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.balance-stage--balanced .balance-board__surface::after {
+  background: rgba(120, 240, 200, 0.12);
+}
+
+.balance-stage--tilt-left .balance-board__surface {
+  box-shadow:
+    0 18px 28px rgba(6, 10, 30, 0.42),
+    0 0 0 1px rgba(255, 140, 100, 0.16) inset,
+    0 0 0 1px rgba(180, 70, 40, 0.35);
+}
+
+.balance-stage--tilt-right .balance-board__surface {
+  box-shadow:
+    0 18px 28px rgba(6, 10, 30, 0.42),
+    0 0 0 1px rgba(110, 180, 255, 0.2) inset,
+    0 0 0 1px rgba(60, 120, 255, 0.35);
+}
+
+.balance-stage--balanced .balance-board__surface {
+  box-shadow:
+    0 18px 28px rgba(6, 10, 30, 0.35),
+    0 0 0 1px rgba(140, 240, 200, 0.25) inset,
+    0 0 0 1px rgba(80, 200, 160, 0.32);
+}
+
+.balance-stage--tilt-left .balance-board-shadow,
+.balance-stage--tilt-right .balance-board-shadow {
+  transform: translateY(calc(var(--balance-pivot-height) * 0.2)) scaleX(1.05);
+  opacity: 0.7;
+}
+
+.balance-stage--balanced .balance-board-shadow {
+  transform: translateY(calc(var(--balance-pivot-height) * 0.12)) scaleX(0.95);
+  opacity: 0.72;
+}
+
+.balance-stage--testing .balance-board {
+  transition-duration: var(--balance-tilt-duration);
+}
+
+.balance-stage--settling .balance-board {
+  transition-duration: var(--balance-settle-duration);
+}
+
+.balance-cube__weight {
+  font-size: clamp(1rem, 1.65vw, 1.35rem);
+  text-shadow: 0 0 6px rgba(10, 10, 20, 0.5);
+}
+
+.balance-inventory__list:empty::after {
+  content: attr(data-empty-text);
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+body.theme-light .balance-cube {
+  color: #0e1020;
+  background: linear-gradient(140deg, rgba(180, 210, 255, 0.94), rgba(110, 150, 255, 0.92));
+  box-shadow:
+    0 14px 20px rgba(12, 18, 36, 0.18),
+    inset 0 0 0 1px rgba(90, 120, 220, 0.42);
+}
+
+body.theme-light .balance-status {
+  background: rgba(235, 240, 255, 0.78);
+  border-color: rgba(90, 120, 220, 0.25);
+}
+
+body.theme-light .balance-status--success {
+  background: rgba(160, 240, 210, 0.42);
+  border-color: rgba(60, 150, 120, 0.52);
+}
+
+body.theme-light .balance-status--warning {
+  background: rgba(255, 220, 160, 0.48);
+  border-color: rgba(210, 140, 60, 0.45);
+}
+
+body.theme-light .balance-status--error {
+  background: rgba(255, 200, 200, 0.5);
+  border-color: rgba(220, 120, 140, 0.45);
+}
+
+.balance-cube[aria-pressed="true"] {
+  box-shadow:
+    0 20px 28px rgba(6, 12, 28, 0.4),
+    inset 0 0 0 1px rgba(200, 230, 255, 0.6);
+}

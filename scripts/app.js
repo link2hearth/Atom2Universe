@@ -2352,6 +2352,16 @@ const elements = {
   arcadeScoreValue: document.getElementById('arcadeScoreValue'),
   arcadeComboMessage: document.getElementById('arcadeComboMessage'),
   arcadeBrickSkinSelect: document.getElementById('arcadeBrickSkinSelect'),
+  balancePage: document.getElementById('balance'),
+  balanceStage: document.getElementById('balanceStage'),
+  balanceBoard: document.getElementById('balanceBoard'),
+  balanceSurface: document.getElementById('balanceBoardSurface'),
+  balanceInventory: document.getElementById('balanceInventory'),
+  balancePieces: document.getElementById('balancePieces'),
+  balanceStatus: document.getElementById('balanceStatus'),
+  balanceTestButton: document.getElementById('balanceTestButton'),
+  balanceResetButton: document.getElementById('balanceResetButton'),
+  balanceDragLayer: document.getElementById('balanceDragLayer'),
   waveStage: document.getElementById('waveStage'),
   waveCanvas: document.getElementById('waveCanvas'),
   waveTicketLayer: document.getElementById('waveTicketLayer'),
@@ -2719,6 +2729,27 @@ function ensureWaveGame() {
     stage: elements.waveStage
   });
   return waveGame;
+}
+
+function ensureBalanceGame() {
+  if (balanceGame || typeof BalanceGame !== 'function') {
+    return balanceGame;
+  }
+  if (!elements.balanceBoard) {
+    return null;
+  }
+  balanceGame = new BalanceGame({
+    pageElement: elements.balancePage,
+    stageElement: elements.balanceStage,
+    boardElement: elements.balanceBoard,
+    surfaceElement: elements.balanceSurface,
+    inventoryElement: elements.balancePieces,
+    statusElement: elements.balanceStatus,
+    testButton: elements.balanceTestButton,
+    resetButton: elements.balanceResetButton,
+    dragLayer: elements.balanceDragLayer
+  });
+  return balanceGame;
 }
 
 function ensureQuantum2048Game() {
@@ -5255,6 +5286,7 @@ function renderProductionBreakdown(container, entry, context = null) {
 
 let toastElement = null;
 let waveGame = null;
+let balanceGame = null;
 let quantum2048Game = null;
 let apsCritPulseTimeoutId = null;
 
@@ -6156,6 +6188,9 @@ function showPage(pageId) {
   if (pageId === 'wave') {
     ensureWaveGame();
   }
+  if (pageId === 'balance') {
+    ensureBalanceGame();
+  }
   if (pageId === 'quantum2048') {
     ensureQuantum2048Game();
   }
@@ -6184,6 +6219,7 @@ function showPage(pageId) {
   document.body.classList.toggle('view-arcade-hub', pageId === 'arcadeHub');
   document.body.classList.toggle('view-metaux', pageId === 'metaux');
   document.body.classList.toggle('view-wave', pageId === 'wave');
+  document.body.classList.toggle('view-balance', pageId === 'balance');
   document.body.classList.toggle('view-quantum2048', pageId === 'quantum2048');
   document.body.classList.toggle('view-sudoku', pageId === 'sudoku');
   if (pageId === 'game') {
@@ -6211,6 +6247,13 @@ function showPage(pageId) {
       waveGame.onEnter();
     } else {
       waveGame.onLeave();
+    }
+  }
+  if (balanceGame) {
+    if (pageId === 'balance') {
+      balanceGame.onEnter();
+    } else {
+      balanceGame.onLeave();
     }
   }
   if (quantum2048Game) {

@@ -98,6 +98,12 @@
             "description": "Trigger chain reactions on your chosen grid to reach the requested tile.",
             "cta": "Play"
           },
+          "balance": {
+            "aria": "Open the Balance mini-game",
+            "title": "Quantum Balance",
+            "description": "Arrange blocks of different weights to keep the board perfectly level during the physics test.",
+            "cta": "Balance"
+          },
           "math": {
             "aria": "Open the Math mini-game",
             "title": "Math",
@@ -127,6 +133,25 @@
         "timerLabel": "Time left",
         "optionsAria": "Select the value that completes the equation",
         "next": "Next puzzle"
+      },
+      "balance": {
+        "aria": "Quantum Balance mini-game",
+        "title": "Quantum Balance",
+        "subtitle": "Drag the blocks and distribute their weight so the center of mass stays above the pivot.",
+        "instructions": "Drag a block from the inventory onto the board, then press “Test balance” to run the simulation.",
+        "actions": {
+          "title": "Controls",
+          "reset": "Reset blocks",
+          "test": "Test balance"
+        },
+        "inventory": {
+          "title": "Block inventory",
+          "hint": "The number on each block shows its relative weight.",
+          "list": "Inventory of blocks ready to be placed",
+          "empty": "All blocks are currently on the board.",
+          "status": "{available} blocks ready to be placed."
+        },
+        "cubeAria": "Block weighing {weight}"
       },
       "sudoku": {
         "aria": "Quantum Sudoku mini-game",
@@ -878,11 +903,43 @@
           "noSolution": "No solution found (or the puzzle is invalid).",
           "cleared": "Grid cleared."
         }
+      },
+      "balance": {
+        "status": {
+          "ready": "Place the blocks and run a test.",
+          "needBlocks": "Place at least one block on the board before testing.",
+          "success": "Perfect balance!",
+          "leanLeft": "The board tilts left (offset: {offset}%).",
+          "leanRight": "The board tilts right (offset: {offset}%).",
+          "returned": "Block returned to the inventory."
+        },
+        "sets": {
+          "equilibrium": "Equilibrium set",
+          "fractal": "Fractal set",
+          "binary": "Binary set",
+          "default": "Starter set"
+        }
       }
     }
   },
   "scripts": {
     "arcade": {
+      "balance": {
+        "status": {
+          "ready": "Arrange the blocks and press “Test balance” when you're ready.",
+          "needBlocks": "Add at least one block to the board before testing.",
+          "success": "Perfect balance achieved!",
+          "leanLeft": "The board tilts to the left (offset: {offset}).",
+          "leanRight": "The board tilts to the right (offset: {offset}).",
+          "returned": "Block returned to the inventory."
+        },
+        "sets": {
+          "default": "Starter set",
+          "equilibrium": "Equilibrium set",
+          "fractal": "Fractal set",
+          "binary": "Binary set"
+        }
+      },
       "math": {
         "status": {
           "prompt": "Pick the missing value to complete the equation.",
