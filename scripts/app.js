@@ -2444,8 +2444,10 @@ const elements = {
   devkitAtomsInput: document.getElementById('devkitAtomsInput'),
   devkitAutoForm: document.getElementById('devkitAutoForm'),
   devkitAutoInput: document.getElementById('devkitAutoInput'),
-  devkitTimeForm: document.getElementById('devkitTimeForm'),
-  devkitTimeInput: document.getElementById('devkitTimeInput'),
+  devkitOfflineTimeForm: document.getElementById('devkitOfflineTimeForm'),
+  devkitOfflineTimeInput: document.getElementById('devkitOfflineTimeInput'),
+  devkitOnlineTimeForm: document.getElementById('devkitOnlineTimeForm'),
+  devkitOnlineTimeInput: document.getElementById('devkitOnlineTimeInput'),
   devkitAutoStatus: document.getElementById('devkitAutoStatus'),
   devkitAutoReset: document.getElementById('devkitResetAuto'),
   devkitTicketsForm: document.getElementById('devkitTicketsForm'),
@@ -4331,7 +4333,7 @@ function handleDevKitMach3TicketSubmission(value) {
     : t('scripts.app.devkit.mach3TicketAdded.multiple', { count: gained }));
 }
 
-function handleDevKitTimeAdvance(value) {
+function handleDevKitOfflineAdvance(value) {
   const seconds = parseDevKitDurationInput(value);
   if (!Number.isFinite(seconds) || seconds <= 0) {
     showToast(t('scripts.app.devkit.invalidTime'));
@@ -4366,6 +4368,42 @@ function handleDevKitTimeAdvance(value) {
     showToast(t('scripts.app.devkit.timeAdvanced', { duration: durationText }));
   } else {
     showToast(t('scripts.app.devkit.timeAdvancedNoReward', { duration: durationText }));
+  }
+
+  updateUI();
+  saveGame();
+  updateDevKitUI();
+}
+
+function handleDevKitOnlineAdvance(value) {
+  const seconds = parseDevKitDurationInput(value);
+  if (!Number.isFinite(seconds) || seconds <= 0) {
+    showToast(t('scripts.app.devkit.invalidTime'));
+    return;
+  }
+
+  const result = applyOnlineProgress(seconds, { stepSeconds: 1 });
+
+  const atomsGained = result.atomsGained instanceof LayeredNumber ? result.atomsGained : null;
+  if (atomsGained && !atomsGained.isZero()) {
+    showToast(t('scripts.app.devkit.onlineProgressAtoms', { amount: atomsGained.toString() }));
+  }
+
+  if (result.ticketsEarned > 0) {
+    const unitKey = result.ticketsEarned === 1
+      ? 'scripts.app.offlineTickets.ticketSingular'
+      : 'scripts.app.offlineTickets.ticketPlural';
+    const unit = t(unitKey);
+    showToast(t('scripts.app.devkit.onlineTickets', { count: result.ticketsEarned, unit }));
+  }
+
+  const appliedSeconds = result.appliedSeconds > 0 ? result.appliedSeconds : seconds;
+  const durationText = formatDevKitDuration(appliedSeconds);
+
+  if ((atomsGained && !atomsGained.isZero()) || result.ticketsEarned > 0) {
+    showToast(t('scripts.app.devkit.timeAdvancedOnline', { duration: durationText }));
+  } else {
+    showToast(t('scripts.app.devkit.timeAdvancedOnlineNoReward', { duration: durationText }));
   }
 
   updateUI();
@@ -6509,13 +6547,24 @@ if (elements.devkitAutoForm) {
   });
 }
 
-if (elements.devkitTimeForm) {
-  elements.devkitTimeForm.addEventListener('submit', event => {
+if (elements.devkitOfflineTimeForm) {
+  elements.devkitOfflineTimeForm.addEventListener('submit', event => {
     event.preventDefault();
-    const value = elements.devkitTimeInput ? elements.devkitTimeInput.value : '';
-    handleDevKitTimeAdvance(value);
-    if (elements.devkitTimeInput) {
-      elements.devkitTimeInput.value = '';
+    const value = elements.devkitOfflineTimeInput ? elements.devkitOfflineTimeInput.value : '';
+    handleDevKitOfflineAdvance(value);
+    if (elements.devkitOfflineTimeInput) {
+      elements.devkitOfflineTimeInput.value = '';
+    }
+  });
+}
+
+if (elements.devkitOnlineTimeForm) {
+  elements.devkitOnlineTimeForm.addEventListener('submit', event => {
+    event.preventDefault();
+    const value = elements.devkitOnlineTimeInput ? elements.devkitOnlineTimeInput.value : '';
+    handleDevKitOnlineAdvance(value);
+    if (elements.devkitOnlineTimeInput) {
+      elements.devkitOnlineTimeInput.value = '';
     }
   });
 }
@@ -9828,6 +9877,67 @@ function resetGame() {
     )
   );
   saveGame();
+}
+
+function applyOnlineProgress(seconds, options = {}) {
+  const totalSeconds = Math.max(0, Number(seconds) || 0);
+  const result = {
+    requestedSeconds: totalSeconds,
+    appliedSeconds: 0,
+    atomsGained: LayeredNumber.zero(),
+    ticketsEarned: 0
+  };
+  if (totalSeconds <= 0) {
+    return result;
+  }
+
+  const stepCandidate = Number(options.stepSeconds);
+  const stepSeconds = Number.isFinite(stepCandidate) && stepCandidate > 0
+    ? Math.min(Math.max(stepCandidate, 0.1), 60)
+    : 1;
+  const startNow = typeof performance !== 'undefined' ? performance.now() : Date.now();
+  let simulatedNow = startNow;
+  const originalVisibleSince = gamePageVisibleSince;
+  if (gamePageVisibleSince == null) {
+    gamePageVisibleSince = simulatedNow - 60000;
+  }
+
+  const initialTickets = Math.max(0, Math.floor(Number(gameState.gachaTickets) || 0));
+  let remaining = totalSeconds;
+
+  try {
+    while (remaining > 1e-6) {
+      const delta = Math.min(remaining, stepSeconds);
+      if (!gameState.perSecond.isZero()) {
+        const gain = gameState.perSecond.multiplyNumber(delta);
+        if (gain instanceof LayeredNumber && !gain.isZero()) {
+          gainAtoms(gain, 'aps');
+          result.atomsGained = result.atomsGained.add(gain);
+        }
+      }
+
+      updateApsCritTimer(delta);
+      updatePlaytime(delta);
+      simulatedNow += delta * 1000;
+      updateFrenzies(delta, simulatedNow);
+      updateTicketStar(delta, simulatedNow);
+
+      remaining -= delta;
+      result.appliedSeconds += delta;
+    }
+  } finally {
+    gamePageVisibleSince = originalVisibleSince;
+  }
+
+  const finalTickets = Math.max(0, Math.floor(Number(gameState.gachaTickets) || 0));
+  const ticketsEarned = finalTickets - initialTickets;
+  if (ticketsEarned > 0) {
+    result.ticketsEarned = ticketsEarned;
+  }
+
+  result.appliedSeconds = Math.min(totalSeconds, result.appliedSeconds);
+
+  return result;
 }
 
 function applyOfflineProgress(seconds, options = {}) {
