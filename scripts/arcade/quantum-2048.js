@@ -600,8 +600,14 @@
         return;
       }
       const boardSize = this.calculateBoardSize();
+      const layoutContainer = this.boardElement.parentElement;
       if (Number.isFinite(boardSize) && boardSize > 0) {
         this.boardElement.style.setProperty('--quantum2048-board-size', `${boardSize}px`);
+        if (layoutContainer && layoutContainer.style) {
+          layoutContainer.style.setProperty('--quantum2048-layout-width', `${boardSize}px`);
+        }
+      } else if (layoutContainer && layoutContainer.style) {
+        layoutContainer.style.removeProperty('--quantum2048-layout-width');
       }
       const gapRem = this.size >= 6 ? 0.32 : this.size === 5 ? 0.38 : 0.45;
       const fontScale = clamp(4 / (this.size + 0.25), 0.52, 1.2);
