@@ -341,16 +341,16 @@
           "title": "Son du clicker",
           "ariaLabel": "Activer ou couper le son du clicker",
           "state": {
-            "on": "Sons actifs",
-            "off": "Sons coupés"
+            "on": "Avec",
+            "off": "Sans"
           }
         },
         "critAtoms": {
           "title": "Atomes critiques animés",
           "ariaLabel": "Activer ou couper les atomes animés lors des critiques",
           "state": {
-            "on": "Animations critiques actives",
-            "off": "Animations critiques coupées"
+            "on": "Avec",
+            "off": "Sans"
           }
         },
         "music": {
