@@ -1469,6 +1469,7 @@
       this.paddleBounceAnimation = null;
       if (this.stage && typeof this.stage.classList?.remove === 'function') {
         this.stage.classList.remove('arcade-stage--pulse');
+        this.stage.classList.remove('arcade-stage--vertical');
       }
       this.clearImpactParticles();
       this.enabled = false;
@@ -1476,7 +1477,11 @@
 
     handleResize() {
       if (!this.enabled) return;
-      const rect = this.canvas.getBoundingClientRect();
+      const orientationChanged = this.updateStageOrientation();
+      let rect = this.canvas.getBoundingClientRect();
+      if (orientationChanged) {
+        rect = this.canvas.getBoundingClientRect();
+      }
       const width = Math.max(1, rect.width);
       const height = Math.max(1, rect.height);
       const dpr = typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1;
@@ -1499,6 +1504,48 @@
       });
       this.updateHud();
       this.render();
+    }
+
+    updateStageOrientation() {
+      if (!this.stage || !this.stage.classList) {
+        return false;
+      }
+      let viewportWidth = 0;
+      let viewportHeight = 0;
+      if (typeof window !== 'undefined') {
+        const innerWidth = Number(window.innerWidth);
+        const innerHeight = Number(window.innerHeight);
+        if (Number.isFinite(innerWidth) && innerWidth > 0) {
+          viewportWidth = innerWidth;
+        }
+        if (Number.isFinite(innerHeight) && innerHeight > 0) {
+          viewportHeight = innerHeight;
+        }
+      }
+      if (!(viewportWidth > 0 && viewportHeight > 0)) {
+        const rect = typeof this.stage.getBoundingClientRect === 'function'
+          ? this.stage.getBoundingClientRect()
+          : null;
+        if (rect) {
+          viewportWidth = rect.width || viewportWidth;
+          viewportHeight = rect.height || viewportHeight;
+        }
+      }
+      if (!(viewportWidth > 0 && viewportHeight > 0)) {
+        return false;
+      }
+      const shouldUseVertical = viewportHeight >= viewportWidth;
+      const classList = this.stage.classList;
+      const isCurrentlyVertical = classList.contains('arcade-stage--vertical');
+      if (shouldUseVertical === isCurrentlyVertical) {
+        return false;
+      }
+      if (shouldUseVertical) {
+        classList.add('arcade-stage--vertical');
+      } else {
+        classList.remove('arcade-stage--vertical');
+      }
+      return true;
     }
 
     updatePaddleSize() {
