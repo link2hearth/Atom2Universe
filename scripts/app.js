@@ -2444,6 +2444,10 @@ const elements = {
   devkitAtomsInput: document.getElementById('devkitAtomsInput'),
   devkitAutoForm: document.getElementById('devkitAutoForm'),
   devkitAutoInput: document.getElementById('devkitAutoInput'),
+  devkitOfflineTimeForm: document.getElementById('devkitOfflineTimeForm'),
+  devkitOfflineTimeInput: document.getElementById('devkitOfflineTimeInput'),
+  devkitOnlineTimeForm: document.getElementById('devkitOnlineTimeForm'),
+  devkitOnlineTimeInput: document.getElementById('devkitOnlineTimeInput'),
   devkitAutoStatus: document.getElementById('devkitAutoStatus'),
   devkitAutoReset: document.getElementById('devkitResetAuto'),
   devkitTicketsForm: document.getElementById('devkitTicketsForm'),
@@ -4070,6 +4074,98 @@ function parseDevKitLayeredInput(raw) {
   return null;
 }
 
+function parseDevKitDurationInput(raw) {
+  if (raw == null) {
+    return null;
+  }
+  const normalized = String(raw)
+    .trim()
+    .replace(/,/g, '.')
+    .replace(/\s+/g, '');
+  if (!normalized) {
+    return null;
+  }
+  const match = normalized.match(/^([+-]?\d+(?:\.\d+)?)([a-zA-Z]*)$/);
+  if (!match) {
+    return null;
+  }
+  const value = Number(match[1]);
+  if (!Number.isFinite(value)) {
+    return null;
+  }
+  const unitRaw = match[2].toLowerCase();
+  const unitMap = new Map([
+    ['', 3600],
+    ['h', 3600],
+    ['hr', 3600],
+    ['hrs', 3600],
+    ['hour', 3600],
+    ['hours', 3600],
+    ['heure', 3600],
+    ['heures', 3600],
+    ['d', 86400],
+    ['day', 86400],
+    ['days', 86400],
+    ['jour', 86400],
+    ['jours', 86400],
+    ['m', 60],
+    ['mn', 60],
+    ['min', 60],
+    ['mins', 60],
+    ['minute', 60],
+    ['minutes', 60],
+    ['s', 1],
+    ['sec', 1],
+    ['secs', 1],
+    ['second', 1],
+    ['seconds', 1],
+    ['seconde', 1],
+    ['secondes', 1]
+  ]);
+  const factor = unitMap.get(unitRaw);
+  if (!factor) {
+    return null;
+  }
+  const seconds = value * factor;
+  if (!Number.isFinite(seconds) || seconds <= 0) {
+    return null;
+  }
+  return seconds;
+}
+
+function formatDevKitDuration(seconds) {
+  const numeric = Number(seconds);
+  if (!Number.isFinite(numeric) || numeric <= 0) {
+    return formatDurationLocalized(0, { style: 'unit', unit: 'second', unitDisplay: 'short' });
+  }
+  const absSeconds = Math.abs(numeric);
+  if (absSeconds >= 86400) {
+    const days = absSeconds / 86400;
+    const options = days < 10
+      ? { style: 'unit', unit: 'day', unitDisplay: 'short', minimumFractionDigits: 2, maximumFractionDigits: 2 }
+      : { style: 'unit', unit: 'day', unitDisplay: 'short', maximumFractionDigits: 1 };
+    return formatDurationLocalized(days, options);
+  }
+  if (absSeconds >= 3600) {
+    const hours = absSeconds / 3600;
+    const options = hours < 10
+      ? { style: 'unit', unit: 'hour', unitDisplay: 'short', minimumFractionDigits: 2, maximumFractionDigits: 2 }
+      : { style: 'unit', unit: 'hour', unitDisplay: 'short', maximumFractionDigits: 1 };
+    return formatDurationLocalized(hours, options);
+  }
+  if (absSeconds >= 60) {
+    const minutes = absSeconds / 60;
+    return formatDurationLocalized(minutes, {
+      style: 'unit',
+      unit: 'minute',
+      unitDisplay: 'short',
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1
+    });
+  }
+  return formatDurationLocalized(absSeconds, { style: 'unit', unit: 'second', unitDisplay: 'short', maximumFractionDigits: 0 });
+}
+
 function parseDevKitInteger(raw) {
   if (raw == null) {
     return null;
@@ -4235,6 +4331,84 @@ function handleDevKitMach3TicketSubmission(value) {
   showToast(gained === 1
     ? t('scripts.app.devkit.mach3TicketAdded.single')
     : t('scripts.app.devkit.mach3TicketAdded.multiple', { count: gained }));
+}
+
+function handleDevKitOfflineAdvance(value) {
+  const seconds = parseDevKitDurationInput(value);
+  if (!Number.isFinite(seconds) || seconds <= 0) {
+    showToast(t('scripts.app.devkit.invalidTime'));
+    return;
+  }
+
+  const result = applyOfflineProgress(seconds, { announceAtoms: false, announceTickets: false });
+
+  const atomsGained = result.atomsGained instanceof LayeredNumber ? result.atomsGained : null;
+  if (atomsGained && !atomsGained.isZero()) {
+    showToast(t('scripts.app.offline.progressAtoms', { amount: atomsGained.toString() }));
+  }
+
+  if (result.ticketsEarned > 0) {
+    const unitKey = result.ticketsEarned === 1
+      ? 'scripts.app.offlineTickets.ticketSingular'
+      : 'scripts.app.offlineTickets.ticketPlural';
+    const unit = t(unitKey);
+    showToast(t('scripts.app.offline.tickets', { count: result.ticketsEarned, unit }));
+  }
+
+  const appliedSeconds = result.appliedSeconds > 0 ? result.appliedSeconds : seconds;
+  const durationText = formatDevKitDuration(appliedSeconds);
+
+  if (result.requestedSeconds > result.appliedSeconds + 1e-6) {
+    const requestedText = formatDevKitDuration(result.requestedSeconds);
+    showToast(t('scripts.app.devkit.timeAdvancedCapped', {
+      applied: durationText,
+      requested: requestedText
+    }));
+  } else if ((atomsGained && !atomsGained.isZero()) || result.ticketsEarned > 0) {
+    showToast(t('scripts.app.devkit.timeAdvanced', { duration: durationText }));
+  } else {
+    showToast(t('scripts.app.devkit.timeAdvancedNoReward', { duration: durationText }));
+  }
+
+  updateUI();
+  saveGame();
+  updateDevKitUI();
+}
+
+function handleDevKitOnlineAdvance(value) {
+  const seconds = parseDevKitDurationInput(value);
+  if (!Number.isFinite(seconds) || seconds <= 0) {
+    showToast(t('scripts.app.devkit.invalidTime'));
+    return;
+  }
+
+  const result = applyOnlineProgress(seconds, { stepSeconds: 1 });
+
+  const atomsGained = result.atomsGained instanceof LayeredNumber ? result.atomsGained : null;
+  if (atomsGained && !atomsGained.isZero()) {
+    showToast(t('scripts.app.devkit.onlineProgressAtoms', { amount: atomsGained.toString() }));
+  }
+
+  if (result.ticketsEarned > 0) {
+    const unitKey = result.ticketsEarned === 1
+      ? 'scripts.app.offlineTickets.ticketSingular'
+      : 'scripts.app.offlineTickets.ticketPlural';
+    const unit = t(unitKey);
+    showToast(t('scripts.app.devkit.onlineTickets', { count: result.ticketsEarned, unit }));
+  }
+
+  const appliedSeconds = result.appliedSeconds > 0 ? result.appliedSeconds : seconds;
+  const durationText = formatDevKitDuration(appliedSeconds);
+
+  if ((atomsGained && !atomsGained.isZero()) || result.ticketsEarned > 0) {
+    showToast(t('scripts.app.devkit.timeAdvancedOnline', { duration: durationText }));
+  } else {
+    showToast(t('scripts.app.devkit.timeAdvancedOnlineNoReward', { duration: durationText }));
+  }
+
+  updateUI();
+  saveGame();
+  updateDevKitUI();
 }
 
 function devkitUnlockAllTrophies() {
@@ -6369,6 +6543,28 @@ if (elements.devkitAutoForm) {
     handleDevKitAutoSubmission(value);
     if (elements.devkitAutoInput) {
       elements.devkitAutoInput.value = '';
+    }
+  });
+}
+
+if (elements.devkitOfflineTimeForm) {
+  elements.devkitOfflineTimeForm.addEventListener('submit', event => {
+    event.preventDefault();
+    const value = elements.devkitOfflineTimeInput ? elements.devkitOfflineTimeInput.value : '';
+    handleDevKitOfflineAdvance(value);
+    if (elements.devkitOfflineTimeInput) {
+      elements.devkitOfflineTimeInput.value = '';
+    }
+  });
+}
+
+if (elements.devkitOnlineTimeForm) {
+  elements.devkitOnlineTimeForm.addEventListener('submit', event => {
+    event.preventDefault();
+    const value = elements.devkitOnlineTimeInput ? elements.devkitOnlineTimeInput.value : '';
+    handleDevKitOnlineAdvance(value);
+    if (elements.devkitOnlineTimeInput) {
+      elements.devkitOnlineTimeInput.value = '';
     }
   });
 }
@@ -9683,6 +9879,161 @@ function resetGame() {
   saveGame();
 }
 
+function applyOnlineProgress(seconds, options = {}) {
+  const totalSeconds = Math.max(0, Number(seconds) || 0);
+  const result = {
+    requestedSeconds: totalSeconds,
+    appliedSeconds: 0,
+    atomsGained: LayeredNumber.zero(),
+    ticketsEarned: 0
+  };
+  if (totalSeconds <= 0) {
+    return result;
+  }
+
+  const stepCandidate = Number(options.stepSeconds);
+  const stepSeconds = Number.isFinite(stepCandidate) && stepCandidate > 0
+    ? Math.min(Math.max(stepCandidate, 0.1), 60)
+    : 1;
+  const startNow = typeof performance !== 'undefined' ? performance.now() : Date.now();
+  let simulatedNow = startNow;
+  const originalVisibleSince = gamePageVisibleSince;
+  if (gamePageVisibleSince == null) {
+    gamePageVisibleSince = simulatedNow - 60000;
+  }
+
+  const initialTickets = Math.max(0, Math.floor(Number(gameState.gachaTickets) || 0));
+  let remaining = totalSeconds;
+
+  try {
+    while (remaining > 1e-6) {
+      const delta = Math.min(remaining, stepSeconds);
+      if (!gameState.perSecond.isZero()) {
+        const gain = gameState.perSecond.multiplyNumber(delta);
+        if (gain instanceof LayeredNumber && !gain.isZero()) {
+          gainAtoms(gain, 'aps');
+          result.atomsGained = result.atomsGained.add(gain);
+        }
+      }
+
+      updateApsCritTimer(delta);
+      updatePlaytime(delta);
+      simulatedNow += delta * 1000;
+      updateFrenzies(delta, simulatedNow);
+      updateTicketStar(delta, simulatedNow);
+
+      remaining -= delta;
+      result.appliedSeconds += delta;
+    }
+  } finally {
+    gamePageVisibleSince = originalVisibleSince;
+  }
+
+  const finalTickets = Math.max(0, Math.floor(Number(gameState.gachaTickets) || 0));
+  const ticketsEarned = finalTickets - initialTickets;
+  if (ticketsEarned > 0) {
+    result.ticketsEarned = ticketsEarned;
+  }
+
+  result.appliedSeconds = Math.min(totalSeconds, result.appliedSeconds);
+
+  return result;
+}
+
+function applyOfflineProgress(seconds, options = {}) {
+  const totalSeconds = Math.max(0, Number(seconds) || 0);
+  const result = {
+    requestedSeconds: totalSeconds,
+    appliedSeconds: 0,
+    atomsGained: LayeredNumber.zero(),
+    ticketsEarned: 0
+  };
+  if (totalSeconds <= 0) {
+    return result;
+  }
+
+  const appliedSeconds = Math.min(totalSeconds, OFFLINE_GAIN_CAP);
+  result.appliedSeconds = appliedSeconds;
+
+  const announceAtoms = options.announceAtoms !== false;
+  const announceTickets = options.announceTickets !== false;
+
+  if (appliedSeconds > 0) {
+    const multiplier = Number.isFinite(Number(gameState.offlineGainMultiplier))
+      && Number(gameState.offlineGainMultiplier) > 0
+      ? Math.min(MYTHIQUE_OFFLINE_CAP, Number(gameState.offlineGainMultiplier))
+      : MYTHIQUE_OFFLINE_BASE;
+    if (multiplier > 0 && gameState.perSecond instanceof LayeredNumber && !gameState.perSecond.isZero()) {
+      const offlineGain = gameState.perSecond.multiplyNumber(appliedSeconds * multiplier);
+      if (offlineGain instanceof LayeredNumber && !offlineGain.isZero()) {
+        gainAtoms(offlineGain, 'offline');
+        result.atomsGained = offlineGain.clone ? offlineGain.clone() : offlineGain;
+        if (announceAtoms) {
+          showToast(t('scripts.app.offline.progressAtoms', { amount: offlineGain.toString() }));
+        }
+      }
+    }
+  }
+
+  const hasFirstTrophy = getUnlockedTrophySet().has(ARCADE_TROPHY_ID);
+  if (hasFirstTrophy) {
+    const offlineTickets = gameState.offlineTickets || {
+      secondsPerTicket: OFFLINE_TICKET_CONFIG.secondsPerTicket,
+      capSeconds: OFFLINE_TICKET_CONFIG.capSeconds,
+      progressSeconds: 0
+    };
+    const secondsPerTicket = Number.isFinite(Number(offlineTickets.secondsPerTicket))
+      && Number(offlineTickets.secondsPerTicket) > 0
+      ? Number(offlineTickets.secondsPerTicket)
+      : OFFLINE_TICKET_CONFIG.secondsPerTicket;
+    const capSeconds = Number.isFinite(Number(offlineTickets.capSeconds))
+      && Number(offlineTickets.capSeconds) > 0
+      ? Math.max(Number(offlineTickets.capSeconds), secondsPerTicket)
+      : Math.max(OFFLINE_TICKET_CONFIG.capSeconds, secondsPerTicket);
+    let progressSeconds = Number.isFinite(Number(offlineTickets.progressSeconds))
+      && Number(offlineTickets.progressSeconds) > 0
+      ? Math.max(0, Math.min(Number(offlineTickets.progressSeconds), capSeconds))
+      : 0;
+    const effectiveSeconds = Math.min(totalSeconds, capSeconds);
+    progressSeconds = Math.min(progressSeconds + effectiveSeconds, capSeconds);
+    const ticketsEarned = secondsPerTicket > 0
+      ? Math.floor(progressSeconds / secondsPerTicket)
+      : 0;
+    if (ticketsEarned > 0) {
+      const currentTickets = Number.isFinite(Number(gameState.gachaTickets))
+        ? Math.max(0, Math.floor(Number(gameState.gachaTickets)))
+        : 0;
+      gameState.gachaTickets = currentTickets + ticketsEarned;
+      evaluatePageUnlocks({ save: false, deferUI: true });
+      if (announceTickets) {
+        const unitKey = ticketsEarned === 1
+          ? 'scripts.app.offlineTickets.ticketSingular'
+          : 'scripts.app.offlineTickets.ticketPlural';
+        const unit = t(unitKey);
+        showToast(t('scripts.app.offline.tickets', { count: ticketsEarned, unit }));
+      }
+      progressSeconds -= ticketsEarned * secondsPerTicket;
+      progressSeconds = Math.max(0, Math.min(progressSeconds, capSeconds));
+      result.ticketsEarned = ticketsEarned;
+    }
+    gameState.offlineTickets = {
+      secondsPerTicket,
+      capSeconds,
+      progressSeconds
+    };
+  } else {
+    const secondsPerTicket = OFFLINE_TICKET_CONFIG.secondsPerTicket;
+    const capSeconds = Math.max(OFFLINE_TICKET_CONFIG.capSeconds, secondsPerTicket);
+    gameState.offlineTickets = {
+      secondsPerTicket,
+      capSeconds,
+      progressSeconds: 0
+    };
+  }
+
+  return result;
+}
+
 function loadGame() {
   try {
     resetFrenzyState({ skipApply: true });
@@ -10011,69 +10362,7 @@ function loadGame() {
     updateUI();
     if (data.lastSave) {
       const diff = Math.max(0, (Date.now() - data.lastSave) / 1000);
-      const capped = Math.min(diff, OFFLINE_GAIN_CAP);
-      if (capped > 0) {
-        const multiplier = Number.isFinite(Number(gameState.offlineGainMultiplier))
-          && Number(gameState.offlineGainMultiplier) > 0
-          ? Math.min(MYTHIQUE_OFFLINE_CAP, Number(gameState.offlineGainMultiplier))
-          : MYTHIQUE_OFFLINE_BASE;
-        if (multiplier > 0) {
-          const offlineGain = gameState.perSecond.multiplyNumber(capped * multiplier);
-          gainAtoms(offlineGain, 'offline');
-          showToast(t('scripts.app.offline.progressAtoms', { amount: offlineGain.toString() }));
-        }
-      }
-      const hasFirstTrophy = getUnlockedTrophySet().has(ARCADE_TROPHY_ID);
-      if (diff > 0 && hasFirstTrophy) {
-        const offlineTickets = gameState.offlineTickets || {
-          secondsPerTicket: OFFLINE_TICKET_CONFIG.secondsPerTicket,
-          capSeconds: OFFLINE_TICKET_CONFIG.capSeconds,
-          progressSeconds: 0
-        };
-        const secondsPerTicket = Number.isFinite(Number(offlineTickets.secondsPerTicket))
-          && Number(offlineTickets.secondsPerTicket) > 0
-          ? Number(offlineTickets.secondsPerTicket)
-          : OFFLINE_TICKET_CONFIG.secondsPerTicket;
-        const capSeconds = Number.isFinite(Number(offlineTickets.capSeconds))
-          && Number(offlineTickets.capSeconds) > 0
-          ? Math.max(Number(offlineTickets.capSeconds), secondsPerTicket)
-          : Math.max(OFFLINE_TICKET_CONFIG.capSeconds, secondsPerTicket);
-        let progressSeconds = Number.isFinite(Number(offlineTickets.progressSeconds))
-          && Number(offlineTickets.progressSeconds) > 0
-          ? Math.max(0, Math.min(Number(offlineTickets.progressSeconds), capSeconds))
-          : 0;
-        const effectiveSeconds = Math.min(diff, capSeconds);
-        progressSeconds = Math.min(progressSeconds + effectiveSeconds, capSeconds);
-        const ticketsEarned = secondsPerTicket > 0
-          ? Math.floor(progressSeconds / secondsPerTicket)
-          : 0;
-        if (ticketsEarned > 0) {
-          const currentTickets = Number.isFinite(Number(gameState.gachaTickets))
-            ? Math.max(0, Math.floor(Number(gameState.gachaTickets)))
-            : 0;
-          gameState.gachaTickets = currentTickets + ticketsEarned;
-          evaluatePageUnlocks({ save: false, deferUI: true });
-          const unit = ticketsEarned === 1
-            ? t('scripts.app.offlineTickets.ticketSingular')
-            : t('scripts.app.offlineTickets.ticketPlural');
-          showToast(t('scripts.app.offline.tickets', { count: ticketsEarned, unit }));
-          progressSeconds -= ticketsEarned * secondsPerTicket;
-          progressSeconds = Math.max(0, Math.min(progressSeconds, capSeconds));
-        }
-        gameState.offlineTickets = {
-          secondsPerTicket,
-          capSeconds,
-          progressSeconds
-        };
-      } else if (!hasFirstTrophy) {
-        const secondsPerTicket = OFFLINE_TICKET_CONFIG.secondsPerTicket;
-        const capSeconds = Math.max(OFFLINE_TICKET_CONFIG.capSeconds, secondsPerTicket);
-        gameState.offlineTickets = {
-          secondsPerTicket,
-          capSeconds,
-          progressSeconds: 0
-        };
-      }
+      applyOfflineProgress(diff);
     }
   } catch (err) {
     console.error('Erreur de chargement', err);
