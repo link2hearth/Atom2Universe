@@ -800,6 +800,24 @@ const GAME_CONFIG = {
       dealerHitSoft17: false,
       betOptions: [10, 20, 50, 100]
     },
+    // Paramètres du mini-jeu Math (progression des opérations).
+    math: {
+      termCountRange: { min: 4, max: 5 },
+      baseRange: { min: 1, max: 9 },
+      advancedRange: { min: 2, max: 12 },
+      expertRange: { min: 2, max: 15 },
+      optionsCount: 5,
+      thresholds: {
+        multiply: 3,
+        divide: 7,
+        expert: 12
+      },
+      resultLimits: {
+        base: 40,
+        advanced: 80,
+        expert: 120
+      }
+    },
     particules: {
       ticketReward: 1,
       grid: {

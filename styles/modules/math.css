@@ -1,0 +1,231 @@
+.page--math {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1.5rem, 3vw, 3rem) var(--page-padding-x, clamp(1rem, 4vw, 3rem));
+}
+
+.page--math.active {
+  display: flex;
+}
+
+.math-game {
+  width: min(100%, 560px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1rem, 2.5vw, 1.8rem);
+  padding: clamp(1.6rem, 4vw, 2.6rem);
+  border-radius: 18px;
+  background: rgba(8, 11, 19, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 24px 60px rgba(5, 12, 38, 0.45);
+  backdrop-filter: blur(16px);
+}
+
+body.theme-light .math-game {
+  background: rgba(247, 248, 252, 0.9);
+  border-color: rgba(12, 16, 32, 0.12);
+  box-shadow: 0 18px 48px rgba(8, 12, 26, 0.18);
+}
+
+body.theme-neon .math-game {
+  background: rgba(12, 14, 46, 0.78);
+  border-color: rgba(94, 124, 255, 0.28);
+}
+
+.math-game__header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.math-game__title {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 700;
+}
+
+.math-game__subtitle {
+  font-size: clamp(0.95rem, 2.6vw, 1.05rem);
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0;
+}
+
+body.theme-light .math-game__subtitle {
+  color: rgba(12, 16, 32, 0.72);
+}
+
+body.theme-neon .math-game__subtitle {
+  color: rgba(200, 208, 255, 0.75);
+}
+
+.math-game__counters {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1.25rem, 4vw, 2rem);
+}
+
+.math-game__counter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.math-game__counter-label {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.75;
+}
+
+.math-game__counter-value {
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  font-weight: 700;
+}
+
+.math-game__challenge {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.9rem, 2.8vw, 1.4rem);
+}
+
+.math-game__expression {
+  font-size: clamp(1.35rem, 4.2vw, 2rem);
+  font-weight: 600;
+  text-align: center;
+  margin: 0;
+}
+
+.math-game__options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: clamp(0.75rem, 2.5vw, 1.1rem);
+}
+
+.math-game__option {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 14px;
+  padding: 0.75rem 1rem;
+  font: inherit;
+  font-weight: 600;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.math-game__option:hover,
+.math-game__option:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(12, 18, 42, 0.35);
+  border-color: rgba(255, 255, 255, 0.38);
+  outline: none;
+}
+
+.math-game__option:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.55);
+  outline-offset: 3px;
+}
+
+.math-game__option[disabled] {
+  cursor: not-allowed;
+  opacity: 0.7;
+  transform: none;
+  box-shadow: none;
+}
+
+.math-game__option--correct {
+  background: linear-gradient(125deg, #00c68f, #00d4c7);
+  color: #031821;
+  border-color: rgba(0, 214, 180, 0.8);
+}
+
+.math-game__option--wrong {
+  border-color: rgba(255, 105, 105, 0.55);
+  background: rgba(255, 82, 82, 0.12);
+}
+
+body.theme-light .math-game__option {
+  background: rgba(255, 255, 255, 0.94);
+  border-color: rgba(12, 16, 32, 0.12);
+  color: #050a18;
+}
+
+body.theme-light .math-game__option:hover,
+body.theme-light .math-game__option:focus-visible {
+  border-color: rgba(12, 16, 32, 0.32);
+  box-shadow: 0 12px 24px rgba(8, 12, 26, 0.2);
+}
+
+body.theme-neon .math-game__option {
+  background: rgba(16, 20, 58, 0.9);
+  border-color: rgba(100, 130, 255, 0.32);
+}
+
+.math-game__feedback {
+  min-height: 1.5rem;
+  text-align: center;
+  font-size: 0.95rem;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+body.theme-light .math-game__feedback {
+  color: rgba(12, 16, 32, 0.75);
+}
+
+body.theme-neon .math-game__feedback {
+  color: rgba(200, 208, 255, 0.78);
+}
+
+.math-game__next {
+  align-self: center;
+  appearance: none;
+  border: none;
+  border-radius: 16px;
+  padding: 0.85rem 2.8rem;
+  font: inherit;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  background: linear-gradient(125deg, #0076ff, #6a5cff);
+  color: #fff;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.math-game__next:hover:not([disabled]),
+.math-game__next:focus-visible:not([disabled]) {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 36px rgba(20, 28, 68, 0.35);
+  outline: none;
+}
+
+.math-game__next[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+body.theme-light .math-game__next {
+  background: linear-gradient(125deg, #005ce0, #5b4cff);
+}
+
+body.theme-neon .math-game__next {
+  background: linear-gradient(125deg, #5770ff, #8d5bff);
+}
+
+@media (max-width: 540px) {
+  .math-game {
+    padding: clamp(1.2rem, 5vw, 1.8rem);
+    border-radius: 16px;
+  }
+
+  .math-game__options {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  }
+}

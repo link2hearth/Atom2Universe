@@ -282,6 +282,19 @@
         <button
           type="button"
           class="arcade-hub-card"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.math.aria"
+          data-page-target="math"
+        >
+          <span
+            class="arcade-hub-card__title"
+            role="heading"
+            aria-level="3"
+            data-i18n="index.sections.arcadeHub.cards.math.title"
+          ></span>
+        </button>
+        <button
+          type="button"
+          class="arcade-hub-card"
           data-i18n="aria-label:index.sections.arcadeHub.cards.sudoku.aria"
           data-page-target="sudoku"
         >
@@ -374,6 +387,48 @@
             </div>
           </div>
         </div>
+      </div>
+    </section>
+
+    <section
+      id="math"
+      class="page page--math"
+      data-page-group="arcade"
+      data-i18n="aria-label:index.sections.math.aria"
+      hidden
+    >
+      <div class="math-game" id="mathGame">
+        <header class="math-game__header">
+          <h2 class="math-game__title" data-i18n="index.sections.math.title"></h2>
+          <p class="math-game__subtitle" data-i18n="index.sections.math.subtitle"></p>
+        </header>
+        <div class="math-game__counters" role="presentation">
+          <div class="math-game__counter">
+            <span class="math-game__counter-label" data-i18n="index.sections.math.scoreLabel"></span>
+            <span class="math-game__counter-value" id="mathScoreValue">0</span>
+          </div>
+          <div class="math-game__counter">
+            <span class="math-game__counter-label" data-i18n="index.sections.math.streakLabel"></span>
+            <span class="math-game__counter-value" id="mathStreakValue">0</span>
+          </div>
+        </div>
+        <div class="math-game__challenge">
+          <p class="math-game__expression" id="mathExpression" role="status" aria-live="polite"></p>
+          <div
+            class="math-game__options"
+            id="mathOptions"
+            role="group"
+            data-i18n="aria-label:index.sections.math.optionsAria"
+          ></div>
+        </div>
+        <p class="math-game__feedback" id="mathFeedback" role="status"></p>
+        <button
+          type="button"
+          class="math-game__next"
+          id="mathNextButton"
+          data-i18n="index.sections.math.next"
+          disabled
+        ></button>
       </div>
     </section>
 
@@ -1334,6 +1389,7 @@
   <script src="scripts/resources/periodic-elements.js"></script>
   <script src="scripts/arcade/particules.js"></script>
   <script src="scripts/arcade/wave.js"></script>
+  <script src="scripts/arcade/math.js"></script>
   <script src="scripts/arcade/sudoku.js"></script>
   <script src="scripts/arcade/blackjack.js"></script>
   <script src="scripts/arcade/quantum-2048.js"></script>

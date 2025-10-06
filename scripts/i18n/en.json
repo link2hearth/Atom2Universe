@@ -98,6 +98,12 @@
             "description": "Trigger chain reactions on your chosen grid to reach the requested tile.",
             "cta": "Play"
           },
+          "math": {
+            "aria": "Open the Math mini-game",
+            "title": "Math",
+            "description": "Find the missing number to complete ever-trickier operations.",
+            "cta": "Solve"
+          },
           "sudoku": {
             "aria": "Open the Sudoku mini-game",
             "title": "Sudoku",
@@ -111,6 +117,15 @@
             "cta": "Deal"
           }
         }
+      },
+      "math": {
+        "aria": "Math mini-game: find the missing number.",
+        "title": "Quantum Math",
+        "subtitle": "Spot the hidden value to complete calculations that ramp up in difficulty.",
+        "scoreLabel": "Solved",
+        "streakLabel": "Current streak",
+        "optionsAria": "Select the value that completes the equation",
+        "next": "Next puzzle"
       },
       "sudoku": {
         "aria": "Quantum Sudoku mini-game",
@@ -867,6 +882,13 @@
   },
   "scripts": {
     "arcade": {
+      "math": {
+        "status": {
+          "prompt": "Pick the missing value to complete the equation.",
+          "correct": "Great job! {equation}",
+          "incorrect": "{value} isn't the right number. Try again!"
+        }
+      },
       "sudoku": {
         "status": {
           "generating": "Generating…",
