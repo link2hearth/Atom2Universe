@@ -93,20 +93,20 @@
             "cta": "Ride"
           },
           "quantum2048": {
-            "aria": "Open the Fusion 2048 mini-game",
-            "title": "Fusion 2048",
+            "aria": "Open the ObjectX mini-game",
+            "title": "ObjectX",
             "description": "Trigger chain reactions on your chosen grid to reach the requested tile.",
             "cta": "Play"
           },
           "sudoku": {
-            "aria": "Open the Quantum Sudoku mini-game",
-            "title": "Quantum Sudoku",
+            "aria": "Open the Sudoku mini-game",
+            "title": "Sudoku",
             "description": "Solve freshly generated grids or let the solver reveal a flawless solution.",
             "cta": "Solve"
           },
           "blackjack": {
-            "aria": "Open the Quantum Blackjack mini-game",
-            "title": "Quantum Blackjack",
+            "aria": "Open the Blackjack mini-game",
+            "title": "Blackjack",
             "description": "Face the dealer with an eight-deck shoe that reshuffles as soon as a unique card runs out.",
             "cta": "Deal"
           }
