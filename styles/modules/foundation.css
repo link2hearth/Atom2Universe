@@ -289,6 +289,7 @@ body.theme-neon .brand--portal-ready {
 .status-bar {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-areas: 'left center right';
   align-items: center;
   padding: var(--status-padding-y) var(--header-padding-x);
   gap: clamp(0.4rem, 0.8vw, 0.8rem);
@@ -316,10 +317,12 @@ body.view-sudoku .status-bar {
 
 .status-side--left {
   justify-self: flex-start;
+  grid-area: left;
 }
 
 .status-side--right {
   justify-self: flex-end;
+  grid-area: right;
 }
 
 .status-item--left {
@@ -331,6 +334,7 @@ body.view-sudoku .status-bar {
   text-align: center;
   align-items: center;
   justify-self: center;
+  grid-area: center;
 }
 
 .status-item--crit {
@@ -526,6 +530,43 @@ body.view-sudoku .status-bar {
 .status-item--right {
   text-align: right;
   align-items: flex-end;
+}
+
+@media (max-width: 52rem) {
+  .status-bar {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas:
+      'left right'
+      'center center';
+    row-gap: clamp(0.55rem, 1.8vw, 1rem);
+  }
+
+  .status-side {
+    width: 100%;
+  }
+
+  .status-side--left,
+  .status-side--right {
+    justify-self: stretch;
+    width: 100%;
+  }
+
+  .status-side--left {
+    justify-content: flex-start;
+  }
+
+  .status-side--right {
+    justify-content: flex-end;
+  }
+
+  .status-item--center {
+    width: 100%;
+  }
+
+  .status-item--center .status-atoms-button {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 .status-value-group {
