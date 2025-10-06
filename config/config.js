@@ -806,7 +806,8 @@ const GAME_CONFIG = {
       baseRange: { min: 1, max: 9 },
       advancedRange: { min: 2, max: 12 },
       expertRange: { min: 2, max: 15 },
-      optionsCount: 5,
+      optionsCount: 6,
+      roundTimerSeconds: 30, // Temps alloué pour répondre (en secondes).
       thresholds: {
         multiply: 3,
         divide: 7,
