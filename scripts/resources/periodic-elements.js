@@ -1130,11 +1130,11 @@
     "name": "Lanthane",
     "category": "lanthanide",
     "atomicMass": 138.91,
-    "period": 6,
-    "group": 3,
+    "period": 8,
+    "group": 4,
     "position": {
-      "row": 6,
-      "column": 3
+      "row": 8,
+      "column": 4
     },
     "tags": {
       "rarity": null,
@@ -1151,10 +1151,10 @@
     "category": "lanthanide",
     "atomicMass": 140.12,
     "period": 8,
-    "group": 4,
+    "group": 5,
     "position": {
       "row": 8,
-      "column": 4
+      "column": 5
     },
     "tags": {
       "rarity": null,
@@ -1171,10 +1171,10 @@
     "category": "lanthanide",
     "atomicMass": 140.91,
     "period": 8,
-    "group": 5,
+    "group": 6,
     "position": {
       "row": 8,
-      "column": 5
+      "column": 6
     },
     "tags": {
       "rarity": null,
@@ -1191,10 +1191,10 @@
     "category": "lanthanide",
     "atomicMass": 144.24,
     "period": 8,
-    "group": 6,
+    "group": 7,
     "position": {
       "row": 8,
-      "column": 6
+      "column": 7
     },
     "tags": {
       "rarity": null,
@@ -1211,10 +1211,10 @@
     "category": "lanthanide",
     "atomicMass": 145.0,
     "period": 8,
-    "group": 7,
+    "group": 8,
     "position": {
       "row": 8,
-      "column": 7
+      "column": 8
     },
     "tags": {
       "rarity": null,
@@ -1231,10 +1231,10 @@
     "category": "lanthanide",
     "atomicMass": 150.36,
     "period": 8,
-    "group": 8,
+    "group": 9,
     "position": {
       "row": 8,
-      "column": 8
+      "column": 9
     },
     "tags": {
       "rarity": null,
@@ -1251,10 +1251,10 @@
     "category": "lanthanide",
     "atomicMass": 151.96,
     "period": 8,
-    "group": 9,
+    "group": 10,
     "position": {
       "row": 8,
-      "column": 9
+      "column": 10
     },
     "tags": {
       "rarity": null,
@@ -1271,10 +1271,10 @@
     "category": "lanthanide",
     "atomicMass": 157.25,
     "period": 8,
-    "group": 10,
+    "group": 11,
     "position": {
       "row": 8,
-      "column": 10
+      "column": 11
     },
     "tags": {
       "rarity": null,
@@ -1291,10 +1291,10 @@
     "category": "lanthanide",
     "atomicMass": 158.93,
     "period": 8,
-    "group": 11,
+    "group": 12,
     "position": {
       "row": 8,
-      "column": 11
+      "column": 12
     },
     "tags": {
       "rarity": null,
@@ -1311,10 +1311,10 @@
     "category": "lanthanide",
     "atomicMass": 162.5,
     "period": 8,
-    "group": 12,
+    "group": 13,
     "position": {
       "row": 8,
-      "column": 12
+      "column": 13
     },
     "tags": {
       "rarity": null,
@@ -1331,10 +1331,10 @@
     "category": "lanthanide",
     "atomicMass": 164.93,
     "period": 8,
-    "group": 13,
+    "group": 14,
     "position": {
       "row": 8,
-      "column": 13
+      "column": 14
     },
     "tags": {
       "rarity": null,
@@ -1351,10 +1351,10 @@
     "category": "lanthanide",
     "atomicMass": 167.26,
     "period": 8,
-    "group": 14,
+    "group": 15,
     "position": {
       "row": 8,
-      "column": 14
+      "column": 15
     },
     "tags": {
       "rarity": null,
@@ -1371,10 +1371,10 @@
     "category": "lanthanide",
     "atomicMass": 168.93,
     "period": 8,
-    "group": 15,
+    "group": 16,
     "position": {
       "row": 8,
-      "column": 15
+      "column": 16
     },
     "tags": {
       "rarity": null,
@@ -1391,10 +1391,10 @@
     "category": "lanthanide",
     "atomicMass": 173.05,
     "period": 8,
-    "group": 16,
+    "group": 17,
     "position": {
       "row": 8,
-      "column": 16
+      "column": 17
     },
     "tags": {
       "rarity": null,
@@ -1411,10 +1411,10 @@
     "category": "lanthanide",
     "atomicMass": 174.97,
     "period": 8,
-    "group": 17,
+    "group": 18,
     "position": {
       "row": 8,
-      "column": 17
+      "column": 18
     },
     "tags": {
       "rarity": null,
@@ -1770,11 +1770,11 @@
     "name": "Actinium",
     "category": "actinide",
     "atomicMass": 227.0,
-    "period": 7,
-    "group": 3,
+    "period": 9,
+    "group": 4,
     "position": {
-      "row": 7,
-      "column": 3
+      "row": 9,
+      "column": 4
     },
     "tags": {
       "rarity": null,
@@ -1791,10 +1791,10 @@
     "category": "actinide",
     "atomicMass": 232.04,
     "period": 9,
-    "group": 4,
+    "group": 5,
     "position": {
       "row": 9,
-      "column": 4
+      "column": 5
     },
     "tags": {
       "rarity": null,
@@ -1811,10 +1811,10 @@
     "category": "actinide",
     "atomicMass": 231.04,
     "period": 9,
-    "group": 5,
+    "group": 6,
     "position": {
       "row": 9,
-      "column": 5
+      "column": 6
     },
     "tags": {
       "rarity": null,
@@ -1831,10 +1831,10 @@
     "category": "actinide",
     "atomicMass": 238.03,
     "period": 9,
-    "group": 6,
+    "group": 7,
     "position": {
       "row": 9,
-      "column": 6
+      "column": 7
     },
     "tags": {
       "rarity": null,
@@ -1851,10 +1851,10 @@
     "category": "actinide",
     "atomicMass": 237.0,
     "period": 9,
-    "group": 7,
+    "group": 8,
     "position": {
       "row": 9,
-      "column": 7
+      "column": 8
     },
     "tags": {
       "rarity": null,
@@ -1871,10 +1871,10 @@
     "category": "actinide",
     "atomicMass": 244.0,
     "period": 9,
-    "group": 8,
+    "group": 9,
     "position": {
       "row": 9,
-      "column": 8
+      "column": 9
     },
     "tags": {
       "rarity": null,
@@ -1891,10 +1891,10 @@
     "category": "actinide",
     "atomicMass": 243.0,
     "period": 9,
-    "group": 9,
+    "group": 10,
     "position": {
       "row": 9,
-      "column": 9
+      "column": 10
     },
     "tags": {
       "rarity": null,
@@ -1911,10 +1911,10 @@
     "category": "actinide",
     "atomicMass": 247.0,
     "period": 9,
-    "group": 10,
+    "group": 11,
     "position": {
       "row": 9,
-      "column": 10
+      "column": 11
     },
     "tags": {
       "rarity": null,
@@ -1931,10 +1931,10 @@
     "category": "actinide",
     "atomicMass": 247.0,
     "period": 9,
-    "group": 11,
+    "group": 12,
     "position": {
       "row": 9,
-      "column": 11
+      "column": 12
     },
     "tags": {
       "rarity": null,
@@ -1951,10 +1951,10 @@
     "category": "actinide",
     "atomicMass": 251.0,
     "period": 9,
-    "group": 12,
+    "group": 13,
     "position": {
       "row": 9,
-      "column": 12
+      "column": 13
     },
     "tags": {
       "rarity": null,
@@ -1971,10 +1971,10 @@
     "category": "actinide",
     "atomicMass": 252.0,
     "period": 9,
-    "group": 13,
+    "group": 14,
     "position": {
       "row": 9,
-      "column": 13
+      "column": 14
     },
     "tags": {
       "rarity": null,
@@ -1991,10 +1991,10 @@
     "category": "actinide",
     "atomicMass": 257.0,
     "period": 9,
-    "group": 14,
+    "group": 15,
     "position": {
       "row": 9,
-      "column": 14
+      "column": 15
     },
     "tags": {
       "rarity": null,
@@ -2011,10 +2011,10 @@
     "category": "actinide",
     "atomicMass": 258.0,
     "period": 9,
-    "group": 15,
+    "group": 16,
     "position": {
       "row": 9,
-      "column": 15
+      "column": 16
     },
     "tags": {
       "rarity": null,
@@ -2031,10 +2031,10 @@
     "category": "actinide",
     "atomicMass": 259.0,
     "period": 9,
-    "group": 16,
+    "group": 17,
     "position": {
       "row": 9,
-      "column": 16
+      "column": 17
     },
     "tags": {
       "rarity": null,
@@ -2051,10 +2051,10 @@
     "category": "actinide",
     "atomicMass": 262.0,
     "period": 9,
-    "group": 17,
+    "group": 18,
     "position": {
       "row": 9,
-      "column": 17
+      "column": 18
     },
     "tags": {
       "rarity": null,
