@@ -890,8 +890,8 @@ const GAME_CONFIG = {
         columns: 14,
         rows: 6,
         vertical: {
-          columns: 8,
-          rows: 12
+          columns: 10,
+          rows: 10
         }
       },
       maxLives: 3,
@@ -902,11 +902,11 @@ const GAME_CONFIG = {
         innerWidthRatio: 0.92,
         innerHeightRatio: 0.68,
         vertical: {
-          paddingX: 0.08,
-          paddingY: 0.03,
-          usableHeight: 0.72,
-          innerWidthRatio: 0.92,
-          innerHeightRatio: 0.905
+          paddingX: 0,
+          paddingY: 0.02,
+          usableHeight: 0.5,
+          innerWidthRatio: 1,
+          innerHeightRatio: 0.82
         }
       },
       paddle: {
