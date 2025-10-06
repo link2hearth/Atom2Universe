@@ -316,12 +316,12 @@ body.view-sudoku .status-bar {
 }
 
 .status-side--left {
-  justify-self: flex-start;
+  justify-self: start;
   grid-area: left;
 }
 
 .status-side--right {
-  justify-self: flex-end;
+  justify-self: end;
   grid-area: right;
 }
 
@@ -340,7 +340,7 @@ body.view-sudoku .status-bar {
 .status-item--crit {
   text-align: left;
   align-items: flex-start;
-  justify-self: flex-start;
+  justify-self: start;
   min-width: 0;
 }
 
@@ -395,7 +395,7 @@ body.view-sudoku .status-bar {
 
 .status-item--crit-aps {
   align-items: center;
-  justify-self: flex-end;
+  justify-self: end;
 }
 
 .status-crit-display--aps {
