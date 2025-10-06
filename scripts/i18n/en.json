@@ -124,6 +124,7 @@
         "subtitle": "Spot the hidden value to complete calculations that ramp up in difficulty.",
         "scoreLabel": "Solved",
         "streakLabel": "Current streak",
+        "timerLabel": "Time left",
         "optionsAria": "Select the value that completes the equation",
         "next": "Next puzzle"
       },
@@ -886,7 +887,8 @@
         "status": {
           "prompt": "Pick the missing value to complete the equation.",
           "correct": "Great job! {equation}",
-          "incorrect": "{value} isn't the right number. Try again!"
+          "incorrect": "{value} isn't the right number. Try again!",
+          "timeout": "Time's up! Streak reset."
         }
       },
       "sudoku": {

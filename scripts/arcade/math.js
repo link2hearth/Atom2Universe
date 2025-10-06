@@ -6,7 +6,7 @@
   const GLOBAL_CONFIG = typeof globalThis !== 'undefined' ? globalThis.GAME_CONFIG : null;
 
   const DEFAULT_CONFIG = Object.freeze({
-    optionsCount: 5,
+    optionsCount: 6,
     termCountRange: Object.freeze({ min: 4, max: 5 }),
     baseRange: Object.freeze({ min: 1, max: 9 }),
     advancedRange: Object.freeze({ min: 2, max: 12 }),
@@ -20,11 +20,15 @@
       base: 40,
       advanced: 80,
       expert: 120
-    })
+    }),
+    roundTimerSeconds: 30
   });
 
   const PLACEHOLDER_SYMBOL = '?';
   const MAX_GENERATION_ATTEMPTS = 120;
+  const DISPLAY_OPERATOR_MAP = Object.freeze({
+    '*': 'x'
+  });
 
   function onReady(callback) {
     if (document.readyState === 'loading') {
@@ -102,6 +106,9 @@
     const optionsCount = Number.isFinite(mathConfig.optionsCount)
       ? Math.max(3, Math.floor(mathConfig.optionsCount))
       : DEFAULT_CONFIG.optionsCount;
+    const roundTimerSeconds = Number.isFinite(mathConfig.roundTimerSeconds)
+      ? Math.max(1, Math.floor(mathConfig.roundTimerSeconds))
+      : DEFAULT_CONFIG.roundTimerSeconds;
     return {
       optionsCount,
       termCountRange,
@@ -109,7 +116,8 @@
       advancedRange,
       expertRange,
       thresholds,
-      resultLimits
+      resultLimits,
+      roundTimerSeconds
     };
   }
 
@@ -342,13 +350,20 @@
     };
   }
 
+  function formatOperator(operator) {
+    if (typeof operator !== 'string') {
+      return '';
+    }
+    return DISPLAY_OPERATOR_MAP[operator] || operator;
+  }
+
   function formatExpression(numbers, operations, result, hiddenIndex, reveal) {
     const sequence = [];
     for (let i = 0; i < numbers.length; i += 1) {
       const display = i === hiddenIndex && !reveal ? PLACEHOLDER_SYMBOL : numbers[i];
       sequence.push(String(display));
       if (i < operations.length) {
-        sequence.push(operations[i]);
+        sequence.push(formatOperator(operations[i]));
       }
     }
     sequence.push('=');
@@ -369,7 +384,8 @@
       feedback: document.getElementById('mathFeedback'),
       nextButton: document.getElementById('mathNextButton'),
       score: document.getElementById('mathScoreValue'),
-      streak: document.getElementById('mathStreakValue')
+      streak: document.getElementById('mathStreakValue'),
+      timer: document.getElementById('mathTimerValue')
     };
 
     if (!elements.expression || !elements.options || !elements.nextButton) {
@@ -383,7 +399,12 @@
       streak: 0,
       solved: false,
       currentRound: null,
-      config
+      config,
+      timer: {
+        id: null,
+        deadline: null,
+        remaining: Math.max(0, Math.floor(config.roundTimerSeconds || 0))
+      }
     };
 
     function updateCounters() {
@@ -393,6 +414,82 @@
       if (elements.streak) {
         elements.streak.textContent = String(state.streak);
       }
+    }
+
+    function updateTimerDisplay() {
+      if (elements.timer) {
+        elements.timer.textContent = String(state.timer.remaining);
+      }
+    }
+
+    function setTimerRemaining(seconds) {
+      const normalized = Number.isFinite(seconds) ? Math.max(0, Math.floor(seconds)) : 0;
+      state.timer.remaining = normalized;
+      updateTimerDisplay();
+    }
+
+    function stopTimer() {
+      if (state.timer.id != null) {
+        window.clearInterval(state.timer.id);
+      }
+      state.timer.id = null;
+      state.timer.deadline = null;
+    }
+
+    function startTimer() {
+      stopTimer();
+      const duration = Math.max(1, Math.floor(state.config.roundTimerSeconds));
+      setTimerRemaining(duration);
+      const deadline = Date.now() + duration * 1000;
+      state.timer.deadline = deadline;
+      state.timer.id = window.setInterval(() => {
+        const remaining = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
+        if (remaining !== state.timer.remaining) {
+          state.timer.remaining = remaining;
+          updateTimerDisplay();
+        }
+        if (remaining <= 0) {
+          stopTimer();
+          handleTimeout();
+        }
+      }, 200);
+    }
+
+    function handleTimeout() {
+      if (state.solved) {
+        return;
+      }
+      setTimerRemaining(0);
+      const round = state.currentRound;
+      state.solved = true;
+      state.streak = 0;
+      if (round) {
+        const fullEquation = formatExpression(
+          round.numbers,
+          round.operations,
+          round.result,
+          round.hiddenIndex,
+          true
+        );
+        elements.expression.textContent = fullEquation;
+      }
+      Array.from(elements.options.querySelectorAll('button')).forEach(option => {
+        option.disabled = true;
+        if (round) {
+          const optionValue = Number.parseInt(option.dataset.value, 10);
+          if (Number.isFinite(optionValue) && optionValue === round.hiddenValue) {
+            option.classList.add('math-game__option--correct');
+          }
+        }
+      });
+      if (elements.feedback) {
+        elements.feedback.textContent = translate(
+          'scripts.arcade.math.status.timeout',
+          'Temps écoulé ! La série est réinitialisée.'
+        );
+      }
+      elements.nextButton.disabled = false;
+      updateCounters();
     }
 
     function renderRound(round) {
@@ -425,6 +522,8 @@
     }
 
     function prepareRound() {
+      stopTimer();
+      setTimerRemaining(state.config.roundTimerSeconds);
       const stage = determineStage(state.correctAnswers, state.config);
       let round = generateRoundForStage(stage, state.config);
       if (!round && stage.operations.includes('/')) {
@@ -447,9 +546,11 @@
       }
       state.currentRound = round;
       renderRound(round);
+      startTimer();
     }
 
     function handleCorrectAnswer(button) {
+      stopTimer();
       const round = state.currentRound;
       state.correctAnswers += 1;
       state.streak += 1;

@@ -124,6 +124,7 @@
         "subtitle": "Repérez le nombre caché pour compléter des calculs de plus en plus complexes.",
         "scoreLabel": "Opérations résolues",
         "streakLabel": "Série actuelle",
+        "timerLabel": "Temps restant",
         "optionsAria": "Choisir la réponse pour le nombre manquant",
         "next": "Nouvelle opération"
       },
@@ -871,7 +872,8 @@
         "status": {
           "prompt": "Choisissez la valeur manquante pour compléter le calcul.",
           "correct": "Bravo ! {equation}",
-          "incorrect": "Ce n'est pas {value}. Réessayez !"
+          "incorrect": "Ce n'est pas {value}. Réessayez !",
+          "timeout": "Temps écoulé ! La série est réinitialisée."
         }
       },
       "sudoku": {
