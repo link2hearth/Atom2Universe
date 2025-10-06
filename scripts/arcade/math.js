@@ -7,7 +7,7 @@
 
   const DEFAULT_CONFIG = Object.freeze({
     optionsCount: 6,
-    termCountRange: Object.freeze({ min: 4, max: 5 }),
+    termCountRange: Object.freeze({ min: 2, max: 5 }),
     baseRange: Object.freeze({ min: 1, max: 9 }),
     advancedRange: Object.freeze({ min: 2, max: 12 }),
     expertRange: Object.freeze({ min: 2, max: 15 }),
@@ -97,7 +97,7 @@
     if (!mathConfig) {
       return DEFAULT_CONFIG;
     }
-    const termCountRange = normalizeRange(mathConfig.termCountRange, DEFAULT_CONFIG.termCountRange, 3);
+    const termCountRange = normalizeRange(mathConfig.termCountRange, DEFAULT_CONFIG.termCountRange, 2);
     const baseRange = normalizeRange(mathConfig.baseRange, DEFAULT_CONFIG.baseRange, 1);
     const advancedRange = normalizeRange(mathConfig.advancedRange, DEFAULT_CONFIG.advancedRange, 1);
     const expertRange = normalizeRange(mathConfig.expertRange, DEFAULT_CONFIG.expertRange, 1);
@@ -210,37 +210,46 @@
   }
 
   function determineStage(correctCount, config) {
-    const operations = ['+', '-'];
+    const level = Math.max(1, correctCount + 1);
+    let operations = ['+', '-'];
     let range = config.baseRange;
     let maxResult = config.resultLimits.base;
+    let termRange = { min: 2, max: 2 };
+    let requireMultiplicative = false;
 
-    if (correctCount >= config.thresholds.multiply) {
-      operations.push('*');
+    if (level <= 5) {
+      termRange = { min: 2, max: 2 };
+      operations = ['+', '-'];
+      range = config.baseRange;
+      maxResult = config.resultLimits.base;
+    } else if (level <= 10) {
+      termRange = { min: 3, max: 3 };
+      operations = ['+', '-'];
+      range = config.baseRange;
+      maxResult = config.resultLimits.base;
+    } else if (level <= 20) {
+      termRange = { min: 3, max: 3 };
+      operations = ['+', '-', '*', '/'];
       range = config.advancedRange;
       maxResult = config.resultLimits.advanced;
-    }
-    if (correctCount >= config.thresholds.divide) {
-      if (!operations.includes('*')) {
-        operations.push('*');
-      }
-      operations.push('/');
-      range = config.advancedRange;
-      maxResult = config.resultLimits.advanced;
-    }
-    if (correctCount >= config.thresholds.expert) {
+      requireMultiplicative = true;
+    } else {
+      termRange = { min: 3, max: 5 };
+      operations = ['+', '-', '*', '/'];
       range = config.expertRange;
       maxResult = config.resultLimits.expert;
     }
 
-    const minTerms = Math.max(4, config.termCountRange.min);
-    const maxTerms = Math.max(minTerms, config.termCountRange.max);
-
-    return {
+    const stage = {
       operations,
       range,
-      termRange: { min: minTerms, max: maxTerms },
+      termRange,
       maxResult
     };
+    if (requireMultiplicative) {
+      stage.requireMultiplicative = true;
+    }
+    return stage;
   }
 
   function buildOptions(correctValue, stage, config) {
@@ -298,6 +307,12 @@
       for (let i = 0; i < termCount - 1; i += 1) {
         const opIndex = randomInt(0, stage.operations.length - 1);
         operations.push(stage.operations[opIndex]);
+      }
+      if (stage.requireMultiplicative) {
+        const hasMultiplicative = operations.some(operator => operator === '*' || operator === '/');
+        if (!hasMultiplicative) {
+          continue;
+        }
       }
       const evaluation = evaluateExpression(numbers, operations);
       if (!evaluation.valid) {
@@ -358,17 +373,51 @@
   }
 
   function formatExpression(numbers, operations, result, hiddenIndex, reveal) {
-    const sequence = [];
-    for (let i = 0; i < numbers.length; i += 1) {
-      const display = i === hiddenIndex && !reveal ? PLACEHOLDER_SYMBOL : numbers[i];
-      sequence.push(String(display));
-      if (i < operations.length) {
-        sequence.push(formatOperator(operations[i]));
+    const displayNumbers = numbers.map((value, index) => {
+      if (index === hiddenIndex && !reveal) {
+        return PLACEHOLDER_SYMBOL;
+      }
+      return String(value);
+    });
+    const formattedOps = operations.map(formatOperator);
+    const tokens = [];
+    let index = 0;
+
+    while (index < displayNumbers.length) {
+      const nextOperator = index < operations.length ? operations[index] : null;
+      if (nextOperator === '*' || nextOperator === '/') {
+        let groupStart = index;
+        let groupEnd = index;
+        while (groupEnd < operations.length && (operations[groupEnd] === '*' || operations[groupEnd] === '/')) {
+          groupEnd += 1;
+        }
+        const parts = [displayNumbers[groupStart]];
+        for (let opIndex = groupStart; opIndex < groupEnd; opIndex += 1) {
+          parts.push(formattedOps[opIndex]);
+          parts.push(displayNumbers[opIndex + 1]);
+        }
+        let segment = parts.join(' ');
+        const wrapLeft = groupStart > 0 && (operations[groupStart - 1] === '+' || operations[groupStart - 1] === '-');
+        const wrapRight = groupEnd < operations.length && (operations[groupEnd] === '+' || operations[groupEnd] === '-');
+        if (wrapLeft || wrapRight) {
+          segment = `(${segment})`;
+        }
+        tokens.push(segment);
+        if (groupEnd < operations.length) {
+          tokens.push(formattedOps[groupEnd]);
+        }
+        index = groupEnd + 1;
+      } else {
+        tokens.push(displayNumbers[index]);
+        if (index < operations.length) {
+          tokens.push(formattedOps[index]);
+        }
+        index += 1;
       }
     }
-    sequence.push('=');
-    sequence.push(String(result));
-    return sequence.join(' ');
+    tokens.push('=');
+    tokens.push(String(result));
+    return tokens.join(' ');
   }
 
   onReady(() => {
