@@ -44,7 +44,6 @@
   --rarity-strong: var(--category-strong);
   --rarity-weak: var(--category-weak);
   --rarity-border: var(--category-border);
-  --rarity-divider: rgba(0, 0, 0, 0.35);
   position: relative;
   display: flex;
   flex-direction: column;
@@ -69,7 +68,6 @@
   z-index: 2;
 }
 
-.periodic-element::before,
 .periodic-element::after {
   content: '';
   position: absolute;
@@ -86,13 +84,6 @@
   z-index: 0;
 }
 
-.periodic-element::before {
-  background: linear-gradient(135deg, transparent 48%, var(--rarity-divider) 50%, transparent 52%);
-  z-index: 1;
-  mix-blend-mode: soft-light;
-}
-
-.periodic-element[data-rarity]::before,
 .periodic-element[data-rarity]::after {
   opacity: 1;
 }
@@ -109,7 +100,6 @@
     --rarity-strong: color-mix(in srgb, var(--rarity-color, transparent) 70%, rgba(255, 255, 255, 0.14));
     --rarity-weak: color-mix(in srgb, var(--rarity-color, transparent) 45%, rgba(0, 0, 0, 0.22));
     --rarity-border: color-mix(in srgb, var(--rarity-color, transparent) 55%, rgba(255, 255, 255, 0.2));
-    --rarity-divider: color-mix(in srgb, var(--rarity-color, transparent) 35%, rgba(0, 0, 0, 0.55));
   }
 
   .periodic-element[data-rarity] {
@@ -580,72 +570,72 @@ body.element-details-modal-open {
 
 .periodic-element[data-category='alkali-metal'],
 .element-info-panel[data-category='alkali-metal'] {
-  --category-strong: rgba(7, 70, 50, 0.38);
-  --category-weak: rgba(7, 70, 50, 0.12);
-  --category-border: rgba(7, 70, 50, 0.4);
+  --category-strong: rgba(255, 76, 100, 0.56);
+  --category-weak: rgba(255, 76, 100, 0.18);
+  --category-border: rgba(255, 76, 100, 0.62);
 }
 
 .periodic-element[data-category='alkaline-earth-metal'],
 .element-info-panel[data-category='alkaline-earth-metal'] {
-  --category-strong: rgba(90, 101, 37, 0.36);
-  --category-weak: rgba(90, 101, 37, 0.12);
-  --category-border: rgba(90, 101, 37, 0.36);
+  --category-strong: rgba(255, 138, 61, 0.54);
+  --category-weak: rgba(255, 138, 61, 0.18);
+  --category-border: rgba(255, 138, 61, 0.58);
 }
 
 .periodic-element[data-category='transition-metal'],
 .element-info-panel[data-category='transition-metal'] {
-  --category-strong: rgba(188, 116, 58, 0.36);
-  --category-weak: rgba(188, 116, 58, 0.12);
-  --category-border: rgba(188, 116, 58, 0.36);
+  --category-strong: rgba(255, 209, 58, 0.5);
+  --category-weak: rgba(255, 209, 58, 0.18);
+  --category-border: rgba(255, 209, 58, 0.52);
 }
 
 .periodic-element[data-category='post-transition-metal'],
 .element-info-panel[data-category='post-transition-metal'] {
-  --category-strong: rgba(201, 150, 77, 0.36);
-  --category-weak: rgba(201, 150, 77, 0.12);
-  --category-border: rgba(201, 150, 77, 0.36);
+  --category-strong: rgba(155, 232, 47, 0.5);
+  --category-weak: rgba(155, 232, 47, 0.18);
+  --category-border: rgba(155, 232, 47, 0.52);
 }
 
 .periodic-element[data-category='metalloid'],
 .element-info-panel[data-category='metalloid'] {
-  --category-strong: rgba(211, 184, 104, 0.32);
-  --category-weak: rgba(211, 184, 104, 0.12);
-  --category-border: rgba(211, 184, 104, 0.32);
+  --category-strong: rgba(42, 210, 133, 0.5);
+  --category-weak: rgba(42, 210, 133, 0.18);
+  --category-border: rgba(42, 210, 133, 0.52);
 }
 
 .periodic-element[data-category='nonmetal'],
 .element-info-panel[data-category='nonmetal'] {
-  --category-strong: rgba(117, 165, 158, 0.36);
-  --category-weak: rgba(117, 165, 158, 0.14);
-  --category-border: rgba(117, 165, 158, 0.34);
+  --category-strong: rgba(29, 156, 255, 0.5);
+  --category-weak: rgba(29, 156, 255, 0.18);
+  --category-border: rgba(29, 156, 255, 0.52);
 }
 
 .periodic-element[data-category='halogen'],
 .element-info-panel[data-category='halogen'] {
-  --category-strong: rgba(88, 142, 127, 0.36);
-  --category-weak: rgba(88, 142, 127, 0.14);
-  --category-border: rgba(88, 142, 127, 0.34);
+  --category-strong: rgba(134, 102, 255, 0.5);
+  --category-weak: rgba(134, 102, 255, 0.18);
+  --category-border: rgba(134, 102, 255, 0.52);
 }
 
 .periodic-element[data-category='noble-gas'],
 .element-info-panel[data-category='noble-gas'] {
-  --category-strong: rgba(63, 119, 95, 0.36);
-  --category-weak: rgba(63, 119, 95, 0.14);
-  --category-border: rgba(63, 119, 95, 0.34);
+  --category-strong: rgba(212, 92, 255, 0.5);
+  --category-weak: rgba(212, 92, 255, 0.18);
+  --category-border: rgba(212, 92, 255, 0.52);
 }
 
 .periodic-element[data-category='lanthanide'],
 .element-info-panel[data-category='lanthanide'] {
-  --category-strong: rgba(49, 124, 83, 0.34);
-  --category-weak: rgba(49, 124, 83, 0.12);
-  --category-border: rgba(49, 124, 83, 0.32);
+  --category-strong: rgba(255, 107, 170, 0.5);
+  --category-weak: rgba(255, 107, 170, 0.18);
+  --category-border: rgba(255, 107, 170, 0.55);
 }
 
 .periodic-element[data-category='actinide'],
 .element-info-panel[data-category='actinide'] {
-  --category-strong: rgba(42, 157, 88, 0.34);
-  --category-weak: rgba(42, 157, 88, 0.12);
-  --category-border: rgba(42, 157, 88, 0.32);
+  --category-strong: rgba(0, 198, 255, 0.5);
+  --category-weak: rgba(0, 198, 255, 0.18);
+  --category-border: rgba(0, 198, 255, 0.52);
 }
 
 body.theme-light .periodic-table-wrapper {
