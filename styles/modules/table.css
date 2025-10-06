@@ -44,7 +44,6 @@
   --rarity-strong: var(--category-strong);
   --rarity-weak: var(--category-weak);
   --rarity-border: var(--category-border);
-  --rarity-divider: rgba(0, 0, 0, 0.35);
   position: relative;
   display: flex;
   flex-direction: column;
@@ -69,7 +68,6 @@
   z-index: 2;
 }
 
-.periodic-element::before,
 .periodic-element::after {
   content: '';
   position: absolute;
@@ -86,13 +84,6 @@
   z-index: 0;
 }
 
-.periodic-element::before {
-  background: linear-gradient(135deg, transparent 48%, var(--rarity-divider) 50%, transparent 52%);
-  z-index: 1;
-  mix-blend-mode: soft-light;
-}
-
-.periodic-element[data-rarity]::before,
 .periodic-element[data-rarity]::after {
   opacity: 1;
 }
@@ -109,7 +100,6 @@
     --rarity-strong: color-mix(in srgb, var(--rarity-color, transparent) 70%, rgba(255, 255, 255, 0.14));
     --rarity-weak: color-mix(in srgb, var(--rarity-color, transparent) 45%, rgba(0, 0, 0, 0.22));
     --rarity-border: color-mix(in srgb, var(--rarity-color, transparent) 55%, rgba(255, 255, 255, 0.2));
-    --rarity-divider: color-mix(in srgb, var(--rarity-color, transparent) 35%, rgba(0, 0, 0, 0.55));
   }
 
   .periodic-element[data-rarity] {
