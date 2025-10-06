@@ -715,7 +715,7 @@ const GAME_CONFIG = {
    * - spawnChancePerSecond : probabilités d'apparition par seconde (APC / APS).
    */
   frenzies: {
-    displayDurationMs: 5000,
+    displayDurationMs: 8000,
     effectDurationMs: 30000,
     multiplier: 2,
     baseMaxStacks: 1,
@@ -873,7 +873,7 @@ const GAME_CONFIG = {
          * Niveau à partir duquel toutes les opérations (+, -, ×, ÷) sont proposées.
          * Les niveaux inférieurs n'affichent que les opérations de base (addition/soustraction).
          */
-        fullSymbolUnlockLevel: 10,
+        fullSymbolUnlockLevel: 5,
         /**
          * Ensemble des symboles proposés avant le palier d'extension.
          */
@@ -1409,7 +1409,7 @@ const GAME_CONFIG = {
       ],
       successChance: 0.5,
       rewards: {
-        apcFlat: 100
+        apcFlat: 100000
       }
     },
     {
@@ -1422,7 +1422,7 @@ const GAME_CONFIG = {
       ],
       successChance: 0.5,
       rewards: {
-        apcFlat: 100
+        apcFlat: 100000
       }
     },
     {
@@ -1435,7 +1435,7 @@ const GAME_CONFIG = {
       ],
       successChance: 0.5,
       rewards: {
-        apcFlat: 100
+        apcFlat: 100000
       }
     },
     {
