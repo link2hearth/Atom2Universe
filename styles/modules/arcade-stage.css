@@ -188,6 +188,21 @@ body.theme-neon .arcade-header__status--bonus {
   will-change: transform;
 }
 
+.arcade-stage--vertical {
+  aspect-ratio: 9 / 16;
+  width: min(
+    calc(100vw - var(--arcade-padding-x) * 2),
+    calc((100vh - var(--arcade-vertical-offset)) * 9 / 16)
+  );
+  min-width: min(280px, calc(100vw - var(--arcade-padding-x) * 2));
+  max-height: max(0px, calc(100vh - var(--arcade-vertical-offset)));
+}
+
+.arcade-stage--vertical .arcade-stage__hud {
+  top: clamp(0.6rem, 2.4vh, 1.6rem);
+  bottom: auto;
+}
+
 .arcade-side-panel {
   flex: 0 1 clamp(260px, 26vw, 360px);
   display: flex;

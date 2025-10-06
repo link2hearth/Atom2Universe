@@ -888,7 +888,11 @@ const GAME_CONFIG = {
       ticketReward: 1,
       grid: {
         columns: 14,
-        rows: 6
+        rows: 6,
+        vertical: {
+          columns: 8,
+          rows: 12
+        }
       },
       maxLives: 3,
       geometry: {
@@ -896,7 +900,14 @@ const GAME_CONFIG = {
         paddingY: 0.04,
         usableHeight: 0.46,
         innerWidthRatio: 0.92,
-        innerHeightRatio: 0.68
+        innerHeightRatio: 0.68,
+        vertical: {
+          paddingX: 0.08,
+          paddingY: 0.03,
+          usableHeight: 0.72,
+          innerWidthRatio: 0.92,
+          innerHeightRatio: 0.905
+        }
       },
       paddle: {
         baseWidthRatio: 0.18,
