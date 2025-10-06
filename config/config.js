@@ -172,8 +172,8 @@ function createShopBuildingDefinitions() {
         if (level > 0) {
           const freeElectronLevel = getBuildingLevel(context, 'freeElectrons');
           if (freeElectronLevel >= 50) {
-            const ownedBuildingCount = SHOP_BUILDING_IDS.reduce(
-              (count, buildingId) => count + (getBuildingLevel(context, buildingId) > 0 ? 1 : 0),
+            const totalPurchased = SHOP_BUILDING_IDS.reduce(
+              (sum, buildingId) => sum + getBuildingLevel(context, buildingId),
               0
             );
             if (ownedBuildingCount > 0) {
