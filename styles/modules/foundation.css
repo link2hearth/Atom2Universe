@@ -289,10 +289,12 @@ body.theme-neon .brand--portal-ready {
 .status-bar {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-areas: 'left center right';
   align-items: center;
   padding: var(--status-padding-y) var(--header-padding-x);
   gap: clamp(0.4rem, 0.8vw, 0.8rem);
   border-top: 1px solid rgba(255, 255, 255, 0.08);
+  width: 100%;
 }
 
 body.view-arcade .status-bar,
@@ -315,11 +317,15 @@ body.view-sudoku .status-bar {
 }
 
 .status-side--left {
-  justify-self: flex-start;
+  justify-self: start;
+  grid-area: left;
+  margin-right: auto;
 }
 
 .status-side--right {
-  justify-self: flex-end;
+  justify-self: end;
+  grid-area: right;
+  margin-left: auto;
 }
 
 .status-item--left {
@@ -331,12 +337,15 @@ body.view-sudoku .status-bar {
   text-align: center;
   align-items: center;
   justify-self: center;
+  grid-area: center;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .status-item--crit {
   text-align: left;
   align-items: flex-start;
-  justify-self: flex-start;
+  justify-self: start;
   min-width: 0;
 }
 
@@ -391,7 +400,7 @@ body.view-sudoku .status-bar {
 
 .status-item--crit-aps {
   align-items: center;
-  justify-self: flex-end;
+  justify-self: end;
 }
 
 .status-crit-display--aps {
@@ -526,6 +535,46 @@ body.view-sudoku .status-bar {
 .status-item--right {
   text-align: right;
   align-items: flex-end;
+}
+
+@media (max-width: 52rem), (max-aspect-ratio: 1 / 1) {
+  .status-bar {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas:
+      'left right'
+      'center center';
+    row-gap: clamp(0.55rem, 1.8vw, 1rem);
+  }
+
+  .status-side {
+    width: 100%;
+  }
+
+  .status-side--left,
+  .status-side--right {
+    justify-self: stretch;
+    width: 100%;
+    margin: 0;
+  }
+
+  .status-side--left {
+    justify-content: flex-start;
+  }
+
+  .status-side--right {
+    justify-content: flex-end;
+  }
+
+  .status-item--center {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .status-item--center .status-atoms-button {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 .status-value-group {
