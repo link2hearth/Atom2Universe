@@ -580,6 +580,14 @@
         <div class="quantum2048-toolbar" role="presentation">
           <button
             class="arcade-header__status arcade-header__status--info"
+            id="quantum2048UniverseDisplay"
+            type="button"
+          >
+            <span class="arcade-header__status-label" data-i18n="index.sections.quantum2048.progress.label"></span>
+            <span class="arcade-header__status-value" id="quantum2048ParallelUniverseValue" aria-live="polite">0</span>
+          </button>
+          <button
+            class="arcade-header__status arcade-header__status--info"
             id="quantum2048GoalDisplay"
             type="button"
           >
@@ -621,17 +629,6 @@
             ></p>
           </header>
           <div class="quantum2048-hud__stats">
-            <div class="quantum2048-hud__stat">
-              <span
-                class="quantum2048-hud__stat-label"
-                data-i18n="index.sections.quantum2048.progress.label"
-              ></span>
-              <span
-                class="quantum2048-hud__stat-value"
-                id="quantum2048ParallelUniverseValue"
-                aria-live="polite"
-              >0</span>
-            </div>
             <p class="quantum2048-hud__status" id="quantum2048Status" role="status"></p>
           </div>
         </div>
