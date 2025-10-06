@@ -161,7 +161,7 @@ function createShopBuildingDefinitions() {
       name: 'Sonde interstellaire',
       description: 'Explorez la galaxie pour récolter toujours plus.',
       effectSummary:
-        'Production passive : +5 000 APS par niveau. Bonus conditionnel : avec 50 Électrons libres ou plus, chaque niveau de bâtiment ajoute +100 APC.',
+        'Production passive : +5 000 APS par niveau. Bonus conditionnel : avec 50 Électrons libres ou plus, chaque type de bâtiment possédé ajoute +100 APC par niveau de Sonde.',
       category: 'hybrid',
       baseCost: 5e6,
       costScale: 1.2,
@@ -172,13 +172,13 @@ function createShopBuildingDefinitions() {
         if (level > 0) {
           const freeElectronLevel = getBuildingLevel(context, 'freeElectrons');
           if (freeElectronLevel >= 50) {
-            const totalPurchased = SHOP_BUILDING_IDS.reduce(
-              (sum, buildingId) => sum + getBuildingLevel(context, buildingId),
+            const ownedBuildingCount = SHOP_BUILDING_IDS.reduce(
+              (count, buildingId) => count + (getBuildingLevel(context, buildingId) > 0 ? 1 : 0),
               0
             );
-            if (totalPurchased > 0) {
+            if (ownedBuildingCount > 0) {
               const bonusPerUnit = 100;
-              clickAdd = totalPurchased * bonusPerUnit * level;
+              clickAdd = ownedBuildingCount * bonusPerUnit * level;
             }
           }
         }
