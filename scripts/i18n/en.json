@@ -887,8 +887,10 @@
         "status": {
           "prompt": "Pick the missing value to complete the equation.",
           "correct": "Great job! {equation}",
-          "incorrect": "{value} isn't the right number. Try again!",
-          "timeout": "Time's up! Streak reset."
+          "incorrect": "{value} isn't the right number. Try again! {remaining} mistake(s) left before game over.",
+          "timeout": "Time's up! Streak reset.",
+          "gameOverMistakes": "You've reached {limit} mistakes: game over! Level resets to zero.",
+          "gameOverTimeout": "Time's up: game over! Level resets to zero."
         }
       },
       "sudoku": {

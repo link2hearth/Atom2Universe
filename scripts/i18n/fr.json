@@ -872,8 +872,10 @@
         "status": {
           "prompt": "Choisissez la valeur manquante pour compléter le calcul.",
           "correct": "Bravo ! {equation}",
-          "incorrect": "Ce n'est pas {value}. Réessayez !",
-          "timeout": "Temps écoulé ! La série est réinitialisée."
+          "incorrect": "Ce n'est pas {value}. Réessayez ! Il vous reste {remaining} erreur(s) avant le game over.",
+          "timeout": "Temps écoulé ! La série est réinitialisée.",
+          "gameOverMistakes": "Vous avez atteint {limit} erreurs : game over ! Le niveau repart à zéro.",
+          "gameOverTimeout": "Temps écoulé : game over ! Le niveau repart à zéro."
         }
       },
       "sudoku": {
