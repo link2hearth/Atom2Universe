@@ -1420,7 +1420,7 @@ const GAME_CONFIG = {
       ],
       successChance: 0.5,
       rewards: {
-        apcFlat: 100000
+        apcFlat: 25000
       }
     },
     {
@@ -1433,7 +1433,7 @@ const GAME_CONFIG = {
       ],
       successChance: 0.5,
       rewards: {
-        apcFlat: 100000
+        apcFlat: 25000
       }
     },
     {
@@ -1446,7 +1446,7 @@ const GAME_CONFIG = {
       ],
       successChance: 0.5,
       rewards: {
-        apcFlat: 100000
+        apcFlat: 25000
       }
     },
     {
