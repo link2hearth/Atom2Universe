@@ -50,6 +50,9 @@ const BRICK_SKIN_TOAST_KEYS = Object.freeze({
 
 const LANGUAGE_STORAGE_KEY = 'atom2univers.language';
 const CLICK_SOUND_STORAGE_KEY = 'atom2univers.options.clickSoundMuted';
+const CRIT_ATOM_VISUALS_STORAGE_KEY = 'atom2univers.options.critAtomVisualsDisabled';
+
+let critAtomVisualsDisabled = false;
 const AVAILABLE_LANGUAGE_CODES = (() => {
   const i18n = globalThis.i18n;
   if (i18n && typeof i18n.getAvailableLanguages === 'function') {
@@ -2396,6 +2399,9 @@ const elements = {
   clickSoundToggleCard: document.getElementById('clickSoundToggleCard'),
   clickSoundToggle: document.getElementById('clickSoundToggle'),
   clickSoundToggleStatus: document.getElementById('clickSoundToggleStatus'),
+  critAtomToggleCard: document.getElementById('critAtomToggleCard'),
+  critAtomToggle: document.getElementById('critAtomToggle'),
+  critAtomToggleStatus: document.getElementById('critAtomToggleStatus'),
   optionsArcadeDetails: document.getElementById('optionsArcadeDetails'),
   brickSkinOptionCard: document.getElementById('brickSkinOptionCard'),
   brickSkinSelect: document.getElementById('brickSkinSelect'),
@@ -3081,6 +3087,33 @@ function writeStoredClickSoundMuted(muted) {
   }
 }
 
+function readStoredCritAtomVisualsDisabled() {
+  try {
+    const stored = globalThis.localStorage?.getItem(CRIT_ATOM_VISUALS_STORAGE_KEY);
+    if (stored == null) {
+      return null;
+    }
+    if (stored === '1' || stored === 'true') {
+      return true;
+    }
+    if (stored === '0' || stored === 'false') {
+      return false;
+    }
+  } catch (error) {
+    console.warn('Unable to read critical atom visual preference', error);
+  }
+  return null;
+}
+
+function writeStoredCritAtomVisualsDisabled(disabled) {
+  try {
+    const value = disabled ? '1' : '0';
+    globalThis.localStorage?.setItem(CRIT_ATOM_VISUALS_STORAGE_KEY, value);
+  } catch (error) {
+    console.warn('Unable to persist critical atom visual preference', error);
+  }
+}
+
 function updateClickSoundStatusLabel(muted) {
   if (!elements.clickSoundToggleStatus) {
     return;
@@ -3138,8 +3171,79 @@ function subscribeClickSoundLanguageUpdates() {
   }
 }
 
+function updateCritAtomStatusLabel(disabled) {
+  if (!elements.critAtomToggleStatus) {
+    return;
+  }
+  const key = disabled
+    ? 'index.sections.options.critAtoms.state.off'
+    : 'index.sections.options.critAtoms.state.on';
+  const fallback = disabled ? 'Critical atom bursts off' : 'Critical atom bursts on';
+  elements.critAtomToggleStatus.setAttribute('data-i18n', key);
+  elements.critAtomToggleStatus.textContent = translateOrDefault(key, fallback);
+}
+
+function applyCritAtomVisualsDisabled(disabled, options = {}) {
+  const value = !!disabled;
+  const settings = Object.assign({ persist: true, updateControl: true, clearExisting: true }, options);
+  critAtomVisualsDisabled = value;
+  if (settings.updateControl && elements.critAtomToggle) {
+    elements.critAtomToggle.checked = !value;
+  }
+  updateCritAtomStatusLabel(value);
+  if (value && settings.clearExisting && elements.critAtomLayer) {
+    const layer = elements.critAtomLayer;
+    if (layer && typeof layer.querySelectorAll === 'function') {
+      layer.querySelectorAll('.crit-atom').forEach(atom => {
+        if (atom && typeof atom.remove === 'function') {
+          atom.remove();
+        }
+      });
+    }
+    if (layer && layer.isConnected && typeof layer.remove === 'function') {
+      layer.remove();
+    }
+    elements.critAtomLayer = null;
+  }
+  if (settings.persist) {
+    writeStoredCritAtomVisualsDisabled(value);
+  }
+}
+
+function initCritAtomOption() {
+  const stored = readStoredCritAtomVisualsDisabled();
+  const initialDisabled = stored === null ? false : stored === true;
+  applyCritAtomVisualsDisabled(initialDisabled, {
+    persist: false,
+    updateControl: Boolean(elements.critAtomToggle)
+  });
+  if (!elements.critAtomToggle) {
+    return;
+  }
+  elements.critAtomToggle.addEventListener('change', () => {
+    const disabled = !elements.critAtomToggle.checked;
+    applyCritAtomVisualsDisabled(disabled, { persist: true, updateControl: false });
+  });
+}
+
+function subscribeCritAtomLanguageUpdates() {
+  const handler = () => {
+    updateCritAtomStatusLabel(critAtomVisualsDisabled);
+  };
+  const api = getI18nApi();
+  if (api && typeof api.onLanguageChanged === 'function') {
+    api.onLanguageChanged(handler);
+    return;
+  }
+  if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
+    globalThis.addEventListener('i18n:languagechange', handler);
+  }
+}
+
 initClickSoundOption();
 subscribeClickSoundLanguageUpdates();
+initCritAtomOption();
+subscribeCritAtomLanguageUpdates();
 
 const musicPlayer = (() => {
   const MUSIC_DIR = 'Assets/Music/';
@@ -5700,6 +5804,9 @@ function clamp(value, min, max) {
 }
 
 function spawnCriticalAtom(multiplier = 1) {
+  if (critAtomVisualsDisabled) {
+    return;
+  }
   const layer = ensureCritAtomLayer();
   if (!layer) return;
 

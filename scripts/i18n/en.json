@@ -346,6 +346,15 @@
             "off": "Click sounds off"
           }
         },
+        "critAtoms": {
+          "title": "Critical atom bursts",
+          "description": "Show little atom sprites erupting on critical hits. Disable them to reduce on-screen effects.",
+          "ariaLabel": "Toggle the critical hit atom bursts",
+          "state": {
+            "on": "Critical bursts on",
+            "off": "Critical bursts off"
+          }
+        },
         "music": {
           "title": "Music",
           "track": "Now playing",

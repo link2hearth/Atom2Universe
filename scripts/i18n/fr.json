@@ -346,6 +346,15 @@
             "off": "Sons coupés"
           }
         },
+        "critAtoms": {
+          "title": "Atomes critiques animés",
+          "description": "Affiche de petits atomes qui jaillissent lors d’un coup critique. Désactivez-les pour alléger l’affichage.",
+          "ariaLabel": "Activer ou couper les atomes animés lors des critiques",
+          "state": {
+            "on": "Animations critiques actives",
+            "off": "Animations critiques coupées"
+          }
+        },
         "music": {
           "title": "Musique",
           "track": "Piste en lecture",
