@@ -625,7 +625,7 @@
         "interstellarProbe": {
           "name": "Sonde interstellaire",
           "description": "Explorez la galaxie pour récolter toujours plus.",
-          "effect": "Production passive : +5 000 APS par niveau. Bonus : avec 50 Électrons libres ou plus, chaque niveau de bâtiment ajoute +100 APC."
+          "effect": "Production passive : +5 000 APS par niveau. Bonus : avec 50 Électrons libres ou plus, chaque type de bâtiment possédé ajoute +100 APC par niveau de Sonde."
         },
         "spaceStation": {
           "name": "Station spatiale",
