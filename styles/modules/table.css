@@ -375,7 +375,7 @@ body.theme-light .element-info-panel__symbol-button:focus-visible {
 .element-details-overlay__dialog {
   position: relative;
   width: min(1200px, 96vw);
-  max-height: min(90vh, calc(96vw * 9 / 16));
+  max-height: min(92vh, 1200px);
   display: flex;
   flex-direction: column;
   gap: clamp(0.6rem, 1.5vw, 1rem);
@@ -384,6 +384,22 @@ body.theme-light .element-info-panel__symbol-button:focus-visible {
   background: rgba(18, 24, 40, 0.94);
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 1.25rem 3.2rem rgba(0, 0, 0, 0.45);
+}
+
+@media (orientation: landscape) {
+  .element-details-overlay__dialog {
+    max-height: min(90vh, calc(96vw * 9 / 16));
+  }
+}
+
+@media (orientation: portrait) {
+  .element-details-overlay {
+    align-items: flex-start;
+  }
+
+  .element-details-overlay__dialog {
+    width: min(96vw, 760px);
+  }
 }
 
 .element-details-overlay__header {
