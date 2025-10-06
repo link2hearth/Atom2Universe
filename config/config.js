@@ -867,6 +867,21 @@ const GAME_CONFIG = {
         base: 40,
         advanced: 80,
         expert: 120
+      },
+      symbolMode: {
+        /**
+         * Niveau à partir duquel toutes les opérations (+, -, ×, ÷) sont proposées.
+         * Les niveaux inférieurs n'affichent que les opérations de base (addition/soustraction).
+         */
+        fullSymbolUnlockLevel: 10,
+        /**
+         * Ensemble des symboles proposés avant le palier d'extension.
+         */
+        earlySymbols: ['+', '-'],
+        /**
+         * Ensemble complet des symboles proposés une fois le palier atteint.
+         */
+        fullSymbols: ['+', '-', '*', '/']
       }
     },
     particules: {

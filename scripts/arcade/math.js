@@ -22,14 +22,22 @@
       expert: 120
     }),
     maxMistakes: 3,
-    roundTimerSeconds: 30
+    roundTimerSeconds: 30,
+    symbolMode: Object.freeze({
+      enabled: true,
+      fullSymbolUnlockLevel: 10,
+      earlySymbols: Object.freeze(['+', '-']),
+      fullSymbols: Object.freeze(['+', '-', '*', '/'])
+    })
   });
 
   const PLACEHOLDER_SYMBOL = '?';
   const MAX_GENERATION_ATTEMPTS = 120;
   const DISPLAY_OPERATOR_MAP = Object.freeze({
-    '*': 'x'
+    '*': 'x',
+    '/': '÷'
   });
+  const ALLOWED_OPERATORS = Object.freeze(['+', '-', '*', '/']);
 
   function onReady(callback) {
     if (document.readyState === 'loading') {
@@ -92,6 +100,72 @@
     return { base, advanced, expert };
   }
 
+  function normalizeSymbolList(list, fallback) {
+    const fallbackList = Array.isArray(fallback) ? fallback : [];
+    const source = Array.isArray(list) ? list : [];
+    const sanitized = [];
+    source.forEach(value => {
+      if (typeof value !== 'string') {
+        return;
+      }
+      const trimmed = value.trim();
+      if (!trimmed) {
+        return;
+      }
+      if (!ALLOWED_OPERATORS.includes(trimmed)) {
+        return;
+      }
+      if (!sanitized.includes(trimmed)) {
+        sanitized.push(trimmed);
+      }
+    });
+    if (sanitized.length > 0) {
+      return sanitized;
+    }
+    const fallbackSanitized = [];
+    fallbackList.forEach(value => {
+      if (typeof value !== 'string') {
+        return;
+      }
+      const trimmed = value.trim();
+      if (ALLOWED_OPERATORS.includes(trimmed) && !fallbackSanitized.includes(trimmed)) {
+        fallbackSanitized.push(trimmed);
+      }
+    });
+    if (fallbackSanitized.length > 0) {
+      return fallbackSanitized;
+    }
+    return ['+', '-'];
+  }
+
+  function normalizeSymbolMode(symbolMode, fallback) {
+    const safeFallback = fallback || DEFAULT_CONFIG.symbolMode;
+    const source = symbolMode && typeof symbolMode === 'object' ? symbolMode : {};
+    const enabled = source.enabled !== false;
+    const unlockLevel = Number.isFinite(source.fullSymbolUnlockLevel)
+      ? Math.max(1, Math.floor(source.fullSymbolUnlockLevel))
+      : safeFallback.fullSymbolUnlockLevel;
+    const fullSymbols = normalizeSymbolList(source.fullSymbols, safeFallback.fullSymbols);
+    const earlySymbolsSource = normalizeSymbolList(source.earlySymbols, safeFallback.earlySymbols);
+    const earlySymbols = earlySymbolsSource.filter(symbol => fullSymbols.includes(symbol));
+    if (earlySymbols.length < 2) {
+      fullSymbols.forEach(symbol => {
+        if (!earlySymbols.includes(symbol) && earlySymbols.length < 2) {
+          earlySymbols.push(symbol);
+        }
+      });
+    }
+    const optionCount = Math.max(2, Math.min(fullSymbols.length, 8));
+    const normalizedEarly = Object.freeze(earlySymbols.slice(0, optionCount));
+    const normalizedFull = Object.freeze(fullSymbols.slice(0, optionCount));
+    return {
+      enabled,
+      fullSymbolUnlockLevel: unlockLevel,
+      earlySymbols: normalizedEarly,
+      fullSymbols: normalizedFull
+    };
+  }
+
   function getGameConfig() {
     const arcadeConfig = GLOBAL_CONFIG && GLOBAL_CONFIG.arcade ? GLOBAL_CONFIG.arcade : null;
     const mathConfig = arcadeConfig && typeof arcadeConfig.math === 'object' ? arcadeConfig.math : null;
@@ -113,6 +187,7 @@
     const maxMistakes = Number.isFinite(mathConfig.maxMistakes)
       ? Math.max(1, Math.floor(mathConfig.maxMistakes))
       : DEFAULT_CONFIG.maxMistakes;
+    const symbolMode = normalizeSymbolMode(mathConfig.symbolMode, DEFAULT_CONFIG.symbolMode);
     return {
       optionsCount,
       termCountRange,
@@ -122,7 +197,8 @@
       thresholds,
       resultLimits,
       maxMistakes,
-      roundTimerSeconds
+      roundTimerSeconds,
+      symbolMode
     };
   }
 
@@ -214,8 +290,49 @@
     return { valid: true, value: total };
   }
 
-  function determineStage(correctCount, config) {
+  function determineStage(correctCount, config, mode) {
     const level = Math.max(1, correctCount + 1);
+    if (mode === 'symbols') {
+      const symbolConfig = config.symbolMode || DEFAULT_CONFIG.symbolMode;
+      const unlockLevel = Math.max(1, symbolConfig.fullSymbolUnlockLevel || DEFAULT_CONFIG.symbolMode.fullSymbolUnlockLevel);
+      const usingFullSet = level >= unlockLevel;
+      const operations = usingFullSet
+        ? Array.from(symbolConfig.fullSymbols || DEFAULT_CONFIG.symbolMode.fullSymbols)
+        : Array.from(symbolConfig.earlySymbols || DEFAULT_CONFIG.symbolMode.earlySymbols);
+      if (!operations.length) {
+        operations.push('+', '-');
+      }
+      let range = config.baseRange;
+      let maxResult = config.resultLimits.base;
+      let termRange = level <= 5 ? { min: 2, max: 2 } : { min: 3, max: 3 };
+      if (usingFullSet) {
+        range = config.advancedRange;
+        maxResult = config.resultLimits.advanced;
+        termRange = { min: 3, max: 3 };
+        if (level > config.thresholds.divide) {
+          termRange = { min: 3, max: 4 };
+        }
+        if (level > config.thresholds.expert) {
+          range = config.expertRange;
+          maxResult = config.resultLimits.expert;
+          termRange = { min: 3, max: 5 };
+        }
+      }
+      const stage = {
+        operations,
+        range,
+        termRange,
+        maxResult,
+        hideType: 'operator',
+        optionValues: operations.slice(),
+        optionCount: Math.max(2, operations.length)
+      };
+      if (usingFullSet) {
+        stage.requireMultiplicative = true;
+      }
+      return stage;
+    }
+
     let operations = ['+', '-'];
     let range = config.baseRange;
     let maxResult = config.resultLimits.base;
@@ -249,7 +366,8 @@
       operations,
       range,
       termRange,
-      maxResult
+      maxResult,
+      hideType: 'number'
     };
     if (requireMultiplicative) {
       stage.requireMultiplicative = true;
@@ -298,10 +416,66 @@
     return shuffled;
   }
 
+  function buildSymbolOptions(hiddenValue, stage, symbolModeConfig) {
+    const config = symbolModeConfig || DEFAULT_CONFIG.symbolMode;
+    const baseValues = Array.isArray(stage.optionValues) && stage.optionValues.length
+      ? Array.from(stage.optionValues)
+      : Array.isArray(config.fullSymbols)
+        ? Array.from(config.fullSymbols)
+        : Array.from(DEFAULT_CONFIG.symbolMode.fullSymbols);
+    const targetCount = Math.max(2, stage.optionCount || baseValues.length || 2);
+    const poolSet = new Set();
+    baseValues.forEach(symbol => {
+      if (typeof symbol === 'string' && ALLOWED_OPERATORS.includes(symbol)) {
+        poolSet.add(symbol);
+      }
+    });
+    if (typeof hiddenValue === 'string' && ALLOWED_OPERATORS.includes(hiddenValue)) {
+      poolSet.add(hiddenValue);
+    }
+    if (poolSet.size < targetCount) {
+      const fallbackFull = Array.isArray(config.fullSymbols) && config.fullSymbols.length
+        ? config.fullSymbols
+        : DEFAULT_CONFIG.symbolMode.fullSymbols;
+      fallbackFull.forEach(symbol => {
+        if (typeof symbol === 'string' && ALLOWED_OPERATORS.includes(symbol)) {
+          poolSet.add(symbol);
+        }
+      });
+    }
+    if (poolSet.size < targetCount) {
+      const fallbackEarly = Array.isArray(config.earlySymbols) && config.earlySymbols.length
+        ? config.earlySymbols
+        : DEFAULT_CONFIG.symbolMode.earlySymbols;
+      fallbackEarly.forEach(symbol => {
+        if (typeof symbol === 'string' && ALLOWED_OPERATORS.includes(symbol)) {
+          poolSet.add(symbol);
+        }
+      });
+    }
+    const pool = Array.from(poolSet).filter(symbol => ALLOWED_OPERATORS.includes(symbol));
+    if (typeof hiddenValue === 'string' && !pool.includes(hiddenValue)) {
+      pool.unshift(hiddenValue);
+    }
+    if (pool.length < targetCount) {
+      return null;
+    }
+    const others = shuffle(pool.filter(symbol => symbol !== hiddenValue));
+    const result = [hiddenValue];
+    for (let index = 0; index < others.length && result.length < targetCount; index += 1) {
+      result.push(others[index]);
+    }
+    if (result.length < targetCount) {
+      return null;
+    }
+    return shuffle(result);
+  }
+
   function generateRoundForStage(stage, config) {
     if (!stage.operations.length) {
       stage = Object.assign({}, stage, { operations: ['+'] });
     }
+    const hideType = stage.hideType === 'operator' ? 'operator' : 'number';
     for (let attempt = 0; attempt < MAX_GENERATION_ATTEMPTS; attempt += 1) {
       const termCount = randomInt(stage.termRange.min, stage.termRange.max);
       const numbers = [];
@@ -326,6 +500,27 @@
       if (!Number.isFinite(evaluation.value) || Math.abs(evaluation.value) > stage.maxResult) {
         continue;
       }
+      if (hideType === 'operator') {
+        if (!operations.length) {
+          continue;
+        }
+        const hiddenIndex = randomInt(0, operations.length - 1);
+        const hiddenValue = operations[hiddenIndex];
+        const options = buildSymbolOptions(hiddenValue, stage, config.symbolMode);
+        const required = Math.max(2, stage.optionCount || 2);
+        if (!Array.isArray(options) || options.length < required) {
+          continue;
+        }
+        return {
+          numbers,
+          operations,
+          result: evaluation.value,
+          hiddenIndex,
+          hiddenValue,
+          options,
+          hiddenType: 'operator'
+        };
+      }
       const hiddenIndex = randomInt(0, numbers.length - 1);
       const hiddenValue = numbers[hiddenIndex];
       if (!Number.isInteger(hiddenValue) || hiddenValue <= 0) {
@@ -341,13 +536,33 @@
         result: evaluation.value,
         hiddenIndex,
         hiddenValue,
-        options
+        options,
+        hiddenType: 'number'
       };
     }
     return null;
   }
 
-  function createStaticFallback(config) {
+  function createFallbackRound(config, mode) {
+    if (mode === 'symbols') {
+      const numbers = [3, 4];
+      const operations = ['+'];
+      const evaluation = evaluateExpression(numbers, operations);
+      const symbolStage = {
+        optionValues: (config.symbolMode && config.symbolMode.earlySymbols) || DEFAULT_CONFIG.symbolMode.earlySymbols,
+        optionCount: Math.max(2, (config.symbolMode && config.symbolMode.earlySymbols && config.symbolMode.earlySymbols.length) || 2)
+      };
+      const options = buildSymbolOptions('+', symbolStage, config.symbolMode);
+      return {
+        numbers,
+        operations,
+        result: evaluation.valid ? evaluation.value : 7,
+        hiddenIndex: 0,
+        hiddenValue: '+',
+        options: options || ['+', '-'],
+        hiddenType: 'operator'
+      };
+    }
     const stage = {
       operations: ['+', '-'],
       range: config.baseRange,
@@ -366,7 +581,8 @@
       result: evaluation.valid ? evaluation.value : 11,
       hiddenIndex,
       hiddenValue,
-      options
+      options,
+      hiddenType: 'number'
     };
   }
 
@@ -377,14 +593,20 @@
     return DISPLAY_OPERATOR_MAP[operator] || operator;
   }
 
-  function formatExpression(numbers, operations, result, hiddenIndex, reveal) {
+  function formatExpression(numbers, operations, result, hiddenIndex, reveal, hiddenType) {
+    const type = hiddenType === 'operator' ? 'operator' : 'number';
     const displayNumbers = numbers.map((value, index) => {
-      if (index === hiddenIndex && !reveal) {
+      if (type === 'number' && index === hiddenIndex && !reveal) {
         return PLACEHOLDER_SYMBOL;
       }
       return String(value);
     });
-    const formattedOps = operations.map(formatOperator);
+    const formattedOps = operations.map((operator, index) => {
+      if (type === 'operator' && index === hiddenIndex && !reveal) {
+        return PLACEHOLDER_SYMBOL;
+      }
+      return formatOperator(operator);
+    });
     const tokens = [];
     let index = 0;
 
@@ -439,8 +661,12 @@
       nextButton: document.getElementById('mathNextButton'),
       score: document.getElementById('mathScoreValue'),
       streak: document.getElementById('mathStreakValue'),
-      timer: document.getElementById('mathTimerValue')
+      timer: document.getElementById('mathTimerValue'),
+      modeSwitch: document.getElementById('mathModeSwitch')
     };
+    elements.modeButtons = elements.modeSwitch
+      ? Array.from(elements.modeSwitch.querySelectorAll('[data-math-mode]'))
+      : Array.from(document.querySelectorAll('[data-math-mode]'));
 
     if (!elements.expression || !elements.options || !elements.nextButton) {
       return;
@@ -454,6 +680,7 @@
       mistakes: 0,
       solved: false,
       currentRound: null,
+      mode: 'numbers',
       config,
       timer: {
         id: null,
@@ -481,6 +708,58 @@
       const normalized = Number.isFinite(seconds) ? Math.max(0, Math.floor(seconds)) : 0;
       state.timer.remaining = normalized;
       updateTimerDisplay();
+    }
+
+    function isSymbolModeAvailable() {
+      return Boolean(state.config.symbolMode && state.config.symbolMode.enabled);
+    }
+
+    function updateModeButtons() {
+      if (!Array.isArray(elements.modeButtons)) {
+        return;
+      }
+      elements.modeButtons.forEach(button => {
+        if (!(button instanceof HTMLElement)) {
+          return;
+        }
+        const modeValue = button.dataset.mathMode || 'numbers';
+        const isActive = modeValue === state.mode;
+        button.classList.toggle('math-game__mode-button--active', isActive);
+        button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+        if (modeValue === 'symbols') {
+          if (!isSymbolModeAvailable()) {
+            button.disabled = true;
+            button.setAttribute('aria-disabled', 'true');
+          } else {
+            button.disabled = false;
+            button.removeAttribute('aria-disabled');
+          }
+        }
+      });
+    }
+
+    function resetForModeChange() {
+      state.correctAnswers = 0;
+      state.streak = 0;
+      state.mistakes = 0;
+      state.solved = false;
+      state.currentRound = null;
+      updateCounters();
+      if (elements.feedback) {
+        elements.feedback.textContent = '';
+      }
+    }
+
+    function switchMode(nextMode) {
+      const normalized = nextMode === 'symbols' && isSymbolModeAvailable() ? 'symbols' : 'numbers';
+      if (normalized === state.mode) {
+        return;
+      }
+      stopTimer();
+      state.mode = normalized;
+      resetForModeChange();
+      updateModeButtons();
+      prepareRound();
     }
 
     function stopTimer() {
@@ -522,13 +801,14 @@
         round.operations,
         round.result,
         round.hiddenIndex,
-        true
+        true,
+        round.hiddenType
       );
       elements.expression.textContent = fullEquation;
       Array.from(elements.options.querySelectorAll('button')).forEach(option => {
         option.disabled = true;
-        const optionValue = Number.parseInt(option.dataset.value, 10);
-        if (Number.isFinite(optionValue) && optionValue === round.hiddenValue) {
+        const optionValue = option.dataset.answer || '';
+        if (optionValue === String(round.hiddenValue)) {
           option.classList.add('math-game__option--correct');
         }
       });
@@ -574,24 +854,36 @@
     }
 
     function renderRound(round) {
-      const promptMessage = translate(
-        'scripts.arcade.math.status.prompt',
-        'Choisissez la valeur manquante pour compléter le calcul.'
-      );
+      const promptKey = round.hiddenType === 'operator'
+        ? 'scripts.arcade.math.status.symbolPrompt'
+        : 'scripts.arcade.math.status.prompt';
+      const promptFallback = round.hiddenType === 'operator'
+        ? 'Pick the missing operator to complete the equation.'
+        : 'Pick the missing value to complete the equation.';
+      const promptMessage = translate(promptKey, promptFallback);
       elements.expression.textContent = formatExpression(
         round.numbers,
         round.operations,
         round.result,
         round.hiddenIndex,
-        false
+        false,
+        round.hiddenType
       );
       elements.options.innerHTML = '';
+      const ariaKey = round.hiddenType === 'operator'
+        ? 'index.sections.math.symbolOptionsAria'
+        : 'index.sections.math.optionsAria';
+      const ariaFallback = round.hiddenType === 'operator'
+        ? 'Pick the missing operator to complete the equation.'
+        : 'Pick the answer that completes the equation.';
+      elements.options.setAttribute('aria-label', translate(ariaKey, ariaFallback));
       round.options.forEach(value => {
         const button = document.createElement('button');
         button.type = 'button';
         button.className = 'math-game__option';
-        button.dataset.value = String(value);
-        button.textContent = String(value);
+        const answerValue = String(value);
+        button.dataset.answer = answerValue;
+        button.textContent = round.hiddenType === 'operator' ? formatOperator(value) : answerValue;
         elements.options.appendChild(button);
       });
       if (elements.feedback) {
@@ -605,11 +897,19 @@
     function prepareRound() {
       stopTimer();
       setTimerRemaining(state.config.roundTimerSeconds);
-      const stage = determineStage(state.correctAnswers, state.config);
+      const stage = determineStage(state.correctAnswers, state.config, state.mode);
       let round = generateRoundForStage(stage, state.config);
       if (!round && stage.operations.includes('/')) {
+        const filteredOperations = stage.operations.filter(operator => operator !== '/');
         const withoutDivision = Object.assign({}, stage, {
-          operations: stage.operations.filter(operator => operator !== '/'),
+          operations: filteredOperations,
+          optionValues: Array.isArray(stage.optionValues)
+            ? stage.optionValues.filter(operator => operator !== '/')
+            : filteredOperations,
+          optionCount: Math.max(2, Array.isArray(stage.optionValues)
+            ? stage.optionValues.filter(operator => operator !== '/').length
+            : filteredOperations.length),
+          requireMultiplicative: false,
           maxResult: Math.max(stage.maxResult, state.config.resultLimits.advanced)
         });
         round = generateRoundForStage(withoutDivision, state.config);
@@ -618,12 +918,15 @@
         const simpleStage = Object.assign({}, stage, {
           operations: ['+', '-'],
           range: state.config.baseRange,
+          optionValues: ['+', '-'],
+          optionCount: 2,
+          requireMultiplicative: false,
           maxResult: state.config.resultLimits.base
         });
         round = generateRoundForStage(simpleStage, state.config);
       }
       if (!round) {
-        round = createStaticFallback(state.config);
+        round = createFallbackRound(state.config, state.mode);
       }
       state.currentRound = round;
       renderRound(round);
@@ -661,13 +964,31 @@
       }
       if (elements.feedback) {
         const remaining = Math.max(0, mistakeLimit - state.mistakes);
+        const displayValue = state.currentRound && state.currentRound.hiddenType === 'operator'
+          ? formatOperator(value)
+          : value;
         elements.feedback.textContent = translate(
           'scripts.arcade.math.status.incorrect',
           "Ce n'est pas {value}. Réessayez ! Il vous reste {remaining} erreur(s).",
-          { value, remaining }
+          { value: displayValue, remaining }
         );
       }
       updateCounters();
+    }
+
+    if (Array.isArray(elements.modeButtons) && elements.modeButtons.length) {
+      elements.modeButtons.forEach(button => {
+        if (!(button instanceof HTMLElement)) {
+          return;
+        }
+        const modeValue = button.dataset.mathMode || 'numbers';
+        button.addEventListener('click', () => {
+          if (modeValue === 'symbols' && !isSymbolModeAvailable()) {
+            return;
+          }
+          switchMode(modeValue);
+        });
+      });
     }
 
     elements.options.addEventListener('click', event => {
@@ -678,11 +999,11 @@
       if (target.disabled || state.solved || !state.currentRound) {
         return;
       }
-      const value = Number.parseInt(target.dataset.value, 10);
-      if (!Number.isFinite(value)) {
+      const value = target.dataset.answer;
+      if (typeof value !== 'string') {
         return;
       }
-      if (value === state.currentRound.hiddenValue) {
+      if (value === String(state.currentRound.hiddenValue)) {
         handleCorrectAnswer(target);
       } else {
         handleWrongAnswer(target, value);
@@ -696,6 +1017,7 @@
       prepareRound();
     });
 
+    updateModeButtons();
     prepareRound();
   });
 })();

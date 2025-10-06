@@ -107,7 +107,7 @@
           "math": {
             "aria": "Accéder au mini-jeu Math",
             "title": "Math",
-            "description": "Trouvez le nombre manquant pour compléter des opérations évolutives.",
+            "description": "Trouvez le nombre ou le symbole manquant pour compléter des opérations évolutives.",
             "cta": "Calculer"
           },
           "sudoku": {
@@ -125,13 +125,19 @@
         }
       },
       "math": {
-        "aria": "Mini-jeu Math : trouvez le nombre manquant.",
+        "aria": "Mini-jeu Math : trouvez le nombre ou le symbole manquant.",
         "title": "Math quantique",
-        "subtitle": "Repérez le nombre caché pour compléter des calculs de plus en plus complexes.",
+        "subtitle": "Repérez le nombre ou le symbole caché pour compléter des calculs de plus en plus complexes.",
         "scoreLabel": "Opérations résolues",
         "streakLabel": "Série actuelle",
         "timerLabel": "Temps restant",
-        "optionsAria": "Choisir la réponse pour le nombre manquant",
+        "optionsAria": "Choisir la réponse pour compléter le calcul",
+        "symbolOptionsAria": "Choisir le symbole manquant pour compléter le calcul",
+        "modes": {
+          "aria": "Choisir le mode de calcul",
+          "numbers": "Mode chiffres",
+          "symbols": "Mode symboles"
+        },
         "next": "Nouvelle opération"
       },
       "balance": {
@@ -928,6 +934,7 @@
       "math": {
         "status": {
           "prompt": "Choisissez la valeur manquante pour compléter le calcul.",
+          "symbolPrompt": "Choisissez le symbole manquant pour compléter le calcul.",
           "correct": "Bravo ! {equation}",
           "incorrect": "Ce n'est pas {value}. Réessayez ! Il vous reste {remaining} erreur(s) avant le game over.",
           "timeout": "Temps écoulé ! La série est réinitialisée.",
