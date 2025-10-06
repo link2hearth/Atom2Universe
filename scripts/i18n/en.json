@@ -341,16 +341,16 @@
           "title": "Clicker sound",
           "ariaLabel": "Toggle the clicker pop sound",
           "state": {
-            "on": "Click sounds on",
-            "off": "Click sounds off"
+            "on": "On",
+            "off": "Off"
           }
         },
         "critAtoms": {
           "title": "Critical atom bursts",
           "ariaLabel": "Toggle the critical hit atom bursts",
           "state": {
-            "on": "Critical bursts on",
-            "off": "Critical bursts off"
+            "on": "On",
+            "off": "Off"
           }
         },
         "music": {
