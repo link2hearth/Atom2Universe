@@ -107,7 +107,7 @@
           "math": {
             "aria": "Open the Math mini-game",
             "title": "Math",
-            "description": "Find the missing number to complete ever-trickier operations.",
+            "description": "Find the missing number or symbol to complete ever-trickier operations.",
             "cta": "Solve"
           },
           "sudoku": {
@@ -125,13 +125,19 @@
         }
       },
       "math": {
-        "aria": "Math mini-game: find the missing number.",
+        "aria": "Math mini-game: find the missing number or symbol.",
         "title": "Quantum Math",
-        "subtitle": "Spot the hidden value to complete calculations that ramp up in difficulty.",
+        "subtitle": "Spot the hidden number or operator to complete calculations that ramp up in difficulty.",
         "scoreLabel": "Solved",
         "streakLabel": "Current streak",
         "timerLabel": "Time left",
-        "optionsAria": "Select the value that completes the equation",
+        "optionsAria": "Select the answer that completes the equation",
+        "symbolOptionsAria": "Select the missing operator to complete the equation",
+        "modes": {
+          "aria": "Choose the gameplay mode",
+          "numbers": "Number mode",
+          "symbols": "Symbol mode"
+        },
         "next": "Next puzzle"
       },
       "balance": {
@@ -943,8 +949,9 @@
       "math": {
         "status": {
           "prompt": "Pick the missing value to complete the equation.",
+          "symbolPrompt": "Pick the missing operator to complete the equation.",
           "correct": "Great job! {equation}",
-          "incorrect": "{value} isn't the right number. Try again! {remaining} mistake(s) left before game over.",
+          "incorrect": "{value} isn't the right answer. Try again! {remaining} mistake(s) left before game over.",
           "timeout": "Time's up! Streak reset.",
           "gameOverMistakes": "You've reached {limit} mistakes: game over! Level resets to zero.",
           "gameOverTimeout": "Time's up: game over! Level resets to zero."

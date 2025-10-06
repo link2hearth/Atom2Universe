@@ -414,6 +414,27 @@
         <header class="math-game__header">
           <h2 class="math-game__title" data-i18n="index.sections.math.title"></h2>
           <p class="math-game__subtitle" data-i18n="index.sections.math.subtitle"></p>
+          <div
+            class="math-game__mode-switch"
+            id="mathModeSwitch"
+            role="group"
+            data-i18n="aria-label:index.sections.math.modes.aria"
+          >
+            <button
+              type="button"
+              class="math-game__mode-button math-game__mode-button--active"
+              data-math-mode="numbers"
+              aria-pressed="true"
+              data-i18n="index.sections.math.modes.numbers"
+            ></button>
+            <button
+              type="button"
+              class="math-game__mode-button"
+              data-math-mode="symbols"
+              aria-pressed="false"
+              data-i18n="index.sections.math.modes.symbols"
+            ></button>
+          </div>
         </header>
         <div class="math-game__counters" role="presentation">
           <div class="math-game__counter">
