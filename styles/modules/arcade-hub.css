@@ -71,71 +71,44 @@
 .arcade-hub__grid {
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: clamp(1rem, 2.6vw, 2.4rem);
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: clamp(0.9rem, 2.1vw, 1.8rem);
 }
 
 .arcade-hub-card {
   display: flex;
-  flex-direction: column;
-  gap: clamp(0.8rem, 1.6vw, 1.3rem);
-  padding: clamp(1.1rem, 2.6vw, 1.9rem);
-  border-radius: clamp(1rem, 2.4vw, 1.6rem);
+  align-items: center;
+  justify-content: center;
+  padding: clamp(0.9rem, 2.2vw, 1.6rem);
+  min-height: clamp(6.2rem, 18vw, 9rem);
+  border-radius: clamp(0.85rem, 2vw, 1.4rem);
   background: linear-gradient(160deg, rgba(26, 34, 70, 0.85), rgba(12, 16, 38, 0.9));
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 18px 32px rgba(6, 8, 24, 0.32);
-  min-height: 100%;
   transition: transform var(--transition), box-shadow var(--transition);
+  appearance: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  text-align: center;
+  width: 100%;
+  text-decoration: none;
+  outline: none;
 }
 
 .arcade-hub-card:hover,
-.arcade-hub-card:focus-within {
+.arcade-hub-card:focus-visible {
   transform: translateY(-4px);
-  box-shadow: 0 26px 46px rgba(12, 18, 46, 0.45);
-}
-
-.arcade-hub-card__header {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(0.4rem, 1vw, 0.75rem);
+  box-shadow: 0 24px 40px rgba(12, 18, 46, 0.45);
+  outline: 2px solid rgba(255, 255, 255, 0.55);
+  outline-offset: 4px;
 }
 
 .arcade-hub-card__title {
+  display: block;
   margin: 0;
   font-family: 'Orbitron', 'Audiowide', sans-serif;
-  font-size: clamp(1.05rem, 2vw, 1.45rem);
-  letter-spacing: 0.08em;
+  font-size: clamp(0.92rem, 1.8vw, 1.25rem);
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-}
-
-.arcade-hub-card__description {
-  margin: 0;
-  color: rgba(226, 229, 255, 0.82);
-  line-height: 1.55;
-  font-size: clamp(0.85rem, 1.4vw, 1rem);
-}
-
-.arcade-hub-card__button {
-  align-self: flex-start;
-  appearance: none;
-  border: none;
-  border-radius: 999px;
-  padding: clamp(0.42rem, 1.1vw, 0.78rem) clamp(1.15rem, 2.6vw, 1.9rem);
-  font-family: 'Orbitron', 'Audiowide', sans-serif;
-  font-size: clamp(0.62rem, 1.2vw, 0.82rem);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  background: linear-gradient(135deg, #ff8ba7, #ffd166);
-  color: #111321;
-  box-shadow: 0 14px 28px rgba(255, 139, 167, 0.35);
-  cursor: pointer;
-  transition: transform var(--transition), box-shadow var(--transition);
-}
-
-.arcade-hub-card__button:hover,
-.arcade-hub-card__button:focus-visible {
-  transform: translateY(-1px);
-  box-shadow: 0 18px 32px rgba(255, 139, 167, 0.48);
-  outline: 2px solid rgba(17, 19, 33, 0.45);
-  outline-offset: 2px;
 }

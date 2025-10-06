@@ -93,20 +93,20 @@
             "cta": "Surfer"
           },
           "quantum2048": {
-            "aria": "Accéder au mini-jeu Fusion 2048",
-            "title": "Fusion 2048",
+            "aria": "Accéder au mini-jeu ObjectX",
+            "title": "ObjectX",
             "description": "Composez des réactions en chaîne sur la grille choisie pour atteindre la tuile objectif.",
             "cta": "Fusionner"
           },
           "sudoku": {
-            "aria": "Accéder au mini-jeu Sudoku quantique",
-            "title": "Sudoku quantique",
+            "aria": "Accéder au mini-jeu Sudoku",
+            "title": "Sudoku",
             "description": "Résolvez des grilles générées aléatoirement ou laissez l'ordinateur trouver la solution parfaite.",
             "cta": "Résoudre"
           },
           "blackjack": {
-            "aria": "Ouvrir le mini-jeu Blackjack quantique",
-            "title": "Blackjack quantique",
+            "aria": "Ouvrir le mini-jeu Blackjack",
+            "title": "Blackjack",
             "description": "Affrontez le croupier avec un sabot de huit paquets qui se régénère dès qu'une carte unique s'épuise.",
             "cta": "Distribuer"
           }

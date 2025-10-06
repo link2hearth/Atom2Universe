@@ -2346,7 +2346,7 @@ const elements = {
   arcadeOverlay: document.getElementById('arcadeOverlay'),
   arcadeOverlayMessage: document.getElementById('arcadeOverlayMessage'),
   arcadeOverlayButton: document.getElementById('arcadeOverlayButton'),
-  arcadeHubCardButtons: document.querySelectorAll('.arcade-hub-card__button'),
+  arcadeHubCards: document.querySelectorAll('.arcade-hub-card'),
   arcadeLevelValue: document.getElementById('arcadeLevelValue'),
   arcadeLivesValue: document.getElementById('arcadeLivesValue'),
   arcadeScoreValue: document.getElementById('arcadeScoreValue'),
@@ -6499,10 +6499,10 @@ elements.navButtons.forEach(btn => {
   });
 });
 
-if (elements.arcadeHubCardButtons?.length) {
-  elements.arcadeHubCardButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      const target = button.dataset.pageTarget;
+if (elements.arcadeHubCards?.length) {
+  elements.arcadeHubCards.forEach(card => {
+    card.addEventListener('click', () => {
+      const target = card.dataset.pageTarget;
       if (!target || !isPageUnlocked(target)) {
         return;
       }
