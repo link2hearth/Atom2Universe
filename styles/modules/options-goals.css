@@ -13,13 +13,20 @@
   position: relative;
 }
 
-.option-card {
+.option-card { 
   background: var(--card-dark);
   border-radius: 18px;
   padding: clamp(1.2rem, 2vw, 1.6rem);
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
+}
+
+.option-card__toggles {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.5rem, 1.4vw, 0.9rem);
+  flex-wrap: wrap;
 }
 
 .option-card__header {
@@ -192,33 +199,26 @@ body.theme-light select {
   font-size: 0.9rem;
 }
 
+
 .option-toggle-card {
   border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 14px;
-  padding: clamp(0.75rem, 1.6vw, 1rem);
-  background: rgba(255, 255, 255, 0.04);
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
+  border-radius: 999px;
+  padding: 0.45rem 0.9rem;
+  background: rgba(255, 255, 255, 0.06);
+  display: inline-flex;
   align-items: center;
+  gap: 0.6rem;
 }
 
 .option-toggle-card__content {
-  flex: 1 1 220px;
-  min-width: 200px;
+  flex: 0 0 auto;
 }
 
 .option-toggle-card__title {
   margin: 0;
-  font-size: 1rem;
+  font-size: 0.92rem;
   font-weight: 600;
-}
-
-.option-toggle-card__description {
-  margin: 0.35rem 0 0;
-  opacity: 0.75;
-  font-size: 0.9rem;
-  line-height: 1.45;
+  white-space: nowrap;
 }
 
 .option-toggle-card__control {
