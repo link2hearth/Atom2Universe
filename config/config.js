@@ -902,10 +902,10 @@ const GAME_CONFIG = {
         innerWidthRatio: 0.92,
         innerHeightRatio: 0.68,
         vertical: {
-          paddingX: 0.05,
+          paddingX: 0,
           paddingY: 0.02,
           usableHeight: 0.5,
-          innerWidthRatio: 0.97,
+          innerWidthRatio: 1,
           innerHeightRatio: 0.82
         }
       },
