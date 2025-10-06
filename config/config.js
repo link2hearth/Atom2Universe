@@ -807,6 +807,7 @@ const GAME_CONFIG = {
       advancedRange: { min: 2, max: 12 },
       expertRange: { min: 2, max: 15 },
       optionsCount: 6,
+      maxMistakes: 3, // Nombre d'erreurs autorisées avant le game over.
       roundTimerSeconds: 30, // Temps alloué pour répondre (en secondes).
       thresholds: {
         multiply: 3,

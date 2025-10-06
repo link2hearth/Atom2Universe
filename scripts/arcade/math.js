@@ -21,6 +21,7 @@
       advanced: 80,
       expert: 120
     }),
+    maxMistakes: 3,
     roundTimerSeconds: 30
   });
 
@@ -109,6 +110,9 @@
     const roundTimerSeconds = Number.isFinite(mathConfig.roundTimerSeconds)
       ? Math.max(1, Math.floor(mathConfig.roundTimerSeconds))
       : DEFAULT_CONFIG.roundTimerSeconds;
+    const maxMistakes = Number.isFinite(mathConfig.maxMistakes)
+      ? Math.max(1, Math.floor(mathConfig.maxMistakes))
+      : DEFAULT_CONFIG.maxMistakes;
     return {
       optionsCount,
       termCountRange,
@@ -117,6 +121,7 @@
       expertRange,
       thresholds,
       resultLimits,
+      maxMistakes,
       roundTimerSeconds
     };
   }
@@ -446,6 +451,7 @@
     const state = {
       correctAnswers: 0,
       streak: 0,
+      mistakes: 0,
       solved: false,
       currentRound: null,
       config,
@@ -504,41 +510,67 @@
       }, 200);
     }
 
+    function revealRoundAnswer(round) {
+      if (!round) {
+        Array.from(elements.options.querySelectorAll('button')).forEach(option => {
+          option.disabled = true;
+        });
+        return '';
+      }
+      const fullEquation = formatExpression(
+        round.numbers,
+        round.operations,
+        round.result,
+        round.hiddenIndex,
+        true
+      );
+      elements.expression.textContent = fullEquation;
+      Array.from(elements.options.querySelectorAll('button')).forEach(option => {
+        option.disabled = true;
+        const optionValue = Number.parseInt(option.dataset.value, 10);
+        if (Number.isFinite(optionValue) && optionValue === round.hiddenValue) {
+          option.classList.add('math-game__option--correct');
+        }
+      });
+      return fullEquation;
+    }
+
+    function handleGameOver(reason) {
+      if (state.solved) {
+        return;
+      }
+      stopTimer();
+      const round = state.currentRound;
+      revealRoundAnswer(round);
+      state.solved = true;
+      state.correctAnswers = 0;
+      state.streak = 0;
+      state.mistakes = 0;
+      if (elements.feedback) {
+        if (reason === 'mistakes') {
+          const mistakeLimit = Math.max(1, state.config.maxMistakes || DEFAULT_CONFIG.maxMistakes);
+          elements.feedback.textContent = translate(
+            'scripts.arcade.math.status.gameOverMistakes',
+            'Vous avez atteint {limit} erreurs : game over ! Le niveau repart à zéro.',
+            { limit: mistakeLimit }
+          );
+        } else {
+          elements.feedback.textContent = translate(
+            'scripts.arcade.math.status.gameOverTimeout',
+            'Temps écoulé : game over ! Le niveau repart à zéro.'
+          );
+        }
+      }
+      elements.nextButton.disabled = false;
+      updateCounters();
+    }
+
     function handleTimeout() {
       if (state.solved) {
         return;
       }
       setTimerRemaining(0);
-      const round = state.currentRound;
-      state.solved = true;
-      state.streak = 0;
-      if (round) {
-        const fullEquation = formatExpression(
-          round.numbers,
-          round.operations,
-          round.result,
-          round.hiddenIndex,
-          true
-        );
-        elements.expression.textContent = fullEquation;
-      }
-      Array.from(elements.options.querySelectorAll('button')).forEach(option => {
-        option.disabled = true;
-        if (round) {
-          const optionValue = Number.parseInt(option.dataset.value, 10);
-          if (Number.isFinite(optionValue) && optionValue === round.hiddenValue) {
-            option.classList.add('math-game__option--correct');
-          }
-        }
-      });
-      if (elements.feedback) {
-        elements.feedback.textContent = translate(
-          'scripts.arcade.math.status.timeout',
-          'Temps écoulé ! La série est réinitialisée.'
-        );
-      }
-      elements.nextButton.disabled = false;
-      updateCounters();
+      handleGameOver('timeout');
     }
 
     function renderRound(round) {
@@ -604,18 +636,8 @@
       state.correctAnswers += 1;
       state.streak += 1;
       state.solved = true;
-      const fullEquation = formatExpression(
-        round.numbers,
-        round.operations,
-        round.result,
-        round.hiddenIndex,
-        true
-      );
+      const fullEquation = revealRoundAnswer(round);
       button.classList.add('math-game__option--correct');
-      Array.from(elements.options.querySelectorAll('button')).forEach(option => {
-        option.disabled = true;
-      });
-      elements.expression.textContent = fullEquation;
       if (elements.feedback) {
         elements.feedback.textContent = translate(
           'scripts.arcade.math.status.correct',
@@ -631,11 +653,18 @@
       state.streak = 0;
       button.classList.add('math-game__option--wrong');
       button.disabled = true;
+      state.mistakes += 1;
+      const mistakeLimit = Math.max(1, state.config.maxMistakes || DEFAULT_CONFIG.maxMistakes);
+      if (state.mistakes >= mistakeLimit) {
+        handleGameOver('mistakes');
+        return;
+      }
       if (elements.feedback) {
+        const remaining = Math.max(0, mistakeLimit - state.mistakes);
         elements.feedback.textContent = translate(
           'scripts.arcade.math.status.incorrect',
-          "Ce n'est pas {value}. Réessayez !",
-          { value }
+          "Ce n'est pas {value}. Réessayez ! Il vous reste {remaining} erreur(s).",
+          { value, remaining }
         );
       }
       updateCounters();
