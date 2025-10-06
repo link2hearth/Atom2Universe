@@ -294,6 +294,7 @@ body.theme-neon .brand--portal-ready {
   padding: var(--status-padding-y) var(--header-padding-x);
   gap: clamp(0.4rem, 0.8vw, 0.8rem);
   border-top: 1px solid rgba(255, 255, 255, 0.08);
+  width: 100%;
 }
 
 body.view-arcade .status-bar,
@@ -318,11 +319,13 @@ body.view-sudoku .status-bar {
 .status-side--left {
   justify-self: start;
   grid-area: left;
+  margin-right: auto;
 }
 
 .status-side--right {
   justify-self: end;
   grid-area: right;
+  margin-left: auto;
 }
 
 .status-item--left {
@@ -335,6 +338,8 @@ body.view-sudoku .status-bar {
   align-items: center;
   justify-self: center;
   grid-area: center;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .status-item--crit {
@@ -532,7 +537,7 @@ body.view-sudoku .status-bar {
   align-items: flex-end;
 }
 
-@media (max-width: 52rem) {
+@media (max-width: 52rem), (max-aspect-ratio: 1 / 1) {
   .status-bar {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     grid-template-areas:
@@ -549,6 +554,7 @@ body.view-sudoku .status-bar {
   .status-side--right {
     justify-self: stretch;
     width: 100%;
+    margin: 0;
   }
 
   .status-side--left {
@@ -561,6 +567,8 @@ body.view-sudoku .status-bar {
 
   .status-item--center {
     width: 100%;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .status-item--center .status-atoms-button {
