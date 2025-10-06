@@ -696,6 +696,31 @@ const TICKET_STAR_CONFIG = {
     );
     return Number.isFinite(raw) && raw > 0 ? raw : 90;
   })(),
+  speedVariance: (() => {
+    const raw = Number(
+      rawTicketStarConfig.speedVarianceFactor
+        ?? rawTicketStarConfig.speedVariance
+        ?? rawTicketStarConfig.speedVariancePercent
+        ?? 0
+    );
+    if (!Number.isFinite(raw)) {
+      return 0;
+    }
+    const absolute = Math.abs(raw);
+    if (absolute <= 0) {
+      return 0;
+    }
+    return Math.min(absolute, 0.95);
+  })(),
+  edgePadding: (() => {
+    const raw = Number(
+      rawTicketStarConfig.spawnOffsetPixels
+        ?? rawTicketStarConfig.edgePaddingPixels
+        ?? rawTicketStarConfig.edgePadding
+        ?? 0
+    );
+    return Number.isFinite(raw) && raw >= 0 ? raw : 0;
+  })(),
   size: (() => {
     const raw = Number(rawTicketStarConfig.size ?? rawTicketStarConfig.spriteSize ?? 72);
     return Number.isFinite(raw) && raw > 0 ? raw : 72;
@@ -3397,10 +3422,13 @@ function spawnTicketStar(now = performance.now()) {
 
   const starWidth = star.offsetWidth || TICKET_STAR_CONFIG.size;
   const starHeight = star.offsetHeight || TICKET_STAR_CONFIG.size;
-  const maxX = Math.max(0, layerWidth - starWidth);
-  const maxY = Math.max(0, layerHeight - starHeight);
-  let startX = Math.random() * maxX;
-  let startY = Math.random() * maxY;
+  const interiorMaxX = Math.max(0, layerWidth - starWidth);
+  const interiorMaxY = Math.max(0, layerHeight - starHeight);
+  const padding = TICKET_STAR_CONFIG.edgePadding;
+  const horizontalRange = interiorMaxX + padding * 2;
+  const verticalRange = interiorMaxY + padding * 2;
+  let startX = Math.random() * horizontalRange - padding;
+  let startY = Math.random() * verticalRange - padding;
   const edges = ['top', 'right', 'bottom', 'left'];
   let edgePool = edges;
   if (ticketStarState.lastSpawnEdge && edges.length > 1) {
@@ -3411,23 +3439,22 @@ function spawnTicketStar(now = performance.now()) {
   }
   const edge = edgePool[Math.floor(Math.random() * edgePool.length)] ?? 'top';
   ticketStarState.lastSpawnEdge = edge;
-  let angle;
   switch (edge) {
     case 'top':
-      startY = 0;
-      angle = Math.PI / 4 + Math.random() * (Math.PI / 2);
+      startX = Math.random() * horizontalRange - padding;
+      startY = -padding;
       break;
     case 'bottom':
-      startY = maxY;
-      angle = (Math.PI * 5) / 4 + Math.random() * (Math.PI / 2);
+      startX = Math.random() * horizontalRange - padding;
+      startY = interiorMaxY + padding;
       break;
     case 'left':
-      startX = 0;
-      angle = -Math.PI / 4 + Math.random() * (Math.PI / 2);
+      startX = -padding;
+      startY = Math.random() * verticalRange - padding;
       break;
     default:
-      startX = maxX;
-      angle = (3 * Math.PI) / 4 + Math.random() * (Math.PI / 2);
+      startX = interiorMaxX + padding;
+      startY = Math.random() * verticalRange - padding;
       break;
   }
 
@@ -3437,9 +3464,45 @@ function spawnTicketStar(now = performance.now()) {
   ticketStarState.position.y = startY;
   ticketStarState.width = starWidth;
   ticketStarState.height = starHeight;
-  const speed = TICKET_STAR_CONFIG.speed;
-  ticketStarState.velocity.x = Math.cos(angle) * speed;
-  ticketStarState.velocity.y = Math.sin(angle) * speed;
+  const targetX = interiorMaxX > 0 ? Math.random() * interiorMaxX : interiorMaxX * 0.5;
+  const targetY = interiorMaxY > 0 ? Math.random() * interiorMaxY : interiorMaxY * 0.5;
+  let deltaX = targetX - startX;
+  let deltaY = targetY - startY;
+  let distance = Math.hypot(deltaX, deltaY);
+  if (!Number.isFinite(distance) || distance <= 1e-3) {
+    switch (edge) {
+      case 'top':
+        deltaX = 0;
+        deltaY = 1;
+        break;
+      case 'bottom':
+        deltaX = 0;
+        deltaY = -1;
+        break;
+      case 'left':
+        deltaX = 1;
+        deltaY = 0;
+        break;
+      default:
+        deltaX = -1;
+        deltaY = 0;
+        break;
+    }
+    distance = Math.hypot(deltaX, deltaY) || 1;
+  }
+  const normalizedX = deltaX / distance;
+  const normalizedY = deltaY / distance;
+  const baseSpeed = TICKET_STAR_CONFIG.speed;
+  const variance = TICKET_STAR_CONFIG.speedVariance;
+  let speedMultiplier = 1;
+  if (variance > 0) {
+    const minMultiplier = Math.max(0.05, 1 - variance);
+    const maxMultiplier = 1 + variance;
+    speedMultiplier = minMultiplier + Math.random() * (maxMultiplier - minMultiplier);
+  }
+  const speed = baseSpeed * speedMultiplier;
+  ticketStarState.velocity.x = normalizedX * speed;
+  ticketStarState.velocity.y = normalizedY * speed;
   ticketStarState.nextSpawnTime = Number.POSITIVE_INFINITY;
   ticketStarState.spawnTime = now;
 
@@ -3492,21 +3555,26 @@ function updateTicketStar(deltaSeconds, now = performance.now()) {
   }
   const starWidth = star.offsetWidth || ticketStarState.width || TICKET_STAR_CONFIG.size;
   const starHeight = star.offsetHeight || ticketStarState.height || TICKET_STAR_CONFIG.size;
-  const maxX = Math.max(0, width - starWidth);
-  const maxY = Math.max(0, height - starHeight);
+  const interiorMaxX = Math.max(0, width - starWidth);
+  const interiorMaxY = Math.max(0, height - starHeight);
+  const padding = TICKET_STAR_CONFIG.edgePadding;
+  const minX = -padding;
+  const maxX = interiorMaxX + padding;
+  const minY = -padding;
+  const maxY = interiorMaxY + padding;
   let nextX = ticketStarState.position.x + ticketStarState.velocity.x * deltaSeconds;
   let nextY = ticketStarState.position.y + ticketStarState.velocity.y * deltaSeconds;
 
-  if (nextX <= 0) {
-    nextX = 0;
+  if (nextX <= minX) {
+    nextX = minX;
     ticketStarState.velocity.x = Math.abs(ticketStarState.velocity.x);
   } else if (nextX >= maxX) {
     nextX = maxX;
     ticketStarState.velocity.x = -Math.abs(ticketStarState.velocity.x);
   }
 
-  if (nextY <= 0) {
-    nextY = 0;
+  if (nextY <= minY) {
+    nextY = minY;
     ticketStarState.velocity.y = Math.abs(ticketStarState.velocity.y);
   } else if (nextY >= maxY) {
     nextY = maxY;

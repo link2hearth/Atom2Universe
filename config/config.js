@@ -1799,12 +1799,16 @@ const GAME_CONFIG = {
    * Apparition de l'étoile à tickets sur la page principale.
    * - averageSpawnIntervalSeconds : intervalle moyen entre deux apparitions.
    * - speedPixelsPerSecond : vitesse de déplacement de l'icône.
+   * - speedVariance : variation aléatoire relative appliquée à la vitesse (0.35 = ±35 %).
+   * - spawnOffsetPixels : distance (en px) à l'extérieur de l'écran lors de l'apparition.
    * - size : taille (en pixels) du sprite.
    * - rewardTickets : nombre de tickets octroyés par clic.
    */
   ticketStar: {
     averageSpawnIntervalSeconds: 600,
     speedPixelsPerSecond: 90,
+    speedVariance: 0.35,
+    spawnOffsetPixels: 48,
     size: 72,
     rewardTickets: 1
   },
