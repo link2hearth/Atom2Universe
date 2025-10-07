@@ -5619,6 +5619,12 @@ function renderProductionBreakdown(container, entry, context = null) {
   if (!container) return;
   container.innerHTML = '';
   PRODUCTION_STEP_ORDER.forEach(step => {
+    if (
+      (context === 'perSecond' || context === 'perClick')
+      && step.id === 'baseFlat'
+    ) {
+      return;
+    }
     const row = document.createElement('li');
     row.className = `production-breakdown__row production-breakdown__row--${step.type}`;
     row.dataset.step = step.id;
