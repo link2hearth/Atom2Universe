@@ -1077,19 +1077,6 @@ function normalizeElementFamilyBonusEntry(raw, { familyId, defaultLabel, index }
   if (autoAdd != null) {
     effects.autoAdd = autoAdd;
   }
-  const clickMult = coerceFiniteNumber(
-    readNumberProperty(effectSource, ['clickMult', 'perClickMultiplier', 'manualMultiplier', 'apcMultiplier'])
-  , { allowZero: false, positiveOnly: true });
-  if (clickMult != null && Math.abs(clickMult - 1) > 1e-9) {
-    effects.clickMult = clickMult;
-  }
-  const autoMult = coerceFiniteNumber(
-    readNumberProperty(effectSource, ['autoMult', 'perSecondMultiplier', 'apsMultiplier', 'autoMultiplier'])
-  , { allowZero: false, positiveOnly: true });
-  if (autoMult != null && Math.abs(autoMult - 1) > 1e-9) {
-    effects.autoMult = autoMult;
-  }
-
   const critSource = effectSource.crit && typeof effectSource.crit === 'object' ? effectSource.crit : null;
   const readCrit = (source, keys, target, options = {}) => {
     if (effects[target] != null) {

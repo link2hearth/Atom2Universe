@@ -767,8 +767,6 @@ defineProductionStep(
   translateWithFallback('scripts.gacha.productionSteps.fusionFlat', 'Fusions'),
   { source: 'fusionFlat' }
 );
-defineProductionStep('shopBonus1', 'multiplier', 'Bonus shop 1', { source: 'shopBonus1' });
-defineProductionStep('shopBonus2', 'multiplier', 'Bonus shop 2', { source: 'shopBonus2' });
 defineProductionStep('frenzy', 'multiplier', 'Frénésie', { source: 'frenzy' });
 defineProductionStep(
   'trophyMultiplier',
@@ -806,8 +804,6 @@ const DEFAULT_PRODUCTION_STEP_IDS = [
   'shopFlat',
   'elementFlat',
   'fusionFlat',
-  'shopBonus1',
-  'shopBonus2',
   'collectionMultiplier',
   'frenzy',
   'trophyMultiplier',
@@ -821,11 +817,7 @@ function resolveProductionStepOrder(configOrder) {
   const pushStep = (id, labelOverride = null) => {
     if (!id) return;
     let normalizedId = id;
-    if (id === 'shopMultiplier') {
-      normalizedId = 'shopBonus1';
-    } else if (id === 'shopMultiplier2' || id === 'shopMultiplierSecondary') {
-      normalizedId = 'shopBonus2';
-    } else if (id === 'rarityMultiplier') {
+    if (id === 'rarityMultiplier') {
       normalizedId = 'collectionMultiplier';
     }
     if (normalizedId.startsWith('rarityMultiplier:')) {
