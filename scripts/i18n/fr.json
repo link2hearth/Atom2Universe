@@ -1652,9 +1652,9 @@
             "name": "Hydrogène → Hélium (He)",
             "description": "Fusionnez 4 protons d’H au cœur d’une étoile pour produire 1 He."
           },
-          "nitrogen": {
-            "name": "Azote (N₂)",
-            "description": "Combinez 2 atomes d’Azote pour former du diazote."
+          "carbon": {
+            "name": "Hélium → Carbone (C)",
+            "description": "Déclenchez la triple nucléosynthèse alpha : fusionnez 3 noyaux d’He pour tenter de forger 1 C."
           },
           "oxygen": {
             "name": "Oxygène (O₂)",

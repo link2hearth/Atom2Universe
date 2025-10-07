@@ -1486,16 +1486,19 @@ const GAME_CONFIG = {
       }
     },
     {
-      id: 'nitrogen',
-      name: 'Azote (N₂)',
-      translationKey: 'scripts.gameData.fusions.recipes.nitrogen',
-      description: 'Combinez 2 atomes d’Azote pour former du diazote.',
+      id: 'carbon',
+      name: 'Hélium → Carbone (C)',
+      translationKey: 'scripts.gameData.fusions.recipes.carbon',
+      description: 'Déclenchez la triple nucléosynthèse alpha : fusionnez 3 noyaux d’He pour tenter de forger 1 C.',
       inputs: [
-        { elementId: 'element-007-azote', count: 2 }
+        { elementId: 'element-002-helium', count: 3 }
       ],
       successChance: 0.5,
       rewards: {
-        apcFlat: 25000
+        apcFlat: 25000,
+        elements: [
+          { elementId: 'element-006-carbone', count: 1 }
+        ]
       }
     },
     {
