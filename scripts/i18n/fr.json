@@ -99,9 +99,9 @@
             "cta": "Fusionner"
           },
           "balance": {
-            "aria": "Accéder au mini-jeu Balance quantique",
-            "title": "Balance quantique",
-            "description": "Disposez des blocs de masses différentes pour stabiliser la plateforme en un seul test parfait.",
+            "aria": "Accéder au mini-jeu Balance",
+            "title": "Balance",
+            "description": "Disposez des blocs de masses différentes pour maintenir la planche parfaitement équilibrée.",
             "cta": "Équilibrer"
           },
           "math": {
@@ -141,17 +141,17 @@
         "next": "Nouvelle opération"
       },
       "balance": {
-        "aria": "Mini-jeu Balance quantique",
-        "title": "Balance quantique",
-        "subtitle": "Faites glisser les blocs et répartissez leur masse pour aligner le centre de gravité au-dessus du pivot.",
-        "instructions": "Faites glisser un bloc depuis l'inventaire vers la planche, puis appuyez sur « Tester l'équilibre » pour déclencher la simulation.",
+        "aria": "Mini-jeu Balance",
+        "title": "Balance",
+        "subtitle": "Répartissez les blocs pour que le centre de gravité reste au-dessus du pivot.",
+        "instructions": "Faites glisser un bloc depuis le plateau vers la planche, puis appuyez sur « Tester l'équilibre » pour lancer la simulation.",
         "actions": {
           "title": "Contrôles",
           "reset": "Réinitialiser les blocs",
           "test": "Tester l'équilibre"
         },
         "inventory": {
-          "title": "Inventaire des blocs",
+          "title": "Blocs disponibles",
           "hint": "Le nombre inscrit sur chaque bloc représente son poids relatif.",
           "list": "Inventaire des blocs prêts à être placés",
           "empty": "Tous les blocs sont placés sur la planche.",

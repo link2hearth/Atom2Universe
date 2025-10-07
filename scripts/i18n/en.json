@@ -100,8 +100,8 @@
           },
           "balance": {
             "aria": "Open the Balance mini-game",
-            "title": "Quantum Balance",
-            "description": "Arrange blocks of different weights to keep the board perfectly level during the physics test.",
+            "title": "Balance",
+            "description": "Arrange blocks of different weights to keep the board perfectly level.",
             "cta": "Balance"
           },
           "math": {
@@ -141,17 +141,17 @@
         "next": "Next puzzle"
       },
       "balance": {
-        "aria": "Quantum Balance mini-game",
-        "title": "Quantum Balance",
-        "subtitle": "Drag the blocks and distribute their weight so the center of mass stays above the pivot.",
-        "instructions": "Drag a block from the inventory onto the board, then press “Test balance” to run the simulation.",
+        "aria": "Balance mini-game",
+        "title": "Balance",
+        "subtitle": "Distribute the blocks so the center of mass stays above the pivot.",
+        "instructions": "Drag a block from the tray onto the board, then press “Test balance” to launch the simulation.",
         "actions": {
           "title": "Controls",
           "reset": "Reset blocks",
           "test": "Test balance"
         },
         "inventory": {
-          "title": "Block inventory",
+          "title": "Available blocks",
           "hint": "The number on each block shows its relative weight.",
           "list": "Inventory of blocks ready to be placed",
           "empty": "All blocks are currently on the board.",

@@ -5,7 +5,6 @@
   --balance-rotation: 0deg;
   --balance-tilt-duration: 600ms;
   --balance-settle-duration: 500ms;
-  --balance-stage-gap: clamp(1.5rem, 2.4vw, 2.5rem);
   display: none;
   width: 100%;
   max-width: 100%;
@@ -23,49 +22,18 @@
 
 .balance-layout {
   width: min(1100px, 100%);
-  display: flex;
-  flex-direction: column;
-  gap: var(--balance-stage-gap);
-}
-
-.balance-header {
-  text-align: center;
   display: grid;
-  gap: 0.5rem;
-}
-
-.balance-title {
-  font-size: clamp(1.5rem, 3vw, 2.4rem);
-  margin: 0;
-  letter-spacing: 0.01em;
-}
-
-.balance-subtitle {
-  margin: 0;
-  font-size: clamp(0.95rem, 1.4vw, 1.1rem);
-  opacity: 0.82;
-}
-
-.balance-main {
-  display: flex;
-  flex-direction: column;
-  gap: var(--balance-stage-gap);
-}
-
-@media (min-width: 900px) {
-  .balance-main {
-    flex-direction: row;
-    align-items: flex-start;
-  }
-}
-
-.balance-stage {
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
+  grid-template-rows: auto 1fr auto;
+  justify-items: center;
   align-items: center;
-  gap: clamp(1rem, 1.6vw, 1.6rem);
-  min-width: 0;
+  gap: clamp(1.5rem, 2.6vw, 2.75rem);
+  flex: 1 1 auto;
+}
+
+.balance-inventory {
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .balance-board-wrapper {
@@ -75,6 +43,17 @@
   flex-direction: column;
   align-items: center;
   gap: 1.5rem;
+}
+
+.balance-stage {
+  align-self: stretch;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: clamp(1.25rem, 2vw, 1.75rem);
+  padding-top: clamp(2.5rem, 8vw, 5.5rem);
 }
 
 .balance-board {
@@ -163,51 +142,18 @@ body.theme-light .balance-board__pivot {
   opacity: 0.6;
 }
 
-.balance-hint {
-  margin: 0;
-  text-align: center;
-  font-size: clamp(0.9rem, 1.35vw, 1.05rem);
-  max-width: min(38rem, 92%);
-  opacity: 0.78;
-}
-
-.balance-sidebar {
-  flex: 0 0 clamp(18rem, 26vw, 22rem);
-  display: flex;
-  flex-direction: column;
-  gap: clamp(1.2rem, 2vw, 1.8rem);
-}
-
-@media (max-width: 899px) {
-  .balance-sidebar {
-    align-self: stretch;
-  }
-}
-
-.balance-actions {
+.balance-controls {
+  width: 100%;
   display: grid;
-  gap: 0.75rem;
-  padding: clamp(1rem, 1.6vw, 1.2rem);
-  border-radius: 1.1rem;
-  background: rgba(10, 16, 34, 0.55);
-  border: 1px solid rgba(120, 150, 230, 0.18);
-  box-shadow: 0 18px 30px rgba(6, 12, 28, 0.35);
+  justify-items: center;
+  gap: clamp(0.75rem, 1.6vw, 1.5rem);
+  margin-top: auto;
 }
 
-body.theme-light .balance-actions {
-  background: rgba(240, 244, 255, 0.78);
-  border-color: rgba(90, 120, 220, 0.22);
-  box-shadow: 0 14px 24px rgba(12, 18, 36, 0.1);
-}
-
-.balance-actions__title {
-  margin: 0;
-  font-size: clamp(1.05rem, 1.5vw, 1.2rem);
-}
-
-.balance-actions__buttons {
+.balance-controls__buttons {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 0.75rem;
 }
 
@@ -253,6 +199,8 @@ body.theme-light .balance-actions {
   padding: 0.65rem 1rem;
   border-radius: 0.9rem;
   font-size: 0.95rem;
+  text-align: center;
+  width: min(32rem, 100%);
   background: rgba(14, 18, 40, 0.55);
   border: 1px solid rgba(120, 150, 230, 0.15);
   box-shadow: inset 0 0 0 1px rgba(80, 110, 200, 0.08);
@@ -274,27 +222,12 @@ body.theme-light .balance-actions {
   border-color: rgba(255, 120, 140, 0.4);
 }
 
-.balance-inventory {
-  display: grid;
-  gap: 0.75rem;
-}
-
-.balance-inventory__title {
-  margin: 0;
-  font-size: clamp(1rem, 1.45vw, 1.15rem);
-}
-
-.balance-inventory__hint {
-  margin: 0;
-  font-size: 0.9rem;
-  opacity: 0.75;
-}
-
 .balance-inventory__list {
   display: flex;
   flex-wrap: wrap;
   gap: 0.8rem;
   align-items: flex-start;
+  justify-content: center;
   min-height: 3.5rem;
 }
 
