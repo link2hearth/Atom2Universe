@@ -68,50 +68,35 @@
 .balance-board__surface {
   position: relative;
   width: 100%;
-  height: var(--balance-board-surface-height);
-  border-radius: clamp(1.25rem, 2.4vw, 2.6rem);
-  background: linear-gradient(135deg, rgba(92, 122, 255, 0.22), rgba(40, 52, 120, 0.76));
-  border: 1px solid rgba(160, 190, 255, 0.22);
+  height: max(0.35rem, var(--balance-board-surface-height));
+  --balance-surface-color: rgba(90, 124, 220, 0.92);
+  --balance-surface-outline: rgba(26, 36, 78, 0.55);
+  --balance-surface-glow: rgba(90, 124, 220, 0.35);
+  border-radius: 999px;
+  background-color: var(--balance-surface-color);
   box-shadow:
-    0 18px 28px rgba(6, 10, 30, 0.32),
-    0 0 0 1px rgba(140, 170, 255, 0.12) inset,
-    0 0 0 1px rgba(10, 14, 32, 0.4);
-  overflow: visible;
+    0 0 0 1px var(--balance-surface-outline),
+    0 4px 12px rgba(4, 6, 16, 0.5),
+    0 0 16px -2px var(--balance-surface-glow);
+  transition: background-color 220ms ease, box-shadow 220ms ease;
 }
 
 body.theme-light .balance-board__surface {
-  background: linear-gradient(140deg, rgba(120, 160, 255, 0.18), rgba(46, 70, 160, 0.36));
-  border-color: rgba(70, 110, 200, 0.28);
+  --balance-surface-color: rgba(134, 158, 255, 0.95);
+  --balance-surface-outline: rgba(58, 80, 168, 0.45);
+  --balance-surface-glow: rgba(150, 174, 255, 0.35);
   box-shadow:
-    0 20px 26px rgba(10, 16, 46, 0.14),
-    0 0 0 1px rgba(90, 130, 220, 0.25) inset,
-    0 0 0 1px rgba(12, 22, 48, 0.12);
+    0 0 0 1px var(--balance-surface-outline),
+    0 6px 14px rgba(26, 40, 90, 0.15),
+    0 0 18px -2px var(--balance-surface-glow);
 }
 
 .balance-board__surface::after {
-  content: '';
-  position: absolute;
-  inset: 12% 6%;
-  border-radius: clamp(1rem, 2vw, 2rem);
-  background: rgba(255, 255, 255, 0.04);
-  pointer-events: none;
+  content: none;
 }
 
 .balance-board__beam {
-  position: absolute;
-  bottom: calc(-1 * clamp(1.1rem, 1.8vw, 1.9rem));
-  left: 12%;
-  right: 12%;
-  height: clamp(0.8rem, 1.2vw, 1.2rem);
-  background: linear-gradient(180deg, rgba(20, 28, 60, 0.65), rgba(10, 14, 32, 0.95));
-  border-radius: 0 0 clamp(1rem, 1.6vw, 1.6rem) clamp(1rem, 1.6vw, 1.6rem);
-  box-shadow:
-    0 6px 20px rgba(5, 8, 20, 0.55),
-    0 0 0 1px rgba(160, 200, 255, 0.1) inset;
-}
-
-body.theme-light .balance-board__beam {
-  background: linear-gradient(180deg, rgba(48, 72, 140, 0.4), rgba(16, 24, 48, 0.78));
+  display: none;
 }
 
 .balance-board__pivot {
@@ -122,24 +107,29 @@ body.theme-light .balance-board__beam {
   width: clamp(3.2rem, 6vw, 6.5rem);
   height: var(--balance-pivot-height);
   clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
-  background: linear-gradient(200deg, rgba(70, 100, 190, 0.88), rgba(20, 26, 60, 0.92));
+  background: linear-gradient(180deg, rgba(64, 90, 180, 0.94), rgba(20, 28, 70, 0.88));
+  border: 1px solid rgba(24, 34, 78, 0.5);
   box-shadow:
-    0 18px 30px rgba(6, 12, 28, 0.55),
-    0 0 0 1px rgba(160, 190, 255, 0.22) inset;
+    0 12px 22px rgba(4, 8, 24, 0.45),
+    0 0 0 1px rgba(140, 168, 240, 0.18) inset;
 }
 
 body.theme-light .balance-board__pivot {
-  background: linear-gradient(200deg, rgba(120, 160, 255, 0.82), rgba(36, 60, 120, 0.9));
+  background: linear-gradient(180deg, rgba(164, 184, 255, 0.9), rgba(70, 92, 182, 0.9));
+  border-color: rgba(70, 96, 190, 0.38);
+  box-shadow:
+    0 10px 18px rgba(22, 36, 86, 0.18),
+    0 0 0 1px rgba(200, 218, 255, 0.22) inset;
 }
 
 .balance-board-shadow {
   width: 80%;
-  height: clamp(1.6rem, 2.8vw, 3.2rem);
+  height: clamp(0.8rem, 1.6vw, 1.8rem);
   border-radius: 999px;
-  background: radial-gradient(circle at center, rgba(0, 0, 0, 0.38), transparent 68%);
-  filter: blur(1px);
-  transform: translateY(calc(var(--balance-pivot-height) * 0.15));
-  opacity: 0.6;
+  background: radial-gradient(circle at center, rgba(0, 0, 0, 0.3), transparent 72%);
+  filter: blur(0.5px);
+  transform: translateY(calc(var(--balance-pivot-height) * 0.12));
+  opacity: 0.55;
 }
 
 .balance-controls {
@@ -265,8 +255,8 @@ body.theme-light .balance-board__pivot {
 
 .balance-cube--board {
   position: absolute;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  top: 0;
+  transform: translate(-50%, -100%);
   width: calc(var(--cube-width-ratio) * 100%);
 }
 
@@ -309,34 +299,37 @@ body.theme-light.view-balance {
   background: radial-gradient(160% 160% at 50% -10%, #dde6ff 0%, #f5f7ff 40%, #eef1ff 100%);
 }
 
-.balance-stage--tilt-left .balance-board__surface::after,
-.balance-stage--tilt-right .balance-board__surface::after {
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.balance-stage--balanced .balance-board__surface::after {
-  background: rgba(120, 240, 200, 0.12);
-}
-
 .balance-stage--tilt-left .balance-board__surface {
-  box-shadow:
-    0 18px 28px rgba(6, 10, 30, 0.42),
-    0 0 0 1px rgba(255, 140, 100, 0.16) inset,
-    0 0 0 1px rgba(180, 70, 40, 0.35);
+  --balance-surface-color: rgba(250, 158, 122, 0.95);
+  --balance-surface-outline: rgba(196, 88, 48, 0.58);
+  --balance-surface-glow: rgba(252, 173, 140, 0.45);
 }
 
 .balance-stage--tilt-right .balance-board__surface {
-  box-shadow:
-    0 18px 28px rgba(6, 10, 30, 0.42),
-    0 0 0 1px rgba(110, 180, 255, 0.2) inset,
-    0 0 0 1px rgba(60, 120, 255, 0.35);
+  --balance-surface-color: rgba(116, 186, 255, 0.95);
+  --balance-surface-outline: rgba(46, 116, 210, 0.55);
+  --balance-surface-glow: rgba(140, 198, 255, 0.45);
 }
 
 .balance-stage--balanced .balance-board__surface {
-  box-shadow:
-    0 18px 28px rgba(6, 10, 30, 0.35),
-    0 0 0 1px rgba(140, 240, 200, 0.25) inset,
-    0 0 0 1px rgba(80, 200, 160, 0.32);
+  --balance-surface-color: rgba(132, 230, 188, 0.95);
+  --balance-surface-outline: rgba(32, 140, 102, 0.52);
+  --balance-surface-glow: rgba(132, 230, 188, 0.45);
+}
+
+body.theme-light .balance-stage--tilt-left .balance-board__surface {
+  --balance-surface-outline: rgba(222, 128, 90, 0.45);
+  --balance-surface-glow: rgba(255, 186, 150, 0.35);
+}
+
+body.theme-light .balance-stage--tilt-right .balance-board__surface {
+  --balance-surface-outline: rgba(100, 160, 236, 0.45);
+  --balance-surface-glow: rgba(156, 206, 255, 0.35);
+}
+
+body.theme-light .balance-stage--balanced .balance-board__surface {
+  --balance-surface-outline: rgba(88, 190, 150, 0.42);
+  --balance-surface-glow: rgba(164, 238, 206, 0.32);
 }
 
 .balance-stage--tilt-left .balance-board-shadow,

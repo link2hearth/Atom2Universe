@@ -1,7 +1,7 @@
 (() => {
   const DEFAULT_BOARD_CONFIG = {
     widthPx: 620,
-    surfaceHeightPx: 92,
+    surfaceHeightPx: 12,
     pivotHeightPx: 110,
     tolerance: 0.04,
     maxTiltDegrees: 18,
@@ -395,6 +395,7 @@
       cube.classList.add('balance-cube--board');
       cube.setAttribute('aria-pressed', 'true');
       cube.style.left = `${(positionRatio + 0.5) * 100}%`;
+      cube.style.top = '';
       this.surfaceElement.appendChild(cube);
       this.updateCubeWidth(cube, state.widthRatio);
     }
