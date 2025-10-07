@@ -264,7 +264,7 @@ body:not(.view-game):not(.view-wave) .apc-frenzy-counter {
 
 .game-header h2 {
   margin: 0 0 0.5rem 0;
-  font-family: 'Orbitron', sans-serif;
+  font-family: var(--font-text, 'Orbitron', sans-serif);
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }

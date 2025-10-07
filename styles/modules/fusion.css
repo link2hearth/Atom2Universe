@@ -9,7 +9,7 @@
 }
 
 .fusion-title {
-  font-family: 'Orbitron', sans-serif;
+  font-family: var(--font-text, 'Orbitron', sans-serif);
   font-size: clamp(1.4rem, 3vw, 1.85rem);
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -109,7 +109,7 @@ body.theme-light .fusion-card__description {
 }
 
 .fusion-requirement__symbol {
-  font-family: 'Orbitron', sans-serif;
+  font-family: var(--font-text, 'Orbitron', sans-serif);
   letter-spacing: 0.08em;
   font-size: 0.85rem;
   text-transform: uppercase;

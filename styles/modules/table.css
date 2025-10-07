@@ -127,7 +127,7 @@
 
 
 .periodic-element__symbol {
-  font-family: 'Orbitron', sans-serif;
+  font-family: var(--font-text, 'Orbitron', sans-serif);
   font-size: clamp(0.48rem, 1.2vw, 0.8rem);
   letter-spacing: 0.08em;
   line-height: 1;
@@ -274,7 +274,7 @@
 }
 
 .element-info-panel__symbol {
-  font-family: 'Orbitron', sans-serif;
+  font-family: var(--font-text, 'Orbitron', sans-serif);
   font-size: clamp(1.1rem, 2.25vw, 1.6rem);
   letter-spacing: 0.1em;
   line-height: 1;
@@ -311,7 +311,7 @@ body.theme-light .element-info-panel__symbol-button:focus-visible {
 }
 
 .element-info-panel__owned-count {
-  font-family: 'Orbitron', sans-serif;
+  font-family: var(--font-text, 'Orbitron', sans-serif);
   font-size: clamp(0.65rem, 1.3vw, 0.9rem);
   font-weight: 600;
   line-height: 1;
@@ -401,7 +401,7 @@ body.theme-light .element-info-panel__symbol-button:focus-visible {
 
 .element-details-overlay__title {
   margin: 0;
-  font-family: 'Orbitron', sans-serif;
+  font-family: var(--font-text, 'Orbitron', sans-serif);
   font-size: clamp(1.1rem, 2.2vw, 1.5rem);
   letter-spacing: 0.12em;
   text-transform: uppercase;

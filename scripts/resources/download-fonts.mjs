@@ -4,7 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const FONT_CSS_URL =
-  'https://fonts.googleapis.com/css2?family=Audiowide&family=Orbitron:wght@400;600;700&family=Seven+Segment&display=swap';
+  'https://fonts.googleapis.com/css2?family=Audiowide&family=Orbitron:wght@400;600;700&family=Seven+Segment&family=VT323&display=swap';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
