@@ -392,6 +392,7 @@
           "ariaLabel": "Choisir la police utilisée pour les nombres",
           "options": {
             "orbitron": "Orbitron",
+            "cinzel": "Cinzel",
             "digittech7": "Digit Tech 7",
             "vt323": "VT323"
           },
@@ -402,6 +403,7 @@
           "ariaLabel": "Choisir la police utilisée pour les textes de l’interface",
           "options": {
             "orbitron": "Orbitron",
+            "cinzel": "Cinzel",
             "vt323": "VT323"
           },
           "preview": "Texte d’exemple — Atom → Univers 0 1 2 3"

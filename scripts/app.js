@@ -58,6 +58,10 @@ const TEXT_FONT_CHOICES = Object.freeze({
     id: 'orbitron',
     stack: "'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
   },
+  cinzel: {
+    id: 'cinzel',
+    stack: "'Cinzel', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+  },
   vt323: {
     id: 'vt323',
     stack: "'VT323', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
@@ -71,6 +75,11 @@ const DIGIT_FONT_CHOICES = Object.freeze({
     id: 'orbitron',
     stack: "'Orbitron', sans-serif",
     compactStack: "'Orbitron', monospace"
+  },
+  cinzel: {
+    id: 'cinzel',
+    stack: "'Cinzel', 'DigitTech7', 'Orbitron', sans-serif",
+    compactStack: "'Cinzel', 'Orbitron', monospace"
   },
   digittech7: {
     id: 'digittech7',

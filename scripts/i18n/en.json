@@ -392,6 +392,7 @@
           "ariaLabel": "Choose the font used for numbers",
           "options": {
             "orbitron": "Orbitron",
+            "cinzel": "Cinzel",
             "digittech7": "Digit Tech 7",
             "vt323": "VT323"
           },
@@ -402,6 +403,7 @@
           "ariaLabel": "Choose the font used for interface text",
           "options": {
             "orbitron": "Orbitron",
+            "cinzel": "Cinzel",
             "vt323": "VT323"
           },
           "preview": "Sample text — Atom → Univers 0 1 2 3"
