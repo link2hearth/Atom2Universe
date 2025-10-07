@@ -1363,27 +1363,27 @@
       "rarities": {
         "commun": {
           "label": "Nucléosynthèse primordiale",
-          "description": "Les briques fondamentales présentes dans la majorité des nébuleuses."
+          "description": "Premiers éléments créés dans l’univers, juste après le Big Bang."
         },
         "essentiel": {
           "label": "Spallation cosmique",
-          "description": "Éléments abondants dans les mondes rocheux et les atmosphères habitables."
+          "description": "Éléments légers formés par spallation et désintégrations sous l’action des rayons cosmiques."
         },
         "stellaire": {
           "label": "Étoiles simples",
-          "description": "Alliages façonnés au coeur des étoiles et disséminés par les supernovæ."
+          "description": "Éléments forgés lentement par fusion au cœur des étoiles de type solaire."
         },
         "singulier": {
           "label": "Supernovae",
-          "description": "Cristaux recherchés, rarement concentrés au même endroit."
+          "description": "Éléments lourds créés lors des supernovas et des fusions d’étoiles à neutrons."
         },
         "mythique": {
           "label": "Étoiles massives",
-          "description": "Éléments légendaires aux propriétés extrêmes et insaisissables."
+          "description": "Éléments produits par fusion dans les cœurs très chauds des étoiles géantes avant leur explosion."
         },
         "irreel": {
           "label": "Artificiels",
-          "description": "Synthèses artificielles nées uniquement dans des accélérateurs."
+          "description": "Éléments instables créés artificiellement par l’homme dans des réacteurs et accélérateurs."
         }
       },
       "featured": {
