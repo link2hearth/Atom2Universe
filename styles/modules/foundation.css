@@ -546,7 +546,9 @@ body.view-sudoku .status-bar {
   align-items: flex-end;
 }
 
-@media (max-width: 52rem), (max-aspect-ratio: 1 / 1) {
+/* Keep counters on a single row in most layouts and only stack them on
+   very small viewports where the values would start to collide. */
+@media (max-width: 40rem) {
   .status-bar {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     grid-template-areas:
