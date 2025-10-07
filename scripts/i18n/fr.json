@@ -1445,8 +1445,10 @@
         "noRewardSummary": "Aucun bonus.",
         "apcBonus": "+{value} APC",
         "apsBonus": "+{value} APS",
+        "elementBonus": "+{count} {element}",
         "apcTotal": "+{value} APC cumulés",
         "apsTotal": "+{value} APS cumulés",
+        "elementTotal": "+{count} {element} cumulés",
         "logMissingResources": "Vous n’avez pas assez de ressources pour cette fusion.",
         "toastMissingResources": "Ressources insuffisantes pour cette fusion.",
         "logSuccess": "Fusion {name} réussie ! Bonus obtenu : {reward}",
@@ -1647,8 +1649,8 @@
         "defaultName": "Fusion {number}",
         "recipes": {
           "hydrogen": {
-            "name": "Hydrogène (H₂)",
-            "description": "Associez 2 atomes d’Hydrogène pour créer une molécule de dihydrogène."
+            "name": "Hydrogène → Hélium (He)",
+            "description": "Fusionnez 4 protons d’H au cœur d’une étoile pour produire 1 He."
           },
           "nitrogen": {
             "name": "Azote (N₂)",

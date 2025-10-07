@@ -1471,15 +1471,18 @@ const GAME_CONFIG = {
   fusions: [
     {
       id: 'hydrogen',
-      name: 'Hydrogène (H₂)',
+      name: 'Hydrogène → Hélium (He)',
       translationKey: 'scripts.gameData.fusions.recipes.hydrogen',
-      description: 'Associez 2 atomes d’Hydrogène pour créer une molécule de dihydrogène.',
+      description: 'Fusionnez 4 protons d’H au cœur d’une étoile pour produire 1 He.',
       inputs: [
-        { elementId: 'element-001-hydrogene', count: 2 }
+        { elementId: 'element-001-hydrogene', count: 4 }
       ],
       successChance: 0.5,
       rewards: {
-        apcFlat: 25000
+        apcFlat: 25000,
+        elements: [
+          { elementId: 'element-002-helium', count: 1 }
+        ]
       }
     },
     {

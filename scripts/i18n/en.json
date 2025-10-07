@@ -1460,8 +1460,10 @@
         "noRewardSummary": "No bonus.",
         "apcBonus": "+{value} APC",
         "apsBonus": "+{value} APS",
+        "elementBonus": "+{count} {element}",
         "apcTotal": "+{value} APC total",
         "apsTotal": "+{value} APS total",
+        "elementTotal": "+{count} {element} total",
         "logMissingResources": "You don't have enough resources for this fusion.",
         "toastMissingResources": "Not enough resources for this fusion.",
         "logSuccess": "{name} fusion succeeded! Reward earned: {reward}",
@@ -1662,8 +1664,8 @@
         "defaultName": "Fusion {number}",
         "recipes": {
           "hydrogen": {
-            "name": "Hydrogen (H₂)",
-            "description": "Combine 2 Hydrogen atoms to create a dihydrogen molecule."
+            "name": "Hydrogen → Helium (He)",
+            "description": "Fuse 4 Hydrogen protons in a stellar core to produce 1 He."
           },
           "nitrogen": {
             "name": "Nitrogen (N₂)",
