@@ -812,39 +812,30 @@ const GAME_CONFIG = {
         testDurationMs: 900,
         settleDurationMs: 600
       },
+      cubeRules: {
+        countPerSet: 5, // Nombre de blocs générés par série.
+        widthRatio: 0.18, // Largeur uniforme des blocs par rapport à la planche.
+        inventoryWidthPx: { min: 64, max: 112 }, // Largeur minimale et maximale affichée dans l'inventaire.
+        weightRange: { min: 1, max: 20 }, // Fourchette des poids aléatoires attribués aux blocs.
+        stackOffsetMultiplier: 0.72, // Hauteur relative entre deux blocs empilés.
+        stackGroupingThreshold: 0.08, // Distance horizontale maximale (en proportion de la planche) pour regrouper les blocs.
+        randomizeWeights: true // Active la génération aléatoire des poids pour chaque série.
+      },
       cubeSets: [
         {
           id: 'equilibrium',
           labelKey: 'scripts.arcade.balance.sets.equilibrium',
-          cubes: [
-            { id: 'eq-1', weight: 2, widthRatio: 0.16 },
-            { id: 'eq-2', weight: 3, widthRatio: 0.18 },
-            { id: 'eq-3', weight: 4, widthRatio: 0.2 },
-            { id: 'eq-4', weight: 1, widthRatio: 0.12 },
-            { id: 'eq-5', weight: 5, widthRatio: 0.22 }
-          ]
+          cubeCount: 5
         },
         {
           id: 'fractal',
           labelKey: 'scripts.arcade.balance.sets.fractal',
-          cubes: [
-            { id: 'fr-1', weight: 6, widthRatio: 0.24 },
-            { id: 'fr-2', weight: 3, widthRatio: 0.16 },
-            { id: 'fr-3', weight: 2, widthRatio: 0.14 },
-            { id: 'fr-4', weight: 1, widthRatio: 0.1 },
-            { id: 'fr-5', weight: 4, widthRatio: 0.18 }
-          ]
+          cubeCount: 5
         },
         {
           id: 'binary',
           labelKey: 'scripts.arcade.balance.sets.binary',
-          cubes: [
-            { id: 'bi-1', weight: 5, widthRatio: 0.18 },
-            { id: 'bi-2', weight: 5, widthRatio: 0.18 },
-            { id: 'bi-3', weight: 2, widthRatio: 0.14 },
-            { id: 'bi-4', weight: 3, widthRatio: 0.16 },
-            { id: 'bi-5', weight: 1, widthRatio: 0.1 }
-          ]
+          cubeCount: 5
         }
       ],
       defaultSetId: 'equilibrium'

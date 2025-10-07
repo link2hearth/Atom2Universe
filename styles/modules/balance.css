@@ -222,7 +222,9 @@ body.theme-light .balance-board__pivot {
 }
 
 .balance-cube {
-  --cube-width-ratio: 0.16;
+  --cube-width-ratio: 0.18;
+  --cube-stack-offset: 0px;
+  --cube-stack-level: 0;
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -256,8 +258,9 @@ body.theme-light .balance-board__pivot {
 .balance-cube--board {
   position: absolute;
   top: 0;
-  transform: translate(-50%, -100%);
+  transform: translate(-50%, calc(-100% - var(--cube-stack-offset, 0px)));
   width: calc(var(--cube-width-ratio) * 100%);
+  z-index: calc(24 + var(--cube-stack-level, 0));
 }
 
 .balance-cube--dragging {
