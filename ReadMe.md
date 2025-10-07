@@ -65,7 +65,7 @@ Le jeu charge dynamiquement les ressources depuis `scripts/i18n/<code>.json`. Aj
 
 ## Lancer le projet en local
 Le dépôt contient uniquement des fichiers statiques. Pour tester le jeu en local :
-1. (Optionnel mais recommandé) Téléchargez les polices locales (`Audiowide`, `Orbitron` 400/600/700, `Inter` 400/500/600 et `Seven Segment` 400) pour assurer l’affichage hors-ligne :
+1. (Optionnel mais recommandé) Téléchargez les polices locales (`Audiowide`, `Orbitron` 400/600/700 et `Inter` 400/500/600) pour assurer l’affichage hors-ligne :
    ```bash
    node scripts/resources/download-fonts.mjs
    ```
