@@ -18,6 +18,8 @@
   --header-padding-y: clamp(0.56rem, 0.896vw, 0.784rem);
   --header-padding-x: clamp(1.2rem, 2vw, 2.4rem);
   --status-padding-y: clamp(0.315rem, 0.51vw, 0.45rem);
+  --font-digits: 'Orbitron', 'Inter', sans-serif;
+  --font-digits-compact: 'Orbitron', monospace;
 }
 
 * {
@@ -359,7 +361,7 @@ body.view-sudoku .status-bar {
   background: linear-gradient(120deg, rgba(255, 118, 45, 0.22), rgba(255, 182, 82, 0.32));
   box-shadow: 0 0.4rem 1.4rem rgba(255, 126, 45, 0.18);
   color: #ffdcbc;
-  font-family: 'Orbitron', monospace;
+  font-family: var(--font-digits-compact, 'Orbitron', monospace);
   font-size: clamp(0.86rem, 1.35vw, 1.1rem);
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -601,7 +603,7 @@ body.view-sudoku .status-bar {
 }
 
 .status-value {
-  font-family: 'Orbitron', monospace;
+  font-family: var(--font-digits-compact, 'Orbitron', monospace);
   font-size: clamp(0.92rem, 1.6vw, 1.2rem);
 }
 
@@ -635,7 +637,7 @@ body.view-sudoku .status-bar {
   gap: clamp(0.75rem, 7vw, 4rem);
   padding: 0 clamp(0.9rem, 4vw, 3.2rem);
   pointer-events: none;
-  font-family: 'Orbitron', sans-serif;
+  font-family: var(--font-digits, 'Orbitron', 'Inter', sans-serif);
   font-size: clamp(0.58rem, 0.98vw, 0.82rem);
   color: rgba(220, 236, 255, 0.78);
   letter-spacing: 0.04em;

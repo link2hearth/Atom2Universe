@@ -13,13 +13,24 @@
   position: relative;
 }
 
-.option-card { 
+.option-card {
   background: var(--card-dark);
   border-radius: 18px;
   padding: clamp(1.2rem, 2vw, 1.6rem);
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
+}
+
+.option-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.option-field select {
+  min-width: 140px;
+  align-self: flex-start;
 }
 
 .option-card__toggles {
@@ -197,6 +208,13 @@ body.theme-light select {
   margin: 0;
   opacity: 0.7;
   font-size: 0.9rem;
+}
+
+.option-note--preview {
+  font-family: var(--font-digits, 'Orbitron', 'Inter', sans-serif);
+  letter-spacing: 0.18em;
+  font-size: 1rem;
+  opacity: 1;
 }
 
 
