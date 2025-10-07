@@ -150,6 +150,9 @@
           "reset": "Réinitialiser les blocs",
           "test": "Tester l'équilibre"
         },
+        "difficulty": {
+          "label": "Mode de difficulté"
+        },
         "inventory": {
           "title": "Blocs disponibles",
           "hint": "Le nombre inscrit sur chaque bloc représente son poids relatif.",
@@ -945,6 +948,12 @@
           "equilibrium": "Set Équilibre",
           "fractal": "Set Fractal",
           "binary": "Set Binaire"
+        },
+        "difficulty": {
+          "easy": "Facile",
+          "hard": "Difficile",
+          "easyDescription": "Tolérance généreuse pour placer les blocs en toute sérénité.",
+          "hardDescription": "Tolérance réduite : chaque position compte pour atteindre l'équilibre."
         },
         "toast": {
           "perfectReward": {

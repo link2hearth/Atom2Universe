@@ -2373,6 +2373,8 @@ const elements = {
   balanceInventory: document.getElementById('balanceInventory'),
   balancePieces: document.getElementById('balancePieces'),
   balanceStatus: document.getElementById('balanceStatus'),
+  balanceDifficultySelect: document.getElementById('balanceDifficultySelect'),
+  balanceDifficultyDescription: document.getElementById('balanceDifficultyDescription'),
   balanceTestButton: document.getElementById('balanceTestButton'),
   balanceResetButton: document.getElementById('balanceResetButton'),
   balanceDragLayer: document.getElementById('balanceDragLayer'),
@@ -2855,6 +2857,8 @@ function ensureBalanceGame() {
     surfaceElement: elements.balanceSurface,
     inventoryElement: elements.balancePieces,
     statusElement: elements.balanceStatus,
+    difficultySelect: elements.balanceDifficultySelect,
+    difficultyDescription: elements.balanceDifficultyDescription,
     testButton: elements.balanceTestButton,
     resetButton: elements.balanceResetButton,
     dragLayer: elements.balanceDragLayer
