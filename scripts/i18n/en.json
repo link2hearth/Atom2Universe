@@ -1378,27 +1378,27 @@
       "rarities": {
         "commun": {
           "label": "Primordial Nucleosynthesis",
-          "description": "Fundamental bricks found across most nebulae."
+          "description": "First elements created in the universe just after the Big Bang."
         },
         "essentiel": {
           "label": "Cosmic Spallation",
-          "description": "Elements abundant on rocky worlds and habitable atmospheres."
+          "description": "Light elements formed through spallation and decays under cosmic rays."
         },
         "stellaire": {
           "label": "Simple Stars",
-          "description": "Alloys shaped in stellar cores and scattered by supernovae."
+          "description": "Elements slowly forged by fusion in the cores of Sun-like stars."
         },
         "singulier": {
           "label": "Supernovae",
-          "description": "Sought-after crystals rarely concentrated in the same place."
+          "description": "Heavy elements created during supernovae and neutron star mergers."
         },
         "mythique": {
           "label": "Massive Stars",
-          "description": "Legendary elements with extreme, elusive properties."
+          "description": "Elements produced by fusion in the scorching cores of giant stars before they explode."
         },
         "irreel": {
           "label": "Artificial",
-          "description": "Artificial syntheses born only inside accelerators."
+          "description": "Unstable elements created artificially by humans in reactors and accelerators."
         }
       },
       "featured": {

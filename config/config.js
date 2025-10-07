@@ -1829,42 +1829,42 @@ const GAME_CONFIG = {
       {
         id: 'commun',
         label: 'Nucléosynthèse primordiale',
-        description: 'Les éléments omniprésents dans les nébuleuses et les atmosphères stellaires.',
+        description: "Premiers éléments créés dans l'univers, juste après le Big Bang.",
         weight: 35,
         color: '#1abc9c'
       },
       {
         id: 'essentiel',
         label: 'Spallation cosmique',
-        description: 'Les piliers des mondes rocheux et des océans extraterrestres.',
+        description: 'Éléments légers formés par spallation et désintégrations sous l’action des rayons cosmiques.',
         weight: 25,
         color: '#3498db'
       },
       {
         id: 'stellaire',
         label: 'Étoiles simples',
-        description: 'Alliages façonnés dans les coeurs d’étoiles actives.',
+        description: 'Éléments forgés lentement par fusion au cœur des étoiles de type solaire.',
         weight: 20,
         color: '#9b59b6'
       },
       {
         id: 'singulier',
         label: 'Supernovae',
-        description: 'Raretés cristallines difficiles à isoler.',
+        description: 'Éléments lourds créés lors des supernovas et des fusions d’étoiles à neutrons.',
         weight: 8,
         color: '#cd6155'
       },
       {
         id: 'mythique',
         label: 'Étoiles massives',
-        description: 'Éléments aux propriétés quasi légendaires.',
+        description: 'Éléments produits par fusion dans les cœurs très chauds des étoiles géantes avant leur explosion.',
         weight: 7,
         color: '#FFBF66'
       },
       {
         id: 'irreel',
         label: 'Artificiels',
-        description: 'Créations synthétiques jamais rencontrées naturellement.',
+        description: 'Éléments instables créés artificiellement par l’homme dans des réacteurs et accélérateurs.',
         weight: 5,
         color: '#7f8c8d'
       }
