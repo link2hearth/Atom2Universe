@@ -10,17 +10,21 @@
     settleDurationMs: 550
   };
 
+  const DEFAULT_CUBE_RULES = {
+    countPerSet: 5,
+    widthRatio: 0.18,
+    inventoryWidthPx: { min: 60, max: 120 },
+    weightRange: { min: 1, max: 20 },
+    stackOffsetMultiplier: 0.72,
+    stackGroupingThreshold: 0.08,
+    randomizeWeights: true
+  };
+
   const DEFAULT_CUBE_SETS = [
     {
       id: 'default',
       labelKey: 'scripts.arcade.balance.sets.default',
-      cubes: [
-        { id: 'df-1', weight: 2, widthRatio: 0.16 },
-        { id: 'df-2', weight: 3, widthRatio: 0.18 },
-        { id: 'df-3', weight: 4, widthRatio: 0.2 },
-        { id: 'df-4', weight: 1, widthRatio: 0.12 },
-        { id: 'df-5', weight: 5, widthRatio: 0.22 }
-      ]
+      cubeCount: DEFAULT_CUBE_RULES.countPerSet
     }
   ];
 
@@ -80,13 +84,62 @@
       ? globalConfig.defaultSetId
       : cubeSets[0]?.id || 'default';
 
-    return { board, cubeSets, defaultSetId };
+    const rawCubeRules = globalConfig?.cubeRules;
+    const normalizeInventoryWidth = value => {
+      const numeric = Number(value);
+      if (!Number.isFinite(numeric)) {
+        return null;
+      }
+      return clamp(numeric, 36, 220);
+    };
+    const weightMin = Math.floor(Number(rawCubeRules?.weightRange?.min));
+    const weightMax = Math.floor(Number(rawCubeRules?.weightRange?.max));
+    let resolvedMin = Number.isFinite(weightMin) ? weightMin : DEFAULT_CUBE_RULES.weightRange.min;
+    let resolvedMax = Number.isFinite(weightMax) ? weightMax : DEFAULT_CUBE_RULES.weightRange.max;
+    if (resolvedMax < resolvedMin) {
+      const temp = resolvedMax;
+      resolvedMax = resolvedMin;
+      resolvedMin = temp;
+    }
+    const cubeRules = {
+      countPerSet: clamp(
+        Math.floor(Number(rawCubeRules?.countPerSet)) || DEFAULT_CUBE_RULES.countPerSet,
+        1,
+        12
+      ),
+      widthRatio: normalizeWidthRatio(rawCubeRules?.widthRatio ?? DEFAULT_CUBE_RULES.widthRatio),
+      inventoryWidthPx: {
+        min: normalizeInventoryWidth(rawCubeRules?.inventoryWidthPx?.min) ?? DEFAULT_CUBE_RULES.inventoryWidthPx.min,
+        max: normalizeInventoryWidth(rawCubeRules?.inventoryWidthPx?.max) ?? DEFAULT_CUBE_RULES.inventoryWidthPx.max
+      },
+      weightRange: {
+        min: clamp(resolvedMin, -120, 120),
+        max: clamp(resolvedMax, -120, 120)
+      },
+      stackOffsetMultiplier: Number(rawCubeRules?.stackOffsetMultiplier) > 0
+        ? clamp(Number(rawCubeRules.stackOffsetMultiplier), 0.2, 1.6)
+        : DEFAULT_CUBE_RULES.stackOffsetMultiplier,
+      stackGroupingThreshold: clamp(
+        Number(rawCubeRules?.stackGroupingThreshold) || DEFAULT_CUBE_RULES.stackGroupingThreshold,
+        0.02,
+        0.32
+      ),
+      randomizeWeights: rawCubeRules?.randomizeWeights ?? DEFAULT_CUBE_RULES.randomizeWeights
+    };
+
+    if (cubeRules.inventoryWidthPx.max < cubeRules.inventoryWidthPx.min) {
+      const { min, max } = cubeRules.inventoryWidthPx;
+      cubeRules.inventoryWidthPx.min = max;
+      cubeRules.inventoryWidthPx.max = min;
+    }
+
+    return { board, cubeSets, defaultSetId, cubeRules };
   }
 
   function normalizeWidthRatio(value) {
     const numeric = Number(value);
     if (!Number.isFinite(numeric)) {
-      return 0.16;
+      return DEFAULT_CUBE_RULES.widthRatio;
     }
     return clamp(numeric, 0.08, 0.32);
   }
@@ -398,6 +451,7 @@
       cube.style.top = '';
       this.surfaceElement.appendChild(cube);
       this.updateCubeWidth(cube, state.widthRatio);
+      this.recalculateStacking();
     }
 
     returnCubeToInventory(cube) {
@@ -412,17 +466,21 @@
       cube.removeAttribute('aria-pressed');
       cube.style.left = '';
       cube.style.top = '';
+      state.stackIndex = 0;
+      this.clearCubeStackStyles(cube);
       this.inventoryElement.appendChild(cube);
       this.updateCubeWidth(cube, state.widthRatio);
       this.applyRotation(0, this.config.board.settleDurationMs);
       this.clearTiltState();
       this.updateInventoryAccessibility();
+      this.recalculateStacking();
     }
 
     updateCubeWidths() {
       this.cubes.forEach((state, cube) => {
         this.updateCubeWidth(cube, state.widthRatio);
       });
+      this.recalculateStacking();
     }
 
     updateCubeWidth(cube, ratio) {
@@ -436,7 +494,9 @@
         if (cube.classList.contains('balance-cube--board')) {
           cube.style.width = `${widthPx}px`;
         } else {
-          cube.style.width = `${clamp(widthPx, 60, 120)}px`;
+          const minWidth = this.config.cubeRules.inventoryWidthPx.min;
+          const maxWidth = this.config.cubeRules.inventoryWidthPx.max;
+          cube.style.width = `${clamp(widthPx, minWidth, maxWidth)}px`;
         }
       }
     }
@@ -459,24 +519,164 @@
       if (!set) {
         return;
       }
-      const cubes = Array.isArray(set.cubes) ? set.cubes : [];
+      const cubes = this.getCubeDefinitionsForSet(set);
       cubes.forEach((def, index) => {
-        const cube = this.createCube(def, index);
+        const weight = this.resolveCubeWeight(def, index);
+        const cube = this.createCube({ ...def, weight }, index);
         if (!cube) {
           return;
         }
-        const widthRatio = normalizeWidthRatio(def.widthRatio);
+        const widthRatio = normalizeWidthRatio(this.config.cubeRules.widthRatio);
         this.cubes.set(cube, {
           definition: def,
           widthRatio,
-          weight: Number(def.weight) || 1,
+          weight,
           location: 'inventory',
-          position: null
+          position: null,
+          stackIndex: 0
         });
         this.updateCubeWidth(cube, widthRatio);
         this.inventoryElement?.appendChild(cube);
       });
       this.updateInventoryAccessibility();
+    }
+
+    getCubeDefinitionsForSet(set) {
+      if (!set) {
+        return [];
+      }
+      if (Array.isArray(set.cubes) && set.cubes.length) {
+        return set.cubes;
+      }
+      const count = Number.isFinite(set.cubeCount)
+        ? clamp(Math.floor(set.cubeCount), 1, 20)
+        : this.config.cubeRules.countPerSet;
+      return Array.from({ length: count }, (_, index) => ({
+        id: `${set.id || 'cube'}-${index + 1}`
+      }));
+    }
+
+    resolveCubeWeight(definition, index) {
+      const existingWeights = new Set();
+      this.cubes.forEach(state => {
+        if (state && typeof state.weight === 'number') {
+          existingWeights.add(state.weight);
+        }
+      });
+      const { min, max } = this.config.cubeRules.weightRange;
+      const fallback = clamp(
+        Number(definition?.weight) || min + index,
+        min,
+        max
+      );
+      if (!this.config.cubeRules.randomizeWeights) {
+        return this.ensureUniqueWeight(fallback, existingWeights, min, max);
+      }
+      const randomWeight = this.generateRandomWeight(existingWeights, min, max);
+      return randomWeight ?? this.ensureUniqueWeight(fallback, existingWeights, min, max);
+    }
+
+    ensureUniqueWeight(weight, existingWeights, min, max) {
+      let candidate = weight;
+      const span = Math.max(max - min + 1, 1);
+      if (!existingWeights.has(candidate)) {
+        return candidate;
+      }
+      for (let offset = 1; offset < span; offset += 1) {
+        const next = weight + offset;
+        if (next <= max && !existingWeights.has(next)) {
+          return next;
+        }
+        const previous = weight - offset;
+        if (previous >= min && !existingWeights.has(previous)) {
+          return previous;
+        }
+      }
+      return clamp(weight, min, max);
+    }
+
+    generateRandomWeight(existingWeights, min, max) {
+      if (max < min) {
+        return null;
+      }
+      const span = max - min + 1;
+      if (existingWeights.size >= span) {
+        return null;
+      }
+      let attempts = 0;
+      while (attempts < span * 2) {
+        const candidate = Math.floor(Math.random() * span) + min;
+        if (!existingWeights.has(candidate)) {
+          return candidate;
+        }
+        attempts += 1;
+      }
+      return null;
+    }
+
+    recalculateStacking() {
+      const entries = [];
+      this.cubes.forEach((state, cube) => {
+        if (!state) {
+          return;
+        }
+        if (state.location === 'board' && typeof state.position === 'number') {
+          entries.push({ state, cube });
+        } else {
+          state.stackIndex = 0;
+          this.clearCubeStackStyles(cube);
+        }
+      });
+      if (!entries.length) {
+        return;
+      }
+      const threshold = this.config.cubeRules.stackGroupingThreshold;
+      entries.sort((a, b) => a.state.position - b.state.position);
+      let currentGroup = [];
+      let currentCenter = null;
+      const groups = [];
+      entries.forEach(entry => {
+        if (!currentGroup.length) {
+          currentGroup.push(entry);
+          currentCenter = entry.state.position;
+          groups.push(currentGroup);
+          return;
+        }
+        const distance = Math.abs(entry.state.position - currentCenter);
+        if (distance <= threshold) {
+          currentGroup.push(entry);
+          currentCenter = (currentCenter * (currentGroup.length - 1) + entry.state.position) / currentGroup.length;
+        } else {
+          currentGroup = [entry];
+          currentCenter = entry.state.position;
+          groups.push(currentGroup);
+        }
+      });
+      groups.forEach(group => {
+        group.forEach((entry, index) => {
+          entry.state.stackIndex = index;
+          this.applyStackStyles(entry.cube, entry.state);
+        });
+      });
+    }
+
+    applyStackStyles(cube, state) {
+      if (!cube || !state) {
+        return;
+      }
+      const stackIndex = Number(state.stackIndex) || 0;
+      const baseHeight = cube.offsetHeight || (this.currentBoardWidth * state.widthRatio * 0.45);
+      const offset = baseHeight * this.config.cubeRules.stackOffsetMultiplier * stackIndex;
+      cube.style.setProperty('--cube-stack-offset', `${offset}px`);
+      cube.style.setProperty('--cube-stack-level', String(stackIndex));
+    }
+
+    clearCubeStackStyles(cube) {
+      if (!cube) {
+        return;
+      }
+      cube.style.removeProperty('--cube-stack-offset');
+      cube.style.removeProperty('--cube-stack-level');
     }
 
     pickNextSet() {
