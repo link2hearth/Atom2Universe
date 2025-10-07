@@ -56,6 +56,7 @@
   font-size: 1.2rem;
   font-weight: 600;
   letter-spacing: 0.06em;
+  font-family: var(--font-digits, 'Orbitron', 'Inter', sans-serif);
 }
 
 .metaux-content {
@@ -151,6 +152,7 @@
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+  font-family: var(--font-digits, 'Orbitron', 'Inter', sans-serif);
 }
 
 .metaux-timer__free-exit {

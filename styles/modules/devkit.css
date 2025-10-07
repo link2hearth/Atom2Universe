@@ -194,7 +194,7 @@ body.theme-neon .devkit-form__controls input {
 }
 
 .devkit-status-row strong {
-  font-family: 'Orbitron', monospace;
+  font-family: var(--font-digits-compact, 'Orbitron', monospace);
   font-size: 0.95rem;
 }
 
@@ -250,7 +250,7 @@ body.theme-neon .devkit-form__controls input {
   padding: 0.2rem 0.45rem;
   border-radius: 0.4rem;
   background: rgba(255, 255, 255, 0.15);
-  font-family: 'Orbitron', monospace;
+  font-family: var(--font-digits-compact, 'Orbitron', monospace);
   font-size: 0.85rem;
 }
 

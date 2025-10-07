@@ -112,6 +112,10 @@
   line-height: 1;
 }
 
+.blackjack-card__value {
+  font-family: var(--font-digits, 'Orbitron', 'Inter', sans-serif);
+}
+
 .blackjack-card__suit {
   font-size: 0.9em;
 }

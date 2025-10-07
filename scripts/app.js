@@ -51,6 +51,20 @@ const BRICK_SKIN_TOAST_KEYS = Object.freeze({
 const LANGUAGE_STORAGE_KEY = 'atom2univers.language';
 const CLICK_SOUND_STORAGE_KEY = 'atom2univers.options.clickSoundMuted';
 const CRIT_ATOM_VISUALS_STORAGE_KEY = 'atom2univers.options.critAtomVisualsDisabled';
+const DIGIT_FONT_STORAGE_KEY = 'atom2univers.options.digitFont';
+const DIGIT_FONT_DEFAULT = 'orbitron';
+const DIGIT_FONT_CHOICES = Object.freeze({
+  orbitron: {
+    id: 'orbitron',
+    stack: "'Orbitron', 'Inter', sans-serif",
+    compactStack: "'Orbitron', monospace"
+  },
+  digittech7: {
+    id: 'digittech7',
+    stack: "'DigitTech7', 'Orbitron', 'Inter', sans-serif",
+    compactStack: "'DigitTech7', 'Orbitron', monospace"
+  }
+});
 
 let critAtomVisualsDisabled = false;
 const AVAILABLE_LANGUAGE_CODES = (() => {
@@ -2401,6 +2415,8 @@ const elements = {
   metauxMovesValue: document.getElementById('metauxMovesValue'),
   metauxReshuffleButton: document.getElementById('metauxReshuffleButton'),
   languageSelect: document.getElementById('languageSelect'),
+  digitFontSelect: document.getElementById('digitFontSelect'),
+  digitFontPreview: document.getElementById('digitFontPreview'),
   musicTrackSelect: document.getElementById('musicTrackSelect'),
   musicTrackStatus: document.getElementById('musicTrackStatus'),
   musicVolumeSlider: document.getElementById('musicVolumeSlider'),
@@ -2654,6 +2670,96 @@ function populateLanguageSelectOptions() {
     ? previousSelection
     : getInitialLanguagePreference();
   updateLanguageSelectorValue(desiredSelection);
+}
+
+function normalizeDigitFontSelection(value) {
+  if (typeof value !== 'string') {
+    return DIGIT_FONT_DEFAULT;
+  }
+  const normalized = value.trim().toLowerCase();
+  return Object.prototype.hasOwnProperty.call(DIGIT_FONT_CHOICES, normalized)
+    ? normalized
+    : DIGIT_FONT_DEFAULT;
+}
+
+function readStoredDigitFont() {
+  try {
+    const stored = globalThis.localStorage?.getItem(DIGIT_FONT_STORAGE_KEY);
+    if (typeof stored === 'string' && stored.trim()) {
+      return normalizeDigitFontSelection(stored);
+    }
+  } catch (error) {
+    console.warn('Unable to read digit font preference', error);
+  }
+  return null;
+}
+
+function writeStoredDigitFont(value) {
+  try {
+    const normalized = normalizeDigitFontSelection(value);
+    globalThis.localStorage?.setItem(DIGIT_FONT_STORAGE_KEY, normalized);
+  } catch (error) {
+    console.warn('Unable to persist digit font preference', error);
+  }
+}
+
+function updateDigitFontPreviewText() {
+  if (!elements.digitFontPreview) {
+    return;
+  }
+  const key = 'index.sections.options.digitFont.preview';
+  const fallback = '0 1 2 3 4 5 6 7 8 9';
+  elements.digitFontPreview.setAttribute('data-i18n', key);
+  elements.digitFontPreview.textContent = translateOrDefault(key, fallback);
+}
+
+function applyDigitFontSelection(selection, options = {}) {
+  const normalized = normalizeDigitFontSelection(selection);
+  const config = DIGIT_FONT_CHOICES[normalized] || DIGIT_FONT_CHOICES[DIGIT_FONT_DEFAULT];
+  const settings = Object.assign({ persist: true, updateControl: true }, options);
+  const root = typeof document !== 'undefined' ? document.documentElement : null;
+  if (root && root.style) {
+    root.style.setProperty('--font-digits', config.stack);
+    root.style.setProperty('--font-digits-compact', config.compactStack);
+  }
+  if (typeof document !== 'undefined' && document.body) {
+    document.body.setAttribute('data-digit-font', normalized);
+  }
+  if (settings.updateControl && elements.digitFontSelect) {
+    elements.digitFontSelect.value = normalized;
+  }
+  if (settings.persist) {
+    writeStoredDigitFont(normalized);
+  }
+  updateDigitFontPreviewText();
+  return normalized;
+}
+
+function initDigitFontOption() {
+  const stored = readStoredDigitFont();
+  const initial = stored ?? DIGIT_FONT_DEFAULT;
+  applyDigitFontSelection(initial, { persist: false, updateControl: true });
+  if (!elements.digitFontSelect) {
+    return;
+  }
+  elements.digitFontSelect.addEventListener('change', event => {
+    const value = event?.target?.value;
+    applyDigitFontSelection(value, { persist: true, updateControl: false });
+  });
+}
+
+function subscribeDigitFontLanguageUpdates() {
+  const handler = () => {
+    updateDigitFontPreviewText();
+  };
+  const api = getI18nApi();
+  if (api && typeof api.onLanguageChanged === 'function') {
+    api.onLanguageChanged(handler);
+    return;
+  }
+  if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
+    globalThis.addEventListener('i18n:languagechange', handler);
+  }
 }
 
 function updateBrickSkinOption() {
@@ -3275,6 +3381,8 @@ function subscribeCritAtomLanguageUpdates() {
   }
 }
 
+initDigitFontOption();
+subscribeDigitFontLanguageUpdates();
 initClickSoundOption();
 subscribeClickSoundLanguageUpdates();
 initCritAtomOption();
