@@ -66,13 +66,3 @@
        url('../fonts/Inter-600.ttf') format('truetype'),
        url('../fonts/Inter-SemiBold.ttf') format('truetype');
 }
-
-@font-face {
-  font-family: 'Seven Segment';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('../fonts/SevenSegment-400.woff2') format('woff2'),
-       url('../fonts/SevenSegment-400.ttf') format('truetype'),
-       url('../fonts/SevenSegment-Regular.ttf') format('truetype');
-}

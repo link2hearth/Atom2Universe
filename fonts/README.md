@@ -9,11 +9,10 @@ Le jeu repose sur les familles et variantes suivantes :
 - `Audiowide` — régulier (400)
 - `Orbitron` — régulier (400), semi-bold (600) et bold (700)
 - `Inter` — régulier (400), medium (500) et semi-bold (600)
-- `Seven Segment` — régulier (400)
 
 Chaque variante peut être fournie au format `.woff2` **ou** `.ttf`. Le jeu essaiera d’abord de charger le fichier `.woff2`, puis
 de basculer sur la version `.ttf` si elle est disponible. Respecte les noms utilisés dans `styles/fonts.css`, par exemple
-`Orbitron-600.woff2` / `Orbitron-600.ttf` ou `SevenSegment-400.woff2` / `SevenSegment-400.ttf`. Pour les fichiers téléchargés qui
+`Orbitron-600.woff2` / `Orbitron-600.ttf`. Pour les fichiers téléchargés qui
 gardent un suffixe plus verbeux (ex. `Orbitron-Regular.ttf`), conserve aussi cette variante : elle est référencée comme solution
 de secours.
 
