@@ -773,25 +773,31 @@
       "collectionMultiplier": "Collection Synergy · Unified resonance",
       "essentiel": {
         "perCopy": "Cosmic Spallation · Essential harvests",
-        "setBonus": "Cosmic Spallation · Complete collection"
+        "setBonus": "Cosmic Spallation · Complete collection",
+        "multiplier": "Cosmic Spallation · Orbital synergy"
       },
       "stellaire": {
         "perCopy": "Simple Stars · Activated fragments",
         "setBonus": "Simple Stars · Perfect forge",
+        "multiplier": "Simple Stars · Stellar intensity",
         "labels": {
           "perCopy": "Simple Stars · Fragments"
         }
       },
       "singulier": {
-        "perCopy": "Supernovae · Crystalline resonance"
+        "perCopy": "Supernovae · Crystalline resonance",
+        "multiplier": "Supernovae · Extreme density"
       },
       "mythique": {
         "setBonus": "Massive Stars · Ultimate convergence",
         "ticketBonus": "Massive Stars · Compressed star",
         "offlineBonus": "Massive Stars · Persistent collection",
-        "duplicateOverflow": "Massive Stars · Fractal overload"
+        "duplicateOverflow": "Massive Stars · Fractal overload",
+        "frenzyBonus": "Massive Stars · Frenzy catalyst"
       },
-      "irreel": {}
+      "irreel": {
+        "multiplier": "Artificial · Dimensional catalyst"
+      }
     },
     "trophies": {
       "presets": {
@@ -1135,7 +1141,8 @@
           "setBonus": "Massive Stars · Ultimate convergence",
           "ticketBonus": "Massive Stars · Compressed star",
           "offlineBonus": "Massive Stars · Persistent collection",
-          "duplicateOverflow": "Massive Stars · Fractal overload"
+          "duplicateOverflow": "Massive Stars · Fractal overload",
+          "frenzyBonus": "Massive Stars · Frenzy catalyst"
         },
         "irreel": {
           "multiplier": "Artificial · Dimensional catalyst"

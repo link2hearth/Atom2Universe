@@ -2073,7 +2073,8 @@ const GAME_CONFIG = {
           setBonus: 'scripts.config.elementBonuses.mythique.setBonus',
           ticketBonus: 'scripts.config.elementBonuses.mythique.ticketBonus',
           offlineBonus: 'scripts.config.elementBonuses.mythique.offlineBonus',
-          duplicateOverflow: 'scripts.config.elementBonuses.mythique.duplicateOverflow'
+          duplicateOverflow: 'scripts.config.elementBonuses.mythique.duplicateOverflow',
+          frenzyBonus: 'scripts.config.elementBonuses.mythique.frenzyBonus'
         },
         ticketBonus: {
           uniqueReductionSeconds: 15,
