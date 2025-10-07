@@ -69,7 +69,7 @@ Le dépôt contient uniquement des fichiers statiques. Pour tester le jeu en loc
    ```bash
    node scripts/resources/download-fonts.mjs
    ```
-   Les fichiers `.woff2` sont placés dans le dossier `fonts/` et peuvent être versionnés.
+   Les fichiers `.woff2` sont placés dans le dossier `fonts/` et peuvent être versionnés. Si vous ne trouvez que des archives `.ttf`, copiez-les dans le même dossier en les renommant selon le motif `Famille-poids.ttf` (`Orbitron-Regular.ttf` → `Orbitron-400.ttf`, etc.).
 2. Installez une version LTS de Node.js (ou utilisez Python si vous préférez).
 3. Depuis la racine du projet, lancez un serveur statique, par exemple :
    ```bash

@@ -3,7 +3,8 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('../fonts/Audiowide-400.woff2') format('woff2');
+  src: url('../fonts/Audiowide-400.woff2') format('woff2'),
+       url('../fonts/Audiowide-400.ttf') format('truetype');
 }
 
 @font-face {
@@ -11,7 +12,9 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('../fonts/Orbitron-400.woff2') format('woff2');
+  src: url('../fonts/Orbitron-400.woff2') format('woff2'),
+       url('../fonts/Orbitron-400.ttf') format('truetype'),
+       url('../fonts/Orbitron-Regular.ttf') format('truetype');
 }
 
 @font-face {
@@ -19,7 +22,9 @@
   font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: url('../fonts/Orbitron-600.woff2') format('woff2');
+  src: url('../fonts/Orbitron-600.woff2') format('woff2'),
+       url('../fonts/Orbitron-600.ttf') format('truetype'),
+       url('../fonts/Orbitron-SemiBold.ttf') format('truetype');
 }
 
 @font-face {
@@ -27,7 +32,9 @@
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url('../fonts/Orbitron-700.woff2') format('woff2');
+  src: url('../fonts/Orbitron-700.woff2') format('woff2'),
+       url('../fonts/Orbitron-700.ttf') format('truetype'),
+       url('../fonts/Orbitron-Bold.ttf') format('truetype');
 }
 
 @font-face {
@@ -35,7 +42,9 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('../fonts/Inter-400.woff2') format('woff2');
+  src: url('../fonts/Inter-400.woff2') format('woff2'),
+       url('../fonts/Inter-400.ttf') format('truetype'),
+       url('../fonts/Inter-Regular.ttf') format('truetype');
 }
 
 @font-face {
@@ -43,7 +52,9 @@
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url('../fonts/Inter-500.woff2') format('woff2');
+  src: url('../fonts/Inter-500.woff2') format('woff2'),
+       url('../fonts/Inter-500.ttf') format('truetype'),
+       url('../fonts/Inter-Medium.ttf') format('truetype');
 }
 
 @font-face {
@@ -51,7 +62,9 @@
   font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: url('../fonts/Inter-600.woff2') format('woff2');
+  src: url('../fonts/Inter-600.woff2') format('woff2'),
+       url('../fonts/Inter-600.ttf') format('truetype'),
+       url('../fonts/Inter-SemiBold.ttf') format('truetype');
 }
 
 @font-face {
@@ -59,5 +72,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('../fonts/SevenSegment-400.woff2') format('woff2');
+  src: url('../fonts/SevenSegment-400.woff2') format('woff2'),
+       url('../fonts/SevenSegment-400.ttf') format('truetype'),
+       url('../fonts/SevenSegment-Regular.ttf') format('truetype');
 }
