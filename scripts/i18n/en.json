@@ -384,6 +384,15 @@
           },
           "note": "Changes apply immediately."
         },
+        "digitFont": {
+          "label": "Number font",
+          "ariaLabel": "Choose the font used for numbers",
+          "options": {
+            "orbitron": "Orbitron",
+            "digittech7": "Digit Tech 7"
+          },
+          "preview": "0 1 2 3 4 5 6 7 8 9"
+        },
         "clickSound": {
           "title": "Clicker sound",
           "ariaLabel": "Toggle the clicker pop sound",

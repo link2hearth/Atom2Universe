@@ -33,7 +33,7 @@
   background: rgba(16, 22, 48, 0.6);
   color: inherit;
   font: inherit;
-  font-family: 'Orbitron', 'Inter', sans-serif;
+  font-family: var(--font-digits, 'Orbitron', 'Inter', sans-serif);
   display: inline-flex;
   align-items: baseline;
   gap: clamp(0.26rem, 0.68vw, 0.45rem);
