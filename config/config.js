@@ -1994,14 +1994,14 @@ const GAME_CONFIG = {
     groups: {
       commun: {
         perCopy: {
-          clickAdd: 5
+          clickAdd: 25
         },
         setBonus: {
           clickAdd: 500,
           requireAllUnique: true
         },
         multiplier: {
-          every: 20,
+          every: 100,
           increment: 1,
           targets: ['perClick', 'perSecond'],
           label: COLLECTION_MULTIPLIER_LABEL_KEY
@@ -2009,8 +2009,8 @@ const GAME_CONFIG = {
       },
       essentiel: {
         perCopy: {
-          uniqueClickAdd: 10,
-          duplicateClickAdd: 10,
+          uniqueClickAdd: 100,
+          duplicateClickAdd: 200,
           label: 'scripts.config.elementBonuses.essentiel.perCopy'
         },
         setBonus: [
@@ -2021,7 +2021,7 @@ const GAME_CONFIG = {
           }
         ],
         multiplier: {
-          every: 20,
+          every: 50,
           increment: 1,
           targets: ['perClick', 'perSecond'],
           label: COLLECTION_MULTIPLIER_LABEL_KEY
@@ -2029,12 +2029,12 @@ const GAME_CONFIG = {
       },
       stellaire: {
         perCopy: {
-          uniqueClickAdd: 50,
-          duplicateClickAdd: 50,
+          uniqueClickAdd: 200,
+          duplicateClickAdd: 250,
           label: 'scripts.config.elementBonuses.stellaire.perCopy'
         },
         multiplier: {
-          every: 15,
+          every: 25,
           increment: 1,
           targets: ['perClick', 'perSecond'],
           label: COLLECTION_MULTIPLIER_LABEL_KEY
