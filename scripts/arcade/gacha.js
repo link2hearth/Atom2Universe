@@ -1925,11 +1925,18 @@ function buildFusionCard(definition) {
   };
 }
 
+const VISIBLE_FUSION_IDS = new Set(['hydrogen']);
+
+function getVisibleFusionDefinitions() {
+  return FUSION_DEFS.filter(def => VISIBLE_FUSION_IDS.has(def.id));
+}
+
 function renderFusionList() {
   if (!elements.fusionList) return;
   fusionCards.clear();
   elements.fusionList.innerHTML = '';
-  if (!FUSION_DEFS.length) {
+  const visibleFusions = getVisibleFusionDefinitions();
+  if (!visibleFusions.length) {
     const empty = document.createElement('p');
     empty.className = 'fusion-empty';
     empty.textContent = t('scripts.gacha.fusion.empty');
@@ -1938,7 +1945,7 @@ function renderFusionList() {
     return;
   }
   const fragment = document.createDocumentFragment();
-  FUSION_DEFS.forEach(def => {
+  visibleFusions.forEach(def => {
     const card = buildFusionCard(def);
     fragment.appendChild(card.root);
     fusionCards.set(def.id, card);
