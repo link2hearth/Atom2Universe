@@ -758,25 +758,31 @@
       "collectionMultiplier": "Synergie de collection · Résonance unifiée",
       "essentiel": {
         "perCopy": "Spallation cosmique · récoltes essentielles",
-        "setBonus": "Spallation cosmique · collection complète"
+        "setBonus": "Spallation cosmique · collection complète",
+        "multiplier": "Spallation cosmique · synergie orbitale"
       },
       "stellaire": {
         "perCopy": "Étoiles simples · fragments activés",
         "setBonus": "Étoiles simples · forge parfaite",
+        "multiplier": "Étoiles simples · intensité stellaire",
         "labels": {
           "perCopy": "Étoiles simples · fragments"
         }
       },
       "singulier": {
-        "perCopy": "Supernovae · résonance cristalline"
+        "perCopy": "Supernovae · résonance cristalline",
+        "multiplier": "Supernovae · densité extrême"
       },
       "mythique": {
         "setBonus": "Étoiles massives · convergence ultime",
         "ticketBonus": "Étoiles massives · étoile compressée",
         "offlineBonus": "Étoiles massives · collecte persistante",
-        "duplicateOverflow": "Étoiles massives · surcharge fractale"
+        "duplicateOverflow": "Étoiles massives · surcharge fractale",
+        "frenzyBonus": "Étoiles massives · catalyseur de frénésie"
       },
-      "irreel": {}
+      "irreel": {
+        "multiplier": "Artificiels · catalyseur dimensionnel"
+      }
     },
     "trophies": {
       "presets": {
@@ -1120,7 +1126,8 @@
           "setBonus": "Étoiles massives · convergence ultime",
           "ticketBonus": "Étoiles massives · étoile compressée",
           "offlineBonus": "Étoiles massives · collecte persistante",
-          "duplicateOverflow": "Étoiles massives · surcharge fractale"
+          "duplicateOverflow": "Étoiles massives · surcharge fractale",
+          "frenzyBonus": "Étoiles massives · catalyseur de frénésie"
         },
         "irreel": {
           "multiplier": "Artificiels · catalyseur dimensionnel"
