@@ -1944,7 +1944,7 @@
             this.pause();
           } else if (this.canStartAutoRandomPlayback()) {
             this.startHeaderRandomPlayback();
-          } else {
+          } else if (this.hasPlayableTimeline()) {
             this.play();
           }
         });
@@ -3333,7 +3333,15 @@
       }
       if (this.headerPlaybackButton) {
         const headerDisabled = !hasTimeline && !this.canStartAutoRandomPlayback();
-        this.headerPlaybackButton.disabled = headerDisabled;
+        this.headerPlaybackButton.disabled = false;
+        this.headerPlaybackButton.removeAttribute('disabled');
+        if (headerDisabled) {
+          this.headerPlaybackButton.setAttribute('aria-disabled', 'true');
+          this.headerPlaybackButton.classList.add('is-disabled');
+        } else {
+          this.headerPlaybackButton.removeAttribute('aria-disabled');
+          this.headerPlaybackButton.classList.remove('is-disabled');
+        }
       }
       this.updateHeaderPlaybackButton();
       if (this.stopButton) {
