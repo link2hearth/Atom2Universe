@@ -317,12 +317,14 @@ body.view-sudoku .status-bar {
   display: flex;
   flex-direction: column;
   gap: 0.12rem;
+  min-width: 0;
 }
 
 .status-side {
   display: inline-flex;
   align-items: center;
   gap: clamp(0.55rem, 1vw, 0.95rem);
+  min-width: 0;
 }
 
 .status-side--left {
@@ -546,9 +548,15 @@ body.view-sudoku .status-bar {
   align-items: flex-end;
 }
 
+@media (max-width: 30rem) {
+  .status-bar {
+    gap: clamp(0.3rem, 1.8vw, 0.6rem);
+  }
+}
+
 /* Keep counters on a single row in most layouts and only stack them on
-   very small viewports where the values would start to collide. */
-@media (max-width: 40rem) {
+   extremely small viewports where the values would start to collide. */
+@media (max-width: 21.5rem) {
   .status-bar {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     grid-template-areas:
@@ -748,7 +756,9 @@ body.theme-neon .status-bar {
   display: flex;
   gap: 0.3rem;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-end;
+  margin-left: auto;
+  text-align: right;
 }
 
 .nav-button {
