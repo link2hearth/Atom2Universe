@@ -65,14 +65,19 @@ Le jeu charge dynamiquement les ressources depuis `scripts/i18n/<code>.json`. Aj
 
 ## Lancer le projet en local
 Le dépôt contient uniquement des fichiers statiques. Pour tester le jeu en local :
-1. Installez une version LTS de Node.js (ou utilisez Python si vous préférez).
-2. Depuis la racine du projet, lancez un serveur statique, par exemple :
+1. (Optionnel mais recommandé) Téléchargez les polices locales (`Audiowide`, `Orbitron` 400/600/700, `Inter` 400/500/600 et `Seven Segment` 400) pour assurer l’affichage hors-ligne :
+   ```bash
+   node scripts/resources/download-fonts.mjs
+   ```
+   Les fichiers `.woff2` sont placés dans le dossier `fonts/` et peuvent être versionnés.
+2. Installez une version LTS de Node.js (ou utilisez Python si vous préférez).
+3. Depuis la racine du projet, lancez un serveur statique, par exemple :
    ```bash
    npx serve .
    # ou
    python -m http.server 8080
    ```
-3. Ouvrez `http://localhost:3000` (ou le port choisi) dans votre navigateur. Les requêtes `fetch` du jeu nécessitent un serveur HTTP et ne fonctionnent pas en ouvrant directement `index.html`.
+4. Ouvrez `http://localhost:3000` (ou le port choisi) dans votre navigateur. Les requêtes `fetch` du jeu nécessitent un serveur HTTP et ne fonctionnent pas en ouvrant directement `index.html`.
 
 ---
 
