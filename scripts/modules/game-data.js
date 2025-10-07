@@ -108,6 +108,52 @@ periodicElements.forEach(def => {
 
 const configuredRarityIds = new Set(elementRarityIndex.values());
 
+function normalizeFusionElementList(source) {
+  const normalized = [];
+  if (source == null) {
+    return normalized;
+  }
+  const list = Array.isArray(source) ? source : [source];
+  list.forEach(rawEntry => {
+    if (rawEntry == null) {
+      return;
+    }
+    let entry = rawEntry;
+    if (typeof rawEntry === 'string') {
+      entry = { elementId: rawEntry };
+    } else if (typeof rawEntry === 'number') {
+      entry = { atomicNumber: rawEntry };
+    }
+    if (!entry || typeof entry !== 'object') {
+      return;
+    }
+    let elementDef = null;
+    let elementId = typeof entry.elementId === 'string' ? entry.elementId.trim() : '';
+    const atomicNumber = Number(entry.atomicNumber ?? entry.numero ?? entry.number);
+    const symbol = typeof entry.symbol === 'string' ? entry.symbol.trim() : '';
+    if (elementId && periodicElementIndex.has(elementId)) {
+      elementDef = periodicElementIndex.get(elementId);
+    } else if (Number.isFinite(atomicNumber) && periodicElementByAtomicNumber.has(atomicNumber)) {
+      elementDef = periodicElementByAtomicNumber.get(atomicNumber);
+    } else if (symbol) {
+      elementDef = periodicElements.find(def => {
+        if (typeof def.symbol !== 'string') {
+          return false;
+        }
+        return def.symbol.trim().toLowerCase() === symbol.toLowerCase();
+      }) || null;
+    }
+    if (!elementDef) {
+      return;
+    }
+    elementId = elementDef.id;
+    const rawCount = Number(entry.count ?? entry.quantity ?? entry.amount ?? 1);
+    const count = Number.isFinite(rawCount) && rawCount > 0 ? Math.floor(rawCount) : 1;
+    normalized.push({ elementId, elementDef, count });
+  });
+  return normalized;
+}
+
 function normalizeFusionDefinition(entry, index = 0) {
   if (!entry || typeof entry !== 'object') {
     return null;
@@ -133,35 +179,8 @@ function normalizeFusionDefinition(entry, index = 0) {
   const nameParams = { number: index + 1 };
   const name = translateGameDataKey(nameKey, nameFallback, nameParams);
   const description = translateGameDataKey(descriptionKey, descriptionFallback);
-  const inputSource = Array.isArray(entry.inputs)
-    ? entry.inputs
-    : (Array.isArray(entry.ingredients) ? entry.ingredients : []);
-  const inputs = [];
-  inputSource.forEach(rawInput => {
-    if (!rawInput || typeof rawInput !== 'object') {
-      return;
-    }
-    let elementDef = null;
-    let elementId = typeof rawInput.elementId === 'string' ? rawInput.elementId.trim() : '';
-    const atomicNumber = Number(rawInput.atomicNumber ?? rawInput.numero ?? rawInput.number);
-    const symbol = typeof rawInput.symbol === 'string' ? rawInput.symbol.trim() : '';
-    if (elementId && periodicElementIndex.has(elementId)) {
-      elementDef = periodicElementIndex.get(elementId);
-    } else if (Number.isFinite(atomicNumber) && periodicElementByAtomicNumber.has(atomicNumber)) {
-      elementDef = periodicElementByAtomicNumber.get(atomicNumber);
-    } else if (symbol) {
-      elementDef = periodicElements.find(
-        def => typeof def.symbol === 'string' && def.symbol.toLowerCase() === symbol.toLowerCase()
-      );
-    }
-    if (!elementDef) {
-      return;
-    }
-    elementId = elementDef.id;
-    const rawCount = Number(rawInput.count ?? rawInput.quantity ?? rawInput.amount ?? 1);
-    const count = Number.isFinite(rawCount) && rawCount > 0 ? Math.floor(rawCount) : 1;
-    inputs.push({ elementId, elementDef, count });
-  });
+  const inputSource = entry.inputs ?? entry.ingredients ?? [];
+  const inputs = normalizeFusionElementList(inputSource);
   if (!inputs.length) {
     return null;
   }
@@ -179,6 +198,8 @@ function normalizeFusionDefinition(entry, index = 0) {
   const rawAps = Number(rewardsRaw.apsFlat ?? rewardsRaw.aps ?? rewardsRaw.perSecond ?? rewardsRaw.auto ?? 0);
   const apcFlat = Number.isFinite(rawApc) ? rawApc : 0;
   const apsFlat = Number.isFinite(rawAps) ? rawAps : 0;
+  const rewardElementSource = rewardsRaw.elements ?? rewardsRaw.items ?? rewardsRaw.element ?? [];
+  const elementRewards = normalizeFusionElementList(rewardElementSource);
   return {
     id,
     name,
@@ -187,7 +208,8 @@ function normalizeFusionDefinition(entry, index = 0) {
     successChance,
     rewards: {
       apcFlat,
-      apsFlat
+      apsFlat,
+      elements: elementRewards
     },
     localization: {
       nameKey,
