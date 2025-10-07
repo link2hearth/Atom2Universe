@@ -4,6 +4,17 @@
     ? GLOBAL_CONFIG.arcade.particules ?? {}
     : {};
 
+  const MODE_DESCRIPTION_FALLBACKS = Object.freeze({
+    free: {
+      fr: 'Entraînez-vous sans dépenser d\u2019atomes ni gagner de récompenses.',
+      en: 'Practice without spending atoms or earning rewards.'
+    },
+    paid: {
+      fr: 'Consommez {percent} de vos Atomes pour tenter de gagner des tickets de tirage d\'éléments.',
+      en: 'Spend {percent} of your atoms to try earning element draw tickets.'
+    }
+  });
+
   const translate = (() => {
     const hasTranslator = typeof globalThis !== 'undefined' && typeof globalThis.t === 'function';
     if (hasTranslator) {
@@ -45,6 +56,52 @@
       });
     };
   })();
+
+  const formatFallbackMessage = (template, params = {}) => {
+    if (typeof template !== 'string' || !template.trim()) {
+      return '';
+    }
+    return template.replace(/\{\s*([^\s{}]+)\s*\}/g, (match, token) => {
+      const value = params[token];
+      return value == null ? match : String(value);
+    });
+  };
+
+  const getCurrentLanguageCode = () => {
+    const langFromI18n = globalThis.i18n && typeof globalThis.i18n.getCurrentLanguage === 'function'
+      ? globalThis.i18n.getCurrentLanguage()
+      : null;
+    if (typeof langFromI18n === 'string' && langFromI18n.trim()) {
+      return langFromI18n.trim().toLowerCase();
+    }
+    if (typeof document === 'object' && document?.documentElement?.lang) {
+      const docLang = String(document.documentElement.lang).trim();
+      if (docLang) {
+        return docLang.toLowerCase();
+      }
+    }
+    if (typeof navigator === 'object') {
+      const browserLang = navigator.language || navigator.userLanguage;
+      if (typeof browserLang === 'string' && browserLang.trim()) {
+        return browserLang.trim().toLowerCase();
+      }
+    }
+    return 'en';
+  };
+
+  const getModeDescriptionFallback = (mode, params) => {
+    const fallbacks = MODE_DESCRIPTION_FALLBACKS[mode];
+    if (!fallbacks) {
+      return '';
+    }
+    const language = getCurrentLanguageCode();
+    const [baseLanguage] = language.split('-');
+    const localizedTemplate = fallbacks[language]
+      || (baseLanguage ? fallbacks[baseLanguage] : null)
+      || fallbacks.en
+      || Object.values(fallbacks)[0];
+    return formatFallbackMessage(localizedTemplate, params);
+  };
 
   const FALLBACK_NUMBER_LOCALE = 'fr-FR';
   let resolvedNumberLocale = (() => {
@@ -3549,12 +3606,18 @@
         });
         const percent = `${percentValue}%`;
         const formattedCost = this.formatPaidCostValue(info?.cost);
-        message = translate('scripts.particules.ui.mode.paid.description', {
+        const translated = translate('scripts.particules.ui.mode.paid.description', {
           cost: formattedCost,
           percent
         });
+        message = typeof translated === 'string' && translated !== 'scripts.particules.ui.mode.paid.description'
+          ? translated
+          : getModeDescriptionFallback('paid', { cost: formattedCost, percent });
       } else {
-        message = translate('scripts.particules.ui.mode.free.description');
+        const translated = translate('scripts.particules.ui.mode.free.description');
+        message = typeof translated === 'string' && translated !== 'scripts.particules.ui.mode.free.description'
+          ? translated
+          : getModeDescriptionFallback('free');
       }
       this.modeHint.textContent = message;
     }
