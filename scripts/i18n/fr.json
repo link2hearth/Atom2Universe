@@ -347,7 +347,7 @@
         },
         "elements": {
           "title": "Bonus éléments",
-          "subtitle": "Commun cosmique · Essentiel planétaire · Forge stellaire · Singularité minérale · Mythe quantique · Irréel"
+          "subtitle": "Nucléosynthèse primordiale · Spallation cosmique · Étoiles simples · Supernovae · Étoiles massives · Artificiels"
         }
       },
       "metaux": {
@@ -751,24 +751,24 @@
     "elementBonuses": {
       "collectionMultiplier": "Synergie de collection · Résonance unifiée",
       "essentiel": {
-        "perCopy": "Essentiel planétaire · récoltes essentielles",
-        "setBonus": "Essentiel planétaire · collection complète"
+        "perCopy": "Spallation cosmique · récoltes essentielles",
+        "setBonus": "Spallation cosmique · collection complète"
       },
       "stellaire": {
-        "perCopy": "Forge stellaire · fragments activés",
-        "setBonus": "Forge stellaire · forge parfaite",
+        "perCopy": "Étoiles simples · fragments activés",
+        "setBonus": "Étoiles simples · forge parfaite",
         "labels": {
-          "perCopy": "Forge stellaire · fragments"
+          "perCopy": "Étoiles simples · fragments"
         }
       },
       "singulier": {
-        "perCopy": "Singularité minérale · résonance cristalline"
+        "perCopy": "Supernovae · résonance cristalline"
       },
       "mythique": {
-        "setBonus": "Mythe quantique · convergence ultime",
-        "ticketBonus": "Mythe quantique · étoile compressée",
-        "offlineBonus": "Mythe quantique · collecte persistante",
-        "duplicateOverflow": "Mythe quantique · surcharge fractale"
+        "setBonus": "Étoiles massives · convergence ultime",
+        "ticketBonus": "Étoiles massives · étoile compressée",
+        "offlineBonus": "Étoiles massives · collecte persistante",
+        "duplicateOverflow": "Étoiles massives · surcharge fractale"
       },
       "irreel": {}
     },
@@ -1079,30 +1079,30 @@
       },
       "elementBonuses": {
         "essentiel": {
-          "perCopy": "Essentiel planétaire · récoltes essentielles",
-          "setBonus": "Essentiel planétaire · collection complète",
-          "multiplier": "Essentiel planétaire · synergie orbitale"
+          "perCopy": "Spallation cosmique · récoltes essentielles",
+          "setBonus": "Spallation cosmique · collection complète",
+          "multiplier": "Spallation cosmique · synergie orbitale"
         },
         "stellaire": {
-          "perCopy": "Forge stellaire · fragments activés",
-          "setBonus": "Forge stellaire · forge parfaite",
-          "multiplier": "Forge stellaire · intensité stellaire",
+          "perCopy": "Étoiles simples · fragments activés",
+          "setBonus": "Étoiles simples · forge parfaite",
+          "multiplier": "Étoiles simples · intensité stellaire",
           "labels": {
-            "perCopy": "Forge stellaire · fragments"
+            "perCopy": "Étoiles simples · fragments"
           }
         },
         "singulier": {
-          "perCopy": "Singularité minérale · résonance cristalline",
-          "multiplier": "Singularité minérale · densité extrême"
+          "perCopy": "Supernovae · résonance cristalline",
+          "multiplier": "Supernovae · densité extrême"
         },
         "mythique": {
-          "setBonus": "Mythe quantique · convergence ultime",
-          "ticketBonus": "Mythe quantique · étoile compressée",
-          "offlineBonus": "Mythe quantique · collecte persistante",
-          "duplicateOverflow": "Mythe quantique · surcharge fractale"
+          "setBonus": "Étoiles massives · convergence ultime",
+          "ticketBonus": "Étoiles massives · étoile compressée",
+          "offlineBonus": "Étoiles massives · collecte persistante",
+          "duplicateOverflow": "Étoiles massives · surcharge fractale"
         },
         "irreel": {
-          "multiplier": "Irréel · catalyseur dimensionnel"
+          "multiplier": "Artificiels · catalyseur dimensionnel"
         }
       }
     },
@@ -1272,7 +1272,7 @@
             "frenzy": "Chance de frénésie {value}"
           },
           "notes": {
-            "singularityBoost": "Singularité amplifiée : effets {value}",
+            "singularityBoost": "Supernovae amplifiées : effets {value}",
             "amplify": "Amplifie {target} : {effects}",
             "effects": "{label} : {effects}",
             "multiplierBase": "{prefix}base {value}",
@@ -1306,8 +1306,8 @@
             "overflowFlat": "APC/APS +{value} par doublon",
             "overflowThreshold": "au-delà de {count} {unit}",
             "frenzyComplete": "Chance de frénésie {value} (collection complète requise)",
-            "singularitySynergy": "Synergie Singularité : Bonus ×2 si la collection Singularité minérale est complète",
-            "stellaireSynergy": "Synergie Forge stellaire : Compléter la collection double tous les bonus Forge stellaire"
+            "singularitySynergy": "Synergie Supernovae : Bonus ×2 si la collection Supernovae est complète",
+            "stellaireSynergy": "Synergie Étoiles simples : Compléter la collection double tous les bonus Étoiles simples"
           },
           "units": {
             "copy": {
@@ -1362,38 +1362,38 @@
     "gacha": {
       "rarities": {
         "commun": {
-          "label": "Commun cosmique",
+          "label": "Nucléosynthèse primordiale",
           "description": "Les briques fondamentales présentes dans la majorité des nébuleuses."
         },
         "essentiel": {
-          "label": "Essentiel planétaire",
+          "label": "Spallation cosmique",
           "description": "Éléments abondants dans les mondes rocheux et les atmosphères habitables."
         },
         "stellaire": {
-          "label": "Forge stellaire",
+          "label": "Étoiles simples",
           "description": "Alliages façonnés au coeur des étoiles et disséminés par les supernovæ."
         },
         "singulier": {
-          "label": "Singularité minérale",
+          "label": "Supernovae",
           "description": "Cristaux recherchés, rarement concentrés au même endroit."
         },
         "mythique": {
-          "label": "Mythe quantique",
+          "label": "Étoiles massives",
           "description": "Éléments légendaires aux propriétés extrêmes et insaisissables."
         },
         "irreel": {
-          "label": "Irréel",
+          "label": "Artificiels",
           "description": "Synthèses artificielles nées uniquement dans des accélérateurs."
         }
       },
       "featured": {
         "today": "Aujourd'hui",
-        "monday": "+Singularité Minérale",
-        "thursday": "+Singularité Minérale",
-        "tuesday": "+Mythe Quantique",
-        "friday": "+Mythe Quantique",
-        "wednesday": "+Iréel",
-        "saturday": "+Iréel"
+        "monday": "+Supernovae",
+        "thursday": "+Supernovae",
+        "tuesday": "+Étoiles massives",
+        "friday": "+Étoiles massives",
+        "wednesday": "+Artificiels",
+        "saturday": "+Artificiels"
       },
       "rarityProgress": {
         "unavailable": "Raretés indisponibles",
@@ -1604,7 +1604,7 @@
         },
         "ticketHarvester": {
           "name": "Collecteur d’étoiles",
-          "description": "Complétez les collections Commun cosmique et Essentiel planétaire.",
+          "description": "Complétez les collections Nucléosynthèse primordiale et Spallation cosmique.",
           "reward": "Sur l’écran principal, les étoiles à tickets se récoltent automatiquement au bout de 3 secondes."
         },
         "alloyMastery": {

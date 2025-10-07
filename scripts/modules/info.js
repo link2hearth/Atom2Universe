@@ -886,14 +886,14 @@ function getCollectionBonusOverview(rarityId) {
     pushOverview(
       translateCollectionOverview(
         'singularitySynergy',
-        'Synergie Singularité : Bonus ×2 si la collection Singularité minérale est complète'
+        'Synergie Supernovae : Bonus ×2 si la collection Supernovae est complète'
       )
     );
   } else if (rarityId === 'singulier') {
     pushOverview(
       translateCollectionOverview(
         'stellaireSynergy',
-        'Synergie Forge stellaire : Compléter la collection double tous les bonus Forge stellaire'
+        'Synergie Étoiles simples : Compléter la collection double tous les bonus Étoiles simples'
       )
     );
   }

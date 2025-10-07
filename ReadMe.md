@@ -32,7 +32,7 @@ La boutique regroupe quinze bâtiments (manuel, automatique ou hybrides). Chaque
 Chaque carte de boutique est décrite et générée dynamiquement à partir de `GAME_CONFIG`, ce qui permet d’ajuster facilement l’équilibrage sans modifier la logique d’interface.【F:scripts/app.js†L6089-L7576】
 
 ## Collections, gacha et tickets
-- **Tickets** : la “star” apparaît automatiquement, peut être améliorée par la rareté Mythe quantique (−1 s par élément unique, minimum 5 s) et offre un mode de collecte automatique via les trophées dédiés.【F:scripts/app.js†L1270-L1318】【F:config/config.js†L990-L1014】【F:config/config.js†L810-L827】
+- **Tickets** : la “star” apparaît automatiquement, peut être améliorée par la rareté Étoiles massives (−1 s par élément unique, minimum 5 s) et offre un mode de collecte automatique via les trophées dédiés.【F:scripts/app.js†L1270-L1318】【F:config/config.js†L990-L1014】【F:config/config.js†L810-L827】
 - **Portail gacha** : chaque tirage coûte 1 ticket (ou peut être gratuit via le DevKit). Les probabilités de base et la rareté mise à l’honneur changent selon le jour (pity journalier).【F:scripts/arcade/gacha.js†L107-L217】【F:config/config.js†L1528-L1612】
 - **Raretés & bonus** : six familles d’éléments apportent des bonus plats, multiplicatifs ou utilitaires (intervalle de tickets, critique, hors-ligne…). Les caps de progression sont précisés pour chaque groupe.【F:config/config.js†L910-L1034】
 - **Tableau périodique** : la liste complète des éléments et leurs méta-données se trouve dans `scripts/resources/periodic-elements.js` et alimente la collection affichée dans l’onglet dédié.【F:scripts/resources/periodic-elements.js†L1-L210】
