@@ -1942,7 +1942,9 @@
         this.headerPlaybackButton.addEventListener('click', () => {
           if (this.playing) {
             this.pause();
-          } else {
+          } else if (this.canStartAutoRandomPlayback()) {
+            this.startHeaderRandomPlayback();
+          } else if (this.hasPlayableTimeline()) {
             this.play();
           }
         });
@@ -3281,15 +3283,65 @@
       }
     }
 
+    hasPlayableTimeline() {
+      return Boolean(this.timeline && Array.isArray(this.timeline.notes) && this.timeline.notes.length > 0);
+    }
+
+    canStartAutoRandomPlayback() {
+      if (this.playing) {
+        return false;
+      }
+      if (this.randomPlaybackPending) {
+        return false;
+      }
+      if (this.hasPlayableTimeline()) {
+        return false;
+      }
+      return Array.isArray(this.libraryAllTracks) && this.libraryAllTracks.length > 0;
+    }
+
+    ensureDefaultSoundFontSelection() {
+      if (this.selectedSoundFontId) {
+        return;
+      }
+      const defaultEntry = (Array.isArray(this.soundFontList) ? this.soundFontList : []).find((item) => item && item.default)
+        || (Array.isArray(this.soundFontList) ? this.soundFontList[0] : null)
+        || null;
+      if (defaultEntry) {
+        this.setSoundFontSelection(defaultEntry.id, { autoLoad: false, stopPlayback: false });
+      }
+    }
+
+    async startHeaderRandomPlayback() {
+      if (!this.canStartAutoRandomPlayback()) {
+        return;
+      }
+      this.ensureDefaultSoundFontSelection();
+      try {
+        await this.playRandomTrack(null, { continueSession: false });
+      } catch (error) {
+        console.error('Unable to start random playback from header', error);
+      }
+    }
+
     updateButtons() {
-      const hasTimeline = this.timeline && Array.isArray(this.timeline.notes) && this.timeline.notes.length > 0;
+      const hasTimeline = this.hasPlayableTimeline();
       const disabled = !hasTimeline;
       if (this.playButton) {
         this.playButton.disabled = disabled;
         this.updatePlayButtonLabel();
       }
       if (this.headerPlaybackButton) {
-        this.headerPlaybackButton.disabled = disabled;
+        const headerDisabled = !hasTimeline && !this.canStartAutoRandomPlayback();
+        this.headerPlaybackButton.disabled = false;
+        this.headerPlaybackButton.removeAttribute('disabled');
+        if (headerDisabled) {
+          this.headerPlaybackButton.setAttribute('aria-disabled', 'true');
+          this.headerPlaybackButton.classList.add('is-disabled');
+        } else {
+          this.headerPlaybackButton.removeAttribute('aria-disabled');
+          this.headerPlaybackButton.classList.remove('is-disabled');
+        }
       }
       this.updateHeaderPlaybackButton();
       if (this.stopButton) {
