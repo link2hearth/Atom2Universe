@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title data-i18n="index.meta.title"></title>
+  <title data-i18n="index.meta.title">Atom to Univers</title>
   <link rel="stylesheet" href="styles/fonts.css" />
   <link rel="stylesheet" href="styles/main.css" />
 </head>
@@ -11,19 +11,30 @@
   <header class="app-header">
     <div class="header-main">
       <div class="header-brand-group">
-        <button class="brand brand-button" id="brandPortal" type="button">Atom2Univers</button>
+        <button
+          class="brand brand-button"
+          id="brandPortal"
+          type="button"
+          data-i18n="index.header.brand"
+        >
+          Atom2Univers
+        </button>
         <button
           class="header-playback-button"
           id="headerPlaybackToggle"
           type="button"
           data-state="play"
           aria-pressed="false"
-          aria-label="Play"
-          title="Play"
+          aria-label="Lecture"
+          title="Lecture"
           data-i18n="aria-label:index.sections.options.chiptune.controls.play;title:index.sections.options.chiptune.controls.play"
         ></button>
       </div>
-      <nav class="nav-menu" data-i18n="aria-label:index.navigation.primary">
+      <nav
+        class="nav-menu"
+        aria-label="Navigation principale"
+        data-i18n="aria-label:index.navigation.primary"
+      >
         <button
           class="nav-button"
           data-target="arcadeHub"
@@ -33,7 +44,7 @@
           disabled
           aria-disabled="true"
         >
-          <span data-i18n="index.navigation.items.arcade"></span>
+          <span data-i18n="index.navigation.items.arcade">Arcade</span>
         </button>
         <button
           class="nav-button"
@@ -42,18 +53,20 @@
           aria-hidden="true"
           disabled
           aria-disabled="true"
-        ><span data-i18n="index.navigation.items.shop"></span></button>
+        >
+          <span data-i18n="index.navigation.items.shop">Boutique</span>
+        </button>
         <button class="nav-button" data-target="gacha" hidden aria-hidden="true">
-          <span data-i18n="index.navigation.items.gacha"></span>
+          <span data-i18n="index.navigation.items.gacha">Gacha</span>
         </button>
         <button class="nav-button" data-target="tableau" hidden aria-hidden="true">
-          <span data-i18n="index.navigation.items.table"></span>
+          <span data-i18n="index.navigation.items.table">Table</span>
         </button>
         <button class="nav-button" data-target="fusion" hidden aria-hidden="true">
-          <span data-i18n="index.navigation.items.fusion"></span>
+          <span data-i18n="index.navigation.items.fusion">Fusion</span>
         </button>
         <button class="nav-button" data-target="info" hidden aria-hidden="true">
-          <span data-i18n="index.navigation.items.info"></span>
+          <span data-i18n="index.navigation.items.info">Infos</span>
         </button>
         <button
           class="nav-button"
@@ -62,25 +75,31 @@
           aria-hidden="true"
           disabled
           aria-disabled="true"
-        ><span data-i18n="index.navigation.items.goals"></span></button>
+        >
+          <span data-i18n="index.navigation.items.goals">Objectifs</span>
+        </button>
         <button class="nav-button" data-target="bigbang" id="navBigBangButton" hidden aria-hidden="true">
-          <span data-i18n="index.navigation.items.bigbang"></span>
+          <span data-i18n="index.navigation.items.bigbang">Big Bang</span>
         </button>
         <button class="nav-button" data-target="options">
-          <span data-i18n="index.navigation.items.options"></span>
+          <span data-i18n="index.navigation.items.options">Options</span>
         </button>
       </nav>
     </div>
     <div class="status-bar" aria-live="polite">
       <div class="status-side status-side--left">
         <div class="status-item status-item--left">
-          <span class="status-label" data-i18n="index.status.apc"></span>
+          <span class="status-label" data-i18n="index.status.apc">APC</span>
           <div class="status-value-group status-value-group--left">
             <span class="status-value" id="statusApc">1</span>
           </div>
         </div>
       </div>
-      <div class="status-item status-item--center" data-i18n="aria-label:index.status.totalAtoms">
+      <div
+        class="status-item status-item--center"
+        aria-label="Total d'atomes"
+        data-i18n="aria-label:index.status.totalAtoms"
+      >
         <button class="status-atoms-button" type="button" id="statusAtomsButton">
           <span class="status-value status-value--main" id="statusAtoms">0</span>
         </button>
@@ -100,7 +119,7 @@
           </div>
         </div>
         <div class="status-item status-item--right">
-          <span class="status-label" data-i18n="index.status.aps"></span>
+          <span class="status-label" data-i18n="index.status.aps">APS</span>
           <div class="status-value-group status-value-group--aps">
             <span class="status-value" id="statusAps">0</span>
           </div>
@@ -125,6 +144,7 @@
       id="game"
       class="page active page--void"
       data-page-group="clicker"
+      aria-label="Chambre de création atomique"
       data-i18n="aria-label:index.sections.game.aria"
     >
       <div class="starfield" aria-hidden="true"></div>
@@ -133,6 +153,7 @@
         class="atom-button"
         id="atomButton"
         type="button"
+        aria-label="Créer des atomes"
         data-i18n="aria-label:index.sections.game.atomButton.aria"
       >
         <span class="atom-visual">
@@ -140,8 +161,8 @@
             src="Assets/Image/Atom.png"
             class="atom-image"
             draggable="false"
+            alt="Illustration d'un atome vibrant"
             data-i18n="alt:index.sections.game.atomButton.alt"
-            alt=""
           />
         </span>
       </button>
@@ -158,10 +179,23 @@
       data-page-group="clicker"
       aria-labelledby="shop-title"
     >
-      <h2 id="shop-title" class="visually-hidden" data-i18n="index.sections.shop.title"></h2>
+      <h2 id="shop-title" class="visually-hidden" data-i18n="index.sections.shop.title">
+        Boutique quantique
+      </h2>
       <div class="shop-layout">
-        <div class="shop-actions-header" id="shopActionsHeader" aria-hidden="true"></div>
-        <div class="shop-list" id="shopList" role="list"></div>
+        <div class="shop-actions-header" id="shopActionsHeader" aria-hidden="true">
+          <p
+            class="shop-actions-header__placeholder"
+            data-i18n="index.sections.shop.actionsPlaceholder"
+          >
+            Les options d'achat apparaîtront ici.
+          </p>
+        </div>
+        <div class="shop-list" id="shopList" role="list">
+          <p class="shop-list__placeholder" data-i18n="index.sections.shop.placeholder">
+            La boutique se charge…
+          </p>
+        </div>
       </div>
     </section>
 
@@ -171,13 +205,20 @@
       data-page-group="clicker"
       aria-labelledby="gacha-title"
     >
-      <h2 id="gacha-title" class="visually-hidden" data-i18n="index.sections.gacha.title"></h2>
-      <div class="gacha-featured-info" id="gachaFeaturedInfo" aria-live="polite" hidden></div>
+      <h2 id="gacha-title" class="visually-hidden" data-i18n="index.sections.gacha.title">
+        Portail de tirage cosmique
+      </h2>
+      <div class="gacha-featured-info" id="gachaFeaturedInfo" aria-live="polite" hidden>
+        <p data-i18n="index.sections.gacha.featuredPlaceholder">
+          Aucun tirage vedette pour le moment.
+        </p>
+      </div>
       <div class="gacha-ticket-counter" id="gachaTicketCounter" aria-live="polite">
         <button
           class="gacha-ticket-mode"
           id="gachaTicketModeButton"
           type="button"
+          aria-label="Basculer le mode de tirage (actuel : Tirage x1)"
           data-i18n="aria-label:index.sections.gacha.toggleAria"
         >
           <img
@@ -187,7 +228,9 @@
             aria-hidden="true"
             draggable="false"
           />
-          <span class="gacha-ticket-mode__label" id="gachaTicketModeLabel" data-i18n="index.sections.gacha.modeSingle"></span>
+          <span class="gacha-ticket-mode__label" id="gachaTicketModeLabel" data-i18n="index.sections.gacha.modeSingle">
+            Tirage x1
+          </span>
         </button>
         <span class="gacha-ticket-counter__value" id="gachaTicketValue">0</span>
       </div>
@@ -195,10 +238,16 @@
         class="gacha-sun-button"
         id="gachaSunButton"
         type="button"
+        aria-label="Déclencher un tirage cosmique"
         data-i18n="aria-label:index.sections.gacha.sunButton"
         aria-describedby="gachaTicketCounter"
       >
-        <img src="Assets/Image/Sun.png" draggable="false" data-i18n="alt:index.sections.gacha.sunAlt" alt="" />
+        <img
+          src="Assets/Image/Sun.png"
+          draggable="false"
+          alt="Soleil cosmique"
+          data-i18n="alt:index.sections.gacha.sunAlt"
+        />
       </button>
       <div
         class="gacha-animation-layer"
@@ -209,8 +258,12 @@
       >
         <canvas class="gacha-confetti-layer" id="gachaAnimationConfetti" aria-hidden="true"></canvas>
         <div class="gacha-overlay" aria-hidden="true"></div>
-        <div class="gacha-result" id="gachaResult" role="status" aria-live="assertive"></div>
-        <p class="gacha-continue-hint" id="gachaContinueHint" data-i18n="index.sections.gacha.continue"></p>
+        <div class="gacha-result" id="gachaResult" role="status" aria-live="assertive">
+          <p data-i18n="index.sections.gacha.resultPlaceholder">Résultat du tirage</p>
+        </div>
+        <p class="gacha-continue-hint" id="gachaContinueHint" data-i18n="index.sections.gacha.continue">
+          Cliquer pour continuer
+        </p>
       </div>
     </section>
 
@@ -221,6 +274,12 @@
       data-i18n="aria-label:index.sections.arcadeHub.aria"
       hidden
     >
+      <header class="arcade-hub__header">
+        <h2 class="arcade-hub__title" data-i18n="index.sections.arcadeHub.title">Arcade</h2>
+        <p class="arcade-hub__subtitle" data-i18n="index.sections.arcadeHub.subtitle">
+          Choisissez un mini-jeu pour prolonger l'expérience Atom2Univers.
+        </p>
+      </header>
       <div class="arcade-hub__grid">
         <button
           type="button"
@@ -233,7 +292,16 @@
             role="heading"
             aria-level="3"
             data-i18n="index.sections.arcadeHub.cards.particules.title"
-          ></span>
+          >Particules</span>
+          <p
+            class="arcade-hub-card__description"
+            data-i18n="index.sections.arcadeHub.cards.particules.description"
+          >
+            Renvoyez la particule quantique pour décrocher des tickets de gacha et des crédits Mach3.
+          </p>
+          <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.particules.cta"
+            >Jouer</span
+          >
         </button>
         <button
           type="button"
@@ -246,7 +314,16 @@
             role="heading"
             aria-level="3"
             data-i18n="index.sections.arcadeHub.cards.metaux.title"
-          ></span>
+          >Métaux</span>
+          <p
+            class="arcade-hub-card__description"
+            data-i18n="index.sections.arcadeHub.cards.metaux.description"
+          >
+            Alignez les alliages Mach3 pour forger des bonus et améliorer votre production.
+          </p>
+          <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.metaux.cta"
+            >Forger</span
+          >
         </button>
         <button
           type="button"
@@ -259,7 +336,16 @@
             role="heading"
             aria-level="3"
             data-i18n="index.sections.arcadeHub.cards.wave.title"
-          ></span>
+          >Photon</span>
+          <p
+            class="arcade-hub-card__description"
+            data-i18n="index.sections.arcadeHub.cards.wave.description"
+          >
+            Incarnez un photon surfant son onde cosmique.
+          </p>
+          <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.wave.cta"
+            >Surfer</span
+          >
         </button>
         <button
           type="button"
@@ -272,7 +358,16 @@
             role="heading"
             aria-level="3"
             data-i18n="index.sections.arcadeHub.cards.quantum2048.title"
-          ></span>
+          >ObjectX</span>
+          <p
+            class="arcade-hub-card__description"
+            data-i18n="index.sections.arcadeHub.cards.quantum2048.description"
+          >
+            Composez des réactions en chaîne sur la grille choisie pour atteindre la tuile objectif.
+          </p>
+          <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.quantum2048.cta"
+            >Fusionner</span
+          >
         </button>
         <button
           type="button"
@@ -285,7 +380,16 @@
             role="heading"
             aria-level="3"
             data-i18n="index.sections.arcadeHub.cards.math.title"
-          ></span>
+          >Math</span>
+          <p
+            class="arcade-hub-card__description"
+            data-i18n="index.sections.arcadeHub.cards.math.description"
+          >
+            Trouvez le nombre ou le symbole manquant pour compléter des opérations évolutives.
+          </p>
+          <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.math.cta"
+            >Calculer</span
+          >
         </button>
         <button
           type="button"
@@ -298,7 +402,16 @@
             role="heading"
             aria-level="3"
             data-i18n="index.sections.arcadeHub.cards.balance.title"
-          ></span>
+          >Balance</span>
+          <p
+            class="arcade-hub-card__description"
+            data-i18n="index.sections.arcadeHub.cards.balance.description"
+          >
+            Disposez des blocs de masses différentes pour maintenir la planche parfaitement équilibrée.
+          </p>
+          <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.balance.cta"
+            >Équilibrer</span
+          >
         </button>
         <button
           type="button"
@@ -311,7 +424,16 @@
             role="heading"
             aria-level="3"
             data-i18n="index.sections.arcadeHub.cards.sudoku.title"
-          ></span>
+          >Sudoku</span>
+          <p
+            class="arcade-hub-card__description"
+            data-i18n="index.sections.arcadeHub.cards.sudoku.description"
+          >
+            Résolvez des grilles générées aléatoirement ou laissez l'ordinateur trouver la solution parfaite.
+          </p>
+          <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.sudoku.cta"
+            >Résoudre</span
+          >
         </button>
         <button
           type="button"
@@ -324,7 +446,16 @@
             role="heading"
             aria-level="3"
             data-i18n="index.sections.arcadeHub.cards.blackjack.title"
-          ></span>
+          >Blackjack</span>
+          <p
+            class="arcade-hub-card__description"
+            data-i18n="index.sections.arcadeHub.cards.blackjack.description"
+          >
+            Affrontez le croupier avec un sabot de huit paquets qui se régénère dès qu'une carte unique s'épuise.
+          </p>
+          <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.blackjack.cta"
+            >Distribuer</span
+          >
         </button>
       </div>
     </section>
@@ -341,19 +472,26 @@
           <div class="arcade-stage__hud" aria-hidden="true">
             <dl class="arcade-hud" role="presentation">
               <div class="arcade-hud__item">
-                <dt class="arcade-hud__label" data-i18n="index.sections.arcade.hud.level"></dt>
+                <dt class="arcade-hud__label" data-i18n="index.sections.arcade.hud.level">Niveau</dt>
                 <dd class="arcade-hud__value" id="arcadeLevelValue">1</dd>
               </div>
               <div class="arcade-hud__item">
-                <dt class="arcade-hud__label" data-i18n="index.sections.arcade.hud.lives"></dt>
+                <dt class="arcade-hud__label" data-i18n="index.sections.arcade.hud.lives">Vies</dt>
                 <dd class="arcade-hud__value" id="arcadeLivesValue">3</dd>
               </div>
               <div class="arcade-hud__item">
-                <dt class="arcade-hud__label" data-i18n="index.sections.arcade.hud.score"></dt>
+                <dt class="arcade-hud__label" data-i18n="index.sections.arcade.hud.score">Score</dt>
                 <dd class="arcade-hud__value" id="arcadeScoreValue">0</dd>
               </div>
             </dl>
-            <p class="arcade-hud__combo" id="arcadeComboMessage" aria-live="polite"></p>
+            <p
+              class="arcade-hud__combo"
+              id="arcadeComboMessage"
+              aria-live="polite"
+              data-i18n="index.sections.arcade.hud.combo"
+            >
+              Combo prêt
+            </p>
           </div>
           <canvas
             id="arcadeGameCanvas"
@@ -368,7 +506,9 @@
                 class="arcade-overlay__message"
                 id="arcadeOverlayMessage"
                 data-i18n="index.sections.arcade.overlay.message"
-              ></p>
+              >
+                Touchez ou cliquez la raquette pour guider la particule et détruire les briques quantiques.
+              </p>
               <div
                 class="arcade-overlay__field"
                 id="arcadeModeField"
@@ -377,7 +517,7 @@
                 <span
                   class="arcade-overlay__label"
                   data-i18n="index.sections.arcade.overlay.mode.label"
-                ></span>
+                >Mode de jeu</span>
                 <div
                   class="arcade-mode-switch"
                   id="arcadeModeSwitch"
@@ -390,36 +530,38 @@
                     data-arcade-mode="free"
                     aria-pressed="true"
                     data-i18n="index.sections.arcade.overlay.mode.free"
-                  ></button>
+                  >Mode libre</button>
                   <button
                     type="button"
                     class="arcade-mode-switch__button"
                     data-arcade-mode="paid"
                     aria-pressed="false"
                     data-i18n="index.sections.arcade.overlay.mode.paid"
-                  ></button>
+                  >Mode récompenses</button>
                 </div>
                 <p
                   class="arcade-mode-hint"
                   id="arcadeModeHint"
                   data-i18n="scripts.particules.ui.mode.free.description"
-                ></p>
+                >
+                  Entraînez-vous sans dépenser d’atomes ni gagner de récompenses.
+                </p>
               </div>
               <div class="arcade-overlay__field">
                 <label
                   for="arcadeBrickSkinSelect"
                   class="arcade-overlay__label"
                   data-i18n="index.sections.arcade.overlay.brickSkin.label"
-                ></label>
+                >Apparence des briques</label>
                 <select
                   id="arcadeBrickSkinSelect"
                   class="arcade-overlay__select"
                   data-i18n="aria-label:index.sections.arcade.overlay.brickSkin.aria"
                 >
-                  <option value="original" data-i18n="index.sections.options.brickSkin.options.original"></option>
-                  <option value="metallic" data-i18n="index.sections.options.brickSkin.options.metallic"></option>
-                  <option value="neon" data-i18n="index.sections.options.brickSkin.options.neon"></option>
-                  <option value="pastels" data-i18n="index.sections.options.brickSkin.options.pastels"></option>
+                  <option value="original" data-i18n="index.sections.options.brickSkin.options.original">Original</option>
+                  <option value="metallic" data-i18n="index.sections.options.brickSkin.options.metallic">Metallic</option>
+                  <option value="neon" data-i18n="index.sections.options.brickSkin.options.neon">Néon</option>
+                  <option value="pastels" data-i18n="index.sections.options.brickSkin.options.pastels">Pastels</option>
                 </select>
               </div>
               <button
@@ -427,7 +569,7 @@
                 class="arcade-overlay__button"
                 id="arcadeOverlayButton"
                 data-i18n="index.sections.arcade.overlay.button"
-              ></button>
+              >Commencer</button>
             </div>
           </div>
         </div>
@@ -840,6 +982,7 @@
       id="tableau"
       class="page page--table"
       data-page-group="clicker"
+      aria-label="Tableau périodique des éléments"
       data-i18n="aria-label:index.sections.table.aria"
     >
       <div class="periodic-table-wrapper" role="presentation">
@@ -847,6 +990,7 @@
           class="periodic-table"
           id="periodicTable"
           role="grid"
+          aria-label="Tableau périodique des éléments"
           data-i18n="aria-label:index.sections.table.aria"
         >
           <aside class="element-info-panel" id="elementInfoPanel" aria-live="polite">
@@ -854,7 +998,7 @@
               class="element-info-panel__placeholder"
               id="elementInfoPlaceholder"
               data-i18n="index.sections.table.placeholder"
-            ></p>
+            >Sélectionnez un élément pour afficher ses détails.</p>
             <div class="element-info-panel__content" id="elementInfoContent" hidden>
               <header class="element-info-panel__header">
                 <span class="element-info-panel__number" id="elementInfoNumber"></span>
@@ -876,7 +1020,7 @@
             </header>
             <dl class="element-info-panel__details">
                 <div class="element-info-panel__row">
-                  <dt data-i18n="index.sections.table.details.collection"></dt>
+                  <dt data-i18n="index.sections.table.details.collection">Bonus de collection</dt>
                   <dd id="elementInfoCollection" class="element-info-panel__value element-info-panel__collection"></dd>
                 </div>
               </dl>
@@ -887,14 +1031,14 @@
             id="elementCollectionSummary"
             aria-live="polite"
           >
-            <h3 class="periodic-summary__title" data-i18n="index.sections.table.summary.title"></h3>
+            <h3 class="periodic-summary__title" data-i18n="index.sections.table.summary.title">Collection</h3>
             <dl class="periodic-summary__stats">
               <div class="periodic-summary__row">
-                <dt data-i18n="index.sections.table.summary.current"></dt>
+                <dt data-i18n="index.sections.table.summary.current">Éléments possédés</dt>
                 <dd id="elementCollectionCurrentTotal" class="periodic-summary__value">0</dd>
               </div>
               <div class="periodic-summary__row">
-                <dt data-i18n="index.sections.table.summary.lifetime"></dt>
+                <dt data-i18n="index.sections.table.summary.lifetime">Éléments découverts</dt>
                 <dd id="elementCollectionLifetimeTotal" class="periodic-summary__value">0</dd>
               </div>
             </dl>
@@ -914,13 +1058,19 @@
         id="fusion-title"
         class="fusion-title visually-hidden"
         data-i18n="index.sections.fusion.title"
-      ></h2>
+      >Chambre de fusion quantique</h2>
       <p
         class="fusion-intro visually-hidden"
         data-i18n="index.sections.fusion.intro"
-      ></p>
+      >Assemblez des éléments pour tenter des fusions aux effets uniques.</p>
       <div class="fusion-list" id="fusionList" role="list"></div>
-      <div class="fusion-log" id="fusionLog" role="status" aria-live="polite"></div>
+      <div
+        class="fusion-log"
+        id="fusionLog"
+        role="status"
+        aria-live="polite"
+        data-i18n="index.sections.fusion.logPlaceholder"
+      >Les résultats de fusion apparaîtront ici.</div>
     </section>
 
     <section
@@ -929,12 +1079,12 @@
       data-page-group="clicker"
       aria-labelledby="info-title"
     >
-      <h2 id="info-title" class="visually-hidden" data-i18n="index.sections.info.title"></h2>
+      <h2 id="info-title" class="visually-hidden" data-i18n="index.sections.info.title">Tableau de bord des statistiques</h2>
       <div class="info-grid">
         <article class="info-card info-card--production" aria-labelledby="info-aps-title">
           <header class="info-card__header">
-            <h3 id="info-aps-title" data-i18n="index.sections.info.aps.title"></h3>
-            <p class="info-card__subtitle" data-i18n="index.sections.info.aps.subtitle"></p>
+            <h3 id="info-aps-title" data-i18n="index.sections.info.aps.title">Production passive (APS)</h3>
+            <p class="info-card__subtitle" data-i18n="index.sections.info.aps.subtitle">Répartition détaillée de vos gains automatiques.</p>
           </header>
           <ul
             id="infoApsBreakdown"
@@ -945,8 +1095,8 @@
 
         <article class="info-card info-card--production" aria-labelledby="info-apc-title">
           <header class="info-card__header">
-            <h3 id="info-apc-title" data-i18n="index.sections.info.apc.title"></h3>
-            <p class="info-card__subtitle" data-i18n="index.sections.info.apc.subtitle"></p>
+            <h3 id="info-apc-title" data-i18n="index.sections.info.apc.title">Production par clic (APC)</h3>
+            <p class="info-card__subtitle" data-i18n="index.sections.info.apc.subtitle">Analyse de la puissance générée à chaque clic.</p>
           </header>
           <ul
             id="infoApcBreakdown"
@@ -957,64 +1107,64 @@
 
         <article class="info-card info-card--stats info-card--progression" aria-labelledby="info-progress-title">
           <header class="info-card__header">
-            <h3 id="info-progress-title" data-i18n="index.sections.info.progress.title"></h3>
-            <p class="info-card__subtitle" data-i18n="index.sections.info.progress.subtitle"></p>
+            <h3 id="info-progress-title" data-i18n="index.sections.info.progress.title">Progression du joueur</h3>
+            <p class="info-card__subtitle" data-i18n="index.sections.info.progress.subtitle">Suivi des performances de la session et de l'historique.</p>
           </header>
           <div class="info-progress-grid" role="group" aria-labelledby="info-progress-title">
             <section class="info-progress-block" aria-labelledby="info-session-title">
-              <h4 id="info-session-title" data-i18n="index.sections.info.progress.session.title"></h4>
+              <h4 id="info-session-title" data-i18n="index.sections.info.progress.session.title">Session en cours</h4>
               <dl class="info-metrics">
                 <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.session.atoms"></dt>
+                  <dt data-i18n="index.sections.info.progress.session.atoms">Atomes générés</dt>
                   <dd id="infoSessionAtoms">0</dd>
                 </div>
                 <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.session.clicks"></dt>
+                  <dt data-i18n="index.sections.info.progress.session.clicks">Clics enregistrés</dt>
                   <dd id="infoSessionClicks">0</dd>
                 </div>
                 <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.session.apc"></dt>
+                  <dt data-i18n="index.sections.info.progress.session.apc">APC cumulés</dt>
                   <dd id="infoSessionApcAtoms">0</dd>
                 </div>
                 <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.session.aps"></dt>
+                  <dt data-i18n="index.sections.info.progress.session.aps">APS cumulés</dt>
                   <dd id="infoSessionApsAtoms">0</dd>
                 </div>
                 <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.session.offline"></dt>
+                  <dt data-i18n="index.sections.info.progress.session.offline">Collecte hors ligne</dt>
                   <dd id="infoSessionOfflineAtoms">0</dd>
                 </div>
                 <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.session.duration"></dt>
+                  <dt data-i18n="index.sections.info.progress.session.duration">Durée de la session</dt>
                   <dd id="infoSessionDuration">0s</dd>
                 </div>
               </dl>
             </section>
             <section class="info-progress-block" aria-labelledby="info-global-title">
-              <h4 id="info-global-title" data-i18n="index.sections.info.progress.global.title"></h4>
+              <h4 id="info-global-title" data-i18n="index.sections.info.progress.global.title">Historique global</h4>
               <dl class="info-metrics">
                 <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.global.atoms"></dt>
+                  <dt data-i18n="index.sections.info.progress.global.atoms">Total d'atomes</dt>
                   <dd id="infoGlobalAtoms">0</dd>
                 </div>
                 <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.global.clicks"></dt>
+                  <dt data-i18n="index.sections.info.progress.global.clicks">Total de clics</dt>
                   <dd id="infoGlobalClicks">0</dd>
                 </div>
                 <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.global.apc"></dt>
+                  <dt data-i18n="index.sections.info.progress.global.apc">APC cumulés</dt>
                   <dd id="infoGlobalApcAtoms">0</dd>
                 </div>
                 <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.global.aps"></dt>
+                  <dt data-i18n="index.sections.info.progress.global.aps">APS cumulés</dt>
                   <dd id="infoGlobalApsAtoms">0</dd>
                 </div>
                 <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.global.offline"></dt>
+                  <dt data-i18n="index.sections.info.progress.global.offline">Collecte hors ligne</dt>
                   <dd id="infoGlobalOfflineAtoms">0</dd>
                 </div>
                 <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.global.duration"></dt>
+                  <dt data-i18n="index.sections.info.progress.global.duration">Temps de jeu</dt>
                   <dd id="infoGlobalDuration">0s</dd>
                 </div>
               </dl>
@@ -1024,8 +1174,8 @@
 
         <article class="info-card info-card--bonuses" aria-labelledby="info-shop-bonus-title">
           <header class="info-card__header">
-            <h3 id="info-shop-bonus-title" data-i18n="index.sections.info.shop.title"></h3>
-            <p class="info-card__subtitle" data-i18n="index.sections.info.shop.subtitle"></p>
+            <h3 id="info-shop-bonus-title" data-i18n="index.sections.info.shop.title">Bonus de boutique</h3>
+            <p class="info-card__subtitle" data-i18n="index.sections.info.shop.subtitle">Effets obtenus auprès des améliorations achetées.</p>
           </header>
           <div
             id="infoShopBonuses"
@@ -1037,12 +1187,12 @@
 
         <article class="info-card info-card--bonuses" aria-labelledby="info-bonus-title">
           <header class="info-card__header">
-            <h3 id="info-bonus-title" data-i18n="index.sections.info.elements.title"></h3>
+            <h3 id="info-bonus-title" data-i18n="index.sections.info.elements.title">Bonus des éléments</h3>
             <p
               class="info-card__subtitle"
               id="infoBonusSubtitle"
               data-i18n="index.sections.info.elements.subtitle"
-            ></p>
+            >Effets cumulés de vos collections élémentaires.</p>
           </header>
           <div id="infoElementBonuses" class="element-bonus-list" role="list" aria-live="polite"></div>
         </article>
@@ -1137,9 +1287,10 @@
       class="page"
       data-page-group="clicker"
       role="region"
+      aria-label="Objectifs"
       data-i18n="aria-label:index.sections.goals.title"
     >
-      <p class="goals-empty" id="goalsEmpty" hidden data-i18n="index.sections.goals.empty"></p>
+      <p class="goals-empty" id="goalsEmpty" hidden data-i18n="index.sections.goals.empty">Aucun objectif actif pour le moment.</p>
       <div class="goals-list" id="goalsList" role="list"></div>
     </section>
 
@@ -1150,8 +1301,8 @@
       aria-labelledby="bigbang-title"
     >
       <div class="bigbang-content">
-        <h2 id="bigbang-title" data-i18n="index.sections.bigbang.title"></h2>
-        <p class="bigbang-description" data-i18n="index.sections.bigbang.description"></p>
+        <h2 id="bigbang-title" data-i18n="index.sections.bigbang.title">Big Bang</h2>
+        <p class="bigbang-description" data-i18n="index.sections.bigbang.description">Déclenchez une renaissance cosmique pour multiplier vos gains et tout recommencer.</p>
       </div>
     </section>
 
@@ -1163,20 +1314,39 @@
       <div class="options-grid">
         <div class="option-card option-card--intro">
           <div class="option-card__header option-card__header--welcome">
-            <h3 id="optionsWelcomeTitle"></h3>
-            <select id="languageSelect" data-i18n="aria-label:index.sections.options.language.label">
-              <option value="fr" data-i18n="index.sections.options.language.options.fr"></option>
-              <option value="en" data-i18n="index.sections.options.language.options.en"></option>
+            <h3
+              id="optionsWelcomeTitle"
+              data-i18n="index.sections.options.welcome.title"
+            >
+              Bienvenue
+            </h3>
+            <select
+              id="languageSelect"
+              aria-label="Langue de l’interface"
+              data-i18n="aria-label:index.sections.options.language.label"
+            >
+              <option value="fr" data-i18n="index.sections.options.language.options.fr">Français</option>
+              <option value="en" data-i18n="index.sections.options.language.options.en">Anglais</option>
             </select>
           </div>
-          <div id="optionsWelcomeIntro" class="option-welcome-intro"></div>
+          <div id="optionsWelcomeIntro" class="option-welcome-intro">
+            <p data-i18n="index.sections.options.welcome.intro.main">
+              Bienvenue dans Atom to Univers. Cliquez pour générer vos premiers atomes, achetez des améliorations dans la boutique
+              et automatisez la production pour façonner votre univers.
+            </p>
+            <p data-i18n="index.sections.options.welcome.intro.note">
+              Débloquez les mini-jeux et fonctionnalités au fil de votre progression pour multiplier vos gains d’APC et d’APS.
+            </p>
+          </div>
           <div class="option-card__toggles">
             <div class="option-toggle-card" id="clickSoundToggleCard">
               <div class="option-toggle-card__content">
                 <h4
                   class="option-toggle-card__title"
                   data-i18n="index.sections.options.clickSound.title"
-                ></h4>
+                >
+                  Son du clicker
+                </h4>
               </div>
               <div class="option-toggle-card__control">
                 <label class="toggle-switch">
@@ -1184,6 +1354,7 @@
                     type="checkbox"
                     id="clickSoundToggle"
                     checked
+                    aria-label="Activer ou couper le son du clicker"
                     data-i18n="aria-label:index.sections.options.clickSound.ariaLabel"
                     aria-describedby="clickSoundToggleStatus"
                   />
@@ -1192,7 +1363,9 @@
                     class="toggle-switch__label"
                     id="clickSoundToggleStatus"
                     data-i18n="index.sections.options.clickSound.state.on"
-                  ></span>
+                  >
+                    Avec
+                  </span>
                 </label>
               </div>
             </div>
@@ -1201,7 +1374,9 @@
                 <h4
                   class="option-toggle-card__title"
                   data-i18n="index.sections.options.critAtoms.title"
-                ></h4>
+                >
+                  Atomes critiques animés
+                </h4>
               </div>
               <div class="option-toggle-card__control">
                 <label class="toggle-switch">
@@ -1209,6 +1384,7 @@
                     type="checkbox"
                     id="critAtomToggle"
                     checked
+                    aria-label="Activer ou couper les atomes animés lors des critiques"
                     data-i18n="aria-label:index.sections.options.critAtoms.ariaLabel"
                     aria-describedby="critAtomToggleStatus"
                   />
@@ -1217,7 +1393,9 @@
                     class="toggle-switch__label"
                     id="critAtomToggleStatus"
                     data-i18n="index.sections.options.critAtoms.state.on"
-                  ></span>
+                  >
+                    Avec
+                  </span>
                 </label>
               </div>
             </div>
@@ -1227,6 +1405,7 @@
               <label for="textFontSelect" data-i18n="index.sections.options.textFont.label">Police du texte</label>
               <select
                 id="textFontSelect"
+                aria-label="Choisir la police utilisée pour les textes de l’interface"
                 data-i18n="aria-label:index.sections.options.textFont.ariaLabel"
               >
                 <option value="orbitron" data-i18n="index.sections.options.textFont.options.orbitron">Orbitron</option>
@@ -1238,6 +1417,7 @@
               <label for="digitFontSelect" data-i18n="index.sections.options.digitFont.label">Police des chiffres</label>
               <select
                 id="digitFontSelect"
+                aria-label="Choisir la police utilisée pour les nombres"
                 data-i18n="aria-label:index.sections.options.digitFont.ariaLabel"
               >
                 <option value="orbitron" data-i18n="index.sections.options.digitFont.options.orbitron">Orbitron</option>
@@ -1247,7 +1427,20 @@
               </select>
             </div>
           </div>
-          <div id="optionsArcadeDetails" class="option-note" hidden aria-hidden="true"></div>
+          <div id="optionsArcadeDetails" class="option-note" hidden aria-hidden="true">
+            <p>
+              <strong data-i18n="index.sections.options.welcome.details.particles.label">Mini Jeu Particules :</strong>
+              <span data-i18n="index.sections.options.welcome.details.particles.description">Collisionnez les particules élémentaires pour gagner des tickets de tirage et des crédits Mach3.</span>
+            </p>
+            <p>
+              <strong data-i18n="index.sections.options.welcome.details.gacha.label">Gacha :</strong>
+              <span data-i18n="index.sections.options.welcome.details.gacha.description">Utilisez vos tickets pour récupérer des éléments du tableau périodique et débloquer des bonus de production.</span>
+            </p>
+            <p>
+              <strong data-i18n="index.sections.options.welcome.details.match3.label">Mini jeu Mach3 :</strong>
+              <span data-i18n="index.sections.options.welcome.details.match3.description">Alignez les métaux le plus vite possible pour booster vos gains d’APS.</span>
+            </p>
+          </div>
         </div>
         <div class="option-card option-card--chiptune">
           <h3 data-i18n="index.sections.options.chiptune.title">Module Musique Midi</h3>
@@ -1323,8 +1516,11 @@
               class="chiptune-dropzone"
               role="button"
               tabindex="0"
+              aria-label="Déposez un fichier MIDI (.mid) ici ou cliquez pour le sélectionner"
               data-i18n="index.sections.options.chiptune.dropZone.prompt;aria-label:index.sections.options.chiptune.dropZone.prompt"
-            ></div>
+            >
+              Déposez un fichier MIDI (.mid) ici ou cliquez pour le sélectionner
+            </div>
           </div>
           <div class="option-row option-row--slider">
             <label for="chiptuneVolumeSlider" data-i18n="index.sections.options.chiptune.labels.volume">Volume général</label>
@@ -1359,7 +1555,13 @@
           </div>
           <p class="option-note" id="chiptuneStatus" data-i18n="index.sections.options.chiptune.status.noneLoaded">Aucun morceau chargé pour le moment.</p>
           <div class="option-row option-row--progress">
-            <label for="chiptuneProgressSlider" id="chiptuneProgressLabel" data-i18n="index.sections.options.chiptune.progress.label"></label>
+            <label
+              for="chiptuneProgressSlider"
+              id="chiptuneProgressLabel"
+              data-i18n="index.sections.options.chiptune.progress.label"
+            >
+              Position de lecture
+            </label>
             <input
               type="range"
               id="chiptuneProgressSlider"
@@ -1370,13 +1572,27 @@
               disabled
               aria-labelledby="chiptuneProgressLabel"
             />
-            <span class="option-value" id="chiptuneProgressValue" aria-live="polite" data-i18n="index.sections.options.chiptune.progress.empty"></span>
+            <span
+              class="option-value"
+              id="chiptuneProgressValue"
+              aria-live="polite"
+              data-i18n="index.sections.options.chiptune.progress.empty"
+            >
+              Aucun morceau chargé
+            </span>
           </div>
           <div class="option-row option-row--usage">
             <div class="chiptune-usage" role="group" aria-labelledby="chiptuneUsageTitle">
               <div class="chiptune-usage__header">
-                <span id="chiptuneUsageTitle" data-i18n="index.sections.options.chiptune.usage.title"></span>
-                <span id="chiptuneUsageSummary" class="chiptune-usage__summary" aria-live="polite" data-i18n="index.sections.options.chiptune.usage.summaryEmpty"></span>
+                <span id="chiptuneUsageTitle" data-i18n="index.sections.options.chiptune.usage.title">Programmes MIDI utilisés</span>
+                <span
+                  id="chiptuneUsageSummary"
+                  class="chiptune-usage__summary"
+                  aria-live="polite"
+                  data-i18n="index.sections.options.chiptune.usage.summaryEmpty"
+                >
+                  Aucun programme détecté
+                </span>
               </div>
               <div
                 id="chiptuneProgramUsage"
@@ -1388,13 +1604,15 @@
                 class="option-note chiptune-usage__note"
                 id="chiptuneUsageNote"
                 data-i18n="index.sections.options.chiptune.usage.note"
-              ></p>
+              >
+                Les numéros correspondent aux programmes General MIDI (0 à 127).
+              </p>
             </div>
           </div>
         </div>
       </div>
       <div class="options-reset">
-        <button id="resetButton" class="danger" data-i18n="index.sections.options.reset"></button>
+        <button id="resetButton" class="danger" data-i18n="index.sections.options.reset">Réinitialiser</button>
       </div>
     </section>
   </main>
@@ -1432,79 +1650,86 @@
   <div class="devkit-overlay" id="devkitOverlay" hidden aria-hidden="true">
     <div class="devkit-panel" id="devkitPanel" role="dialog" aria-modal="true" aria-labelledby="devkitTitle" tabindex="-1">
       <header class="devkit-panel__header">
-        <h2 id="devkitTitle" data-i18n="index.sections.devkit.title"></h2>
+        <h2 id="devkitTitle" data-i18n="index.sections.devkit.title">DevKit quantique</h2>
         <button
           type="button"
           class="devkit-panel__close"
           id="devkitCloseButton"
+          aria-label="Fermer le DevKit"
           data-i18n="aria-label:index.sections.devkit.close"
         >
           ×
         </button>
       </header>
-      <p class="devkit-panel__intro" data-i18n="index.sections.devkit.intro"></p>
+      <p class="devkit-panel__intro" data-i18n="index.sections.devkit.intro">
+        Outils de triche pour expérimentations rapides. Les changements sont immédiats.
+      </p>
       <div class="devkit-grid">
         <section class="devkit-section" aria-labelledby="devkitResourcesTitle">
-          <h3 id="devkitResourcesTitle" data-i18n="index.sections.devkit.resources.title"></h3>
+          <h3 id="devkitResourcesTitle" data-i18n="index.sections.devkit.resources.title">Ressources</h3>
           <form id="devkitAtomsForm" class="devkit-form">
-            <label for="devkitAtomsInput" data-i18n="index.sections.devkit.resources.giveAtoms"></label>
+            <label for="devkitAtomsInput" data-i18n="index.sections.devkit.resources.giveAtoms">Donner des atomes</label>
             <div class="devkit-form__controls">
               <input
                 type="text"
                 id="devkitAtomsInput"
                 inputmode="decimal"
                 autocomplete="off"
+                placeholder="ex : 1e9"
                 data-i18n="placeholder:index.sections.devkit.resources.atomsPlaceholder"
               />
-              <button type="submit" class="primary" data-i18n="index.sections.devkit.resources.add"></button>
+              <button type="submit" class="primary" data-i18n="index.sections.devkit.resources.add">Ajouter</button>
             </div>
           </form>
           <form id="devkitAutoForm" class="devkit-form">
-            <label for="devkitAutoInput" data-i18n="index.sections.devkit.resources.increaseAuto"></label>
+            <label for="devkitAutoInput" data-i18n="index.sections.devkit.resources.increaseAuto">Augmenter les APS plats</label>
             <div class="devkit-form__controls">
               <input
                 type="text"
                 id="devkitAutoInput"
                 inputmode="decimal"
                 autocomplete="off"
+                placeholder="ex : 250000"
                 data-i18n="placeholder:index.sections.devkit.resources.autoPlaceholder"
               />
-              <button type="submit" class="primary" data-i18n="index.sections.devkit.resources.increase"></button>
+              <button type="submit" class="primary" data-i18n="index.sections.devkit.resources.increase">Augmenter</button>
             </div>
           </form>
           <form id="devkitOfflineTimeForm" class="devkit-form">
-            <label for="devkitOfflineTimeInput" data-i18n="index.sections.devkit.resources.advanceOfflineTime"></label>
+            <label for="devkitOfflineTimeInput" data-i18n="index.sections.devkit.resources.advanceOfflineTime">Avancer le temps hors ligne (heures)</label>
             <div class="devkit-form__controls">
               <input
                 type="text"
                 id="devkitOfflineTimeInput"
                 inputmode="decimal"
                 autocomplete="off"
+                placeholder="ex : 1.5"
                 data-i18n="placeholder:index.sections.devkit.resources.timePlaceholder"
               />
-              <button type="submit" class="primary" data-i18n="index.sections.devkit.resources.simulateOffline"></button>
+              <button type="submit" class="primary" data-i18n="index.sections.devkit.resources.simulateOffline">Simuler hors ligne</button>
             </div>
           </form>
           <form id="devkitOnlineTimeForm" class="devkit-form">
-            <label for="devkitOnlineTimeInput" data-i18n="index.sections.devkit.resources.advanceOnlineTime"></label>
+            <label for="devkitOnlineTimeInput" data-i18n="index.sections.devkit.resources.advanceOnlineTime">Simuler du jeu actif (heures)</label>
             <div class="devkit-form__controls">
               <input
                 type="text"
                 id="devkitOnlineTimeInput"
                 inputmode="decimal"
                 autocomplete="off"
+                placeholder="ex : 1.5"
                 data-i18n="placeholder:index.sections.devkit.resources.timePlaceholder"
               />
-              <button type="submit" class="primary" data-i18n="index.sections.devkit.resources.simulateOnline"></button>
+              <button type="submit" class="primary" data-i18n="index.sections.devkit.resources.simulateOnline">Simuler en jeu</button>
             </div>
           </form>
           <div class="devkit-status-row">
-            <span data-i18n="index.sections.devkit.resources.autoBonusLabel"></span>
+            <span data-i18n="index.sections.devkit.resources.autoBonusLabel">Bonus APS actuel&nbsp;:</span>
             <strong id="devkitAutoStatus">0</strong>
-            <button type="button" id="devkitResetAuto" class="devkit-link" data-i18n="index.sections.devkit.resources.reset"></button>
+            <button type="button" id="devkitResetAuto" class="devkit-link" data-i18n="index.sections.devkit.resources.reset">Réinitialiser</button>
           </div>
           <form id="devkitTicketsForm" class="devkit-form">
-            <label for="devkitTicketsInput" data-i18n="index.sections.devkit.resources.giveTickets"></label>
+            <label for="devkitTicketsInput" data-i18n="index.sections.devkit.resources.giveTickets">Donner des tickets de tirage</label>
             <div class="devkit-form__controls">
               <input
                 type="number"
@@ -1512,13 +1737,14 @@
                 min="1"
                 step="1"
                 autocomplete="off"
+                placeholder="ex : 50"
                 data-i18n="placeholder:index.sections.devkit.resources.ticketsPlaceholder"
               />
-              <button type="submit" class="primary" data-i18n="index.sections.devkit.resources.add"></button>
+              <button type="submit" class="primary" data-i18n="index.sections.devkit.resources.add">Ajouter</button>
             </div>
           </form>
           <form id="devkitMach3TicketsForm" class="devkit-form">
-            <label for="devkitMach3TicketsInput" data-i18n="index.sections.devkit.resources.giveMach3Tickets"></label>
+            <label for="devkitMach3TicketsInput" data-i18n="index.sections.devkit.resources.giveMach3Tickets">Donner des tickets Mach3</label>
             <div class="devkit-form__controls">
               <input
                 type="number"
@@ -1526,25 +1752,28 @@
                 min="1"
                 step="1"
                 autocomplete="off"
+                placeholder="ex : 5"
                 data-i18n="placeholder:index.sections.devkit.resources.mach3TicketsPlaceholder"
               />
-              <button type="submit" class="primary" data-i18n="index.sections.devkit.resources.add"></button>
+              <button type="submit" class="primary" data-i18n="index.sections.devkit.resources.add">Ajouter</button>
             </div>
           </form>
         </section>
         <section class="devkit-section" aria-labelledby="devkitUnlockTitle">
-          <h3 id="devkitUnlockTitle" data-i18n="index.sections.devkit.unlocks.title"></h3>
-          <button type="button" class="devkit-action" id="devkitUnlockTrophies" data-i18n="index.sections.devkit.unlocks.trophies"></button>
-          <button type="button" class="devkit-action" id="devkitUnlockElements" data-i18n="index.sections.devkit.unlocks.elements"></button>
+          <h3 id="devkitUnlockTitle" data-i18n="index.sections.devkit.unlocks.title">Déblocages instantanés</h3>
+          <button type="button" class="devkit-action" id="devkitUnlockTrophies" data-i18n="index.sections.devkit.unlocks.trophies">Débloquer tous les succès</button>
+          <button type="button" class="devkit-action" id="devkitUnlockElements" data-i18n="index.sections.devkit.unlocks.elements">Débloquer tout le tableau périodique</button>
           <button
             type="button"
             class="devkit-action"
             id="devkitUnlockInfo"
             data-i18n="index.sections.devkit.unlocks.infoLocked"
-          ></button>
+          >
+            Débloquer la page Infos
+          </button>
         </section>
         <section class="devkit-section" aria-labelledby="devkitModesTitle">
-          <h3 id="devkitModesTitle" data-i18n="index.sections.devkit.modes.title"></h3>
+          <h3 id="devkitModesTitle" data-i18n="index.sections.devkit.modes.title">Modes persistants</h3>
           <button
             type="button"
             class="devkit-toggle"
@@ -1552,7 +1781,9 @@
             data-active="false"
             aria-pressed="false"
             data-i18n="index.sections.devkit.modes.shop"
-          ></button>
+          >
+            Magasin gratuit : désactivé
+          </button>
           <button
             type="button"
             class="devkit-toggle"
@@ -1560,12 +1791,16 @@
             data-active="false"
             aria-pressed="false"
             data-i18n="index.sections.devkit.modes.gacha"
-          ></button>
-          <p class="devkit-note" data-i18n="index.sections.devkit.modes.note"></p>
+          >
+            Tirages gratuits : désactivés
+          </button>
+          <p class="devkit-note" data-i18n="index.sections.devkit.modes.note">
+            Les modes restent actifs tant que la session est ouverte (raccourci F9).
+          </p>
         </section>
       </div>
       <footer class="devkit-panel__footer">
-        <p data-i18n="index.sections.devkit.footer"></p>
+        <p data-i18n="index.sections.devkit.footer">Appuyez sur F9 pour ouvrir ou fermer le DevKit.</p>
       </footer>
     </div>
   </div>
