@@ -2172,42 +2172,42 @@ const GAME_CONFIG = {
       numero: 3,
       name: 'Lithium',
       famille: 'alkali-metal',
-      rarete: 'stellaire',
+      rarete: 'essentiel',
       bonus: 'ajoute +1 au APS flat'
     },
     {
       numero: 4,
       name: 'Béryllium',
       famille: 'alkaline-earth-metal',
-      rarete: 'stellaire',
+      rarete: 'essentiel',
       bonus: 'ajoute +1 au APS flat'
     },
     {
       numero: 5,
       name: 'Bore',
       famille: 'metalloid',
-      rarete: 'stellaire',
+      rarete: 'essentiel',
       bonus: 'ajoute +1 au APS flat'
     },
     {
       numero: 6,
       name: 'Carbone',
       famille: 'nonmetal',
-      rarete: 'commun',
+      rarete: 'stellaire',
       bonus: 'ajoute +1 au APS flat'
     },
     {
       numero: 7,
       name: 'Azote',
       famille: 'nonmetal',
-      rarete: 'commun',
+      rarete: 'stellaire',
       bonus: 'ajoute +1 au APS flat'
     },
     {
       numero: 8,
       name: 'Oxygène',
       famille: 'nonmetal',
-      rarete: 'commun',
+      rarete: 'stellaire',
       bonus: 'ajoute +1 au APS flat'
     },
     {
@@ -2221,133 +2221,133 @@ const GAME_CONFIG = {
       numero: 10,
       name: 'Néon',
       famille: 'noble-gas',
-      rarete: 'essentiel',
+      rarete: 'stellaire',
       bonus: 'ajoute +1 au APS flat'
     },
     {
       numero: 11,
       name: 'Sodium',
       famille: 'alkali-metal',
-      rarete: 'essentiel',
+      rarete: 'stellaire',
       bonus: 'ajoute +1 au APS flat'
     },
     {
       numero: 12,
       name: 'Magnésium',
       famille: 'alkaline-earth-metal',
-      rarete: 'essentiel',
+      rarete: 'stellaire',
       bonus: 'ajoute +1 au APS flat'
     },
     {
       numero: 13,
       name: 'Aluminium',
       famille: 'post-transition-metal',
-      rarete: 'essentiel',
+      rarete: 'stellaire',
       bonus: 'ajoute +1 au APS flat'
     },
     {
       numero: 14,
       name: 'Silicium',
       famille: 'metalloid',
-      rarete: 'essentiel',
+      rarete: 'stellaire',
       bonus: 'ajoute +1 au APS flat'
     },
     {
       numero: 15,
       name: 'Phosphore',
       famille: 'nonmetal',
-      rarete: 'essentiel',
+      rarete: 'mythique',
       bonus: 'ajoute +1 au APS flat'
     },
     {
       numero: 16,
       name: 'Soufre',
       famille: 'nonmetal',
-      rarete: 'essentiel',
+      rarete: 'mythique',
       bonus: 'ajoute +1 au APS flat'
     },
     {
       numero: 17,
       name: 'Chlore',
       famille: 'halogen',
-      rarete: 'essentiel',
+      rarete: 'mythique',
       bonus: 'ajoute +1 au APS flat'
     },
     {
       numero: 18,
       name: 'Argon',
       famille: 'noble-gas',
-      rarete: 'essentiel',
+      rarete: 'mythique',
       bonus: 'ajoute +1 au APS flat'
     },
     {
       numero: 19,
       name: 'Potassium',
       famille: 'alkali-metal',
-      rarete: 'essentiel',
+      rarete: 'mythique',
       bonus: 'ajoute +1 au APS flat'
     },
     {
       numero: 20,
       name: 'Calcium',
       famille: 'alkaline-earth-metal',
-      rarete: 'essentiel',
+      rarete: 'mythique',
       bonus: 'ajoute +1 au APS flat'
     },
     {
       numero: 21,
       name: 'Scandium',
       famille: 'transition-metal',
-      rarete: 'stellaire',
+      rarete: 'mythique',
       bonus: 'ajoute +1 au APS flat'
     },
     {
       numero: 22,
       name: 'Titane',
       famille: 'transition-metal',
-      rarete: 'stellaire',
+      rarete: 'mythique',
       bonus: 'ajoute +1 au APS flat'
     },
     {
       numero: 23,
       name: 'Vanadium',
       famille: 'transition-metal',
-      rarete: 'stellaire',
+      rarete: 'mythique',
       bonus: 'ajoute +1 au APS flat'
     },
     {
       numero: 24,
       name: 'Chrome',
       famille: 'transition-metal',
-      rarete: 'stellaire',
+      rarete: 'mythique',
       bonus: 'ajoute +1 au APS flat'
     },
     {
       numero: 25,
       name: 'Manganèse',
       famille: 'transition-metal',
-      rarete: 'stellaire',
+      rarete: 'mythique',
       bonus: 'ajoute +1 au APS flat'
     },
     {
       numero: 26,
       name: 'Fer',
       famille: 'transition-metal',
-      rarete: 'essentiel',
+      rarete: 'mythique',
       bonus: 'ajoute +1 au APS flat'
     },
     {
       numero: 27,
       name: 'Cobalt',
       famille: 'transition-metal',
-      rarete: 'stellaire',
+      rarete: 'mythique',
       bonus: 'ajoute +1 au APS flat'
     },
     {
       numero: 28,
       name: 'Nickel',
       famille: 'transition-metal',
-      rarete: 'stellaire',
+      rarete: 'mythique',
       bonus: 'ajoute +1 au APS flat'
     },
     {
