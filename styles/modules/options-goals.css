@@ -199,6 +199,8 @@ select {
   min-width: 160px;
   box-shadow: 0 10px 22px rgba(18, 34, 88, 0.35);
   transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+  --select-option-bg: rgba(38, 70, 150, 0.95);
+  --select-option-active-bg: rgba(18, 38, 110, 0.98);
 }
 
 select:hover,
@@ -211,10 +213,29 @@ select:focus-visible {
   outline: none;
 }
 
+select option {
+  background-color: var(--select-option-bg);
+  color: #fff;
+}
+
+select option:checked,
+select option:hover,
+select option:focus {
+  background-color: var(--select-option-active-bg);
+  color: #fff;
+}
+
 body.theme-light select {
   border-color: rgba(60, 110, 210, 0.55);
   background: linear-gradient(135deg, rgba(96, 150, 255, 0.96), rgba(60, 110, 220, 0.98));
   box-shadow: 0 10px 20px rgba(30, 60, 130, 0.28);
+  --select-option-bg: rgba(80, 130, 230, 0.96);
+  --select-option-active-bg: rgba(44, 78, 180, 0.98);
+}
+
+body.theme-neon select {
+  --select-option-bg: rgba(34, 60, 150, 0.95);
+  --select-option-active-bg: rgba(12, 28, 105, 0.98);
 }
 
 .primary {
