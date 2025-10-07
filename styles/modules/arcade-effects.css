@@ -267,6 +267,74 @@ body.theme-neon .arcade-hud__combo {
   align-items: stretch;
 }
 
+.arcade-mode-switch {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: clamp(0.4rem, 1vw, 0.8rem);
+}
+
+.arcade-mode-switch__button {
+  border-radius: 999px;
+  border: 1px solid rgba(120, 170, 255, 0.55);
+  background: rgba(30, 60, 140, 0.35);
+  color: #f5f7ff;
+  font: inherit;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: clamp(0.4rem, 0.9vw, 0.65rem) clamp(0.8rem, 1.8vw, 1.4rem);
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.arcade-mode-switch__button:hover,
+.arcade-mode-switch__button:focus-visible {
+  background: rgba(60, 110, 200, 0.55);
+  border-color: rgba(180, 220, 255, 0.8);
+  box-shadow: 0 0 0 2px rgba(130, 190, 255, 0.3);
+  outline: none;
+}
+
+.arcade-mode-switch__button:focus-visible {
+  outline: 2px solid rgba(200, 220, 255, 0.75);
+  outline-offset: 2px;
+}
+
+.arcade-mode-switch__button--active {
+  background: linear-gradient(135deg, rgba(100, 180, 255, 0.95), rgba(70, 130, 255, 0.98));
+  border-color: rgba(200, 235, 255, 0.85);
+  color: #02040c;
+  box-shadow: 0 12px 26px rgba(26, 56, 150, 0.35);
+}
+
+.arcade-mode-switch__button[disabled] {
+  cursor: not-allowed;
+  opacity: 0.6;
+  box-shadow: none;
+}
+
+.arcade-mode-hint {
+  margin: 0;
+  font-size: clamp(0.68rem, 1vw, 0.85rem);
+  line-height: 1.45;
+  color: rgba(210, 225, 255, 0.85);
+}
+
+body.theme-light .arcade-mode-switch__button {
+  background: rgba(200, 220, 255, 0.4);
+  color: rgba(18, 30, 68, 0.9);
+  border-color: rgba(120, 160, 230, 0.6);
+}
+
+body.theme-light .arcade-mode-switch__button--active {
+  background: linear-gradient(135deg, rgba(120, 180, 255, 0.96), rgba(80, 140, 240, 0.98));
+  color: #041024;
+  border-color: rgba(150, 200, 255, 0.85);
+}
+
+body.theme-light .arcade-mode-hint {
+  color: rgba(30, 40, 70, 0.75);
+}
+
 .arcade-overlay__label {
   font-size: clamp(0.62rem, 1.05vw, 0.8rem);
   letter-spacing: 0.08em;

@@ -2406,6 +2406,51 @@ function initParticulesGame() {
     brickSkin: particulesBrickSkinPreference,
     formatTicketLabel,
     formatBonusTicketLabel,
+    modeField: elements.arcadeModeField,
+    modeButtons: elements.arcadeModeButtons,
+    modeHint: elements.arcadeModeHint,
+    computePaidModeCost: (ratio = 0.5) => {
+      const numericRatio = Number.isFinite(Number(ratio)) ? Number(ratio) : 0.5;
+      const clampedRatio = Math.max(0, Math.min(1, numericRatio));
+      const atoms = toLayeredValue(gameState.atoms, 0);
+      if (!(atoms instanceof LayeredNumber)) {
+        return { cost: LayeredNumber.zero(), ratio: clampedRatio };
+      }
+      if (clampedRatio <= 0) {
+        return { cost: LayeredNumber.zero(), ratio: clampedRatio };
+      }
+      const cost = atoms.multiplyNumber(clampedRatio);
+      return { cost, ratio: clampedRatio };
+    },
+    formatPaidModeCost: value => {
+      const layered = value instanceof LayeredNumber ? value : new LayeredNumber(value || 0);
+      return formatLayeredLocalized(layered, { mantissaDigits: 2 });
+    },
+    onPaidModeStart: info => {
+      const cost = info && info.cost instanceof LayeredNumber
+        ? info.cost
+        : new LayeredNumber(info?.cost || 0);
+      const available = toLayeredValue(gameState.atoms, 0);
+      if (!(available instanceof LayeredNumber)) {
+        return false;
+      }
+      if (cost.isZero()) {
+        return true;
+      }
+      if (available.compare(cost) < 0) {
+        return false;
+      }
+      gameState.atoms = available.subtract(cost);
+      updateUI();
+      saveGame();
+      showToast(t('scripts.particules.ui.mode.paid.debit', {
+        cost: formatLayeredLocalized(cost, { mantissaDigits: 2 })
+      }));
+      return true;
+    },
+    onPaidModeUnavailable: () => {
+      showToast(t('scripts.particules.ui.mode.paid.insufficient'));
+    },
     onTicketsEarned: (count = 0) => {
       const reward = Math.max(0, Math.floor(Number(count) || 0));
       if (reward <= 0) {
