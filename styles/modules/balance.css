@@ -1,7 +1,7 @@
 .page--balance {
   --balance-board-width: 640px;
   --balance-board-surface-height: 96px;
-  --balance-pivot-height: 120px;
+  --balance-pivot-height: 30px;
   --balance-rotation: 0deg;
   --balance-tilt-duration: 600ms;
   --balance-settle-duration: 500ms;
