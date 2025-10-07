@@ -679,10 +679,7 @@ function createEmptyProductionEntry() {
         devkitFlat: LayeredNumber.zero()
       },
       multipliers: {
-        shopBonus1: LayeredNumber.one(),
-        shopBonus2: LayeredNumber.one(),
         trophyMultiplier: LayeredNumber.one(),
-        familyMultiplier: LayeredNumber.one(),
         frenzy: LayeredNumber.one(),
         apsCrit: LayeredNumber.one(),
         collectionMultiplier: LayeredNumber.one(),
@@ -753,18 +750,9 @@ function cloneProductionEntry(entry) {
           : toLayeredValue(entry.sources?.flats?.devkitFlat, 0)
       },
       multipliers: {
-        shopBonus1: entry.sources?.multipliers?.shopBonus1 instanceof LayeredNumber
-          ? entry.sources.multipliers.shopBonus1.clone()
-          : toMultiplierLayered(entry.sources?.multipliers?.shopBonus1 ?? 1),
-        shopBonus2: entry.sources?.multipliers?.shopBonus2 instanceof LayeredNumber
-          ? entry.sources.multipliers.shopBonus2.clone()
-          : toMultiplierLayered(entry.sources?.multipliers?.shopBonus2 ?? 1),
         trophyMultiplier: entry.sources?.multipliers?.trophyMultiplier instanceof LayeredNumber
           ? entry.sources.multipliers.trophyMultiplier.clone()
           : toMultiplierLayered(entry.sources?.multipliers?.trophyMultiplier ?? 1),
-        familyMultiplier: entry.sources?.multipliers?.familyMultiplier instanceof LayeredNumber
-          ? entry.sources.multipliers.familyMultiplier.clone()
-          : toMultiplierLayered(entry.sources?.multipliers?.familyMultiplier ?? 1),
         frenzy: entry.sources?.multipliers?.frenzy instanceof LayeredNumber
           ? entry.sources.multipliers.frenzy.clone()
           : LayeredNumber.one(),
@@ -1685,27 +1673,6 @@ function setDevKitAutoFlatBonus(value) {
 const UPGRADE_DEFS = Array.isArray(CONFIG.upgrades) ? CONFIG.upgrades : FALLBACK_UPGRADES;
 const UPGRADE_NAME_MAP = new Map(UPGRADE_DEFS.map(def => [def.id, def.name || def.id]));
 const UPGRADE_INDEX_MAP = new Map(UPGRADE_DEFS.map((def, index) => [def.id, index]));
-
-const PRODUCTION_MULTIPLIER_SLOT_MAP = {
-  perClick: new Map(),
-  perSecond: new Map()
-};
-
-const PRODUCTION_MULTIPLIER_SLOT_FALLBACK = {
-  perClick: 'shopBonus1',
-  perSecond: 'shopBonus2'
-};
-
-const PRODUCTION_STEP_LABEL_OVERRIDES = {
-  perClick: new Map([
-    ['shopBonus1', 'Multiplicateurs APC'],
-    ['shopBonus2', 'Amplifications APC']
-  ]),
-  perSecond: new Map([
-    ['shopBonus1', 'Multiplicateurs APS'],
-    ['shopBonus2', 'Amplifications APS']
-  ])
-};
 
 const milestoneSource = Array.isArray(CONFIG.milestones) ? CONFIG.milestones : FALLBACK_MILESTONES;
 
@@ -5605,13 +5572,6 @@ function formatProductionStepValue(step, entry) {
 
 function getProductionStepLabel(step, context) {
   if (!step) return '';
-  if (!context) {
-    return step.label;
-  }
-  const overrides = PRODUCTION_STEP_LABEL_OVERRIDES[context];
-  if (overrides && overrides.has(step.id)) {
-    return overrides.get(step.id);
-  }
   return step.label;
 }
 
@@ -7247,17 +7207,8 @@ function recalcProduction() {
   let autoFusionAddition = LayeredNumber.zero();
   const critAccumulator = createCritAccumulator();
 
-  const clickMultiplierSlots = {
-    shopBonus1: LayeredNumber.one(),
-    shopBonus2: LayeredNumber.one()
-  };
-  const autoMultiplierSlots = {
-    shopBonus1: LayeredNumber.one(),
-    shopBonus2: LayeredNumber.one()
-  };
-
-  const clickSlotMap = PRODUCTION_MULTIPLIER_SLOT_MAP.perClick;
-  const autoSlotMap = PRODUCTION_MULTIPLIER_SLOT_MAP.perSecond;
+  let clickShopMultiplier = LayeredNumber.one();
+  let autoShopMultiplier = LayeredNumber.one();
 
   const clickRarityMultipliers = clickDetails.sources.multipliers.rarityMultipliers;
   const autoRarityMultipliers = autoDetails.sources.multipliers.rarityMultipliers;
@@ -7332,116 +7283,11 @@ function recalcProduction() {
   const stellaireSingularityBoost = isSingularityComplete ? 2 : 1;
   const STELLAIRE_SINGULARITY_BONUS_LABEL = 'Étoiles simples · Supernovae amplifiées';
 
-  const flatBonusMultipliers = {
-    perClick: new Map(),
-    perSecond: new Map()
-  };
-  const activeFlatMultiplierEntries = new Set();
-  const familyMultipliers = {
-    perClick: LayeredNumber.one(),
-    perSecond: LayeredNumber.one()
-  };
-
-  const registerFlatMultiplierDefaults = rarityId => {
-    if (!rarityId) return;
-    if (!flatBonusMultipliers.perClick.has(rarityId)) {
-      flatBonusMultipliers.perClick.set(rarityId, 1);
-    }
-    if (!flatBonusMultipliers.perSecond.has(rarityId)) {
-      flatBonusMultipliers.perSecond.set(rarityId, 1);
-    }
-  };
-
-  const applyFlatMultiplierTargets = (targets, sourceRarityId) => {
-    if (!Array.isArray(targets)) return;
-    const boostMultiplier = sourceRarityId === 'stellaire' && stellaireSingularityBoost !== 1
-      ? stellaireSingularityBoost
-      : 1;
-    targets.forEach(target => {
-      if (!target || typeof target !== 'object') return;
-      const targetRarity = typeof target.rarityId === 'string' ? target.rarityId.trim() : '';
-      if (!targetRarity) return;
-      registerFlatMultiplierDefaults(targetRarity);
-      const rawPerClick = Number(target.perClick);
-      if (Number.isFinite(rawPerClick) && rawPerClick > 0 && rawPerClick !== 1) {
-        const perClickValue = boostMultiplier !== 1 ? rawPerClick * boostMultiplier : rawPerClick;
-        const current = flatBonusMultipliers.perClick.get(targetRarity) ?? 1;
-        flatBonusMultipliers.perClick.set(targetRarity, current * perClickValue);
-      }
-      const rawPerSecond = Number(target.perSecond);
-      if (Number.isFinite(rawPerSecond) && rawPerSecond > 0 && rawPerSecond !== 1) {
-        const perSecondValue = boostMultiplier !== 1 ? rawPerSecond * boostMultiplier : rawPerSecond;
-        const current = flatBonusMultipliers.perSecond.get(targetRarity) ?? 1;
-        flatBonusMultipliers.perSecond.set(targetRarity, current * perSecondValue);
-      }
-    });
-  };
-
-  const evaluateFlatMultiplierEntry = (rarityId, entry, key, counts, poolSize) => {
-    if (!entry || !Array.isArray(entry.rarityFlatMultipliers) || entry.rarityFlatMultipliers.length === 0) {
-      return;
-    }
-    const copyCount = Number(counts?.copyCount ?? counts?.copies ?? 0);
-    const uniqueCount = Number(counts?.uniqueCount ?? counts?.unique ?? 0);
-    const { minCopies = 0, minUnique = 0, requireAllUnique = false } = entry;
-    let isActive = false;
-    if (key === 'perCopy') {
-      const requiredCopies = Math.max(1, minCopies);
-      const requiredUnique = Math.max(0, minUnique);
-      isActive = copyCount >= requiredCopies && uniqueCount >= requiredUnique;
-    } else {
-      const requiredCopies = Math.max(0, minCopies);
-      let requiredUnique = Math.max(0, minUnique);
-      if (requireAllUnique) {
-        if (poolSize > 0) {
-          requiredUnique = Math.max(requiredUnique, poolSize);
-        } else if (requiredUnique === 0) {
-          requiredUnique = uniqueCount;
-        }
-      }
-      const meetsCopyRequirement = copyCount >= requiredCopies;
-      const meetsUniqueRequirement = requiredUnique > 0
-        ? uniqueCount >= requiredUnique
-        : uniqueCount > 0;
-      isActive = meetsCopyRequirement && meetsUniqueRequirement;
-    }
-    if (!isActive) {
-      return;
-    }
-    applyFlatMultiplierTargets(entry.rarityFlatMultipliers, rarityId);
-    activeFlatMultiplierEntries.add(`${rarityId}:${key}`);
-  };
-
-  ELEMENT_GROUP_BONUS_CONFIG.forEach((groupConfig, rarityId) => {
-    registerFlatMultiplierDefaults(rarityId);
-    const counts = elementCountsByRarity.get(rarityId) || { copies: 0, unique: 0, active: 0 };
-    const poolSize = getRarityPoolSize(rarityId);
-    if (groupConfig?.perCopy) {
-      evaluateFlatMultiplierEntry(rarityId, groupConfig.perCopy, 'perCopy', counts, poolSize);
-    }
-    const setBonuses = Array.isArray(groupConfig?.setBonuses)
-      ? groupConfig.setBonuses
-      : (groupConfig?.setBonus ? [groupConfig.setBonus] : []);
-    setBonuses.forEach((setBonusEntry, index) => {
-      if (!setBonusEntry) return;
-      evaluateFlatMultiplierEntry(rarityId, setBonusEntry, `setBonus:${index}`, counts, poolSize);
-    });
-  });
-
-  const getFlatBonusMultiplier = (type, rarityId) => {
-    if (!rarityId) return 1;
-    const store = type === 'perSecond' ? flatBonusMultipliers.perSecond : flatBonusMultipliers.perClick;
-    if (!store) return 1;
-    const value = store.get(rarityId);
-    return Number.isFinite(value) && value > 0 ? value : 1;
-  };
-
   const addClickElementFlat = (value, { id, label, rarityId, source = 'elements' }) => {
     if (value == null) return 0;
     const layeredValue = value instanceof LayeredNumber ? value.clone() : new LayeredNumber(value);
     if (layeredValue.isZero()) return 0;
-    const multiplier = getFlatBonusMultiplier('perClick', rarityId);
-    let finalValue = multiplier !== 1 ? layeredValue.multiplyNumber(multiplier) : layeredValue;
+    let finalValue = layeredValue;
     if (stellaireSingularityBoost !== 1 && rarityId === 'stellaire') {
       finalValue = finalValue.multiplyNumber(stellaireSingularityBoost);
     }
@@ -7459,8 +7305,7 @@ function recalcProduction() {
     if (value == null) return 0;
     const layeredValue = value instanceof LayeredNumber ? value.clone() : new LayeredNumber(value);
     if (layeredValue.isZero()) return 0;
-    const multiplier = getFlatBonusMultiplier('perSecond', rarityId);
-    let finalValue = multiplier !== 1 ? layeredValue.multiplyNumber(multiplier) : layeredValue;
+    let finalValue = layeredValue;
     if (stellaireSingularityBoost !== 1 && rarityId === 'stellaire') {
       finalValue = finalValue.multiplyNumber(stellaireSingularityBoost);
     }
@@ -7472,29 +7317,6 @@ function recalcProduction() {
       source
     });
     return finalValue.toNumber();
-  };
-
-  const applyFamilyMultiplier = (type, multiplierValue, { id, label }) => {
-    if (multiplierValue == null) {
-      return 1;
-    }
-    const layeredValue = multiplierValue instanceof LayeredNumber
-      ? multiplierValue.clone()
-      : toMultiplierLayered(multiplierValue);
-    if (!(layeredValue instanceof LayeredNumber)) {
-      return 1;
-    }
-    if (isLayeredOne(layeredValue)) {
-      return 1;
-    }
-    if (type === 'perClick') {
-      familyMultipliers.perClick = familyMultipliers.perClick.multiply(layeredValue);
-      clickDetails.multipliers.push({ id, label, value: layeredValue.clone(), source: 'family' });
-    } else {
-      familyMultipliers.perSecond = familyMultipliers.perSecond.multiply(layeredValue);
-      autoDetails.multipliers.push({ id, label, value: layeredValue.clone(), source: 'family' });
-    }
-    return layeredValue.toNumber();
   };
 
   const updateRarityMultiplierDetail = (details, detailId, label, value) => {
@@ -7578,56 +7400,6 @@ function recalcProduction() {
     const markLabelActive = (label, type = null) => {
       ensureActiveLabel(label, type);
     };
-    const describeRarityFlatMultipliers = entries => {
-      if (!Array.isArray(entries) || entries.length === 0) {
-        return [];
-      }
-      const notes = [];
-      entries.forEach(target => {
-        if (!target || typeof target !== 'object') return;
-        const targetRarityId = typeof target.rarityId === 'string' ? target.rarityId.trim() : '';
-        if (!targetRarityId) return;
-        const targetLabel = RARITY_LABEL_MAP.get(targetRarityId) || targetRarityId;
-        const parts = [];
-        const rawPerClick = Number(target.perClick);
-        if (Number.isFinite(rawPerClick) && rawPerClick > 0 && rawPerClick !== 1) {
-          const effective = stellaireBoostActive
-            ? rawPerClick * stellaireSingularityBoost
-            : rawPerClick;
-          const formatted = formatMultiplierTooltip(effective);
-          if (formatted) {
-            parts.push(
-              translateCollectionEffect('apcMultiplier', `APC ${formatted}`, { value: formatted })
-            );
-          }
-        }
-        const rawPerSecond = Number(target.perSecond);
-        if (Number.isFinite(rawPerSecond) && rawPerSecond > 0 && rawPerSecond !== 1) {
-          const effective = stellaireBoostActive
-            ? rawPerSecond * stellaireSingularityBoost
-            : rawPerSecond;
-          const formatted = formatMultiplierTooltip(effective);
-          if (formatted) {
-            parts.push(
-              translateCollectionEffect('apsMultiplier', `APS ${formatted}`, { value: formatted })
-            );
-          }
-        }
-        if (parts.length) {
-          const effectsText = parts.join(' · ');
-          notes.push(
-            translateCollectionNote(
-              'amplify',
-              `Amplifie ${targetLabel} : ${effectsText}`,
-              { target: targetLabel, effects: effectsText }
-            )
-          );
-        }
-      });
-      return notes;
-    };
-    let clickMultiplierValue = 1;
-    let autoMultiplierValue = 1;
     const summary = {
       type: 'rarity',
       rarityId,
@@ -7640,8 +7412,6 @@ function recalcProduction() {
       isComplete: totalUnique > 0 && uniqueCount >= totalUnique,
       clickFlatTotal: 0,
       autoFlatTotal: 0,
-      multiplierPerClick: 1,
-      multiplierPerSecond: 1,
       critChanceAdd: 0,
       critMultiplierAdd: 0,
       activeLabels: []
@@ -7756,14 +7526,6 @@ function recalcProduction() {
             if (formatted) {
               addLabelEffect(copyLabel, translateCollectionEffect('apsFlat', `APS +${formatted}`, { value: formatted }), 'perCopy');
             }
-          }
-        }
-        if (activeFlatMultiplierEntries.has(`${rarityId}:perCopy`)) {
-          hasEffect = true;
-          if (groupConfig.perCopy?.rarityFlatMultipliers) {
-            describeRarityFlatMultipliers(groupConfig.perCopy.rarityFlatMultipliers).forEach(note => {
-              addLabelNote(copyLabel, note, 'perCopy');
-            });
           }
         }
         if (hasEffect) {
@@ -7903,14 +7665,6 @@ function recalcProduction() {
             }
           }
         }
-        if (activeFlatMultiplierEntries.has(`${rarityId}:setBonus:${index}`)) {
-          setBonusTriggered = true;
-          if (Array.isArray(setBonusEntry.rarityFlatMultipliers)) {
-            describeRarityFlatMultipliers(setBonusEntry.rarityFlatMultipliers).forEach(note => {
-              addLabelNote(resolvedLabel, note, 'setBonus');
-            });
-          }
-        }
         if (setBonusTriggered) {
           markLabelActive(resolvedLabel, 'setBonus');
         }
@@ -7937,13 +7691,11 @@ function recalcProduction() {
       if (targets.has('perClick')) {
         clickRarityMultipliers.set(rarityId, appliedMultiplier);
         updateRarityMultiplierDetail(clickDetails.multipliers, multiplierDetailId, multiplierLabelResolved, appliedMultiplier);
-        clickMultiplierValue = appliedMultiplier;
         multiplierApplied = multiplierApplied || Math.abs(appliedMultiplier - 1) > 1e-9;
       }
       if (targets.has('perSecond')) {
         autoRarityMultipliers.set(rarityId, appliedMultiplier);
         updateRarityMultiplierDetail(autoDetails.multipliers, multiplierDetailId, multiplierLabelResolved, appliedMultiplier);
-        autoMultiplierValue = appliedMultiplier;
         multiplierApplied = multiplierApplied || Math.abs(appliedMultiplier - 1) > 1e-9;
       }
       if (multiplierApplied) {
@@ -8017,11 +7769,10 @@ function recalcProduction() {
           const resolvedLabel = bonusLabel || rarityMultiplierLabel;
           let labelApplied = false;
           if (targets.has('perClick')) {
-            const current = Number(clickRarityMultipliers.get(rarityId)) || clickMultiplierValue || 1;
+            const current = Number(clickRarityMultipliers.get(rarityId)) || 1;
             const updated = Math.max(0, current + amount);
             clickRarityMultipliers.set(rarityId, updated);
             updateRarityMultiplierDetail(clickDetails.multipliers, multiplierDetailId, resolvedLabel, updated);
-            clickMultiplierValue = updated;
             const display = formatMultiplierTooltip(updated);
             if (display) {
               addLabelEffect(resolvedLabel, translateCollectionEffect('rarityMultiplierApc', `Multiplicateur de rareté APC ${display}`, { value: display }), 'rarityMultiplier');
@@ -8029,11 +7780,10 @@ function recalcProduction() {
             }
           }
           if (targets.has('perSecond')) {
-            const current = Number(autoRarityMultipliers.get(rarityId)) || autoMultiplierValue || 1;
+            const current = Number(autoRarityMultipliers.get(rarityId)) || 1;
             const updated = Math.max(0, current + amount);
             autoRarityMultipliers.set(rarityId, updated);
             updateRarityMultiplierDetail(autoDetails.multipliers, multiplierDetailId, resolvedLabel, updated);
-            autoMultiplierValue = updated;
             const display = formatMultiplierTooltip(updated);
             if (display) {
               addLabelEffect(resolvedLabel, translateCollectionEffect('rarityMultiplierAps', `Multiplicateur de rareté APS ${display}`, { value: display }), 'rarityMultiplier');
@@ -8174,14 +7924,7 @@ function recalcProduction() {
       }
     }
 
-    if (
-      stellaireBoostActive
-      && (
-        copyCount > 0
-        || Math.abs((clickMultiplierValue ?? 1) - 1) > 1e-9
-        || Math.abs((autoMultiplierValue ?? 1) - 1) > 1e-9
-      )
-    ) {
+    if (stellaireBoostActive && copyCount > 0) {
       markLabelActive(STELLAIRE_SINGULARITY_BONUS_LABEL, 'synergy');
       const singularityText = formatMultiplierTooltip(stellaireSingularityBoost);
       if (singularityText) {
@@ -8193,8 +7936,6 @@ function recalcProduction() {
       }
     }
 
-    summary.multiplierPerClick = clickMultiplierValue;
-    summary.multiplierPerSecond = autoMultiplierValue;
     summary.isComplete = totalUnique > 0 && uniqueCount >= totalUnique;
     const labelEntries = [];
     activeLabelDetails.forEach(entry => {
@@ -8252,8 +7993,6 @@ function recalcProduction() {
         isComplete: totalUnique > 0 && uniqueCount >= totalUnique,
         clickFlatTotal: 0,
         autoFlatTotal: 0,
-        multiplierPerClick: 1,
-        multiplierPerSecond: 1,
         critChanceAdd: 0,
         critMultiplierAdd: 0,
         activeLabels: [],
@@ -8359,36 +8098,6 @@ function recalcProduction() {
               const formatted = formatElementFlatBonus(applied);
               if (formatted) {
                 addLabelEffect(effectLabel, translateCollectionEffect('apsFlat', `APS +${formatted}`, { value: formatted }), 'flat');
-              }
-            }
-          }
-
-          if (effects.clickMult != null) {
-            const applied = applyFamilyMultiplier('perClick', effects.clickMult, {
-              id: `family:${effectIdBase}:clickMult`,
-              label: effectLabel
-            });
-            if (Number.isFinite(applied) && Math.abs(applied - 1) > 1e-9) {
-              summary.multiplierPerClick *= applied;
-              bonusApplied = true;
-              const formatted = formatMultiplierTooltip(applied);
-              if (formatted) {
-                addLabelEffect(effectLabel, translateCollectionEffect('apcMultiplier', `APC ${formatted}`, { value: formatted }), 'multiplier');
-              }
-            }
-          }
-
-          if (effects.autoMult != null) {
-            const applied = applyFamilyMultiplier('perSecond', effects.autoMult, {
-              id: `family:${effectIdBase}:autoMult`,
-              label: effectLabel
-            });
-            if (Number.isFinite(applied) && Math.abs(applied - 1) > 1e-9) {
-              summary.multiplierPerSecond *= applied;
-              bonusApplied = true;
-              const formatted = formatMultiplierTooltip(applied);
-              if (formatted) {
-                addLabelEffect(effectLabel, translateCollectionEffect('apsMultiplier', `APS ${formatted}`, { value: formatted }), 'multiplier');
               }
             }
           }
@@ -8612,11 +8321,8 @@ function recalcProduction() {
 
     if (effects.clickMult != null) {
       const multiplierValue = toMultiplierLayered(effects.clickMult);
-      const targetSlot = clickSlotMap.get(def.id) || PRODUCTION_MULTIPLIER_SLOT_FALLBACK.perClick;
-      if (targetSlot && clickMultiplierSlots[targetSlot]) {
-        clickMultiplierSlots[targetSlot] = clickMultiplierSlots[targetSlot].multiply(multiplierValue);
-      }
       if (!isLayeredOne(multiplierValue)) {
+        clickShopMultiplier = clickShopMultiplier.multiply(multiplierValue);
         clickDetails.multipliers.push({
           id: def.id,
           label: displayName,
@@ -8629,11 +8335,8 @@ function recalcProduction() {
 
     if (effects.autoMult != null) {
       const multiplierValue = toMultiplierLayered(effects.autoMult);
-      const targetSlot = autoSlotMap.get(def.id) || PRODUCTION_MULTIPLIER_SLOT_FALLBACK.perSecond;
-      if (targetSlot && autoMultiplierSlots[targetSlot]) {
-        autoMultiplierSlots[targetSlot] = autoMultiplierSlots[targetSlot].multiply(multiplierValue);
-      }
       if (!isLayeredOne(multiplierValue)) {
+        autoShopMultiplier = autoShopMultiplier.multiply(multiplierValue);
         autoDetails.multipliers.push({
           id: def.id,
           label: displayName,
@@ -8699,21 +8402,11 @@ function recalcProduction() {
     autoDetails.sources.flats.devkitFlat = LayeredNumber.zero();
   }
 
-  clickDetails.sources.multipliers.shopBonus1 = clickMultiplierSlots.shopBonus1.clone();
-  clickDetails.sources.multipliers.shopBonus2 = clickMultiplierSlots.shopBonus2.clone();
-  autoDetails.sources.multipliers.shopBonus1 = autoMultiplierSlots.shopBonus1.clone();
-  autoDetails.sources.multipliers.shopBonus2 = autoMultiplierSlots.shopBonus2.clone();
   clickDetails.sources.multipliers.trophyMultiplier = clickTrophyMultiplier.clone();
   autoDetails.sources.multipliers.trophyMultiplier = autoTrophyMultiplier.clone();
-  clickDetails.sources.multipliers.familyMultiplier = familyMultipliers.perClick.clone();
-  autoDetails.sources.multipliers.familyMultiplier = familyMultipliers.perSecond.clone();
 
-  const clickShopBonus1 = clickDetails.sources.multipliers.shopBonus1;
-  const clickShopBonus2 = clickDetails.sources.multipliers.shopBonus2;
-  const autoShopBonus1 = autoDetails.sources.multipliers.shopBonus1;
-  const autoShopBonus2 = autoDetails.sources.multipliers.shopBonus2;
-  const clickFamilyMultiplier = clickDetails.sources.multipliers.familyMultiplier;
-  const autoFamilyMultiplier = autoDetails.sources.multipliers.familyMultiplier;
+  const clickShopBonus = clickShopMultiplier.clone();
+  const autoShopBonus = autoShopMultiplier.clone();
 
   const clickRarityProduct = computeRarityMultiplierProduct(clickRarityMultipliers);
   const autoRarityProduct = computeRarityMultiplierProduct(autoRarityMultipliers);
@@ -8735,15 +8428,11 @@ function recalcProduction() {
   autoDetails.totalAddition = autoTotalAddition.clone();
 
   const clickTotalMultiplier = LayeredNumber.one()
-    .multiply(clickShopBonus1)
-    .multiply(clickShopBonus2)
-    .multiply(clickFamilyMultiplier)
+    .multiply(clickShopBonus)
     .multiply(clickRarityProduct)
     .multiply(clickTrophyMultiplier);
   let autoTotalMultiplier = LayeredNumber.one()
-    .multiply(autoShopBonus1)
-    .multiply(autoShopBonus2)
-    .multiply(autoFamilyMultiplier)
+    .multiply(autoShopBonus)
     .multiply(autoRarityProduct)
     .multiply(autoTrophyMultiplier);
 
@@ -8768,18 +8457,14 @@ function recalcProduction() {
     .add(autoDetails.sources.flats.devkitFlat || LayeredNumber.zero());
 
   let perClick = clickFlatBase.clone();
-  perClick = perClick.multiply(clickShopBonus1);
-  perClick = perClick.multiply(clickShopBonus2);
-  perClick = perClick.multiply(clickFamilyMultiplier);
+  perClick = perClick.multiply(clickShopBonus);
   perClick = perClick.multiply(clickRarityProduct);
   perClick = perClick.multiply(clickTrophyMultiplier);
   if (perClick.compare(LayeredNumber.zero()) < 0) {
     perClick = LayeredNumber.zero();
   }
   let perSecond = autoFlatBase.clone();
-  perSecond = perSecond.multiply(autoShopBonus1);
-  perSecond = perSecond.multiply(autoShopBonus2);
-  perSecond = perSecond.multiply(autoFamilyMultiplier);
+  perSecond = perSecond.multiply(autoShopBonus);
   perSecond = perSecond.multiply(autoRarityProduct);
   perSecond = perSecond.multiply(autoTrophyMultiplier);
   if (hasApsCritMultiplier) {

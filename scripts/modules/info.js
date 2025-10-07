@@ -986,8 +986,6 @@ function renderElementBonuses() {
       isComplete: false,
       clickFlatTotal: 0,
       autoFlatTotal: 0,
-      multiplierPerClick: 1,
-      multiplierPerSecond: 1,
       critChanceAdd: 0,
       critMultiplierAdd: 0,
       activeLabels: [],
@@ -1092,8 +1090,6 @@ function renderElementBonuses() {
 
     appendProduction('APC +', formatElementFlatBonus(summary.clickFlatTotal));
     appendProduction('APS +', formatElementFlatBonus(summary.autoFlatTotal));
-    appendProduction('APC ×', formatElementMultiplierBonus(summary.multiplierPerClick));
-    appendProduction('APS ×', formatElementMultiplierBonus(summary.multiplierPerSecond));
 
     const critParts = [];
     const critChanceText = formatElementCritChanceBonus(summary.critChanceAdd);

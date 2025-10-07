@@ -1425,8 +1425,6 @@ const GAME_CONFIG = {
       'shopFlat',
       'elementFlat',
       'fusionFlat',
-      'shopBonus1',
-      'shopBonus2',
       'collectionMultiplier',
       'frenzy',
       'trophyMultiplier',
