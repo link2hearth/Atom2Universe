@@ -219,7 +219,10 @@
           "numbers": "Mode chiffres",
           "symbols": "Mode symboles"
         },
-        "next": "Nouvelle opération"
+        "next": "Nouvelle opération",
+        "feedback": {
+          "initial": "Choisissez la bonne réponse pour commencer la manche."
+        }
       },
       "balance": {
         "aria": "Mini-jeu Balance",
@@ -251,7 +254,7 @@
           "aria": "Contrôles du Sudoku",
           "level": "Niveau",
           "generate": "Générer une grille",
-          "check": "Check",
+          "check": "Vérifier la grille",
           "options": {
             "facile": "Facile",
             "moyen": "Moyen",
@@ -265,6 +268,9 @@
           "aria": "Sélection des chiffres du Sudoku",
           "clear": "Effacer",
           "ok": "OK"
+        },
+        "status": {
+          "ready": "Générez une grille pour commencer."
         }
       },
       "blackjack": {
@@ -357,7 +363,8 @@
         },
         "controls": {
           "hold": "Maintenir pour plonger",
-          "reset": "Relancer la partie"
+          "reset": "Relancer la partie",
+          "aria": "Commandes du mini-jeu Photon"
         }
       },
       "table": {

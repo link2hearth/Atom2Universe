@@ -219,7 +219,10 @@
           "numbers": "Number mode",
           "symbols": "Symbol mode"
         },
-        "next": "Next puzzle"
+        "next": "Next puzzle",
+        "feedback": {
+          "initial": "Pick an answer to launch the round."
+        }
       },
       "balance": {
         "aria": "Balance mini-game",
@@ -251,7 +254,7 @@
           "aria": "Sudoku controls",
           "level": "Difficulty",
           "generate": "Generate grid",
-          "check": "Check",
+          "check": "Check grid",
           "options": {
             "facile": "Easy",
             "moyen": "Medium",
@@ -265,6 +268,9 @@
           "aria": "Sudoku number picker",
           "clear": "Clear",
           "ok": "OK"
+        },
+        "status": {
+          "ready": "Generate a grid to get started."
         }
       },
       "blackjack": {
@@ -357,7 +363,8 @@
         },
         "controls": {
           "hold": "Hold to dive",
-          "reset": "Reset run"
+          "reset": "Reset run",
+          "aria": "Photon mini-game controls"
         }
       },
       "table": {

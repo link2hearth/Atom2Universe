@@ -585,12 +585,15 @@
     >
       <div class="math-game" id="mathGame">
         <header class="math-game__header">
-          <h2 class="math-game__title" data-i18n="index.sections.math.title"></h2>
-          <p class="math-game__subtitle" data-i18n="index.sections.math.subtitle"></p>
+          <h2 class="math-game__title" data-i18n="index.sections.math.title">Math quantique</h2>
+          <p class="math-game__subtitle" data-i18n="index.sections.math.subtitle">
+            Repérez le nombre ou le symbole caché pour compléter des calculs de plus en plus complexes.
+          </p>
           <div
             class="math-game__mode-switch"
             id="mathModeSwitch"
             role="group"
+            aria-label="Choisir le mode de calcul"
             data-i18n="aria-label:index.sections.math.modes.aria"
           >
             <button
@@ -599,23 +602,23 @@
               data-math-mode="numbers"
               aria-pressed="true"
               data-i18n="index.sections.math.modes.numbers"
-            ></button>
+            >Mode chiffres</button>
             <button
               type="button"
               class="math-game__mode-button"
               data-math-mode="symbols"
               aria-pressed="false"
               data-i18n="index.sections.math.modes.symbols"
-            ></button>
+            >Mode symboles</button>
           </div>
         </header>
         <div class="math-game__counters" role="presentation">
           <div class="math-game__counter">
-            <span class="math-game__counter-label" data-i18n="index.sections.math.scoreLabel"></span>
+            <span class="math-game__counter-label" data-i18n="index.sections.math.scoreLabel">Opérations résolues</span>
             <span class="math-game__counter-value" id="mathScoreValue">0</span>
           </div>
           <div class="math-game__counter">
-            <span class="math-game__counter-label" data-i18n="index.sections.math.streakLabel"></span>
+            <span class="math-game__counter-label" data-i18n="index.sections.math.streakLabel">Série actuelle</span>
             <span class="math-game__counter-value" id="mathStreakValue">0</span>
           </div>
           <div class="math-game__counter">
@@ -624,22 +627,28 @@
           </div>
         </div>
         <div class="math-game__challenge">
-          <p class="math-game__expression" id="mathExpression" role="status" aria-live="polite"></p>
+          <p class="math-game__expression" id="mathExpression" role="status" aria-live="polite">2 + 3 = ?</p>
           <div
             class="math-game__options"
             id="mathOptions"
             role="group"
+            aria-label="Choisir la réponse pour compléter le calcul"
             data-i18n="aria-label:index.sections.math.optionsAria"
           ></div>
         </div>
-        <p class="math-game__feedback" id="mathFeedback" role="status"></p>
+        <p
+          class="math-game__feedback"
+          id="mathFeedback"
+          role="status"
+          data-i18n="index.sections.math.feedback.initial"
+        >Choisissez la bonne réponse pour commencer la manche.</p>
         <button
           type="button"
           class="math-game__next"
           id="mathNextButton"
           data-i18n="index.sections.math.next"
           disabled
-        ></button>
+        >Nouvelle opération</button>
       </div>
     </section>
 
@@ -651,37 +660,61 @@
       hidden
     >
       <div class="sudoku-content">
+        <header class="sudoku-header">
+          <h2 class="sudoku-header__title" data-i18n="index.sections.sudoku.title">Sudoku quantique</h2>
+          <p class="sudoku-header__subtitle" data-i18n="index.sections.sudoku.subtitle">
+            Choisissez votre niveau de difficulté, remplissez la grille et vérifiez votre progression en temps réel.
+          </p>
+        </header>
         <div
           class="sudoku-toolbar"
           role="toolbar"
+          aria-label="Contrôles du Sudoku"
           data-i18n="aria-label:index.sections.sudoku.toolbar.aria"
         >
-          <label for="sudokuLevel" class="sudoku-toolbar__label" data-i18n="index.sections.sudoku.toolbar.level"></label>
-          <select id="sudokuLevel" class="sudoku-toolbar__select" data-i18n="aria-label:index.sections.sudoku.toolbar.level">
-            <option value="facile" data-i18n="index.sections.sudoku.toolbar.options.facile"></option>
-            <option value="moyen" data-i18n="index.sections.sudoku.toolbar.options.moyen" selected></option>
-            <option value="difficile" data-i18n="index.sections.sudoku.toolbar.options.difficile"></option>
+          <label for="sudokuLevel" class="sudoku-toolbar__label" data-i18n="index.sections.sudoku.toolbar.level">Niveau</label>
+          <select
+            id="sudokuLevel"
+            class="sudoku-toolbar__select"
+            aria-label="Niveau"
+            data-i18n="aria-label:index.sections.sudoku.toolbar.level"
+          >
+            <option value="facile" data-i18n="index.sections.sudoku.toolbar.options.facile">Facile</option>
+            <option value="moyen" data-i18n="index.sections.sudoku.toolbar.options.moyen" selected>Moyen</option>
+            <option value="difficile" data-i18n="index.sections.sudoku.toolbar.options.difficile">Difficile</option>
           </select>
           <button
             type="button"
             id="sudokuGenerate"
             class="sudoku-toolbar__button sudoku-toolbar__button--primary"
             data-i18n="index.sections.sudoku.toolbar.generate"
-          ></button>
+          >Générer une grille</button>
           <button
             type="button"
             id="sudokuCheck"
             class="sudoku-toolbar__button"
             data-i18n="index.sections.sudoku.toolbar.check"
             hidden
-          ></button>
-          <span id="sudokuStatus" class="sudoku-status" role="status" aria-live="polite" hidden></span>
+          >Vérifier la grille</button>
+          <span
+            id="sudokuStatus"
+            class="sudoku-status"
+            role="status"
+            aria-live="polite"
+            hidden
+            data-i18n="index.sections.sudoku.status.ready"
+          >Générez une grille pour commencer.</span>
         </div>
+        <p class="sudoku-note" data-i18n="index.sections.sudoku.note">
+          Astuce : utilisez les chiffres 1 à 9. La validation détecte les doublons dans les lignes, colonnes et blocs 3×3.
+          La résolution applique un backtracking tandis que la génération produit une grille à solution unique.
+        </p>
         <div class="sudoku-main">
           <div
             id="sudokuGrid"
             class="sudoku-grid"
             role="grid"
+            aria-label="Grille Sudoku"
             data-i18n="aria-label:index.sections.sudoku.board"
             aria-live="off"
           ></div>
@@ -689,6 +722,7 @@
             id="sudokuPad"
             class="sudoku-pad"
             role="group"
+            aria-label="Sélection des chiffres du Sudoku"
             data-i18n="aria-label:index.sections.sudoku.pad.aria"
           >
             <div class="sudoku-pad__actions" role="group">
@@ -697,13 +731,13 @@
                 class="sudoku-pad__button sudoku-pad__button--action"
                 data-value="clear"
                 data-i18n="index.sections.sudoku.pad.clear"
-              ></button>
+              >Effacer</button>
               <button
                 type="button"
                 id="sudokuPadValidate"
                 class="sudoku-pad__button sudoku-pad__button--action"
                 data-i18n="index.sections.sudoku.pad.ok"
-              ></button>
+              >OK</button>
             </div>
             <div class="sudoku-pad__numbers" role="group">
               <button type="button" class="sudoku-pad__button" data-value="1">1</button>
@@ -819,8 +853,32 @@
           id="waveCanvas"
           class="wave-stage__canvas"
           role="presentation"
+          aria-label="Zone de jeu Photon"
           data-i18n="aria-label:index.sections.wave.canvasAria"
         ></canvas>
+        <div class="wave-hud" role="status" aria-live="polite">
+          <div class="wave-hud__item">
+            <span class="wave-hud__label" data-i18n="index.sections.wave.hud.distance">Distance</span>
+            <span class="wave-hud__value">
+              <span id="waveDistanceValue">0</span>
+              <span class="wave-hud__unit" data-i18n="index.sections.wave.hud.distanceUnit">m</span>
+            </span>
+          </div>
+          <div class="wave-hud__item">
+            <span class="wave-hud__label" data-i18n="index.sections.wave.hud.speed">Vitesse</span>
+            <span class="wave-hud__value">
+              <span id="waveSpeedValue">0</span>
+              <span class="wave-hud__unit" data-i18n="index.sections.wave.hud.speedUnit">km/h</span>
+            </span>
+          </div>
+          <div class="wave-hud__item">
+            <span class="wave-hud__label" data-i18n="index.sections.wave.hud.altitude">Altitude</span>
+            <span class="wave-hud__value">
+              <span id="waveAltitudeValue">0</span>
+              <span class="wave-hud__unit" data-i18n="index.sections.wave.hud.altitudeUnit">m</span>
+            </span>
+          </div>
+        </div>
         <div class="ticket-layer" id="waveTicketLayer" aria-hidden="true"></div>
         <div class="frenzy-layer" id="waveFrenzyLayer" aria-hidden="true"></div>
         <div
@@ -832,6 +890,27 @@
         >
           <span class="apc-frenzy-counter__value" id="waveApcFrenzyCounterValue">0</span>
         </div>
+        <div
+          class="wave-controls"
+          role="group"
+          aria-label="Commandes du mini-jeu Photon"
+          data-i18n="aria-label:index.sections.wave.controls.aria"
+        >
+          <button
+            type="button"
+            class="wave-controls__reset"
+            id="waveResetButton"
+            data-i18n="index.sections.wave.controls.reset"
+          >Relancer la partie</button>
+          <p class="wave-controls-hint" data-i18n="index.sections.wave.controls.hold">Maintenir pour plonger</p>
+        </div>
+        <p
+          class="wave-status"
+          id="waveStatusMessage"
+          role="status"
+          aria-live="polite"
+          data-i18n="index.sections.wave.status.ready"
+        >Relâchez sur la montée pour décoller.</p>
       </div>
     </section>
 
