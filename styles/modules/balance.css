@@ -140,6 +140,65 @@ body.theme-light .balance-board__pivot {
   margin-top: auto;
 }
 
+.balance-difficulty {
+  width: min(20rem, 100%);
+  display: grid;
+  gap: 0.4rem;
+  justify-items: stretch;
+  text-align: left;
+}
+
+.balance-difficulty__label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.balance-difficulty__select {
+  appearance: none;
+  width: 100%;
+  border: 1px solid rgba(140, 170, 255, 0.35);
+  border-radius: 12px;
+  padding: 0.55rem 2.5rem 0.55rem 1rem;
+  font: inherit;
+  background:
+    linear-gradient(135deg, rgba(80, 120, 220, 0.28), rgba(60, 90, 200, 0.24)),
+    url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="20" height="12" viewBox="0 0 20 12" fill="none"%3E%3Cpath d="M2 2L10 10L18 2" stroke="rgba(210,220,255,0.8)" stroke-width="2.5" stroke-linecap="round"/%3E%3C/svg%3E')
+      right 1rem center / 1.25rem auto no-repeat,
+    rgba(50, 70, 150, 0.3);
+  color: inherit;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.balance-difficulty__select:hover,
+.balance-difficulty__select:focus-visible {
+  border-color: rgba(170, 200, 255, 0.55);
+  box-shadow: 0 12px 24px rgba(10, 18, 36, 0.28);
+  outline: none;
+}
+
+body.theme-light .balance-difficulty__select {
+  border-color: rgba(110, 140, 220, 0.35);
+  background:
+    linear-gradient(135deg, rgba(140, 170, 255, 0.35), rgba(110, 150, 255, 0.28)),
+    url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="20" height="12" viewBox="0 0 20 12" fill="none"%3E%3Cpath d="M2 2L10 10L18 2" stroke="rgba(70,80,130,0.85)" stroke-width="2.5" stroke-linecap="round"/%3E%3C/svg%3E')
+      right 1rem center / 1.25rem auto no-repeat,
+    rgba(210, 220, 255, 0.65);
+}
+
+.balance-difficulty__description {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.35;
+  text-align: center;
+  color: rgba(210, 220, 255, 0.8);
+}
+
+body.theme-light .balance-difficulty__description {
+  color: rgba(40, 50, 90, 0.7);
+}
+
 .balance-controls__buttons {
   display: flex;
   flex-wrap: wrap;

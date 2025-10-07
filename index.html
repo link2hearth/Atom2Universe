@@ -765,6 +765,22 @@
         </div>
         <div class="balance-controls" id="balanceControls">
           <p class="balance-status" id="balanceStatus" role="status" aria-live="polite"></p>
+          <div class="balance-difficulty" id="balanceDifficulty">
+            <label
+              class="balance-difficulty__label"
+              for="balanceDifficultySelect"
+              data-i18n="index.sections.balance.difficulty.label"
+            >Difficulté</label>
+            <select
+              class="balance-difficulty__select"
+              id="balanceDifficultySelect"
+              aria-describedby="balanceDifficultyDescription"
+            ></select>
+            <p
+              class="balance-difficulty__description"
+              id="balanceDifficultyDescription"
+            ></p>
+          </div>
           <div class="balance-controls__buttons">
             <button
               type="button"

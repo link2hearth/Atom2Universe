@@ -812,6 +812,30 @@ const GAME_CONFIG = {
         testDurationMs: 900,
         settleDurationMs: 600
       },
+      /**
+       * Réglages des modes de difficulté.
+       * - defaultMode : mode sélectionné par défaut à l'ouverture du mini-jeu.
+       * - modes : liste ordonnée des modes disponibles avec leur clé de traduction et
+       *   un multiplicateur appliqué à la tolérance de base. Une valeur plus faible
+       *   demande un équilibrage plus précis.
+       */
+      difficulty: {
+        defaultMode: 'easy',
+        modes: [
+          {
+            id: 'easy',
+            labelKey: 'scripts.arcade.balance.difficulty.easy',
+            descriptionKey: 'scripts.arcade.balance.difficulty.easyDescription',
+            toleranceMultiplier: 1
+          },
+          {
+            id: 'hard',
+            labelKey: 'scripts.arcade.balance.difficulty.hard',
+            descriptionKey: 'scripts.arcade.balance.difficulty.hardDescription',
+            toleranceMultiplier: 0.45
+          }
+        ]
+      },
       cubeRules: {
         countPerSet: 5, // Nombre de blocs générés par série.
         widthRatio: 0.18, // Largeur uniforme des blocs par rapport à la planche.

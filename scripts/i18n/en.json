@@ -150,6 +150,9 @@
           "reset": "Reset blocks",
           "test": "Test balance"
         },
+        "difficulty": {
+          "label": "Difficulty"
+        },
         "inventory": {
           "title": "Available blocks",
           "hint": "The number on each block shows its relative weight.",
@@ -960,6 +963,12 @@
           "equilibrium": "Equilibrium set",
           "fractal": "Fractal set",
           "binary": "Binary set"
+        },
+        "difficulty": {
+          "easy": "Easy",
+          "hard": "Hard",
+          "easyDescription": "A generous tolerance that makes testing balance more forgiving.",
+          "hardDescription": "Tighter tolerance: every placement matters if you want equilibrium."
         },
         "toast": {
           "perfectReward": {

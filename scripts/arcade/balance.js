@@ -35,6 +35,28 @@
     }
   };
 
+  const DEFAULT_DIFFICULTY_CONFIG = {
+    defaultMode: 'easy',
+    modes: [
+      {
+        id: 'easy',
+        labelKey: 'scripts.arcade.balance.difficulty.easy',
+        labelFallback: 'Easy mode',
+        descriptionKey: 'scripts.arcade.balance.difficulty.easyDescription',
+        descriptionFallback: 'Generous tolerance to get familiar with balancing.',
+        toleranceMultiplier: 1
+      },
+      {
+        id: 'hard',
+        labelKey: 'scripts.arcade.balance.difficulty.hard',
+        labelFallback: 'Hard mode',
+        descriptionKey: 'scripts.arcade.balance.difficulty.hardDescription',
+        descriptionFallback: 'Reduced tolerance for precise, demanding balance tests.',
+        toleranceMultiplier: 0.45
+      }
+    ]
+  };
+
   function clamp(value, min, max) {
     if (value < min) return min;
     if (value > max) return max;
@@ -155,7 +177,9 @@
       }
     };
 
-    return { board, cubeSets, defaultSetId, cubeRules, rewards };
+    const difficulty = normalizeDifficulty(globalConfig?.difficulty);
+
+    return { board, cubeSets, defaultSetId, cubeRules, rewards, difficulty };
   }
 
   function normalizeWidthRatio(value) {
@@ -164,6 +188,72 @@
       return DEFAULT_CUBE_RULES.widthRatio;
     }
     return clamp(numeric, 0.08, 0.32);
+  }
+
+  function getDefaultDifficultyMode(id) {
+    if (typeof id !== 'string') {
+      return null;
+    }
+    return DEFAULT_DIFFICULTY_CONFIG.modes.find(mode => mode.id === id) || null;
+  }
+
+  function normalizeDifficulty(rawDifficulty) {
+    const fallbackModes = DEFAULT_DIFFICULTY_CONFIG.modes;
+    const rawModes = Array.isArray(rawDifficulty?.modes) && rawDifficulty.modes.length
+      ? rawDifficulty.modes
+      : fallbackModes;
+    const seen = new Set();
+    const normalizedModes = [];
+    rawModes.forEach((mode, index) => {
+      const modeId = typeof mode?.id === 'string' ? mode.id : null;
+      const fallback = getDefaultDifficultyMode(modeId) || fallbackModes[index] || fallbackModes[0];
+      const id = modeId || fallback?.id || `mode-${index + 1}`;
+      if (seen.has(id)) {
+        return;
+      }
+      seen.add(id);
+      const toleranceMultiplierRaw = Number(mode?.toleranceMultiplier);
+      const toleranceMultiplier = Number.isFinite(toleranceMultiplierRaw) && toleranceMultiplierRaw > 0
+        ? clamp(toleranceMultiplierRaw, 0.05, 5)
+        : clamp(Number(fallback?.toleranceMultiplier) || 1, 0.05, 5);
+      const labelKey = typeof mode?.labelKey === 'string'
+        ? mode.labelKey
+        : fallback?.labelKey;
+      const descriptionKey = typeof mode?.descriptionKey === 'string'
+        ? mode.descriptionKey
+        : fallback?.descriptionKey;
+      const labelFallback = typeof mode?.labelFallback === 'string'
+        ? mode.labelFallback
+        : typeof fallback?.labelFallback === 'string'
+          ? fallback.labelFallback
+          : `Mode ${id}`;
+      const descriptionFallback = typeof mode?.descriptionFallback === 'string'
+        ? mode.descriptionFallback
+        : typeof fallback?.descriptionFallback === 'string'
+          ? fallback.descriptionFallback
+          : '';
+      normalizedModes.push({
+        id,
+        labelKey,
+        descriptionKey,
+        toleranceMultiplier,
+        labelFallback,
+        descriptionFallback
+      });
+    });
+
+    if (!normalizedModes.length) {
+      return { ...DEFAULT_DIFFICULTY_CONFIG };
+    }
+
+    const desiredDefault = typeof rawDifficulty?.defaultMode === 'string'
+      ? rawDifficulty.defaultMode
+      : DEFAULT_DIFFICULTY_CONFIG.defaultMode;
+    const defaultMode = normalizedModes.some(mode => mode.id === desiredDefault)
+      ? desiredDefault
+      : normalizedModes[0].id;
+
+    return { defaultMode, modes: normalizedModes };
   }
 
   function getCubeAriaLabel(weight) {
@@ -205,9 +295,16 @@
       this.surfaceElement = options.surfaceElement || document.getElementById('balanceBoardSurface');
       this.inventoryElement = options.inventoryElement || document.getElementById('balancePieces');
       this.statusElement = options.statusElement || document.getElementById('balanceStatus');
+      this.difficultySelect = options.difficultySelect || document.getElementById('balanceDifficultySelect');
+      this.difficultyDescriptionElement = options.difficultyDescription || document.getElementById('balanceDifficultyDescription');
       this.resetButton = options.resetButton || document.getElementById('balanceResetButton');
       this.testButton = options.testButton || document.getElementById('balanceTestButton');
       this.dragLayer = options.dragLayer || document.getElementById('balanceDragLayer');
+
+      this.difficultyConfig = config.difficulty || { ...DEFAULT_DIFFICULTY_CONFIG };
+      this.baseTolerance = Number(config.board?.tolerance) || DEFAULT_BOARD_CONFIG.tolerance;
+      this.currentTolerance = this.baseTolerance;
+      this.activeDifficultyId = null;
 
       this.cubes = new Map();
       this.activeSet = null;
@@ -227,9 +324,12 @@
       this.handleReset = this.handleReset.bind(this);
       this.handleDoubleClick = this.handleDoubleClick.bind(this);
       this.handleKeyDown = this.handleKeyDown.bind(this);
+      this.handleDifficultyChange = this.handleDifficultyChange.bind(this);
+      this.handleLanguageChange = this.handleLanguageChange.bind(this);
 
       this.initializeDimensions();
       this.bindEvents();
+      this.initializeDifficultyControls();
       this.reset();
       this.updateStatus('ready');
     }
@@ -247,6 +347,107 @@
       this.measureBoardWidth();
     }
 
+    initializeDifficultyControls() {
+      const hasModes = Array.isArray(this.difficultyConfig?.modes) && this.difficultyConfig.modes.length;
+      if (!hasModes) {
+        this.difficultyConfig = { ...DEFAULT_DIFFICULTY_CONFIG };
+      }
+      const modes = this.difficultyConfig.modes || DEFAULT_DIFFICULTY_CONFIG.modes;
+      if (this.difficultySelect) {
+        this.difficultySelect.innerHTML = '';
+        modes.forEach(mode => {
+          const option = document.createElement('option');
+          option.value = mode.id;
+          option.textContent = translate(mode.labelKey, mode.labelFallback || mode.id);
+          this.difficultySelect.appendChild(option);
+        });
+        this.difficultySelect.addEventListener('change', this.handleDifficultyChange);
+      }
+      const defaultModeId = this.difficultyConfig.defaultMode || modes[0]?.id;
+      this.setDifficulty(defaultModeId, { skipStatusReset: true });
+    }
+
+    getDifficultyMode(modeId) {
+      const modes = this.difficultyConfig?.modes;
+      if (!Array.isArray(modes) || !modes.length) {
+        return DEFAULT_DIFFICULTY_CONFIG.modes[0];
+      }
+      if (modeId) {
+        const found = modes.find(mode => mode.id === modeId);
+        if (found) {
+          return found;
+        }
+      }
+      return modes[0];
+    }
+
+    computeToleranceForMode(mode) {
+      const base = Number(this.baseTolerance) > 0 ? this.baseTolerance : DEFAULT_BOARD_CONFIG.tolerance;
+      const multiplier = Number(mode?.toleranceMultiplier);
+      const effectiveMultiplier = Number.isFinite(multiplier) && multiplier > 0 ? multiplier : 1;
+      const tolerance = base * effectiveMultiplier;
+      return clamp(tolerance, 0.002, 0.12);
+    }
+
+    setDifficulty(modeId, { skipStatusReset = false } = {}) {
+      const mode = this.getDifficultyMode(modeId);
+      if (!mode) {
+        return;
+      }
+      this.activeDifficultyId = mode.id;
+      this.currentTolerance = this.computeToleranceForMode(mode);
+      this.config.board.tolerance = this.currentTolerance;
+      if (this.difficultySelect && this.difficultySelect.value !== mode.id) {
+        this.difficultySelect.value = mode.id;
+      }
+      this.updateDifficultyDescription(mode);
+      if (!skipStatusReset) {
+        this.updateStatus('ready');
+      }
+    }
+
+    updateDifficultyDescription(mode) {
+      if (!this.difficultyDescriptionElement) {
+        return;
+      }
+      const activeMode = mode || this.getDifficultyMode(this.activeDifficultyId);
+      const description = activeMode
+        ? translate(activeMode.descriptionKey, activeMode.descriptionFallback || '')
+        : '';
+      this.difficultyDescriptionElement.textContent = description || '';
+      this.difficultyDescriptionElement.hidden = !description;
+    }
+
+    getCurrentTolerance() {
+      const tolerance = Number(this.currentTolerance);
+      if (Number.isFinite(tolerance) && tolerance > 0) {
+        return tolerance;
+      }
+      const configTolerance = Number(this.config.board?.tolerance);
+      if (Number.isFinite(configTolerance) && configTolerance > 0) {
+        return configTolerance;
+      }
+      return DEFAULT_BOARD_CONFIG.tolerance;
+    }
+
+    refreshDifficultyTexts() {
+      const modes = this.difficultyConfig?.modes;
+      if (this.difficultySelect && Array.isArray(modes) && modes.length) {
+        const previousValue = this.difficultySelect.value;
+        const options = Array.from(this.difficultySelect.options || []);
+        modes.forEach(mode => {
+          const option = options.find(opt => opt.value === mode.id);
+          if (option) {
+            option.textContent = translate(mode.labelKey, mode.labelFallback || mode.id);
+          }
+        });
+        if (previousValue) {
+          this.difficultySelect.value = previousValue;
+        }
+      }
+      this.updateDifficultyDescription();
+    }
+
     bindEvents() {
       if (this.pageElement) {
         this.pageElement.addEventListener('pointerdown', this.handlePointerDown);
@@ -260,6 +461,9 @@
         this.resetButton.addEventListener('click', this.handleReset);
       }
       window.addEventListener('resize', this.handleResize);
+      if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
+        globalThis.addEventListener('i18n:languagechange', this.handleLanguageChange);
+      }
     }
 
     dispose() {
@@ -274,7 +478,13 @@
       if (this.resetButton) {
         this.resetButton.removeEventListener('click', this.handleReset);
       }
+      if (this.difficultySelect) {
+        this.difficultySelect.removeEventListener('change', this.handleDifficultyChange);
+      }
       window.removeEventListener('resize', this.handleResize);
+      if (typeof globalThis !== 'undefined' && typeof globalThis.removeEventListener === 'function') {
+        globalThis.removeEventListener('i18n:languagechange', this.handleLanguageChange);
+      }
       this.clearSettleTimeout();
     }
 
@@ -295,6 +505,17 @@
 
     handleReset() {
       this.reset({ keepSet: false });
+    }
+
+    handleDifficultyChange(event) {
+      const modeId = event?.target?.value;
+      this.setDifficulty(modeId, { skipStatusReset: true });
+      this.reset({ keepSet: true });
+      this.updateStatus('ready');
+    }
+
+    handleLanguageChange() {
+      this.refreshDifficultyTexts();
     }
 
     handleTest() {
@@ -783,7 +1004,8 @@
       const result = this.evaluateBoard(placed);
       const offsetDisplay = formatNumber(Math.abs(result.centerOffset) * 100, 1);
       let statusKey = 'success';
-      if (Math.abs(result.centerOffset) > this.config.board.tolerance) {
+      const tolerance = this.getCurrentTolerance();
+      if (Math.abs(result.centerOffset) > tolerance) {
         statusKey = result.centerOffset < 0 ? 'leanLeft' : 'leanRight';
       }
       this.updateStatus(statusKey, { offset: offsetDisplay });
