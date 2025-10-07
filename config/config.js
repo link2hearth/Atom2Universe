@@ -838,7 +838,18 @@ const GAME_CONFIG = {
           cubeCount: 5
         }
       ],
-      defaultSetId: 'equilibrium'
+      defaultSetId: 'equilibrium',
+      rewards: {
+        /**
+         * Paramètres de la récompense accordée lorsque le joueur équilibre parfaitement la planche.
+         * - maxAttempts : nombre maximal de tests autorisés pour décrocher le bonus (2 = une erreur permise).
+         * - ticketAmount : quantité de tickets Mach3 remis lors de la réussite (0 pour désactiver la récompense).
+         */
+        perfectBalance: {
+          maxAttempts: 2,
+          ticketAmount: 1
+        }
+      }
     },
     // Paramètres du mini-jeu Math (progression des opérations).
     math: {

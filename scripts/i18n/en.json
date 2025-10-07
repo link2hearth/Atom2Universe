@@ -928,6 +928,7 @@
         "status": {
           "ready": "Place the blocks and run a test.",
           "needBlocks": "Place at least one block on the board before testing.",
+          "needAllBlocks": "Place every block on the board before testing.",
           "success": "Perfect balance!",
           "leanLeft": "The board tilts left (offset: {offset}%).",
           "leanRight": "The board tilts right (offset: {offset}%).",
@@ -948,6 +949,7 @@
         "status": {
           "ready": "Arrange the blocks and press “Test balance” when you're ready.",
           "needBlocks": "Add at least one block to the board before testing.",
+          "needAllBlocks": "Place every block on the board before testing.",
           "success": "Perfect balance achieved!",
           "leanLeft": "The board tilts to the left (offset: {offset}).",
           "leanRight": "The board tilts to the right (offset: {offset}).",
@@ -958,6 +960,12 @@
           "equilibrium": "Equilibrium set",
           "fractal": "Fractal set",
           "binary": "Binary set"
+        },
+        "toast": {
+          "perfectReward": {
+            "single": "Perfect balance! Mach3 ticket earned.",
+            "multiple": "Perfect balance! {count} Mach3 tickets earned."
+          }
         }
       },
       "math": {

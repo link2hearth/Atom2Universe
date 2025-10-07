@@ -28,6 +28,13 @@
     }
   ];
 
+  const DEFAULT_REWARD_RULES = {
+    perfectBalance: {
+      maxAttempts: 2,
+      ticketAmount: 1
+    }
+  };
+
   function clamp(value, min, max) {
     if (value < min) return min;
     if (value > max) return max;
@@ -133,7 +140,22 @@
       cubeRules.inventoryWidthPx.max = min;
     }
 
-    return { board, cubeSets, defaultSetId, cubeRules };
+    const rawRewards = globalConfig?.rewards;
+    const perfectBalanceConfig = rawRewards?.perfectBalance || {};
+    const rawMaxAttempts = Math.floor(Number(perfectBalanceConfig.maxAttempts));
+    const rawTicketAmount = Math.floor(Number(perfectBalanceConfig.ticketAmount));
+    const rewards = {
+      perfectBalance: {
+        maxAttempts: Number.isFinite(rawMaxAttempts) && rawMaxAttempts > 0
+          ? clamp(rawMaxAttempts, 1, 10)
+          : DEFAULT_REWARD_RULES.perfectBalance.maxAttempts,
+        ticketAmount: Number.isFinite(rawTicketAmount)
+          ? clamp(rawTicketAmount, 0, 10)
+          : DEFAULT_REWARD_RULES.perfectBalance.ticketAmount
+      }
+    };
+
+    return { board, cubeSets, defaultSetId, cubeRules, rewards };
   }
 
   function normalizeWidthRatio(value) {
@@ -163,6 +185,7 @@
     const fallbackMap = {
       ready: 'Disposez les blocs et lancez un test.',
       needBlocks: 'Ajoutez au moins un bloc sur la planche avant de tester.',
+      needAllBlocks: 'Placez tous les blocs sur la planche avant de tester.',
       success: 'Équilibre parfait !',
       leanLeft: 'La planche penche à gauche (écart : {offset}).',
       leanRight: 'La planche penche à droite (écart : {offset}).',
@@ -192,6 +215,8 @@
       this.currentBoardWidth = 0;
       this.pendingSettleTimeout = null;
       this.isTesting = false;
+      this.testsSinceReset = 0;
+      this.successRewardClaimed = false;
 
       this.handlePointerDown = this.handlePointerDown.bind(this);
       this.handlePointerMove = this.handlePointerMove.bind(this);
@@ -505,6 +530,9 @@
       this.clearSettleTimeout();
       this.applyRotation(0, this.config.board.settleDurationMs);
       this.clearTiltState();
+      this.isTesting = false;
+      this.testsSinceReset = 0;
+      this.successRewardClaimed = false;
       this.cubes.clear();
       if (this.inventoryElement) {
         this.inventoryElement.innerHTML = '';
@@ -539,6 +567,7 @@
         this.inventoryElement?.appendChild(cube);
       });
       this.updateInventoryAccessibility();
+      this.updateTestButtonState();
     }
 
     getCubeDefinitionsForSet(set) {
@@ -730,6 +759,7 @@
       );
       this.inventoryElement.setAttribute('aria-live', 'polite');
       this.inventoryElement.setAttribute('aria-label', inventoryLabel);
+      this.updateTestButtonState();
     }
 
     runTest() {
@@ -737,9 +767,19 @@
       if (!placed.length) {
         this.updateStatus('needBlocks');
         this.applyRotation(0, this.config.board.settleDurationMs);
+        this.updateTestButtonState();
+        return;
+      }
+      const totalCubes = this.cubes.size;
+      if (totalCubes === 0 || placed.length < totalCubes) {
+        this.updateStatus('needAllBlocks');
+        this.applyRotation(0, this.config.board.settleDurationMs);
+        this.updateTestButtonState();
         return;
       }
       this.isTesting = true;
+      this.testsSinceReset += 1;
+      this.updateTestButtonState();
       const result = this.evaluateBoard(placed);
       const offsetDisplay = formatNumber(Math.abs(result.centerOffset) * 100, 1);
       let statusKey = 'success';
@@ -749,12 +789,16 @@
       this.updateStatus(statusKey, { offset: offsetDisplay });
       this.applyRotation(result.rotation, this.config.board.testDurationMs);
       this.applyTiltState(statusKey);
+      if (statusKey === 'success') {
+        this.maybeAwardPerfectReward();
+      }
       this.clearSettleTimeout();
       this.pendingSettleTimeout = window.setTimeout(() => {
         this.applyRotation(0, this.config.board.settleDurationMs);
         this.clearTiltState();
         this.pendingSettleTimeout = null;
         this.isTesting = false;
+        this.updateTestButtonState();
       }, this.config.board.testDurationMs + this.config.board.settleDurationMs);
     }
 
@@ -837,7 +881,7 @@
         this.statusElement.classList.add('balance-status--success');
       } else if (key === 'leanLeft' || key === 'leanRight') {
         this.statusElement.classList.add('balance-status--warning');
-      } else if (key === 'needBlocks') {
+      } else if (key === 'needBlocks' || key === 'needAllBlocks') {
         this.statusElement.classList.add('balance-status--error');
       }
     }
@@ -852,6 +896,7 @@
     onEnter() {
       this.measureBoardWidth();
       this.updateInventoryAccessibility();
+      this.updateTestButtonState();
     }
 
     onLeave() {
@@ -859,6 +904,70 @@
       this.applyRotation(0, this.config.board.settleDurationMs);
       this.clearTiltState();
       this.isTesting = false;
+      this.updateTestButtonState();
+    }
+
+    areAllCubesPlaced() {
+      if (!this.cubes || this.cubes.size === 0) {
+        return false;
+      }
+      let placed = 0;
+      this.cubes.forEach(state => {
+        if (state.location === 'board') {
+          placed += 1;
+        }
+      });
+      return placed === this.cubes.size;
+    }
+
+    updateTestButtonState() {
+      if (!this.testButton) {
+        return;
+      }
+      const allPlaced = this.areAllCubesPlaced();
+      const disabled = this.isTesting || !allPlaced;
+      this.testButton.disabled = disabled;
+      if (disabled) {
+        this.testButton.setAttribute('aria-disabled', 'true');
+      } else {
+        this.testButton.removeAttribute('aria-disabled');
+      }
+    }
+
+    maybeAwardPerfectReward() {
+      if (this.successRewardClaimed) {
+        return;
+      }
+      const rules = this.config?.rewards?.perfectBalance;
+      if (!rules) {
+        return;
+      }
+      const maxAttempts = Number(rules.maxAttempts) || 0;
+      if (maxAttempts > 0 && this.testsSinceReset > maxAttempts) {
+        return;
+      }
+      if (!this.areAllCubesPlaced()) {
+        return;
+      }
+      const amount = Number(rules.ticketAmount) || 0;
+      if (amount <= 0 || typeof gainBonusParticulesTickets !== 'function') {
+        return;
+      }
+      const gained = gainBonusParticulesTickets(amount);
+      if (gained <= 0) {
+        return;
+      }
+      this.successRewardClaimed = true;
+      if (typeof showToast === 'function') {
+        const messageKey = gained === 1
+          ? 'scripts.arcade.balance.toast.perfectReward.single'
+          : 'scripts.arcade.balance.toast.perfectReward.multiple';
+        const fallback = gained === 1
+          ? 'Équilibre parfait ! Ticket Mach3 gagné.'
+          : 'Équilibre parfait ! {count} tickets Mach3 gagnés.';
+        const message = translate(messageKey, fallback, { count: formatNumber(gained) });
+        showToast(message);
+      }
     }
   }
 

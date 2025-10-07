@@ -913,6 +913,7 @@
         "status": {
           "ready": "Disposez les blocs et lancez un test.",
           "needBlocks": "Ajoutez au moins un bloc sur la planche avant de lancer le test.",
+          "needAllBlocks": "Placez tous les blocs sur la planche avant de lancer le test.",
           "success": "Équilibre parfait !",
           "leanLeft": "La planche penche à gauche (écart : {offset} %).",
           "leanRight": "La planche penche à droite (écart : {offset} %).",
@@ -933,6 +934,7 @@
         "status": {
           "ready": "Disposez les blocs puis appuyez sur «\u00a0Tester l'équilibre\u00a0».",
           "needBlocks": "Ajoutez au moins un bloc sur la planche avant de tester.",
+          "needAllBlocks": "Placez tous les blocs sur la planche avant de tester.",
           "success": "Équilibre parfait !",
           "leanLeft": "La planche penche à gauche (écart\u00a0: {offset}).",
           "leanRight": "La planche penche à droite (écart\u00a0: {offset}).",
@@ -943,6 +945,12 @@
           "equilibrium": "Set Équilibre",
           "fractal": "Set Fractal",
           "binary": "Set Binaire"
+        },
+        "toast": {
+          "perfectReward": {
+            "single": "Équilibre parfait ! Ticket Mach3 gagné.",
+            "multiple": "Équilibre parfait ! {count} tickets Mach3 gagnés."
+          }
         }
       },
       "math": {
