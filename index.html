@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title data-i18n="index.meta.title"></title>
+  <title data-i18n="index.meta.title">Atom to Univers</title>
   <link rel="stylesheet" href="styles/fonts.css" />
   <link rel="stylesheet" href="styles/main.css" />
 </head>
@@ -11,19 +11,30 @@
   <header class="app-header">
     <div class="header-main">
       <div class="header-brand-group">
-        <button class="brand brand-button" id="brandPortal" type="button">Atom2Univers</button>
+        <button
+          class="brand brand-button"
+          id="brandPortal"
+          type="button"
+          data-i18n="index.header.brand"
+        >
+          Atom2Univers
+        </button>
         <button
           class="header-playback-button"
           id="headerPlaybackToggle"
           type="button"
           data-state="play"
           aria-pressed="false"
-          aria-label="Play"
-          title="Play"
+          aria-label="Lecture"
+          title="Lecture"
           data-i18n="aria-label:index.sections.options.chiptune.controls.play;title:index.sections.options.chiptune.controls.play"
         ></button>
       </div>
-      <nav class="nav-menu" data-i18n="aria-label:index.navigation.primary">
+      <nav
+        class="nav-menu"
+        aria-label="Navigation principale"
+        data-i18n="aria-label:index.navigation.primary"
+      >
         <button
           class="nav-button"
           data-target="arcadeHub"
@@ -33,7 +44,7 @@
           disabled
           aria-disabled="true"
         >
-          <span data-i18n="index.navigation.items.arcade"></span>
+          <span data-i18n="index.navigation.items.arcade">Arcade</span>
         </button>
         <button
           class="nav-button"
@@ -42,18 +53,20 @@
           aria-hidden="true"
           disabled
           aria-disabled="true"
-        ><span data-i18n="index.navigation.items.shop"></span></button>
+        >
+          <span data-i18n="index.navigation.items.shop">Boutique</span>
+        </button>
         <button class="nav-button" data-target="gacha" hidden aria-hidden="true">
-          <span data-i18n="index.navigation.items.gacha"></span>
+          <span data-i18n="index.navigation.items.gacha">Gacha</span>
         </button>
         <button class="nav-button" data-target="tableau" hidden aria-hidden="true">
-          <span data-i18n="index.navigation.items.table"></span>
+          <span data-i18n="index.navigation.items.table">Table</span>
         </button>
         <button class="nav-button" data-target="fusion" hidden aria-hidden="true">
-          <span data-i18n="index.navigation.items.fusion"></span>
+          <span data-i18n="index.navigation.items.fusion">Fusion</span>
         </button>
         <button class="nav-button" data-target="info" hidden aria-hidden="true">
-          <span data-i18n="index.navigation.items.info"></span>
+          <span data-i18n="index.navigation.items.info">Infos</span>
         </button>
         <button
           class="nav-button"
@@ -62,25 +75,31 @@
           aria-hidden="true"
           disabled
           aria-disabled="true"
-        ><span data-i18n="index.navigation.items.goals"></span></button>
+        >
+          <span data-i18n="index.navigation.items.goals">Objectifs</span>
+        </button>
         <button class="nav-button" data-target="bigbang" id="navBigBangButton" hidden aria-hidden="true">
-          <span data-i18n="index.navigation.items.bigbang"></span>
+          <span data-i18n="index.navigation.items.bigbang">Big Bang</span>
         </button>
         <button class="nav-button" data-target="options">
-          <span data-i18n="index.navigation.items.options"></span>
+          <span data-i18n="index.navigation.items.options">Options</span>
         </button>
       </nav>
     </div>
     <div class="status-bar" aria-live="polite">
       <div class="status-side status-side--left">
         <div class="status-item status-item--left">
-          <span class="status-label" data-i18n="index.status.apc"></span>
+          <span class="status-label" data-i18n="index.status.apc">APC</span>
           <div class="status-value-group status-value-group--left">
             <span class="status-value" id="statusApc">1</span>
           </div>
         </div>
       </div>
-      <div class="status-item status-item--center" data-i18n="aria-label:index.status.totalAtoms">
+      <div
+        class="status-item status-item--center"
+        aria-label="Total d'atomes"
+        data-i18n="aria-label:index.status.totalAtoms"
+      >
         <button class="status-atoms-button" type="button" id="statusAtomsButton">
           <span class="status-value status-value--main" id="statusAtoms">0</span>
         </button>
@@ -100,7 +119,7 @@
           </div>
         </div>
         <div class="status-item status-item--right">
-          <span class="status-label" data-i18n="index.status.aps"></span>
+          <span class="status-label" data-i18n="index.status.aps">APS</span>
           <div class="status-value-group status-value-group--aps">
             <span class="status-value" id="statusAps">0</span>
           </div>
@@ -125,6 +144,7 @@
       id="game"
       class="page active page--void"
       data-page-group="clicker"
+      aria-label="Chambre de création atomique"
       data-i18n="aria-label:index.sections.game.aria"
     >
       <div class="starfield" aria-hidden="true"></div>
@@ -133,6 +153,7 @@
         class="atom-button"
         id="atomButton"
         type="button"
+        aria-label="Créer des atomes"
         data-i18n="aria-label:index.sections.game.atomButton.aria"
       >
         <span class="atom-visual">
@@ -140,8 +161,8 @@
             src="Assets/Image/Atom.png"
             class="atom-image"
             draggable="false"
+            alt="Illustration d'un atome vibrant"
             data-i18n="alt:index.sections.game.atomButton.alt"
-            alt=""
           />
         </span>
       </button>
@@ -158,10 +179,23 @@
       data-page-group="clicker"
       aria-labelledby="shop-title"
     >
-      <h2 id="shop-title" class="visually-hidden" data-i18n="index.sections.shop.title"></h2>
+      <h2 id="shop-title" class="visually-hidden" data-i18n="index.sections.shop.title">
+        Boutique quantique
+      </h2>
       <div class="shop-layout">
-        <div class="shop-actions-header" id="shopActionsHeader" aria-hidden="true"></div>
-        <div class="shop-list" id="shopList" role="list"></div>
+        <div class="shop-actions-header" id="shopActionsHeader" aria-hidden="true">
+          <p
+            class="shop-actions-header__placeholder"
+            data-i18n="index.sections.shop.actionsPlaceholder"
+          >
+            Les options d'achat apparaîtront ici.
+          </p>
+        </div>
+        <div class="shop-list" id="shopList" role="list">
+          <p class="shop-list__placeholder" data-i18n="index.sections.shop.placeholder">
+            La boutique se charge…
+          </p>
+        </div>
       </div>
     </section>
 
@@ -171,13 +205,20 @@
       data-page-group="clicker"
       aria-labelledby="gacha-title"
     >
-      <h2 id="gacha-title" class="visually-hidden" data-i18n="index.sections.gacha.title"></h2>
-      <div class="gacha-featured-info" id="gachaFeaturedInfo" aria-live="polite" hidden></div>
+      <h2 id="gacha-title" class="visually-hidden" data-i18n="index.sections.gacha.title">
+        Portail de tirage cosmique
+      </h2>
+      <div class="gacha-featured-info" id="gachaFeaturedInfo" aria-live="polite" hidden>
+        <p data-i18n="index.sections.gacha.featuredPlaceholder">
+          Aucun tirage vedette pour le moment.
+        </p>
+      </div>
       <div class="gacha-ticket-counter" id="gachaTicketCounter" aria-live="polite">
         <button
           class="gacha-ticket-mode"
           id="gachaTicketModeButton"
           type="button"
+          aria-label="Basculer le mode de tirage (actuel : Tirage x1)"
           data-i18n="aria-label:index.sections.gacha.toggleAria"
         >
           <img
@@ -187,7 +228,9 @@
             aria-hidden="true"
             draggable="false"
           />
-          <span class="gacha-ticket-mode__label" id="gachaTicketModeLabel" data-i18n="index.sections.gacha.modeSingle"></span>
+          <span class="gacha-ticket-mode__label" id="gachaTicketModeLabel" data-i18n="index.sections.gacha.modeSingle">
+            Tirage x1
+          </span>
         </button>
         <span class="gacha-ticket-counter__value" id="gachaTicketValue">0</span>
       </div>
@@ -195,10 +238,16 @@
         class="gacha-sun-button"
         id="gachaSunButton"
         type="button"
+        aria-label="Déclencher un tirage cosmique"
         data-i18n="aria-label:index.sections.gacha.sunButton"
         aria-describedby="gachaTicketCounter"
       >
-        <img src="Assets/Image/Sun.png" draggable="false" data-i18n="alt:index.sections.gacha.sunAlt" alt="" />
+        <img
+          src="Assets/Image/Sun.png"
+          draggable="false"
+          alt="Soleil cosmique"
+          data-i18n="alt:index.sections.gacha.sunAlt"
+        />
       </button>
       <div
         class="gacha-animation-layer"
@@ -209,8 +258,12 @@
       >
         <canvas class="gacha-confetti-layer" id="gachaAnimationConfetti" aria-hidden="true"></canvas>
         <div class="gacha-overlay" aria-hidden="true"></div>
-        <div class="gacha-result" id="gachaResult" role="status" aria-live="assertive"></div>
-        <p class="gacha-continue-hint" id="gachaContinueHint" data-i18n="index.sections.gacha.continue"></p>
+        <div class="gacha-result" id="gachaResult" role="status" aria-live="assertive">
+          <p data-i18n="index.sections.gacha.resultPlaceholder">Résultat du tirage</p>
+        </div>
+        <p class="gacha-continue-hint" id="gachaContinueHint" data-i18n="index.sections.gacha.continue">
+          Cliquer pour continuer
+        </p>
       </div>
     </section>
 

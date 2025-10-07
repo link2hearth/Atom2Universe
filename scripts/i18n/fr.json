@@ -7,15 +7,18 @@
       "primary": "Navigation principale",
       "items": {
         "arcade": "Arcade",
-        "shop": "Shop",
+        "shop": "Boutique",
         "gacha": "Gacha",
         "table": "Table",
         "fusion": "Fusion",
         "info": "Infos",
-        "goals": "Goals",
+        "goals": "Objectifs",
         "bigbang": "Big Bang",
         "options": "Options"
       }
+    },
+    "header": {
+      "brand": "Atom2Univers"
     },
     "status": {
       "totalAtoms": "Total d'atomes",
@@ -37,7 +40,9 @@
         }
       },
       "shop": {
-        "title": "Boutique quantique"
+        "title": "Boutique quantique",
+        "placeholder": "La boutique se charge…",
+        "actionsPlaceholder": "Les options de quantité apparaîtront ici."
       },
       "gacha": {
         "title": "Portail de tirage cosmique",
@@ -49,7 +54,9 @@
         },
         "sunButton": "Déclencher un tirage cosmique",
         "sunAlt": "Soleil cosmique",
-        "continue": "Cliquer pour continuer"
+        "continue": "Cliquer pour continuer",
+        "featuredPlaceholder": "Aucun tirage vedette pour le moment.",
+        "resultPlaceholder": "Résultat du tirage"
       },
       "arcade": {
         "aria": "Mini-jeu Particules",
