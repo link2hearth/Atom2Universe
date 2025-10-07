@@ -1,7 +1,7 @@
 (() => {
   const DEFAULT_BOARD_CONFIG = {
     widthPx: 620,
-    surfaceHeightPx: 92,
+    surfaceHeightPx: 12,
     pivotHeightPx: 110,
     tolerance: 0.04,
     maxTiltDegrees: 18,
