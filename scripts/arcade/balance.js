@@ -395,6 +395,7 @@
       cube.classList.add('balance-cube--board');
       cube.setAttribute('aria-pressed', 'true');
       cube.style.left = `${(positionRatio + 0.5) * 100}%`;
+      cube.style.top = '';
       this.surfaceElement.appendChild(cube);
       this.updateCubeWidth(cube, state.widthRatio);
     }

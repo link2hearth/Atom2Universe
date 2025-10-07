@@ -255,8 +255,8 @@ body.theme-light .balance-board__pivot {
 
 .balance-cube--board {
   position: absolute;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  top: 0;
+  transform: translate(-50%, -100%);
   width: calc(var(--cube-width-ratio) * 100%);
 }
 
