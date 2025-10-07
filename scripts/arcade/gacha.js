@@ -1720,6 +1720,7 @@ function updateGachaRarityProgress() {
 }
 
 const fusionCards = new Map();
+let isRenderingFusionList = false;
 
 function formatFusionChance(chance) {
   const ratio = Math.max(0, Math.min(1, Number(chance) || 0));
@@ -2018,40 +2019,74 @@ function buildFusionCard(definition) {
   };
 }
 
-const VISIBLE_FUSION_IDS = new Set(['hydrogen']);
+const VISIBLE_FUSION_IDS = new Set(['hydrogen', 'carbon']);
+
+function isFusionDefinitionVisible(def) {
+  if (!def || !VISIBLE_FUSION_IDS.has(def.id)) {
+    return false;
+  }
+  if (def.id === 'carbon') {
+    return getFusionSuccessCount('hydrogen') >= 10;
+  }
+  return true;
+}
 
 function getVisibleFusionDefinitions() {
-  return FUSION_DEFS.filter(def => VISIBLE_FUSION_IDS.has(def.id));
+  return FUSION_DEFS.filter(isFusionDefinitionVisible);
+}
+
+function ensureFusionListVisibility() {
+  const visibleDefs = getVisibleFusionDefinitions();
+  const expectedIds = new Set(visibleDefs.map(def => def.id));
+  if (fusionCards.size !== expectedIds.size) {
+    renderFusionList();
+    return true;
+  }
+  for (const id of expectedIds) {
+    if (!fusionCards.has(id)) {
+      renderFusionList();
+      return true;
+    }
+  }
+  return false;
 }
 
 function renderFusionList() {
-  if (!elements.fusionList) return;
-  fusionCards.clear();
-  elements.fusionList.innerHTML = '';
-  const visibleFusions = getVisibleFusionDefinitions();
-  if (!visibleFusions.length) {
-    const empty = document.createElement('p');
-    empty.className = 'fusion-empty';
-    empty.textContent = t('scripts.gacha.fusion.empty');
-    empty.setAttribute('role', 'listitem');
-    elements.fusionList.appendChild(empty);
-    return;
+  if (!elements.fusionList || isRenderingFusionList) return;
+  isRenderingFusionList = true;
+  try {
+    fusionCards.clear();
+    elements.fusionList.innerHTML = '';
+    const visibleFusions = getVisibleFusionDefinitions();
+    if (!visibleFusions.length) {
+      const empty = document.createElement('p');
+      empty.className = 'fusion-empty';
+      empty.textContent = t('scripts.gacha.fusion.empty');
+      empty.setAttribute('role', 'listitem');
+      elements.fusionList.appendChild(empty);
+      return;
+    }
+    const fragment = document.createDocumentFragment();
+    visibleFusions.forEach(def => {
+      const card = buildFusionCard(def);
+      fragment.appendChild(card.root);
+      fusionCards.set(def.id, card);
+    });
+    elements.fusionList.appendChild(fragment);
+    if (elements.fusionLog && !elements.fusionLog.textContent.trim()) {
+      setFusionLog(t('scripts.app.fusion.prompt'));
+    }
+    updateFusionUI();
+  } finally {
+    isRenderingFusionList = false;
   }
-  const fragment = document.createDocumentFragment();
-  visibleFusions.forEach(def => {
-    const card = buildFusionCard(def);
-    fragment.appendChild(card.root);
-    fusionCards.set(def.id, card);
-  });
-  elements.fusionList.appendChild(fragment);
-  if (elements.fusionLog && !elements.fusionLog.textContent.trim()) {
-    setFusionLog(t('scripts.app.fusion.prompt'));
-  }
-  updateFusionUI();
 }
 
 function updateFusionUI() {
   if (!elements.fusionList || !FUSION_DEFS.length) {
+    return;
+  }
+  if (ensureFusionListVisibility()) {
     return;
   }
   FUSION_DEFS.forEach(def => {
