@@ -77,6 +77,7 @@
 
 .arcade-hub-card {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: clamp(0.9rem, 2.2vw, 1.6rem);
@@ -94,6 +95,7 @@
   width: 100%;
   text-decoration: none;
   outline: none;
+  gap: clamp(0.35rem, 1.2vw, 0.8rem);
 }
 
 .arcade-hub-card:hover,
@@ -111,4 +113,32 @@
   font-size: clamp(0.92rem, 1.8vw, 1.25rem);
   letter-spacing: 0.06em;
   text-transform: uppercase;
+}
+
+.arcade-hub-card__description {
+  margin: 0;
+  font-size: clamp(0.8rem, 1.5vw, 1rem);
+  line-height: 1.5;
+  color: rgba(228, 231, 255, 0.82);
+}
+
+.arcade-hub-card__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem 0.9rem;
+  font-family: 'Orbitron', 'Audiowide', sans-serif;
+  font-size: clamp(0.7rem, 1.2vw, 0.9rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  background: rgba(109, 167, 255, 0.12);
+  border: 1px solid rgba(109, 167, 255, 0.4);
+  transition: background var(--transition), border-color var(--transition), color var(--transition);
+}
+
+.arcade-hub-card:hover .arcade-hub-card__cta,
+.arcade-hub-card:focus-visible .arcade-hub-card__cta {
+  background: rgba(109, 167, 255, 0.24);
+  border-color: rgba(152, 196, 255, 0.68);
 }

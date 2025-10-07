@@ -274,6 +274,12 @@
       data-i18n="aria-label:index.sections.arcadeHub.aria"
       hidden
     >
+      <header class="arcade-hub__header">
+        <h2 class="arcade-hub__title" data-i18n="index.sections.arcadeHub.title">Arcade</h2>
+        <p class="arcade-hub__subtitle" data-i18n="index.sections.arcadeHub.subtitle">
+          Choisissez un mini-jeu pour prolonger l'expérience Atom2Univers.
+        </p>
+      </header>
       <div class="arcade-hub__grid">
         <button
           type="button"
@@ -286,7 +292,16 @@
             role="heading"
             aria-level="3"
             data-i18n="index.sections.arcadeHub.cards.particules.title"
-          ></span>
+          >Particules</span>
+          <p
+            class="arcade-hub-card__description"
+            data-i18n="index.sections.arcadeHub.cards.particules.description"
+          >
+            Renvoyez la particule quantique pour décrocher des tickets de gacha et des crédits Mach3.
+          </p>
+          <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.particules.cta"
+            >Jouer</span
+          >
         </button>
         <button
           type="button"
@@ -299,7 +314,16 @@
             role="heading"
             aria-level="3"
             data-i18n="index.sections.arcadeHub.cards.metaux.title"
-          ></span>
+          >Métaux</span>
+          <p
+            class="arcade-hub-card__description"
+            data-i18n="index.sections.arcadeHub.cards.metaux.description"
+          >
+            Alignez les alliages Mach3 pour forger des bonus et améliorer votre production.
+          </p>
+          <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.metaux.cta"
+            >Forger</span
+          >
         </button>
         <button
           type="button"
@@ -312,7 +336,16 @@
             role="heading"
             aria-level="3"
             data-i18n="index.sections.arcadeHub.cards.wave.title"
-          ></span>
+          >Photon</span>
+          <p
+            class="arcade-hub-card__description"
+            data-i18n="index.sections.arcadeHub.cards.wave.description"
+          >
+            Incarnez un photon surfant son onde cosmique.
+          </p>
+          <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.wave.cta"
+            >Surfer</span
+          >
         </button>
         <button
           type="button"
@@ -325,7 +358,16 @@
             role="heading"
             aria-level="3"
             data-i18n="index.sections.arcadeHub.cards.quantum2048.title"
-          ></span>
+          >ObjectX</span>
+          <p
+            class="arcade-hub-card__description"
+            data-i18n="index.sections.arcadeHub.cards.quantum2048.description"
+          >
+            Composez des réactions en chaîne sur la grille choisie pour atteindre la tuile objectif.
+          </p>
+          <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.quantum2048.cta"
+            >Fusionner</span
+          >
         </button>
         <button
           type="button"
@@ -338,7 +380,16 @@
             role="heading"
             aria-level="3"
             data-i18n="index.sections.arcadeHub.cards.math.title"
-          ></span>
+          >Math</span>
+          <p
+            class="arcade-hub-card__description"
+            data-i18n="index.sections.arcadeHub.cards.math.description"
+          >
+            Trouvez le nombre ou le symbole manquant pour compléter des opérations évolutives.
+          </p>
+          <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.math.cta"
+            >Calculer</span
+          >
         </button>
         <button
           type="button"
@@ -351,7 +402,16 @@
             role="heading"
             aria-level="3"
             data-i18n="index.sections.arcadeHub.cards.balance.title"
-          ></span>
+          >Balance</span>
+          <p
+            class="arcade-hub-card__description"
+            data-i18n="index.sections.arcadeHub.cards.balance.description"
+          >
+            Disposez des blocs de masses différentes pour maintenir la planche parfaitement équilibrée.
+          </p>
+          <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.balance.cta"
+            >Équilibrer</span
+          >
         </button>
         <button
           type="button"
@@ -364,7 +424,16 @@
             role="heading"
             aria-level="3"
             data-i18n="index.sections.arcadeHub.cards.sudoku.title"
-          ></span>
+          >Sudoku</span>
+          <p
+            class="arcade-hub-card__description"
+            data-i18n="index.sections.arcadeHub.cards.sudoku.description"
+          >
+            Résolvez des grilles générées aléatoirement ou laissez l'ordinateur trouver la solution parfaite.
+          </p>
+          <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.sudoku.cta"
+            >Résoudre</span
+          >
         </button>
         <button
           type="button"
@@ -377,7 +446,16 @@
             role="heading"
             aria-level="3"
             data-i18n="index.sections.arcadeHub.cards.blackjack.title"
-          ></span>
+          >Blackjack</span>
+          <p
+            class="arcade-hub-card__description"
+            data-i18n="index.sections.arcadeHub.cards.blackjack.description"
+          >
+            Affrontez le croupier avec un sabot de huit paquets qui se régénère dès qu'une carte unique s'épuise.
+          </p>
+          <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.blackjack.cta"
+            >Distribuer</span
+          >
         </button>
       </div>
     </section>
@@ -394,19 +472,26 @@
           <div class="arcade-stage__hud" aria-hidden="true">
             <dl class="arcade-hud" role="presentation">
               <div class="arcade-hud__item">
-                <dt class="arcade-hud__label" data-i18n="index.sections.arcade.hud.level"></dt>
+                <dt class="arcade-hud__label" data-i18n="index.sections.arcade.hud.level">Niveau</dt>
                 <dd class="arcade-hud__value" id="arcadeLevelValue">1</dd>
               </div>
               <div class="arcade-hud__item">
-                <dt class="arcade-hud__label" data-i18n="index.sections.arcade.hud.lives"></dt>
+                <dt class="arcade-hud__label" data-i18n="index.sections.arcade.hud.lives">Vies</dt>
                 <dd class="arcade-hud__value" id="arcadeLivesValue">3</dd>
               </div>
               <div class="arcade-hud__item">
-                <dt class="arcade-hud__label" data-i18n="index.sections.arcade.hud.score"></dt>
+                <dt class="arcade-hud__label" data-i18n="index.sections.arcade.hud.score">Score</dt>
                 <dd class="arcade-hud__value" id="arcadeScoreValue">0</dd>
               </div>
             </dl>
-            <p class="arcade-hud__combo" id="arcadeComboMessage" aria-live="polite"></p>
+            <p
+              class="arcade-hud__combo"
+              id="arcadeComboMessage"
+              aria-live="polite"
+              data-i18n="index.sections.arcade.hud.combo"
+            >
+              Combo prêt
+            </p>
           </div>
           <canvas
             id="arcadeGameCanvas"
@@ -421,7 +506,9 @@
                 class="arcade-overlay__message"
                 id="arcadeOverlayMessage"
                 data-i18n="index.sections.arcade.overlay.message"
-              ></p>
+              >
+                Touchez ou cliquez la raquette pour guider la particule et détruire les briques quantiques.
+              </p>
               <div
                 class="arcade-overlay__field"
                 id="arcadeModeField"
@@ -430,7 +517,7 @@
                 <span
                   class="arcade-overlay__label"
                   data-i18n="index.sections.arcade.overlay.mode.label"
-                ></span>
+                >Mode de jeu</span>
                 <div
                   class="arcade-mode-switch"
                   id="arcadeModeSwitch"
@@ -443,36 +530,38 @@
                     data-arcade-mode="free"
                     aria-pressed="true"
                     data-i18n="index.sections.arcade.overlay.mode.free"
-                  ></button>
+                  >Mode libre</button>
                   <button
                     type="button"
                     class="arcade-mode-switch__button"
                     data-arcade-mode="paid"
                     aria-pressed="false"
                     data-i18n="index.sections.arcade.overlay.mode.paid"
-                  ></button>
+                  >Mode récompenses</button>
                 </div>
                 <p
                   class="arcade-mode-hint"
                   id="arcadeModeHint"
                   data-i18n="scripts.particules.ui.mode.free.description"
-                ></p>
+                >
+                  Entraînez-vous sans dépenser d’atomes ni gagner de récompenses.
+                </p>
               </div>
               <div class="arcade-overlay__field">
                 <label
                   for="arcadeBrickSkinSelect"
                   class="arcade-overlay__label"
                   data-i18n="index.sections.arcade.overlay.brickSkin.label"
-                ></label>
+                >Apparence des briques</label>
                 <select
                   id="arcadeBrickSkinSelect"
                   class="arcade-overlay__select"
                   data-i18n="aria-label:index.sections.arcade.overlay.brickSkin.aria"
                 >
-                  <option value="original" data-i18n="index.sections.options.brickSkin.options.original"></option>
-                  <option value="metallic" data-i18n="index.sections.options.brickSkin.options.metallic"></option>
-                  <option value="neon" data-i18n="index.sections.options.brickSkin.options.neon"></option>
-                  <option value="pastels" data-i18n="index.sections.options.brickSkin.options.pastels"></option>
+                  <option value="original" data-i18n="index.sections.options.brickSkin.options.original">Original</option>
+                  <option value="metallic" data-i18n="index.sections.options.brickSkin.options.metallic">Metallic</option>
+                  <option value="neon" data-i18n="index.sections.options.brickSkin.options.neon">Néon</option>
+                  <option value="pastels" data-i18n="index.sections.options.brickSkin.options.pastels">Pastels</option>
                 </select>
               </div>
               <button
@@ -480,7 +569,7 @@
                 class="arcade-overlay__button"
                 id="arcadeOverlayButton"
                 data-i18n="index.sections.arcade.overlay.button"
-              ></button>
+              >Commencer</button>
             </div>
           </div>
         </div>

@@ -132,7 +132,7 @@
           "level": "Niveau",
           "lives": "Vies",
           "score": "Score",
-          "combo": ""
+          "combo": "Combo prêt"
         },
         "canvasAria": "Zone de jeu Particules",
         "overlay": {

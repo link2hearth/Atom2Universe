@@ -132,7 +132,7 @@
           "level": "Level",
           "lives": "Lives",
           "score": "Score",
-          "combo": ""
+          "combo": "Combo ready"
         },
         "canvasAria": "Particles play area",
         "overlay": {
