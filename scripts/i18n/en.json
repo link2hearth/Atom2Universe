@@ -1099,6 +1099,7 @@
         }
       },
       "elementBonuses": {
+        "collectionMultiplier": "Collection Synergy · Unified resonance",
         "essentiel": {
           "perCopy": "Cosmic Spallation · Essential harvests",
           "setBonus": "Cosmic Spallation · Complete collection",

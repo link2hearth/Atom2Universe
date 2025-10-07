@@ -1084,6 +1084,7 @@
         }
       },
       "elementBonuses": {
+        "collectionMultiplier": "Synergie de collection · Résonance unifiée",
         "essentiel": {
           "perCopy": "Spallation cosmique · récoltes essentielles",
           "setBonus": "Spallation cosmique · collection complète",
