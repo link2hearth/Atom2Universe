@@ -893,6 +893,7 @@
       id="tableau"
       class="page page--table"
       data-page-group="clicker"
+      aria-label="Tableau périodique des éléments"
       data-i18n="aria-label:index.sections.table.aria"
     >
       <div class="periodic-table-wrapper" role="presentation">
@@ -900,6 +901,7 @@
           class="periodic-table"
           id="periodicTable"
           role="grid"
+          aria-label="Tableau périodique des éléments"
           data-i18n="aria-label:index.sections.table.aria"
         >
           <aside class="element-info-panel" id="elementInfoPanel" aria-live="polite">
@@ -907,7 +909,7 @@
               class="element-info-panel__placeholder"
               id="elementInfoPlaceholder"
               data-i18n="index.sections.table.placeholder"
-            ></p>
+            >Sélectionnez un élément pour afficher ses détails.</p>
             <div class="element-info-panel__content" id="elementInfoContent" hidden>
               <header class="element-info-panel__header">
                 <span class="element-info-panel__number" id="elementInfoNumber"></span>
@@ -929,7 +931,7 @@
             </header>
             <dl class="element-info-panel__details">
                 <div class="element-info-panel__row">
-                  <dt data-i18n="index.sections.table.details.collection"></dt>
+                  <dt data-i18n="index.sections.table.details.collection">Bonus de collection</dt>
                   <dd id="elementInfoCollection" class="element-info-panel__value element-info-panel__collection"></dd>
                 </div>
               </dl>
@@ -940,14 +942,14 @@
             id="elementCollectionSummary"
             aria-live="polite"
           >
-            <h3 class="periodic-summary__title" data-i18n="index.sections.table.summary.title"></h3>
+            <h3 class="periodic-summary__title" data-i18n="index.sections.table.summary.title">Collection</h3>
             <dl class="periodic-summary__stats">
               <div class="periodic-summary__row">
-                <dt data-i18n="index.sections.table.summary.current"></dt>
+                <dt data-i18n="index.sections.table.summary.current">Éléments possédés</dt>
                 <dd id="elementCollectionCurrentTotal" class="periodic-summary__value">0</dd>
               </div>
               <div class="periodic-summary__row">
-                <dt data-i18n="index.sections.table.summary.lifetime"></dt>
+                <dt data-i18n="index.sections.table.summary.lifetime">Éléments découverts</dt>
                 <dd id="elementCollectionLifetimeTotal" class="periodic-summary__value">0</dd>
               </div>
             </dl>
@@ -967,13 +969,19 @@
         id="fusion-title"
         class="fusion-title visually-hidden"
         data-i18n="index.sections.fusion.title"
-      ></h2>
+      >Chambre de fusion quantique</h2>
       <p
         class="fusion-intro visually-hidden"
         data-i18n="index.sections.fusion.intro"
-      ></p>
+      >Assemblez des éléments pour tenter des fusions aux effets uniques.</p>
       <div class="fusion-list" id="fusionList" role="list"></div>
-      <div class="fusion-log" id="fusionLog" role="status" aria-live="polite"></div>
+      <div
+        class="fusion-log"
+        id="fusionLog"
+        role="status"
+        aria-live="polite"
+        data-i18n="index.sections.fusion.logPlaceholder"
+      >Les résultats de fusion apparaîtront ici.</div>
     </section>
 
     <section
@@ -982,12 +990,12 @@
       data-page-group="clicker"
       aria-labelledby="info-title"
     >
-      <h2 id="info-title" class="visually-hidden" data-i18n="index.sections.info.title"></h2>
+      <h2 id="info-title" class="visually-hidden" data-i18n="index.sections.info.title">Tableau de bord des statistiques</h2>
       <div class="info-grid">
         <article class="info-card info-card--production" aria-labelledby="info-aps-title">
           <header class="info-card__header">
-            <h3 id="info-aps-title" data-i18n="index.sections.info.aps.title"></h3>
-            <p class="info-card__subtitle" data-i18n="index.sections.info.aps.subtitle"></p>
+            <h3 id="info-aps-title" data-i18n="index.sections.info.aps.title">Production passive (APS)</h3>
+            <p class="info-card__subtitle" data-i18n="index.sections.info.aps.subtitle">Répartition détaillée de vos gains automatiques.</p>
           </header>
           <ul
             id="infoApsBreakdown"
@@ -998,8 +1006,8 @@
 
         <article class="info-card info-card--production" aria-labelledby="info-apc-title">
           <header class="info-card__header">
-            <h3 id="info-apc-title" data-i18n="index.sections.info.apc.title"></h3>
-            <p class="info-card__subtitle" data-i18n="index.sections.info.apc.subtitle"></p>
+            <h3 id="info-apc-title" data-i18n="index.sections.info.apc.title">Production par clic (APC)</h3>
+            <p class="info-card__subtitle" data-i18n="index.sections.info.apc.subtitle">Analyse de la puissance générée à chaque clic.</p>
           </header>
           <ul
             id="infoApcBreakdown"
@@ -1010,64 +1018,64 @@
 
         <article class="info-card info-card--stats info-card--progression" aria-labelledby="info-progress-title">
           <header class="info-card__header">
-            <h3 id="info-progress-title" data-i18n="index.sections.info.progress.title"></h3>
-            <p class="info-card__subtitle" data-i18n="index.sections.info.progress.subtitle"></p>
+            <h3 id="info-progress-title" data-i18n="index.sections.info.progress.title">Progression du joueur</h3>
+            <p class="info-card__subtitle" data-i18n="index.sections.info.progress.subtitle">Suivi des performances de la session et de l'historique.</p>
           </header>
           <div class="info-progress-grid" role="group" aria-labelledby="info-progress-title">
             <section class="info-progress-block" aria-labelledby="info-session-title">
-              <h4 id="info-session-title" data-i18n="index.sections.info.progress.session.title"></h4>
+              <h4 id="info-session-title" data-i18n="index.sections.info.progress.session.title">Session en cours</h4>
               <dl class="info-metrics">
                 <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.session.atoms"></dt>
+                  <dt data-i18n="index.sections.info.progress.session.atoms">Atomes générés</dt>
                   <dd id="infoSessionAtoms">0</dd>
                 </div>
                 <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.session.clicks"></dt>
+                  <dt data-i18n="index.sections.info.progress.session.clicks">Clics enregistrés</dt>
                   <dd id="infoSessionClicks">0</dd>
                 </div>
                 <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.session.apc"></dt>
+                  <dt data-i18n="index.sections.info.progress.session.apc">APC cumulés</dt>
                   <dd id="infoSessionApcAtoms">0</dd>
                 </div>
                 <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.session.aps"></dt>
+                  <dt data-i18n="index.sections.info.progress.session.aps">APS cumulés</dt>
                   <dd id="infoSessionApsAtoms">0</dd>
                 </div>
                 <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.session.offline"></dt>
+                  <dt data-i18n="index.sections.info.progress.session.offline">Collecte hors ligne</dt>
                   <dd id="infoSessionOfflineAtoms">0</dd>
                 </div>
                 <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.session.duration"></dt>
+                  <dt data-i18n="index.sections.info.progress.session.duration">Durée de la session</dt>
                   <dd id="infoSessionDuration">0s</dd>
                 </div>
               </dl>
             </section>
             <section class="info-progress-block" aria-labelledby="info-global-title">
-              <h4 id="info-global-title" data-i18n="index.sections.info.progress.global.title"></h4>
+              <h4 id="info-global-title" data-i18n="index.sections.info.progress.global.title">Historique global</h4>
               <dl class="info-metrics">
                 <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.global.atoms"></dt>
+                  <dt data-i18n="index.sections.info.progress.global.atoms">Total d'atomes</dt>
                   <dd id="infoGlobalAtoms">0</dd>
                 </div>
                 <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.global.clicks"></dt>
+                  <dt data-i18n="index.sections.info.progress.global.clicks">Total de clics</dt>
                   <dd id="infoGlobalClicks">0</dd>
                 </div>
                 <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.global.apc"></dt>
+                  <dt data-i18n="index.sections.info.progress.global.apc">APC cumulés</dt>
                   <dd id="infoGlobalApcAtoms">0</dd>
                 </div>
                 <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.global.aps"></dt>
+                  <dt data-i18n="index.sections.info.progress.global.aps">APS cumulés</dt>
                   <dd id="infoGlobalApsAtoms">0</dd>
                 </div>
                 <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.global.offline"></dt>
+                  <dt data-i18n="index.sections.info.progress.global.offline">Collecte hors ligne</dt>
                   <dd id="infoGlobalOfflineAtoms">0</dd>
                 </div>
                 <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.global.duration"></dt>
+                  <dt data-i18n="index.sections.info.progress.global.duration">Temps de jeu</dt>
                   <dd id="infoGlobalDuration">0s</dd>
                 </div>
               </dl>
@@ -1077,8 +1085,8 @@
 
         <article class="info-card info-card--bonuses" aria-labelledby="info-shop-bonus-title">
           <header class="info-card__header">
-            <h3 id="info-shop-bonus-title" data-i18n="index.sections.info.shop.title"></h3>
-            <p class="info-card__subtitle" data-i18n="index.sections.info.shop.subtitle"></p>
+            <h3 id="info-shop-bonus-title" data-i18n="index.sections.info.shop.title">Bonus de boutique</h3>
+            <p class="info-card__subtitle" data-i18n="index.sections.info.shop.subtitle">Effets obtenus auprès des améliorations achetées.</p>
           </header>
           <div
             id="infoShopBonuses"
@@ -1090,12 +1098,12 @@
 
         <article class="info-card info-card--bonuses" aria-labelledby="info-bonus-title">
           <header class="info-card__header">
-            <h3 id="info-bonus-title" data-i18n="index.sections.info.elements.title"></h3>
+            <h3 id="info-bonus-title" data-i18n="index.sections.info.elements.title">Bonus des éléments</h3>
             <p
               class="info-card__subtitle"
               id="infoBonusSubtitle"
               data-i18n="index.sections.info.elements.subtitle"
-            ></p>
+            >Effets cumulés de vos collections élémentaires.</p>
           </header>
           <div id="infoElementBonuses" class="element-bonus-list" role="list" aria-live="polite"></div>
         </article>
@@ -1190,9 +1198,10 @@
       class="page"
       data-page-group="clicker"
       role="region"
+      aria-label="Objectifs"
       data-i18n="aria-label:index.sections.goals.title"
     >
-      <p class="goals-empty" id="goalsEmpty" hidden data-i18n="index.sections.goals.empty"></p>
+      <p class="goals-empty" id="goalsEmpty" hidden data-i18n="index.sections.goals.empty">Aucun objectif actif pour le moment.</p>
       <div class="goals-list" id="goalsList" role="list"></div>
     </section>
 
@@ -1203,8 +1212,8 @@
       aria-labelledby="bigbang-title"
     >
       <div class="bigbang-content">
-        <h2 id="bigbang-title" data-i18n="index.sections.bigbang.title"></h2>
-        <p class="bigbang-description" data-i18n="index.sections.bigbang.description"></p>
+        <h2 id="bigbang-title" data-i18n="index.sections.bigbang.title">Big Bang</h2>
+        <p class="bigbang-description" data-i18n="index.sections.bigbang.description">Déclenchez une renaissance cosmique pour multiplier vos gains et tout recommencer.</p>
       </div>
     </section>
 

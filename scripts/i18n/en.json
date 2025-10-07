@@ -58,6 +58,74 @@
         "featuredPlaceholder": "No featured draw is available right now.",
         "resultPlaceholder": "Draw result"
       },
+      "table": {
+        "aria": "Periodic table of the elements",
+        "placeholder": "Select an element to view its details.",
+        "details": {
+          "collection": "Collection bonus"
+        },
+        "summary": {
+          "title": "Collection",
+          "current": "Owned elements",
+          "lifetime": "Discovered elements"
+        }
+      },
+      "fusion": {
+        "title": "Quantum fusion chamber",
+        "intro": "Combine elements to attempt unique fusion effects.",
+        "logPlaceholder": "Fusion results will appear here."
+      },
+      "info": {
+        "title": "Statistics dashboard",
+        "aps": {
+          "title": "Passive production (APS)",
+          "subtitle": "Detailed breakdown of your automatic gains.",
+          "aria": "Passive production breakdown"
+        },
+        "apc": {
+          "title": "Click production (APC)",
+          "subtitle": "Analysis of the power generated per click.",
+          "aria": "Click production breakdown"
+        },
+        "progress": {
+          "title": "Player progression",
+          "subtitle": "Track current session performance and overall history.",
+          "session": {
+            "title": "Current session",
+            "atoms": "Atoms generated",
+            "clicks": "Clicks registered",
+            "apc": "APC accumulated",
+            "aps": "APS accumulated",
+            "offline": "Offline collection",
+            "duration": "Session duration"
+          },
+          "global": {
+            "title": "Lifetime overview",
+            "atoms": "Total atoms",
+            "clicks": "Total clicks",
+            "apc": "APC accumulated",
+            "aps": "APS accumulated",
+            "offline": "Offline collection",
+            "duration": "Play time"
+          }
+        },
+        "shop": {
+          "title": "Shop bonuses",
+          "subtitle": "Effects earned from purchased upgrades."
+        },
+        "elements": {
+          "title": "Element bonuses",
+          "subtitle": "Combined effects from your element collections."
+        }
+      },
+      "goals": {
+        "title": "Goals",
+        "empty": "No goal is active right now."
+      },
+      "bigbang": {
+        "title": "Big Bang",
+        "description": "Trigger a cosmic rebirth to multiply your gains and start anew."
+      },
       "arcade": {
         "aria": "Particles mini-game",
         "hud": {
