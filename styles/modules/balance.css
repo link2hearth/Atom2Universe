@@ -167,6 +167,25 @@ body.theme-light .balance-board__pivot {
   border-color: rgba(160, 190, 255, 0.48);
 }
 
+.balance-button[disabled],
+.balance-button[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.55;
+  box-shadow: none;
+  transform: none;
+  background: rgba(60, 80, 140, 0.24);
+  border-color: rgba(120, 150, 230, 0.2);
+}
+
+.balance-button[disabled]:hover,
+.balance-button[disabled]:focus-visible,
+.balance-button[aria-disabled="true"]:hover,
+.balance-button[aria-disabled="true"]:focus-visible {
+  transform: none;
+  box-shadow: none;
+  outline: none;
+}
+
 .balance-button:focus-visible {
   outline: 2px solid rgba(160, 190, 255, 0.65);
   outline-offset: 3px;
@@ -181,6 +200,12 @@ body.theme-light .balance-board__pivot {
 .balance-button--primary:hover,
 .balance-button--primary:focus-visible {
   background: linear-gradient(135deg, rgba(130, 180, 255, 0.92), rgba(90, 140, 255, 1));
+}
+
+.balance-button--primary[disabled],
+.balance-button--primary[aria-disabled="true"] {
+  background: linear-gradient(135deg, rgba(90, 120, 200, 0.6), rgba(70, 100, 190, 0.7));
+  border-color: rgba(110, 140, 210, 0.3);
 }
 
 .balance-status {
