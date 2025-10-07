@@ -1495,7 +1495,7 @@ const GAME_CONFIG = {
       ],
       successChance: 0.5,
       rewards: {
-        apcFlat: 20000,
+        apcFlat: 5000,
         elements: [
           { elementId: 'element-006-carbone', count: 1 }
         ]
@@ -1511,7 +1511,7 @@ const GAME_CONFIG = {
       ],
       successChance: 0.5,
       rewards: {
-        apcFlat: 25000
+        apcFlat: 10000
       }
     },
     {
