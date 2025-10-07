@@ -277,21 +277,22 @@ body.theme-neon .arcade-hud__combo {
 .arcade-overlay__select {
   appearance: none;
   border-radius: 999px;
-  border: 1px solid rgba(150, 190, 255, 0.45);
-  background: rgba(22, 30, 60, 0.65);
-  color: inherit;
+  border: 1px solid rgba(140, 190, 255, 0.6);
+  background: linear-gradient(135deg, rgba(30, 60, 140, 0.95), rgba(110, 170, 255, 0.98));
+  color: #fff;
   font: inherit;
   padding: clamp(0.4rem, 0.9vw, 0.65rem) clamp(1rem, 2.2vw, 1.5rem);
   text-align: center;
   letter-spacing: 0.06em;
   cursor: pointer;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  box-shadow: 0 12px 26px rgba(18, 38, 110, 0.35);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
 }
 
 .arcade-overlay__select:hover,
 .arcade-overlay__select:focus-visible {
-  border-color: rgba(190, 220, 255, 0.65);
-  box-shadow: 0 8px 18px rgba(40, 60, 160, 0.35);
+  border-color: rgba(190, 225, 255, 0.85);
+  box-shadow: 0 0 0 2px rgba(130, 190, 255, 0.35), 0 16px 32px rgba(26, 56, 150, 0.45);
   outline: none;
 }
 
@@ -311,9 +312,10 @@ body.theme-light .arcade-overlay__label {
 }
 
 body.theme-light .arcade-overlay__select {
-  background: rgba(240, 244, 255, 0.88);
-  color: rgba(18, 26, 64, 0.9);
-  border-color: rgba(96, 128, 220, 0.35);
+  background: linear-gradient(135deg, rgba(120, 170, 255, 0.96), rgba(80, 130, 230, 0.98));
+  color: #fff;
+  border-color: rgba(90, 140, 230, 0.65);
+  box-shadow: 0 12px 24px rgba(30, 60, 130, 0.28);
 }
 
 .arcade-overlay__button {
