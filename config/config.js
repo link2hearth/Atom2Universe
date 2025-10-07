@@ -804,7 +804,7 @@ const GAME_CONFIG = {
     balance: {
       board: {
         widthPx: 640,
-        surfaceHeightPx: 96,
+        surfaceHeightPx: 12,
         pivotHeightPx: 120,
         tolerance: 0.035,
         maxTiltDegrees: 18,
