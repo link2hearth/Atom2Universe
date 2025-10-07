@@ -72,6 +72,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('../fonts/DigitTech7-Regular.ttf') format('ttf');
+  src: url('../fonts/DigitTech16-8M01J.ttf') format('truetype'),
+       url('../fonts/DigitTech7-Regular.woff2') format('woff2');
   unicode-range: U+0020, U+0025, U+002B, U+002C, U+002D, U+002E, U+00A0, U+00B0, U+00B7, U+00D7, U+202F, U+2212, U+0030-0039;
 }

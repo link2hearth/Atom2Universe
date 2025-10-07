@@ -433,16 +433,14 @@ class LayeredNumber {
       const value = this.mantissa * Math.pow(10, this.exponent);
       if (Math.abs(this.exponent) < 6) {
         const numeric = this.sign * value;
-        if (globalThis.i18n && typeof globalThis.i18n.formatNumber === 'function') {
-          return globalThis.i18n.formatNumber(numeric, { maximumFractionDigits: 2 });
-        }
-        const locale = globalThis.i18n && typeof globalThis.i18n.getCurrentLocale === 'function'
-          ? globalThis.i18n.getCurrentLocale()
-          : 'fr-FR';
-        return numeric.toLocaleString(locale, { maximumFractionDigits: 2 });
+        const formatted = LayeredNumber.formatLocalizedNumber(numeric, { maximumFractionDigits: 2 });
+        return formatted || `${numeric}`;
       }
-      const mant = (this.sign * this.mantissa).toFixed(2);
-      return `${mant}e${this.exponent}`;
+      const mantissa = LayeredNumber.formatLocalizedNumber(this.sign * this.mantissa, {
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2
+      }) || (this.sign * this.mantissa).toFixed(2);
+      return `${mantissa}e${this.exponent}`;
     }
     return `10^${LayeredNumber.formatExponent(this.value)}`;
   }
@@ -465,6 +463,47 @@ class LayeredNumber {
     if (value instanceof LayeredNumber) return value;
     if (typeof value === 'number') return new LayeredNumber(value);
     return new LayeredNumber(value);
+  }
+
+  static formatLocalizedNumber(value, options) {
+    const numeric = Number(value);
+    if (!Number.isFinite(numeric)) {
+      return '';
+    }
+
+    const api = typeof globalThis === 'object' && globalThis !== null ? globalThis.i18n : null;
+    if (api && typeof api.formatNumber === 'function') {
+      try {
+        const formatted = api.formatNumber(numeric, options);
+        if (typeof formatted === 'string' && formatted.length > 0) {
+          return formatted;
+        }
+      } catch (error) {
+        // Ignore formatting errors and fall back to locale-based formatting.
+      }
+    }
+
+    let locale = 'fr-FR';
+    if (api && typeof api.getCurrentLocale === 'function') {
+      try {
+        const resolved = api.getCurrentLocale();
+        if (typeof resolved === 'string' && resolved) {
+          locale = resolved;
+        }
+      } catch (error) {
+        // Ignore locale resolution errors and keep default locale.
+      }
+    }
+
+    try {
+      return numeric.toLocaleString(locale, options);
+    } catch (error) {
+      try {
+        return numeric.toLocaleString('fr-FR', options);
+      } catch (fallbackError) {
+        return `${numeric}`;
+      }
+    }
   }
 
   static formatExponent(value) {
