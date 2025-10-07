@@ -1,4 +1,18 @@
 (() => {
+  const DEFAULT_BOARD_PHYSICS = {
+    gravity: 9.81,
+    boardMassKg: 18,
+    cubeMassPerWeight: 1.15,
+    lengthMeters: 2.4,
+    pivotFriction: 22,
+    stiffness: 1450,
+    simulationStepMs: 16,
+    simulationDurationMs: 1500,
+    maxAngularVelocity: 5,
+    settleThresholdVelocity: 0.003,
+    settleThresholdTorque: 0.08
+  };
+
   const DEFAULT_BOARD_CONFIG = {
     widthPx: 620,
     surfaceHeightPx: 12,
@@ -7,7 +21,8 @@
     maxTiltDegrees: 18,
     maxOffsetForTilt: 0.3,
     testDurationMs: 900,
-    settleDurationMs: 550
+    settleDurationMs: 550,
+    physics: { ...DEFAULT_BOARD_PHYSICS }
   };
 
   const DEFAULT_CUBE_RULES = {
@@ -63,6 +78,14 @@
     return value;
   }
 
+  function toRadians(degrees) {
+    return (degrees * Math.PI) / 180;
+  }
+
+  function toDegrees(radians) {
+    return (radians * 180) / Math.PI;
+  }
+
   function translate(key, fallback, params) {
     if (typeof translateOrDefault === 'function') {
       return translateOrDefault(key, fallback, params);
@@ -103,7 +126,8 @@
         0.48
       ),
       testDurationMs: Number(rawBoard?.testDurationMs) || DEFAULT_BOARD_CONFIG.testDurationMs,
-      settleDurationMs: Number(rawBoard?.settleDurationMs) || DEFAULT_BOARD_CONFIG.settleDurationMs
+      settleDurationMs: Number(rawBoard?.settleDurationMs) || DEFAULT_BOARD_CONFIG.settleDurationMs,
+      physics: normalizeBoardPhysics(rawBoard?.physics)
     };
 
     const cubeSets = Array.isArray(globalConfig?.cubeSets) && globalConfig.cubeSets.length
@@ -188,6 +212,62 @@
       return DEFAULT_CUBE_RULES.widthRatio;
     }
     return clamp(numeric, 0.08, 0.32);
+  }
+
+  function normalizeBoardPhysics(rawPhysics) {
+    const defaults = DEFAULT_BOARD_PHYSICS;
+    const normalized = { ...defaults };
+    if (!rawPhysics || typeof rawPhysics !== 'object') {
+      return { ...normalized };
+    }
+    const clampOr = (value, fallback, min, max) => {
+      const numeric = Number(value);
+      if (!Number.isFinite(numeric)) {
+        return fallback;
+      }
+      return clamp(numeric, min, max);
+    };
+
+    normalized.gravity = clampOr(rawPhysics.gravity, defaults.gravity, 1, 50);
+    normalized.boardMassKg = clampOr(rawPhysics.boardMassKg, defaults.boardMassKg, 0.5, 200);
+    normalized.cubeMassPerWeight = clampOr(
+      rawPhysics.cubeMassPerWeight,
+      defaults.cubeMassPerWeight,
+      0.05,
+      15
+    );
+    normalized.lengthMeters = clampOr(rawPhysics.lengthMeters, defaults.lengthMeters, 0.5, 12);
+    normalized.pivotFriction = clampOr(rawPhysics.pivotFriction, defaults.pivotFriction, 0.01, 400);
+    normalized.stiffness = clampOr(rawPhysics.stiffness, defaults.stiffness, 10, 6000);
+    const step = clampOr(rawPhysics.simulationStepMs, defaults.simulationStepMs, 4, 120);
+    normalized.simulationStepMs = Math.floor(step);
+    const duration = clampOr(
+      rawPhysics.simulationDurationMs,
+      defaults.simulationDurationMs,
+      normalized.simulationStepMs,
+      6000
+    );
+    normalized.simulationDurationMs = Math.floor(duration);
+    normalized.maxAngularVelocity = clampOr(
+      rawPhysics.maxAngularVelocity,
+      defaults.maxAngularVelocity,
+      0.1,
+      30
+    );
+    normalized.settleThresholdVelocity = clampOr(
+      rawPhysics.settleThresholdVelocity,
+      defaults.settleThresholdVelocity,
+      0.0001,
+      0.5
+    );
+    normalized.settleThresholdTorque = clampOr(
+      rawPhysics.settleThresholdTorque,
+      defaults.settleThresholdTorque,
+      0.0001,
+      10
+    );
+
+    return { ...normalized };
   }
 
   function getDefaultDifficultyMode(id) {
@@ -1043,10 +1123,97 @@
         totalTorque += weight * cube.position;
       });
       const centerOffset = totalWeight > 0 ? totalTorque / totalWeight : 0;
-      const maxOffset = this.config.board.maxOffsetForTilt || 0.3;
-      const normalized = clamp(centerOffset / maxOffset, -1, 1);
-      const rotation = normalized * (this.config.board.maxTiltDegrees || 18);
+      const rotation = this.simulateBoardRotation(cubes, {
+        centerOffset,
+        totalWeight,
+        totalTorque
+      });
       return { centerOffset, rotation, totalWeight, totalTorque };
+    }
+
+    legacyRotation(centerOffset) {
+      const maxOffset = this.config.board.maxOffsetForTilt || DEFAULT_BOARD_CONFIG.maxOffsetForTilt;
+      const normalized = clamp(centerOffset / maxOffset, -1, 1);
+      const maxTilt = this.config.board.maxTiltDegrees || DEFAULT_BOARD_CONFIG.maxTiltDegrees;
+      return normalized * maxTilt;
+    }
+
+    simulateBoardRotation(cubes, summary) {
+      const fallback = this.legacyRotation(summary?.centerOffset || 0);
+      const boardConfig = this.config?.board || {};
+      const physics = boardConfig.physics;
+      if (!physics) {
+        return fallback;
+      }
+      const stepMs = Number(physics.simulationStepMs) || DEFAULT_BOARD_PHYSICS.simulationStepMs;
+      const durationMs = Number(physics.simulationDurationMs) || DEFAULT_BOARD_PHYSICS.simulationDurationMs;
+      const maxDegrees = boardConfig.maxTiltDegrees || DEFAULT_BOARD_CONFIG.maxTiltDegrees;
+      const maxAngle = toRadians(maxDegrees);
+      const length = Number(physics.lengthMeters) || DEFAULT_BOARD_PHYSICS.lengthMeters;
+      const gravity = Number(physics.gravity) || DEFAULT_BOARD_PHYSICS.gravity;
+      const boardMass = Math.max(Number(physics.boardMassKg) || DEFAULT_BOARD_PHYSICS.boardMassKg, 0.01);
+      const cubeMassPerWeight = Math.max(
+        Number(physics.cubeMassPerWeight) || DEFAULT_BOARD_PHYSICS.cubeMassPerWeight,
+        0.01
+      );
+      const pivotFriction = Number(physics.pivotFriction) || DEFAULT_BOARD_PHYSICS.pivotFriction;
+      const stiffness = Number(physics.stiffness) || DEFAULT_BOARD_PHYSICS.stiffness;
+      const maxAngularVelocity = Math.max(
+        Number(physics.maxAngularVelocity) || DEFAULT_BOARD_PHYSICS.maxAngularVelocity,
+        0.1
+      );
+      const settleVelocity = Number(physics.settleThresholdVelocity) || DEFAULT_BOARD_PHYSICS.settleThresholdVelocity;
+      const settleTorque = Number(physics.settleThresholdTorque) || DEFAULT_BOARD_PHYSICS.settleThresholdTorque;
+
+      if (!Number.isFinite(length) || length <= 0 || !Number.isFinite(stepMs) || stepMs <= 0) {
+        return fallback;
+      }
+
+      const dt = stepMs / 1000;
+      const iterations = Math.max(Math.floor(durationMs / stepMs), 1);
+      const baseInertia = (boardMass * (length ** 2)) / 12;
+      let angle = clamp(toRadians(fallback), -maxAngle, maxAngle);
+      let angularVelocity = 0;
+
+      for (let i = 0; i < iterations; i += 1) {
+        let torque = 0;
+        let inertia = baseInertia;
+        cubes.forEach(cube => {
+          const weight = Number(cube.weight) || 0;
+          if (!weight) {
+            return;
+          }
+          const mass = weight * cubeMassPerWeight;
+          const ratio = clamp(Number(cube.position) || 0, -0.5, 0.5);
+          const distance = ratio * length;
+          const leverArm = distance * Math.cos(angle);
+          torque += mass * gravity * leverArm;
+          inertia += mass * (distance ** 2);
+        });
+
+        const restoringTorque = -stiffness * angle;
+        const dampingTorque = -pivotFriction * angularVelocity;
+        const netTorque = torque + restoringTorque + dampingTorque;
+        const angularAcceleration = netTorque / Math.max(inertia, 0.0001);
+        angularVelocity += angularAcceleration * dt;
+        angularVelocity = clamp(angularVelocity, -maxAngularVelocity, maxAngularVelocity);
+        angle += angularVelocity * dt;
+
+        if (angle > maxAngle) {
+          angle = maxAngle;
+          angularVelocity = 0;
+        } else if (angle < -maxAngle) {
+          angle = -maxAngle;
+          angularVelocity = 0;
+        }
+
+        if (Math.abs(angularVelocity) < settleVelocity && Math.abs(netTorque) < settleTorque) {
+          break;
+        }
+      }
+
+      const rotationDegrees = clamp(toDegrees(angle), -maxDegrees, maxDegrees);
+      return Number.isFinite(rotationDegrees) ? rotationDegrees : fallback;
     }
 
     applyRotation(degrees, duration) {

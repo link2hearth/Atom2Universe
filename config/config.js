@@ -810,7 +810,20 @@ const GAME_CONFIG = {
         maxTiltDegrees: 18,
         maxOffsetForTilt: 0.32,
         testDurationMs: 900,
-        settleDurationMs: 600
+        settleDurationMs: 600,
+        physics: {
+          gravity: 9.81, // Accélération gravitationnelle (m/s²) utilisée pour la simulation.
+          lengthMeters: 2.4, // Longueur approximative de la planche (m) servant de base aux leviers.
+          boardMassKg: 18, // Masse estimée de la planche pour le calcul de l'inertie (kg).
+          cubeMassPerWeight: 1.15, // Masse équivalente (kg) apportée par une unité de poids de bloc.
+          pivotFriction: 22, // Coefficient de frottement du pivot (N·m·s) pour amortir la rotation.
+          stiffness: 1450, // Couple de rappel appliqué par radian (N·m/rad) pour stabiliser l'équilibre.
+          simulationStepMs: 16, // Intervalle entre deux itérations de la simulation (ms).
+          simulationDurationMs: 1500, // Durée totale simulée lors d'un test (ms).
+          maxAngularVelocity: 5, // Vitesse angulaire maximale autorisée (rad/s) pour éviter les à-coups.
+          settleThresholdVelocity: 0.003, // Seuil de vitesse sous lequel la planche est considérée comme stable (rad/s).
+          settleThresholdTorque: 0.08 // Seuil de couple résiduel pour interrompre la simulation (N·m).
+        }
       },
       /**
        * Réglages des modes de difficulté.
