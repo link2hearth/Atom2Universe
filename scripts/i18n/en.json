@@ -1797,7 +1797,7 @@
           },
           "paid": {
             "title": "Reward mode",
-            "description": "Spend {cost} atoms ({percent}) to enable draw tickets and Mach3 credits.",
+            "description": "Spend {percent} of your atoms to try earning element draw tickets.",
             "insufficient": "Not enough atoms to start the reward mode.",
             "debit": "Reward mode: -{cost} atoms"
           }
