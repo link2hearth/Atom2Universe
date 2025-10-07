@@ -1,6 +1,7 @@
 :root {
   color-scheme: dark light;
   --font-text: 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-text-base-size: 1rem;
   font-family: var(--font-text, 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
   --bg-dark: #080b13;
   --bg-light: #f6f7fb;
@@ -35,6 +36,11 @@ body {
   display: flex;
   flex-direction: column;
   transition: background 0.4s ease, color 0.4s ease;
+  font-size: var(--font-text-base-size, 1rem);
+}
+
+body[data-text-font='vt323'] {
+  --font-text-base-size: 1.06rem;
 }
 
 body.theme-light {
