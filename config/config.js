@@ -700,7 +700,7 @@ const GAME_CONFIG = {
   presentation: {
     clicks: {
       windowMs: 1000,
-      maxClicksPerSecond: 20
+      maxClicksPerSecond: 10
     },
     starfield: {
       starCount: 60
@@ -1894,60 +1894,60 @@ const GAME_CONFIG = {
     ],
     weeklyRarityWeights: {
       monday: {
-        commun: 50,
-        essentiel: 20,
-        stellaire: 20,
+        commun: 70,
+        essentiel: 10,
+        stellaire: 10,
         singulier: 10,
         mythique: 0,
         irreel: 0
       },
       tuesday: {
-        commun: 50,
-        essentiel: 20,
-        stellaire: 20,
+        commun: 70,
+        essentiel: 10,
+        stellaire: 10,
         singulier: 0,
         mythique: 10,
         irreel: 0
       },
       wednesday: {
-        commun: 50,
-        essentiel: 20,
-        stellaire: 20,
+        commun: 70,
+        essentiel: 10,
+        stellaire: 10,
         singulier: 0,
         mythique: 0,
         irreel: 10
       },
       thursday: {
-        commun: 50,
-        essentiel: 20,
-        stellaire: 20,
+        commun: 70,
+        essentiel: 10,
+        stellaire: 10,
         singulier: 10,
         mythique: 0,
         irreel: 0
       },
       friday: {
-        commun: 50,
-        essentiel: 20,
-        stellaire: 20,
+        commun: 70,
+        essentiel: 10,
+        stellaire: 10,
         singulier: 0,
         mythique: 10,
         irreel: 0
       },
       saturday: {
-        commun: 50,
-        essentiel: 20,
-        stellaire: 20,
+        commun: 70,
+        essentiel: 10,
+        stellaire: 10,
         singulier: 0,
         mythique: 0,
         irreel: 10
       },
       sunday: {
-        commun: 50,
-        essentiel: 25,
-        stellaire: 22,
-        singulier: 1,
-        mythique: 1,
-        irreel: 1
+        commun: 71,
+        essentiel: 10,
+        stellaire: 10,
+        singulier: 3,
+        mythique: 3,
+        irreel: 3
       }
     }
   },
