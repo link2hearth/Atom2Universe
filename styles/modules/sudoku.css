@@ -276,11 +276,13 @@ body.theme-neon {
   justify-content: center;
   cursor: pointer;
   transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  font-family: var(--font-digits, 'Orbitron', 'Inter', sans-serif);
 }
 
 .sudoku-pad__button--action {
   font-size: clamp(1rem, 1.8vw, 1.25rem);
   font-weight: 700;
+  font-family: inherit;
 }
 
 .sudoku-pad__button:hover,
@@ -351,7 +353,9 @@ body.theme-neon .sudoku-pad__button.is-active {
   background: transparent;
   color: inherit;
   text-align: center;
-  font: 700 clamp(1.2rem, 3vw, 1.8rem) 'Roboto Mono', 'Fira Mono', 'Courier New', monospace;
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  font-weight: 700;
+  font-family: var(--font-digits-compact, 'Orbitron', monospace);
   text-transform: uppercase;
 }
 
