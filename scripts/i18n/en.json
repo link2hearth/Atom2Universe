@@ -17,6 +17,9 @@
         "options": "Options"
       }
     },
+    "header": {
+      "brand": "Atom2Univers"
+    },
     "status": {
       "totalAtoms": "Total atoms",
       "apc": "APC",
