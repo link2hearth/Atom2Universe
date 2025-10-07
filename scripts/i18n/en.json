@@ -347,7 +347,7 @@
         },
         "elements": {
           "title": "Element bonuses",
-          "subtitle": "Cosmic common · Planetary essential · Stellar forge · Mineral singularity · Quantum myth · Unreal"
+          "subtitle": "Primordial nucleosynthesis · Cosmic spallation · Simple stars · Supernovae · Massive stars · Artificial"
         }
       },
       "metaux": {
@@ -766,24 +766,24 @@
     "elementBonuses": {
       "collectionMultiplier": "Collection Synergy · Unified resonance",
       "essentiel": {
-        "perCopy": "Planetary Essential · Essential harvests",
-        "setBonus": "Planetary Essential · Complete collection"
+        "perCopy": "Cosmic Spallation · Essential harvests",
+        "setBonus": "Cosmic Spallation · Complete collection"
       },
       "stellaire": {
-        "perCopy": "Stellar Forge · Activated fragments",
-        "setBonus": "Stellar Forge · Perfect forge",
+        "perCopy": "Simple Stars · Activated fragments",
+        "setBonus": "Simple Stars · Perfect forge",
         "labels": {
-          "perCopy": "Stellar Forge · Fragments"
+          "perCopy": "Simple Stars · Fragments"
         }
       },
       "singulier": {
-        "perCopy": "Mineral Singularity · Crystalline resonance"
+        "perCopy": "Supernovae · Crystalline resonance"
       },
       "mythique": {
-        "setBonus": "Quantum Myth · Ultimate convergence",
-        "ticketBonus": "Quantum Myth · Compressed star",
-        "offlineBonus": "Quantum Myth · Persistent collection",
-        "duplicateOverflow": "Quantum Myth · Fractal overload"
+        "setBonus": "Massive Stars · Ultimate convergence",
+        "ticketBonus": "Massive Stars · Compressed star",
+        "offlineBonus": "Massive Stars · Persistent collection",
+        "duplicateOverflow": "Massive Stars · Fractal overload"
       },
       "irreel": {}
     },
@@ -1094,30 +1094,30 @@
       },
       "elementBonuses": {
         "essentiel": {
-          "perCopy": "Planetary Essential · Essential harvests",
-          "setBonus": "Planetary Essential · Complete collection",
-          "multiplier": "Planetary Essential · Orbital synergy"
+          "perCopy": "Cosmic Spallation · Essential harvests",
+          "setBonus": "Cosmic Spallation · Complete collection",
+          "multiplier": "Cosmic Spallation · Orbital synergy"
         },
         "stellaire": {
-          "perCopy": "Stellar Forge · Activated fragments",
-          "setBonus": "Stellar Forge · Perfect forge",
-          "multiplier": "Stellar Forge · Stellar intensity",
+          "perCopy": "Simple Stars · Activated fragments",
+          "setBonus": "Simple Stars · Perfect forge",
+          "multiplier": "Simple Stars · Stellar intensity",
           "labels": {
-            "perCopy": "Stellar Forge · Fragments"
+            "perCopy": "Simple Stars · Fragments"
           }
         },
         "singulier": {
-          "perCopy": "Mineral Singularity · Crystalline resonance",
-          "multiplier": "Mineral Singularity · Extreme density"
+          "perCopy": "Supernovae · Crystalline resonance",
+          "multiplier": "Supernovae · Extreme density"
         },
         "mythique": {
-          "setBonus": "Quantum Myth · Ultimate convergence",
-          "ticketBonus": "Quantum Myth · Compressed star",
-          "offlineBonus": "Quantum Myth · Persistent collection",
-          "duplicateOverflow": "Quantum Myth · Fractal overload"
+          "setBonus": "Massive Stars · Ultimate convergence",
+          "ticketBonus": "Massive Stars · Compressed star",
+          "offlineBonus": "Massive Stars · Persistent collection",
+          "duplicateOverflow": "Massive Stars · Fractal overload"
         },
         "irreel": {
-          "multiplier": "Unreal · Dimensional catalyst"
+          "multiplier": "Artificial · Dimensional catalyst"
         }
       }
     },
@@ -1287,7 +1287,7 @@
             "frenzy": "Frenzy chance {value}"
           },
           "notes": {
-            "singularityBoost": "Amplified Singularity: effects {value}",
+            "singularityBoost": "Amplified Supernovae: effects {value}",
             "amplify": "Boosts {target}: {effects}",
             "effects": "{label}: {effects}",
             "multiplierBase": "{prefix}base {value}",
@@ -1321,8 +1321,8 @@
             "overflowFlat": "APC/APS +{value} per duplicate",
             "overflowThreshold": "beyond {count} {unit}",
             "frenzyComplete": "Frenzy chance {value} (complete collection required)",
-            "singularitySynergy": "Singularity synergy: Bonus ×2 when the Singularity collection is complete",
-            "stellaireSynergy": "Stellar Forge synergy: Completing the collection doubles all Stellar Forge bonuses"
+            "singularitySynergy": "Supernovae synergy: Bonus ×2 when the Supernovae collection is complete",
+            "stellaireSynergy": "Simple Stars synergy: Completing the collection doubles all Simple Stars bonuses"
           },
           "units": {
             "copy": {
@@ -1377,38 +1377,38 @@
     "gacha": {
       "rarities": {
         "commun": {
-          "label": "Cosmic Common",
+          "label": "Primordial Nucleosynthesis",
           "description": "Fundamental bricks found across most nebulae."
         },
         "essentiel": {
-          "label": "Planetary Essential",
+          "label": "Cosmic Spallation",
           "description": "Elements abundant on rocky worlds and habitable atmospheres."
         },
         "stellaire": {
-          "label": "Stellar Forge",
+          "label": "Simple Stars",
           "description": "Alloys shaped in stellar cores and scattered by supernovae."
         },
         "singulier": {
-          "label": "Mineral Singularity",
+          "label": "Supernovae",
           "description": "Sought-after crystals rarely concentrated in the same place."
         },
         "mythique": {
-          "label": "Quantum Myth",
+          "label": "Massive Stars",
           "description": "Legendary elements with extreme, elusive properties."
         },
         "irreel": {
-          "label": "Unreal",
+          "label": "Artificial",
           "description": "Artificial syntheses born only inside accelerators."
         }
       },
       "featured": {
         "today": "Today",
-        "monday": "+Mineral Singularity",
-        "thursday": "+Mineral Singularity",
-        "tuesday": "+Quantum Myth",
-        "friday": "+Quantum Myth",
-        "wednesday": "+Unreal",
-        "saturday": "+Unreal"
+        "monday": "+Supernovae",
+        "thursday": "+Supernovae",
+        "tuesday": "+Massive Stars",
+        "friday": "+Massive Stars",
+        "wednesday": "+Artificial",
+        "saturday": "+Artificial"
       },
       "rarityProgress": {
         "unavailable": "Rarities unavailable",
@@ -1619,7 +1619,7 @@
         },
         "ticketHarvester": {
           "name": "Star Collector",
-          "description": "Complete both the Cosmic Common and Planetary Essential collections.",
+          "description": "Complete both the Primordial Nucleosynthesis and Cosmic Spallation collections.",
           "reward": "On the main screen, ticket stars auto-collect after 3 seconds."
         },
         "alloyMastery": {

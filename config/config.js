@@ -1785,7 +1785,7 @@ const GAME_CONFIG = {
     {
       id: 'ticketHarvester',
       name: 'Collecteur d’étoiles',
-      description: 'Complétez les collections Commun cosmique et Essentiel planétaire.',
+      description: 'Complétez les collections Nucléosynthèse primordiale et Spallation cosmique.',
       condition: {
         type: 'collectionRarities',
         rarities: ['commun', 'essentiel']
@@ -1828,42 +1828,42 @@ const GAME_CONFIG = {
     rarities: [
       {
         id: 'commun',
-        label: 'Commun cosmique',
+        label: 'Nucléosynthèse primordiale',
         description: 'Les éléments omniprésents dans les nébuleuses et les atmosphères stellaires.',
         weight: 35,
         color: '#1abc9c'
       },
       {
         id: 'essentiel',
-        label: 'Essentiel planétaire',
+        label: 'Spallation cosmique',
         description: 'Les piliers des mondes rocheux et des océans extraterrestres.',
         weight: 25,
         color: '#3498db'
       },
       {
         id: 'stellaire',
-        label: 'Forge stellaire',
+        label: 'Étoiles simples',
         description: 'Alliages façonnés dans les coeurs d’étoiles actives.',
         weight: 20,
         color: '#9b59b6'
       },
       {
         id: 'singulier',
-        label: 'Singularité minérale',
+        label: 'Supernovae',
         description: 'Raretés cristallines difficiles à isoler.',
         weight: 8,
         color: '#cd6155'
       },
       {
         id: 'mythique',
-        label: 'Mythe quantique',
+        label: 'Étoiles massives',
         description: 'Éléments aux propriétés quasi légendaires.',
         weight: 7,
         color: '#FFBF66'
       },
       {
         id: 'irreel',
-        label: 'Irréel',
+        label: 'Artificiels',
         description: 'Créations synthétiques jamais rencontrées naturellement.',
         weight: 5,
         color: '#7f8c8d'

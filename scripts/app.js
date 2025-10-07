@@ -7369,7 +7369,7 @@ function recalcProduction() {
   const singularityPoolSize = getRarityPoolSize('singulier');
   const isSingularityComplete = singularityPoolSize > 0 && singularityCounts.unique >= singularityPoolSize;
   const stellaireSingularityBoost = isSingularityComplete ? 2 : 1;
-  const STELLAIRE_SINGULARITY_BONUS_LABEL = 'Forge stellaire · singularité amplifiée';
+  const STELLAIRE_SINGULARITY_BONUS_LABEL = 'Étoiles simples · Supernovae amplifiées';
 
   const flatBonusMultipliers = {
     perClick: new Map(),
