@@ -7,15 +7,18 @@
       "primary": "Navigation principale",
       "items": {
         "arcade": "Arcade",
-        "shop": "Shop",
+        "shop": "Boutique",
         "gacha": "Gacha",
         "table": "Table",
         "fusion": "Fusion",
         "info": "Infos",
-        "goals": "Goals",
+        "goals": "Objectifs",
         "bigbang": "Big Bang",
         "options": "Options"
       }
+    },
+    "header": {
+      "brand": "Atom2Univers"
     },
     "status": {
       "totalAtoms": "Total d'atomes",
@@ -37,7 +40,9 @@
         }
       },
       "shop": {
-        "title": "Boutique quantique"
+        "title": "Boutique quantique",
+        "placeholder": "La boutique se charge…",
+        "actionsPlaceholder": "Les options de quantité apparaîtront ici."
       },
       "gacha": {
         "title": "Portail de tirage cosmique",
@@ -49,7 +54,77 @@
         },
         "sunButton": "Déclencher un tirage cosmique",
         "sunAlt": "Soleil cosmique",
-        "continue": "Cliquer pour continuer"
+        "continue": "Cliquer pour continuer",
+        "featuredPlaceholder": "Aucun tirage vedette pour le moment.",
+        "resultPlaceholder": "Résultat du tirage"
+      },
+      "table": {
+        "aria": "Tableau périodique des éléments",
+        "placeholder": "Sélectionnez un élément pour afficher ses détails.",
+        "details": {
+          "collection": "Bonus de collection"
+        },
+        "summary": {
+          "title": "Collection",
+          "current": "Éléments possédés",
+          "lifetime": "Éléments découverts"
+        }
+      },
+      "fusion": {
+        "title": "Chambre de fusion quantique",
+        "intro": "Assemblez des éléments pour tenter des fusions aux effets uniques.",
+        "logPlaceholder": "Les résultats de fusion apparaîtront ici."
+      },
+      "info": {
+        "title": "Tableau de bord des statistiques",
+        "aps": {
+          "title": "Production passive (APS)",
+          "subtitle": "Répartition détaillée de vos gains automatiques.",
+          "aria": "Répartition de la production passive"
+        },
+        "apc": {
+          "title": "Production par clic (APC)",
+          "subtitle": "Analyse de la puissance générée à chaque clic.",
+          "aria": "Répartition de la production par clic"
+        },
+        "progress": {
+          "title": "Progression du joueur",
+          "subtitle": "Suivi des performances de la session et de l'historique.",
+          "session": {
+            "title": "Session en cours",
+            "atoms": "Atomes générés",
+            "clicks": "Clics enregistrés",
+            "apc": "APC cumulés",
+            "aps": "APS cumulés",
+            "offline": "Collecte hors ligne",
+            "duration": "Durée de la session"
+          },
+          "global": {
+            "title": "Historique global",
+            "atoms": "Total d'atomes",
+            "clicks": "Total de clics",
+            "apc": "APC cumulés",
+            "aps": "APS cumulés",
+            "offline": "Collecte hors ligne",
+            "duration": "Temps de jeu"
+          }
+        },
+        "shop": {
+          "title": "Bonus de boutique",
+          "subtitle": "Effets obtenus auprès des améliorations achetées."
+        },
+        "elements": {
+          "title": "Bonus des éléments",
+          "subtitle": "Effets cumulés de vos collections élémentaires."
+        }
+      },
+      "goals": {
+        "title": "Objectifs",
+        "empty": "Aucun objectif actif pour le moment."
+      },
+      "bigbang": {
+        "title": "Big Bang",
+        "description": "Déclenchez une renaissance cosmique pour multiplier vos gains et tout recommencer."
       },
       "arcade": {
         "aria": "Mini-jeu Particules",
@@ -384,6 +459,27 @@
       },
       "options": {
         "title": "Options",
+        "welcome": {
+          "title": "Bienvenue",
+          "intro": {
+            "main": "Bienvenue dans Atom to Univers. Cliquez pour générer vos premiers atomes, achetez des améliorations dans la boutique et automatisez la production pour façonner votre univers.",
+            "note": "Débloquez les mini-jeux et fonctionnalités au fil de votre progression pour multiplier vos gains d’APC et d’APS."
+          },
+          "details": {
+            "particles": {
+              "label": "Mini Jeu Particules :",
+              "description": "Collisionnez les particules élémentaires pour gagner des tickets de tirage et des crédits Mach3."
+            },
+            "gacha": {
+              "label": "Gacha :",
+              "description": "Utilisez vos tickets pour récupérer des éléments du tableau périodique et débloquer des bonus de production."
+            },
+            "match3": {
+              "label": "Mini jeu Mach3 :",
+              "description": "Alignez les métaux le plus vite possible pour booster vos gains d’APS."
+            }
+          }
+        },
         "language": {
           "title": "Langue",
           "label": "Langue de l’interface",
