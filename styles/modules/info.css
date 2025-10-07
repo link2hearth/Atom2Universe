@@ -261,7 +261,7 @@ body.theme-neon .element-bonus-card {
 }
 
 .element-bonus-count__value {
-  font-family: var(--font-digits, 'Orbitron', 'Inter', sans-serif);
+  font-family: var(--font-digits, 'Orbitron', sans-serif);
   font-size: 0.85rem;
   min-width: 0;
   word-break: break-word;
@@ -439,7 +439,7 @@ body.theme-light .element-bonus-effects__item {
 }
 
 .element-bonus-effects__value {
-  font-family: var(--font-digits, 'Orbitron', 'Inter', sans-serif);
+  font-family: var(--font-digits, 'Orbitron', sans-serif);
   font-size: 1rem;
   text-align: right;
   white-space: normal;
@@ -573,7 +573,7 @@ body.theme-light .element-bonus-specials__item {
 }
 
 .element-bonus-specials__value {
-  font-family: var(--font-digits, 'Orbitron', 'Inter', sans-serif);
+  font-family: var(--font-digits, 'Orbitron', sans-serif);
   font-size: 1rem;
   text-align: right;
   white-space: normal;
@@ -597,7 +597,7 @@ body.theme-light .element-bonus-specials__item {
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   font-size: 0.95rem;
-  font-family: var(--font-digits, 'Orbitron', 'Inter', sans-serif);
+  font-family: var(--font-digits, 'Orbitron', sans-serif);
 }
 
 .production-breakdown__row--multiplier .production-breakdown__value {

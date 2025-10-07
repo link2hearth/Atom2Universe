@@ -321,7 +321,7 @@ body.theme-light .arcade-overlay__select {
   padding: clamp(0.55rem, 1.2vw, 0.85rem) clamp(1.4rem, 3vw, 2.2rem);
   border-radius: 999px;
   border: none;
-  font-family: 'Orbitron', 'Inter', sans-serif;
+  font-family: 'Orbitron', sans-serif;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   font-size: clamp(0.68rem, 1vw, 0.82rem);

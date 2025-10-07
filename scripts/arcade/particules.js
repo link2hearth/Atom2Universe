@@ -3492,7 +3492,7 @@
               ? brick.particle.symbolScale
               : 1;
             const baseFontSize = Math.max(12, h * 0.55);
-            ctx.font = `${Math.max(12, baseFontSize * symbolScale)}px 'Orbitron', 'Inter', sans-serif`;
+            ctx.font = `${Math.max(12, baseFontSize * symbolScale)}px 'Orbitron', sans-serif`;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText(brick.particle.symbol, x + w / 2, y + h / 2 + h * 0.04);
@@ -3543,7 +3543,7 @@
         ctx.shadowBlur = 0;
         ctx.shadowColor = 'transparent';
         ctx.fillStyle = visuals.textColor || DEFAULT_POWER_UP_VISUAL.textColor;
-        ctx.font = `${Math.max(14, height * 0.6)}px 'Orbitron', 'Inter', sans-serif`;
+        ctx.font = `${Math.max(14, height * 0.6)}px 'Orbitron', sans-serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         const symbol = powerUp.symbol || visuals.symbol || DEFAULT_POWER_UP_VISUAL.symbol;

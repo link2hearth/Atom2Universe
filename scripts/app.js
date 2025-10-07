@@ -56,12 +56,12 @@ const DIGIT_FONT_DEFAULT = 'orbitron';
 const DIGIT_FONT_CHOICES = Object.freeze({
   orbitron: {
     id: 'orbitron',
-    stack: "'Orbitron', 'Inter', sans-serif",
+    stack: "'Orbitron', sans-serif",
     compactStack: "'Orbitron', monospace"
   },
   digittech7: {
     id: 'digittech7',
-    stack: "'DigitTech7', 'Orbitron', 'Inter', sans-serif",
+    stack: "'DigitTech7', 'Orbitron', sans-serif",
     compactStack: "'DigitTech7', 'Orbitron', monospace"
   }
 });
