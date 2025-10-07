@@ -1060,6 +1060,20 @@
         "cardLabel": "{rank} de {suit}"
       }
     },
+    "particules": {
+      "ui": {
+        "mode": {
+          "free": {
+            "description": "Entraînez-vous sans dépenser d’Atomes ni gagner de récompenses."
+          },
+          "paid": {
+            "description": "Consommez {percent} de vos Atomes pour tenter de gagner des tickets de tirage d’éléments.",
+            "debit": "{cost} Atomes dépensés pour activer le mode récompenses.",
+            "insufficient": "Pas assez d’Atomes pour activer le mode récompenses."
+          }
+        }
+      }
+    },
     "config": {
       "uiText": {
         "options": {

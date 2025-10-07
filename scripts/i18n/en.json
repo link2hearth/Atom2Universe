@@ -1075,6 +1075,20 @@
         "cardLabel": "{rank} of {suit}"
       }
     },
+    "particules": {
+      "ui": {
+        "mode": {
+          "free": {
+            "description": "Practice without spending atoms or earning rewards."
+          },
+          "paid": {
+            "description": "Spend {percent} of your atoms for a chance to earn element draw tickets.",
+            "debit": "Spent {cost} atoms to enable rewards mode.",
+            "insufficient": "Not enough atoms to enable rewards mode."
+          }
+        }
+      }
+    },
     "config": {
       "uiText": {
         "options": {
