@@ -554,6 +554,30 @@
 
   settings.ticketReward = readNumber(ARCADE_CONFIG.ticketReward, 1, { min: 0, round: 'floor' });
 
+  const modesConfig = readObject(ARCADE_CONFIG.modes);
+  const freeModeConfig = readObject(modesConfig.free);
+  const paidModeConfig = readObject(modesConfig.paid);
+  const freeModeId = readString(freeModeConfig.id, 'free') || 'free';
+  const paidModeId = readString(paidModeConfig.id, 'paid') || 'paid';
+  const defaultModeCandidate = readString(modesConfig.defaultMode, freeModeId) || freeModeId;
+  const paidCostRatio = readNumber(
+    paidModeConfig.costRatio ?? modesConfig.paidCostRatio ?? modesConfig.costRatio,
+    0.5,
+    { min: 0, max: 1 }
+  );
+  let defaultMode = defaultModeCandidate;
+  const normalizedDefault = typeof defaultMode === 'string' ? defaultMode.trim().toLowerCase() : '';
+  if (normalizedDefault === paidModeId.trim().toLowerCase()) {
+    defaultMode = paidModeId;
+  } else {
+    defaultMode = freeModeId;
+  }
+  settings.modes = {
+    free: { id: freeModeId },
+    paid: { id: paidModeId, costRatio: paidCostRatio },
+    defaultMode
+  };
+
   const levelSpeedBonusConfig = readObject(
     ARCADE_CONFIG.levelSpeedBonus ?? ARCADE_CONFIG.speedBonus
   );
@@ -1181,6 +1205,7 @@
   const LEVEL_CLEARED_BUTTON = SETTINGS.ui.levelCleared.buttonLabel;
   const LEVEL_CLEARED_REWARD_TEMPLATE = SETTINGS.ui.levelCleared.rewardTemplate;
   const LEVEL_CLEARED_SPEED_BONUS_TEMPLATE = SETTINGS.ui.levelCleared.speedBonusTemplate;
+  const LEVEL_CLEARED_NO_REWARD_TEMPLATE = SETTINGS.ui.levelCleared.noReward;
   const GAME_OVER_WITH_TICKETS = SETTINGS.ui.gameOver.withTickets;
   const GAME_OVER_WITHOUT_TICKETS = SETTINGS.ui.gameOver.withoutTickets;
   const GAME_OVER_BUTTON = SETTINGS.ui.gameOver.buttonLabel;
@@ -1188,6 +1213,14 @@
   const HUD_TICKET_PLURAL = SETTINGS.ui.hud.ticketPlural;
   const HUD_BONUS_TICKET_SINGULAR = SETTINGS.ui.hud.bonusTicketSingular;
   const HUD_BONUS_TICKET_PLURAL = SETTINGS.ui.hud.bonusTicketPlural;
+  const MODE_IDS = {
+    free: SETTINGS.modes?.free?.id || 'free',
+    paid: SETTINGS.modes?.paid?.id || 'paid'
+  };
+  const DEFAULT_MODE_ID = SETTINGS.modes?.defaultMode || MODE_IDS.free;
+  const PAID_MODE_COST_RATIO = typeof SETTINGS.modes?.paid?.costRatio === 'number'
+    ? Math.max(0, Math.min(1, SETTINGS.modes.paid.costRatio))
+    : 0.5;
   const GRAVITON_DETECTION_MESSAGE = SETTINGS.graviton.detectionMessage;
   const GRAVITON_DETECTION_DURATION = SETTINGS.graviton.detectionMessageDurationMs;
   const GRAVITON_DISSIPATE_MESSAGE = SETTINGS.graviton.dissipateMessage;
@@ -1376,7 +1409,14 @@
         onTicketsEarned,
         onSpecialTicket,
         formatTicketLabel,
-        formatBonusTicketLabel
+        formatBonusTicketLabel,
+        modeField,
+        modeButtons,
+        modeHint,
+        computePaidModeCost,
+        formatPaidModeCost,
+        onPaidModeStart,
+        onPaidModeUnavailable
       } = options;
 
       this.canvas = canvas;
@@ -1407,6 +1447,23 @@
       this.formatBonusTicketLabel = typeof formatBonusTicketLabel === 'function'
         ? formatBonusTicketLabel
         : defaultBonusTicketFormatter;
+      this.computePaidModeCostFn = typeof computePaidModeCost === 'function' ? computePaidModeCost : null;
+      this.formatPaidModeCostFn = typeof formatPaidModeCost === 'function' ? formatPaidModeCost : null;
+      this.onPaidModeStart = typeof onPaidModeStart === 'function' ? onPaidModeStart : null;
+      this.onPaidModeUnavailable = typeof onPaidModeUnavailable === 'function'
+        ? onPaidModeUnavailable
+        : null;
+      this.modeField = hasHTMLElement && modeField instanceof HTMLElement ? modeField : null;
+      const modeButtonList = [];
+      if (modeButtons && typeof modeButtons.forEach === 'function') {
+        modeButtons.forEach(button => {
+          if (hasHTMLElement && button instanceof HTMLElement) {
+            modeButtonList.push(button);
+          }
+        });
+      }
+      this.modeButtons = modeButtonList;
+      this.modeHint = hasHTMLElement && modeHint instanceof HTMLElement ? modeHint : null;
 
       if (!this.canvas || !this.canvas.getContext) {
         this.enabled = false;
@@ -1464,6 +1521,8 @@
       this.stagePulseTimeout = null;
       this.levelStartedAt = 0;
       this.lastLingerBonusCheckAt = 0;
+      this.currentMode = this.normalizeMode(DEFAULT_MODE_ID);
+      this.paidModeCostRatio = PAID_MODE_COST_RATIO;
 
       this.paddle = {
         baseWidthRatio: SETTINGS.paddle.baseWidthRatio,
@@ -1491,6 +1550,8 @@
       this.handlePointerUp = this.handlePointerUp.bind(this);
       this.handleOverlayButtonClick = this.handleOverlayButtonClick.bind(this);
       this.handleResize = this.handleResize.bind(this);
+      this.handleModeButtonClick = this.handleModeButtonClick.bind(this);
+      this.handleLanguageChange = this.handleLanguageChange.bind(this);
 
       this.canvas.addEventListener('pointerdown', this.handlePointerDown);
       this.canvas.addEventListener('pointermove', this.handlePointerMove);
@@ -1502,12 +1563,19 @@
         this.overlayButton.addEventListener('click', this.handleOverlayButtonClick);
       }
 
+      this.modeButtons.forEach(button => {
+        button.addEventListener('click', this.handleModeButtonClick);
+      });
+
       if (typeof window !== 'undefined') {
         window.addEventListener('resize', this.handleResize);
+        window.addEventListener('i18n:languagechange', this.handleLanguageChange);
       }
 
       this.handleResize();
       this.setupLevel();
+      this.updateModeButtonStates();
+      this.updateModeHint();
       this.showOverlay({
         message:
           (this.overlayMessage?.textContent || '').trim()
@@ -1528,8 +1596,12 @@
       if (this.overlayButton) {
         this.overlayButton.removeEventListener('click', this.handleOverlayButtonClick);
       }
+      this.modeButtons.forEach(button => {
+        button.removeEventListener('click', this.handleModeButtonClick);
+      });
       if (typeof window !== 'undefined') {
         window.removeEventListener('resize', this.handleResize);
+        window.removeEventListener('i18n:languagechange', this.handleLanguageChange);
       }
       if (this.stagePulseTimeout) {
         clearTimeout(this.stagePulseTimeout);
@@ -2980,9 +3052,11 @@
 
     captureGraviton() {
       this.setComboMessage(GRAVITON_CAPTURE_MESSAGE, GRAVITON_CAPTURE_DURATION);
-      this.specialTicketsEarned += 1;
-      if (this.onSpecialTicket) {
-        this.onSpecialTicket(1);
+      if (this.areRewardsEnabled()) {
+        this.specialTicketsEarned += 1;
+        if (this.onSpecialTicket) {
+          this.onSpecialTicket(1);
+        }
       }
     }
 
@@ -3184,31 +3258,40 @@
       const completionSeconds = this.levelStartedAt > 0
         ? (now - this.levelStartedAt) / 1000
         : null;
-      const baseReward = Math.max(1, Math.floor(ARCADE_TICKET_REWARD) || 0);
-      const speedBonus = completionSeconds != null
+      const rewardsEnabled = this.areRewardsEnabled();
+      const baseReward = rewardsEnabled ? Math.max(1, Math.floor(ARCADE_TICKET_REWARD) || 0) : 0;
+      const speedBonus = rewardsEnabled
+        && completionSeconds != null
         && completionSeconds < LEVEL_SPEED_BONUS_THRESHOLD_SECONDS
-        ? LEVEL_SPEED_BONUS_TICKETS
-        : 0;
-      const totalReward = baseReward + speedBonus;
-      this.ticketsEarned += totalReward;
-      if (this.onTicketsEarned) {
-        this.onTicketsEarned(totalReward, {
-          level: completedLevel,
-          score: this.score,
-          speedBonus,
-          completionSeconds
-        });
+          ? LEVEL_SPEED_BONUS_TICKETS
+          : 0;
+      const totalReward = rewardsEnabled ? baseReward + speedBonus : 0;
+      if (rewardsEnabled && totalReward > 0) {
+        this.ticketsEarned += totalReward;
+        if (this.onTicketsEarned) {
+          this.onTicketsEarned(totalReward, {
+            level: completedLevel,
+            score: this.score,
+            speedBonus,
+            completionSeconds
+          });
+        }
       }
-      let rewardLabel = LEVEL_CLEARED_REWARD_TEMPLATE.replace(
-        '{reward}',
-        this.formatTicketLabel(totalReward)
-      );
-      if (speedBonus > 0 && LEVEL_CLEARED_SPEED_BONUS_TEMPLATE) {
-        const bonusLabel = LEVEL_CLEARED_SPEED_BONUS_TEMPLATE.replace(
-          '{bonus}',
-          this.formatTicketLabel(speedBonus)
+      let rewardLabel = '';
+      if (rewardsEnabled && totalReward > 0) {
+        rewardLabel = LEVEL_CLEARED_REWARD_TEMPLATE.replace(
+          '{reward}',
+          this.formatTicketLabel(totalReward)
         );
-        rewardLabel += bonusLabel;
+        if (speedBonus > 0 && LEVEL_CLEARED_SPEED_BONUS_TEMPLATE) {
+          const bonusLabel = LEVEL_CLEARED_SPEED_BONUS_TEMPLATE.replace(
+            '{bonus}',
+            this.formatTicketLabel(speedBonus)
+          );
+          rewardLabel += bonusLabel;
+        }
+      } else if (LEVEL_CLEARED_NO_REWARD_TEMPLATE) {
+        rewardLabel = LEVEL_CLEARED_NO_REWARD_TEMPLATE;
       }
       const message = LEVEL_CLEARED_TEMPLATE
         .replace('{level}', completedLevel)
@@ -3269,6 +3352,7 @@
         this.overlayButton.textContent = buttonLabel;
       }
       this.overlayAction = action;
+      this.updateModeUI(action);
     }
 
     hideOverlay() {
@@ -3282,6 +3366,9 @@
     }
 
     startNewGame() {
+      if (!this.tryActivatePaidMode()) {
+        return;
+      }
       this.level = 1;
       this.score = 0;
       this.ticketsEarned = 0;
@@ -3358,6 +3445,172 @@
           this.updateBallFollowingPaddle(ball);
         }
       });
+    }
+
+    normalizeMode(value) {
+      const freeId = MODE_IDS.free;
+      const paidId = MODE_IDS.paid;
+      if (typeof value === 'string') {
+        const normalized = value.trim().toLowerCase();
+        if (normalized === (paidId || '').toLowerCase() || normalized === 'paid' || normalized === 'rewarded') {
+          return paidId;
+        }
+        if (normalized === (freeId || '').toLowerCase() || normalized === 'free' || normalized === 'libre') {
+          return freeId;
+        }
+      }
+      return freeId;
+    }
+
+    setMode(modeId) {
+      const normalized = this.normalizeMode(modeId);
+      if (this.currentMode === normalized) {
+        this.updateModeButtonStates();
+        this.updateModeHint();
+        return;
+      }
+      this.currentMode = normalized;
+      this.updateModeButtonStates();
+      this.updateModeHint();
+    }
+
+    areRewardsEnabled() {
+      return this.currentMode === this.normalizeMode(MODE_IDS.paid);
+    }
+
+    getPaidModeInfo() {
+      if (!this.computePaidModeCostFn) {
+        return { cost: null, ratio: this.paidModeCostRatio };
+      }
+      try {
+        const info = this.computePaidModeCostFn(this.paidModeCostRatio);
+        if (info && typeof info === 'object') {
+          const ratio = Number.isFinite(info.ratio) ? info.ratio : this.paidModeCostRatio;
+          return { cost: info.cost ?? null, ratio };
+        }
+        return { cost: info, ratio: this.paidModeCostRatio };
+      } catch (error) {
+        return { cost: null, ratio: this.paidModeCostRatio };
+      }
+    }
+
+    formatPaidCostValue(value) {
+      if (this.formatPaidModeCostFn) {
+        try {
+          const formatted = this.formatPaidModeCostFn(value);
+          if (formatted != null) {
+            return String(formatted);
+          }
+        } catch (error) {
+          // ignore formatting errors and fallback below
+        }
+      }
+      if (value && typeof value.toString === 'function') {
+        const text = value.toString();
+        if (typeof text === 'string' && text.trim()) {
+          return text;
+        }
+      }
+      return formatLocaleNumber(0, {
+        maximumFractionDigits: 0,
+        minimumFractionDigits: 0
+      });
+    }
+
+    updateModeButtonStates() {
+      if (!Array.isArray(this.modeButtons) || !this.modeButtons.length) {
+        return;
+      }
+      const activeMode = this.currentMode;
+      this.modeButtons.forEach(button => {
+        if (!button) return;
+        const modeId = this.normalizeMode(button.dataset?.arcadeMode);
+        const isActive = modeId === activeMode;
+        if (isActive) {
+          button.classList.add('arcade-mode-switch__button--active');
+        } else {
+          button.classList.remove('arcade-mode-switch__button--active');
+        }
+        button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      });
+    }
+
+    updateModeHint() {
+      if (!this.modeHint) {
+        return;
+      }
+      let message;
+      if (this.areRewardsEnabled()) {
+        const info = this.getPaidModeInfo();
+        const ratio = Number.isFinite(info?.ratio) ? info.ratio : this.paidModeCostRatio;
+        const percentValue = formatLocaleNumber(ratio * 100, {
+          maximumFractionDigits: ratio >= 0.1 ? 0 : 1,
+          minimumFractionDigits: 0
+        });
+        const percent = `${percentValue}%`;
+        const formattedCost = this.formatPaidCostValue(info?.cost);
+        message = translate('scripts.particules.ui.mode.paid.description', {
+          cost: formattedCost,
+          percent
+        });
+      } else {
+        message = translate('scripts.particules.ui.mode.free.description');
+      }
+      this.modeHint.textContent = message;
+    }
+
+    updateModeUI(action = this.overlayAction) {
+      if (!this.modeField) {
+        return;
+      }
+      const shouldShow = action === 'start' || action === 'restart';
+      this.modeField.hidden = !shouldShow;
+      this.modeField.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
+      this.modeButtons.forEach(button => {
+        button.disabled = !shouldShow;
+      });
+      if (shouldShow) {
+        this.updateModeButtonStates();
+        this.updateModeHint();
+      }
+    }
+
+    tryActivatePaidMode() {
+      if (!this.areRewardsEnabled()) {
+        return true;
+      }
+      if (!this.onPaidModeStart) {
+        return true;
+      }
+      const info = this.getPaidModeInfo();
+      const result = this.onPaidModeStart(info || { cost: null, ratio: this.paidModeCostRatio });
+      if (result === false) {
+        if (this.onPaidModeUnavailable) {
+          this.onPaidModeUnavailable();
+        }
+        this.updateModeHint();
+        return false;
+      }
+      this.updateModeHint();
+      return true;
+    }
+
+    handleModeButtonClick(event) {
+      if (!this.enabled) {
+        return;
+      }
+      const button = event?.currentTarget;
+      if (!button || button.disabled) {
+        return;
+      }
+      event.preventDefault();
+      const modeId = this.normalizeMode(button.dataset?.arcadeMode);
+      this.setMode(modeId);
+    }
+
+    handleLanguageChange() {
+      this.updateModeButtonStates();
+      this.updateModeHint();
     }
 
     handleOverlayButtonClick() {

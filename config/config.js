@@ -925,6 +925,20 @@ const GAME_CONFIG = {
     },
     particules: {
       ticketReward: 1,
+      /**
+       * Modes de jeu disponibles pour Particules.
+       * - free : partie d'entraînement sans coût ni récompense.
+       * - paid : mode avec récompenses qui prélève un pourcentage du solde actuel d'atomes.
+       */
+      modes: {
+        defaultMode: 'free',
+        free: { id: 'free' },
+        paid: {
+          id: 'paid',
+          /** Pourcentage du solde d'atomes utilisé comme coût d'entrée (0,5 = 50%). */
+          costRatio: 0.5
+        }
+      },
       grid: {
         columns: 14,
         rows: 6,

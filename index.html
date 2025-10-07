@@ -369,6 +369,42 @@
                 id="arcadeOverlayMessage"
                 data-i18n="index.sections.arcade.overlay.message"
               ></p>
+              <div
+                class="arcade-overlay__field"
+                id="arcadeModeField"
+                aria-hidden="false"
+              >
+                <span
+                  class="arcade-overlay__label"
+                  data-i18n="index.sections.arcade.overlay.mode.label"
+                ></span>
+                <div
+                  class="arcade-mode-switch"
+                  id="arcadeModeSwitch"
+                  role="group"
+                  data-i18n="aria-label:index.sections.arcade.overlay.mode.aria"
+                >
+                  <button
+                    type="button"
+                    class="arcade-mode-switch__button arcade-mode-switch__button--active"
+                    data-arcade-mode="free"
+                    aria-pressed="true"
+                    data-i18n="index.sections.arcade.overlay.mode.free"
+                  ></button>
+                  <button
+                    type="button"
+                    class="arcade-mode-switch__button"
+                    data-arcade-mode="paid"
+                    aria-pressed="false"
+                    data-i18n="index.sections.arcade.overlay.mode.paid"
+                  ></button>
+                </div>
+                <p
+                  class="arcade-mode-hint"
+                  id="arcadeModeHint"
+                  data-i18n="scripts.particules.ui.mode.free.description"
+                ></p>
+              </div>
               <div class="arcade-overlay__field">
                 <label
                   for="arcadeBrickSkinSelect"

@@ -62,6 +62,12 @@
         "canvasAria": "Particles play area",
         "overlay": {
           "message": "Tap or click the paddle to guide the particle and shatter the quantum bricks.",
+          "mode": {
+            "label": "Game mode",
+            "aria": "Choose the Particules game mode",
+            "free": "Free mode",
+            "paid": "Reward mode"
+          },
           "brickSkin": {
             "label": "Brick appearance",
             "aria": "Choose the brick appearance for Particles."
@@ -1781,6 +1787,19 @@
         },
         "overlay": {
           "defaultButton": "Continue"
+        },
+        "mode": {
+          "aria": "Choose the Particules game mode",
+          "free": {
+            "title": "Free mode",
+            "description": "Practice without spending atoms or earning rewards."
+          },
+          "paid": {
+            "title": "Reward mode",
+            "description": "Spend {cost} atoms ({percent}) to enable draw tickets and Mach3 credits.",
+            "insufficient": "Not enough atoms to start the reward mode.",
+            "debit": "Reward mode: -{cost} atoms"
+          }
         }
       }
     },
