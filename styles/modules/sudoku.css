@@ -50,37 +50,48 @@ body.theme-neon .sudoku-content {
 .sudoku-toolbar__button {
   appearance: none;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background: rgba(255, 255, 255, 0.08);
-  color: inherit;
   font: inherit;
   font-weight: 600;
   padding: 0.55rem 0.9rem;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease, background 0.2s ease;
   cursor: pointer;
   min-height: 2.6rem;
 }
 
 .sudoku-toolbar__select {
-  cursor: pointer;
+  border: 1px solid rgba(110, 170, 255, 0.55);
+  background: linear-gradient(135deg, rgba(38, 70, 150, 0.95), rgba(86, 148, 255, 0.98));
+  color: #fff;
   padding-right: 2.5rem;
+  box-shadow: 0 10px 22px rgba(18, 34, 88, 0.35);
 }
 
 .sudoku-toolbar__button {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+  color: inherit;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.35rem;
 }
 
-.sudoku-toolbar__button:hover,
-.sudoku-toolbar__select:hover {
+.sudoku-toolbar__select:hover,
+.sudoku-toolbar__select:focus-visible {
+  border-color: rgba(160, 210, 255, 0.85);
+  box-shadow: 0 0 0 2px rgba(110, 170, 255, 0.28), 0 16px 28px rgba(18, 38, 110, 0.45);
+}
+
+.sudoku-toolbar__select:focus-visible {
+  outline: none;
+}
+
+.sudoku-toolbar__button:hover {
   border-color: rgba(255, 255, 255, 0.35);
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.12);
 }
 
-.sudoku-toolbar__button:focus-visible,
-.sudoku-toolbar__select:focus-visible {
+.sudoku-toolbar__button:focus-visible {
   outline: 2px solid rgba(255, 255, 255, 0.55);
   outline-offset: 2px;
 }
@@ -97,7 +108,13 @@ body.theme-neon .sudoku-content {
   color: #fff;
 }
 
-body.theme-light .sudoku-toolbar__select,
+body.theme-light .sudoku-toolbar__select {
+  background: linear-gradient(135deg, rgba(96, 150, 255, 0.96), rgba(60, 110, 220, 0.98));
+  border-color: rgba(60, 110, 210, 0.55);
+  color: #fff;
+  box-shadow: 0 10px 20px rgba(30, 60, 130, 0.28);
+}
+
 body.theme-light .sudoku-toolbar__button {
   background: rgba(255, 255, 255, 0.92);
   border-color: rgba(12, 16, 32, 0.12);
@@ -114,7 +131,11 @@ body.theme-light .sudoku-toolbar__button--danger {
   color: #fff;
 }
 
-body.theme-neon .sudoku-toolbar__select,
+body.theme-neon .sudoku-toolbar__select {
+  background: linear-gradient(135deg, rgba(34, 60, 150, 0.95), rgba(120, 168, 255, 0.98));
+  border-color: rgba(150, 200, 255, 0.65);
+}
+
 body.theme-neon .sudoku-toolbar__button {
   background: rgba(16, 20, 54, 0.92);
   border-color: rgba(86, 120, 255, 0.38);
