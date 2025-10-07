@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title data-i18n="index.meta.title"></title>
+  <title data-i18n="index.meta.title">Atom to Univers</title>
   <link rel="stylesheet" href="styles/fonts.css" />
   <link rel="stylesheet" href="styles/main.css" />
 </head>
@@ -11,19 +11,30 @@
   <header class="app-header">
     <div class="header-main">
       <div class="header-brand-group">
-        <button class="brand brand-button" id="brandPortal" type="button">Atom2Univers</button>
+        <button
+          class="brand brand-button"
+          id="brandPortal"
+          type="button"
+          data-i18n="index.header.brand"
+        >
+          Atom2Univers
+        </button>
         <button
           class="header-playback-button"
           id="headerPlaybackToggle"
           type="button"
           data-state="play"
           aria-pressed="false"
-          aria-label="Play"
-          title="Play"
+          aria-label="Lecture"
+          title="Lecture"
           data-i18n="aria-label:index.sections.options.chiptune.controls.play;title:index.sections.options.chiptune.controls.play"
         ></button>
       </div>
-      <nav class="nav-menu" data-i18n="aria-label:index.navigation.primary">
+      <nav
+        class="nav-menu"
+        aria-label="Navigation principale"
+        data-i18n="aria-label:index.navigation.primary"
+      >
         <button
           class="nav-button"
           data-target="arcadeHub"
@@ -33,7 +44,7 @@
           disabled
           aria-disabled="true"
         >
-          <span data-i18n="index.navigation.items.arcade"></span>
+          <span data-i18n="index.navigation.items.arcade">Arcade</span>
         </button>
         <button
           class="nav-button"
@@ -42,18 +53,20 @@
           aria-hidden="true"
           disabled
           aria-disabled="true"
-        ><span data-i18n="index.navigation.items.shop"></span></button>
+        >
+          <span data-i18n="index.navigation.items.shop">Boutique</span>
+        </button>
         <button class="nav-button" data-target="gacha" hidden aria-hidden="true">
-          <span data-i18n="index.navigation.items.gacha"></span>
+          <span data-i18n="index.navigation.items.gacha">Gacha</span>
         </button>
         <button class="nav-button" data-target="tableau" hidden aria-hidden="true">
-          <span data-i18n="index.navigation.items.table"></span>
+          <span data-i18n="index.navigation.items.table">Table</span>
         </button>
         <button class="nav-button" data-target="fusion" hidden aria-hidden="true">
-          <span data-i18n="index.navigation.items.fusion"></span>
+          <span data-i18n="index.navigation.items.fusion">Fusion</span>
         </button>
         <button class="nav-button" data-target="info" hidden aria-hidden="true">
-          <span data-i18n="index.navigation.items.info"></span>
+          <span data-i18n="index.navigation.items.info">Infos</span>
         </button>
         <button
           class="nav-button"
@@ -62,25 +75,31 @@
           aria-hidden="true"
           disabled
           aria-disabled="true"
-        ><span data-i18n="index.navigation.items.goals"></span></button>
+        >
+          <span data-i18n="index.navigation.items.goals">Objectifs</span>
+        </button>
         <button class="nav-button" data-target="bigbang" id="navBigBangButton" hidden aria-hidden="true">
-          <span data-i18n="index.navigation.items.bigbang"></span>
+          <span data-i18n="index.navigation.items.bigbang">Big Bang</span>
         </button>
         <button class="nav-button" data-target="options">
-          <span data-i18n="index.navigation.items.options"></span>
+          <span data-i18n="index.navigation.items.options">Options</span>
         </button>
       </nav>
     </div>
     <div class="status-bar" aria-live="polite">
       <div class="status-side status-side--left">
         <div class="status-item status-item--left">
-          <span class="status-label" data-i18n="index.status.apc"></span>
+          <span class="status-label" data-i18n="index.status.apc">APC</span>
           <div class="status-value-group status-value-group--left">
             <span class="status-value" id="statusApc">1</span>
           </div>
         </div>
       </div>
-      <div class="status-item status-item--center" data-i18n="aria-label:index.status.totalAtoms">
+      <div
+        class="status-item status-item--center"
+        aria-label="Total d'atomes"
+        data-i18n="aria-label:index.status.totalAtoms"
+      >
         <button class="status-atoms-button" type="button" id="statusAtomsButton">
           <span class="status-value status-value--main" id="statusAtoms">0</span>
         </button>
@@ -100,7 +119,7 @@
           </div>
         </div>
         <div class="status-item status-item--right">
-          <span class="status-label" data-i18n="index.status.aps"></span>
+          <span class="status-label" data-i18n="index.status.aps">APS</span>
           <div class="status-value-group status-value-group--aps">
             <span class="status-value" id="statusAps">0</span>
           </div>

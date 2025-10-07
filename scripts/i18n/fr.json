@@ -7,15 +7,18 @@
       "primary": "Navigation principale",
       "items": {
         "arcade": "Arcade",
-        "shop": "Shop",
+        "shop": "Boutique",
         "gacha": "Gacha",
         "table": "Table",
         "fusion": "Fusion",
         "info": "Infos",
-        "goals": "Goals",
+        "goals": "Objectifs",
         "bigbang": "Big Bang",
         "options": "Options"
       }
+    },
+    "header": {
+      "brand": "Atom2Univers"
     },
     "status": {
       "totalAtoms": "Total d'atomes",
