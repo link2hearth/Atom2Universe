@@ -38,6 +38,15 @@
 }
 
 @font-face {
+  font-family: 'Cinzel';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Cinzel-400.woff2') format('woff2'),
+       url('../fonts/Cinzel-Regular.ttf') format('truetype');
+}
+
+@font-face {
   font-family: 'DigitTech7';
   font-style: normal;
   font-weight: 400;
