@@ -1479,7 +1479,7 @@ const GAME_CONFIG = {
       ],
       successChance: 0.5,
       rewards: {
-        apcFlat: 25000,
+        apcFlat: 10000,
         elements: [
           { elementId: 'element-002-helium', count: 1 }
         ]
@@ -1495,7 +1495,7 @@ const GAME_CONFIG = {
       ],
       successChance: 0.5,
       rewards: {
-        apcFlat: 25000,
+        apcFlat: 20000,
         elements: [
           { elementId: 'element-006-carbone', count: 1 }
         ]
