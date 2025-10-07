@@ -2718,84 +2718,84 @@ const GAME_CONFIG = {
       numero: 81,
       name: 'Thallium',
       famille: 'post-transition-metal',
-      rarete: 'mythique',
+      rarete: 'singulier',
       bonus: 'ajoute +1 au APS flat'
     },
     {
       numero: 82,
       name: 'Plomb',
       famille: 'post-transition-metal',
-      rarete: 'mythique',
+      rarete: 'singulier',
       bonus: 'ajoute +1 au APS flat'
     },
     {
       numero: 83,
       name: 'Bismuth',
       famille: 'post-transition-metal',
-      rarete: 'mythique',
+      rarete: 'singulier',
       bonus: 'ajoute +1 au APS flat'
     },
     {
       numero: 84,
       name: 'Polonium',
       famille: 'post-transition-metal',
-      rarete: 'mythique',
+      rarete: 'singulier',
       bonus: 'ajoute +1 au APS flat'
     },
     {
       numero: 85,
       name: 'Astate',
       famille: 'halogen',
-      rarete: 'mythique',
+      rarete: 'singulier',
       bonus: 'ajoute +1 au APS flat'
     },
     {
       numero: 86,
       name: 'Radon',
       famille: 'noble-gas',
-      rarete: 'mythique',
+      rarete: 'singulier',
       bonus: 'ajoute +1 au APS flat'
     },
     {
       numero: 87,
       name: 'Francium',
       famille: 'alkali-metal',
-      rarete: 'mythique',
+      rarete: 'singulier',
       bonus: 'ajoute +1 au APS flat'
     },
     {
       numero: 88,
       name: 'Radium',
       famille: 'alkaline-earth-metal',
-      rarete: 'mythique',
+      rarete: 'singulier',
       bonus: 'ajoute +1 au APS flat'
     },
     {
       numero: 89,
       name: 'Actinium',
       famille: 'actinide',
-      rarete: 'mythique',
+      rarete: 'singulier',
       bonus: 'ajoute +1 au APS flat'
     },
     {
       numero: 90,
       name: 'Thorium',
       famille: 'actinide',
-      rarete: 'mythique',
+      rarete: 'singulier',
       bonus: 'ajoute +1 au APS flat'
     },
     {
       numero: 91,
       name: 'Protactinium',
       famille: 'actinide',
-      rarete: 'mythique',
+      rarete: 'singulier',
       bonus: 'ajoute +1 au APS flat'
     },
     {
       numero: 92,
       name: 'Uranium',
       famille: 'actinide',
-      rarete: 'mythique',
+      rarete: 'singulier',
       bonus: 'ajoute +1 au APS flat'
     },
     {
