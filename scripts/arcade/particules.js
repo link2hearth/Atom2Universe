@@ -130,6 +130,8 @@
   };
   const readArray = (value, fallback) => (Array.isArray(value) && value.length ? value : fallback);
 
+  const degreesToRadians = degrees => (Math.PI / 180) * degrees;
+
   const cloneParticle = particle => {
     if (!particle || typeof particle !== 'object') {
       return particle;
@@ -643,6 +645,15 @@
   const ballConfig = readObject(ARCADE_CONFIG.ball);
   const ballTrailConfig = readObject(ballConfig.trail);
   const ballGhostConfig = readObject(ballConfig.ghost);
+  const ballLaunchAngleDegreesConfig = readObject(ballConfig.launchAngleDegrees);
+  const defaultLaunchMinDeg = -100;
+  const defaultLaunchMaxDeg = -80;
+  let launchAngleMinDeg = readNumber(ballLaunchAngleDegreesConfig.min, defaultLaunchMinDeg);
+  let launchAngleMaxDeg = readNumber(ballLaunchAngleDegreesConfig.max, defaultLaunchMaxDeg);
+  if (Number.isFinite(launchAngleMinDeg) && Number.isFinite(launchAngleMaxDeg)
+    && launchAngleMaxDeg < launchAngleMinDeg) {
+    [launchAngleMinDeg, launchAngleMaxDeg] = [launchAngleMaxDeg, launchAngleMinDeg];
+  }
   settings.ball = {
     radiusRatio: readNumber(ballConfig.radiusRatio, 0.015),
     baseSpeedRatio: readNumber(ballConfig.baseSpeedRatio, 1.9),
@@ -657,7 +668,9 @@
     trailPruneMs: readNumber(ballTrailConfig.pruneMs, 260, { min: 0 }),
     ghostIntervalMs: readNumber(ballGhostConfig.intervalMs, 68, { min: 0 }),
     ghostBlurFactor: readNumber(ballGhostConfig.blurFactor, 1.4),
-    ghostRemoveDelayMs: readNumber(ballGhostConfig.removeDelayMs, 360, { min: 0 })
+    ghostRemoveDelayMs: readNumber(ballGhostConfig.removeDelayMs, 360, { min: 0 }),
+    launchAngleMin: degreesToRadians(launchAngleMinDeg),
+    launchAngleMax: degreesToRadians(launchAngleMaxDeg)
   };
 
   const gravitonConfig = readObject(ARCADE_CONFIG.graviton);
@@ -1467,7 +1480,9 @@
       this.ballSettings = {
         radiusRatio: SETTINGS.ball.radiusRatio,
         baseSpeedRatio: SETTINGS.ball.baseSpeedRatio,
-        speedGrowthRatio: SETTINGS.ball.speedGrowthRatio
+        speedGrowthRatio: SETTINGS.ball.speedGrowthRatio,
+        launchAngleMin: SETTINGS.ball.launchAngleMin,
+        launchAngleMax: SETTINGS.ball.launchAngleMax
       };
 
       this.handleFrame = this.handleFrame.bind(this);
@@ -2318,7 +2333,7 @@
       if (!attachToPaddle) {
         const launchAngle = typeof angle === 'number'
           ? angle
-          : (-Math.PI / 2) * 0.75 + Math.random() * (Math.PI / 3);
+          : this.getRandomLaunchAngle();
         const speed = this.getBallSpeed();
         ball.vx = Math.cos(launchAngle) * speed;
         ball.vy = Math.sin(launchAngle) * speed;
@@ -2341,9 +2356,22 @@
       return Math.max(BALL_MIN_SPEED_PER_MS, speedPerMillisecond);
     }
 
+    getRandomLaunchAngle() {
+      const { launchAngleMin, launchAngleMax } = this.ballSettings;
+      if (Number.isFinite(launchAngleMin) && Number.isFinite(launchAngleMax)) {
+        const effectiveMin = Math.min(launchAngleMin, launchAngleMax);
+        const effectiveMax = Math.max(launchAngleMin, launchAngleMax);
+        if (effectiveMax <= effectiveMin) {
+          return effectiveMin;
+        }
+        return effectiveMin + Math.random() * (effectiveMax - effectiveMin);
+      }
+      return (-Math.PI / 2) * 0.75 + Math.random() * (Math.PI / 3);
+    }
+
     launchBallFromPaddle(ball) {
       if (!ball) return;
-      const angle = (-Math.PI / 2) * 0.75 + Math.random() * (Math.PI / 3);
+      const angle = this.getRandomLaunchAngle();
       const speed = this.getBallSpeed();
       ball.vx = Math.cos(angle) * speed;
       ball.vy = Math.sin(angle) * speed;

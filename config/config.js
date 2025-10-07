@@ -970,6 +970,14 @@ const GAME_CONFIG = {
         minSpeedPerMs: 0.25,
         speedFactor: 0.0006,
         followOffsetRatio: 1.6,
+        /**
+         * Intervalle (en degrés) utilisé lors du lancement automatique de la bille.
+         * Par défaut, la bille est envoyée quasi à la verticale pour maximiser la montée initiale.
+         */
+        launchAngleDegrees: {
+          min: -100,
+          max: -80
+        },
         trail: {
           minDistance: 2,
           minDistanceFactor: 0.35,
