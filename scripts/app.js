@@ -2445,9 +2445,7 @@ const elements = {
   metauxReshuffleButton: document.getElementById('metauxReshuffleButton'),
   languageSelect: document.getElementById('languageSelect'),
   textFontSelect: document.getElementById('textFontSelect'),
-  textFontPreview: document.getElementById('textFontPreview'),
   digitFontSelect: document.getElementById('digitFontSelect'),
-  digitFontPreview: document.getElementById('digitFontPreview'),
   musicTrackSelect: document.getElementById('musicTrackSelect'),
   musicTrackStatus: document.getElementById('musicTrackStatus'),
   musicVolumeSlider: document.getElementById('musicVolumeSlider'),
@@ -2734,16 +2732,6 @@ function writeStoredTextFont(value) {
   }
 }
 
-function updateTextFontPreviewText() {
-  if (!elements.textFontPreview) {
-    return;
-  }
-  const key = 'index.sections.options.textFont.preview';
-  const fallback = 'Sample text — Atom → Univers 0 1 2 3';
-  elements.textFontPreview.setAttribute('data-i18n', key);
-  elements.textFontPreview.textContent = translateOrDefault(key, fallback);
-}
-
 function applyTextFontSelection(selection, options = {}) {
   const normalized = normalizeTextFontSelection(selection);
   const config = TEXT_FONT_CHOICES[normalized] || TEXT_FONT_CHOICES[TEXT_FONT_DEFAULT];
@@ -2761,7 +2749,6 @@ function applyTextFontSelection(selection, options = {}) {
   if (settings.persist) {
     writeStoredTextFont(normalized);
   }
-  updateTextFontPreviewText();
   return normalized;
 }
 
@@ -2776,20 +2763,6 @@ function initTextFontOption() {
     const value = event?.target?.value;
     applyTextFontSelection(value, { persist: true, updateControl: false });
   });
-}
-
-function subscribeTextFontLanguageUpdates() {
-  const handler = () => {
-    updateTextFontPreviewText();
-  };
-  const api = getI18nApi();
-  if (api && typeof api.onLanguageChanged === 'function') {
-    api.onLanguageChanged(handler);
-    return;
-  }
-  if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
-    globalThis.addEventListener('i18n:languagechange', handler);
-  }
 }
 
 function normalizeDigitFontSelection(value) {
@@ -2823,16 +2796,6 @@ function writeStoredDigitFont(value) {
   }
 }
 
-function updateDigitFontPreviewText() {
-  if (!elements.digitFontPreview) {
-    return;
-  }
-  const key = 'index.sections.options.digitFont.preview';
-  const fallback = '0 1 2 3 4 5 6 7 8 9';
-  elements.digitFontPreview.setAttribute('data-i18n', key);
-  elements.digitFontPreview.textContent = translateOrDefault(key, fallback);
-}
-
 function applyDigitFontSelection(selection, options = {}) {
   const normalized = normalizeDigitFontSelection(selection);
   const config = DIGIT_FONT_CHOICES[normalized] || DIGIT_FONT_CHOICES[DIGIT_FONT_DEFAULT];
@@ -2851,7 +2814,6 @@ function applyDigitFontSelection(selection, options = {}) {
   if (settings.persist) {
     writeStoredDigitFont(normalized);
   }
-  updateDigitFontPreviewText();
   return normalized;
 }
 
@@ -2866,20 +2828,6 @@ function initDigitFontOption() {
     const value = event?.target?.value;
     applyDigitFontSelection(value, { persist: true, updateControl: false });
   });
-}
-
-function subscribeDigitFontLanguageUpdates() {
-  const handler = () => {
-    updateDigitFontPreviewText();
-  };
-  const api = getI18nApi();
-  if (api && typeof api.onLanguageChanged === 'function') {
-    api.onLanguageChanged(handler);
-    return;
-  }
-  if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
-    globalThis.addEventListener('i18n:languagechange', handler);
-  }
 }
 
 function updateBrickSkinOption() {
@@ -3504,9 +3452,7 @@ function subscribeCritAtomLanguageUpdates() {
 }
 
 initTextFontOption();
-subscribeTextFontLanguageUpdates();
 initDigitFontOption();
-subscribeDigitFontLanguageUpdates();
 initClickSoundOption();
 subscribeClickSoundLanguageUpdates();
 initCritAtomOption();
