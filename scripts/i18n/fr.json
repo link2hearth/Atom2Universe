@@ -40,7 +40,9 @@
         }
       },
       "shop": {
-        "title": "Boutique quantique"
+        "title": "Boutique quantique",
+        "placeholder": "La boutique se charge…",
+        "actionsPlaceholder": "Les options de quantité apparaîtront ici."
       },
       "gacha": {
         "title": "Portail de tirage cosmique",
@@ -52,7 +54,9 @@
         },
         "sunButton": "Déclencher un tirage cosmique",
         "sunAlt": "Soleil cosmique",
-        "continue": "Cliquer pour continuer"
+        "continue": "Cliquer pour continuer",
+        "featuredPlaceholder": "Aucun tirage vedette pour le moment.",
+        "resultPlaceholder": "Résultat du tirage"
       },
       "arcade": {
         "aria": "Mini-jeu Particules",

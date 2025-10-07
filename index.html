@@ -144,6 +144,7 @@
       id="game"
       class="page active page--void"
       data-page-group="clicker"
+      aria-label="Chambre de création atomique"
       data-i18n="aria-label:index.sections.game.aria"
     >
       <div class="starfield" aria-hidden="true"></div>
@@ -152,6 +153,7 @@
         class="atom-button"
         id="atomButton"
         type="button"
+        aria-label="Créer des atomes"
         data-i18n="aria-label:index.sections.game.atomButton.aria"
       >
         <span class="atom-visual">
@@ -159,8 +161,8 @@
             src="Assets/Image/Atom.png"
             class="atom-image"
             draggable="false"
+            alt="Illustration d'un atome vibrant"
             data-i18n="alt:index.sections.game.atomButton.alt"
-            alt=""
           />
         </span>
       </button>
@@ -177,10 +179,23 @@
       data-page-group="clicker"
       aria-labelledby="shop-title"
     >
-      <h2 id="shop-title" class="visually-hidden" data-i18n="index.sections.shop.title"></h2>
+      <h2 id="shop-title" class="visually-hidden" data-i18n="index.sections.shop.title">
+        Boutique quantique
+      </h2>
       <div class="shop-layout">
-        <div class="shop-actions-header" id="shopActionsHeader" aria-hidden="true"></div>
-        <div class="shop-list" id="shopList" role="list"></div>
+        <div class="shop-actions-header" id="shopActionsHeader" aria-hidden="true">
+          <p
+            class="shop-actions-header__placeholder"
+            data-i18n="index.sections.shop.actionsPlaceholder"
+          >
+            Les options d'achat apparaîtront ici.
+          </p>
+        </div>
+        <div class="shop-list" id="shopList" role="list">
+          <p class="shop-list__placeholder" data-i18n="index.sections.shop.placeholder">
+            La boutique se charge…
+          </p>
+        </div>
       </div>
     </section>
 
@@ -190,13 +205,20 @@
       data-page-group="clicker"
       aria-labelledby="gacha-title"
     >
-      <h2 id="gacha-title" class="visually-hidden" data-i18n="index.sections.gacha.title"></h2>
-      <div class="gacha-featured-info" id="gachaFeaturedInfo" aria-live="polite" hidden></div>
+      <h2 id="gacha-title" class="visually-hidden" data-i18n="index.sections.gacha.title">
+        Portail de tirage cosmique
+      </h2>
+      <div class="gacha-featured-info" id="gachaFeaturedInfo" aria-live="polite" hidden>
+        <p data-i18n="index.sections.gacha.featuredPlaceholder">
+          Aucun tirage vedette pour le moment.
+        </p>
+      </div>
       <div class="gacha-ticket-counter" id="gachaTicketCounter" aria-live="polite">
         <button
           class="gacha-ticket-mode"
           id="gachaTicketModeButton"
           type="button"
+          aria-label="Basculer le mode de tirage (actuel : Tirage x1)"
           data-i18n="aria-label:index.sections.gacha.toggleAria"
         >
           <img
@@ -206,7 +228,9 @@
             aria-hidden="true"
             draggable="false"
           />
-          <span class="gacha-ticket-mode__label" id="gachaTicketModeLabel" data-i18n="index.sections.gacha.modeSingle"></span>
+          <span class="gacha-ticket-mode__label" id="gachaTicketModeLabel" data-i18n="index.sections.gacha.modeSingle">
+            Tirage x1
+          </span>
         </button>
         <span class="gacha-ticket-counter__value" id="gachaTicketValue">0</span>
       </div>
@@ -214,10 +238,16 @@
         class="gacha-sun-button"
         id="gachaSunButton"
         type="button"
+        aria-label="Déclencher un tirage cosmique"
         data-i18n="aria-label:index.sections.gacha.sunButton"
         aria-describedby="gachaTicketCounter"
       >
-        <img src="Assets/Image/Sun.png" draggable="false" data-i18n="alt:index.sections.gacha.sunAlt" alt="" />
+        <img
+          src="Assets/Image/Sun.png"
+          draggable="false"
+          alt="Soleil cosmique"
+          data-i18n="alt:index.sections.gacha.sunAlt"
+        />
       </button>
       <div
         class="gacha-animation-layer"
@@ -228,8 +258,12 @@
       >
         <canvas class="gacha-confetti-layer" id="gachaAnimationConfetti" aria-hidden="true"></canvas>
         <div class="gacha-overlay" aria-hidden="true"></div>
-        <div class="gacha-result" id="gachaResult" role="status" aria-live="assertive"></div>
-        <p class="gacha-continue-hint" id="gachaContinueHint" data-i18n="index.sections.gacha.continue"></p>
+        <div class="gacha-result" id="gachaResult" role="status" aria-live="assertive">
+          <p data-i18n="index.sections.gacha.resultPlaceholder">Résultat du tirage</p>
+        </div>
+        <p class="gacha-continue-hint" id="gachaContinueHint" data-i18n="index.sections.gacha.continue">
+          Cliquer pour continuer
+        </p>
       </div>
     </section>
 

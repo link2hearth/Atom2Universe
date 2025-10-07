@@ -40,7 +40,9 @@
         }
       },
       "shop": {
-        "title": "Quantum shop"
+        "title": "Quantum shop",
+        "placeholder": "The shop is loading…",
+        "actionsPlaceholder": "Quantity options will appear here soon"
       },
       "gacha": {
         "title": "Cosmic draw portal",
@@ -52,7 +54,9 @@
         },
         "sunButton": "Trigger a cosmic draw",
         "sunAlt": "Cosmic sun",
-        "continue": "Click to continue"
+        "continue": "Click to continue",
+        "featuredPlaceholder": "No featured draw is available right now.",
+        "resultPlaceholder": "Draw result"
       },
       "arcade": {
         "aria": "Particles mini-game",
