@@ -935,8 +935,8 @@ const GAME_CONFIG = {
         free: { id: 'free' },
         paid: {
           id: 'paid',
-          /** Pourcentage du solde d'atomes utilisé comme coût d'entrée (0,5 = 50%). */
-          costRatio: 0.5
+          /** Pourcentage du solde d'atomes utilisé comme coût d'entrée (0,9 = 90%). */
+          costRatio: 0.9
         }
       },
       grid: {

@@ -1782,7 +1782,7 @@
           },
           "paid": {
             "title": "Mode récompenses",
-            "description": "Payez {cost} atomes ({percent}) pour activer les tickets de tirage et les crédits Mach3.",
+            "description": "Consommez {percent} de vos Atomes pour tenter de gagner des tickets de tirage d'éléments.",
             "insufficient": "Atomes insuffisants pour lancer le mode récompenses.",
             "debit": "Mode récompenses : -{cost} atomes"
           }
