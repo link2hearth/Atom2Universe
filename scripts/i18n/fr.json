@@ -392,9 +392,19 @@
           "ariaLabel": "Choisir la police utilisée pour les nombres",
           "options": {
             "orbitron": "Orbitron",
-            "digittech7": "Digit Tech 7"
+            "digittech7": "Digit Tech 7",
+            "vt323": "VT323"
           },
           "preview": "0 1 2 3 4 5 6 7 8 9"
+        },
+        "textFont": {
+          "label": "Police du texte",
+          "ariaLabel": "Choisir la police utilisée pour les textes de l’interface",
+          "options": {
+            "orbitron": "Orbitron",
+            "vt323": "VT323"
+          },
+          "preview": "Texte d’exemple — Atom → Univers 0 1 2 3"
         },
         "clickSound": {
           "title": "Son du clicker",

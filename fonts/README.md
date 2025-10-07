@@ -9,6 +9,7 @@ Le jeu repose sur les familles et variantes suivantes :
 - `Audiowide` — régulier (400)
 - `Orbitron` — régulier (400), semi-bold (600) et bold (700)
 - `DigitTech7` — régulier (400) pour certains affichages numériques
+- `VT323` — régulier (400) pour proposer une alternative rétro
 
 Chaque variante peut être fournie au format `.woff2` **ou** `.ttf`. Le jeu essaiera d’abord de charger le fichier `.woff2`, puis
 de basculer sur la version `.ttf` si elle est disponible. Respecte les noms utilisés dans `styles/fonts.css`, par exemple

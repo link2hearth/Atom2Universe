@@ -78,7 +78,7 @@
 
 .shop-item__header h3 {
   margin: 0;
-  font-family: 'Orbitron', sans-serif;
+  font-family: var(--font-text, 'Orbitron', sans-serif);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   font-size: 0.85rem;
@@ -113,7 +113,7 @@
   border: 1px solid transparent;
   padding: 0.45rem 0.75rem;
   border-radius: 14px;
-  font-family: 'Orbitron', sans-serif;
+  font-family: var(--font-text, 'Orbitron', sans-serif);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   cursor: pointer;

@@ -392,9 +392,19 @@
           "ariaLabel": "Choose the font used for numbers",
           "options": {
             "orbitron": "Orbitron",
-            "digittech7": "Digit Tech 7"
+            "digittech7": "Digit Tech 7",
+            "vt323": "VT323"
           },
           "preview": "0 1 2 3 4 5 6 7 8 9"
+        },
+        "textFont": {
+          "label": "Text font",
+          "ariaLabel": "Choose the font used for interface text",
+          "options": {
+            "orbitron": "Orbitron",
+            "vt323": "VT323"
+          },
+          "preview": "Sample text — Atom → Univers 0 1 2 3"
         },
         "clickSound": {
           "title": "Clicker sound",

@@ -464,7 +464,7 @@
   align-items: center;
   justify-content: center;
   color: #f8f9ff;
-  font-family: 'Orbitron', sans-serif;
+  font-family: var(--font-text, 'Orbitron', sans-serif);
   font-size: clamp(0.38rem, 0.8vw, 0.62rem);
   letter-spacing: 0.14em;
   text-transform: uppercase;
