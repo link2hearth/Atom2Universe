@@ -1225,20 +1225,39 @@
       <div class="options-grid">
         <div class="option-card option-card--intro">
           <div class="option-card__header option-card__header--welcome">
-            <h3 id="optionsWelcomeTitle"></h3>
-            <select id="languageSelect" data-i18n="aria-label:index.sections.options.language.label">
-              <option value="fr" data-i18n="index.sections.options.language.options.fr"></option>
-              <option value="en" data-i18n="index.sections.options.language.options.en"></option>
+            <h3
+              id="optionsWelcomeTitle"
+              data-i18n="index.sections.options.welcome.title"
+            >
+              Bienvenue
+            </h3>
+            <select
+              id="languageSelect"
+              aria-label="Langue de l’interface"
+              data-i18n="aria-label:index.sections.options.language.label"
+            >
+              <option value="fr" data-i18n="index.sections.options.language.options.fr">Français</option>
+              <option value="en" data-i18n="index.sections.options.language.options.en">Anglais</option>
             </select>
           </div>
-          <div id="optionsWelcomeIntro" class="option-welcome-intro"></div>
+          <div id="optionsWelcomeIntro" class="option-welcome-intro">
+            <p data-i18n="index.sections.options.welcome.intro.main">
+              Bienvenue dans Atom to Univers. Cliquez pour générer vos premiers atomes, achetez des améliorations dans la boutique
+              et automatisez la production pour façonner votre univers.
+            </p>
+            <p data-i18n="index.sections.options.welcome.intro.note">
+              Débloquez les mini-jeux et fonctionnalités au fil de votre progression pour multiplier vos gains d’APC et d’APS.
+            </p>
+          </div>
           <div class="option-card__toggles">
             <div class="option-toggle-card" id="clickSoundToggleCard">
               <div class="option-toggle-card__content">
                 <h4
                   class="option-toggle-card__title"
                   data-i18n="index.sections.options.clickSound.title"
-                ></h4>
+                >
+                  Son du clicker
+                </h4>
               </div>
               <div class="option-toggle-card__control">
                 <label class="toggle-switch">
@@ -1246,6 +1265,7 @@
                     type="checkbox"
                     id="clickSoundToggle"
                     checked
+                    aria-label="Activer ou couper le son du clicker"
                     data-i18n="aria-label:index.sections.options.clickSound.ariaLabel"
                     aria-describedby="clickSoundToggleStatus"
                   />
@@ -1254,7 +1274,9 @@
                     class="toggle-switch__label"
                     id="clickSoundToggleStatus"
                     data-i18n="index.sections.options.clickSound.state.on"
-                  ></span>
+                  >
+                    Avec
+                  </span>
                 </label>
               </div>
             </div>
@@ -1263,7 +1285,9 @@
                 <h4
                   class="option-toggle-card__title"
                   data-i18n="index.sections.options.critAtoms.title"
-                ></h4>
+                >
+                  Atomes critiques animés
+                </h4>
               </div>
               <div class="option-toggle-card__control">
                 <label class="toggle-switch">
@@ -1271,6 +1295,7 @@
                     type="checkbox"
                     id="critAtomToggle"
                     checked
+                    aria-label="Activer ou couper les atomes animés lors des critiques"
                     data-i18n="aria-label:index.sections.options.critAtoms.ariaLabel"
                     aria-describedby="critAtomToggleStatus"
                   />
@@ -1279,7 +1304,9 @@
                     class="toggle-switch__label"
                     id="critAtomToggleStatus"
                     data-i18n="index.sections.options.critAtoms.state.on"
-                  ></span>
+                  >
+                    Avec
+                  </span>
                 </label>
               </div>
             </div>
@@ -1289,6 +1316,7 @@
               <label for="textFontSelect" data-i18n="index.sections.options.textFont.label">Police du texte</label>
               <select
                 id="textFontSelect"
+                aria-label="Choisir la police utilisée pour les textes de l’interface"
                 data-i18n="aria-label:index.sections.options.textFont.ariaLabel"
               >
                 <option value="orbitron" data-i18n="index.sections.options.textFont.options.orbitron">Orbitron</option>
@@ -1300,6 +1328,7 @@
               <label for="digitFontSelect" data-i18n="index.sections.options.digitFont.label">Police des chiffres</label>
               <select
                 id="digitFontSelect"
+                aria-label="Choisir la police utilisée pour les nombres"
                 data-i18n="aria-label:index.sections.options.digitFont.ariaLabel"
               >
                 <option value="orbitron" data-i18n="index.sections.options.digitFont.options.orbitron">Orbitron</option>
@@ -1309,7 +1338,20 @@
               </select>
             </div>
           </div>
-          <div id="optionsArcadeDetails" class="option-note" hidden aria-hidden="true"></div>
+          <div id="optionsArcadeDetails" class="option-note" hidden aria-hidden="true">
+            <p>
+              <strong data-i18n="index.sections.options.welcome.details.particles.label">Mini Jeu Particules :</strong>
+              <span data-i18n="index.sections.options.welcome.details.particles.description">Collisionnez les particules élémentaires pour gagner des tickets de tirage et des crédits Mach3.</span>
+            </p>
+            <p>
+              <strong data-i18n="index.sections.options.welcome.details.gacha.label">Gacha :</strong>
+              <span data-i18n="index.sections.options.welcome.details.gacha.description">Utilisez vos tickets pour récupérer des éléments du tableau périodique et débloquer des bonus de production.</span>
+            </p>
+            <p>
+              <strong data-i18n="index.sections.options.welcome.details.match3.label">Mini jeu Mach3 :</strong>
+              <span data-i18n="index.sections.options.welcome.details.match3.description">Alignez les métaux le plus vite possible pour booster vos gains d’APS.</span>
+            </p>
+          </div>
         </div>
         <div class="option-card option-card--chiptune">
           <h3 data-i18n="index.sections.options.chiptune.title">Module Musique Midi</h3>
@@ -1385,8 +1427,11 @@
               class="chiptune-dropzone"
               role="button"
               tabindex="0"
+              aria-label="Déposez un fichier MIDI (.mid) ici ou cliquez pour le sélectionner"
               data-i18n="index.sections.options.chiptune.dropZone.prompt;aria-label:index.sections.options.chiptune.dropZone.prompt"
-            ></div>
+            >
+              Déposez un fichier MIDI (.mid) ici ou cliquez pour le sélectionner
+            </div>
           </div>
           <div class="option-row option-row--slider">
             <label for="chiptuneVolumeSlider" data-i18n="index.sections.options.chiptune.labels.volume">Volume général</label>
@@ -1421,7 +1466,13 @@
           </div>
           <p class="option-note" id="chiptuneStatus" data-i18n="index.sections.options.chiptune.status.noneLoaded">Aucun morceau chargé pour le moment.</p>
           <div class="option-row option-row--progress">
-            <label for="chiptuneProgressSlider" id="chiptuneProgressLabel" data-i18n="index.sections.options.chiptune.progress.label"></label>
+            <label
+              for="chiptuneProgressSlider"
+              id="chiptuneProgressLabel"
+              data-i18n="index.sections.options.chiptune.progress.label"
+            >
+              Position de lecture
+            </label>
             <input
               type="range"
               id="chiptuneProgressSlider"
@@ -1432,13 +1483,27 @@
               disabled
               aria-labelledby="chiptuneProgressLabel"
             />
-            <span class="option-value" id="chiptuneProgressValue" aria-live="polite" data-i18n="index.sections.options.chiptune.progress.empty"></span>
+            <span
+              class="option-value"
+              id="chiptuneProgressValue"
+              aria-live="polite"
+              data-i18n="index.sections.options.chiptune.progress.empty"
+            >
+              Aucun morceau chargé
+            </span>
           </div>
           <div class="option-row option-row--usage">
             <div class="chiptune-usage" role="group" aria-labelledby="chiptuneUsageTitle">
               <div class="chiptune-usage__header">
-                <span id="chiptuneUsageTitle" data-i18n="index.sections.options.chiptune.usage.title"></span>
-                <span id="chiptuneUsageSummary" class="chiptune-usage__summary" aria-live="polite" data-i18n="index.sections.options.chiptune.usage.summaryEmpty"></span>
+                <span id="chiptuneUsageTitle" data-i18n="index.sections.options.chiptune.usage.title">Programmes MIDI utilisés</span>
+                <span
+                  id="chiptuneUsageSummary"
+                  class="chiptune-usage__summary"
+                  aria-live="polite"
+                  data-i18n="index.sections.options.chiptune.usage.summaryEmpty"
+                >
+                  Aucun programme détecté
+                </span>
               </div>
               <div
                 id="chiptuneProgramUsage"
@@ -1450,13 +1515,15 @@
                 class="option-note chiptune-usage__note"
                 id="chiptuneUsageNote"
                 data-i18n="index.sections.options.chiptune.usage.note"
-              ></p>
+              >
+                Les numéros correspondent aux programmes General MIDI (0 à 127).
+              </p>
             </div>
           </div>
         </div>
       </div>
       <div class="options-reset">
-        <button id="resetButton" class="danger" data-i18n="index.sections.options.reset"></button>
+        <button id="resetButton" class="danger" data-i18n="index.sections.options.reset">Réinitialiser</button>
       </div>
     </section>
   </main>
@@ -1494,79 +1561,86 @@
   <div class="devkit-overlay" id="devkitOverlay" hidden aria-hidden="true">
     <div class="devkit-panel" id="devkitPanel" role="dialog" aria-modal="true" aria-labelledby="devkitTitle" tabindex="-1">
       <header class="devkit-panel__header">
-        <h2 id="devkitTitle" data-i18n="index.sections.devkit.title"></h2>
+        <h2 id="devkitTitle" data-i18n="index.sections.devkit.title">DevKit quantique</h2>
         <button
           type="button"
           class="devkit-panel__close"
           id="devkitCloseButton"
+          aria-label="Fermer le DevKit"
           data-i18n="aria-label:index.sections.devkit.close"
         >
           ×
         </button>
       </header>
-      <p class="devkit-panel__intro" data-i18n="index.sections.devkit.intro"></p>
+      <p class="devkit-panel__intro" data-i18n="index.sections.devkit.intro">
+        Outils de triche pour expérimentations rapides. Les changements sont immédiats.
+      </p>
       <div class="devkit-grid">
         <section class="devkit-section" aria-labelledby="devkitResourcesTitle">
-          <h3 id="devkitResourcesTitle" data-i18n="index.sections.devkit.resources.title"></h3>
+          <h3 id="devkitResourcesTitle" data-i18n="index.sections.devkit.resources.title">Ressources</h3>
           <form id="devkitAtomsForm" class="devkit-form">
-            <label for="devkitAtomsInput" data-i18n="index.sections.devkit.resources.giveAtoms"></label>
+            <label for="devkitAtomsInput" data-i18n="index.sections.devkit.resources.giveAtoms">Donner des atomes</label>
             <div class="devkit-form__controls">
               <input
                 type="text"
                 id="devkitAtomsInput"
                 inputmode="decimal"
                 autocomplete="off"
+                placeholder="ex : 1e9"
                 data-i18n="placeholder:index.sections.devkit.resources.atomsPlaceholder"
               />
-              <button type="submit" class="primary" data-i18n="index.sections.devkit.resources.add"></button>
+              <button type="submit" class="primary" data-i18n="index.sections.devkit.resources.add">Ajouter</button>
             </div>
           </form>
           <form id="devkitAutoForm" class="devkit-form">
-            <label for="devkitAutoInput" data-i18n="index.sections.devkit.resources.increaseAuto"></label>
+            <label for="devkitAutoInput" data-i18n="index.sections.devkit.resources.increaseAuto">Augmenter les APS plats</label>
             <div class="devkit-form__controls">
               <input
                 type="text"
                 id="devkitAutoInput"
                 inputmode="decimal"
                 autocomplete="off"
+                placeholder="ex : 250000"
                 data-i18n="placeholder:index.sections.devkit.resources.autoPlaceholder"
               />
-              <button type="submit" class="primary" data-i18n="index.sections.devkit.resources.increase"></button>
+              <button type="submit" class="primary" data-i18n="index.sections.devkit.resources.increase">Augmenter</button>
             </div>
           </form>
           <form id="devkitOfflineTimeForm" class="devkit-form">
-            <label for="devkitOfflineTimeInput" data-i18n="index.sections.devkit.resources.advanceOfflineTime"></label>
+            <label for="devkitOfflineTimeInput" data-i18n="index.sections.devkit.resources.advanceOfflineTime">Avancer le temps hors ligne (heures)</label>
             <div class="devkit-form__controls">
               <input
                 type="text"
                 id="devkitOfflineTimeInput"
                 inputmode="decimal"
                 autocomplete="off"
+                placeholder="ex : 1.5"
                 data-i18n="placeholder:index.sections.devkit.resources.timePlaceholder"
               />
-              <button type="submit" class="primary" data-i18n="index.sections.devkit.resources.simulateOffline"></button>
+              <button type="submit" class="primary" data-i18n="index.sections.devkit.resources.simulateOffline">Simuler hors ligne</button>
             </div>
           </form>
           <form id="devkitOnlineTimeForm" class="devkit-form">
-            <label for="devkitOnlineTimeInput" data-i18n="index.sections.devkit.resources.advanceOnlineTime"></label>
+            <label for="devkitOnlineTimeInput" data-i18n="index.sections.devkit.resources.advanceOnlineTime">Simuler du jeu actif (heures)</label>
             <div class="devkit-form__controls">
               <input
                 type="text"
                 id="devkitOnlineTimeInput"
                 inputmode="decimal"
                 autocomplete="off"
+                placeholder="ex : 1.5"
                 data-i18n="placeholder:index.sections.devkit.resources.timePlaceholder"
               />
-              <button type="submit" class="primary" data-i18n="index.sections.devkit.resources.simulateOnline"></button>
+              <button type="submit" class="primary" data-i18n="index.sections.devkit.resources.simulateOnline">Simuler en jeu</button>
             </div>
           </form>
           <div class="devkit-status-row">
-            <span data-i18n="index.sections.devkit.resources.autoBonusLabel"></span>
+            <span data-i18n="index.sections.devkit.resources.autoBonusLabel">Bonus APS actuel&nbsp;:</span>
             <strong id="devkitAutoStatus">0</strong>
-            <button type="button" id="devkitResetAuto" class="devkit-link" data-i18n="index.sections.devkit.resources.reset"></button>
+            <button type="button" id="devkitResetAuto" class="devkit-link" data-i18n="index.sections.devkit.resources.reset">Réinitialiser</button>
           </div>
           <form id="devkitTicketsForm" class="devkit-form">
-            <label for="devkitTicketsInput" data-i18n="index.sections.devkit.resources.giveTickets"></label>
+            <label for="devkitTicketsInput" data-i18n="index.sections.devkit.resources.giveTickets">Donner des tickets de tirage</label>
             <div class="devkit-form__controls">
               <input
                 type="number"
@@ -1574,13 +1648,14 @@
                 min="1"
                 step="1"
                 autocomplete="off"
+                placeholder="ex : 50"
                 data-i18n="placeholder:index.sections.devkit.resources.ticketsPlaceholder"
               />
-              <button type="submit" class="primary" data-i18n="index.sections.devkit.resources.add"></button>
+              <button type="submit" class="primary" data-i18n="index.sections.devkit.resources.add">Ajouter</button>
             </div>
           </form>
           <form id="devkitMach3TicketsForm" class="devkit-form">
-            <label for="devkitMach3TicketsInput" data-i18n="index.sections.devkit.resources.giveMach3Tickets"></label>
+            <label for="devkitMach3TicketsInput" data-i18n="index.sections.devkit.resources.giveMach3Tickets">Donner des tickets Mach3</label>
             <div class="devkit-form__controls">
               <input
                 type="number"
@@ -1588,25 +1663,28 @@
                 min="1"
                 step="1"
                 autocomplete="off"
+                placeholder="ex : 5"
                 data-i18n="placeholder:index.sections.devkit.resources.mach3TicketsPlaceholder"
               />
-              <button type="submit" class="primary" data-i18n="index.sections.devkit.resources.add"></button>
+              <button type="submit" class="primary" data-i18n="index.sections.devkit.resources.add">Ajouter</button>
             </div>
           </form>
         </section>
         <section class="devkit-section" aria-labelledby="devkitUnlockTitle">
-          <h3 id="devkitUnlockTitle" data-i18n="index.sections.devkit.unlocks.title"></h3>
-          <button type="button" class="devkit-action" id="devkitUnlockTrophies" data-i18n="index.sections.devkit.unlocks.trophies"></button>
-          <button type="button" class="devkit-action" id="devkitUnlockElements" data-i18n="index.sections.devkit.unlocks.elements"></button>
+          <h3 id="devkitUnlockTitle" data-i18n="index.sections.devkit.unlocks.title">Déblocages instantanés</h3>
+          <button type="button" class="devkit-action" id="devkitUnlockTrophies" data-i18n="index.sections.devkit.unlocks.trophies">Débloquer tous les succès</button>
+          <button type="button" class="devkit-action" id="devkitUnlockElements" data-i18n="index.sections.devkit.unlocks.elements">Débloquer tout le tableau périodique</button>
           <button
             type="button"
             class="devkit-action"
             id="devkitUnlockInfo"
             data-i18n="index.sections.devkit.unlocks.infoLocked"
-          ></button>
+          >
+            Débloquer la page Infos
+          </button>
         </section>
         <section class="devkit-section" aria-labelledby="devkitModesTitle">
-          <h3 id="devkitModesTitle" data-i18n="index.sections.devkit.modes.title"></h3>
+          <h3 id="devkitModesTitle" data-i18n="index.sections.devkit.modes.title">Modes persistants</h3>
           <button
             type="button"
             class="devkit-toggle"
@@ -1614,7 +1692,9 @@
             data-active="false"
             aria-pressed="false"
             data-i18n="index.sections.devkit.modes.shop"
-          ></button>
+          >
+            Magasin gratuit : désactivé
+          </button>
           <button
             type="button"
             class="devkit-toggle"
@@ -1622,12 +1702,16 @@
             data-active="false"
             aria-pressed="false"
             data-i18n="index.sections.devkit.modes.gacha"
-          ></button>
-          <p class="devkit-note" data-i18n="index.sections.devkit.modes.note"></p>
+          >
+            Tirages gratuits : désactivés
+          </button>
+          <p class="devkit-note" data-i18n="index.sections.devkit.modes.note">
+            Les modes restent actifs tant que la session est ouverte (raccourci F9).
+          </p>
         </section>
       </div>
       <footer class="devkit-panel__footer">
-        <p data-i18n="index.sections.devkit.footer"></p>
+        <p data-i18n="index.sections.devkit.footer">Appuyez sur F9 pour ouvrir ou fermer le DevKit.</p>
       </footer>
     </div>
   </div>

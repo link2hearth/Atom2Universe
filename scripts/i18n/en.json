@@ -459,6 +459,27 @@
       },
       "options": {
         "title": "Options",
+        "welcome": {
+          "title": "Welcome",
+          "intro": {
+            "main": "Welcome to Atom to Univers. Start clicking to generate your first atoms, buy upgrades in the shop, and automate production to shape your universe.",
+            "note": "Unlock mini-games and features as you progress to multiply your APC and APS gains."
+          },
+          "details": {
+            "particles": {
+              "label": "Particles mini-game:",
+              "description": "Collide elemental particles to earn gacha tickets and Mach3 credits."
+            },
+            "gacha": {
+              "label": "Gacha:",
+              "description": "Spend your tickets to collect periodic table elements and unlock production bonuses."
+            },
+            "match3": {
+              "label": "Mach3 mini-game:",
+              "description": "Align metals as fast as possible to boost your APS gains."
+            }
+          }
+        },
         "language": {
           "title": "Language",
           "label": "Interface language",

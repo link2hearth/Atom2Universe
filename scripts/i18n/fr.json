@@ -459,6 +459,27 @@
       },
       "options": {
         "title": "Options",
+        "welcome": {
+          "title": "Bienvenue",
+          "intro": {
+            "main": "Bienvenue dans Atom to Univers. Cliquez pour générer vos premiers atomes, achetez des améliorations dans la boutique et automatisez la production pour façonner votre univers.",
+            "note": "Débloquez les mini-jeux et fonctionnalités au fil de votre progression pour multiplier vos gains d’APC et d’APS."
+          },
+          "details": {
+            "particles": {
+              "label": "Mini Jeu Particules :",
+              "description": "Collisionnez les particules élémentaires pour gagner des tickets de tirage et des crédits Mach3."
+            },
+            "gacha": {
+              "label": "Gacha :",
+              "description": "Utilisez vos tickets pour récupérer des éléments du tableau périodique et débloquer des bonus de production."
+            },
+            "match3": {
+              "label": "Mini jeu Mach3 :",
+              "description": "Alignez les métaux le plus vite possible pour booster vos gains d’APS."
+            }
+          }
+        },
         "language": {
           "title": "Langue",
           "label": "Langue de l’interface",
