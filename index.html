@@ -184,6 +184,12 @@
       </h2>
       <div class="shop-layout">
         <div class="shop-actions-header" id="shopActionsHeader" aria-hidden="true">
+          <div class="shop-actions-header__spacer" aria-hidden="true"></div>
+          <div class="shop-actions-header__labels">
+            <span class="shop-actions-header__label">x1</span>
+            <span class="shop-actions-header__label">x10</span>
+            <span class="shop-actions-header__label">x100</span>
+          </div>
           <p
             class="shop-actions-header__placeholder"
             data-i18n="index.sections.shop.actionsPlaceholder"
@@ -195,6 +201,219 @@
           <p class="shop-list__placeholder" data-i18n="index.sections.shop.placeholder">
             La boutique se charge…
           </p>
+          <p class="shop-list__fallback-note" data-i18n="index.sections.shop.fallback.note">
+            Activez JavaScript pour interagir avec la boutique. Aperçu des améliorations disponibles ci-dessous.
+          </p>
+          <article class="shop-item shop-item--fallback" data-upgrade-id="freeElectrons" role="listitem">
+            <header class="shop-item__header">
+              <h3 data-i18n="config.shop.buildings.freeElectrons.name">Électrons libres</h3>
+              <span class="shop-item__level" data-i18n="scripts.app.shop.notPurchased">Non acheté</span>
+            </header>
+            <p class="shop-item__description" data-i18n="config.shop.buildings.freeElectrons.effect">
+              Production manuelle : +1 APC par niveau.
+            </p>
+            <div class="shop-item__actions shop-item__actions--fallback">
+              <p data-i18n="index.sections.shop.fallback.action">
+                Activez JavaScript pour acheter cette amélioration.
+              </p>
+            </div>
+          </article>
+          <article class="shop-item shop-item--fallback" data-upgrade-id="physicsLab" role="listitem">
+            <header class="shop-item__header">
+              <h3 data-i18n="config.shop.buildings.physicsLab.name">Laboratoire de Physique</h3>
+              <span class="shop-item__level" data-i18n="scripts.app.shop.notPurchased">Non acheté</span>
+            </header>
+            <p class="shop-item__description" data-i18n="config.shop.buildings.physicsLab.effect">
+              Production passive : +1 APS par niveau.
+            </p>
+            <div class="shop-item__actions shop-item__actions--fallback">
+              <p data-i18n="index.sections.shop.fallback.action">
+                Activez JavaScript pour acheter cette amélioration.
+              </p>
+            </div>
+          </article>
+          <article class="shop-item shop-item--fallback" data-upgrade-id="nuclearReactor" role="listitem">
+            <header class="shop-item__header">
+              <h3 data-i18n="config.shop.buildings.nuclearReactor.name">Réacteur nucléaire</h3>
+              <span class="shop-item__level" data-i18n="scripts.app.shop.notPurchased">Non acheté</span>
+            </header>
+            <p class="shop-item__description" data-i18n="config.shop.buildings.nuclearReactor.effect">
+              Production passive : +10 APS par niveau.
+            </p>
+            <div class="shop-item__actions shop-item__actions--fallback">
+              <p data-i18n="index.sections.shop.fallback.action">
+                Activez JavaScript pour acheter cette amélioration.
+              </p>
+            </div>
+          </article>
+          <article class="shop-item shop-item--fallback" data-upgrade-id="particleAccelerator" role="listitem">
+            <header class="shop-item__header">
+              <h3 data-i18n="config.shop.buildings.particleAccelerator.name">Accélérateur de particules</h3>
+              <span class="shop-item__level" data-i18n="scripts.app.shop.notPurchased">Non acheté</span>
+            </header>
+            <p class="shop-item__description" data-i18n="config.shop.buildings.particleAccelerator.effect">
+              Production passive : +50 APS par niveau.
+            </p>
+            <div class="shop-item__actions shop-item__actions--fallback">
+              <p data-i18n="index.sections.shop.fallback.action">
+                Activez JavaScript pour acheter cette amélioration.
+              </p>
+            </div>
+          </article>
+          <article class="shop-item shop-item--fallback" data-upgrade-id="supercomputer" role="listitem">
+            <header class="shop-item__header">
+              <h3 data-i18n="config.shop.buildings.supercomputer.name">Supercalculateurs</h3>
+              <span class="shop-item__level" data-i18n="scripts.app.shop.notPurchased">Non acheté</span>
+            </header>
+            <p class="shop-item__description" data-i18n="config.shop.buildings.supercomputer.effect">
+              Production passive : +500 APS par niveau.
+            </p>
+            <div class="shop-item__actions shop-item__actions--fallback">
+              <p data-i18n="index.sections.shop.fallback.action">
+                Activez JavaScript pour acheter cette amélioration.
+              </p>
+            </div>
+          </article>
+          <article class="shop-item shop-item--fallback" data-upgrade-id="interstellarProbe" role="listitem">
+            <header class="shop-item__header">
+              <h3 data-i18n="config.shop.buildings.interstellarProbe.name">Sonde interstellaire</h3>
+              <span class="shop-item__level" data-i18n="scripts.app.shop.notPurchased">Non acheté</span>
+            </header>
+            <p class="shop-item__description" data-i18n="config.shop.buildings.interstellarProbe.effect">
+              Production passive : +5 000 APS par niveau. Bonus : avec 50 Électrons libres ou plus, chaque bâtiment possédé ajoute +100 APC.
+            </p>
+            <div class="shop-item__actions shop-item__actions--fallback">
+              <p data-i18n="index.sections.shop.fallback.action">
+                Activez JavaScript pour acheter cette amélioration.
+              </p>
+            </div>
+          </article>
+          <article class="shop-item shop-item--fallback" data-upgrade-id="spaceStation" role="listitem">
+            <header class="shop-item__header">
+              <h3 data-i18n="config.shop.buildings.spaceStation.name">Station spatiale</h3>
+              <span class="shop-item__level" data-i18n="scripts.app.shop.notPurchased">Non acheté</span>
+            </header>
+            <p class="shop-item__description" data-i18n="config.shop.buildings.spaceStation.effect">
+              Production passive : +50 000 APS par niveau.
+            </p>
+            <div class="shop-item__actions shop-item__actions--fallback">
+              <p data-i18n="index.sections.shop.fallback.action">
+                Activez JavaScript pour acheter cette amélioration.
+              </p>
+            </div>
+          </article>
+          <article class="shop-item shop-item--fallback" data-upgrade-id="starForge" role="listitem">
+            <header class="shop-item__header">
+              <h3 data-i18n="config.shop.buildings.starForge.name">Forgeron d’étoiles</h3>
+              <span class="shop-item__level" data-i18n="scripts.app.shop.notPurchased">Non acheté</span>
+            </header>
+            <p class="shop-item__description" data-i18n="config.shop.buildings.starForge.effect">
+              Production passive : +500 000 APS par niveau.
+            </p>
+            <div class="shop-item__actions shop-item__actions--fallback">
+              <p data-i18n="index.sections.shop.fallback.action">
+                Activez JavaScript pour acheter cette amélioration.
+              </p>
+            </div>
+          </article>
+          <article class="shop-item shop-item--fallback" data-upgrade-id="artificialGalaxy" role="listitem">
+            <header class="shop-item__header">
+              <h3 data-i18n="config.shop.buildings.artificialGalaxy.name">Galaxie artificielle</h3>
+              <span class="shop-item__level" data-i18n="scripts.app.shop.notPurchased">Non acheté</span>
+            </header>
+            <p class="shop-item__description" data-i18n="config.shop.buildings.artificialGalaxy.effect">
+              Production passive : +5 000 000 APS par niveau.
+            </p>
+            <div class="shop-item__actions shop-item__actions--fallback">
+              <p data-i18n="index.sections.shop.fallback.action">
+                Activez JavaScript pour acheter cette amélioration.
+              </p>
+            </div>
+          </article>
+          <article class="shop-item shop-item--fallback" data-upgrade-id="multiverseSimulator" role="listitem">
+            <header class="shop-item__header">
+              <h3 data-i18n="config.shop.buildings.multiverseSimulator.name">Simulateur de Multivers</h3>
+              <span class="shop-item__level" data-i18n="scripts.app.shop.notPurchased">Non acheté</span>
+            </header>
+            <p class="shop-item__description" data-i18n="config.shop.buildings.multiverseSimulator.effect">
+              Production passive : +500 000 000 APS par niveau.
+            </p>
+            <div class="shop-item__actions shop-item__actions--fallback">
+              <p data-i18n="index.sections.shop.fallback.action">
+                Activez JavaScript pour acheter cette amélioration.
+              </p>
+            </div>
+          </article>
+          <article class="shop-item shop-item--fallback" data-upgrade-id="realityWeaver" role="listitem">
+            <header class="shop-item__header">
+              <h3 data-i18n="config.shop.buildings.realityWeaver.name">Tisseur de Réalité</h3>
+              <span class="shop-item__level" data-i18n="scripts.app.shop.notPurchased">Non acheté</span>
+            </header>
+            <p class="shop-item__description" data-i18n="config.shop.buildings.realityWeaver.effect">
+              Production passive : +10 000 000 000 APS par niveau.
+            </p>
+            <div class="shop-item__actions shop-item__actions--fallback">
+              <p data-i18n="index.sections.shop.fallback.action">
+                Activez JavaScript pour acheter cette amélioration.
+              </p>
+            </div>
+          </article>
+          <article class="shop-item shop-item--fallback" data-upgrade-id="cosmicArchitect" role="listitem">
+            <header class="shop-item__header">
+              <h3 data-i18n="config.shop.buildings.cosmicArchitect.name">Architecte Cosmique</h3>
+              <span class="shop-item__level" data-i18n="scripts.app.shop.notPurchased">Non acheté</span>
+            </header>
+            <p class="shop-item__description" data-i18n="config.shop.buildings.cosmicArchitect.effect">
+              Production passive : +1 000 000 000 000 APS par niveau.
+            </p>
+            <div class="shop-item__actions shop-item__actions--fallback">
+              <p data-i18n="index.sections.shop.fallback.action">
+                Activez JavaScript pour acheter cette amélioration.
+              </p>
+            </div>
+          </article>
+          <article class="shop-item shop-item--fallback" data-upgrade-id="parallelUniverse" role="listitem">
+            <header class="shop-item__header">
+              <h3 data-i18n="config.shop.buildings.parallelUniverse.name">Univers parallèle</h3>
+              <span class="shop-item__level" data-i18n="scripts.app.shop.notPurchased">Non acheté</span>
+            </header>
+            <p class="shop-item__description" data-i18n="config.shop.buildings.parallelUniverse.effect">
+              Production passive : +100 000 000 000 000 APS par niveau.
+            </p>
+            <div class="shop-item__actions shop-item__actions--fallback">
+              <p data-i18n="index.sections.shop.fallback.action">
+                Activez JavaScript pour acheter cette amélioration.
+              </p>
+            </div>
+          </article>
+          <article class="shop-item shop-item--fallback" data-upgrade-id="omniverseLibrary" role="listitem">
+            <header class="shop-item__header">
+              <h3 data-i18n="config.shop.buildings.omniverseLibrary.name">Bibliothèque de l’Omnivers</h3>
+              <span class="shop-item__level" data-i18n="scripts.app.shop.notPurchased">Non acheté</span>
+            </header>
+            <p class="shop-item__description" data-i18n="config.shop.buildings.omniverseLibrary.effect">
+              Production passive : +10 000 000 000 000 000 APS par niveau.
+            </p>
+            <div class="shop-item__actions shop-item__actions--fallback">
+              <p data-i18n="index.sections.shop.fallback.action">
+                Activez JavaScript pour acheter cette amélioration.
+              </p>
+            </div>
+          </article>
+          <article class="shop-item shop-item--fallback" data-upgrade-id="quantumOverseer" role="listitem">
+            <header class="shop-item__header">
+              <h3 data-i18n="config.shop.buildings.quantumOverseer.name">Grand Ordonnateur Quantique</h3>
+              <span class="shop-item__level" data-i18n="scripts.app.shop.notPurchased">Non acheté</span>
+            </header>
+            <p class="shop-item__description" data-i18n="config.shop.buildings.quantumOverseer.effect">
+              Production passive : +1 000 000 000 000 000 000 APS par niveau.
+            </p>
+            <div class="shop-item__actions shop-item__actions--fallback">
+              <p data-i18n="index.sections.shop.fallback.action">
+                Activez JavaScript pour acheter cette amélioration.
+              </p>
+            </div>
+          </article>
         </div>
       </div>
     </section>

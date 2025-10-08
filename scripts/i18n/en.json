@@ -42,7 +42,11 @@
       "shop": {
         "title": "Quantum shop",
         "placeholder": "The shop is loading…",
-        "actionsPlaceholder": "Quantity options will appear here soon"
+        "actionsPlaceholder": "Quantity options will appear here soon",
+        "fallback": {
+          "note": "Enable JavaScript to interact with the shop. A static preview of the available upgrades is shown below.",
+          "action": "Enable JavaScript to purchase this upgrade."
+        }
       },
       "gacha": {
         "title": "Cosmic draw portal",
