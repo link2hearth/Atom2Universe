@@ -553,7 +553,9 @@
           cell.dataset.c = String(col);
           cell.setAttribute('role', 'gridcell');
           const input = document.createElement('input');
-          input.inputMode = 'numeric';
+          const isFixedCell = Boolean(currentFixedMask[row][col]);
+          input.inputMode = 'none';
+          input.setAttribute('inputmode', 'none');
           input.maxLength = 1;
           input.pattern = '[1-9]';
           input.setAttribute('aria-label', translate('index.sections.sudoku.cellLabel', 'Case de Sudoku'));
@@ -561,10 +563,13 @@
           if (value) {
             input.value = String(value);
           }
-          if (currentFixedMask[row][col]) {
+          input.readOnly = true;
+          input.dataset.fixed = isFixedCell ? 'true' : 'false';
+          if (isFixedCell) {
             cell.classList.add('fixed');
-            input.readOnly = true;
             input.tabIndex = -1;
+          } else {
+            input.tabIndex = 0;
           }
           input.addEventListener('input', event => {
             const sanitized = event.target.value.replace(/[^1-9]/g, '');
@@ -604,7 +609,7 @@
     }
 
     function applySelectionToInput(input, selection) {
-      if (!input || input.readOnly || selection === null) {
+      if (!input || input.dataset.fixed === 'true' || selection === null) {
         return;
       }
       const finalValue = selection === 'clear' ? '' : selection;
@@ -740,7 +745,7 @@
     });
 
     gridElement.addEventListener('focusin', event => {
-      if (event.target instanceof HTMLInputElement) {
+      if (event.target instanceof HTMLInputElement && event.target.dataset.fixed !== 'true') {
         activeInput = event.target;
       }
     });
@@ -764,7 +769,7 @@
         return;
       }
       const input = cell.querySelector('input');
-      if (!input || input.readOnly) {
+      if (!input || input.dataset.fixed === 'true') {
         return;
       }
       input.focus();
