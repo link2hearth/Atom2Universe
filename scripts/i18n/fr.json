@@ -103,7 +103,9 @@
             "apc": "APC cumulés",
             "aps": "APS cumulés",
             "offline": "Collecte hors ligne",
-            "duration": "Durée de la session"
+            "duration": "Durée de la session",
+            "frenzySingle": "Record frénésie (30 s)",
+            "frenzyMulti": "Record frénésie (chaîne)"
           },
           "global": {
             "title": "Historique global",
@@ -112,7 +114,15 @@
             "apc": "APC cumulés",
             "aps": "APS cumulés",
             "offline": "Collecte hors ligne",
-            "duration": "Temps de jeu"
+            "duration": "Temps de jeu",
+            "frenzySingle": "Record frénésie (30 s)",
+            "frenzyMulti": "Record frénésie (chaîne)"
+          },
+          "frenzy": {
+            "empty": "—",
+            "singleValue": "{count} clics",
+            "multiValueSingle": "{count} clics · {frenzies} frén.",
+            "multiValue": "{count} clics · {frenzies} frén."
           }
         },
         "shop": {
@@ -403,7 +413,9 @@
             "apc": "Atomes via APC",
             "aps": "Atomes via APS",
             "offline": "Atomes hors ligne",
-            "duration": "Durée en ligne"
+            "duration": "Durée en ligne",
+            "frenzySingle": "Record frénésie (30 s)",
+            "frenzyMulti": "Record frénésie (chaîne)"
           },
           "global": {
             "title": "Globale",
@@ -412,7 +424,15 @@
             "apc": "Atomes via APC",
             "aps": "Atomes via APS",
             "offline": "Atomes hors ligne",
-            "duration": "Durée de jeu"
+            "duration": "Durée de jeu",
+            "frenzySingle": "Record frénésie (30 s)",
+            "frenzyMulti": "Record frénésie (chaîne)"
+          },
+          "frenzy": {
+            "empty": "—",
+            "singleValue": "{count} clics",
+            "multiValueSingle": "{count} clics · {frenzies} frén.",
+            "multiValue": "{count} clics · {frenzies} frén."
           }
         },
         "shop": {
