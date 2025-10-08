@@ -736,7 +736,7 @@ const GAME_CONFIG = {
    * - timer : configuration du chrono (valeur initiale, gains, pénalités, cadence de mise à jour).
    */
   metaux: {
-    rows: 8,
+    rows: 10,
     cols: 16,
     clearDelayMs: 220,
     refillDelayMs: 120,
