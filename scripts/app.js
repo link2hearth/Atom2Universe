@@ -2316,7 +2316,7 @@ const elements = {
   elementInfoNumber: document.getElementById('elementInfoNumber'),
   elementInfoSymbol: document.getElementById('elementInfoSymbol'),
   elementInfoName: document.getElementById('elementInfoName'),
-  elementInfoCategory: document.getElementById('elementInfoCategory'),
+  elementInfoCategoryButton: document.getElementById('elementInfoCategoryButton'),
   elementInfoOwnedCount: document.getElementById('elementInfoOwnedCount'),
   elementInfoCollection: document.getElementById('elementInfoCollection'),
   elementDetailsOverlay: document.getElementById('elementDetailsOverlay'),
@@ -2324,6 +2324,11 @@ const elements = {
   elementDetailsTitle: document.getElementById('elementDetailsTitle'),
   elementDetailsBody: document.getElementById('elementDetailsBody'),
   elementDetailsCloseButton: document.getElementById('elementDetailsCloseButton'),
+  elementFamilyOverlay: document.getElementById('elementFamilyOverlay'),
+  elementFamilyDialog: document.getElementById('elementFamilyDialog'),
+  elementFamilyTitle: document.getElementById('elementFamilyTitle'),
+  elementFamilyBody: document.getElementById('elementFamilyBody'),
+  elementFamilyCloseButton: document.getElementById('elementFamilyCloseButton'),
   collectionProgress: document.getElementById('elementCollectionProgress'),
   collectionSummaryTile: document.getElementById('elementCollectionSummary'),
   collectionSummaryCurrent: document.getElementById('elementCollectionCurrentTotal'),
@@ -4651,9 +4656,22 @@ function toggleDevKitCheat(key) {
 const SHOP_PURCHASE_AMOUNTS = [1, 10, 100];
 const shopRows = new Map();
 let lastVisibleShopBonusIds = new Set();
+const FAMILY_DESCRIPTION_KEYS = {
+  'alkali-metal': 'scripts.app.table.family.descriptions.alkaliMetal',
+  'alkaline-earth-metal': 'scripts.app.table.family.descriptions.alkalineEarthMetal',
+  'transition-metal': 'scripts.app.table.family.descriptions.transitionMetal',
+  'post-transition-metal': 'scripts.app.table.family.descriptions.postTransitionMetal',
+  metalloid: 'scripts.app.table.family.descriptions.metalloid',
+  nonmetal: 'scripts.app.table.family.descriptions.nonmetal',
+  halogen: 'scripts.app.table.family.descriptions.halogen',
+  'noble-gas': 'scripts.app.table.family.descriptions.nobleGas',
+  lanthanide: 'scripts.app.table.family.descriptions.lanthanide',
+  actinide: 'scripts.app.table.family.descriptions.actinide'
+};
 const periodicCells = new Map();
 let selectedElementId = null;
 let elementDetailsLastTrigger = null;
+let elementFamilyLastTrigger = null;
 let gamePageVisibleSince = null;
 
 function getShopUnlockSet() {
@@ -4974,6 +4992,143 @@ function handleElementDetailsKeydown(event) {
   }
 }
 
+function isElementFamilyModalOpen() {
+  return Boolean(elements.elementFamilyOverlay && !elements.elementFamilyOverlay.hasAttribute('hidden'));
+}
+
+function getFamilyDescription(familyId, familyLabel) {
+  if (!familyId) {
+    return translateOrDefault(
+      'scripts.app.table.family.descriptions.placeholder',
+      `Description de la famille ${familyLabel} à venir.`,
+      { family: familyLabel }
+    );
+  }
+  const messageKey = FAMILY_DESCRIPTION_KEYS[familyId];
+  if (messageKey) {
+    const translated = t(messageKey);
+    if (translated && translated !== messageKey) {
+      return translated;
+    }
+  }
+  return translateOrDefault(
+    'scripts.app.table.family.descriptions.placeholder',
+    `Description de la famille ${familyLabel} à venir.`,
+    { family: familyLabel }
+  );
+}
+
+function updateElementFamilyModalContent(familyId) {
+  if (!familyId || !elements.elementFamilyOverlay) {
+    return;
+  }
+  const familyLabel = CATEGORY_LABELS[familyId] || familyId;
+  if (elements.elementFamilyTitle) {
+    const titleText = translateOrDefault(
+      'index.sections.table.family.modal.title',
+      `Famille · ${familyLabel}`,
+      { family: familyLabel }
+    );
+    elements.elementFamilyTitle.textContent = titleText;
+  }
+  if (elements.elementFamilyBody) {
+    const description = getFamilyDescription(familyId, familyLabel);
+    elements.elementFamilyBody.textContent = description;
+  }
+  elements.elementFamilyOverlay.dataset.familyId = familyId;
+  if (elements.elementFamilyDialog) {
+    elements.elementFamilyDialog.dataset.familyId = familyId;
+  }
+}
+
+function openElementFamilyModal(familyId, { trigger = null } = {}) {
+  if (!familyId || !elements.elementFamilyOverlay) {
+    return;
+  }
+  updateElementFamilyModalContent(familyId);
+  elements.elementFamilyOverlay.hidden = false;
+  elements.elementFamilyOverlay.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('element-family-modal-open');
+  elementFamilyLastTrigger = trigger || document.activeElement || elements.elementInfoCategoryButton;
+  if (elements.elementInfoCategoryButton) {
+    elements.elementInfoCategoryButton.setAttribute('aria-expanded', 'true');
+  }
+  if (elements.elementFamilyDialog) {
+    elements.elementFamilyDialog.focus({ preventScroll: true });
+  }
+  if (elements.elementFamilyCloseButton) {
+    const closeLabel = t('index.sections.table.modal.close');
+    if (closeLabel) {
+      elements.elementFamilyCloseButton.setAttribute('aria-label', closeLabel);
+    }
+  }
+  document.addEventListener('keydown', handleElementFamilyKeydown, true);
+}
+
+function closeElementFamilyModal({ restoreFocus = true } = {}) {
+  if (!isElementFamilyModalOpen()) {
+    return;
+  }
+  elements.elementFamilyOverlay.hidden = true;
+  elements.elementFamilyOverlay.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('element-family-modal-open');
+  if (elements.elementInfoCategoryButton) {
+    elements.elementInfoCategoryButton.setAttribute('aria-expanded', 'false');
+  }
+  if (elements.elementFamilyOverlay.dataset.familyId) {
+    delete elements.elementFamilyOverlay.dataset.familyId;
+  }
+  if (elements.elementFamilyDialog?.dataset?.familyId) {
+    delete elements.elementFamilyDialog.dataset.familyId;
+  }
+  document.removeEventListener('keydown', handleElementFamilyKeydown, true);
+  const lastTrigger = elementFamilyLastTrigger;
+  elementFamilyLastTrigger = null;
+  if (restoreFocus && lastTrigger && typeof lastTrigger.focus === 'function') {
+    lastTrigger.focus({ preventScroll: true });
+  }
+}
+
+function handleElementFamilyKeydown(event) {
+  if (!isElementFamilyModalOpen()) {
+    return;
+  }
+  if (event.key === 'Escape') {
+    event.preventDefault();
+    closeElementFamilyModal();
+    return;
+  }
+  if (event.key === 'Tab' && elements.elementFamilyDialog) {
+    const focusableSelectors = [
+      'button:not([disabled])',
+      '[href]',
+      'input:not([disabled])',
+      'select:not([disabled])',
+      'textarea:not([disabled])',
+      '[tabindex]:not([tabindex="-1"])',
+    ];
+    const focusable = Array.from(
+      elements.elementFamilyDialog.querySelectorAll(focusableSelectors.join(','))
+    ).filter(el => !(el.hasAttribute('disabled') || el.getAttribute('aria-hidden') === 'true'));
+    if (!focusable.length) {
+      event.preventDefault();
+      elements.elementFamilyDialog.focus({ preventScroll: true });
+      return;
+    }
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey) {
+      if (document.activeElement === first || document.activeElement === elements.elementFamilyDialog) {
+        event.preventDefault();
+        last.focus({ preventScroll: true });
+      }
+    } else if (document.activeElement === last) {
+      event.preventDefault();
+      first.focus({ preventScroll: true });
+    }
+  }
+}
+
 function updateElementInfoPanel(definition) {
   const panel = elements.elementInfoPanel;
   const placeholder = elements.elementInfoPlaceholder;
@@ -4991,8 +5146,21 @@ function updateElementInfoPanel(definition) {
         delete elements.elementInfoSymbol.dataset.elementId;
       }
     }
+    if (elements.elementInfoCategoryButton) {
+      elements.elementInfoCategoryButton.textContent = '';
+      elements.elementInfoCategoryButton.disabled = true;
+      elements.elementInfoCategoryButton.setAttribute('aria-expanded', 'false');
+      elements.elementInfoCategoryButton.removeAttribute('aria-label');
+      elements.elementInfoCategoryButton.removeAttribute('title');
+      if (elements.elementInfoCategoryButton.dataset.familyId) {
+        delete elements.elementInfoCategoryButton.dataset.familyId;
+      }
+    }
     if (isElementDetailsModalOpen()) {
       closeElementDetailsModal({ restoreFocus: false });
+    }
+    if (isElementFamilyModalOpen()) {
+      closeElementFamilyModal({ restoreFocus: false });
     }
     if (panel.dataset.category) {
       delete panel.dataset.category;
@@ -5059,27 +5227,47 @@ function updateElementInfoPanel(definition) {
   if (elements.elementInfoName) {
     elements.elementInfoName.textContent = name ?? '';
   }
-  if (elements.elementInfoCategory) {
+  if (elements.elementInfoCategoryButton) {
+    const categoryButton = elements.elementInfoCategoryButton;
     const hasCategory = Boolean(definition.category);
     const label = hasCategory
       ? CATEGORY_LABELS[definition.category] || definition.category
       : '—';
-    elements.elementInfoCategory.textContent = label;
-    const familyLabel = translateOrDefault(
+    categoryButton.textContent = label;
+    categoryButton.disabled = !hasCategory;
+    const familyLabelText = translateOrDefault(
       'index.sections.table.details.family',
       'Famille'
     );
-    if (familyLabel) {
-      const description = `${familyLabel} : ${label}`;
-      elements.elementInfoCategory.setAttribute('aria-label', description);
-      if (hasCategory) {
-        elements.elementInfoCategory.setAttribute('title', description);
+    const openFamilyId = elements.elementFamilyOverlay?.dataset?.familyId || null;
+    if (hasCategory) {
+      categoryButton.dataset.familyId = definition.category;
+      const openLabel = translateOrDefault(
+        'index.sections.table.family.open',
+        `${familyLabelText ? `${familyLabelText} : ` : ''}${label}. Ouvrir la fiche famille.`,
+        { family: label, label: familyLabelText || '' }
+      );
+      if (openLabel) {
+        categoryButton.setAttribute('aria-label', openLabel);
+        categoryButton.setAttribute('title', openLabel);
       } else {
-        elements.elementInfoCategory.removeAttribute('title');
+        categoryButton.removeAttribute('aria-label');
+        categoryButton.removeAttribute('title');
+      }
+      categoryButton.setAttribute('aria-expanded', openFamilyId === definition.category ? 'true' : 'false');
+      if (isElementFamilyModalOpen() && openFamilyId === definition.category) {
+        updateElementFamilyModalContent(definition.category);
       }
     } else {
-      elements.elementInfoCategory.removeAttribute('aria-label');
-      elements.elementInfoCategory.removeAttribute('title');
+      if (categoryButton.dataset.familyId) {
+        delete categoryButton.dataset.familyId;
+      }
+      categoryButton.setAttribute('aria-expanded', 'false');
+      categoryButton.removeAttribute('aria-label');
+      categoryButton.removeAttribute('title');
+      if (isElementFamilyModalOpen()) {
+        closeElementFamilyModal({ restoreFocus: false });
+      }
     }
   }
   const entry = gameState.elements?.[definition.id];
@@ -7035,12 +7223,36 @@ if (elements.elementInfoSymbol) {
   });
 }
 
+if (elements.elementInfoCategoryButton) {
+  elements.elementInfoCategoryButton.addEventListener('click', event => {
+    if (elements.elementInfoCategoryButton.disabled) {
+      return;
+    }
+    const familyId = elements.elementInfoCategoryButton.dataset.familyId || null;
+    if (!familyId) {
+      return;
+    }
+    event.preventDefault();
+    openElementFamilyModal(familyId, { trigger: elements.elementInfoCategoryButton });
+  });
+}
+
 if (elements.elementDetailsOverlay) {
   elements.elementDetailsOverlay.addEventListener('click', event => {
     const target = event.target.closest('[data-element-details-close]');
     if (target) {
       event.preventDefault();
       closeElementDetailsModal();
+    }
+  });
+}
+
+if (elements.elementFamilyOverlay) {
+  elements.elementFamilyOverlay.addEventListener('click', event => {
+    const target = event.target.closest('[data-element-family-close]');
+    if (target) {
+      event.preventDefault();
+      closeElementFamilyModal();
     }
   });
 }
