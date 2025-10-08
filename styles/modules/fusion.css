@@ -10,7 +10,7 @@
 
 .fusion-title {
   font-family: var(--font-text, 'Orbitron', sans-serif);
-  font-size: clamp(1.4rem, 3vw, 1.85rem);
+  font-size: calc(var(--font-scale-factor, 1) * clamp(1.4rem, 3vw, 1.85rem));
   letter-spacing: 0.08em;
   text-transform: uppercase;
   margin: 0;
@@ -65,13 +65,13 @@ body.theme-neon .fusion-card {
 
 .fusion-card__title {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: calc(var(--font-scale-factor, 1) * 1.1rem);
   font-weight: 600;
 }
 
 .fusion-card__chance {
   margin: 0;
-  font-size: 0.85rem;
+  font-size: calc(var(--font-scale-factor, 1) * 0.85rem);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: rgba(238, 241, 255, 0.66);
@@ -92,7 +92,7 @@ body.theme-light .fusion-card__chance {
 
 .fusion-card__description {
   margin: 0;
-  font-size: 0.9rem;
+  font-size: calc(var(--font-scale-factor, 1) * 0.9rem);
   line-height: 1.5;
   color: rgba(238, 241, 255, 0.72);
 }
@@ -105,13 +105,13 @@ body.theme-light .fusion-card__description {
   display: flex;
   align-items: center;
   gap: 0.7rem;
-  font-size: 0.95rem;
+  font-size: calc(var(--font-scale-factor, 1) * 0.95rem);
 }
 
 .fusion-requirement__symbol {
   font-family: var(--font-text, 'Orbitron', sans-serif);
   letter-spacing: 0.08em;
-  font-size: 0.85rem;
+  font-size: calc(var(--font-scale-factor, 1) * 0.85rem);
   text-transform: uppercase;
   padding: 0.15rem 0.45rem;
   border-radius: 999px;
@@ -130,7 +130,7 @@ body.theme-light .fusion-requirement__symbol {
 }
 
 .fusion-requirement__availability {
-  font-size: 0.8rem;
+  font-size: calc(var(--font-scale-factor, 1) * 0.8rem);
   color: rgba(238, 241, 255, 0.6);
 }
 
@@ -141,7 +141,7 @@ body.theme-light .fusion-requirement__availability {
 .fusion-card__stats,
 .fusion-card__bonus {
   margin: 0;
-  font-size: 0.85rem;
+  font-size: calc(var(--font-scale-factor, 1) * 0.85rem);
   color: rgba(238, 241, 255, 0.72);
 }
 
@@ -193,7 +193,7 @@ body.theme-light .fusion-card__bonus {
 }
 
 .fusion-card__feedback {
-  font-size: 0.82rem;
+  font-size: calc(var(--font-scale-factor, 1) * 0.82rem);
   color: rgba(238, 241, 255, 0.65);
 }
 
@@ -212,7 +212,7 @@ body.theme-light .fusion-card__feedback {
   background: rgba(26, 34, 68, 0.55);
   color: rgba(238, 241, 255, 0.75);
   text-align: center;
-  font-size: 0.95rem;
+  font-size: calc(var(--font-scale-factor, 1) * 0.95rem);
   box-shadow: inset 0 0 0 1px rgba(130, 170, 255, 0.15);
 }
 
@@ -228,7 +228,7 @@ body.theme-light .fusion-empty {
   border-radius: 0.9rem;
   background: rgba(32, 44, 88, 0.35);
   color: rgba(238, 241, 255, 0.82);
-  font-size: 0.9rem;
+  font-size: calc(var(--font-scale-factor, 1) * 0.9rem);
   box-shadow: 0 10px 22px rgba(4, 8, 20, 0.45);
   border: 1px solid rgba(130, 170, 255, 0.18);
 }
