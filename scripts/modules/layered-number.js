@@ -427,12 +427,17 @@ class LayeredNumber {
     if (typeof power !== 'number') return this.pow(power.toNumber());
     if (power === 0) return LayeredNumber.one();
     if (this.isZero()) return LayeredNumber.zero();
+
+    const exponentIsInteger = Number.isFinite(power) && Number.isInteger(power);
+    const isEvenInteger = exponentIsInteger && Math.abs(power % 2) === 0;
+    const resultSign = this.sign >= 0 ? 1 : (isEvenInteger ? 1 : -1);
+
     if (this.layer === 0) {
       const mantissa = Math.pow(this.mantissa, power);
       const exponent = this.exponent * power;
-      return LayeredNumber.fromLayer0(mantissa, exponent, this.sign >= 0 ? 1 : -1).normalize();
+      return LayeredNumber.fromLayer0(mantissa, exponent, resultSign).normalize();
     }
-    return LayeredNumber.fromLayer1(this.value * power, this.sign >= 0 ? 1 : -1).normalize();
+    return LayeredNumber.fromLayer1(this.value * power, resultSign).normalize();
   }
 
   negate() {
