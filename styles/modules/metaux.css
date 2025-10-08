@@ -10,13 +10,19 @@
   display: flex;
   flex-direction: column;
   gap: clamp(1.5rem, 3vw, 2.4rem);
+  align-items: center;
+  justify-content: center;
 }
 
 .metaux-content {
-  display: grid;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: clamp(1.5rem, 3vw, 2.5rem);
-  grid-template-columns: minmax(0, 1fr);
-  justify-items: center;
+  width: min(100%, 1280px);
+  margin-inline: auto;
 }
 
 .metaux-board-wrapper {
@@ -173,7 +179,7 @@
   grid-template-columns: repeat(var(--metaux-visual-cols), minmax(0, 1fr));
   gap: clamp(0.18rem, 0.45vw, 0.34rem);
   width: min(
-    90vw,
+    100%,
     1280px,
     calc((100vh - var(--metaux-vertical-space)) * var(--metaux-aspect-cols) / var(--metaux-aspect-rows))
   );
@@ -189,6 +195,12 @@
   position: relative;
   overflow: hidden;
   margin: 0 auto;
+}
+
+@media (orientation: portrait) {
+  .page--metaux {
+    --metaux-vertical-space: clamp(2.8rem, 14vh, 8rem);
+  }
 }
 
 .metaux-end-screen {
