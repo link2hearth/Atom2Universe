@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title data-i18n="index.meta.title"></title>
+  <title data-i18n="index.meta.title">Atom to Univers</title>
   <link rel="stylesheet" href="styles/fonts.css" />
   <link rel="stylesheet" href="styles/main.css" />
 </head>
@@ -11,19 +11,30 @@
   <header class="app-header">
     <div class="header-main">
       <div class="header-brand-group">
-        <button class="brand brand-button" id="brandPortal" type="button">Atom2Univers</button>
+        <button
+          class="brand brand-button"
+          id="brandPortal"
+          type="button"
+          data-i18n="index.header.brand"
+        >
+          Atom2Univers
+        </button>
         <button
           class="header-playback-button"
           id="headerPlaybackToggle"
           type="button"
           data-state="play"
           aria-pressed="false"
-          aria-label="Play"
-          title="Play"
+          aria-label="Lecture"
+          title="Lecture"
           data-i18n="aria-label:index.sections.options.chiptune.controls.play;title:index.sections.options.chiptune.controls.play"
         ></button>
       </div>
-      <nav class="nav-menu" data-i18n="aria-label:index.navigation.primary">
+      <nav
+        class="nav-menu"
+        aria-label="Navigation principale"
+        data-i18n="aria-label:index.navigation.primary"
+      >
         <button
           class="nav-button"
           data-target="arcadeHub"
@@ -33,7 +44,7 @@
           disabled
           aria-disabled="true"
         >
-          <span data-i18n="index.navigation.items.arcade"></span>
+          <span data-i18n="index.navigation.items.arcade">Arcade</span>
         </button>
         <button
           class="nav-button"
@@ -42,18 +53,20 @@
           aria-hidden="true"
           disabled
           aria-disabled="true"
-        ><span data-i18n="index.navigation.items.shop"></span></button>
+        >
+          <span data-i18n="index.navigation.items.shop">Boutique</span>
+        </button>
         <button class="nav-button" data-target="gacha" hidden aria-hidden="true">
-          <span data-i18n="index.navigation.items.gacha"></span>
+          <span data-i18n="index.navigation.items.gacha">Gacha</span>
         </button>
         <button class="nav-button" data-target="tableau" hidden aria-hidden="true">
-          <span data-i18n="index.navigation.items.table"></span>
+          <span data-i18n="index.navigation.items.table">Table</span>
         </button>
         <button class="nav-button" data-target="fusion" hidden aria-hidden="true">
-          <span data-i18n="index.navigation.items.fusion"></span>
+          <span data-i18n="index.navigation.items.fusion">Fusion</span>
         </button>
         <button class="nav-button" data-target="info" hidden aria-hidden="true">
-          <span data-i18n="index.navigation.items.info"></span>
+          <span data-i18n="index.navigation.items.info">Infos</span>
         </button>
         <button
           class="nav-button"
@@ -62,25 +75,31 @@
           aria-hidden="true"
           disabled
           aria-disabled="true"
-        ><span data-i18n="index.navigation.items.goals"></span></button>
+        >
+          <span data-i18n="index.navigation.items.goals">Objectifs</span>
+        </button>
         <button class="nav-button" data-target="bigbang" id="navBigBangButton" hidden aria-hidden="true">
-          <span data-i18n="index.navigation.items.bigbang"></span>
+          <span data-i18n="index.navigation.items.bigbang">Big Bang</span>
         </button>
         <button class="nav-button" data-target="options">
-          <span data-i18n="index.navigation.items.options"></span>
+          <span data-i18n="index.navigation.items.options">Options</span>
         </button>
       </nav>
     </div>
     <div class="status-bar" aria-live="polite">
       <div class="status-side status-side--left">
         <div class="status-item status-item--left">
-          <span class="status-label" data-i18n="index.status.apc"></span>
+          <span class="status-label" data-i18n="index.status.apc">APC</span>
           <div class="status-value-group status-value-group--left">
             <span class="status-value" id="statusApc">1</span>
           </div>
         </div>
       </div>
-      <div class="status-item status-item--center" data-i18n="aria-label:index.status.totalAtoms">
+      <div
+        class="status-item status-item--center"
+        aria-label="Total d'atomes"
+        data-i18n="aria-label:index.status.totalAtoms"
+      >
         <button class="status-atoms-button" type="button" id="statusAtomsButton">
           <span class="status-value status-value--main" id="statusAtoms">0</span>
         </button>
@@ -100,7 +119,7 @@
           </div>
         </div>
         <div class="status-item status-item--right">
-          <span class="status-label" data-i18n="index.status.aps"></span>
+          <span class="status-label" data-i18n="index.status.aps">APS</span>
           <div class="status-value-group status-value-group--aps">
             <span class="status-value" id="statusAps">0</span>
           </div>
@@ -125,6 +144,7 @@
       id="game"
       class="page active page--void"
       data-page-group="clicker"
+      aria-label="Chambre de création atomique"
       data-i18n="aria-label:index.sections.game.aria"
     >
       <div class="starfield" aria-hidden="true"></div>
@@ -133,6 +153,7 @@
         class="atom-button"
         id="atomButton"
         type="button"
+        aria-label="Créer des atomes"
         data-i18n="aria-label:index.sections.game.atomButton.aria"
       >
         <span class="atom-visual">
@@ -140,8 +161,8 @@
             src="Assets/Image/Atom.png"
             class="atom-image"
             draggable="false"
+            alt="Illustration d'un atome vibrant"
             data-i18n="alt:index.sections.game.atomButton.alt"
-            alt=""
           />
         </span>
       </button>
@@ -158,10 +179,23 @@
       data-page-group="clicker"
       aria-labelledby="shop-title"
     >
-      <h2 id="shop-title" class="visually-hidden" data-i18n="index.sections.shop.title"></h2>
+      <h2 id="shop-title" class="visually-hidden" data-i18n="index.sections.shop.title">
+        Boutique quantique
+      </h2>
       <div class="shop-layout">
-        <div class="shop-actions-header" id="shopActionsHeader" aria-hidden="true"></div>
-        <div class="shop-list" id="shopList" role="list"></div>
+        <div class="shop-actions-header" id="shopActionsHeader" aria-hidden="true">
+          <p
+            class="shop-actions-header__placeholder"
+            data-i18n="index.sections.shop.actionsPlaceholder"
+          >
+            Les options d'achat apparaîtront ici.
+          </p>
+        </div>
+        <div class="shop-list" id="shopList" role="list">
+          <p class="shop-list__placeholder" data-i18n="index.sections.shop.placeholder">
+            La boutique se charge…
+          </p>
+        </div>
       </div>
     </section>
 
@@ -171,13 +205,20 @@
       data-page-group="clicker"
       aria-labelledby="gacha-title"
     >
-      <h2 id="gacha-title" class="visually-hidden" data-i18n="index.sections.gacha.title"></h2>
-      <div class="gacha-featured-info" id="gachaFeaturedInfo" aria-live="polite" hidden></div>
+      <h2 id="gacha-title" class="visually-hidden" data-i18n="index.sections.gacha.title">
+        Portail de tirage cosmique
+      </h2>
+      <div class="gacha-featured-info" id="gachaFeaturedInfo" aria-live="polite" hidden>
+        <p data-i18n="index.sections.gacha.featuredPlaceholder">
+          Aucun tirage vedette pour le moment.
+        </p>
+      </div>
       <div class="gacha-ticket-counter" id="gachaTicketCounter" aria-live="polite">
         <button
           class="gacha-ticket-mode"
           id="gachaTicketModeButton"
           type="button"
+          aria-label="Basculer le mode de tirage (actuel : Tirage x1)"
           data-i18n="aria-label:index.sections.gacha.toggleAria"
         >
           <img
@@ -187,7 +228,9 @@
             aria-hidden="true"
             draggable="false"
           />
-          <span class="gacha-ticket-mode__label" id="gachaTicketModeLabel" data-i18n="index.sections.gacha.modeSingle"></span>
+          <span class="gacha-ticket-mode__label" id="gachaTicketModeLabel" data-i18n="index.sections.gacha.modeSingle">
+            Tirage x1
+          </span>
         </button>
         <span class="gacha-ticket-counter__value" id="gachaTicketValue">0</span>
       </div>
@@ -195,10 +238,16 @@
         class="gacha-sun-button"
         id="gachaSunButton"
         type="button"
+        aria-label="Déclencher un tirage cosmique"
         data-i18n="aria-label:index.sections.gacha.sunButton"
         aria-describedby="gachaTicketCounter"
       >
-        <img src="Assets/Image/Sun.png" draggable="false" data-i18n="alt:index.sections.gacha.sunAlt" alt="" />
+        <img
+          src="Assets/Image/Sun.png"
+          draggable="false"
+          alt="Soleil cosmique"
+          data-i18n="alt:index.sections.gacha.sunAlt"
+        />
       </button>
       <div
         class="gacha-animation-layer"
@@ -209,8 +258,12 @@
       >
         <canvas class="gacha-confetti-layer" id="gachaAnimationConfetti" aria-hidden="true"></canvas>
         <div class="gacha-overlay" aria-hidden="true"></div>
-        <div class="gacha-result" id="gachaResult" role="status" aria-live="assertive"></div>
-        <p class="gacha-continue-hint" id="gachaContinueHint" data-i18n="index.sections.gacha.continue"></p>
+        <div class="gacha-result" id="gachaResult" role="status" aria-live="assertive">
+          <p data-i18n="index.sections.gacha.resultPlaceholder">Résultat du tirage</p>
+        </div>
+        <p class="gacha-continue-hint" id="gachaContinueHint" data-i18n="index.sections.gacha.continue">
+          Cliquer pour continuer
+        </p>
       </div>
     </section>
 
@@ -221,6 +274,12 @@
       data-i18n="aria-label:index.sections.arcadeHub.aria"
       hidden
     >
+      <header class="arcade-hub__header">
+        <h2 class="arcade-hub__title" data-i18n="index.sections.arcadeHub.title">Arcade</h2>
+        <p class="arcade-hub__subtitle" data-i18n="index.sections.arcadeHub.subtitle">
+          Choisissez un mini-jeu pour prolonger l'expérience Atom2Univers.
+        </p>
+      </header>
       <div class="arcade-hub__grid">
         <button
           type="button"
@@ -233,7 +292,16 @@
             role="heading"
             aria-level="3"
             data-i18n="index.sections.arcadeHub.cards.particules.title"
-          ></span>
+          >Particules</span>
+          <p
+            class="arcade-hub-card__description"
+            data-i18n="index.sections.arcadeHub.cards.particules.description"
+          >
+            Renvoyez la particule quantique pour décrocher des tickets de gacha et des crédits Mach3.
+          </p>
+          <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.particules.cta"
+            >Jouer</span
+          >
         </button>
         <button
           type="button"
@@ -246,7 +314,16 @@
             role="heading"
             aria-level="3"
             data-i18n="index.sections.arcadeHub.cards.metaux.title"
-          ></span>
+          >Métaux</span>
+          <p
+            class="arcade-hub-card__description"
+            data-i18n="index.sections.arcadeHub.cards.metaux.description"
+          >
+            Alignez les alliages Mach3 pour forger des bonus et améliorer votre production.
+          </p>
+          <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.metaux.cta"
+            >Forger</span
+          >
         </button>
         <button
           type="button"
@@ -259,7 +336,16 @@
             role="heading"
             aria-level="3"
             data-i18n="index.sections.arcadeHub.cards.wave.title"
-          ></span>
+          >Photon</span>
+          <p
+            class="arcade-hub-card__description"
+            data-i18n="index.sections.arcadeHub.cards.wave.description"
+          >
+            Incarnez un photon surfant son onde cosmique.
+          </p>
+          <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.wave.cta"
+            >Surfer</span
+          >
         </button>
         <button
           type="button"
@@ -272,7 +358,16 @@
             role="heading"
             aria-level="3"
             data-i18n="index.sections.arcadeHub.cards.quantum2048.title"
-          ></span>
+          >ObjectX</span>
+          <p
+            class="arcade-hub-card__description"
+            data-i18n="index.sections.arcadeHub.cards.quantum2048.description"
+          >
+            Composez des réactions en chaîne sur la grille choisie pour atteindre la tuile objectif.
+          </p>
+          <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.quantum2048.cta"
+            >Fusionner</span
+          >
         </button>
         <button
           type="button"
@@ -285,7 +380,16 @@
             role="heading"
             aria-level="3"
             data-i18n="index.sections.arcadeHub.cards.math.title"
-          ></span>
+          >Math</span>
+          <p
+            class="arcade-hub-card__description"
+            data-i18n="index.sections.arcadeHub.cards.math.description"
+          >
+            Trouvez le nombre ou le symbole manquant pour compléter des opérations évolutives.
+          </p>
+          <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.math.cta"
+            >Calculer</span
+          >
         </button>
         <button
           type="button"
@@ -298,7 +402,16 @@
             role="heading"
             aria-level="3"
             data-i18n="index.sections.arcadeHub.cards.balance.title"
-          ></span>
+          >Balance</span>
+          <p
+            class="arcade-hub-card__description"
+            data-i18n="index.sections.arcadeHub.cards.balance.description"
+          >
+            Disposez des blocs de masses différentes pour maintenir la planche parfaitement équilibrée.
+          </p>
+          <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.balance.cta"
+            >Équilibrer</span
+          >
         </button>
         <button
           type="button"
@@ -311,7 +424,16 @@
             role="heading"
             aria-level="3"
             data-i18n="index.sections.arcadeHub.cards.sudoku.title"
-          ></span>
+          >Sudoku</span>
+          <p
+            class="arcade-hub-card__description"
+            data-i18n="index.sections.arcadeHub.cards.sudoku.description"
+          >
+            Résolvez des grilles générées aléatoirement ou laissez l'ordinateur trouver la solution parfaite.
+          </p>
+          <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.sudoku.cta"
+            >Résoudre</span
+          >
         </button>
         <button
           type="button"
@@ -324,7 +446,16 @@
             role="heading"
             aria-level="3"
             data-i18n="index.sections.arcadeHub.cards.blackjack.title"
-          ></span>
+          >Blackjack</span>
+          <p
+            class="arcade-hub-card__description"
+            data-i18n="index.sections.arcadeHub.cards.blackjack.description"
+          >
+            Affrontez le croupier avec un sabot de huit paquets qui se régénère dès qu'une carte unique s'épuise.
+          </p>
+          <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.blackjack.cta"
+            >Distribuer</span
+          >
         </button>
       </div>
     </section>
@@ -341,19 +472,26 @@
           <div class="arcade-stage__hud" aria-hidden="true">
             <dl class="arcade-hud" role="presentation">
               <div class="arcade-hud__item">
-                <dt class="arcade-hud__label" data-i18n="index.sections.arcade.hud.level"></dt>
+                <dt class="arcade-hud__label" data-i18n="index.sections.arcade.hud.level">Niveau</dt>
                 <dd class="arcade-hud__value" id="arcadeLevelValue">1</dd>
               </div>
               <div class="arcade-hud__item">
-                <dt class="arcade-hud__label" data-i18n="index.sections.arcade.hud.lives"></dt>
+                <dt class="arcade-hud__label" data-i18n="index.sections.arcade.hud.lives">Vies</dt>
                 <dd class="arcade-hud__value" id="arcadeLivesValue">3</dd>
               </div>
               <div class="arcade-hud__item">
-                <dt class="arcade-hud__label" data-i18n="index.sections.arcade.hud.score"></dt>
+                <dt class="arcade-hud__label" data-i18n="index.sections.arcade.hud.score">Score</dt>
                 <dd class="arcade-hud__value" id="arcadeScoreValue">0</dd>
               </div>
             </dl>
-            <p class="arcade-hud__combo" id="arcadeComboMessage" aria-live="polite"></p>
+            <p
+              class="arcade-hud__combo"
+              id="arcadeComboMessage"
+              aria-live="polite"
+              data-i18n="index.sections.arcade.hud.combo"
+            >
+              Combo prêt
+            </p>
           </div>
           <canvas
             id="arcadeGameCanvas"
@@ -368,7 +506,9 @@
                 class="arcade-overlay__message"
                 id="arcadeOverlayMessage"
                 data-i18n="index.sections.arcade.overlay.message"
-              ></p>
+              >
+                Touchez ou cliquez la raquette pour guider la particule et détruire les briques quantiques.
+              </p>
               <div
                 class="arcade-overlay__field"
                 id="arcadeModeField"
@@ -377,7 +517,7 @@
                 <span
                   class="arcade-overlay__label"
                   data-i18n="index.sections.arcade.overlay.mode.label"
-                ></span>
+                >Mode de jeu</span>
                 <div
                   class="arcade-mode-switch"
                   id="arcadeModeSwitch"
@@ -390,36 +530,38 @@
                     data-arcade-mode="free"
                     aria-pressed="true"
                     data-i18n="index.sections.arcade.overlay.mode.free"
-                  ></button>
+                  >Mode libre</button>
                   <button
                     type="button"
                     class="arcade-mode-switch__button"
                     data-arcade-mode="paid"
                     aria-pressed="false"
                     data-i18n="index.sections.arcade.overlay.mode.paid"
-                  ></button>
+                  >Mode récompenses</button>
                 </div>
                 <p
                   class="arcade-mode-hint"
                   id="arcadeModeHint"
                   data-i18n="scripts.particules.ui.mode.free.description"
-                ></p>
+                >
+                  Entraînez-vous sans dépenser d’atomes ni gagner de récompenses.
+                </p>
               </div>
               <div class="arcade-overlay__field">
                 <label
                   for="arcadeBrickSkinSelect"
                   class="arcade-overlay__label"
                   data-i18n="index.sections.arcade.overlay.brickSkin.label"
-                ></label>
+                >Apparence des briques</label>
                 <select
                   id="arcadeBrickSkinSelect"
                   class="arcade-overlay__select"
                   data-i18n="aria-label:index.sections.arcade.overlay.brickSkin.aria"
                 >
-                  <option value="original" data-i18n="index.sections.options.brickSkin.options.original"></option>
-                  <option value="metallic" data-i18n="index.sections.options.brickSkin.options.metallic"></option>
-                  <option value="neon" data-i18n="index.sections.options.brickSkin.options.neon"></option>
-                  <option value="pastels" data-i18n="index.sections.options.brickSkin.options.pastels"></option>
+                  <option value="original" data-i18n="index.sections.options.brickSkin.options.original">Original</option>
+                  <option value="metallic" data-i18n="index.sections.options.brickSkin.options.metallic">Metallic</option>
+                  <option value="neon" data-i18n="index.sections.options.brickSkin.options.neon">Néon</option>
+                  <option value="pastels" data-i18n="index.sections.options.brickSkin.options.pastels">Pastels</option>
                 </select>
               </div>
               <button
@@ -427,7 +569,7 @@
                 class="arcade-overlay__button"
                 id="arcadeOverlayButton"
                 data-i18n="index.sections.arcade.overlay.button"
-              ></button>
+              >Commencer</button>
             </div>
           </div>
         </div>
@@ -443,12 +585,15 @@
     >
       <div class="math-game" id="mathGame">
         <header class="math-game__header">
-          <h2 class="math-game__title" data-i18n="index.sections.math.title"></h2>
-          <p class="math-game__subtitle" data-i18n="index.sections.math.subtitle"></p>
+          <h2 class="math-game__title" data-i18n="index.sections.math.title">Math quantique</h2>
+          <p class="math-game__subtitle" data-i18n="index.sections.math.subtitle">
+            Repérez le nombre ou le symbole caché pour compléter des calculs de plus en plus complexes.
+          </p>
           <div
             class="math-game__mode-switch"
             id="mathModeSwitch"
             role="group"
+            aria-label="Choisir le mode de calcul"
             data-i18n="aria-label:index.sections.math.modes.aria"
           >
             <button
@@ -457,23 +602,23 @@
               data-math-mode="numbers"
               aria-pressed="true"
               data-i18n="index.sections.math.modes.numbers"
-            ></button>
+            >Mode chiffres</button>
             <button
               type="button"
               class="math-game__mode-button"
               data-math-mode="symbols"
               aria-pressed="false"
               data-i18n="index.sections.math.modes.symbols"
-            ></button>
+            >Mode symboles</button>
           </div>
         </header>
         <div class="math-game__counters" role="presentation">
           <div class="math-game__counter">
-            <span class="math-game__counter-label" data-i18n="index.sections.math.scoreLabel"></span>
+            <span class="math-game__counter-label" data-i18n="index.sections.math.scoreLabel">Opérations résolues</span>
             <span class="math-game__counter-value" id="mathScoreValue">0</span>
           </div>
           <div class="math-game__counter">
-            <span class="math-game__counter-label" data-i18n="index.sections.math.streakLabel"></span>
+            <span class="math-game__counter-label" data-i18n="index.sections.math.streakLabel">Série actuelle</span>
             <span class="math-game__counter-value" id="mathStreakValue">0</span>
           </div>
           <div class="math-game__counter">
@@ -482,22 +627,28 @@
           </div>
         </div>
         <div class="math-game__challenge">
-          <p class="math-game__expression" id="mathExpression" role="status" aria-live="polite"></p>
+          <p class="math-game__expression" id="mathExpression" role="status" aria-live="polite">2 + 3 = ?</p>
           <div
             class="math-game__options"
             id="mathOptions"
             role="group"
+            aria-label="Choisir la réponse pour compléter le calcul"
             data-i18n="aria-label:index.sections.math.optionsAria"
           ></div>
         </div>
-        <p class="math-game__feedback" id="mathFeedback" role="status"></p>
+        <p
+          class="math-game__feedback"
+          id="mathFeedback"
+          role="status"
+          data-i18n="index.sections.math.feedback.initial"
+        >Choisissez la bonne réponse pour commencer la manche.</p>
         <button
           type="button"
           class="math-game__next"
           id="mathNextButton"
           data-i18n="index.sections.math.next"
           disabled
-        ></button>
+        >Nouvelle opération</button>
       </div>
     </section>
 
@@ -509,37 +660,61 @@
       hidden
     >
       <div class="sudoku-content">
+        <header class="sudoku-header">
+          <h2 class="sudoku-header__title" data-i18n="index.sections.sudoku.title">Sudoku quantique</h2>
+          <p class="sudoku-header__subtitle" data-i18n="index.sections.sudoku.subtitle">
+            Choisissez votre niveau de difficulté, remplissez la grille et vérifiez votre progression en temps réel.
+          </p>
+        </header>
         <div
           class="sudoku-toolbar"
           role="toolbar"
+          aria-label="Contrôles du Sudoku"
           data-i18n="aria-label:index.sections.sudoku.toolbar.aria"
         >
-          <label for="sudokuLevel" class="sudoku-toolbar__label" data-i18n="index.sections.sudoku.toolbar.level"></label>
-          <select id="sudokuLevel" class="sudoku-toolbar__select" data-i18n="aria-label:index.sections.sudoku.toolbar.level">
-            <option value="facile" data-i18n="index.sections.sudoku.toolbar.options.facile"></option>
-            <option value="moyen" data-i18n="index.sections.sudoku.toolbar.options.moyen" selected></option>
-            <option value="difficile" data-i18n="index.sections.sudoku.toolbar.options.difficile"></option>
+          <label for="sudokuLevel" class="sudoku-toolbar__label" data-i18n="index.sections.sudoku.toolbar.level">Niveau</label>
+          <select
+            id="sudokuLevel"
+            class="sudoku-toolbar__select"
+            aria-label="Niveau"
+            data-i18n="aria-label:index.sections.sudoku.toolbar.level"
+          >
+            <option value="facile" data-i18n="index.sections.sudoku.toolbar.options.facile">Facile</option>
+            <option value="moyen" data-i18n="index.sections.sudoku.toolbar.options.moyen" selected>Moyen</option>
+            <option value="difficile" data-i18n="index.sections.sudoku.toolbar.options.difficile">Difficile</option>
           </select>
           <button
             type="button"
             id="sudokuGenerate"
             class="sudoku-toolbar__button sudoku-toolbar__button--primary"
             data-i18n="index.sections.sudoku.toolbar.generate"
-          ></button>
+          >Générer une grille</button>
           <button
             type="button"
             id="sudokuCheck"
             class="sudoku-toolbar__button"
             data-i18n="index.sections.sudoku.toolbar.check"
             hidden
-          ></button>
-          <span id="sudokuStatus" class="sudoku-status" role="status" aria-live="polite" hidden></span>
+          >Vérifier la grille</button>
+          <span
+            id="sudokuStatus"
+            class="sudoku-status"
+            role="status"
+            aria-live="polite"
+            hidden
+            data-i18n="index.sections.sudoku.status.ready"
+          >Générez une grille pour commencer.</span>
         </div>
+        <p class="sudoku-note" data-i18n="index.sections.sudoku.note">
+          Astuce : utilisez les chiffres 1 à 9. La validation détecte les doublons dans les lignes, colonnes et blocs 3×3.
+          La résolution applique un backtracking tandis que la génération produit une grille à solution unique.
+        </p>
         <div class="sudoku-main">
           <div
             id="sudokuGrid"
             class="sudoku-grid"
             role="grid"
+            aria-label="Grille Sudoku"
             data-i18n="aria-label:index.sections.sudoku.board"
             aria-live="off"
           ></div>
@@ -547,6 +722,7 @@
             id="sudokuPad"
             class="sudoku-pad"
             role="group"
+            aria-label="Sélection des chiffres du Sudoku"
             data-i18n="aria-label:index.sections.sudoku.pad.aria"
           >
             <div class="sudoku-pad__actions" role="group">
@@ -555,13 +731,13 @@
                 class="sudoku-pad__button sudoku-pad__button--action"
                 data-value="clear"
                 data-i18n="index.sections.sudoku.pad.clear"
-              ></button>
+              >Effacer</button>
               <button
                 type="button"
                 id="sudokuPadValidate"
                 class="sudoku-pad__button sudoku-pad__button--action"
                 data-i18n="index.sections.sudoku.pad.ok"
-              ></button>
+              >OK</button>
             </div>
             <div class="sudoku-pad__numbers" role="group">
               <button type="button" class="sudoku-pad__button" data-value="1">1</button>
@@ -583,49 +759,102 @@
       id="blackjack"
       class="page page--blackjack"
       data-page-group="arcade"
+      aria-label="Mini-jeu Blackjack quantique"
       data-i18n="aria-label:index.sections.blackjack.aria"
       hidden
     >
       <div class="blackjack">
-        <div
-          class="blackjack-table"
-          role="group"
-          data-i18n="aria-label:index.sections.blackjack.tableAria"
-        >
-          <section class="blackjack-hand blackjack-hand--dealer">
-            <header class="blackjack-hand__header">
-              <h3 class="blackjack-hand__title" data-i18n="index.sections.blackjack.dealer.label"></h3>
-              <p class="blackjack-hand__total">
-                <span data-i18n="index.sections.blackjack.totals.dealer"></span>
-                <span id="blackjackDealerTotalValue">0</span>
-              </p>
-            </header>
-            <ul
-              class="blackjack-cards"
-              id="blackjackDealerCards"
-              aria-live="polite"
-              data-i18n="aria-label:index.sections.blackjack.dealer.cards"
-            ></ul>
-          </section>
-          <section class="blackjack-hand blackjack-hand--player">
-            <header class="blackjack-hand__header">
-              <h3 class="blackjack-hand__title" data-i18n="index.sections.blackjack.player.label"></h3>
-              <p class="blackjack-hand__total">
-                <span data-i18n="index.sections.blackjack.totals.player"></span>
-                <span id="blackjackPlayerTotalValue">0</span>
-              </p>
-            </header>
-            <ul
-              class="blackjack-cards"
-              id="blackjackPlayerCards"
-              aria-live="polite"
-              data-i18n="aria-label:index.sections.blackjack.player.cards"
-            ></ul>
-          </section>
+        <header class="blackjack-header">
+          <div class="blackjack-header__titles">
+            <h2 class="blackjack-header__title" data-i18n="index.sections.blackjack.title">Blackjack quantique</h2>
+            <p class="blackjack-header__subtitle" data-i18n="index.sections.blackjack.subtitle">
+              Défiez le croupier avec un sabot de huit paquets qui se reconstitue dès qu'une carte manque.
+            </p>
+          </div>
+          <dl class="blackjack-scoreboard" aria-label="Statistiques de la session">
+            <div class="blackjack-scoreboard__item">
+              <dt data-i18n="index.sections.blackjack.scoreboard.wins">Victoires</dt>
+              <dd id="blackjackWins">0</dd>
+            </div>
+            <div class="blackjack-scoreboard__item">
+              <dt data-i18n="index.sections.blackjack.scoreboard.losses">Défaites</dt>
+              <dd id="blackjackLosses">0</dd>
+            </div>
+            <div class="blackjack-scoreboard__item">
+              <dt data-i18n="index.sections.blackjack.scoreboard.pushes">Égalités</dt>
+              <dd id="blackjackPushes">0</dd>
+            </div>
+          </dl>
+        </header>
+        <p
+          class="blackjack-status"
+          id="blackjackStatus"
+          role="status"
+          aria-live="polite"
+          data-i18n="index.sections.blackjack.status.ready"
+        >Lancez une nouvelle manche pour affronter le croupier.</p>
+        <div class="blackjack-layout">
+          <div
+            class="blackjack-table"
+            role="group"
+            aria-label="Table de blackjack"
+            data-i18n="aria-label:index.sections.blackjack.tableAria"
+          >
+            <section class="blackjack-hand blackjack-hand--dealer">
+              <header class="blackjack-hand__header">
+                <h3 class="blackjack-hand__title" data-i18n="index.sections.blackjack.dealer.label">Croupier</h3>
+                <p class="blackjack-hand__total">
+                  <span data-i18n="index.sections.blackjack.totals.dealer">Total croupier&nbsp;:</span>
+                  <span id="blackjackDealerTotalValue">0</span>
+                </p>
+              </header>
+              <ul
+                class="blackjack-cards"
+                id="blackjackDealerCards"
+                aria-live="polite"
+                aria-label="Cartes du croupier"
+                data-i18n="aria-label:index.sections.blackjack.dealer.cards"
+              ></ul>
+            </section>
+            <section class="blackjack-hand blackjack-hand--player">
+              <header class="blackjack-hand__header">
+                <h3 class="blackjack-hand__title" data-i18n="index.sections.blackjack.player.label">Joueur</h3>
+                <p class="blackjack-hand__total">
+                  <span data-i18n="index.sections.blackjack.totals.player">Total joueur&nbsp;:</span>
+                  <span id="blackjackPlayerTotalValue">0</span>
+                </p>
+              </header>
+              <ul
+                class="blackjack-cards"
+                id="blackjackPlayerCards"
+                aria-live="polite"
+                aria-label="Cartes du joueur"
+                data-i18n="aria-label:index.sections.blackjack.player.cards"
+              ></ul>
+            </section>
+          </div>
+          <aside class="blackjack-overview" aria-labelledby="blackjackShoeHeading">
+            <h3 id="blackjackShoeHeading" class="blackjack-overview__title" data-i18n="index.sections.blackjack.shoe.label">
+              Sabot
+            </h3>
+            <p class="blackjack-overview__stat">
+              <span class="blackjack-overview__label" data-i18n="index.sections.blackjack.shoe.decksLabel">Paquets en jeu&nbsp;:</span>
+              <span class="blackjack-overview__value" id="blackjackDeckInfo">8 paquets prêts</span>
+            </p>
+            <p class="blackjack-overview__stat">
+              <span class="blackjack-overview__label" data-i18n="index.sections.blackjack.shoe.stateLabel">État du sabot&nbsp;:</span>
+              <span class="blackjack-overview__value" id="blackjackShoeState">Sabot prêt</span>
+            </p>
+            <p class="blackjack-overview__stat">
+              <span class="blackjack-overview__label" data-i18n="index.sections.blackjack.shoe.remainingLabel">Cartes restantes&nbsp;:</span>
+              <span class="blackjack-overview__value" id="blackjackShoeRemaining">416 cartes</span>
+            </p>
+          </aside>
         </div>
         <div
           class="blackjack-controls"
           role="group"
+          aria-label="Commandes du blackjack"
           data-i18n="aria-label:index.sections.blackjack.controls.aria"
         >
           <button
@@ -633,34 +862,56 @@
             class="blackjack-button"
             id="blackjackNewRound"
             data-i18n="index.sections.blackjack.controls.new"
-          ></button>
+          >Nouvelle manche</button>
           <button
             type="button"
             class="blackjack-button"
             id="blackjackHit"
             data-i18n="index.sections.blackjack.controls.hit"
             disabled
-          ></button>
+          >Tirer</button>
           <button
             type="button"
             class="blackjack-button"
             id="blackjackStand"
             data-i18n="index.sections.blackjack.controls.stand"
             disabled
-          ></button>
+          >Rester</button>
         </div>
         <section
           class="blackjack-bet"
           id="blackjackBet"
           role="group"
+          aria-label="Gestion des mises"
           data-i18n="aria-label:index.sections.blackjack.bet.title"
         >
+          <header class="blackjack-bet__header">
+            <h3 class="blackjack-bet__title" data-i18n="index.sections.blackjack.bet.title">Mise</h3>
+            <p class="blackjack-bet__hint" data-i18n="index.sections.blackjack.bet.hint">
+              Choisissez un montant pour lancer une nouvelle manche.
+            </p>
+          </header>
+          <div class="blackjack-bet__status">
+            <p class="blackjack-bet__line">
+              <span class="blackjack-bet__label" data-i18n="index.sections.blackjack.bet.current">Mise actuelle&nbsp;:</span>
+              <span class="blackjack-bet__value" id="blackjackCurrentBet" data-i18n="index.sections.blackjack.bet.none">Aucune</span>
+            </p>
+            <p class="blackjack-bet__line">
+              <span class="blackjack-bet__label" data-i18n="index.sections.blackjack.bet.balance">Atomes disponibles&nbsp;:</span>
+              <span class="blackjack-bet__value" id="blackjackAtomsBalance">0</span>
+            </p>
+          </div>
           <div
             class="blackjack-bet__options"
             id="blackjackBetOptions"
             role="group"
+            aria-label="Montants de mise disponibles"
             data-i18n="aria-label:index.sections.blackjack.bet.optionsAria"
-          ></div>
+          >
+            <p class="blackjack-bet__placeholder" data-i18n="index.sections.blackjack.bet.placeholder">
+              Les montants de mise apparaîtront dès que le sabot est prêt.
+            </p>
+          </div>
         </section>
       </div>
     </section>
@@ -677,8 +928,32 @@
           id="waveCanvas"
           class="wave-stage__canvas"
           role="presentation"
+          aria-label="Zone de jeu Photon"
           data-i18n="aria-label:index.sections.wave.canvasAria"
         ></canvas>
+        <div class="wave-hud" role="status" aria-live="polite">
+          <div class="wave-hud__item">
+            <span class="wave-hud__label" data-i18n="index.sections.wave.hud.distance">Distance</span>
+            <span class="wave-hud__value">
+              <span id="waveDistanceValue">0</span>
+              <span class="wave-hud__unit" data-i18n="index.sections.wave.hud.distanceUnit">m</span>
+            </span>
+          </div>
+          <div class="wave-hud__item">
+            <span class="wave-hud__label" data-i18n="index.sections.wave.hud.speed">Vitesse</span>
+            <span class="wave-hud__value">
+              <span id="waveSpeedValue">0</span>
+              <span class="wave-hud__unit" data-i18n="index.sections.wave.hud.speedUnit">km/h</span>
+            </span>
+          </div>
+          <div class="wave-hud__item">
+            <span class="wave-hud__label" data-i18n="index.sections.wave.hud.altitude">Altitude</span>
+            <span class="wave-hud__value">
+              <span id="waveAltitudeValue">0</span>
+              <span class="wave-hud__unit" data-i18n="index.sections.wave.hud.altitudeUnit">m</span>
+            </span>
+          </div>
+        </div>
         <div class="ticket-layer" id="waveTicketLayer" aria-hidden="true"></div>
         <div class="frenzy-layer" id="waveFrenzyLayer" aria-hidden="true"></div>
         <div
@@ -690,6 +965,27 @@
         >
           <span class="apc-frenzy-counter__value" id="waveApcFrenzyCounterValue">0</span>
         </div>
+        <div
+          class="wave-controls"
+          role="group"
+          aria-label="Commandes du mini-jeu Photon"
+          data-i18n="aria-label:index.sections.wave.controls.aria"
+        >
+          <button
+            type="button"
+            class="wave-controls__reset"
+            id="waveResetButton"
+            data-i18n="index.sections.wave.controls.reset"
+          >Relancer la partie</button>
+          <p class="wave-controls-hint" data-i18n="index.sections.wave.controls.hold">Maintenir pour plonger</p>
+        </div>
+        <p
+          class="wave-status"
+          id="waveStatusMessage"
+          role="status"
+          aria-live="polite"
+          data-i18n="index.sections.wave.status.ready"
+        >Relâchez sur la montée pour décoller.</p>
       </div>
     </section>
 
@@ -697,64 +993,134 @@
       id="quantum2048"
       class="page page--quantum2048"
       data-page-group="arcade"
+      aria-label="Mini-jeu Fusion 2048"
       data-i18n="aria-label:index.sections.quantum2048.aria"
       hidden
     >
       <div class="quantum2048-content">
-        <div class="quantum2048-toolbar" role="presentation">
-          <button
-            class="arcade-header__status arcade-header__status--info"
-            id="quantum2048UniverseDisplay"
-            type="button"
-          >
-            <span class="arcade-header__status-label" data-i18n="index.sections.quantum2048.progress.label"></span>
-            <span class="arcade-header__status-value" id="quantum2048ParallelUniverseValue" aria-live="polite">0</span>
-          </button>
-          <button
-            class="arcade-header__status arcade-header__status--info"
-            id="quantum2048GoalDisplay"
-            type="button"
-          >
-            <span class="visually-hidden" data-i18n="index.sections.quantum2048.controls.restart"></span>
-            <span class="arcade-header__status-label" data-i18n="index.sections.quantum2048.banner.goalLabel"></span>
-            <span class="arcade-header__status-value" id="quantum2048GoalValue" aria-live="polite">0</span>
-          </button>
+        <header class="quantum2048-header">
+          <h2 class="quantum2048-header__title" data-i18n="index.sections.quantum2048.title">Fusion 2048</h2>
+          <p class="quantum2048-header__subtitle" data-i18n="index.sections.quantum2048.subtitle">
+            Choisissez votre grille et combinez les tuiles pour atteindre l’objectif sélectionné.
+          </p>
+        </header>
+        <div
+          class="quantum2048-toolbar"
+          role="group"
+          aria-label="Paramètres de la partie Fusion 2048"
+          data-i18n="aria-label:index.sections.quantum2048.controls.group"
+        >
+          <div class="quantum2048-toolbar__control">
+            <label
+              for="quantum2048SizeSelect"
+              class="quantum2048-toolbar__label"
+              data-i18n="index.sections.quantum2048.controls.size"
+            >Taille de la grille</label>
+            <select
+              id="quantum2048SizeSelect"
+              class="quantum2048-toolbar__select"
+              aria-label="Taille de la grille"
+              data-i18n="aria-label:index.sections.quantum2048.controls.size"
+            >
+              <option value="4">4×4</option>
+              <option value="5">5×5</option>
+              <option value="6">6×6</option>
+            </select>
+          </div>
+          <div class="quantum2048-toolbar__control">
+            <label
+              for="quantum2048TargetSelect"
+              class="quantum2048-toolbar__label"
+              data-i18n="index.sections.quantum2048.controls.target"
+            >Objectif à atteindre</label>
+            <select
+              id="quantum2048TargetSelect"
+              class="quantum2048-toolbar__select"
+              aria-label="Objectif à atteindre"
+              data-i18n="aria-label:index.sections.quantum2048.controls.target"
+            >
+              <option value="2048">2&nbsp;048</option>
+              <option value="4096">4&nbsp;096</option>
+              <option value="8192">8&nbsp;192</option>
+            </select>
+          </div>
+          <div class="quantum2048-toolbar__status">
+            <button
+              class="arcade-header__status arcade-header__status--info"
+              id="quantum2048UniverseDisplay"
+              type="button"
+            >
+              <span class="arcade-header__status-label" data-i18n="index.sections.quantum2048.progress.label">
+                Univers parallèles n°&nbsp;:
+              </span>
+              <span class="arcade-header__status-value" id="quantum2048ParallelUniverseValue" aria-live="polite">0</span>
+            </button>
+            <button
+              class="arcade-header__status arcade-header__status--info"
+              id="quantum2048GoalDisplay"
+              type="button"
+            >
+              <span class="visually-hidden" data-i18n="index.sections.quantum2048.controls.restart">
+                Nouvelle partie
+              </span>
+              <span class="arcade-header__status-label" data-i18n="index.sections.quantum2048.banner.goalLabel">Objectif</span>
+              <span class="arcade-header__status-value" id="quantum2048GoalValue" aria-live="polite">0</span>
+            </button>
+          </div>
         </div>
         <div
           class="quantum2048-board"
           id="quantum2048Board"
           role="application"
-          aria-label="2048"
+          aria-label="Plateau Fusion 2048"
           data-i18n="aria-label:index.sections.quantum2048.board"
         >
           <div class="quantum2048-board__background" id="quantum2048Grid" aria-hidden="true"></div>
           <div class="quantum2048-board__tiles" id="quantum2048Tiles" aria-hidden="true"></div>
           <div class="quantum2048-overlay" id="quantum2048Overlay" hidden>
             <div class="quantum2048-overlay__content">
-              <p class="quantum2048-overlay__message" id="quantum2048OverlayMessage"></p>
+              <p
+                class="quantum2048-overlay__message"
+                id="quantum2048OverlayMessage"
+                data-i18n="index.sections.quantum2048.overlay.message"
+              >Objectif atteint&nbsp;! Relancez une manche pour repousser la fusion.</p>
               <button
                 type="button"
                 class="quantum2048-overlay__button"
                 id="quantum2048OverlayButton"
                 data-i18n="scripts.arcade.quantum2048.overlay.retry"
-              ></button>
+              >Relancer</button>
             </div>
           </div>
         </div>
         <div class="quantum2048-hud">
           <header class="quantum2048-hud__header">
-            <h2
-              class="quantum2048-hud__title visually-hidden"
-              data-i18n="index.sections.quantum2048.title"
-            ></h2>
-            <p
-              class="quantum2048-hud__subtitle visually-hidden"
-              data-i18n="index.sections.quantum2048.subtitle"
-            ></p>
+            <h3 class="quantum2048-hud__title" data-i18n="index.sections.quantum2048.stats.group">Statistiques de la manche</h3>
+            <p class="quantum2048-hud__subtitle" data-i18n="index.sections.quantum2048.status.ready">
+              Fusion prête&nbsp;: combinez les tuiles pour atteindre la cible.
+            </p>
           </header>
-          <div class="quantum2048-hud__stats">
-            <p class="quantum2048-hud__status" id="quantum2048Status" role="status"></p>
+          <div class="quantum2048-hud__stats" role="group" aria-label="Indicateurs de progression">
+            <div class="quantum2048-hud__stat">
+              <span class="quantum2048-hud__stat-label" data-i18n="index.sections.quantum2048.stats.score">Score</span>
+              <span class="quantum2048-hud__stat-value" id="quantum2048ScoreValue">0</span>
+            </div>
+            <div class="quantum2048-hud__stat">
+              <span class="quantum2048-hud__stat-label" data-i18n="index.sections.quantum2048.stats.best">Meilleure tuile</span>
+              <span class="quantum2048-hud__stat-value" id="quantum2048BestValue">0</span>
+            </div>
+            <div class="quantum2048-hud__stat">
+              <span class="quantum2048-hud__stat-label" data-i18n="index.sections.quantum2048.stats.moves">Mouvements</span>
+              <span class="quantum2048-hud__stat-value" id="quantum2048MovesValue">0</span>
+            </div>
           </div>
+          <p
+            class="quantum2048-hud__status"
+            id="quantum2048Status"
+            role="status"
+            aria-live="polite"
+            data-i18n="index.sections.quantum2048.status.ready"
+          >Fusion prête&nbsp;: combinez les tuiles pour atteindre la cible.</p>
         </div>
       </div>
     </section>
@@ -763,19 +1129,34 @@
       id="balance"
       class="page page--balance"
       data-page-group="arcade"
+      aria-label="Mini-jeu Balance"
       data-i18n="aria-label:index.sections.balance.aria"
       hidden
     >
       <div class="balance-layout" id="balancePageLayout">
+        <header class="balance-header">
+          <h2 class="balance-header__title" data-i18n="index.sections.balance.title">Balance</h2>
+          <p class="balance-header__subtitle" data-i18n="index.sections.balance.subtitle">
+            Répartissez les blocs pour que le centre de gravité reste au-dessus du pivot.
+          </p>
+        </header>
         <div
           class="balance-inventory"
           id="balanceInventory"
           role="region"
+          aria-label="Blocs disponibles"
           data-i18n="aria-label:index.sections.balance.inventory.title"
         >
+          <div class="balance-inventory__header">
+            <h3 class="balance-inventory__title" data-i18n="index.sections.balance.inventory.title">Blocs disponibles</h3>
+            <p class="balance-inventory__hint" data-i18n="index.sections.balance.inventory.hint">
+              Le nombre inscrit sur chaque bloc représente son poids relatif.
+            </p>
+          </div>
           <div
             class="balance-inventory__list"
             id="balancePieces"
+            aria-label="Inventaire des blocs prêts à être placés"
             data-i18n="aria-label:index.sections.balance.inventory.list"
           ></div>
         </div>
@@ -796,11 +1177,18 @@
               id="balanceBoardLabel"
               class="visually-hidden"
               data-i18n="index.sections.balance.instructions"
-            ></span>
+            >Faites glisser un bloc depuis le plateau vers la planche, puis appuyez sur « Tester l'équilibre » pour lancer la
+              simulation.</span>
           </div>
         </div>
         <div class="balance-controls" id="balanceControls">
-          <p class="balance-status" id="balanceStatus" role="status" aria-live="polite"></p>
+          <p
+            class="balance-status"
+            id="balanceStatus"
+            role="status"
+            aria-live="polite"
+            data-i18n="index.sections.balance.status.ready"
+          >Disposez les blocs et lancez un test.</p>
           <div class="balance-difficulty" id="balanceDifficulty">
             <label
               class="balance-difficulty__label"
@@ -811,11 +1199,15 @@
               class="balance-difficulty__select"
               id="balanceDifficultySelect"
               aria-describedby="balanceDifficultyDescription"
-            ></select>
+            >
+              <option value="easy" data-i18n="scripts.arcade.balance.difficulty.easy">Mode facile</option>
+              <option value="hard" data-i18n="scripts.arcade.balance.difficulty.hard">Mode difficile</option>
+            </select>
             <p
               class="balance-difficulty__description"
               id="balanceDifficultyDescription"
-            ></p>
+              data-i18n="scripts.arcade.balance.difficulty.easyDescription"
+            >Tolérance généreuse pour apprivoiser l’équilibre.</p>
           </div>
           <div class="balance-controls__buttons">
             <button
@@ -823,13 +1215,13 @@
               class="balance-button balance-button--primary"
               id="balanceTestButton"
               data-i18n="index.sections.balance.actions.test"
-            ></button>
+            >Tester l'équilibre</button>
             <button
               type="button"
               class="balance-button"
               id="balanceResetButton"
               data-i18n="index.sections.balance.actions.reset"
-            ></button>
+            >Réinitialiser les blocs</button>
           </div>
         </div>
       </div>
@@ -840,6 +1232,7 @@
       id="tableau"
       class="page page--table"
       data-page-group="clicker"
+      aria-label="Tableau périodique des éléments"
       data-i18n="aria-label:index.sections.table.aria"
     >
       <div class="periodic-table-wrapper" role="presentation">
@@ -847,6 +1240,7 @@
           class="periodic-table"
           id="periodicTable"
           role="grid"
+          aria-label="Tableau périodique des éléments"
           data-i18n="aria-label:index.sections.table.aria"
         >
           <aside class="element-info-panel" id="elementInfoPanel" aria-live="polite">
@@ -854,7 +1248,7 @@
               class="element-info-panel__placeholder"
               id="elementInfoPlaceholder"
               data-i18n="index.sections.table.placeholder"
-            ></p>
+            >Sélectionnez un élément pour afficher ses détails.</p>
             <div class="element-info-panel__content" id="elementInfoContent" hidden>
               <header class="element-info-panel__header">
                 <span class="element-info-panel__number" id="elementInfoNumber"></span>
@@ -876,7 +1270,7 @@
             </header>
             <dl class="element-info-panel__details">
                 <div class="element-info-panel__row">
-                  <dt data-i18n="index.sections.table.details.collection"></dt>
+                  <dt data-i18n="index.sections.table.details.collection">Bonus de collection</dt>
                   <dd id="elementInfoCollection" class="element-info-panel__value element-info-panel__collection"></dd>
                 </div>
               </dl>
@@ -887,14 +1281,14 @@
             id="elementCollectionSummary"
             aria-live="polite"
           >
-            <h3 class="periodic-summary__title" data-i18n="index.sections.table.summary.title"></h3>
+            <h3 class="periodic-summary__title" data-i18n="index.sections.table.summary.title">Collection</h3>
             <dl class="periodic-summary__stats">
               <div class="periodic-summary__row">
-                <dt data-i18n="index.sections.table.summary.current"></dt>
+                <dt data-i18n="index.sections.table.summary.current">Éléments possédés</dt>
                 <dd id="elementCollectionCurrentTotal" class="periodic-summary__value">0</dd>
               </div>
               <div class="periodic-summary__row">
-                <dt data-i18n="index.sections.table.summary.lifetime"></dt>
+                <dt data-i18n="index.sections.table.summary.lifetime">Éléments découverts</dt>
                 <dd id="elementCollectionLifetimeTotal" class="periodic-summary__value">0</dd>
               </div>
             </dl>
@@ -914,13 +1308,19 @@
         id="fusion-title"
         class="fusion-title visually-hidden"
         data-i18n="index.sections.fusion.title"
-      ></h2>
+      >Chambre de fusion quantique</h2>
       <p
         class="fusion-intro visually-hidden"
         data-i18n="index.sections.fusion.intro"
-      ></p>
+      >Assemblez des éléments pour tenter des fusions aux effets uniques.</p>
       <div class="fusion-list" id="fusionList" role="list"></div>
-      <div class="fusion-log" id="fusionLog" role="status" aria-live="polite"></div>
+      <div
+        class="fusion-log"
+        id="fusionLog"
+        role="status"
+        aria-live="polite"
+        data-i18n="index.sections.fusion.logPlaceholder"
+      >Les résultats de fusion apparaîtront ici.</div>
     </section>
 
     <section
@@ -929,12 +1329,12 @@
       data-page-group="clicker"
       aria-labelledby="info-title"
     >
-      <h2 id="info-title" class="visually-hidden" data-i18n="index.sections.info.title"></h2>
+      <h2 id="info-title" class="visually-hidden" data-i18n="index.sections.info.title">Tableau de bord des statistiques</h2>
       <div class="info-grid">
         <article class="info-card info-card--production" aria-labelledby="info-aps-title">
           <header class="info-card__header">
-            <h3 id="info-aps-title" data-i18n="index.sections.info.aps.title"></h3>
-            <p class="info-card__subtitle" data-i18n="index.sections.info.aps.subtitle"></p>
+            <h3 id="info-aps-title" data-i18n="index.sections.info.aps.title">Production passive (APS)</h3>
+            <p class="info-card__subtitle" data-i18n="index.sections.info.aps.subtitle">Répartition détaillée de vos gains automatiques.</p>
           </header>
           <ul
             id="infoApsBreakdown"
@@ -945,8 +1345,8 @@
 
         <article class="info-card info-card--production" aria-labelledby="info-apc-title">
           <header class="info-card__header">
-            <h3 id="info-apc-title" data-i18n="index.sections.info.apc.title"></h3>
-            <p class="info-card__subtitle" data-i18n="index.sections.info.apc.subtitle"></p>
+            <h3 id="info-apc-title" data-i18n="index.sections.info.apc.title">Production par clic (APC)</h3>
+            <p class="info-card__subtitle" data-i18n="index.sections.info.apc.subtitle">Analyse de la puissance générée à chaque clic.</p>
           </header>
           <ul
             id="infoApcBreakdown"
@@ -957,64 +1357,64 @@
 
         <article class="info-card info-card--stats info-card--progression" aria-labelledby="info-progress-title">
           <header class="info-card__header">
-            <h3 id="info-progress-title" data-i18n="index.sections.info.progress.title"></h3>
-            <p class="info-card__subtitle" data-i18n="index.sections.info.progress.subtitle"></p>
+            <h3 id="info-progress-title" data-i18n="index.sections.info.progress.title">Progression du joueur</h3>
+            <p class="info-card__subtitle" data-i18n="index.sections.info.progress.subtitle">Suivi des performances de la session et de l'historique.</p>
           </header>
           <div class="info-progress-grid" role="group" aria-labelledby="info-progress-title">
             <section class="info-progress-block" aria-labelledby="info-session-title">
-              <h4 id="info-session-title" data-i18n="index.sections.info.progress.session.title"></h4>
+              <h4 id="info-session-title" data-i18n="index.sections.info.progress.session.title">Session en cours</h4>
               <dl class="info-metrics">
                 <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.session.atoms"></dt>
+                  <dt data-i18n="index.sections.info.progress.session.atoms">Atomes générés</dt>
                   <dd id="infoSessionAtoms">0</dd>
                 </div>
                 <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.session.clicks"></dt>
+                  <dt data-i18n="index.sections.info.progress.session.clicks">Clics enregistrés</dt>
                   <dd id="infoSessionClicks">0</dd>
                 </div>
                 <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.session.apc"></dt>
+                  <dt data-i18n="index.sections.info.progress.session.apc">APC cumulés</dt>
                   <dd id="infoSessionApcAtoms">0</dd>
                 </div>
                 <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.session.aps"></dt>
+                  <dt data-i18n="index.sections.info.progress.session.aps">APS cumulés</dt>
                   <dd id="infoSessionApsAtoms">0</dd>
                 </div>
                 <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.session.offline"></dt>
+                  <dt data-i18n="index.sections.info.progress.session.offline">Collecte hors ligne</dt>
                   <dd id="infoSessionOfflineAtoms">0</dd>
                 </div>
                 <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.session.duration"></dt>
+                  <dt data-i18n="index.sections.info.progress.session.duration">Durée de la session</dt>
                   <dd id="infoSessionDuration">0s</dd>
                 </div>
               </dl>
             </section>
             <section class="info-progress-block" aria-labelledby="info-global-title">
-              <h4 id="info-global-title" data-i18n="index.sections.info.progress.global.title"></h4>
+              <h4 id="info-global-title" data-i18n="index.sections.info.progress.global.title">Historique global</h4>
               <dl class="info-metrics">
                 <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.global.atoms"></dt>
+                  <dt data-i18n="index.sections.info.progress.global.atoms">Total d'atomes</dt>
                   <dd id="infoGlobalAtoms">0</dd>
                 </div>
                 <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.global.clicks"></dt>
+                  <dt data-i18n="index.sections.info.progress.global.clicks">Total de clics</dt>
                   <dd id="infoGlobalClicks">0</dd>
                 </div>
                 <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.global.apc"></dt>
+                  <dt data-i18n="index.sections.info.progress.global.apc">APC cumulés</dt>
                   <dd id="infoGlobalApcAtoms">0</dd>
                 </div>
                 <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.global.aps"></dt>
+                  <dt data-i18n="index.sections.info.progress.global.aps">APS cumulés</dt>
                   <dd id="infoGlobalApsAtoms">0</dd>
                 </div>
                 <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.global.offline"></dt>
+                  <dt data-i18n="index.sections.info.progress.global.offline">Collecte hors ligne</dt>
                   <dd id="infoGlobalOfflineAtoms">0</dd>
                 </div>
                 <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.global.duration"></dt>
+                  <dt data-i18n="index.sections.info.progress.global.duration">Temps de jeu</dt>
                   <dd id="infoGlobalDuration">0s</dd>
                 </div>
               </dl>
@@ -1024,8 +1424,8 @@
 
         <article class="info-card info-card--bonuses" aria-labelledby="info-shop-bonus-title">
           <header class="info-card__header">
-            <h3 id="info-shop-bonus-title" data-i18n="index.sections.info.shop.title"></h3>
-            <p class="info-card__subtitle" data-i18n="index.sections.info.shop.subtitle"></p>
+            <h3 id="info-shop-bonus-title" data-i18n="index.sections.info.shop.title">Bonus de boutique</h3>
+            <p class="info-card__subtitle" data-i18n="index.sections.info.shop.subtitle">Effets obtenus auprès des améliorations achetées.</p>
           </header>
           <div
             id="infoShopBonuses"
@@ -1037,12 +1437,12 @@
 
         <article class="info-card info-card--bonuses" aria-labelledby="info-bonus-title">
           <header class="info-card__header">
-            <h3 id="info-bonus-title" data-i18n="index.sections.info.elements.title"></h3>
+            <h3 id="info-bonus-title" data-i18n="index.sections.info.elements.title">Bonus des éléments</h3>
             <p
               class="info-card__subtitle"
               id="infoBonusSubtitle"
               data-i18n="index.sections.info.elements.subtitle"
-            ></p>
+            >Effets cumulés de vos collections élémentaires.</p>
           </header>
           <div id="infoElementBonuses" class="element-bonus-list" role="list" aria-live="polite"></div>
         </article>
@@ -1053,22 +1453,69 @@
       id="metaux"
       class="page page--metaux"
       data-page-group="arcade"
+      aria-label="Mini-jeu Métaux"
       data-i18n="aria-label:index.sections.metaux.aria"
       hidden
     >
       <div class="metaux-content">
+        <header class="metaux-header">
+          <div class="metaux-header__brand">
+            <h2 class="metaux-header__title" data-i18n="index.sections.metaux.title">Métaux Mach3</h2>
+            <p class="metaux-header__subtitle" data-i18n="index.sections.metaux.subtitle">
+              Alignez les alliages pour forger des bonus et maintenir le flux d’énergie.
+            </p>
+          </div>
+            <div class="metaux-header__stats">
+              <div class="metaux-stat">
+                <span class="metaux-stat__label" data-i18n="index.sections.metaux.stats.lastCombo">Dernier combo</span>
+                <span class="metaux-stat__value" id="metauxLastComboValue">0</span>
+              </div>
+              <div class="metaux-stat">
+                <span class="metaux-stat__label" data-i18n="index.sections.metaux.stats.bestCombo">Meilleur combo</span>
+                <span class="metaux-stat__value" id="metauxBestComboValue">0</span>
+              </div>
+              <div class="metaux-stat">
+                <span class="metaux-stat__label" data-i18n="index.sections.metaux.stats.totalTiles">Tuiles fusionnées</span>
+                <span class="metaux-stat__value" id="metauxTotalTilesValue">0</span>
+              </div>
+            </div>
+        </header>
+        <div class="metaux-layout">
+          <aside class="metaux-sidebar" aria-label="Synthèse des alliages">
+            <h3 class="metaux-sidebar__title" data-i18n="index.sections.metaux.sidebar.title">Forgez vos alliages</h3>
+            <p class="metaux-sidebar__intro" data-i18n="index.sections.metaux.sidebar.intro">
+              Assemblez trois pièces identiques pour libérer de l’énergie et prolonger la session. Chaque combo augmente la
+              vitesse&nbsp;: surveillez le chrono !
+            </p>
+            <dl class="metaux-sidebar__stats">
+              <div class="metaux-sidebar__stat">
+                <dt data-i18n="index.sections.metaux.stats.reshuffles">Mélanges forcés</dt>
+                <dd id="metauxReshufflesValue">0</dd>
+              </div>
+              <div class="metaux-sidebar__stat">
+                <dt data-i18n="index.sections.metaux.stats.moves">Mouvements</dt>
+                <dd id="metauxMovesValue">0</dd>
+              </div>
+            </dl>
+            <button
+              type="button"
+              id="metauxReshuffleButton"
+              class="metaux-reshuffle-button"
+              data-i18n="index.sections.metaux.actions.reshuffle"
+            >Forcer un mélange</button>
+          </aside>
         <div class="metaux-board-wrapper">
           <div class="metaux-timer" id="metauxTimer" role="timer" aria-live="polite">
             <span
               class="metaux-timer__label"
               id="metauxTimerLabel"
               data-i18n="index.sections.metaux.timerLabel"
-            ></span>
+            >Temps restant</span>
             <span
               class="metaux-timer__max"
               id="metauxTimerMaxValue"
               data-i18n="index.sections.metaux.timerMax"
-            ></span>
+            >Max&nbsp;: 6&nbsp;s</span>
             <div class="metaux-timer__bar" aria-hidden="true">
               <div class="metaux-timer__bar-fill" id="metauxTimerFill"></div>
             </div>
@@ -1079,55 +1526,63 @@
               class="metaux-timer__free-exit"
               hidden
             >
-              <span data-i18n="index.sections.metaux.freePlayExitButton"></span>
+              <span data-i18n="index.sections.metaux.freePlayExitButton">Quitter le mode libre</span>
             </button>
           </div>
           <div
             class="metaux-board"
             id="metauxBoard"
             role="grid"
+            aria-label="Grille de correspondances Métaux"
             data-i18n="aria-label:index.sections.metaux.boardAria"
           ></div>
           <div class="metaux-end-screen" id="metauxEndScreen" hidden>
             <div class="metaux-end-screen__panel" role="dialog" aria-modal="true" aria-labelledby="metauxEndTitle">
-              <h2 id="metauxEndTitle" data-i18n="index.sections.metaux.endTitle"></h2>
+              <h2 id="metauxEndTitle" data-i18n="index.sections.metaux.endTitle">Session terminée</h2>
               <dl class="metaux-end-screen__summary">
                 <div class="metaux-end-screen__summary-item">
-                  <dt data-i18n="index.sections.metaux.summary.time"></dt>
+                  <dt data-i18n="index.sections.metaux.summary.time">Durée</dt>
                   <dd id="metauxEndTimeValue">0&nbsp;s</dd>
                 </div>
                 <div class="metaux-end-screen__summary-item">
-                  <dt data-i18n="index.sections.metaux.summary.matches"></dt>
+                  <dt data-i18n="index.sections.metaux.summary.matches">Combos</dt>
                   <dd id="metauxEndMatchesValue">0</dd>
                 </div>
               </dl>
               <div class="metaux-end-screen__actions">
                 <button type="button" id="metauxNewGameButton" class="metaux-end-screen__button">
-                  <span data-i18n="index.sections.metaux.newGame"></span>
+                  <span data-i18n="index.sections.metaux.newGame">Nouvelle partie</span>
                   <span
                     id="metauxNewGameCredits"
                     class="metaux-end-screen__button-note"
                     data-i18n="index.sections.metaux.newGameCredits"
-                  ></span>
+                  >Coût : 1 crédit Mach3</span>
                 </button>
                 <button
                   type="button"
                   id="metauxFreePlayButton"
                   class="metaux-end-screen__button metaux-end-screen__button--free"
                 >
-                  <span data-i18n="index.sections.metaux.freePlay"></span>
+                  <span data-i18n="index.sections.metaux.freePlay">Mode libre</span>
                 </button>
                 <button
                   type="button"
                   id="metauxReturnButton"
                   class="metaux-end-screen__button metaux-end-screen__button--ghost"
                 >
-                  <span data-i18n="index.sections.metaux.return"></span>
+                  <span data-i18n="index.sections.metaux.return">Retourner au clicker</span>
                 </button>
               </div>
-              <p id="metauxCreditStatus" class="metaux-credit-status" role="status" aria-live="polite"></p>
+              <p
+                id="metauxCreditStatus"
+                class="metaux-credit-status"
+                role="status"
+                aria-live="polite"
+                data-i18n="index.sections.metaux.creditStatus"
+              >Crédits Mach3 restants&nbsp;: 0</p>
             </div>
           </div>
+        </div>
         </div>
       </div>
     </section>
@@ -1137,9 +1592,10 @@
       class="page"
       data-page-group="clicker"
       role="region"
+      aria-label="Objectifs"
       data-i18n="aria-label:index.sections.goals.title"
     >
-      <p class="goals-empty" id="goalsEmpty" hidden data-i18n="index.sections.goals.empty"></p>
+      <p class="goals-empty" id="goalsEmpty" hidden data-i18n="index.sections.goals.empty">Aucun objectif actif pour le moment.</p>
       <div class="goals-list" id="goalsList" role="list"></div>
     </section>
 
@@ -1150,8 +1606,8 @@
       aria-labelledby="bigbang-title"
     >
       <div class="bigbang-content">
-        <h2 id="bigbang-title" data-i18n="index.sections.bigbang.title"></h2>
-        <p class="bigbang-description" data-i18n="index.sections.bigbang.description"></p>
+        <h2 id="bigbang-title" data-i18n="index.sections.bigbang.title">Big Bang</h2>
+        <p class="bigbang-description" data-i18n="index.sections.bigbang.description">Déclenchez une renaissance cosmique pour multiplier vos gains et tout recommencer.</p>
       </div>
     </section>
 
@@ -1163,20 +1619,39 @@
       <div class="options-grid">
         <div class="option-card option-card--intro">
           <div class="option-card__header option-card__header--welcome">
-            <h3 id="optionsWelcomeTitle"></h3>
-            <select id="languageSelect" data-i18n="aria-label:index.sections.options.language.label">
-              <option value="fr" data-i18n="index.sections.options.language.options.fr"></option>
-              <option value="en" data-i18n="index.sections.options.language.options.en"></option>
+            <h3
+              id="optionsWelcomeTitle"
+              data-i18n="index.sections.options.welcome.title"
+            >
+              Bienvenue
+            </h3>
+            <select
+              id="languageSelect"
+              aria-label="Langue de l’interface"
+              data-i18n="aria-label:index.sections.options.language.label"
+            >
+              <option value="fr" data-i18n="index.sections.options.language.options.fr">Français</option>
+              <option value="en" data-i18n="index.sections.options.language.options.en">Anglais</option>
             </select>
           </div>
-          <div id="optionsWelcomeIntro" class="option-welcome-intro"></div>
+          <div id="optionsWelcomeIntro" class="option-welcome-intro">
+            <p data-i18n="index.sections.options.welcome.intro.main">
+              Bienvenue dans Atom to Univers. Cliquez pour générer vos premiers atomes, achetez des améliorations dans la boutique
+              et automatisez la production pour façonner votre univers.
+            </p>
+            <p data-i18n="index.sections.options.welcome.intro.note">
+              Débloquez les mini-jeux et fonctionnalités au fil de votre progression pour multiplier vos gains d’APC et d’APS.
+            </p>
+          </div>
           <div class="option-card__toggles">
             <div class="option-toggle-card" id="clickSoundToggleCard">
               <div class="option-toggle-card__content">
                 <h4
                   class="option-toggle-card__title"
                   data-i18n="index.sections.options.clickSound.title"
-                ></h4>
+                >
+                  Son du clicker
+                </h4>
               </div>
               <div class="option-toggle-card__control">
                 <label class="toggle-switch">
@@ -1184,6 +1659,7 @@
                     type="checkbox"
                     id="clickSoundToggle"
                     checked
+                    aria-label="Activer ou couper le son du clicker"
                     data-i18n="aria-label:index.sections.options.clickSound.ariaLabel"
                     aria-describedby="clickSoundToggleStatus"
                   />
@@ -1192,7 +1668,9 @@
                     class="toggle-switch__label"
                     id="clickSoundToggleStatus"
                     data-i18n="index.sections.options.clickSound.state.on"
-                  ></span>
+                  >
+                    Avec
+                  </span>
                 </label>
               </div>
             </div>
@@ -1201,7 +1679,9 @@
                 <h4
                   class="option-toggle-card__title"
                   data-i18n="index.sections.options.critAtoms.title"
-                ></h4>
+                >
+                  Atomes critiques animés
+                </h4>
               </div>
               <div class="option-toggle-card__control">
                 <label class="toggle-switch">
@@ -1209,6 +1689,7 @@
                     type="checkbox"
                     id="critAtomToggle"
                     checked
+                    aria-label="Activer ou couper les atomes animés lors des critiques"
                     data-i18n="aria-label:index.sections.options.critAtoms.ariaLabel"
                     aria-describedby="critAtomToggleStatus"
                   />
@@ -1217,7 +1698,9 @@
                     class="toggle-switch__label"
                     id="critAtomToggleStatus"
                     data-i18n="index.sections.options.critAtoms.state.on"
-                  ></span>
+                  >
+                    Avec
+                  </span>
                 </label>
               </div>
             </div>
@@ -1227,6 +1710,7 @@
               <label for="textFontSelect" data-i18n="index.sections.options.textFont.label">Police du texte</label>
               <select
                 id="textFontSelect"
+                aria-label="Choisir la police utilisée pour les textes de l’interface"
                 data-i18n="aria-label:index.sections.options.textFont.ariaLabel"
               >
                 <option value="orbitron" data-i18n="index.sections.options.textFont.options.orbitron">Orbitron</option>
@@ -1238,6 +1722,7 @@
               <label for="digitFontSelect" data-i18n="index.sections.options.digitFont.label">Police des chiffres</label>
               <select
                 id="digitFontSelect"
+                aria-label="Choisir la police utilisée pour les nombres"
                 data-i18n="aria-label:index.sections.options.digitFont.ariaLabel"
               >
                 <option value="orbitron" data-i18n="index.sections.options.digitFont.options.orbitron">Orbitron</option>
@@ -1247,7 +1732,20 @@
               </select>
             </div>
           </div>
-          <div id="optionsArcadeDetails" class="option-note" hidden aria-hidden="true"></div>
+          <div id="optionsArcadeDetails" class="option-note" hidden aria-hidden="true">
+            <p>
+              <strong data-i18n="index.sections.options.welcome.details.particles.label">Mini Jeu Particules :</strong>
+              <span data-i18n="index.sections.options.welcome.details.particles.description">Collisionnez les particules élémentaires pour gagner des tickets de tirage et des crédits Mach3.</span>
+            </p>
+            <p>
+              <strong data-i18n="index.sections.options.welcome.details.gacha.label">Gacha :</strong>
+              <span data-i18n="index.sections.options.welcome.details.gacha.description">Utilisez vos tickets pour récupérer des éléments du tableau périodique et débloquer des bonus de production.</span>
+            </p>
+            <p>
+              <strong data-i18n="index.sections.options.welcome.details.match3.label">Mini jeu Mach3 :</strong>
+              <span data-i18n="index.sections.options.welcome.details.match3.description">Alignez les métaux le plus vite possible pour booster vos gains d’APS.</span>
+            </p>
+          </div>
         </div>
         <div class="option-card option-card--chiptune">
           <h3 data-i18n="index.sections.options.chiptune.title">Module Musique Midi</h3>
@@ -1323,8 +1821,11 @@
               class="chiptune-dropzone"
               role="button"
               tabindex="0"
+              aria-label="Déposez un fichier MIDI (.mid) ici ou cliquez pour le sélectionner"
               data-i18n="index.sections.options.chiptune.dropZone.prompt;aria-label:index.sections.options.chiptune.dropZone.prompt"
-            ></div>
+            >
+              Déposez un fichier MIDI (.mid) ici ou cliquez pour le sélectionner
+            </div>
           </div>
           <div class="option-row option-row--slider">
             <label for="chiptuneVolumeSlider" data-i18n="index.sections.options.chiptune.labels.volume">Volume général</label>
@@ -1359,7 +1860,13 @@
           </div>
           <p class="option-note" id="chiptuneStatus" data-i18n="index.sections.options.chiptune.status.noneLoaded">Aucun morceau chargé pour le moment.</p>
           <div class="option-row option-row--progress">
-            <label for="chiptuneProgressSlider" id="chiptuneProgressLabel" data-i18n="index.sections.options.chiptune.progress.label"></label>
+            <label
+              for="chiptuneProgressSlider"
+              id="chiptuneProgressLabel"
+              data-i18n="index.sections.options.chiptune.progress.label"
+            >
+              Position de lecture
+            </label>
             <input
               type="range"
               id="chiptuneProgressSlider"
@@ -1370,13 +1877,27 @@
               disabled
               aria-labelledby="chiptuneProgressLabel"
             />
-            <span class="option-value" id="chiptuneProgressValue" aria-live="polite" data-i18n="index.sections.options.chiptune.progress.empty"></span>
+            <span
+              class="option-value"
+              id="chiptuneProgressValue"
+              aria-live="polite"
+              data-i18n="index.sections.options.chiptune.progress.empty"
+            >
+              Aucun morceau chargé
+            </span>
           </div>
           <div class="option-row option-row--usage">
             <div class="chiptune-usage" role="group" aria-labelledby="chiptuneUsageTitle">
               <div class="chiptune-usage__header">
-                <span id="chiptuneUsageTitle" data-i18n="index.sections.options.chiptune.usage.title"></span>
-                <span id="chiptuneUsageSummary" class="chiptune-usage__summary" aria-live="polite" data-i18n="index.sections.options.chiptune.usage.summaryEmpty"></span>
+                <span id="chiptuneUsageTitle" data-i18n="index.sections.options.chiptune.usage.title">Programmes MIDI utilisés</span>
+                <span
+                  id="chiptuneUsageSummary"
+                  class="chiptune-usage__summary"
+                  aria-live="polite"
+                  data-i18n="index.sections.options.chiptune.usage.summaryEmpty"
+                >
+                  Aucun programme détecté
+                </span>
               </div>
               <div
                 id="chiptuneProgramUsage"
@@ -1388,13 +1909,15 @@
                 class="option-note chiptune-usage__note"
                 id="chiptuneUsageNote"
                 data-i18n="index.sections.options.chiptune.usage.note"
-              ></p>
+              >
+                Les numéros correspondent aux programmes General MIDI (0 à 127).
+              </p>
             </div>
           </div>
         </div>
       </div>
       <div class="options-reset">
-        <button id="resetButton" class="danger" data-i18n="index.sections.options.reset"></button>
+        <button id="resetButton" class="danger" data-i18n="index.sections.options.reset">Réinitialiser</button>
       </div>
     </section>
   </main>
@@ -1432,79 +1955,86 @@
   <div class="devkit-overlay" id="devkitOverlay" hidden aria-hidden="true">
     <div class="devkit-panel" id="devkitPanel" role="dialog" aria-modal="true" aria-labelledby="devkitTitle" tabindex="-1">
       <header class="devkit-panel__header">
-        <h2 id="devkitTitle" data-i18n="index.sections.devkit.title"></h2>
+        <h2 id="devkitTitle" data-i18n="index.sections.devkit.title">DevKit quantique</h2>
         <button
           type="button"
           class="devkit-panel__close"
           id="devkitCloseButton"
+          aria-label="Fermer le DevKit"
           data-i18n="aria-label:index.sections.devkit.close"
         >
           ×
         </button>
       </header>
-      <p class="devkit-panel__intro" data-i18n="index.sections.devkit.intro"></p>
+      <p class="devkit-panel__intro" data-i18n="index.sections.devkit.intro">
+        Outils de triche pour expérimentations rapides. Les changements sont immédiats.
+      </p>
       <div class="devkit-grid">
         <section class="devkit-section" aria-labelledby="devkitResourcesTitle">
-          <h3 id="devkitResourcesTitle" data-i18n="index.sections.devkit.resources.title"></h3>
+          <h3 id="devkitResourcesTitle" data-i18n="index.sections.devkit.resources.title">Ressources</h3>
           <form id="devkitAtomsForm" class="devkit-form">
-            <label for="devkitAtomsInput" data-i18n="index.sections.devkit.resources.giveAtoms"></label>
+            <label for="devkitAtomsInput" data-i18n="index.sections.devkit.resources.giveAtoms">Donner des atomes</label>
             <div class="devkit-form__controls">
               <input
                 type="text"
                 id="devkitAtomsInput"
                 inputmode="decimal"
                 autocomplete="off"
+                placeholder="ex : 1e9"
                 data-i18n="placeholder:index.sections.devkit.resources.atomsPlaceholder"
               />
-              <button type="submit" class="primary" data-i18n="index.sections.devkit.resources.add"></button>
+              <button type="submit" class="primary" data-i18n="index.sections.devkit.resources.add">Ajouter</button>
             </div>
           </form>
           <form id="devkitAutoForm" class="devkit-form">
-            <label for="devkitAutoInput" data-i18n="index.sections.devkit.resources.increaseAuto"></label>
+            <label for="devkitAutoInput" data-i18n="index.sections.devkit.resources.increaseAuto">Augmenter les APS plats</label>
             <div class="devkit-form__controls">
               <input
                 type="text"
                 id="devkitAutoInput"
                 inputmode="decimal"
                 autocomplete="off"
+                placeholder="ex : 250000"
                 data-i18n="placeholder:index.sections.devkit.resources.autoPlaceholder"
               />
-              <button type="submit" class="primary" data-i18n="index.sections.devkit.resources.increase"></button>
+              <button type="submit" class="primary" data-i18n="index.sections.devkit.resources.increase">Augmenter</button>
             </div>
           </form>
           <form id="devkitOfflineTimeForm" class="devkit-form">
-            <label for="devkitOfflineTimeInput" data-i18n="index.sections.devkit.resources.advanceOfflineTime"></label>
+            <label for="devkitOfflineTimeInput" data-i18n="index.sections.devkit.resources.advanceOfflineTime">Avancer le temps hors ligne (heures)</label>
             <div class="devkit-form__controls">
               <input
                 type="text"
                 id="devkitOfflineTimeInput"
                 inputmode="decimal"
                 autocomplete="off"
+                placeholder="ex : 1.5"
                 data-i18n="placeholder:index.sections.devkit.resources.timePlaceholder"
               />
-              <button type="submit" class="primary" data-i18n="index.sections.devkit.resources.simulateOffline"></button>
+              <button type="submit" class="primary" data-i18n="index.sections.devkit.resources.simulateOffline">Simuler hors ligne</button>
             </div>
           </form>
           <form id="devkitOnlineTimeForm" class="devkit-form">
-            <label for="devkitOnlineTimeInput" data-i18n="index.sections.devkit.resources.advanceOnlineTime"></label>
+            <label for="devkitOnlineTimeInput" data-i18n="index.sections.devkit.resources.advanceOnlineTime">Simuler du jeu actif (heures)</label>
             <div class="devkit-form__controls">
               <input
                 type="text"
                 id="devkitOnlineTimeInput"
                 inputmode="decimal"
                 autocomplete="off"
+                placeholder="ex : 1.5"
                 data-i18n="placeholder:index.sections.devkit.resources.timePlaceholder"
               />
-              <button type="submit" class="primary" data-i18n="index.sections.devkit.resources.simulateOnline"></button>
+              <button type="submit" class="primary" data-i18n="index.sections.devkit.resources.simulateOnline">Simuler en jeu</button>
             </div>
           </form>
           <div class="devkit-status-row">
-            <span data-i18n="index.sections.devkit.resources.autoBonusLabel"></span>
+            <span data-i18n="index.sections.devkit.resources.autoBonusLabel">Bonus APS actuel&nbsp;:</span>
             <strong id="devkitAutoStatus">0</strong>
-            <button type="button" id="devkitResetAuto" class="devkit-link" data-i18n="index.sections.devkit.resources.reset"></button>
+            <button type="button" id="devkitResetAuto" class="devkit-link" data-i18n="index.sections.devkit.resources.reset">Réinitialiser</button>
           </div>
           <form id="devkitTicketsForm" class="devkit-form">
-            <label for="devkitTicketsInput" data-i18n="index.sections.devkit.resources.giveTickets"></label>
+            <label for="devkitTicketsInput" data-i18n="index.sections.devkit.resources.giveTickets">Donner des tickets de tirage</label>
             <div class="devkit-form__controls">
               <input
                 type="number"
@@ -1512,13 +2042,14 @@
                 min="1"
                 step="1"
                 autocomplete="off"
+                placeholder="ex : 50"
                 data-i18n="placeholder:index.sections.devkit.resources.ticketsPlaceholder"
               />
-              <button type="submit" class="primary" data-i18n="index.sections.devkit.resources.add"></button>
+              <button type="submit" class="primary" data-i18n="index.sections.devkit.resources.add">Ajouter</button>
             </div>
           </form>
           <form id="devkitMach3TicketsForm" class="devkit-form">
-            <label for="devkitMach3TicketsInput" data-i18n="index.sections.devkit.resources.giveMach3Tickets"></label>
+            <label for="devkitMach3TicketsInput" data-i18n="index.sections.devkit.resources.giveMach3Tickets">Donner des tickets Mach3</label>
             <div class="devkit-form__controls">
               <input
                 type="number"
@@ -1526,25 +2057,28 @@
                 min="1"
                 step="1"
                 autocomplete="off"
+                placeholder="ex : 5"
                 data-i18n="placeholder:index.sections.devkit.resources.mach3TicketsPlaceholder"
               />
-              <button type="submit" class="primary" data-i18n="index.sections.devkit.resources.add"></button>
+              <button type="submit" class="primary" data-i18n="index.sections.devkit.resources.add">Ajouter</button>
             </div>
           </form>
         </section>
         <section class="devkit-section" aria-labelledby="devkitUnlockTitle">
-          <h3 id="devkitUnlockTitle" data-i18n="index.sections.devkit.unlocks.title"></h3>
-          <button type="button" class="devkit-action" id="devkitUnlockTrophies" data-i18n="index.sections.devkit.unlocks.trophies"></button>
-          <button type="button" class="devkit-action" id="devkitUnlockElements" data-i18n="index.sections.devkit.unlocks.elements"></button>
+          <h3 id="devkitUnlockTitle" data-i18n="index.sections.devkit.unlocks.title">Déblocages instantanés</h3>
+          <button type="button" class="devkit-action" id="devkitUnlockTrophies" data-i18n="index.sections.devkit.unlocks.trophies">Débloquer tous les succès</button>
+          <button type="button" class="devkit-action" id="devkitUnlockElements" data-i18n="index.sections.devkit.unlocks.elements">Débloquer tout le tableau périodique</button>
           <button
             type="button"
             class="devkit-action"
             id="devkitUnlockInfo"
             data-i18n="index.sections.devkit.unlocks.infoLocked"
-          ></button>
+          >
+            Débloquer la page Infos
+          </button>
         </section>
         <section class="devkit-section" aria-labelledby="devkitModesTitle">
-          <h3 id="devkitModesTitle" data-i18n="index.sections.devkit.modes.title"></h3>
+          <h3 id="devkitModesTitle" data-i18n="index.sections.devkit.modes.title">Modes persistants</h3>
           <button
             type="button"
             class="devkit-toggle"
@@ -1552,7 +2086,9 @@
             data-active="false"
             aria-pressed="false"
             data-i18n="index.sections.devkit.modes.shop"
-          ></button>
+          >
+            Magasin gratuit : désactivé
+          </button>
           <button
             type="button"
             class="devkit-toggle"
@@ -1560,12 +2096,16 @@
             data-active="false"
             aria-pressed="false"
             data-i18n="index.sections.devkit.modes.gacha"
-          ></button>
-          <p class="devkit-note" data-i18n="index.sections.devkit.modes.note"></p>
+          >
+            Tirages gratuits : désactivés
+          </button>
+          <p class="devkit-note" data-i18n="index.sections.devkit.modes.note">
+            Les modes restent actifs tant que la session est ouverte (raccourci F9).
+          </p>
         </section>
       </div>
       <footer class="devkit-panel__footer">
-        <p data-i18n="index.sections.devkit.footer"></p>
+        <p data-i18n="index.sections.devkit.footer">Appuyez sur F9 pour ouvrir ou fermer le DevKit.</p>
       </footer>
     </div>
   </div>
