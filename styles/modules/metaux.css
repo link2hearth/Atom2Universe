@@ -10,13 +10,19 @@
   display: flex;
   flex-direction: column;
   gap: clamp(1.5rem, 3vw, 2.4rem);
+  align-items: center;
+  justify-content: center;
 }
 
 .metaux-content {
-  display: grid;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: clamp(1.5rem, 3vw, 2.5rem);
-  grid-template-columns: minmax(0, 1fr);
-  justify-items: center;
+  width: min(100%, 1280px);
+  margin-inline: auto;
 }
 
 .metaux-board-wrapper {
