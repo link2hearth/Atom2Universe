@@ -1357,7 +1357,9 @@
         },
         "family": {
           "descriptions": {
-            "placeholder": "The description for the {family} family is coming soon."
+            "placeholder": "The description for the {family} family is coming soon.",
+            "nonmetal": "The nonmetals in the upper-right corner split into three subgroups: the “classic” nonmetals (H, C, N, O, P, S, Se), the halogens, and the noble gases. The classic nonmetals do not share a single column, but each carries 4 to 7 valence electrons that they gain or share to reach the octet. Their strong electronegativity and prolific covalent bonding weave water, CO₂, ammonia, and the broader chemistry of life.",
+            "halogen": "Halogens occupy group 17: fluorine, chlorine, bromine, iodine, and astatine (sometimes joined by tennessine). Every atom bears seven valence electrons and hunts for an eighth, giving them intense electronegativity and reactivity—from the fluorine attacks to ionic salts (NaCl), polar covalent bonds (HCl), and diatomic molecules (Cl₂). Their physical gradation—pale-yellow gas, green-yellow gas, red-brown liquid, violet solid, rare radioactive solid—reveals rising intermolecular forces and surfaces in vital salts, disinfectants, and industrial chemistry."
           }
         },
         "collection": {
