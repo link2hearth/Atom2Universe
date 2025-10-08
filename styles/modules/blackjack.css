@@ -15,118 +15,9 @@
   gap: clamp(0.75rem, 2.5vw, 1.5rem);
 }
 
-.blackjack-header {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: clamp(1rem, 2.5vw, 1.5rem);
-  align-items: flex-start;
-}
-
-.blackjack-header__titles {
-  display: grid;
-  gap: 0.5rem;
-  max-width: min(520px, 100%);
-}
-
-.blackjack-header__title {
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: clamp(1.5rem, 3vw, 2.1rem);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.blackjack-header__subtitle {
-  margin: 0;
-  font-size: clamp(0.85rem, 1.6vw, 1rem);
-  line-height: 1.6;
-  color: rgba(226, 232, 255, 0.78);
-}
-
-.blackjack-scoreboard {
-  margin: 0;
-  display: flex;
-  gap: clamp(0.6rem, 1.8vw, 1.2rem);
-  padding: 0;
-}
-
-.blackjack-scoreboard__item {
-  list-style: none;
-  min-width: clamp(120px, 18vw, 160px);
-  padding: 0.6rem 1rem;
-  border-radius: 16px;
-  background: linear-gradient(160deg, rgba(17, 24, 39, 0.82), rgba(30, 41, 59, 0.88));
-  border: 1px solid rgba(148, 163, 184, 0.25);
-  box-shadow: 0 16px 28px rgba(15, 23, 42, 0.4);
-  display: grid;
-  gap: 0.2rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.blackjack-scoreboard__item dt {
-  margin: 0;
-  font-size: 0.75rem;
-  color: rgba(226, 232, 255, 0.72);
-}
-
-.blackjack-scoreboard__item dd {
-  margin: 0;
-  font-size: clamp(1.2rem, 2.2vw, 1.5rem);
-  font-weight: 700;
-  font-family: var(--font-digits, 'Orbitron', sans-serif);
-  color: #f8fafc;
-}
-
-.blackjack-status {
-  margin: 0;
-  padding: 0.75rem 1rem;
-  border-radius: 16px;
-  background: rgba(15, 23, 42, 0.55);
-  border: 1px solid rgba(148, 163, 184, 0.25);
-  font-size: clamp(0.85rem, 1.5vw, 1rem);
-  line-height: 1.6;
-  color: rgba(226, 232, 255, 0.85);
-}
-
 .blackjack-layout {
   display: grid;
   gap: clamp(1rem, 2.5vw, 1.6rem);
-}
-
-.blackjack-overview {
-  display: grid;
-  gap: 0.6rem;
-  padding: clamp(0.75rem, 2vw, 1.1rem);
-  border-radius: 16px;
-  background: rgba(15, 23, 42, 0.55);
-  border: 1px solid rgba(148, 163, 184, 0.25);
-  align-self: start;
-}
-
-.blackjack-overview__title {
-  margin: 0;
-  font-size: clamp(1rem, 2vw, 1.25rem);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.blackjack-overview__stat {
-  display: flex;
-  justify-content: space-between;
-  gap: 0.75rem;
-  margin: 0;
-  font-size: clamp(0.85rem, 1.6vw, 1rem);
-  color: rgba(226, 232, 255, 0.8);
-}
-
-.blackjack-overview__label {
-  font-weight: 600;
-}
-
-.blackjack-overview__value {
-  font-family: var(--font-digits, 'Orbitron', sans-serif);
 }
 
 .blackjack-table {
@@ -257,55 +148,6 @@
   border-radius: 1rem;
   background: rgba(15, 23, 42, 0.55);
   border: 1px solid rgba(148, 163, 184, 0.25);
-  display: grid;
-  gap: 0.75rem;
-}
-
-.blackjack-bet__header {
-  display: grid;
-  gap: 0.4rem;
-}
-
-.blackjack-bet__title {
-  margin: 0;
-  font-size: clamp(1.05rem, 2vw, 1.3rem);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-}
-
-.blackjack-bet__hint {
-  margin: 0;
-  font-size: clamp(0.8rem, 1.4vw, 0.95rem);
-  color: rgba(226, 232, 255, 0.75);
-}
-
-.blackjack-bet__status {
-  display: grid;
-  gap: 0.35rem;
-}
-
-.blackjack-bet__line {
-  margin: 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  font-size: clamp(0.85rem, 1.5vw, 1rem);
-}
-
-.blackjack-bet__label {
-  color: rgba(226, 232, 255, 0.75);
-}
-
-.blackjack-bet__value {
-  font-weight: 600;
-  font-family: var(--font-digits, 'Orbitron', sans-serif);
-}
-
-.blackjack-bet__placeholder {
-  margin: 0;
-  text-align: center;
-  font-size: clamp(0.8rem, 1.4vw, 0.95rem);
-  color: rgba(226, 232, 255, 0.65);
 }
 
 .blackjack-bet__options {
@@ -407,8 +249,7 @@
   }
 
   .blackjack-layout {
-    grid-template-columns: minmax(0, 1fr) minmax(220px, 1fr);
-    align-items: start;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -430,7 +271,4 @@
     padding: 0.5rem 0.75rem;
   }
 
-  .blackjack-scoreboard {
-    flex-direction: column;
-  }
 }

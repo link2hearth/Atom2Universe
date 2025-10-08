@@ -284,8 +284,6 @@
       },
       "blackjack": {
         "aria": "Quantum Blackjack mini-game",
-        "title": "Quantum Blackjack",
-        "subtitle": "Challenge the dealer with an eight-deck shoe that refreshes whenever a unique card runs out.",
         "tableAria": "Blackjack table",
         "dealer": {
           "label": "Dealer",
@@ -301,9 +299,6 @@
           "dealer": "Dealer total: ",
           "player": "Player total: "
         },
-        "status": {
-          "ready": "Start a new round to challenge the dealer."
-        },
         "controls": {
           "aria": "Blackjack controls",
           "new": "New round",
@@ -311,12 +306,7 @@
           "stand": "Stand"
         },
         "bet": {
-          "title": "Bet",
-          "current": "Current bet:",
-          "balance": "Atoms available:",
-          "none": "None",
-          "hint": "Pick an amount to launch a new round.",
-          "placeholder": "Bet options will appear once the shoe is ready.",
+          "ariaLabel": "Bet management",
           "option": "{amount} atoms",
           "optionsAria": "Available bet amounts",
           "scale": {
@@ -326,17 +316,6 @@
             "divideLabel": "÷10",
             "divideAria": "Divide bet options by 10 (current multiplier: ×{multiplier})"
           }
-        },
-        "shoe": {
-          "label": "Shoe",
-          "decksLabel": "Decks in play:",
-          "stateLabel": "Shoe status:",
-          "remainingLabel": "Cards remaining:"
-        },
-        "scoreboard": {
-          "wins": "Wins",
-          "losses": "Losses",
-          "pushes": "Pushes"
         },
         "hiddenCard": "Hidden card"
       },

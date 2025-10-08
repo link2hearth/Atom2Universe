@@ -284,8 +284,6 @@
       },
       "blackjack": {
         "aria": "Mini-jeu Blackjack quantique",
-        "title": "Blackjack quantique",
-        "subtitle": "Défiez le croupier avec un sabot de huit paquets qui se reconstitue dès qu’une carte manque.",
         "tableAria": "Table de blackjack",
         "dealer": {
           "label": "Croupier",
@@ -301,9 +299,6 @@
           "dealer": "Total croupier :",
           "player": "Total joueur :"
         },
-        "status": {
-          "ready": "Lancez une nouvelle manche pour affronter le croupier."
-        },
         "controls": {
           "aria": "Commandes du blackjack",
           "new": "Nouvelle manche",
@@ -311,12 +306,7 @@
           "stand": "Rester"
         },
         "bet": {
-          "title": "Mise",
-          "current": "Mise actuelle :",
-          "balance": "Atomes disponibles :",
-          "none": "Aucune",
-          "hint": "Choisissez un montant pour lancer une nouvelle manche.",
-          "placeholder": "Les montants de mise apparaîtront dès que le sabot est prêt.",
+          "ariaLabel": "Gestion des mises",
           "option": "{amount} atomes",
           "optionsAria": "Montants de mise disponibles",
           "scale": {
@@ -326,17 +316,6 @@
             "divideLabel": "÷10",
             "divideAria": "Diviser les mises par 10 (multiplicateur actuel : ×{multiplier})"
           }
-        },
-        "shoe": {
-          "label": "Sabot",
-          "decksLabel": "Paquets en jeu :",
-          "stateLabel": "État du sabot :",
-          "remainingLabel": "Cartes restantes :"
-        },
-        "scoreboard": {
-          "wins": "Victoires",
-          "losses": "Défaites",
-          "pushes": "Égalités"
         },
         "hiddenCard": "Carte cachée"
       },
