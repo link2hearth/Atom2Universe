@@ -6,26 +6,52 @@ class LayeredNumber {
     this.exponent = 0;
     this.value = 0;
 
-    if (input instanceof LayeredNumber) {
-      this.sign = input.sign;
-      this.layer = input.layer;
-      this.mantissa = input.mantissa;
-      this.exponent = input.exponent;
-      this.value = input.value;
+    let source = input;
+
+    if (source instanceof LayeredNumber) {
+      this.sign = source.sign;
+      this.layer = source.layer;
+      this.mantissa = source.mantissa;
+      this.exponent = source.exponent;
+      this.value = source.value;
       return;
     }
 
-    if (typeof input === 'number') {
-      this.fromNumber(input);
+    if (typeof source === 'string') {
+      const trimmed = source.trim();
+      if (!trimmed) {
+        return;
+      }
+      const numeric = Number(trimmed);
+      if (Number.isFinite(numeric)) {
+        source = numeric;
+      } else {
+        try {
+          const parsed = JSON.parse(trimmed);
+          if (typeof parsed === 'number') {
+            source = parsed;
+          } else if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+            source = parsed;
+          } else {
+            return;
+          }
+        } catch (error) {
+          return;
+        }
+      }
+    }
+
+    if (typeof source === 'number') {
+      this.fromNumber(source);
       return;
     }
 
-    if (input && typeof input === 'object') {
-      this.sign = input.sign ?? 0;
-      this.layer = input.layer ?? 0;
-      this.mantissa = input.mantissa ?? 0;
-      this.exponent = input.exponent ?? 0;
-      this.value = input.value ?? 0;
+    if (source && typeof source === 'object') {
+      this.sign = source.sign ?? 0;
+      this.layer = source.layer ?? 0;
+      this.mantissa = source.mantissa ?? 0;
+      this.exponent = source.exponent ?? 0;
+      this.value = source.value ?? 0;
       this.normalize();
     }
   }

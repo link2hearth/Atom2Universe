@@ -1646,6 +1646,25 @@ function toLayeredNumber(value, fallback = 0) {
   if (value instanceof LayeredNumber) return value.clone();
   if (value == null) return new LayeredNumber(fallback);
   if (typeof value === 'number') return new LayeredNumber(value);
+  if (typeof value === 'string') {
+    const trimmed = value.trim();
+    if (!trimmed) {
+      return new LayeredNumber(fallback);
+    }
+    const numeric = Number(trimmed);
+    if (Number.isFinite(numeric)) {
+      return new LayeredNumber(numeric);
+    }
+    try {
+      const parsed = JSON.parse(trimmed);
+      if (parsed === value) {
+        return new LayeredNumber(fallback);
+      }
+      return toLayeredNumber(parsed, fallback);
+    } catch (error) {
+      return new LayeredNumber(fallback);
+    }
+  }
   if (typeof value === 'object') {
     if (value.type === 'number') return new LayeredNumber(value.value ?? fallback);
     if (value.type === 'layer0') {
