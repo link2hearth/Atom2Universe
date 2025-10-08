@@ -84,12 +84,14 @@
         "aps": {
           "title": "Passive production (APS)",
           "subtitle": "Detailed breakdown of your automatic gains.",
-          "aria": "Passive production breakdown"
+          "aria": "Passive production breakdown",
+          "placeholder": "Passive production details will appear here."
         },
         "apc": {
           "title": "Click production (APC)",
           "subtitle": "Analysis of the power generated per click.",
-          "aria": "Click production breakdown"
+          "aria": "Click production breakdown",
+          "placeholder": "Click production breakdown will appear here."
         },
         "progress": {
           "title": "Player progression",
@@ -287,11 +289,13 @@
         "tableAria": "Blackjack table",
         "dealer": {
           "label": "Dealer",
-          "cards": "Dealer cards"
+          "cards": "Dealer cards",
+          "cardsPlaceholder": "No dealer cards to display yet."
         },
         "player": {
           "label": "Player",
-          "cards": "Player cards"
+          "cards": "Player cards",
+          "cardsPlaceholder": "No player cards to display yet."
         },
         "totals": {
           "dealer": "Dealer total: ",

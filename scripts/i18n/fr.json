@@ -21,7 +21,7 @@
       "brand": "Atom2Univers"
     },
     "status": {
-      "totalAtoms": "Total d'atomes",
+      "totalAtoms": "Total d’atomes",
       "apc": "APC",
       "aps": "APS"
     },
@@ -30,7 +30,7 @@
         "aria": "Chambre de création atomique",
         "atomButton": {
           "aria": "Créer des atomes",
-          "alt": "Illustration d'un atome vibrant"
+          "alt": "Illustration d’un atome vibrant"
         },
         "apcFrenzyCounter": {
           "bestEmpty": "Record : —",
@@ -84,16 +84,18 @@
         "aps": {
           "title": "Production passive (APS)",
           "subtitle": "Répartition détaillée de vos gains automatiques.",
-          "aria": "Répartition de la production passive"
+          "aria": "Répartition de la production passive",
+          "placeholder": "Les détails de production passive apparaîtront ici."
         },
         "apc": {
           "title": "Production par clic (APC)",
           "subtitle": "Analyse de la puissance générée à chaque clic.",
-          "aria": "Répartition de la production par clic"
+          "aria": "Répartition de la production par clic",
+          "placeholder": "La répartition de la production par clic apparaîtra ici."
         },
         "progress": {
           "title": "Progression du joueur",
-          "subtitle": "Suivi des performances de la session et de l'historique.",
+          "subtitle": "Suivi des performances de la session et de l’historique.",
           "session": {
             "title": "Session en cours",
             "atoms": "Atomes générés",
@@ -105,7 +107,7 @@
           },
           "global": {
             "title": "Historique global",
-            "atoms": "Total d'atomes",
+            "atoms": "Total d’atomes",
             "clicks": "Total de clics",
             "apc": "APC cumulés",
             "aps": "APS cumulés",
@@ -157,7 +159,7 @@
       "arcadeHub": {
         "aria": "Hall de sélection des mini-jeux",
         "title": "Arcade",
-        "subtitle": "Choisissez un mini-jeu pour prolonger l'expérience Atom2Univers.",
+        "subtitle": "Choisissez un mini-jeu pour prolonger l’expérience Atom2Univers.",
         "cards": {
           "particules": {
             "aria": "Accéder au mini-jeu Particules",
@@ -198,13 +200,13 @@
           "sudoku": {
             "aria": "Accéder au mini-jeu Sudoku",
             "title": "Sudoku",
-            "description": "Résolvez des grilles générées aléatoirement ou laissez l'ordinateur trouver la solution parfaite.",
+            "description": "Résolvez des grilles générées aléatoirement ou laissez l’ordinateur trouver la solution parfaite.",
             "cta": "Résoudre"
           },
           "blackjack": {
             "aria": "Ouvrir le mini-jeu Blackjack",
             "title": "Blackjack",
-            "description": "Affrontez le croupier avec un sabot de huit paquets qui se régénère dès qu'une carte unique s'épuise.",
+            "description": "Affrontez le croupier avec un sabot de huit paquets qui se régénère dès qu’une carte unique s’épuise.",
             "cta": "Distribuer"
           }
         }
@@ -232,11 +234,11 @@
         "aria": "Mini-jeu Balance",
         "title": "Balance",
         "subtitle": "Répartissez les blocs pour que le centre de gravité reste au-dessus du pivot.",
-        "instructions": "Faites glisser un bloc depuis le plateau vers la planche, puis appuyez sur « Tester l'équilibre » pour lancer la simulation.",
+        "instructions": "Faites glisser un bloc depuis le plateau vers la planche, puis appuyez sur « Tester l’équilibre » pour lancer la simulation.",
         "actions": {
           "title": "Contrôles",
           "reset": "Réinitialiser les blocs",
-          "test": "Tester l'équilibre"
+          "test": "Tester l’équilibre"
         },
         "difficulty": {
           "label": "Mode de difficulté"
@@ -283,15 +285,17 @@
       "blackjack": {
         "aria": "Mini-jeu Blackjack quantique",
         "title": "Blackjack quantique",
-        "subtitle": "Défiez le croupier avec un sabot de huit paquets qui se reconstitue dès qu'une carte manque.",
+        "subtitle": "Défiez le croupier avec un sabot de huit paquets qui se reconstitue dès qu’une carte manque.",
         "tableAria": "Table de blackjack",
         "dealer": {
           "label": "Croupier",
-          "cards": "Cartes du croupier"
+          "cards": "Cartes du croupier",
+          "cardsPlaceholder": "Aucune carte face visible pour le moment."
         },
         "player": {
           "label": "Joueur",
-          "cards": "Cartes du joueur"
+          "cards": "Cartes du joueur",
+          "cardsPlaceholder": "Aucune carte dans votre main pour le moment."
         },
         "totals": {
           "dealer": "Total croupier :",
@@ -651,7 +655,7 @@
               "placeholder": "Sélectionnez un titre",
               "empty": "Aucun titre pour cet artiste",
               "unavailable": "Bibliothèque locale indisponible",
-              "selectArtist": "Choisissez d'abord un artiste"
+              "selectArtist": "Choisissez d’abord un artiste"
             }
           },
           "folderImport": {
@@ -661,7 +665,7 @@
             "statusEmpty": "Le dossier sélectionné ne contient aucun fichier MIDI.",
             "statusAdded": "Dossier prêt : {name} ({count} morceaux)",
             "statusUpdated": "Dossier mis à jour : {name} ({count} morceaux)",
-            "statusError": "Impossible d'importer le dossier sélectionné."
+            "statusError": "Impossible d’importer le dossier sélectionné."
           },
           "trackSlider": {
             "label": "Explorer les titres",
@@ -1069,7 +1073,7 @@
           "hideMistakes": "Masquer les cases incorrectes",
           "showConflicts": "Afficher les conflits",
           "hideConflicts": "Masquer les conflits",
-          "noError": "Aucune erreur pour l'instant.",
+          "noError": "Aucune erreur pour l’instant.",
           "conflictBeforeSolve": "Il y a des conflits. Corrigez avant de résoudre.",
           "solved": "Solution trouvée ✔︎",
           "noSolution": "Pas de solution trouvée (ou puzzle invalide).",
@@ -1099,13 +1103,13 @@
     "arcade": {
       "balance": {
         "status": {
-          "ready": "Disposez les blocs puis appuyez sur «\u00a0Tester l'équilibre\u00a0».",
+          "ready": "Disposez les blocs puis appuyez sur «\u00a0Tester l’équilibre\u00a0».",
           "needBlocks": "Ajoutez au moins un bloc sur la planche avant de tester.",
           "needAllBlocks": "Placez tous les blocs sur la planche avant de tester.",
           "success": "Équilibre parfait !",
           "leanLeft": "La planche penche à gauche (écart\u00a0: {offset}).",
           "leanRight": "La planche penche à droite (écart\u00a0: {offset}).",
-          "returned": "Bloc renvoyé dans l'inventaire."
+          "returned": "Bloc renvoyé dans l’inventaire."
         },
         "sets": {
           "default": "Jeu de départ",
@@ -1117,7 +1121,7 @@
           "easy": "Facile",
           "hard": "Difficile",
           "easyDescription": "Tolérance généreuse pour placer les blocs en toute sérénité.",
-          "hardDescription": "Tolérance réduite : chaque position compte pour atteindre l'équilibre."
+          "hardDescription": "Tolérance réduite : chaque position compte pour atteindre l’équilibre."
         },
         "toast": {
           "perfectReward": {
@@ -1131,7 +1135,7 @@
           "prompt": "Choisissez la valeur manquante pour compléter le calcul.",
           "symbolPrompt": "Choisissez le symbole manquant pour compléter le calcul.",
           "correct": "Bravo ! {equation}",
-          "incorrect": "Ce n'est pas {value}. Réessayez ! Il vous reste {remaining} erreur(s) avant le game over.",
+          "incorrect": "Ce n’est pas {value}. Réessayez ! Il vous reste {remaining} erreur(s) avant le game over.",
           "timeout": "Temps écoulé ! La série est réinitialisée.",
           "gameOverMistakes": "Vous avez atteint {limit} erreurs : game over ! Le niveau repart à zéro.",
           "gameOverTimeout": "Temps écoulé : game over ! Le niveau repart à zéro."
@@ -1147,7 +1151,7 @@
           "hideMistakes": "Masquer les cases incorrectes",
           "showConflicts": "Afficher les conflits",
           "hideConflicts": "Masquer les conflits",
-          "noError": "Aucune erreur pour l'instant.",
+          "noError": "Aucune erreur pour l’instant.",
           "conflictBeforeSolve": "Il y a des conflits. Corrigez avant de résoudre.",
           "solved": "Solution trouvée ✔︎",
           "noSolution": "Pas de solution trouvée (ou puzzle invalide).",
@@ -1167,7 +1171,7 @@
           "dealerWins": "Défaite {dealer} contre {player}.",
           "push": "Égalité à {total}.",
           "dealerTurn": "Tour du croupier…",
-          "insufficientAtoms": "Pas assez d'Atomes pour cette mise.",
+          "insufficientAtoms": "Pas assez d’Atomes pour cette mise.",
           "selectBet": "Sélectionnez une mise avant de lancer une manche."
         },
         "totals": {
@@ -1557,7 +1561,7 @@
         }
       },
       "featured": {
-        "today": "Aujourd'hui",
+        "today": "Aujourd’hui",
         "monday": "+Supernovae",
         "thursday": "+Supernovae",
         "tuesday": "+Étoiles massives",
@@ -1947,7 +1951,7 @@
           },
           "paid": {
             "title": "Mode récompenses",
-            "description": "Consommez {percent} de vos Atomes pour tenter de gagner des tickets de tirage d'éléments.",
+            "description": "Consommez {percent} de vos Atomes pour tenter de gagner des tickets de tirage d’éléments.",
             "insufficient": "Atomes insuffisants pour lancer le mode récompenses.",
             "debit": "Mode récompenses : -{cost} atomes"
           }
@@ -2066,7 +2070,7 @@
           "details": {
             "summary": "Métal alcalino-terreux léger mais ultra rigide, le béryllium associe rareté, résistance et transparence aux rayons X, ce qui en fait un matériau prisé des technologies de pointe.",
             "paragraphs": [
-              "Symbole \"Be\", numéro atomique 4, le béryllium est un métal gris acier, léger mais extrêmement rigide. Il fait partie des métaux alcalino-terreux aux côtés du magnésium et du calcium. Rare et discret, on ne le croise pas au quotidien, mais il combine légèreté, solidité et transparence aux rayons X, ce qui l'a rendu précieux dans des domaines très pointus.",
+              "Symbole \"Be\", numéro atomique 4, le béryllium est un métal gris acier, léger mais extrêmement rigide. Il fait partie des métaux alcalino-terreux aux côtés du magnésium et du calcium. Rare et discret, on ne le croise pas au quotidien, mais il combine légèreté, solidité et transparence aux rayons X, ce qui l’a rendu précieux dans des domaines très pointus.",
               "Le béryllium est un élément singulier dans l’histoire du cosmos. Contrairement à l’hydrogène, à l’hélium ou même au lithium, il n’a pas été produit en quantité significative lors du Big Bang. Dans les étoiles, il est si fragile qu’il est rapidement détruit par fusion, d’où son origine principale : la spallation cosmique, lorsque des rayons cosmiques énergétiques fragmentent des noyaux de carbone et d’oxygène pour créer des éléments plus légers.",
               "Sur Terre, le béryllium est rare. On le trouve dans des minéraux comme le béryl, source d’émeraudes et d’aigues-marines. Il n’existe pas à l’état natif car il réagit volontiers avec l’oxygène et le silicium pour former des minéraux très stables, ce qui limite sa présence à une fraction minuscule de la croûte terrestre mais suffisante pour des usages spécialisés.",
               "Le béryllium est choisi lorsque ses propriétés uniques sont indispensables. Sa rigidité et sa légèreté en font un matériau de choix pour l’aéronautique, l’aérospatial ou certains équipements militaires. Transparent aux rayons X, il sert de fenêtre dans les tubes et instruments scientifiques, et allié au cuivre il donne un matériau à la fois conducteur et résistant pour des composants électriques exigeants. Son exploitation est toutefois freinée par la toxicité de ses poussières, responsables de la bérylliose.",
@@ -2082,11 +2086,11 @@
           "details": {
             "summary": "Métalloïde discret mais polyvalent, le bore allie rareté, dureté et une chimie foisonnante qui relie le quotidien aux technologies de pointe.",
             "paragraphs": [
-              "Symbole \"B\", numéro atomique 5, le bore est un métalloïde : pas tout à fait un métal, pas tout à fait un non-métal, mais un élément hybride aux propriétés uniques. Solide noirâtre ou brun à l'état pur, il est dur, léger et peu abondant. Pourtant, ses composés, appelés borates, se glissent un peu partout : dans les verres résistants à la chaleur, dans les détergents, dans les engrais et même dans certaines réactions biologiques. Élément discret, mais d'une polyvalence étonnante.",
-              "Comme le béryllium, le bore n'a pas été produit en quantité notable lors du Big Bang, et il est trop fragile pour survivre dans les réactions nucléaires au cœur des étoiles. Sa principale origine cosmique est la spallation : des rayons cosmiques percutent des noyaux de carbone, d'azote ou d'oxygène, les fragmentant en éléments plus légers comme le lithium, le béryllium et le bore. Ce n'est donc pas dans la forge des étoiles, mais dans les grandes collisions de particules interstellaires que le bore a vu le jour.",
-              "Sur Terre, le bore est relativement rare. On le trouve surtout concentré dans des dépôts de borates, formés dans des environnements arides et riches en sels, comme certains lacs évaporés. Les plus grands gisements connus se trouvent en Turquie, aux États-Unis (Californie) et en Amérique du Sud. Bien qu'il ne représente qu'une fraction infime de la croûte terrestre, il est accessible et exploité depuis longtemps pour ses propriétés chimiques intéressantes.",
-              "Le bore et ses composés ont de nombreux usages pratiques. Dans le verre borosilicaté (comme le Pyrex), il apporte une résistance remarquable à la chaleur et aux chocs thermiques. Dans les lessives, les borates servent d'agents nettoyants et désinfectants. En agriculture, le bore est un oligo-élément essentiel : les plantes en ont besoin pour croître, même en petites quantités. Dans l'industrie de pointe, il intervient aussi dans la fabrication de matériaux ultrarésistants, comme le carbure de bore, l'un des solides les plus durs connus, ou dans les aimants de haute performance à base d'alliages néodyme-fer-bore.",
-              "Les composés du bore sont nombreux et variés. L'acide borique (H₃BO₃) est utilisé comme antiseptique doux ou comme additif industriel. Les borates, comme le borax (Na₂B₄O₇·10H₂O), se retrouvent dans les détergents, les émaux et de nombreuses applications chimiques. En science des matériaux, le carbure de bore (B₄C) est apprécié pour sa dureté exceptionnelle, utilisée dans les gilets pare-balles et les boucliers nucléaires. Dans la chimie moderne, les composés organoborés jouent un rôle central dans la synthèse de nouvelles molécules, en particulier en pharmacie.",
+              "Symbole \"B\", numéro atomique 5, le bore est un métalloïde : pas tout à fait un métal, pas tout à fait un non-métal, mais un élément hybride aux propriétés uniques. Solide noirâtre ou brun à l’état pur, il est dur, léger et peu abondant. Pourtant, ses composés, appelés borates, se glissent un peu partout : dans les verres résistants à la chaleur, dans les détergents, dans les engrais et même dans certaines réactions biologiques. Élément discret, mais d’une polyvalence étonnante.",
+              "Comme le béryllium, le bore n’a pas été produit en quantité notable lors du Big Bang, et il est trop fragile pour survivre dans les réactions nucléaires au cœur des étoiles. Sa principale origine cosmique est la spallation : des rayons cosmiques percutent des noyaux de carbone, d’azote ou d’oxygène, les fragmentant en éléments plus légers comme le lithium, le béryllium et le bore. Ce n’est donc pas dans la forge des étoiles, mais dans les grandes collisions de particules interstellaires que le bore a vu le jour.",
+              "Sur Terre, le bore est relativement rare. On le trouve surtout concentré dans des dépôts de borates, formés dans des environnements arides et riches en sels, comme certains lacs évaporés. Les plus grands gisements connus se trouvent en Turquie, aux États-Unis (Californie) et en Amérique du Sud. Bien qu’il ne représente qu’une fraction infime de la croûte terrestre, il est accessible et exploité depuis longtemps pour ses propriétés chimiques intéressantes.",
+              "Le bore et ses composés ont de nombreux usages pratiques. Dans le verre borosilicaté (comme le Pyrex), il apporte une résistance remarquable à la chaleur et aux chocs thermiques. Dans les lessives, les borates servent d’agents nettoyants et désinfectants. En agriculture, le bore est un oligo-élément essentiel : les plantes en ont besoin pour croître, même en petites quantités. Dans l’industrie de pointe, il intervient aussi dans la fabrication de matériaux ultrarésistants, comme le carbure de bore, l’un des solides les plus durs connus, ou dans les aimants de haute performance à base d’alliages néodyme-fer-bore.",
+              "Les composés du bore sont nombreux et variés. L’acide borique (H₃BO₃) est utilisé comme antiseptique doux ou comme additif industriel. Les borates, comme le borax (Na₂B₄O₇·10H₂O), se retrouvent dans les détergents, les émaux et de nombreuses applications chimiques. En science des matériaux, le carbure de bore (B₄C) est apprécié pour sa dureté exceptionnelle, utilisée dans les gilets pare-balles et les boucliers nucléaires. Dans la chimie moderne, les composés organoborés jouent un rôle central dans la synthèse de nouvelles molécules, en particulier en pharmacie.",
               "Né des rayons cosmiques plutôt que des étoiles, rare mais indispensable, le bore est un élément qui cache bien son jeu. De la verrerie de cuisine aux matériaux les plus avancés, en passant par la croissance des plantes, il relie la chimie du quotidien aux technologies de pointe. Métalloïde hybride, il incarne à merveille la capacité des éléments mineurs à avoir un impact majeur."
             ],
             "sources": []
@@ -2096,14 +2100,14 @@
           "symbol": "C",
           "name": "Carbone",
           "details": {
-            "summary": "Élément des contrastes, le carbone relie diamants et graphite, cycle du vivant et industries modernes, en bâtissant l'immense diversité de la chimie organique.",
+            "summary": "Élément des contrastes, le carbone relie diamants et graphite, cycle du vivant et industries modernes, en bâtissant l’immense diversité de la chimie organique.",
             "paragraphs": [
-              "Symbole \"C\", numéro atomique 6, le carbone est l'élément des contrastes : aussi bien graphite noir et tendre que diamant transparent et presque indestructible. C'est l'ossature de toute la chimie organique, le squelette moléculaire des êtres vivants. Modeste sur le tableau périodique, il est pourtant au cœur de la vie, de l'industrie et même des étoiles : sans carbone, pas de molécules complexes, pas de biologie, pas d'humanité.",
-              "Le carbone ne s'est pas formé au Big Bang : l'univers primitif n'a produit que l'hydrogène, l'hélium et un peu de lithium. C'est dans les étoiles, via la fusion nucléaire, que le carbone est né. Le mécanisme clé est le processus triple alpha, lorsque trois noyaux d'hélium fusionnent pour donner un noyau de carbone. Quand les étoiles massives meurent et explosent en supernovae, elles dispersent ce carbone dans l'espace, enrichissant les nuages interstellaires dont sont nées les planètes et la chimie de la vie.",
-              "Sur Terre, le carbone se décline en multiples formes. À l'état élémentaire, il existe comme graphite, mine de crayon et lubrifiant naturel, ou comme diamant, cristal d'une dureté inégalée. Sous forme combinée, il est partout : dans le dioxyde de carbone de l'air, dans les carbonates des roches, dans les hydrocarbures des sous-sols et surtout dans les molécules organiques qui composent le vivant. Cet élément omniprésent circule en permanence entre atmosphère, océans, sols et êtres vivants au fil du cycle du carbone.",
-              "Le carbone a autant d'usages que de visages. Sous forme de graphite, il sert dans les électrodes, les batteries et comme lubrifiant. Sous forme de diamant, il brille en joaillerie mais excelle aussi comme matériau industriel de coupe et de polissage. Transformé en fibres de carbone, il renforce nos matériaux les plus modernes. Ses composés sont tout aussi variés : le monoxyde de carbone (CO) comme réducteur en sidérurgie, les hydrocarbures comme source d'énergie, et bien sûr l'immense chimie organique qui bâtit plastiques, médicaments et innombrables matériaux.",
-              "Le carbone est l'élément le plus sociable du tableau : avec ses quatre liaisons possibles, il construit des architectures moléculaires infinies. Le méthane (CH₄) en est l'exemple le plus simple, mais les grandes familles organiques montrent toute sa créativité : protéines, sucres, lipides, ADN, toutes les briques de la vie reposent sur son squelette. Il s'associe aussi aux minéraux, du carbonate de calcium (CaCO₃) des calcaires et des coquilles au dioxyde de carbone (CO₂) de l'air. Le carbone est à la fois la base de la vie et une pierre angulaire de la géologie.",
-              "Le carbone est bien plus qu'un élément : c'est le fil conducteur entre les étoiles et la vie. Né dans les fournaises stellaires, il s'est déposé sur Terre pour devenir diamant et graphite, roche et molécule, squelette de toute biologie. Dans la simplicité de ses quatre liaisons se cache une richesse infinie de combinaisons qui font de lui l'architecte de la matière vivante. À chaque respiration, à chaque geste, nous sommes un peu l'expression de ce vieux voyageur cosmique."
+              "Symbole \"C\", numéro atomique 6, le carbone est l’élément des contrastes : aussi bien graphite noir et tendre que diamant transparent et presque indestructible. C’est l’ossature de toute la chimie organique, le squelette moléculaire des êtres vivants. Modeste sur le tableau périodique, il est pourtant au cœur de la vie, de l’industrie et même des étoiles : sans carbone, pas de molécules complexes, pas de biologie, pas d’humanité.",
+              "Le carbone ne s’est pas formé au Big Bang : l’univers primitif n’a produit que l’hydrogène, l’hélium et un peu de lithium. C’est dans les étoiles, via la fusion nucléaire, que le carbone est né. Le mécanisme clé est le processus triple alpha, lorsque trois noyaux d’hélium fusionnent pour donner un noyau de carbone. Quand les étoiles massives meurent et explosent en supernovae, elles dispersent ce carbone dans l’espace, enrichissant les nuages interstellaires dont sont nées les planètes et la chimie de la vie.",
+              "Sur Terre, le carbone se décline en multiples formes. À l’état élémentaire, il existe comme graphite, mine de crayon et lubrifiant naturel, ou comme diamant, cristal d’une dureté inégalée. Sous forme combinée, il est partout : dans le dioxyde de carbone de l’air, dans les carbonates des roches, dans les hydrocarbures des sous-sols et surtout dans les molécules organiques qui composent le vivant. Cet élément omniprésent circule en permanence entre atmosphère, océans, sols et êtres vivants au fil du cycle du carbone.",
+              "Le carbone a autant d’usages que de visages. Sous forme de graphite, il sert dans les électrodes, les batteries et comme lubrifiant. Sous forme de diamant, il brille en joaillerie mais excelle aussi comme matériau industriel de coupe et de polissage. Transformé en fibres de carbone, il renforce nos matériaux les plus modernes. Ses composés sont tout aussi variés : le monoxyde de carbone (CO) comme réducteur en sidérurgie, les hydrocarbures comme source d’énergie, et bien sûr l’immense chimie organique qui bâtit plastiques, médicaments et innombrables matériaux.",
+              "Le carbone est l’élément le plus sociable du tableau : avec ses quatre liaisons possibles, il construit des architectures moléculaires infinies. Le méthane (CH₄) en est l’exemple le plus simple, mais les grandes familles organiques montrent toute sa créativité : protéines, sucres, lipides, ADN, toutes les briques de la vie reposent sur son squelette. Il s’associe aussi aux minéraux, du carbonate de calcium (CaCO₃) des calcaires et des coquilles au dioxyde de carbone (CO₂) de l’air. Le carbone est à la fois la base de la vie et une pierre angulaire de la géologie.",
+              "Le carbone est bien plus qu’un élément : c’est le fil conducteur entre les étoiles et la vie. Né dans les fournaises stellaires, il s’est déposé sur Terre pour devenir diamant et graphite, roche et molécule, squelette de toute biologie. Dans la simplicité de ses quatre liaisons se cache une richesse infinie de combinaisons qui font de lui l’architecte de la matière vivante. À chaque respiration, à chaque geste, nous sommes un peu l’expression de ce vieux voyageur cosmique."
             ],
             "sources": []
           }
@@ -2240,14 +2244,14 @@
           "symbol": "P",
           "name": "Phosphore",
           "details": {
-            "summary": "Symbole \"P\", numéro atomique 15, le phosphore est un non-métal aux multiples visages, trop réactif pour exister à l'état pur et pourtant vital pour le vivant.",
+            "summary": "Symbole \"P\", numéro atomique 15, le phosphore est un non-métal aux multiples visages, trop réactif pour exister à l’état pur et pourtant vital pour le vivant.",
             "paragraphs": [
-              "Symbole \"P\", numéro atomique 15, le phosphore est un non-métal aux multiples visages. On ne le trouve jamais à l'état pur dans la nature : trop réactif, il préfère se cacher dans les minéraux et les molécules biologiques. Découvert au XVIIe siècle dans l'urine humaine (un hasard alchimique étonnant !), il a d'abord frappé les esprits par sa lueur étrange — d'où son nom, qui signifie \"porteur de lumière\". Aujourd'hui, il est connu comme l'un des éléments essentiels à la vie, présent dans l'ADN, les membranes cellulaires et l'énergie de nos cellules.",
-              "Le phosphore est forgé dans les étoiles massives, lors de réactions nucléaires complexes à haute température, notamment à partir du silicium et du soufre. Quand ces étoiles explosent en supernovae, elles dispersent du phosphore dans l'espace. C'est ainsi qu'il s'est intégré à la poussière stellaire qui a donné naissance au système solaire. Même si sa concentration est faible par rapport à d'autres éléments, il joue un rôle biologique disproportionné par rapport à son abondance cosmique.",
-              "Sur Terre, le phosphore est surtout présent dans les minéraux appelés phosphates (comme l'apatite). Ces gisements, souvent sédimentaires, se forment par accumulation de matière organique marine et d'excréments riches en phosphates. Il est donc concentré dans certaines roches, mais aussi recyclé en permanence par le cycle du phosphore : des roches aux sols, des sols aux plantes, puis aux animaux, et retour. Sans phosphore, pas de croissance des plantes ni de vie animale : c'est un nutriment essentiel.",
-              "Le phosphore est vital pour l'agriculture. La majorité de sa production industrielle sert à fabriquer des engrais phosphatés, qui soutiennent la croissance des cultures dans le monde entier. Il intervient aussi dans la fabrication de produits chimiques, de détergents, et autrefois dans les allumettes (le phosphore blanc étant tristement célèbre pour sa dangerosité). Dans la vie quotidienne, il est plus discret mais omniprésent : dans nos os, dans notre ADN, dans l'ATP — la molécule qui fournit l'énergie à toutes nos cellules.",
-              "Le phosphore existe sous plusieurs formes allotropiques : le phosphore blanc, très réactif et toxique, qui s'enflamme spontanément à l'air ; le phosphore rouge, plus stable, utilisé dans les allumettes ; et le phosphore noir, structurellement proche du graphite. Ses composés sont essentiels : phosphates (PO₄³⁻), constituants de l'ADN, des os et des dents ; ATP (adénosine triphosphate), la monnaie énergétique des cellules ; phospholipides, briques des membranes cellulaires. Dans l'industrie, on retrouve aussi le pentoxyde de phosphore (P₂O₅), utilisé comme desséchant puissant.",
-              "Le phosphore est l'un des piliers de la vie. Né dans les étoiles, il a trouvé sur Terre un rôle biologique vital, allant des plantes aux humains. Nourrir la planète, structurer nos gènes, alimenter nos cellules : il est partout où la vie s'organise et se perpétue. Mais manipulé sans précaution, il se révèle dangereux, rappelant qu'entre lumière et poison, la frontière chimique peut être fine. Élément de feu et de vie, le phosphore porte bien son nom."
+              "Symbole \"P\", numéro atomique 15, le phosphore est un non-métal aux multiples visages. On ne le trouve jamais à l’état pur dans la nature : trop réactif, il préfère se cacher dans les minéraux et les molécules biologiques. Découvert au XVIIe siècle dans l’urine humaine (un hasard alchimique étonnant !), il a d’abord frappé les esprits par sa lueur étrange — d’où son nom, qui signifie \"porteur de lumière\". Aujourd’hui, il est connu comme l’un des éléments essentiels à la vie, présent dans l’ADN, les membranes cellulaires et l’énergie de nos cellules.",
+              "Le phosphore est forgé dans les étoiles massives, lors de réactions nucléaires complexes à haute température, notamment à partir du silicium et du soufre. Quand ces étoiles explosent en supernovae, elles dispersent du phosphore dans l’espace. C’est ainsi qu’il s’est intégré à la poussière stellaire qui a donné naissance au système solaire. Même si sa concentration est faible par rapport à d’autres éléments, il joue un rôle biologique disproportionné par rapport à son abondance cosmique.",
+              "Sur Terre, le phosphore est surtout présent dans les minéraux appelés phosphates (comme l’apatite). Ces gisements, souvent sédimentaires, se forment par accumulation de matière organique marine et d’excréments riches en phosphates. Il est donc concentré dans certaines roches, mais aussi recyclé en permanence par le cycle du phosphore : des roches aux sols, des sols aux plantes, puis aux animaux, et retour. Sans phosphore, pas de croissance des plantes ni de vie animale : c’est un nutriment essentiel.",
+              "Le phosphore est vital pour l’agriculture. La majorité de sa production industrielle sert à fabriquer des engrais phosphatés, qui soutiennent la croissance des cultures dans le monde entier. Il intervient aussi dans la fabrication de produits chimiques, de détergents, et autrefois dans les allumettes (le phosphore blanc étant tristement célèbre pour sa dangerosité). Dans la vie quotidienne, il est plus discret mais omniprésent : dans nos os, dans notre ADN, dans l’ATP — la molécule qui fournit l’énergie à toutes nos cellules.",
+              "Le phosphore existe sous plusieurs formes allotropiques : le phosphore blanc, très réactif et toxique, qui s’enflamme spontanément à l’air ; le phosphore rouge, plus stable, utilisé dans les allumettes ; et le phosphore noir, structurellement proche du graphite. Ses composés sont essentiels : phosphates (PO₄³⁻), constituants de l’ADN, des os et des dents ; ATP (adénosine triphosphate), la monnaie énergétique des cellules ; phospholipides, briques des membranes cellulaires. Dans l’industrie, on retrouve aussi le pentoxyde de phosphore (P₂O₅), utilisé comme desséchant puissant.",
+              "Le phosphore est l’un des piliers de la vie. Né dans les étoiles, il a trouvé sur Terre un rôle biologique vital, allant des plantes aux humains. Nourrir la planète, structurer nos gènes, alimenter nos cellules : il est partout où la vie s’organise et se perpétue. Mais manipulé sans précaution, il se révèle dangereux, rappelant qu’entre lumière et poison, la frontière chimique peut être fine. Élément de feu et de vie, le phosphore porte bien son nom."
             ],
             "sources": []
           }
@@ -2256,13 +2260,13 @@
           "symbol": "S",
           "name": "Soufre",
           "details": {
-            "summary": "Symbole \"S\", numéro atomique 16, le soufre est un non-métal jaune aussi entêtant par son odeur que crucial pour la vie et l'industrie.",
+            "summary": "Symbole \"S\", numéro atomique 16, le soufre est un non-métal jaune aussi entêtant par son odeur que crucial pour la vie et l’industrie.",
             "paragraphs": [
-              "Symbole \"S\", numéro atomique 16, le soufre est un non-métal jaune, friable, au caractère bien trempé. Son odeur d'œuf pourri, due à certains de ses composés (comme le sulfure d'hydrogène), est familière près des volcans ou des sources chaudes. Connu depuis l'Antiquité, associé au feu et à l'enfer, il est pourtant vital : on le retrouve dans nos protéines, dans les sols fertiles, et dans les processus géologiques de la Terre. Élément ambivalent, il oscille entre poison et source de vie.",
-              "Le soufre est produit dans les étoiles massives, notamment lors de la fusion du silicium. Quand ces étoiles arrivent en fin de vie et explosent en supernovae, elles relâchent d'importantes quantités de soufre dans l'espace interstellaire. Ce dernier s'intègre ensuite dans les planètes et les corps célestes. Ainsi, le soufre fait partie des éléments répandus dans l'univers, témoin du travail des étoiles et acteur de la chimie planétaire.",
-              "Sur Terre, le soufre se trouve sous des formes variées. On le rencontre sous forme native autour des volcans et des fumerolles, mais il existe surtout dans des minéraux (comme la pyrite, FeS₂) et dans des sulfates (comme le gypse, CaSO₄·2H₂O). Il joue un rôle central dans le cycle du soufre, qui relie les océans, l'atmosphère, les sols et les organismes vivants. Ce cycle est essentiel à la fertilité des écosystèmes. Les bactéries, en particulier, interviennent pour oxyder ou réduire ses composés, faisant du soufre un acteur biologique autant que géologique.",
-              "Le soufre est un pilier de l'industrie chimique. Sa principale utilisation est la fabrication d'acide sulfurique (H₂SO₄), l'un des produits industriels les plus fabriqués au monde, indispensable à la chimie, aux engrais, aux batteries et au raffinage. Le soufre est aussi utilisé pour la vulcanisation du caoutchouc, qui lui donne sa résistance et son élasticité. Ses composés interviennent dans les fongicides, les poudres à canon historiques et certains médicaments. Côté vie, le soufre est indispensable : nos protéines (via les acides aminés cystéine et méthionine) ne peuvent exister sans lui.",
-              "Le soufre forme une grande variété de composés. Le sulfure d'hydrogène (H₂S), gaz toxique à l'odeur caractéristique, est produit par les bactéries anaérobies. Les sulfates (SO₄²⁻) comme le gypse et l'anhydrite sont des minéraux communs. L'acide sulfurique (H₂SO₄) est la \"star\" de l'industrie chimique. Dans la biologie, les ponts disulfure (-S-S-) stabilisent la structure des protéines, un rôle crucial dans le repliement et la fonction des enzymes.",
+              "Symbole \"S\", numéro atomique 16, le soufre est un non-métal jaune, friable, au caractère bien trempé. Son odeur d’œuf pourri, due à certains de ses composés (comme le sulfure d’hydrogène), est familière près des volcans ou des sources chaudes. Connu depuis l’Antiquité, associé au feu et à l’enfer, il est pourtant vital : on le retrouve dans nos protéines, dans les sols fertiles, et dans les processus géologiques de la Terre. Élément ambivalent, il oscille entre poison et source de vie.",
+              "Le soufre est produit dans les étoiles massives, notamment lors de la fusion du silicium. Quand ces étoiles arrivent en fin de vie et explosent en supernovae, elles relâchent d’importantes quantités de soufre dans l’espace interstellaire. Ce dernier s’intègre ensuite dans les planètes et les corps célestes. Ainsi, le soufre fait partie des éléments répandus dans l’univers, témoin du travail des étoiles et acteur de la chimie planétaire.",
+              "Sur Terre, le soufre se trouve sous des formes variées. On le rencontre sous forme native autour des volcans et des fumerolles, mais il existe surtout dans des minéraux (comme la pyrite, FeS₂) et dans des sulfates (comme le gypse, CaSO₄·2H₂O). Il joue un rôle central dans le cycle du soufre, qui relie les océans, l’atmosphère, les sols et les organismes vivants. Ce cycle est essentiel à la fertilité des écosystèmes. Les bactéries, en particulier, interviennent pour oxyder ou réduire ses composés, faisant du soufre un acteur biologique autant que géologique.",
+              "Le soufre est un pilier de l’industrie chimique. Sa principale utilisation est la fabrication d’acide sulfurique (H₂SO₄), l’un des produits industriels les plus fabriqués au monde, indispensable à la chimie, aux engrais, aux batteries et au raffinage. Le soufre est aussi utilisé pour la vulcanisation du caoutchouc, qui lui donne sa résistance et son élasticité. Ses composés interviennent dans les fongicides, les poudres à canon historiques et certains médicaments. Côté vie, le soufre est indispensable : nos protéines (via les acides aminés cystéine et méthionine) ne peuvent exister sans lui.",
+              "Le soufre forme une grande variété de composés. Le sulfure d’hydrogène (H₂S), gaz toxique à l’odeur caractéristique, est produit par les bactéries anaérobies. Les sulfates (SO₄²⁻) comme le gypse et l’anhydrite sont des minéraux communs. L’acide sulfurique (H₂SO₄) est la \"star\" de l’industrie chimique. Dans la biologie, les ponts disulfure (-S-S-) stabilisent la structure des protéines, un rôle crucial dans le repliement et la fonction des enzymes.",
               "Le soufre est un élément à double visage : associé aux volcans et aux odeurs fétides, mais aussi essentiel à la vie et aux technologies modernes. Présent dans les étoiles, les roches, les bactéries et nos propres cellules, il illustre parfaitement la continuité entre chimie cosmique, géologique et biologique. Derrière son odeur de soufre, il cache un rôle discret mais indispensable, un fil jaune qui relie la Terre et la vie."
             ],
             "sources": []
@@ -3030,12 +3034,12 @@
           "details": {
             "summary": "Symbole Gd, numéro atomique 64, le gadolinium est un lanthanide argenté et ductile devenu un pilier des technologies médicales modernes.",
             "paragraphs": [
-              "Découvert en 1880 par le chimiste suisse Jean Charles Galissard de Marignac puis isolé par Paul-Émile Lecoq de Boisbaudran, ce métal rend hommage au Finlandais Johan Gadolin, pionnier de la chimie des terres rares, et relie l'histoire des laboratoires à celle des innovations contemporaines.",
-              "Comme ses voisins lanthanides, le gadolinium naît des réactions nucléaires stellaires : processus s dans les étoiles géantes rouges et processus r lors des supernovae ou des fusions d'étoiles à neutrons, qui ont semé ses atomes dans les météorites et les roches terrestres.",
-              "Sur notre planète, il se cache dans la monazite, la bastnäsite ou la gadolinite qui porte aussi le nom de Gadolin ; avec environ 6,2 parties par million dans la croûte terrestre, il exige des procédés d'extraction des terres rares pour être isolé.",
-              "Ses sels, notamment les chélates de chlorure de gadolinium utilisés en IRM, améliorent le contraste des images médicales grâce à leur paramagnétisme, tandis que les isotopes Gd-155 et Gd-157 servent d'absorbeurs de neutrons dans les réacteurs et que ses alliages magnétiques ou magnétocaloriques ouvrent la voie à des systèmes cryogéniques innovants.",
+              "Découvert en 1880 par le chimiste suisse Jean Charles Galissard de Marignac puis isolé par Paul-Émile Lecoq de Boisbaudran, ce métal rend hommage au Finlandais Johan Gadolin, pionnier de la chimie des terres rares, et relie l’histoire des laboratoires à celle des innovations contemporaines.",
+              "Comme ses voisins lanthanides, le gadolinium naît des réactions nucléaires stellaires : processus s dans les étoiles géantes rouges et processus r lors des supernovae ou des fusions d’étoiles à neutrons, qui ont semé ses atomes dans les météorites et les roches terrestres.",
+              "Sur notre planète, il se cache dans la monazite, la bastnäsite ou la gadolinite qui porte aussi le nom de Gadolin ; avec environ 6,2 parties par million dans la croûte terrestre, il exige des procédés d’extraction des terres rares pour être isolé.",
+              "Ses sels, notamment les chélates de chlorure de gadolinium utilisés en IRM, améliorent le contraste des images médicales grâce à leur paramagnétisme, tandis que les isotopes Gd-155 et Gd-157 servent d’absorbeurs de neutrons dans les réacteurs et que ses alliages magnétiques ou magnétocaloriques ouvrent la voie à des systèmes cryogéniques innovants.",
               "Trivalent dans la plupart de ses composés, le gadolinium est ferromagnétique à basse température, paramagnétique à température ambiante et même supraconducteur dans des conditions extrêmes ; son oxyde Gd₂O₃ alimente phosphores, verres spéciaux et matériaux magnétiques, tandis que les complexes médicaux comme le gadopentétate ou le gadobutrol sont conçus pour rester stables et non toxiques.",
-              "Né des étoiles et dédié à un savant nordique, le gadolinium incarne la rencontre du cosmos et de la médecine : métal de contraste et de précision, il aide à voir l'invisible tout en nourrissant les innovations magnétiques et énergétiques d'aujourd'hui."
+              "Né des étoiles et dédié à un savant nordique, le gadolinium incarne la rencontre du cosmos et de la médecine : métal de contraste et de précision, il aide à voir l’invisible tout en nourrissant les innovations magnétiques et énergétiques d’aujourd’hui."
             ],
             "sources": []
           }
@@ -3044,13 +3048,13 @@
           "symbol": "Tb",
           "name": "Terbium",
           "details": {
-            "summary": "Symbole Tb, numéro atomique 65, le terbium est un lanthanide argenté et malléable dont les lueurs vertes ont marqué l'histoire des écrans modernes.",
+            "summary": "Symbole Tb, numéro atomique 65, le terbium est un lanthanide argenté et malléable dont les lueurs vertes ont marqué l’histoire des écrans modernes.",
             "paragraphs": [
-              "Découvert en 1843 par Carl Gustaf Mosander dans le minerai d'ytterbite, il porte le nom du village suédois d'Ytterby, gisement mythique qui a donné quatre éléments au tableau périodique et illustre le lien intime entre géologie scandinave et chimie des terres rares.",
-              "Produit de la nucléosynthèse stellaire, le terbium résulte principalement du processus r lors des supernovae ou des fusions d'étoiles à neutrons ; des traces dans les météorites primitives prouvent qu'il baignait déjà le nuage de poussières à l'origine du système solaire.",
-              "Sur Terre, il accompagne la monazite et la bastnäsite avec une abondance moyenne d'environ 1,2 partie par million dans la croûte, et son extraction industrielle repose sur des séparations par échange d'ions ou extraction liquide-liquide pour le distinguer du gadolinium et du dysprosium.",
+              "Découvert en 1843 par Carl Gustaf Mosander dans le minerai d’ytterbite, il porte le nom du village suédois d’Ytterby, gisement mythique qui a donné quatre éléments au tableau périodique et illustre le lien intime entre géologie scandinave et chimie des terres rares.",
+              "Produit de la nucléosynthèse stellaire, le terbium résulte principalement du processus r lors des supernovae ou des fusions d’étoiles à neutrons ; des traces dans les météorites primitives prouvent qu’il baignait déjà le nuage de poussières à l’origine du système solaire.",
+              "Sur Terre, il accompagne la monazite et la bastnäsite avec une abondance moyenne d’environ 1,2 partie par million dans la croûte, et son extraction industrielle repose sur des séparations par échange d’ions ou extraction liquide-liquide pour le distinguer du gadolinium et du dysprosium.",
               "Ses composés luminescents, tels que Tb₄O₇ ou les phosphates dopés, donnent la teinte verte éclatante des tubes fluorescents, LED et écrans, tandis que les alliages magnétostrictifs comme le terfenol-D transforment les champs magnétiques en vibrations contrôlées pour les actionneurs, capteurs ultrasoniques et systèmes sonar.",
-              "Principalement trivalent, le terbium forme aussi l'oxyde mixte Tb₄O₇ contenant Tb³⁺ et Tb⁴⁺, affiche une luminescence verte intense sous UV et passe d'un comportement paramagnétique à ferromagnétique sous environ 220 K, des propriétés qui en font un matériau de choix pour les lasers solides.",
+              "Principalement trivalent, le terbium forme aussi l’oxyde mixte Tb₄O₇ contenant Tb³⁺ et Tb⁴⁺, affiche une luminescence verte intense sous UV et passe d’un comportement paramagnétique à ferromagnétique sous environ 220 K, des propriétés qui en font un matériau de choix pour les lasers solides.",
               "Entre feu stellaire et village nordique, le terbium reste un métal rare mais essentiel : discret dans les minerais, rayonnant dans nos technologies, il relie la poésie des terres rares aux couleurs de la vie moderne."
             ],
             "sources": []
@@ -3538,13 +3542,13 @@
           "symbol": "Cm",
           "name": "Curium",
           "details": {
-            "summary": "Actinide synthétique dense et très radioactif, le curium rend hommage au couple Curie tout en servant de source énergétique et d'outil de recherche.",
+            "summary": "Actinide synthétique dense et très radioactif, le curium rend hommage au couple Curie tout en servant de source énergétique et d’outil de recherche.",
             "paragraphs": [
-              "Découvert en 1944 par Glenn Seaborg, Ralph James et Albert Ghiorso à l'Université de Californie à Berkeley, le curium (symbole Cm, numéro atomique 96) est un métal actinide argenté et dense, plus dur que l'américium, dont les isotopes notables incluent ^242Cm, ^244Cm et ^248Cm aux demi-vies très contrastées.",
-              "Totalement absent de la croûte terrestre, le curium est produit artificiellement dans les réacteurs nucléaires par captures neutroniques successives sur le plutonium et l'américium, suivies de désintégrations bêta, et de rares traces peuvent aussi apparaître lors d'explosions nucléaires ou d'expériences de recherche.",
+              "Découvert en 1944 par Glenn Seaborg, Ralph James et Albert Ghiorso à l’Université de Californie à Berkeley, le curium (symbole Cm, numéro atomique 96) est un métal actinide argenté et dense, plus dur que l’américium, dont les isotopes notables incluent ^242Cm, ^244Cm et ^248Cm aux demi-vies très contrastées.",
+              "Totalement absent de la croûte terrestre, le curium est produit artificiellement dans les réacteurs nucléaires par captures neutroniques successives sur le plutonium et l’américium, suivies de désintégrations bêta, et de rares traces peuvent aussi apparaître lors d’explosions nucléaires ou d’expériences de recherche.",
               "Ses usages restent spécialisés : ^244Cm et ^242Cm ont servi de sources thermiques pour des générateurs thermoélectriques à radioisotope des premières sondes spatiales, tandis que ses émissions alpha et neutroniques en font un outil précieux pour les laboratoires, malgré une radioactivité et une chaleur résiduelle qui limitent toute application industrielle.",
-              "Sur le plan chimique, le curium adopte surtout l'état d'oxydation +3, formant des oxydes, halogénures, nitrates et complexes aqueux étudiés pour mieux comprendre les cycles du combustible nucléaire et la séparation des déchets, même si des états +4 et +6 peuvent être observés dans des conditions particulières.",
-              "Élément clé de la série des actinides synthétiques, le curium incarne à la fois une ressource énergétique, un sujet d'étude et un déchet à longue durée de vie, illustrant la puissance et les défis de la chimie nucléaire moderne."
+              "Sur le plan chimique, le curium adopte surtout l’état d’oxydation +3, formant des oxydes, halogénures, nitrates et complexes aqueux étudiés pour mieux comprendre les cycles du combustible nucléaire et la séparation des déchets, même si des états +4 et +6 peuvent être observés dans des conditions particulières.",
+              "Élément clé de la série des actinides synthétiques, le curium incarne à la fois une ressource énergétique, un sujet d’étude et un déchet à longue durée de vie, illustrant la puissance et les défis de la chimie nucléaire moderne."
             ],
             "sources": []
           }
@@ -3553,12 +3557,12 @@
           "symbol": "Bk",
           "name": "Berkélium",
           "details": {
-            "summary": "Actinide artificiel rare, le berkélium sert surtout de maillon scientifique vers des éléments plus lourds et à l'étude de la chimie des actinides.",
+            "summary": "Actinide artificiel rare, le berkélium sert surtout de maillon scientifique vers des éléments plus lourds et à l’étude de la chimie des actinides.",
             "paragraphs": [
-              "Mis en évidence en 1949 par l'équipe de Glenn T. Seaborg à l'Université de Californie à Berkeley, le berkélium (symbole Bk, numéro atomique 97) est un métal actinide radioactif, argenté, malléable et réactif à l'air, dont l'isotope le plus stable est ^247Bk avec une demi-vie d'environ 1 380 ans.",
-              "Entièrement synthétique, il est obtenu dans des réacteurs à flux neutronique élevé par captures successives sur le curium ou l'américium, avant des désintégrations bêta, et seules des quantités infimes apparaissent lors d'explosions nucléaires ou d'expériences de transmutation, aucun isotope ne subsistant naturellement.",
-              "Ses usages sont principalement scientifiques : précurseur du californium, précieuse source de neutrons, le berkélium-249 a servi à la synthèse d'éléments superlourds comme le tennessine, mais sa rareté et sa radioactivité excluent toute application industrielle courante.",
-              "Chimiquement, il adopte majoritairement l'état d'oxydation +3 et forme des oxydes comme Bk₂O₃, des halogénures tels que BkCl₃ ou BkF₃ ainsi que des complexes aqueux, une chimie proche de celle des lanthanides qui aide à perfectionner les procédés de séparation des actinides.",
+              "Mis en évidence en 1949 par l’équipe de Glenn T. Seaborg à l’Université de Californie à Berkeley, le berkélium (symbole Bk, numéro atomique 97) est un métal actinide radioactif, argenté, malléable et réactif à l’air, dont l’isotope le plus stable est ^247Bk avec une demi-vie d’environ 1 380 ans.",
+              "Entièrement synthétique, il est obtenu dans des réacteurs à flux neutronique élevé par captures successives sur le curium ou l’américium, avant des désintégrations bêta, et seules des quantités infimes apparaissent lors d’explosions nucléaires ou d’expériences de transmutation, aucun isotope ne subsistant naturellement.",
+              "Ses usages sont principalement scientifiques : précurseur du californium, précieuse source de neutrons, le berkélium-249 a servi à la synthèse d’éléments superlourds comme le tennessine, mais sa rareté et sa radioactivité excluent toute application industrielle courante.",
+              "Chimiquement, il adopte majoritairement l’état d’oxydation +3 et forme des oxydes comme Bk₂O₃, des halogénures tels que BkCl₃ ou BkF₃ ainsi que des complexes aqueux, une chimie proche de celle des lanthanides qui aide à perfectionner les procédés de séparation des actinides.",
               "Produit seulement dans quelques laboratoires spécialisés, le berkélium demeure un outil scientifique crucial pour créer des éléments plus lourds et comprendre le comportement des actinides, à la frontière entre chimie expérimentale et physique nucléaire."
             ],
             "sources": []
@@ -3570,10 +3574,10 @@
           "details": {
             "summary": "Actinide synthétique ultra rare, le californium sert surtout de source neutronique précieuse malgré des coûts et risques radiologiques élevés.",
             "paragraphs": [
-              "Présentation — Symbole \"Cf\", numéro atomique 98, le californium est un actinide transuranien synthétique. Métal argenté lorsqu'il est préparé en quantité, il est fortement radioactif et n'existe que par production humaine en quantités extrêmement limitées. Plusieurs isotopes sont connus ; parmi eux ^252Cf est le plus utilisé industriellement, tandis que ^251Cf est l'isotope le plus stable connu (demi-vie ≈ 898 ans).",
-              "Origine (cosmique & terrestre) — Cosmiquement, le californium résulte des mêmes processus de nucléosynthèse lourde (processus r) que les autres éléments lourds, mais il ne subsiste pas naturellement à cause de la brièveté de la plupart de ses isotopes. Terrestrement, il est entièrement produit par irradiation neutronique prolongée d'actinides (curium, berkelium, etc.) dans des réacteurs à haut flux ou synthétisé en accélérateurs ; il a été d'abord créé à Berkeley en 1950. La production commerciale reste très limitée et concentrée (ex. Oak Ridge, USA et RIAR, Russie).",
-              "Usages — La propriété la plus exploitée est l'émission de neutrons de ^252Cf (fort flux neutronique par microgramme). Cela rend cet isotope précieux comme source neutronique portable pour la radiographie neutronique, l'activation neutronique (analyse élémentaire), la détection de minerais ou d'hydrocarbures, le démarrage de réacteurs et quelques applications médicales spécialisées. La production restreinte et le coût élevé limitent cependant son usage à des applications où aucune alternative pratique n'existe.",
-              "Chimie et composés associés — Chimiquement, le californium se montre comparable aux autres actinides lourds : il adopte préférentiellement l'état +3 en solution et forme des oxydes (Cf₂O₃), halogénures et nitrates en laboratoire. Sa chimie est surtout étudiée à l'échelle microscopique pour comprendre le comportement des actinides et optimiser leur séparation/recyclage ; les manipulations exigent des installations radiologiques spécialisées.",
+              "Présentation — Symbole \"Cf\", numéro atomique 98, le californium est un actinide transuranien synthétique. Métal argenté lorsqu’il est préparé en quantité, il est fortement radioactif et n’existe que par production humaine en quantités extrêmement limitées. Plusieurs isotopes sont connus ; parmi eux ^252Cf est le plus utilisé industriellement, tandis que ^251Cf est l’isotope le plus stable connu (demi-vie ≈ 898 ans).",
+              "Origine (cosmique & terrestre) — Cosmiquement, le californium résulte des mêmes processus de nucléosynthèse lourde (processus r) que les autres éléments lourds, mais il ne subsiste pas naturellement à cause de la brièveté de la plupart de ses isotopes. Terrestrement, il est entièrement produit par irradiation neutronique prolongée d’actinides (curium, berkelium, etc.) dans des réacteurs à haut flux ou synthétisé en accélérateurs ; il a été d’abord créé à Berkeley en 1950. La production commerciale reste très limitée et concentrée (ex. Oak Ridge, USA et RIAR, Russie).",
+              "Usages — La propriété la plus exploitée est l’émission de neutrons de ^252Cf (fort flux neutronique par microgramme). Cela rend cet isotope précieux comme source neutronique portable pour la radiographie neutronique, l’activation neutronique (analyse élémentaire), la détection de minerais ou d’hydrocarbures, le démarrage de réacteurs et quelques applications médicales spécialisées. La production restreinte et le coût élevé limitent cependant son usage à des applications où aucune alternative pratique n’existe.",
+              "Chimie et composés associés — Chimiquement, le californium se montre comparable aux autres actinides lourds : il adopte préférentiellement l’état +3 en solution et forme des oxydes (Cf₂O₃), halogénures et nitrates en laboratoire. Sa chimie est surtout étudiée à l’échelle microscopique pour comprendre le comportement des actinides et optimiser leur séparation/recyclage ; les manipulations exigent des installations radiologiques spécialisées.",
               "Conclusion — Le californium est un matériau de niche à très haute valeur scientifique et technologique : produit en quantités minimes, il sert de source neutronique indispensable dans plusieurs domaines industriels et scientifiques. Son coût, sa radioactivité et la rareté de production en font un élément stratégique et strictement réglementé."
             ],
             "sources": []
@@ -3583,13 +3587,13 @@
           "symbol": "Es",
           "name": "Einsteinium",
           "details": {
-            "summary": "Élément né dans les explosions nucléaires, l'einsteinium est un actinide synthétique réservé à la recherche fondamentale sur les actinides et les éléments superlourds.",
+            "summary": "Élément né dans les explosions nucléaires, l’einsteinium est un actinide synthétique réservé à la recherche fondamentale sur les actinides et les éléments superlourds.",
             "paragraphs": [
-              "Présentation — Symbole \"Es\", numéro atomique 99, l'einsteinium est un métal actinide radioactif, argenté, produit artificiellement en très petites quantités. Découvert en 1952 dans les retombées de la première explosion thermonucléaire américaine (Ivy Mike), il fut identifié pour la première fois dans les débris de la bombe à hydrogène. L'isotope le plus stable connu est ^252Es, dont la demi-vie est d'environ 471 jours.",
-              "Origine — L'einsteinium n'existe pas naturellement sur Terre : il est entièrement synthétique. Il se forme dans les explosions nucléaires ou dans des réacteurs à très haut flux neutronique, par irradiation de curium ou de plutonium suivie de plusieurs captures neutroniques et désintégrations bêta. Sa découverte fut tenue secrète pendant plusieurs années en raison de son origine militaire.",
-              "Usages — Les applications de l'einsteinium sont essentiellement scientifiques. Sa radioactivité intense et sa production minuscule (quelques microgrammes au maximum) le réservent à la recherche sur les actinides lourds et la synthèse d'éléments superlourds : l'einsteinium a notamment servi à produire le mendélévium (Md, 101). En dehors de ces contextes de recherche nucléaire fondamentale, il n'a aucun usage industriel.",
-              "Chimie et composés associés — L'einsteinium adopte principalement l'état d'oxydation +3 en solution, formant des oxydes (Es₂O₃), halogénures et complexes similaires à ceux de ses voisins curium et californium. En raison de sa forte émission alpha, il s'échauffe spontanément à température ambiante, ce qui complique sa manipulation : même quelques microgrammes doivent être manipulés dans des environnements radioprotégés et thermiquement contrôlés.",
-              "Conclusion — L'einsteinium est un symbole de la science nucléaire du XXᵉ siècle : né dans le feu d'une explosion thermonucléaire, nommé en hommage à Albert Einstein, et utilisé pour créer d'autres éléments au-delà du tableau périodique. Invisible au quotidien, il incarne la frontière entre la physique de l'atome et la création de nouvelles formes de matière."
+              "Présentation — Symbole \"Es\", numéro atomique 99, l’einsteinium est un métal actinide radioactif, argenté, produit artificiellement en très petites quantités. Découvert en 1952 dans les retombées de la première explosion thermonucléaire américaine (Ivy Mike), il fut identifié pour la première fois dans les débris de la bombe à hydrogène. L’isotope le plus stable connu est ^252Es, dont la demi-vie est d’environ 471 jours.",
+              "Origine — L’einsteinium n’existe pas naturellement sur Terre : il est entièrement synthétique. Il se forme dans les explosions nucléaires ou dans des réacteurs à très haut flux neutronique, par irradiation de curium ou de plutonium suivie de plusieurs captures neutroniques et désintégrations bêta. Sa découverte fut tenue secrète pendant plusieurs années en raison de son origine militaire.",
+              "Usages — Les applications de l’einsteinium sont essentiellement scientifiques. Sa radioactivité intense et sa production minuscule (quelques microgrammes au maximum) le réservent à la recherche sur les actinides lourds et la synthèse d’éléments superlourds : l’einsteinium a notamment servi à produire le mendélévium (Md, 101). En dehors de ces contextes de recherche nucléaire fondamentale, il n’a aucun usage industriel.",
+              "Chimie et composés associés — L’einsteinium adopte principalement l’état d’oxydation +3 en solution, formant des oxydes (Es₂O₃), halogénures et complexes similaires à ceux de ses voisins curium et californium. En raison de sa forte émission alpha, il s’échauffe spontanément à température ambiante, ce qui complique sa manipulation : même quelques microgrammes doivent être manipulés dans des environnements radioprotégés et thermiquement contrôlés.",
+              "Conclusion — L’einsteinium est un symbole de la science nucléaire du XXᵉ siècle : né dans le feu d’une explosion thermonucléaire, nommé en hommage à Albert Einstein, et utilisé pour créer d’autres éléments au-delà du tableau périodique. Invisible au quotidien, il incarne la frontière entre la physique de l’atome et la création de nouvelles formes de matière."
             ],
             "sources": []
           }
@@ -3628,13 +3632,13 @@
           "symbol": "No",
           "name": "Nobélium",
           "details": {
-            "summary": "Actinide transuranien artificiel, le nobélium honore Alfred Nobel et n'existe qu'en atomes hautement radioactifs produits en laboratoire.",
+            "summary": "Actinide transuranien artificiel, le nobélium honore Alfred Nobel et n’existe qu’en atomes hautement radioactifs produits en laboratoire.",
             "paragraphs": [
               "Présentation — Le nobélium, symbole No et numéro atomique 102, est un actinide transuranien artificiel reconnu officiellement en 1966 et nommé en hommage à Alfred Nobel ; ses isotopes, tous instables, possèdent des demi-vies allant de la milliseconde à quelques heures.",
-              "Origine — Le nobélium n'existe pas naturellement : il est obtenu en laboratoire par fusion de noyaux (bombardement de cibles lourdes avec des ions légers) ou par irradiation dans des réacteurs à très haut flux, ce qui ne produit que des quantités infimes (quelques atomes ou nanogrammes).",
-              "Propriétés et usages — Aucune application industrielle ou technologique courante n'est possible : la production limitée et la radioactivité du nobélium le cantonnent à la recherche, où l'on cherche surtout à mesurer ses propriétés nucléaires et quelques caractéristiques chimiques à très petite échelle.",
-              "Chimie et composés associés — Les études chimiques, rares, suggèrent un comportement proche des autres actinides lourds avec un état d'oxydation +3 dominant en solution ; seuls des composés simples comme des halogénures ou des oxydes ont été envisagés expérimentalement, sans production exploitable.",
-              "Conclusion — Strictement confiné aux laboratoires spécialisés, le nobélium constitue une étape supplémentaire dans l'exploration des actinides et de la structure nucléaire, clin d'œil à Alfred Nobel mais élément à la valeur exclusivement scientifique."
+              "Origine — Le nobélium n’existe pas naturellement : il est obtenu en laboratoire par fusion de noyaux (bombardement de cibles lourdes avec des ions légers) ou par irradiation dans des réacteurs à très haut flux, ce qui ne produit que des quantités infimes (quelques atomes ou nanogrammes).",
+              "Propriétés et usages — Aucune application industrielle ou technologique courante n’est possible : la production limitée et la radioactivité du nobélium le cantonnent à la recherche, où l’on cherche surtout à mesurer ses propriétés nucléaires et quelques caractéristiques chimiques à très petite échelle.",
+              "Chimie et composés associés — Les études chimiques, rares, suggèrent un comportement proche des autres actinides lourds avec un état d’oxydation +3 dominant en solution ; seuls des composés simples comme des halogénures ou des oxydes ont été envisagés expérimentalement, sans production exploitable.",
+              "Conclusion — Strictement confiné aux laboratoires spécialisés, le nobélium constitue une étape supplémentaire dans l’exploration des actinides et de la structure nucléaire, clin d’œil à Alfred Nobel mais élément à la valeur exclusivement scientifique."
             ],
             "sources": []
           }
@@ -3645,10 +3649,10 @@
           "details": {
             "summary": "Dernier actinide, le lawrencium est un élément transuranien artificiel dédié à Ernest O. Lawrence et produit uniquement en quantités infinitésimales.",
             "paragraphs": [
-              "Présentation — Le lawrencium, symbole Lr et numéro atomique 103, est un élément transuranien radioactif artificiel, dernier représentant officiel de la série des actinides ; sous forme métallique il serait argenté, mais il n'est observé qu'à l'échelle atomique ou nanoscopique en laboratoire.",
-              "Origine — Synthétisé au début des années 1960 à Berkeley et nommé en hommage à Ernest O. Lawrence, inventeur du cyclotron, le lawrencium n'existe pas naturellement ; il est produit par fusion de noyaux légers sur des cibles lourdes dans des accélérateurs ou par irradiation intense d'actinides dans des réacteurs spécialisés, pour des quantités de quelques atomes à quelques nanogrammes.",
-              "Usages — Dépourvu d'application industrielle, le lawrencium est un outil de recherche servant à explorer la chimie et la physique des éléments superlourds, tester des prédictions théoriques sur la structure électronique ou les effets relativistes, et perfectionner les méthodes de détection en physique nucléaire.",
-              "Chimie et composés associés — La chimie du lawrencium reste très peu étudiée en raison de son extrême rareté et de la brièveté de ses isotopes ; on s'attend néanmoins à un état d'oxydation +3 en solution, analogue aux autres actinides, tandis que les effets relativistes sur ses électrons externes en font un sujet d'étude fondamental.",
+              "Présentation — Le lawrencium, symbole Lr et numéro atomique 103, est un élément transuranien radioactif artificiel, dernier représentant officiel de la série des actinides ; sous forme métallique il serait argenté, mais il n’est observé qu’à l’échelle atomique ou nanoscopique en laboratoire.",
+              "Origine — Synthétisé au début des années 1960 à Berkeley et nommé en hommage à Ernest O. Lawrence, inventeur du cyclotron, le lawrencium n’existe pas naturellement ; il est produit par fusion de noyaux légers sur des cibles lourdes dans des accélérateurs ou par irradiation intense d’actinides dans des réacteurs spécialisés, pour des quantités de quelques atomes à quelques nanogrammes.",
+              "Usages — Dépourvu d’application industrielle, le lawrencium est un outil de recherche servant à explorer la chimie et la physique des éléments superlourds, tester des prédictions théoriques sur la structure électronique ou les effets relativistes, et perfectionner les méthodes de détection en physique nucléaire.",
+              "Chimie et composés associés — La chimie du lawrencium reste très peu étudiée en raison de son extrême rareté et de la brièveté de ses isotopes ; on s’attend néanmoins à un état d’oxydation +3 en solution, analogue aux autres actinides, tandis que les effets relativistes sur ses électrons externes en font un sujet d’étude fondamental.",
               "Conclusion — Borne symbolique du tableau périodique dédiée à un pionnier des accélérateurs, le lawrencium marque la frontière entre chimie classique et exploration des effets extrêmes sur noyaux et électrons, chaque atome synthétisé enrichissant notre compréhension de la matière."
             ],
             "sources": []
@@ -3672,7 +3676,7 @@
           "symbol": "Db",
           "name": "Dubnium",
           "details": {
-            "summary": "Élément superlourd synthétique confirmé en 1997, le dubnium rend hommage à la cité scientifique de Doubna où sa découverte s'est concrétisée.",
+            "summary": "Élément superlourd synthétique confirmé en 1997, le dubnium rend hommage à la cité scientifique de Doubna où sa découverte s’est concrétisée.",
             "paragraphs": [
               "Le dubnium, symbole \"Db\", numéro atomique 105, est un élément superlourd confirmé en 1997. Il porte le nom de la ville scientifique de Doubna (ou Dubna), en Russie, où se trouve le Joint Institute for Nuclear Research, acteur majeur de sa découverte.",
               "C’est un élément synthétique, produit par bombardement de noyaux lourds dans un accélérateur de particules. Ses isotopes se désintègrent en quelques secondes au maximum, ce qui empêche toute existence naturelle durable.",
@@ -3686,7 +3690,7 @@
           "symbol": "Sg",
           "name": "Seaborgium",
           "details": {
-            "summary": "Élément superlourd confirmé en 1993, le seaborgium honore le chimiste Glenn T. Seaborg et prolonge brièvement la chimie des métaux de transition au-delà de l'uranium.",
+            "summary": "Élément superlourd confirmé en 1993, le seaborgium honore le chimiste Glenn T. Seaborg et prolonge brièvement la chimie des métaux de transition au-delà de l’uranium.",
             "paragraphs": [
               "Le seaborgium, symbole \"Sg\", numéro atomique 106, est un élément superlourd confirmé en 1993. Il rend hommage au chimiste américain Glenn T. Seaborg, l’un des découvreurs de nombreux éléments transuraniens.",
               "C’est un élément artificiel, obtenu par fusion nucléaire de noyaux lourds. Ses isotopes sont tous instables, avec des demi-vies variant de quelques millisecondes à une minute environ pour les plus durables.",
@@ -3700,7 +3704,7 @@
           "symbol": "Bh",
           "name": "Bohrium",
           "details": {
-            "summary": "Élément superlourd entièrement artificiel, le bohrium rend hommage à Niels Bohr et reste un sujet fugace d'étude en laboratoire.",
+            "summary": "Élément superlourd entièrement artificiel, le bohrium rend hommage à Niels Bohr et reste un sujet fugace d’étude en laboratoire.",
             "paragraphs": [
               "Le bohrium, symbole \"Bh\" et numéro atomique 107, est un élément superlourd confirmé en 1981. Il a été nommé en l’honneur du physicien danois Niels Bohr, figure majeure de la physique atomique.",
               "C’est un élément artificiel, créé dans des accélérateurs de particules en fusionnant des noyaux lourds. Ses isotopes ont des demi-vies très courtes, de l’ordre de la seconde ou moins, ce qui le rend inexistant à l’état naturel.",

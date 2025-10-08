@@ -121,6 +121,11 @@ body.theme-neon .info-card {
   gap: 0.55rem;
 }
 
+.production-breakdown__placeholder {
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
 .production-breakdown__row {
   display: flex;
   justify-content: space-between;
