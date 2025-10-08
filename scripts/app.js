@@ -2383,8 +2383,6 @@ const elements = {
   waveDistanceValue: document.getElementById('waveDistanceValue'),
   waveSpeedValue: document.getElementById('waveSpeedValue'),
   waveAltitudeValue: document.getElementById('waveAltitudeValue'),
-  waveStatusMessage: document.getElementById('waveStatusMessage'),
-  waveResetButton: document.getElementById('waveResetButton'),
   waveApcFrenzyCounter: document.getElementById('waveApcFrenzyCounter'),
   waveApcFrenzyCounterValue: document.getElementById('waveApcFrenzyCounterValue'),
   waveApcFrenzyCounterBestSingle: document.getElementById('waveApcFrenzyCounterBestSingle'),
@@ -2882,9 +2880,7 @@ function ensureWaveGame() {
     stage: elements.waveStage,
     distanceElement: elements.waveDistanceValue,
     speedElement: elements.waveSpeedValue,
-    altitudeElement: elements.waveAltitudeValue,
-    statusElement: elements.waveStatusMessage,
-    resetButton: elements.waveResetButton
+    altitudeElement: elements.waveAltitudeValue
   });
   return waveGame;
 }

@@ -381,16 +381,6 @@
           "speedUnit": "km/h",
           "altitude": "Altitude",
           "altitudeUnit": "m"
-        },
-        "status": {
-          "ready": "Release on the uphill to take off.",
-          "hold": "Hold to dive and build speed.",
-          "air": "Airborne! Aim for the next slope."
-        },
-        "controls": {
-          "hold": "Hold to dive",
-          "reset": "Reset run",
-          "aria": "Photon mini-game controls"
         }
       },
       "table": {

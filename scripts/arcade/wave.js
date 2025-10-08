@@ -456,11 +456,22 @@
       this.lastTimestamp = null;
       this.frameHandle = null;
 
-      this.messages = {
-        ready: translate('index.sections.wave.status.ready', 'Relâchez pour bondir sur la prochaine montée.'),
-        hold: translate('index.sections.wave.status.hold', 'Maintenez pour piquer et gagner de la vitesse.'),
-        air: translate('index.sections.wave.status.air', 'En vol ! Orientez-vous pour reprendre de la vitesse.')
-      };
+      this.messages = this.statusElement
+        ? {
+            ready: translate(
+              'index.sections.wave.status.ready',
+              'Relâchez pour bondir sur la prochaine montée.'
+            ),
+            hold: translate(
+              'index.sections.wave.status.hold',
+              'Maintenez pour piquer et gagner de la vitesse.'
+            ),
+            air: translate(
+              'index.sections.wave.status.air',
+              'En vol ! Orientez-vous pour reprendre de la vitesse.'
+            )
+          }
+        : null;
 
       this.handleResize = this.handleResize.bind(this);
       this.handlePointerDown = this.handlePointerDown.bind(this);
@@ -1225,7 +1236,7 @@
       this.distanceElement.textContent = formatNumber(distanceMeters, 0);
       this.speedElement.textContent = formatNumber(speedKmh, speedKmh >= 50 ? 0 : 1);
       this.altitudeElement.textContent = formatNumber(altitude, altitude >= 10 ? 0 : 1);
-      if (this.statusElement) {
+      if (this.statusElement && this.messages) {
         const nextState = this.player.onGround ? (this.isPressing ? 'hold' : 'ready') : 'air';
         if (nextState !== this.statusState) {
           this.statusState = nextState;

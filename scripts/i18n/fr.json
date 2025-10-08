@@ -381,16 +381,6 @@
           "speedUnit": "km/h",
           "altitude": "Altitude",
           "altitudeUnit": "m"
-        },
-        "status": {
-          "ready": "Relâchez sur la montée pour décoller.",
-          "hold": "Maintenez pour piquer et accélérer.",
-          "air": "En vol ! Cherchez la prochaine pente."
-        },
-        "controls": {
-          "hold": "Maintenir pour plonger",
-          "reset": "Relancer la partie",
-          "aria": "Commandes du mini-jeu Photon"
         }
       },
       "metaux": {
