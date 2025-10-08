@@ -1157,8 +1157,8 @@
       const groundY = this.terrain.getHeight(this.player.x);
       const topMargin = this.viewHeight * CAMERA_TOP_MARGIN_RATIO;
       const bottomMargin = this.viewHeight * CAMERA_BOTTOM_MARGIN_RATIO;
-      const desiredTop = Math.max(0, this.player.y - topMargin);
-      const desiredBottom = Math.max(
+      const baseTop = Math.max(0, this.player.y - topMargin);
+      const baseBottom = Math.max(
         this.player.y + bottomMargin,
         groundY + bottomMargin * GROUND_INFLUENCE_RATIO
       );
@@ -1178,6 +1178,13 @@
       const zoomInfluence = Math.max(speedInfluence, altitudeInfluence);
       const smoothedInfluence = easeInOutSine(zoomInfluence);
       const dynamicSpanMultiplier = lerp(1, MAX_DYNAMIC_SPAN_MULTIPLIER, smoothedInfluence);
+      const span = Math.max(baseBottom - baseTop, 1);
+      const spanIncrease = span * Math.max(dynamicSpanMultiplier - 1, 0);
+      const altitudeBias = clamp(0.5 + (altitudeInfluence - speedInfluence) * 0.35, 0.35, 0.75);
+      const extraTop = spanIncrease * altitudeBias;
+      const extraBottom = spanIncrease - extraTop;
+      const desiredTop = Math.max(0, baseTop - extraTop);
+      const desiredBottom = baseBottom + extraBottom;
       const dynamicMinScale = clamp(
         BASE_MIN_CAMERA_SCALE / dynamicSpanMultiplier,
         ABSOLUTE_MIN_CAMERA_SCALE,
