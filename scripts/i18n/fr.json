@@ -485,6 +485,14 @@
           },
           "note": "La modification s’applique immédiatement."
         },
+        "uiScale": {
+          "label": "Taille de l’interface",
+          "ariaLabel": "Choisir l’échelle appliquée aux textes et aux nombres de l’interface",
+          "options": {
+            "normal": "Taille standard",
+            "large": "Grande taille (×1,5)"
+          }
+        },
         "digitFont": {
           "label": "Police des chiffres",
           "ariaLabel": "Choisir la police utilisée pour les nombres",

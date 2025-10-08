@@ -485,6 +485,14 @@
           },
           "note": "Changes apply immediately."
         },
+        "uiScale": {
+          "label": "Interface size",
+          "ariaLabel": "Choose the scale applied to interface text and numbers",
+          "options": {
+            "normal": "Standard size",
+            "large": "Large size (×1.5)"
+          }
+        },
         "digitFont": {
           "label": "Number font",
           "ariaLabel": "Choose the font used for numbers",
