@@ -332,11 +332,35 @@
           ? part.split(':', 2).map((segment) => segment.trim())
           : ['text', part.trim()];
 
+        if (!messageKey) {
+          return;
+        }
+
         const translated = translate(messageKey);
+        if (translated == null) {
+          return;
+        }
+
+        let value;
+        if (typeof translated === 'string') {
+          const trimmed = translated.trim();
+          if (!trimmed) {
+            return;
+          }
+          const stripped = trimmed.replace(/^!+/, '').replace(/!+$/, '');
+          const normalizedKey = messageKey.trim();
+          if (trimmed === normalizedKey || stripped === normalizedKey) {
+            return;
+          }
+          value = translated;
+        } else {
+          value = String(translated);
+        }
+
         if (target === 'text') {
-          element.textContent = translated;
+          element.textContent = value;
         } else if (target) {
-          element.setAttribute(target, translated);
+          element.setAttribute(target, value);
         }
       });
     });
