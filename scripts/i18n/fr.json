@@ -396,22 +396,6 @@
       "metaux": {
         "aria": "Mini-jeu Métaux Mach3",
         "exitAria": "Quitter le mini-jeu Métaux",
-        "title": "Métaux Mach3",
-        "subtitle": "Alignez les alliages pour forger des bonus et maintenir le flux d’énergie.",
-        "stats": {
-          "lastCombo": "Dernier combo",
-          "bestCombo": "Meilleur combo",
-          "totalTiles": "Tuiles fusionnées",
-          "reshuffles": "Mélanges forcés",
-          "moves": "Mouvements"
-        },
-        "sidebar": {
-          "title": "Forgez vos alliages",
-          "intro": "Assemblez trois pièces identiques pour libérer de l’énergie et prolonger la session. Chaque combo accélère la forge : surveillez le chrono !"
-        },
-        "actions": {
-          "reshuffle": "Forcer un mélange"
-        },
         "timerLabel": "Temps restant",
         "timerMax": "Max : 6 s",
         "freePlayExitButton": "Quitter le mode libre",

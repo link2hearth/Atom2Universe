@@ -1766,11 +1766,6 @@ function initMetauxGame() {
     endScreenElement: elements.metauxEndScreen,
     endTimeElement: elements.metauxEndTimeValue,
     endMatchesElement: elements.metauxEndMatchesValue,
-    lastComboElement: elements.metauxLastComboValue,
-    bestComboElement: elements.metauxBestComboValue,
-    totalTilesElement: elements.metauxTotalTilesValue,
-    reshufflesElement: elements.metauxReshufflesValue,
-    movesElement: elements.metauxMovesValue,
     onSessionEnd:
       typeof window !== 'undefined' && typeof window.handleMetauxSessionEnd === 'function'
         ? window.handleMetauxSessionEnd
