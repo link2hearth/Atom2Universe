@@ -2418,12 +2418,6 @@ const elements = {
   metauxFreePlayButton: document.getElementById('metauxFreePlayButton'),
   metauxNewGameCredits: document.getElementById('metauxNewGameCredits'),
   metauxCreditStatus: document.getElementById('metauxCreditStatus'),
-  metauxLastComboValue: document.getElementById('metauxLastComboValue'),
-  metauxBestComboValue: document.getElementById('metauxBestComboValue'),
-  metauxTotalTilesValue: document.getElementById('metauxTotalTilesValue'),
-  metauxReshufflesValue: document.getElementById('metauxReshufflesValue'),
-  metauxMovesValue: document.getElementById('metauxMovesValue'),
-  metauxReshuffleButton: document.getElementById('metauxReshuffleButton'),
   languageSelect: document.getElementById('languageSelect'),
   textFontSelect: document.getElementById('textFontSelect'),
   digitFontSelect: document.getElementById('digitFontSelect'),
@@ -6933,19 +6927,6 @@ if (elements.metauxOpenButton) {
 if (elements.metauxReturnButton) {
   elements.metauxReturnButton.addEventListener('click', () => {
     showPage('game');
-  });
-}
-
-if (elements.metauxReshuffleButton) {
-  elements.metauxReshuffleButton.addEventListener('click', () => {
-    initMetauxGame();
-    if (metauxGame) {
-      if (metauxGame.processing) {
-        metauxGame.updateMessage('Patientez, la réaction en chaîne est en cours.');
-        return;
-      }
-      metauxGame.forceReshuffle(true);
-    }
   });
 }
 

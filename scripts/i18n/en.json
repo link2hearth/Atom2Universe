@@ -467,22 +467,6 @@
       "metaux": {
         "aria": "Metals Match-3 mini-game",
         "exitAria": "Leave the Metals mini-game",
-        "title": "Metals Match-3",
-        "subtitle": "Line up alloys to forge bonuses and keep the energy flow going.",
-        "stats": {
-          "lastCombo": "Last combo",
-          "bestCombo": "Best combo",
-          "totalTiles": "Tiles fused",
-          "reshuffles": "Forced reshuffles",
-          "moves": "Moves"
-        },
-        "sidebar": {
-          "title": "Forge your alloys",
-          "intro": "Match three identical pieces to unleash energy and extend the run. Each combo speeds up the forge—watch the timer!"
-        },
-        "actions": {
-          "reshuffle": "Force a reshuffle"
-        },
         "timerLabel": "Time remaining",
         "timerMax": "Max: 6 s",
         "freePlayExitButton": "Leave free mode",
