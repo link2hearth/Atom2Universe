@@ -368,6 +368,13 @@
           "open": "Ouvrir la fiche détaillée de {name}",
           "openSymbol": "Ouvrir la fiche détaillée de {symbol}",
           "sourcesLabel": "Sources"
+        },
+        "family": {
+          "open": "{label} : {family}. Ouvrir la fiche dédiée.",
+          "modal": {
+            "title": "Famille · {family}",
+            "placeholder": "Description de la famille à venir."
+          }
         }
       },
       "fusion": {
@@ -1332,6 +1339,11 @@
         "info": {
           "ownedAria": "Copies actives : {active}. Collectées au total : {lifetime}.",
           "ownedTitle": "Copies actives : {active}\nCollectées au total : {lifetime}"
+        },
+        "family": {
+          "descriptions": {
+            "placeholder": "La description de la famille {family} arrive bientôt."
+          }
         },
         "collection": {
           "progress": "Collection : {owned} / {total} éléments",

@@ -1275,7 +1275,14 @@
                       aria-expanded="false"
                       aria-controls="elementDetailsDialog"
                     ></button>
-                    <span class="element-info-panel__category" id="elementInfoCategory"></span>
+                    <button
+                      class="element-info-panel__category element-info-panel__category-button"
+                      id="elementInfoCategoryButton"
+                      type="button"
+                      aria-haspopup="dialog"
+                      aria-expanded="false"
+                      aria-controls="elementFamilyDialog"
+                    ></button>
                     <span class="element-info-panel__owned-count" id="elementInfoOwnedCount"></span>
                   </div>
                   <span class="element-info-panel__name" id="elementInfoName"></span>
@@ -1928,6 +1935,40 @@
       </header>
       <div class="element-details-overlay__body">
         <div class="element-details-overlay__content" id="elementDetailsBody"></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="element-details-overlay element-family-overlay" id="elementFamilyOverlay" hidden aria-hidden="true">
+    <div class="element-details-overlay__backdrop" data-element-family-close></div>
+    <section
+      class="element-details-overlay__dialog"
+      id="elementFamilyDialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="elementFamilyTitle"
+      aria-describedby="elementFamilyBody"
+      tabindex="-1"
+    >
+      <header class="element-details-overlay__header">
+        <h2 class="element-details-overlay__title" id="elementFamilyTitle"></h2>
+        <button
+          class="element-details-overlay__close"
+          id="elementFamilyCloseButton"
+          type="button"
+          data-element-family-close
+          aria-label="Fermer"
+          data-i18n="aria-label:index.sections.table.modal.close"
+        >
+          ×
+        </button>
+      </header>
+      <div class="element-details-overlay__body">
+        <div
+          class="element-details-overlay__content"
+          id="elementFamilyBody"
+          data-i18n="index.sections.table.family.modal.placeholder"
+        >Description de la famille à venir.</div>
       </div>
     </section>
   </div>

@@ -350,6 +350,13 @@
           "open": "Open detailed sheet for {name}",
           "openSymbol": "Open detailed sheet for {symbol}",
           "sourcesLabel": "Sources"
+        },
+        "family": {
+          "open": "{label}: {family}. Open the family overview.",
+          "modal": {
+            "title": "Family · {family}",
+            "placeholder": "Family description coming soon."
+          }
         }
       },
       "fusion": {
@@ -1347,6 +1354,11 @@
         "info": {
           "ownedAria": "Active copies: {active}. Total collected: {lifetime}.",
           "ownedTitle": "Active copies: {active}\nTotal collected: {lifetime}"
+        },
+        "family": {
+          "descriptions": {
+            "placeholder": "The description for the {family} family is coming soon."
+          }
         },
         "collection": {
           "progress": "Collection: {owned} / {total} elements",
