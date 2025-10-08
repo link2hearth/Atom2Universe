@@ -427,11 +427,7 @@
       this.config.gridSizes.forEach(size => {
         const option = document.createElement('option');
         option.value = String(size);
-        option.textContent = translate(
-          'scripts.arcade.quantum2048.sizeOption',
-          `${size}×${size}`,
-          { size }
-        );
+        option.textContent = `${size}×${size}`;
         this.sizeSelect.appendChild(option);
       });
       this.sizeSelect.value = String(this.size);
@@ -450,12 +446,7 @@
         const option = document.createElement('option');
         option.value = String(value);
         const formatted = formatInteger(value);
-        let label = translate('scripts.arcade.quantum2048.targetOption', formatted, { value: formatted });
-        if (recommended && value === recommended) {
-          const recommendedLabel = translate('scripts.arcade.quantum2048.targetRecommended', 'Recommandé');
-          label = `${label} · ${recommendedLabel}`;
-        }
-        option.textContent = label;
+        option.textContent = formatted;
         this.targetSelect.appendChild(option);
       });
       if (previousValue && this.config.targetValues.includes(Number.parseInt(previousValue, 10))) {

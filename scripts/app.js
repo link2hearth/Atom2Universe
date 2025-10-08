@@ -2393,14 +2393,6 @@ const elements = {
   quantum2048GoalValue: document.getElementById('quantum2048GoalValue'),
   quantum2048ParallelUniverseValue: document.getElementById('quantum2048ParallelUniverseValue'),
   quantum2048RestartButton: document.getElementById('quantum2048GoalDisplay'),
-  quantum2048SizeSelect: document.getElementById('quantum2048SizeSelect'),
-  quantum2048TargetSelect: document.getElementById('quantum2048TargetSelect'),
-  quantum2048ScoreValue: document.getElementById('quantum2048ScoreValue'),
-  quantum2048BestValue: document.getElementById('quantum2048BestValue'),
-  quantum2048MovesValue: document.getElementById('quantum2048MovesValue'),
-  quantum2048Overlay: document.getElementById('quantum2048Overlay'),
-  quantum2048OverlayMessage: document.getElementById('quantum2048OverlayMessage'),
-  quantum2048OverlayButton: document.getElementById('quantum2048OverlayButton'),
   metauxOpenButton: document.getElementById('metauxOpenButton'),
   metauxReturnButton: document.getElementById('metauxReturnButton'),
   metauxBoard: document.getElementById('metauxBoard'),
@@ -2919,17 +2911,9 @@ function ensureQuantum2048Game() {
     boardElement: elements.quantum2048Board,
     tilesContainer: elements.quantum2048Tiles,
     backgroundContainer: elements.quantum2048Grid,
-    sizeSelect: elements.quantum2048SizeSelect,
-    targetSelect: elements.quantum2048TargetSelect,
-    scoreElement: elements.quantum2048ScoreValue,
-    bestElement: elements.quantum2048BestValue,
-    movesElement: elements.quantum2048MovesValue,
     goalElement: elements.quantum2048GoalValue,
     parallelUniverseElement: elements.quantum2048ParallelUniverseValue,
-    restartButton: elements.quantum2048RestartButton,
-    overlayElement: elements.quantum2048Overlay,
-    overlayMessageElement: elements.quantum2048OverlayMessage,
-    overlayButtonElement: elements.quantum2048OverlayButton
+    restartButton: elements.quantum2048RestartButton
   });
   return quantum2048Game;
 }
