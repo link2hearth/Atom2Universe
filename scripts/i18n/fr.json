@@ -1342,7 +1342,9 @@
         },
         "family": {
           "descriptions": {
-            "placeholder": "La description de la famille {family} arrive bientôt."
+            "placeholder": "La description de la famille {family} arrive bientôt.",
+            "nonmetal": "Les non-métaux de l’angle supérieur droit se répartissent en trois sous-ensembles : non-métaux “classiques” (H, C, N, O, P, S, Se), halogènes et gaz nobles. Les non-métaux classiques n’occupent pas une colonne unique, mais partagent 4 à 7 électrons de valence qu’ils gagnent ou mettent en commun pour atteindre l’octet. Leur forte électronégativité et leur aptitude à multiplier les liaisons covalentes tissent l’eau, le CO₂, l’ammoniac et l’essentiel de la chimie du vivant.",
+            "halogen": "Les halogènes forment la 17ᵉ colonne : fluor, chlore, brome, iode et astate (avec parfois le tennessine). Chacun possède sept électrons de valence et cherche à en gagner un huitième, d’où une électronégativité aiguë et une réactivité qui va des attaques du fluor aux sels ioniques (NaCl), aux liaisons covalentes polaires (HCl) et aux molécules diatomiques (Cl₂). Leur gradation physique — gaz jaune pâle, gaz vert-jaune, liquide brun-rouge, solide violet, solide radioactif — illustre la montée des forces intermoléculaires et se retrouve des sels vitaux aux désinfectants et à l’industrie."
           }
         },
         "collection": {
