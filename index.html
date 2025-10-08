@@ -28,7 +28,11 @@
           aria-label="Lecture"
           title="Lecture"
           data-i18n="aria-label:index.sections.options.chiptune.controls.play;title:index.sections.options.chiptune.controls.play"
-        ></button>
+        >
+          <span class="visually-hidden" data-i18n="index.sections.options.chiptune.controls.play">
+            Lecture
+          </span>
+        </button>
       </div>
       <nav
         class="nav-menu"
@@ -97,7 +101,7 @@
       </div>
       <div
         class="status-item status-item--center"
-        aria-label="Total d'atomes"
+        aria-label="Total d’atomes"
         data-i18n="aria-label:index.status.totalAtoms"
       >
         <button class="status-atoms-button" type="button" id="statusAtomsButton">
@@ -161,7 +165,7 @@
             src="Assets/Image/Atom.png"
             class="atom-image"
             draggable="false"
-            alt="Illustration d'un atome vibrant"
+            alt="Illustration d’un atome vibrant"
             data-i18n="alt:index.sections.game.atomButton.alt"
           />
         </span>
@@ -194,7 +198,7 @@
             class="shop-actions-header__placeholder"
             data-i18n="index.sections.shop.actionsPlaceholder"
           >
-            Les options d'achat apparaîtront ici.
+            Les options d’achat apparaîtront ici.
           </p>
         </div>
         <div class="shop-list" id="shopList" role="list">
@@ -461,6 +465,9 @@
         data-i18n="aria-label:index.sections.gacha.sunButton"
         aria-describedby="gachaTicketCounter"
       >
+        <span class="visually-hidden" data-i18n="index.sections.gacha.sunButton">
+          Déclencher un tirage cosmique
+        </span>
         <img
           src="Assets/Image/Sun.png"
           draggable="false"
@@ -496,7 +503,7 @@
       <header class="arcade-hub__header">
         <h2 class="arcade-hub__title" data-i18n="index.sections.arcadeHub.title">Arcade</h2>
         <p class="arcade-hub__subtitle" data-i18n="index.sections.arcadeHub.subtitle">
-          Choisissez un mini-jeu pour prolonger l'expérience Atom2Univers.
+          Choisissez un mini-jeu pour prolonger l’expérience Atom2Univers.
         </p>
       </header>
       <div class="arcade-hub__grid">
@@ -648,7 +655,7 @@
             class="arcade-hub-card__description"
             data-i18n="index.sections.arcadeHub.cards.sudoku.description"
           >
-            Résolvez des grilles générées aléatoirement ou laissez l'ordinateur trouver la solution parfaite.
+            Résolvez des grilles générées aléatoirement ou laissez l’ordinateur trouver la solution parfaite.
           </p>
           <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.sudoku.cta"
             >Résoudre</span
@@ -670,7 +677,7 @@
             class="arcade-hub-card__description"
             data-i18n="index.sections.arcadeHub.cards.blackjack.description"
           >
-            Affrontez le croupier avec un sabot de huit paquets qui se régénère dès qu'une carte unique s'épuise.
+            Affrontez le croupier avec un sabot de huit paquets qui se régénère dès qu’une carte unique s’épuise.
           </p>
           <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.blackjack.cta"
             >Distribuer</span
@@ -987,7 +994,7 @@
           <div class="blackjack-header__titles">
             <h2 class="blackjack-header__title" data-i18n="index.sections.blackjack.title">Blackjack quantique</h2>
             <p class="blackjack-header__subtitle" data-i18n="index.sections.blackjack.subtitle">
-              Défiez le croupier avec un sabot de huit paquets qui se reconstitue dès qu'une carte manque.
+              Défiez le croupier avec un sabot de huit paquets qui se reconstitue dès qu’une carte manque.
             </p>
           </div>
           <dl class="blackjack-scoreboard" aria-label="Statistiques de la session">
@@ -1033,7 +1040,14 @@
                 aria-live="polite"
                 aria-label="Cartes du croupier"
                 data-i18n="aria-label:index.sections.blackjack.dealer.cards"
-              ></ul>
+              >
+                <li
+                  class="blackjack-cards__placeholder"
+                  data-i18n="index.sections.blackjack.dealer.cardsPlaceholder"
+                >
+                  Aucune carte face visible pour le moment.
+                </li>
+              </ul>
             </section>
             <section class="blackjack-hand blackjack-hand--player">
               <header class="blackjack-hand__header">
@@ -1049,7 +1063,14 @@
                 aria-live="polite"
                 aria-label="Cartes du joueur"
                 data-i18n="aria-label:index.sections.blackjack.player.cards"
-              ></ul>
+              >
+                <li
+                  class="blackjack-cards__placeholder"
+                  data-i18n="index.sections.blackjack.player.cardsPlaceholder"
+                >
+                  Aucune carte dans votre main pour le moment.
+                </li>
+              </ul>
             </section>
           </div>
           <aside class="blackjack-overview" aria-labelledby="blackjackShoeHeading">
@@ -1396,7 +1417,7 @@
               id="balanceBoardLabel"
               class="visually-hidden"
               data-i18n="index.sections.balance.instructions"
-            >Faites glisser un bloc depuis le plateau vers la planche, puis appuyez sur « Tester l'équilibre » pour lancer la
+            >Faites glisser un bloc depuis le plateau vers la planche, puis appuyez sur « Tester l’équilibre » pour lancer la
               simulation.</span>
           </div>
         </div>
@@ -1434,7 +1455,7 @@
               class="balance-button balance-button--primary"
               id="balanceTestButton"
               data-i18n="index.sections.balance.actions.test"
-            >Tester l'équilibre</button>
+            >Tester l’équilibre</button>
             <button
               type="button"
               class="balance-button"
@@ -1559,7 +1580,14 @@
             id="infoApsBreakdown"
             class="production-breakdown"
             data-i18n="aria-label:index.sections.info.aps.aria"
-          ></ul>
+          >
+            <li
+              class="production-breakdown__placeholder"
+              data-i18n="index.sections.info.aps.placeholder"
+            >
+              Les détails de production passive apparaîtront ici.
+            </li>
+          </ul>
         </article>
 
         <article class="info-card info-card--production" aria-labelledby="info-apc-title">
@@ -1571,13 +1599,20 @@
             id="infoApcBreakdown"
             class="production-breakdown"
             data-i18n="aria-label:index.sections.info.apc.aria"
-          ></ul>
+          >
+            <li
+              class="production-breakdown__placeholder"
+              data-i18n="index.sections.info.apc.placeholder"
+            >
+              La répartition de la production par clic apparaîtra ici.
+            </li>
+          </ul>
         </article>
 
         <article class="info-card info-card--stats info-card--progression" aria-labelledby="info-progress-title">
           <header class="info-card__header">
             <h3 id="info-progress-title" data-i18n="index.sections.info.progress.title">Progression du joueur</h3>
-            <p class="info-card__subtitle" data-i18n="index.sections.info.progress.subtitle">Suivi des performances de la session et de l'historique.</p>
+            <p class="info-card__subtitle" data-i18n="index.sections.info.progress.subtitle">Suivi des performances de la session et de l’historique.</p>
           </header>
           <div class="info-progress-grid" role="group" aria-labelledby="info-progress-title">
             <section class="info-progress-block" aria-labelledby="info-session-title">
@@ -1613,7 +1648,7 @@
               <h4 id="info-global-title" data-i18n="index.sections.info.progress.global.title">Historique global</h4>
               <dl class="info-metrics">
                 <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.global.atoms">Total d'atomes</dt>
+                  <dt data-i18n="index.sections.info.progress.global.atoms">Total d’atomes</dt>
                   <dd id="infoGlobalAtoms">0</dd>
                 </div>
                 <div class="info-metrics__row">
