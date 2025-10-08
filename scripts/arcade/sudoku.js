@@ -596,6 +596,13 @@
       });
     }
 
+    function clearPadSelection() {
+      if (selectedPadValue !== null) {
+        selectedPadValue = null;
+        updatePadSelection();
+      }
+    }
+
     function applySelectionToInput(input, selection) {
       if (!input || input.readOnly || selection === null) {
         return;
@@ -660,6 +667,7 @@
 
     function onValidate() {
       clearHighlights();
+      clearPadSelection();
       const board = parseGridToBoard(gridElement);
       const { mistakes } = updateMistakeHighlights(board);
       const conflicts = updateConflictState(board, validateBoard(board));
@@ -739,7 +747,14 @@
 
     gridElement.addEventListener('focusout', event => {
       if (activeInput === event.target) {
-        activeInput = null;
+        const nextFocused = event.relatedTarget;
+        const staysInInteractionZone =
+          nextFocused instanceof HTMLElement &&
+          (gridElement.contains(nextFocused) || padElement.contains(nextFocused));
+
+        if (!staysInInteractionZone) {
+          activeInput = null;
+        }
       }
     });
 
