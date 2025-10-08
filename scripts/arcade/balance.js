@@ -353,7 +353,7 @@
 
   function getStatusMessage(key, params) {
     const fallbackMap = {
-      ready: 'Disposez les blocs et lancez un test.',
+      ready: 'Disposez les blocs puis appuyez sur la zone de résultat pour lancer le test.',
       needBlocks: 'Ajoutez au moins un bloc sur la planche avant de tester.',
       needAllBlocks: 'Placez tous les blocs sur la planche avant de tester.',
       success: 'Équilibre parfait !',
@@ -374,11 +374,13 @@
       this.boardElement = options.boardElement || document.getElementById('balanceBoard');
       this.surfaceElement = options.surfaceElement || document.getElementById('balanceBoardSurface');
       this.inventoryElement = options.inventoryElement || document.getElementById('balancePieces');
+      this.statusButton = options.statusButton || document.getElementById('balanceStatusButton');
       this.statusElement = options.statusElement || document.getElementById('balanceStatus');
       this.difficultySelect = options.difficultySelect || document.getElementById('balanceDifficultySelect');
       this.difficultyDescriptionElement = options.difficultyDescription || document.getElementById('balanceDifficultyDescription');
       this.resetButton = options.resetButton || document.getElementById('balanceResetButton');
-      this.testButton = options.testButton || document.getElementById('balanceTestButton');
+      this.testButton =
+        options.testButton || this.statusButton || document.getElementById('balanceTestButton');
       this.dragLayer = options.dragLayer || document.getElementById('balanceDragLayer');
 
       this.difficultyConfig = config.difficulty || { ...DEFAULT_DIFFICULTY_CONFIG };
@@ -1265,13 +1267,18 @@
       }
       const message = getStatusMessage(key, params);
       this.statusElement.textContent = message;
-      this.statusElement.classList.remove('balance-status--success', 'balance-status--warning', 'balance-status--error');
+      const statusVisualElement = this.statusButton || this.statusElement;
+      statusVisualElement.classList.remove(
+        'balance-status--success',
+        'balance-status--warning',
+        'balance-status--error'
+      );
       if (key === 'success') {
-        this.statusElement.classList.add('balance-status--success');
+        statusVisualElement.classList.add('balance-status--success');
       } else if (key === 'leanLeft' || key === 'leanRight') {
-        this.statusElement.classList.add('balance-status--warning');
+        statusVisualElement.classList.add('balance-status--warning');
       } else if (key === 'needBlocks' || key === 'needAllBlocks') {
-        this.statusElement.classList.add('balance-status--error');
+        statusVisualElement.classList.add('balance-status--error');
       }
     }
 

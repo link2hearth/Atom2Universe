@@ -1286,12 +1286,6 @@
           aria-label="Blocs disponibles"
           data-i18n="aria-label:index.sections.balance.inventory.title"
         >
-          <div class="balance-inventory__header">
-            <h3 class="balance-inventory__title" data-i18n="index.sections.balance.inventory.title">Blocs disponibles</h3>
-            <p class="balance-inventory__hint" data-i18n="index.sections.balance.inventory.hint">
-              Le nombre inscrit sur chaque bloc représente son poids relatif.
-            </p>
-          </div>
           <div
             class="balance-inventory__list"
             id="balancePieces"
@@ -1316,18 +1310,24 @@
               id="balanceBoardLabel"
               class="visually-hidden"
               data-i18n="index.sections.balance.instructions"
-            >Faites glisser un bloc depuis le plateau vers la planche, puis appuyez sur « Tester l’équilibre » pour lancer la
+            >Faites glisser un bloc depuis le plateau vers la planche, puis appuyez sur la zone de résultat pour lancer la
               simulation.</span>
           </div>
         </div>
         <div class="balance-controls" id="balanceControls">
-          <p
+          <button
+            type="button"
             class="balance-status"
-            id="balanceStatus"
-            role="status"
-            aria-live="polite"
-            data-i18n="index.sections.balance.status.ready"
-          >Disposez les blocs et lancez un test.</p>
+            id="balanceStatusButton"
+          >
+            <span
+              class="balance-status__text"
+              id="balanceStatus"
+              role="status"
+              aria-live="polite"
+              data-i18n="index.sections.balance.status.ready"
+            >Disposez les blocs puis appuyez sur la zone de résultat pour lancer le test.</span>
+          </button>
           <div class="balance-difficulty" id="balanceDifficulty">
             <label
               class="balance-difficulty__label"
@@ -1349,12 +1349,6 @@
             >Tolérance généreuse pour apprivoiser l’équilibre.</p>
           </div>
           <div class="balance-controls__buttons">
-            <button
-              type="button"
-              class="balance-button balance-button--primary"
-              id="balanceTestButton"
-              data-i18n="index.sections.balance.actions.test"
-            >Tester l’équilibre</button>
             <button
               type="button"
               class="balance-button"

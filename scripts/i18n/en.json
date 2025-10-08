@@ -234,7 +234,7 @@
         "aria": "Balance mini-game",
         "title": "Balance",
         "subtitle": "Distribute the blocks so the center of mass stays above the pivot.",
-        "instructions": "Drag a block from the tray onto the board, then press “Test balance” to launch the simulation.",
+        "instructions": "Drag a block from the tray onto the board, then press the result panel to launch the simulation.",
         "actions": {
           "title": "Controls",
           "reset": "Reset blocks",
@@ -251,7 +251,7 @@
           "status": "{available} blocks ready to be placed."
         },
         "status": {
-          "ready": "Place the blocks and start a test."
+          "ready": "Place the blocks, then press the result panel to run the test."
         },
         "cubeAria": "Block weighing {weight}"
       },
@@ -1047,7 +1047,7 @@
       },
       "balance": {
         "status": {
-          "ready": "Place the blocks and run a test.",
+          "ready": "Place the blocks, then press the result panel to run the test.",
           "needBlocks": "Place at least one block on the board before testing.",
           "needAllBlocks": "Place every block on the board before testing.",
           "success": "Perfect balance!",
@@ -1068,7 +1068,7 @@
     "arcade": {
       "balance": {
         "status": {
-          "ready": "Arrange the blocks and press “Test balance” when you're ready.",
+          "ready": "Arrange the blocks, then press the result panel when you're ready to test.",
           "needBlocks": "Add at least one block to the board before testing.",
           "needAllBlocks": "Place every block on the board before testing.",
           "success": "Perfect balance achieved!",
