@@ -1168,12 +1168,6 @@
       hidden
     >
       <div class="balance-layout" id="balancePageLayout">
-        <header class="balance-header">
-          <h2 class="balance-header__title" data-i18n="index.sections.balance.title">Balance</h2>
-          <p class="balance-header__subtitle" data-i18n="index.sections.balance.subtitle">
-            Répartissez les blocs pour que le centre de gravité reste au-dessus du pivot.
-          </p>
-        </header>
         <div
           class="balance-inventory"
           id="balanceInventory"
@@ -1224,24 +1218,15 @@
             >Disposez les blocs puis appuyez sur la zone de résultat pour lancer le test.</span>
           </button>
           <div class="balance-difficulty" id="balanceDifficulty">
-            <label
-              class="balance-difficulty__label"
-              for="balanceDifficultySelect"
-              data-i18n="index.sections.balance.difficulty.label"
-            >Difficulté</label>
             <select
               class="balance-difficulty__select"
               id="balanceDifficultySelect"
-              aria-describedby="balanceDifficultyDescription"
+              aria-label="Difficulté"
+              data-i18n-aria-label="index.sections.balance.difficulty.label"
             >
               <option value="easy" data-i18n="scripts.arcade.balance.difficulty.easy">Mode facile</option>
               <option value="hard" data-i18n="scripts.arcade.balance.difficulty.hard">Mode difficile</option>
             </select>
-            <p
-              class="balance-difficulty__description"
-              id="balanceDifficultyDescription"
-              data-i18n="scripts.arcade.balance.difficulty.easyDescription"
-            >Tolérance généreuse pour apprivoiser l’équilibre.</p>
           </div>
           <div class="balance-controls__buttons">
             <button

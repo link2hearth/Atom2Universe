@@ -156,36 +156,42 @@ body.theme-light .balance-board__pivot {
 .balance-controls {
   width: 100%;
   display: grid;
-  justify-items: center;
-  gap: clamp(0.75rem, 1.6vw, 1.5rem);
+  grid-template-columns: minmax(0, auto) auto;
+  grid-template-areas:
+    "status status"
+    "difficulty buttons";
+  justify-content: center;
+  align-items: center;
+  row-gap: clamp(0.75rem, 1.6vw, 1.5rem);
+  column-gap: clamp(0.75rem, 1.6vw, 1.5rem);
   margin-top: auto;
 }
 
-.balance-difficulty {
-  width: min(20rem, 100%);
-  display: grid;
-  gap: 0.4rem;
-  justify-items: stretch;
-  text-align: left;
+.balance-status {
+  grid-area: status;
+  justify-self: center;
 }
 
-.balance-difficulty__label {
-  font-size: 0.95rem;
-  font-weight: 600;
-  text-align: center;
+.balance-difficulty {
+  grid-area: difficulty;
+  display: flex;
+  justify-content: flex-end;
+  width: auto;
 }
 
 .balance-difficulty__select {
   appearance: none;
   width: 100%;
+  min-width: 9.5rem;
+  max-width: 11.5rem;
   border: 1px solid rgba(140, 170, 255, 0.35);
   border-radius: 12px;
-  padding: 0.55rem 2.5rem 0.55rem 1rem;
+  padding: 0.45rem 2.25rem 0.45rem 0.85rem;
   font: inherit;
   background:
     linear-gradient(135deg, rgba(80, 120, 220, 0.28), rgba(60, 90, 200, 0.24)),
     url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="20" height="12" viewBox="0 0 20 12" fill="none"%3E%3Cpath d="M2 2L10 10L18 2" stroke="rgba(210,220,255,0.8)" stroke-width="2.5" stroke-linecap="round"/%3E%3C/svg%3E')
-      right 1rem center / 1.25rem auto no-repeat,
+      right 0.85rem center / 1.1rem auto no-repeat,
     rgba(50, 70, 150, 0.3);
   color: inherit;
   cursor: pointer;
@@ -204,27 +210,35 @@ body.theme-light .balance-difficulty__select {
   background:
     linear-gradient(135deg, rgba(140, 170, 255, 0.35), rgba(110, 150, 255, 0.28)),
     url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="20" height="12" viewBox="0 0 20 12" fill="none"%3E%3Cpath d="M2 2L10 10L18 2" stroke="rgba(70,80,130,0.85)" stroke-width="2.5" stroke-linecap="round"/%3E%3C/svg%3E')
-      right 1rem center / 1.25rem auto no-repeat,
+      right 0.85rem center / 1.1rem auto no-repeat,
     rgba(210, 220, 255, 0.65);
 }
 
-.balance-difficulty__description {
-  margin: 0;
-  font-size: 0.85rem;
-  line-height: 1.35;
-  text-align: center;
-  color: rgba(210, 220, 255, 0.8);
-}
-
-body.theme-light .balance-difficulty__description {
-  color: rgba(40, 50, 90, 0.7);
-}
-
 .balance-controls__buttons {
+  grid-area: buttons;
+  justify-self: start;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 0.75rem;
+}
+
+@media (max-width: 600px) {
+  .balance-controls {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "status"
+      "difficulty"
+      "buttons";
+  }
+
+  .balance-difficulty {
+    justify-content: center;
+  }
+
+  .balance-controls__buttons {
+    justify-self: center;
+  }
 }
 
 .balance-button {
