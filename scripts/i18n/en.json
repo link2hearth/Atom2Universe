@@ -103,7 +103,9 @@
             "apc": "APC accumulated",
             "aps": "APS accumulated",
             "offline": "Offline collection",
-            "duration": "Session duration"
+            "duration": "Session duration",
+            "frenzySingle": "Frenzy record (30 s)",
+            "frenzyMulti": "Frenzy record (chain)"
           },
           "global": {
             "title": "Lifetime overview",
@@ -112,7 +114,15 @@
             "apc": "APC accumulated",
             "aps": "APS accumulated",
             "offline": "Offline collection",
-            "duration": "Play time"
+            "duration": "Play time",
+            "frenzySingle": "Frenzy record (30 s)",
+            "frenzyMulti": "Frenzy record (chain)"
+          },
+          "frenzy": {
+            "empty": "—",
+            "singleValue": "{count} clicks",
+            "multiValueSingle": "{count} clicks · {frenzies} frenzy",
+            "multiValue": "{count} clicks · {frenzies} frenzies"
           }
         },
         "shop": {
@@ -385,7 +395,9 @@
             "apc": "Atoms via APC",
             "aps": "Atoms via APS",
             "offline": "Offline atoms",
-            "duration": "Time online"
+            "duration": "Time online",
+            "frenzySingle": "Frenzy record (30 s)",
+            "frenzyMulti": "Frenzy record (chain)"
           },
           "global": {
             "title": "Global",
@@ -394,7 +406,15 @@
             "apc": "Atoms via APC",
             "aps": "Atoms via APS",
             "offline": "Offline atoms",
-            "duration": "Play time"
+            "duration": "Play time",
+            "frenzySingle": "Frenzy record (30 s)",
+            "frenzyMulti": "Frenzy record (chain)"
+          },
+          "frenzy": {
+            "empty": "—",
+            "singleValue": "{count} clicks",
+            "multiValueSingle": "{count} clicks · {frenzies} frenzy",
+            "multiValue": "{count} clicks · {frenzies} frenzies"
           }
         },
         "shop": {

@@ -27,6 +27,14 @@ function formatIntegerLocalized(value) {
   return formatNumberLocalized(value, { maximumFractionDigits: 0, minimumFractionDigits: 0 });
 }
 
+function toNonNegativeInteger(value) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) {
+    return 0;
+  }
+  return Math.max(0, Math.floor(numeric));
+}
+
 function translateOrDefault(key, fallback = '', params) {
   if (typeof key !== 'string' || !key.trim()) {
     return fallback;
@@ -1550,9 +1558,86 @@ function computeRarityMultiplierProduct(store) {
   return new LayeredNumber(total);
 }
 
+function createFallbackApcFrenzyStats() {
+  return {
+    totalClicks: 0,
+    best: {
+      clicks: 0,
+      frenziesUsed: 0
+    },
+    bestSingle: {
+      clicks: 0
+    }
+  };
+}
+
+function getNormalizedApcFrenzyStats(store) {
+  if (typeof ensureApcFrenzyStats === 'function') {
+    const normalized = ensureApcFrenzyStats(store);
+    if (normalized && typeof normalized === 'object') {
+      return normalized;
+    }
+  }
+
+  const fallback = createFallbackApcFrenzyStats();
+  if (!store || typeof store !== 'object') {
+    return fallback;
+  }
+
+  const rawStats = store.apcFrenzy && typeof store.apcFrenzy === 'object'
+    ? store.apcFrenzy
+    : {};
+  const bestRaw = rawStats.best && typeof rawStats.best === 'object' ? rawStats.best : {};
+  const bestSingleRaw = rawStats.bestSingle && typeof rawStats.bestSingle === 'object' ? rawStats.bestSingle : {};
+
+  fallback.totalClicks = toNonNegativeInteger(rawStats.totalClicks ?? rawStats.total ?? 0);
+  fallback.best.clicks = toNonNegativeInteger(bestRaw.clicks ?? bestRaw.count ?? 0);
+  fallback.best.frenziesUsed = toNonNegativeInteger(bestRaw.frenziesUsed ?? bestRaw.frenzies ?? 0);
+  fallback.bestSingle.clicks = toNonNegativeInteger(bestSingleRaw.clicks ?? bestSingleRaw.count ?? 0);
+
+  if (fallback.bestSingle.clicks <= 0 && fallback.best.frenziesUsed <= 1) {
+    fallback.bestSingle.clicks = Math.max(fallback.bestSingle.clicks, fallback.best.clicks);
+  }
+
+  store.apcFrenzy = fallback;
+  return fallback;
+}
+
+function formatFrenzySingleRecordValue(rawClicks) {
+  const clicks = toNonNegativeInteger(rawClicks);
+  if (clicks <= 0) {
+    return translateOrDefault('scripts.info.progress.frenzy.empty', '—');
+  }
+  const clicksText = formatIntegerLocalized(clicks);
+  return translateOrDefault(
+    'scripts.info.progress.frenzy.singleValue',
+    `${clicksText} clicks`,
+    { count: clicksText }
+  );
+}
+
+function formatFrenzyMultiRecordValue(rawClicks, rawFrenzies) {
+  const clicks = toNonNegativeInteger(rawClicks);
+  if (clicks <= 0) {
+    return translateOrDefault('scripts.info.progress.frenzy.empty', '—');
+  }
+  const frenzies = Math.max(1, toNonNegativeInteger(rawFrenzies));
+  const clicksText = formatIntegerLocalized(clicks);
+  const frenziesText = formatIntegerLocalized(frenzies);
+  const key = frenzies === 1
+    ? 'scripts.info.progress.frenzy.multiValueSingle'
+    : 'scripts.info.progress.frenzy.multiValue';
+  const fallback = frenzies === 1
+    ? `${clicksText} clicks · ${frenziesText} frenzy`
+    : `${clicksText} clicks · ${frenziesText} frenzies`;
+  return translateOrDefault(key, fallback, { count: clicksText, frenzies: frenziesText });
+}
+
 function updateSessionStats() {
   const session = gameState.stats?.session;
   if (!session) return;
+
+  const frenzyStats = getNormalizedApcFrenzyStats(session);
 
   if (elements.infoSessionAtoms) {
     const atoms = session.atomsGained instanceof LayeredNumber
@@ -1578,11 +1663,22 @@ function updateSessionStats() {
   if (elements.infoSessionDuration) {
     elements.infoSessionDuration.textContent = formatDuration(session.onlineTimeMs);
   }
+  if (elements.infoSessionFrenzySingle) {
+    elements.infoSessionFrenzySingle.textContent = formatFrenzySingleRecordValue(frenzyStats.bestSingle?.clicks);
+  }
+  if (elements.infoSessionFrenzyMulti) {
+    elements.infoSessionFrenzyMulti.textContent = formatFrenzyMultiRecordValue(
+      frenzyStats.best?.clicks,
+      frenzyStats.best?.frenziesUsed
+    );
+  }
 }
 
 function updateGlobalStats() {
   const global = gameState.stats?.global;
   if (!global) return;
+
+  const frenzyStats = getNormalizedApcFrenzyStats(global);
 
   if (elements.infoGlobalAtoms) {
     elements.infoGlobalAtoms.textContent = gameState.lifetime.toString();
@@ -1604,6 +1700,15 @@ function updateGlobalStats() {
   }
   if (elements.infoGlobalDuration) {
     elements.infoGlobalDuration.textContent = formatDuration(global.playTimeMs);
+  }
+  if (elements.infoGlobalFrenzySingle) {
+    elements.infoGlobalFrenzySingle.textContent = formatFrenzySingleRecordValue(frenzyStats.bestSingle?.clicks);
+  }
+  if (elements.infoGlobalFrenzyMulti) {
+    elements.infoGlobalFrenzyMulti.textContent = formatFrenzyMultiRecordValue(
+      frenzyStats.best?.clicks,
+      frenzyStats.best?.frenziesUsed
+    );
   }
 }
 
