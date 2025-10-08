@@ -260,6 +260,18 @@
       this.handleRestart = this.handleRestart.bind(this);
       this.handleOverlayAction = this.handleOverlayAction.bind(this);
       this.handleResize = this.handleResize.bind(this);
+      this.handleTouchStart = this.handleTouchStart.bind(this);
+      this.handleTouchMove = this.handleTouchMove.bind(this);
+      this.handleTouchEnd = this.handleTouchEnd.bind(this);
+      this.handleTouchCancel = this.handleTouchCancel.bind(this);
+      this.touchIdentifier = null;
+      this.touchStartX = 0;
+      this.touchStartY = 0;
+      this.touchLastX = 0;
+      this.touchLastY = 0;
+      this.touchMoved = false;
+      this.touchStartOptions = { passive: true };
+      this.touchMoveOptions = { passive: false };
       this.resizeFrame = null;
 
       this.setupControls();
@@ -950,12 +962,108 @@
       this.move(direction);
     }
 
+    resetTouchTracking() {
+      this.touchIdentifier = null;
+      this.touchStartX = 0;
+      this.touchStartY = 0;
+      this.touchLastX = 0;
+      this.touchLastY = 0;
+      this.touchMoved = false;
+    }
+
+    handleTouchStart(event) {
+      if (!this.active || this.isOverlayVisible()) {
+        return;
+      }
+      if (!event || !event.touches || event.touches.length === 0) {
+        return;
+      }
+      const touch = event.touches[0];
+      if (!touch) {
+        return;
+      }
+      this.touchIdentifier = Number.isFinite(touch.identifier) ? touch.identifier : null;
+      this.touchStartX = Number.isFinite(touch.clientX) ? touch.clientX : 0;
+      this.touchStartY = Number.isFinite(touch.clientY) ? touch.clientY : 0;
+      this.touchLastX = this.touchStartX;
+      this.touchLastY = this.touchStartY;
+      this.touchMoved = false;
+    }
+
+    handleTouchMove(event) {
+      if (this.touchIdentifier === null || !event || !event.touches) {
+        return;
+      }
+      const touch = Array.from(event.touches).find(t => t.identifier === this.touchIdentifier)
+        || event.touches[0];
+      if (!touch) {
+        return;
+      }
+      const currentX = Number.isFinite(touch.clientX) ? touch.clientX : this.touchLastX;
+      const currentY = Number.isFinite(touch.clientY) ? touch.clientY : this.touchLastY;
+      const deltaX = currentX - this.touchStartX;
+      const deltaY = currentY - this.touchStartY;
+      if (!this.touchMoved) {
+        const threshold = 8;
+        if (Math.abs(deltaX) > threshold || Math.abs(deltaY) > threshold) {
+          this.touchMoved = true;
+        }
+      }
+      if (this.touchMoved && typeof event.preventDefault === 'function') {
+        event.preventDefault();
+      }
+      this.touchLastX = currentX;
+      this.touchLastY = currentY;
+    }
+
+    handleTouchEnd(event) {
+      if (this.touchIdentifier === null || !event) {
+        this.resetTouchTracking();
+        return;
+      }
+      const touchList = event.changedTouches || [];
+      const touch = Array.from(touchList).find(t => t.identifier === this.touchIdentifier)
+        || touchList[0];
+      if (!touch) {
+        this.resetTouchTracking();
+        return;
+      }
+      const finalX = Number.isFinite(touch.clientX) ? touch.clientX : this.touchLastX;
+      const finalY = Number.isFinite(touch.clientY) ? touch.clientY : this.touchLastY;
+      const deltaX = finalX - this.touchStartX;
+      const deltaY = finalY - this.touchStartY;
+      const absX = Math.abs(deltaX);
+      const absY = Math.abs(deltaY);
+      const distance = Math.max(absX, absY);
+      const minSwipeDistance = 24;
+      const direction = distance < minSwipeDistance
+        ? null
+        : absX > absY
+          ? (deltaX > 0 ? 'right' : 'left')
+          : (deltaY > 0 ? 'down' : 'up');
+      this.resetTouchTracking();
+      if (!direction || !this.active || this.isOverlayVisible()) {
+        return;
+      }
+      this.move(direction);
+    }
+
+    handleTouchCancel() {
+      this.resetTouchTracking();
+    }
+
     onEnter() {
       if (this.active) {
         return;
       }
       this.active = true;
       document.addEventListener('keydown', this.handleKeydown);
+      if (this.boardElement) {
+        this.boardElement.addEventListener('touchstart', this.handleTouchStart, this.touchStartOptions);
+        this.boardElement.addEventListener('touchmove', this.handleTouchMove, this.touchMoveOptions);
+        this.boardElement.addEventListener('touchend', this.handleTouchEnd);
+        this.boardElement.addEventListener('touchcancel', this.handleTouchCancel);
+      }
       if (typeof window !== 'undefined') {
         window.addEventListener('resize', this.handleResize);
         this.handleResize();
@@ -968,6 +1076,12 @@
       }
       this.active = false;
       document.removeEventListener('keydown', this.handleKeydown);
+      if (this.boardElement) {
+        this.boardElement.removeEventListener('touchstart', this.handleTouchStart, this.touchStartOptions);
+        this.boardElement.removeEventListener('touchmove', this.handleTouchMove, this.touchMoveOptions);
+        this.boardElement.removeEventListener('touchend', this.handleTouchEnd);
+        this.boardElement.removeEventListener('touchcancel', this.handleTouchCancel);
+      }
       if (typeof window !== 'undefined') {
         window.removeEventListener('resize', this.handleResize);
         if (this.resizeFrame) {
@@ -975,6 +1089,7 @@
           this.resizeFrame = null;
         }
       }
+      this.resetTouchTracking();
     }
   }
 
