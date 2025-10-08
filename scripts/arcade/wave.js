@@ -34,7 +34,13 @@
   const CAMERA_SCALE_LERP_MAX = 0.18;
   const CAMERA_VERTICAL_LERP_MIN = 0.08;
   const CAMERA_VERTICAL_LERP_MAX = 0.22;
-  const MIN_CAMERA_SCALE = 0.55;
+  const BASE_MIN_CAMERA_SCALE = 0.55;
+  const ABSOLUTE_MIN_CAMERA_SCALE = 0.38;
+  const MAX_DYNAMIC_SPAN_MULTIPLIER = 1.8;
+  const SPEED_ZOOM_MIN_KMH = 110;
+  const SPEED_ZOOM_MAX_KMH = 420;
+  const ALTITUDE_ZOOM_MIN_METERS = 4;
+  const ALTITUDE_ZOOM_MAX_METERS = 30;
   const MIN_VISIBLE_SPAN_RATIO = 0.9;
   const MAX_VISIBLE_SPAN_RATIO = 2.8;
   const CAMERA_TOP_MARGIN_RATIO = 0.18;
@@ -417,6 +423,7 @@
       this.cameraX = 0;
       this.cameraY = 0;
       this.cameraScale = 1;
+      this.minCameraScale = BASE_MIN_CAMERA_SCALE;
 
       this.terrain = new TerrainGenerator();
       this.player = {
@@ -590,6 +597,7 @@
       }
       this.cameraScale = 1;
       this.cameraY = 0;
+      this.minCameraScale = BASE_MIN_CAMERA_SCALE;
       const minY = height * 0.7;
       const maxY = height * 0.95;
       const baseLevel = height * 0.9;
@@ -617,7 +625,7 @@
     resetTerrain() {
       this.cameraScale = 1;
       this.cameraY = 0;
-      const worldWidth = this.viewWidth / Math.max(this.cameraScale, MIN_CAMERA_SCALE);
+      const worldWidth = this.viewWidth / Math.max(this.cameraScale, this.minCameraScale);
       const span = worldWidth * 3;
       const startX = -worldWidth;
       this.terrain.setAmplitudeScale(1);
@@ -1154,14 +1162,34 @@
         this.player.y + bottomMargin,
         groundY + bottomMargin * GROUND_INFLUENCE_RATIO
       );
-      const rawSpan = Math.max(desiredBottom - desiredTop, this.viewHeight * MIN_VISIBLE_SPAN_RATIO);
-      const clampedSpan = clamp(
-        rawSpan,
-        this.viewHeight * MIN_VISIBLE_SPAN_RATIO,
-        this.viewHeight * MAX_VISIBLE_SPAN_RATIO
+      const altitudeMeters = Math.max(0, (groundY - this.player.y) / PIXELS_PER_METER);
+      const speedInfluence = clamp(
+        (this.currentSpeedKmh - SPEED_ZOOM_MIN_KMH) /
+          Math.max(SPEED_ZOOM_MAX_KMH - SPEED_ZOOM_MIN_KMH, 1),
+        0,
+        1
       );
+      const altitudeInfluence = clamp(
+        (altitudeMeters - ALTITUDE_ZOOM_MIN_METERS) /
+          Math.max(ALTITUDE_ZOOM_MAX_METERS - ALTITUDE_ZOOM_MIN_METERS, 1),
+        0,
+        1
+      );
+      const zoomInfluence = Math.max(speedInfluence, altitudeInfluence);
+      const smoothedInfluence = easeInOutSine(zoomInfluence);
+      const dynamicSpanMultiplier = lerp(1, MAX_DYNAMIC_SPAN_MULTIPLIER, smoothedInfluence);
+      const dynamicMinScale = clamp(
+        BASE_MIN_CAMERA_SCALE / dynamicSpanMultiplier,
+        ABSOLUTE_MIN_CAMERA_SCALE,
+        BASE_MIN_CAMERA_SCALE
+      );
+      this.minCameraScale = dynamicMinScale;
+
+      const maxSpanRatio = MAX_VISIBLE_SPAN_RATIO * dynamicSpanMultiplier;
+      const rawSpan = Math.max(desiredBottom - desiredTop, this.viewHeight * MIN_VISIBLE_SPAN_RATIO);
+      const clampedSpan = clamp(rawSpan, this.viewHeight * MIN_VISIBLE_SPAN_RATIO, this.viewHeight * maxSpanRatio);
       const crestScreenLimit = this.viewHeight * (1 - MAX_WAVE_TOP_SCREEN_RATIO);
-      let targetScale = clamp(this.viewHeight / clampedSpan, MIN_CAMERA_SCALE, 1);
+      let targetScale = clamp(this.viewHeight / clampedSpan, dynamicMinScale, 1);
 
       for (let attempt = 0; attempt < 3; attempt += 1) {
         const previewViewHeight = this.viewHeight / targetScale;
@@ -1176,7 +1204,7 @@
         if (crestScreenY < crestScreenLimit && groundY > previewCameraY) {
           const requiredScale = clamp(
             crestScreenLimit / (groundY - previewCameraY),
-            MIN_CAMERA_SCALE,
+            dynamicMinScale,
             1
           );
           if (requiredScale > targetScale + 1e-4) {
@@ -1194,7 +1222,7 @@
         const nextScale = this.cameraScale + (targetScale - this.cameraScale) * scaleLerp;
         this.cameraScale = targetScale > this.cameraScale ? Math.max(targetScale, nextScale) : nextScale;
       }
-      this.cameraScale = clamp(this.cameraScale, MIN_CAMERA_SCALE, 1);
+      this.cameraScale = clamp(this.cameraScale, dynamicMinScale, 1);
 
       const viewWorldHeight = this.viewHeight / this.cameraScale;
       const lowerBound = Math.max(0, desiredBottom - viewWorldHeight);
