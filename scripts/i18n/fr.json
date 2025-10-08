@@ -234,7 +234,7 @@
         "aria": "Mini-jeu Balance",
         "title": "Balance",
         "subtitle": "Répartissez les blocs pour que le centre de gravité reste au-dessus du pivot.",
-        "instructions": "Faites glisser un bloc depuis le plateau vers la planche, puis appuyez sur « Tester l’équilibre » pour lancer la simulation.",
+        "instructions": "Faites glisser un bloc depuis le plateau vers la planche, puis appuyez sur la zone de résultat pour lancer la simulation.",
         "actions": {
           "title": "Contrôles",
           "reset": "Réinitialiser les blocs",
@@ -251,7 +251,7 @@
           "status": "{available} blocs prêts à être placés."
         },
         "status": {
-          "ready": "Disposez les blocs et lancez un test."
+          "ready": "Disposez les blocs puis appuyez sur la zone de résultat pour lancer le test."
         },
         "cubeAria": "Bloc de poids {weight}"
       },
@@ -992,7 +992,7 @@
       },
       "balance": {
         "status": {
-          "ready": "Disposez les blocs et lancez un test.",
+          "ready": "Disposez les blocs puis appuyez sur la zone de résultat pour lancer le test.",
           "needBlocks": "Ajoutez au moins un bloc sur la planche avant de lancer le test.",
           "needAllBlocks": "Placez tous les blocs sur la planche avant de lancer le test.",
           "success": "Équilibre parfait !",
@@ -1013,7 +1013,7 @@
     "arcade": {
       "balance": {
         "status": {
-          "ready": "Disposez les blocs puis appuyez sur «\u00a0Tester l’équilibre\u00a0».",
+          "ready": "Disposez les blocs puis appuyez sur la zone de résultat pour lancer le test.",
           "needBlocks": "Ajoutez au moins un bloc sur la planche avant de tester.",
           "needAllBlocks": "Placez tous les blocs sur la planche avant de tester.",
           "success": "Équilibre parfait !",

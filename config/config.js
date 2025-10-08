@@ -805,7 +805,7 @@ const GAME_CONFIG = {
       board: {
         widthPx: 640,
         surfaceHeightPx: 12,
-        pivotHeightPx: 120,
+        pivotHeightPx: 30,
         tolerance: 0.035,
         maxTiltDegrees: 18,
         maxOffsetForTilt: 0.32,
