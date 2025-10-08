@@ -51,7 +51,6 @@ const BRICK_SKIN_TOAST_KEYS = Object.freeze({
 const LANGUAGE_STORAGE_KEY = 'atom2univers.language';
 const CLICK_SOUND_STORAGE_KEY = 'atom2univers.options.clickSoundMuted';
 const CRIT_ATOM_VISUALS_STORAGE_KEY = 'atom2univers.options.critAtomVisualsDisabled';
-const UI_SCALE_STORAGE_KEY = 'atom2univers.options.uiScale';
 const TEXT_FONT_STORAGE_KEY = 'atom2univers.options.textFont';
 const TEXT_FONT_DEFAULT = 'orbitron';
 const TEXT_FONT_CHOICES = Object.freeze({
@@ -92,13 +91,6 @@ const DIGIT_FONT_CHOICES = Object.freeze({
     stack: "'VT323', 'DigitTech7', 'Orbitron', sans-serif",
     compactStack: "'VT323', 'Orbitron', monospace"
   }
-});
-
-const UI_SCALE_DEFAULT = 'normal';
-const UI_SCALE_CHOICES = Object.freeze({
-  normal: { id: 'normal', factor: 1 },
-  large: { id: 'large', factor: 1.5 },
-  xlarge: { id: 'xlarge', factor: 2 }
 });
 
 let critAtomVisualsDisabled = false;
@@ -2424,7 +2416,6 @@ const elements = {
   languageSelect: document.getElementById('languageSelect'),
   textFontSelect: document.getElementById('textFontSelect'),
   digitFontSelect: document.getElementById('digitFontSelect'),
-  uiScaleSelect: document.getElementById('uiScaleSelect'),
   musicTrackSelect: document.getElementById('musicTrackSelect'),
   musicTrackStatus: document.getElementById('musicTrackStatus'),
   musicVolumeSlider: document.getElementById('musicVolumeSlider'),
@@ -2682,70 +2673,6 @@ function populateLanguageSelectOptions() {
     ? previousSelection
     : getInitialLanguagePreference();
   updateLanguageSelectorValue(desiredSelection);
-}
-
-function normalizeUiScaleSelection(value) {
-  if (typeof value !== 'string') {
-    return UI_SCALE_DEFAULT;
-  }
-  const normalized = value.trim().toLowerCase();
-  return Object.prototype.hasOwnProperty.call(UI_SCALE_CHOICES, normalized)
-    ? normalized
-    : UI_SCALE_DEFAULT;
-}
-
-function readStoredUiScale() {
-  try {
-    const stored = globalThis.localStorage?.getItem(UI_SCALE_STORAGE_KEY);
-    if (typeof stored === 'string' && stored.trim()) {
-      return normalizeUiScaleSelection(stored);
-    }
-  } catch (error) {
-    console.warn('Unable to read UI scale preference', error);
-  }
-  return null;
-}
-
-function writeStoredUiScale(value) {
-  try {
-    const normalized = normalizeUiScaleSelection(value);
-    globalThis.localStorage?.setItem(UI_SCALE_STORAGE_KEY, normalized);
-  } catch (error) {
-    console.warn('Unable to persist UI scale preference', error);
-  }
-}
-
-function applyUiScaleSelection(selection, options = {}) {
-  const normalized = normalizeUiScaleSelection(selection);
-  const config = UI_SCALE_CHOICES[normalized] || UI_SCALE_CHOICES[UI_SCALE_DEFAULT];
-  const settings = Object.assign({ persist: true, updateControl: true }, options);
-  const root = typeof document !== 'undefined' ? document.documentElement : null;
-  if (root && root.style) {
-    root.style.setProperty('--ui-scale', String(config.factor));
-  }
-  if (typeof document !== 'undefined' && document.body) {
-    document.body.setAttribute('data-ui-scale', normalized);
-  }
-  if (settings.updateControl && elements.uiScaleSelect) {
-    elements.uiScaleSelect.value = normalized;
-  }
-  if (settings.persist) {
-    writeStoredUiScale(normalized);
-  }
-  return normalized;
-}
-
-function initUiScaleOption() {
-  const stored = readStoredUiScale();
-  const initial = stored ?? UI_SCALE_DEFAULT;
-  applyUiScaleSelection(initial, { persist: false, updateControl: true });
-  if (!elements.uiScaleSelect) {
-    return;
-  }
-  elements.uiScaleSelect.addEventListener('change', event => {
-    const value = event?.target?.value;
-    applyUiScaleSelection(value, { persist: true, updateControl: false });
-  });
 }
 
 function normalizeTextFontSelection(value) {
@@ -3498,7 +3425,6 @@ function subscribeCritAtomLanguageUpdates() {
   }
 }
 
-initUiScaleOption();
 initTextFontOption();
 initDigitFontOption();
 initClickSoundOption();
