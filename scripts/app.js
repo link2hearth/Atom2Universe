@@ -93,6 +93,67 @@ const DIGIT_FONT_CHOICES = Object.freeze({
   }
 });
 
+const UI_SCALE_STORAGE_KEY = 'atom2univers.options.uiScale';
+
+const UI_SCALE_CONFIG = (() => {
+  const fallbackChoices = {
+    normal: Object.freeze({ id: 'normal', factor: 1 }),
+    large: Object.freeze({ id: 'large', factor: 1.5 })
+  };
+  const fallback = {
+    defaultId: 'normal',
+    choices: Object.freeze(fallbackChoices)
+  };
+
+  const rawConfig = GLOBAL_CONFIG && GLOBAL_CONFIG.ui && GLOBAL_CONFIG.ui.scale;
+  if (!rawConfig || !Array.isArray(rawConfig.options)) {
+    return fallback;
+  }
+
+  const normalizedChoices = {};
+  rawConfig.options.forEach(option => {
+    if (!option || typeof option.id !== 'string') {
+      return;
+    }
+    const id = option.id.trim().toLowerCase();
+    if (!id || Object.prototype.hasOwnProperty.call(normalizedChoices, id)) {
+      return;
+    }
+    const factorValue = Number(option.factor);
+    if (!Number.isFinite(factorValue) || factorValue <= 0) {
+      return;
+    }
+    normalizedChoices[id] = Object.freeze({
+      id,
+      factor: factorValue
+    });
+  });
+
+  const ids = Object.keys(normalizedChoices);
+  if (!ids.length) {
+    return fallback;
+  }
+
+  let defaultId = 'normal';
+  if (typeof rawConfig.default === 'string') {
+    const normalizedDefault = rawConfig.default.trim().toLowerCase();
+    if (Object.prototype.hasOwnProperty.call(normalizedChoices, normalizedDefault)) {
+      defaultId = normalizedDefault;
+    }
+  }
+  if (!Object.prototype.hasOwnProperty.call(normalizedChoices, defaultId)) {
+    defaultId = ids[0];
+  }
+
+  return {
+    defaultId,
+    choices: Object.freeze(normalizedChoices)
+  };
+})();
+
+const UI_SCALE_CHOICES = UI_SCALE_CONFIG.choices;
+const UI_SCALE_DEFAULT = UI_SCALE_CONFIG.defaultId;
+
 let critAtomVisualsDisabled = false;
 const AVAILABLE_LANGUAGE_CODES = (() => {
   const i18n = globalThis.i18n;
@@ -2414,6 +2475,7 @@ const elements = {
   metauxNewGameCredits: document.getElementById('metauxNewGameCredits'),
   metauxCreditStatus: document.getElementById('metauxCreditStatus'),
   languageSelect: document.getElementById('languageSelect'),
+  uiScaleSelect: document.getElementById('uiScaleSelect'),
   textFontSelect: document.getElementById('textFontSelect'),
   digitFontSelect: document.getElementById('digitFontSelect'),
   musicTrackSelect: document.getElementById('musicTrackSelect'),
@@ -2673,6 +2735,71 @@ function populateLanguageSelectOptions() {
     ? previousSelection
     : getInitialLanguagePreference();
   updateLanguageSelectorValue(desiredSelection);
+}
+
+function normalizeUiScaleSelection(value) {
+  if (typeof value !== 'string') {
+    return UI_SCALE_DEFAULT;
+  }
+  const normalized = value.trim().toLowerCase();
+  return Object.prototype.hasOwnProperty.call(UI_SCALE_CHOICES, normalized)
+    ? normalized
+    : UI_SCALE_DEFAULT;
+}
+
+function readStoredUiScale() {
+  try {
+    const stored = globalThis.localStorage?.getItem(UI_SCALE_STORAGE_KEY);
+    if (typeof stored === 'string' && stored.trim()) {
+      return normalizeUiScaleSelection(stored);
+    }
+  } catch (error) {
+    console.warn('Unable to read UI scale preference', error);
+  }
+  return null;
+}
+
+function writeStoredUiScale(value) {
+  try {
+    const normalized = normalizeUiScaleSelection(value);
+    globalThis.localStorage?.setItem(UI_SCALE_STORAGE_KEY, normalized);
+  } catch (error) {
+    console.warn('Unable to persist UI scale preference', error);
+  }
+}
+
+function applyUiScaleSelection(selection, options = {}) {
+  const normalized = normalizeUiScaleSelection(selection);
+  const config = UI_SCALE_CHOICES[normalized] || UI_SCALE_CHOICES[UI_SCALE_DEFAULT];
+  const settings = Object.assign({ persist: true, updateControl: true }, options);
+  const factor = config && Number.isFinite(config.factor) && config.factor > 0 ? config.factor : 1;
+  const root = typeof document !== 'undefined' ? document.documentElement : null;
+  if (root && root.style) {
+    root.style.setProperty('--font-scale-factor', String(factor));
+  }
+  if (typeof document !== 'undefined' && document.body) {
+    document.body.setAttribute('data-ui-scale', normalized);
+  }
+  if (settings.updateControl && elements.uiScaleSelect) {
+    elements.uiScaleSelect.value = normalized;
+  }
+  if (settings.persist) {
+    writeStoredUiScale(normalized);
+  }
+  return normalized;
+}
+
+function initUiScaleOption() {
+  const stored = readStoredUiScale();
+  const initial = stored ?? UI_SCALE_DEFAULT;
+  applyUiScaleSelection(initial, { persist: false, updateControl: true });
+  if (!elements.uiScaleSelect) {
+    return;
+  }
+  elements.uiScaleSelect.addEventListener('change', event => {
+    const value = event?.target?.value;
+    applyUiScaleSelection(value, { persist: true, updateControl: false });
+  });
 }
 
 function normalizeTextFontSelection(value) {
@@ -3425,6 +3552,7 @@ function subscribeCritAtomLanguageUpdates() {
   }
 }
 
+initUiScaleOption();
 initTextFontOption();
 initDigitFontOption();
 initClickSoundOption();

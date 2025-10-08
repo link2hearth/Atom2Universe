@@ -653,6 +653,21 @@ const GAME_CONFIG = {
   },
 
   /**
+   * Options d’accessibilité de l’interface utilisateur.
+   * - scale.default : identifiant de l’option utilisée par défaut lors d’une nouvelle partie.
+   * - scale.options : facteurs d’agrandissement disponibles pour l’interface.
+   */
+  ui: {
+    scale: {
+      default: 'normal',
+      options: [
+        { id: 'normal', factor: 1 },
+        { id: 'large', factor: 1.5 }
+      ]
+    }
+  },
+
+  /**
    * Paramètres du système de grands nombres et des layers.
    * - layer1Threshold : passage automatique au layer 1 lorsque l'exposant dépasse ce seuil.
    * - layer1Downshift : retour au layer 0 quand la valeur redescend sous ce niveau.
