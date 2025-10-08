@@ -13,7 +13,7 @@
   font-family: var(--font-digits, 'Orbitron', sans-serif);
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  font-size: 0.62rem;
+  font-size: calc(0.62rem * var(--font-scale-factor, 1));
   opacity: 0.65;
 }
 
@@ -45,7 +45,7 @@
   margin: 0;
   opacity: 0.8;
   line-height: 1.4;
-  font-size: 0.78rem;
+  font-size: calc(0.78rem * var(--font-scale-factor, 1));
 }
 
 .shop-item {
@@ -88,11 +88,11 @@
   font-family: var(--font-text, 'Orbitron', sans-serif);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  font-size: 0.85rem;
+  font-size: calc(0.85rem * var(--font-scale-factor, 1));
 }
 
 .shop-item__level {
-  font-size: 0.65rem;
+  font-size: calc(0.65rem * var(--font-scale-factor, 1));
   letter-spacing: 0.08em;
   text-transform: uppercase;
   opacity: 0.65;
@@ -104,7 +104,7 @@
   margin: 0;
   opacity: 0.8;
   line-height: 1.35;
-  font-size: 0.78rem;
+  font-size: calc(0.78rem * var(--font-scale-factor, 1));
 }
 
 .shop-item__actions {
@@ -121,7 +121,7 @@
   align-items: flex-start;
   justify-content: flex-start;
   gap: 0.35rem;
-  font-size: 0.72rem;
+  font-size: calc(0.72rem * var(--font-scale-factor, 1));
   opacity: 0.8;
 }
 
@@ -147,11 +147,11 @@
   flex-direction: column;
   align-items: center;
   gap: 0.25rem;
-  font-size: 0.68rem;
+  font-size: calc(0.68rem * var(--font-scale-factor, 1));
 }
 
 .shop-item__action-price {
-  font-size: 0.65rem;
+  font-size: calc(0.65rem * var(--font-scale-factor, 1));
   opacity: 0.85;
   font-family: var(--font-digits, 'Orbitron', sans-serif);
   font-weight: 600;
