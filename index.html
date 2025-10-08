@@ -1137,52 +1137,7 @@
       hidden
     >
       <div class="quantum2048-content">
-        <header class="quantum2048-header">
-          <h2 class="quantum2048-header__title" data-i18n="index.sections.quantum2048.title">Fusion 2048</h2>
-          <p class="quantum2048-header__subtitle" data-i18n="index.sections.quantum2048.subtitle">
-            Choisissez votre grille et combinez les tuiles pour atteindre l’objectif sélectionné.
-          </p>
-        </header>
-        <div
-          class="quantum2048-toolbar"
-          role="group"
-          aria-label="Paramètres de la partie Fusion 2048"
-          data-i18n="aria-label:index.sections.quantum2048.controls.group"
-        >
-          <div class="quantum2048-toolbar__control">
-            <label
-              for="quantum2048SizeSelect"
-              class="quantum2048-toolbar__label"
-              data-i18n="index.sections.quantum2048.controls.size"
-            >Taille de la grille</label>
-            <select
-              id="quantum2048SizeSelect"
-              class="quantum2048-toolbar__select"
-              aria-label="Taille de la grille"
-              data-i18n="aria-label:index.sections.quantum2048.controls.size"
-            >
-              <option value="4">4×4</option>
-              <option value="5">5×5</option>
-              <option value="6">6×6</option>
-            </select>
-          </div>
-          <div class="quantum2048-toolbar__control">
-            <label
-              for="quantum2048TargetSelect"
-              class="quantum2048-toolbar__label"
-              data-i18n="index.sections.quantum2048.controls.target"
-            >Objectif à atteindre</label>
-            <select
-              id="quantum2048TargetSelect"
-              class="quantum2048-toolbar__select"
-              aria-label="Objectif à atteindre"
-              data-i18n="aria-label:index.sections.quantum2048.controls.target"
-            >
-              <option value="2048">2&nbsp;048</option>
-              <option value="4096">4&nbsp;096</option>
-              <option value="8192">8&nbsp;192</option>
-            </select>
-          </div>
+        <div class="quantum2048-toolbar">
           <div class="quantum2048-toolbar__status">
             <button
               class="arcade-header__status arcade-header__status--info"
@@ -1231,35 +1186,6 @@
               >Relancer</button>
             </div>
           </div>
-        </div>
-        <div class="quantum2048-hud">
-          <header class="quantum2048-hud__header">
-            <h3 class="quantum2048-hud__title" data-i18n="index.sections.quantum2048.stats.group">Statistiques de la manche</h3>
-            <p class="quantum2048-hud__subtitle" data-i18n="index.sections.quantum2048.status.ready">
-              Fusion prête&nbsp;: combinez les tuiles pour atteindre la cible.
-            </p>
-          </header>
-          <div class="quantum2048-hud__stats" role="group" aria-label="Indicateurs de progression">
-            <div class="quantum2048-hud__stat">
-              <span class="quantum2048-hud__stat-label" data-i18n="index.sections.quantum2048.stats.score">Score</span>
-              <span class="quantum2048-hud__stat-value" id="quantum2048ScoreValue">0</span>
-            </div>
-            <div class="quantum2048-hud__stat">
-              <span class="quantum2048-hud__stat-label" data-i18n="index.sections.quantum2048.stats.best">Meilleure tuile</span>
-              <span class="quantum2048-hud__stat-value" id="quantum2048BestValue">0</span>
-            </div>
-            <div class="quantum2048-hud__stat">
-              <span class="quantum2048-hud__stat-label" data-i18n="index.sections.quantum2048.stats.moves">Mouvements</span>
-              <span class="quantum2048-hud__stat-value" id="quantum2048MovesValue">0</span>
-            </div>
-          </div>
-          <p
-            class="quantum2048-hud__status"
-            id="quantum2048Status"
-            role="status"
-            aria-live="polite"
-            data-i18n="index.sections.quantum2048.status.ready"
-          >Fusion prête&nbsp;: combinez les tuiles pour atteindre la cible.</p>
         </div>
       </div>
     </section>
