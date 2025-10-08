@@ -49,14 +49,14 @@
     0 18px 32px rgba(0, 0, 0, 0.42),
     0 0 0 1px rgba(255, 255, 255, 0.12),
     inset 0 0 28px rgba(255, 255, 255, 0.08);
-  min-width: clamp(7.5rem, 14vw, 11.25rem);
+  min-width: clamp(120px, 14vw, 180px);
   pointer-events: none;
   z-index: 3;
 }
 
 .metaux-timer.is-free-play {
   gap: 0.3rem;
-  min-width: clamp(6.875rem, 12vw, 10rem);
+  min-width: clamp(110px, 12vw, 160px);
   pointer-events: auto;
 }
 

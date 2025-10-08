@@ -164,15 +164,6 @@ body.theme-neon .goal-card__reward {
   align-items: center;
 }
 
-.option-row--ui-scale {
-  width: 100%;
-}
-
-.option-row--ui-scale .option-field--ui-scale {
-  flex: 1 1 220px;
-  min-width: 220px;
-}
-
 .option-row--font-selectors {
   align-items: stretch;
   width: 100%;
