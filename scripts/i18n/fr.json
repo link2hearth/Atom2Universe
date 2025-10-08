@@ -520,6 +520,16 @@
             "off": "Sans"
           }
         },
+        "uiScale": {
+          "label": "Taille de l’interface",
+          "ariaLabel": "Ajuster la taille de l’interface",
+          "options": {
+            "normal": "Standard",
+            "large": "Grand (×1,5)",
+            "xlarge": "Très grand (×2)"
+          },
+          "note": "Agrandit les textes, les boutons et les chiffres de l’interface."
+        },
         "music": {
           "title": "Musique",
           "track": "Piste en lecture",

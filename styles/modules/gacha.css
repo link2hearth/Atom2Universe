@@ -1,7 +1,7 @@
 .page--gacha {
   display: none;
   position: relative;
-  min-height: clamp(420px, 78vh, 780px);
+  min-height: clamp(26.25rem, 78vh, 48.75rem);
   padding: clamp(1.2rem, 3vw, 2.4rem);
   align-items: center;
   justify-content: center;
@@ -38,8 +38,8 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: clamp(160px, 20vw, 256px);
-  height: clamp(160px, 20vw, 256px);
+  width: clamp(10rem, 20vw, 16rem);
+  height: clamp(10rem, 20vw, 16rem);
   transform: translate(-50%, -50%);
   background-size: cover;
   background-repeat: no-repeat;

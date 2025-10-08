@@ -2,7 +2,7 @@
   position: relative;
   max-width: none;
   padding: clamp(2.4rem, 7vw, 5rem);
-  min-height: max(100%, clamp(420px, 85vh, 1200px));
+  min-height: max(100%, clamp(26.25rem, 85vh, 75rem));
   background: radial-gradient(circle at 50% 20%, rgba(255, 200, 120, 0.08) 0%, rgba(12, 12, 16, 0.92) 45%, #020207 100%);
   overflow: hidden;
   isolation: isolate;
@@ -135,8 +135,8 @@ body:not(.view-game):not(.view-wave) .apc-frenzy-counter {
   position: absolute;
   left: 0;
   top: 0;
-  width: var(--ticket-star-size, clamp(52px, 9vw, 96px));
-  height: var(--ticket-star-size, clamp(52px, 9vw, 96px));
+  width: var(--ticket-star-size, clamp(3.25rem, 9vw, 6rem));
+  height: var(--ticket-star-size, clamp(3.25rem, 9vw, 6rem));
   border: none;
   padding: 0;
   background: transparent;
@@ -166,7 +166,7 @@ body:not(.view-game):not(.view-wave) .apc-frenzy-counter {
 
 .frenzy-token {
   position: absolute;
-  width: clamp(54px, 9vw, 96px);
+  width: clamp(3.375rem, 9vw, 6rem);
   aspect-ratio: 1 / 1;
   border: none;
   padding: 0;
@@ -281,7 +281,7 @@ body:not(.view-game):not(.view-wave) .apc-frenzy-counter {
   --critical-flash: 0;
   position: relative;
   display: block;
-  width: clamp(110px, 24vw, 180px);
+  width: clamp(6.875rem, 24vw, 11.25rem);
   aspect-ratio: 1 / 1;
   margin: 0;
   padding: 0;
@@ -335,7 +335,7 @@ body:not(.view-game):not(.view-wave) .apc-frenzy-counter {
 .crit-atom {
   position: absolute;
   display: block;
-  width: var(--crit-atom-size, 100px);
+  width: var(--crit-atom-size, 6.25rem);
   height: auto;
   transform: translate3d(var(--crit-atom-x, 0), var(--crit-atom-y, 0), 0)
     rotate(var(--crit-atom-rotation, 0deg))
