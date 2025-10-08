@@ -2,7 +2,7 @@ const GLOBAL_METAUX_CONFIG =
   typeof window !== 'undefined' && window.GAME_CONFIG ? window.GAME_CONFIG.metaux : null;
 
 const DEFAULT_METAUX_CONFIG = {
-  rows: 9,
+  rows: 10,
   cols: 16,
   clearDelayMs: 220,
   refillDelayMs: 120,
