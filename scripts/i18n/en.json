@@ -244,6 +244,9 @@
           "empty": "All blocks are currently on the board.",
           "status": "{available} blocks ready to be placed."
         },
+        "status": {
+          "ready": "Place the blocks and start a test."
+        },
         "cubeAria": "Block weighing {weight}"
       },
       "sudoku": {
@@ -290,6 +293,9 @@
           "dealer": "Dealer total: ",
           "player": "Player total: "
         },
+        "status": {
+          "ready": "Start a new round to challenge the dealer."
+        },
         "controls": {
           "aria": "Blackjack controls",
           "new": "New round",
@@ -301,6 +307,8 @@
           "current": "Current bet:",
           "balance": "Atoms available:",
           "none": "None",
+          "hint": "Pick an amount to launch a new round.",
+          "placeholder": "Bet options will appear once the shoe is ready.",
           "option": "{amount} atoms",
           "optionsAria": "Available bet amounts",
           "scale": {
@@ -312,7 +320,10 @@
           }
         },
         "shoe": {
-          "label": "Shoe"
+          "label": "Shoe",
+          "decksLabel": "Decks in play:",
+          "stateLabel": "Shoe status:",
+          "remainingLabel": "Cards remaining:"
         },
         "scoreboard": {
           "wins": "Wins",
@@ -329,6 +340,7 @@
           "goalLabel": "Goal"
         },
         "controls": {
+          "group": "Fusion 2048 run settings",
           "size": "Grid size",
           "target": "Goal to reach",
           "restart": "New run"
@@ -342,6 +354,12 @@
           "best": "Best tile",
           "moves": "Moves",
           "goal": "Goal"
+        },
+        "status": {
+          "ready": "Fusion ready: merge tiles to reach the target."
+        },
+        "overlay": {
+          "message": "Goal reached! Launch another run to push the fusion further."
         },
         "board": "Fusion 2048 board"
       },
@@ -439,21 +457,38 @@
         }
       },
       "metaux": {
-        "aria": "Metals",
+        "aria": "Metals Match-3 mini-game",
         "exitAria": "Leave the Metals mini-game",
-        "timerLabel": "Timer",
-        "timerMax": "Max 6 s",
-        "boardAria": "Metals mini-game grid",
-        "endTitle": "Forge complete",
+        "title": "Metals Match-3",
+        "subtitle": "Line up alloys to forge bonuses and keep the energy flow going.",
+        "stats": {
+          "lastCombo": "Last combo",
+          "bestCombo": "Best combo",
+          "totalTiles": "Tiles fused",
+          "reshuffles": "Forced reshuffles",
+          "moves": "Moves"
+        },
+        "sidebar": {
+          "title": "Forge your alloys",
+          "intro": "Match three identical pieces to unleash energy and extend the run. Each combo speeds up the forge—watch the timer!"
+        },
+        "actions": {
+          "reshuffle": "Force a reshuffle"
+        },
+        "timerLabel": "Time remaining",
+        "timerMax": "Max: 6 s",
+        "freePlayExitButton": "Leave free mode",
+        "boardAria": "Metals matching grid",
+        "endTitle": "Run complete",
         "summary": {
-          "time": "Time spent",
-          "matches": "Matches"
+          "time": "Time",
+          "matches": "Combos"
         },
         "newGame": "New game",
-        "newGameCredits": "Mach3: 0",
-        "freePlay": "Free play",
-        "freePlayExitButton": "Quit free play",
-        "return": "Back"
+        "newGameCredits": "Cost: 1 Mach3 credit",
+        "freePlay": "Free mode",
+        "return": "Return to clicker",
+        "creditStatus": "Mach3 credits left: 0"
       },
       "goals": {
         "title": "Objectives & trophies",

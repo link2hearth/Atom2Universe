@@ -244,6 +244,9 @@
           "empty": "Tous les blocs sont placés sur la planche.",
           "status": "{available} blocs prêts à être placés."
         },
+        "status": {
+          "ready": "Disposez les blocs et lancez un test."
+        },
         "cubeAria": "Bloc de poids {weight}"
       },
       "sudoku": {
@@ -290,6 +293,9 @@
           "dealer": "Total croupier :",
           "player": "Total joueur :"
         },
+        "status": {
+          "ready": "Lancez une nouvelle manche pour affronter le croupier."
+        },
         "controls": {
           "aria": "Commandes du blackjack",
           "new": "Nouvelle manche",
@@ -301,6 +307,8 @@
           "current": "Mise actuelle :",
           "balance": "Atomes disponibles :",
           "none": "Aucune",
+          "hint": "Choisissez un montant pour lancer une nouvelle manche.",
+          "placeholder": "Les montants de mise apparaîtront dès que le sabot est prêt.",
           "option": "{amount} atomes",
           "optionsAria": "Montants de mise disponibles",
           "scale": {
@@ -312,7 +320,10 @@
           }
         },
         "shoe": {
-          "label": "Sabot"
+          "label": "Sabot",
+          "decksLabel": "Paquets en jeu :",
+          "stateLabel": "État du sabot :",
+          "remainingLabel": "Cartes restantes :"
         },
         "scoreboard": {
           "wins": "Victoires",
@@ -329,6 +340,7 @@
           "goalLabel": "Objectif"
         },
         "controls": {
+          "group": "Paramètres de la partie Fusion 2048",
           "size": "Taille de la grille",
           "target": "Objectif à atteindre",
           "restart": "Nouvelle partie"
@@ -342,6 +354,12 @@
           "best": "Meilleure tuile",
           "moves": "Mouvements",
           "goal": "Objectif"
+        },
+        "status": {
+          "ready": "Fusion prête : combinez les tuiles pour atteindre la cible."
+        },
+        "overlay": {
+          "message": "Objectif atteint ! Relancez une manche pour repousser la fusion."
         },
         "board": "Plateau Fusion 2048"
       },
@@ -366,6 +384,40 @@
           "reset": "Relancer la partie",
           "aria": "Commandes du mini-jeu Photon"
         }
+      },
+      "metaux": {
+        "aria": "Mini-jeu Métaux Mach3",
+        "exitAria": "Quitter le mini-jeu Métaux",
+        "title": "Métaux Mach3",
+        "subtitle": "Alignez les alliages pour forger des bonus et maintenir le flux d’énergie.",
+        "stats": {
+          "lastCombo": "Dernier combo",
+          "bestCombo": "Meilleur combo",
+          "totalTiles": "Tuiles fusionnées",
+          "reshuffles": "Mélanges forcés",
+          "moves": "Mouvements"
+        },
+        "sidebar": {
+          "title": "Forgez vos alliages",
+          "intro": "Assemblez trois pièces identiques pour libérer de l’énergie et prolonger la session. Chaque combo accélère la forge : surveillez le chrono !"
+        },
+        "actions": {
+          "reshuffle": "Forcer un mélange"
+        },
+        "timerLabel": "Temps restant",
+        "timerMax": "Max : 6 s",
+        "freePlayExitButton": "Quitter le mode libre",
+        "boardAria": "Grille de correspondances Métaux",
+        "endTitle": "Session terminée",
+        "summary": {
+          "time": "Durée",
+          "matches": "Combos"
+        },
+        "newGame": "Nouvelle partie",
+        "newGameCredits": "Coût : 1 crédit Mach3",
+        "freePlay": "Mode libre",
+        "return": "Retourner au clicker",
+        "creditStatus": "Crédits Mach3 restants : 0"
       },
       "table": {
         "aria": "Tableau périodique des éléments",
@@ -437,23 +489,6 @@
           "title": "Bonus éléments",
           "subtitle": "Nucléosynthèse primordiale · Spallation cosmique · Étoiles simples · Supernovae · Étoiles massives · Artificiels"
         }
-      },
-      "metaux": {
-        "aria": "Métaux",
-        "exitAria": "Quitter le mini-jeu Métaux",
-        "timerLabel": "Chrono",
-        "timerMax": "Max 6 s",
-        "boardAria": "Grille du mini-jeu Métaux",
-        "endTitle": "Forge terminée",
-        "summary": {
-          "time": "Temps passé",
-          "matches": "Matches"
-        },
-        "newGame": "Nouvelle partie",
-        "newGameCredits": "Mach3 : 0",
-        "freePlay": "Partie libre",
-        "freePlayExitButton": "Quitter le mode libre",
-        "return": "Retour"
       },
       "goals": {
         "title": "Objectifs & trophées",
