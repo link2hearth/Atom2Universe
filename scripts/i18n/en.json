@@ -316,37 +316,6 @@
         },
         "hiddenCard": "Hidden card"
       },
-      "quantum2048": {
-        "aria": "Fusion 2048 mini-game",
-        "title": "Fusion 2048",
-        "subtitle": "Pick your grid and merge tiles until you reach the selected goal.",
-        "banner": {
-          "goalLabel": "Goal"
-        },
-        "controls": {
-          "group": "Fusion 2048 run settings",
-          "size": "Grid size",
-          "target": "Goal to reach",
-          "restart": "New run"
-        },
-        "progress": {
-          "label": "Parallel universe No: "
-        },
-        "stats": {
-          "group": "Run statistics",
-          "score": "Score",
-          "best": "Best tile",
-          "moves": "Moves",
-          "goal": "Goal"
-        },
-        "status": {
-          "ready": "Fusion ready: merge tiles to reach the target."
-        },
-        "overlay": {
-          "message": "Goal reached! Launch another run to push the fusion further."
-        },
-        "board": "Fusion 2048 board"
-      },
       "wave": {
         "aria": "Photon mini-game",
         "canvasAria": "Photon playfield",
@@ -1017,15 +986,6 @@
             "speed": "Acceleration",
             "floor": "Lower shield"
           }
-        }
-      },
-      "quantum2048": {
-        "sizeOption": "{size}×{size}",
-        "targetOption": "{value}",
-        "targetRecommended": "Recommended",
-        "overlay": {
-          "defeat": "No more moves! Score: {score}",
-          "retry": "Retry"
         }
       },
       "sudoku": {

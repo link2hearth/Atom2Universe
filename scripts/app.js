@@ -2393,9 +2393,6 @@ const elements = {
   quantum2048GoalValue: document.getElementById('quantum2048GoalValue'),
   quantum2048ParallelUniverseValue: document.getElementById('quantum2048ParallelUniverseValue'),
   quantum2048RestartButton: document.getElementById('quantum2048GoalDisplay'),
-  quantum2048Overlay: document.getElementById('quantum2048Overlay'),
-  quantum2048OverlayMessage: document.getElementById('quantum2048OverlayMessage'),
-  quantum2048OverlayButton: document.getElementById('quantum2048OverlayButton'),
   metauxOpenButton: document.getElementById('metauxOpenButton'),
   metauxReturnButton: document.getElementById('metauxReturnButton'),
   metauxBoard: document.getElementById('metauxBoard'),
@@ -2916,10 +2913,7 @@ function ensureQuantum2048Game() {
     backgroundContainer: elements.quantum2048Grid,
     goalElement: elements.quantum2048GoalValue,
     parallelUniverseElement: elements.quantum2048ParallelUniverseValue,
-    restartButton: elements.quantum2048RestartButton,
-    overlayElement: elements.quantum2048Overlay,
-    overlayMessageElement: elements.quantum2048OverlayMessage,
-    overlayButtonElement: elements.quantum2048OverlayButton
+    restartButton: elements.quantum2048RestartButton
   });
   return quantum2048Game;
 }

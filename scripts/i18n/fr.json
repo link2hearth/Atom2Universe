@@ -316,37 +316,6 @@
         },
         "hiddenCard": "Carte cachée"
       },
-      "quantum2048": {
-        "aria": "Mini-jeu Fusion 2048",
-        "title": "Fusion 2048",
-        "subtitle": "Choisissez votre grille et combinez les tuiles pour atteindre l’objectif sélectionné.",
-        "banner": {
-          "goalLabel": "Objectif"
-        },
-        "controls": {
-          "group": "Paramètres de la partie Fusion 2048",
-          "size": "Taille de la grille",
-          "target": "Objectif à atteindre",
-          "restart": "Nouvelle partie"
-        },
-        "progress": {
-          "label": "Univers parallèle n° :"
-        },
-        "stats": {
-          "group": "Statistiques de la manche",
-          "score": "Score",
-          "best": "Meilleure tuile",
-          "moves": "Mouvements",
-          "goal": "Objectif"
-        },
-        "status": {
-          "ready": "Fusion prête : combinez les tuiles pour atteindre la cible."
-        },
-        "overlay": {
-          "message": "Objectif atteint ! Relancez une manche pour repousser la fusion."
-        },
-        "board": "Plateau Fusion 2048"
-      },
       "wave": {
         "aria": "Mini-jeu Photon",
         "canvasAria": "Zone de jeu Photon",
@@ -1002,15 +971,6 @@
             "speed": "Accélération",
             "floor": "Bouclier inférieur"
           }
-        }
-      },
-      "quantum2048": {
-        "sizeOption": "{size}×{size}",
-        "targetOption": "{value}",
-        "targetRecommended": "Recommandé",
-        "overlay": {
-          "defeat": "Plus de mouvements ! Score : {score}",
-          "retry": "Rejouer"
         }
       },
       "sudoku": {

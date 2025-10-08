@@ -1128,14 +1128,7 @@
       </div>
     </section>
 
-    <section
-      id="quantum2048"
-      class="page page--quantum2048"
-      data-page-group="arcade"
-      aria-label="Mini-jeu Fusion 2048"
-      data-i18n="aria-label:index.sections.quantum2048.aria"
-      hidden
-    >
+    <section id="quantum2048" class="page page--quantum2048" data-page-group="arcade" hidden>
       <div class="quantum2048-content">
         <div class="quantum2048-toolbar">
           <div class="quantum2048-toolbar__status">
@@ -1144,9 +1137,6 @@
               id="quantum2048UniverseDisplay"
               type="button"
             >
-              <span class="arcade-header__status-label" data-i18n="index.sections.quantum2048.progress.label">
-                Univers parallèles n°&nbsp;:
-              </span>
               <span class="arcade-header__status-value" id="quantum2048ParallelUniverseValue" aria-live="polite">0</span>
             </button>
             <button
@@ -1154,10 +1144,6 @@
               id="quantum2048GoalDisplay"
               type="button"
             >
-              <span class="visually-hidden" data-i18n="index.sections.quantum2048.controls.restart">
-                Nouvelle partie
-              </span>
-              <span class="arcade-header__status-label" data-i18n="index.sections.quantum2048.banner.goalLabel">Objectif</span>
               <span class="arcade-header__status-value" id="quantum2048GoalValue" aria-live="polite">0</span>
             </button>
           </div>
@@ -1166,26 +1152,9 @@
           class="quantum2048-board"
           id="quantum2048Board"
           role="application"
-          aria-label="Plateau Fusion 2048"
-          data-i18n="aria-label:index.sections.quantum2048.board"
         >
           <div class="quantum2048-board__background" id="quantum2048Grid" aria-hidden="true"></div>
           <div class="quantum2048-board__tiles" id="quantum2048Tiles" aria-hidden="true"></div>
-          <div class="quantum2048-overlay" id="quantum2048Overlay" hidden>
-            <div class="quantum2048-overlay__content">
-              <p
-                class="quantum2048-overlay__message"
-                id="quantum2048OverlayMessage"
-                data-i18n="index.sections.quantum2048.overlay.message"
-              >Objectif atteint&nbsp;! Relancez une manche pour repousser la fusion.</p>
-              <button
-                type="button"
-                class="quantum2048-overlay__button"
-                id="quantum2048OverlayButton"
-                data-i18n="scripts.arcade.quantum2048.overlay.retry"
-              >Relancer</button>
-            </div>
-          </div>
         </div>
       </div>
     </section>
