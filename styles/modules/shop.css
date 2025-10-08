@@ -41,6 +41,13 @@
   width: 100%;
 }
 
+.shop-list__fallback-note {
+  margin: 0;
+  opacity: 0.8;
+  line-height: 1.4;
+  font-size: 0.78rem;
+}
+
 .shop-item {
   list-style: none;
   background: var(--card-dark);
@@ -107,6 +114,20 @@
   gap: clamp(0.35rem, 0.8vw, 0.55rem);
   justify-content: flex-end;
   align-items: stretch;
+}
+
+.shop-item__actions--fallback {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  opacity: 0.8;
+}
+
+.shop-item__actions--fallback p {
+  margin: 0;
+  line-height: 1.35;
 }
 
 .shop-item__action {
