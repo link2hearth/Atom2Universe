@@ -257,8 +257,6 @@
       },
       "sudoku": {
         "aria": "Mini-jeu Sudoku quantique",
-        "title": "Sudoku quantique",
-        "subtitle": "Choisissez votre niveau de difficulté, remplissez la grille et vérifiez votre progression en temps réel.",
         "toolbar": {
           "aria": "Contrôles du Sudoku",
           "level": "Niveau",
@@ -272,7 +270,6 @@
         },
         "board": "Grille Sudoku",
         "cellLabel": "Case de Sudoku",
-        "note": "Astuce : utilisez les chiffres 1 à 9. La validation détecte les doublons dans les lignes, colonnes et blocs 3×3. La résolution applique un backtracking tandis que la génération produit une grille à solution unique.",
         "pad": {
           "aria": "Sélection des chiffres du Sudoku",
           "clear": "Effacer",
