@@ -10,7 +10,7 @@
 }
 
 .quantum2048-content {
-  --quantum2048-layout-width: clamp(320px, 62vw, 560px);
+  --quantum2048-layout-width: clamp(20rem, 62vw, 35rem);
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
@@ -45,7 +45,7 @@
 .quantum2048-toolbar {
   display: grid;
   gap: clamp(0.75rem, 2vw, 1.2rem);
-  width: min(100%, var(--quantum2048-layout-width, clamp(320px, 62vw, 560px)));
+  width: min(100%, var(--quantum2048-layout-width, clamp(20rem, 62vw, 35rem)));
   margin: 0 auto;
   padding: clamp(0.75rem, 2vw, 1.1rem);
   border-radius: 18px;
@@ -126,7 +126,7 @@
   flex-direction: column;
   align-items: center;
   gap: clamp(0.9rem, 2.2vh, 1.6rem);
-  width: min(100%, var(--quantum2048-layout-width, clamp(320px, 62vw, 560px)));
+  width: min(100%, var(--quantum2048-layout-width, clamp(20rem, 62vw, 35rem)));
   margin: 0 auto;
   text-align: center;
 }
@@ -200,9 +200,9 @@
 
 .quantum2048-board {
   position: relative;
-  flex: 0 0 var(--quantum2048-board-size, clamp(280px, 40vw, 560px));
-  width: var(--quantum2048-board-size, clamp(280px, 40vw, 560px));
-  height: var(--quantum2048-board-size, clamp(280px, 40vw, 560px));
+  flex: 0 0 var(--quantum2048-board-size, clamp(17.5rem, 40vw, 35rem));
+  width: var(--quantum2048-board-size, clamp(17.5rem, 40vw, 35rem));
+  height: var(--quantum2048-board-size, clamp(17.5rem, 40vw, 35rem));
   border-radius: 1.8rem;
   background: radial-gradient(circle at top, rgba(44, 58, 130, 0.82), rgba(14, 18, 52, 0.95));
   box-shadow: 0 28px 60px rgba(6, 8, 28, 0.6);

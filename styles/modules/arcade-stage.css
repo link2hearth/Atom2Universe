@@ -204,7 +204,7 @@ body.theme-neon .arcade-header__status--bonus {
 }
 
 .arcade-side-panel {
-  flex: 0 1 clamp(260px, 26vw, 360px);
+  flex: 0 1 clamp(16.25rem, 26vw, 22.5rem);
   display: flex;
   align-items: center;
   justify-content: center;
