@@ -990,35 +990,6 @@
       hidden
     >
       <div class="blackjack">
-        <header class="blackjack-header">
-          <div class="blackjack-header__titles">
-            <h2 class="blackjack-header__title" data-i18n="index.sections.blackjack.title">Blackjack quantique</h2>
-            <p class="blackjack-header__subtitle" data-i18n="index.sections.blackjack.subtitle">
-              Défiez le croupier avec un sabot de huit paquets qui se reconstitue dès qu’une carte manque.
-            </p>
-          </div>
-          <dl class="blackjack-scoreboard" aria-label="Statistiques de la session">
-            <div class="blackjack-scoreboard__item">
-              <dt data-i18n="index.sections.blackjack.scoreboard.wins">Victoires</dt>
-              <dd id="blackjackWins">0</dd>
-            </div>
-            <div class="blackjack-scoreboard__item">
-              <dt data-i18n="index.sections.blackjack.scoreboard.losses">Défaites</dt>
-              <dd id="blackjackLosses">0</dd>
-            </div>
-            <div class="blackjack-scoreboard__item">
-              <dt data-i18n="index.sections.blackjack.scoreboard.pushes">Égalités</dt>
-              <dd id="blackjackPushes">0</dd>
-            </div>
-          </dl>
-        </header>
-        <p
-          class="blackjack-status"
-          id="blackjackStatus"
-          role="status"
-          aria-live="polite"
-          data-i18n="index.sections.blackjack.status.ready"
-        >Lancez une nouvelle manche pour affronter le croupier.</p>
         <div class="blackjack-layout">
           <div
             class="blackjack-table"
@@ -1073,23 +1044,6 @@
               </ul>
             </section>
           </div>
-          <aside class="blackjack-overview" aria-labelledby="blackjackShoeHeading">
-            <h3 id="blackjackShoeHeading" class="blackjack-overview__title" data-i18n="index.sections.blackjack.shoe.label">
-              Sabot
-            </h3>
-            <p class="blackjack-overview__stat">
-              <span class="blackjack-overview__label" data-i18n="index.sections.blackjack.shoe.decksLabel">Paquets en jeu&nbsp;:</span>
-              <span class="blackjack-overview__value" id="blackjackDeckInfo">8 paquets prêts</span>
-            </p>
-            <p class="blackjack-overview__stat">
-              <span class="blackjack-overview__label" data-i18n="index.sections.blackjack.shoe.stateLabel">État du sabot&nbsp;:</span>
-              <span class="blackjack-overview__value" id="blackjackShoeState">Sabot prêt</span>
-            </p>
-            <p class="blackjack-overview__stat">
-              <span class="blackjack-overview__label" data-i18n="index.sections.blackjack.shoe.remainingLabel">Cartes restantes&nbsp;:</span>
-              <span class="blackjack-overview__value" id="blackjackShoeRemaining">416 cartes</span>
-            </p>
-          </aside>
         </div>
         <div
           class="blackjack-controls"
@@ -1123,35 +1077,15 @@
           id="blackjackBet"
           role="group"
           aria-label="Gestion des mises"
-          data-i18n="aria-label:index.sections.blackjack.bet.title"
+          data-i18n="aria-label:index.sections.blackjack.bet.ariaLabel"
         >
-          <header class="blackjack-bet__header">
-            <h3 class="blackjack-bet__title" data-i18n="index.sections.blackjack.bet.title">Mise</h3>
-            <p class="blackjack-bet__hint" data-i18n="index.sections.blackjack.bet.hint">
-              Choisissez un montant pour lancer une nouvelle manche.
-            </p>
-          </header>
-          <div class="blackjack-bet__status">
-            <p class="blackjack-bet__line">
-              <span class="blackjack-bet__label" data-i18n="index.sections.blackjack.bet.current">Mise actuelle&nbsp;:</span>
-              <span class="blackjack-bet__value" id="blackjackCurrentBet" data-i18n="index.sections.blackjack.bet.none">Aucune</span>
-            </p>
-            <p class="blackjack-bet__line">
-              <span class="blackjack-bet__label" data-i18n="index.sections.blackjack.bet.balance">Atomes disponibles&nbsp;:</span>
-              <span class="blackjack-bet__value" id="blackjackAtomsBalance">0</span>
-            </p>
-          </div>
           <div
             class="blackjack-bet__options"
             id="blackjackBetOptions"
             role="group"
             aria-label="Montants de mise disponibles"
             data-i18n="aria-label:index.sections.blackjack.bet.optionsAria"
-          >
-            <p class="blackjack-bet__placeholder" data-i18n="index.sections.blackjack.bet.placeholder">
-              Les montants de mise apparaîtront dès que le sabot est prêt.
-            </p>
-          </div>
+          ></div>
         </section>
       </div>
     </section>
