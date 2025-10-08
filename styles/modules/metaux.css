@@ -173,7 +173,7 @@
   grid-template-columns: repeat(var(--metaux-visual-cols), minmax(0, 1fr));
   gap: clamp(0.18rem, 0.45vw, 0.34rem);
   width: min(
-    90vw,
+    100%,
     1280px,
     calc((100vh - var(--metaux-vertical-space)) * var(--metaux-aspect-cols) / var(--metaux-aspect-rows))
   );
@@ -189,6 +189,12 @@
   position: relative;
   overflow: hidden;
   margin: 0 auto;
+}
+
+@media (orientation: portrait) {
+  .page--metaux {
+    --metaux-vertical-space: clamp(2.8rem, 14vh, 8rem);
+  }
 }
 
 .metaux-end-screen {
