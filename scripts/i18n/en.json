@@ -520,6 +520,16 @@
             "off": "Off"
           }
         },
+        "uiScale": {
+          "label": "Interface scale",
+          "ariaLabel": "Adjust the interface size",
+          "options": {
+            "normal": "Standard",
+            "large": "Large (×1.5)",
+            "xlarge": "Extra large (×2)"
+          },
+          "note": "Enlarges interface text, buttons, and numbers."
+        },
         "music": {
           "title": "Music",
           "track": "Now playing",
