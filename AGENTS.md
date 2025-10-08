@@ -4,6 +4,7 @@ Bienvenue dans Atom2Univers ! Voici les consignes à respecter lorsque tu interv
 
 1. **Internationalisation**
    - Dès qu’un texte visible par l’utilisateur est modifié, ajoute ou mets à jour les entrées correspondantes dans les fichiers de langues (système i18n).
+   - Utilise la méthode de fallback HTML (texte visible + data-i18n), pas la méthode JS avec defaultValue.
    - Vérifie que les clés sont cohérentes et évite les doublons.
 
 2. **Configuration centralisée**
