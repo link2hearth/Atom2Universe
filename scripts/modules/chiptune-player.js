@@ -8369,6 +8369,7 @@
           ? globalScope.atom2universMidiPlayer
           : null);
       let detachNoteObserver = null;
+      let attachedPlayer = null;
 
       const debugNoteEvents = Boolean(globalScope && globalScope.atom2universDebugMidiSelection);
 
@@ -9117,16 +9118,19 @@
       }
 
       function attachPlayer(player) {
-        if (player === midiPlayer) {
+        const nextPlayer = player || null;
+        if (nextPlayer === attachedPlayer) {
+          midiPlayer = nextPlayer;
           return;
         }
         if (detachNoteObserver) {
           detachNoteObserver();
           detachNoteObserver = null;
         }
-        midiPlayer = player;
-        if (player && typeof player.registerNoteObserver === 'function') {
-          detachNoteObserver = player.registerNoteObserver({
+        attachedPlayer = nextPlayer;
+        midiPlayer = nextPlayer;
+        if (nextPlayer && typeof nextPlayer.registerNoteObserver === 'function') {
+          detachNoteObserver = nextPlayer.registerNoteObserver({
             onNoteOn: handleNoteOn,
             onNoteOff: handleNoteOff,
           });
