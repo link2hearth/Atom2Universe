@@ -417,6 +417,10 @@
             "multiValue": "{count} clicks · {frenzies} frenzies"
           }
         },
+        "calculations": {
+          "title": "Production breakdown",
+          "subtitle": "Automatic vs manual gains overview"
+        },
         "shop": {
           "title": "Shop bonuses",
           "subtitle": "Combined store effects"

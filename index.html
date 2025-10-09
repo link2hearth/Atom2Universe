@@ -1367,44 +1367,51 @@
     >
       <h2 id="info-title" class="visually-hidden" data-i18n="index.sections.info.title">Tableau de bord des statistiques</h2>
       <div class="info-grid">
-        <article class="info-card info-card--production" aria-labelledby="info-aps-title">
+        <article class="info-card info-card--stats info-card--calculations" aria-labelledby="info-calculations-title">
           <header class="info-card__header">
-            <h3 id="info-aps-title" data-i18n="index.sections.info.aps.title">Production passive (APS)</h3>
-            <p class="info-card__subtitle" data-i18n="index.sections.info.aps.subtitle">Répartition détaillée de vos gains automatiques.</p>
+            <h3 id="info-calculations-title" data-i18n="index.sections.info.calculations.title">Calculs de production</h3>
+            <p class="info-card__subtitle" data-i18n="index.sections.info.calculations.subtitle">Décomposition des gains automatiques et manuels.</p>
           </header>
-          <ul
-            id="infoApsBreakdown"
-            class="production-breakdown"
-            aria-label="Répartition de la production passive"
-            data-i18n="aria-label:index.sections.info.aps.aria"
-          >
-            <li
-              class="production-breakdown__placeholder"
-              data-i18n="index.sections.info.aps.placeholder"
-            >
-              Les détails de production passive apparaîtront ici.
-            </li>
-          </ul>
-        </article>
-
-        <article class="info-card info-card--production" aria-labelledby="info-apc-title">
-          <header class="info-card__header">
-            <h3 id="info-apc-title" data-i18n="index.sections.info.apc.title">Production par clic (APC)</h3>
-            <p class="info-card__subtitle" data-i18n="index.sections.info.apc.subtitle">Analyse de la puissance générée à chaque clic.</p>
-          </header>
-          <ul
-            id="infoApcBreakdown"
-            class="production-breakdown"
-            aria-label="Répartition de la production par clic"
-            data-i18n="aria-label:index.sections.info.apc.aria"
-          >
-            <li
-              class="production-breakdown__placeholder"
-              data-i18n="index.sections.info.apc.placeholder"
-            >
-              La répartition de la production par clic apparaîtra ici.
-            </li>
-          </ul>
+          <div class="info-progress-grid info-calculations-grid" role="group" aria-labelledby="info-calculations-title">
+            <section class="info-progress-block info-calculation-block info-calculation-block--aps" aria-labelledby="info-aps-title">
+              <header class="info-calculation-block__header">
+                <h4 id="info-aps-title" data-i18n="index.sections.info.aps.title">Production passive (APS)</h4>
+                <p class="info-calculation-block__subtitle" data-i18n="index.sections.info.aps.subtitle">Répartition détaillée de vos gains automatiques.</p>
+              </header>
+              <ul
+                id="infoApsBreakdown"
+                class="production-breakdown"
+                aria-label="Répartition de la production passive"
+                data-i18n="aria-label:index.sections.info.aps.aria"
+              >
+                <li
+                  class="production-breakdown__placeholder"
+                  data-i18n="index.sections.info.aps.placeholder"
+                >
+                  Les détails de production passive apparaîtront ici.
+                </li>
+              </ul>
+            </section>
+            <section class="info-progress-block info-calculation-block info-calculation-block--apc" aria-labelledby="info-apc-title">
+              <header class="info-calculation-block__header">
+                <h4 id="info-apc-title" data-i18n="index.sections.info.apc.title">Production par clic (APC)</h4>
+                <p class="info-calculation-block__subtitle" data-i18n="index.sections.info.apc.subtitle">Analyse de la puissance générée à chaque clic.</p>
+              </header>
+              <ul
+                id="infoApcBreakdown"
+                class="production-breakdown"
+                aria-label="Répartition de la production par clic"
+                data-i18n="aria-label:index.sections.info.apc.aria"
+              >
+                <li
+                  class="production-breakdown__placeholder"
+                  data-i18n="index.sections.info.apc.placeholder"
+                >
+                  La répartition de la production par clic apparaîtra ici.
+                </li>
+              </ul>
+            </section>
+          </div>
         </article>
 
         <article class="info-card info-card--stats info-card--progression" aria-labelledby="info-progress-title">
