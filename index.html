@@ -1182,6 +1182,26 @@
               Touchez ou faites glisser une pièce blanche pour afficher ses déplacements possibles.
             </p>
             <div class="chess-game__options">
+              <div class="chess-game__difficulty">
+                <label class="chess-difficulty">
+                  <span
+                    class="chess-difficulty__label"
+                    data-i18n="index.sections.echecs.controls.difficulty"
+                  >
+                    Choisir la difficulté
+                  </span>
+                  <select
+                    class="chess-difficulty__select"
+                    data-chess-difficulty
+                    aria-describedby="chessDifficultyDescription"
+                  ></select>
+                </label>
+                <p
+                  class="chess-difficulty__description"
+                  id="chessDifficultyDescription"
+                  data-chess-difficulty-description
+                ></p>
+              </div>
               <label class="chess-toggle">
                 <input
                   class="chess-toggle__input"
@@ -1211,6 +1231,25 @@
                 </span>
               </label>
             </div>
+            <div class="chess-game__actions">
+              <button
+                class="chess-action"
+                type="button"
+                data-chess-reset
+                data-i18n="index.sections.echecs.controls.reset"
+              >
+                Réinitialiser la partie
+              </button>
+              <button
+                class="chess-action chess-action--secondary"
+                type="button"
+                data-chess-analyze
+                data-i18n="index.sections.echecs.controls.analyze"
+                disabled
+              >
+                Analyser le dernier coup de l'IA
+              </button>
+            </div>
             <div class="chess-history" data-chess-history hidden>
               <h3
                 class="chess-history__title"
@@ -1231,6 +1270,21 @@
                 Aucun coup joué pour le moment.
               </p>
             </div>
+            <section class="chess-analysis" data-chess-analysis hidden>
+              <h3
+                class="chess-analysis__title"
+                data-i18n="index.sections.echecs.analysis.title"
+              >
+                Analyse du dernier coup de l'IA
+              </h3>
+              <p
+                class="chess-analysis__summary"
+                data-chess-analysis-text
+                data-i18n="index.sections.echecs.analysis.empty"
+              >
+                Aucun coup de l'IA à analyser pour l'instant.
+              </p>
+            </section>
           </div>
         </div>
       </div>

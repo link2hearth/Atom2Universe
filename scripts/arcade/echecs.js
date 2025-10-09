@@ -19,6 +19,12 @@
   const HISTORY_CONTAINER_SELECTOR = '[data-chess-history]';
   const HISTORY_LIST_SELECTOR = '[data-chess-history-list]';
   const HISTORY_EMPTY_SELECTOR = '[data-chess-history-empty]';
+  const RESET_BUTTON_SELECTOR = '[data-chess-reset]';
+  const ANALYZE_BUTTON_SELECTOR = '[data-chess-analyze]';
+  const ANALYSIS_CONTAINER_SELECTOR = '[data-chess-analysis]';
+  const ANALYSIS_TEXT_SELECTOR = '[data-chess-analysis-text]';
+  const DIFFICULTY_SELECT_SELECTOR = '[data-chess-difficulty]';
+  const DIFFICULTY_DESCRIPTION_SELECTOR = '[data-chess-difficulty-description]';
 
   const LOCAL_STORAGE_KEY = 'atom2univers.arcade.echecs';
   const POINTER_DRAG_THRESHOLD = 6;
@@ -43,6 +49,68 @@
     moveDelayMs: 150,
     transpositionSize: 4000
   });
+
+  const DEFAULT_DIFFICULTY_MODES = Object.freeze([
+    Object.freeze({
+      id: 'training',
+      labelKey: 'index.sections.echecs.difficulty.training',
+      fallbackLabel: 'Mode entraînement',
+      descriptionKey: 'index.sections.echecs.difficulty.trainingDescription',
+      fallbackDescription: 'Recherche plus courte et coups rapides pour tester librement le plateau.',
+      ai: Object.freeze({ depth: 2, timeLimitMs: 600, moveDelayMs: 120 }),
+      reward: Object.freeze({ offlineSeconds: 600, offlineMultiplier: 1 })
+    }),
+    Object.freeze({
+      id: 'standard',
+      labelKey: 'index.sections.echecs.difficulty.standard',
+      fallbackLabel: 'Mode standard',
+      descriptionKey: 'index.sections.echecs.difficulty.standardDescription',
+      fallbackDescription: 'Configuration équilibrée : IA réactive et coups stables.',
+      ai: Object.freeze({ depth: 3, timeLimitMs: 1200, moveDelayMs: 150 }),
+      reward: Object.freeze({ offlineSeconds: 1200, offlineMultiplier: 1.5 })
+    }),
+    Object.freeze({
+      id: 'expert',
+      labelKey: 'index.sections.echecs.difficulty.expert',
+      fallbackLabel: 'Mode expert',
+      descriptionKey: 'index.sections.echecs.difficulty.expertDescription',
+      fallbackDescription: 'Profondeur accrue et réflexion prolongée pour un défi soutenu.',
+      ai: Object.freeze({ depth: 4, timeLimitMs: 1800, moveDelayMs: 180 }),
+      reward: Object.freeze({ offlineSeconds: 1800, offlineMultiplier: 2 })
+    })
+  ]);
+
+  const DEFAULT_DIFFICULTY_CONFIG = Object.freeze({
+    defaultMode: 'standard',
+    modes: DEFAULT_DIFFICULTY_MODES
+  });
+
+  const DEFAULT_MATCH_LIMIT = 80;
+
+  const AI_TEST_POSITIONS_URL = 'resources/chess/ai-test-positions.json';
+  const FALLBACK_AI_TEST_POSITIONS = Object.freeze([
+    Object.freeze({
+      id: 'king_centralization',
+      description: 'Finale roi et pions : le roi noir doit rejoindre le centre pour bloquer le pion blanc.',
+      fen: '8/6p1/3k3p/8/8/3K3P/6P1/8 b - - 0 1',
+      expectedMoves: Object.freeze(['Kd5']),
+      tags: Object.freeze(['endgame', 'king'])
+    }),
+    Object.freeze({
+      id: 'capture_passed_pawn',
+      description: 'Les noirs peuvent capturer immédiatement le pion passé blanc.',
+      fen: '8/6p1/8/3k3p/3P4/8/6PP/5K2 b - - 0 1',
+      expectedMoves: Object.freeze(['Kxd4']),
+      tags: Object.freeze(['tactics', 'passed-pawn'])
+    }),
+    Object.freeze({
+      id: 'push_outside_passed_pawn',
+      description: 'Pousser le pion h crée une menace de promotion rapide.',
+      fen: '8/8/6k1/6P1/7p/6K1/8/8 b - - 0 1',
+      expectedMoves: Object.freeze(['h3']),
+      tags: Object.freeze(['endgame', 'passed-pawn'])
+    })
+  ]);
 
   const MIN_AI_DEPTH = 1;
   const MAX_AI_DEPTH = 5;
@@ -139,7 +207,399 @@
     return Math.max(500, Math.min(20000, normalized));
   }
 
-  function getConfiguredChessAiSettings() {
+  function normalizeRewardConfig(raw, fallback) {
+    const base = fallback && typeof fallback === 'object' ? fallback : {};
+    const secondsCandidate = raw && typeof raw === 'object'
+      ? raw.offlineSeconds ?? raw.seconds ?? raw.durationSeconds
+      : null;
+    const multiplierCandidate = raw && typeof raw === 'object'
+      ? raw.offlineMultiplier ?? raw.multiplier ?? raw.value
+      : null;
+
+    const offlineSeconds = Math.max(
+      0,
+      Number.isFinite(Number(secondsCandidate))
+        ? Number(secondsCandidate)
+        : Number.isFinite(Number(base.offlineSeconds))
+          ? Number(base.offlineSeconds)
+          : 0
+    );
+
+    const offlineMultiplier = Math.max(
+      0,
+      Number.isFinite(Number(multiplierCandidate))
+        ? Number(multiplierCandidate)
+        : Number.isFinite(Number(base.offlineMultiplier))
+          ? Number(base.offlineMultiplier)
+          : 1
+    );
+
+    return {
+      offlineSeconds,
+      offlineMultiplier
+    };
+  }
+
+  function normalizeDifficultyMode(rawMode, fallbackMode) {
+    const base = fallbackMode && typeof fallbackMode === 'object'
+      ? fallbackMode
+      : DEFAULT_DIFFICULTY_MODES[0];
+    const source = rawMode && typeof rawMode === 'object' ? rawMode : {};
+
+    const id = typeof source.id === 'string' && source.id.trim()
+      ? source.id.trim()
+      : base.id;
+
+    const labelKey = typeof source.labelKey === 'string' && source.labelKey.trim()
+      ? source.labelKey.trim()
+      : base.labelKey;
+
+    const fallbackLabel = typeof source.label === 'string' && source.label.trim()
+      ? source.label.trim()
+      : base.fallbackLabel;
+
+    const descriptionKey = typeof source.descriptionKey === 'string' && source.descriptionKey.trim()
+      ? source.descriptionKey.trim()
+      : base.descriptionKey;
+
+    const fallbackDescription = typeof source.description === 'string' && source.description.trim()
+      ? source.description.trim()
+      : base.fallbackDescription;
+
+    const aiSource = source.ai && typeof source.ai === 'object' ? source.ai : {};
+    const baseAi = base.ai && typeof base.ai === 'object' ? base.ai : DEFAULT_AI_SETTINGS;
+    const depthCandidates = [aiSource.depth, aiSource.searchDepth, aiSource.maxDepth, baseAi.depth, DEFAULT_AI_SETTINGS.depth];
+    let depth = DEFAULT_AI_SETTINGS.depth;
+    for (let i = 0; i < depthCandidates.length; i += 1) {
+      const candidate = depthCandidates[i];
+      if (candidate != null) {
+        depth = clampDepth(candidate);
+        break;
+      }
+    }
+
+    const timeCandidates = [
+      aiSource.timeLimitMs,
+      aiSource.timeMs,
+      aiSource.maxTimeMs,
+      baseAi.timeLimitMs,
+      DEFAULT_AI_SETTINGS.timeLimitMs
+    ];
+    let timeLimitMs = DEFAULT_AI_SETTINGS.timeLimitMs;
+    for (let i = 0; i < timeCandidates.length; i += 1) {
+      const candidate = timeCandidates[i];
+      if (candidate != null) {
+        timeLimitMs = toNonNegativeNumber(candidate, DEFAULT_AI_SETTINGS.timeLimitMs);
+        break;
+      }
+    }
+
+    const delayCandidates = [
+      aiSource.moveDelayMs,
+      aiSource.delayMs,
+      baseAi.moveDelayMs,
+      DEFAULT_AI_SETTINGS.moveDelayMs
+    ];
+    let moveDelayMs = DEFAULT_AI_SETTINGS.moveDelayMs;
+    for (let i = 0; i < delayCandidates.length; i += 1) {
+      const candidate = delayCandidates[i];
+      if (candidate != null) {
+        moveDelayMs = toNonNegativeNumber(candidate, DEFAULT_AI_SETTINGS.moveDelayMs);
+        break;
+      }
+    }
+
+    const reward = normalizeRewardConfig(source.reward, base.reward);
+
+    return {
+      id,
+      labelKey,
+      fallbackLabel,
+      descriptionKey,
+      fallbackDescription,
+      ai: { depth, timeLimitMs, moveDelayMs },
+      reward
+    };
+  }
+
+  function normalizeDifficultyConfig(rawConfig) {
+    const fallback = DEFAULT_DIFFICULTY_CONFIG;
+    const source = rawConfig && typeof rawConfig === 'object' ? rawConfig : {};
+    const normalized = { defaultMode: fallback.defaultMode, modes: [] };
+    const rawModes = Array.isArray(source.modes) && source.modes.length ? source.modes : fallback.modes;
+    const seen = new Set();
+    for (let i = 0; i < rawModes.length; i += 1) {
+      const rawMode = rawModes[i];
+      const fallbackMode = fallback.modes[Math.min(i, fallback.modes.length - 1)] || fallback.modes[0];
+      const mode = normalizeDifficultyMode(rawMode, fallbackMode);
+      if (!mode || seen.has(mode.id)) {
+        continue;
+      }
+      seen.add(mode.id);
+      normalized.modes.push(Object.freeze(mode));
+    }
+    if (!normalized.modes.length) {
+      normalized.modes = fallback.modes;
+      normalized.defaultMode = fallback.defaultMode;
+      return Object.freeze(normalized);
+    }
+    const defaultCandidate = typeof source.defaultMode === 'string' && source.defaultMode.trim()
+      ? source.defaultMode.trim()
+      : null;
+    if (defaultCandidate && seen.has(defaultCandidate)) {
+      normalized.defaultMode = defaultCandidate;
+    } else if (!seen.has(normalized.defaultMode)) {
+      normalized.defaultMode = normalized.modes[0].id;
+    }
+    return Object.freeze(normalized);
+  }
+
+  function findDifficultyMode(config, id) {
+    if (!config || !Array.isArray(config.modes)) {
+      return null;
+    }
+    for (let i = 0; i < config.modes.length; i += 1) {
+      const mode = config.modes[i];
+      if (mode && mode.id === id) {
+        return mode;
+      }
+    }
+    return null;
+  }
+
+  function getDefaultDifficultyMode() {
+    return findDifficultyMode(DIFFICULTY_CONFIG, DIFFICULTY_CONFIG.defaultMode)
+      || (DIFFICULTY_CONFIG.modes && DIFFICULTY_CONFIG.modes[0])
+      || DEFAULT_DIFFICULTY_MODES[0];
+  }
+
+  function resolveDifficultyMode(modeId) {
+    if (typeof modeId === 'string' && modeId.trim()) {
+      const found = findDifficultyMode(DIFFICULTY_CONFIG, modeId.trim());
+      if (found) {
+        return found;
+      }
+    }
+    return getDefaultDifficultyMode();
+  }
+
+  function normalizeMatchConfig(raw) {
+    const source = raw && typeof raw === 'object' ? raw : {};
+    const candidate = Number(source.moveLimit ?? source.fullmoveLimit ?? source.limit);
+    let moveLimit = DEFAULT_MATCH_LIMIT;
+    if (Number.isFinite(candidate) && candidate >= 20) {
+      moveLimit = Math.floor(candidate);
+    }
+    return { moveLimit };
+  }
+
+  const DIFFICULTY_CONFIG = normalizeDifficultyConfig(
+    GLOBAL_CONFIG && GLOBAL_CONFIG.arcade && GLOBAL_CONFIG.arcade.echecs
+      ? GLOBAL_CONFIG.arcade.echecs.difficulty
+      : null
+  );
+
+  const MATCH_CONFIG = normalizeMatchConfig(
+    GLOBAL_CONFIG && GLOBAL_CONFIG.arcade && GLOBAL_CONFIG.arcade.echecs
+      ? GLOBAL_CONFIG.arcade.echecs.match
+      : null
+  );
+
+  function normalizeAiAnalysis(raw) {
+    if (!raw || typeof raw !== 'object') {
+      return null;
+    }
+    const moveSan = typeof raw.moveSan === 'string' && raw.moveSan.trim() ? raw.moveSan.trim() : '';
+    const before = Number(raw.evaluationBefore);
+    const after = Number(raw.evaluationAfter);
+    const delta = Number(raw.evaluationDelta);
+    const depth = Number(raw.depth);
+    const score = Number(raw.searchScore);
+    const timestamp = Number(raw.timestamp);
+    const normalized = {
+      moveSan,
+      evaluationBefore: Number.isFinite(before) ? before : null,
+      evaluationAfter: Number.isFinite(after) ? after : null,
+      evaluationDelta: Number.isFinite(delta)
+        ? delta
+        : Number.isFinite(before) && Number.isFinite(after)
+          ? after - before
+          : null,
+      depth: Number.isFinite(depth) && depth >= 0 ? Math.floor(depth) : null,
+      searchScore: Number.isFinite(score) ? score : null,
+      timestamp: Number.isFinite(timestamp) && timestamp > 0 ? timestamp : Date.now()
+    };
+    if (!normalized.moveSan && normalized.evaluationAfter == null && normalized.evaluationBefore == null) {
+      return null;
+    }
+    return normalized;
+  }
+
+  function serializeAiAnalysis(analysis) {
+    if (!analysis || typeof analysis !== 'object') {
+      return null;
+    }
+    const normalized = normalizeAiAnalysis(analysis);
+    if (!normalized) {
+      return null;
+    }
+    return {
+      moveSan: normalized.moveSan,
+      evaluationBefore: normalized.evaluationBefore,
+      evaluationAfter: normalized.evaluationAfter,
+      evaluationDelta: normalized.evaluationDelta,
+      depth: normalized.depth,
+      searchScore: normalized.searchScore,
+      timestamp: normalized.timestamp
+    };
+  }
+
+  function normalizeEvaluationForAnalysis(score, activeColor) {
+    const numeric = Number(score);
+    if (!Number.isFinite(numeric)) {
+      return null;
+    }
+    return numeric - getTempoBonusForColor(activeColor);
+  }
+
+  function createAiMoveAnalysis(state, move, info, notation) {
+    if (!info || typeof info !== 'object') {
+      return null;
+    }
+    const movingColor = info.activeColorBefore === WHITE || info.activeColorBefore === BLACK
+      ? info.activeColorBefore
+      : getPieceColor(move && move.piece ? move.piece : null) || BLACK;
+    const before = normalizeEvaluationForAnalysis(info.evaluationBefore, movingColor);
+    let after = normalizeEvaluationForAnalysis(info.evaluationAfter, state.activeColor);
+    if (after == null) {
+      after = normalizeEvaluationForAnalysis(evaluateStaticPosition(state), state.activeColor);
+    }
+    const depth = Number.isFinite(Number(info.depth)) ? Math.max(0, Math.floor(Number(info.depth))) : null;
+    const searchScore = Number.isFinite(Number(info.searchScore)) ? Number(info.searchScore) : null;
+    const durationMs = Number.isFinite(Number(info.durationMs)) && Number(info.durationMs) >= 0
+      ? Number(info.durationMs)
+      : null;
+    const delta = after != null && before != null ? after - before : null;
+    return {
+      moveSan: notation && notation.san ? notation.san : '',
+      evaluationBefore: before,
+      evaluationAfter: after,
+      evaluationDelta: delta,
+      depth,
+      searchScore,
+      durationMs,
+      timestamp: Date.now()
+    };
+  }
+
+  function formatMultiplierText(value) {
+    const numeric = Number(value);
+    if (!Number.isFinite(numeric) || numeric <= 0) {
+      return '';
+    }
+    if (Math.abs(numeric - Math.round(numeric)) < 1e-6) {
+      return '×' + Math.round(numeric);
+    }
+    if (Math.abs(numeric) >= 10) {
+      return '×' + numeric.toFixed(1).replace(/\.0$/, '');
+    }
+    return '×' + numeric.toFixed(2).replace(/0+$/, '').replace(/\.$/, '');
+  }
+
+  function formatRewardDuration(seconds) {
+    const numeric = Number(seconds);
+    if (!Number.isFinite(numeric) || numeric <= 0) {
+      return '';
+    }
+    const totalSeconds = Math.floor(numeric);
+    const minutes = Math.floor(totalSeconds / 60);
+    if (minutes >= 120) {
+      const hours = Math.floor(minutes / 60);
+      const remainingMinutes = minutes % 60;
+      if (remainingMinutes === 0) {
+        return hours + ' h';
+      }
+      return hours + ' h ' + remainingMinutes + ' min';
+    }
+    if (minutes >= 60) {
+      const hours = Math.floor(minutes / 60);
+      const remainingMinutes = minutes % 60;
+      return hours + ' h ' + remainingMinutes + ' min';
+    }
+    if (minutes > 0) {
+      return minutes + ' min';
+    }
+    return Math.max(1, totalSeconds) + ' s';
+  }
+
+  function formatDifficultyRewardText(mode) {
+    if (!mode || !mode.reward) {
+      return '';
+    }
+    const seconds = Number(mode.reward.offlineSeconds);
+    const multiplierText = formatMultiplierText(mode.reward.offlineMultiplier);
+    const durationText = formatRewardDuration(seconds);
+    if (!durationText && !multiplierText) {
+      return '';
+    }
+    const fallback = durationText && multiplierText
+      ? 'Bonus hors ligne : ' + durationText + ' à ' + multiplierText
+      : durationText
+        ? 'Bonus hors ligne : ' + durationText
+        : 'Bonus hors ligne : ' + multiplierText;
+    return translate(
+      'index.sections.echecs.difficulty.reward',
+      fallback,
+      { duration: durationText, multiplier: multiplierText }
+    );
+  }
+
+  function formatEvaluationScore(score) {
+    const numeric = Number(score);
+    if (!Number.isFinite(numeric)) {
+      return '—';
+    }
+    const pawns = numeric / 100;
+    const abs = Math.abs(pawns);
+    const precision = abs >= 10 ? 1 : 2;
+    const text = pawns.toFixed(precision).replace(/0+$/, '').replace(/\.$/, '');
+    const sign = pawns > 0 ? '+' : pawns < 0 ? '−' : '';
+    return sign + text.replace(/^(\-)/, '−').replace(/^\+−/, '−');
+  }
+
+  function formatDeltaScore(delta) {
+    const numeric = Number(delta);
+    if (!Number.isFinite(numeric) || Math.abs(numeric) < 1e-3) {
+      return translate('index.sections.echecs.analysis.delta.equal', 'aucun changement');
+    }
+    const pawns = numeric / 100;
+    const abs = Math.abs(pawns);
+    const precision = abs >= 10 ? 1 : 2;
+    const text = pawns.toFixed(precision).replace(/0+$/, '').replace(/\.$/, '');
+    const sign = pawns > 0 ? '+' : '−';
+    const fallback = pawns > 0
+      ? 'avantage noir ' + sign + text
+      : 'avantage blanc ' + sign + text;
+    const key = pawns > 0
+      ? 'index.sections.echecs.analysis.delta.positive'
+      : 'index.sections.echecs.analysis.delta.negative';
+    return translate(key, fallback, { value: sign + text });
+  }
+
+  function formatDepthText(depth) {
+    const numeric = Number(depth);
+    if (!Number.isFinite(numeric) || numeric <= 0) {
+      return '';
+    }
+    const value = Math.floor(numeric);
+    return translate(
+      'index.sections.echecs.analysis.depth',
+      ' · profondeur ' + value,
+      { value }
+    );
+  }
+
+  function getConfiguredChessAiSettings(difficultyMode) {
     const arcadeConfig = GLOBAL_CONFIG && GLOBAL_CONFIG.arcade ? GLOBAL_CONFIG.arcade : null;
     const chessConfig = arcadeConfig && arcadeConfig.echecs ? arcadeConfig.echecs : null;
     const aiConfig = chessConfig && chessConfig.ai ? chessConfig.ai : null;
@@ -192,6 +652,19 @@
       }
     }
 
+    if (difficultyMode && difficultyMode.ai) {
+      const overrides = difficultyMode.ai;
+      if (overrides.depth != null) {
+        depth = clampDepth(overrides.depth);
+      }
+      if (overrides.timeLimitMs != null) {
+        timeLimitMs = toNonNegativeNumber(overrides.timeLimitMs, timeLimitMs);
+      }
+      if (overrides.moveDelayMs != null) {
+        moveDelayMs = toNonNegativeNumber(overrides.moveDelayMs, moveDelayMs);
+      }
+    }
+
     return {
       depth,
       timeLimitMs,
@@ -200,12 +673,71 @@
     };
   }
 
-  function createAiContext() {
+  function createAiContext(difficultyMode) {
     return {
-      settings: getConfiguredChessAiSettings(),
+      settings: getConfiguredChessAiSettings(difficultyMode),
       table: new Map(),
-      searchId: 0
+      searchId: 0,
+      lastBestMove: null
     };
+  }
+
+  function assignAiTestPositions(positions) {
+    if (typeof window === 'undefined' || !Array.isArray(positions)) {
+      return;
+    }
+    window.atom2universChessTests = positions;
+  }
+
+  function loadAiTestPositions() {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    if (Array.isArray(window.atom2universChessTests) && window.atom2universChessTests.length > 0) {
+      return;
+    }
+    assignAiTestPositions(FALLBACK_AI_TEST_POSITIONS);
+
+    const fetcher = typeof window.fetch === 'function'
+      ? window.fetch.bind(window)
+      : typeof fetch === 'function'
+        ? fetch
+        : null;
+
+    if (!fetcher) {
+      return;
+    }
+
+    fetcher(AI_TEST_POSITIONS_URL)
+      .then(function (response) {
+        if (!response || !response.ok) {
+          return null;
+        }
+        return response.json();
+      })
+      .then(function (data) {
+        if (!Array.isArray(data) || data.length === 0) {
+          return;
+        }
+        const sanitized = data.map(function (entry) {
+          const normalized = {
+            id: typeof entry.id === 'string' ? entry.id : '',
+            description: typeof entry.description === 'string' ? entry.description : '',
+            fen: typeof entry.fen === 'string' ? entry.fen : '',
+            expectedMoves: Array.isArray(entry.expectedMoves)
+              ? entry.expectedMoves.filter(function (move) { return typeof move === 'string' && move.trim(); })
+              : [],
+            tags: Array.isArray(entry.tags)
+              ? entry.tags.filter(function (tag) { return typeof tag === 'string' && tag.trim(); })
+              : []
+          };
+          return Object.freeze(normalized);
+        });
+        assignAiTestPositions(Object.freeze(sanitized));
+      })
+      .catch(function () {
+        // Ignored: fallback dataset already assigned.
+      });
   }
 
   function translate(key, fallback, params) {
@@ -618,6 +1150,47 @@
     return score;
   }
 
+  function evaluateEndgameFeatures(analysis) {
+    const totalNonPawnMaterial = analysis.whiteNonPawnMaterial + analysis.blackNonPawnMaterial;
+    if (totalNonPawnMaterial > 1600) {
+      return 0;
+    }
+
+    let score = 0;
+    const passedPawnBase = totalNonPawnMaterial < 800 ? 18 : 12;
+    const kingCentralBase = totalNonPawnMaterial < 800 ? 16 : 10;
+
+    const evaluateKingCentrality = function (kingInfo) {
+      if (!kingInfo) {
+        return 0;
+      }
+      const distance = Math.abs(kingInfo.row - 3.5) + Math.abs(kingInfo.col - 3.5);
+      const centrality = Math.max(0, 4 - distance);
+      return Math.round(centrality * kingCentralBase);
+    };
+
+    score += evaluateKingCentrality(analysis.whiteKing);
+    score -= evaluateKingCentrality(analysis.blackKing);
+
+    for (let i = 0; i < analysis.whitePawns.length; i += 1) {
+      const pawn = analysis.whitePawns[i];
+      if (isWhitePassedPawn(analysis, pawn)) {
+        const advancement = Math.max(0, 6 - pawn.row);
+        score += passedPawnBase + advancement * 6;
+      }
+    }
+
+    for (let i = 0; i < analysis.blackPawns.length; i += 1) {
+      const pawn = analysis.blackPawns[i];
+      if (isBlackPassedPawn(analysis, pawn)) {
+        const advancement = Math.max(0, pawn.row - 1);
+        score -= passedPawnBase + advancement * 6;
+      }
+    }
+
+    return score;
+  }
+
   function evaluateStaticPosition(state) {
     if (!state || !state.board) {
       return 0;
@@ -640,10 +1213,15 @@
     score += evaluateDevelopmentScore(analysis);
     score += evaluateRookPlacementScore(analysis);
     score += evaluateKingSafetyScore(analysis, state);
+    score += evaluateEndgameFeatures(analysis);
 
     score += state.activeColor === WHITE ? 10 : -10;
 
     return score;
+  }
+
+  function getTempoBonusForColor(color) {
+    return color === WHITE ? 10 : -10;
   }
 
   function cloneCastlingRights(castling) {
@@ -669,15 +1247,18 @@
 
   function ensureAiContext(state) {
     if (!state.ai || typeof state.ai !== 'object') {
-      state.ai = createAiContext();
+      state.ai = createAiContext(state.difficulty);
       return;
     }
-    state.ai.settings = getConfiguredChessAiSettings();
+    state.ai.settings = getConfiguredChessAiSettings(state.difficulty);
     if (!(state.ai.table instanceof Map)) {
       state.ai.table = new Map();
     }
     if (!Number.isInteger(state.ai.searchId)) {
       state.ai.searchId = 0;
+    }
+    if (!Object.prototype.hasOwnProperty.call(state.ai, 'lastBestMove')) {
+      state.ai.lastBestMove = null;
     }
   }
 
@@ -716,6 +1297,38 @@
     };
   }
 
+  function recordKillerMove(context, ply, move) {
+    if (!context || !context.killers || !move || move.isCapture) {
+      return;
+    }
+    if (!Number.isInteger(ply) || ply <= 0) {
+      return;
+    }
+    const descriptor = cloneMoveDescriptor(move);
+    if (!descriptor) {
+      return;
+    }
+    const killers = Array.isArray(context.killers[ply]) ? context.killers[ply] : [];
+    for (let i = 0; i < killers.length; i += 1) {
+      if (moveMatchesDescriptor(move, killers[i])) {
+        return;
+      }
+    }
+    killers.unshift(descriptor);
+    if (killers.length > 2) {
+      killers.length = 2;
+    }
+    context.killers[ply] = killers;
+  }
+
+  function getKillerMoves(context, ply) {
+    if (!context || !context.killers || !Number.isInteger(ply) || ply <= 0) {
+      return null;
+    }
+    const killers = context.killers[ply];
+    return Array.isArray(killers) && killers.length ? killers : null;
+  }
+
   function findMoveFromDescriptor(moves, descriptor) {
     if (!descriptor || !Array.isArray(moves)) {
       return null;
@@ -748,7 +1361,7 @@
     return PIECE_BASE_VALUES[type] || 0;
   }
 
-  function getMoveOrderingScore(state, move, preferredDescriptor) {
+  function getMoveOrderingScore(state, move, preferredDescriptor, context, ply) {
     let score = 0;
     if (preferredDescriptor && moveMatchesDescriptor(move, preferredDescriptor)) {
       score += 5000;
@@ -756,7 +1369,18 @@
     if (move.isCapture) {
       const capturedValue = getCapturedPieceValue(state, move);
       const moverValue = PIECE_BASE_VALUES[getPieceType(move.piece)] || 0;
-      score += 2000 + capturedValue - moverValue;
+      const mvvLva = capturedValue * 12 - moverValue;
+      score += 4000 + mvvLva;
+    } else {
+      const killerMoves = getKillerMoves(context, ply);
+      if (killerMoves) {
+        for (let index = 0; index < killerMoves.length; index += 1) {
+          if (moveMatchesDescriptor(move, killerMoves[index])) {
+            score += 3200 - index * 200;
+            break;
+          }
+        }
+      }
     }
     if (move.promotion) {
       score += 1500;
@@ -767,9 +1391,9 @@
     return score;
   }
 
-  function orderMovesForSearch(state, moves, preferredDescriptor) {
+  function orderMovesForSearch(state, moves, preferredDescriptor, context, ply) {
     const scored = moves.map(function (move) {
-      return { move, score: getMoveOrderingScore(state, move, preferredDescriptor) };
+      return { move, score: getMoveOrderingScore(state, move, preferredDescriptor, context, ply) };
     });
     scored.sort(function (a, b) {
       return b.score - a.score;
@@ -845,7 +1469,11 @@
       }
     }
 
-    const orderedMoves = orderMovesForSearch(state, legalMoves, preferredDescriptor);
+    if (!preferredDescriptor && ply === 1 && context.rootHint) {
+      preferredDescriptor = context.rootHint;
+    }
+
+    const orderedMoves = orderMovesForSearch(state, legalMoves, preferredDescriptor, context, ply);
 
     let bestScore = Number.NEGATIVE_INFINITY;
     let bestMove = null;
@@ -866,6 +1494,9 @@
       }
       if (score > localAlpha) {
         localAlpha = score;
+      }
+      if (localAlpha >= beta) {
+        recordKillerMove(context, ply, move);
       }
       if (localAlpha >= beta || aborted) {
         break;
@@ -894,18 +1525,55 @@
     const context = {
       table: aiContext && aiContext.table instanceof Map ? aiContext.table : new Map(),
       transpositionLimit,
-      deadline
+      deadline,
+      killers: [],
+      rootHint: aiContext && aiContext.lastBestMove ? cloneMoveDescriptor(aiContext.lastBestMove) : null
     };
     if (aiContext && !(aiContext.table instanceof Map)) {
       aiContext.table = context.table;
     }
     const colorSign = searchState.activeColor === WHITE ? 1 : -1;
-    const result = negamax(searchState, depth, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, colorSign, context, 1);
-    if (!result.move) {
-      const fallbackMoves = generateLegalMoves(searchState);
-      result.move = fallbackMoves.length ? fallbackMoves[0] : null;
+    let bestResult = { score: Number.NEGATIVE_INFINITY, move: null, aborted: false, depth: 0 };
+    let bestDescriptor = context.rootHint;
+    for (let currentDepth = 1; currentDepth <= depth; currentDepth += 1) {
+      const iteration = negamax(
+        searchState,
+        currentDepth,
+        Number.NEGATIVE_INFINITY,
+        Number.POSITIVE_INFINITY,
+        colorSign,
+        context,
+        1
+      );
+      if (iteration.aborted) {
+        break;
+      }
+      if (iteration.move) {
+        bestResult = { ...iteration, depth: currentDepth };
+        bestDescriptor = cloneMoveDescriptor(iteration.move);
+        context.rootHint = bestDescriptor;
+        if (aiContext) {
+          aiContext.lastBestMove = bestDescriptor;
+        }
+      }
+      if (context.deadline && context.deadline > 0 && getCurrentTimeMs() >= context.deadline) {
+        break;
+      }
     }
-    return result;
+
+    if (!bestResult.move) {
+      const fallbackMoves = generateLegalMoves(searchState);
+      bestResult.move = fallbackMoves.length ? fallbackMoves[0] : null;
+      bestResult.score = bestResult.move ? evaluateStaticPosition(applyMove(searchState, bestResult.move)) : 0;
+      bestResult.depth = bestResult.move ? 1 : 0;
+    }
+    if (!bestDescriptor && bestResult.move) {
+      bestDescriptor = cloneMoveDescriptor(bestResult.move);
+    }
+    if (aiContext && bestDescriptor) {
+      aiContext.lastBestMove = bestDescriptor;
+    }
+    return bestResult;
   }
 
   function scheduleAIMove(state, ui) {
@@ -940,7 +1608,11 @@
         : null;
 
     const executeSearch = function () {
+      const activeColorBefore = state.activeColor;
+      const evaluationBefore = evaluateStaticPosition(state);
+      const startTime = getCurrentTimeMs();
       const result = findBestAIMove(state, state.ai);
+      const searchDuration = Math.max(0, getCurrentTimeMs() - startTime);
       if (searchId !== state.ai.searchId) {
         return;
       }
@@ -951,7 +1623,16 @@
         updateStatus(state, ui);
         return;
       }
-      makeMove(state, result.move, ui);
+      makeMove(state, result.move, ui, {
+        analysis: {
+          type: 'ai',
+          evaluationBefore,
+          activeColorBefore,
+          searchScore: result.score,
+          depth: result.depth,
+          durationMs: searchDuration
+        }
+      });
     };
 
     if (scheduler) {
@@ -1625,6 +2306,9 @@
         state.gameOutcome = { type: 'draw', reason: 'repetition' };
       } else if (isInsufficientMaterial(state.board)) {
         state.gameOutcome = { type: 'draw', reason: 'insufficient' };
+      } else if (MATCH_CONFIG && Number.isFinite(MATCH_CONFIG.moveLimit) && MATCH_CONFIG.moveLimit > 0
+        && state.fullmove > MATCH_CONFIG.moveLimit) {
+        state.gameOutcome = { type: 'draw', reason: 'moveLimit' };
       }
     }
 
@@ -1813,12 +2497,220 @@
     }
   }
 
+  function triggerSquareAnimation(button, className) {
+    if (!button || !className) {
+      return;
+    }
+    button.classList.remove(className);
+    // Force reflow to restart the animation when the class is re-added.
+    void button.offsetWidth;
+    button.classList.add(className);
+    const remover = typeof window !== 'undefined' && typeof window.setTimeout === 'function'
+      ? window.setTimeout.bind(window)
+      : typeof setTimeout === 'function'
+        ? setTimeout
+        : null;
+    if (remover) {
+      remover(function () {
+        button.classList.remove(className);
+      }, 360);
+    }
+  }
+
+  function animateMoveSquares(ui, move) {
+    if (!ui || !ui.squares || !move) {
+      return;
+    }
+    const fromRow = move.fromRow;
+    const fromCol = move.fromCol;
+    const toRow = move.toRow;
+    const toCol = move.toCol;
+    if (Number.isInteger(fromRow) && Number.isInteger(fromCol)) {
+      const fromButton = ui.squares[fromRow] && ui.squares[fromRow][fromCol];
+      triggerSquareAnimation(fromButton, 'chess-square--animate-move');
+    }
+    if (Number.isInteger(toRow) && Number.isInteger(toCol)) {
+      const toButton = ui.squares[toRow] && ui.squares[toRow][toCol];
+      const className = move.isCapture ? 'chess-square--animate-capture' : 'chess-square--animate-move';
+      triggerSquareAnimation(toButton, className);
+    }
+  }
+
   function setStatusText(element, key, fallback, params) {
     if (!element) {
       return;
     }
     const text = translate(key, fallback, params);
     element.textContent = text;
+  }
+
+  function renderDifficultyOptions(state, ui) {
+    if (!ui || !ui.difficultySelect) {
+      return;
+    }
+    const select = ui.difficultySelect;
+    const modes = Array.isArray(state.difficultyOptions) && state.difficultyOptions.length
+      ? state.difficultyOptions
+      : DIFFICULTY_CONFIG.modes;
+    const fragment = document.createDocumentFragment();
+    const current = state.difficulty ? state.difficulty.id : state.difficultyId;
+    const seen = new Set();
+    for (let i = 0; i < modes.length; i += 1) {
+      const mode = modes[i];
+      if (!mode || !mode.id || seen.has(mode.id)) {
+        continue;
+      }
+      seen.add(mode.id);
+      const option = document.createElement('option');
+      option.value = mode.id;
+      option.textContent = translate(mode.labelKey, mode.fallbackLabel);
+      fragment.appendChild(option);
+    }
+    select.replaceChildren(fragment);
+    if (current && seen.has(current)) {
+      select.value = current;
+    }
+  }
+
+  function updateDifficultyDescription(state, ui) {
+    if (!ui || !ui.difficultyDescription) {
+      return;
+    }
+    const mode = state.difficulty || resolveDifficultyMode(state.difficultyId);
+    if (!mode) {
+      ui.difficultyDescription.textContent = '';
+      return;
+    }
+    const description = translate(mode.descriptionKey, mode.fallbackDescription);
+    const reward = formatDifficultyRewardText(mode);
+    ui.difficultyDescription.textContent = reward ? description + ' · ' + reward : description;
+  }
+
+  function updateDifficultyUI(state, ui) {
+    renderDifficultyOptions(state, ui);
+    updateDifficultyDescription(state, ui);
+  }
+
+  function applyAnalysisSummary(state, ui, analysis) {
+    if (!ui || !ui.analysisElement || !ui.analysisText || !analysis) {
+      return;
+    }
+    const normalized = normalizeAiAnalysis(analysis);
+    if (!normalized) {
+      ui.analysisElement.hidden = true;
+      delete ui.analysisElement.dataset.visible;
+      ui.analysisText.textContent = translate('index.sections.echecs.analysis.empty', 'No AI move to analyse yet.');
+      return;
+    }
+    state.lastAiAnalysis = normalized;
+    const scoreText = formatEvaluationScore(normalized.evaluationAfter);
+    const deltaText = formatDeltaScore(normalized.evaluationDelta);
+    const depthText = formatDepthText(normalized.depth);
+    const advantageKey = normalized.evaluationAfter > 25
+      ? 'white'
+      : normalized.evaluationAfter < -25
+        ? 'black'
+        : 'balanced';
+    const advantage = translate(
+      'index.sections.echecs.analysis.advantage.' + advantageKey,
+      advantageKey === 'white'
+        ? 'avantage blanc'
+        : advantageKey === 'black'
+          ? 'avantage noir'
+          : 'équilibre'
+    );
+    const fallback = normalized.moveSan
+      ? 'Coup ' + normalized.moveSan + ' · ' + scoreText + ' (' + advantage + ')' + (deltaText ? ' · ' + deltaText : '') + (depthText ? ' · ' + depthText : '')
+      : scoreText + ' (' + advantage + ')' + (deltaText ? ' · ' + deltaText : '') + (depthText ? ' · ' + depthText : '');
+    const summary = translate(
+      'index.sections.echecs.analysis.summary',
+      fallback,
+      {
+        move: normalized.moveSan || '—',
+        score: scoreText,
+        advantage,
+        delta: deltaText,
+        depth: depthText
+      }
+    );
+    ui.analysisText.textContent = summary;
+    ui.analysisElement.hidden = false;
+    ui.analysisElement.dataset.visible = 'true';
+  }
+
+  function updateAnalysisState(state, ui) {
+    const analysis = state.lastAiAnalysis ? normalizeAiAnalysis(state.lastAiAnalysis) : null;
+    if (analysis) {
+      state.lastAiAnalysis = analysis;
+    }
+    if (ui && ui.analyzeButton) {
+      ui.analyzeButton.disabled = !analysis;
+      ui.analyzeButton.textContent = translate(
+        'index.sections.echecs.controls.analyze',
+        'Analyse last AI move'
+      );
+    }
+    if (!ui || !ui.analysisElement || !ui.analysisText) {
+      return;
+    }
+    if (!analysis) {
+      ui.analysisElement.hidden = true;
+      delete ui.analysisElement.dataset.visible;
+      ui.analysisText.textContent = translate('index.sections.echecs.analysis.empty', 'No AI move to analyse yet.');
+      return;
+    }
+    if (ui.analysisElement.dataset.visible === 'true') {
+      applyAnalysisSummary(state, ui, analysis);
+    } else {
+      ui.analysisElement.hidden = true;
+      ui.analysisText.textContent = translate(
+        'index.sections.echecs.analysis.ready',
+        'Cliquez sur « Analyser » pour détailler le dernier coup.'
+      );
+    }
+  }
+
+  function revealAnalysis(state, ui) {
+    if (!state || !ui) {
+      return;
+    }
+    const analysis = state.lastAiAnalysis ? normalizeAiAnalysis(state.lastAiAnalysis) : null;
+    if (!analysis) {
+      updateAnalysisState(state, ui);
+      return;
+    }
+    applyAnalysisSummary(state, ui, analysis);
+  }
+
+  function applyDifficulty(state, ui, modeId) {
+    if (!state) {
+      return false;
+    }
+    const mode = resolveDifficultyMode(modeId);
+    if (!mode) {
+      return false;
+    }
+    const currentId = state.difficulty ? state.difficulty.id : state.difficultyId;
+    if (currentId === mode.id) {
+      updateDifficultyUI(state, ui);
+      return false;
+    }
+    state.difficulty = mode;
+    state.difficultyId = mode.id;
+    state.ai = createAiContext(mode);
+    state.aiThinking = false;
+    state.lastAiAnalysis = null;
+    if (ui && ui.analysisElement) {
+      ui.analysisElement.hidden = true;
+      delete ui.analysisElement.dataset.visible;
+    }
+    updateDifficultyUI(state, ui);
+    updateAnalysisState(state, ui);
+    saveProgress(state);
+    if (!state.isGameOver && state.activeColor === BLACK) {
+      scheduleAIMove(state, ui);
+    }
+    return true;
   }
 
   function updateStatus(state, ui) {
@@ -2623,6 +3515,14 @@
       showHistory: raw.preferences && raw.preferences.showHistory === false ? false : true
     };
 
+    const difficultyIdRaw = typeof raw.difficultyId === 'string' && raw.difficultyId.trim()
+      ? raw.difficultyId.trim()
+      : typeof raw.difficulty === 'string' && raw.difficulty.trim()
+        ? raw.difficulty.trim()
+        : null;
+    const difficulty = resolveDifficultyMode(difficultyIdRaw);
+    const lastAiAnalysis = normalizeAiAnalysis(raw.lastAiAnalysis);
+
     const isGameOver = raw.isGameOver === true || (gameOutcome != null);
 
     return {
@@ -2637,7 +3537,10 @@
       positionCounts,
       gameOutcome,
       isGameOver,
-      preferences
+      preferences,
+      difficulty,
+      difficultyId: difficulty.id,
+      lastAiAnalysis
     };
   }
 
@@ -2688,6 +3591,10 @@
     state.helperMessage = null;
     state.helperTimeoutId = null;
     state.suppressClick = false;
+    state.difficulty = stored.difficulty || resolveDifficultyMode(stored.difficultyId);
+    state.difficultyId = state.difficulty ? state.difficulty.id : getDefaultDifficultyMode().id;
+    state.difficultyOptions = DIFFICULTY_CONFIG.modes;
+    state.lastAiAnalysis = stored.lastAiAnalysis ? normalizeAiAnalysis(stored.lastAiAnalysis) : null;
     ensureAiContext(state);
     state.aiThinking = false;
 
@@ -2704,6 +3611,68 @@
     updateLegalMoves(state);
     evaluateGameState(state);
     return true;
+  }
+
+  function resetGameState(state, ui) {
+    if (!state) {
+      return;
+    }
+    const difficulty = state.difficulty || getDefaultDifficultyMode();
+    const preferences = {
+      showCoordinates: state.preferences && state.preferences.showCoordinates !== false,
+      showHistory: state.preferences && state.preferences.showHistory !== false
+    };
+    const base = createInitialState();
+    state.board = base.board;
+    state.activeColor = base.activeColor;
+    state.castling = base.castling;
+    state.enPassant = base.enPassant;
+    state.halfmoveClock = base.halfmoveClock;
+    state.fullmove = base.fullmove;
+    state.positionCounts = base.positionCounts;
+    state.positionKey = base.positionKey;
+    state.legalMoves = base.legalMoves;
+    state.legalMovesByFrom = base.legalMovesByFrom;
+    state.selection = null;
+    state.lastMove = null;
+    state.pendingPromotion = null;
+    state.gameOutcome = null;
+    state.isGameOver = false;
+    state.history = [];
+    state.preferences = preferences;
+    state.dragContext = null;
+    state.helperMessage = null;
+    state.helperTimeoutId = null;
+    state.suppressClick = false;
+    state.difficulty = difficulty;
+    state.difficultyId = difficulty.id;
+    state.difficultyOptions = DIFFICULTY_CONFIG.modes;
+    state.lastAiAnalysis = null;
+    state.ai = createAiContext(difficulty);
+    state.aiThinking = false;
+    updateLegalMoves(state);
+    evaluateGameState(state);
+    clearSelection(state, ui);
+    renderBoard(state, ui);
+    renderHistory(state, ui);
+    updateStatus(state, ui);
+    clearHelperMessage(state);
+    updateHelper(state, ui);
+    applyBoardPreferences(state, ui);
+    updateDifficultyUI(state, ui);
+    updateAnalysisState(state, ui);
+    saveProgress(state);
+    showInteractionMessage(
+      state,
+      ui,
+      'index.sections.echecs.feedback.reset',
+      'Partie réinitialisée.',
+      null,
+      { duration: 2500 }
+    );
+    if (!state.isGameOver && state.activeColor === BLACK) {
+      scheduleAIMove(state, ui);
+    }
   }
 
   function saveProgress(state) {
@@ -2759,7 +3728,9 @@
       preferences: {
         showCoordinates: preferences.showCoordinates !== false,
         showHistory: preferences.showHistory !== false
-      }
+      },
+      difficultyId: state.difficultyId || (state.difficulty && state.difficulty.id) || getDefaultDifficultyMode().id,
+      lastAiAnalysis: serializeAiAnalysis(state.lastAiAnalysis)
     };
 
     const globalState = getGlobalGameState();
@@ -2781,7 +3752,8 @@
     requestSave();
   }
 
-  function makeMove(state, move, ui) {
+  function makeMove(state, move, ui, metadata) {
+    const hadGameOutcome = Boolean(state.gameOutcome);
     const moveNumber = state.fullmove;
     const movingColor = state.activeColor;
     const nextState = applyMove(state, move);
@@ -2816,16 +3788,53 @@
 
     updateLegalMoves(state);
     evaluateGameState(state);
+    if (!hadGameOutcome
+      && state.gameOutcome
+      && state.gameOutcome.type === 'checkmate'
+      && state.gameOutcome.winner === WHITE) {
+      registerVictoryReward(state);
+    }
     clearSelection(state, ui);
     renderBoard(state, ui);
+    animateMoveSquares(ui, move);
     renderHistory(state, ui);
     updateStatus(state, ui);
     clearHelperMessage(state);
     updateHelper(state, ui);
     applyBoardPreferences(state, ui);
+    if (metadata && metadata.analysis && metadata.analysis.type === 'ai') {
+      state.lastAiAnalysis = createAiMoveAnalysis(state, move, metadata.analysis, notation);
+    }
+    updateAnalysisState(state, ui);
     saveProgress(state);
     if (!state.isGameOver && state.activeColor === BLACK) {
       scheduleAIMove(state, ui);
+    }
+  }
+
+  function registerVictoryReward(state) {
+    if (!state || !state.gameOutcome || state.gameOutcome.type !== 'checkmate' || state.gameOutcome.winner !== WHITE) {
+      return;
+    }
+    const registrar = typeof window !== 'undefined' && typeof window.registerChessVictoryReward === 'function'
+      ? window.registerChessVictoryReward
+      : null;
+    if (!registrar) {
+      return;
+    }
+    const difficulty = state.difficulty || resolveDifficultyMode(state.difficultyId);
+    if (!difficulty || !difficulty.reward) {
+      return;
+    }
+    try {
+      registrar({
+        reward: difficulty.reward,
+        difficultyId: difficulty.id,
+        labelKey: difficulty.labelKey,
+        fallbackLabel: difficulty.fallbackLabel
+      });
+    } catch (error) {
+      console.warn('Chess reward registration failed', error);
     }
   }
 
@@ -2865,6 +3874,8 @@
         'No moves yet.'
       );
     }
+    updateDifficultyUI(state, ui);
+    updateAnalysisState(state, ui);
     updateHelper(state, ui);
     renderHistory(state, ui);
     applyBoardPreferences(state, ui);
@@ -2880,6 +3891,7 @@
       w: { king: true, queen: true },
       b: { king: true, queen: true }
     };
+    const difficulty = getDefaultDifficultyMode();
     const state = {
       board,
       activeColor: WHITE,
@@ -2902,8 +3914,12 @@
       helperMessage: null,
       helperTimeoutId: null,
       suppressClick: false,
-      ai: createAiContext(),
-      aiThinking: false
+      ai: createAiContext(difficulty),
+      aiThinking: false,
+      difficulty,
+      difficultyId: difficulty.id,
+      difficultyOptions: DIFFICULTY_CONFIG.modes,
+      lastAiAnalysis: null
     };
     const key = getPositionKey(state);
     state.positionKey = key;
@@ -2913,6 +3929,8 @@
   }
 
   onReady(function () {
+    loadAiTestPositions();
+
     const section = document.getElementById(SECTION_ID);
     if (!section) {
       return;
@@ -2932,6 +3950,12 @@
     const coordinatesLabel = section.querySelector('[data-i18n="index.sections.echecs.controls.coordinates"]');
     const historyLabel = section.querySelector('[data-i18n="index.sections.echecs.controls.history"]');
     const historyTitle = section.querySelector('[data-i18n="index.sections.echecs.history.title"]');
+    const resetButton = section.querySelector(RESET_BUTTON_SELECTOR);
+    const analyzeButton = section.querySelector(ANALYZE_BUTTON_SELECTOR);
+    const analysisElement = section.querySelector(ANALYSIS_CONTAINER_SELECTOR);
+    const analysisText = section.querySelector(ANALYSIS_TEXT_SELECTOR);
+    const difficultySelect = section.querySelector(DIFFICULTY_SELECT_SELECTOR);
+    const difficultyDescription = section.querySelector(DIFFICULTY_DESCRIPTION_SELECTOR);
 
     if (!boardElement || !statusElement) {
       return;
@@ -2957,7 +3981,13 @@
       historyEmpty,
       coordinatesLabel,
       historyLabel,
-      historyTitle
+      historyTitle,
+      resetButton,
+      analyzeButton,
+      analysisElement,
+      analysisText,
+      difficultySelect,
+      difficultyDescription
     };
 
     attachPointerHandlers(state, ui);
@@ -2978,6 +4008,21 @@
         applyBoardPreferences(state, ui);
         renderHistory(state, ui);
         saveProgress(state);
+      });
+    }
+    if (difficultySelect) {
+      difficultySelect.addEventListener('change', function () {
+        applyDifficulty(state, ui, difficultySelect.value);
+      });
+    }
+    if (resetButton) {
+      resetButton.addEventListener('click', function () {
+        resetGameState(state, ui);
+      });
+    }
+    if (analyzeButton) {
+      analyzeButton.addEventListener('click', function () {
+        revealAnalysis(state, ui);
       });
     }
 
