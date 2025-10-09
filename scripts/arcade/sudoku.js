@@ -10,6 +10,154 @@
     difficile: Object.freeze({ min: 18, max: 22 })
   });
 
+  const DEFAULT_COMPLETION_REWARD = Object.freeze({
+    enabled: true,
+    timeLimitSeconds: 10 * 60,
+    bonusSeconds: 6 * 60 * 60,
+    multiplier: 1
+  });
+
+  function toPositiveNumber(value) {
+    const numeric = Number(value);
+    if (!Number.isFinite(numeric) || numeric <= 0) {
+      return null;
+    }
+    return numeric;
+  }
+
+  function normalizeCompletionReward(raw) {
+    const config = {
+      enabled: DEFAULT_COMPLETION_REWARD.enabled,
+      timeLimitSeconds: DEFAULT_COMPLETION_REWARD.timeLimitSeconds,
+      bonusSeconds: DEFAULT_COMPLETION_REWARD.bonusSeconds,
+      multiplier: DEFAULT_COMPLETION_REWARD.multiplier
+    };
+
+    if (raw === false) {
+      config.enabled = false;
+      return config;
+    }
+
+    const source = raw && typeof raw === 'object' ? raw : {};
+
+    const timeLimitCandidates = [
+      source.timeLimitSeconds,
+      source.timeLimit,
+      source.limitSeconds,
+      source.limit,
+      source.seconds
+    ];
+    for (let i = 0; i < timeLimitCandidates.length; i += 1) {
+      const candidate = toPositiveNumber(timeLimitCandidates[i]);
+      if (candidate) {
+        config.timeLimitSeconds = candidate;
+        break;
+      }
+    }
+    if (config.timeLimitSeconds === DEFAULT_COMPLETION_REWARD.timeLimitSeconds) {
+      const minuteCandidates = [
+        source.timeLimitMinutes,
+        source.minutes,
+        source.minuteLimit
+      ];
+      for (let i = 0; i < minuteCandidates.length; i += 1) {
+        const candidate = toPositiveNumber(minuteCandidates[i]);
+        if (candidate) {
+          config.timeLimitSeconds = candidate * 60;
+          break;
+        }
+      }
+    }
+    if (config.timeLimitSeconds === DEFAULT_COMPLETION_REWARD.timeLimitSeconds) {
+      const hourCandidates = [source.timeLimitHours, source.hours];
+      for (let i = 0; i < hourCandidates.length; i += 1) {
+        const candidate = toPositiveNumber(hourCandidates[i]);
+        if (candidate) {
+          config.timeLimitSeconds = candidate * 60 * 60;
+          break;
+        }
+      }
+    }
+
+    const bonusCandidates = [
+      source.offlineBonusSeconds,
+      source.bonusSeconds,
+      source.durationSeconds,
+      source.duration,
+      source.secondsBonus
+    ];
+    for (let i = 0; i < bonusCandidates.length; i += 1) {
+      const candidate = toPositiveNumber(bonusCandidates[i]);
+      if (candidate) {
+        config.bonusSeconds = candidate;
+        break;
+      }
+    }
+    if (config.bonusSeconds === DEFAULT_COMPLETION_REWARD.bonusSeconds) {
+      const bonusMinutes = [
+        source.offlineBonusMinutes,
+        source.bonusMinutes,
+        source.durationMinutes
+      ];
+      for (let i = 0; i < bonusMinutes.length; i += 1) {
+        const candidate = toPositiveNumber(bonusMinutes[i]);
+        if (candidate) {
+          config.bonusSeconds = candidate * 60;
+          break;
+        }
+      }
+    }
+    if (config.bonusSeconds === DEFAULT_COMPLETION_REWARD.bonusSeconds) {
+      const bonusHours = [
+        source.offlineBonusHours,
+        source.bonusHours,
+        source.durationHours
+      ];
+      for (let i = 0; i < bonusHours.length; i += 1) {
+        const candidate = toPositiveNumber(bonusHours[i]);
+        if (candidate) {
+          config.bonusSeconds = candidate * 60 * 60;
+          break;
+        }
+      }
+    }
+
+    const multiplierCandidate = toPositiveNumber(
+      source.offlineMultiplier
+        ?? source.multiplier
+        ?? source.value
+    );
+    if (multiplierCandidate) {
+      config.multiplier = multiplierCandidate;
+    }
+
+    if (source.enabled === false) {
+      config.enabled = false;
+    }
+
+    if (config.timeLimitSeconds <= 0 || config.bonusSeconds <= 0 || config.multiplier <= 0) {
+      config.enabled = false;
+    }
+
+    return config;
+  }
+
+  const COMPLETION_REWARD_CONFIG = normalizeCompletionReward(
+    GLOBAL_CONFIG
+    && GLOBAL_CONFIG.arcade
+    && GLOBAL_CONFIG.arcade.sudoku
+    && GLOBAL_CONFIG.arcade.sudoku.rewards
+    ? GLOBAL_CONFIG.arcade.sudoku.rewards.speedCompletion
+    : null
+  );
+
+  function getNowMs() {
+    if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+      return performance.now();
+    }
+    return Date.now();
+  }
+
   function onReady(callback) {
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', callback, { once: true });
@@ -316,6 +464,8 @@
     let lastStatusMessageBuilder = null;
     let lastStatusMeta = {};
     let lastStatusIsMistakeMessage = false;
+    let puzzleStartTimestamp = null;
+    let puzzleSolved = false;
 
     function updateConflictButtonState() {
       conflictToggleButton.hidden = true;
@@ -340,6 +490,9 @@
     });
 
     function refreshStatus() {
+      if (lastStatusMeta && lastStatusMeta.isSolved) {
+        return;
+      }
       if (lastStatusMeta.isConflictMessage && lastConflictCount === 0) {
         if (lastMistakeCount > 0) {
           const messageBuilder = () =>
@@ -515,6 +668,100 @@
       return entries;
     }
 
+    function isBoardComplete(board) {
+      if (!Array.isArray(board) || board.length !== 9) {
+        return false;
+      }
+      for (let row = 0; row < 9; row += 1) {
+        const rowEntries = board[row];
+        if (!Array.isArray(rowEntries) || rowEntries.length !== 9) {
+          return false;
+        }
+        for (let col = 0; col < 9; col += 1) {
+          const value = rowEntries[col];
+          if (!Number.isInteger(value) || value < 1 || value > 9) {
+            return false;
+          }
+        }
+      }
+      return true;
+    }
+
+    function boardMatchesSolution(board) {
+      if (!Array.isArray(board) || board.length !== 9) {
+        return false;
+      }
+      if (!Array.isArray(solutionBoard) || solutionBoard.length !== 9) {
+        return false;
+      }
+      for (let row = 0; row < 9; row += 1) {
+        const currentRow = board[row];
+        const targetRow = solutionBoard[row];
+        if (!Array.isArray(currentRow) || !Array.isArray(targetRow) || currentRow.length !== 9) {
+          return false;
+        }
+        for (let col = 0; col < 9; col += 1) {
+          if (targetRow[col] !== currentRow[col]) {
+            return false;
+          }
+        }
+      }
+      return true;
+    }
+
+    function triggerCompletionReward(elapsedSeconds) {
+      if (!COMPLETION_REWARD_CONFIG.enabled) {
+        return;
+      }
+      const elapsed = Number(elapsedSeconds);
+      if (!Number.isFinite(elapsed) || elapsed <= 0) {
+        return;
+      }
+      const registrar = typeof window !== 'undefined'
+        && typeof window.registerSudokuOfflineBonus === 'function'
+        ? window.registerSudokuOfflineBonus
+        : null;
+      if (!registrar) {
+        return;
+      }
+      try {
+        registrar({ elapsedSeconds: elapsed, config: COMPLETION_REWARD_CONFIG });
+      } catch (error) {
+        console.warn('Sudoku reward registration failed', error);
+      }
+    }
+
+    function handlePuzzleSolved(elapsedSeconds) {
+      puzzleSolved = true;
+      setStatus(formatStatus('solved', 'Solution trouvée ✔︎'), 'ok', null, { isSolved: true });
+      triggerCompletionReward(elapsedSeconds);
+    }
+
+    function checkForCompletion(board, conflicts) {
+      if (puzzleSolved) {
+        return true;
+      }
+      const hasConflicts = Array.isArray(conflicts) ? conflicts.length > 0 : lastConflictCount > 0;
+      if (hasConflicts || lastMistakeCount > 0) {
+        return false;
+      }
+      const workingBoard = board || parseGridToBoard(gridElement);
+      if (!isBoardComplete(workingBoard)) {
+        return false;
+      }
+      if (!boardMatchesSolution(workingBoard)) {
+        return false;
+      }
+      const startedAt = typeof puzzleStartTimestamp === 'number' && Number.isFinite(puzzleStartTimestamp)
+        ? puzzleStartTimestamp
+        : null;
+      puzzleStartTimestamp = null;
+      const now = getNowMs();
+      const elapsedSeconds = startedAt != null ? Math.max(0, (now - startedAt) / 1000) : null;
+      handlePuzzleSolved(elapsedSeconds);
+      return true;
+    }
+
     function buildMistakeStatusOptions() {
       if (!allowMistakeHints) {
         return null;
@@ -580,8 +827,10 @@
               showMistakes = false;
               refreshMistakeVisibility();
             }
-            updateConflictState(workingBoard);
-            refreshStatus();
+            const conflicts = updateConflictState(workingBoard);
+            if (!checkForCompletion(workingBoard, conflicts)) {
+              refreshStatus();
+            }
           });
           input.addEventListener('focus', () => {
             cell.classList.remove('error', 'ok');
@@ -677,7 +926,11 @@
       const { mistakes } = updateMistakeHighlights(board);
       const conflicts = updateConflictState(board, validateBoard(board));
 
-      if (conflicts.length || mistakes.length) {
+      if (!conflicts.length && !mistakes.length) {
+        if (!checkForCompletion(board, conflicts)) {
+          setStatus(formatStatus('noError', "Aucune erreur pour l'instant."), 'ok');
+        }
+      } else {
         const hasConflicts = conflicts.length > 0;
         const messageBuilder = () =>
           formatStatus(
@@ -691,8 +944,6 @@
           isMistakeMessage: !hasConflicts,
           isConflictMessage: hasConflicts
         });
-      } else {
-        setStatus(formatStatus('noError', "Aucune erreur pour l'instant."), 'ok');
       }
     }
 
@@ -716,6 +967,8 @@
       setStatus(formatStatus('generating', 'Génération en cours…'));
       const { puzzle, solution } = generateRandomPuzzle(level);
       solutionBoard = cloneBoard(solution);
+      puzzleSolved = false;
+      puzzleStartTimestamp = getNowMs();
       const fixedMask = puzzle.map(row => row.map(value => value !== 0));
       loadBoardToGrid(puzzle, fixedMask);
       const clues = puzzle.flat().filter(value => value !== 0).length;
@@ -793,6 +1046,8 @@
     generateButton.addEventListener('click', onGenerate);
     padValidateButton.addEventListener('click', onValidate);
 
+    puzzleSolved = false;
+    puzzleStartTimestamp = null;
     loadBoardToGrid(createEmptyBoard());
     updateConflictButtonState();
     updateCheckButtonVisibility();

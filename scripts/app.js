@@ -48,6 +48,13 @@ const BRICK_SKIN_TOAST_KEYS = Object.freeze({
   pastels: 'scripts.app.brickSkins.applied.pastels'
 });
 
+const DEFAULT_SUDOKU_COMPLETION_REWARD = Object.freeze({
+  enabled: true,
+  timeLimitSeconds: 10 * 60,
+  bonusSeconds: 6 * 60 * 60,
+  multiplier: 1
+});
+
 const LANGUAGE_STORAGE_KEY = 'atom2univers.language';
 const CLICK_SOUND_STORAGE_KEY = 'atom2univers.options.clickSoundMuted';
 const CRIT_ATOM_VISUALS_STORAGE_KEY = 'atom2univers.options.critAtomVisualsDisabled';
@@ -411,6 +418,156 @@ function formatDurationLocalized(value, options) {
   }
   return formatNumberLocalized(value, Object.assign({ style: 'unit', unit: 'second', unitDisplay: 'short' }, options));
 }
+
+function readPositiveNumber(candidates, transform) {
+  if (!Array.isArray(candidates)) {
+    return null;
+  }
+  for (let i = 0; i < candidates.length; i += 1) {
+    const numeric = Number(candidates[i]);
+    if (Number.isFinite(numeric) && numeric > 0) {
+      return typeof transform === 'function' ? transform(numeric) : numeric;
+    }
+  }
+  return null;
+}
+
+function normalizeSudokuRewardSettings(raw) {
+  const config = {
+    enabled: DEFAULT_SUDOKU_COMPLETION_REWARD.enabled,
+    timeLimitSeconds: DEFAULT_SUDOKU_COMPLETION_REWARD.timeLimitSeconds,
+    bonusSeconds: DEFAULT_SUDOKU_COMPLETION_REWARD.bonusSeconds,
+    multiplier: DEFAULT_SUDOKU_COMPLETION_REWARD.multiplier
+  };
+
+  if (raw === false) {
+    config.enabled = false;
+    return config;
+  }
+
+  const source = raw && typeof raw === 'object' ? raw : {};
+
+  const limitSeconds = readPositiveNumber([
+    source.timeLimitSeconds,
+    source.timeLimit,
+    source.limitSeconds,
+    source.limit,
+    source.seconds
+  ]);
+  if (limitSeconds) {
+    config.timeLimitSeconds = limitSeconds;
+  } else {
+    const limitMinutes = readPositiveNumber([
+      source.timeLimitMinutes,
+      source.minutes,
+      source.minuteLimit
+    ], value => value * 60);
+    if (limitMinutes) {
+      config.timeLimitSeconds = limitMinutes;
+    } else {
+      const limitHours = readPositiveNumber([
+        source.timeLimitHours,
+        source.hours
+      ], value => value * 60 * 60);
+      if (limitHours) {
+        config.timeLimitSeconds = limitHours;
+      }
+    }
+  }
+
+  const bonusSeconds = readPositiveNumber([
+    source.offlineBonusSeconds,
+    source.bonusSeconds,
+    source.durationSeconds,
+    source.duration,
+    source.secondsBonus
+  ]);
+  if (bonusSeconds) {
+    config.bonusSeconds = bonusSeconds;
+  } else {
+    const bonusMinutes = readPositiveNumber([
+      source.offlineBonusMinutes,
+      source.bonusMinutes,
+      source.durationMinutes
+    ], value => value * 60);
+    if (bonusMinutes) {
+      config.bonusSeconds = bonusMinutes;
+    } else {
+      const bonusHours = readPositiveNumber([
+        source.offlineBonusHours,
+        source.bonusHours,
+        source.durationHours
+      ], value => value * 60 * 60);
+      if (bonusHours) {
+        config.bonusSeconds = bonusHours;
+      }
+    }
+  }
+
+  const multiplier = readPositiveNumber([
+    source.offlineMultiplier,
+    source.multiplier,
+    source.value
+  ]);
+  if (multiplier) {
+    config.multiplier = multiplier;
+  }
+
+  if (source.enabled === false) {
+    config.enabled = false;
+  }
+
+  if (config.timeLimitSeconds <= 0 || config.bonusSeconds <= 0 || config.multiplier <= 0) {
+    config.enabled = false;
+  }
+
+  return config;
+}
+
+function normalizeSudokuOfflineBonusState(raw) {
+  if (!raw || typeof raw !== 'object') {
+    return null;
+  }
+  const maxSeconds = readPositiveNumber([
+    raw.maxSeconds,
+    raw.seconds,
+    raw.durationSeconds,
+    raw.limitSeconds,
+    raw.capSeconds
+  ]);
+  const multiplier = readPositiveNumber([
+    raw.multiplier,
+    raw.offlineMultiplier,
+    raw.value
+  ]);
+  if (!maxSeconds || !multiplier) {
+    return null;
+  }
+  const limitSeconds = readPositiveNumber([
+    raw.limitSeconds,
+    raw.timeLimitSeconds,
+    raw.limit
+  ]) || 0;
+  const grantedAtCandidate = Number(raw.grantedAt ?? raw.timestamp ?? raw.granted_at);
+  const grantedAt = Number.isFinite(grantedAtCandidate) && grantedAtCandidate > 0
+    ? grantedAtCandidate
+    : Date.now();
+  return {
+    multiplier,
+    maxSeconds,
+    limitSeconds,
+    grantedAt
+  };
+}
+
+const SUDOKU_COMPLETION_REWARD_CONFIG = normalizeSudokuRewardSettings(
+  GLOBAL_CONFIG
+  && GLOBAL_CONFIG.arcade
+  && GLOBAL_CONFIG.arcade.sudoku
+  && GLOBAL_CONFIG.arcade.sudoku.rewards
+  ? GLOBAL_CONFIG.arcade.sudoku.rewards.speedCompletion
+  : null
+);
 
 function formatTrophyBonusValue(value) {
   const numeric = Number(value);
@@ -1617,6 +1774,7 @@ const DEFAULT_STATE = {
     capSeconds: OFFLINE_TICKET_CONFIG.capSeconds,
     progressSeconds: 0
   },
+  sudokuOfflineBonus: null,
   ticketStarAutoCollect: null,
   ticketStarAverageIntervalSeconds: DEFAULT_TICKET_STAR_INTERVAL_SECONDS,
   ticketStarUnlocked: false,
@@ -1659,6 +1817,7 @@ const gameState = {
     capSeconds: OFFLINE_TICKET_CONFIG.capSeconds,
     progressSeconds: 0
   },
+  sudokuOfflineBonus: null,
   ticketStarAutoCollect: null,
   ticketStarAverageIntervalSeconds: DEFAULT_TICKET_STAR_INTERVAL_SECONDS,
   ticketStarUnlocked: false,
@@ -3273,6 +3432,7 @@ function updateMetauxCreditsUI() {
 }
 
 window.updateMetauxCreditsUI = updateMetauxCreditsUI;
+window.registerSudokuOfflineBonus = registerSudokuOfflineBonus;
 
 function updateBrandPortalState(options = {}) {
   const unlocked = isArcadeUnlocked();
@@ -4465,6 +4625,29 @@ function formatDevKitDuration(seconds) {
   return formatDurationLocalized(absSeconds, { style: 'unit', unit: 'second', unitDisplay: 'short', maximumFractionDigits: 0 });
 }
 
+function formatSudokuRewardDuration(seconds) {
+  const numeric = Number(seconds);
+  if (!Number.isFinite(numeric) || numeric <= 0) {
+    return formatDurationLocalized(0, { style: 'unit', unit: 'second', unitDisplay: 'short', maximumFractionDigits: 0 });
+  }
+  const absSeconds = Math.abs(numeric);
+  if (absSeconds >= 3600) {
+    const hours = absSeconds / 3600;
+    const options = hours < 10
+      ? { style: 'unit', unit: 'hour', unitDisplay: 'short', minimumFractionDigits: 1, maximumFractionDigits: 1 }
+      : { style: 'unit', unit: 'hour', unitDisplay: 'short', maximumFractionDigits: 0 };
+    return formatDurationLocalized(hours, options);
+  }
+  if (absSeconds >= 60) {
+    const minutes = absSeconds / 60;
+    const options = minutes < 10
+      ? { style: 'unit', unit: 'minute', unitDisplay: 'short', minimumFractionDigits: 1, maximumFractionDigits: 1 }
+      : { style: 'unit', unit: 'minute', unitDisplay: 'short', maximumFractionDigits: 0 };
+    return formatDurationLocalized(minutes, options);
+  }
+  return formatDurationLocalized(absSeconds, { style: 'unit', unit: 'second', unitDisplay: 'short', maximumFractionDigits: 0 });
+}
+
 function parseDevKitInteger(raw) {
   if (raw == null) {
     return null;
@@ -4917,6 +5100,64 @@ function formatMultiplier(value) {
     return '×—';
   }
   return `×${layered.toString()}`;
+}
+
+function registerSudokuOfflineBonus(options = {}) {
+  const rawConfig = options && typeof options === 'object' ? options.config : null;
+  const normalizedConfig = normalizeSudokuRewardSettings(rawConfig || SUDOKU_COMPLETION_REWARD_CONFIG);
+  if (!normalizedConfig.enabled) {
+    return false;
+  }
+  const elapsed = Number(options.elapsedSeconds);
+  if (!Number.isFinite(elapsed) || elapsed <= 0) {
+    return false;
+  }
+  const withinLimit = elapsed <= normalizedConfig.timeLimitSeconds + 1e-6;
+  const announce = options.announce !== false;
+  const elapsedText = formatSudokuRewardDuration(elapsed);
+  const limitText = formatSudokuRewardDuration(normalizedConfig.timeLimitSeconds);
+
+  if (!withinLimit) {
+    if (announce && typeof showToast === 'function') {
+      const messageKey = 'scripts.app.arcade.sudoku.reward.missed';
+      const fallback = `Sudoku solved in ${elapsedText}, slower than the limit (${limitText}). Bonus not granted.`;
+      const message = typeof t === 'function'
+        ? t(messageKey, { elapsed: elapsedText, limit: limitText })
+        : null;
+      showToast(message && message !== messageKey ? message : fallback);
+    }
+    return false;
+  }
+
+  const bonus = normalizeSudokuOfflineBonusState({
+    multiplier: normalizedConfig.multiplier,
+    maxSeconds: normalizedConfig.bonusSeconds,
+    limitSeconds: normalizedConfig.timeLimitSeconds,
+    grantedAt: Date.now()
+  });
+  if (!bonus) {
+    return false;
+  }
+  gameState.sudokuOfflineBonus = bonus;
+
+  if (announce && typeof showToast === 'function') {
+    const durationText = formatSudokuRewardDuration(normalizedConfig.bonusSeconds);
+    const multiplierText = formatMultiplier(normalizedConfig.multiplier);
+    const messageKey = 'scripts.app.arcade.sudoku.reward.ready';
+    const fallback = `Sudoku bonus ready: next offline gains will be ${multiplierText} for up to ${durationText}.`;
+    const message = typeof t === 'function'
+      ? t(messageKey, {
+        duration: durationText,
+        elapsed: elapsedText,
+        limit: limitText,
+        multiplier: multiplierText
+      })
+      : null;
+    showToast(message && message !== messageKey ? message : fallback);
+  }
+
+  saveGame();
+  return true;
 }
 
 function formatDuration(ms) {
@@ -9963,6 +10204,21 @@ function serializeState() {
         progressSeconds
       };
     })(),
+    sudokuOfflineBonus: (() => {
+      const bonus = normalizeSudokuOfflineBonusState(gameState.sudokuOfflineBonus);
+      if (!bonus) {
+        return null;
+      }
+      const grantedAt = Number.isFinite(Number(bonus.grantedAt)) && Number(bonus.grantedAt) > 0
+        ? Number(bonus.grantedAt)
+        : Date.now();
+      return {
+        multiplier: bonus.multiplier,
+        maxSeconds: bonus.maxSeconds,
+        limitSeconds: bonus.limitSeconds,
+        grantedAt
+      };
+    })(),
     ticketStarAutoCollect: gameState.ticketStarAutoCollect
       ? {
           delaySeconds: Math.max(
@@ -10064,6 +10320,7 @@ function resetGame() {
       capSeconds: OFFLINE_TICKET_CONFIG.capSeconds,
       progressSeconds: 0
     },
+    sudokuOfflineBonus: null,
     ticketStarAutoCollect: null,
     ticketStarAverageIntervalSeconds: DEFAULT_TICKET_STAR_INTERVAL_SECONDS,
     ticketStarUnlocked: false,
@@ -10102,7 +10359,8 @@ function applyOnlineProgress(seconds, options = {}) {
     requestedSeconds: totalSeconds,
     appliedSeconds: 0,
     atomsGained: LayeredNumber.zero(),
-    ticketsEarned: 0
+    ticketsEarned: 0,
+    sudokuBonus: null
   };
   if (totalSeconds <= 0) {
     return result;
@@ -10174,22 +10432,69 @@ function applyOfflineProgress(seconds, options = {}) {
 
   const announceAtoms = options.announceAtoms !== false;
   const announceTickets = options.announceTickets !== false;
+  const sudokuBonus = normalizeSudokuOfflineBonusState(gameState.sudokuOfflineBonus);
+  let sudokuBonusAppliedSeconds = 0;
+  let sudokuBonusMultiplier = 0;
+  if (sudokuBonus && appliedSeconds > 0) {
+    sudokuBonusAppliedSeconds = Math.min(appliedSeconds, sudokuBonus.maxSeconds);
+    const multiplierCandidate = Number(sudokuBonus.multiplier);
+    if (Number.isFinite(multiplierCandidate) && multiplierCandidate > 0) {
+      sudokuBonusMultiplier = multiplierCandidate;
+    }
+  }
 
   if (appliedSeconds > 0) {
     const multiplier = Number.isFinite(Number(gameState.offlineGainMultiplier))
       && Number(gameState.offlineGainMultiplier) > 0
       ? Math.min(MYTHIQUE_OFFLINE_CAP, Number(gameState.offlineGainMultiplier))
       : MYTHIQUE_OFFLINE_BASE;
-    if (multiplier > 0 && gameState.perSecond instanceof LayeredNumber && !gameState.perSecond.isZero()) {
-      const offlineGain = gameState.perSecond.multiplyNumber(appliedSeconds * multiplier);
-      if (offlineGain instanceof LayeredNumber && !offlineGain.isZero()) {
-        gainAtoms(offlineGain, 'offline');
-        result.atomsGained = offlineGain.clone ? offlineGain.clone() : offlineGain;
+    const perSecondGain = gameState.perSecond instanceof LayeredNumber && !gameState.perSecond.isZero()
+      ? gameState.perSecond
+      : null;
+    let totalOfflineGain = null;
+    if (perSecondGain) {
+      if (sudokuBonusAppliedSeconds > 0 && sudokuBonusMultiplier > 0) {
+        const bonusGain = perSecondGain.multiplyNumber(sudokuBonusAppliedSeconds * sudokuBonusMultiplier);
+        if (bonusGain instanceof LayeredNumber && !bonusGain.isZero()) {
+          totalOfflineGain = bonusGain.clone ? bonusGain.clone() : bonusGain;
+        }
+      }
+      const remainingSeconds = appliedSeconds - sudokuBonusAppliedSeconds;
+      if (remainingSeconds > 0 && multiplier > 0) {
+        const regularGain = perSecondGain.multiplyNumber(remainingSeconds * multiplier);
+        if (regularGain instanceof LayeredNumber && !regularGain.isZero()) {
+          totalOfflineGain = totalOfflineGain
+            ? totalOfflineGain.add(regularGain)
+            : regularGain.clone ? regularGain.clone() : regularGain;
+        }
+      }
+      if (totalOfflineGain instanceof LayeredNumber && !totalOfflineGain.isZero()) {
+        gainAtoms(totalOfflineGain, 'offline');
+        result.atomsGained = totalOfflineGain.clone ? totalOfflineGain.clone() : totalOfflineGain;
         if (announceAtoms) {
-          showToast(t('scripts.app.offline.progressAtoms', { amount: offlineGain.toString() }));
+          showToast(t('scripts.app.offline.progressAtoms', { amount: totalOfflineGain.toString() }));
         }
       }
     }
+  }
+
+  if (sudokuBonus && appliedSeconds > 0) {
+    if (announceAtoms && sudokuBonusAppliedSeconds > 0 && sudokuBonusMultiplier > 0 && typeof showToast === 'function') {
+      const durationText = formatSudokuRewardDuration(sudokuBonusAppliedSeconds);
+      const multiplierText = formatMultiplier(sudokuBonusMultiplier);
+      const messageKey = 'scripts.app.arcade.sudoku.reward.applied';
+      const fallback = `Sudoku bonus applied: ${durationText} at ${multiplierText}.`;
+      const message = typeof t === 'function'
+        ? t(messageKey, { duration: durationText, multiplier: multiplierText })
+        : null;
+      showToast(message && message !== messageKey ? message : fallback);
+    }
+    result.sudokuBonus = sudokuBonusAppliedSeconds > 0 && sudokuBonusMultiplier > 0
+      ? { appliedSeconds: sudokuBonusAppliedSeconds, multiplier: sudokuBonusMultiplier }
+      : null;
+    gameState.sudokuOfflineBonus = null;
+  } else if (sudokuBonus) {
+    gameState.sudokuOfflineBonus = sudokuBonus;
   }
 
   const hasFirstTrophy = getUnlockedTrophySet().has(ARCADE_TROPHY_ID);
@@ -10382,6 +10687,7 @@ function loadGame() {
         progressSeconds: 0
       };
     }
+    gameState.sudokuOfflineBonus = normalizeSudokuOfflineBonusState(data.sudokuOfflineBonus);
     const storedInterval = Number(data.ticketStarIntervalSeconds);
     if (Number.isFinite(storedInterval) && storedInterval > 0) {
       gameState.ticketStarAverageIntervalSeconds = storedInterval;
