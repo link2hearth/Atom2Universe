@@ -873,7 +873,30 @@ const GAME_CONFIG = {
         /**
          * Nombre maximum d'entrées conservées dans la table de transposition.
          */
-        transpositionSize: 4000
+        transpositionSize: 4000,
+        /**
+         * Paramètres de créativité : permettent à l'IA de varier ses choix lorsque plusieurs
+         * coups de valeur proche sont disponibles afin d'éviter un style trop répétitif.
+         */
+        creativity: {
+          enabled: true,
+          thresholdCentipawns: 80,
+          variabilityCentipawns: 30,
+          candidateCount: 3,
+          excitementBonus: 0.35
+        },
+        /**
+         * Ajustements dynamiques de réflexion : l'IA peut prolonger sa recherche lorsqu'une
+         * position comporte beaucoup d'échanges ou des échecs possibles.
+         */
+        searchExtensions: {
+          captureDepthBonus: 1,
+          checkDepthBonus: 1,
+          tacticalMoveThreshold: 2,
+          maxDepth: 5,
+          timeBonusMs: 450,
+          branchingThreshold: 26
+        }
       },
       /**
        * Paramétrage des récompenses et de la difficulté.
