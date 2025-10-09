@@ -1236,16 +1236,24 @@
     },
     "keyboard": {
       "title": "Explorateur de clavier",
-      "subtitle": "Choisissez la zone à pratiquer et visualisez-la sur deux octaves.",
+      "subtitle": "Choisissez la zone à pratiquer et visualisez-la sur la plage sélectionnée.",
       "layoutLabel": "Nombre de touches",
       "layoutOptions": {
         "88": "88 touches (A0 – C8)",
         "76": "76 touches (E1 – G7)",
         "61": "61 touches (C2 – C7)"
       },
+      "windowLabel": "Octaves affichées",
+      "windowOptions": {
+        "one": "1 octave",
+        "two": "2 octaves",
+        "three": "3 octaves",
+        "four": "4 octaves",
+        "five": "5 octaves"
+      },
       "fullLabel": "Clavier complet",
-      "fullHint": "Cliquez ou faites glisser pour sélectionner deux octaves.",
-      "miniLabel": "Zone de jeu (2 octaves)",
+      "fullHint": "Cliquez sur une touche pour sélectionner une plage.",
+      "miniLabel": "Zone de jeu",
       "miniHint": "Les touches sélectionnées apparaissent ici pour la pratique.",
       "rangeLabel": "Plage sélectionnée"
     }

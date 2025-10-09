@@ -351,6 +351,7 @@
     }
 
     const layoutSelect = root.querySelector('#midiKeyboardLayoutSelect');
+    const windowSizeSelect = root.querySelector('#midiKeyboardOctaveSelect');
     const fullContainer = root.querySelector('#midiKeyboardFull');
     const miniContainer = root.querySelector('#midiKeyboardMini');
     const rangeValue = root.querySelector('#midiKeyboardRangeValue');
@@ -372,6 +373,56 @@
     let miniKeyRefs = new Map();
     const pointerNotes = new Map();
     const keyboardNotes = new Map();
+
+    function clampOctaveCount(value) {
+      const numeric = Number(value);
+      if (!Number.isFinite(numeric)) {
+        return 1;
+      }
+      const rounded = Math.round(numeric);
+      if (rounded < 1) {
+        return 1;
+      }
+      if (rounded > 5) {
+        return 5;
+      }
+      return rounded;
+    }
+
+    function computeWindowSizeForLayout(octaves, layout) {
+      const clampedOctaves = clampOctaveCount(octaves);
+      const requested = Math.max(12, clampedOctaves * 12);
+      if (!layout) {
+        return requested;
+      }
+      const lowest = Number(layout.lowestNote);
+      const highest = Number(layout.highestNote);
+      if (!Number.isFinite(lowest) || !Number.isFinite(highest)) {
+        return requested;
+      }
+      const layoutRange = Math.max(1, Math.round(highest - lowest + 1));
+      if (layoutRange < 12) {
+        return layoutRange;
+      }
+      return Math.min(requested, layoutRange);
+    }
+
+    function getOctaveCountFromWindowSize(size) {
+      if (!Number.isFinite(size) || size <= 0) {
+        return 1;
+      }
+      return clampOctaveCount(Math.round(size / 12));
+    }
+
+    function syncOctaveSelectFromWindowSize(size) {
+      if (!windowSizeSelect) {
+        return;
+      }
+      const value = String(getOctaveCountFromWindowSize(size));
+      if (windowSizeSelect.value !== value) {
+        windowSizeSelect.value = value;
+      }
+    }
 
     function getKeyElements(noteNumber) {
       const elements = [];
@@ -506,7 +557,8 @@
       });
     }
 
-    const windowSize = getKeyboardWindowSize();
+    const configuredWindowSize = getKeyboardWindowSize();
+    let requestedOctaves = clampOctaveCount(Math.round(configuredWindowSize / 12));
     const layouts = getConfiguredKeyboardLayouts();
     if (!layouts.length) {
       return;
@@ -519,27 +571,35 @@
       return;
     }
 
+    const initialWindowSize = computeWindowSizeForLayout(requestedOctaves, defaultLayout);
+    requestedOctaves = getOctaveCountFromWindowSize(initialWindowSize);
+
     const midpoint = Math.round((defaultLayout.lowestNote + defaultLayout.highestNote) / 2);
-    const tentativeStart = midpoint - Math.floor(windowSize / 2);
-    const initialStart = clampSelectionStart(tentativeStart, defaultLayout, windowSize);
+    const tentativeStart = midpoint - Math.floor(initialWindowSize / 2);
+    const initialStart = clampSelectionStart(tentativeStart, defaultLayout, initialWindowSize);
 
     const state = {
       layout: defaultLayout,
-      selectionStart: initialStart
+      selectionStart: initialStart,
+      windowSize: initialWindowSize
     };
 
+    syncOctaveSelectFromWindowSize(state.windowSize);
     layoutSelect.value = state.layout.id;
 
     const api = getI18n();
     if (api && typeof api.updateTranslations === 'function') {
       api.updateTranslations(layoutSelect);
+      if (windowSizeSelect) {
+        api.updateTranslations(windowSizeSelect);
+      }
     }
 
     let pointerActive = false;
     let pointerId = null;
 
     function updateRangeLabel() {
-      const activeRange = getActiveRange(state.selectionStart, windowSize);
+      const activeRange = getActiveRange(state.selectionStart, state.windowSize);
       const end = Math.min(state.layout.highestNote, activeRange.end);
       const startName = formatNoteName(activeRange.start);
       const endName = formatNoteName(end);
@@ -547,7 +607,7 @@
     }
 
     function updateFullSelectionHighlight() {
-      const activeRange = getActiveRange(state.selectionStart, windowSize);
+      const activeRange = getActiveRange(state.selectionStart, state.windowSize);
       fullKeyRefs.forEach((element, note) => {
         if (!element) {
           return;
@@ -561,7 +621,7 @@
     }
 
     function renderMiniKeyboard() {
-      const activeRange = getActiveRange(state.selectionStart, windowSize);
+      const activeRange = getActiveRange(state.selectionStart, state.windowSize);
       const end = Math.min(state.layout.highestNote, activeRange.end);
       const miniLayout = {
         id: 'window',
@@ -591,7 +651,7 @@
     }
 
     function setSelection(note) {
-      const nextStart = clampSelectionStart(note, state.layout, windowSize);
+      const nextStart = clampSelectionStart(note, state.layout, state.windowSize);
       if (nextStart === state.selectionStart) {
         return;
       }
@@ -605,10 +665,24 @@
     layoutSelect.addEventListener('change', () => {
       const nextLayout = findLayoutById(layoutSelect.value, layouts) || state.layout;
       state.layout = nextLayout;
-      state.selectionStart = clampSelectionStart(state.selectionStart, state.layout, windowSize);
+      state.windowSize = computeWindowSizeForLayout(requestedOctaves, state.layout);
+      requestedOctaves = getOctaveCountFromWindowSize(state.windowSize);
+      syncOctaveSelectFromWindowSize(state.windowSize);
+      state.selectionStart = clampSelectionStart(state.selectionStart, state.layout, state.windowSize);
       renderFullKeyboard();
       updateView();
     });
+
+    if (windowSizeSelect) {
+      windowSizeSelect.addEventListener('change', () => {
+        requestedOctaves = clampOctaveCount(windowSizeSelect.value);
+        state.windowSize = computeWindowSizeForLayout(requestedOctaves, state.layout);
+        requestedOctaves = getOctaveCountFromWindowSize(state.windowSize);
+        syncOctaveSelectFromWindowSize(state.windowSize);
+        state.selectionStart = clampSelectionStart(state.selectionStart, state.layout, state.windowSize);
+        updateView();
+      });
+    }
 
     fullContainer.addEventListener('click', (event) => {
       const note = extractNoteFromEvent(event);
