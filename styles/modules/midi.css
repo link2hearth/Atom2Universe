@@ -1,3 +1,18 @@
+:root {
+  --midi-preview-color-start: rgba(138, 97, 255, 0.95);
+  --midi-preview-color-end: rgba(255, 80, 112, 0.96);
+}
+
+body.theme-light {
+  --midi-preview-color-start: rgba(120, 90, 240, 0.9);
+  --midi-preview-color-end: rgba(240, 70, 100, 0.9);
+}
+
+body.theme-neon {
+  --midi-preview-color-start: rgba(150, 110, 255, 0.95);
+  --midi-preview-color-end: rgba(255, 90, 140, 0.98);
+}
+
 .midi-page {
   min-height: 100vh;
   display: flex;
@@ -290,6 +305,20 @@ body.theme-neon .midi-keyboard__instrument--full {
   justify-content: center;
 }
 
+.midi-key__lane {
+  position: absolute;
+  inset: clamp(0.18rem, 0.5vw, 0.32rem);
+  pointer-events: none;
+  overflow: visible;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.midi-key--black .midi-key__lane {
+  inset: clamp(0.16rem, 0.45vw, 0.28rem);
+}
+
 .midi-key {
   position: relative;
   display: inline-flex;
@@ -331,6 +360,53 @@ body.theme-neon .midi-keyboard__instrument--full {
     inset 0 -8px 0 rgba(0, 0, 0, 0.6),
     0 18px 32px rgba(0, 0, 0, 0.5);
   transform: translateX(-50%);
+}
+
+.midi-key__preview {
+  position: absolute;
+  left: clamp(18%, 1.8vw, 28%);
+  right: clamp(18%, 1.8vw, 28%);
+  bottom: clamp(0.16rem, 0.45vw, 0.28rem);
+  height: clamp(0.4rem, 1.1vw, 0.7rem);
+  border-radius: 999px;
+  background: var(--midi-preview-color-start);
+  opacity: 0;
+  transform: translateY(-120%);
+  box-shadow: 0 0 18px rgba(122, 77, 255, 0.45);
+  transition:
+    transform var(--preview-duration, 1.6s) linear,
+    background-color var(--preview-duration, 1.6s) linear,
+    opacity 0.18s ease-out,
+    box-shadow 0.3s ease-out;
+}
+
+.midi-key__preview.is-active {
+  opacity: 0.95;
+}
+
+.midi-key__preview.is-landed {
+  background: var(--midi-preview-color-end);
+  box-shadow: 0 0 22px rgba(255, 80, 112, 0.55);
+}
+
+.midi-key__preview.is-finishing {
+  opacity: 0;
+}
+
+body.theme-light .midi-key__preview {
+  box-shadow: 0 0 16px rgba(110, 80, 200, 0.45);
+}
+
+body.theme-light .midi-key__preview.is-landed {
+  box-shadow: 0 0 20px rgba(230, 70, 110, 0.42);
+}
+
+body.theme-neon .midi-key__preview {
+  box-shadow: 0 0 22px rgba(160, 130, 255, 0.5);
+}
+
+body.theme-neon .midi-key__preview.is-landed {
+  box-shadow: 0 0 26px rgba(255, 100, 150, 0.58);
 }
 
 .midi-key--white.is-active,
@@ -505,6 +581,26 @@ body.theme-neon .midi-page__nav-link:focus-visible {
   gap: 1rem;
   align-items: center;
   flex-wrap: wrap;
+}
+
+.midi-page__module .option-row--audio {
+  gap: 0.9rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.midi-page__module .option-row--audio label {
+  flex: 0 0 auto;
+  font-weight: 600;
+}
+
+.midi-page__module .option-row--audio input[type="checkbox"] {
+  transform: scale(1.1);
+}
+
+.midi-page__module .option-row--audio .option-value {
+  flex: 0 0 auto;
+  font-weight: 600;
 }
 
 .midi-page__module .option-row--slider label {

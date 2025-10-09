@@ -246,6 +246,7 @@
     container.classList.toggle('is-interactive', interactive);
 
     const keyRefs = new Map();
+    const laneRefs = new Map();
     let note = layout.lowestNote;
     const highest = layout.highestNote;
 
@@ -259,14 +260,22 @@
       slot.className = 'midi-keyboard__white-slot';
 
       const whiteKey = createKeyElement(note, 'white', interactive, activeRange);
+      const whiteLane = document.createElement('div');
+      whiteLane.className = 'midi-key__lane';
+      whiteKey.appendChild(whiteLane);
       slot.appendChild(whiteKey);
       keyRefs.set(Math.round(note), whiteKey);
+      laneRefs.set(Math.round(note), whiteLane);
 
       if (note + 1 <= highest && isBlackKey(note + 1)) {
         const blackNote = note + 1;
         const blackKey = createKeyElement(blackNote, 'black', interactive, activeRange);
+        const blackLane = document.createElement('div');
+        blackLane.className = 'midi-key__lane';
+        blackKey.appendChild(blackLane);
         slot.appendChild(blackKey);
         keyRefs.set(Math.round(blackNote), blackKey);
+        laneRefs.set(Math.round(blackNote), blackLane);
         note += 1;
       }
 
@@ -274,7 +283,7 @@
       note += 1;
     }
 
-    return { keyRefs };
+    return { keyRefs, laneRefs };
   }
 
   function formatLayoutFallbackLabel(layout) {
@@ -369,8 +378,11 @@
     let detachNoteObserver = null;
 
     const highlightState = new Map();
+    const previewEntries = new Map();
     let fullKeyRefs = new Map();
+    let fullLaneRefs = new Map();
     let miniKeyRefs = new Map();
+    let miniLaneRefs = new Map();
     const pointerNotes = new Map();
     const keyboardNotes = new Map();
 
@@ -435,6 +447,186 @@
         elements.push(miniKey);
       }
       return elements;
+    }
+
+    function getKeyLanes(noteNumber) {
+      const lanes = [];
+      const fullLane = fullLaneRefs.get(noteNumber);
+      if (fullLane) {
+        lanes.push(fullLane);
+      }
+      const miniLane = miniLaneRefs.get(noteNumber);
+      if (miniLane) {
+        lanes.push(miniLane);
+      }
+      return lanes;
+    }
+
+    function destroyPreviewBars(entry, options = {}) {
+      if (!entry || !Array.isArray(entry.bars)) {
+        return;
+      }
+      const immediate = options.immediate === true;
+      entry.bars.forEach((bar) => {
+        if (!bar) {
+          return;
+        }
+        if (immediate || typeof window === 'undefined') {
+          bar.remove();
+          return;
+        }
+        bar.classList.add('is-finishing');
+        window.setTimeout(() => {
+          bar.remove();
+        }, 220);
+      });
+      entry.bars = [];
+    }
+
+    function buildPreviewBars(entry) {
+      if (!entry) {
+        return;
+      }
+      destroyPreviewBars(entry, { immediate: true });
+      const lanes = getKeyLanes(entry.note);
+      if (!lanes.length) {
+        return;
+      }
+
+      const referenceWindow = entry.previewLead > 0 ? entry.previewLead : Math.max(0.35, entry.sustainSeconds || 0.35);
+      const sustainSeconds = Math.max(0.08, entry.sustainSeconds || 0.08);
+      const previewDuration = entry.highlightStarted ? 0 : entry.previewLead;
+
+      entry.bars = lanes.map((lane) => {
+        if (!lane) {
+          return null;
+        }
+        const doc = lane.ownerDocument || document;
+        const bar = doc.createElement('div');
+        bar.className = 'midi-key__preview';
+        bar.dataset.eventId = entry.id;
+        if (previewDuration > 0) {
+          bar.style.setProperty('--preview-duration', `${Math.max(0.05, previewDuration)}s`);
+        }
+
+        const laneHeight = lane.clientHeight || lane.offsetHeight || 0;
+        const baseReference = Math.max(0.35, referenceWindow);
+        let height;
+        if (laneHeight > 0) {
+          const ratio = Math.max(0.18, Math.min(1.1, sustainSeconds / baseReference));
+          height = Math.max(6, Math.min(laneHeight * 1.1, laneHeight * ratio));
+        } else {
+          height = Math.max(6, Math.min(160, sustainSeconds * 45));
+        }
+        bar.style.height = `${height}px`;
+
+        lane.appendChild(bar);
+
+        if (entry.highlightStarted || previewDuration <= 0) {
+          bar.classList.add('is-active');
+          bar.classList.add('is-landed');
+          bar.style.transform = 'translateY(0)';
+          bar.style.backgroundColor = 'var(--midi-preview-color-end)';
+        } else if (typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
+          window.requestAnimationFrame(() => {
+            bar.classList.add('is-active');
+            bar.style.transform = 'translateY(0)';
+            bar.style.backgroundColor = 'var(--midi-preview-color-end)';
+          });
+        } else {
+          bar.classList.add('is-active');
+          bar.style.transform = 'translateY(0)';
+          bar.style.backgroundColor = 'var(--midi-preview-color-end)';
+        }
+
+        return bar;
+      }).filter(Boolean);
+    }
+
+    function refreshPreviewLanes() {
+      previewEntries.forEach((entry) => {
+        buildPreviewBars(entry);
+      });
+    }
+
+    function startPreviewHighlight(entry) {
+      if (!entry || entry.highlightStarted) {
+        return;
+      }
+      entry.highlightStarted = true;
+      if (!entry.bars || entry.bars.length === 0) {
+        if (entry.source === 'playback') {
+          buildPreviewBars(entry);
+        }
+      }
+      entry.bars.forEach((bar) => {
+        if (!bar) {
+          return;
+        }
+        bar.classList.add('is-landed');
+        bar.style.transform = 'translateY(0)';
+        bar.style.backgroundColor = 'var(--midi-preview-color-end)';
+      });
+      recordNoteStart(entry.note, entry.source);
+    }
+
+    function finalizePreviewEntry(entry, options = {}) {
+      if (!entry) {
+        return;
+      }
+      if (entry.highlightTimer && typeof window !== 'undefined') {
+        window.clearTimeout(entry.highlightTimer);
+      }
+      entry.highlightTimer = null;
+      if (entry.highlightStarted) {
+        recordNoteStop(entry.note, entry.source);
+      }
+      destroyPreviewBars(entry, options);
+      previewEntries.delete(entry.id);
+    }
+
+    function createPreviewEntry(detail, noteNumber, source) {
+      const normalizedNote = Math.round(noteNumber);
+      const previewLead = Math.max(0, Number.isFinite(detail?.previewLeadTime) ? detail.previewLeadTime : 0);
+      const sustainSeconds = Math.max(0.08, Number.isFinite(detail?.durationSeconds) ? detail.durationSeconds : 0.08);
+      const eventId = typeof detail?.id === 'string' && detail.id ? detail.id : `preview-${normalizedNote}-${Date.now()}`;
+
+      if (previewEntries.has(eventId)) {
+        finalizePreviewEntry(previewEntries.get(eventId), { immediate: true });
+      }
+
+      const entry = {
+        id: eventId,
+        note: normalizedNote,
+        source,
+        previewLead,
+        sustainSeconds,
+        bars: [],
+        highlightTimer: null,
+        highlightStarted: false,
+      };
+
+      previewEntries.set(eventId, entry);
+
+      if (previewLead > 0) {
+        buildPreviewBars(entry);
+        if (typeof window !== 'undefined') {
+          const timerId = window.setTimeout(() => {
+            entry.highlightTimer = null;
+            if (!previewEntries.has(entry.id)) {
+              return;
+            }
+            startPreviewHighlight(entry);
+          }, Math.max(0, Math.round(previewLead * 1000)));
+          entry.highlightTimer = timerId;
+        } else {
+          startPreviewHighlight(entry);
+        }
+      } else {
+        startPreviewHighlight(entry);
+      }
+
+      return entry;
     }
 
     function updateKeyHighlight(noteNumber) {
@@ -514,7 +706,10 @@
         return;
       }
       const source = detail?.source === 'manual' ? 'manual' : 'playback';
-      recordNoteStart(noteNumber, source);
+      const entry = createPreviewEntry(detail, noteNumber, source);
+      if (!entry) {
+        recordNoteStart(Math.round(noteNumber), source);
+      }
     }
 
     function handleNoteOff(detail) {
@@ -523,7 +718,12 @@
         return;
       }
       const source = detail?.source === 'manual' ? 'manual' : 'playback';
-      recordNoteStop(noteNumber, source);
+      const eventId = typeof detail?.id === 'string' && detail.id ? detail.id : null;
+      if (eventId && previewEntries.has(eventId)) {
+        finalizePreviewEntry(previewEntries.get(eventId));
+      } else {
+        recordNoteStop(Math.round(noteNumber), source);
+      }
     }
 
     function attachPlayer(player) {
@@ -634,7 +834,9 @@
         activeRange
       });
       miniKeyRefs = result.keyRefs || new Map();
+      miniLaneRefs = result.laneRefs || new Map();
       refreshActiveHighlights();
+      refreshPreviewLanes();
     }
 
     function updateView() {
@@ -646,8 +848,10 @@
     function renderFullKeyboard() {
       const result = buildKeyboard(fullContainer, state.layout, { interactive: true });
       fullKeyRefs = result.keyRefs || new Map();
+      fullLaneRefs = result.laneRefs || new Map();
       updateFullSelectionHighlight();
       refreshActiveHighlights();
+      refreshPreviewLanes();
     }
 
     function setSelection(note) {

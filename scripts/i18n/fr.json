@@ -721,6 +721,8 @@
             "soundFont": "SoundFont",
             "volume": "Volume général",
             "pianoOverride": "Forcer le programme piano pour les pistes piano",
+            "engineAudio": "Son du moteur",
+            "keyboardAudio": "Son du clavier",
             "speed": "Vitesse de lecture",
             "speedNormal": "Tempo normal (100%)",
             "transposeZero": "0 demi-ton",
@@ -798,6 +800,16 @@
           "pianoOverride": {
             "enabled": "Activé",
             "disabled": "Désactivé"
+          },
+          "audio": {
+            "engine": {
+              "enabled": "Activé",
+              "disabled": "Coupé"
+            },
+            "keyboard": {
+              "enabled": "Activé",
+              "disabled": "Coupé"
+            }
           },
           "controls": {
             "octaveDown": "Octave −",
