@@ -2398,7 +2398,10 @@
     return color + typeChar.toUpperCase();
   }
 
-  function updateSquareAccessibility(button, piece) {
+  function updateSquareAccessibility(button, piece, shouldUpdate) {
+    if (!shouldUpdate) {
+      return;
+    }
     const coordinate = button.dataset.coordinate;
     if (piece) {
       const label = getPieceLabel(piece);
@@ -2428,39 +2431,68 @@
     );
   }
 
-  function renderBoard(state, ui) {
+  function renderBoard(state, ui, options) {
     if (ui.boardElement) {
       const hideCoordinates = state.preferences && state.preferences.showCoordinates === false;
       ui.boardElement.classList.toggle('chess-board--hide-coordinates', hideCoordinates);
+    }
+    const forceAccessibility = Boolean(options && options.forceAccessibility);
+    const selection = state.selection;
+    const selectionIndex = selection ? (selection.row * BOARD_SIZE) + selection.col : -1;
+    const selectionKey = selection ? selection.row + ',' + selection.col : null;
+    const selectionMoves = selectionKey ? state.legalMovesByFrom.get(selectionKey) || [] : null;
+    let selectionTargets = null;
+    if (selectionMoves && selectionMoves.length > 0) {
+      selectionTargets = new Map();
+      for (let i = 0; i < selectionMoves.length; i += 1) {
+        const move = selectionMoves[i];
+        selectionTargets.set((move.toRow * BOARD_SIZE) + move.toCol, move);
+      }
     }
     for (let row = 0; row < BOARD_SIZE; row += 1) {
       for (let col = 0; col < BOARD_SIZE; col += 1) {
         const button = ui.squares[row][col];
         const piece = state.board[row][col];
-        button.textContent = getPieceSymbol(piece);
-        button.classList.toggle('has-piece', Boolean(piece));
-        updateSquareAccessibility(button, piece);
-        if (!state.selection || state.selection.row !== row || state.selection.col !== col) {
+        const pieceKey = piece || '';
+        const pieceChanged = button.dataset.piece !== pieceKey;
+        if (pieceChanged) {
+          button.dataset.piece = pieceKey;
+          const symbol = getPieceSymbol(piece);
+          if (button.textContent !== symbol) {
+            button.textContent = symbol;
+          }
+          if (piece) {
+            button.classList.add('has-piece');
+          } else {
+            button.classList.remove('has-piece');
+          }
+        }
+        updateSquareAccessibility(button, piece, pieceChanged || forceAccessibility);
+        const squareIndex = (row * BOARD_SIZE) + col;
+        if (squareIndex === selectionIndex) {
+          button.classList.add('is-selected');
+        } else {
           button.classList.remove('is-selected');
         }
         const isDragTarget = state.dragContext
           && state.dragContext.hoverRow === row
           && state.dragContext.hoverCol === col;
         button.classList.toggle('is-drag-target', Boolean(isDragTarget));
-        if (state.selection) {
-          const key = state.selection.row + ',' + state.selection.col;
-          const moves = state.legalMovesByFrom.get(key) || [];
-          let isTarget = false;
-          for (let i = 0; i < moves.length; i += 1) {
-            const move = moves[i];
-            if (move.toRow === row && move.toCol === col) {
-              isTarget = true;
-              button.classList.toggle('is-legal-capture', move.isCapture);
-              button.classList.toggle('is-legal-move', !move.isCapture);
-              break;
+        if (selection) {
+          if (selectionTargets && selectionTargets.size > 0) {
+            const move = selectionTargets.get(squareIndex);
+            if (move) {
+              if (move.isCapture) {
+                button.classList.add('is-legal-capture');
+                button.classList.remove('is-legal-move');
+              } else {
+                button.classList.add('is-legal-move');
+                button.classList.remove('is-legal-capture');
+              }
+            } else {
+              button.classList.remove('is-legal-move', 'is-legal-capture');
             }
-          }
-          if (!isTarget) {
+          } else {
             button.classList.remove('is-legal-move', 'is-legal-capture');
           }
         } else {
@@ -3844,7 +3876,7 @@
       const ariaLabel = translate('index.sections.echecs.board', 'Standard chessboard');
       boardElement.setAttribute('aria-label', ariaLabel);
     }
-    renderBoard(state, ui);
+    renderBoard(state, ui, { forceAccessibility: true });
     if (state.pendingPromotion && ui.promotionElement && !ui.promotionElement.hidden) {
       showPromotionDialog(state, ui, state.pendingPromotion);
     } else {
