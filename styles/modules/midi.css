@@ -371,7 +371,7 @@ body.theme-neon .midi-keyboard__instrument--full {
   border-radius: 999px;
   background: var(--midi-preview-color-start);
   opacity: 0;
-  transform: translateY(-120%);
+  transform: translateY(calc(-1 * var(--preview-travel-distance, 120%)));
   box-shadow: 0 0 18px rgba(122, 77, 255, 0.45);
   transition:
     transform var(--preview-duration, 1.6s) linear,

@@ -43,6 +43,13 @@ const MIDI_KEYBOARD_WINDOW_SIZE = 24;
  */
 const MIDI_PLAYBACK_PREVIEW_LEAD_SECONDS = 2;
 
+if (typeof globalThis !== 'undefined') {
+  globalThis.MIDI_KEYBOARD_LAYOUTS = MIDI_KEYBOARD_LAYOUTS;
+  globalThis.MIDI_DEFAULT_KEYBOARD_LAYOUT_ID = MIDI_DEFAULT_KEYBOARD_LAYOUT_ID;
+  globalThis.MIDI_KEYBOARD_WINDOW_SIZE = MIDI_KEYBOARD_WINDOW_SIZE;
+  globalThis.MIDI_PLAYBACK_PREVIEW_LEAD_SECONDS = MIDI_PLAYBACK_PREVIEW_LEAD_SECONDS;
+}
+
 function translateOrDefault(key, fallback, params) {
   if (typeof key !== 'string' || !key.trim()) {
     return fallback;
