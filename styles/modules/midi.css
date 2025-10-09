@@ -439,9 +439,38 @@ body.theme-neon .midi-keyboard__instrument--full {
   transform: translate(-50%, -0.2rem);
 }
 
+.midi-key__preview-label {
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  transform: translate(-50%, -0.2rem);
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(12, 24, 60, 0.4);
+  color: #f6f7ff;
+  font-size: clamp(0.55rem, 1vw, 0.78rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.22s ease-out, transform 0.22s ease-out, background-color 0.3s ease-out, color 0.3s ease-out;
+}
+
+.midi-key__preview.is-active .midi-key__preview-label {
+  opacity: 1;
+  transform: translate(-50%, -0.4rem);
+}
+
 .midi-key__preview.is-landed {
   background: var(--midi-preview-color-end);
   box-shadow: 0 0 24px rgba(255, 80, 112, 0.55);
+}
+
+.midi-key__preview.is-landed .midi-key__preview-label {
+  background: rgba(255, 255, 255, 0.22);
 }
 
 .midi-key__preview.is-landed .midi-key__preview-label {
@@ -459,6 +488,17 @@ body.theme-light .midi-key__preview {
 
 body.theme-light .midi-key__preview.is-landed {
   box-shadow: 0 0 22px rgba(230, 90, 140, 0.45);
+}
+
+body.theme-light .midi-key__preview-label {
+  background: rgba(220, 230, 255, 0.85);
+  color: #0b1933;
+  text-shadow: none;
+}
+
+body.theme-light .midi-key__preview.is-landed .midi-key__preview-label {
+  background: rgba(120, 150, 230, 0.35);
+  color: #0b1933;
 }
 
 body.theme-light .midi-key__preview-label {
