@@ -3902,10 +3902,39 @@
       }
     }
 
-    getManualProgram(channel = 0) {
-      const normalizedChannel = Number.isFinite(channel) ? Math.max(0, Math.min(15, Math.round(channel))) : 0;
+    getLastKnownProgram(channel = 0) {
+      const normalizedChannel = Number.isFinite(channel)
+        ? Math.max(0, Math.min(15, Math.round(channel)))
+        : 0;
       if (this.lastProgramByChannel.has(normalizedChannel)) {
         return this.lastProgramByChannel.get(normalizedChannel);
+      }
+      if (this.timeline && Array.isArray(this.timeline.notes)) {
+        for (const note of this.timeline.notes) {
+          if (!note) {
+            continue;
+          }
+          const noteChannel = Number.isFinite(note.channel) ? note.channel : 0;
+          if (noteChannel !== normalizedChannel) {
+            continue;
+          }
+          if (!Number.isFinite(note.program)) {
+            continue;
+          }
+          this.lastProgramByChannel.set(noteChannel, note.program);
+          return note.program;
+        }
+      }
+      return null;
+    }
+
+    getManualProgram(channel = 0) {
+      const normalizedChannel = Number.isFinite(channel)
+        ? Math.max(0, Math.min(15, Math.round(channel)))
+        : 0;
+      const directProgram = this.getLastKnownProgram(normalizedChannel);
+      if (Number.isFinite(directProgram)) {
+        return directProgram;
       }
       for (const [chan, program] of this.lastProgramByChannel.entries()) {
         if (chan !== 9) {
@@ -7954,6 +7983,7 @@
   function initializeMidiPracticeKeyboards(initialPlayer) {
     const NOTE_NAMES = DEFAULT_NOTE_NAMES;
     const BLACK_NOTE_INDEXES = new Set([1, 3, 6, 8, 10]);
+    const PIANO_PROGRAMS = new Set([0, 1, 2, 3, 4, 5, 6, 7]);
     const FALLBACK_KEYBOARD_LAYOUTS = [
       { id: '88', keyCount: 88, lowestMidiNote: 21, highestMidiNote: 108 },
       { id: '76', keyCount: 76, lowestMidiNote: 28, highestMidiNote: 103 },
@@ -8508,6 +8538,57 @@
         return Math.max(0, Math.min(127, normalized));
       }
 
+      function normalizeProgramValue(program) {
+        const numeric = Number(program);
+        if (!Number.isFinite(numeric)) {
+          return null;
+        }
+        const clamped = Math.max(0, Math.min(127, Math.round(numeric)));
+        return clamped;
+      }
+
+      function isPianoProgram(program) {
+        const normalized = normalizeProgramValue(program);
+        if (normalized == null) {
+          return false;
+        }
+        return PIANO_PROGRAMS.has(normalized);
+      }
+
+      function resolveProgramForDetail(detail) {
+        if (!detail) {
+          return null;
+        }
+        const direct = normalizeProgramValue(detail.program);
+        if (direct != null) {
+          return direct;
+        }
+        const channel = Number.isFinite(detail.channel)
+          ? Math.max(0, Math.min(15, Math.round(detail.channel)))
+          : null;
+        if (channel == null) {
+          return null;
+        }
+        if (midiPlayer && typeof midiPlayer.getLastKnownProgram === 'function') {
+          const known = normalizeProgramValue(midiPlayer.getLastKnownProgram(channel));
+          if (known != null) {
+            return known;
+          }
+        }
+        return null;
+      }
+
+      function shouldObserveDetail(detail) {
+        if (!detail) {
+          return false;
+        }
+        if (detail.source === 'manual') {
+          return true;
+        }
+        const program = resolveProgramForDetail(detail);
+        return program != null && isPianoProgram(program);
+      }
+
       function resolveKeyFromMap(refs, container, noteNumber) {
         if (!refs) {
           return null;
@@ -8572,29 +8653,21 @@
       }
 
       function getKeyElements(noteNumber) {
-        const elements = [];
         const fullKey = resolveKeyFromMap(fullKeyRefs, fullContainer, noteNumber);
-        if (fullKey) {
-          elements.push(fullKey);
-        }
         const miniKey = resolveKeyFromMap(miniKeyRefs, miniContainer, noteNumber);
-        if (miniKey) {
-          elements.push(miniKey);
-        }
-        return elements;
+        return {
+          full: fullKey ? [fullKey] : [],
+          mini: miniKey ? [miniKey] : [],
+        };
       }
 
       function getKeyLanes(noteNumber) {
-        const lanes = [];
         const fullLane = resolveLaneFromMap(fullLaneRefs, fullContainer, noteNumber);
-        if (fullLane) {
-          lanes.push(fullLane);
-        }
         const miniLane = resolveLaneFromMap(miniLaneRefs, miniContainer, noteNumber);
-        if (miniLane) {
-          lanes.push(miniLane);
-        }
-        return lanes;
+        return {
+          full: fullLane ? [fullLane] : [],
+          mini: miniLane ? [miniLane] : [],
+        };
       }
 
       function destroyPreviewBars(entry, options = {}) {
@@ -8720,15 +8793,18 @@
           return;
         }
         destroyPreviewBars(entry, { immediate: true });
-        const lanes = getKeyLanes(entry.note);
-        if (!lanes.length) {
+        const { full: fullLanes, mini: miniLanes } = getKeyLanes(entry.note);
+        const laneTargets = entry.source === 'manual'
+          ? fullLanes.concat(miniLanes)
+          : fullLanes;
+        if (!laneTargets.length) {
           entry.bars = [];
           return;
         }
 
         const previewDuration = entry.highlightStarted ? 0 : entry.previewLead;
 
-        entry.bars = lanes
+        entry.bars = laneTargets
           .map((lane) => createPreviewBar(entry, lane, previewDuration))
           .filter(Boolean);
       }
@@ -8850,37 +8926,67 @@
         const stats = highlightState.get(noteNumber) || { manual: 0, playback: 0 };
         const manualCount = Math.max(0, stats.manual || 0);
         const playbackCount = Math.max(0, stats.playback || 0);
-        const total = manualCount + playbackCount;
-        const elements = getKeyElements(noteNumber);
-        elements.forEach((element) => {
-          if (!element) {
-            return;
-          }
-          if (total > 0) {
+        const { full: fullKeys, mini: miniKeys } = getKeyElements(noteNumber);
+        const manualTargets = fullKeys.concat(miniKeys);
+
+        if (manualCount > 0) {
+          manualTargets.forEach((element) => {
+            if (!element) {
+              return;
+            }
             element.classList.add('is-playing');
-          } else {
-            element.classList.remove('is-playing');
-          }
-          if (manualCount > 0) {
             element.classList.add('is-playing--manual');
             if (Number.isFinite(stats.manualBrightness)) {
               element.style.setProperty('--midi-key-manual-brightness', stats.manualBrightness);
             }
-          } else {
+          });
+        } else {
+          manualTargets.forEach((element) => {
+            if (!element) {
+              return;
+            }
             element.classList.remove('is-playing--manual');
             element.style.removeProperty('--midi-key-manual-brightness');
-          }
-          if (playbackCount > 0) {
+          });
+        }
+
+        if (playbackCount > 0) {
+          fullKeys.forEach((element) => {
+            if (!element) {
+              return;
+            }
+            element.classList.add('is-playing');
             element.classList.add('is-playing--playback');
             if (Number.isFinite(stats.playbackBrightness)) {
               element.style.setProperty('--midi-key-playback-brightness', stats.playbackBrightness);
             }
-          } else {
+          });
+        } else {
+          fullKeys.forEach((element) => {
+            if (!element) {
+              return;
+            }
             element.classList.remove('is-playing--playback');
             element.style.removeProperty('--midi-key-playback-brightness');
-          }
-        });
-        if (total <= 0) {
+          });
+        }
+
+        if (manualCount <= 0) {
+          miniKeys.forEach((element) => {
+            if (!element) {
+              return;
+            }
+            element.classList.remove('is-playing');
+          });
+        }
+
+        if (manualCount <= 0 && playbackCount <= 0) {
+          fullKeys.forEach((element) => {
+            if (!element) {
+              return;
+            }
+            element.classList.remove('is-playing');
+          });
           highlightState.delete(noteNumber);
         }
       }
@@ -8956,6 +9062,9 @@
         if (noteNumber == null) {
           return;
         }
+        if (!shouldObserveDetail(detail)) {
+          return;
+        }
         const source = detail?.source === 'manual' ? 'manual' : 'playback';
         const entry = createPreviewEntry(detail, noteNumber, source);
         if (!entry) {
@@ -8966,6 +9075,9 @@
       function handleNoteOff(detail) {
         const noteNumber = coerceMidiNote(detail?.note);
         if (noteNumber == null) {
+          return;
+        }
+        if (!shouldObserveDetail(detail)) {
           return;
         }
         const source = detail?.source === 'manual' ? 'manual' : 'playback';
