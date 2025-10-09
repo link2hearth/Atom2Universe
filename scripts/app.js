@@ -97,6 +97,7 @@ const UI_SCALE_STORAGE_KEY = 'atom2univers.options.uiScale';
 
 const UI_SCALE_CONFIG = (() => {
   const fallbackChoices = {
+    small: Object.freeze({ id: 'small', factor: 0.75 }),
     normal: Object.freeze({ id: 'normal', factor: 1 }),
     large: Object.freeze({ id: 'large', factor: 1.5 })
   };

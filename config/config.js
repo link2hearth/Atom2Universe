@@ -661,6 +661,7 @@ const GAME_CONFIG = {
     scale: {
       default: 'normal',
       options: [
+        { id: 'small', factor: 0.75 },
         { id: 'normal', factor: 1 },
         { id: 'large', factor: 1.5 }
       ]

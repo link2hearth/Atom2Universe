@@ -489,6 +489,7 @@
           "label": "Interface size",
           "ariaLabel": "Choose the scale applied to interface text and numbers",
           "options": {
+            "small": "Small size (×0.75)",
             "normal": "Standard size",
             "large": "Large size (×1.5)"
           }
