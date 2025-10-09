@@ -6685,13 +6685,14 @@
       const speed = this.clampPlaybackSpeed(speedParam || 1);
       const now = this.audioContext.currentTime;
       const startOffset = Number.isFinite(note.startTime) ? note.startTime : 0;
-      const startAt = Math.max(baseTime + (startOffset / speed), now + 0.001);
-      const velocity = Math.max(0.08, Math.min(1, note.velocity || 0.2));
-      const baseStartDelay = Math.max(0, startAt - now);
       const isPlayback = source === 'playback';
       const previewLeadBase = isPlayback
-        ? Math.max(0, Math.min(this.previewLeadSeconds || 0, baseStartDelay))
+        ? Math.max(0, this.previewLeadSeconds || 0)
         : 0;
+      const scheduledBase = baseTime + (startOffset / speed);
+      const startAt = Math.max(scheduledBase + previewLeadBase, now + 0.001);
+      const velocity = Math.max(0.08, Math.min(1, note.velocity || 0.2));
+      const baseStartDelay = Math.max(0, startAt - now);
       const startDelaySeconds = Math.max(0, baseStartDelay - previewLeadBase);
       const timelineDuration = Math.max(0.02, Number.isFinite(note.duration) ? note.duration : 0.12);
       const duration = Math.max(0.02, timelineDuration / speed);
