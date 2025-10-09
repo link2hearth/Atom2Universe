@@ -1507,6 +1507,15 @@
       "offlineTickets": {
         "ticketSingular": "ticket",
         "ticketPlural": "tickets"
+      },
+      "arcade": {
+        "sudoku": {
+          "reward": {
+            "ready": "Sudoku bonus ready: next offline gains will be {multiplier} for up to {duration} (solved in {elapsed}, limit {limit}).",
+            "missed": "Sudoku cleared in {elapsed}, slower than the limit ({limit}). Bonus not granted.",
+            "applied": "Sudoku bonus applied: {duration} at {multiplier}."
+          }
+        }
       }
     },
     "gacha": {

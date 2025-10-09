@@ -1420,6 +1420,19 @@ const GAME_CONFIG = {
         facile: { min: 30, max: 34 },
         moyen: { min: 24, max: 28 },
         difficile: { min: 18, max: 22 }
+      },
+      /**
+       * Bonus accordé lorsqu'un Sudoku est résolu rapidement.
+       * - timeLimitMinutes : temps maximal (en minutes) pour déclencher le bonus.
+       * - offlineBonusHours : durée couverte à 100 % pendant la prochaine collecte hors ligne.
+       * - offlineMultiplier : multiplicateur appliqué durant cette fenêtre (1 = 100 % de l’APS).
+       */
+      rewards: {
+        speedCompletion: {
+          timeLimitMinutes: 10,
+          offlineBonusHours: 6,
+          offlineMultiplier: 1
+        }
       }
     },
     quantum2048: {

@@ -1507,6 +1507,15 @@
       "offlineTickets": {
         "ticketSingular": "ticket",
         "ticketPlural": "tickets"
+      },
+      "arcade": {
+        "sudoku": {
+          "reward": {
+            "ready": "Bonus Sudoku : prochaine collecte hors ligne à {multiplier} pendant {duration} (résolu en {elapsed}, limite {limit}).",
+            "missed": "Sudoku résolu en {elapsed}, au-delà de la limite ({limit}). Bonus non déclenché.",
+            "applied": "Bonus Sudoku appliqué : {duration} à {multiplier}."
+          }
+        }
       }
     },
     "gacha": {
