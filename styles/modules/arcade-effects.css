@@ -279,6 +279,7 @@ body.theme-neon .arcade-hud__combo {
   background: rgba(30, 60, 140, 0.35);
   color: #f5f7ff;
   font: inherit;
+  font-size: 1rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: clamp(0.4rem, 0.9vw, 0.65rem) clamp(0.8rem, 1.8vw, 1.4rem);
