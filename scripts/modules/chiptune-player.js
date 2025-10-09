@@ -6690,18 +6690,20 @@
         ? Math.max(0, this.previewLeadSeconds || 0)
         : 0;
       const scheduledBase = baseTime + (startOffset / speed);
-      const startAt = Math.max(scheduledBase + previewLeadBase, now + 0.001);
+      const visualStartAt = Math.max(scheduledBase, now + 0.001);
+      const startAt = visualStartAt + previewLeadBase;
       const velocity = Math.max(0.08, Math.min(1, note.velocity || 0.2));
       const baseStartDelay = Math.max(0, startAt - now);
-      const startDelaySeconds = Math.max(0, baseStartDelay - previewLeadBase);
+      const startDelaySeconds = Math.max(0, visualStartAt - now);
+      const effectivePreviewLead = Math.max(0, Math.min(previewLeadBase, baseStartDelay));
       const timelineDuration = Math.max(0.02, Number.isFinite(note.duration) ? note.duration : 0.12);
       const duration = Math.max(0.02, timelineDuration / speed);
       const audioAllowed = isPlayback ? this.engineAudioEnabled : this.keyboardAudioEnabled;
       const visualizationContext = {
         startDelay: startDelaySeconds,
-        endDelay: startDelaySeconds + previewLeadBase + Math.max(0.1, duration),
+        endDelay: startDelaySeconds + effectivePreviewLead + Math.max(0.1, duration),
         source,
-        previewLeadTime: previewLeadBase,
+        previewLeadTime: effectivePreviewLead,
         durationSeconds: duration,
         playbackDelay: baseStartDelay,
       };
@@ -6712,7 +6714,7 @@
 
       const instrument = this.getInstrumentSettings(note);
       if (!audioAllowed) {
-        const estimatedEnd = startDelaySeconds + previewLeadBase + duration + 0.35;
+        const estimatedEnd = startDelaySeconds + effectivePreviewLead + duration + 0.35;
         visualizationContext.endDelay = Math.max(visualizationContext.endDelay, estimatedEnd);
         const silentEventId = this.scheduleNoteVisualization(note, visualizationContext);
         if (returnHandle) {
