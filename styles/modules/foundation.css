@@ -811,6 +811,15 @@ body.theme-neon .status-bar {
   animation: brandPortalPulse 1.4s ease-in-out forwards;
 }
 
+.nav-button--vibrate {
+  animation: navButtonVibrate 0.18s linear infinite;
+}
+
+.nav-button--vibrate:hover,
+.nav-button--vibrate:focus-visible {
+  animation-name: navButtonVibrateHover;
+}
+
 .nav-button.active {
   background: var(--nav-button-active-bg);
   color: var(--nav-button-active-color);
@@ -960,6 +969,38 @@ body.theme-neon .nav-button.active {
   --nav-button-active-color: #08143a;
   --nav-button-active-color-light: #040a1b;
   --nav-button-active-color-neon: #040a1b;
+}
+
+@keyframes navButtonVibrate {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  25% {
+    transform: translate3d(-1px, 0, 0);
+  }
+  75% {
+    transform: translate3d(1px, 0, 0);
+  }
+}
+
+@keyframes navButtonVibrateHover {
+  0%,
+  100% {
+    transform: translate3d(0, -1px, 0);
+  }
+  25% {
+    transform: translate3d(-1px, -1px, 0);
+  }
+  75% {
+    transform: translate3d(1px, -1px, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-button--vibrate {
+    animation: none;
+  }
 }
 
 main {
