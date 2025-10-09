@@ -1413,8 +1413,10 @@
             <p class="info-card__subtitle" data-i18n="index.sections.info.progress.subtitle">Suivi des performances de la session et de l’historique.</p>
           </header>
           <div class="info-progress-grid" role="group" aria-labelledby="info-progress-title">
-            <section class="info-progress-block" aria-labelledby="info-session-title">
-              <h4 id="info-session-title" data-i18n="index.sections.info.progress.session.title">Session en cours</h4>
+            <section class="info-progress-block info-progress-block--session" aria-labelledby="info-session-title">
+              <header class="info-progress-block__header">
+                <h4 id="info-session-title" data-i18n="index.sections.info.progress.session.title">Session en cours</h4>
+              </header>
               <dl class="info-metrics">
                 <div class="info-metrics__row">
                   <dt data-i18n="index.sections.info.progress.session.atoms">Atomes générés</dt>
@@ -1450,8 +1452,10 @@
                 </div>
               </dl>
             </section>
-            <section class="info-progress-block" aria-labelledby="info-global-title">
-              <h4 id="info-global-title" data-i18n="index.sections.info.progress.global.title">Historique global</h4>
+            <section class="info-progress-block info-progress-block--global" aria-labelledby="info-global-title">
+              <header class="info-progress-block__header">
+                <h4 id="info-global-title" data-i18n="index.sections.info.progress.global.title">Historique global</h4>
+              </header>
               <dl class="info-metrics">
                 <div class="info-metrics__row">
                   <dt data-i18n="index.sections.info.progress.global.atoms">Total d’atomes</dt>
