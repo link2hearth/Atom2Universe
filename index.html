@@ -714,6 +714,27 @@
         <button
           type="button"
           class="arcade-hub-card"
+          aria-label="Accéder au mini-jeu Échecs"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.echecs.aria"
+          data-page-target="echecs"
+        >
+          <span
+            class="arcade-hub-card__title"
+            role="heading"
+            aria-level="3"
+            data-i18n="index.sections.arcadeHub.cards.echecs.title"
+          >Échecs</span>
+          <p
+            class="arcade-hub-card__description"
+            data-i18n="index.sections.arcadeHub.cards.echecs.description"
+          >Affrontez une IA sur un échiquier quantique pensé pour les stratèges en herbe.</p>
+          <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.echecs.cta"
+            >Planifier</span
+          >
+        </button>
+        <button
+          type="button"
+          class="arcade-hub-card"
           aria-label="Ouvrir le mini-jeu Blackjack"
           data-i18n="aria-label:index.sections.arcadeHub.cards.blackjack.aria"
           data-page-target="blackjack"
@@ -1099,6 +1120,69 @@
           aria-label="Plateau du solitaire"
           data-i18n="aria-label:index.sections.solitaire.board"
         ></div>
+      </div>
+    </section>
+
+    <section
+      id="echecs"
+      class="page page--echecs"
+      data-page-group="arcade"
+      aria-label="Mini-jeu d'échecs — moteur côté client"
+      data-i18n="aria-label:index.sections.echecs.aria"
+      hidden
+    >
+      <div class="chess-game">
+        <header class="chess-game__header">
+          <h2 class="chess-game__title" data-i18n="index.sections.echecs.title">Échecs quantiques</h2>
+          <p class="chess-game__lead" data-i18n="index.sections.echecs.lead">
+            Le moteur de règles tourne désormais côté client : explorez les coups légaux pendant que l’IA se prépare.
+          </p>
+        </header>
+        <div class="chess-game__layout">
+          <div class="chess-game__board-area">
+            <div
+              class="chess-board"
+              id="chessBoard"
+              role="grid"
+              aria-label="Plateau d'échecs 8 × 8"
+              data-i18n="aria-label:index.sections.echecs.board"
+              data-chess-board
+            ></div>
+            <div class="chess-promotion" data-chess-promotion hidden>
+              <p
+                class="chess-promotion__title"
+                data-i18n="index.sections.echecs.promotion.title"
+              >
+                Choisissez la pièce de promotion
+              </p>
+              <div class="chess-promotion__options" data-chess-promotion-options></div>
+            </div>
+          </div>
+          <div class="chess-game__panel">
+            <p
+              class="chess-game__status"
+              id="chessStatus"
+              data-chess-status
+              aria-live="polite"
+              data-i18n="index.sections.echecs.status.ready"
+            >
+              Le moteur est prêt. Les blancs jouent en premier.
+            </p>
+            <p
+              class="chess-game__outcome"
+              id="chessOutcome"
+              data-chess-outcome
+              aria-live="polite"
+            ></p>
+            <p
+              class="chess-game__helper"
+              data-chess-helper
+              data-i18n="index.sections.echecs.helper"
+            >
+              Sélectionnez une pièce blanche pour afficher ses déplacements possibles.
+            </p>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -2340,6 +2424,7 @@
   <script src="scripts/arcade/minesweeper.js"></script>
   <script src="scripts/arcade/solitaire.js"></script>
   <script src="scripts/arcade/blackjack.js"></script>
+  <script src="scripts/arcade/echecs.js"></script>
   <script src="scripts/arcade/quantum-2048.js"></script>
   <script src="scripts/i18n/embedded-resources.js"></script>
   <script src="scripts/modules/i18n.js"></script>

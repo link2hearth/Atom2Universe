@@ -225,6 +225,12 @@
             "description": "Stack the tableau cards to rebuild all four foundations.",
             "cta": "Play"
           },
+          "echecs": {
+            "aria": "Open the Chess mini-game",
+            "title": "Chess",
+            "description": "Challenge an AI across a quantum-flavored board tailored for aspiring strategists.",
+            "cta": "Plan"
+          },
           "blackjack": {
             "aria": "Open the Blackjack mini-game",
             "title": "Blackjack",
@@ -327,6 +333,74 @@
           "reset": "Restart"
         },
         "board": "Solitaire board"
+      },
+      "echecs": {
+        "aria": "Quantum Chess mini-game — client-side engine",
+        "title": "Quantum Chess",
+        "lead": "The client-side engine now validates legal moves while the AI opponent takes shape.",
+        "board": "8×8 chessboard",
+        "helper": "Select a white piece to display its legal moves.",
+        "status": {
+          "ready": "Engine ready. White moves first.",
+          "turn": {
+            "white": "White to move.",
+            "black": "Black to move."
+          },
+          "check": {
+            "white": "White is in check!",
+            "black": "Black is in check!"
+          },
+          "promotion": "Choose a promotion piece."
+        },
+        "outcome": {
+          "checkmate": {
+            "white": "Checkmate! White wins.",
+            "black": "Checkmate! Black wins."
+          },
+          "stalemate": "Stalemate. The game is drawn.",
+          "draw": {
+            "generic": "Draw.",
+            "fiftyMove": "Draw by the fifty-move rule.",
+            "repetition": "Draw by threefold repetition.",
+            "insufficient": "Draw by insufficient material.",
+            "reason": {
+              "fiftyMove": "Fifty moves without a capture or pawn move.",
+              "repetition": "The same position has occurred three times.",
+              "insufficient": "No mating material remains on the board."
+            }
+          }
+        },
+        "promotion": {
+          "title": "Choose a promotion piece",
+          "options": {
+            "queen": "Queen",
+            "rook": "Rook",
+            "bishop": "Bishop",
+            "knight": "Knight"
+          }
+        },
+        "pieces": {
+          "w": {
+            "p": "White pawn",
+            "n": "White knight",
+            "b": "White bishop",
+            "r": "White rook",
+            "q": "White queen",
+            "k": "White king"
+          },
+          "b": {
+            "p": "Black pawn",
+            "n": "Black knight",
+            "b": "Black bishop",
+            "r": "Black rook",
+            "q": "Black queen",
+            "k": "Black king"
+          }
+        },
+        "accessibility": {
+          "pieceOnSquare": "{{piece}} on {{square}}",
+          "emptySquare": "Empty square {{square}}"
+        }
       },
       "blackjack": {
         "aria": "Quantum Blackjack mini-game",
