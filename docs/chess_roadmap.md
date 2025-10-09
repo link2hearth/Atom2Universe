@@ -36,10 +36,18 @@ Ce plan décrit les étapes pour ajouter un mini-jeu d'échecs jouable dans Atom
 - **Gestion des finales** : appliquer des bonus/malus spécifiques (pions passés, roi centralisé) lorsque peu de pièces restent.
 - **Tests ciblés** : construire un petit corpus de positions (FEN) pour vérifier la cohérence des choix de l'IA.
 
+## Revue des étapes 1 à 5
+- ✅ Étape 1 — Cadrage, architecture et intégration I18N : la section arcade “Échecs” est disponible dans `index.html` avec sa carte dédiée et toutes les clés de traduction nécessaires.
+- ✅ Étape 2 — Moteur d'échecs : la validation des coups (pions, pièces majeures, roques, promotion, prise en passant) est en place ainsi que la détection d'échecs et de fins de partie standards.
+- ✅ Étape 3 — Boucle de jeu et UX : la grille HTML supporte le clic et le glisser-déposer, l'historique SAN et les aides visuelles sont opérationnels.
+- ✅ Étape 4 — IA des noirs (v1) : minimax + alpha-bêta, tri des captures et table de transposition légère sont implémentés.
+- ✅ Étape 5 — IA des noirs (améliorations) : itération approfondie, heuristiques MVV-LVA/killer, évaluation de finales et corpus FEN ont été livrés.
+
 ## Étape 6 — Finitions et QA
-- **Interface** : ajouter des animations légères, possibilité de réinitialiser la partie et d'analyser le dernier coup de l'IA.
-- **Equilibrage** : ajuster les récompenses en fonction de la difficulté et valider que les parties se terminent dans un temps raisonnable.
-- **Sauvegarde** : décider si la progression du mini-jeu doit être persistée entre les sessions (localStorage) et implémenter si nécessaire. (oui, validé)
-- **Documentation** : mettre à jour `ReadMe.md` (section mini-jeux) une fois le mini-jeu jouable et décrire la commande de lancement.
+- ✅ **Interface** : animations de déplacement/capture, bouton de réinitialisation, panneau d'analyse du dernier coup de l'IA et sélecteur de difficulté ont été ajoutés.
+- ✅ **Équilibrage** : trois modes (Entraînement/Standard/Expert) ajustent profondeur, temps de réflexion et bonus hors-ligne ; un plafond de coups limite les parties interminables.
+- ✅ **Récompense** : la victoire des blancs déclenche désormais le bonus hors ligne associé à la difficulté via `registerChessVictoryReward`.
+- ✅ **Sauvegarde** : la progression (plateau, historique, préférences, difficulté, analyse) est persistée dans `localStorage` et dans l'état global du jeu.
+- 📌 **Documentation** : ce fichier et le `ReadMe.md` sont mis à jour pour refléter les nouvelles commandes.
 
 Ce plan peut être itéré en plusieurs PR : commencer par les étapes 1–3 pour poser le plateau, puis créer des itérations supplémentaires pour les étapes 4 et 5 afin d'enrichir l'IA.

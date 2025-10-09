@@ -47,6 +47,7 @@ Un onglet “Fusion” présente des recettes consommant des éléments du gacha
 
 ## Mini-jeux d’arcade
 L’onglet Arcade propose trois expériences qui alimentent les tickets et bonus :
+- **Échecs quantiques** : affrontez une IA configurable (Entraînement/Standard/Expert), réinitialisez la partie à la volée et analysez son dernier coup grâce à un panneau dédié. La progression (plateau, historique, préférences et difficulté) est automatiquement sauvegardée et chaque victoire octroie un bonus hors ligne dépendant de la difficulté choisie.【F:index.html†L1129-L1236】【F:scripts/arcade/echecs.js†L3695-L3755】【F:scripts/app.js†L5124-L5236】
 - **Particules** (brick breaker) : niveaux successifs, HUD complet, tickets de gacha en récompense de niveau parfait, gravitons convertis en crédits Mach3 et en annonces toast.【F:index.html†L158-L266】【F:scripts/arcade/particules.js†L1980-L2056】【F:scripts/arcade/particules.js†L2532-L2555】
 - **Mach3 – Métaux** : grille 9×16, cinq gemmes, timer de 6 s extensible, consommation d’un crédit Mach3 par partie et bonus APS proportionnel aux performances.【F:index.html†L424-L477】【F:scripts/arcade/metaux-match3.js†L4-L118】【F:scripts/app.js†L1608-L1705】
 

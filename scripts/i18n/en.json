@@ -340,13 +340,43 @@
         "lead": "The client-side engine now validates legal moves while the AI opponent takes shape.",
         "board": "8×8 chessboard",
         "helper": "Tap or drag a white piece to display its legal moves.",
+        "helperAiThinking": "The AI is thinking about its reply…",
         "controls": {
           "coordinates": "Show coordinates",
-          "history": "Show move list"
+          "history": "Show move list",
+          "difficulty": "Choose difficulty",
+          "reset": "Reset the game",
+          "analyze": "Analyze the AI's last move"
         },
         "history": {
           "title": "Move list",
           "empty": "No moves yet."
+        },
+        "difficulty": {
+          "training": "Training mode",
+          "trainingDescription": "Shorter search to explore ideas quickly.",
+          "standard": "Standard mode",
+          "standardDescription": "Balanced configuration: responsive, steady AI.",
+          "expert": "Expert mode",
+          "expertDescription": "Deeper analysis and longer think time for a tough challenge.",
+          "reward": "Offline bonus: {duration} at {multiplier}"
+        },
+        "analysis": {
+          "title": "AI move analysis",
+          "empty": "No AI move to analyze yet.",
+          "ready": "Click \u201cAnalyze\u201d to break down the last move.",
+          "summary": "Move {{move}} · evaluation {{score}} ({{advantage}}). {{delta}}{{depth}}.",
+          "advantage": {
+            "white": "white advantage",
+            "black": "black advantage",
+            "balanced": "balanced"
+          },
+          "delta": {
+            "equal": "no change",
+            "positive": "black advantage {{value}}",
+            "negative": "white advantage {{value}}"
+          },
+          "depth": " · depth {{value}}"
         },
         "feedback": {
           "invalidMove": "That move isn’t legal.",
@@ -355,6 +385,7 @@
         },
         "status": {
           "ready": "Engine ready. White moves first.",
+          "aiThinking": "Black is thinking…",
           "turn": {
             "white": "White to move.",
             "black": "Black to move."
@@ -379,7 +410,8 @@
             "reason": {
               "fiftyMove": "Fifty moves without a capture or pawn move.",
               "repetition": "The same position has occurred three times.",
-              "insufficient": "No mating material remains on the board."
+              "insufficient": "No mating material remains on the board.",
+              "moveLimit": "Move limit reached."
             }
           }
         },
@@ -1246,6 +1278,21 @@
             "single": "Perfect balance! Mach3 ticket earned.",
             "multiple": "Perfect balance! {count} Mach3 tickets earned."
           }
+        }
+      },
+      "chess": {
+        "difficulty": {
+          "training": "Training mode",
+          "trainingDescription": "Shorter search to explore ideas quickly.",
+          "standard": "Standard mode",
+          "standardDescription": "Balanced configuration: responsive, steady AI.",
+          "expert": "Expert mode",
+          "expertDescription": "Deeper analysis and longer think time for a tough challenge.",
+          "reward": "Offline bonus: {duration} at {multiplier}"
+        },
+        "reward": {
+          "ready": "Victory in {difficulty}! Offline bonus ready: {duration} at {multiplier}.",
+          "readyGeneric": "Chess victory! Offline bonus ready: {duration} at {multiplier}."
         }
       },
       "math": {
