@@ -3268,6 +3268,7 @@ function updatePrimaryNavigationLocks() {
     : toLayeredValue(gameState.atoms, 0);
   const shopUnlocked = atoms.compare(SHOP_UNLOCK_THRESHOLD) >= 0;
   setNavButtonLockState(elements.navShopButton, shopUnlocked);
+  updateShopUnlockHint();
 
   const goalsUnlocked = getUnlockedTrophySet().has(GOALS_UNLOCK_TROPHY_ID);
   setNavButtonLockState(elements.navGoalsButton, goalsUnlocked);
@@ -5003,6 +5004,7 @@ function toggleDevKitCheat(key) {
 
 const SHOP_PURCHASE_AMOUNTS = [1, 10, 100];
 const shopRows = new Map();
+let lastVisibleShopIndex = -1;
 let lastVisibleShopBonusIds = new Set();
 const FAMILY_DESCRIPTION_KEYS = {
   'alkali-metal': 'scripts.app.table.family.descriptions.alkaliMetal',
@@ -9524,8 +9526,37 @@ function buildShopItem(def) {
   return { root: item, title, level, description: desc, buttons: buttonMap };
 }
 
+function updateShopUnlockHint() {
+  const button = elements.navShopButton;
+  if (!button) {
+    return;
+  }
+
+  let shouldVibrate = false;
+  if (!button.hidden && !button.disabled && lastVisibleShopIndex >= 0 && lastVisibleShopIndex < UPGRADE_DEFS.length) {
+    const def = UPGRADE_DEFS[lastVisibleShopIndex];
+    if (def) {
+      const level = getUpgradeLevel(gameState.upgrades, def.id);
+      if (!Number.isFinite(level) || level <= 0) {
+        const remainingLevels = getRemainingUpgradeCapacity(def);
+        if (!Number.isFinite(remainingLevels) || remainingLevels > 0) {
+          const cost = computeUpgradeCost(def, 1);
+          const atoms = toLayeredValue(gameState.atoms, 0);
+          shouldVibrate = atoms.compare(cost) >= 0;
+        }
+      }
+    }
+  }
+
+  button.classList.toggle('nav-button--vibrate', shouldVibrate);
+}
+
 function updateShopVisibility() {
-  if (!shopRows.size) return;
+  if (!shopRows.size) {
+    lastVisibleShopIndex = -1;
+    updateShopUnlockHint();
+    return;
+  }
   const unlocks = getShopUnlockSet();
 
   let visibleLimit = -1;
@@ -9537,6 +9568,9 @@ function updateShopVisibility() {
   });
   if (visibleLimit < 0 && UPGRADE_DEFS.length > 0) {
     visibleLimit = 0;
+  }
+  if (visibleLimit >= UPGRADE_DEFS.length) {
+    visibleLimit = UPGRADE_DEFS.length - 1;
   }
 
   UPGRADE_DEFS.forEach((def, index) => {
@@ -9550,6 +9584,9 @@ function updateShopVisibility() {
       unlocks.add(def.id);
     }
   });
+
+  lastVisibleShopIndex = visibleLimit;
+  updateShopUnlockHint();
 }
 
 function updateShopAffordability() {
