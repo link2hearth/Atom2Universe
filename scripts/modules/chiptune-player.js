@@ -2938,9 +2938,14 @@
     scheduleNoteVisualization(note, context = {}) {
       this.noteEventCounter = (this.noteEventCounter + 1) % Number.MAX_SAFE_INTEGER;
       const id = `note-${this.noteEventCounter}`;
+      const noteValue = Number(note?.note);
+      const midiNote = Number.isFinite(noteValue)
+        ? Math.max(0, Math.min(127, Math.round(noteValue)))
+        : null;
+
       const detail = {
         id,
-        note: Number.isFinite(note?.note) ? Math.round(note.note) : null,
+        note: midiNote,
         velocity: Math.max(0, Math.min(1, Number.isFinite(note?.velocity) ? note.velocity : 0.5)),
         channel: Number.isFinite(note?.channel) ? note.channel : 0,
         program: Number.isFinite(note?.program) ? note.program : 0,

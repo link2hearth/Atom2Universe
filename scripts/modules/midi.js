@@ -548,6 +548,14 @@
       return Math.round(numeric);
     }
 
+    function coerceMidiNote(value) {
+      const normalized = normalizeNoteValue(value);
+      if (normalized == null) {
+        return null;
+      }
+      return Math.max(0, Math.min(127, normalized));
+    }
+
     function resolveKeyFromMap(refs, container, noteNumber) {
       if (!refs) {
         return null;
@@ -839,7 +847,10 @@
     }
 
     function createPreviewEntry(detail, noteNumber, source) {
-      const normalizedNote = Math.round(noteNumber);
+      const normalizedNote = coerceMidiNote(noteNumber);
+      if (normalizedNote == null) {
+        return null;
+      }
       const previewLead = Math.max(0, Number.isFinite(detail?.previewLeadTime) ? detail.previewLeadTime : 0);
       const sustainSeconds = Math.max(0.08, Number.isFinite(detail?.durationSeconds) ? detail.durationSeconds : 0.08);
       const eventId = typeof detail?.id === 'string' && detail.id ? detail.id : `preview-${normalizedNote}-${Date.now()}`;
@@ -933,10 +944,10 @@
     }
 
     function recordNoteStart(noteNumber, source, detail = {}) {
-      if (!Number.isFinite(noteNumber)) {
+      const normalized = coerceMidiNote(noteNumber);
+      if (normalized == null) {
         return;
       }
-      const normalized = Math.round(noteNumber);
       const stats = highlightState.get(normalized) || { manual: 0, playback: 0 };
       if (!highlightState.has(normalized)) {
         highlightState.set(normalized, stats);
@@ -960,10 +971,10 @@
     }
 
     function recordNoteStop(noteNumber, source) {
-      if (!Number.isFinite(noteNumber)) {
+      const normalized = coerceMidiNote(noteNumber);
+      if (normalized == null) {
         return;
       }
-      const normalized = Math.round(noteNumber);
       const stats = highlightState.get(normalized);
       if (!stats) {
         return;
@@ -989,19 +1000,19 @@
     }
 
     function handleNoteOn(detail) {
-      const noteNumber = Number.isFinite(detail?.note) ? detail.note : null;
+      const noteNumber = coerceMidiNote(detail?.note);
       if (noteNumber == null) {
         return;
       }
       const source = detail?.source === 'manual' ? 'manual' : 'playback';
       const entry = createPreviewEntry(detail, noteNumber, source);
       if (!entry) {
-        recordNoteStart(Math.round(noteNumber), source, { velocity: detail?.velocity });
+        recordNoteStart(noteNumber, source, { velocity: detail?.velocity });
       }
     }
 
     function handleNoteOff(detail) {
-      const noteNumber = Number.isFinite(detail?.note) ? detail.note : null;
+      const noteNumber = coerceMidiNote(detail?.note);
       if (noteNumber == null) {
         return;
       }
@@ -1010,7 +1021,7 @@
       if (eventId && previewEntries.has(eventId)) {
         finalizePreviewEntry(previewEntries.get(eventId));
       } else {
-        recordNoteStop(Math.round(noteNumber), source);
+        recordNoteStop(noteNumber, source);
       }
     }
 
