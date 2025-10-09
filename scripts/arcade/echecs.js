@@ -824,14 +824,47 @@
       element.replaceChildren.apply(element, children);
       return;
     }
+    const doc = element.ownerDocument || (typeof document !== 'undefined' ? document : null);
+
+    function appendNormalized(target, value) {
+      if (value == null) {
+        return;
+      }
+      const isNode = typeof Node === 'function'
+        ? value instanceof Node
+        : value && typeof value === 'object' && typeof value.nodeType === 'number';
+      if (isNode) {
+        target.appendChild(value);
+        return;
+      }
+      if (Array.isArray(value)) {
+        for (let index = 0; index < value.length; index += 1) {
+          appendNormalized(target, value[index]);
+        }
+        return;
+      }
+      if (value && typeof value === 'object') {
+        const iteratorSymbol = typeof Symbol !== 'undefined' ? Symbol.iterator : null;
+        if (iteratorSymbol && typeof value[iteratorSymbol] === 'function') {
+          const iterator = value[iteratorSymbol]();
+          let step = iterator.next();
+          while (!step.done) {
+            appendNormalized(target, step.value);
+            step = iterator.next();
+          }
+          return;
+        }
+      }
+      if (doc) {
+        target.appendChild(doc.createTextNode(String(value)));
+      }
+    }
+
     while (element.firstChild) {
       element.removeChild(element.firstChild);
     }
     for (let i = 0; i < children.length; i += 1) {
-      const child = children[i];
-      if (child != null) {
-        element.appendChild(child);
-      }
+      appendNormalized(element, children[i]);
     }
   }
 
