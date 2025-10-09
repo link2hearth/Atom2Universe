@@ -1289,6 +1289,12 @@
       this.pianoOverrideToggle = elements.pianoOverrideToggle;
       this.pianoOverrideValue = elements.pianoOverrideValue;
       this.pianoOverrideEnabled = true;
+      this.engineAudioToggle = elements.engineAudioToggle;
+      this.engineAudioValue = elements.engineAudioValue;
+      this.keyboardAudioToggle = elements.keyboardAudioToggle;
+      this.keyboardAudioValue = elements.keyboardAudioValue;
+      this.engineAudioEnabled = true;
+      this.keyboardAudioEnabled = true;
       this.engineSelect = elements.engineSelect;
       this.soundFontSelect = elements.soundFontSelect;
       this.progressLabel = elements.progressLabel;
@@ -1373,6 +1379,16 @@
       this.schedulerState = null;
       this.scheduleAheadTime = 0.25;
       this.scheduleIntervalSeconds = 0.03;
+      const previewLeadConfig = typeof globalThis !== 'undefined'
+        ? globalThis.MIDI_PLAYBACK_PREVIEW_LEAD_SECONDS
+        : undefined;
+      const configuredPreviewLead = Number.isFinite(previewLeadConfig)
+        ? Math.max(0, previewLeadConfig)
+        : 0;
+      this.previewLeadSeconds = configuredPreviewLead;
+      if (configuredPreviewLead > 0) {
+        this.scheduleAheadTime = Math.max(this.scheduleAheadTime, configuredPreviewLead + 0.35);
+      }
       this.limiterSettings = {
         threshold: -8,
         knee: 10,
@@ -2024,6 +2040,20 @@
         });
       }
 
+      if (this.engineAudioToggle) {
+        this.engineAudioToggle.addEventListener('change', () => {
+          const enabled = Boolean(this.engineAudioToggle.checked);
+          this.setEngineAudioEnabled(enabled, { syncControl: false });
+        });
+      }
+
+      if (this.keyboardAudioToggle) {
+        this.keyboardAudioToggle.addEventListener('change', () => {
+          const enabled = Boolean(this.keyboardAudioToggle.checked);
+          this.setKeyboardAudioEnabled(enabled, { syncControl: false });
+        });
+      }
+
       if (this.progressSlider) {
         const getSliderSeconds = () => {
           const rawValue = Number.parseFloat(this.progressSlider.value);
@@ -2121,6 +2151,18 @@
         this.setPianoOverrideEnabled(Boolean(this.pianoOverrideToggle.checked));
       } else {
         this.setPianoOverrideEnabled(true, { syncControl: false });
+      }
+
+      if (this.engineAudioToggle) {
+        this.setEngineAudioEnabled(Boolean(this.engineAudioToggle.checked));
+      } else {
+        this.setEngineAudioEnabled(true, { syncControl: false });
+      }
+
+      if (this.keyboardAudioToggle) {
+        this.setKeyboardAudioEnabled(Boolean(this.keyboardAudioToggle.checked));
+      } else {
+        this.setKeyboardAudioEnabled(true, { syncControl: false });
       }
 
     }
@@ -2325,6 +2367,92 @@
       }
 
       this.updateReadyStatusMessage();
+    }
+
+    setEngineAudioEnabled(value, options = {}) {
+      const { syncControl = true } = options;
+      const enabled = Boolean(value);
+      this.engineAudioEnabled = enabled;
+
+      if (this.engineAudioToggle) {
+        if (syncControl) {
+          this.engineAudioToggle.checked = enabled;
+        }
+        this.engineAudioToggle.setAttribute('aria-checked', enabled ? 'true' : 'false');
+        if (this.engineAudioValue) {
+          this.engineAudioToggle.setAttribute('aria-describedby', this.engineAudioValue.id);
+        }
+      }
+
+      const key = enabled
+        ? 'index.sections.options.chiptune.audio.engine.enabled'
+        : 'index.sections.options.chiptune.audio.engine.disabled';
+      const fallback = enabled ? 'Enabled' : 'Muted';
+      const label = this.translate(key, fallback);
+
+      if (this.engineAudioValue) {
+        this.engineAudioValue.textContent = label;
+      }
+
+      if (!enabled) {
+        this.fadeOutVoicesBySource('playback');
+      }
+
+      this.updateReadyStatusMessage();
+    }
+
+    setKeyboardAudioEnabled(value, options = {}) {
+      const { syncControl = true } = options;
+      const enabled = Boolean(value);
+      this.keyboardAudioEnabled = enabled;
+
+      if (this.keyboardAudioToggle) {
+        if (syncControl) {
+          this.keyboardAudioToggle.checked = enabled;
+        }
+        this.keyboardAudioToggle.setAttribute('aria-checked', enabled ? 'true' : 'false');
+        if (this.keyboardAudioValue) {
+          this.keyboardAudioToggle.setAttribute('aria-describedby', this.keyboardAudioValue.id);
+        }
+      }
+
+      const key = enabled
+        ? 'index.sections.options.chiptune.audio.keyboard.enabled'
+        : 'index.sections.options.chiptune.audio.keyboard.disabled';
+      const fallback = enabled ? 'Enabled' : 'Muted';
+      const label = this.translate(key, fallback);
+
+      if (this.keyboardAudioValue) {
+        this.keyboardAudioValue.textContent = label;
+      }
+
+      if (!enabled) {
+        this.fadeOutVoicesBySource('manual');
+      }
+
+      this.updateReadyStatusMessage();
+    }
+
+    fadeOutVoicesBySource(source) {
+      if (!source || !this.audioContext || !this.liveVoices || !this.liveVoices.size) {
+        return;
+      }
+      const now = this.audioContext.currentTime;
+      for (const voice of this.liveVoices) {
+        if (!voice || voice.source !== source) {
+          continue;
+        }
+        if (voice.gainNode && voice.gainNode.gain) {
+          try {
+            voice.gainNode.gain.cancelScheduledValues(now);
+          } catch (error) {
+            // Ignore cancellation issues
+          }
+          const currentValue = Math.max(0.0001, voice.gainNode.gain.value);
+          voice.gainNode.gain.setValueAtTime(currentValue, now);
+          voice.gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);
+        }
+      }
     }
 
     setEngineMode(value, options = {}) {
@@ -2788,6 +2916,9 @@
         source: context.source || 'playback',
         engine: this.engineMode,
       };
+      detail.previewLeadTime = Math.max(0, Number.isFinite(context.previewLeadTime) ? context.previewLeadTime : 0);
+      detail.durationSeconds = Math.max(0, Number.isFinite(context.durationSeconds) ? context.durationSeconds : 0);
+      detail.playbackDelay = Math.max(0, Number.isFinite(context.playbackDelay) ? context.playbackDelay : 0);
 
       if (!this.noteObservers || this.noteObservers.size === 0 || typeof window === 'undefined' || typeof window.setTimeout !== 'function') {
         return id;
@@ -6554,34 +6685,64 @@
       const speed = this.clampPlaybackSpeed(speedParam || 1);
       const now = this.audioContext.currentTime;
       const startOffset = Number.isFinite(note.startTime) ? note.startTime : 0;
-      const startAt = Math.max(baseTime + (startOffset / speed), now + 0.001);
+      const isPlayback = source === 'playback';
+      const previewLeadBase = isPlayback
+        ? Math.max(0, this.previewLeadSeconds || 0)
+        : 0;
+      const scheduledBase = baseTime + (startOffset / speed);
+      const startAt = Math.max(scheduledBase + previewLeadBase, now + 0.001);
       const velocity = Math.max(0.08, Math.min(1, note.velocity || 0.2));
       const baseStartDelay = Math.max(0, startAt - now);
+      const startDelaySeconds = Math.max(0, baseStartDelay - previewLeadBase);
+      const timelineDuration = Math.max(0.02, Number.isFinite(note.duration) ? note.duration : 0.12);
+      const duration = Math.max(0.02, timelineDuration / speed);
+      const audioAllowed = isPlayback ? this.engineAudioEnabled : this.keyboardAudioEnabled;
+      const visualizationContext = {
+        startDelay: startDelaySeconds,
+        endDelay: startDelaySeconds + previewLeadBase + Math.max(0.1, duration),
+        source,
+        previewLeadTime: previewLeadBase,
+        durationSeconds: duration,
+        playbackDelay: baseStartDelay,
+      };
 
       if (Number.isFinite(note.channel) && Number.isFinite(note.program)) {
         this.lastProgramByChannel.set(note.channel, note.program);
       }
 
       const instrument = this.getInstrumentSettings(note);
+      if (!audioAllowed) {
+        const estimatedEnd = startDelaySeconds + previewLeadBase + duration + 0.35;
+        visualizationContext.endDelay = Math.max(visualizationContext.endDelay, estimatedEnd);
+        const silentEventId = this.scheduleNoteVisualization(note, visualizationContext);
+        if (returnHandle) {
+          return {
+            eventId: silentEventId,
+            voice: null,
+            startAt,
+            stopAt: startAt + duration,
+          };
+        }
+        return silentEventId;
+      }
       if (note.channel === 9) {
         const usesSoundFont = instrument && instrument.type === 'soundfont';
         if (!usesSoundFont) {
           if (this.engineMode === 'hifi' && !instrument) {
             return null;
           }
-          const percussionVoice = this.schedulePercussion(note, baseTime, speed);
+          const percussionVoice = this.schedulePercussion(note, baseTime, speed, { source });
           if (!percussionVoice) {
             return null;
           }
           const stopTime = Number.isFinite(percussionVoice.stopTime)
             ? percussionVoice.stopTime
             : (startAt + 0.24);
-          const endDelay = Math.max(baseStartDelay, Math.max(0, stopTime - now));
-          const eventId = this.scheduleNoteVisualization(note, {
-            startDelay: baseStartDelay,
-            endDelay,
-            source,
-          });
+          visualizationContext.endDelay = Math.max(
+            visualizationContext.endDelay,
+            Math.max(0, stopTime - now)
+          );
+          const eventId = this.scheduleNoteVisualization(note, visualizationContext);
           if (returnHandle) {
             return {
               eventId,
@@ -6613,8 +6774,6 @@
       const attack = Math.max(0.002, (envelope.attack || 0.01) / speed);
       const decay = Math.max(0.01, (envelope.decay || 0.06) / speed);
       let sustainLevel = Math.min(1, Math.max(0, envelope.sustain ?? 0.6));
-      const timelineDuration = Math.max(0.02, Number.isFinite(note.duration) ? note.duration : 0.12);
-      const duration = Math.max(0.02, timelineDuration / speed);
       const releaseBase = Number.isFinite(envelope.release)
         ? envelope.release
         : Math.min(0.9, timelineDuration * 0.8);
@@ -6644,10 +6803,12 @@
           decayEnd,
           releaseDuration,
           sustainProfile,
+          source,
         });
         if (!voice) {
           return null;
         }
+        voice.source = source;
       } else {
 
       const layers = Array.isArray(instrument.layers) && instrument.layers.length
@@ -6683,6 +6844,7 @@
         effectOscillators: [],
         nodes: [voiceInput],
         baseMidiNote: note.note,
+        source,
       };
 
       this.liveVoices.add(voice);
@@ -6949,11 +7111,12 @@
         return null;
       }
 
-      const eventId = this.scheduleNoteVisualization(note, {
-        startDelay: baseStartDelay,
-        endDelay: Math.max(baseStartDelay, Math.max(0, endAt - now)),
-        source,
-      });
+      visualizationContext.endDelay = Math.max(
+        visualizationContext.endDelay,
+        Math.max(0, endAt - now)
+      );
+
+      const eventId = this.scheduleNoteVisualization(note, visualizationContext);
 
       if (returnHandle) {
         return {
@@ -6986,6 +7149,7 @@
         decayEnd = stopAt,
         releaseDuration = 0.2,
         sustainProfile = null,
+        source = 'playback',
       } = context;
 
       const voiceInput = this.audioContext.createGain();
@@ -7000,6 +7164,7 @@
         effectOscillators: [],
         nodes: [voiceInput],
         baseMidiNote: note.note,
+        source,
       };
 
       this.liveVoices.add(voice);
@@ -7161,7 +7326,7 @@
       return voice;
     }
 
-    schedulePercussion(note, baseTime, speedParam = this.activePlaybackSpeed || 1) {
+    schedulePercussion(note, baseTime, speedParam = this.activePlaybackSpeed || 1, options = {}) {
       if (!this.audioContext || !this.masterGain) {
         return;
       }
@@ -7175,6 +7340,7 @@
       if (!settings) {
         return;
       }
+      const sourceType = typeof options.source === 'string' ? options.source : 'playback';
       const envelope = settings.envelope || {};
       const attack = Math.max(0.001, (envelope.attack || 0.005) / speed);
       const decay = Math.max(0.01, (envelope.decay || 0.05) / speed);
@@ -7203,6 +7369,7 @@
         gainNode,
         sources: [],
         nodes: [],
+        source: sourceType,
       };
 
       this.liveVoices.add(voice);
@@ -7438,7 +7605,8 @@
             ? 0
             : this.getEffectiveDuration(this.timeline, playbackSpeed));
         const finishDelaySeconds = Math.max(0, (effectiveDuration || 0) + 0.6);
-        const startTime = context.currentTime + 0.05;
+        const previewLead = Math.max(0, this.previewLeadSeconds || 0);
+        const startTime = context.currentTime + 0.05 + previewLead;
         const schedulerStartTime = startTime - (startOffset / playbackSpeed);
         this.playStartTime = startTime;
         this.playStartOffset = startOffset;
@@ -7777,6 +7945,10 @@
     programUsageSummary: document.getElementById('chiptuneUsageSummary'),
     programUsageTitle: document.getElementById('chiptuneUsageTitle'),
     programUsageNote: document.getElementById('chiptuneUsageNote'),
+    engineAudioToggle: document.getElementById('chiptuneEngineAudioToggle'),
+    engineAudioValue: document.getElementById('chiptuneEngineAudioValue'),
+    keyboardAudioToggle: document.getElementById('chiptuneKeyboardAudioToggle'),
+    keyboardAudioValue: document.getElementById('chiptuneKeyboardAudioValue'),
   };
 
   if (elements.fileInput && elements.playButton && elements.stopButton && elements.status) {
