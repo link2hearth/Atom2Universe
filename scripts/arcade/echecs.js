@@ -815,6 +815,59 @@
     }
   }
 
+  function replaceChildrenSafe(element) {
+    if (!element) {
+      return;
+    }
+    const children = Array.prototype.slice.call(arguments, 1);
+    if (typeof element.replaceChildren === 'function') {
+      element.replaceChildren.apply(element, children);
+      return;
+    }
+    const doc = element.ownerDocument || (typeof document !== 'undefined' ? document : null);
+
+    function appendNormalized(target, value) {
+      if (value == null) {
+        return;
+      }
+      const isNode = typeof Node === 'function'
+        ? value instanceof Node
+        : value && typeof value === 'object' && typeof value.nodeType === 'number';
+      if (isNode) {
+        target.appendChild(value);
+        return;
+      }
+      if (Array.isArray(value)) {
+        for (let index = 0; index < value.length; index += 1) {
+          appendNormalized(target, value[index]);
+        }
+        return;
+      }
+      if (value && typeof value === 'object') {
+        const iteratorSymbol = typeof Symbol !== 'undefined' ? Symbol.iterator : null;
+        if (iteratorSymbol && typeof value[iteratorSymbol] === 'function') {
+          const iterator = value[iteratorSymbol]();
+          let step = iterator.next();
+          while (!step.done) {
+            appendNormalized(target, step.value);
+            step = iterator.next();
+          }
+          return;
+        }
+      }
+      if (doc) {
+        target.appendChild(doc.createTextNode(String(value)));
+      }
+    }
+
+    while (element.firstChild) {
+      element.removeChild(element.firstChild);
+    }
+    for (let i = 0; i < children.length; i += 1) {
+      appendNormalized(element, children[i]);
+    }
+  }
+
   function createPiece(color, type) {
     return color + type.toUpperCase();
   }
@@ -2317,7 +2370,7 @@
 
   function createBoardSquares(boardElement, handleSquareClick) {
     const squares = [];
-    boardElement.replaceChildren();
+    replaceChildrenSafe(boardElement);
 
     for (let row = 0; row < BOARD_SIZE; row += 1) {
       squares[row] = [];
@@ -2598,7 +2651,7 @@
       option.textContent = translate(mode.labelKey, mode.fallbackLabel);
       fragment.appendChild(option);
     }
-    select.replaceChildren(fragment);
+    replaceChildrenSafe(select, fragment);
     if (current && seen.has(current)) {
       select.value = current;
     }
@@ -2903,7 +2956,7 @@
       state.pendingPromotion = null;
       return;
     }
-    ui.promotionOptionsElement.replaceChildren();
+    replaceChildrenSafe(ui.promotionOptionsElement);
     for (let i = 0; i < promotionMoves.length; i += 1) {
       const move = promotionMoves[i];
       const button = document.createElement('button');
@@ -2932,7 +2985,7 @@
     if (!ui.promotionElement || !ui.promotionOptionsElement) {
       return;
     }
-    ui.promotionOptionsElement.replaceChildren();
+    replaceChildrenSafe(ui.promotionOptionsElement);
     ui.promotionElement.hidden = true;
   }
 
@@ -2966,7 +3019,7 @@
     }
 
     const moveNumbers = Array.from(entriesByMove.keys()).sort((a, b) => a - b);
-    ui.historyList.replaceChildren();
+    replaceChildrenSafe(ui.historyList);
     for (let i = 0; i < moveNumbers.length; i += 1) {
       const moveNumber = moveNumbers[i];
       const record = entriesByMove.get(moveNumber);
