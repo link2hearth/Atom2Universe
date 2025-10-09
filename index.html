@@ -1179,8 +1179,58 @@
               data-chess-helper
               data-i18n="index.sections.echecs.helper"
             >
-              Sélectionnez une pièce blanche pour afficher ses déplacements possibles.
+              Touchez ou faites glisser une pièce blanche pour afficher ses déplacements possibles.
             </p>
+            <div class="chess-game__options">
+              <label class="chess-toggle">
+                <input
+                  class="chess-toggle__input"
+                  type="checkbox"
+                  data-chess-toggle-coordinates
+                  checked
+                />
+                <span
+                  class="chess-toggle__label"
+                  data-i18n="index.sections.echecs.controls.coordinates"
+                >
+                  Afficher les coordonnées
+                </span>
+              </label>
+              <label class="chess-toggle">
+                <input
+                  class="chess-toggle__input"
+                  type="checkbox"
+                  data-chess-toggle-history
+                  checked
+                />
+                <span
+                  class="chess-toggle__label"
+                  data-i18n="index.sections.echecs.controls.history"
+                >
+                  Afficher l'historique
+                </span>
+              </label>
+            </div>
+            <div class="chess-history" data-chess-history hidden>
+              <h3
+                class="chess-history__title"
+                data-i18n="index.sections.echecs.history.title"
+              >
+                Historique des coups
+              </h3>
+              <ol
+                class="chess-history__list"
+                data-chess-history-list
+                aria-live="polite"
+              ></ol>
+              <p
+                class="chess-history__empty"
+                data-chess-history-empty
+                data-i18n="index.sections.echecs.history.empty"
+              >
+                Aucun coup joué pour le moment.
+              </p>
+            </div>
           </div>
         </div>
       </div>

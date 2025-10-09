@@ -339,7 +339,20 @@
         "title": "Quantum Chess",
         "lead": "The client-side engine now validates legal moves while the AI opponent takes shape.",
         "board": "8×8 chessboard",
-        "helper": "Select a white piece to display its legal moves.",
+        "helper": "Tap or drag a white piece to display its legal moves.",
+        "controls": {
+          "coordinates": "Show coordinates",
+          "history": "Show move list"
+        },
+        "history": {
+          "title": "Move list",
+          "empty": "No moves yet."
+        },
+        "feedback": {
+          "invalidMove": "That move isn’t legal.",
+          "notYourTurn": "It isn’t that side’s turn.",
+          "dragCancelled": "Drag cancelled."
+        },
         "status": {
           "ready": "Engine ready. White moves first.",
           "turn": {
