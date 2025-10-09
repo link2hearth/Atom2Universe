@@ -511,6 +511,18 @@
           bar.style.setProperty('--preview-duration', `${Math.max(0.05, previewDuration)}s`);
         }
 
+        const labelText = formatNoteName(entry.note);
+        if (labelText) {
+          bar.dataset.noteLabel = labelText;
+          const label = doc.createElement('span');
+          label.className = 'midi-key__preview-label';
+          label.textContent = labelText;
+          label.setAttribute('aria-hidden', 'true');
+          bar.appendChild(label);
+        } else {
+          bar.removeAttribute('data-note-label');
+        }
+
         const laneHeight = lane.clientHeight || lane.offsetHeight || 0;
         const baseReference = Math.max(0.35, referenceWindow);
         let height;
@@ -546,17 +558,14 @@
           bar.classList.add('is-active');
           bar.classList.add('is-landed');
           bar.style.transform = 'translateY(0)';
-          bar.style.backgroundColor = 'var(--midi-preview-color-end)';
         } else if (typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
           window.requestAnimationFrame(() => {
             bar.classList.add('is-active');
             bar.style.transform = 'translateY(0)';
-            bar.style.backgroundColor = 'var(--midi-preview-color-end)';
           });
         } else {
           bar.classList.add('is-active');
           bar.style.transform = 'translateY(0)';
-          bar.style.backgroundColor = 'var(--midi-preview-color-end)';
         }
 
         return bar;
@@ -585,7 +594,6 @@
         }
         bar.classList.add('is-landed');
         bar.style.transform = 'translateY(0)';
-        bar.style.backgroundColor = 'var(--midi-preview-color-end)';
       });
       recordNoteStart(entry.note, entry.source);
     }
