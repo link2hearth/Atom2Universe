@@ -457,6 +457,10 @@ body.theme-neon .midi-keyboard__subtitle {
   flex: 1 1 12rem;
 }
 
+.midi-keyboard__control--toggle {
+  align-items: flex-start;
+}
+
 .midi-keyboard__control-label {
   opacity: 0.7;
 }
@@ -482,6 +486,23 @@ body.theme-light .midi-keyboard__select {
 body.theme-neon .midi-keyboard__select {
   color: #041321;
   background: linear-gradient(120deg, rgba(168, 210, 255, 0.96), rgba(120, 230, 255, 0.94));
+}
+
+.midi-keyboard__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.midi-keyboard__toggle input[type="checkbox"] {
+  transform: scale(1.1);
+}
+
+.midi-keyboard__toggle-value {
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: none;
 }
 
 .midi-keyboard__body {
