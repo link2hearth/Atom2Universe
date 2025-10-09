@@ -44,6 +44,31 @@
     transpositionSize: 4000
   });
 
+  const AI_TEST_POSITIONS_URL = 'resources/chess/ai-test-positions.json';
+  const FALLBACK_AI_TEST_POSITIONS = Object.freeze([
+    Object.freeze({
+      id: 'king_centralization',
+      description: 'Finale roi et pions : le roi noir doit rejoindre le centre pour bloquer le pion blanc.',
+      fen: '8/6p1/3k3p/8/8/3K3P/6P1/8 b - - 0 1',
+      expectedMoves: Object.freeze(['Kd5']),
+      tags: Object.freeze(['endgame', 'king'])
+    }),
+    Object.freeze({
+      id: 'capture_passed_pawn',
+      description: 'Les noirs peuvent capturer immédiatement le pion passé blanc.',
+      fen: '8/6p1/8/3k3p/3P4/8/6PP/5K2 b - - 0 1',
+      expectedMoves: Object.freeze(['Kxd4']),
+      tags: Object.freeze(['tactics', 'passed-pawn'])
+    }),
+    Object.freeze({
+      id: 'push_outside_passed_pawn',
+      description: 'Pousser le pion h crée une menace de promotion rapide.',
+      fen: '8/8/6k1/6P1/7p/6K1/8/8 b - - 0 1',
+      expectedMoves: Object.freeze(['h3']),
+      tags: Object.freeze(['endgame', 'passed-pawn'])
+    })
+  ]);
+
   const MIN_AI_DEPTH = 1;
   const MAX_AI_DEPTH = 5;
 
@@ -204,8 +229,67 @@
     return {
       settings: getConfiguredChessAiSettings(),
       table: new Map(),
-      searchId: 0
+      searchId: 0,
+      lastBestMove: null
     };
+  }
+
+  function assignAiTestPositions(positions) {
+    if (typeof window === 'undefined' || !Array.isArray(positions)) {
+      return;
+    }
+    window.atom2universChessTests = positions;
+  }
+
+  function loadAiTestPositions() {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    if (Array.isArray(window.atom2universChessTests) && window.atom2universChessTests.length > 0) {
+      return;
+    }
+    assignAiTestPositions(FALLBACK_AI_TEST_POSITIONS);
+
+    const fetcher = typeof window.fetch === 'function'
+      ? window.fetch.bind(window)
+      : typeof fetch === 'function'
+        ? fetch
+        : null;
+
+    if (!fetcher) {
+      return;
+    }
+
+    fetcher(AI_TEST_POSITIONS_URL)
+      .then(function (response) {
+        if (!response || !response.ok) {
+          return null;
+        }
+        return response.json();
+      })
+      .then(function (data) {
+        if (!Array.isArray(data) || data.length === 0) {
+          return;
+        }
+        const sanitized = data.map(function (entry) {
+          const normalized = {
+            id: typeof entry.id === 'string' ? entry.id : '',
+            description: typeof entry.description === 'string' ? entry.description : '',
+            fen: typeof entry.fen === 'string' ? entry.fen : '',
+            expectedMoves: Array.isArray(entry.expectedMoves)
+              ? entry.expectedMoves.filter(function (move) { return typeof move === 'string' && move.trim(); })
+              : [],
+            tags: Array.isArray(entry.tags)
+              ? entry.tags.filter(function (tag) { return typeof tag === 'string' && tag.trim(); })
+              : []
+          };
+          return Object.freeze(normalized);
+        });
+        assignAiTestPositions(Object.freeze(sanitized));
+      })
+      .catch(function () {
+        // Ignored: fallback dataset already assigned.
+      });
   }
 
   function translate(key, fallback, params) {
@@ -618,6 +702,47 @@
     return score;
   }
 
+  function evaluateEndgameFeatures(analysis) {
+    const totalNonPawnMaterial = analysis.whiteNonPawnMaterial + analysis.blackNonPawnMaterial;
+    if (totalNonPawnMaterial > 1600) {
+      return 0;
+    }
+
+    let score = 0;
+    const passedPawnBase = totalNonPawnMaterial < 800 ? 18 : 12;
+    const kingCentralBase = totalNonPawnMaterial < 800 ? 16 : 10;
+
+    const evaluateKingCentrality = function (kingInfo) {
+      if (!kingInfo) {
+        return 0;
+      }
+      const distance = Math.abs(kingInfo.row - 3.5) + Math.abs(kingInfo.col - 3.5);
+      const centrality = Math.max(0, 4 - distance);
+      return Math.round(centrality * kingCentralBase);
+    };
+
+    score += evaluateKingCentrality(analysis.whiteKing);
+    score -= evaluateKingCentrality(analysis.blackKing);
+
+    for (let i = 0; i < analysis.whitePawns.length; i += 1) {
+      const pawn = analysis.whitePawns[i];
+      if (isWhitePassedPawn(analysis, pawn)) {
+        const advancement = Math.max(0, 6 - pawn.row);
+        score += passedPawnBase + advancement * 6;
+      }
+    }
+
+    for (let i = 0; i < analysis.blackPawns.length; i += 1) {
+      const pawn = analysis.blackPawns[i];
+      if (isBlackPassedPawn(analysis, pawn)) {
+        const advancement = Math.max(0, pawn.row - 1);
+        score -= passedPawnBase + advancement * 6;
+      }
+    }
+
+    return score;
+  }
+
   function evaluateStaticPosition(state) {
     if (!state || !state.board) {
       return 0;
@@ -640,6 +765,7 @@
     score += evaluateDevelopmentScore(analysis);
     score += evaluateRookPlacementScore(analysis);
     score += evaluateKingSafetyScore(analysis, state);
+    score += evaluateEndgameFeatures(analysis);
 
     score += state.activeColor === WHITE ? 10 : -10;
 
@@ -679,6 +805,9 @@
     if (!Number.isInteger(state.ai.searchId)) {
       state.ai.searchId = 0;
     }
+    if (!Object.prototype.hasOwnProperty.call(state.ai, 'lastBestMove')) {
+      state.ai.lastBestMove = null;
+    }
   }
 
   function getCurrentTimeMs() {
@@ -716,6 +845,38 @@
     };
   }
 
+  function recordKillerMove(context, ply, move) {
+    if (!context || !context.killers || !move || move.isCapture) {
+      return;
+    }
+    if (!Number.isInteger(ply) || ply <= 0) {
+      return;
+    }
+    const descriptor = cloneMoveDescriptor(move);
+    if (!descriptor) {
+      return;
+    }
+    const killers = Array.isArray(context.killers[ply]) ? context.killers[ply] : [];
+    for (let i = 0; i < killers.length; i += 1) {
+      if (moveMatchesDescriptor(move, killers[i])) {
+        return;
+      }
+    }
+    killers.unshift(descriptor);
+    if (killers.length > 2) {
+      killers.length = 2;
+    }
+    context.killers[ply] = killers;
+  }
+
+  function getKillerMoves(context, ply) {
+    if (!context || !context.killers || !Number.isInteger(ply) || ply <= 0) {
+      return null;
+    }
+    const killers = context.killers[ply];
+    return Array.isArray(killers) && killers.length ? killers : null;
+  }
+
   function findMoveFromDescriptor(moves, descriptor) {
     if (!descriptor || !Array.isArray(moves)) {
       return null;
@@ -748,7 +909,7 @@
     return PIECE_BASE_VALUES[type] || 0;
   }
 
-  function getMoveOrderingScore(state, move, preferredDescriptor) {
+  function getMoveOrderingScore(state, move, preferredDescriptor, context, ply) {
     let score = 0;
     if (preferredDescriptor && moveMatchesDescriptor(move, preferredDescriptor)) {
       score += 5000;
@@ -756,7 +917,18 @@
     if (move.isCapture) {
       const capturedValue = getCapturedPieceValue(state, move);
       const moverValue = PIECE_BASE_VALUES[getPieceType(move.piece)] || 0;
-      score += 2000 + capturedValue - moverValue;
+      const mvvLva = capturedValue * 12 - moverValue;
+      score += 4000 + mvvLva;
+    } else {
+      const killerMoves = getKillerMoves(context, ply);
+      if (killerMoves) {
+        for (let index = 0; index < killerMoves.length; index += 1) {
+          if (moveMatchesDescriptor(move, killerMoves[index])) {
+            score += 3200 - index * 200;
+            break;
+          }
+        }
+      }
     }
     if (move.promotion) {
       score += 1500;
@@ -767,9 +939,9 @@
     return score;
   }
 
-  function orderMovesForSearch(state, moves, preferredDescriptor) {
+  function orderMovesForSearch(state, moves, preferredDescriptor, context, ply) {
     const scored = moves.map(function (move) {
-      return { move, score: getMoveOrderingScore(state, move, preferredDescriptor) };
+      return { move, score: getMoveOrderingScore(state, move, preferredDescriptor, context, ply) };
     });
     scored.sort(function (a, b) {
       return b.score - a.score;
@@ -845,7 +1017,11 @@
       }
     }
 
-    const orderedMoves = orderMovesForSearch(state, legalMoves, preferredDescriptor);
+    if (!preferredDescriptor && ply === 1 && context.rootHint) {
+      preferredDescriptor = context.rootHint;
+    }
+
+    const orderedMoves = orderMovesForSearch(state, legalMoves, preferredDescriptor, context, ply);
 
     let bestScore = Number.NEGATIVE_INFINITY;
     let bestMove = null;
@@ -866,6 +1042,9 @@
       }
       if (score > localAlpha) {
         localAlpha = score;
+      }
+      if (localAlpha >= beta) {
+        recordKillerMove(context, ply, move);
       }
       if (localAlpha >= beta || aborted) {
         break;
@@ -894,18 +1073,54 @@
     const context = {
       table: aiContext && aiContext.table instanceof Map ? aiContext.table : new Map(),
       transpositionLimit,
-      deadline
+      deadline,
+      killers: [],
+      rootHint: aiContext && aiContext.lastBestMove ? cloneMoveDescriptor(aiContext.lastBestMove) : null
     };
     if (aiContext && !(aiContext.table instanceof Map)) {
       aiContext.table = context.table;
     }
     const colorSign = searchState.activeColor === WHITE ? 1 : -1;
-    const result = negamax(searchState, depth, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, colorSign, context, 1);
-    if (!result.move) {
-      const fallbackMoves = generateLegalMoves(searchState);
-      result.move = fallbackMoves.length ? fallbackMoves[0] : null;
+    let bestResult = { score: Number.NEGATIVE_INFINITY, move: null, aborted: false };
+    let bestDescriptor = context.rootHint;
+    for (let currentDepth = 1; currentDepth <= depth; currentDepth += 1) {
+      const iteration = negamax(
+        searchState,
+        currentDepth,
+        Number.NEGATIVE_INFINITY,
+        Number.POSITIVE_INFINITY,
+        colorSign,
+        context,
+        1
+      );
+      if (iteration.aborted) {
+        break;
+      }
+      if (iteration.move) {
+        bestResult = iteration;
+        bestDescriptor = cloneMoveDescriptor(iteration.move);
+        context.rootHint = bestDescriptor;
+        if (aiContext) {
+          aiContext.lastBestMove = bestDescriptor;
+        }
+      }
+      if (context.deadline && context.deadline > 0 && getCurrentTimeMs() >= context.deadline) {
+        break;
+      }
     }
-    return result;
+
+    if (!bestResult.move) {
+      const fallbackMoves = generateLegalMoves(searchState);
+      bestResult.move = fallbackMoves.length ? fallbackMoves[0] : null;
+      bestResult.score = bestResult.move ? evaluateStaticPosition(applyMove(searchState, bestResult.move)) : 0;
+    }
+    if (!bestDescriptor && bestResult.move) {
+      bestDescriptor = cloneMoveDescriptor(bestResult.move);
+    }
+    if (aiContext && bestDescriptor) {
+      aiContext.lastBestMove = bestDescriptor;
+    }
+    return bestResult;
   }
 
   function scheduleAIMove(state, ui) {
@@ -2913,6 +3128,8 @@
   }
 
   onReady(function () {
+    loadAiTestPositions();
+
     const section = document.getElementById(SECTION_ID);
     if (!section) {
       return;
