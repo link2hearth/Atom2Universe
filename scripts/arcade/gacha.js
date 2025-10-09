@@ -1216,18 +1216,32 @@ const FRENZY_CONFIG = {
   spawnChancePerSecond: normalizeFrenzySpawnChance(CONFIG.frenzies?.spawnChancePerSecond)
 };
 
+const FRENZY_PORTRAIT_ASSETS = Object.freeze([
+  'Assets/Image/Astronaute.png',
+  'Assets/Image/Darwin.png',
+  'Assets/Image/MarieCurie.png',
+  'Assets/Image/Monkey.png',
+  'Assets/Image/Newton2.png',
+  'Assets/Image/Oppenheimer.png',
+  'Assets/Image/Sagan.png',
+  'Assets/Image/Socrates.png',
+  'Assets/Image/Tesla.png'
+]);
+
 const FRENZY_TYPE_INFO = {
   perClick: {
     id: 'perClick',
     label: 'Frénésie APC',
     shortLabel: 'APC',
-    asset: 'Assets/Image/frenesieAPC.png'
+    asset: FRENZY_PORTRAIT_ASSETS[0],
+    assets: FRENZY_PORTRAIT_ASSETS
   },
   perSecond: {
     id: 'perSecond',
     label: 'Frénésie APS',
     shortLabel: 'APS',
-    asset: 'Assets/Image/frenesieAPS.png'
+    asset: FRENZY_PORTRAIT_ASSETS[0],
+    assets: FRENZY_PORTRAIT_ASSETS
   }
 };
 

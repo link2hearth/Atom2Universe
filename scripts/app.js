@@ -1350,6 +1350,21 @@ function positionFrenzyToken(context, type, token) {
   return true;
 }
 
+function pickFrenzyAsset(info) {
+  if (!info) {
+    return '';
+  }
+  const assets = Array.isArray(info.assets) ? info.assets.filter(asset => typeof asset === 'string' && asset.trim()) : [];
+  if (assets.length) {
+    const randomIndex = Math.floor(Math.random() * assets.length);
+    return assets[randomIndex];
+  }
+  if (typeof info.asset === 'string' && info.asset.trim()) {
+    return info.asset;
+  }
+  return '';
+}
+
 function spawnFrenzyToken(type, now = performance.now()) {
   const info = FRENZY_TYPE_INFO[type];
   if (!info) return;
@@ -1366,7 +1381,10 @@ function spawnFrenzyToken(type, now = performance.now()) {
   token.title = `Activer la ${info.label} (${multiplierText})`;
 
   const img = document.createElement('img');
-  img.src = info.asset;
+  const assetSource = pickFrenzyAsset(info);
+  if (assetSource) {
+    img.src = assetSource;
+  }
   img.alt = '';
   img.setAttribute('aria-hidden', 'true');
   token.appendChild(img);
