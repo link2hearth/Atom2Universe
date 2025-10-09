@@ -6691,17 +6691,18 @@
         : 0;
       const scheduledBase = baseTime + (startOffset / speed);
       const visualStartAt = Math.max(scheduledBase, now + 0.001);
-      const startAt = visualStartAt + previewLeadBase;
+      const startAt = visualStartAt;
       const velocity = Math.max(0.08, Math.min(1, note.velocity || 0.2));
       const baseStartDelay = Math.max(0, startAt - now);
-      const startDelaySeconds = Math.max(0, visualStartAt - now);
       const effectivePreviewLead = Math.max(0, Math.min(previewLeadBase, baseStartDelay));
+      const visualizationDelay = Math.max(0, baseStartDelay - effectivePreviewLead);
       const timelineDuration = Math.max(0.02, Number.isFinite(note.duration) ? note.duration : 0.12);
       const duration = Math.max(0.02, timelineDuration / speed);
+      const highlightDelay = visualizationDelay + effectivePreviewLead;
       const audioAllowed = isPlayback ? this.engineAudioEnabled : this.keyboardAudioEnabled;
       const visualizationContext = {
-        startDelay: startDelaySeconds,
-        endDelay: startDelaySeconds + effectivePreviewLead + Math.max(0.1, duration),
+        startDelay: visualizationDelay,
+        endDelay: highlightDelay + Math.max(0.1, duration),
         source,
         previewLeadTime: effectivePreviewLead,
         durationSeconds: duration,
@@ -6714,7 +6715,7 @@
 
       const instrument = this.getInstrumentSettings(note);
       if (!audioAllowed) {
-        const estimatedEnd = startDelaySeconds + effectivePreviewLead + duration + 0.35;
+        const estimatedEnd = highlightDelay + duration + 0.35;
         visualizationContext.endDelay = Math.max(visualizationContext.endDelay, estimatedEnd);
         const silentEventId = this.scheduleNoteVisualization(note, visualizationContext);
         if (returnHandle) {
@@ -6740,9 +6741,10 @@
           const stopTime = Number.isFinite(percussionVoice.stopTime)
             ? percussionVoice.stopTime
             : (startAt + 0.24);
+          const remainingUntilStop = Math.max(0, stopTime - now);
           visualizationContext.endDelay = Math.max(
             visualizationContext.endDelay,
-            Math.max(0, stopTime - now)
+            Math.max(highlightDelay + Math.max(0.1, duration), remainingUntilStop)
           );
           const eventId = this.scheduleNoteVisualization(note, visualizationContext);
           if (returnHandle) {
@@ -7609,7 +7611,7 @@
         const previewLead = Math.max(0, this.previewLeadSeconds || 0);
         const finishDelaySeconds = Math.max(0, (effectiveDuration || 0) + previewLead + 0.6);
         const baseStartTime = context.currentTime + 0.05;
-        const audioStartTime = baseStartTime + previewLead;
+        const audioStartTime = baseStartTime;
         const schedulerStartTime = baseStartTime - (startOffset / playbackSpeed);
         this.playStartTime = audioStartTime;
         this.playStartOffset = startOffset;
