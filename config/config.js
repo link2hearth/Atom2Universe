@@ -37,6 +37,12 @@ const MIDI_DEFAULT_KEYBOARD_LAYOUT_ID = '88';
 /** Nombre de demi-tons affichés dans la fenêtre d’exercice (2 octaves). */
 const MIDI_KEYBOARD_WINDOW_SIZE = 24;
 
+/**
+ * Délai (en secondes) entre l’apparition visuelle d’une note et sa lecture réelle.
+ * Permet d’afficher les barres de prévisualisation qui descendent vers le clavier.
+ */
+const MIDI_PLAYBACK_PREVIEW_LEAD_SECONDS = 2;
+
 function translateOrDefault(key, fallback, params) {
   if (typeof key !== 'string' || !key.trim()) {
     return fallback;
