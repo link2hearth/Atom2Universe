@@ -1318,7 +1318,7 @@
         "devkitFreePurchase": "DevKit: \"{name}\" ×{quantity} unlocked for free!{suffix}",
         "purchase": "Upgrade \"{name}\" ×{quantity} purchased!{suffix}",
         "milestoneHint": "Keep exploring ever larger orders of magnitude!",
-        "costLabel": "{value} atoms"
+        "costLabel": "{value}"
       },
       "themeUpdated": "Theme updated",
       "language": {

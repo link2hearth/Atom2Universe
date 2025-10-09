@@ -7530,7 +7530,7 @@ function computeUpgradeCost(def, quantity = 1) {
 
 function formatShopCost(cost) {
   const value = cost instanceof LayeredNumber ? cost : new LayeredNumber(cost);
-  return translateOrDefault('scripts.app.shop.costLabel', `${value.toString()} atomes`, {
+  return translateOrDefault('scripts.app.shop.costLabel', value.toString(), {
     value: value.toString()
   });
 }
