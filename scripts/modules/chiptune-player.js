@@ -8370,6 +8370,8 @@
           : null);
       let detachNoteObserver = null;
 
+      const debugNoteEvents = Boolean(globalScope && globalScope.atom2universDebugMidiSelection);
+
       const highlightState = new Map();
       const previewEntries = new Map();
       let fullKeyRefs = new Map();
@@ -8585,6 +8587,14 @@
         if (detail.source === 'manual') {
           return true;
         }
+        const normalizedSource = typeof detail.source === 'string' && detail.source
+          ? detail.source
+          : 'playback';
+
+        if (normalizedSource === 'playback') {
+          return true;
+        }
+
         const program = resolveProgramForDetail(detail);
         return program != null && isPianoProgram(program);
       }
@@ -9066,6 +9076,15 @@
           return;
         }
         const source = detail?.source === 'manual' ? 'manual' : 'playback';
+        if (debugNoteEvents && typeof console !== 'undefined' && typeof console.debug === 'function') {
+          console.debug('[MIDI] noteOn (selection)', {
+            note: noteNumber,
+            source,
+            channel: Number.isFinite(detail?.channel) ? detail.channel : null,
+            program: resolveProgramForDetail(detail),
+            velocity: Number.isFinite(detail?.velocity) ? detail.velocity : null,
+          });
+        }
         const entry = createPreviewEntry(detail, noteNumber, source);
         if (!entry) {
           recordNoteStart(noteNumber, source, { velocity: detail?.velocity });
@@ -9081,6 +9100,14 @@
           return;
         }
         const source = detail?.source === 'manual' ? 'manual' : 'playback';
+        if (debugNoteEvents && typeof console !== 'undefined' && typeof console.debug === 'function') {
+          console.debug('[MIDI] noteOff (selection)', {
+            note: noteNumber,
+            source,
+            channel: Number.isFinite(detail?.channel) ? detail.channel : null,
+            program: resolveProgramForDetail(detail),
+          });
+        }
         const eventId = typeof detail?.id === 'string' && detail.id ? detail.id : null;
         if (eventId && previewEntries.has(eventId)) {
           finalizePreviewEntry(previewEntries.get(eventId));
