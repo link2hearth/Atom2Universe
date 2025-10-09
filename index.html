@@ -2142,24 +2142,6 @@
     >
     <div class="midi-page__main">
       <div class="midi-page__content">
-        <nav
-          class="midi-page__nav"
-          aria-label="Navigation de la page MIDI"
-          data-i18n="aria-label:midi.page.nav"
-        >
-          <button
-            class="midi-page__nav-link"
-            id="midiBackToOptions"
-            type="button"
-            data-i18n="midi.page.back"
-          >
-            Retour aux options
-          </button>
-        </nav>
-        <h1 class="midi-page__title" data-i18n="index.sections.options.chiptune.title">Module Musique Midi</h1>
-        <p class="midi-page__description" data-i18n="midi.page.description">
-          Gérez vos morceaux et vos SoundFonts MIDI dans cet espace dédié.
-        </p>
         <section class="option-card option-card--chiptune midi-page__module" aria-labelledby="midiModuleTitle">
           <h2 id="midiModuleTitle" class="visually-hidden" data-i18n="index.sections.options.chiptune.title">Module Musique Midi</h2>
           <div class="option-row option-row--selectors">
@@ -2339,7 +2321,7 @@
                 Explorateur de clavier
               </h2>
               <p class="midi-keyboard__subtitle" data-i18n="midi.keyboard.subtitle">
-                Choisissez la zone à pratiquer et visualisez-la sur deux octaves.
+                Choisissez la zone à pratiquer et visualisez-la sur la plage sélectionnée.
               </p>
             </div>
             <div class="midi-keyboard__controls">
@@ -2348,6 +2330,18 @@
                   Nombre de touches
                 </span>
                 <select id="midiKeyboardLayoutSelect" class="midi-keyboard__select"></select>
+              </label>
+              <label class="midi-keyboard__control" for="midiKeyboardOctaveSelect">
+                <span class="midi-keyboard__control-label" data-i18n="midi.keyboard.windowLabel">
+                  Octaves affichées
+                </span>
+                <select id="midiKeyboardOctaveSelect" class="midi-keyboard__select">
+                  <option value="1" data-i18n="midi.keyboard.windowOptions.one">1 octave</option>
+                  <option value="2" data-i18n="midi.keyboard.windowOptions.two">2 octaves</option>
+                  <option value="3" data-i18n="midi.keyboard.windowOptions.three">3 octaves</option>
+                  <option value="4" data-i18n="midi.keyboard.windowOptions.four">4 octaves</option>
+                  <option value="5" data-i18n="midi.keyboard.windowOptions.five">5 octaves</option>
+                </select>
               </label>
             </div>
           </header>
@@ -2366,7 +2360,7 @@
                   Clavier complet
                 </h3>
                 <p class="midi-keyboard__panel-hint" data-i18n="midi.keyboard.fullHint">
-                  Cliquez sur une touche pour sélectionner deux octaves.
+                  Cliquez sur une touche pour sélectionner une plage.
                 </p>
               </div>
               <div class="midi-keyboard__range" id="midiKeyboardRange">
@@ -2390,7 +2384,7 @@
                   class="midi-keyboard__panel-title"
                   data-i18n="midi.keyboard.miniLabel"
                 >
-                  Zone de jeu (2 octaves)
+                  Zone de jeu
                 </h3>
                 <p class="midi-keyboard__panel-hint" data-i18n="midi.keyboard.miniHint">
                   Les touches sélectionnées apparaissent ici pour la pratique.

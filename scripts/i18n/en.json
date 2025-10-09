@@ -1236,16 +1236,24 @@
     },
     "keyboard": {
       "title": "Keyboard explorer",
-      "subtitle": "Pick the area you want to practice and view it across two octaves.",
+      "subtitle": "Pick the area you want to practice and view it across the selected range.",
       "layoutLabel": "Key count",
       "layoutOptions": {
         "88": "88 keys (A0 – C8)",
         "76": "76 keys (E1 – G7)",
         "61": "61 keys (C2 – C7)"
       },
+      "windowLabel": "Displayed octaves",
+      "windowOptions": {
+        "one": "1 octave",
+        "two": "2 octaves",
+        "three": "3 octaves",
+        "four": "4 octaves",
+        "five": "5 octaves"
+      },
       "fullLabel": "Full keyboard",
-      "fullHint": "Click or drag to choose two octaves.",
-      "miniLabel": "Practice zone (2 octaves)",
+      "fullHint": "Click a key to choose a range.",
+      "miniLabel": "Practice zone",
       "miniHint": "Selected keys appear here for easy practice.",
       "rangeLabel": "Selected range"
     }

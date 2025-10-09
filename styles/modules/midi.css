@@ -123,6 +123,7 @@ body.theme-neon .midi-keyboard__subtitle {
 
 .midi-keyboard__controls {
   display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
   align-items: center;
 }
@@ -135,6 +136,7 @@ body.theme-neon .midi-keyboard__subtitle {
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+  flex: 1 1 12rem;
 }
 
 .midi-keyboard__control-label {
@@ -606,6 +608,7 @@ body.theme-neon .midi-page__module .chiptune-usage__summary {
 @media (max-width: 768px) {
   .midi-page__module .option-row--selectors {
     flex-direction: column;
+    gap: 0.5rem;
   }
 
   .midi-page__module .option-row--selectors .option-field {
