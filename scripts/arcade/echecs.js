@@ -2893,9 +2893,19 @@
     if (!ui.promotionElement || !ui.promotionOptionsElement) {
       return;
     }
+    const promotionMoves = Array.isArray(moves)
+      ? moves.filter(function (move) {
+        return move && move.promotion;
+      })
+      : [];
+    if (!promotionMoves.length) {
+      hidePromotionDialog(ui);
+      state.pendingPromotion = null;
+      return;
+    }
     ui.promotionOptionsElement.replaceChildren();
-    for (let i = 0; i < moves.length; i += 1) {
-      const move = moves[i];
+    for (let i = 0; i < promotionMoves.length; i += 1) {
+      const move = promotionMoves[i];
       const button = document.createElement('button');
       button.type = 'button';
       button.className = 'chess-promotion__option';
@@ -2910,7 +2920,7 @@
       ui.promotionOptionsElement.appendChild(button);
     }
     ui.promotionElement.hidden = false;
-    state.pendingPromotion = moves;
+    state.pendingPromotion = promotionMoves;
     setStatusText(
       ui.statusElement,
       'index.sections.echecs.status.promotion',
@@ -3129,10 +3139,15 @@
     if (!candidates.length) {
       return false;
     }
-    if (candidates.length === 1 && !candidates[0].promotion) {
+    const promotionCandidates = candidates.filter(function (move) {
+      return Boolean(move && move.promotion);
+    });
+    if (!promotionCandidates.length) {
       makeMove(state, candidates[0], ui);
+    } else if (promotionCandidates.length === 1) {
+      makeMove(state, promotionCandidates[0], ui);
     } else {
-      showPromotionDialog(state, ui, candidates);
+      showPromotionDialog(state, ui, promotionCandidates);
     }
     return true;
   }
