@@ -213,6 +213,12 @@
             "description": "Solve freshly generated grids or let the solver reveal a flawless solution.",
             "cta": "Solve"
           },
+          "minesweeper": {
+            "aria": "Open the Minesweeper mini-game",
+            "title": "Minesweeper",
+            "description": "Uncover every tile without triggering the quantum mines.",
+            "cta": "Disarm"
+          },
           "blackjack": {
             "aria": "Open the Blackjack mini-game",
             "title": "Blackjack",
@@ -287,6 +293,26 @@
         },
         "status": {
           "ready": "Generate a grid to get started."
+        }
+      },
+      "minesweeper": {
+        "aria": "Quantum Minesweeper mini-game",
+        "controls": {
+          "difficulty": "Difficulty",
+          "difficultyAria": "Select the Minesweeper difficulty",
+          "reset": "Reset",
+          "options": {
+            "facile": "Easy",
+            "moyen": "Medium",
+            "difficile": "Hard"
+          }
+        },
+        "board": "Minesweeper grid",
+        "labels": {
+          "hidden": "Hidden cell",
+          "flagged": "Flagged cell",
+          "revealed": "Cleared cell",
+          "mine": "Mine triggered"
         }
       },
       "blackjack": {

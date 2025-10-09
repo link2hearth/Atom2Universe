@@ -672,6 +672,27 @@
         <button
           type="button"
           class="arcade-hub-card"
+          aria-label="Accéder au mini-jeu Démineur"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.minesweeper.aria"
+          data-page-target="minesweeper"
+        >
+          <span
+            class="arcade-hub-card__title"
+            role="heading"
+            aria-level="3"
+            data-i18n="index.sections.arcadeHub.cards.minesweeper.title"
+          >Démineur</span>
+          <p
+            class="arcade-hub-card__description"
+            data-i18n="index.sections.arcadeHub.cards.minesweeper.description"
+          >Dévoilez toutes les cases sans déclencher les mines.</p>
+          <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.minesweeper.cta"
+            >Désarmer</span
+          >
+        </button>
+        <button
+          type="button"
+          class="arcade-hub-card"
           aria-label="Ouvrir le mini-jeu Blackjack"
           data-i18n="aria-label:index.sections.arcadeHub.cards.blackjack.aria"
           data-page-target="blackjack"
@@ -979,6 +1000,55 @@
             </div>
           </div>
         </div>
+      </div>
+    </section>
+
+    <section
+      id="minesweeper"
+      class="page page--minesweeper"
+      data-page-group="arcade"
+      aria-label="Mini-jeu Démineur quantique"
+      data-i18n="aria-label:index.sections.minesweeper.aria"
+      hidden
+    >
+      <div class="minesweeper">
+        <div class="minesweeper__controls">
+          <div class="minesweeper__control-group">
+            <label
+              for="minesweeperDifficulty"
+              class="minesweeper__label"
+              data-i18n="index.sections.minesweeper.controls.difficulty"
+            >Difficulté</label>
+            <select
+              id="minesweeperDifficulty"
+              class="minesweeper__select"
+              aria-label="Choisir la difficulté du Démineur"
+              data-i18n="aria-label:index.sections.minesweeper.controls.difficultyAria"
+            >
+              <option value="facile" data-i18n="index.sections.minesweeper.controls.options.facile">Facile</option>
+              <option value="moyen" data-i18n="index.sections.minesweeper.controls.options.moyen">Moyen</option>
+              <option value="difficile" data-i18n="index.sections.minesweeper.controls.options.difficile">Difficile</option>
+            </select>
+          </div>
+          <button
+            type="button"
+            class="minesweeper__button"
+            id="minesweeperReset"
+            data-i18n="index.sections.minesweeper.controls.reset"
+          >Réinitialiser</button>
+        </div>
+        <div
+          class="minesweeper__board"
+          id="minesweeperBoard"
+          role="grid"
+          aria-label="Grille du Démineur"
+          data-hidden-label="Case masquée"
+          data-flagged-label="Case marquée"
+          data-revealed-label="Case sécurisée"
+          data-mine-label="Mine déclenchée"
+          data-i18n="aria-label:index.sections.minesweeper.board;data-hidden-label:index.sections.minesweeper.labels.hidden;data-flagged-label:index.sections.minesweeper.labels.flagged;data-revealed-label:index.sections.minesweeper.labels.revealed;data-mine-label:index.sections.minesweeper.labels.mine"
+          data-state="ready"
+        ></div>
       </div>
     </section>
 
@@ -2217,6 +2287,7 @@
   <script src="scripts/arcade/balance.js"></script>
   <script src="scripts/arcade/math.js"></script>
   <script src="scripts/arcade/sudoku.js"></script>
+  <script src="scripts/arcade/minesweeper.js"></script>
   <script src="scripts/arcade/blackjack.js"></script>
   <script src="scripts/arcade/quantum-2048.js"></script>
   <script src="scripts/i18n/embedded-resources.js"></script>

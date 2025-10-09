@@ -213,6 +213,12 @@
             "description": "Résolvez des grilles générées aléatoirement ou laissez l’ordinateur trouver la solution parfaite.",
             "cta": "Résoudre"
           },
+          "minesweeper": {
+            "aria": "Accéder au mini-jeu Démineur",
+            "title": "Démineur",
+            "description": "Dévoilez toutes les cases sans déclencher les mines quantiques.",
+            "cta": "Désarmer"
+          },
           "blackjack": {
             "aria": "Ouvrir le mini-jeu Blackjack",
             "title": "Blackjack",
@@ -287,6 +293,26 @@
         },
         "status": {
           "ready": "Générez une grille pour commencer."
+        }
+      },
+      "minesweeper": {
+        "aria": "Mini-jeu Démineur quantique",
+        "controls": {
+          "difficulty": "Difficulté",
+          "difficultyAria": "Choisir la difficulté du Démineur",
+          "reset": "Réinitialiser",
+          "options": {
+            "facile": "Facile",
+            "moyen": "Moyen",
+            "difficile": "Difficile"
+          }
+        },
+        "board": "Grille du Démineur",
+        "labels": {
+          "hidden": "Case masquée",
+          "flagged": "Case marquée",
+          "revealed": "Case sécurisée",
+          "mine": "Mine déclenchée"
         }
       },
       "blackjack": {
