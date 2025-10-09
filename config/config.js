@@ -6,6 +6,37 @@
 const SHOP_MAX_PURCHASE_DEFAULT = 1000;
 const COLLECTION_MULTIPLIER_LABEL_KEY = 'scripts.config.elementBonuses.collectionMultiplier';
 
+/**
+ * Configuration du module MIDI.
+ * `MIDI_KEYBOARD_LAYOUTS` répertorie les claviers disponibles ainsi que leurs bornes MIDI.
+ */
+const MIDI_KEYBOARD_LAYOUTS = [
+  {
+    id: '88',
+    keyCount: 88,
+    lowestMidiNote: 21,
+    highestMidiNote: 108
+  },
+  {
+    id: '76',
+    keyCount: 76,
+    lowestMidiNote: 28,
+    highestMidiNote: 103
+  },
+  {
+    id: '61',
+    keyCount: 61,
+    lowestMidiNote: 36,
+    highestMidiNote: 96
+  }
+];
+
+/** Identifiant du clavier sélectionné par défaut sur la page MIDI. */
+const MIDI_DEFAULT_KEYBOARD_LAYOUT_ID = '88';
+
+/** Nombre de demi-tons affichés dans la fenêtre d’exercice (2 octaves). */
+const MIDI_KEYBOARD_WINDOW_SIZE = 24;
+
 function translateOrDefault(key, fallback, params) {
   if (typeof key !== 'string' || !key.trim()) {
     return fallback;

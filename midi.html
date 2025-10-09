@@ -209,10 +209,86 @@
           </div>
         </div>
       </section>
-      <section class="midi-page__keyboard" id="midiKeyboardArea" aria-hidden="true"></section>
+      <section class="midi-page__keyboard" id="midiKeyboardArea" aria-labelledby="midiKeyboardTitle">
+        <header class="midi-keyboard__header">
+          <div class="midi-keyboard__heading">
+            <h2
+              id="midiKeyboardTitle"
+              class="midi-keyboard__title"
+              data-i18n="midi.keyboard.title"
+            >
+              Explorateur de clavier
+            </h2>
+            <p class="midi-keyboard__subtitle" data-i18n="midi.keyboard.subtitle">
+              Choisissez la zone à pratiquer et visualisez-la sur deux octaves.
+            </p>
+          </div>
+          <div class="midi-keyboard__controls">
+            <label class="midi-keyboard__control" for="midiKeyboardLayoutSelect">
+              <span class="midi-keyboard__control-label" data-i18n="midi.keyboard.layoutLabel">
+                Nombre de touches
+              </span>
+              <select id="midiKeyboardLayoutSelect" class="midi-keyboard__select"></select>
+            </label>
+          </div>
+        </header>
+        <div class="midi-keyboard__body">
+          <div
+            class="midi-keyboard__panel midi-keyboard__panel--full"
+            role="region"
+            aria-labelledby="midiKeyboardFullLabel"
+          >
+            <div class="midi-keyboard__panel-header">
+              <h3
+                id="midiKeyboardFullLabel"
+                class="midi-keyboard__panel-title"
+                data-i18n="midi.keyboard.fullLabel"
+              >
+                Clavier complet
+              </h3>
+              <p class="midi-keyboard__panel-hint" data-i18n="midi.keyboard.fullHint">
+                Cliquez sur une touche pour sélectionner deux octaves.
+              </p>
+            </div>
+            <div class="midi-keyboard__range" id="midiKeyboardRange">
+              <span data-i18n="midi.keyboard.rangeLabel">Plage sélectionnée</span>
+              <span class="midi-keyboard__range-value" id="midiKeyboardRangeValue">C3 – B4</span>
+            </div>
+            <div
+              class="midi-keyboard__instrument midi-keyboard__instrument--full"
+              id="midiKeyboardFull"
+              data-role="keyboard"
+            ></div>
+          </div>
+          <div
+            class="midi-keyboard__panel midi-keyboard__panel--mini"
+            role="region"
+            aria-labelledby="midiKeyboardMiniLabel"
+          >
+            <div class="midi-keyboard__panel-header">
+              <h3
+                id="midiKeyboardMiniLabel"
+                class="midi-keyboard__panel-title"
+                data-i18n="midi.keyboard.miniLabel"
+              >
+                Zone de jeu (2 octaves)
+              </h3>
+              <p class="midi-keyboard__panel-hint" data-i18n="midi.keyboard.miniHint">
+                Les touches sélectionnées apparaissent ici pour la pratique.
+              </p>
+            </div>
+            <div
+              class="midi-keyboard__instrument midi-keyboard__instrument--mini"
+              id="midiKeyboardMini"
+              data-role="keyboard"
+            ></div>
+          </div>
+        </div>
+      </section>
     </div>
   </main>
 
+  <script src="config/config.js"></script>
   <script src="scripts/i18n/embedded-resources.js"></script>
   <script src="scripts/modules/i18n.js"></script>
   <script src="scripts/modules/shared/scc-waveform.js"></script>
