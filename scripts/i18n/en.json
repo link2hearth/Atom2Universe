@@ -721,6 +721,8 @@
             "soundFont": "SoundFont",
             "volume": "Master volume",
             "pianoOverride": "Force piano program for piano tracks",
+            "engineAudio": "Player audio",
+            "keyboardAudio": "Keyboard audio",
             "speed": "Playback speed",
             "speedNormal": "Normal tempo (100%)",
             "transposeZero": "0 semitone",
@@ -798,6 +800,16 @@
           "pianoOverride": {
             "enabled": "Enabled",
             "disabled": "Disabled"
+          },
+          "audio": {
+            "engine": {
+              "enabled": "Enabled",
+              "disabled": "Muted"
+            },
+            "keyboard": {
+              "enabled": "Enabled",
+              "disabled": "Muted"
+            }
           },
           "controls": {
             "octaveDown": "Octave −",
