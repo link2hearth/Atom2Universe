@@ -540,13 +540,92 @@
       }
     }
 
+    function normalizeNoteValue(noteNumber) {
+      const numeric = Number(noteNumber);
+      if (!Number.isFinite(numeric)) {
+        return null;
+      }
+      return Math.round(numeric);
+    }
+
+    function coerceMidiNote(value) {
+      const normalized = normalizeNoteValue(value);
+      if (normalized == null) {
+        return null;
+      }
+      return Math.max(0, Math.min(127, normalized));
+    }
+
+    function resolveKeyFromMap(refs, container, noteNumber) {
+      if (!refs) {
+        return null;
+      }
+      const normalized = normalizeNoteValue(noteNumber);
+      if (normalized == null) {
+        return null;
+      }
+
+      const existing = refs.get(normalized);
+      if (existing && existing.isConnected) {
+        return existing;
+      }
+
+      if (existing && !existing.isConnected) {
+        refs.delete(normalized);
+      }
+
+      if (!container || typeof container.querySelector !== 'function') {
+        return null;
+      }
+
+      const fallback = container.querySelector(`.midi-key[data-note="${normalized}"]`);
+      if (fallback) {
+        refs.set(normalized, fallback);
+        return fallback;
+      }
+
+      return null;
+    }
+
+    function resolveLaneFromMap(refs, container, noteNumber) {
+      if (!refs) {
+        return null;
+      }
+      const normalized = normalizeNoteValue(noteNumber);
+      if (normalized == null) {
+        return null;
+      }
+
+      const existing = refs.get(normalized);
+      if (existing && existing.isConnected) {
+        return existing;
+      }
+
+      if (existing && !existing.isConnected) {
+        refs.delete(normalized);
+      }
+
+      if (!container || typeof container.querySelector !== 'function') {
+        return null;
+      }
+
+      const selector = `.midi-key__lane[data-note="${normalized}"]`;
+      const fallback = container.querySelector(selector);
+      if (fallback) {
+        refs.set(normalized, fallback);
+        return fallback;
+      }
+
+      return null;
+    }
+
     function getKeyElements(noteNumber) {
       const elements = [];
-      const fullKey = fullKeyRefs.get(noteNumber);
+      const fullKey = resolveKeyFromMap(fullKeyRefs, fullContainer, noteNumber);
       if (fullKey) {
         elements.push(fullKey);
       }
-      const miniKey = miniKeyRefs.get(noteNumber);
+      const miniKey = resolveKeyFromMap(miniKeyRefs, miniContainer, noteNumber);
       if (miniKey) {
         elements.push(miniKey);
       }
@@ -555,11 +634,11 @@
 
     function getKeyLanes(noteNumber) {
       const lanes = [];
-      const fullLane = fullLaneRefs.get(noteNumber);
+      const fullLane = resolveLaneFromMap(fullLaneRefs, fullContainer, noteNumber);
       if (fullLane) {
         lanes.push(fullLane);
       }
-      const miniLane = miniLaneRefs.get(noteNumber);
+      const miniLane = resolveLaneFromMap(miniLaneRefs, miniContainer, noteNumber);
       if (miniLane) {
         lanes.push(miniLane);
       }
@@ -768,7 +847,10 @@
     }
 
     function createPreviewEntry(detail, noteNumber, source) {
-      const normalizedNote = Math.round(noteNumber);
+      const normalizedNote = coerceMidiNote(noteNumber);
+      if (normalizedNote == null) {
+        return null;
+      }
       const previewLead = Math.max(0, Number.isFinite(detail?.previewLeadTime) ? detail.previewLeadTime : 0);
       const sustainSeconds = Math.max(0.08, Number.isFinite(detail?.durationSeconds) ? detail.durationSeconds : 0.08);
       const eventId = typeof detail?.id === 'string' && detail.id ? detail.id : `preview-${normalizedNote}-${Date.now()}`;
@@ -862,10 +944,10 @@
     }
 
     function recordNoteStart(noteNumber, source, detail = {}) {
-      if (!Number.isFinite(noteNumber)) {
+      const normalized = coerceMidiNote(noteNumber);
+      if (normalized == null) {
         return;
       }
-      const normalized = Math.round(noteNumber);
       const stats = highlightState.get(normalized) || { manual: 0, playback: 0 };
       if (!highlightState.has(normalized)) {
         highlightState.set(normalized, stats);
@@ -889,10 +971,10 @@
     }
 
     function recordNoteStop(noteNumber, source) {
-      if (!Number.isFinite(noteNumber)) {
+      const normalized = coerceMidiNote(noteNumber);
+      if (normalized == null) {
         return;
       }
-      const normalized = Math.round(noteNumber);
       const stats = highlightState.get(normalized);
       if (!stats) {
         return;
@@ -918,19 +1000,19 @@
     }
 
     function handleNoteOn(detail) {
-      const noteNumber = Number.isFinite(detail?.note) ? detail.note : null;
+      const noteNumber = coerceMidiNote(detail?.note);
       if (noteNumber == null) {
         return;
       }
       const source = detail?.source === 'manual' ? 'manual' : 'playback';
       const entry = createPreviewEntry(detail, noteNumber, source);
       if (!entry) {
-        recordNoteStart(Math.round(noteNumber), source, { velocity: detail?.velocity });
+        recordNoteStart(noteNumber, source, { velocity: detail?.velocity });
       }
     }
 
     function handleNoteOff(detail) {
-      const noteNumber = Number.isFinite(detail?.note) ? detail.note : null;
+      const noteNumber = coerceMidiNote(detail?.note);
       if (noteNumber == null) {
         return;
       }
@@ -939,7 +1021,7 @@
       if (eventId && previewEntries.has(eventId)) {
         finalizePreviewEntry(previewEntries.get(eventId));
       } else {
-        recordNoteStop(Math.round(noteNumber), source);
+        recordNoteStop(noteNumber, source);
       }
     }
 
