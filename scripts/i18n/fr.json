@@ -225,6 +225,12 @@
             "description": "Empilez les cartes du tableau pour compléter les quatre fondations.",
             "cta": "Jouer"
           },
+          "echecs": {
+            "aria": "Accéder au mini-jeu Échecs",
+            "title": "Échecs",
+            "description": "Affrontez une IA sur un échiquier quantique pensé pour les stratèges en herbe.",
+            "cta": "Planifier"
+          },
           "blackjack": {
             "aria": "Ouvrir le mini-jeu Blackjack",
             "title": "Blackjack",
@@ -327,6 +333,74 @@
           "reset": "Réinitialiser"
         },
         "board": "Plateau du solitaire"
+      },
+      "echecs": {
+        "aria": "Mini-jeu d'échecs — moteur côté client",
+        "title": "Échecs quantiques",
+        "lead": "Le moteur de règles tourne désormais côté client : explorez les coups légaux pendant que l’IA se prépare.",
+        "board": "Plateau d'échecs 8 × 8",
+        "helper": "Sélectionnez une pièce blanche pour afficher ses déplacements légaux.",
+        "status": {
+          "ready": "Le moteur est prêt. Les blancs jouent en premier.",
+          "turn": {
+            "white": "Tour des blancs.",
+            "black": "Tour des noirs."
+          },
+          "check": {
+            "white": "Échec aux blancs !",
+            "black": "Échec aux noirs !"
+          },
+          "promotion": "Choisissez la pièce de promotion."
+        },
+        "outcome": {
+          "checkmate": {
+            "white": "Échec et mat ! Victoire des blancs.",
+            "black": "Échec et mat ! Victoire des noirs."
+          },
+          "stalemate": "Pat. Partie nulle.",
+          "draw": {
+            "generic": "Partie nulle.",
+            "fiftyMove": "Partie nulle par règle des 50 coups.",
+            "repetition": "Partie nulle par triple répétition.",
+            "insufficient": "Partie nulle par matériel insuffisant.",
+            "reason": {
+              "fiftyMove": "Aucun pion déplacé ni prise depuis 50 coups.",
+              "repetition": "La même position est apparue trois fois.",
+              "insufficient": "Le matériel restant ne permet plus le mat."
+            }
+          }
+        },
+        "promotion": {
+          "title": "Choisissez la pièce de promotion",
+          "options": {
+            "queen": "Dame",
+            "rook": "Tour",
+            "bishop": "Fou",
+            "knight": "Cavalier"
+          }
+        },
+        "pieces": {
+          "w": {
+            "p": "Pion blanc",
+            "n": "Cavalier blanc",
+            "b": "Fou blanc",
+            "r": "Tour blanche",
+            "q": "Dame blanche",
+            "k": "Roi blanc"
+          },
+          "b": {
+            "p": "Pion noir",
+            "n": "Cavalier noir",
+            "b": "Fou noir",
+            "r": "Tour noire",
+            "q": "Dame noire",
+            "k": "Roi noir"
+          }
+        },
+        "accessibility": {
+          "pieceOnSquare": "{{piece}} sur {{square}}",
+          "emptySquare": "Case {{square}} vide"
+        }
       },
       "blackjack": {
         "aria": "Mini-jeu Blackjack quantique",
