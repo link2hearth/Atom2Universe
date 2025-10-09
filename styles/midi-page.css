@@ -377,6 +377,60 @@ body.theme-light .midi-key--white.is-active {
     0 12px 24px rgba(36, 110, 200, 0.55);
 }
 
+.midi-key.is-playing {
+  transform: translateY(-3px);
+}
+
+.midi-key--white.is-playing {
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.85),
+    inset 0 -8px 0 rgba(90, 150, 240, 0.5),
+    0 18px 28px rgba(40, 120, 220, 0.55);
+}
+
+.midi-key--black.is-playing {
+  box-shadow:
+    inset 0 3px 0 rgba(180, 220, 255, 0.35),
+    inset 0 -8px 0 rgba(10, 16, 28, 0.7),
+    0 18px 30px rgba(44, 120, 220, 0.6);
+}
+
+.midi-key--white.is-playing--manual {
+  background: linear-gradient(180deg, rgba(255, 228, 180, 0.96), rgba(255, 190, 120, 0.9));
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -8px 0 rgba(255, 170, 90, 0.55),
+    0 20px 32px rgba(255, 170, 70, 0.4);
+}
+
+body.theme-light .midi-key--white.is-playing--manual {
+  background: linear-gradient(180deg, rgba(255, 240, 210, 0.96), rgba(255, 204, 140, 0.9));
+}
+
+.midi-key--black.is-playing--manual {
+  background: linear-gradient(180deg, rgba(140, 90, 40, 0.92), rgba(90, 55, 20, 0.88));
+  box-shadow:
+    inset 0 3px 0 rgba(255, 210, 150, 0.35),
+    inset 0 -8px 0 rgba(30, 12, 4, 0.6),
+    0 18px 30px rgba(255, 150, 60, 0.45);
+}
+
+.midi-key--white.is-playing--playback {
+  background: linear-gradient(180deg, rgba(180, 230, 255, 0.96), rgba(120, 200, 255, 0.92));
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -8px 0 rgba(90, 150, 230, 0.55),
+    0 22px 34px rgba(80, 150, 255, 0.45);
+}
+
+.midi-key--black.is-playing--playback {
+  background: linear-gradient(180deg, rgba(70, 110, 200, 0.92), rgba(40, 70, 140, 0.9));
+  box-shadow:
+    inset 0 3px 0 rgba(180, 220, 255, 0.4),
+    inset 0 -8px 0 rgba(12, 20, 40, 0.6),
+    0 18px 32px rgba(60, 140, 255, 0.55);
+}
+
 .midi-key:focus-visible {
   outline: 2px solid rgba(120, 200, 255, 0.8);
   outline-offset: 3px;
