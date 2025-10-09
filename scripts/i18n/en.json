@@ -679,6 +679,8 @@
         },
         "chiptune": {
           "title": "MIDI Music Module",
+          "linkDescription": "Access the MIDI player and SoundFonts from a dedicated page.",
+          "openPage": "Open the MIDI page",
           "labels": {
             "artist": "Artist",
             "track": "Track",
@@ -1188,6 +1190,31 @@
           "default": "Starter set"
         }
       }
+    }
+  },
+  "midi": {
+    "meta": {
+      "title": "Atom to Univers · MIDI Music Module"
+    },
+    "page": {
+      "nav": "MIDI page navigation",
+      "back": "Back to options",
+      "description": "Manage your MIDI tracks and SoundFonts from this dedicated space."
+    },
+    "keyboard": {
+      "title": "Keyboard explorer",
+      "subtitle": "Pick the area you want to practice and view it across two octaves.",
+      "layoutLabel": "Key count",
+      "layoutOptions": {
+        "88": "88 keys (A0 – C8)",
+        "76": "76 keys (E1 – G7)",
+        "61": "61 keys (C2 – C7)"
+      },
+      "fullLabel": "Full keyboard",
+      "fullHint": "Click or drag to choose two octaves.",
+      "miniLabel": "Practice zone (2 octaves)",
+      "miniHint": "Selected keys appear here for easy practice.",
+      "rangeLabel": "Selected range"
     }
   },
   "scripts": {

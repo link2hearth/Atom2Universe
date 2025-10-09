@@ -679,6 +679,8 @@
         },
         "chiptune": {
           "title": "Module Musique Midi",
+          "linkDescription": "Retrouvez le lecteur MIDI et les SoundFonts dans une page dédiée.",
+          "openPage": "Ouvrir la page MIDI",
           "labels": {
             "artist": "Artiste",
             "track": "Titre",
@@ -1188,6 +1190,31 @@
           "default": "Lot classique"
         }
       }
+    }
+  },
+  "midi": {
+    "meta": {
+      "title": "Atom to Univers · Module Musique MIDI"
+    },
+    "page": {
+      "nav": "Navigation de la page MIDI",
+      "back": "Retour aux options",
+      "description": "Gérez vos morceaux et vos SoundFonts MIDI dans cet espace dédié."
+    },
+    "keyboard": {
+      "title": "Explorateur de clavier",
+      "subtitle": "Choisissez la zone à pratiquer et visualisez-la sur deux octaves.",
+      "layoutLabel": "Nombre de touches",
+      "layoutOptions": {
+        "88": "88 touches (A0 – C8)",
+        "76": "76 touches (E1 – G7)",
+        "61": "61 touches (C2 – C7)"
+      },
+      "fullLabel": "Clavier complet",
+      "fullHint": "Cliquez ou faites glisser pour sélectionner deux octaves.",
+      "miniLabel": "Zone de jeu (2 octaves)",
+      "miniHint": "Les touches sélectionnées apparaissent ici pour la pratique.",
+      "rangeLabel": "Plage sélectionnée"
     }
   },
   "scripts": {

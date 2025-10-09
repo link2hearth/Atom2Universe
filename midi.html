@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title data-i18n="midi.meta.title">Atom to Univers · Module Musique MIDI</title>
+  <link rel="stylesheet" href="styles/fonts.css" />
+  <link rel="stylesheet" href="styles/main.css" />
+  <link rel="stylesheet" href="styles/midi-page.css" />
+</head>
+<body class="theme-dark midi-page">
+  <header class="app-header midi-page__header">
+    <div class="header-main">
+      <div class="header-brand-group">
+        <a class="brand brand-button" href="index.html" data-i18n="index.header.brand">Atom2Univers</a>
+        <button
+          class="header-playback-button"
+          id="headerPlaybackToggle"
+          type="button"
+          data-state="play"
+          aria-pressed="false"
+          aria-label="Lecture"
+          title="Lecture"
+          data-i18n="aria-label:index.sections.options.chiptune.controls.play;title:index.sections.options.chiptune.controls.play"
+        >
+          <span class="visually-hidden" data-i18n="index.sections.options.chiptune.controls.play">Lecture</span>
+        </button>
+      </div>
+      <nav
+        class="midi-page__nav"
+        aria-label="Navigation de la page MIDI"
+        data-i18n="aria-label:midi.page.nav"
+      >
+        <a class="midi-page__nav-link" href="index.html#options" data-i18n="midi.page.back">Retour aux options</a>
+      </nav>
+    </div>
+  </header>
+  <main class="midi-page__main">
+    <div class="midi-page__content">
+      <h1 class="midi-page__title" data-i18n="index.sections.options.chiptune.title">Module Musique Midi</h1>
+      <p class="midi-page__description" data-i18n="midi.page.description">
+        Gérez vos morceaux et vos SoundFonts MIDI dans cet espace dédié.
+      </p>
+      <section class="option-card option-card--chiptune midi-page__module" aria-labelledby="midiModuleTitle">
+        <h2 id="midiModuleTitle" class="visually-hidden" data-i18n="index.sections.options.chiptune.title">Module Musique Midi</h2>
+        <div class="option-row option-row--selectors">
+          <div class="option-field option-field--wide option-field--artist">
+            <label for="chiptuneArtistSelect" data-i18n="index.sections.options.chiptune.labels.artist">Artiste</label>
+            <select id="chiptuneArtistSelect" disabled>
+              <option value="" data-i18n="index.sections.options.chiptune.library.artists.placeholder">Sélectionnez un artiste</option>
+            </select>
+          </div>
+          <div class="option-field option-field--wide option-field--track">
+            <label for="chiptuneTrackSelect" data-i18n="index.sections.options.chiptune.labels.track">Titre</label>
+            <select id="chiptuneTrackSelect" disabled>
+              <option value="" data-i18n="index.sections.options.chiptune.library.tracks.placeholder">Sélectionnez un titre</option>
+            </select>
+            <div class="chiptune-track-slider" role="group" aria-live="polite">
+              <input
+                type="range"
+                id="chiptuneTrackSlider"
+                min="0"
+                max="0"
+                value="0"
+                step="1"
+                disabled
+                aria-label="Parcourir les titres"
+                data-i18n-aria-label="index.sections.options.chiptune.trackSlider.label"
+              />
+              <span class="chiptune-track-slider__value" id="chiptuneTrackSliderValue" data-i18n="index.sections.options.chiptune.trackSlider.empty">Aucun titre</span>
+            </div>
+          </div>
+          <div class="option-field">
+            <label for="chiptuneEngineSelect" data-i18n="index.sections.options.chiptune.labels.engine">Moteur sonore</label>
+            <select id="chiptuneEngineSelect">
+              <option value="hifi" data-i18n="index.sections.options.chiptune.engineOptions.hifi">SoundFont Hi-Fi</option>
+              <option value="scc" data-i18n="index.sections.options.chiptune.engineOptions.scc">SCC (MSX)</option>
+              <option value="n163" data-i18n="index.sections.options.chiptune.engineOptions.n163">Namco 163 (N163)</option>
+              <option value="ym2413" data-i18n="index.sections.options.chiptune.engineOptions.ym2413">Yamaha OPLL (YM2413)</option>
+              <option value="sid" data-i18n="index.sections.options.chiptune.engineOptions.sid">MOS SID (6581/8580)</option>
+              <option value="original" data-i18n="index.sections.options.chiptune.engineOptions.original">Original</option>
+            </select>
+          </div>
+          <div class="option-field">
+            <label for="chiptuneSoundFontSelect" data-i18n="index.sections.options.chiptune.labels.soundFont">SoundFont</label>
+            <select id="chiptuneSoundFontSelect">
+              <option value="" data-i18n="index.sections.options.chiptune.soundfonts.loading">Chargement des SoundFonts…</option>
+            </select>
+          </div>
+        </div>
+        <div class="option-row option-row--buttons option-row--random">
+          <button type="button" id="chiptuneRandomAllButton" disabled data-i18n="index.sections.options.chiptune.controls.randomAll">Lecture aléatoire (bibliothèque)</button>
+          <button type="button" id="chiptuneRandomArtistButton" disabled data-i18n="index.sections.options.chiptune.controls.randomArtist">Lecture aléatoire (artiste)</button>
+        </div>
+        <div class="option-row option-row--buttons option-row--import">
+          <button
+            type="button"
+            id="chiptuneImportFolderButton"
+            data-i18n="index.sections.options.chiptune.folderImport.button"
+          >Ajouter un dossier MIDI local</button>
+          <input
+            type="file"
+            id="chiptuneFolderInput"
+            accept=".mid,.midi"
+            webkitdirectory
+            directory
+            multiple
+            hidden
+          />
+        </div>
+        <div class="option-row option-row--dropzone">
+          <input type="file" id="chiptuneFileInput" accept=".mid,.midi" hidden />
+          <div
+            id="chiptuneDropZone"
+            class="chiptune-dropzone"
+            role="button"
+            tabindex="0"
+            aria-label="Déposez un fichier MIDI (.mid) ici ou cliquez pour le sélectionner"
+            data-i18n="index.sections.options.chiptune.dropZone.prompt;aria-label:index.sections.options.chiptune.dropZone.prompt"
+          >
+            Déposez un fichier MIDI (.mid) ici ou cliquez pour le sélectionner
+          </div>
+        </div>
+        <div class="option-row option-row--slider">
+          <label for="chiptuneVolumeSlider" data-i18n="index.sections.options.chiptune.labels.volume">Volume général</label>
+          <input type="range" id="chiptuneVolumeSlider" min="0" max="100" step="1" value="80" />
+          <span class="option-value" id="chiptuneVolumeValue" aria-live="polite">80%</span>
+
+          <label for="chiptunePianoOverrideToggle" data-i18n="index.sections.options.chiptune.labels.pianoOverride">Forcer le programme piano pour les pistes piano</label>
+          <input type="checkbox" id="chiptunePianoOverrideToggle" checked />
+          <span
+            class="option-value"
+            id="chiptunePianoOverrideValue"
+            aria-live="polite"
+            data-i18n="index.sections.options.chiptune.pianoOverride.enabled"
+          >Activé</span>
+        </div>
+        <div class="option-row option-row--buttons option-row--pitch">
+          <button type="button" id="chiptuneOctaveDownButton" data-i18n="index.sections.options.chiptune.controls.octaveDown">Octave −</button>
+          <button type="button" id="chiptuneOctaveUpButton" data-i18n="index.sections.options.chiptune.controls.octaveUp">Octave +</button>
+          <button type="button" id="chiptuneResetPitchButton" data-i18n="index.sections.options.chiptune.controls.resetPitch">Réinitialiser</button>
+        </div>
+        <div class="option-row option-row--buttons">
+          <button type="button" id="chiptunePlayButton" disabled data-i18n="index.sections.options.chiptune.controls.play">Lecture</button>
+          <button
+            type="button"
+            id="chiptuneSkipButton"
+            disabled
+            data-i18n="index.sections.options.chiptune.controls.skip"
+          >
+            Suivant
+          </button>
+          <button type="button" id="chiptuneStopButton" disabled data-i18n="index.sections.options.chiptune.controls.stop">Stop</button>
+        </div>
+        <p class="option-note" id="chiptuneStatus" data-i18n="index.sections.options.chiptune.status.noneLoaded">Aucun morceau chargé pour le moment.</p>
+        <div class="option-row option-row--progress">
+          <label
+            for="chiptuneProgressSlider"
+            id="chiptuneProgressLabel"
+            data-i18n="index.sections.options.chiptune.progress.label"
+          >
+            Position de lecture
+          </label>
+          <input
+            type="range"
+            id="chiptuneProgressSlider"
+            min="0"
+            max="0"
+            step="0.01"
+            value="0"
+            disabled
+            aria-labelledby="chiptuneProgressLabel"
+          />
+          <span
+            class="option-value"
+            id="chiptuneProgressValue"
+            aria-live="polite"
+            data-i18n="index.sections.options.chiptune.progress.empty"
+          >
+            Aucun morceau chargé
+          </span>
+        </div>
+        <div class="option-row option-row--usage">
+          <div class="chiptune-usage" role="group" aria-labelledby="chiptuneUsageTitle">
+            <div class="chiptune-usage__header">
+              <span id="chiptuneUsageTitle" data-i18n="index.sections.options.chiptune.usage.title">Programmes MIDI utilisés</span>
+              <span
+                id="chiptuneUsageSummary"
+                class="chiptune-usage__summary"
+                aria-live="polite"
+                data-i18n="index.sections.options.chiptune.usage.summaryEmpty"
+              >
+                Aucun programme détecté
+              </span>
+            </div>
+            <div
+              id="chiptuneProgramUsage"
+              class="chiptune-usage__grid"
+              role="grid"
+              aria-labelledby="chiptuneUsageTitle"
+            ></div>
+            <p
+              class="option-note chiptune-usage__note"
+              id="chiptuneUsageNote"
+              data-i18n="index.sections.options.chiptune.usage.note"
+            >
+              Les numéros correspondent aux programmes General MIDI (0 à 127).
+            </p>
+          </div>
+        </div>
+      </section>
+      <section class="midi-page__keyboard" id="midiKeyboardArea" aria-labelledby="midiKeyboardTitle">
+        <header class="midi-keyboard__header">
+          <div class="midi-keyboard__heading">
+            <h2
+              id="midiKeyboardTitle"
+              class="midi-keyboard__title"
+              data-i18n="midi.keyboard.title"
+            >
+              Explorateur de clavier
+            </h2>
+            <p class="midi-keyboard__subtitle" data-i18n="midi.keyboard.subtitle">
+              Choisissez la zone à pratiquer et visualisez-la sur deux octaves.
+            </p>
+          </div>
+          <div class="midi-keyboard__controls">
+            <label class="midi-keyboard__control" for="midiKeyboardLayoutSelect">
+              <span class="midi-keyboard__control-label" data-i18n="midi.keyboard.layoutLabel">
+                Nombre de touches
+              </span>
+              <select id="midiKeyboardLayoutSelect" class="midi-keyboard__select"></select>
+            </label>
+          </div>
+        </header>
+        <div class="midi-keyboard__body">
+          <div
+            class="midi-keyboard__panel midi-keyboard__panel--full"
+            role="region"
+            aria-labelledby="midiKeyboardFullLabel"
+          >
+            <div class="midi-keyboard__panel-header">
+              <h3
+                id="midiKeyboardFullLabel"
+                class="midi-keyboard__panel-title"
+                data-i18n="midi.keyboard.fullLabel"
+              >
+                Clavier complet
+              </h3>
+              <p class="midi-keyboard__panel-hint" data-i18n="midi.keyboard.fullHint">
+                Cliquez sur une touche pour sélectionner deux octaves.
+              </p>
+            </div>
+            <div class="midi-keyboard__range" id="midiKeyboardRange">
+              <span data-i18n="midi.keyboard.rangeLabel">Plage sélectionnée</span>
+              <span class="midi-keyboard__range-value" id="midiKeyboardRangeValue">C3 – B4</span>
+            </div>
+            <div
+              class="midi-keyboard__instrument midi-keyboard__instrument--full"
+              id="midiKeyboardFull"
+              data-role="keyboard"
+            ></div>
+          </div>
+          <div
+            class="midi-keyboard__panel midi-keyboard__panel--mini"
+            role="region"
+            aria-labelledby="midiKeyboardMiniLabel"
+          >
+            <div class="midi-keyboard__panel-header">
+              <h3
+                id="midiKeyboardMiniLabel"
+                class="midi-keyboard__panel-title"
+                data-i18n="midi.keyboard.miniLabel"
+              >
+                Zone de jeu (2 octaves)
+              </h3>
+              <p class="midi-keyboard__panel-hint" data-i18n="midi.keyboard.miniHint">
+                Les touches sélectionnées apparaissent ici pour la pratique.
+              </p>
+            </div>
+            <div
+              class="midi-keyboard__instrument midi-keyboard__instrument--mini"
+              id="midiKeyboardMini"
+              data-role="keyboard"
+            ></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="config/config.js"></script>
+  <script src="scripts/i18n/embedded-resources.js"></script>
+  <script src="scripts/modules/i18n.js"></script>
+  <script src="scripts/modules/shared/scc-waveform.js"></script>
+  <script src="scripts/modules/chiptune-player.js"></script>
+  <script src="scripts/midi-page.js"></script>
+</body>
+</html>
