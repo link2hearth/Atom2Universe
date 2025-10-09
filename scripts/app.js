@@ -1786,6 +1786,12 @@ const DEFAULT_STATE = {
   apsCrit: createDefaultApsCritState()
 };
 
+function createInitialArcadeProgress() {
+  return {
+    echecs: null
+  };
+}
+
 const gameState = {
   atoms: LayeredNumber.zero(),
   lifetime: LayeredNumber.zero(),
@@ -1826,8 +1832,13 @@ const gameState = {
   musicVolume: DEFAULT_MUSIC_VOLUME,
   musicEnabled: DEFAULT_MUSIC_ENABLED,
   bigBangButtonVisible: false,
-  apsCrit: createDefaultApsCritState()
+  apsCrit: createDefaultApsCritState(),
+  arcadeProgress: createInitialArcadeProgress()
 };
+
+if (typeof window !== 'undefined') {
+  window.atom2universGameState = gameState;
+}
 
 applyFrenzySpawnChanceBonus(gameState.frenzySpawnBonus);
 if (typeof setParticulesBrickSkinPreference === 'function') {
@@ -10072,6 +10083,22 @@ if (elements.bigBangOptionToggle) {
   });
 }
 
+function cloneArcadeProgress(progress) {
+  const base = createInitialArcadeProgress();
+  if (!progress || typeof progress !== 'object') {
+    return base;
+  }
+  const result = { ...base };
+  if (progress.echecs && typeof progress.echecs === 'object') {
+    try {
+      result.echecs = JSON.parse(JSON.stringify(progress.echecs));
+    } catch (error) {
+      result.echecs = null;
+    }
+  }
+  return result;
+}
+
 function serializeState() {
   const stats = gameState.stats || createInitialStats();
   const sessionApc = getLayeredStat(stats.session, 'apcAtoms');
@@ -10275,6 +10302,7 @@ function serializeState() {
     musicEnabled: gameState.musicEnabled !== false,
     bigBangButtonVisible: gameState.bigBangButtonVisible === true,
     trophies: getUnlockedTrophyIds(),
+    arcadeProgress: cloneArcadeProgress(gameState.arcadeProgress),
     lastSave: Date.now()
   };
 }
@@ -10286,6 +10314,10 @@ function saveGame() {
   } catch (err) {
     console.error('Erreur de sauvegarde', err);
   }
+}
+
+if (typeof window !== 'undefined') {
+  window.atom2universSaveGame = saveGame;
 }
 
 function resetGame() {
@@ -10329,7 +10361,8 @@ function resetGame() {
     musicVolume: DEFAULT_MUSIC_VOLUME,
     musicEnabled: DEFAULT_MUSIC_ENABLED,
     bigBangButtonVisible: false,
-    apsCrit: createDefaultApsCritState()
+    apsCrit: createDefaultApsCritState(),
+    arcadeProgress: createInitialArcadeProgress()
   });
   applyFrenzySpawnChanceBonus(gameState.frenzySpawnBonus);
   setTicketStarAverageIntervalSeconds(gameState.ticketStarAverageIntervalSeconds);
@@ -10556,6 +10589,22 @@ function applyOfflineProgress(seconds, options = {}) {
   return result;
 }
 
+function normalizeArcadeProgress(raw) {
+  const base = createInitialArcadeProgress();
+  if (!raw || typeof raw !== 'object') {
+    return base;
+  }
+  const result = { ...base };
+  if (raw.echecs && typeof raw.echecs === 'object') {
+    try {
+      result.echecs = JSON.parse(JSON.stringify(raw.echecs));
+    } catch (error) {
+      result.echecs = null;
+    }
+  }
+  return result;
+}
+
 function loadGame() {
   try {
     resetFrenzyState({ skipApply: true });
@@ -10594,6 +10643,7 @@ function loadGame() {
     } else {
       gameState.ticketStarUnlocked = gameState.gachaTickets > 0;
     }
+    gameState.arcadeProgress = normalizeArcadeProgress(data.arcadeProgress);
     const storedUpgrades = data.upgrades;
     if (storedUpgrades && typeof storedUpgrades === 'object') {
       const normalizedUpgrades = {};

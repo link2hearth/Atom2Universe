@@ -339,9 +339,24 @@
         "title": "Échecs quantiques",
         "lead": "Le moteur de règles tourne désormais côté client : explorez les coups légaux pendant que l’IA se prépare.",
         "board": "Plateau d'échecs 8 × 8",
-        "helper": "Sélectionnez une pièce blanche pour afficher ses déplacements légaux.",
+        "helper": "Touchez ou faites glisser une pièce blanche pour afficher ses déplacements légaux.",
+        "helperAiThinking": "L’IA réfléchit à sa réponse…",
+        "controls": {
+          "coordinates": "Afficher les coordonnées",
+          "history": "Afficher l'historique"
+        },
+        "history": {
+          "title": "Historique des coups",
+          "empty": "Aucun coup joué pour le moment."
+        },
+        "feedback": {
+          "invalidMove": "Ce déplacement n’est pas légal.",
+          "notYourTurn": "Ce n’est pas à cette pièce de jouer.",
+          "dragCancelled": "Déplacement annulé."
+        },
         "status": {
           "ready": "Le moteur est prêt. Les blancs jouent en premier.",
+          "aiThinking": "Les noirs réfléchissent…",
           "turn": {
             "white": "Tour des blancs.",
             "black": "Tour des noirs."

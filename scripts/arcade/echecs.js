@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  const GLOBAL_CONFIG = typeof globalThis !== 'undefined' ? globalThis.GAME_CONFIG : null;
+
   if (typeof document === 'undefined') {
     return;
   }
@@ -12,6 +14,14 @@
   const HELPER_SELECTOR = '[data-chess-helper]';
   const PROMOTION_SELECTOR = '[data-chess-promotion]';
   const PROMOTION_OPTIONS_SELECTOR = '[data-chess-promotion-options]';
+  const COORDINATES_TOGGLE_SELECTOR = '[data-chess-toggle-coordinates]';
+  const HISTORY_TOGGLE_SELECTOR = '[data-chess-toggle-history]';
+  const HISTORY_CONTAINER_SELECTOR = '[data-chess-history]';
+  const HISTORY_LIST_SELECTOR = '[data-chess-history-list]';
+  const HISTORY_EMPTY_SELECTOR = '[data-chess-history-empty]';
+
+  const LOCAL_STORAGE_KEY = 'atom2univers.arcade.echecs';
+  const POINTER_DRAG_THRESHOLD = 6;
 
   const BOARD_SIZE = 8;
   const WHITE = 'w';
@@ -26,6 +36,16 @@
     b: 'bishop',
     n: 'knight'
   });
+
+  const DEFAULT_AI_SETTINGS = Object.freeze({
+    depth: 3,
+    timeLimitMs: 1200,
+    moveDelayMs: 150,
+    transpositionSize: 4000
+  });
+
+  const MIN_AI_DEPTH = 1;
+  const MAX_AI_DEPTH = 5;
 
   const PIECE_TYPES = Object.freeze({
     PAWN: 'p',
@@ -93,6 +113,101 @@
     }
   }
 
+  function toPositiveInteger(value, fallback) {
+    const numeric = Number(value);
+    if (!Number.isFinite(numeric) || numeric <= 0) {
+      return fallback;
+    }
+    return Math.floor(numeric);
+  }
+
+  function toNonNegativeNumber(value, fallback) {
+    const numeric = Number(value);
+    if (!Number.isFinite(numeric) || numeric < 0) {
+      return fallback;
+    }
+    return numeric;
+  }
+
+  function clampDepth(value) {
+    const normalized = toPositiveInteger(value, DEFAULT_AI_SETTINGS.depth);
+    return Math.max(MIN_AI_DEPTH, Math.min(MAX_AI_DEPTH, normalized));
+  }
+
+  function clampTranspositionSize(value) {
+    const normalized = toPositiveInteger(value, DEFAULT_AI_SETTINGS.transpositionSize);
+    return Math.max(500, Math.min(20000, normalized));
+  }
+
+  function getConfiguredChessAiSettings() {
+    const arcadeConfig = GLOBAL_CONFIG && GLOBAL_CONFIG.arcade ? GLOBAL_CONFIG.arcade : null;
+    const chessConfig = arcadeConfig && arcadeConfig.echecs ? arcadeConfig.echecs : null;
+    const aiConfig = chessConfig && chessConfig.ai ? chessConfig.ai : null;
+
+    let depth = DEFAULT_AI_SETTINGS.depth;
+    if (aiConfig) {
+      const depthCandidates = [aiConfig.searchDepth, aiConfig.depth, aiConfig.maxDepth];
+      for (let i = 0; i < depthCandidates.length; i += 1) {
+        const candidate = depthCandidates[i];
+        if (candidate != null) {
+          depth = clampDepth(candidate);
+          break;
+        }
+      }
+    }
+
+    let timeLimitMs = DEFAULT_AI_SETTINGS.timeLimitMs;
+    if (aiConfig) {
+      const timeCandidates = [aiConfig.timeLimitMs, aiConfig.timeMs, aiConfig.maxTimeMs];
+      for (let i = 0; i < timeCandidates.length; i += 1) {
+        const candidate = timeCandidates[i];
+        if (candidate != null) {
+          timeLimitMs = toNonNegativeNumber(candidate, DEFAULT_AI_SETTINGS.timeLimitMs);
+          break;
+        }
+      }
+    }
+
+    let moveDelayMs = DEFAULT_AI_SETTINGS.moveDelayMs;
+    if (aiConfig) {
+      const delayCandidates = [aiConfig.moveDelayMs, aiConfig.delayMs];
+      for (let i = 0; i < delayCandidates.length; i += 1) {
+        const candidate = delayCandidates[i];
+        if (candidate != null) {
+          moveDelayMs = toNonNegativeNumber(candidate, DEFAULT_AI_SETTINGS.moveDelayMs);
+          break;
+        }
+      }
+    }
+
+    let transpositionSize = DEFAULT_AI_SETTINGS.transpositionSize;
+    if (aiConfig) {
+      const transpositionCandidates = [aiConfig.transpositionSize, aiConfig.ttSize, aiConfig.hashSize];
+      for (let i = 0; i < transpositionCandidates.length; i += 1) {
+        const candidate = transpositionCandidates[i];
+        if (candidate != null) {
+          transpositionSize = clampTranspositionSize(candidate);
+          break;
+        }
+      }
+    }
+
+    return {
+      depth,
+      timeLimitMs,
+      moveDelayMs,
+      transpositionSize
+    };
+  }
+
+  function createAiContext() {
+    return {
+      settings: getConfiguredChessAiSettings(),
+      table: new Map(),
+      searchId: 0
+    };
+  }
+
   function translate(key, fallback, params) {
     if (typeof key !== 'string' || !key) {
       return fallback;
@@ -142,6 +257,32 @@
     return fallback !== undefined ? fallback : key;
   }
 
+  function getGlobalGameState() {
+    if (typeof window === 'undefined') {
+      return null;
+    }
+    if (window.atom2universGameState && typeof window.atom2universGameState === 'object') {
+      return window.atom2universGameState;
+    }
+    if (window.gameState && typeof window.gameState === 'object') {
+      return window.gameState;
+    }
+    return null;
+  }
+
+  function requestSave() {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    if (typeof window.atom2universSaveGame === 'function') {
+      window.atom2universSaveGame();
+      return;
+    }
+    if (typeof window.saveGame === 'function') {
+      window.saveGame();
+    }
+  }
+
   function createPiece(color, type) {
     return color + type.toUpperCase();
   }
@@ -158,6 +299,666 @@
       return null;
     }
     return piece[1].toLowerCase();
+  }
+
+  const PIECE_BASE_VALUES = Object.freeze({
+    [PIECE_TYPES.PAWN]: 100,
+    [PIECE_TYPES.KNIGHT]: 320,
+    [PIECE_TYPES.BISHOP]: 330,
+    [PIECE_TYPES.ROOK]: 500,
+    [PIECE_TYPES.QUEEN]: 900,
+    [PIECE_TYPES.KING]: 20000
+  });
+
+  const MATE_SCORE = 100000;
+  const TRANSPOSITION_FLAG_EXACT = 0;
+  const TRANSPOSITION_FLAG_LOWER = 1;
+  const TRANSPOSITION_FLAG_UPPER = 2;
+
+  function analyzeBoardForEvaluation(board) {
+    const analysis = {
+      board,
+      score: 0,
+      whitePawnFiles: new Array(BOARD_SIZE).fill(0),
+      blackPawnFiles: new Array(BOARD_SIZE).fill(0),
+      whitePawnRowsByFile: Array.from({ length: BOARD_SIZE }, function () { return []; }),
+      blackPawnRowsByFile: Array.from({ length: BOARD_SIZE }, function () { return []; }),
+      whitePawns: [],
+      blackPawns: [],
+      whiteRooks: [],
+      blackRooks: [],
+      whiteKing: null,
+      blackKing: null,
+      whiteMinorHome: 0,
+      blackMinorHome: 0,
+      whiteNonPawnMaterial: 0,
+      blackNonPawnMaterial: 0,
+      whiteBishopCount: 0,
+      blackBishopCount: 0
+    };
+
+    for (let row = 0; row < BOARD_SIZE; row += 1) {
+      for (let col = 0; col < BOARD_SIZE; col += 1) {
+        const piece = board[row][col];
+        if (!piece) {
+          continue;
+        }
+        const color = getPieceColor(piece);
+        const type = getPieceType(piece);
+        if (!color || !type) {
+          continue;
+        }
+        const sign = color === WHITE ? 1 : -1;
+        const baseValue = PIECE_BASE_VALUES[type] || 0;
+        analysis.score += sign * baseValue;
+
+        if (type !== PIECE_TYPES.PAWN && type !== PIECE_TYPES.KING) {
+          if (color === WHITE) {
+            analysis.whiteNonPawnMaterial += baseValue;
+          } else {
+            analysis.blackNonPawnMaterial += baseValue;
+          }
+        }
+
+        if (type === PIECE_TYPES.PAWN) {
+          if (color === WHITE) {
+            analysis.whitePawnFiles[col] += 1;
+            analysis.whitePawnRowsByFile[col].push(row);
+            analysis.whitePawns.push({ row, col });
+            const advancement = Math.max(0, 6 - row);
+            analysis.score += sign * advancement * 4;
+          } else {
+            analysis.blackPawnFiles[col] += 1;
+            analysis.blackPawnRowsByFile[col].push(row);
+            analysis.blackPawns.push({ row, col });
+            const advancement = Math.max(0, row - 1);
+            analysis.score += sign * advancement * 4;
+          }
+          const centerDistance = Math.abs(col - 3.5);
+          const centerBonus = Math.max(0, 2 - centerDistance) * 2;
+          analysis.score += sign * centerBonus;
+        } else if (type === PIECE_TYPES.KNIGHT) {
+          const distance = Math.max(Math.abs(row - 3.5), Math.abs(col - 3.5));
+          const centrality = Math.max(0, 3.5 - distance);
+          analysis.score += sign * Math.round(centrality * 12);
+          if (color === WHITE && row === 7 && (col === 1 || col === 6)) {
+            analysis.whiteMinorHome += 1;
+          } else if (color === BLACK && row === 0 && (col === 1 || col === 6)) {
+            analysis.blackMinorHome += 1;
+          }
+        } else if (type === PIECE_TYPES.BISHOP) {
+          const distance = Math.max(Math.abs(row - 3.5), Math.abs(col - 3.5));
+          const centrality = Math.max(0, 3 - distance);
+          analysis.score += sign * Math.round(centrality * 10);
+          if (color === WHITE && row === 7 && (col === 2 || col === 5)) {
+            analysis.whiteMinorHome += 1;
+          } else if (color === BLACK && row === 0 && (col === 2 || col === 5)) {
+            analysis.blackMinorHome += 1;
+          }
+          if (color === WHITE) {
+            analysis.whiteBishopCount += 1;
+          } else {
+            analysis.blackBishopCount += 1;
+          }
+        } else if (type === PIECE_TYPES.ROOK) {
+          const rookInfo = { row, col };
+          if (color === WHITE) {
+            analysis.whiteRooks.push(rookInfo);
+          } else {
+            analysis.blackRooks.push(rookInfo);
+          }
+          const fileDistance = Math.abs(col - 3.5);
+          analysis.score += sign * Math.max(0, 2 - fileDistance) * 4;
+        } else if (type === PIECE_TYPES.QUEEN) {
+          const distance = Math.max(Math.abs(row - 3.5), Math.abs(col - 3.5));
+          const centrality = Math.max(0, 3 - distance);
+          analysis.score += sign * Math.round(centrality * 6);
+        } else if (type === PIECE_TYPES.KING) {
+          if (color === WHITE) {
+            analysis.whiteKing = { row, col };
+          } else {
+            analysis.blackKing = { row, col };
+          }
+        }
+      }
+    }
+
+    return analysis;
+  }
+
+  function evaluatePawnStructureScore(analysis) {
+    let score = 0;
+    for (let file = 0; file < BOARD_SIZE; file += 1) {
+      const whiteCount = analysis.whitePawnFiles[file];
+      const blackCount = analysis.blackPawnFiles[file];
+      if (whiteCount > 1) {
+        score -= (whiteCount - 1) * 18;
+      }
+      if (blackCount > 1) {
+        score += (blackCount - 1) * 18;
+      }
+
+      const whiteIsolated = whiteCount > 0
+        && (file === 0 || analysis.whitePawnFiles[file - 1] === 0)
+        && (file === BOARD_SIZE - 1 || analysis.whitePawnFiles[file + 1] === 0);
+      if (whiteIsolated) {
+        score -= 12;
+      }
+
+      const blackIsolated = blackCount > 0
+        && (file === 0 || analysis.blackPawnFiles[file - 1] === 0)
+        && (file === BOARD_SIZE - 1 || analysis.blackPawnFiles[file + 1] === 0);
+      if (blackIsolated) {
+        score += 12;
+      }
+    }
+
+    for (let i = 0; i < analysis.whitePawns.length; i += 1) {
+      const pawn = analysis.whitePawns[i];
+      if (isWhitePassedPawn(analysis, pawn)) {
+        const advancement = Math.max(0, 6 - pawn.row);
+        score += 20 + advancement * 4;
+      }
+    }
+
+    for (let i = 0; i < analysis.blackPawns.length; i += 1) {
+      const pawn = analysis.blackPawns[i];
+      if (isBlackPassedPawn(analysis, pawn)) {
+        const advancement = Math.max(0, pawn.row - 1);
+        score -= 20 + advancement * 4;
+      }
+    }
+
+    return score;
+  }
+
+  function isWhitePassedPawn(analysis, pawn) {
+    for (let file = pawn.col - 1; file <= pawn.col + 1; file += 1) {
+      if (file < 0 || file >= BOARD_SIZE) {
+        continue;
+      }
+      const opponentRows = analysis.blackPawnRowsByFile[file];
+      for (let index = 0; index < opponentRows.length; index += 1) {
+        if (opponentRows[index] < pawn.row) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  function isBlackPassedPawn(analysis, pawn) {
+    for (let file = pawn.col - 1; file <= pawn.col + 1; file += 1) {
+      if (file < 0 || file >= BOARD_SIZE) {
+        continue;
+      }
+      const opponentRows = analysis.whitePawnRowsByFile[file];
+      for (let index = 0; index < opponentRows.length; index += 1) {
+        if (opponentRows[index] > pawn.row) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  function evaluateDevelopmentScore(analysis) {
+    const penalty = 18;
+    return (-analysis.whiteMinorHome * penalty) + (analysis.blackMinorHome * penalty);
+  }
+
+  function evaluateRookPlacementScore(analysis) {
+    let score = 0;
+    for (let i = 0; i < analysis.whiteRooks.length; i += 1) {
+      const rook = analysis.whiteRooks[i];
+      const file = rook.col;
+      const whiteFilePawns = analysis.whitePawnFiles[file];
+      const blackFilePawns = analysis.blackPawnFiles[file];
+      if (whiteFilePawns === 0) {
+        score += 12;
+        if (blackFilePawns === 0) {
+          score += 6;
+        }
+      }
+      if (rook.row <= 1) {
+        score += 10;
+      }
+    }
+
+    for (let i = 0; i < analysis.blackRooks.length; i += 1) {
+      const rook = analysis.blackRooks[i];
+      const file = rook.col;
+      const blackFilePawns = analysis.blackPawnFiles[file];
+      const whiteFilePawns = analysis.whitePawnFiles[file];
+      if (blackFilePawns === 0) {
+        score -= 12;
+        if (whiteFilePawns === 0) {
+          score -= 6;
+        }
+      }
+      if (rook.row >= BOARD_SIZE - 2) {
+        score -= 10;
+      }
+    }
+
+    return score;
+  }
+
+  function evaluateSingleKingSafety(analysis, state, kingPosition, color, isEndgame) {
+    if (!kingPosition) {
+      return 0;
+    }
+
+    let score = 0;
+    const board = analysis.board;
+    const homeRow = color === WHITE ? BOARD_SIZE - 1 : 0;
+    const direction = color === WHITE ? -1 : 1;
+    const kingFile = kingPosition.col;
+    const kingRow = kingPosition.row;
+
+    if (isEndgame) {
+      const distance = Math.max(Math.abs(kingRow - 3.5), Math.abs(kingFile - 3.5));
+      const centrality = Math.max(0, 3.5 - distance);
+      score += Math.round(centrality * 14);
+      return score;
+    }
+
+    const distanceFromCenter = Math.abs(kingFile - 3.5);
+    if (distanceFromCenter > 1.5) {
+      score += 20;
+    } else if (distanceFromCenter < 1) {
+      score -= 18;
+    }
+
+    if (Math.abs(kingRow - homeRow) > 1) {
+      score -= 14;
+    }
+
+    const castlingRights = state.castling && state.castling[color];
+    if (castlingRights && !castlingRights.king && !castlingRights.queen && kingFile === 4) {
+      score -= 8;
+    }
+
+    let shieldScore = 0;
+    for (let offset = -1; offset <= 1; offset += 1) {
+      const file = kingFile + offset;
+      const frontRow = kingRow + direction;
+      if (!isOnBoard(frontRow, file)) {
+        shieldScore -= 6;
+        continue;
+      }
+      const frontPiece = board[frontRow][file];
+      if (frontPiece && getPieceColor(frontPiece) === color && getPieceType(frontPiece) === PIECE_TYPES.PAWN) {
+        shieldScore += 12;
+        continue;
+      }
+      const secondRow = kingRow + direction * 2;
+      if (isOnBoard(secondRow, file)) {
+        const secondPiece = board[secondRow][file];
+        if (secondPiece && getPieceColor(secondPiece) === color && getPieceType(secondPiece) === PIECE_TYPES.PAWN) {
+          shieldScore += 6;
+        } else {
+          shieldScore -= 8;
+        }
+      } else {
+        shieldScore -= 8;
+      }
+    }
+
+    score += shieldScore;
+    return score;
+  }
+
+  function evaluateKingSafetyScore(analysis, state) {
+    const totalNonPawnMaterial = analysis.whiteNonPawnMaterial + analysis.blackNonPawnMaterial;
+    const isEndgame = totalNonPawnMaterial < 1600;
+    let score = 0;
+    score += evaluateSingleKingSafety(analysis, state, analysis.whiteKing, WHITE, isEndgame);
+    score -= evaluateSingleKingSafety(analysis, state, analysis.blackKing, BLACK, isEndgame);
+    return score;
+  }
+
+  function evaluateStaticPosition(state) {
+    if (!state || !state.board) {
+      return 0;
+    }
+    if (state.halfmoveClock >= 100 || isInsufficientMaterial(state.board)) {
+      return 0;
+    }
+
+    const analysis = analyzeBoardForEvaluation(state.board);
+    let score = analysis.score;
+
+    if (analysis.whiteBishopCount >= 2) {
+      score += 30;
+    }
+    if (analysis.blackBishopCount >= 2) {
+      score -= 30;
+    }
+
+    score += evaluatePawnStructureScore(analysis);
+    score += evaluateDevelopmentScore(analysis);
+    score += evaluateRookPlacementScore(analysis);
+    score += evaluateKingSafetyScore(analysis, state);
+
+    score += state.activeColor === WHITE ? 10 : -10;
+
+    return score;
+  }
+
+  function cloneCastlingRights(castling) {
+    const source = castling && typeof castling === 'object' ? castling : {};
+    const white = source.w && typeof source.w === 'object' ? source.w : {};
+    const black = source.b && typeof source.b === 'object' ? source.b : {};
+    return {
+      w: { king: Boolean(white.king), queen: Boolean(white.queen) },
+      b: { king: Boolean(black.king), queen: Boolean(black.queen) }
+    };
+  }
+
+  function createSearchStateFromGameState(state) {
+    return {
+      board: cloneBoard(state.board),
+      activeColor: state.activeColor,
+      castling: cloneCastlingRights(state.castling),
+      enPassant: state.enPassant ? { row: state.enPassant.row, col: state.enPassant.col } : null,
+      halfmoveClock: Number.isFinite(state.halfmoveClock) ? state.halfmoveClock : 0,
+      fullmove: Number.isFinite(state.fullmove) && state.fullmove > 0 ? state.fullmove : 1
+    };
+  }
+
+  function ensureAiContext(state) {
+    if (!state.ai || typeof state.ai !== 'object') {
+      state.ai = createAiContext();
+      return;
+    }
+    state.ai.settings = getConfiguredChessAiSettings();
+    if (!(state.ai.table instanceof Map)) {
+      state.ai.table = new Map();
+    }
+    if (!Number.isInteger(state.ai.searchId)) {
+      state.ai.searchId = 0;
+    }
+  }
+
+  function getCurrentTimeMs() {
+    if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+      return performance.now();
+    }
+    return Date.now();
+  }
+
+  function moveMatchesDescriptor(move, descriptor) {
+    if (!move || !descriptor) {
+      return false;
+    }
+    if (move.fromRow !== descriptor.fromRow || move.fromCol !== descriptor.fromCol) {
+      return false;
+    }
+    if (move.toRow !== descriptor.toRow || move.toCol !== descriptor.toCol) {
+      return false;
+    }
+    const promotion = move.promotion || null;
+    const descriptorPromotion = descriptor.promotion || null;
+    return promotion === descriptorPromotion;
+  }
+
+  function cloneMoveDescriptor(move) {
+    if (!move) {
+      return null;
+    }
+    return {
+      fromRow: move.fromRow,
+      fromCol: move.fromCol,
+      toRow: move.toRow,
+      toCol: move.toCol,
+      promotion: move.promotion || null
+    };
+  }
+
+  function findMoveFromDescriptor(moves, descriptor) {
+    if (!descriptor || !Array.isArray(moves)) {
+      return null;
+    }
+    for (let i = 0; i < moves.length; i += 1) {
+      const move = moves[i];
+      if (moveMatchesDescriptor(move, descriptor)) {
+        return move;
+      }
+    }
+    return null;
+  }
+
+  function getCapturedPieceValue(state, move) {
+    if (!move || !move.isCapture) {
+      return 0;
+    }
+    const color = getPieceColor(move.piece);
+    if (move.isEnPassant) {
+      const captureRow = move.toRow + (color === WHITE ? 1 : -1);
+      if (captureRow < 0 || captureRow >= BOARD_SIZE) {
+        return 0;
+      }
+      const captured = state.board[captureRow][move.toCol];
+      const type = getPieceType(captured);
+      return PIECE_BASE_VALUES[type] || 0;
+    }
+    const captured = state.board[move.toRow][move.toCol];
+    const type = getPieceType(captured);
+    return PIECE_BASE_VALUES[type] || 0;
+  }
+
+  function getMoveOrderingScore(state, move, preferredDescriptor) {
+    let score = 0;
+    if (preferredDescriptor && moveMatchesDescriptor(move, preferredDescriptor)) {
+      score += 5000;
+    }
+    if (move.isCapture) {
+      const capturedValue = getCapturedPieceValue(state, move);
+      const moverValue = PIECE_BASE_VALUES[getPieceType(move.piece)] || 0;
+      score += 2000 + capturedValue - moverValue;
+    }
+    if (move.promotion) {
+      score += 1500;
+    }
+    if (move.isCastle) {
+      score += 400;
+    }
+    return score;
+  }
+
+  function orderMovesForSearch(state, moves, preferredDescriptor) {
+    const scored = moves.map(function (move) {
+      return { move, score: getMoveOrderingScore(state, move, preferredDescriptor) };
+    });
+    scored.sort(function (a, b) {
+      return b.score - a.score;
+    });
+    return scored.map(function (entry) {
+      return entry.move;
+    });
+  }
+
+  function storeTranspositionEntry(context, key, depth, score, flag, move) {
+    if (!context || !(context.table instanceof Map)) {
+      return;
+    }
+    const limit = Number.isFinite(context.transpositionLimit) ? context.transpositionLimit : DEFAULT_AI_SETTINGS.transpositionSize;
+    if (context.table.size >= limit) {
+      const iterator = context.table.keys();
+      const first = iterator.next();
+      if (!first.done) {
+        context.table.delete(first.value);
+      }
+    }
+    context.table.set(key, {
+      depth,
+      score,
+      flag,
+      bestMove: cloneMoveDescriptor(move)
+    });
+  }
+
+  function negamax(state, depth, alpha, beta, colorSign, context, ply) {
+    const alphaOriginal = alpha;
+    if (context.deadline && getCurrentTimeMs() >= context.deadline) {
+      return { score: colorSign * evaluateStaticPosition(state), move: null, aborted: true };
+    }
+
+    if (depth === 0) {
+      return { score: colorSign * evaluateStaticPosition(state), move: null, aborted: false };
+    }
+
+    if (state.halfmoveClock >= 100 || isInsufficientMaterial(state.board)) {
+      return { score: 0, move: null, aborted: false };
+    }
+
+    const key = getPositionKey(state);
+    const tableEntry = context.table instanceof Map ? context.table.get(key) : null;
+
+    const legalMoves = generateLegalMoves(state);
+
+    if (legalMoves.length === 0) {
+      if (isKingInCheck(state, state.activeColor)) {
+        return { score: -MATE_SCORE + ply, move: null, aborted: false };
+      }
+      return { score: 0, move: null, aborted: false };
+    }
+
+    let preferredDescriptor = null;
+    if (tableEntry) {
+      preferredDescriptor = tableEntry.bestMove;
+      if (tableEntry.depth >= depth) {
+        if (tableEntry.flag === TRANSPOSITION_FLAG_EXACT) {
+          const matched = findMoveFromDescriptor(legalMoves, tableEntry.bestMove);
+          return { score: tableEntry.score, move: matched, aborted: false };
+        }
+        if (tableEntry.flag === TRANSPOSITION_FLAG_LOWER) {
+          alpha = Math.max(alpha, tableEntry.score);
+        } else if (tableEntry.flag === TRANSPOSITION_FLAG_UPPER) {
+          beta = Math.min(beta, tableEntry.score);
+        }
+        if (alpha >= beta) {
+          const matched = findMoveFromDescriptor(legalMoves, tableEntry.bestMove);
+          return { score: tableEntry.score, move: matched, aborted: false };
+        }
+      }
+    }
+
+    const orderedMoves = orderMovesForSearch(state, legalMoves, preferredDescriptor);
+
+    let bestScore = Number.NEGATIVE_INFINITY;
+    let bestMove = null;
+    let aborted = false;
+    let localAlpha = alpha;
+
+    for (let i = 0; i < orderedMoves.length; i += 1) {
+      const move = orderedMoves[i];
+      const nextState = applyMove(state, move);
+      const child = negamax(nextState, depth - 1, -beta, -localAlpha, -colorSign, context, ply + 1);
+      if (child.aborted) {
+        aborted = true;
+      }
+      const score = -child.score;
+      if (score > bestScore || bestMove == null) {
+        bestScore = score;
+        bestMove = move;
+      }
+      if (score > localAlpha) {
+        localAlpha = score;
+      }
+      if (localAlpha >= beta || aborted) {
+        break;
+      }
+    }
+
+    if (!aborted) {
+      let flag = TRANSPOSITION_FLAG_EXACT;
+      if (bestScore <= alphaOriginal) {
+        flag = TRANSPOSITION_FLAG_UPPER;
+      } else if (bestScore >= beta) {
+        flag = TRANSPOSITION_FLAG_LOWER;
+      }
+      storeTranspositionEntry(context, key, depth, bestScore, flag, bestMove);
+    }
+
+    return { score: bestScore, move: bestMove, aborted };
+  }
+
+  function findBestAIMove(gameState, aiContext) {
+    const settings = aiContext && aiContext.settings ? aiContext.settings : DEFAULT_AI_SETTINGS;
+    const depth = clampDepth(settings.depth);
+    const transpositionLimit = clampTranspositionSize(settings.transpositionSize);
+    const searchState = createSearchStateFromGameState(gameState);
+    const deadline = settings.timeLimitMs > 0 ? getCurrentTimeMs() + settings.timeLimitMs : 0;
+    const context = {
+      table: aiContext && aiContext.table instanceof Map ? aiContext.table : new Map(),
+      transpositionLimit,
+      deadline
+    };
+    if (aiContext && !(aiContext.table instanceof Map)) {
+      aiContext.table = context.table;
+    }
+    const colorSign = searchState.activeColor === WHITE ? 1 : -1;
+    const result = negamax(searchState, depth, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, colorSign, context, 1);
+    if (!result.move) {
+      const fallbackMoves = generateLegalMoves(searchState);
+      result.move = fallbackMoves.length ? fallbackMoves[0] : null;
+    }
+    return result;
+  }
+
+  function scheduleAIMove(state, ui) {
+    if (!state || state.isGameOver || state.pendingPromotion || state.activeColor !== BLACK) {
+      return;
+    }
+    ensureAiContext(state);
+    if (state.aiThinking) {
+      return;
+    }
+
+    state.aiThinking = true;
+    state.ai.searchId += 1;
+    const searchId = state.ai.searchId;
+    const settings = state.ai.settings || DEFAULT_AI_SETTINGS;
+    const delay = Number.isFinite(settings.moveDelayMs) && settings.moveDelayMs > 0 ? settings.moveDelayMs : 0;
+
+    showInteractionMessage(
+      state,
+      ui,
+      'index.sections.echecs.helperAiThinking',
+      'The AI is thinking…',
+      null,
+      { duration: 0 }
+    );
+    updateStatus(state, ui);
+
+    const scheduler = typeof window !== 'undefined' && typeof window.setTimeout === 'function'
+      ? window.setTimeout.bind(window)
+      : typeof setTimeout === 'function'
+        ? setTimeout
+        : null;
+
+    const executeSearch = function () {
+      const result = findBestAIMove(state, state.ai);
+      if (searchId !== state.ai.searchId) {
+        return;
+      }
+      state.aiThinking = false;
+      clearHelperMessage(state);
+      updateHelper(state, ui);
+      if (!result.move) {
+        updateStatus(state, ui);
+        return;
+      }
+      makeMove(state, result.move, ui);
+    };
+
+    if (scheduler) {
+      scheduler(executeSearch, delay);
+    } else {
+      executeSearch();
+    }
   }
 
   function createInitialBoard() {
@@ -884,6 +1685,35 @@
     return translate(key, fallback);
   }
 
+  function toSquareNotation(row, col) {
+    if (!Number.isInteger(row) || !Number.isInteger(col)) {
+      return '';
+    }
+    const file = FILES[col] || '';
+    const rank = RANKS[row] || '';
+    return file + rank;
+  }
+
+  function sanitizePiece(value) {
+    if (typeof value !== 'string') {
+      return '';
+    }
+    const trimmed = value.trim();
+    if (trimmed.length < 2) {
+      return '';
+    }
+    const color = trimmed[0];
+    const typeChar = trimmed[1].toLowerCase();
+    if (color !== WHITE && color !== BLACK) {
+      return '';
+    }
+    const allowed = Object.values(PIECE_TYPES);
+    if (!allowed.includes(typeChar)) {
+      return '';
+    }
+    return color + typeChar.toUpperCase();
+  }
+
   function updateSquareAccessibility(button, piece) {
     const coordinate = button.dataset.coordinate;
     if (piece) {
@@ -915,6 +1745,10 @@
   }
 
   function renderBoard(state, ui) {
+    if (ui.boardElement) {
+      const hideCoordinates = state.preferences && state.preferences.showCoordinates === false;
+      ui.boardElement.classList.toggle('chess-board--hide-coordinates', hideCoordinates);
+    }
     for (let row = 0; row < BOARD_SIZE; row += 1) {
       for (let col = 0; col < BOARD_SIZE; col += 1) {
         const button = ui.squares[row][col];
@@ -925,6 +1759,10 @@
         if (!state.selection || state.selection.row !== row || state.selection.col !== col) {
           button.classList.remove('is-selected');
         }
+        const isDragTarget = state.dragContext
+          && state.dragContext.hoverRow === row
+          && state.dragContext.hoverCol === col;
+        button.classList.toggle('is-drag-target', Boolean(isDragTarget));
         if (state.selection) {
           const key = state.selection.row + ',' + state.selection.col;
           const moves = state.legalMovesByFrom.get(key) || [];
@@ -985,6 +1823,18 @@
 
   function updateStatus(state, ui) {
     if (!ui.statusElement) {
+      return;
+    }
+
+    if (state.aiThinking) {
+      setStatusText(
+        ui.statusElement,
+        'index.sections.echecs.status.aiThinking',
+        'Black is thinking…'
+      );
+      if (ui.outcomeElement) {
+        ui.outcomeElement.textContent = '';
+      }
       return;
     }
 
@@ -1069,6 +1919,52 @@
     }
   }
 
+  function updateHelper(state, ui) {
+    if (!ui.helperElement) {
+      return;
+    }
+    const message = state.helperMessage;
+    if (message) {
+      ui.helperElement.textContent = translate(message.key, message.fallback, message.params);
+      return;
+    }
+    if (state.aiThinking) {
+      ui.helperElement.textContent = translate(
+        'index.sections.echecs.helperAiThinking',
+        'The AI is thinking…'
+      );
+      return;
+    }
+    ui.helperElement.textContent = translate(
+      'index.sections.echecs.helper',
+      'Tap or drag a white piece to highlight legal moves.'
+    );
+  }
+
+  function clearHelperMessage(state) {
+    if (state.helperTimeoutId) {
+      clearTimeout(state.helperTimeoutId);
+      state.helperTimeoutId = null;
+    }
+    state.helperMessage = null;
+  }
+
+  function showInteractionMessage(state, ui, key, fallback, params, options) {
+    clearHelperMessage(state);
+    state.helperMessage = { key, fallback, params };
+    updateHelper(state, ui);
+    const duration = options && Number.isFinite(Number(options.duration)) && Number(options.duration) >= 0
+      ? Number(options.duration)
+      : 4000;
+    if (duration > 0) {
+      state.helperTimeoutId = setTimeout(function () {
+        state.helperTimeoutId = null;
+        state.helperMessage = null;
+        updateHelper(state, ui);
+      }, duration);
+    }
+  }
+
   function showPromotionDialog(state, ui, moves) {
     if (!ui.promotionElement || !ui.promotionOptionsElement) {
       return;
@@ -1106,6 +2002,178 @@
     ui.promotionElement.hidden = true;
   }
 
+  function renderHistory(state, ui) {
+    if (!ui.historyList) {
+      return;
+    }
+    const entriesByMove = new Map();
+    const history = Array.isArray(state.history) ? state.history : [];
+    for (let index = 0; index < history.length; index += 1) {
+      const entry = history[index];
+      if (!entry || typeof entry !== 'object') {
+        continue;
+      }
+      const moveNumber = Number(entry.moveNumber);
+      const color = entry.color === BLACK ? BLACK : entry.color === WHITE ? WHITE : null;
+      const san = typeof entry.san === 'string' ? entry.san : '';
+      if (!Number.isFinite(moveNumber) || moveNumber <= 0 || !color || !san) {
+        continue;
+      }
+      const key = Math.floor(moveNumber);
+      if (!entriesByMove.has(key)) {
+        entriesByMove.set(key, { number: key, white: '', black: '' });
+      }
+      const record = entriesByMove.get(key);
+      if (color === WHITE) {
+        record.white = san;
+      } else {
+        record.black = san;
+      }
+    }
+
+    const moveNumbers = Array.from(entriesByMove.keys()).sort((a, b) => a - b);
+    ui.historyList.replaceChildren();
+    for (let i = 0; i < moveNumbers.length; i += 1) {
+      const moveNumber = moveNumbers[i];
+      const record = entriesByMove.get(moveNumber);
+      const item = document.createElement('li');
+      item.className = 'chess-history__item';
+      const numberSpan = document.createElement('span');
+      numberSpan.className = 'chess-history__move-number';
+      numberSpan.textContent = moveNumber + '.';
+      const whiteSpan = document.createElement('span');
+      whiteSpan.className = 'chess-history__move chess-history__move--white';
+      whiteSpan.textContent = record.white || '…';
+      if (!record.white) {
+        whiteSpan.classList.add('chess-history__move--empty');
+      }
+      const blackSpan = document.createElement('span');
+      blackSpan.className = 'chess-history__move chess-history__move--black';
+      blackSpan.textContent = record.black || '…';
+      if (!record.black) {
+        blackSpan.classList.add('chess-history__move--empty');
+      }
+      item.append(numberSpan, whiteSpan, blackSpan);
+      ui.historyList.appendChild(item);
+    }
+
+    if (ui.historyEmpty) {
+      ui.historyEmpty.hidden = moveNumbers.length > 0;
+    }
+  }
+
+  function applyBoardPreferences(state, ui) {
+    const preferences = state.preferences || {};
+    const showCoordinates = preferences.showCoordinates !== false;
+    const showHistory = preferences.showHistory !== false;
+    if (ui.coordinatesToggle) {
+      ui.coordinatesToggle.checked = showCoordinates;
+    }
+    if (ui.historyToggle) {
+      ui.historyToggle.checked = showHistory;
+    }
+    if (ui.historyContainer) {
+      ui.historyContainer.hidden = !showHistory;
+    }
+    if (ui.boardElement) {
+      ui.boardElement.classList.toggle('chess-board--hide-coordinates', !showCoordinates);
+    }
+  }
+
+  function getFenString(state) {
+    const base = getPositionKey(state);
+    return base + ' ' + state.halfmoveClock + ' ' + state.fullmove;
+  }
+
+  function buildAlgebraicNotation(state, move, nextState) {
+    const pieceType = getPieceType(move.piece);
+    const color = getPieceColor(move.piece);
+    if (!pieceType || !color) {
+      return { san: toSquareNotation(move.toRow, move.toCol), fen: getFenString(nextState) };
+    }
+
+    if (move.isCastle === 'king') {
+      const opponentMoves = generateLegalMoves(nextState);
+      const inCheck = isKingInCheck(nextState, nextState.activeColor);
+      const suffix = inCheck ? (opponentMoves.length === 0 ? '#' : '+') : '';
+      return { san: 'O-O' + suffix, fen: getFenString(nextState) };
+    }
+    if (move.isCastle === 'queen') {
+      const opponentMoves = generateLegalMoves(nextState);
+      const inCheck = isKingInCheck(nextState, nextState.activeColor);
+      const suffix = inCheck ? (opponentMoves.length === 0 ? '#' : '+') : '';
+      return { san: 'O-O-O' + suffix, fen: getFenString(nextState) };
+    }
+
+    const pieceLetterMap = {
+      [PIECE_TYPES.PAWN]: '',
+      [PIECE_TYPES.KNIGHT]: 'N',
+      [PIECE_TYPES.BISHOP]: 'B',
+      [PIECE_TYPES.ROOK]: 'R',
+      [PIECE_TYPES.QUEEN]: 'Q',
+      [PIECE_TYPES.KING]: 'K'
+    };
+
+    let notation = pieceLetterMap[pieceType] || '';
+
+    if (pieceType !== PIECE_TYPES.PAWN) {
+      const disambiguationCandidates = [];
+      const legalMoves = Array.isArray(state.legalMoves) ? state.legalMoves : [];
+      for (let index = 0; index < legalMoves.length; index += 1) {
+        const candidate = legalMoves[index];
+        if (!candidate || candidate === move) {
+          continue;
+        }
+        if (candidate.toRow !== move.toRow || candidate.toCol !== move.toCol) {
+          continue;
+        }
+        const candidatePiece = state.board[candidate.fromRow][candidate.fromCol];
+        if (!candidatePiece) {
+          continue;
+        }
+        if (getPieceColor(candidatePiece) !== color) {
+          continue;
+        }
+        if (getPieceType(candidatePiece) !== pieceType) {
+          continue;
+        }
+        disambiguationCandidates.push(candidate);
+      }
+
+      if (disambiguationCandidates.length) {
+        const sameFile = disambiguationCandidates.some(candidate => candidate.fromCol === move.fromCol);
+        const sameRank = disambiguationCandidates.some(candidate => candidate.fromRow === move.fromRow);
+        if (!sameFile) {
+          notation += FILES[move.fromCol];
+        } else if (!sameRank) {
+          notation += RANKS[move.fromRow];
+        } else {
+          notation += FILES[move.fromCol] + RANKS[move.fromRow];
+        }
+      }
+    } else if (move.isCapture) {
+      notation += FILES[move.fromCol];
+    }
+
+    if (move.isCapture) {
+      notation += 'x';
+    }
+
+    notation += toSquareNotation(move.toRow, move.toCol);
+
+    if (move.promotion) {
+      notation += '=' + String(move.promotion).toUpperCase();
+    }
+
+    const opponentMoves = generateLegalMoves(nextState);
+    const inCheck = isKingInCheck(nextState, nextState.activeColor);
+    if (inCheck) {
+      notation += opponentMoves.length === 0 ? '#' : '+';
+    }
+
+    return { san: notation, fen: getFenString(nextState) };
+  }
+
   function clearSelection(state, ui) {
     state.selection = null;
     for (let row = 0; row < BOARD_SIZE; row += 1) {
@@ -1115,8 +2183,47 @@
     }
   }
 
+  function selectSquare(state, ui, row, col) {
+    state.selection = { row, col };
+    renderBoard(state, ui);
+    const button = ui.squares[row][col];
+    if (button) {
+      button.classList.add('is-selected');
+    }
+  }
+
+  function attemptMove(state, ui, fromRow, fromCol, toRow, toCol) {
+    const selectionKey = fromRow + ',' + fromCol;
+    const moves = state.legalMovesByFrom.get(selectionKey) || [];
+    const candidates = [];
+    for (let i = 0; i < moves.length; i += 1) {
+      const move = moves[i];
+      if (move.toRow === toRow && move.toCol === toCol) {
+        candidates.push(move);
+      }
+    }
+    if (!candidates.length) {
+      return false;
+    }
+    if (candidates.length === 1 && !candidates[0].promotion) {
+      makeMove(state, candidates[0], ui);
+    } else {
+      showPromotionDialog(state, ui, candidates);
+    }
+    return true;
+  }
+
   function handleSquareClick(state, ui, row, col) {
     if (state.isGameOver || state.pendingPromotion) {
+      return;
+    }
+
+    if (state.aiThinking && state.activeColor === BLACK) {
+      return;
+    }
+
+    if (state.suppressClick) {
+      state.suppressClick = false;
       return;
     }
 
@@ -1127,40 +2234,558 @@
       clearSelection(state, ui);
       renderBoard(state, ui);
       updateStatus(state, ui);
+      updateHelper(state, ui);
       return;
     }
 
     if (piece && color === state.activeColor) {
-      state.selection = { row, col };
-      renderBoard(state, ui);
-      const button = ui.squares[row][col];
-      button.classList.add('is-selected');
+      selectSquare(state, ui, row, col);
       return;
     }
 
     if (state.selection) {
-      const selectionKey = state.selection.row + ',' + state.selection.col;
-      const moves = state.legalMovesByFrom.get(selectionKey) || [];
-      const candidates = [];
-      for (let i = 0; i < moves.length; i += 1) {
-        const move = moves[i];
-        if (move.toRow === row && move.toCol === col) {
-          candidates.push(move);
-        }
+      const moved = attemptMove(state, ui, state.selection.row, state.selection.col, row, col);
+      if (!moved) {
+        showInteractionMessage(
+          state,
+          ui,
+          'index.sections.echecs.feedback.invalidMove',
+          'That move is not legal.'
+        );
       }
-      if (candidates.length === 0) {
-        return;
+      return;
+    }
+
+    if (piece && color && color !== state.activeColor) {
+      showInteractionMessage(
+        state,
+        ui,
+        'index.sections.echecs.feedback.notYourTurn',
+        'It is not that side to move.'
+      );
+      return;
+    }
+
+    showInteractionMessage(
+      state,
+      ui,
+      'index.sections.echecs.helper',
+      'Tap or drag a white piece to highlight its legal moves.'
+    );
+  }
+
+  function getSquareFromPoint(x, y) {
+    if (typeof document === 'undefined') {
+      return null;
+    }
+    const element = document.elementFromPoint(x, y);
+    if (!element) {
+      return null;
+    }
+    const button = element.closest('[data-row][data-col]');
+    if (!button || !button.dataset) {
+      return null;
+    }
+    const row = Number.parseInt(button.dataset.row, 10);
+    const col = Number.parseInt(button.dataset.col, 10);
+    if (!Number.isInteger(row) || !Number.isInteger(col)) {
+      return null;
+    }
+    if (row < 0 || row >= BOARD_SIZE || col < 0 || col >= BOARD_SIZE) {
+      return null;
+    }
+    return { row, col };
+  }
+
+  function cleanupDrag(state, ui) {
+    const context = state.dragContext;
+    if (!context) {
+      return;
+    }
+    if (context.moveHandler) {
+      document.removeEventListener('pointermove', context.moveHandler);
+    }
+    if (context.upHandler) {
+      document.removeEventListener('pointerup', context.upHandler);
+    }
+    if (context.cancelHandler) {
+      document.removeEventListener('pointercancel', context.cancelHandler);
+    }
+    state.dragContext = null;
+    renderBoard(state, ui);
+  }
+
+  function beginDrag(state, ui, event, row, col) {
+    cleanupDrag(state, ui);
+    const context = {
+      pointerId: event.pointerId,
+      fromRow: row,
+      fromCol: col,
+      startX: event.clientX,
+      startY: event.clientY,
+      moved: false,
+      hoverRow: null,
+      hoverCol: null
+    };
+    context.moveHandler = function (moveEvent) {
+      handlePointerMove(state, ui, moveEvent);
+    };
+    context.upHandler = function (upEvent) {
+      handlePointerUp(state, ui, upEvent);
+    };
+    context.cancelHandler = function (cancelEvent) {
+      handlePointerCancel(state, ui, cancelEvent);
+    };
+    state.dragContext = context;
+    document.addEventListener('pointermove', context.moveHandler);
+    document.addEventListener('pointerup', context.upHandler);
+    document.addEventListener('pointercancel', context.cancelHandler);
+  }
+
+  function handlePointerDown(state, ui, event, row, col) {
+    if (state.isGameOver || state.pendingPromotion) {
+      return;
+    }
+    if (state.aiThinking && state.activeColor === BLACK) {
+      return;
+    }
+    if (event.pointerType === 'mouse' && event.button !== 0) {
+      return;
+    }
+    const piece = state.board[row][col];
+    if (!piece) {
+      return;
+    }
+    const color = getPieceColor(piece);
+    if (color !== state.activeColor) {
+      if (!state.selection) {
+        showInteractionMessage(
+          state,
+          ui,
+          'index.sections.echecs.feedback.notYourTurn',
+          'It is not that side to move.'
+        );
       }
-      if (candidates.length === 1 && !candidates[0].promotion) {
-        makeMove(state, candidates[0], ui);
-      } else {
-        showPromotionDialog(state, ui, candidates);
+      return;
+    }
+    selectSquare(state, ui, row, col);
+    beginDrag(state, ui, event, row, col);
+    event.preventDefault();
+  }
+
+  function handlePointerMove(state, ui, event) {
+    const context = state.dragContext;
+    if (!context || event.pointerId !== context.pointerId) {
+      return;
+    }
+    const dx = event.clientX - context.startX;
+    const dy = event.clientY - context.startY;
+    if (!context.moved) {
+      const distance = Math.hypot(dx, dy);
+      if (distance >= POINTER_DRAG_THRESHOLD) {
+        context.moved = true;
+      }
+    }
+    if (!context.moved) {
+      return;
+    }
+    const square = getSquareFromPoint(event.clientX, event.clientY);
+    const hoverRow = square ? square.row : null;
+    const hoverCol = square ? square.col : null;
+    if (hoverRow !== context.hoverRow || hoverCol !== context.hoverCol) {
+      context.hoverRow = hoverRow;
+      context.hoverCol = hoverCol;
+      renderBoard(state, ui);
+    }
+    event.preventDefault();
+  }
+
+  function handlePointerUp(state, ui, event) {
+    const context = state.dragContext;
+    if (!context || event.pointerId !== context.pointerId) {
+      return;
+    }
+    const wasMoved = context.moved;
+    const square = getSquareFromPoint(event.clientX, event.clientY);
+    cleanupDrag(state, ui);
+    if (!wasMoved) {
+      return;
+    }
+    state.suppressClick = true;
+    if (!square) {
+      showInteractionMessage(
+        state,
+        ui,
+        'index.sections.echecs.feedback.dragCancelled',
+        'Drag cancelled.'
+      );
+      return;
+    }
+    if (square.row === context.fromRow && square.col === context.fromCol) {
+      showInteractionMessage(
+        state,
+        ui,
+        'index.sections.echecs.feedback.dragCancelled',
+        'Drag cancelled.'
+      );
+      return;
+    }
+    const moved = attemptMove(state, ui, context.fromRow, context.fromCol, square.row, square.col);
+    if (!moved) {
+      showInteractionMessage(
+        state,
+        ui,
+        'index.sections.echecs.feedback.invalidMove',
+        'That move is not legal.'
+      );
+      renderBoard(state, ui);
+      updateStatus(state, ui);
+      updateHelper(state, ui);
+    }
+    event.preventDefault();
+  }
+
+  function handlePointerCancel(state, ui, event) {
+    const context = state.dragContext;
+    if (!context || event.pointerId !== context.pointerId) {
+      return;
+    }
+    cleanupDrag(state, ui);
+    showInteractionMessage(
+      state,
+      ui,
+      'index.sections.echecs.feedback.dragCancelled',
+      'Drag cancelled.'
+    );
+  }
+
+  function attachPointerHandlers(state, ui) {
+    for (let row = 0; row < BOARD_SIZE; row += 1) {
+      for (let col = 0; col < BOARD_SIZE; col += 1) {
+        const button = ui.squares[row][col];
+        button.addEventListener('pointerdown', function (event) {
+          handlePointerDown(state, ui, event, row, col);
+        });
       }
     }
   }
 
+  function normalizeStoredChessProgress(raw) {
+    if (!raw || typeof raw !== 'object') {
+      return null;
+    }
+
+    const board = [];
+    const sourceBoard = Array.isArray(raw.board) ? raw.board : [];
+    for (let row = 0; row < BOARD_SIZE; row += 1) {
+      const sourceRow = Array.isArray(sourceBoard[row]) ? sourceBoard[row] : [];
+      const normalizedRow = [];
+      for (let col = 0; col < BOARD_SIZE; col += 1) {
+        normalizedRow[col] = sanitizePiece(sourceRow[col]);
+      }
+      board.push(normalizedRow);
+    }
+
+    const activeColor = raw.activeColor === BLACK ? BLACK : WHITE;
+    const castlingSource = raw.castling && typeof raw.castling === 'object' ? raw.castling : {};
+    const castling = {
+      w: {
+        king: Boolean(castlingSource.w && castlingSource.w.king),
+        queen: Boolean(castlingSource.w && castlingSource.w.queen)
+      },
+      b: {
+        king: Boolean(castlingSource.b && castlingSource.b.king),
+        queen: Boolean(castlingSource.b && castlingSource.b.queen)
+      }
+    };
+
+    const enPassant = raw.enPassant
+      && Number.isInteger(raw.enPassant.row)
+      && Number.isInteger(raw.enPassant.col)
+      && raw.enPassant.row >= 0
+      && raw.enPassant.row < BOARD_SIZE
+      && raw.enPassant.col >= 0
+      && raw.enPassant.col < BOARD_SIZE
+      ? { row: raw.enPassant.row, col: raw.enPassant.col }
+      : null;
+
+    const halfmoveClock = Number.isFinite(Number(raw.halfmoveClock)) && Number(raw.halfmoveClock) >= 0
+      ? Math.floor(Number(raw.halfmoveClock))
+      : 0;
+    const fullmove = Number.isFinite(Number(raw.fullmove)) && Number(raw.fullmove) > 0
+      ? Math.floor(Number(raw.fullmove))
+      : 1;
+
+    let lastMove = null;
+    if (raw.lastMove && typeof raw.lastMove === 'object') {
+      const fromRow = Number(raw.lastMove.fromRow);
+      const fromCol = Number(raw.lastMove.fromCol);
+      const toRow = Number(raw.lastMove.toRow);
+      const toCol = Number(raw.lastMove.toCol);
+      if (
+        Number.isInteger(fromRow) && Number.isInteger(fromCol)
+        && Number.isInteger(toRow) && Number.isInteger(toCol)
+        && fromRow >= 0 && fromRow < BOARD_SIZE
+        && fromCol >= 0 && fromCol < BOARD_SIZE
+        && toRow >= 0 && toRow < BOARD_SIZE
+        && toCol >= 0 && toCol < BOARD_SIZE
+      ) {
+        lastMove = {
+          fromRow,
+          fromCol,
+          toRow,
+          toCol,
+          piece: sanitizePiece(raw.lastMove.piece),
+          placedPiece: sanitizePiece(raw.lastMove.placedPiece),
+          captured: sanitizePiece(raw.lastMove.captured || raw.lastMove.capturedPiece || ''),
+          promotion: raw.lastMove.promotion || null,
+          isCastle: raw.lastMove.isCastle || false,
+          isEnPassant: raw.lastMove.isEnPassant || false
+        };
+      }
+    }
+
+    const history = [];
+    if (Array.isArray(raw.history)) {
+      for (let index = 0; index < raw.history.length; index += 1) {
+        const entry = raw.history[index];
+        if (!entry || typeof entry !== 'object') {
+          continue;
+        }
+        const moveNumber = Number(entry.moveNumber);
+        const color = entry.color === BLACK ? BLACK : entry.color === WHITE ? WHITE : null;
+        const san = typeof entry.san === 'string' ? entry.san.trim() : '';
+        const fen = typeof entry.fen === 'string' ? entry.fen : null;
+        if (!Number.isFinite(moveNumber) || moveNumber <= 0 || !color || !san) {
+          continue;
+        }
+        history.push({
+          moveNumber: Math.floor(moveNumber),
+          color,
+          san,
+          fen: fen || null
+        });
+      }
+      history.sort(function (a, b) {
+        if (a.moveNumber === b.moveNumber) {
+          if (a.color === b.color) {
+            return 0;
+          }
+          return a.color === WHITE ? -1 : 1;
+        }
+        return a.moveNumber - b.moveNumber;
+      });
+    }
+
+    const positionCounts = new Map();
+    if (Array.isArray(raw.positionCounts)) {
+      raw.positionCounts.forEach(function (entry) {
+        if (Array.isArray(entry) && entry.length >= 2) {
+          const key = typeof entry[0] === 'string' ? entry[0] : null;
+          const value = Number(entry[1]);
+          if (key && Number.isFinite(value) && value > 0) {
+            positionCounts.set(key, Math.floor(value));
+          }
+        } else if (entry && typeof entry === 'object' && typeof entry.key === 'string') {
+          const value = Number(entry.value);
+          if (Number.isFinite(value) && value > 0) {
+            positionCounts.set(entry.key, Math.floor(value));
+          }
+        }
+      });
+    } else if (raw.positionCounts && typeof raw.positionCounts === 'object') {
+      Object.keys(raw.positionCounts).forEach(function (key) {
+        const value = Number(raw.positionCounts[key]);
+        if (typeof key === 'string' && Number.isFinite(value) && value > 0) {
+          positionCounts.set(key, Math.floor(value));
+        }
+      });
+    }
+
+    let gameOutcome = null;
+    if (raw.gameOutcome && typeof raw.gameOutcome === 'object') {
+      const type = typeof raw.gameOutcome.type === 'string' ? raw.gameOutcome.type : null;
+      if (type === 'checkmate') {
+        const winner = raw.gameOutcome.winner === BLACK ? BLACK : raw.gameOutcome.winner === WHITE ? WHITE : null;
+        if (winner) {
+          gameOutcome = { type: 'checkmate', winner };
+        }
+      } else if (type === 'stalemate') {
+        gameOutcome = { type: 'stalemate' };
+      } else if (type === 'draw') {
+        const reason = typeof raw.gameOutcome.reason === 'string' ? raw.gameOutcome.reason : null;
+        gameOutcome = reason ? { type: 'draw', reason } : { type: 'draw' };
+      }
+    }
+
+    const preferences = {
+      showCoordinates: raw.preferences && raw.preferences.showCoordinates === false ? false : true,
+      showHistory: raw.preferences && raw.preferences.showHistory === false ? false : true
+    };
+
+    const isGameOver = raw.isGameOver === true || (gameOutcome != null);
+
+    return {
+      board,
+      activeColor,
+      castling,
+      enPassant,
+      halfmoveClock,
+      fullmove,
+      lastMove,
+      history,
+      positionCounts,
+      gameOutcome,
+      isGameOver,
+      preferences
+    };
+  }
+
+  function readStoredProgress() {
+    const globalState = getGlobalGameState();
+    if (globalState && globalState.arcadeProgress && typeof globalState.arcadeProgress === 'object') {
+      const normalized = normalizeStoredChessProgress(globalState.arcadeProgress.echecs);
+      if (normalized) {
+        return normalized;
+      }
+    }
+    if (typeof window !== 'undefined' && window.localStorage) {
+      try {
+        const raw = window.localStorage.getItem(LOCAL_STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          const normalized = normalizeStoredChessProgress(parsed);
+          if (normalized) {
+            return normalized;
+          }
+        }
+      } catch (error) {
+        // Ignore storage errors
+      }
+    }
+    return null;
+  }
+
+  function applyStoredProgress(state, stored) {
+    if (!stored) {
+      return false;
+    }
+    state.board = stored.board;
+    state.activeColor = stored.activeColor;
+    state.castling = stored.castling;
+    state.enPassant = stored.enPassant;
+    state.halfmoveClock = stored.halfmoveClock;
+    state.fullmove = stored.fullmove;
+    state.lastMove = stored.lastMove;
+    state.history = stored.history;
+    state.positionCounts = stored.positionCounts;
+    state.gameOutcome = stored.gameOutcome;
+    state.isGameOver = stored.isGameOver;
+    state.preferences = stored.preferences;
+    state.pendingPromotion = null;
+    state.selection = null;
+    state.dragContext = null;
+    state.helperMessage = null;
+    state.helperTimeoutId = null;
+    state.suppressClick = false;
+    ensureAiContext(state);
+    state.aiThinking = false;
+
+    if (state.ai) {
+      state.ai.searchId = 0;
+    }
+
+    const key = getPositionKey(state);
+    state.positionKey = key;
+    if (!state.positionCounts.has(key)) {
+      state.positionCounts.set(key, 1);
+    }
+
+    updateLegalMoves(state);
+    evaluateGameState(state);
+    return true;
+  }
+
+  function saveProgress(state) {
+    const preferences = state.preferences || {};
+    const payload = {
+      board: state.board.map(function (row) {
+        return row.map(function (cell) {
+          return sanitizePiece(cell);
+        });
+      }),
+      activeColor: state.activeColor,
+      castling: (function () {
+        const castlingState = state.castling && typeof state.castling === 'object' ? state.castling : {};
+        const white = castlingState.w && typeof castlingState.w === 'object' ? castlingState.w : {};
+        const black = castlingState.b && typeof castlingState.b === 'object' ? castlingState.b : {};
+        return {
+          w: { king: Boolean(white.king), queen: Boolean(white.queen) },
+          b: { king: Boolean(black.king), queen: Boolean(black.queen) }
+        };
+      }()),
+      enPassant: state.enPassant ? { row: state.enPassant.row, col: state.enPassant.col } : null,
+      halfmoveClock: Math.max(0, Number(state.halfmoveClock) || 0),
+      fullmove: Math.max(1, Number(state.fullmove) || 1),
+      lastMove: state.lastMove
+        ? {
+            fromRow: state.lastMove.fromRow,
+            fromCol: state.lastMove.fromCol,
+            toRow: state.lastMove.toRow,
+            toCol: state.lastMove.toCol,
+            piece: sanitizePiece(state.lastMove.piece),
+            placedPiece: sanitizePiece(state.lastMove.placedPiece),
+            captured: sanitizePiece(state.lastMove.captured),
+            promotion: state.lastMove.promotion || null,
+            isCastle: Boolean(state.lastMove.isCastle),
+            isEnPassant: Boolean(state.lastMove.isEnPassant)
+          }
+        : null,
+      history: Array.isArray(state.history)
+        ? state.history.map(function (entry) {
+            return {
+              moveNumber: entry.moveNumber,
+              color: entry.color,
+              san: entry.san,
+              fen: entry.fen || null
+            };
+          })
+        : [],
+      positionCounts: Array.from(
+        state.positionCounts instanceof Map ? state.positionCounts.entries() : []
+      ),
+      gameOutcome: state.gameOutcome ? { ...state.gameOutcome } : null,
+      isGameOver: Boolean(state.isGameOver),
+      preferences: {
+        showCoordinates: preferences.showCoordinates !== false,
+        showHistory: preferences.showHistory !== false
+      }
+    };
+
+    const globalState = getGlobalGameState();
+    if (globalState && typeof globalState === 'object') {
+      if (!globalState.arcadeProgress || typeof globalState.arcadeProgress !== 'object') {
+        globalState.arcadeProgress = {};
+      }
+      globalState.arcadeProgress.echecs = payload;
+    }
+
+    if (typeof window !== 'undefined' && window.localStorage) {
+      try {
+        window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(payload));
+      } catch (error) {
+        // Ignore storage errors
+      }
+    }
+
+    requestSave();
+  }
+
   function makeMove(state, move, ui) {
+    const moveNumber = state.fullmove;
+    const movingColor = state.activeColor;
     const nextState = applyMove(state, move);
+    const notation = buildAlgebraicNotation(state, move, nextState);
     state.board = nextState.board;
     state.activeColor = nextState.activeColor;
     state.castling = nextState.castling;
@@ -1169,6 +2794,20 @@
     state.fullmove = nextState.fullmove;
     state.lastMove = nextState.lastMove;
     state.pendingPromotion = null;
+
+    if (!Array.isArray(state.history)) {
+      state.history = [];
+    }
+    state.history = state.history.concat({
+      moveNumber,
+      color: movingColor,
+      san: notation.san,
+      fen: notation.fen
+    });
+
+    if (!(state.positionCounts instanceof Map)) {
+      state.positionCounts = new Map();
+    }
 
     const key = getPositionKey(state);
     state.positionKey = key;
@@ -1179,7 +2818,15 @@
     evaluateGameState(state);
     clearSelection(state, ui);
     renderBoard(state, ui);
+    renderHistory(state, ui);
     updateStatus(state, ui);
+    clearHelperMessage(state);
+    updateHelper(state, ui);
+    applyBoardPreferences(state, ui);
+    saveProgress(state);
+    if (!state.isGameOver && state.activeColor === BLACK) {
+      scheduleAIMove(state, ui);
+    }
   }
 
   function updateBoardTranslations(section, ui, state) {
@@ -1194,14 +2841,33 @@
     } else {
       updateStatus(state, ui);
     }
-    const helper = section.querySelector(HELPER_SELECTOR);
-    if (helper) {
-      const text = translate(
-        'index.sections.echecs.helper',
-        'Select a white piece to see its legal moves.'
+    if (ui.coordinatesLabel) {
+      ui.coordinatesLabel.textContent = translate(
+        'index.sections.echecs.controls.coordinates',
+        'Show coordinates'
       );
-      helper.textContent = text;
     }
+    if (ui.historyLabel) {
+      ui.historyLabel.textContent = translate(
+        'index.sections.echecs.controls.history',
+        'Show move list'
+      );
+    }
+    if (ui.historyTitle) {
+      ui.historyTitle.textContent = translate(
+        'index.sections.echecs.history.title',
+        'Move list'
+      );
+    }
+    if (ui.historyEmpty) {
+      ui.historyEmpty.textContent = translate(
+        'index.sections.echecs.history.empty',
+        'No moves yet.'
+      );
+    }
+    updateHelper(state, ui);
+    renderHistory(state, ui);
+    applyBoardPreferences(state, ui);
   }
 
   function markSectionReady(section) {
@@ -1229,7 +2895,15 @@
       lastMove: null,
       pendingPromotion: null,
       gameOutcome: null,
-      isGameOver: false
+      isGameOver: false,
+      history: [],
+      preferences: { showCoordinates: true, showHistory: true },
+      dragContext: null,
+      helperMessage: null,
+      helperTimeoutId: null,
+      suppressClick: false,
+      ai: createAiContext(),
+      aiThinking: false
     };
     const key = getPositionKey(state);
     state.positionKey = key;
@@ -1250,6 +2924,14 @@
     const helperElement = section.querySelector(HELPER_SELECTOR);
     const promotionElement = section.querySelector(PROMOTION_SELECTOR);
     const promotionOptionsElement = section.querySelector(PROMOTION_OPTIONS_SELECTOR);
+    const coordinatesToggle = section.querySelector(COORDINATES_TOGGLE_SELECTOR);
+    const historyToggle = section.querySelector(HISTORY_TOGGLE_SELECTOR);
+    const historyContainer = section.querySelector(HISTORY_CONTAINER_SELECTOR);
+    const historyList = section.querySelector(HISTORY_LIST_SELECTOR);
+    const historyEmpty = section.querySelector(HISTORY_EMPTY_SELECTOR);
+    const coordinatesLabel = section.querySelector('[data-i18n="index.sections.echecs.controls.coordinates"]');
+    const historyLabel = section.querySelector('[data-i18n="index.sections.echecs.controls.history"]');
+    const historyTitle = section.querySelector('[data-i18n="index.sections.echecs.history.title"]');
 
     if (!boardElement || !statusElement) {
       return;
@@ -1259,6 +2941,7 @@
 
     const state = createInitialState();
     const ui = {
+      boardElement,
       squares: createBoardSquares(boardElement, function (row, col) {
         handleSquareClick(state, ui, row, col);
       }),
@@ -1266,13 +2949,51 @@
       outcomeElement,
       helperElement,
       promotionElement,
-      promotionOptionsElement
+      promotionOptionsElement,
+      coordinatesToggle,
+      historyToggle,
+      historyContainer,
+      historyList,
+      historyEmpty,
+      coordinatesLabel,
+      historyLabel,
+      historyTitle
     };
 
-    renderBoard(state, ui);
-    updateStatus(state, ui);
+    attachPointerHandlers(state, ui);
+
+    if (coordinatesToggle) {
+      coordinatesToggle.addEventListener('change', function () {
+        state.preferences = state.preferences || {};
+        state.preferences.showCoordinates = coordinatesToggle.checked;
+        applyBoardPreferences(state, ui);
+        renderBoard(state, ui);
+        saveProgress(state);
+      });
+    }
+    if (historyToggle) {
+      historyToggle.addEventListener('change', function () {
+        state.preferences = state.preferences || {};
+        state.preferences.showHistory = historyToggle.checked;
+        applyBoardPreferences(state, ui);
+        renderHistory(state, ui);
+        saveProgress(state);
+      });
+    }
+
+    const storedProgress = readStoredProgress();
+    const hasStored = applyStoredProgress(state, storedProgress);
+
+    applyBoardPreferences(state, ui);
     updateBoardTranslations(section, ui, state);
+    if (!hasStored) {
+      saveProgress(state);
+    }
     markSectionReady(section);
+
+    if (!state.isGameOver && state.activeColor === BLACK) {
+      scheduleAIMove(state, ui);
+    }
 
     window.addEventListener('i18n:languagechange', function () {
       updateBoardTranslations(section, ui, state);
