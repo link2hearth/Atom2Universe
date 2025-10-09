@@ -847,6 +847,74 @@ const GAME_CONFIG = {
       dealerHitSoft17: false,
       betOptions: [10, 20, 50, 100]
     },
+    // Paramètres du mini-jeu Échecs.
+    echecs: {
+      ai: {
+        /**
+         * Profondeur de recherche maximale (en demi-coups) utilisée par l'IA noire.
+         * Une valeur plus élevée augmente la force de jeu mais rallonge le temps de calcul.
+         */
+        searchDepth: 3,
+        /**
+         * Budget de temps autorisé pour un coup de l'IA (en millisecondes).
+         * Si 0, aucun plafond n'est appliqué et seule la profondeur limite le calcul.
+         */
+        timeLimitMs: 1200,
+        /**
+         * Délai (ms) ajouté avant le lancement du calcul afin de laisser l'interface se mettre à jour.
+         */
+        moveDelayMs: 150,
+        /**
+         * Nombre maximum d'entrées conservées dans la table de transposition.
+         */
+        transpositionSize: 4000
+      },
+      /**
+       * Paramétrage des récompenses et de la difficulté.
+       * - difficulty.defaultMode : difficulté sélectionnée par défaut.
+       * - difficulty.modes : liste des modes proposés avec leur étiquette i18n,
+       *   les réglages IA associés et la récompense accordée en cas de victoire.
+       * - match.moveLimit : nombre maximal de tours complets avant déclaration d'une nulle technique.
+       */
+      difficulty: {
+        defaultMode: 'standard',
+        modes: [
+          {
+            id: 'training',
+            labelKey: 'scripts.arcade.chess.difficulty.training',
+            descriptionKey: 'scripts.arcade.chess.difficulty.trainingDescription',
+            ai: { depth: 2, timeLimitMs: 600 },
+            reward: {
+              offlineSeconds: 600,
+              offlineMultiplier: 1
+            }
+          },
+          {
+            id: 'standard',
+            labelKey: 'scripts.arcade.chess.difficulty.standard',
+            descriptionKey: 'scripts.arcade.chess.difficulty.standardDescription',
+            ai: { depth: 3, timeLimitMs: 1200 },
+            reward: {
+              offlineSeconds: 1200,
+              offlineMultiplier: 1.5
+            }
+          },
+          {
+            id: 'expert',
+            labelKey: 'scripts.arcade.chess.difficulty.expert',
+            descriptionKey: 'scripts.arcade.chess.difficulty.expertDescription',
+            ai: { depth: 4, timeLimitMs: 1800 },
+            reward: {
+              offlineSeconds: 1800,
+              offlineMultiplier: 2
+            }
+          }
+        ]
+      },
+      match: {
+        moveLimit: 80
+      }
+    },
     // Paramètres du mini-jeu Balance (plateforme d'équilibre).
     balance: {
       board: {
