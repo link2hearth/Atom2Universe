@@ -749,7 +749,7 @@
       entry.bars.forEach((state) => {
         settlePreviewBar(state);
       });
-      recordNoteStart(entry.note, entry.source);
+      recordNoteStart(entry.note, entry.source, { velocity: entry.velocity });
     }
 
     function finalizePreviewEntry(entry, options = {}) {
@@ -781,6 +781,7 @@
         id: eventId,
         note: normalizedNote,
         source,
+        velocity: Number.isFinite(detail?.velocity) ? detail.velocity : null,
         previewLead,
         sustainSeconds,
         bars: [],
@@ -828,13 +829,21 @@
         }
         if (manualCount > 0) {
           element.classList.add('is-playing--manual');
+          if (Number.isFinite(stats.manualBrightness)) {
+            element.style.setProperty('--midi-key-manual-brightness', stats.manualBrightness);
+          }
         } else {
           element.classList.remove('is-playing--manual');
+          element.style.removeProperty('--midi-key-manual-brightness');
         }
         if (playbackCount > 0) {
           element.classList.add('is-playing--playback');
+          if (Number.isFinite(stats.playbackBrightness)) {
+            element.style.setProperty('--midi-key-playback-brightness', stats.playbackBrightness);
+          }
         } else {
           element.classList.remove('is-playing--playback');
+          element.style.removeProperty('--midi-key-playback-brightness');
         }
       });
       if (total <= 0) {
@@ -842,7 +851,17 @@
       }
     }
 
-    function recordNoteStart(noteNumber, source) {
+    function computeBrightnessFromVelocity(velocity, options = {}) {
+      const base = Number.isFinite(velocity) ? Math.max(0, Math.min(1, velocity)) : null;
+      const fallback = Number.isFinite(options.fallback) ? options.fallback : 0.75;
+      const multiplier = Number.isFinite(options.multiplier) ? options.multiplier : 0.35;
+      const offset = Number.isFinite(options.offset) ? options.offset : 1;
+      const normalized = base != null ? base : fallback;
+      const brightness = offset + (normalized * multiplier);
+      return Math.max(0.6, Math.min(1.8, brightness));
+    }
+
+    function recordNoteStart(noteNumber, source, detail = {}) {
       if (!Number.isFinite(noteNumber)) {
         return;
       }
@@ -853,8 +872,18 @@
       }
       if (source === 'manual') {
         stats.manual += 1;
+        stats.manualBrightness = computeBrightnessFromVelocity(detail.velocity, {
+          fallback: 0.78,
+          multiplier: 0.42,
+          offset: 1,
+        });
       } else {
         stats.playback += 1;
+        stats.playbackBrightness = computeBrightnessFromVelocity(detail.velocity, {
+          fallback: 0.7,
+          multiplier: 0.38,
+          offset: 1,
+        });
       }
       updateKeyHighlight(normalized);
     }
@@ -870,8 +899,14 @@
       }
       if (source === 'manual') {
         stats.manual = Math.max(0, stats.manual - 1);
+        if (stats.manual <= 0) {
+          delete stats.manualBrightness;
+        }
       } else {
         stats.playback = Math.max(0, stats.playback - 1);
+        if (stats.playback <= 0) {
+          delete stats.playbackBrightness;
+        }
       }
       updateKeyHighlight(normalized);
     }
@@ -890,7 +925,7 @@
       const source = detail?.source === 'manual' ? 'manual' : 'playback';
       const entry = createPreviewEntry(detail, noteNumber, source);
       if (!entry) {
-        recordNoteStart(Math.round(noteNumber), source);
+        recordNoteStart(Math.round(noteNumber), source, { velocity: detail?.velocity });
       }
     }
 

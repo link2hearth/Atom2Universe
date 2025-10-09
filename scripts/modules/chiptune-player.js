@@ -2879,6 +2879,37 @@
         return () => {};
       }
       this.noteObservers.add(observer);
+
+      if (typeof observer.onNoteOn === 'function') {
+        try {
+          const now = this.audioContext && typeof this.audioContext.currentTime === 'number'
+            ? this.audioContext.currentTime
+            : null;
+          this.activeNoteVisuals.forEach((entry) => {
+            if (!entry || !entry.started) {
+              return;
+            }
+            const originalDetail = entry.detail || {};
+            let remainingSeconds = Number.isFinite(originalDetail.durationSeconds)
+              ? originalDetail.durationSeconds
+              : 0;
+            if (now != null && Number.isFinite(entry.startTime) && Number.isFinite(remainingSeconds)) {
+              const elapsed = Math.max(0, now - entry.startTime);
+              remainingSeconds = Math.max(0, remainingSeconds - elapsed);
+            }
+            const catchUpDetail = {
+              ...originalDetail,
+              previewLeadTime: 0,
+              playbackDelay: 0,
+              durationSeconds: remainingSeconds,
+            };
+            observer.onNoteOn(catchUpDetail);
+          });
+        } catch (error) {
+          console.error('Unable to synchronize MIDI note observer', error);
+        }
+      }
+
       return () => {
         this.noteObservers.delete(observer);
       };
@@ -2920,7 +2951,12 @@
       detail.durationSeconds = Math.max(0, Number.isFinite(context.durationSeconds) ? context.durationSeconds : 0);
       detail.playbackDelay = Math.max(0, Number.isFinite(context.playbackDelay) ? context.playbackDelay : 0);
 
-      if (!this.noteObservers || this.noteObservers.size === 0 || typeof window === 'undefined' || typeof window.setTimeout !== 'function') {
+      const hasWindowTimers = typeof window !== 'undefined' && typeof window.setTimeout === 'function';
+      if (!hasWindowTimers) {
+        if (this.noteObservers && this.noteObservers.size > 0) {
+          this.notifyNoteEvent('start', detail);
+          this.notifyNoteEvent('stop', detail);
+        }
         return id;
       }
 
