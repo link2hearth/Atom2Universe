@@ -1346,6 +1346,11 @@
       this.lastKnownPosition = 0;
       this.isScrubbing = false;
 
+      this.noteObservers = new Set();
+      this.activeNoteVisuals = new Map();
+      this.noteEventCounter = 0;
+      this.lastProgramByChannel = new Map();
+
       this.masterVolume = 0.8;
       this.maxGain = 0.26;
       this.waveCache = new Map();
@@ -2724,6 +2729,141 @@
       }
     }
 
+    cacheChannelPrograms(timeline) {
+      this.lastProgramByChannel.clear();
+      const notes = timeline && Array.isArray(timeline.notes) ? timeline.notes : [];
+      for (const note of notes) {
+        if (!note) {
+          continue;
+        }
+        const channel = Number.isFinite(note.channel) ? note.channel : 0;
+        if (!Number.isFinite(note.program)) {
+          continue;
+        }
+        if (!this.lastProgramByChannel.has(channel)) {
+          this.lastProgramByChannel.set(channel, note.program);
+        }
+      }
+    }
+
+    registerNoteObserver(observer) {
+      if (!observer || typeof observer !== 'object') {
+        return () => {};
+      }
+      this.noteObservers.add(observer);
+      return () => {
+        this.noteObservers.delete(observer);
+      };
+    }
+
+    notifyNoteEvent(type, detail) {
+      if (!this.noteObservers || this.noteObservers.size === 0) {
+        return;
+      }
+      for (const observer of this.noteObservers) {
+        if (!observer) {
+          continue;
+        }
+        try {
+          if (type === 'start' && typeof observer.onNoteOn === 'function') {
+            observer.onNoteOn(detail);
+          } else if (type === 'stop' && typeof observer.onNoteOff === 'function') {
+            observer.onNoteOff(detail);
+          }
+        } catch (error) {
+          console.error('Unable to notify MIDI note observer', error);
+        }
+      }
+    }
+
+    scheduleNoteVisualization(note, context = {}) {
+      this.noteEventCounter = (this.noteEventCounter + 1) % Number.MAX_SAFE_INTEGER;
+      const id = `note-${this.noteEventCounter}`;
+      const detail = {
+        id,
+        note: Number.isFinite(note?.note) ? Math.round(note.note) : null,
+        velocity: Math.max(0, Math.min(1, Number.isFinite(note?.velocity) ? note.velocity : 0.5)),
+        channel: Number.isFinite(note?.channel) ? note.channel : 0,
+        program: Number.isFinite(note?.program) ? note.program : 0,
+        source: context.source || 'playback',
+        engine: this.engineMode,
+      };
+
+      if (!this.noteObservers || this.noteObservers.size === 0 || typeof window === 'undefined' || typeof window.setTimeout !== 'function') {
+        return id;
+      }
+
+      const entry = {
+        id,
+        detail,
+        started: false,
+        startTimerId: null,
+        endTimerId: null,
+      };
+      this.activeNoteVisuals.set(id, entry);
+
+      const startDelaySeconds = Math.max(0, Number.isFinite(context.startDelay) ? context.startDelay : 0);
+      const endDelaySeconds = Math.max(startDelaySeconds, Number.isFinite(context.endDelay) ? context.endDelay : startDelaySeconds + 0.2);
+
+      if (startDelaySeconds <= 0) {
+        entry.started = true;
+        entry.startTime = this.audioContext ? this.audioContext.currentTime : 0;
+        this.notifyNoteEvent('start', detail);
+      } else {
+        const startDelayMs = Math.max(0, Math.round(startDelaySeconds * 1000));
+        const startTimerId = window.setTimeout(() => {
+          this.pendingTimers.delete(startTimerId);
+          entry.startTimerId = null;
+          entry.started = true;
+          entry.startTime = this.audioContext ? this.audioContext.currentTime : 0;
+          this.notifyNoteEvent('start', detail);
+        }, startDelayMs);
+        this.pendingTimers.add(startTimerId);
+        entry.startTimerId = startTimerId;
+      }
+
+      const endDelayMs = Math.max(0, Math.round(endDelaySeconds * 1000));
+      const endTimerId = window.setTimeout(() => {
+        this.pendingTimers.delete(endTimerId);
+        entry.endTimerId = null;
+        this.activeNoteVisuals.delete(id);
+        if (entry.started) {
+          this.notifyNoteEvent('stop', detail);
+        }
+      }, endDelayMs);
+      this.pendingTimers.add(endTimerId);
+      entry.endTimerId = endTimerId;
+
+      return id;
+    }
+
+    cancelNoteVisualization(id, options = {}) {
+      if (!id || !this.activeNoteVisuals.has(id)) {
+        return;
+      }
+      const entry = this.activeNoteVisuals.get(id);
+      this.activeNoteVisuals.delete(id);
+      if (entry.startTimerId) {
+        window.clearTimeout(entry.startTimerId);
+        this.pendingTimers.delete(entry.startTimerId);
+      }
+      if (entry.endTimerId) {
+        window.clearTimeout(entry.endTimerId);
+        this.pendingTimers.delete(entry.endTimerId);
+      }
+      if (entry.started && options.notify !== false) {
+        this.notifyNoteEvent('stop', entry.detail);
+      }
+    }
+
+    clearNoteVisualizations(options = {}) {
+      const { notify = false } = options;
+      const ids = Array.from(this.activeNoteVisuals.keys());
+      for (const id of ids) {
+        this.cancelNoteVisualization(id, { notify });
+      }
+    }
+
     refreshStaticTexts() {
       if (this.playButton) {
         this.updatePlayButtonLabel();
@@ -3538,6 +3678,7 @@
         const midi = MidiParser.parse(buffer);
         const timeline = MidiTimeline.fromMidi(midi);
         this.timeline = timeline;
+        this.cacheChannelPrograms(timeline);
         if (label) {
           this.currentTitle = label;
           this.currentTitleDescriptor = null;
@@ -3572,6 +3713,7 @@
         this.readyStatusMessage = null;
         this.currentTitle = '';
         this.currentTitleDescriptor = null;
+        this.cacheChannelPrograms(null);
         this.pendingSeekSeconds = 0;
         this.lastKnownPosition = 0;
         this.refreshProgressControls(null);
@@ -3583,6 +3725,177 @@
         if (!this.timeline) {
           this.refreshProgressControls(null);
           this.updateProgramUsage(null);
+          this.cacheChannelPrograms(null);
+        }
+      }
+    }
+
+    getManualProgram(channel = 0) {
+      const normalizedChannel = Number.isFinite(channel) ? Math.max(0, Math.min(15, Math.round(channel))) : 0;
+      if (this.lastProgramByChannel.has(normalizedChannel)) {
+        return this.lastProgramByChannel.get(normalizedChannel);
+      }
+      for (const [chan, program] of this.lastProgramByChannel.entries()) {
+        if (chan !== 9) {
+          return program;
+        }
+      }
+      if (this.timeline && Array.isArray(this.timeline.notes)) {
+        for (const note of this.timeline.notes) {
+          if (!note) {
+            continue;
+          }
+          const noteChannel = Number.isFinite(note.channel) ? note.channel : 0;
+          if (noteChannel === 9 || !Number.isFinite(note.program)) {
+            continue;
+          }
+          this.lastProgramByChannel.set(noteChannel, note.program);
+          if (noteChannel === normalizedChannel) {
+            return note.program;
+          }
+        }
+      }
+      return 0;
+    }
+
+    async playManualNote(noteNumber, options = {}) {
+      const midiNote = Number.isFinite(noteNumber) ? Math.max(0, Math.min(127, Math.round(noteNumber))) : null;
+      if (midiNote == null) {
+        return null;
+      }
+
+      try {
+        await this.ensureContext();
+      } catch (error) {
+        console.error('Unable to prepare audio context for manual note', error);
+        return null;
+      }
+
+      if (this.engineMode === 'hifi') {
+        try {
+          await this.ensureSoundFontReady();
+        } catch (error) {
+          console.error('Unable to prepare SoundFont for manual note', error);
+          return null;
+        }
+      }
+
+      const channel = Number.isFinite(options.channel) ? options.channel : 0;
+      const program = Number.isFinite(options.program)
+        ? options.program
+        : this.getManualProgram(channel);
+      this.lastProgramByChannel.set(channel, program);
+
+      const velocity = Math.max(0.05, Math.min(1, Number.isFinite(options.velocity) ? options.velocity : 0.75));
+      const duration = Math.max(0.2, Number.isFinite(options.duration) ? options.duration : 1.6);
+      const pan = Number.isFinite(options.pan) ? options.pan : 0;
+
+      const note = {
+        note: midiNote,
+        startTime: 0,
+        duration,
+        velocity,
+        channel,
+        program,
+        pan,
+        rawVelocity: velocity,
+      };
+
+      const baseTime = this.audioContext ? this.audioContext.currentTime : 0;
+      const handle = this.scheduleNote(note, baseTime, 1, { source: 'manual', returnHandle: true });
+      if (!handle) {
+        return null;
+      }
+      return { ...handle, note };
+    }
+
+    stopManualNote(handle) {
+      if (!handle) {
+        return;
+      }
+      if (handle.eventId) {
+        this.cancelNoteVisualization(handle.eventId, { notify: true });
+      }
+      if (!this.audioContext || !handle.voice) {
+        return;
+      }
+
+      const now = this.audioContext.currentTime;
+      const voice = handle.voice;
+
+      if (voice.type === 'percussion') {
+        const stopAt = now + 0.12;
+        if (voice.gainNode && voice.gainNode.gain) {
+          try {
+            voice.gainNode.gain.cancelScheduledValues(now);
+          } catch (error) {
+            // Ignore cancellation errors
+          }
+          const currentValue = voice.gainNode.gain.value;
+          voice.gainNode.gain.setValueAtTime(Math.max(0.0001, currentValue), now);
+          voice.gainNode.gain.exponentialRampToValueAtTime(0.0001, stopAt);
+        }
+        for (const source of voice.sources || []) {
+          if (!source) {
+            continue;
+          }
+          try {
+            source.stop(stopAt);
+          } catch (error) {
+            // Ignore stop issues
+          }
+        }
+      } else if (voice.type === 'melodic') {
+        const oscillators = Array.isArray(voice.oscillators) && voice.oscillators.length
+          ? voice.oscillators
+          : (voice.osc ? [voice.osc] : []);
+        const fadeStart = now;
+        const fadeEnd = fadeStart + 0.14;
+        if (voice.gainNode && voice.gainNode.gain) {
+          try {
+            voice.gainNode.gain.cancelScheduledValues(fadeStart);
+          } catch (error) {
+            // Ignore cancellation errors
+          }
+          const currentValue = voice.gainNode.gain.value;
+          voice.gainNode.gain.setValueAtTime(Math.max(0.0001, currentValue), fadeStart);
+          voice.gainNode.gain.exponentialRampToValueAtTime(0.0001, fadeEnd);
+        }
+        for (const osc of oscillators) {
+          if (!osc) {
+            continue;
+          }
+          try {
+            osc.stop(fadeEnd + 0.02);
+          } catch (error) {
+            // Ignore stop issues
+          }
+        }
+        if (voice.lfo) {
+          try {
+            voice.lfo.stop(fadeEnd);
+          } catch (error) {
+            // Ignore stop issues
+          }
+        }
+        if (voice.tremoloOffset) {
+          try {
+            voice.tremoloOffset.stop(fadeEnd);
+          } catch (error) {
+            // Ignore stop issues
+          }
+        }
+        if (Array.isArray(voice.effectOscillators)) {
+          for (const eff of voice.effectOscillators) {
+            if (!eff) {
+              continue;
+            }
+            try {
+              eff.stop(fadeEnd + 0.02);
+            } catch (error) {
+              // Ignore stop issues
+            }
+          }
         }
       }
     }
@@ -6232,30 +6545,56 @@
       return profile;
     }
 
-    scheduleNote(note, baseTime, speedParam = this.activePlaybackSpeed || 1) {
+    scheduleNote(note, baseTime, speedParam = this.activePlaybackSpeed || 1, options = {}) {
       if (!this.audioContext || !this.masterGain) {
-        return;
+        return null;
       }
 
+      const { source = 'playback', returnHandle = false } = options || {};
       const speed = this.clampPlaybackSpeed(speedParam || 1);
       const now = this.audioContext.currentTime;
       const startOffset = Number.isFinite(note.startTime) ? note.startTime : 0;
       const startAt = Math.max(baseTime + (startOffset / speed), now + 0.001);
       const velocity = Math.max(0.08, Math.min(1, note.velocity || 0.2));
+      const baseStartDelay = Math.max(0, startAt - now);
+
+      if (Number.isFinite(note.channel) && Number.isFinite(note.program)) {
+        this.lastProgramByChannel.set(note.channel, note.program);
+      }
 
       const instrument = this.getInstrumentSettings(note);
       if (note.channel === 9) {
         const usesSoundFont = instrument && instrument.type === 'soundfont';
         if (!usesSoundFont) {
           if (this.engineMode === 'hifi' && !instrument) {
-            return;
+            return null;
           }
-          this.schedulePercussion(note, baseTime, speed);
-          return;
+          const percussionVoice = this.schedulePercussion(note, baseTime, speed);
+          if (!percussionVoice) {
+            return null;
+          }
+          const stopTime = Number.isFinite(percussionVoice.stopTime)
+            ? percussionVoice.stopTime
+            : (startAt + 0.24);
+          const endDelay = Math.max(baseStartDelay, Math.max(0, stopTime - now));
+          const eventId = this.scheduleNoteVisualization(note, {
+            startDelay: baseStartDelay,
+            endDelay,
+            source,
+          });
+          if (returnHandle) {
+            return {
+              eventId,
+              voice: percussionVoice,
+              startAt,
+              stopAt: stopTime,
+            };
+          }
+          return eventId;
         }
       }
       if (!instrument) {
-        return;
+        return null;
       }
       const frequency = this.midiNoteToFrequency(note.note);
       const lfoSettings = this.getLfoSettings(instrument);
@@ -6290,9 +6629,12 @@
       const stopAt = startAt + duration;
       const attackEnd = Math.min(stopAt, startAt + attack);
       const decayEnd = Math.min(stopAt, attackEnd + decay);
+      const endAt = stopAt + releaseDuration;
+
+      let voice = null;
 
       if (instrument && instrument.type === 'soundfont' && Array.isArray(instrument.regions) && instrument.regions.length) {
-        this.scheduleSoundFontVoice(note, instrument, {
+        voice = this.scheduleSoundFontVoice(note, instrument, {
           startAt,
           stopAt,
           velocity,
@@ -6303,8 +6645,10 @@
           releaseDuration,
           sustainProfile,
         });
-        return;
-      }
+        if (!voice) {
+          return null;
+        }
+      } else {
 
       const layers = Array.isArray(instrument.layers) && instrument.layers.length
         ? instrument.layers
@@ -6330,7 +6674,7 @@
         vibratoGain.gain.setValueAtTime(depthHz, startAt);
       }
 
-      const voice = {
+      voice = {
         type: 'melodic',
         startTime: startAt,
         stopTime: stopAt + releaseDuration,
@@ -6601,6 +6945,28 @@
       }
     }
 
+      if (!voice) {
+        return null;
+      }
+
+      const eventId = this.scheduleNoteVisualization(note, {
+        startDelay: baseStartDelay,
+        endDelay: Math.max(baseStartDelay, Math.max(0, endAt - now)),
+        source,
+      });
+
+      if (returnHandle) {
+        return {
+          eventId,
+          voice,
+          startAt,
+          stopAt: endAt,
+        };
+      }
+
+      return eventId;
+    }
+
     scheduleSoundFontVoice(note, instrument, context = {}) {
       if (!this.audioContext || !this.masterGain) {
         return;
@@ -6791,6 +7157,8 @@
           }
         }
       };
+
+      return voice;
     }
 
     schedulePercussion(note, baseTime, speedParam = this.activePlaybackSpeed || 1) {
@@ -6997,6 +7365,8 @@
       } else {
         dryGain.gain.setValueAtTime(Math.min(1, dryAmount + (reverbAmount * 0.3)), startAt);
       }
+
+      return voice;
     }
 
     async play(options = {}) {
@@ -7180,6 +7550,7 @@
         window.clearTimeout(timerId);
       }
       this.pendingTimers.clear();
+      this.clearNoteVisualizations({ notify: true });
 
       if (this.audioContext) {
         const now = this.audioContext.currentTime;
@@ -7409,6 +7780,23 @@
   };
 
   if (elements.fileInput && elements.playButton && elements.stopButton && elements.status) {
-    new ChiptunePlayer(elements);
+    const player = new ChiptunePlayer(elements);
+    if (typeof globalThis !== 'undefined') {
+      globalThis.atom2universMidiPlayer = player;
+      if (typeof globalThis.dispatchEvent === 'function') {
+        try {
+          const eventDetail = { detail: { player } };
+          if (typeof CustomEvent === 'function') {
+            globalThis.dispatchEvent(new CustomEvent('atom2univers:midiPlayerReady', eventDetail));
+          } else if (globalThis.document && typeof globalThis.document.createEvent === 'function') {
+            const event = globalThis.document.createEvent('CustomEvent');
+            event.initCustomEvent('atom2univers:midiPlayerReady', false, false, eventDetail.detail);
+            globalThis.dispatchEvent(event);
+          }
+        } catch (error) {
+          console.warn('Unable to dispatch MIDI player ready event', error);
+        }
+      }
+    }
   }
 })();

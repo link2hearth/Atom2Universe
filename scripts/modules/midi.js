@@ -1,7 +1,6 @@
-(function initMidiPage() {
+(function initMidiModule() {
   'use strict';
 
-  const LANGUAGE_STORAGE_KEY = 'atom2univers.language';
   const NOTE_NAMES = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
   const BLACK_NOTE_INDEXES = new Set([1, 3, 6, 8, 10]);
   const FALLBACK_KEYBOARD_LAYOUTS = [
@@ -12,161 +11,6 @@
 
   function getI18n() {
     return typeof globalThis !== 'undefined' ? globalThis.i18n : null;
-  }
-
-  function normalizeLanguageCode(raw) {
-    if (typeof raw !== 'string') {
-      return '';
-    }
-    return raw.trim().toLowerCase();
-  }
-
-  function getAvailableLanguages() {
-    const api = getI18n();
-    if (api && typeof api.getAvailableLanguages === 'function') {
-      try {
-        const languages = api.getAvailableLanguages();
-        if (Array.isArray(languages) && languages.length) {
-          const normalized = languages
-            .map(code => (typeof code === 'string' ? code.trim() : ''))
-            .filter(Boolean);
-          if (normalized.length) {
-            return normalized;
-          }
-        }
-      } catch (error) {
-        console.warn('Unable to read available languages from i18n', error);
-      }
-    }
-    return ['fr', 'en'];
-  }
-
-  function matchAvailableLanguage(raw) {
-    const normalized = normalizeLanguageCode(raw);
-    if (!normalized) {
-      return null;
-    }
-    const available = getAvailableLanguages();
-    const direct = available.find(code => code.toLowerCase() === normalized);
-    if (direct) {
-      return direct;
-    }
-    const [base] = normalized.split('-');
-    if (base) {
-      const baseMatch = available.find(code => code.toLowerCase() === base);
-      if (baseMatch) {
-        return baseMatch;
-      }
-    }
-    return null;
-  }
-
-  function readStoredLanguagePreference() {
-    try {
-      const stored = globalThis.localStorage?.getItem(LANGUAGE_STORAGE_KEY);
-      if (stored) {
-        const matched = matchAvailableLanguage(stored);
-        if (matched) {
-          return matched;
-        }
-      }
-    } catch (error) {
-      console.warn('Unable to read stored language preference', error);
-    }
-    return null;
-  }
-
-  function writeStoredLanguagePreference(lang) {
-    try {
-      const normalized = matchAvailableLanguage(lang) || normalizeLanguageCode(lang);
-      if (normalized) {
-        globalThis.localStorage?.setItem(LANGUAGE_STORAGE_KEY, normalized);
-      }
-    } catch (error) {
-      console.warn('Unable to persist language preference', error);
-    }
-  }
-
-  function detectNavigatorLanguage() {
-    const nav = typeof navigator !== 'undefined' ? navigator : null;
-    if (!nav) {
-      return null;
-    }
-    const candidates = [];
-    if (Array.isArray(nav.languages)) {
-      candidates.push(...nav.languages);
-    }
-    if (typeof nav.language === 'string') {
-      candidates.push(nav.language);
-    }
-    for (let index = 0; index < candidates.length; index += 1) {
-      const match = matchAvailableLanguage(candidates[index]);
-      if (match) {
-        return match;
-      }
-    }
-    return null;
-  }
-
-  function getDefaultLanguage() {
-    const documentLang = typeof document !== 'undefined' ? document.documentElement?.lang : '';
-    const matchedDocumentLang = documentLang ? matchAvailableLanguage(documentLang) : null;
-    if (matchedDocumentLang) {
-      return matchedDocumentLang;
-    }
-    const available = getAvailableLanguages();
-    if (available.length) {
-      return available[0];
-    }
-    return 'fr';
-  }
-
-  function getInitialLanguage() {
-    const stored = readStoredLanguagePreference();
-    if (stored) {
-      return stored;
-    }
-    const navigatorLanguage = detectNavigatorLanguage();
-    if (navigatorLanguage) {
-      return navigatorLanguage;
-    }
-    return getDefaultLanguage();
-  }
-
-  function applyLanguage(language) {
-    const api = getI18n();
-    const fallback = getDefaultLanguage();
-    const target = matchAvailableLanguage(language) || fallback;
-
-    if (!api || typeof api.setLanguage !== 'function') {
-      if (typeof document !== 'undefined' && document.documentElement) {
-        document.documentElement.lang = target;
-      }
-      writeStoredLanguagePreference(target);
-      return Promise.resolve();
-    }
-
-    return api
-      .setLanguage(target)
-      .then(() => {
-        if (typeof api.updateTranslations === 'function') {
-          api.updateTranslations(document);
-        }
-        const current = typeof api.getCurrentLanguage === 'function'
-          ? api.getCurrentLanguage()
-          : target;
-        const normalized = matchAvailableLanguage(current) || target;
-        if (typeof document !== 'undefined' && document.documentElement) {
-          document.documentElement.lang = normalized;
-        }
-        writeStoredLanguagePreference(normalized);
-      })
-      .catch((error) => {
-        console.error('Unable to initialize language for MIDI page', error);
-        if (typeof document !== 'undefined' && document.documentElement) {
-          document.documentElement.lang = target;
-        }
-      });
   }
 
   function getKeyboardWindowSize() {
@@ -497,6 +341,7 @@
     return Number.isFinite(note) ? note : null;
   }
 
+
   function setupKeyboardUI() {
     const root = typeof document !== 'undefined'
       ? document.getElementById('midiKeyboardArea')
@@ -512,6 +357,153 @@
 
     if (!layoutSelect || !fullContainer || !miniContainer || !rangeValue) {
       return;
+    }
+
+    const globalScope = typeof globalThis !== 'undefined'
+      ? globalThis
+      : (typeof window !== 'undefined' ? window : null);
+    let midiPlayer = globalScope && globalScope.atom2universMidiPlayer
+      ? globalScope.atom2universMidiPlayer
+      : null;
+    let detachNoteObserver = null;
+
+    const highlightState = new Map();
+    let fullKeyRefs = new Map();
+    let miniKeyRefs = new Map();
+    const pointerNotes = new Map();
+    const keyboardNotes = new Map();
+
+    function getKeyElements(noteNumber) {
+      const elements = [];
+      const fullKey = fullKeyRefs.get(noteNumber);
+      if (fullKey) {
+        elements.push(fullKey);
+      }
+      const miniKey = miniKeyRefs.get(noteNumber);
+      if (miniKey) {
+        elements.push(miniKey);
+      }
+      return elements;
+    }
+
+    function updateKeyHighlight(noteNumber) {
+      const stats = highlightState.get(noteNumber) || { manual: 0, playback: 0 };
+      const manualCount = Math.max(0, stats.manual || 0);
+      const playbackCount = Math.max(0, stats.playback || 0);
+      const total = manualCount + playbackCount;
+      const elements = getKeyElements(noteNumber);
+      elements.forEach((element) => {
+        if (!element) {
+          return;
+        }
+        if (total > 0) {
+          element.classList.add('is-playing');
+        } else {
+          element.classList.remove('is-playing');
+        }
+        if (manualCount > 0) {
+          element.classList.add('is-playing--manual');
+        } else {
+          element.classList.remove('is-playing--manual');
+        }
+        if (playbackCount > 0) {
+          element.classList.add('is-playing--playback');
+        } else {
+          element.classList.remove('is-playing--playback');
+        }
+      });
+      if (total <= 0) {
+        highlightState.delete(noteNumber);
+      }
+    }
+
+    function recordNoteStart(noteNumber, source) {
+      if (!Number.isFinite(noteNumber)) {
+        return;
+      }
+      const normalized = Math.round(noteNumber);
+      const stats = highlightState.get(normalized) || { manual: 0, playback: 0 };
+      if (!highlightState.has(normalized)) {
+        highlightState.set(normalized, stats);
+      }
+      if (source === 'manual') {
+        stats.manual += 1;
+      } else {
+        stats.playback += 1;
+      }
+      updateKeyHighlight(normalized);
+    }
+
+    function recordNoteStop(noteNumber, source) {
+      if (!Number.isFinite(noteNumber)) {
+        return;
+      }
+      const normalized = Math.round(noteNumber);
+      const stats = highlightState.get(normalized);
+      if (!stats) {
+        return;
+      }
+      if (source === 'manual') {
+        stats.manual = Math.max(0, stats.manual - 1);
+      } else {
+        stats.playback = Math.max(0, stats.playback - 1);
+      }
+      updateKeyHighlight(normalized);
+    }
+
+    function refreshActiveHighlights() {
+      highlightState.forEach((_, note) => {
+        updateKeyHighlight(note);
+      });
+    }
+
+    function handleNoteOn(detail) {
+      const noteNumber = Number.isFinite(detail?.note) ? detail.note : null;
+      if (noteNumber == null) {
+        return;
+      }
+      const source = detail?.source === 'manual' ? 'manual' : 'playback';
+      recordNoteStart(noteNumber, source);
+    }
+
+    function handleNoteOff(detail) {
+      const noteNumber = Number.isFinite(detail?.note) ? detail.note : null;
+      if (noteNumber == null) {
+        return;
+      }
+      const source = detail?.source === 'manual' ? 'manual' : 'playback';
+      recordNoteStop(noteNumber, source);
+    }
+
+    function attachPlayer(player) {
+      if (player === midiPlayer) {
+        return;
+      }
+      if (detachNoteObserver) {
+        detachNoteObserver();
+        detachNoteObserver = null;
+      }
+      midiPlayer = player;
+      if (player && typeof player.registerNoteObserver === 'function') {
+        detachNoteObserver = player.registerNoteObserver({
+          onNoteOn: handleNoteOn,
+          onNoteOff: handleNoteOff,
+        });
+      }
+    }
+
+    if (midiPlayer) {
+      attachPlayer(midiPlayer);
+    }
+    if (globalScope && typeof globalScope.addEventListener === 'function') {
+      globalScope.addEventListener('atom2univers:midiPlayerReady', (event) => {
+        const player = event?.detail?.player
+          || (globalScope && globalScope.atom2universMidiPlayer)
+          || null;
+        if (player) {
+          attachPlayer(player);
+        }
+      });
     }
 
     const windowSize = getKeyboardWindowSize();
@@ -543,7 +535,6 @@
       api.updateTranslations(layoutSelect);
     }
 
-    let fullKeyRefs = new Map();
     let pointerActive = false;
     let pointerId = null;
 
@@ -578,10 +569,12 @@
         highestNote: end,
         keyCount: Math.max(1, end - activeRange.start + 1)
       };
-      buildKeyboard(miniContainer, miniLayout, {
-        interactive: false,
+      const result = buildKeyboard(miniContainer, miniLayout, {
+        interactive: true,
         activeRange
       });
+      miniKeyRefs = result.keyRefs || new Map();
+      refreshActiveHighlights();
     }
 
     function updateView() {
@@ -592,7 +585,9 @@
 
     function renderFullKeyboard() {
       const result = buildKeyboard(fullContainer, state.layout, { interactive: true });
-      fullKeyRefs = result.keyRefs;
+      fullKeyRefs = result.keyRefs || new Map();
+      updateFullSelectionHighlight();
+      refreshActiveHighlights();
     }
 
     function setSelection(note) {
@@ -655,7 +650,7 @@
       setSelection(note);
     });
 
-    function stopPointerInteraction(event) {
+    function stopPointerInteraction() {
       if (pointerActive && pointerId != null && typeof fullContainer.releasePointerCapture === 'function') {
         try {
           fullContainer.releasePointerCapture(pointerId);
@@ -670,15 +665,191 @@
     fullContainer.addEventListener('pointerup', stopPointerInteraction);
     fullContainer.addEventListener('pointerleave', stopPointerInteraction);
     fullContainer.addEventListener('pointercancel', stopPointerInteraction);
+
+    function startPointerNote(pointer, midiNote) {
+      if (!midiPlayer || typeof midiPlayer.playManualNote !== 'function') {
+        return;
+      }
+      const playPromise = Promise.resolve(
+        midiPlayer.playManualNote(midiNote, { velocity: 0.78 })
+      ).catch((error) => {
+        console.warn('Unable to start manual note', error);
+        return null;
+      });
+      pointerNotes.set(pointer, { note: midiNote, handlePromise: playPromise });
+    }
+
+    async function stopPointerNote(pointer) {
+      const state = pointerNotes.get(pointer);
+      if (!state) {
+        return;
+      }
+      pointerNotes.delete(pointer);
+      try {
+        const handle = await state.handlePromise;
+        if (handle && midiPlayer && typeof midiPlayer.stopManualNote === 'function') {
+          midiPlayer.stopManualNote(handle);
+        }
+      } catch (error) {
+        console.warn('Unable to stop manual note', error);
+      }
+    }
+
+    function releaseMiniPointer(pointer) {
+      if (typeof miniContainer.releasePointerCapture === 'function') {
+        try {
+          miniContainer.releasePointerCapture(pointer);
+        } catch (error) {
+          console.warn('Unable to release mini keyboard pointer', error);
+        }
+      }
+    }
+
+    miniContainer.addEventListener('pointerdown', (event) => {
+      if (typeof event.button === 'number' && event.button !== 0) {
+        return;
+      }
+      if (!midiPlayer || typeof midiPlayer.playManualNote !== 'function') {
+        return;
+      }
+      const note = extractNoteFromEvent(event);
+      if (note == null) {
+        return;
+      }
+      event.preventDefault();
+      const midiNote = Math.max(0, Math.min(127, Math.round(note)));
+      startPointerNote(event.pointerId, midiNote);
+      if (typeof miniContainer.setPointerCapture === 'function') {
+        try {
+          miniContainer.setPointerCapture(event.pointerId);
+        } catch (error) {
+          console.warn('Unable to capture mini keyboard pointer', error);
+        }
+      }
+    });
+
+    miniContainer.addEventListener('pointermove', (event) => {
+      const state = pointerNotes.get(event.pointerId);
+      if (!state) {
+        return;
+      }
+      const note = resolveNoteFromPointer(event);
+      if (note == null) {
+        return;
+      }
+      const midiNote = Math.max(0, Math.min(127, Math.round(note)));
+      if (midiNote === state.note) {
+        return;
+      }
+      stopPointerNote(event.pointerId).then(() => {
+        startPointerNote(event.pointerId, midiNote);
+      });
+    });
+
+    miniContainer.addEventListener('pointerup', (event) => {
+      releaseMiniPointer(event.pointerId);
+      stopPointerNote(event.pointerId);
+    });
+
+    miniContainer.addEventListener('pointercancel', (event) => {
+      releaseMiniPointer(event.pointerId);
+      stopPointerNote(event.pointerId);
+    });
+
+    miniContainer.addEventListener('lostpointercapture', (event) => {
+      stopPointerNote(event.pointerId);
+    });
+
+    function startKeyboardNote(target, midiNote) {
+      if (!target || keyboardNotes.has(target)) {
+        return;
+      }
+      if (!midiPlayer || typeof midiPlayer.playManualNote !== 'function') {
+        return;
+      }
+      const playPromise = Promise.resolve(
+        midiPlayer.playManualNote(midiNote, { velocity: 0.72 })
+      ).catch((error) => {
+        console.warn('Unable to start manual note', error);
+        return null;
+      });
+      keyboardNotes.set(target, { note: midiNote, handlePromise: playPromise });
+    }
+
+    async function stopKeyboardNote(target) {
+      const state = keyboardNotes.get(target);
+      if (!state) {
+        return;
+      }
+      keyboardNotes.delete(target);
+      try {
+        const handle = await state.handlePromise;
+        if (handle && midiPlayer && typeof midiPlayer.stopManualNote === 'function') {
+          midiPlayer.stopManualNote(handle);
+        }
+      } catch (error) {
+        console.warn('Unable to stop manual note', error);
+      }
+    }
+
+    miniContainer.addEventListener('keydown', (event) => {
+      if (event.repeat) {
+        return;
+      }
+      if (event.code !== 'Space' && event.code !== 'Enter') {
+        return;
+      }
+      if (!midiPlayer || typeof midiPlayer.playManualNote !== 'function') {
+        return;
+      }
+      const note = extractNoteFromEvent(event);
+      if (note == null) {
+        return;
+      }
+      event.preventDefault();
+      const midiNote = Math.max(0, Math.min(127, Math.round(note)));
+      startKeyboardNote(event.target, midiNote);
+    });
+
+    miniContainer.addEventListener('keyup', (event) => {
+      if (event.code !== 'Space' && event.code !== 'Enter') {
+        return;
+      }
+      event.preventDefault();
+      stopKeyboardNote(event.target);
+    });
+
+    miniContainer.addEventListener('blur', (event) => {
+      stopKeyboardNote(event.target);
+    }, true);
+  }
+  function attachNavigationHandlers() {
+    const backButton = typeof document !== 'undefined'
+      ? document.getElementById('midiBackToOptions')
+      : null;
+    if (backButton) {
+      backButton.addEventListener('click', () => {
+        const targetPage = typeof showPage === 'function'
+          ? showPage
+          : (typeof globalThis !== 'undefined' && typeof globalThis.showPage === 'function'
+            ? globalThis.showPage
+            : null);
+        if (targetPage) {
+          targetPage('options');
+        } else if (typeof document !== 'undefined') {
+          const optionsSection = document.getElementById('options');
+          optionsSection?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        if (typeof backButton.blur === 'function') {
+          backButton.blur();
+        }
+      });
+    }
   }
 
   function initialize() {
-    const initialLanguage = getInitialLanguage();
-    applyLanguage(initialLanguage)
-      .catch(() => {})
-      .finally(() => {
-        setupKeyboardUI();
-      });
+    setupKeyboardUI();
+    attachNavigationHandlers();
   }
 
   if (document.readyState === 'loading') {

@@ -2522,6 +2522,7 @@ const elements = {
   navFusionButton: document.querySelector('.nav-button[data-target="fusion"]'),
   navInfoButton: document.querySelector('.nav-button[data-target="info"]'),
   navGoalsButton: document.querySelector('.nav-button[data-target="goals"]'),
+  navMidiButton: document.querySelector('.nav-button[data-target="midi"]'),
   navBigBangButton: document.getElementById('navBigBangButton'),
   pages: document.querySelectorAll('.page'),
   statusAtomsButton: document.getElementById('statusAtomsButton'),
@@ -2672,6 +2673,7 @@ const elements = {
   musicVolumeSlider: document.getElementById('musicVolumeSlider'),
   optionsWelcomeTitle: document.getElementById('optionsWelcomeTitle'),
   optionsWelcomeIntro: document.getElementById('optionsWelcomeIntro'),
+  openMidiModuleButton: document.getElementById('openMidiModuleButton'),
   clickSoundToggleCard: document.getElementById('clickSoundToggleCard'),
   clickSoundToggle: document.getElementById('clickSoundToggle'),
   clickSoundToggleStatus: document.getElementById('clickSoundToggleStatus'),
@@ -7711,6 +7713,12 @@ if (elements.arcadeHubCards?.length) {
       }
       showPage(target);
     });
+  });
+}
+
+if (elements.openMidiModuleButton) {
+  elements.openMidiModuleButton.addEventListener('click', () => {
+    showPage('midi');
   });
 }
 
