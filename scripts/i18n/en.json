@@ -679,6 +679,8 @@
         },
         "chiptune": {
           "title": "MIDI Music Module",
+          "linkDescription": "Access the MIDI player and SoundFonts from a dedicated page.",
+          "openPage": "Open the MIDI page",
           "labels": {
             "artist": "Artist",
             "track": "Track",
@@ -1188,6 +1190,16 @@
           "default": "Starter set"
         }
       }
+    }
+  },
+  "midi": {
+    "meta": {
+      "title": "Atom to Univers · MIDI Music Module"
+    },
+    "page": {
+      "nav": "MIDI page navigation",
+      "back": "Back to options",
+      "description": "Manage your MIDI tracks and SoundFonts from this dedicated space."
     }
   },
   "scripts": {
