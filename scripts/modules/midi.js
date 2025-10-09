@@ -540,13 +540,84 @@
       }
     }
 
+    function normalizeNoteValue(noteNumber) {
+      const numeric = Number(noteNumber);
+      if (!Number.isFinite(numeric)) {
+        return null;
+      }
+      return Math.round(numeric);
+    }
+
+    function resolveKeyFromMap(refs, container, noteNumber) {
+      if (!refs) {
+        return null;
+      }
+      const normalized = normalizeNoteValue(noteNumber);
+      if (normalized == null) {
+        return null;
+      }
+
+      const existing = refs.get(normalized);
+      if (existing && existing.isConnected) {
+        return existing;
+      }
+
+      if (existing && !existing.isConnected) {
+        refs.delete(normalized);
+      }
+
+      if (!container || typeof container.querySelector !== 'function') {
+        return null;
+      }
+
+      const fallback = container.querySelector(`.midi-key[data-note="${normalized}"]`);
+      if (fallback) {
+        refs.set(normalized, fallback);
+        return fallback;
+      }
+
+      return null;
+    }
+
+    function resolveLaneFromMap(refs, container, noteNumber) {
+      if (!refs) {
+        return null;
+      }
+      const normalized = normalizeNoteValue(noteNumber);
+      if (normalized == null) {
+        return null;
+      }
+
+      const existing = refs.get(normalized);
+      if (existing && existing.isConnected) {
+        return existing;
+      }
+
+      if (existing && !existing.isConnected) {
+        refs.delete(normalized);
+      }
+
+      if (!container || typeof container.querySelector !== 'function') {
+        return null;
+      }
+
+      const selector = `.midi-key__lane[data-note="${normalized}"]`;
+      const fallback = container.querySelector(selector);
+      if (fallback) {
+        refs.set(normalized, fallback);
+        return fallback;
+      }
+
+      return null;
+    }
+
     function getKeyElements(noteNumber) {
       const elements = [];
-      const fullKey = fullKeyRefs.get(noteNumber);
+      const fullKey = resolveKeyFromMap(fullKeyRefs, fullContainer, noteNumber);
       if (fullKey) {
         elements.push(fullKey);
       }
-      const miniKey = miniKeyRefs.get(noteNumber);
+      const miniKey = resolveKeyFromMap(miniKeyRefs, miniContainer, noteNumber);
       if (miniKey) {
         elements.push(miniKey);
       }
@@ -555,11 +626,11 @@
 
     function getKeyLanes(noteNumber) {
       const lanes = [];
-      const fullLane = fullLaneRefs.get(noteNumber);
+      const fullLane = resolveLaneFromMap(fullLaneRefs, fullContainer, noteNumber);
       if (fullLane) {
         lanes.push(fullLane);
       }
-      const miniLane = miniLaneRefs.get(noteNumber);
+      const miniLane = resolveLaneFromMap(miniLaneRefs, miniContainer, noteNumber);
       if (miniLane) {
         lanes.push(miniLane);
       }
