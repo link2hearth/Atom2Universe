@@ -552,7 +552,7 @@
           }
         },
         "critAtoms": {
-          "title": "Atomes critiques animés",
+          "title": "Animations",
           "ariaLabel": "Activer ou couper les atomes animés lors des critiques",
           "state": {
             "on": "Avec",
