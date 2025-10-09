@@ -47,7 +47,22 @@
     depth: 3,
     timeLimitMs: 1200,
     moveDelayMs: 150,
-    transpositionSize: 4000
+    transpositionSize: 4000,
+    creativity: Object.freeze({
+      enabled: true,
+      thresholdCentipawns: 80,
+      variabilityCentipawns: 30,
+      candidateCount: 3,
+      excitementBonus: 0.35
+    }),
+    extensions: Object.freeze({
+      captureDepthBonus: 1,
+      checkDepthBonus: 1,
+      tacticalMoveThreshold: 2,
+      maxDepth: 5,
+      timeBonusMs: 450,
+      branchingThreshold: 26
+    })
   });
 
   const DEFAULT_DIFFICULTY_MODES = Object.freeze([
@@ -599,6 +614,108 @@
     );
   }
 
+  function normalizeAiCreativitySettings(raw, fallback) {
+    const base = fallback && typeof fallback === 'object' ? fallback : DEFAULT_AI_SETTINGS.creativity;
+    const result = {
+      enabled: Boolean(base && base.enabled),
+      thresholdCentipawns: Math.max(0, Number(base && base.thresholdCentipawns) || 0),
+      variabilityCentipawns: Math.max(0, Number(base && base.variabilityCentipawns) || 0),
+      candidateCount: Math.max(1, toPositiveInteger(base && base.candidateCount, DEFAULT_AI_SETTINGS.creativity.candidateCount)),
+      excitementBonus: Math.max(0, Number(base && base.excitementBonus) || 0)
+    };
+
+    if (!raw || typeof raw !== 'object') {
+      return result;
+    }
+
+    if (Object.prototype.hasOwnProperty.call(raw, 'enabled')) {
+      result.enabled = Boolean(raw.enabled);
+    }
+
+    if (Object.prototype.hasOwnProperty.call(raw, 'thresholdCentipawns')) {
+      const threshold = Number(raw.thresholdCentipawns);
+      if (Number.isFinite(threshold) && threshold >= 0) {
+        result.thresholdCentipawns = threshold;
+      }
+    }
+
+    if (Object.prototype.hasOwnProperty.call(raw, 'variabilityCentipawns')) {
+      const variability = Number(raw.variabilityCentipawns);
+      if (Number.isFinite(variability) && variability >= 0) {
+        result.variabilityCentipawns = variability;
+      }
+    }
+
+    if (Object.prototype.hasOwnProperty.call(raw, 'candidateCount')) {
+      const candidates = toPositiveInteger(raw.candidateCount, result.candidateCount);
+      result.candidateCount = Math.max(1, candidates);
+    }
+
+    if (Object.prototype.hasOwnProperty.call(raw, 'excitementBonus')) {
+      const excitement = Number(raw.excitementBonus);
+      if (Number.isFinite(excitement) && excitement >= 0) {
+        result.excitementBonus = excitement;
+      }
+    }
+
+    return result;
+  }
+
+  function normalizeAiExtensionSettings(raw, fallback) {
+    const base = fallback && typeof fallback === 'object' ? fallback : DEFAULT_AI_SETTINGS.extensions;
+    const result = {
+      captureDepthBonus: Math.max(0, Number(base && base.captureDepthBonus) || 0),
+      checkDepthBonus: Math.max(0, Number(base && base.checkDepthBonus) || 0),
+      tacticalMoveThreshold: Math.max(1, toPositiveInteger(base && base.tacticalMoveThreshold, DEFAULT_AI_SETTINGS.extensions.tacticalMoveThreshold)),
+      maxDepth: clampDepth((base && base.maxDepth) != null ? base.maxDepth : DEFAULT_AI_SETTINGS.extensions.maxDepth),
+      timeBonusMs: Math.max(0, Number(base && base.timeBonusMs) || 0),
+      branchingThreshold: Math.max(0, Number(base && base.branchingThreshold) || 0)
+    };
+
+    if (!raw || typeof raw !== 'object') {
+      return result;
+    }
+
+    if (Object.prototype.hasOwnProperty.call(raw, 'captureDepthBonus')) {
+      const captureBonus = Number(raw.captureDepthBonus);
+      if (Number.isFinite(captureBonus) && captureBonus >= 0) {
+        result.captureDepthBonus = captureBonus;
+      }
+    }
+
+    if (Object.prototype.hasOwnProperty.call(raw, 'checkDepthBonus')) {
+      const checkBonus = Number(raw.checkDepthBonus);
+      if (Number.isFinite(checkBonus) && checkBonus >= 0) {
+        result.checkDepthBonus = checkBonus;
+      }
+    }
+
+    if (Object.prototype.hasOwnProperty.call(raw, 'tacticalMoveThreshold')) {
+      const tactical = toPositiveInteger(raw.tacticalMoveThreshold, result.tacticalMoveThreshold);
+      result.tacticalMoveThreshold = Math.max(1, tactical);
+    }
+
+    if (Object.prototype.hasOwnProperty.call(raw, 'maxDepth')) {
+      result.maxDepth = clampDepth(raw.maxDepth);
+    }
+
+    if (Object.prototype.hasOwnProperty.call(raw, 'timeBonusMs')) {
+      const bonus = Number(raw.timeBonusMs);
+      if (Number.isFinite(bonus) && bonus >= 0) {
+        result.timeBonusMs = bonus;
+      }
+    }
+
+    if (Object.prototype.hasOwnProperty.call(raw, 'branchingThreshold')) {
+      const branching = Number(raw.branchingThreshold);
+      if (Number.isFinite(branching) && branching >= 0) {
+        result.branchingThreshold = branching;
+      }
+    }
+
+    return result;
+  }
+
   function getConfiguredChessAiSettings(difficultyMode) {
     const arcadeConfig = GLOBAL_CONFIG && GLOBAL_CONFIG.arcade ? GLOBAL_CONFIG.arcade : null;
     const chessConfig = arcadeConfig && arcadeConfig.echecs ? arcadeConfig.echecs : null;
@@ -663,13 +780,32 @@
       if (overrides.moveDelayMs != null) {
         moveDelayMs = toNonNegativeNumber(overrides.moveDelayMs, moveDelayMs);
       }
+      if (overrides.transpositionSize != null) {
+        transpositionSize = clampTranspositionSize(overrides.transpositionSize);
+      }
+    }
+
+    let creativity = normalizeAiCreativitySettings(aiConfig && (aiConfig.creativity || aiConfig.personality), DEFAULT_AI_SETTINGS.creativity);
+    let extensions = normalizeAiExtensionSettings(aiConfig && (aiConfig.searchExtensions || aiConfig.extensions), DEFAULT_AI_SETTINGS.extensions);
+
+    if (difficultyMode && difficultyMode.ai) {
+      const overrides = difficultyMode.ai;
+      if (overrides.creativity) {
+        creativity = normalizeAiCreativitySettings(overrides.creativity, creativity);
+      }
+      if (overrides.searchExtensions || overrides.extensions) {
+        const rawExtensions = overrides.searchExtensions || overrides.extensions;
+        extensions = normalizeAiExtensionSettings(rawExtensions, extensions);
+      }
     }
 
     return {
       depth,
       timeLimitMs,
       moveDelayMs,
-      transpositionSize
+      transpositionSize,
+      creativity: Object.freeze(creativity),
+      extensions: Object.freeze(extensions)
     };
   }
 
@@ -1456,6 +1592,169 @@
     });
   }
 
+  function doesMoveDeliverCheck(state, move) {
+    if (!state || !move) {
+      return false;
+    }
+    const nextState = applyMove(state, move);
+    return isKingInCheck(nextState, nextState.activeColor);
+  }
+
+  function analyzeSearchPressure(state) {
+    const moves = generateLegalMoves(state);
+    let captureCount = 0;
+    let checkingCount = 0;
+    let promotionCount = 0;
+    for (let i = 0; i < moves.length; i += 1) {
+      const move = moves[i];
+      if (!move) {
+        continue;
+      }
+      if (move.isCapture) {
+        captureCount += 1;
+      }
+      if (move.promotion) {
+        promotionCount += 1;
+      }
+      if (doesMoveDeliverCheck(state, move)) {
+        checkingCount += 1;
+      }
+    }
+    return {
+      totalMoves: moves.length,
+      captureCount,
+      checkingCount,
+      promotionCount
+    };
+  }
+
+  function computeExtendedSearchDepth(baseDepth, pressure, extensionSettings) {
+    if (!pressure || !extensionSettings) {
+      return baseDepth;
+    }
+    const maxDepthSetting = extensionSettings.maxDepth != null ? extensionSettings.maxDepth : DEFAULT_AI_SETTINGS.extensions.maxDepth;
+    const maxDepth = clampDepth(maxDepthSetting);
+    let targetDepth = Math.min(maxDepth, clampDepth(baseDepth));
+    const tacticalThreshold = Math.max(1, Number(extensionSettings.tacticalMoveThreshold) || DEFAULT_AI_SETTINGS.extensions.tacticalMoveThreshold);
+    const hasTacticalBurst = pressure.captureCount + pressure.promotionCount >= tacticalThreshold;
+    if (hasTacticalBurst) {
+      targetDepth = Math.min(maxDepth, targetDepth + Math.max(0, Number(extensionSettings.captureDepthBonus) || 0));
+    }
+    if (pressure.checkingCount > 0) {
+      targetDepth = Math.min(maxDepth, targetDepth + Math.max(0, Number(extensionSettings.checkDepthBonus) || 0));
+    }
+    return targetDepth;
+  }
+
+  function computeAdditionalThinkTimeMs(pressure, extensionSettings) {
+    if (!pressure || !extensionSettings) {
+      return 0;
+    }
+    const bonus = Math.max(0, Number(extensionSettings.timeBonusMs) || 0);
+    if (bonus <= 0) {
+      return 0;
+    }
+    const branchingThreshold = Math.max(0, Number(extensionSettings.branchingThreshold) || 0);
+    const hasBranching = branchingThreshold > 0 && pressure.totalMoves >= branchingThreshold;
+    const hasChecks = pressure.checkingCount > 0;
+    const hasCaptures = pressure.captureCount + pressure.promotionCount > 0;
+    return hasBranching || hasChecks || hasCaptures ? bonus : 0;
+  }
+
+  function evaluateMoveExcitement(state, move, creativitySettings) {
+    const excitementBonus = Math.max(0, Number(creativitySettings && creativitySettings.excitementBonus) || 0);
+    let weight = 1;
+    let givesCheck = false;
+    if (move.isCapture) {
+      weight += excitementBonus;
+    }
+    if (move.promotion) {
+      weight += excitementBonus;
+    }
+    if (move.isCastle) {
+      weight += excitementBonus * 0.5;
+    }
+    if (state) {
+      givesCheck = doesMoveDeliverCheck(state, move);
+      if (givesCheck) {
+        weight += excitementBonus;
+      }
+    }
+    return { weight, givesCheck };
+  }
+
+  function selectCreativeRootMove(state, result, creativitySettings) {
+    if (!creativitySettings || !creativitySettings.enabled || !result || !Array.isArray(result.rootScores)) {
+      return null;
+    }
+    if (result.rootScores.length < 2) {
+      return null;
+    }
+    if (Math.abs(result.score) >= MATE_SCORE - 2000) {
+      return null;
+    }
+
+    const threshold = Math.max(0, Number(creativitySettings.thresholdCentipawns) || 0);
+    const variability = Math.max(0, Number(creativitySettings.variabilityCentipawns) || 0);
+    const candidateLimit = Math.max(1, Math.min(result.rootScores.length, toPositiveInteger(creativitySettings.candidateCount, DEFAULT_AI_SETTINGS.creativity.candidateCount)));
+
+    const sorted = result.rootScores
+      .filter(function (entry) {
+        return entry && entry.move && Number.isFinite(entry.score) && !entry.aborted;
+      })
+      .sort(function (a, b) {
+        return b.score - a.score;
+      });
+
+    if (sorted.length < 2) {
+      return null;
+    }
+
+    const bestScore = sorted[0].score;
+    const candidates = [];
+    for (let index = 0; index < sorted.length && candidates.length < candidateLimit; index += 1) {
+      const entry = sorted[index];
+      const diff = bestScore - entry.score;
+      if (diff > threshold) {
+        continue;
+      }
+      const excitement = evaluateMoveExcitement(state, entry.move, creativitySettings);
+      const noise = variability > 0 ? (Math.random() * variability) : 0;
+      const baseWeight = Math.max(0.001, threshold - diff + noise);
+      const totalWeight = baseWeight * Math.max(0.25, excitement.weight);
+      candidates.push({
+        move: entry.move,
+        score: entry.score,
+        weight: totalWeight
+      });
+    }
+
+    if (candidates.length <= 1) {
+      return null;
+    }
+
+    let totalWeight = 0;
+    for (let i = 0; i < candidates.length; i += 1) {
+      totalWeight += candidates[i].weight;
+    }
+
+    if (totalWeight <= 0) {
+      return null;
+    }
+
+    const pick = Math.random() * totalWeight;
+    let accum = 0;
+    for (let i = 0; i < candidates.length; i += 1) {
+      const candidate = candidates[i];
+      accum += candidate.weight;
+      if (accum >= pick) {
+        return candidate;
+      }
+    }
+
+    return candidates[candidates.length - 1];
+  }
+
   function storeTranspositionEntry(context, key, depth, score, flag, move) {
     if (!context || !(context.table instanceof Map)) {
       return;
@@ -1478,6 +1777,10 @@
 
   function negamax(state, depth, alpha, beta, colorSign, context, ply) {
     const alphaOriginal = alpha;
+    const isRoot = ply === 1;
+    if (isRoot && Array.isArray(context.currentRootScores)) {
+      context.currentRootScores.length = 0;
+    }
     if (context.deadline && getCurrentTimeMs() >= context.deadline) {
       return { score: colorSign * evaluateStaticPosition(state), move: null, aborted: true };
     }
@@ -1541,6 +1844,9 @@
         aborted = true;
       }
       const score = -child.score;
+      if (isRoot && Array.isArray(context.currentRootScores)) {
+        context.currentRootScores.push({ move, score, aborted: child.aborted });
+      }
       if (score > bestScore || bestMove == null) {
         bestScore = score;
         bestMove = move;
@@ -1571,24 +1877,31 @@
 
   function findBestAIMove(gameState, aiContext) {
     const settings = aiContext && aiContext.settings ? aiContext.settings : DEFAULT_AI_SETTINGS;
-    const depth = clampDepth(settings.depth);
+    const baseDepth = clampDepth(settings.depth);
     const transpositionLimit = clampTranspositionSize(settings.transpositionSize);
     const searchState = createSearchStateFromGameState(gameState);
-    const deadline = settings.timeLimitMs > 0 ? getCurrentTimeMs() + settings.timeLimitMs : 0;
+    const extensions = settings.extensions || DEFAULT_AI_SETTINGS.extensions;
+    const creativity = settings.creativity || DEFAULT_AI_SETTINGS.creativity;
+    const pressure = analyzeSearchPressure(searchState);
+    const targetDepth = computeExtendedSearchDepth(baseDepth, pressure, extensions);
+    const baseDeadline = settings.timeLimitMs > 0 ? getCurrentTimeMs() + settings.timeLimitMs : 0;
+    const deadline = baseDeadline > 0 ? baseDeadline + computeAdditionalThinkTimeMs(pressure, extensions) : 0;
     const context = {
       table: aiContext && aiContext.table instanceof Map ? aiContext.table : new Map(),
       transpositionLimit,
       deadline,
       killers: [],
-      rootHint: aiContext && aiContext.lastBestMove ? cloneMoveDescriptor(aiContext.lastBestMove) : null
+      rootHint: aiContext && aiContext.lastBestMove ? cloneMoveDescriptor(aiContext.lastBestMove) : null,
+      currentRootScores: []
     };
     if (aiContext && !(aiContext.table instanceof Map)) {
       aiContext.table = context.table;
     }
     const colorSign = searchState.activeColor === WHITE ? 1 : -1;
-    let bestResult = { score: Number.NEGATIVE_INFINITY, move: null, aborted: false, depth: 0 };
+    let bestResult = { score: Number.NEGATIVE_INFINITY, move: null, aborted: false, depth: 0, rootScores: [] };
     let bestDescriptor = context.rootHint;
-    for (let currentDepth = 1; currentDepth <= depth; currentDepth += 1) {
+    for (let currentDepth = 1; currentDepth <= targetDepth; currentDepth += 1) {
+      context.currentRootScores = [];
       const iteration = negamax(
         searchState,
         currentDepth,
@@ -1602,7 +1915,8 @@
         break;
       }
       if (iteration.move) {
-        bestResult = { ...iteration, depth: currentDepth };
+        const rootScores = Array.isArray(context.currentRootScores) ? context.currentRootScores.slice() : [];
+        bestResult = { ...iteration, depth: currentDepth, rootScores };
         bestDescriptor = cloneMoveDescriptor(iteration.move);
         context.rootHint = bestDescriptor;
         if (aiContext) {
@@ -1623,8 +1937,19 @@
     if (!bestDescriptor && bestResult.move) {
       bestDescriptor = cloneMoveDescriptor(bestResult.move);
     }
+    if (bestResult.move) {
+      const creativeChoice = selectCreativeRootMove(searchState, bestResult, creativity);
+      if (creativeChoice && creativeChoice.move) {
+        bestResult.move = creativeChoice.move;
+        bestResult.score = creativeChoice.score;
+        bestDescriptor = cloneMoveDescriptor(creativeChoice.move);
+      }
+    }
     if (aiContext && bestDescriptor) {
       aiContext.lastBestMove = bestDescriptor;
+    }
+    if (bestResult.rootScores) {
+      delete bestResult.rootScores;
     }
     return bestResult;
   }
