@@ -2236,6 +2236,28 @@
               data-i18n="index.sections.options.chiptune.pianoOverride.enabled"
             >Activé</span>
           </div>
+          <div class="option-row option-row--slider">
+            <label
+              for="chiptuneSpeedSlider"
+              id="chiptuneSpeedLabel"
+              data-i18n="index.sections.options.chiptune.labels.speed"
+            >Vitesse de lecture</label>
+            <input
+              type="range"
+              id="chiptuneSpeedSlider"
+              min="50"
+              max="200"
+              step="5"
+              value="100"
+              aria-labelledby="chiptuneSpeedLabel"
+            />
+            <span
+              class="option-value"
+              id="chiptuneSpeedValue"
+              aria-live="polite"
+              data-i18n="index.sections.options.chiptune.labels.speedNormal"
+            >Tempo normal (100%)</span>
+          </div>
           <div class="option-row option-row--toggles option-row--audio">
             <label for="chiptuneEngineAudioToggle" data-i18n="index.sections.options.chiptune.labels.engineAudio">Son du moteur</label>
             <input type="checkbox" id="chiptuneEngineAudioToggle" checked />
@@ -2361,6 +2383,26 @@
                   <option value="4" data-i18n="midi.keyboard.windowOptions.four">4 octaves</option>
                   <option value="5" data-i18n="midi.keyboard.windowOptions.five">5 octaves</option>
                 </select>
+              </label>
+              <label class="midi-keyboard__control midi-keyboard__control--toggle" for="midiKeyboardMiniPreviewToggle">
+                <span class="midi-keyboard__control-label" data-i18n="midi.keyboard.practiceScrollLabel">
+                  Défilement des notes (zone de jeu)
+                </span>
+                <div class="midi-keyboard__toggle">
+                  <input
+                    type="checkbox"
+                    id="midiKeyboardMiniPreviewToggle"
+                    role="switch"
+                    aria-checked="false"
+                    aria-describedby="midiKeyboardMiniPreviewValue"
+                  />
+                  <span
+                    class="midi-keyboard__toggle-value"
+                    id="midiKeyboardMiniPreviewValue"
+                    aria-live="polite"
+                    data-i18n="midi.keyboard.practiceScrollDisabled"
+                  >Défilement désactivé</span>
+                </div>
               </label>
             </div>
           </header>

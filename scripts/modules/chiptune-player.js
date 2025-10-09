@@ -8356,6 +8356,8 @@
       const fullContainer = root.querySelector('#midiKeyboardFull');
       const miniContainer = root.querySelector('#midiKeyboardMini');
       const rangeValue = root.querySelector('#midiKeyboardRangeValue');
+      const practiceScrollToggle = root.querySelector('#midiKeyboardMiniPreviewToggle');
+      const practiceScrollValue = root.querySelector('#midiKeyboardMiniPreviewValue');
 
       if (!layoutSelect || !fullContainer || !miniContainer || !rangeValue) {
         return;
@@ -8381,6 +8383,7 @@
       let miniLaneRefs = new Map();
       const pointerNotes = new Map();
       const keyboardNotes = new Map();
+      let playbackPreviewOnMini = practiceScrollToggle ? Boolean(practiceScrollToggle.checked) : false;
 
       const laneMetrics = new WeakMap();
       const laneObserver = typeof ResizeObserver !== 'undefined'
@@ -8681,6 +8684,62 @@
         };
       }
 
+      function formatPracticeScrollStatus(enabled) {
+        const key = enabled
+          ? 'midi.keyboard.practiceScrollEnabled'
+          : 'midi.keyboard.practiceScrollDisabled';
+        const fallback = enabled ? 'Practice scroll enabled' : 'Practice scroll disabled';
+        const api = getI18n();
+        if (api && typeof api.t === 'function') {
+          return api.t(key, fallback);
+        }
+        return fallback;
+      }
+
+      function updatePracticeScrollDisplay(enabled) {
+        if (!practiceScrollValue) {
+          return;
+        }
+        const key = enabled
+          ? 'midi.keyboard.practiceScrollEnabled'
+          : 'midi.keyboard.practiceScrollDisabled';
+        practiceScrollValue.dataset.i18n = key;
+        practiceScrollValue.textContent = formatPracticeScrollStatus(enabled);
+        const api = getI18n();
+        if (api && typeof api.updateTranslations === 'function') {
+          api.updateTranslations(practiceScrollValue);
+        }
+      }
+
+      function setPracticePreviewEnabled(value, options = {}) {
+        const { syncControl = true, refresh = true } = options;
+        const enabled = Boolean(value);
+        playbackPreviewOnMini = enabled;
+        if (practiceScrollToggle) {
+          if (syncControl) {
+            practiceScrollToggle.checked = enabled;
+          }
+          practiceScrollToggle.setAttribute('aria-checked', enabled ? 'true' : 'false');
+          if (practiceScrollValue) {
+            practiceScrollToggle.setAttribute('aria-describedby', practiceScrollValue.id);
+          }
+        }
+        updatePracticeScrollDisplay(enabled);
+        if (refresh) {
+          refreshPreviewLanes();
+          refreshActiveHighlights();
+        }
+      }
+
+      setPracticePreviewEnabled(playbackPreviewOnMini, { refresh: false });
+
+      const practiceScrollI18n = getI18n();
+      if (practiceScrollI18n && typeof practiceScrollI18n.onLanguageChanged === 'function') {
+        practiceScrollI18n.onLanguageChanged(() => {
+          updatePracticeScrollDisplay(playbackPreviewOnMini);
+        });
+      }
+
       function destroyPreviewBars(entry, options = {}) {
         if (!entry || !Array.isArray(entry.bars)) {
           return;
@@ -8805,7 +8864,9 @@
         }
         destroyPreviewBars(entry, { immediate: true });
         const { full: fullLanes, mini: miniLanes } = getKeyLanes(entry.note);
-        const laneTargets = entry.source === 'manual'
+        const includeMini = entry.source === 'manual'
+          || (playbackPreviewOnMini && entry.source !== 'manual');
+        const laneTargets = includeMini
           ? fullLanes.concat(miniLanes)
           : fullLanes;
         if (!laneTargets.length) {
@@ -8961,8 +9022,10 @@
           });
         }
 
+        const playbackTargets = playbackPreviewOnMini ? fullKeys.concat(miniKeys) : fullKeys;
+
         if (playbackCount > 0) {
-          fullKeys.forEach((element) => {
+          playbackTargets.forEach((element) => {
             if (!element) {
               return;
             }
@@ -8973,7 +9036,7 @@
             }
           });
         } else {
-          fullKeys.forEach((element) => {
+          playbackTargets.forEach((element) => {
             if (!element) {
               return;
             }
@@ -8982,7 +9045,7 @@
           });
         }
 
-        if (manualCount <= 0) {
+        if (manualCount <= 0 && (!playbackPreviewOnMini || playbackCount <= 0)) {
           miniKeys.forEach((element) => {
             if (!element) {
               return;
@@ -9285,6 +9348,12 @@
           syncOctaveSelectFromWindowSize(state.windowSize);
           state.selectionStart = clampSelectionStart(state.selectionStart, state.layout, state.windowSize);
           updateView();
+        });
+      }
+
+      if (practiceScrollToggle) {
+        practiceScrollToggle.addEventListener('change', () => {
+          setPracticePreviewEnabled(practiceScrollToggle.checked);
         });
       }
 
