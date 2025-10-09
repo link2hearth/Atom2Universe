@@ -151,7 +151,7 @@
 }
 
 .shop-item__action-price {
-  font-size: calc(1.1375rem * var(--font-scale-factor, 1));
+  font-size: calc(0.82rem * var(--font-scale-factor, 1));
   opacity: 0.85;
   font-family: var(--font-digits, 'Orbitron', sans-serif);
   font-weight: 600;
