@@ -28,9 +28,14 @@
   gap: 0.35rem;
 }
 
+.option-field label {
+  font-size: calc(0.9rem * var(--font-scale-factor, 1));
+}
+
 .option-field select {
   min-width: 140px;
   align-self: flex-start;
+  font-size: calc(0.95rem * var(--font-scale-factor, 1));
 }
 
 .option-card__toggles {
@@ -50,6 +55,7 @@
 .option-card__header--welcome select {
   margin-left: auto;
   min-width: 120px;
+  font-size: calc(0.9rem * var(--font-scale-factor, 1));
 }
 
 .options-reset {
@@ -271,7 +277,7 @@ body.theme-neon select {
 
 .option-toggle-card__title {
   margin: 0;
-  font-size: 0.92rem;
+  font-size: calc(0.92rem * var(--font-scale-factor, 1));
   font-weight: 600;
   white-space: nowrap;
 }
@@ -289,6 +295,7 @@ body.theme-neon select {
   gap: 0.6rem;
   cursor: pointer;
   font-weight: 600;
+  font-size: calc(0.86rem * var(--font-scale-factor, 1));
 }
 
 .toggle-switch input {

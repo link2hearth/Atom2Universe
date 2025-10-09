@@ -552,7 +552,7 @@
           }
         },
         "critAtoms": {
-          "title": "Critical atom bursts",
+          "title": "Animations",
           "ariaLabel": "Toggle the critical hit atom bursts",
           "state": {
             "on": "On",
