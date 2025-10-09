@@ -13,6 +13,7 @@
         "fusion": "Fusion",
         "info": "Infos",
         "goals": "Objectifs",
+        "midi": "MIDI",
         "bigbang": "Big Bang",
         "options": "Options"
       }
@@ -711,8 +712,8 @@
         },
         "chiptune": {
           "title": "Module Musique Midi",
-          "linkDescription": "Retrouvez le lecteur MIDI et les SoundFonts dans une page dédiée.",
-          "openPage": "Ouvrir la page MIDI",
+          "linkDescription": "Retrouvez le lecteur MIDI directement dans l’interface du jeu.",
+          "openPage": "Ouvrir le module MIDI",
           "labels": {
             "artist": "Artiste",
             "track": "Titre",
