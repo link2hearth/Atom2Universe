@@ -679,6 +679,8 @@
         },
         "chiptune": {
           "title": "Module Musique Midi",
+          "linkDescription": "Retrouvez le lecteur MIDI et les SoundFonts dans une page dédiée.",
+          "openPage": "Ouvrir la page MIDI",
           "labels": {
             "artist": "Artiste",
             "track": "Titre",
@@ -1188,6 +1190,16 @@
           "default": "Lot classique"
         }
       }
+    }
+  },
+  "midi": {
+    "meta": {
+      "title": "Atom to Univers · Module Musique MIDI"
+    },
+    "page": {
+      "nav": "Navigation de la page MIDI",
+      "back": "Retour aux options",
+      "description": "Gérez vos morceaux et vos SoundFonts MIDI dans cet espace dédié."
     }
   },
   "scripts": {

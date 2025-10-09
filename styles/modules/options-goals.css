@@ -22,6 +22,11 @@
   gap: 0.8rem;
 }
 
+.option-card--chiptune-link {
+  border: 1px solid rgba(120, 200, 255, 0.18);
+  box-shadow: 0 16px 36px rgba(90, 200, 255, 0.12);
+}
+
 .option-field {
   display: flex;
   flex-direction: column;
@@ -50,6 +55,21 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.8rem;
+}
+
+.option-card__description {
+  margin: 0;
+  max-width: 56ch;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+body.theme-light .option-card__description {
+  color: rgba(12, 16, 32, 0.75);
+}
+
+body.theme-neon .option-card__description {
+  color: rgba(210, 220, 255, 0.8);
 }
 
 .option-card__header--welcome select {
@@ -170,6 +190,10 @@ body.theme-neon .goal-card__reward {
   align-items: center;
 }
 
+.option-row--midi-link {
+  justify-content: flex-start;
+}
+
 .option-row--font-selectors {
   align-items: stretch;
   width: 100%;
@@ -217,6 +241,53 @@ select:focus-visible {
 
 select:focus-visible {
   outline: none;
+}
+
+.option-link-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.55rem 1.6rem;
+  border-radius: 999px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  background: linear-gradient(135deg, rgba(76, 141, 255, 0.95), rgba(148, 228, 255, 0.98));
+  color: #05070c;
+  box-shadow: 0 14px 28px rgba(30, 80, 160, 0.28);
+  transition: transform var(--transition), box-shadow var(--transition), filter var(--transition);
+}
+
+.option-link-button:hover,
+.option-link-button:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 20px 36px rgba(30, 80, 160, 0.36);
+  filter: brightness(1.05);
+}
+
+.option-link-button:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 3px;
+}
+
+body.theme-light .option-link-button {
+  background: linear-gradient(135deg, rgba(90, 150, 255, 0.95), rgba(180, 230, 255, 0.98));
+  color: #041024;
+  box-shadow: 0 14px 28px rgba(70, 110, 200, 0.22);
+}
+
+body.theme-light .option-link-button:focus-visible {
+  outline-color: rgba(40, 70, 150, 0.65);
+}
+
+body.theme-neon .option-link-button {
+  background: linear-gradient(135deg, rgba(110, 150, 255, 0.9), rgba(140, 240, 255, 0.95));
+  color: #030310;
+  box-shadow: 0 18px 34px rgba(80, 120, 255, 0.28);
+}
+
+body.theme-neon .option-link-button:focus-visible {
+  outline-color: rgba(160, 200, 255, 0.75);
 }
 
 select option {
