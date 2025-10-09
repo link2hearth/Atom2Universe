@@ -3669,7 +3669,7 @@
     return null;
   }
 
-  function applyStoredProgress(state, stored) {
+  function applyStoredProgress(state, stored, ui) {
     if (!stored) {
       return false;
     }
@@ -3710,6 +3710,9 @@
 
     updateLegalMoves(state);
     evaluateGameState(state);
+    if (ui) {
+      hidePromotionDialog(ui);
+    }
     return true;
   }
 
@@ -3753,6 +3756,7 @@
     updateLegalMoves(state);
     evaluateGameState(state);
     clearSelection(state, ui);
+    hidePromotionDialog(ui);
     renderBoard(state, ui);
     renderHistory(state, ui);
     updateStatus(state, ui);
@@ -4127,7 +4131,7 @@
     }
 
     const storedProgress = readStoredProgress();
-    const hasStored = applyStoredProgress(state, storedProgress);
+    const hasStored = applyStoredProgress(state, storedProgress, ui);
 
     applyBoardPreferences(state, ui);
     updateBoardTranslations(section, ui, state);
