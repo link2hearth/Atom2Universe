@@ -219,6 +219,12 @@
             "description": "Uncover every tile without triggering the quantum mines.",
             "cta": "Disarm"
           },
+          "solitaire": {
+            "aria": "Open the Solitaire mini-game",
+            "title": "Solitaire",
+            "description": "Stack the tableau cards to rebuild all four foundations.",
+            "cta": "Play"
+          },
           "blackjack": {
             "aria": "Open the Blackjack mini-game",
             "title": "Blackjack",
@@ -314,6 +320,13 @@
           "revealed": "Cleared cell",
           "mine": "Mine triggered"
         }
+      },
+      "solitaire": {
+        "aria": "Classic Solitaire mini-game",
+        "controls": {
+          "reset": "Restart"
+        },
+        "board": "Solitaire board"
       },
       "blackjack": {
         "aria": "Quantum Blackjack mini-game",

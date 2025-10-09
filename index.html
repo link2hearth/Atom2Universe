@@ -693,6 +693,27 @@
         <button
           type="button"
           class="arcade-hub-card"
+          aria-label="Accéder au mini-jeu Solitaire"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.solitaire.aria"
+          data-page-target="solitaire"
+        >
+          <span
+            class="arcade-hub-card__title"
+            role="heading"
+            aria-level="3"
+            data-i18n="index.sections.arcadeHub.cards.solitaire.title"
+          >Solitaire</span>
+          <p
+            class="arcade-hub-card__description"
+            data-i18n="index.sections.arcadeHub.cards.solitaire.description"
+          >Empilez les cartes du tableau pour reconstituer les quatre fondations.</p>
+          <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.solitaire.cta"
+            >Jouer</span
+          >
+        </button>
+        <button
+          type="button"
+          class="arcade-hub-card"
           aria-label="Ouvrir le mini-jeu Blackjack"
           data-i18n="aria-label:index.sections.arcadeHub.cards.blackjack.aria"
           data-page-target="blackjack"
@@ -1048,6 +1069,35 @@
           data-mine-label="Mine déclenchée"
           data-i18n="aria-label:index.sections.minesweeper.board;data-hidden-label:index.sections.minesweeper.labels.hidden;data-flagged-label:index.sections.minesweeper.labels.flagged;data-revealed-label:index.sections.minesweeper.labels.revealed;data-mine-label:index.sections.minesweeper.labels.mine"
           data-state="ready"
+        ></div>
+      </div>
+    </section>
+
+    <section
+      id="solitaire"
+      class="page page--solitaire"
+      data-page-group="arcade"
+      aria-label="Mini-jeu Solitaire classique"
+      data-i18n="aria-label:index.sections.solitaire.aria"
+      hidden
+    >
+      <div class="solitaire">
+        <div class="solitaire__controls">
+          <button
+            type="button"
+            class="solitaire__button"
+            id="solitaireReset"
+            data-i18n="index.sections.solitaire.controls.reset"
+          >
+            Réinitialiser
+          </button>
+        </div>
+        <div
+          class="solitaire__board"
+          id="solitaireBoard"
+          role="application"
+          aria-label="Plateau du solitaire"
+          data-i18n="aria-label:index.sections.solitaire.board"
         ></div>
       </div>
     </section>
@@ -2288,6 +2338,7 @@
   <script src="scripts/arcade/math.js"></script>
   <script src="scripts/arcade/sudoku.js"></script>
   <script src="scripts/arcade/minesweeper.js"></script>
+  <script src="scripts/arcade/solitaire.js"></script>
   <script src="scripts/arcade/blackjack.js"></script>
   <script src="scripts/arcade/quantum-2048.js"></script>
   <script src="scripts/i18n/embedded-resources.js"></script>
