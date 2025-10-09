@@ -219,6 +219,12 @@
             "description": "Dévoilez toutes les cases sans déclencher les mines quantiques.",
             "cta": "Désarmer"
           },
+          "solitaire": {
+            "aria": "Accéder au mini-jeu Solitaire",
+            "title": "Solitaire",
+            "description": "Empilez les cartes du tableau pour compléter les quatre fondations.",
+            "cta": "Jouer"
+          },
           "blackjack": {
             "aria": "Ouvrir le mini-jeu Blackjack",
             "title": "Blackjack",
@@ -314,6 +320,13 @@
           "revealed": "Case sécurisée",
           "mine": "Mine déclenchée"
         }
+      },
+      "solitaire": {
+        "aria": "Mini-jeu Solitaire classique",
+        "controls": {
+          "reset": "Réinitialiser"
+        },
+        "board": "Plateau du solitaire"
       },
       "blackjack": {
         "aria": "Mini-jeu Blackjack quantique",
