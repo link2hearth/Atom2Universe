@@ -241,6 +241,9 @@
 
     const interactive = Boolean(options.interactive);
     const activeRange = options.activeRange || null;
+    const registerLane = typeof options.onLaneCreated === 'function'
+      ? options.onLaneCreated
+      : null;
 
     container.textContent = '';
     container.classList.toggle('is-interactive', interactive);
@@ -262,20 +265,28 @@
       const whiteKey = createKeyElement(note, 'white', interactive, activeRange);
       const whiteLane = document.createElement('div');
       whiteLane.className = 'midi-key__lane';
+      whiteLane.dataset.note = String(Math.round(note));
       whiteKey.appendChild(whiteLane);
       slot.appendChild(whiteKey);
       keyRefs.set(Math.round(note), whiteKey);
       laneRefs.set(Math.round(note), whiteLane);
+      if (registerLane) {
+        registerLane(whiteLane, { note: Math.round(note) });
+      }
 
       if (note + 1 <= highest && isBlackKey(note + 1)) {
         const blackNote = note + 1;
         const blackKey = createKeyElement(blackNote, 'black', interactive, activeRange);
         const blackLane = document.createElement('div');
         blackLane.className = 'midi-key__lane';
+        blackLane.dataset.note = String(Math.round(blackNote));
         blackKey.appendChild(blackLane);
         slot.appendChild(blackKey);
         keyRefs.set(Math.round(blackNote), blackKey);
         laneRefs.set(Math.round(blackNote), blackLane);
+        if (registerLane) {
+          registerLane(blackLane, { note: Math.round(blackNote) });
+        }
         note += 1;
       }
 
@@ -386,6 +397,99 @@
     const pointerNotes = new Map();
     const keyboardNotes = new Map();
 
+    const laneMetrics = new WeakMap();
+    const laneObserver = typeof ResizeObserver !== 'undefined'
+      ? new ResizeObserver((entries) => {
+        entries.forEach((entry) => {
+          const lane = entry?.target;
+          if (!lane) {
+            return;
+          }
+          const rectHeight = Number.isFinite(entry?.contentRect?.height)
+            ? entry.contentRect.height
+            : null;
+          const measuredHeight = Math.max(
+            0,
+            rectHeight != null
+              ? rectHeight
+              : (lane.clientHeight || lane.offsetHeight || 0)
+          );
+          laneMetrics.set(lane, { height: measuredHeight });
+        });
+        refreshPreviewLanes();
+      })
+      : null;
+    let resizeScheduled = false;
+
+    function measureLaneHeight(lane) {
+      if (!lane) {
+        return 0;
+      }
+      const height = Math.max(0, lane.clientHeight || lane.offsetHeight || 0);
+      laneMetrics.set(lane, { height });
+      return height;
+    }
+
+    function getLaneHeight(lane) {
+      if (!lane) {
+        return 0;
+      }
+      const cached = laneMetrics.get(lane);
+      if (cached && Number.isFinite(cached.height)) {
+        return cached.height;
+      }
+      return measureLaneHeight(lane);
+    }
+
+    function registerLaneObserver(lane) {
+      if (!lane) {
+        return;
+      }
+      measureLaneHeight(lane);
+      if (laneObserver) {
+        try {
+          laneObserver.observe(lane);
+        } catch (error) {
+          console.warn('Unable to observe MIDI keyboard lane', error);
+        }
+      }
+    }
+
+    function unregisterLaneMap(laneMap) {
+      if (!laneMap || typeof laneMap.forEach !== 'function') {
+        return;
+      }
+      laneMap.forEach((lane) => {
+        if (!lane) {
+          return;
+        }
+        if (laneObserver) {
+          try {
+            laneObserver.unobserve(lane);
+          } catch (error) {
+            console.warn('Unable to stop observing MIDI keyboard lane', error);
+          }
+        }
+        laneMetrics.delete(lane);
+      });
+    }
+
+    if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+      window.addEventListener('resize', () => {
+        if (resizeScheduled) {
+          return;
+        }
+        resizeScheduled = true;
+        const schedule = typeof window.requestAnimationFrame === 'function'
+          ? window.requestAnimationFrame
+          : (handler) => window.setTimeout(handler, 16);
+        schedule(() => {
+          resizeScheduled = false;
+          refreshPreviewLanes();
+        });
+      });
+    }
+
     function clampOctaveCount(value) {
       const numeric = Number(value);
       if (!Number.isFinite(numeric)) {
@@ -467,20 +571,117 @@
         return;
       }
       const immediate = options.immediate === true;
-      entry.bars.forEach((bar) => {
-        if (!bar) {
+      entry.bars.forEach((state) => {
+        if (!state || !state.element) {
           return;
         }
+        if (typeof state.cleanup === 'function') {
+          try {
+            state.cleanup();
+          } catch (error) {
+            console.warn('Unable to clean MIDI preview listeners', error);
+          }
+        }
+        const element = state.element;
+        state.cleanup = null;
+        state.element = null;
+        state.lane = null;
+        state.height = null;
+        state.travel = null;
+        state.animationDuration = null;
         if (immediate || typeof window === 'undefined') {
-          bar.remove();
+          element.remove();
           return;
         }
-        bar.classList.add('is-finishing');
+        element.classList.add('is-finishing');
         window.setTimeout(() => {
-          bar.remove();
+          element.remove();
         }, 220);
       });
       entry.bars = [];
+    }
+
+    function computePreviewBarHeight(laneHeight, sustainSeconds) {
+      const duration = Math.max(0.08, Number.isFinite(sustainSeconds) ? sustainSeconds : 0.08);
+      if (laneHeight <= 0) {
+        return Math.max(12, Math.min(140, duration * 60));
+      }
+      const durationRatio = Math.max(0.18, Math.min(0.88, duration / 3.2));
+      return Math.max(10, Math.min(laneHeight * 0.85, laneHeight * (0.24 + durationRatio)));
+    }
+
+    function createPreviewBar(entry, lane, previewDuration) {
+      if (!lane || !entry) {
+        return null;
+      }
+
+      const doc = lane.ownerDocument || document;
+      const bar = doc.createElement('div');
+      bar.className = 'midi-key__preview';
+      bar.dataset.eventId = entry.id;
+
+      const labelText = formatNoteName(entry.note);
+      if (labelText) {
+        bar.dataset.noteLabel = labelText;
+        const label = doc.createElement('span');
+        label.className = 'midi-key__preview-label';
+        label.textContent = labelText;
+        label.setAttribute('aria-hidden', 'true');
+        bar.appendChild(label);
+      } else {
+        bar.removeAttribute('data-note-label');
+      }
+
+      const laneHeight = getLaneHeight(lane);
+      const barHeight = computePreviewBarHeight(laneHeight, entry.sustainSeconds);
+      const travelDistance = laneHeight > 0
+        ? laneHeight
+        : Math.max(barHeight * 2.2, 48);
+
+      bar.style.height = `${barHeight}px`;
+      bar.style.setProperty('--midi-preview-height', `${barHeight}px`);
+      bar.style.setProperty('--midi-preview-travel', `${travelDistance}px`);
+      bar.style.transform = 'translateY(0)';
+
+      lane.appendChild(bar);
+
+      const state = {
+        element: bar,
+        lane,
+        travel: travelDistance,
+        height: barHeight,
+        cleanup: null,
+      };
+
+      if (previewDuration > 0) {
+        const duration = Math.max(0.05, previewDuration);
+        bar.style.setProperty('--midi-preview-duration', `${duration}s`);
+        state.animationDuration = duration;
+        const handleAnimationEnd = () => {
+          bar.classList.remove('is-animating');
+          bar.classList.add('is-landed');
+          bar.style.transform = `translateY(${travelDistance}px)`;
+        };
+        bar.addEventListener('animationend', handleAnimationEnd, { once: true });
+        state.cleanup = () => {
+          bar.removeEventListener('animationend', handleAnimationEnd);
+        };
+        if (typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
+          window.requestAnimationFrame(() => {
+            bar.classList.add('is-active');
+            bar.classList.add('is-animating');
+          });
+        } else {
+          bar.classList.add('is-active');
+          bar.classList.add('is-animating');
+        }
+      } else {
+        bar.classList.add('is-active');
+        bar.classList.add('is-landed');
+        bar.style.transform = `translateY(${travelDistance}px)`;
+      }
+
+      return state;
     }
 
     function buildPreviewBars(entry) {
@@ -490,86 +691,43 @@
       destroyPreviewBars(entry, { immediate: true });
       const lanes = getKeyLanes(entry.note);
       if (!lanes.length) {
+        entry.bars = [];
         return;
       }
 
-      const referenceWindow = entry.previewLead > 0
-        ? entry.previewLead
-        : Math.max(0.35, entry.sustainSeconds || 0.35);
-      const sustainSeconds = Math.max(0.08, entry.sustainSeconds || 0.08);
       const previewDuration = entry.highlightStarted ? 0 : entry.previewLead;
 
-      entry.bars = lanes.map((lane) => {
-        if (!lane) {
-          return null;
-        }
-        const doc = lane.ownerDocument || document;
-        const bar = doc.createElement('div');
-        bar.className = 'midi-key__preview';
-        bar.dataset.eventId = entry.id;
-        if (previewDuration > 0) {
-          bar.style.setProperty('--preview-duration', `${Math.max(0.05, previewDuration)}s`);
-        }
+      entry.bars = lanes
+        .map((lane) => createPreviewBar(entry, lane, previewDuration))
+        .filter(Boolean);
+    }
 
-        const labelText = formatNoteName(entry.note);
-        if (labelText) {
-          bar.dataset.noteLabel = labelText;
-          const label = doc.createElement('span');
-          label.className = 'midi-key__preview-label';
-          label.textContent = labelText;
-          label.setAttribute('aria-hidden', 'true');
-          bar.appendChild(label);
-        } else {
-          bar.removeAttribute('data-note-label');
+    function settlePreviewBar(state) {
+      if (!state || !state.element) {
+        return;
+      }
+      const element = state.element;
+      if (typeof state.cleanup === 'function') {
+        try {
+          state.cleanup();
+        } catch (error) {
+          console.warn('Unable to settle MIDI preview animation', error);
         }
-
-        const laneHeight = lane.clientHeight || lane.offsetHeight || 0;
-        const baseReference = Math.max(0.35, referenceWindow);
-        let height;
-        if (laneHeight > 0) {
-          const ratio = Math.max(0.18, Math.min(1.1, sustainSeconds / baseReference));
-          height = Math.max(6, Math.min(laneHeight * 1.1, laneHeight * ratio));
-        } else {
-          height = Math.max(6, Math.min(160, sustainSeconds * 45));
-        }
-        bar.style.height = `${height}px`;
-
-        lane.appendChild(bar);
-
-        if (laneHeight > 0) {
-          let bottomOffset = 0;
-          const view = doc.defaultView;
-          if (view && typeof view.getComputedStyle === 'function') {
-            const computed = view.getComputedStyle(bar);
-            if (computed) {
-              const parsed = Number.parseFloat(computed.bottom);
-              if (Number.isFinite(parsed)) {
-                bottomOffset = parsed;
-              }
-            }
-          }
-          const travelDistance = Math.max(0, laneHeight - height - bottomOffset);
-          bar.style.setProperty('--preview-travel-distance', `${travelDistance}px`);
-        } else {
-          bar.style.removeProperty('--preview-travel-distance');
-        }
-
-        if (entry.highlightStarted || previewDuration <= 0) {
-          bar.classList.add('is-active');
-          bar.classList.add('is-landed');
-          bar.style.transform = 'translateY(0)';
-        } else if (typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
-          window.requestAnimationFrame(() => {
-            bar.classList.add('is-active');
-            bar.style.transform = 'translateY(0)';
-          });
-        } else {
-          bar.classList.add('is-active');
-          bar.style.transform = 'translateY(0)';
-        }
-
-        return bar;
-      }).filter(Boolean);
+      }
+      state.cleanup = null;
+      state.animationDuration = null;
+      element.classList.add('is-active');
+      element.classList.add('is-landed');
+      element.classList.remove('is-animating');
+      element.style.removeProperty('animation-name');
+      element.style.removeProperty('animation-duration');
+      element.style.removeProperty('animation-delay');
+      element.style.removeProperty('--midi-preview-duration');
+      if (Number.isFinite(state.travel)) {
+        element.style.transform = `translateY(${state.travel}px)`;
+      } else {
+        element.style.transform = 'translateY(0)';
+      }
     }
 
     function refreshPreviewLanes() {
@@ -588,12 +746,8 @@
           buildPreviewBars(entry);
         }
       }
-      entry.bars.forEach((bar) => {
-        if (!bar) {
-          return;
-        }
-        bar.classList.add('is-landed');
-        bar.style.transform = 'translateY(0)';
+      entry.bars.forEach((state) => {
+        settlePreviewBar(state);
       });
       recordNoteStart(entry.note, entry.source);
     }
@@ -857,9 +1011,11 @@
         highestNote: end,
         keyCount: Math.max(1, end - activeRange.start + 1)
       };
+      unregisterLaneMap(miniLaneRefs);
       const result = buildKeyboard(miniContainer, miniLayout, {
         interactive: true,
-        activeRange
+        activeRange,
+        onLaneCreated: registerLaneObserver,
       });
       miniKeyRefs = result.keyRefs || new Map();
       miniLaneRefs = result.laneRefs || new Map();
@@ -874,7 +1030,11 @@
     }
 
     function renderFullKeyboard() {
-      const result = buildKeyboard(fullContainer, state.layout, { interactive: true });
+      unregisterLaneMap(fullLaneRefs);
+      const result = buildKeyboard(fullContainer, state.layout, {
+        interactive: true,
+        onLaneCreated: registerLaneObserver,
+      });
       fullKeyRefs = result.keyRefs || new Map();
       fullLaneRefs = result.laneRefs || new Map();
       updateFullSelectionHighlight();
