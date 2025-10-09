@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  const GLOBAL_CONFIG = typeof globalThis !== 'undefined' ? globalThis.GAME_CONFIG : null;
+
   if (typeof document === 'undefined') {
     return;
   }
@@ -34,6 +36,16 @@
     b: 'bishop',
     n: 'knight'
   });
+
+  const DEFAULT_AI_SETTINGS = Object.freeze({
+    depth: 3,
+    timeLimitMs: 1200,
+    moveDelayMs: 150,
+    transpositionSize: 4000
+  });
+
+  const MIN_AI_DEPTH = 1;
+  const MAX_AI_DEPTH = 5;
 
   const PIECE_TYPES = Object.freeze({
     PAWN: 'p',
@@ -99,6 +111,101 @@
     } else {
       callback();
     }
+  }
+
+  function toPositiveInteger(value, fallback) {
+    const numeric = Number(value);
+    if (!Number.isFinite(numeric) || numeric <= 0) {
+      return fallback;
+    }
+    return Math.floor(numeric);
+  }
+
+  function toNonNegativeNumber(value, fallback) {
+    const numeric = Number(value);
+    if (!Number.isFinite(numeric) || numeric < 0) {
+      return fallback;
+    }
+    return numeric;
+  }
+
+  function clampDepth(value) {
+    const normalized = toPositiveInteger(value, DEFAULT_AI_SETTINGS.depth);
+    return Math.max(MIN_AI_DEPTH, Math.min(MAX_AI_DEPTH, normalized));
+  }
+
+  function clampTranspositionSize(value) {
+    const normalized = toPositiveInteger(value, DEFAULT_AI_SETTINGS.transpositionSize);
+    return Math.max(500, Math.min(20000, normalized));
+  }
+
+  function getConfiguredChessAiSettings() {
+    const arcadeConfig = GLOBAL_CONFIG && GLOBAL_CONFIG.arcade ? GLOBAL_CONFIG.arcade : null;
+    const chessConfig = arcadeConfig && arcadeConfig.echecs ? arcadeConfig.echecs : null;
+    const aiConfig = chessConfig && chessConfig.ai ? chessConfig.ai : null;
+
+    let depth = DEFAULT_AI_SETTINGS.depth;
+    if (aiConfig) {
+      const depthCandidates = [aiConfig.searchDepth, aiConfig.depth, aiConfig.maxDepth];
+      for (let i = 0; i < depthCandidates.length; i += 1) {
+        const candidate = depthCandidates[i];
+        if (candidate != null) {
+          depth = clampDepth(candidate);
+          break;
+        }
+      }
+    }
+
+    let timeLimitMs = DEFAULT_AI_SETTINGS.timeLimitMs;
+    if (aiConfig) {
+      const timeCandidates = [aiConfig.timeLimitMs, aiConfig.timeMs, aiConfig.maxTimeMs];
+      for (let i = 0; i < timeCandidates.length; i += 1) {
+        const candidate = timeCandidates[i];
+        if (candidate != null) {
+          timeLimitMs = toNonNegativeNumber(candidate, DEFAULT_AI_SETTINGS.timeLimitMs);
+          break;
+        }
+      }
+    }
+
+    let moveDelayMs = DEFAULT_AI_SETTINGS.moveDelayMs;
+    if (aiConfig) {
+      const delayCandidates = [aiConfig.moveDelayMs, aiConfig.delayMs];
+      for (let i = 0; i < delayCandidates.length; i += 1) {
+        const candidate = delayCandidates[i];
+        if (candidate != null) {
+          moveDelayMs = toNonNegativeNumber(candidate, DEFAULT_AI_SETTINGS.moveDelayMs);
+          break;
+        }
+      }
+    }
+
+    let transpositionSize = DEFAULT_AI_SETTINGS.transpositionSize;
+    if (aiConfig) {
+      const transpositionCandidates = [aiConfig.transpositionSize, aiConfig.ttSize, aiConfig.hashSize];
+      for (let i = 0; i < transpositionCandidates.length; i += 1) {
+        const candidate = transpositionCandidates[i];
+        if (candidate != null) {
+          transpositionSize = clampTranspositionSize(candidate);
+          break;
+        }
+      }
+    }
+
+    return {
+      depth,
+      timeLimitMs,
+      moveDelayMs,
+      transpositionSize
+    };
+  }
+
+  function createAiContext() {
+    return {
+      settings: getConfiguredChessAiSettings(),
+      table: new Map(),
+      searchId: 0
+    };
   }
 
   function translate(key, fallback, params) {
@@ -192,6 +299,666 @@
       return null;
     }
     return piece[1].toLowerCase();
+  }
+
+  const PIECE_BASE_VALUES = Object.freeze({
+    [PIECE_TYPES.PAWN]: 100,
+    [PIECE_TYPES.KNIGHT]: 320,
+    [PIECE_TYPES.BISHOP]: 330,
+    [PIECE_TYPES.ROOK]: 500,
+    [PIECE_TYPES.QUEEN]: 900,
+    [PIECE_TYPES.KING]: 20000
+  });
+
+  const MATE_SCORE = 100000;
+  const TRANSPOSITION_FLAG_EXACT = 0;
+  const TRANSPOSITION_FLAG_LOWER = 1;
+  const TRANSPOSITION_FLAG_UPPER = 2;
+
+  function analyzeBoardForEvaluation(board) {
+    const analysis = {
+      board,
+      score: 0,
+      whitePawnFiles: new Array(BOARD_SIZE).fill(0),
+      blackPawnFiles: new Array(BOARD_SIZE).fill(0),
+      whitePawnRowsByFile: Array.from({ length: BOARD_SIZE }, function () { return []; }),
+      blackPawnRowsByFile: Array.from({ length: BOARD_SIZE }, function () { return []; }),
+      whitePawns: [],
+      blackPawns: [],
+      whiteRooks: [],
+      blackRooks: [],
+      whiteKing: null,
+      blackKing: null,
+      whiteMinorHome: 0,
+      blackMinorHome: 0,
+      whiteNonPawnMaterial: 0,
+      blackNonPawnMaterial: 0,
+      whiteBishopCount: 0,
+      blackBishopCount: 0
+    };
+
+    for (let row = 0; row < BOARD_SIZE; row += 1) {
+      for (let col = 0; col < BOARD_SIZE; col += 1) {
+        const piece = board[row][col];
+        if (!piece) {
+          continue;
+        }
+        const color = getPieceColor(piece);
+        const type = getPieceType(piece);
+        if (!color || !type) {
+          continue;
+        }
+        const sign = color === WHITE ? 1 : -1;
+        const baseValue = PIECE_BASE_VALUES[type] || 0;
+        analysis.score += sign * baseValue;
+
+        if (type !== PIECE_TYPES.PAWN && type !== PIECE_TYPES.KING) {
+          if (color === WHITE) {
+            analysis.whiteNonPawnMaterial += baseValue;
+          } else {
+            analysis.blackNonPawnMaterial += baseValue;
+          }
+        }
+
+        if (type === PIECE_TYPES.PAWN) {
+          if (color === WHITE) {
+            analysis.whitePawnFiles[col] += 1;
+            analysis.whitePawnRowsByFile[col].push(row);
+            analysis.whitePawns.push({ row, col });
+            const advancement = Math.max(0, 6 - row);
+            analysis.score += sign * advancement * 4;
+          } else {
+            analysis.blackPawnFiles[col] += 1;
+            analysis.blackPawnRowsByFile[col].push(row);
+            analysis.blackPawns.push({ row, col });
+            const advancement = Math.max(0, row - 1);
+            analysis.score += sign * advancement * 4;
+          }
+          const centerDistance = Math.abs(col - 3.5);
+          const centerBonus = Math.max(0, 2 - centerDistance) * 2;
+          analysis.score += sign * centerBonus;
+        } else if (type === PIECE_TYPES.KNIGHT) {
+          const distance = Math.max(Math.abs(row - 3.5), Math.abs(col - 3.5));
+          const centrality = Math.max(0, 3.5 - distance);
+          analysis.score += sign * Math.round(centrality * 12);
+          if (color === WHITE && row === 7 && (col === 1 || col === 6)) {
+            analysis.whiteMinorHome += 1;
+          } else if (color === BLACK && row === 0 && (col === 1 || col === 6)) {
+            analysis.blackMinorHome += 1;
+          }
+        } else if (type === PIECE_TYPES.BISHOP) {
+          const distance = Math.max(Math.abs(row - 3.5), Math.abs(col - 3.5));
+          const centrality = Math.max(0, 3 - distance);
+          analysis.score += sign * Math.round(centrality * 10);
+          if (color === WHITE && row === 7 && (col === 2 || col === 5)) {
+            analysis.whiteMinorHome += 1;
+          } else if (color === BLACK && row === 0 && (col === 2 || col === 5)) {
+            analysis.blackMinorHome += 1;
+          }
+          if (color === WHITE) {
+            analysis.whiteBishopCount += 1;
+          } else {
+            analysis.blackBishopCount += 1;
+          }
+        } else if (type === PIECE_TYPES.ROOK) {
+          const rookInfo = { row, col };
+          if (color === WHITE) {
+            analysis.whiteRooks.push(rookInfo);
+          } else {
+            analysis.blackRooks.push(rookInfo);
+          }
+          const fileDistance = Math.abs(col - 3.5);
+          analysis.score += sign * Math.max(0, 2 - fileDistance) * 4;
+        } else if (type === PIECE_TYPES.QUEEN) {
+          const distance = Math.max(Math.abs(row - 3.5), Math.abs(col - 3.5));
+          const centrality = Math.max(0, 3 - distance);
+          analysis.score += sign * Math.round(centrality * 6);
+        } else if (type === PIECE_TYPES.KING) {
+          if (color === WHITE) {
+            analysis.whiteKing = { row, col };
+          } else {
+            analysis.blackKing = { row, col };
+          }
+        }
+      }
+    }
+
+    return analysis;
+  }
+
+  function evaluatePawnStructureScore(analysis) {
+    let score = 0;
+    for (let file = 0; file < BOARD_SIZE; file += 1) {
+      const whiteCount = analysis.whitePawnFiles[file];
+      const blackCount = analysis.blackPawnFiles[file];
+      if (whiteCount > 1) {
+        score -= (whiteCount - 1) * 18;
+      }
+      if (blackCount > 1) {
+        score += (blackCount - 1) * 18;
+      }
+
+      const whiteIsolated = whiteCount > 0
+        && (file === 0 || analysis.whitePawnFiles[file - 1] === 0)
+        && (file === BOARD_SIZE - 1 || analysis.whitePawnFiles[file + 1] === 0);
+      if (whiteIsolated) {
+        score -= 12;
+      }
+
+      const blackIsolated = blackCount > 0
+        && (file === 0 || analysis.blackPawnFiles[file - 1] === 0)
+        && (file === BOARD_SIZE - 1 || analysis.blackPawnFiles[file + 1] === 0);
+      if (blackIsolated) {
+        score += 12;
+      }
+    }
+
+    for (let i = 0; i < analysis.whitePawns.length; i += 1) {
+      const pawn = analysis.whitePawns[i];
+      if (isWhitePassedPawn(analysis, pawn)) {
+        const advancement = Math.max(0, 6 - pawn.row);
+        score += 20 + advancement * 4;
+      }
+    }
+
+    for (let i = 0; i < analysis.blackPawns.length; i += 1) {
+      const pawn = analysis.blackPawns[i];
+      if (isBlackPassedPawn(analysis, pawn)) {
+        const advancement = Math.max(0, pawn.row - 1);
+        score -= 20 + advancement * 4;
+      }
+    }
+
+    return score;
+  }
+
+  function isWhitePassedPawn(analysis, pawn) {
+    for (let file = pawn.col - 1; file <= pawn.col + 1; file += 1) {
+      if (file < 0 || file >= BOARD_SIZE) {
+        continue;
+      }
+      const opponentRows = analysis.blackPawnRowsByFile[file];
+      for (let index = 0; index < opponentRows.length; index += 1) {
+        if (opponentRows[index] < pawn.row) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  function isBlackPassedPawn(analysis, pawn) {
+    for (let file = pawn.col - 1; file <= pawn.col + 1; file += 1) {
+      if (file < 0 || file >= BOARD_SIZE) {
+        continue;
+      }
+      const opponentRows = analysis.whitePawnRowsByFile[file];
+      for (let index = 0; index < opponentRows.length; index += 1) {
+        if (opponentRows[index] > pawn.row) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  function evaluateDevelopmentScore(analysis) {
+    const penalty = 18;
+    return (-analysis.whiteMinorHome * penalty) + (analysis.blackMinorHome * penalty);
+  }
+
+  function evaluateRookPlacementScore(analysis) {
+    let score = 0;
+    for (let i = 0; i < analysis.whiteRooks.length; i += 1) {
+      const rook = analysis.whiteRooks[i];
+      const file = rook.col;
+      const whiteFilePawns = analysis.whitePawnFiles[file];
+      const blackFilePawns = analysis.blackPawnFiles[file];
+      if (whiteFilePawns === 0) {
+        score += 12;
+        if (blackFilePawns === 0) {
+          score += 6;
+        }
+      }
+      if (rook.row <= 1) {
+        score += 10;
+      }
+    }
+
+    for (let i = 0; i < analysis.blackRooks.length; i += 1) {
+      const rook = analysis.blackRooks[i];
+      const file = rook.col;
+      const blackFilePawns = analysis.blackPawnFiles[file];
+      const whiteFilePawns = analysis.whitePawnFiles[file];
+      if (blackFilePawns === 0) {
+        score -= 12;
+        if (whiteFilePawns === 0) {
+          score -= 6;
+        }
+      }
+      if (rook.row >= BOARD_SIZE - 2) {
+        score -= 10;
+      }
+    }
+
+    return score;
+  }
+
+  function evaluateSingleKingSafety(analysis, state, kingPosition, color, isEndgame) {
+    if (!kingPosition) {
+      return 0;
+    }
+
+    let score = 0;
+    const board = analysis.board;
+    const homeRow = color === WHITE ? BOARD_SIZE - 1 : 0;
+    const direction = color === WHITE ? -1 : 1;
+    const kingFile = kingPosition.col;
+    const kingRow = kingPosition.row;
+
+    if (isEndgame) {
+      const distance = Math.max(Math.abs(kingRow - 3.5), Math.abs(kingFile - 3.5));
+      const centrality = Math.max(0, 3.5 - distance);
+      score += Math.round(centrality * 14);
+      return score;
+    }
+
+    const distanceFromCenter = Math.abs(kingFile - 3.5);
+    if (distanceFromCenter > 1.5) {
+      score += 20;
+    } else if (distanceFromCenter < 1) {
+      score -= 18;
+    }
+
+    if (Math.abs(kingRow - homeRow) > 1) {
+      score -= 14;
+    }
+
+    const castlingRights = state.castling && state.castling[color];
+    if (castlingRights && !castlingRights.king && !castlingRights.queen && kingFile === 4) {
+      score -= 8;
+    }
+
+    let shieldScore = 0;
+    for (let offset = -1; offset <= 1; offset += 1) {
+      const file = kingFile + offset;
+      const frontRow = kingRow + direction;
+      if (!isOnBoard(frontRow, file)) {
+        shieldScore -= 6;
+        continue;
+      }
+      const frontPiece = board[frontRow][file];
+      if (frontPiece && getPieceColor(frontPiece) === color && getPieceType(frontPiece) === PIECE_TYPES.PAWN) {
+        shieldScore += 12;
+        continue;
+      }
+      const secondRow = kingRow + direction * 2;
+      if (isOnBoard(secondRow, file)) {
+        const secondPiece = board[secondRow][file];
+        if (secondPiece && getPieceColor(secondPiece) === color && getPieceType(secondPiece) === PIECE_TYPES.PAWN) {
+          shieldScore += 6;
+        } else {
+          shieldScore -= 8;
+        }
+      } else {
+        shieldScore -= 8;
+      }
+    }
+
+    score += shieldScore;
+    return score;
+  }
+
+  function evaluateKingSafetyScore(analysis, state) {
+    const totalNonPawnMaterial = analysis.whiteNonPawnMaterial + analysis.blackNonPawnMaterial;
+    const isEndgame = totalNonPawnMaterial < 1600;
+    let score = 0;
+    score += evaluateSingleKingSafety(analysis, state, analysis.whiteKing, WHITE, isEndgame);
+    score -= evaluateSingleKingSafety(analysis, state, analysis.blackKing, BLACK, isEndgame);
+    return score;
+  }
+
+  function evaluateStaticPosition(state) {
+    if (!state || !state.board) {
+      return 0;
+    }
+    if (state.halfmoveClock >= 100 || isInsufficientMaterial(state.board)) {
+      return 0;
+    }
+
+    const analysis = analyzeBoardForEvaluation(state.board);
+    let score = analysis.score;
+
+    if (analysis.whiteBishopCount >= 2) {
+      score += 30;
+    }
+    if (analysis.blackBishopCount >= 2) {
+      score -= 30;
+    }
+
+    score += evaluatePawnStructureScore(analysis);
+    score += evaluateDevelopmentScore(analysis);
+    score += evaluateRookPlacementScore(analysis);
+    score += evaluateKingSafetyScore(analysis, state);
+
+    score += state.activeColor === WHITE ? 10 : -10;
+
+    return score;
+  }
+
+  function cloneCastlingRights(castling) {
+    const source = castling && typeof castling === 'object' ? castling : {};
+    const white = source.w && typeof source.w === 'object' ? source.w : {};
+    const black = source.b && typeof source.b === 'object' ? source.b : {};
+    return {
+      w: { king: Boolean(white.king), queen: Boolean(white.queen) },
+      b: { king: Boolean(black.king), queen: Boolean(black.queen) }
+    };
+  }
+
+  function createSearchStateFromGameState(state) {
+    return {
+      board: cloneBoard(state.board),
+      activeColor: state.activeColor,
+      castling: cloneCastlingRights(state.castling),
+      enPassant: state.enPassant ? { row: state.enPassant.row, col: state.enPassant.col } : null,
+      halfmoveClock: Number.isFinite(state.halfmoveClock) ? state.halfmoveClock : 0,
+      fullmove: Number.isFinite(state.fullmove) && state.fullmove > 0 ? state.fullmove : 1
+    };
+  }
+
+  function ensureAiContext(state) {
+    if (!state.ai || typeof state.ai !== 'object') {
+      state.ai = createAiContext();
+      return;
+    }
+    state.ai.settings = getConfiguredChessAiSettings();
+    if (!(state.ai.table instanceof Map)) {
+      state.ai.table = new Map();
+    }
+    if (!Number.isInteger(state.ai.searchId)) {
+      state.ai.searchId = 0;
+    }
+  }
+
+  function getCurrentTimeMs() {
+    if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+      return performance.now();
+    }
+    return Date.now();
+  }
+
+  function moveMatchesDescriptor(move, descriptor) {
+    if (!move || !descriptor) {
+      return false;
+    }
+    if (move.fromRow !== descriptor.fromRow || move.fromCol !== descriptor.fromCol) {
+      return false;
+    }
+    if (move.toRow !== descriptor.toRow || move.toCol !== descriptor.toCol) {
+      return false;
+    }
+    const promotion = move.promotion || null;
+    const descriptorPromotion = descriptor.promotion || null;
+    return promotion === descriptorPromotion;
+  }
+
+  function cloneMoveDescriptor(move) {
+    if (!move) {
+      return null;
+    }
+    return {
+      fromRow: move.fromRow,
+      fromCol: move.fromCol,
+      toRow: move.toRow,
+      toCol: move.toCol,
+      promotion: move.promotion || null
+    };
+  }
+
+  function findMoveFromDescriptor(moves, descriptor) {
+    if (!descriptor || !Array.isArray(moves)) {
+      return null;
+    }
+    for (let i = 0; i < moves.length; i += 1) {
+      const move = moves[i];
+      if (moveMatchesDescriptor(move, descriptor)) {
+        return move;
+      }
+    }
+    return null;
+  }
+
+  function getCapturedPieceValue(state, move) {
+    if (!move || !move.isCapture) {
+      return 0;
+    }
+    const color = getPieceColor(move.piece);
+    if (move.isEnPassant) {
+      const captureRow = move.toRow + (color === WHITE ? 1 : -1);
+      if (captureRow < 0 || captureRow >= BOARD_SIZE) {
+        return 0;
+      }
+      const captured = state.board[captureRow][move.toCol];
+      const type = getPieceType(captured);
+      return PIECE_BASE_VALUES[type] || 0;
+    }
+    const captured = state.board[move.toRow][move.toCol];
+    const type = getPieceType(captured);
+    return PIECE_BASE_VALUES[type] || 0;
+  }
+
+  function getMoveOrderingScore(state, move, preferredDescriptor) {
+    let score = 0;
+    if (preferredDescriptor && moveMatchesDescriptor(move, preferredDescriptor)) {
+      score += 5000;
+    }
+    if (move.isCapture) {
+      const capturedValue = getCapturedPieceValue(state, move);
+      const moverValue = PIECE_BASE_VALUES[getPieceType(move.piece)] || 0;
+      score += 2000 + capturedValue - moverValue;
+    }
+    if (move.promotion) {
+      score += 1500;
+    }
+    if (move.isCastle) {
+      score += 400;
+    }
+    return score;
+  }
+
+  function orderMovesForSearch(state, moves, preferredDescriptor) {
+    const scored = moves.map(function (move) {
+      return { move, score: getMoveOrderingScore(state, move, preferredDescriptor) };
+    });
+    scored.sort(function (a, b) {
+      return b.score - a.score;
+    });
+    return scored.map(function (entry) {
+      return entry.move;
+    });
+  }
+
+  function storeTranspositionEntry(context, key, depth, score, flag, move) {
+    if (!context || !(context.table instanceof Map)) {
+      return;
+    }
+    const limit = Number.isFinite(context.transpositionLimit) ? context.transpositionLimit : DEFAULT_AI_SETTINGS.transpositionSize;
+    if (context.table.size >= limit) {
+      const iterator = context.table.keys();
+      const first = iterator.next();
+      if (!first.done) {
+        context.table.delete(first.value);
+      }
+    }
+    context.table.set(key, {
+      depth,
+      score,
+      flag,
+      bestMove: cloneMoveDescriptor(move)
+    });
+  }
+
+  function negamax(state, depth, alpha, beta, colorSign, context, ply) {
+    const alphaOriginal = alpha;
+    if (context.deadline && getCurrentTimeMs() >= context.deadline) {
+      return { score: colorSign * evaluateStaticPosition(state), move: null, aborted: true };
+    }
+
+    if (depth === 0) {
+      return { score: colorSign * evaluateStaticPosition(state), move: null, aborted: false };
+    }
+
+    if (state.halfmoveClock >= 100 || isInsufficientMaterial(state.board)) {
+      return { score: 0, move: null, aborted: false };
+    }
+
+    const key = getPositionKey(state);
+    const tableEntry = context.table instanceof Map ? context.table.get(key) : null;
+
+    const legalMoves = generateLegalMoves(state);
+
+    if (legalMoves.length === 0) {
+      if (isKingInCheck(state, state.activeColor)) {
+        return { score: -MATE_SCORE + ply, move: null, aborted: false };
+      }
+      return { score: 0, move: null, aborted: false };
+    }
+
+    let preferredDescriptor = null;
+    if (tableEntry) {
+      preferredDescriptor = tableEntry.bestMove;
+      if (tableEntry.depth >= depth) {
+        if (tableEntry.flag === TRANSPOSITION_FLAG_EXACT) {
+          const matched = findMoveFromDescriptor(legalMoves, tableEntry.bestMove);
+          return { score: tableEntry.score, move: matched, aborted: false };
+        }
+        if (tableEntry.flag === TRANSPOSITION_FLAG_LOWER) {
+          alpha = Math.max(alpha, tableEntry.score);
+        } else if (tableEntry.flag === TRANSPOSITION_FLAG_UPPER) {
+          beta = Math.min(beta, tableEntry.score);
+        }
+        if (alpha >= beta) {
+          const matched = findMoveFromDescriptor(legalMoves, tableEntry.bestMove);
+          return { score: tableEntry.score, move: matched, aborted: false };
+        }
+      }
+    }
+
+    const orderedMoves = orderMovesForSearch(state, legalMoves, preferredDescriptor);
+
+    let bestScore = Number.NEGATIVE_INFINITY;
+    let bestMove = null;
+    let aborted = false;
+    let localAlpha = alpha;
+
+    for (let i = 0; i < orderedMoves.length; i += 1) {
+      const move = orderedMoves[i];
+      const nextState = applyMove(state, move);
+      const child = negamax(nextState, depth - 1, -beta, -localAlpha, -colorSign, context, ply + 1);
+      if (child.aborted) {
+        aborted = true;
+      }
+      const score = -child.score;
+      if (score > bestScore || bestMove == null) {
+        bestScore = score;
+        bestMove = move;
+      }
+      if (score > localAlpha) {
+        localAlpha = score;
+      }
+      if (localAlpha >= beta || aborted) {
+        break;
+      }
+    }
+
+    if (!aborted) {
+      let flag = TRANSPOSITION_FLAG_EXACT;
+      if (bestScore <= alphaOriginal) {
+        flag = TRANSPOSITION_FLAG_UPPER;
+      } else if (bestScore >= beta) {
+        flag = TRANSPOSITION_FLAG_LOWER;
+      }
+      storeTranspositionEntry(context, key, depth, bestScore, flag, bestMove);
+    }
+
+    return { score: bestScore, move: bestMove, aborted };
+  }
+
+  function findBestAIMove(gameState, aiContext) {
+    const settings = aiContext && aiContext.settings ? aiContext.settings : DEFAULT_AI_SETTINGS;
+    const depth = clampDepth(settings.depth);
+    const transpositionLimit = clampTranspositionSize(settings.transpositionSize);
+    const searchState = createSearchStateFromGameState(gameState);
+    const deadline = settings.timeLimitMs > 0 ? getCurrentTimeMs() + settings.timeLimitMs : 0;
+    const context = {
+      table: aiContext && aiContext.table instanceof Map ? aiContext.table : new Map(),
+      transpositionLimit,
+      deadline
+    };
+    if (aiContext && !(aiContext.table instanceof Map)) {
+      aiContext.table = context.table;
+    }
+    const colorSign = searchState.activeColor === WHITE ? 1 : -1;
+    const result = negamax(searchState, depth, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, colorSign, context, 1);
+    if (!result.move) {
+      const fallbackMoves = generateLegalMoves(searchState);
+      result.move = fallbackMoves.length ? fallbackMoves[0] : null;
+    }
+    return result;
+  }
+
+  function scheduleAIMove(state, ui) {
+    if (!state || state.isGameOver || state.pendingPromotion || state.activeColor !== BLACK) {
+      return;
+    }
+    ensureAiContext(state);
+    if (state.aiThinking) {
+      return;
+    }
+
+    state.aiThinking = true;
+    state.ai.searchId += 1;
+    const searchId = state.ai.searchId;
+    const settings = state.ai.settings || DEFAULT_AI_SETTINGS;
+    const delay = Number.isFinite(settings.moveDelayMs) && settings.moveDelayMs > 0 ? settings.moveDelayMs : 0;
+
+    showInteractionMessage(
+      state,
+      ui,
+      'index.sections.echecs.helperAiThinking',
+      'The AI is thinking…',
+      null,
+      { duration: 0 }
+    );
+    updateStatus(state, ui);
+
+    const scheduler = typeof window !== 'undefined' && typeof window.setTimeout === 'function'
+      ? window.setTimeout.bind(window)
+      : typeof setTimeout === 'function'
+        ? setTimeout
+        : null;
+
+    const executeSearch = function () {
+      const result = findBestAIMove(state, state.ai);
+      if (searchId !== state.ai.searchId) {
+        return;
+      }
+      state.aiThinking = false;
+      clearHelperMessage(state);
+      updateHelper(state, ui);
+      if (!result.move) {
+        updateStatus(state, ui);
+        return;
+      }
+      makeMove(state, result.move, ui);
+    };
+
+    if (scheduler) {
+      scheduler(executeSearch, delay);
+    } else {
+      executeSearch();
+    }
   }
 
   function createInitialBoard() {
@@ -1059,6 +1826,18 @@
       return;
     }
 
+    if (state.aiThinking) {
+      setStatusText(
+        ui.statusElement,
+        'index.sections.echecs.status.aiThinking',
+        'Black is thinking…'
+      );
+      if (ui.outcomeElement) {
+        ui.outcomeElement.textContent = '';
+      }
+      return;
+    }
+
     if (state.pendingPromotion) {
       setStatusText(
         ui.statusElement,
@@ -1147,6 +1926,13 @@
     const message = state.helperMessage;
     if (message) {
       ui.helperElement.textContent = translate(message.key, message.fallback, message.params);
+      return;
+    }
+    if (state.aiThinking) {
+      ui.helperElement.textContent = translate(
+        'index.sections.echecs.helperAiThinking',
+        'The AI is thinking…'
+      );
       return;
     }
     ui.helperElement.textContent = translate(
@@ -1432,6 +2218,10 @@
       return;
     }
 
+    if (state.aiThinking && state.activeColor === BLACK) {
+      return;
+    }
+
     if (state.suppressClick) {
       state.suppressClick = false;
       return;
@@ -1554,6 +2344,9 @@
 
   function handlePointerDown(state, ui, event, row, col) {
     if (state.isGameOver || state.pendingPromotion) {
+      return;
+    }
+    if (state.aiThinking && state.activeColor === BLACK) {
       return;
     }
     if (event.pointerType === 'mouse' && event.button !== 0) {
@@ -1895,6 +2688,12 @@
     state.helperMessage = null;
     state.helperTimeoutId = null;
     state.suppressClick = false;
+    ensureAiContext(state);
+    state.aiThinking = false;
+
+    if (state.ai) {
+      state.ai.searchId = 0;
+    }
 
     const key = getPositionKey(state);
     state.positionKey = key;
@@ -2025,6 +2824,9 @@
     updateHelper(state, ui);
     applyBoardPreferences(state, ui);
     saveProgress(state);
+    if (!state.isGameOver && state.activeColor === BLACK) {
+      scheduleAIMove(state, ui);
+    }
   }
 
   function updateBoardTranslations(section, ui, state) {
@@ -2099,7 +2901,9 @@
       dragContext: null,
       helperMessage: null,
       helperTimeoutId: null,
-      suppressClick: false
+      suppressClick: false,
+      ai: createAiContext(),
+      aiThinking: false
     };
     const key = getPositionKey(state);
     state.positionKey = key;
@@ -2186,6 +2990,10 @@
       saveProgress(state);
     }
     markSectionReady(section);
+
+    if (!state.isGameOver && state.activeColor === BLACK) {
+      scheduleAIMove(state, ui);
+    }
 
     window.addEventListener('i18n:languagechange', function () {
       updateBoardTranslations(section, ui, state);

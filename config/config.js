@@ -816,6 +816,29 @@ const GAME_CONFIG = {
       dealerHitSoft17: false,
       betOptions: [10, 20, 50, 100]
     },
+    // Paramètres du mini-jeu Échecs.
+    echecs: {
+      ai: {
+        /**
+         * Profondeur de recherche maximale (en demi-coups) utilisée par l'IA noire.
+         * Une valeur plus élevée augmente la force de jeu mais rallonge le temps de calcul.
+         */
+        searchDepth: 3,
+        /**
+         * Budget de temps autorisé pour un coup de l'IA (en millisecondes).
+         * Si 0, aucun plafond n'est appliqué et seule la profondeur limite le calcul.
+         */
+        timeLimitMs: 1200,
+        /**
+         * Délai (ms) ajouté avant le lancement du calcul afin de laisser l'interface se mettre à jour.
+         */
+        moveDelayMs: 150,
+        /**
+         * Nombre maximum d'entrées conservées dans la table de transposition.
+         */
+        transpositionSize: 4000
+      }
+    },
     // Paramètres du mini-jeu Balance (plateforme d'équilibre).
     balance: {
       board: {
