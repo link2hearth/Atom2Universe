@@ -13,6 +13,7 @@
         "fusion": "Fusion",
         "info": "Info",
         "goals": "Goals",
+        "midi": "MIDI",
         "bigbang": "Big Bang",
         "options": "Options"
       }
@@ -711,8 +712,8 @@
         },
         "chiptune": {
           "title": "MIDI Music Module",
-          "linkDescription": "Access the MIDI player and SoundFonts from a dedicated page.",
-          "openPage": "Open the MIDI page",
+          "linkDescription": "Access the MIDI player directly inside the main interface.",
+          "openPage": "Open the MIDI module",
           "labels": {
             "artist": "Artist",
             "track": "Track",
