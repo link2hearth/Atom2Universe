@@ -435,6 +435,10 @@
             "multiValue": "{count} clics · {frenzies} frén."
           }
         },
+        "calculations": {
+          "title": "Calculs de production",
+          "subtitle": "Décomposition des gains automatiques et manuels"
+        },
         "shop": {
           "title": "Bonus boutique",
           "subtitle": "Effets cumulés du magasin"
