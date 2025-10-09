@@ -493,7 +493,9 @@
         return;
       }
 
-      const referenceWindow = entry.previewLead > 0 ? entry.previewLead : Math.max(0.35, entry.sustainSeconds || 0.35);
+      const referenceWindow = entry.previewLead > 0
+        ? entry.previewLead
+        : Math.max(0.35, entry.sustainSeconds || 0.35);
       const sustainSeconds = Math.max(0.08, entry.sustainSeconds || 0.08);
       const previewDuration = entry.highlightStarted ? 0 : entry.previewLead;
 
@@ -521,6 +523,24 @@
         bar.style.height = `${height}px`;
 
         lane.appendChild(bar);
+
+        if (laneHeight > 0) {
+          let bottomOffset = 0;
+          const view = doc.defaultView;
+          if (view && typeof view.getComputedStyle === 'function') {
+            const computed = view.getComputedStyle(bar);
+            if (computed) {
+              const parsed = Number.parseFloat(computed.bottom);
+              if (Number.isFinite(parsed)) {
+                bottomOffset = parsed;
+              }
+            }
+          }
+          const travelDistance = Math.max(0, laneHeight - height - bottomOffset);
+          bar.style.setProperty('--preview-travel-distance', `${travelDistance}px`);
+        } else {
+          bar.style.removeProperty('--preview-travel-distance');
+        }
 
         if (entry.highlightStarted || previewDuration <= 0) {
           bar.classList.add('is-active');
