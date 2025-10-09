@@ -493,7 +493,9 @@
         return;
       }
 
-      const referenceWindow = entry.previewLead > 0 ? entry.previewLead : Math.max(0.35, entry.sustainSeconds || 0.35);
+      const referenceWindow = entry.previewLead > 0
+        ? entry.previewLead
+        : Math.max(0.35, entry.sustainSeconds || 0.35);
       const sustainSeconds = Math.max(0.08, entry.sustainSeconds || 0.08);
       const previewDuration = entry.highlightStarted ? 0 : entry.previewLead;
 
@@ -509,6 +511,18 @@
           bar.style.setProperty('--preview-duration', `${Math.max(0.05, previewDuration)}s`);
         }
 
+        const labelText = formatNoteName(entry.note);
+        if (labelText) {
+          bar.dataset.noteLabel = labelText;
+          const label = doc.createElement('span');
+          label.className = 'midi-key__preview-label';
+          label.textContent = labelText;
+          label.setAttribute('aria-hidden', 'true');
+          bar.appendChild(label);
+        } else {
+          bar.removeAttribute('data-note-label');
+        }
+
         const laneHeight = lane.clientHeight || lane.offsetHeight || 0;
         const baseReference = Math.max(0.35, referenceWindow);
         let height;
@@ -522,21 +536,36 @@
 
         lane.appendChild(bar);
 
+        if (laneHeight > 0) {
+          let bottomOffset = 0;
+          const view = doc.defaultView;
+          if (view && typeof view.getComputedStyle === 'function') {
+            const computed = view.getComputedStyle(bar);
+            if (computed) {
+              const parsed = Number.parseFloat(computed.bottom);
+              if (Number.isFinite(parsed)) {
+                bottomOffset = parsed;
+              }
+            }
+          }
+          const travelDistance = Math.max(0, laneHeight - height - bottomOffset);
+          bar.style.setProperty('--preview-travel-distance', `${travelDistance}px`);
+        } else {
+          bar.style.removeProperty('--preview-travel-distance');
+        }
+
         if (entry.highlightStarted || previewDuration <= 0) {
           bar.classList.add('is-active');
           bar.classList.add('is-landed');
           bar.style.transform = 'translateY(0)';
-          bar.style.backgroundColor = 'var(--midi-preview-color-end)';
         } else if (typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
           window.requestAnimationFrame(() => {
             bar.classList.add('is-active');
             bar.style.transform = 'translateY(0)';
-            bar.style.backgroundColor = 'var(--midi-preview-color-end)';
           });
         } else {
           bar.classList.add('is-active');
           bar.style.transform = 'translateY(0)';
-          bar.style.backgroundColor = 'var(--midi-preview-color-end)';
         }
 
         return bar;
@@ -565,7 +594,6 @@
         }
         bar.classList.add('is-landed');
         bar.style.transform = 'translateY(0)';
-        bar.style.backgroundColor = 'var(--midi-preview-color-end)';
       });
       recordNoteStart(entry.note, entry.source);
     }
