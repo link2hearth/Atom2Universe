@@ -343,11 +343,40 @@
         "helperAiThinking": "L’IA réfléchit à sa réponse…",
         "controls": {
           "coordinates": "Afficher les coordonnées",
-          "history": "Afficher l'historique"
+          "history": "Afficher l'historique",
+          "difficulty": "Choisir la difficulté",
+          "reset": "Réinitialiser la partie",
+          "analyze": "Analyser le dernier coup de l'IA"
         },
         "history": {
           "title": "Historique des coups",
           "empty": "Aucun coup joué pour le moment."
+        },
+        "difficulty": {
+          "training": "Mode entraînement",
+          "trainingDescription": "Recherche raccourcie pour tester librement vos idées.",
+          "standard": "Mode standard",
+          "standardDescription": "Réglage équilibré : l’IA joue vite et solidement.",
+          "expert": "Mode expert",
+          "expertDescription": "Profondeur accrue et temps de calcul prolongé pour un vrai défi.",
+          "reward": "Bonus hors ligne : {duration} à {multiplier}"
+        },
+        "analysis": {
+          "title": "Analyse du dernier coup de l'IA",
+          "empty": "Aucun coup de l'IA à analyser pour l'instant.",
+          "ready": "Cliquez sur « Analyser » pour détailler le dernier coup.",
+          "summary": "Coup {{move}} · évaluation {{score}} ({{advantage}}). {{delta}}{{depth}}.",
+          "advantage": {
+            "white": "avantage blanc",
+            "black": "avantage noir",
+            "balanced": "équilibre"
+          },
+          "delta": {
+            "equal": "aucun changement",
+            "positive": "avantage noir {{value}}",
+            "negative": "avantage blanc {{value}}"
+          },
+          "depth": " · profondeur {{value}}"
         },
         "feedback": {
           "invalidMove": "Ce déplacement n’est pas légal.",
@@ -381,7 +410,8 @@
             "reason": {
               "fiftyMove": "Aucun pion déplacé ni prise depuis 50 coups.",
               "repetition": "La même position est apparue trois fois.",
-              "insufficient": "Le matériel restant ne permet plus le mat."
+              "insufficient": "Le matériel restant ne permet plus le mat.",
+              "moveLimit": "La limite de coups est atteinte."
             }
           }
         },
@@ -1233,6 +1263,21 @@
             "single": "Équilibre parfait ! Ticket Mach3 gagné.",
             "multiple": "Équilibre parfait ! {count} tickets Mach3 gagnés."
           }
+        }
+      },
+      "chess": {
+        "difficulty": {
+          "training": "Mode entraînement",
+          "trainingDescription": "Recherche raccourcie pour tester librement vos idées.",
+          "standard": "Mode standard",
+          "standardDescription": "Réglage équilibré : l’IA joue vite et solidement.",
+          "expert": "Mode expert",
+          "expertDescription": "Profondeur accrue et temps de calcul prolongé pour un vrai défi.",
+          "reward": "Bonus hors ligne : {duration} à {multiplier}"
+        },
+        "reward": {
+          "ready": "Victoire en {difficulty} ! Bonus hors ligne prêt : {duration} à {multiplier}.",
+          "readyGeneric": "Victoire aux échecs ! Bonus hors ligne prêt : {duration} à {multiplier}."
         }
       },
       "math": {

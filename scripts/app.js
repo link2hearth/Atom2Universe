@@ -3444,6 +3444,7 @@ function updateMetauxCreditsUI() {
 
 window.updateMetauxCreditsUI = updateMetauxCreditsUI;
 window.registerSudokuOfflineBonus = registerSudokuOfflineBonus;
+window.registerChessVictoryReward = registerChessVictoryReward;
 
 function updateBrandPortalState(options = {}) {
   const unlocked = isArcadeUnlocked();
@@ -5164,6 +5165,230 @@ function registerSudokuOfflineBonus(options = {}) {
         multiplier: multiplierText
       })
       : null;
+    showToast(message && message !== messageKey ? message : fallback);
+  }
+
+  saveGame();
+  return true;
+}
+
+function resolveChessDifficultyConfig() {
+  const arcadeConfig = GLOBAL_CONFIG && GLOBAL_CONFIG.arcade;
+  if (!arcadeConfig || typeof arcadeConfig !== 'object') {
+    return null;
+  }
+  const chessConfig = arcadeConfig.echecs;
+  if (!chessConfig || typeof chessConfig !== 'object') {
+    return null;
+  }
+  const difficultyConfig = chessConfig.difficulty;
+  if (!difficultyConfig || typeof difficultyConfig !== 'object') {
+    return null;
+  }
+  return difficultyConfig;
+}
+
+function findChessDifficultyConfigMode(id) {
+  const difficultyConfig = resolveChessDifficultyConfig();
+  if (!difficultyConfig) {
+    return null;
+  }
+  const modes = Array.isArray(difficultyConfig.modes) ? difficultyConfig.modes : [];
+  const trimmedId = typeof id === 'string' ? id.trim() : '';
+  if (!trimmedId) {
+    return null;
+  }
+  for (let index = 0; index < modes.length; index += 1) {
+    const mode = modes[index];
+    if (!mode || typeof mode !== 'object') {
+      continue;
+    }
+    if (typeof mode.id === 'string' && mode.id.trim() === trimmedId) {
+      return mode;
+    }
+  }
+  return null;
+}
+
+function translateChessDifficultyLabel(options = {}) {
+  const labelCandidates = [];
+  const fallbackLabels = [];
+  if (options && typeof options === 'object') {
+    if (typeof options.labelKey === 'string') {
+      labelCandidates.push(options.labelKey.trim());
+    }
+    if (typeof options.difficultyLabelKey === 'string') {
+      labelCandidates.push(options.difficultyLabelKey.trim());
+    }
+    if (options.mode && typeof options.mode === 'object') {
+      if (typeof options.mode.labelKey === 'string') {
+        labelCandidates.push(options.mode.labelKey.trim());
+      }
+      if (typeof options.mode.label === 'string' && options.mode.label.trim()) {
+        fallbackLabels.push(options.mode.label.trim());
+      }
+      if (typeof options.mode.fallbackLabel === 'string' && options.mode.fallbackLabel.trim()) {
+        fallbackLabels.push(options.mode.fallbackLabel.trim());
+      }
+    }
+    if (typeof options.label === 'string' && options.label.trim()) {
+      fallbackLabels.push(options.label.trim());
+    }
+    if (typeof options.fallbackLabel === 'string' && options.fallbackLabel.trim()) {
+      fallbackLabels.push(options.fallbackLabel.trim());
+    }
+  }
+
+  const translator = typeof t === 'function' ? t : null;
+  for (let i = 0; i < labelCandidates.length; i += 1) {
+    const key = labelCandidates[i];
+    if (!key) {
+      continue;
+    }
+    if (translator) {
+      try {
+        const translated = translator(key);
+        if (typeof translated === 'string' && translated && translated !== key) {
+          return translated;
+        }
+      } catch (error) {
+        console.warn('Unable to translate chess difficulty label', key, error);
+      }
+    }
+    const api = getI18nApi();
+    const fallbackTranslator = api && typeof api.t === 'function' ? api.t : null;
+    if (fallbackTranslator) {
+      try {
+        const translated = fallbackTranslator(key);
+        if (typeof translated === 'string' && translated && translated !== key) {
+          return translated;
+        }
+      } catch (error) {
+        console.warn('Unable to translate chess difficulty label', key, error);
+      }
+    }
+  }
+
+  for (let i = 0; i < fallbackLabels.length; i += 1) {
+    const label = fallbackLabels[i];
+    if (label) {
+      return label;
+    }
+  }
+
+  return '';
+}
+
+function normalizeChessVictoryReward(raw) {
+  const source = raw && typeof raw === 'object' ? raw : {};
+  const secondsCandidates = [
+    source.offlineSeconds,
+    source.seconds,
+    source.durationSeconds,
+    source.timeSeconds,
+    source.time
+  ];
+  let offlineSeconds = 0;
+  for (let i = 0; i < secondsCandidates.length; i += 1) {
+    const candidate = Number(secondsCandidates[i]);
+    if (Number.isFinite(candidate) && candidate > 0) {
+      offlineSeconds = Math.floor(candidate);
+      break;
+    }
+  }
+
+  const multiplierCandidates = [
+    source.offlineMultiplier,
+    source.multiplier,
+    source.value,
+    source.amount
+  ];
+  let offlineMultiplier = 0;
+  for (let i = 0; i < multiplierCandidates.length; i += 1) {
+    const candidate = Number(multiplierCandidates[i]);
+    if (Number.isFinite(candidate) && candidate > 0) {
+      offlineMultiplier = candidate;
+      break;
+    }
+  }
+
+  if (offlineSeconds <= 0 || offlineMultiplier <= 0) {
+    return null;
+  }
+
+  return {
+    offlineSeconds,
+    offlineMultiplier
+  };
+}
+
+function registerChessVictoryReward(options = {}) {
+  const reward = normalizeChessVictoryReward(options && options.reward);
+  if (!reward) {
+    return false;
+  }
+
+  const bonus = normalizeSudokuOfflineBonusState({
+    multiplier: reward.offlineMultiplier,
+    maxSeconds: reward.offlineSeconds,
+    limitSeconds: 0,
+    grantedAt: Date.now()
+  });
+  if (!bonus) {
+    return false;
+  }
+
+  gameState.sudokuOfflineBonus = bonus;
+
+  const announce = options.announce !== false;
+  if (announce && typeof showToast === 'function') {
+    const durationText = formatSudokuRewardDuration(reward.offlineSeconds);
+    const multiplierText = formatMultiplier(reward.offlineMultiplier);
+    const difficultyId = typeof options.difficultyId === 'string' ? options.difficultyId.trim() : '';
+    const modeFromConfig = difficultyId ? findChessDifficultyConfigMode(difficultyId) : null;
+    const difficultyLabel = translateChessDifficultyLabel({
+      labelKey: options.labelKey,
+      difficultyLabelKey: options.difficultyLabelKey,
+      fallbackLabel: typeof options.fallbackLabel === 'string' ? options.fallbackLabel : '',
+      label: options.label,
+      mode: modeFromConfig
+    });
+    const hasDifficulty = Boolean(difficultyLabel);
+    const messageKey = hasDifficulty
+      ? 'scripts.app.arcade.chess.reward.ready'
+      : 'scripts.app.arcade.chess.reward.readyGeneric';
+    const fallback = hasDifficulty
+      ? `Chess victory (${difficultyLabel}): offline bonus ready (${durationText} at ${multiplierText}).`
+      : `Chess victory: offline bonus ready (${durationText} at ${multiplierText}).`;
+    let message = null;
+    if (typeof t === 'function') {
+      try {
+        message = t(messageKey, {
+          difficulty: difficultyLabel,
+          duration: durationText,
+          multiplier: multiplierText
+        });
+      } catch (error) {
+        console.warn('Unable to translate chess reward toast', error);
+      }
+    }
+    if (!message || typeof message !== 'string' || !message.trim() || message === messageKey) {
+      const api = getI18nApi();
+      if (api && typeof api.t === 'function') {
+        try {
+          const translated = api.t(messageKey, {
+            difficulty: difficultyLabel,
+            duration: durationText,
+            multiplier: multiplierText
+          });
+          if (translated && typeof translated === 'string' && translated.trim() && translated !== messageKey) {
+            message = translated;
+          }
+        } catch (error) {
+          console.warn('Unable to translate chess reward toast', error);
+        }
+      }
+    }
     showToast(message && message !== messageKey ? message : fallback);
   }
 
