@@ -7,8 +7,7 @@ Ce plan décrit les étapes pour ajouter un mini-jeu d'échecs jouable dans Atom
 - **Créer les fichiers dédiés** :
   - `scripts/arcade/echecs.js` pour la logique du plateau, l'orchestration du tour par tour et l'interface.
   - `styles/arcade/echecs.css` pour la mise en forme.
-  - Actifs supplémentaires (sprites des pièces, sons) dans `Assets/Arcade/Chess/`.
-- **Configurer les ressources** : renseigner les clés de traduction (FR/EN) et, si nécessaire, ajouter un bloc de configuration dans `config/config.js` pour les récompenses du mini-jeu.
+- **Configurer les ressources** : renseigner les clés de traduction (FR/EN).
 
 ## Étape 2 — Moteur d'échecs côté client
 - **Modèle de données** : représenter l'échiquier en matrice 8×8 et structurer les pièces via des objets ou constantes symboliques.
@@ -17,8 +16,8 @@ Ce plan décrit les étapes pour ajouter un mini-jeu d'échecs jouable dans Atom
 - **Interface utilisateur** : générer la grille HTML, gérer la sélection des pièces, les indications de coups valides et les messages d'état i18n.
 
 ## Étape 3 — Boucle de jeu et intégration UI/UX
-- **Interaction joueur** : permettre le glisser-déposer ou le clic-clic pour les mouvements, avec validations et messages d'erreur.
-- **État de partie** : sauvegarder l'avancement dans la structure centrale (similaire aux autres mini-jeux) et relier les récompenses en cas de victoire ou de match nul.
+- **Interaction joueur** : permettre le glisser-déposer et le clic-clic pour les mouvements (adapté au tactile et a la souris), avec validations et messages d'erreur.
+- **État de partie** : sauvegarder l'avancement dans la structure centrale (similaire aux autres mini-jeux).
 - **Accessibilité** : ajouter une option d'affichage des coordonnées et des coups joués (liste de notation algébrique basique).
 - **Tests manuels** : vérifier toutes les règles côté joueur sur différents scénarios (roques, promotions, pat…).
 
@@ -40,7 +39,7 @@ Ce plan décrit les étapes pour ajouter un mini-jeu d'échecs jouable dans Atom
 ## Étape 6 — Finitions et QA
 - **Interface** : ajouter des animations légères, possibilité de réinitialiser la partie et d'analyser le dernier coup de l'IA.
 - **Equilibrage** : ajuster les récompenses en fonction de la difficulté et valider que les parties se terminent dans un temps raisonnable.
-- **Sauvegarde** : décider si la progression du mini-jeu doit être persistée entre les sessions (localStorage) et implémenter si nécessaire.
+- **Sauvegarde** : décider si la progression du mini-jeu doit être persistée entre les sessions (localStorage) et implémenter si nécessaire. (oui, validé)
 - **Documentation** : mettre à jour `ReadMe.md` (section mini-jeux) une fois le mini-jeu jouable et décrire la commande de lancement.
 
 Ce plan peut être itéré en plusieurs PR : commencer par les étapes 1–3 pour poser le plateau, puis créer des itérations supplémentaires pour les étapes 4 et 5 afin d'enrichir l'IA.
