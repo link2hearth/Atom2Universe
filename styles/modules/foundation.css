@@ -1,6 +1,7 @@
 :root {
   color-scheme: dark light;
   --font-text: 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-display: 'Audiowide', 'Orbitron', sans-serif;
   --font-text-base-size: 1rem;
   --font-scale-factor: 1;
   --ui-control-scale: var(--font-scale-factor, 1);
@@ -129,6 +130,18 @@ body.theme-aurora.view-arcade-hub {
 
 body.view-sudoku {
   background: radial-gradient(140% 160% at 50% 0%, #1a1e48 0%, #070918 55%, #01020a 100%);
+}
+
+body.theme-light.view-sudoku {
+  background: radial-gradient(140% 160% at 50% 0%, #f7f9ff 0%, #dde6ff 55%, #cbd8ff 100%);
+}
+
+body.theme-neon.view-sudoku {
+  background: radial-gradient(140% 160% at 50% 0%, #201a60 0%, #0d1036 55%, #04051a 100%);
+}
+
+body.theme-aurora.view-sudoku {
+  background: radial-gradient(140% 160% at 50% 0%, #0b4834 0%, #052a1c 55%, #02140c 100%);
 }
 
 body.theme-light .app-header {
