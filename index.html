@@ -725,6 +725,27 @@
         <button
           type="button"
           class="arcade-hub-card"
+          aria-label="Accéder au mini-jeu Jeu de la vie"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.gameOfLife.aria"
+          data-page-target="gameOfLife"
+        >
+          <span
+            class="arcade-hub-card__title"
+            role="heading"
+            aria-level="3"
+            data-i18n="index.sections.arcadeHub.cards.gameOfLife.title"
+          >Jeu de la vie</span>
+          <p
+            class="arcade-hub-card__description"
+            data-i18n="index.sections.arcadeHub.cards.gameOfLife.description"
+          >Faites évoluer des cellules sur une grille infinie et orchestrez vos motifs préférés.</p>
+          <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.gameOfLife.cta"
+            >Explorer</span
+          >
+        </button>
+        <button
+          type="button"
+          class="arcade-hub-card"
           aria-label="Ouvrir le mini-jeu Blackjack"
           data-i18n="aria-label:index.sections.arcadeHub.cards.blackjack.aria"
           data-page-target="blackjack"
@@ -949,6 +970,217 @@
           data-i18n="index.sections.math.next"
           disabled
         >Nouvelle opération</button>
+      </div>
+    </section>
+
+    <section
+      id="gameOfLife"
+      class="page page--game-of-life"
+      data-page-group="arcade"
+      aria-label="Mini-jeu Jeu de la vie de Conway"
+      data-i18n="aria-label:index.sections.gameOfLife.aria"
+      hidden
+    >
+      <div class="game-of-life__header">
+        <div>
+          <h2 class="game-of-life__title" data-i18n="index.sections.gameOfLife.title">Jeu de la vie</h2>
+          <p class="game-of-life__subtitle" data-i18n="index.sections.gameOfLife.subtitle">
+            Faites éclore vos motifs préférés sur une grille infinie et composez votre propre univers cellulaire.
+          </p>
+        </div>
+        <button
+          type="button"
+          class="game-of-life__button game-of-life__button--secondary"
+          id="gameOfLifeBackButton"
+          data-i18n="index.sections.gameOfLife.backToHub"
+        >Retourner au hub</button>
+      </div>
+      <div class="game-of-life__layout">
+        <div class="game-of-life__stage">
+          <canvas
+            id="gameOfLifeCanvas"
+            class="game-of-life__canvas"
+            role="img"
+            aria-label="Grille du Jeu de la vie"
+            data-i18n="aria-label:index.sections.gameOfLife.canvas"
+          ></canvas>
+          <div
+            class="game-of-life__toolbar"
+            role="group"
+            aria-label="Commandes de la simulation"
+            data-i18n="aria-label:index.sections.gameOfLife.toolbar"
+          >
+            <div class="game-of-life__toolbar-group">
+              <button
+                type="button"
+                class="game-of-life__button"
+                id="gameOfLifePlayPauseButton"
+                aria-pressed="false"
+                data-state="pause"
+                data-i18n="index.sections.gameOfLife.controls.play"
+              >Lecture</button>
+              <button
+                type="button"
+                class="game-of-life__button game-of-life__button--secondary"
+                id="gameOfLifeStepButton"
+                data-i18n="index.sections.gameOfLife.controls.step"
+              >Pas-à-pas</button>
+              <button
+                type="button"
+                class="game-of-life__button game-of-life__button--secondary"
+                id="gameOfLifeRewindButton"
+                data-i18n="index.sections.gameOfLife.controls.rewind"
+              >Retour</button>
+              <button
+                type="button"
+                class="game-of-life__button game-of-life__button--secondary"
+                id="gameOfLifeFastForwardButton"
+                aria-pressed="false"
+                data-i18n="index.sections.gameOfLife.controls.fastForward"
+              >Avance rapide</button>
+              <button
+                type="button"
+                class="game-of-life__button game-of-life__button--secondary"
+                id="gameOfLifeClearButton"
+                data-i18n="index.sections.gameOfLife.controls.clear"
+              >Réinitialiser</button>
+            </div>
+            <div class="game-of-life__toolbar-group" role="group">
+              <label class="game-of-life__label" for="gameOfLifeSpeedSlider" data-i18n="index.sections.gameOfLife.controls.speed">
+                Vitesse
+              </label>
+              <input
+                type="range"
+                min="50"
+                max="600"
+                step="10"
+                value="200"
+                id="gameOfLifeSpeedSlider"
+                class="game-of-life__slider"
+                aria-label="Régler la vitesse de simulation"
+                data-i18n="aria-label:index.sections.gameOfLife.controls.speedSlider"
+              />
+            </div>
+            <div class="game-of-life__toolbar-group" role="group">
+              <label class="game-of-life__label" for="gameOfLifeZoomSlider" data-i18n="index.sections.gameOfLife.controls.zoom">
+                Zoom
+              </label>
+              <input
+                type="range"
+                min="6"
+                max="64"
+                step="1"
+                value="22"
+                id="gameOfLifeZoomSlider"
+                class="game-of-life__slider"
+                aria-label="Régler le niveau de zoom"
+                data-i18n="aria-label:index.sections.gameOfLife.controls.zoomSlider"
+              />
+            </div>
+            <dl class="game-of-life__status">
+              <div>
+                <dt data-i18n="index.sections.gameOfLife.status.generation">Génération</dt>
+                <dd id="gameOfLifeGenerationValue">0</dd>
+              </div>
+              <div>
+                <dt data-i18n="index.sections.gameOfLife.status.population">Population</dt>
+                <dd id="gameOfLifePopulationValue">0</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+        <aside class="game-of-life__sidebar">
+          <section class="game-of-life__panel" aria-labelledby="gameOfLifePatternsTitle">
+            <h3 class="game-of-life__panel-title" id="gameOfLifePatternsTitle" data-i18n="index.sections.gameOfLife.patterns.title">
+              Motifs emblématiques
+            </h3>
+            <div class="game-of-life__pattern-list" id="gameOfLifePatternList" role="list"></div>
+            <p class="game-of-life__empty-state" id="gameOfLifePatternEmpty" hidden data-i18n="index.sections.gameOfLife.patterns.empty">
+              Les motifs seront chargés automatiquement.
+            </p>
+          </section>
+          <section class="game-of-life__panel" aria-labelledby="gameOfLifeRandomTitle">
+            <h3 class="game-of-life__panel-title" id="gameOfLifeRandomTitle" data-i18n="index.sections.gameOfLife.random.title">
+              Génération aléatoire
+            </h3>
+            <form class="game-of-life__random-form" id="gameOfLifeRandomForm">
+              <div class="game-of-life__field">
+                <label class="game-of-life__label" for="gameOfLifeRandomWidth" data-i18n="index.sections.gameOfLife.random.width">
+                  Largeur (cases)
+                </label>
+                <input
+                  type="number"
+                  id="gameOfLifeRandomWidth"
+                  class="game-of-life__input"
+                  min="5"
+                  max="200"
+                  value="40"
+                />
+              </div>
+              <div class="game-of-life__field">
+                <label class="game-of-life__label" for="gameOfLifeRandomHeight" data-i18n="index.sections.gameOfLife.random.height">
+                  Hauteur (cases)
+                </label>
+                <input
+                  type="number"
+                  id="gameOfLifeRandomHeight"
+                  class="game-of-life__input"
+                  min="5"
+                  max="200"
+                  value="24"
+                />
+              </div>
+              <div class="game-of-life__field">
+                <label class="game-of-life__label" for="gameOfLifeRandomDensity" data-i18n="index.sections.gameOfLife.random.density">
+                  Densité vivante
+                </label>
+                <input
+                  type="range"
+                  id="gameOfLifeRandomDensity"
+                  class="game-of-life__slider"
+                  min="0"
+                  max="100"
+                  step="1"
+                  value="25"
+                  aria-label="Régler la densité vivante"
+                  data-i18n="aria-label:index.sections.gameOfLife.random.densitySlider"
+                />
+                <div class="game-of-life__pattern-meta">
+                  <span class="game-of-life__badge" id="gameOfLifeRandomDensityValue">25%</span>
+                </div>
+              </div>
+              <div class="game-of-life__actions">
+                <button
+                  type="button"
+                  class="game-of-life__button"
+                  id="gameOfLifeRandomReplace"
+                  data-i18n="index.sections.gameOfLife.random.replace"
+                >Remplacer</button>
+                <button
+                  type="button"
+                  class="game-of-life__button game-of-life__button--secondary"
+                  id="gameOfLifeRandomAdd"
+                  data-i18n="index.sections.gameOfLife.random.add"
+                >Ajouter</button>
+              </div>
+              <p class="game-of-life__hint" data-i18n="index.sections.gameOfLife.random.hint">
+                Le générateur utilise une graine mémorisée pour reproduire vos galaxies vivantes.
+              </p>
+            </form>
+          </section>
+          <section class="game-of-life__panel" aria-labelledby="gameOfLifeHelpTitle">
+            <h3 class="game-of-life__panel-title" id="gameOfLifeHelpTitle" data-i18n="index.sections.gameOfLife.help.title">
+              Commandes rapides
+            </h3>
+            <ul class="game-of-life__pattern-list" id="gameOfLifeHelpList">
+              <li data-i18n="index.sections.gameOfLife.help.draw">Clique gauche : activer/désactiver une cellule.</li>
+              <li data-i18n="index.sections.gameOfLife.help.drag">Clique gauche maintenu : dessiner ou effacer une zone.</li>
+              <li data-i18n="index.sections.gameOfLife.help.pan">Maintenez espace ou clic droit pour déplacer la caméra.</li>
+              <li data-i18n="index.sections.gameOfLife.help.zoom">Molette ou pincement : zoomer et dézoomer autour du pointeur.</li>
+              <li data-i18n="index.sections.gameOfLife.help.shortcut">Barre espace : lecture/pause · R : réinitialiser · Z : retour.</li>
+            </ul>
+          </section>
+        </aside>
       </div>
     </section>
 
@@ -2757,6 +2989,7 @@
   <script src="scripts/arcade/solitaire.js"></script>
   <script src="scripts/arcade/blackjack.js"></script>
   <script src="scripts/arcade/echecs.js"></script>
+  <script src="scripts/arcade/game-of-life.js"></script>
   <script src="scripts/arcade/quantum-2048.js"></script>
   <script src="scripts/i18n/embedded-resources.js"></script>
   <script src="scripts/modules/i18n.js"></script>

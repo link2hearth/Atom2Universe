@@ -233,12 +233,72 @@
             "description": "Affrontez une IA sur un échiquier quantique pensé pour les stratèges en herbe.",
             "cta": "Planifier"
           },
+          "gameOfLife": {
+            "aria": "Accéder au mini-jeu Jeu de la vie",
+            "title": "Jeu de la vie",
+            "description": "Faites évoluer des cellules sur une grille infinie et orchestrez vos motifs préférés.",
+            "cta": "Explorer"
+          },
           "blackjack": {
             "aria": "Ouvrir le mini-jeu Blackjack",
             "title": "Blackjack",
             "description": "Affrontez le croupier avec un sabot de huit paquets qui se régénère dès qu’une carte unique s’épuise.",
             "cta": "Distribuer"
           }
+        }
+      },
+      "gameOfLife": {
+        "aria": "Mini-jeu Jeu de la vie de Conway",
+        "title": "Jeu de la vie",
+        "subtitle": "Dessinez, zoomez et contrôlez la simulation pour révéler des structures quantiques fascinantes.",
+        "backToHub": "Retourner au hub",
+        "canvas": "Grille du Jeu de la vie",
+        "toolbar": "Commandes de la simulation",
+        "controls": {
+          "play": "Lecture",
+          "pause": "Pause",
+          "step": "Pas-à-pas",
+          "rewind": "Retour",
+          "fastForward": "Avance rapide",
+          "clear": "Réinitialiser",
+          "speed": "Vitesse",
+          "zoom": "Zoom",
+          "speedSlider": "Régler la vitesse de simulation",
+          "zoomSlider": "Régler le niveau de zoom"
+        },
+        "status": {
+          "generation": "Génération",
+          "population": "Population"
+        },
+        "patterns": {
+          "title": "Motifs emblématiques",
+          "empty": "Les motifs seront chargés automatiquement.",
+          "glider": "Planeur",
+          "gliderDescription": "Un motif minimaliste qui voyage en diagonale à l’infini.",
+          "lightweightSpaceship": "Vaisseau léger",
+          "lightweightSpaceshipDescription": "Un vaisseau rapide idéal pour transporter des signaux.",
+          "pulsar": "Pulsar",
+          "pulsarDescription": "Un oscillateur majestueux de période 3.",
+          "gosperGliderGun": "Canon à planeurs",
+          "gosperGliderGunDescription": "Le premier canon infini, émettant des planeurs à intervalles réguliers."
+        },
+        "random": {
+          "title": "Génération aléatoire",
+          "width": "Largeur (cases)",
+          "height": "Hauteur (cases)",
+          "density": "Densité vivante",
+          "densitySlider": "Régler la densité vivante",
+          "replace": "Remplacer",
+          "add": "Ajouter",
+          "hint": "Le générateur utilise une graine mémorisée pour reproduire vos galaxies vivantes."
+        },
+        "help": {
+          "title": "Commandes rapides",
+          "draw": "Clique gauche : activer/désactiver une cellule.",
+          "drag": "Clique gauche maintenu : dessiner ou effacer une zone.",
+          "pan": "Maintenez espace ou clic droit pour déplacer la caméra.",
+          "zoom": "Molette ou pincement : zoomer et dézoomer autour du pointeur.",
+          "shortcut": "Barre espace : lecture/pause · R : réinitialiser · Z : retour."
         }
       },
       "math": {
