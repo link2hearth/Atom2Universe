@@ -2554,6 +2554,7 @@ function initParticulesGame() {
     particleLayer: elements.arcadeParticleLayer,
     overlay: elements.arcadeOverlay,
     overlayButton: elements.arcadeOverlayButton,
+    overlaySecondaryButton: elements.arcadeOverlayQuitButton,
     overlayMessage: elements.arcadeOverlayMessage,
     levelLabel: elements.arcadeLevelValue,
     livesLabel: elements.arcadeLivesValue,

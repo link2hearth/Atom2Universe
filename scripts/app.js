@@ -2615,6 +2615,7 @@ const elements = {
   arcadeOverlay: document.getElementById('arcadeOverlay'),
   arcadeOverlayMessage: document.getElementById('arcadeOverlayMessage'),
   arcadeOverlayButton: document.getElementById('arcadeOverlayButton'),
+  arcadeOverlayQuitButton: document.getElementById('arcadeOverlayQuitButton'),
   arcadeModeField: document.getElementById('arcadeModeField'),
   arcadeModeSwitch: document.getElementById('arcadeModeSwitch'),
   arcadeModeHint: document.getElementById('arcadeModeHint'),

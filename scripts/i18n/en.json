@@ -164,7 +164,8 @@
             "label": "Brick appearance",
             "aria": "Choose the brick appearance for Particles."
           },
-          "button": "Start"
+          "button": "Start",
+          "quit": "Quit"
         }
       },
       "arcadeHub": {
@@ -2133,6 +2134,7 @@
         "levelCleared": {
           "template": "Level {level} cleared!{reward}",
           "button": "Continue",
+          "quitButton": "Quit",
           "reward": " {reward} obtained!",
           "noReward": " No tickets this time.",
           "speedBonus": " Speed bonus: +{bonus}!"

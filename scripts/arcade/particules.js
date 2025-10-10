@@ -1087,6 +1087,10 @@
         uiLevelClearedConfig.buttonLabel,
         translate('scripts.particules.ui.levelCleared.button')
       ),
+      quitButtonLabel: readString(
+        uiLevelClearedConfig.quitButtonLabel,
+        translate('scripts.particules.ui.levelCleared.quitButton')
+      ),
       rewardTemplate: readString(
         uiLevelClearedConfig.rewardTemplate,
         translate('scripts.particules.ui.levelCleared.reward')
@@ -1260,6 +1264,7 @@
   const PAUSE_OVERLAY_BUTTON = SETTINGS.ui.pause.buttonLabel;
   const LEVEL_CLEARED_TEMPLATE = SETTINGS.ui.levelCleared.template;
   const LEVEL_CLEARED_BUTTON = SETTINGS.ui.levelCleared.buttonLabel;
+  const LEVEL_CLEARED_QUIT_BUTTON = SETTINGS.ui.levelCleared.quitButtonLabel;
   const LEVEL_CLEARED_REWARD_TEMPLATE = SETTINGS.ui.levelCleared.rewardTemplate;
   const LEVEL_CLEARED_SPEED_BONUS_TEMPLATE = SETTINGS.ui.levelCleared.speedBonusTemplate;
   const LEVEL_CLEARED_NO_REWARD_TEMPLATE = SETTINGS.ui.levelCleared.noReward;
@@ -1457,6 +1462,7 @@
         canvas,
         overlay,
         overlayButton,
+        overlaySecondaryButton,
         overlayMessage,
         particleLayer,
         levelLabel,
@@ -1481,6 +1487,15 @@
       this.overlayButton = overlayButton;
       this.overlayMessage = overlayMessage;
       const hasHTMLElement = typeof HTMLElement !== 'undefined';
+      this.overlaySecondaryButton = hasHTMLElement && overlaySecondaryButton instanceof HTMLElement
+        ? overlaySecondaryButton
+        : null;
+      this.overlaySecondaryAction = null;
+      if (this.overlaySecondaryButton) {
+        this.overlaySecondaryButton.hidden = true;
+        this.overlaySecondaryButton.setAttribute('aria-hidden', 'true');
+        this.overlaySecondaryButton.disabled = true;
+      }
       this.particleLayer = hasHTMLElement && particleLayer instanceof HTMLElement ? particleLayer : null;
       this.comboLabel = comboLabel;
       this.stage = hasHTMLElement && canvas instanceof HTMLElement
@@ -1606,6 +1621,7 @@
       this.handlePointerMove = this.handlePointerMove.bind(this);
       this.handlePointerUp = this.handlePointerUp.bind(this);
       this.handleOverlayButtonClick = this.handleOverlayButtonClick.bind(this);
+      this.handleOverlaySecondaryButtonClick = this.handleOverlaySecondaryButtonClick.bind(this);
       this.handleResize = this.handleResize.bind(this);
       this.handleModeButtonClick = this.handleModeButtonClick.bind(this);
       this.handleLanguageChange = this.handleLanguageChange.bind(this);
@@ -1618,6 +1634,10 @@
 
       if (this.overlayButton) {
         this.overlayButton.addEventListener('click', this.handleOverlayButtonClick);
+      }
+
+      if (this.overlaySecondaryButton) {
+        this.overlaySecondaryButton.addEventListener('click', this.handleOverlaySecondaryButtonClick);
       }
 
       this.modeButtons.forEach(button => {
@@ -1652,6 +1672,9 @@
       this.canvas.removeEventListener('pointercancel', this.handlePointerUp);
       if (this.overlayButton) {
         this.overlayButton.removeEventListener('click', this.handleOverlayButtonClick);
+      }
+      if (this.overlaySecondaryButton) {
+        this.overlaySecondaryButton.removeEventListener('click', this.handleOverlaySecondaryButtonClick);
       }
       this.modeButtons.forEach(button => {
         button.removeEventListener('click', this.handleModeButtonClick);
@@ -3357,7 +3380,9 @@
       this.showOverlay({
         message,
         buttonLabel: LEVEL_CLEARED_BUTTON,
-        action: 'next'
+        action: 'next',
+        secondaryButtonLabel: LEVEL_CLEARED_QUIT_BUTTON,
+        secondaryAction: 'quit'
       });
     }
 
@@ -3398,7 +3423,9 @@
       const {
         message = '',
         buttonLabel = translate('scripts.particules.ui.overlay.defaultButton'),
-        action = 'start'
+        action = 'start',
+        secondaryButtonLabel = '',
+        secondaryAction = null
       } = options;
       this.overlay.hidden = false;
       this.overlay.setAttribute('aria-hidden', 'false');
@@ -3408,7 +3435,26 @@
       if (this.overlayButton) {
         this.overlayButton.textContent = buttonLabel;
       }
+      const secondaryText = typeof secondaryButtonLabel === 'string'
+        ? secondaryButtonLabel.trim()
+        : '';
+      const hasSecondary = Boolean(secondaryText) && this.overlaySecondaryButton;
+      if (this.overlaySecondaryButton) {
+        if (hasSecondary) {
+          this.overlaySecondaryButton.hidden = false;
+          this.overlaySecondaryButton.setAttribute('aria-hidden', 'false');
+          this.overlaySecondaryButton.disabled = false;
+          this.overlaySecondaryButton.textContent = secondaryText;
+        } else {
+          this.overlaySecondaryButton.hidden = true;
+          this.overlaySecondaryButton.setAttribute('aria-hidden', 'true');
+          this.overlaySecondaryButton.disabled = true;
+        }
+      }
       this.overlayAction = action;
+      this.overlaySecondaryAction = hasSecondary && typeof secondaryAction === 'string'
+        ? secondaryAction
+        : null;
       this.updateModeUI(action);
     }
 
@@ -3416,6 +3462,12 @@
       if (!this.overlay) return;
       this.overlay.hidden = true;
       this.overlay.setAttribute('aria-hidden', 'true');
+      if (this.overlaySecondaryButton) {
+        this.overlaySecondaryButton.hidden = true;
+        this.overlaySecondaryButton.setAttribute('aria-hidden', 'true');
+        this.overlaySecondaryButton.disabled = true;
+      }
+      this.overlaySecondaryAction = null;
     }
 
     isOverlayVisible() {
@@ -3442,6 +3494,25 @@
       if (!this.releaseHeldBalls()) {
         this.startAnimation();
       }
+    }
+
+    quitToMenu() {
+      if (!this.enabled) {
+        return;
+      }
+      this.stopAnimation();
+      this.pendingResume = false;
+      this.pendingLevelAdvance = false;
+      this.level = 1;
+      this.score = 0;
+      this.ticketsEarned = 0;
+      this.specialTicketsEarned = 0;
+      this.setupLevel();
+      this.showOverlay({
+        message: START_OVERLAY_MESSAGE,
+        buttonLabel: START_OVERLAY_BUTTON,
+        action: 'start'
+      });
     }
 
     startNextLevel() {
@@ -3686,6 +3757,16 @@
         this.startNextLevel();
       } else if (this.overlayAction === 'restart') {
         this.startNewGame();
+      }
+    }
+
+    handleOverlaySecondaryButtonClick(event) {
+      if (!this.enabled) return;
+      if (event?.preventDefault) {
+        event.preventDefault();
+      }
+      if (this.overlaySecondaryAction === 'quit') {
+        this.quitToMenu();
       }
     }
 
