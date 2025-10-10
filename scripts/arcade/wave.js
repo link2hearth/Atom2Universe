@@ -466,8 +466,11 @@
       this.stats = {
         bestDistance: 0,
         bestSpeed: 0,
-        maxAltitude: 0
+        maxAltitude: 0,
+        totalDistance: 0
       };
+      this.lastRecordedRunDistance = 0;
+      this.distanceAutosaveAccumulator = 0;
       this.autosaveTimer = null;
 
       this.messages = this.statusElement
@@ -541,10 +544,21 @@
       const bestDistance = toNumber(raw.bestDistance ?? raw.bestDistanceMeters ?? raw.maxDistance ?? raw.distance);
       const bestSpeed = toNumber(raw.bestSpeed ?? raw.maxSpeed ?? raw.speed);
       const maxAltitude = toNumber(raw.maxAltitude ?? raw.bestAltitude ?? raw.altitude);
+      const totalDistance = toNumber(
+        raw.totalDistance
+          ?? raw.distanceTotal
+          ?? raw.accumulatedDistance
+          ?? raw.distanceAccumulated
+          ?? raw.bestDistance
+          ?? raw.bestDistanceMeters
+          ?? raw.maxDistance
+          ?? raw.distance
+      );
       return {
         bestDistance,
         bestSpeed,
-        maxAltitude
+        maxAltitude,
+        totalDistance: Math.max(totalDistance, bestDistance)
       };
     }
 
@@ -574,8 +588,11 @@
       this.stats = {
         bestDistance: normalized.bestDistance,
         bestSpeed: normalized.bestSpeed,
-        maxAltitude: normalized.maxAltitude
+        maxAltitude: normalized.maxAltitude,
+        totalDistance: normalized.totalDistance
       };
+      this.distanceAutosaveAccumulator = 0;
+      this.lastRecordedRunDistance = 0;
     }
 
     serializeStats() {
@@ -583,7 +600,8 @@
       return {
         bestDistance: normalize(this.stats?.bestDistance),
         bestSpeed: normalize(this.stats?.bestSpeed),
-        maxAltitude: normalize(this.stats?.maxAltitude)
+        maxAltitude: normalize(this.stats?.maxAltitude),
+        totalDistance: normalize(this.stats?.totalDistance)
       };
     }
 
@@ -758,6 +776,11 @@
       this.activePointers.clear();
       this.lastTimestamp = null;
       this.statusState = null;
+      if (Number.isFinite(this.distanceAutosaveAccumulator) && this.distanceAutosaveAccumulator > 0) {
+        this.scheduleAutosave();
+      }
+      this.distanceAutosaveAccumulator = 0;
+      this.lastRecordedRunDistance = 0;
       this.applyInitialLaunch();
       this.resetBallVisualState();
       this.captureTrailPoint(true);
@@ -1383,6 +1406,35 @@
       this.altitudeElement.textContent = formatNumber(altitude, altitude >= 10 ? 0 : 1);
       if (this.stats && typeof this.stats === 'object') {
         let statsChanged = false;
+        const previousDistance = Number.isFinite(this.lastRecordedRunDistance)
+          ? this.lastRecordedRunDistance
+          : 0;
+        if (!Number.isFinite(this.stats.totalDistance) || this.stats.totalDistance < 0) {
+          this.stats.totalDistance = 0;
+        }
+        if (distanceMeters >= previousDistance) {
+          const delta = distanceMeters - previousDistance;
+          if (delta > 0) {
+            this.stats.totalDistance += delta;
+            const accumulator = Number.isFinite(this.distanceAutosaveAccumulator)
+              ? this.distanceAutosaveAccumulator
+              : 0;
+            const combined = accumulator + delta;
+            if (combined >= 1) {
+              statsChanged = true;
+              this.distanceAutosaveAccumulator = combined - Math.floor(combined);
+            } else {
+              this.distanceAutosaveAccumulator = combined;
+            }
+          }
+        } else {
+          if (Number.isFinite(this.distanceAutosaveAccumulator) && this.distanceAutosaveAccumulator > 0) {
+            statsChanged = true;
+          }
+          this.distanceAutosaveAccumulator = 0;
+        }
+        this.lastRecordedRunDistance = distanceMeters;
+
         if (distanceMeters > (this.stats.bestDistance || 0)) {
           this.stats.bestDistance = distanceMeters;
           statsChanged = true;
