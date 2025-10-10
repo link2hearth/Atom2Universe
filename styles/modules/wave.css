@@ -70,7 +70,11 @@
 }
 
 .wave-hud__label {
-  font-size: clamp(0.32rem, 0.9vw, 0.55rem);
+  font-size: clamp(
+    calc(var(--font-scale-factor, 1) * 0.32rem),
+    calc(var(--font-scale-factor, 1) * 0.9vw),
+    calc(var(--font-scale-factor, 1) * 0.55rem)
+  );
   letter-spacing: 0.08em;
   text-transform: uppercase;
   opacity: 0.8;
@@ -81,12 +85,20 @@
   align-items: baseline;
   gap: clamp(0.08rem, 0.6vw, 0.2rem);
   font-family: var(--font-digits, 'Orbitron', sans-serif);
-  font-size: clamp(0.5rem, 1.8vw, 0.9rem);
+  font-size: clamp(
+    calc(var(--font-scale-factor, 1) * 0.5rem),
+    calc(var(--font-scale-factor, 1) * 1.8vw),
+    calc(var(--font-scale-factor, 1) * 0.9rem)
+  );
   font-weight: 600;
 }
 
 .wave-hud__unit {
-  font-size: clamp(0.3rem, 1vw, 0.45rem);
+  font-size: clamp(
+    calc(var(--font-scale-factor, 1) * 0.3rem),
+    calc(var(--font-scale-factor, 1) * 1vw),
+    calc(var(--font-scale-factor, 1) * 0.45rem)
+  );
   opacity: 0.75;
 }
 
