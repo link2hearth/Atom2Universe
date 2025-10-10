@@ -345,7 +345,11 @@
           "history": "Afficher l'historique",
           "difficulty": "Choisir la difficulté",
           "reset": "Réinitialiser la partie",
-          "analyze": "Analyser le dernier coup de l'IA"
+          "analyze": "Analyser le dernier coup de l'IA",
+          "notation": {
+            "short": "Notation courte",
+            "long": "Notation longue"
+          }
         },
         "history": {
           "title": "Historique des coups",
