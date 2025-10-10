@@ -8027,8 +8027,22 @@ function computeUpgradeCost(def, quantity = 1) {
 
 function formatShopCost(cost) {
   const value = cost instanceof LayeredNumber ? cost : new LayeredNumber(cost);
-  return translateOrDefault('scripts.app.shop.costLabel', value.toString(), {
-    value: value.toString()
+  let display = '';
+
+  if (value instanceof LayeredNumber && value.layer === 0) {
+    const numeric = value.toNumber();
+    if (Number.isFinite(numeric)) {
+      const rounded = Math.round(numeric);
+      display = formatIntegerLocalized(rounded);
+    }
+  }
+
+  if (!display) {
+    display = value.toString();
+  }
+
+  return translateOrDefault('scripts.app.shop.costLabel', display, {
+    value: display
   });
 }
 
