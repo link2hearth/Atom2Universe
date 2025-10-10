@@ -8030,16 +8030,20 @@ function formatShopCost(cost) {
   const value = cost instanceof LayeredNumber ? cost : new LayeredNumber(cost);
   let display = '';
 
-  if (value instanceof LayeredNumber && value.layer === 0) {
-    const numeric = value.toNumber();
-    if (Number.isFinite(numeric)) {
-      const rounded = Math.round(numeric);
-      display = formatIntegerLocalized(rounded);
+  if (value instanceof LayeredNumber) {
+    if (value.layer === 0) {
+      const numeric = value.toNumber();
+      if (Number.isFinite(numeric)) {
+        if (Math.abs(numeric) < 1_000_000) {
+          const rounded = Math.round(numeric);
+          display = formatIntegerLocalized(rounded);
+        }
+      }
     }
-  }
 
-  if (!display) {
-    display = value.toString();
+    if (!display) {
+      display = value.toString();
+    }
   }
 
   return translateOrDefault('scripts.app.shop.costLabel', display, {
