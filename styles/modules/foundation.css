@@ -28,6 +28,15 @@
   --status-padding-y: clamp(0.315rem, 0.51vw, 0.45rem);
   --font-digits: 'Orbitron', sans-serif;
   --font-digits-compact: 'Orbitron', monospace;
+  --arcade-padding-x: clamp(0.5rem, 1.4vw, 0.82rem);
+  --arcade-padding-top: clamp(0rem, 0.12vw, 0.08rem);
+  --arcade-padding-bottom: clamp(0.55rem, 1.8vw, 0.9rem);
+  --arcade-stage-spacing: clamp(0.15rem, 0.9vh, 0.45rem);
+  --arcade-header-height: 0rem;
+  --arcade-vertical-offset: calc(
+    var(--arcade-padding-top) + var(--arcade-padding-bottom) +
+      var(--arcade-stage-spacing) * 2 + var(--arcade-header-height)
+  );
 }
 
 * {
@@ -88,6 +97,18 @@ body.theme-aurora {
 
 body.view-arcade {
   background: radial-gradient(140% 160% at 50% 0%, #1a1e48 0%, #070918 55%, #01020a 100%);
+}
+
+body.theme-light.view-arcade {
+  background: radial-gradient(140% 160% at 50% 0%, #fdfdff 0%, #e2e8ff 55%, #cbd6ff 100%);
+}
+
+body.theme-neon.view-arcade {
+  background: radial-gradient(140% 160% at 50% 0%, #251a68 0%, #0d102f 55%, #030411 100%);
+}
+
+body.theme-aurora.view-arcade {
+  background: radial-gradient(140% 160% at 50% 0%, #0c543a 0%, #043022 55%, #02130d 100%);
 }
 
 body.view-arcade-hub {
