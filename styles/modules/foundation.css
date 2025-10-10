@@ -91,7 +91,19 @@ body.view-arcade {
 }
 
 body.view-arcade-hub {
+  background: radial-gradient(140% 160% at 50% 0%, #101426 0%, #050711 55%, #010205 100%);
+}
+
+body.theme-light.view-arcade-hub {
+  background: radial-gradient(140% 160% at 50% 0%, #fdfdff 0%, #dbe2f5 55%, #cad3ee 100%);
+}
+
+body.theme-neon.view-arcade-hub {
   background: radial-gradient(140% 160% at 50% 0%, #1a1e48 0%, #070918 55%, #01020a 100%);
+}
+
+body.theme-aurora.view-arcade-hub {
+  background: radial-gradient(140% 160% at 50% 0%, #0b5131 0%, #05271a 55%, #010f0a 100%);
 }
 
 body.view-sudoku {
