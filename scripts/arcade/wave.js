@@ -463,6 +463,13 @@
       this.lastTimestamp = null;
       this.frameHandle = null;
 
+      this.stats = {
+        bestDistance: 0,
+        bestSpeed: 0,
+        maxAltitude: 0
+      };
+      this.autosaveTimer = null;
+
       this.messages = this.statusElement
         ? {
             ready: translate(
@@ -489,6 +496,7 @@
       this.handleResetClick = this.handleResetClick.bind(this);
       this.tick = this.tick.bind(this);
 
+      this.loadAutosavedStats();
       this.attachEvents();
       this.handleResize();
       this.resetState();
@@ -509,6 +517,107 @@
           console.warn('Unable to trigger manual click from Wave game', error);
         }
       }
+    }
+
+    getAutosaveApi() {
+      if (typeof window === 'undefined') {
+        return null;
+      }
+      const api = window.ArcadeAutosave;
+      if (!api || typeof api.set !== 'function' || typeof api.get !== 'function') {
+        return null;
+      }
+      return api;
+    }
+
+    sanitizeAutosavedStats(raw) {
+      if (!raw || typeof raw !== 'object') {
+        return null;
+      }
+      const toNumber = value => {
+        const numeric = Number(value);
+        return Number.isFinite(numeric) && numeric >= 0 ? numeric : 0;
+      };
+      const bestDistance = toNumber(raw.bestDistance ?? raw.bestDistanceMeters ?? raw.maxDistance ?? raw.distance);
+      const bestSpeed = toNumber(raw.bestSpeed ?? raw.maxSpeed ?? raw.speed);
+      const maxAltitude = toNumber(raw.maxAltitude ?? raw.bestAltitude ?? raw.altitude);
+      return {
+        bestDistance,
+        bestSpeed,
+        maxAltitude
+      };
+    }
+
+    loadAutosavedStats() {
+      const api = this.getAutosaveApi();
+      if (!api) {
+        return;
+      }
+      let saved = null;
+      try {
+        saved = api.get('wave');
+      } catch (error) {
+        return;
+      }
+      if (!saved) {
+        return;
+      }
+      const normalized = this.sanitizeAutosavedStats(saved);
+      if (!normalized) {
+        try {
+          api.set('wave', null);
+        } catch (error) {
+          // Ignore autosave cleanup errors
+        }
+        return;
+      }
+      this.stats = {
+        bestDistance: normalized.bestDistance,
+        bestSpeed: normalized.bestSpeed,
+        maxAltitude: normalized.maxAltitude
+      };
+    }
+
+    serializeStats() {
+      const normalize = value => (Number.isFinite(value) && value >= 0 ? value : 0);
+      return {
+        bestDistance: normalize(this.stats?.bestDistance),
+        bestSpeed: normalize(this.stats?.bestSpeed),
+        maxAltitude: normalize(this.stats?.maxAltitude)
+      };
+    }
+
+    persistAutosave() {
+      const api = this.getAutosaveApi();
+      if (!api) {
+        return;
+      }
+      try {
+        api.set('wave', this.serializeStats());
+      } catch (error) {
+        // Ignore autosave persistence errors
+      }
+    }
+
+    scheduleAutosave() {
+      if (typeof window === 'undefined') {
+        return;
+      }
+      if (this.autosaveTimer != null) {
+        window.clearTimeout(this.autosaveTimer);
+      }
+      this.autosaveTimer = window.setTimeout(() => {
+        this.autosaveTimer = null;
+        this.persistAutosave();
+      }, 200);
+    }
+
+    flushAutosave() {
+      if (typeof window !== 'undefined' && this.autosaveTimer != null) {
+        window.clearTimeout(this.autosaveTimer);
+        this.autosaveTimer = null;
+      }
+      this.persistAutosave();
     }
 
     attachEvents() {
@@ -995,6 +1104,7 @@
     onLeave() {
       this.stop();
       this.setPressingState(false);
+      this.flushAutosave();
     }
 
     tick(timestamp) {
@@ -1271,6 +1381,24 @@
       this.distanceElement.textContent = formatNumber(distanceMeters, 0);
       this.speedElement.textContent = formatNumber(speedKmh, speedKmh >= 50 ? 0 : 1);
       this.altitudeElement.textContent = formatNumber(altitude, altitude >= 10 ? 0 : 1);
+      if (this.stats && typeof this.stats === 'object') {
+        let statsChanged = false;
+        if (distanceMeters > (this.stats.bestDistance || 0)) {
+          this.stats.bestDistance = distanceMeters;
+          statsChanged = true;
+        }
+        if (speedKmh > (this.stats.bestSpeed || 0)) {
+          this.stats.bestSpeed = speedKmh;
+          statsChanged = true;
+        }
+        if (altitude > (this.stats.maxAltitude || 0)) {
+          this.stats.maxAltitude = altitude;
+          statsChanged = true;
+        }
+        if (statsChanged) {
+          this.scheduleAutosave();
+        }
+      }
       if (this.statusElement && this.messages) {
         const nextState = this.player.onGround ? (this.isPressing ? 'hold' : 'ready') : 'air';
         if (nextState !== this.statusState) {

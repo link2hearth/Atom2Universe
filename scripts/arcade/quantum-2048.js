@@ -253,6 +253,7 @@
       this.active = false;
       this.parallelUniverseCount = readStoredParallelUniverses(0);
       this.transitionTimeout = null;
+      this.autosaveTimer = null;
 
       this.handleKeydown = this.handleKeydown.bind(this);
       this.handleSizeChange = this.handleSizeChange.bind(this);
@@ -276,7 +277,10 @@
 
       this.setupControls();
       this.updateParallelUniverseDisplay();
-      this.startNewGame({ randomize: this.config.randomizeGames !== false });
+      const restored = this.restoreAutosavedState();
+      if (!restored) {
+        this.startNewGame({ randomize: this.config.randomizeGames !== false });
+      }
     }
 
     normalizeSize(value) {
@@ -536,6 +540,142 @@
       this.transitionTimeout = window.setTimeout(launchNext, delay);
     }
 
+    getAutosaveApi() {
+      if (typeof window === 'undefined') {
+        return null;
+      }
+      const api = window.ArcadeAutosave;
+      if (!api || typeof api.set !== 'function' || typeof api.get !== 'function') {
+        return null;
+      }
+      return api;
+    }
+
+    sanitizeSavedState(raw) {
+      if (!raw || typeof raw !== 'object') {
+        return null;
+      }
+      const size = this.normalizeSize(raw.size);
+      const boardSource = Array.isArray(raw.board) ? raw.board : [];
+      if (boardSource.length !== size * size) {
+        return null;
+      }
+      const board = boardSource.map(value => {
+        const numeric = Number(value);
+        return Number.isFinite(numeric) && numeric > 0 ? numeric : 0;
+      });
+      const target = this.normalizeTarget(raw.target, size);
+      const scoreValue = Number(raw.score);
+      const movesValue = Number(raw.moves);
+      const bestTileValue = Number(raw.bestTile);
+      const hasWon = raw.hasWon === true;
+      const gameOver = raw.gameOver === true;
+      const bestTileFromBoard = board.reduce((max, value) => {
+        const numeric = Number(value);
+        return Number.isFinite(numeric) && numeric > max ? numeric : max;
+      }, 0);
+      const score = Number.isFinite(scoreValue) ? Math.max(0, Math.floor(scoreValue)) : 0;
+      const moves = Number.isFinite(movesValue) ? Math.max(0, Math.floor(movesValue)) : 0;
+      const bestTile = Math.max(bestTileFromBoard, Number.isFinite(bestTileValue) ? bestTileValue : 0);
+      return { size, board, target, score, moves, bestTile, hasWon, gameOver };
+    }
+
+    serializeState() {
+      const board = Array.isArray(this.board) ? this.board.slice() : [];
+      return {
+        size: this.size,
+        target: this.target,
+        board,
+        score: Number.isFinite(this.score) ? this.score : 0,
+        moves: Number.isFinite(this.moves) ? this.moves : 0,
+        bestTile: Number.isFinite(this.bestTile) ? this.bestTile : 0,
+        hasWon: this.hasWon === true,
+        gameOver: this.gameOver === true
+      };
+    }
+
+    applyAutosavedState(state) {
+      if (!state) {
+        return false;
+      }
+      this.clearTransitionTimeout();
+      this.size = state.size;
+      this.target = state.target;
+      this.board = state.board.slice();
+      this.score = state.score;
+      this.moves = state.moves;
+      this.bestTile = state.bestTile;
+      this.hasWon = state.hasWon;
+      this.gameOver = state.gameOver;
+      if (this.sizeSelect) {
+        this.sizeSelect.value = String(this.size);
+      }
+      if (this.targetSelect) {
+        this.populateTargetOptions();
+        this.targetSelect.value = String(this.target);
+      }
+      this.hideOverlay();
+      this.updateBoardGeometry(true);
+      this.renderTiles();
+      this.updateStats();
+      return true;
+    }
+
+    persistAutosave() {
+      const api = this.getAutosaveApi();
+      if (!api) {
+        return;
+      }
+      try {
+        api.set('quantum2048', this.serializeState());
+      } catch (error) {
+        // Ignore autosave persistence issues
+      }
+    }
+
+    scheduleAutosave() {
+      if (typeof window === 'undefined') {
+        return;
+      }
+      if (this.autosaveTimer != null) {
+        window.clearTimeout(this.autosaveTimer);
+      }
+      this.autosaveTimer = window.setTimeout(() => {
+        this.autosaveTimer = null;
+        this.persistAutosave();
+      }, 150);
+    }
+
+    restoreAutosavedState() {
+      const api = this.getAutosaveApi();
+      if (!api) {
+        return false;
+      }
+      let saved = null;
+      try {
+        saved = api.get('quantum2048');
+      } catch (error) {
+        return false;
+      }
+      if (!saved) {
+        return false;
+      }
+      const normalized = this.sanitizeSavedState(saved);
+      if (!normalized) {
+        try {
+          api.set('quantum2048', null);
+        } catch (error) {
+          // Ignore cleanup failures
+        }
+        return false;
+      }
+      const applied = this.applyAutosavedState(normalized);
+      if (applied) {
+        this.scheduleAutosave();
+      }
+      return applied;
+    }
+
     startNewGame({ size = this.size, target = this.target, randomize = false } = {}) {
       this.clearTransitionTimeout();
       let nextSize = size;
@@ -583,6 +723,7 @@
       }
       this.renderTiles({ spawned });
       this.updateStats();
+      this.scheduleAutosave();
     }
 
     handleResize() {
@@ -721,6 +862,7 @@
       }
       this.renderTiles({ spawned, merged: Array.from(result.mergedIndices) });
       this.updateStats();
+      this.scheduleAutosave();
       if (!this.hasWon && this.bestTile >= this.target) {
         this.handleVictory();
       }
@@ -859,6 +1001,7 @@
       this.hasWon = true;
       this.gameOver = true;
       this.scheduleUniverseShift(1);
+      this.scheduleAutosave();
     }
 
     handleDefeat() {
@@ -868,6 +1011,7 @@
       this.gameOver = true;
       this.hideOverlay();
       this.scheduleUniverseShift(-1, { delay: UNIVERSE_TRANSITION_DELAY_MS + UNIVERSE_DEFEAT_EXTRA_DELAY_MS });
+      this.scheduleAutosave();
     }
 
     canMove() {
@@ -1072,6 +1216,11 @@
 
     onLeave() {
       if (!this.active) {
+        if (typeof window !== 'undefined' && this.autosaveTimer != null) {
+          window.clearTimeout(this.autosaveTimer);
+          this.autosaveTimer = null;
+        }
+        this.persistAutosave();
         return;
       }
       this.active = false;
@@ -1090,6 +1239,11 @@
         }
       }
       this.resetTouchTracking();
+      if (typeof window !== 'undefined' && this.autosaveTimer != null) {
+        window.clearTimeout(this.autosaveTimer);
+        this.autosaveTimer = null;
+      }
+      this.persistAutosave();
     }
   }
 
