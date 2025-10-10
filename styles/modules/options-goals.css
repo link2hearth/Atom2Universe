@@ -3,6 +3,54 @@
   gap: clamp(1rem, 2vw, 1.6rem);
 }
 
+:root {
+  --options-select-border: rgba(110, 170, 255, 0.55);
+  --options-select-border-hover: rgba(160, 210, 255, 0.85);
+  --options-select-background: linear-gradient(135deg, rgba(38, 70, 150, 0.95), rgba(86, 148, 255, 0.98));
+  --options-select-shadow: 0 10px 22px rgba(18, 34, 88, 0.35);
+  --options-select-shadow-hover: 0 0 0 2px rgba(110, 170, 255, 0.28), 0 16px 28px rgba(18, 38, 110, 0.45);
+  --options-select-text-color: #fff;
+  --options-select-option-bg: rgba(38, 70, 150, 0.95);
+  --options-select-option-active-bg: rgba(18, 38, 110, 0.98);
+  --options-select-option-color: #fff;
+}
+
+body.theme-light {
+  --options-select-border: rgba(80, 130, 210, 0.42);
+  --options-select-border-hover: rgba(110, 160, 230, 0.7);
+  --options-select-background: linear-gradient(135deg, rgba(196, 215, 255, 0.96), rgba(150, 195, 255, 0.92));
+  --options-select-shadow: 0 10px 18px rgba(70, 110, 180, 0.22);
+  --options-select-shadow-hover: 0 0 0 2px rgba(120, 170, 235, 0.26), 0 16px 26px rgba(70, 110, 180, 0.28);
+  --options-select-text-color: #041024;
+  --options-select-option-bg: rgba(120, 170, 240, 0.95);
+  --options-select-option-active-bg: rgba(70, 120, 210, 0.96);
+  --options-select-option-color: #041024;
+}
+
+body.theme-neon {
+  --options-select-border: rgba(150, 210, 255, 0.55);
+  --options-select-border-hover: rgba(190, 235, 255, 0.82);
+  --options-select-background: linear-gradient(135deg, rgba(62, 92, 180, 0.95), rgba(118, 208, 255, 0.96));
+  --options-select-shadow: 0 12px 24px rgba(26, 46, 120, 0.42);
+  --options-select-shadow-hover: 0 0 0 2px rgba(160, 210, 255, 0.34), 0 18px 32px rgba(26, 46, 120, 0.52);
+  --options-select-text-color: #041321;
+  --options-select-option-bg: rgba(34, 60, 150, 0.95);
+  --options-select-option-active-bg: rgba(12, 28, 105, 0.98);
+  --options-select-option-color: #f4f8ff;
+}
+
+body.theme-aurora {
+  --options-select-border: rgba(70, 220, 180, 0.45);
+  --options-select-border-hover: rgba(120, 250, 210, 0.75);
+  --options-select-background: linear-gradient(135deg, rgba(52, 180, 140, 0.9), rgba(132, 255, 205, 0.94));
+  --options-select-shadow: 0 12px 26px rgba(6, 32, 24, 0.34);
+  --options-select-shadow-hover: 0 0 0 2px rgba(90, 240, 200, 0.32), 0 18px 32px rgba(6, 32, 24, 0.42);
+  --options-select-text-color: #02150f;
+  --options-select-option-bg: rgba(38, 136, 112, 0.92);
+  --options-select-option-active-bg: rgba(18, 90, 74, 0.96);
+  --options-select-option-color: #e6fff4;
+}
+
 #options.page.active {
   display: flex;
   flex-direction: column;
@@ -238,20 +286,20 @@ select, button {
 select {
   padding: 0.5em 0.8em;
   border-radius: 0.8em;
-  border: 1px solid rgba(110, 170, 255, 0.55);
-  background: linear-gradient(135deg, rgba(38, 70, 150, 0.95), rgba(86, 148, 255, 0.98));
-  color: #fff;
+  border: 1px solid var(--options-select-border, rgba(110, 170, 255, 0.55));
+  background: var(--options-select-background, linear-gradient(135deg, rgba(38, 70, 150, 0.95), rgba(86, 148, 255, 0.98)));
+  color: var(--options-select-text-color, #fff);
   min-width: 10em;
-  box-shadow: 0 10px 22px rgba(18, 34, 88, 0.35);
-  transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
-  --select-option-bg: rgba(38, 70, 150, 0.95);
-  --select-option-active-bg: rgba(18, 38, 110, 0.98);
+  box-shadow: var(--options-select-shadow, 0 10px 22px rgba(18, 34, 88, 0.35));
+  transition: border-color var(--transition), box-shadow var(--transition), background var(--transition), color var(--transition);
+  --select-option-bg: var(--options-select-option-bg, rgba(38, 70, 150, 0.95));
+  --select-option-active-bg: var(--options-select-option-active-bg, rgba(18, 38, 110, 0.98));
 }
 
 select:hover,
 select:focus-visible {
-  border-color: rgba(160, 210, 255, 0.85);
-  box-shadow: 0 0 0 2px rgba(110, 170, 255, 0.28), 0 16px 28px rgba(18, 38, 110, 0.45);
+  border-color: var(--options-select-border-hover, rgba(160, 210, 255, 0.85));
+  box-shadow: var(--options-select-shadow-hover, 0 0 0 2px rgba(110, 170, 255, 0.28), 0 16px 28px rgba(18, 38, 110, 0.45));
 }
 
 select:focus-visible {
@@ -309,27 +357,14 @@ body.theme-neon .option-link-button:focus-visible {
 
 select option {
   background-color: var(--select-option-bg);
-  color: #fff;
+  color: var(--options-select-option-color, #fff);
 }
 
 select option:checked,
 select option:hover,
 select option:focus {
   background-color: var(--select-option-active-bg);
-  color: #fff;
-}
-
-body.theme-light select {
-  border-color: rgba(60, 110, 210, 0.55);
-  background: linear-gradient(135deg, rgba(96, 150, 255, 0.96), rgba(60, 110, 220, 0.98));
-  box-shadow: 0 10px 20px rgba(30, 60, 130, 0.28);
-  --select-option-bg: rgba(80, 130, 230, 0.96);
-  --select-option-active-bg: rgba(44, 78, 180, 0.98);
-}
-
-body.theme-neon select {
-  --select-option-bg: rgba(34, 60, 150, 0.95);
-  --select-option-active-bg: rgba(12, 28, 105, 0.98);
+  color: var(--options-select-option-color, #fff);
 }
 
 .primary {
