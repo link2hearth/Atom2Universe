@@ -29,6 +29,11 @@
   --chess-description-color: rgba(255, 255, 255, 0.7);
   --chess-toggle-accent: rgba(255, 221, 89, 0.75);
   --chess-toggle-label-color: inherit;
+  --chess-notation-background: rgba(0, 0, 0, 0.28);
+  --chess-notation-border: rgba(255, 255, 255, 0.22);
+  --chess-notation-color: inherit;
+  --chess-notation-hover-background: rgba(255, 221, 89, 0.28);
+  --chess-notation-hover-border: rgba(255, 221, 89, 0.55);
   --chess-action-background: rgba(255, 255, 255, 0.15);
   --chess-action-border: rgba(255, 255, 255, 0.22);
   --chess-action-color: #ffffff;
@@ -335,6 +340,40 @@
   color: var(--chess-toggle-label-color);
 }
 
+.chess-notation-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: center;
+  padding: 0.35em 0.9em;
+  border-radius: 999px;
+  border: 1px solid var(--chess-notation-border);
+  background: var(--chess-notation-background);
+  color: var(--chess-notation-color);
+  font-size: calc(clamp(0.85rem, 1.8vh, 1rem) * var(--ui-control-scale, 1));
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.chess-notation-toggle:hover,
+.chess-notation-toggle:focus-visible {
+  background: var(--chess-notation-hover-background);
+  border-color: var(--chess-notation-hover-border);
+  color: var(--chess-notation-color);
+}
+
+.chess-notation-toggle:focus-visible {
+  outline: 2px solid var(--chess-select-outline);
+  outline-offset: 2px;
+}
+
+.chess-notation-toggle[aria-pressed='true'] {
+  background: var(--chess-notation-hover-background);
+  border-color: var(--chess-notation-hover-border);
+}
+
 .chess-game__actions {
   display: flex;
   flex-wrap: wrap;
@@ -591,6 +630,11 @@ body.theme-light .page--echecs {
   --chess-description-color: rgba(55, 70, 102, 0.75);
   --chess-toggle-accent: rgba(96, 165, 250, 0.7);
   --chess-toggle-label-color: rgba(32, 44, 72, 0.88);
+  --chess-notation-background: rgba(236, 240, 252, 0.9);
+  --chess-notation-border: rgba(96, 150, 255, 0.45);
+  --chess-notation-color: #0d1320;
+  --chess-notation-hover-background: rgba(96, 165, 250, 0.22);
+  --chess-notation-hover-border: rgba(96, 165, 250, 0.5);
   --chess-action-background: rgba(96, 165, 250, 0.18);
   --chess-action-border: rgba(96, 165, 250, 0.4);
   --chess-action-color: #0d1320;
@@ -645,6 +689,11 @@ body.theme-neon .page--echecs {
   --chess-description-color: rgba(188, 204, 255, 0.75);
   --chess-toggle-accent: rgba(168, 200, 255, 0.75);
   --chess-toggle-label-color: rgba(210, 224, 255, 0.88);
+  --chess-notation-background: rgba(30, 38, 92, 0.75);
+  --chess-notation-border: rgba(168, 200, 255, 0.5);
+  --chess-notation-color: rgba(228, 236, 255, 0.95);
+  --chess-notation-hover-background: rgba(148, 188, 255, 0.35);
+  --chess-notation-hover-border: rgba(180, 210, 255, 0.6);
   --chess-action-background: rgba(120, 160, 255, 0.25);
   --chess-action-border: rgba(144, 182, 255, 0.5);
   --chess-action-color: rgba(228, 236, 255, 0.95);
@@ -699,6 +748,11 @@ body.theme-aurora .page--echecs {
   --chess-description-color: rgba(182, 240, 218, 0.75);
   --chess-toggle-accent: rgba(120, 246, 208, 0.65);
   --chess-toggle-label-color: rgba(210, 255, 236, 0.88);
+  --chess-notation-background: rgba(18, 74, 60, 0.72);
+  --chess-notation-border: rgba(96, 232, 192, 0.4);
+  --chess-notation-color: rgba(210, 255, 236, 0.92);
+  --chess-notation-hover-background: rgba(120, 246, 208, 0.35);
+  --chess-notation-hover-border: rgba(126, 255, 210, 0.5);
   --chess-action-background: rgba(96, 232, 192, 0.25);
   --chess-action-border: rgba(96, 232, 192, 0.4);
   --chess-action-color: rgba(16, 46, 36, 0.95);

@@ -345,7 +345,11 @@
           "history": "Show move list",
           "difficulty": "Choose difficulty",
           "reset": "Reset the game",
-          "analyze": "Analyze the AI's last move"
+          "analyze": "Analyze the AI's last move",
+          "notation": {
+            "short": "Short notation",
+            "long": "Long notation"
+          }
         },
         "history": {
           "title": "Move list",

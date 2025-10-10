@@ -16,6 +16,7 @@
   const PROMOTION_OPTIONS_SELECTOR = '[data-chess-promotion-options]';
   const COORDINATES_TOGGLE_SELECTOR = '[data-chess-toggle-coordinates]';
   const HISTORY_TOGGLE_SELECTOR = '[data-chess-toggle-history]';
+  const NOTATION_TOGGLE_SELECTOR = '[data-chess-notation-toggle]';
   const HISTORY_CONTAINER_SELECTOR = '[data-chess-history]';
   const HISTORY_LIST_SELECTOR = '[data-chess-history-list]';
   const HISTORY_EMPTY_SELECTOR = '[data-chess-history-empty]';
@@ -41,6 +42,11 @@
     r: 'rook',
     b: 'bishop',
     n: 'knight'
+  });
+
+  const NOTATION_STYLES = Object.freeze({
+    SHORT: 'san',
+    LONG: 'lan'
   });
 
   const DEFAULT_AI_SETTINGS = Object.freeze({
@@ -3450,6 +3456,41 @@
     return fallback;
   }
 
+  function getNotationPreference(state) {
+    if (!state || !state.preferences || state.preferences.notation !== NOTATION_STYLES.LONG) {
+      return NOTATION_STYLES.SHORT;
+    }
+    return NOTATION_STYLES.LONG;
+  }
+
+  function getEntryNotation(entry, style) {
+    if (!entry || typeof entry.san !== 'string') {
+      return '';
+    }
+    if (style === NOTATION_STYLES.LONG) {
+      const lan = typeof entry.lan === 'string' ? entry.lan.trim() : '';
+      if (lan) {
+        return lan;
+      }
+    }
+    return entry.san;
+  }
+
+  function updateNotationToggle(state, ui) {
+    if (!ui || !ui.notationToggle) {
+      return;
+    }
+    const style = getNotationPreference(state);
+    const isLong = style === NOTATION_STYLES.LONG;
+    ui.notationToggle.setAttribute('aria-pressed', isLong ? 'true' : 'false');
+    const key = isLong
+      ? 'index.sections.echecs.controls.notation.long'
+      : 'index.sections.echecs.controls.notation.short';
+    const fallback = isLong ? 'Notation longue' : 'Notation courte';
+    ui.notationToggle.dataset.i18n = key;
+    ui.notationToggle.textContent = translate(key, fallback);
+  }
+
   function renderHistory(state, ui) {
     if (!ui.historyList) {
       return;
@@ -3464,6 +3505,7 @@
       const moveNumber = Number(entry.moveNumber);
       const color = entry.color === BLACK ? BLACK : entry.color === WHITE ? WHITE : null;
       const san = typeof entry.san === 'string' ? entry.san.trim() : '';
+      const lan = typeof entry.lan === 'string' ? entry.lan.trim() : '';
       const capturedPiece = sanitizePiece(entry.captured);
       if (!Number.isFinite(moveNumber) || moveNumber <= 0 || !color || !san) {
         continue;
@@ -3476,12 +3518,15 @@
       const slot = color === WHITE ? 'white' : 'black';
       record[slot] = {
         san,
+        lan: lan || null,
         captured: capturedPiece || null
       };
     }
 
     const moveNumbers = Array.from(entriesByMove.keys()).sort((a, b) => a - b);
     replaceChildrenSafe(ui.historyList);
+
+    const notationStyle = getNotationPreference(state);
 
     function renderMoveCell(cell, moveData) {
       replaceChildrenSafe(cell);
@@ -3493,7 +3538,8 @@
       }
       const notationSpan = document.createElement('span');
       notationSpan.className = 'chess-history__notation';
-      notationSpan.textContent = moveData.san;
+      const text = getEntryNotation(moveData, notationStyle);
+      notationSpan.textContent = text || moveData.san;
       cell.appendChild(notationSpan);
       if (moveData.captured) {
         const captureElement = createHistoryCaptureElement(moveData.captured);
@@ -3530,6 +3576,8 @@
     const preferences = state.preferences || {};
     const showCoordinates = preferences.showCoordinates !== false;
     const showHistory = preferences.showHistory !== false;
+    const notationStyle = getNotationPreference(state);
+    state.preferences = Object.assign({}, preferences, { notation: notationStyle });
     if (ui.coordinatesToggle) {
       ui.coordinatesToggle.checked = showCoordinates;
     }
@@ -3542,6 +3590,7 @@
     if (ui.boardElement) {
       ui.boardElement.classList.toggle('chess-board--hide-coordinates', !showCoordinates);
     }
+    updateNotationToggle(state, ui);
   }
 
   function getFenString(state) {
@@ -3552,21 +3601,30 @@
   function buildAlgebraicNotation(state, move, nextState) {
     const pieceType = getPieceType(move.piece);
     const color = getPieceColor(move.piece);
+    const toSquare = toSquareNotation(move.toRow, move.toCol);
+    const hasFromCoordinates = Number.isInteger(move.fromRow)
+      && Number.isInteger(move.fromCol)
+      && move.fromRow >= 0
+      && move.fromRow < BOARD_SIZE
+      && move.fromCol >= 0
+      && move.fromCol < BOARD_SIZE;
+    const fromSquare = hasFromCoordinates ? toSquareNotation(move.fromRow, move.fromCol) : '';
+    const fen = getFenString(nextState);
+
     if (!pieceType || !color) {
-      return { san: toSquareNotation(move.toRow, move.toCol), fen: getFenString(nextState) };
+      const basic = toSquare;
+      const lanFallback = fromSquare ? fromSquare + '-' + toSquare : basic;
+      return { san: basic, lan: lanFallback, fen };
     }
 
-    if (move.isCastle === 'king') {
+    if (move.isCastle === 'king' || move.isCastle === 'queen') {
       const opponentMoves = generateLegalMoves(nextState);
       const inCheck = isKingInCheck(nextState, nextState.activeColor);
       const suffix = inCheck ? (opponentMoves.length === 0 ? '#' : '+') : '';
-      return { san: 'O-O' + suffix, fen: getFenString(nextState) };
-    }
-    if (move.isCastle === 'queen') {
-      const opponentMoves = generateLegalMoves(nextState);
-      const inCheck = isKingInCheck(nextState, nextState.activeColor);
-      const suffix = inCheck ? (opponentMoves.length === 0 ? '#' : '+') : '';
-      return { san: 'O-O-O' + suffix, fen: getFenString(nextState) };
+      const san = (move.isCastle === 'king' ? 'O-O' : 'O-O-O') + suffix;
+      const lanBase = 'K' + (fromSquare ? fromSquare + '-' + toSquare : toSquare);
+      const lan = lanBase + suffix;
+      return { san, lan, fen };
     }
 
     const pieceLetterMap = {
@@ -3578,7 +3636,16 @@
       [PIECE_TYPES.KING]: 'K'
     };
 
-    let notation = pieceLetterMap[pieceType] || '';
+    const longPieceLetterMap = {
+      [PIECE_TYPES.PAWN]: 'P',
+      [PIECE_TYPES.KNIGHT]: 'N',
+      [PIECE_TYPES.BISHOP]: 'B',
+      [PIECE_TYPES.ROOK]: 'R',
+      [PIECE_TYPES.QUEEN]: 'Q',
+      [PIECE_TYPES.KING]: 'K'
+    };
+
+    let sanNotation = pieceLetterMap[pieceType] || '';
 
     if (pieceType !== PIECE_TYPES.PAWN) {
       const disambiguationCandidates = [];
@@ -3608,34 +3675,50 @@
         const sameFile = disambiguationCandidates.some(candidate => candidate.fromCol === move.fromCol);
         const sameRank = disambiguationCandidates.some(candidate => candidate.fromRow === move.fromRow);
         if (!sameFile) {
-          notation += FILES[move.fromCol];
+          sanNotation += FILES[move.fromCol];
         } else if (!sameRank) {
-          notation += RANKS[move.fromRow];
+          sanNotation += RANKS[move.fromRow];
         } else {
-          notation += FILES[move.fromCol] + RANKS[move.fromRow];
+          sanNotation += FILES[move.fromCol] + RANKS[move.fromRow];
         }
       }
     } else if (move.isCapture) {
-      notation += FILES[move.fromCol];
+      sanNotation += FILES[move.fromCol];
     }
 
     if (move.isCapture) {
-      notation += 'x';
+      sanNotation += 'x';
     }
 
-    notation += toSquareNotation(move.toRow, move.toCol);
+    sanNotation += toSquare;
+
+    const longPieceLetter = longPieceLetterMap[pieceType] || '';
+    let lanNotation = longPieceLetter + (fromSquare || '');
+    if (!lanNotation) {
+      lanNotation = fromSquare || longPieceLetter;
+    }
+    if (fromSquare) {
+      lanNotation += move.isCapture ? 'x' : '-';
+    } else {
+      lanNotation += move.isCapture ? 'x' : '-';
+    }
+    lanNotation += toSquare;
 
     if (move.promotion) {
-      notation += '=' + String(move.promotion).toUpperCase();
+      const promotion = '=' + String(move.promotion).toUpperCase();
+      sanNotation += promotion;
+      lanNotation += promotion;
     }
 
     const opponentMoves = generateLegalMoves(nextState);
     const inCheck = isKingInCheck(nextState, nextState.activeColor);
     if (inCheck) {
-      notation += opponentMoves.length === 0 ? '#' : '+';
+      const suffix = opponentMoves.length === 0 ? '#' : '+';
+      sanNotation += suffix;
+      lanNotation += suffix;
     }
 
-    return { san: notation, fen: getFenString(nextState) };
+    return { san: sanNotation, lan: lanNotation, fen };
   }
 
   function clearSelection(state, ui) {
@@ -4025,6 +4108,7 @@
         const color = entry.color === BLACK ? BLACK : entry.color === WHITE ? WHITE : null;
         const san = typeof entry.san === 'string' ? entry.san.trim() : '';
         const fen = typeof entry.fen === 'string' ? entry.fen : null;
+        const lan = typeof entry.lan === 'string' ? entry.lan.trim() : '';
         const captured = sanitizePiece(entry.captured);
         if (!Number.isFinite(moveNumber) || moveNumber <= 0 || !color || !san) {
           continue;
@@ -4033,6 +4117,7 @@
           moveNumber: Math.floor(moveNumber),
           color,
           san,
+          lan: lan || null,
           fen: fen || null,
           captured: captured || null
         });
@@ -4089,9 +4174,13 @@
       }
     }
 
+    const rawNotationPreference = raw.preferences && typeof raw.preferences.notation === 'string'
+      ? raw.preferences.notation.toLowerCase()
+      : null;
     const preferences = {
       showCoordinates: raw.preferences && raw.preferences.showCoordinates === false ? false : true,
-      showHistory: raw.preferences && raw.preferences.showHistory === false ? false : true
+      showHistory: raw.preferences && raw.preferences.showHistory === false ? false : true,
+      notation: rawNotationPreference === NOTATION_STYLES.LONG ? NOTATION_STYLES.LONG : NOTATION_STYLES.SHORT
     };
 
     const difficultyIdRaw = typeof raw.difficultyId === 'string' && raw.difficultyId.trim()
@@ -4220,7 +4309,8 @@
     const difficulty = state.difficulty || getDefaultDifficultyMode();
     const preferences = {
       showCoordinates: state.preferences && state.preferences.showCoordinates !== false,
-      showHistory: state.preferences && state.preferences.showHistory !== false
+      showHistory: state.preferences && state.preferences.showHistory !== false,
+      notation: getNotationPreference(state)
     };
     const base = createInitialState();
     state.board = base.board;
@@ -4317,6 +4407,7 @@
               moveNumber: entry.moveNumber,
               color: entry.color,
               san: entry.san,
+              lan: entry.lan || null,
               fen: entry.fen || null,
               captured: sanitizePiece(entry.captured) || null
             };
@@ -4329,7 +4420,10 @@
       isGameOver: Boolean(state.isGameOver),
       preferences: {
         showCoordinates: preferences.showCoordinates !== false,
-        showHistory: preferences.showHistory !== false
+        showHistory: preferences.showHistory !== false,
+        notation: preferences.notation === NOTATION_STYLES.LONG
+          ? NOTATION_STYLES.LONG
+          : NOTATION_STYLES.SHORT
       },
       difficultyId: state.difficultyId || (state.difficulty && state.difficulty.id) || getDefaultDifficultyMode().id,
       lastAiAnalysis: serializeAiAnalysis(state.lastAiAnalysis)
@@ -4390,6 +4484,7 @@
       moveNumber,
       color: movingColor,
       san: notation.san,
+      lan: notation.lan,
       fen: notation.fen,
       captured: nextState.lastMove ? sanitizePiece(nextState.lastMove.captured) || null : null
     });
@@ -4526,7 +4621,7 @@
       gameOutcome: null,
       isGameOver: false,
       history: [],
-      preferences: { showCoordinates: true, showHistory: true },
+      preferences: { showCoordinates: true, showHistory: true, notation: NOTATION_STYLES.SHORT },
       dragContext: null,
       helperMessage: null,
       helperTimeoutId: null,
@@ -4561,6 +4656,7 @@
     const promotionOptionsElement = section.querySelector(PROMOTION_OPTIONS_SELECTOR);
     const coordinatesToggle = section.querySelector(COORDINATES_TOGGLE_SELECTOR);
     const historyToggle = section.querySelector(HISTORY_TOGGLE_SELECTOR);
+    const notationToggle = section.querySelector(NOTATION_TOGGLE_SELECTOR);
     const historyContainer = section.querySelector(HISTORY_CONTAINER_SELECTOR);
     const historyList = section.querySelector(HISTORY_LIST_SELECTOR);
     const historyEmpty = section.querySelector(HISTORY_EMPTY_SELECTOR);
@@ -4593,6 +4689,7 @@
       promotionOptionsElement,
       coordinatesToggle,
       historyToggle,
+      notationToggle,
       historyContainer,
       historyList,
       historyEmpty,
@@ -4623,6 +4720,17 @@
         state.preferences = state.preferences || {};
         state.preferences.showHistory = historyToggle.checked;
         applyBoardPreferences(state, ui);
+        renderHistory(state, ui);
+        saveProgress(state);
+      });
+    }
+    if (notationToggle) {
+      notationToggle.addEventListener('click', function () {
+        state.preferences = state.preferences || {};
+        const current = getNotationPreference(state);
+        const next = current === NOTATION_STYLES.LONG ? NOTATION_STYLES.SHORT : NOTATION_STYLES.LONG;
+        state.preferences.notation = next;
+        updateNotationToggle(state, ui);
         renderHistory(state, ui);
         saveProgress(state);
       });
