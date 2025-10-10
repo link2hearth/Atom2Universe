@@ -936,8 +936,8 @@
           "title": "Instant unlocks",
           "trophies": "Unlock every achievement",
           "elements": "Unlock the entire periodic table",
-          "infoLocked": "Unlock the Info page",
-          "infoUnlocked": "Info page unlocked"
+          "infoLocked": "Unlock Info page bonuses",
+          "infoUnlocked": "Info page bonuses unlocked"
         },
         "modes": {
           "title": "Persistent modes",
@@ -1520,8 +1520,8 @@
         "freeShopDisabled": "DevKit: free shop disabled",
         "freeGachaEnabled": "DevKit: free draws enabled",
         "freeGachaDisabled": "DevKit: free draws disabled",
-        "infoPageUnlocked": "DevKit: Info page unlocked!",
-        "infoPageAlready": "Info page already unlocked."
+        "infoPageUnlocked": "DevKit: Info page bonuses unlocked!",
+        "infoPageAlready": "Info page bonuses are already unlocked."
       },
       "shop": {
         "limitReached": "Limit reached",

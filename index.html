@@ -69,7 +69,7 @@
         <button class="nav-button" data-target="fusion" hidden aria-hidden="true">
           <span data-i18n="index.navigation.items.fusion">Fusion</span>
         </button>
-        <button class="nav-button" data-target="info" hidden aria-hidden="true">
+        <button class="nav-button" data-target="info">
           <span data-i18n="index.navigation.items.info">Infos</span>
         </button>
         <button
@@ -1808,7 +1808,12 @@
           </div>
         </article>
 
-        <article class="info-card info-card--bonuses" aria-labelledby="info-shop-bonus-title">
+        <article
+          id="infoShopBonusCard"
+          class="info-card info-card--bonuses"
+          aria-labelledby="info-shop-bonus-title"
+          hidden
+        >
           <header class="info-card__header">
             <h3 id="info-shop-bonus-title" data-i18n="index.sections.info.shop.title">Bonus de boutique</h3>
             <p class="info-card__subtitle" data-i18n="index.sections.info.shop.subtitle">Effets obtenus auprès des améliorations achetées.</p>
@@ -1821,7 +1826,12 @@
           ></div>
         </article>
 
-        <article class="info-card info-card--bonuses" aria-labelledby="info-bonus-title">
+        <article
+          id="infoElementBonusCard"
+          class="info-card info-card--bonuses"
+          aria-labelledby="info-bonus-title"
+          hidden
+        >
           <header class="info-card__header">
             <h3 id="info-bonus-title" data-i18n="index.sections.info.elements.title">Bonus des éléments</h3>
             <p
@@ -2635,7 +2645,7 @@
             id="devkitUnlockInfo"
             data-i18n="index.sections.devkit.unlocks.infoLocked"
           >
-            Débloquer la page Infos
+            Débloquer les bonus de la page Infos
           </button>
         </section>
         <section class="devkit-section" aria-labelledby="devkitModesTitle">

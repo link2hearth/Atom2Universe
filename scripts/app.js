@@ -2149,6 +2149,9 @@ function isPageUnlocked(pageId) {
   if (pageId === 'goals') {
     return getUnlockedTrophySet().has(GOALS_UNLOCK_TROPHY_ID);
   }
+  if (pageId === 'info') {
+    return true;
+  }
   if (!LOCKABLE_PAGE_IDS.has(pageId)) {
     return true;
   }
@@ -2733,6 +2736,8 @@ const elements = {
   infoBonusSubtitle: document.getElementById('infoBonusSubtitle'),
   infoElementBonuses: document.getElementById('infoElementBonuses'),
   infoShopBonuses: document.getElementById('infoShopBonuses'),
+  infoShopBonusCard: document.getElementById('infoShopBonusCard'),
+  infoElementBonusCard: document.getElementById('infoElementBonusCard'),
   critAtomLayer: null,
   devkitOverlay: document.getElementById('devkitOverlay'),
   devkitPanel: document.getElementById('devkitPanel'),
@@ -3275,19 +3280,38 @@ function ensureQuantum2048Game() {
   return quantum2048Game;
 }
 
+function areInfoBonusesUnlocked() {
+  const unlocks = getPageUnlockState();
+  return unlocks?.info === true;
+}
+
+function updateInfoBonusVisibility() {
+  const visible = areInfoBonusesUnlocked();
+  if (elements.infoShopBonusCard) {
+    elements.infoShopBonusCard.hidden = !visible;
+    elements.infoShopBonusCard.setAttribute('aria-hidden', visible ? 'false' : 'true');
+  }
+  if (elements.infoElementBonusCard) {
+    elements.infoElementBonusCard.hidden = !visible;
+    elements.infoElementBonusCard.setAttribute('aria-hidden', visible ? 'false' : 'true');
+  }
+}
+
 function updatePageUnlockUI() {
   const unlocks = getPageUnlockState();
   const buttonConfig = [
     ['gacha', elements.navGachaButton],
     ['tableau', elements.navTableButton],
-    ['fusion', elements.navFusionButton],
-    ['info', elements.navInfoButton]
+    ['fusion', elements.navFusionButton]
   ];
 
   buttonConfig.forEach(([pageId, button]) => {
     const unlocked = unlocks?.[pageId] === true;
     setNavButtonLockState(button, unlocked);
   });
+
+  setNavButtonLockState(elements.navInfoButton, true);
+  updateInfoBonusVisibility();
 
   ensureActivePageUnlocked();
 }
@@ -4731,7 +4755,7 @@ function updateDevKitUI() {
     elements.devkitToggleGacha.textContent = `Tirages gratuits : ${active ? 'activés' : 'désactivés'}`;
   }
   if (elements.devkitUnlockInfo) {
-    const unlocked = isPageUnlocked('info');
+    const unlocked = areInfoBonusesUnlocked();
     elements.devkitUnlockInfo.disabled = unlocked;
     elements.devkitUnlockInfo.setAttribute('aria-disabled', unlocked ? 'true' : 'false');
     const i18nKey = unlocked

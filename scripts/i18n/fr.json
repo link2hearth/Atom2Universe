@@ -936,8 +936,8 @@
           "title": "Déblocages instantanés",
           "trophies": "Débloquer tous les succès",
           "elements": "Débloquer tout le tableau périodique",
-          "infoLocked": "Débloquer la page Infos",
-          "infoUnlocked": "Page Infos débloquée"
+          "infoLocked": "Débloquer les bonus de la page Infos",
+          "infoUnlocked": "Bonus de la page Infos débloqués"
         },
         "modes": {
           "title": "Modes persistants",
@@ -1520,8 +1520,8 @@
         "freeShopDisabled": "DevKit : magasin gratuit désactivé",
         "freeGachaEnabled": "DevKit : tirages gratuits activés",
         "freeGachaDisabled": "DevKit : tirages gratuits désactivés",
-        "infoPageUnlocked": "DevKit : page Infos débloquée !",
-        "infoPageAlready": "Page Infos déjà débloquée."
+        "infoPageUnlocked": "DevKit : bonus de la page Infos débloqués !",
+        "infoPageAlready": "Bonus de la page Infos déjà débloqués."
       },
       "shop": {
         "limitReached": "Limite atteinte",
