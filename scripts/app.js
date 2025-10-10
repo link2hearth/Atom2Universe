@@ -1791,9 +1791,28 @@ const DEFAULT_STATE = {
   apsCrit: createDefaultApsCritState()
 };
 
+const ARCADE_GAME_IDS = Object.freeze([
+  'particules',
+  'metaux',
+  'wave',
+  'quantum2048',
+  'math',
+  'balance',
+  'sudoku',
+  'minesweeper',
+  'solitaire',
+  'blackjack',
+  'echecs'
+]);
+
 function createInitialArcadeProgress() {
+  const entries = {};
+  ARCADE_GAME_IDS.forEach(id => {
+    entries[id] = null;
+  });
   return {
-    echecs: null
+    version: 1,
+    entries
   };
 }
 
@@ -10408,14 +10427,35 @@ function cloneArcadeProgress(progress) {
   if (!progress || typeof progress !== 'object') {
     return base;
   }
-  const result = { ...base };
-  if (progress.echecs && typeof progress.echecs === 'object') {
-    try {
-      result.echecs = JSON.parse(JSON.stringify(progress.echecs));
-    } catch (error) {
-      result.echecs = null;
+
+  const result = { version: 1, entries: { ...base.entries } };
+  const sourceEntries = progress.entries && typeof progress.entries === 'object'
+    ? progress.entries
+    : progress;
+
+  ARCADE_GAME_IDS.forEach(id => {
+    const rawEntry = sourceEntries[id];
+    if (!rawEntry) {
+      result.entries[id] = null;
+      return;
     }
-  }
+    if (rawEntry && typeof rawEntry === 'object') {
+      const entryState = rawEntry.state && typeof rawEntry.state === 'object'
+        ? rawEntry.state
+        : rawEntry;
+      try {
+        result.entries[id] = {
+          state: JSON.parse(JSON.stringify(entryState)),
+          updatedAt: Number.isFinite(rawEntry.updatedAt) ? rawEntry.updatedAt : Date.now()
+        };
+      } catch (error) {
+        result.entries[id] = null;
+      }
+    } else {
+      result.entries[id] = null;
+    }
+  });
+
   return result;
 }
 
@@ -10914,14 +10954,30 @@ function normalizeArcadeProgress(raw) {
   if (!raw || typeof raw !== 'object') {
     return base;
   }
-  const result = { ...base };
-  if (raw.echecs && typeof raw.echecs === 'object') {
-    try {
-      result.echecs = JSON.parse(JSON.stringify(raw.echecs));
-    } catch (error) {
-      result.echecs = null;
+  const result = { version: 1, entries: { ...base.entries } };
+  const sourceEntries = raw.entries && typeof raw.entries === 'object' ? raw.entries : raw;
+
+  ARCADE_GAME_IDS.forEach(id => {
+    const entry = sourceEntries[id];
+    if (!entry) {
+      result.entries[id] = null;
+      return;
     }
-  }
+    const payload = entry && typeof entry === 'object' ? (entry.state ?? entry) : null;
+    if (!payload || typeof payload !== 'object') {
+      result.entries[id] = null;
+      return;
+    }
+    try {
+      result.entries[id] = {
+        state: JSON.parse(JSON.stringify(payload)),
+        updatedAt: Number.isFinite(entry.updatedAt) ? entry.updatedAt : Date.now()
+      };
+    } catch (error) {
+      result.entries[id] = null;
+    }
+  });
+
   return result;
 }
 

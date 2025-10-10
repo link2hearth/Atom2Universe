@@ -4074,13 +4074,31 @@
   }
 
   function readStoredProgress() {
+    if (typeof window !== 'undefined' && window.ArcadeAutosave && typeof window.ArcadeAutosave.get === 'function') {
+      try {
+        const autosaved = window.ArcadeAutosave.get('echecs');
+        const normalizedAutosaved = normalizeStoredChessProgress(autosaved);
+        if (normalizedAutosaved) {
+          return normalizedAutosaved;
+        }
+      } catch (error) {
+        // Ignore autosave errors
+      }
+    }
+
     const globalState = getGlobalGameState();
     if (globalState && globalState.arcadeProgress && typeof globalState.arcadeProgress === 'object') {
-      const normalized = normalizeStoredChessProgress(globalState.arcadeProgress.echecs);
+      const entries = globalState.arcadeProgress.entries && typeof globalState.arcadeProgress.entries === 'object'
+        ? globalState.arcadeProgress.entries
+        : globalState.arcadeProgress;
+      const rawEntry = entries.echecs;
+      const payload = rawEntry && typeof rawEntry === 'object' && rawEntry.state ? rawEntry.state : rawEntry;
+      const normalized = normalizeStoredChessProgress(payload);
       if (normalized) {
         return normalized;
       }
     }
+
     if (typeof window !== 'undefined' && window.localStorage) {
       try {
         const raw = window.localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -4266,12 +4284,26 @@
       lastAiAnalysis: serializeAiAnalysis(state.lastAiAnalysis)
     };
 
-    const globalState = getGlobalGameState();
-    if (globalState && typeof globalState === 'object') {
-      if (!globalState.arcadeProgress || typeof globalState.arcadeProgress !== 'object') {
-        globalState.arcadeProgress = {};
+    if (typeof window !== 'undefined' && window.ArcadeAutosave && typeof window.ArcadeAutosave.set === 'function') {
+      try {
+        window.ArcadeAutosave.set('echecs', payload);
+      } catch (error) {
+        // Ignore autosave errors
       }
-      globalState.arcadeProgress.echecs = payload;
+    } else {
+      const globalState = getGlobalGameState();
+      if (globalState && typeof globalState === 'object') {
+        if (!globalState.arcadeProgress || typeof globalState.arcadeProgress !== 'object') {
+          globalState.arcadeProgress = { version: 1, entries: {} };
+        }
+        if (!globalState.arcadeProgress.entries || typeof globalState.arcadeProgress.entries !== 'object') {
+          globalState.arcadeProgress.entries = {};
+        }
+        globalState.arcadeProgress.entries.echecs = {
+          state: payload,
+          updatedAt: Date.now()
+        };
+      }
     }
 
     if (typeof window !== 'undefined' && window.localStorage) {
