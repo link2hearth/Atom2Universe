@@ -221,12 +221,12 @@
 
 .chess-difficulty__select {
   inline-size: 100%;
-  padding: 0.4rem 0.65rem;
-  border-radius: 0.65rem;
+  padding: 0.4em 0.65em;
+  border-radius: 0.65em;
   border: 1px solid rgba(255, 255, 255, 0.18);
   background: rgba(0, 0, 0, 0.35);
   color: #ffffff;
-  font-size: clamp(0.85rem, 1.8vh, 1rem);
+  font-size: calc(clamp(0.85rem, 1.8vh, 1rem) * var(--ui-control-scale, 1));
   font-weight: 500;
 }
 
