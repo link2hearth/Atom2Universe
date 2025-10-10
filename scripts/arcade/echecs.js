@@ -3418,6 +3418,38 @@
     ui.promotionElement.hidden = true;
   }
 
+  function createHistoryCaptureElement(piece) {
+    if (!piece) {
+      return null;
+    }
+
+    const label = getPieceLabel(piece);
+    const spriteUrl = getPieceSprite(piece);
+    if (spriteUrl) {
+      const image = document.createElement('img');
+      image.className = 'chess-history__capture';
+      image.src = spriteUrl;
+      image.alt = label;
+      image.loading = 'lazy';
+      image.decoding = 'async';
+      return image;
+    }
+
+    const symbol = getPieceSymbol(piece);
+    if (!symbol && !label) {
+      return null;
+    }
+
+    const fallback = document.createElement('span');
+    fallback.className = 'chess-history__capture chess-history__capture--fallback';
+    fallback.textContent = symbol || '×';
+    if (label) {
+      fallback.setAttribute('role', 'img');
+      fallback.setAttribute('aria-label', label);
+    }
+    return fallback;
+  }
+
   function renderHistory(state, ui) {
     if (!ui.historyList) {
       return;
@@ -3431,24 +3463,46 @@
       }
       const moveNumber = Number(entry.moveNumber);
       const color = entry.color === BLACK ? BLACK : entry.color === WHITE ? WHITE : null;
-      const san = typeof entry.san === 'string' ? entry.san : '';
+      const san = typeof entry.san === 'string' ? entry.san.trim() : '';
+      const capturedPiece = sanitizePiece(entry.captured);
       if (!Number.isFinite(moveNumber) || moveNumber <= 0 || !color || !san) {
         continue;
       }
       const key = Math.floor(moveNumber);
       if (!entriesByMove.has(key)) {
-        entriesByMove.set(key, { number: key, white: '', black: '' });
+        entriesByMove.set(key, { number: key, white: null, black: null });
       }
       const record = entriesByMove.get(key);
-      if (color === WHITE) {
-        record.white = san;
-      } else {
-        record.black = san;
-      }
+      const slot = color === WHITE ? 'white' : 'black';
+      record[slot] = {
+        san,
+        captured: capturedPiece || null
+      };
     }
 
     const moveNumbers = Array.from(entriesByMove.keys()).sort((a, b) => a - b);
     replaceChildrenSafe(ui.historyList);
+
+    function renderMoveCell(cell, moveData) {
+      replaceChildrenSafe(cell);
+      cell.classList.remove('chess-history__move--empty');
+      if (!moveData || !moveData.san) {
+        cell.textContent = '…';
+        cell.classList.add('chess-history__move--empty');
+        return;
+      }
+      const notationSpan = document.createElement('span');
+      notationSpan.className = 'chess-history__notation';
+      notationSpan.textContent = moveData.san;
+      cell.appendChild(notationSpan);
+      if (moveData.captured) {
+        const captureElement = createHistoryCaptureElement(moveData.captured);
+        if (captureElement) {
+          cell.appendChild(captureElement);
+        }
+      }
+    }
+
     for (let i = 0; i < moveNumbers.length; i += 1) {
       const moveNumber = moveNumbers[i];
       const record = entriesByMove.get(moveNumber);
@@ -3459,16 +3513,10 @@
       numberSpan.textContent = moveNumber + '.';
       const whiteSpan = document.createElement('span');
       whiteSpan.className = 'chess-history__move chess-history__move--white';
-      whiteSpan.textContent = record.white || '…';
-      if (!record.white) {
-        whiteSpan.classList.add('chess-history__move--empty');
-      }
+      renderMoveCell(whiteSpan, record.white);
       const blackSpan = document.createElement('span');
       blackSpan.className = 'chess-history__move chess-history__move--black';
-      blackSpan.textContent = record.black || '…';
-      if (!record.black) {
-        blackSpan.classList.add('chess-history__move--empty');
-      }
+      renderMoveCell(blackSpan, record.black);
       item.append(numberSpan, whiteSpan, blackSpan);
       ui.historyList.appendChild(item);
     }
@@ -3977,6 +4025,7 @@
         const color = entry.color === BLACK ? BLACK : entry.color === WHITE ? WHITE : null;
         const san = typeof entry.san === 'string' ? entry.san.trim() : '';
         const fen = typeof entry.fen === 'string' ? entry.fen : null;
+        const captured = sanitizePiece(entry.captured);
         if (!Number.isFinite(moveNumber) || moveNumber <= 0 || !color || !san) {
           continue;
         }
@@ -3984,7 +4033,8 @@
           moveNumber: Math.floor(moveNumber),
           color,
           san,
-          fen: fen || null
+          fen: fen || null,
+          captured: captured || null
         });
       }
       history.sort(function (a, b) {
@@ -4267,7 +4317,8 @@
               moveNumber: entry.moveNumber,
               color: entry.color,
               san: entry.san,
-              fen: entry.fen || null
+              fen: entry.fen || null,
+              captured: sanitizePiece(entry.captured) || null
             };
           })
         : [],
@@ -4339,7 +4390,8 @@
       moveNumber,
       color: movingColor,
       san: notation.san,
-      fen: notation.fen
+      fen: notation.fen,
+      captured: nextState.lastMove ? sanitizePiece(nextState.lastMove.captured) || null : null
     });
 
     if (!(state.positionCounts instanceof Map)) {
