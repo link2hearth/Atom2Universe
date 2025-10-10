@@ -9,6 +9,106 @@
     difficile: Object.freeze({ rows: 16, cols: 16, mines: 40 })
   });
 
+  function coercePositiveNumber(value, fallback) {
+    const parsed = Number.parseFloat(value);
+    if (!Number.isFinite(parsed) || parsed <= 0) {
+      return fallback;
+    }
+    return parsed;
+  }
+
+  function getBoardMetrics(boardElement) {
+    const viewportWidth = Math.max(
+      coercePositiveNumber(window.innerWidth, 1),
+      coercePositiveNumber(document.documentElement?.clientWidth, 1),
+      1
+    );
+    const viewportHeight = Math.max(
+      coercePositiveNumber(window.innerHeight, 1),
+      coercePositiveNumber(document.documentElement?.clientHeight, 1),
+      1
+    );
+
+    let availableWidth = viewportWidth;
+    let availableHeight = viewportHeight;
+
+    const container = boardElement.closest('.minesweeper');
+    if (container) {
+      const containerRect = container.getBoundingClientRect();
+      const containerStyles = window.getComputedStyle(container);
+      const paddingX =
+        coercePositiveNumber(containerStyles.paddingLeft, 0) +
+        coercePositiveNumber(containerStyles.paddingRight, 0);
+      const paddingY =
+        coercePositiveNumber(containerStyles.paddingTop, 0) +
+        coercePositiveNumber(containerStyles.paddingBottom, 0);
+      const gap = coercePositiveNumber(containerStyles.gap || containerStyles.rowGap, 0);
+
+      availableWidth = containerRect.width - paddingX;
+      availableHeight = containerRect.height - paddingY - gap;
+
+      const controls = container.querySelector('.minesweeper__controls');
+      if (controls) {
+        availableHeight -= controls.getBoundingClientRect().height;
+      }
+    }
+
+    const boardRect = boardElement.getBoundingClientRect();
+    if (!Number.isFinite(availableWidth) || availableWidth <= 0) {
+      availableWidth = viewportWidth;
+    }
+    if (!Number.isFinite(availableHeight) || availableHeight <= 0) {
+      availableHeight = viewportHeight - boardRect.top;
+    }
+
+    availableWidth = Math.max(availableWidth, 240);
+    availableHeight = Math.max(availableHeight, viewportHeight - boardRect.top - 24, 240);
+
+    return {
+      width: availableWidth,
+      height: availableHeight,
+      ratio: availableWidth / availableHeight,
+      orientation: availableWidth >= availableHeight ? 'landscape' : 'portrait'
+    };
+  }
+
+  function computeGridDimensions(preset, metrics) {
+    const baseRows = Math.max(4, Number(preset.rows) || 8);
+    const baseCols = Math.max(4, Number(preset.cols) || 8);
+    const totalCells = Math.max(16, baseRows * baseCols);
+    const targetRatio = Math.min(Math.max(metrics.ratio || 1, 0.35), 3);
+
+    const candidateRows = new Set();
+    const targetRows = Math.sqrt(totalCells / targetRatio);
+    for (let delta = -2; delta <= 2; delta += 1) {
+      candidateRows.add(Math.max(4, Math.round(targetRows + delta)));
+    }
+    candidateRows.add(baseRows);
+    candidateRows.add(baseCols);
+
+    let best = { rows: baseRows, cols: baseCols, score: Number.POSITIVE_INFINITY };
+
+    candidateRows.forEach((rows) => {
+      if (!Number.isFinite(rows) || rows < 4) {
+        return;
+      }
+      const rawCols = totalCells / rows;
+      for (let delta = -1; delta <= 1; delta += 1) {
+        const cols = Math.max(4, Math.round(rawCols + delta));
+        const aspect = cols / rows;
+        const product = rows * cols;
+        const ratioDiff = Math.abs(aspect - targetRatio);
+        const cellDiff = Math.abs(product - totalCells) / totalCells;
+        const score = ratioDiff * 3 + cellDiff;
+        if (score < best.score) {
+          best = { rows, cols, score };
+        }
+      }
+    });
+
+    return { rows: best.rows, cols: best.cols };
+  }
+
   function onReady(callback) {
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', callback, { once: true });
@@ -92,7 +192,8 @@
       grid: [],
       safeRemaining: 0,
       status: 'ready',
-      armed: false
+      armed: false,
+      metrics: null
     };
 
     function refreshLabelCache() {
@@ -160,9 +261,24 @@
       setCellAriaLabel(cell, labelCache.hidden);
     }
 
+    function applyBoardMetrics() {
+      if (!gameState.metrics) {
+        return;
+      }
+      const { width, height } = gameState.metrics;
+      boardElement.style.setProperty('--minesweeper-board-width', `${Math.round(width)}px`);
+      boardElement.style.setProperty('--minesweeper-board-height', `${Math.round(height)}px`);
+      boardElement.style.width = `${Math.round(width)}px`;
+      boardElement.style.height = `${Math.round(height)}px`;
+      boardElement.style.maxWidth = '100%';
+      boardElement.style.maxHeight = '100%';
+    }
+
     function renderBoard() {
       boardElement.innerHTML = '';
       boardElement.style.setProperty('--minesweeper-columns', gameState.cols);
+      boardElement.style.setProperty('--minesweeper-rows', gameState.rows);
+      applyBoardMetrics();
       for (let row = 0; row < gameState.rows; row += 1) {
         for (let col = 0; col < gameState.cols; col += 1) {
           const cell = gameState.grid[row][col];
@@ -184,9 +300,12 @@
     function initializeGrid(difficultyKey) {
       const presetKey = normalizeDifficultyKey(difficultyKey);
       const preset = DIFFICULTY_PRESETS[presetKey];
-      const rows = Math.max(4, Number(preset.rows) || 8);
-      const cols = Math.max(4, Number(preset.cols) || 8);
-      const mines = clampMines(rows, cols, preset.mines);
+      const metrics = getBoardMetrics(boardElement);
+      const { rows, cols } = computeGridDimensions(preset, metrics);
+      const baseArea = Math.max(preset.rows * preset.cols, 1);
+      const density = preset.mines / baseArea;
+      const desiredMines = Math.round(density * rows * cols);
+      const mines = clampMines(rows, cols, desiredMines);
       gameState.rows = rows;
       gameState.cols = cols;
       gameState.mineCount = mines;
@@ -194,6 +313,7 @@
       gameState.safeRemaining = rows * cols - mines;
       gameState.status = 'ready';
       gameState.armed = false;
+      gameState.metrics = metrics;
       renderBoard();
       for (let row = 0; row < gameState.rows; row += 1) {
         for (let col = 0; col < gameState.cols; col += 1) {
