@@ -233,12 +233,72 @@
             "description": "Challenge an AI across a quantum-flavored board tailored for aspiring strategists.",
             "cta": "Plan"
           },
+          "gameOfLife": {
+            "aria": "Open the Game of Life mini-game",
+            "title": "Game of Life",
+            "description": "Grow cells on an infinite grid and orchestrate your favorite patterns.",
+            "cta": "Explore"
+          },
           "blackjack": {
             "aria": "Open the Blackjack mini-game",
             "title": "Blackjack",
             "description": "Face the dealer with an eight-deck shoe that reshuffles as soon as a unique card runs out.",
             "cta": "Deal"
           }
+        }
+      },
+      "gameOfLife": {
+        "aria": "Conway's Game of Life mini-game",
+        "title": "Game of Life",
+        "subtitle": "Draw, zoom, and steer the simulation to uncover mesmerizing quantum structures.",
+        "backToHub": "Back to hub",
+        "canvas": "Game of Life grid",
+        "toolbar": "Simulation controls",
+        "controls": {
+          "play": "Play",
+          "pause": "Pause",
+          "step": "Step",
+          "rewind": "Rewind",
+          "fastForward": "Fast-forward",
+          "clear": "Reset",
+          "speed": "Speed",
+          "zoom": "Zoom",
+          "speedSlider": "Adjust simulation speed",
+          "zoomSlider": "Adjust zoom level"
+        },
+        "status": {
+          "generation": "Generation",
+          "population": "Population"
+        },
+        "patterns": {
+          "title": "Signature patterns",
+          "empty": "Patterns will load automatically.",
+          "glider": "Glider",
+          "gliderDescription": "A minimalist traveler gliding diagonally forever.",
+          "lightweightSpaceship": "Lightweight spaceship",
+          "lightweightSpaceshipDescription": "A speedy craft perfect for carrying signals.",
+          "pulsar": "Pulsar",
+          "pulsarDescription": "A majestic period-3 oscillator.",
+          "gosperGliderGun": "Gosper glider gun",
+          "gosperGliderGunDescription": "The first infinite gun, firing gliders at regular intervals."
+        },
+        "random": {
+          "title": "Random generation",
+          "width": "Width (cells)",
+          "height": "Height (cells)",
+          "density": "Live density",
+          "densitySlider": "Adjust live density",
+          "replace": "Replace",
+          "add": "Add",
+          "hint": "The generator stores a seed so you can reproduce your living galaxies."
+        },
+        "help": {
+          "title": "Quick controls",
+          "draw": "Left click: toggle a cell.",
+          "drag": "Hold left click: draw or erase an area.",
+          "pan": "Hold space or right click to pan the camera.",
+          "zoom": "Scroll or pinch to zoom around the pointer.",
+          "shortcut": "Space bar: play/pause · R: reset · Z: rewind."
         }
       },
       "math": {

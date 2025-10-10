@@ -1,0 +1,312 @@
+.page--game-of-life {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2rem 1.5rem 3rem;
+  color: var(--color-text-primary, #f5f7ff);
+}
+
+.game-of-life__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 1.5rem;
+}
+
+.game-of-life__title {
+  font-family: var(--font-heading, 'Orbitron', system-ui, sans-serif);
+  font-size: clamp(1.75rem, 2vw + 1rem, 2.4rem);
+  letter-spacing: 0.04em;
+  margin: 0;
+}
+
+.game-of-life__subtitle {
+  max-width: 640px;
+  margin: 0;
+  font-size: 1rem;
+  color: var(--color-text-secondary, rgba(245, 247, 255, 0.8));
+}
+
+.game-of-life__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
+  gap: 1.5rem;
+  min-height: 0;
+  flex: 1;
+}
+
+@media (max-width: 1200px) {
+  .game-of-life__layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.game-of-life__stage {
+  position: relative;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(10, 14, 28, 0.82), rgba(12, 18, 40, 0.92));
+  box-shadow: 0 24px 48px rgba(3, 8, 20, 0.45);
+  overflow: hidden;
+  min-height: 420px;
+}
+
+.game-of-life__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+
+.game-of-life__toolbar {
+  position: absolute;
+  left: 1.25rem;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  padding: 0.9rem 1.1rem;
+  border-radius: 14px;
+  background: rgba(6, 10, 22, 0.78);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 16px 32px rgba(2, 6, 14, 0.35);
+}
+
+.game-of-life__toolbar-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.game-of-life__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-width: 42px;
+  padding: 0.55rem 0.85rem;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, rgba(80, 150, 255, 0.9), rgba(110, 85, 255, 0.95));
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease;
+}
+
+.game-of-life__button[aria-pressed="true"],
+.game-of-life__button:focus-visible,
+.game-of-life__button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 24px rgba(70, 120, 255, 0.35);
+}
+
+.game-of-life__button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.game-of-life__slider {
+  appearance: none;
+  width: 140px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  outline: none;
+}
+
+.game-of-life__slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #90f7ff, #7f6bff);
+  box-shadow: 0 0 0 4px rgba(144, 247, 255, 0.18);
+  cursor: pointer;
+}
+
+.game-of-life__slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #90f7ff, #7f6bff);
+  border: none;
+  box-shadow: 0 0 0 4px rgba(144, 247, 255, 0.18);
+  cursor: pointer;
+}
+
+.game-of-life__status {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-left: auto;
+  font-size: 0.95rem;
+  color: rgba(230, 236, 255, 0.86);
+}
+
+.game-of-life__status dt {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.game-of-life__status dd {
+  margin: 0;
+}
+
+.game-of-life__sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.game-of-life__panel {
+  background: rgba(10, 14, 28, 0.78);
+  border-radius: 18px;
+  padding: 1.25rem;
+  box-shadow: 0 18px 36px rgba(4, 10, 24, 0.4);
+}
+
+.game-of-life__panel-title {
+  margin: 0 0 0.85rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.game-of-life__pattern-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.game-of-life__pattern-button {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 14px;
+  border: 1px solid rgba(120, 160, 255, 0.35);
+  background: rgba(22, 30, 56, 0.72);
+  color: inherit;
+  cursor: pointer;
+  transition: border-color 150ms ease, transform 150ms ease, background 150ms ease;
+}
+
+.game-of-life__pattern-button:hover,
+.game-of-life__pattern-button:focus-visible {
+  border-color: rgba(160, 210, 255, 0.8);
+  transform: translateY(-1px);
+}
+
+.game-of-life__pattern-button[aria-pressed="true"] {
+  border-color: rgba(160, 210, 255, 0.9);
+  background: rgba(30, 38, 70, 0.85);
+}
+
+.game-of-life__pattern-name {
+  font-weight: 600;
+  font-size: 1.02rem;
+}
+
+.game-of-life__pattern-description {
+  font-size: 0.9rem;
+  color: rgba(220, 230, 255, 0.75);
+}
+
+.game-of-life__random-form {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.game-of-life__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.game-of-life__label {
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+.game-of-life__input,
+.game-of-life__select {
+  width: 100%;
+  border-radius: 12px;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid rgba(120, 150, 220, 0.35);
+  background: rgba(12, 18, 36, 0.9);
+  color: inherit;
+  font-size: 0.95rem;
+}
+
+.game-of-life__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.game-of-life__hint {
+  font-size: 0.82rem;
+  color: rgba(200, 210, 240, 0.72);
+  margin-top: 0.4rem;
+}
+
+.game-of-life__empty-state {
+  font-size: 0.9rem;
+  color: rgba(220, 228, 255, 0.72);
+}
+
+.game-of-life__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(80, 140, 255, 0.24);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.game-of-life__pattern-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  color: rgba(200, 210, 240, 0.72);
+  font-size: 0.82rem;
+}
+
+.game-of-life__toolbar .game-of-life__button--secondary {
+  background: rgba(32, 48, 86, 0.88);
+  color: rgba(220, 230, 255, 0.9);
+  box-shadow: inset 0 0 0 1px rgba(120, 150, 220, 0.35);
+}
+
+.game-of-life__toolbar .game-of-life__button--secondary:hover,
+.game-of-life__toolbar .game-of-life__button--secondary:focus-visible {
+  box-shadow: inset 0 0 0 1px rgba(160, 190, 250, 0.65);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 720px) {
+  .page--game-of-life {
+    padding: 1.5rem 1rem 2.5rem;
+  }
+
+  .game-of-life__toolbar {
+    left: 1rem;
+    right: 1rem;
+  }
+
+  .game-of-life__status {
+    flex-basis: 100%;
+    justify-content: space-between;
+  }
+}

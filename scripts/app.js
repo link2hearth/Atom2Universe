@@ -3485,6 +3485,17 @@ function ensureQuantum2048Game() {
   return quantum2048Game;
 }
 
+function ensureGameOfLifeGame() {
+  if (gameOfLifeGame && typeof gameOfLifeGame === 'object') {
+    return gameOfLifeGame;
+  }
+  if (window.gameOfLifeArcade && typeof window.gameOfLifeArcade === 'object') {
+    gameOfLifeGame = window.gameOfLifeArcade;
+    return gameOfLifeGame;
+  }
+  return null;
+}
+
 function areInfoBonusesUnlocked() {
   const unlocks = getPageUnlockState();
   return unlocks?.info === true;
@@ -6699,6 +6710,7 @@ let toastElement = null;
 let waveGame = null;
 let balanceGame = null;
 let quantum2048Game = null;
+let gameOfLifeGame = null;
 let apsCritPulseTimeoutId = null;
 
 const APS_CRIT_TIMER_EPSILON = 1e-3;
@@ -7654,6 +7666,7 @@ function showPage(pageId) {
   document.body.classList.toggle('view-balance', pageId === 'balance');
   document.body.classList.toggle('view-quantum2048', pageId === 'quantum2048');
   document.body.classList.toggle('view-sudoku', pageId === 'sudoku');
+  document.body.classList.toggle('view-game-of-life', pageId === 'gameOfLife');
   if (pageId === 'game') {
     randomizeAtomButtonImage();
   }
@@ -7693,6 +7706,14 @@ function showPage(pageId) {
       quantum2048Game.onEnter();
     } else {
       quantum2048Game.onLeave();
+    }
+  }
+  const gameOfLife = ensureGameOfLifeGame();
+  if (gameOfLife) {
+    if (pageId === 'gameOfLife') {
+      gameOfLife.onEnter?.();
+    } else {
+      gameOfLife.onLeave?.();
     }
   }
   const manualPageActive = pageId === 'game' || pageId === 'wave';
@@ -8008,6 +8029,9 @@ if (elements.arcadeHubCards?.length) {
       }
       if (target === 'quantum2048') {
         ensureQuantum2048Game();
+      }
+      if (target === 'gameOfLife') {
+        ensureGameOfLifeGame();
       }
       showPage(target);
     });
