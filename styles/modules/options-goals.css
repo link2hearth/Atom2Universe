@@ -4,27 +4,39 @@
 }
 
 :root {
-  --options-select-border: rgba(110, 170, 255, 0.55);
-  --options-select-border-hover: rgba(160, 210, 255, 0.85);
-  --options-select-background: linear-gradient(135deg, rgba(38, 70, 150, 0.95), rgba(86, 148, 255, 0.98));
-  --options-select-shadow: 0 10px 22px rgba(18, 34, 88, 0.35);
-  --options-select-shadow-hover: 0 0 0 2px rgba(110, 170, 255, 0.28), 0 16px 28px rgba(18, 38, 110, 0.45);
-  --options-select-text-color: #fff;
-  --options-select-option-bg: rgba(38, 70, 150, 0.95);
-  --options-select-option-active-bg: rgba(18, 38, 110, 0.98);
-  --options-select-option-color: #fff;
+  --options-select-border: rgba(120, 126, 144, 0.55);
+  --options-select-border-hover: rgba(182, 190, 210, 0.75);
+  --options-select-background: linear-gradient(135deg, rgba(16, 18, 26, 0.96), rgba(44, 46, 60, 0.9));
+  --options-select-shadow: 0 12px 26px rgba(0, 0, 0, 0.45);
+  --options-select-shadow-hover: 0 0 0 2px rgba(176, 184, 204, 0.22), 0 18px 32px rgba(0, 0, 0, 0.55);
+  --options-select-text-color: #f4f6fb;
+  --options-select-option-bg: rgba(30, 32, 44, 0.95);
+  --options-select-option-active-bg: rgba(12, 14, 20, 0.98);
+  --options-select-option-color: #f4f6fb;
+}
+
+body.theme-dark {
+  --options-select-border: rgba(120, 126, 144, 0.55);
+  --options-select-border-hover: rgba(182, 190, 210, 0.75);
+  --options-select-background: linear-gradient(135deg, rgba(16, 18, 26, 0.96), rgba(44, 46, 60, 0.9));
+  --options-select-shadow: 0 12px 26px rgba(0, 0, 0, 0.45);
+  --options-select-shadow-hover: 0 0 0 2px rgba(176, 184, 204, 0.22), 0 18px 32px rgba(0, 0, 0, 0.55);
+  --options-select-text-color: #f4f6fb;
+  --options-select-option-bg: rgba(30, 32, 44, 0.95);
+  --options-select-option-active-bg: rgba(12, 14, 20, 0.98);
+  --options-select-option-color: #f4f6fb;
 }
 
 body.theme-light {
-  --options-select-border: rgba(80, 130, 210, 0.42);
-  --options-select-border-hover: rgba(110, 160, 230, 0.7);
-  --options-select-background: linear-gradient(135deg, rgba(196, 215, 255, 0.96), rgba(150, 195, 255, 0.92));
-  --options-select-shadow: 0 10px 18px rgba(70, 110, 180, 0.22);
-  --options-select-shadow-hover: 0 0 0 2px rgba(120, 170, 235, 0.26), 0 16px 26px rgba(70, 110, 180, 0.28);
-  --options-select-text-color: #041024;
-  --options-select-option-bg: rgba(120, 170, 240, 0.95);
-  --options-select-option-active-bg: rgba(70, 120, 210, 0.96);
-  --options-select-option-color: #041024;
+  --options-select-border: rgba(162, 166, 180, 0.5);
+  --options-select-border-hover: rgba(118, 122, 140, 0.75);
+  --options-select-background: linear-gradient(135deg, rgba(248, 248, 250, 0.98), rgba(220, 222, 230, 0.9));
+  --options-select-shadow: 0 10px 20px rgba(28, 30, 40, 0.18);
+  --options-select-shadow-hover: 0 0 0 2px rgba(140, 144, 160, 0.2), 0 18px 28px rgba(32, 36, 48, 0.22);
+  --options-select-text-color: #161820;
+  --options-select-option-bg: rgba(236, 236, 242, 0.96);
+  --options-select-option-active-bg: rgba(208, 210, 220, 0.96);
+  --options-select-option-color: #161820;
 }
 
 body.theme-neon {
@@ -40,14 +52,14 @@ body.theme-neon {
 }
 
 body.theme-aurora {
-  --options-select-border: rgba(70, 220, 180, 0.45);
-  --options-select-border-hover: rgba(120, 250, 210, 0.75);
-  --options-select-background: linear-gradient(135deg, rgba(52, 180, 140, 0.9), rgba(132, 255, 205, 0.94));
+  --options-select-border: rgba(78, 226, 184, 0.48);
+  --options-select-border-hover: rgba(126, 252, 212, 0.78);
+  --options-select-background: linear-gradient(135deg, rgba(40, 156, 126, 0.88), rgba(132, 255, 205, 0.94));
   --options-select-shadow: 0 12px 26px rgba(6, 32, 24, 0.34);
   --options-select-shadow-hover: 0 0 0 2px rgba(90, 240, 200, 0.32), 0 18px 32px rgba(6, 32, 24, 0.42);
   --options-select-text-color: #02150f;
-  --options-select-option-bg: rgba(38, 136, 112, 0.92);
-  --options-select-option-active-bg: rgba(18, 90, 74, 0.96);
+  --options-select-option-bg: rgba(34, 132, 110, 0.92);
+  --options-select-option-active-bg: rgba(16, 86, 70, 0.96);
   --options-select-option-color: #e6fff4;
 }
 
