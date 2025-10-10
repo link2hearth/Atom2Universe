@@ -584,6 +584,15 @@
             "frenzySingle": "Record frénésie (30 s)",
             "frenzyMulti": "Record frénésie (chaîne)"
           },
+          "photon": {
+            "title": "Photon",
+            "distance": "Distance cumulée",
+            "distanceUnit": "m",
+            "speed": "Vitesse maximale",
+            "speedUnit": "km/h",
+            "altitude": "Altitude maximale",
+            "altitudeUnit": "m"
+          },
           "frenzy": {
             "empty": "—",
             "singleValue": "{count} clics",
@@ -2169,6 +2178,17 @@
       }
     },
     "info": {
+      "progress": {
+        "frenzy": {
+          "empty": "—",
+          "singleValue": "{count} clics",
+          "multiValueSingle": "{count} clics · {frenzies} frén.",
+          "multiValue": "{count} clics · {frenzies} frén."
+        },
+        "photon": {
+          "empty": "—"
+        }
+      },
       "bonuses": {
         "perCopy": "Par copie",
         "set": "Bonus de collection",

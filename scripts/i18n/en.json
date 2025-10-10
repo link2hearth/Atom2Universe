@@ -566,6 +566,15 @@
             "frenzySingle": "Frenzy record (30 s)",
             "frenzyMulti": "Frenzy record (chain)"
           },
+          "photon": {
+            "title": "Photon",
+            "distance": "Total distance",
+            "distanceUnit": "m",
+            "speed": "Top speed",
+            "speedUnit": "km/h",
+            "altitude": "Peak altitude",
+            "altitudeUnit": "m"
+          },
           "frenzy": {
             "empty": "—",
             "singleValue": "{count} clicks",
@@ -2169,6 +2178,17 @@
       }
     },
     "info": {
+      "progress": {
+        "frenzy": {
+          "empty": "—",
+          "singleValue": "{count} clicks",
+          "multiValueSingle": "{count} clicks · {frenzies} frenzy",
+          "multiValue": "{count} clicks · {frenzies} frenzies"
+        },
+        "photon": {
+          "empty": "—"
+        }
+      },
       "bonuses": {
         "perCopy": "Per copy",
         "set": "Collection bonus",

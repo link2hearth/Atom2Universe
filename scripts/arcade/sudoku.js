@@ -466,6 +466,225 @@
     let lastStatusIsMistakeMessage = false;
     let puzzleStartTimestamp = null;
     let puzzleSolved = false;
+    let puzzleBoard = createEmptyBoard();
+    const AUTOSAVE_ID = 'sudoku';
+    const AUTOSAVE_DELAY_MS = 160;
+    let autosaveTimerId = null;
+
+    function getAutosaveApi() {
+      if (typeof window === 'undefined') {
+        return null;
+      }
+      const api = window.ArcadeAutosave;
+      if (!api || typeof api.set !== 'function' || typeof api.get !== 'function') {
+        return null;
+      }
+      return api;
+    }
+
+    function clearAutosaveEntry() {
+      const api = getAutosaveApi();
+      if (!api) {
+        return;
+      }
+      try {
+        api.set(AUTOSAVE_ID, null);
+      } catch (error) {
+        // Ignore cleanup errors
+      }
+    }
+
+    function sanitizeBoardData(board) {
+      if (!Array.isArray(board) || board.length !== 9) {
+        return null;
+      }
+      const sanitized = [];
+      for (let row = 0; row < 9; row += 1) {
+        const sourceRow = board[row];
+        if (!Array.isArray(sourceRow) || sourceRow.length !== 9) {
+          return null;
+        }
+        const rowValues = [];
+        for (let col = 0; col < 9; col += 1) {
+          const value = Number(sourceRow[col]);
+          if (Number.isFinite(value) && value >= 1 && value <= 9) {
+            rowValues.push(Math.floor(value));
+          } else {
+            rowValues.push(0);
+          }
+        }
+        sanitized.push(rowValues);
+      }
+      return sanitized;
+    }
+
+    function boardHasClues(board) {
+      if (!Array.isArray(board)) {
+        return false;
+      }
+      for (let row = 0; row < board.length; row += 1) {
+        const rowEntries = board[row];
+        if (!Array.isArray(rowEntries)) {
+          continue;
+        }
+        for (let col = 0; col < rowEntries.length; col += 1) {
+          if (Number(rowEntries[col]) > 0) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+
+    function buildAutosavePayload() {
+      const puzzle = sanitizeBoardData(puzzleBoard);
+      const solution = sanitizeBoardData(solutionBoard);
+      if (!puzzle || !solution || !boardHasClues(puzzle)) {
+        return null;
+      }
+      const currentBoard = sanitizeBoardData(parseGridToBoard(gridElement));
+      if (!currentBoard) {
+        return null;
+      }
+      const elapsedSeconds =
+        typeof puzzleStartTimestamp === 'number' && Number.isFinite(puzzleStartTimestamp)
+          ? Math.max(0, Math.floor((getNowMs() - puzzleStartTimestamp) / 1000))
+          : null;
+      return {
+        level: currentLevel,
+        puzzle,
+        board: currentBoard,
+        solution,
+        showMistakes: showMistakes === true,
+        showConflicts: showConflicts === true,
+        allowMistakeHints: allowMistakeHints === true,
+        manualMistakeReveal: manualMistakeReveal === true,
+        puzzleSolved: puzzleSolved === true,
+        elapsedSeconds,
+        updatedAt: Date.now()
+      };
+    }
+
+    function persistAutosave() {
+      const api = getAutosaveApi();
+      if (!api) {
+        return;
+      }
+      const payload = buildAutosavePayload();
+      try {
+        if (payload) {
+          api.set(AUTOSAVE_ID, payload);
+        } else {
+          api.set(AUTOSAVE_ID, null);
+        }
+      } catch (error) {
+        // Ignore persistence issues to avoid disrupting gameplay
+      }
+    }
+
+    function scheduleAutosave() {
+      if (typeof window === 'undefined') {
+        return;
+      }
+      if (autosaveTimerId != null) {
+        window.clearTimeout(autosaveTimerId);
+      }
+      autosaveTimerId = window.setTimeout(() => {
+        autosaveTimerId = null;
+        persistAutosave();
+      }, AUTOSAVE_DELAY_MS);
+    }
+
+    function sanitizeSavedState(saved) {
+      if (!saved || typeof saved !== 'object') {
+        return null;
+      }
+      const puzzle = sanitizeBoardData(saved.puzzle);
+      const board = sanitizeBoardData(saved.board);
+      const solution = sanitizeBoardData(saved.solution);
+      if (!puzzle || !solution || !board || !boardHasClues(puzzle)) {
+        return null;
+      }
+      const level = typeof saved.level === 'string' && saved.level.trim() ? saved.level : currentLevel;
+      const showSavedMistakes = saved.showMistakes === true;
+      const showSavedConflicts = saved.showConflicts === true;
+      const allowSavedMistakes = saved.allowMistakeHints === true;
+      const manualSavedReveal = saved.manualMistakeReveal === true;
+      const solved = saved.puzzleSolved === true;
+      const elapsed = Number(saved.elapsedSeconds);
+      const elapsedSeconds = Number.isFinite(elapsed) && elapsed >= 0 ? elapsed : null;
+      return {
+        level,
+        puzzle,
+        board,
+        solution,
+        showMistakes: showSavedMistakes,
+        showConflicts: showSavedConflicts,
+        allowMistakeHints: allowSavedMistakes,
+        manualMistakeReveal: manualSavedReveal,
+        puzzleSolved: solved,
+        elapsedSeconds
+      };
+    }
+
+    function restoreAutosavedState() {
+      const api = getAutosaveApi();
+      if (!api) {
+        return false;
+      }
+      let saved = null;
+      try {
+        saved = api.get(AUTOSAVE_ID);
+      } catch (error) {
+        return false;
+      }
+      if (!saved) {
+        return false;
+      }
+      const normalized = sanitizeSavedState(saved);
+      if (!normalized) {
+        clearAutosaveEntry();
+        return false;
+      }
+      if (normalized.level && typeof normalized.level === 'string') {
+        currentLevel = normalized.level;
+      }
+      const availableLevels = Array.from(levelSelect.options).map(option => option.value);
+      if (!availableLevels.includes(currentLevel)) {
+        currentLevel = levelSelect.value || 'moyen';
+      }
+      levelSelect.value = currentLevel;
+      showMistakes = normalized.showMistakes;
+      showConflicts = normalized.showConflicts;
+      allowMistakeHints = normalized.allowMistakeHints;
+      manualMistakeReveal = normalized.manualMistakeReveal;
+      puzzleSolved = normalized.puzzleSolved === true;
+      puzzleBoard = cloneBoard(normalized.puzzle);
+      solutionBoard = cloneBoard(normalized.solution);
+      const fixedMask = puzzleBoard.map(row => row.map(value => value !== 0));
+      loadBoardToGrid(normalized.board, fixedMask);
+      if (!puzzleSolved && normalized.elapsedSeconds != null) {
+        const now = getNowMs();
+        const elapsedMs = Math.max(0, normalized.elapsedSeconds) * 1000;
+        const startCandidate = now - elapsedMs;
+        puzzleStartTimestamp = Number.isFinite(startCandidate) && startCandidate >= 0 ? startCandidate : now;
+      } else if (!puzzleSolved) {
+        puzzleStartTimestamp = getNowMs();
+      } else {
+        puzzleStartTimestamp = null;
+      }
+      refreshMistakeVisibility();
+      refreshConflictHighlights();
+      updateConflictButtonState();
+      updateCheckButtonVisibility();
+      if (puzzleSolved) {
+        setStatus(formatStatus('solved', 'Solution trouvée ✔︎'), 'ok', null, { isSolved: true });
+      } else {
+        refreshStatus();
+      }
+      scheduleAutosave();
+      return true;
+    }
 
     function updateConflictButtonState() {
       conflictToggleButton.hidden = true;
@@ -487,6 +706,7 @@
       updateConflictButtonState();
       refreshConflictHighlights();
       refreshStatus();
+      scheduleAutosave();
     });
 
     function refreshStatus() {
@@ -735,6 +955,7 @@
       puzzleSolved = true;
       setStatus(formatStatus('solved', 'Solution trouvée ✔︎'), 'ok', null, { isSolved: true });
       triggerCompletionReward(elapsedSeconds);
+      scheduleAutosave();
     }
 
     function checkForCompletion(board, conflicts) {
@@ -780,6 +1001,7 @@
             showMistakes = !showMistakes;
             refreshMistakeVisibility();
             refreshStatus();
+            scheduleAutosave();
           }
         }
       };
@@ -831,6 +1053,7 @@
             if (!checkForCompletion(workingBoard, conflicts)) {
               refreshStatus();
             }
+            scheduleAutosave();
           });
           input.addEventListener('focus', () => {
             cell.classList.remove('error', 'ok');
@@ -854,6 +1077,17 @@
       if (selectedPadValue !== null) {
         selectedPadValue = null;
         updatePadSelection();
+      }
+    }
+
+    function clearActiveInput() {
+      if (!activeInput) {
+        return;
+      }
+      const input = activeInput;
+      activeInput = null;
+      if (typeof input.blur === 'function') {
+        input.blur();
       }
     }
 
@@ -922,6 +1156,7 @@
     function onValidate() {
       clearHighlights();
       clearPadSelection();
+      clearActiveInput();
       const board = parseGridToBoard(gridElement);
       const { mistakes } = updateMistakeHighlights(board);
       const conflicts = updateConflictState(board, validateBoard(board));
@@ -966,6 +1201,7 @@
       updateCheckButtonVisibility();
       setStatus(formatStatus('generating', 'Génération en cours…'));
       const { puzzle, solution } = generateRandomPuzzle(level);
+      puzzleBoard = cloneBoard(puzzle);
       solutionBoard = cloneBoard(solution);
       puzzleSolved = false;
       puzzleStartTimestamp = getNowMs();
@@ -981,6 +1217,7 @@
       );
       refreshMistakeVisibility();
       refreshConflictHighlights();
+      scheduleAutosave();
     }
 
     padButtons.forEach(button => {
@@ -1041,16 +1278,23 @@
       refreshMistakeVisibility();
       updateConflictState(board, validateBoard(board));
       refreshStatus();
+      scheduleAutosave();
     });
 
     generateButton.addEventListener('click', onGenerate);
     padValidateButton.addEventListener('click', onValidate);
 
-    puzzleSolved = false;
-    puzzleStartTimestamp = null;
-    loadBoardToGrid(createEmptyBoard());
-    updateConflictButtonState();
-    updateCheckButtonVisibility();
-    setStatus('');
+    const restored = restoreAutosavedState();
+    if (!restored) {
+      puzzleSolved = false;
+      puzzleStartTimestamp = null;
+      puzzleBoard = createEmptyBoard();
+      solutionBoard = createEmptyBoard();
+      loadBoardToGrid(createEmptyBoard());
+      updateConflictButtonState();
+      updateCheckButtonVisibility();
+      setStatus('');
+      persistAutosave();
+    }
   });
 })();
