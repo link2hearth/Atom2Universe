@@ -306,6 +306,7 @@
   --midi-preview-color-end: rgba(255, 80, 112, 0.96);
   --midi-preview-glow: rgba(122, 77, 255, 0.45);
   --midi-preview-glow-strong: rgba(255, 80, 112, 0.55);
+  --midi-preview-dot-size: clamp(0.6rem, 1.6vw, 0.85rem);
 }
 
 body.theme-light {
@@ -721,24 +722,21 @@ body.theme-neon .midi-keyboard__instrument--full {
 
 .midi-key__preview {
   position: absolute;
-  left: 22%;
-  right: 22%;
-  top: calc(-1 * var(--midi-preview-height, 18px));
-  height: var(--midi-preview-height, 18px);
-  border-radius: 999px;
+  left: 50%;
+  top: calc(-1 * var(--midi-preview-height, var(--midi-preview-diameter, var(--midi-preview-dot-size, 14px))));
+  width: var(--midi-preview-diameter, var(--midi-preview-dot-size, 14px));
+  min-height: var(--midi-preview-diameter, var(--midi-preview-dot-size, 14px));
+  height: var(--midi-preview-height, var(--midi-preview-diameter, var(--midi-preview-dot-size, 14px)));
+  margin-left: calc(var(--midi-preview-diameter, var(--midi-preview-dot-size, 14px)) * -0.5);
+  border-radius: calc(var(--midi-preview-diameter, var(--midi-preview-dot-size, 14px)) / 2);
   background: linear-gradient(180deg, var(--midi-preview-color-start), var(--midi-preview-color-end));
   opacity: 0;
   transform: translateY(0);
   box-shadow: 0 0 18px var(--midi-preview-glow, rgba(122, 77, 255, 0.45));
   overflow: visible;
-  will-change: transform, opacity;
-  transition: opacity 0.18s ease-out, box-shadow 0.3s ease-out, background 0.3s ease-out;
+  will-change: transform, opacity, height;
+  transition: opacity 0.18s ease-out, box-shadow 0.3s ease-out, background 0.3s ease-out, height 0.18s ease-out;
   z-index: 2;
-}
-
-.midi-key--black .midi-key__preview {
-  left: 30%;
-  right: 30%;
 }
 
 .midi-key__preview.is-active {
