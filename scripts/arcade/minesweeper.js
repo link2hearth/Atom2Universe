@@ -9,6 +9,55 @@
     difficile: Object.freeze({ rows: 16, cols: 16, mines: 40 })
   });
 
+  const DEFAULT_BOARD_SETTINGS = Object.freeze({
+    targetCellSize: 48,
+    minCellSize: 32,
+    maxCellSize: 72,
+    maxRows: 40,
+    maxCols: 60
+  });
+
+  const BOARD_SETTINGS = (() => {
+    if (typeof globalThis === 'undefined') {
+      return DEFAULT_BOARD_SETTINGS;
+    }
+    const source = globalThis.MINESWEEPER_BOARD_SETTINGS;
+    if (!source || typeof source !== 'object') {
+      return DEFAULT_BOARD_SETTINGS;
+    }
+
+    const minSize = Math.max(16, coercePositiveNumber(source.minCellSize, DEFAULT_BOARD_SETTINGS.minCellSize));
+    const maxSize = Math.max(minSize, coercePositiveNumber(source.maxCellSize, DEFAULT_BOARD_SETTINGS.maxCellSize));
+    const targetSize = Math.min(
+      maxSize,
+      Math.max(minSize, coercePositiveNumber(source.targetCellSize, DEFAULT_BOARD_SETTINGS.targetCellSize))
+    );
+
+    const maxRows = Math.max(4, Math.floor(coercePositiveNumber(source.maxRows, DEFAULT_BOARD_SETTINGS.maxRows)));
+    const maxCols = Math.max(4, Math.floor(coercePositiveNumber(source.maxCols, DEFAULT_BOARD_SETTINGS.maxCols)));
+
+    return Object.freeze({
+      targetCellSize: targetSize,
+      minCellSize: minSize,
+      maxCellSize: maxSize,
+      maxRows,
+      maxCols
+    });
+  })();
+
+  function clamp(value, min, max) {
+    if (!Number.isFinite(value)) {
+      return min;
+    }
+    if (value < min) {
+      return min;
+    }
+    if (value > max) {
+      return max;
+    }
+    return value;
+  }
+
   function coercePositiveNumber(value, fallback) {
     const parsed = Number.parseFloat(value);
     if (!Number.isFinite(parsed) || parsed <= 0) {
@@ -75,35 +124,91 @@
   function computeGridDimensions(preset, metrics) {
     const baseRows = Math.max(4, Number(preset.rows) || 8);
     const baseCols = Math.max(4, Number(preset.cols) || 8);
-    const totalCells = Math.max(16, baseRows * baseCols);
-    const targetRatio = Math.min(Math.max(metrics.ratio || 1, 0.35), 3);
+    const baseArea = Math.max(16, baseRows * baseCols);
+    const width = Math.max(coercePositiveNumber(metrics.width, 1), 1);
+    const height = Math.max(coercePositiveNumber(metrics.height, 1), 1);
+    const targetRatio = clamp(metrics.ratio || width / height, 0.35, 3.5);
 
-    const candidateRows = new Set();
-    const targetRows = Math.sqrt(totalCells / targetRatio);
-    for (let delta = -2; delta <= 2; delta += 1) {
-      candidateRows.add(Math.max(4, Math.round(targetRows + delta)));
+    const minRows = Math.max(
+      4,
+      Math.min(
+        BOARD_SETTINGS.maxRows,
+        Math.floor(height / Math.max(BOARD_SETTINGS.maxCellSize, 1)) || 0
+      )
+    );
+    const maxRows = Math.max(
+      minRows,
+      Math.min(
+        BOARD_SETTINGS.maxRows,
+        Math.floor(height / Math.max(BOARD_SETTINGS.minCellSize, 1)) || 0
+      )
+    );
+    const minCols = Math.max(
+      4,
+      Math.min(
+        BOARD_SETTINGS.maxCols,
+        Math.floor(width / Math.max(BOARD_SETTINGS.maxCellSize, 1)) || 0
+      )
+    );
+    const maxCols = Math.max(
+      minCols,
+      Math.min(
+        BOARD_SETTINGS.maxCols,
+        Math.floor(width / Math.max(BOARD_SETTINGS.minCellSize, 1)) || 0
+      )
+    );
+
+    const candidateRows = new Set([baseRows]);
+    for (let rows = minRows; rows <= maxRows; rows += 1) {
+      candidateRows.add(rows);
     }
-    candidateRows.add(baseRows);
-    candidateRows.add(baseCols);
 
-    let best = { rows: baseRows, cols: baseCols, score: Number.POSITIVE_INFINITY };
+    const baseColsCandidate = clamp(baseCols, 4, BOARD_SETTINGS.maxCols);
+    const candidateCols = new Set([baseColsCandidate]);
+    for (let cols = minCols; cols <= maxCols; cols += 1) {
+      candidateCols.add(cols);
+    }
+
+    let best = {
+      rows: clamp(baseRows, 4, BOARD_SETTINGS.maxRows),
+      cols: baseColsCandidate,
+      score: Number.POSITIVE_INFINITY
+    };
 
     candidateRows.forEach((rows) => {
-      if (!Number.isFinite(rows) || rows < 4) {
-        return;
+      const normalizedRows = clamp(Math.round(rows), 4, BOARD_SETTINGS.maxRows);
+      const idealCols = clamp(Math.round(normalizedRows * targetRatio), 4, BOARD_SETTINGS.maxCols);
+      for (let delta = -2; delta <= 2; delta += 1) {
+        candidateCols.add(clamp(idealCols + delta, 4, BOARD_SETTINGS.maxCols));
       }
-      const rawCols = totalCells / rows;
-      for (let delta = -1; delta <= 1; delta += 1) {
-        const cols = Math.max(4, Math.round(rawCols + delta));
-        const aspect = cols / rows;
-        const product = rows * cols;
-        const ratioDiff = Math.abs(aspect - targetRatio);
-        const cellDiff = Math.abs(product - totalCells) / totalCells;
-        const score = ratioDiff * 3 + cellDiff;
-        if (score < best.score) {
-          best = { rows, cols, score };
+
+      candidateCols.forEach((colsCandidate) => {
+        const normalizedCols = clamp(Math.round(colsCandidate), 4, BOARD_SETTINGS.maxCols);
+        if (normalizedCols < 4) {
+          return;
         }
-      }
+
+        const totalCells = normalizedRows * normalizedCols;
+        const ratio = normalizedCols / normalizedRows;
+        const cellWidth = width / normalizedCols;
+        const cellHeight = height / normalizedRows;
+        const effectiveSize = Math.min(cellWidth, cellHeight);
+
+        const ratioScore = Math.abs(ratio - targetRatio);
+        const areaScore = Math.abs(totalCells - baseArea) / baseArea;
+        const sizeScore = Math.abs(effectiveSize - BOARD_SETTINGS.targetCellSize) / BOARD_SETTINGS.targetCellSize;
+        const minSizePenalty = effectiveSize < BOARD_SETTINGS.minCellSize
+          ? (BOARD_SETTINGS.minCellSize - effectiveSize) / BOARD_SETTINGS.minCellSize
+          : 0;
+        const maxSizePenalty = effectiveSize > BOARD_SETTINGS.maxCellSize
+          ? (effectiveSize - BOARD_SETTINGS.maxCellSize) / BOARD_SETTINGS.maxCellSize
+          : 0;
+
+        const score = ratioScore * 4 + sizeScore * 3 + areaScore * 1.5 + (minSizePenalty + maxSizePenalty) * 10;
+        if (score < best.score) {
+          best = { rows: normalizedRows, cols: normalizedCols, score };
+        }
+      });
     });
 
     return { rows: best.rows, cols: best.cols };

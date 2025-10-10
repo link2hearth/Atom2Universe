@@ -7,6 +7,21 @@ const SHOP_MAX_PURCHASE_DEFAULT = 1000;
 const COLLECTION_MULTIPLIER_LABEL_KEY = 'scripts.config.elementBonuses.collectionMultiplier';
 
 /**
+ * Paramètres d'affichage du Démineur.
+ * `targetCellSize` indique la taille idéale (en pixels) d'une case lorsque c'est possible.
+ * `minCellSize` et `maxCellSize` encadrent la taille acceptable d'une case afin de conserver une
+ * lisibilité correcte, tandis que `maxRows` et `maxCols` bornent le nombre de lignes/colonnes
+ * générées automatiquement.
+ */
+const MINESWEEPER_BOARD_SETTINGS = Object.freeze({
+  targetCellSize: 48,
+  minCellSize: 36,
+  maxCellSize: 72,
+  maxRows: 40,
+  maxCols: 60
+});
+
+/**
  * Configuration du module MIDI.
  * `MIDI_KEYBOARD_LAYOUTS` répertorie les claviers disponibles ainsi que leurs bornes MIDI.
  */
@@ -87,6 +102,7 @@ const MIDI_PREVIEW_COLOR_PALETTE = Object.freeze([
 ]);
 
 if (typeof globalThis !== 'undefined') {
+  globalThis.MINESWEEPER_BOARD_SETTINGS = MINESWEEPER_BOARD_SETTINGS;
   globalThis.MIDI_KEYBOARD_LAYOUTS = MIDI_KEYBOARD_LAYOUTS;
   globalThis.MIDI_DEFAULT_KEYBOARD_LAYOUT_ID = MIDI_DEFAULT_KEYBOARD_LAYOUT_ID;
   globalThis.MIDI_KEYBOARD_WINDOW_SIZE = MIDI_KEYBOARD_WINDOW_SIZE;
