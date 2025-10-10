@@ -179,6 +179,11 @@ const AVAILABLE_LANGUAGE_CODES = (() => {
   return Object.freeze(['fr', 'en']);
 })();
 
+const LANGUAGE_OPTION_FALLBACK_LABELS = Object.freeze({
+  fr: 'Français',
+  en: 'English'
+});
+
 const DEFAULT_LANGUAGE_CODE = (() => {
   const primary = AVAILABLE_LANGUAGE_CODES[0];
   if (typeof primary === 'string' && primary.trim()) {
@@ -2916,6 +2921,11 @@ function populateLanguageSelectOptions() {
     const option = document.createElement('option');
     option.value = code;
     option.setAttribute('data-i18n', `index.sections.options.language.options.${code}`);
+    const fallback = LANGUAGE_OPTION_FALLBACK_LABELS[code] || code.toUpperCase();
+    option.textContent = translateOrDefault(
+      `index.sections.options.language.options.${code}`,
+      fallback
+    );
     select.appendChild(option);
   });
   const i18n = globalThis.i18n;
