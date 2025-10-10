@@ -158,6 +158,28 @@
     })
   });
 
+  const PIECE_SPRITES = Object.freeze({
+    w: Object.freeze({
+      p: 'assets/sprites/pawn.png',
+      n: 'assets/sprites/knight.png',
+      b: 'assets/sprites/bishop.png',
+      r: 'assets/sprites/rook.png',
+      q: 'assets/sprites/queen.png',
+      k: 'assets/sprites/king.png'
+    }),
+    b: Object.freeze({
+      p: 'assets/sprites/pawn1.png',
+      n: 'assets/sprites/knight1.png',
+      b: 'assets/sprites/bishop1.png',
+      r: 'assets/sprites/rook1.png',
+      q: 'assets/sprites/queen1.png',
+      k: 'assets/sprites/king1.png'
+    })
+  });
+
+  const SPRITE_STATUS = new Map();
+  let latestRenderContext = null;
+
   const PIECE_FALLBACK_LABELS = Object.freeze({
     w: Object.freeze({
       p: 'White pawn',
@@ -2736,6 +2758,69 @@
     return symbols ? symbols[type] || '' : '';
   }
 
+  function getPieceSprite(piece) {
+    if (!piece) {
+      return '';
+    }
+    const color = getPieceColor(piece);
+    const type = getPieceType(piece);
+    const sprites = PIECE_SPRITES[color];
+    return sprites ? sprites[type] || '' : '';
+  }
+
+  function rememberRenderContext(state, ui, options) {
+    latestRenderContext = {
+      state: state,
+      ui: ui,
+      options: options || null
+    };
+  }
+
+  function rerenderBoardFromSprites() {
+    if (!latestRenderContext) {
+      return;
+    }
+    renderBoard(latestRenderContext.state, latestRenderContext.ui, latestRenderContext.options);
+  }
+
+  function scheduleBoardRerender() {
+    if (typeof requestAnimationFrame === 'function') {
+      requestAnimationFrame(rerenderBoardFromSprites);
+    } else {
+      setTimeout(rerenderBoardFromSprites, 0);
+    }
+  }
+
+  function canUseSprite(spriteUrl) {
+    if (!spriteUrl) {
+      return false;
+    }
+    if (typeof Image !== 'function') {
+      return false;
+    }
+    const status = SPRITE_STATUS.get(spriteUrl);
+    if (status === 'loaded') {
+      return true;
+    }
+    if (status === 'failed') {
+      return false;
+    }
+    if (status !== 'pending') {
+      SPRITE_STATUS.set(spriteUrl, 'pending');
+      const image = new Image();
+      image.addEventListener('load', function () {
+        SPRITE_STATUS.set(spriteUrl, 'loaded');
+        scheduleBoardRerender();
+      });
+      image.addEventListener('error', function () {
+        SPRITE_STATUS.set(spriteUrl, 'failed');
+        scheduleBoardRerender();
+      });
+      image.src = spriteUrl;
+    }
+    return false;
+  }
+
   function getPieceLabel(piece) {
     if (!piece) {
       return '';
@@ -2810,6 +2895,7 @@
   }
 
   function renderBoard(state, ui, options) {
+    rememberRenderContext(state, ui, options);
     if (ui.boardElement) {
       const hideCoordinates = state.preferences && state.preferences.showCoordinates === false;
       ui.boardElement.classList.toggle('chess-board--hide-coordinates', hideCoordinates);
@@ -2835,15 +2921,40 @@
         const pieceChanged = button.dataset.piece !== pieceKey;
         if (pieceChanged) {
           button.dataset.piece = pieceKey;
-          const symbol = getPieceSymbol(piece);
-          if (button.textContent !== symbol) {
-            button.textContent = symbol;
-          }
-          if (piece) {
-            button.classList.add('has-piece');
+        }
+        const existingSprite = button.querySelector('.chess-square__piece');
+        const spriteUrl = getPieceSprite(piece);
+        const shouldUseSprite = Boolean(piece) && canUseSprite(spriteUrl);
+        const usesSprite = button.classList.contains('chess-square--with-sprite');
+        if (pieceChanged || usesSprite !== shouldUseSprite) {
+          if (shouldUseSprite) {
+            if (!existingSprite) {
+              const spriteElement = document.createElement('span');
+              spriteElement.className = 'chess-square__piece';
+              spriteElement.setAttribute('aria-hidden', 'true');
+              button.textContent = '';
+              button.appendChild(spriteElement);
+              spriteElement.style.backgroundImage = 'url(' + spriteUrl + ')';
+            } else {
+              existingSprite.style.backgroundImage = 'url(' + spriteUrl + ')';
+              if (button.textContent !== '') {
+                button.textContent = '';
+              }
+            }
+            button.classList.add('chess-square--with-sprite');
           } else {
-            button.classList.remove('has-piece');
+            if (existingSprite) {
+              existingSprite.remove();
+            }
+            const symbol = getPieceSymbol(piece);
+            button.textContent = piece ? symbol : '';
+            button.classList.remove('chess-square--with-sprite');
           }
+        }
+        if (piece) {
+          button.classList.add('has-piece');
+        } else {
+          button.classList.remove('has-piece');
         }
         updateSquareAccessibility(button, piece, pieceChanged || forceAccessibility);
         const squareIndex = (row * BOARD_SIZE) + col;
