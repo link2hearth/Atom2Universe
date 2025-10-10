@@ -515,6 +515,10 @@ body.theme-neon .element-details-overlay {
   background: rgba(10, 12, 40, 0.74);
 }
 
+body.theme-aurora .element-details-overlay {
+  background: rgba(6, 28, 20, 0.74);
+}
+
 body.theme-light .element-details-overlay__dialog {
   background: rgba(250, 252, 255, 0.96);
   border-color: rgba(12, 16, 32, 0.08);
@@ -526,6 +530,12 @@ body.theme-neon .element-details-overlay__dialog {
   background: rgba(18, 20, 60, 0.92);
   border-color: rgba(130, 150, 255, 0.2);
   box-shadow: 0 1.25rem 3.2rem rgba(12, 16, 48, 0.4);
+}
+
+body.theme-aurora .element-details-overlay__dialog {
+  background: rgba(8, 44, 30, 0.92);
+  border-color: rgba(64, 210, 150, 0.28);
+  box-shadow: 0 1.25rem 3.2rem rgba(8, 38, 26, 0.44);
 }
 
 body.element-details-modal-open {
@@ -692,4 +702,13 @@ body.theme-neon .periodic-element:focus-visible {
 
 body.theme-neon .periodic-placeholder {
   background: rgba(90, 120, 255, 0.12);
+}
+
+body.theme-aurora .periodic-element:hover,
+body.theme-aurora .periodic-element:focus-visible {
+  box-shadow: 0 14px 24px rgba(70, 210, 150, 0.3);
+}
+
+body.theme-aurora .periodic-placeholder {
+  background: rgba(70, 210, 150, 0.14);
 }

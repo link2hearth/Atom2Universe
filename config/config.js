@@ -757,6 +757,41 @@ const GAME_CONFIG = {
   },
 
   /**
+   * Thèmes visuels proposés dans l’interface.
+   * - default : identifiant appliqué par défaut lors d’une nouvelle partie.
+   * - available : liste des thèmes avec leurs classes CSS et la clé i18n de leur libellé.
+   */
+  themes: {
+    default: 'dark',
+    available: Object.freeze([
+      Object.freeze({
+        id: 'dark',
+        name: 'Thème sombre',
+        labelKey: 'scripts.config.themes.dark',
+        classes: Object.freeze(['theme-dark'])
+      }),
+      Object.freeze({
+        id: 'light',
+        name: 'Thème clair',
+        labelKey: 'scripts.config.themes.light',
+        classes: Object.freeze(['theme-light'])
+      }),
+      Object.freeze({
+        id: 'neon',
+        name: 'Thème néon',
+        labelKey: 'scripts.config.themes.neon',
+        classes: Object.freeze(['theme-neon'])
+      }),
+      Object.freeze({
+        id: 'aurora',
+        name: 'Thème Aurore',
+        labelKey: 'scripts.config.themes.aurora',
+        classes: Object.freeze(['theme-aurora', 'theme-neon'])
+      })
+    ])
+  },
+
+  /**
    * Options d’accessibilité de l’interface utilisateur.
    * - scale.default : identifiant de l’option utilisée par défaut lors d’une nouvelle partie.
    * - scale.options : facteurs d’agrandissement disponibles pour l’interface.
@@ -3233,6 +3268,8 @@ const GAME_CONFIG = {
     }
   ]
 };
+
+GAME_CONFIG.progression.defaultTheme = GAME_CONFIG.themes.default;
 
 if (typeof globalThis !== 'undefined') {
   globalThis.GAME_CONFIG = GAME_CONFIG;
