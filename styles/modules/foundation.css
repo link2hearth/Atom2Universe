@@ -3,6 +3,7 @@
   --font-text: 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-text-base-size: 1rem;
   --font-scale-factor: 1;
+  --ui-control-scale: var(--font-scale-factor, 1);
   font-family: var(--font-text, 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
   --bg-dark: #080b13;
   --bg-light: #f6f7fb;

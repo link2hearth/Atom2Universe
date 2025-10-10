@@ -221,12 +221,12 @@
 
 .chess-difficulty__select {
   inline-size: 100%;
-  padding: 0.4rem 0.65rem;
-  border-radius: 0.65rem;
+  padding: 0.4em 0.65em;
+  border-radius: 0.65em;
   border: 1px solid rgba(255, 255, 255, 0.18);
   background: rgba(0, 0, 0, 0.35);
   color: #ffffff;
-  font-size: clamp(0.85rem, 1.8vh, 1rem);
+  font-size: calc(clamp(0.85rem, 1.8vh, 1rem) * var(--ui-control-scale, 1));
   font-weight: 500;
 }
 
@@ -245,35 +245,36 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: calc(0.5rem * var(--ui-control-scale, 1));
 }
 
 .chess-toggle__input {
-  inline-size: 1.1rem;
-  block-size: 1.1rem;
+  inline-size: calc(1.1rem * var(--ui-control-scale, 1));
+  block-size: calc(1.1rem * var(--ui-control-scale, 1));
   accent-color: rgba(255, 221, 89, 0.75);
 }
 
 .chess-toggle__label {
-  font-size: clamp(0.85rem, 1.8vh, 1rem);
+  font-size: calc(clamp(0.85rem, 1.8vh, 1rem) * var(--ui-control-scale, 1));
 }
 
 .chess-game__actions {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0.75rem;
+  gap: calc(0.75rem * var(--ui-control-scale, 1));
   margin-block-start: 0.35rem;
 }
 
 .chess-action {
   border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 999px;
+  border-radius: calc(999px * var(--ui-control-scale, 1));
   background: rgba(255, 255, 255, 0.15);
   color: #ffffff;
   font-weight: 600;
-  font-size: clamp(0.85rem, 1.8vh, 1rem);
-  padding: 0.55rem 1.35rem;
+  font-size: calc(clamp(0.85rem, 1.8vh, 1rem) * var(--ui-control-scale, 1));
+  padding: calc(0.55rem * var(--ui-control-scale, 1))
+    calc(1.35rem * var(--ui-control-scale, 1));
   cursor: pointer;
   transition: transform 150ms ease, background 150ms ease, border-color 150ms ease;
 }

@@ -43,11 +43,11 @@
 }
 
 .option-card--chiptune .option-row--selectors .option-field--track select {
-  min-height: 2.6rem;
+  min-height: 2.6em;
 }
 
 .option-card--chiptune .option-row--selectors label {
-  font-size: 0.9rem;
+  font-size: calc(0.9rem * var(--font-scale-factor, 1));
   font-weight: 600;
 }
 
@@ -57,7 +57,7 @@
 }
 
 .option-card--chiptune select.chiptune-select--scrollable {
-  min-height: 12rem;
+  min-height: 12em;
   overflow-y: auto;
 }
 
@@ -456,7 +456,7 @@ body.theme-neon .midi-keyboard__subtitle {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
-  font-size: 0.95rem;
+  font-size: calc(0.95rem * var(--font-scale-factor, 1));
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -472,8 +472,8 @@ body.theme-neon .midi-keyboard__subtitle {
 }
 
 .midi-keyboard__select {
-  min-width: 11rem;
-  padding: 0.55rem 1rem;
+  min-width: 11em;
+  padding: 0.55em 1em;
   border-radius: 999px;
   border: none;
   font-weight: 600;
@@ -505,7 +505,7 @@ body.theme-neon .midi-keyboard__select {
 }
 
 .midi-keyboard__toggle-value {
-  font-size: 0.9rem;
+  font-size: calc(0.9rem * var(--font-scale-factor, 1));
   font-weight: 600;
   letter-spacing: 0.02em;
   text-transform: none;
