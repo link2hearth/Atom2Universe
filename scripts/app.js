@@ -7178,6 +7178,27 @@ function hideCritBanner(immediate = false) {
   }, 360);
 }
 
+function formatCritLayeredNumber(value) {
+  const layered = value instanceof LayeredNumber ? value : toLayeredValue(value, 0);
+  if (!layered || layered.sign === 0) {
+    return '0';
+  }
+
+  if (layered.layer === 0 && Math.abs(layered.exponent) < 6) {
+    const numeric = layered.sign * layered.mantissa * Math.pow(10, layered.exponent);
+    const formatted = LayeredNumber.formatLocalizedNumber(numeric, {
+      maximumFractionDigits: 2,
+      minimumFractionDigits: 0
+    });
+    if (formatted) {
+      return formatted;
+    }
+    return `${numeric}`;
+  }
+
+  return layered.toString();
+}
+
 function showCritBanner(input) {
   const display = elements.statusCrit;
   const valueElement = elements.statusCritValue;
@@ -7208,7 +7229,7 @@ function showCritBanner(input) {
     return;
   }
 
-  const totalText = `+${layeredTotal.toString()}`;
+  const totalText = `+${formatCritLayeredNumber(layeredTotal)}`;
 
   const multiplierValue = Number(options.multiplier ?? options.multiplierValue);
   const hasMultiplier = Number.isFinite(multiplierValue) && multiplierValue > 1;
@@ -7235,10 +7256,10 @@ function showCritBanner(input) {
 
   const details = [];
   if (layeredBase && layeredBase.sign > 0) {
-    details.push(`base ${layeredBase.toString()}`);
+    details.push(`base ${formatCritLayeredNumber(layeredBase)}`);
   }
   if (layeredBonus && layeredBonus.sign > 0 && (!layeredBase || layeredBonus.compare(layeredTotal) !== 0)) {
-    details.push(`bonus +${layeredBonus.toString()}`);
+    details.push(`bonus +${formatCritLayeredNumber(layeredBonus)}`);
   }
   const detailText = details.length ? ` — ${details.join(' · ')}` : '';
   display.title = hasMultiplier
