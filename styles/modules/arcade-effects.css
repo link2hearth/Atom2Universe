@@ -267,6 +267,25 @@ body.theme-neon .arcade-hud__combo {
   align-items: stretch;
 }
 
+.arcade-overlay__field--brick-skin {
+  order: -1;
+  align-self: flex-end;
+  width: auto;
+  min-width: clamp(160px, 25vw, 220px);
+  text-align: right;
+  align-items: flex-end;
+}
+
+.arcade-overlay__field--brick-skin .arcade-overlay__label {
+  text-align: right;
+}
+
+.arcade-overlay__field--brick-skin .arcade-overlay__select {
+  font-size: clamp(0.58rem, 0.85vw, 0.7rem);
+  padding: clamp(0.25em, 0.6vw, 0.4em) clamp(0.6em, 1.6vw, 1.1em);
+  min-width: clamp(150px, 24vw, 210px);
+}
+
 .arcade-mode-switch {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -279,7 +298,7 @@ body.theme-neon .arcade-hud__combo {
   background: rgba(30, 60, 140, 0.35);
   color: #f5f7ff;
   font: inherit;
-  font-size: calc(1rem * var(--ui-control-scale, 1));
+  font-size: calc(0.5rem * var(--ui-control-scale, 1));
   letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: calc(clamp(0.4rem, 0.9vw, 0.65rem) * var(--ui-control-scale, 1))
