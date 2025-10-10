@@ -1,8 +1,97 @@
 .page--math {
+  --math-surface-background: rgba(8, 11, 19, 0.65);
+  --math-surface-border: rgba(255, 255, 255, 0.12);
+  --math-surface-shadow: 0 24px 60px rgba(5, 12, 38, 0.45);
+  --math-surface-color: inherit;
+  --math-subtitle-color: rgba(255, 255, 255, 0.75);
+  --math-mode-button-background: rgba(255, 255, 255, 0.08);
+  --math-mode-button-border: rgba(255, 255, 255, 0.24);
+  --math-mode-button-color: inherit;
+  --math-mode-button-hover-border: rgba(255, 255, 255, 0.38);
+  --math-mode-button-hover-shadow: 0 10px 22px rgba(12, 18, 42, 0.28);
+  --math-mode-button-active-background: linear-gradient(125deg, #0094ff, #7a5cff);
+  --math-mode-button-active-border: rgba(122, 160, 255, 0.85);
+  --math-mode-button-active-color: #ffffff;
+  --math-option-background: rgba(255, 255, 255, 0.08);
+  --math-option-border: rgba(255, 255, 255, 0.2);
+  --math-option-color: inherit;
+  --math-option-hover-border: rgba(255, 255, 255, 0.38);
+  --math-option-hover-shadow: 0 12px 28px rgba(12, 18, 42, 0.35);
+  --math-feedback-color: rgba(255, 255, 255, 0.8);
+  --math-next-background: linear-gradient(125deg, #0076ff, #6a5cff);
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: clamp(1.5rem, 3vw, 3rem) var(--page-padding-x, clamp(1rem, 4vw, 3rem));
+}
+
+body.theme-light .page--math {
+  --math-surface-background: rgba(247, 248, 252, 0.9);
+  --math-surface-border: rgba(12, 16, 32, 0.12);
+  --math-surface-shadow: 0 18px 48px rgba(8, 12, 26, 0.18);
+  --math-surface-color: #050a18;
+  --math-subtitle-color: rgba(12, 16, 32, 0.72);
+  --math-mode-button-background: rgba(255, 255, 255, 0.94);
+  --math-mode-button-border: rgba(12, 16, 32, 0.18);
+  --math-mode-button-color: #050a18;
+  --math-mode-button-hover-border: rgba(12, 16, 32, 0.3);
+  --math-mode-button-hover-shadow: 0 10px 18px rgba(8, 12, 26, 0.18);
+  --math-mode-button-active-background: linear-gradient(125deg, #1b73ff, #7642ff);
+  --math-mode-button-active-border: rgba(55, 92, 220, 0.7);
+  --math-mode-button-active-color: #ffffff;
+  --math-option-background: rgba(255, 255, 255, 0.94);
+  --math-option-border: rgba(12, 16, 32, 0.12);
+  --math-option-color: #050a18;
+  --math-option-hover-border: rgba(12, 16, 32, 0.32);
+  --math-option-hover-shadow: 0 12px 24px rgba(8, 12, 26, 0.2);
+  --math-feedback-color: rgba(12, 16, 32, 0.75);
+  --math-next-background: linear-gradient(125deg, #005ce0, #5b4cff);
+}
+
+body.theme-neon .page--math {
+  --math-surface-background: rgba(12, 14, 46, 0.78);
+  --math-surface-border: rgba(94, 124, 255, 0.28);
+  --math-surface-shadow: 0 24px 60px rgba(6, 8, 32, 0.45);
+  --math-surface-color: rgba(228, 231, 255, 0.92);
+  --math-subtitle-color: rgba(200, 208, 255, 0.75);
+  --math-mode-button-background: rgba(16, 20, 58, 0.9);
+  --math-mode-button-border: rgba(100, 130, 255, 0.32);
+  --math-mode-button-color: rgba(228, 231, 255, 0.92);
+  --math-mode-button-hover-border: rgba(152, 196, 255, 0.5);
+  --math-mode-button-hover-shadow: 0 12px 24px rgba(20, 24, 80, 0.32);
+  --math-mode-button-active-background: linear-gradient(125deg, #28a7ff, #9d6bff);
+  --math-mode-button-active-border: rgba(144, 176, 255, 0.85);
+  --math-mode-button-active-color: #ffffff;
+  --math-option-background: rgba(16, 20, 58, 0.9);
+  --math-option-border: rgba(100, 130, 255, 0.32);
+  --math-option-color: rgba(228, 231, 255, 0.92);
+  --math-option-hover-border: rgba(152, 196, 255, 0.5);
+  --math-option-hover-shadow: 0 12px 26px rgba(26, 36, 90, 0.4);
+  --math-feedback-color: rgba(200, 208, 255, 0.78);
+  --math-next-background: linear-gradient(125deg, #5770ff, #8d5bff);
+}
+
+body.theme-aurora .page--math {
+  --math-surface-background: rgba(12, 44, 36, 0.78);
+  --math-surface-border: rgba(70, 220, 170, 0.28);
+  --math-surface-shadow: 0 24px 56px rgba(6, 36, 26, 0.4);
+  --math-surface-color: rgba(220, 255, 240, 0.92);
+  --math-subtitle-color: rgba(210, 255, 236, 0.82);
+  --math-mode-button-background: rgba(18, 60, 48, 0.85);
+  --math-mode-button-border: rgba(90, 220, 180, 0.35);
+  --math-mode-button-color: rgba(210, 255, 236, 0.92);
+  --math-mode-button-hover-border: rgba(120, 250, 210, 0.45);
+  --math-mode-button-hover-shadow: 0 12px 24px rgba(20, 90, 70, 0.35);
+  --math-mode-button-active-background: linear-gradient(125deg, #25d69f, #32bfa7);
+  --math-mode-button-active-border: rgba(120, 255, 210, 0.55);
+  --math-mode-button-active-color: #04221a;
+  --math-option-background: rgba(18, 60, 48, 0.85);
+  --math-option-border: rgba(90, 220, 180, 0.3);
+  --math-option-color: rgba(210, 255, 236, 0.92);
+  --math-option-hover-border: rgba(120, 250, 210, 0.45);
+  --math-option-hover-shadow: 0 12px 26px rgba(24, 110, 84, 0.4);
+  --math-feedback-color: rgba(210, 255, 236, 0.86);
+  --math-next-background: linear-gradient(125deg, #1bcf8d, #2dbf99);
 }
 
 .page--math.active {
@@ -16,21 +105,11 @@
   gap: clamp(1rem, 2.5vw, 1.8rem);
   padding: clamp(1.6rem, 4vw, 2.6rem);
   border-radius: 18px;
-  background: rgba(8, 11, 19, 0.65);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 24px 60px rgba(5, 12, 38, 0.45);
+  background: var(--math-surface-background, rgba(8, 11, 19, 0.65));
+  border: 1px solid var(--math-surface-border, rgba(255, 255, 255, 0.12));
+  box-shadow: var(--math-surface-shadow, 0 24px 60px rgba(5, 12, 38, 0.45));
   backdrop-filter: blur(16px);
-}
-
-body.theme-light .math-game {
-  background: rgba(247, 248, 252, 0.9);
-  border-color: rgba(12, 16, 32, 0.12);
-  box-shadow: 0 18px 48px rgba(8, 12, 26, 0.18);
-}
-
-body.theme-neon .math-game {
-  background: rgba(12, 14, 46, 0.78);
-  border-color: rgba(94, 124, 255, 0.28);
+  color: var(--math-surface-color, inherit);
 }
 
 .math-game__header {
@@ -51,14 +130,14 @@ body.theme-neon .math-game {
 
 .math-game__mode-button {
   appearance: none;
-  border: 1px solid rgba(255, 255, 255, 0.24);
+  border: 1px solid var(--math-mode-button-border, rgba(255, 255, 255, 0.24));
   border-radius: 999px;
   padding: 0.4rem 1rem;
   font: inherit;
   font-size: 0.85rem;
   font-weight: 600;
-  color: inherit;
-  background: rgba(255, 255, 255, 0.08);
+  color: var(--math-mode-button-color, inherit);
+  background: var(--math-mode-button-background, rgba(255, 255, 255, 0.08));
   cursor: pointer;
   transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
 }
@@ -66,8 +145,8 @@ body.theme-neon .math-game {
 .math-game__mode-button:hover,
 .math-game__mode-button:focus-visible {
   transform: translateY(-1px);
-  box-shadow: 0 10px 22px rgba(12, 18, 42, 0.28);
-  border-color: rgba(255, 255, 255, 0.38);
+  box-shadow: var(--math-mode-button-hover-shadow, 0 10px 22px rgba(12, 18, 42, 0.28));
+  border-color: var(--math-mode-button-hover-border, rgba(255, 255, 255, 0.38));
   outline: none;
 }
 
@@ -77,9 +156,12 @@ body.theme-neon .math-game {
 }
 
 .math-game__mode-button--active {
-  background: linear-gradient(125deg, #0094ff, #7a5cff);
-  border-color: rgba(122, 160, 255, 0.85);
-  color: #ffffff;
+  background: var(
+    --math-mode-button-active-background,
+    linear-gradient(125deg, #0094ff, #7a5cff)
+  );
+  border-color: var(--math-mode-button-active-border, rgba(122, 160, 255, 0.85));
+  color: var(--math-mode-button-active-color, #ffffff);
   box-shadow: 0 12px 28px rgba(12, 18, 42, 0.32);
 }
 
@@ -90,35 +172,6 @@ body.theme-neon .math-game {
   box-shadow: none;
 }
 
-body.theme-light .math-game__mode-button {
-  background: rgba(255, 255, 255, 0.94);
-  border-color: rgba(12, 16, 32, 0.18);
-  color: #050a18;
-}
-
-body.theme-light .math-game__mode-button:hover,
-body.theme-light .math-game__mode-button:focus-visible {
-  border-color: rgba(12, 16, 32, 0.3);
-  box-shadow: 0 10px 18px rgba(8, 12, 26, 0.18);
-}
-
-body.theme-light .math-game__mode-button--active {
-  background: linear-gradient(125deg, #1b73ff, #7642ff);
-  color: #ffffff;
-  border-color: rgba(55, 92, 220, 0.7);
-}
-
-body.theme-neon .math-game__mode-button {
-  background: rgba(16, 20, 58, 0.9);
-  border-color: rgba(100, 130, 255, 0.32);
-}
-
-body.theme-neon .math-game__mode-button--active {
-  background: linear-gradient(125deg, #28a7ff, #9d6bff);
-  border-color: rgba(144, 176, 255, 0.85);
-  color: #ffffff;
-}
-
 .math-game__title {
   font-size: clamp(1.5rem, 4vw, 2rem);
   font-weight: 700;
@@ -126,16 +179,8 @@ body.theme-neon .math-game__mode-button--active {
 
 .math-game__subtitle {
   font-size: clamp(0.95rem, 2.6vw, 1.05rem);
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--math-subtitle-color, rgba(255, 255, 255, 0.75));
   margin: 0;
-}
-
-body.theme-light .math-game__subtitle {
-  color: rgba(12, 16, 32, 0.72);
-}
-
-body.theme-neon .math-game__subtitle {
-  color: rgba(200, 208, 255, 0.75);
 }
 
 .math-game__counters {
@@ -187,14 +232,14 @@ body.theme-neon .math-game__subtitle {
 
 .math-game__option {
   appearance: none;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--math-option-border, rgba(255, 255, 255, 0.2));
   border-radius: 14px;
   padding: 0.75rem 1rem;
   font: inherit;
   font-size: 2rem;
   font-weight: 600;
-  color: inherit;
-  background: rgba(255, 255, 255, 0.08);
+  color: var(--math-option-color, inherit);
+  background: var(--math-option-background, rgba(255, 255, 255, 0.08));
   cursor: pointer;
   transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
   font-family: var(--font-digits, 'Orbitron', sans-serif);
@@ -203,8 +248,8 @@ body.theme-neon .math-game__subtitle {
 .math-game__option:hover,
 .math-game__option:focus-visible {
   transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(12, 18, 42, 0.35);
-  border-color: rgba(255, 255, 255, 0.38);
+  box-shadow: var(--math-option-hover-shadow, 0 12px 28px rgba(12, 18, 42, 0.35));
+  border-color: var(--math-option-hover-border, rgba(255, 255, 255, 0.38));
   outline: none;
 }
 
@@ -231,37 +276,12 @@ body.theme-neon .math-game__subtitle {
   background: rgba(255, 82, 82, 0.12);
 }
 
-body.theme-light .math-game__option {
-  background: rgba(255, 255, 255, 0.94);
-  border-color: rgba(12, 16, 32, 0.12);
-  color: #050a18;
-}
-
-body.theme-light .math-game__option:hover,
-body.theme-light .math-game__option:focus-visible {
-  border-color: rgba(12, 16, 32, 0.32);
-  box-shadow: 0 12px 24px rgba(8, 12, 26, 0.2);
-}
-
-body.theme-neon .math-game__option {
-  background: rgba(16, 20, 58, 0.9);
-  border-color: rgba(100, 130, 255, 0.32);
-}
-
 .math-game__feedback {
   min-height: 1.5rem;
   text-align: center;
   font-size: 0.95rem;
   margin: 0;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-body.theme-light .math-game__feedback {
-  color: rgba(12, 16, 32, 0.75);
-}
-
-body.theme-neon .math-game__feedback {
-  color: rgba(200, 208, 255, 0.78);
+  color: var(--math-feedback-color, rgba(255, 255, 255, 0.8));
 }
 
 .math-game__next {
@@ -275,7 +295,10 @@ body.theme-neon .math-game__feedback {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   cursor: pointer;
-  background: linear-gradient(125deg, #0076ff, #6a5cff);
+  background: var(
+    --math-next-background,
+    linear-gradient(125deg, #0076ff, #6a5cff)
+  );
   color: #fff;
   transition: transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s ease;
 }
@@ -292,14 +315,6 @@ body.theme-neon .math-game__feedback {
   cursor: not-allowed;
   box-shadow: none;
   transform: none;
-}
-
-body.theme-light .math-game__next {
-  background: linear-gradient(125deg, #005ce0, #5b4cff);
-}
-
-body.theme-neon .math-game__next {
-  background: linear-gradient(125deg, #5770ff, #8d5bff);
 }
 
 @media (max-width: 540px) {
