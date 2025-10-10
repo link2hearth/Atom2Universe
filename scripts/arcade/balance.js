@@ -1,27 +1,27 @@
 (() => {
   const DEFAULT_BOARD_PHYSICS = {
     gravity: 9.81,
-    boardMassKg: 18,
-    cubeMassPerWeight: 1.15,
+    boardMassKg: 12,
+    cubeMassPerWeight: 1.4,
     lengthMeters: 2.4,
-    pivotFriction: 22,
-    stiffness: 1450,
+    pivotFriction: 14,
+    stiffness: 960,
     simulationStepMs: 16,
-    simulationDurationMs: 1500,
+    simulationDurationMs: 1800,
     maxAngularVelocity: 5,
-    settleThresholdVelocity: 0.003,
-    settleThresholdTorque: 0.08
+    settleThresholdVelocity: 0.0025,
+    settleThresholdTorque: 0.05
   };
 
   const DEFAULT_BOARD_CONFIG = {
     widthPx: 620,
     surfaceHeightPx: 12,
     pivotHeightPx: 110,
-    tolerance: 0.04,
+    tolerance: 0.026,
     maxTiltDegrees: 18,
-    maxOffsetForTilt: 0.3,
+    maxOffsetForTilt: 0.32,
     testDurationMs: 900,
-    settleDurationMs: 550,
+    settleDurationMs: 600,
     physics: { ...DEFAULT_BOARD_PHYSICS }
   };
 
