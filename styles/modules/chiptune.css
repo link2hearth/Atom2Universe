@@ -307,6 +307,14 @@
   --midi-preview-glow: rgba(122, 77, 255, 0.45);
   --midi-preview-glow-strong: rgba(255, 80, 112, 0.55);
   --midi-preview-dot-size: clamp(0.6rem, 1.6vw, 0.85rem);
+  --midi-key-manual-border: rgba(180, 230, 255, 0.85);
+  --midi-key-playback-border: rgba(255, 200, 120, 0.8);
+  --midi-dropzone-border: rgba(140, 190, 255, 0.45);
+  --midi-dropzone-text: rgba(200, 220, 255, 0.85);
+  --midi-dropzone-border-hover: rgba(180, 220, 255, 0.7);
+  --midi-dropzone-bg-hover: rgba(60, 100, 180, 0.2);
+  --midi-dropzone-text-hover: rgba(230, 240, 255, 0.9);
+  --midi-dropzone-outline: rgba(140, 190, 255, 0.75);
 }
 
 body.theme-light {
@@ -314,6 +322,14 @@ body.theme-light {
   --midi-preview-color-end: rgba(240, 70, 100, 0.9);
   --midi-preview-glow: rgba(110, 80, 200, 0.45);
   --midi-preview-glow-strong: rgba(230, 90, 140, 0.45);
+  --midi-key-manual-border: rgba(70, 110, 200, 0.75);
+  --midi-key-playback-border: rgba(255, 208, 150, 0.82);
+  --midi-dropzone-border: rgba(80, 130, 210, 0.4);
+  --midi-dropzone-text: rgba(40, 60, 120, 0.75);
+  --midi-dropzone-border-hover: rgba(100, 150, 220, 0.65);
+  --midi-dropzone-bg-hover: rgba(160, 200, 255, 0.28);
+  --midi-dropzone-text-hover: rgba(30, 50, 100, 0.85);
+  --midi-dropzone-outline: rgba(50, 90, 170, 0.55);
 }
 
 body.theme-neon {
@@ -321,6 +337,14 @@ body.theme-neon {
   --midi-preview-color-end: rgba(255, 90, 140, 0.98);
   --midi-preview-glow: rgba(160, 130, 255, 0.5);
   --midi-preview-glow-strong: rgba(255, 100, 150, 0.58);
+  --midi-key-manual-border: rgba(190, 232, 255, 0.88);
+  --midi-key-playback-border: rgba(255, 210, 150, 0.84);
+  --midi-dropzone-border: rgba(150, 210, 255, 0.48);
+  --midi-dropzone-text: rgba(210, 230, 255, 0.85);
+  --midi-dropzone-border-hover: rgba(190, 235, 255, 0.72);
+  --midi-dropzone-bg-hover: rgba(70, 120, 220, 0.26);
+  --midi-dropzone-text-hover: rgba(235, 245, 255, 0.92);
+  --midi-dropzone-outline: rgba(170, 220, 255, 0.78);
 }
 
 body.theme-aurora {
@@ -328,6 +352,14 @@ body.theme-aurora {
   --midi-preview-color-end: rgba(140, 255, 210, 0.96);
   --midi-preview-glow: rgba(70, 240, 190, 0.45);
   --midi-preview-glow-strong: rgba(110, 255, 210, 0.55);
+  --midi-key-manual-border: rgba(120, 250, 210, 0.78);
+  --midi-key-playback-border: rgba(255, 214, 150, 0.84);
+  --midi-dropzone-border: rgba(70, 220, 180, 0.45);
+  --midi-dropzone-text: rgba(150, 240, 210, 0.85);
+  --midi-dropzone-border-hover: rgba(110, 255, 210, 0.7);
+  --midi-dropzone-bg-hover: rgba(40, 140, 110, 0.22);
+  --midi-dropzone-text-hover: rgba(188, 255, 232, 0.9);
+  --midi-dropzone-outline: rgba(120, 250, 210, 0.75);
 }
 
 .midi-page {
@@ -1073,12 +1105,12 @@ body.theme-aurora .midi-page__nav-link:focus-visible {
   position: absolute;
   inset: 6px;
   border-radius: inherit;
-  border: 2px solid rgba(180, 230, 255, 0.85);
+  border: 2px solid var(--midi-key-manual-border, rgba(180, 230, 255, 0.85));
   pointer-events: none;
 }
 
 .midi-keyboard__instrument .midi-key.is-playing--playback::before {
-  border-color: rgba(255, 200, 120, 0.8);
+  border-color: var(--midi-key-playback-border, rgba(255, 200, 120, 0.8));
 }
 
 .midi-page__content > *:first-child {
@@ -1102,25 +1134,25 @@ body.theme-aurora .midi-page__nav-link:focus-visible {
 
 .midi-page__module .chiptune-dropzone {
   padding: 1.4rem;
-  border: 2px dashed rgba(140, 190, 255, 0.45);
+  border: 2px dashed var(--midi-dropzone-border, rgba(140, 190, 255, 0.45));
   border-radius: 16px;
   text-align: center;
   line-height: 1.6;
-  color: rgba(200, 220, 255, 0.85);
+  color: var(--midi-dropzone-text, rgba(200, 220, 255, 0.85));
   cursor: pointer;
   transition: border-color var(--transition), background var(--transition), color var(--transition);
 }
 
 .midi-page__module .chiptune-dropzone:focus-visible {
-  outline: 2px solid rgba(140, 190, 255, 0.75);
+  outline: 2px solid var(--midi-dropzone-outline, rgba(140, 190, 255, 0.75));
   outline-offset: 4px;
 }
 
 .midi-page__module .chiptune-dropzone:hover,
 .midi-page__module .chiptune-dropzone:focus-visible {
-  border-color: rgba(180, 220, 255, 0.7);
-  background: rgba(60, 100, 180, 0.2);
-  color: rgba(230, 240, 255, 0.9);
+  border-color: var(--midi-dropzone-border-hover, rgba(180, 220, 255, 0.7));
+  background: var(--midi-dropzone-bg-hover, rgba(60, 100, 180, 0.2));
+  color: var(--midi-dropzone-text-hover, rgba(230, 240, 255, 0.9));
 }
 
 .midi-page__module .option-row--slider {
