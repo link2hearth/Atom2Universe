@@ -464,8 +464,19 @@ class LayeredNumber {
       const value = this.mantissa * Math.pow(10, this.exponent);
       if (Math.abs(this.exponent) < 6) {
         const numeric = this.sign * value;
-        const formatted = LayeredNumber.formatLocalizedNumber(numeric, { maximumFractionDigits: 2 });
-        return formatted || `${numeric}`;
+        const absolute = Math.abs(numeric);
+        const options = absolute >= 1
+          ? { maximumFractionDigits: 0, minimumFractionDigits: 0 }
+          : { maximumFractionDigits: 2, minimumFractionDigits: 0 };
+        const formatted = LayeredNumber.formatLocalizedNumber(numeric, options);
+        if (formatted && formatted.length > 0) {
+          return formatted;
+        }
+        if (absolute >= 1) {
+          const truncated = Math.trunc(numeric);
+          return `${truncated}`;
+        }
+        return `${numeric}`;
       }
       const mantissa = LayeredNumber.formatLocalizedNumber(this.sign * this.mantissa, {
         maximumFractionDigits: 2,
