@@ -12,7 +12,6 @@
         "table": "Table",
         "fusion": "Fusion",
         "info": "Infos",
-        "goals": "Objectifs",
         "midi": "MIDI",
         "bigbang": "Big Bang",
         "options": "Options"
@@ -126,6 +125,11 @@
             "multiValue": "{count} clics · {frenzies} frén."
           }
         },
+        "achievements": {
+          "title": "Succès débloqués",
+          "subtitle": "Visualisez les trophées obtenus au cours de votre aventure.",
+          "empty": "Aucun trophée complété pour le moment. Terminez des objectifs pour les afficher ici."
+        },
         "shop": {
           "title": "Bonus de boutique",
           "subtitle": "Effets obtenus auprès des améliorations achetées."
@@ -134,10 +138,6 @@
           "title": "Bonus des éléments",
           "subtitle": "Effets cumulés de vos collections élémentaires."
         }
-      },
-      "goals": {
-        "title": "Objectifs",
-        "empty": "Aucun objectif actif pour le moment."
       },
       "bigbang": {
         "title": "Big Bang",
@@ -600,6 +600,11 @@
             "multiValue": "{count} clics · {frenzies} frén."
           }
         },
+        "achievements": {
+          "title": "Succès débloqués",
+          "subtitle": "Visualisez les trophées obtenus au cours de votre aventure.",
+          "empty": "Aucun trophée complété pour le moment. Terminez des objectifs pour les afficher ici."
+        },
         "calculations": {
           "title": "Calculs de production",
           "subtitle": "Décomposition des gains automatiques et manuels"
@@ -612,11 +617,6 @@
           "title": "Bonus éléments",
           "subtitle": "Nucléosynthèse primordiale · Spallation cosmique · Étoiles simples · Supernovae · Étoiles massives · Artificiels"
         }
-      },
-      "goals": {
-        "title": "Objectifs & trophées",
-        "intro": "Surveillez vos succès galactiques et débloquez des bonus permanents.",
-        "empty": "Aucun trophée complété pour le moment. Terminez des objectifs pour les afficher ici."
       },
       "bigbang": {
         "title": "Big Bang",

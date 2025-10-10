@@ -12,7 +12,6 @@
         "table": "Table",
         "fusion": "Fusion",
         "info": "Info",
-        "goals": "Goals",
         "midi": "MIDI",
         "bigbang": "Big Bang",
         "options": "Options"
@@ -126,6 +125,11 @@
             "multiValue": "{count} clicks · {frenzies} frenzies"
           }
         },
+        "achievements": {
+          "title": "Unlocked achievements",
+          "subtitle": "Review the trophies you have earned on your journey.",
+          "empty": "No trophy completed yet. Finish objectives to display them here."
+        },
         "shop": {
           "title": "Shop bonuses",
           "subtitle": "Effects earned from purchased upgrades."
@@ -134,10 +138,6 @@
           "title": "Element bonuses",
           "subtitle": "Combined effects from your element collections."
         }
-      },
-      "goals": {
-        "title": "Goals",
-        "empty": "No goal is active right now."
       },
       "bigbang": {
         "title": "Big Bang",
@@ -582,6 +582,11 @@
             "multiValue": "{count} clicks · {frenzies} frenzies"
           }
         },
+        "achievements": {
+          "title": "Unlocked achievements",
+          "subtitle": "Review the trophies you have earned on your journey.",
+          "empty": "No trophy completed yet. Finish objectives to display them here."
+        },
         "calculations": {
           "title": "Production breakdown",
           "subtitle": "Automatic vs manual gains overview"
@@ -612,11 +617,6 @@
         "freePlay": "Free mode",
         "return": "Return to clicker",
         "creditStatus": "Mach3 credits left: 0"
-      },
-      "goals": {
-        "title": "Objectives & trophies",
-        "intro": "Track your galactic achievements and unlock permanent bonuses.",
-        "empty": "No trophy completed yet. Finish objectives to display them here."
       },
       "bigbang": {
         "title": "Big Bang",

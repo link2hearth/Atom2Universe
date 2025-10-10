@@ -2126,7 +2126,7 @@ const TROPHY_MAP = new Map(TROPHY_DEFS.map(def => [def.id, def]));
 const BIG_BANG_TROPHY_ID = 'scaleObservableUniverse';
 const ARCADE_TROPHY_ID = 'millionAtoms';
 const INFO_TROPHY_ID = 'scaleSandGrain';
-const GOALS_UNLOCK_TROPHY_ID = ARCADE_TROPHY_ID;
+const ACHIEVEMENTS_UNLOCK_TROPHY_ID = ARCADE_TROPHY_ID;
 const LOCKABLE_PAGE_IDS = new Set(['gacha', 'tableau', 'fusion', 'info']);
 
 function getPageUnlockState() {
@@ -2145,9 +2145,6 @@ function isPageUnlocked(pageId) {
       ? gameState.atoms
       : toLayeredValue(gameState.atoms, 0);
     return atoms.compare(SHOP_UNLOCK_THRESHOLD) >= 0;
-  }
-  if (pageId === 'goals') {
-    return getUnlockedTrophySet().has(GOALS_UNLOCK_TROPHY_ID);
   }
   if (pageId === 'info') {
     return true;
@@ -2548,7 +2545,6 @@ const elements = {
   navTableButton: document.querySelector('.nav-button[data-target="tableau"]'),
   navFusionButton: document.querySelector('.nav-button[data-target="fusion"]'),
   navInfoButton: document.querySelector('.nav-button[data-target="info"]'),
-  navGoalsButton: document.querySelector('.nav-button[data-target="goals"]'),
   navMidiButton: document.querySelector('.nav-button[data-target="midi"]'),
   navBigBangButton: document.getElementById('navBigBangButton'),
   pages: document.querySelectorAll('.page'),
@@ -2612,6 +2608,7 @@ const elements = {
   collectionSummaryCurrent: document.getElementById('elementCollectionCurrentTotal'),
   collectionSummaryLifetime: document.getElementById('elementCollectionLifetimeTotal'),
   nextMilestone: document.getElementById('nextMilestone'),
+  infoAchievementsCard: document.getElementById('infoAchievementsCard'),
   goalsList: document.getElementById('goalsList'),
   goalsEmpty: document.getElementById('goalsEmpty'),
   gachaResult: document.getElementById('gachaResult'),
@@ -3288,6 +3285,23 @@ function areInfoBonusesUnlocked() {
   return unlocks?.info === true;
 }
 
+function areAchievementsFeatureUnlocked() {
+  return getUnlockedTrophySet().has(ACHIEVEMENTS_UNLOCK_TROPHY_ID);
+}
+
+function updateInfoAchievementsVisibility() {
+  if (!elements.infoAchievementsCard) {
+    return;
+  }
+  const unlocked = areAchievementsFeatureUnlocked();
+  elements.infoAchievementsCard.hidden = !unlocked;
+  elements.infoAchievementsCard.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
+  if (!unlocked && elements.goalsEmpty) {
+    elements.goalsEmpty.hidden = true;
+    elements.goalsEmpty.setAttribute('aria-hidden', 'true');
+  }
+}
+
 function updateInfoBonusVisibility() {
   const visible = areInfoBonusesUnlocked();
   if (elements.infoShopBonusCard) {
@@ -3327,8 +3341,7 @@ function updatePrimaryNavigationLocks() {
   setNavButtonLockState(elements.navShopButton, shopUnlocked);
   updateShopUnlockHint();
 
-  const goalsUnlocked = getUnlockedTrophySet().has(GOALS_UNLOCK_TROPHY_ID);
-  setNavButtonLockState(elements.navGoalsButton, goalsUnlocked);
+  updateInfoAchievementsVisibility();
 
   ensureActivePageUnlocked();
 }
@@ -9953,6 +9966,7 @@ function renderGoals() {
   if (!TROPHY_DEFS.length) {
     if (elements.goalsEmpty) {
       elements.goalsEmpty.hidden = false;
+      elements.goalsEmpty.setAttribute('aria-hidden', 'false');
     }
     return;
   }
@@ -10054,22 +10068,26 @@ function updateMilestone() {
 
 function updateGoalsUI() {
   if (!elements.goalsList || !trophyCards.size) return;
-  const unlocked = getUnlockedTrophySet();
+  const unlockedSet = getUnlockedTrophySet();
+  const featureUnlocked = areAchievementsFeatureUnlocked();
   let visibleCount = 0;
   TROPHY_DEFS.forEach(def => {
     const card = trophyCards.get(def.id);
     if (!card) return;
-    const isUnlocked = unlocked.has(def.id);
+    const isUnlocked = unlockedSet.has(def.id);
+    const shouldShow = featureUnlocked && isUnlocked;
     card.root.classList.toggle('goal-card--completed', isUnlocked);
     card.root.classList.toggle('goal-card--locked', !isUnlocked);
-    card.root.hidden = !isUnlocked;
-    card.root.setAttribute('aria-hidden', String(!isUnlocked));
-    if (isUnlocked) {
+    card.root.hidden = !shouldShow;
+    card.root.setAttribute('aria-hidden', String(!shouldShow));
+    if (shouldShow) {
       visibleCount += 1;
     }
   });
   if (elements.goalsEmpty) {
-    elements.goalsEmpty.hidden = visibleCount > 0;
+    const hideEmpty = !featureUnlocked || visibleCount > 0;
+    elements.goalsEmpty.hidden = hideEmpty;
+    elements.goalsEmpty.setAttribute('aria-hidden', hideEmpty ? 'true' : 'false');
   }
 }
 
