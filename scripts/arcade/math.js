@@ -686,7 +686,8 @@
         id: null,
         deadline: null,
         remaining: Math.max(0, Math.floor(config.roundTimerSeconds || 0))
-      }
+      },
+      disabledOptions: new Set()
     };
 
     function updateCounters() {
@@ -770,10 +771,17 @@
       state.timer.deadline = null;
     }
 
-    function startTimer() {
+    function startTimer(overrideSeconds) {
       stopTimer();
-      const duration = Math.max(1, Math.floor(state.config.roundTimerSeconds));
+      const baseDuration = Math.max(1, Math.floor(state.config.roundTimerSeconds));
+      const duration = Number.isFinite(overrideSeconds)
+        ? Math.max(0, Math.floor(overrideSeconds))
+        : baseDuration;
       setTimerRemaining(duration);
+      if (duration <= 0) {
+        state.timer.deadline = null;
+        return;
+      }
       const deadline = Date.now() + duration * 1000;
       state.timer.deadline = deadline;
       state.timer.id = window.setInterval(() => {
@@ -843,6 +851,7 @@
       }
       elements.nextButton.disabled = false;
       updateCounters();
+      scheduleSave();
     }
 
     function handleTimeout() {
@@ -870,6 +879,7 @@
         round.hiddenType
       );
       elements.options.innerHTML = '';
+      state.disabledOptions = new Set();
       const ariaKey = round.hiddenType === 'operator'
         ? 'index.sections.math.symbolOptionsAria'
         : 'index.sections.math.optionsAria';
@@ -931,6 +941,169 @@
       state.currentRound = round;
       renderRound(round);
       startTimer();
+      scheduleSave();
+    }
+
+    function serializeRound(round) {
+      if (!round || typeof round !== 'object') {
+        return null;
+      }
+      const numbers = Array.isArray(round.numbers) ? round.numbers.map(value => Number(value)) : null;
+      const operations = Array.isArray(round.operations) ? round.operations.map(value => String(value)) : null;
+      const options = Array.isArray(round.options) ? round.options.map(value => String(value)) : null;
+      if (!numbers || numbers.length === 0 || !operations) {
+        return null;
+      }
+      const hiddenType = round.hiddenType === 'operator' ? 'operator' : 'number';
+      const hiddenIndex = Number.isFinite(round.hiddenIndex) ? Math.max(0, Math.floor(round.hiddenIndex)) : 0;
+      const hiddenValue = hiddenType === 'operator' ? String(round.hiddenValue) : Number(round.hiddenValue);
+      return {
+        numbers,
+        operations,
+        result: Number(round.result) || 0,
+        hiddenIndex,
+        hiddenValue,
+        hiddenType,
+        options
+      };
+    }
+
+    function sanitizeRound(data) {
+      if (!data || typeof data !== 'object') {
+        return null;
+      }
+      const numbers = Array.isArray(data.numbers)
+        ? data.numbers.map(value => Number(value)).filter(value => Number.isFinite(value))
+        : null;
+      const operations = Array.isArray(data.operations)
+        ? data.operations.map(value => String(value))
+        : null;
+      if (!numbers || numbers.length === 0 || !operations) {
+        return null;
+      }
+      const hiddenType = data.hiddenType === 'operator' ? 'operator' : 'number';
+      const hiddenIndex = Number.isFinite(data.hiddenIndex) ? Math.max(0, Math.floor(data.hiddenIndex)) : 0;
+      const result = Number(data.result);
+      if (!Number.isFinite(result)) {
+        return null;
+      }
+      if (hiddenType === 'number' && hiddenIndex >= numbers.length) {
+        return null;
+      }
+      if (hiddenType === 'operator' && hiddenIndex >= operations.length) {
+        return null;
+      }
+      const options = Array.isArray(data.options)
+        ? data.options.map(value => String(value)).filter(value => value != null)
+        : [];
+      const hiddenValue = hiddenType === 'operator'
+        ? String(data.hiddenValue || '')
+        : Number(data.hiddenValue);
+      if (hiddenType === 'number' && !Number.isFinite(hiddenValue)) {
+        return null;
+      }
+      return {
+        numbers,
+        operations,
+        result,
+        hiddenIndex,
+        hiddenValue,
+        hiddenType,
+        options
+      };
+    }
+
+    let saveTimeoutId = null;
+
+    function persistState() {
+      if (typeof window === 'undefined' || !window.ArcadeAutosave || typeof window.ArcadeAutosave.set !== 'function') {
+        return;
+      }
+      const payload = {
+        mode: state.mode,
+        correctAnswers: Math.max(0, Number(state.correctAnswers) || 0),
+        streak: Math.max(0, Number(state.streak) || 0),
+        mistakes: Math.max(0, Number(state.mistakes) || 0),
+        solved: state.solved === true,
+        timer: {
+          remaining: Math.max(0, Number(state.timer?.remaining) || 0)
+        },
+        round: serializeRound(state.currentRound),
+        disabledOptions: Array.from(state.disabledOptions || []).map(value => String(value)),
+        feedback: elements.feedback ? elements.feedback.textContent || '' : '',
+        updatedAt: Date.now()
+      };
+      try {
+        window.ArcadeAutosave.set('math', payload);
+      } catch (error) {
+        // Ignore autosave errors to avoid disrupting gameplay
+      }
+    }
+
+    function scheduleSave() {
+      if (saveTimeoutId != null) {
+        window.clearTimeout(saveTimeoutId);
+      }
+      saveTimeoutId = window.setTimeout(() => {
+        saveTimeoutId = null;
+        persistState();
+      }, 60);
+    }
+
+    function applySavedState(saved) {
+      const round = sanitizeRound(saved && saved.round);
+      if (!saved || !round) {
+        return false;
+      }
+      const savedMode = saved.mode === 'symbols' && isSymbolModeAvailable() ? 'symbols' : 'numbers';
+      state.mode = savedMode;
+      state.correctAnswers = Math.max(0, Number(saved.correctAnswers) || 0);
+      state.streak = Math.max(0, Number(saved.streak) || 0);
+      state.mistakes = Math.max(0, Number(saved.mistakes) || 0);
+      state.solved = saved.solved === true;
+      state.currentRound = round;
+      const remaining = saved.timer && Number(saved.timer.remaining);
+      const normalizedRemaining = Number.isFinite(remaining) ? Math.max(0, Math.floor(remaining)) : state.config.roundTimerSeconds;
+      setTimerRemaining(normalizedRemaining);
+      updateCounters();
+      updateModeButtons();
+      renderRound(round);
+      const disabledList = Array.isArray(saved.disabledOptions)
+        ? saved.disabledOptions.map(value => String(value))
+        : [];
+      state.disabledOptions = new Set();
+      if (disabledList.length) {
+        const optionButtons = Array.from(elements.options.querySelectorAll('button'));
+        disabledList.forEach(value => {
+          state.disabledOptions.add(value);
+          optionButtons.forEach(button => {
+            if (String(button.dataset.answer) === value) {
+              button.disabled = true;
+              button.classList.add('math-game__option--wrong');
+            }
+          });
+        });
+      }
+      if (elements.feedback) {
+        if (state.solved && saved.feedback && typeof saved.feedback === 'string') {
+          elements.feedback.textContent = saved.feedback;
+        } else if (!state.solved) {
+          // Keep the prompt rendered by renderRound
+        }
+      }
+      if (state.solved) {
+        revealRoundAnswer(round);
+        elements.nextButton.disabled = false;
+        stopTimer();
+      } else {
+        elements.nextButton.disabled = true;
+        if (normalizedRemaining > 0) {
+          startTimer(normalizedRemaining);
+        } else {
+          stopTimer();
+        }
+      }
+      return true;
     }
 
     function handleCorrectAnswer(button) {
@@ -950,6 +1123,7 @@
       }
       elements.nextButton.disabled = false;
       updateCounters();
+      scheduleSave();
     }
 
     function handleWrongAnswer(button, value) {
@@ -957,6 +1131,9 @@
       button.classList.add('math-game__option--wrong');
       button.disabled = true;
       state.mistakes += 1;
+      if (value != null) {
+        state.disabledOptions.add(String(value));
+      }
       const mistakeLimit = Math.max(1, state.config.maxMistakes || DEFAULT_CONFIG.maxMistakes);
       if (state.mistakes >= mistakeLimit) {
         handleGameOver('mistakes');
@@ -974,6 +1151,7 @@
         );
       }
       updateCounters();
+      scheduleSave();
     }
 
     if (Array.isArray(elements.modeButtons) && elements.modeButtons.length) {
@@ -1017,7 +1195,21 @@
       prepareRound();
     });
 
-    updateModeButtons();
-    prepareRound();
+    let restored = false;
+    if (typeof window !== 'undefined' && window.ArcadeAutosave && typeof window.ArcadeAutosave.get === 'function') {
+      try {
+        const savedState = window.ArcadeAutosave.get('math');
+        restored = applySavedState(savedState);
+      } catch (error) {
+        restored = false;
+      }
+    }
+
+    if (!restored) {
+      updateModeButtons();
+      prepareRound();
+    } else {
+      scheduleSave();
+    }
   });
 })();
