@@ -846,7 +846,7 @@ body.theme-neon .nav-button.active {
 }
 
 /* Individual navigation button palettes */
-.nav-button[data-target="arcade"] {
+.nav-button[data-target="arcadeHub"] {
   --nav-button-bg: linear-gradient(135deg, #2f9e44 0%, #71d36b 100%);
   --nav-button-bg-light: linear-gradient(135deg, #2a8c3d 0%, #63c75f 100%);
   --nav-button-bg-neon: linear-gradient(135deg, rgba(47, 158, 68, 0.85) 0%, rgba(113, 211, 107, 0.9) 100%);
