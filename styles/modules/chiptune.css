@@ -323,6 +323,13 @@ body.theme-neon {
   --midi-preview-glow-strong: rgba(255, 100, 150, 0.58);
 }
 
+body.theme-aurora {
+  --midi-preview-color-start: rgba(64, 220, 170, 0.95);
+  --midi-preview-color-end: rgba(140, 255, 210, 0.96);
+  --midi-preview-glow: rgba(70, 240, 190, 0.45);
+  --midi-preview-glow-strong: rgba(110, 255, 210, 0.55);
+}
+
 .midi-page {
   min-height: 100vh;
   display: flex;
@@ -367,6 +374,10 @@ body.theme-neon .midi-page__description {
   color: rgba(200, 210, 255, 0.78);
 }
 
+body.theme-aurora .midi-page__description {
+  color: rgba(210, 245, 230, 0.78);
+}
+
 .midi-page__module {
   margin: 0;
 }
@@ -402,6 +413,14 @@ body.theme-neon .midi-page__keyboard {
   box-shadow:
     inset 0 1px 0 rgba(180, 210, 255, 0.18),
     0 26px 52px rgba(30, 50, 120, 0.55);
+}
+
+body.theme-aurora .midi-page__keyboard {
+  border-color: rgba(90, 240, 200, 0.32);
+  background: linear-gradient(145deg, rgba(16, 70, 56, 0.86), rgba(6, 32, 24, 0.8));
+  box-shadow:
+    inset 0 1px 0 rgba(210, 255, 236, 0.12),
+    0 26px 52px rgba(6, 32, 24, 0.45);
 }
 
 .midi-keyboard__header {
@@ -444,6 +463,10 @@ body.theme-light .midi-keyboard__subtitle {
 
 body.theme-neon .midi-keyboard__subtitle {
   color: rgba(190, 205, 255, 0.75);
+}
+
+body.theme-aurora .midi-keyboard__subtitle {
+  color: rgba(210, 245, 230, 0.78);
 }
 
 .midi-keyboard__controls {
@@ -493,6 +516,11 @@ body.theme-light .midi-keyboard__select {
 body.theme-neon .midi-keyboard__select {
   color: #041321;
   background: linear-gradient(120deg, rgba(168, 210, 255, 0.96), rgba(120, 230, 255, 0.94));
+}
+
+body.theme-aurora .midi-keyboard__select {
+  color: #032018;
+  background: linear-gradient(120deg, rgba(70, 220, 170, 0.95), rgba(130, 255, 210, 0.92));
 }
 
 .midi-keyboard__toggle {
@@ -547,6 +575,14 @@ body.theme-neon .midi-keyboard__panel {
     0 20px 40px rgba(26, 40, 100, 0.52);
 }
 
+body.theme-aurora .midi-keyboard__panel {
+  border-color: rgba(90, 240, 200, 0.3);
+  background: linear-gradient(160deg, rgba(14, 50, 40, 0.85), rgba(8, 28, 22, 0.82));
+  box-shadow:
+    inset 0 1px 0 rgba(210, 255, 236, 0.1),
+    0 20px 38px rgba(6, 26, 22, 0.38);
+}
+
 .midi-keyboard__panel-header {
   display: flex;
   flex-direction: column;
@@ -573,6 +609,10 @@ body.theme-neon .midi-keyboard__panel-hint {
   color: rgba(190, 210, 255, 0.72);
 }
 
+body.theme-aurora .midi-keyboard__panel-hint {
+  color: rgba(200, 245, 226, 0.72);
+}
+
 .midi-keyboard__range {
   display: flex;
   align-items: center;
@@ -592,6 +632,10 @@ body.theme-light .midi-keyboard__range-value {
 
 body.theme-neon .midi-keyboard__range-value {
   color: rgba(150, 220, 255, 0.92);
+}
+
+body.theme-aurora .midi-keyboard__range-value {
+  color: rgba(130, 255, 210, 0.9);
 }
 
 .midi-keyboard__instrument {
@@ -624,6 +668,13 @@ body.theme-neon .midi-keyboard__instrument--mini {
     inset 0 -1px 0 rgba(10, 16, 34, 0.4);
 }
 
+body.theme-aurora .midi-keyboard__instrument--mini {
+  background: linear-gradient(180deg, rgba(10, 34, 26, 0.55), rgba(6, 22, 18, 0.45));
+  box-shadow:
+    inset 0 1px 0 rgba(180, 250, 220, 0.15),
+    inset 0 -1px 0 rgba(4, 14, 10, 0.38);
+}
+
 .midi-keyboard__instrument--full {
   padding: clamp(0.75rem, 1.8vw, 1.2rem);
   border-radius: 18px;
@@ -636,6 +687,10 @@ body.theme-light .midi-keyboard__instrument--full {
 
 body.theme-neon .midi-keyboard__instrument--full {
   background: rgba(32, 44, 100, 0.6);
+}
+
+body.theme-aurora .midi-keyboard__instrument--full {
+  background: rgba(10, 40, 32, 0.58);
 }
 
 .midi-keyboard__white-slot {
@@ -873,6 +928,23 @@ body.theme-neon .midi-key__preview.is-landed .midi-key__preview-label {
   background: rgba(255, 255, 255, 0.25);
 }
 
+body.theme-aurora .midi-key__preview {
+  box-shadow: 0 0 20px var(--midi-preview-glow, rgba(80, 240, 190, 0.45));
+}
+
+body.theme-aurora .midi-key__preview.is-landed {
+  box-shadow: 0 0 24px var(--midi-preview-glow-strong, rgba(120, 255, 210, 0.52));
+}
+
+body.theme-aurora .midi-key__preview-label {
+  background: rgba(8, 28, 22, 0.5);
+  color: #f2fff7;
+}
+
+body.theme-aurora .midi-key__preview.is-landed .midi-key__preview-label {
+  background: rgba(150, 255, 210, 0.28);
+}
+
 .midi-key--white.is-active,
 .midi-key--white.is-playing--manual {
   transform: translateY(-4px);
@@ -966,6 +1038,10 @@ body.theme-light .midi-page__nav-link:focus-visible {
 
 body.theme-neon .midi-page__nav-link:focus-visible {
   outline-color: rgba(160, 200, 255, 0.75);
+}
+
+body.theme-aurora .midi-page__nav-link:focus-visible {
+  outline-color: rgba(120, 250, 210, 0.75);
 }
 
 .midi-keyboard__instrument .midi-key {
@@ -1119,6 +1195,10 @@ body.theme-neon .midi-page__module .chiptune-usage {
   background: rgba(40, 60, 120, 0.62);
 }
 
+body.theme-aurora .midi-page__module .chiptune-usage {
+  background: rgba(10, 36, 26, 0.62);
+}
+
 .midi-page__module .chiptune-usage__header {
   display: flex;
   justify-content: space-between;
@@ -1140,6 +1220,10 @@ body.theme-light .midi-page__module .chiptune-usage__summary {
 
 body.theme-neon .midi-page__module .chiptune-usage__summary {
   color: rgba(200, 230, 255, 0.9);
+}
+
+body.theme-aurora .midi-page__module .chiptune-usage__summary {
+  color: rgba(170, 250, 220, 0.85);
 }
 
 .midi-page__module .chiptune-usage__grid {
@@ -1227,6 +1311,10 @@ body.theme-neon .midi-page__module .option-row--buttons button:focus-visible {
   outline-color: rgba(160, 210, 255, 0.75);
 }
 
+body.theme-aurora .midi-page__module .option-row--buttons button:focus-visible {
+  outline-color: rgba(120, 250, 210, 0.75);
+}
+
 .midi-page__module .option-row--buttons button {
   background: linear-gradient(135deg, rgba(76, 141, 255, 0.9), rgba(120, 210, 255, 0.95));
   color: #05070c;
@@ -1246,4 +1334,9 @@ body.theme-light .midi-page__module .option-row--buttons button {
 body.theme-neon .midi-page__module .option-row--buttons button {
   background: linear-gradient(135deg, rgba(110, 160, 255, 0.88), rgba(150, 240, 255, 0.95));
   color: #030310;
+}
+
+body.theme-aurora .midi-page__module .option-row--buttons button {
+  background: linear-gradient(135deg, rgba(70, 220, 180, 0.9), rgba(140, 255, 220, 0.96));
+  color: #02150f;
 }
