@@ -252,6 +252,13 @@ body.theme-neon .arcade-hud__combo {
   text-align: center;
 }
 
+.arcade-overlay__actions {
+  display: flex;
+  justify-content: center;
+  gap: clamp(0.6rem, 1.5vw, 1rem);
+  flex-wrap: wrap;
+}
+
 .arcade-overlay__message {
   margin: 0;
   font-size: clamp(0.9rem, 1.6vw, 1.2rem);
@@ -427,6 +434,22 @@ body.theme-light .arcade-overlay__select {
 .arcade-overlay__button:focus-visible {
   transform: translateY(-2px);
   box-shadow: 0 18px 34px rgba(120, 220, 255, 0.55);
+}
+
+.arcade-overlay__button--secondary {
+  background: linear-gradient(120deg, rgba(70, 90, 180, 0.92), rgba(40, 60, 140, 0.95));
+  color: #f3f7ff;
+  box-shadow: 0 12px 26px rgba(30, 50, 120, 0.5);
+}
+
+.arcade-overlay__button--secondary:hover,
+.arcade-overlay__button--secondary:focus-visible {
+  box-shadow: 0 16px 32px rgba(60, 100, 200, 0.55);
+}
+
+body.theme-light .arcade-overlay__button--secondary {
+  background: linear-gradient(120deg, rgba(120, 150, 230, 0.9), rgba(90, 120, 210, 0.95));
+  color: #fff;
 }
 
 .arcade-overlay[hidden],

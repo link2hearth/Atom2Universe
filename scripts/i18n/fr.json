@@ -164,7 +164,8 @@
             "label": "Apparence des briques",
             "aria": "Choisissez l’apparence des briques de Particules."
           },
-          "button": "Commencer"
+          "button": "Commencer",
+          "quit": "Quitter"
         }
       },
       "arcadeHub": {
@@ -2133,6 +2134,7 @@
         "levelCleared": {
           "template": "Niveau {level} terminé !{reward}",
           "button": "Continuer",
+          "quitButton": "Quitter",
           "reward": " {reward} obtenu !",
           "noReward": " Aucun ticket cette fois.",
           "speedBonus": " Bonus vitesse : +{bonus} !"

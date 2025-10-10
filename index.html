@@ -869,12 +869,23 @@
                   <option value="pastels" data-i18n="index.sections.options.brickSkin.options.pastels">Pastels</option>
                 </select>
               </div>
-              <button
-                type="button"
-                class="arcade-overlay__button"
-                id="arcadeOverlayButton"
-                data-i18n="index.sections.arcade.overlay.button"
-              >Commencer</button>
+              <div class="arcade-overlay__actions">
+                <button
+                  type="button"
+                  class="arcade-overlay__button"
+                  id="arcadeOverlayButton"
+                  data-i18n="index.sections.arcade.overlay.button"
+                >Commencer</button>
+                <button
+                  type="button"
+                  class="arcade-overlay__button arcade-overlay__button--secondary"
+                  id="arcadeOverlayQuitButton"
+                  data-i18n="index.sections.arcade.overlay.quit"
+                  hidden
+                  aria-hidden="true"
+                  disabled
+                >Quitter</button>
+              </div>
             </div>
           </div>
         </div>
