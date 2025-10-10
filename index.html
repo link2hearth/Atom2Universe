@@ -72,16 +72,6 @@
         <button class="nav-button" data-target="info">
           <span data-i18n="index.navigation.items.info">Infos</span>
         </button>
-        <button
-          class="nav-button"
-          data-target="goals"
-          hidden
-          aria-hidden="true"
-          disabled
-          aria-disabled="true"
-        >
-          <span data-i18n="index.navigation.items.goals">Objectifs</span>
-        </button>
         <button class="nav-button" data-target="bigbang" id="navBigBangButton" hidden aria-hidden="true">
           <span data-i18n="index.navigation.items.bigbang">Big Bang</span>
         </button>
@@ -1843,6 +1833,28 @@
         </article>
 
         <article
+          id="infoAchievementsCard"
+          class="info-card info-card--stats info-card--achievements"
+          aria-labelledby="info-achievements-title"
+          hidden
+          aria-hidden="true"
+        >
+          <header class="info-card__header">
+            <h3 id="info-achievements-title" data-i18n="index.sections.info.achievements.title">Succès débloqués</h3>
+            <p class="info-card__subtitle" data-i18n="index.sections.info.achievements.subtitle">Visualisez les trophées obtenus au cours de votre aventure.</p>
+          </header>
+          <p
+            class="goals-empty"
+            id="goalsEmpty"
+            hidden
+            data-i18n="index.sections.info.achievements.empty"
+          >
+            Aucun trophée complété pour le moment. Terminez des objectifs pour les afficher ici.
+          </p>
+          <div class="goals-list" id="goalsList" role="list"></div>
+        </article>
+
+        <article
           id="infoShopBonusCard"
           class="info-card info-card--bonuses"
           aria-labelledby="info-shop-bonus-title"
@@ -1968,18 +1980,6 @@
           </div>
         </div>
       </div>
-    </section>
-
-    <section
-      id="goals"
-      class="page"
-      data-page-group="clicker"
-      role="region"
-      aria-label="Objectifs"
-      data-i18n="aria-label:index.sections.goals.title"
-    >
-      <p class="goals-empty" id="goalsEmpty" hidden data-i18n="index.sections.goals.empty">Aucun objectif actif pour le moment.</p>
-      <div class="goals-list" id="goalsList" role="list"></div>
     </section>
 
     <section

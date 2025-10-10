@@ -930,20 +930,6 @@ body.theme-neon .nav-button.active {
   --nav-button-active-color-neon: #fff9ff;
 }
 
-.nav-button[data-target="goals"] {
-  --nav-button-bg: linear-gradient(135deg, #9df3e3 0%, #c4f8ee 100%);
-  --nav-button-bg-light: linear-gradient(135deg, #7de4d3 0%, #b0f2e5 100%);
-  --nav-button-bg-neon: linear-gradient(135deg, rgba(157, 243, 227, 0.85) 0%, rgba(196, 248, 238, 0.92) 100%);
-  --nav-button-color: #0d4238;
-  --nav-button-color-light: #083029;
-  --nav-button-color-neon: #083029;
-  --nav-button-active-bg: #59d9c2;
-  --nav-button-active-bg-neon: linear-gradient(135deg, #59d9c2 0%, #93f4e0 100%);
-  --nav-button-active-color: #073029;
-  --nav-button-active-color-light: #041d1a;
-  --nav-button-active-color-neon: #041d1a;
-}
-
 .nav-button[data-target="bigbang"] {
   --nav-button-bg: linear-gradient(135deg, #ff9c8a 0%, #ff6f91 100%);
   --nav-button-bg-light: linear-gradient(135deg, #ff846e 0%, #ff5c7c 100%);
