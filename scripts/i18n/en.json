@@ -663,6 +663,16 @@
             "large": "Large size (×1.5)"
           }
         },
+        "theme": {
+          "label": "Visual theme",
+          "ariaLabel": "Choose the interface visual theme",
+          "options": {
+            "dark": "Dark",
+            "light": "Light",
+            "neon": "Neon",
+            "aurora": "Aurora"
+          }
+        },
         "digitFont": {
           "label": "Number font",
           "ariaLabel": "Choose the font used for numbers",
@@ -1279,6 +1289,14 @@
     }
   },
   "scripts": {
+    "config": {
+      "themes": {
+        "dark": "Dark theme",
+        "light": "Light theme",
+        "neon": "Neon theme",
+        "aurora": "Aurora theme"
+      }
+    },
     "arcade": {
       "balance": {
         "status": {
@@ -1553,7 +1571,7 @@
         "milestoneHint": "Keep exploring ever larger orders of magnitude!",
         "costLabel": "{value}"
       },
-      "themeUpdated": "Theme updated",
+      "themeUpdated": "Theme updated: {name}",
       "language": {
         "updated": "Language updated."
       },

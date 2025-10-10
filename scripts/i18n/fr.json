@@ -663,6 +663,16 @@
             "large": "Grande taille (×1,5)"
           }
         },
+        "theme": {
+          "label": "Thème visuel",
+          "ariaLabel": "Choisir le thème visuel de l’interface",
+          "options": {
+            "dark": "Sombre",
+            "light": "Clair",
+            "neon": "Néon",
+            "aurora": "Aurore"
+          }
+        },
         "digitFont": {
           "label": "Police des chiffres",
           "ariaLabel": "Choisir la police utilisée pour les nombres",
@@ -1279,6 +1289,14 @@
     }
   },
   "scripts": {
+    "config": {
+      "themes": {
+        "dark": "Thème sombre",
+        "light": "Thème clair",
+        "neon": "Thème néon",
+        "aurora": "Thème Aurore"
+      }
+    },
     "arcade": {
       "balance": {
         "status": {
@@ -1553,7 +1571,7 @@
         "milestoneHint": "Continuez à explorer des ordres de grandeur toujours plus vastes !",
         "costLabel": "{value}"
       },
-      "themeUpdated": "Thème mis à jour",
+      "themeUpdated": "Thème mis à jour : {name}",
       "language": {
         "updated": "Langue mise à jour."
       },

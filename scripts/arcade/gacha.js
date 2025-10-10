@@ -901,7 +901,6 @@ LayeredNumber.EPSILON = CONFIG.numbers?.epsilon ?? 1e-12;
 
 const BASE_PER_CLICK = toLayeredNumber(CONFIG.progression?.basePerClick, 1);
 const BASE_PER_SECOND = toLayeredNumber(CONFIG.progression?.basePerSecond, 0);
-const DEFAULT_THEME = CONFIG.progression?.defaultTheme ?? 'dark';
 const DEFAULT_MUSIC_VOLUME = 0.5;
 const DEFAULT_MUSIC_ENABLED = true;
 
