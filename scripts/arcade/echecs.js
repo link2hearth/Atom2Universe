@@ -3264,11 +3264,7 @@
     }
 
     if (!state.lastMove && state.halfmoveClock === 0) {
-      setStatusText(
-        ui.statusElement,
-        'index.sections.echecs.status.ready',
-        'Engine ready. White moves first.'
-      );
+      ui.statusElement.textContent = '';
       if (ui.outcomeElement) {
         ui.outcomeElement.textContent = '';
       }
@@ -3348,10 +3344,7 @@
       );
       return;
     }
-    ui.helperElement.textContent = translate(
-      'index.sections.echecs.helper',
-      'Tap or drag a white piece to highlight legal moves.'
-    );
+    ui.helperElement.textContent = '';
   }
 
   function clearHelperMessage(state) {
