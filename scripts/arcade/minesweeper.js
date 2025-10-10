@@ -9,6 +9,211 @@
     difficile: Object.freeze({ rows: 16, cols: 16, mines: 40 })
   });
 
+  const DEFAULT_BOARD_SETTINGS = Object.freeze({
+    targetCellSize: 48,
+    minCellSize: 32,
+    maxCellSize: 72,
+    maxRows: 40,
+    maxCols: 60
+  });
+
+  const BOARD_SETTINGS = (() => {
+    if (typeof globalThis === 'undefined') {
+      return DEFAULT_BOARD_SETTINGS;
+    }
+    const source = globalThis.MINESWEEPER_BOARD_SETTINGS;
+    if (!source || typeof source !== 'object') {
+      return DEFAULT_BOARD_SETTINGS;
+    }
+
+    const minSize = Math.max(16, coercePositiveNumber(source.minCellSize, DEFAULT_BOARD_SETTINGS.minCellSize));
+    const maxSize = Math.max(minSize, coercePositiveNumber(source.maxCellSize, DEFAULT_BOARD_SETTINGS.maxCellSize));
+    const targetSize = Math.min(
+      maxSize,
+      Math.max(minSize, coercePositiveNumber(source.targetCellSize, DEFAULT_BOARD_SETTINGS.targetCellSize))
+    );
+
+    const maxRows = Math.max(4, Math.floor(coercePositiveNumber(source.maxRows, DEFAULT_BOARD_SETTINGS.maxRows)));
+    const maxCols = Math.max(4, Math.floor(coercePositiveNumber(source.maxCols, DEFAULT_BOARD_SETTINGS.maxCols)));
+
+    return Object.freeze({
+      targetCellSize: targetSize,
+      minCellSize: minSize,
+      maxCellSize: maxSize,
+      maxRows,
+      maxCols
+    });
+  })();
+
+  function clamp(value, min, max) {
+    if (!Number.isFinite(value)) {
+      return min;
+    }
+    if (value < min) {
+      return min;
+    }
+    if (value > max) {
+      return max;
+    }
+    return value;
+  }
+
+  function coercePositiveNumber(value, fallback) {
+    const parsed = Number.parseFloat(value);
+    if (!Number.isFinite(parsed) || parsed <= 0) {
+      return fallback;
+    }
+    return parsed;
+  }
+
+  function getBoardMetrics(boardElement) {
+    const viewportWidth = Math.max(
+      coercePositiveNumber(window.innerWidth, 1),
+      coercePositiveNumber(document.documentElement?.clientWidth, 1),
+      1
+    );
+    const viewportHeight = Math.max(
+      coercePositiveNumber(window.innerHeight, 1),
+      coercePositiveNumber(document.documentElement?.clientHeight, 1),
+      1
+    );
+
+    let availableWidth = viewportWidth;
+    let availableHeight = viewportHeight;
+
+    const container = boardElement.closest('.minesweeper');
+    if (container) {
+      const containerRect = container.getBoundingClientRect();
+      const containerStyles = window.getComputedStyle(container);
+      const paddingX =
+        coercePositiveNumber(containerStyles.paddingLeft, 0) +
+        coercePositiveNumber(containerStyles.paddingRight, 0);
+      const paddingY =
+        coercePositiveNumber(containerStyles.paddingTop, 0) +
+        coercePositiveNumber(containerStyles.paddingBottom, 0);
+      const gap = coercePositiveNumber(containerStyles.gap || containerStyles.rowGap, 0);
+
+      availableWidth = containerRect.width - paddingX;
+      availableHeight = containerRect.height - paddingY - gap;
+
+      const controls = container.querySelector('.minesweeper__controls');
+      if (controls) {
+        availableHeight -= controls.getBoundingClientRect().height;
+      }
+    }
+
+    const boardRect = boardElement.getBoundingClientRect();
+    if (!Number.isFinite(availableWidth) || availableWidth <= 0) {
+      availableWidth = viewportWidth;
+    }
+    if (!Number.isFinite(availableHeight) || availableHeight <= 0) {
+      availableHeight = viewportHeight - boardRect.top;
+    }
+
+    availableWidth = Math.max(availableWidth, 240);
+    availableHeight = Math.max(availableHeight, viewportHeight - boardRect.top - 24, 240);
+
+    return {
+      width: availableWidth,
+      height: availableHeight,
+      ratio: availableWidth / availableHeight,
+      orientation: availableWidth >= availableHeight ? 'landscape' : 'portrait'
+    };
+  }
+
+  function computeGridDimensions(preset, metrics) {
+    const baseRows = Math.max(4, Number(preset.rows) || 8);
+    const baseCols = Math.max(4, Number(preset.cols) || 8);
+    const baseArea = Math.max(16, baseRows * baseCols);
+    const width = Math.max(coercePositiveNumber(metrics.width, 1), 1);
+    const height = Math.max(coercePositiveNumber(metrics.height, 1), 1);
+    const targetRatio = clamp(metrics.ratio || width / height, 0.35, 3.5);
+
+    const minRows = Math.max(
+      4,
+      Math.min(
+        BOARD_SETTINGS.maxRows,
+        Math.floor(height / Math.max(BOARD_SETTINGS.maxCellSize, 1)) || 0
+      )
+    );
+    const maxRows = Math.max(
+      minRows,
+      Math.min(
+        BOARD_SETTINGS.maxRows,
+        Math.floor(height / Math.max(BOARD_SETTINGS.minCellSize, 1)) || 0
+      )
+    );
+    const minCols = Math.max(
+      4,
+      Math.min(
+        BOARD_SETTINGS.maxCols,
+        Math.floor(width / Math.max(BOARD_SETTINGS.maxCellSize, 1)) || 0
+      )
+    );
+    const maxCols = Math.max(
+      minCols,
+      Math.min(
+        BOARD_SETTINGS.maxCols,
+        Math.floor(width / Math.max(BOARD_SETTINGS.minCellSize, 1)) || 0
+      )
+    );
+
+    const candidateRows = new Set([baseRows]);
+    for (let rows = minRows; rows <= maxRows; rows += 1) {
+      candidateRows.add(rows);
+    }
+
+    const baseColsCandidate = clamp(baseCols, 4, BOARD_SETTINGS.maxCols);
+    const candidateCols = new Set([baseColsCandidate]);
+    for (let cols = minCols; cols <= maxCols; cols += 1) {
+      candidateCols.add(cols);
+    }
+
+    let best = {
+      rows: clamp(baseRows, 4, BOARD_SETTINGS.maxRows),
+      cols: baseColsCandidate,
+      score: Number.POSITIVE_INFINITY
+    };
+
+    candidateRows.forEach((rows) => {
+      const normalizedRows = clamp(Math.round(rows), 4, BOARD_SETTINGS.maxRows);
+      const idealCols = clamp(Math.round(normalizedRows * targetRatio), 4, BOARD_SETTINGS.maxCols);
+      for (let delta = -2; delta <= 2; delta += 1) {
+        candidateCols.add(clamp(idealCols + delta, 4, BOARD_SETTINGS.maxCols));
+      }
+
+      candidateCols.forEach((colsCandidate) => {
+        const normalizedCols = clamp(Math.round(colsCandidate), 4, BOARD_SETTINGS.maxCols);
+        if (normalizedCols < 4) {
+          return;
+        }
+
+        const totalCells = normalizedRows * normalizedCols;
+        const ratio = normalizedCols / normalizedRows;
+        const cellWidth = width / normalizedCols;
+        const cellHeight = height / normalizedRows;
+        const effectiveSize = Math.min(cellWidth, cellHeight);
+
+        const ratioScore = Math.abs(ratio - targetRatio);
+        const areaScore = Math.abs(totalCells - baseArea) / baseArea;
+        const sizeScore = Math.abs(effectiveSize - BOARD_SETTINGS.targetCellSize) / BOARD_SETTINGS.targetCellSize;
+        const minSizePenalty = effectiveSize < BOARD_SETTINGS.minCellSize
+          ? (BOARD_SETTINGS.minCellSize - effectiveSize) / BOARD_SETTINGS.minCellSize
+          : 0;
+        const maxSizePenalty = effectiveSize > BOARD_SETTINGS.maxCellSize
+          ? (effectiveSize - BOARD_SETTINGS.maxCellSize) / BOARD_SETTINGS.maxCellSize
+          : 0;
+
+        const score = ratioScore * 4 + sizeScore * 3 + areaScore * 1.5 + (minSizePenalty + maxSizePenalty) * 10;
+        if (score < best.score) {
+          best = { rows: normalizedRows, cols: normalizedCols, score };
+        }
+      });
+    });
+
+    return { rows: best.rows, cols: best.cols };
+  }
+
   function onReady(callback) {
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', callback, { once: true });
@@ -92,7 +297,8 @@
       grid: [],
       safeRemaining: 0,
       status: 'ready',
-      armed: false
+      armed: false,
+      metrics: null
     };
 
     function refreshLabelCache() {
@@ -160,9 +366,24 @@
       setCellAriaLabel(cell, labelCache.hidden);
     }
 
+    function applyBoardMetrics() {
+      if (!gameState.metrics) {
+        return;
+      }
+      const { width, height } = gameState.metrics;
+      boardElement.style.setProperty('--minesweeper-board-width', `${Math.round(width)}px`);
+      boardElement.style.setProperty('--minesweeper-board-height', `${Math.round(height)}px`);
+      boardElement.style.width = `${Math.round(width)}px`;
+      boardElement.style.height = `${Math.round(height)}px`;
+      boardElement.style.maxWidth = '100%';
+      boardElement.style.maxHeight = '100%';
+    }
+
     function renderBoard() {
       boardElement.innerHTML = '';
       boardElement.style.setProperty('--minesweeper-columns', gameState.cols);
+      boardElement.style.setProperty('--minesweeper-rows', gameState.rows);
+      applyBoardMetrics();
       for (let row = 0; row < gameState.rows; row += 1) {
         for (let col = 0; col < gameState.cols; col += 1) {
           const cell = gameState.grid[row][col];
@@ -184,9 +405,12 @@
     function initializeGrid(difficultyKey) {
       const presetKey = normalizeDifficultyKey(difficultyKey);
       const preset = DIFFICULTY_PRESETS[presetKey];
-      const rows = Math.max(4, Number(preset.rows) || 8);
-      const cols = Math.max(4, Number(preset.cols) || 8);
-      const mines = clampMines(rows, cols, preset.mines);
+      const metrics = getBoardMetrics(boardElement);
+      const { rows, cols } = computeGridDimensions(preset, metrics);
+      const baseArea = Math.max(preset.rows * preset.cols, 1);
+      const density = preset.mines / baseArea;
+      const desiredMines = Math.round(density * rows * cols);
+      const mines = clampMines(rows, cols, desiredMines);
       gameState.rows = rows;
       gameState.cols = cols;
       gameState.mineCount = mines;
@@ -194,6 +418,7 @@
       gameState.safeRemaining = rows * cols - mines;
       gameState.status = 'ready';
       gameState.armed = false;
+      gameState.metrics = metrics;
       renderBoard();
       for (let row = 0; row < gameState.rows; row += 1) {
         for (let col = 0; col < gameState.cols; col += 1) {
