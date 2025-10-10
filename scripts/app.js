@@ -402,13 +402,40 @@ function renderThemeOptions() {
   }
   const select = elements.themeSelect;
   const previousValue = select.value;
+  const doc = select.ownerDocument || (typeof document !== 'undefined' ? document : null);
+  const fragment = doc && typeof doc.createDocumentFragment === 'function'
+    ? doc.createDocumentFragment()
+    : null;
   select.innerHTML = '';
   THEME_DEFINITIONS.forEach(theme => {
-    const option = document.createElement('option');
+    const option = doc && typeof doc.createElement === 'function'
+      ? doc.createElement('option')
+      : typeof document !== 'undefined' && typeof document.createElement === 'function'
+        ? document.createElement('option')
+        : null;
+    if (!option) {
+      return;
+    }
     option.value = theme.id;
-    option.textContent = getThemeLabel(theme);
-    select.appendChild(option);
+    option.setAttribute('data-i18n', `index.sections.options.theme.options.${theme.id}`);
+    const fallbackLabel = getThemeLabel(theme) || theme.id;
+    option.textContent = translateOrDefault(
+      `index.sections.options.theme.options.${theme.id}`,
+      fallbackLabel
+    );
+    if (fragment) {
+      fragment.appendChild(option);
+    } else {
+      select.appendChild(option);
+    }
   });
+  if (fragment) {
+    select.appendChild(fragment);
+  }
+  const i18n = getI18nApi();
+  if (i18n && typeof i18n.updateTranslations === 'function') {
+    i18n.updateTranslations(select);
+  }
   const currentThemeId = typeof gameState !== 'undefined'
     && gameState
     && typeof gameState.theme === 'string'
