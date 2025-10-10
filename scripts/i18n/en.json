@@ -1265,9 +1265,11 @@
       },
       "fullLabel": "Full keyboard",
       "fullHint": "Click a key to choose a range.",
-      "miniLabel": "Practice zone",
-      "miniHint": "Selected keys appear here for easy practice.",
-      "rangeLabel": "Selected range"
+      "rangeLabel": "Selected range",
+      "practiceRegionLabel": "Practice keyboard",
+      "practiceScrollLabel": "Practice note scroll",
+      "practiceScrollEnabled": "Scroll enabled",
+      "practiceScrollDisabled": "Scroll disabled"
     }
   },
   "scripts": {
