@@ -1,7 +1,71 @@
 .page--blackjack {
+  --blackjack-text-color: var(--color-text-primary, #f0f4ff);
+  --blackjack-hand-background: linear-gradient(
+    160deg,
+    rgba(17, 24, 39, 0.82),
+    rgba(30, 41, 59, 0.88)
+  );
+  --blackjack-hand-border: rgba(148, 163, 184, 0.25);
+  --blackjack-hand-shadow: 0 18px 28px rgba(15, 23, 42, 0.45);
+  --blackjack-hand-win-background: linear-gradient(
+    160deg,
+    rgba(20, 83, 45, 0.92),
+    rgba(34, 197, 94, 0.75)
+  );
+  --blackjack-hand-win-border: rgba(134, 239, 172, 0.65);
+  --blackjack-hand-win-shadow: 0 22px 32px rgba(16, 185, 129, 0.45);
+  --blackjack-hand-lose-background: linear-gradient(
+    160deg,
+    rgba(127, 29, 29, 0.92),
+    rgba(248, 113, 113, 0.7)
+  );
+  --blackjack-hand-lose-border: rgba(248, 113, 113, 0.65);
+  --blackjack-hand-lose-shadow: 0 22px 32px rgba(239, 68, 68, 0.45);
+  --blackjack-hand-push-background: linear-gradient(
+    160deg,
+    rgba(30, 41, 59, 0.9),
+    rgba(59, 130, 246, 0.55)
+  );
+  --blackjack-hand-push-border: rgba(147, 197, 253, 0.6);
+  --blackjack-hand-push-shadow: 0 22px 32px rgba(37, 99, 235, 0.4);
+  --blackjack-card-background: linear-gradient(
+    160deg,
+    rgba(248, 250, 252, 0.98),
+    rgba(241, 245, 249, 0.92)
+  );
+  --blackjack-card-border: rgba(15, 23, 42, 0.08);
+  --blackjack-card-shadow: 0 12px 18px rgba(15, 23, 42, 0.35);
+  --blackjack-card-color: #111827;
+  --blackjack-card-red: #b91c1c;
+  --blackjack-card-hidden-background: repeating-linear-gradient(
+    135deg,
+    rgba(15, 23, 42, 0.88) 0,
+    rgba(15, 23, 42, 0.88) 10px,
+    rgba(59, 130, 246, 0.18) 10px,
+    rgba(59, 130, 246, 0.18) 20px
+  );
+  --blackjack-card-hidden-color: rgba(226, 232, 240, 0.82);
+  --blackjack-card-hidden-border: rgba(59, 130, 246, 0.25);
+  --blackjack-bet-background: rgba(15, 23, 42, 0.55);
+  --blackjack-bet-border: rgba(148, 163, 184, 0.25);
+  --blackjack-bet-color: inherit;
+  --blackjack-bet-option-background: rgba(30, 64, 175, 0.5);
+  --blackjack-bet-option-border: rgba(148, 163, 184, 0.35);
+  --blackjack-bet-option-color: #f8fafc;
+  --blackjack-bet-option-hover-background: rgba(59, 130, 246, 0.65);
+  --blackjack-bet-option-hover-shadow: 0 8px 16px rgba(37, 99, 235, 0.25);
+  --blackjack-bet-option-selected-background: rgba(59, 130, 246, 0.75);
+  --blackjack-bet-option-selected-border: rgba(191, 219, 254, 0.6);
+  --blackjack-bet-option-selected-shadow: 0 12px 22px rgba(37, 99, 235, 0.28);
+  --blackjack-bet-option-unavailable-background: rgba(30, 41, 59, 0.55);
+  --blackjack-button-background: rgba(30, 64, 175, 0.65);
+  --blackjack-button-border: rgba(148, 163, 184, 0.4);
+  --blackjack-button-color: #f8fafc;
+  --blackjack-button-hover-background: rgba(59, 130, 246, 0.7);
+  --blackjack-button-hover-shadow: 0 10px 18px rgba(37, 99, 235, 0.28);
   padding: clamp(1rem, 2vw, 2.5rem) clamp(0.75rem, 2vw, 2rem);
   justify-content: center;
-  color: var(--color-text-primary, #f0f4ff);
+  color: var(--blackjack-text-color);
   --blackjack-scale: var(--ui-control-scale, 1);
 }
 
@@ -28,11 +92,11 @@
 }
 
 .blackjack-hand {
-  background: linear-gradient(160deg, rgba(17, 24, 39, 0.82), rgba(30, 41, 59, 0.88));
-  border: 1px solid rgba(148, 163, 184, 0.25);
+  background: var(--blackjack-hand-background);
+  border: 1px solid var(--blackjack-hand-border);
   border-radius: calc(1rem * var(--blackjack-scale, 1));
   padding: calc(clamp(0.75rem, 2vw, 1.25rem) * var(--blackjack-scale, 1));
-  box-shadow: 0 18px 28px rgba(15, 23, 42, 0.45);
+  box-shadow: var(--blackjack-hand-shadow);
   display: flex;
   flex-direction: column;
   gap: calc(0.65rem * var(--blackjack-scale, 1));
@@ -40,21 +104,21 @@
 }
 
 .blackjack-hand--win {
-  background: linear-gradient(160deg, rgba(20, 83, 45, 0.92), rgba(34, 197, 94, 0.75));
-  border-color: rgba(134, 239, 172, 0.65);
-  box-shadow: 0 22px 32px rgba(16, 185, 129, 0.45);
+  background: var(--blackjack-hand-win-background);
+  border-color: var(--blackjack-hand-win-border);
+  box-shadow: var(--blackjack-hand-win-shadow);
 }
 
 .blackjack-hand--lose {
-  background: linear-gradient(160deg, rgba(127, 29, 29, 0.92), rgba(248, 113, 113, 0.7));
-  border-color: rgba(248, 113, 113, 0.65);
-  box-shadow: 0 22px 32px rgba(239, 68, 68, 0.45);
+  background: var(--blackjack-hand-lose-background);
+  border-color: var(--blackjack-hand-lose-border);
+  box-shadow: var(--blackjack-hand-lose-shadow);
 }
 
 .blackjack-hand--push {
-  background: linear-gradient(160deg, rgba(30, 41, 59, 0.9), rgba(59, 130, 246, 0.55));
-  border-color: rgba(147, 197, 253, 0.6);
-  box-shadow: 0 22px 32px rgba(37, 99, 235, 0.4);
+  background: var(--blackjack-hand-push-background);
+  border-color: var(--blackjack-hand-push-border);
+  box-shadow: var(--blackjack-hand-push-shadow);
 }
 
 .blackjack-hand__header {
@@ -94,9 +158,9 @@
   width: clamp(2.5rem, 8vw, 3.25rem);
   aspect-ratio: 63 / 88;
   border-radius: calc(0.6rem * var(--blackjack-scale, 1));
-  background: linear-gradient(160deg, rgba(248, 250, 252, 0.98), rgba(241, 245, 249, 0.92));
-  color: #111827;
-  box-shadow: 0 12px 18px rgba(15, 23, 42, 0.35);
+  background: var(--blackjack-card-background);
+  color: var(--blackjack-card-color);
+  box-shadow: var(--blackjack-card-shadow);
   display: grid;
   place-items: center;
   position: relative;
@@ -110,12 +174,12 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  border: 2px solid rgba(15, 23, 42, 0.08);
+  border: 2px solid var(--blackjack-card-border);
   pointer-events: none;
 }
 
 .blackjack-card--red {
-  color: #b91c1c;
+  color: var(--blackjack-card-red);
 }
 
 .blackjack-card__value,
@@ -133,24 +197,25 @@
 }
 
 .blackjack-card--hidden {
-  background: repeating-linear-gradient(135deg, rgba(15, 23, 42, 0.88) 0, rgba(15, 23, 42, 0.88) 10px, rgba(59, 130, 246, 0.18) 10px, rgba(59, 130, 246, 0.18) 20px);
-  color: rgba(226, 232, 240, 0.82);
+  background: var(--blackjack-card-hidden-background);
+  color: var(--blackjack-card-hidden-color);
   text-transform: uppercase;
   font-size: calc(clamp(0.7rem, 2.4vw, 0.85rem) * var(--blackjack-scale, 1));
   letter-spacing: 0.08em;
 }
 
 .blackjack-card--hidden::after {
-  border-color: rgba(59, 130, 246, 0.25);
+  border-color: var(--blackjack-card-hidden-border);
 }
 
 .blackjack-bet {
   margin: 0;
   padding: calc(clamp(0.75rem, 2vw, 1rem) * var(--blackjack-scale, 1));
   border-radius: calc(1rem * var(--blackjack-scale, 1));
-  background: rgba(15, 23, 42, 0.55);
-  border: 1px solid rgba(148, 163, 184, 0.25);
+  background: var(--blackjack-bet-background);
+  border: 1px solid var(--blackjack-bet-border);
   font-size: calc(0.95rem * var(--blackjack-scale, 1));
+  color: var(--blackjack-bet-color);
 }
 
 .blackjack-bet__options {
@@ -181,19 +246,20 @@
   padding: calc(0.55rem * var(--blackjack-scale, 1))
     calc(0.9rem * var(--blackjack-scale, 1));
   border-radius: calc(0.85rem * var(--blackjack-scale, 1));
-  border: 1px solid rgba(148, 163, 184, 0.35);
-  background: rgba(30, 64, 175, 0.5);
-  color: #f8fafc;
+  border: 1px solid var(--blackjack-bet-option-border);
+  background: var(--blackjack-bet-option-background);
+  color: var(--blackjack-bet-option-color);
   text-transform: none;
   letter-spacing: 0.02em;
   cursor: pointer;
-  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .blackjack-bet__option:hover {
   transform: translateY(-2px);
-  background: rgba(59, 130, 246, 0.65);
-  box-shadow: 0 8px 16px rgba(37, 99, 235, 0.25);
+  background: var(--blackjack-bet-option-hover-background);
+  box-shadow: var(--blackjack-bet-option-hover-shadow);
 }
 
 .blackjack-bet__option:disabled {
@@ -203,13 +269,13 @@
 }
 
 .blackjack-bet__option--selected {
-  background: rgba(59, 130, 246, 0.75);
-  border-color: rgba(191, 219, 254, 0.6);
-  box-shadow: 0 12px 22px rgba(37, 99, 235, 0.28);
+  background: var(--blackjack-bet-option-selected-background);
+  border-color: var(--blackjack-bet-option-selected-border);
+  box-shadow: var(--blackjack-bet-option-selected-shadow);
 }
 
 .blackjack-bet__option--unavailable {
-  background: rgba(30, 41, 59, 0.55);
+  background: var(--blackjack-bet-option-unavailable-background);
   border-style: dashed;
 }
 
@@ -227,9 +293,9 @@
   padding: calc(0.65rem * var(--blackjack-scale, 1))
     calc(1.4rem * var(--blackjack-scale, 1));
   border-radius: calc(999px * var(--blackjack-scale, 1));
-  border: 1px solid rgba(148, 163, 184, 0.4);
-  background: rgba(30, 64, 175, 0.65);
-  color: #f8fafc;
+  border: 1px solid var(--blackjack-button-border);
+  background: var(--blackjack-button-background);
+  color: var(--blackjack-button-color);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
@@ -244,8 +310,8 @@
 
 .blackjack-button:not(:disabled):hover {
   transform: translateY(-2px);
-  background: rgba(59, 130, 246, 0.7);
-  box-shadow: 0 10px 18px rgba(37, 99, 235, 0.28);
+  background: var(--blackjack-button-hover-background);
+  box-shadow: var(--blackjack-button-hover-shadow);
 }
 
 @media (min-width: 768px) {
@@ -279,5 +345,205 @@
   .blackjack-bet__option {
     padding: 0.5rem 0.75rem;
   }
+}
 
+body.theme-light .page--blackjack {
+  --blackjack-text-color: #0d1320;
+  --blackjack-hand-background: linear-gradient(
+    160deg,
+    rgba(248, 250, 252, 0.9),
+    rgba(230, 234, 243, 0.92)
+  );
+  --blackjack-hand-border: rgba(12, 16, 32, 0.12);
+  --blackjack-hand-shadow: 0 18px 28px rgba(12, 16, 32, 0.15);
+  --blackjack-hand-win-background: linear-gradient(
+    160deg,
+    rgba(232, 255, 240, 0.92),
+    rgba(134, 239, 172, 0.78)
+  );
+  --blackjack-hand-win-border: rgba(34, 197, 94, 0.45);
+  --blackjack-hand-win-shadow: 0 20px 30px rgba(56, 161, 105, 0.28);
+  --blackjack-hand-lose-background: linear-gradient(
+    160deg,
+    rgba(250, 213, 213, 0.92),
+    rgba(248, 113, 113, 0.68)
+  );
+  --blackjack-hand-lose-border: rgba(248, 113, 113, 0.55);
+  --blackjack-hand-lose-shadow: 0 20px 30px rgba(220, 38, 38, 0.25);
+  --blackjack-hand-push-background: linear-gradient(
+    160deg,
+    rgba(226, 232, 240, 0.95),
+    rgba(147, 197, 253, 0.65)
+  );
+  --blackjack-hand-push-border: rgba(96, 165, 250, 0.5);
+  --blackjack-hand-push-shadow: 0 20px 30px rgba(59, 130, 246, 0.25);
+  --blackjack-card-background: linear-gradient(
+    160deg,
+    rgba(253, 254, 255, 0.98),
+    rgba(240, 244, 255, 0.94)
+  );
+  --blackjack-card-border: rgba(12, 16, 32, 0.1);
+  --blackjack-card-shadow: 0 10px 16px rgba(12, 16, 32, 0.18);
+  --blackjack-card-color: #0f172a;
+  --blackjack-card-red: #c53030;
+  --blackjack-card-hidden-background: repeating-linear-gradient(
+    135deg,
+    rgba(71, 85, 105, 0.85) 0,
+    rgba(71, 85, 105, 0.85) 10px,
+    rgba(96, 165, 250, 0.25) 10px,
+    rgba(96, 165, 250, 0.25) 20px
+  );
+  --blackjack-card-hidden-color: rgba(30, 41, 59, 0.78);
+  --blackjack-card-hidden-border: rgba(96, 165, 250, 0.4);
+  --blackjack-bet-background: rgba(236, 239, 248, 0.92);
+  --blackjack-bet-border: rgba(12, 16, 32, 0.12);
+  --blackjack-bet-color: #0f172a;
+  --blackjack-bet-option-background: rgba(96, 165, 250, 0.2);
+  --blackjack-bet-option-border: rgba(59, 130, 246, 0.35);
+  --blackjack-bet-option-color: #0f172a;
+  --blackjack-bet-option-hover-background: rgba(96, 165, 250, 0.3);
+  --blackjack-bet-option-hover-shadow: 0 8px 16px rgba(59, 130, 246, 0.18);
+  --blackjack-bet-option-selected-background: rgba(59, 130, 246, 0.35);
+  --blackjack-bet-option-selected-border: rgba(59, 130, 246, 0.6);
+  --blackjack-bet-option-selected-shadow: 0 12px 20px rgba(59, 130, 246, 0.2);
+  --blackjack-bet-option-unavailable-background: rgba(203, 213, 225, 0.6);
+  --blackjack-button-background: rgba(59, 130, 246, 0.28);
+  --blackjack-button-border: rgba(59, 130, 246, 0.4);
+  --blackjack-button-color: #0f172a;
+  --blackjack-button-hover-background: rgba(59, 130, 246, 0.4);
+  --blackjack-button-hover-shadow: 0 10px 18px rgba(59, 130, 246, 0.2);
+}
+
+body.theme-neon .page--blackjack {
+  --blackjack-text-color: rgba(230, 234, 255, 0.95);
+  --blackjack-hand-background: linear-gradient(
+    160deg,
+    rgba(16, 18, 54, 0.86),
+    rgba(30, 38, 92, 0.92)
+  );
+  --blackjack-hand-border: rgba(110, 148, 255, 0.38);
+  --blackjack-hand-shadow: 0 20px 36px rgba(12, 18, 60, 0.48);
+  --blackjack-hand-win-background: linear-gradient(
+    160deg,
+    rgba(20, 90, 88, 0.95),
+    rgba(64, 224, 198, 0.78)
+  );
+  --blackjack-hand-win-border: rgba(108, 236, 214, 0.6);
+  --blackjack-hand-win-shadow: 0 24px 36px rgba(12, 80, 92, 0.42);
+  --blackjack-hand-lose-background: linear-gradient(
+    160deg,
+    rgba(134, 36, 72, 0.95),
+    rgba(255, 110, 160, 0.75)
+  );
+  --blackjack-hand-lose-border: rgba(255, 140, 180, 0.62);
+  --blackjack-hand-lose-shadow: 0 24px 36px rgba(180, 40, 84, 0.45);
+  --blackjack-hand-push-background: linear-gradient(
+    160deg,
+    rgba(22, 26, 74, 0.9),
+    rgba(112, 148, 255, 0.62)
+  );
+  --blackjack-hand-push-border: rgba(148, 188, 255, 0.65);
+  --blackjack-hand-push-shadow: 0 24px 36px rgba(64, 96, 220, 0.42);
+  --blackjack-card-background: linear-gradient(
+    160deg,
+    rgba(248, 250, 255, 0.98),
+    rgba(226, 234, 255, 0.95)
+  );
+  --blackjack-card-border: rgba(116, 150, 255, 0.32);
+  --blackjack-card-shadow: 0 14px 24px rgba(24, 36, 96, 0.42);
+  --blackjack-card-color: rgba(20, 24, 58, 0.95);
+  --blackjack-card-red: #ff4d7d;
+  --blackjack-card-hidden-background: repeating-linear-gradient(
+    135deg,
+    rgba(24, 28, 80, 0.92) 0,
+    rgba(24, 28, 80, 0.92) 10px,
+    rgba(116, 148, 255, 0.24) 10px,
+    rgba(116, 148, 255, 0.24) 20px
+  );
+  --blackjack-card-hidden-color: rgba(220, 230, 255, 0.88);
+  --blackjack-card-hidden-border: rgba(116, 148, 255, 0.4);
+  --blackjack-bet-background: rgba(18, 22, 68, 0.75);
+  --blackjack-bet-border: rgba(120, 150, 255, 0.4);
+  --blackjack-bet-color: rgba(228, 236, 255, 0.9);
+  --blackjack-bet-option-background: rgba(84, 120, 255, 0.28);
+  --blackjack-bet-option-border: rgba(140, 172, 255, 0.4);
+  --blackjack-bet-option-color: rgba(228, 236, 255, 0.95);
+  --blackjack-bet-option-hover-background: rgba(120, 160, 255, 0.4);
+  --blackjack-bet-option-hover-shadow: 0 10px 18px rgba(96, 140, 255, 0.28);
+  --blackjack-bet-option-selected-background: rgba(120, 160, 255, 0.5);
+  --blackjack-bet-option-selected-border: rgba(168, 200, 255, 0.65);
+  --blackjack-bet-option-selected-shadow: 0 14px 22px rgba(96, 140, 255, 0.32);
+  --blackjack-bet-option-unavailable-background: rgba(28, 34, 84, 0.6);
+  --blackjack-button-background: rgba(96, 140, 255, 0.32);
+  --blackjack-button-border: rgba(140, 172, 255, 0.5);
+  --blackjack-button-color: rgba(230, 236, 255, 0.95);
+  --blackjack-button-hover-background: rgba(120, 164, 255, 0.45);
+  --blackjack-button-hover-shadow: 0 12px 22px rgba(96, 140, 255, 0.32);
+}
+
+body.theme-aurora .page--blackjack {
+  --blackjack-text-color: rgba(210, 255, 236, 0.92);
+  --blackjack-hand-background: linear-gradient(
+    160deg,
+    rgba(12, 60, 48, 0.82),
+    rgba(20, 74, 60, 0.88)
+  );
+  --blackjack-hand-border: rgba(90, 220, 180, 0.32);
+  --blackjack-hand-shadow: 0 20px 34px rgba(8, 48, 38, 0.42);
+  --blackjack-hand-win-background: linear-gradient(
+    160deg,
+    rgba(18, 98, 72, 0.95),
+    rgba(64, 224, 174, 0.78)
+  );
+  --blackjack-hand-win-border: rgba(108, 236, 194, 0.6);
+  --blackjack-hand-win-shadow: 0 24px 34px rgba(12, 86, 66, 0.42);
+  --blackjack-hand-lose-background: linear-gradient(
+    160deg,
+    rgba(122, 46, 52, 0.92),
+    rgba(242, 148, 136, 0.72)
+  );
+  --blackjack-hand-lose-border: rgba(242, 148, 136, 0.6);
+  --blackjack-hand-lose-shadow: 0 24px 34px rgba(176, 68, 64, 0.4);
+  --blackjack-hand-push-background: linear-gradient(
+    160deg,
+    rgba(16, 74, 60, 0.88),
+    rgba(96, 232, 192, 0.58)
+  );
+  --blackjack-hand-push-border: rgba(96, 232, 192, 0.6);
+  --blackjack-hand-push-shadow: 0 24px 34px rgba(32, 120, 96, 0.38);
+  --blackjack-card-background: linear-gradient(
+    160deg,
+    rgba(244, 255, 250, 0.96),
+    rgba(214, 255, 240, 0.92)
+  );
+  --blackjack-card-border: rgba(84, 210, 176, 0.35);
+  --blackjack-card-shadow: 0 14px 24px rgba(8, 48, 38, 0.4);
+  --blackjack-card-color: rgba(12, 42, 34, 0.95);
+  --blackjack-card-red: #ff6b80;
+  --blackjack-card-hidden-background: repeating-linear-gradient(
+    135deg,
+    rgba(22, 80, 68, 0.9) 0,
+    rgba(22, 80, 68, 0.9) 10px,
+    rgba(96, 232, 192, 0.22) 10px,
+    rgba(96, 232, 192, 0.22) 20px
+  );
+  --blackjack-card-hidden-color: rgba(210, 255, 236, 0.88);
+  --blackjack-card-hidden-border: rgba(96, 232, 192, 0.4);
+  --blackjack-bet-background: rgba(16, 70, 56, 0.68);
+  --blackjack-bet-border: rgba(90, 220, 180, 0.35);
+  --blackjack-bet-color: rgba(210, 255, 236, 0.92);
+  --blackjack-bet-option-background: rgba(64, 200, 160, 0.25);
+  --blackjack-bet-option-border: rgba(96, 232, 192, 0.35);
+  --blackjack-bet-option-color: rgba(16, 42, 34, 0.95);
+  --blackjack-bet-option-hover-background: rgba(96, 232, 192, 0.32);
+  --blackjack-bet-option-hover-shadow: 0 10px 18px rgba(64, 200, 160, 0.24);
+  --blackjack-bet-option-selected-background: rgba(96, 232, 192, 0.42);
+  --blackjack-bet-option-selected-border: rgba(120, 246, 208, 0.6);
+  --blackjack-bet-option-selected-shadow: 0 14px 22px rgba(64, 200, 160, 0.3);
+  --blackjack-bet-option-unavailable-background: rgba(24, 82, 70, 0.55);
+  --blackjack-button-background: rgba(96, 232, 192, 0.28);
+  --blackjack-button-border: rgba(96, 232, 192, 0.45);
+  --blackjack-button-color: rgba(16, 42, 34, 0.95);
+  --blackjack-button-hover-background: rgba(120, 246, 208, 0.42);
+  --blackjack-button-hover-shadow: 0 12px 20px rgba(64, 200, 160, 0.28);
 }

@@ -42,7 +42,10 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at center, rgba(120, 190, 255, 0.12), transparent 65%);
+  background: var(
+    --arcade-stage-glow,
+    radial-gradient(circle at center, rgba(120, 190, 255, 0.12), transparent 65%)
+  );
   pointer-events: none;
 }
 
@@ -193,6 +196,7 @@
   }
 }
 
+
 .arcade-stage__hud {
   position: absolute;
   bottom: clamp(0.4rem, 1.6vw, 1.2rem);
@@ -204,7 +208,7 @@
   gap: clamp(0.4rem, 0.9vw, 0.75rem);
   z-index: 2;
   pointer-events: none;
-  color: rgba(230, 240, 255, 0.92);
+  color: var(--arcade-hud-color, rgba(230, 240, 255, 0.92));
 }
 
 .arcade-stage__hud .arcade-hud {
@@ -217,20 +221,21 @@
   font-size: clamp(0.72rem, 1.2vw, 0.95rem);
   letter-spacing: 0.08em;
   text-align: center;
-  text-shadow: 0 0 12px rgba(160, 220, 255, 0.45);
+  text-shadow: 0 0 12px var(--arcade-hud-combo-shadow, rgba(160, 220, 255, 0.45));
 }
 
 body.theme-light .arcade-stage__hud {
-  color: rgba(14, 22, 48, 0.92);
+  color: var(--arcade-hud-color, rgba(14, 22, 48, 0.92));
 }
 
 body.theme-light .arcade-hud__combo {
-  text-shadow: 0 0 12px rgba(48, 86, 148, 0.32);
+  text-shadow: 0 0 12px var(--arcade-hud-combo-shadow, rgba(48, 86, 148, 0.32));
 }
 
 body.theme-neon .arcade-hud__combo {
-  text-shadow: 0 0 14px rgba(180, 120, 255, 0.45);
+  text-shadow: 0 0 14px var(--arcade-hud-combo-shadow, rgba(180, 120, 255, 0.45));
 }
+
 
 .arcade-overlay {
   position: absolute;
@@ -239,7 +244,7 @@ body.theme-neon .arcade-hud__combo {
   align-items: center;
   justify-content: center;
   padding: clamp(1.2rem, 4vw, 2.4rem);
-  background: rgba(4, 6, 18, 0.78);
+  background: var(--arcade-overlay-backdrop, rgba(4, 6, 18, 0.78));
   backdrop-filter: blur(10px);
   z-index: 2;
 }
@@ -301,9 +306,9 @@ body.theme-neon .arcade-hud__combo {
 
 .arcade-mode-switch__button {
   border-radius: calc(999px * var(--ui-control-scale, 1));
-  border: 1px solid rgba(120, 170, 255, 0.55);
-  background: rgba(30, 60, 140, 0.35);
-  color: #f5f7ff;
+  border: 1px solid var(--arcade-mode-button-border, rgba(120, 170, 255, 0.55));
+  background: var(--arcade-mode-button-background, rgba(30, 60, 140, 0.35));
+  color: var(--arcade-mode-button-color, #f5f7ff);
   font: inherit;
   font-size: calc(0.5rem * var(--ui-control-scale, 1));
   letter-spacing: 0.08em;
@@ -316,9 +321,9 @@ body.theme-neon .arcade-hud__combo {
 
 .arcade-mode-switch__button:hover,
 .arcade-mode-switch__button:focus-visible {
-  background: rgba(60, 110, 200, 0.55);
-  border-color: rgba(180, 220, 255, 0.8);
-  box-shadow: 0 0 0 2px rgba(130, 190, 255, 0.3);
+  background: var(--arcade-mode-button-hover-background, rgba(60, 110, 200, 0.55));
+  border-color: var(--arcade-mode-button-hover-border, rgba(180, 220, 255, 0.8));
+  box-shadow: 0 0 0 2px var(--arcade-mode-button-hover-ring, rgba(130, 190, 255, 0.3));
   outline: none;
 }
 
@@ -328,9 +333,12 @@ body.theme-neon .arcade-hud__combo {
 }
 
 .arcade-mode-switch__button--active {
-  background: linear-gradient(135deg, rgba(100, 180, 255, 0.95), rgba(70, 130, 255, 0.98));
-  border-color: rgba(200, 235, 255, 0.85);
-  color: #02040c;
+  background: var(
+    --arcade-mode-button-active-background,
+    linear-gradient(135deg, rgba(100, 180, 255, 0.95), rgba(70, 130, 255, 0.98))
+  );
+  border-color: var(--arcade-mode-button-active-border, rgba(200, 235, 255, 0.85));
+  color: var(--arcade-mode-button-active-color, #02040c);
   box-shadow: 0 12px 26px rgba(26, 56, 150, 0.35);
 }
 
@@ -344,51 +352,61 @@ body.theme-neon .arcade-hud__combo {
   margin: 0;
   font-size: clamp(0.68rem, 1vw, 0.85rem);
   line-height: 1.45;
-  color: rgba(210, 225, 255, 0.85);
+  color: var(--arcade-mode-hint-color, rgba(210, 225, 255, 0.85));
 }
 
 body.theme-light .arcade-mode-switch__button {
-  background: rgba(200, 220, 255, 0.4);
-  color: rgba(18, 30, 68, 0.9);
-  border-color: rgba(120, 160, 230, 0.6);
+  background: var(--arcade-mode-button-background, rgba(200, 220, 255, 0.4));
+  color: var(--arcade-mode-button-color, rgba(18, 30, 68, 0.9));
+  border-color: var(--arcade-mode-button-border, rgba(120, 160, 230, 0.6));
 }
 
 body.theme-light .arcade-mode-switch__button--active {
-  background: linear-gradient(135deg, rgba(120, 180, 255, 0.96), rgba(80, 140, 240, 0.98));
-  color: #041024;
-  border-color: rgba(150, 200, 255, 0.85);
+  background: var(
+    --arcade-mode-button-active-background,
+    linear-gradient(135deg, rgba(120, 180, 255, 0.96), rgba(80, 140, 240, 0.98))
+  );
+  color: var(--arcade-mode-button-active-color, #041024);
+  border-color: var(--arcade-mode-button-active-border, rgba(150, 200, 255, 0.85));
 }
 
 body.theme-light .arcade-mode-hint {
-  color: rgba(30, 40, 70, 0.75);
+  color: var(--arcade-mode-hint-color, rgba(30, 40, 70, 0.75));
 }
 
 .arcade-overlay__label {
   font-size: clamp(0.62rem, 1.05vw, 0.8rem);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  opacity: 0.78;
+  color: var(--arcade-overlay-label-color, rgba(210, 225, 255, 0.85));
+  opacity: 0.9;
 }
 
 .arcade-overlay__select {
   appearance: none;
   border-radius: 999px;
-  border: 1px solid rgba(140, 190, 255, 0.6);
-  background: linear-gradient(135deg, rgba(30, 60, 140, 0.95), rgba(110, 170, 255, 0.98));
-  color: #fff;
+  border: 1px solid var(--arcade-overlay-select-border, rgba(140, 190, 255, 0.6));
+  background: var(
+    --arcade-overlay-select-background,
+    linear-gradient(135deg, rgba(30, 60, 140, 0.95), rgba(110, 170, 255, 0.98))
+  );
+  color: var(--arcade-overlay-select-color, #fff);
   font: inherit;
   padding: clamp(0.4em, 0.9vw, 0.65em) clamp(1em, 2.2vw, 1.5em);
   text-align: center;
   letter-spacing: 0.06em;
   cursor: pointer;
-  box-shadow: 0 12px 26px rgba(18, 38, 110, 0.35);
+  box-shadow: var(--arcade-overlay-select-shadow, 0 12px 26px rgba(18, 38, 110, 0.35));
   transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
 }
 
 .arcade-overlay__select:hover,
 .arcade-overlay__select:focus-visible {
-  border-color: rgba(190, 225, 255, 0.85);
-  box-shadow: 0 0 0 2px rgba(130, 190, 255, 0.35), 0 16px 32px rgba(26, 56, 150, 0.45);
+  border-color: var(--arcade-overlay-select-hover-border, rgba(190, 225, 255, 0.85));
+  box-shadow: var(
+      --arcade-overlay-select-hover-shadow,
+      0 0 0 2px rgba(130, 190, 255, 0.35), 0 16px 32px rgba(26, 56, 150, 0.45)
+    );
   outline: none;
 }
 
@@ -404,14 +422,17 @@ body.theme-light .arcade-mode-hint {
 }
 
 body.theme-light .arcade-overlay__label {
-  color: rgba(20, 28, 64, 0.75);
+  color: var(--arcade-overlay-label-color, rgba(20, 28, 64, 0.75));
 }
 
 body.theme-light .arcade-overlay__select {
-  background: linear-gradient(135deg, rgba(120, 170, 255, 0.96), rgba(80, 130, 230, 0.98));
-  color: #fff;
-  border-color: rgba(90, 140, 230, 0.65);
-  box-shadow: 0 12px 24px rgba(30, 60, 130, 0.28);
+  background: var(
+    --arcade-overlay-select-background,
+    linear-gradient(135deg, rgba(120, 170, 255, 0.96), rgba(80, 130, 230, 0.98))
+  );
+  color: var(--arcade-overlay-select-color, #fff);
+  border-color: var(--arcade-overlay-select-border, rgba(90, 140, 230, 0.65));
+  box-shadow: var(--arcade-overlay-select-shadow, 0 12px 24px rgba(30, 60, 130, 0.28));
 }
 
 .arcade-overlay__button {
@@ -424,32 +445,50 @@ body.theme-light .arcade-overlay__select {
   text-transform: uppercase;
   font-size: clamp(0.68rem, 1vw, 0.82rem);
   cursor: pointer;
-  color: #02040c;
-  background: linear-gradient(120deg, #6ee7ff, #67d6ff 45%, #cba4ff);
-  box-shadow: 0 14px 28px rgba(80, 210, 255, 0.45);
+  color: var(--arcade-overlay-button-primary-color, #02040c);
+  background: var(
+    --arcade-overlay-button-primary-background,
+    linear-gradient(120deg, #6ee7ff, #67d6ff 45%, #cba4ff)
+  );
+  box-shadow: var(--arcade-overlay-button-primary-shadow, 0 14px 28px rgba(80, 210, 255, 0.45));
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .arcade-overlay__button:hover,
 .arcade-overlay__button:focus-visible {
   transform: translateY(-2px);
-  box-shadow: 0 18px 34px rgba(120, 220, 255, 0.55);
+  box-shadow: var(
+    --arcade-overlay-button-primary-shadow-hover,
+    0 18px 34px rgba(120, 220, 255, 0.55)
+  );
 }
 
 .arcade-overlay__button--secondary {
-  background: linear-gradient(120deg, rgba(70, 90, 180, 0.92), rgba(40, 60, 140, 0.95));
-  color: #f3f7ff;
-  box-shadow: 0 12px 26px rgba(30, 50, 120, 0.5);
+  background: var(
+    --arcade-overlay-button-secondary-background,
+    linear-gradient(120deg, rgba(70, 90, 180, 0.92), rgba(40, 60, 140, 0.95))
+  );
+  color: var(--arcade-overlay-button-secondary-color, #f3f7ff);
+  box-shadow: var(
+    --arcade-overlay-button-secondary-shadow,
+    0 12px 26px rgba(30, 50, 120, 0.5)
+  );
 }
 
 .arcade-overlay__button--secondary:hover,
 .arcade-overlay__button--secondary:focus-visible {
-  box-shadow: 0 16px 32px rgba(60, 100, 200, 0.55);
+  box-shadow: var(
+    --arcade-overlay-button-secondary-shadow-hover,
+    0 16px 32px rgba(60, 100, 200, 0.55)
+  );
 }
 
 body.theme-light .arcade-overlay__button--secondary {
-  background: linear-gradient(120deg, rgba(120, 150, 230, 0.9), rgba(90, 120, 210, 0.95));
-  color: #fff;
+  background: var(
+    --arcade-overlay-button-secondary-background,
+    linear-gradient(120deg, rgba(120, 150, 230, 0.9), rgba(90, 120, 210, 0.95))
+  );
+  color: var(--arcade-overlay-button-secondary-color, #fff);
 }
 
 .arcade-overlay[hidden],
