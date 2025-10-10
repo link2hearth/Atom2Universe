@@ -325,93 +325,93 @@ body.theme-neon .arcade-header__status--bonus {
 }
 
 .page--arcade {
-  --arcade-header-subtitle-color: rgba(230, 234, 255, 0.78);
-  --arcade-header-status-border: rgba(255, 255, 255, 0.1);
-  --arcade-header-status-background: rgba(16, 22, 48, 0.6);
-  --arcade-header-status-info-background: rgba(40, 56, 112, 0.35);
-  --arcade-header-status-info-border: rgba(255, 255, 255, 0.14);
+  --arcade-header-subtitle-color: rgba(214, 218, 228, 0.82);
+  --arcade-header-status-border: rgba(168, 172, 188, 0.22);
+  --arcade-header-status-background: rgba(40, 42, 52, 0.78);
+  --arcade-header-status-info-background: rgba(60, 62, 74, 0.6);
+  --arcade-header-status-info-border: rgba(188, 192, 206, 0.32);
   --arcade-header-status-bonus-background: linear-gradient(
     135deg,
-    rgba(52, 72, 156, 0.8),
-    rgba(86, 116, 224, 0.72)
+    rgba(118, 122, 136, 0.86),
+    rgba(78, 82, 96, 0.9)
   );
-  --arcade-header-status-bonus-border: rgba(110, 142, 255, 0.45);
-  --arcade-stage-border: rgba(255, 255, 255, 0.12);
+  --arcade-header-status-bonus-border: rgba(200, 204, 218, 0.4);
+  --arcade-stage-border: rgba(168, 172, 188, 0.22);
   --arcade-stage-background: radial-gradient(
     circle at top,
-    rgba(28, 36, 88, 0.65),
-    rgba(8, 12, 34, 0.95)
+    rgba(58, 60, 72, 0.88),
+    rgba(20, 22, 28, 0.96)
   );
-  --arcade-stage-shadow: 0 32px 68px rgba(6, 8, 28, 0.55);
+  --arcade-stage-shadow: 0 32px 68px rgba(0, 0, 0, 0.55);
   --arcade-stage-glow: radial-gradient(
     circle at center,
-    rgba(120, 190, 255, 0.12),
+    rgba(148, 152, 168, 0.2),
     transparent 65%
   );
-  --arcade-side-card-border: rgba(255, 255, 255, 0.16);
+  --arcade-side-card-border: rgba(168, 172, 188, 0.22);
   --arcade-side-card-background: linear-gradient(
     150deg,
-    rgba(40, 56, 120, 0.42),
-    rgba(12, 18, 48, 0.8)
+    rgba(64, 66, 78, 0.85),
+    rgba(28, 30, 38, 0.92)
   );
-  --arcade-side-card-shadow: 0 18px 36px rgba(6, 8, 28, 0.45);
-  --arcade-side-card-description-color: rgba(230, 240, 255, 0.78);
-  --arcade-side-card-detail-color: rgba(230, 240, 255, 0.65);
+  --arcade-side-card-shadow: 0 22px 42px rgba(0, 0, 0, 0.5);
+  --arcade-side-card-description-color: rgba(226, 228, 236, 0.86);
+  --arcade-side-card-detail-color: rgba(196, 200, 212, 0.68);
   --arcade-side-card-button-background: linear-gradient(
     135deg,
-    rgba(96, 128, 220, 0.65),
-    rgba(80, 110, 200, 0.45)
+    rgba(132, 136, 152, 0.85),
+    rgba(96, 100, 116, 0.78)
   );
-  --arcade-side-card-button-border: rgba(140, 180, 255, 0.35);
-  --arcade-side-card-button-color: inherit;
-  --arcade-side-card-button-shadow: 0 12px 20px rgba(40, 60, 160, 0.45);
-  --arcade-side-card-button-shadow-hover: 0 12px 20px rgba(40, 60, 160, 0.45);
-  --arcade-hud-color: rgba(230, 240, 255, 0.92);
-  --arcade-hud-combo-shadow: rgba(160, 220, 255, 0.45);
-  --arcade-overlay-backdrop: rgba(4, 6, 18, 0.78);
-  --arcade-mode-button-background: rgba(30, 60, 140, 0.35);
-  --arcade-mode-button-border: rgba(120, 170, 255, 0.55);
-  --arcade-mode-button-color: #f5f7ff;
-  --arcade-mode-button-hover-background: rgba(60, 110, 200, 0.55);
-  --arcade-mode-button-hover-border: rgba(180, 220, 255, 0.8);
-  --arcade-mode-button-hover-ring: rgba(130, 190, 255, 0.3);
+  --arcade-side-card-button-border: rgba(188, 192, 208, 0.45);
+  --arcade-side-card-button-color: rgba(246, 248, 254, 0.95);
+  --arcade-side-card-button-shadow: 0 14px 24px rgba(0, 0, 0, 0.45);
+  --arcade-side-card-button-shadow-hover: 0 18px 30px rgba(0, 0, 0, 0.5);
+  --arcade-hud-color: rgba(234, 238, 248, 0.95);
+  --arcade-hud-combo-shadow: rgba(148, 152, 168, 0.45);
+  --arcade-overlay-backdrop: rgba(10, 12, 18, 0.8);
+  --arcade-mode-button-background: rgba(60, 62, 74, 0.55);
+  --arcade-mode-button-border: rgba(168, 172, 188, 0.45);
+  --arcade-mode-button-color: rgba(234, 238, 248, 0.95);
+  --arcade-mode-button-hover-background: rgba(82, 84, 98, 0.68);
+  --arcade-mode-button-hover-border: rgba(196, 200, 214, 0.6);
+  --arcade-mode-button-hover-ring: rgba(168, 172, 188, 0.32);
   --arcade-mode-button-active-background: linear-gradient(
     135deg,
-    rgba(100, 180, 255, 0.95),
-    rgba(70, 130, 255, 0.98)
+    rgba(198, 202, 216, 0.92),
+    rgba(152, 156, 172, 0.95)
   );
-  --arcade-mode-button-active-border: rgba(200, 235, 255, 0.85);
-  --arcade-mode-button-active-color: #02040c;
-  --arcade-mode-hint-color: rgba(210, 225, 255, 0.85);
-  --arcade-overlay-label-color: rgba(210, 225, 255, 0.85);
+  --arcade-mode-button-active-border: rgba(220, 224, 234, 0.8);
+  --arcade-mode-button-active-color: #111418;
+  --arcade-mode-hint-color: rgba(210, 214, 226, 0.85);
+  --arcade-overlay-label-color: rgba(214, 218, 230, 0.85);
   --arcade-overlay-select-background: linear-gradient(
     135deg,
-    rgba(30, 60, 140, 0.95),
-    rgba(110, 170, 255, 0.98)
+    rgba(86, 90, 104, 0.96),
+    rgba(54, 58, 72, 0.98)
   );
-  --arcade-overlay-select-border: rgba(140, 190, 255, 0.6);
-  --arcade-overlay-select-color: #fff;
-  --arcade-overlay-select-shadow: 0 12px 26px rgba(18, 38, 110, 0.35);
-  --arcade-overlay-select-hover-border: rgba(190, 225, 255, 0.85);
-  --arcade-overlay-select-hover-shadow: 0 0 0 2px rgba(130, 190, 255, 0.35),
-    0 16px 32px rgba(26, 56, 150, 0.45);
+  --arcade-overlay-select-border: rgba(188, 192, 206, 0.6);
+  --arcade-overlay-select-color: #f5f7ff;
+  --arcade-overlay-select-shadow: 0 14px 28px rgba(0, 0, 0, 0.45);
+  --arcade-overlay-select-hover-border: rgba(214, 218, 230, 0.78);
+  --arcade-overlay-select-hover-shadow: 0 0 0 2px rgba(188, 192, 206, 0.35),
+    0 18px 34px rgba(0, 0, 0, 0.52);
   --arcade-overlay-button-primary-background: linear-gradient(
     120deg,
-    #6ee7ff,
-    #67d6ff 45%,
-    #cba4ff
+    #e5e7f1,
+    #d1d4de 45%,
+    #f6f7fb
   );
-  --arcade-overlay-button-primary-shadow: 0 14px 28px rgba(80, 210, 255, 0.45);
-  --arcade-overlay-button-primary-color: #02040c;
-  --arcade-overlay-button-primary-shadow-hover: 0 18px 34px rgba(120, 220, 255, 0.55);
+  --arcade-overlay-button-primary-shadow: 0 16px 32px rgba(0, 0, 0, 0.48);
+  --arcade-overlay-button-primary-color: #111418;
+  --arcade-overlay-button-primary-shadow-hover: 0 20px 38px rgba(0, 0, 0, 0.55);
   --arcade-overlay-button-secondary-background: linear-gradient(
     120deg,
-    rgba(70, 90, 180, 0.92),
-    rgba(40, 60, 140, 0.95)
+    rgba(88, 92, 108, 0.92),
+    rgba(56, 60, 74, 0.96)
   );
-  --arcade-overlay-button-secondary-color: #f3f7ff;
-  --arcade-overlay-button-secondary-shadow: 0 12px 26px rgba(30, 50, 120, 0.5);
-  --arcade-overlay-button-secondary-shadow-hover: 0 16px 32px rgba(60, 100, 200, 0.55);
+  --arcade-overlay-button-secondary-color: rgba(236, 240, 250, 0.95);
+  --arcade-overlay-button-secondary-shadow: 0 14px 28px rgba(0, 0, 0, 0.5);
+  --arcade-overlay-button-secondary-shadow-hover: 0 18px 34px rgba(0, 0, 0, 0.58);
 }
 
 body.theme-light .page--arcade {

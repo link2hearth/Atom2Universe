@@ -5,11 +5,11 @@
   --balance-rotation: 0deg;
   --balance-tilt-duration: 600ms;
   --balance-settle-duration: 500ms;
-  --balance-header-subtitle-color: rgba(226, 232, 255, 0.78);
-  --balance-surface-color: rgba(90, 124, 220, 0.92);
-  --balance-surface-outline: rgba(26, 36, 78, 0.55);
-  --balance-surface-shadow: rgba(4, 6, 16, 0.5);
-  --balance-surface-glow: rgba(90, 124, 220, 0.35);
+  --balance-header-subtitle-color: rgba(214, 218, 228, 0.78);
+  --balance-surface-color: rgba(72, 76, 88, 0.92);
+  --balance-surface-outline: rgba(24, 26, 32, 0.55);
+  --balance-surface-shadow: rgba(0, 0, 0, 0.52);
+  --balance-surface-glow: rgba(134, 138, 150, 0.35);
   --balance-surface-color-tilt-left: rgba(250, 158, 122, 0.95);
   --balance-surface-outline-tilt-left: rgba(196, 88, 48, 0.58);
   --balance-surface-glow-tilt-left: rgba(252, 173, 140, 0.45);
@@ -19,52 +19,52 @@
   --balance-surface-color-balanced: rgba(132, 230, 188, 0.95);
   --balance-surface-outline-balanced: rgba(32, 140, 102, 0.52);
   --balance-surface-glow-balanced: rgba(132, 230, 188, 0.45);
-  --balance-pivot-background: linear-gradient(180deg, rgba(64, 90, 180, 0.94), rgba(20, 28, 70, 0.88));
-  --balance-pivot-border: rgba(24, 34, 78, 0.5);
-  --balance-pivot-shadow: 0 12px 22px rgba(4, 8, 24, 0.45),
-    0 0 0 1px rgba(140, 168, 240, 0.18) inset;
-  --balance-select-background: linear-gradient(135deg, rgba(80, 120, 220, 0.28), rgba(60, 90, 200, 0.24)),
-    url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="20" height="12" viewBox="0 0 20 12" fill="none"%3E%3Cpath d="M2 2L10 10L18 2" stroke="rgba(210,220,255,0.8)" stroke-width="2.5" stroke-linecap="round"/%3E%3C/svg%3E')
+  --balance-pivot-background: linear-gradient(180deg, rgba(78, 82, 96, 0.94), rgba(26, 28, 36, 0.88));
+  --balance-pivot-border: rgba(32, 34, 44, 0.5);
+  --balance-pivot-shadow: 0 12px 22px rgba(0, 0, 0, 0.48),
+    0 0 0 1px rgba(156, 160, 176, 0.18) inset;
+  --balance-select-background: linear-gradient(135deg, rgba(82, 86, 104, 0.28), rgba(62, 66, 82, 0.24)),
+    url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="20" height="12" viewBox="0 0 20 12" fill="none"%3E%3Cpath d="M2 2L10 10L18 2" stroke="rgba(220,224,232,0.85)" stroke-width="2.5" stroke-linecap="round"/%3E%3C/svg%3E')
       right 0.85em center / 1.1em auto no-repeat,
-    rgba(50, 70, 150, 0.3);
-  --balance-select-border: rgba(140, 170, 255, 0.35);
+    rgba(48, 50, 60, 0.32);
+  --balance-select-border: rgba(144, 148, 164, 0.32);
   --balance-select-color: inherit;
-  --balance-select-shadow: 0 12px 24px rgba(10, 18, 36, 0.28);
-  --balance-select-hover-border: rgba(170, 200, 255, 0.55);
-  --balance-select-hover-shadow: 0 12px 24px rgba(10, 18, 36, 0.28);
-  --balance-button-background: rgba(80, 110, 200, 0.24);
-  --balance-button-border: rgba(140, 170, 255, 0.28);
-  --balance-button-color: inherit;
-  --balance-button-hover-border: rgba(160, 190, 255, 0.48);
-  --balance-button-hover-shadow: 0 10px 20px rgba(10, 18, 36, 0.28);
-  --balance-button-disabled-background: rgba(60, 80, 140, 0.24);
-  --balance-button-disabled-border: rgba(120, 150, 230, 0.2);
-  --balance-button-outline: rgba(160, 190, 255, 0.65);
-  --balance-button-primary-background: linear-gradient(135deg, rgba(110, 160, 255, 0.85), rgba(70, 120, 255, 0.96));
-  --balance-button-primary-border: rgba(160, 190, 255, 0.62);
-  --balance-button-primary-hover-background: linear-gradient(135deg, rgba(130, 180, 255, 0.92), rgba(90, 140, 255, 1));
-  --balance-button-primary-disabled-background: linear-gradient(135deg, rgba(90, 120, 200, 0.6), rgba(70, 100, 190, 0.7));
-  --balance-button-primary-disabled-border: rgba(110, 140, 210, 0.3);
-  --balance-status-background: rgba(14, 18, 40, 0.55);
-  --balance-status-border: rgba(120, 150, 230, 0.15);
+  --balance-select-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
+  --balance-select-hover-border: rgba(176, 180, 196, 0.48);
+  --balance-select-hover-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+  --balance-button-background: rgba(70, 74, 88, 0.32);
+  --balance-button-border: rgba(156, 160, 178, 0.3);
+  --balance-button-color: rgba(236, 238, 244, 0.92);
+  --balance-button-hover-border: rgba(184, 188, 204, 0.48);
+  --balance-button-hover-shadow: 0 10px 20px rgba(0, 0, 0, 0.45);
+  --balance-button-disabled-background: rgba(54, 58, 70, 0.28);
+  --balance-button-disabled-border: rgba(110, 114, 128, 0.24);
+  --balance-button-outline: rgba(188, 192, 210, 0.6);
+  --balance-button-primary-background: linear-gradient(135deg, rgba(130, 134, 150, 0.85), rgba(90, 94, 110, 0.96));
+  --balance-button-primary-border: rgba(188, 192, 210, 0.45);
+  --balance-button-primary-hover-background: linear-gradient(135deg, rgba(150, 154, 170, 0.92), rgba(104, 108, 124, 1));
+  --balance-button-primary-disabled-background: linear-gradient(135deg, rgba(96, 100, 116, 0.6), rgba(78, 82, 98, 0.7));
+  --balance-button-primary-disabled-border: rgba(120, 124, 140, 0.3);
+  --balance-status-background: rgba(18, 20, 26, 0.55);
+  --balance-status-border: rgba(110, 114, 128, 0.2);
   --balance-status-color: inherit;
-  --balance-status-hover-border: rgba(150, 180, 255, 0.32);
-  --balance-status-outline: rgba(160, 190, 255, 0.65);
+  --balance-status-hover-border: rgba(156, 160, 178, 0.38);
+  --balance-status-outline: rgba(188, 192, 210, 0.55);
   --balance-status-success-background: rgba(40, 160, 120, 0.22);
   --balance-status-success-border: rgba(120, 240, 200, 0.36);
   --balance-status-warning-background: rgba(200, 120, 50, 0.25);
   --balance-status-warning-border: rgba(255, 180, 90, 0.4);
   --balance-status-error-background: rgba(180, 60, 60, 0.28);
   --balance-status-error-border: rgba(255, 120, 140, 0.4);
-  --balance-cube-color: #f8fbff;
-  --balance-cube-background: linear-gradient(140deg, rgba(120, 170, 255, 0.92), rgba(74, 118, 248, 0.9));
-  --balance-cube-shadow: rgba(10, 20, 48, 0.32);
-  --balance-cube-outline: rgba(180, 210, 255, 0.45);
-  --balance-cube-focus-outline: rgba(160, 200, 255, 0.85);
-  --balance-cube-drag-shadow: 0 24px 32px rgba(6, 12, 28, 0.48),
-    inset 0 0 0 1px rgba(200, 230, 255, 0.55);
-  --balance-cube-pressed-shadow: 0 20px 28px rgba(6, 12, 28, 0.4),
-    inset 0 0 0 1px rgba(200, 230, 255, 0.6);
+  --balance-cube-color: #f8f9fb;
+  --balance-cube-background: linear-gradient(140deg, rgba(138, 142, 156, 0.92), rgba(96, 100, 118, 0.9));
+  --balance-cube-shadow: rgba(0, 0, 0, 0.32);
+  --balance-cube-outline: rgba(186, 190, 206, 0.45);
+  --balance-cube-focus-outline: rgba(200, 204, 220, 0.75);
+  --balance-cube-drag-shadow: 0 24px 32px rgba(0, 0, 0, 0.5),
+    inset 0 0 0 1px rgba(204, 208, 222, 0.55);
+  --balance-cube-pressed-shadow: 0 20px 28px rgba(0, 0, 0, 0.45),
+    inset 0 0 0 1px rgba(204, 208, 222, 0.6);
   display: none;
   width: 100%;
   max-width: 100%;
