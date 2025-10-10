@@ -1025,8 +1025,8 @@ const GAME_CONFIG = {
         physics: {
           gravity: 9.81, // Accélération gravitationnelle (m/s²) utilisée pour la simulation.
           lengthMeters: 2.4, // Longueur approximative de la planche (m) servant de base aux leviers.
-          boardMassKg: 12, // Masse estimée de la planche pour le calcul de l'inertie (kg).
-          cubeMassPerWeight: 1.4, // Masse équivalente (kg) apportée par une unité de poids de bloc.
+          boardMassKg: 2, // Masse estimée de la planche pour le calcul de l'inertie (kg).
+          cubeMassPerWeight: 1.6, // Masse équivalente (kg) apportée par une unité de poids de bloc.
           pivotFriction: 14, // Coefficient de frottement du pivot (N·m·s) pour amortir la rotation.
           stiffness: 960, // Couple de rappel appliqué par radian (N·m/rad) pour stabiliser l'équilibre.
           simulationStepMs: 16, // Intervalle entre deux itérations de la simulation (ms).
