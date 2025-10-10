@@ -1,3 +1,44 @@
+import { readJSON, readString, writeJSON, writeString } from './services/storage.js';
+import {
+  DEFAULT_MUSIC_VOLUME,
+  clampMusicVolume,
+  createMusicPlayer
+} from './services/audio/music-player.js';
+import { initializeUiOptions } from './ui/options/index.js';
+import { initializeShopUI } from './ui/shop/index.js';
+import { initializeLayout } from './ui/layout.js';
+import { initializeCollectionsUI } from './ui/collections/index.js';
+import { initializeFusionUI } from './ui/fusion/index.js';
+import { initializeGoalsUI } from './ui/goals/index.js';
+import { initializeInfoUI } from './ui/info/index.js';
+import { initializeArcadeUI } from './ui/arcade/index.js';
+import {
+  ARCADE_GAME_IDS,
+  DEVKIT_STATE,
+  createDefaultApsCritState,
+  createEmptyProductionBreakdown,
+  createEmptyProductionEntry,
+  createInitialArcadeProgress,
+  createInitialStats,
+  ensureApcFrenzyStats,
+  ensureApsCritState,
+  getApsCritMultiplier,
+  getApsCritRemainingSeconds,
+  getDevKitAutoFlatBonus,
+  getLayeredStat,
+  incrementLayeredStat,
+  initializeCoreState,
+  isDevKitGachaFree,
+  isDevKitShopFree,
+  normalizeArcadeProgress,
+  normalizeApcFrenzyStats,
+  normalizeApsCritEffect,
+  normalizeApsCritState,
+  normalizeFrenzyStats,
+  parseStats,
+  setDevKitAutoFlatBonus
+} from './core/state/index.js';
+
 const APP_DATA = typeof globalThis !== 'undefined' && globalThis.APP_DATA ? globalThis.APP_DATA : {};
 const GLOBAL_CONFIG =
   typeof globalThis !== 'undefined' && globalThis.GAME_CONFIG ? globalThis.GAME_CONFIG : {};
@@ -8,6 +49,10 @@ const CONFIG_OPTIONS_WELCOME_CARD =
   && GLOBAL_CONFIG.uiText.options.welcomeCard
     ? GLOBAL_CONFIG.uiText.options.welcomeCard
     : null;
+
+if (typeof globalThis !== 'undefined' && typeof globalThis.lastVisibleShopBonusIds === 'undefined') {
+  globalThis.lastVisibleShopBonusIds = new Set();
+}
 
 const ATOM_SCALE_TROPHY_DATA = Array.isArray(APP_DATA.ATOM_SCALE_TROPHY_DATA)
   ? APP_DATA.ATOM_SCALE_TROPHY_DATA
@@ -58,47 +103,6 @@ const DEFAULT_SUDOKU_COMPLETION_REWARD = Object.freeze({
 const LANGUAGE_STORAGE_KEY = 'atom2univers.language';
 const CLICK_SOUND_STORAGE_KEY = 'atom2univers.options.clickSoundMuted';
 const CRIT_ATOM_VISUALS_STORAGE_KEY = 'atom2univers.options.critAtomVisualsDisabled';
-const TEXT_FONT_STORAGE_KEY = 'atom2univers.options.textFont';
-const TEXT_FONT_DEFAULT = 'orbitron';
-const TEXT_FONT_CHOICES = Object.freeze({
-  orbitron: {
-    id: 'orbitron',
-    stack: "'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
-  },
-  cinzel: {
-    id: 'cinzel',
-    stack: "'Cinzel', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
-  },
-  vt323: {
-    id: 'vt323',
-    stack: "'VT323', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
-  }
-});
-
-const DIGIT_FONT_STORAGE_KEY = 'atom2univers.options.digitFont';
-const DIGIT_FONT_DEFAULT = 'orbitron';
-const DIGIT_FONT_CHOICES = Object.freeze({
-  orbitron: {
-    id: 'orbitron',
-    stack: "'Orbitron', sans-serif",
-    compactStack: "'Orbitron', monospace"
-  },
-  cinzel: {
-    id: 'cinzel',
-    stack: "'Cinzel', 'DigitTech7', 'Orbitron', sans-serif",
-    compactStack: "'Cinzel', 'Orbitron', monospace"
-  },
-  digittech7: {
-    id: 'digittech7',
-    stack: "'DigitTech7', 'Orbitron', sans-serif",
-    compactStack: "'DigitTech7', 'Orbitron', monospace"
-  },
-  vt323: {
-    id: 'vt323',
-    stack: "'VT323', 'DigitTech7', 'Orbitron', sans-serif",
-    compactStack: "'VT323', 'Orbitron', monospace"
-  }
-});
 
 const FALLBACK_THEME_DEFINITIONS = Object.freeze([
   Object.freeze({
@@ -223,68 +227,6 @@ const DEFAULT_THEME_ID = (() => {
   return 'dark';
 })();
 
-const UI_SCALE_STORAGE_KEY = 'atom2univers.options.uiScale';
-
-const UI_SCALE_CONFIG = (() => {
-  const fallbackChoices = {
-    small: Object.freeze({ id: 'small', factor: 0.75 }),
-    normal: Object.freeze({ id: 'normal', factor: 1 }),
-    large: Object.freeze({ id: 'large', factor: 1.5 })
-  };
-  const fallback = {
-    defaultId: 'normal',
-    choices: Object.freeze(fallbackChoices)
-  };
-
-  const rawConfig = GLOBAL_CONFIG && GLOBAL_CONFIG.ui && GLOBAL_CONFIG.ui.scale;
-  if (!rawConfig || !Array.isArray(rawConfig.options)) {
-    return fallback;
-  }
-
-  const normalizedChoices = {};
-  rawConfig.options.forEach(option => {
-    if (!option || typeof option.id !== 'string') {
-      return;
-    }
-    const id = option.id.trim().toLowerCase();
-    if (!id || Object.prototype.hasOwnProperty.call(normalizedChoices, id)) {
-      return;
-    }
-    const factorValue = Number(option.factor);
-    if (!Number.isFinite(factorValue) || factorValue <= 0) {
-      return;
-    }
-    normalizedChoices[id] = Object.freeze({
-      id,
-      factor: factorValue
-    });
-  });
-
-  const ids = Object.keys(normalizedChoices);
-  if (!ids.length) {
-    return fallback;
-  }
-
-  let defaultId = 'normal';
-  if (typeof rawConfig.default === 'string') {
-    const normalizedDefault = rawConfig.default.trim().toLowerCase();
-    if (Object.prototype.hasOwnProperty.call(normalizedChoices, normalizedDefault)) {
-      defaultId = normalizedDefault;
-    }
-  }
-  if (!Object.prototype.hasOwnProperty.call(normalizedChoices, defaultId)) {
-    defaultId = ids[0];
-  }
-
-  return {
-    defaultId,
-    choices: Object.freeze(normalizedChoices)
-  };
-})();
-
-const UI_SCALE_CHOICES = UI_SCALE_CONFIG.choices;
-const UI_SCALE_DEFAULT = UI_SCALE_CONFIG.defaultId;
-
 let critAtomVisualsDisabled = false;
 const AVAILABLE_LANGUAGE_CODES = (() => {
   const i18n = globalThis.i18n;
@@ -367,6 +309,17 @@ function translateOrDefault(key, fallback, params) {
     return strippedKey;
   }
   return fallback;
+}
+
+function translateMessage(key, params, fallback) {
+  const fallbackValue = typeof fallback === 'string'
+    ? fallback
+    : (typeof key === 'string' ? key : '');
+  const translated = translateOrDefault(key, fallbackValue, params);
+  if (typeof translated === 'string' && translated.trim()) {
+    return translated;
+  }
+  return fallbackValue;
 }
 
 function getThemeDefinition(id) {
@@ -468,60 +421,6 @@ function translateCollectionLabel(key, fallback, params) {
     return fallback;
   }
   return translateOrDefault(`scripts.app.table.collection.labels.${key}`, fallback, params);
-}
-
-const PERIODIC_ELEMENT_I18N_BASE = 'scripts.periodic.elements';
-
-function getPeriodicElementTranslationBase(definition) {
-  const id = typeof definition?.id === 'string' ? definition.id.trim() : '';
-  if (!id) {
-    return '';
-  }
-  return `${PERIODIC_ELEMENT_I18N_BASE}.${id}`;
-}
-
-function translatePeriodicElementField(definition, field, fallback) {
-  if (!field) {
-    return fallback ?? '';
-  }
-  const base = getPeriodicElementTranslationBase(definition);
-  if (!base) {
-    return fallback ?? '';
-  }
-  const translated = translateOrDefault(`${base}.${field}`, fallback ?? '');
-  if (typeof translated === 'string' && translated.trim()) {
-    return translated;
-  }
-  return fallback ?? '';
-}
-
-function getPeriodicElementDisplay(definition) {
-  if (!definition || typeof definition !== 'object') {
-    return { symbol: '', name: '' };
-  }
-  const fallbackSymbol = typeof definition.symbol === 'string' ? definition.symbol : '';
-  const fallbackName = typeof definition.name === 'string' ? definition.name : '';
-  const symbol = translatePeriodicElementField(definition, 'symbol', fallbackSymbol);
-  const name = translatePeriodicElementField(definition, 'name', fallbackName);
-  return { symbol, name };
-}
-
-function getPeriodicElementDetails(definition) {
-  if (!definition || typeof definition !== 'object') {
-    return null;
-  }
-  const base = getPeriodicElementTranslationBase(definition);
-  if (!base) {
-    return null;
-  }
-  const api = getI18nApi();
-  if (api && typeof api.getResource === 'function') {
-    const resource = api.getResource(`${base}.details`);
-    if (resource && typeof resource === 'object') {
-      return resource;
-    }
-  }
-  return null;
 }
 
 function getCurrentLocale() {
@@ -833,27 +732,23 @@ function getConfigDefaultLanguage() {
 }
 
 function readStoredLanguagePreference() {
-  try {
-    const stored = globalThis.localStorage?.getItem(LANGUAGE_STORAGE_KEY);
-    if (stored) {
-      const matched = matchAvailableLanguage(stored);
-      if (matched) {
-        return matched;
-      }
-    }
-  } catch (error) {
-    console.warn('Unable to read stored language preference', error);
+  const stored = readString(LANGUAGE_STORAGE_KEY);
+  if (!stored) {
+    return null;
+  }
+  const matched = matchAvailableLanguage(stored);
+  if (matched) {
+    return matched;
   }
   return null;
 }
 
 function writeStoredLanguagePreference(lang) {
-  try {
-    const normalized = resolveLanguageCode(lang);
-    globalThis.localStorage?.setItem(LANGUAGE_STORAGE_KEY, normalized);
-  } catch (error) {
-    console.warn('Unable to persist language preference', error);
+  const normalized = resolveLanguageCode(lang);
+  if (!normalized) {
+    return;
   }
+  writeString(LANGUAGE_STORAGE_KEY, normalized);
 }
 
 function detectNavigatorLanguage() {
@@ -900,228 +795,6 @@ function normalizeBrickSkinSelection(rawValue) {
   return 'original';
 }
 
-function createInitialApcFrenzyStats() {
-  return {
-    totalClicks: 0,
-    best: {
-      clicks: 0,
-      frenziesUsed: 0
-    },
-    bestSingle: {
-      clicks: 0
-    }
-  };
-}
-
-function normalizeApcFrenzyStats(raw) {
-  const base = createInitialApcFrenzyStats();
-  if (!raw || typeof raw !== 'object') {
-    return base;
-  }
-  const total = Number(raw.totalClicks ?? raw.total ?? 0);
-  base.totalClicks = Number.isFinite(total) ? Math.max(0, Math.floor(total)) : 0;
-  const bestRaw = raw.best && typeof raw.best === 'object' ? raw.best : {};
-  const bestClicks = Number(bestRaw.clicks ?? bestRaw.count ?? 0);
-  const bestFrenzies = Number(bestRaw.frenziesUsed ?? bestRaw.frenzies ?? 0);
-  base.best.clicks = Number.isFinite(bestClicks) ? Math.max(0, Math.floor(bestClicks)) : 0;
-  base.best.frenziesUsed = Number.isFinite(bestFrenzies) ? Math.max(0, Math.floor(bestFrenzies)) : 0;
-  const bestSingleRaw = raw.bestSingle && typeof raw.bestSingle === 'object' ? raw.bestSingle : {};
-  const bestSingleClicks = Number(bestSingleRaw.clicks ?? bestSingleRaw.count ?? 0);
-  base.bestSingle.clicks = Number.isFinite(bestSingleClicks)
-    ? Math.max(0, Math.floor(bestSingleClicks))
-    : 0;
-  if ((!raw.bestSingle || typeof raw.bestSingle !== 'object') && base.best.frenziesUsed <= 1) {
-    base.bestSingle.clicks = Math.max(base.bestSingle.clicks, base.best.clicks);
-  }
-  return base;
-}
-
-function ensureApcFrenzyStats(store) {
-  if (!store || typeof store !== 'object') {
-    return createInitialApcFrenzyStats();
-  }
-  if (!store.apcFrenzy || typeof store.apcFrenzy !== 'object') {
-    store.apcFrenzy = createInitialApcFrenzyStats();
-    return store.apcFrenzy;
-  }
-  store.apcFrenzy = normalizeApcFrenzyStats(store.apcFrenzy);
-  return store.apcFrenzy;
-}
-
-function createInitialStats() {
-  const now = Date.now();
-  return {
-    session: {
-      atomsGained: LayeredNumber.zero(),
-      apcAtoms: LayeredNumber.zero(),
-      apsAtoms: LayeredNumber.zero(),
-      offlineAtoms: LayeredNumber.zero(),
-      manualClicks: 0,
-      onlineTimeMs: 0,
-      startedAt: now,
-      frenzyTriggers: {
-        perClick: 0,
-        perSecond: 0,
-        total: 0
-      },
-      apcFrenzy: createInitialApcFrenzyStats()
-    },
-    global: {
-      apcAtoms: LayeredNumber.zero(),
-      apsAtoms: LayeredNumber.zero(),
-      offlineAtoms: LayeredNumber.zero(),
-      manualClicks: 0,
-      playTimeMs: 0,
-      startedAt: null,
-      frenzyTriggers: {
-        perClick: 0,
-        perSecond: 0,
-        total: 0
-      },
-      apcFrenzy: createInitialApcFrenzyStats()
-    }
-  };
-}
-
-function getLayeredStat(store, key) {
-  if (!store || typeof store !== 'object') {
-    return LayeredNumber.zero();
-  }
-  const current = store[key];
-  if (current instanceof LayeredNumber) {
-    return current;
-  }
-  if (current && typeof current === 'object') {
-    try {
-      const normalized = LayeredNumber.fromJSON(current);
-      store[key] = normalized;
-      return normalized;
-    } catch (err) {
-      // Ignore malformed values and fall through to zero
-    }
-  }
-  if (current != null) {
-    const numeric = Number(current);
-    if (Number.isFinite(numeric) && numeric !== 0) {
-      const normalized = new LayeredNumber(numeric);
-      store[key] = normalized;
-      return normalized;
-    }
-  }
-  const zero = LayeredNumber.zero();
-  store[key] = zero;
-  return zero;
-}
-
-function incrementLayeredStat(store, key, amount) {
-  if (!store || typeof store !== 'object') {
-    return;
-  }
-  const current = getLayeredStat(store, key);
-  store[key] = current.add(amount);
-}
-
-function normalizeFrenzyStats(raw) {
-  if (!raw || typeof raw !== 'object') {
-    return { perClick: 0, perSecond: 0, total: 0 };
-  }
-  const perClick = Number(raw.perClick ?? raw.click ?? 0);
-  const perSecond = Number(raw.perSecond ?? raw.auto ?? raw.aps ?? 0);
-  const totalRaw = raw.total != null ? Number(raw.total) : perClick + perSecond;
-  return {
-    perClick: Number.isFinite(perClick) && perClick > 0 ? Math.floor(perClick) : 0,
-    perSecond: Number.isFinite(perSecond) && perSecond > 0 ? Math.floor(perSecond) : 0,
-    total: Number.isFinite(totalRaw) && totalRaw > 0 ? Math.floor(totalRaw) : 0
-  };
-}
-
-function createDefaultApsCritState() {
-  return { effects: [] };
-}
-
-function normalizeApsCritEffect(raw) {
-  if (!raw || typeof raw !== 'object') {
-    return null;
-  }
-  const multiplierAdd = Number(raw.multiplierAdd ?? raw.add ?? raw.multiplier ?? raw.value ?? 0);
-  const remainingSeconds = Number(
-    raw.remainingSeconds ?? raw.seconds ?? raw.time ?? raw.duration ?? raw.chrono ?? 0
-  );
-  if (!Number.isFinite(multiplierAdd) || !Number.isFinite(remainingSeconds)) {
-    return null;
-  }
-  if (multiplierAdd <= 0 || remainingSeconds <= 0) {
-    return null;
-  }
-  return {
-    multiplierAdd: Math.max(0, multiplierAdd),
-    remainingSeconds: Math.max(0, remainingSeconds)
-  };
-}
-
-function normalizeApsCritState(raw) {
-  const state = createDefaultApsCritState();
-  if (!raw || typeof raw !== 'object') {
-    return state;
-  }
-  if (Array.isArray(raw.effects)) {
-    state.effects = raw.effects
-      .map(entry => normalizeApsCritEffect(entry))
-      .filter(effect => effect != null);
-    if (state.effects.length) {
-      return state;
-    }
-  }
-  const chronoValue = Number(
-    raw.chronoSeconds ?? raw.chrono ?? raw.time ?? raw.seconds ?? raw.chronoSecs ?? 0
-  );
-  const multiplierValue = Number(raw.multiplier ?? raw.multi ?? raw.factor ?? 0);
-  if (Number.isFinite(chronoValue) && chronoValue > 0 && Number.isFinite(multiplierValue) && multiplierValue > 1) {
-    state.effects = [{
-      multiplierAdd: Math.max(0, multiplierValue - 1),
-      remainingSeconds: Math.max(0, chronoValue)
-    }];
-  }
-  return state;
-}
-
-function createEmptyProductionEntry() {
-  const rarityMultipliers = new Map();
-  RARITY_IDS.forEach(id => {
-    rarityMultipliers.set(id, 1);
-  });
-  return {
-    base: LayeredNumber.zero(),
-    totalAddition: LayeredNumber.zero(),
-    totalMultiplier: LayeredNumber.one(),
-    additions: [],
-    multipliers: [],
-    total: LayeredNumber.zero(),
-    sources: {
-      flats: {
-        baseFlat: LayeredNumber.zero(),
-        shopFlat: LayeredNumber.zero(),
-        elementFlat: LayeredNumber.zero(),
-        fusionFlat: LayeredNumber.zero(),
-        devkitFlat: LayeredNumber.zero()
-      },
-      multipliers: {
-        trophyMultiplier: LayeredNumber.one(),
-        frenzy: LayeredNumber.one(),
-        apsCrit: LayeredNumber.one(),
-        collectionMultiplier: LayeredNumber.one(),
-        rarityMultipliers
-      }
-    }
-  };
-}
-
-function createEmptyProductionBreakdown() {
-  return {
-    perClick: createEmptyProductionEntry(),
-    perSecond: createEmptyProductionEntry()
-  };
-}
 
 function cloneRarityMultipliers(store) {
   if (store instanceof Map) {
@@ -1950,202 +1623,15 @@ function parseStats(saved) {
 }
 
 // Game state management
-const DEFAULT_STATE = {
-  atoms: LayeredNumber.zero(),
-  lifetime: LayeredNumber.zero(),
-  perClick: BASE_PER_CLICK.clone(),
-  perSecond: BASE_PER_SECOND.clone(),
-  basePerClick: BASE_PER_CLICK.clone(),
-  basePerSecond: BASE_PER_SECOND.clone(),
-  gachaTickets: 0,
-  bonusParticulesTickets: 0,
-  upgrades: {},
-  shopUnlocks: [],
-  elements: createInitialElementCollection(),
-  fusions: createInitialFusionState(),
-  fusionBonuses: createInitialFusionBonuses(),
-  pageUnlocks: createInitialPageUnlockState(),
-  lastSave: Date.now(),
-  theme: DEFAULT_THEME_ID,
-  arcadeBrickSkin: 'original',
-  stats: createInitialStats(),
-  production: createEmptyProductionBreakdown(),
-  productionBase: createEmptyProductionBreakdown(),
-  crit: createDefaultCritState(),
-  baseCrit: createDefaultCritState(),
-  lastCritical: null,
-  elementBonusSummary: {},
-  trophies: [],
-  offlineGainMultiplier: MYTHIQUE_OFFLINE_BASE,
-  offlineTickets: {
-    secondsPerTicket: OFFLINE_TICKET_CONFIG.secondsPerTicket,
-    capSeconds: OFFLINE_TICKET_CONFIG.capSeconds,
-    progressSeconds: 0
-  },
-  sudokuOfflineBonus: null,
-  ticketStarAutoCollect: null,
-  ticketStarAverageIntervalSeconds: DEFAULT_TICKET_STAR_INTERVAL_SECONDS,
-  ticketStarUnlocked: false,
-  frenzySpawnBonus: { perClick: 1, perSecond: 1 },
-  musicTrackId: null,
-  musicVolume: DEFAULT_MUSIC_VOLUME,
-  musicEnabled: DEFAULT_MUSIC_ENABLED,
-  bigBangButtonVisible: false,
-  apsCrit: createDefaultApsCritState()
-};
-
-const ARCADE_GAME_IDS = Object.freeze([
-  'particules',
-  'metaux',
-  'wave',
-  'quantum2048',
-  'math',
-  'balance',
-  'sudoku',
-  'minesweeper',
-  'solitaire',
-  'blackjack',
-  'echecs'
-]);
-
-function createInitialArcadeProgress() {
-  const entries = {};
-  ARCADE_GAME_IDS.forEach(id => {
-    entries[id] = null;
-  });
-  return {
-    version: 1,
-    entries
-  };
-}
-
-const gameState = {
-  atoms: LayeredNumber.zero(),
-  lifetime: LayeredNumber.zero(),
-  perClick: BASE_PER_CLICK.clone(),
-  perSecond: BASE_PER_SECOND.clone(),
-  basePerClick: BASE_PER_CLICK.clone(),
-  basePerSecond: BASE_PER_SECOND.clone(),
-  gachaTickets: 0,
-  bonusParticulesTickets: 0,
-  upgrades: {},
-  shopUnlocks: new Set(),
-  elements: createInitialElementCollection(),
-  fusions: createInitialFusionState(),
-  fusionBonuses: createInitialFusionBonuses(),
-  pageUnlocks: createInitialPageUnlockState(),
-  theme: DEFAULT_THEME_ID,
-  arcadeBrickSkin: 'original',
-  stats: createInitialStats(),
-  production: createEmptyProductionBreakdown(),
-  productionBase: createEmptyProductionBreakdown(),
-  crit: createDefaultCritState(),
-  baseCrit: createDefaultCritState(),
-  lastCritical: null,
-  elementBonusSummary: {},
-  trophies: new Set(),
-  offlineGainMultiplier: MYTHIQUE_OFFLINE_BASE,
-  offlineTickets: {
-    secondsPerTicket: OFFLINE_TICKET_CONFIG.secondsPerTicket,
-    capSeconds: OFFLINE_TICKET_CONFIG.capSeconds,
-    progressSeconds: 0
-  },
-  sudokuOfflineBonus: null,
-  ticketStarAutoCollect: null,
-  ticketStarAverageIntervalSeconds: DEFAULT_TICKET_STAR_INTERVAL_SECONDS,
-  ticketStarUnlocked: false,
-  frenzySpawnBonus: { perClick: 1, perSecond: 1 },
-  musicTrackId: null,
-  musicVolume: DEFAULT_MUSIC_VOLUME,
-  musicEnabled: DEFAULT_MUSIC_ENABLED,
-  bigBangButtonVisible: false,
-  apsCrit: createDefaultApsCritState(),
-  arcadeProgress: createInitialArcadeProgress()
-};
-
-if (typeof window !== 'undefined') {
-  window.atom2universGameState = gameState;
-}
-
-applyFrenzySpawnChanceBonus(gameState.frenzySpawnBonus);
-if (typeof setParticulesBrickSkinPreference === 'function') {
-  setParticulesBrickSkinPreference(gameState.arcadeBrickSkin);
-}
-
-function ensureApsCritState() {
-  if (!gameState.apsCrit || typeof gameState.apsCrit !== 'object') {
-    gameState.apsCrit = createDefaultApsCritState();
-    return gameState.apsCrit;
-  }
-  const state = gameState.apsCrit;
-  if (!Array.isArray(state.effects)) {
-    state.effects = [];
-  }
-  state.effects = state.effects
-    .map(entry => normalizeApsCritEffect(entry))
-    .filter(effect => effect != null);
-  return state;
-}
-
-function getApsCritRemainingSeconds(state = ensureApsCritState()) {
-  if (!state || !Array.isArray(state.effects) || !state.effects.length) {
-    return 0;
-  }
-  return state.effects.reduce(
-    (max, effect) => Math.max(max, Number(effect?.remainingSeconds) || 0),
-    0
-  );
-}
-
-function getApsCritMultiplier(state = ensureApsCritState()) {
-  if (!state || !Array.isArray(state.effects) || !state.effects.length) {
-    return 1;
-  }
-  const totalAdd = state.effects.reduce((sum, effect) => {
-    const timeLeft = Number(effect?.remainingSeconds) || 0;
-    if (timeLeft <= 0) {
-      return sum;
-    }
-    const value = Number(effect?.multiplierAdd) || 0;
-    if (value <= 0) {
-      return sum;
-    }
-    return sum + value;
-  }, 0);
-  return totalAdd > 0 ? 1 + totalAdd : 1;
-}
-
-const DEVKIT_STATE = {
-  isOpen: false,
-  lastFocusedElement: null,
-  cheats: {
-    freeShop: false,
-    freeGacha: false
-  },
-  bonuses: {
-    autoFlat: LayeredNumber.zero()
-  }
-};
-
-function isDevKitShopFree() {
-  return DEVKIT_STATE.cheats.freeShop === true;
-}
-
-function isDevKitGachaFree() {
-  return DEVKIT_STATE.cheats.freeGacha === true;
-}
-
-function getDevKitAutoFlatBonus() {
-  return DEVKIT_STATE.bonuses.autoFlat instanceof LayeredNumber
-    ? DEVKIT_STATE.bonuses.autoFlat
-    : LayeredNumber.zero();
-}
-
-function setDevKitAutoFlatBonus(value) {
-  DEVKIT_STATE.bonuses.autoFlat = value instanceof LayeredNumber
-    ? value.clone()
-    : new LayeredNumber(value || 0);
-}
+const gameState = initializeCoreState({
+  basePerClick: BASE_PER_CLICK,
+  basePerSecond: BASE_PER_SECOND,
+  defaultThemeId: DEFAULT_THEME_ID,
+  offlineTicketConfig: OFFLINE_TICKET_CONFIG,
+  defaultTicketStarIntervalSeconds: DEFAULT_TICKET_STAR_INTERVAL_SECONDS,
+  defaultMusicVolume: DEFAULT_MUSIC_VOLUME,
+  defaultMusicEnabled: DEFAULT_MUSIC_ENABLED
+});
 
 const UPGRADE_DEFS = Array.isArray(CONFIG.upgrades) ? CONFIG.upgrades : FALLBACK_UPGRADES;
 const UPGRADE_NAME_MAP = new Map(UPGRADE_DEFS.map(def => [def.id, def.name || def.id]));
@@ -2439,8 +1925,6 @@ function evaluatePageUnlocks(options = {}) {
   return changed;
 }
 
-const trophyCards = new Map();
-
 function getUnlockedTrophySet() {
   if (gameState.trophies instanceof Set) {
     return gameState.trophies;
@@ -2712,10 +2196,15 @@ function unlockTrophy(def) {
   const unlocked = getUnlockedTrophySet();
   if (unlocked.has(def.id)) return false;
   unlocked.add(def.id);
-  const trophyTexts = getTrophyDisplayTexts(def);
+  const trophyTexts = goalsController
+    ? goalsController.getDisplayTexts(def)
+    : { name: typeof def?.name === 'string' ? def.name : (def?.id ?? ''), description: '', reward: '' };
   showToast(t('scripts.app.trophies.unlocked', { name: trophyTexts.name }));
   recalcProduction();
-  updateGoalsUI();
+  if (goalsController) {
+    goalsController.update();
+    goalsController.updateMilestone();
+  }
   updateBigBangVisibility();
   updateOptionsIntroDetails();
   updateBrickSkinOption();
@@ -2967,6 +2456,13 @@ const elements = {
   devkitToggleGacha: document.getElementById('devkitToggleGacha')
 };
 
+const infoController = initializeInfoUI({
+  elements,
+  getPageUnlockState,
+  getUnlockedTrophySet,
+  achievementsTrophyId: ACHIEVEMENTS_UNLOCK_TROPHY_ID
+});
+
 function getOptionsWelcomeCardCopy() {
   const api = getI18nApi();
   if (api && typeof api.getResource === 'function') {
@@ -3168,200 +2664,6 @@ function populateLanguageSelectOptions() {
   updateLanguageSelectorValue(desiredSelection);
 }
 
-function normalizeUiScaleSelection(value) {
-  if (typeof value !== 'string') {
-    return UI_SCALE_DEFAULT;
-  }
-  const normalized = value.trim().toLowerCase();
-  return Object.prototype.hasOwnProperty.call(UI_SCALE_CHOICES, normalized)
-    ? normalized
-    : UI_SCALE_DEFAULT;
-}
-
-function readStoredUiScale() {
-  try {
-    const stored = globalThis.localStorage?.getItem(UI_SCALE_STORAGE_KEY);
-    if (typeof stored === 'string' && stored.trim()) {
-      return normalizeUiScaleSelection(stored);
-    }
-  } catch (error) {
-    console.warn('Unable to read UI scale preference', error);
-  }
-  return null;
-}
-
-function writeStoredUiScale(value) {
-  try {
-    const normalized = normalizeUiScaleSelection(value);
-    globalThis.localStorage?.setItem(UI_SCALE_STORAGE_KEY, normalized);
-  } catch (error) {
-    console.warn('Unable to persist UI scale preference', error);
-  }
-}
-
-function applyUiScaleSelection(selection, options = {}) {
-  const normalized = normalizeUiScaleSelection(selection);
-  const config = UI_SCALE_CHOICES[normalized] || UI_SCALE_CHOICES[UI_SCALE_DEFAULT];
-  const settings = Object.assign({ persist: true, updateControl: true }, options);
-  const factor = config && Number.isFinite(config.factor) && config.factor > 0 ? config.factor : 1;
-  const root = typeof document !== 'undefined' ? document.documentElement : null;
-  if (root && root.style) {
-    root.style.setProperty('--font-scale-factor', String(factor));
-  }
-  if (typeof document !== 'undefined' && document.body) {
-    document.body.setAttribute('data-ui-scale', normalized);
-  }
-  if (settings.updateControl && elements.uiScaleSelect) {
-    elements.uiScaleSelect.value = normalized;
-  }
-  if (settings.persist) {
-    writeStoredUiScale(normalized);
-  }
-  return normalized;
-}
-
-function initUiScaleOption() {
-  const stored = readStoredUiScale();
-  const initial = stored ?? UI_SCALE_DEFAULT;
-  applyUiScaleSelection(initial, { persist: false, updateControl: true });
-  if (!elements.uiScaleSelect) {
-    return;
-  }
-  elements.uiScaleSelect.addEventListener('change', event => {
-    const value = event?.target?.value;
-    applyUiScaleSelection(value, { persist: true, updateControl: false });
-  });
-}
-
-function normalizeTextFontSelection(value) {
-  if (typeof value !== 'string') {
-    return TEXT_FONT_DEFAULT;
-  }
-  const normalized = value.trim().toLowerCase();
-  return Object.prototype.hasOwnProperty.call(TEXT_FONT_CHOICES, normalized)
-    ? normalized
-    : TEXT_FONT_DEFAULT;
-}
-
-function readStoredTextFont() {
-  try {
-    const stored = globalThis.localStorage?.getItem(TEXT_FONT_STORAGE_KEY);
-    if (typeof stored === 'string' && stored.trim()) {
-      return normalizeTextFontSelection(stored);
-    }
-  } catch (error) {
-    console.warn('Unable to read text font preference', error);
-  }
-  return null;
-}
-
-function writeStoredTextFont(value) {
-  try {
-    const normalized = normalizeTextFontSelection(value);
-    globalThis.localStorage?.setItem(TEXT_FONT_STORAGE_KEY, normalized);
-  } catch (error) {
-    console.warn('Unable to persist text font preference', error);
-  }
-}
-
-function applyTextFontSelection(selection, options = {}) {
-  const normalized = normalizeTextFontSelection(selection);
-  const config = TEXT_FONT_CHOICES[normalized] || TEXT_FONT_CHOICES[TEXT_FONT_DEFAULT];
-  const settings = Object.assign({ persist: true, updateControl: true }, options);
-  const root = typeof document !== 'undefined' ? document.documentElement : null;
-  if (root && root.style) {
-    root.style.setProperty('--font-text', config.stack);
-  }
-  if (typeof document !== 'undefined' && document.body) {
-    document.body.setAttribute('data-text-font', normalized);
-  }
-  if (settings.updateControl && elements.textFontSelect) {
-    elements.textFontSelect.value = normalized;
-  }
-  if (settings.persist) {
-    writeStoredTextFont(normalized);
-  }
-  return normalized;
-}
-
-function initTextFontOption() {
-  const stored = readStoredTextFont();
-  const initial = stored ?? TEXT_FONT_DEFAULT;
-  applyTextFontSelection(initial, { persist: false, updateControl: true });
-  if (!elements.textFontSelect) {
-    return;
-  }
-  elements.textFontSelect.addEventListener('change', event => {
-    const value = event?.target?.value;
-    applyTextFontSelection(value, { persist: true, updateControl: false });
-  });
-}
-
-function normalizeDigitFontSelection(value) {
-  if (typeof value !== 'string') {
-    return DIGIT_FONT_DEFAULT;
-  }
-  const normalized = value.trim().toLowerCase();
-  return Object.prototype.hasOwnProperty.call(DIGIT_FONT_CHOICES, normalized)
-    ? normalized
-    : DIGIT_FONT_DEFAULT;
-}
-
-function readStoredDigitFont() {
-  try {
-    const stored = globalThis.localStorage?.getItem(DIGIT_FONT_STORAGE_KEY);
-    if (typeof stored === 'string' && stored.trim()) {
-      return normalizeDigitFontSelection(stored);
-    }
-  } catch (error) {
-    console.warn('Unable to read digit font preference', error);
-  }
-  return null;
-}
-
-function writeStoredDigitFont(value) {
-  try {
-    const normalized = normalizeDigitFontSelection(value);
-    globalThis.localStorage?.setItem(DIGIT_FONT_STORAGE_KEY, normalized);
-  } catch (error) {
-    console.warn('Unable to persist digit font preference', error);
-  }
-}
-
-function applyDigitFontSelection(selection, options = {}) {
-  const normalized = normalizeDigitFontSelection(selection);
-  const config = DIGIT_FONT_CHOICES[normalized] || DIGIT_FONT_CHOICES[DIGIT_FONT_DEFAULT];
-  const settings = Object.assign({ persist: true, updateControl: true }, options);
-  const root = typeof document !== 'undefined' ? document.documentElement : null;
-  if (root && root.style) {
-    root.style.setProperty('--font-digits', config.stack);
-    root.style.setProperty('--font-digits-compact', config.compactStack);
-  }
-  if (typeof document !== 'undefined' && document.body) {
-    document.body.setAttribute('data-digit-font', normalized);
-  }
-  if (settings.updateControl && elements.digitFontSelect) {
-    elements.digitFontSelect.value = normalized;
-  }
-  if (settings.persist) {
-    writeStoredDigitFont(normalized);
-  }
-  return normalized;
-}
-
-function initDigitFontOption() {
-  const stored = readStoredDigitFont();
-  const initial = stored ?? DIGIT_FONT_DEFAULT;
-  applyDigitFontSelection(initial, { persist: false, updateControl: true });
-  if (!elements.digitFontSelect) {
-    return;
-  }
-  elements.digitFontSelect.addEventListener('change', event => {
-    const value = event?.target?.value;
-    applyDigitFontSelection(value, { persist: true, updateControl: false });
-  });
-}
-
 function updateBrickSkinOption() {
   const unlocked = isArcadeUnlocked();
   const selection = normalizeBrickSkinSelection(gameState.arcadeBrickSkin);
@@ -3485,40 +2787,6 @@ function ensureQuantum2048Game() {
   return quantum2048Game;
 }
 
-function areInfoBonusesUnlocked() {
-  const unlocks = getPageUnlockState();
-  return unlocks?.info === true;
-}
-
-function areAchievementsFeatureUnlocked() {
-  return getUnlockedTrophySet().has(ACHIEVEMENTS_UNLOCK_TROPHY_ID);
-}
-
-function updateInfoAchievementsVisibility() {
-  if (!elements.infoAchievementsCard) {
-    return;
-  }
-  const unlocked = areAchievementsFeatureUnlocked();
-  elements.infoAchievementsCard.hidden = !unlocked;
-  elements.infoAchievementsCard.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
-  if (!unlocked && elements.goalsEmpty) {
-    elements.goalsEmpty.hidden = true;
-    elements.goalsEmpty.setAttribute('aria-hidden', 'true');
-  }
-}
-
-function updateInfoBonusVisibility() {
-  const visible = areInfoBonusesUnlocked();
-  if (elements.infoShopBonusCard) {
-    elements.infoShopBonusCard.hidden = !visible;
-    elements.infoShopBonusCard.setAttribute('aria-hidden', visible ? 'false' : 'true');
-  }
-  if (elements.infoElementBonusCard) {
-    elements.infoElementBonusCard.hidden = !visible;
-    elements.infoElementBonusCard.setAttribute('aria-hidden', visible ? 'false' : 'true');
-  }
-}
-
 function updatePageUnlockUI() {
   const unlocks = getPageUnlockState();
   const buttonConfig = [
@@ -3533,7 +2801,7 @@ function updatePageUnlockUI() {
   });
 
   setNavButtonLockState(elements.navInfoButton, true);
-  updateInfoBonusVisibility();
+  infoController.updateBonusVisibility();
 
   ensureActivePageUnlocked();
 }
@@ -3544,9 +2812,9 @@ function updatePrimaryNavigationLocks() {
     : toLayeredValue(gameState.atoms, 0);
   const shopUnlocked = atoms.compare(SHOP_UNLOCK_THRESHOLD) >= 0;
   setNavButtonLockState(elements.navShopButton, shopUnlocked);
-  updateShopUnlockHint();
+  shopController.updateUnlockHint();
 
-  updateInfoAchievementsVisibility();
+  infoController.updateAchievementsVisibility();
 
   ensureActivePageUnlocked();
 }
@@ -3584,170 +2852,6 @@ function updateBigBangVisibility() {
 function isArcadeUnlocked() {
   return getUnlockedTrophySet().has(ARCADE_TROPHY_ID);
 }
-
-function triggerBrandPortalPulse() {
-  const pulseTarget = elements.navArcadeButton;
-  if (!pulseTarget) {
-    return;
-  }
-  pulseTarget.classList.add('nav-button--pulse');
-  clearTimeout(triggerBrandPortalPulse.timeoutId);
-  triggerBrandPortalPulse.timeoutId = setTimeout(() => {
-    if (elements.navArcadeButton) {
-      elements.navArcadeButton.classList.remove('nav-button--pulse');
-    }
-  }, 1600);
-}
-
-function updateArcadeTicketDisplay() {
-  const available = Math.max(0, Math.floor(Number(gameState.gachaTickets) || 0));
-  const ticketLabel = formatTicketLabel(available);
-  if (elements.arcadeTicketValues?.length) {
-    elements.arcadeTicketValues.forEach(valueElement => {
-      valueElement.textContent = ticketLabel;
-    });
-  }
-  if (elements.arcadeTicketButtons?.length) {
-    const gachaUnlocked = isPageUnlocked('gacha');
-    elements.arcadeTicketButtons.forEach(button => {
-      button.disabled = !gachaUnlocked;
-      button.setAttribute('aria-disabled', gachaUnlocked ? 'false' : 'true');
-      if (gachaUnlocked) {
-        button.setAttribute('aria-label', `Ouvrir le portail Gacha (${ticketLabel})`);
-        button.title = `Tickets disponibles : ${ticketLabel}`;
-      } else {
-        button.setAttribute('aria-label', 'Portail Gacha verrouillé');
-        button.title = 'Obtenez un ticket de tirage pour débloquer le portail Gacha';
-      }
-    });
-  }
-  const bonusCount = Math.max(0, Math.floor(Number(gameState.bonusParticulesTickets) || 0));
-  const bonusValue = formatIntegerLocalized(bonusCount);
-  const bonusLabel = formatMetauxCreditLabel(bonusCount);
-  if (elements.arcadeBonusTicketValues?.length) {
-    elements.arcadeBonusTicketValues.forEach(valueElement => {
-      valueElement.textContent = bonusValue;
-    });
-  }
-  if (elements.arcadeBonusTicketAnnouncements?.length) {
-    elements.arcadeBonusTicketAnnouncements.forEach(announcement => {
-      announcement.textContent = `Mach3 : ${bonusLabel}`;
-    });
-  }
-  if (elements.arcadeBonusTicketButtons?.length) {
-    const hasCredits = bonusCount > 0;
-    elements.arcadeBonusTicketButtons.forEach(button => {
-      button.disabled = !hasCredits;
-      button.setAttribute('aria-disabled', hasCredits ? 'false' : 'true');
-      if (hasCredits) {
-        button.title = `Lancer Métaux — ${bonusLabel}`;
-        button.setAttribute('aria-label', `Ouvrir Métaux (Mach3 : ${bonusLabel})`);
-      } else {
-        button.title = 'Attrapez un graviton pour gagner un Mach3.';
-        button.setAttribute('aria-label', 'Mach3 indisponible — attrapez un graviton.');
-      }
-    });
-  }
-  updateMetauxCreditsUI();
-}
-
-function getMetauxCreditCount() {
-  return Math.max(0, Math.floor(Number(gameState.bonusParticulesTickets) || 0));
-}
-
-function formatMetauxCreditLabel(count) {
-  if (typeof formatBonusTicketLabel === 'function') {
-    return formatBonusTicketLabel(count);
-  }
-  const numeric = Math.max(0, Math.floor(Number(count) || 0));
-  const unit = numeric === 1 ? 'crédit' : 'crédits';
-  return `${formatIntegerLocalized(numeric)} ${unit}`;
-}
-
-function isMetauxSessionRunning() {
-  if (!metauxGame) {
-    return false;
-  }
-  if (typeof metauxGame.isSessionRunning === 'function') {
-    return metauxGame.isSessionRunning();
-  }
-  return metauxGame.gameOver === false;
-}
-
-function updateMetauxCreditsUI() {
-  const available = getMetauxCreditCount();
-  const active = isMetauxSessionRunning();
-  if (elements.metauxNewGameCredits) {
-    elements.metauxNewGameCredits.textContent = `Mach3 : ${formatMetauxCreditLabel(available)}`;
-  }
-  if (elements.metauxNewGameButton) {
-    const canStart = available > 0 && !active;
-    elements.metauxNewGameButton.disabled = !canStart;
-    elements.metauxNewGameButton.setAttribute('aria-disabled', canStart ? 'false' : 'true');
-    const tooltip = canStart
-      ? `Consomme 1 crédit Mach3 (restant : ${formatMetauxCreditLabel(available)}).`
-      : available > 0
-        ? 'Partie en cours… Terminez-la avant de relancer.'
-        : 'Aucun crédit Mach3 disponible. Jouez à Atom2Univers pour en gagner.';
-    elements.metauxNewGameButton.title = tooltip;
-    elements.metauxNewGameButton.setAttribute('aria-label', `${available > 0 ? 'Nouvelle partie' : 'Crédit indisponible'} — ${tooltip}`);
-  }
-  if (elements.metauxFreePlayButton) {
-    const disabled = active;
-    elements.metauxFreePlayButton.disabled = disabled;
-    elements.metauxFreePlayButton.setAttribute('aria-disabled', disabled ? 'true' : 'false');
-    const tooltip = disabled
-      ? 'Partie en cours… Terminez-la avant de relancer.'
-      : 'Partie libre : aucun crédit requis.';
-    elements.metauxFreePlayButton.title = tooltip;
-    const label = (elements.metauxFreePlayButton.textContent || '').trim() || 'Free Play';
-    elements.metauxFreePlayButton.setAttribute('aria-label', `${label} — ${tooltip}`);
-  }
-  if (elements.metauxCreditStatus) {
-    let statusText = '';
-    const freeMode = metauxGame && typeof metauxGame.isFreePlayMode === 'function' && metauxGame.isFreePlayMode();
-    if (active) {
-      statusText = freeMode
-        ? 'Partie libre en cours — expérimentez sans pression.'
-        : 'Forge en cours… Utilisez vos déplacements pour créer des alliages !';
-    } else if (available > 0) {
-      statusText = `Crédits disponibles : ${formatMetauxCreditLabel(available)}.`;
-    } else {
-      statusText = 'Aucun crédit Mach3 disponible. Lancez une partie libre ou jouez à Atom2Univers pour en gagner.';
-    }
-    elements.metauxCreditStatus.textContent = statusText;
-    elements.metauxCreditStatus.hidden = false;
-  }
-}
-
-window.updateMetauxCreditsUI = updateMetauxCreditsUI;
-window.registerSudokuOfflineBonus = registerSudokuOfflineBonus;
-window.registerChessVictoryReward = registerChessVictoryReward;
-
-function updateBrandPortalState(options = {}) {
-  const unlocked = isArcadeUnlocked();
-  if (elements.brandPortal) {
-    elements.brandPortal.disabled = false;
-    elements.brandPortal.setAttribute('aria-disabled', 'false');
-    elements.brandPortal.classList.remove('brand--locked');
-    elements.brandPortal.classList.toggle('brand--portal-ready', unlocked);
-  }
-  if (elements.navArcadeButton) {
-    setNavButtonLockState(elements.navArcadeButton, unlocked);
-    if (!unlocked) {
-      elements.navArcadeButton.classList.remove('nav-button--pulse');
-    } else {
-      updateArcadeTicketDisplay();
-      if (options.animate) {
-        triggerBrandPortalPulse();
-      }
-    }
-  } else if (unlocked) {
-    updateArcadeTicketDisplay();
-  }
-}
-
-updateBigBangVisibility();
 
 const soundEffects = (() => {
   let popMuted = false;
@@ -3842,57 +2946,41 @@ const soundEffects = (() => {
 })();
 
 function readStoredClickSoundMuted() {
-  try {
-    const stored = globalThis.localStorage?.getItem(CLICK_SOUND_STORAGE_KEY);
-    if (stored == null) {
-      return null;
-    }
-    if (stored === '1' || stored === 'true') {
-      return true;
-    }
-    if (stored === '0' || stored === 'false') {
-      return false;
-    }
-  } catch (error) {
-    console.warn('Unable to read click sound preference', error);
+  const stored = readString(CLICK_SOUND_STORAGE_KEY);
+  if (stored == null) {
+    return null;
+  }
+  if (stored === '1' || stored === 'true') {
+    return true;
+  }
+  if (stored === '0' || stored === 'false') {
+    return false;
   }
   return null;
 }
 
 function writeStoredClickSoundMuted(muted) {
-  try {
-    const value = muted ? '1' : '0';
-    globalThis.localStorage?.setItem(CLICK_SOUND_STORAGE_KEY, value);
-  } catch (error) {
-    console.warn('Unable to persist click sound preference', error);
-  }
+  const value = muted ? '1' : '0';
+  writeString(CLICK_SOUND_STORAGE_KEY, value);
 }
 
 function readStoredCritAtomVisualsDisabled() {
-  try {
-    const stored = globalThis.localStorage?.getItem(CRIT_ATOM_VISUALS_STORAGE_KEY);
-    if (stored == null) {
-      return null;
-    }
-    if (stored === '1' || stored === 'true') {
-      return true;
-    }
-    if (stored === '0' || stored === 'false') {
-      return false;
-    }
-  } catch (error) {
-    console.warn('Unable to read critical atom visual preference', error);
+  const stored = readString(CRIT_ATOM_VISUALS_STORAGE_KEY);
+  if (stored == null) {
+    return null;
+  }
+  if (stored === '1' || stored === 'true') {
+    return true;
+  }
+  if (stored === '0' || stored === 'false') {
+    return false;
   }
   return null;
 }
 
 function writeStoredCritAtomVisualsDisabled(disabled) {
-  try {
-    const value = disabled ? '1' : '0';
-    globalThis.localStorage?.setItem(CRIT_ATOM_VISUALS_STORAGE_KEY, value);
-  } catch (error) {
-    console.warn('Unable to persist critical atom visual preference', error);
-  }
+  const value = disabled ? '1' : '0';
+  writeString(CRIT_ATOM_VISUALS_STORAGE_KEY, value);
 }
 
 function updateClickSoundStatusLabel(muted) {
@@ -4021,636 +3109,106 @@ function subscribeCritAtomLanguageUpdates() {
   }
 }
 
-initUiScaleOption();
-initTextFontOption();
-initDigitFontOption();
+initializeUiOptions({ elements, globalConfig: GLOBAL_CONFIG });
+const collectionsController = initializeCollectionsUI({
+  elements,
+  gameState,
+  translateOrDefault,
+  t,
+  formatNumberLocalized,
+  formatIntegerLocalized,
+  getI18nApi,
+  periodicElements,
+  periodicElementIndex,
+  elementRarityIndex,
+  gachaRarityMap: GACHA_RARITY_MAP,
+  categoryLabels: CATEGORY_LABELS,
+  totalElementCount: TOTAL_ELEMENT_COUNT,
+  getCollectionBonusOverview,
+  normalizeCollectionDetailText,
+  getElementCurrentCount,
+  getElementLifetimeCount,
+  hasElementLifetime,
+  applyPeriodicCellCollectionColor,
+  updateGachaRarityProgress
+});
+const fusionController = initializeFusionUI({ elements });
+const goalsController = initializeGoalsUI({
+  elements,
+  trophyDefs: TROPHY_DEFS,
+  milestoneList,
+  gameState,
+  translateOrDefault,
+  t,
+  formatNumberLocalized,
+  formatTrophyBonusValue,
+  getUnlockedTrophySet,
+  areAchievementsFeatureUnlocked: infoController.areAchievementsFeatureUnlocked
+});
+const shopController = initializeShopUI({
+  elements,
+  upgradeDefs: UPGRADE_DEFS,
+  upgradeIndexMap: UPGRADE_INDEX_MAP,
+  gameState,
+  translateOrDefault,
+  translate: (key, params, fallback) => translateMessage(key, params, fallback),
+  formatIntegerLocalized,
+  formatShopCost,
+  getUpgradeLevel,
+  resolveUpgradeMaxLevel,
+  getRemainingUpgradeCapacity,
+  computeUpgradeCost,
+  getShopUnlockSet,
+  isDevKitShopFree,
+  recalcProduction,
+  updateUI,
+  showToast,
+  toLayeredValue
+});
+const arcadeController = initializeArcadeUI({
+  elements,
+  gameState,
+  translate: (key, params, fallback) => translateMessage(key, params, fallback),
+  showToast,
+  showPage,
+  saveGame,
+  formatIntegerLocalized,
+  setNavButtonLockState,
+  isPageUnlocked,
+  unlockPage,
+  isArcadeUnlocked,
+  ensureWaveGame,
+  ensureBalanceGame,
+  ensureQuantum2048Game,
+  ensureApsCritState,
+  getApsCritMultiplier,
+  getApsCritRemainingSeconds,
+  recalcProduction,
+  updateUI,
+  pulseApsCritPanel
+});
+const {
+  updateArcadeTicketDisplay,
+  updateBrandPortalState,
+  updateMetauxCreditsUI,
+  handleMetauxSessionEnd
+} = arcadeController;
 initClickSoundOption();
 subscribeClickSoundLanguageUpdates();
 initCritAtomOption();
 subscribeCritAtomLanguageUpdates();
 
-const musicPlayer = (() => {
-  const MUSIC_DIR = 'Assets/Music/';
-  const SUPPORTED_EXTENSIONS = MUSIC_SUPPORTED_EXTENSIONS;
-  const FALLBACK_TRACKS = MUSIC_FALLBACK_TRACKS;
+if (typeof window !== 'undefined') {
+  window.registerSudokuOfflineBonus = registerSudokuOfflineBonus;
+  window.registerChessVictoryReward = registerChessVictoryReward;
+}
 
-  if (typeof window === 'undefined' || typeof Audio === 'undefined') {
-    const resolved = Promise.resolve([]);
-    let stubVolume = DEFAULT_MUSIC_VOLUME;
-    return {
-      init: options => {
-        if (options && typeof options.volume === 'number') {
-          stubVolume = clampMusicVolume(options.volume, stubVolume);
-        }
-        return resolved;
-      },
-      ready: () => resolved,
-      getTracks: () => [],
-      getCurrentTrack: () => null,
-      getCurrentTrackId: () => null,
-      getPlaybackState: () => 'unsupported',
-      playTrackById: id => {
-        const normalized = typeof id === 'string' ? id.trim().toLowerCase() : '';
-        return !normalized || normalized === 'none';
-      },
-      stop: () => true,
-      setVolume: value => {
-        stubVolume = clampMusicVolume(value, stubVolume);
-        return stubVolume;
-      },
-      getVolume: () => stubVolume,
-      onChange: () => () => {},
-      isAwaitingUserGesture: () => false
-    };
-  }
-
-  let tracks = [];
-  let audioElement = null;
-  let currentIndex = -1;
-  let readyPromise = null;
-  let preferredTrackId = null;
-  let awaitingUserGesture = true;
-  let unlockListenersAttached = false;
-  let volume = DEFAULT_MUSIC_VOLUME;
-  const changeListeners = new Set();
-
-  const formatDisplayName = fileName => {
-    if (!fileName) {
-      return '';
-    }
-    const segments = String(fileName).split('/').filter(Boolean);
-    const lastSegment = segments.length ? segments[segments.length - 1] : String(fileName);
-    const baseName = lastSegment
-      .replace(/\.[^/.]+$/, '')
-      .replace(/[_-]+/g, ' ')
-      .trim();
-    if (!baseName) {
-      return lastSegment || fileName;
-    }
-    return baseName.replace(/\b\w/g, char => char.toUpperCase());
-  };
-
-  const sanitizeFileName = input => {
-    if (!input || typeof input !== 'string') {
-      return '';
-    }
-    let value = input.trim();
-    if (!value) {
-      return '';
-    }
-    try {
-      value = decodeURIComponent(value);
-    } catch (error) {
-      // Ignore decoding issues and keep the original value.
-    }
-    value = value.replace(/^[./]+/, '');
-    value = value.replace(/^Assets\/?Music\//i, '');
-    value = value.replace(/^assets\/?music\//i, '');
-    value = value.split(/[?#]/)[0];
-    value = value.replace(/\\/g, '/');
-    const parts = value
-      .split('/')
-      .map(part => part.trim())
-      .filter(part => part && part !== '..');
-    return parts.join('/');
-  };
-
-  const isSupportedFile = fileName => {
-    const cleanName = sanitizeFileName(fileName);
-    const segments = cleanName.split('.');
-    if (segments.length <= 1) {
-      return false;
-    }
-    const extension = segments.pop().toLowerCase();
-    return SUPPORTED_EXTENSIONS.includes(extension);
-  };
-
-  const createTrack = (fileName, { placeholder = false } = {}) => {
-    const cleanName = sanitizeFileName(fileName);
-    if (!cleanName || !isSupportedFile(cleanName)) {
-      return null;
-    }
-    const encodedPath = cleanName
-      .split('/')
-      .map(segment => encodeURIComponent(segment))
-      .join('/');
-    return {
-      id: cleanName,
-      filename: cleanName,
-      src: `${MUSIC_DIR}${encodedPath}`,
-      displayName: formatDisplayName(cleanName),
-      placeholder
-    };
-  };
-
-  const normalizeCandidate = entry => {
-    if (!entry) {
-      return '';
-    }
-    if (typeof entry === 'string') {
-      return sanitizeFileName(entry);
-    }
-    if (typeof entry === 'object') {
-      const candidate = entry.path
-        ?? entry.src
-        ?? entry.url
-        ?? entry.file
-        ?? entry.filename
-        ?? entry.name;
-      return typeof candidate === 'string' ? sanitizeFileName(candidate) : '';
-    }
-    return '';
-  };
-
-  const findIndexForId = id => {
-    if (!id) {
-      return -1;
-    }
-    const trimmed = typeof id === 'string' ? id.trim().toLowerCase() : '';
-    const sanitized = sanitizeFileName(id).toLowerCase();
-    const candidates = new Set([trimmed, sanitized]);
-    const addBaseVariant = value => {
-      if (value && value.includes('.')) {
-        candidates.add(value.replace(/\.[^/.]+$/, ''));
-      }
-    };
-    addBaseVariant(trimmed);
-    addBaseVariant(sanitized);
-    return tracks.findIndex(track => {
-      const name = track.id?.toLowerCase?.() ?? '';
-      const file = track.filename?.toLowerCase?.() ?? '';
-      const src = track.src?.toLowerCase?.() ?? '';
-      const base = track.filename?.split('/')?.pop()?.toLowerCase?.() ?? '';
-      const display = track.displayName?.toLowerCase?.() ?? '';
-      return (
-        candidates.has(name)
-        || candidates.has(file)
-        || candidates.has(src)
-        || candidates.has(base)
-        || candidates.has(display)
-      );
-    });
-  };
-
-  const getPlaybackState = () => {
-    if (!audioElement) {
-      return 'idle';
-    }
-    if (audioElement.error) {
-      return 'error';
-    }
-    if (audioElement.paused) {
-      return audioElement.currentTime > 0 ? 'paused' : 'idle';
-    }
-    return 'playing';
-  };
-
-  const emitChange = type => {
-    const payload = {
-      type,
-      tracks: tracks.map(track => ({ ...track })),
-      currentTrack: tracks[currentIndex] ? { ...tracks[currentIndex] } : null,
-      state: getPlaybackState(),
-      awaitingUserGesture
-    };
-    changeListeners.forEach(listener => {
-      try {
-        listener(payload);
-      } catch (error) {
-        console.error('Music listener error', error);
-      }
-    });
-  };
-
-  const applyVolumeToAudio = () => {
-    if (audioElement) {
-      audioElement.volume = volume;
-    }
-  };
-
-  const setVolumeValue = (value, { silent = false } = {}) => {
-    const normalized = clampMusicVolume(value, volume);
-    if (normalized === volume) {
-      return volume;
-    }
-    volume = normalized;
-    applyVolumeToAudio();
-    if (!silent) {
-      emitChange('volume');
-    }
-    return volume;
-  };
-
-  const getVolumeValue = () => volume;
-
-  const getAudioElement = () => {
-    if (!audioElement) {
-      audioElement = new Audio();
-      audioElement.loop = true;
-      audioElement.preload = 'auto';
-      audioElement.setAttribute('preload', 'auto');
-      audioElement.volume = volume;
-      audioElement.addEventListener('playing', () => {
-        awaitingUserGesture = false;
-        emitChange('state');
-      });
-      audioElement.addEventListener('pause', () => {
-        emitChange('state');
-      });
-      audioElement.addEventListener('error', () => {
-        emitChange('error');
-      });
-    }
-    return audioElement;
-  };
-
-  const tryPlay = () => {
-    const audio = getAudioElement();
-    if (!audio.src) {
-      return;
-    }
-    audio.volume = volume;
-    const playPromise = audio.play();
-    if (playPromise && typeof playPromise.catch === 'function') {
-      playPromise.catch(() => {});
-    }
-  };
-
-  const stop = ({ keepPreference = false, silent = false } = {}) => {
-    let hadSource = false;
-    if (audioElement) {
-      try {
-        audioElement.pause();
-      } catch (error) {
-        // Ignore pause issues.
-      }
-      try {
-        if (audioElement.currentTime) {
-          audioElement.currentTime = 0;
-        }
-      } catch (error) {
-        // Ignore reset issues.
-      }
-      if (audioElement.src) {
-        hadSource = true;
-      }
-      audioElement.removeAttribute('src');
-      audioElement.src = '';
-    }
-    const wasPlaying = hadSource || currentIndex !== -1;
-    currentIndex = -1;
-    if (!keepPreference) {
-      preferredTrackId = null;
-    }
-    if (!silent) {
-      emitChange('stop');
-    } else {
-      emitChange('track');
-    }
-    return wasPlaying;
-  };
-
-  const playIndex = index => {
-    if (!tracks.length) {
-      currentIndex = -1;
-      emitChange('track');
-      return false;
-    }
-    const wrappedIndex = ((index % tracks.length) + tracks.length) % tracks.length;
-    const track = tracks[wrappedIndex];
-    const audio = getAudioElement();
-    if (audio.src !== track.src) {
-      audio.src = track.src;
-    }
-    audio.currentTime = 0;
-    audio.volume = volume;
-    currentIndex = wrappedIndex;
-    preferredTrackId = track.id;
-    emitChange('track');
-    tryPlay();
-    return true;
-  };
-
-  const setupUnlockListeners = () => {
-    if (unlockListenersAttached || typeof document === 'undefined') {
-      return;
-    }
-    unlockListenersAttached = true;
-    awaitingUserGesture = true;
-    const unlock = () => {
-      awaitingUserGesture = false;
-      tryPlay();
-    };
-    document.addEventListener('pointerdown', unlock, { once: true, capture: false });
-    document.addEventListener('keydown', unlock, { once: true, capture: false });
-  };
-
-  const loadJsonList = async fileName => {
-    try {
-      const response = await fetch(`${MUSIC_DIR}${fileName}`, { cache: 'no-store' });
-      if (!response.ok) {
-        return [];
-      }
-      const data = await response.json();
-      if (Array.isArray(data)) {
-        return data;
-      }
-      if (data && Array.isArray(data.files)) {
-        return data.files;
-      }
-      if (data && Array.isArray(data.tracks)) {
-        return data.tracks;
-      }
-      return [];
-    } catch (error) {
-      return [];
-    }
-  };
-
-  const loadDirectoryListing = async () => {
-    try {
-      const response = await fetch(MUSIC_DIR, { cache: 'no-store' });
-      if (!response.ok) {
-        return [];
-      }
-      const contentType = response.headers.get('content-type') || '';
-      if (contentType.includes('application/json')) {
-        const data = await response.json();
-        if (Array.isArray(data)) {
-          return data;
-        }
-        if (data && Array.isArray(data.files)) {
-          return data.files;
-        }
-        if (data && Array.isArray(data.tracks)) {
-          return data.tracks;
-        }
-        return [];
-      }
-      const text = await response.text();
-      const matches = Array.from(
-        text.matchAll(/href="([^"?#]+\.(?:mp3|ogg|wav|webm|m4a))"/gi)
-      );
-      return matches.map(match => match[1]).filter(Boolean);
-    } catch (error) {
-      return [];
-    }
-  };
-
-  const sortTrackList = list => {
-    return list
-      .slice()
-      .sort((a, b) => {
-        const nameA = (a?.displayName || a?.filename || '').toString();
-        const nameB = (b?.displayName || b?.filename || '').toString();
-        return compareTextLocalized(nameA, nameB, { sensitivity: 'base' });
-      });
-  };
-
-  const verifyTrackAvailability = async list => {
-    const results = await Promise.all(
-      list.map(async track => {
-        if (!track || !track.placeholder) {
-          return track;
-        }
-        if (typeof window !== 'undefined' && window.location?.protocol === 'file:') {
-          return { ...track, placeholder: false };
-        }
-        try {
-          const response = await fetch(track.src, { method: 'HEAD', cache: 'no-store' });
-          if (response.ok) {
-            return { ...track, placeholder: false };
-          }
-          if (response.status === 405) {
-            const rangeResponse = await fetch(track.src, {
-              method: 'GET',
-              headers: { Range: 'bytes=0-0' },
-              cache: 'no-store'
-            });
-            if (rangeResponse.ok) {
-              return { ...track, placeholder: false };
-            }
-          }
-        } catch (error) {
-          try {
-            const fallbackResponse = await fetch(track.src, {
-              method: 'GET',
-              headers: { Range: 'bytes=0-0' },
-              cache: 'no-store'
-            });
-            if (fallbackResponse.ok) {
-              return { ...track, placeholder: false };
-            }
-          } catch (innerError) {
-            // Ignore network failures and keep placeholder flag.
-          }
-        }
-        return track;
-      })
-    );
-    return results;
-  };
-
-  const discoverTracks = async () => {
-    const discovered = new Set();
-    const pushCandidate = candidate => {
-      const normalized = normalizeCandidate(candidate);
-      if (!normalized || !isSupportedFile(normalized)) {
-        return;
-      }
-      discovered.add(normalized);
-    };
-
-    for (const manifest of ['tracks.json', 'manifest.json', 'playlist.json', 'music.json', 'list.json']) {
-      const entries = await loadJsonList(manifest);
-      entries.forEach(pushCandidate);
-      if (discovered.size > 0) {
-        break;
-      }
-    }
-
-    if (discovered.size === 0) {
-      const listing = await loadDirectoryListing();
-      listing.forEach(pushCandidate);
-    }
-
-    if (discovered.size > 0) {
-      return Array.from(discovered)
-        .map(name => createTrack(name))
-        .filter(Boolean);
-    }
-
-    return FALLBACK_TRACKS.map(name => createTrack(name, { placeholder: true })).filter(Boolean);
-  };
-
-  const init = (options = {}) => {
-    if (readyPromise) {
-      if (typeof options.volume === 'number') {
-        setVolumeValue(options.volume);
-      }
-      if (typeof options.preferredTrackId === 'string') {
-        const trimmed = options.preferredTrackId.trim();
-        if (!trimmed || ['none', 'off', 'stop'].includes(trimmed.toLowerCase())) {
-          preferredTrackId = null;
-          stop({ keepPreference: false });
-        } else {
-          preferredTrackId = sanitizeFileName(trimmed) || null;
-          if (preferredTrackId && options.autoplay !== false) {
-            const preferredIndex = findIndexForId(preferredTrackId);
-            if (preferredIndex >= 0) {
-              playIndex(preferredIndex);
-            }
-          } else if (options.autoplay === false) {
-            stop({ keepPreference: Boolean(preferredTrackId) });
-          }
-        }
-      } else if (options.autoplay === false) {
-        stop({ keepPreference: Boolean(preferredTrackId) });
-      }
-      return readyPromise;
-    }
-
-    if (typeof options.volume === 'number') {
-      setVolumeValue(options.volume, { silent: true });
-    }
-
-    if (typeof options.preferredTrackId === 'string') {
-      const rawPreference = options.preferredTrackId.trim();
-      if (!rawPreference || ['none', 'off', 'stop'].includes(rawPreference.toLowerCase())) {
-        preferredTrackId = null;
-      } else {
-        preferredTrackId = sanitizeFileName(rawPreference);
-        if (preferredTrackId && !preferredTrackId.trim()) {
-          preferredTrackId = null;
-        }
-      }
-    } else {
-      preferredTrackId = null;
-    }
-
-    const autoplay = options?.autoplay !== false;
-
-    setupUnlockListeners();
-
-    readyPromise = discoverTracks()
-      .then(async foundTracks => {
-        const verified = await verifyTrackAvailability(foundTracks);
-        tracks = sortTrackList(verified);
-        emitChange('tracks');
-        if (!tracks.length) {
-          currentIndex = -1;
-          emitChange('track');
-          if (!autoplay) {
-            stop({ keepPreference: Boolean(preferredTrackId) });
-          }
-          return tracks;
-        }
-        if (!autoplay) {
-          stop({ keepPreference: Boolean(preferredTrackId) });
-          return tracks;
-        }
-        const preferredIndex = preferredTrackId ? findIndexForId(preferredTrackId) : -1;
-        const indexToPlay = preferredIndex >= 0
-          ? preferredIndex
-          : Math.floor(Math.random() * tracks.length);
-        playIndex(indexToPlay);
-        return tracks;
-      })
-      .catch(error => {
-        console.error('Erreur de découverte des pistes musicales', error);
-        const fallbackList = FALLBACK_TRACKS.map(name => createTrack(name, { placeholder: true })).filter(Boolean);
-        return verifyTrackAvailability(fallbackList).then(verifiedFallback => {
-          tracks = sortTrackList(verifiedFallback);
-          emitChange('tracks');
-          if (!tracks.length) {
-            currentIndex = -1;
-            emitChange('track');
-            return tracks;
-          }
-          if (!autoplay) {
-            stop({ keepPreference: Boolean(preferredTrackId) });
-            return tracks;
-          }
-          const preferredIndex = preferredTrackId ? findIndexForId(preferredTrackId) : -1;
-          playIndex(preferredIndex >= 0 ? preferredIndex : Math.floor(Math.random() * tracks.length));
-          return tracks;
-        });
-      });
-
-    return readyPromise;
-  };
-
-  const ready = () => {
-    if (readyPromise) {
-      return readyPromise;
-    }
-    return init();
-  };
-
-  const getTracks = () => tracks.map(track => ({ ...track }));
-
-  const getCurrentTrack = () => {
-    if (currentIndex < 0 || currentIndex >= tracks.length) {
-      return null;
-    }
-    return { ...tracks[currentIndex] };
-  };
-
-  const getCurrentTrackId = () => {
-    const current = getCurrentTrack();
-    return current ? current.id : null;
-  };
-
-  const playTrackById = id => {
-    const raw = typeof id === 'string' ? id.trim() : '';
-    const normalized = raw.toLowerCase();
-    if (!raw || normalized === 'none' || normalized === 'off' || normalized === 'stop') {
-      stop({ keepPreference: false });
-      return true;
-    }
-    const sanitized = sanitizeFileName(raw);
-    if (!sanitized) {
-      stop({ keepPreference: false });
-      return true;
-    }
-    preferredTrackId = sanitized;
-    if (!tracks.length) {
-      emitChange('track');
-      return false;
-    }
-    const index = findIndexForId(sanitized);
-    if (index === -1) {
-      emitChange('track');
-      return false;
-    }
-    return playIndex(index);
-  };
-
-  const onChange = listener => {
-    if (typeof listener !== 'function') {
-      return () => {};
-    }
-    changeListeners.add(listener);
-    return () => {
-      changeListeners.delete(listener);
-    };
-  };
-
-  return {
-    init,
-    ready,
-    getTracks,
-    getCurrentTrack,
-    getCurrentTrackId,
-    getPlaybackState,
-    playTrackById,
-    stop,
-    setVolume: (value, options) => setVolumeValue(value, options || {}),
-    getVolume: () => getVolumeValue(),
-    onChange,
-    isAwaitingUserGesture: () => awaitingUserGesture
-  };
-})();
+const musicPlayer = createMusicPlayer({
+  supportedExtensions: MUSIC_SUPPORTED_EXTENSIONS,
+  fallbackTracks: MUSIC_FALLBACK_TRACKS,
+  defaultVolume: DEFAULT_MUSIC_VOLUME,
+  compareText: (a, b, options) => compareTextLocalized(a, b, options)
+});
 
 function updateMusicSelectOptions() {
   const select = elements.musicTrackSelect;
@@ -4976,7 +3534,7 @@ function updateDevKitUI() {
     elements.devkitToggleGacha.textContent = `Tirages gratuits : ${active ? 'activés' : 'désactivés'}`;
   }
   if (elements.devkitUnlockInfo) {
-    const unlocked = areInfoBonusesUnlocked();
+    const unlocked = infoController.areInfoBonusesUnlocked();
     elements.devkitUnlockInfo.disabled = unlocked;
     elements.devkitUnlockInfo.setAttribute('aria-disabled', unlocked ? 'true' : 'false');
     const i18nKey = unlocked
@@ -5195,7 +3753,10 @@ function devkitUnlockAllTrophies() {
   if (newlyUnlocked > 0) {
     recalcProduction();
     updateUI();
-    updateGoalsUI();
+    if (goalsController) {
+      goalsController.update();
+      goalsController.updateMilestone();
+    }
     evaluatePageUnlocks({ save: false });
     saveGame();
     showToast(t('scripts.app.devkit.trophiesUnlocked', { count: newlyUnlocked }));
@@ -5265,7 +3826,7 @@ function toggleDevKitCheat(key) {
   DEVKIT_STATE.cheats[key] = !DEVKIT_STATE.cheats[key];
   updateDevKitUI();
   if (key === 'freeShop') {
-    updateShopAffordability();
+    shopController.updateAffordability();
     showToast(DEVKIT_STATE.cheats[key]
       ? t('scripts.app.devkit.freeShopEnabled')
       : t('scripts.app.devkit.freeShopDisabled'));
@@ -5277,26 +3838,6 @@ function toggleDevKitCheat(key) {
   }
 }
 
-const SHOP_PURCHASE_AMOUNTS = [1, 10, 100];
-const shopRows = new Map();
-let lastVisibleShopIndex = -1;
-let lastVisibleShopBonusIds = new Set();
-const FAMILY_DESCRIPTION_KEYS = {
-  'alkali-metal': 'scripts.app.table.family.descriptions.alkaliMetal',
-  'alkaline-earth-metal': 'scripts.app.table.family.descriptions.alkalineEarthMetal',
-  'transition-metal': 'scripts.app.table.family.descriptions.transitionMetal',
-  'post-transition-metal': 'scripts.app.table.family.descriptions.postTransitionMetal',
-  metalloid: 'scripts.app.table.family.descriptions.metalloid',
-  nonmetal: 'scripts.app.table.family.descriptions.nonmetal',
-  halogen: 'scripts.app.table.family.descriptions.halogen',
-  'noble-gas': 'scripts.app.table.family.descriptions.nobleGas',
-  lanthanide: 'scripts.app.table.family.descriptions.lanthanide',
-  actinide: 'scripts.app.table.family.descriptions.actinide'
-};
-const periodicCells = new Map();
-let selectedElementId = null;
-let elementDetailsLastTrigger = null;
-let elementFamilyLastTrigger = null;
 let gamePageVisibleSince = null;
 
 function getShopUnlockSet() {
@@ -5698,829 +4239,6 @@ function formatDuration(ms) {
   parts.push(`${minuteStr}m`);
   parts.push(`${seconds.toString().padStart(2, '0')}s`);
   return parts.join(' ');
-}
-
-function isElementDetailsModalOpen() {
-  return Boolean(elements.elementDetailsOverlay && !elements.elementDetailsOverlay.hasAttribute('hidden'));
-}
-
-function updateElementDetailsModalContent(definition) {
-  if (!definition || !elements.elementDetailsOverlay) {
-    return;
-  }
-  const { symbol, name } = getPeriodicElementDisplay(definition);
-  const displaySymbol = symbol || '';
-  const displayName = name || '';
-  const atomicNumber = definition.atomicNumber != null ? definition.atomicNumber : '';
-  if (elements.elementDetailsTitle) {
-    let titleKey = 'index.sections.table.modal.titleFallback';
-    let fallbackTitle = atomicNumber ? `Element ${atomicNumber}` : 'Element details';
-    if (displayName && displaySymbol) {
-      titleKey = 'index.sections.table.modal.title';
-      fallbackTitle = `${displayName} (${displaySymbol})`;
-    } else if (displayName) {
-      titleKey = 'index.sections.table.modal.titleNameOnly';
-      fallbackTitle = displayName;
-    } else if (displaySymbol) {
-      titleKey = 'index.sections.table.modal.titleSymbolOnly';
-      fallbackTitle = displaySymbol;
-    }
-    const titleText = translateOrDefault(titleKey, fallbackTitle, {
-      name: displayName,
-      symbol: displaySymbol,
-      number: atomicNumber || definition.id || '',
-    });
-    elements.elementDetailsTitle.textContent = titleText;
-  }
-  if (elements.elementDetailsBody) {
-    const container = elements.elementDetailsBody;
-    const fallbackText = t('index.sections.table.modal.comingSoon');
-    container.innerHTML = '';
-    container.classList.remove('element-details-overlay__content--placeholder');
-    const details = getPeriodicElementDetails(definition);
-
-    const summaryText = typeof details?.summary === 'string' ? details.summary.trim() : '';
-    const bodyText = typeof details?.body === 'string' ? details.body.trim() : '';
-    const paragraphTexts = Array.isArray(details?.paragraphs)
-      ? details.paragraphs
-          .map(paragraph => (typeof paragraph === 'string' ? paragraph.trim() : ''))
-          .filter(text => text.length)
-      : [];
-    const sources = Array.isArray(details?.sources)
-      ? details.sources
-          .map(source => (typeof source === 'string' ? source.trim() : ''))
-          .filter(text => text.length)
-      : [];
-
-    let hasContent = false;
-    const fragment = document.createDocumentFragment();
-
-    if (summaryText) {
-      const summary = document.createElement('p');
-      summary.className = 'element-details-overlay__summary';
-      summary.textContent = summaryText;
-      fragment.appendChild(summary);
-      hasContent = true;
-    }
-
-    const effectiveParagraphs = paragraphTexts.length ? paragraphTexts : (bodyText ? [bodyText] : []);
-    effectiveParagraphs.forEach(text => {
-      const paragraph = document.createElement('p');
-      paragraph.className = 'element-details-overlay__paragraph';
-      paragraph.textContent = text;
-      fragment.appendChild(paragraph);
-      hasContent = true;
-    });
-
-    if (sources.length) {
-      const sourcesWrapper = document.createElement('div');
-      sourcesWrapper.className = 'element-details-overlay__sources';
-
-      const label = document.createElement('p');
-      label.className = 'element-details-overlay__sources-label';
-      label.textContent = t('index.sections.table.modal.sourcesLabel');
-      sourcesWrapper.appendChild(label);
-
-      const list = document.createElement('ul');
-      list.className = 'element-details-overlay__sources-list';
-      sources.forEach(text => {
-        const item = document.createElement('li');
-        item.className = 'element-details-overlay__sources-item';
-        item.textContent = text;
-        list.appendChild(item);
-      });
-      sourcesWrapper.appendChild(list);
-      fragment.appendChild(sourcesWrapper);
-      hasContent = true;
-    }
-
-    if (hasContent) {
-      container.appendChild(fragment);
-    } else {
-      const placeholder = document.createElement('p');
-      placeholder.className = 'element-details-overlay__placeholder';
-      placeholder.textContent = fallbackText;
-      container.appendChild(placeholder);
-      container.classList.add('element-details-overlay__content--placeholder');
-    }
-  }
-  elements.elementDetailsOverlay.dataset.elementId = definition.id;
-  if (elements.elementDetailsDialog) {
-    elements.elementDetailsDialog.dataset.elementId = definition.id;
-  }
-}
-
-function openElementDetailsModal(elementId, { trigger = null } = {}) {
-  if (!elements.elementDetailsOverlay || !periodicElementIndex.has(elementId)) {
-    return;
-  }
-  const definition = periodicElementIndex.get(elementId);
-  updateElementDetailsModalContent(definition);
-  elements.elementDetailsOverlay.hidden = false;
-  elements.elementDetailsOverlay.setAttribute('aria-hidden', 'false');
-  document.body.classList.add('element-details-modal-open');
-  elementDetailsLastTrigger = trigger || document.activeElement || elements.elementInfoSymbol;
-  if (elements.elementInfoSymbol) {
-    elements.elementInfoSymbol.setAttribute('aria-expanded', 'true');
-  }
-  if (elements.elementDetailsDialog) {
-    elements.elementDetailsDialog.focus({ preventScroll: true });
-  }
-  if (elements.elementDetailsCloseButton) {
-    const closeLabel = t('index.sections.table.modal.close');
-    if (closeLabel) {
-      elements.elementDetailsCloseButton.setAttribute('aria-label', closeLabel);
-    }
-  }
-  document.addEventListener('keydown', handleElementDetailsKeydown, true);
-}
-
-function closeElementDetailsModal({ restoreFocus = true } = {}) {
-  if (!isElementDetailsModalOpen()) {
-    return;
-  }
-  elements.elementDetailsOverlay.hidden = true;
-  elements.elementDetailsOverlay.setAttribute('aria-hidden', 'true');
-  document.body.classList.remove('element-details-modal-open');
-  if (elements.elementInfoSymbol) {
-    elements.elementInfoSymbol.setAttribute('aria-expanded', 'false');
-  }
-  if (elements.elementDetailsOverlay.dataset.elementId) {
-    delete elements.elementDetailsOverlay.dataset.elementId;
-  }
-  if (elements.elementDetailsDialog?.dataset?.elementId) {
-    delete elements.elementDetailsDialog.dataset.elementId;
-  }
-  document.removeEventListener('keydown', handleElementDetailsKeydown, true);
-  const lastTrigger = elementDetailsLastTrigger;
-  elementDetailsLastTrigger = null;
-  if (restoreFocus && lastTrigger && typeof lastTrigger.focus === 'function') {
-    lastTrigger.focus({ preventScroll: true });
-  }
-}
-
-function handleElementDetailsKeydown(event) {
-  if (!isElementDetailsModalOpen()) {
-    return;
-  }
-  if (event.key === 'Escape') {
-    event.preventDefault();
-    closeElementDetailsModal();
-    return;
-  }
-  if (event.key === 'Tab' && elements.elementDetailsDialog) {
-    const focusableSelectors = [
-      'button:not([disabled])',
-      '[href]',
-      'input:not([disabled])',
-      'select:not([disabled])',
-      'textarea:not([disabled])',
-      '[tabindex]:not([tabindex="-1"])',
-    ];
-    const focusable = Array.from(
-      elements.elementDetailsDialog.querySelectorAll(focusableSelectors.join(','))
-    ).filter(el => !(el.hasAttribute('disabled') || el.getAttribute('aria-hidden') === 'true'));
-    if (!focusable.length) {
-      event.preventDefault();
-      elements.elementDetailsDialog.focus({ preventScroll: true });
-      return;
-    }
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-    if (event.shiftKey) {
-      if (document.activeElement === first || document.activeElement === elements.elementDetailsDialog) {
-        event.preventDefault();
-        last.focus({ preventScroll: true });
-      }
-    } else if (document.activeElement === last) {
-      event.preventDefault();
-      first.focus({ preventScroll: true });
-    }
-  }
-}
-
-function isElementFamilyModalOpen() {
-  return Boolean(elements.elementFamilyOverlay && !elements.elementFamilyOverlay.hasAttribute('hidden'));
-}
-
-function getFamilyDescription(familyId, familyLabel) {
-  if (!familyId) {
-    return translateOrDefault(
-      'scripts.app.table.family.descriptions.placeholder',
-      `Description de la famille ${familyLabel} à venir.`,
-      { family: familyLabel }
-    );
-  }
-  const messageKey = FAMILY_DESCRIPTION_KEYS[familyId];
-  if (messageKey) {
-    const translated = t(messageKey);
-    if (translated && translated !== messageKey) {
-      return translated;
-    }
-  }
-  return translateOrDefault(
-    'scripts.app.table.family.descriptions.placeholder',
-    `Description de la famille ${familyLabel} à venir.`,
-    { family: familyLabel }
-  );
-}
-
-function updateElementFamilyModalContent(familyId) {
-  if (!familyId || !elements.elementFamilyOverlay) {
-    return;
-  }
-  const familyLabel = CATEGORY_LABELS[familyId] || familyId;
-  if (elements.elementFamilyTitle) {
-    const titleText = translateOrDefault(
-      'index.sections.table.family.modal.title',
-      `Famille · ${familyLabel}`,
-      { family: familyLabel }
-    );
-    elements.elementFamilyTitle.textContent = titleText;
-  }
-  if (elements.elementFamilyBody) {
-    const description = getFamilyDescription(familyId, familyLabel);
-    elements.elementFamilyBody.textContent = description;
-  }
-  elements.elementFamilyOverlay.dataset.familyId = familyId;
-  if (elements.elementFamilyDialog) {
-    elements.elementFamilyDialog.dataset.familyId = familyId;
-  }
-}
-
-function openElementFamilyModal(familyId, { trigger = null } = {}) {
-  if (!familyId || !elements.elementFamilyOverlay) {
-    return;
-  }
-  updateElementFamilyModalContent(familyId);
-  elements.elementFamilyOverlay.hidden = false;
-  elements.elementFamilyOverlay.setAttribute('aria-hidden', 'false');
-  document.body.classList.add('element-family-modal-open');
-  elementFamilyLastTrigger = trigger || document.activeElement || elements.elementInfoCategoryButton;
-  if (elements.elementInfoCategoryButton) {
-    elements.elementInfoCategoryButton.setAttribute('aria-expanded', 'true');
-  }
-  if (elements.elementFamilyDialog) {
-    elements.elementFamilyDialog.focus({ preventScroll: true });
-  }
-  if (elements.elementFamilyCloseButton) {
-    const closeLabel = t('index.sections.table.modal.close');
-    if (closeLabel) {
-      elements.elementFamilyCloseButton.setAttribute('aria-label', closeLabel);
-    }
-  }
-  document.addEventListener('keydown', handleElementFamilyKeydown, true);
-}
-
-function closeElementFamilyModal({ restoreFocus = true } = {}) {
-  if (!isElementFamilyModalOpen()) {
-    return;
-  }
-  elements.elementFamilyOverlay.hidden = true;
-  elements.elementFamilyOverlay.setAttribute('aria-hidden', 'true');
-  document.body.classList.remove('element-family-modal-open');
-  if (elements.elementInfoCategoryButton) {
-    elements.elementInfoCategoryButton.setAttribute('aria-expanded', 'false');
-  }
-  if (elements.elementFamilyOverlay.dataset.familyId) {
-    delete elements.elementFamilyOverlay.dataset.familyId;
-  }
-  if (elements.elementFamilyDialog?.dataset?.familyId) {
-    delete elements.elementFamilyDialog.dataset.familyId;
-  }
-  document.removeEventListener('keydown', handleElementFamilyKeydown, true);
-  const lastTrigger = elementFamilyLastTrigger;
-  elementFamilyLastTrigger = null;
-  if (restoreFocus && lastTrigger && typeof lastTrigger.focus === 'function') {
-    lastTrigger.focus({ preventScroll: true });
-  }
-}
-
-function handleElementFamilyKeydown(event) {
-  if (!isElementFamilyModalOpen()) {
-    return;
-  }
-  if (event.key === 'Escape') {
-    event.preventDefault();
-    closeElementFamilyModal();
-    return;
-  }
-  if (event.key === 'Tab' && elements.elementFamilyDialog) {
-    const focusableSelectors = [
-      'button:not([disabled])',
-      '[href]',
-      'input:not([disabled])',
-      'select:not([disabled])',
-      'textarea:not([disabled])',
-      '[tabindex]:not([tabindex="-1"])',
-    ];
-    const focusable = Array.from(
-      elements.elementFamilyDialog.querySelectorAll(focusableSelectors.join(','))
-    ).filter(el => !(el.hasAttribute('disabled') || el.getAttribute('aria-hidden') === 'true'));
-    if (!focusable.length) {
-      event.preventDefault();
-      elements.elementFamilyDialog.focus({ preventScroll: true });
-      return;
-    }
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-    if (event.shiftKey) {
-      if (document.activeElement === first || document.activeElement === elements.elementFamilyDialog) {
-        event.preventDefault();
-        last.focus({ preventScroll: true });
-      }
-    } else if (document.activeElement === last) {
-      event.preventDefault();
-      first.focus({ preventScroll: true });
-    }
-  }
-}
-
-function updateElementInfoPanel(definition) {
-  const panel = elements.elementInfoPanel;
-  const placeholder = elements.elementInfoPlaceholder;
-  const content = elements.elementInfoContent;
-  if (!panel) return;
-
-  if (!definition) {
-    if (elements.elementInfoSymbol) {
-      elements.elementInfoSymbol.textContent = '';
-      elements.elementInfoSymbol.disabled = true;
-      elements.elementInfoSymbol.setAttribute('aria-expanded', 'false');
-      elements.elementInfoSymbol.removeAttribute('aria-label');
-      elements.elementInfoSymbol.removeAttribute('title');
-      if (elements.elementInfoSymbol.dataset.elementId) {
-        delete elements.elementInfoSymbol.dataset.elementId;
-      }
-    }
-    if (elements.elementInfoCategoryButton) {
-      elements.elementInfoCategoryButton.textContent = '';
-      elements.elementInfoCategoryButton.disabled = true;
-      elements.elementInfoCategoryButton.setAttribute('aria-expanded', 'false');
-      elements.elementInfoCategoryButton.removeAttribute('aria-label');
-      elements.elementInfoCategoryButton.removeAttribute('title');
-      if (elements.elementInfoCategoryButton.dataset.familyId) {
-        delete elements.elementInfoCategoryButton.dataset.familyId;
-      }
-    }
-    if (isElementDetailsModalOpen()) {
-      closeElementDetailsModal({ restoreFocus: false });
-    }
-    if (isElementFamilyModalOpen()) {
-      closeElementFamilyModal({ restoreFocus: false });
-    }
-    if (panel.dataset.category) {
-      delete panel.dataset.category;
-    }
-    if (content) {
-      content.hidden = true;
-    }
-    if (placeholder) {
-      placeholder.hidden = false;
-    }
-    return;
-  }
-
-  if (definition.category) {
-    panel.dataset.category = definition.category;
-  } else if (panel.dataset.category) {
-    delete panel.dataset.category;
-  }
-
-  if (placeholder) {
-    placeholder.hidden = true;
-  }
-  if (content) {
-    content.hidden = false;
-  }
-
-  if (elements.elementInfoNumber) {
-    elements.elementInfoNumber.textContent =
-      definition.atomicNumber != null ? definition.atomicNumber : '—';
-  }
-  const { symbol, name } = getPeriodicElementDisplay(definition);
-  if (elements.elementInfoSymbol) {
-    const symbolButton = elements.elementInfoSymbol;
-    const displaySymbol = symbol ?? '';
-    symbolButton.textContent = displaySymbol;
-    const hasSymbol = Boolean(displaySymbol);
-    const hasName = Boolean(name);
-    symbolButton.disabled = !(hasSymbol || hasName);
-    if (!symbolButton.disabled) {
-      const openLabel = hasName
-        ? translateOrDefault(
-            'index.sections.table.modal.open',
-            `Open detailed sheet for ${name}`,
-            { name, symbol: displaySymbol }
-          )
-        : translateOrDefault(
-            'index.sections.table.modal.openSymbol',
-            `Open detailed sheet for ${displaySymbol}`,
-            { symbol: displaySymbol }
-          );
-      symbolButton.setAttribute('aria-label', openLabel);
-      symbolButton.setAttribute('title', openLabel);
-      symbolButton.dataset.elementId = definition.id;
-    } else {
-      symbolButton.removeAttribute('aria-label');
-      symbolButton.removeAttribute('title');
-      if (symbolButton.dataset.elementId) {
-        delete symbolButton.dataset.elementId;
-      }
-    }
-    const openElementId = elements.elementDetailsOverlay?.dataset?.elementId || null;
-    symbolButton.setAttribute('aria-expanded', openElementId === definition.id ? 'true' : 'false');
-  }
-  if (elements.elementInfoName) {
-    elements.elementInfoName.textContent = name ?? '';
-  }
-  if (elements.elementInfoCategoryButton) {
-    const categoryButton = elements.elementInfoCategoryButton;
-    const hasCategory = Boolean(definition.category);
-    const label = hasCategory
-      ? CATEGORY_LABELS[definition.category] || definition.category
-      : '—';
-    categoryButton.textContent = label;
-    categoryButton.disabled = !hasCategory;
-    const familyLabelText = translateOrDefault(
-      'index.sections.table.details.family',
-      'Famille'
-    );
-    const openFamilyId = elements.elementFamilyOverlay?.dataset?.familyId || null;
-    if (hasCategory) {
-      categoryButton.dataset.familyId = definition.category;
-      const openLabel = translateOrDefault(
-        'index.sections.table.family.open',
-        `${familyLabelText ? `${familyLabelText} : ` : ''}${label}. Ouvrir la fiche famille.`,
-        { family: label, label: familyLabelText || '' }
-      );
-      if (openLabel) {
-        categoryButton.setAttribute('aria-label', openLabel);
-        categoryButton.setAttribute('title', openLabel);
-      } else {
-        categoryButton.removeAttribute('aria-label');
-        categoryButton.removeAttribute('title');
-      }
-      categoryButton.setAttribute('aria-expanded', openFamilyId === definition.category ? 'true' : 'false');
-      if (isElementFamilyModalOpen() && openFamilyId === definition.category) {
-        updateElementFamilyModalContent(definition.category);
-      }
-    } else {
-      if (categoryButton.dataset.familyId) {
-        delete categoryButton.dataset.familyId;
-      }
-      categoryButton.setAttribute('aria-expanded', 'false');
-      categoryButton.removeAttribute('aria-label');
-      categoryButton.removeAttribute('title');
-      if (isElementFamilyModalOpen()) {
-        closeElementFamilyModal({ restoreFocus: false });
-      }
-    }
-  }
-  const entry = gameState.elements?.[definition.id];
-  const count = getElementCurrentCount(entry);
-  const lifetimeCount = getElementLifetimeCount(entry);
-  if (elements.elementInfoOwnedCount) {
-    const displayCount = formatIntegerLocalized(count);
-    const lifetimeDisplay = formatIntegerLocalized(lifetimeCount);
-    elements.elementInfoOwnedCount.textContent = displayCount;
-    const ownedAria = translateOrDefault(
-      'scripts.app.table.info.ownedAria',
-      `Copies actives\u00a0: ${displayCount}. Collectées au total\u00a0: ${lifetimeDisplay}`,
-      { active: displayCount, lifetime: lifetimeDisplay }
-    );
-    elements.elementInfoOwnedCount.setAttribute('aria-label', ownedAria);
-    const ownedTitle = translateOrDefault(
-      'scripts.app.table.info.ownedTitle',
-      `Copies actives\u00a0: ${displayCount}\nCollectées au total\u00a0: ${lifetimeDisplay}`,
-      { active: displayCount, lifetime: lifetimeDisplay }
-    );
-    elements.elementInfoOwnedCount.setAttribute('title', ownedTitle);
-  }
-  if (elements.elementInfoCollection) {
-    const rarityId = entry?.rarity || elementRarityIndex.get(definition.id);
-    const rarityDef = rarityId ? GACHA_RARITY_MAP.get(rarityId) : null;
-    const rarityLabel = rarityDef?.label || rarityId || '—';
-    const hasRarityLabel = Boolean(rarityLabel && rarityLabel !== '—');
-    const bonusDetails = [];
-    const seenDetailTexts = new Set();
-    const addDetail = detail => {
-      const normalized = normalizeCollectionDetailText(detail);
-      if (!normalized) {
-        return;
-      }
-      if (seenDetailTexts.has(normalized)) {
-        return;
-      }
-      seenDetailTexts.add(normalized);
-      bonusDetails.push(detail.trim());
-    };
-    if (rarityId) {
-      const overview = getCollectionBonusOverview(rarityId);
-      overview.forEach(addDetail);
-    }
-
-    if (!bonusDetails.length && rarityDef?.description) {
-      addDetail(rarityDef.description);
-    }
-
-    if (bonusDetails.length) {
-      elements.elementInfoCollection.textContent = hasRarityLabel
-        ? `${rarityLabel} · ${bonusDetails.join(' · ')}`
-        : bonusDetails.join(' · ');
-    } else {
-      elements.elementInfoCollection.textContent = rarityLabel;
-    }
-  }
-
-  if (isElementDetailsModalOpen()) {
-    const openId = elements.elementDetailsOverlay?.dataset?.elementId;
-    if (openId === definition.id) {
-      updateElementDetailsModalContent(definition);
-    }
-  }
-}
-
-function selectPeriodicElement(id, { focus = false } = {}) {
-  if (!id || !periodicElementIndex.has(id)) {
-    selectedElementId = null;
-    periodicCells.forEach(cell => {
-      cell.classList.remove('is-selected');
-      cell.setAttribute('aria-pressed', 'false');
-    });
-    updateElementInfoPanel(null);
-    return;
-  }
-
-  selectedElementId = id;
-  periodicCells.forEach((cell, elementId) => {
-    const isSelected = elementId === id;
-    cell.classList.toggle('is-selected', isSelected);
-    cell.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
-  });
-
-  const definition = periodicElementIndex.get(id);
-  updateElementInfoPanel(definition);
-
-  if (focus) {
-    const target = periodicCells.get(id);
-    if (target) {
-      target.focus();
-    }
-  }
-}
-
-function renderPeriodicTable() {
-  if (!elements.periodicTable) return;
-  const infoPanel = elements.elementInfoPanel;
-  const summaryTile = elements.collectionSummaryTile;
-  if (infoPanel) {
-    infoPanel.remove();
-  }
-  if (summaryTile) {
-    summaryTile.remove();
-  }
-
-  elements.periodicTable.innerHTML = '';
-  periodicCells.clear();
-
-  if (infoPanel) {
-    elements.periodicTable.appendChild(infoPanel);
-  }
-  if (summaryTile) {
-    elements.periodicTable.appendChild(summaryTile);
-  }
-
-  if (!periodicElements.length) {
-    const placeholder = document.createElement('p');
-    placeholder.className = 'periodic-placeholder';
-    placeholder.textContent = t('scripts.app.table.placeholder');
-    elements.periodicTable.appendChild(placeholder);
-    if (elements.collectionProgress) {
-      elements.collectionProgress.textContent = t('scripts.app.collection.pending');
-    }
-    selectPeriodicElement(null);
-    return;
-  }
-
-  const fragment = document.createDocumentFragment();
-  periodicElements.forEach(def => {
-    const cell = document.createElement('button');
-    cell.type = 'button';
-    cell.className = 'periodic-element';
-    cell.dataset.elementId = def.id;
-    cell.dataset.category = def.category ?? 'unknown';
-    if (def.atomicNumber != null) {
-      cell.dataset.atomicNumber = String(def.atomicNumber);
-    }
-    if (def.period != null) {
-      cell.dataset.period = String(def.period);
-    }
-    if (def.group != null) {
-      cell.dataset.group = String(def.group);
-    }
-    if (def.gachaId) {
-      cell.dataset.gachaId = def.gachaId;
-    }
-    const rarityId = elementRarityIndex.get(def.id);
-    if (rarityId) {
-      cell.dataset.rarity = rarityId;
-      const rarityDef = GACHA_RARITY_MAP.get(rarityId);
-      if (rarityDef?.color) {
-        cell.dataset.rarityColor = rarityDef.color;
-      } else {
-        delete cell.dataset.rarityColor;
-      }
-    } else {
-      delete cell.dataset.rarityColor;
-      cell.style.removeProperty('--rarity-color');
-    }
-    const { row, column } = def.position || {};
-    if (column) {
-      cell.style.gridColumn = String(column);
-    }
-    if (row) {
-      cell.style.gridRow = String(row);
-    }
-    const { symbol, name } = getPeriodicElementDisplay(def);
-    const displaySymbol = symbol || '';
-    const displayName = name || '';
-    const massText = formatAtomicMass(def.atomicMass);
-    const labelParts = [];
-    if (displayName) {
-      if (displaySymbol) {
-        labelParts.push(
-          translateOrDefault(
-            'scripts.app.table.aria.nameWithSymbol',
-            `${displayName} (${displaySymbol})`,
-            { name: displayName, symbol: displaySymbol }
-          )
-        );
-      } else {
-        labelParts.push(
-          translateOrDefault(
-            'scripts.app.table.aria.name',
-            displayName,
-            { name: displayName }
-          )
-        );
-      }
-    } else if (displaySymbol) {
-      labelParts.push(
-        translateOrDefault(
-          'scripts.app.table.aria.symbol',
-          displaySymbol,
-          { symbol: displaySymbol }
-        )
-      );
-    }
-    if (def.atomicNumber != null) {
-      labelParts.push(
-        translateOrDefault(
-          'scripts.app.table.aria.atomicNumber',
-          `numéro atomique ${def.atomicNumber}`,
-          { number: def.atomicNumber }
-        )
-      );
-    }
-    if (massText) {
-      labelParts.push(
-        translateOrDefault(
-          'scripts.app.table.aria.atomicMass',
-          `masse atomique ${massText}`,
-          { mass: massText }
-        )
-      );
-    }
-    if (def.category) {
-      const categoryLabel = CATEGORY_LABELS[def.category] || def.category;
-      labelParts.push(
-        translateOrDefault(
-          'scripts.app.table.aria.family',
-          `famille ${categoryLabel}`,
-          { family: categoryLabel }
-        )
-      );
-    }
-    cell.setAttribute('aria-label', labelParts.join(', '));
-
-    cell.innerHTML = `
-      <span class="periodic-element__symbol">${displaySymbol}</span>
-      <span class="periodic-element__number">${def.atomicNumber}</span>
-    `;
-    cell.setAttribute('aria-pressed', 'false');
-    cell.addEventListener('click', () => selectPeriodicElement(def.id));
-    cell.addEventListener('focus', () => selectPeriodicElement(def.id));
-
-    const state = gameState.elements[def.id];
-    const isOwned = hasElementLifetime(state);
-    applyPeriodicCellCollectionColor(cell, isOwned);
-    if (isOwned) {
-      cell.classList.add('is-owned');
-    }
-
-    periodicCells.set(def.id, cell);
-    fragment.appendChild(cell);
-  });
-
-  elements.periodicTable.appendChild(fragment);
-  if (selectedElementId && periodicCells.has(selectedElementId)) {
-    selectPeriodicElement(selectedElementId);
-  } else if (periodicElements.length) {
-    selectPeriodicElement(periodicElements[0].id);
-  } else {
-    selectPeriodicElement(null);
-  }
-  updateCollectionDisplay();
-}
-
-function updateCollectionDisplay() {
-  const elementEntries = Object.values(gameState.elements || {});
-  const ownedCount = elementEntries.reduce((total, entry) => {
-    return total + (hasElementLifetime(entry) ? 1 : 0);
-  }, 0);
-  const total = TOTAL_ELEMENT_COUNT || elementEntries.length;
-  const lifetimeTotal = elementEntries.reduce((sum, entry) => {
-    return sum + getElementLifetimeCount(entry);
-  }, 0);
-  const currentTotal = elementEntries.reduce((sum, entry) => {
-    return sum + getElementCurrentCount(entry);
-  }, 0);
-
-  if (elements.collectionProgress) {
-    if (total > 0) {
-      const ownedDisplay = formatIntegerLocalized(ownedCount);
-      const totalDisplay = formatIntegerLocalized(total);
-      elements.collectionProgress.textContent = translateOrDefault(
-        'scripts.app.table.collection.progress',
-        `Collection\u00a0: ${ownedDisplay} / ${totalDisplay} éléments`,
-        { owned: ownedDisplay, total: totalDisplay }
-      );
-    } else {
-      elements.collectionProgress.textContent = t('scripts.app.collection.pending');
-    }
-  }
-
-  if (elements.gachaOwnedSummary) {
-    if (total > 0) {
-      const ownedDisplay = formatIntegerLocalized(ownedCount);
-      const totalDisplay = formatIntegerLocalized(total);
-      const ratio = (ownedCount / total) * 100;
-      let ratioValue = ratio;
-      let ratioOptions = { maximumFractionDigits: 2 };
-      if (!Number.isFinite(ratioValue) || ratioValue < 0) {
-        ratioValue = 0;
-      }
-      if (ratioValue >= 99.95) {
-        ratioValue = 100;
-        ratioOptions = { maximumFractionDigits: 0 };
-      } else if (ratioValue >= 10) {
-        ratioOptions = { maximumFractionDigits: 1 };
-      }
-      const ratioDisplay = formatNumberLocalized(ratioValue, ratioOptions);
-      elements.gachaOwnedSummary.textContent = translateOrDefault(
-        'scripts.app.table.collection.summary',
-        `Collection\u00a0: ${ownedDisplay} / ${totalDisplay} éléments (${ratioDisplay}\u00a0%)`,
-        { owned: ownedDisplay, total: totalDisplay, ratio: ratioDisplay }
-      );
-    } else {
-      elements.gachaOwnedSummary.textContent = t('scripts.app.collection.pending');
-    }
-  }
-
-  const currentDisplay = formatIntegerLocalized(currentTotal);
-  const lifetimeDisplay = formatIntegerLocalized(lifetimeTotal);
-
-  if (elements.collectionSummaryCurrent) {
-    elements.collectionSummaryCurrent.textContent = currentDisplay;
-  }
-
-  if (elements.collectionSummaryLifetime) {
-    elements.collectionSummaryLifetime.textContent = lifetimeDisplay;
-  }
-
-  if (elements.collectionSummaryTile) {
-    const summaryLabel = translateOrDefault(
-      'scripts.app.table.summaryTile.aria',
-      `Total actuel\u00a0: ${currentDisplay} · Total historique\u00a0: ${lifetimeDisplay}`,
-      { current: currentDisplay, lifetime: lifetimeDisplay }
-    );
-    elements.collectionSummaryTile.setAttribute('aria-label', summaryLabel);
-    elements.collectionSummaryTile.setAttribute('title', summaryLabel);
-  }
-
-  periodicCells.forEach((cell, id) => {
-    const entry = gameState.elements?.[id];
-    const isOwned = hasElementLifetime(entry);
-    cell.classList.toggle('is-owned', isOwned);
-    applyPeriodicCellCollectionColor(cell, isOwned);
-  });
-
-  if (selectedElementId && periodicElementIndex.has(selectedElementId)) {
-    updateElementInfoPanel(periodicElementIndex.get(selectedElementId));
-  }
-
-  updateGachaRarityProgress();
 }
 
 function toLayeredValue(value, fallback = 0) {
@@ -7609,14 +5327,9 @@ function shouldTriggerGlobalClick(event) {
   return true;
 }
 
-function showPage(pageId) {
-  if (!isPageUnlocked(pageId)) {
-    if (pageId !== 'game') {
-      showPage('game');
-    }
-    return;
-  }
-  const now = performance.now();
+const MANUAL_LAYOUT_PAGES = Object.freeze(['game', 'wave']);
+
+function ensureLayoutPageReady(pageId) {
   if (pageId === 'wave') {
     ensureWaveGame();
   }
@@ -7626,48 +5339,23 @@ function showPage(pageId) {
   if (pageId === 'quantum2048') {
     ensureQuantum2048Game();
   }
-  elements.pages.forEach(page => {
-    const isActive = page.id === pageId;
-    page.classList.toggle('active', isActive);
-    page.toggleAttribute('hidden', !isActive);
-  });
-  elements.navButtons.forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.target === pageId);
-  });
-  document.body.dataset.activePage = pageId;
-  const activePageElement = typeof document !== 'undefined'
-    ? document.getElementById(pageId)
-    : null;
-  const rawPageGroup = activePageElement?.dataset?.pageGroup || 'clicker';
-  const normalizedPageGroup = typeof rawPageGroup === 'string'
-    ? rawPageGroup.trim().toLowerCase()
-    : '';
-  const activePageGroup = normalizedPageGroup === 'arcade'
-    ? 'arcade'
-    : 'clicker';
-  document.body.dataset.pageGroup = activePageGroup;
-  document.body.classList.toggle('view-game', pageId === 'game');
-  document.body.classList.toggle('view-arcade', pageId === 'arcade');
-  document.body.classList.toggle('view-arcade-hub', pageId === 'arcadeHub');
-  document.body.classList.toggle('view-metaux', pageId === 'metaux');
-  document.body.classList.toggle('view-wave', pageId === 'wave');
-  document.body.classList.toggle('view-balance', pageId === 'balance');
-  document.body.classList.toggle('view-quantum2048', pageId === 'quantum2048');
-  document.body.classList.toggle('view-sudoku', pageId === 'sudoku');
+}
+
+function handleLayoutPageDisplayed(pageId) {
   if (pageId === 'game') {
     randomizeAtomButtonImage();
   }
-  if (pageId === 'metaux') {
+  if (pageId === 'metaux' && typeof initMetauxGame === 'function') {
     initMetauxGame();
   }
-  if (particulesGame) {
+  if (typeof particulesGame !== 'undefined' && particulesGame) {
     if (pageId === 'arcade') {
       particulesGame.onEnter();
     } else {
       particulesGame.onLeave();
     }
   }
-  if (metauxGame) {
+  if (typeof metauxGame !== 'undefined' && metauxGame) {
     if (pageId === 'metaux') {
       metauxGame.onEnter();
     } else {
@@ -7695,68 +5383,89 @@ function showPage(pageId) {
       quantum2048Game.onLeave();
     }
   }
-  const manualPageActive = pageId === 'game' || pageId === 'wave';
-  if (manualPageActive && (typeof document === 'undefined' || !document.hidden)) {
-    gamePageVisibleSince = now;
-  } else {
-    gamePageVisibleSince = null;
-  }
-  if (pageId === 'gacha') {
-    const weightsUpdated = refreshGachaRarities(new Date());
-    if (weightsUpdated) {
-      rebuildGachaPools();
-      renderGachaRarityList();
-    }
-  }
-  updateFrenzyIndicators(now);
 }
 
-document.addEventListener('visibilitychange', () => {
-  if (typeof document === 'undefined') {
-    return;
-  }
-  const activePage = document.body?.dataset.activePage;
-  if (document.hidden) {
-    gamePageVisibleSince = null;
-    if (particulesGame && activePage === 'arcade') {
-      particulesGame.onLeave();
-    }
-    if (waveGame && activePage === 'wave') {
-      waveGame.onLeave();
-    }
-    if (quantum2048Game && activePage === 'quantum2048') {
-      quantum2048Game.onLeave();
-    }
-    return;
-  }
+function handleLayoutManualVisibilityChange({ active, now }) {
+  gamePageVisibleSince = active ? now : null;
+}
 
+function handleLayoutPageAfterEffects(pageId) {
+  if (pageId !== 'gacha') {
+    return;
+  }
+  if (typeof refreshGachaRarities !== 'function') {
+    return;
+  }
+  const weightsUpdated = refreshGachaRarities(new Date());
+  if (!weightsUpdated) {
+    return;
+  }
+  if (typeof rebuildGachaPools === 'function') {
+    rebuildGachaPools();
+  }
+  if (typeof renderGachaRarityList === 'function') {
+    renderGachaRarityList();
+  }
+}
+
+function handleLayoutVisibilityHidden(pageId) {
+  if (typeof particulesGame !== 'undefined' && particulesGame && pageId === 'arcade') {
+    particulesGame.onLeave();
+  }
+  if (pageId === 'wave' && waveGame) {
+    waveGame.onLeave();
+  }
+  if (pageId === 'quantum2048' && quantum2048Game) {
+    quantum2048Game.onLeave();
+  }
+}
+
+function handleLayoutVisibilityVisible(pageId, { now }) {
   if (isManualClickContextActive()) {
-    gamePageVisibleSince = performance.now();
-    if (particulesGame && activePage === 'arcade') {
+    handleLayoutManualVisibilityChange({ active: true, now, pageId });
+    if (typeof particulesGame !== 'undefined' && particulesGame && pageId === 'arcade') {
       particulesGame.onEnter();
     }
-    if (activePage === 'wave') {
+    if (pageId === 'wave') {
       ensureWaveGame();
       waveGame?.onEnter();
     }
-  } else if (particulesGame && activePage === 'arcade') {
+  } else if (typeof particulesGame !== 'undefined' && particulesGame && pageId === 'arcade') {
     particulesGame.onEnter();
-  } else if (activePage === 'wave') {
+  } else if (pageId === 'wave') {
     ensureWaveGame();
     waveGame?.onEnter();
   }
 
-  if (activePage === 'quantum2048') {
+  if (pageId === 'quantum2048') {
     ensureQuantum2048Game();
     quantum2048Game?.onEnter();
   }
+}
+
+const layoutController = initializeLayout({
+  elements,
+  isPageUnlocked,
+  ensurePageReady: ensureLayoutPageReady,
+  handlePageDisplayed: handleLayoutPageDisplayed,
+  handleManualPageVisibilityChange: handleLayoutManualVisibilityChange,
+  handlePageShownAfterEffects: handleLayoutPageAfterEffects,
+  updateFrenzyIndicators,
+  manualPages: MANUAL_LAYOUT_PAGES,
+  handleVisibilityHidden: handleLayoutVisibilityHidden,
+  handleVisibilityVisible: handleLayoutVisibilityVisible
 });
 
-const initiallyActivePage = document.querySelector('.page.active') || elements.pages[0];
-if (initiallyActivePage) {
-  showPage(initiallyActivePage.id);
-} else {
-  document.body.classList.remove('view-game');
+const { showPage } = layoutController;
+
+if (typeof globalThis !== 'undefined' && typeof showPage === 'function') {
+  globalThis.showPage = showPage;
+}
+
+if (typeof document !== 'undefined') {
+  document.addEventListener('visibilitychange', () => {
+    layoutController.handleVisibilityChange(Boolean(document.hidden));
+  });
 }
 
 if (elements.devkitOverlay) {
@@ -7911,316 +5620,6 @@ document.addEventListener('keydown', event => {
 updateDevKitUI();
 
 initParticulesGame();
-
-function handleMetauxSessionEnd(summary) {
-  updateMetauxCreditsUI();
-  if (!summary || typeof summary !== 'object') {
-    return;
-  }
-  const elapsedMs = Number(summary.elapsedMs ?? summary.time ?? 0);
-  const matches = Number(summary.matches ?? summary.matchCount ?? 0);
-  const secondsEarned = Number.isFinite(elapsedMs) && elapsedMs > 0
-    ? Math.max(0, Math.round(elapsedMs / 1000))
-    : 0;
-  const matchesEarned = Number.isFinite(matches) && matches > 0
-    ? Math.max(0, Math.floor(matches))
-    : 0;
-  if (secondsEarned <= 0 && matchesEarned <= 0) {
-    return;
-  }
-  const apsCrit = ensureApsCritState();
-  const hadEffects = apsCrit.effects.length > 0;
-  const previousMultiplier = getApsCritMultiplier(apsCrit);
-  const currentRemaining = getApsCritRemainingSeconds(apsCrit);
-  let chronoAdded = 0;
-  let effectAdded = false;
-  if (!hadEffects) {
-    if (secondsEarned > 0 && matchesEarned > 0) {
-      apsCrit.effects.push({
-        multiplierAdd: matchesEarned,
-        remainingSeconds: secondsEarned
-      });
-      chronoAdded = secondsEarned;
-      effectAdded = true;
-    }
-  } else if (matchesEarned > 0 && currentRemaining > 0) {
-    apsCrit.effects.push({
-      multiplierAdd: matchesEarned,
-      remainingSeconds: currentRemaining
-    });
-    effectAdded = true;
-  }
-  if (!effectAdded) {
-    return;
-  }
-  apsCrit.effects = apsCrit.effects.filter(effect => {
-    const remaining = Number(effect?.remainingSeconds) || 0;
-    const value = Number(effect?.multiplierAdd) || 0;
-    return remaining > 0 && value > 0;
-  });
-  if (!apsCrit.effects.length) {
-    return;
-  }
-  const newMultiplier = getApsCritMultiplier(apsCrit);
-  if (newMultiplier !== previousMultiplier) {
-    recalcProduction();
-  }
-  updateUI();
-  pulseApsCritPanel();
-  const messageParts = [];
-  if (chronoAdded > 0) {
-    messageParts.push(t('scripts.app.metaux.chronoBonus', {
-      value: formatIntegerLocalized(chronoAdded)
-    }));
-  }
-  if (matchesEarned > 0) {
-    messageParts.push(t('scripts.app.metaux.multiBonus', {
-      value: formatIntegerLocalized(matchesEarned)
-    }));
-  }
-  if (messageParts.length) {
-    showToast(t('scripts.app.metaux.toast', { details: messageParts.join(' · ') }));
-  }
-  saveGame();
-}
-
-window.handleMetauxSessionEnd = handleMetauxSessionEnd;
-
-elements.navButtons.forEach(btn => {
-  btn.addEventListener('click', () => {
-    const target = btn.dataset.target;
-    if (!isPageUnlocked(target)) {
-      return;
-    }
-    showPage(target);
-  });
-});
-
-if (elements.arcadeHubCards?.length) {
-  elements.arcadeHubCards.forEach(card => {
-    card.addEventListener('click', () => {
-      const target = card.dataset.pageTarget;
-      if (!target || !isPageUnlocked(target)) {
-        return;
-      }
-      if (target === 'wave') {
-        ensureWaveGame();
-      }
-      if (target === 'quantum2048') {
-        ensureQuantum2048Game();
-      }
-      showPage(target);
-    });
-  });
-}
-
-if (elements.openMidiModuleButton) {
-  elements.openMidiModuleButton.addEventListener('click', () => {
-    showPage('midi');
-  });
-}
-
-if (elements.metauxOpenButton) {
-  elements.metauxOpenButton.addEventListener('click', () => {
-    showPage('metaux');
-  });
-}
-
-if (elements.metauxReturnButton) {
-  elements.metauxReturnButton.addEventListener('click', () => {
-    showPage('game');
-  });
-}
-
-if (elements.metauxNewGameButton) {
-  elements.metauxNewGameButton.addEventListener('click', () => {
-    initMetauxGame();
-    const credits = getMetauxCreditCount();
-    if (!metauxGame) {
-      showToast(t('scripts.app.metaux.unavailable'));
-      return;
-    }
-    if (isMetauxSessionRunning()) {
-      showToast(t('scripts.app.metaux.gameInProgress'));
-      updateMetauxCreditsUI();
-      return;
-    }
-    if (credits <= 0) {
-      showToast(t('scripts.app.metaux.noCredits'));
-      updateMetauxCreditsUI();
-      return;
-    }
-    gameState.bonusParticulesTickets = credits - 1;
-    metauxGame.restart();
-    updateMetauxCreditsUI();
-    saveGame();
-  });
-}
-
-if (elements.metauxFreePlayButton) {
-  elements.metauxFreePlayButton.addEventListener('click', () => {
-    initMetauxGame();
-    if (!metauxGame) {
-      showToast(t('scripts.app.metaux.unavailable'));
-      return;
-    }
-    if (isMetauxSessionRunning()) {
-      showToast(t('scripts.app.metaux.gameInProgress'));
-      updateMetauxCreditsUI();
-      return;
-    }
-    if (typeof metauxGame.startFreePlay === 'function') {
-      metauxGame.startFreePlay();
-    } else {
-      metauxGame.restart({ freePlay: true });
-    }
-    updateMetauxCreditsUI();
-  });
-}
-
-if (elements.metauxFreePlayExitButton) {
-  elements.metauxFreePlayExitButton.addEventListener('click', () => {
-    initMetauxGame();
-    if (!metauxGame) {
-      showToast(t('scripts.app.metaux.unavailable'));
-      return;
-    }
-    if (typeof metauxGame.isFreePlayMode === 'function' && !metauxGame.isFreePlayMode()) {
-      return;
-    }
-    if (metauxGame.processing) {
-      showToast('Patientez, la réaction en chaîne est en cours.');
-      return;
-    }
-    if (typeof metauxGame.endFreePlaySession === 'function') {
-      const ended = metauxGame.endFreePlaySession({ showEndScreen: true });
-      if (ended && typeof window.updateMetauxCreditsUI === 'function') {
-        window.updateMetauxCreditsUI();
-      }
-    }
-  });
-}
-
-if (elements.brandPortal) {
-  elements.brandPortal.addEventListener('click', () => {
-    showPage('game');
-  });
-}
-
-if (elements.statusAtomsButton) {
-  elements.statusAtomsButton.addEventListener('click', () => {
-    if (document?.body?.dataset?.activePage === 'game') {
-      return;
-    }
-    showPage('game');
-  });
-}
-
-if (elements.arcadeReturnButton) {
-  elements.arcadeReturnButton.addEventListener('click', () => {
-    showPage('game');
-    if (isArcadeUnlocked()) {
-      triggerBrandPortalPulse();
-    }
-  });
-}
-
-if (elements.arcadeTicketButtons?.length) {
-  elements.arcadeTicketButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      if (!isPageUnlocked('gacha')) {
-        return;
-      }
-      showPage('gacha');
-    });
-  });
-}
-
-if (elements.arcadeBonusTicketButtons?.length) {
-  elements.arcadeBonusTicketButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      if (button.disabled) {
-        return;
-      }
-      showPage('metaux');
-    });
-  });
-}
-
-if (elements.elementInfoSymbol) {
-  elements.elementInfoSymbol.addEventListener('click', event => {
-    if (elements.elementInfoSymbol.disabled || !selectedElementId) {
-      return;
-    }
-    event.preventDefault();
-    openElementDetailsModal(selectedElementId, { trigger: elements.elementInfoSymbol });
-  });
-}
-
-if (elements.elementInfoCategoryButton) {
-  elements.elementInfoCategoryButton.addEventListener('click', event => {
-    if (elements.elementInfoCategoryButton.disabled) {
-      return;
-    }
-    const familyId = elements.elementInfoCategoryButton.dataset.familyId || null;
-    if (!familyId) {
-      return;
-    }
-    event.preventDefault();
-    openElementFamilyModal(familyId, { trigger: elements.elementInfoCategoryButton });
-  });
-}
-
-if (elements.elementDetailsOverlay) {
-  elements.elementDetailsOverlay.addEventListener('click', event => {
-    const target = event.target.closest('[data-element-details-close]');
-    if (target) {
-      event.preventDefault();
-      closeElementDetailsModal();
-    }
-  });
-}
-
-if (elements.elementFamilyOverlay) {
-  elements.elementFamilyOverlay.addEventListener('click', event => {
-    const target = event.target.closest('[data-element-family-close]');
-    if (target) {
-      event.preventDefault();
-      closeElementFamilyModal();
-    }
-  });
-}
-
-renderPeriodicTable();
-renderGachaRarityList();
-renderFusionList();
-
-if (elements.atomButton) {
-  elements.atomButton.addEventListener('click', event => {
-    event.stopPropagation();
-    handleManualAtomClick({ contextId: 'game' });
-  });
-  elements.atomButton.addEventListener('dragstart', event => {
-    event.preventDefault();
-  });
-}
-
-if (elements.gachaSunButton) {
-  elements.gachaSunButton.addEventListener('click', event => {
-    event.preventDefault();
-    handleGachaSunClick().catch(error => {
-      console.error('Erreur lors du tirage cosmique', error);
-    });
-  });
-}
-
-if (elements.gachaTicketModeButton) {
-  elements.gachaTicketModeButton.addEventListener('click', event => {
-    event.preventDefault();
-    if (gachaAnimationInProgress) return;
-    toggleGachaRollMode();
-  });
-}
 
 document.addEventListener('click', event => {
   if (!shouldTriggerGlobalClick(event)) return;
@@ -9649,653 +7048,6 @@ LayeredNumber.prototype.addNumber = function (num) {
   return this.add(new LayeredNumber(num));
 };
 
-function getShopBuildingTexts(def) {
-  if (!def || typeof def !== 'object') {
-    return { name: '', description: '' };
-  }
-  const id = typeof def.id === 'string' ? def.id.trim() : '';
-  const baseKey = id ? `config.shop.buildings.${id}` : '';
-  const fallbackName = typeof def.name === 'string' ? def.name : id;
-  let name = fallbackName;
-  if (baseKey) {
-    const translatedName = translateOrDefault(`${baseKey}.name`, fallbackName);
-    if (translatedName) {
-      name = translatedName;
-    }
-  }
-  const fallbackDescription = typeof def.effectSummary === 'string' && def.effectSummary.trim()
-    ? def.effectSummary.trim()
-    : (typeof def.description === 'string' ? def.description.trim() : '');
-  let description = '';
-  if (baseKey) {
-    description =
-      translateOrDefault(`${baseKey}.effectSummary`, '')
-      || translateOrDefault(`${baseKey}.effect`, '')
-      || translateOrDefault(`${baseKey}.description`, '');
-  }
-  if (!description) {
-    description = fallbackDescription;
-  }
-  return { name, description };
-}
-
-function getShopActionLabel(level) {
-  const isUpgrade = Number.isFinite(level) && Number(level) > 0;
-  const key = isUpgrade ? 'scripts.app.shop.actionUpgrade' : 'scripts.app.shop.actionBuy';
-  const fallback = isUpgrade ? 'Améliorer' : 'Acheter';
-  return translateOrDefault(key, fallback);
-}
-
-function formatShopLevelLabel(level, maxLevel, capReached) {
-  const resolvedLevel = Number.isFinite(level) ? Math.max(0, Math.floor(level)) : 0;
-  const params = { level: formatIntegerLocalized(resolvedLevel) };
-  let label;
-  if (Number.isFinite(maxLevel)) {
-    params.max = formatIntegerLocalized(Math.max(0, Math.floor(maxLevel)));
-    label = translateOrDefault(
-      'scripts.app.shop.levelLabelWithMax',
-      `Niveau ${params.level} / ${params.max}`,
-      params
-    );
-    if (capReached) {
-      const suffix = translateOrDefault('scripts.app.shop.levelMaxSuffix', ' (max)');
-      label += suffix;
-    }
-  } else {
-    label = translateOrDefault('scripts.app.shop.levelLabel', `Niveau ${params.level}`, params);
-  }
-  return label;
-}
-
-function getShopLimitSuffix(limited) {
-  if (!limited) {
-    return '';
-  }
-  return translateOrDefault('scripts.app.shop.limitSuffix', ' (limité aux niveaux restants)');
-}
-
-function formatShopPriceText({ isFree, limitedQuantity, quantity, priceText }) {
-  if (isFree) {
-    return translateOrDefault('scripts.app.shop.free', 'Gratuit');
-  }
-  if (limitedQuantity) {
-    return translateOrDefault(
-      'scripts.app.shop.priceLimited',
-      `Limité à x${quantity} — ${priceText}`,
-      { quantity: formatIntegerLocalized(quantity), price: priceText }
-    );
-  }
-  return priceText;
-}
-
-function formatShopAriaLabel({ state, action, name, quantity, limitNote, costValue }) {
-  const params = {
-    action: action || '',
-    name: name || '',
-    quantity: formatIntegerLocalized(Number.isFinite(quantity) ? quantity : Number(quantity) || 0),
-    limitNote: limitNote || ''
-  };
-  const fallbackQuantity = `×${params.quantity}${params.limitNote}`;
-  if (state === 'free') {
-    return translateOrDefault(
-      'scripts.app.shop.ariaActionFree',
-      `${params.action} ${params.name} ${fallbackQuantity} (gratuit)`,
-      params
-    );
-  }
-  params.cost = costValue || '';
-  if (state === 'cost') {
-    return translateOrDefault(
-      'scripts.app.shop.ariaActionCost',
-      `${params.action} ${params.name} ${fallbackQuantity} (coût ${params.cost} atomes)`,
-      params
-    );
-  }
-  return translateOrDefault(
-    'scripts.app.shop.ariaActionInsufficient',
-    `${params.action} ${params.name} ${fallbackQuantity} (atomes insuffisants)`,
-    params
-  );
-}
-
-function renderShopPurchaseHeader() {
-  if (!elements.shopActionsHeader) return;
-  const header = elements.shopActionsHeader;
-  header.innerHTML = '';
-  if (!Array.isArray(SHOP_PURCHASE_AMOUNTS) || SHOP_PURCHASE_AMOUNTS.length === 0) {
-    header.hidden = true;
-    return;
-  }
-  header.hidden = false;
-  const fragment = document.createDocumentFragment();
-  const spacer = document.createElement('div');
-  spacer.className = 'shop-actions-header__spacer';
-  fragment.appendChild(spacer);
-  const labels = document.createElement('div');
-  labels.className = 'shop-actions-header__labels';
-  SHOP_PURCHASE_AMOUNTS.forEach(quantity => {
-    const label = document.createElement('span');
-    label.className = 'shop-actions-header__label';
-    label.textContent = `x${quantity}`;
-    labels.appendChild(label);
-  });
-  fragment.appendChild(labels);
-  header.appendChild(fragment);
-}
-
-function getLocalizedUpgradeName(def) {
-  return getShopBuildingTexts(def).name;
-}
-
-function buildShopItem(def) {
-  const item = document.createElement('article');
-  item.className = 'shop-item';
-  item.dataset.upgradeId = def.id;
-  item.setAttribute('role', 'listitem');
-
-  const header = document.createElement('header');
-  header.className = 'shop-item__header';
-
-  const title = document.createElement('h3');
-  const texts = getShopBuildingTexts(def);
-  title.textContent = texts.name;
-
-  const level = document.createElement('span');
-  level.className = 'shop-item__level';
-
-  header.append(title, level);
-
-  const desc = document.createElement('p');
-  desc.className = 'shop-item__description';
-  desc.textContent = texts.description;
-
-  const actions = document.createElement('div');
-  actions.className = 'shop-item__actions';
-  const buttonMap = new Map();
-
-  SHOP_PURCHASE_AMOUNTS.forEach(quantity => {
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.className = 'shop-item__action';
-
-    const priceLabel = document.createElement('span');
-    priceLabel.className = 'shop-item__action-price';
-    priceLabel.textContent = '—';
-
-    button.append(priceLabel);
-    button.addEventListener('click', () => {
-      attemptPurchase(def, quantity);
-    });
-
-    actions.appendChild(button);
-    buttonMap.set(quantity, {
-      button,
-      price: priceLabel,
-      baseQuantity: quantity
-    });
-  });
-
-  item.append(header, desc, actions);
-
-  return { root: item, title, level, description: desc, buttons: buttonMap };
-}
-
-function updateShopUnlockHint() {
-  const button = elements.navShopButton;
-  if (!button) {
-    return;
-  }
-
-  let shouldVibrate = false;
-  if (!button.hidden && !button.disabled && lastVisibleShopIndex >= 0 && lastVisibleShopIndex < UPGRADE_DEFS.length) {
-    const def = UPGRADE_DEFS[lastVisibleShopIndex];
-    if (def) {
-      const level = getUpgradeLevel(gameState.upgrades, def.id);
-      if (!Number.isFinite(level) || level <= 0) {
-        const remainingLevels = getRemainingUpgradeCapacity(def);
-        if (!Number.isFinite(remainingLevels) || remainingLevels > 0) {
-          const cost = computeUpgradeCost(def, 1);
-          const atoms = toLayeredValue(gameState.atoms, 0);
-          shouldVibrate = atoms.compare(cost) >= 0;
-        }
-      }
-    }
-  }
-
-  button.classList.toggle('nav-button--vibrate', shouldVibrate);
-}
-
-function updateShopVisibility() {
-  if (!shopRows.size) {
-    lastVisibleShopIndex = -1;
-    updateShopUnlockHint();
-    return;
-  }
-  const unlocks = getShopUnlockSet();
-
-  let visibleLimit = -1;
-  unlocks.forEach(id => {
-    const unlockIndex = UPGRADE_INDEX_MAP.get(id);
-    if (unlockIndex != null && unlockIndex > visibleLimit) {
-      visibleLimit = unlockIndex;
-    }
-  });
-  if (visibleLimit < 0 && UPGRADE_DEFS.length > 0) {
-    visibleLimit = 0;
-  }
-  if (visibleLimit >= UPGRADE_DEFS.length) {
-    visibleLimit = UPGRADE_DEFS.length - 1;
-  }
-
-  UPGRADE_DEFS.forEach((def, index) => {
-    const row = shopRows.get(def.id);
-    if (!row) return;
-
-    const shouldReveal = index <= visibleLimit;
-    row.root.hidden = !shouldReveal;
-    row.root.classList.toggle('shop-item--locked', !shouldReveal);
-    if (shouldReveal) {
-      unlocks.add(def.id);
-    }
-  });
-
-  lastVisibleShopIndex = visibleLimit;
-  updateShopUnlockHint();
-}
-
-function updateShopAffordability() {
-  if (!shopRows.size) return;
-  UPGRADE_DEFS.forEach(def => {
-    const row = shopRows.get(def.id);
-    if (!row) return;
-    const texts = getShopBuildingTexts(def);
-    if (row.title) {
-      row.title.textContent = texts.name;
-    }
-    if (row.description) {
-      row.description.textContent = texts.description;
-    }
-    const level = getUpgradeLevel(gameState.upgrades, def.id);
-    const maxLevel = resolveUpgradeMaxLevel(def);
-    const remainingLevels = getRemainingUpgradeCapacity(def);
-    const hasFiniteCap = Number.isFinite(maxLevel);
-    const capReached = Number.isFinite(remainingLevels) && remainingLevels <= 0;
-    row.level.textContent = formatShopLevelLabel(level, maxLevel, capReached);
-    let anyAffordable = false;
-    const actionLabel = getShopActionLabel(level);
-    const displayName = texts.name;
-    const shopFree = isDevKitShopFree();
-
-    SHOP_PURCHASE_AMOUNTS.forEach(quantity => {
-      const entry = row.buttons.get(quantity);
-      if (!entry) return;
-      const baseQuantity = entry.baseQuantity ?? quantity;
-
-      if (capReached) {
-        entry.price.textContent = t('scripts.app.shop.limitReached');
-        entry.button.disabled = true;
-        entry.button.classList.remove('is-ready');
-        const ariaLabel = translateOrDefault(
-          'scripts.app.shop.ariaMaxLevel',
-          `${displayName} a atteint son niveau maximum`,
-          { name: displayName }
-        );
-        entry.button.setAttribute('aria-label', ariaLabel);
-        entry.button.title = ariaLabel;
-        return;
-      }
-
-      const effectiveQuantity = Number.isFinite(remainingLevels)
-        ? Math.min(baseQuantity, remainingLevels)
-        : baseQuantity;
-      const limited = Number.isFinite(remainingLevels) && effectiveQuantity !== baseQuantity;
-
-      const cost = computeUpgradeCost(def, effectiveQuantity);
-      const affordable = shopFree || gameState.atoms.compare(cost) >= 0;
-      const costDisplay = formatShopCost(cost);
-      entry.price.textContent = formatShopPriceText({
-        isFree: shopFree,
-        limitedQuantity: limited,
-        quantity: limited ? effectiveQuantity : baseQuantity,
-        priceText: costDisplay
-      });
-      const enabled = affordable && effectiveQuantity > 0;
-      entry.button.disabled = !enabled;
-      entry.button.classList.toggle('is-ready', enabled);
-      if (enabled) {
-        anyAffordable = true;
-      }
-      const displayQuantity = limited ? effectiveQuantity : baseQuantity;
-      const limitNote = getShopLimitSuffix(limited);
-      const ariaLabel = formatShopAriaLabel({
-        state: enabled ? (shopFree ? 'free' : 'cost') : 'insufficient',
-        action: actionLabel,
-        name: displayName,
-        quantity: displayQuantity,
-        limitNote,
-        costValue: cost.toString()
-      });
-      entry.button.setAttribute('aria-label', ariaLabel);
-      entry.button.title = ariaLabel;
-    });
-
-    row.root.classList.toggle('shop-item--ready', anyAffordable);
-  });
-  updateShopVisibility();
-}
-
-function renderShop() {
-  if (!elements.shopList) return;
-  renderShopPurchaseHeader();
-  shopRows.clear();
-  elements.shopList.innerHTML = '';
-  const fragment = document.createDocumentFragment();
-  UPGRADE_DEFS.forEach(def => {
-    const row = buildShopItem(def);
-    fragment.appendChild(row.root);
-    shopRows.set(def.id, row);
-  });
-  elements.shopList.appendChild(fragment);
-  updateShopAffordability();
-}
-
-function getTrophyRewardParams(def) {
-  if (!def || typeof def !== 'object' || !def.reward) {
-    return null;
-  }
-  const params = {};
-  const reward = def.reward;
-  const bonusCandidates = [
-    reward.trophyMultiplierAdd,
-    reward.trophyMultiplierBonus,
-    reward.trophyMultiplier,
-    reward.trophyBonus
-  ];
-  const bonusValue = bonusCandidates.find(value => Number.isFinite(Number(value)));
-  if (bonusValue != null && Number.isFinite(Number(bonusValue))) {
-    const numeric = Number(bonusValue);
-    params.bonus = formatTrophyBonusValue(numeric);
-    params.total = formatTrophyBonusValue(1 + numeric);
-  }
-  let multiplierValue = null;
-  if (reward.multiplier != null) {
-    if (typeof reward.multiplier === 'number') {
-      multiplierValue = reward.multiplier;
-    } else if (reward.multiplier instanceof LayeredNumber) {
-      multiplierValue = reward.multiplier.toNumber();
-    } else if (typeof reward.multiplier === 'object') {
-      multiplierValue = reward.multiplier.global
-        ?? reward.multiplier.all
-        ?? reward.multiplier.total
-        ?? reward.multiplier.perClick
-        ?? reward.multiplier.click
-        ?? reward.multiplier.perSecond
-        ?? reward.multiplier.auto;
-    }
-  }
-  if (multiplierValue != null && Number.isFinite(Number(multiplierValue))) {
-    params.multiplier = formatNumberLocalized(Number(multiplierValue), {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    });
-  }
-  return Object.keys(params).length ? params : null;
-}
-
-function getTrophyTranslationBases(id) {
-  if (typeof id !== 'string' || !id) {
-    return [];
-  }
-  const bases = [];
-  if (id.startsWith('scale')) {
-    bases.push(`scripts.appData.atomScale.trophies.${id}`);
-    bases.push(`scripts.appData.trophies.presets.${id}`);
-    bases.push(`config.trophies.presets.${id}`);
-  }
-  bases.push(`scripts.appData.trophies.${id}`);
-  bases.push(`config.trophies.${id}`);
-  return bases;
-}
-
-function translateTrophyField(def, field, fallback, params) {
-  const bases = getTrophyTranslationBases(def?.id);
-  for (const base of bases) {
-    const key = `${base}.${field}`;
-    const translated = translateOrDefault(key, '', params);
-    if (translated) {
-      return translated;
-    }
-  }
-  return fallback || '';
-}
-
-function getTrophyDisplayTexts(def) {
-  if (!def || typeof def !== 'object') {
-    return { name: '', description: '', reward: '' };
-  }
-  const fallbackName = typeof def.name === 'string' ? def.name : '';
-  const fallbackDescription = typeof def.description === 'string' ? def.description : '';
-  const fallbackReward = typeof def.rewardText === 'string'
-    ? def.rewardText
-    : (def.reward && typeof def.reward.description === 'string' ? def.reward.description : '');
-
-  let name = translateTrophyField(def, 'name', fallbackName);
-  if (!name) {
-    name = fallbackName;
-  }
-
-  let descriptionParams = null;
-  const descriptionTarget = def.targetText || '';
-  const descriptionFlavor = translateTrophyField(def, 'flavor', def.flavor || '');
-  if (descriptionTarget || descriptionFlavor) {
-    descriptionParams = {
-      target: descriptionTarget,
-      flavor: descriptionFlavor
-    };
-  }
-  let description = '';
-  if (descriptionParams) {
-    description = translateOrDefault(
-      'scripts.appData.atomScale.trophies.description',
-      '',
-      descriptionParams
-    );
-    if (!description) {
-      description = translateOrDefault('config.trophies.description', '', descriptionParams);
-    }
-  }
-  if (!description) {
-    description = translateTrophyField(def, 'description', '', descriptionParams);
-  }
-  if (!description) {
-    description = fallbackDescription;
-  }
-
-  const rewardParams = getTrophyRewardParams(def);
-  let rewardText = translateTrophyField(def, 'reward', '', rewardParams);
-  if (!rewardText && rewardParams) {
-    rewardText = translateOrDefault('scripts.appData.atomScale.trophies.reward', '', rewardParams);
-  }
-  if (!rewardText && rewardParams) {
-    rewardText = translateOrDefault('config.trophies.reward.description', '', rewardParams);
-  }
-  if (!rewardText) {
-    rewardText = fallbackReward;
-  }
-
-  return {
-    name,
-    description,
-    reward: rewardText
-  };
-}
-
-function buildGoalCard(def) {
-  const card = document.createElement('article');
-  card.className = 'goal-card';
-  card.dataset.trophyId = def.id;
-  card.setAttribute('role', 'listitem');
-  card.classList.add('goal-card--locked');
-  card.hidden = true;
-  card.setAttribute('aria-hidden', 'true');
-
-  const header = document.createElement('header');
-  header.className = 'goal-card__header';
-
-  const title = document.createElement('h3');
-  const texts = getTrophyDisplayTexts(def);
-  title.textContent = texts.name;
-  title.className = 'goal-card__title';
-
-  header.append(title);
-
-  const description = document.createElement('p');
-  description.className = 'goal-card__description';
-  description.textContent = texts.description || '';
-
-  card.append(header, description);
-
-  const reward = document.createElement('p');
-  reward.className = 'goal-card__reward';
-  reward.textContent = texts.reward || '';
-  reward.hidden = !texts.reward;
-  card.appendChild(reward);
-
-  return { root: card, title, description, reward };
-}
-
-function renderGoals() {
-  if (!elements.goalsList) return;
-  trophyCards.clear();
-  elements.goalsList.innerHTML = '';
-  if (!TROPHY_DEFS.length) {
-    if (elements.goalsEmpty) {
-      elements.goalsEmpty.hidden = false;
-      elements.goalsEmpty.setAttribute('aria-hidden', 'false');
-    }
-    return;
-  }
-  const fragment = document.createDocumentFragment();
-  TROPHY_DEFS.forEach(def => {
-    const card = buildGoalCard(def);
-    trophyCards.set(def.id, card);
-    fragment.appendChild(card.root);
-  });
-  elements.goalsList.appendChild(fragment);
-  refreshGoalCardTexts();
-  updateGoalsUI();
-}
-
-function refreshGoalCardTexts() {
-  if (!trophyCards.size) {
-    return;
-  }
-  TROPHY_DEFS.forEach(def => {
-    const card = trophyCards.get(def.id);
-    if (!card) {
-      return;
-    }
-    const texts = getTrophyDisplayTexts(def);
-    if (card.title) {
-      card.title.textContent = texts.name;
-    }
-    if (card.description) {
-      card.description.textContent = texts.description || '';
-    }
-    if (card.reward) {
-      if (texts.reward) {
-        card.reward.textContent = texts.reward;
-        card.reward.hidden = false;
-      } else {
-        card.reward.textContent = '';
-        card.reward.hidden = true;
-      }
-    }
-  });
-}
-
-function attemptPurchase(def, quantity = 1) {
-  const buyAmount = Math.max(1, Math.floor(Number(quantity) || 0));
-  const remainingLevels = getRemainingUpgradeCapacity(def);
-  const cappedOut = Number.isFinite(remainingLevels) && remainingLevels <= 0;
-  if (cappedOut) {
-    showToast(t('scripts.app.shop.maxLevel'));
-    return;
-  }
-  const finalAmount = Number.isFinite(remainingLevels)
-    ? Math.min(buyAmount, remainingLevels)
-    : buyAmount;
-  if (!Number.isFinite(finalAmount) || finalAmount <= 0) {
-    showToast(t('scripts.app.shop.maxLevel'));
-    return;
-  }
-  const cost = computeUpgradeCost(def, finalAmount);
-  const shopFree = isDevKitShopFree();
-  if (!shopFree && gameState.atoms.compare(cost) < 0) {
-    showToast(t('scripts.app.shop.notEnoughAtoms'));
-    return;
-  }
-  if (!shopFree) {
-    gameState.atoms = gameState.atoms.subtract(cost);
-  }
-  const currentLevel = Number(gameState.upgrades[def.id]);
-  const normalizedLevel = Number.isFinite(currentLevel) && currentLevel > 0
-    ? Math.floor(currentLevel)
-    : 0;
-  gameState.upgrades[def.id] = normalizedLevel + finalAmount;
-  recalcProduction();
-  updateUI();
-  const limitSuffix = finalAmount < buyAmount ? getShopLimitSuffix(true) : '';
-  const displayName = getLocalizedUpgradeName(def);
-  showToast(shopFree
-    ? t('scripts.app.shop.devkitFreePurchase', {
-      name: displayName,
-      quantity: finalAmount,
-      suffix: limitSuffix
-    })
-    : t('scripts.app.shop.purchase', {
-      name: displayName,
-      quantity: finalAmount,
-      suffix: limitSuffix
-    }));
-}
-
-function updateMilestone() {
-  if (!elements.nextMilestone) return;
-  for (const milestone of milestoneList) {
-    if (gameState.lifetime.compare(milestone.amount) < 0) {
-      elements.nextMilestone.textContent = milestone.text;
-      return;
-    }
-  }
-  elements.nextMilestone.textContent = t('scripts.app.shop.milestoneHint');
-}
-
-function updateGoalsUI() {
-  if (!elements.goalsList || !trophyCards.size) return;
-  const unlockedSet = getUnlockedTrophySet();
-  const featureUnlocked = areAchievementsFeatureUnlocked();
-  let visibleCount = 0;
-  TROPHY_DEFS.forEach(def => {
-    const card = trophyCards.get(def.id);
-    if (!card) return;
-    const isUnlocked = unlockedSet.has(def.id);
-    const shouldShow = featureUnlocked && isUnlocked;
-    card.root.classList.toggle('goal-card--completed', isUnlocked);
-    card.root.classList.toggle('goal-card--locked', !isUnlocked);
-    card.root.hidden = !shouldShow;
-    card.root.setAttribute('aria-hidden', String(!shouldShow));
-    if (shouldShow) {
-      visibleCount += 1;
-    }
-  });
-  if (elements.goalsEmpty) {
-    const hideEmpty = !featureUnlocked || visibleCount > 0;
-    elements.goalsEmpty.hidden = hideEmpty;
-    elements.goalsEmpty.setAttribute('aria-hidden', hideEmpty ? 'true' : 'false');
-  }
-}
-
 function updateFrenzyIndicatorFor(type, target, now) {
   const container = target?.container ?? target;
   const multiplierElement = target?.multiplier ?? null;
@@ -10490,13 +7242,15 @@ function updateUI() {
   updateFrenzyIndicators();
   updateApcFrenzyCounterDisplay();
   updateGachaUI();
-  updateCollectionDisplay();
-  updateFusionUI();
-  updateShopAffordability();
-  updateMilestone();
-  refreshGoalCardTexts();
-  updateGoalsUI();
-  updateInfoPanels();
+  collectionsController.updateCollectionDisplay();
+  fusionController.update();
+  shopController.updateAffordability();
+  if (goalsController) {
+    goalsController.updateMilestone();
+    goalsController.refreshTexts();
+    goalsController.update();
+  }
+  infoController.updatePanels();
 }
 
 function showToast(message) {
@@ -10511,6 +7265,21 @@ function showToast(message) {
   showToast.timeout = setTimeout(() => {
     toastElement.classList.remove('visible');
   }, 2200);
+}
+
+if (typeof globalThis !== 'undefined') {
+  globalThis.showToast = showToast;
+  globalThis.updateUI = updateUI;
+  globalThis.recalcProduction = recalcProduction;
+  globalThis.evaluateTrophies = evaluateTrophies;
+  globalThis.saveGame = saveGame;
+  globalThis.gameState = gameState;
+  if (!globalThis.atom2universElements || globalThis.atom2universElements === elements) {
+    globalThis.atom2universElements = elements;
+  }
+  if (!globalThis.elements || globalThis.elements === elements) {
+    globalThis.elements = elements;
+  }
 }
 
 function applyTheme(requestedThemeId) {
@@ -10595,7 +7364,7 @@ if (elements.themeSelect) {
 if (typeof window !== 'undefined') {
   window.addEventListener('i18n:languagechange', () => {
     renderThemeOptions();
-    renderPeriodicTable();
+    collectionsController.renderPeriodicTable();
     updateUI();
   });
 }
@@ -10939,7 +7708,7 @@ function serializeState() {
 function saveGame() {
   try {
     const payload = serializeState();
-    localStorage.setItem('atom2univers', JSON.stringify(payload));
+    writeJSON('atom2univers', payload);
   } catch (err) {
     console.error('Erreur de sauvegarde', err);
   }
@@ -11004,9 +7773,9 @@ function resetGame() {
   musicPlayer.stop();
   musicPlayer.setVolume(DEFAULT_MUSIC_VOLUME, { silent: true });
   recalcProduction();
-  renderShop();
+  shopController.render();
   updateUI();
-  setFusionLog(
+  fusionController.setLog(
     translateOrDefault(
       'scripts.app.fusion.prompt',
       'Sélectionnez une recette pour tenter votre première fusion.'
@@ -11257,18 +8026,17 @@ function loadGame() {
     gameState.baseCrit = createDefaultCritState();
     gameState.crit = createDefaultCritState();
     gameState.lastCritical = null;
-    const raw = localStorage.getItem('atom2univers');
-    if (!raw) {
+    const data = readJSON('atom2univers', null);
+    if (!data) {
       gameState.theme = DEFAULT_THEME_ID;
       gameState.stats = createInitialStats();
       gameState.shopUnlocks = new Set();
       applyTheme();
       recalcProduction();
-      renderShop();
+      shopController.render();
       updateUI();
       return;
     }
-    const data = JSON.parse(raw);
     gameState.atoms = LayeredNumber.fromJSON(data.atoms);
     gameState.lifetime = LayeredNumber.fromJSON(data.lifetime);
     gameState.perClick = LayeredNumber.fromJSON(data.perClick);
@@ -11575,7 +8343,7 @@ function loadGame() {
     getShopUnlockSet();
     applyTheme();
     recalcProduction();
-    renderShop();
+    shopController.render();
     updateBigBangVisibility();
     updateUI();
     if (data.lastSave) {
@@ -11643,8 +8411,10 @@ function startApp() {
   });
   recalcProduction();
   evaluateTrophies();
-  renderShop();
-  renderGoals();
+  shopController.render();
+  if (goalsController) {
+    goalsController.render();
+  }
   updateUI();
   randomizeAtomButtonImage();
   initStarfield();
@@ -11681,8 +8451,4 @@ function initializeApp() {
   startApp();
 }
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initializeApp, { once: true });
-} else {
-  initializeApp();
-}
+export { gameState, initializeApp, loadGame, saveGame, startApp };
