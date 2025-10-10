@@ -40,23 +40,24 @@
   left: clamp(0.25rem, 1vw, 0.6rem);
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
-  padding: clamp(0.35rem, 0.8vw, 0.6rem) clamp(0.6rem, 1.4vw, 0.9rem);
-  border-radius: 14px;
+  gap: calc(0.25rem * var(--ui-control-scale, 1));
+  padding: calc(clamp(0.35rem, 0.8vw, 0.6rem) * var(--ui-control-scale, 1))
+    calc(clamp(0.6rem, 1.4vw, 0.9rem) * var(--ui-control-scale, 1));
+  border-radius: calc(14px * var(--ui-control-scale, 1));
   background: linear-gradient(165deg, rgba(10, 14, 28, 0.92), rgba(5, 7, 18, 0.78));
   border: 1px solid rgba(255, 255, 255, 0.22);
   box-shadow:
     0 18px 32px rgba(0, 0, 0, 0.42),
     0 0 0 1px rgba(255, 255, 255, 0.12),
     inset 0 0 28px rgba(255, 255, 255, 0.08);
-  min-width: clamp(120px, 14vw, 180px);
+  min-width: calc(clamp(120px, 14vw, 180px) * var(--ui-control-scale, 1));
   pointer-events: none;
   z-index: 3;
 }
 
 .metaux-timer.is-free-play {
-  gap: 0.3rem;
-  min-width: clamp(110px, 12vw, 160px);
+  gap: calc(0.3rem * var(--ui-control-scale, 1));
+  min-width: calc(clamp(110px, 12vw, 160px) * var(--ui-control-scale, 1));
   pointer-events: auto;
 }
 
@@ -75,14 +76,14 @@
 
 .metaux-timer__label {
   margin: 0;
-  font-size: 0.78rem;
+  font-size: calc(0.78rem * var(--ui-control-scale, 1));
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.68);
 }
 
 .metaux-timer__max {
-  font-size: 0.68rem;
+  font-size: calc(0.68rem * var(--ui-control-scale, 1));
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.58);
@@ -107,7 +108,7 @@
 }
 
 .metaux-timer__value {
-  font-size: clamp(1.3rem, 2.6vw, 1.7rem);
+  font-size: calc(clamp(1.3rem, 2.6vw, 1.7rem) * var(--ui-control-scale, 1));
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -119,13 +120,14 @@
   align-self: stretch;
   justify-content: center;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.55rem 0.9rem;
-  border-radius: 12px;
+  gap: calc(0.35rem * var(--ui-control-scale, 1));
+  padding: calc(0.55rem * var(--ui-control-scale, 1))
+    calc(0.9rem * var(--ui-control-scale, 1));
+  border-radius: calc(12px * var(--ui-control-scale, 1));
   border: 1px solid rgba(255, 255, 255, 0.18);
   background: linear-gradient(125deg, rgba(255, 153, 58, 0.16), rgba(255, 102, 0, 0.38));
   color: #fff;
-  font-size: 0.85rem;
+  font-size: calc(0.85rem * var(--ui-control-scale, 1));
   letter-spacing: 0.16em;
   text-transform: uppercase;
   cursor: pointer;
@@ -221,17 +223,17 @@
 
 .metaux-end-screen__panel {
   width: min(90vw, 360px);
-  border-radius: 26px;
+  border-radius: calc(26px * var(--ui-control-scale, 1));
   background: linear-gradient(175deg, rgba(16, 20, 36, 0.95), rgba(8, 10, 22, 0.82));
   border: 1px solid rgba(255, 255, 255, 0.16);
   box-shadow:
     0 28px 46px rgba(0, 0, 0, 0.5),
     0 0 0 1px rgba(255, 255, 255, 0.12),
     inset 0 0 42px rgba(255, 255, 255, 0.04);
-  padding: clamp(1.4rem, 3vw, 2.1rem);
+  padding: calc(clamp(1.4rem, 3vw, 2.1rem) * var(--ui-control-scale, 1));
   display: flex;
   flex-direction: column;
-  gap: 1.1rem;
+  gap: calc(1.1rem * var(--ui-control-scale, 1));
   text-align: center;
 }
 
@@ -239,20 +241,20 @@
   margin: 0;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  font-size: clamp(1.2rem, 2.8vw, 1.6rem);
+  font-size: calc(clamp(1.2rem, 2.8vw, 1.6rem) * var(--ui-control-scale, 1));
 }
 
 .metaux-end-screen__summary {
   margin: 0;
   display: grid;
-  gap: 0.8rem;
+  gap: calc(0.8rem * var(--ui-control-scale, 1));
 }
 
 .metaux-end-screen__summary-item {
   display: flex;
   justify-content: space-between;
-  gap: 0.6rem;
-  font-size: 0.95rem;
+  gap: calc(0.6rem * var(--ui-control-scale, 1));
+  font-size: calc(0.95rem * var(--ui-control-scale, 1));
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.75);
@@ -272,16 +274,18 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0.8rem;
-  margin-top: 0.6rem;
+  gap: calc(0.8rem * var(--ui-control-scale, 1));
+  margin-top: calc(0.6rem * var(--ui-control-scale, 1));
 }
 
 .metaux-end-screen__button {
-  padding: 0.6rem 1.6rem;
-  border-radius: 999px;
+  padding: calc(0.6rem * var(--ui-control-scale, 1))
+    calc(1.6rem * var(--ui-control-scale, 1));
+  border-radius: calc(999px * var(--ui-control-scale, 1));
   border: 1px solid rgba(255, 255, 255, 0.26);
   background: linear-gradient(150deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.06));
   color: #f7f9ff;
+  font-size: calc(0.9rem * var(--ui-control-scale, 1));
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -323,17 +327,17 @@
 
 .metaux-end-screen__button-note {
   display: block;
-  margin-top: 0.2rem;
-  font-size: 0.72rem;
+  margin-top: calc(0.2rem * var(--ui-control-scale, 1));
+  font-size: calc(0.72rem * var(--ui-control-scale, 1));
   letter-spacing: 0.08em;
   text-transform: none;
   opacity: 0.84;
 }
 
 .metaux-credit-status {
-  margin-top: 0.6rem;
+  margin-top: calc(0.6rem * var(--ui-control-scale, 1));
   text-align: center;
-  font-size: 0.82rem;
+  font-size: calc(0.82rem * var(--ui-control-scale, 1));
   letter-spacing: 0.04em;
   color: rgba(255, 255, 255, 0.82);
 }

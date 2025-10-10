@@ -247,8 +247,10 @@ select:focus-visible {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.55rem 1.6rem;
-  border-radius: 999px;
+  padding: calc(0.55rem * var(--ui-control-scale, 1))
+    calc(1.6rem * var(--ui-control-scale, 1));
+  border-radius: calc(999px * var(--ui-control-scale, 1));
+  font-size: calc(0.82rem * var(--ui-control-scale, 1));
   font-weight: 600;
   letter-spacing: 0.04em;
   text-decoration: none;
@@ -334,12 +336,13 @@ body.theme-neon select {
 
 .option-toggle-card {
   border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 999px;
-  padding: 0.45rem 0.9rem;
+  border-radius: calc(999px * var(--ui-control-scale, 1));
+  padding: calc(0.45rem * var(--ui-control-scale, 1))
+    calc(0.9rem * var(--ui-control-scale, 1));
   background: rgba(255, 255, 255, 0.06);
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: calc(0.6rem * var(--ui-control-scale, 1));
 }
 
 .option-toggle-card__content {
@@ -348,7 +351,7 @@ body.theme-neon select {
 
 .option-toggle-card__title {
   margin: 0;
-  font-size: calc(0.65rem * var(--font-scale-factor, 1));
+  font-size: calc(0.65rem * var(--ui-control-scale, 1));
   font-weight: 600;
   white-space: nowrap;
 }
@@ -363,10 +366,10 @@ body.theme-neon select {
 .toggle-switch {
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: calc(0.6rem * var(--ui-control-scale, 1));
   cursor: pointer;
   font-weight: 600;
-  font-size: calc(0.65rem * var(--font-scale-factor, 1));
+  font-size: calc(0.65rem * var(--ui-control-scale, 1));
 }
 
 .toggle-switch input {
@@ -377,9 +380,9 @@ body.theme-neon select {
 }
 
 .toggle-switch__track {
-  width: 2.6rem;
-  height: 1.4rem;
-  border-radius: 999px;
+  width: calc(2.6rem * var(--ui-control-scale, 1));
+  height: calc(1.4rem * var(--ui-control-scale, 1));
+  border-radius: calc(999px * var(--ui-control-scale, 1));
   background: rgba(255, 255, 255, 0.28);
   position: relative;
   transition: background var(--transition);
@@ -389,10 +392,10 @@ body.theme-neon select {
 .toggle-switch__track::after {
   content: '';
   position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 1rem;
-  height: 1rem;
+  top: calc(0.125rem * var(--ui-control-scale, 1));
+  left: calc(0.125rem * var(--ui-control-scale, 1));
+  width: calc(1rem * var(--ui-control-scale, 1));
+  height: calc(1rem * var(--ui-control-scale, 1));
   border-radius: 50%;
   background: #fff;
   transition: transform var(--transition);
@@ -404,11 +407,11 @@ body.theme-neon select {
 }
 
 .toggle-switch input:checked + .toggle-switch__track::after {
-  transform: translateX(1.2rem);
+  transform: translateX(calc(1.2rem * var(--ui-control-scale, 1)));
 }
 
 .toggle-switch__label {
-  font-size: 0.9rem;
+  font-size: calc(0.9rem * var(--ui-control-scale, 1));
 }
 
 body.theme-light .option-toggle-card {

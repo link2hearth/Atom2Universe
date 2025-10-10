@@ -41,14 +41,16 @@ body.theme-neon .solitaire {
 
 .solitaire__button {
   appearance: none;
-  border-radius: 12px;
+  border-radius: calc(12px * var(--ui-control-scale, 1));
   border: 1px solid rgba(255, 255, 255, 0.18);
   background: rgba(255, 255, 255, 0.08);
   color: inherit;
   font: inherit;
   font-weight: 600;
   letter-spacing: 0.02em;
-  padding: 0.6rem 1.4rem;
+  font-size: calc(0.95rem * var(--ui-control-scale, 1));
+  padding: calc(0.6rem * var(--ui-control-scale, 1))
+    calc(1.4rem * var(--ui-control-scale, 1));
   cursor: pointer;
   transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
 }

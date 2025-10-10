@@ -38,18 +38,18 @@ body.theme-neon .minesweeper {
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: clamp(0.6rem, 1.8vw, 1.1rem);
+  gap: calc(clamp(0.6rem, 1.8vw, 1.1rem) * var(--ui-control-scale, 1));
 }
 
 .minesweeper__control-group {
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: calc(0.6rem * var(--ui-control-scale, 1));
 }
 
 .minesweeper__label {
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: calc(0.95rem * var(--ui-control-scale, 1));
 }
 
 .minesweeper__select,
@@ -58,6 +58,7 @@ body.theme-neon .minesweeper {
   border-radius: 0.75em;
   font: inherit;
   font-weight: 600;
+  font-size: calc(0.95rem * var(--ui-control-scale, 1));
   padding: 0.55em 0.9em;
   min-height: 2.6em;
   transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease, background 0.2s ease;

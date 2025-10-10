@@ -274,15 +274,16 @@ body.theme-neon .arcade-hud__combo {
 }
 
 .arcade-mode-switch__button {
-  border-radius: 999px;
+  border-radius: calc(999px * var(--ui-control-scale, 1));
   border: 1px solid rgba(120, 170, 255, 0.55);
   background: rgba(30, 60, 140, 0.35);
   color: #f5f7ff;
   font: inherit;
-  font-size: 1rem;
+  font-size: calc(1rem * var(--ui-control-scale, 1));
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  padding: clamp(0.4rem, 0.9vw, 0.65rem) clamp(0.8rem, 1.8vw, 1.4rem);
+  padding: calc(clamp(0.4rem, 0.9vw, 0.65rem) * var(--ui-control-scale, 1))
+    calc(clamp(0.8rem, 1.8vw, 1.4rem) * var(--ui-control-scale, 1));
   cursor: pointer;
   transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
