@@ -102,7 +102,7 @@ body.theme-neon .option-card__description {
 
 .goal-card {
   list-style: none;
-  background: var(--card-dark);
+  background: var(--card-surface);
   border-radius: 14px;
   padding: clamp(0.5rem, 1vw, 0.75rem);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -112,6 +112,9 @@ body.theme-neon .option-card__description {
   position: relative;
   overflow: hidden;
   transition: border var(--transition), box-shadow var(--transition), transform var(--transition);
+  --goal-card-highlight: linear-gradient(120deg, rgba(76, 141, 255, 0.16), rgba(110, 90, 255, 0.08));
+  --goal-card-completed-border: rgba(120, 220, 255, 0.5);
+  --goal-card-completed-shadow: 0 16px 40px rgba(90, 200, 255, 0.25);
 }
 
 .goal-card--locked {
@@ -122,7 +125,7 @@ body.theme-neon .option-card__description {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(120deg, rgba(76, 141, 255, 0.16), rgba(110, 90, 255, 0.08));
+  background: var(--goal-card-highlight);
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--transition);
@@ -161,12 +164,11 @@ body.theme-neon .option-card__description {
 }
 
 .goal-card--completed {
-  border-color: rgba(120, 220, 255, 0.5);
-  box-shadow: 0 16px 40px rgba(90, 200, 255, 0.25);
+  border-color: var(--goal-card-completed-border);
+  box-shadow: var(--goal-card-completed-shadow);
 }
 
 body.theme-light .goal-card {
-  background: var(--card-light);
   border-color: rgba(12, 16, 32, 0.08);
 }
 
@@ -175,12 +177,25 @@ body.theme-light .goal-card__reward {
 }
 
 body.theme-neon .goal-card {
-  background: var(--card-neon);
   border-color: rgba(110, 130, 255, 0.22);
+  --goal-card-highlight: linear-gradient(120deg, rgba(110, 90, 255, 0.2), rgba(80, 110, 255, 0.12));
+  --goal-card-completed-border: rgba(120, 220, 255, 0.5);
+  --goal-card-completed-shadow: 0 16px 40px rgba(90, 200, 255, 0.25);
 }
 
 body.theme-neon .goal-card__reward {
   color: #9ffaff;
+}
+
+body.theme-aurora .goal-card {
+  border-color: rgba(70, 220, 170, 0.28);
+  --goal-card-highlight: linear-gradient(120deg, rgba(60, 210, 150, 0.2), rgba(40, 150, 110, 0.12));
+  --goal-card-completed-border: rgba(120, 255, 210, 0.48);
+  --goal-card-completed-shadow: 0 16px 40px rgba(60, 200, 150, 0.26);
+}
+
+body.theme-aurora .goal-card__reward {
+  color: #5dffc7;
 }
 
 .option-row {

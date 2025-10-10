@@ -901,7 +901,21 @@ LayeredNumber.EPSILON = CONFIG.numbers?.epsilon ?? 1e-12;
 
 const BASE_PER_CLICK = toLayeredNumber(CONFIG.progression?.basePerClick, 1);
 const BASE_PER_SECOND = toLayeredNumber(CONFIG.progression?.basePerSecond, 0);
-const DEFAULT_THEME = CONFIG.progression?.defaultTheme ?? 'dark';
+const DEFAULT_THEME_ID = (() => {
+  const globalThemes = typeof globalThis !== 'undefined' && globalThis.GAME_CONFIG
+    ? globalThis.GAME_CONFIG.themes
+    : null;
+  const themeFromConfig = globalThemes && typeof globalThemes.default === 'string'
+    ? globalThemes.default.trim()
+    : null;
+  if (themeFromConfig) {
+    return themeFromConfig;
+  }
+  const progressionTheme = typeof CONFIG?.progression?.defaultTheme === 'string'
+    ? CONFIG.progression.defaultTheme.trim()
+    : null;
+  return progressionTheme || 'dark';
+})();
 const DEFAULT_MUSIC_VOLUME = 0.5;
 const DEFAULT_MUSIC_ENABLED = true;
 
