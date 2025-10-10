@@ -1080,6 +1080,17 @@
       }
     }
 
+    function clearActiveInput() {
+      if (!activeInput) {
+        return;
+      }
+      const input = activeInput;
+      activeInput = null;
+      if (typeof input.blur === 'function') {
+        input.blur();
+      }
+    }
+
     function applySelectionToInput(input, selection) {
       if (!input || input.dataset.fixed === 'true' || selection === null) {
         return;
@@ -1145,6 +1156,7 @@
     function onValidate() {
       clearHighlights();
       clearPadSelection();
+      clearActiveInput();
       const board = parseGridToBoard(gridElement);
       const { mistakes } = updateMistakeHighlights(board);
       const conflicts = updateConflictState(board, validateBoard(board));
