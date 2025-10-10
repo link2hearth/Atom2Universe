@@ -1633,6 +1633,105 @@ function formatFrenzyMultiRecordValue(rawClicks, rawFrenzies) {
   return translateOrDefault(key, fallback, { count: clicksText, frenzies: frenziesText });
 }
 
+function getPhotonProgressStats() {
+  const progress = gameState.arcadeProgress;
+  if (!progress || typeof progress !== 'object') {
+    return null;
+  }
+  const entries = progress.entries && typeof progress.entries === 'object' ? progress.entries : {};
+  const entry = entries.wave || entries.photon || null;
+  if (!entry || typeof entry !== 'object') {
+    return null;
+  }
+  const state = entry.state && typeof entry.state === 'object' ? entry.state : entry;
+  if (!state || typeof state !== 'object') {
+    return null;
+  }
+  const toNumber = value => {
+    const numeric = Number(value);
+    return Number.isFinite(numeric) && numeric > 0 ? numeric : 0;
+  };
+  const bestDistance = toNumber(
+    state.bestDistance
+      ?? state.bestDistanceMeters
+      ?? state.maxDistance
+      ?? state.distance
+  );
+  const totalDistance = toNumber(
+    state.totalDistance
+      ?? state.distanceTotal
+      ?? state.accumulatedDistance
+      ?? state.distanceAccumulated
+  );
+  const bestSpeed = toNumber(state.bestSpeed ?? state.maxSpeed ?? state.speed);
+  const maxAltitude = toNumber(state.maxAltitude ?? state.bestAltitude ?? state.altitude);
+  return {
+    totalDistance: Math.max(totalDistance, bestDistance),
+    bestSpeed,
+    maxAltitude
+  };
+}
+
+function formatPhotonSpeed(value) {
+  if (!Number.isFinite(value) || value <= 0) {
+    return null;
+  }
+  const digits = value >= 100 ? 0 : 1;
+  return formatNumberLocalized(value, {
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits
+  });
+}
+
+function formatPhotonAltitude(value) {
+  if (!Number.isFinite(value) || value <= 0) {
+    return null;
+  }
+  const digits = value >= 10 ? 0 : 1;
+  return formatNumberLocalized(value, {
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits
+  });
+}
+
+function updatePhotonStats() {
+  const stats = getPhotonProgressStats();
+  const emptyValue = translateOrDefault('scripts.info.progress.photon.empty', '—');
+
+  if (elements.infoPhotonDistanceValue) {
+    if (stats && stats.totalDistance > 0) {
+      const rawDistance = stats.totalDistance;
+      let layered;
+      if (rawDistance instanceof LayeredNumber) {
+        layered = rawDistance.clone();
+      } else if (rawDistance && typeof rawDistance === 'object') {
+        try {
+          layered = LayeredNumber.fromJSON(rawDistance);
+        } catch (error) {
+          layered = new LayeredNumber(rawDistance);
+        }
+      } else {
+        layered = new LayeredNumber(rawDistance);
+      }
+      elements.infoPhotonDistanceValue.textContent = layered.isZero()
+        ? emptyValue
+        : layered.toString();
+    } else {
+      elements.infoPhotonDistanceValue.textContent = emptyValue;
+    }
+  }
+
+  if (elements.infoPhotonSpeedValue) {
+    const formatted = stats ? formatPhotonSpeed(stats.bestSpeed) : null;
+    elements.infoPhotonSpeedValue.textContent = formatted ?? emptyValue;
+  }
+
+  if (elements.infoPhotonAltitudeValue) {
+    const formatted = stats ? formatPhotonAltitude(stats.maxAltitude) : null;
+    elements.infoPhotonAltitudeValue.textContent = formatted ?? emptyValue;
+  }
+}
+
 function updateSessionStats() {
   const session = gameState.stats?.session;
   if (!session) return;
@@ -1710,6 +1809,8 @@ function updateGlobalStats() {
       frenzyStats.best?.frenziesUsed
     );
   }
+
+  updatePhotonStats();
 }
 
 function updateInfoPanels() {
