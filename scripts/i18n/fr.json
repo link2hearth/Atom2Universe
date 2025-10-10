@@ -1265,9 +1265,8 @@
       },
       "fullLabel": "Clavier complet",
       "fullHint": "Cliquez sur une touche pour sélectionner une plage.",
-      "miniLabel": "Zone de jeu",
-      "miniHint": "Les touches sélectionnées apparaissent ici pour la pratique.",
       "rangeLabel": "Plage sélectionnée",
+      "practiceRegionLabel": "Clavier d’entraînement",
       "practiceScrollLabel": "Défilement des notes (zone de jeu)",
       "practiceScrollEnabled": "Défilement activé",
       "practiceScrollDisabled": "Défilement désactivé"

@@ -83,6 +83,122 @@
 
   const DEFAULT_NOTE_NAMES = Object.freeze(['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B']);
 
+  const DEFAULT_PREVIEW_COLOR_PALETTE = Object.freeze([
+    Object.freeze({
+      start: 'rgba(138, 97, 255, 0.95)',
+      end: 'rgba(255, 80, 112, 0.96)',
+      glow: 'rgba(128, 88, 240, 0.45)',
+      landedGlow: 'rgba(255, 96, 148, 0.58)',
+    }),
+    Object.freeze({
+      start: 'rgba(70, 190, 255, 0.95)',
+      end: 'rgba(0, 235, 190, 0.96)',
+      glow: 'rgba(40, 170, 230, 0.42)',
+      landedGlow: 'rgba(0, 235, 190, 0.55)',
+    }),
+    Object.freeze({
+      start: 'rgba(255, 168, 76, 0.95)',
+      end: 'rgba(255, 94, 150, 0.96)',
+      glow: 'rgba(255, 150, 90, 0.45)',
+      landedGlow: 'rgba(255, 110, 160, 0.58)',
+    }),
+    Object.freeze({
+      start: 'rgba(135, 220, 130, 0.95)',
+      end: 'rgba(68, 150, 255, 0.96)',
+      glow: 'rgba(80, 200, 160, 0.42)',
+      landedGlow: 'rgba(72, 150, 255, 0.56)',
+    }),
+    Object.freeze({
+      start: 'rgba(255, 120, 90, 0.95)',
+      end: 'rgba(255, 210, 90, 0.96)',
+      glow: 'rgba(255, 145, 85, 0.42)',
+      landedGlow: 'rgba(255, 210, 110, 0.55)',
+    }),
+    Object.freeze({
+      start: 'rgba(210, 120, 255, 0.95)',
+      end: 'rgba(120, 80, 255, 0.96)',
+      glow: 'rgba(190, 110, 255, 0.45)',
+      landedGlow: 'rgba(140, 90, 255, 0.58)',
+    }),
+  ]);
+
+  const sanitizePreviewColorEntry = (entry) => {
+    if (!entry || typeof entry !== 'object') {
+      return null;
+    }
+
+    const start = typeof entry.start === 'string' ? entry.start.trim() : '';
+    const end = typeof entry.end === 'string' ? entry.end.trim() : '';
+    if (!start || !end) {
+      return null;
+    }
+
+    const glow = typeof entry.glow === 'string' ? entry.glow.trim() : '';
+    const landedGlow = typeof entry.landedGlow === 'string' ? entry.landedGlow.trim() : '';
+
+    return Object.freeze({
+      start,
+      end,
+      glow: glow || null,
+      landedGlow: landedGlow || null,
+    });
+  };
+
+  const resolvePreviewColorPalette = () => {
+    const scope = typeof globalThis !== 'undefined' ? globalThis : null;
+    if (scope && Array.isArray(scope.MIDI_PREVIEW_COLOR_PALETTE)) {
+      const sanitized = scope.MIDI_PREVIEW_COLOR_PALETTE
+        .map(sanitizePreviewColorEntry)
+        .filter(Boolean);
+      if (sanitized.length > 0) {
+        return Object.freeze(sanitized);
+      }
+    }
+    return DEFAULT_PREVIEW_COLOR_PALETTE;
+  };
+
+  const PREVIEW_COLOR_PALETTE = resolvePreviewColorPalette();
+  let previewColorCursor = 0;
+
+  const getNextPreviewColor = () => {
+    if (!Array.isArray(PREVIEW_COLOR_PALETTE) || PREVIEW_COLOR_PALETTE.length === 0) {
+      return DEFAULT_PREVIEW_COLOR_PALETTE[0];
+    }
+    const index = previewColorCursor % PREVIEW_COLOR_PALETTE.length;
+    previewColorCursor = (previewColorCursor + 1) % PREVIEW_COLOR_PALETTE.length;
+    return PREVIEW_COLOR_PALETTE[index] || DEFAULT_PREVIEW_COLOR_PALETTE[0];
+  };
+
+  const applyPreviewColorStyles = (element, paletteEntry) => {
+    if (!element || !paletteEntry) {
+      return;
+    }
+
+    if (paletteEntry.start) {
+      element.style.setProperty('--midi-preview-color-start', paletteEntry.start);
+    } else {
+      element.style.removeProperty('--midi-preview-color-start');
+    }
+
+    if (paletteEntry.end) {
+      element.style.setProperty('--midi-preview-color-end', paletteEntry.end);
+    } else {
+      element.style.removeProperty('--midi-preview-color-end');
+    }
+
+    if (paletteEntry.glow) {
+      element.style.setProperty('--midi-preview-glow', paletteEntry.glow);
+    } else {
+      element.style.removeProperty('--midi-preview-glow');
+    }
+
+    if (paletteEntry.landedGlow) {
+      element.style.setProperty('--midi-preview-glow-strong', paletteEntry.landedGlow);
+    } else {
+      element.style.removeProperty('--midi-preview-glow-strong');
+    }
+  };
+
   const N163_TABLE_LENGTH = 32;
   const N163_WAVE_GENERATORS = {
     default(index, length) {
@@ -8794,6 +8910,10 @@
         bar.className = 'midi-key__preview';
         bar.dataset.eventId = entry.id;
 
+        if (entry.previewColor) {
+          applyPreviewColorStyles(bar, entry.previewColor);
+        }
+
         const labelText = formatNoteName(entry.note);
         if (labelText) {
           bar.dataset.noteLabel = labelText;
@@ -8861,6 +8981,9 @@
       function buildPreviewBars(entry) {
         if (!entry) {
           return;
+        }
+        if (!entry.previewColor) {
+          entry.previewColor = getNextPreviewColor() || DEFAULT_PREVIEW_COLOR_PALETTE[0];
         }
         destroyPreviewBars(entry, { immediate: true });
         const { full: fullLanes, mini: miniLanes } = getKeyLanes(entry.note);
@@ -8959,6 +9082,8 @@
           finalizePreviewEntry(previewEntries.get(eventId), { immediate: true });
         }
 
+        const previewColor = getNextPreviewColor() || DEFAULT_PREVIEW_COLOR_PALETTE[0];
+
         const entry = {
           id: eventId,
           note: normalizedNote,
@@ -8969,6 +9094,7 @@
           bars: [],
           highlightTimer: null,
           highlightStarted: false,
+          previewColor,
         };
 
         previewEntries.set(eventId, entry);

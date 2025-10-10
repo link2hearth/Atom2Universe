@@ -43,11 +43,55 @@ const MIDI_KEYBOARD_WINDOW_SIZE = 24;
  */
 const MIDI_PLAYBACK_PREVIEW_LEAD_SECONDS = 2;
 
+/**
+ * Palette cyclique appliquée aux barres de notes de prévisualisation.
+ * Chaque entrée définit un dégradé (start → end) et les teintes de halo associées.
+ */
+const MIDI_PREVIEW_COLOR_PALETTE = Object.freeze([
+  Object.freeze({
+    start: 'rgba(138, 97, 255, 0.95)',
+    end: 'rgba(255, 80, 112, 0.96)',
+    glow: 'rgba(128, 88, 240, 0.45)',
+    landedGlow: 'rgba(255, 96, 148, 0.58)'
+  }),
+  Object.freeze({
+    start: 'rgba(70, 190, 255, 0.95)',
+    end: 'rgba(0, 235, 190, 0.96)',
+    glow: 'rgba(40, 170, 230, 0.42)',
+    landedGlow: 'rgba(0, 235, 190, 0.55)'
+  }),
+  Object.freeze({
+    start: 'rgba(255, 168, 76, 0.95)',
+    end: 'rgba(255, 94, 150, 0.96)',
+    glow: 'rgba(255, 150, 90, 0.45)',
+    landedGlow: 'rgba(255, 110, 160, 0.58)'
+  }),
+  Object.freeze({
+    start: 'rgba(135, 220, 130, 0.95)',
+    end: 'rgba(68, 150, 255, 0.96)',
+    glow: 'rgba(80, 200, 160, 0.42)',
+    landedGlow: 'rgba(72, 150, 255, 0.56)'
+  }),
+  Object.freeze({
+    start: 'rgba(255, 120, 90, 0.95)',
+    end: 'rgba(255, 210, 90, 0.96)',
+    glow: 'rgba(255, 145, 85, 0.42)',
+    landedGlow: 'rgba(255, 210, 110, 0.55)'
+  }),
+  Object.freeze({
+    start: 'rgba(210, 120, 255, 0.95)',
+    end: 'rgba(120, 80, 255, 0.96)',
+    glow: 'rgba(190, 110, 255, 0.45)',
+    landedGlow: 'rgba(140, 90, 255, 0.58)'
+  })
+]);
+
 if (typeof globalThis !== 'undefined') {
   globalThis.MIDI_KEYBOARD_LAYOUTS = MIDI_KEYBOARD_LAYOUTS;
   globalThis.MIDI_DEFAULT_KEYBOARD_LAYOUT_ID = MIDI_DEFAULT_KEYBOARD_LAYOUT_ID;
   globalThis.MIDI_KEYBOARD_WINDOW_SIZE = MIDI_KEYBOARD_WINDOW_SIZE;
   globalThis.MIDI_PLAYBACK_PREVIEW_LEAD_SECONDS = MIDI_PLAYBACK_PREVIEW_LEAD_SECONDS;
+  globalThis.MIDI_PREVIEW_COLOR_PALETTE = MIDI_PREVIEW_COLOR_PALETTE;
 }
 
 function translateOrDefault(key, fallback, params) {

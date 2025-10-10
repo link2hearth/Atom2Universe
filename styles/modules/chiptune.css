@@ -304,16 +304,22 @@
 :root {
   --midi-preview-color-start: rgba(138, 97, 255, 0.95);
   --midi-preview-color-end: rgba(255, 80, 112, 0.96);
+  --midi-preview-glow: rgba(122, 77, 255, 0.45);
+  --midi-preview-glow-strong: rgba(255, 80, 112, 0.55);
 }
 
 body.theme-light {
   --midi-preview-color-start: rgba(120, 90, 240, 0.9);
   --midi-preview-color-end: rgba(240, 70, 100, 0.9);
+  --midi-preview-glow: rgba(110, 80, 200, 0.45);
+  --midi-preview-glow-strong: rgba(230, 90, 140, 0.45);
 }
 
 body.theme-neon {
   --midi-preview-color-start: rgba(150, 110, 255, 0.95);
   --midi-preview-color-end: rgba(255, 90, 140, 0.98);
+  --midi-preview-glow: rgba(160, 130, 255, 0.5);
+  --midi-preview-glow-strong: rgba(255, 100, 150, 0.58);
 }
 
 .midi-page {
@@ -696,6 +702,23 @@ body.theme-neon .midi-keyboard__instrument--full {
   transform: translateX(-50%);
 }
 
+.midi-keyboard__instrument--mini .midi-key {
+  min-height: clamp(9rem, 24vw, 15rem);
+}
+
+.midi-keyboard__instrument--mini .midi-key--black {
+  min-height: clamp(6.6rem, 18vw, 10.5rem);
+  top: -28%;
+}
+
+.midi-keyboard__instrument--mini .midi-key__lane {
+  inset: clamp(0.24rem, 0.6vw, 0.38rem);
+}
+
+.midi-keyboard__instrument--mini .midi-key--black .midi-key__lane {
+  inset: clamp(0.2rem, 0.55vw, 0.34rem);
+}
+
 .midi-key__preview {
   position: absolute;
   left: 22%;
@@ -703,13 +726,13 @@ body.theme-neon .midi-keyboard__instrument--full {
   top: calc(-1 * var(--midi-preview-height, 18px));
   height: var(--midi-preview-height, 18px);
   border-radius: 999px;
-  background: linear-gradient(180deg, var(--midi-preview-color-start), rgba(240, 88, 140, 0.92));
+  background: linear-gradient(180deg, var(--midi-preview-color-start), var(--midi-preview-color-end));
   opacity: 0;
   transform: translateY(0);
-  box-shadow: 0 0 18px rgba(122, 77, 255, 0.45);
+  box-shadow: 0 0 18px var(--midi-preview-glow, rgba(122, 77, 255, 0.45));
   overflow: visible;
   will-change: transform, opacity;
-  transition: opacity 0.18s ease-out, box-shadow 0.3s ease-out, background-color 0.3s ease-out;
+  transition: opacity 0.18s ease-out, box-shadow 0.3s ease-out, background 0.3s ease-out;
   z-index: 2;
 }
 
@@ -790,7 +813,7 @@ body.theme-neon .midi-keyboard__instrument--full {
 
 .midi-key__preview.is-landed {
   background: var(--midi-preview-color-end);
-  box-shadow: 0 0 24px rgba(255, 80, 112, 0.55);
+  box-shadow: 0 0 24px var(--midi-preview-glow-strong, rgba(255, 80, 112, 0.55));
 }
 
 .midi-key__preview.is-landed .midi-key__preview-label {
@@ -806,12 +829,11 @@ body.theme-neon .midi-keyboard__instrument--full {
 }
 
 body.theme-light .midi-key__preview {
-  background: linear-gradient(180deg, rgba(160, 190, 255, 0.95), rgba(255, 150, 190, 0.9));
-  box-shadow: 0 0 16px rgba(110, 80, 200, 0.45);
+  box-shadow: 0 0 16px var(--midi-preview-glow, rgba(110, 80, 200, 0.45));
 }
 
 body.theme-light .midi-key__preview.is-landed {
-  box-shadow: 0 0 22px rgba(230, 90, 140, 0.45);
+  box-shadow: 0 0 22px var(--midi-preview-glow-strong, rgba(230, 90, 140, 0.45));
 }
 
 body.theme-light .midi-key__preview-label {
@@ -837,11 +859,11 @@ body.theme-light .midi-key__preview.is-landed .midi-key__preview-label {
 }
 
 body.theme-neon .midi-key__preview {
-  box-shadow: 0 0 22px rgba(160, 130, 255, 0.5);
+  box-shadow: 0 0 22px var(--midi-preview-glow, rgba(160, 130, 255, 0.5));
 }
 
 body.theme-neon .midi-key__preview.is-landed {
-  box-shadow: 0 0 26px rgba(255, 100, 150, 0.58);
+  box-shadow: 0 0 26px var(--midi-preview-glow-strong, rgba(255, 100, 150, 0.58));
 }
 
 body.theme-neon .midi-key__preview-label {
