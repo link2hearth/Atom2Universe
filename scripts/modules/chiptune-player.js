@@ -8891,13 +8891,26 @@
         entry.bars = [];
       }
 
-      function computePreviewBarHeight(laneHeight, sustainSeconds) {
-        const duration = Math.max(0.08, Number.isFinite(sustainSeconds) ? sustainSeconds : 0.08);
+      function computePreviewDotDiameter(laneHeight) {
         if (laneHeight <= 0) {
-          return Math.max(12, Math.min(140, duration * 60));
+          return 14;
         }
-        const durationRatio = Math.max(0.18, Math.min(0.88, duration / 3.2));
-        return Math.max(10, Math.min(laneHeight * 0.85, laneHeight * (0.24 + durationRatio)));
+        return Math.max(10, Math.min(22, laneHeight * 0.12));
+      }
+
+      function computePreviewBarHeight(laneHeight, sustainSeconds, dotDiameter) {
+        const duration = Math.max(0.08, Number.isFinite(sustainSeconds) ? sustainSeconds : 0.08);
+        const baseHeight = Math.max(10, dotDiameter || 12);
+        if (duration <= 0.22) {
+          return baseHeight;
+        }
+        if (laneHeight <= 0) {
+          const elongated = baseHeight + (duration - 0.22) * 80;
+          return Math.max(baseHeight, Math.min(baseHeight * 4, elongated));
+        }
+        const normalized = Math.max(0.12, Math.min(0.92, duration / 3.4));
+        const elongated = laneHeight * (0.2 + normalized * 0.7);
+        return Math.max(baseHeight, Math.min(laneHeight * 0.9, elongated));
       }
 
       function createPreviewBar(entry, lane, previewDuration) {
@@ -8927,11 +8940,17 @@
         }
 
         const laneHeight = getLaneHeight(lane);
-        const barHeight = computePreviewBarHeight(laneHeight, entry.sustainSeconds);
+        const dotDiameter = computePreviewDotDiameter(laneHeight);
+        const barHeight = computePreviewBarHeight(laneHeight, entry.sustainSeconds, dotDiameter);
         const travelDistance = laneHeight > 0
           ? laneHeight
           : Math.max(barHeight * 2.2, 48);
 
+        if (Number.isFinite(dotDiameter)) {
+          bar.style.setProperty('--midi-preview-diameter', `${dotDiameter}px`);
+        } else {
+          bar.style.removeProperty('--midi-preview-diameter');
+        }
         bar.style.height = `${barHeight}px`;
         bar.style.setProperty('--midi-preview-height', `${barHeight}px`);
         bar.style.setProperty('--midi-preview-travel', `${travelDistance}px`);
