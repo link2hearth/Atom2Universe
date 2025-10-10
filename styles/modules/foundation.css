@@ -846,18 +846,18 @@ body.theme-neon .nav-button.active {
 }
 
 /* Individual navigation button palettes */
-.nav-button[data-target="arcade"] {
-  --nav-button-bg: linear-gradient(135deg, #8ef7a3 0%, #caffbf 100%);
-  --nav-button-bg-light: linear-gradient(135deg, #69e58d 0%, #b8f8c9 100%);
-  --nav-button-bg-neon: linear-gradient(135deg, rgba(142, 247, 163, 0.85) 0%, rgba(202, 255, 191, 0.9) 100%);
-  --nav-button-color: #06381c;
-  --nav-button-color-light: #042315;
-  --nav-button-color-neon: #042315;
-  --nav-button-active-bg: #5ce08d;
-  --nav-button-active-bg-neon: linear-gradient(135deg, #5ce08d 0%, #9fffbf 100%);
-  --nav-button-active-color: #042414;
-  --nav-button-active-color-light: #02160c;
-  --nav-button-active-color-neon: #02160c;
+.nav-button[data-target="arcadeHub"] {
+  --nav-button-bg: linear-gradient(135deg, #2f9e44 0%, #71d36b 100%);
+  --nav-button-bg-light: linear-gradient(135deg, #2a8c3d 0%, #63c75f 100%);
+  --nav-button-bg-neon: linear-gradient(135deg, rgba(47, 158, 68, 0.85) 0%, rgba(113, 211, 107, 0.9) 100%);
+  --nav-button-color: #041d10;
+  --nav-button-color-light: #03160c;
+  --nav-button-color-neon: #03160c;
+  --nav-button-active-bg: #37b24d;
+  --nav-button-active-bg-neon: linear-gradient(135deg, #37b24d 0%, #8ce073 100%);
+  --nav-button-active-color: #021208;
+  --nav-button-active-color-light: #010c05;
+  --nav-button-active-color-neon: #010c05;
 }
 
 .nav-button[data-target="shop"] {
