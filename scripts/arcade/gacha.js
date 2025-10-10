@@ -2549,6 +2549,17 @@ function initParticulesGame() {
   if (particulesGame || !elements.arcadeCanvas || typeof ParticulesGame !== 'function') {
     return;
   }
+  let initialState = null;
+  if (typeof window !== 'undefined' && window.ArcadeAutosave && typeof window.ArcadeAutosave.get === 'function') {
+    try {
+      initialState = window.ArcadeAutosave.get('particules');
+    } catch (error) {
+      initialState = null;
+    }
+  }
+  if (initialState && typeof initialState === 'object' && initialState.brickSkin != null) {
+    particulesBrickSkinPreference = normalizeParticulesBrickSkin(initialState.brickSkin);
+  }
   particulesGame = new ParticulesGame({
     canvas: elements.arcadeCanvas,
     particleLayer: elements.arcadeParticleLayer,
@@ -2561,6 +2572,7 @@ function initParticulesGame() {
     scoreLabel: elements.arcadeScoreValue,
     comboLabel: elements.arcadeComboMessage,
     brickSkin: particulesBrickSkinPreference,
+    initialState,
     formatTicketLabel,
     formatBonusTicketLabel,
     modeField: elements.arcadeModeField,

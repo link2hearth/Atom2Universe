@@ -1456,6 +1456,66 @@
 
   const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 
+  const AUTOSAVE_GAME_ID = 'particules';
+
+  const normalizeOverlaySnapshot = raw => {
+    if (!raw || typeof raw !== 'object') {
+      return { visible: false };
+    }
+    const visible = raw.visible === true;
+    if (!visible) {
+      return { visible: false };
+    }
+    const readLabel = value => (typeof value === 'string' ? value.trim() : '');
+    return {
+      visible: true,
+      action: typeof raw.action === 'string' ? raw.action : null,
+      message: readLabel(raw.message),
+      buttonLabel: readLabel(raw.buttonLabel),
+      secondaryButtonLabel: readLabel(raw.secondaryButtonLabel),
+      secondaryAction: typeof raw.secondaryAction === 'string' ? raw.secondaryAction : null
+    };
+  };
+
+  const normalizeParticulesSavedState = raw => {
+    if (!raw || typeof raw !== 'object') {
+      return null;
+    }
+    const level = Number(raw.level);
+    if (!Number.isFinite(level) || level < 1) {
+      return null;
+    }
+    const score = Number(raw.score);
+    const lives = Number(raw.lives);
+    const maxLives = Number(raw.maxLives);
+    const tickets = Number(raw.ticketsEarned);
+    const bonusTickets = Number(raw.specialTicketsEarned);
+    const ratio = Number(raw.paidModeCostRatio);
+    const normalized = {
+      version: 1,
+      level: Math.max(1, Math.floor(level)),
+      score: Number.isFinite(score) ? Math.max(0, Math.floor(score)) : 0,
+      lives: Number.isFinite(lives) ? Math.max(0, Math.floor(lives)) : MAX_LIVES,
+      maxLives: Number.isFinite(maxLives) ? Math.max(1, Math.floor(maxLives)) : MAX_LIVES,
+      ticketsEarned: Number.isFinite(tickets) ? Math.max(0, Math.floor(tickets)) : 0,
+      specialTicketsEarned: Number.isFinite(bonusTickets)
+        ? Math.max(0, Math.floor(bonusTickets))
+        : 0,
+      pendingLevelAdvance: raw.pendingLevelAdvance === true,
+      pendingResume: raw.pendingResume === true,
+      pendingFloorShieldBonus: raw.pendingFloorShieldBonus === false ? false : true,
+      currentMode: typeof raw.currentMode === 'string' ? raw.currentMode : null,
+      paidModeCostRatio: Number.isFinite(ratio) ? clamp(ratio, 0, 1) : null,
+      brickSkin: normalizeBrickSkinKey(raw.brickSkin),
+      overlay: normalizeOverlaySnapshot(raw.overlay),
+      timestamp: Number.isFinite(Number(raw.timestamp)) ? Number(raw.timestamp) : null
+    };
+    if (normalized.lives > normalized.maxLives) {
+      normalized.lives = normalized.maxLives;
+    }
+    return normalized;
+  };
+
   class ParticulesGame {
     constructor(options = {}) {
       const {
@@ -1479,8 +1539,11 @@
         computePaidModeCost,
         formatPaidModeCost,
         onPaidModeStart,
-        onPaidModeUnavailable
+        onPaidModeUnavailable,
+        initialState
       } = options;
+
+      const savedState = normalizeParticulesSavedState(initialState);
 
       this.canvas = canvas;
       this.overlay = overlay;
@@ -1551,18 +1614,22 @@
       this.ctx = context;
       this.enabled = true;
       const initialBrickSkin = normalizeBrickSkinKey(
-        options.brickSkin != null ? options.brickSkin : SETTINGS.bricks.skin
+        savedState?.brickSkin != null
+          ? savedState.brickSkin
+          : options.brickSkin != null
+            ? options.brickSkin
+            : SETTINGS.bricks.skin
       );
       this.brickSkin = initialBrickSkin;
       SETTINGS.bricks.skin = initialBrickSkin;
       this.gridCols = GRID_COLS;
       this.gridRows = GRID_ROWS;
       this.maxLives = MAX_LIVES;
-      this.level = 1;
+      this.level = savedState ? savedState.level : 1;
       this.lives = this.maxLives;
-      this.score = 0;
-      this.ticketsEarned = 0;
-      this.specialTicketsEarned = 0;
+      this.score = savedState ? savedState.score : 0;
+      this.ticketsEarned = savedState ? savedState.ticketsEarned : 0;
+      this.specialTicketsEarned = savedState ? savedState.specialTicketsEarned : 0;
       this.pendingLevelAdvance = false;
       this.pendingFloorShieldBonus = false;
       this.pointerActive = false;
@@ -1593,8 +1660,13 @@
       this.stagePulseTimeout = null;
       this.levelStartedAt = 0;
       this.lastLingerBonusCheckAt = 0;
-      this.currentMode = this.normalizeMode(DEFAULT_MODE_ID);
-      this.paidModeCostRatio = PAID_MODE_COST_RATIO;
+      this.currentMode = this.normalizeMode(savedState?.currentMode || DEFAULT_MODE_ID);
+      this.paidModeCostRatio = typeof savedState?.paidModeCostRatio === 'number'
+        ? clamp(savedState.paidModeCostRatio, 0, 1)
+        : PAID_MODE_COST_RATIO;
+      this.autosaveTimer = null;
+      this.autosaveDelayMs = 250;
+      this.isRestoringState = false;
 
       this.paddle = {
         baseWidthRatio: SETTINGS.paddle.baseWidthRatio,
@@ -1653,18 +1725,27 @@
       this.setupLevel();
       this.updateModeButtonStates();
       this.updateModeHint();
-      this.showOverlay({
-        message:
-          (this.overlayMessage?.textContent || '').trim()
-          || START_OVERLAY_MESSAGE,
-        buttonLabel: START_OVERLAY_BUTTON,
-        action: 'start'
-      });
+      if (savedState) {
+        this.isRestoringState = true;
+        this.applySavedState(savedState);
+        this.isRestoringState = false;
+      } else {
+        this.showOverlay({
+          message:
+            (this.overlayMessage?.textContent || '').trim()
+            || START_OVERLAY_MESSAGE,
+          buttonLabel: START_OVERLAY_BUTTON,
+          action: 'start'
+        });
+      }
+      this.scheduleAutosave();
     }
 
     dispose() {
       if (!this.enabled) return;
       this.stopAnimation();
+      this.persistAutosave();
+      this.clearAutosaveTimer();
       this.canvas.removeEventListener('pointerdown', this.handlePointerDown);
       this.canvas.removeEventListener('pointermove', this.handlePointerMove);
       this.canvas.removeEventListener('pointerup', this.handlePointerUp);
@@ -2458,6 +2539,9 @@
         });
       }
       this.render();
+      if (!this.isRestoringState) {
+        this.scheduleAutosave();
+      }
     }
 
     prepareServe() {
@@ -2546,6 +2630,7 @@
             duration: LEVEL_START_FLOOR_DURATION_MS
           });
           this.pendingFloorShieldBonus = false;
+          this.scheduleAutosave();
         }
         this.startAnimation();
       }
@@ -2968,6 +3053,7 @@
         this.registerQuarkCombo(brick.particle.quarkColor);
       }
       this.registerComboChain(brick);
+      this.scheduleAutosave();
       const hasRemaining = this.bricks.some(entry => entry.active);
       if (!hasRemaining) {
         this.handleLevelCleared();
@@ -3137,6 +3223,7 @@
         if (this.onSpecialTicket) {
           this.onSpecialTicket(1);
         }
+        this.scheduleAutosave();
       }
     }
 
@@ -3381,7 +3468,7 @@
         message,
         buttonLabel: LEVEL_CLEARED_BUTTON,
         action: 'next',
-        secondaryButtonLabel: LEVEL_CLEARED_QUIT_BUTTON,
+        secondaryButtonLabel: this.getLevelClearedQuitButtonLabel(),
         secondaryAction: 'quit'
       });
     }
@@ -3390,6 +3477,7 @@
       this.stopAnimation();
       this.lives = Math.max(0, this.lives - 1);
       this.updateHud();
+      this.scheduleAutosave();
       if (this.lives > 0) {
         this.prepareServe();
         this.hideOverlay();
@@ -3456,6 +3544,9 @@
         ? secondaryAction
         : null;
       this.updateModeUI(action);
+      if (!this.isRestoringState) {
+        this.scheduleAutosave();
+      }
     }
 
     hideOverlay() {
@@ -3468,6 +3559,9 @@
         this.overlaySecondaryButton.disabled = true;
       }
       this.overlaySecondaryAction = null;
+      if (!this.isRestoringState) {
+        this.scheduleAutosave();
+      }
     }
 
     isOverlayVisible() {
@@ -3486,6 +3580,7 @@
       this.setupLevel();
       this.hideOverlay();
       this.releaseHeldBalls();
+      this.scheduleAutosave();
     }
 
     resumeFromPause() {
@@ -3494,6 +3589,7 @@
       if (!this.releaseHeldBalls()) {
         this.startAnimation();
       }
+      this.scheduleAutosave();
     }
 
     quitToMenu() {
@@ -3513,6 +3609,7 @@
         buttonLabel: START_OVERLAY_BUTTON,
         action: 'start'
       });
+      this.scheduleAutosave();
     }
 
     startNextLevel() {
@@ -3523,6 +3620,7 @@
       this.setupLevel();
       this.hideOverlay();
       this.releaseHeldBalls();
+      this.scheduleAutosave();
     }
 
     handlePointerDown(event) {
@@ -3600,6 +3698,7 @@
       this.currentMode = normalized;
       this.updateModeButtonStates();
       this.updateModeHint();
+      this.scheduleAutosave();
     }
 
     areRewardsEnabled() {
@@ -3709,6 +3808,240 @@
       }
     }
 
+    getLevelClearedQuitButtonLabel() {
+      const translated = translate('scripts.particules.ui.levelCleared.quitButton');
+      if (typeof translated === 'string') {
+        const trimmed = translated.trim();
+        if (trimmed && trimmed !== 'scripts.particules.ui.levelCleared.quitButton') {
+          return trimmed;
+        }
+      }
+      const configured = typeof LEVEL_CLEARED_QUIT_BUTTON === 'string'
+        ? LEVEL_CLEARED_QUIT_BUTTON
+        : SETTINGS?.ui?.levelCleared?.quitButtonLabel;
+      if (typeof configured === 'string') {
+        const trimmedConfigured = configured.trim();
+        if (trimmedConfigured && trimmedConfigured !== 'scripts.particules.ui.levelCleared.quitButton') {
+          return trimmedConfigured;
+        }
+      }
+      const overlayLabel = translate('index.sections.arcade.overlay.quit');
+      if (typeof overlayLabel === 'string') {
+        const trimmedOverlay = overlayLabel.trim();
+        if (trimmedOverlay && trimmedOverlay !== 'index.sections.arcade.overlay.quit') {
+          return trimmedOverlay;
+        }
+      }
+      return 'Quitter';
+    }
+
+    getAutosaveApi() {
+      if (typeof window === 'undefined') {
+        return null;
+      }
+      const api = window.ArcadeAutosave;
+      if (!api || typeof api.set !== 'function') {
+        return null;
+      }
+      return api;
+    }
+
+    buildOverlaySnapshot() {
+      if (!this.overlay) {
+        return { visible: false };
+      }
+      const visible = this.isOverlayVisible();
+      if (!visible) {
+        return { visible: false };
+      }
+      const hasSecondary = Boolean(
+        this.overlaySecondaryButton
+        && !this.overlaySecondaryButton.hidden
+        && !this.overlaySecondaryButton.disabled
+      );
+      return {
+        visible: true,
+        action: typeof this.overlayAction === 'string' ? this.overlayAction : null,
+        message: (this.overlayMessage?.textContent || '').trim(),
+        buttonLabel: (this.overlayButton?.textContent || '').trim(),
+        secondaryButtonLabel: hasSecondary
+          ? (this.overlaySecondaryButton.textContent || '').trim()
+          : '',
+        secondaryAction: hasSecondary && typeof this.overlaySecondaryAction === 'string'
+          ? this.overlaySecondaryAction
+          : null
+      };
+    }
+
+    serializeState() {
+      if (!this.enabled) {
+        return null;
+      }
+      const overlaySnapshot = this.buildOverlaySnapshot();
+      const maxLives = Math.max(1, Math.floor(Number(this.maxLives) || MAX_LIVES));
+      const lives = Math.max(0, Math.floor(Number(this.lives) || 0));
+      const runningBall = this.balls.some(ball => ball && ball.inPlay);
+      return {
+        version: 1,
+        level: Math.max(1, Math.floor(Number(this.level) || 1)),
+        score: Math.max(0, Math.floor(Number(this.score) || 0)),
+        lives: Math.min(maxLives, lives),
+        maxLives,
+        ticketsEarned: Math.max(0, Math.floor(Number(this.ticketsEarned) || 0)),
+        specialTicketsEarned: Math.max(0, Math.floor(Number(this.specialTicketsEarned) || 0)),
+        pendingLevelAdvance: Boolean(this.pendingLevelAdvance),
+        pendingResume: Boolean(this.pendingResume)
+          || (!overlaySnapshot.visible && (this.running || runningBall)),
+        pendingFloorShieldBonus: Boolean(this.pendingFloorShieldBonus),
+        currentMode: this.currentMode,
+        paidModeCostRatio: typeof this.paidModeCostRatio === 'number'
+          ? clamp(this.paidModeCostRatio, 0, 1)
+          : PAID_MODE_COST_RATIO,
+        brickSkin: this.brickSkin || null,
+        overlay: overlaySnapshot,
+        timestamp: Date.now()
+      };
+    }
+
+    persistAutosave() {
+      if (!this.enabled) {
+        return;
+      }
+      const api = this.getAutosaveApi();
+      if (!api) {
+        return;
+      }
+      const payload = this.serializeState();
+      if (!payload) {
+        if (typeof api.clear === 'function') {
+          try {
+            api.clear(AUTOSAVE_GAME_ID);
+          } catch (error) {
+            // Ignore storage errors
+          }
+        }
+        return;
+      }
+      try {
+        api.set(AUTOSAVE_GAME_ID, payload);
+      } catch (error) {
+        // Ignore autosave persistence errors
+      }
+    }
+
+    scheduleAutosave() {
+      if (this.isRestoringState) {
+        return;
+      }
+      const api = this.getAutosaveApi();
+      if (!api) {
+        return;
+      }
+      if (this.autosaveTimer) {
+        clearTimeout(this.autosaveTimer);
+      }
+      const delay = Number(this.autosaveDelayMs);
+      const timeout = Number.isFinite(delay) && delay >= 0 ? delay : 200;
+      this.autosaveTimer = setTimeout(() => {
+        this.autosaveTimer = null;
+        this.persistAutosave();
+      }, timeout);
+    }
+
+    clearAutosaveTimer() {
+      if (this.autosaveTimer) {
+        clearTimeout(this.autosaveTimer);
+        this.autosaveTimer = null;
+      }
+    }
+
+    applySavedState(savedState) {
+      if (!savedState || typeof savedState !== 'object') {
+        return;
+      }
+      const normalizedMode = this.normalizeMode(savedState.currentMode || this.currentMode);
+      if (normalizedMode !== this.currentMode) {
+        this.currentMode = normalizedMode;
+      }
+      if (typeof savedState.paidModeCostRatio === 'number') {
+        this.paidModeCostRatio = clamp(savedState.paidModeCostRatio, 0, 1);
+      }
+      if (savedState.brickSkin != null && savedState.brickSkin !== this.brickSkin) {
+        this.setBrickSkin(savedState.brickSkin);
+      } else {
+        this.render();
+      }
+      this.level = Math.max(1, Math.floor(Number(savedState.level) || this.level || 1));
+      this.score = Math.max(0, Math.floor(Number(savedState.score) || 0));
+      this.ticketsEarned = Math.max(0, Math.floor(Number(savedState.ticketsEarned) || 0));
+      this.specialTicketsEarned = Math.max(0, Math.floor(Number(savedState.specialTicketsEarned) || 0));
+      const maxLives = Math.max(1, Math.floor(Number(savedState.maxLives) || this.maxLives || MAX_LIVES));
+      const lives = Math.min(maxLives, Math.max(0, Math.floor(Number(savedState.lives) || maxLives)));
+      this.lives = lives;
+      this.pendingLevelAdvance = Boolean(savedState.pendingLevelAdvance);
+      this.pendingResume = Boolean(savedState.pendingResume);
+      this.pendingFloorShieldBonus = savedState.pendingFloorShieldBonus === false ? false : true;
+      this.updateHud();
+      this.updateModeButtonStates();
+      this.updateModeHint();
+
+      const overlayState = savedState.overlay && savedState.overlay.visible ? savedState.overlay : null;
+      if (overlayState) {
+        let message = overlayState.message || '';
+        let buttonLabel = overlayState.buttonLabel || '';
+        let secondaryLabel = overlayState.secondaryButtonLabel || '';
+        let action = overlayState.action || 'start';
+        let secondaryAction = overlayState.secondaryAction || null;
+        if (action === 'start') {
+          message = START_OVERLAY_MESSAGE;
+          buttonLabel = START_OVERLAY_BUTTON;
+          secondaryLabel = '';
+          secondaryAction = null;
+        } else if (action === 'resume') {
+          message = PAUSE_OVERLAY_MESSAGE;
+          buttonLabel = PAUSE_OVERLAY_BUTTON;
+          secondaryLabel = '';
+          secondaryAction = null;
+        } else if (action === 'next') {
+          buttonLabel = LEVEL_CLEARED_BUTTON || buttonLabel;
+          if (!secondaryLabel) {
+            secondaryLabel = this.getLevelClearedQuitButtonLabel();
+          }
+          if (!secondaryAction && secondaryLabel) {
+            secondaryAction = 'quit';
+          }
+        } else if (action === 'restart') {
+          buttonLabel = GAME_OVER_BUTTON || buttonLabel;
+        }
+        this.showOverlay({
+          message,
+          buttonLabel,
+          action,
+          secondaryButtonLabel: secondaryLabel,
+          secondaryAction
+        });
+      } else if (this.pendingResume) {
+        this.showOverlay({
+          message: PAUSE_OVERLAY_MESSAGE,
+          buttonLabel: PAUSE_OVERLAY_BUTTON,
+          action: 'resume'
+        });
+      } else if (this.pendingLevelAdvance) {
+        const fallbackMessage = LEVEL_CLEARED_TEMPLATE
+          .replace('{level}', this.level)
+          .replace('{reward}', '');
+        this.showOverlay({
+          message: savedState.overlay?.message || fallbackMessage,
+          buttonLabel: LEVEL_CLEARED_BUTTON,
+          action: 'next',
+          secondaryButtonLabel: this.getLevelClearedQuitButtonLabel(),
+          secondaryAction: 'quit'
+        });
+      } else {
+        this.hideOverlay();
+      }
+    }
+
     tryActivatePaidMode() {
       if (!this.areRewardsEnabled()) {
         return true;
@@ -3745,6 +4078,15 @@
     handleLanguageChange() {
       this.updateModeButtonStates();
       this.updateModeHint();
+      const hasQuitSecondary = this.overlaySecondaryAction === 'quit'
+        && this.overlaySecondaryButton
+        && !this.overlaySecondaryButton.hidden;
+      if (hasQuitSecondary) {
+        this.overlaySecondaryButton.textContent = this.getLevelClearedQuitButtonLabel();
+      }
+      if (this.isOverlayVisible() && !this.isRestoringState) {
+        this.scheduleAutosave();
+      }
     }
 
     handleOverlayButtonClick() {
@@ -3780,6 +4122,7 @@
           action: 'resume'
         });
         this.pendingResume = false;
+        this.scheduleAutosave();
       }
       if (this.balls.some(ball => ball.inPlay) && !this.isOverlayVisible()) {
         this.startAnimation();
@@ -3795,6 +4138,7 @@
         this.prepareServe();
       }
       this.stopAnimation();
+      this.scheduleAutosave();
     }
 
     setComboMessage(message, duration = 2500) {
