@@ -350,7 +350,7 @@ body.theme-light .arcade-mode-hint {
   background: linear-gradient(135deg, rgba(30, 60, 140, 0.95), rgba(110, 170, 255, 0.98));
   color: #fff;
   font: inherit;
-  padding: clamp(0.4rem, 0.9vw, 0.65rem) clamp(1rem, 2.2vw, 1.5rem);
+  padding: clamp(0.4em, 0.9vw, 0.65em) clamp(1em, 2.2vw, 1.5em);
   text-align: center;
   letter-spacing: 0.06em;
   cursor: pointer;
