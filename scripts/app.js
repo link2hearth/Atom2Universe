@@ -100,6 +100,129 @@ const DIGIT_FONT_CHOICES = Object.freeze({
   }
 });
 
+const FALLBACK_THEME_DEFINITIONS = Object.freeze([
+  Object.freeze({
+    id: 'dark',
+    name: 'Thème sombre',
+    labelKey: 'scripts.config.themes.dark',
+    classes: Object.freeze(['theme-dark'])
+  }),
+  Object.freeze({
+    id: 'light',
+    name: 'Thème clair',
+    labelKey: 'scripts.config.themes.light',
+    classes: Object.freeze(['theme-light'])
+  }),
+  Object.freeze({
+    id: 'neon',
+    name: 'Thème néon',
+    labelKey: 'scripts.config.themes.neon',
+    classes: Object.freeze(['theme-neon'])
+  }),
+  Object.freeze({
+    id: 'aurora',
+    name: 'Thème Aurore',
+    labelKey: 'scripts.config.themes.aurora',
+    classes: Object.freeze(['theme-aurora', 'theme-neon'])
+  })
+]);
+
+function normalizeThemeDefinition(theme, fallbackIndex = 0) {
+  if (!theme || typeof theme !== 'object') {
+    return null;
+  }
+  const fallback = FALLBACK_THEME_DEFINITIONS[fallbackIndex] || FALLBACK_THEME_DEFINITIONS[0];
+  const id = typeof theme.id === 'string' && theme.id.trim()
+    ? theme.id.trim()
+    : fallback.id;
+  if (!id) {
+    return null;
+  }
+  const labelKey = typeof theme.labelKey === 'string' && theme.labelKey.trim()
+    ? theme.labelKey.trim()
+    : typeof fallback.labelKey === 'string'
+      ? fallback.labelKey
+      : null;
+  const name = typeof theme.name === 'string' && theme.name.trim()
+    ? theme.name.trim()
+    : typeof fallback.name === 'string'
+      ? fallback.name
+      : id;
+  const classes = Array.isArray(theme.classes)
+    ? theme.classes.map(cls => (typeof cls === 'string' ? cls.trim() : '')).filter(Boolean)
+    : Array.isArray(fallback.classes)
+      ? [...fallback.classes]
+      : [];
+  if (!classes.length) {
+    classes.push('theme-dark');
+  }
+  return Object.freeze({ id, labelKey, name, classes: Object.freeze(classes) });
+}
+
+const RAW_THEME_DEFINITIONS = Array.isArray(GLOBAL_CONFIG?.themes?.available)
+  ? GLOBAL_CONFIG.themes.available
+  : null;
+
+const THEME_DEFINITIONS = (() => {
+  const source = RAW_THEME_DEFINITIONS && RAW_THEME_DEFINITIONS.length
+    ? RAW_THEME_DEFINITIONS
+    : FALLBACK_THEME_DEFINITIONS;
+  const normalized = [];
+  const seen = new Set();
+  source.forEach((entry, index) => {
+    const theme = normalizeThemeDefinition(entry, index);
+    if (!theme || seen.has(theme.id)) {
+      return;
+    }
+    seen.add(theme.id);
+    normalized.push(theme);
+  });
+  if (!normalized.length) {
+    FALLBACK_THEME_DEFINITIONS.forEach(theme => {
+      if (!seen.has(theme.id)) {
+        seen.add(theme.id);
+        normalized.push(theme);
+      }
+    });
+  }
+  return Object.freeze(normalized);
+})();
+
+const THEME_CLASS_LIST = Object.freeze(
+  Array.from(
+    new Set(
+      THEME_DEFINITIONS
+        .flatMap(theme => (Array.isArray(theme.classes) ? theme.classes : []))
+        .filter(Boolean)
+    )
+  )
+);
+
+const THEME_DEFINITION_MAP = (() => {
+  const map = new Map();
+  THEME_DEFINITIONS.forEach(theme => {
+    map.set(theme.id, theme);
+  });
+  return map;
+})();
+
+const DEFAULT_THEME_ID = (() => {
+  const candidates = [
+    typeof GLOBAL_CONFIG?.themes?.default === 'string' ? GLOBAL_CONFIG.themes.default.trim() : null,
+    typeof GLOBAL_CONFIG?.progression?.defaultTheme === 'string'
+      ? GLOBAL_CONFIG.progression.defaultTheme.trim()
+      : null,
+    THEME_DEFINITIONS[0] ? THEME_DEFINITIONS[0].id : null,
+    'dark'
+  ];
+  for (const candidate of candidates) {
+    if (candidate && THEME_DEFINITION_MAP.has(candidate)) {
+      return candidate;
+    }
+  }
+  return 'dark';
+})();
+
 const UI_SCALE_STORAGE_KEY = 'atom2univers.options.uiScale';
 
 const UI_SCALE_CONFIG = (() => {
@@ -244,6 +367,59 @@ function translateOrDefault(key, fallback, params) {
     return strippedKey;
   }
   return fallback;
+}
+
+function getThemeDefinition(id) {
+  if (typeof id !== 'string') {
+    return null;
+  }
+  const normalized = id.trim();
+  if (!normalized) {
+    return null;
+  }
+  return THEME_DEFINITION_MAP.get(normalized) || null;
+}
+
+function getThemeClasses(id) {
+  const definition = getThemeDefinition(id) || getThemeDefinition(DEFAULT_THEME_ID);
+  if (definition && Array.isArray(definition.classes) && definition.classes.length) {
+    return definition.classes;
+  }
+  return ['theme-dark'];
+}
+
+function getThemeLabel(theme) {
+  if (!theme) {
+    return '';
+  }
+  const fallback = typeof theme.name === 'string' && theme.name.trim() ? theme.name.trim() : theme.id;
+  return translateOrDefault(theme.labelKey, fallback);
+}
+
+function renderThemeOptions() {
+  if (!elements.themeSelect) {
+    return;
+  }
+  const select = elements.themeSelect;
+  const previousValue = select.value;
+  select.innerHTML = '';
+  THEME_DEFINITIONS.forEach(theme => {
+    const option = document.createElement('option');
+    option.value = theme.id;
+    option.textContent = getThemeLabel(theme);
+    select.appendChild(option);
+  });
+  const currentThemeId = typeof gameState !== 'undefined'
+    && gameState
+    && typeof gameState.theme === 'string'
+    ? gameState.theme
+    : null;
+  const targetThemeId = getThemeDefinition(previousValue)
+    ? previousValue
+    : getThemeDefinition(currentThemeId)
+      ? currentThemeId
+      : DEFAULT_THEME_ID;
+  select.value = targetThemeId;
 }
 
 function translateCollectionEffect(key, fallback, params) {
@@ -1763,7 +1939,7 @@ const DEFAULT_STATE = {
   fusionBonuses: createInitialFusionBonuses(),
   pageUnlocks: createInitialPageUnlockState(),
   lastSave: Date.now(),
-  theme: DEFAULT_THEME,
+  theme: DEFAULT_THEME_ID,
   arcadeBrickSkin: 'original',
   stats: createInitialStats(),
   production: createEmptyProductionBreakdown(),
@@ -1831,7 +2007,7 @@ const gameState = {
   fusions: createInitialFusionState(),
   fusionBonuses: createInitialFusionBonuses(),
   pageUnlocks: createInitialPageUnlockState(),
-  theme: DEFAULT_THEME,
+  theme: DEFAULT_THEME_ID,
   arcadeBrickSkin: 'original',
   stats: createInitialStats(),
   production: createEmptyProductionBreakdown(),
@@ -2691,6 +2867,7 @@ const elements = {
   metauxCreditStatus: document.getElementById('metauxCreditStatus'),
   languageSelect: document.getElementById('languageSelect'),
   uiScaleSelect: document.getElementById('uiScaleSelect'),
+  themeSelect: document.getElementById('themeSelect'),
   textFontSelect: document.getElementById('textFontSelect'),
   digitFontSelect: document.getElementById('digitFontSelect'),
   musicTrackSelect: document.getElementById('musicTrackSelect'),
@@ -2924,6 +3101,7 @@ function subscribeOptionsWelcomeContentUpdates() {
 
 refreshOptionsWelcomeContent();
 subscribeOptionsWelcomeContentUpdates();
+renderThemeOptions();
 
 function updateLanguageSelectorValue(language) {
   if (!elements.languageSelect) {
@@ -10308,14 +10486,28 @@ function showToast(message) {
   }, 2200);
 }
 
-function applyTheme() {
-  document.body.classList.remove('theme-dark', 'theme-light', 'theme-neon');
-  document.body.classList.add('theme-dark');
-  const appliedTheme = 'dark';
-  if (elements.themeSelect) {
-    elements.themeSelect.value = appliedTheme;
+function applyTheme(requestedThemeId) {
+  const requested = typeof requestedThemeId === 'string' ? requestedThemeId.trim() : '';
+  const currentThemeId = typeof gameState.theme === 'string' ? gameState.theme : null;
+  const appliedId = getThemeDefinition(requested)
+    ? requested
+    : getThemeDefinition(currentThemeId)
+      ? currentThemeId
+      : DEFAULT_THEME_ID;
+  const theme = getThemeDefinition(appliedId) || getThemeDefinition(DEFAULT_THEME_ID);
+  const classes = theme && Array.isArray(theme.classes) && theme.classes.length
+    ? theme.classes
+    : ['theme-dark'];
+  if (document && document.body) {
+    document.body.classList.remove(...THEME_CLASS_LIST);
+    classes.forEach(cls => document.body.classList.add(cls));
+    document.body.setAttribute('data-theme', theme.id);
   }
-  gameState.theme = appliedTheme;
+  if (elements.themeSelect && elements.themeSelect.value !== theme.id) {
+    elements.themeSelect.value = theme.id;
+  }
+  gameState.theme = theme.id;
+  return theme.id;
 }
 
 if (elements.languageSelect) {
@@ -10363,14 +10555,19 @@ if (elements.languageSelect) {
 }
 
 if (elements.themeSelect) {
-  elements.themeSelect.addEventListener('change', () => {
-    applyTheme();
-    showToast(t('scripts.app.themeUpdated'));
+  elements.themeSelect.addEventListener('change', event => {
+    const appliedId = applyTheme(event.target.value);
+    renderThemeOptions();
+    saveGame();
+    const appliedTheme = getThemeDefinition(appliedId);
+    const themeLabel = getThemeLabel(appliedTheme) || appliedId;
+    showToast(t('scripts.app.themeUpdated', { name: themeLabel }));
   });
 }
 
 if (typeof window !== 'undefined') {
   window.addEventListener('i18n:languagechange', () => {
+    renderThemeOptions();
     renderPeriodicTable();
     updateUI();
   });
@@ -10741,7 +10938,7 @@ function resetGame() {
     fusions: createInitialFusionState(),
     fusionBonuses: createInitialFusionBonuses(),
     pageUnlocks: createInitialPageUnlockState(),
-    theme: DEFAULT_THEME,
+    theme: DEFAULT_THEME_ID,
     arcadeBrickSkin: 'original',
     stats: createInitialStats(),
     production: createEmptyProductionBreakdown(),
@@ -11035,7 +11232,7 @@ function loadGame() {
     gameState.lastCritical = null;
     const raw = localStorage.getItem('atom2univers');
     if (!raw) {
-      gameState.theme = DEFAULT_THEME;
+      gameState.theme = DEFAULT_THEME_ID;
       gameState.stats = createInitialStats();
       gameState.shopUnlocks = new Set();
       applyTheme();
@@ -11281,7 +11478,7 @@ function loadGame() {
       fusionBonuses.apsFlat = Number.isFinite(aps) ? aps : 0;
     }
     gameState.fusionBonuses = fusionBonuses;
-    gameState.theme = data.theme || DEFAULT_THEME;
+    gameState.theme = getThemeDefinition(data.theme) ? data.theme : DEFAULT_THEME_ID;
     const storedBrickSkin = data.arcadeBrickSkin
       ?? data.particulesBrickSkin
       ?? data.brickSkin

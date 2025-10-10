@@ -20,6 +20,11 @@ body.theme-neon .page--void {
   background: radial-gradient(circle at 50% 22%, rgba(255, 200, 120, 0.08) 0%, rgba(10, 10, 16, 0.92) 42%, #020207 100%);
 }
 
+body.theme-aurora .page--void {
+  color: var(--fg-dark);
+  background: radial-gradient(circle at 50% 22%, rgba(140, 255, 200, 0.12) 0%, rgba(6, 22, 18, 0.92) 42%, #010806 100%);
+}
+
 .page--void::after {
   content: '';
   position: absolute;
@@ -90,6 +95,10 @@ body.theme-light .frenzy-status__item .apc-frenzy-counter {
 
 body.theme-neon .frenzy-status__item .apc-frenzy-counter {
   border-top-color: rgba(190, 236, 255, 0.32);
+}
+
+body.theme-aurora .frenzy-status__item .apc-frenzy-counter {
+  border-top-color: rgba(120, 255, 200, 0.36);
 }
 
 .apc-frenzy-counter.is-active {
