@@ -3,7 +3,7 @@ const DEFAULT_GACHA_TICKET_COST = 1;
 const GACHA_SMOKE_FRAME_COUNT = 91;
 const GACHA_SMOKE_FRAME_RATE = 12;
 const GACHA_SMOKE_FRAME_PAD = 4;
-const GACHA_SMOKE_ASSET_PATH = 'assets/sprites/Smoke';
+const GACHA_SMOKE_ASSET_PATH = 'Assets/sprites/Smoke';
 
 const gachaSmokeAnimationState = {
   timer: null,
