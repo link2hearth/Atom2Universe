@@ -1314,7 +1314,7 @@
         "options": {
           "welcomeCard": {
             "title": "Welcome",
-            "intro": "Welcome to Atom to Univers. Start by clicking to earn Atoms (APC Atoms Per Click), purchase upgrades in the shop, and automate harvesting (APS Atoms Per Second). Unlock mini-games as you progress. The goal is to gather as many Atoms as possible to forge a Universe. Large values use an easy scientific-style notation: 1.0e6 means 1,000,000 (1.0 × 10^6) and the number after “e” tells you how many zeros follow.",
+            "intro": "Welcome to Atom to Univers. Start by clicking to earn Atoms (APC Atoms Per Click), purchase upgrades in the shop, and automate harvesting (APS Atoms Per Second). Unlock mini-games as you progress. The goal is to gather as many Atoms as possible to forge a Universe. Large values use an easy scientific-style notation: 1.0e6 means 1,000,000 (1.0 × 10^6) and the number after “e” tells you the number of digits after the decimal point.",
             "details": {
               "particles": {
                 "label": "Particles mini-game:",
