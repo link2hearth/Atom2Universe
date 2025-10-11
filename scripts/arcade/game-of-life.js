@@ -162,12 +162,64 @@
     return `${x},${y}`;
   }
 
-  function deserializeCell(key) {
-    const parts = key.split(',');
-    if (parts.length !== 2) {
-      return { x: 0, y: 0 };
+  function deserializeCell(key, target) {
+    const output = target || { x: 0, y: 0 };
+    const commaIndex = typeof key === 'string' ? key.indexOf(',') : -1;
+    if (commaIndex === -1) {
+      output.x = 0;
+      output.y = 0;
+      return output;
     }
-    return { x: Number(parts[0]) || 0, y: Number(parts[1]) || 0 };
+    output.x = Number.parseInt(key.slice(0, commaIndex), 10) || 0;
+    output.y = Number.parseInt(key.slice(commaIndex + 1), 10) || 0;
+    return output;
+  }
+
+  const NEIGHBOR_OFFSETS = Object.freeze([
+    [-1, -1], [-1, 0], [-1, 1],
+    [0, -1], /* skip (0,0) */ [0, 1],
+    [1, -1], [1, 0], [1, 1]
+  ]);
+
+  function computeNextGenerationFromCells(cells) {
+    const current = new Set();
+    const neighborCounts = new Map();
+    cells.forEach(([x, y]) => {
+      const key = serializeCell(x, y);
+      if (current.has(key)) {
+        return;
+      }
+      current.add(key);
+      NEIGHBOR_OFFSETS.forEach(([dx, dy]) => {
+        const neighborKey = serializeCell(x + dx, y + dy);
+        neighborCounts.set(neighborKey, (neighborCounts.get(neighborKey) || 0) + 1);
+      });
+    });
+
+    const next = new Set();
+    neighborCounts.forEach((count, key) => {
+      const alive = current.has(key);
+      if ((alive && (count === 2 || count === 3)) || (!alive && count === 3)) {
+        next.add(key);
+      }
+    });
+    return { current, next };
+  }
+
+  function isStillLifePattern(cells) {
+    if (!cells.length) {
+      return false;
+    }
+    const { current, next } = computeNextGenerationFromCells(cells);
+    if (current.size !== next.size) {
+      return false;
+    }
+    for (const key of current) {
+      if (!next.has(key)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   function loadSeed() {
@@ -327,6 +379,10 @@
         offsetX: 0,
         offsetY: 0
       };
+
+      this.stepCandidates = new Map();
+      this.stepCellBuffer = { x: 0, y: 0 };
+      this.renderCellBuffer = { x: 0, y: 0 };
     }
 
     async init() {
@@ -589,22 +645,34 @@
       }
       const anchorX = Number(pattern.anchor?.x) || 0;
       const anchorY = Number(pattern.anchor?.y) || 0;
-      const cells = Array.isArray(pattern.cells)
-        ? pattern.cells
-            .map(cell => Array.isArray(cell) && cell.length >= 2
-              ? [Number(cell[0]) || 0, Number(cell[1]) || 0]
-              : null)
-            .filter(Boolean)
-        : [];
-      if (!cells.length) {
+      const rawCells = Array.isArray(pattern.cells) ? pattern.cells : [];
+      const uniqueKeys = new Set();
+      const normalizedCells = [];
+      rawCells.forEach(cell => {
+        if (!Array.isArray(cell) || cell.length < 2) {
+          return;
+        }
+        const x = Number(cell[0]) || 0;
+        const y = Number(cell[1]) || 0;
+        const key = serializeCell(x, y);
+        if (uniqueKeys.has(key)) {
+          return;
+        }
+        uniqueKeys.add(key);
+        normalizedCells.push([x, y]);
+      });
+      if (!normalizedCells.length || isStillLifePattern(normalizedCells)) {
         return null;
       }
+      const absoluteCells = normalizedCells.map(([x, y]) => Object.freeze([x, y]));
+      const relativeCells = normalizedCells.map(([x, y]) => Object.freeze([x - anchorX, y - anchorY]));
       return {
         id,
         nameKey: typeof pattern.nameKey === 'string' ? pattern.nameKey : null,
         descriptionKey: typeof pattern.descriptionKey === 'string' ? pattern.descriptionKey : null,
-        anchor: { x: anchorX, y: anchorY },
-        cells
+        anchor: Object.freeze({ x: anchorX, y: anchorY }),
+        cells: Object.freeze(absoluteCells),
+        relativeCells: Object.freeze(relativeCells)
       };
     }
 
@@ -762,44 +830,44 @@
 
     stepInternal() {
       const nextState = new Set();
-      const candidates = new Map();
+      const candidates = this.stepCandidates;
+      candidates.clear();
       const bounds = this.getSimulationBounds();
+      const { minX, maxX, minY, maxY } = bounds;
+      const aliveCells = this.state.aliveCells;
+      const cellBuffer = this.stepCellBuffer;
 
-      this.state.aliveCells.forEach(key => {
-        const cell = deserializeCell(key);
-        if (cell.x < bounds.minX || cell.x > bounds.maxX || cell.y < bounds.minY || cell.y > bounds.maxY) {
-          return;
+      for (const key of aliveCells) {
+        const cell = deserializeCell(key, cellBuffer);
+        const x = cell.x;
+        const y = cell.y;
+        if (x < minX || x > maxX || y < minY || y > maxY) {
+          continue;
         }
-        for (let dx = -1; dx <= 1; dx += 1) {
-          for (let dy = -1; dy <= 1; dy += 1) {
-            if (dx === 0 && dy === 0) {
-              continue;
-            }
-            const nx = cell.x + dx;
-            const ny = cell.y + dy;
-            if (nx < bounds.minX || nx > bounds.maxX || ny < bounds.minY || ny > bounds.maxY) {
-              continue;
-            }
-            const neighborKey = serializeCell(nx, ny);
-            const count = candidates.get(neighborKey) || 0;
-            candidates.set(neighborKey, count + 1);
+        for (let i = 0; i < NEIGHBOR_OFFSETS.length; i += 1) {
+          const offset = NEIGHBOR_OFFSETS[i];
+          const nx = x + offset[0];
+          const ny = y + offset[1];
+          if (nx < minX || nx > maxX || ny < minY || ny > maxY) {
+            continue;
           }
+          const neighborKey = serializeCell(nx, ny);
+          candidates.set(neighborKey, (candidates.get(neighborKey) || 0) + 1);
         }
-      });
+      }
 
-      candidates.forEach((count, key) => {
-        const alive = this.state.aliveCells.has(key);
-        if (alive && (count === 2 || count === 3)) {
-          nextState.add(key);
-        } else if (!alive && count === 3) {
+      for (const [key, count] of candidates) {
+        const alive = aliveCells.has(key);
+        if ((alive && (count === 2 || count === 3)) || (!alive && count === 3)) {
           nextState.add(key);
         }
-      });
+      }
 
       this.pushHistory();
       this.state.aliveCells = nextState;
       this.state.generation += 1;
       this.updateUI();
+      candidates.clear();
     }
 
     pushHistory() {
@@ -1140,9 +1208,12 @@
         return;
       }
       this.pushHistory();
-      pattern.cells.forEach(([x, y]) => {
-        const worldX = baseX + x - pattern.anchor.x;
-        const worldY = baseY + y - pattern.anchor.y;
+      const relativeCells = pattern.relativeCells
+        ? pattern.relativeCells
+        : pattern.cells.map(([x, y]) => [x - pattern.anchor.x, y - pattern.anchor.y]);
+      relativeCells.forEach(([dx, dy]) => {
+        const worldX = baseX + dx;
+        const worldY = baseY + dy;
         this.state.aliveCells.add(serializeCell(worldX, worldY));
       });
       this.updateUI();
@@ -1224,15 +1295,23 @@
 
       ctx.save();
       ctx.fillStyle = 'rgba(120, 200, 255, 0.85)';
-      this.state.aliveCells.forEach(key => {
-        const cell = deserializeCell(key);
-        if (cell.x < bounds.minX - padding || cell.x > bounds.maxX + padding || cell.y < bounds.minY - padding || cell.y > bounds.maxY + padding) {
-          return;
+      const aliveCells = this.state.aliveCells;
+      const renderCell = this.renderCellBuffer;
+      const minDrawX = bounds.minX - padding;
+      const maxDrawX = bounds.maxX + padding;
+      const minDrawY = bounds.minY - padding;
+      const maxDrawY = bounds.maxY + padding;
+      for (const key of aliveCells) {
+        const cell = deserializeCell(key, renderCell);
+        const cellX = cell.x;
+        const cellY = cell.y;
+        if (cellX < minDrawX || cellX > maxDrawX || cellY < minDrawY || cellY > maxDrawY) {
+          continue;
         }
-        const px = (cell.x - this.viewport.originX) * cellSize;
-        const py = (cell.y - this.viewport.originY) * cellSize;
+        const px = (cellX - this.viewport.originX) * cellSize;
+        const py = (cellY - this.viewport.originY) * cellSize;
         ctx.fillRect(px, py, cellSize, cellSize);
-      });
+      }
       ctx.restore();
 
       if (cellSize >= this.viewport.gridFadeStart) {
