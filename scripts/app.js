@@ -4045,6 +4045,20 @@ const musicPlayer = (() => {
   const SUPPORTED_EXTENSIONS = MUSIC_SUPPORTED_EXTENSIONS;
   const FALLBACK_TRACKS = MUSIC_FALLBACK_TRACKS;
 
+  const SUPPORTED_EXTENSION_PATTERN = (() => {
+    const uniqueExtensions = Array.from(new Set(
+      SUPPORTED_EXTENSIONS
+        .map(ext => (typeof ext === 'string' ? ext.trim().toLowerCase() : ''))
+        .map(ext => ext.replace(/[^a-z0-9]/g, ''))
+        .filter(Boolean)
+    ));
+    if (!uniqueExtensions.length) {
+      return /href="([^"?#]+\.(?:mp3|ogg|wav|webm|m4a))"/gi;
+    }
+    const pattern = uniqueExtensions.join('|');
+    return new RegExp(`href="([^"?#]+\\.(?:${pattern}))"`, 'gi');
+  })();
+
   if (typeof window === 'undefined' || typeof Audio === 'undefined') {
     const resolved = Promise.resolve([]);
     let stubVolume = DEFAULT_MUSIC_VOLUME;
@@ -4399,9 +4413,7 @@ const musicPlayer = (() => {
         return [];
       }
       const text = await response.text();
-      const matches = Array.from(
-        text.matchAll(/href="([^"?#]+\.(?:mp3|ogg|wav|webm|m4a))"/gi)
-      );
+      const matches = Array.from(text.matchAll(SUPPORTED_EXTENSION_PATTERN));
       return matches.map(match => match[1]).filter(Boolean);
     } catch (error) {
       return [];
