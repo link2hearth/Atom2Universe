@@ -269,12 +269,14 @@ body.theme-aurora .goal-card__reward {
   justify-content: flex-start;
 }
 
-.option-row--font-selectors {
+.option-row--font-selectors,
+.option-row--ui-preferences {
   align-items: stretch;
   width: 100%;
 }
 
-.option-row--font-selectors .option-field {
+.option-row--font-selectors .option-field,
+.option-row--ui-preferences .option-field {
   flex: 1 1 220px;
   min-width: 220px;
 }
