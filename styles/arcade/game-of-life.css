@@ -18,10 +18,11 @@
 }
 
 .game-of-life__menu {
+  --game-of-life-menu-scale: 0.5;
   position: fixed;
   top: 50%;
   right: 1.5rem;
-  transform: translateY(-50%);
+  transform: translateY(-50%) scale(var(--game-of-life-menu-scale));
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -30,6 +31,7 @@
   cursor: grab;
   width: min(20rem, calc(100vw - 3rem));
   max-height: calc(100vh - 2.5rem);
+  transform-origin: center right;
 }
 
 .game-of-life__menu:active {
@@ -92,8 +94,7 @@
 }
 
 .view-game-of-life .game-of-life__menu {
-  transform: translateY(-50%) scale(0.6);
-  transform-origin: center right;
+  transform: translateY(-50%) scale(calc(var(--game-of-life-menu-scale) * 0.6));
 }
 
 .game-of-life__menu[data-expanded='false'] .game-of-life__menu-body {
@@ -315,14 +316,14 @@
     top: auto;
     bottom: 1rem;
     right: 1rem;
-    transform: none;
+    transform: scale(var(--game-of-life-menu-scale));
+    transform-origin: bottom right;
     width: calc(100vw - 2rem);
     max-height: calc(100vh - 2rem);
   }
 
   .view-game-of-life .game-of-life__menu {
-    transform: scale(0.6);
-    transform-origin: bottom right;
+    transform: scale(calc(var(--game-of-life-menu-scale) * 0.6));
   }
 
   .game-of-life__toolbar {
