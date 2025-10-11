@@ -3627,7 +3627,7 @@ function spawnTicketStar(now = performance.now()) {
   star.className = 'ticket-star';
   star.setAttribute('aria-label', 'Collecter un ticket de tirage');
   star.style.setProperty('--ticket-star-size', `${TICKET_STAR_CONFIG.size}px`);
-  star.innerHTML = '<img src="Assets/Image/star.png" alt="Étoile bonus" draggable="false" />';
+  star.innerHTML = '<img src="Assets/Image/Star.png" alt="Étoile bonus" draggable="false" />';
   star.addEventListener('click', collectTicketStar);
   star.addEventListener('dragstart', event => event.preventDefault());
 
