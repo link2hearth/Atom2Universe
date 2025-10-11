@@ -254,6 +254,10 @@
         "backToHub": "Retourner au hub",
         "canvas": "Grille du Jeu de la vie",
         "toolbar": "Commandes de la simulation",
+        "menu": {
+          "collapse": "Réduire le panneau",
+          "expand": "Afficher le panneau"
+        },
         "controls": {
           "play": "Lecture",
           "pause": "Pause",
