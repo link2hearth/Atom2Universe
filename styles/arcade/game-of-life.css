@@ -30,8 +30,8 @@
   z-index: 5;
   cursor: grab;
   width: min(
-    calc(20rem * var(--game-of-life-menu-scale)),
-    calc((100vw - 3rem) * var(--game-of-life-menu-scale))
+    calc(40rem * var(--game-of-life-menu-scale)),
+    calc(100vw - 3rem)
   );
   max-height: min(
     calc((100vh - 2.5rem) * var(--game-of-life-menu-scale)),
@@ -337,7 +337,10 @@
     bottom: 1rem;
     right: 1rem;
     transform: none;
-    width: calc((100vw - 2rem) * var(--game-of-life-menu-scale));
+    width: min(
+      calc(40rem * var(--game-of-life-menu-scale)),
+      calc(100vw - 2rem)
+    );
     max-height: calc((100vh - 2rem) * var(--game-of-life-menu-scale));
   }
 
