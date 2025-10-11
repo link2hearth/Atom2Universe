@@ -757,28 +757,36 @@ body.theme-aurora .midi-keyboard__subtitle {
   min-width: 11em;
   padding: 0.55em 1em;
   border-radius: 999px;
-  border: none;
+  border: 1px solid rgba(96, 96, 112, 0.6);
   font-weight: 600;
   letter-spacing: 0.04em;
-  color: #041321;
-  background: linear-gradient(120deg, rgba(132, 190, 255, 0.95), rgba(92, 232, 255, 0.9));
-  box-shadow: 0 14px 28px rgba(12, 40, 90, 0.36);
+  color: rgba(242, 242, 248, 0.95);
+  background: linear-gradient(120deg, rgba(62, 62, 70, 0.95), rgba(22, 22, 28, 0.92));
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.45);
   cursor: pointer;
+  transition: border-color var(--transition), box-shadow var(--transition), background var(--transition),
+    color var(--transition);
 }
 
 body.theme-light .midi-keyboard__select {
   color: #0e1a2b;
   background: linear-gradient(120deg, rgba(200, 220, 255, 0.96), rgba(150, 210, 255, 0.92));
+  border: none;
+  box-shadow: 0 14px 28px rgba(40, 70, 150, 0.22);
 }
 
 body.theme-neon .midi-keyboard__select {
   color: #041321;
   background: linear-gradient(120deg, rgba(168, 210, 255, 0.96), rgba(120, 230, 255, 0.94));
+  border: none;
+  box-shadow: 0 14px 28px rgba(20, 46, 110, 0.4);
 }
 
 body.theme-aurora .midi-keyboard__select {
   color: #032018;
   background: linear-gradient(120deg, rgba(70, 220, 170, 0.95), rgba(130, 255, 210, 0.92));
+  border: none;
+  box-shadow: 0 14px 28px rgba(12, 46, 30, 0.32);
 }
 
 .midi-keyboard__toggle {
@@ -1345,6 +1353,26 @@ body.theme-aurora .midi-page__nav-link:focus-visible {
   min-width: 160px;
 }
 
+.midi-page__module input[type="range"],
+.midi-page__module input[type="checkbox"] {
+  accent-color: rgba(212, 212, 220, 0.85);
+}
+
+body.theme-light .midi-page__module input[type="range"],
+body.theme-light .midi-page__module input[type="checkbox"] {
+  accent-color: rgba(90, 150, 255, 0.85);
+}
+
+body.theme-neon .midi-page__module input[type="range"],
+body.theme-neon .midi-page__module input[type="checkbox"] {
+  accent-color: rgba(150, 220, 255, 0.85);
+}
+
+body.theme-aurora .midi-page__module input[type="range"],
+body.theme-aurora .midi-page__module input[type="checkbox"] {
+  accent-color: rgba(120, 255, 210, 0.8);
+}
+
 .midi-page__module .option-row--slider input[type="checkbox"] {
   transform: scale(1.1);
 }
@@ -1486,7 +1514,7 @@ body.theme-aurora .midi-page__module .chiptune-usage__summary {
 }
 
 .midi-page__module .option-row--buttons button:focus-visible {
-  outline: 2px solid rgba(180, 230, 255, 0.75);
+  outline: 2px solid rgba(220, 220, 228, 0.7);
   outline-offset: 3px;
 }
 
@@ -1503,27 +1531,33 @@ body.theme-aurora .midi-page__module .option-row--buttons button:focus-visible {
 }
 
 .midi-page__module .option-row--buttons button {
-  background: linear-gradient(135deg, rgba(76, 141, 255, 0.9), rgba(120, 210, 255, 0.95));
-  color: #05070c;
-  border: none;
+  background: linear-gradient(135deg, rgba(64, 64, 72, 0.95), rgba(18, 18, 24, 0.9));
+  color: rgba(242, 242, 248, 0.95);
+  border: 1px solid rgba(92, 92, 110, 0.6);
   padding: 0.55rem 1.2rem;
   border-radius: 999px;
   font-weight: 600;
   letter-spacing: 0.04em;
-  box-shadow: 0 14px 26px rgba(26, 70, 150, 0.32);
+  box-shadow: 0 14px 26px rgba(0, 0, 0, 0.45);
 }
 
 body.theme-light .midi-page__module .option-row--buttons button {
   background: linear-gradient(135deg, rgba(90, 150, 255, 0.9), rgba(160, 220, 255, 0.95));
   color: #041024;
+  border: none;
+  box-shadow: 0 14px 26px rgba(40, 80, 160, 0.26);
 }
 
 body.theme-neon .midi-page__module .option-row--buttons button {
   background: linear-gradient(135deg, rgba(110, 160, 255, 0.88), rgba(150, 240, 255, 0.95));
   color: #030310;
+  border: none;
+  box-shadow: 0 16px 30px rgba(20, 50, 130, 0.45);
 }
 
 body.theme-aurora .midi-page__module .option-row--buttons button {
   background: linear-gradient(135deg, rgba(70, 220, 180, 0.9), rgba(140, 255, 220, 0.96));
   color: #02150f;
+  border: none;
+  box-shadow: 0 16px 30px rgba(12, 70, 50, 0.32);
 }

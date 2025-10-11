@@ -2,11 +2,11 @@
   --blackjack-text-color: var(--color-text-primary, #f0f4ff);
   --blackjack-hand-background: linear-gradient(
     160deg,
-    rgba(17, 24, 39, 0.82),
-    rgba(30, 41, 59, 0.88)
+    rgba(16, 18, 26, 0.92),
+    rgba(38, 40, 50, 0.88)
   );
-  --blackjack-hand-border: rgba(148, 163, 184, 0.25);
-  --blackjack-hand-shadow: 0 18px 28px rgba(15, 23, 42, 0.45);
+  --blackjack-hand-border: rgba(255, 255, 255, 0.08);
+  --blackjack-hand-shadow: 0 18px 32px rgba(0, 0, 0, 0.5);
   --blackjack-hand-win-background: linear-gradient(
     160deg,
     rgba(20, 83, 45, 0.92),
@@ -23,46 +23,46 @@
   --blackjack-hand-lose-shadow: 0 22px 32px rgba(239, 68, 68, 0.45);
   --blackjack-hand-push-background: linear-gradient(
     160deg,
-    rgba(30, 41, 59, 0.9),
-    rgba(59, 130, 246, 0.55)
+    rgba(32, 34, 44, 0.9),
+    rgba(56, 58, 68, 0.82)
   );
-  --blackjack-hand-push-border: rgba(147, 197, 253, 0.6);
-  --blackjack-hand-push-shadow: 0 22px 32px rgba(37, 99, 235, 0.4);
+  --blackjack-hand-push-border: rgba(228, 232, 240, 0.16);
+  --blackjack-hand-push-shadow: 0 22px 32px rgba(0, 0, 0, 0.42);
   --blackjack-card-background: linear-gradient(
     160deg,
-    rgba(248, 250, 252, 0.98),
-    rgba(241, 245, 249, 0.92)
+    rgba(248, 249, 252, 0.98),
+    rgba(236, 238, 244, 0.9)
   );
-  --blackjack-card-border: rgba(15, 23, 42, 0.08);
-  --blackjack-card-shadow: 0 12px 18px rgba(15, 23, 42, 0.35);
+  --blackjack-card-border: rgba(255, 255, 255, 0.08);
+  --blackjack-card-shadow: 0 12px 18px rgba(0, 0, 0, 0.45);
   --blackjack-card-color: #111827;
   --blackjack-card-red: #b91c1c;
   --blackjack-card-hidden-background: repeating-linear-gradient(
     135deg,
-    rgba(15, 23, 42, 0.88) 0,
-    rgba(15, 23, 42, 0.88) 10px,
-    rgba(59, 130, 246, 0.18) 10px,
-    rgba(59, 130, 246, 0.18) 20px
+    rgba(28, 30, 40, 0.94) 0,
+    rgba(28, 30, 40, 0.94) 10px,
+    rgba(86, 88, 100, 0.28) 10px,
+    rgba(86, 88, 100, 0.28) 20px
   );
-  --blackjack-card-hidden-color: rgba(226, 232, 240, 0.82);
-  --blackjack-card-hidden-border: rgba(59, 130, 246, 0.25);
-  --blackjack-bet-background: rgba(15, 23, 42, 0.55);
-  --blackjack-bet-border: rgba(148, 163, 184, 0.25);
+  --blackjack-card-hidden-color: rgba(228, 230, 236, 0.85);
+  --blackjack-card-hidden-border: rgba(255, 255, 255, 0.12);
+  --blackjack-bet-background: rgba(16, 18, 26, 0.6);
+  --blackjack-bet-border: rgba(255, 255, 255, 0.1);
   --blackjack-bet-color: inherit;
-  --blackjack-bet-option-background: rgba(30, 64, 175, 0.5);
-  --blackjack-bet-option-border: rgba(148, 163, 184, 0.35);
+  --blackjack-bet-option-background: rgba(58, 60, 72, 0.62);
+  --blackjack-bet-option-border: rgba(255, 255, 255, 0.14);
   --blackjack-bet-option-color: #f8fafc;
-  --blackjack-bet-option-hover-background: rgba(59, 130, 246, 0.65);
-  --blackjack-bet-option-hover-shadow: 0 8px 16px rgba(37, 99, 235, 0.25);
-  --blackjack-bet-option-selected-background: rgba(59, 130, 246, 0.75);
-  --blackjack-bet-option-selected-border: rgba(191, 219, 254, 0.6);
-  --blackjack-bet-option-selected-shadow: 0 12px 22px rgba(37, 99, 235, 0.28);
-  --blackjack-bet-option-unavailable-background: rgba(30, 41, 59, 0.55);
-  --blackjack-button-background: rgba(30, 64, 175, 0.65);
-  --blackjack-button-border: rgba(148, 163, 184, 0.4);
+  --blackjack-bet-option-hover-background: rgba(84, 86, 100, 0.72);
+  --blackjack-bet-option-hover-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  --blackjack-bet-option-selected-background: rgba(104, 106, 118, 0.8);
+  --blackjack-bet-option-selected-border: rgba(255, 255, 255, 0.2);
+  --blackjack-bet-option-selected-shadow: 0 12px 22px rgba(0, 0, 0, 0.32);
+  --blackjack-bet-option-unavailable-background: rgba(40, 42, 52, 0.6);
+  --blackjack-button-background: rgba(68, 70, 82, 0.75);
+  --blackjack-button-border: rgba(255, 255, 255, 0.16);
   --blackjack-button-color: #f8fafc;
-  --blackjack-button-hover-background: rgba(59, 130, 246, 0.7);
-  --blackjack-button-hover-shadow: 0 10px 18px rgba(37, 99, 235, 0.28);
+  --blackjack-button-hover-background: rgba(90, 92, 106, 0.82);
+  --blackjack-button-hover-shadow: 0 10px 18px rgba(0, 0, 0, 0.32);
   padding: clamp(1rem, 2vw, 2.5rem) clamp(0.75rem, 2vw, 2rem);
   justify-content: center;
   color: var(--blackjack-text-color);

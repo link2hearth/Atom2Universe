@@ -28,11 +28,11 @@
     0 18px 38px rgba(12, 26, 62, 0.42);
   --solitaire-card-back-background: linear-gradient(
     135deg,
-    rgba(34, 46, 96, 0.96),
-    rgba(58, 92, 168, 0.98)
+    rgba(24, 26, 34, 0.96),
+    rgba(46, 48, 60, 0.98)
   );
-  --solitaire-card-back-border: rgba(124, 168, 255, 0.65);
-  --solitaire-card-back-shadow: 0 14px 32px rgba(12, 22, 62, 0.48);
+  --solitaire-card-back-border: rgba(255, 255, 255, 0.14);
+  --solitaire-card-back-shadow: 0 14px 32px rgba(0, 0, 0, 0.48);
   --solitaire-card-color-black: #111c2f;
   --solitaire-card-color-red: #c4384a;
   flex-direction: column;
