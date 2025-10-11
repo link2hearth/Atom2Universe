@@ -302,72 +302,86 @@
 }
 /* MIDI practice keyboards (merged from midi.css) */
 :root {
-  --midi-preview-color-start: rgba(120, 128, 148, 0.92);
-  --midi-preview-color-end: rgba(58, 62, 74, 0.94);
-  --midi-preview-glow: rgba(96, 104, 124, 0.4);
-  --midi-preview-glow-strong: rgba(140, 150, 170, 0.5);
+  --midi-preview-color-start: rgba(72, 72, 72, 0.94);
+  --midi-preview-color-end: rgba(18, 18, 18, 0.96);
+  --midi-preview-glow: rgba(0, 0, 0, 0.55);
+  --midi-preview-glow-strong: rgba(230, 230, 230, 0.28);
   --midi-preview-dot-size: clamp(0.6rem, 1.6vw, 0.85rem);
-  --midi-key-manual-border: rgba(200, 206, 220, 0.6);
-  --midi-key-playback-border: rgba(220, 204, 170, 0.55);
-  --midi-dropzone-border: rgba(110, 116, 134, 0.42);
-  --midi-dropzone-text: rgba(224, 228, 236, 0.85);
-  --midi-dropzone-border-hover: rgba(150, 156, 176, 0.65);
-  --midi-dropzone-bg-hover: rgba(58, 62, 74, 0.32);
-  --midi-dropzone-text-hover: rgba(242, 244, 248, 0.92);
-  --midi-dropzone-outline: rgba(150, 156, 176, 0.6);
-  --midi-key-white-background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(210, 220, 255, 0.88));
-  --midi-key-white-color: rgba(20, 30, 60, 0.78);
-  --midi-key-white-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), inset 0 -8px 0 rgba(140, 160, 210, 0.36), 0 16px 28px rgba(10, 20, 50, 0.45);
-  --midi-key-black-background: linear-gradient(180deg, rgba(16, 28, 60, 0.95), rgba(8, 12, 30, 0.92));
-  --midi-key-black-color: rgba(200, 220, 255, 0.6);
-  --midi-key-black-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.2), inset 0 -8px 0 rgba(0, 0, 0, 0.6), 0 18px 32px rgba(0, 0, 0, 0.5);
+  --midi-key-manual-border: rgba(220, 220, 220, 0.52);
+  --midi-key-playback-border: rgba(210, 210, 210, 0.38);
+  --midi-dropzone-border: rgba(120, 120, 120, 0.42);
+  --midi-dropzone-text: rgba(234, 234, 234, 0.85);
+  --midi-dropzone-border-hover: rgba(200, 200, 200, 0.68);
+  --midi-dropzone-bg-hover: rgba(52, 52, 52, 0.38);
+  --midi-dropzone-text-hover: rgba(250, 250, 250, 0.92);
+  --midi-dropzone-outline: rgba(188, 188, 188, 0.62);
+  --midi-key-white-background: linear-gradient(
+    180deg,
+    rgba(248, 248, 248, 0.98),
+    rgba(210, 210, 210, 0.88)
+  );
+  --midi-key-white-color: rgba(22, 22, 22, 0.85);
+  --midi-key-white-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 -8px 0 rgba(150, 150, 150, 0.32),
+    0 16px 28px rgba(0, 0, 0, 0.52);
+  --midi-key-black-background: linear-gradient(
+    180deg,
+    rgba(34, 34, 34, 0.95),
+    rgba(10, 10, 10, 0.94)
+  );
+  --midi-key-black-color: rgba(230, 230, 230, 0.68);
+  --midi-key-black-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.15),
+    inset 0 -8px 0 rgba(0, 0, 0, 0.65),
+    0 18px 32px rgba(0, 0, 0, 0.55);
   --midi-key-white-manual-background: linear-gradient(
     180deg,
-    rgba(180, 220, 255, 0.96),
-    rgba(140, 180, 255, 0.92)
+    rgba(232, 232, 232, 0.98),
+    rgba(196, 196, 196, 0.92)
   );
   --midi-key-white-manual-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.8),
-    inset 0 -6px 0 rgba(50, 90, 180, 0.45),
-    0 18px 30px rgba(8, 18, 42, 0.6);
-  --midi-key-white-manual-color: rgba(12, 20, 40, 0.8);
+    inset 0 1px 0 rgba(255, 255, 255, 0.82),
+    inset 0 -6px 0 rgba(120, 120, 120, 0.45),
+    0 18px 30px rgba(0, 0, 0, 0.48);
+  --midi-key-white-manual-color: rgba(14, 14, 14, 0.82);
   --midi-key-black-manual-background: linear-gradient(
     180deg,
-    rgba(60, 100, 180, 0.92),
-    rgba(26, 46, 120, 0.92)
+    rgba(54, 54, 54, 0.94),
+    rgba(22, 22, 22, 0.92)
   );
   --midi-key-black-manual-shadow:
-    inset 0 3px 0 rgba(180, 220, 255, 0.4),
-    inset 0 -8px 0 rgba(8, 12, 30, 0.6),
-    0 20px 34px rgba(30, 60, 120, 0.55);
+    inset 0 3px 0 rgba(214, 214, 214, 0.32),
+    inset 0 -8px 0 rgba(0, 0, 0, 0.7),
+    0 20px 34px rgba(0, 0, 0, 0.58);
   --midi-key-white-playback-background: linear-gradient(
     180deg,
-    rgba(200, 230, 255, 0.96),
-    rgba(150, 190, 255, 0.9)
+    rgba(240, 240, 240, 0.96),
+    rgba(188, 188, 188, 0.9)
   );
   --midi-key-white-playback-shadow:
-    inset 0 2px 0 rgba(255, 255, 255, 0.9),
-    inset 0 -8px 0 rgba(90, 150, 230, 0.55),
-    0 22px 34px rgba(80, 150, 255, 0.45);
+    inset 0 2px 0 rgba(255, 255, 255, 0.82),
+    inset 0 -8px 0 rgba(170, 170, 170, 0.5),
+    0 22px 34px rgba(32, 32, 32, 0.4);
   --midi-key-black-playback-background: linear-gradient(
     180deg,
-    rgba(70, 110, 200, 0.92),
-    rgba(40, 70, 140, 0.9)
+    rgba(64, 64, 64, 0.94),
+    rgba(26, 26, 26, 0.9)
   );
   --midi-key-black-playback-shadow:
-    inset 0 3px 0 rgba(180, 220, 255, 0.4),
-    inset 0 -8px 0 rgba(12, 20, 40, 0.6),
-    0 18px 32px rgba(60, 140, 255, 0.55);
-  --midi-key-focus-outline: rgba(120, 200, 255, 0.8);
-  --midi-key-focus-outline-alt: rgba(180, 230, 255, 0.95);
-  --midi-key-label-background: rgba(12, 24, 60, 0.4);
-  --midi-key-label-color: #f6f7ff;
-  --midi-key-label-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-  --midi-key-label-background-landed: rgba(255, 255, 255, 0.22);
-  --midi-key-label-color-landed: #f6f7ff;
-  --midi-mini-background: linear-gradient(180deg, rgba(22, 22, 28, 0.7), rgba(14, 14, 20, 0.6));
-  --midi-mini-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), inset 0 -1px 0 rgba(0, 0, 0, 0.45);
-  --midi-full-background: rgba(18, 18, 24, 0.72);
+    inset 0 3px 0 rgba(210, 210, 210, 0.28),
+    inset 0 -8px 0 rgba(0, 0, 0, 0.72),
+    0 18px 32px rgba(0, 0, 0, 0.5);
+  --midi-key-focus-outline: rgba(220, 220, 220, 0.6);
+  --midi-key-focus-outline-alt: rgba(255, 255, 255, 0.75);
+  --midi-key-label-background: rgba(16, 16, 16, 0.55);
+  --midi-key-label-color: rgba(248, 248, 248, 0.9);
+  --midi-key-label-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+  --midi-key-label-background-landed: rgba(240, 240, 240, 0.22);
+  --midi-key-label-color-landed: rgba(250, 250, 250, 0.92);
+  --midi-mini-background: linear-gradient(180deg, rgba(28, 28, 28, 0.85), rgba(12, 12, 12, 0.78));
+  --midi-mini-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 0 rgba(0, 0, 0, 0.6);
+  --midi-full-background: rgba(16, 16, 16, 0.8);
 }
 
 body.theme-light {
