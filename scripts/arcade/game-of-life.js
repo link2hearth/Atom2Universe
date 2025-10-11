@@ -238,7 +238,10 @@
       randomAddButton,
       patternList,
       patternEmpty,
-      backButton
+      backButton,
+      menu,
+      menuToggle,
+      menuHeader
     }) {
       this.root = root;
       this.canvas = canvas;
@@ -261,6 +264,9 @@
       this.patternList = patternList;
       this.patternEmpty = patternEmpty;
       this.backButton = backButton;
+      this.menu = menu;
+      this.menuToggle = menuToggle;
+      this.menuHeader = menuHeader;
 
       this.config = DEFAULT_CONFIG;
       this.patterns = [];
@@ -308,9 +314,19 @@
       this.frameId = null;
       this.needsRedraw = true;
       this.canvasRect = { width: 0, height: 0 };
+      this.boundHandleWindowResize = null;
 
       this.boundHandleFrame = this.handleFrame.bind(this);
       this.boundHandleVisibility = this.handleVisibilityChange.bind(this);
+      this.boundHandleMenuPointerMove = this.handleMenuPointerMove.bind(this);
+      this.boundHandleMenuPointerUp = this.handleMenuPointerUp.bind(this);
+
+      this.menuDragState = {
+        active: false,
+        pointerId: null,
+        offsetX: 0,
+        offsetY: 0
+      };
     }
 
     async init() {
@@ -367,6 +383,10 @@
         this.resizeObserver.disconnect();
         this.resizeObserver = null;
       }
+      if (this.boundHandleWindowResize) {
+        window.removeEventListener('resize', this.boundHandleWindowResize);
+        this.boundHandleWindowResize = null;
+      }
       document.removeEventListener('visibilitychange', this.boundHandleVisibility);
     }
 
@@ -407,6 +427,7 @@
         this.randomHeightInput.value = String(Math.round(this.config.random.defaultHeight));
         this.randomHeightInput.max = String(Math.round(this.config.random.maxHeight));
       }
+      this.updateMenuToggleLabel();
     }
 
     attachEvents() {
@@ -477,6 +498,21 @@
         });
       }
 
+      if (this.menuToggle) {
+        this.menuToggle.addEventListener('click', () => {
+          this.toggleMenu();
+        });
+      }
+
+      if (this.menuHeader) {
+        this.menuHeader.addEventListener('pointerdown', event => {
+          this.startMenuDrag(event);
+        });
+        this.menuHeader.addEventListener('pointermove', this.boundHandleMenuPointerMove);
+        this.menuHeader.addEventListener('pointerup', this.boundHandleMenuPointerUp);
+        this.menuHeader.addEventListener('pointercancel', this.boundHandleMenuPointerUp);
+      }
+
       if (this.canvas) {
         this.canvas.addEventListener('pointerdown', event => this.handlePointerDown(event));
         this.canvas.addEventListener('pointermove', event => this.handlePointerMove(event));
@@ -492,21 +528,13 @@
       if (!this.canvas) {
         return;
       }
-      const resizeTarget = this.canvas.parentElement;
-      if (!resizeTarget) {
-        return;
-      }
-      this.resizeObserver = new ResizeObserver(entries => {
-        for (const entry of entries) {
-          if (entry.target === resizeTarget) {
-            this.updateCanvasSize(entry.contentRect.width, entry.contentRect.height);
-            break;
-          }
-        }
-      });
-      this.resizeObserver.observe(resizeTarget);
-      const rect = resizeTarget.getBoundingClientRect();
-      this.updateCanvasSize(rect.width, rect.height);
+      const update = () => {
+        this.updateCanvasSize(window.innerWidth, window.innerHeight);
+        this.clampMenuPosition();
+      };
+      this.boundHandleWindowResize = update;
+      window.addEventListener('resize', this.boundHandleWindowResize);
+      update();
     }
 
     handleVisibilityChange() {
@@ -804,6 +832,95 @@
       this.canvas.height = Math.round(safeHeight * dpr);
       this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       this.needsRedraw = true;
+    }
+
+    toggleMenu(forceState) {
+      if (!this.menu) {
+        return;
+      }
+      const isExpanded = this.menu.dataset.expanded !== 'false';
+      const nextState = typeof forceState === 'boolean' ? forceState : !isExpanded;
+      this.menu.dataset.expanded = nextState ? 'true' : 'false';
+      this.updateMenuToggleLabel();
+    }
+
+    updateMenuToggleLabel() {
+      if (!this.menuToggle) {
+        return;
+      }
+      const expanded = this.menu?.dataset.expanded !== 'false';
+      const key = expanded
+        ? 'index.sections.gameOfLife.menu.collapse'
+        : 'index.sections.gameOfLife.menu.expand';
+      const fallback = expanded ? 'Réduire le panneau' : 'Afficher le panneau';
+      this.menuToggle.dataset.i18n = key;
+      this.menuToggle.textContent = translate(key, fallback);
+      this.menuToggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+    }
+
+    startMenuDrag(event) {
+      if (!this.menu || event.button !== 0) {
+        return;
+      }
+      if (this.menuToggle && (event.target === this.menuToggle || this.menuToggle.contains(event.target))) {
+        return;
+      }
+      const rect = this.menu.getBoundingClientRect();
+      this.menuDragState.active = true;
+      this.menuDragState.pointerId = event.pointerId;
+      this.menuDragState.offsetX = event.clientX - rect.left;
+      this.menuDragState.offsetY = event.clientY - rect.top;
+      this.menu.style.left = `${rect.left}px`;
+      this.menu.style.top = `${rect.top}px`;
+      this.menu.style.right = 'auto';
+      this.menu.style.bottom = 'auto';
+      this.menuHeader?.setPointerCapture?.(event.pointerId);
+      event.preventDefault();
+    }
+
+    handleMenuPointerMove(event) {
+      if (!this.menuDragState.active || event.pointerId !== this.menuDragState.pointerId || !this.menu) {
+        return;
+      }
+      const newLeft = clamp(
+        event.clientX - this.menuDragState.offsetX,
+        8,
+        Math.max(8, window.innerWidth - this.menu.offsetWidth - 8)
+      );
+      const newTop = clamp(
+        event.clientY - this.menuDragState.offsetY,
+        8,
+        Math.max(8, window.innerHeight - this.menu.offsetHeight - 8)
+      );
+      this.menu.style.left = `${newLeft}px`;
+      this.menu.style.top = `${newTop}px`;
+    }
+
+    handleMenuPointerUp(event) {
+      if (!this.menuDragState.active || event.pointerId !== this.menuDragState.pointerId) {
+        return;
+      }
+      this.menuDragState.active = false;
+      this.menuDragState.pointerId = null;
+      this.menuHeader?.releasePointerCapture?.(event.pointerId);
+      this.clampMenuPosition();
+    }
+
+    clampMenuPosition() {
+      if (!this.menu || !this.menu.style.left) {
+        return;
+      }
+      const currentLeft = Number.parseFloat(this.menu.style.left);
+      const currentTop = Number.parseFloat(this.menu.style.top);
+      if (!Number.isFinite(currentLeft) || !Number.isFinite(currentTop)) {
+        return;
+      }
+      const maxLeft = Math.max(8, window.innerWidth - this.menu.offsetWidth - 8);
+      const maxTop = Math.max(8, window.innerHeight - this.menu.offsetHeight - 8);
+      const clampedLeft = clamp(currentLeft, 8, maxLeft);
+      const clampedTop = clamp(currentTop, 8, maxTop);
+      this.menu.style.left = `${clampedLeft}px`;
+      this.menu.style.top = `${clampedTop}px`;
     }
 
     handlePointerDown(event) {
@@ -1122,6 +1239,9 @@
     const patternList = document.getElementById('gameOfLifePatternList');
     const patternEmpty = document.getElementById('gameOfLifePatternEmpty');
     const backButton = document.getElementById('gameOfLifeBackButton');
+    const menu = document.getElementById('gameOfLifeMenu');
+    const menuToggle = document.getElementById('gameOfLifeMenuToggle');
+    const menuHeader = document.getElementById('gameOfLifeMenuHeader');
 
     const instance = new GameOfLifeArcade({
       root,
@@ -1143,7 +1263,10 @@
       randomAddButton,
       patternList,
       patternEmpty,
-      backButton
+      backButton,
+      menu,
+      menuToggle,
+      menuHeader
     });
 
     instance.init();
