@@ -91,6 +91,11 @@
   cursor: auto;
 }
 
+.view-game-of-life .game-of-life__menu {
+  transform: translateY(-50%) scale(0.6);
+  transform-origin: center right;
+}
+
 .game-of-life__menu[data-expanded='false'] .game-of-life__menu-body {
   display: none;
 }
@@ -315,6 +320,11 @@
     max-height: calc(100vh - 2rem);
   }
 
+  .view-game-of-life .game-of-life__menu {
+    transform: scale(0.6);
+    transform-origin: bottom right;
+  }
+
   .game-of-life__toolbar {
     left: 1rem;
     right: 1rem;
@@ -324,4 +334,9 @@
     flex-basis: 100%;
     justify-content: space-between;
   }
+}
+
+.view-game-of-life .status-bar,
+.view-game-of-life .frenzy-status {
+  display: none;
 }
