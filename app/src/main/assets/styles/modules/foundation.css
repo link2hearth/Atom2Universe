@@ -761,6 +761,7 @@ body.view-sudoku .status-bar {
 }
 
 .frenzy-status {
+  --frenzy-scale: calc(2 * var(--ui-control-scale, 1));
   position: fixed;
   top: clamp(3.15rem, 19.8vh, 10.8rem);
   left: 0;
@@ -768,11 +769,11 @@ body.view-sudoku .status-bar {
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
-  gap: clamp(0.75rem, 7vw, 4rem);
-  padding: 0 clamp(0.9rem, 4vw, 3.2rem);
+  gap: calc(clamp(0.75rem, 7vw, 4rem) * var(--frenzy-scale));
+  padding: 0 calc(clamp(0.9rem, 4vw, 3.2rem) * var(--frenzy-scale));
   pointer-events: none;
   font-family: var(--font-digits, 'Orbitron', sans-serif);
-  font-size: clamp(0.58rem, 0.98vw, 0.82rem);
+  font-size: calc(clamp(0.58rem, 0.98vw, 0.82rem) * var(--frenzy-scale));
   color: rgba(220, 236, 255, 0.78);
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -787,14 +788,15 @@ body.view-sudoku .status-bar {
 .frenzy-status__item {
   display: flex;
   flex-direction: column;
-  gap: 0.12rem;
-  padding: clamp(0.3rem, 0.85vw, 0.6rem) clamp(0.45rem, 1.15vw, 0.9rem);
-  border-radius: 0.75rem;
+  gap: calc(0.12rem * var(--frenzy-scale));
+  padding: calc(clamp(0.3rem, 0.85vw, 0.6rem) * var(--frenzy-scale))
+    calc(clamp(0.45rem, 1.15vw, 0.9rem) * var(--frenzy-scale));
+  border-radius: calc(0.75rem * var(--frenzy-scale));
   background: rgba(6, 12, 28, 0.55);
   box-shadow: 0 0.8rem 1.6rem rgba(0, 0, 0, 0.26);
   backdrop-filter: blur(7px);
   -webkit-backdrop-filter: blur(7px);
-  min-width: clamp(4.6rem, 14vw, 7.2rem);
+  min-width: calc(clamp(4.6rem, 14vw, 7.2rem) * var(--frenzy-scale));
   align-items: flex-start;
   text-align: left;
   opacity: 0.9;
@@ -815,7 +817,7 @@ body.view-sudoku .status-bar {
 }
 
 .frenzy-status__timer {
-  font-size: clamp(0.52rem, 0.9vw, 0.72rem);
+  font-size: calc(clamp(0.52rem, 0.9vw, 0.72rem) * var(--frenzy-scale));
   font-weight: 500;
   opacity: 0.78;
 }
