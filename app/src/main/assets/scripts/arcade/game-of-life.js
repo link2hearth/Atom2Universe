@@ -351,12 +351,22 @@
       this.dragState = {
         active: false,
         mode: 'toggle',
-        lastCellKey: null
+        lastCellKey: null,
+        initialCellKey: null,
+        initialCellAlive: false
       };
       this.panState = {
         active: false,
         lastX: 0,
         lastY: 0
+      };
+
+      this.touchState = {
+        pointers: new Map(),
+        isGesture: false,
+        initialDistance: 0,
+        initialCellSize: this.viewport.cellSize,
+        lastMidpoint: null
       };
 
       this.spacePressed = false;
@@ -573,6 +583,7 @@
         this.canvas.addEventListener('pointerdown', event => this.handlePointerDown(event));
         this.canvas.addEventListener('pointermove', event => this.handlePointerMove(event));
         window.addEventListener('pointerup', event => this.handlePointerUp(event));
+        window.addEventListener('pointercancel', event => this.handlePointerUp(event));
         this.canvas.addEventListener('wheel', event => this.handleWheel(event), { passive: false });
       }
 
@@ -1036,11 +1047,105 @@
       this.menu.style.top = `${clampedTop}px`;
     }
 
-    handlePointerDown(event) {
-      if (!this.canvas || event.pointerType === 'touch') {
-        this.canvas.setPointerCapture?.(event.pointerId);
+    startTouchGesture() {
+      if (!this.canvas) {
+        return;
       }
-      this.pointerId = event.pointerId;
+      const pointers = Array.from(this.touchState.pointers.values());
+      if (pointers.length < 2) {
+        return;
+      }
+      const [first, second] = pointers;
+      const midpoint = {
+        x: (first.x + second.x) / 2,
+        y: (first.y + second.y) / 2
+      };
+      const distance = Math.hypot(second.x - first.x, second.y - first.y) || 1;
+      this.touchState.isGesture = true;
+      this.touchState.initialDistance = distance;
+      this.touchState.initialCellSize = this.viewport.cellSize;
+      this.touchState.lastMidpoint = midpoint;
+      if (this.dragState.active && this.dragState.initialCellKey) {
+        const originalCell = deserializeCell(
+          this.dragState.initialCellKey,
+          this.stepCellBuffer
+        );
+        if (originalCell) {
+          this.applyCellToggle(
+            originalCell.x,
+            originalCell.y,
+            this.dragState.initialCellAlive
+          );
+        }
+      }
+      this.panState.active = true;
+      this.panState.lastX = midpoint.x;
+      this.panState.lastY = midpoint.y;
+      this.dragState.active = false;
+      this.dragState.lastCellKey = null;
+      this.dragState.initialCellKey = null;
+      this.dragState.initialCellAlive = false;
+    }
+
+    handleTouchGestureMove() {
+      if (!this.canvas) {
+        return;
+      }
+      const pointers = Array.from(this.touchState.pointers.values());
+      if (pointers.length < 2) {
+        return;
+      }
+      const [first, second] = pointers;
+      const midpoint = {
+        x: (first.x + second.x) / 2,
+        y: (first.y + second.y) / 2
+      };
+      const lastMidpoint = this.touchState.lastMidpoint || midpoint;
+      const dx = midpoint.x - lastMidpoint.x;
+      const dy = midpoint.y - lastMidpoint.y;
+      const rect = this.canvas.getBoundingClientRect();
+      const anchor = {
+        x: this.viewport.originX + (midpoint.x - rect.left) / this.viewport.cellSize,
+        y: this.viewport.originY + (midpoint.y - rect.top) / this.viewport.cellSize
+      };
+      if (dx !== 0 || dy !== 0) {
+        this.panByPixels(dx, dy);
+        this.panState.lastX = midpoint.x;
+        this.panState.lastY = midpoint.y;
+        this.touchState.lastMidpoint = midpoint;
+      }
+      const distance = Math.hypot(second.x - first.x, second.y - first.y);
+      if (!distance || !this.touchState.initialDistance) {
+        return;
+      }
+      const ratio = distance / this.touchState.initialDistance;
+      const newSize = clamp(
+        this.touchState.initialCellSize * ratio,
+        this.viewport.minCellSize,
+        this.viewport.maxCellSize
+      );
+      this.setZoom(newSize, anchor);
+    }
+
+    handlePointerDown(event) {
+      if (!this.canvas) {
+        return;
+      }
+      if (event.pointerType === 'touch') {
+        this.canvas.setPointerCapture?.(event.pointerId);
+        this.touchState.pointers.set(event.pointerId, {
+          x: event.clientX,
+          y: event.clientY
+        });
+        if (this.touchState.pointers.size >= 2) {
+          this.startTouchGesture();
+          event.preventDefault();
+          return;
+        }
+        this.pointerId = event.pointerId;
+      } else {
+        this.pointerId = event.pointerId;
+      }
       const isPanButton = event.button === 1 || event.button === 2;
       const wantsPan = this.spacePressed || isPanButton;
       if (wantsPan) {
@@ -1064,9 +1169,22 @@
       this.dragState.mode = alreadyAlive ? 'erase' : 'draw';
       this.applyCellToggle(cell.x, cell.y, this.dragState.mode === 'draw');
       this.dragState.lastCellKey = key;
+      this.dragState.initialCellKey = key;
+      this.dragState.initialCellAlive = alreadyAlive;
     }
 
     handlePointerMove(event) {
+      if (event.pointerType === 'touch' && this.touchState.pointers.has(event.pointerId)) {
+        this.touchState.pointers.set(event.pointerId, {
+          x: event.clientX,
+          y: event.clientY
+        });
+        if (this.touchState.isGesture) {
+          this.handleTouchGestureMove();
+          event.preventDefault();
+          return;
+        }
+      }
       if (this.panState.active) {
         const dx = event.clientX - this.panState.lastX;
         const dy = event.clientY - this.panState.lastY;
@@ -1092,6 +1210,29 @@
     }
 
     handlePointerUp(event) {
+      if (event.pointerType === 'touch') {
+        this.touchState.pointers.delete(event.pointerId);
+        if (this.touchState.pointers.size >= 2) {
+          const pointers = Array.from(this.touchState.pointers.values());
+          const [first, second] = pointers;
+          this.touchState.initialDistance = Math.hypot(
+            second.x - first.x,
+            second.y - first.y
+          ) || this.touchState.initialDistance;
+          this.touchState.initialCellSize = this.viewport.cellSize;
+          this.touchState.lastMidpoint = {
+            x: (first.x + second.x) / 2,
+            y: (first.y + second.y) / 2
+          };
+        } else {
+          this.touchState.isGesture = false;
+          this.touchState.initialDistance = 0;
+          this.touchState.initialCellSize = this.viewport.cellSize;
+          this.touchState.lastMidpoint = null;
+          this.panState.active = false;
+          this.touchState.pointers.clear();
+        }
+      }
       if (this.pointerId !== null && event.pointerId !== this.pointerId) {
         return;
       }
@@ -1102,6 +1243,8 @@
       }
       this.dragState.active = false;
       this.dragState.lastCellKey = null;
+      this.dragState.initialCellKey = null;
+      this.dragState.initialCellAlive = false;
     }
 
     handleWheel(event) {
