@@ -249,9 +249,6 @@
       },
       "gameOfLife": {
         "aria": "Mini-jeu Jeu de la vie de Conway",
-        "title": "Jeu de la vie",
-        "subtitle": "Dessinez, zoomez et contrôlez la simulation pour révéler des structures quantiques fascinantes.",
-        "backToHub": "Retourner au hub",
         "canvas": "Grille du Jeu de la vie",
         "toolbar": "Commandes de la simulation",
         "menu": {
@@ -276,6 +273,8 @@
         },
         "patterns": {
           "title": "Motifs emblématiques",
+          "selectLabel": "Choisir un motif",
+          "none": "Aucun motif",
           "empty": "Les motifs seront chargés automatiquement.",
           "glider": "Planeur",
           "gliderDescription": "Un motif minimaliste qui voyage en diagonale à l’infini.",

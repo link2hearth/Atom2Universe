@@ -7,28 +7,6 @@
   overflow: hidden;
 }
 
-.game-of-life__header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.6rem 1rem;
-}
-
-.game-of-life__title {
-  font-family: var(--font-heading, 'Orbitron', system-ui, sans-serif);
-  font-size: clamp(1.75rem, 2vw + 1rem, 2.4rem);
-  letter-spacing: 0.04em;
-  margin: 0;
-}
-
-.game-of-life__subtitle {
-  max-width: 640px;
-  margin: 0;
-  font-size: 1rem;
-  color: var(--color-text-secondary, rgba(245, 247, 255, 0.8));
-}
-
 .game-of-life__canvas {
   position: fixed;
   inset: 0;
@@ -41,13 +19,17 @@
 
 .game-of-life__menu {
   position: fixed;
-  top: 1.5rem;
+  top: 50%;
   right: 1.5rem;
+  transform: translateY(-50%);
   display: flex;
   flex-direction: column;
+  align-items: stretch;
   gap: 0.5rem;
   z-index: 5;
   cursor: grab;
+  width: min(20rem, calc(100vw - 3rem));
+  max-height: calc(100vh - 2.5rem);
 }
 
 .game-of-life__menu:active {
@@ -56,7 +38,21 @@
 
 .game-of-life__menu-header {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.35rem 0 0.35rem;
+}
+
+.game-of-life__menu-handle {
+  flex: 1 1 auto;
+  max-width: 6rem;
+  height: 0.35rem;
+  border-radius: 999px;
+  background: rgba(160, 185, 255, 0.35);
+  box-shadow: inset 0 1px 2px rgba(20, 30, 60, 0.45);
+  align-self: center;
+  cursor: inherit;
 }
 
 .game-of-life__menu-toggle {
@@ -83,9 +79,16 @@
   background: rgba(10, 14, 28, 0.82);
   box-shadow: 0 24px 48px rgba(3, 8, 20, 0.45);
   backdrop-filter: blur(12px);
-  padding: 1.25rem;
-  max-width: 360px;
-  overflow: hidden;
+  padding: 1.1rem 1.25rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  width: 100%;
+  box-sizing: border-box;
+  max-height: min(calc(100vh - 5rem), 38rem);
+  overflow-y: auto;
+  scrollbar-gutter: stable both-edges;
+  cursor: auto;
 }
 
 .game-of-life__menu[data-expanded='false'] .game-of-life__menu-body {
@@ -93,20 +96,22 @@
 }
 
 .game-of-life__menu-content {
-  transform: scale(0.5);
-  transform-origin: top right;
+  display: grid;
+  gap: 1.1rem;
 }
 
 .game-of-life__toolbar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.75rem 1rem;
-  margin-top: 0.75rem;
-  padding: 0.65rem 0.75rem;
+  gap: 0.65rem 0.75rem;
+  margin-top: 0;
+  padding: 0.6rem 0.7rem;
   border-radius: 14px;
   background: rgba(6, 10, 22, 0.78);
   box-shadow: 0 12px 24px rgba(2, 6, 14, 0.35);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .game-of-life__toolbar-group {
@@ -197,7 +202,7 @@
 .game-of-life__sidebar {
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  gap: 1.1rem;
 }
 
 .game-of-life__panel {
@@ -214,42 +219,8 @@
   letter-spacing: 0.03em;
 }
 
-.game-of-life__pattern-list {
-  display: grid;
-  gap: 0.75rem;
-}
-
-.game-of-life__pattern-button {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.35rem;
-  padding: 0.75rem 0.9rem;
-  border-radius: 14px;
-  border: 1px solid rgba(120, 160, 255, 0.35);
-  background: rgba(22, 30, 56, 0.72);
-  color: inherit;
-  cursor: pointer;
-  transition: border-color 150ms ease, transform 150ms ease, background 150ms ease;
-}
-
-.game-of-life__pattern-button:hover,
-.game-of-life__pattern-button:focus-visible {
-  border-color: rgba(160, 210, 255, 0.8);
-  transform: translateY(-1px);
-}
-
-.game-of-life__pattern-button[aria-pressed="true"] {
-  border-color: rgba(160, 210, 255, 0.9);
-  background: rgba(30, 38, 70, 0.85);
-}
-
-.game-of-life__pattern-name {
-  font-weight: 600;
-  font-size: 1.02rem;
-}
-
 .game-of-life__pattern-description {
+  margin: 0.5rem 0 0;
   font-size: 0.9rem;
   color: rgba(220, 230, 255, 0.75);
 }
@@ -333,6 +304,15 @@
 @media (max-width: 720px) {
   .page--game-of-life {
     padding: 1.5rem 1rem 2.5rem;
+  }
+
+  .game-of-life__menu {
+    top: auto;
+    bottom: 1rem;
+    right: 1rem;
+    transform: none;
+    width: calc(100vw - 2rem);
+    max-height: calc(100vh - 2rem);
   }
 
   .game-of-life__toolbar {
