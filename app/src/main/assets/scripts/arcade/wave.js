@@ -984,10 +984,18 @@
       if (event.pointerType === 'mouse' && event.button !== 0) {
         return;
       }
-      this.activePointers.add(event.pointerId);
+      const pointerId = Number.isFinite(event?.pointerId) ? event.pointerId : null;
+      if (pointerId != null) {
+        this.activePointers.add(pointerId);
+      }
+      const wasPressing = this.isPressing;
+      if (wasPressing) {
+        this.triggerManualAtomClick();
+      }
       this.setPressingState(true);
       if (typeof this.canvas?.setPointerCapture === 'function') {
-        this.canvas.setPointerCapture(event.pointerId);
+        const targetId = pointerId != null ? pointerId : event.pointerId;
+        this.canvas.setPointerCapture(targetId);
       }
       event.preventDefault();
     }
