@@ -16,6 +16,8 @@ import androidx.webkit.WebViewAssetLoader
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var webView: WebView
+
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +30,7 @@ class MainActivity : AppCompatActivity() {
                 WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
 
-        val webView: WebView = findViewById(R.id.webview)
+        webView = findViewById(R.id.webview)
         val assetLoader = WebViewAssetLoader.Builder()
             .addPathHandler("/assets/", WebViewAssetLoader.AssetsPathHandler(this))
             .addPathHandler("/res/", WebViewAssetLoader.ResourcesPathHandler(this))
@@ -52,6 +54,17 @@ class MainActivity : AppCompatActivity() {
             domStorageEnabled = true
         }
 
-        webView.loadUrl("https://appassets.androidplatform.net/assets/index.html")
+        if (savedInstanceState != null) {
+            webView.restoreState(savedInstanceState)
+        } else {
+            webView.loadUrl("https://appassets.androidplatform.net/assets/index.html")
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        if (::webView.isInitialized) {
+            webView.saveState(outState)
+        }
     }
 }
