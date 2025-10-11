@@ -2739,7 +2739,10 @@ function evaluateTrophies() {
   }
 }
 
-const elements = {
+let elements = {};
+
+function collectDomElements() {
+  return {
   brandPortal: document.getElementById('brandPortal'),
   navButtons: document.querySelectorAll('.nav-button'),
   navArcadeButton: document.getElementById('navArcadeButton'),
@@ -2965,7 +2968,8 @@ const elements = {
   devkitUnlockInfo: document.getElementById('devkitUnlockInfo'),
   devkitToggleShop: document.getElementById('devkitToggleShop'),
   devkitToggleGacha: document.getElementById('devkitToggleGacha')
-};
+  };
+}
 
 function getOptionsWelcomeCardCopy() {
   const api = getI18nApi();
@@ -3126,9 +3130,6 @@ function subscribeOptionsWelcomeContentUpdates() {
   }
 }
 
-refreshOptionsWelcomeContent();
-subscribeOptionsWelcomeContentUpdates();
-renderThemeOptions();
 
 function updateLanguageSelectorValue(language) {
   if (!elements.languageSelect) {
@@ -3758,7 +3759,6 @@ function updateBrandPortalState(options = {}) {
   }
 }
 
-updateBigBangVisibility();
 
 const soundEffects = (() => {
   let popMuted = false;
@@ -4032,13 +4032,6 @@ function subscribeCritAtomLanguageUpdates() {
   }
 }
 
-initUiScaleOption();
-initTextFontOption();
-initDigitFontOption();
-initClickSoundOption();
-subscribeClickSoundLanguageUpdates();
-initCritAtomOption();
-subscribeCritAtomLanguageUpdates();
 
 const musicPlayer = (() => {
   const MUSIC_DIR = 'Assets/Music/';
@@ -7785,477 +7778,631 @@ document.addEventListener('visibilitychange', () => {
   }
 });
 
-const initiallyActivePage = document.querySelector('.page.active') || elements.pages[0];
-if (initiallyActivePage) {
-  showPage(initiallyActivePage.id);
-} else {
-  document.body.classList.remove('view-game');
-}
+function bindDomEventListeners() {
+  const initiallyActivePage = document.querySelector('.page.active') || elements.pages[0];
+  if (initiallyActivePage) {
+    showPage(initiallyActivePage.id);
+  } else {
+    document.body.classList.remove('view-game');
+  }
 
-if (elements.devkitOverlay) {
-  elements.devkitOverlay.addEventListener('click', event => {
-    if (event.target === elements.devkitOverlay) {
+  if (elements.devkitOverlay) {
+    elements.devkitOverlay.addEventListener('click', event => {
+      if (event.target === elements.devkitOverlay) {
+        closeDevKit();
+      }
+    });
+  }
+
+  if (elements.devkitPanel) {
+    elements.devkitPanel.addEventListener('keydown', event => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closeDevKit();
+      }
+    });
+  }
+
+  if (elements.devkitClose) {
+    elements.devkitClose.addEventListener('click', event => {
+      event.preventDefault();
       closeDevKit();
-    }
-  });
-}
+    });
+  }
 
-if (elements.devkitPanel) {
-  elements.devkitPanel.addEventListener('keydown', event => {
-    if (event.key === 'Escape') {
+  if (elements.devkitAtomsForm) {
+    elements.devkitAtomsForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const value = elements.devkitAtomsInput ? elements.devkitAtomsInput.value : '';
+      handleDevKitAtomsSubmission(value);
+      if (elements.devkitAtomsInput) {
+        elements.devkitAtomsInput.value = '';
+      }
+    });
+  }
+
+  if (elements.devkitAutoForm) {
+    elements.devkitAutoForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const value = elements.devkitAutoInput ? elements.devkitAutoInput.value : '';
+      handleDevKitAutoSubmission(value);
+      if (elements.devkitAutoInput) {
+        elements.devkitAutoInput.value = '';
+      }
+    });
+  }
+
+  if (elements.devkitOfflineTimeForm) {
+    elements.devkitOfflineTimeForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const value = elements.devkitOfflineTimeInput ? elements.devkitOfflineTimeInput.value : '';
+      handleDevKitOfflineAdvance(value);
+      if (elements.devkitOfflineTimeInput) {
+        elements.devkitOfflineTimeInput.value = '';
+      }
+    });
+  }
+
+  if (elements.devkitOnlineTimeForm) {
+    elements.devkitOnlineTimeForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const value = elements.devkitOnlineTimeInput ? elements.devkitOnlineTimeInput.value : '';
+      handleDevKitOnlineAdvance(value);
+      if (elements.devkitOnlineTimeInput) {
+        elements.devkitOnlineTimeInput.value = '';
+      }
+    });
+  }
+
+  if (elements.devkitAutoReset) {
+    elements.devkitAutoReset.addEventListener('click', event => {
+      event.preventDefault();
+      resetDevKitAutoBonus();
+    });
+  }
+
+  if (elements.devkitTicketsForm) {
+    elements.devkitTicketsForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const value = elements.devkitTicketsInput ? elements.devkitTicketsInput.value : '';
+      handleDevKitTicketSubmission(value);
+      if (elements.devkitTicketsInput) {
+        elements.devkitTicketsInput.value = '';
+      }
+    });
+  }
+
+  if (elements.devkitMach3TicketsForm) {
+    elements.devkitMach3TicketsForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const value = elements.devkitMach3TicketsInput ? elements.devkitMach3TicketsInput.value : '';
+      handleDevKitMach3TicketSubmission(value);
+      if (elements.devkitMach3TicketsInput) {
+        elements.devkitMach3TicketsInput.value = '';
+      }
+    });
+  }
+
+  if (elements.devkitUnlockTrophies) {
+    elements.devkitUnlockTrophies.addEventListener('click', event => {
+      event.preventDefault();
+      devkitUnlockAllTrophies();
+    });
+  }
+
+  if (elements.devkitUnlockElements) {
+    elements.devkitUnlockElements.addEventListener('click', event => {
+      event.preventDefault();
+      devkitUnlockAllElements();
+    });
+  }
+
+  if (elements.devkitUnlockInfo) {
+    elements.devkitUnlockInfo.addEventListener('click', event => {
+      event.preventDefault();
+      const unlocked = unlockPage('info', {
+        save: true,
+        announce: t('scripts.app.devkit.infoPageUnlocked')
+      });
+      if (!unlocked) {
+        showToast(t('scripts.app.devkit.infoPageAlready'));
+      }
+      updateDevKitUI();
+    });
+  }
+
+  if (elements.devkitToggleShop) {
+    elements.devkitToggleShop.addEventListener('click', event => {
+      event.preventDefault();
+      toggleDevKitCheat('freeShop');
+    });
+  }
+
+  if (elements.devkitToggleGacha) {
+    elements.devkitToggleGacha.addEventListener('click', event => {
+      event.preventDefault();
+      toggleDevKitCheat('freeGacha');
+    });
+  }
+
+  document.addEventListener('keydown', event => {
+    if (event.key === 'F9') {
+      event.preventDefault();
+      toggleDevKit();
+    } else if (event.key === 'Escape' && DEVKIT_STATE.isOpen) {
       event.preventDefault();
       closeDevKit();
     }
   });
-}
 
-if (elements.devkitClose) {
-  elements.devkitClose.addEventListener('click', event => {
-    event.preventDefault();
-    closeDevKit();
-  });
-}
-
-if (elements.devkitAtomsForm) {
-  elements.devkitAtomsForm.addEventListener('submit', event => {
-    event.preventDefault();
-    const value = elements.devkitAtomsInput ? elements.devkitAtomsInput.value : '';
-    handleDevKitAtomsSubmission(value);
-    if (elements.devkitAtomsInput) {
-      elements.devkitAtomsInput.value = '';
-    }
-  });
-}
-
-if (elements.devkitAutoForm) {
-  elements.devkitAutoForm.addEventListener('submit', event => {
-    event.preventDefault();
-    const value = elements.devkitAutoInput ? elements.devkitAutoInput.value : '';
-    handleDevKitAutoSubmission(value);
-    if (elements.devkitAutoInput) {
-      elements.devkitAutoInput.value = '';
-    }
-  });
-}
-
-if (elements.devkitOfflineTimeForm) {
-  elements.devkitOfflineTimeForm.addEventListener('submit', event => {
-    event.preventDefault();
-    const value = elements.devkitOfflineTimeInput ? elements.devkitOfflineTimeInput.value : '';
-    handleDevKitOfflineAdvance(value);
-    if (elements.devkitOfflineTimeInput) {
-      elements.devkitOfflineTimeInput.value = '';
-    }
-  });
-}
-
-if (elements.devkitOnlineTimeForm) {
-  elements.devkitOnlineTimeForm.addEventListener('submit', event => {
-    event.preventDefault();
-    const value = elements.devkitOnlineTimeInput ? elements.devkitOnlineTimeInput.value : '';
-    handleDevKitOnlineAdvance(value);
-    if (elements.devkitOnlineTimeInput) {
-      elements.devkitOnlineTimeInput.value = '';
-    }
-  });
-}
-
-if (elements.devkitAutoReset) {
-  elements.devkitAutoReset.addEventListener('click', event => {
-    event.preventDefault();
-    resetDevKitAutoBonus();
-  });
-}
-
-if (elements.devkitTicketsForm) {
-  elements.devkitTicketsForm.addEventListener('submit', event => {
-    event.preventDefault();
-    const value = elements.devkitTicketsInput ? elements.devkitTicketsInput.value : '';
-    handleDevKitTicketSubmission(value);
-    if (elements.devkitTicketsInput) {
-      elements.devkitTicketsInput.value = '';
-    }
-  });
-}
-
-if (elements.devkitMach3TicketsForm) {
-  elements.devkitMach3TicketsForm.addEventListener('submit', event => {
-    event.preventDefault();
-    const value = elements.devkitMach3TicketsInput ? elements.devkitMach3TicketsInput.value : '';
-    handleDevKitMach3TicketSubmission(value);
-    if (elements.devkitMach3TicketsInput) {
-      elements.devkitMach3TicketsInput.value = '';
-    }
-  });
-}
-
-if (elements.devkitUnlockTrophies) {
-  elements.devkitUnlockTrophies.addEventListener('click', event => {
-    event.preventDefault();
-    devkitUnlockAllTrophies();
-  });
-}
-
-if (elements.devkitUnlockElements) {
-  elements.devkitUnlockElements.addEventListener('click', event => {
-    event.preventDefault();
-    devkitUnlockAllElements();
-  });
-}
-
-if (elements.devkitUnlockInfo) {
-  elements.devkitUnlockInfo.addEventListener('click', event => {
-    event.preventDefault();
-    const unlocked = unlockPage('info', {
-      save: true,
-      announce: t('scripts.app.devkit.infoPageUnlocked')
-    });
-    if (!unlocked) {
-      showToast(t('scripts.app.devkit.infoPageAlready'));
-    }
-    updateDevKitUI();
-  });
-}
-
-if (elements.devkitToggleShop) {
-  elements.devkitToggleShop.addEventListener('click', event => {
-    event.preventDefault();
-    toggleDevKitCheat('freeShop');
-  });
-}
-
-if (elements.devkitToggleGacha) {
-  elements.devkitToggleGacha.addEventListener('click', event => {
-    event.preventDefault();
-    toggleDevKitCheat('freeGacha');
-  });
-}
-
-document.addEventListener('keydown', event => {
-  if (event.key === 'F9') {
-    event.preventDefault();
-    toggleDevKit();
-  } else if (event.key === 'Escape' && DEVKIT_STATE.isOpen) {
-    event.preventDefault();
-    closeDevKit();
-  }
-});
-
-updateDevKitUI();
-
-initParticulesGame();
-
-function handleMetauxSessionEnd(summary) {
-  updateMetauxCreditsUI();
-  if (!summary || typeof summary !== 'object') {
-    return;
-  }
-  const elapsedMs = Number(summary.elapsedMs ?? summary.time ?? 0);
-  const matches = Number(summary.matches ?? summary.matchCount ?? 0);
-  const secondsEarned = Number.isFinite(elapsedMs) && elapsedMs > 0
-    ? Math.max(0, Math.round(elapsedMs / 1000))
-    : 0;
-  const matchesEarned = Number.isFinite(matches) && matches > 0
-    ? Math.max(0, Math.floor(matches))
-    : 0;
-  if (secondsEarned <= 0 && matchesEarned <= 0) {
-    return;
-  }
-  const apsCrit = ensureApsCritState();
-  const hadEffects = apsCrit.effects.length > 0;
-  const previousMultiplier = getApsCritMultiplier(apsCrit);
-  const currentRemaining = getApsCritRemainingSeconds(apsCrit);
-  let chronoAdded = 0;
-  let effectAdded = false;
-  if (!hadEffects) {
-    if (secondsEarned > 0 && matchesEarned > 0) {
-      apsCrit.effects.push({
-        multiplierAdd: matchesEarned,
-        remainingSeconds: secondsEarned
-      });
-      chronoAdded = secondsEarned;
-      effectAdded = true;
-    }
-  } else if (matchesEarned > 0 && currentRemaining > 0) {
-    apsCrit.effects.push({
-      multiplierAdd: matchesEarned,
-      remainingSeconds: currentRemaining
-    });
-    effectAdded = true;
-  }
-  if (!effectAdded) {
-    return;
-  }
-  apsCrit.effects = apsCrit.effects.filter(effect => {
-    const remaining = Number(effect?.remainingSeconds) || 0;
-    const value = Number(effect?.multiplierAdd) || 0;
-    return remaining > 0 && value > 0;
-  });
-  if (!apsCrit.effects.length) {
-    return;
-  }
-  const newMultiplier = getApsCritMultiplier(apsCrit);
-  if (newMultiplier !== previousMultiplier) {
-    recalcProduction();
-  }
-  updateUI();
-  pulseApsCritPanel();
-  const messageParts = [];
-  if (chronoAdded > 0) {
-    messageParts.push(t('scripts.app.metaux.chronoBonus', {
-      value: formatIntegerLocalized(chronoAdded)
-    }));
-  }
-  if (matchesEarned > 0) {
-    messageParts.push(t('scripts.app.metaux.multiBonus', {
-      value: formatIntegerLocalized(matchesEarned)
-    }));
-  }
-  if (messageParts.length) {
-    showToast(t('scripts.app.metaux.toast', { details: messageParts.join(' · ') }));
-  }
-  saveGame();
-}
-
-window.handleMetauxSessionEnd = handleMetauxSessionEnd;
-
-elements.navButtons.forEach(btn => {
-  btn.addEventListener('click', () => {
-    const target = btn.dataset.target;
-    if (!isPageUnlocked(target)) {
+  function handleMetauxSessionEnd(summary) {
+    updateMetauxCreditsUI();
+    if (!summary || typeof summary !== 'object') {
       return;
     }
-    showPage(target);
-  });
-});
+    const elapsedMs = Number(summary.elapsedMs ?? summary.time ?? 0);
+    const matches = Number(summary.matches ?? summary.matchCount ?? 0);
+    const secondsEarned = Number.isFinite(elapsedMs) && elapsedMs > 0
+      ? Math.max(0, Math.round(elapsedMs / 1000))
+      : 0;
+    const matchesEarned = Number.isFinite(matches) && matches > 0
+      ? Math.max(0, Math.floor(matches))
+      : 0;
+    if (secondsEarned <= 0 && matchesEarned <= 0) {
+      return;
+    }
+    const apsCrit = ensureApsCritState();
+    const hadEffects = apsCrit.effects.length > 0;
+    const previousMultiplier = getApsCritMultiplier(apsCrit);
+    const currentRemaining = getApsCritRemainingSeconds(apsCrit);
+    let chronoAdded = 0;
+    let effectAdded = false;
+    if (!hadEffects) {
+      if (secondsEarned > 0 && matchesEarned > 0) {
+        apsCrit.effects.push({
+          multiplierAdd: matchesEarned,
+          remainingSeconds: secondsEarned
+        });
+        chronoAdded = secondsEarned;
+        effectAdded = true;
+      }
+    } else if (matchesEarned > 0 && currentRemaining > 0) {
+      apsCrit.effects.push({
+        multiplierAdd: matchesEarned,
+        remainingSeconds: currentRemaining
+      });
+      effectAdded = true;
+    }
+    if (!effectAdded) {
+      return;
+    }
+    apsCrit.effects = apsCrit.effects.filter(effect => {
+      const remaining = Number(effect?.remainingSeconds) || 0;
+      const value = Number(effect?.multiplierAdd) || 0;
+      return remaining > 0 && value > 0;
+    });
+    if (!apsCrit.effects.length) {
+      return;
+    }
+    const newMultiplier = getApsCritMultiplier(apsCrit);
+    if (newMultiplier !== previousMultiplier) {
+      recalcProduction();
+    }
+    updateUI();
+    pulseApsCritPanel();
+    const messageParts = [];
+    if (chronoAdded > 0) {
+      messageParts.push(t('scripts.app.metaux.chronoBonus', {
+        value: formatIntegerLocalized(chronoAdded)
+      }));
+    }
+    if (matchesEarned > 0) {
+      messageParts.push(t('scripts.app.metaux.multiBonus', {
+        value: formatIntegerLocalized(matchesEarned)
+      }));
+    }
+    if (messageParts.length) {
+      showToast(t('scripts.app.metaux.toast', { details: messageParts.join(' · ') }));
+    }
+    saveGame();
+  }
 
-if (elements.arcadeHubCards?.length) {
-  elements.arcadeHubCards.forEach(card => {
-    card.addEventListener('click', () => {
-      const target = card.dataset.pageTarget;
-      if (!target || !isPageUnlocked(target)) {
+  window.handleMetauxSessionEnd = handleMetauxSessionEnd;
+
+  elements.navButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.dataset.target;
+      if (!isPageUnlocked(target)) {
         return;
-      }
-      if (target === 'wave') {
-        ensureWaveGame();
-      }
-      if (target === 'quantum2048') {
-        ensureQuantum2048Game();
-      }
-      if (target === 'gameOfLife') {
-        ensureGameOfLifeGame();
       }
       showPage(target);
     });
   });
-}
 
-if (elements.openMidiModuleButton) {
-  elements.openMidiModuleButton.addEventListener('click', () => {
-    showPage('midi');
-  });
-}
-
-if (elements.metauxOpenButton) {
-  elements.metauxOpenButton.addEventListener('click', () => {
-    showPage('metaux');
-  });
-}
-
-if (elements.metauxReturnButton) {
-  elements.metauxReturnButton.addEventListener('click', () => {
-    showPage('game');
-  });
-}
-
-if (elements.metauxNewGameButton) {
-  elements.metauxNewGameButton.addEventListener('click', () => {
-    initMetauxGame();
-    const credits = getMetauxCreditCount();
-    if (!metauxGame) {
-      showToast(t('scripts.app.metaux.unavailable'));
-      return;
-    }
-    if (isMetauxSessionRunning()) {
-      showToast(t('scripts.app.metaux.gameInProgress'));
-      updateMetauxCreditsUI();
-      return;
-    }
-    if (credits <= 0) {
-      showToast(t('scripts.app.metaux.noCredits'));
-      updateMetauxCreditsUI();
-      return;
-    }
-    gameState.bonusParticulesTickets = credits - 1;
-    metauxGame.restart();
-    updateMetauxCreditsUI();
-    saveGame();
-  });
-}
-
-if (elements.metauxFreePlayButton) {
-  elements.metauxFreePlayButton.addEventListener('click', () => {
-    initMetauxGame();
-    if (!metauxGame) {
-      showToast(t('scripts.app.metaux.unavailable'));
-      return;
-    }
-    if (isMetauxSessionRunning()) {
-      showToast(t('scripts.app.metaux.gameInProgress'));
-      updateMetauxCreditsUI();
-      return;
-    }
-    if (typeof metauxGame.startFreePlay === 'function') {
-      metauxGame.startFreePlay();
-    } else {
-      metauxGame.restart({ freePlay: true });
-    }
-    updateMetauxCreditsUI();
-  });
-}
-
-if (elements.metauxFreePlayExitButton) {
-  elements.metauxFreePlayExitButton.addEventListener('click', () => {
-    initMetauxGame();
-    if (!metauxGame) {
-      showToast(t('scripts.app.metaux.unavailable'));
-      return;
-    }
-    if (typeof metauxGame.isFreePlayMode === 'function' && !metauxGame.isFreePlayMode()) {
-      return;
-    }
-    if (metauxGame.processing) {
-      showToast('Patientez, la réaction en chaîne est en cours.');
-      return;
-    }
-    if (typeof metauxGame.endFreePlaySession === 'function') {
-      const ended = metauxGame.endFreePlaySession({ showEndScreen: true });
-      if (ended && typeof window.updateMetauxCreditsUI === 'function') {
-        window.updateMetauxCreditsUI();
-      }
-    }
-  });
-}
-
-if (elements.brandPortal) {
-  elements.brandPortal.addEventListener('click', () => {
-    showPage('game');
-  });
-}
-
-if (elements.statusAtomsButton) {
-  elements.statusAtomsButton.addEventListener('click', () => {
-    if (document?.body?.dataset?.activePage === 'game') {
-      return;
-    }
-    showPage('game');
-  });
-}
-
-if (elements.arcadeReturnButton) {
-  elements.arcadeReturnButton.addEventListener('click', () => {
-    showPage('game');
-    if (isArcadeUnlocked()) {
-      triggerBrandPortalPulse();
-    }
-  });
-}
-
-if (elements.arcadeTicketButtons?.length) {
-  elements.arcadeTicketButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      if (!isPageUnlocked('gacha')) {
-        return;
-      }
-      showPage('gacha');
+  if (elements.arcadeHubCards?.length) {
+    elements.arcadeHubCards.forEach(card => {
+      card.addEventListener('click', () => {
+        const target = card.dataset.pageTarget;
+        if (!target || !isPageUnlocked(target)) {
+          return;
+        }
+        if (target === 'wave') {
+          ensureWaveGame();
+        }
+        if (target === 'quantum2048') {
+          ensureQuantum2048Game();
+        }
+        if (target === 'gameOfLife') {
+          ensureGameOfLifeGame();
+        }
+        showPage(target);
+      });
     });
-  });
-}
+  }
 
-if (elements.arcadeBonusTicketButtons?.length) {
-  elements.arcadeBonusTicketButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      if (button.disabled) {
-        return;
-      }
+  if (elements.openMidiModuleButton) {
+    elements.openMidiModuleButton.addEventListener('click', () => {
+      showPage('midi');
+    });
+  }
+
+  if (elements.metauxOpenButton) {
+    elements.metauxOpenButton.addEventListener('click', () => {
       showPage('metaux');
     });
-  });
-}
+  }
 
-if (elements.elementInfoSymbol) {
-  elements.elementInfoSymbol.addEventListener('click', event => {
-    if (elements.elementInfoSymbol.disabled || !selectedElementId) {
-      return;
-    }
-    event.preventDefault();
-    openElementDetailsModal(selectedElementId, { trigger: elements.elementInfoSymbol });
-  });
-}
-
-if (elements.elementInfoCategoryButton) {
-  elements.elementInfoCategoryButton.addEventListener('click', event => {
-    if (elements.elementInfoCategoryButton.disabled) {
-      return;
-    }
-    const familyId = elements.elementInfoCategoryButton.dataset.familyId || null;
-    if (!familyId) {
-      return;
-    }
-    event.preventDefault();
-    openElementFamilyModal(familyId, { trigger: elements.elementInfoCategoryButton });
-  });
-}
-
-if (elements.elementDetailsOverlay) {
-  elements.elementDetailsOverlay.addEventListener('click', event => {
-    const target = event.target.closest('[data-element-details-close]');
-    if (target) {
-      event.preventDefault();
-      closeElementDetailsModal();
-    }
-  });
-}
-
-if (elements.elementFamilyOverlay) {
-  elements.elementFamilyOverlay.addEventListener('click', event => {
-    const target = event.target.closest('[data-element-family-close]');
-    if (target) {
-      event.preventDefault();
-      closeElementFamilyModal();
-    }
-  });
-}
-
-renderPeriodicTable();
-renderGachaRarityList();
-renderFusionList();
-
-if (elements.atomButton) {
-  elements.atomButton.addEventListener('click', event => {
-    event.stopPropagation();
-    handleManualAtomClick({ contextId: 'game' });
-  });
-  elements.atomButton.addEventListener('dragstart', event => {
-    event.preventDefault();
-  });
-}
-
-if (elements.gachaSunButton) {
-  elements.gachaSunButton.addEventListener('click', event => {
-    event.preventDefault();
-    handleGachaSunClick().catch(error => {
-      console.error('Erreur lors du tirage cosmique', error);
+  if (elements.metauxReturnButton) {
+    elements.metauxReturnButton.addEventListener('click', () => {
+      showPage('game');
     });
-  });
-}
+  }
 
-if (elements.gachaTicketModeButton) {
-  elements.gachaTicketModeButton.addEventListener('click', event => {
-    event.preventDefault();
-    if (gachaAnimationInProgress) return;
-    toggleGachaRollMode();
-  });
+  if (elements.metauxNewGameButton) {
+    elements.metauxNewGameButton.addEventListener('click', () => {
+      initMetauxGame();
+      const credits = getMetauxCreditCount();
+      if (!metauxGame) {
+        showToast(t('scripts.app.metaux.unavailable'));
+        return;
+      }
+      if (isMetauxSessionRunning()) {
+        showToast(t('scripts.app.metaux.gameInProgress'));
+        updateMetauxCreditsUI();
+        return;
+      }
+      if (credits <= 0) {
+        showToast(t('scripts.app.metaux.noCredits'));
+        updateMetauxCreditsUI();
+        return;
+      }
+      gameState.bonusParticulesTickets = credits - 1;
+      metauxGame.restart();
+      updateMetauxCreditsUI();
+      saveGame();
+    });
+  }
+
+  if (elements.metauxFreePlayButton) {
+    elements.metauxFreePlayButton.addEventListener('click', () => {
+      initMetauxGame();
+      if (!metauxGame) {
+        showToast(t('scripts.app.metaux.unavailable'));
+        return;
+      }
+      if (isMetauxSessionRunning()) {
+        showToast(t('scripts.app.metaux.gameInProgress'));
+        updateMetauxCreditsUI();
+        return;
+      }
+      if (typeof metauxGame.startFreePlay === 'function') {
+        metauxGame.startFreePlay();
+      } else {
+        metauxGame.restart({ freePlay: true });
+      }
+      updateMetauxCreditsUI();
+    });
+  }
+
+  if (elements.metauxFreePlayExitButton) {
+    elements.metauxFreePlayExitButton.addEventListener('click', () => {
+      initMetauxGame();
+      if (!metauxGame) {
+        showToast(t('scripts.app.metaux.unavailable'));
+        return;
+      }
+      if (typeof metauxGame.isFreePlayMode === 'function' && !metauxGame.isFreePlayMode()) {
+        return;
+      }
+      if (metauxGame.processing) {
+        showToast('Patientez, la réaction en chaîne est en cours.');
+        return;
+      }
+      if (typeof metauxGame.endFreePlaySession === 'function') {
+        const ended = metauxGame.endFreePlaySession({ showEndScreen: true });
+        if (ended && typeof window.updateMetauxCreditsUI === 'function') {
+          window.updateMetauxCreditsUI();
+        }
+      }
+    });
+  }
+
+  if (elements.brandPortal) {
+    elements.brandPortal.addEventListener('click', () => {
+      showPage('game');
+    });
+  }
+
+  if (elements.statusAtomsButton) {
+    elements.statusAtomsButton.addEventListener('click', () => {
+      if (document?.body?.dataset?.activePage === 'game') {
+        return;
+      }
+      showPage('game');
+    });
+  }
+
+  if (elements.arcadeReturnButton) {
+    elements.arcadeReturnButton.addEventListener('click', () => {
+      showPage('game');
+      if (isArcadeUnlocked()) {
+        triggerBrandPortalPulse();
+      }
+    });
+  }
+
+  if (elements.arcadeTicketButtons?.length) {
+    elements.arcadeTicketButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        if (!isPageUnlocked('gacha')) {
+          return;
+        }
+        showPage('gacha');
+      });
+    });
+  }
+
+  if (elements.arcadeBonusTicketButtons?.length) {
+    elements.arcadeBonusTicketButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        if (button.disabled) {
+          return;
+        }
+        showPage('metaux');
+      });
+    });
+  }
+
+  if (elements.elementInfoSymbol) {
+    elements.elementInfoSymbol.addEventListener('click', event => {
+      if (elements.elementInfoSymbol.disabled || !selectedElementId) {
+        return;
+      }
+      event.preventDefault();
+      openElementDetailsModal(selectedElementId, { trigger: elements.elementInfoSymbol });
+    });
+  }
+
+  if (elements.elementInfoCategoryButton) {
+    elements.elementInfoCategoryButton.addEventListener('click', event => {
+      if (elements.elementInfoCategoryButton.disabled) {
+        return;
+      }
+      const familyId = elements.elementInfoCategoryButton.dataset.familyId || null;
+      if (!familyId) {
+        return;
+      }
+      event.preventDefault();
+      openElementFamilyModal(familyId, { trigger: elements.elementInfoCategoryButton });
+    });
+  }
+
+  if (elements.elementDetailsOverlay) {
+    elements.elementDetailsOverlay.addEventListener('click', event => {
+      const target = event.target.closest('[data-element-details-close]');
+      if (target) {
+        event.preventDefault();
+        closeElementDetailsModal();
+      }
+    });
+  }
+
+  if (elements.elementFamilyOverlay) {
+    elements.elementFamilyOverlay.addEventListener('click', event => {
+      const target = event.target.closest('[data-element-family-close]');
+      if (target) {
+        event.preventDefault();
+        closeElementFamilyModal();
+      }
+    });
+  }
+
+
+  if (elements.atomButton) {
+    elements.atomButton.addEventListener('click', event => {
+      event.stopPropagation();
+      handleManualAtomClick({ contextId: 'game' });
+    });
+    elements.atomButton.addEventListener('dragstart', event => {
+      event.preventDefault();
+    });
+  }
+
+  if (elements.gachaSunButton) {
+    elements.gachaSunButton.addEventListener('click', event => {
+      event.preventDefault();
+      handleGachaSunClick().catch(error => {
+        console.error('Erreur lors du tirage cosmique', error);
+      });
+    });
+  }
+
+  if (elements.gachaTicketModeButton) {
+    elements.gachaTicketModeButton.addEventListener('click', event => {
+      event.preventDefault();
+      if (gachaAnimationInProgress) return;
+      toggleGachaRollMode();
+    });
+  }
+
+  if (elements.languageSelect) {
+    elements.languageSelect.addEventListener('change', event => {
+      const requestedLanguage = resolveLanguageCode(event.target.value);
+      const i18n = globalThis.i18n;
+      if (!i18n || typeof i18n.setLanguage !== 'function') {
+        updateLanguageSelectorValue(requestedLanguage);
+        writeStoredLanguagePreference(requestedLanguage);
+        if (document && document.documentElement) {
+          document.documentElement.lang = requestedLanguage;
+        }
+        return;
+      }
+      const previousLanguage = i18n.getCurrentLanguage ? i18n.getCurrentLanguage() : null;
+      const normalizedPrevious = previousLanguage ? resolveLanguageCode(previousLanguage) : null;
+      if (normalizedPrevious === requestedLanguage) {
+        writeStoredLanguagePreference(requestedLanguage);
+        return;
+      }
+      elements.languageSelect.disabled = true;
+      i18n
+        .setLanguage(requestedLanguage)
+        .then(() => {
+          writeStoredLanguagePreference(requestedLanguage);
+          if (typeof i18n.updateTranslations === 'function') {
+            i18n.updateTranslations(document);
+          }
+          updateLanguageSelectorValue(requestedLanguage);
+          refreshOptionsWelcomeContent();
+          updateBrickSkinOption();
+          updateUI();
+          showToast(t('scripts.app.language.updated'));
+        })
+        .catch(error => {
+          console.error('Unable to change language', error);
+          if (previousLanguage) {
+            updateLanguageSelectorValue(previousLanguage);
+          }
+        })
+        .finally(() => {
+          elements.languageSelect.disabled = false;
+        });
+    });
+  }
+
+  if (elements.themeSelect) {
+    elements.themeSelect.addEventListener('change', event => {
+      const appliedId = applyTheme(event.target.value);
+      renderThemeOptions();
+      saveGame();
+      const appliedTheme = getThemeDefinition(appliedId);
+      const themeLabel = getThemeLabel(appliedTheme) || appliedId;
+      showToast(t('scripts.app.themeUpdated', { name: themeLabel }));
+    });
+  }
+
+  if (typeof window !== 'undefined') {
+    window.addEventListener('i18n:languagechange', () => {
+      renderThemeOptions();
+      renderPeriodicTable();
+      updateUI();
+    });
+  }
+
+  if (elements.brickSkinSelect) {
+    elements.brickSkinSelect.addEventListener('change', event => {
+      commitBrickSkinSelection(event.target.value);
+    });
+  }
+
+  if (elements.arcadeBrickSkinSelect) {
+    elements.arcadeBrickSkinSelect.addEventListener('change', event => {
+      commitBrickSkinSelection(event.target.value);
+    });
+  }
+
+  if (elements.musicTrackSelect) {
+    elements.musicTrackSelect.addEventListener('change', event => {
+      const selectedId = event.target.value;
+      if (!selectedId) {
+        musicPlayer.stop();
+        showToast(t('scripts.app.music.muted'));
+        return;
+      }
+      const success = musicPlayer.playTrackById(selectedId);
+      if (!success) {
+        showToast(t('scripts.app.music.missing'));
+        updateMusicStatus();
+        return;
+      }
+      const currentTrack = musicPlayer.getCurrentTrack();
+      if (currentTrack) {
+        if (currentTrack.placeholder) {
+          showToast(t('scripts.app.music.fileMissing'));
+        } else {
+          showToast(t('scripts.app.music.nowPlaying', { name: currentTrack.displayName }));
+        }
+      }
+      updateMusicStatus();
+    });
+  }
+
+  if (elements.musicVolumeSlider) {
+    const applyVolumeFromSlider = (rawValue, { announce = false } = {}) => {
+      const numeric = Number(rawValue);
+      const percent = Number.isFinite(numeric) ? Math.max(0, Math.min(100, numeric)) : 0;
+      const normalized = clampMusicVolume(percent / 100, musicPlayer.getVolume());
+      musicPlayer.setVolume(normalized);
+      gameState.musicVolume = normalized;
+      if (announce) {
+        showToast(t('scripts.app.music.volumeLabel', { value: Math.round(normalized * 100) }));
+      }
+    };
+    elements.musicVolumeSlider.addEventListener('input', event => {
+      applyVolumeFromSlider(event.target.value);
+    });
+    elements.musicVolumeSlider.addEventListener('change', event => {
+      applyVolumeFromSlider(event.target.value, { announce: true });
+    });
+  }
+
+  if (elements.resetButton) {
+    elements.resetButton.addEventListener('click', () => {
+      const confirmationWord = 'RESET';
+      const promptMessage = `Réinitialisation complète du jeu. Tapez "${confirmationWord}" pour confirmer.\nCette action est irréversible.`;
+      const response = prompt(promptMessage);
+      if (response == null) {
+        showToast(t('scripts.app.reset.cancelled'));
+        return;
+      }
+      if (response.trim().toUpperCase() !== confirmationWord) {
+        showToast(t('scripts.app.reset.invalid'));
+        return;
+      }
+      resetGame();
+      showToast(t('scripts.app.reset.done'));
+    });
+  }
+
+  if (elements.bigBangOptionToggle) {
+    elements.bigBangOptionToggle.addEventListener('change', event => {
+      const enabled = event.target.checked;
+      if (!isBigBangTrophyUnlocked()) {
+        event.target.checked = false;
+        gameState.bigBangButtonVisible = false;
+        updateBigBangVisibility();
+        return;
+      }
+      gameState.bigBangButtonVisible = enabled;
+      updateBigBangVisibility();
+      saveGame();
+      showToast(enabled
+        ? t('scripts.app.bigBangToggle.shown')
+        : t('scripts.app.bigBangToggle.hidden'));
+    });
+  }
+
+
+
 }
 
 document.addEventListener('click', event => {
@@ -10573,160 +10720,6 @@ function applyTheme(requestedThemeId) {
   return theme.id;
 }
 
-if (elements.languageSelect) {
-  elements.languageSelect.addEventListener('change', event => {
-    const requestedLanguage = resolveLanguageCode(event.target.value);
-    const i18n = globalThis.i18n;
-    if (!i18n || typeof i18n.setLanguage !== 'function') {
-      updateLanguageSelectorValue(requestedLanguage);
-      writeStoredLanguagePreference(requestedLanguage);
-      if (document && document.documentElement) {
-        document.documentElement.lang = requestedLanguage;
-      }
-      return;
-    }
-    const previousLanguage = i18n.getCurrentLanguage ? i18n.getCurrentLanguage() : null;
-    const normalizedPrevious = previousLanguage ? resolveLanguageCode(previousLanguage) : null;
-    if (normalizedPrevious === requestedLanguage) {
-      writeStoredLanguagePreference(requestedLanguage);
-      return;
-    }
-    elements.languageSelect.disabled = true;
-    i18n
-      .setLanguage(requestedLanguage)
-      .then(() => {
-        writeStoredLanguagePreference(requestedLanguage);
-        if (typeof i18n.updateTranslations === 'function') {
-          i18n.updateTranslations(document);
-        }
-        updateLanguageSelectorValue(requestedLanguage);
-        refreshOptionsWelcomeContent();
-        updateBrickSkinOption();
-        updateUI();
-        showToast(t('scripts.app.language.updated'));
-      })
-      .catch(error => {
-        console.error('Unable to change language', error);
-        if (previousLanguage) {
-          updateLanguageSelectorValue(previousLanguage);
-        }
-      })
-      .finally(() => {
-        elements.languageSelect.disabled = false;
-      });
-  });
-}
-
-if (elements.themeSelect) {
-  elements.themeSelect.addEventListener('change', event => {
-    const appliedId = applyTheme(event.target.value);
-    renderThemeOptions();
-    saveGame();
-    const appliedTheme = getThemeDefinition(appliedId);
-    const themeLabel = getThemeLabel(appliedTheme) || appliedId;
-    showToast(t('scripts.app.themeUpdated', { name: themeLabel }));
-  });
-}
-
-if (typeof window !== 'undefined') {
-  window.addEventListener('i18n:languagechange', () => {
-    renderThemeOptions();
-    renderPeriodicTable();
-    updateUI();
-  });
-}
-
-if (elements.brickSkinSelect) {
-  elements.brickSkinSelect.addEventListener('change', event => {
-    commitBrickSkinSelection(event.target.value);
-  });
-}
-
-if (elements.arcadeBrickSkinSelect) {
-  elements.arcadeBrickSkinSelect.addEventListener('change', event => {
-    commitBrickSkinSelection(event.target.value);
-  });
-}
-
-if (elements.musicTrackSelect) {
-  elements.musicTrackSelect.addEventListener('change', event => {
-    const selectedId = event.target.value;
-    if (!selectedId) {
-      musicPlayer.stop();
-      showToast(t('scripts.app.music.muted'));
-      return;
-    }
-    const success = musicPlayer.playTrackById(selectedId);
-    if (!success) {
-      showToast(t('scripts.app.music.missing'));
-      updateMusicStatus();
-      return;
-    }
-    const currentTrack = musicPlayer.getCurrentTrack();
-    if (currentTrack) {
-      if (currentTrack.placeholder) {
-        showToast(t('scripts.app.music.fileMissing'));
-      } else {
-        showToast(t('scripts.app.music.nowPlaying', { name: currentTrack.displayName }));
-      }
-    }
-    updateMusicStatus();
-  });
-}
-
-if (elements.musicVolumeSlider) {
-  const applyVolumeFromSlider = (rawValue, { announce = false } = {}) => {
-    const numeric = Number(rawValue);
-    const percent = Number.isFinite(numeric) ? Math.max(0, Math.min(100, numeric)) : 0;
-    const normalized = clampMusicVolume(percent / 100, musicPlayer.getVolume());
-    musicPlayer.setVolume(normalized);
-    gameState.musicVolume = normalized;
-    if (announce) {
-      showToast(t('scripts.app.music.volumeLabel', { value: Math.round(normalized * 100) }));
-    }
-  };
-  elements.musicVolumeSlider.addEventListener('input', event => {
-    applyVolumeFromSlider(event.target.value);
-  });
-  elements.musicVolumeSlider.addEventListener('change', event => {
-    applyVolumeFromSlider(event.target.value, { announce: true });
-  });
-}
-
-elements.resetButton.addEventListener('click', () => {
-  const confirmationWord = 'RESET';
-  const promptMessage = `Réinitialisation complète du jeu. Tapez "${confirmationWord}" pour confirmer.\nCette action est irréversible.`;
-  const response = prompt(promptMessage);
-  if (response == null) {
-    showToast(t('scripts.app.reset.cancelled'));
-    return;
-  }
-  if (response.trim().toUpperCase() !== confirmationWord) {
-    showToast(t('scripts.app.reset.invalid'));
-    return;
-  }
-  resetGame();
-  showToast(t('scripts.app.reset.done'));
-});
-
-if (elements.bigBangOptionToggle) {
-  elements.bigBangOptionToggle.addEventListener('change', event => {
-    const enabled = event.target.checked;
-    if (!isBigBangTrophyUnlocked()) {
-      event.target.checked = false;
-      gameState.bigBangButtonVisible = false;
-      updateBigBangVisibility();
-      return;
-    }
-    gameState.bigBangButtonVisible = enabled;
-    updateBigBangVisibility();
-    saveGame();
-    showToast(enabled
-      ? t('scripts.app.bigBangToggle.shown')
-      : t('scripts.app.bigBangToggle.hidden'));
-  });
-}
-
 function cloneArcadeProgress(progress) {
   const base = createInitialArcadeProgress();
   if (!progress || typeof progress !== 'object') {
@@ -11687,7 +11680,31 @@ function startApp() {
   requestAnimationFrame(loop);
 }
 
+function initializeDomBoundModules() {
+  refreshOptionsWelcomeContent();
+  subscribeOptionsWelcomeContentUpdates();
+  renderThemeOptions();
+  updateBigBangVisibility();
+  bindDomEventListeners();
+  initUiScaleOption();
+  initTextFontOption();
+  initDigitFontOption();
+  initClickSoundOption();
+  subscribeClickSoundLanguageUpdates();
+  initCritAtomOption();
+  subscribeCritAtomLanguageUpdates();
+  updateDevKitUI();
+  if (typeof initParticulesGame === 'function') {
+    initParticulesGame();
+  }
+  renderPeriodicTable();
+  renderGachaRarityList();
+  renderFusionList();
+}
+
 function initializeApp() {
+  elements = collectDomElements();
+  initializeDomBoundModules();
   populateLanguageSelectOptions();
   const i18n = globalThis.i18n;
   if (i18n && typeof i18n.setLanguage === 'function') {
