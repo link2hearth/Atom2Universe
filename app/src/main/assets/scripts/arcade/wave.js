@@ -77,7 +77,7 @@
       };
     }
     const image = new Image();
-    image.src = 'Assets/Sprites/energy_ball2.png';
+    image.src = 'Assets/sprites/energy_ball2.png';
     const sprite = {
       image,
       loaded: false,

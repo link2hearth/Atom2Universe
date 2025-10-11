@@ -242,7 +242,7 @@
       };
     }
     const image = new Image();
-    image.src = 'Assets/Sprites/energy_ball.png';
+    image.src = 'Assets/sprites/energy_ball.png';
     const sprite = {
       image,
       loaded: false,
@@ -324,7 +324,7 @@
   };
 
   const QUARK_SPRITE_SHEET = createSpriteSheet({
-    src: 'Assets/Sprites/quarks.png',
+    src: 'Assets/sprites/quarks.png',
     frameWidth: 64,
     frameHeight: 32,
     columns: 6,
@@ -332,7 +332,7 @@
   });
 
   const PARTICLE_SPRITE_SHEET = createSpriteSheet({
-    src: 'Assets/Sprites/particles.png',
+    src: 'Assets/sprites/particles.png',
     frameWidth: 64,
     frameHeight: 32,
     columns: 6,
@@ -340,7 +340,7 @@
   });
 
   const METALLIC_BRICK_SPRITE_SHEET = createSpriteSheet({
-    src: 'Assets/Sprites/metallic_bricks.png',
+    src: 'Assets/sprites/metallic_bricks.png',
     frameWidth: 64,
     frameHeight: 32,
     columns: 12,
@@ -348,7 +348,7 @@
   });
 
   const NEON_BRICK_SPRITE_SHEET = createSpriteSheet({
-    src: 'Assets/Sprites/neon_bricks.png',
+    src: 'Assets/sprites/neon_bricks.png',
     frameWidth: 64,
     frameHeight: 32,
     columns: 12,
@@ -356,7 +356,7 @@
   });
 
   const PASTELS_BRICK_SPRITE_SHEET = createSpriteSheet({
-    src: 'Assets/Sprites/Pastels_bricks.png',
+    src: 'Assets/sprites/Pastels_bricks.png',
     frameWidth: 64,
     frameHeight: 32,
     columns: 12,
@@ -364,7 +364,7 @@
   });
 
   const LASER_SPRITE_SHEET = createSpriteSheet({
-    src: 'Assets/Sprites/bullet.png',
+    src: 'Assets/sprites/bullet.png',
     frameWidth: 128,
     frameHeight: 128,
     columns: 8,

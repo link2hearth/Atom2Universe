@@ -166,20 +166,20 @@
 
   const PIECE_SPRITES = Object.freeze({
     w: Object.freeze({
-      p: 'assets/sprites/pawn.png',
-      n: 'assets/sprites/knight.png',
-      b: 'assets/sprites/bishop.png',
-      r: 'assets/sprites/rook.png',
-      q: 'assets/sprites/queen.png',
-      k: 'assets/sprites/king.png'
+      p: 'Assets/sprites/pawn.png',
+      n: 'Assets/sprites/knight.png',
+      b: 'Assets/sprites/bishop.png',
+      r: 'Assets/sprites/rook.png',
+      q: 'Assets/sprites/queen.png',
+      k: 'Assets/sprites/king.png'
     }),
     b: Object.freeze({
-      p: 'assets/sprites/pawn1.png',
-      n: 'assets/sprites/knight1.png',
-      b: 'assets/sprites/bishop1.png',
-      r: 'assets/sprites/rook1.png',
-      q: 'assets/sprites/queen1.png',
-      k: 'assets/sprites/king1.png'
+      p: 'Assets/sprites/pawn1.png',
+      n: 'Assets/sprites/knight1.png',
+      b: 'Assets/sprites/bishop1.png',
+      r: 'Assets/sprites/rook1.png',
+      q: 'Assets/sprites/queen1.png',
+      k: 'Assets/sprites/king1.png'
     })
   });
 
