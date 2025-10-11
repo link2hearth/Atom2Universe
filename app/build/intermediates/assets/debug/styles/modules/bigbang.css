@@ -1,0 +1,58 @@
+.page--bigbang {
+  display: none;
+}
+
+.page--bigbang.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.bigbang-content {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.8rem, 2vw, 1.4rem);
+  padding: clamp(2rem, 5vw, 3rem);
+  border-radius: 1.8rem;
+  background: linear-gradient(160deg, rgba(32, 44, 96, 0.8), rgba(12, 16, 40, 0.92));
+  box-shadow: 0 28px 52px rgba(4, 10, 28, 0.6);
+  border: 1px solid rgba(120, 150, 255, 0.22);
+  max-width: min(520px, 90vw);
+}
+
+body.theme-light .bigbang-content {
+  background: linear-gradient(160deg, rgba(240, 244, 255, 0.92), rgba(202, 214, 255, 0.94));
+  border-color: rgba(118, 148, 255, 0.28);
+  box-shadow: 0 24px 40px rgba(18, 24, 40, 0.16);
+}
+
+body.theme-neon .bigbang-content {
+  background: linear-gradient(160deg, rgba(52, 24, 120, 0.88), rgba(10, 40, 120, 0.9));
+  border-color: rgba(152, 120, 255, 0.38);
+  box-shadow: 0 32px 54px rgba(32, 18, 92, 0.68);
+}
+
+#bigbang-title {
+  margin: 0;
+  font-family: 'Audiowide', 'Orbitron', sans-serif;
+  font-size: clamp(1.8rem, 4.5vw, 2.4rem);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.bigbang-description {
+  margin: 0;
+  font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(228, 231, 255, 0.85);
+}
+
+body.theme-light .bigbang-description {
+  color: rgba(28, 34, 56, 0.72);
+}
+
+body.theme-neon .bigbang-description {
+  color: rgba(190, 200, 255, 0.9);
+}
