@@ -254,6 +254,10 @@
         "backToHub": "Back to hub",
         "canvas": "Game of Life grid",
         "toolbar": "Simulation controls",
+        "menu": {
+          "collapse": "Collapse panel",
+          "expand": "Expand panel"
+        },
         "controls": {
           "play": "Play",
           "pause": "Pause",
