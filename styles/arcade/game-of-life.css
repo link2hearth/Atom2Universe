@@ -93,7 +93,7 @@
 }
 
 .game-of-life__menu-content {
-  transform: scale(0.1);
+  transform: scale(0.5);
   transform-origin: top right;
 }
 
