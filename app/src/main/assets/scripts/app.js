@@ -7626,6 +7626,32 @@ function shouldTriggerGlobalClick(event) {
   return true;
 }
 
+const POINTER_TRIGGER_SUPPRESSION_WINDOW_MS = 600;
+let lastManualPointerTriggerTime = 0;
+
+function getHighResolutionTimestamp() {
+  if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+    return performance.now();
+  }
+  return Date.now();
+}
+
+function markManualPointerTrigger() {
+  lastManualPointerTriggerTime = getHighResolutionTimestamp();
+}
+
+function shouldSuppressManualClickFromPointer() {
+  if (!lastManualPointerTriggerTime) {
+    return false;
+  }
+  const elapsed = getHighResolutionTimestamp() - lastManualPointerTriggerTime;
+  return elapsed >= 0 && elapsed <= POINTER_TRIGGER_SUPPRESSION_WINDOW_MS;
+}
+
+function isTouchLikePointerType(pointerType) {
+  return pointerType === 'touch' || pointerType === 'pen';
+}
+
 function showPage(pageId) {
   if (!isPageUnlocked(pageId)) {
     if (pageId !== 'game') {
@@ -8219,11 +8245,103 @@ function bindDomEventListeners() {
 
 
   if (elements.atomButton) {
-    elements.atomButton.addEventListener('click', event => {
-      event.stopPropagation();
+    const atomButton = elements.atomButton;
+    const activeTouchPointers = new Set();
+
+    const registerManualTouchClick = ({ pointer = false } = {}) => {
       handleManualAtomClick({ contextId: 'game' });
+      if (pointer) {
+        markManualPointerTrigger();
+      }
+    };
+
+    const releasePointerCapture = pointerId => {
+      if (typeof atomButton.releasePointerCapture !== 'function') return;
+      try {
+        atomButton.releasePointerCapture(pointerId);
+      } catch (error) {
+        // Ignorer les erreurs de libération sur les navigateurs qui ne les supportent pas totalement.
+      }
+    };
+
+    const handlePointerDown = event => {
+      if (!event) return;
+      const pointerType = event.pointerType;
+      if (!isTouchLikePointerType(pointerType)) return;
+      event.stopPropagation();
+      if (typeof event.preventDefault === 'function') {
+        event.preventDefault();
+      }
+      if (activeTouchPointers.has(event.pointerId)) return;
+      activeTouchPointers.add(event.pointerId);
+      if (typeof atomButton.setPointerCapture === 'function') {
+        try {
+          atomButton.setPointerCapture(event.pointerId);
+        } catch (error) {
+          // Ignorer les erreurs de capture sur les navigateurs qui ne les supportent pas totalement.
+        }
+      }
+      registerManualTouchClick({ pointer: true });
+    };
+
+    const handlePointerUpOrCancel = event => {
+      if (!event) return;
+      const pointerType = event.pointerType;
+      if (pointerType !== 'touch' && pointerType !== 'pen') return;
+      activeTouchPointers.delete(event.pointerId);
+      releasePointerCapture(event.pointerId);
+    };
+
+    const handleTouchStartFallback = event => {
+      if (!event) return;
+      event.stopPropagation();
+      if (typeof event.preventDefault === 'function') {
+        event.preventDefault();
+      }
+      const touches = Array.from(event.changedTouches || []);
+      if (!touches.length) return;
+      touches.forEach(touch => {
+        const identifier = Number.isFinite(touch?.identifier) ? touch.identifier : null;
+        if (identifier != null && activeTouchPointers.has(identifier)) {
+          return;
+        }
+        if (identifier != null) {
+          activeTouchPointers.add(identifier);
+        }
+        registerManualTouchClick({ pointer: true });
+      });
+    };
+
+    const handleTouchEndOrCancelFallback = event => {
+      const touches = Array.from(event?.changedTouches || []);
+      if (!touches.length) return;
+      touches.forEach(touch => {
+        const identifier = Number.isFinite(touch?.identifier) ? touch.identifier : null;
+        if (identifier != null) {
+          activeTouchPointers.delete(identifier);
+        }
+      });
+    };
+
+    atomButton.addEventListener('click', event => {
+      event.stopPropagation();
+      if (shouldSuppressManualClickFromPointer()) {
+        return;
+      }
+      registerManualTouchClick();
     });
-    elements.atomButton.addEventListener('dragstart', event => {
+
+    if (typeof globalThis.PointerEvent === 'function') {
+      atomButton.addEventListener('pointerdown', handlePointerDown, { passive: false });
+      atomButton.addEventListener('pointerup', handlePointerUpOrCancel, { passive: true });
+      atomButton.addEventListener('pointercancel', handlePointerUpOrCancel, { passive: true });
+    } else {
+      atomButton.addEventListener('touchstart', handleTouchStartFallback, { passive: false });
+      atomButton.addEventListener('touchend', handleTouchEndOrCancelFallback, { passive: true });
+      atomButton.addEventListener('touchcancel', handleTouchEndOrCancelFallback, { passive: true });
+    }
+
+    atomButton.addEventListener('dragstart', event => {
       event.preventDefault();
     });
   }
@@ -8405,8 +8523,95 @@ function bindDomEventListeners() {
 
 }
 
+const globalManualTouchState = {
+  activePointers: new Set(),
+  activeTouchIdentifiers: new Set()
+};
+
+const shouldHandleGlobalManualEvent = event => {
+  if (!event || !event.target || typeof event.target.closest !== 'function') {
+    return false;
+  }
+  return shouldTriggerGlobalClick(event);
+};
+
+const handleGlobalManualPointerDown = event => {
+  if (!isTouchLikePointerType(event?.pointerType)) {
+    return;
+  }
+  if (!shouldHandleGlobalManualEvent(event)) {
+    return;
+  }
+  const pointerId = Number.isFinite(event.pointerId) ? event.pointerId : null;
+  if (pointerId != null) {
+    if (globalManualTouchState.activePointers.has(pointerId)) {
+      return;
+    }
+    globalManualTouchState.activePointers.add(pointerId);
+  }
+  handleManualAtomClick({ contextId: 'game' });
+  markManualPointerTrigger();
+};
+
+const handleGlobalManualPointerEnd = event => {
+  const pointerId = Number.isFinite(event?.pointerId) ? event.pointerId : null;
+  if (pointerId != null) {
+    globalManualTouchState.activePointers.delete(pointerId);
+  }
+};
+
+const handleGlobalManualTouchStart = event => {
+  const touches = Array.from(event?.changedTouches || []);
+  if (!touches.length) {
+    return;
+  }
+  let triggered = false;
+  touches.forEach(touch => {
+    const identifier = Number.isFinite(touch?.identifier) ? touch.identifier : null;
+    if (identifier != null && globalManualTouchState.activeTouchIdentifiers.has(identifier)) {
+      return;
+    }
+    const target = touch?.target || event?.target || null;
+    if (!target || typeof target.closest !== 'function') {
+      return;
+    }
+    if (!shouldTriggerGlobalClick({ target })) {
+      return;
+    }
+    if (identifier != null) {
+      globalManualTouchState.activeTouchIdentifiers.add(identifier);
+    }
+    handleManualAtomClick({ contextId: 'game' });
+    markManualPointerTrigger();
+    triggered = true;
+  });
+};
+
+const handleGlobalManualTouchEnd = event => {
+  const touches = Array.from(event?.changedTouches || []);
+  touches.forEach(touch => {
+    const identifier = Number.isFinite(touch?.identifier) ? touch.identifier : null;
+    if (identifier != null) {
+      globalManualTouchState.activeTouchIdentifiers.delete(identifier);
+    }
+  });
+};
+
+if (typeof document !== 'undefined') {
+  if (typeof globalThis.PointerEvent === 'function') {
+    document.addEventListener('pointerdown', handleGlobalManualPointerDown, { passive: true });
+    document.addEventListener('pointerup', handleGlobalManualPointerEnd, { passive: true });
+    document.addEventListener('pointercancel', handleGlobalManualPointerEnd, { passive: true });
+  } else {
+    document.addEventListener('touchstart', handleGlobalManualTouchStart, { passive: true });
+    document.addEventListener('touchend', handleGlobalManualTouchEnd, { passive: true });
+    document.addEventListener('touchcancel', handleGlobalManualTouchEnd, { passive: true });
+  }
+}
+
 document.addEventListener('click', event => {
   if (!shouldTriggerGlobalClick(event)) return;
+  if (shouldSuppressManualClickFromPointer() && event?.detail !== 0) return;
   handleManualAtomClick({ contextId: 'game' });
 });
 
