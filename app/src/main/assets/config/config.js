@@ -1185,6 +1185,16 @@ const GAME_CONFIG = {
           costRatio: 0.9
         }
       },
+      /**
+       * Contrôle des effets visuels optionnels pour limiter l'impact sur les performances.
+       * Tous les effets sont désactivés par défaut et peuvent être réactivés individuellement au besoin.
+       */
+      visualEffects: {
+        enableScreenPulse: false,
+        enableGlow: false,
+        enableShockwave: false,
+        enableBallGhost: false
+      },
       grid: {
         columns: 14,
         rows: 6,

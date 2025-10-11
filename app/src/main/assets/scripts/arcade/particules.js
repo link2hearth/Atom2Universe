@@ -187,6 +187,12 @@
   };
   const readArray = (value, fallback) => (Array.isArray(value) && value.length ? value : fallback);
 
+  const VISUAL_EFFECTS_CONFIG = readObject(ARCADE_CONFIG.visualEffects, {});
+  const SCREEN_PULSE_ENABLED = VISUAL_EFFECTS_CONFIG.enableScreenPulse === true;
+  const GLOW_EFFECTS_ENABLED = VISUAL_EFFECTS_CONFIG.enableGlow === true;
+  const SHOCKWAVE_ENABLED = VISUAL_EFFECTS_CONFIG.enableShockwave === true;
+  const BALL_GHOST_ENABLED = VISUAL_EFFECTS_CONFIG.enableBallGhost === true;
+
   const degreesToRadians = degrees => (Math.PI / 180) * degrees;
 
   const cloneParticle = particle => {
@@ -2810,6 +2816,9 @@
     }
 
     spawnBallGhost(ball) {
+      if (!BALL_GHOST_ENABLED) {
+        return;
+      }
       if (!this.particleLayer || !this.canvas || !ball) {
         return;
       }
@@ -3255,7 +3264,16 @@
     }
 
     triggerComboShockwave(brick, chainCount = COMBO_CHAIN_THRESHOLD) {
-      if (!this.particleLayer) return;
+      const stagePulse = COMBO_SHOCKWAVE.stagePulse;
+      if (SCREEN_PULSE_ENABLED && stagePulse) {
+        const effectivePulseChains = Math.min(chainCount, stagePulse.maxChains);
+        const originalIntensity = stagePulse.baseIntensity + effectivePulseChains * stagePulse.intensityPerChain;
+        const intensity = 1 + (originalIntensity - 1) * 0.5;
+        this.triggerScreenPulse(intensity);
+      } else {
+        this.triggerScreenPulse(1);
+      }
+      if (!SHOCKWAVE_ENABLED || !this.particleLayer) return;
       const doc = this.particleLayer.ownerDocument || (typeof document !== 'undefined' ? document : null);
       if (!doc) return;
       const shockwave = doc.createElement('div');
@@ -3283,15 +3301,19 @@
       };
       shockwave.addEventListener('animationend', removeShockwave);
       setTimeout(removeShockwave, COMBO_SHOCKWAVE.removeDelayMs);
-      const stagePulse = COMBO_SHOCKWAVE.stagePulse;
-      const effectivePulseChains = Math.min(chainCount, stagePulse.maxChains);
-      const originalIntensity = stagePulse.baseIntensity + effectivePulseChains * stagePulse.intensityPerChain;
-      const intensity = 1 + (originalIntensity - 1) * 0.5;
-      this.triggerScreenPulse(intensity);
     }
 
     triggerScreenPulse(intensity = 1.03) {
       if (!this.stage || typeof this.stage.classList?.add !== 'function') return;
+      if (!SCREEN_PULSE_ENABLED) {
+        if (this.stagePulseTimeout) {
+          clearTimeout(this.stagePulseTimeout);
+          this.stagePulseTimeout = null;
+        }
+        this.stage.classList.remove('arcade-stage--pulse');
+        this.stage.style.removeProperty('--arcade-pulse-scale');
+        return;
+      }
       const scale = Math.max(1, intensity);
       this.stage.style.setProperty('--arcade-pulse-scale', scale.toFixed(3));
       this.stage.classList.remove('arcade-stage--pulse');
@@ -4290,8 +4312,10 @@
         gradient.addColorStop(0, colors[0]);
         gradient.addColorStop(1, colors[1] || colors[0]);
         ctx.save();
-        ctx.shadowColor = visuals.glow || DEFAULT_POWER_UP_VISUAL.glow;
-        ctx.shadowBlur = height * 0.55;
+        if (GLOW_EFFECTS_ENABLED) {
+          ctx.shadowColor = visuals.glow || DEFAULT_POWER_UP_VISUAL.glow;
+          ctx.shadowBlur = height * 0.55;
+        }
         ctx.fillStyle = gradient;
         if (hasRoundRect) {
           ctx.beginPath();
@@ -4309,8 +4333,10 @@
             ctx.strokeRect(left, top, width, height);
           }
         }
-        ctx.shadowBlur = 0;
-        ctx.shadowColor = 'transparent';
+        if (GLOW_EFFECTS_ENABLED) {
+          ctx.shadowBlur = 0;
+          ctx.shadowColor = 'transparent';
+        }
         ctx.fillStyle = visuals.textColor || DEFAULT_POWER_UP_VISUAL.textColor;
         ctx.font = `${Math.max(14, height * 0.6)}px 'Orbitron', sans-serif`;
         ctx.textAlign = 'center';
@@ -4355,7 +4381,9 @@
         this.height * FLOOR_SHIELD_CONFIG.heightRatio
       );
       ctx.save();
-      ctx.globalCompositeOperation = 'lighter';
+      if (GLOW_EFFECTS_ENABLED) {
+        ctx.globalCompositeOperation = 'lighter';
+      }
       if (floorShieldActive) {
         const pulse = 0.55 + 0.25 * Math.sin(time * 6.2);
         const shieldGradient = ctx.createLinearGradient(
@@ -4446,7 +4474,9 @@
             const destWidth = sprite.frameWidth * scale;
             const destHeight = sprite.trailHeight * scale;
             ctx.save();
-            ctx.globalCompositeOperation = 'lighter';
+            if (GLOW_EFFECTS_ENABLED) {
+              ctx.globalCompositeOperation = 'lighter';
+            }
             trail.forEach(point => {
               if (!point || typeof point.time !== 'number') return;
               const age = renderTimestamp - point.time;
@@ -4482,7 +4512,9 @@
             ctx.restore();
           } else {
             ctx.save();
-            ctx.globalCompositeOperation = 'lighter';
+            if (GLOW_EFFECTS_ENABLED) {
+              ctx.globalCompositeOperation = 'lighter';
+            }
             ctx.fillStyle = trailFillColor;
             ctx.shadowOffsetX = 0;
             ctx.shadowOffsetY = 0;
@@ -4497,9 +4529,14 @@
               const alpha = alphaBase + lifeRatio * alphaRange;
               ctx.globalAlpha = alpha;
               const blur = ball.radius * (1.1 + (1 - lifeRatio) * 0.9 * trailBlurBoost);
-              ctx.shadowBlur = blur;
-              const glowAlpha = Math.min(1, 0.25 + lifeRatio * (speedTrailActive ? 0.45 : 0.35));
-              ctx.shadowColor = `rgba(${trailGlowColor.r}, ${trailGlowColor.g}, ${trailGlowColor.b}, ${glowAlpha})`;
+              if (GLOW_EFFECTS_ENABLED) {
+                ctx.shadowBlur = blur;
+                const glowAlpha = Math.min(1, 0.25 + lifeRatio * (speedTrailActive ? 0.45 : 0.35));
+                ctx.shadowColor = `rgba(${trailGlowColor.r}, ${trailGlowColor.g}, ${trailGlowColor.b}, ${glowAlpha})`;
+              } else {
+                ctx.shadowBlur = 0;
+                ctx.shadowColor = 'transparent';
+              }
               const radius = ball.radius * (0.85 + lifeRatio * 0.35 * trailRadiusBoost);
               ctx.beginPath();
               ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
@@ -4519,15 +4556,17 @@
           const destHeight = sprite.frameHeight * scale;
           const destX = ball.x - destWidth / 2;
           const destY = ball.y - destHeight / 2;
-          ctx.save();
-          ctx.globalCompositeOperation = 'lighter';
-          const glowRadius = ball.radius * (1.25 + pulse * 0.3);
-          ctx.globalAlpha = 0.3 + pulse * 0.25;
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.65)';
-          ctx.beginPath();
-          ctx.arc(ball.x, ball.y, glowRadius, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.restore();
+          if (GLOW_EFFECTS_ENABLED) {
+            ctx.save();
+            ctx.globalCompositeOperation = 'lighter';
+            const glowRadius = ball.radius * (1.25 + pulse * 0.3);
+            ctx.globalAlpha = 0.3 + pulse * 0.25;
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.65)';
+            ctx.beginPath();
+            ctx.arc(ball.x, ball.y, glowRadius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+          }
           ctx.drawImage(
             sprite.image,
             colorIndex * sprite.frameWidth,
@@ -4554,58 +4593,60 @@
           ctx.beginPath();
           ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
           ctx.fill();
-          ctx.save();
-          ctx.globalCompositeOperation = 'lighter';
-          const auraOuterRadius = ball.radius * (1.6 + 0.28 * Math.sin(time * 3.4 + electricSeed * 1.7));
-          const auraGradient = ctx.createRadialGradient(
-            ball.x,
-            ball.y,
-            ball.radius * 0.45,
-            ball.x,
-            ball.y,
-            auraOuterRadius
-          );
-          auraGradient.addColorStop(0, `rgba(150, 220, 255, ${0.18 + pulse * 0.2})`);
-          auraGradient.addColorStop(0.8, `rgba(90, 180, 255, ${0.08 + pulse * 0.18})`);
-          auraGradient.addColorStop(1, 'rgba(30, 120, 255, 0)');
-          ctx.fillStyle = auraGradient;
-          ctx.beginPath();
-          ctx.arc(ball.x, ball.y, auraOuterRadius, 0, Math.PI * 2);
-          ctx.fill();
-
-          const arcCount = 4;
-          const arcLineWidth = Math.max(0.8, ball.radius * 0.18);
-          ctx.lineWidth = arcLineWidth;
-          ctx.lineCap = 'round';
-          for (let i = 0; i < arcCount; i += 1) {
-            const segmentSeed = electricSeed + i * 2.318;
-            const baseAngle = segmentSeed + time * 4.2 + Math.sin(time * 2.1 + segmentSeed) * 0.4;
-            const innerRadius = ball.radius * (0.92 + 0.12 * Math.sin(time * 5.3 + segmentSeed * 1.4));
-            const outerRadius = ball.radius * (1.45 + 0.3 * Math.sin(time * 3.8 + segmentSeed * 2.2));
-            ctx.beginPath();
-            ctx.moveTo(
-              ball.x + Math.cos(baseAngle) * innerRadius,
-              ball.y + Math.sin(baseAngle) * innerRadius
+          if (GLOW_EFFECTS_ENABLED) {
+            ctx.save();
+            ctx.globalCompositeOperation = 'lighter';
+            const auraOuterRadius = ball.radius * (1.6 + 0.28 * Math.sin(time * 3.4 + electricSeed * 1.7));
+            const auraGradient = ctx.createRadialGradient(
+              ball.x,
+              ball.y,
+              ball.radius * 0.45,
+              ball.x,
+              ball.y,
+              auraOuterRadius
             );
-            const jaggedSteps = 3;
-            for (let step = 1; step <= jaggedSteps; step += 1) {
-              const progress = step / jaggedSteps;
-              const noise = Math.sin((time + step) * 6.4 + segmentSeed * (step + 1)) * 0.35;
-              const angle = baseAngle + noise * 0.55;
-              const radius = innerRadius + (outerRadius - innerRadius) * progress + noise * ball.radius * 0.22;
-              ctx.lineTo(ball.x + Math.cos(angle) * radius, ball.y + Math.sin(angle) * radius);
-            }
-            ctx.strokeStyle = `rgba(170, 240, 255, ${0.18 + pulse * 0.28})`;
-            ctx.stroke();
-          }
+            auraGradient.addColorStop(0, `rgba(150, 220, 255, ${0.18 + pulse * 0.2})`);
+            auraGradient.addColorStop(0.8, `rgba(90, 180, 255, ${0.08 + pulse * 0.18})`);
+            auraGradient.addColorStop(1, 'rgba(30, 120, 255, 0)');
+            ctx.fillStyle = auraGradient;
+            ctx.beginPath();
+            ctx.arc(ball.x, ball.y, auraOuterRadius, 0, Math.PI * 2);
+            ctx.fill();
 
-          const ringRadius = ball.radius * (1.18 + 0.08 * Math.sin(time * 4.6 + electricSeed));
-          ctx.strokeStyle = `rgba(150, 220, 255, ${0.2 + pulse * 0.3})`;
-          ctx.lineWidth = Math.max(1, ball.radius * 0.24);
-          ctx.beginPath();
-          ctx.arc(ball.x, ball.y, ringRadius, 0, Math.PI * 2);
-          ctx.stroke();
-          ctx.restore();
+            const arcCount = 4;
+            const arcLineWidth = Math.max(0.8, ball.radius * 0.18);
+            ctx.lineWidth = arcLineWidth;
+            ctx.lineCap = 'round';
+            for (let i = 0; i < arcCount; i += 1) {
+              const segmentSeed = electricSeed + i * 2.318;
+              const baseAngle = segmentSeed + time * 4.2 + Math.sin(time * 2.1 + segmentSeed) * 0.4;
+              const innerRadius = ball.radius * (0.92 + 0.12 * Math.sin(time * 5.3 + segmentSeed * 1.4));
+              const outerRadius = ball.radius * (1.45 + 0.3 * Math.sin(time * 3.8 + segmentSeed * 2.2));
+              ctx.beginPath();
+              ctx.moveTo(
+                ball.x + Math.cos(baseAngle) * innerRadius,
+                ball.y + Math.sin(baseAngle) * innerRadius
+              );
+              const jaggedSteps = 3;
+              for (let step = 1; step <= jaggedSteps; step += 1) {
+                const progress = step / jaggedSteps;
+                const noise = Math.sin((time + step) * 6.4 + segmentSeed * (step + 1)) * 0.35;
+                const angle = baseAngle + noise * 0.55;
+                const radius = innerRadius + (outerRadius - innerRadius) * progress + noise * ball.radius * 0.22;
+                ctx.lineTo(ball.x + Math.cos(angle) * radius, ball.y + Math.sin(angle) * radius);
+              }
+              ctx.strokeStyle = `rgba(170, 240, 255, ${0.18 + pulse * 0.28})`;
+              ctx.stroke();
+            }
+
+            const ringRadius = ball.radius * (1.18 + 0.08 * Math.sin(time * 4.6 + electricSeed));
+            ctx.strokeStyle = `rgba(150, 220, 255, ${0.2 + pulse * 0.3})`;
+            ctx.lineWidth = Math.max(1, ball.radius * 0.24);
+            ctx.beginPath();
+            ctx.arc(ball.x, ball.y, ringRadius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.restore();
+          }
         }
       });
     }
