@@ -44,6 +44,18 @@
   box-sizing: border-box;
 }
 
+/* Global selection guard: prevents blue highlight on images and texts while
+   keeping form fields editable. */
+body,
+body *:not(input):not(textarea):not(select):not(option):not([contenteditable='true']) {
+  -webkit-user-select: none; /* Safari, Chrome */
+  -ms-user-select: none;     /* IE 10+ */
+  user-select: none;         /* Standard */
+
+  /* Remove tap highlight on touch devices */
+  -webkit-tap-highlight-color: transparent;
+}
+
 [hidden] {
   display: none !important;
 }
