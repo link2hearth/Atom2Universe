@@ -3,7 +3,7 @@ const DEFAULT_GACHA_TICKET_COST = 1;
 const GACHA_SMOKE_FRAME_COUNT = 91;
 const GACHA_SMOKE_FRAME_RATE = 12;
 const GACHA_SMOKE_FRAME_PAD = 4;
-const GACHA_SMOKE_ASSET_PATH = 'assets/sprites/Smoke';
+const GACHA_SMOKE_ASSET_PATH = 'Assets/sprites/Smoke';
 
 const gachaSmokeAnimationState = {
   timer: null,
@@ -3627,7 +3627,7 @@ function spawnTicketStar(now = performance.now()) {
   star.className = 'ticket-star';
   star.setAttribute('aria-label', 'Collecter un ticket de tirage');
   star.style.setProperty('--ticket-star-size', `${TICKET_STAR_CONFIG.size}px`);
-  star.innerHTML = '<img src="Assets/Image/star.png" alt="Étoile bonus" draggable="false" />';
+  star.innerHTML = '<img src="Assets/Image/Star.png" alt="Étoile bonus" draggable="false" />';
   star.addEventListener('click', collectTicketStar);
   star.addEventListener('dragstart', event => event.preventDefault());
 
