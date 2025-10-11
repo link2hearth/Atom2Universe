@@ -236,9 +236,9 @@
       randomDensityValue,
       randomReplaceButton,
       randomAddButton,
-      patternList,
+      patternSelect,
+      patternDescription,
       patternEmpty,
-      backButton,
       menu,
       menuToggle,
       menuHeader
@@ -261,9 +261,9 @@
       this.randomDensityValue = randomDensityValue;
       this.randomReplaceButton = randomReplaceButton;
       this.randomAddButton = randomAddButton;
-      this.patternList = patternList;
+      this.patternSelect = patternSelect;
+      this.patternDescription = patternDescription;
       this.patternEmpty = patternEmpty;
-      this.backButton = backButton;
       this.menu = menu;
       this.menuToggle = menuToggle;
       this.menuHeader = menuHeader;
@@ -490,11 +490,11 @@
           this.generateRandomPattern('add');
         });
       }
-      if (this.backButton) {
-        this.backButton.addEventListener('click', () => {
-          if (typeof showPage === 'function') {
-            showPage('arcadeHub');
-          }
+      if (this.patternSelect) {
+        this.patternSelect.addEventListener('change', () => {
+          const value = this.patternSelect.value;
+          this.selectedPatternId = value || null;
+          this.updatePatternDescription();
         });
       }
 
@@ -609,46 +609,90 @@
     }
 
     renderPatterns() {
-      if (!this.patternList) {
+      if (!this.patternSelect) {
         return;
       }
-      this.patternList.innerHTML = '';
+      this.patternSelect.innerHTML = '';
+      const placeholderOption = document.createElement('option');
+      placeholderOption.value = '';
+      placeholderOption.dataset.i18n = 'index.sections.gameOfLife.patterns.none';
+      placeholderOption.textContent = translate(
+        'index.sections.gameOfLife.patterns.none',
+        'No pattern'
+      );
+      this.patternSelect.append(placeholderOption);
+
       if (!this.patterns.length) {
+        this.patternSelect.disabled = true;
+        this.patternSelect.value = '';
+        this.selectedPatternId = null;
         if (this.patternEmpty) {
           this.patternEmpty.hidden = false;
         }
+        this.updatePatternDescription();
         return;
       }
+
+      this.patternSelect.disabled = false;
       if (this.patternEmpty) {
         this.patternEmpty.hidden = true;
       }
+
+      let hasSelectedPattern = false;
       this.patterns.forEach(pattern => {
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'game-of-life__pattern-button';
-        button.dataset.patternId = pattern.id;
-        button.setAttribute('aria-pressed', pattern.id === this.selectedPatternId ? 'true' : 'false');
-        const title = document.createElement('span');
-        title.className = 'game-of-life__pattern-name';
+        const option = document.createElement('option');
+        option.value = pattern.id;
         const fallbackName = pattern.id.replace(/([A-Z])/g, ' $1').trim();
-        title.textContent = translate(pattern.nameKey, fallbackName);
-        const description = document.createElement('span');
-        description.className = 'game-of-life__pattern-description';
-        description.textContent = translate(pattern.descriptionKey, '');
-        button.append(title);
-        if (description.textContent) {
-          button.append(description);
+        if (pattern.nameKey) {
+          option.dataset.i18n = pattern.nameKey;
         }
-        button.addEventListener('click', () => {
-          if (this.selectedPatternId === pattern.id) {
-            this.selectedPatternId = null;
-          } else {
-            this.selectedPatternId = pattern.id;
-          }
-          this.renderPatterns();
-        });
-        this.patternList.append(button);
+        option.textContent = translate(pattern.nameKey, fallbackName);
+        if (pattern.id === this.selectedPatternId) {
+          option.selected = true;
+          hasSelectedPattern = true;
+        }
+        this.patternSelect.append(option);
       });
+
+      if (!hasSelectedPattern) {
+        this.selectedPatternId = null;
+        this.patternSelect.value = '';
+      }
+
+      this.updatePatternDescription();
+    }
+
+    updatePatternDescription() {
+      if (!this.patternDescription) {
+        return;
+      }
+      if (!this.selectedPatternId) {
+        this.patternDescription.hidden = true;
+        this.patternDescription.textContent = '';
+        delete this.patternDescription.dataset.i18n;
+        return;
+      }
+      const pattern = this.patterns.find(entry => entry.id === this.selectedPatternId);
+      if (!pattern) {
+        this.patternDescription.hidden = true;
+        this.patternDescription.textContent = '';
+        delete this.patternDescription.dataset.i18n;
+        return;
+      }
+      const description = translate(pattern.descriptionKey, '');
+      if (!description) {
+        this.patternDescription.hidden = true;
+        this.patternDescription.textContent = '';
+        delete this.patternDescription.dataset.i18n;
+        return;
+      }
+      this.patternDescription.hidden = false;
+      if (pattern.descriptionKey) {
+        this.patternDescription.dataset.i18n = pattern.descriptionKey;
+      } else {
+        delete this.patternDescription.dataset.i18n;
+      }
+      this.patternDescription.textContent = description;
     }
 
     updateRandomInputs() {
@@ -874,6 +918,7 @@
       this.menu.style.top = `${rect.top}px`;
       this.menu.style.right = 'auto';
       this.menu.style.bottom = 'auto';
+      this.menu.style.transform = 'none';
       this.menuHeader?.setPointerCapture?.(event.pointerId);
       event.preventDefault();
     }
@@ -1236,9 +1281,9 @@
     const randomDensityValue = document.getElementById('gameOfLifeRandomDensityValue');
     const randomReplaceButton = document.getElementById('gameOfLifeRandomReplace');
     const randomAddButton = document.getElementById('gameOfLifeRandomAdd');
-    const patternList = document.getElementById('gameOfLifePatternList');
+    const patternSelect = document.getElementById('gameOfLifePatternSelect');
+    const patternDescription = document.getElementById('gameOfLifePatternDescription');
     const patternEmpty = document.getElementById('gameOfLifePatternEmpty');
-    const backButton = document.getElementById('gameOfLifeBackButton');
     const menu = document.getElementById('gameOfLifeMenu');
     const menuToggle = document.getElementById('gameOfLifeMenuToggle');
     const menuHeader = document.getElementById('gameOfLifeMenuHeader');
@@ -1261,9 +1306,9 @@
       randomDensityValue,
       randomReplaceButton,
       randomAddButton,
-      patternList,
+      patternSelect,
+      patternDescription,
       patternEmpty,
-      backButton,
       menu,
       menuToggle,
       menuHeader

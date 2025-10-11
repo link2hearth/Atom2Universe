@@ -249,9 +249,6 @@
       },
       "gameOfLife": {
         "aria": "Conway's Game of Life mini-game",
-        "title": "Game of Life",
-        "subtitle": "Draw, zoom, and steer the simulation to uncover mesmerizing quantum structures.",
-        "backToHub": "Back to hub",
         "canvas": "Game of Life grid",
         "toolbar": "Simulation controls",
         "menu": {
@@ -276,6 +273,8 @@
         },
         "patterns": {
           "title": "Signature patterns",
+          "selectLabel": "Choose a pattern",
+          "none": "No pattern",
           "empty": "Patterns will load automatically.",
           "glider": "Glider",
           "gliderDescription": "A minimalist traveler gliding diagonally forever.",
