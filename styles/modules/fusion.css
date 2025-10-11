@@ -1,5 +1,30 @@
 .page--fusion {
   display: none;
+  --fusion-intro-color: rgba(224, 230, 255, 0.78);
+  --fusion-card-bg: linear-gradient(135deg, rgba(24, 30, 52, 0.9), rgba(10, 14, 30, 0.96));
+  --fusion-card-border: rgba(108, 140, 240, 0.25);
+  --fusion-card-shadow: 0 18px 32px rgba(4, 8, 20, 0.55);
+  --fusion-card-chance-color: rgba(200, 210, 240, 0.68);
+  --fusion-card-description-color: rgba(212, 220, 255, 0.78);
+  --fusion-symbol-bg: rgba(108, 140, 240, 0.22);
+  --fusion-symbol-color: rgba(232, 238, 255, 0.88);
+  --fusion-availability-color: rgba(196, 206, 240, 0.66);
+  --fusion-muted-color: rgba(212, 220, 255, 0.78);
+  --fusion-button-bg: linear-gradient(120deg, #4d6dff, #5fb1ff);
+  --fusion-button-color: #f4f7ff;
+  --fusion-button-shadow: 0 12px 24px rgba(76, 118, 255, 0.35);
+  --fusion-feedback-color: rgba(208, 218, 248, 0.72);
+  --fusion-empty-bg: rgba(20, 26, 52, 0.74);
+  --fusion-empty-color: rgba(226, 232, 255, 0.78);
+  --fusion-empty-border: rgba(108, 140, 240, 0.25);
+  --fusion-log-bg: rgba(24, 32, 64, 0.52);
+  --fusion-log-border: rgba(108, 140, 240, 0.28);
+  --fusion-log-color: rgba(226, 232, 255, 0.88);
+  --fusion-log-shadow: 0 14px 28px rgba(4, 8, 20, 0.5);
+  --fusion-log-success-bg: rgba(24, 88, 72, 0.48);
+  --fusion-log-success-border: rgba(110, 230, 190, 0.5);
+  --fusion-log-failure-bg: rgba(88, 36, 36, 0.48);
+  --fusion-log-failure-border: rgba(230, 120, 110, 0.48);
 }
 
 .page--fusion.active {
@@ -18,13 +43,9 @@
 
 .fusion-intro {
   margin: 0;
-  color: rgba(238, 241, 255, 0.75);
+  color: var(--fusion-intro-color, rgba(238, 241, 255, 0.75));
   max-width: 60ch;
   line-height: 1.5;
-}
-
-body.theme-light .fusion-intro {
-  color: rgba(18, 24, 40, 0.7);
 }
 
 .fusion-list {
@@ -40,21 +61,9 @@ body.theme-light .fusion-intro {
   gap: 0.9rem;
   padding: clamp(1.1rem, 3vw, 1.5rem);
   border-radius: 1.15rem;
-  background: linear-gradient(135deg, rgba(34, 44, 78, 0.78), rgba(16, 20, 44, 0.88));
-  box-shadow: 0 18px 32px rgba(4, 8, 20, 0.55);
-  border: 1px solid rgba(130, 170, 255, 0.12);
-}
-
-body.theme-light .fusion-card {
-  background: linear-gradient(135deg, rgba(248, 250, 255, 0.96), rgba(214, 224, 255, 0.92));
-  border-color: rgba(108, 140, 240, 0.18);
-  box-shadow: 0 16px 26px rgba(18, 24, 40, 0.15);
-}
-
-body.theme-neon .fusion-card {
-  background: linear-gradient(135deg, rgba(48, 36, 84, 0.92), rgba(16, 28, 84, 0.92));
-  border-color: rgba(122, 120, 255, 0.3);
-  box-shadow: 0 22px 36px rgba(40, 24, 96, 0.6);
+  background: var(--fusion-card-bg, linear-gradient(135deg, rgba(34, 44, 78, 0.78), rgba(16, 20, 44, 0.88)));
+  box-shadow: var(--fusion-card-shadow, 0 18px 32px rgba(4, 8, 20, 0.55));
+  border: 1px solid var(--fusion-card-border, rgba(130, 170, 255, 0.12));
 }
 
 .fusion-card__header {
@@ -74,11 +83,7 @@ body.theme-neon .fusion-card {
   font-size: calc(var(--font-scale-factor, 1) * 0.85rem);
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: rgba(238, 241, 255, 0.66);
-}
-
-body.theme-light .fusion-card__chance {
-  color: rgba(24, 32, 58, 0.62);
+  color: var(--fusion-card-chance-color, rgba(238, 241, 255, 0.66));
 }
 
 .fusion-card__requirements {
@@ -94,11 +99,7 @@ body.theme-light .fusion-card__chance {
   margin: 0;
   font-size: calc(var(--font-scale-factor, 1) * 0.9rem);
   line-height: 1.5;
-  color: rgba(238, 241, 255, 0.72);
-}
-
-body.theme-light .fusion-card__description {
-  color: rgba(24, 32, 58, 0.68);
+  color: var(--fusion-card-description-color, rgba(238, 241, 255, 0.72));
 }
 
 .fusion-requirement {
@@ -115,13 +116,8 @@ body.theme-light .fusion-card__description {
   text-transform: uppercase;
   padding: 0.15rem 0.45rem;
   border-radius: 999px;
-  background: rgba(130, 170, 255, 0.2);
-  color: rgba(238, 241, 255, 0.85);
-}
-
-body.theme-light .fusion-requirement__symbol {
-  background: rgba(108, 140, 240, 0.2);
-  color: rgba(18, 24, 40, 0.75);
+  background: var(--fusion-symbol-bg, rgba(130, 170, 255, 0.2));
+  color: var(--fusion-symbol-color, rgba(238, 241, 255, 0.85));
 }
 
 .fusion-requirement__count {
@@ -131,23 +127,14 @@ body.theme-light .fusion-requirement__symbol {
 
 .fusion-requirement__availability {
   font-size: calc(var(--font-scale-factor, 1) * 0.8rem);
-  color: rgba(238, 241, 255, 0.6);
-}
-
-body.theme-light .fusion-requirement__availability {
-  color: rgba(24, 32, 58, 0.58);
+  color: var(--fusion-availability-color, rgba(238, 241, 255, 0.6));
 }
 
 .fusion-card__stats,
 .fusion-card__bonus {
   margin: 0;
   font-size: calc(var(--font-scale-factor, 1) * 0.85rem);
-  color: rgba(238, 241, 255, 0.72);
-}
-
-body.theme-light .fusion-card__stats,
-body.theme-light .fusion-card__bonus {
-  color: rgba(24, 32, 58, 0.68);
+  color: var(--fusion-muted-color, rgba(238, 241, 255, 0.72));
 }
 
 .fusion-card__actions {
@@ -166,8 +153,8 @@ body.theme-light .fusion-card__bonus {
   padding: 0.55rem 1.1rem;
   border-radius: 0.9rem;
   border: 0;
-  background: linear-gradient(120deg, #5079ff, #6ebeff);
-  color: #f4f7ff;
+  background: var(--fusion-button-bg, linear-gradient(120deg, #5079ff, #6ebeff));
+  color: var(--fusion-button-color, #f4f7ff);
   font-weight: 600;
   letter-spacing: 0.04em;
   cursor: pointer;
@@ -184,7 +171,7 @@ body.theme-light .fusion-card__bonus {
 .fusion-card__button:not(:disabled):hover,
 .fusion-card__button:not(:disabled):focus-visible {
   transform: translateY(-2px);
-  box-shadow: 0 12px 24px rgba(72, 118, 255, 0.35);
+  box-shadow: var(--fusion-button-shadow, 0 12px 24px rgba(72, 118, 255, 0.35));
 }
 
 .fusion-card__button:focus-visible {
@@ -194,68 +181,125 @@ body.theme-light .fusion-card__bonus {
 
 .fusion-card__feedback {
   font-size: calc(var(--font-scale-factor, 1) * 0.82rem);
-  color: rgba(238, 241, 255, 0.65);
+  color: var(--fusion-feedback-color, rgba(238, 241, 255, 0.65));
 }
 
 .fusion-card__total {
   font-weight: 500;
 }
 
-body.theme-light .fusion-card__feedback {
-  color: rgba(24, 32, 58, 0.6);
-}
-
 .fusion-empty {
   margin: 0;
   padding: clamp(1.4rem, 3vw, 1.8rem);
   border-radius: 1rem;
-  background: rgba(26, 34, 68, 0.55);
-  color: rgba(238, 241, 255, 0.75);
+  background: var(--fusion-empty-bg, rgba(26, 34, 68, 0.55));
+  color: var(--fusion-empty-color, rgba(238, 241, 255, 0.75));
   text-align: center;
   font-size: calc(var(--font-scale-factor, 1) * 0.95rem);
-  box-shadow: inset 0 0 0 1px rgba(130, 170, 255, 0.15);
-}
-
-body.theme-light .fusion-empty {
-  background: rgba(230, 236, 255, 0.85);
-  color: rgba(24, 32, 58, 0.7);
-  box-shadow: inset 0 0 0 1px rgba(108, 140, 240, 0.2);
+  box-shadow: inset 0 0 0 1px var(--fusion-empty-border, rgba(130, 170, 255, 0.15));
 }
 
 .fusion-log {
   min-height: 2rem;
   padding: 0.9rem 1.2rem;
   border-radius: 0.9rem;
-  background: rgba(32, 44, 88, 0.35);
-  color: rgba(238, 241, 255, 0.82);
+  background: var(--fusion-log-bg, rgba(32, 44, 88, 0.35));
+  color: var(--fusion-log-color, rgba(238, 241, 255, 0.82));
   font-size: calc(var(--font-scale-factor, 1) * 0.9rem);
-  box-shadow: 0 10px 22px rgba(4, 8, 20, 0.45);
-  border: 1px solid rgba(130, 170, 255, 0.18);
+  box-shadow: var(--fusion-log-shadow, 0 10px 22px rgba(4, 8, 20, 0.45));
+  border: 1px solid var(--fusion-log-border, rgba(130, 170, 255, 0.18));
 }
 
 .fusion-log.fusion-log--success {
-  border-color: rgba(120, 255, 200, 0.45);
-  background: rgba(32, 84, 72, 0.35);
+  border-color: var(--fusion-log-success-border, rgba(120, 255, 200, 0.45));
+  background: var(--fusion-log-success-bg, rgba(32, 84, 72, 0.35));
 }
 
 .fusion-log.fusion-log--failure {
-  border-color: rgba(255, 140, 120, 0.45);
-  background: rgba(84, 40, 40, 0.35);
+  border-color: var(--fusion-log-failure-border, rgba(255, 140, 120, 0.45));
+  background: var(--fusion-log-failure-bg, rgba(84, 40, 40, 0.35));
 }
 
-body.theme-light .fusion-log {
-  background: rgba(234, 238, 255, 0.85);
-  border-color: rgba(108, 140, 240, 0.25);
-  color: rgba(24, 32, 58, 0.75);
-  box-shadow: 0 12px 24px rgba(18, 24, 40, 0.12);
+body.theme-light .page--fusion {
+  --fusion-intro-color: rgba(18, 24, 40, 0.7);
+  --fusion-card-bg: linear-gradient(135deg, rgba(248, 250, 255, 0.96), rgba(214, 224, 255, 0.92));
+  --fusion-card-border: rgba(108, 140, 240, 0.18);
+  --fusion-card-shadow: 0 16px 26px rgba(18, 24, 40, 0.15);
+  --fusion-card-chance-color: rgba(24, 32, 58, 0.62);
+  --fusion-card-description-color: rgba(24, 32, 58, 0.68);
+  --fusion-symbol-bg: rgba(108, 140, 240, 0.2);
+  --fusion-symbol-color: rgba(18, 24, 40, 0.75);
+  --fusion-availability-color: rgba(24, 32, 58, 0.58);
+  --fusion-muted-color: rgba(24, 32, 58, 0.68);
+  --fusion-button-bg: linear-gradient(120deg, #4f70ff, #7ab8ff);
+  --fusion-button-color: #0f1632;
+  --fusion-button-shadow: 0 12px 24px rgba(60, 110, 220, 0.25);
+  --fusion-feedback-color: rgba(24, 32, 58, 0.6);
+  --fusion-empty-bg: rgba(230, 236, 255, 0.85);
+  --fusion-empty-color: rgba(24, 32, 58, 0.7);
+  --fusion-empty-border: rgba(108, 140, 240, 0.2);
+  --fusion-log-bg: rgba(234, 238, 255, 0.85);
+  --fusion-log-border: rgba(108, 140, 240, 0.25);
+  --fusion-log-color: rgba(24, 32, 58, 0.75);
+  --fusion-log-shadow: 0 12px 24px rgba(18, 24, 40, 0.12);
+  --fusion-log-success-border: rgba(100, 210, 180, 0.5);
+  --fusion-log-success-bg: rgba(214, 240, 232, 0.85);
+  --fusion-log-failure-border: rgba(240, 150, 130, 0.5);
+  --fusion-log-failure-bg: rgba(250, 228, 224, 0.85);
 }
 
-body.theme-light .fusion-log.fusion-log--success {
-  border-color: rgba(100, 210, 180, 0.5);
-  background: rgba(214, 240, 232, 0.85);
+body.theme-neon .page--fusion {
+  --fusion-intro-color: rgba(238, 241, 255, 0.78);
+  --fusion-card-bg: linear-gradient(135deg, rgba(48, 36, 84, 0.92), rgba(16, 28, 84, 0.92));
+  --fusion-card-border: rgba(122, 120, 255, 0.3);
+  --fusion-card-shadow: 0 22px 36px rgba(40, 24, 96, 0.6);
+  --fusion-card-chance-color: rgba(230, 235, 255, 0.7);
+  --fusion-card-description-color: rgba(230, 235, 255, 0.76);
+  --fusion-symbol-bg: rgba(130, 170, 255, 0.28);
+  --fusion-symbol-color: rgba(240, 245, 255, 0.9);
+  --fusion-availability-color: rgba(220, 225, 255, 0.68);
+  --fusion-muted-color: rgba(230, 235, 255, 0.78);
+  --fusion-button-bg: linear-gradient(120deg, #5079ff, #6ebeff);
+  --fusion-button-color: #f4f7ff;
+  --fusion-button-shadow: 0 14px 28px rgba(98, 138, 255, 0.45);
+  --fusion-feedback-color: rgba(220, 228, 255, 0.72);
+  --fusion-empty-bg: rgba(34, 38, 84, 0.7);
+  --fusion-empty-color: rgba(238, 241, 255, 0.78);
+  --fusion-empty-border: rgba(130, 170, 255, 0.22);
+  --fusion-log-bg: rgba(38, 48, 96, 0.45);
+  --fusion-log-border: rgba(130, 170, 255, 0.3);
+  --fusion-log-color: rgba(234, 238, 255, 0.88);
+  --fusion-log-shadow: 0 18px 36px rgba(40, 24, 96, 0.45);
+  --fusion-log-success-border: rgba(120, 255, 200, 0.55);
+  --fusion-log-success-bg: rgba(44, 108, 92, 0.45);
+  --fusion-log-failure-border: rgba(255, 140, 120, 0.55);
+  --fusion-log-failure-bg: rgba(108, 44, 60, 0.45);
 }
 
-body.theme-light .fusion-log.fusion-log--failure {
-  border-color: rgba(240, 150, 130, 0.5);
-  background: rgba(250, 228, 224, 0.85);
+body.theme-aurora .page--fusion {
+  --fusion-intro-color: rgba(210, 255, 238, 0.78);
+  --fusion-card-bg: linear-gradient(135deg, rgba(20, 60, 50, 0.88), rgba(8, 24, 20, 0.92));
+  --fusion-card-border: rgba(80, 220, 170, 0.28);
+  --fusion-card-shadow: 0 22px 38px rgba(6, 40, 26, 0.5);
+  --fusion-card-chance-color: rgba(200, 250, 230, 0.76);
+  --fusion-card-description-color: rgba(210, 250, 235, 0.78);
+  --fusion-symbol-bg: rgba(80, 220, 170, 0.24);
+  --fusion-symbol-color: rgba(230, 255, 244, 0.88);
+  --fusion-availability-color: rgba(186, 244, 226, 0.7);
+  --fusion-muted-color: rgba(210, 250, 235, 0.78);
+  --fusion-button-bg: linear-gradient(120deg, #1f8f6b, #37f9c4);
+  --fusion-button-color: #f4fdf8;
+  --fusion-button-shadow: 0 12px 24px rgba(40, 200, 160, 0.35);
+  --fusion-feedback-color: rgba(200, 250, 230, 0.72);
+  --fusion-empty-bg: rgba(12, 46, 36, 0.7);
+  --fusion-empty-color: rgba(210, 250, 235, 0.78);
+  --fusion-empty-border: rgba(80, 220, 170, 0.28);
+  --fusion-log-bg: rgba(14, 54, 44, 0.5);
+  --fusion-log-border: rgba(80, 220, 170, 0.35);
+  --fusion-log-color: rgba(216, 255, 242, 0.88);
+  --fusion-log-shadow: 0 18px 36px rgba(6, 36, 24, 0.45);
+  --fusion-log-success-border: rgba(120, 255, 210, 0.55);
+  --fusion-log-success-bg: rgba(32, 112, 88, 0.5);
+  --fusion-log-failure-border: rgba(255, 160, 140, 0.55);
+  --fusion-log-failure-bg: rgba(132, 48, 48, 0.45);
 }
