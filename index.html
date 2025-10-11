@@ -1000,20 +1000,6 @@
         </div>
         <div class="game-of-life__menu-body" id="gameOfLifeMenuBody">
           <div class="game-of-life__menu-content" id="gameOfLifeMenuContent">
-            <div class="game-of-life__header">
-              <div>
-                <h2 class="game-of-life__title" data-i18n="index.sections.gameOfLife.title">Jeu de la vie</h2>
-                <p class="game-of-life__subtitle" data-i18n="index.sections.gameOfLife.subtitle">
-                  Faites éclore vos motifs préférés sur une grille infinie et composez votre propre univers cellulaire.
-                </p>
-              </div>
-              <button
-                type="button"
-                class="game-of-life__button game-of-life__button--secondary"
-                id="gameOfLifeBackButton"
-                data-i18n="index.sections.gameOfLife.backToHub"
-              >Retourner au hub</button>
-            </div>
             <div
               class="game-of-life__toolbar"
               role="group"
@@ -1103,10 +1089,18 @@
                 <h3 class="game-of-life__panel-title" id="gameOfLifePatternsTitle" data-i18n="index.sections.gameOfLife.patterns.title">
                   Motifs emblématiques
                 </h3>
-                <div class="game-of-life__pattern-list" id="gameOfLifePatternList" role="list"></div>
+                <div class="game-of-life__field">
+                  <label class="game-of-life__label" for="gameOfLifePatternSelect" data-i18n="index.sections.gameOfLife.patterns.selectLabel">
+                    Choisir un motif
+                  </label>
+                  <select class="game-of-life__select" id="gameOfLifePatternSelect">
+                    <option value="" data-i18n="index.sections.gameOfLife.patterns.none">Aucun motif</option>
+                  </select>
+                </div>
                 <p class="game-of-life__empty-state" id="gameOfLifePatternEmpty" hidden data-i18n="index.sections.gameOfLife.patterns.empty">
                   Les motifs seront chargés automatiquement.
                 </p>
+                <p class="game-of-life__pattern-description" id="gameOfLifePatternDescription" hidden></p>
               </section>
               <section class="game-of-life__panel" aria-labelledby="gameOfLifeRandomTitle">
                 <h3 class="game-of-life__panel-title" id="gameOfLifeRandomTitle" data-i18n="index.sections.gameOfLife.random.title">
