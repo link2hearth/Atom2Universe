@@ -2,54 +2,2661 @@
   "_comment": "Catalogue de motifs pour le mini-jeu Jeu de la vie",
   "patterns": [
     {
+      "id": "acorn",
+      "nameKey": "index.sections.gameOfLife.patterns.acorn",
+      "descriptionKey": "index.sections.gameOfLife.patterns.acornDescription",
+      "anchor": {
+        "x": 3,
+        "y": 1
+      },
+      "cells": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          2,
+          5
+        ],
+        [
+          2,
+          6
+        ]
+      ]
+    },
+    {
+      "id": "beacon",
+      "nameKey": "index.sections.gameOfLife.patterns.beacon",
+      "descriptionKey": "index.sections.gameOfLife.patterns.beaconDescription",
+      "anchor": {
+        "x": 1,
+        "y": 1
+      },
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "beaconPair",
+      "nameKey": "index.sections.gameOfLife.patterns.beaconPair",
+      "descriptionKey": "index.sections.gameOfLife.patterns.beaconPairDescription",
+      "anchor": {
+        "x": 3,
+        "y": 1
+      },
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          6
+        ],
+        [
+          0,
+          7
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          6
+        ],
+        [
+          1,
+          7
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          2,
+          6
+        ],
+        [
+          2,
+          7
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          3,
+          6
+        ],
+        [
+          3,
+          7
+        ]
+      ]
+    },
+    {
+      "id": "beehive",
+      "nameKey": "index.sections.gameOfLife.patterns.beehive",
+      "descriptionKey": "index.sections.gameOfLife.patterns.beehiveDescription",
+      "anchor": {
+        "x": 1,
+        "y": 1
+      },
+      "cells": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ]
+      ]
+    },
+    {
+      "id": "beehivePairHorizontal",
+      "nameKey": "index.sections.gameOfLife.patterns.beehivePairHorizontal",
+      "descriptionKey": "index.sections.gameOfLife.patterns.beehivePairHorizontalDescription",
+      "anchor": {
+        "x": 4,
+        "y": 1
+      },
+      "cells": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          7
+        ],
+        [
+          0,
+          8
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          1,
+          6
+        ],
+        [
+          1,
+          9
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          2,
+          7
+        ],
+        [
+          2,
+          8
+        ]
+      ]
+    },
+    {
+      "id": "blinker",
+      "nameKey": "index.sections.gameOfLife.patterns.blinker",
+      "descriptionKey": "index.sections.gameOfLife.patterns.blinkerDescription",
+      "anchor": {
+        "x": 0,
+        "y": 1
+      },
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ]
+    },
+    {
+      "id": "blinkerCross",
+      "nameKey": "index.sections.gameOfLife.patterns.blinkerCross",
+      "descriptionKey": "index.sections.gameOfLife.patterns.blinkerCrossDescription",
+      "anchor": {
+        "x": 2,
+        "y": 2
+      },
+      "cells": [
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          4,
+          2
+        ]
+      ]
+    },
+    {
+      "id": "blinkerPairHorizontal",
+      "nameKey": "index.sections.gameOfLife.patterns.blinkerPairHorizontal",
+      "descriptionKey": "index.sections.gameOfLife.patterns.blinkerPairHorizontalDescription",
+      "anchor": {
+        "x": 2,
+        "y": 1
+      },
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          4
+        ]
+      ]
+    },
+    {
+      "id": "block",
+      "nameKey": "index.sections.gameOfLife.patterns.block",
+      "descriptionKey": "index.sections.gameOfLife.patterns.blockDescription",
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "id": "blockAndBeehive",
+      "nameKey": "index.sections.gameOfLife.patterns.blockAndBeehive",
+      "descriptionKey": "index.sections.gameOfLife.patterns.blockAndBeehiveDescription",
+      "anchor": {
+        "x": 4,
+        "y": 1
+      },
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          6
+        ],
+        [
+          0,
+          7
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          5
+        ],
+        [
+          1,
+          8
+        ],
+        [
+          2,
+          6
+        ],
+        [
+          2,
+          7
+        ]
+      ]
+    },
+    {
+      "id": "blockPairHorizontal",
+      "nameKey": "index.sections.gameOfLife.patterns.blockPairHorizontal",
+      "descriptionKey": "index.sections.gameOfLife.patterns.blockPairHorizontalDescription",
+      "anchor": {
+        "x": 2,
+        "y": 0
+      },
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          0,
+          5
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          1,
+          5
+        ]
+      ]
+    },
+    {
+      "id": "blockPairVertical",
+      "nameKey": "index.sections.gameOfLife.patterns.blockPairVertical",
+      "descriptionKey": "index.sections.gameOfLife.patterns.blockPairVerticalDescription",
+      "anchor": {
+        "x": 0,
+        "y": 2
+      },
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ]
+    },
+    {
+      "id": "blockRing",
+      "nameKey": "index.sections.gameOfLife.patterns.blockRing",
+      "descriptionKey": "index.sections.gameOfLife.patterns.blockRingDescription",
+      "anchor": {
+        "x": 3,
+        "y": 3
+      },
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          6
+        ],
+        [
+          0,
+          7
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          6
+        ],
+        [
+          1,
+          7
+        ],
+        [
+          6,
+          0
+        ],
+        [
+          6,
+          1
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          6,
+          7
+        ],
+        [
+          7,
+          0
+        ],
+        [
+          7,
+          1
+        ],
+        [
+          7,
+          6
+        ],
+        [
+          7,
+          7
+        ]
+      ]
+    },
+    {
+      "id": "blockSquare",
+      "nameKey": "index.sections.gameOfLife.patterns.blockSquare",
+      "descriptionKey": "index.sections.gameOfLife.patterns.blockSquareDescription",
+      "anchor": {
+        "x": 2,
+        "y": 2
+      },
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          0,
+          5
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          1,
+          5
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          5,
+          0
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          5
+        ]
+      ]
+    },
+    {
+      "id": "boat",
+      "nameKey": "index.sections.gameOfLife.patterns.boat",
+      "descriptionKey": "index.sections.gameOfLife.patterns.boatDescription",
+      "anchor": {
+        "x": 1,
+        "y": 1
+      },
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "id": "boatFleet",
+      "nameKey": "index.sections.gameOfLife.patterns.boatFleet",
+      "descriptionKey": "index.sections.gameOfLife.patterns.boatFleetDescription",
+      "anchor": {
+        "x": 6,
+        "y": 1
+      },
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          5
+        ],
+        [
+          0,
+          6
+        ],
+        [
+          0,
+          10
+        ],
+        [
+          0,
+          11
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          5
+        ],
+        [
+          1,
+          7
+        ],
+        [
+          1,
+          10
+        ],
+        [
+          1,
+          12
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          6
+        ],
+        [
+          2,
+          11
+        ]
+      ]
+    },
+    {
+      "id": "boatTie",
+      "nameKey": "index.sections.gameOfLife.patterns.boatTie",
+      "descriptionKey": "index.sections.gameOfLife.patterns.boatTieDescription",
+      "anchor": {
+        "x": 1,
+        "y": 1
+      },
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          2
+        ]
+      ]
+    },
+    {
+      "id": "cappedBoat",
+      "nameKey": "index.sections.gameOfLife.patterns.cappedBoat",
+      "descriptionKey": "index.sections.gameOfLife.patterns.cappedBoatDescription",
+      "anchor": {
+        "x": 1,
+        "y": 1
+      },
+      "cells": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          1
+        ]
+      ]
+    },
+    {
+      "id": "cornerBoat",
+      "nameKey": "index.sections.gameOfLife.patterns.cornerBoat",
+      "descriptionKey": "index.sections.gameOfLife.patterns.cornerBoatDescription",
+      "anchor": {
+        "x": 1,
+        "y": 1
+      },
+      "cells": [
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ]
+      ]
+    },
+    {
+      "id": "diagonalLongBoat",
+      "nameKey": "index.sections.gameOfLife.patterns.diagonalLongBoat",
+      "descriptionKey": "index.sections.gameOfLife.patterns.diagonalLongBoatDescription",
+      "anchor": {
+        "x": 1,
+        "y": 1
+      },
+      "cells": [
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ]
+    },
+    {
+      "id": "diehard",
+      "nameKey": "index.sections.gameOfLife.patterns.diehard",
+      "descriptionKey": "index.sections.gameOfLife.patterns.diehardDescription",
+      "anchor": {
+        "x": 3,
+        "y": 1
+      },
+      "cells": [
+        [
+          0,
+          6
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          2,
+          5
+        ],
+        [
+          2,
+          6
+        ]
+      ]
+    },
+    {
+      "id": "fishhook",
+      "nameKey": "index.sections.gameOfLife.patterns.fishhook",
+      "descriptionKey": "index.sections.gameOfLife.patterns.fishhookDescription",
+      "anchor": {
+        "x": 1,
+        "y": 1
+      },
+      "cells": [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ]
+      ]
+    },
+    {
       "id": "glider",
       "nameKey": "index.sections.gameOfLife.patterns.glider",
       "descriptionKey": "index.sections.gameOfLife.patterns.gliderDescription",
-      "anchor": { "x": 1, "y": 1 },
+      "anchor": {
+        "x": 1,
+        "y": 1
+      },
       "cells": [
-        [0, 1],
-        [1, 2],
-        [2, 0],
-        [2, 1],
-        [2, 2]
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ]
       ]
     },
     {
-      "id": "lightweightSpaceship",
-      "nameKey": "index.sections.gameOfLife.patterns.lightweightSpaceship",
-      "descriptionKey": "index.sections.gameOfLife.patterns.lightweightSpaceshipDescription",
-      "anchor": { "x": 2, "y": 1 },
+      "id": "gliderNE",
+      "nameKey": "index.sections.gameOfLife.patterns.gliderNE",
+      "descriptionKey": "index.sections.gameOfLife.patterns.gliderNEDescription",
+      "anchor": {
+        "x": 1,
+        "y": 1
+      },
       "cells": [
-        [0, 1], [0, 4],
-        [1, 0],
-        [2, 0], [2, 4],
-        [3, 0], [3, 1], [3, 2], [3, 3]
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
       ]
     },
     {
-      "id": "pulsar",
-      "nameKey": "index.sections.gameOfLife.patterns.pulsar",
-      "descriptionKey": "index.sections.gameOfLife.patterns.pulsarDescription",
-      "anchor": { "x": 6, "y": 6 },
+      "id": "gliderNW",
+      "nameKey": "index.sections.gameOfLife.patterns.gliderNW",
+      "descriptionKey": "index.sections.gameOfLife.patterns.gliderNWDescription",
+      "anchor": {
+        "x": 1,
+        "y": 1
+      },
       "cells": [
-        [2, 4], [2, 5], [2, 6], [2, 10], [2, 11], [2, 12],
-        [4, 2], [5, 2], [6, 2], [4, 7], [5, 7], [6, 7], [4, 9], [5, 9], [6, 9], [4, 14], [5, 14], [6, 14],
-        [7, 4], [7, 5], [7, 6], [7, 10], [7, 11], [7, 12],
-        [9, 4], [9, 5], [9, 6], [9, 10], [9, 11], [9, 12],
-        [10, 2], [11, 2], [12, 2], [10, 7], [11, 7], [12, 7], [10, 9], [11, 9], [12, 9], [10, 14], [11, 14], [12, 14],
-        [14, 4], [14, 5], [14, 6], [14, 10], [14, 11], [14, 12]
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "id": "gliderSW",
+      "nameKey": "index.sections.gameOfLife.patterns.gliderSW",
+      "descriptionKey": "index.sections.gameOfLife.patterns.gliderSWDescription",
+      "anchor": {
+        "x": 1,
+        "y": 1
+      },
+      "cells": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          2
+        ]
       ]
     },
     {
       "id": "gosperGliderGun",
       "nameKey": "index.sections.gameOfLife.patterns.gosperGliderGun",
       "descriptionKey": "index.sections.gameOfLife.patterns.gosperGliderGunDescription",
-      "anchor": { "x": 18, "y": 4 },
+      "anchor": {
+        "x": 18,
+        "y": 4
+      },
       "cells": [
-        [0, 4], [0, 5], [1, 4], [1, 5],
-        [10, 4], [10, 5], [10, 6], [11, 3], [11, 7], [12, 2], [12, 8], [13, 2], [13, 8], [14, 5], [15, 3], [15, 7], [16, 4], [16, 5], [16, 6], [17, 5],
-        [20, 2], [20, 3], [20, 4], [21, 2], [21, 3], [21, 4], [22, 1], [22, 5], [24, 0], [24, 1], [24, 5], [24, 6],
-        [34, 2], [34, 3], [35, 2], [35, 3]
+        [
+          0,
+          4
+        ],
+        [
+          0,
+          5
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          1,
+          5
+        ],
+        [
+          10,
+          4
+        ],
+        [
+          10,
+          5
+        ],
+        [
+          10,
+          6
+        ],
+        [
+          11,
+          3
+        ],
+        [
+          11,
+          7
+        ],
+        [
+          12,
+          2
+        ],
+        [
+          12,
+          8
+        ],
+        [
+          13,
+          2
+        ],
+        [
+          13,
+          8
+        ],
+        [
+          14,
+          5
+        ],
+        [
+          15,
+          3
+        ],
+        [
+          15,
+          7
+        ],
+        [
+          16,
+          4
+        ],
+        [
+          16,
+          5
+        ],
+        [
+          16,
+          6
+        ],
+        [
+          17,
+          5
+        ],
+        [
+          20,
+          2
+        ],
+        [
+          20,
+          3
+        ],
+        [
+          20,
+          4
+        ],
+        [
+          21,
+          2
+        ],
+        [
+          21,
+          3
+        ],
+        [
+          21,
+          4
+        ],
+        [
+          22,
+          1
+        ],
+        [
+          22,
+          5
+        ],
+        [
+          24,
+          0
+        ],
+        [
+          24,
+          1
+        ],
+        [
+          24,
+          5
+        ],
+        [
+          24,
+          6
+        ],
+        [
+          34,
+          2
+        ],
+        [
+          34,
+          3
+        ],
+        [
+          35,
+          2
+        ],
+        [
+          35,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "layeredBoat",
+      "nameKey": "index.sections.gameOfLife.patterns.layeredBoat",
+      "descriptionKey": "index.sections.gameOfLife.patterns.layeredBoatDescription",
+      "anchor": {
+        "x": 1,
+        "y": 1
+      },
+      "cells": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "lightweightSpaceship",
+      "nameKey": "index.sections.gameOfLife.patterns.lightweightSpaceship",
+      "descriptionKey": "index.sections.gameOfLife.patterns.lightweightSpaceshipDescription",
+      "anchor": {
+        "x": 2,
+        "y": 1
+      },
+      "cells": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "lightweightSpaceshipNorth",
+      "nameKey": "index.sections.gameOfLife.patterns.lightweightSpaceshipNorth",
+      "descriptionKey": "index.sections.gameOfLife.patterns.lightweightSpaceshipNorthDescription",
+      "anchor": {
+        "x": 1,
+        "y": 2
+      },
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          4,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "lightweightSpaceshipSouth",
+      "nameKey": "index.sections.gameOfLife.patterns.lightweightSpaceshipSouth",
+      "descriptionKey": "index.sections.gameOfLife.patterns.lightweightSpaceshipSouthDescription",
+      "anchor": {
+        "x": 1,
+        "y": 2
+      },
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          4,
+          2
+        ],
+        [
+          4,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "lightweightSpaceshipWest",
+      "nameKey": "index.sections.gameOfLife.patterns.lightweightSpaceshipWest",
+      "descriptionKey": "index.sections.gameOfLife.patterns.lightweightSpaceshipWestDescription",
+      "anchor": {
+        "x": 2,
+        "y": 1
+      },
+      "cells": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "loaf",
+      "nameKey": "index.sections.gameOfLife.patterns.loaf",
+      "descriptionKey": "index.sections.gameOfLife.patterns.loafDescription",
+      "anchor": {
+        "x": 1,
+        "y": 1
+      },
+      "cells": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          2
+        ]
+      ]
+    },
+    {
+      "id": "loafAndBoat",
+      "nameKey": "index.sections.gameOfLife.patterns.loafAndBoat",
+      "descriptionKey": "index.sections.gameOfLife.patterns.loafAndBoatDescription",
+      "anchor": {
+        "x": 4,
+        "y": 1
+      },
+      "cells": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          1,
+          6
+        ],
+        [
+          1,
+          7
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          2,
+          6
+        ],
+        [
+          2,
+          8
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          3,
+          7
+        ]
+      ]
+    },
+    {
+      "id": "loafPairDiagonal",
+      "nameKey": "index.sections.gameOfLife.patterns.loafPairDiagonal",
+      "descriptionKey": "index.sections.gameOfLife.patterns.loafPairDiagonalDescription",
+      "anchor": {
+        "x": 4,
+        "y": 3
+      },
+      "cells": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          4,
+          7
+        ],
+        [
+          4,
+          8
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          5,
+          9
+        ],
+        [
+          6,
+          7
+        ],
+        [
+          6,
+          9
+        ],
+        [
+          7,
+          8
+        ]
+      ]
+    },
+    {
+      "id": "longBoat",
+      "nameKey": "index.sections.gameOfLife.patterns.longBoat",
+      "descriptionKey": "index.sections.gameOfLife.patterns.longBoatDescription",
+      "anchor": {
+        "x": 1,
+        "y": 1
+      },
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          2
+        ]
+      ]
+    },
+    {
+      "id": "mirroredHook",
+      "nameKey": "index.sections.gameOfLife.patterns.mirroredHook",
+      "descriptionKey": "index.sections.gameOfLife.patterns.mirroredHookDescription",
+      "anchor": {
+        "x": 1,
+        "y": 1
+      },
+      "cells": [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          1
+        ]
+      ]
+    },
+    {
+      "id": "offsetBoat",
+      "nameKey": "index.sections.gameOfLife.patterns.offsetBoat",
+      "descriptionKey": "index.sections.gameOfLife.patterns.offsetBoatDescription",
+      "anchor": {
+        "x": 1,
+        "y": 1
+      },
+      "cells": [
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ]
+      ]
+    },
+    {
+      "id": "piHeptomino",
+      "nameKey": "index.sections.gameOfLife.patterns.piHeptomino",
+      "descriptionKey": "index.sections.gameOfLife.patterns.piHeptominoDescription",
+      "anchor": {
+        "x": 1,
+        "y": 1
+      },
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          2
+        ]
+      ]
+    },
+    {
+      "id": "pulsar",
+      "nameKey": "index.sections.gameOfLife.patterns.pulsar",
+      "descriptionKey": "index.sections.gameOfLife.patterns.pulsarDescription",
+      "anchor": {
+        "x": 6,
+        "y": 6
+      },
+      "cells": [
+        [
+          2,
+          4
+        ],
+        [
+          2,
+          5
+        ],
+        [
+          2,
+          6
+        ],
+        [
+          2,
+          10
+        ],
+        [
+          2,
+          11
+        ],
+        [
+          2,
+          12
+        ],
+        [
+          4,
+          2
+        ],
+        [
+          5,
+          2
+        ],
+        [
+          6,
+          2
+        ],
+        [
+          4,
+          7
+        ],
+        [
+          5,
+          7
+        ],
+        [
+          6,
+          7
+        ],
+        [
+          4,
+          9
+        ],
+        [
+          5,
+          9
+        ],
+        [
+          6,
+          9
+        ],
+        [
+          4,
+          14
+        ],
+        [
+          5,
+          14
+        ],
+        [
+          6,
+          14
+        ],
+        [
+          7,
+          4
+        ],
+        [
+          7,
+          5
+        ],
+        [
+          7,
+          6
+        ],
+        [
+          7,
+          10
+        ],
+        [
+          7,
+          11
+        ],
+        [
+          7,
+          12
+        ],
+        [
+          9,
+          4
+        ],
+        [
+          9,
+          5
+        ],
+        [
+          9,
+          6
+        ],
+        [
+          9,
+          10
+        ],
+        [
+          9,
+          11
+        ],
+        [
+          9,
+          12
+        ],
+        [
+          10,
+          2
+        ],
+        [
+          11,
+          2
+        ],
+        [
+          12,
+          2
+        ],
+        [
+          10,
+          7
+        ],
+        [
+          11,
+          7
+        ],
+        [
+          12,
+          7
+        ],
+        [
+          10,
+          9
+        ],
+        [
+          11,
+          9
+        ],
+        [
+          12,
+          9
+        ],
+        [
+          10,
+          14
+        ],
+        [
+          11,
+          14
+        ],
+        [
+          12,
+          14
+        ],
+        [
+          14,
+          4
+        ],
+        [
+          14,
+          5
+        ],
+        [
+          14,
+          6
+        ],
+        [
+          14,
+          10
+        ],
+        [
+          14,
+          11
+        ],
+        [
+          14,
+          12
+        ]
+      ]
+    },
+    {
+      "id": "rPentomino",
+      "nameKey": "index.sections.gameOfLife.patterns.rPentomino",
+      "descriptionKey": "index.sections.gameOfLife.patterns.rPentominoDescription",
+      "anchor": {
+        "x": 1,
+        "y": 1
+      },
+      "cells": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "id": "shiftedBoat",
+      "nameKey": "index.sections.gameOfLife.patterns.shiftedBoat",
+      "descriptionKey": "index.sections.gameOfLife.patterns.shiftedBoatDescription",
+      "anchor": {
+        "x": 1,
+        "y": 1
+      },
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "ship",
+      "nameKey": "index.sections.gameOfLife.patterns.ship",
+      "descriptionKey": "index.sections.gameOfLife.patterns.shipDescription",
+      "anchor": {
+        "x": 1,
+        "y": 1
+      },
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ]
+      ]
+    },
+    {
+      "id": "shipPair",
+      "nameKey": "index.sections.gameOfLife.patterns.shipPair",
+      "descriptionKey": "index.sections.gameOfLife.patterns.shipPairDescription",
+      "anchor": {
+        "x": 3,
+        "y": 1
+      },
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          5
+        ],
+        [
+          0,
+          6
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          5
+        ],
+        [
+          1,
+          7
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          2,
+          6
+        ],
+        [
+          2,
+          7
+        ]
+      ]
+    },
+    {
+      "id": "skewedLongBoat",
+      "nameKey": "index.sections.gameOfLife.patterns.skewedLongBoat",
+      "descriptionKey": "index.sections.gameOfLife.patterns.skewedLongBoatDescription",
+      "anchor": {
+        "x": 1,
+        "y": 1
+      },
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "spurBoat",
+      "nameKey": "index.sections.gameOfLife.patterns.spurBoat",
+      "descriptionKey": "index.sections.gameOfLife.patterns.spurBoatDescription",
+      "anchor": {
+        "x": 1,
+        "y": 1
+      },
+      "cells": [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          0
+        ]
+      ]
+    },
+    {
+      "id": "stillLifeGarden",
+      "nameKey": "index.sections.gameOfLife.patterns.stillLifeGarden",
+      "descriptionKey": "index.sections.gameOfLife.patterns.stillLifeGardenDescription",
+      "anchor": {
+        "x": 3,
+        "y": 3
+      },
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          6
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          5
+        ],
+        [
+          1,
+          7
+        ],
+        [
+          2,
+          6
+        ],
+        [
+          4,
+          3
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          5,
+          3
+        ],
+        [
+          5,
+          5
+        ],
+        [
+          6,
+          4
+        ]
+      ]
+    },
+    {
+      "id": "tailBoat",
+      "nameKey": "index.sections.gameOfLife.patterns.tailBoat",
+      "descriptionKey": "index.sections.gameOfLife.patterns.tailBoatDescription",
+      "anchor": {
+        "x": 1,
+        "y": 1
+      },
+      "cells": [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ]
+      ]
+    },
+    {
+      "id": "toad",
+      "nameKey": "index.sections.gameOfLife.patterns.toad",
+      "descriptionKey": "index.sections.gameOfLife.patterns.toadDescription",
+      "anchor": {
+        "x": 1,
+        "y": 0
+      },
+      "cells": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ]
+    },
+    {
+      "id": "toadPair",
+      "nameKey": "index.sections.gameOfLife.patterns.toadPair",
+      "descriptionKey": "index.sections.gameOfLife.patterns.toadPairDescription",
+      "anchor": {
+        "x": 4,
+        "y": 0
+      },
+      "cells": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          0,
+          7
+        ],
+        [
+          0,
+          8
+        ],
+        [
+          0,
+          9
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          6
+        ],
+        [
+          1,
+          7
+        ],
+        [
+          1,
+          8
+        ]
+      ]
+    },
+    {
+      "id": "tub",
+      "nameKey": "index.sections.gameOfLife.patterns.tub",
+      "descriptionKey": "index.sections.gameOfLife.patterns.tubDescription",
+      "anchor": {
+        "x": 1,
+        "y": 1
+      },
+      "cells": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "id": "tubPair",
+      "nameKey": "index.sections.gameOfLife.patterns.tubPair",
+      "descriptionKey": "index.sections.gameOfLife.patterns.tubPairDescription",
+      "anchor": {
+        "x": 3,
+        "y": 3
+      },
+      "cells": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          6,
+          5
+        ]
+      ]
+    },
+    {
+      "id": "tubRing",
+      "nameKey": "index.sections.gameOfLife.patterns.tubRing",
+      "descriptionKey": "index.sections.gameOfLife.patterns.tubRingDescription",
+      "anchor": {
+        "x": 3,
+        "y": 3
+      },
+      "cells": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          5
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          1,
+          6
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          5
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          5,
+          0
+        ],
+        [
+          5,
+          2
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          6,
+          1
+        ],
+        [
+          6,
+          5
+        ]
+      ]
+    },
+    {
+      "id": "twistedBoat",
+      "nameKey": "index.sections.gameOfLife.patterns.twistedBoat",
+      "descriptionKey": "index.sections.gameOfLife.patterns.twistedBoatDescription",
+      "anchor": {
+        "x": 1,
+        "y": 1
+      },
+      "cells": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ]
       ]
     }
   ]

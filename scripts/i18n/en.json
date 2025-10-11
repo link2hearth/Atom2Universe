@@ -63,60 +63,85 @@
         "resultPlaceholder": "Draw result"
       },
       "table": {
-        "aria": "Periodic table of the elements",
-        "placeholder": "Select an element to view its details.",
+        "aria": "Periodic table of elements",
+        "placeholder": "Select an element to display its properties.",
         "details": {
-          "collection": "Collection bonus"
+          "family": "Family",
+          "collection": "Collection"
         },
         "summary": {
-          "title": "Collection",
-          "current": "Owned elements",
-          "lifetime": "Discovered elements"
+          "title": "Element totals",
+          "current": "Current",
+          "lifetime": "Lifetime collected"
+        },
+        "modal": {
+          "title": "{name} ({symbol})",
+          "titleNameOnly": "{name}",
+          "titleSymbolOnly": "{symbol}",
+          "titleFallback": "Element {number}",
+          "comingSoon": "Coming soon",
+          "close": "Close",
+          "open": "Open detailed sheet for {name}",
+          "openSymbol": "Open detailed sheet for {symbol}",
+          "sourcesLabel": "Sources"
+        },
+        "family": {
+          "open": "{label}: {family}. Open the family overview.",
+          "modal": {
+            "title": "Family · {family}",
+            "placeholder": "Family description coming soon."
+          }
         }
       },
       "fusion": {
-        "title": "Quantum fusion chamber",
-        "intro": "Combine elements to attempt unique fusion effects.",
-        "logPlaceholder": "Fusion results will appear here."
+        "title": "Molecular fusion chamber",
+        "intro": "Combine your elements to attempt creating brand new molecules. Ingredients are taken from your current stock and success is never guaranteed."
       },
       "info": {
-        "title": "Statistics dashboard",
+        "title": "Progress information",
         "aps": {
-          "title": "Passive production (APS)",
-          "subtitle": "Detailed breakdown of your automatic gains.",
-          "aria": "Passive production breakdown",
-          "placeholder": "Passive production details will appear here."
+          "title": "Automatic production (APS)",
+          "subtitle": "Synthesis per second",
+          "aria": "APS breakdown"
         },
         "apc": {
-          "title": "Click production (APC)",
-          "subtitle": "Analysis of the power generated per click.",
-          "aria": "Click production breakdown",
-          "placeholder": "Click production breakdown will appear here."
+          "title": "Manual production (APC)",
+          "subtitle": "Atoms per click",
+          "aria": "APC breakdown"
         },
         "progress": {
-          "title": "Player progression",
-          "subtitle": "Track current session performance and overall history.",
+          "title": "Progress",
+          "subtitle": "Session & global",
           "session": {
-            "title": "Current session",
-            "atoms": "Atoms generated",
-            "clicks": "Clicks registered",
-            "apc": "APC accumulated",
-            "aps": "APS accumulated",
-            "offline": "Offline collection",
-            "duration": "Session duration",
+            "title": "Session",
+            "atoms": "Atoms gained",
+            "clicks": "Manual clicks",
+            "apc": "Atoms via APC",
+            "aps": "Atoms via APS",
+            "offline": "Offline atoms",
+            "duration": "Time online",
             "frenzySingle": "Frenzy record (30 s)",
             "frenzyMulti": "Frenzy record (chain)"
           },
           "global": {
-            "title": "Lifetime overview",
-            "atoms": "Total atoms",
-            "clicks": "Total clicks",
-            "apc": "APC accumulated",
-            "aps": "APS accumulated",
-            "offline": "Offline collection",
+            "title": "Global",
+            "atoms": "Atoms gained",
+            "clicks": "Manual clicks",
+            "apc": "Atoms via APC",
+            "aps": "Atoms via APS",
+            "offline": "Offline atoms",
             "duration": "Play time",
             "frenzySingle": "Frenzy record (30 s)",
             "frenzyMulti": "Frenzy record (chain)"
+          },
+          "photon": {
+            "title": "Photon",
+            "distance": "Total distance",
+            "distanceUnit": "m",
+            "speed": "Top speed",
+            "speedUnit": "km/h",
+            "altitude": "Peak altitude",
+            "altitudeUnit": "m"
           },
           "frenzy": {
             "empty": "—",
@@ -130,18 +155,22 @@
           "subtitle": "Review the trophies you have earned on your journey.",
           "empty": "No trophy completed yet. Finish objectives to display them here."
         },
+        "calculations": {
+          "title": "Production breakdown",
+          "subtitle": "Automatic vs manual gains overview"
+        },
         "shop": {
           "title": "Shop bonuses",
-          "subtitle": "Effects earned from purchased upgrades."
+          "subtitle": "Combined store effects"
         },
         "elements": {
           "title": "Element bonuses",
-          "subtitle": "Combined effects from your element collections."
+          "subtitle": "Primordial nucleosynthesis · Cosmic spallation · Simple stars · Supernovae · Massive stars · Artificial"
         }
       },
       "bigbang": {
         "title": "Big Bang",
-        "description": "Trigger a cosmic rebirth to multiply your gains and start anew."
+        "description": "Coming soon"
       },
       "arcade": {
         "aria": "Particles mini-game",
@@ -272,18 +301,118 @@
           "population": "Population"
         },
         "patterns": {
-          "title": "Signature patterns",
-          "selectLabel": "Choose a pattern",
-          "none": "No pattern",
+          "acorn": "Acorn",
+          "acornDescription": "A seven-cell methuselah that takes generations to settle.",
+          "beacon": "Beacon",
+          "beaconDescription": "Two blocks flashing against each other every other tick.",
+          "beaconPair": "Beacon pair",
+          "beaconPairDescription": "Two beacons blinking in sync for a rhythmic signal.",
+          "beehive": "Beehive",
+          "beehiveDescription": "Six cells forming a honeycomb-like still life.",
+          "beehivePairHorizontal": "Beehive pair",
+          "beehivePairHorizontalDescription": "Two beehives side by side with a one-cell gap.",
+          "blinker": "Blinker",
+          "blinkerCross": "Blinker cross",
+          "blinkerCrossDescription": "Four blinkers forming a cross of pulsing light.",
+          "blinkerDescription": "The classic period-2 oscillator of three cells.",
+          "blinkerPairHorizontal": "Blinker pair",
+          "blinkerPairHorizontalDescription": "Two synchronized blinkers separated by a gap.",
+          "block": "Block",
+          "blockAndBeehive": "Block and beehive",
+          "blockAndBeehiveDescription": "A block paired with a beehive for a simple garden.",
+          "blockDescription": "A 2×2 still life that stays solid forever.",
+          "blockPairHorizontal": "Block pair (horizontal)",
+          "blockPairHorizontalDescription": "Two separated blocks aligned horizontally.",
+          "blockPairVertical": "Block pair (vertical)",
+          "blockPairVerticalDescription": "Two separated blocks stacked vertically.",
+          "blockRing": "Block ring",
+          "blockRingDescription": "A wide ring made of four distant blocks.",
+          "blockSquare": "Block square",
+          "blockSquareDescription": "Four blocks forming the corners of a hollow square.",
+          "boat": "Boat",
+          "boatDescription": "A five-cell still life shaped like a tiny boat.",
+          "boatFleet": "Boat fleet",
+          "boatFleetDescription": "Three boats aligned to form a tiny fleet.",
+          "boatTie": "Boat tie",
+          "boatTieDescription": "Two boats fused corner to corner into a stable still life.",
+          "cappedBoat": "Capped boat",
+          "cappedBoatDescription": "A boat capped with an extra block that keeps it stable.",
+          "cornerBoat": "Corner boat",
+          "cornerBoatDescription": "A hook-shaped boat variant that hugs a corner.",
+          "diagonalLongBoat": "Diagonal long boat",
+          "diagonalLongBoatDescription": "A long boat rotated along the diagonal, useful as an eater.",
+          "diehard": "Diehard",
+          "diehardDescription": "A sparse pattern that lives for 130 generations before vanishing.",
           "empty": "Patterns will load automatically.",
+          "fishhook": "Fishhook",
+          "fishhookDescription": "A compact hook-shaped still life reminiscent of a fishhook.",
           "glider": "Glider",
           "gliderDescription": "A minimalist traveler gliding diagonally forever.",
+          "gliderNE": "Glider (north-east)",
+          "gliderNEDescription": "A glider rotated to travel in a different diagonal direction.",
+          "gliderNW": "Glider (north-west)",
+          "gliderNWDescription": "A glider rotated to travel in a different diagonal direction.",
+          "gliderSW": "Glider (south-west)",
+          "gliderSWDescription": "A glider rotated to travel in a different diagonal direction.",
+          "gosperGliderGun": "Gosper glider gun",
+          "gosperGliderGunDescription": "The first infinite gun, firing gliders at regular intervals.",
+          "layeredBoat": "Layered boat",
+          "layeredBoatDescription": "A layered boat variant with a double-thick stern.",
           "lightweightSpaceship": "Lightweight spaceship",
           "lightweightSpaceshipDescription": "A speedy craft perfect for carrying signals.",
+          "lightweightSpaceshipNorth": "Lightweight spaceship (north)",
+          "lightweightSpaceshipNorthDescription": "The lightweight spaceship rotated to travel along another axis.",
+          "lightweightSpaceshipSouth": "Lightweight spaceship (south)",
+          "lightweightSpaceshipSouthDescription": "The lightweight spaceship rotated to travel along another axis.",
+          "lightweightSpaceshipWest": "Lightweight spaceship (west)",
+          "lightweightSpaceshipWestDescription": "The lightweight spaceship rotated to travel along another axis.",
+          "loaf": "Loaf",
+          "loafAndBoat": "Loaf and boat",
+          "loafAndBoatDescription": "A loaf guarding a nearby boat.",
+          "loafDescription": "A compact still life shaped like a loaf of bread.",
+          "loafPairDiagonal": "Diagonal loaf pair",
+          "loafPairDiagonalDescription": "Two loaves arranged on a diagonal to leave breathing room.",
+          "longBoat": "Long boat",
+          "longBoatDescription": "A stretched boat still life with an extended stern.",
+          "mirroredHook": "Mirrored hook",
+          "mirroredHookDescription": "A mirrored hook still life that often appears in eater catalogs.",
+          "none": "No pattern",
+          "offsetBoat": "Offset boat",
+          "offsetBoatDescription": "A diagonally offset boat still life with seven cells.",
+          "piHeptomino": "Pi-heptomino",
+          "piHeptominoDescription": "Seven cells arranged like the Greek letter π.",
           "pulsar": "Pulsar",
           "pulsarDescription": "A majestic period-3 oscillator.",
-          "gosperGliderGun": "Gosper glider gun",
-          "gosperGliderGunDescription": "The first infinite gun, firing gliders at regular intervals."
+          "rPentomino": "R-pentomino",
+          "rPentominoDescription": "A famous methuselah that erupts into chaotic life.",
+          "selectLabel": "Choose a pattern",
+          "shiftedBoat": "Shifted boat",
+          "shiftedBoatDescription": "A skewed boat still life with an offset stern.",
+          "ship": "Ship",
+          "shipDescription": "A six-cell still life shaped like a small ship.",
+          "shipPair": "Ship pair",
+          "shipPairDescription": "Two ships docked with enough room to stay still.",
+          "skewedLongBoat": "Skewed long boat",
+          "skewedLongBoatDescription": "A long boat stretched along a diagonal axis.",
+          "spurBoat": "Spur boat",
+          "spurBoatDescription": "A seven-cell hook-shaped still life often used as an eater.",
+          "stillLifeGarden": "Still-life garden",
+          "stillLifeGardenDescription": "A small garden of a block, tub, and boat living in harmony.",
+          "tailBoat": "Tail boat",
+          "tailBoatDescription": "A boat variant sporting a tail that can catch gliders.",
+          "title": "Signature patterns",
+          "toad": "Toad",
+          "toadDescription": "A six-cell period-2 oscillator shaped like a toad.",
+          "toadPair": "Toad pair",
+          "toadPairDescription": "Two toads oscillating in parallel.",
+          "tub": "Tub",
+          "tubDescription": "Four cells forming a rounded tub-shaped still life.",
+          "tubPair": "Tub pair",
+          "tubPairDescription": "Two tubs separated diagonally.",
+          "tubRing": "Tub ring",
+          "tubRingDescription": "Four tubs arranged in a loose ring.",
+          "twistedBoat": "Twisted boat",
+          "twistedBoatDescription": "A twisted boat variant where the bow folds inward."
         },
         "random": {
           "title": "Random generation",
@@ -430,7 +559,7 @@
         "analysis": {
           "title": "AI move analysis",
           "empty": "No AI move to analyze yet.",
-          "ready": "Click \u201cAnalyze\u201d to break down the last move.",
+          "ready": "Click “Analyze” to break down the last move.",
           "summary": "Move {{move}} · evaluation {{score}} ({{advantage}}). {{delta}}{{depth}}.",
           "advantage": {
             "white": "white advantage",
@@ -561,112 +690,6 @@
           "altitudeUnit": "m"
         }
       },
-      "table": {
-        "aria": "Periodic table of elements",
-        "placeholder": "Select an element to display its properties.",
-        "details": {
-          "family": "Family",
-          "collection": "Collection"
-        },
-        "summary": {
-          "title": "Element totals",
-          "current": "Current",
-          "lifetime": "Lifetime collected"
-        },
-        "modal": {
-          "title": "{name} ({symbol})",
-          "titleNameOnly": "{name}",
-          "titleSymbolOnly": "{symbol}",
-          "titleFallback": "Element {number}",
-          "comingSoon": "Coming soon",
-          "close": "Close",
-          "open": "Open detailed sheet for {name}",
-          "openSymbol": "Open detailed sheet for {symbol}",
-          "sourcesLabel": "Sources"
-        },
-        "family": {
-          "open": "{label}: {family}. Open the family overview.",
-          "modal": {
-            "title": "Family · {family}",
-            "placeholder": "Family description coming soon."
-          }
-        }
-      },
-      "fusion": {
-        "title": "Molecular fusion chamber",
-        "intro": "Combine your elements to attempt creating brand new molecules. Ingredients are taken from your current stock and success is never guaranteed."
-      },
-      "info": {
-        "title": "Progress information",
-        "aps": {
-          "title": "Automatic production (APS)",
-          "subtitle": "Synthesis per second",
-          "aria": "APS breakdown"
-        },
-        "apc": {
-          "title": "Manual production (APC)",
-          "subtitle": "Atoms per click",
-          "aria": "APC breakdown"
-        },
-        "progress": {
-          "title": "Progress",
-          "subtitle": "Session & global",
-          "session": {
-            "title": "Session",
-            "atoms": "Atoms gained",
-            "clicks": "Manual clicks",
-            "apc": "Atoms via APC",
-            "aps": "Atoms via APS",
-            "offline": "Offline atoms",
-            "duration": "Time online",
-            "frenzySingle": "Frenzy record (30 s)",
-            "frenzyMulti": "Frenzy record (chain)"
-          },
-          "global": {
-            "title": "Global",
-            "atoms": "Atoms gained",
-            "clicks": "Manual clicks",
-            "apc": "Atoms via APC",
-            "aps": "Atoms via APS",
-            "offline": "Offline atoms",
-            "duration": "Play time",
-            "frenzySingle": "Frenzy record (30 s)",
-            "frenzyMulti": "Frenzy record (chain)"
-          },
-          "photon": {
-            "title": "Photon",
-            "distance": "Total distance",
-            "distanceUnit": "m",
-            "speed": "Top speed",
-            "speedUnit": "km/h",
-            "altitude": "Peak altitude",
-            "altitudeUnit": "m"
-          },
-          "frenzy": {
-            "empty": "—",
-            "singleValue": "{count} clicks",
-            "multiValueSingle": "{count} clicks · {frenzies} frenzy",
-            "multiValue": "{count} clicks · {frenzies} frenzies"
-          }
-        },
-        "achievements": {
-          "title": "Unlocked achievements",
-          "subtitle": "Review the trophies you have earned on your journey.",
-          "empty": "No trophy completed yet. Finish objectives to display them here."
-        },
-        "calculations": {
-          "title": "Production breakdown",
-          "subtitle": "Automatic vs manual gains overview"
-        },
-        "shop": {
-          "title": "Shop bonuses",
-          "subtitle": "Combined store effects"
-        },
-        "elements": {
-          "title": "Element bonuses",
-          "subtitle": "Primordial nucleosynthesis · Cosmic spallation · Simple stars · Supernovae · Massive stars · Artificial"
-        }
-      },
       "metaux": {
         "aria": "Metals Match-3 mini-game",
         "exitAria": "Leave the Metals mini-game",
@@ -684,10 +707,6 @@
         "freePlay": "Free mode",
         "return": "Return to clicker",
         "creditStatus": "Mach3 credits left: 0"
-      },
-      "bigbang": {
-        "title": "Big Bang",
-        "description": "Coming soon"
       },
       "options": {
         "title": "Options",
@@ -1334,9 +1353,9 @@
       "subtitle": "Pick the area you want to practice and view it across the selected range.",
       "layoutLabel": "Key count",
       "layoutOptions": {
-        "88": "88 keys (A0 – C8)",
+        "61": "61 keys (C2 – C7)",
         "76": "76 keys (E1 – G7)",
-        "61": "61 keys (C2 – C7)"
+        "88": "88 keys (A0 – C8)"
       },
       "windowLabel": "Displayed octaves",
       "windowOptions": {
@@ -1357,11 +1376,57 @@
   },
   "scripts": {
     "config": {
-      "themes": {
-        "dark": "Dark theme",
-        "light": "Light theme",
-        "neon": "Neon theme",
-        "aurora": "Aurora theme"
+      "uiText": {
+        "options": {
+          "welcomeCard": {
+            "title": "Welcome",
+            "intro": "Welcome to Atom to Univers. Start by clicking to earn Atoms (APC Atoms Per Click), purchase upgrades in the shop, and automate harvesting (APS Atoms Per Second). Unlock mini-games as you progress. The goal is to gather as many Atoms as possible to forge a Universe. Large values use an easy scientific-style notation: 1.0e6 means 1,000,000 (1.0 × 10^6) and the number after “e” tells you how many zeros follow.",
+            "details": {
+              "particles": {
+                "label": "Particles mini-game:",
+                "description": "Collide elementary particles to earn draw tickets for the Gacha and credits for the Mach3 mini-game."
+              },
+              "gacha": {
+                "label": "Gacha:",
+                "description": "Spend your tickets to obtain atoms from the periodic table; completing collections grants APS and APC bonuses among others."
+              },
+              "match3": {
+                "label": "Mach3 mini-game:",
+                "description": "A Match 3 game—line up Copper, Bronze, Silver, Gold, and Carbon (Diamond) as quickly as possible before the timer hits 0. Higher scores mean higher APS production bonuses."
+              }
+            }
+          }
+        }
+      },
+      "elementBonuses": {
+        "collectionMultiplier": "Collection Synergy · Unified resonance",
+        "essentiel": {
+          "perCopy": "Cosmic Spallation · Essential harvests",
+          "setBonus": "Cosmic Spallation · Complete collection",
+          "multiplier": "Cosmic Spallation · Orbital synergy"
+        },
+        "stellaire": {
+          "perCopy": "Simple Stars · Activated fragments",
+          "setBonus": "Simple Stars · Perfect forge",
+          "multiplier": "Simple Stars · Stellar intensity",
+          "labels": {
+            "perCopy": "Simple Stars · Fragments"
+          }
+        },
+        "singulier": {
+          "perCopy": "Supernovae · Crystalline resonance",
+          "multiplier": "Supernovae · Extreme density"
+        },
+        "mythique": {
+          "setBonus": "Massive Stars · Ultimate convergence",
+          "ticketBonus": "Massive Stars · Compressed star",
+          "offlineBonus": "Massive Stars · Persistent collection",
+          "duplicateOverflow": "Massive Stars · Fractal overload",
+          "frenzyBonus": "Massive Stars · Frenzy catalyst"
+        },
+        "irreel": {
+          "multiplier": "Artificial · Dimensional catalyst"
+        }
       }
     },
     "arcade": {
@@ -1468,7 +1533,6 @@
           }
         },
         "ranks": {
-          "A": "Ace",
           "2": "Two",
           "3": "Three",
           "4": "Four",
@@ -1478,6 +1542,7 @@
           "8": "Eight",
           "9": "Nine",
           "10": "Ten",
+          "A": "Ace",
           "J": "Jack",
           "Q": "Queen",
           "K": "King"
@@ -1492,70 +1557,72 @@
       }
     },
     "particules": {
+      "graviton": {
+        "detected": "Graviton detected!",
+        "dissipated": "The graviton dissipated…",
+        "captured": "Graviton captured! Special ticket +1"
+      },
+      "combos": {
+        "bonusPrefix": "Bonus: ",
+        "quarkPrefix": "Quark combo! "
+      },
+      "lingerBonus": {
+        "message": "Bonus multiball!"
+      },
+      "powerUps": {
+        "extend": "Extended paddle",
+        "multiball": "Multiball",
+        "laser": "Laser shot",
+        "speed": "Acceleration",
+        "floor": "Lower shield"
+      },
       "ui": {
+        "start": {
+          "message": "Tap or click the paddle to guide the particle and shatter the quantum bricks.",
+          "button": "Start"
+        },
+        "pause": {
+          "message": "Game paused. Tap the paddle to continue.",
+          "button": "Resume"
+        },
+        "lifeLost": {
+          "message": "Particle lost! Tap the paddle to continue.",
+          "button": "Resume"
+        },
+        "levelCleared": {
+          "template": "Level {level} cleared!{reward}",
+          "button": "Continue",
+          "quitButton": "Quit",
+          "reward": " {reward} obtained!",
+          "noReward": " No tickets this time.",
+          "speedBonus": " Speed bonus: +{bonus}!"
+        },
+        "gameOver": {
+          "withTickets": "Game over! Tickets earned: {tickets}{bonus}.",
+          "withoutTickets": "Game over! No tickets this time.",
+          "button": "Play again"
+        },
+        "hud": {
+          "ticketSingular": "ticket",
+          "ticketPlural": "tickets",
+          "bonusTicketSingular": "Mach3 ticket",
+          "bonusTicketPlural": "Mach3 tickets"
+        },
+        "overlay": {
+          "defaultButton": "Continue"
+        },
         "mode": {
+          "aria": "Choose the Particules game mode",
           "free": {
+            "title": "Free mode",
             "description": "Practice without spending atoms or earning rewards."
           },
           "paid": {
-            "description": "Spend {percent} of your atoms for a chance to earn element draw tickets.",
-            "debit": "Spent {cost} atoms to enable rewards mode.",
-            "insufficient": "Not enough atoms to enable rewards mode."
+            "title": "Reward mode",
+            "description": "Spend {percent} of your atoms to try earning element draw tickets.",
+            "insufficient": "Not enough atoms to start the reward mode.",
+            "debit": "Reward mode: -{cost} atoms"
           }
-        }
-      }
-    },
-    "config": {
-      "uiText": {
-        "options": {
-          "welcomeCard": {
-            "title": "Welcome",
-            "intro": "Welcome to Atom to Univers. Start by clicking to earn Atoms (APC Atoms Per Click), purchase upgrades in the shop, and automate harvesting (APS Atoms Per Second). Unlock mini-games as you progress. The goal is to gather as many Atoms as possible to forge a Universe. Large values use an easy scientific-style notation: 1.0e6 means 1,000,000 (1.0 × 10^6) and the number after “e” tells you how many zeros follow.",
-            "details": {
-              "particles": {
-                "label": "Particles mini-game:",
-                "description": "Collide elementary particles to earn draw tickets for the Gacha and credits for the Mach3 mini-game."
-              },
-              "gacha": {
-                "label": "Gacha:",
-                "description": "Spend your tickets to obtain atoms from the periodic table; completing collections grants APS and APC bonuses among others."
-              },
-              "match3": {
-                "label": "Mach3 mini-game:",
-                "description": "A Match 3 game—line up Copper, Bronze, Silver, Gold, and Carbon (Diamond) as quickly as possible before the timer hits 0. Higher scores mean higher APS production bonuses."
-              }
-            }
-          }
-        }
-      },
-      "elementBonuses": {
-        "collectionMultiplier": "Collection Synergy · Unified resonance",
-        "essentiel": {
-          "perCopy": "Cosmic Spallation · Essential harvests",
-          "setBonus": "Cosmic Spallation · Complete collection",
-          "multiplier": "Cosmic Spallation · Orbital synergy"
-        },
-        "stellaire": {
-          "perCopy": "Simple Stars · Activated fragments",
-          "setBonus": "Simple Stars · Perfect forge",
-          "multiplier": "Simple Stars · Stellar intensity",
-          "labels": {
-            "perCopy": "Simple Stars · Fragments"
-          }
-        },
-        "singulier": {
-          "perCopy": "Supernovae · Crystalline resonance",
-          "multiplier": "Supernovae · Extreme density"
-        },
-        "mythique": {
-          "setBonus": "Massive Stars · Ultimate convergence",
-          "ticketBonus": "Massive Stars · Compressed star",
-          "offlineBonus": "Massive Stars · Persistent collection",
-          "duplicateOverflow": "Massive Stars · Fractal overload",
-          "frenzyBonus": "Massive Stars · Frenzy catalyst"
-        },
-        "irreel": {
-          "multiplier": "Artificial · Dimensional catalyst"
         }
       }
     },
@@ -2192,76 +2259,6 @@
         "actinide": "Actinide"
       }
     },
-    "particules": {
-      "graviton": {
-        "detected": "Graviton detected!",
-        "dissipated": "The graviton dissipated…",
-        "captured": "Graviton captured! Special ticket +1"
-      },
-      "combos": {
-        "bonusPrefix": "Bonus: ",
-        "quarkPrefix": "Quark combo! "
-      },
-      "lingerBonus": {
-        "message": "Bonus multiball!"
-      },
-      "powerUps": {
-        "extend": "Extended paddle",
-        "multiball": "Multiball",
-        "laser": "Laser shot",
-        "speed": "Acceleration",
-        "floor": "Lower shield"
-      },
-      "ui": {
-        "start": {
-          "message": "Tap or click the paddle to guide the particle and shatter the quantum bricks.",
-          "button": "Start"
-        },
-        "pause": {
-          "message": "Game paused. Tap the paddle to continue.",
-          "button": "Resume"
-        },
-        "lifeLost": {
-          "message": "Particle lost! Tap the paddle to continue.",
-          "button": "Resume"
-        },
-        "levelCleared": {
-          "template": "Level {level} cleared!{reward}",
-          "button": "Continue",
-          "quitButton": "Quit",
-          "reward": " {reward} obtained!",
-          "noReward": " No tickets this time.",
-          "speedBonus": " Speed bonus: +{bonus}!"
-        },
-        "gameOver": {
-          "withTickets": "Game over! Tickets earned: {tickets}{bonus}.",
-          "withoutTickets": "Game over! No tickets this time.",
-          "button": "Play again"
-        },
-        "hud": {
-          "ticketSingular": "ticket",
-          "ticketPlural": "tickets",
-          "bonusTicketSingular": "Mach3 ticket",
-          "bonusTicketPlural": "Mach3 tickets"
-        },
-        "overlay": {
-          "defaultButton": "Continue"
-        },
-        "mode": {
-          "aria": "Choose the Particules game mode",
-          "free": {
-            "title": "Free mode",
-            "description": "Practice without spending atoms or earning rewards."
-          },
-          "paid": {
-            "title": "Reward mode",
-            "description": "Spend {percent} of your atoms to try earning element draw tickets.",
-            "insufficient": "Not enough atoms to start the reward mode.",
-            "debit": "Reward mode: -{cost} atoms"
-          }
-        }
-      }
-    },
     "info": {
       "progress": {
         "frenzy": {
@@ -2843,7 +2840,6 @@
             "sources": []
           }
         },
-
         "element-033-arsenic": {
           "symbol": "As",
           "name": "Arsenic",
@@ -2860,7 +2856,6 @@
             "sources": []
           }
         },
-
         "element-034-selenium": {
           "symbol": "Se",
           "name": "Selenium",
@@ -2979,11 +2974,11 @@
           "details": {
             "summary": "Silvery-gray niobium (Nb, 41) balances lightness, strength, and stability to power cutting-edge technologies.",
             "paragraphs": [
-              "Symbol \u201cNb\u201d, atomic number 41, niobium is a silvery-gray metal that is ductile and highly resistant to corrosion and heat. Discovered in 1801 by English chemist Charles Hatchett, it was first mistaken for tantalum, its chemical neighbor. Only in 1846 were the two clearly distinguished, and in 1950 the name \u201cniobium\u201d became internationally official. A metal of patience and precision, niobium combines lightness, strength, and stability — an ideal trio for high-tech applications.",
+              "Symbol “Nb”, atomic number 41, niobium is a silvery-gray metal that is ductile and highly resistant to corrosion and heat. Discovered in 1801 by English chemist Charles Hatchett, it was first mistaken for tantalum, its chemical neighbor. Only in 1846 were the two clearly distinguished, and in 1950 the name “niobium” became internationally official. A metal of patience and precision, niobium combines lightness, strength, and stability — an ideal trio for high-tech applications.",
               "Niobium forms in supernovae and in slow neutron-capture processes (the s-process) alongside other heavy transition metals. Its relative scarcity in the universe reflects the sporadic nature of these nuclear reactions. Trace amounts turn up in iron and stony meteorites, evidence of its stellar heritage. Its isotopic stability makes it a valuable witness to ancient nucleosynthesis environments.",
               "On Earth, niobium is rare (about 20 ppm in the crust), yet it concentrates in a few specific minerals: coltan (columbite-tantalite), pyrochlore, and euxenite. These ores often contain tantalum, explaining their historical confusion. The largest deposits lie in Brazil and Canada, which together supply more than 90% of world production. Despite its rarity, niobium is not considered a critical resource because its sources are concentrated yet stable.",
-              "Niobium is a metal for advanced engineering. Added in very small amounts to steel, it significantly boosts strength and toughness, making it a choice material for pipelines, aircraft structures, and bridges. Its alloys with titanium and zirconium appear in superalloys for jet engines. Niobium truly shines in superconductivity: the superconducting magnets of particle accelerators (like those at CERN), MRI machines, and tokamaks (experimental fusion reactors) rely on niobium-titanium (NbTi) or niobium-tin (Nb\u2083Sn) wires.",
-              "Niobium pentoxide (Nb\u2082O\u2085) is a cornerstone compound in niobium chemistry, used to produce electronic capacitors and specialty glasses. Halides such as niobium pentachloride (NbCl\u2085) act as precursors for refining the pure metal. In ceramics and optics, lithium niobate (LiNbO\u2083) is an essential piezoelectric and electro-optic material for lasers and telecommunications devices. Niobium stands out for the diversity of its compounds, from reactor cores to delicate light waves.",
+              "Niobium is a metal for advanced engineering. Added in very small amounts to steel, it significantly boosts strength and toughness, making it a choice material for pipelines, aircraft structures, and bridges. Its alloys with titanium and zirconium appear in superalloys for jet engines. Niobium truly shines in superconductivity: the superconducting magnets of particle accelerators (like those at CERN), MRI machines, and tokamaks (experimental fusion reactors) rely on niobium-titanium (NbTi) or niobium-tin (Nb₃Sn) wires.",
+              "Niobium pentoxide (Nb₂O₅) is a cornerstone compound in niobium chemistry, used to produce electronic capacitors and specialty glasses. Halides such as niobium pentachloride (NbCl₅) act as precursors for refining the pure metal. In ceramics and optics, lithium niobate (LiNbO₃) is an essential piezoelectric and electro-optic material for lasers and telecommunications devices. Niobium stands out for the diversity of its compounds, from reactor cores to delicate light waves.",
               "Niobium is a metal of balance: solid without being heavy, stable yet responsive to the right partners, rare but indispensable. Born in stars and extracted from deep rocks, it now supports the most advanced technologies — the ones that probe matter, the human body, and the universe. From steel structures to superconducting magnetic fields, niobium embodies the quiet power of modern science."
             ],
             "sources": []
@@ -2995,11 +2990,11 @@
           "details": {
             "summary": "Dense, high-melting molybdenum (Mo, 42) fortifies alloys while quietly sustaining the chemistry of life.",
             "paragraphs": [
-              "Symbol \u201cMo\u201d, atomic number 42, molybdenum is a silvery-gray metal that is dense, hard, and endowed with a very high melting point (2,623 \u00b0C). Its name comes from the Greek molybdos, meaning \u201clead,\u201d because it was long confused with that metal. Only at the end of the 18th century, thanks to Swedish chemist Carl Wilhelm Scheele, was molybdenum identified as a distinct element. Today it is recognized as a strategic metal, indispensable for specialty steels and — more surprisingly — for the metabolism of almost all life forms.",
+              "Symbol “Mo”, atomic number 42, molybdenum is a silvery-gray metal that is dense, hard, and endowed with a very high melting point (2,623 °C). Its name comes from the Greek molybdos, meaning “lead,” because it was long confused with that metal. Only at the end of the 18th century, thanks to Swedish chemist Carl Wilhelm Scheele, was molybdenum identified as a distinct element. Today it is recognized as a strategic metal, indispensable for specialty steels and — more surprisingly — for the metabolism of almost all life forms.",
               "Molybdenum is forged in stellar nucleosynthesis, forming during supernovae and through both slow and rapid neutron-capture reactions (the s- and r-processes). Its presence in meteorites attests to its cosmic antiquity: some isotopes, such as ^92Mo and ^100Mo, can be created only under the extreme conditions of stellar explosions. It stands among the heavy transition metals that link the chemistry of stars to that of rocky planets.",
-              "On Earth, molybdenum is relatively rare (about 1.2 ppm in the crust), yet it concentrates in certain ores, chiefly molybdenite (MoS\u2082), a black-silver sulfide that is the near-exclusive source of the element. Smaller amounts also occur in wulfenite (PbMoO\u2084). Chile, the United States, and China are the main producers, and extraction often accompanies copper mining, with which molybdenum frequently coexists.",
-              "Molybdenum is first and foremost an alloy enhancer: a few percent added to steel markedly improve resistance to heat, corrosion, and pressure. It appears in stainless steels, turbines, drills, pipelines, and military hardware. It also features in solid lubricants (molybdenum disulfide, MoS\u2082, acts as a slippery protective film), in petrochemical catalysis, and in electrodes. Yet molybdenum has a second, quieter mission: it is a biologically essential element. As a cofactor, it enables enzymes that fix nitrogen in plants and detoxify certain compounds in animals.",
-              "Molybdenite (MoS\u2082) is both the principal natural ore and a high-performance engineering material, also used in lubricants. Molybdenum trioxide (MoO\u2083) is a common catalyst in the chemical industry. In living organisms, the molybdenum cofactor (Moco) is an organometallic complex critical to several enzymes, notably nitrate reductases and xanthine oxidases. This dual metallic and biological life makes its chemistry particularly rich.",
+              "On Earth, molybdenum is relatively rare (about 1.2 ppm in the crust), yet it concentrates in certain ores, chiefly molybdenite (MoS₂), a black-silver sulfide that is the near-exclusive source of the element. Smaller amounts also occur in wulfenite (PbMoO₄). Chile, the United States, and China are the main producers, and extraction often accompanies copper mining, with which molybdenum frequently coexists.",
+              "Molybdenum is first and foremost an alloy enhancer: a few percent added to steel markedly improve resistance to heat, corrosion, and pressure. It appears in stainless steels, turbines, drills, pipelines, and military hardware. It also features in solid lubricants (molybdenum disulfide, MoS₂, acts as a slippery protective film), in petrochemical catalysis, and in electrodes. Yet molybdenum has a second, quieter mission: it is a biologically essential element. As a cofactor, it enables enzymes that fix nitrogen in plants and detoxify certain compounds in animals.",
+              "Molybdenite (MoS₂) is both the principal natural ore and a high-performance engineering material, also used in lubricants. Molybdenum trioxide (MoO₃) is a common catalyst in the chemical industry. In living organisms, the molybdenum cofactor (Moco) is an organometallic complex critical to several enzymes, notably nitrate reductases and xanthine oxidases. This dual metallic and biological life makes its chemistry particularly rich.",
               "Molybdenum bridges inert matter and living systems: a smith for the toughest alloys, yet a discreet cofactor of metabolism. Born in supernovae, present in rocks, and essential within cells, it perfectly illustrates the continuity between the physical laws of the cosmos and the biochemical machinery of life. A metal of strength and finesse, molybdenum is a true universal craftsman."
             ],
             "sources": []

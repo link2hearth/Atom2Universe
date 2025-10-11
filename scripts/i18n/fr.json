@@ -64,59 +64,84 @@
       },
       "table": {
         "aria": "Tableau périodique des éléments",
-        "placeholder": "Sélectionnez un élément pour afficher ses détails.",
+        "placeholder": "Sélectionnez un élément pour afficher ses propriétés.",
         "details": {
-          "collection": "Bonus de collection"
+          "family": "Famille",
+          "collection": "Collection"
         },
         "summary": {
-          "title": "Collection",
-          "current": "Éléments possédés",
-          "lifetime": "Éléments découverts"
+          "title": "Total des éléments",
+          "current": "Actuels",
+          "lifetime": "Collectés au total"
+        },
+        "modal": {
+          "title": "{name} ({symbol})",
+          "titleNameOnly": "{name}",
+          "titleSymbolOnly": "{symbol}",
+          "titleFallback": "Élément {number}",
+          "comingSoon": "À venir",
+          "close": "Fermer",
+          "open": "Ouvrir la fiche détaillée de {name}",
+          "openSymbol": "Ouvrir la fiche détaillée de {symbol}",
+          "sourcesLabel": "Sources"
+        },
+        "family": {
+          "open": "{label} : {family}. Ouvrir la fiche dédiée.",
+          "modal": {
+            "title": "Famille · {family}",
+            "placeholder": "Description de la famille à venir."
+          }
         }
       },
       "fusion": {
-        "title": "Chambre de fusion quantique",
-        "intro": "Assemblez des éléments pour tenter des fusions aux effets uniques.",
-        "logPlaceholder": "Les résultats de fusion apparaîtront ici."
+        "title": "Chambre de fusion moléculaire",
+        "intro": "Combinez vos éléments pour tenter de former des molécules inédites. Les ingrédients sont prélevés sur vos stocks actuels et la réussite n’est jamais garantie."
       },
       "info": {
-        "title": "Tableau de bord des statistiques",
+        "title": "Informations de progression",
         "aps": {
-          "title": "Production passive (APS)",
-          "subtitle": "Répartition détaillée de vos gains automatiques.",
-          "aria": "Répartition de la production passive",
-          "placeholder": "Les détails de production passive apparaîtront ici."
+          "title": "Production automatique (APS)",
+          "subtitle": "Synthèse par seconde",
+          "aria": "Détail du calcul APS"
         },
         "apc": {
-          "title": "Production par clic (APC)",
-          "subtitle": "Analyse de la puissance générée à chaque clic.",
-          "aria": "Répartition de la production par clic",
-          "placeholder": "La répartition de la production par clic apparaîtra ici."
+          "title": "Production manuelle (APC)",
+          "subtitle": "Atomes par clic",
+          "aria": "Détail du calcul APC"
         },
         "progress": {
-          "title": "Progression du joueur",
-          "subtitle": "Suivi des performances de la session et de l’historique.",
+          "title": "Progression",
+          "subtitle": "Session & globale",
           "session": {
-            "title": "Session en cours",
-            "atoms": "Atomes générés",
-            "clicks": "Clics enregistrés",
-            "apc": "APC cumulés",
-            "aps": "APS cumulés",
-            "offline": "Collecte hors ligne",
-            "duration": "Durée de la session",
+            "title": "Session",
+            "atoms": "Atomes gagnés",
+            "clicks": "Clics manuels",
+            "apc": "Atomes via APC",
+            "aps": "Atomes via APS",
+            "offline": "Atomes hors ligne",
+            "duration": "Durée en ligne",
             "frenzySingle": "Record frénésie (30 s)",
             "frenzyMulti": "Record frénésie (chaîne)"
           },
           "global": {
-            "title": "Historique global",
-            "atoms": "Total d’atomes",
-            "clicks": "Total de clics",
-            "apc": "APC cumulés",
-            "aps": "APS cumulés",
-            "offline": "Collecte hors ligne",
-            "duration": "Temps de jeu",
+            "title": "Globale",
+            "atoms": "Atomes gagnés",
+            "clicks": "Clics manuels",
+            "apc": "Atomes via APC",
+            "aps": "Atomes via APS",
+            "offline": "Atomes hors ligne",
+            "duration": "Durée de jeu",
             "frenzySingle": "Record frénésie (30 s)",
             "frenzyMulti": "Record frénésie (chaîne)"
+          },
+          "photon": {
+            "title": "Photon",
+            "distance": "Distance cumulée",
+            "distanceUnit": "m",
+            "speed": "Vitesse maximale",
+            "speedUnit": "km/h",
+            "altitude": "Altitude maximale",
+            "altitudeUnit": "m"
           },
           "frenzy": {
             "empty": "—",
@@ -130,18 +155,22 @@
           "subtitle": "Visualisez les trophées obtenus au cours de votre aventure.",
           "empty": "Aucun trophée complété pour le moment. Terminez des objectifs pour les afficher ici."
         },
+        "calculations": {
+          "title": "Calculs de production",
+          "subtitle": "Décomposition des gains automatiques et manuels"
+        },
         "shop": {
-          "title": "Bonus de boutique",
-          "subtitle": "Effets obtenus auprès des améliorations achetées."
+          "title": "Bonus boutique",
+          "subtitle": "Effets cumulés du magasin"
         },
         "elements": {
-          "title": "Bonus des éléments",
-          "subtitle": "Effets cumulés de vos collections élémentaires."
+          "title": "Bonus éléments",
+          "subtitle": "Nucléosynthèse primordiale · Spallation cosmique · Étoiles simples · Supernovae · Étoiles massives · Artificiels"
         }
       },
       "bigbang": {
         "title": "Big Bang",
-        "description": "Déclenchez une renaissance cosmique pour multiplier vos gains et tout recommencer."
+        "description": "A venir"
       },
       "arcade": {
         "aria": "Mini-jeu Particules",
@@ -272,18 +301,118 @@
           "population": "Population"
         },
         "patterns": {
-          "title": "Motifs emblématiques",
-          "selectLabel": "Choisir un motif",
-          "none": "Aucun motif",
+          "acorn": "Gland",
+          "acornDescription": "Un méthusalem de sept cellules qui met de nombreuses générations à se stabiliser.",
+          "beacon": "Balise",
+          "beaconDescription": "Deux blocs qui s’allument en alternance toutes les deux générations.",
+          "beaconPair": "Paire de balises",
+          "beaconPairDescription": "Deux balises clignotant en phase pour créer un signal rythmique.",
+          "beehive": "Ruche",
+          "beehiveDescription": "Six cellules qui dessinent une alvéole immobile.",
+          "beehivePairHorizontal": "Paire de ruches",
+          "beehivePairHorizontalDescription": "Deux ruches côte à côte séparées par une case.",
+          "blinker": "Clignotant",
+          "blinkerCross": "Croix de clignotants",
+          "blinkerCrossDescription": "Quatre clignotants formant une croix lumineuse.",
+          "blinkerDescription": "L’oscillateur de période 2 le plus célèbre, composé de trois cellules.",
+          "blinkerPairHorizontal": "Paire de clignotants",
+          "blinkerPairHorizontalDescription": "Deux clignotants synchronisés séparés par un espace.",
+          "block": "Bloc",
+          "blockAndBeehive": "Bloc et ruche",
+          "blockAndBeehiveDescription": "Un bloc associé à une ruche pour un petit jardin immobile.",
+          "blockDescription": "Un motif stable 2×2 qui reste figé pour toujours.",
+          "blockPairHorizontal": "Paire de blocs (horizontale)",
+          "blockPairHorizontalDescription": "Deux blocs séparés alignés horizontalement.",
+          "blockPairVertical": "Paire de blocs (verticale)",
+          "blockPairVerticalDescription": "Deux blocs séparés empilés verticalement.",
+          "blockRing": "Anneau de blocs",
+          "blockRingDescription": "Un large anneau composé de quatre blocs espacés.",
+          "blockSquare": "Carré de blocs",
+          "blockSquareDescription": "Quatre blocs disposés aux coins d’un carré creux.",
+          "boat": "Bateau",
+          "boatDescription": "Un petit bateau de cinq cellules qui reste stable.",
+          "boatFleet": "Flotte de bateaux",
+          "boatFleetDescription": "Trois bateaux alignés qui forment une petite flotte.",
+          "boatTie": "Nœud de bateaux",
+          "boatTieDescription": "Deux bateaux soudés par un coin forment ce motif stable.",
+          "cappedBoat": "Bateau coiffé",
+          "cappedBoatDescription": "Un bateau coiffé d’un bloc supplémentaire qui le stabilise.",
+          "cornerBoat": "Bateau d’angle",
+          "cornerBoatDescription": "Une variante du bateau en crochet qui épouse un angle.",
+          "diagonalLongBoat": "Bateau long diagonal",
+          "diagonalLongBoatDescription": "Un bateau long aligné sur la diagonale, très utile comme absorbeur.",
+          "diehard": "Dur à cuire",
+          "diehardDescription": "Un motif rare qui survit 130 générations avant de disparaître.",
           "empty": "Les motifs seront chargés automatiquement.",
+          "fishhook": "Hameçon",
+          "fishhookDescription": "Un petit crochet en forme d’hameçon, stable et utile pour détourner les signaux.",
           "glider": "Planeur",
           "gliderDescription": "Un motif minimaliste qui voyage en diagonale à l’infini.",
+          "gliderNE": "Planeur (nord-est)",
+          "gliderNEDescription": "Un planeur tourné pour voyager sur une autre diagonale.",
+          "gliderNW": "Planeur (nord-ouest)",
+          "gliderNWDescription": "Un planeur tourné pour voyager sur une autre diagonale.",
+          "gliderSW": "Planeur (sud-ouest)",
+          "gliderSWDescription": "Un planeur tourné pour voyager sur une autre diagonale.",
+          "gosperGliderGun": "Canon à planeurs",
+          "gosperGliderGunDescription": "Le premier canon infini, émettant des planeurs à intervalles réguliers.",
+          "layeredBoat": "Bateau superposé",
+          "layeredBoatDescription": "Une variante superposée dont la poupe est doublée.",
           "lightweightSpaceship": "Vaisseau léger",
           "lightweightSpaceshipDescription": "Un vaisseau rapide idéal pour transporter des signaux.",
+          "lightweightSpaceshipNorth": "Vaisseau léger (nord)",
+          "lightweightSpaceshipNorthDescription": "Le vaisseau léger pivoté pour voyager selon un autre axe.",
+          "lightweightSpaceshipSouth": "Vaisseau léger (sud)",
+          "lightweightSpaceshipSouthDescription": "Le vaisseau léger pivoté pour voyager selon un autre axe.",
+          "lightweightSpaceshipWest": "Vaisseau léger (ouest)",
+          "lightweightSpaceshipWestDescription": "Le vaisseau léger pivoté pour voyager selon un autre axe.",
+          "loaf": "Pain de sucre",
+          "loafAndBoat": "Pain et bateau",
+          "loafAndBoatDescription": "Un pain de sucre qui veille sur un bateau voisin.",
+          "loafDescription": "Un motif compact rappelant la forme d’un pain de sucre.",
+          "loafPairDiagonal": "Paire de pains diagonale",
+          "loafPairDiagonalDescription": "Deux pains de sucre disposés en diagonale pour éviter toute interaction.",
+          "longBoat": "Bateau long",
+          "longBoatDescription": "Un bateau allongé dont la poupe s’étire sur une case supplémentaire.",
+          "mirroredHook": "Crochet miroir",
+          "mirroredHookDescription": "Un crochet symétrique que l’on retrouve souvent parmi les absorbeurs.",
+          "none": "Aucun motif",
+          "offsetBoat": "Bateau décalé",
+          "offsetBoatDescription": "Un bateau de sept cellules dont la coque est décalée en diagonale.",
+          "piHeptomino": "Heptomino Pi",
+          "piHeptominoDescription": "Sept cellules disposées comme la lettre grecque π.",
           "pulsar": "Pulsar",
           "pulsarDescription": "Un oscillateur majestueux de période 3.",
-          "gosperGliderGun": "Canon à planeurs",
-          "gosperGliderGunDescription": "Le premier canon infini, émettant des planeurs à intervalles réguliers."
+          "rPentomino": "Pentomino R",
+          "rPentominoDescription": "Un méthusalem célèbre qui déclenche une évolution chaotique.",
+          "selectLabel": "Choisir un motif",
+          "shiftedBoat": "Bateau décalé",
+          "shiftedBoatDescription": "Un bateau penché dont la poupe est décalée.",
+          "ship": "Navire",
+          "shipDescription": "Un navire immobile composé de six cellules.",
+          "shipPair": "Paire de navires",
+          "shipPairDescription": "Deux navires amarrés avec assez d’espace pour rester stables.",
+          "skewedLongBoat": "Bateau long penché",
+          "skewedLongBoatDescription": "Un bateau long étiré sur un axe diagonal.",
+          "spurBoat": "Bateau éperon",
+          "spurBoatDescription": "Un motif à sept cellules en forme de crochet, souvent utilisé comme absorbeur.",
+          "stillLifeGarden": "Jardin immobile",
+          "stillLifeGardenDescription": "Un petit jardin composé d’un bloc, d’une baignoire et d’un bateau.",
+          "tailBoat": "Bateau à queue",
+          "tailBoatDescription": "Une variante de bateau dotée d’une queue capable d’attraper des planeurs.",
+          "title": "Motifs emblématiques",
+          "toad": "Crapaud",
+          "toadDescription": "Un oscillateur de période 2 en forme de crapaud.",
+          "toadPair": "Paire de crapauds",
+          "toadPairDescription": "Deux crapauds qui oscillent en parallèle.",
+          "tub": "Baignoire",
+          "tubDescription": "Quatre cellules qui dessinent une petite baignoire stable.",
+          "tubPair": "Paire de baignoires",
+          "tubPairDescription": "Deux baignoires séparées en diagonale.",
+          "tubRing": "Anneau de baignoires",
+          "tubRingDescription": "Quatre baignoires disposées en anneau.",
+          "twistedBoat": "Bateau torsadé",
+          "twistedBoatDescription": "Une variante torsadée dont la proue se replie vers l’intérieur."
         },
         "random": {
           "title": "Génération aléatoire",
@@ -578,116 +707,6 @@
         "freePlay": "Mode libre",
         "return": "Retourner au clicker",
         "creditStatus": "Crédits Mach3 restants : 0"
-      },
-      "table": {
-        "aria": "Tableau périodique des éléments",
-        "placeholder": "Sélectionnez un élément pour afficher ses propriétés.",
-        "details": {
-          "family": "Famille",
-          "collection": "Collection"
-        },
-        "summary": {
-          "title": "Total des éléments",
-          "current": "Actuels",
-          "lifetime": "Collectés au total"
-        },
-        "modal": {
-          "title": "{name} ({symbol})",
-          "titleNameOnly": "{name}",
-          "titleSymbolOnly": "{symbol}",
-          "titleFallback": "Élément {number}",
-          "comingSoon": "À venir",
-          "close": "Fermer",
-          "open": "Ouvrir la fiche détaillée de {name}",
-          "openSymbol": "Ouvrir la fiche détaillée de {symbol}",
-          "sourcesLabel": "Sources"
-        },
-        "family": {
-          "open": "{label} : {family}. Ouvrir la fiche dédiée.",
-          "modal": {
-            "title": "Famille · {family}",
-            "placeholder": "Description de la famille à venir."
-          }
-        }
-      },
-      "fusion": {
-        "title": "Chambre de fusion moléculaire",
-        "intro": "Combinez vos éléments pour tenter de former des molécules inédites. Les ingrédients sont prélevés sur vos stocks actuels et la réussite n’est jamais garantie."
-      },
-      "info": {
-        "title": "Informations de progression",
-        "aps": {
-          "title": "Production automatique (APS)",
-          "subtitle": "Synthèse par seconde",
-          "aria": "Détail du calcul APS"
-        },
-        "apc": {
-          "title": "Production manuelle (APC)",
-          "subtitle": "Atomes par clic",
-          "aria": "Détail du calcul APC"
-        },
-        "progress": {
-          "title": "Progression",
-          "subtitle": "Session & globale",
-          "session": {
-            "title": "Session",
-            "atoms": "Atomes gagnés",
-            "clicks": "Clics manuels",
-            "apc": "Atomes via APC",
-            "aps": "Atomes via APS",
-            "offline": "Atomes hors ligne",
-            "duration": "Durée en ligne",
-            "frenzySingle": "Record frénésie (30 s)",
-            "frenzyMulti": "Record frénésie (chaîne)"
-          },
-          "global": {
-            "title": "Globale",
-            "atoms": "Atomes gagnés",
-            "clicks": "Clics manuels",
-            "apc": "Atomes via APC",
-            "aps": "Atomes via APS",
-            "offline": "Atomes hors ligne",
-            "duration": "Durée de jeu",
-            "frenzySingle": "Record frénésie (30 s)",
-            "frenzyMulti": "Record frénésie (chaîne)"
-          },
-          "photon": {
-            "title": "Photon",
-            "distance": "Distance cumulée",
-            "distanceUnit": "m",
-            "speed": "Vitesse maximale",
-            "speedUnit": "km/h",
-            "altitude": "Altitude maximale",
-            "altitudeUnit": "m"
-          },
-          "frenzy": {
-            "empty": "—",
-            "singleValue": "{count} clics",
-            "multiValueSingle": "{count} clics · {frenzies} frén.",
-            "multiValue": "{count} clics · {frenzies} frén."
-          }
-        },
-        "achievements": {
-          "title": "Succès débloqués",
-          "subtitle": "Visualisez les trophées obtenus au cours de votre aventure.",
-          "empty": "Aucun trophée complété pour le moment. Terminez des objectifs pour les afficher ici."
-        },
-        "calculations": {
-          "title": "Calculs de production",
-          "subtitle": "Décomposition des gains automatiques et manuels"
-        },
-        "shop": {
-          "title": "Bonus boutique",
-          "subtitle": "Effets cumulés du magasin"
-        },
-        "elements": {
-          "title": "Bonus éléments",
-          "subtitle": "Nucléosynthèse primordiale · Spallation cosmique · Étoiles simples · Supernovae · Étoiles massives · Artificiels"
-        }
-      },
-      "bigbang": {
-        "title": "Big Bang",
-        "description": "A venir"
       },
       "options": {
         "title": "Options",
@@ -1334,9 +1353,9 @@
       "subtitle": "Choisissez la zone à pratiquer et visualisez-la sur la plage sélectionnée.",
       "layoutLabel": "Nombre de touches",
       "layoutOptions": {
-        "88": "88 touches (A0 – C8)",
+        "61": "61 touches (C2 – C7)",
         "76": "76 touches (E1 – G7)",
-        "61": "61 touches (C2 – C7)"
+        "88": "88 touches (A0 – C8)"
       },
       "windowLabel": "Octaves affichées",
       "windowOptions": {
@@ -1357,11 +1376,57 @@
   },
   "scripts": {
     "config": {
-      "themes": {
-        "dark": "Thème sombre",
-        "light": "Thème clair",
-        "neon": "Thème néon",
-        "aurora": "Thème Aurore"
+      "uiText": {
+        "options": {
+          "welcomeCard": {
+            "title": "Bienvenue",
+            "intro": "Bienvenue dans Atom to Univers, commencez en cliquant pour gagner des Atomes (APC Atoms Par Clic), achetez des améliorations dans le magasin et automatisez la récolte (APS Atoms Par Seconde). Débloquez des minis jeux au fur et à mesure de votre progression. L’objectif est d’accumuler le plus possible d’Atomes pour fabriquer un Univers. Les grands nombres utilisent une notation abrégée très simple : 1.0e6 signifie 1 000 000 (1.0 × 10^6) et le chiffre après « e » indique combien de zéros suivent.",
+            "details": {
+              "particles": {
+                "label": "Mini Jeu Particules :",
+                "description": "Collisionnez les particules élémentaires afin de gagner des tickets de tirage pour le Gacha, et des crédits pour le mini jeu Mach3."
+              },
+              "gacha": {
+                "label": "Gacha :",
+                "description": "Grâce à vos tickets gagnez des Atomes du tableau périodique des éléments, leurs collections vous octroieront des bonus de APS et APC notamment."
+              },
+              "match3": {
+                "label": "Mini jeu Mach3 :",
+                "description": "C’est un jeu de Match 3, alignez le Cuivre, le Bronze, l’Argent, l’Or et le Carbone (Diamant) le plus vite possible avant que le timer atteigne 0. Plus votre score sera grand, plus grand sera votre bonus de production d’APS."
+              }
+            }
+          }
+        }
+      },
+      "elementBonuses": {
+        "collectionMultiplier": "Synergie de collection · Résonance unifiée",
+        "essentiel": {
+          "perCopy": "Spallation cosmique · récoltes essentielles",
+          "setBonus": "Spallation cosmique · collection complète",
+          "multiplier": "Spallation cosmique · synergie orbitale"
+        },
+        "stellaire": {
+          "perCopy": "Étoiles simples · fragments activés",
+          "setBonus": "Étoiles simples · forge parfaite",
+          "multiplier": "Étoiles simples · intensité stellaire",
+          "labels": {
+            "perCopy": "Étoiles simples · fragments"
+          }
+        },
+        "singulier": {
+          "perCopy": "Supernovae · résonance cristalline",
+          "multiplier": "Supernovae · densité extrême"
+        },
+        "mythique": {
+          "setBonus": "Étoiles massives · convergence ultime",
+          "ticketBonus": "Étoiles massives · étoile compressée",
+          "offlineBonus": "Étoiles massives · collecte persistante",
+          "duplicateOverflow": "Étoiles massives · surcharge fractale",
+          "frenzyBonus": "Étoiles massives · catalyseur de frénésie"
+        },
+        "irreel": {
+          "multiplier": "Artificiels · catalyseur dimensionnel"
+        }
       }
     },
     "arcade": {
@@ -1371,8 +1436,8 @@
           "needBlocks": "Ajoutez au moins un bloc sur la planche avant de tester.",
           "needAllBlocks": "Placez tous les blocs sur la planche avant de tester.",
           "success": "Équilibre parfait !",
-          "leanLeft": "La planche penche à gauche (écart\u00a0: {offset}).",
-          "leanRight": "La planche penche à droite (écart\u00a0: {offset}).",
+          "leanLeft": "La planche penche à gauche (écart : {offset}).",
+          "leanRight": "La planche penche à droite (écart : {offset}).",
           "returned": "Bloc renvoyé dans l’inventaire."
         },
         "sets": {
@@ -1468,7 +1533,6 @@
           }
         },
         "ranks": {
-          "A": "As",
           "2": "Deux",
           "3": "Trois",
           "4": "Quatre",
@@ -1478,6 +1542,7 @@
           "8": "Huit",
           "9": "Neuf",
           "10": "Dix",
+          "A": "As",
           "J": "Valet",
           "Q": "Dame",
           "K": "Roi"
@@ -1492,70 +1557,72 @@
       }
     },
     "particules": {
+      "graviton": {
+        "detected": "Graviton détecté !",
+        "dissipated": "Le graviton s’est dissipé…",
+        "captured": "Graviton capturé ! Ticket spécial +1"
+      },
+      "combos": {
+        "bonusPrefix": "Bonus: ",
+        "quarkPrefix": "Combo quark ! "
+      },
+      "lingerBonus": {
+        "message": "Multiballe bonus !"
+      },
+      "powerUps": {
+        "extend": "Barre allongée",
+        "multiball": "Multiballe",
+        "laser": "Tir laser",
+        "speed": "Accélération",
+        "floor": "Bouclier inférieur"
+      },
       "ui": {
+        "start": {
+          "message": "Touchez ou cliquez la raquette pour guider la particule et détruire les briques quantiques.",
+          "button": "Commencer"
+        },
+        "pause": {
+          "message": "Partie en pause. Touchez la raquette pour continuer.",
+          "button": "Reprendre"
+        },
+        "lifeLost": {
+          "message": "Particule perdue ! Touchez la raquette pour continuer.",
+          "button": "Reprendre"
+        },
+        "levelCleared": {
+          "template": "Niveau {level} terminé !{reward}",
+          "button": "Continuer",
+          "quitButton": "Quitter la partie",
+          "reward": " {reward} obtenu !",
+          "noReward": " Aucun ticket cette fois.",
+          "speedBonus": " Bonus vitesse : +{bonus} !"
+        },
+        "gameOver": {
+          "withTickets": "Partie terminée ! Tickets gagnés : {tickets}{bonus}.",
+          "withoutTickets": "Partie terminée ! Aucun ticket gagné cette fois-ci.",
+          "button": "Rejouer"
+        },
+        "hud": {
+          "ticketSingular": "ticket",
+          "ticketPlural": "tickets",
+          "bonusTicketSingular": "ticket Mach3",
+          "bonusTicketPlural": "tickets Mach3"
+        },
+        "overlay": {
+          "defaultButton": "Continuer"
+        },
         "mode": {
+          "aria": "Choisissez le mode de jeu Particules",
           "free": {
-            "description": "Entraînez-vous sans dépenser d’Atomes ni gagner de récompenses."
+            "title": "Mode libre",
+            "description": "Entraînez-vous sans dépenser d’atomes ni gagner de récompenses."
           },
           "paid": {
+            "title": "Mode récompenses",
             "description": "Consommez {percent} de vos Atomes pour tenter de gagner des tickets de tirage d’éléments.",
-            "debit": "{cost} Atomes dépensés pour activer le mode récompenses.",
-            "insufficient": "Pas assez d’Atomes pour activer le mode récompenses."
+            "insufficient": "Atomes insuffisants pour lancer le mode récompenses.",
+            "debit": "Mode récompenses : -{cost} atomes"
           }
-        }
-      }
-    },
-    "config": {
-      "uiText": {
-        "options": {
-          "welcomeCard": {
-            "title": "Bienvenue",
-            "intro": "Bienvenue dans Atom to Univers, commencez en cliquant pour gagner des Atomes (APC Atoms Par Clic), achetez des améliorations dans le magasin et automatisez la récolte (APS Atoms Par Seconde). Débloquez des minis jeux au fur et à mesure de votre progression. L’objectif est d’accumuler le plus possible d’Atomes pour fabriquer un Univers. Les grands nombres utilisent une notation abrégée très simple : 1.0e6 signifie 1 000 000 (1.0 × 10^6) et le chiffre après « e » indique combien de zéros suivent.",
-            "details": {
-              "particles": {
-                "label": "Mini Jeu Particules :",
-                "description": "Collisionnez les particules élémentaires afin de gagner des tickets de tirage pour le Gacha, et des crédits pour le mini jeu Mach3."
-              },
-              "gacha": {
-                "label": "Gacha :",
-                "description": "Grâce à vos tickets gagnez des Atomes du tableau périodique des éléments, leurs collections vous octroieront des bonus de APS et APC notamment."
-              },
-              "match3": {
-                "label": "Mini jeu Mach3 :",
-                "description": "C’est un jeu de Match 3, alignez le Cuivre, le Bronze, l’Argent, l’Or et le Carbone (Diamant) le plus vite possible avant que le timer atteigne 0. Plus votre score sera grand, plus grand sera votre bonus de production d’APS."
-              }
-            }
-          }
-        }
-      },
-      "elementBonuses": {
-        "collectionMultiplier": "Synergie de collection · Résonance unifiée",
-        "essentiel": {
-          "perCopy": "Spallation cosmique · récoltes essentielles",
-          "setBonus": "Spallation cosmique · collection complète",
-          "multiplier": "Spallation cosmique · synergie orbitale"
-        },
-        "stellaire": {
-          "perCopy": "Étoiles simples · fragments activés",
-          "setBonus": "Étoiles simples · forge parfaite",
-          "multiplier": "Étoiles simples · intensité stellaire",
-          "labels": {
-            "perCopy": "Étoiles simples · fragments"
-          }
-        },
-        "singulier": {
-          "perCopy": "Supernovae · résonance cristalline",
-          "multiplier": "Supernovae · densité extrême"
-        },
-        "mythique": {
-          "setBonus": "Étoiles massives · convergence ultime",
-          "ticketBonus": "Étoiles massives · étoile compressée",
-          "offlineBonus": "Étoiles massives · collecte persistante",
-          "duplicateOverflow": "Étoiles massives · surcharge fractale",
-          "frenzyBonus": "Étoiles massives · catalyseur de frénésie"
-        },
-        "irreel": {
-          "multiplier": "Artificiels · catalyseur dimensionnel"
         }
       }
     },
@@ -2190,76 +2257,6 @@
         "nobleGas": "gaz noble",
         "lanthanide": "lanthanide",
         "actinide": "actinide"
-      }
-    },
-    "particules": {
-      "graviton": {
-        "detected": "Graviton détecté !",
-        "dissipated": "Le graviton s’est dissipé…",
-        "captured": "Graviton capturé ! Ticket spécial +1"
-      },
-      "combos": {
-        "bonusPrefix": "Bonus: ",
-        "quarkPrefix": "Combo quark ! "
-      },
-      "lingerBonus": {
-        "message": "Multiballe bonus !"
-      },
-      "powerUps": {
-        "extend": "Barre allongée",
-        "multiball": "Multiballe",
-        "laser": "Tir laser",
-        "speed": "Accélération",
-        "floor": "Bouclier inférieur"
-      },
-      "ui": {
-        "start": {
-          "message": "Touchez ou cliquez la raquette pour guider la particule et détruire les briques quantiques.",
-          "button": "Commencer"
-        },
-        "pause": {
-          "message": "Partie en pause. Touchez la raquette pour continuer.",
-          "button": "Reprendre"
-        },
-        "lifeLost": {
-          "message": "Particule perdue ! Touchez la raquette pour continuer.",
-          "button": "Reprendre"
-        },
-        "levelCleared": {
-          "template": "Niveau {level} terminé !{reward}",
-          "button": "Continuer",
-          "quitButton": "Quitter la partie",
-          "reward": " {reward} obtenu !",
-          "noReward": " Aucun ticket cette fois.",
-          "speedBonus": " Bonus vitesse : +{bonus} !"
-        },
-        "gameOver": {
-          "withTickets": "Partie terminée ! Tickets gagnés : {tickets}{bonus}.",
-          "withoutTickets": "Partie terminée ! Aucun ticket gagné cette fois-ci.",
-          "button": "Rejouer"
-        },
-        "hud": {
-          "ticketSingular": "ticket",
-          "ticketPlural": "tickets",
-          "bonusTicketSingular": "ticket Mach3",
-          "bonusTicketPlural": "tickets Mach3"
-        },
-        "overlay": {
-          "defaultButton": "Continuer"
-        },
-        "mode": {
-          "aria": "Choisissez le mode de jeu Particules",
-          "free": {
-            "title": "Mode libre",
-            "description": "Entraînez-vous sans dépenser d’atomes ni gagner de récompenses."
-          },
-          "paid": {
-            "title": "Mode récompenses",
-            "description": "Consommez {percent} de vos Atomes pour tenter de gagner des tickets de tirage d’éléments.",
-            "insufficient": "Atomes insuffisants pour lancer le mode récompenses.",
-            "debit": "Mode récompenses : -{cost} atomes"
-          }
-        }
       }
     },
     "info": {
@@ -2977,11 +2974,11 @@
           "details": {
             "summary": "Métal gris argenté, le niobium (Nb, 41) allie légèreté, solidité et stabilité au service des technologies avancées.",
             "paragraphs": [
-              "Symbole \u201cNb\u201d, numéro atomique 41, le niobium est un métal gris argenté, ductile, résistant à la corrosion et à la chaleur. Découvert en 1801 par l’Anglais Charles Hatchett, il fut d’abord confondu avec le tantale, son voisin chimique. Ce n’est qu’en 1846 qu’on les distingua clairement, et en 1950 que le nom \u201cniobium\u201d devint officiel à l’international. Métal de la patience et de la précision, le niobium combine légèreté, solidité et stabilité — un trio idéal pour les technologies de pointe.",
+              "Symbole “Nb”, numéro atomique 41, le niobium est un métal gris argenté, ductile, résistant à la corrosion et à la chaleur. Découvert en 1801 par l’Anglais Charles Hatchett, il fut d’abord confondu avec le tantale, son voisin chimique. Ce n’est qu’en 1846 qu’on les distingua clairement, et en 1950 que le nom “niobium” devint officiel à l’international. Métal de la patience et de la précision, le niobium combine légèreté, solidité et stabilité — un trio idéal pour les technologies de pointe.",
               "Le niobium se forme dans les supernovae et dans les processus de capture lente de neutrons (s-process), comme les autres métaux de transition lourds. Sa rareté relative dans l’univers reflète le caractère sporadique de ces réactions nucléaires. On le retrouve en traces dans les météorites ferreuses et pierreuses, preuve de son héritage stellaire. Sa stabilité isotopique en fait un bon témoin des environnements de nucléosynthèse anciens.",
               "Sur Terre, le niobium est rare (environ 20 ppm dans la croûte), mais il se concentre dans quelques minéraux spécifiques : le coltan (colombo-tantalite), la pyrochlore et l’euxénite. Ces minerais contiennent souvent du tantale, ce qui explique leur confusion historique. Les plus grands gisements se trouvent au Brésil et au Canada, qui fournissent ensemble plus de 90 % de la production mondiale. Malgré sa rareté, il n’est pas considéré comme critique en disponibilité, car ses sources sont concentrées mais stables.",
-              "Le niobium est un métal de haute technologie. Ajouté en très faibles quantités à l’acier, il améliore considérablement sa résistance et sa ténacité : il est donc utilisé dans les pipelines, les structures d’avions et les ponts. Ses alliages avec le titane et le zirconium sont employés dans les superalliages des moteurs à réaction. Mais c’est surtout en supraconductivité que le niobium brille : les aimants supraconducteurs des accélérateurs de particules (comme ceux du CERN), des IRM et des tokamaks (réacteurs à fusion expérimentaux) utilisent des fils de niobium-titane (NbTi) ou de niobium-étain (Nb\u2083Sn).",
-              "Le pentoxyde de niobium (Nb\u2082O\u2085) est un composé central dans la chimie du niobium, utilisé pour produire des condensateurs électroniques et des verres spéciaux. Les halogénures, comme le pentachlorure de niobium (NbCl\u2085), servent de précurseurs pour obtenir le métal pur. En céramique et en optique, le niobate de lithium (LiNbO\u2083) est un matériau piézoélectrique et électro-optique essentiel dans les lasers et les dispositifs de télécommunication. Le niobium se distingue ainsi par la diversité de ses composés, du cœur des réacteurs à la finesse des ondes lumineuses.",
+              "Le niobium est un métal de haute technologie. Ajouté en très faibles quantités à l’acier, il améliore considérablement sa résistance et sa ténacité : il est donc utilisé dans les pipelines, les structures d’avions et les ponts. Ses alliages avec le titane et le zirconium sont employés dans les superalliages des moteurs à réaction. Mais c’est surtout en supraconductivité que le niobium brille : les aimants supraconducteurs des accélérateurs de particules (comme ceux du CERN), des IRM et des tokamaks (réacteurs à fusion expérimentaux) utilisent des fils de niobium-titane (NbTi) ou de niobium-étain (Nb₃Sn).",
+              "Le pentoxyde de niobium (Nb₂O₅) est un composé central dans la chimie du niobium, utilisé pour produire des condensateurs électroniques et des verres spéciaux. Les halogénures, comme le pentachlorure de niobium (NbCl₅), servent de précurseurs pour obtenir le métal pur. En céramique et en optique, le niobate de lithium (LiNbO₃) est un matériau piézoélectrique et électro-optique essentiel dans les lasers et les dispositifs de télécommunication. Le niobium se distingue ainsi par la diversité de ses composés, du cœur des réacteurs à la finesse des ondes lumineuses.",
               "Le niobium est un métal de l’équilibre : solide sans être lourd, stable mais réactif aux bons partenaires, rare mais essentiel. Né dans les étoiles, extrait des roches profondes, il soutient aujourd’hui les technologies les plus avancées — celles qui sondent la matière, le corps et l’univers. Des structures d’acier aux champs magnétiques supraconducteurs, le niobium incarne la puissance discrète de la modernité scientifique."
             ],
             "sources": []
@@ -2993,11 +2990,11 @@
           "details": {
             "summary": "Métal gris dense au point de fusion élevé, le molybdène (Mo, 42) renforce nos alliages tout en jouant un rôle clé dans le vivant.",
             "paragraphs": [
-              "Symbole \u201cMo\u201d, numéro atomique 42, le molybdène est un métal gris argenté, dense, dur et doté d’un point de fusion très élevé (2 623 °C). Son nom vient du grec molybdos, qui signifie \u201cplomb\u201d, car on le confondait autrefois avec lui. Ce n’est qu’à la fin du XVIII\u1d57 siècle, grâce au chimiste suédois Carl Wilhelm Scheele, qu’on identifia le molybdène comme un élément distinct. Aujourd’hui, il est reconnu comme un métal stratégique, indispensable aux aciers spéciaux et — plus étonnamment — au métabolisme de presque toute forme de vie.",
+              "Symbole “Mo”, numéro atomique 42, le molybdène est un métal gris argenté, dense, dur et doté d’un point de fusion très élevé (2 623 °C). Son nom vient du grec molybdos, qui signifie “plomb”, car on le confondait autrefois avec lui. Ce n’est qu’à la fin du XVIIIᵗ siècle, grâce au chimiste suédois Carl Wilhelm Scheele, qu’on identifia le molybdène comme un élément distinct. Aujourd’hui, il est reconnu comme un métal stratégique, indispensable aux aciers spéciaux et — plus étonnamment — au métabolisme de presque toute forme de vie.",
               "Le molybdène est un produit de la nucléosynthèse stellaire, formé lors des supernovae et des réactions de capture lente et rapide de neutrons (s et r-process). Sa présence dans les météorites témoigne de son ancienneté cosmique : certains isotopes de molybdène, comme ^92Mo et ^100Mo, ne peuvent être créés que dans les conditions extrêmes d’explosions stellaires. Il figure parmi les métaux de transition lourds qui relient la chimie des étoiles à celle des planètes rocheuses.",
-              "Sur Terre, le molybdène est relativement rare (environ 1,2 ppm dans la croûte), mais il se concentre dans certains minerais, principalement la molybdénite (MoS\u2082), un sulfure noir argenté. C’est la source quasi exclusive de l’élément. On le trouve aussi, en plus faibles quantités, dans la wulfénite (PbMoO\u2084). Le Chili, les États-Unis et la Chine en sont les principaux producteurs. Son extraction est souvent associée à celle du cuivre, dont il accompagne les gisements.",
-              "Le molybdène est avant tout un améliorateur d’alliages : quelques pourcents ajoutés à l’acier suffisent à en accroître la résistance à la chaleur, à la corrosion et à la pression. On le retrouve dans les aciers inoxydables, les turbines, les foreuses, les pipelines et les équipements militaires. Il est aussi utilisé dans les lubrifiants solides (le disulfure de molybdène, MoS\u2082, agit comme un film protecteur glissant), dans la catalyse pétrochimique et dans les électrodes. Mais le molybdène a un second rôle, plus discret et vital : c’est un élément biologique essentiel. Sous forme de cofacteur, il intervient dans des enzymes qui permettent la fixation de l’azote dans les plantes et la détoxification de certains composés chez les animaux.",
-              "La molybdénite (MoS\u2082) est le principal minerai naturel et un matériau d’ingénierie très performant, aussi utilisé dans les lubrifiants. Le trioxyde de molybdène (MoO\u2083) est un catalyseur courant dans l’industrie chimique. Dans le vivant, le cofacteur molybdène (Moco) est un complexe organométallique essentiel à plusieurs enzymes, notamment les nitrates réductases et les xanthine oxydases. Cette double vie — métallique et biologique — rend sa chimie particulièrement riche.",
+              "Sur Terre, le molybdène est relativement rare (environ 1,2 ppm dans la croûte), mais il se concentre dans certains minerais, principalement la molybdénite (MoS₂), un sulfure noir argenté. C’est la source quasi exclusive de l’élément. On le trouve aussi, en plus faibles quantités, dans la wulfénite (PbMoO₄). Le Chili, les États-Unis et la Chine en sont les principaux producteurs. Son extraction est souvent associée à celle du cuivre, dont il accompagne les gisements.",
+              "Le molybdène est avant tout un améliorateur d’alliages : quelques pourcents ajoutés à l’acier suffisent à en accroître la résistance à la chaleur, à la corrosion et à la pression. On le retrouve dans les aciers inoxydables, les turbines, les foreuses, les pipelines et les équipements militaires. Il est aussi utilisé dans les lubrifiants solides (le disulfure de molybdène, MoS₂, agit comme un film protecteur glissant), dans la catalyse pétrochimique et dans les électrodes. Mais le molybdène a un second rôle, plus discret et vital : c’est un élément biologique essentiel. Sous forme de cofacteur, il intervient dans des enzymes qui permettent la fixation de l’azote dans les plantes et la détoxification de certains composés chez les animaux.",
+              "La molybdénite (MoS₂) est le principal minerai naturel et un matériau d’ingénierie très performant, aussi utilisé dans les lubrifiants. Le trioxyde de molybdène (MoO₃) est un catalyseur courant dans l’industrie chimique. Dans le vivant, le cofacteur molybdène (Moco) est un complexe organométallique essentiel à plusieurs enzymes, notamment les nitrates réductases et les xanthine oxydases. Cette double vie — métallique et biologique — rend sa chimie particulièrement riche.",
               "Le molybdène est un pont entre la matière inerte et la matière vivante : forgeron des alliages les plus solides, mais aussi cofacteur discret du métabolisme. Né des supernovae, présent dans les roches et indispensable dans les cellules, il illustre parfaitement la continuité entre les lois physiques du cosmos et les mécanismes biochimiques du vivant. Métal de la force et de la finesse, le molybdène est un véritable artisan universel."
             ],
             "sources": []
