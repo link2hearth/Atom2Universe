@@ -3359,6 +3359,250 @@ function evaluateTrophies() {
 
 let elements = {};
 
+const RESET_DIALOG_FOCUSABLE_SELECTOR = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+
+const resetDialogState = {
+  isOpen: false,
+  previousFocus: null
+};
+
+function translateResetString(key, fallback, params) {
+  return translateOrDefault(`scripts.app.reset.${key}`, fallback, params);
+}
+
+function getResetConfirmationKeyword() {
+  const fallbackKeyword = 'RESET';
+  const translated = translateResetString('keyword', fallbackKeyword);
+  if (typeof translated === 'string' && translated.trim()) {
+    return translated.trim();
+  }
+  return fallbackKeyword;
+}
+
+function normalizeResetConfirmation(value) {
+  if (typeof value !== 'string') {
+    return '';
+  }
+  return value.trim().toUpperCase();
+}
+
+function updateResetDialogCopy() {
+  if (!elements.resetDialog) {
+    return;
+  }
+  const keyword = getResetConfirmationKeyword();
+  const descriptionFallback = `Type ${keyword} to confirm. This action cannot be undone.`;
+  if (elements.resetDialogTitle) {
+    elements.resetDialogTitle.textContent = translateOrDefault(
+      'index.sections.options.resetDialog.title',
+      'Confirm reset'
+    );
+  }
+  if (elements.resetDialogMessage) {
+    elements.resetDialogMessage.textContent = translateOrDefault(
+      'index.sections.options.resetDialog.description',
+      descriptionFallback,
+      { keyword }
+    );
+  }
+  if (elements.resetDialogLabel) {
+    elements.resetDialogLabel.textContent = translateOrDefault(
+      'index.sections.options.resetDialog.inputLabel',
+      'Confirmation word'
+    );
+  }
+  if (elements.resetDialogInput) {
+    const placeholderFallback = `Type ${keyword}`;
+    elements.resetDialogInput.placeholder = translateOrDefault(
+      'index.sections.options.resetDialog.placeholder',
+      placeholderFallback,
+      { keyword }
+    );
+  }
+  if (elements.resetDialogCancel) {
+    elements.resetDialogCancel.textContent = translateOrDefault(
+      'index.sections.options.resetDialog.cancel',
+      'Keep my progress'
+    );
+  }
+  if (elements.resetDialogConfirm) {
+    elements.resetDialogConfirm.textContent = translateOrDefault(
+      'index.sections.options.resetDialog.confirm',
+      'Reset progress'
+    );
+  }
+}
+
+function setResetDialogError(message) {
+  if (!elements.resetDialog || !elements.resetDialogError) {
+    return;
+  }
+  if (typeof message === 'string' && message.trim()) {
+    elements.resetDialogError.textContent = message.trim();
+    elements.resetDialogError.hidden = false;
+    elements.resetDialog.setAttribute('aria-describedby', 'resetDialogMessage resetDialogError');
+  } else {
+    elements.resetDialogError.textContent = '';
+    elements.resetDialogError.hidden = true;
+    elements.resetDialog.setAttribute('aria-describedby', 'resetDialogMessage');
+  }
+}
+
+function getResetDialogFocusableElements() {
+  if (!elements.resetDialog) {
+    return [];
+  }
+  return Array.from(elements.resetDialog.querySelectorAll(RESET_DIALOG_FOCUSABLE_SELECTOR))
+    .filter(node => node instanceof HTMLElement && !node.hasAttribute('disabled') && !node.hidden);
+}
+
+function handleResetDialogKeydown(event) {
+  if (!resetDialogState.isOpen) {
+    return;
+  }
+  if (event.key === 'Escape') {
+    event.preventDefault();
+    closeResetDialog({ cancelled: true });
+    return;
+  }
+  if (event.key !== 'Tab') {
+    return;
+  }
+  const focusable = getResetDialogFocusableElements();
+  if (!focusable.length) {
+    event.preventDefault();
+    return;
+  }
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+  const active = document && document.activeElement instanceof HTMLElement
+    ? document.activeElement
+    : null;
+  if (event.shiftKey) {
+    if (!active || active === first) {
+      event.preventDefault();
+      last.focus();
+    }
+  } else if (active === last) {
+    event.preventDefault();
+    first.focus();
+  }
+}
+
+function openResetDialog() {
+  if (!elements.resetDialog || !elements.resetDialogForm || !elements.resetDialogInput) {
+    handleResetPromptFallback();
+    return;
+  }
+  if (resetDialogState.isOpen) {
+    return;
+  }
+  resetDialogState.isOpen = true;
+  resetDialogState.previousFocus = document && document.activeElement instanceof HTMLElement
+    ? document.activeElement
+    : null;
+  updateResetDialogCopy();
+  setResetDialogError();
+  elements.resetDialogInput.value = '';
+  elements.resetDialog.hidden = false;
+  document.addEventListener('keydown', handleResetDialogKeydown);
+  requestAnimationFrame(() => {
+    if (elements.resetDialogInput) {
+      elements.resetDialogInput.focus();
+    }
+  });
+}
+
+function closeResetDialog({ cancelled = false } = {}) {
+  if (!resetDialogState.isOpen) {
+    return;
+  }
+  resetDialogState.isOpen = false;
+  if (elements.resetDialog) {
+    elements.resetDialog.hidden = true;
+  }
+  if (elements.resetDialogInput) {
+    elements.resetDialogInput.value = '';
+    elements.resetDialogInput.blur();
+  }
+  setResetDialogError();
+  document.removeEventListener('keydown', handleResetDialogKeydown);
+  const { previousFocus } = resetDialogState;
+  resetDialogState.previousFocus = null;
+  const focusTarget = previousFocus && typeof previousFocus.focus === 'function'
+    ? previousFocus
+    : elements.resetButton && typeof elements.resetButton.focus === 'function'
+      ? elements.resetButton
+      : null;
+  if (focusTarget) {
+    focusTarget.focus();
+  }
+  if (cancelled) {
+    showToast(translateResetString('cancelled', 'Reset cancelled'));
+  }
+}
+
+function handleResetDialogSubmit(event) {
+  event.preventDefault();
+  const keyword = getResetConfirmationKeyword();
+  const expected = normalizeResetConfirmation(keyword);
+  const provided = elements.resetDialogInput ? normalizeResetConfirmation(elements.resetDialogInput.value) : '';
+  if (provided !== expected) {
+    const invalidMessage = translateResetString('invalid', 'Incorrect confirmation word');
+    setResetDialogError(invalidMessage);
+    if (elements.resetDialogInput) {
+      elements.resetDialogInput.focus();
+      elements.resetDialogInput.select();
+    }
+    showToast(invalidMessage);
+    return;
+  }
+  closeResetDialog();
+  resetGame();
+  showToast(translateResetString('done', 'Progress reset'));
+}
+
+function handleResetDialogCancel(event) {
+  event.preventDefault();
+  closeResetDialog({ cancelled: true });
+}
+
+function handleResetDialogBackdrop(event) {
+  if (!elements.resetDialog || event.target !== elements.resetDialog) {
+    return;
+  }
+  event.preventDefault();
+  closeResetDialog({ cancelled: true });
+}
+
+function handleResetPromptFallback() {
+  const keyword = getResetConfirmationKeyword();
+  const expected = normalizeResetConfirmation(keyword);
+  const promptMessage = translateResetString(
+    'prompt',
+    `Full game reset. Type "${keyword}" to confirm.\nThis action cannot be undone.`,
+    { keyword }
+  );
+  const promptFn = typeof window !== 'undefined' && typeof window.prompt === 'function'
+    ? window.prompt
+    : null;
+  if (!promptFn) {
+    showToast(translateResetString('cancelled', 'Reset cancelled'));
+    return;
+  }
+  const response = promptFn(promptMessage);
+  if (response == null) {
+    showToast(translateResetString('cancelled', 'Reset cancelled'));
+    return;
+  }
+  if (normalizeResetConfirmation(response) !== expected) {
+    showToast(translateResetString('invalid', 'Incorrect confirmation word'));
+    return;
+  }
+  resetGame();
+  showToast(translateResetString('done', 'Progress reset'));
+}
+
 function collectDomElements() {
   return {
   brandPortal: document.getElementById('brandPortal'),
@@ -3534,6 +3778,15 @@ function collectDomElements() {
   brickSkinSelect: document.getElementById('brickSkinSelect'),
   brickSkinStatus: document.getElementById('brickSkinStatus'),
   resetButton: document.getElementById('resetButton'),
+  resetDialog: document.getElementById('resetDialog'),
+  resetDialogForm: document.getElementById('resetDialogForm'),
+  resetDialogInput: document.getElementById('resetDialogInput'),
+  resetDialogMessage: document.getElementById('resetDialogMessage'),
+  resetDialogError: document.getElementById('resetDialogError'),
+  resetDialogCancel: document.getElementById('resetDialogCancel'),
+  resetDialogConfirm: document.getElementById('resetDialogConfirm'),
+  resetDialogLabel: document.getElementById('resetDialogLabel'),
+  resetDialogTitle: document.getElementById('resetDialogTitle'),
   bigBangOptionCard: document.getElementById('bigBangOptionCard'),
   bigBangOptionToggle: document.getElementById('bigBangNavToggle'),
   infoApsBreakdown: document.getElementById('infoApsBreakdown'),
@@ -9064,6 +9317,7 @@ function bindDomEventListeners() {
           updateLanguageSelectorValue(requestedLanguage);
           refreshOptionsWelcomeContent();
           updateBrickSkinOption();
+          updateResetDialogCopy();
           updateUI();
           showToast(t('scripts.app.language.updated'));
         })
@@ -9095,6 +9349,7 @@ function bindDomEventListeners() {
       renderThemeOptions();
       renderPeriodicTable();
       updateUI();
+      updateResetDialogCopy();
     });
   }
 
@@ -9156,21 +9411,26 @@ function bindDomEventListeners() {
   }
 
   if (elements.resetButton) {
-    elements.resetButton.addEventListener('click', () => {
-      const confirmationWord = 'RESET';
-      const promptMessage = `Réinitialisation complète du jeu. Tapez "${confirmationWord}" pour confirmer.\nCette action est irréversible.`;
-      const response = prompt(promptMessage);
-      if (response == null) {
-        showToast(t('scripts.app.reset.cancelled'));
-        return;
+    if (elements.resetDialog && elements.resetDialogForm && elements.resetDialogInput) {
+      elements.resetButton.addEventListener('click', event => {
+        event.preventDefault();
+        openResetDialog();
+      });
+      elements.resetDialogForm.addEventListener('submit', handleResetDialogSubmit);
+      if (elements.resetDialogCancel) {
+        elements.resetDialogCancel.addEventListener('click', handleResetDialogCancel);
       }
-      if (response.trim().toUpperCase() !== confirmationWord) {
-        showToast(t('scripts.app.reset.invalid'));
-        return;
+      if (elements.resetDialog) {
+        elements.resetDialog.addEventListener('click', handleResetDialogBackdrop);
       }
-      resetGame();
-      showToast(t('scripts.app.reset.done'));
-    });
+      updateResetDialogCopy();
+      setResetDialogError();
+    } else {
+      elements.resetButton.addEventListener('click', event => {
+        event.preventDefault();
+        handleResetPromptFallback();
+      });
+    }
   }
 
   if (elements.bigBangOptionToggle) {

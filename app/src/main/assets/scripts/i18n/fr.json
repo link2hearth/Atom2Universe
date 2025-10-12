@@ -752,6 +752,15 @@
           },
           "note": "Débloquez le trophée « Ruée vers le million » pour personnaliser vos briques."
         },
+        "reset": "Réinitialiser",
+        "resetDialog": {
+          "title": "Confirmer la réinitialisation",
+          "description": "Tapez {keyword} pour confirmer. Cette action est irréversible.",
+          "inputLabel": "Mot de confirmation",
+          "placeholder": "Tapez {keyword}",
+          "confirm": "Réinitialiser ma progression",
+          "cancel": "Conserver ma progression"
+        },
         "chiptune": {
           "title": "Module Musique Midi",
           "linkDescription": "Retrouvez le lecteur MIDI directement dans l’interface du jeu.",
@@ -1724,7 +1733,8 @@
         "keyword": "RESET",
         "cancelled": "Réinitialisation annulée",
         "invalid": "Mot de confirmation incorrect",
-        "done": "Progression réinitialisée"
+        "done": "Progression réinitialisée",
+        "prompt": "Réinitialisation complète du jeu. Tapez \"{keyword}\" pour confirmer.\\nCette action est irréversible."
       },
       "bigBangToggle": {
         "shown": "Bouton Big Bang affiché",
