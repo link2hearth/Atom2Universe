@@ -1064,32 +1064,32 @@
         "freeElectrons": {
           "name": "Free Electrons",
           "description": "Channel electrons to boost every quantum click.",
-          "effect": "Manual production: +1 APC per level.",
-          "effectSummary": "Manual production +1 APC per level."
+          "effect": "Manual production: +1 APC per level. Every 50 levels, ionization doubles the total bonus.",
+          "effectSummary": "Manual production +1 APC per level. Ionization: bonus doubled every 50 levels."
         },
         "physicsLab": {
           "name": "Physics Laboratory",
           "description": "Research teams supercharge your atomic production.",
-          "effect": "Passive production: +1 APS per level.",
-          "effectSummary": "Passive production +1 APS per level."
+          "effect": "Passive production: +1 APS per level. Every 50 levels, ionization doubles the total bonus.",
+          "effectSummary": "Passive production +1 APS per level. Ionization: bonus doubled every 50 levels."
         },
         "nuclearReactor": {
           "name": "Nuclear Reactor",
           "description": "Controlled reactors unleash colossal energy.",
-          "effect": "Passive production: +10 APS per level.",
-          "effectSummary": "Passive production +10 APS per level."
+          "effect": "Passive production: +10 APS per level. Every 50 levels, ionization doubles the total bonus.",
+          "effectSummary": "Passive production +10 APS per level. Ionization: bonus doubled every 50 levels."
         },
         "particleAccelerator": {
           "name": "Particle Accelerator",
           "description": "Boost your particles to intensify passive output.",
-          "effect": "Passive production: +50 APS per level.",
-          "effectSummary": "Passive production +50 APS per level."
+          "effect": "Passive production: +50 APS per level. Every 100 levels, remanence adds an APC bonus equal to the passive gain.",
+          "effectSummary": "Passive production +50 APS per level. Remanence: +APC equal to the gain every 100 levels."
         },
         "supercomputer": {
           "name": "Supercomputers",
           "description": "Quantum compute centers optimize your gains.",
-          "effect": "Passive production: +500 APS per level.",
-          "effectSummary": "Passive production +500 APS per level."
+          "effect": "Passive production: +500 APS per level. Every 25 levels, a stabilizer adds +5% multiplier.",
+          "effectSummary": "Passive production +500 APS per level. Stabilizer: +5% multiplier every 25 levels."
         },
         "interstellarProbe": {
           "name": "Interstellar Probe",
@@ -1100,38 +1100,38 @@
         "spaceStation": {
           "name": "Space Station",
           "description": "Orbital bases coordinate your expansion.",
-          "effect": "Passive production: +50,000 APS per level.",
-          "effectSummary": "Passive production +50,000 APS per level."
+          "effect": "Passive production: +50,000 APS per level. Every 100 levels, remanence converts that gain into APC.",
+          "effectSummary": "Passive production +50,000 APS per level. Remanence: APC conversion every 100 levels."
         },
         "starForge": {
           "name": "Star Forger",
           "description": "Forge stars and ramp up your passive production.",
-          "effect": "Passive production: +500,000 APS per level.",
-          "effectSummary": "Passive production +500,000 APS per level."
+          "effect": "Passive production: +500,000 APS per level. Every 100 levels, remanence grants an APC bonus equal to the passive gain.",
+          "effectSummary": "Passive production +500,000 APS per level. Remanence: +APC equal to the gain every 100 levels."
         },
         "artificialGalaxy": {
           "name": "Artificial Galaxy",
           "description": "Galactic engineering for endless expansion.",
-          "effect": "Passive production: +5,000,000 APS per level.",
-          "effectSummary": "Passive production +5,000,000 APS per level."
+          "effect": "Passive production: +5,000,000 APS per level. Every 25 levels, a stabilizer adds +5% multiplier.",
+          "effectSummary": "Passive production +5,000,000 APS per level. Stabilizer: +5% multiplier every 25 levels."
         },
         "multiverseSimulator": {
           "name": "Multiverse Simulator",
           "description": "Simulate infinity to optimize every second.",
-          "effect": "Passive production: +500,000,000 APS per level.",
-          "effectSummary": "Passive production +500,000,000 APS per level."
+          "effect": "Passive production: +500,000,000 APS per level. Every 25 levels, a stabilizer adds +5% multiplier.",
+          "effectSummary": "Passive production +500,000,000 APS per level. Stabilizer: +5% multiplier every 25 levels."
         },
         "realityWeaver": {
           "name": "Reality Weaver",
           "description": "Weave physical laws to your advantage.",
-          "effect": "Passive production: +10,000,000,000 APS per level.",
-          "effectSummary": "Passive production +10,000,000,000 APS per level."
+          "effect": "Passive production: +10,000,000,000 APS per level. Every 150 levels, critical overload adds +5% crit chance.",
+          "effectSummary": "Passive production +10,000,000,000 APS per level. Critical: +5% chance every 150 levels."
         },
         "cosmicArchitect": {
           "name": "Cosmic Architect",
           "description": "Rewrite the cosmos to unleash infinite energy.",
-          "effect": "Passive production: +1,000,000,000,000 APS per level.",
-          "effectSummary": "Passive production +1,000,000,000,000 APS per level."
+          "effect": "Passive production: +1,000,000,000,000 APS per level. Every 150 levels, critical overload adds +0.5 crit multiplier.",
+          "effectSummary": "Passive production +1,000,000,000,000 APS per level. Critical: +0.5 multiplier every 150 levels."
         },
         "parallelUniverse": {
           "name": "Parallel Universe",
@@ -1148,8 +1148,8 @@
         "quantumOverseer": {
           "name": "Grand Quantum Overseer",
           "description": "Order the multiverse and reach singularity.",
-          "effect": "Passive production: +1,000,000,000,000,000,000 APS per level.",
-          "effectSummary": "Passive production +1,000,000,000,000,000,000 APS per level."
+          "effect": "Passive production: +1,000,000,000,000,000,000 APS per level. Every 100 levels, critical overload adds +5% crit chance and +0.25 multiplier.",
+          "effectSummary": "Passive production +1,000,000,000,000,000,000 APS per level. Critical: +5% chance and +0.25 multiplier every 100 levels."
         }
       }
     },
