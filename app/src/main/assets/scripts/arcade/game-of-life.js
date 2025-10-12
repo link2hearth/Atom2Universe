@@ -317,6 +317,10 @@
       patternDescription,
       patternEmpty,
       selectionButton,
+      selectionPanel,
+      selectionForm,
+      selectionNameInput,
+      selectionCancelButton,
       menu,
       menuToggle,
       menuHeader
@@ -343,6 +347,10 @@
       this.patternDescription = patternDescription;
       this.patternEmpty = patternEmpty;
       this.selectionButton = selectionButton;
+      this.selectionPanel = selectionPanel;
+      this.selectionForm = selectionForm;
+      this.selectionNameInput = selectionNameInput;
+      this.selectionCancelButton = selectionCancelButton;
       this.menu = menu;
       this.menuToggle = menuToggle;
       this.menuHeader = menuHeader;
@@ -415,6 +423,8 @@
         currentCell: null,
         message: null
       };
+
+      this.pendingSelection = null;
 
       this.speedSliderRange = { min: 50, max: 600 };
 
@@ -552,6 +562,7 @@
         this.randomHeightInput.value = String(Math.round(this.config.random.defaultHeight));
         this.randomHeightInput.max = String(Math.round(this.config.random.maxHeight));
       }
+      this.resetSelectionForm();
       this.updateMenuToggleLabel();
     }
 
@@ -602,6 +613,17 @@
           const nextState = !this.selectionState.enabled;
           this.setSelectionEnabled(nextState);
           this.updateUI();
+        });
+      }
+      if (this.selectionForm) {
+        this.selectionForm.addEventListener('submit', event => {
+          event.preventDefault();
+          this.handleSelectionFormSubmit();
+        });
+      }
+      if (this.selectionCancelButton) {
+        this.selectionCancelButton.addEventListener('click', () => {
+          this.cancelPendingSelection(false);
         });
       }
       if (this.randomDensitySlider) {
@@ -1385,6 +1407,7 @@
       this.selectionState.enabled = allowSelection;
       if (!allowSelection) {
         this.selectionState.message = null;
+        this.cancelPendingSelection(true);
       }
       if (this.selectionButton) {
         this.selectionButton.disabled = this.state.running;
@@ -1402,6 +1425,7 @@
       this.selectionState.pointerId = null;
       this.selectionState.startCell = null;
       this.selectionState.currentCell = null;
+      this.cancelPendingSelection(true);
     }
 
     startSelection(cell, pointerId) {
@@ -1504,42 +1528,123 @@
         this.updatePatternDescription();
         return;
       }
-      const pattern = this.createCustomPattern({ width, height }, relativeCells);
+      this.prepareSelectionSave({
+        bounds: { width, height },
+        relativeCells
+      });
+    }
+
+    resetSelectionForm() {
+      if (this.selectionPanel) {
+        this.selectionPanel.hidden = true;
+      }
+      if (this.selectionNameInput) {
+        this.selectionNameInput.value = '';
+        this.selectionNameInput.placeholder = '';
+      }
+    }
+
+    prepareSelectionSave(data) {
+      if (!data || !data.relativeCells || !data.relativeCells.length) {
+        return;
+      }
+      const bounds = data.bounds || { width: 0, height: 0 };
+      this.pendingSelection = {
+        bounds: {
+          width: Math.max(1, Math.floor(bounds.width || 0)),
+          height: Math.max(1, Math.floor(bounds.height || 0))
+        },
+        relativeCells: data.relativeCells.map(([x, y]) => [x, y])
+      };
+      if (!this.selectionPanel || !this.selectionForm || !this.selectionNameInput) {
+        this.finalizeSelectionSave('');
+        return;
+      }
+      const nextIndex = Math.max(1, this.customPatternCounter);
+      const automaticName = translate(
+        'index.sections.gameOfLife.patterns.customNameTemplate',
+        `Pattern #${nextIndex}`,
+        { index: nextIndex }
+      );
+      const placeholder = translate(
+        'index.sections.gameOfLife.patterns.selection.namePlaceholder',
+        `Automatic name: ${automaticName}`,
+        { name: automaticName }
+      );
+      this.selectionNameInput.value = '';
+      this.selectionNameInput.placeholder = placeholder;
+      this.selectionPanel.hidden = false;
+      if (typeof this.selectionNameInput.focus === 'function') {
+        window.requestAnimationFrame(() => {
+          try {
+            this.selectionNameInput.focus({ preventScroll: true });
+          } catch (error) {
+            this.selectionNameInput.focus();
+          }
+        });
+      }
+    }
+
+    handleSelectionFormSubmit() {
+      if (!this.pendingSelection) {
+        this.resetSelectionForm();
+        return;
+      }
+      const name = typeof this.selectionNameInput?.value === 'string'
+        ? this.selectionNameInput.value.trim()
+        : '';
+      this.finalizeSelectionSave(name);
+    }
+
+    finalizeSelectionSave(name) {
+      const data = this.pendingSelection;
+      this.pendingSelection = null;
+      this.resetSelectionForm();
+      if (!data) {
+        return;
+      }
+      const pattern = this.createCustomPattern(data.bounds, data.relativeCells, name);
       if (!pattern) {
         return;
       }
       this.customPatterns.unshift(pattern);
+      const selectionConfig = this.config.selection || DEFAULT_CONFIG.selection;
       const maxStored = Math.max(0, Math.floor(selectionConfig.maxStored ?? DEFAULT_CONFIG.selection.maxStored));
       if (maxStored > 0 && this.customPatterns.length > maxStored) {
         this.customPatterns.length = maxStored;
       }
       this.persistCustomPatterns();
+      const displayName = this.getPatternDisplayName(pattern) || pattern.id;
+      this.selectionState.message = {
+        key: 'index.sections.gameOfLife.patterns.selection.saved',
+        fallback: `"${displayName}" was added to your patterns.`,
+        params: { name: displayName }
+      };
       this.selectedPatternId = pattern.id;
       this.renderPatterns();
-      this.updatePatternDescription();
     }
 
-    createCustomPattern(bounds, relativeCells) {
+    cancelPendingSelection(silent) {
+      const hadPending = Boolean(this.pendingSelection);
+      this.pendingSelection = null;
+      this.resetSelectionForm();
+      if (!silent && hadPending) {
+        this.selectionState.message = {
+          key: 'index.sections.gameOfLife.patterns.selection.cancelled',
+          fallback: 'Pattern save cancelled.'
+        };
+        this.updatePatternDescription();
+      }
+    }
+
+    createCustomPattern(bounds, relativeCells, customName) {
       if (!bounds || !relativeCells || !relativeCells.length) {
         return null;
       }
-      let customName = null;
-      if (typeof window !== 'undefined' && typeof window.prompt === 'function') {
-        const message = translate(
-          'index.sections.gameOfLife.patterns.selectionPrompt',
-          'Name this pattern (leave blank for an automatic name).'
-        );
-        const response = window.prompt(message, '');
-        if (response === null) {
-          return null;
-        }
-        const trimmed = response.trim();
-        if (trimmed) {
-          customName = trimmed;
-        }
-      }
+      const trimmedName = typeof customName === 'string' ? customName.trim() : '';
+      let finalName = trimmedName || '';
       let autoIndex = null;
-      if (!customName) {
+      if (!finalName) {
         autoIndex = this.customPatternCounter;
       }
       this.customPatternCounter = Math.max(1, this.customPatternCounter + 1);
@@ -1551,13 +1656,15 @@
       const height = Math.max(1, Math.floor(bounds.height));
       const cellCount = frozenCells.length;
       const descriptionParams = { width, height, cells: cellCount };
+      const fallbackName = autoIndex ? `Pattern #${autoIndex}` : id;
+      const displayName = finalName || fallbackName;
       return Object.freeze({
         id,
         origin: 'custom',
         nameKey: autoIndex ? 'index.sections.gameOfLife.patterns.customNameTemplate' : null,
         nameParams: autoIndex ? { index: autoIndex } : null,
-        nameFallback: autoIndex ? `Pattern #${autoIndex}` : (customName || id),
-        customName,
+        nameFallback: displayName,
+        customName: finalName || null,
         descriptionKey: 'index.sections.gameOfLife.patterns.customDescription',
         descriptionParams,
         descriptionFallback: `${width} × ${height} – ${cellCount} cells`,
@@ -2127,6 +2234,10 @@
     const patternDescription = document.getElementById('gameOfLifePatternDescription');
     const patternEmpty = document.getElementById('gameOfLifePatternEmpty');
     const selectionButton = document.getElementById('gameOfLifeSelectButton');
+    const selectionPanel = document.getElementById('gameOfLifeSelectionPanel');
+    const selectionForm = document.getElementById('gameOfLifeSelectionForm');
+    const selectionNameInput = document.getElementById('gameOfLifeSelectionName');
+    const selectionCancelButton = document.getElementById('gameOfLifeSelectionCancel');
     const menu = document.getElementById('gameOfLifeMenu');
     const menuToggle = document.getElementById('gameOfLifeMenuToggle');
     const menuHeader = document.getElementById('gameOfLifeMenuHeader');
@@ -2153,6 +2264,10 @@
       patternDescription,
       patternEmpty,
       selectionButton,
+      selectionPanel,
+      selectionForm,
+      selectionNameInput,
+      selectionCancelButton,
       menu,
       menuToggle,
       menuHeader

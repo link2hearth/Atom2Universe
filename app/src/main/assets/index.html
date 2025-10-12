@@ -1103,6 +1103,58 @@
                   Les motifs seront chargés automatiquement.
                 </p>
                 <p class="game-of-life__pattern-description" id="gameOfLifePatternDescription" hidden></p>
+                <div class="game-of-life__selection" id="gameOfLifeSelectionPanel" hidden>
+                  <h4
+                    class="game-of-life__selection-title"
+                    data-i18n="index.sections.gameOfLife.patterns.selection.title"
+                  >
+                    Enregistrer la sélection
+                  </h4>
+                  <p
+                    class="game-of-life__selection-hint"
+                    data-i18n="index.sections.gameOfLife.patterns.selection.hint"
+                  >
+                    Choisissez un nom pour le motif ou laissez vide pour utiliser un nom automatique.
+                  </p>
+                  <form class="game-of-life__selection-form" id="gameOfLifeSelectionForm">
+                    <div class="game-of-life__field">
+                      <label
+                        class="game-of-life__label"
+                        for="gameOfLifeSelectionName"
+                        data-i18n="index.sections.gameOfLife.patterns.selection.nameLabel"
+                      >
+                        Nom du motif
+                      </label>
+                      <input
+                        type="text"
+                        id="gameOfLifeSelectionName"
+                        class="game-of-life__input"
+                        maxlength="64"
+                        autocomplete="off"
+                        data-i18n="placeholder:index.sections.gameOfLife.patterns.selection.namePlaceholder"
+                        placeholder="Nom automatique : Motif perso"
+                      />
+                    </div>
+                    <div class="game-of-life__selection-actions">
+                      <button
+                        type="submit"
+                        class="game-of-life__button"
+                        id="gameOfLifeSelectionSave"
+                        data-i18n="index.sections.gameOfLife.patterns.selection.save"
+                      >
+                        Enregistrer
+                      </button>
+                      <button
+                        type="button"
+                        class="game-of-life__button game-of-life__button--secondary"
+                        id="gameOfLifeSelectionCancel"
+                        data-i18n="index.sections.gameOfLife.patterns.selection.cancel"
+                      >
+                        Annuler
+                      </button>
+                    </div>
+                  </form>
+                </div>
               </section>
               <section class="game-of-life__panel" aria-labelledby="gameOfLifeRandomTitle">
                 <h3 class="game-of-life__panel-title" id="gameOfLifeRandomTitle" data-i18n="index.sections.gameOfLife.random.title">
