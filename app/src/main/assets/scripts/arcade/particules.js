@@ -187,6 +187,14 @@
   };
   const readArray = (value, fallback) => (Array.isArray(value) && value.length ? value : fallback);
 
+  const getHighResolutionTime = () => (
+    typeof performance !== 'undefined'
+    && performance
+    && typeof performance.now === 'function'
+      ? performance.now()
+      : Date.now()
+  );
+
   const VISUAL_EFFECTS_CONFIG = readObject(ARCADE_CONFIG.visualEffects, {});
   const SCREEN_PULSE_ENABLED = VISUAL_EFFECTS_CONFIG.enableScreenPulse === true;
   const GLOW_EFFECTS_ENABLED = VISUAL_EFFECTS_CONFIG.enableGlow === true;
@@ -2660,23 +2668,29 @@
     startAnimation() {
       if (this.running) return;
       this.running = true;
-      this.lastTimestamp = typeof performance !== 'undefined' ? performance.now() : Date.now();
+      this.lastTimestamp = getHighResolutionTime();
       this.animationFrameId = requestAnimationFrame(this.handleFrame);
     }
 
     stopAnimation() {
       if (!this.running) return;
       this.running = false;
+      this.lastTimestamp = 0;
       if (this.animationFrameId != null) {
         cancelAnimationFrame(this.animationFrameId);
         this.animationFrameId = null;
       }
     }
 
-    handleFrame(timestamp) {
+    handleFrame(_timestamp) {
       if (!this.running) return;
-      const now = typeof timestamp === 'number' ? timestamp : (typeof performance !== 'undefined' ? performance.now() : Date.now());
-      const delta = Math.min(32, now - this.lastTimestamp);
+      // Some Android webviews (and a few desktop browsers) expose requestAnimationFrame
+      // timestamps with a different unit than performance.now(), typically microseconds.
+      // Mixing those sources caused huge deltas that were then clamped to 32ms, doubling
+      // the gameplay speed. Using the same high-resolution clock everywhere keeps delta
+      // computations consistent regardless of platform quirks.
+      const now = getHighResolutionTime();
+      const delta = Math.max(0, Math.min(32, now - this.lastTimestamp));
       this.lastTimestamp = now;
       this.update(delta, now);
       this.render(now);
