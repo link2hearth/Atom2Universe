@@ -1892,6 +1892,9 @@
             "missed": "Sudoku résolu en {elapsed}, au-delà de la limite ({limit}). Bonus non déclenché.",
             "applied": "Bonus Sudoku appliqué : {duration} à {multiplier}."
           }
+        },
+        "quantum2048": {
+          "rewardToast": "{tickets} gagnés grâce à ObjectX !"
         }
       }
     },
