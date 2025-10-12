@@ -737,9 +737,64 @@ const GAME_CONFIG = {
         ],
         unlockedDetails: [
           {
-            label: 'Mini Jeu Particules :',
+            label: 'Arcade Particules :',
             description:
               'Collisionnez les particules élémentaires afin de gagner des tickets de tirage pour le Gacha, et des crédits pour le mini jeu Mach3.'
+          },
+          {
+            label: 'Arcade Métaux :',
+            description:
+              'Alignez les alliages Mach3 pour forger des bonus qui dopent votre production.'
+          },
+          {
+            label: 'Arcade Photon :',
+            description:
+              'Guidez un photon sur son onde cosmique et récoltez l’énergie sans perdre le rythme.'
+          },
+          {
+            label: 'Arcade ObjectX :',
+            description:
+              "Fusionnez des blocs quantiques sur la grille choisie jusqu’à atteindre la tuile objectif."
+          },
+          {
+            label: 'Arcade Balance :',
+            description:
+              'Disposez des blocs de masses différentes pour maintenir la planche parfaitement stable.'
+          },
+          {
+            label: 'Arcade Math :',
+            description:
+              'Complétez les nombres ou symboles manquants et maintenez la série de calculs.'
+          },
+          {
+            label: 'Arcade Sudoku :',
+            description:
+              'Résolvez des grilles générées dynamiquement avec des aides optionnelles.'
+          },
+          {
+            label: 'Arcade Démineur :',
+            description:
+              'Dévoilez toutes les cases sans déclencher les mines quantiques.'
+          },
+          {
+            label: 'Arcade Solitaire :',
+            description:
+              'Empilez les cartes pour compléter les quatre fondations le plus efficacement possible.'
+          },
+          {
+            label: 'Arcade Échecs :',
+            description:
+              'Affrontez une IA adaptable sur un échiquier futuriste.'
+          },
+          {
+            label: 'Arcade Jeu de la vie :',
+            description:
+              'Orchestrez vos motifs favoris dans l’automate cellulaire de Conway.'
+          },
+          {
+            label: 'Arcade Blackjack :',
+            description:
+              'Affrontez le croupier avec un sabot qui se régénère automatiquement.'
           },
           {
             label: 'Gacha :',
@@ -747,9 +802,19 @@ const GAME_CONFIG = {
               'Grâce à vos tickets gagnez des Atomes du tableau périodique des éléments, leurs collections vous octroieront des bonus de APS et APC notamment.'
           },
           {
-            label: 'Mini jeu Mach3 :',
+            label: 'Tableau :',
             description:
-              "C’est un jeu de Match 3, alignez le Cuivre, le Bronze, l’Argent, l’Or et le Carbone (Diamant) le plus vite possible avant que le timer atteigne 0. Plus votre score sera grand, plus grand sera votre bonus de production d’APS."
+              'Consultez le tableau périodique pour suivre vos collections et leurs bonus cumulés.'
+          },
+          {
+            label: 'Fusion :',
+            description:
+              'Combinez vos éléments spéciaux pour débloquer des améliorations permanentes.'
+          },
+          {
+            label: 'Musique :',
+            description:
+              'Personnalisez l’ambiance sonore avec vos playlists chiptune et vos SoundFonts.'
           }
         ]
       }

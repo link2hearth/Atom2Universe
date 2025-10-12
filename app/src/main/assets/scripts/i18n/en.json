@@ -1317,16 +1317,68 @@
             "intro": "Welcome to Atom to Univers. Start by clicking to earn Atoms (APC Atoms Per Click), purchase upgrades in the shop, and automate harvesting (APS Atoms Per Second). Unlock mini-games as you progress. The goal is to gather as many Atoms as possible to forge a Universe. Large values use an easy scientific-style notation: 1.0e6 means 1,000,000 (1.0 × 10^6) and the number after “e” tells you the number of digits after the decimal point.",
             "details": {
               "particles": {
-                "label": "Particles mini-game:",
+                "label": "Arcade Particles:",
                 "description": "Collide elementary particles to earn draw tickets for the Gacha and credits for the Mach3 mini-game."
+              },
+              "match3": {
+                "label": "Arcade Metals:",
+                "description": "Align metallic tiles in the Mach3 forge to craft production-boosting bonuses."
+              },
+              "photon": {
+                "label": "Arcade Photon:",
+                "description": "Guide a photon along its cosmic wave and gather energy without missing a beat."
+              },
+              "objectx": {
+                "label": "Arcade ObjectX:",
+                "description": "Merge quantum tiles on the selected board until you reach the requested target tile."
+              },
+              "balance": {
+                "label": "Arcade Balance:",
+                "description": "Arrange blocks with different weights to keep the board perfectly level."
+              },
+              "math": {
+                "label": "Arcade Math:",
+                "description": "Fill in the missing numbers or operators to sustain the puzzle streak."
+              },
+              "sudoku": {
+                "label": "Arcade Sudoku:",
+                "description": "Solve dynamically generated grids with optional assists."
+              },
+              "demineur": {
+                "label": "Arcade Minesweeper:",
+                "description": "Reveal every cell without triggering the quantum mines."
+              },
+              "solitaire": {
+                "label": "Arcade Solitaire:",
+                "description": "Stack the tableau to complete all four foundations efficiently."
+              },
+              "echecs": {
+                "label": "Arcade Chess:",
+                "description": "Challenge an adaptive AI across a futuristic chessboard."
+              },
+              "gameOfLife": {
+                "label": "Arcade Game of Life:",
+                "description": "Conduct your favorite patterns inside Conway’s cellular automaton."
+              },
+              "blackjack": {
+                "label": "Arcade Blackjack:",
+                "description": "Face the dealer with a shoe that refreshes itself automatically."
               },
               "gacha": {
                 "label": "Gacha:",
                 "description": "Spend your tickets to obtain atoms from the periodic table; completing collections grants APS and APC bonuses among others."
               },
-              "match3": {
-                "label": "Mach3 mini-game:",
-                "description": "A Match 3 game—line up Copper, Bronze, Silver, Gold, and Carbon (Diamond) as quickly as possible before the timer hits 0. Higher scores mean higher APS production bonuses."
+              "tableau": {
+                "label": "Periodic Table:",
+                "description": "Review the periodic table to track your collections and their cumulative bonuses."
+              },
+              "fusion": {
+                "label": "Fusion:",
+                "description": "Combine special elements to unlock permanent upgrades."
+              },
+              "musique": {
+                "label": "Music:",
+                "description": "Customize the soundtrack with chiptune playlists and your SoundFonts."
               }
             }
           }
