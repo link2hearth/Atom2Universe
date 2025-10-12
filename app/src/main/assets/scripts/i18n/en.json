@@ -752,6 +752,15 @@
           },
           "note": "Unlock the “Rush to a Million” trophy to customize your bricks."
         },
+        "reset": "Reset",
+        "resetDialog": {
+          "title": "Confirm reset",
+          "description": "Type {keyword} to confirm. This action cannot be undone.",
+          "inputLabel": "Confirmation word",
+          "placeholder": "Type {keyword}",
+          "confirm": "Reset progress",
+          "cancel": "Keep my progress"
+        },
         "chiptune": {
           "title": "MIDI Music Module",
           "linkDescription": "Access the MIDI player directly inside the main interface.",
@@ -1724,7 +1733,8 @@
         "keyword": "RESET",
         "cancelled": "Reset cancelled",
         "invalid": "Incorrect confirmation word",
-        "done": "Progress reset"
+        "done": "Progress reset",
+        "prompt": "Full game reset. Type \"{keyword}\" to confirm.\\nThis action cannot be undone."
       },
       "bigBangToggle": {
         "shown": "Big Bang button shown",

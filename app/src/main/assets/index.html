@@ -2969,6 +2969,72 @@
     </div>
   </div>
 
+  <div
+    id="resetDialog"
+    class="reset-dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="resetDialogTitle"
+    aria-describedby="resetDialogMessage"
+    hidden
+  >
+    <div class="reset-dialog__panel" role="document">
+      <h2
+        id="resetDialogTitle"
+        class="reset-dialog__title"
+        data-i18n="index.sections.options.resetDialog.title"
+      >
+        Confirmer la réinitialisation
+      </h2>
+      <p id="resetDialogMessage" class="reset-dialog__message">
+        Tapez RESET pour confirmer. Cette action est irréversible.
+      </p>
+      <form id="resetDialogForm" class="reset-dialog__form">
+        <label
+          for="resetDialogInput"
+          id="resetDialogLabel"
+          class="visually-hidden"
+          data-i18n="index.sections.options.resetDialog.inputLabel"
+        >
+          Mot de confirmation
+        </label>
+        <input
+          id="resetDialogInput"
+          class="reset-dialog__input"
+          type="text"
+          name="resetConfirmation"
+          autocomplete="off"
+          autocapitalize="characters"
+          spellcheck="false"
+          inputmode="latin"
+          data-i18n="placeholder:index.sections.options.resetDialog.placeholder"
+          placeholder="Tapez RESET"
+        />
+        <p id="resetDialogError" class="reset-dialog__error" role="alert" hidden>
+          Mot de confirmation incorrect
+        </p>
+        <div class="reset-dialog__actions">
+          <button
+            type="button"
+            id="resetDialogCancel"
+            class="reset-dialog__button"
+            data-i18n="index.sections.options.resetDialog.cancel"
+          >
+            Conserver ma progression
+          </button>
+          <button
+            type="submit"
+            id="resetDialogConfirm"
+            class="reset-dialog__button danger"
+            data-i18n="index.sections.options.resetDialog.confirm"
+          >
+            Réinitialiser ma progression
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <div class="status-crit-floating" aria-live="polite">
     <div
       class="status-crit-display status-crit-display--floating"
