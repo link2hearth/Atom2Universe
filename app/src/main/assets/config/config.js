@@ -929,7 +929,7 @@ const GAME_CONFIG = {
       arcade: {
         hub: { type: 'lifetimeAtoms', amount: { type: 'number', value: 1000 } },
         particules: { type: 'feature', requires: 'arcade.hub' },
-        metaux: { type: 'trophy', trophyId: 'millionAtoms' },
+        metaux: { type: 'flag', flagId: 'arcade.metaux' },
         photon: { type: 'trophy', trophyId: 'millionAtoms' },
         objectx: { type: 'trophy', trophyId: 'millionAtoms' },
         balance: { type: 'trophy', trophyId: 'millionAtoms' },

@@ -3426,7 +3426,20 @@ function gainBonusParticulesTickets(amount = 1) {
   const gain = Math.max(1, Math.floor(Number(amount) || 0));
   const current = Math.max(0, Math.floor(Number(gameState.bonusParticulesTickets) || 0));
   gameState.bonusParticulesTickets = current + gain;
+  const featureId = typeof METAL_FEATURE_ID === 'string' ? METAL_FEATURE_ID : 'arcade.metaux';
+  const unlockedNow = typeof setFeatureUnlockFlag === 'function'
+    ? setFeatureUnlockFlag(featureId)
+    : false;
+  if (unlockedNow && typeof invalidateFeatureUnlockCache === 'function') {
+    invalidateFeatureUnlockCache();
+  }
   updateArcadeTicketDisplay();
+  if (unlockedNow && typeof refreshOptionsWelcomeContent === 'function') {
+    refreshOptionsWelcomeContent();
+  }
+  if (typeof updateBrandPortalState === 'function') {
+    updateBrandPortalState({ animate: unlockedNow });
+  }
   if (typeof window !== 'undefined' && typeof window.updateMetauxCreditsUI === 'function') {
     window.updateMetauxCreditsUI();
   }

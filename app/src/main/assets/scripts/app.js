@@ -83,6 +83,8 @@ const OPTIONS_DETAIL_FEATURE_MAP = Object.freeze({
   musique: 'system.musique'
 });
 
+const METAL_FEATURE_ID = 'arcade.metaux';
+
 const FEATURE_UNLOCK_DEFINITIONS = buildFeatureUnlockDefinitions(
   GLOBAL_CONFIG?.progression?.featureUnlocks
 );
@@ -681,9 +683,12 @@ function createDefaultFeatureUnlockDefinitions() {
     'arcade.particules',
     freezeFeatureUnlockDefinition({ type: 'feature', requires: Object.freeze(['arcade.hub']) })
   );
+  defaults.set(
+    METAL_FEATURE_ID,
+    freezeFeatureUnlockDefinition({ type: 'flag', flagId: METAL_FEATURE_ID })
+  );
   const trophyRequirement = id => freezeFeatureUnlockDefinition({ type: 'trophy', trophyId: id });
   [
-    'arcade.metaux',
     'arcade.photon',
     'arcade.objectx',
     'arcade.balance',
@@ -779,6 +784,17 @@ function normalizeFeatureUnlockCondition(featureId, rawEntry) {
       }
       return freezeFeatureUnlockDefinition({ type: 'page', pageId });
     }
+    case 'flag':
+    case 'featureflag':
+    case 'flagunlock':
+    case 'flagged': {
+      const flagCandidate = rawEntry.flagId ?? rawEntry.flag ?? rawEntry.id ?? rawEntry.target ?? featureId;
+      const flagId = typeof flagCandidate === 'string' ? flagCandidate.trim() : '';
+      if (!flagId) {
+        return null;
+      }
+      return freezeFeatureUnlockDefinition({ type: 'flag', flagId });
+    }
     default:
       return null;
   }
@@ -840,6 +856,95 @@ function getFeatureUnlockDefinition(featureId) {
   return FEATURE_UNLOCK_DEFINITIONS.get(featureId.trim()) || null;
 }
 
+function normalizeFeatureUnlockFlags(raw) {
+  const flags = new Set();
+  if (raw == null) {
+    return flags;
+  }
+  if (Array.isArray(raw)) {
+    raw.forEach(entry => {
+      const id = typeof entry === 'string' ? entry.trim() : '';
+      if (id) {
+        flags.add(id);
+      }
+    });
+    return flags;
+  }
+  if (typeof raw === 'string') {
+    const id = raw.trim();
+    if (id) {
+      flags.add(id);
+    }
+    return flags;
+  }
+  if (typeof raw === 'object') {
+    Object.entries(raw).forEach(([key, value]) => {
+      const id = typeof key === 'string' ? key.trim() : '';
+      if (!id) {
+        return;
+      }
+      if (
+        value === true
+        || value === 'true'
+        || value === 1
+        || (typeof value === 'string' && value.trim().toLowerCase() === 'true')
+      ) {
+        flags.add(id);
+      }
+    });
+  }
+  return flags;
+}
+
+function ensureFeatureUnlockFlagSet() {
+  if (gameState.featureUnlockFlags instanceof Set) {
+    return gameState.featureUnlockFlags;
+  }
+  const raw = gameState.featureUnlockFlags;
+  const flags = normalizeFeatureUnlockFlags(raw);
+  gameState.featureUnlockFlags = flags;
+  return flags;
+}
+
+function hasFeatureUnlockFlag(flagId) {
+  const id = typeof flagId === 'string' ? flagId.trim() : '';
+  if (!id) {
+    return false;
+  }
+  return ensureFeatureUnlockFlagSet().has(id);
+}
+
+function setFeatureUnlockFlag(flagId) {
+  const id = typeof flagId === 'string' ? flagId.trim() : '';
+  if (!id) {
+    return false;
+  }
+  const flags = ensureFeatureUnlockFlagSet();
+  if (flags.has(id)) {
+    return false;
+  }
+  flags.add(id);
+  return true;
+}
+
+function applyDerivedFeatureUnlockFlags() {
+  const flags = ensureFeatureUnlockFlagSet();
+  let changed = false;
+  if (!flags.has(METAL_FEATURE_ID)) {
+    const credits = Math.max(0, Math.floor(Number(gameState.bonusParticulesTickets) || 0));
+    const hasMetauxProgress = !!(
+      gameState.arcadeProgress
+      && gameState.arcadeProgress.entries
+      && gameState.arcadeProgress.entries.metaux
+    );
+    if (credits > 0 || hasMetauxProgress) {
+      flags.add(METAL_FEATURE_ID);
+      changed = true;
+    }
+  }
+  return changed;
+}
+
 function evaluateFeatureUnlockCondition(definition, stack = new Set()) {
   if (!definition || typeof definition !== 'object') {
     return true;
@@ -872,6 +977,13 @@ function evaluateFeatureUnlockCondition(definition, stack = new Set()) {
       }
       const unlocks = getPageUnlockState();
       return unlocks?.[pageId] === true;
+    }
+    case 'flag': {
+      const flagId = typeof definition.flagId === 'string' ? definition.flagId.trim() : '';
+      if (!flagId) {
+        return false;
+      }
+      return hasFeatureUnlockFlag(flagId);
     }
     default:
       return false;
@@ -1030,6 +1142,12 @@ function getFeatureLockedReason(featureId, visited = new Set()) {
       'index.sections.arcadeHub.locked.requiresTrophy',
       `Débloquez le trophée « ${trophyName} » pour accéder à ce mini-jeu.`,
       { trophy: trophyName }
+    );
+  }
+  if (definition.type === 'flag' && definition.flagId === METAL_FEATURE_ID) {
+    return translateOrDefault(
+      'index.sections.arcadeHub.locked.requiresMach3',
+      'Obtenez un ticket Mach3 pour débloquer ce mini-jeu.'
     );
   }
   if (definition.type === 'feature') {
@@ -2485,7 +2603,8 @@ const DEFAULT_STATE = {
   musicVolume: DEFAULT_MUSIC_VOLUME,
   musicEnabled: DEFAULT_MUSIC_ENABLED,
   bigBangButtonVisible: false,
-  apsCrit: createDefaultApsCritState()
+  apsCrit: createDefaultApsCritState(),
+  featureUnlockFlags: []
 };
 
 const ARCADE_GAME_IDS = Object.freeze([
@@ -2554,7 +2673,8 @@ const gameState = {
   musicEnabled: DEFAULT_MUSIC_ENABLED,
   bigBangButtonVisible: false,
   apsCrit: createDefaultApsCritState(),
-  arcadeProgress: createInitialArcadeProgress()
+  arcadeProgress: createInitialArcadeProgress(),
+  featureUnlockFlags: new Set()
 };
 
 if (typeof window !== 'undefined') {
@@ -11542,6 +11662,7 @@ function serializeState() {
       ? Math.max(0, Math.floor(Number(gameState.bonusParticulesTickets)))
       : 0,
     ticketStarUnlocked: gameState.ticketStarUnlocked === true,
+    featureUnlockFlags: Array.from(ensureFeatureUnlockFlagSet()),
     upgrades: gameState.upgrades,
     shopUnlocks: Array.from(getShopUnlockSet()),
     elements: gameState.elements,
@@ -11783,7 +11904,8 @@ function resetGame() {
     musicEnabled: DEFAULT_MUSIC_ENABLED,
     bigBangButtonVisible: false,
     apsCrit: createDefaultApsCritState(),
-    arcadeProgress: createInitialArcadeProgress()
+    arcadeProgress: createInitialArcadeProgress(),
+    featureUnlockFlags: new Set()
   });
   applyFrenzySpawnChanceBonus(gameState.frenzySpawnBonus);
   setTicketStarAverageIntervalSeconds(gameState.ticketStarAverageIntervalSeconds);
@@ -12073,6 +12195,8 @@ function loadGame() {
     gameState.bonusParticulesTickets = Number.isFinite(bonusTickets) && bonusTickets > 0
       ? Math.floor(bonusTickets)
       : 0;
+    const storedFeatureFlags = data.featureUnlockFlags ?? data.featureFlags ?? null;
+    gameState.featureUnlockFlags = normalizeFeatureUnlockFlags(storedFeatureFlags);
     const storedTicketStarUnlock = data.ticketStarUnlocked ?? data.ticketStarUnlock;
     if (storedTicketStarUnlock != null) {
       gameState.ticketStarUnlocked = storedTicketStarUnlock === true
@@ -12080,9 +12204,10 @@ function loadGame() {
         || storedTicketStarUnlock === 1
         || storedTicketStarUnlock === '1';
     } else {
-      gameState.ticketStarUnlocked = gameState.gachaTickets > 0;
+    gameState.ticketStarUnlocked = gameState.gachaTickets > 0;
     }
     gameState.arcadeProgress = normalizeArcadeProgress(data.arcadeProgress);
+    applyDerivedFeatureUnlockFlags();
     const storedUpgrades = data.upgrades;
     if (storedUpgrades && typeof storedUpgrades === 'object') {
       const normalizedUpgrades = {};

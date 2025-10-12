@@ -204,6 +204,7 @@
         "locked": {
           "requiresAtoms": "Collectez {{amount}} atomes pour débloquer l’arcade.",
           "requiresTrophy": "Débloquez le trophée « {{trophy}} » pour accéder à ce mini-jeu.",
+          "requiresMach3": "Obtenez un ticket Mach3 pour débloquer ce mini-jeu.",
           "default": "Débloquez ce mini-jeu pour y accéder."
         },
         "cards": {
