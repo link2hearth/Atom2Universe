@@ -1318,11 +1318,11 @@
             "details": {
               "particles": {
                 "label": "Arcade Particules :",
-                "description": "Collisionnez les particules élémentaires afin de gagner des tickets de tirage pour le Gacha, et des crédits pour le mini jeu Mach3."
+                "description": "Collisionnez les particules élémentaires afin de gagner des tickets de tirage pour le Gacha, et des crédits pour le mini jeu Métaux."
               },
               "match3": {
                 "label": "Arcade Métaux :",
-                "description": "Alignez les alliages Mach3 pour forger des bonus qui dopent votre production."
+                "description": "Alignez les alliages pour forger des bonus qui dopent votre production."
               },
               "photon": {
                 "label": "Arcade Photon :",
@@ -1346,7 +1346,7 @@
               },
               "demineur": {
                 "label": "Arcade Démineur :",
-                "description": "Dévoilez toutes les cases sans déclencher les mines quantiques."
+                "description": "Dévoilez toutes les cases sans déclencher les mines."
               },
               "solitaire": {
                 "label": "Arcade Solitaire :",
@@ -1354,7 +1354,7 @@
               },
               "echecs": {
                 "label": "Arcade Échecs :",
-                "description": "Affrontez une IA adaptable sur un échiquier futuriste."
+                "description": "Affrontez une IA adaptable sur un échiquier."
               },
               "gameOfLife": {
                 "label": "Arcade Jeu de la vie :",
@@ -1362,7 +1362,7 @@
               },
               "blackjack": {
                 "label": "Arcade Blackjack :",
-                "description": "Affrontez le croupier avec un sabot qui se régénère automatiquement."
+                "description": "Pariez vous Atomes."
               },
               "gacha": {
                 "label": "Gacha :",
@@ -4174,3 +4174,4 @@
     }
   }
 }
+
