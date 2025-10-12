@@ -792,14 +792,14 @@ body.view-sudoku .status-bar {
   display: flex;
   flex-direction: column;
   gap: calc(0.12rem * var(--frenzy-scale));
-  padding: calc(clamp(0.3rem, 0.85vw, 0.6rem) * var(--frenzy-scale))
-    calc(clamp(0.45rem, 1.15vw, 0.9rem) * var(--frenzy-scale));
+  padding: calc(clamp(0.28rem, 0.8vw, 0.55rem) * var(--frenzy-scale))
+    calc(clamp(0.35rem, 0.95vw, 0.7rem) * var(--frenzy-scale));
   border-radius: calc(0.75rem * var(--frenzy-scale));
   background: rgba(6, 12, 28, 0.55);
   box-shadow: 0 0.8rem 1.6rem rgba(0, 0, 0, 0.26);
   backdrop-filter: blur(7px);
   -webkit-backdrop-filter: blur(7px);
-  min-width: calc(clamp(4.6rem, 14vw, 7.2rem) * var(--frenzy-scale));
+  min-width: calc(clamp(2.8rem, 8vw, 4.4rem) * var(--frenzy-scale));
   align-items: flex-start;
   text-align: left;
   opacity: 0.9;
