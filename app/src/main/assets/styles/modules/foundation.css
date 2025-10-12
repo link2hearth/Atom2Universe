@@ -5,6 +5,7 @@
   --font-text-base-size: 1rem;
   --font-scale-factor: 1;
   --ui-control-scale: var(--font-scale-factor, 1);
+  --header-scale: 1.5;
   font-family: var(--font-text, 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
   --bg-dark: #080b13;
   --bg-light: #f6f7fb;
@@ -24,9 +25,9 @@
   --card-surface: var(--card-dark);
   --max-width: min(1100px, 92vw);
   --transition: 0.2s ease;
-  --header-padding-y: clamp(0.56rem, 0.896vw, 0.784rem);
-  --header-padding-x: clamp(1.2rem, 2vw, 2.4rem);
-  --status-padding-y: clamp(0.315rem, 0.51vw, 0.45rem);
+  --header-padding-y: calc(clamp(0.56rem, 0.896vw, 0.784rem) * var(--header-scale, 1));
+  --header-padding-x: calc(clamp(1.2rem, 2vw, 2.4rem) * var(--header-scale, 1));
+  --status-padding-y: calc(clamp(0.315rem, 0.51vw, 0.45rem) * var(--header-scale, 1));
   --font-digits: 'Orbitron', sans-serif;
   --font-digits-compact: 'Orbitron', monospace;
   --arcade-padding-x: clamp(0.5rem, 1.4vw, 0.82rem);
@@ -181,13 +182,13 @@ body[data-page-group="arcade"] main {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1.2rem;
+  gap: calc(1.2rem * var(--header-scale, 1));
 }
 
 .header-brand-group {
   display: inline-flex;
   align-items: center;
-  gap: clamp(0.5rem, 1vw, 0.75rem);
+  gap: calc(clamp(0.5rem, 1vw, 0.75rem) * var(--header-scale, 1));
 }
 
 .header-playback-button {
@@ -195,8 +196,8 @@ body[data-page-group="arcade"] main {
   border: 1px solid rgba(255, 255, 255, 0.18);
   background: rgba(255, 255, 255, 0.08);
   color: inherit;
-  width: clamp(1.1rem, 1.5vw, 1.3rem);
-  height: clamp(1.1rem, 1.5vw, 1.3rem);
+  width: calc(clamp(1.1rem, 1.5vw, 1.3rem) * var(--header-scale, 1));
+  height: calc(clamp(1.1rem, 1.5vw, 1.3rem) * var(--header-scale, 1));
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
@@ -209,7 +210,7 @@ body[data-page-group="arcade"] main {
 
 .header-playback-button::before {
   content: '▶';
-  font-size: clamp(0.5rem, 0.7vw, 0.6rem);
+  font-size: calc(clamp(0.5rem, 0.7vw, 0.6rem) * var(--header-scale, 1));
   line-height: 1;
   transform: translateX(1px);
 }
@@ -320,12 +321,12 @@ body.theme-aurora .header-playback-button.is-playing {
 
 .brand {
   font-family: 'Audiowide', 'Orbitron', sans-serif;
-  font-size: clamp(1.162rem, 1.89vw, 1.68rem);
+  font-size: calc(clamp(1.162rem, 1.89vw, 1.68rem) * var(--header-scale, 1));
   letter-spacing: 0.14em;
   text-transform: uppercase;
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: calc(0.4rem * var(--header-scale, 1));
   white-space: nowrap;
 }
 
@@ -341,7 +342,7 @@ body.theme-aurora .header-playback-button.is-playing {
   text-transform: inherit;
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: calc(0.4rem * var(--header-scale, 1));
   cursor: default;
   transition: color 0.3s ease, text-shadow 0.3s ease, transform 0.3s ease;
 }
@@ -418,7 +419,7 @@ body.theme-aurora .brand--portal-ready {
   grid-template-areas: 'left center right';
   align-items: center;
   padding: var(--status-padding-y) var(--header-padding-x);
-  gap: clamp(0.4rem, 0.8vw, 0.8rem);
+  gap: calc(clamp(0.4rem, 0.8vw, 0.8rem) * var(--header-scale, 1));
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   width: 100%;
 }
@@ -440,7 +441,7 @@ body.view-sudoku .status-bar {
 .status-side {
   display: inline-flex;
   align-items: center;
-  gap: clamp(0.55rem, 1vw, 0.95rem);
+  gap: calc(clamp(0.55rem, 1vw, 0.95rem) * var(--header-scale, 1));
   min-width: 0;
 }
 
@@ -481,14 +482,15 @@ body.view-sudoku .status-bar {
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: clamp(0.2rem, 0.45vw, 0.35rem);
-  padding: clamp(0.16rem, 0.45vw, 0.3rem) clamp(0.42rem, 0.9vw, 0.6rem);
+  gap: calc(clamp(0.2rem, 0.45vw, 0.35rem) * var(--header-scale, 1));
+  padding: calc(clamp(0.16rem, 0.45vw, 0.3rem) * var(--header-scale, 1))
+    calc(clamp(0.42rem, 0.9vw, 0.6rem) * var(--header-scale, 1));
   border-radius: 999px;
   background: linear-gradient(120deg, rgba(255, 118, 45, 0.22), rgba(255, 182, 82, 0.32));
   box-shadow: 0 0.4rem 1.4rem rgba(255, 126, 45, 0.18);
   color: #ffdcbc;
   font-family: var(--font-digits-compact, 'Orbitron', monospace);
-  font-size: clamp(0.86rem, 1.35vw, 1.1rem);
+  font-size: calc(clamp(0.86rem, 1.35vw, 1.1rem) * var(--header-scale, 1));
   font-weight: 600;
   letter-spacing: 0.04em;
   text-shadow: 0 0.16rem 0.45rem rgba(0, 0, 0, 0.35);
@@ -533,8 +535,9 @@ body.view-sudoku .status-bar {
 
 .status-crit-display--aps {
   align-items: center;
-  gap: clamp(0.2rem, 0.45vw, 0.35rem);
-  padding: clamp(0.16rem, 0.45vw, 0.3rem) clamp(0.42rem, 0.9vw, 0.6rem);
+  gap: calc(clamp(0.2rem, 0.45vw, 0.35rem) * var(--header-scale, 1));
+  padding: calc(clamp(0.16rem, 0.45vw, 0.3rem) * var(--header-scale, 1))
+    calc(clamp(0.42rem, 0.9vw, 0.6rem) * var(--header-scale, 1));
   opacity: 1;
   transform: none;
   transition: box-shadow 0.28s ease, transform 0.28s ease;
@@ -552,13 +555,13 @@ body.view-sudoku .status-bar {
 }
 
 .status-aps-crit-value {
-  font-size: calc(var(--font-scale-factor, 1) * clamp(0.58rem, 0.9vw, 0.75rem));
+  font-size: calc(var(--font-scale-factor, 1) * clamp(0.58rem, 0.9vw, 0.75rem) * var(--header-scale, 1));
   font-weight: 600;
   min-width: 0;
   white-space: nowrap;
   display: inline-flex;
   align-items: baseline;
-  gap: 0.1rem;
+  gap: calc(0.1rem * var(--header-scale, 1));
 }
 
 .status-aps-crit-value--chrono {
@@ -570,7 +573,7 @@ body.view-sudoku .status-bar {
 }
 
 .status-aps-crit-separator {
-  font-size: calc(var(--font-scale-factor, 1) * clamp(0.58rem, 0.9vw, 0.72rem));
+  font-size: calc(var(--font-scale-factor, 1) * clamp(0.58rem, 0.9vw, 0.72rem) * var(--header-scale, 1));
   opacity: 0.75;
   transform: translateY(-0.02rem);
 }
@@ -628,7 +631,7 @@ body.view-sudoku .status-bar {
   position: relative;
   display: inline-flex;
   align-items: flex-end;
-  gap: 0.18rem;
+  gap: calc(0.18rem * var(--header-scale, 1));
   line-height: 1;
   min-width: 0;
   white-space: nowrap;
@@ -716,7 +719,7 @@ body.view-sudoku .status-bar {
 .status-value-group {
   display: inline-flex;
   align-items: center;
-  gap: clamp(0.25rem, 0.6vw, 0.45rem);
+  gap: calc(clamp(0.25rem, 0.6vw, 0.45rem) * var(--header-scale, 1));
   flex-wrap: wrap;
 }
 
@@ -730,7 +733,7 @@ body.view-sudoku .status-bar {
 }
 
 .status-label {
-  font-size: calc(var(--font-scale-factor, 1) * clamp(0.55rem, 0.88vw, 0.7rem));
+  font-size: calc(var(--font-scale-factor, 1) * clamp(0.55rem, 0.88vw, 0.7rem) * var(--header-scale, 1));
   letter-spacing: 0.12em;
   text-transform: uppercase;
   opacity: 0.72;
@@ -738,7 +741,7 @@ body.view-sudoku .status-bar {
 
 .status-value {
   font-family: var(--font-digits-compact, 'Orbitron', monospace);
-  font-size: calc(var(--font-scale-factor, 1) * clamp(0.92rem, 1.6vw, 1.2rem));
+  font-size: calc(var(--font-scale-factor, 1) * clamp(0.92rem, 1.6vw, 1.2rem) * var(--header-scale, 1));
 }
 
 .status-atoms-button {
@@ -850,7 +853,7 @@ body.theme-aurora .frenzy-status__item {
 }
 
 .status-value--main {
-  font-size: calc(var(--font-scale-factor, 1) * clamp(1.65rem, 3vw, 2.35rem));
+  font-size: calc(var(--font-scale-factor, 1) * clamp(1.65rem, 3vw, 2.35rem) * var(--header-scale, 1));
   background: linear-gradient(120deg, #ffd166, #ff8ba7, #70d6ff, #caffbf, #bdb2ff, #ffd166);
   background-size: 240% 240%;
   -webkit-background-clip: text;
@@ -886,7 +889,7 @@ body.theme-aurora .status-bar {
 
 .nav-menu {
   display: flex;
-  gap: 0.3rem;
+  gap: calc(0.3rem * var(--header-scale, 1));
   flex-wrap: wrap;
   justify-content: flex-end;
   margin-left: auto;
@@ -913,11 +916,12 @@ body.theme-aurora .status-bar {
   border: none;
   color: var(--nav-button-color);
   font-family: 'Audiowide', 'Orbitron', sans-serif;
-  font-size: calc(0.48rem * var(--font-scale-factor, 1));
+  font-size: calc(0.48rem * var(--font-scale-factor, 1) * var(--header-scale, 1));
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  padding: 0.16rem 0.44rem;
-  border-radius: 0.45rem;
+  padding: calc(0.16rem * var(--header-scale, 1))
+    calc(0.44rem * var(--header-scale, 1));
+  border-radius: calc(0.45rem * var(--header-scale, 1));
   cursor: pointer;
   transition: transform var(--transition), box-shadow var(--transition), background var(--transition), color var(--transition);
 }
