@@ -402,6 +402,8 @@
 
   const GENERIC_BRICK_SKINS = new Set(['metallic', 'neon', 'pastels']);
 
+  const BRICK_SKINS_WITHOUT_SPRITES = new Set(['particules']);
+
   const normalizeBrickSkinKey = value => {
     if (value == null) {
       return null;
@@ -409,6 +411,9 @@
     const normalized = String(value).trim().toLowerCase();
     if (!normalized || normalized === 'original' || normalized === 'default') {
       return null;
+    }
+    if (BRICK_SKINS_WITHOUT_SPRITES.has(normalized)) {
+      return normalized;
     }
     if (normalized === 'pastels' || normalized === 'pastels1' || normalized === 'pastels2') {
       return 'pastels';
@@ -1400,6 +1405,13 @@
       return particle;
     }
     const clone = { ...particle };
+    const requestedSkin = typeof skinKey === 'string' ? skinKey.trim().toLowerCase() : null;
+    if (requestedSkin && BRICK_SKINS_WITHOUT_SPRITES.has(requestedSkin)) {
+      if ('sprite' in clone) {
+        delete clone.sprite;
+      }
+      return clone;
+    }
     if (!clone.sprite || typeof clone.sprite !== 'object') {
       return clone;
     }
@@ -1407,7 +1419,6 @@
     const normalizedColumns = normalizeSpriteColumns(sprite.columns);
     const originalColumn = Number.isFinite(sprite.column) ? Math.floor(sprite.column) : null;
 
-    const requestedSkin = typeof skinKey === 'string' ? skinKey.trim().toLowerCase() : null;
     const sheet = requestedSkin ? BRICK_SPRITE_SHEETS[requestedSkin] : null;
     if (sheet) {
       const totalColumns = Math.max(1, Math.floor(sheet.columns || 1));
