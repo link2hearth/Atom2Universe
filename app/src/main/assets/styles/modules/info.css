@@ -34,6 +34,84 @@
   gap: clamp(0.8rem, 1.6vw, 1.4rem);
 }
 
+.info-card--characters {
+  grid-column: 1 / -1;
+  gap: clamp(1rem, 1.8vw, 1.5rem);
+}
+
+.info-character-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: clamp(0.9rem, 1.8vw, 1.4rem);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.info-character {
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(0.8rem, 1.6vw, 1.1rem);
+  padding: clamp(0.9rem, 1.8vw, 1.2rem);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.18);
+}
+
+body.theme-light .info-character {
+  background: rgba(12, 16, 32, 0.05);
+  border-color: rgba(12, 16, 32, 0.14);
+  box-shadow: 0 16px 30px rgba(12, 16, 32, 0.12);
+}
+
+body.theme-neon .info-character {
+  background: rgba(80, 100, 255, 0.16);
+  border-color: rgba(110, 130, 255, 0.28);
+  box-shadow: 0 16px 34px rgba(70, 90, 255, 0.24);
+}
+
+body.theme-aurora .info-character {
+  background: rgba(40, 170, 120, 0.18);
+  border-color: rgba(90, 230, 170, 0.32);
+  box-shadow: 0 16px 34px rgba(34, 130, 96, 0.24);
+}
+
+.info-character__image {
+  width: clamp(72px, 8vw, 88px);
+  height: clamp(72px, 8vw, 88px);
+  border-radius: 18px;
+  object-fit: cover;
+  flex-shrink: 0;
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.18);
+}
+
+body.theme-light .info-character__image {
+  border-color: rgba(12, 16, 32, 0.18);
+  box-shadow: 0 12px 20px rgba(12, 16, 32, 0.18);
+}
+
+.info-character__body {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.35rem, 0.9vw, 0.6rem);
+}
+
+.info-character__name {
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.info-character__description {
+  margin: 0;
+  font-size: calc(var(--font-scale-factor, 1) * 0.95rem);
+  line-height: 1.6;
+  opacity: 0.85;
+}
+
 body.theme-light .info-card {
   box-shadow: 0 24px 48px rgba(12, 16, 32, 0.12);
 }
