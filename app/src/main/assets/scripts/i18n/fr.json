@@ -211,73 +211,73 @@
           "particules": {
             "aria": "Accéder au mini-jeu Particules",
             "title": "Particules",
-            "description": "Renvoyez la particule quantique pour décrocher des tickets de gacha et des crédits Mach3.",
+            "description": "Collectez des tickets de gacha au prix de votre stock d'Atomes, ou entraînez-vous gratuitement.",
             "cta": "Jouer"
           },
           "metaux": {
             "aria": "Accéder au mini-jeu Métaux",
             "title": "Métaux",
-            "description": "Alignez les alliages Mach3 pour forger des bonus et améliorer votre production.",
+            "description": "Boostez votre production d'APS grâce à ce jeu de match 3.",
             "cta": "Forger"
           },
           "wave": {
             "aria": "Accéder au mini-jeu Photon",
             "title": "Photon",
-            "description": "Incarnez un photon surfant son onde cosmique.",
+            "description": "Page alternative du clicker.",
             "cta": "Surfer"
           },
           "quantum2048": {
             "aria": "Accéder au mini-jeu ObjectX",
             "title": "ObjectX",
-            "description": "Composez des réactions en chaîne sur la grille choisie pour atteindre la tuile objectif.",
+            "description": "Atteignez l'objectif (indiqué en haut à droite) dans ce 2048-like pour gagner des tickets de gacha.",
             "cta": "Fusionner"
           },
           "balance": {
             "aria": "Accéder au mini-jeu Balance",
             "title": "Balance",
-            "description": "Disposez des blocs de masses différentes pour maintenir la planche parfaitement équilibrée.",
+            "description": "Équilibrez la balance avec tous les poids, gagnez des tentatives du jeu Métaux.",
             "cta": "Équilibrer"
           },
           "math": {
             "aria": "Accéder au mini-jeu Math",
             "title": "Math",
-            "description": "Trouvez le nombre ou le symbole manquant pour compléter des opérations évolutives.",
+            "description": "Complétez les opérations et ne gagnez rien pour le moment.",
             "cta": "Calculer"
           },
           "sudoku": {
             "aria": "Accéder au mini-jeu Sudoku",
             "title": "Sudoku",
-            "description": "Résolvez des grilles générées aléatoirement ou laissez l’ordinateur trouver la solution parfaite.",
+            "description": "Terminez un tableau pour booster la production hors ligne pour les prochaines heures.",
             "cta": "Résoudre"
           },
           "minesweeper": {
             "aria": "Accéder au mini-jeu Démineur",
             "title": "Démineur",
-            "description": "Dévoilez toutes les cases sans déclencher les mines quantiques.",
+            "description": "Validez une grille pour gagner des tickets de gacha.",
             "cta": "Désarmer"
           },
           "solitaire": {
             "aria": "Accéder au mini-jeu Solitaire",
             "title": "Solitaire",
-            "description": "Empilez les cartes du tableau pour compléter les quatre fondations.",
+            "description": "Super connu, finissez le tableau, pas de récompense pour le moment.",
             "cta": "Jouer"
           },
           "echecs": {
             "aria": "Accéder au mini-jeu Échecs",
             "title": "Échecs",
-            "description": "Affrontez une IA sur un échiquier quantique pensé pour les stratèges en herbe.",
+            "description": "Entraînez-vous, aucune récompense pour le moment.",
             "cta": "Planifier"
           },
           "gameOfLife": {
             "aria": "Accéder au mini-jeu Jeu de la vie",
             "title": "Jeu de la vie",
-            "description": "Faites évoluer des cellules sur une grille infinie et orchestrez vos motifs préférés.",
+            "description": "Rien à gagner, c'est une aire de test pour le jeu de la vie de Conway.",
             "cta": "Explorer"
           },
           "blackjack": {
             "aria": "Ouvrir le mini-jeu Blackjack",
             "title": "Blackjack",
-            "description": "Affrontez le croupier avec un sabot de huit paquets qui se régénère dès qu’une carte unique s’épuise.",
+            "description": "Doublez vos Atomes, ou perdez tout.",
             "cta": "Distribuer"
           }
         }
