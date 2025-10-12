@@ -52,6 +52,8 @@ const DEFAULT_METAUX_CONFIG = {
     penaltyWindowSeconds: 30,
     penaltyAmountSeconds: 1,
     minMaxSeconds: 1,
+    decayIntervalSeconds: 120,
+    decayAmountSeconds: 1,
     tickIntervalMs: 100
   }
 };
@@ -196,6 +198,16 @@ const METAUX_TIMER_CONFIG = {
     DEFAULT_METAUX_CONFIG.timer.minMaxSeconds,
     { min: 0.5, max: 600 }
   ),
+  decayIntervalSeconds: toNumberWithinRange(
+    METAUX_TIMER_SOURCE.decayIntervalSeconds,
+    DEFAULT_METAUX_CONFIG.timer.decayIntervalSeconds,
+    { min: 0, max: 3600 }
+  ),
+  decayAmountSeconds: toNumberWithinRange(
+    METAUX_TIMER_SOURCE.decayAmountSeconds,
+    DEFAULT_METAUX_CONFIG.timer.decayAmountSeconds,
+    { min: 0, max: 60 }
+  ),
   tickIntervalMs: Math.max(
     16,
     toPositiveInteger(METAUX_TIMER_SOURCE.tickIntervalMs, DEFAULT_METAUX_CONFIG.timer.tickIntervalMs)
@@ -210,6 +222,12 @@ METAUX_TIMER_CONFIG.minMaxSeconds = clamp(
   0.5,
   METAUX_TIMER_CONFIG.maxSeconds
 );
+
+const METAUX_TIMER_DECAY_INTERVAL_MS =
+  METAUX_TIMER_CONFIG.decayIntervalSeconds > 0
+    ? METAUX_TIMER_CONFIG.decayIntervalSeconds * 1000
+    : 0;
+const METAUX_TIMER_DECAY_AMOUNT = Math.max(0, METAUX_TIMER_CONFIG.decayAmountSeconds);
 
 const METAUX_TIMER_REWARD_SECONDS = Math.max(0, METAUX_TIMER_CONFIG.matchRewardSeconds);
 const METAUX_TIMER_PENALTY_WINDOW_MS = Math.max(
@@ -306,7 +324,8 @@ class MetauxMatch3Game {
       running: false,
       intervalId: null,
       lastUpdate: null,
-      totalElapsedMs: 0
+      totalElapsedMs: 0,
+      decaySteps: 0
     };
     this.freePlaySessionStart = null;
     this.lastMatchPerType = new Map();
@@ -1007,6 +1026,7 @@ class MetauxMatch3Game {
     this.timerState.current = 0;
     this.timerState.lastUpdate = null;
     this.timerState.running = false;
+    this.timerState.decaySteps = 0;
     this.matchHistory = this.createEmptyMatchHistory();
     this.lastMatchPerType = new Map(METAUX_TILE_TYPES.map(type => [type.id, this.getNow()]));
     this.resetStats();
@@ -1039,6 +1059,7 @@ class MetauxMatch3Game {
       this.timerState.current = 0;
       this.timerState.totalElapsedMs = 0;
       this.timerState.running = false;
+      this.timerState.decaySteps = 0;
       this.freePlaySessionStart = this.getNow();
     } else {
       this.startTimer();
@@ -1055,6 +1076,7 @@ class MetauxMatch3Game {
     this.timerState.current = METAUX_TIMER_CONFIG.initialSeconds;
     this.timerState.totalElapsedMs = 0;
     this.timerState.lastUpdate = null;
+    this.timerState.decaySteps = 0;
   }
 
   startTimer() {
@@ -1098,6 +1120,24 @@ class MetauxMatch3Game {
       return;
     }
     this.timerState.totalElapsedMs += deltaMs;
+    if (METAUX_TIMER_DECAY_INTERVAL_MS && METAUX_TIMER_DECAY_AMOUNT) {
+      const decaySteps = Math.floor(this.timerState.totalElapsedMs / METAUX_TIMER_DECAY_INTERVAL_MS);
+      if (decaySteps > this.timerState.decaySteps) {
+        const stepsToApply = decaySteps - this.timerState.decaySteps;
+        const decayAmount = METAUX_TIMER_DECAY_AMOUNT * stepsToApply;
+        const reduced = this.reduceTimerMax(decayAmount);
+        this.timerState.decaySteps = decaySteps;
+        if (reduced) {
+          const decimals = Number.isInteger(reduced) ? 0 : 1;
+          const amountLabel = this.formatSeconds(reduced, { decimals });
+          this.updateMessage(
+            t('scripts.metaux.timer.decay', {
+              amount: amountLabel
+            })
+          );
+        }
+      }
+    }
     const deltaSeconds = deltaMs / 1000;
     this.timerState.current = Math.max(0, this.timerState.current - deltaSeconds);
     this.updateTimerUI();
@@ -1130,20 +1170,22 @@ class MetauxMatch3Game {
     this.updateTimerUI();
   }
 
-  reduceTimerMax() {
-    if (METAUX_TIMER_PENALTY_AMOUNT <= 0) {
-      return false;
+  reduceTimerMax(amountSeconds = METAUX_TIMER_PENALTY_AMOUNT) {
+    const normalizedAmount = Math.max(0, Number(amountSeconds) || 0);
+    if (normalizedAmount <= 0) {
+      return 0;
     }
-    const newMax = Math.max(METAUX_TIMER_CONFIG.minMaxSeconds, this.timerState.max - METAUX_TIMER_PENALTY_AMOUNT);
-    if (newMax === this.timerState.max) {
-      return false;
+    const newMax = Math.max(METAUX_TIMER_CONFIG.minMaxSeconds, this.timerState.max - normalizedAmount);
+    const reduction = this.timerState.max - newMax;
+    if (reduction <= 0) {
+      return 0;
     }
     this.timerState.max = newMax;
     if (this.timerState.current > this.timerState.max) {
       this.timerState.current = this.timerState.max;
     }
     this.updateTimerUI();
-    return true;
+    return reduction;
   }
 
   evaluateColorPenalties(now) {

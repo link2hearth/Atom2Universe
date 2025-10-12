@@ -1044,6 +1044,8 @@ const GAME_CONFIG = {
       penaltyWindowSeconds: 20,
       penaltyAmountSeconds: 1,
       minMaxSeconds: 1,
+      decayIntervalSeconds: 120,
+      decayAmountSeconds: 1,
       tickIntervalMs: 100
     }
   },

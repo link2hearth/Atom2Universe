@@ -2383,7 +2383,8 @@
       "timer": {
         "max": "Max {value}",
         "free": "Free mode",
-        "exitHint": "Show the summary and leave free play."
+        "exitHint": "Show the summary and leave free play.",
+        "decay": "The clock speeds up: {amount} trimmed from the maximum."
       },
       "session": {
         "start": "New session: chain those alloys!",
