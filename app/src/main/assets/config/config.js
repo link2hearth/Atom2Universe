@@ -192,12 +192,15 @@ function createShopBuildingDefinitions() {
       name: 'Électrons libres',
       description: 'Canalisez des électrons pour amplifier chaque clic quantique.',
       effectSummary:
-        'Production manuelle : +1 APC par niveau.',
+        'Production manuelle : +1 APC par niveau. Tous les 50 niveaux, l’ionisation double le bonus total.',
       category: 'manual',
       baseCost: 15,
       costScale: 1.15,
       effect: (level = 0) => {
-        const clickAdd = level > 0 ? level : 0;
+        // Ionisation : tous les 50 niveaux, on applique un multiplicateur ×2 sur le bonus total.
+        const ionizationTier = Math.floor(level / 50);
+        const ionizationBoost = ionizationTier > 0 ? 2 ** ionizationTier : 1;
+        const clickAdd = level > 0 ? level * ionizationBoost : 0;
         return { clickAdd };
       }
     },
@@ -206,12 +209,15 @@ function createShopBuildingDefinitions() {
       name: 'Laboratoire de Physique',
       description: 'Des équipes de chercheurs boostent votre production atomique.',
       effectSummary:
-        'Production passive : +1 APS par niveau.',
+        'Production passive : +1 APS par niveau. Tous les 50 niveaux, l’ionisation double le bonus total.',
       category: 'auto',
       baseCost: 100,
       costScale: 1.15,
       effect: (level = 0) => {
-        const autoAdd = level > 0 ? level : 0;
+        // Ionisation : tous les 50 niveaux, on applique un multiplicateur ×2 sur le bonus total.
+        const ionizationTier = Math.floor(level / 50);
+        const ionizationBoost = ionizationTier > 0 ? 2 ** ionizationTier : 1;
+        const autoAdd = level > 0 ? level * ionizationBoost : 0;
         return { autoAdd };
       }
     },
@@ -220,13 +226,16 @@ function createShopBuildingDefinitions() {
       name: 'Réacteur nucléaire',
       description: 'Des réacteurs contrôlés libèrent une énergie colossale.',
       effectSummary:
-        'Production passive : +10 APS par niveau.',
+        'Production passive : +10 APS par niveau. Tous les 50 niveaux, l’ionisation double le bonus total.',
       category: 'auto',
       baseCost: 1000,
       costScale: 1.15,
       effect: (level = 0) => {
         const baseAmount = 10 * level;
-        const autoAdd = level > 0 ? baseAmount : 0;
+        // Ionisation : tous les 50 niveaux, on applique un multiplicateur ×2 sur le bonus total.
+        const ionizationTier = Math.floor(level / 50);
+        const ionizationBoost = ionizationTier > 0 ? 2 ** ionizationTier : 1;
+        const autoAdd = level > 0 ? baseAmount * ionizationBoost : 0;
         return { autoAdd };
       }
     },
@@ -235,14 +244,21 @@ function createShopBuildingDefinitions() {
       name: 'Accélérateur de particules',
       description: 'Boostez vos particules pour intensifier la production passive.',
       effectSummary:
-        'Production passive : +50 APS par niveau.',
+        'Production passive : +50 APS par niveau. Tous les 100 niveaux, la rémanence ajoute un bonus d’APC égal au gain passif.',
       category: 'hybrid',
       baseCost: 12_000,
       costScale: 1.15,
       effect: (level = 0) => {
         const baseAmount = 50 * level;
         const autoAdd = level > 0 ? baseAmount : 0;
-        return { autoAdd };
+        // Rémanence manuelle : tous les 100 niveaux, on convertit le gain passif en bonus d’APC.
+        const remanenceTier = Math.floor(level / 100);
+        const clickAdd = remanenceTier > 0 ? remanenceTier * baseAmount : 0;
+        const result = { autoAdd };
+        if (clickAdd > 0) {
+          result.clickAdd = clickAdd;
+        }
+        return result;
       }
     },
     {
@@ -250,14 +266,21 @@ function createShopBuildingDefinitions() {
       name: 'Supercalculateurs',
       description: 'Des centres de calcul quantique optimisent vos gains.',
       effectSummary:
-        'Production passive : +500 APS par niveau.',
+        'Production passive : +500 APS par niveau. Tous les 25 niveaux, un stabilisateur ajoute +5 % de multiplicateur à la production.',
       category: 'auto',
       baseCost: 200_000,
       costScale: 1.15,
       effect: (level = 0) => {
         const baseAmount = 500 * level;
         const autoAdd = level > 0 ? baseAmount : 0;
-        return { autoAdd };
+        // Stabilisateur quantique : tous les 25 niveaux, ajoute +5 % au multiplicateur automatique.
+        const stabilizerTier = Math.floor(level / 25);
+        const autoMult = stabilizerTier > 0 ? 1 + stabilizerTier * 0.05 : 1;
+        const result = { autoAdd };
+        if (autoMult !== 1) {
+          result.autoMult = autoMult;
+        }
+        return result;
       }
     },
     {
@@ -298,14 +321,21 @@ function createShopBuildingDefinitions() {
       name: 'Station spatiale',
       description: 'Des bases orbitales coordonnent votre expansion.',
       effectSummary:
-        'Production passive : +50 000 APS par niveau.',
+        'Production passive : +50 000 APS par niveau. Tous les 100 niveaux, la rémanence convertit ce gain en bonus d’APC.',
       category: 'hybrid',
       baseCost: 1e8,
       costScale: 1.2,
       effect: (level = 0) => {
         const baseAmount = 50_000 * level;
         const autoAdd = level > 0 ? baseAmount : 0;
-        return { autoAdd };
+        // Rémanence manuelle : tous les 100 niveaux, on convertit le gain passif en bonus d’APC.
+        const remanenceTier = Math.floor(level / 100);
+        const clickAdd = remanenceTier > 0 ? remanenceTier * baseAmount : 0;
+        const result = { autoAdd };
+        if (clickAdd > 0) {
+          result.clickAdd = clickAdd;
+        }
+        return result;
       }
     },
     {
@@ -313,14 +343,21 @@ function createShopBuildingDefinitions() {
       name: 'Forgeron d’étoiles',
       description: 'Façonnez des étoiles et dopez votre production passive.',
       effectSummary:
-        'Production passive : +500 000 APS par niveau.',
+        'Production passive : +500 000 APS par niveau. Tous les 100 niveaux, la rémanence ajoute un bonus d’APC équivalent.',
       category: 'hybrid',
       baseCost: 5e10,
       costScale: 1.2,
       effect: (level = 0) => {
         const baseAmount = 500_000 * level;
         const autoAdd = level > 0 ? baseAmount : 0;
-        return { autoAdd };
+        // Rémanence manuelle : tous les 100 niveaux, on convertit le gain passif en bonus d’APC.
+        const remanenceTier = Math.floor(level / 100);
+        const clickAdd = remanenceTier > 0 ? remanenceTier * baseAmount : 0;
+        const result = { autoAdd };
+        if (clickAdd > 0) {
+          result.clickAdd = clickAdd;
+        }
+        return result;
       }
     },
     {
@@ -328,14 +365,21 @@ function createShopBuildingDefinitions() {
       name: 'Galaxie artificielle',
       description: 'Ingénierie galactique pour une expansion sans fin.',
       effectSummary:
-        'Production passive : +5 000 000 APS par niveau.',
+        'Production passive : +5 000 000 APS par niveau. Tous les 25 niveaux, un stabilisateur ajoute +5 % de multiplicateur.',
       category: 'auto',
       baseCost: 1e13,
       costScale: 1.2,
       effect: (level = 0) => {
         const baseAmount = 5e6 * level;
         const autoAdd = level > 0 ? baseAmount : 0;
-        return { autoAdd };
+        // Stabilisateur quantique : tous les 25 niveaux, ajoute +5 % au multiplicateur automatique.
+        const stabilizerTier = Math.floor(level / 25);
+        const autoMult = stabilizerTier > 0 ? 1 + stabilizerTier * 0.05 : 1;
+        const result = { autoAdd };
+        if (autoMult !== 1) {
+          result.autoMult = autoMult;
+        }
+        return result;
       }
     },
     {
@@ -343,14 +387,21 @@ function createShopBuildingDefinitions() {
       name: 'Simulateur de Multivers',
       description: 'Simulez l’infini pour optimiser chaque seconde.',
       effectSummary:
-        'Production passive : +500 000 000 APS par niveau.',
+        'Production passive : +500 000 000 APS par niveau. Tous les 25 niveaux, un stabilisateur ajoute +5 % de multiplicateur.',
       category: 'auto',
       baseCost: 1e16,
       costScale: 1.2,
       effect: (level = 0) => {
         const baseAmount = 5e8 * level;
         const autoAdd = level > 0 ? baseAmount : 0;
-        return { autoAdd };
+        // Stabilisateur quantique : tous les 25 niveaux, ajoute +5 % au multiplicateur automatique.
+        const stabilizerTier = Math.floor(level / 25);
+        const autoMult = stabilizerTier > 0 ? 1 + stabilizerTier * 0.05 : 1;
+        const result = { autoAdd };
+        if (autoMult !== 1) {
+          result.autoMult = autoMult;
+        }
+        return result;
       }
     },
     {
@@ -358,14 +409,21 @@ function createShopBuildingDefinitions() {
       name: 'Tisseur de Réalité',
       description: 'Tissez les lois physiques à votre avantage.',
       effectSummary:
-        'Production passive : +10 000 000 000 APS par niveau.',
+        'Production passive : +10 000 000 000 APS par niveau. Tous les 150 niveaux, la surcharge critique ajoute +5 % de chance de critique.',
       category: 'hybrid',
       baseCost: 1e20,
       costScale: 1.25,
       effect: (level = 0) => {
         const baseAmount = 1e10 * level;
         const autoAdd = level > 0 ? baseAmount : 0;
-        return { autoAdd };
+        // Surcharge critique : tous les 150 niveaux, ajoute +5 % de chance de critique.
+        const overloadTier = Math.floor(level / 150);
+        const critChanceAdd = overloadTier > 0 ? overloadTier * 0.05 : 0;
+        const result = { autoAdd };
+        if (critChanceAdd > 0) {
+          result.critChanceAdd = critChanceAdd;
+        }
+        return result;
       }
     },
     {
@@ -373,14 +431,21 @@ function createShopBuildingDefinitions() {
       name: 'Architecte Cosmique',
       description: 'Réécrivez les plans du cosmos pour libérer une énergie infinie.',
       effectSummary:
-        'Production passive : +1 000 000 000 000 APS par niveau.',
+        'Production passive : +1 000 000 000 000 APS par niveau. Tous les 150 niveaux, la surcharge critique ajoute +0,5 au multiplicateur critique.',
       category: 'hybrid',
       baseCost: 1e25,
       costScale: 1.25,
       effect: (level = 0) => {
         const baseAmount = 1e12 * level;
         const autoAdd = level > 0 ? baseAmount : 0;
-        return { autoAdd };
+        // Surcharge critique : tous les 150 niveaux, ajoute +0,5 au multiplicateur critique.
+        const overloadTier = Math.floor(level / 150);
+        const critMultiplierAdd = overloadTier > 0 ? overloadTier * 0.5 : 0;
+        const result = { autoAdd };
+        if (critMultiplierAdd > 0) {
+          result.critMultiplierAdd = critMultiplierAdd;
+        }
+        return result;
       }
     },
     {
@@ -418,14 +483,25 @@ function createShopBuildingDefinitions() {
       name: 'Grand Ordonnateur Quantique',
       description: 'Ordonnez le multivers et atteignez la singularité.',
       effectSummary:
-        'Production passive : +1 000 000 000 000 000 000 APS par niveau.',
+        'Production passive : +1 000 000 000 000 000 000 APS par niveau. Tous les 100 niveaux, la surcharge critique ajoute +5 % de chance et +0,25 de multiplicateur.',
       category: 'hybrid',
       baseCost: 1e42,
       costScale: 1.25,
       effect: (level = 0) => {
         const baseAmount = 1e18 * level;
         const autoAdd = level > 0 ? baseAmount : 0;
-        return { autoAdd };
+        // Surcharge critique : tous les 100 niveaux, ajoute +5 % de chance et +0,25 de multiplicateur critique.
+        const overloadTier = Math.floor(level / 100);
+        const critChanceAdd = overloadTier > 0 ? overloadTier * 0.05 : 0;
+        const critMultiplierAdd = overloadTier > 0 ? overloadTier * 0.25 : 0;
+        const result = { autoAdd };
+        if (critChanceAdd > 0) {
+          result.critChanceAdd = critChanceAdd;
+        }
+        if (critMultiplierAdd > 0) {
+          result.critMultiplierAdd = critMultiplierAdd;
+        }
+        return result;
       }
     }
   ].map(withDefaults);
