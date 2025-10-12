@@ -1811,6 +1811,17 @@ const GAME_CONFIG = {
         }
       }
     },
+    demineur: {
+      /**
+       * Ratio de tickets de tirage accordés par mine présente sur le plateau
+       * lorsqu'une partie est gagnée. Le total est arrondi à l'entier inférieur.
+       */
+      rewards: {
+        gachaTickets: {
+          perMineRatio: 0.5
+        }
+      }
+    },
   },
 
   /**

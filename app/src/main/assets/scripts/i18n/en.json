@@ -1895,6 +1895,9 @@
         },
         "quantum2048": {
           "rewardToast": "{tickets} earned from ObjectX!"
+        },
+        "minesweeper": {
+          "rewardToast": "Minesweeper reward: {tickets} secured!"
         }
       }
     },
