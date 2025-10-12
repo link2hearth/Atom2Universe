@@ -72,6 +72,12 @@ body {
   font-size: calc(var(--font-text-base-size, 1rem) * var(--font-scale-factor, 1));
 }
 
+body[data-active-page='game'],
+body[data-active-page='wave'] {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
 body[data-text-font='vt323'] {
   --font-text-base-size: 1.06rem;
 }
