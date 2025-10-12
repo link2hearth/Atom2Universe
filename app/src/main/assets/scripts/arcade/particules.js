@@ -2585,10 +2585,13 @@
 
     getBallSpeed() {
       const base = (this.width + this.height) / (2 * Math.max(this.pixelRatio, 0.5));
-      const effectiveLevel = Math.min(
-        Math.max(0, this.level - 1),
-        BALL_SPEED_GROWTH_LEVEL_CAP
-      );
+      const shouldScaleWithLevel = this.areRewardsEnabled();
+      const effectiveLevel = shouldScaleWithLevel
+        ? Math.min(
+          Math.max(0, this.level - 1),
+          BALL_SPEED_GROWTH_LEVEL_CAP
+        )
+        : 0;
       const levelMultiplier = Math.pow(
         1 + this.ballSettings.speedGrowthRatio,
         effectiveLevel
