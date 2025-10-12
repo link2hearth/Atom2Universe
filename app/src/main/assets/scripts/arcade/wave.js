@@ -124,6 +124,47 @@
     return palette || ENERGY_BALL_FALLBACK_COLORS[0];
   };
 
+  const DEFAULT_WAVE_PALETTE = Object.freeze({
+    skyTop: '#050810',
+    skyMiddle: '#04060d',
+    skyBottom: '#010103',
+    starColor: 'rgba(255, 255, 255, 0.85)',
+    terrainTop: 'rgba(74, 74, 82, 0.92)',
+    terrainMiddle: 'rgba(44, 44, 52, 0.95)',
+    terrainBottom: 'rgba(18, 18, 26, 1)',
+    terrainStroke: 'rgba(255, 255, 255, 0.25)'
+  });
+
+  const cloneWavePalette = source => ({
+    skyTop: source?.skyTop ?? DEFAULT_WAVE_PALETTE.skyTop,
+    skyMiddle: source?.skyMiddle ?? DEFAULT_WAVE_PALETTE.skyMiddle,
+    skyBottom: source?.skyBottom ?? DEFAULT_WAVE_PALETTE.skyBottom,
+    starColor: source?.starColor ?? DEFAULT_WAVE_PALETTE.starColor,
+    terrainTop: source?.terrainTop ?? DEFAULT_WAVE_PALETTE.terrainTop,
+    terrainMiddle: source?.terrainMiddle ?? DEFAULT_WAVE_PALETTE.terrainMiddle,
+    terrainBottom: source?.terrainBottom ?? DEFAULT_WAVE_PALETTE.terrainBottom,
+    terrainStroke: source?.terrainStroke ?? DEFAULT_WAVE_PALETTE.terrainStroke
+  });
+
+  const areWavePalettesEqual = (a, b) => {
+    if (a === b) {
+      return true;
+    }
+    if (!a || !b) {
+      return false;
+    }
+    return (
+      a.skyTop === b.skyTop &&
+      a.skyMiddle === b.skyMiddle &&
+      a.skyBottom === b.skyBottom &&
+      a.starColor === b.starColor &&
+      a.terrainTop === b.terrainTop &&
+      a.terrainMiddle === b.terrainMiddle &&
+      a.terrainBottom === b.terrainBottom &&
+      a.terrainStroke === b.terrainStroke
+    );
+  };
+
   const degToRad = degrees => (degrees * Math.PI) / 180;
 
   function translate(key, fallback, params) {
@@ -458,6 +499,8 @@
       };
 
       this.skyDots = [];
+      this.palette = cloneWavePalette(DEFAULT_WAVE_PALETTE);
+      this.themeObserver = null;
 
       this.running = false;
       this.lastTimestamp = null;
@@ -498,6 +541,9 @@
       this.handleKeyUp = this.handleKeyUp.bind(this);
       this.handleResetClick = this.handleResetClick.bind(this);
       this.tick = this.tick.bind(this);
+
+      this.updatePalette(true);
+      this.observeThemeChanges();
 
       this.loadAutosavedStats();
       this.attachEvents();
@@ -737,6 +783,7 @@
       });
       this.refreshSky();
       this.resetTerrain();
+      this.updatePalette();
     }
 
     refreshSky() {
@@ -1486,16 +1533,17 @@
     }
 
     drawSky(ctx) {
+      const palette = this.getPalette();
       const gradient = ctx.createLinearGradient(0, 0, 0, this.viewHeight);
-      gradient.addColorStop(0, 'rgba(10, 16, 45, 1)');
-      gradient.addColorStop(0.55, 'rgba(9, 20, 52, 1)');
-      gradient.addColorStop(1, 'rgba(4, 9, 24, 1)');
+      gradient.addColorStop(0, palette.skyTop);
+      gradient.addColorStop(0.55, palette.skyMiddle);
+      gradient.addColorStop(1, palette.skyBottom);
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, this.viewWidth, this.viewHeight);
 
       if (this.skyDots?.length) {
         ctx.save();
-        ctx.fillStyle = '#dbe7ff';
+        ctx.fillStyle = palette.starColor;
         this.skyDots.forEach(dot => {
           const x = dot.x * this.viewWidth;
           const y = dot.y * this.viewHeight * 0.8;
@@ -1513,6 +1561,7 @@
       if (!points.length) {
         return;
       }
+      const palette = this.getPalette();
       const scale = this.cameraScale;
       const viewWorldWidth = this.viewWidth / scale;
       const startX = this.cameraX - viewWorldWidth * 0.25;
@@ -1537,17 +1586,70 @@
       ctx.closePath();
 
       const fillGradient = ctx.createLinearGradient(0, this.viewHeight * 0.4, 0, this.viewHeight);
-      fillGradient.addColorStop(0, 'rgba(24, 40, 84, 0.92)');
-      fillGradient.addColorStop(0.55, 'rgba(20, 54, 112, 0.95)');
-      fillGradient.addColorStop(1, 'rgba(8, 16, 40, 1)');
+      fillGradient.addColorStop(0, palette.terrainTop);
+      fillGradient.addColorStop(0.55, palette.terrainMiddle);
+      fillGradient.addColorStop(1, palette.terrainBottom);
       ctx.fillStyle = fillGradient;
       ctx.fill();
 
       ctx.lineWidth = Math.max(1.5, this.viewHeight * 0.004);
-      ctx.strokeStyle = 'rgba(132, 196, 255, 0.45)';
+      ctx.strokeStyle = palette.terrainStroke;
       ctx.stroke();
 
       ctx.restore();
+    }
+
+    readPaletteFromStage() {
+      if (!this.stage || typeof window === 'undefined' || typeof window.getComputedStyle !== 'function') {
+        return cloneWavePalette(DEFAULT_WAVE_PALETTE);
+      }
+      try {
+        const styles = window.getComputedStyle(this.stage);
+        const readColor = (property, fallback) => {
+          const value = styles.getPropertyValue(property);
+          return value && value.trim() ? value.trim() : fallback;
+        };
+        return {
+          skyTop: readColor('--wave-sky-top', DEFAULT_WAVE_PALETTE.skyTop),
+          skyMiddle: readColor('--wave-sky-middle', DEFAULT_WAVE_PALETTE.skyMiddle),
+          skyBottom: readColor('--wave-sky-bottom', DEFAULT_WAVE_PALETTE.skyBottom),
+          starColor: readColor('--wave-star-color', DEFAULT_WAVE_PALETTE.starColor),
+          terrainTop: readColor('--wave-terrain-top', DEFAULT_WAVE_PALETTE.terrainTop),
+          terrainMiddle: readColor('--wave-terrain-middle', DEFAULT_WAVE_PALETTE.terrainMiddle),
+          terrainBottom: readColor('--wave-terrain-bottom', DEFAULT_WAVE_PALETTE.terrainBottom),
+          terrainStroke: readColor('--wave-terrain-stroke', DEFAULT_WAVE_PALETTE.terrainStroke)
+        };
+      } catch (error) {
+        return cloneWavePalette(DEFAULT_WAVE_PALETTE);
+      }
+    }
+
+    updatePalette(force = false) {
+      const next = this.readPaletteFromStage();
+      if (!force && areWavePalettesEqual(this.palette, next)) {
+        return;
+      }
+      this.palette = next;
+    }
+
+    getPalette() {
+      if (this.palette) {
+        return this.palette;
+      }
+      return DEFAULT_WAVE_PALETTE;
+    }
+
+    observeThemeChanges() {
+      if (typeof MutationObserver !== 'function' || typeof document === 'undefined' || !document.body) {
+        return;
+      }
+      if (this.themeObserver && typeof this.themeObserver.disconnect === 'function') {
+        this.themeObserver.disconnect();
+      }
+      this.themeObserver = new MutationObserver(() => {
+        this.updatePalette();
+      });
+      this.themeObserver.observe(document.body, { attributes: true, attributeFilter: ['class', 'data-theme'] });
     }
 
     drawPlayer(ctx) {
