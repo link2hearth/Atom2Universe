@@ -6,12 +6,15 @@
   const CONFIG_PATH = 'config/arcade/game-of-life.json';
   const PATTERNS_PATH = 'resources/patterns/game-of-life.json';
   const RANDOM_SEED_STORAGE_KEY = 'atom2univers.arcade.gameOfLife.seed';
+  const CUSTOM_PATTERNS_STORAGE_KEY = 'atom2univers.arcade.gameOfLife.customPatterns';
+  const CUSTOM_PATTERN_COUNTER_STORAGE_KEY = 'atom2univers.arcade.gameOfLife.customPatternCounter';
 
   const DEFAULT_CONFIG = Object.freeze({
     simulation: Object.freeze({
       tickMs: 200,
       fastForwardMultiplier: 4,
-      historyLimit: 240
+      historyLimit: 240,
+      maxOffscreenDistance: 160
     }),
     viewport: Object.freeze({
       baseCellSize: 22,
@@ -20,6 +23,11 @@
       gridFadeStart: 12,
       gridFadeEnd: 28,
       paddingCells: 2
+    }),
+    selection: Object.freeze({
+      maxWidth: 200,
+      maxHeight: 200,
+      maxStored: 25
     }),
     random: Object.freeze({
       defaultWidth: 40,
@@ -98,6 +106,9 @@
       if (Number.isFinite(source.historyLimit) && source.historyLimit >= 10) {
         simulation.historyLimit = source.historyLimit;
       }
+      if (Number.isFinite(source.maxOffscreenDistance) && source.maxOffscreenDistance >= 0) {
+        simulation.maxOffscreenDistance = source.maxOffscreenDistance;
+      }
     }
 
     const viewport = Object.assign({}, base.viewport);
@@ -123,6 +134,20 @@
       }
     }
 
+    const selection = Object.assign({}, base.selection);
+    if (override?.selection) {
+      const source = override.selection;
+      if (Number.isFinite(source.maxWidth) && source.maxWidth >= 1) {
+        selection.maxWidth = source.maxWidth;
+      }
+      if (Number.isFinite(source.maxHeight) && source.maxHeight >= 1) {
+        selection.maxHeight = source.maxHeight;
+      }
+      if (Number.isFinite(source.maxStored) && source.maxStored >= 0) {
+        selection.maxStored = Math.floor(source.maxStored);
+      }
+    }
+
     const random = Object.assign({}, base.random);
     if (override?.random) {
       const source = override.random;
@@ -143,7 +168,7 @@
       }
     }
 
-    return Object.freeze({ simulation, viewport, random });
+    return Object.freeze({ simulation, viewport, selection, random });
   }
 
   async function fetchJson(path) {
@@ -291,6 +316,7 @@
       patternSelect,
       patternDescription,
       patternEmpty,
+      selectionButton,
       menu,
       menuToggle,
       menuHeader
@@ -316,13 +342,16 @@
       this.patternSelect = patternSelect;
       this.patternDescription = patternDescription;
       this.patternEmpty = patternEmpty;
+      this.selectionButton = selectionButton;
       this.menu = menu;
       this.menuToggle = menuToggle;
       this.menuHeader = menuHeader;
 
       this.config = DEFAULT_CONFIG;
-      this.patterns = [];
+      this.builtinPatterns = [];
+      this.customPatterns = [];
       this.selectedPatternId = null;
+      this.customPatternCounter = 1;
 
       this.dpr = window.devicePixelRatio || 1;
       this.viewport = {
@@ -378,6 +407,17 @@
       this.canvasRect = { width: 0, height: 0 };
       this.boundHandleWindowResize = null;
 
+      this.selectionState = {
+        enabled: false,
+        active: false,
+        pointerId: null,
+        startCell: null,
+        currentCell: null,
+        message: null
+      };
+
+      this.speedSliderRange = { min: 50, max: 600 };
+
       this.boundHandleFrame = this.handleFrame.bind(this);
       this.boundHandleVisibility = this.handleVisibilityChange.bind(this);
       this.boundHandleMenuPointerMove = this.handleMenuPointerMove.bind(this);
@@ -393,6 +433,8 @@
       this.stepCandidates = new Map();
       this.stepCellBuffer = { x: 0, y: 0 };
       this.renderCellBuffer = { x: 0, y: 0 };
+      this.boundsCellBuffer = { x: 0, y: 0 };
+      this.selectionCellBuffer = { x: 0, y: 0 };
     }
 
     async init() {
@@ -405,9 +447,19 @@
       const rawPatterns = Array.isArray(patternsJson?.patterns)
         ? patternsJson.patterns
         : FALLBACK_PATTERNS;
-      this.patterns = rawPatterns
+      this.builtinPatterns = rawPatterns
         .map(pattern => this.normalizePattern(pattern))
-        .filter(Boolean);
+        .filter(Boolean)
+        .map(pattern => Object.freeze(Object.assign({
+          origin: 'builtin',
+          nameFallback: pattern.id.replace(/([A-Z])/g, ' $1').trim(),
+          nameParams: null,
+          descriptionParams: null,
+          descriptionFallback: '',
+          customName: null,
+          created: null
+        }, pattern)));
+      this.restoreCustomPatterns();
 
       this.viewport.cellSize = clamp(
         this.config.viewport.baseCellSize,
@@ -468,11 +520,18 @@
     onLeave() {
       this.state.active = false;
       this.pause();
+      this.setSelectionEnabled(false);
     }
 
     setupUI() {
       if (this.speedSlider) {
-        this.speedSlider.value = String(Math.round(this.state.speedMs));
+        const rawMin = toNumber(this.speedSlider.min, this.speedSliderRange.min);
+        const rawMax = toNumber(this.speedSlider.max, this.speedSliderRange.max);
+        if (Number.isFinite(rawMin) && Number.isFinite(rawMax)) {
+          this.speedSliderRange.min = Math.min(rawMin, rawMax);
+          this.speedSliderRange.max = Math.max(rawMin, rawMax);
+        }
+        this.speedSlider.value = this.speedToSliderValue(this.state.speedMs);
       }
       if (this.zoomSlider) {
         this.zoomSlider.min = String(this.viewport.minCellSize);
@@ -528,7 +587,7 @@
       }
       if (this.speedSlider) {
         this.speedSlider.addEventListener('input', () => {
-          const value = clamp(Number(this.speedSlider.value) || this.state.speedMs, 30, 2000);
+          const value = this.sliderValueToSpeed(this.speedSlider.value);
           this.setSpeed(value);
         });
       }
@@ -536,6 +595,13 @@
         this.zoomSlider.addEventListener('input', () => {
           const value = clamp(Number(this.zoomSlider.value) || this.viewport.cellSize, this.viewport.minCellSize, this.viewport.maxCellSize);
           this.setZoom(value);
+        });
+      }
+      if (this.selectionButton) {
+        this.selectionButton.addEventListener('click', () => {
+          const nextState = !this.selectionState.enabled;
+          this.setSelectionEnabled(nextState);
+          this.updateUI();
         });
       }
       if (this.randomDensitySlider) {
@@ -687,6 +753,197 @@
       };
     }
 
+    restoreCustomPatterns() {
+      const selectionConfig = this.config.selection || DEFAULT_CONFIG.selection;
+      const rawMaxWidth = Number(selectionConfig.maxWidth ?? DEFAULT_CONFIG.selection.maxWidth);
+      const rawMaxHeight = Number(selectionConfig.maxHeight ?? DEFAULT_CONFIG.selection.maxHeight);
+      const maxWidth = Number.isFinite(rawMaxWidth) && rawMaxWidth > 0
+        ? Math.floor(rawMaxWidth)
+        : 0;
+      const maxHeight = Number.isFinite(rawMaxHeight) && rawMaxHeight > 0
+        ? Math.floor(rawMaxHeight)
+        : 0;
+      const maxStored = Math.max(0, Math.floor(selectionConfig.maxStored ?? DEFAULT_CONFIG.selection.maxStored));
+
+      let parsedList = [];
+      try {
+        const raw = window.localStorage?.getItem(CUSTOM_PATTERNS_STORAGE_KEY);
+        if (raw) {
+          const json = JSON.parse(raw);
+          if (Array.isArray(json)) {
+            parsedList = json;
+          }
+        }
+      } catch (error) {
+        parsedList = [];
+      }
+
+      const patterns = [];
+      parsedList.forEach(entry => {
+        const normalized = this.normalizeStoredCustomPattern(entry, maxWidth, maxHeight);
+        if (normalized) {
+          patterns.push(normalized);
+        }
+      });
+
+      patterns.sort((a, b) => (b.created || 0) - (a.created || 0));
+      if (maxStored > 0 && patterns.length > maxStored) {
+        patterns.length = maxStored;
+      }
+      this.customPatterns = patterns;
+
+      let counter = this.readStoredCustomPatternCounter();
+      const maxAutoIndex = patterns.reduce((highest, pattern) => Math.max(highest, pattern.autoIndex || 0), 0);
+      if (!Number.isFinite(counter) || counter <= maxAutoIndex) {
+        counter = maxAutoIndex + 1;
+      }
+      this.customPatternCounter = Math.max(1, counter);
+    }
+
+    readStoredCustomPatternCounter() {
+      try {
+        const raw = window.localStorage?.getItem(CUSTOM_PATTERN_COUNTER_STORAGE_KEY);
+        if (!raw) {
+          return 1;
+        }
+        const parsed = Number.parseInt(raw, 10);
+        if (Number.isFinite(parsed) && parsed > 0) {
+          return parsed;
+        }
+      } catch (error) {
+        // ignore storage errors
+      }
+      return 1;
+    }
+
+    persistCustomPatternCounter() {
+      try {
+        const value = Math.max(1, Math.floor(this.customPatternCounter || 1));
+        window.localStorage?.setItem(CUSTOM_PATTERN_COUNTER_STORAGE_KEY, String(value));
+      } catch (error) {
+        // ignore storage errors
+      }
+    }
+
+    normalizeStoredCustomPattern(entry, maxWidth, maxHeight) {
+      if (!entry || typeof entry !== 'object') {
+        return null;
+      }
+      const id = typeof entry.id === 'string' && entry.id.trim() ? entry.id.trim() : null;
+      if (!id) {
+        return null;
+      }
+      const customName = typeof entry.name === 'string' && entry.name.trim() ? entry.name.trim() : null;
+      const autoIndex = Number.isFinite(entry.autoIndex) && entry.autoIndex > 0
+        ? Math.floor(entry.autoIndex)
+        : null;
+      const rawCells = Array.isArray(entry.cells) ? entry.cells : [];
+      const unique = new Set();
+      const normalizedCells = [];
+      rawCells.forEach(cell => {
+        if (!Array.isArray(cell) || cell.length < 2) {
+          return;
+        }
+        const x = Math.max(0, Math.floor(Number(cell[0]) || 0));
+        const y = Math.max(0, Math.floor(Number(cell[1]) || 0));
+        const key = serializeCell(x, y);
+        if (unique.has(key)) {
+          return;
+        }
+        unique.add(key);
+        normalizedCells.push([x, y]);
+      });
+      if (!normalizedCells.length) {
+        return null;
+      }
+      let maxX = 0;
+      let maxY = 0;
+      normalizedCells.forEach(([x, y]) => {
+        maxX = Math.max(maxX, x);
+        maxY = Math.max(maxY, y);
+      });
+      const width = maxX + 1;
+      const height = maxY + 1;
+      if ((maxWidth && width > maxWidth) || (maxHeight && height > maxHeight)) {
+        return null;
+      }
+      const created = Number.isFinite(entry.created) ? entry.created : Date.now();
+      const relativeCells = Object.freeze(normalizedCells.map(([x, y]) => Object.freeze([x, y])));
+      const descriptionParams = { width, height, cells: relativeCells.length };
+      return Object.freeze({
+        id,
+        origin: 'custom',
+        nameKey: autoIndex ? 'index.sections.gameOfLife.patterns.customNameTemplate' : null,
+        nameParams: autoIndex ? { index: autoIndex } : null,
+        nameFallback: autoIndex ? `Pattern #${autoIndex}` : (customName || id),
+        customName,
+        descriptionKey: 'index.sections.gameOfLife.patterns.customDescription',
+        descriptionParams,
+        descriptionFallback: `${width} × ${height} – ${relativeCells.length} cells`,
+        anchor: Object.freeze({ x: 0, y: 0 }),
+        cells: relativeCells,
+        relativeCells,
+        autoIndex,
+        created,
+        meta: Object.freeze({ width, height, population: relativeCells.length })
+      });
+    }
+
+    persistCustomPatterns() {
+      const selectionConfig = this.config.selection || DEFAULT_CONFIG.selection;
+      const maxStored = Math.max(0, Math.floor(selectionConfig.maxStored ?? DEFAULT_CONFIG.selection.maxStored));
+      const limit = maxStored > 0 ? Math.min(maxStored, this.customPatterns.length) : this.customPatterns.length;
+      const serialized = [];
+      for (let i = 0; i < limit; i += 1) {
+        const pattern = this.customPatterns[i];
+        if (!pattern) {
+          continue;
+        }
+        const cells = Array.isArray(pattern.relativeCells)
+          ? pattern.relativeCells.map(([x, y]) => [x, y])
+          : [];
+        serialized.push({
+          id: pattern.id,
+          name: pattern.customName || null,
+          autoIndex: pattern.autoIndex || null,
+          cells,
+          width: pattern.meta?.width || 0,
+          height: pattern.meta?.height || 0,
+          created: Number.isFinite(pattern.created) ? pattern.created : Date.now()
+        });
+      }
+      try {
+        window.localStorage?.setItem(CUSTOM_PATTERNS_STORAGE_KEY, JSON.stringify(serialized));
+      } catch (error) {
+        // ignore storage errors
+      }
+    }
+
+    getAllPatterns() {
+      return this.builtinPatterns.concat(this.customPatterns);
+    }
+
+    getPatternById(id) {
+      if (!id) {
+        return null;
+      }
+      const all = this.getAllPatterns();
+      return all.find(pattern => pattern.id === id) || null;
+    }
+
+    getPatternDisplayName(pattern) {
+      if (!pattern) {
+        return '';
+      }
+      if (pattern.customName) {
+        return pattern.customName;
+      }
+      if (pattern.nameKey) {
+        return translate(pattern.nameKey, pattern.nameFallback || pattern.id, pattern.nameParams);
+      }
+      return pattern.nameFallback || pattern.id;
+    }
+
     renderPatterns() {
       if (!this.patternSelect) {
         return;
@@ -701,7 +958,8 @@
       );
       this.patternSelect.append(placeholderOption);
 
-      if (!this.patterns.length) {
+      const totalPatterns = this.builtinPatterns.length + this.customPatterns.length;
+      if (!totalPatterns) {
         this.patternSelect.disabled = true;
         this.patternSelect.value = '';
         this.selectedPatternId = null;
@@ -718,20 +976,37 @@
       }
 
       let hasSelectedPattern = false;
-      this.patterns.forEach(pattern => {
+      const appendOption = (pattern, parent) => {
+        if (!pattern) {
+          return;
+        }
         const option = document.createElement('option');
         option.value = pattern.id;
-        const fallbackName = pattern.id.replace(/([A-Z])/g, ' $1').trim();
-        if (pattern.nameKey) {
+        const label = this.getPatternDisplayName(pattern);
+        if (!pattern.customName && pattern.nameKey) {
           option.dataset.i18n = pattern.nameKey;
+          option.textContent = translate(pattern.nameKey, pattern.nameFallback || label, pattern.nameParams);
+        } else {
+          delete option.dataset.i18n;
+          option.textContent = label;
         }
-        option.textContent = translate(pattern.nameKey, fallbackName);
         if (pattern.id === this.selectedPatternId) {
           option.selected = true;
           hasSelectedPattern = true;
         }
-        this.patternSelect.append(option);
-      });
+        parent.append(option);
+      };
+
+      this.builtinPatterns.forEach(pattern => appendOption(pattern, this.patternSelect));
+
+      if (this.customPatterns.length) {
+        const group = document.createElement('optgroup');
+        const labelKey = 'index.sections.gameOfLife.patterns.customGroup';
+        group.label = translate(labelKey, 'Personal patterns');
+        group.dataset.i18n = labelKey;
+        this.customPatterns.forEach(pattern => appendOption(pattern, group));
+        this.patternSelect.append(group);
+      }
 
       if (!hasSelectedPattern) {
         this.selectedPatternId = null;
@@ -745,20 +1020,36 @@
       if (!this.patternDescription) {
         return;
       }
+      if (this.selectionState.message) {
+        const { key, fallback, params } = this.selectionState.message;
+        this.patternDescription.hidden = false;
+        if (key) {
+          this.patternDescription.dataset.i18n = key;
+          this.patternDescription.textContent = translate(key, fallback || '', params);
+        } else {
+          delete this.patternDescription.dataset.i18n;
+          this.patternDescription.textContent = fallback || '';
+        }
+        this.selectionState.message = null;
+        return;
+      }
       if (!this.selectedPatternId) {
         this.patternDescription.hidden = true;
         this.patternDescription.textContent = '';
         delete this.patternDescription.dataset.i18n;
         return;
       }
-      const pattern = this.patterns.find(entry => entry.id === this.selectedPatternId);
+      const pattern = this.getPatternById(this.selectedPatternId);
       if (!pattern) {
         this.patternDescription.hidden = true;
         this.patternDescription.textContent = '';
         delete this.patternDescription.dataset.i18n;
         return;
       }
-      const description = translate(pattern.descriptionKey, '');
+      const fallback = pattern.descriptionFallback || '';
+      const description = pattern.descriptionKey
+        ? translate(pattern.descriptionKey, fallback, pattern.descriptionParams)
+        : fallback;
       if (!description) {
         this.patternDescription.hidden = true;
         this.patternDescription.textContent = '';
@@ -811,14 +1102,23 @@
       if (this.populationValue) {
         this.populationValue.textContent = String(this.state.aliveCells.size);
       }
+      if (this.speedSlider) {
+        this.speedSlider.value = this.speedToSliderValue(this.state.speedMs);
+      }
       if (this.zoomSlider) {
         this.zoomSlider.value = String(Math.round(this.viewport.cellSize));
+      }
+      if (this.selectionButton) {
+        this.selectionButton.disabled = this.state.running;
+        const pressed = this.selectionState.enabled && !this.state.running;
+        this.selectionButton.setAttribute('aria-pressed', pressed ? 'true' : 'false');
       }
       this.needsRedraw = true;
     }
 
     play() {
       this.state.running = true;
+      this.setSelectionEnabled(false);
       this.updateUI();
     }
 
@@ -908,14 +1208,44 @@
       this.state.aliveCells.clear();
       this.state.history = [];
       this.state.generation = 0;
+      this.cancelSelection();
+      this.selectionState.message = null;
       this.pause();
       this.updateUI();
+    }
+
+    getSpeedSliderRange() {
+      const min = Number.isFinite(this.speedSliderRange?.min)
+        ? this.speedSliderRange.min
+        : 50;
+      const max = Number.isFinite(this.speedSliderRange?.max)
+        ? this.speedSliderRange.max
+        : 600;
+      if (min > max) {
+        return { min: max, max: min };
+      }
+      return { min, max };
+    }
+
+    speedToSliderValue(speed) {
+      const { min, max } = this.getSpeedSliderRange();
+      const clampedSpeed = clamp(Number(speed) || this.state.speedMs, 30, 2000);
+      const mirrored = max + min - clamp(clampedSpeed, min, max);
+      const sliderValue = clamp(mirrored, min, max);
+      return String(Math.round(sliderValue));
+    }
+
+    sliderValueToSpeed(value) {
+      const { min, max } = this.getSpeedSliderRange();
+      const numeric = clamp(Number(value) || min, min, max);
+      const mirrored = max + min - numeric;
+      return clamp(mirrored, 30, 2000);
     }
 
     setSpeed(value) {
       this.state.speedMs = clamp(value, 30, 2000);
       if (this.speedSlider) {
-        this.speedSlider.value = String(Math.round(this.state.speedMs));
+        this.speedSlider.value = this.speedToSliderValue(this.state.speedMs);
       }
     }
 
@@ -1047,6 +1377,199 @@
       this.menu.style.top = `${clampedTop}px`;
     }
 
+    setSelectionEnabled(enabled) {
+      const allowSelection = Boolean(enabled) && !this.state.running;
+      if (!allowSelection && this.selectionState.enabled) {
+        this.cancelSelection();
+      }
+      this.selectionState.enabled = allowSelection;
+      if (!allowSelection) {
+        this.selectionState.message = null;
+      }
+      if (this.selectionButton) {
+        this.selectionButton.disabled = this.state.running;
+        this.selectionButton.setAttribute('aria-pressed', allowSelection ? 'true' : 'false');
+      }
+      this.needsRedraw = true;
+      this.updatePatternDescription();
+    }
+
+    cancelSelection() {
+      if (this.selectionState.active) {
+        this.needsRedraw = true;
+      }
+      this.selectionState.active = false;
+      this.selectionState.pointerId = null;
+      this.selectionState.startCell = null;
+      this.selectionState.currentCell = null;
+    }
+
+    startSelection(cell, pointerId) {
+      if (!cell) {
+        return;
+      }
+      this.selectionState.active = true;
+      this.selectionState.pointerId = pointerId;
+      this.selectionState.startCell = this.selectionState.startCell || { x: 0, y: 0 };
+      this.selectionState.startCell.x = cell.x;
+      this.selectionState.startCell.y = cell.y;
+      this.selectionState.currentCell = this.selectionState.currentCell || { x: 0, y: 0 };
+      this.selectionState.currentCell.x = cell.x;
+      this.selectionState.currentCell.y = cell.y;
+      this.selectionState.message = null;
+      this.pointerId = pointerId;
+      this.needsRedraw = true;
+    }
+
+    updateSelection(cell) {
+      if (!this.selectionState.active || !cell) {
+        return;
+      }
+      this.selectionState.currentCell = this.selectionState.currentCell || { x: 0, y: 0 };
+      this.selectionState.currentCell.x = cell.x;
+      this.selectionState.currentCell.y = cell.y;
+      this.needsRedraw = true;
+    }
+
+    finishSelection() {
+      if (!this.selectionState.active) {
+        return;
+      }
+      const startCell = this.selectionState.startCell
+        ? { x: this.selectionState.startCell.x, y: this.selectionState.startCell.y }
+        : null;
+      const endCell = this.selectionState.currentCell
+        ? { x: this.selectionState.currentCell.x, y: this.selectionState.currentCell.y }
+        : startCell;
+      this.selectionState.active = false;
+      this.selectionState.pointerId = null;
+      this.selectionState.startCell = null;
+      this.selectionState.currentCell = null;
+      this.needsRedraw = true;
+      if (startCell && endCell) {
+        this.saveSelectionAsPattern(startCell, endCell);
+      }
+    }
+
+    saveSelectionAsPattern(startCell, endCell) {
+      if (!startCell || !endCell) {
+        return;
+      }
+      const minX = Math.min(startCell.x, endCell.x);
+      const maxX = Math.max(startCell.x, endCell.x);
+      const minY = Math.min(startCell.y, endCell.y);
+      const maxY = Math.max(startCell.y, endCell.y);
+      const width = maxX - minX + 1;
+      const height = maxY - minY + 1;
+      const selectionConfig = this.config.selection || DEFAULT_CONFIG.selection;
+      const rawMaxWidth = Number(selectionConfig.maxWidth ?? DEFAULT_CONFIG.selection.maxWidth);
+      const rawMaxHeight = Number(selectionConfig.maxHeight ?? DEFAULT_CONFIG.selection.maxHeight);
+      const maxWidth = Number.isFinite(rawMaxWidth) && rawMaxWidth > 0 ? Math.floor(rawMaxWidth) : 0;
+      const maxHeight = Number.isFinite(rawMaxHeight) && rawMaxHeight > 0 ? Math.floor(rawMaxHeight) : 0;
+      if ((maxWidth && width > maxWidth) || (maxHeight && height > maxHeight)) {
+        const displayWidth = maxWidth || '∞';
+        const displayHeight = maxHeight || '∞';
+        this.selectionState.message = {
+          key: 'index.sections.gameOfLife.patterns.selectionTooLarge',
+          fallback: `Selection is limited to ${displayWidth}×${displayHeight} cells.`,
+          params: { maxWidth: displayWidth, maxHeight: displayHeight }
+        };
+        this.updatePatternDescription();
+        return;
+      }
+      const aliveCells = this.state.aliveCells;
+      const buffer = this.selectionCellBuffer;
+      const relativeCells = [];
+      const unique = new Set();
+      for (const key of aliveCells) {
+        const cell = deserializeCell(key, buffer);
+        if (cell.x < minX || cell.x > maxX || cell.y < minY || cell.y > maxY) {
+          continue;
+        }
+        const rx = cell.x - minX;
+        const ry = cell.y - minY;
+        const relKey = serializeCell(rx, ry);
+        if (unique.has(relKey)) {
+          continue;
+        }
+        unique.add(relKey);
+        relativeCells.push([rx, ry]);
+      }
+      if (!relativeCells.length) {
+        this.selectionState.message = {
+          key: 'index.sections.gameOfLife.patterns.selectionEmpty',
+          fallback: 'The selected area does not contain any living cells.'
+        };
+        this.selectedPatternId = null;
+        this.updatePatternDescription();
+        return;
+      }
+      const pattern = this.createCustomPattern({ width, height }, relativeCells);
+      if (!pattern) {
+        return;
+      }
+      this.customPatterns.unshift(pattern);
+      const maxStored = Math.max(0, Math.floor(selectionConfig.maxStored ?? DEFAULT_CONFIG.selection.maxStored));
+      if (maxStored > 0 && this.customPatterns.length > maxStored) {
+        this.customPatterns.length = maxStored;
+      }
+      this.persistCustomPatterns();
+      this.selectedPatternId = pattern.id;
+      this.renderPatterns();
+      this.updatePatternDescription();
+    }
+
+    createCustomPattern(bounds, relativeCells) {
+      if (!bounds || !relativeCells || !relativeCells.length) {
+        return null;
+      }
+      let customName = null;
+      if (typeof window !== 'undefined' && typeof window.prompt === 'function') {
+        const message = translate(
+          'index.sections.gameOfLife.patterns.selectionPrompt',
+          'Name this pattern (leave blank for an automatic name).'
+        );
+        const response = window.prompt(message, '');
+        if (response === null) {
+          return null;
+        }
+        const trimmed = response.trim();
+        if (trimmed) {
+          customName = trimmed;
+        }
+      }
+      let autoIndex = null;
+      if (!customName) {
+        autoIndex = this.customPatternCounter;
+      }
+      this.customPatternCounter = Math.max(1, this.customPatternCounter + 1);
+      this.persistCustomPatternCounter();
+      const id = `custom-${Date.now().toString(36)}-${Math.floor(Math.random() * 0xffffff).toString(16)}`;
+      const created = Date.now();
+      const frozenCells = Object.freeze(relativeCells.map(([x, y]) => Object.freeze([x, y])));
+      const width = Math.max(1, Math.floor(bounds.width));
+      const height = Math.max(1, Math.floor(bounds.height));
+      const cellCount = frozenCells.length;
+      const descriptionParams = { width, height, cells: cellCount };
+      return Object.freeze({
+        id,
+        origin: 'custom',
+        nameKey: autoIndex ? 'index.sections.gameOfLife.patterns.customNameTemplate' : null,
+        nameParams: autoIndex ? { index: autoIndex } : null,
+        nameFallback: autoIndex ? `Pattern #${autoIndex}` : (customName || id),
+        customName,
+        descriptionKey: 'index.sections.gameOfLife.patterns.customDescription',
+        descriptionParams,
+        descriptionFallback: `${width} × ${height} – ${cellCount} cells`,
+        anchor: Object.freeze({ x: 0, y: 0 }),
+        cells: frozenCells,
+        relativeCells: frozenCells,
+        autoIndex,
+        created,
+        meta: Object.freeze({ width, height, population: cellCount })
+      });
+    }
+
     startTouchGesture() {
       if (!this.canvas) {
         return;
@@ -1077,6 +1600,9 @@
             this.dragState.initialCellAlive
           );
         }
+      }
+      if (this.selectionState.active) {
+        this.cancelSelection();
       }
       this.panState.active = true;
       this.panState.lastX = midpoint.x;
@@ -1159,6 +1685,11 @@
       if (!cell) {
         return;
       }
+      const isPrimaryButton = event.button === 0 || typeof event.button === 'undefined';
+      if (this.selectionState.enabled && !this.state.running && isPrimaryButton) {
+        this.startSelection(cell, event.pointerId);
+        return;
+      }
       if (this.selectedPatternId) {
         this.placePatternAt(cell.x, cell.y);
         return;
@@ -1184,6 +1715,13 @@
           event.preventDefault();
           return;
         }
+      }
+      if (this.selectionState.active && event.pointerId === this.selectionState.pointerId) {
+        const cell = this.eventToCell(event);
+        if (cell) {
+          this.updateSelection(cell);
+        }
+        return;
       }
       if (this.panState.active) {
         const dx = event.clientX - this.panState.lastX;
@@ -1233,6 +1771,11 @@
           this.touchState.pointers.clear();
         }
       }
+      if (this.selectionState.active && event.pointerId === this.selectionState.pointerId) {
+        this.finishSelection();
+        this.pointerId = null;
+        return;
+      }
       if (this.pointerId !== null && event.pointerId !== this.pointerId) {
         return;
       }
@@ -1276,6 +1819,13 @@
         this.spacePressed = true;
         if (!isFormField) {
           event.preventDefault();
+        }
+      }
+      if (event.code === 'Escape' && !isFormField) {
+        if (this.selectionState.enabled || this.selectionState.active) {
+          this.setSelectionEnabled(false);
+          this.updateUI();
+          return;
         }
       }
       if (isFormField) {
@@ -1346,7 +1896,7 @@
     }
 
     placePatternAt(baseX, baseY) {
-      const pattern = this.patterns.find(entry => entry.id === this.selectedPatternId);
+      const pattern = this.getPatternById(this.selectedPatternId);
       if (!pattern) {
         return;
       }
@@ -1412,14 +1962,62 @@
       return { minX, minY, maxX, maxY };
     }
 
+    computeAliveBounds() {
+      const alive = this.state.aliveCells;
+      if (!alive || !alive.size) {
+        return null;
+      }
+      const buffer = this.boundsCellBuffer;
+      let minX = Infinity;
+      let maxX = -Infinity;
+      let minY = Infinity;
+      let maxY = -Infinity;
+      for (const key of alive) {
+        const cell = deserializeCell(key, buffer);
+        if (cell.x < minX) { minX = cell.x; }
+        if (cell.x > maxX) { maxX = cell.x; }
+        if (cell.y < minY) { minY = cell.y; }
+        if (cell.y > maxY) { maxY = cell.y; }
+      }
+      if (!Number.isFinite(minX) || !Number.isFinite(maxX) || !Number.isFinite(minY) || !Number.isFinite(maxY)) {
+        return null;
+      }
+      return { minX, maxX, minY, maxY };
+    }
+
     getSimulationBounds() {
       const visible = this.getVisibleBounds();
       const padding = Number.isFinite(this.viewport.paddingCells) ? this.viewport.paddingCells : 2;
+      let minX = visible.minX - padding;
+      let maxX = visible.maxX + padding;
+      let minY = visible.minY - padding;
+      let maxY = visible.maxY + padding;
+
+      const aliveBounds = this.computeAliveBounds();
+      if (aliveBounds) {
+        minX = Math.min(minX, aliveBounds.minX - padding);
+        maxX = Math.max(maxX, aliveBounds.maxX + padding);
+        minY = Math.min(minY, aliveBounds.minY - padding);
+        maxY = Math.max(maxY, aliveBounds.maxY + padding);
+      }
+
+      const maxDistance = Math.max(0, Number(this.config.simulation?.maxOffscreenDistance ?? DEFAULT_CONFIG.simulation.maxOffscreenDistance) || 0);
+      if (maxDistance > 0) {
+        const clampMinX = visible.minX - maxDistance;
+        const clampMaxX = visible.maxX + maxDistance;
+        const clampMinY = visible.minY - maxDistance;
+        const clampMaxY = visible.maxY + maxDistance;
+        minX = Math.max(minX, clampMinX);
+        maxX = Math.min(maxX, clampMaxX);
+        minY = Math.max(minY, clampMinY);
+        maxY = Math.min(maxY, clampMaxY);
+      }
+
       return {
-        minX: visible.minX - padding,
-        maxX: visible.maxX + padding,
-        minY: visible.minY - padding,
-        maxY: visible.maxY + padding
+        minX: Math.floor(minX),
+        maxX: Math.ceil(maxX),
+        minY: Math.floor(minY),
+        maxY: Math.ceil(maxY)
       };
     }
 
@@ -1478,6 +2076,28 @@
         ctx.restore();
       }
 
+      if (this.selectionState.active && this.selectionState.startCell && this.selectionState.currentCell) {
+        const start = this.selectionState.startCell;
+        const current = this.selectionState.currentCell;
+        const minX = Math.min(start.x, current.x);
+        const minY = Math.min(start.y, current.y);
+        const maxX = Math.max(start.x, current.x);
+        const maxY = Math.max(start.y, current.y);
+        const px = (minX - this.viewport.originX) * cellSize;
+        const py = (minY - this.viewport.originY) * cellSize;
+        const rectWidth = (maxX - minX + 1) * cellSize;
+        const rectHeight = (maxY - minY + 1) * cellSize;
+        ctx.save();
+        ctx.fillStyle = 'rgba(64, 220, 255, 0.18)';
+        ctx.strokeStyle = 'rgba(64, 220, 255, 0.85)';
+        ctx.lineWidth = Math.max(1, Math.min(3, cellSize * 0.12));
+        const dashLength = Math.max(4, cellSize * 0.6);
+        ctx.setLineDash([dashLength, dashLength * 0.6]);
+        ctx.fillRect(px, py, rectWidth, rectHeight);
+        ctx.strokeRect(px + 0.5, py + 0.5, rectWidth, rectHeight);
+        ctx.restore();
+      }
+
       this.needsRedraw = false;
     }
   }
@@ -1506,6 +2126,7 @@
     const patternSelect = document.getElementById('gameOfLifePatternSelect');
     const patternDescription = document.getElementById('gameOfLifePatternDescription');
     const patternEmpty = document.getElementById('gameOfLifePatternEmpty');
+    const selectionButton = document.getElementById('gameOfLifeSelectButton');
     const menu = document.getElementById('gameOfLifeMenu');
     const menuToggle = document.getElementById('gameOfLifeMenuToggle');
     const menuHeader = document.getElementById('gameOfLifeMenuHeader');
@@ -1531,6 +2152,7 @@
       patternSelect,
       patternDescription,
       patternEmpty,
+      selectionButton,
       menu,
       menuToggle,
       menuHeader
