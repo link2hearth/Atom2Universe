@@ -1895,6 +1895,9 @@
         },
         "quantum2048": {
           "rewardToast": "{tickets} gagnés grâce à ObjectX !"
+        },
+        "minesweeper": {
+          "rewardToast": "Récompense Démineur : {tickets} remportés !"
         }
       }
     },

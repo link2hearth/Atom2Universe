@@ -45,6 +45,8 @@
     });
   })();
 
+  const DEFAULT_TICKET_REWARD_RATIO = 0.5;
+
   function clamp(value, min, max) {
     if (!Number.isFinite(value)) {
       return min;
@@ -624,6 +626,7 @@
       if (gameState.safeRemaining <= 0 && gameState.status !== 'lost') {
         updateBoardState('won');
         exposeMinesAfterWin();
+        grantVictoryTickets();
       }
     }
 
@@ -682,6 +685,85 @@
             cell.element.disabled = true;
           }
         }
+      }
+    }
+
+    function resolveTicketRewardRatio() {
+      if (typeof GLOBAL_CONFIG === 'undefined' || !GLOBAL_CONFIG) {
+        return DEFAULT_TICKET_REWARD_RATIO;
+      }
+      const arcadeConfig = GLOBAL_CONFIG.arcade;
+      if (!arcadeConfig || typeof arcadeConfig !== 'object') {
+        return DEFAULT_TICKET_REWARD_RATIO;
+      }
+      const demineurConfig = arcadeConfig.demineur;
+      if (!demineurConfig || typeof demineurConfig !== 'object') {
+        return DEFAULT_TICKET_REWARD_RATIO;
+      }
+      const rewardConfig = demineurConfig.rewards;
+      if (!rewardConfig || typeof rewardConfig !== 'object') {
+        return DEFAULT_TICKET_REWARD_RATIO;
+      }
+      const ticketsConfig = rewardConfig.gachaTickets;
+      if (!ticketsConfig || typeof ticketsConfig !== 'object') {
+        return DEFAULT_TICKET_REWARD_RATIO;
+      }
+      const ratioCandidate =
+        ticketsConfig.perMineRatio ?? ticketsConfig.mineRatio ?? ticketsConfig.perMine ?? ticketsConfig.ratio;
+      const ratio = Number.parseFloat(ratioCandidate);
+      if (!Number.isFinite(ratio)) {
+        return DEFAULT_TICKET_REWARD_RATIO;
+      }
+      return Math.max(0, ratio);
+    }
+
+    function computeVictoryTicketReward(totalMines) {
+      if (!Number.isFinite(totalMines) || totalMines <= 0) {
+        return 0;
+      }
+      const ratio = resolveTicketRewardRatio();
+      if (!Number.isFinite(ratio) || ratio <= 0) {
+        return 0;
+      }
+      return Math.floor(totalMines * ratio);
+    }
+
+    function grantVictoryTickets() {
+      const totalMines = Math.max(0, Math.floor(Number(gameState.mineCount) || 0));
+      const reward = computeVictoryTicketReward(totalMines);
+      if (!Number.isFinite(reward) || reward <= 0) {
+        return;
+      }
+
+      let granted = reward;
+      if (typeof gainGachaTickets === 'function') {
+        granted = gainGachaTickets(reward, { unlockTicketStar: true });
+      }
+
+      if (!Number.isFinite(granted) || granted <= 0) {
+        return;
+      }
+
+      let fallbackLabel = `${granted} tickets`;
+      if (typeof formatInteger === 'function') {
+        fallbackLabel = `${formatInteger(granted)} tickets`;
+      }
+      const ticketLabel = typeof formatTicketLabel === 'function'
+        ? formatTicketLabel(granted)
+        : fallbackLabel;
+      const message = typeof translate === 'function'
+        ? translate(
+            'scripts.arcade.minesweeper.rewardToast',
+            'Minesweeper reward: {tickets}',
+            { tickets: ticketLabel }
+          )
+        : `Minesweeper reward: ${ticketLabel}`;
+
+      if (message && typeof showToast === 'function') {
+        showToast(message);
+      }
+      if (typeof updateArcadeTicketDisplay === 'function') {
+        updateArcadeTicketDisplay();
       }
     }
 
