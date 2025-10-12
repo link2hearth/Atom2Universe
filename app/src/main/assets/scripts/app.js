@@ -5314,6 +5314,7 @@ let selectedElementId = null;
 let elementDetailsLastTrigger = null;
 let elementFamilyLastTrigger = null;
 let gamePageVisibleSince = null;
+let hiddenSinceTimestamp = null;
 
 function getShopUnlockSet() {
   let unlocks;
@@ -7769,6 +7770,7 @@ document.addEventListener('visibilitychange', () => {
   }
   const activePage = document.body?.dataset.activePage;
   if (document.hidden) {
+    hiddenSinceTimestamp = Date.now();
     gamePageVisibleSince = null;
     if (particulesGame && activePage === 'arcade') {
       particulesGame.onLeave();
@@ -7779,7 +7781,28 @@ document.addEventListener('visibilitychange', () => {
     if (quantum2048Game && activePage === 'quantum2048') {
       quantum2048Game.onLeave();
     }
+    saveGame();
     return;
+  }
+
+  const becameVisibleAt = typeof performance !== 'undefined' ? performance.now() : null;
+  if (becameVisibleAt != null) {
+    lastUpdate = becameVisibleAt;
+    lastUIUpdate = becameVisibleAt;
+    lastSaveTime = becameVisibleAt;
+  }
+
+  const nowTimestamp = Date.now();
+  const hiddenDurationSeconds = hiddenSinceTimestamp != null
+    ? Math.max(0, (nowTimestamp - hiddenSinceTimestamp) / 1000)
+    : 0;
+  hiddenSinceTimestamp = null;
+  if (hiddenDurationSeconds > 0) {
+    const offlineResult = applyOfflineProgress(hiddenDurationSeconds);
+    if (offlineResult.appliedSeconds > 0) {
+      updateUI();
+      saveGame();
+    }
   }
 
   if (isManualClickContextActive()) {
