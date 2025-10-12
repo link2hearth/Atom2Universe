@@ -211,73 +211,73 @@
           "particules": {
             "aria": "Open the Particles mini-game",
             "title": "Particles",
-            "description": "Deflect the quantum particle to earn gacha tickets and Mach3 credits.",
+            "description": "Collect gacha tickets at the cost of your Atom stock, or practice for free.",
             "cta": "Play"
           },
           "metaux": {
             "aria": "Open the Metals mini-game",
             "title": "Metals",
-            "description": "Match alloys in Mach3 mode to forge bonuses and boost production.",
+            "description": "Boost your APS production thanks to this match-3 game.",
             "cta": "Forge"
           },
           "wave": {
             "aria": "Open the Photon mini-game",
             "title": "Photon",
-            "description": "Become a photon surfing its cosmic wave.",
+            "description": "Alternate page for the clicker.",
             "cta": "Ride"
           },
           "quantum2048": {
             "aria": "Open the ObjectX mini-game",
             "title": "ObjectX",
-            "description": "Trigger chain reactions on your chosen grid to reach the requested tile.",
+            "description": "Reach the objective tile (shown in the top right) in this 2048-like to earn gacha tickets.",
             "cta": "Play"
           },
           "balance": {
             "aria": "Open the Balance mini-game",
             "title": "Balance",
-            "description": "Arrange blocks of different weights to keep the board perfectly level.",
+            "description": "Balance the scale with all the weights, earn extra attempts for the Metals game.",
             "cta": "Balance"
           },
           "math": {
             "aria": "Open the Math mini-game",
             "title": "Math",
-            "description": "Find the missing number or symbol to complete ever-trickier operations.",
+            "description": "Complete the equations and earn nothing for now.",
             "cta": "Solve"
           },
           "sudoku": {
             "aria": "Open the Sudoku mini-game",
             "title": "Sudoku",
-            "description": "Solve freshly generated grids or let the solver reveal a flawless solution.",
+            "description": "Finish a board to boost offline production for the next few hours.",
             "cta": "Solve"
           },
           "minesweeper": {
             "aria": "Open the Minesweeper mini-game",
             "title": "Minesweeper",
-            "description": "Uncover every tile without triggering the quantum mines.",
+            "description": "Clear a board to earn gacha tickets.",
             "cta": "Disarm"
           },
           "solitaire": {
             "aria": "Open the Solitaire mini-game",
             "title": "Solitaire",
-            "description": "Stack the tableau cards to rebuild all four foundations.",
+            "description": "Super well-known: finish the tableau, no reward for now.",
             "cta": "Play"
           },
           "echecs": {
             "aria": "Open the Chess mini-game",
             "title": "Chess",
-            "description": "Challenge an AI across a quantum-flavored board tailored for aspiring strategists.",
+            "description": "Practice; no reward for the moment.",
             "cta": "Plan"
           },
           "gameOfLife": {
             "aria": "Open the Game of Life mini-game",
             "title": "Game of Life",
-            "description": "Grow cells on an infinite grid and orchestrate your favorite patterns.",
+            "description": "Nothing to gain; it's a testing area for Conway's Game of Life.",
             "cta": "Explore"
           },
           "blackjack": {
             "aria": "Open the Blackjack mini-game",
             "title": "Blackjack",
-            "description": "Face the dealer with an eight-deck shoe that reshuffles as soon as a unique card runs out.",
+            "description": "Double your Atoms—or lose everything.",
             "cta": "Deal"
           }
         }
