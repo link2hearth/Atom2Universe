@@ -331,6 +331,26 @@ const UI_SCALE_CONFIG = (() => {
 const UI_SCALE_CHOICES = UI_SCALE_CONFIG.choices;
 const UI_SCALE_DEFAULT = UI_SCALE_CONFIG.defaultId;
 
+const DEFAULT_UI_SCALE_FACTOR = (() => {
+  const config = UI_SCALE_CHOICES?.[UI_SCALE_DEFAULT];
+  const factor = Number(config?.factor);
+  return Number.isFinite(factor) && factor > 0 ? factor : 1;
+})();
+
+let currentUiScaleSelection = UI_SCALE_DEFAULT;
+let currentUiScaleFactor = DEFAULT_UI_SCALE_FACTOR;
+let autoUiScaleFactor = 1;
+let pendingAutoUiScaleFrame = null;
+let pendingAutoUiScaleTimeoutId = null;
+let autoUiScaleFrameUsesTimeout = false;
+
+const AUTO_UI_SCALE_MIN_FACTOR = 0.7;
+const AUTO_UI_SCALE_TOLERANCE = 0.015;
+const AUTO_UI_SCALE_SAFE_PADDING = 24;
+const AUTO_UI_SCALE_OVERFLOW_TOLERANCE = 12;
+const AUTO_UI_SCALE_VERTICAL_PADDING = 32;
+const AUTO_UI_SCALE_HEIGHT_TOLERANCE = 32;
+
 let critAtomVisualsDisabled = false;
 const AVAILABLE_LANGUAGE_CODES = (() => {
   const i18n = globalThis.i18n;
@@ -3606,8 +3626,10 @@ function handleResetPromptFallback() {
 
 function collectDomElements() {
   return {
-  brandPortal: document.getElementById('brandPortal'),
-  navButtons: document.querySelectorAll('.nav-button'),
+    appHeader: document.querySelector('.app-header'),
+    pageContainer: document.getElementById('pageContainer'),
+    brandPortal: document.getElementById('brandPortal'),
+    navButtons: document.querySelectorAll('.nav-button'),
   navArcadeButton: document.getElementById('navArcadeButton'),
   navShopButton: document.querySelector('.nav-button[data-target="shop"]'),
   navGachaButton: document.querySelector('.nav-button[data-target="gacha"]'),
@@ -4090,15 +4112,215 @@ function writeStoredUiScale(value) {
   }
 }
 
+function updateEffectiveUiScaleFactor() {
+  if (typeof document === 'undefined') {
+    return;
+  }
+  const root = document.documentElement;
+  if (!root || !root.style) {
+    return;
+  }
+  const baseFactor = Number.isFinite(currentUiScaleFactor) && currentUiScaleFactor > 0
+    ? currentUiScaleFactor
+    : 1;
+  const autoFactor = Number.isFinite(autoUiScaleFactor) && autoUiScaleFactor > 0
+    ? autoUiScaleFactor
+    : 1;
+  const effective = Math.max(0.4, Math.min(3, baseFactor * autoFactor));
+  root.style.setProperty('--font-scale-factor', String(effective));
+}
+
+function getActivePageElement() {
+  if (typeof document === 'undefined') {
+    return null;
+  }
+  const activePageId = document.body?.dataset?.activePage;
+  return activePageId ? document.getElementById(activePageId) : null;
+}
+
+function computeAutoUiScaleForPage(pageElement) {
+  if (typeof window === 'undefined') {
+    return 1;
+  }
+  const viewportWidth = Math.max(
+    window.innerWidth || 0,
+    document?.documentElement?.clientWidth || 0,
+    document?.body?.clientWidth || 0
+  );
+  const viewportHeight = Math.max(
+    window.innerHeight || 0,
+    document?.documentElement?.clientHeight || 0,
+    document?.body?.clientHeight || 0
+  );
+  const headerRect = elements?.appHeader?.getBoundingClientRect?.();
+  const headerWidth = Math.max(
+    elements?.appHeader?.scrollWidth || 0,
+    headerRect?.width || 0
+  );
+  const headerHeight = Math.max(
+    headerRect?.height || 0,
+    elements?.appHeader?.offsetHeight || 0
+  );
+
+  let widthScale = 1;
+  if (viewportWidth > 0) {
+    const safeWidth = Math.max(0, viewportWidth - AUTO_UI_SCALE_SAFE_PADDING);
+    const pageWidth = Math.max(
+      pageElement?.scrollWidth || 0,
+      pageElement?.getBoundingClientRect?.().width || 0
+    );
+    const containerWidth = Math.max(
+      elements?.pageContainer?.scrollWidth || 0,
+      elements?.pageContainer?.getBoundingClientRect?.().width || 0
+    );
+    const documentWidth = Math.max(
+      document?.documentElement?.scrollWidth || 0,
+      document?.body?.scrollWidth || 0
+    );
+    const widestContent = Math.max(
+      viewportWidth,
+      headerWidth,
+      pageWidth,
+      containerWidth,
+      documentWidth
+    );
+    if (widestContent > safeWidth + AUTO_UI_SCALE_OVERFLOW_TOLERANCE) {
+      if (safeWidth <= 0) {
+        widthScale = AUTO_UI_SCALE_MIN_FACTOR;
+      } else {
+        const ratio = safeWidth / widestContent;
+        if (Number.isFinite(ratio) && ratio > 0) {
+          widthScale = Math.max(AUTO_UI_SCALE_MIN_FACTOR, Math.min(1, ratio));
+        }
+      }
+    }
+  }
+
+  let heightScale = 1;
+  if (pageElement) {
+    const rawPageGroup = pageElement.dataset?.pageGroup;
+    const pageGroup = typeof rawPageGroup === 'string' ? rawPageGroup.trim().toLowerCase() : '';
+    const shouldClampHeight = pageGroup === 'arcade' || pageElement.id === 'midi';
+    if (shouldClampHeight && viewportHeight > 0) {
+      const availableHeight = Math.max(0, viewportHeight - headerHeight - AUTO_UI_SCALE_VERTICAL_PADDING);
+      const pageHeight = Math.max(
+        pageElement.scrollHeight || 0,
+        pageElement.getBoundingClientRect?.().height || 0
+      );
+      const containerHeight = Math.max(
+        elements?.pageContainer?.scrollHeight || 0,
+        elements?.pageContainer?.getBoundingClientRect?.().height || 0
+      );
+      const tallestContent = Math.max(pageHeight, containerHeight);
+      if (tallestContent > availableHeight + AUTO_UI_SCALE_HEIGHT_TOLERANCE) {
+        if (availableHeight <= 0) {
+          heightScale = AUTO_UI_SCALE_MIN_FACTOR;
+        } else {
+          const ratio = availableHeight / tallestContent;
+          if (Number.isFinite(ratio) && ratio > 0) {
+            heightScale = Math.max(AUTO_UI_SCALE_MIN_FACTOR, Math.min(1, ratio));
+          }
+        }
+      }
+    }
+  }
+
+  const finalScale = Math.min(widthScale, heightScale);
+  if (!Number.isFinite(finalScale) || finalScale <= 0) {
+    return 1;
+  }
+  return Math.max(AUTO_UI_SCALE_MIN_FACTOR, Math.min(1, finalScale));
+}
+
+function recalculateAutoUiScaleFactor() {
+  pendingAutoUiScaleFrame = null;
+  autoUiScaleFrameUsesTimeout = false;
+  const activePage = getActivePageElement();
+  const newFactor = computeAutoUiScaleForPage(activePage);
+  if (!Number.isFinite(newFactor) || newFactor <= 0) {
+    if (autoUiScaleFactor !== 1) {
+      autoUiScaleFactor = 1;
+      updateEffectiveUiScaleFactor();
+    }
+    return;
+  }
+  if (Math.abs(newFactor - autoUiScaleFactor) <= AUTO_UI_SCALE_TOLERANCE && newFactor < 1) {
+    return;
+  }
+  if (Math.abs(newFactor - autoUiScaleFactor) <= AUTO_UI_SCALE_TOLERANCE && newFactor >= 1 && autoUiScaleFactor >= 1) {
+    return;
+  }
+  autoUiScaleFactor = newFactor;
+  updateEffectiveUiScaleFactor();
+}
+
+function scheduleAutoUiScaleUpdate(options = {}) {
+  if (typeof window === 'undefined') {
+    return;
+  }
+  const immediate = options?.immediate === true;
+  if (immediate) {
+    if (pendingAutoUiScaleFrame != null) {
+      if (autoUiScaleFrameUsesTimeout) {
+        clearTimeout(pendingAutoUiScaleFrame);
+      } else {
+        window.cancelAnimationFrame?.(pendingAutoUiScaleFrame);
+      }
+      pendingAutoUiScaleFrame = null;
+      autoUiScaleFrameUsesTimeout = false;
+    }
+    recalculateAutoUiScaleFactor();
+    return;
+  }
+  if (pendingAutoUiScaleFrame != null) {
+    return;
+  }
+  if (typeof window.requestAnimationFrame === 'function') {
+    pendingAutoUiScaleFrame = window.requestAnimationFrame(recalculateAutoUiScaleFactor);
+    autoUiScaleFrameUsesTimeout = false;
+  } else {
+    pendingAutoUiScaleFrame = setTimeout(recalculateAutoUiScaleFactor, 16);
+    autoUiScaleFrameUsesTimeout = true;
+  }
+}
+
+function handleAutoUiScaleResize() {
+  scheduleAutoUiScaleUpdate();
+}
+
+function handleAutoUiScaleOrientationChange() {
+  scheduleAutoUiScaleUpdate();
+  if (pendingAutoUiScaleTimeoutId != null) {
+    clearTimeout(pendingAutoUiScaleTimeoutId);
+  }
+  pendingAutoUiScaleTimeoutId = setTimeout(() => {
+    pendingAutoUiScaleTimeoutId = null;
+    scheduleAutoUiScaleUpdate({ immediate: true });
+  }, 320);
+}
+
+function initResponsiveAutoScale() {
+  if (typeof window === 'undefined') {
+    return;
+  }
+  scheduleAutoUiScaleUpdate({ immediate: true });
+  window.addEventListener('resize', handleAutoUiScaleResize, { passive: true });
+  window.addEventListener('orientationchange', handleAutoUiScaleOrientationChange);
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', handleAutoUiScaleResize);
+    window.visualViewport.addEventListener('scroll', handleAutoUiScaleResize);
+  }
+}
+
 function applyUiScaleSelection(selection, options = {}) {
   const normalized = normalizeUiScaleSelection(selection);
   const config = UI_SCALE_CHOICES[normalized] || UI_SCALE_CHOICES[UI_SCALE_DEFAULT];
   const settings = Object.assign({ persist: true, updateControl: true }, options);
   const factor = config && Number.isFinite(config.factor) && config.factor > 0 ? config.factor : 1;
-  const root = typeof document !== 'undefined' ? document.documentElement : null;
-  if (root && root.style) {
-    root.style.setProperty('--font-scale-factor', String(factor));
-  }
+  currentUiScaleSelection = normalized;
+  currentUiScaleFactor = factor;
+  updateEffectiveUiScaleFactor();
+  scheduleAutoUiScaleUpdate();
   if (typeof document !== 'undefined' && document.body) {
     document.body.setAttribute('data-ui-scale', normalized);
   }
@@ -8731,6 +8953,7 @@ function showPage(pageId) {
       renderGachaRarityList();
     }
   }
+  scheduleAutoUiScaleUpdate();
   updateFrenzyIndicators(now);
 }
 
@@ -12896,6 +13119,7 @@ function startApp() {
   updateUI();
   randomizeAtomButtonImage();
   initStarfield();
+  scheduleAutoUiScaleUpdate({ immediate: true });
   requestAnimationFrame(loop);
 }
 
@@ -12906,6 +13130,7 @@ function initializeDomBoundModules() {
   updateBigBangVisibility();
   bindDomEventListeners();
   initUiScaleOption();
+  initResponsiveAutoScale();
   initTextFontOption();
   initDigitFontOption();
   initClickSoundOption();
