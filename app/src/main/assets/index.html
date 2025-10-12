@@ -1910,6 +1910,34 @@
     >
       <h2 id="info-title" class="visually-hidden" data-i18n="index.sections.info.title">Tableau de bord des statistiques</h2>
       <div class="info-grid">
+        <article class="info-card info-card--welcome" aria-labelledby="optionsWelcomeTitle">
+          <header class="info-card__header info-card__header--welcome">
+            <h3 id="optionsWelcomeTitle" data-i18n="index.sections.options.welcome.title">Bienvenue</h3>
+          </header>
+          <div id="optionsWelcomeIntro" class="info-welcome-intro">
+            <p data-i18n="index.sections.options.welcome.intro.main">
+              Bienvenue dans Atom to Univers. Cliquez pour générer vos premiers atomes, achetez des améliorations dans la boutique
+              et automatisez la production pour façonner votre univers.
+            </p>
+            <p data-i18n="index.sections.options.welcome.intro.note">
+              Débloquez les mini-jeux et fonctionnalités au fil de votre progression pour multiplier vos gains d’APC et d’APS.
+            </p>
+          </div>
+          <div id="optionsArcadeDetails" class="info-welcome-details" hidden aria-hidden="true">
+            <p>
+              <strong data-i18n="index.sections.options.welcome.details.particles.label">Mini Jeu Particules :</strong>
+              <span data-i18n="index.sections.options.welcome.details.particles.description">Collisionnez les particules élémentaires pour gagner des tickets de tirage et des crédits Mach3.</span>
+            </p>
+            <p>
+              <strong data-i18n="index.sections.options.welcome.details.gacha.label">Gacha :</strong>
+              <span data-i18n="index.sections.options.welcome.details.gacha.description">Utilisez vos tickets pour récupérer des éléments du tableau périodique et débloquer des bonus de production.</span>
+            </p>
+            <p>
+              <strong data-i18n="index.sections.options.welcome.details.match3.label">Mini jeu Mach3 :</strong>
+              <span data-i18n="index.sections.options.welcome.details.match3.description">Alignez les métaux le plus vite possible pour booster vos gains d’APS.</span>
+            </p>
+          </div>
+        </article>
         <article class="info-card info-card--stats info-card--calculations" aria-labelledby="info-calculations-title">
           <header class="info-card__header">
             <h3 id="info-calculations-title" data-i18n="index.sections.info.calculations.title">Calculs de production</h3>
@@ -2246,31 +2274,26 @@
       data-page-group="clicker"
     >
       <div class="options-grid">
-        <div class="option-card option-card--intro">
-          <div class="option-card__header option-card__header--welcome">
-            <h3
-              id="optionsWelcomeTitle"
-              data-i18n="index.sections.options.welcome.title"
-            >
-              Bienvenue
+        <div class="option-card option-card--preferences">
+          <div class="option-card__header">
+            <h3 data-i18n="index.sections.options.preferences.title">
+              Préférences d’interface
             </h3>
-            <select
-              id="languageSelect"
-              aria-label="Langue de l’interface"
-              data-i18n="aria-label:index.sections.options.language.label"
-            >
-              <option value="fr" data-i18n="index.sections.options.language.options.fr">Français</option>
-              <option value="en" data-i18n="index.sections.options.language.options.en">Anglais</option>
-            </select>
           </div>
-          <div id="optionsWelcomeIntro" class="option-welcome-intro">
-            <p data-i18n="index.sections.options.welcome.intro.main">
-              Bienvenue dans Atom to Univers. Cliquez pour générer vos premiers atomes, achetez des améliorations dans la boutique
-              et automatisez la production pour façonner votre univers.
-            </p>
-            <p data-i18n="index.sections.options.welcome.intro.note">
-              Débloquez les mini-jeux et fonctionnalités au fil de votre progression pour multiplier vos gains d’APC et d’APS.
-            </p>
+          <div class="option-row option-row--language">
+            <div class="option-field option-field--language">
+              <label for="languageSelect" data-i18n="index.sections.options.language.label">
+                Langue de l’interface
+              </label>
+              <select
+                id="languageSelect"
+                aria-label="Langue de l’interface"
+                data-i18n="aria-label:index.sections.options.language.label"
+              >
+                <option value="fr" data-i18n="index.sections.options.language.options.fr">Français</option>
+                <option value="en" data-i18n="index.sections.options.language.options.en">Anglais</option>
+              </select>
+            </div>
           </div>
           <div class="option-card__toggles">
             <div class="option-toggle-card" id="clickSoundToggleCard">
@@ -2390,20 +2413,6 @@
                 <option value="vt323" data-i18n="index.sections.options.digitFont.options.vt323">VT323</option>
               </select>
             </div>
-          </div>
-          <div id="optionsArcadeDetails" class="option-note" hidden aria-hidden="true">
-            <p>
-              <strong data-i18n="index.sections.options.welcome.details.particles.label">Mini Jeu Particules :</strong>
-              <span data-i18n="index.sections.options.welcome.details.particles.description">Collisionnez les particules élémentaires pour gagner des tickets de tirage et des crédits Mach3.</span>
-            </p>
-            <p>
-              <strong data-i18n="index.sections.options.welcome.details.gacha.label">Gacha :</strong>
-              <span data-i18n="index.sections.options.welcome.details.gacha.description">Utilisez vos tickets pour récupérer des éléments du tableau périodique et débloquer des bonus de production.</span>
-            </p>
-            <p>
-              <strong data-i18n="index.sections.options.welcome.details.match3.label">Mini jeu Mach3 :</strong>
-              <span data-i18n="index.sections.options.welcome.details.match3.description">Alignez les métaux le plus vite possible pour booster vos gains d’APS.</span>
-            </p>
           </div>
         </div>
         <div class="option-card option-card--chiptune-link">

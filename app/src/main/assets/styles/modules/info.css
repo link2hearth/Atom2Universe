@@ -29,6 +29,11 @@
   gap: 1rem;
 }
 
+.info-card--welcome {
+  grid-column: 1 / -1;
+  gap: clamp(0.8rem, 1.6vw, 1.4rem);
+}
+
 body.theme-light .info-card {
   box-shadow: 0 24px 48px rgba(12, 16, 32, 0.12);
 }
@@ -55,12 +60,50 @@ body.theme-aurora .info-card {
   gap: 0.4rem;
 }
 
+.info-card__header--welcome {
+  align-items: flex-start;
+  gap: 0.6rem;
+}
+
 .info-card__subtitle {
   font-size: calc(var(--font-scale-factor, 1) * 0.8rem);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   opacity: 0.6;
   margin: 0;
+}
+
+.info-welcome-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.info-welcome-intro p {
+  margin: 0;
+}
+
+.info-welcome-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin: 0;
+  font-size: calc(0.95rem * var(--font-scale-factor, 1));
+  opacity: 0.85;
+}
+
+.info-welcome-details p {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: baseline;
+}
+
+.info-welcome-details strong {
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .info-card--progression {

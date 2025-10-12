@@ -650,6 +650,9 @@
       },
       "options": {
         "title": "Options",
+        "preferences": {
+          "title": "Interface preferences"
+        },
         "welcome": {
           "title": "Welcome",
           "intro": {

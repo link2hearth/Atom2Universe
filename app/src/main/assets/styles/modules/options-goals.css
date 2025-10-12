@@ -82,6 +82,10 @@ body.theme-aurora {
   gap: 0.8rem;
 }
 
+.option-card--preferences {
+  gap: clamp(1rem, 1.8vw, 1.4rem);
+}
+
 .option-card--chiptune-link {
   border: 1px solid rgba(120, 200, 255, 0.18);
   box-shadow: 0 16px 36px rgba(90, 200, 255, 0.12);
@@ -117,6 +121,11 @@ body.theme-aurora {
   gap: 0.8rem;
 }
 
+.option-card--preferences .option-card__header {
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
 .option-card__description {
   margin: 0;
   max-width: 56ch;
@@ -136,6 +145,19 @@ body.theme-neon .option-card__description {
   margin-left: auto;
   min-width: 11.5em;
   font-size: calc(0.65rem * var(--font-scale-factor, 1));
+}
+
+.option-row--language {
+  width: 100%;
+  align-items: flex-end;
+}
+
+.option-field--language {
+  min-width: 220px;
+}
+
+.option-field--language select {
+  min-width: 12em;
 }
 
 .options-reset {
