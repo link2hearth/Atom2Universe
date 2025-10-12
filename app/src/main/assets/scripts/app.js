@@ -48,6 +48,49 @@ const BRICK_SKIN_TOAST_KEYS = Object.freeze({
   pastels: 'scripts.app.brickSkins.applied.pastels'
 });
 
+const PAGE_FEATURE_MAP = Object.freeze({
+  arcadeHub: 'arcade.hub',
+  arcade: 'arcade.particules',
+  metaux: 'arcade.metaux',
+  wave: 'arcade.photon',
+  quantum2048: 'arcade.objectx',
+  balance: 'arcade.balance',
+  math: 'arcade.math',
+  sudoku: 'arcade.sudoku',
+  minesweeper: 'arcade.demineur',
+  solitaire: 'arcade.solitaire',
+  blackjack: 'arcade.blackjack',
+  echecs: 'arcade.echecs',
+  gameOfLife: 'arcade.gameOfLife'
+});
+
+const OPTIONS_DETAIL_FEATURE_MAP = Object.freeze({
+  particles: 'arcade.particules',
+  match3: 'arcade.metaux',
+  photon: 'arcade.photon',
+  objectx: 'arcade.objectx',
+  balance: 'arcade.balance',
+  math: 'arcade.math',
+  sudoku: 'arcade.sudoku',
+  demineur: 'arcade.demineur',
+  solitaire: 'arcade.solitaire',
+  echecs: 'arcade.echecs',
+  gameOfLife: 'arcade.gameOfLife',
+  blackjack: 'arcade.blackjack',
+  gacha: 'system.gacha',
+  tableau: 'system.tableau',
+  fusion: 'system.fusion',
+  musique: 'system.musique'
+});
+
+const FEATURE_UNLOCK_DEFINITIONS = buildFeatureUnlockDefinitions(
+  GLOBAL_CONFIG?.progression?.featureUnlocks
+);
+
+let featureUnlockCache = new Map();
+let cachedOptionsDetailMetadata = null;
+let lastArcadeUnlockState = null;
+
 const DEFAULT_SUDOKU_COMPLETION_REWARD = Object.freeze({
   enabled: true,
   timeLimitSeconds: 10 * 60,
@@ -614,6 +657,457 @@ function formatLayeredLocalized(value, options = {}) {
     return `${mantissa.toFixed(mantissaDigits)}e${exponent}`;
   }
   return formatSmall(numeric);
+}
+
+function freezeFeatureUnlockDefinition(definition) {
+  if (!definition || typeof definition !== 'object') {
+    return Object.freeze({ type: 'always' });
+  }
+  const normalized = { ...definition };
+  if (Array.isArray(normalized.requires)) {
+    normalized.requires = Object.freeze([...normalized.requires]);
+  }
+  return Object.freeze(normalized);
+}
+
+function createDefaultFeatureUnlockDefinitions() {
+  const millionAtomsId = 'millionAtoms';
+  const defaults = new Map();
+  defaults.set(
+    'arcade.hub',
+    freezeFeatureUnlockDefinition({ type: 'lifetimeAtoms', amount: toLayeredNumber(1000, 0) })
+  );
+  defaults.set(
+    'arcade.particules',
+    freezeFeatureUnlockDefinition({ type: 'feature', requires: Object.freeze(['arcade.hub']) })
+  );
+  const trophyRequirement = id => freezeFeatureUnlockDefinition({ type: 'trophy', trophyId: id });
+  [
+    'arcade.metaux',
+    'arcade.photon',
+    'arcade.objectx',
+    'arcade.balance',
+    'arcade.math',
+    'arcade.sudoku',
+    'arcade.demineur',
+    'arcade.solitaire',
+    'arcade.blackjack',
+    'arcade.echecs',
+    'arcade.gameOfLife'
+  ].forEach(id => {
+    defaults.set(id, trophyRequirement(millionAtomsId));
+  });
+  defaults.set('system.gacha', freezeFeatureUnlockDefinition({ type: 'page', pageId: 'gacha' }));
+  defaults.set('system.tableau', freezeFeatureUnlockDefinition({ type: 'page', pageId: 'tableau' }));
+  defaults.set('system.fusion', freezeFeatureUnlockDefinition({ type: 'page', pageId: 'fusion' }));
+  defaults.set('system.musique', freezeFeatureUnlockDefinition({ type: 'always' }));
+  return defaults;
+}
+
+function normalizeFeatureUnlockCondition(featureId, rawEntry) {
+  if (rawEntry == null) {
+    return null;
+  }
+  if (typeof rawEntry === 'number' || typeof rawEntry === 'string') {
+    return freezeFeatureUnlockDefinition({
+      type: 'lifetimeAtoms',
+      amount: toLayeredNumber(rawEntry, 0)
+    });
+  }
+  if (typeof rawEntry !== 'object') {
+    return null;
+  }
+  const typeCandidate = rawEntry.type ?? rawEntry.kind ?? rawEntry.mode;
+  let type = typeof typeCandidate === 'string' ? typeCandidate.trim().toLowerCase() : '';
+  if (!type) {
+    if (rawEntry.amount != null || rawEntry.value != null || rawEntry.threshold != null) {
+      type = 'lifetimeatoms';
+    } else if (rawEntry.trophyId || rawEntry.trophy) {
+      type = 'trophy';
+    } else if (rawEntry.pageId || rawEntry.page) {
+      type = 'page';
+    } else if (rawEntry.requires || rawEntry.require || rawEntry.dependencies || rawEntry.dependency) {
+      type = 'feature';
+    } else if (rawEntry === true) {
+      type = 'always';
+    }
+  }
+  switch (type) {
+    case 'always':
+    case 'true':
+    case 'unlocked':
+      return freezeFeatureUnlockDefinition({ type: 'always' });
+    case 'lifetimeatoms':
+    case 'atoms':
+    case 'lifetime':
+    case 'threshold': {
+      const amountSource =
+        rawEntry.amount ?? rawEntry.value ?? rawEntry.threshold ?? rawEntry.required ?? rawEntry.target ?? 0;
+      return freezeFeatureUnlockDefinition({
+        type: 'lifetimeAtoms',
+        amount: toLayeredNumber(amountSource, 0)
+      });
+    }
+    case 'feature':
+    case 'requires':
+    case 'dependency':
+    case 'dependencies': {
+      const requiresSource =
+        rawEntry.requires ?? rawEntry.require ?? rawEntry.dependencies ?? rawEntry.dependency ?? [];
+      const requiresList = Array.isArray(requiresSource) ? requiresSource : [requiresSource];
+      const normalizedRequires = requiresList
+        .map(entry => (typeof entry === 'string' ? entry.trim() : ''))
+        .filter(Boolean);
+      return freezeFeatureUnlockDefinition({ type: 'feature', requires: normalizedRequires });
+    }
+    case 'trophy':
+    case 'achievement': {
+      const trophyIdCandidate = rawEntry.trophyId ?? rawEntry.trophy ?? rawEntry.id ?? rawEntry.target;
+      const trophyId = typeof trophyIdCandidate === 'string' ? trophyIdCandidate.trim() : '';
+      if (!trophyId) {
+        return null;
+      }
+      return freezeFeatureUnlockDefinition({ type: 'trophy', trophyId });
+    }
+    case 'page':
+    case 'pageunlock':
+    case 'pagestate': {
+      const pageCandidate = rawEntry.pageId ?? rawEntry.page ?? rawEntry.id ?? rawEntry.target;
+      const pageId = typeof pageCandidate === 'string' ? pageCandidate.trim() : '';
+      if (!pageId) {
+        return null;
+      }
+      return freezeFeatureUnlockDefinition({ type: 'page', pageId });
+    }
+    default:
+      return null;
+  }
+}
+
+function buildFeatureUnlockDefinitions(rawConfig) {
+  const defaults = createDefaultFeatureUnlockDefinitions();
+  if (!rawConfig || typeof rawConfig !== 'object') {
+    return defaults;
+  }
+  const result = new Map(defaults);
+  const addEntry = (featureId, entry) => {
+    const id = typeof featureId === 'string' ? featureId.trim() : '';
+    if (!id) {
+      return;
+    }
+    const normalized = normalizeFeatureUnlockCondition(id, entry);
+    if (normalized) {
+      result.set(id, normalized);
+    }
+  };
+  const processGroup = (group, prefix) => {
+    if (!group || typeof group !== 'object') {
+      return;
+    }
+    Object.entries(group).forEach(([key, value]) => {
+      const keyId = typeof key === 'string' ? key.trim() : '';
+      if (!keyId) {
+        return;
+      }
+      const featureId = prefix ? `${prefix}.${keyId}` : keyId;
+      addEntry(featureId, value);
+    });
+  };
+  if (Array.isArray(rawConfig.entries)) {
+    rawConfig.entries.forEach(entry => {
+      if (!entry || typeof entry !== 'object') {
+        return;
+      }
+      const id = typeof entry.id === 'string' ? entry.id.trim() : '';
+      if (!id) {
+        return;
+      }
+      addEntry(id, entry);
+    });
+  }
+  processGroup(rawConfig.arcade, 'arcade');
+  processGroup(rawConfig.systems, 'system');
+  if (rawConfig.features) {
+    processGroup(rawConfig.features, '');
+  }
+  return result;
+}
+
+function getFeatureUnlockDefinition(featureId) {
+  if (typeof featureId !== 'string' || !featureId.trim()) {
+    return null;
+  }
+  return FEATURE_UNLOCK_DEFINITIONS.get(featureId.trim()) || null;
+}
+
+function evaluateFeatureUnlockCondition(definition, stack = new Set()) {
+  if (!definition || typeof definition !== 'object') {
+    return true;
+  }
+  switch (definition.type) {
+    case 'always':
+      return true;
+    case 'lifetimeAtoms': {
+      const target = definition.amount instanceof LayeredNumber
+        ? definition.amount
+        : toLayeredNumber(definition.amount ?? 0, 0);
+      const lifetime = gameState.lifetime instanceof LayeredNumber
+        ? gameState.lifetime
+        : toLayeredNumber(gameState.lifetime ?? 0, 0);
+      return lifetime.compare(target) >= 0;
+    }
+    case 'feature': {
+      const requires = Array.isArray(definition.requires) ? definition.requires : [];
+      if (!requires.length) {
+        return true;
+      }
+      return requires.every(dep => isFeatureUnlocked(dep, stack));
+    }
+    case 'trophy':
+      return !!definition.trophyId && getUnlockedTrophySet().has(definition.trophyId);
+    case 'page': {
+      const pageId = typeof definition.pageId === 'string' ? definition.pageId : '';
+      if (!pageId) {
+        return false;
+      }
+      const unlocks = getPageUnlockState();
+      return unlocks?.[pageId] === true;
+    }
+    default:
+      return false;
+  }
+}
+
+function isFeatureUnlocked(featureId, stack = new Set()) {
+  const id = typeof featureId === 'string' ? featureId.trim() : '';
+  if (!id) {
+    return true;
+  }
+  if (featureUnlockCache.has(id)) {
+    return featureUnlockCache.get(id);
+  }
+  if (stack.has(id)) {
+    return false;
+  }
+  stack.add(id);
+  const definition = getFeatureUnlockDefinition(id);
+  const unlocked = definition ? evaluateFeatureUnlockCondition(definition, stack) : true;
+  stack.delete(id);
+  featureUnlockCache.set(id, unlocked);
+  return unlocked;
+}
+
+function invalidateFeatureUnlockCache(options = {}) {
+  featureUnlockCache.clear();
+  if (options.resetArcadeState) {
+    lastArcadeUnlockState = null;
+  }
+}
+
+function isOptionsDetailUnlocked(detailId) {
+  const featureId = OPTIONS_DETAIL_FEATURE_MAP[detailId];
+  if (!featureId) {
+    return true;
+  }
+  return isFeatureUnlocked(featureId);
+}
+
+function createDetailId(candidate, label, fallbackIndex = 0) {
+  if (typeof candidate === 'string') {
+    const trimmed = candidate.trim();
+    if (trimmed) {
+      return trimmed;
+    }
+  }
+  if (typeof label === 'string') {
+    const slug = label
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+    if (slug) {
+      return slug;
+    }
+  }
+  return `detail-${fallbackIndex}`;
+}
+
+function getOptionsDetailMetadata(override = {}) {
+  if (cachedOptionsDetailMetadata && !override.forceRefresh) {
+    return cachedOptionsDetailMetadata;
+  }
+  const copy = override.copy ?? getOptionsWelcomeCardCopy();
+  const fallbackCopy = override.fallback ?? CONFIG_OPTIONS_WELCOME_CARD;
+  const localizedDetails = extractWelcomeDetails(copy);
+  const fallbackDetails = extractWelcomeDetails(fallbackCopy);
+  const detailMap = new Map();
+  fallbackDetails.forEach(detail => {
+    if (detail && detail.id) {
+      detailMap.set(detail.id, detail);
+    }
+  });
+  localizedDetails.forEach(detail => {
+    if (detail && detail.id) {
+      detailMap.set(detail.id, detail);
+    }
+  });
+  const detailOrder = localizedDetails.length
+    ? localizedDetails.map(detail => detail.id)
+    : fallbackDetails.map(detail => detail.id);
+  cachedOptionsDetailMetadata = { detailMap, detailOrder };
+  return cachedOptionsDetailMetadata;
+}
+
+function computeRenderableOptionDetailIds(detailOrder, detailMap) {
+  const order = Array.isArray(detailOrder) ? detailOrder : [];
+  const map = detailMap instanceof Map ? detailMap : new Map();
+  const unlocked = [];
+  const seen = new Set();
+  order.forEach(id => {
+    if (!id || seen.has(id) || !map.has(id)) {
+      return;
+    }
+    if (isOptionsDetailUnlocked(id)) {
+      unlocked.push(id);
+    }
+    seen.add(id);
+  });
+  Object.keys(OPTIONS_DETAIL_FEATURE_MAP).forEach(id => {
+    if (seen.has(id) || !map.has(id)) {
+      return;
+    }
+    if (isOptionsDetailUnlocked(id)) {
+      unlocked.push(id);
+    }
+    seen.add(id);
+  });
+  return unlocked;
+}
+
+function getTrophyDisplayName(trophyId) {
+  if (typeof trophyId !== 'string' || !trophyId.trim()) {
+    return '';
+  }
+  const def = TROPHY_MAP.get(trophyId.trim());
+  if (!def) {
+    return trophyId.trim();
+  }
+  const texts = getTrophyDisplayTexts(def);
+  if (texts.name && typeof texts.name === 'string' && texts.name.trim()) {
+    return texts.name.trim();
+  }
+  if (typeof def.name === 'string' && def.name.trim()) {
+    return def.name.trim();
+  }
+  return def.id || trophyId.trim();
+}
+
+function getFeatureLockedReason(featureId, visited = new Set()) {
+  const id = typeof featureId === 'string' ? featureId.trim() : '';
+  if (!id || visited.has(id)) {
+    return '';
+  }
+  visited.add(id);
+  const definition = getFeatureUnlockDefinition(id);
+  if (!definition) {
+    return '';
+  }
+  if (definition.type === 'lifetimeAtoms') {
+    const amount = definition.amount instanceof LayeredNumber
+      ? definition.amount
+      : toLayeredNumber(definition.amount ?? 0, 0);
+    const amountText = formatLayeredLocalized(amount, { mantissaDigits: 1 });
+    return translateOrDefault(
+      'index.sections.arcadeHub.locked.requiresAtoms',
+      `Collectez ${amountText} atomes pour débloquer l’arcade.`,
+      { amount: amountText }
+    );
+  }
+  if (definition.type === 'trophy') {
+    const trophyName = getTrophyDisplayName(definition.trophyId);
+    return translateOrDefault(
+      'index.sections.arcadeHub.locked.requiresTrophy',
+      `Débloquez le trophée « ${trophyName} » pour accéder à ce mini-jeu.`,
+      { trophy: trophyName }
+    );
+  }
+  if (definition.type === 'feature') {
+    const requires = Array.isArray(definition.requires) ? definition.requires : [];
+    for (const dependency of requires) {
+      if (!isFeatureUnlocked(dependency)) {
+        const nested = getFeatureLockedReason(dependency, visited);
+        if (nested) {
+          return nested;
+        }
+      }
+    }
+  }
+  return translateOrDefault(
+    'index.sections.arcadeHub.locked.default',
+    'Débloquez ce mini-jeu pour y accéder.'
+  );
+}
+
+function getArcadeCardLockedMessage(pageId) {
+  const featureId = PAGE_FEATURE_MAP[pageId];
+  if (!featureId) {
+    return translateOrDefault(
+      'index.sections.arcadeHub.locked.default',
+      'Débloquez ce mini-jeu pour y accéder.'
+    );
+  }
+  if (isFeatureUnlocked(featureId)) {
+    return '';
+  }
+  const reason = getFeatureLockedReason(featureId);
+  return reason
+    || translateOrDefault(
+      'index.sections.arcadeHub.locked.default',
+      'Débloquez ce mini-jeu pour y accéder.'
+    );
+}
+
+function updateArcadeHubLocks() {
+  if (!elements || !elements.arcadeHubCards?.length) {
+    return;
+  }
+  elements.arcadeHubCards.forEach(card => {
+    if (!card) {
+      return;
+    }
+    const target = card.dataset?.pageTarget;
+    if (!target) {
+      return;
+    }
+    const featureId = PAGE_FEATURE_MAP[target];
+    const unlocked = featureId ? isFeatureUnlocked(featureId) : true;
+    const originalLabel = card.dataset.originalAriaLabel || card.getAttribute('aria-label') || '';
+    if (!card.dataset.originalAriaLabel && originalLabel) {
+      card.dataset.originalAriaLabel = originalLabel;
+    }
+    if (unlocked) {
+      card.disabled = false;
+      card.setAttribute('aria-disabled', 'false');
+      card.classList.remove('arcade-hub-card--locked');
+      card.title = '';
+      if (originalLabel) {
+        card.setAttribute('aria-label', originalLabel);
+      }
+      return;
+    }
+    const hint = getArcadeCardLockedMessage(target);
+    card.disabled = true;
+    card.setAttribute('aria-disabled', 'true');
+    card.classList.add('arcade-hub-card--locked');
+    if (hint) {
+      card.title = hint;
+      const combined = originalLabel ? `${originalLabel} — ${hint}` : hint;
+      card.setAttribute('aria-label', combined);
+    } else if (originalLabel) {
+      card.setAttribute('aria-label', originalLabel);
+    }
+  });
 }
 
 function formatDurationLocalized(value, options) {
@@ -2340,8 +2834,9 @@ function getPageUnlockState() {
 }
 
 function isPageUnlocked(pageId) {
-  if (pageId === 'arcadeHub' || pageId === 'arcade') {
-    return isArcadeUnlocked();
+  const featureId = PAGE_FEATURE_MAP[pageId];
+  if (featureId) {
+    return isFeatureUnlocked(featureId);
   }
   if (pageId === 'shop') {
     const atoms = gameState.atoms instanceof LayeredNumber
@@ -2377,6 +2872,8 @@ function unlockPage(pageId, options = {}) {
       }
     }
   }
+  invalidateFeatureUnlockCache();
+  refreshOptionsWelcomeContent();
   if (!options.deferUI) {
     updatePageUnlockUI();
   }
@@ -2717,7 +3214,8 @@ function unlockTrophy(def) {
   recalcProduction();
   updateGoalsUI();
   updateBigBangVisibility();
-  updateOptionsIntroDetails();
+  invalidateFeatureUnlockCache();
+  refreshOptionsWelcomeContent();
   updateBrickSkinOption();
   updateBrandPortalState({ animate: def.id === ARCADE_TROPHY_ID });
   updatePrimaryNavigationLocks();
@@ -3011,34 +3509,37 @@ function extractWelcomeDetails(source) {
   if (!source || typeof source !== 'object') {
     return [];
   }
+  const normalizeDetail = (entry, index, key) => {
+    if (!entry || typeof entry !== 'object') {
+      return null;
+    }
+    const label = typeof entry.label === 'string' ? entry.label.trim() : '';
+    const description = typeof entry.description === 'string' ? entry.description.trim() : '';
+    if (!label && !description) {
+      return null;
+    }
+    const idCandidate = entry.id ?? key;
+    const id = createDetailId(idCandidate, label, index);
+    return { id, label, description };
+  };
+  if (source.details && typeof source.details === 'object' && !Array.isArray(source.details)) {
+    return Object.entries(source.details)
+      .map(([key, entry], index) => normalizeDetail(entry, index, key))
+      .filter(Boolean);
+  }
   const rawDetails = Array.isArray(source.unlockedDetails)
     ? source.unlockedDetails
     : Array.isArray(source.details)
       ? source.details
-      : source.details && typeof source.details === 'object'
-        ? Object.values(source.details)
-        : [];
+      : [];
   return rawDetails
-    .map(entry => {
-      if (!entry || typeof entry !== 'object') {
-        return null;
-      }
-      const label = typeof entry.label === 'string' ? entry.label.trim() : '';
-      const description = typeof entry.description === 'string' ? entry.description.trim() : '';
-      if (!label && !description) {
-        return null;
-      }
-      return {
-        label,
-        description
-      };
-    })
+    .map((entry, index) => normalizeDetail(entry, index))
     .filter(Boolean);
 }
 
-function renderOptionsWelcomeContent() {
-  const copy = getOptionsWelcomeCardCopy();
-  const fallbackCopy = CONFIG_OPTIONS_WELCOME_CARD;
+function renderOptionsWelcomeContent(options = {}) {
+  const copy = options.copy ?? getOptionsWelcomeCardCopy();
+  const fallbackCopy = options.fallback ?? CONFIG_OPTIONS_WELCOME_CARD;
 
   if (elements.optionsWelcomeTitle) {
     const fallbackTitle = fallbackCopy && typeof fallbackCopy.title === 'string'
@@ -3077,15 +3578,14 @@ function renderOptionsWelcomeContent() {
 
   if (elements.optionsArcadeDetails) {
     const container = elements.optionsArcadeDetails;
+    const metadata = options.metadata
+      || getOptionsDetailMetadata({ copy, fallback: fallbackCopy, forceRefresh: options.forceMetadata });
+    const renderIds = Array.isArray(options.renderIds)
+      ? options.renderIds
+      : computeRenderableOptionDetailIds(metadata.detailOrder, metadata.detailMap);
     container.innerHTML = '';
-
-    const fallbackDetails = extractWelcomeDetails(fallbackCopy);
-    let details = extractWelcomeDetails(copy);
-    if (!details.length && fallbackDetails.length) {
-      details = [...fallbackDetails];
-    }
-
-    details.forEach(detail => {
+    renderIds.forEach(id => {
+      const detail = metadata.detailMap.get(id);
       if (!detail) {
         return;
       }
@@ -3106,12 +3606,24 @@ function renderOptionsWelcomeContent() {
       }
       container.appendChild(paragraph);
     });
+    const key = renderIds.join('|');
+    container.dataset.renderKey = key;
+    const hasDetails = renderIds.length > 0;
+    container.hidden = !hasDetails;
+    container.setAttribute('aria-hidden', hasDetails ? 'false' : 'true');
+    return renderIds;
   }
+  return [];
 }
 
 function refreshOptionsWelcomeContent() {
-  renderOptionsWelcomeContent();
-  updateOptionsIntroDetails();
+  cachedOptionsDetailMetadata = null;
+  const copy = getOptionsWelcomeCardCopy();
+  const fallbackCopy = CONFIG_OPTIONS_WELCOME_CARD;
+  const metadata = getOptionsDetailMetadata({ copy, fallback: fallbackCopy, forceRefresh: true });
+  const renderIds = computeRenderableOptionDetailIds(metadata.detailOrder, metadata.detailMap);
+  renderOptionsWelcomeContent({ copy, fallback: fallbackCopy, metadata, renderIds });
+  updateOptionsIntroDetails({ metadata, renderIds });
 }
 
 function subscribeOptionsWelcomeContentUpdates() {
@@ -3119,6 +3631,7 @@ function subscribeOptionsWelcomeContentUpdates() {
   if (api && typeof api.onLanguageChanged === 'function') {
     api.onLanguageChanged(() => {
       refreshOptionsWelcomeContent();
+      updateArcadeHubLocks();
     });
     return;
   }
@@ -3126,6 +3639,7 @@ function subscribeOptionsWelcomeContentUpdates() {
     && typeof globalThis.addEventListener === 'function') {
     globalThis.addEventListener('i18n:languagechange', () => {
       refreshOptionsWelcomeContent();
+      updateArcadeHubLocks();
     });
   }
 }
@@ -3400,13 +3914,22 @@ function updateBrickSkinOption() {
   }
 }
 
-function updateOptionsIntroDetails() {
+function updateOptionsIntroDetails(options = {}) {
   if (!elements.optionsArcadeDetails) {
     return;
   }
-  const unlocked = isArcadeUnlocked();
-  elements.optionsArcadeDetails.hidden = !unlocked;
-  elements.optionsArcadeDetails.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
+  const metadata = options.metadata || getOptionsDetailMetadata();
+  const renderIds = Array.isArray(options.renderIds)
+    ? options.renderIds
+    : computeRenderableOptionDetailIds(metadata.detailOrder, metadata.detailMap);
+  const key = renderIds.join('|');
+  if (elements.optionsArcadeDetails.dataset.renderKey !== key) {
+    renderOptionsWelcomeContent({ metadata, renderIds });
+    return;
+  }
+  const hasDetails = renderIds.length > 0;
+  elements.optionsArcadeDetails.hidden = !hasDetails;
+  elements.optionsArcadeDetails.setAttribute('aria-hidden', hasDetails ? 'false' : 'true');
 }
 
 function commitBrickSkinSelection(rawValue) {
@@ -3594,7 +4117,7 @@ function updateBigBangVisibility() {
 }
 
 function isArcadeUnlocked() {
-  return getUnlockedTrophySet().has(ARCADE_TROPHY_ID);
+  return isFeatureUnlocked('arcade.hub');
 }
 
 function triggerBrandPortalPulse() {
@@ -3738,10 +4261,13 @@ window.registerChessVictoryReward = registerChessVictoryReward;
 
 function updateBrandPortalState(options = {}) {
   const unlocked = isArcadeUnlocked();
+  const wasUnlocked = lastArcadeUnlockState === true;
+  const justUnlocked = !wasUnlocked && unlocked;
+  lastArcadeUnlockState = unlocked;
   if (elements.brandPortal) {
-    elements.brandPortal.disabled = false;
-    elements.brandPortal.setAttribute('aria-disabled', 'false');
-    elements.brandPortal.classList.remove('brand--locked');
+    elements.brandPortal.disabled = !unlocked;
+    elements.brandPortal.setAttribute('aria-disabled', unlocked ? 'false' : 'true');
+    elements.brandPortal.classList.toggle('brand--locked', !unlocked);
     elements.brandPortal.classList.toggle('brand--portal-ready', unlocked);
   }
   if (elements.navArcadeButton) {
@@ -3750,12 +4276,17 @@ function updateBrandPortalState(options = {}) {
       elements.navArcadeButton.classList.remove('nav-button--pulse');
     } else {
       updateArcadeTicketDisplay();
-      if (options.animate) {
+      if (options.animate || justUnlocked) {
         triggerBrandPortalPulse();
       }
     }
   } else if (unlocked) {
     updateArcadeTicketDisplay();
+  }
+  updateArcadeHubLocks();
+  if (justUnlocked) {
+    refreshOptionsWelcomeContent();
+    updateBrickSkinOption();
   }
 }
 
@@ -8647,6 +9178,7 @@ document.addEventListener('selectstart', event => {
 function gainAtoms(amount, source = 'generic') {
   gameState.atoms = gameState.atoms.add(amount);
   gameState.lifetime = gameState.lifetime.add(amount);
+  invalidateFeatureUnlockCache();
   if (gameState.stats) {
     const session = gameState.stats.session;
     const global = gameState.stats.global;
@@ -8667,6 +9199,9 @@ function gainAtoms(amount, source = 'generic') {
     }
   }
   evaluateTrophies();
+  if (lastArcadeUnlockState !== true && isFeatureUnlocked('arcade.hub')) {
+    updateBrandPortalState({ animate: true });
+  }
 }
 
 function getUpgradeLevel(state, id) {
@@ -11254,6 +11789,7 @@ function resetGame() {
   setTicketStarAverageIntervalSeconds(gameState.ticketStarAverageIntervalSeconds);
   resetFrenzyState({ skipApply: true });
   resetTicketStarState({ reschedule: true });
+  invalidateFeatureUnlockCache({ resetArcadeState: true });
   applyTheme();
   if (typeof setParticulesBrickSkinPreference === 'function') {
     setParticulesBrickSkinPreference(gameState.arcadeBrickSkin);
@@ -11519,6 +12055,7 @@ function loadGame() {
       gameState.theme = DEFAULT_THEME_ID;
       gameState.stats = createInitialStats();
       gameState.shopUnlocks = new Set();
+      invalidateFeatureUnlockCache({ resetArcadeState: true });
       applyTheme();
       recalcProduction();
       renderShop();
@@ -11830,6 +12367,7 @@ function loadGame() {
     }
     evaluatePageUnlocks({ save: false, deferUI: true });
     getShopUnlockSet();
+    invalidateFeatureUnlockCache({ resetArcadeState: true });
     applyTheme();
     recalcProduction();
     renderShop();

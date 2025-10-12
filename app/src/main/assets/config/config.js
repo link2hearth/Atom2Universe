@@ -737,81 +737,97 @@ const GAME_CONFIG = {
         ],
         unlockedDetails: [
           {
+            id: 'particles',
             label: 'Arcade Particules :',
             description:
               'Collisionnez les particules élémentaires afin de gagner des tickets de tirage pour le Gacha, et des crédits pour le mini jeu Métaux.'
           },
           {
+            id: 'match3',
             label: 'Arcade Métaux :',
             description:
               'Alignez les alliages pour forger des bonus qui dopent votre production.'
           },
           {
+            id: 'photon',
             label: 'Arcade Photon :',
             description:
               'Guidez un photon sur son onde cosmique et récoltez l’énergie sans perdre le rythme.'
           },
           {
+            id: 'objectx',
             label: 'Arcade ObjectX :',
             description:
               "Fusionnez des blocs quantiques sur la grille choisie jusqu’à atteindre la tuile objectif."
           },
           {
+            id: 'balance',
             label: 'Arcade Balance :',
             description:
               'Disposez des blocs de masses différentes pour maintenir la planche parfaitement stable.'
           },
           {
+            id: 'math',
             label: 'Arcade Math :',
             description:
               'Complétez les nombres ou symboles manquants et maintenez la série de calculs.'
           },
           {
+            id: 'sudoku',
             label: 'Arcade Sudoku :',
             description:
               'Résolvez des grilles générées dynamiquement avec des aides optionnelles.'
           },
           {
+            id: 'demineur',
             label: 'Arcade Démineur :',
             description:
               'Dévoilez toutes les cases sans déclencher les mines quantiques.'
           },
           {
+            id: 'solitaire',
             label: 'Arcade Solitaire :',
             description:
               'Empilez les cartes pour compléter les quatre fondations le plus efficacement possible.'
           },
           {
+            id: 'echecs',
             label: 'Arcade Échecs :',
             description:
               'Affrontez une IA adaptable sur un échiquier futuriste.'
           },
           {
+            id: 'gameOfLife',
             label: 'Arcade Jeu de la vie :',
             description:
               'Orchestrez vos motifs favoris dans l’automate cellulaire de Conway.'
           },
           {
+            id: 'blackjack',
             label: 'Arcade Blackjack :',
             description:
               'Affrontez le croupier avec un sabot qui se régénère automatiquement.'
           },
           {
+            id: 'gacha',
             label: 'Gacha :',
             description:
               'Grâce à vos tickets gagnez des Atomes du tableau périodique des éléments, leurs collections vous octroieront des bonus de APS et APC notamment.'
           },
           {
+            id: 'tableau',
             label: 'Tableau :',
             description:
               'Consultez le tableau périodique pour suivre vos collections et leurs bonus cumulés.'
           },
           {
+            id: 'fusion',
             label: 'Fusion :',
             description:
               'Combinez vos éléments spéciaux pour débloquer des améliorations permanentes.'
           },
           {
+            id: 'musique',
             label: 'Musique :',
             description:
               'Personnalisez l’ambiance sonore avec vos playlists chiptune et vos SoundFonts.'
@@ -908,6 +924,29 @@ const GAME_CONFIG = {
       baseChance: 0.05,
       baseMultiplier: 2,
       maxMultiplier: 100
+    },
+    featureUnlocks: {
+      arcade: {
+        hub: { type: 'lifetimeAtoms', amount: { type: 'number', value: 1000 } },
+        particules: { type: 'feature', requires: 'arcade.hub' },
+        metaux: { type: 'trophy', trophyId: 'millionAtoms' },
+        photon: { type: 'trophy', trophyId: 'millionAtoms' },
+        objectx: { type: 'trophy', trophyId: 'millionAtoms' },
+        balance: { type: 'trophy', trophyId: 'millionAtoms' },
+        math: { type: 'trophy', trophyId: 'millionAtoms' },
+        sudoku: { type: 'trophy', trophyId: 'millionAtoms' },
+        demineur: { type: 'trophy', trophyId: 'millionAtoms' },
+        solitaire: { type: 'trophy', trophyId: 'millionAtoms' },
+        blackjack: { type: 'trophy', trophyId: 'millionAtoms' },
+        echecs: { type: 'trophy', trophyId: 'millionAtoms' },
+        gameOfLife: { type: 'trophy', trophyId: 'millionAtoms' }
+      },
+      systems: {
+        gacha: { type: 'page', pageId: 'gacha' },
+        tableau: { type: 'page', pageId: 'tableau' },
+        fusion: { type: 'page', pageId: 'fusion' },
+        musique: { type: 'always' }
+      }
     }
   },
 

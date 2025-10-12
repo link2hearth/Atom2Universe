@@ -108,6 +108,20 @@
   gap: clamp(0.35rem, 1.2vw, 0.8rem);
 }
 
+.arcade-hub-card--locked {
+  cursor: not-allowed;
+  opacity: 0.6;
+  box-shadow: none;
+  filter: grayscale(0.25);
+}
+
+.arcade-hub-card--locked:hover,
+.arcade-hub-card--locked:focus-visible {
+  transform: none;
+  box-shadow: none;
+  outline: none;
+}
+
 .arcade-hub-card:hover,
 .arcade-hub-card:focus-visible {
   transform: translateY(-4px);
