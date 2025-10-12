@@ -170,6 +170,10 @@
         "characters": {
           "title": "Qui sont les personnages ?",
           "subtitle": "Les esprits brillants qui accompagnent votre aventure.",
+          "toggle": {
+            "collapse": "Réduire",
+            "expand": "Dérouler"
+          },
           "names": {
             "currie": "Marie Curie",
             "oppenheimer": "J. Robert Oppenheimer",

@@ -18,7 +18,7 @@
   align-items: stretch;
 }
 
-.info-card {
+.info-card { 
   background: var(--card-surface);
   border-radius: 18px;
   padding: clamp(1.4rem, 2.4vw, 2rem);
@@ -136,6 +136,103 @@ body.theme-aurora .info-card {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
+}
+
+.info-card__header--collapsible {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: clamp(0.6rem, 1.4vw, 1rem);
+}
+
+.info-card__header--collapsible h3 {
+  margin: 0;
+}
+
+.info-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.9rem, 1.6vw, 1.3rem);
+}
+
+.info-card__content--characters {
+  gap: clamp(1rem, 1.8vw, 1.5rem);
+}
+
+.info-card__collapse-button {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  background: rgba(255, 255, 255, 0.12);
+  color: inherit;
+  border-radius: 999px;
+  padding: 0.45rem 0.9rem;
+  font: inherit;
+  font-size: calc(var(--font-scale-factor, 1) * 0.75rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+.info-card__collapse-button::after {
+  content: '';
+  width: 0.65rem;
+  height: 0.65rem;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform 160ms ease;
+}
+
+.info-card--collapsed .info-card__collapse-button::after {
+  transform: rotate(-135deg);
+}
+
+body.theme-light .info-card__collapse-button {
+  border-color: rgba(12, 16, 32, 0.24);
+  background: rgba(12, 16, 32, 0.08);
+}
+
+body.theme-neon .info-card__collapse-button {
+  border-color: rgba(110, 130, 255, 0.36);
+  background: rgba(80, 100, 255, 0.18);
+}
+
+body.theme-aurora .info-card__collapse-button {
+  border-color: rgba(90, 230, 170, 0.36);
+  background: rgba(40, 170, 120, 0.2);
+}
+
+.info-card__collapse-button:hover,
+.info-card__collapse-button:focus-visible {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+body.theme-light .info-card__collapse-button:hover,
+body.theme-light .info-card__collapse-button:focus-visible {
+  background: rgba(12, 16, 32, 0.12);
+  border-color: rgba(12, 16, 32, 0.36);
+}
+
+body.theme-neon .info-card__collapse-button:hover,
+body.theme-neon .info-card__collapse-button:focus-visible {
+  background: rgba(80, 100, 255, 0.24);
+  border-color: rgba(110, 130, 255, 0.48);
+}
+
+body.theme-aurora .info-card__collapse-button:hover,
+body.theme-aurora .info-card__collapse-button:focus-visible {
+  background: rgba(40, 170, 120, 0.26);
+  border-color: rgba(90, 230, 170, 0.48);
+}
+
+.info-card__subtitle--characters {
+  margin: 0;
 }
 
 .info-card__header--welcome {

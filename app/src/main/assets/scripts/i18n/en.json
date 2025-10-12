@@ -170,6 +170,10 @@
         "characters": {
           "title": "Who are the characters?",
           "subtitle": "The brilliant minds guiding your journey.",
+          "toggle": {
+            "collapse": "Collapse",
+            "expand": "Expand"
+          },
           "names": {
             "currie": "Marie Curie",
             "oppenheimer": "J. Robert Oppenheimer",
