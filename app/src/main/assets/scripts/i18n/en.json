@@ -1318,11 +1318,11 @@
             "details": {
               "particles": {
                 "label": "Arcade Particles:",
-                "description": "Collide elementary particles to earn draw tickets for the Gacha and credits for the Mach3 mini-game."
+                "description": "Collide elementary particles to earn draw tickets for the Gacha and credits for the Metals mini-game."
               },
               "match3": {
                 "label": "Arcade Metals:",
-                "description": "Align metallic tiles in the Mach3 forge to craft production-boosting bonuses."
+                "description": "Align metallic tiles in the forge to craft production-boosting bonuses."
               },
               "photon": {
                 "label": "Arcade Photon:",
@@ -1354,7 +1354,7 @@
               },
               "echecs": {
                 "label": "Arcade Chess:",
-                "description": "Challenge an adaptive AI across a futuristic chessboard."
+                "description": "Challenge an adaptive AI across a chessboard."
               },
               "gameOfLife": {
                 "label": "Arcade Game of Life:",
@@ -1362,7 +1362,7 @@
               },
               "blackjack": {
                 "label": "Arcade Blackjack:",
-                "description": "Face the dealer with a shoe that refreshes itself automatically."
+                "description": "Bet your Atoms.."
               },
               "gacha": {
                 "label": "Gacha:",
@@ -4174,3 +4174,4 @@
     }
   }
 }
+
