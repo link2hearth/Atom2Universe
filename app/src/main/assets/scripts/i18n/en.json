@@ -201,6 +201,12 @@
         "aria": "Mini-game selection hub",
         "title": "Arcade",
         "subtitle": "Pick a bonus mini-game to extend your Atom2Univers session.",
+        "locked": {
+          "requiresAtoms": "Collect {{amount}} atoms to unlock the arcade.",
+          "requiresTrophy": "Unlock the \u201c{{trophy}}\u201d trophy to access this minigame.",
+          "requiresMach3": "Earn a Mach3 ticket to unlock this minigame.",
+          "default": "Unlock this minigame to access it."
+        },
         "cards": {
           "particules": {
             "aria": "Open the Particles mini-game",
