@@ -83,3 +83,26 @@ Le dépôt contient uniquement des fichiers statiques. Pour tester le jeu en loc
 ---
 
 Bon jeu et bon click !
+
+## Icône Android
+
+L’application Android référence deux variantes de l’icône dans
+`AndroidManifest.xml` :
+
+- `android:icon="@mipmap/ic_launcher"`
+- `android:roundIcon="@mipmap/ic_launcher_round"`
+
+Le fichier `mipmap-anydpi-v26/ic_launcher_round.xml` fourni dans ce dépôt
+réutilise l’icône principale comme foreground pour Android 8 et plus.
+Pour les versions antérieures, il faut s’assurer manuellement que des
+PNGs nommés `ic_launcher_round.png` existent dans chaque dossier de
+densité (`mipmap-mdpi`, `-hdpi`, etc.). La manière la plus simple est de :
+
+1. Exporter votre visuel carré dans toutes les densités requises sous le
+   nom `ic_launcher.png` (remplace les fichiers existants si nécessaire).
+2. Dupliquer chaque fichier et renommer la copie en
+   `ic_launcher_round.png` dans le même dossier.
+
+Ces doublons garantissent que la propriété `roundIcon` soit résolue sur
+toutes les versions d’Android, même sans ajouter d’autres fichiers au
+contrôle de version.
