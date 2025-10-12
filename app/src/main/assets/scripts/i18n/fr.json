@@ -2372,7 +2372,8 @@
       "timer": {
         "max": "Max {value}",
         "free": "Mode libre",
-        "exitHint": "Afficher le récapitulatif et quitter le mode libre."
+        "exitHint": "Afficher le récapitulatif et quitter le mode libre.",
+        "decay": "Le chrono s'accélère : {amount} retiré du maximum."
       },
       "session": {
         "start": "Nouvelle session : enchaînez les alliages !",
