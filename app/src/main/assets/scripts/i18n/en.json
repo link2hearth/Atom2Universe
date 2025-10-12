@@ -166,6 +166,40 @@
         "elements": {
           "title": "Element bonuses",
           "subtitle": "Primordial nucleosynthesis · Cosmic spallation · Simple stars · Supernovae · Massive stars · Artificial"
+        },
+        "characters": {
+          "title": "Who are the characters?",
+          "subtitle": "The brilliant minds guiding your journey.",
+          "toggle": {
+            "collapse": "Collapse",
+            "expand": "Expand"
+          },
+          "names": {
+            "currie": "Marie Curie",
+            "oppenheimer": "J. Robert Oppenheimer",
+            "darwin": "Charles Darwin",
+            "newton": "Isaac Newton",
+            "sagan": "Carl Sagan",
+            "socrates": "Socrates",
+            "tesla": "Nikola Tesla",
+            "einstein": "Albert Einstein",
+            "mendeleev": "Dmitri Mendeleev",
+            "astronaut": "Astronaut",
+            "monkey": "Monkey"
+          },
+          "descriptions": {
+            "currie": "Pioneer of radioactivity and a two-time Nobel laureate.",
+            "oppenheimer": "Scientific director of the Manhattan Project, torn between physics and conscience.",
+            "darwin": "Revealed evolution by natural selection and reshaped modern biology.",
+            "newton": "Formulated universal gravitation and laid the foundations of classical mechanics.",
+            "sagan": "Poetic astrophysicist who popularized the cosmos and our place within it.",
+            "socrates": "Philosopher of dialogue, challenging every certainty to illuminate thought.",
+            "tesla": "Visionary inventor of modern electricity and alternating current.",
+            "einstein": "Genius of relativity, bending spacetime to supercharge your frenzies.",
+            "mendeleev": "Architect of the periodic table, organizing the elements of your progress.",
+            "astronaut": "Thanks to them, humanity can brush the stars with its fingertips.",
+            "monkey": "The passionate creator shaping this game for you."
+          }
         }
       },
       "bigbang": {

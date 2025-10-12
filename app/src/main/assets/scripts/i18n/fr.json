@@ -166,6 +166,40 @@
         "elements": {
           "title": "Bonus éléments",
           "subtitle": "Nucléosynthèse primordiale · Spallation cosmique · Étoiles simples · Supernovae · Étoiles massives · Artificiels"
+        },
+        "characters": {
+          "title": "Qui sont les personnages ?",
+          "subtitle": "Les esprits brillants qui accompagnent votre aventure.",
+          "toggle": {
+            "collapse": "Réduire",
+            "expand": "Dérouler"
+          },
+          "names": {
+            "currie": "Marie Curie",
+            "oppenheimer": "J. Robert Oppenheimer",
+            "darwin": "Charles Darwin",
+            "newton": "Isaac Newton",
+            "sagan": "Carl Sagan",
+            "socrates": "Socrate",
+            "tesla": "Nikola Tesla",
+            "einstein": "Albert Einstein",
+            "mendeleev": "Dmitri Mendeleïev",
+            "astronaut": "Astronaute",
+            "monkey": "Monkey"
+          },
+          "descriptions": {
+            "currie": "Pionnière de la radioactivité, double lauréate du prix Nobel.",
+            "oppenheimer": "Directeur scientifique du projet Manhattan, partagé entre physique et conscience.",
+            "darwin": "A révélé l’évolution par sélection naturelle et transformé la biologie moderne.",
+            "newton": "A formulé la gravitation universelle et posé les bases de la mécanique classique.",
+            "sagan": "Astrophysicien poète, il popularise le cosmos et rappelle notre place dans l’univers.",
+            "socrates": "Philosophe de l’écoute, il questionne chaque certitude pour éclairer la pensée.",
+            "tesla": "Inventeur visionnaire de l’électricité moderne et des courants alternatifs.",
+            "einstein": "Génie de la relativité, il plie l’espace-temps pour dynamiser vos frénésies.",
+            "mendeleev": "Architecte du tableau périodique, il ordonne les éléments de votre progression.",
+            "astronaut": "Grâce à eux, l’humanité touche les étoiles du bout des doigts.",
+            "monkey": "Le créateur passionné qui façonne ce jeu pour vous."
+          }
         }
       },
       "bigbang": {

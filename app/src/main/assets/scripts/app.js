@@ -3815,6 +3815,9 @@ function collectDomElements() {
   infoShopBonuses: document.getElementById('infoShopBonuses'),
   infoShopBonusCard: document.getElementById('infoShopBonusCard'),
   infoElementBonusCard: document.getElementById('infoElementBonusCard'),
+  infoCharactersCard: document.querySelector('.info-card--characters'),
+  infoCharactersContent: document.getElementById('info-characters-content'),
+  infoCharactersToggle: document.getElementById('infoCharactersToggle'),
   critAtomLayer: null,
   devkitOverlay: document.getElementById('devkitOverlay'),
   devkitPanel: document.getElementById('devkitPanel'),
@@ -4422,6 +4425,70 @@ function updateInfoBonusVisibility() {
   if (elements.infoElementBonusCard) {
     elements.infoElementBonusCard.hidden = !visible;
     elements.infoElementBonusCard.setAttribute('aria-hidden', visible ? 'false' : 'true');
+  }
+}
+
+function updateInfoCharactersToggleLabel(collapsed) {
+  if (!elements.infoCharactersToggle) {
+    return;
+  }
+  const key = collapsed
+    ? 'index.sections.info.characters.toggle.expand'
+    : 'index.sections.info.characters.toggle.collapse';
+  const fallback = collapsed ? 'Expand' : 'Collapse';
+  const label = translateOrDefault(key, fallback);
+  elements.infoCharactersToggle.setAttribute('data-i18n', key);
+  elements.infoCharactersToggle.textContent = label;
+  elements.infoCharactersToggle.setAttribute('aria-label', label);
+}
+
+function setInfoCharactersCollapsed(collapsed) {
+  if (!elements.infoCharactersCard || !elements.infoCharactersContent || !elements.infoCharactersToggle) {
+    return;
+  }
+  const shouldCollapse = !!collapsed;
+  elements.infoCharactersCard.classList.toggle('info-card--collapsed', shouldCollapse);
+  elements.infoCharactersContent.hidden = shouldCollapse;
+  elements.infoCharactersContent.setAttribute('aria-hidden', shouldCollapse ? 'true' : 'false');
+  elements.infoCharactersToggle.setAttribute('aria-expanded', shouldCollapse ? 'false' : 'true');
+  updateInfoCharactersToggleLabel(shouldCollapse);
+}
+
+function toggleInfoCharactersCollapsed() {
+  if (!elements.infoCharactersCard) {
+    return;
+  }
+  const currentlyCollapsed = elements.infoCharactersCard.classList.contains('info-card--collapsed');
+  setInfoCharactersCollapsed(!currentlyCollapsed);
+}
+
+function initInfoCharactersCard() {
+  if (!elements.infoCharactersCard || !elements.infoCharactersContent || !elements.infoCharactersToggle) {
+    return;
+  }
+  elements.infoCharactersContent.hidden = false;
+  elements.infoCharactersContent.setAttribute('aria-hidden', 'false');
+  setInfoCharactersCollapsed(false);
+  elements.infoCharactersToggle.addEventListener('click', event => {
+    event.preventDefault();
+    toggleInfoCharactersCollapsed();
+  });
+}
+
+function subscribeInfoCharactersLanguageUpdates() {
+  const handler = () => {
+    const collapsed = elements.infoCharactersCard
+      ? elements.infoCharactersCard.classList.contains('info-card--collapsed')
+      : false;
+    updateInfoCharactersToggleLabel(collapsed);
+  };
+  const api = getI18nApi();
+  if (api && typeof api.onLanguageChanged === 'function') {
+    api.onLanguageChanged(handler);
+    return;
+  }
+  if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
+    globalThis.addEventListener('i18n:languagechange', handler);
   }
 }
 
@@ -8737,6 +8804,8 @@ function bindDomEventListeners() {
     document.body.classList.remove('view-game');
   }
 
+  initInfoCharactersCard();
+
   if (elements.devkitOverlay) {
     elements.devkitOverlay.addEventListener('click', event => {
       if (event.target === elements.devkitOverlay) {
@@ -12842,6 +12911,7 @@ function initializeDomBoundModules() {
   subscribeClickSoundLanguageUpdates();
   initCritAtomOption();
   subscribeCritAtomLanguageUpdates();
+  subscribeInfoCharactersLanguageUpdates();
   updateDevKitUI();
   if (typeof initParticulesGame === 'function') {
     initParticulesGame();
