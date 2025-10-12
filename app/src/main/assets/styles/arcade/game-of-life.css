@@ -282,6 +282,35 @@
   color: var(--gol-description-color, rgba(220, 230, 255, 0.75));
 }
 
+.game-of-life__selection {
+  margin-top: calc(0.85rem * var(--game-of-life-menu-scale));
+  padding: calc(0.85rem * var(--game-of-life-menu-scale));
+  border-radius: calc(14px * var(--game-of-life-menu-scale));
+  background: var(--gol-selection-bg, rgba(16, 24, 46, 0.72));
+  border: 1px solid var(--gol-selection-border, rgba(120, 160, 255, 0.35));
+  display: grid;
+  gap: calc(0.65rem * var(--game-of-life-menu-scale));
+}
+
+.game-of-life__selection-title {
+  margin: 0;
+  font-size: calc(1rem * var(--game-of-life-menu-scale));
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.game-of-life__selection-hint {
+  margin: 0;
+  font-size: calc(0.82rem * var(--game-of-life-menu-scale));
+  color: var(--gol-hint-color, rgba(200, 210, 240, 0.72));
+}
+
+.game-of-life__selection-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(0.65rem * var(--game-of-life-menu-scale));
+}
+
 .game-of-life__random-form {
   display: grid;
   gap: calc(0.75rem * var(--game-of-life-menu-scale));
