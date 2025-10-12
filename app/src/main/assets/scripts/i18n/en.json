@@ -1892,6 +1892,9 @@
             "missed": "Sudoku cleared in {elapsed}, slower than the limit ({limit}). Bonus not granted.",
             "applied": "Sudoku bonus applied: {duration} at {multiplier}."
           }
+        },
+        "quantum2048": {
+          "rewardToast": "{tickets} earned from ObjectX!"
         }
       }
     },

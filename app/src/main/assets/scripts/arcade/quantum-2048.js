@@ -29,6 +29,13 @@
     spawnWeights: [0.9, 0.1]
   };
 
+  const DEFAULT_REWARD_CONFIG = {
+    gachaTickets: {
+      minRange: { min: 1, max: 4 },
+      maxRange: { min: 25, max: 50 }
+    }
+  };
+
   const UNIVERSE_TRANSITION_DELAY_MS = 850;
   const UNIVERSE_DEFEAT_EXTRA_DELAY_MS = 250;
   const PARALLEL_UNIVERSE_STORAGE_KEY = 'atom2univers.quantum2048.parallelUniverses';
@@ -73,6 +80,36 @@
       }
     });
     return Array.from(unique).sort((a, b) => a - b);
+  }
+
+  function sanitizeTicketRange(range, fallback) {
+    const fallbackMin = Math.max(0, Math.floor(Number(fallback?.min) || 0));
+    const fallbackMax = Math.max(fallbackMin, Math.floor(Number(fallback?.max) || fallbackMin));
+    if (!range || typeof range !== 'object') {
+      return { min: fallbackMin, max: fallbackMax };
+    }
+    const rawMin = Number(range.min ?? range.minimum ?? range.from);
+    const rawMax = Number(range.max ?? range.maximum ?? range.to);
+    const min = Number.isFinite(rawMin) ? Math.max(0, Math.floor(rawMin)) : fallbackMin;
+    const maxCandidate = Number.isFinite(rawMax) ? Math.max(0, Math.floor(rawMax)) : fallbackMax;
+    const max = Math.max(min, maxCandidate);
+    return { min, max };
+  }
+
+  function sanitizeRewardsConfig(rawRewards) {
+    const rewards = rawRewards && typeof rawRewards === 'object' ? rawRewards : {};
+    const gachaSource = rewards.gachaTickets && typeof rewards.gachaTickets === 'object'
+      ? rewards.gachaTickets
+      : {};
+    const defaults = DEFAULT_REWARD_CONFIG.gachaTickets;
+    const minRange = sanitizeTicketRange(gachaSource.minRange, defaults.minRange);
+    const maxRange = sanitizeTicketRange(gachaSource.maxRange, defaults.maxRange);
+    return {
+      gachaTickets: {
+        minRange,
+        maxRange
+      }
+    };
   }
 
   function sanitizeConfig() {
@@ -155,7 +192,8 @@
       targetPoolsBySize,
       randomizeGames: config.randomizeGames !== false,
       spawnValues: spawnValues.length ? spawnValues : DEFAULT_CONFIG.spawnValues,
-      spawnWeights: spawnWeights.length ? spawnWeights : DEFAULT_CONFIG.spawnWeights
+      spawnWeights: spawnWeights.length ? spawnWeights : DEFAULT_CONFIG.spawnWeights,
+      rewards: sanitizeRewardsConfig(config.rewards)
     };
   }
 
@@ -207,6 +245,22 @@
     return value;
   }
 
+  function lerp(start, end, t) {
+    const ratio = Number.isFinite(t) ? clamp(t, 0, 1) : 0;
+    const a = Number.isFinite(Number(start)) ? Number(start) : 0;
+    const b = Number.isFinite(Number(end)) ? Number(end) : 0;
+    return a + (b - a) * ratio;
+  }
+
+  function randomIntInRange(min, max) {
+    const lower = Math.max(0, Math.ceil(Number(min) || 0));
+    const upper = Math.max(lower, Math.floor(Number(max) || 0));
+    if (upper <= lower) {
+      return lower;
+    }
+    return lower + Math.floor(Math.random() * (upper - lower + 1));
+  }
+
   class Quantum2048Game {
     constructor(options = {}) {
       const {
@@ -220,7 +274,6 @@
         movesElement,
         goalElement,
         parallelUniverseElement,
-        restartButton,
         overlayElement,
         overlayMessageElement,
         overlayButtonElement
@@ -237,10 +290,10 @@
       this.movesElement = movesElement || null;
       this.goalElement = goalElement || null;
       this.parallelUniverseElement = parallelUniverseElement || null;
-      this.restartButton = restartButton || null;
       this.overlayElement = overlayElement || null;
       this.overlayMessageElement = overlayMessageElement || null;
       this.overlayButtonElement = overlayButtonElement || null;
+      this.rewards = this.config.rewards || DEFAULT_REWARD_CONFIG;
 
       this.size = this.normalizeSize(this.config.defaultGridSize);
       this.target = this.normalizeTarget(this.config.recommendedTargetBySize[this.size] ?? this.config.targetValues[0]);
@@ -258,7 +311,6 @@
       this.handleKeydown = this.handleKeydown.bind(this);
       this.handleSizeChange = this.handleSizeChange.bind(this);
       this.handleTargetChange = this.handleTargetChange.bind(this);
-      this.handleRestart = this.handleRestart.bind(this);
       this.handleOverlayAction = this.handleOverlayAction.bind(this);
       this.handleResize = this.handleResize.bind(this);
       this.handleTouchStart = this.handleTouchStart.bind(this);
@@ -427,9 +479,6 @@
         this.populateTargetOptions();
         this.targetSelect.addEventListener('change', this.handleTargetChange);
       }
-      if (this.restartButton) {
-        this.restartButton.addEventListener('click', this.handleRestart);
-      }
       if (this.overlayButtonElement) {
         this.overlayButtonElement.addEventListener('click', this.handleOverlayAction);
       }
@@ -484,14 +533,6 @@
       const value = Number.parseInt(event?.target?.value, 10);
       const normalized = this.normalizeTarget(value, this.size);
       this.startNewGame({ target: normalized, size: this.size, randomize: false });
-    }
-
-    handleRestart() {
-      this.startNewGame({
-        size: this.size,
-        target: this.target,
-        randomize: this.config.randomizeGames !== false
-      });
     }
 
     handleOverlayAction() {
@@ -994,12 +1035,95 @@
       this.updateParallelUniverseDisplay();
     }
 
+    getVictoryTicketRewardRange(target) {
+      const targets = Array.isArray(this.config.targetValues)
+        ? this.config.targetValues.slice().sort((a, b) => a - b)
+        : [];
+      if (!targets.length) {
+        return null;
+      }
+      const rewardConfig = this.rewards?.gachaTickets;
+      if (!rewardConfig || !rewardConfig.minRange || !rewardConfig.maxRange) {
+        return null;
+      }
+      const minRange = rewardConfig.minRange;
+      const maxRange = rewardConfig.maxRange;
+      const minLow = Math.max(0, Math.floor(Number(minRange.min) || 0));
+      const minHigh = Math.max(minLow, Math.floor(Number(minRange.max) || minLow));
+      const maxLow = Math.max(0, Math.floor(Number(maxRange.min) || 0));
+      const maxHigh = Math.max(maxLow, Math.floor(Number(maxRange.max) || maxLow));
+
+      let ratio = targets.length === 1 ? 1 : 0;
+      if (targets.length > 1) {
+        const index = targets.indexOf(target);
+        if (index >= 0) {
+          ratio = index / (targets.length - 1);
+        } else {
+          let insertionIndex = targets.findIndex(value => target < value);
+          if (insertionIndex <= 0) {
+            ratio = 0;
+          } else if (insertionIndex < 0) {
+            ratio = 1;
+          } else {
+            const lowerValue = targets[insertionIndex - 1];
+            const upperValue = targets[insertionIndex];
+            const span = upperValue - lowerValue;
+            const localRatio = span > 0 ? (target - lowerValue) / span : 0;
+            ratio = (insertionIndex - 1 + clamp(localRatio, 0, 1)) / (targets.length - 1);
+          }
+        }
+      }
+
+      const safeRatio = clamp(ratio, 0, 1);
+      const minTickets = Math.round(lerp(minLow, maxLow, safeRatio));
+      const maxTickets = Math.round(lerp(minHigh, maxHigh, safeRatio));
+      const lower = Math.max(0, Math.min(minTickets, maxTickets));
+      const upper = Math.max(lower, Math.max(minTickets, maxTickets));
+      return { min: lower, max: upper };
+    }
+
+    grantVictoryRewards() {
+      const range = this.getVictoryTicketRewardRange(this.target);
+      if (!range) {
+        return null;
+      }
+      const min = Math.max(0, Math.floor(Number(range.min) || 0));
+      const max = Math.max(min, Math.floor(Number(range.max) || min));
+      if (max <= 0) {
+        return null;
+      }
+      const rewardAmount = randomIntInRange(min, max);
+      if (!Number.isFinite(rewardAmount) || rewardAmount <= 0) {
+        return null;
+      }
+      let granted = rewardAmount;
+      if (typeof gainGachaTickets === 'function') {
+        granted = gainGachaTickets(rewardAmount, { unlockTicketStar: true });
+      }
+      if (granted > 0) {
+        const ticketLabel = typeof formatTicketLabel === 'function'
+          ? formatTicketLabel(granted)
+          : `${formatInteger(granted)} tickets`;
+        const message = translate('scripts.arcade.quantum2048.rewardToast', 'ObjectX reward: {tickets}', {
+          tickets: ticketLabel
+        });
+        if (typeof showToast === 'function' && message) {
+          showToast(message);
+        }
+        if (typeof updateArcadeTicketDisplay === 'function') {
+          updateArcadeTicketDisplay();
+        }
+      }
+      return { amount: granted, range };
+    }
+
     handleVictory() {
       if (this.hasWon || this.gameOver) {
         return;
       }
       this.hasWon = true;
       this.gameOver = true;
+      this.grantVictoryRewards();
       this.scheduleUniverseShift(1);
       this.scheduleAutosave();
     }

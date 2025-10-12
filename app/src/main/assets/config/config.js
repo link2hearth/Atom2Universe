@@ -1797,7 +1797,19 @@ const GAME_CONFIG = {
       },
       randomizeGames: true,
       spawnValues: [2, 4],
-      spawnWeights: [0.9, 0.1]
+      spawnWeights: [0.9, 0.1],
+      /**
+       * Configuration des récompenses accordées lorsqu'une partie est gagnée.
+       * Les intervalles correspondent aux tickets de tirage obtenus pour la
+       * difficulté la plus basse et la plus haute. Les valeurs intermédiaires
+       * sont interpolées automatiquement en fonction de l'objectif sélectionné.
+       */
+      rewards: {
+        gachaTickets: {
+          minRange: { min: 1, max: 4 },
+          maxRange: { min: 25, max: 50 }
+        }
+      }
     },
   },
 
