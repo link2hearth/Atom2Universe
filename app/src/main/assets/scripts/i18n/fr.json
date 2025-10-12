@@ -800,6 +800,7 @@
           "appearance": "Apparence",
           "options": {
             "original": "Original",
+            "particules": "Particules",
             "metallic": "Metallic",
             "neon": "Néon",
             "pastels": "Pastels"
@@ -1685,6 +1686,7 @@
       "brickSkins": {
         "applied": {
           "original": "Skin original appliqué.",
+          "particules": "Skin Particules appliqué.",
           "metallic": "Skin Metallic appliqué.",
           "neon": "Skin Néon appliqué.",
           "pastels": "Skin Pastels appliqué.",

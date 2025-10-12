@@ -2531,6 +2531,9 @@ function normalizeParticulesBrickSkin(value) {
   if (normalized === 'pastels' || normalized === 'pastels1' || normalized === 'pastels2') {
     return 'pastels';
   }
+  if (normalized === 'particules') {
+    return 'particules';
+  }
   if (normalized === 'metallic' || normalized === 'neon') {
     return normalized;
   }

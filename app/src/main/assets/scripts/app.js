@@ -39,10 +39,11 @@ const MUSIC_FALLBACK_TRACKS = Array.isArray(APP_DATA.MUSIC_FALLBACK_TRACKS)
       ? [...APP_DATA.DEFAULT_MUSIC_FALLBACK_TRACKS]
       : [];
 
-const BRICK_SKIN_CHOICES = Object.freeze(['original', 'metallic', 'neon', 'pastels']);
+const BRICK_SKIN_CHOICES = Object.freeze(['original', 'particules', 'metallic', 'neon', 'pastels']);
 
 const BRICK_SKIN_TOAST_KEYS = Object.freeze({
   original: 'scripts.app.brickSkins.applied.original',
+  particules: 'scripts.app.brickSkins.applied.particules',
   metallic: 'scripts.app.brickSkins.applied.metallic',
   neon: 'scripts.app.brickSkins.applied.neon',
   pastels: 'scripts.app.brickSkins.applied.pastels'
