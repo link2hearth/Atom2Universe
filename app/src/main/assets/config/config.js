@@ -739,12 +739,12 @@ const GAME_CONFIG = {
           {
             label: 'Arcade Particules :',
             description:
-              'Collisionnez les particules élémentaires afin de gagner des tickets de tirage pour le Gacha, et des crédits pour le mini jeu Mach3.'
+              'Collisionnez les particules élémentaires afin de gagner des tickets de tirage pour le Gacha, et des crédits pour le mini jeu Métaux.'
           },
           {
             label: 'Arcade Métaux :',
             description:
-              'Alignez les alliages Mach3 pour forger des bonus qui dopent votre production.'
+              'Alignez les alliages pour forger des bonus qui dopent votre production.'
           },
           {
             label: 'Arcade Photon :',
@@ -3349,3 +3349,4 @@ GAME_CONFIG.progression.defaultTheme = GAME_CONFIG.themes.default;
 if (typeof globalThis !== 'undefined') {
   globalThis.GAME_CONFIG = GAME_CONFIG;
 }
+
