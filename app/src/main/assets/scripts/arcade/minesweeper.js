@@ -68,6 +68,17 @@
     return parsed;
   }
 
+  function parseCssNumber(value, fallback = 0) {
+    if (typeof value !== 'string') {
+      return fallback;
+    }
+    const parsed = Number.parseFloat(value);
+    if (!Number.isFinite(parsed)) {
+      return fallback;
+    }
+    return parsed;
+  }
+
   function getBoardMetrics(boardElement) {
     const viewportWidth = Math.max(
       coercePositiveNumber(window.innerWidth, 1),
@@ -115,11 +126,39 @@
     availableWidth = Math.max(availableWidth, 240);
     availableHeight = Math.max(availableHeight, viewportHeight - boardRect.top - 24, 240);
 
+    let paddingLeft = 0;
+    let paddingRight = 0;
+    let paddingTop = 0;
+    let paddingBottom = 0;
+    let rowGap = 0;
+    let columnGap = 0;
+
+    if (typeof window !== 'undefined' && typeof window.getComputedStyle === 'function') {
+      const boardStyles = window.getComputedStyle(boardElement);
+      paddingLeft = parseCssNumber(boardStyles.paddingLeft, 0);
+      paddingRight = parseCssNumber(boardStyles.paddingRight, 0);
+      paddingTop = parseCssNumber(boardStyles.paddingTop, 0);
+      paddingBottom = parseCssNumber(boardStyles.paddingBottom, 0);
+      rowGap = parseCssNumber(boardStyles.rowGap, parseCssNumber(boardStyles.gap, 0));
+      columnGap = parseCssNumber(boardStyles.columnGap, parseCssNumber(boardStyles.gap, 0));
+    }
+
+    const innerWidth = Math.max(availableWidth - paddingLeft - paddingRight, 1);
+    const innerHeight = Math.max(availableHeight - paddingTop - paddingBottom, 1);
+
     return {
       width: availableWidth,
       height: availableHeight,
-      ratio: availableWidth / availableHeight,
-      orientation: availableWidth >= availableHeight ? 'landscape' : 'portrait'
+      innerWidth,
+      innerHeight,
+      ratio: innerWidth / innerHeight,
+      orientation: availableWidth >= availableHeight ? 'landscape' : 'portrait',
+      paddingLeft,
+      paddingRight,
+      paddingTop,
+      paddingBottom,
+      rowGap,
+      columnGap
     };
   }
 
@@ -127,8 +166,10 @@
     const baseRows = Math.max(4, Number(preset.rows) || 8);
     const baseCols = Math.max(4, Number(preset.cols) || 8);
     const baseArea = Math.max(16, baseRows * baseCols);
-    const width = Math.max(coercePositiveNumber(metrics.width, 1), 1);
-    const height = Math.max(coercePositiveNumber(metrics.height, 1), 1);
+    const width = Math.max(coercePositiveNumber(metrics.innerWidth || metrics.width, 1), 1);
+    const height = Math.max(coercePositiveNumber(metrics.innerHeight || metrics.height, 1), 1);
+    const columnGap = Math.max(0, metrics.columnGap || 0);
+    const rowGap = Math.max(0, metrics.rowGap || 0);
     const targetRatio = clamp(metrics.ratio || width / height, 0.35, 3.5);
 
     const minRows = Math.max(
@@ -190,10 +231,14 @@
           return;
         }
 
+        const horizontalGapAllowance = columnGap * Math.max(normalizedCols - 1, 0);
+        const verticalGapAllowance = rowGap * Math.max(normalizedRows - 1, 0);
+        const widthForCells = Math.max(width - horizontalGapAllowance, 1);
+        const heightForCells = Math.max(height - verticalGapAllowance, 1);
         const totalCells = normalizedRows * normalizedCols;
         const ratio = normalizedCols / normalizedRows;
-        const cellWidth = width / normalizedCols;
-        const cellHeight = height / normalizedRows;
+        const cellWidth = widthForCells / normalizedCols;
+        const cellHeight = heightForCells / normalizedRows;
         const effectiveSize = Math.min(cellWidth, cellHeight);
 
         const ratioScore = Math.abs(ratio - targetRatio);
@@ -214,6 +259,73 @@
     });
 
     return { rows: best.rows, cols: best.cols };
+  }
+
+  function computeBoardLayout(rows, cols, metrics) {
+    const safeRows = Math.max(1, Math.floor(rows));
+    const safeCols = Math.max(1, Math.floor(cols));
+    const availableWidth = Math.max(coercePositiveNumber(metrics?.width, 1), 1);
+    const availableHeight = Math.max(coercePositiveNumber(metrics?.height, 1), 1);
+    const paddingLeft = Math.max(0, metrics?.paddingLeft || 0);
+    const paddingRight = Math.max(0, metrics?.paddingRight || 0);
+    const paddingTop = Math.max(0, metrics?.paddingTop || 0);
+    const paddingBottom = Math.max(0, metrics?.paddingBottom || 0);
+    const rowGap = Math.max(0, metrics?.rowGap || 0);
+    const columnGap = Math.max(0, metrics?.columnGap || 0);
+
+    const horizontalPadding = paddingLeft + paddingRight;
+    const verticalPadding = paddingTop + paddingBottom;
+    const horizontalGaps = columnGap * Math.max(safeCols - 1, 0);
+    const verticalGaps = rowGap * Math.max(safeRows - 1, 0);
+
+    const usableWidth = Math.max(availableWidth - horizontalPadding - horizontalGaps, 0);
+    const usableHeight = Math.max(availableHeight - verticalPadding - verticalGaps, 0);
+
+    let cellSize = Math.min(
+      usableWidth / safeCols || 0,
+      usableHeight / safeRows || 0,
+      BOARD_SETTINGS.maxCellSize
+    );
+    if (!Number.isFinite(cellSize) || cellSize <= 0) {
+      const fallbackWidth = Math.max(availableWidth - horizontalPadding - horizontalGaps, 0);
+      const fallbackHeight = Math.max(availableHeight - verticalPadding - verticalGaps, 0);
+      cellSize = Math.min(
+        fallbackWidth / safeCols || 0,
+        fallbackHeight / safeRows || 0,
+        BOARD_SETTINGS.targetCellSize
+      );
+    }
+    if (!Number.isFinite(cellSize) || cellSize <= 0) {
+      const widthBound = availableWidth / safeCols || 0;
+      const heightBound = availableHeight / safeRows || 0;
+      cellSize = Math.max(
+        0,
+        Math.min(BOARD_SETTINGS.minCellSize, BOARD_SETTINGS.maxCellSize, widthBound, heightBound)
+      );
+    }
+
+    let boardWidth = horizontalPadding + horizontalGaps + cellSize * safeCols;
+    let boardHeight = verticalPadding + verticalGaps + cellSize * safeRows;
+
+    if (boardWidth > availableWidth || boardHeight > availableHeight) {
+      const widthLimit = Math.max(availableWidth - horizontalPadding - horizontalGaps, 0) / safeCols;
+      const heightLimit = Math.max(availableHeight - verticalPadding - verticalGaps, 0) / safeRows;
+      const limitedCellSize = Math.min(widthLimit || 0, heightLimit || 0);
+      if (Number.isFinite(limitedCellSize) && limitedCellSize > 0) {
+        cellSize = Math.min(cellSize, limitedCellSize);
+        boardWidth = horizontalPadding + horizontalGaps + cellSize * safeCols;
+        boardHeight = verticalPadding + verticalGaps + cellSize * safeRows;
+      } else {
+        boardWidth = Math.max(availableWidth, 0);
+        boardHeight = Math.max(availableHeight, 0);
+      }
+    }
+
+    return {
+      width: boardWidth,
+      height: boardHeight,
+      cellSize
+    };
   }
 
   function onReady(callback) {
@@ -372,11 +484,35 @@
       if (!gameState.metrics) {
         return;
       }
-      const { width, height } = gameState.metrics;
-      boardElement.style.setProperty('--minesweeper-board-width', `${Math.round(width)}px`);
-      boardElement.style.setProperty('--minesweeper-board-height', `${Math.round(height)}px`);
-      boardElement.style.width = `${Math.round(width)}px`;
-      boardElement.style.height = `${Math.round(height)}px`;
+      const layout = gameState.metrics.layout || {};
+      const width = Number.isFinite(layout.width) ? layout.width : gameState.metrics.width;
+      const height = Number.isFinite(layout.height) ? layout.height : gameState.metrics.height;
+      const resolvedWidth = Number.isFinite(width) ? Math.max(0, Math.round(width)) : null;
+      const resolvedHeight = Number.isFinite(height) ? Math.max(0, Math.round(height)) : null;
+      const cellSize = Number.isFinite(layout.cellSize) ? Math.max(0, layout.cellSize) : null;
+
+      if (resolvedWidth != null) {
+        boardElement.style.setProperty('--minesweeper-board-width', `${resolvedWidth}px`);
+        boardElement.style.width = `${resolvedWidth}px`;
+      } else {
+        boardElement.style.removeProperty('--minesweeper-board-width');
+        boardElement.style.removeProperty('width');
+      }
+
+      if (resolvedHeight != null) {
+        boardElement.style.setProperty('--minesweeper-board-height', `${resolvedHeight}px`);
+        boardElement.style.height = `${resolvedHeight}px`;
+      } else {
+        boardElement.style.removeProperty('--minesweeper-board-height');
+        boardElement.style.removeProperty('height');
+      }
+
+      if (cellSize != null) {
+        boardElement.style.setProperty('--minesweeper-cell-size', `${cellSize}px`);
+      } else {
+        boardElement.style.removeProperty('--minesweeper-cell-size');
+      }
+
       boardElement.style.maxWidth = '100%';
       boardElement.style.maxHeight = '100%';
     }
@@ -409,6 +545,7 @@
       const preset = DIFFICULTY_PRESETS[presetKey];
       const metrics = getBoardMetrics(boardElement);
       const { rows, cols } = computeGridDimensions(preset, metrics);
+      const layout = computeBoardLayout(rows, cols, metrics);
       const baseArea = Math.max(preset.rows * preset.cols, 1);
       const density = preset.mines / baseArea;
       const desiredMines = Math.round(density * rows * cols);
@@ -420,7 +557,7 @@
       gameState.safeRemaining = rows * cols - mines;
       gameState.status = 'ready';
       gameState.armed = false;
-      gameState.metrics = metrics;
+      gameState.metrics = { ...metrics, layout };
       renderBoard();
       for (let row = 0; row < gameState.rows; row += 1) {
         for (let col = 0; col < gameState.cols; col += 1) {
@@ -840,6 +977,16 @@
       initializeGrid(key);
     }
 
+    function recalculateBoardMetrics() {
+      if (!gameState.rows || !gameState.cols) {
+        return;
+      }
+      const metrics = getBoardMetrics(boardElement);
+      const layout = computeBoardLayout(gameState.rows, gameState.cols, metrics);
+      gameState.metrics = { ...metrics, layout };
+      applyBoardMetrics();
+    }
+
     difficultySelect.addEventListener('change', () => {
       resetGame();
     });
@@ -852,6 +999,21 @@
       window.addEventListener('i18n:languagechange', () => {
         refreshLabelCache();
       });
+      window.addEventListener('resize', () => {
+        recalculateBoardMetrics();
+      });
+    }
+
+    if (typeof ResizeObserver !== 'undefined') {
+      const observerTarget = boardElement.closest('.minesweeper') || boardElement;
+      try {
+        const observer = new ResizeObserver(() => {
+          recalculateBoardMetrics();
+        });
+        observer.observe(observerTarget);
+      } catch (error) {
+        /* noop */
+      }
     }
 
     resetGame();
