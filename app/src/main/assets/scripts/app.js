@@ -152,7 +152,8 @@ const PERFORMANCE_MODE_STORAGE_KEY = 'atom2univers.options.performanceMode';
 const GLOBAL_PERFORMANCE_MODE_SETTINGS = typeof globalThis !== 'undefined'
   ? globalThis.PERFORMANCE_MODE_SETTINGS
   : null;
-const PERFORMANCE_MODE_SETTINGS = GLOBAL_PERFORMANCE_MODE_SETTINGS && typeof GLOBAL_PERFORMANCE_MODE_SETTINGS === 'object'
+const RESOLVED_PERFORMANCE_MODE_SETTINGS = GLOBAL_PERFORMANCE_MODE_SETTINGS
+  && typeof GLOBAL_PERFORMANCE_MODE_SETTINGS === 'object'
   ? GLOBAL_PERFORMANCE_MODE_SETTINGS
   : {
     fluid: Object.freeze({ apcFlushIntervalMs: 0, apsFlushIntervalMs: 0 }),
@@ -161,14 +162,14 @@ const PERFORMANCE_MODE_SETTINGS = GLOBAL_PERFORMANCE_MODE_SETTINGS && typeof GLO
 const GLOBAL_PERFORMANCE_MODE_DEFINITIONS = typeof globalThis !== 'undefined'
   ? globalThis.PERFORMANCE_MODE_DEFINITIONS
   : null;
-const PERFORMANCE_MODE_DEFINITIONS = Array.isArray(GLOBAL_PERFORMANCE_MODE_DEFINITIONS)
+const RESOLVED_PERFORMANCE_MODE_DEFINITIONS = Array.isArray(GLOBAL_PERFORMANCE_MODE_DEFINITIONS)
   && GLOBAL_PERFORMANCE_MODE_DEFINITIONS.length
   ? GLOBAL_PERFORMANCE_MODE_DEFINITIONS
   : [
     Object.freeze({ id: 'fluid', labelKey: 'index.sections.options.performance.options.fluid', isDefault: true }),
     Object.freeze({ id: 'eco', labelKey: 'index.sections.options.performance.options.eco' })
   ];
-const PERFORMANCE_MODE_IDS = PERFORMANCE_MODE_DEFINITIONS
+const PERFORMANCE_MODE_IDS = RESOLVED_PERFORMANCE_MODE_DEFINITIONS
   .map(def => (def && typeof def.id === 'string') ? def.id.trim().toLowerCase() : null)
   .filter((id, index, array) => id && array.indexOf(id) === index);
 const PERFORMANCE_MODE_DEFAULT_ID = resolveDefaultPerformanceModeId();
@@ -467,7 +468,7 @@ function translateOrDefault(key, fallback, params) {
 }
 
 function resolveDefaultPerformanceModeId() {
-  const preferred = PERFORMANCE_MODE_DEFINITIONS.find(def => {
+  const preferred = RESOLVED_PERFORMANCE_MODE_DEFINITIONS.find(def => {
     return def && typeof def.id === 'string' && def.isDefault === true;
   });
   if (preferred) {
@@ -495,11 +496,11 @@ function normalizePerformanceMode(value) {
 
 function getPerformanceModeSettings(modeId) {
   const normalized = normalizePerformanceMode(modeId);
-  const settings = PERFORMANCE_MODE_SETTINGS?.[normalized];
+  const settings = RESOLVED_PERFORMANCE_MODE_SETTINGS?.[normalized];
   if (settings && typeof settings === 'object') {
     return settings;
   }
-  const fallback = PERFORMANCE_MODE_SETTINGS?.[PERFORMANCE_MODE_DEFAULT_ID];
+  const fallback = RESOLVED_PERFORMANCE_MODE_SETTINGS?.[PERFORMANCE_MODE_DEFAULT_ID];
   if (fallback && typeof fallback === 'object') {
     return fallback;
   }
