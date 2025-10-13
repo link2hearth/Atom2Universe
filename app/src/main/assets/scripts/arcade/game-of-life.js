@@ -417,7 +417,11 @@
       this.randomSeed = loadSeed();
       this.resizeObserver = null;
       this.frameId = null;
-      this.needsRedraw = true;
+      this.boundHandleFrame = this.handleFrame.bind(this);
+      this.boundHandleVisibility = this.handleVisibilityChange.bind(this);
+      this.boundHandleMenuPointerMove = this.handleMenuPointerMove.bind(this);
+      this.boundHandleMenuPointerUp = this.handleMenuPointerUp.bind(this);
+      this.needsRedraw = false;
       this.canvasRect = { width: 0, height: 0 };
       this.boundHandleWindowResize = null;
 
@@ -434,10 +438,7 @@
 
       this.speedSliderRange = { min: 50, max: 600 };
 
-      this.boundHandleFrame = this.handleFrame.bind(this);
-      this.boundHandleVisibility = this.handleVisibilityChange.bind(this);
-      this.boundHandleMenuPointerMove = this.handleMenuPointerMove.bind(this);
-      this.boundHandleMenuPointerUp = this.handleMenuPointerUp.bind(this);
+      this.requestRedraw();
 
       this.menuDragState = {
         active: false,
@@ -451,6 +452,17 @@
       this.renderCellBuffer = { x: 0, y: 0 };
       this.boundsCellBuffer = { x: 0, y: 0 };
       this.selectionCellBuffer = { x: 0, y: 0 };
+    }
+
+    ensureAnimationLoop() {
+      if (!this.frameId) {
+        this.frameId = requestAnimationFrame(this.boundHandleFrame);
+      }
+    }
+
+    requestRedraw() {
+      this.needsRedraw = true;
+      this.ensureAnimationLoop();
     }
 
     async init() {
@@ -501,9 +513,9 @@
       this.updateUI();
       this.observeResize();
       this.state.active = false;
-      this.needsRedraw = true;
+      this.requestRedraw();
       this.render();
-      this.frameId = requestAnimationFrame(this.boundHandleFrame);
+      this.ensureAnimationLoop();
       document.addEventListener('visibilitychange', this.boundHandleVisibility);
     }
 
@@ -528,9 +540,7 @@
       this.state.active = true;
       this.state.accumulator = 0;
       this.state.lastFrameTime = performance.now();
-      if (!this.frameId) {
-        this.frameId = requestAnimationFrame(this.boundHandleFrame);
-      }
+      this.ensureAnimationLoop();
     }
 
     onLeave() {
@@ -735,7 +745,11 @@
         this.render();
       }
 
-      this.frameId = requestAnimationFrame(this.boundHandleFrame);
+      if (this.state.running || this.needsRedraw) {
+        this.frameId = requestAnimationFrame(this.boundHandleFrame);
+      } else {
+        this.frameId = null;
+      }
     }
 
     normalizePattern(pattern) {
@@ -1141,13 +1155,14 @@
         const pressed = this.selectionState.enabled && !this.state.running;
         this.selectionButton.setAttribute('aria-pressed', pressed ? 'true' : 'false');
       }
-      this.needsRedraw = true;
+      this.requestRedraw();
     }
 
     play() {
       this.state.running = true;
       this.setSelectionEnabled(false);
       this.updateUI();
+      this.ensureAnimationLoop();
     }
 
     pause() {
@@ -1319,7 +1334,7 @@
       this.canvas.width = Math.round(safeWidth * dpr);
       this.canvas.height = Math.round(safeHeight * dpr);
       this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      this.needsRedraw = true;
+      this.requestRedraw();
     }
 
     toggleMenu(forceState) {
@@ -1426,13 +1441,13 @@
         this.selectionButton.disabled = this.state.running;
         this.selectionButton.setAttribute('aria-pressed', allowSelection ? 'true' : 'false');
       }
-      this.needsRedraw = true;
+      this.requestRedraw();
       this.updatePatternDescription();
     }
 
     cancelSelection() {
       if (this.selectionState.active) {
-        this.needsRedraw = true;
+        this.requestRedraw();
       }
       this.selectionState.active = false;
       this.selectionState.pointerId = null;
@@ -1455,7 +1470,7 @@
       this.selectionState.currentCell.y = cell.y;
       this.selectionState.message = null;
       this.pointerId = pointerId;
-      this.needsRedraw = true;
+      this.requestRedraw();
     }
 
     updateSelection(cell) {
@@ -1465,7 +1480,7 @@
       this.selectionState.currentCell = this.selectionState.currentCell || { x: 0, y: 0 };
       this.selectionState.currentCell.x = cell.x;
       this.selectionState.currentCell.y = cell.y;
-      this.needsRedraw = true;
+      this.requestRedraw();
     }
 
     finishSelection() {
@@ -1482,7 +1497,7 @@
       this.selectionState.pointerId = null;
       this.selectionState.startCell = null;
       this.selectionState.currentCell = null;
-      this.needsRedraw = true;
+      this.requestRedraw();
       if (startCell && endCell) {
         this.saveSelectionAsPattern(startCell, endCell);
       }
@@ -2002,7 +2017,7 @@
       const scale = this.viewport.cellSize || 1;
       this.viewport.originX -= dx / scale;
       this.viewport.originY -= dy / scale;
-      this.needsRedraw = true;
+      this.requestRedraw();
     }
 
     applyCellToggle(x, y, alive) {
