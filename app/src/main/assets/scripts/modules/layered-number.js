@@ -560,3 +560,7 @@ class LayeredNumber {
   }
 }
 
+if (typeof globalThis !== 'undefined' && globalThis) {
+  globalThis.LayeredNumber = LayeredNumber;
+}
+
