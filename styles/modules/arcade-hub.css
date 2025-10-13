@@ -1,0 +1,189 @@
+.page--arcade-hub {
+  display: none;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  --arcade-hub-scale: var(--ui-control-scale, 1);
+  --arcade-hub-font-scale: var(--font-scale-factor, 1);
+  padding: 0 calc(clamp(1.2rem, 4vw, 3rem) * var(--arcade-hub-scale))
+    calc(clamp(2rem, 5vw, 3.4rem) * var(--arcade-hub-scale));
+  --arcade-hub-card-background: linear-gradient(160deg, rgba(46, 48, 60, 0.92), rgba(20, 22, 30, 0.95));
+  --arcade-hub-card-border: rgba(168, 172, 188, 0.16);
+  --arcade-hub-card-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+  --arcade-hub-card-shadow-hover: 0 28px 54px rgba(0, 0, 0, 0.55);
+  --arcade-hub-card-outline: rgba(196, 200, 214, 0.6);
+  --arcade-hub-card-description-color: rgba(226, 228, 236, 0.86);
+  --arcade-hub-card-cta-bg: rgba(110, 114, 128, 0.18);
+  --arcade-hub-card-cta-border: rgba(168, 172, 188, 0.38);
+  --arcade-hub-card-cta-bg-hover: rgba(136, 140, 156, 0.28);
+  --arcade-hub-card-cta-border-hover: rgba(198, 202, 218, 0.6);
+}
+
+.page--arcade-hub.active {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: calc(clamp(1.4rem, 3vw, 2.2rem) * var(--arcade-hub-scale));
+  min-height: 100vh;
+}
+
+.page--arcade-hub.active > * {
+  width: min(1080px, 94vw);
+  margin-inline: auto;
+}
+
+.page--arcade {
+  display: none;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  --arcade-padding-x: clamp(0.5rem, 1.4vw, 0.82rem);
+  --arcade-padding-top: clamp(0rem, 0.12vw, 0.08rem);
+  --arcade-padding-bottom: clamp(0.55rem, 1.8vw, 0.9rem);
+  --arcade-stage-spacing: clamp(0.15rem, 0.9vh, 0.45rem);
+  --arcade-header-height: 0rem;
+  --arcade-vertical-offset: calc(
+    var(--arcade-padding-top) + var(--arcade-padding-bottom) + var(--arcade-stage-spacing) * 2 + var(--arcade-header-height)
+  );
+  padding: var(--arcade-padding-top) var(--arcade-padding-x) var(--arcade-padding-bottom);
+}
+
+.page--arcade.active {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.2rem, 0.9vw, 0.6rem);
+  align-items: stretch;
+  min-height: 100vh;
+}
+
+
+.arcade-hub__grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(calc(180px * var(--arcade-hub-scale)), 1fr)
+  );
+  gap: calc(clamp(0.9rem, 2.1vw, 1.8rem) * var(--arcade-hub-scale));
+}
+
+.arcade-hub-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: calc(clamp(0.9rem, 2.2vw, 1.6rem) * var(--arcade-hub-scale));
+  min-height: calc(clamp(6.2rem, 18vw, 9rem) * var(--arcade-hub-scale));
+  border-radius: calc(clamp(0.85rem, 2vw, 1.4rem) * var(--arcade-hub-scale));
+  background: var(--arcade-hub-card-background);
+  border: 1px solid var(--arcade-hub-card-border);
+  box-shadow: var(--arcade-hub-card-shadow);
+  transition: transform var(--transition), box-shadow var(--transition);
+  appearance: none;
+  cursor: pointer;
+  color: inherit;
+  text-align: center;
+  width: 100%;
+  text-decoration: none;
+  outline: none;
+  gap: calc(clamp(0.35rem, 1.2vw, 0.8rem) * var(--arcade-hub-scale));
+}
+
+.arcade-hub-card--locked {
+  cursor: not-allowed;
+  opacity: 0.6;
+  box-shadow: none;
+  filter: grayscale(0.25);
+}
+
+.arcade-hub-card--locked:hover,
+.arcade-hub-card--locked:focus-visible {
+  transform: none;
+  box-shadow: none;
+  outline: none;
+}
+
+.arcade-hub-card:hover,
+.arcade-hub-card:focus-visible {
+  transform: translateY(calc(-4px * var(--arcade-hub-scale)));
+  box-shadow: var(--arcade-hub-card-shadow-hover);
+  outline: calc(2px * var(--arcade-hub-scale)) solid var(--arcade-hub-card-outline);
+  outline-offset: calc(4px * var(--arcade-hub-scale));
+}
+
+.arcade-hub-card__title {
+  display: block;
+  margin: 0;
+  font-family: 'Orbitron', 'Audiowide', sans-serif;
+  font-size: calc(var(--arcade-hub-font-scale) * clamp(0.92rem, 1.8vw, 1.25rem));
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.arcade-hub-card__description {
+  margin: 0;
+  font-size: calc(var(--arcade-hub-font-scale) * clamp(0.8rem, 1.5vw, 1rem));
+  line-height: 1.5;
+  color: var(--arcade-hub-card-description-color);
+}
+
+.arcade-hub-card__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(0.35rem * var(--arcade-hub-scale))
+    calc(0.9rem * var(--arcade-hub-scale));
+  font-family: 'Orbitron', 'Audiowide', sans-serif;
+  font-size: calc(var(--arcade-hub-font-scale) * clamp(0.7rem, 1.2vw, 0.9rem));
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: calc(999px * var(--arcade-hub-scale));
+  background: var(--arcade-hub-card-cta-bg);
+  border: 1px solid var(--arcade-hub-card-cta-border);
+  transition: background var(--transition), border-color var(--transition), color var(--transition);
+}
+
+.arcade-hub-card:hover .arcade-hub-card__cta,
+.arcade-hub-card:focus-visible .arcade-hub-card__cta {
+  background: var(--arcade-hub-card-cta-bg-hover);
+  border-color: var(--arcade-hub-card-cta-border-hover);
+}
+
+body.theme-light .page--arcade-hub {
+  --arcade-hub-card-background: linear-gradient(160deg, rgba(250, 251, 255, 0.96), rgba(227, 232, 248, 0.94));
+  --arcade-hub-card-border: rgba(12, 16, 32, 0.08);
+  --arcade-hub-card-shadow: 0 16px 32px rgba(12, 16, 32, 0.16);
+  --arcade-hub-card-shadow-hover: 0 24px 48px rgba(12, 16, 32, 0.22);
+  --arcade-hub-card-outline: rgba(40, 56, 120, 0.48);
+  --arcade-hub-card-description-color: rgba(36, 48, 80, 0.78);
+  --arcade-hub-card-cta-bg: rgba(40, 72, 160, 0.12);
+  --arcade-hub-card-cta-border: rgba(40, 72, 160, 0.28);
+  --arcade-hub-card-cta-bg-hover: rgba(40, 72, 160, 0.22);
+  --arcade-hub-card-cta-border-hover: rgba(40, 72, 160, 0.42);
+}
+
+body.theme-neon .page--arcade-hub {
+  --arcade-hub-card-background: linear-gradient(160deg, rgba(26, 34, 70, 0.85), rgba(12, 16, 38, 0.9));
+  --arcade-hub-card-border: rgba(110, 130, 255, 0.22);
+  --arcade-hub-card-shadow: 0 18px 32px rgba(6, 8, 24, 0.32);
+  --arcade-hub-card-shadow-hover: 0 24px 40px rgba(12, 18, 46, 0.45);
+  --arcade-hub-card-outline: rgba(170, 210, 255, 0.6);
+  --arcade-hub-card-description-color: rgba(228, 231, 255, 0.82);
+  --arcade-hub-card-cta-bg: rgba(109, 167, 255, 0.12);
+  --arcade-hub-card-cta-border: rgba(109, 167, 255, 0.4);
+  --arcade-hub-card-cta-bg-hover: rgba(109, 167, 255, 0.24);
+  --arcade-hub-card-cta-border-hover: rgba(152, 196, 255, 0.68);
+}
+
+body.theme-aurora .page--arcade-hub {
+  --arcade-hub-card-background: linear-gradient(160deg, rgba(12, 60, 46, 0.85), rgba(6, 28, 24, 0.9));
+  --arcade-hub-card-border: rgba(70, 220, 170, 0.28);
+  --arcade-hub-card-shadow: 0 20px 36px rgba(10, 70, 50, 0.28);
+  --arcade-hub-card-shadow-hover: 0 28px 48px rgba(12, 90, 62, 0.36);
+  --arcade-hub-card-outline: rgba(120, 255, 210, 0.52);
+  --arcade-hub-card-description-color: rgba(220, 255, 240, 0.82);
+  --arcade-hub-card-cta-bg: rgba(70, 255, 200, 0.16);
+  --arcade-hub-card-cta-border: rgba(70, 255, 200, 0.32);
+  --arcade-hub-card-cta-bg-hover: rgba(70, 255, 200, 0.26);
+  --arcade-hub-card-cta-border-hover: rgba(110, 255, 210, 0.52);
+}
