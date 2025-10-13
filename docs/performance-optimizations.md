@@ -7,14 +7,21 @@ Ce document propose plusieurs améliorations concrètes pour alléger le chargem
 **Constat actuel :** tous les mini-jeux arcade (Particules, Wave, Balance, Math, Sudoku, etc.) sont chargés dès l'ouverture de la page, alors qu'un joueur n'en ouvrira généralement qu'un seul pendant une session. L'`index.html` inclut près d'une quinzaine de scripts synchrones en fin de page, ce qui allonge le temps de parsing et bloque le thread principal.
 
 **Plan d'implémentation (étape en cours) :**
-- [ ] **Audit des imports existants** : lister dans `index.html` et `scripts/app.js` tous les `<script>` synchrones pour identifier les modules à convertir.
-- [ ] **Conversion d'`app.js` en module ES** : ajouter `type="module"`, vérifier les exports/imports existants et préparer les chargements dynamiques.
-- [ ] **Création du manifest des mini-jeux** : définir une structure de données `{ id, importPath, init }` exportée par `app.js` afin de centraliser les `import()`.
-- [ ] **Chargement différé dans le hub arcade** : remplacer les instanciations directes par des appels `await import(manifest[id].importPath)` lorsque le joueur choisit un mini-jeu.
-- [ ] **Fallback pour navigateurs anciens** : documenter la génération d'un bundle unique via l'outil de build actuel (Android) et l'inclure uniquement si la détection de modules échoue.
+- [x] **Audit des imports existants** : lister dans `index.html` et `scripts/app.js` tous les `<script>` synchrones pour identifier les modules à convertir.
+- [x] **Conversion d'`app.js` en module ES** : ajouter `type="module"`, vérifier les exports/imports existants et préparer les chargements dynamiques.
+- [x] **Création du manifest des mini-jeux** : définir une structure de données `{ id, importPath, init }` exportée par `app.js` afin de centraliser les `import()`.
+- [x] **Chargement différé dans le hub arcade** : remplacer les instanciations directes par des appels `await import(manifest[id].importPath)` lorsque le joueur choisit un mini-jeu.
+- [x] **Fallback pour navigateurs anciens** : ajouter un chargeur `nomodule` (`scripts/app.legacy-loader.js`) qui simule les `import()` dynamiques en injectant les scripts arcade au format classique, et documenter la manière dont le bundle Android embarque automatiquement cette version en même temps que le module moderne.
+
+**Notes d'implémentation :**
+- Le chargeur `nomodule` expose `globalThis.__dynamicImport__`, utilisé par `app.js` à la place d'un `import()` direct. Cela garantit un comportement identique lorsque les scripts sont injectés dynamiquement dans des environnements sans modules ES.
+- Lors de la génération d'un APK via `./gradlew assembleRelease`, Android Studio recopie automatiquement les assets du dossier `app/src/main/assets/`. Le couple `app.js`/`app.legacy-loader.js` est donc empaqueté ensemble ; il suffit de publier l'APK pour distribuer les deux modes de chargement.
 
 **Journal de progression**
 - 2024-05-09 — Démarrage de l'étape 1 : définition du plan détaillé ci-dessus pour guider les commits successifs.
+- 2024-05-10 — Ajout du chargeur `nomodule` et documentation du processus de packaging Android pour les environnements sans support des modules ES.
+- 2024-05-11 — Étape 2 finalisée : cache local `lastRender` pour limiter les écritures DOM et recalculs d'accessibilité lors des mises à jour du magasin.
+- 2024-05-12 — Étape 4 finalisée : mise en place d'un ordonnanceur `requestIdleCallback` avec repli `setTimeout` pour différer le tableau périodique, les trophées et le champ d'étoiles après le premier rendu.
 
 **Impact attendu :** réduction du temps de chargement initial et du pic mémoire, puisque seules les ressources nécessaires sont téléchargées et évaluées.
 
@@ -23,9 +30,9 @@ Ce document propose plusieurs améliorations concrètes pour alléger le chargem
 **Constat actuel :** la fonction `updateShopAffordability` reconstruit les textes, états ARIA et classes CSS de chaque bouton d'achat à chaque mise à jour, même si aucune valeur n'a changé. Le recalcul touche potentiellement des dizaines de lignes (titre, description, prix, niveau, attributs ARIA) pour chaque entrée du magasin.
 
 **Proposition :**
-- Conserver pour chaque `shopRow` une structure légère (ex : `lastRender`) qui stocke le niveau, le prix formaté, l'état `isReady`, le libellé ARIA, etc.
-- Lors des boucles `SHOP_PURCHASE_AMOUNTS.forEach`, comparer les valeurs actuelles aux précédentes et n'écrire dans le DOM que si une différence est détectée.
-- Factoriser la construction des libellés (titre, description) pour éviter les appels répétés à `translateOrDefault` si les textes ne changent pas.
+- [x] Conserver pour chaque `shopRow` une structure légère (ex : `lastRender`) qui stocke le niveau, le prix formaté, l'état `isReady`, le libellé ARIA, etc.
+- [x] Lors des boucles `SHOP_PURCHASE_AMOUNTS.forEach`, comparer les valeurs actuelles aux précédentes et n'écrire dans le DOM que si une différence est détectée.
+- [x] Factoriser la construction des libellés (titre, description) pour éviter les appels répétés à `translateOrDefault` si les textes ne changent pas.
 
 **Impact attendu :** moins d'opérations sur le DOM et réduction des reflows lors des ticks du jeu, ce qui aide les appareils mobiles et le mode "eco".
 
@@ -45,8 +52,9 @@ Ce document propose plusieurs améliorations concrètes pour alléger le chargem
 **Constat actuel :** plusieurs mises à jour non critiques (rafraîchissement des listes de trophées, génération du tableau périodique) sont déclenchées immédiatement lors du chargement, en concurrence avec le rendu initial.
 
 **Proposition :**
-- Encapsuler ces travaux dans `requestIdleCallback` (avec fallback `setTimeout`) pour laisser le navigateur dessiner l'interface principale avant d'initialiser les sections lourdes.
-- Prioriser les éléments interactifs (bouton d'atome, compteur) et repousser le reste si l'`IdleDeadline` reste court.
+- [x] Encapsuler ces travaux dans `requestIdleCallback` (avec fallback `setTimeout`) pour laisser le navigateur dessiner l'interface principale avant d'initialiser les sections lourdes.
+- [x] Prioriser les éléments interactifs (bouton d'atome, compteur) et repousser le reste si l'`IdleDeadline` reste court.
+- [x] Déplacer le tableau périodique, les cartes de trophées et le champ d'étoiles dans une file de tâches exécutée à l'idle.
 
 **Impact attendu :** sensation de démarrage plus fluide, surtout sur appareils à faible cœur.
 

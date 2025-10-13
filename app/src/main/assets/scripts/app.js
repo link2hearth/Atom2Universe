@@ -84,6 +84,27 @@ const OPTIONS_DETAIL_FEATURE_MAP = Object.freeze({
   musique: 'system.musique'
 });
 
+const dynamicImport =
+  typeof globalThis !== 'undefined'
+  && typeof globalThis.__dynamicImport__ === 'function'
+    ? globalThis.__dynamicImport__
+    : specifier => import(specifier);
+
+const ARCADE_MODULE_MANIFEST = Object.freeze({
+  arcade: Object.freeze({ importPath: './arcade/particules.js' }),
+  metaux: Object.freeze({ importPath: './arcade/metaux-match3.js' }),
+  wave: Object.freeze({ importPath: './arcade/wave.js' }),
+  quantum2048: Object.freeze({ importPath: './arcade/quantum-2048.js' }),
+  balance: Object.freeze({ importPath: './arcade/balance.js' }),
+  math: Object.freeze({ importPath: './arcade/math.js' }),
+  sudoku: Object.freeze({ importPath: './arcade/sudoku.js' }),
+  minesweeper: Object.freeze({ importPath: './arcade/minesweeper.js' }),
+  solitaire: Object.freeze({ importPath: './arcade/solitaire.js' }),
+  blackjack: Object.freeze({ importPath: './arcade/blackjack.js' }),
+  echecs: Object.freeze({ importPath: './arcade/echecs.js' }),
+  gameOfLife: Object.freeze({ importPath: './arcade/game-of-life.js' })
+});
+
 const METAL_FEATURE_ID = 'arcade.metaux';
 
 const FEATURE_UNLOCK_DEFINITIONS = buildFeatureUnlockDefinitions(
@@ -93,6 +114,174 @@ const FEATURE_UNLOCK_DEFINITIONS = buildFeatureUnlockDefinitions(
 let featureUnlockCache = new Map();
 let cachedOptionsDetailMetadata = null;
 let lastArcadeUnlockState = null;
+
+const arcadeModulePromises = new Map();
+
+function loadArcadeModule(moduleId) {
+  if (typeof moduleId !== 'string') {
+    return null;
+  }
+  const trimmedId = moduleId.trim();
+  if (!trimmedId) {
+    return null;
+  }
+  const entry = ARCADE_MODULE_MANIFEST[trimmedId];
+  if (!entry || typeof entry.importPath !== 'string' || !entry.importPath.trim()) {
+    return null;
+  }
+  if (!arcadeModulePromises.has(trimmedId)) {
+    const promise = dynamicImport(entry.importPath)
+      .catch(error => {
+        console.error(`Failed to load arcade module "${trimmedId}" from ${entry.importPath}.`, error);
+        arcadeModulePromises.delete(trimmedId);
+        throw error;
+      });
+    arcadeModulePromises.set(trimmedId, promise);
+  }
+  return arcadeModulePromises.get(trimmedId);
+}
+
+async function ensureArcadeModule(moduleId) {
+  try {
+    const promise = loadArcadeModule(moduleId);
+    if (!promise || typeof promise.then !== 'function') {
+      return true;
+    }
+    await promise;
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
+function whenArcadeModuleReady(moduleId, callback) {
+  const promise = ensureArcadeModule(moduleId);
+  if (!promise || typeof promise.then !== 'function') {
+    if (typeof callback === 'function') {
+      try {
+        callback();
+      } catch (error) {
+        console.error(`Arcade module callback for "${moduleId}" failed.`, error);
+      }
+    }
+    return;
+  }
+  promise
+    .then(success => {
+      if (!success) {
+        return;
+      }
+      if (typeof callback === 'function') {
+        try {
+          callback();
+        } catch (error) {
+          console.error(`Arcade module callback for "${moduleId}" failed.`, error);
+        }
+      }
+    })
+    .catch(error => {
+      console.error(`Failed to prepare arcade module "${moduleId}".`, error);
+    });
+}
+
+const hasRequestIdleCallback =
+  typeof globalThis !== 'undefined'
+  && typeof globalThis.requestIdleCallback === 'function';
+const hasCancelIdleCallback =
+  typeof globalThis !== 'undefined'
+  && typeof globalThis.cancelIdleCallback === 'function';
+
+const backgroundTaskQueue = [];
+let backgroundTaskHandle = null;
+let backgroundTaskHandleType = null;
+let backgroundTaskMinTimeout = null;
+
+function scheduleBackgroundProcessing(timeout) {
+  const normalizedTimeout = Number.isFinite(timeout) ? Math.max(0, timeout) : null;
+  backgroundTaskMinTimeout = normalizedTimeout;
+  if (hasRequestIdleCallback) {
+    const options = normalizedTimeout != null ? { timeout: normalizedTimeout } : undefined;
+    backgroundTaskHandle = globalThis.requestIdleCallback(processBackgroundTasks, options);
+    backgroundTaskHandleType = 'idle';
+    return;
+  }
+  const delay = normalizedTimeout != null ? normalizedTimeout : 50;
+  backgroundTaskHandle = setTimeout(() => {
+    processBackgroundTasks({ didTimeout: true, timeRemaining: () => 0 });
+  }, delay);
+  backgroundTaskHandleType = 'timeout';
+}
+
+function cancelScheduledBackgroundProcessing() {
+  if (backgroundTaskHandle == null) {
+    return;
+  }
+  if (backgroundTaskHandleType === 'idle' && hasCancelIdleCallback) {
+    globalThis.cancelIdleCallback(backgroundTaskHandle);
+  } else if (backgroundTaskHandleType === 'timeout') {
+    clearTimeout(backgroundTaskHandle);
+  }
+  backgroundTaskHandle = null;
+  backgroundTaskHandleType = null;
+  backgroundTaskMinTimeout = null;
+}
+
+function processBackgroundTasks(deadline) {
+  backgroundTaskHandle = null;
+  backgroundTaskHandleType = null;
+  backgroundTaskMinTimeout = null;
+  const safeDeadline = deadline || { didTimeout: true, timeRemaining: () => 0 };
+  while (backgroundTaskQueue.length) {
+    const next = backgroundTaskQueue[0];
+    const remaining = typeof safeDeadline.timeRemaining === 'function'
+      ? safeDeadline.timeRemaining()
+      : 0;
+    if (!safeDeadline.didTimeout && remaining < next.minTimeRemaining) {
+      break;
+    }
+    backgroundTaskQueue.shift();
+    try {
+      next.task(safeDeadline);
+    } catch (error) {
+      console.error('Background task failed.', error);
+    }
+  }
+  if (backgroundTaskQueue.length) {
+    const nextTimeout = backgroundTaskQueue[0].timeout;
+    scheduleBackgroundProcessing(nextTimeout);
+  }
+}
+
+function enqueueBackgroundTask(task, options = {}) {
+  if (typeof task !== 'function') {
+    return;
+  }
+  const entry = {
+    task,
+    minTimeRemaining: Number.isFinite(options.minTimeRemaining)
+      ? Math.max(0, options.minTimeRemaining)
+      : 12,
+    timeout: Number.isFinite(options.timeout) ? Math.max(0, options.timeout) : null,
+    priority: Number.isFinite(options.priority) ? options.priority : 0
+  };
+  let insertIndex = backgroundTaskQueue.findIndex(candidate => entry.priority < candidate.priority);
+  if (insertIndex < 0) {
+    backgroundTaskQueue.push(entry);
+  } else {
+    backgroundTaskQueue.splice(insertIndex, 0, entry);
+  }
+  if (backgroundTaskHandle == null) {
+    scheduleBackgroundProcessing(entry.timeout);
+    return;
+  }
+  if (
+    entry.timeout != null
+    && (backgroundTaskMinTimeout == null || entry.timeout < backgroundTaskMinTimeout)
+  ) {
+    cancelScheduledBackgroundProcessing();
+    scheduleBackgroundProcessing(entry.timeout);
+  }
+}
 
 const DEFAULT_SUDOKU_COMPLETION_REWARD = Object.freeze({
   enabled: true,
@@ -588,7 +777,8 @@ function queueManualApcGain(amount, now = (typeof performance !== 'undefined' &&
     && !performanceModeState.pendingManualGain.isZero()
     && performanceModeState.pendingManualGain.sign > 0;
   if (!hasPending) {
-    performanceModeState.lastManualFlush = now;
+    // Keep the last flush timestamp unchanged so the throttle window is based on the
+    // moment the previous flush happened instead of the most recent click.
     performanceModeState.pendingManualGain = amount.clone();
     return;
   }
@@ -4959,8 +5149,12 @@ function commitBrickSkinSelection(rawValue) {
 }
 
 function ensureWaveGame() {
-  if (waveGame || typeof WaveGame !== 'function') {
+  if (waveGame) {
     return waveGame;
+  }
+  if (typeof WaveGame !== 'function') {
+    loadArcadeModule('wave');
+    return null;
   }
   if (!elements.waveCanvas) {
     return null;
@@ -4976,8 +5170,12 @@ function ensureWaveGame() {
 }
 
 function ensureBalanceGame() {
-  if (balanceGame || typeof BalanceGame !== 'function') {
+  if (balanceGame) {
     return balanceGame;
+  }
+  if (typeof BalanceGame !== 'function') {
+    loadArcadeModule('balance');
+    return null;
   }
   if (!elements.balanceBoard) {
     return null;
@@ -4999,8 +5197,12 @@ function ensureBalanceGame() {
 }
 
 function ensureQuantum2048Game() {
-  if (quantum2048Game || typeof Quantum2048Game !== 'function') {
+  if (quantum2048Game) {
     return quantum2048Game;
+  }
+  if (typeof Quantum2048Game !== 'function') {
+    loadArcadeModule('quantum2048');
+    return null;
   }
   if (!elements.quantum2048Board) {
     return null;
@@ -5023,6 +5225,7 @@ function ensureGameOfLifeGame() {
     gameOfLifeGame = window.gameOfLifeArcade;
     return gameOfLifeGame;
   }
+  loadArcadeModule('gameOfLife');
   return null;
 }
 
@@ -5363,14 +5566,23 @@ function formatMetauxCreditLabel(count) {
   return `${formatIntegerLocalized(numeric)} ${unit}`;
 }
 
+function getMetauxGame() {
+  if (typeof globalThis === 'undefined' || typeof globalThis.metauxGame === 'undefined') {
+    return null;
+  }
+  const candidate = globalThis.metauxGame;
+  return candidate && typeof candidate === 'object' ? candidate : null;
+}
+
 function isMetauxSessionRunning() {
-  if (!metauxGame) {
+  const activeGame = getMetauxGame();
+  if (!activeGame) {
     return false;
   }
-  if (typeof metauxGame.isSessionRunning === 'function') {
-    return metauxGame.isSessionRunning();
+  if (typeof activeGame.isSessionRunning === 'function') {
+    return activeGame.isSessionRunning();
   }
-  return metauxGame.gameOver === false;
+  return activeGame.gameOver === false;
 }
 
 function updateMetauxCreditsUI() {
@@ -5404,7 +5616,9 @@ function updateMetauxCreditsUI() {
   }
   if (elements.metauxCreditStatus) {
     let statusText = '';
-    const freeMode = metauxGame && typeof metauxGame.isFreePlayMode === 'function' && metauxGame.isFreePlayMode();
+    const currentMetauxGame = getMetauxGame();
+    const freeMode = currentMetauxGame && typeof currentMetauxGame.isFreePlayMode === 'function'
+      && currentMetauxGame.isFreePlayMode();
     if (active) {
       statusText = freeMode
         ? 'Partie libre en cours — expérimentez sans pression.'
@@ -9440,15 +9654,50 @@ function showPage(pageId) {
     }
     return;
   }
+  whenArcadeModuleReady(pageId);
   const now = performance.now();
+  if (pageId === 'arcade') {
+    whenArcadeModuleReady('arcade', () => {
+      if (typeof initParticulesGame === 'function') {
+        initParticulesGame();
+        if (document?.body?.dataset?.activePage === 'arcade' && typeof particulesGame?.onEnter === 'function') {
+          particulesGame.onEnter();
+        }
+      }
+    });
+  }
   if (pageId === 'wave') {
-    ensureWaveGame();
+    const game = ensureWaveGame();
+    if (!game) {
+      whenArcadeModuleReady('wave', () => {
+        const readyGame = ensureWaveGame();
+        if (document?.body?.dataset?.activePage === 'wave' && typeof readyGame?.onEnter === 'function') {
+          readyGame.onEnter();
+        }
+      });
+    }
   }
   if (pageId === 'balance') {
-    ensureBalanceGame();
+    const balance = ensureBalanceGame();
+    if (!balance) {
+      whenArcadeModuleReady('balance', () => {
+        const readyBalance = ensureBalanceGame();
+        if (document?.body?.dataset?.activePage === 'balance' && typeof readyBalance?.onEnter === 'function') {
+          readyBalance.onEnter();
+        }
+      });
+    }
   }
   if (pageId === 'quantum2048') {
-    ensureQuantum2048Game();
+    const quantum = ensureQuantum2048Game();
+    if (!quantum) {
+      whenArcadeModuleReady('quantum2048', () => {
+        const readyQuantum = ensureQuantum2048Game();
+        if (document?.body?.dataset?.activePage === 'quantum2048' && typeof readyQuantum?.onEnter === 'function') {
+          readyQuantum.onEnter();
+        }
+      });
+    }
   }
   elements.pages.forEach(page => {
     const isActive = page.id === pageId;
@@ -9484,8 +9733,17 @@ function showPage(pageId) {
     markClickerAnimationActive();
   }
   if (pageId === 'metaux') {
-    initMetauxGame();
+    whenArcadeModuleReady('metaux', () => {
+      if (typeof initMetauxGame === 'function') {
+        initMetauxGame();
+        const activeMetauxGame = getMetauxGame();
+        if (document?.body?.dataset?.activePage === 'metaux' && typeof activeMetauxGame?.onEnter === 'function') {
+          activeMetauxGame.onEnter();
+        }
+      }
+    });
   }
+  const activeMetauxGame = getMetauxGame();
   if (particulesGame) {
     if (pageId === 'arcade') {
       particulesGame.onEnter();
@@ -9493,11 +9751,11 @@ function showPage(pageId) {
       particulesGame.onLeave();
     }
   }
-  if (metauxGame) {
+  if (activeMetauxGame) {
     if (pageId === 'metaux') {
-      metauxGame.onEnter();
+      activeMetauxGame.onEnter();
     } else {
-      metauxGame.onLeave();
+      activeMetauxGame.onLeave();
     }
   }
   if (waveGame) {
@@ -9528,6 +9786,11 @@ function showPage(pageId) {
     } else {
       gameOfLife.onLeave?.();
     }
+  } else if (pageId === 'gameOfLife') {
+    whenArcadeModuleReady('gameOfLife', () => {
+      const readyGameOfLife = ensureGameOfLifeGame();
+      readyGameOfLife?.onEnter?.();
+    });
   }
   const manualPageActive = pageId === 'game' || pageId === 'wave';
   if (manualPageActive && (typeof document === 'undefined' || !document.hidden)) {
@@ -9865,15 +10128,7 @@ function bindDomEventListeners() {
         if (!target || !isPageUnlocked(target)) {
           return;
         }
-        if (target === 'wave') {
-          ensureWaveGame();
-        }
-        if (target === 'quantum2048') {
-          ensureQuantum2048Game();
-        }
-        if (target === 'gameOfLife') {
-          ensureGameOfLifeGame();
-        }
+        whenArcadeModuleReady(target);
         showPage(target);
       });
     });
@@ -9898,10 +10153,18 @@ function bindDomEventListeners() {
   }
 
   if (elements.metauxNewGameButton) {
-    elements.metauxNewGameButton.addEventListener('click', () => {
-      initMetauxGame();
+    elements.metauxNewGameButton.addEventListener('click', async () => {
+      const loaded = await ensureArcadeModule('metaux');
+      if (!loaded) {
+        showToast(t('scripts.app.metaux.unavailable'));
+        return;
+      }
+      if (typeof initMetauxGame === 'function') {
+        initMetauxGame();
+      }
+      const currentMetauxGame = getMetauxGame();
       const credits = getMetauxCreditCount();
-      if (!metauxGame) {
+      if (!currentMetauxGame) {
         showToast(t('scripts.app.metaux.unavailable'));
         return;
       }
@@ -9916,16 +10179,24 @@ function bindDomEventListeners() {
         return;
       }
       gameState.bonusParticulesTickets = credits - 1;
-      metauxGame.restart();
+      currentMetauxGame.restart();
       updateMetauxCreditsUI();
       saveGame();
     });
   }
 
   if (elements.metauxFreePlayButton) {
-    elements.metauxFreePlayButton.addEventListener('click', () => {
-      initMetauxGame();
-      if (!metauxGame) {
+    elements.metauxFreePlayButton.addEventListener('click', async () => {
+      const loaded = await ensureArcadeModule('metaux');
+      if (!loaded) {
+        showToast(t('scripts.app.metaux.unavailable'));
+        return;
+      }
+      if (typeof initMetauxGame === 'function') {
+        initMetauxGame();
+      }
+      const currentMetauxGame = getMetauxGame();
+      if (!currentMetauxGame) {
         showToast(t('scripts.app.metaux.unavailable'));
         return;
       }
@@ -9934,31 +10205,39 @@ function bindDomEventListeners() {
         updateMetauxCreditsUI();
         return;
       }
-      if (typeof metauxGame.startFreePlay === 'function') {
-        metauxGame.startFreePlay();
+      if (typeof currentMetauxGame.startFreePlay === 'function') {
+        currentMetauxGame.startFreePlay();
       } else {
-        metauxGame.restart({ freePlay: true });
+        currentMetauxGame.restart({ freePlay: true });
       }
       updateMetauxCreditsUI();
     });
   }
 
   if (elements.metauxFreePlayExitButton) {
-    elements.metauxFreePlayExitButton.addEventListener('click', () => {
-      initMetauxGame();
-      if (!metauxGame) {
+    elements.metauxFreePlayExitButton.addEventListener('click', async () => {
+      const loaded = await ensureArcadeModule('metaux');
+      if (!loaded) {
         showToast(t('scripts.app.metaux.unavailable'));
         return;
       }
-      if (typeof metauxGame.isFreePlayMode === 'function' && !metauxGame.isFreePlayMode()) {
+      if (typeof initMetauxGame === 'function') {
+        initMetauxGame();
+      }
+      const currentMetauxGame = getMetauxGame();
+      if (!currentMetauxGame) {
+        showToast(t('scripts.app.metaux.unavailable'));
         return;
       }
-      if (metauxGame.processing) {
+      if (typeof currentMetauxGame.isFreePlayMode === 'function' && !currentMetauxGame.isFreePlayMode()) {
+        return;
+      }
+      if (currentMetauxGame.processing) {
         showToast('Patientez, la réaction en chaîne est en cours.');
         return;
       }
-      if (typeof metauxGame.endFreePlaySession === 'function') {
-        const ended = metauxGame.endFreePlaySession({ showEndScreen: true });
+      if (typeof currentMetauxGame.endFreePlaySession === 'function') {
+        const ended = currentMetauxGame.endFreePlaySession({ showEndScreen: true });
         if (ended && typeof window.updateMetauxCreditsUI === 'function') {
           window.updateMetauxCreditsUI();
         }
@@ -12049,7 +12328,20 @@ function buildShopItem(def) {
 
   item.append(header, desc, actions);
 
-  return { root: item, title, level, description: desc, buttons: buttonMap };
+  return {
+    root: item,
+    title,
+    level,
+    description: desc,
+    buttons: buttonMap,
+    lastRender: {
+      name: null,
+      description: null,
+      levelLabel: null,
+      anyAffordable: null,
+      buttons: new Map()
+    }
+  };
 }
 
 function updateShopUnlockHint() {
@@ -12117,82 +12409,137 @@ function updateShopVisibility() {
 
 function updateShopAffordability() {
   if (!shopRows.size) return;
+  const shopFree = isDevKitShopFree();
+
   UPGRADE_DEFS.forEach(def => {
     const row = shopRows.get(def.id);
     if (!row) return;
+
+    const renderState = row.lastRender || {
+      name: null,
+      description: null,
+      levelLabel: null,
+      anyAffordable: null,
+      buttons: new Map()
+    };
+    row.lastRender = renderState;
+    if (!(renderState.buttons instanceof Map)) {
+      renderState.buttons = new Map();
+    }
+
     const texts = getShopBuildingTexts(def);
-    if (row.title) {
+    if (row.title && renderState.name !== texts.name) {
       row.title.textContent = texts.name;
+      renderState.name = texts.name;
     }
-    if (row.description) {
+    if (row.description && renderState.description !== texts.description) {
       row.description.textContent = texts.description;
+      renderState.description = texts.description;
     }
+
     const level = getUpgradeLevel(gameState.upgrades, def.id);
     const maxLevel = resolveUpgradeMaxLevel(def);
     const remainingLevels = getRemainingUpgradeCapacity(def);
-    const hasFiniteCap = Number.isFinite(maxLevel);
     const capReached = Number.isFinite(remainingLevels) && remainingLevels <= 0;
-    row.level.textContent = formatShopLevelLabel(level, maxLevel, capReached);
+    const levelLabel = formatShopLevelLabel(level, maxLevel, capReached);
+    if (renderState.levelLabel !== levelLabel) {
+      row.level.textContent = levelLabel;
+      renderState.levelLabel = levelLabel;
+    }
+
     let anyAffordable = false;
     const actionLabel = getShopActionLabel(level);
     const displayName = texts.name;
-    const shopFree = isDevKitShopFree();
 
     SHOP_PURCHASE_AMOUNTS.forEach(quantity => {
       const entry = row.buttons.get(quantity);
       if (!entry) return;
       const baseQuantity = entry.baseQuantity ?? quantity;
 
+      let priceLabel = '';
+      let enabled = false;
+      let ariaLabel = '';
+
       if (capReached) {
-        entry.price.textContent = t('scripts.app.shop.limitReached');
-        entry.button.disabled = true;
-        entry.button.classList.remove('is-ready');
-        const ariaLabel = translateOrDefault(
+        priceLabel = t('scripts.app.shop.limitReached');
+        ariaLabel = translateOrDefault(
           'scripts.app.shop.ariaMaxLevel',
           `${displayName} a atteint son niveau maximum`,
           { name: displayName }
         );
-        entry.button.setAttribute('aria-label', ariaLabel);
-        entry.button.title = ariaLabel;
-        return;
+      } else {
+        const effectiveQuantity = Number.isFinite(remainingLevels)
+          ? Math.min(baseQuantity, remainingLevels)
+          : baseQuantity;
+        const limited = Number.isFinite(remainingLevels) && effectiveQuantity !== baseQuantity;
+
+        const cost = computeUpgradeCost(def, effectiveQuantity);
+        const affordable = shopFree || gameState.atoms.compare(cost) >= 0;
+        const displayQuantity = limited ? effectiveQuantity : baseQuantity;
+        const limitNote = getShopLimitSuffix(limited);
+
+        priceLabel = formatShopPriceText({
+          isFree: shopFree,
+          limitedQuantity: limited,
+          quantity: displayQuantity,
+          priceText: formatShopCost(cost)
+        });
+
+        enabled = affordable && effectiveQuantity > 0;
+        if (enabled) {
+          anyAffordable = true;
+        }
+
+        ariaLabel = formatShopAriaLabel({
+          state: enabled ? (shopFree ? 'free' : 'cost') : 'insufficient',
+          action: actionLabel,
+          name: displayName,
+          quantity: displayQuantity,
+          limitNote,
+          costValue: cost.toString()
+        });
       }
 
-      const effectiveQuantity = Number.isFinite(remainingLevels)
-        ? Math.min(baseQuantity, remainingLevels)
-        : baseQuantity;
-      const limited = Number.isFinite(remainingLevels) && effectiveQuantity !== baseQuantity;
-
-      const cost = computeUpgradeCost(def, effectiveQuantity);
-      const affordable = shopFree || gameState.atoms.compare(cost) >= 0;
-      const costDisplay = formatShopCost(cost);
-      entry.price.textContent = formatShopPriceText({
-        isFree: shopFree,
-        limitedQuantity: limited,
-        quantity: limited ? effectiveQuantity : baseQuantity,
-        priceText: costDisplay
-      });
-      const enabled = affordable && effectiveQuantity > 0;
-      entry.button.disabled = !enabled;
-      entry.button.classList.toggle('is-ready', enabled);
-      if (enabled) {
-        anyAffordable = true;
+      let buttonState = renderState.buttons.get(quantity);
+      if (!buttonState) {
+        buttonState = {};
+        renderState.buttons.set(quantity, buttonState);
       }
-      const displayQuantity = limited ? effectiveQuantity : baseQuantity;
-      const limitNote = getShopLimitSuffix(limited);
-      const ariaLabel = formatShopAriaLabel({
-        state: enabled ? (shopFree ? 'free' : 'cost') : 'insufficient',
-        action: actionLabel,
-        name: displayName,
-        quantity: displayQuantity,
-        limitNote,
-        costValue: cost.toString()
-      });
-      entry.button.setAttribute('aria-label', ariaLabel);
-      entry.button.title = ariaLabel;
+
+      if (buttonState.priceLabel !== priceLabel) {
+        entry.price.textContent = priceLabel;
+        buttonState.priceLabel = priceLabel;
+      }
+
+      const disabled = !enabled;
+      if (buttonState.disabled !== disabled) {
+        entry.button.disabled = disabled;
+        buttonState.disabled = disabled;
+      }
+
+      if (buttonState.isReady !== enabled) {
+        entry.button.classList.toggle('is-ready', enabled);
+        buttonState.isReady = enabled;
+      }
+
+      if (buttonState.ariaLabel !== ariaLabel) {
+        if (ariaLabel) {
+          entry.button.setAttribute('aria-label', ariaLabel);
+          entry.button.title = ariaLabel;
+        } else {
+          entry.button.removeAttribute('aria-label');
+          entry.button.removeAttribute('title');
+        }
+        buttonState.ariaLabel = ariaLabel;
+      }
     });
 
-    row.root.classList.toggle('shop-item--ready', anyAffordable);
+    if (renderState.anyAffordable !== anyAffordable) {
+      row.root.classList.toggle('shop-item--ready', anyAffordable);
+      renderState.anyAffordable = anyAffordable;
+    }
   });
+
   updateShopVisibility();
 }
 
@@ -13712,12 +14059,16 @@ function startApp() {
   recalcProduction();
   evaluateTrophies();
   renderShop();
-  renderGoals();
   updateUI();
   randomizeAtomButtonImage();
-  initStarfield();
   scheduleAutoUiScaleUpdate({ immediate: true });
   startGameLoop();
+  enqueueBackgroundTask(() => {
+    renderGoals();
+  }, { priority: -1, timeout: 300 });
+  enqueueBackgroundTask(() => {
+    initStarfield();
+  }, { priority: 1, timeout: 600, minTimeRemaining: 16 });
 }
 
 function initializeDomBoundModules() {
@@ -13739,10 +14090,19 @@ function initializeDomBoundModules() {
   subscribeInfoWelcomeLanguageUpdates();
   subscribeInfoCharactersLanguageUpdates();
   updateDevKitUI();
-  if (typeof initParticulesGame === 'function') {
-    initParticulesGame();
+  if (document?.body?.dataset?.activePage === 'arcade') {
+    whenArcadeModuleReady('arcade', () => {
+      if (typeof initParticulesGame === 'function') {
+        initParticulesGame();
+        if (typeof particulesGame?.onEnter === 'function') {
+          particulesGame.onEnter();
+        }
+      }
+    });
   }
-  renderPeriodicTable();
+  enqueueBackgroundTask(() => {
+    renderPeriodicTable();
+  }, { priority: 0, timeout: 500, minTimeRemaining: 12 });
   renderGachaRarityList();
   renderFusionList();
 }
