@@ -156,9 +156,18 @@ const RESOLVED_PERFORMANCE_MODE_SETTINGS = GLOBAL_PERFORMANCE_MODE_SETTINGS
   && typeof GLOBAL_PERFORMANCE_MODE_SETTINGS === 'object'
   ? GLOBAL_PERFORMANCE_MODE_SETTINGS
   : {
-    fluid: Object.freeze({ apcFlushIntervalMs: 0, apsFlushIntervalMs: 0 }),
-    eco: Object.freeze({ apcFlushIntervalMs: 200, apsFlushIntervalMs: 1000 })
+    fluid: Object.freeze({
+      apcFlushIntervalMs: 0,
+      apsFlushIntervalMs: 0,
+      frameIntervalMs: 0
+    }),
+    eco: Object.freeze({
+      apcFlushIntervalMs: 200,
+      apsFlushIntervalMs: 1000,
+      frameIntervalMs: 120
+    })
   };
+const GAME_LOOP_MIN_TIMEOUT_MS = 16;
 const GLOBAL_PERFORMANCE_MODE_DEFINITIONS = typeof globalThis !== 'undefined'
   ? globalThis.PERFORMANCE_MODE_DEFINITIONS
   : null;
@@ -676,6 +685,9 @@ function applyPerformanceMode(modeId, options = {}) {
   performanceModeState.settings = settings;
   performanceModeState.lastManualFlush = now;
   performanceModeState.lastAutoFlush = now;
+  if (changed && gameLoopControl.isActive) {
+    restartGameLoop({ immediate: true });
+  }
   if (config.updateControl && elements.performanceModeSelect) {
     if (elements.performanceModeSelect.value !== normalized) {
       elements.performanceModeSelect.value = normalized;
@@ -2999,6 +3011,105 @@ const performanceModeState = {
     ? performance.now()
     : Date.now()
 };
+
+const gameLoopControl = {
+  handle: null,
+  type: null,
+  isActive: false
+};
+
+function getLoopTimestamp() {
+  return typeof performance !== 'undefined' && typeof performance.now === 'function'
+    ? performance.now()
+    : Date.now();
+}
+
+function clearScheduledGameLoop() {
+  if (gameLoopControl.handle == null) {
+    return;
+  }
+  if (gameLoopControl.type === 'timeout') {
+    const globalTarget = typeof globalThis !== 'undefined'
+      ? globalThis
+      : (typeof window !== 'undefined' ? window : null);
+    if (globalTarget && typeof globalTarget.clearTimeout === 'function') {
+      globalTarget.clearTimeout(gameLoopControl.handle);
+    } else if (typeof clearTimeout === 'function') {
+      clearTimeout(gameLoopControl.handle);
+    }
+  } else if (gameLoopControl.type === 'raf') {
+    if (typeof cancelAnimationFrame === 'function') {
+      cancelAnimationFrame(gameLoopControl.handle);
+    } else if (typeof globalThis !== 'undefined'
+      && typeof globalThis.cancelAnimationFrame === 'function') {
+      globalThis.cancelAnimationFrame(gameLoopControl.handle);
+    }
+  }
+  gameLoopControl.handle = null;
+  gameLoopControl.type = null;
+}
+
+function scheduleGameLoop(options = {}) {
+  const config = Object.assign({ immediate: false, force: false }, options);
+  if (!gameLoopControl.isActive && !config.force) {
+    return;
+  }
+  clearScheduledGameLoop();
+  const settings = performanceModeState.settings || {};
+  const intervalRaw = Number(settings?.frameIntervalMs);
+  const frameInterval = Number.isFinite(intervalRaw) && intervalRaw > 0 ? intervalRaw : 0;
+  const nowProvider = getLoopTimestamp;
+  const hasWindow = typeof window !== 'undefined';
+  const hasRaf = hasWindow && typeof window.requestAnimationFrame === 'function';
+  const useTimeout = frameInterval > 0 || !hasRaf;
+  const delay = useTimeout && !config.immediate
+    ? Math.max(frameInterval > 0 ? frameInterval : GAME_LOOP_MIN_TIMEOUT_MS, GAME_LOOP_MIN_TIMEOUT_MS)
+    : 0;
+  if (useTimeout) {
+    const timeoutTarget = typeof globalThis !== 'undefined'
+      ? globalThis
+      : (hasWindow ? window : null);
+    if (timeoutTarget && typeof timeoutTarget.setTimeout === 'function') {
+      gameLoopControl.type = 'timeout';
+      gameLoopControl.handle = timeoutTarget.setTimeout(() => {
+        loop(nowProvider());
+      }, delay);
+      return;
+    }
+    gameLoopControl.type = 'timeout';
+    gameLoopControl.handle = setTimeout(() => {
+      loop(nowProvider());
+    }, delay);
+    return;
+  }
+  gameLoopControl.type = 'raf';
+  gameLoopControl.handle = window.requestAnimationFrame(loop);
+}
+
+function startGameLoop(options = {}) {
+  if (gameLoopControl.isActive) {
+    restartGameLoop(options);
+    return;
+  }
+  gameLoopControl.isActive = true;
+  const now = getLoopTimestamp();
+  lastUpdate = now;
+  lastSaveTime = now;
+  lastUIUpdate = now;
+  scheduleGameLoop(Object.assign({ immediate: true, force: true }, options));
+}
+
+function restartGameLoop(options = {}) {
+  if (!gameLoopControl.isActive) {
+    return;
+  }
+  const now = getLoopTimestamp();
+  lastUpdate = now;
+  lastSaveTime = now;
+  lastUIUpdate = now;
+  clearScheduledGameLoop();
+  scheduleGameLoop(Object.assign({ immediate: true, force: true }, options));
+}
 
 function ensureApsCritState() {
   if (!gameState.apsCrit || typeof gameState.apsCrit !== 'object') {
@@ -13466,6 +13577,8 @@ function updatePlaytime(deltaSeconds) {
 }
 
 function loop(now) {
+  gameLoopControl.handle = null;
+  gameLoopControl.type = null;
   const delta = Math.max(0, (now - lastUpdate) / 1000);
   lastUpdate = now;
 
@@ -13490,7 +13603,7 @@ function loop(now) {
     lastSaveTime = now;
   }
 
-  requestAnimationFrame(loop);
+  scheduleGameLoop();
 }
 
 window.addEventListener('beforeunload', saveGame);
@@ -13513,7 +13626,7 @@ function startApp() {
   randomizeAtomButtonImage();
   initStarfield();
   scheduleAutoUiScaleUpdate({ immediate: true });
-  requestAnimationFrame(loop);
+  startGameLoop();
 }
 
 function initializeDomBoundModules() {
