@@ -19,4 +19,7 @@ Bienvenue dans Atom2Univers ! Voici les consignes à respecter lorsque tu interv
 4. **Collaboration**
    - Le propriétaire du dépôt est débutant en code, mais nous formons une équipe formidable. Explique tes choix et garde un ton pédagogique dans les messages de commit et de PR.
 
+5. **Ressources binaires**
+   - Ne propose pas de fichiers binaires (images, polices, etc.) dans tes contributions. Fournis uniquement des références ou des instructions pour que le propriétaire ajoute lui-même les ressources nécessaires.
+
 Merci et bon travail !
