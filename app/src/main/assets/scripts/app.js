@@ -777,7 +777,8 @@ function queueManualApcGain(amount, now = (typeof performance !== 'undefined' &&
     && !performanceModeState.pendingManualGain.isZero()
     && performanceModeState.pendingManualGain.sign > 0;
   if (!hasPending) {
-    performanceModeState.lastManualFlush = now;
+    // Keep the last flush timestamp unchanged so the throttle window is based on the
+    // moment the previous flush happened instead of the most recent click.
     performanceModeState.pendingManualGain = amount.clone();
     return;
   }
