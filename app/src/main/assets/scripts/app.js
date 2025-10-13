@@ -84,11 +84,104 @@ const OPTIONS_DETAIL_FEATURE_MAP = Object.freeze({
   musique: 'system.musique'
 });
 
-const dynamicImport =
-  typeof globalThis !== 'undefined'
-  && typeof globalThis.__dynamicImport__ === 'function'
-    ? globalThis.__dynamicImport__
-    : specifier => import(specifier);
+const dynamicImport = (() => {
+  if (typeof globalThis !== 'undefined' && typeof globalThis.__dynamicImport__ === 'function') {
+    return globalThis.__dynamicImport__;
+  }
+
+  let nativeDynamicImport = null;
+  try {
+    // eslint-disable-next-line no-new-func
+    const importer = new Function('specifier', 'return import(specifier);');
+    nativeDynamicImport = specifier => importer(specifier);
+  } catch (error) {
+    nativeDynamicImport = null;
+  }
+
+  if (nativeDynamicImport) {
+    if (typeof globalThis !== 'undefined') {
+      globalThis.__dynamicImport__ = nativeDynamicImport;
+    }
+    return nativeDynamicImport;
+  }
+
+  let baseUrl = null;
+  try {
+    if (typeof import.meta !== 'undefined' && import.meta && import.meta.url) {
+      baseUrl = new URL('./', import.meta.url).href;
+    }
+  } catch (error) {
+    baseUrl = null;
+  }
+
+  if (!baseUrl) {
+    try {
+      const candidate = typeof document !== 'undefined' && document?.baseURI
+        ? document.baseURI
+        : typeof window !== 'undefined' && window?.location?.href
+          ? window.location.href
+          : '';
+      baseUrl = new URL('./', candidate).href;
+    } catch (error) {
+      baseUrl = null;
+    }
+  }
+
+  const loadedScripts = new Map();
+
+  const fallbackDynamicImport = specifier => {
+    return new Promise((resolve, reject) => {
+      if (typeof document === 'undefined' || !document.createElement) {
+        reject(new Error('Dynamic import fallback is not available in this environment.'));
+        return;
+      }
+      if (typeof specifier !== 'string') {
+        reject(new TypeError('Dynamic import fallback expects a string specifier.'));
+        return;
+      }
+      const trimmed = specifier.trim();
+      if (!trimmed) {
+        reject(new TypeError('Dynamic import fallback received an empty specifier.'));
+        return;
+      }
+      let resolvedUrl;
+      try {
+        resolvedUrl = baseUrl ? new URL(trimmed, baseUrl).href : new URL(trimmed).href;
+      } catch (error) {
+        reject(new Error(`Dynamic import fallback could not resolve "${trimmed}".`));
+        return;
+      }
+      if (!loadedScripts.has(resolvedUrl)) {
+        loadedScripts.set(
+          resolvedUrl,
+          new Promise((innerResolve, innerReject) => {
+            const script = document.createElement('script');
+            script.src = resolvedUrl;
+            script.defer = false;
+            script.async = false;
+            script.addEventListener('load', () => innerResolve({}));
+            script.addEventListener('error', event => {
+              const reason = new Error(`Dynamic import fallback failed to load "${resolvedUrl}".`);
+              reason.event = event;
+              innerReject(reason);
+            });
+            (document.head || document.documentElement || document.body || document).appendChild(script);
+          })
+        );
+      }
+      loadedScripts
+        .get(resolvedUrl)
+        .then(resolve)
+        .catch(reject);
+    });
+  };
+
+  if (typeof globalThis !== 'undefined') {
+    globalThis.__dynamicImport__ = fallbackDynamicImport;
+  }
+
+  return fallbackDynamicImport;
+})();
 
 const ARCADE_MODULE_MANIFEST = Object.freeze({
   arcade: Object.freeze({ importPath: './arcade/particules.js' }),
