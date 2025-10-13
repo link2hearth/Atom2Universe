@@ -361,7 +361,13 @@
       this.selectedPatternId = null;
       this.customPatternCounter = 1;
 
-      this.dpr = window.devicePixelRatio || 1;
+      const rawDpr = typeof window !== 'undefined' && Number.isFinite(window.devicePixelRatio)
+        ? window.devicePixelRatio
+        : 1;
+      const configuredMaxDpr = typeof globalThis !== 'undefined' && typeof globalThis.MAX_CANVAS_DEVICE_PIXEL_RATIO === 'number'
+        ? Math.max(1, globalThis.MAX_CANVAS_DEVICE_PIXEL_RATIO)
+        : 1;
+      this.dpr = Math.min(rawDpr, configuredMaxDpr);
       this.viewport = {
         originX: -20,
         originY: -15,
@@ -1302,7 +1308,14 @@
       const safeWidth = Math.max(1, width);
       const safeHeight = Math.max(1, height);
       this.canvasRect = { width: safeWidth, height: safeHeight };
-      const dpr = window.devicePixelRatio || 1;
+      const rawDpr = typeof window !== 'undefined' && Number.isFinite(window.devicePixelRatio)
+        ? window.devicePixelRatio
+        : 1;
+      const configuredMaxDpr = typeof globalThis !== 'undefined' && typeof globalThis.MAX_CANVAS_DEVICE_PIXEL_RATIO === 'number'
+        ? Math.max(1, globalThis.MAX_CANVAS_DEVICE_PIXEL_RATIO)
+        : 1;
+      const dpr = Math.min(rawDpr, configuredMaxDpr);
+      this.dpr = dpr;
       this.canvas.width = Math.round(safeWidth * dpr);
       this.canvas.height = Math.round(safeHeight * dpr);
       this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);

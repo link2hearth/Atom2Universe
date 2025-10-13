@@ -1811,7 +1811,13 @@
       }
       const width = Math.max(1, rect.width);
       const height = Math.max(1, rect.height);
-      const dpr = typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1;
+      const rawDpr = typeof window !== 'undefined' && Number.isFinite(window.devicePixelRatio)
+        ? window.devicePixelRatio
+        : 1;
+      const configuredMaxDpr = typeof globalThis !== 'undefined' && typeof globalThis.MAX_CANVAS_DEVICE_PIXEL_RATIO === 'number'
+        ? Math.max(1, globalThis.MAX_CANVAS_DEVICE_PIXEL_RATIO)
+        : 1;
+      const dpr = Math.min(rawDpr, configuredMaxDpr);
       const targetWidth = Math.round(width * dpr);
       const targetHeight = Math.round(height * dpr);
       if (this.canvas.width !== targetWidth || this.canvas.height !== targetHeight) {
