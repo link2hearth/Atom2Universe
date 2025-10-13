@@ -3501,17 +3501,6 @@
 
   <script src="config/config.js"></script>
   <script src="scripts/resources/periodic-elements.js"></script>
-  <script src="scripts/arcade/particules.js"></script>
-  <script src="scripts/arcade/wave.js"></script>
-  <script src="scripts/arcade/balance.js"></script>
-  <script src="scripts/arcade/math.js"></script>
-  <script src="scripts/arcade/sudoku.js"></script>
-  <script src="scripts/arcade/minesweeper.js"></script>
-  <script src="scripts/arcade/solitaire.js"></script>
-  <script src="scripts/arcade/blackjack.js"></script>
-  <script src="scripts/arcade/echecs.js"></script>
-  <script src="scripts/arcade/game-of-life.js"></script>
-  <script src="scripts/arcade/quantum-2048.js"></script>
   <script src="scripts/i18n/embedded-resources.js"></script>
   <script src="scripts/modules/i18n.js"></script>
   <script src="scripts/modules/layered-number.js"></script>
@@ -3519,10 +3508,10 @@
   <script src="scripts/arcade/autosave.js"></script>
   <script src="scripts/arcade/gacha.js"></script>
   <script src="scripts/modules/info.js"></script>
-  <script src="scripts/arcade/metaux-match3.js"></script>
   <script src="scripts/modules/shared/scc-waveform.js"></script>
   <script src="scripts/modules/chiptune-player.js"></script>
   <script src="scripts/modules/app-data.js"></script>
-  <script src="scripts/app.js"></script>
+  <script nomodule src="scripts/app.legacy-loader.js"></script>
+  <script type="module" src="scripts/app.js"></script>
 </body>
 </html>
