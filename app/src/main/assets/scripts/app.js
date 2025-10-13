@@ -84,6 +84,192 @@ const OPTIONS_DETAIL_FEATURE_MAP = Object.freeze({
   musique: 'system.musique'
 });
 
+function clampNumber(value, fallback, options = {}) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) {
+    return fallback;
+  }
+  const { min = -Infinity, max = Infinity } = options;
+  let result = numeric;
+  if (Number.isFinite(min)) {
+    result = Math.max(min, result);
+  }
+  if (Number.isFinite(max)) {
+    result = Math.min(max, result);
+  }
+  return result;
+}
+
+const DEFAULT_MUSIC_VOLUME = (() => {
+  const existing = typeof globalThis !== 'undefined' && typeof globalThis.DEFAULT_MUSIC_VOLUME === 'number'
+    ? clampNumber(globalThis.DEFAULT_MUSIC_VOLUME, 0.5, { min: 0, max: 1 })
+    : null;
+  if (existing != null) {
+    return existing;
+  }
+  const configured = GLOBAL_CONFIG?.audio?.defaultVolume;
+  const resolved = clampNumber(configured, 0.5, { min: 0, max: 1 });
+  if (typeof globalThis !== 'undefined' && globalThis) {
+    globalThis.DEFAULT_MUSIC_VOLUME = resolved;
+  }
+  return resolved;
+})();
+
+const DEFAULT_MUSIC_ENABLED = (() => {
+  const existing = typeof globalThis !== 'undefined' && typeof globalThis.DEFAULT_MUSIC_ENABLED === 'boolean'
+    ? globalThis.DEFAULT_MUSIC_ENABLED
+    : null;
+  if (existing != null) {
+    return existing;
+  }
+  const configured = GLOBAL_CONFIG?.audio?.defaultEnabled;
+  const resolved = typeof configured === 'boolean' ? configured : true;
+  if (typeof globalThis !== 'undefined' && globalThis) {
+    globalThis.DEFAULT_MUSIC_ENABLED = resolved;
+  }
+  return resolved;
+})();
+
+const BASE_PER_CLICK = (() => {
+  const source = GLOBAL_CONFIG?.progression?.basePerClick;
+  const layered = typeof toLayeredNumber === 'function'
+    ? toLayeredNumber(source, 1)
+    : toLayeredValue(source, 1);
+  return normalizeProductionUnit(layered, { minimum: 1 });
+})();
+
+const BASE_PER_SECOND = (() => {
+  const source = GLOBAL_CONFIG?.progression?.basePerSecond;
+  const layered = typeof toLayeredNumber === 'function'
+    ? toLayeredNumber(source, 0)
+    : toLayeredValue(source, 0);
+  return layered.sign > 0 ? layered : LayeredNumber.zero();
+})();
+
+const OFFLINE_TICKET_CONFIG = (() => {
+  const defaults = { secondsPerTicket: 60 * 60, capSeconds: 60 * 60 * 50 };
+  const raw = GLOBAL_CONFIG?.progression?.offlineTickets ?? {};
+  const secondsPerTicket = clampNumber(
+    raw.secondsPerTicket
+      ?? raw.intervalSeconds
+      ?? raw.interval
+      ?? raw.seconds,
+    defaults.secondsPerTicket,
+    { min: 1 }
+  );
+  const capSeconds = clampNumber(
+    raw.capSeconds
+      ?? raw.cap
+      ?? raw.maximumSeconds
+      ?? raw.maxSeconds,
+    Math.max(secondsPerTicket, defaults.capSeconds),
+    { min: secondsPerTicket }
+  );
+  return {
+    secondsPerTicket,
+    capSeconds
+  };
+})();
+
+const OFFLINE_GAIN_CAP = clampNumber(
+  GLOBAL_CONFIG?.progression?.offlineCapSeconds,
+  60 * 60 * 12,
+  { min: 0 }
+);
+
+const DEFAULT_TICKET_STAR_INTERVAL_SECONDS = clampNumber(
+  GLOBAL_CONFIG?.ticketStar?.averageSpawnIntervalSeconds
+    ?? GLOBAL_CONFIG?.ticketStar?.averageIntervalSeconds
+    ?? GLOBAL_CONFIG?.ticketStar?.intervalSeconds,
+  600,
+  { min: 1 }
+);
+
+const MYTHIQUE_BONUS_DEFAULTS = Object.freeze({
+  ticket: Object.freeze({ uniqueReductionSeconds: 1, minIntervalSeconds: 5 }),
+  offline: Object.freeze({ baseMultiplier: 0.01, perDuplicate: 0.01, cap: 1 }),
+  overflow: Object.freeze({ flatBonus: 50 }),
+  frenzy: Object.freeze({ multiplier: 1.5 })
+});
+
+const RAW_MYTHIQUE_CONFIG = GLOBAL_CONFIG?.elementBonuses?.groups?.mythique ?? {};
+const RAW_MYTHIQUE_TICKET = RAW_MYTHIQUE_CONFIG.ticketBonus ?? RAW_MYTHIQUE_CONFIG.ticket ?? {};
+const RAW_MYTHIQUE_OFFLINE = RAW_MYTHIQUE_CONFIG.offlineBonus ?? RAW_MYTHIQUE_CONFIG.offline ?? {};
+const RAW_MYTHIQUE_OVERFLOW = RAW_MYTHIQUE_CONFIG.duplicateOverflow ?? RAW_MYTHIQUE_CONFIG.overflow ?? {};
+const RAW_MYTHIQUE_FRENZY = RAW_MYTHIQUE_CONFIG.frenzyBonus ?? RAW_MYTHIQUE_CONFIG.frenzy ?? {};
+
+const MYTHIQUE_TICKET_UNIQUE_REDUCTION_SECONDS = clampNumber(
+  RAW_MYTHIQUE_TICKET.uniqueReductionSeconds
+    ?? RAW_MYTHIQUE_TICKET.reductionPerUnique
+    ?? RAW_MYTHIQUE_TICKET.perUnique
+    ?? RAW_MYTHIQUE_TICKET.reduction,
+  MYTHIQUE_BONUS_DEFAULTS.ticket.uniqueReductionSeconds,
+  { min: 0 }
+);
+
+const MYTHIQUE_TICKET_MIN_INTERVAL_SECONDS = clampNumber(
+  RAW_MYTHIQUE_TICKET.minIntervalSeconds
+    ?? RAW_MYTHIQUE_TICKET.minSeconds
+    ?? RAW_MYTHIQUE_TICKET.minimum
+    ?? RAW_MYTHIQUE_TICKET.minimumSeconds,
+  MYTHIQUE_BONUS_DEFAULTS.ticket.minIntervalSeconds,
+  { min: 1 }
+);
+
+const MYTHIQUE_OFFLINE_BASE = clampNumber(
+  RAW_MYTHIQUE_OFFLINE.baseMultiplier
+    ?? RAW_MYTHIQUE_OFFLINE.base
+    ?? RAW_MYTHIQUE_OFFLINE.minimum
+    ?? RAW_MYTHIQUE_OFFLINE.min,
+  MYTHIQUE_BONUS_DEFAULTS.offline.baseMultiplier,
+  { min: 0 }
+);
+
+const MYTHIQUE_OFFLINE_PER_DUPLICATE = clampNumber(
+  RAW_MYTHIQUE_OFFLINE.perDuplicate
+    ?? RAW_MYTHIQUE_OFFLINE.increment
+    ?? RAW_MYTHIQUE_OFFLINE.step
+    ?? RAW_MYTHIQUE_OFFLINE.perCopy,
+  MYTHIQUE_BONUS_DEFAULTS.offline.perDuplicate,
+  { min: 0 }
+);
+
+const MYTHIQUE_OFFLINE_CAP = (() => {
+  const capped = clampNumber(
+    RAW_MYTHIQUE_OFFLINE.cap
+      ?? RAW_MYTHIQUE_OFFLINE.maximum
+      ?? RAW_MYTHIQUE_OFFLINE.max,
+    MYTHIQUE_BONUS_DEFAULTS.offline.cap,
+    { min: MYTHIQUE_OFFLINE_BASE }
+  );
+  return Math.max(capped, MYTHIQUE_OFFLINE_BASE);
+})();
+
+const MYTHIQUE_DUPLICATE_OVERFLOW_FLAT_BONUS = clampNumber(
+  RAW_MYTHIQUE_OVERFLOW.flatBonus
+    ?? RAW_MYTHIQUE_OVERFLOW.flat
+    ?? RAW_MYTHIQUE_OVERFLOW.amount,
+  MYTHIQUE_BONUS_DEFAULTS.overflow.flatBonus,
+  { min: 0 }
+);
+
+const MYTHIQUE_FRENZY_SPAWN_BONUS_MULTIPLIER = clampNumber(
+  RAW_MYTHIQUE_FRENZY.multiplier
+    ?? RAW_MYTHIQUE_FRENZY.value
+    ?? RAW_MYTHIQUE_FRENZY.amount,
+  MYTHIQUE_BONUS_DEFAULTS.frenzy.multiplier,
+  { min: 1 }
+);
+
+const MYTHIQUE_DUPLICATES_FOR_OFFLINE_CAP = (
+  MYTHIQUE_OFFLINE_PER_DUPLICATE > 0
+  && MYTHIQUE_OFFLINE_CAP > MYTHIQUE_OFFLINE_BASE
+)
+  ? Math.ceil((MYTHIQUE_OFFLINE_CAP - MYTHIQUE_OFFLINE_BASE) / MYTHIQUE_OFFLINE_PER_DUPLICATE)
+  : Number.POSITIVE_INFINITY;
+
+const MYTHIQUE_RARITY_ID = 'mythique';
+
 const dynamicImport = (() => {
   if (typeof globalThis !== 'undefined' && typeof globalThis.__dynamicImport__ === 'function') {
     return globalThis.__dynamicImport__;
