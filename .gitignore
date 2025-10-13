@@ -1,0 +1,33 @@
+# Ignore Gradle build output
+.gradle/
+build/
+**/build/
+
+# Local configuration files
+local.properties
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Android Studio generated folders
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Log files
+*.log
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Android package outputs
+*.apk
+*.aab
+*.ap_
+*.dex
+
+# Keystore files
+*.jks
+*.keystore
