@@ -78,6 +78,11 @@ body[data-active-page='wave'] {
   overscroll-behavior: none;
 }
 
+body[data-active-page='game'] main,
+body[data-active-page='wave'] main {
+  overflow: hidden;
+}
+
 body[data-text-font='vt323'] {
   --font-text-base-size: 1.06rem;
 }
@@ -1144,6 +1149,9 @@ main {
   justify-content: center;
   align-items: stretch;
   min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .page { 
