@@ -147,6 +147,9 @@ const MIDI_PREVIEW_COLOR_PALETTE = Object.freeze([
 ]);
 
 if (typeof globalThis !== 'undefined') {
+  if (!globalThis.elements || typeof globalThis.elements !== 'object') {
+    globalThis.elements = {};
+  }
   globalThis.MAX_CANVAS_DEVICE_PIXEL_RATIO = MAX_CANVAS_DEVICE_PIXEL_RATIO;
   globalThis.MINESWEEPER_BOARD_SETTINGS = MINESWEEPER_BOARD_SETTINGS;
   globalThis.MIDI_KEYBOARD_LAYOUTS = MIDI_KEYBOARD_LAYOUTS;

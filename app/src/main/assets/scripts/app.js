@@ -2127,6 +2127,10 @@ function getLayeredStat(store, key) {
   return zero;
 }
 
+if (typeof globalThis !== 'undefined') {
+  globalThis.getLayeredStat = getLayeredStat;
+}
+
 function incrementLayeredStat(store, key, amount) {
   if (!store || typeof store !== 'object') {
     return;
@@ -3181,6 +3185,10 @@ const gameState = {
 
 if (typeof window !== 'undefined') {
   window.atom2universGameState = gameState;
+  window.gameState = gameState;
+}
+if (typeof globalThis !== 'undefined') {
+  globalThis.gameState = gameState;
 }
 
 applyFrenzySpawnChanceBonus(gameState.frenzySpawnBonus);
@@ -3362,6 +3370,10 @@ function isDevKitShopFree() {
 
 function isDevKitGachaFree() {
   return DEVKIT_STATE.cheats.freeGacha === true;
+}
+
+if (typeof globalThis !== 'undefined') {
+  globalThis.isDevKitGachaFree = isDevKitGachaFree;
 }
 
 function getDevKitAutoFlatBonus() {
@@ -3587,6 +3599,10 @@ function isPageUnlocked(pageId) {
   }
   const unlocks = getPageUnlockState();
   return unlocks?.[pageId] === true;
+}
+
+if (typeof globalThis !== 'undefined') {
+  globalThis.isPageUnlocked = isPageUnlocked;
 }
 
 function unlockPage(pageId, options = {}) {
@@ -5551,6 +5567,10 @@ function updateArcadeTicketDisplay() {
     });
   }
   updateMetauxCreditsUI();
+}
+
+if (typeof globalThis !== 'undefined') {
+  globalThis.updateArcadeTicketDisplay = updateArcadeTicketDisplay;
 }
 
 function getMetauxCreditCount() {
@@ -7626,6 +7646,10 @@ function formatDuration(ms) {
   return parts.join(' ');
 }
 
+if (typeof globalThis !== 'undefined') {
+  globalThis.formatDuration = formatDuration;
+}
+
 function isElementDetailsModalOpen() {
   return Boolean(elements.elementDetailsOverlay && !elements.elementDetailsOverlay.hasAttribute('hidden'));
 }
@@ -8619,6 +8643,10 @@ function renderProductionBreakdown(container, entry, context = null) {
     row.append(label, value);
     container.appendChild(row);
   });
+}
+
+if (typeof globalThis !== 'undefined') {
+  globalThis.renderProductionBreakdown = renderProductionBreakdown;
 }
 
 let toastElement = null;
@@ -14109,6 +14137,10 @@ function initializeDomBoundModules() {
 
 function initializeApp() {
   elements = collectDomElements();
+  if (typeof globalThis !== 'undefined') {
+    globalThis.elements = elements;
+    globalThis.atom2universElements = elements;
+  }
   initializeDomBoundModules();
   populateLanguageSelectOptions();
   const i18n = globalThis.i18n;
