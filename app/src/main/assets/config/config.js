@@ -184,6 +184,13 @@ const SHOP_BUILDING_IDS = [
   'quantumOverseer'
 ];
 
+/**
+ * Bonus de la Sonde interstellaire.
+ * Chaque bâtiment possédé ajoute +100 APC, et ce bonus est doublé tous les 100 niveaux.
+ */
+const INTERSTELLAR_PROBE_APC_BONUS = 100;
+const INTERSTELLAR_PROBE_BONUS_DOUBLING_INTERVAL = 100;
+
 function createShopBuildingDefinitions() {
   const withDefaults = def => ({ maxLevel: SHOP_MAX_PURCHASE_DEFAULT, ...def });
   return [
@@ -288,7 +295,7 @@ function createShopBuildingDefinitions() {
       name: 'Sonde interstellaire',
       description: 'Explorez la galaxie pour récolter toujours plus.',
       effectSummary:
-        'Production passive : +5 000 APS par niveau. Bonus conditionnel : avec 50 Électrons libres ou plus, chaque bâtiment possédé ajoute +100 APC.',
+        'Production passive : +5 000 APS par niveau. Bonus conditionnel : avec 50 Électrons libres ou plus, chaque bâtiment possédé ajoute +100 APC, doublés tous les 100 niveaux de Sonde interstellaire.',
       category: 'hybrid',
       baseCost: 5e6,
       costScale: 1.2,
@@ -304,7 +311,9 @@ function createShopBuildingDefinitions() {
               0
             );
             if (ownedBuildingCount > 0) {
-              const bonusPerUnit = 100;
+              const doublingTier = Math.floor(level / INTERSTELLAR_PROBE_BONUS_DOUBLING_INTERVAL);
+              const bonusMultiplier = doublingTier > 0 ? 2 ** doublingTier : 1;
+              const bonusPerUnit = INTERSTELLAR_PROBE_APC_BONUS * bonusMultiplier;
               clickAdd = ownedBuildingCount * bonusPerUnit;
             }
           }
