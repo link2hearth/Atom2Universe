@@ -59,11 +59,11 @@ const PERFORMANCE_MODE_DEFINITIONS = Object.freeze([
  * générées automatiquement.
  */
 const MINESWEEPER_BOARD_SETTINGS = Object.freeze({
-  targetCellSize: 48,
-  minCellSize: 36,
-  maxCellSize: 72,
-  maxRows: 40,
-  maxCols: 60
+  targetCellSize: 32,
+  minCellSize: 22,
+  maxCellSize: 48,
+  maxRows: 80,
+  maxCols: 80
 });
 
 /**
@@ -253,7 +253,7 @@ function createShopBuildingDefinitions() {
       costScale: 1.15,
       effect: (level = 0) => {
         // Ionisation : tous les 50 niveaux, on applique un multiplicateur ×2 sur le bonus total.
-        const ionizationTier = Math.floor(level / 50);
+        const ionizationTier = Math.floor(level / 25);
         const ionizationBoost = ionizationTier > 0 ? 2 ** ionizationTier : 1;
         const clickAdd = level > 0 ? level * ionizationBoost : 0;
         return { clickAdd };
@@ -270,7 +270,7 @@ function createShopBuildingDefinitions() {
       costScale: 1.15,
       effect: (level = 0) => {
         // Ionisation : tous les 50 niveaux, on applique un multiplicateur ×2 sur le bonus total.
-        const ionizationTier = Math.floor(level / 50);
+        const ionizationTier = Math.floor(level / 25);
         const ionizationBoost = ionizationTier > 0 ? 2 ** ionizationTier : 1;
         const autoAdd = level > 0 ? level * ionizationBoost : 0;
         return { autoAdd };
@@ -288,7 +288,7 @@ function createShopBuildingDefinitions() {
       effect: (level = 0) => {
         const baseAmount = 10 * level;
         // Ionisation : tous les 50 niveaux, on applique un multiplicateur ×2 sur le bonus total.
-        const ionizationTier = Math.floor(level / 50);
+        const ionizationTier = Math.floor(level / 25);
         const ionizationBoost = ionizationTier > 0 ? 2 ** ionizationTier : 1;
         const autoAdd = level > 0 ? baseAmount * ionizationBoost : 0;
         return { autoAdd };
@@ -307,7 +307,7 @@ function createShopBuildingDefinitions() {
         const baseAmount = 50 * level;
         const autoAdd = level > 0 ? baseAmount : 0;
         // Rémanence manuelle : tous les 100 niveaux, on convertit le gain passif en bonus d’APC.
-        const remanenceTier = Math.floor(level / 100);
+        const remanenceTier = Math.floor(level / 50);
         const clickAdd = remanenceTier > 0 ? remanenceTier * baseAmount : 0;
         const result = { autoAdd };
         if (clickAdd > 0) {
@@ -330,7 +330,7 @@ function createShopBuildingDefinitions() {
         const autoAdd = level > 0 ? baseAmount : 0;
         // Stabilisateur quantique : tous les 25 niveaux, ajoute +5 % au multiplicateur automatique.
         const stabilizerTier = Math.floor(level / 25);
-        const autoMult = stabilizerTier > 0 ? 1 + stabilizerTier * 0.05 : 1;
+        const autoMult = stabilizerTier > 0 ? 1 + stabilizerTier * 0.10 : 1;
         const result = { autoAdd };
         if (autoMult !== 1) {
           result.autoMult = autoMult;
@@ -386,7 +386,7 @@ function createShopBuildingDefinitions() {
         const baseAmount = 50_000 * level;
         const autoAdd = level > 0 ? baseAmount : 0;
         // Rémanence manuelle : tous les 100 niveaux, on convertit le gain passif en bonus d’APC.
-        const remanenceTier = Math.floor(level / 100);
+        const remanenceTier = Math.floor(level / 50);
         const clickAdd = remanenceTier > 0 ? remanenceTier * baseAmount : 0;
         const result = { autoAdd };
         if (clickAdd > 0) {
@@ -408,7 +408,7 @@ function createShopBuildingDefinitions() {
         const baseAmount = 500_000 * level;
         const autoAdd = level > 0 ? baseAmount : 0;
         // Rémanence manuelle : tous les 100 niveaux, on convertit le gain passif en bonus d’APC.
-        const remanenceTier = Math.floor(level / 100);
+        const remanenceTier = Math.floor(level / 50);
         const clickAdd = remanenceTier > 0 ? remanenceTier * baseAmount : 0;
         const result = { autoAdd };
         if (clickAdd > 0) {
@@ -431,7 +431,7 @@ function createShopBuildingDefinitions() {
         const autoAdd = level > 0 ? baseAmount : 0;
         // Stabilisateur quantique : tous les 25 niveaux, ajoute +5 % au multiplicateur automatique.
         const stabilizerTier = Math.floor(level / 25);
-        const autoMult = stabilizerTier > 0 ? 1 + stabilizerTier * 0.05 : 1;
+        const autoMult = stabilizerTier > 0 ? 1 + stabilizerTier * 0.10 : 1;
         const result = { autoAdd };
         if (autoMult !== 1) {
           result.autoMult = autoMult;
@@ -453,7 +453,7 @@ function createShopBuildingDefinitions() {
         const autoAdd = level > 0 ? baseAmount : 0;
         // Stabilisateur quantique : tous les 25 niveaux, ajoute +5 % au multiplicateur automatique.
         const stabilizerTier = Math.floor(level / 25);
-        const autoMult = stabilizerTier > 0 ? 1 + stabilizerTier * 0.05 : 1;
+        const autoMult = stabilizerTier > 0 ? 1 + stabilizerTier * 0.10 : 1;
         const result = { autoAdd };
         if (autoMult !== 1) {
           result.autoMult = autoMult;
@@ -475,7 +475,7 @@ function createShopBuildingDefinitions() {
         const autoAdd = level > 0 ? baseAmount : 0;
         // Surcharge critique : tous les 150 niveaux, ajoute +5 % de chance de critique.
         const overloadTier = Math.floor(level / 150);
-        const critChanceAdd = overloadTier > 0 ? overloadTier * 0.05 : 0;
+        const critChanceAdd = overloadTier > 0 ? overloadTier * 0.15 : 0;
         const result = { autoAdd };
         if (critChanceAdd > 0) {
           result.critChanceAdd = critChanceAdd;
@@ -3553,6 +3553,7 @@ GAME_CONFIG.progression.defaultTheme = GAME_CONFIG.themes.default;
 if (typeof globalThis !== 'undefined') {
   globalThis.GAME_CONFIG = GAME_CONFIG;
 }
+
 
 
 
