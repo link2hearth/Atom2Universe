@@ -19,15 +19,19 @@ const COLLECTION_MULTIPLIER_LABEL_KEY = 'scripts.config.elementBonuses.collectio
  *   à laquelle les gains manuels (APC) sont appliqués au total d'atomes.
  * - `apsFlushIntervalMs` contrôle la fréquence minimale (en millisecondes)
  *   à laquelle les gains automatiques (APS) sont appliqués.
+ * - `frameIntervalMs` impose un délai minimal entre deux itérations de la
+ *   boucle principale (0 = rafraîchissement natif via requestAnimationFrame).
  */
 const PERFORMANCE_MODE_SETTINGS = Object.freeze({
   fluid: Object.freeze({
     apcFlushIntervalMs: 16,
-    apsFlushIntervalMs: 16
+    apsFlushIntervalMs: 16,
+    frameIntervalMs: 0
   }),
   eco: Object.freeze({
     apcFlushIntervalMs: 200,
-    apsFlushIntervalMs: 1000
+    apsFlushIntervalMs: 1000,
+    frameIntervalMs: 120
   })
 });
 
