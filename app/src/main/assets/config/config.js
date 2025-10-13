@@ -14,6 +14,40 @@ const MAX_CANVAS_DEVICE_PIXEL_RATIO = 2;
 const COLLECTION_MULTIPLIER_LABEL_KEY = 'scripts.config.elementBonuses.collectionMultiplier';
 
 /**
+ * Profils de performance disponibles pour la boucle principale du jeu.
+ * - `apcFlushIntervalMs` contrôle la fréquence minimale (en millisecondes)
+ *   à laquelle les gains manuels (APC) sont appliqués au total d'atomes.
+ * - `apsFlushIntervalMs` contrôle la fréquence minimale (en millisecondes)
+ *   à laquelle les gains automatiques (APS) sont appliqués.
+ */
+const PERFORMANCE_MODE_SETTINGS = Object.freeze({
+  fluid: Object.freeze({
+    apcFlushIntervalMs: 0,
+    apsFlushIntervalMs: 0
+  }),
+  eco: Object.freeze({
+    apcFlushIntervalMs: 200,
+    apsFlushIntervalMs: 1000
+  })
+});
+
+/**
+ * Métadonnées associées aux modes de performance.
+ * `isDefault` identifie le mode appliqué lors du premier lancement.
+ */
+const PERFORMANCE_MODE_DEFINITIONS = Object.freeze([
+  Object.freeze({
+    id: 'fluid',
+    labelKey: 'index.sections.options.performance.options.fluid',
+    isDefault: true
+  }),
+  Object.freeze({
+    id: 'eco',
+    labelKey: 'index.sections.options.performance.options.eco'
+  })
+]);
+
+/**
  * Paramètres d'affichage du Démineur.
  * `targetCellSize` indique la taille idéale (en pixels) d'une case lorsque c'est possible.
  * `minCellSize` et `maxCellSize` encadrent la taille acceptable d'une case afin de conserver une
@@ -116,6 +150,8 @@ if (typeof globalThis !== 'undefined') {
   globalThis.MIDI_KEYBOARD_WINDOW_SIZE = MIDI_KEYBOARD_WINDOW_SIZE;
   globalThis.MIDI_PLAYBACK_PREVIEW_LEAD_SECONDS = MIDI_PLAYBACK_PREVIEW_LEAD_SECONDS;
   globalThis.MIDI_PREVIEW_COLOR_PALETTE = MIDI_PREVIEW_COLOR_PALETTE;
+  globalThis.PERFORMANCE_MODE_SETTINGS = PERFORMANCE_MODE_SETTINGS;
+  globalThis.PERFORMANCE_MODE_DEFINITIONS = PERFORMANCE_MODE_DEFINITIONS;
 }
 
 function translateOrDefault(key, fallback, params) {

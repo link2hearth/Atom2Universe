@@ -148,6 +148,35 @@ const DIGIT_FONT_CHOICES = Object.freeze({
   }
 });
 
+const PERFORMANCE_MODE_STORAGE_KEY = 'atom2univers.options.performanceMode';
+const GLOBAL_PERFORMANCE_MODE_SETTINGS = typeof globalThis !== 'undefined'
+  ? globalThis.PERFORMANCE_MODE_SETTINGS
+  : null;
+const PERFORMANCE_MODE_SETTINGS = GLOBAL_PERFORMANCE_MODE_SETTINGS && typeof GLOBAL_PERFORMANCE_MODE_SETTINGS === 'object'
+  ? GLOBAL_PERFORMANCE_MODE_SETTINGS
+  : {
+    fluid: Object.freeze({ apcFlushIntervalMs: 0, apsFlushIntervalMs: 0 }),
+    eco: Object.freeze({ apcFlushIntervalMs: 200, apsFlushIntervalMs: 1000 })
+  };
+const GLOBAL_PERFORMANCE_MODE_DEFINITIONS = typeof globalThis !== 'undefined'
+  ? globalThis.PERFORMANCE_MODE_DEFINITIONS
+  : null;
+const PERFORMANCE_MODE_DEFINITIONS = Array.isArray(GLOBAL_PERFORMANCE_MODE_DEFINITIONS)
+  && GLOBAL_PERFORMANCE_MODE_DEFINITIONS.length
+  ? GLOBAL_PERFORMANCE_MODE_DEFINITIONS
+  : [
+    Object.freeze({ id: 'fluid', labelKey: 'index.sections.options.performance.options.fluid', isDefault: true }),
+    Object.freeze({ id: 'eco', labelKey: 'index.sections.options.performance.options.eco' })
+  ];
+const PERFORMANCE_MODE_IDS = PERFORMANCE_MODE_DEFINITIONS
+  .map(def => (def && typeof def.id === 'string') ? def.id.trim().toLowerCase() : null)
+  .filter((id, index, array) => id && array.indexOf(id) === index);
+const PERFORMANCE_MODE_DEFAULT_ID = resolveDefaultPerformanceModeId();
+const PERFORMANCE_MODE_NOTE_FALLBACKS = Object.freeze({
+  fluid: 'Fluid mode: frequent updates for instant feedback.',
+  eco: 'Eco mode: batches clicks every 200 ms and APS once per second to save battery.'
+});
+
 const FALLBACK_THEME_DEFINITIONS = Object.freeze([
   Object.freeze({
     id: 'dark',
@@ -435,6 +464,253 @@ function translateOrDefault(key, fallback, params) {
     return strippedKey;
   }
   return fallback;
+}
+
+function resolveDefaultPerformanceModeId() {
+  const preferred = PERFORMANCE_MODE_DEFINITIONS.find(def => {
+    return def && typeof def.id === 'string' && def.isDefault === true;
+  });
+  if (preferred) {
+    const normalized = preferred.id.trim().toLowerCase();
+    if (normalized) {
+      return normalized;
+    }
+  }
+  if (PERFORMANCE_MODE_IDS.length) {
+    return PERFORMANCE_MODE_IDS[0];
+  }
+  return 'fluid';
+}
+
+function normalizePerformanceMode(value) {
+  if (typeof value !== 'string') {
+    return PERFORMANCE_MODE_DEFAULT_ID;
+  }
+  const normalized = value.trim().toLowerCase();
+  if (!normalized) {
+    return PERFORMANCE_MODE_DEFAULT_ID;
+  }
+  return PERFORMANCE_MODE_IDS.includes(normalized) ? normalized : PERFORMANCE_MODE_DEFAULT_ID;
+}
+
+function getPerformanceModeSettings(modeId) {
+  const normalized = normalizePerformanceMode(modeId);
+  const settings = PERFORMANCE_MODE_SETTINGS?.[normalized];
+  if (settings && typeof settings === 'object') {
+    return settings;
+  }
+  const fallback = PERFORMANCE_MODE_SETTINGS?.[PERFORMANCE_MODE_DEFAULT_ID];
+  if (fallback && typeof fallback === 'object') {
+    return fallback;
+  }
+  return { apcFlushIntervalMs: 0, apsFlushIntervalMs: 0 };
+}
+
+function readStoredPerformanceMode() {
+  try {
+    const stored = globalThis.localStorage?.getItem(PERFORMANCE_MODE_STORAGE_KEY);
+    if (typeof stored === 'string' && stored.trim()) {
+      return normalizePerformanceMode(stored);
+    }
+  } catch (error) {
+    console.warn('Unable to read performance mode preference', error);
+  }
+  return null;
+}
+
+function writeStoredPerformanceMode(value) {
+  try {
+    const normalized = normalizePerformanceMode(value);
+    globalThis.localStorage?.setItem(PERFORMANCE_MODE_STORAGE_KEY, normalized);
+  } catch (error) {
+    console.warn('Unable to persist performance mode preference', error);
+  }
+}
+
+function updatePerformanceModeNote(modeId) {
+  if (!elements.performanceModeNote) {
+    return;
+  }
+  const normalized = normalizePerformanceMode(modeId);
+  const key = `index.sections.options.performance.note.${normalized}`;
+  const fallback = PERFORMANCE_MODE_NOTE_FALLBACKS[normalized]
+    || PERFORMANCE_MODE_NOTE_FALLBACKS[PERFORMANCE_MODE_DEFAULT_ID]
+    || '';
+  elements.performanceModeNote.setAttribute('data-i18n', key);
+  elements.performanceModeNote.textContent = translateOrDefault(key, fallback);
+}
+
+function flushManualApcGains(now, options = {}) {
+  const config = Object.assign({ force: false }, options);
+  const interval = Number(performanceModeState.settings?.apcFlushIntervalMs) || 0;
+  const pending = performanceModeState.pendingManualGain;
+  if (!(pending instanceof LayeredNumber) || pending.isZero() || pending.sign <= 0) {
+    if (config.force) {
+      performanceModeState.pendingManualGain = null;
+      performanceModeState.lastManualFlush = now;
+    }
+    return;
+  }
+  if (!config.force && interval > 0) {
+    const elapsed = now - performanceModeState.lastManualFlush;
+    if (Number.isFinite(elapsed) && elapsed < interval) {
+      return;
+    }
+  }
+  gainAtoms(pending, 'apc');
+  performanceModeState.pendingManualGain = null;
+  performanceModeState.lastManualFlush = now;
+}
+
+function queueManualApcGain(amount, now = (typeof performance !== 'undefined' && typeof performance.now === 'function'
+  ? performance.now()
+  : Date.now())) {
+  if (!(amount instanceof LayeredNumber) || amount.isZero() || amount.sign <= 0) {
+    return;
+  }
+  const interval = Number(performanceModeState.settings?.apcFlushIntervalMs) || 0;
+  if (interval <= 0) {
+    gainAtoms(amount, 'apc');
+    performanceModeState.lastManualFlush = now;
+    return;
+  }
+  const hasPending = performanceModeState.pendingManualGain instanceof LayeredNumber
+    && !performanceModeState.pendingManualGain.isZero()
+    && performanceModeState.pendingManualGain.sign > 0;
+  if (!hasPending) {
+    performanceModeState.lastManualFlush = now;
+    performanceModeState.pendingManualGain = amount.clone();
+    return;
+  }
+  performanceModeState.pendingManualGain = performanceModeState.pendingManualGain.add(amount);
+}
+
+function accumulateAutoProduction(deltaSeconds) {
+  if (!Number.isFinite(deltaSeconds) || deltaSeconds <= 0) {
+    return;
+  }
+  const interval = Number(performanceModeState.settings?.apsFlushIntervalMs) || 0;
+  if (interval <= 0) {
+    if (gameState.perSecond instanceof LayeredNumber && !gameState.perSecond.isZero()) {
+      const gain = gameState.perSecond.multiplyNumber(deltaSeconds);
+      if (gain instanceof LayeredNumber && !gain.isZero()) {
+        gainAtoms(gain, 'aps');
+      }
+    }
+    performanceModeState.pendingAutoGain = null;
+    performanceModeState.autoAccumulatedMs = 0;
+    return;
+  }
+  let added = false;
+  if (gameState.perSecond instanceof LayeredNumber && !gameState.perSecond.isZero()) {
+    const increment = gameState.perSecond.multiplyNumber(deltaSeconds);
+    if (increment instanceof LayeredNumber && !increment.isZero()) {
+      performanceModeState.pendingAutoGain = performanceModeState.pendingAutoGain
+        ? performanceModeState.pendingAutoGain.add(increment)
+        : increment;
+      added = true;
+    }
+  }
+  if (added || (performanceModeState.pendingAutoGain instanceof LayeredNumber
+    && !performanceModeState.pendingAutoGain.isZero())) {
+    performanceModeState.autoAccumulatedMs += deltaSeconds * 1000;
+  }
+}
+
+function flushPendingAutoGain(now, options = {}) {
+  const config = Object.assign({ force: false }, options);
+  const interval = Number(performanceModeState.settings?.apsFlushIntervalMs) || 0;
+  if (interval <= 0) {
+    performanceModeState.pendingAutoGain = null;
+    performanceModeState.autoAccumulatedMs = 0;
+    performanceModeState.lastAutoFlush = now;
+    return;
+  }
+  const pending = performanceModeState.pendingAutoGain;
+  if (!(pending instanceof LayeredNumber) || pending.isZero() || pending.sign <= 0) {
+    if (config.force) {
+      performanceModeState.pendingAutoGain = null;
+      performanceModeState.autoAccumulatedMs = 0;
+      performanceModeState.lastAutoFlush = now;
+    }
+    return;
+  }
+  if (!config.force) {
+    const accumulated = performanceModeState.autoAccumulatedMs;
+    if (Number.isFinite(accumulated) && accumulated < interval) {
+      return;
+    }
+  }
+  gainAtoms(pending, 'aps');
+  performanceModeState.pendingAutoGain = null;
+  performanceModeState.autoAccumulatedMs = 0;
+  performanceModeState.lastAutoFlush = now;
+}
+
+function flushPendingPerformanceQueues(options = {}) {
+  const now = typeof performance !== 'undefined' && typeof performance.now === 'function'
+    ? performance.now()
+    : Date.now();
+  flushManualApcGains(now, options);
+  flushPendingAutoGain(now, options);
+}
+
+function applyPerformanceMode(modeId, options = {}) {
+  const normalized = normalizePerformanceMode(modeId);
+  const settings = getPerformanceModeSettings(normalized);
+  const config = Object.assign({ persist: true, updateControl: true }, options);
+  const now = typeof performance !== 'undefined' && typeof performance.now === 'function'
+    ? performance.now()
+    : Date.now();
+  const changed = performanceModeState.id !== normalized
+    || performanceModeState.settings !== settings;
+  if (changed) {
+    flushManualApcGains(now, { force: true });
+    flushPendingAutoGain(now, { force: true });
+    performanceModeState.pendingManualGain = null;
+    performanceModeState.pendingAutoGain = null;
+    performanceModeState.autoAccumulatedMs = 0;
+  }
+  performanceModeState.id = normalized;
+  performanceModeState.settings = settings;
+  performanceModeState.lastManualFlush = now;
+  performanceModeState.lastAutoFlush = now;
+  if (config.updateControl && elements.performanceModeSelect) {
+    if (elements.performanceModeSelect.value !== normalized) {
+      elements.performanceModeSelect.value = normalized;
+    }
+  }
+  updatePerformanceModeNote(normalized);
+  if (config.persist) {
+    writeStoredPerformanceMode(normalized);
+  }
+}
+
+function initPerformanceModeOption() {
+  const stored = readStoredPerformanceMode();
+  const initial = stored ?? performanceModeState.id ?? PERFORMANCE_MODE_DEFAULT_ID;
+  applyPerformanceMode(initial, { persist: false, updateControl: true });
+  if (!elements.performanceModeSelect) {
+    return;
+  }
+  elements.performanceModeSelect.addEventListener('change', () => {
+    const selected = elements.performanceModeSelect.value;
+    applyPerformanceMode(selected, { persist: true, updateControl: false });
+  });
+}
+
+function subscribePerformanceModeLanguageUpdates() {
+  const handler = () => {
+    updatePerformanceModeNote(performanceModeState.id);
+  };
+  const api = getI18nApi();
+  if (api && typeof api.onLanguageChanged === 'function') {
+    api.onLanguageChanged(handler);
+    return;
+  }
+  if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
+    globalThis.addEventListener('i18n:languagechange', handler);
+  }
 }
 
 function getThemeDefinition(id) {
@@ -2709,6 +2985,20 @@ if (typeof setParticulesBrickSkinPreference === 'function') {
   setParticulesBrickSkinPreference(gameState.arcadeBrickSkin);
 }
 
+const performanceModeState = {
+  id: PERFORMANCE_MODE_DEFAULT_ID,
+  settings: getPerformanceModeSettings(PERFORMANCE_MODE_DEFAULT_ID),
+  pendingManualGain: null,
+  pendingAutoGain: null,
+  autoAccumulatedMs: 0,
+  lastManualFlush: typeof performance !== 'undefined' && typeof performance.now === 'function'
+    ? performance.now()
+    : Date.now(),
+  lastAutoFlush: typeof performance !== 'undefined' && typeof performance.now === 'function'
+    ? performance.now()
+    : Date.now()
+};
+
 function ensureApsCritState() {
   if (!gameState.apsCrit || typeof gameState.apsCrit !== 'object') {
     gameState.apsCrit = createDefaultApsCritState();
@@ -3782,6 +4072,8 @@ function collectDomElements() {
   metauxNewGameCredits: document.getElementById('metauxNewGameCredits'),
   metauxCreditStatus: document.getElementById('metauxCreditStatus'),
   languageSelect: document.getElementById('languageSelect'),
+  performanceModeSelect: document.getElementById('performanceModeSelect'),
+  performanceModeNote: document.getElementById('performanceModeNote'),
   uiScaleSelect: document.getElementById('uiScaleSelect'),
   themeSelect: document.getElementById('themeSelect'),
   textFontSelect: document.getElementById('textFontSelect'),
@@ -8882,7 +9174,7 @@ function handleManualAtomClick(options = {}) {
     ? gameState.perClick
     : toLayeredNumber(gameState.perClick ?? 0, 0);
   const critResult = applyCriticalHit(baseAmount);
-  gainAtoms(critResult.amount, 'apc');
+  queueManualApcGain(critResult.amount);
   registerManualClick();
   registerApcFrenzyClick(performance.now(), context);
   soundEffects.pop.play();
@@ -12292,6 +12584,7 @@ function cloneArcadeProgress(progress) {
 }
 
 function serializeState() {
+  flushPendingPerformanceQueues({ force: true });
   const stats = gameState.stats || createInitialStats();
   const sessionApc = getLayeredStat(stats.session, 'apcAtoms');
   const sessionAps = getLayeredStat(stats.session, 'apsAtoms');
@@ -13175,10 +13468,9 @@ function loop(now) {
   const delta = Math.max(0, (now - lastUpdate) / 1000);
   lastUpdate = now;
 
-  if (!gameState.perSecond.isZero()) {
-    const gain = gameState.perSecond.multiplyNumber(delta);
-    gainAtoms(gain, 'aps');
-  }
+  accumulateAutoProduction(delta);
+  flushManualApcGains(now);
+  flushPendingAutoGain(now);
 
   updateApsCritTimer(delta);
 
@@ -13233,10 +13525,12 @@ function initializeDomBoundModules() {
   initResponsiveAutoScale();
   initTextFontOption();
   initDigitFontOption();
+  initPerformanceModeOption();
   initClickSoundOption();
   subscribeClickSoundLanguageUpdates();
   initCritAtomOption();
   subscribeCritAtomLanguageUpdates();
+  subscribePerformanceModeLanguageUpdates();
   subscribeInfoWelcomeLanguageUpdates();
   subscribeInfoCharactersLanguageUpdates();
   updateDevKitUI();
