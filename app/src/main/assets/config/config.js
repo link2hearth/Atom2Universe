@@ -31,7 +31,7 @@ const PERFORMANCE_MODE_SETTINGS = Object.freeze({
   eco: Object.freeze({
     apcFlushIntervalMs: 200,
     apsFlushIntervalMs: 1000,
-    frameIntervalMs: 120
+    frameIntervalMs: 96
   })
 });
 
@@ -3546,5 +3546,6 @@ GAME_CONFIG.progression.defaultTheme = GAME_CONFIG.themes.default;
 if (typeof globalThis !== 'undefined') {
   globalThis.GAME_CONFIG = GAME_CONFIG;
 }
+
 
 
