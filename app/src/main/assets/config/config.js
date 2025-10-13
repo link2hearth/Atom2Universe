@@ -4,6 +4,13 @@
  * sont rassemblées ici pour faciliter les modifications futures.
  */
 const SHOP_MAX_PURCHASE_DEFAULT = 1000;
+
+/**
+ * Ratio maximal appliqué lors du rendu des canvas.
+ * Permet de conserver une image nette sans dépasser un coût GPU excessif
+ * sur les appareils à très haute densité de pixels.
+ */
+const MAX_CANVAS_DEVICE_PIXEL_RATIO = 2;
 const COLLECTION_MULTIPLIER_LABEL_KEY = 'scripts.config.elementBonuses.collectionMultiplier';
 
 /**
@@ -102,6 +109,7 @@ const MIDI_PREVIEW_COLOR_PALETTE = Object.freeze([
 ]);
 
 if (typeof globalThis !== 'undefined') {
+  globalThis.MAX_CANVAS_DEVICE_PIXEL_RATIO = MAX_CANVAS_DEVICE_PIXEL_RATIO;
   globalThis.MINESWEEPER_BOARD_SETTINGS = MINESWEEPER_BOARD_SETTINGS;
   globalThis.MIDI_KEYBOARD_LAYOUTS = MIDI_KEYBOARD_LAYOUTS;
   globalThis.MIDI_DEFAULT_KEYBOARD_LAYOUT_ID = MIDI_DEFAULT_KEYBOARD_LAYOUT_ID;

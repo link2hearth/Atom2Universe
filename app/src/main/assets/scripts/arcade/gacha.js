@@ -3013,17 +3013,21 @@ function updateGachaConfettiCanvasSize() {
   const width = measuredWidth > 0 ? measuredWidth : (fallbackWidth > 0 ? fallbackWidth : 0);
   const height = measuredHeight > 0 ? measuredHeight : (fallbackHeight > 0 ? fallbackHeight : 0);
 
+  const rawDpr = typeof window !== 'undefined' && Number.isFinite(window.devicePixelRatio)
+    ? window.devicePixelRatio
+    : 1;
+  const configuredMaxDpr = typeof globalThis !== 'undefined' && typeof globalThis.MAX_CANVAS_DEVICE_PIXEL_RATIO === 'number'
+    ? Math.max(1, globalThis.MAX_CANVAS_DEVICE_PIXEL_RATIO)
+    : 1;
+  const dpr = Math.min(rawDpr, configuredMaxDpr);
   if (width <= 0 || height <= 0) {
+    gachaConfettiState.dpr = dpr;
     gachaConfettiState.width = 0;
     gachaConfettiState.height = 0;
     gachaConfettiState.centerX = 0;
     gachaConfettiState.centerY = 0;
     return;
   }
-
-  const dpr = typeof window !== 'undefined' && Number.isFinite(window.devicePixelRatio)
-    ? window.devicePixelRatio
-    : 1;
   const displayWidth = Math.max(1, Math.round(width));
   const displayHeight = Math.max(1, Math.round(height));
   const pixelWidth = Math.max(1, Math.round(displayWidth * dpr));
