@@ -22,8 +22,8 @@ const COLLECTION_MULTIPLIER_LABEL_KEY = 'scripts.config.elementBonuses.collectio
  */
 const PERFORMANCE_MODE_SETTINGS = Object.freeze({
   fluid: Object.freeze({
-    apcFlushIntervalMs: 0,
-    apsFlushIntervalMs: 0
+    apcFlushIntervalMs: 16,
+    apsFlushIntervalMs: 16
   }),
   eco: Object.freeze({
     apcFlushIntervalMs: 200,
@@ -3542,4 +3542,5 @@ GAME_CONFIG.progression.defaultTheme = GAME_CONFIG.themes.default;
 if (typeof globalThis !== 'undefined') {
   globalThis.GAME_CONFIG = GAME_CONFIG;
 }
+
 
