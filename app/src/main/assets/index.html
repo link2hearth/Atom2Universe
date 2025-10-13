@@ -2774,6 +2774,32 @@
               </div>
             </div>
           </div>
+          <div class="option-row option-row--performance">
+            <div class="option-field option-field--performance-mode">
+              <label for="performanceModeSelect" data-i18n="index.sections.options.performance.label">
+                Mode de performance
+              </label>
+              <select
+                id="performanceModeSelect"
+                aria-label="Choisir le mode de performance du jeu"
+                data-i18n="aria-label:index.sections.options.performance.ariaLabel"
+              >
+                <option value="fluid" data-i18n="index.sections.options.performance.options.fluid">
+                  Fluide (60 fps)
+                </option>
+                <option value="eco" data-i18n="index.sections.options.performance.options.eco">
+                  Éco (mises à jour réduites)
+                </option>
+              </select>
+              <p
+                class="option-note"
+                id="performanceModeNote"
+                data-i18n="index.sections.options.performance.note.fluid"
+              >
+                Mode fluide : mises à jour fréquentes pour une sensation immédiate.
+              </p>
+            </div>
+          </div>
           <div class="option-row option-row--ui-preferences">
             <div class="option-field option-field--ui-scale">
               <label for="uiScaleSelect" data-i18n="index.sections.options.uiScale.label">

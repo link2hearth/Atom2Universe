@@ -778,6 +778,18 @@
             "vt323": "VT323"
           }
         },
+        "performance": {
+          "label": "Performance mode",
+          "ariaLabel": "Choose the game's performance mode",
+          "options": {
+            "fluid": "Fluid (60 FPS)",
+            "eco": "Eco mode (reduced updates)"
+          },
+          "note": {
+            "fluid": "Fluid mode: frequent updates for instant feedback.",
+            "eco": "Eco mode: batches clicks every 200 ms and APS once per second to save battery."
+          }
+        },
         "clickSound": {
           "title": "Clicker sound",
           "ariaLabel": "Toggle the clicker pop sound",
