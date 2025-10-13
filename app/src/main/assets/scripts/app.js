@@ -105,6 +105,8 @@ const LANGUAGE_STORAGE_KEY = 'atom2univers.language';
 const CLICK_SOUND_STORAGE_KEY = 'atom2univers.options.clickSoundMuted';
 const CRIT_ATOM_VISUALS_STORAGE_KEY = 'atom2univers.options.critAtomVisualsDisabled';
 const TEXT_FONT_STORAGE_KEY = 'atom2univers.options.textFont';
+const INFO_WELCOME_COLLAPSED_STORAGE_KEY = 'atom2univers.info.welcomeCollapsed';
+const INFO_CHARACTERS_COLLAPSED_STORAGE_KEY = 'atom2univers.info.charactersCollapsed';
 const TEXT_FONT_DEFAULT = 'orbitron';
 const TEXT_FONT_CHOICES = Object.freeze({
   orbitron: {
@@ -3838,6 +3840,9 @@ function collectDomElements() {
   infoShopBonuses: document.getElementById('infoShopBonuses'),
   infoShopBonusCard: document.getElementById('infoShopBonusCard'),
   infoElementBonusCard: document.getElementById('infoElementBonusCard'),
+  infoWelcomeCard: document.querySelector('.info-card--welcome'),
+  infoWelcomeContent: document.getElementById('info-welcome-content'),
+  infoWelcomeToggle: document.getElementById('infoWelcomeToggle'),
   infoCharactersCard: document.querySelector('.info-card--characters'),
   infoCharactersContent: document.getElementById('info-characters-content'),
   infoCharactersToggle: document.getElementById('infoCharactersToggle'),
@@ -4651,6 +4656,81 @@ function updateInfoBonusVisibility() {
   }
 }
 
+function readStoredInfoCardCollapsed(storageKey, defaultValue = false) {
+  try {
+    const stored = globalThis.localStorage?.getItem(storageKey);
+    if (typeof stored === 'string') {
+      const normalized = stored.trim().toLowerCase();
+      if (normalized === 'true') {
+        return true;
+      }
+      if (normalized === 'false') {
+        return false;
+      }
+    }
+  } catch (error) {
+    console.warn('Unable to read info card preference', storageKey, error);
+  }
+  return !!defaultValue;
+}
+
+function writeStoredInfoCardCollapsed(storageKey, collapsed) {
+  try {
+    globalThis.localStorage?.setItem(storageKey, collapsed ? 'true' : 'false');
+  } catch (error) {
+    console.warn('Unable to persist info card preference', storageKey, error);
+  }
+}
+
+function updateInfoWelcomeToggleLabel(collapsed) {
+  if (!elements.infoWelcomeToggle) {
+    return;
+  }
+  const key = collapsed
+    ? 'index.sections.info.welcome.toggle.expand'
+    : 'index.sections.info.welcome.toggle.collapse';
+  const fallback = collapsed ? 'Expand' : 'Collapse';
+  const label = translateOrDefault(key, fallback);
+  elements.infoWelcomeToggle.setAttribute('data-i18n', key);
+  elements.infoWelcomeToggle.textContent = label;
+  elements.infoWelcomeToggle.setAttribute('aria-label', label);
+}
+
+function setInfoWelcomeCollapsed(collapsed, options = {}) {
+  if (!elements.infoWelcomeCard || !elements.infoWelcomeContent || !elements.infoWelcomeToggle) {
+    return;
+  }
+  const shouldCollapse = !!collapsed;
+  elements.infoWelcomeCard.classList.toggle('info-card--collapsed', shouldCollapse);
+  elements.infoWelcomeContent.hidden = shouldCollapse;
+  elements.infoWelcomeContent.setAttribute('aria-hidden', shouldCollapse ? 'true' : 'false');
+  elements.infoWelcomeToggle.setAttribute('aria-expanded', shouldCollapse ? 'false' : 'true');
+  updateInfoWelcomeToggleLabel(shouldCollapse);
+  if (options.persist !== false) {
+    writeStoredInfoCardCollapsed(INFO_WELCOME_COLLAPSED_STORAGE_KEY, shouldCollapse);
+  }
+}
+
+function toggleInfoWelcomeCollapsed() {
+  if (!elements.infoWelcomeCard) {
+    return;
+  }
+  const currentlyCollapsed = elements.infoWelcomeCard.classList.contains('info-card--collapsed');
+  setInfoWelcomeCollapsed(!currentlyCollapsed);
+}
+
+function initInfoWelcomeCard() {
+  if (!elements.infoWelcomeCard || !elements.infoWelcomeContent || !elements.infoWelcomeToggle) {
+    return;
+  }
+  const initialCollapsed = readStoredInfoCardCollapsed(INFO_WELCOME_COLLAPSED_STORAGE_KEY, false);
+  setInfoWelcomeCollapsed(initialCollapsed, { persist: false });
+  elements.infoWelcomeToggle.addEventListener('click', event => {
+    event.preventDefault();
+    toggleInfoWelcomeCollapsed();
+  });
+}
+
 function updateInfoCharactersToggleLabel(collapsed) {
   if (!elements.infoCharactersToggle) {
     return;
@@ -4665,7 +4745,7 @@ function updateInfoCharactersToggleLabel(collapsed) {
   elements.infoCharactersToggle.setAttribute('aria-label', label);
 }
 
-function setInfoCharactersCollapsed(collapsed) {
+function setInfoCharactersCollapsed(collapsed, options = {}) {
   if (!elements.infoCharactersCard || !elements.infoCharactersContent || !elements.infoCharactersToggle) {
     return;
   }
@@ -4675,6 +4755,9 @@ function setInfoCharactersCollapsed(collapsed) {
   elements.infoCharactersContent.setAttribute('aria-hidden', shouldCollapse ? 'true' : 'false');
   elements.infoCharactersToggle.setAttribute('aria-expanded', shouldCollapse ? 'false' : 'true');
   updateInfoCharactersToggleLabel(shouldCollapse);
+  if (options.persist !== false) {
+    writeStoredInfoCardCollapsed(INFO_CHARACTERS_COLLAPSED_STORAGE_KEY, shouldCollapse);
+  }
 }
 
 function toggleInfoCharactersCollapsed() {
@@ -4689,13 +4772,29 @@ function initInfoCharactersCard() {
   if (!elements.infoCharactersCard || !elements.infoCharactersContent || !elements.infoCharactersToggle) {
     return;
   }
-  elements.infoCharactersContent.hidden = false;
-  elements.infoCharactersContent.setAttribute('aria-hidden', 'false');
-  setInfoCharactersCollapsed(false);
+  const initialCollapsed = readStoredInfoCardCollapsed(INFO_CHARACTERS_COLLAPSED_STORAGE_KEY, false);
+  setInfoCharactersCollapsed(initialCollapsed, { persist: false });
   elements.infoCharactersToggle.addEventListener('click', event => {
     event.preventDefault();
     toggleInfoCharactersCollapsed();
   });
+}
+
+function subscribeInfoWelcomeLanguageUpdates() {
+  const handler = () => {
+    const collapsed = elements.infoWelcomeCard
+      ? elements.infoWelcomeCard.classList.contains('info-card--collapsed')
+      : false;
+    updateInfoWelcomeToggleLabel(collapsed);
+  };
+  const api = getI18nApi();
+  if (api && typeof api.onLanguageChanged === 'function') {
+    api.onLanguageChanged(handler);
+    return;
+  }
+  if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
+    globalThis.addEventListener('i18n:languagechange', handler);
+  }
 }
 
 function subscribeInfoCharactersLanguageUpdates() {
@@ -9028,6 +9127,7 @@ function bindDomEventListeners() {
     document.body.classList.remove('view-game');
   }
 
+  initInfoWelcomeCard();
   initInfoCharactersCard();
 
   if (elements.devkitOverlay) {
@@ -13137,6 +13237,7 @@ function initializeDomBoundModules() {
   subscribeClickSoundLanguageUpdates();
   initCritAtomOption();
   subscribeCritAtomLanguageUpdates();
+  subscribeInfoWelcomeLanguageUpdates();
   subscribeInfoCharactersLanguageUpdates();
   updateDevKitUI();
   if (typeof initParticulesGame === 'function') {

@@ -167,6 +167,12 @@
           "title": "Bonus éléments",
           "subtitle": "Nucléosynthèse primordiale · Spallation cosmique · Étoiles simples · Supernovae · Étoiles massives · Artificiels"
         },
+        "welcome": {
+          "toggle": {
+            "collapse": "Réduire",
+            "expand": "Dérouler"
+          }
+        },
         "characters": {
           "title": "Qui sont les personnages ?",
           "subtitle": "Les esprits brillants qui accompagnent votre aventure.",

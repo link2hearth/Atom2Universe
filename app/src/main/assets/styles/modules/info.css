@@ -156,6 +156,10 @@ body.theme-aurora .info-card {
   gap: clamp(0.9rem, 1.6vw, 1.3rem);
 }
 
+.info-card__content--welcome {
+  gap: clamp(0.8rem, 1.6vw, 1.4rem);
+}
+
 .info-card__content--characters {
   gap: clamp(1rem, 1.8vw, 1.5rem);
 }

@@ -167,6 +167,12 @@
           "title": "Element bonuses",
           "subtitle": "Primordial nucleosynthesis · Cosmic spallation · Simple stars · Supernovae · Massive stars · Artificial"
         },
+        "welcome": {
+          "toggle": {
+            "collapse": "Collapse",
+            "expand": "Expand"
+          }
+        },
         "characters": {
           "title": "Who are the characters?",
           "subtitle": "The brilliant minds guiding your journey.",
