@@ -1096,6 +1096,13 @@ const GAME_CONFIG = {
     },
     starfield: {
       starCount: 60
+    },
+    /**
+     * Animation du bouton principal.
+     * - `idleTimeoutSeconds` : durée d'inactivité avant de figer l'animation (0 = animation continue).
+     */
+    clickerAnimation: {
+      idleTimeoutSeconds: 6
     }
   },
 

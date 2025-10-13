@@ -8461,6 +8461,18 @@ function updateApsCritTimer(deltaSeconds) {
 const CLICK_WINDOW_MS = CONFIG.presentation?.clicks?.windowMs ?? 1000;
 const MAX_CLICKS_PER_SECOND = CONFIG.presentation?.clicks?.maxClicksPerSecond ?? 20;
 const clickHistory = [];
+const CLICKER_IDLE_TIMEOUT_MS = (() => {
+  const settings = CONFIG.presentation?.clickerAnimation;
+  const idleTimeoutSeconds = Number(settings?.idleTimeoutSeconds);
+  if (!Number.isFinite(idleTimeoutSeconds) || idleTimeoutSeconds <= 0) {
+    return 0;
+  }
+  return idleTimeoutSeconds * 1000;
+})();
+let clickerAnimationLastActive = typeof performance !== 'undefined' && typeof performance.now === 'function'
+  ? performance.now()
+  : Date.now();
+let clickerAnimationIdle = false;
 let targetClickStrength = 0;
 let displayedClickStrength = 0;
 
@@ -8483,6 +8495,65 @@ const atomAnimationState = {
 };
 
 const ATOM_REBOUND_AMPLITUDE_SCALE = 0.5;
+
+function getClickerTimestamp() {
+  if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+    return performance.now();
+  }
+  return Date.now();
+}
+
+function markClickerAnimationActive(now = getClickerTimestamp()) {
+  clickerAnimationLastActive = now;
+  clickerAnimationIdle = false;
+}
+
+function applyClickerIdleState() {
+  targetClickStrength = 0;
+  displayedClickStrength = 0;
+  applyClickStrength(0);
+  const visual = getAtomVisualElement();
+  if (visual) {
+    visual.style.setProperty('--shake-x', '0px');
+    visual.style.setProperty('--shake-y', '0px');
+    visual.style.setProperty('--shake-rot', '0deg');
+    visual.style.setProperty('--shake-scale-x', '1');
+    visual.style.setProperty('--shake-scale-y', '1');
+  }
+  atomAnimationState.intensity = 0;
+  atomAnimationState.posX = 0;
+  atomAnimationState.posY = 0;
+  atomAnimationState.velX = 0;
+  atomAnimationState.velY = 0;
+  atomAnimationState.tilt = 0;
+  atomAnimationState.tiltVelocity = 0;
+  atomAnimationState.squash = 0;
+  atomAnimationState.squashVelocity = 0;
+  atomAnimationState.lastInputIntensity = 0;
+  atomAnimationState.impulseTimer = 0;
+  atomAnimationState.lastTime = null;
+}
+
+function shouldSkipClickerAnimation(now = getClickerTimestamp()) {
+  if (!isManualClickContextActive()) {
+    return true;
+  }
+  if (typeof document !== 'undefined' && document.hidden) {
+    return true;
+  }
+  if (!Number.isFinite(CLICKER_IDLE_TIMEOUT_MS) || CLICKER_IDLE_TIMEOUT_MS <= 0) {
+    return false;
+  }
+  if (!Number.isFinite(now)) {
+    return false;
+  }
+  const last = clickerAnimationLastActive;
+  if (!Number.isFinite(last)) {
+    return false;
+  }
+  const elapsed = now - last;
+  return Number.isFinite(elapsed) && elapsed >= CLICKER_IDLE_TIMEOUT_MS;
+}
 
 function getAtomVisualElement() {
   const current = elements.atomVisual;
@@ -8796,6 +8867,19 @@ function updateAtomSpring(now = performance.now(), drive = 0) {
 
 function updateClickVisuals(now = performance.now()) {
   updateClickHistory(now);
+  if (shouldSkipClickerAnimation(now)) {
+    if (!clickerAnimationIdle) {
+      clickerAnimationIdle = true;
+      applyClickerIdleState();
+    }
+    return;
+  }
+
+  if (clickerAnimationIdle) {
+    clickerAnimationIdle = false;
+    atomAnimationState.lastTime = null;
+  }
+
   displayedClickStrength += (targetClickStrength - displayedClickStrength) * 0.28;
   if (Math.abs(targetClickStrength - displayedClickStrength) < 0.0003) {
     displayedClickStrength = targetClickStrength;
@@ -8806,6 +8890,7 @@ function updateClickVisuals(now = performance.now()) {
 
 function registerManualClick() {
   const now = performance.now();
+  markClickerAnimationActive(now);
   clickHistory.push(now);
   updateClickVisuals(now);
   injectAtomImpulse(now);
@@ -9396,6 +9481,7 @@ function showPage(pageId) {
   document.body.classList.toggle('view-game-of-life', pageId === 'gameOfLife');
   if (pageId === 'game') {
     randomizeAtomButtonImage();
+    markClickerAnimationActive();
   }
   if (pageId === 'metaux') {
     initMetauxGame();
@@ -9468,6 +9554,10 @@ document.addEventListener('visibilitychange', () => {
   if (document.hidden) {
     hiddenSinceTimestamp = Date.now();
     gamePageVisibleSince = null;
+    if (!clickerAnimationIdle) {
+      clickerAnimationIdle = true;
+      applyClickerIdleState();
+    }
     if (particulesGame && activePage === 'arcade') {
       particulesGame.onLeave();
     }
@@ -9503,6 +9593,7 @@ document.addEventListener('visibilitychange', () => {
 
   if (isManualClickContextActive()) {
     gamePageVisibleSince = performance.now();
+    markClickerAnimationActive();
     if (particulesGame && activePage === 'arcade') {
       particulesGame.onEnter();
     }
