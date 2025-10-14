@@ -10223,10 +10223,11 @@ function bindDomEventListeners() {
     const atomButton = elements.atomButton;
 
     atomButton.addEventListener('click', event => {
-      event.preventDefault();
-      event.stopPropagation();
-      if (event.detail !== 0) {
-        return;
+      if (typeof event?.preventDefault === 'function') {
+        event.preventDefault();
+      }
+      if (typeof event?.stopPropagation === 'function') {
+        event.stopPropagation();
       }
       handleManualAtomClick({ contextId: 'game' });
     });
