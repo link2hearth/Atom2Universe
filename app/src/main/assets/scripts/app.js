@@ -9325,6 +9325,7 @@ function shouldTriggerGlobalClick(event) {
 
 const POINTER_TRIGGER_SUPPRESSION_WINDOW_MS = 600;
 let lastManualPointerTriggerTime = 0;
+let manualScrollLockActive = false;
 
 function getHighResolutionTimestamp() {
   if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
@@ -9353,7 +9354,16 @@ function updateManualScrollLock(manualPageActive) {
   if (typeof document === 'undefined' || !document.body) {
     return;
   }
-  document.body.classList.toggle('manual-scroll-lock', Boolean(manualPageActive));
+  const shouldLock = Boolean(manualPageActive);
+  if (shouldLock === manualScrollLockActive) {
+    return;
+  }
+  manualScrollLockActive = shouldLock;
+  if (shouldLock) {
+    document.body.classList.add('manual-scroll-lock');
+  } else {
+    document.body.classList.remove('manual-scroll-lock');
+  }
 }
 
 function showPage(pageId) {
