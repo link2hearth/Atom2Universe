@@ -1,0 +1,535 @@
+.page--game-of-life {
+  position: relative;
+  min-height: 100vh;
+  width: 100vw;
+  padding: 0;
+  color: var(--gol-text-color, var(--color-text-primary, #f5f7ff));
+  overflow: hidden;
+  --gol-text-color: var(--color-text-primary, #f5f7ff);
+  --gol-canvas-bg: #040712;
+  --gol-menu-handle-bg: rgba(144, 170, 240, 0.32);
+  --gol-menu-handle-shadow: inset 0 1px 2px rgba(6, 12, 28, 0.55);
+  --gol-menu-toggle-bg: rgba(18, 24, 46, 0.85);
+  --gol-menu-toggle-color: #f5f7ff;
+  --gol-menu-toggle-shadow: 0 12px 24px rgba(4, 10, 24, 0.35);
+  --gol-menu-toggle-shadow-hover: 0 18px 36px rgba(60, 120, 255, 0.35);
+  --gol-menu-body-bg: rgba(10, 14, 28, 0.82);
+  --gol-menu-body-shadow: 0 24px 48px rgba(3, 8, 20, 0.45);
+  --gol-toolbar-bg: rgba(6, 10, 22, 0.78);
+  --gol-toolbar-shadow: 0 12px 24px rgba(2, 6, 14, 0.35);
+  --gol-button-bg: linear-gradient(135deg, rgba(80, 150, 255, 0.9), rgba(110, 85, 255, 0.95));
+  --gol-button-color: #fff;
+  --gol-button-shadow: 0 12px 24px rgba(70, 120, 255, 0.35);
+  --gol-slider-track-bg: rgba(255, 255, 255, 0.16);
+  --gol-slider-thumb-bg: linear-gradient(135deg, #90f7ff, #7f6bff);
+  --gol-slider-thumb-glow: rgba(144, 247, 255, 0.18);
+  --gol-status-color: rgba(230, 236, 255, 0.86);
+  --gol-status-accent-color: rgba(255, 255, 255, 0.88);
+  --gol-panel-bg: rgba(10, 14, 28, 0.78);
+  --gol-panel-shadow: 0 18px 36px rgba(4, 10, 24, 0.4);
+  --gol-description-color: rgba(220, 230, 255, 0.75);
+  --gol-input-bg: rgba(12, 18, 36, 0.9);
+  --gol-input-border: rgba(120, 150, 220, 0.35);
+  --gol-hint-color: rgba(200, 210, 240, 0.72);
+  --gol-empty-color: rgba(220, 228, 255, 0.72);
+  --gol-badge-bg: rgba(80, 140, 255, 0.24);
+  --gol-meta-color: rgba(200, 210, 240, 0.72);
+  --gol-button-secondary-bg: rgba(32, 48, 86, 0.88);
+  --gol-button-secondary-color: rgba(220, 230, 255, 0.9);
+  --gol-button-secondary-border: rgba(120, 150, 220, 0.35);
+  --gol-button-secondary-border-hover: rgba(160, 190, 250, 0.65);
+}
+
+.game-of-life__canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  touch-action: none;
+  background: var(--gol-canvas-bg, #000);
+}
+
+.game-of-life__menu {
+  --game-of-life-menu-scale: 0.5;
+  position: fixed;
+  top: 50%;
+  right: 1.5rem;
+  transform: translateY(-50%) scale(var(--game-of-life-menu-scale));
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: calc(0.5rem * var(--game-of-life-menu-scale));
+  z-index: 5;
+  cursor: grab;
+  width: min(
+    calc(40rem * var(--game-of-life-menu-scale)),
+    calc(100vw - 3rem)
+  );
+  max-height: min(
+    calc((100vh - 2.5rem) * var(--game-of-life-menu-scale)),
+    calc(100vh - 2.5rem)
+  );
+  font-size: calc(1rem * var(--game-of-life-menu-scale));
+}
+
+.game-of-life__menu:active {
+  cursor: grabbing;
+}
+
+.game-of-life__menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: calc(0.5rem * var(--game-of-life-menu-scale));
+  padding: calc(0.35rem * var(--game-of-life-menu-scale))
+    calc(0.35rem * var(--game-of-life-menu-scale))
+    0
+    calc(0.35rem * var(--game-of-life-menu-scale));
+}
+
+.game-of-life__menu-handle {
+  flex: 1 1 auto;
+  max-width: calc(6rem * var(--game-of-life-menu-scale));
+  height: calc(0.35rem * var(--game-of-life-menu-scale));
+  border-radius: 999px;
+  background: var(--gol-menu-handle-bg, rgba(160, 185, 255, 0.35));
+  box-shadow: var(--gol-menu-handle-shadow, inset 0 1px 2px rgba(20, 30, 60, 0.45));
+  align-self: center;
+  cursor: inherit;
+}
+
+.game-of-life__menu-toggle {
+  border: none;
+  border-radius: 999px;
+  padding: calc(0.35rem * var(--game-of-life-menu-scale))
+    calc(0.75rem * var(--game-of-life-menu-scale));
+  font-weight: 600;
+  font-size: calc(0.85rem * var(--game-of-life-menu-scale));
+  background: var(--gol-menu-toggle-bg, rgba(18, 24, 46, 0.85));
+  color: var(--gol-menu-toggle-color, #f5f7ff);
+  box-shadow: var(--gol-menu-toggle-shadow, 0 12px 24px rgba(4, 10, 24, 0.35));
+  cursor: pointer;
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.game-of-life__menu-toggle:hover,
+.game-of-life__menu-toggle:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: var(--gol-menu-toggle-shadow-hover, 0 18px 36px rgba(60, 120, 255, 0.35));
+}
+
+.game-of-life__menu-body {
+  border-radius: calc(18px * var(--game-of-life-menu-scale));
+  background: var(--gol-menu-body-bg, rgba(10, 14, 28, 0.82));
+  box-shadow: var(--gol-menu-body-shadow, 0 24px 48px rgba(3, 8, 20, 0.45));
+  backdrop-filter: blur(12px);
+  padding: calc(1.1rem * var(--game-of-life-menu-scale))
+    calc(1.25rem * var(--game-of-life-menu-scale))
+    calc(1.25rem * var(--game-of-life-menu-scale));
+  display: flex;
+  flex-direction: column;
+  gap: calc(1.1rem * var(--game-of-life-menu-scale));
+  width: 100%;
+  box-sizing: border-box;
+  max-height: min(
+    calc((100vh - 5rem) * var(--game-of-life-menu-scale)),
+    calc(38rem * var(--game-of-life-menu-scale))
+  );
+  overflow-y: auto;
+  scrollbar-gutter: stable both-edges;
+  cursor: auto;
+}
+
+.view-game-of-life .game-of-life__menu {
+  transform: translateY(-50%);
+}
+
+.game-of-life__menu[data-expanded='false'] .game-of-life__menu-body {
+  display: none;
+}
+
+.game-of-life__menu-content {
+  display: grid;
+  gap: calc(1.1rem * var(--game-of-life-menu-scale));
+}
+
+.game-of-life__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: calc(0.65rem * var(--game-of-life-menu-scale))
+    calc(0.75rem * var(--game-of-life-menu-scale));
+  margin-top: 0;
+  padding: calc(0.6rem * var(--game-of-life-menu-scale))
+    calc(0.7rem * var(--game-of-life-menu-scale));
+  border-radius: calc(14px * var(--game-of-life-menu-scale));
+  background: var(--gol-toolbar-bg, rgba(6, 10, 22, 0.78));
+  box-shadow: var(--gol-toolbar-shadow, 0 12px 24px rgba(2, 6, 14, 0.35));
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.game-of-life__toolbar-group {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(0.6rem * var(--game-of-life-menu-scale));
+}
+
+.game-of-life__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(0.4rem * var(--game-of-life-menu-scale));
+  min-width: calc(42px * var(--game-of-life-menu-scale));
+  padding: calc(0.55rem * var(--game-of-life-menu-scale))
+    calc(0.85rem * var(--game-of-life-menu-scale));
+  border-radius: 999px;
+  border: none;
+  background: var(--gol-button-bg, linear-gradient(135deg, rgba(80, 150, 255, 0.9), rgba(110, 85, 255, 0.95)));
+  color: var(--gol-button-color, #fff);
+  font-weight: 600;
+  font-size: calc(0.95rem * var(--game-of-life-menu-scale));
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease;
+}
+
+.game-of-life__button[aria-pressed="true"],
+.game-of-life__button:focus-visible,
+.game-of-life__button:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--gol-button-shadow, 0 12px 24px rgba(70, 120, 255, 0.35));
+}
+
+.game-of-life__button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.game-of-life__slider {
+  appearance: none;
+  width: calc(140px * var(--game-of-life-menu-scale));
+  height: calc(6px * var(--game-of-life-menu-scale));
+  border-radius: 999px;
+  background: var(--gol-slider-track-bg, rgba(255, 255, 255, 0.16));
+  outline: none;
+}
+
+.game-of-life__slider::-webkit-slider-thumb {
+  appearance: none;
+  width: calc(18px * var(--game-of-life-menu-scale));
+  height: calc(18px * var(--game-of-life-menu-scale));
+  border-radius: 50%;
+  background: var(--gol-slider-thumb-bg, linear-gradient(135deg, #90f7ff, #7f6bff));
+  box-shadow: 0 0 0 calc(4px * var(--game-of-life-menu-scale)) var(--gol-slider-thumb-glow, rgba(144, 247, 255, 0.18));
+  cursor: pointer;
+}
+
+.game-of-life__slider::-moz-range-thumb {
+  width: calc(18px * var(--game-of-life-menu-scale));
+  height: calc(18px * var(--game-of-life-menu-scale));
+  border-radius: 50%;
+  background: var(--gol-slider-thumb-bg, linear-gradient(135deg, #90f7ff, #7f6bff));
+  border: none;
+  box-shadow: 0 0 0 calc(4px * var(--game-of-life-menu-scale)) var(--gol-slider-thumb-glow, rgba(144, 247, 255, 0.18));
+  cursor: pointer;
+}
+
+.game-of-life__status {
+  display: flex;
+  align-items: center;
+  gap: calc(0.75rem * var(--game-of-life-menu-scale));
+  margin-left: auto;
+  font-size: calc(0.95rem * var(--game-of-life-menu-scale));
+  color: var(--gol-status-color, rgba(230, 236, 255, 0.86));
+}
+
+.game-of-life__status dt {
+  font-weight: 600;
+  color: var(--gol-status-accent-color, rgba(255, 255, 255, 0.88));
+}
+
+.game-of-life__status dd {
+  margin: 0;
+}
+
+.game-of-life__sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: calc(1.1rem * var(--game-of-life-menu-scale));
+}
+
+.game-of-life__panel {
+  background: var(--gol-panel-bg, rgba(10, 14, 28, 0.78));
+  border-radius: calc(18px * var(--game-of-life-menu-scale));
+  padding: calc(1.25rem * var(--game-of-life-menu-scale));
+  box-shadow: var(--gol-panel-shadow, 0 18px 36px rgba(4, 10, 24, 0.4));
+}
+
+.game-of-life__panel-title {
+  margin: 0 0 calc(0.85rem * var(--game-of-life-menu-scale));
+  font-size: calc(1.1rem * var(--game-of-life-menu-scale));
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.game-of-life__pattern-description {
+  margin: calc(0.5rem * var(--game-of-life-menu-scale)) 0 0;
+  font-size: calc(0.9rem * var(--game-of-life-menu-scale));
+  color: var(--gol-description-color, rgba(220, 230, 255, 0.75));
+}
+
+.game-of-life__selection {
+  margin-top: calc(0.85rem * var(--game-of-life-menu-scale));
+  padding: calc(0.85rem * var(--game-of-life-menu-scale));
+  border-radius: calc(14px * var(--game-of-life-menu-scale));
+  background: var(--gol-selection-bg, rgba(16, 24, 46, 0.72));
+  border: 1px solid var(--gol-selection-border, rgba(120, 160, 255, 0.35));
+  display: grid;
+  gap: calc(0.65rem * var(--game-of-life-menu-scale));
+}
+
+.game-of-life__selection-title {
+  margin: 0;
+  font-size: calc(1rem * var(--game-of-life-menu-scale));
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.game-of-life__selection-hint {
+  margin: 0;
+  font-size: calc(0.82rem * var(--game-of-life-menu-scale));
+  color: var(--gol-hint-color, rgba(200, 210, 240, 0.72));
+}
+
+.game-of-life__selection-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(0.65rem * var(--game-of-life-menu-scale));
+}
+
+.game-of-life__random-form {
+  display: grid;
+  gap: calc(0.75rem * var(--game-of-life-menu-scale));
+}
+
+.game-of-life__field {
+  display: flex;
+  flex-direction: column;
+  gap: calc(0.35rem * var(--game-of-life-menu-scale));
+}
+
+.game-of-life__label {
+  font-weight: 600;
+  font-size: calc(0.92rem * var(--game-of-life-menu-scale));
+}
+
+.game-of-life__input,
+.game-of-life__select {
+  width: 100%;
+  border-radius: calc(12px * var(--game-of-life-menu-scale));
+  padding: calc(0.55rem * var(--game-of-life-menu-scale))
+    calc(0.75rem * var(--game-of-life-menu-scale));
+  border: 1px solid var(--gol-input-border, rgba(120, 150, 220, 0.35));
+  background: var(--gol-input-bg, rgba(12, 18, 36, 0.9));
+  color: inherit;
+  font-size: calc(0.95rem * var(--game-of-life-menu-scale));
+}
+
+.game-of-life__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(0.75rem * var(--game-of-life-menu-scale));
+}
+
+.game-of-life__hint {
+  font-size: calc(0.82rem * var(--game-of-life-menu-scale));
+  color: var(--gol-hint-color, rgba(200, 210, 240, 0.72));
+  margin-top: calc(0.4rem * var(--game-of-life-menu-scale));
+}
+
+.game-of-life__empty-state {
+  font-size: calc(0.9rem * var(--game-of-life-menu-scale));
+  color: var(--gol-empty-color, rgba(220, 228, 255, 0.72));
+}
+
+.game-of-life__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(0.15rem * var(--game-of-life-menu-scale))
+    calc(0.55rem * var(--game-of-life-menu-scale));
+  border-radius: 999px;
+  background: var(--gol-badge-bg, rgba(80, 140, 255, 0.24));
+  font-size: calc(0.78rem * var(--game-of-life-menu-scale));
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.game-of-life__pattern-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(0.35rem * var(--game-of-life-menu-scale));
+  color: var(--gol-meta-color, rgba(200, 210, 240, 0.72));
+  font-size: calc(0.82rem * var(--game-of-life-menu-scale));
+}
+
+.game-of-life__toolbar .game-of-life__button--secondary {
+  background: var(--gol-button-secondary-bg, rgba(32, 48, 86, 0.88));
+  color: var(--gol-button-secondary-color, rgba(220, 230, 255, 0.9));
+  box-shadow: inset 0 0 0 1px var(--gol-button-secondary-border, rgba(120, 150, 220, 0.35));
+}
+
+.game-of-life__toolbar .game-of-life__button--secondary:hover,
+.game-of-life__toolbar .game-of-life__button--secondary:focus-visible {
+  box-shadow: inset 0 0 0 1px var(--gol-button-secondary-border-hover, rgba(160, 190, 250, 0.65));
+  transform: translateY(-1px);
+}
+
+body.theme-light .page--game-of-life {
+  --gol-text-color: #121a33;
+  --gol-canvas-bg: #f3f7ff;
+  --gol-menu-handle-bg: rgba(120, 150, 220, 0.35);
+  --gol-menu-handle-shadow: inset 0 1px 2px rgba(186, 202, 255, 0.5);
+  --gol-menu-toggle-bg: rgba(230, 236, 255, 0.95);
+  --gol-menu-toggle-color: #142040;
+  --gol-menu-toggle-shadow: 0 12px 24px rgba(18, 24, 40, 0.12);
+  --gol-menu-toggle-shadow-hover: 0 18px 36px rgba(70, 110, 200, 0.2);
+  --gol-menu-body-bg: rgba(244, 247, 255, 0.96);
+  --gol-menu-body-shadow: 0 20px 48px rgba(18, 24, 40, 0.18);
+  --gol-toolbar-bg: rgba(226, 234, 255, 0.9);
+  --gol-toolbar-shadow: 0 16px 32px rgba(18, 24, 40, 0.12);
+  --gol-button-bg: linear-gradient(135deg, rgba(98, 148, 255, 0.9), rgba(122, 196, 255, 0.95));
+  --gol-button-color: #102042;
+  --gol-button-shadow: 0 12px 24px rgba(90, 130, 220, 0.25);
+  --gol-slider-track-bg: rgba(24, 32, 58, 0.16);
+  --gol-slider-thumb-bg: linear-gradient(135deg, #7fb7ff, #6d8bff);
+  --gol-slider-thumb-glow: rgba(110, 160, 255, 0.22);
+  --gol-status-color: rgba(32, 44, 80, 0.78);
+  --gol-status-accent-color: rgba(16, 26, 52, 0.85);
+  --gol-panel-bg: rgba(237, 241, 255, 0.94);
+  --gol-panel-shadow: 0 18px 36px rgba(18, 24, 40, 0.14);
+  --gol-description-color: rgba(46, 60, 96, 0.72);
+  --gol-input-bg: rgba(226, 234, 255, 0.92);
+  --gol-input-border: rgba(98, 128, 210, 0.45);
+  --gol-hint-color: rgba(46, 60, 96, 0.68);
+  --gol-empty-color: rgba(46, 60, 96, 0.7);
+  --gol-badge-bg: rgba(120, 150, 230, 0.3);
+  --gol-meta-color: rgba(46, 60, 96, 0.68);
+  --gol-button-secondary-bg: rgba(206, 220, 255, 0.9);
+  --gol-button-secondary-color: #162044;
+  --gol-button-secondary-border: rgba(120, 150, 220, 0.45);
+  --gol-button-secondary-border-hover: rgba(90, 130, 210, 0.65);
+}
+
+body.theme-neon .page--game-of-life {
+  --gol-text-color: rgba(245, 247, 255, 0.95);
+  --gol-canvas-bg: #05031a;
+  --gol-menu-handle-bg: rgba(150, 180, 255, 0.4);
+  --gol-menu-handle-shadow: inset 0 1px 2px rgba(30, 40, 120, 0.55);
+  --gol-menu-toggle-bg: rgba(18, 20, 60, 0.88);
+  --gol-menu-toggle-color: rgba(248, 250, 255, 0.96);
+  --gol-menu-toggle-shadow: 0 16px 32px rgba(20, 16, 80, 0.45);
+  --gol-menu-toggle-shadow-hover: 0 22px 40px rgba(120, 80, 255, 0.45);
+  --gol-menu-body-bg: rgba(14, 18, 52, 0.9);
+  --gol-menu-body-shadow: 0 28px 54px rgba(18, 12, 64, 0.55);
+  --gol-toolbar-bg: rgba(12, 18, 56, 0.86);
+  --gol-toolbar-shadow: 0 16px 32px rgba(14, 8, 40, 0.45);
+  --gol-button-bg: linear-gradient(135deg, rgba(120, 90, 255, 0.95), rgba(96, 220, 255, 0.95));
+  --gol-button-color: #faffff;
+  --gol-button-shadow: 0 16px 32px rgba(100, 150, 255, 0.45);
+  --gol-slider-track-bg: rgba(190, 210, 255, 0.24);
+  --gol-slider-thumb-bg: linear-gradient(135deg, #90f7ff, #a06bff);
+  --gol-slider-thumb-glow: rgba(144, 247, 255, 0.25);
+  --gol-status-color: rgba(220, 230, 255, 0.82);
+  --gol-status-accent-color: rgba(255, 255, 255, 0.9);
+  --gol-panel-bg: rgba(12, 16, 50, 0.88);
+  --gol-panel-shadow: 0 24px 48px rgba(12, 10, 60, 0.55);
+  --gol-description-color: rgba(220, 230, 255, 0.78);
+  --gol-input-bg: rgba(14, 18, 52, 0.9);
+  --gol-input-border: rgba(140, 170, 255, 0.45);
+  --gol-hint-color: rgba(210, 220, 255, 0.78);
+  --gol-empty-color: rgba(224, 234, 255, 0.78);
+  --gol-badge-bg: rgba(140, 180, 255, 0.35);
+  --gol-meta-color: rgba(210, 220, 255, 0.78);
+  --gol-button-secondary-bg: rgba(40, 60, 120, 0.88);
+  --gol-button-secondary-color: rgba(234, 244, 255, 0.92);
+  --gol-button-secondary-border: rgba(140, 170, 255, 0.45);
+  --gol-button-secondary-border-hover: rgba(170, 200, 255, 0.65);
+}
+
+body.theme-aurora .page--game-of-life {
+  --gol-text-color: rgba(218, 255, 242, 0.9);
+  --gol-canvas-bg: #021712;
+  --gol-menu-handle-bg: rgba(96, 230, 190, 0.32);
+  --gol-menu-handle-shadow: inset 0 1px 2px rgba(10, 40, 28, 0.55);
+  --gol-menu-toggle-bg: rgba(12, 34, 28, 0.88);
+  --gol-menu-toggle-color: rgba(220, 255, 240, 0.95);
+  --gol-menu-toggle-shadow: 0 16px 32px rgba(8, 28, 18, 0.45);
+  --gol-menu-toggle-shadow-hover: 0 22px 40px rgba(40, 200, 150, 0.45);
+  --gol-menu-body-bg: rgba(10, 30, 26, 0.9);
+  --gol-menu-body-shadow: 0 26px 52px rgba(6, 28, 20, 0.5);
+  --gol-toolbar-bg: rgba(10, 34, 28, 0.82);
+  --gol-toolbar-shadow: 0 18px 36px rgba(6, 24, 18, 0.45);
+  --gol-button-bg: linear-gradient(135deg, rgba(28, 180, 130, 0.92), rgba(80, 240, 210, 0.95));
+  --gol-button-color: #f2fffb;
+  --gol-button-shadow: 0 16px 32px rgba(40, 200, 160, 0.4);
+  --gol-slider-track-bg: rgba(180, 250, 224, 0.22);
+  --gol-slider-thumb-bg: linear-gradient(135deg, #5fffb9, #36d6ff);
+  --gol-slider-thumb-glow: rgba(90, 255, 210, 0.28);
+  --gol-status-color: rgba(210, 250, 236, 0.82);
+  --gol-status-accent-color: rgba(230, 255, 244, 0.9);
+  --gol-panel-bg: rgba(12, 34, 28, 0.86);
+  --gol-panel-shadow: 0 22px 44px rgba(4, 28, 18, 0.5);
+  --gol-description-color: rgba(210, 250, 236, 0.78);
+  --gol-input-bg: rgba(12, 34, 28, 0.92);
+  --gol-input-border: rgba(90, 220, 180, 0.45);
+  --gol-hint-color: rgba(190, 245, 224, 0.75);
+  --gol-empty-color: rgba(200, 250, 230, 0.78);
+  --gol-badge-bg: rgba(72, 210, 170, 0.32);
+  --gol-meta-color: rgba(190, 240, 220, 0.76);
+  --gol-button-secondary-bg: rgba(20, 66, 54, 0.88);
+  --gol-button-secondary-color: rgba(214, 255, 242, 0.9);
+  --gol-button-secondary-border: rgba(90, 220, 180, 0.4);
+  --gol-button-secondary-border-hover: rgba(120, 255, 210, 0.6);
+}
+
+@media (max-width: 720px) {
+  .page--game-of-life {
+    padding: 1.5rem 1rem 2.5rem;
+  }
+
+  .game-of-life__menu {
+    top: auto;
+    bottom: 1rem;
+    right: 1rem;
+    transform: none;
+    width: min(
+      calc(40rem * var(--game-of-life-menu-scale)),
+      calc(100vw - 2rem)
+    );
+    max-height: calc((100vh - 2rem) * var(--game-of-life-menu-scale));
+  }
+
+  .view-game-of-life .game-of-life__menu {
+    transform: none;
+  }
+
+  .game-of-life__toolbar {
+    left: calc(1rem * var(--game-of-life-menu-scale));
+    right: calc(1rem * var(--game-of-life-menu-scale));
+  }
+
+  .game-of-life__status {
+    flex-basis: 100%;
+    justify-content: space-between;
+  }
+}
+
+.view-game-of-life .status-bar,
+.view-game-of-life .frenzy-status {
+  display: none;
+}
