@@ -11706,7 +11706,7 @@ function recalcProduction() {
   clickDetails.totalAddition = clickTotalAddition.clone();
   autoDetails.totalAddition = autoTotalAddition.clone();
 
-  const clickTotalMultiplier = LayeredNumber.one()
+  let clickTotalMultiplier = LayeredNumber.one()
     .multiply(clickShopBonus)
     .multiply(clickRarityProduct)
     .multiply(clickTrophyMultiplier);
@@ -11718,7 +11718,9 @@ function recalcProduction() {
   const apsCritMultiplierValue = getApsCritMultiplier();
   const apsCritMultiplier = toMultiplierLayered(apsCritMultiplierValue);
   const hasApsCritMultiplier = !isLayeredOne(apsCritMultiplier);
+  const apsCritLabel = translateOrDefault('scripts.app.metaux.critLabel', 'Critique APC/APS');
   if (hasApsCritMultiplier) {
+    clickTotalMultiplier = clickTotalMultiplier.multiply(apsCritMultiplier);
     autoTotalMultiplier = autoTotalMultiplier.multiply(apsCritMultiplier);
   }
 
@@ -11739,6 +11741,15 @@ function recalcProduction() {
   perClick = perClick.multiply(clickShopBonus);
   perClick = perClick.multiply(clickRarityProduct);
   perClick = perClick.multiply(clickTrophyMultiplier);
+  if (hasApsCritMultiplier) {
+    perClick = perClick.multiply(apsCritMultiplier);
+    clickDetails.multipliers.push({
+      id: 'apsCrit',
+      label: apsCritLabel,
+      value: apsCritMultiplier.clone(),
+      source: 'metaux'
+    });
+  }
   if (perClick.compare(LayeredNumber.zero()) < 0) {
     perClick = LayeredNumber.zero();
   }
@@ -11750,11 +11761,14 @@ function recalcProduction() {
     perSecond = perSecond.multiply(apsCritMultiplier);
     autoDetails.multipliers.push({
       id: 'apsCrit',
-      label: 'Critique APS',
+      label: apsCritLabel,
       value: apsCritMultiplier.clone(),
       source: 'metaux'
     });
   }
+  clickDetails.sources.multipliers.apsCrit = hasApsCritMultiplier
+    ? apsCritMultiplier.clone()
+    : LayeredNumber.one();
   autoDetails.sources.multipliers.apsCrit = hasApsCritMultiplier
     ? apsCritMultiplier.clone()
     : LayeredNumber.one();
@@ -12562,12 +12576,16 @@ function updateApsCritDisplay() {
     elements.statusApsCritMultiplier.hidden = !isActive;
     elements.statusApsCritMultiplier.setAttribute('aria-hidden', String(!isActive));
   }
-  panel.setAttribute(
-    'aria-label',
-    isActive
-      ? `Compteur critique APS actif : ${multiplierText} pendant ${chronoText}.`
-      : `Compteur critique APS inactif.`
+  const activeAriaLabel = translateOrDefault(
+    'scripts.app.metaux.critAriaActive',
+    `Compteur critique APC/APS actif : ${multiplierText} pendant ${chronoText}.`,
+    { multiplier: multiplierText, duration: chronoText }
   );
+  const inactiveAriaLabel = translateOrDefault(
+    'scripts.app.metaux.critAriaInactive',
+    'Compteur critique APC/APS inactif.'
+  );
+  panel.setAttribute('aria-label', isActive ? activeAriaLabel : inactiveAriaLabel);
 }
 
 function pulseApsCritPanel() {
