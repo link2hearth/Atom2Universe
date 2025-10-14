@@ -1082,20 +1082,20 @@
         "freeElectrons": {
           "name": "Free Electrons",
           "description": "Channel electrons to boost every quantum click.",
-          "effect": "Manual production: +1 APC per level. Every 25 levels, ionization doubles the total bonus.",
-          "effectSummary": "Manual production +1 APC per level. Ionization: bonus doubled every 25 levels."
+          "effect": "Manual production: +1 APC per level. Every 25 levels, ionization adds +10% to the total bonus.",
+          "effectSummary": "Manual production +1 APC per level. Ionization: +10% to the total bonus every 25 levels."
         },
         "physicsLab": {
           "name": "Physics Laboratory",
           "description": "Research teams supercharge your atomic production.",
-          "effect": "Passive production: +1 APS per level. Every 25 levels, ionization doubles the total bonus.",
-          "effectSummary": "Passive production +1 APS per level. Ionization: bonus doubled every 25 levels."
+          "effect": "Passive production: +1 APS per level. Every 25 levels, ionization adds +10% to the total bonus.",
+          "effectSummary": "Passive production +1 APS per level. Ionization: +10% to the total bonus every 25 levels."
         },
         "nuclearReactor": {
           "name": "Nuclear Reactor",
           "description": "Controlled reactors unleash colossal energy.",
-          "effect": "Passive production: +10 APS per level. Every 25 levels, ionization doubles the total bonus.",
-          "effectSummary": "Passive production +10 APS per level. Ionization: bonus doubled every 25 levels."
+          "effect": "Passive production: +10 APS per level. Every 25 levels, ionization adds +10% to the total bonus.",
+          "effectSummary": "Passive production +10 APS per level. Ionization: +10% to the total bonus every 25 levels."
         },
         "particleAccelerator": {
           "name": "Particle Accelerator",
@@ -1816,7 +1816,10 @@
       },
       "metaux": {
         "chronoBonus": "Timer +{value} s",
-        "multiBonus": "Multiplier +{value}",
+        "multiBonus": "APC/APS multiplier +{value}",
+        "critLabel": "APC/APS crit multiplier",
+        "critAriaActive": "APC/APS crit timer active: {multiplier} for {duration}.",
+        "critAriaInactive": "APC/APS crit timer inactive.",
         "toast": "Metals: {details}",
         "unavailable": "Forge unavailable at the moment.",
         "gameInProgress": "A game is already in progress. Finish it before starting a new one.",

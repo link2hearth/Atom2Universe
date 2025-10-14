@@ -1473,11 +1473,21 @@ body.theme-aurora .midi-page__module .chiptune-usage__summary {
 @media (max-width: 768px) {
   .midi-page__module .option-row--selectors {
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.3rem;
   }
 
   .midi-page__module .option-row--selectors .option-field {
     width: 100%;
+    gap: 0.2rem;
+  }
+
+  .midi-page__module .option-row--selectors select {
+    padding-top: 0.4em;
+    padding-bottom: 0.4em;
+  }
+
+  .midi-page__module .option-row--selectors .option-field--track select {
+    min-height: 2.2em;
   }
 }
 
