@@ -3,7 +3,6 @@ package com.example.atom2univers
 import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
-import android.view.WindowManager
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
@@ -17,6 +16,7 @@ import androidx.webkit.WebViewAssetLoader
 class MainActivity : AppCompatActivity() {
 
     private lateinit var webView: WebView
+    private var webViewSaveScript: String? = null
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,6 +64,21 @@ class MainActivity : AppCompatActivity() {
             "AndroidSaveBridge"
         )
 
+        webViewSaveScript = """
+            (function() {
+              try {
+                var saveFn = window.atom2universSaveGame;
+                if (typeof saveFn === 'function') {
+                  saveFn();
+                  return 'saved';
+                }
+                return 'no-save';
+              } catch (error) {
+                return 'error';
+              }
+            })();
+        """.trimIndent()
+
         if (savedInstanceState != null) {
             webView.restoreState(savedInstanceState)
         } else {
@@ -75,6 +90,29 @@ class MainActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
         if (::webView.isInitialized) {
             webView.saveState(outState)
+        }
+    }
+
+    override fun onPause() {
+        requestWebViewSave()
+        if (::webView.isInitialized) {
+            webView.onPause()
+        }
+        super.onPause()
+    }
+
+    override fun onStop() {
+        requestWebViewSave()
+        super.onStop()
+    }
+
+    private fun requestWebViewSave() {
+        if (!::webView.isInitialized) {
+            return
+        }
+        val script = webViewSaveScript ?: return
+        webView.post {
+            webView.evaluateJavascript(script, null)
         }
     }
 }
