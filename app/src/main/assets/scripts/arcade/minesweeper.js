@@ -11,6 +11,11 @@
 
   const FIXED_CELL_SIZE = 48;
 
+  const ORIENTATION_MODE = Object.freeze({
+    LANDSCAPE: 'landscape',
+    PORTRAIT: 'portrait'
+  });
+
   const DEFAULT_TICKET_REWARD_RATIO = 0.5;
 
   function onReady(callback) {
@@ -77,6 +82,7 @@
     const boardElement = document.getElementById('minesweeperBoard');
     const difficultySelect = document.getElementById('minesweeperDifficulty');
     const resetButton = document.getElementById('minesweeperReset');
+    const containerElement = boardElement ? boardElement.closest('.minesweeper') : null;
 
     if (!boardElement || !difficultySelect || !resetButton) {
       return;
@@ -97,7 +103,17 @@
       safeRemaining: 0,
       status: 'ready',
       armed: false,
-      cellSize: FIXED_CELL_SIZE
+      cellSize: FIXED_CELL_SIZE,
+      orientation: ORIENTATION_MODE.LANDSCAPE
+    };
+
+    const orientationState = {
+      listenersAttached: false,
+      mediaQuery: null
+    };
+
+    const boundOrientationHandler = () => {
+      handleOrientationChange();
     };
 
     function refreshLabelCache() {
@@ -190,6 +206,7 @@
           boardElement.appendChild(button);
         }
       }
+      applyOrientationClass();
     }
 
     function initializeGrid(difficultyKey) {
@@ -213,6 +230,67 @@
         }
       }
       updateBoardState('ready');
+    }
+
+    function computeOrientationMode() {
+      if (typeof window === 'undefined') {
+        return ORIENTATION_MODE.LANDSCAPE;
+      }
+      const width = window.innerWidth || 0;
+      const height = window.innerHeight || 0;
+      if (height > width && width > 0) {
+        return ORIENTATION_MODE.PORTRAIT;
+      }
+      if (width === 0 && height > 0) {
+        return ORIENTATION_MODE.PORTRAIT;
+      }
+      return ORIENTATION_MODE.LANDSCAPE;
+    }
+
+    function applyOrientationClass() {
+      if (!containerElement) {
+        return;
+      }
+      containerElement.classList.toggle('minesweeper--portrait', gameState.orientation === ORIENTATION_MODE.PORTRAIT);
+      containerElement.classList.toggle('minesweeper--landscape', gameState.orientation === ORIENTATION_MODE.LANDSCAPE);
+    }
+
+    function handleOrientationChange({ force = false } = {}) {
+      const mode = computeOrientationMode();
+      if (!force && mode === gameState.orientation) {
+        return;
+      }
+      gameState.orientation = mode;
+      applyOrientationClass();
+    }
+
+    function attachOrientationListeners() {
+      if (!containerElement) {
+        return;
+      }
+      if (orientationState.listenersAttached || typeof window === 'undefined') {
+        handleOrientationChange({ force: true });
+        return;
+      }
+      window.addEventListener('resize', boundOrientationHandler);
+      window.addEventListener('orientationchange', boundOrientationHandler);
+      if (typeof window.matchMedia === 'function') {
+        try {
+          orientationState.mediaQuery = window.matchMedia('(orientation: portrait)');
+          const media = orientationState.mediaQuery;
+          if (media) {
+            if (typeof media.addEventListener === 'function') {
+              media.addEventListener('change', boundOrientationHandler);
+            } else if (typeof media.addListener === 'function') {
+              media.addListener(boundOrientationHandler);
+            }
+          }
+        } catch (error) {
+          console.warn('Unable to attach minesweeper orientation listener', error);
+        }
+      }
+      orientationState.listenersAttached = true;
+      handleOrientationChange({ force: true });
     }
 
     function getSafeZone(cell) {
@@ -632,6 +710,8 @@
     resetButton.addEventListener('click', () => {
       resetGame();
     });
+
+    attachOrientationListeners();
 
     if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
       window.addEventListener('i18n:languagechange', () => {
