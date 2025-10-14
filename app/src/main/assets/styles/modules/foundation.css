@@ -189,7 +189,7 @@ body.theme-aurora .app-header {
 
 body[data-page-group="arcade"] main {
   width: 100%;
-  justify-content: center;
+  align-items: center;
 }
 
 .header-main {
@@ -1159,9 +1159,11 @@ body.theme-aurora .nav-button.active {
 main {
   flex: 1;
   display: flex;
-  justify-content: center;
-  align-items: stretch;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
   min-height: 0;
+  width: 100%;
 }
 
 .page { 
