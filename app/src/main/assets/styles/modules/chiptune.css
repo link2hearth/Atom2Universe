@@ -64,6 +64,7 @@
 @media (max-width: 720px) {
   .option-card--chiptune .option-row--selectors {
     flex-wrap: wrap;
+    gap: 0.3rem;
   }
   .option-card--chiptune .option-row--selectors .option-field {
     flex: 1 1 240px;
