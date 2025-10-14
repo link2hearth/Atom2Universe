@@ -77,11 +77,6 @@ body[data-active-page='wave'] {
   overscroll-behavior: none;
 }
 
-body.manual-scroll-lock {
-  overflow: hidden;
-  overscroll-behavior: none;
-}
-
 body[data-text-font='vt323'] {
   --font-text-base-size: 1.06rem;
 }
