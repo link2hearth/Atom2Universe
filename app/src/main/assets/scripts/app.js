@@ -12905,10 +12905,84 @@ function serializeState() {
   };
 }
 
+function getAndroidSaveBridge() {
+  if (typeof globalThis === 'undefined') {
+    return null;
+  }
+  const bridge = globalThis.AndroidSaveBridge || globalThis.androidSaveBridge;
+  if (!bridge) {
+    return null;
+  }
+  const hasMethod = ['saveData', 'loadData', 'clearData'].some(method => {
+    return typeof bridge?.[method] === 'function';
+  });
+  return hasMethod ? bridge : null;
+}
+
+function persistSaveData(serialized, options = {}) {
+  const storage = typeof globalThis !== 'undefined' ? globalThis.localStorage : null;
+  let stored = false;
+  if (storage) {
+    try {
+      storage.setItem('atom2univers', serialized);
+      stored = true;
+    } catch (err) {
+      console.error('Erreur de sauvegarde', err);
+    }
+  }
+
+  if (options.skipAndroid !== true) {
+    const bridge = getAndroidSaveBridge();
+    if (bridge && typeof bridge.saveData === 'function') {
+      try {
+        bridge.saveData(serialized);
+        stored = true;
+      } catch (err) {
+        console.error('Erreur de sauvegarde', err);
+      }
+    }
+  }
+
+  if (!stored) {
+    console.error('Erreur de sauvegarde', new Error('Aucun stockage disponible'));
+  }
+
+  return stored;
+}
+
+function readStoredSaveData() {
+  const storage = typeof globalThis !== 'undefined' ? globalThis.localStorage : null;
+  if (storage) {
+    try {
+      const raw = storage.getItem('atom2univers');
+      if (typeof raw === 'string' && raw.length > 0) {
+        return { data: raw, source: 'localStorage' };
+      }
+    } catch (err) {
+      console.error('Erreur de sauvegarde', err);
+    }
+  }
+
+  const bridge = getAndroidSaveBridge();
+  if (bridge && typeof bridge.loadData === 'function') {
+    try {
+      const raw = bridge.loadData();
+      if (typeof raw === 'string' && raw.length > 0) {
+        return { data: raw, source: 'android' };
+      }
+    } catch (err) {
+      console.error('Erreur de sauvegarde', err);
+    }
+  }
+
+  return { data: null, source: null };
+}
+
 function saveGame() {
   try {
     const payload = serializeState();
-    localStorage.setItem('atom2univers', JSON.stringify(payload));
+    const serialized = JSON.stringify(payload);
+    persistSaveData(serialized);
   } catch (err) {
     console.error('Erreur de sauvegarde', err);
   }
@@ -13228,7 +13302,7 @@ function loadGame() {
     gameState.baseCrit = createDefaultCritState();
     gameState.crit = createDefaultCritState();
     gameState.lastCritical = null;
-    const raw = localStorage.getItem('atom2univers');
+    const { data: raw, source } = readStoredSaveData();
     if (!raw) {
       gameState.theme = DEFAULT_THEME_ID;
       gameState.stats = createInitialStats();
@@ -13241,6 +13315,9 @@ function loadGame() {
       return;
     }
     const data = JSON.parse(raw);
+    if (source === 'android' && typeof globalThis !== 'undefined' && globalThis.localStorage) {
+      persistSaveData(raw, { skipAndroid: true });
+    }
     gameState.atoms = LayeredNumber.fromJSON(data.atoms);
     gameState.lifetime = LayeredNumber.fromJSON(data.lifetime);
     gameState.perClick = LayeredNumber.fromJSON(data.perClick);
