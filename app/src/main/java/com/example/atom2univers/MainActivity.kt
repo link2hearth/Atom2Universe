@@ -15,7 +15,7 @@ import androidx.webkit.WebViewAssetLoader
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var webView: WebView
+    private lateinit var webView: GameWebView
     private var webViewSaveScript: String? = null
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -57,6 +57,9 @@ class MainActivity : AppCompatActivity() {
             domStorageEnabled = true
             allowFileAccess = true
             databaseEnabled = true
+            setSupportZoom(false)
+            builtInZoomControls = false
+            displayZoomControls = false
         }
 
         webView.addJavascriptInterface(
