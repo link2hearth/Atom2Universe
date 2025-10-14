@@ -9325,6 +9325,7 @@ function shouldTriggerGlobalClick(event) {
 
 const POINTER_TRIGGER_SUPPRESSION_WINDOW_MS = 600;
 let lastManualPointerTriggerTime = 0;
+let manualScrollLockActive = false;
 
 function getHighResolutionTimestamp() {
   if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
@@ -9347,6 +9348,22 @@ function shouldSuppressManualClickFromPointer() {
 
 function isTouchLikePointerType(pointerType) {
   return pointerType === 'touch' || pointerType === 'pen';
+}
+
+function updateManualScrollLock(manualPageActive) {
+  if (typeof document === 'undefined' || !document.body) {
+    return;
+  }
+  const shouldLock = Boolean(manualPageActive);
+  if (shouldLock === manualScrollLockActive) {
+    return;
+  }
+  manualScrollLockActive = shouldLock;
+  if (shouldLock) {
+    document.body.classList.add('manual-scroll-lock');
+  } else {
+    document.body.classList.remove('manual-scroll-lock');
+  }
 }
 
 function showPage(pageId) {
@@ -9395,6 +9412,7 @@ function showPage(pageId) {
   document.body.classList.toggle('view-quantum2048', pageId === 'quantum2048');
   document.body.classList.toggle('view-sudoku', pageId === 'sudoku');
   document.body.classList.toggle('view-game-of-life', pageId === 'gameOfLife');
+  updateManualScrollLock(pageId === 'game' || pageId === 'wave');
   if (pageId === 'game') {
     randomizeAtomButtonImage();
   }
