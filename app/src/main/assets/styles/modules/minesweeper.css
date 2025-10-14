@@ -46,6 +46,18 @@
   display: flex;
 }
 
+.minesweeper--landscape {
+  --minesweeper-board-rotation: 0deg;
+  --minesweeper-cell-rotation: 0deg;
+  --minesweeper-cell-hover-translate: translate3d(0, -2px, 0);
+}
+
+.minesweeper--portrait {
+  --minesweeper-board-rotation: 90deg;
+  --minesweeper-cell-rotation: -90deg;
+  --minesweeper-cell-hover-translate: translate3d(0, -2px, 0);
+}
+
 body.theme-light .page--minesweeper {
   --minesweeper-surface-background: rgba(247, 248, 252, 0.86);
   --minesweeper-surface-border: rgba(12, 16, 32, 0.08);
@@ -155,9 +167,11 @@ body.theme-aurora .page--minesweeper {
 
 .minesweeper {
   width: min(100%, 100vw);
-  max-width: none;
+  max-width: min(100%, 80rem);
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
   flex: 1 1 auto;
   gap: clamp(0.85rem, 2vw, 1.4rem);
   background: var(--minesweeper-surface-background, rgba(8, 11, 19, 0.6));
@@ -169,6 +183,10 @@ body.theme-aurora .page--minesweeper {
   min-height: 0;
   margin: 0 auto;
   color: var(--minesweeper-surface-color, inherit);
+  --minesweeper-board-rotation: 0deg;
+  --minesweeper-cell-rotation: 0deg;
+  --minesweeper-cell-rest-translate: translate3d(0, 0, 0);
+  --minesweeper-cell-hover-translate: translate3d(0, -2px, 0);
 }
 
 .minesweeper__controls {
@@ -273,6 +291,9 @@ body.theme-aurora .page--minesweeper {
   justify-items: stretch;
   align-items: stretch;
   flex: 1 1 auto;
+  transform: rotate(var(--minesweeper-board-rotation, 0deg));
+  transform-origin: center;
+  margin: 0 auto;
 }
 
 .minesweeper__board[data-state='won'] {
@@ -309,6 +330,10 @@ body.theme-aurora .page--minesweeper {
   min-height: 0;
   width: 100%;
   height: 100%;
+  --minesweeper-cell-current-translate: var(--minesweeper-cell-rest-translate, translate3d(0, 0, 0));
+  transform: var(--minesweeper-cell-current-translate, translate3d(0, 0, 0))
+    rotate(var(--minesweeper-cell-rotation, 0deg));
+  transform-origin: center;
 }
 
 .minesweeper-cell:focus-visible {
@@ -317,13 +342,19 @@ body.theme-aurora .page--minesweeper {
 }
 
 .minesweeper-cell:hover {
-  transform: translateY(-2px);
+  --minesweeper-cell-current-translate: var(
+    --minesweeper-cell-hover-translate,
+    translate3d(0, -2px, 0)
+  );
   box-shadow: var(--minesweeper-cell-hover-shadow, 0 12px 20px rgba(8, 20, 48, 0.35));
 }
 
 .minesweeper-cell[disabled] {
   cursor: default;
-  transform: none;
+  --minesweeper-cell-current-translate: var(
+    --minesweeper-cell-rest-translate,
+    translate3d(0, 0, 0)
+  );
 }
 
 .minesweeper-cell--revealed {
