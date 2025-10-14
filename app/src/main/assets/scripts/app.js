@@ -10128,6 +10128,18 @@ function bindDomEventListeners() {
       releasePointerCapture(event.pointerId);
     };
 
+    const handleLostPointerCapture = event => {
+      // Sur certains navigateurs, la capture du pointeur peut être perdue sans
+      // déclencher d'événement `pointerup`/`pointercancel`. On nettoie donc
+      // l'état manuel pour éviter qu'un pointeur fantôme bloque l'interface.
+      if (!event) return;
+      const pointerType = event.pointerType;
+      if (pointerType && !isTouchLikePointerType(pointerType)) {
+        return;
+      }
+      activeTouchPointers.delete(event.pointerId);
+    };
+
     const handleTouchStartFallback = event => {
       if (!event) return;
       event.stopPropagation();
@@ -10171,6 +10183,7 @@ function bindDomEventListeners() {
       atomButton.addEventListener('pointerdown', handlePointerDown, { passive: false });
       atomButton.addEventListener('pointerup', handlePointerUpOrCancel, { passive: true });
       atomButton.addEventListener('pointercancel', handlePointerUpOrCancel, { passive: true });
+      atomButton.addEventListener('lostpointercapture', handleLostPointerCapture, { passive: true });
     } else {
       atomButton.addEventListener('touchstart', handleTouchStartFallback, { passive: false });
       atomButton.addEventListener('touchend', handleTouchEndOrCancelFallback, { passive: true });
