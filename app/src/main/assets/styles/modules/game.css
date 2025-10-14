@@ -302,7 +302,6 @@ body:not(.view-game):not(.view-wave) .apc-frenzy-counter {
   background: transparent;
   cursor: pointer;
   z-index: 2;
-  touch-action: none;
 }
 
 .atom-button__core {
@@ -424,3 +423,4 @@ body:not(.view-game):not(.view-wave) .apc-frenzy-counter {
   margin-top: 0;
   opacity: 0.7;
 }
+
