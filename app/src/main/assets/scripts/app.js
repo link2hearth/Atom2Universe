@@ -101,6 +101,7 @@ const DEFAULT_SUDOKU_COMPLETION_REWARD = Object.freeze({
   multiplier: 1
 });
 
+const PRIMARY_SAVE_STORAGE_KEY = 'atom2univers';
 const LANGUAGE_STORAGE_KEY = 'atom2univers.language';
 const CLICK_SOUND_STORAGE_KEY = 'atom2univers.options.clickSoundMuted';
 const CRIT_ATOM_VISUALS_STORAGE_KEY = 'atom2univers.options.critAtomVisualsDisabled';
@@ -12695,6 +12696,72 @@ function cloneArcadeProgress(progress) {
   return result;
 }
 
+function getAndroidSaveBridge() {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+  const bridge = window.AndroidSaveBridge;
+  if (!bridge) {
+    return null;
+  }
+  const type = typeof bridge;
+  if (type === 'object' || type === 'function') {
+    return bridge;
+  }
+  return null;
+}
+
+function readNativeSaveData() {
+  const bridge = getAndroidSaveBridge();
+  if (!bridge || typeof bridge.loadData !== 'function') {
+    return null;
+  }
+  try {
+    const raw = bridge.loadData();
+    if (typeof raw === 'string') {
+      return raw;
+    }
+    if (raw != null) {
+      return String(raw);
+    }
+  } catch (error) {
+    console.error('Unable to read native save data', error);
+  }
+  return null;
+}
+
+function writeNativeSaveData(serialized) {
+  const bridge = getAndroidSaveBridge();
+  if (!bridge) {
+    return;
+  }
+  if (!serialized) {
+    if (typeof bridge.clearData === 'function') {
+      try {
+        bridge.clearData();
+      } catch (error) {
+        console.error('Unable to clear native save data', error);
+      }
+      return;
+    }
+    if (typeof bridge.saveData === 'function') {
+      try {
+        bridge.saveData(null);
+      } catch (error) {
+        console.error('Unable to clear native save data', error);
+      }
+    }
+    return;
+  }
+  if (typeof bridge.saveData === 'function') {
+    try {
+      bridge.saveData(serialized);
+    } catch (error) {
+      console.error('Unable to write native save data', error);
+    }
+  }
+}
+
 function serializeState() {
   flushPendingPerformanceQueues({ force: true });
   const stats = gameState.stats || createInitialStats();
@@ -12908,7 +12975,15 @@ function serializeState() {
 function saveGame() {
   try {
     const payload = serializeState();
-    localStorage.setItem('atom2univers', JSON.stringify(payload));
+    const serialized = JSON.stringify(payload);
+    try {
+      if (typeof localStorage !== 'undefined' && localStorage) {
+        localStorage.setItem(PRIMARY_SAVE_STORAGE_KEY, serialized);
+      }
+    } catch (storageError) {
+      console.error('Erreur de sauvegarde locale', storageError);
+    }
+    writeNativeSaveData(serialized);
   } catch (err) {
     console.error('Erreur de sauvegarde', err);
   }
@@ -13228,7 +13303,27 @@ function loadGame() {
     gameState.baseCrit = createDefaultCritState();
     gameState.crit = createDefaultCritState();
     gameState.lastCritical = null;
-    const raw = localStorage.getItem('atom2univers');
+    let raw = null;
+    try {
+      if (typeof localStorage !== 'undefined' && localStorage) {
+        raw = localStorage.getItem(PRIMARY_SAVE_STORAGE_KEY);
+      }
+    } catch (error) {
+      console.error('Erreur de lecture de la sauvegarde locale', error);
+    }
+    if (!raw) {
+      const nativeRaw = readNativeSaveData();
+      if (nativeRaw) {
+        raw = nativeRaw;
+        try {
+          if (typeof localStorage !== 'undefined' && localStorage) {
+            localStorage.setItem(PRIMARY_SAVE_STORAGE_KEY, nativeRaw);
+          }
+        } catch (syncError) {
+          console.warn('Unable to sync native save with local storage', syncError);
+        }
+      }
+    }
     if (!raw) {
       gameState.theme = DEFAULT_THEME_ID;
       gameState.stats = createInitialStats();
