@@ -9360,6 +9360,12 @@ function showPage(pageId) {
     ? 'arcade'
     : 'clicker';
   document.body.dataset.pageGroup = activePageGroup;
+  const shouldForceScroll = Boolean(activePageElement && activePageElement.hasAttribute('data-force-scroll'));
+  if (shouldForceScroll) {
+    document.body.dataset.forceScroll = 'true';
+  } else {
+    delete document.body.dataset.forceScroll;
+  }
   document.body.classList.toggle('view-game', pageId === 'game');
   document.body.classList.toggle('view-arcade', pageId === 'arcade');
   document.body.classList.toggle('view-arcade-hub', pageId === 'arcadeHub');
