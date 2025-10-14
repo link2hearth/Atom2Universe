@@ -78,6 +78,11 @@ body[data-active-page='wave'] {
   touch-action: none;
 }
 
+body[data-force-scroll='true'] {
+  touch-action: auto !important;
+  overscroll-behavior: auto !important;
+}
+
 body.view-game,
 body.view-wave {
   overflow: hidden;
