@@ -91,47 +91,53 @@
       1
     );
 
-    let availableWidth = viewportWidth;
-    let availableHeight = viewportHeight;
-
-    const container = boardElement.closest('.minesweeper');
-    if (container) {
-      const containerRect = container.getBoundingClientRect();
-      const containerStyles = window.getComputedStyle(container);
-      const paddingX =
-        coercePositiveNumber(containerStyles.paddingLeft, 0) +
-        coercePositiveNumber(containerStyles.paddingRight, 0);
-      const paddingY =
-        coercePositiveNumber(containerStyles.paddingTop, 0) +
-        coercePositiveNumber(containerStyles.paddingBottom, 0);
-      const gap = coercePositiveNumber(containerStyles.gap || containerStyles.rowGap, 0);
-
-      availableWidth = containerRect.width - paddingX;
-      availableHeight = containerRect.height - paddingY - gap;
-
-      const controls = container.querySelector('.minesweeper__controls');
-      if (controls) {
-        availableHeight -= controls.getBoundingClientRect().height;
-      }
-    }
-
     const boardRect = boardElement.getBoundingClientRect();
-    if (!Number.isFinite(availableWidth) || availableWidth <= 0) {
-      availableWidth = viewportWidth;
-    }
-    if (!Number.isFinite(availableHeight) || availableHeight <= 0) {
-      availableHeight = viewportHeight - boardRect.top;
-    }
+    const container = boardElement.closest('.minesweeper');
 
-    availableWidth = Math.max(availableWidth, 240);
-    availableHeight = Math.max(availableHeight, viewportHeight - boardRect.top - 24, 240);
-
+    let availableWidth = viewportWidth;
+    let availableHeight = Math.max(viewportHeight - Math.max(boardRect.top, 0) - 24, 120);
     let paddingLeft = 0;
     let paddingRight = 0;
     let paddingTop = 0;
     let paddingBottom = 0;
     let rowGap = 0;
     let columnGap = 0;
+
+    if (container) {
+      const containerRect = container.getBoundingClientRect();
+      const containerStyles = window.getComputedStyle(container);
+      const containerPaddingLeft = parseCssNumber(containerStyles.paddingLeft, 0);
+      const containerPaddingRight = parseCssNumber(containerStyles.paddingRight, 0);
+      const containerPaddingTop = parseCssNumber(containerStyles.paddingTop, 0);
+      const containerPaddingBottom = parseCssNumber(containerStyles.paddingBottom, 0);
+      const containerGap = parseCssNumber(containerStyles.rowGap || containerStyles.gap, 0);
+
+      availableWidth = Math.min(
+        viewportWidth - 32,
+        containerRect.width - containerPaddingLeft - containerPaddingRight
+      );
+
+      const controls = container.querySelector('.minesweeper__controls');
+      const controlsHeight = controls ? controls.getBoundingClientRect().height : 0;
+      const topOffset = Math.max(containerRect.top, 0);
+      availableHeight = Math.min(
+        Math.max(
+          viewportHeight - topOffset - controlsHeight - containerPaddingTop - containerPaddingBottom - 32,
+          0
+        ),
+        containerRect.height - containerPaddingTop - containerPaddingBottom - controlsHeight - containerGap
+      );
+      availableHeight = Math.max(availableHeight, 0);
+    } else {
+      availableWidth = Math.max(Math.min(viewportWidth - 32, boardRect.width || viewportWidth), 0);
+    }
+
+    if (!Number.isFinite(availableWidth) || availableWidth <= 0) {
+      availableWidth = Math.max(viewportWidth - 32, 160);
+    }
+    if (!Number.isFinite(availableHeight) || availableHeight <= 0) {
+      availableHeight = Math.max(viewportHeight - Math.max(boardRect.top, 0) - 32, 120);
+    }
 
     if (typeof window !== 'undefined' && typeof window.getComputedStyle === 'function') {
       const boardStyles = window.getComputedStyle(boardElement);
@@ -163,102 +169,79 @@
   }
 
   function computeGridDimensions(preset, metrics) {
-    const baseRows = Math.max(4, Number(preset.rows) || 8);
-    const baseCols = Math.max(4, Number(preset.cols) || 8);
-    const baseArea = Math.max(16, baseRows * baseCols);
+    const baseRows = clamp(Math.round(Number(preset.rows) || 8), 4, BOARD_SETTINGS.maxRows);
+    const baseCols = clamp(Math.round(Number(preset.cols) || 8), 4, BOARD_SETTINGS.maxCols);
+    const ratio = baseCols / baseRows || 1;
     const width = Math.max(coercePositiveNumber(metrics.innerWidth || metrics.width, 1), 1);
     const height = Math.max(coercePositiveNumber(metrics.innerHeight || metrics.height, 1), 1);
     const columnGap = Math.max(0, metrics.columnGap || 0);
     const rowGap = Math.max(0, metrics.rowGap || 0);
-    const targetRatio = clamp(metrics.ratio || width / height, 0.35, 3.5);
 
-    const minRows = Math.max(
-      4,
-      Math.min(
-        BOARD_SETTINGS.maxRows,
-        Math.floor(height / Math.max(BOARD_SETTINGS.maxCellSize, 1)) || 0
-      )
-    );
-    const maxRows = Math.max(
-      minRows,
-      Math.min(
-        BOARD_SETTINGS.maxRows,
-        Math.floor(height / Math.max(BOARD_SETTINGS.minCellSize, 1)) || 0
-      )
-    );
-    const minCols = Math.max(
-      4,
-      Math.min(
-        BOARD_SETTINGS.maxCols,
-        Math.floor(width / Math.max(BOARD_SETTINGS.maxCellSize, 1)) || 0
-      )
-    );
-    const maxCols = Math.max(
-      minCols,
-      Math.min(
-        BOARD_SETTINGS.maxCols,
-        Math.floor(width / Math.max(BOARD_SETTINGS.minCellSize, 1)) || 0
-      )
-    );
+    const denominatorCols = BOARD_SETTINGS.minCellSize + columnGap;
+    const denominatorRows = BOARD_SETTINGS.minCellSize + rowGap;
+    const maxColsBySpace = denominatorCols > 0 ? Math.floor((width + columnGap) / denominatorCols) : BOARD_SETTINGS.maxCols;
+    const maxRowsBySpace = denominatorRows > 0 ? Math.floor((height + rowGap) / denominatorRows) : BOARD_SETTINGS.maxRows;
+    const maxCols = clamp(maxColsBySpace || 0, 4, BOARD_SETTINGS.maxCols);
+    const maxRows = clamp(maxRowsBySpace || 0, 4, BOARD_SETTINGS.maxRows);
 
-    const candidateRows = new Set([baseRows]);
-    for (let rows = minRows; rows <= maxRows; rows += 1) {
-      candidateRows.add(rows);
-    }
+    const maxCellDenominatorCols = BOARD_SETTINGS.maxCellSize + columnGap;
+    const maxCellDenominatorRows = BOARD_SETTINGS.maxCellSize + rowGap;
+    const minColsBySpace = maxCellDenominatorCols > 0 ? Math.floor((width + columnGap) / maxCellDenominatorCols) : 0;
+    const minRowsBySpace = maxCellDenominatorRows > 0 ? Math.floor((height + rowGap) / maxCellDenominatorRows) : 0;
+    const minCols = clamp(minColsBySpace || 0, 4, maxCols);
+    const minRows = clamp(minRowsBySpace || 0, 4, maxRows);
 
-    const baseColsCandidate = clamp(baseCols, 4, BOARD_SETTINGS.maxCols);
-    const candidateCols = new Set([baseColsCandidate]);
-    for (let cols = minCols; cols <= maxCols; cols += 1) {
-      candidateCols.add(cols);
-    }
+    const baseWidth = baseCols * BOARD_SETTINGS.targetCellSize;
+    const baseHeight = baseRows * BOARD_SETTINGS.targetCellSize;
+    const widthScale = baseWidth > 0 ? width / baseWidth : 1;
+    const heightScale = baseHeight > 0 ? height / baseHeight : 1;
+    const approxScale = clamp(Math.min(widthScale, heightScale), 0.25, 4);
 
-    let best = {
-      rows: clamp(baseRows, 4, BOARD_SETTINGS.maxRows),
-      cols: baseColsCandidate,
-      score: Number.POSITIVE_INFINITY
+    let rows = clamp(Math.round(baseRows * approxScale), minRows, maxRows);
+    rows = clamp(rows, minRows, maxRows);
+    let cols = clamp(Math.round(rows * ratio), minCols, maxCols);
+
+    const evaluateLayout = (candidateRows, candidateCols) => {
+      const normalizedRows = clamp(Math.round(candidateRows), minRows, maxRows);
+      const normalizedCols = clamp(Math.round(candidateCols), minCols, maxCols);
+      const layout = computeBoardLayout(normalizedRows, normalizedCols, metrics);
+      return { rows: normalizedRows, cols: normalizedCols, layout };
     };
 
-    candidateRows.forEach((rows) => {
-      const normalizedRows = clamp(Math.round(rows), 4, BOARD_SETTINGS.maxRows);
-      const idealCols = clamp(Math.round(normalizedRows * targetRatio), 4, BOARD_SETTINGS.maxCols);
-      for (let delta = -2; delta <= 2; delta += 1) {
-        candidateCols.add(clamp(idealCols + delta, 4, BOARD_SETTINGS.maxCols));
+    let evaluation = evaluateLayout(rows, cols);
+
+    while (
+      (evaluation.layout.width - metrics.width > 1 ||
+        evaluation.layout.height - metrics.height > 1 ||
+        evaluation.layout.cellSize + 0.5 < BOARD_SETTINGS.minCellSize) &&
+      evaluation.rows > 4 &&
+      evaluation.cols > 4
+    ) {
+      rows = clamp(evaluation.rows - 1, minRows, maxRows);
+      cols = clamp(Math.round(rows * ratio), minCols, maxCols);
+      evaluation = evaluateLayout(rows, cols);
+    }
+
+    let expanded = true;
+    while (expanded) {
+      expanded = false;
+      const nextRows = evaluation.rows + 1;
+      const nextCols = Math.round(nextRows * ratio);
+      if (nextRows > maxRows || nextCols > maxCols) {
+        break;
       }
+      const nextEvaluation = evaluateLayout(nextRows, nextCols);
+      if (
+        nextEvaluation.layout.cellSize + 0.5 >= BOARD_SETTINGS.minCellSize &&
+        nextEvaluation.layout.width <= metrics.width + 1 &&
+        nextEvaluation.layout.height <= metrics.height + 1
+      ) {
+        evaluation = nextEvaluation;
+        expanded = true;
+      }
+    }
 
-      candidateCols.forEach((colsCandidate) => {
-        const normalizedCols = clamp(Math.round(colsCandidate), 4, BOARD_SETTINGS.maxCols);
-        if (normalizedCols < 4) {
-          return;
-        }
-
-        const horizontalGapAllowance = columnGap * Math.max(normalizedCols - 1, 0);
-        const verticalGapAllowance = rowGap * Math.max(normalizedRows - 1, 0);
-        const widthForCells = Math.max(width - horizontalGapAllowance, 1);
-        const heightForCells = Math.max(height - verticalGapAllowance, 1);
-        const totalCells = normalizedRows * normalizedCols;
-        const ratio = normalizedCols / normalizedRows;
-        const cellWidth = widthForCells / normalizedCols;
-        const cellHeight = heightForCells / normalizedRows;
-        const effectiveSize = Math.min(cellWidth, cellHeight);
-
-        const ratioScore = Math.abs(ratio - targetRatio);
-        const areaScore = Math.abs(totalCells - baseArea) / baseArea;
-        const sizeScore = Math.abs(effectiveSize - BOARD_SETTINGS.targetCellSize) / BOARD_SETTINGS.targetCellSize;
-        const minSizePenalty = effectiveSize < BOARD_SETTINGS.minCellSize
-          ? (BOARD_SETTINGS.minCellSize - effectiveSize) / BOARD_SETTINGS.minCellSize
-          : 0;
-        const maxSizePenalty = effectiveSize > BOARD_SETTINGS.maxCellSize
-          ? (effectiveSize - BOARD_SETTINGS.maxCellSize) / BOARD_SETTINGS.maxCellSize
-          : 0;
-
-        const score = ratioScore * 4 + sizeScore * 3 + areaScore * 1.5 + (minSizePenalty + maxSizePenalty) * 10;
-        if (score < best.score) {
-          best = { rows: normalizedRows, cols: normalizedCols, score };
-        }
-      });
-    });
-
-    return { rows: best.rows, cols: best.cols };
+    return evaluation;
   }
 
   function computeBoardLayout(rows, cols, metrics) {
@@ -412,7 +395,8 @@
       safeRemaining: 0,
       status: 'ready',
       armed: false,
-      metrics: null
+      metrics: null,
+      difficulty: 'moyen'
     };
 
     function refreshLabelCache() {
@@ -544,8 +528,7 @@
       const presetKey = normalizeDifficultyKey(difficultyKey);
       const preset = DIFFICULTY_PRESETS[presetKey];
       const metrics = getBoardMetrics(boardElement);
-      const { rows, cols } = computeGridDimensions(preset, metrics);
-      const layout = computeBoardLayout(rows, cols, metrics);
+      const { rows, cols, layout } = computeGridDimensions(preset, metrics);
       const baseArea = Math.max(preset.rows * preset.cols, 1);
       const density = preset.mines / baseArea;
       const desiredMines = Math.round(density * rows * cols);
@@ -558,6 +541,7 @@
       gameState.status = 'ready';
       gameState.armed = false;
       gameState.metrics = { ...metrics, layout };
+      gameState.difficulty = presetKey;
       renderBoard();
       for (let row = 0; row < gameState.rows; row += 1) {
         for (let col = 0; col < gameState.cols; col += 1) {
@@ -982,6 +966,17 @@
         return;
       }
       const metrics = getBoardMetrics(boardElement);
+      const preset = DIFFICULTY_PRESETS[gameState.difficulty];
+      if (preset) {
+        const evaluation = computeGridDimensions(preset, metrics);
+        if (evaluation.rows !== gameState.rows || evaluation.cols !== gameState.cols) {
+          initializeGrid(gameState.difficulty);
+          return;
+        }
+        gameState.metrics = { ...metrics, layout: evaluation.layout };
+        applyBoardMetrics();
+        return;
+      }
       const layout = computeBoardLayout(gameState.rows, gameState.cols, metrics);
       gameState.metrics = { ...metrics, layout };
       applyBoardMetrics();
