@@ -2,17 +2,6 @@ const APP_DATA = typeof globalThis !== 'undefined' && globalThis.APP_DATA ? glob
 const GLOBAL_CONFIG =
   typeof globalThis !== 'undefined' && globalThis.GAME_CONFIG ? globalThis.GAME_CONFIG : {};
 
-if (typeof document !== 'undefined') {
-  document.addEventListener(
-    'touchstart',
-    (event) => {
-      if (event.touches && event.touches.length > 2) {
-        event.preventDefault();
-      }
-    },
-    { passive: false }
-  );
-}
 const CONFIG_OPTIONS_WELCOME_CARD =
   GLOBAL_CONFIG
   && GLOBAL_CONFIG.uiText
