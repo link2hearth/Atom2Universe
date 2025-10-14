@@ -3,6 +3,7 @@ package com.example.atom2univers
 import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
@@ -17,6 +18,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var webView: GameWebView
     private var webViewSaveScript: String? = null
+    private var cssRecoveryAttempted = false
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,12 +52,51 @@ class MainActivity : AppCompatActivity() {
             override fun shouldInterceptRequest(view: WebView, url: String): WebResourceResponse? {
                 return assetLoader.shouldInterceptRequest(Uri.parse(url))
             }
+
+            override fun onPageFinished(view: WebView, url: String) {
+                super.onPageFinished(view, url)
+                if (!url.startsWith(ASSET_URL_PREFIX)) {
+                    return
+                }
+                ensureStylesheetsLoaded(view, url)
+            }
+
+            private fun ensureStylesheetsLoaded(view: WebView, url: String) {
+                view.evaluateJavascript(CSS_PRESENCE_CHECK) { rawResult ->
+                    val trimmed = rawResult?.trim()?.trim('"')
+                    val stylesheetCount = trimmed?.toIntOrNull()
+                    if (stylesheetCount == null) {
+                        Log.w(TAG, "Unable to parse stylesheet count from WebView: $rawResult")
+                        return@evaluateJavascript
+                    }
+
+                    if (stylesheetCount > 0) {
+                        if (cssRecoveryAttempted) {
+                            cssRecoveryAttempted = false
+                        }
+                        return@evaluateJavascript
+                    }
+
+                    if (!cssRecoveryAttempted) {
+                        cssRecoveryAttempted = true
+                        Log.w(TAG, "Stylesheets missing, clearing cache and reloading $url")
+                        view.post {
+                            view.clearCache(true)
+                            view.loadUrl(url)
+                        }
+                    } else {
+                        Log.e(TAG, "Stylesheets still unavailable after recovery attempt")
+                    }
+                }
+            }
         }
 
         with(webView.settings) {
             javaScriptEnabled = true
             domStorageEnabled = true
             allowFileAccess = true
+            allowContentAccess = true
+            loadsImagesAutomatically = true
             databaseEnabled = true
             setSupportZoom(false)
             builtInZoomControls = false
@@ -117,6 +158,20 @@ class MainActivity : AppCompatActivity() {
         webView.post {
             webView.evaluateJavascript(script, null)
         }
+    }
+
+    private companion object {
+        private const val TAG = "Atom2Univers"
+        private const val ASSET_URL_PREFIX = "https://appassets.androidplatform.net/assets/"
+        private const val CSS_PRESENCE_CHECK = """
+            (function() {
+              try {
+                return document.styleSheets.length;
+              } catch (error) {
+                return -1;
+              }
+            })();
+        """
     }
 }
 
