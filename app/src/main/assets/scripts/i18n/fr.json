@@ -523,7 +523,14 @@
         "controls": {
           "reset": "Réinitialiser"
         },
-        "board": "Plateau du solitaire"
+        "board": "Plateau du solitaire",
+        "rewards": {
+          "gacha": "{count} ticket{suffix} gacha",
+          "mach3": "{count} ticket{suffix} Mach3"
+        },
+        "toast": {
+          "completion": "Solitaire terminé ! Récompenses : {rewards}."
+        }
       },
       "echecs": {
         "aria": "Mini-jeu d'échecs — moteur côté client",
@@ -1541,11 +1548,13 @@
           "standardDescription": "Réglage équilibré : l’IA joue vite et solidement.",
           "expert": "Mode expert",
           "expertDescription": "Profondeur accrue et temps de calcul prolongé pour un vrai défi.",
-          "reward": "Bonus hors ligne : {duration} à {multiplier}"
+          "reward": "Récompense : {rewards}"
         },
         "reward": {
-          "ready": "Victoire en {difficulty} ! Bonus hors ligne prêt : {duration} à {multiplier}.",
-          "readyGeneric": "Victoire aux échecs ! Bonus hors ligne prêt : {duration} à {multiplier}."
+          "tickets": "{count} ticket{suffix} gacha",
+          "crit": "Critique ×{multiplier} pendant {duration}",
+          "granted": "Victoire en {difficulty} : {rewards}.",
+          "grantedGeneric": "Victoire aux échecs : {rewards}."
         }
       },
       "math": {
@@ -1557,6 +1566,9 @@
           "timeout": "Temps écoulé ! La série est réinitialisée.",
           "gameOverMistakes": "Vous avez atteint {limit} erreurs : game over ! Le niveau repart à zéro.",
           "gameOverTimeout": "Temps écoulé : game over ! Le niveau repart à zéro."
+        },
+        "toast": {
+          "gachaTicket": "Ticket gacha gagné ! (+{count})"
         }
       },
       "sudoku": {

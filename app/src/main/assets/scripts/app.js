@@ -7285,44 +7285,99 @@ function translateChessDifficultyLabel(options = {}) {
 
 function normalizeChessVictoryReward(raw) {
   const source = raw && typeof raw === 'object' ? raw : {};
-  const secondsCandidates = [
-    source.offlineSeconds,
-    source.seconds,
-    source.durationSeconds,
-    source.timeSeconds,
-    source.time
-  ];
-  let offlineSeconds = 0;
-  for (let i = 0; i < secondsCandidates.length; i += 1) {
-    const candidate = Number(secondsCandidates[i]);
+
+  const gachaCandidates = [source.gachaTickets, source.tickets, source.amount];
+  let gachaTickets = 0;
+  for (let i = 0; i < gachaCandidates.length; i += 1) {
+    const candidate = Number(gachaCandidates[i]);
     if (Number.isFinite(candidate) && candidate > 0) {
-      offlineSeconds = Math.floor(candidate);
+      gachaTickets = Math.floor(candidate);
       break;
     }
   }
 
-  const multiplierCandidates = [
-    source.offlineMultiplier,
-    source.multiplier,
-    source.value,
-    source.amount
-  ];
-  let offlineMultiplier = 0;
-  for (let i = 0; i < multiplierCandidates.length; i += 1) {
-    const candidate = Number(multiplierCandidates[i]);
-    if (Number.isFinite(candidate) && candidate > 0) {
-      offlineMultiplier = candidate;
-      break;
+  const critSource = source.crit && typeof source.crit === 'object'
+    ? source.crit
+    : source.critical && typeof source.critical === 'object'
+      ? source.critical
+      : null;
+  let multiplier = 0;
+  let durationSeconds = 0;
+  if (critSource) {
+    const multiplierCandidates = [
+      critSource.multiplier,
+      critSource.value,
+      critSource.multiplierAdd != null ? Number(critSource.multiplierAdd) + 1 : null
+    ];
+    for (let index = 0; index < multiplierCandidates.length; index += 1) {
+      const candidate = Number(multiplierCandidates[index]);
+      if (Number.isFinite(candidate) && candidate > 1) {
+        multiplier = candidate;
+        break;
+      }
+    }
+    const durationCandidates = [
+      critSource.durationSeconds,
+      critSource.seconds,
+      critSource.duration,
+      critSource.time
+    ];
+    for (let index = 0; index < durationCandidates.length; index += 1) {
+      const candidate = Number(durationCandidates[index]);
+      if (Number.isFinite(candidate) && candidate > 0) {
+        durationSeconds = Math.floor(candidate);
+        break;
+      }
     }
   }
 
-  if (offlineSeconds <= 0 || offlineMultiplier <= 0) {
+  const crit = multiplier > 1 && durationSeconds > 0
+    ? { multiplier, durationSeconds }
+    : null;
+
+  if (gachaTickets <= 0 && !crit) {
     return null;
   }
 
   return {
-    offlineSeconds,
-    offlineMultiplier
+    gachaTickets: Math.max(0, gachaTickets),
+    crit
+  };
+}
+
+function applyChessCritBonus(multiplier, durationSeconds) {
+  const numericMultiplier = Number(multiplier);
+  const numericDuration = Number(durationSeconds);
+  if (!Number.isFinite(numericMultiplier) || numericMultiplier <= 1) {
+    return null;
+  }
+  if (!Number.isFinite(numericDuration) || numericDuration <= 0) {
+    return null;
+  }
+  const duration = Math.floor(numericDuration);
+  const state = ensureApsCritState();
+  const previousMultiplier = getApsCritMultiplier(state);
+  state.effects.push({
+    multiplierAdd: Math.max(0, numericMultiplier - 1),
+    remainingSeconds: duration
+  });
+  state.effects = state.effects.filter(effect => {
+    const remaining = Number(effect?.remainingSeconds) || 0;
+    const value = Number(effect?.multiplierAdd) || 0;
+    return remaining > 0 && value > 0;
+  });
+  if (!state.effects.length) {
+    return null;
+  }
+  const newMultiplier = getApsCritMultiplier(state);
+  if (newMultiplier !== previousMultiplier) {
+    recalcProduction();
+  }
+  updateUI();
+  pulseApsCritPanel();
+  return {
+    multiplier: numericMultiplier,
+    durationSeconds: duration
   };
 }
 
@@ -7332,22 +7387,33 @@ function registerChessVictoryReward(options = {}) {
     return false;
   }
 
-  const bonus = normalizeSudokuOfflineBonusState({
-    multiplier: reward.offlineMultiplier,
-    maxSeconds: reward.offlineSeconds,
-    limitSeconds: 0,
-    grantedAt: Date.now()
-  });
-  if (!bonus) {
+  let gachaGained = 0;
+  if (reward.gachaTickets > 0) {
+    const award = typeof gainGachaTickets === 'function'
+      ? gainGachaTickets
+      : typeof window !== 'undefined' && typeof window.gainGachaTickets === 'function'
+        ? window.gainGachaTickets
+        : null;
+    if (typeof award === 'function') {
+      try {
+        gachaGained = award(reward.gachaTickets, { unlockTicketStar: true });
+      } catch (error) {
+        console.warn('Chess reward: unable to grant gacha tickets', error);
+        gachaGained = 0;
+      }
+    }
+  }
+
+  const critResult = reward.crit
+    ? applyChessCritBonus(reward.crit.multiplier, reward.crit.durationSeconds)
+    : null;
+  const hasCrit = Boolean(critResult);
+  if ((!Number.isFinite(gachaGained) || gachaGained <= 0) && !hasCrit) {
     return false;
   }
 
-  gameState.sudokuOfflineBonus = bonus;
-
   const announce = options.announce !== false;
   if (announce && typeof showToast === 'function') {
-    const durationText = formatSudokuRewardDuration(reward.offlineSeconds);
-    const multiplierText = formatMultiplier(reward.offlineMultiplier);
     const difficultyId = typeof options.difficultyId === 'string' ? options.difficultyId.trim() : '';
     const modeFromConfig = difficultyId ? findChessDifficultyConfigMode(difficultyId) : null;
     const difficultyLabel = translateChessDifficultyLabel({
@@ -7358,19 +7424,37 @@ function registerChessVictoryReward(options = {}) {
       mode: modeFromConfig
     });
     const hasDifficulty = Boolean(difficultyLabel);
+    const parts = [];
+    if (Number.isFinite(gachaGained) && gachaGained > 0) {
+      const suffix = gachaGained > 1 ? 's' : '';
+      parts.push(translateOrDefault(
+        'scripts.arcade.chess.reward.tickets',
+        '{count} ticket{suffix} gacha',
+        { count: formatNumberLocalized(gachaGained), suffix }
+      ));
+    }
+    if (hasCrit && critResult) {
+      const multiplierText = formatNumberLocalized(critResult.multiplier, { maximumFractionDigits: 2 });
+      const durationText = formatDuration(critResult.durationSeconds * 1000);
+      parts.push(translateOrDefault(
+        'scripts.arcade.chess.reward.crit',
+        'Critique ×{multiplier} pendant {duration}',
+        { multiplier: multiplierText, duration: durationText }
+      ));
+    }
+    const rewardsText = parts.filter(Boolean).join(' · ');
     const messageKey = hasDifficulty
-      ? 'scripts.app.arcade.chess.reward.ready'
-      : 'scripts.app.arcade.chess.reward.readyGeneric';
+      ? 'scripts.arcade.chess.reward.granted'
+      : 'scripts.arcade.chess.reward.grantedGeneric';
     const fallback = hasDifficulty
-      ? `Chess victory (${difficultyLabel}): offline bonus ready (${durationText} at ${multiplierText}).`
-      : `Chess victory: offline bonus ready (${durationText} at ${multiplierText}).`;
+      ? `Victoire aux échecs (${difficultyLabel}) : ${rewardsText}.`
+      : `Victoire aux échecs : ${rewardsText}.`;
     let message = null;
     if (typeof t === 'function') {
       try {
         message = t(messageKey, {
           difficulty: difficultyLabel,
-          duration: durationText,
-          multiplier: multiplierText
+          rewards: rewardsText
         });
       } catch (error) {
         console.warn('Unable to translate chess reward toast', error);
@@ -7382,8 +7466,7 @@ function registerChessVictoryReward(options = {}) {
         try {
           const translated = api.t(messageKey, {
             difficulty: difficultyLabel,
-            duration: durationText,
-            multiplier: multiplierText
+            rewards: rewardsText
           });
           if (translated && typeof translated === 'string' && translated.trim() && translated !== messageKey) {
             message = translated;

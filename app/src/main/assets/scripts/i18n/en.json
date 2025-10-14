@@ -523,7 +523,14 @@
         "controls": {
           "reset": "Restart"
         },
-        "board": "Solitaire board"
+        "board": "Solitaire board",
+        "rewards": {
+          "gacha": "{count} gacha ticket{suffix}",
+          "mach3": "{count} Mach3 ticket{suffix}"
+        },
+        "toast": {
+          "completion": "Solitaire cleared! Rewards: {rewards}."
+        }
       },
       "echecs": {
         "aria": "Quantum Chess mini-game — client-side engine",
@@ -1541,11 +1548,13 @@
           "standardDescription": "Balanced configuration: responsive, steady AI.",
           "expert": "Expert mode",
           "expertDescription": "Deeper analysis and longer think time for a tough challenge.",
-          "reward": "Offline bonus: {duration} at {multiplier}"
+          "reward": "Reward: {rewards}"
         },
         "reward": {
-          "ready": "Victory in {difficulty}! Offline bonus ready: {duration} at {multiplier}.",
-          "readyGeneric": "Chess victory! Offline bonus ready: {duration} at {multiplier}."
+          "tickets": "{count} gacha ticket{suffix}",
+          "crit": "Critical boost ×{multiplier} for {duration}",
+          "granted": "Victory on {difficulty}: {rewards}.",
+          "grantedGeneric": "Chess victory: {rewards}."
         }
       },
       "math": {
@@ -1557,6 +1566,9 @@
           "timeout": "Time's up! Streak reset.",
           "gameOverMistakes": "You've reached {limit} mistakes: game over! Level resets to zero.",
           "gameOverTimeout": "Time's up: game over! Level resets to zero."
+        },
+        "toast": {
+          "gachaTicket": "Gacha ticket earned! (+{count})"
         }
       },
       "sudoku": {

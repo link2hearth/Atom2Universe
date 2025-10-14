@@ -46,7 +46,8 @@
   const DEFAULT_REWARD_RULES = {
     perfectBalance: {
       maxAttempts: 2,
-      ticketAmount: 1
+      ticketAmount: 1,
+      ticketChance: 1
     }
   };
 
@@ -190,6 +191,7 @@
     const perfectBalanceConfig = rawRewards?.perfectBalance || {};
     const rawMaxAttempts = Math.floor(Number(perfectBalanceConfig.maxAttempts));
     const rawTicketAmount = Math.floor(Number(perfectBalanceConfig.ticketAmount));
+    const rawTicketChance = Number(perfectBalanceConfig.ticketChance);
     const rewards = {
       perfectBalance: {
         maxAttempts: Number.isFinite(rawMaxAttempts) && rawMaxAttempts > 0
@@ -197,7 +199,10 @@
           : DEFAULT_REWARD_RULES.perfectBalance.maxAttempts,
         ticketAmount: Number.isFinite(rawTicketAmount)
           ? clamp(rawTicketAmount, 0, 10)
-          : DEFAULT_REWARD_RULES.perfectBalance.ticketAmount
+          : DEFAULT_REWARD_RULES.perfectBalance.ticketAmount,
+        ticketChance: Number.isFinite(rawTicketChance)
+          ? clamp(rawTicketChance, 0, 1)
+          : DEFAULT_REWARD_RULES.perfectBalance.ticketChance
       }
     };
 
@@ -1347,6 +1352,15 @@
       }
       const amount = Number(rules.ticketAmount) || 0;
       if (amount <= 0 || typeof gainBonusParticulesTickets !== 'function') {
+        return;
+      }
+      const chance = typeof rules.ticketChance === 'number'
+        ? clamp(rules.ticketChance, 0, 1)
+        : DEFAULT_REWARD_RULES.perfectBalance.ticketChance;
+      if (chance <= 0) {
+        return;
+      }
+      if (chance < 1 && Math.random() >= chance) {
         return;
       }
       const gained = gainBonusParticulesTickets(amount);
