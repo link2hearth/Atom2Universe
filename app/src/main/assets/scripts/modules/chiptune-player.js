@@ -267,28 +267,10 @@
 
   const DEFAULT_SOUNDFONTS = Object.freeze([
     Object.freeze({
-      id: 'GeneralUser-GS',
-      name: 'GeneralUser-GS',
-      file: 'Assets/Music/GeneralUser-GS.sf2',
-      default: false,
-    }),
-    Object.freeze({
       id: 'Piano',
       name: 'Piano',
       file: 'Assets/Music/Piano.sf2',
       default: true,
-    }),
-        Object.freeze({
-      id: 'Classical_Oboe',
-      name: 'Classical_Oboe',
-      file: 'Assets/Music/Classical_Oboe.sf2',
-      default: false,
-    }),
-    Object.freeze({
-      id: 'merlin',
-      name: 'merlin',
-      file: 'Assets/Music/merlin.sf2',
-      default: false,
     }),
   ]);
 
