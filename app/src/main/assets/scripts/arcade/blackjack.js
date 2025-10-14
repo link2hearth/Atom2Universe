@@ -55,11 +55,18 @@
     if (typeof key !== 'string' || !key.trim()) {
       return fallback;
     }
-    const translator = typeof window !== 'undefined' && window.i18n && typeof window.i18n.t === 'function'
-      ? window.i18n.t
-      : typeof window !== 'undefined' && typeof window.t === 'function'
-        ? window.t
-        : null;
+
+    let translator = null;
+    if (typeof window !== 'undefined') {
+      if (window.i18n && typeof window.i18n.t === 'function') {
+        translator = window.i18n.t.bind(window.i18n);
+      } else if (typeof window.t === 'function') {
+        translator = window.t.bind(window);
+      }
+    } else if (typeof globalThis !== 'undefined' && typeof globalThis.t === 'function') {
+      translator = globalThis.t.bind(globalThis);
+    }
+
     if (translator) {
       try {
         const result = translator(key, params);
