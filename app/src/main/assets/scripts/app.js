@@ -9334,6 +9334,13 @@ const manualMultiTouchGuardState = {
   touchGuardHandler: null
 };
 
+function isManualInteractionTarget(target) {
+  if (!target || typeof target.closest !== 'function') {
+    return false;
+  }
+  return Boolean(target.closest('#game, #wave'));
+}
+
 function getHighResolutionTimestamp() {
   if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
     return performance.now();
@@ -9372,6 +9379,9 @@ function enableManualMultiTouchGuard() {
     if (!event || !isTouchLikePointerType(event.pointerType)) {
       return;
     }
+    if (!isManualInteractionTarget(event.target)) {
+      return;
+    }
     pointerIds.add(event.pointerId);
     if (pointerIds.size > 1 && typeof event.preventDefault === 'function') {
       event.preventDefault();
@@ -9394,7 +9404,12 @@ function enableManualMultiTouchGuard() {
       : (typeof event.touches === 'object' && typeof event.touches.length === 'number')
         ? Array.from(event.touches)
         : null;
-    if (touches && touches.length > 1 && typeof event.preventDefault === 'function') {
+    if (!touches || touches.length <= 1 || typeof event.preventDefault !== 'function') {
+      return;
+    }
+    const hasManualTarget = touches.some(touch => isManualInteractionTarget(touch?.target))
+      || isManualInteractionTarget(event.target);
+    if (hasManualTarget) {
       event.preventDefault();
     }
   };
