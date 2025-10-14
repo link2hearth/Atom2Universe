@@ -1,5 +1,6 @@
 .page--balance {
-  --balance-available-height: calc(100vh - clamp(13rem, 24vh, 22rem));
+  --balance-viewport: 100vh;
+  --balance-available-height: calc(var(--balance-viewport) - clamp(11rem, 22vh, 18rem));
   --balance-board-width: clamp(180px, min(68vw, var(--balance-available-height)), 640px);
   --balance-board-surface-height: clamp(48px, 12vh, 96px);
   --balance-pivot-height: clamp(18px, 4vh, 30px);
@@ -70,17 +71,24 @@
   width: 100%;
   max-width: 100%;
   margin: 0 auto;
-  padding: clamp(1.25rem, min(2.8vw, 3vh), 2.75rem)
-    clamp(1.25rem, min(2.4vw, 3vh), 2.5rem)
-    clamp(1.6rem, min(3.2vw, 3.6vh), 3rem);
+  padding: clamp(0.85rem, min(2vw, 2.4vh), 2rem)
+    clamp(1rem, min(2.2vw, 2.8vh), 2.2rem)
+    clamp(1.1rem, min(2.4vw, 3vh), 2.35rem);
   flex-direction: column;
   align-items: center;
-  gap: clamp(1rem, min(2.5vw, 2.6vh), 2.75rem);
+  gap: clamp(0.6rem, min(1.8vw, 2vh), 1.75rem);
   min-height: 100vh;
+  min-height: var(--balance-viewport);
 }
 
 .page--balance.active {
   display: flex;
+}
+
+@supports (height: 100dvh) {
+  .page--balance {
+    --balance-viewport: 100dvh;
+  }
 }
 
 body.theme-light .page--balance {
@@ -266,10 +274,10 @@ body.theme-aurora .page--balance {
 .balance-layout {
   width: min(1100px, 100%);
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto minmax(auto, 1fr) auto;
   justify-items: center;
   align-items: center;
-  gap: clamp(0.75rem, min(1.8vw, 2.1vh), 1.8rem);
+  gap: clamp(0.55rem, min(1.5vw, 1.8vh), 1.5rem);
   flex: 1 1 auto;
   min-height: 0;
 }
@@ -307,7 +315,7 @@ body.theme-aurora .page--balance {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(0.75rem, min(1.6vw, 2vh), 1.5rem);
+  gap: clamp(0.5rem, min(1.2vw, 1.6vh), 1.1rem);
 }
 
 .balance-stage {
@@ -316,9 +324,10 @@ body.theme-aurora .page--balance {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
-  gap: clamp(0.5rem, min(1.3vw, 1.8vh), 1.15rem);
-  padding-top: clamp(0.65rem, min(2.5vw, 2.8vh), 2.35rem);
+  justify-content: flex-start;
+  gap: clamp(0.4rem, min(1.2vw, 1.6vh), 0.95rem);
+  padding-top: clamp(0.4rem, min(1.6vw, 1.9vh), 1.35rem);
+  min-height: 0;
 }
 
 .balance-board {
@@ -387,50 +396,78 @@ body.theme-aurora .page--balance {
     "difficulty buttons";
   justify-content: center;
   align-items: center;
-  row-gap: clamp(0.5rem, min(1.6vw, 2vh), 1.5rem);
-  column-gap: clamp(0.5rem, min(1.6vw, 2vh), 1.5rem);
+  row-gap: clamp(0.35rem, min(1vw, 1.4vh), 0.95rem);
+  column-gap: clamp(0.35rem, min(1vw, 1.4vh), 0.95rem);
   margin-top: auto;
 }
 
 @media (max-height: 720px) {
   .page--balance {
-    --balance-available-height: calc(100vh - clamp(11rem, 28vh, 18rem));
-    gap: clamp(0.75rem, min(2vw, 2.4vh), 2rem);
+    --balance-available-height: calc(var(--balance-viewport) - clamp(9.5rem, 24vh, 16rem));
+    gap: clamp(0.5rem, min(1.6vw, 1.9vh), 1.35rem);
   }
 
   .balance-layout {
-    gap: clamp(0.65rem, min(1.6vw, 1.9vh), 1.4rem);
+    gap: clamp(0.45rem, min(1.3vw, 1.6vh), 1.1rem);
   }
 
   .balance-board-wrapper {
-    gap: clamp(0.6rem, min(1.2vw, 1.6vh), 1.1rem);
+    gap: clamp(0.4rem, min(1vw, 1.4vh), 0.9rem);
   }
 
   .balance-stage {
-    padding-top: clamp(0.5rem, min(1.8vw, 2.2vh), 1.5rem);
-    gap: clamp(0.4rem, min(1.2vw, 1.6vh), 0.9rem);
+    padding-top: clamp(0.35rem, min(1.4vw, 1.8vh), 1.05rem);
+    gap: clamp(0.35rem, min(1vw, 1.4vh), 0.85rem);
   }
 
   .balance-controls {
-    row-gap: clamp(0.4rem, min(1.2vw, 1.6vh), 0.9rem);
-    column-gap: clamp(0.4rem, min(1.2vw, 1.6vh), 0.9rem);
+    row-gap: clamp(0.3rem, min(0.9vw, 1.2vh), 0.75rem);
+    column-gap: clamp(0.3rem, min(0.9vw, 1.2vh), 0.75rem);
   }
 }
 
 @media (max-height: 600px) {
   .page--balance {
-    --balance-available-height: calc(100vh - clamp(9.5rem, 32vh, 16rem));
+    --balance-available-height: calc(var(--balance-viewport) - clamp(8.5rem, 28vh, 14.5rem));
     --balance-board-width: clamp(160px, min(62vw, var(--balance-available-height)), 520px);
-    --balance-board-surface-height: clamp(42px, 14vh, 72px);
-    --balance-pivot-height: clamp(16px, 5vh, 24px);
+    --balance-board-surface-height: clamp(40px, 14vh, 68px);
+    --balance-pivot-height: clamp(14px, 5vh, 22px);
   }
 
   .balance-layout {
-    gap: clamp(0.5rem, min(1.4vw, 1.8vh), 1.2rem);
+    gap: clamp(0.4rem, min(1.2vw, 1.4vh), 1rem);
   }
 
   .balance-board-shadow {
-    height: clamp(0.6rem, 1.2vh, 1.4rem);
+    height: clamp(0.5rem, 1vh, 1.2rem);
+  }
+}
+
+@media (orientation: landscape) and (max-height: 600px) {
+  .page--balance {
+    padding: clamp(0.55rem, 2vh, 1.2rem)
+      clamp(0.8rem, 2.6vw, 1.6rem)
+      clamp(0.75rem, 2.4vh, 1.6rem);
+    gap: clamp(0.4rem, min(1.2vw, 1.4vh), 1.1rem);
+    --balance-available-height: calc(var(--balance-viewport) - clamp(7.5rem, 26vh, 12.5rem));
+  }
+
+  .balance-layout {
+    gap: clamp(0.35rem, min(1vw, 1.2vh), 0.85rem);
+  }
+
+  .balance-board-wrapper {
+    gap: clamp(0.3rem, min(0.9vw, 1.1vh), 0.75rem);
+  }
+
+  .balance-stage {
+    padding-top: clamp(0.25rem, min(0.8vw, 1.1vh), 0.7rem);
+    gap: clamp(0.3rem, min(0.9vw, 1.1vh), 0.7rem);
+  }
+
+  .balance-controls {
+    row-gap: clamp(0.25rem, min(0.8vw, 1vh), 0.6rem);
+    column-gap: clamp(0.25rem, min(0.8vw, 1vh), 0.6rem);
   }
 }
 
