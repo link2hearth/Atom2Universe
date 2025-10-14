@@ -165,8 +165,9 @@
 }
 
 .solitaire-pile--tableau {
-  width: 100%;
+  width: var(--solitaire-card-width);
   min-width: var(--solitaire-card-width);
+  max-width: var(--solitaire-card-width);
   height: calc(var(--solitaire-card-height) + var(--solitaire-stack-offset, 0px));
 }
 
