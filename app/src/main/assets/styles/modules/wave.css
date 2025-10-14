@@ -26,6 +26,9 @@ body.theme-aurora.view-wave .app-header {
   gap: clamp(0.75rem, 2vw, 1.5rem);
   padding-inline: clamp(0.75rem, 2vw, 2rem);
   padding-block: clamp(1rem, 3vh, 2.5rem);
+  overflow: hidden;
+  touch-action: none;
+  user-select: none;
 }
 
 .page--wave.active {

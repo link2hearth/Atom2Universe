@@ -9944,8 +9944,21 @@ function bindDomEventListeners() {
   if (elements.atomButton) {
     const atomButton = elements.atomButton;
 
-    atomButton.addEventListener('click', event => {
+    atomButton.addEventListener('pointerdown', event => {
+      if (event.pointerType === 'mouse' && event.button !== 0) {
+        return;
+      }
+      event.preventDefault();
       event.stopPropagation();
+      handleManualAtomClick({ contextId: 'game' });
+    });
+
+    atomButton.addEventListener('click', event => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (event.detail !== 0) {
+        return;
+      }
       handleManualAtomClick({ contextId: 'game' });
     });
 
