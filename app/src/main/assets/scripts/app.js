@@ -10226,68 +10226,8 @@ function bindDomEventListeners() {
       }
     });
   }
-
-
   if (elements.atomButton) {
     const atomButton = elements.atomButton;
-    let suppressNextAtomButtonClick = false;
-
-    const triggerAtomButtonClick = () => {
-      handleManualAtomClick({ contextId: 'game' });
-    };
-
-    if (supportsGlobalPointerEvents) {
-      atomButton.addEventListener('pointerdown', event => {
-        if (!event || event.pointerType !== 'touch') {
-          suppressNextAtomButtonClick = false;
-          return;
-        }
-        suppressNextAtomButtonClick = true;
-        if (typeof event.preventDefault === 'function') {
-          event.preventDefault();
-        }
-        if (typeof event.stopPropagation === 'function') {
-          event.stopPropagation();
-        }
-        triggerAtomButtonClick();
-      });
-
-      ['pointerup', 'pointercancel', 'pointerout', 'pointerleave'].forEach(eventName => {
-        atomButton.addEventListener(eventName, event => {
-          if (event?.pointerType === 'touch') {
-            suppressNextAtomButtonClick = true;
-          }
-        });
-      });
-    } else {
-      const handleAtomTouchStart = event => {
-        if (!event) {
-          return;
-        }
-        suppressNextAtomButtonClick = true;
-        const touches = Array.from(event.changedTouches || event.touches || []);
-        if (typeof event.preventDefault === 'function') {
-          event.preventDefault();
-        }
-        if (typeof event.stopPropagation === 'function') {
-          event.stopPropagation();
-        }
-        if (!touches.length) {
-          triggerAtomButtonClick();
-          return;
-        }
-        touches.forEach(() => {
-          triggerAtomButtonClick();
-        });
-      };
-
-      atomButton.addEventListener('touchstart', handleAtomTouchStart, nonPassiveEventListenerOptions);
-      ['touchend', 'touchcancel'].forEach(eventName => {
-        atomButton.addEventListener(eventName, () => {
-          suppressNextAtomButtonClick = true;
-        }, nonPassiveEventListenerOptions);
-      });
-    }
 
     atomButton.addEventListener('click', event => {
       if (typeof event?.preventDefault === 'function') {
@@ -10296,12 +10236,7 @@ function bindDomEventListeners() {
       if (typeof event?.stopPropagation === 'function') {
         event.stopPropagation();
       }
-      if (suppressNextAtomButtonClick && event?.detail > 0) {
-        suppressNextAtomButtonClick = false;
-        return;
-      }
-      suppressNextAtomButtonClick = false;
-      triggerAtomButtonClick();
+      handleManualAtomClick({ contextId: 'game' });
     });
 
     atomButton.addEventListener('dragstart', event => {
@@ -13962,3 +13897,4 @@ if (document.readyState === 'loading') {
 } else {
   initializeApp();
 }
+
