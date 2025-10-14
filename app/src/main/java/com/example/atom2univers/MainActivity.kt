@@ -55,6 +55,8 @@ class MainActivity : AppCompatActivity() {
         with(webView.settings) {
             javaScriptEnabled = true
             domStorageEnabled = true
+            allowFileAccess = true
+            databaseEnabled = true
         }
 
         if (savedInstanceState != null) {
@@ -71,3 +73,4 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
+
