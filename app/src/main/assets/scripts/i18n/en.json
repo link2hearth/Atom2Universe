@@ -1816,7 +1816,10 @@
       },
       "metaux": {
         "chronoBonus": "Timer +{value} s",
-        "multiBonus": "Multiplier +{value}",
+        "multiBonus": "APC/APS multiplier +{value}",
+        "critLabel": "APC/APS crit multiplier",
+        "critAriaActive": "APC/APS crit timer active: {multiplier} for {duration}.",
+        "critAriaInactive": "APC/APS crit timer inactive.",
         "toast": "Metals: {details}",
         "unavailable": "Forge unavailable at the moment.",
         "gameInProgress": "A game is already in progress. Finish it before starting a new one.",

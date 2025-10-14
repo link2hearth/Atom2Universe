@@ -1816,7 +1816,10 @@
       },
       "metaux": {
         "chronoBonus": "Chrono +{value} s",
-        "multiBonus": "Multi +{value}",
+        "multiBonus": "Multiplicateur APC/APS +{value}",
+        "critLabel": "Critique APC/APS",
+        "critAriaActive": "Compteur critique APC/APS actif : {multiplier} pendant {duration}.",
+        "critAriaInactive": "Compteur critique APC/APS inactif.",
         "toast": "Métaux : {details}",
         "unavailable": "Forge indisponible pour le moment.",
         "gameInProgress": "Une partie est déjà en cours. Terminez-la avant de relancer.",
