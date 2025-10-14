@@ -4,8 +4,10 @@ import android.content.Context
 import android.util.AttributeSet
 import android.util.SparseArray
 import android.view.MotionEvent
+import android.view.ViewConfiguration
 import android.webkit.WebView
 import androidx.core.util.contains
+import kotlin.math.abs
 
 /**
  * Custom WebView that normalises multi-touch input for the clicker gameplay.
@@ -24,53 +26,104 @@ class GameWebView @JvmOverloads constructor(
 
     private data class PointerState(
         val downTime: Long,
+        var startX: Float,
+        var startY: Float,
         var lastX: Float,
         var lastY: Float
     )
 
     private val pointerStates = SparseArray<PointerState>()
+    private val touchSlop = ViewConfiguration.get(context).scaledTouchSlop
+    private var syntheticHandlingEnabled = true
+    private var primaryPointerId: Int = MotionEvent.INVALID_POINTER_ID
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val actionMasked = event.actionMasked
         val actionIndex = event.actionIndex
 
+        if (!syntheticHandlingEnabled) {
+            val handled = super.onTouchEvent(event)
+            if (actionMasked == MotionEvent.ACTION_UP || actionMasked == MotionEvent.ACTION_CANCEL) {
+                syntheticHandlingEnabled = true
+                primaryPointerId = MotionEvent.INVALID_POINTER_ID
+                pointerStates.clear()
+                updateParentInterception()
+            }
+            return handled
+        }
+
         when (actionMasked) {
             MotionEvent.ACTION_DOWN -> {
+                syntheticHandlingEnabled = true
                 registerPointer(event, 0, event.downTime)
+                primaryPointerId = event.getPointerId(0)
                 return super.onTouchEvent(event)
             }
 
             MotionEvent.ACTION_POINTER_DOWN -> {
                 registerPointer(event, actionIndex, event.eventTime)
-                dispatchPointerEvent(event, actionIndex, MotionEvent.ACTION_DOWN)
-                return true
+                if (primaryPointerId == MotionEvent.INVALID_POINTER_ID) {
+                    primaryPointerId = event.getPointerId(actionIndex)
+                }
+                val handled = dispatchPointerEvent(event, actionIndex, MotionEvent.ACTION_DOWN)
+                return if (handled) {
+                    true
+                } else {
+                    super.onTouchEvent(event)
+                }
             }
 
             MotionEvent.ACTION_MOVE -> {
-                if (event.pointerCount > 1) {
-                    for (i in 0 until event.pointerCount) {
-                        dispatchPointerEvent(event, i, MotionEvent.ACTION_MOVE)
+                val primaryIndex = event.findPointerIndex(primaryPointerId)
+                if (primaryIndex != -1) {
+                    pointerStates[primaryPointerId]?.let { state ->
+                        val deltaY = abs(event.getY(primaryIndex) - state.startY)
+                        if (deltaY > touchSlop) {
+                            fallbackToNativeHandling(event)
+                            return super.onTouchEvent(event)
+                        }
                     }
-                    return true
+                }
+                if (event.pointerCount > 1) {
+                    var handled = false
+                    for (i in 0 until event.pointerCount) {
+                        handled = dispatchPointerEvent(event, i, MotionEvent.ACTION_MOVE) || handled
+                    }
+                    return if (handled) {
+                        true
+                    } else {
+                        super.onTouchEvent(event)
+                    }
                 }
                 return super.onTouchEvent(event)
             }
 
             MotionEvent.ACTION_POINTER_UP -> {
-                dispatchPointerEvent(event, actionIndex, MotionEvent.ACTION_UP)
+                val handled = dispatchPointerEvent(event, actionIndex, MotionEvent.ACTION_UP)
                 unregisterPointer(event, actionIndex)
-                return true
+                if (event.getPointerId(actionIndex) == primaryPointerId) {
+                    promoteNextPrimary()
+                }
+                return if (handled) {
+                    true
+                } else {
+                    super.onTouchEvent(event)
+                }
             }
 
             MotionEvent.ACTION_UP -> {
                 val handled = super.onTouchEvent(event)
                 unregisterPointer(event, actionIndex)
+                syntheticHandlingEnabled = true
+                primaryPointerId = MotionEvent.INVALID_POINTER_ID
                 return handled
             }
 
             MotionEvent.ACTION_CANCEL -> {
                 sendCancelForActivePointers(event)
                 pointerStates.clear()
+                syntheticHandlingEnabled = true
+                primaryPointerId = MotionEvent.INVALID_POINTER_ID
                 updateParentInterception()
                 return super.onTouchEvent(event)
             }
@@ -86,12 +139,16 @@ class GameWebView @JvmOverloads constructor(
     private fun registerPointer(event: MotionEvent, pointerIndex: Int, downTime: Long) {
         val pointerId = event.getPointerId(pointerIndex)
         if (!pointerStates.contains(pointerId)) {
+            val x = event.getX(pointerIndex)
+            val y = event.getY(pointerIndex)
             pointerStates.put(
                 pointerId,
                 PointerState(
                     downTime = downTime,
-                    lastX = event.getX(pointerIndex),
-                    lastY = event.getY(pointerIndex)
+                    startX = x,
+                    startY = y,
+                    lastX = x,
+                    lastY = y
                 )
             )
             updateParentInterception()
@@ -104,10 +161,16 @@ class GameWebView @JvmOverloads constructor(
         updateParentInterception()
     }
 
-    private fun dispatchPointerEvent(event: MotionEvent, pointerIndex: Int, action: Int) {
+    private fun dispatchPointerEvent(event: MotionEvent, pointerIndex: Int, action: Int): Boolean {
         val pointerId = event.getPointerId(pointerIndex)
         val state = pointerStates[pointerId]
-            ?: PointerState(event.downTime, event.getX(pointerIndex), event.getY(pointerIndex))
+            ?: PointerState(
+                downTime = event.downTime,
+                startX = event.getX(pointerIndex),
+                startY = event.getY(pointerIndex),
+                lastX = event.getX(pointerIndex),
+                lastY = event.getY(pointerIndex)
+            )
         val pointerProperties = MotionEvent.PointerProperties().apply {
             id = pointerId
             toolType = MotionEvent.TOOL_TYPE_FINGER
@@ -137,8 +200,46 @@ class GameWebView @JvmOverloads constructor(
             event.flags
         )
 
-        super.onTouchEvent(singlePointerEvent)
+        if (event.historySize > 0) {
+            for (h in 0 until event.historySize) {
+                val historicalCoords = MotionEvent.PointerCoords().apply {
+                    event.getHistoricalPointerCoords(pointerIndex, h, this)
+                }
+                singlePointerEvent.addBatch(
+                    event.getHistoricalEventTime(h),
+                    arrayOf(historicalCoords),
+                    event.metaState
+                )
+            }
+        }
+
+        val handled = super.onTouchEvent(singlePointerEvent)
         singlePointerEvent.recycle()
+        return handled
+    }
+
+    private fun fallbackToNativeHandling(event: MotionEvent) {
+        if (!syntheticHandlingEnabled) {
+            return
+        }
+        sendCancelForActivePointers(event)
+        pointerStates.clear()
+        syntheticHandlingEnabled = false
+        primaryPointerId = MotionEvent.INVALID_POINTER_ID
+        updateParentInterception()
+    }
+
+    private fun promoteNextPrimary() {
+        if (pointerStates.size() == 0) {
+            primaryPointerId = MotionEvent.INVALID_POINTER_ID
+            return
+        }
+        val newIndex = 0
+        primaryPointerId = pointerStates.keyAt(newIndex)
+        pointerStates.valueAt(newIndex)?.let { state ->
+            state.startX = state.lastX
+            state.startY = state.lastY
+        }
     }
 
     private fun sendCancelForActivePointers(reference: MotionEvent) {
