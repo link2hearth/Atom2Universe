@@ -42,24 +42,37 @@ class GameWebView @JvmOverloads constructor(
 
             MotionEvent.ACTION_POINTER_DOWN -> {
                 registerPointer(event, actionIndex, event.eventTime)
-                dispatchPointerEvent(event, actionIndex, MotionEvent.ACTION_DOWN)
-                return true
+                val handled = dispatchPointerEvent(event, actionIndex, MotionEvent.ACTION_DOWN)
+                return if (handled) {
+                    true
+                } else {
+                    super.onTouchEvent(event)
+                }
             }
 
             MotionEvent.ACTION_MOVE -> {
                 if (event.pointerCount > 1) {
+                    var handled = false
                     for (i in 0 until event.pointerCount) {
-                        dispatchPointerEvent(event, i, MotionEvent.ACTION_MOVE)
+                        handled = dispatchPointerEvent(event, i, MotionEvent.ACTION_MOVE) || handled
                     }
-                    return true
+                    return if (handled) {
+                        true
+                    } else {
+                        super.onTouchEvent(event)
+                    }
                 }
                 return super.onTouchEvent(event)
             }
 
             MotionEvent.ACTION_POINTER_UP -> {
-                dispatchPointerEvent(event, actionIndex, MotionEvent.ACTION_UP)
+                val handled = dispatchPointerEvent(event, actionIndex, MotionEvent.ACTION_UP)
                 unregisterPointer(event, actionIndex)
-                return true
+                return if (handled) {
+                    true
+                } else {
+                    super.onTouchEvent(event)
+                }
             }
 
             MotionEvent.ACTION_UP -> {
@@ -104,7 +117,7 @@ class GameWebView @JvmOverloads constructor(
         updateParentInterception()
     }
 
-    private fun dispatchPointerEvent(event: MotionEvent, pointerIndex: Int, action: Int) {
+    private fun dispatchPointerEvent(event: MotionEvent, pointerIndex: Int, action: Int): Boolean {
         val pointerId = event.getPointerId(pointerIndex)
         val state = pointerStates[pointerId]
             ?: PointerState(event.downTime, event.getX(pointerIndex), event.getY(pointerIndex))
@@ -137,8 +150,22 @@ class GameWebView @JvmOverloads constructor(
             event.flags
         )
 
-        super.onTouchEvent(singlePointerEvent)
+        if (event.historySize > 0) {
+            for (h in 0 until event.historySize) {
+                val historicalCoords = MotionEvent.PointerCoords().apply {
+                    event.getHistoricalPointerCoords(pointerIndex, h, this)
+                }
+                singlePointerEvent.addBatch(
+                    event.getHistoricalEventTime(h),
+                    arrayOf(historicalCoords),
+                    event.metaState
+                )
+            }
+        }
+
+        val handled = super.onTouchEvent(singlePointerEvent)
         singlePointerEvent.recycle()
+        return handled
     }
 
     private fun sendCancelForActivePointers(reference: MotionEvent) {
