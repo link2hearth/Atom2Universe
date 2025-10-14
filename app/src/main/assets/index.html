@@ -99,19 +99,6 @@
         </button>
       </div>
       <div class="status-side status-side--right">
-        <div class="status-item status-item--crit status-item--crit-aps" aria-live="polite">
-          <div
-            class="status-crit-display status-crit-display--aps"
-            id="statusApsCrit"
-            role="status"
-            aria-atomic="true"
-            hidden
-          >
-            <span class="status-aps-crit-value status-aps-crit-value--chrono" id="statusApsCritChrono">0&nbsp;s</span>
-            <span class="status-aps-crit-separator" aria-hidden="true">·</span>
-            <span class="status-aps-crit-value status-aps-crit-value--multiplier" id="statusApsCritMultiplier">×1</span>
-          </div>
-        </div>
         <div class="status-item status-item--right">
           <span class="status-label" data-i18n="index.status.aps">APS</span>
           <div class="status-value-group status-value-group--aps">
@@ -128,6 +115,19 @@
       <div class="frenzy-status__item frenzy-status__item--aps" id="statusApsFrenzy" hidden>
         <span class="frenzy-status__multiplier" id="statusApsFrenzyMultiplier"></span>
         <span class="frenzy-status__timer" id="statusApsFrenzyTimer"></span>
+      </div>
+      <div class="frenzy-status__crit status-item status-item--crit status-item--crit-aps" aria-live="polite">
+        <div
+          class="status-crit-display status-crit-display--aps"
+          id="statusApsCrit"
+          role="status"
+          aria-atomic="true"
+          hidden
+        >
+          <span class="status-aps-crit-value status-aps-crit-value--chrono" id="statusApsCritChrono">0&nbsp;s</span>
+          <span class="status-aps-crit-separator" aria-hidden="true">·</span>
+          <span class="status-aps-crit-value status-aps-crit-value--multiplier" id="statusApsCritMultiplier">×1</span>
+        </div>
       </div>
     </div>
 

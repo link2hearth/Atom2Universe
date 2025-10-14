@@ -12482,7 +12482,9 @@ function updateFrenzyIndicators(now = performance.now()) {
   if (statusRoot) {
     const activePage = document.body?.dataset?.activePage;
     const displayAllowed = activePage === 'game' || activePage === 'wave';
-    const hasActive = Boolean(apsActive || apcActive);
+    const apsCritPanel = elements.statusApsCrit;
+    const apsCritActive = Boolean(apsCritPanel && !apsCritPanel.hidden);
+    const hasActive = Boolean(apsActive || apcActive || apsCritActive);
     const shouldShow = Boolean(displayAllowed && hasActive);
     statusRoot.hidden = !shouldShow;
     statusRoot.style.display = shouldShow ? '' : 'none';
