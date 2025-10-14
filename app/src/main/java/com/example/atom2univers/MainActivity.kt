@@ -103,6 +103,13 @@ class MainActivity : AppCompatActivity() {
             displayZoomControls = false
         }
 
+        webView.setOnTouchListener { _, event ->
+            if (event.pointerCount > 2) {
+                return@setOnTouchListener true
+            }
+            false
+        }
+
         webView.addJavascriptInterface(
             AndroidSaveBridge(applicationContext),
             "AndroidSaveBridge"
