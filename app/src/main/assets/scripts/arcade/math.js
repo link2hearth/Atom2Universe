@@ -28,6 +28,12 @@
       fullSymbolUnlockLevel: 10,
       earlySymbols: Object.freeze(['+', '-']),
       fullSymbols: Object.freeze(['+', '-', '*', '/'])
+    }),
+    rewards: Object.freeze({
+      gachaTicket: Object.freeze({
+        amount: 0,
+        chance: 0
+      })
     })
   });
 
@@ -166,6 +172,66 @@
     };
   }
 
+  function normalizeRewards(rewards, fallback) {
+    const base = fallback && typeof fallback === 'object' ? fallback : DEFAULT_CONFIG.rewards;
+    const source = rewards && typeof rewards === 'object' ? rewards : {};
+    const gachaSource = source.gachaTicket && typeof source.gachaTicket === 'object'
+      ? source.gachaTicket
+      : source.gacha && typeof source.gacha === 'object'
+        ? source.gacha
+        : {};
+    const fallbackGacha = base && typeof base.gachaTicket === 'object' ? base.gachaTicket : {};
+
+    const amountCandidates = [
+      gachaSource.amount,
+      gachaSource.value,
+      gachaSource.tickets,
+      fallbackGacha.amount,
+      DEFAULT_CONFIG.rewards.gachaTicket.amount
+    ];
+    let amount = 0;
+    for (let index = 0; index < amountCandidates.length; index += 1) {
+      const candidate = Number(amountCandidates[index]);
+      if (Number.isFinite(candidate) && candidate > 0) {
+        amount = Math.floor(candidate);
+        break;
+      }
+    }
+
+    const chanceCandidates = [
+      gachaSource.chance,
+      gachaSource.probability,
+      gachaSource.rate,
+      fallbackGacha.chance,
+      DEFAULT_CONFIG.rewards.gachaTicket.chance
+    ];
+    let chance = 0;
+    for (let index = 0; index < chanceCandidates.length; index += 1) {
+      const candidate = Number(chanceCandidates[index]);
+      if (Number.isFinite(candidate) && candidate > 0) {
+        chance = candidate;
+        break;
+      }
+    }
+
+    return {
+      gachaTicket: {
+        amount: Math.max(0, amount),
+        chance: Math.max(0, Math.min(1, chance))
+      }
+    };
+  }
+
+  function formatIntegerLocalized(value) {
+    const numeric = Number.isFinite(Number(value)) ? Math.floor(Number(value)) : 0;
+    const safe = numeric >= 0 ? numeric : 0;
+    try {
+      return safe.toLocaleString();
+    } catch (error) {
+      return String(safe);
+    }
+  }
+
   function getGameConfig() {
     const arcadeConfig = GLOBAL_CONFIG && GLOBAL_CONFIG.arcade ? GLOBAL_CONFIG.arcade : null;
     const mathConfig = arcadeConfig && typeof arcadeConfig.math === 'object' ? arcadeConfig.math : null;
@@ -188,6 +254,7 @@
       ? Math.max(1, Math.floor(mathConfig.maxMistakes))
       : DEFAULT_CONFIG.maxMistakes;
     const symbolMode = normalizeSymbolMode(mathConfig.symbolMode, DEFAULT_CONFIG.symbolMode);
+    const rewards = normalizeRewards(mathConfig.rewards, DEFAULT_CONFIG.rewards);
     return {
       optionsCount,
       termCountRange,
@@ -198,7 +265,8 @@
       resultLimits,
       maxMistakes,
       roundTimerSeconds,
-      symbolMode
+      symbolMode,
+      rewards
     };
   }
 
@@ -1123,7 +1191,55 @@
       }
       elements.nextButton.disabled = false;
       updateCounters();
+      maybeAwardGachaTicket();
       scheduleSave();
+    }
+
+    function maybeAwardGachaTicket() {
+      const rewards = state.config && state.config.rewards ? state.config.rewards : null;
+      const gacha = rewards && rewards.gachaTicket ? rewards.gachaTicket : null;
+      if (!gacha) {
+        return;
+      }
+      const amount = Math.max(0, Math.floor(Number(gacha.amount) || 0));
+      if (amount <= 0) {
+        return;
+      }
+      const chanceValue = Number(gacha.chance);
+      const chance = Number.isFinite(chanceValue) ? Math.max(0, Math.min(1, chanceValue)) : 0;
+      if (chance <= 0) {
+        return;
+      }
+      if (chance < 1 && Math.random() >= chance) {
+        return;
+      }
+      const award = typeof gainGachaTickets === 'function'
+        ? gainGachaTickets
+        : typeof window !== 'undefined' && typeof window.gainGachaTickets === 'function'
+          ? window.gainGachaTickets
+          : null;
+      if (typeof award !== 'function') {
+        return;
+      }
+      let gained = 0;
+      try {
+        gained = award(amount, { unlockTicketStar: true });
+      } catch (error) {
+        console.warn('Math game: unable to grant gacha tickets', error);
+        return;
+      }
+      if (!Number.isFinite(gained) || gained <= 0) {
+        return;
+      }
+      if (typeof showToast === 'function') {
+        const countText = formatIntegerLocalized(gained);
+        const message = translate(
+          'scripts.arcade.math.toast.gachaTicket',
+          'Ticket de tirage gagné ! (+{count})',
+          { count: countText }
+        );
+        showToast(message);
+      }
     }
 
     function handleWrongAnswer(button, value) {

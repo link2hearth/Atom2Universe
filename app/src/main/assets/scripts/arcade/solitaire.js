@@ -3,6 +3,14 @@
     return;
   }
 
+  const GLOBAL_CONFIG = typeof globalThis !== 'undefined' ? globalThis.GAME_CONFIG : null;
+  const DEFAULT_SOLITAIRE_REWARDS = Object.freeze({
+    completion: Object.freeze({
+      gachaTickets: 0,
+      bonusTicketAmount: 0
+    })
+  });
+
   const SUITS = Object.freeze([
     Object.freeze({ key: 'hearts', symbol: '♥', color: 'red' }),
     Object.freeze({ key: 'diamonds', symbol: '♦', color: 'red' }),
@@ -21,6 +29,101 @@
     } else {
       callback();
     }
+  }
+
+  function translate(key, fallback, params) {
+    if (typeof key !== 'string' || !key.trim()) {
+      return typeof fallback === 'string' ? fallback : '';
+    }
+    if (typeof translateOrDefault === 'function') {
+      return translateOrDefault(key, fallback, params);
+    }
+    if (typeof window !== 'undefined') {
+      if (typeof window.translateOrDefault === 'function') {
+        return window.translateOrDefault(key, fallback, params);
+      }
+      const api = window.i18n && typeof window.i18n.t === 'function' ? window.i18n.t : null;
+      if (api) {
+        try {
+          const result = api(key, params);
+          if (typeof result === 'string' && result.trim() && result !== key) {
+            return result;
+          }
+        } catch (error) {
+          console.warn('Solitaire translation error for', key, error);
+        }
+      }
+    }
+    if (typeof fallback === 'string') {
+      if (!params) {
+        return fallback;
+      }
+      return fallback.replace(/\{(\w+)\}/g, (match, name) => {
+        if (Object.prototype.hasOwnProperty.call(params, name)) {
+          return params[name];
+        }
+        return match;
+      });
+    }
+    return key;
+  }
+
+  function formatIntegerLocalized(value) {
+    const numeric = Number.isFinite(Number(value)) ? Math.floor(Number(value)) : 0;
+    const safe = numeric >= 0 ? numeric : 0;
+    try {
+      return safe.toLocaleString();
+    } catch (error) {
+      return String(safe);
+    }
+  }
+
+  function getSolitaireRewardConfig() {
+    const arcadeConfig = GLOBAL_CONFIG && GLOBAL_CONFIG.arcade ? GLOBAL_CONFIG.arcade : null;
+    const solitaireConfig = arcadeConfig && typeof arcadeConfig.solitaire === 'object' ? arcadeConfig.solitaire : null;
+    const rewardsSource = solitaireConfig && typeof solitaireConfig.rewards === 'object'
+      ? solitaireConfig.rewards
+      : null;
+    const completionSource = rewardsSource && typeof rewardsSource.completion === 'object'
+      ? rewardsSource.completion
+      : {};
+
+    const gachaCandidates = [
+      completionSource.gachaTickets,
+      completionSource.tickets,
+      completionSource.amount,
+      DEFAULT_SOLITAIRE_REWARDS.completion.gachaTickets
+    ];
+    let gachaTickets = 0;
+    for (let index = 0; index < gachaCandidates.length; index += 1) {
+      const candidate = Number(gachaCandidates[index]);
+      if (Number.isFinite(candidate) && candidate > 0) {
+        gachaTickets = Math.floor(candidate);
+        break;
+      }
+    }
+
+    const bonusCandidates = [
+      completionSource.bonusTicketAmount,
+      completionSource.mach3Tickets,
+      completionSource.bonusTickets,
+      DEFAULT_SOLITAIRE_REWARDS.completion.bonusTicketAmount
+    ];
+    let bonusTickets = 0;
+    for (let index = 0; index < bonusCandidates.length; index += 1) {
+      const candidate = Number(bonusCandidates[index]);
+      if (Number.isFinite(candidate) && candidate > 0) {
+        bonusTickets = Math.floor(candidate);
+        break;
+      }
+    }
+
+    return {
+      completion: {
+        gachaTickets: Math.max(0, gachaTickets),
+        bonusTicketAmount: Math.max(0, bonusTickets)
+      }
+    };
   }
 
   function shuffleInPlace(array) {
@@ -73,12 +176,14 @@
     const rootElement = boardElement.closest('.solitaire');
 
     const piles = setupBoard(boardElement);
+    const rewardConfig = getSolitaireRewardConfig();
     const state = {
       stock: [],
       waste: [],
       foundations: Array.from({ length: 4 }, () => []),
       tableau: Array.from({ length: 7 }, () => []),
-      selected: null
+      selected: null,
+      rewardClaimed: false
     };
 
     function resetGame() {
@@ -89,6 +194,7 @@
       state.waste = [];
       state.foundations = Array.from({ length: 4 }, () => []);
       state.tableau = Array.from({ length: 7 }, () => []);
+      state.rewardClaimed = false;
       dealInitialLayout(deck);
       renderAll();
     }
@@ -289,10 +395,94 @@
       });
     }
 
+    function maybeAwardCompletionReward() {
+      if (state.rewardClaimed) {
+        return;
+      }
+      const reward = rewardConfig && rewardConfig.completion ? rewardConfig.completion : null;
+      if (!reward) {
+        state.rewardClaimed = true;
+        return;
+      }
+      const gachaAmount = Math.max(0, Math.floor(Number(reward.gachaTickets) || 0));
+      const bonusAmount = Math.max(0, Math.floor(Number(reward.bonusTicketAmount) || 0));
+      if (gachaAmount <= 0 && bonusAmount <= 0) {
+        state.rewardClaimed = true;
+        return;
+      }
+      let gachaGained = 0;
+      if (gachaAmount > 0) {
+        const awardGacha = typeof gainGachaTickets === 'function'
+          ? gainGachaTickets
+          : typeof window !== 'undefined' && typeof window.gainGachaTickets === 'function'
+            ? window.gainGachaTickets
+            : null;
+        if (typeof awardGacha === 'function') {
+          try {
+            gachaGained = awardGacha(gachaAmount, { unlockTicketStar: true });
+          } catch (error) {
+            console.warn('Solitaire: unable to grant gacha tickets', error);
+            gachaGained = 0;
+          }
+        }
+      }
+      let bonusGained = 0;
+      if (bonusAmount > 0 && typeof gainBonusParticulesTickets === 'function') {
+        try {
+          bonusGained = gainBonusParticulesTickets(bonusAmount);
+        } catch (error) {
+          console.warn('Solitaire: unable to grant Mach3 tickets', error);
+          bonusGained = 0;
+        }
+      }
+      if (!Number.isFinite(gachaGained) || gachaGained <= 0) {
+        gachaGained = 0;
+      }
+      if (!Number.isFinite(bonusGained) || bonusGained <= 0) {
+        bonusGained = 0;
+      }
+      if (gachaGained <= 0 && bonusGained <= 0) {
+        state.rewardClaimed = true;
+        return;
+      }
+      state.rewardClaimed = true;
+      if (typeof showToast === 'function') {
+        const parts = [];
+        if (gachaGained > 0) {
+          const suffix = gachaGained > 1 ? 's' : '';
+          parts.push(translate(
+            'scripts.arcade.solitaire.rewards.gacha',
+            '{count} ticket{suffix} gacha',
+            { count: formatIntegerLocalized(gachaGained), suffix }
+          ));
+        }
+        if (bonusGained > 0) {
+          const suffix = bonusGained > 1 ? 's' : '';
+          parts.push(translate(
+            'scripts.arcade.solitaire.rewards.mach3',
+            '{count} ticket{suffix} Mach3',
+            { count: formatIntegerLocalized(bonusGained), suffix }
+          ));
+        }
+        if (parts.length) {
+          const rewardsText = parts.join(' · ');
+          const message = translate(
+            'scripts.arcade.solitaire.toast.completion',
+            'Solitaire terminé ! Récompenses : {rewards}.',
+            { rewards: rewardsText }
+          );
+          showToast(message);
+        }
+      }
+    }
+
     function updateCompletionState() {
       const complete = state.foundations.every((pile) => pile.length === 13);
       if (rootElement) {
         rootElement.classList.toggle('solitaire--complete', complete);
+      }
+      if (complete) {
+        maybeAwardCompletionReward();
       }
     }
 

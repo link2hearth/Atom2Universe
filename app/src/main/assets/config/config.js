@@ -1253,7 +1253,8 @@ const GAME_CONFIG = {
        * Paramétrage des récompenses et de la difficulté.
        * - difficulty.defaultMode : difficulté sélectionnée par défaut.
        * - difficulty.modes : liste des modes proposés avec leur étiquette i18n,
-       *   les réglages IA associés et la récompense accordée en cas de victoire.
+       *   les réglages IA associés et la récompense accordée en cas de victoire
+       *   (tickets gacha + bonus critique temporaire).
        * - match.moveLimit : nombre maximal de tours complets avant déclaration d'une nulle technique.
        */
       difficulty: {
@@ -1265,8 +1266,11 @@ const GAME_CONFIG = {
             descriptionKey: 'scripts.arcade.chess.difficulty.trainingDescription',
             ai: { depth: 2, timeLimitMs: 600 },
             reward: {
-              offlineSeconds: 600,
-              offlineMultiplier: 1
+              gachaTickets: 100,
+              crit: {
+                multiplier: 1000,
+                durationSeconds: 300
+              }
             }
           },
           {
@@ -1275,8 +1279,11 @@ const GAME_CONFIG = {
             descriptionKey: 'scripts.arcade.chess.difficulty.standardDescription',
             ai: { depth: 3, timeLimitMs: 1200 },
             reward: {
-              offlineSeconds: 1200,
-              offlineMultiplier: 1.5
+              gachaTickets: 100,
+              crit: {
+                multiplier: 1000,
+                durationSeconds: 300
+              }
             }
           },
           {
@@ -1285,8 +1292,11 @@ const GAME_CONFIG = {
             descriptionKey: 'scripts.arcade.chess.difficulty.expertDescription',
             ai: { depth: 4, timeLimitMs: 1800 },
             reward: {
-              offlineSeconds: 1800,
-              offlineMultiplier: 2
+              gachaTickets: 100,
+              crit: {
+                multiplier: 1000,
+                durationSeconds: 300
+              }
             }
           }
         ]
@@ -1376,10 +1386,12 @@ const GAME_CONFIG = {
          * Paramètres de la récompense accordée lorsque le joueur équilibre parfaitement la planche.
          * - maxAttempts : nombre maximal de tests autorisés pour décrocher le bonus (2 = une erreur permise).
          * - ticketAmount : quantité de tickets Mach3 remis lors de la réussite (0 pour désactiver la récompense).
+         * - ticketChance : probabilité (0–1) qu'un ticket soit accordé après un succès.
          */
         perfectBalance: {
           maxAttempts: 2,
-          ticketAmount: 1
+          ticketAmount: 1,
+          ticketChance: 0.1
         }
       }
     },
@@ -1416,6 +1428,31 @@ const GAME_CONFIG = {
          * Ensemble complet des symboles proposés une fois le palier atteint.
          */
         fullSymbols: ['+', '-', '*', '/']
+      },
+      /**
+       * Récompenses distribuées lors d'une réponse correcte.
+       * - gachaTicket.amount : nombre de tickets gacha octroyés.
+       * - gachaTicket.chance : probabilité de gain à chaque opération réussie.
+       */
+      rewards: {
+        gachaTicket: {
+          amount: 1,
+          chance: 1 / 3
+        }
+      }
+    },
+    // Paramètres du mini-jeu Solitaire (patience classique).
+    solitaire: {
+      rewards: {
+        /**
+         * Récompense distribuée lorsque les quatre fondations sont complétées.
+         * - gachaTickets : tickets gacha accordés au joueur.
+         * - bonusTicketAmount : tickets Mach3 bonus octroyés simultanément.
+         */
+        completion: {
+          gachaTickets: 50,
+          bonusTicketAmount: 1
+        }
       }
     },
     particules: {
@@ -1426,7 +1463,7 @@ const GAME_CONFIG = {
        * - paid : mode avec récompenses qui prélève un pourcentage du solde actuel d'atomes.
        */
       modes: {
-        defaultMode: 'free',
+        defaultMode: 'paid',
         free: { id: 'free' },
         paid: {
           id: 'paid',

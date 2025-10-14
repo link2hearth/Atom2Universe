@@ -79,7 +79,10 @@
       descriptionKey: 'index.sections.echecs.difficulty.trainingDescription',
       fallbackDescription: 'Recherche plus courte et coups rapides pour tester librement le plateau.',
       ai: Object.freeze({ depth: 2, timeLimitMs: 600, moveDelayMs: 120 }),
-      reward: Object.freeze({ offlineSeconds: 600, offlineMultiplier: 1 })
+      reward: Object.freeze({
+        gachaTickets: 100,
+        crit: Object.freeze({ multiplier: 1000, durationSeconds: 300 })
+      })
     }),
     Object.freeze({
       id: 'standard',
@@ -88,7 +91,10 @@
       descriptionKey: 'index.sections.echecs.difficulty.standardDescription',
       fallbackDescription: 'Configuration équilibrée : IA réactive et coups stables.',
       ai: Object.freeze({ depth: 3, timeLimitMs: 1200, moveDelayMs: 150 }),
-      reward: Object.freeze({ offlineSeconds: 1200, offlineMultiplier: 1.5 })
+      reward: Object.freeze({
+        gachaTickets: 100,
+        crit: Object.freeze({ multiplier: 1000, durationSeconds: 300 })
+      })
     }),
     Object.freeze({
       id: 'expert',
@@ -97,7 +103,10 @@
       descriptionKey: 'index.sections.echecs.difficulty.expertDescription',
       fallbackDescription: 'Profondeur accrue et réflexion prolongée pour un défi soutenu.',
       ai: Object.freeze({ depth: 4, timeLimitMs: 1800, moveDelayMs: 180 }),
-      reward: Object.freeze({ offlineSeconds: 1800, offlineMultiplier: 2 })
+      reward: Object.freeze({
+        gachaTickets: 100,
+        crit: Object.freeze({ multiplier: 1000, durationSeconds: 300 })
+      })
     })
   ]);
 
@@ -240,6 +249,16 @@
     return numeric;
   }
 
+  function formatInteger(value) {
+    const numeric = Number.isFinite(Number(value)) ? Math.floor(Number(value)) : 0;
+    const safe = numeric >= 0 ? numeric : 0;
+    try {
+      return safe.toLocaleString();
+    } catch (error) {
+      return String(safe);
+    }
+  }
+
   function clampDepth(value) {
     const normalized = toPositiveInteger(value, DEFAULT_AI_SETTINGS.depth);
     return Math.max(MIN_AI_DEPTH, Math.min(MAX_AI_DEPTH, normalized));
@@ -252,34 +271,67 @@
 
   function normalizeRewardConfig(raw, fallback) {
     const base = fallback && typeof fallback === 'object' ? fallback : {};
-    const secondsCandidate = raw && typeof raw === 'object'
-      ? raw.offlineSeconds ?? raw.seconds ?? raw.durationSeconds
-      : null;
-    const multiplierCandidate = raw && typeof raw === 'object'
-      ? raw.offlineMultiplier ?? raw.multiplier ?? raw.value
-      : null;
+    const source = raw && typeof raw === 'object' ? raw : {};
 
-    const offlineSeconds = Math.max(
-      0,
-      Number.isFinite(Number(secondsCandidate))
-        ? Number(secondsCandidate)
-        : Number.isFinite(Number(base.offlineSeconds))
-          ? Number(base.offlineSeconds)
-          : 0
-    );
+    const gachaCandidates = [
+      source.gachaTickets,
+      source.tickets,
+      source.amount,
+      base.gachaTickets
+    ];
+    let gachaTickets = 0;
+    for (let index = 0; index < gachaCandidates.length; index += 1) {
+      const candidate = Number(gachaCandidates[index]);
+      if (Number.isFinite(candidate) && candidate > 0) {
+        gachaTickets = Math.floor(candidate);
+        break;
+      }
+    }
 
-    const offlineMultiplier = Math.max(
-      0,
-      Number.isFinite(Number(multiplierCandidate))
-        ? Number(multiplierCandidate)
-        : Number.isFinite(Number(base.offlineMultiplier))
-          ? Number(base.offlineMultiplier)
-          : 1
-    );
+    const critSource = source.crit && typeof source.crit === 'object'
+      ? source.crit
+      : source.critical && typeof source.critical === 'object'
+        ? source.critical
+        : {};
+    const fallbackCrit = base && typeof base.crit === 'object' ? base.crit : {};
+
+    const multiplierCandidates = [
+      critSource.multiplier,
+      critSource.value,
+      fallbackCrit.multiplier
+    ];
+    let multiplier = 0;
+    for (let index = 0; index < multiplierCandidates.length; index += 1) {
+      const candidate = Number(multiplierCandidates[index]);
+      if (Number.isFinite(candidate) && candidate > 1) {
+        multiplier = candidate;
+        break;
+      }
+    }
+
+    const durationCandidates = [
+      critSource.durationSeconds,
+      critSource.seconds,
+      critSource.duration,
+      critSource.time,
+      fallbackCrit.durationSeconds
+    ];
+    let durationSeconds = 0;
+    for (let index = 0; index < durationCandidates.length; index += 1) {
+      const candidate = Number(durationCandidates[index]);
+      if (Number.isFinite(candidate) && candidate > 0) {
+        durationSeconds = Math.floor(candidate);
+        break;
+      }
+    }
+
+    const crit = multiplier > 1 && durationSeconds > 0
+      ? { multiplier, durationSeconds }
+      : null;
 
     return {
-      offlineSeconds,
-      offlineMultiplier
+      gachaTickets: Math.max(0, gachaTickets),
+      crit
     };
   }
 
@@ -579,21 +631,54 @@
     if (!mode || !mode.reward) {
       return '';
     }
-    const seconds = Number(mode.reward.offlineSeconds);
-    const multiplierText = formatMultiplierText(mode.reward.offlineMultiplier);
-    const durationText = formatRewardDuration(seconds);
-    if (!durationText && !multiplierText) {
+    const ticketCount = Number.isFinite(Number(mode.reward.gachaTickets))
+      ? Math.max(0, Math.floor(Number(mode.reward.gachaTickets)))
+      : 0;
+    const crit = mode.reward.crit && typeof mode.reward.crit === 'object' ? mode.reward.crit : null;
+    const multiplierValue = crit && Number.isFinite(Number(crit.multiplier)) ? Number(crit.multiplier) : 0;
+    const durationValue = crit && Number.isFinite(Number(crit.durationSeconds)) ? Number(crit.durationSeconds) : 0;
+    const durationText = durationValue > 0 ? formatRewardDuration(durationValue) : '';
+    const multiplierText = multiplierValue > 1 ? formatMultiplierText(multiplierValue) : '';
+    const hasTickets = ticketCount > 0;
+    const hasCrit = multiplierValue > 1 && Boolean(durationText);
+    if (!hasTickets && !hasCrit) {
       return '';
     }
-    const fallback = durationText && multiplierText
-      ? 'Bonus hors ligne : ' + durationText + ' à ' + multiplierText
-      : durationText
-        ? 'Bonus hors ligne : ' + durationText
-        : 'Bonus hors ligne : ' + multiplierText;
+    const parts = [];
+    if (hasTickets) {
+      const suffix = ticketCount > 1 ? 's' : '';
+      const ticketText = translate(
+        'scripts.arcade.chess.reward.tickets',
+        '{count} ticket{suffix} gacha',
+        { count: formatInteger(ticketCount), suffix }
+      );
+      if (ticketText) {
+        parts.push(ticketText);
+      }
+    }
+    if (hasCrit) {
+      const multiplierNumeric = multiplierText.replace(/^×/, '') || formatInteger(multiplierValue);
+      const critText = translate(
+        'scripts.arcade.chess.reward.crit',
+        'Critique ×{multiplier} pendant {duration}',
+        {
+          multiplier: multiplierNumeric,
+          multiplierText,
+          duration: durationText
+        }
+      );
+      if (critText) {
+        parts.push(critText);
+      }
+    }
+    if (!parts.length) {
+      return '';
+    }
+    const rewardsText = parts.join(' · ');
     return translate(
       'index.sections.echecs.difficulty.reward',
-      fallback,
-      { duration: durationText, multiplier: multiplierText }
+      'Récompense : {rewards}',
+      { rewards: rewardsText }
     );
   }
 
