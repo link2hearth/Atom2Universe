@@ -9349,6 +9349,13 @@ function isTouchLikePointerType(pointerType) {
   return pointerType === 'touch' || pointerType === 'pen';
 }
 
+function updateManualScrollLock(manualPageActive) {
+  if (typeof document === 'undefined' || !document.body) {
+    return;
+  }
+  document.body.classList.toggle('manual-scroll-lock', Boolean(manualPageActive));
+}
+
 function showPage(pageId) {
   if (!isPageUnlocked(pageId)) {
     if (pageId !== 'game') {
@@ -9395,6 +9402,7 @@ function showPage(pageId) {
   document.body.classList.toggle('view-quantum2048', pageId === 'quantum2048');
   document.body.classList.toggle('view-sudoku', pageId === 'sudoku');
   document.body.classList.toggle('view-game-of-life', pageId === 'gameOfLife');
+  updateManualScrollLock(pageId === 'game' || pageId === 'wave');
   if (pageId === 'game') {
     randomizeAtomButtonImage();
   }
