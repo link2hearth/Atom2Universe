@@ -239,6 +239,13 @@ const SHOP_BUILDING_IDS = [
 const INTERSTELLAR_PROBE_APC_BONUS = 100;
 const INTERSTELLAR_PROBE_BONUS_DOUBLING_INTERVAL = 50;
 
+/**
+ * Paramètres de l'ionisation appliquée aux premiers bâtiments du magasin.
+ * Tous les 10 niveaux, le bonus total du bâtiment est multiplié par 2.
+ */
+const IONIZATION_TOTAL_BONUS_MULTIPLIER = 2;
+const IONIZATION_TOTAL_BONUS_DOUBLING_INTERVAL = 10;
+
 function createShopBuildingDefinitions() {
   const withDefaults = def => ({ maxLevel: SHOP_MAX_PURCHASE_DEFAULT, ...def });
   return [
@@ -247,14 +254,15 @@ function createShopBuildingDefinitions() {
       name: 'Électrons libres',
       description: 'Canalisez des électrons pour amplifier chaque clic quantique.',
       effectSummary:
-        'Production manuelle : +1 APC par niveau. Tous les 25 niveaux, l’ionisation double le bonus total.',
+        'Production manuelle : +1 APC par niveau. Tous les 10 niveaux, l’ionisation double le bonus total.',
       category: 'manual',
       baseCost: 15,
       costScale: 1.15,
       effect: (level = 0) => {
-        // Ionisation : tous les 25 niveaux, on applique un multiplicateur ×2 sur le bonus total.
-        const ionizationTier = Math.floor(level / 25);
-        const ionizationBoost = ionizationTier > 0 ? 2 ** ionizationTier : 1;
+        // Ionisation : tous les 10 niveaux, on applique un multiplicateur ×2 sur le bonus total.
+        const ionizationTier = Math.floor(level / IONIZATION_TOTAL_BONUS_DOUBLING_INTERVAL);
+        const ionizationBoost =
+          ionizationTier > 0 ? IONIZATION_TOTAL_BONUS_MULTIPLIER ** ionizationTier : 1;
         const clickAdd = level > 0 ? level * ionizationBoost : 0;
         return { clickAdd };
       }
@@ -264,14 +272,15 @@ function createShopBuildingDefinitions() {
       name: 'Laboratoire de Physique',
       description: 'Des équipes de chercheurs boostent votre production atomique.',
       effectSummary:
-        'Production passive : +1 APS par niveau. Tous les 25 niveaux, l’ionisation double le bonus total.',
+        'Production passive : +1 APS par niveau. Tous les 10 niveaux, l’ionisation double le bonus total.',
       category: 'auto',
       baseCost: 100,
       costScale: 1.15,
       effect: (level = 0) => {
-        // Ionisation : tous les 25 niveaux, on applique un multiplicateur ×2 sur le bonus total.
-        const ionizationTier = Math.floor(level / 25);
-        const ionizationBoost = ionizationTier > 0 ? 2 ** ionizationTier : 1;
+        // Ionisation : tous les 10 niveaux, on applique un multiplicateur ×2 sur le bonus total.
+        const ionizationTier = Math.floor(level / IONIZATION_TOTAL_BONUS_DOUBLING_INTERVAL);
+        const ionizationBoost =
+          ionizationTier > 0 ? IONIZATION_TOTAL_BONUS_MULTIPLIER ** ionizationTier : 1;
         const autoAdd = level > 0 ? level * ionizationBoost : 0;
         return { autoAdd };
       }
@@ -281,15 +290,16 @@ function createShopBuildingDefinitions() {
       name: 'Réacteur nucléaire',
       description: 'Des réacteurs contrôlés libèrent une énergie colossale.',
       effectSummary:
-        'Production passive : +10 APS par niveau. Tous les 25 niveaux, l’ionisation double le bonus total.',
+        'Production passive : +10 APS par niveau. Tous les 10 niveaux, l’ionisation double le bonus total.',
       category: 'auto',
       baseCost: 1000,
       costScale: 1.15,
       effect: (level = 0) => {
         const baseAmount = 10 * level;
-        // Ionisation : tous les 25 niveaux, on applique un multiplicateur ×2 sur le bonus total.
-        const ionizationTier = Math.floor(level / 25);
-        const ionizationBoost = ionizationTier > 0 ? 2 ** ionizationTier : 1;
+        // Ionisation : tous les 10 niveaux, on applique un multiplicateur ×2 sur le bonus total.
+        const ionizationTier = Math.floor(level / IONIZATION_TOTAL_BONUS_DOUBLING_INTERVAL);
+        const ionizationBoost =
+          ionizationTier > 0 ? IONIZATION_TOTAL_BONUS_MULTIPLIER ** ionizationTier : 1;
         const autoAdd = level > 0 ? baseAmount * ionizationBoost : 0;
         return { autoAdd };
       }
