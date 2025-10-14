@@ -4067,6 +4067,7 @@ function collectDomElements() {
     timer: document.getElementById('statusApsFrenzyTimer')
   },
   atomButton: document.getElementById('atomButton'),
+  atomButtonCore: document.getElementById('atomButtonCore'),
   atomVisual: document.querySelector('.atom-visual'),
   atomImage: document.querySelector('#atomButton .atom-image'),
   frenzyLayer: document.getElementById('frenzyLayer'),
@@ -9061,7 +9062,11 @@ function spawnCriticalAtom(multiplier = 1) {
   atom.className = 'crit-atom';
   atom.setAttribute('aria-hidden', 'true');
 
-  const buttonSize = elements.atomButton ? elements.atomButton.offsetWidth : Math.min(window.innerWidth, window.innerHeight) * 0.2;
+  const buttonSize = elements.atomButtonCore
+    ? elements.atomButtonCore.offsetWidth
+    : elements.atomButton
+    ? elements.atomButton.offsetWidth
+    : Math.min(window.innerWidth, window.innerHeight) * 0.2;
   const normalizedSize = clamp(buttonSize * (0.62 + Math.min(safeMultiplier, 6) * 0.04), 64, 160);
   atom.style.setProperty('--crit-atom-size', `${normalizedSize.toFixed(2)}px`);
 
@@ -9081,7 +9086,11 @@ function spawnCriticalAtom(multiplier = 1) {
   const atomWidth = atomRect.width || normalizedSize;
   const atomHeight = atomRect.height || normalizedSize;
 
-  const buttonRect = elements.atomButton ? elements.atomButton.getBoundingClientRect() : null;
+  const buttonRect = elements.atomButtonCore
+    ? elements.atomButtonCore.getBoundingClientRect()
+    : elements.atomButton
+    ? elements.atomButton.getBoundingClientRect()
+    : null;
   const startX = (buttonRect ? buttonRect.left + buttonRect.width / 2 : viewportWidth / 2)
     - layerRect.left - atomWidth / 2;
   const startY = (buttonRect ? buttonRect.top + buttonRect.height / 2 : viewportHeight / 2)

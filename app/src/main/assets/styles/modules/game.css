@@ -289,9 +289,13 @@ body:not(.view-game):not(.view-wave) .apc-frenzy-counter {
   --glow-color: 255, 236, 170;
   --critical-flash: 0;
   position: relative;
-  display: block;
-  width: clamp(110px, 24vw, 180px);
-  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50vw;
+  height: 50vh;
+  max-width: 100%;
+  max-height: 100%;
   margin: 0;
   padding: 0;
   border: none;
@@ -301,8 +305,15 @@ body:not(.view-game):not(.view-wave) .apc-frenzy-counter {
   touch-action: none;
 }
 
-.atom-button::before,
-.atom-button::after {
+.atom-button__core {
+  position: relative;
+  display: block;
+  width: clamp(110px, 24vw, 180px);
+  aspect-ratio: 1 / 1;
+}
+
+.atom-button__core::before,
+.atom-button__core::after {
   content: '';
   position: absolute;
   inset: 6%;
@@ -311,7 +322,7 @@ body:not(.view-game):not(.view-wave) .apc-frenzy-counter {
   transition: opacity 0.2s ease, filter 0.2s ease, transform 0.2s ease;
 }
 
-.atom-button::before {
+.atom-button__core::before {
   background: radial-gradient(circle, rgba(var(--glow-color), calc(0.42 + 0.52 * var(--glow-strength))) 0%, rgba(var(--glow-color), calc(0.22 + 0.45 * var(--glow-strength))) 42%, rgba(var(--glow-color), 0) 72%);
   filter:
     blur(calc(22px + 96px * var(--glow-strength)))
@@ -321,7 +332,7 @@ body:not(.view-game):not(.view-wave) .apc-frenzy-counter {
   mix-blend-mode: screen;
 }
 
-.atom-button::after {
+.atom-button__core::after {
   inset: -8%;
   box-shadow:
     0 0 calc(40px + 90px * var(--glow-strength)) rgba(var(--glow-color), calc(0.24 + 0.5 * var(--glow-strength))),
@@ -332,6 +343,11 @@ body:not(.view-game):not(.view-wave) .apc-frenzy-counter {
 
 .atom-button.is-critical {
   --critical-flash: 1;
+}
+
+.atom-button.is-critical .atom-button__core::before,
+.atom-button.is-critical .atom-button__core::after {
+  pointer-events: none;
 }
 
 .crit-atom-layer {
