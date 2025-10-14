@@ -10221,56 +10221,6 @@ function bindDomEventListeners() {
 
   if (elements.atomButton) {
     const atomButton = elements.atomButton;
-    const supportsPointerEvents =
-      typeof globalThis !== 'undefined' && typeof globalThis.PointerEvent === 'function';
-
-    const triggerAtomClick = event => {
-      if (event && typeof event.preventDefault === 'function') {
-        event.preventDefault();
-      }
-      if (event && typeof event.stopPropagation === 'function') {
-        event.stopPropagation();
-      }
-      handleManualAtomClick({ contextId: 'game' });
-    };
-
-    atomButton.addEventListener('pointerdown', event => {
-      if (event.pointerType === 'mouse' && event.button !== 0) {
-        return;
-      }
-      triggerAtomClick(event);
-    });
-
-    if (!supportsPointerEvents) {
-      const handleTouchStart = event => {
-        if (!event) {
-          return;
-        }
-        triggerAtomClick(event);
-        const touches = Array.from(event.changedTouches || event.touches || []);
-        const additionalTouches = Math.max(touches.length - 1, 0);
-        for (let index = 0; index < additionalTouches; index += 1) {
-          handleManualAtomClick({ contextId: 'game' });
-        }
-      };
-
-      const suppressTouchPropagation = event => {
-        if (!event) {
-          return;
-        }
-        if (typeof event.preventDefault === 'function') {
-          event.preventDefault();
-        }
-        if (typeof event.stopPropagation === 'function') {
-          event.stopPropagation();
-        }
-      };
-
-      atomButton.addEventListener('touchstart', handleTouchStart, { passive: false });
-      atomButton.addEventListener('touchend', suppressTouchPropagation, { passive: false });
-      atomButton.addEventListener('touchcancel', suppressTouchPropagation, { passive: false });
-      atomButton.addEventListener('touchmove', suppressTouchPropagation, { passive: false });
-    }
 
     atomButton.addEventListener('click', event => {
       event.preventDefault();
