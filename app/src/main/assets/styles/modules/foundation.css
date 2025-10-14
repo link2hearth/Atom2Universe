@@ -72,15 +72,19 @@ body {
   font-size: calc(var(--font-text-base-size, 1rem) * var(--font-scale-factor, 1));
 }
 
-body[data-active-page='game'],
-body[data-active-page='wave'] {
-  overscroll-behavior: none;
-  touch-action: none;
-}
-
 body.view-game,
 body.view-wave {
   overflow: hidden;
+}
+
+body.touch-scroll-lock {
+  touch-action: none !important;
+  overscroll-behavior: none !important;
+}
+
+body.touch-scroll-force {
+  touch-action: auto !important;
+  overscroll-behavior: auto !important;
 }
 
 body[data-text-font='vt323'] {
