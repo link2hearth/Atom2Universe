@@ -365,7 +365,7 @@ body.theme-aurora .page--quantum2048 {
   display: flex;
   align-items: baseline;
   gap: clamp(0.4rem, 1vw, 0.6rem);
-  font-size: clamp(0.85rem, 1.6vw, 1.05rem);
+  font-size: clamp(1.7rem, 3.2vw, 2.1rem);
   color: var(--quantum2048-hud-stat-color, rgba(226, 232, 255, 0.78));
 }
 
@@ -379,7 +379,7 @@ body.theme-aurora .page--quantum2048 {
   font-family: var(--font-display);
   font-weight: 700;
   letter-spacing: 0.08em;
-  font-size: clamp(1.25rem, 2.2vw, 1.8rem);
+  font-size: clamp(2.5rem, 4.4vw, 3.6rem);
   color: var(--quantum2048-hud-stat-value-color, #ffffff);
 }
 
@@ -445,7 +445,7 @@ body.theme-aurora .page--quantum2048 {
   font-family: var(--font-display);
   font-weight: 700;
   letter-spacing: 0.08em;
-  font-size: calc(clamp(1.05rem, 2.8vw, 2.6rem) * var(--quantum2048-font-scale, 1));
+  font-size: calc(clamp(1.05rem, 2.8vw, 2.6rem) * 2 * var(--quantum2048-font-scale, 1));
   color: #0a0f20;
   box-shadow: inset 0 4px 12px rgba(255, 255, 255, 0.25), 0 16px 28px rgba(10, 14, 40, 0.45);
   transform: scale(1);
