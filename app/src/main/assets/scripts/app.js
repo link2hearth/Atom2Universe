@@ -9326,6 +9326,14 @@ function shouldTriggerGlobalClick(event) {
 const POINTER_TRIGGER_SUPPRESSION_WINDOW_MS = 600;
 let lastManualPointerTriggerTime = 0;
 
+const manualMultiTouchGuardState = {
+  enabled: false,
+  activePointers: new Set(),
+  pointerDownHandler: null,
+  pointerCleanupHandler: null,
+  touchGuardHandler: null
+};
+
 function getHighResolutionTimestamp() {
   if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
     return performance.now();
@@ -9347,6 +9355,92 @@ function shouldSuppressManualClickFromPointer() {
 
 function isTouchLikePointerType(pointerType) {
   return pointerType === 'touch' || pointerType === 'pen';
+}
+
+function enableManualMultiTouchGuard() {
+  if (manualMultiTouchGuardState.enabled) {
+    return;
+  }
+  if (typeof document === 'undefined') {
+    return;
+  }
+  manualMultiTouchGuardState.enabled = true;
+  manualMultiTouchGuardState.activePointers.clear();
+  const pointerIds = manualMultiTouchGuardState.activePointers;
+
+  const pointerDownHandler = event => {
+    if (!event || !isTouchLikePointerType(event.pointerType)) {
+      return;
+    }
+    pointerIds.add(event.pointerId);
+    if (pointerIds.size > 1 && typeof event.preventDefault === 'function') {
+      event.preventDefault();
+    }
+  };
+
+  const pointerCleanupHandler = event => {
+    if (!event || !isTouchLikePointerType(event.pointerType)) {
+      return;
+    }
+    pointerIds.delete(event.pointerId);
+  };
+
+  const touchGuardHandler = event => {
+    if (!event) {
+      return;
+    }
+    const touches = Array.isArray(event.touches)
+      ? event.touches
+      : (typeof event.touches === 'object' && typeof event.touches.length === 'number')
+        ? Array.from(event.touches)
+        : null;
+    if (touches && touches.length > 1 && typeof event.preventDefault === 'function') {
+      event.preventDefault();
+    }
+  };
+
+  manualMultiTouchGuardState.pointerDownHandler = pointerDownHandler;
+  manualMultiTouchGuardState.pointerCleanupHandler = pointerCleanupHandler;
+  manualMultiTouchGuardState.touchGuardHandler = touchGuardHandler;
+
+  document.addEventListener('pointerdown', pointerDownHandler, { capture: true, passive: false });
+  document.addEventListener('pointerup', pointerCleanupHandler, { capture: true, passive: true });
+  document.addEventListener('pointercancel', pointerCleanupHandler, { capture: true, passive: true });
+  document.addEventListener('touchstart', touchGuardHandler, { capture: true, passive: false });
+  document.addEventListener('touchmove', touchGuardHandler, { capture: true, passive: false });
+}
+
+function disableManualMultiTouchGuard() {
+  if (!manualMultiTouchGuardState.enabled) {
+    return;
+  }
+  if (typeof document === 'undefined') {
+    manualMultiTouchGuardState.enabled = false;
+    manualMultiTouchGuardState.activePointers.clear();
+    manualMultiTouchGuardState.pointerDownHandler = null;
+    manualMultiTouchGuardState.pointerCleanupHandler = null;
+    manualMultiTouchGuardState.touchGuardHandler = null;
+    return;
+  }
+  const { pointerDownHandler, pointerCleanupHandler, touchGuardHandler } = manualMultiTouchGuardState;
+  document.removeEventListener('pointerdown', pointerDownHandler, true);
+  document.removeEventListener('pointerup', pointerCleanupHandler, true);
+  document.removeEventListener('pointercancel', pointerCleanupHandler, true);
+  document.removeEventListener('touchstart', touchGuardHandler, true);
+  document.removeEventListener('touchmove', touchGuardHandler, true);
+  manualMultiTouchGuardState.activePointers.clear();
+  manualMultiTouchGuardState.pointerDownHandler = null;
+  manualMultiTouchGuardState.pointerCleanupHandler = null;
+  manualMultiTouchGuardState.touchGuardHandler = null;
+  manualMultiTouchGuardState.enabled = false;
+}
+
+function updateManualMultiTouchGuard(manualPageActive) {
+  if (manualPageActive) {
+    enableManualMultiTouchGuard();
+  } else {
+    disableManualMultiTouchGuard();
+  }
 }
 
 function showPage(pageId) {
@@ -9395,6 +9489,7 @@ function showPage(pageId) {
   document.body.classList.toggle('view-quantum2048', pageId === 'quantum2048');
   document.body.classList.toggle('view-sudoku', pageId === 'sudoku');
   document.body.classList.toggle('view-game-of-life', pageId === 'gameOfLife');
+  updateManualMultiTouchGuard(pageId === 'game' || pageId === 'wave');
   if (pageId === 'game') {
     randomizeAtomButtonImage();
   }
@@ -9464,6 +9559,9 @@ function showPage(pageId) {
 document.addEventListener('visibilitychange', () => {
   if (typeof document === 'undefined') {
     return;
+  }
+  if (manualMultiTouchGuardState?.activePointers) {
+    manualMultiTouchGuardState.activePointers.clear();
   }
   const activePage = document.body?.dataset.activePage;
   if (document.hidden) {
@@ -11698,7 +11796,7 @@ function recalcProduction() {
   clickDetails.totalAddition = clickTotalAddition.clone();
   autoDetails.totalAddition = autoTotalAddition.clone();
 
-  const clickTotalMultiplier = LayeredNumber.one()
+  let clickTotalMultiplier = LayeredNumber.one()
     .multiply(clickShopBonus)
     .multiply(clickRarityProduct)
     .multiply(clickTrophyMultiplier);
@@ -11710,7 +11808,9 @@ function recalcProduction() {
   const apsCritMultiplierValue = getApsCritMultiplier();
   const apsCritMultiplier = toMultiplierLayered(apsCritMultiplierValue);
   const hasApsCritMultiplier = !isLayeredOne(apsCritMultiplier);
+  const apsCritLabel = translateOrDefault('scripts.app.metaux.critLabel', 'Critique APC/APS');
   if (hasApsCritMultiplier) {
+    clickTotalMultiplier = clickTotalMultiplier.multiply(apsCritMultiplier);
     autoTotalMultiplier = autoTotalMultiplier.multiply(apsCritMultiplier);
   }
 
@@ -11731,6 +11831,15 @@ function recalcProduction() {
   perClick = perClick.multiply(clickShopBonus);
   perClick = perClick.multiply(clickRarityProduct);
   perClick = perClick.multiply(clickTrophyMultiplier);
+  if (hasApsCritMultiplier) {
+    perClick = perClick.multiply(apsCritMultiplier);
+    clickDetails.multipliers.push({
+      id: 'apsCrit',
+      label: apsCritLabel,
+      value: apsCritMultiplier.clone(),
+      source: 'metaux'
+    });
+  }
   if (perClick.compare(LayeredNumber.zero()) < 0) {
     perClick = LayeredNumber.zero();
   }
@@ -11742,11 +11851,14 @@ function recalcProduction() {
     perSecond = perSecond.multiply(apsCritMultiplier);
     autoDetails.multipliers.push({
       id: 'apsCrit',
-      label: 'Critique APS',
+      label: apsCritLabel,
       value: apsCritMultiplier.clone(),
       source: 'metaux'
     });
   }
+  clickDetails.sources.multipliers.apsCrit = hasApsCritMultiplier
+    ? apsCritMultiplier.clone()
+    : LayeredNumber.one();
   autoDetails.sources.multipliers.apsCrit = hasApsCritMultiplier
     ? apsCritMultiplier.clone()
     : LayeredNumber.one();
@@ -12554,12 +12666,16 @@ function updateApsCritDisplay() {
     elements.statusApsCritMultiplier.hidden = !isActive;
     elements.statusApsCritMultiplier.setAttribute('aria-hidden', String(!isActive));
   }
-  panel.setAttribute(
-    'aria-label',
-    isActive
-      ? `Compteur critique APS actif : ${multiplierText} pendant ${chronoText}.`
-      : `Compteur critique APS inactif.`
+  const activeAriaLabel = translateOrDefault(
+    'scripts.app.metaux.critAriaActive',
+    `Compteur critique APC/APS actif : ${multiplierText} pendant ${chronoText}.`,
+    { multiplier: multiplierText, duration: chronoText }
   );
+  const inactiveAriaLabel = translateOrDefault(
+    'scripts.app.metaux.critAriaInactive',
+    'Compteur critique APC/APS inactif.'
+  );
+  panel.setAttribute('aria-label', isActive ? activeAriaLabel : inactiveAriaLabel);
 }
 
 function pulseApsCritPanel() {

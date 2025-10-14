@@ -74,7 +74,6 @@ body {
 
 body[data-active-page='game'],
 body[data-active-page='wave'] {
-  overflow: hidden;
   overscroll-behavior: none;
 }
 
