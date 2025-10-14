@@ -9355,8 +9355,6 @@ const SCROLL_BEHAVIOR_ALIAS_MAP = new Map([
   ['disable', SCROLL_BEHAVIOR_MODES.LOCK]
 ]);
 
-const SCROLL_LOCK_PAGE_IDS = new Set(['game', 'wave']);
-
 const supportsPassiveEventListeners = (() => {
   if (typeof window === 'undefined' || typeof window.addEventListener !== 'function') {
     return false;
@@ -9424,9 +9422,6 @@ function resolvePageScrollBehavior(pageElement) {
   const pageId = typeof pageElement.id === 'string'
     ? pageElement.id.trim().toLowerCase()
     : '';
-  if (pageId && SCROLL_LOCK_PAGE_IDS.has(pageId)) {
-    return SCROLL_BEHAVIOR_MODES.LOCK;
-  }
   return SCROLL_BEHAVIOR_MODES.DEFAULT;
 }
 

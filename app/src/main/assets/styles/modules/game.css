@@ -7,7 +7,6 @@
   overflow: hidden;
   isolation: isolate;
   user-select: none;
-  touch-action: none;
 }
 
 .page--void.active {
