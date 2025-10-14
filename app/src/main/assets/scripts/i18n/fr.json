@@ -1082,20 +1082,20 @@
         "freeElectrons": {
           "name": "Électrons libres",
           "description": "Canalisez des électrons pour amplifier chaque clic quantique.",
-          "effect": "Production manuelle : +1 APC par niveau. Tous les 25 niveaux, l’ionisation double le bonus total.",
-          "effectSummary": "Production manuelle +1 APC par niveau. Palier ionisation : bonus doublé tous les 25 niveaux."
+          "effect": "Production manuelle : +1 APC par niveau. Tous les 25 niveaux, l’ionisation ajoute +10 % au bonus total.",
+          "effectSummary": "Production manuelle +1 APC par niveau. Palier ionisation : +10 % au bonus total tous les 25 niveaux."
         },
         "physicsLab": {
           "name": "Laboratoire de Physique",
           "description": "Des équipes de chercheurs boostent votre production atomique.",
-          "effect": "Production passive : +1 APS par niveau. Tous les 25 niveaux, l’ionisation double le bonus total.",
-          "effectSummary": "Production passive +1 APS par niveau. Palier ionisation : bonus doublé tous les 25 niveaux."
+          "effect": "Production passive : +1 APS par niveau. Tous les 25 niveaux, l’ionisation ajoute +10 % au bonus total.",
+          "effectSummary": "Production passive +1 APS par niveau. Palier ionisation : +10 % au bonus total tous les 25 niveaux."
         },
         "nuclearReactor": {
           "name": "Réacteur nucléaire",
           "description": "Des réacteurs contrôlés libèrent une énergie colossale.",
-          "effect": "Production passive : +10 APS par niveau. Tous les 25 niveaux, l’ionisation double le bonus total.",
-          "effectSummary": "Production passive +10 APS par niveau. Palier ionisation : bonus doublé tous les 25 niveaux."
+          "effect": "Production passive : +10 APS par niveau. Tous les 25 niveaux, l’ionisation ajoute +10 % au bonus total.",
+          "effectSummary": "Production passive +10 APS par niveau. Palier ionisation : +10 % au bonus total tous les 25 niveaux."
         },
         "particleAccelerator": {
           "name": "Accélérateur de particules",
