@@ -297,6 +297,23 @@
   }
 }
 
+@media (orientation: portrait) {
+  .solitaire__board {
+    --solitaire-card-width: clamp(3.2rem, 8vw, 5.2rem);
+    gap: clamp(0.85rem, 2.6vw, 1.2rem);
+    padding: clamp(0.8rem, 2.2vw, 1.2rem);
+  }
+
+  .solitaire__row--top,
+  .solitaire__group {
+    gap: clamp(0.5rem, 2vw, 0.9rem);
+  }
+
+  .solitaire__row--tableau {
+    grid-template-columns: repeat(7, minmax(var(--solitaire-card-width), 1fr));
+  }
+}
+
 body.theme-light .page--solitaire {
   --solitaire-shell-background: rgba(247, 248, 252, 0.9);
   --solitaire-shell-border: rgba(12, 16, 32, 0.08);
