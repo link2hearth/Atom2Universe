@@ -276,10 +276,11 @@ body.theme-aurora .page--balance {
 .balance-layout {
   width: min(1100px, 100%);
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-rows: auto auto auto;
   justify-items: center;
   align-items: center;
-  gap: clamp(0.7rem, min(1.9vw, 2.2vh), 1.65rem);
+  align-content: start;
+  row-gap: clamp(0.6rem, min(1.7vw, 2vh), 1.45rem);
   flex: 1 1 auto;
   min-height: 0;
 }
@@ -328,7 +329,7 @@ body.theme-aurora .page--balance {
   align-items: center;
   justify-content: flex-start;
   gap: clamp(0.45rem, min(1.3vw, 1.7vh), 1rem);
-  padding-top: clamp(0.55rem, min(1.9vw, 2.3vh), 1.65rem);
+  padding-top: clamp(0.85rem, min(2.4vw, 2.9vh), 2rem);
   max-height: var(--balance-available-height);
   min-height: 0;
 }
@@ -412,7 +413,7 @@ body.theme-aurora .page--balance {
   }
 
   .balance-layout {
-    gap: clamp(0.55rem, min(1.5vw, 1.8vh), 1.3rem);
+    row-gap: clamp(0.5rem, min(1.4vw, 1.7vh), 1.2rem);
   }
 
   .balance-board-wrapper {
@@ -420,7 +421,7 @@ body.theme-aurora .page--balance {
   }
 
   .balance-stage {
-    padding-top: clamp(0.45rem, min(1.6vw, 2vh), 1.2rem);
+    padding-top: clamp(0.65rem, min(1.9vw, 2.3vh), 1.5rem);
     gap: clamp(0.35rem, min(1vw, 1.4vh), 0.85rem);
   }
 
@@ -441,7 +442,7 @@ body.theme-aurora .page--balance {
   }
 
   .balance-layout {
-    gap: clamp(0.45rem, min(1.3vw, 1.5vh), 1.1rem);
+    row-gap: clamp(0.4rem, min(1.2vw, 1.4vh), 1rem);
   }
 
   .balance-board-shadow {
@@ -461,7 +462,7 @@ body.theme-aurora .page--balance {
   }
 
   .balance-layout {
-    gap: clamp(0.35rem, min(1vw, 1.2vh), 0.9rem);
+    row-gap: clamp(0.3rem, min(0.9vw, 1.1vh), 0.75rem);
   }
 
   .balance-board-wrapper {
@@ -469,7 +470,7 @@ body.theme-aurora .page--balance {
   }
 
   .balance-stage {
-    padding-top: clamp(0.35rem, min(1vw, 1.2vh), 0.75rem);
+    padding-top: clamp(0.45rem, min(1.1vw, 1.4vh), 0.95rem);
     gap: clamp(0.3rem, min(0.9vw, 1.1vh), 0.7rem);
   }
 
