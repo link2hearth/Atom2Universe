@@ -59,6 +59,11 @@ class MainActivity : AppCompatActivity() {
             databaseEnabled = true
         }
 
+        webView.addJavascriptInterface(
+            AndroidSaveBridge(applicationContext),
+            "AndroidSaveBridge"
+        )
+
         if (savedInstanceState != null) {
             webView.restoreState(savedInstanceState)
         } else {
