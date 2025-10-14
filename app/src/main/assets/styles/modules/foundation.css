@@ -75,7 +75,12 @@ body {
 body[data-active-page='game'],
 body[data-active-page='wave'] {
   overscroll-behavior: none;
-  touch-action: manipulation;
+  touch-action: none;
+}
+
+body.view-game,
+body.view-wave {
+  overflow: hidden;
 }
 
 body[data-text-font='vt323'] {
