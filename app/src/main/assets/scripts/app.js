@@ -9323,141 +9323,6 @@ function shouldTriggerGlobalClick(event) {
   return true;
 }
 
-const POINTER_TRIGGER_SUPPRESSION_WINDOW_MS = 600;
-let lastManualPointerTriggerTime = 0;
-
-const manualMultiTouchGuardState = {
-  enabled: false,
-  activePointers: new Set(),
-  pointerDownHandler: null,
-  pointerCleanupHandler: null,
-  touchGuardHandler: null
-};
-
-function isManualInteractionTarget(target) {
-  if (!target || typeof target.closest !== 'function') {
-    return false;
-  }
-  return Boolean(target.closest('#game, #wave'));
-}
-
-function getHighResolutionTimestamp() {
-  if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
-    return performance.now();
-  }
-  return Date.now();
-}
-
-function markManualPointerTrigger() {
-  lastManualPointerTriggerTime = getHighResolutionTimestamp();
-}
-
-function shouldSuppressManualClickFromPointer() {
-  if (!lastManualPointerTriggerTime) {
-    return false;
-  }
-  const elapsed = getHighResolutionTimestamp() - lastManualPointerTriggerTime;
-  return elapsed >= 0 && elapsed <= POINTER_TRIGGER_SUPPRESSION_WINDOW_MS;
-}
-
-function isTouchLikePointerType(pointerType) {
-  return pointerType === 'touch' || pointerType === 'pen';
-}
-
-function enableManualMultiTouchGuard() {
-  if (manualMultiTouchGuardState.enabled) {
-    return;
-  }
-  if (typeof document === 'undefined') {
-    return;
-  }
-  manualMultiTouchGuardState.enabled = true;
-  manualMultiTouchGuardState.activePointers.clear();
-  const pointerIds = manualMultiTouchGuardState.activePointers;
-
-  const pointerDownHandler = event => {
-    if (!event || !isTouchLikePointerType(event.pointerType)) {
-      return;
-    }
-    if (!isManualInteractionTarget(event.target)) {
-      return;
-    }
-    pointerIds.add(event.pointerId);
-    if (pointerIds.size > 1 && typeof event.preventDefault === 'function') {
-      event.preventDefault();
-    }
-  };
-
-  const pointerCleanupHandler = event => {
-    if (!event || !isTouchLikePointerType(event.pointerType)) {
-      return;
-    }
-    pointerIds.delete(event.pointerId);
-  };
-
-  const touchGuardHandler = event => {
-    if (!event) {
-      return;
-    }
-    const touches = Array.isArray(event.touches)
-      ? event.touches
-      : (typeof event.touches === 'object' && typeof event.touches.length === 'number')
-        ? Array.from(event.touches)
-        : null;
-    if (!touches || touches.length <= 1 || typeof event.preventDefault !== 'function') {
-      return;
-    }
-    const hasManualTarget = touches.some(touch => isManualInteractionTarget(touch?.target))
-      || isManualInteractionTarget(event.target);
-    if (hasManualTarget) {
-      event.preventDefault();
-    }
-  };
-
-  manualMultiTouchGuardState.pointerDownHandler = pointerDownHandler;
-  manualMultiTouchGuardState.pointerCleanupHandler = pointerCleanupHandler;
-  manualMultiTouchGuardState.touchGuardHandler = touchGuardHandler;
-
-  document.addEventListener('pointerdown', pointerDownHandler, { capture: true, passive: false });
-  document.addEventListener('pointerup', pointerCleanupHandler, { capture: true, passive: true });
-  document.addEventListener('pointercancel', pointerCleanupHandler, { capture: true, passive: true });
-  document.addEventListener('touchstart', touchGuardHandler, { capture: true, passive: false });
-  document.addEventListener('touchmove', touchGuardHandler, { capture: true, passive: false });
-}
-
-function disableManualMultiTouchGuard() {
-  if (!manualMultiTouchGuardState.enabled) {
-    return;
-  }
-  if (typeof document === 'undefined') {
-    manualMultiTouchGuardState.enabled = false;
-    manualMultiTouchGuardState.activePointers.clear();
-    manualMultiTouchGuardState.pointerDownHandler = null;
-    manualMultiTouchGuardState.pointerCleanupHandler = null;
-    manualMultiTouchGuardState.touchGuardHandler = null;
-    return;
-  }
-  const { pointerDownHandler, pointerCleanupHandler, touchGuardHandler } = manualMultiTouchGuardState;
-  document.removeEventListener('pointerdown', pointerDownHandler, true);
-  document.removeEventListener('pointerup', pointerCleanupHandler, true);
-  document.removeEventListener('pointercancel', pointerCleanupHandler, true);
-  document.removeEventListener('touchstart', touchGuardHandler, true);
-  document.removeEventListener('touchmove', touchGuardHandler, true);
-  manualMultiTouchGuardState.activePointers.clear();
-  manualMultiTouchGuardState.pointerDownHandler = null;
-  manualMultiTouchGuardState.pointerCleanupHandler = null;
-  manualMultiTouchGuardState.touchGuardHandler = null;
-  manualMultiTouchGuardState.enabled = false;
-}
-
-function updateManualMultiTouchGuard(manualPageActive) {
-  if (manualPageActive) {
-    enableManualMultiTouchGuard();
-  } else {
-    disableManualMultiTouchGuard();
-  }
-}
-
 function showPage(pageId) {
   if (!isPageUnlocked(pageId)) {
     if (pageId !== 'game') {
@@ -9504,7 +9369,6 @@ function showPage(pageId) {
   document.body.classList.toggle('view-quantum2048', pageId === 'quantum2048');
   document.body.classList.toggle('view-sudoku', pageId === 'sudoku');
   document.body.classList.toggle('view-game-of-life', pageId === 'gameOfLife');
-  updateManualMultiTouchGuard(pageId === 'game' || pageId === 'wave');
   if (pageId === 'game') {
     randomizeAtomButtonImage();
   }
@@ -9574,9 +9438,6 @@ function showPage(pageId) {
 document.addEventListener('visibilitychange', () => {
   if (typeof document === 'undefined') {
     return;
-  }
-  if (manualMultiTouchGuardState?.activePointers) {
-    manualMultiTouchGuardState.activePointers.clear();
   }
   const activePage = document.body?.dataset.activePage;
   if (document.hidden) {
@@ -10082,113 +9943,11 @@ function bindDomEventListeners() {
 
   if (elements.atomButton) {
     const atomButton = elements.atomButton;
-    const activeTouchPointers = new Set();
-
-    const registerManualTouchClick = ({ pointer = false } = {}) => {
-      handleManualAtomClick({ contextId: 'game' });
-      if (pointer) {
-        markManualPointerTrigger();
-      }
-    };
-
-    const releasePointerCapture = pointerId => {
-      if (typeof atomButton.releasePointerCapture !== 'function') return;
-      try {
-        atomButton.releasePointerCapture(pointerId);
-      } catch (error) {
-        // Ignorer les erreurs de libération sur les navigateurs qui ne les supportent pas totalement.
-      }
-    };
-
-    const handlePointerDown = event => {
-      if (!event) return;
-      const pointerType = event.pointerType;
-      if (!isTouchLikePointerType(pointerType)) return;
-      event.stopPropagation();
-      if (typeof event.preventDefault === 'function') {
-        event.preventDefault();
-      }
-      if (activeTouchPointers.has(event.pointerId)) return;
-      activeTouchPointers.add(event.pointerId);
-      if (typeof atomButton.setPointerCapture === 'function') {
-        try {
-          atomButton.setPointerCapture(event.pointerId);
-        } catch (error) {
-          // Ignorer les erreurs de capture sur les navigateurs qui ne les supportent pas totalement.
-        }
-      }
-      registerManualTouchClick({ pointer: true });
-    };
-
-    const handlePointerUpOrCancel = event => {
-      if (!event) return;
-      const pointerType = event.pointerType;
-      if (pointerType !== 'touch' && pointerType !== 'pen') return;
-      activeTouchPointers.delete(event.pointerId);
-      releasePointerCapture(event.pointerId);
-    };
-
-    const handleLostPointerCapture = event => {
-      // Sur certains navigateurs, la capture du pointeur peut être perdue sans
-      // déclencher d'événement `pointerup`/`pointercancel`. On nettoie donc
-      // l'état manuel pour éviter qu'un pointeur fantôme bloque l'interface.
-      if (!event) return;
-      const pointerType = event.pointerType;
-      if (pointerType && !isTouchLikePointerType(pointerType)) {
-        return;
-      }
-      activeTouchPointers.delete(event.pointerId);
-    };
-
-    const handleTouchStartFallback = event => {
-      if (!event) return;
-      event.stopPropagation();
-      if (typeof event.preventDefault === 'function') {
-        event.preventDefault();
-      }
-      const touches = Array.from(event.changedTouches || []);
-      if (!touches.length) return;
-      touches.forEach(touch => {
-        const identifier = Number.isFinite(touch?.identifier) ? touch.identifier : null;
-        if (identifier != null && activeTouchPointers.has(identifier)) {
-          return;
-        }
-        if (identifier != null) {
-          activeTouchPointers.add(identifier);
-        }
-        registerManualTouchClick({ pointer: true });
-      });
-    };
-
-    const handleTouchEndOrCancelFallback = event => {
-      const touches = Array.from(event?.changedTouches || []);
-      if (!touches.length) return;
-      touches.forEach(touch => {
-        const identifier = Number.isFinite(touch?.identifier) ? touch.identifier : null;
-        if (identifier != null) {
-          activeTouchPointers.delete(identifier);
-        }
-      });
-    };
 
     atomButton.addEventListener('click', event => {
       event.stopPropagation();
-      if (shouldSuppressManualClickFromPointer()) {
-        return;
-      }
-      registerManualTouchClick();
+      handleManualAtomClick({ contextId: 'game' });
     });
-
-    if (typeof globalThis.PointerEvent === 'function') {
-      atomButton.addEventListener('pointerdown', handlePointerDown, { passive: false });
-      atomButton.addEventListener('pointerup', handlePointerUpOrCancel, { passive: true });
-      atomButton.addEventListener('pointercancel', handlePointerUpOrCancel, { passive: true });
-      atomButton.addEventListener('lostpointercapture', handleLostPointerCapture, { passive: true });
-    } else {
-      atomButton.addEventListener('touchstart', handleTouchStartFallback, { passive: false });
-      atomButton.addEventListener('touchend', handleTouchEndOrCancelFallback, { passive: true });
-      atomButton.addEventListener('touchcancel', handleTouchEndOrCancelFallback, { passive: true });
-    }
 
     atomButton.addEventListener('dragstart', event => {
       event.preventDefault();
@@ -10379,95 +10138,8 @@ function bindDomEventListeners() {
 
 }
 
-const globalManualTouchState = {
-  activePointers: new Set(),
-  activeTouchIdentifiers: new Set()
-};
-
-const shouldHandleGlobalManualEvent = event => {
-  if (!event || !event.target || typeof event.target.closest !== 'function') {
-    return false;
-  }
-  return shouldTriggerGlobalClick(event);
-};
-
-const handleGlobalManualPointerDown = event => {
-  if (!isTouchLikePointerType(event?.pointerType)) {
-    return;
-  }
-  if (!shouldHandleGlobalManualEvent(event)) {
-    return;
-  }
-  const pointerId = Number.isFinite(event.pointerId) ? event.pointerId : null;
-  if (pointerId != null) {
-    if (globalManualTouchState.activePointers.has(pointerId)) {
-      return;
-    }
-    globalManualTouchState.activePointers.add(pointerId);
-  }
-  handleManualAtomClick({ contextId: 'game' });
-  markManualPointerTrigger();
-};
-
-const handleGlobalManualPointerEnd = event => {
-  const pointerId = Number.isFinite(event?.pointerId) ? event.pointerId : null;
-  if (pointerId != null) {
-    globalManualTouchState.activePointers.delete(pointerId);
-  }
-};
-
-const handleGlobalManualTouchStart = event => {
-  const touches = Array.from(event?.changedTouches || []);
-  if (!touches.length) {
-    return;
-  }
-  let triggered = false;
-  touches.forEach(touch => {
-    const identifier = Number.isFinite(touch?.identifier) ? touch.identifier : null;
-    if (identifier != null && globalManualTouchState.activeTouchIdentifiers.has(identifier)) {
-      return;
-    }
-    const target = touch?.target || event?.target || null;
-    if (!target || typeof target.closest !== 'function') {
-      return;
-    }
-    if (!shouldTriggerGlobalClick({ target })) {
-      return;
-    }
-    if (identifier != null) {
-      globalManualTouchState.activeTouchIdentifiers.add(identifier);
-    }
-    handleManualAtomClick({ contextId: 'game' });
-    markManualPointerTrigger();
-    triggered = true;
-  });
-};
-
-const handleGlobalManualTouchEnd = event => {
-  const touches = Array.from(event?.changedTouches || []);
-  touches.forEach(touch => {
-    const identifier = Number.isFinite(touch?.identifier) ? touch.identifier : null;
-    if (identifier != null) {
-      globalManualTouchState.activeTouchIdentifiers.delete(identifier);
-    }
-  });
-};
-
-if (typeof document !== 'undefined') {
-  if (typeof globalThis.PointerEvent === 'function') {
-    document.addEventListener('pointerdown', handleGlobalManualPointerDown, { passive: true });
-    document.addEventListener('pointerup', handleGlobalManualPointerEnd, { passive: true });
-    document.addEventListener('pointercancel', handleGlobalManualPointerEnd, { passive: true });
-  } else {
-    document.addEventListener('touchstart', handleGlobalManualTouchStart, { passive: true });
-    document.addEventListener('touchend', handleGlobalManualTouchEnd, { passive: true });
-    document.addEventListener('touchcancel', handleGlobalManualTouchEnd, { passive: true });
-  }
-}
-
 document.addEventListener('click', event => {
   if (!shouldTriggerGlobalClick(event)) return;
-  if (shouldSuppressManualClickFromPointer() && event?.detail !== 0) return;
   handleManualAtomClick({ contextId: 'game' });
 });
 
