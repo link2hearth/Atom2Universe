@@ -1081,8 +1081,8 @@ const GAME_CONFIG = {
     basePerSecond: { type: 'number', value: 0 },
     offlineCapSeconds: 60 * 60 * 12,
     offlineTickets: {
-      secondsPerTicket: 60 * 60,
-      capSeconds: 60 * 60 * 50
+      secondsPerTicket: 15 * 60,
+      capSeconds: 60 * 60 * 60
     },
     defaultTheme: 'dark',
     crit: {
@@ -1124,7 +1124,7 @@ const GAME_CONFIG = {
   presentation: {
     clicks: {
       windowMs: 1000,
-      maxClicksPerSecond: 10
+      maxClicksPerSecond: 18
     },
     starfield: {
       starCount: 60
@@ -1233,12 +1233,12 @@ const GAME_CONFIG = {
          * Profondeur de recherche maximale (en demi-coups) utilisée par l'IA noire.
          * Une valeur plus élevée augmente la force de jeu mais rallonge le temps de calcul.
          */
-        searchDepth: 3,
+        searchDepth: 4,
         /**
          * Budget de temps autorisé pour un coup de l'IA (en millisecondes).
          * Si 0, aucun plafond n'est appliqué et seule la profondeur limite le calcul.
          */
-        timeLimitMs: 1200,
+        timeLimitMs: 3000,
         /**
          * Délai (ms) ajouté avant le lancement du calcul afin de laisser l'interface se mettre à jour.
          */
@@ -1422,9 +1422,9 @@ const GAME_CONFIG = {
       termCountRange: { min: 4, max: 5 },
       baseRange: { min: 1, max: 9 },
       advancedRange: { min: 2, max: 12 },
-      expertRange: { min: 2, max: 15 },
+      expertRange: { min: 1, max: 99 },
       optionsCount: 6,
-      maxMistakes: 3, // Nombre d'erreurs autorisées avant le game over.
+      maxMistakes: 2, // Nombre d'erreurs autorisées avant le game over.
       roundTimerSeconds: 30, // Temps alloué pour répondre (en secondes).
       thresholds: {
         multiply: 3,
@@ -1432,9 +1432,9 @@ const GAME_CONFIG = {
         expert: 12
       },
       resultLimits: {
-        base: 40,
-        advanced: 80,
-        expert: 120
+        base: 200,
+        advanced: 800,
+        expert: 4200
       },
       symbolMode: {
         /**
@@ -1490,7 +1490,7 @@ const GAME_CONFIG = {
         paid: {
           id: 'paid',
           /** Pourcentage du solde d'atomes utilisé comme coût d'entrée (0,9 = 90%). */
-          costRatio: 0.9
+          costRatio: 0.99
         }
       },
       /**
@@ -1522,7 +1522,7 @@ const GAME_CONFIG = {
           paddingX: 0,
           paddingY: 0.02,
           usableHeight: 0.5,
-          innerWidthRatio: 1,
+          innerWidthRatio: 0.92,
           innerHeightRatio: 0.82
         }
       },
@@ -1965,7 +1965,7 @@ const GAME_CONFIG = {
        * Les valeurs min / max permettent d'introduire de la variété sans éditer le code.
        */
       levelClues: {
-        facile: { min: 30, max: 34 },
+        facile: { min: 32, max: 36 },
         moyen: { min: 24, max: 28 },
         difficile: { min: 18, max: 22 }
       },
@@ -1979,7 +1979,7 @@ const GAME_CONFIG = {
         speedCompletion: {
           timeLimitMinutes: 10,
           offlineBonusHours: 6,
-          offlineMultiplier: 1
+          offlineMultiplier: 1.5
         }
       }
     },
@@ -2010,8 +2010,8 @@ const GAME_CONFIG = {
        */
       rewards: {
         gachaTickets: {
-          minRange: { min: 1, max: 4 },
-          maxRange: { min: 25, max: 50 }
+          minRange: { min: 10, max: 20 },
+          maxRange: { min: 50, max: 100 }
         }
       }
     },
@@ -2022,7 +2022,7 @@ const GAME_CONFIG = {
        */
       rewards: {
         gachaTickets: {
-          perMineRatio: 0.5
+          perMineRatio: 1
         }
       }
     },
@@ -2095,10 +2095,8 @@ const GAME_CONFIG = {
       ],
       successChance: 0.5,
       rewards: {
-        apcFlat: 5000,
-        elements: [
-          { elementId: 'element-006-carbone', count: 1 }
-        ]
+        apcFlat: 100000,
+        apsFlat: 100000,
       }
     },
     {
@@ -3641,6 +3639,7 @@ GAME_CONFIG.progression.defaultTheme = GAME_CONFIG.themes.default;
 if (typeof globalThis !== 'undefined') {
   globalThis.GAME_CONFIG = GAME_CONFIG;
 }
+
 
 
 
