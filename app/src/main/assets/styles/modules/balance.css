@@ -4,7 +4,12 @@
   --balance-available-height: calc(
     var(--balance-viewport) - clamp(12.5rem, 30vh, 20rem)
   );
-  --balance-board-width: clamp(180px, min(64vw, var(--balance-available-height)), 600px);
+  --balance-board-width: clamp(
+    270px,
+    min(96vw, calc(var(--balance-available-height) * 1.5)),
+    930px
+  );
+  --balance-inventory-gap-unit: clamp(0.6rem, min(1.7vw, 2vh), 1.45rem);
   --balance-board-surface-height: clamp(48px, 12vh, 96px);
   --balance-pivot-height: clamp(18px, 4vh, 30px);
   --balance-rotation: 0deg;
@@ -284,7 +289,7 @@ body.theme-aurora .page--balance {
   justify-items: center;
   align-items: center;
   align-content: center;
-  row-gap: calc(clamp(0.6rem, min(1.7vw, 2vh), 1.45rem) * var(--balance-scale, 1));
+  row-gap: calc(var(--balance-inventory-gap-unit) * var(--balance-scale, 1));
   padding-block:
     calc(clamp(0.8rem, 3.8vh, 1.8rem) * var(--balance-scale, 1))
     calc(clamp(1rem, 4.6vh, 2rem) * var(--balance-scale, 1));
@@ -337,6 +342,7 @@ body.theme-aurora .page--balance {
   align-items: center;
   justify-content: center;
   gap: calc(clamp(0.45rem, min(1.3vw, 1.7vh), 1rem) * var(--balance-scale, 1));
+  margin-top: calc(var(--balance-inventory-gap-unit) * var(--balance-scale, 1) * 7);
   padding-block:
     calc(clamp(1.1rem, min(5.5vh, 3.1rem), 2.8rem) * var(--balance-scale, 1))
     calc(clamp(0.65rem, min(2.6vh, 1.5rem), 1.4rem) * var(--balance-scale, 1));
@@ -424,10 +430,7 @@ body.theme-aurora .page--balance {
       var(--balance-viewport) - clamp(11.25rem, 32vh, 18rem)
     );
     gap: calc(clamp(0.65rem, min(1.9vw, 2.3vh), 1.55rem) * var(--balance-scale, 1));
-  }
-
-  .balance-layout {
-    row-gap: calc(clamp(0.5rem, min(1.4vw, 1.7vh), 1.2rem) * var(--balance-scale, 1));
+    --balance-inventory-gap-unit: clamp(0.5rem, min(1.4vw, 1.7vh), 1.2rem);
   }
 
   .balance-board-wrapper {
@@ -452,13 +455,14 @@ body.theme-aurora .page--balance {
     --balance-available-height: calc(
       var(--balance-viewport) - clamp(10.5rem, 34vh, 16rem)
     );
-    --balance-board-width: clamp(160px, min(58vw, var(--balance-available-height)), 520px);
+    --balance-board-width: clamp(
+      240px,
+      min(87vw, calc(var(--balance-available-height) * 1.5)),
+      780px
+    );
     --balance-board-surface-height: clamp(40px, 14vh, 68px);
     --balance-pivot-height: clamp(14px, 5vh, 22px);
-  }
-
-  .balance-layout {
-    row-gap: calc(clamp(0.4rem, min(1.2vw, 1.4vh), 1rem) * var(--balance-scale, 1));
+    --balance-inventory-gap-unit: clamp(0.4rem, min(1.2vw, 1.4vh), 1rem);
   }
 
   .balance-board-shadow {
@@ -476,10 +480,7 @@ body.theme-aurora .page--balance {
     --balance-available-height: calc(
       var(--balance-viewport) - clamp(9.5rem, 34vh, 14rem)
     );
-  }
-
-  .balance-layout {
-    row-gap: calc(clamp(0.3rem, min(0.9vw, 1.1vh), 0.75rem) * var(--balance-scale, 1));
+    --balance-inventory-gap-unit: clamp(0.3rem, min(0.9vw, 1.1vh), 0.75rem);
   }
 
   .balance-board-wrapper {
