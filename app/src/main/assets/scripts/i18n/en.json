@@ -726,14 +726,14 @@
           "details": {
             "particles": {
               "label": "Particles mini-game:",
-              "description": "Collide elemental particles to earn gacha tickets and Mach3 credits."
+              "description": "Collide elemental particles to earn gacha tickets and Metals credits."
             },
             "gacha": {
               "label": "Gacha:",
               "description": "Spend your tickets to collect periodic table elements and unlock production bonuses."
             },
             "match3": {
-              "label": "Mach3 mini-game:",
+              "label": "Metals mini-game:",
               "description": "Align metals as fast as possible to boost your APS gains."
             }
           }
@@ -1113,8 +1113,8 @@
         "supercomputer": {
           "name": "Supercomputers",
           "description": "Quantum compute centers optimize your gains.",
-          "effect": "Passive production: +500 APS per level. Every 25 levels, a stabilizer adds +50% multiplier. Every 10 levels, ionization doubles the total bonus.",
-          "effectSummary": "Passive production +500 APS per level. Stabilizer: +50% multiplier every 25 levels. Ionization: ×2 total bonus every 10 levels."
+          "effect": "Passive production: +500 APS per level. Every 25 levels, a stabilizer adds +20% multiplier. Every 10 levels, ionization doubles the total bonus.",
+          "effectSummary": "Passive production +500 APS per level. Stabilizer: +20% multiplier every 25 levels. Ionization: ×2 total bonus every 10 levels."
         },
         "interstellarProbe": {
           "name": "Interstellar Probe",
@@ -1137,20 +1137,20 @@
         "artificialGalaxy": {
           "name": "Artificial Galaxy",
           "description": "Galactic engineering for endless expansion.",
-          "effect": "Passive production: +5,000,000 APS per level. Every 25 levels, a stabilizer adds +50% multiplier. Every 10 levels, ionization doubles the total bonus.",
-          "effectSummary": "Passive production +5,000,000 APS per level. Stabilizer: +50% multiplier every 25 levels. Ionization: ×2 total bonus every 10 levels."
+          "effect": "Passive production: +5,000,000 APS per level. Every 25 levels, a stabilizer adds +20% multiplier. Every 10 levels, ionization doubles the total bonus.",
+          "effectSummary": "Passive production +5,000,000 APS per level. Stabilizer: +20% multiplier every 25 levels. Ionization: ×2 total bonus every 10 levels."
         },
         "multiverseSimulator": {
           "name": "Multiverse Simulator",
           "description": "Simulate infinity to optimize every second.",
-          "effect": "Passive production: +500,000,000 APS per level. Every 25 levels, a stabilizer adds +50% multiplier. Every 10 levels, ionization doubles the total bonus.",
-          "effectSummary": "Passive production +500,000,000 APS per level. Stabilizer: +50% multiplier every 25 levels. Ionization: ×2 total bonus every 10 levels."
+          "effect": "Passive production: +500,000,000 APS per level. Every 25 levels, a stabilizer adds +20% multiplier. Every 10 levels, ionization doubles the total bonus.",
+          "effectSummary": "Passive production +500,000,000 APS per level. Stabilizer: +20% multiplier every 25 levels. Ionization: ×2 total bonus every 10 levels."
         },
         "realityWeaver": {
           "name": "Reality Weaver",
           "description": "Weave physical laws to your advantage.",
-          "effect": "Passive production: +10,000,000,000 APS per level. Every 150 levels, critical overload adds +10% crit chance. Every 10 levels, ionization doubles the total bonus.",
-          "effectSummary": "Passive production +10,000,000,000 APS per level. Critical: +10% chance every 150 levels. Ionization: ×2 total bonus every 10 levels."
+          "effect": "Passive production: +10,000,000,000 APS per level. Every 150 levels, critical overload adds +5% crit chance. Every 10 levels, ionization doubles the total bonus.",
+          "effectSummary": "Passive production +10,000,000,000 APS per level. Critical: +5% chance every 150 levels. Ionization: ×2 total bonus every 10 levels."
         },
         "cosmicArchitect": {
           "name": "Cosmic Architect",
