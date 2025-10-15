@@ -695,6 +695,7 @@ function applyPerformanceMode(modeId, options = {}) {
   if (typeof document !== 'undefined' && document.body) {
     document.body.setAttribute('data-performance-mode', normalized);
   }
+  syncAtomVisualForPerformanceMode(normalized);
   if (elements && elements.starfield && (changed || starfieldInitializedForMode !== normalized)) {
     initStarfield(normalized);
   }
@@ -8899,6 +8900,96 @@ function getAtomImageElement() {
   return null;
 }
 
+function isEcoPerformanceModeActive(modeId = performanceModeState?.id) {
+  return modeId === 'eco';
+}
+
+function resetAtomAnimationState() {
+  atomAnimationState.intensity = 0;
+  atomAnimationState.posX = 0;
+  atomAnimationState.posY = 0;
+  atomAnimationState.velX = 0;
+  atomAnimationState.velY = 0;
+  atomAnimationState.tilt = 0;
+  atomAnimationState.tiltVelocity = 0;
+  atomAnimationState.squash = 0;
+  atomAnimationState.squashVelocity = 0;
+  atomAnimationState.spinPhase = Math.random() * Math.PI * 2;
+  atomAnimationState.noisePhase = Math.random() * Math.PI * 2;
+  atomAnimationState.noiseOffset = Math.random() * Math.PI * 2;
+  atomAnimationState.impulseTimer = 0;
+  atomAnimationState.lastInputIntensity = 0;
+  atomAnimationState.lastTime = null;
+}
+
+function resetAtomSpringStyles() {
+  const visual = getAtomVisualElement();
+  if (!visual) return;
+  visual.style.setProperty('--shake-x', '0px');
+  visual.style.setProperty('--shake-y', '0px');
+  visual.style.setProperty('--shake-rot', '0deg');
+  visual.style.setProperty('--shake-scale-x', '1');
+  visual.style.setProperty('--shake-scale-y', '1');
+}
+
+function resetGlowEffects() {
+  const button = elements.atomButton;
+  if (!button) return;
+  button.style.setProperty('--glow-strength', '0');
+  button.style.setProperty('--glow-color', interpolateGlowColor(0));
+  button.classList.remove('is-active');
+}
+
+let ecoClickFeedbackTimeoutId = null;
+
+function clearEcoClickFeedbackTimeout() {
+  if (ecoClickFeedbackTimeoutId != null) {
+    clearTimeout(ecoClickFeedbackTimeoutId);
+    ecoClickFeedbackTimeoutId = null;
+  }
+}
+
+function setEcoClickFeedbackActive(active) {
+  const image = getAtomImageElement();
+  if (!image) return;
+  if (active) {
+    image.classList.add('atom-image--eco-pressed');
+  } else {
+    image.classList.remove('atom-image--eco-pressed');
+  }
+}
+
+function activateEcoClickFeedback() {
+  if (!isEcoPerformanceModeActive()) return;
+  clearEcoClickFeedbackTimeout();
+  setEcoClickFeedbackActive(true);
+}
+
+function triggerEcoClickFeedbackPulse(duration = 140) {
+  if (!isEcoPerformanceModeActive()) return;
+  activateEcoClickFeedback();
+  ecoClickFeedbackTimeoutId = setTimeout(() => {
+    setEcoClickFeedbackActive(false);
+    ecoClickFeedbackTimeoutId = null;
+  }, Math.max(0, duration));
+}
+
+function resetEcoClickFeedback() {
+  clearEcoClickFeedbackTimeout();
+  setEcoClickFeedbackActive(false);
+}
+
+function syncAtomVisualForPerformanceMode(modeId = performanceModeState?.id) {
+  if (!modeId) return;
+  resetEcoClickFeedback();
+  resetAtomAnimationState();
+  resetAtomSpringStyles();
+  resetGlowEffects();
+  targetClickStrength = 0;
+  displayedClickStrength = 0;
+  clickHistory.length = 0;
+}
+
 function isGamePageActive() {
   return document.body.dataset.activePage === 'game';
 }
@@ -8979,6 +9070,10 @@ function interpolateGlowColor(strength) {
 
 function applyClickStrength(strength) {
   if (!elements.atomButton) return;
+  if (isEcoPerformanceModeActive()) {
+    resetGlowEffects();
+    return;
+  }
   const clamped = Math.max(0, Math.min(1, strength));
   const heat = Math.pow(clamped, 0.35);
   const button = elements.atomButton;
@@ -8993,6 +9088,9 @@ function applyClickStrength(strength) {
 
 function injectAtomImpulse(now = performance.now()) {
   if (!getAtomVisualElement()) return;
+  if (isEcoPerformanceModeActive()) {
+    return;
+  }
   const state = atomAnimationState;
   if (state.lastTime == null) {
     state.lastTime = now;
@@ -9025,6 +9123,11 @@ function injectAtomImpulse(now = performance.now()) {
 function updateAtomSpring(now = performance.now(), drive = 0) {
   const visual = getAtomVisualElement();
   if (!visual) return;
+  if (isEcoPerformanceModeActive()) {
+    resetAtomSpringStyles();
+    atomAnimationState.lastTime = null;
+    return;
+  }
   const state = atomAnimationState;
   if (state.lastTime == null) {
     state.lastTime = now;
@@ -9177,6 +9280,7 @@ function registerManualClick() {
   const now = performance.now();
   clickHistory.push(now);
   updateClickVisuals(now);
+  triggerEcoClickFeedbackPulse();
   injectAtomImpulse(now);
   if (
     typeof globalThis !== 'undefined'
@@ -10619,6 +10723,21 @@ function bindDomEventListeners() {
   }
   if (elements.atomButton) {
     const atomButton = elements.atomButton;
+
+    atomButton.addEventListener('pointerdown', () => {
+      activateEcoClickFeedback();
+    });
+
+    const handleEcoPointerRelease = () => {
+      if (!isEcoPerformanceModeActive()) {
+        return;
+      }
+      triggerEcoClickFeedbackPulse();
+    };
+
+    atomButton.addEventListener('pointerup', handleEcoPointerRelease);
+    atomButton.addEventListener('pointerleave', handleEcoPointerRelease);
+    atomButton.addEventListener('pointercancel', handleEcoPointerRelease);
 
     atomButton.addEventListener('click', event => {
       if (typeof event?.preventDefault === 'function') {
