@@ -181,8 +181,8 @@ const RESOLVED_PERFORMANCE_MODE_DEFINITIONS = Array.isArray(GLOBAL_PERFORMANCE_M
   && GLOBAL_PERFORMANCE_MODE_DEFINITIONS.length
   ? GLOBAL_PERFORMANCE_MODE_DEFINITIONS
   : [
-    Object.freeze({ id: 'fluid', labelKey: 'index.sections.options.performance.options.fluid', isDefault: true }),
-    Object.freeze({ id: 'eco', labelKey: 'index.sections.options.performance.options.eco' })
+    Object.freeze({ id: 'fluid', labelKey: 'index.sections.options.performance.options.fluid' }),
+    Object.freeze({ id: 'eco', labelKey: 'index.sections.options.performance.options.eco', isDefault: true })
   ];
 const PERFORMANCE_MODE_IDS = RESOLVED_PERFORMANCE_MODE_DEFINITIONS
   .map(def => (def && typeof def.id === 'string') ? def.id.trim().toLowerCase() : null)
@@ -322,10 +322,11 @@ const UI_SCALE_CONFIG = (() => {
   const fallbackChoices = {
     small: Object.freeze({ id: 'small', factor: 0.75 }),
     normal: Object.freeze({ id: 'normal', factor: 1 }),
-    large: Object.freeze({ id: 'large', factor: 1.5 })
+    large: Object.freeze({ id: 'large', factor: 1.5 }),
+    x2: Object.freeze({ id: 'x2', factor: 2 })
   };
   const fallback = {
-    defaultId: 'normal',
+    defaultId: 'large',
     choices: Object.freeze(fallbackChoices)
   };
 
