@@ -14,7 +14,7 @@
   };
 
   const DEFAULT_BOARD_CONFIG = {
-    widthPx: 620,
+    widthPx: 930,
     surfaceHeightPx: 12,
     pivotHeightPx: 110,
     tolerance: 0.026,
