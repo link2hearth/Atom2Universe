@@ -1113,8 +1113,8 @@
         "supercomputer": {
           "name": "Supercomputers",
           "description": "Quantum compute centers optimize your gains.",
-          "effect": "Passive production: +500 APS per level. Every 25 levels, a stabilizer adds +10% multiplier. Every 10 levels, ionization doubles the total bonus.",
-          "effectSummary": "Passive production +500 APS per level. Stabilizer: +10% multiplier every 25 levels. Ionization: ×2 total bonus every 10 levels."
+          "effect": "Passive production: +500 APS per level. Every 25 levels, a stabilizer adds +50% multiplier. Every 10 levels, ionization doubles the total bonus.",
+          "effectSummary": "Passive production +500 APS per level. Stabilizer: +50% multiplier every 25 levels. Ionization: ×2 total bonus every 10 levels."
         },
         "interstellarProbe": {
           "name": "Interstellar Probe",
@@ -1137,14 +1137,14 @@
         "artificialGalaxy": {
           "name": "Artificial Galaxy",
           "description": "Galactic engineering for endless expansion.",
-          "effect": "Passive production: +5,000,000 APS per level. Every 25 levels, a stabilizer adds +10% multiplier. Every 10 levels, ionization doubles the total bonus.",
-          "effectSummary": "Passive production +5,000,000 APS per level. Stabilizer: +10% multiplier every 25 levels. Ionization: ×2 total bonus every 10 levels."
+          "effect": "Passive production: +5,000,000 APS per level. Every 25 levels, a stabilizer adds +50% multiplier. Every 10 levels, ionization doubles the total bonus.",
+          "effectSummary": "Passive production +5,000,000 APS per level. Stabilizer: +50% multiplier every 25 levels. Ionization: ×2 total bonus every 10 levels."
         },
         "multiverseSimulator": {
           "name": "Multiverse Simulator",
           "description": "Simulate infinity to optimize every second.",
-          "effect": "Passive production: +500,000,000 APS per level. Every 25 levels, a stabilizer adds +10% multiplier. Every 10 levels, ionization doubles the total bonus.",
-          "effectSummary": "Passive production +500,000,000 APS per level. Stabilizer: +10% multiplier every 25 levels. Ionization: ×2 total bonus every 10 levels."
+          "effect": "Passive production: +500,000,000 APS per level. Every 25 levels, a stabilizer adds +50% multiplier. Every 10 levels, ionization doubles the total bonus.",
+          "effectSummary": "Passive production +500,000,000 APS per level. Stabilizer: +50% multiplier every 25 levels. Ionization: ×2 total bonus every 10 levels."
         },
         "realityWeaver": {
           "name": "Reality Weaver",

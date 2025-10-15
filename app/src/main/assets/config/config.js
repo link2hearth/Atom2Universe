@@ -262,6 +262,12 @@ const INTERSTELLAR_PROBE_APC_BONUS = 100;
 const INTERSTELLAR_PROBE_BONUS_DOUBLING_INTERVAL = 50;
 
 /**
+ * Incrément du multiplicateur automatique ajouté par le stabilisateur quantique.
+ * Chaque palier de 25 niveaux augmente la production passive de 50 % avant ionisation.
+ */
+const QUANTUM_STABILIZER_MULTIPLIER_INCREMENT = 0.5;
+
+/**
  * Paramètres de l'ionisation appliquée aux bâtiments du magasin.
  * Tous les 10 niveaux, le bonus total du bâtiment est multiplié par 2.
  */
@@ -361,16 +367,17 @@ function createShopBuildingDefinitions() {
       name: 'Supercalculateurs',
       description: 'Des centres de calcul quantique optimisent vos gains.',
       effectSummary:
-        'Production passive : +500 APS par niveau. Tous les 25 niveaux, un stabilisateur ajoute +10 % de multiplicateur à la production. Tous les 10 niveaux, l’ionisation double le bonus total.',
+        'Production passive : +500 APS par niveau. Tous les 25 niveaux, un stabilisateur ajoute +50 % de multiplicateur à la production. Tous les 10 niveaux, l’ionisation double le bonus total.',
       category: 'auto',
       baseCost: 200_000,
       costScale: 1.15,
       effect: (level = 0) => {
         const baseAmount = 500 * level;
         const autoAddBase = level > 0 ? baseAmount : 0;
-        // Stabilisateur quantique : tous les 25 niveaux, ajoute +10 % au multiplicateur automatique.
+        // Stabilisateur quantique : tous les 25 niveaux, ajoute +50 % au multiplicateur automatique.
         const stabilizerTier = Math.floor(level / 25);
-        const autoMultIncrement = stabilizerTier > 0 ? stabilizerTier * 0.1 : 0;
+        const autoMultIncrement =
+          stabilizerTier > 0 ? stabilizerTier * QUANTUM_STABILIZER_MULTIPLIER_INCREMENT : 0;
         const ionizationBoost = getIonizationBoost(level);
         const result = { autoAdd: 0 };
         if (autoAddBase > 0) {
@@ -478,16 +485,17 @@ function createShopBuildingDefinitions() {
       name: 'Galaxie artificielle',
       description: 'Ingénierie galactique pour une expansion sans fin.',
       effectSummary:
-        'Production passive : +5 000 000 APS par niveau. Tous les 25 niveaux, un stabilisateur ajoute +10 % de multiplicateur. Tous les 10 niveaux, l’ionisation double le bonus total.',
+        'Production passive : +5 000 000 APS par niveau. Tous les 25 niveaux, un stabilisateur ajoute +50 % de multiplicateur. Tous les 10 niveaux, l’ionisation double le bonus total.',
       category: 'auto',
       baseCost: 1e13,
       costScale: 1.2,
       effect: (level = 0) => {
         const baseAmount = 5e6 * level;
         const autoAddBase = level > 0 ? baseAmount : 0;
-        // Stabilisateur quantique : tous les 25 niveaux, ajoute +10 % au multiplicateur automatique.
+        // Stabilisateur quantique : tous les 25 niveaux, ajoute +50 % au multiplicateur automatique.
         const stabilizerTier = Math.floor(level / 25);
-        const autoMultIncrement = stabilizerTier > 0 ? stabilizerTier * 0.1 : 0;
+        const autoMultIncrement =
+          stabilizerTier > 0 ? stabilizerTier * QUANTUM_STABILIZER_MULTIPLIER_INCREMENT : 0;
         const ionizationBoost = getIonizationBoost(level);
         const result = { autoAdd: 0 };
         if (autoAddBase > 0) {
@@ -504,16 +512,17 @@ function createShopBuildingDefinitions() {
       name: 'Simulateur de Multivers',
       description: 'Simulez l’infini pour optimiser chaque seconde.',
       effectSummary:
-        'Production passive : +500 000 000 APS par niveau. Tous les 25 niveaux, un stabilisateur ajoute +10 % de multiplicateur. Tous les 10 niveaux, l’ionisation double le bonus total.',
+        'Production passive : +500 000 000 APS par niveau. Tous les 25 niveaux, un stabilisateur ajoute +50 % de multiplicateur. Tous les 10 niveaux, l’ionisation double le bonus total.',
       category: 'auto',
       baseCost: 1e16,
       costScale: 1.2,
       effect: (level = 0) => {
         const baseAmount = 5e8 * level;
         const autoAddBase = level > 0 ? baseAmount : 0;
-        // Stabilisateur quantique : tous les 25 niveaux, ajoute +10 % au multiplicateur automatique.
+        // Stabilisateur quantique : tous les 25 niveaux, ajoute +50 % au multiplicateur automatique.
         const stabilizerTier = Math.floor(level / 25);
-        const autoMultIncrement = stabilizerTier > 0 ? stabilizerTier * 0.1 : 0;
+        const autoMultIncrement =
+          stabilizerTier > 0 ? stabilizerTier * QUANTUM_STABILIZER_MULTIPLIER_INCREMENT : 0;
         const ionizationBoost = getIonizationBoost(level);
         const result = { autoAdd: 0 };
         if (autoAddBase > 0) {
