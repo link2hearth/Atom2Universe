@@ -1113,8 +1113,8 @@
         "supercomputer": {
           "name": "Supercalculateurs",
           "description": "Des centres de calcul quantique optimisent vos gains.",
-          "effect": "Production passive : +500 APS par niveau. Tous les 25 niveaux, un stabilisateur ajoute +10 % de multiplicateur. Tous les 10 niveaux, l’ionisation double le bonus total.",
-          "effectSummary": "Production passive +500 APS par niveau. Stabilisateur : +10 % multiplicateur tous les 25 niveaux. Ionisation : bonus total x2 tous les 10 niveaux."
+          "effect": "Production passive : +500 APS par niveau. Tous les 25 niveaux, un stabilisateur ajoute +50 % de multiplicateur. Tous les 10 niveaux, l’ionisation double le bonus total.",
+          "effectSummary": "Production passive +500 APS par niveau. Stabilisateur : +50 % multiplicateur tous les 25 niveaux. Ionisation : bonus total x2 tous les 10 niveaux."
         },
         "interstellarProbe": {
           "name": "Sonde interstellaire",
@@ -1137,14 +1137,14 @@
         "artificialGalaxy": {
           "name": "Galaxie artificielle",
           "description": "Ingénierie galactique pour une expansion sans fin.",
-          "effect": "Production passive : +5 000 000 APS par niveau. Tous les 25 niveaux, un stabilisateur ajoute +10 % de multiplicateur. Tous les 10 niveaux, l’ionisation double le bonus total.",
-          "effectSummary": "Production passive +5 000 000 APS par niveau. Stabilisateur : +10 % multiplicateur tous les 25 niveaux. Ionisation : bonus total x2 tous les 10 niveaux."
+          "effect": "Production passive : +5 000 000 APS par niveau. Tous les 25 niveaux, un stabilisateur ajoute +50 % de multiplicateur. Tous les 10 niveaux, l’ionisation double le bonus total.",
+          "effectSummary": "Production passive +5 000 000 APS par niveau. Stabilisateur : +50 % multiplicateur tous les 25 niveaux. Ionisation : bonus total x2 tous les 10 niveaux."
         },
         "multiverseSimulator": {
           "name": "Simulateur de Multivers",
           "description": "Simulez l’infini pour optimiser chaque seconde.",
-          "effect": "Production passive : +500 000 000 APS par niveau. Tous les 25 niveaux, un stabilisateur ajoute +10 % de multiplicateur. Tous les 10 niveaux, l’ionisation double le bonus total.",
-          "effectSummary": "Production passive +500 000 000 APS par niveau. Stabilisateur : +10 % multiplicateur tous les 25 niveaux. Ionisation : bonus total x2 tous les 10 niveaux."
+          "effect": "Production passive : +500 000 000 APS par niveau. Tous les 25 niveaux, un stabilisateur ajoute +50 % de multiplicateur. Tous les 10 niveaux, l’ionisation double le bonus total.",
+          "effectSummary": "Production passive +500 000 000 APS par niveau. Stabilisateur : +50 % multiplicateur tous les 25 niveaux. Ionisation : bonus total x2 tous les 10 niveaux."
         },
         "realityWeaver": {
           "name": "Tisseur de Réalité",
