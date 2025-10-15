@@ -3903,6 +3903,78 @@ function scheduleStartupOverlayFailsafe() {
   }, failsafeDelay);
 }
 
+let pageHiddenAt = null;
+let backgroundReloadScheduled = false;
+let overlayFadeFallbackTimeout = null;
+let startupOverlayFailsafeTimeout = null;
+let visibilityChangeListenerAttached = false;
+let appStartAttempted = false;
+let appStartCompleted = false;
+
+function clearStartupOverlayFailsafe() {
+  if (startupOverlayFailsafeTimeout != null) {
+    clearTimeout(startupOverlayFailsafeTimeout);
+    startupOverlayFailsafeTimeout = null;
+  }
+}
+
+function scheduleStartupOverlayFailsafe() {
+  if (startupOverlayFailsafeTimeout != null) {
+    return;
+  }
+
+  const fadeDuration = typeof STARTUP_FADE_DURATION_MS === 'number'
+    ? Math.max(0, STARTUP_FADE_DURATION_MS)
+    : 0;
+  const bufferDuration = Math.max(2000, fadeDuration);
+  const failsafeDelay = fadeDuration + bufferDuration;
+
+  startupOverlayFailsafeTimeout = setTimeout(() => {
+    startupOverlayFailsafeTimeout = null;
+    const needsForcedStart = !appStartCompleted;
+    console.warn(
+      needsForcedStart
+        ? 'Startup overlay failsafe triggered, forcing application start'
+        : 'Startup overlay failsafe triggered'
+    );
+    if (needsForcedStart) {
+      safelyStartApp({ force: true });
+    }
+    hideStartupOverlay({ instant: true });
+  }, failsafeDelay);
+}
+
+let pageHiddenAt = null;
+let backgroundReloadScheduled = false;
+let overlayFadeFallbackTimeout = null;
+let startupOverlayFailsafeTimeout = null;
+let visibilityChangeListenerAttached = false;
+
+function clearStartupOverlayFailsafe() {
+  if (startupOverlayFailsafeTimeout != null) {
+    clearTimeout(startupOverlayFailsafeTimeout);
+    startupOverlayFailsafeTimeout = null;
+  }
+}
+
+function scheduleStartupOverlayFailsafe() {
+  if (startupOverlayFailsafeTimeout != null) {
+    return;
+  }
+
+  const fadeDuration = typeof STARTUP_FADE_DURATION_MS === 'number'
+    ? Math.max(0, STARTUP_FADE_DURATION_MS)
+    : 0;
+  const bufferDuration = Math.max(2000, fadeDuration);
+  const failsafeDelay = fadeDuration + bufferDuration;
+
+  startupOverlayFailsafeTimeout = setTimeout(() => {
+    startupOverlayFailsafeTimeout = null;
+    console.warn('Startup overlay failsafe triggered');
+    hideStartupOverlay({ instant: true });
+  }, failsafeDelay);
+}
+
 const RESET_DIALOG_FOCUSABLE_SELECTOR = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
 const resetDialogState = {
@@ -4477,6 +4549,285 @@ function hideStartupOverlay(options = {}) {
       finalize();
       return;
     }
+
+    overlay.addEventListener('transitionend', finalize, { once: true });
+    overlay.classList.remove('startup-overlay--visible');
+
+    const fallbackDelay = typeof STARTUP_FADE_DURATION_MS === 'number'
+      ? Math.max(0, STARTUP_FADE_DURATION_MS)
+      : 0;
+
+    overlayFadeFallbackTimeout = setTimeout(() => {
+      overlay.removeEventListener('transitionend', finalize);
+      finalize();
+    }, fallbackDelay + 60);
+
+    if (overlay.style.transitionDuration === '0ms') {
+      overlay.style.transitionDuration = '';
+    }
+  };
+
+  if (delayMs > 0) {
+    setTimeout(startFade, delayMs);
+  } else {
+    requestAnimationFrame(startFade);
+  }
+}
+
+function handleVisibilityChange() {
+  if (typeof document === 'undefined') {
+    return;
+  }
+
+  const isHidden = document.visibilityState
+    ? document.visibilityState === 'hidden'
+    : document.hidden === true;
+
+  if (isHidden) {
+    pageHiddenAt = Date.now();
+    backgroundReloadScheduled = false;
+    return;
+  }
+
+  const hiddenSince = pageHiddenAt;
+  pageHiddenAt = null;
+
+  if (backgroundReloadScheduled || hiddenSince == null) {
+    return;
+  }
+
+  const hiddenDuration = Date.now() - hiddenSince;
+  if (hiddenDuration < BACKGROUND_RELOAD_THRESHOLD_MS) {
+    return;
+  }
+
+  backgroundReloadScheduled = true;
+  showStartupOverlay({ instant: true });
+
+  const leadTime = typeof BACKGROUND_RELOAD_OVERLAY_LEAD_MS === 'number'
+    ? Math.max(0, BACKGROUND_RELOAD_OVERLAY_LEAD_MS)
+    : 0;
+
+  setTimeout(() => {
+    window.location.reload();
+  }, leadTime);
+}
+
+function applyStartupOverlayDuration() {
+  if (typeof document === 'undefined') {
+    return;
+  }
+
+  const root = document.documentElement;
+  if (!root || !root.style || typeof root.style.setProperty !== 'function') {
+    return;
+  }
+
+  const normalizedDuration = typeof STARTUP_FADE_DURATION_MS === 'number'
+    ? Math.max(0, STARTUP_FADE_DURATION_MS)
+    : 0;
+
+  root.style.setProperty('--startup-fade-duration', `${normalizedDuration}ms`);
+}
+
+function showStartupOverlay(options = {}) {
+  const overlay = elements && elements.startupOverlay ? elements.startupOverlay : null;
+  if (!overlay) {
+    return;
+  }
+
+  if (overlayFadeFallbackTimeout != null) {
+    clearTimeout(overlayFadeFallbackTimeout);
+    overlayFadeFallbackTimeout = null;
+  }
+
+  overlay.removeAttribute('hidden');
+
+  const instant = options && options.instant === true;
+  if (instant) {
+    overlay.style.transitionDuration = '0ms';
+  }
+
+  if (!overlay.classList.contains('startup-overlay--visible')) {
+    overlay.classList.add('startup-overlay--visible');
+  }
+
+  if (instant) {
+    requestAnimationFrame(() => {
+      overlay.style.transitionDuration = '';
+    });
+  }
+}
+
+function hideStartupOverlay(options = {}) {
+  const overlay = elements && elements.startupOverlay ? elements.startupOverlay : null;
+  if (!overlay) {
+    clearStartupOverlayFailsafe();
+    return;
+  }
+
+  const delayMs = options && typeof options.delayMs === 'number' && options.delayMs > 0
+    ? options.delayMs
+    : 0;
+  const instant = options && options.instant === true;
+
+  clearStartupOverlayFailsafe();
+
+  const startFade = () => {
+    if (!overlay.classList.contains('startup-overlay--visible')) {
+      overlay.setAttribute('hidden', '');
+      return;
+    }
+
+    const finalize = () => {
+      if (overlayFadeFallbackTimeout != null) {
+        clearTimeout(overlayFadeFallbackTimeout);
+        overlayFadeFallbackTimeout = null;
+      }
+      overlay.setAttribute('hidden', '');
+    };
+
+    if (instant) {
+      overlay.classList.remove('startup-overlay--visible');
+      finalize();
+      return;
+    }
+
+    overlay.addEventListener('transitionend', finalize, { once: true });
+    overlay.classList.remove('startup-overlay--visible');
+
+    const fallbackDelay = typeof STARTUP_FADE_DURATION_MS === 'number'
+      ? Math.max(0, STARTUP_FADE_DURATION_MS)
+      : 0;
+
+    overlayFadeFallbackTimeout = setTimeout(() => {
+      overlay.removeEventListener('transitionend', finalize);
+      finalize();
+    }, fallbackDelay + 60);
+
+    if (overlay.style.transitionDuration === '0ms') {
+      overlay.style.transitionDuration = '';
+    }
+  };
+
+  if (delayMs > 0) {
+    setTimeout(startFade, delayMs);
+  } else {
+    requestAnimationFrame(startFade);
+  }
+}
+
+function handleVisibilityChange() {
+  if (typeof document === 'undefined') {
+    return;
+  }
+
+  const isHidden = document.visibilityState
+    ? document.visibilityState === 'hidden'
+    : document.hidden === true;
+
+  if (isHidden) {
+    pageHiddenAt = Date.now();
+    backgroundReloadScheduled = false;
+    return;
+  }
+
+  const hiddenSince = pageHiddenAt;
+  pageHiddenAt = null;
+
+  if (backgroundReloadScheduled || hiddenSince == null) {
+    return;
+  }
+
+  const hiddenDuration = Date.now() - hiddenSince;
+  if (hiddenDuration < BACKGROUND_RELOAD_THRESHOLD_MS) {
+    return;
+  }
+
+  backgroundReloadScheduled = true;
+  showStartupOverlay({ instant: true });
+
+  const leadTime = typeof BACKGROUND_RELOAD_OVERLAY_LEAD_MS === 'number'
+    ? Math.max(0, BACKGROUND_RELOAD_OVERLAY_LEAD_MS)
+    : 0;
+
+  setTimeout(() => {
+    window.location.reload();
+  }, leadTime);
+}
+
+function applyStartupOverlayDuration() {
+  if (typeof document === 'undefined') {
+    return;
+  }
+
+  const root = document.documentElement;
+  if (!root || !root.style || typeof root.style.setProperty !== 'function') {
+    return;
+  }
+
+  const normalizedDuration = typeof STARTUP_FADE_DURATION_MS === 'number'
+    ? Math.max(0, STARTUP_FADE_DURATION_MS)
+    : 0;
+
+  root.style.setProperty('--startup-fade-duration', `${normalizedDuration}ms`);
+}
+
+function showStartupOverlay(options = {}) {
+  const overlay = elements && elements.startupOverlay ? elements.startupOverlay : null;
+  if (!overlay) {
+    return;
+  }
+
+  if (overlayFadeFallbackTimeout != null) {
+    clearTimeout(overlayFadeFallbackTimeout);
+    overlayFadeFallbackTimeout = null;
+  }
+
+  overlay.removeAttribute('hidden');
+
+  const instant = options && options.instant === true;
+  if (instant) {
+    overlay.style.transitionDuration = '0ms';
+  }
+
+  if (!overlay.classList.contains('startup-overlay--visible')) {
+    overlay.classList.add('startup-overlay--visible');
+  }
+
+  if (instant) {
+    requestAnimationFrame(() => {
+      overlay.style.transitionDuration = '';
+    });
+  }
+}
+
+function hideStartupOverlay(options = {}) {
+  const overlay = elements && elements.startupOverlay ? elements.startupOverlay : null;
+  if (!overlay) {
+    clearStartupOverlayFailsafe();
+    return;
+  }
+
+  const delayMs = options && typeof options.delayMs === 'number' && options.delayMs > 0
+    ? options.delayMs
+    : 0;
+
+  clearStartupOverlayFailsafe();
+
+  const startFade = () => {
+    if (!overlay.classList.contains('startup-overlay--visible')) {
+      overlay.setAttribute('hidden', '');
+      return;
+    }
+
+    const finalize = () => {
+      if (overlayFadeFallbackTimeout != null) {
+        clearTimeout(overlayFadeFallbackTimeout);
+        overlayFadeFallbackTimeout = null;
+      }
+      overlay.setAttribute('hidden', '');
+    };
 
     overlay.addEventListener('transitionend', finalize, { once: true });
     overlay.classList.remove('startup-overlay--visible');

@@ -82,6 +82,7 @@
   gap: clamp(0.75rem, min(2.2vw, 2.6vh), 1.9rem);
   min-height: 100vh;
   min-height: var(--balance-viewport);
+  overscroll-behavior: contain;
 }
 
 .page--balance.active {
@@ -277,11 +278,12 @@ body.theme-aurora .page--balance {
 .balance-layout {
   width: min(1100px, 100%);
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-rows: auto auto auto;
   justify-items: center;
   align-items: center;
   align-content: center;
   row-gap: clamp(0.6rem, min(1.7vw, 2vh), 1.45rem);
+  padding-block: clamp(0.8rem, 3.8vh, 1.8rem) clamp(1rem, 4.6vh, 2rem);
   flex: 1 1 auto;
   min-height: 0;
 }
@@ -311,6 +313,7 @@ body.theme-aurora .page--balance {
   width: 100%;
   display: flex;
   justify-content: center;
+  touch-action: none;
 }
 
 .balance-board-wrapper {
@@ -319,7 +322,7 @@ body.theme-aurora .page--balance {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(0.6rem, min(1.4vw, 1.8vh), 1.25rem);
+  gap: clamp(0.5rem, min(1.2vw, 1.6vh), 1.05rem);
 }
 
 .balance-stage {
@@ -330,9 +333,11 @@ body.theme-aurora .page--balance {
   align-items: center;
   justify-content: center;
   gap: clamp(0.45rem, min(1.3vw, 1.7vh), 1rem);
-  padding-block: clamp(1.2rem, min(6vh, 3.5rem), 3.2rem) clamp(1rem, min(5vh, 2.8rem), 2.6rem);
+  padding-block: clamp(1.1rem, min(5.5vh, 3.1rem), 2.8rem)
+    clamp(0.65rem, min(2.6vh, 1.5rem), 1.4rem);
   max-height: var(--balance-available-height);
   min-height: 0;
+  touch-action: none;
 }
 
 .balance-board {
@@ -342,6 +347,7 @@ body.theme-aurora .page--balance {
   transform: rotate(var(--balance-rotation));
   transition: transform var(--balance-tilt-duration) cubic-bezier(0.25, 0.8, 0.25, 1);
   will-change: transform;
+  touch-action: none;
 }
 
 .balance-board__surface {
@@ -393,7 +399,7 @@ body.theme-aurora .page--balance {
 }
 
 .balance-controls {
-  width: 100%;
+  width: min(100%, var(--balance-board-width));
   display: grid;
   grid-template-columns: minmax(0, auto) auto;
   grid-template-areas:
@@ -403,6 +409,7 @@ body.theme-aurora .page--balance {
   align-items: center;
   row-gap: clamp(0.45rem, min(1.3vw, 1.7vh), 1.1rem);
   column-gap: clamp(0.45rem, min(1.3vw, 1.7vh), 1.1rem);
+  margin-top: clamp(0.35rem, min(1.5vh, 0.9rem), 0.9rem);
 }
 
 @media (max-height: 720px) {
@@ -692,6 +699,7 @@ body.theme-aurora .page--balance {
   align-items: flex-start;
   justify-content: center;
   min-height: 3.5rem;
+  touch-action: none;
 }
 
 .balance-cube {
