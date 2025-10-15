@@ -243,7 +243,6 @@
   display: flex;
   align-items: center;
   gap: calc(0.75rem * var(--game-of-life-menu-scale));
-  margin-left: auto;
   font-size: calc(0.95rem * var(--game-of-life-menu-scale));
   color: var(--gol-status-color, rgba(230, 236, 255, 0.86));
 }
