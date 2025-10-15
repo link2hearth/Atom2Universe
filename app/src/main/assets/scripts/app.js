@@ -3804,7 +3804,33 @@ let elements = {};
 let pageHiddenAt = null;
 let backgroundReloadScheduled = false;
 let overlayFadeFallbackTimeout = null;
+let startupOverlayFailsafeTimeout = null;
 let visibilityChangeListenerAttached = false;
+
+function clearStartupOverlayFailsafe() {
+  if (startupOverlayFailsafeTimeout != null) {
+    clearTimeout(startupOverlayFailsafeTimeout);
+    startupOverlayFailsafeTimeout = null;
+  }
+}
+
+function scheduleStartupOverlayFailsafe() {
+  if (startupOverlayFailsafeTimeout != null) {
+    return;
+  }
+
+  const fadeDuration = typeof STARTUP_FADE_DURATION_MS === 'number'
+    ? Math.max(0, STARTUP_FADE_DURATION_MS)
+    : 0;
+  const bufferDuration = Math.max(2000, fadeDuration);
+  const failsafeDelay = fadeDuration + bufferDuration;
+
+  startupOverlayFailsafeTimeout = setTimeout(() => {
+    startupOverlayFailsafeTimeout = null;
+    console.warn('Startup overlay failsafe triggered');
+    hideStartupOverlay({ instant: true });
+  }, failsafeDelay);
+}
 
 const RESET_DIALOG_FOCUSABLE_SELECTOR = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
@@ -4349,12 +4375,15 @@ function showStartupOverlay(options = {}) {
 function hideStartupOverlay(options = {}) {
   const overlay = elements && elements.startupOverlay ? elements.startupOverlay : null;
   if (!overlay) {
+    clearStartupOverlayFailsafe();
     return;
   }
 
   const delayMs = options && typeof options.delayMs === 'number' && options.delayMs > 0
     ? options.delayMs
     : 0;
+
+  clearStartupOverlayFailsafe();
 
   const startFade = () => {
     if (!overlay.classList.contains('startup-overlay--visible')) {
@@ -13987,6 +14016,15 @@ function startApp() {
   hideStartupOverlay();
 }
 
+function safelyStartApp() {
+  try {
+    startApp();
+  } catch (error) {
+    console.error('Unable to start the application', error);
+    hideStartupOverlay({ instant: true });
+  }
+}
+
 function initializeDomBoundModules() {
   refreshOptionsWelcomeContent();
   subscribeOptionsWelcomeContentUpdates();
@@ -14017,6 +14055,7 @@ function initializeDomBoundModules() {
 function initializeApp() {
   elements = collectDomElements();
   applyStartupOverlayDuration();
+  scheduleStartupOverlayFailsafe();
   if (!visibilityChangeListenerAttached) {
     document.addEventListener('visibilitychange', handleVisibilityChange);
     visibilityChangeListenerAttached = true;
@@ -14044,17 +14083,26 @@ function initializeApp() {
           i18n.updateTranslations(document);
         }
         updateLanguageSelectorValue(i18n.getCurrentLanguage ? i18n.getCurrentLanguage() : preferredLanguage);
-        startApp();
+        safelyStartApp();
       });
     return;
   }
   updateLanguageSelectorValue(getInitialLanguagePreference());
-  startApp();
+  safelyStartApp();
+}
+
+function bootApplication() {
+  try {
+    initializeApp();
+  } catch (error) {
+    console.error('Unable to initialize the application', error);
+    hideStartupOverlay({ instant: true });
+  }
 }
 
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initializeApp, { once: true });
+  document.addEventListener('DOMContentLoaded', bootApplication, { once: true });
 } else {
-  initializeApp();
+  bootApplication();
 }
 
