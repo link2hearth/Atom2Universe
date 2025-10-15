@@ -13489,6 +13489,7 @@ function saveGame() {
 
 if (typeof window !== 'undefined') {
   window.atom2universSaveGame = saveGame;
+  window.saveGame = saveGame;
 }
 
 function resetGame() {
