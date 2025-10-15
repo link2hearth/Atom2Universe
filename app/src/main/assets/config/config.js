@@ -25,25 +25,6 @@ const BACKGROUND_RELOAD_THRESHOLD_MS = 30 * 60 * 1000;
 const BACKGROUND_RELOAD_OVERLAY_LEAD_MS = 250;
 
 /**
- * Durée (en millisecondes) de l’animation de fondu appliquée au démarrage.
- * Ce délai est également réutilisé pour l’effet de transition lors d’un
- * rechargement automatique provoqué après un long passage en arrière-plan.
- */
-const STARTUP_FADE_DURATION_MS = 1000;
-
-/**
- * Durée minimale (en millisecondes) passée en arrière-plan avant de forcer
- * un rechargement complet de l’application au retour au premier plan.
- */
-const BACKGROUND_RELOAD_THRESHOLD_MS = 30 * 60 * 1000;
-
-/**
- * Délai (en millisecondes) laissé à l’overlay pour recouvrir l’écran avant
- * de déclencher un rechargement forcé.
- */
-const BACKGROUND_RELOAD_OVERLAY_LEAD_MS = 250;
-
-/**
  * Ratio maximal appliqué lors du rendu des canvas.
  * Permet de conserver une image nette sans dépasser un coût GPU excessif
  * sur les appareils à très haute densité de pixels.
