@@ -621,6 +621,13 @@
         return;
       }
       event.preventDefault();
+      if (typeof cube.setPointerCapture === 'function' && typeof event.pointerId === 'number') {
+        try {
+          cube.setPointerCapture(event.pointerId);
+        } catch (captureError) {
+          // Some browsers may not support pointer capture on detached nodes.
+        }
+      }
       const pointerId = event.pointerId || 'mouse';
       const rect = cube.getBoundingClientRect();
       const offsetX = event.clientX - rect.left;
@@ -747,6 +754,7 @@
         this.returnCubeToInventory(cube);
       }
       cube.classList.remove('balance-cube--dragging');
+      this.releasePointerCapture();
       this.dragState = null;
       this.updateInventoryAccessibility();
     }
@@ -760,6 +768,7 @@
       if (originalParent) {
         originalParent.insertBefore(cube, originalNextSibling);
       }
+      this.releasePointerCapture();
       this.dragState = null;
       this.stopPointerListeners();
     }
@@ -768,6 +777,20 @@
       document.removeEventListener('pointermove', this.handlePointerMove);
       document.removeEventListener('pointerup', this.handlePointerUp);
       document.removeEventListener('pointercancel', this.handlePointerCancel);
+    }
+
+    releasePointerCapture() {
+      if (!this.dragState) {
+        return;
+      }
+      const { cube, pointerId } = this.dragState;
+      if (cube && typeof cube.releasePointerCapture === 'function' && typeof pointerId === 'number') {
+        try {
+          cube.releasePointerCapture(pointerId);
+        } catch (releaseError) {
+          // Ignore failures when the pointer capture is already released.
+        }
+      }
     }
 
     placeCubeOnBoard(cube, positionRatio) {
