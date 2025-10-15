@@ -10,13 +10,13 @@ const SHOP_MAX_PURCHASE_DEFAULT = 1000;
  * Ce délai est également réutilisé pour l’effet de transition lors d’un
  * rechargement automatique provoqué après un long passage en arrière-plan.
  */
-const STARTUP_FADE_DURATION_MS = 1000;
+const STARTUP_FADE_DURATION_MS = 1500;
 
 /**
  * Durée minimale (en millisecondes) passée en arrière-plan avant de forcer
  * un rechargement complet de l’application au retour au premier plan.
  */
-const BACKGROUND_RELOAD_THRESHOLD_MS = 30 * 60 * 1000;
+const BACKGROUND_RELOAD_THRESHOLD_MS = 1 * 60 * 1000;
 
 /**
  * Délai (en millisecondes) laissé à l’overlay pour recouvrir l’écran avant
@@ -3615,6 +3615,7 @@ GAME_CONFIG.progression.defaultTheme = GAME_CONFIG.themes.default;
 if (typeof globalThis !== 'undefined') {
   globalThis.GAME_CONFIG = GAME_CONFIG;
 }
+
 
 
 
