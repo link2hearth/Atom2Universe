@@ -1102,80 +1102,80 @@
         "nuclearReactor": {
           "name": "Réacteur nucléaire",
           "description": "Des réacteurs contrôlés libèrent une énergie colossale.",
-          "effect": "Production passive : +10 APS par niveau. Tous les 10 niveaux, l’ionisation double le bonus total.",
-          "effectSummary": "Production passive +10 APS par niveau. Ionisation : bonus total x2 tous les 10 niveaux."
+          "effect": "Production passive : +10 APS par niveau. Tous les 50 niveaux, l’ionisation double le bonus total.",
+          "effectSummary": "Production passive +10 APS par niveau. Ionisation : bonus total x2 tous les 50 niveaux."
         },
         "particleAccelerator": {
           "name": "Accélérateur de particules",
           "description": "Boostez vos particules pour intensifier la production passive.",
-          "effect": "Production passive : +50 APS par niveau. Tous les 50 niveaux, la rémanence ajoute un bonus d’APC équivalent. Tous les 10 niveaux, l’ionisation double le bonus total.",
-          "effectSummary": "Production passive +50 APS par niveau. Rémanence : +APC égal au gain tous les 50 niveaux. Ionisation : bonus total x2 tous les 10 niveaux."
+          "effect": "Production passive : +50 APS par niveau. Tous les 50 niveaux, la rémanence ajoute un bonus d’APC équivalent. Tous les 50 niveaux, l’ionisation double le bonus total.",
+          "effectSummary": "Production passive +50 APS par niveau. Rémanence : +APC égal au gain tous les 50 niveaux. Ionisation : bonus total x2 tous les 50 niveaux."
         },
         "supercomputer": {
           "name": "Supercalculateurs",
           "description": "Des centres de calcul quantique optimisent vos gains.",
-          "effect": "Production passive : +500 APS par niveau. Tous les 25 niveaux, un stabilisateur ajoute +20 % de multiplicateur. Tous les 10 niveaux, l’ionisation double le bonus total.",
-          "effectSummary": "Production passive +500 APS par niveau. Stabilisateur : +20 % multiplicateur tous les 25 niveaux. Ionisation : bonus total x2 tous les 10 niveaux."
+          "effect": "Production passive : +500 APS par niveau. Tous les 25 niveaux, un stabilisateur ajoute +20 % de multiplicateur. Tous les 50 niveaux, l’ionisation double le bonus total.",
+          "effectSummary": "Production passive +500 APS par niveau. Stabilisateur : +20 % multiplicateur tous les 25 niveaux. Ionisation : bonus total x2 tous les 50 niveaux."
         },
         "interstellarProbe": {
           "name": "Sonde interstellaire",
           "description": "Explorez la galaxie pour récolter toujours plus.",
-          "effect": "Production passive : +5 000 APS par niveau. Bonus : avec 50 Électrons libres ou plus, chaque bâtiment possédé ajoute +100 APC, doublés tous les 50 niveaux de Sonde interstellaire. Tous les 10 niveaux, l’ionisation double le bonus total.",
-          "effectSummary": "Production passive +5 000 APS par niveau. Bonus : 50 Électrons libres ou plus ajoutent +100 APC par bâtiment, doublés tous les 50 niveaux. Ionisation : bonus total x2 tous les 10 niveaux."
+          "effect": "Production passive : +5 000 APS par niveau. Bonus : avec 50 Électrons libres ou plus, chaque bâtiment possédé ajoute +100 APC, doublés tous les 50 niveaux de Sonde interstellaire. Tous les 50 niveaux, l’ionisation double le bonus total.",
+          "effectSummary": "Production passive +5 000 APS par niveau. Bonus : 50 Électrons libres ou plus ajoutent +100 APC par bâtiment, doublés tous les 50 niveaux. Ionisation : bonus total x2 tous les 50 niveaux."
         },
         "spaceStation": {
           "name": "Station spatiale",
           "description": "Des bases orbitales coordonnent votre expansion.",
-          "effect": "Production passive : +50 000 APS par niveau. Tous les 50 niveaux, la rémanence convertit ce gain en bonus d’APC. Tous les 10 niveaux, l’ionisation double le bonus total.",
-          "effectSummary": "Production passive +50 000 APS par niveau. Rémanence : conversion en APC tous les 50 niveaux. Ionisation : bonus total x2 tous les 10 niveaux."
+          "effect": "Production passive : +50 000 APS par niveau. Tous les 50 niveaux, la rémanence convertit ce gain en bonus d’APC. Tous les 50 niveaux, l’ionisation double le bonus total.",
+          "effectSummary": "Production passive +50 000 APS par niveau. Rémanence : conversion en APC tous les 50 niveaux. Ionisation : bonus total x2 tous les 50 niveaux."
         },
         "starForge": {
           "name": "Forgeron d’étoiles",
           "description": "Façonnez des étoiles et dopez votre production passive.",
-          "effect": "Production passive : +500 000 APS par niveau. Tous les 50 niveaux, la rémanence ajoute un bonus d’APC équivalent. Tous les 10 niveaux, l’ionisation double le bonus total.",
-          "effectSummary": "Production passive +500 000 APS par niveau. Rémanence : +APC équivalent tous les 50 niveaux. Ionisation : bonus total x2 tous les 10 niveaux."
+          "effect": "Production passive : +500 000 APS par niveau. Tous les 50 niveaux, la rémanence ajoute un bonus d’APC équivalent. Tous les 50 niveaux, l’ionisation double le bonus total.",
+          "effectSummary": "Production passive +500 000 APS par niveau. Rémanence : +APC équivalent tous les 50 niveaux. Ionisation : bonus total x2 tous les 50 niveaux."
         },
         "artificialGalaxy": {
           "name": "Galaxie artificielle",
           "description": "Ingénierie galactique pour une expansion sans fin.",
-          "effect": "Production passive : +5 000 000 APS par niveau. Tous les 25 niveaux, un stabilisateur ajoute +20 % de multiplicateur. Tous les 10 niveaux, l’ionisation double le bonus total.",
-          "effectSummary": "Production passive +5 000 000 APS par niveau. Stabilisateur : +20 % multiplicateur tous les 25 niveaux. Ionisation : bonus total x2 tous les 10 niveaux."
+          "effect": "Production passive : +5 000 000 APS par niveau. Tous les 25 niveaux, un stabilisateur ajoute +20 % de multiplicateur. Tous les 50 niveaux, l’ionisation double le bonus total.",
+          "effectSummary": "Production passive +5 000 000 APS par niveau. Stabilisateur : +20 % multiplicateur tous les 25 niveaux. Ionisation : bonus total x2 tous les 50 niveaux."
         },
         "multiverseSimulator": {
           "name": "Simulateur de Multivers",
           "description": "Simulez l’infini pour optimiser chaque seconde.",
-          "effect": "Production passive : +500 000 000 APS par niveau. Tous les 25 niveaux, un stabilisateur ajoute +20 % de multiplicateur. Tous les 10 niveaux, l’ionisation double le bonus total.",
-          "effectSummary": "Production passive +500 000 000 APS par niveau. Stabilisateur : +20 % multiplicateur tous les 25 niveaux. Ionisation : bonus total x2 tous les 10 niveaux."
+          "effect": "Production passive : +500 000 000 APS par niveau. Tous les 25 niveaux, un stabilisateur ajoute +20 % de multiplicateur. Tous les 50 niveaux, l’ionisation double le bonus total.",
+          "effectSummary": "Production passive +500 000 000 APS par niveau. Stabilisateur : +20 % multiplicateur tous les 25 niveaux. Ionisation : bonus total x2 tous les 50 niveaux."
         },
         "realityWeaver": {
           "name": "Tisseur de Réalité",
           "description": "Tissez les lois physiques à votre avantage.",
-          "effect": "Production passive : +10 000 000 000 APS par niveau. Tous les 150 niveaux, la surcharge critique ajoute +5 % de chance de critique. Tous les 10 niveaux, l’ionisation double le bonus total.",
-          "effectSummary": "Production passive +10 000 000 000 APS par niveau. Critique : +5 % chance tous les 150 niveaux. Ionisation : bonus total x2 tous les 10 niveaux."
+          "effect": "Production passive : +10 000 000 000 APS par niveau. Tous les 150 niveaux, la surcharge critique ajoute +5 % de chance de critique. Tous les 50 niveaux, l’ionisation double le bonus total.",
+          "effectSummary": "Production passive +10 000 000 000 APS par niveau. Critique : +5 % chance tous les 150 niveaux. Ionisation : bonus total x2 tous les 50 niveaux."
         },
         "cosmicArchitect": {
           "name": "Architecte Cosmique",
           "description": "Réécrivez les plans du cosmos pour libérer une énergie infinie.",
-          "effect": "Production passive : +1 000 000 000 000 APS par niveau. Tous les 150 niveaux, la surcharge critique ajoute +1 au multiplicateur critique. Tous les 10 niveaux, l’ionisation double le bonus total.",
-          "effectSummary": "Production passive +1 000 000 000 000 APS par niveau. Critique : +1 multiplicateur tous les 150 niveaux. Ionisation : bonus total x2 tous les 10 niveaux."
+          "effect": "Production passive : +1 000 000 000 000 APS par niveau. Tous les 150 niveaux, la surcharge critique ajoute +1 au multiplicateur critique. Tous les 50 niveaux, l’ionisation double le bonus total.",
+          "effectSummary": "Production passive +1 000 000 000 000 APS par niveau. Critique : +1 multiplicateur tous les 150 niveaux. Ionisation : bonus total x2 tous les 50 niveaux."
         },
         "parallelUniverse": {
           "name": "Univers parallèle",
           "description": "Expérimentez des réalités alternatives à haut rendement.",
-          "effect": "Production passive : +100 000 000 000 000 APS par niveau. Tous les 10 niveaux, l’ionisation double le bonus total.",
-          "effectSummary": "Production passive +100 000 000 000 000 APS par niveau. Ionisation : bonus total x2 tous les 10 niveaux."
+          "effect": "Production passive : +100 000 000 000 000 APS par niveau. Tous les 50 niveaux, l’ionisation double le bonus total.",
+          "effectSummary": "Production passive +100 000 000 000 000 APS par niveau. Ionisation : bonus total x2 tous les 50 niveaux."
         },
         "omniverseLibrary": {
           "name": "Bibliothèque de l’Omnivers",
           "description": "Compilez le savoir infini pour booster toute production.",
-          "effect": "Production passive : +10 000 000 000 000 000 APS par niveau. Tous les 10 niveaux, l’ionisation double le bonus total.",
-          "effectSummary": "Production passive +10 000 000 000 000 000 APS par niveau. Ionisation : bonus total x2 tous les 10 niveaux."
+          "effect": "Production passive : +10 000 000 000 000 000 APS par niveau. Tous les 50 niveaux, l’ionisation double le bonus total.",
+          "effectSummary": "Production passive +10 000 000 000 000 000 APS par niveau. Ionisation : bonus total x2 tous les 50 niveaux."
         },
         "quantumOverseer": {
           "name": "Grand Ordonnateur Quantique",
           "description": "Ordonnez le multivers et atteignez la singularité.",
-          "effect": "Production passive : +1 000 000 000 000 000 000 APS par niveau. Tous les 50 niveaux, la surcharge critique ajoute +10 % de chance et +0,5 de multiplicateur. Tous les 10 niveaux, l’ionisation double le bonus total.",
-          "effectSummary": "Production passive +1 000 000 000 000 000 000 APS par niveau. Critique : +10 % chance et +0,5 multiplicateur tous les 50 niveaux. Ionisation : bonus total x2 tous les 10 niveaux."
+          "effect": "Production passive : +1 000 000 000 000 000 000 APS par niveau. Tous les 50 niveaux, la surcharge critique ajoute +10 % de chance et +0,5 de multiplicateur. Tous les 50 niveaux, l’ionisation double le bonus total.",
+          "effectSummary": "Production passive +1 000 000 000 000 000 000 APS par niveau. Critique : +10 % chance et +0,5 multiplicateur tous les 50 niveaux. Ionisation : bonus total x2 tous les 50 niveaux."
         }
       }
     },

@@ -291,18 +291,25 @@ const QUANTUM_STABILIZER_MULTIPLIER_INCREMENT = 0.2;
 
 /**
  * Paramètres de l'ionisation appliquée aux bâtiments du magasin.
- * Tous les 10 niveaux, le bonus total du bâtiment est multiplié par 2.
+ * Par défaut, tous les 50 niveaux le bonus total du bâtiment est multiplié par 2.
  */
 const IONIZATION_TOTAL_BONUS_MULTIPLIER = 2;
-const IONIZATION_TOTAL_BONUS_DOUBLING_INTERVAL = 10;
+const SHOP_DEFAULT_IONIZATION_DOUBLING_INTERVAL = 50;
+const SHOP_IONIZATION_INTERVAL_OVERRIDES = Object.freeze({
+  freeElectrons: 10,
+  physicsLab: 10
+});
 
-function getIonizationBoost(level = 0) {
+function getIonizationBoost(
+  level = 0,
+  interval = SHOP_DEFAULT_IONIZATION_DOUBLING_INTERVAL
+) {
   const normalizedLevel = Number(level);
   if (!Number.isFinite(normalizedLevel) || normalizedLevel <= 0) {
     return 1;
   }
   const ionizationTier = Math.floor(
-    normalizedLevel / IONIZATION_TOTAL_BONUS_DOUBLING_INTERVAL
+    normalizedLevel / interval
   );
   return ionizationTier > 0
     ? IONIZATION_TOTAL_BONUS_MULTIPLIER ** ionizationTier
@@ -322,7 +329,10 @@ function createShopBuildingDefinitions() {
       baseCost: 15,
       costScale: 1.15,
       effect: (level = 0) => {
-        const ionizationBoost = getIonizationBoost(level);
+        const ionizationBoost = getIonizationBoost(
+          level,
+          SHOP_IONIZATION_INTERVAL_OVERRIDES.freeElectrons
+        );
         const clickAdd = level > 0 ? level * ionizationBoost : 0;
         return { clickAdd };
       }
@@ -337,7 +347,10 @@ function createShopBuildingDefinitions() {
       baseCost: 100,
       costScale: 1.15,
       effect: (level = 0) => {
-        const ionizationBoost = getIonizationBoost(level);
+        const ionizationBoost = getIonizationBoost(
+          level,
+          SHOP_IONIZATION_INTERVAL_OVERRIDES.physicsLab
+        );
         const autoAdd = level > 0 ? level * ionizationBoost : 0;
         return { autoAdd };
       }
@@ -347,7 +360,7 @@ function createShopBuildingDefinitions() {
       name: 'Réacteur nucléaire',
       description: 'Des réacteurs contrôlés libèrent une énergie colossale.',
       effectSummary:
-        'Production passive : +10 APS par niveau. Tous les 10 niveaux, l’ionisation double le bonus total.',
+        'Production passive : +10 APS par niveau. Tous les 50 niveaux, l’ionisation double le bonus total.',
       category: 'auto',
       baseCost: 1000,
       costScale: 1.15,
@@ -363,7 +376,7 @@ function createShopBuildingDefinitions() {
       name: 'Accélérateur de particules',
       description: 'Boostez vos particules pour intensifier la production passive.',
       effectSummary:
-        'Production passive : +50 APS par niveau. Tous les 50 niveaux, la rémanence ajoute un bonus d’APC égal au gain passif. Tous les 10 niveaux, l’ionisation double le bonus total.',
+        'Production passive : +50 APS par niveau. Tous les 50 niveaux, la rémanence ajoute un bonus d’APC égal au gain passif. Tous les 50 niveaux, l’ionisation double le bonus total.',
       category: 'hybrid',
       baseCost: 12_000,
       costScale: 1.15,
@@ -389,7 +402,7 @@ function createShopBuildingDefinitions() {
       name: 'Supercalculateurs',
       description: 'Des centres de calcul quantique optimisent vos gains.',
       effectSummary:
-        'Production passive : +500 APS par niveau. Tous les 25 niveaux, un stabilisateur ajoute +20 % de multiplicateur à la production. Tous les 10 niveaux, l’ionisation double le bonus total.',
+        'Production passive : +500 APS par niveau. Tous les 25 niveaux, un stabilisateur ajoute +20 % de multiplicateur à la production. Tous les 50 niveaux, l’ionisation double le bonus total.',
       category: 'auto',
       baseCost: 200_000,
       costScale: 1.15,
@@ -416,7 +429,7 @@ function createShopBuildingDefinitions() {
       name: 'Sonde interstellaire',
       description: 'Explorez la galaxie pour récolter toujours plus.',
       effectSummary:
-        'Production passive : +5 000 APS par niveau. Bonus conditionnel : avec 50 Électrons libres ou plus, chaque bâtiment possédé ajoute +100 APC, doublés tous les 50 niveaux de Sonde interstellaire. Tous les 10 niveaux, l’ionisation double le bonus total.',
+        'Production passive : +5 000 APS par niveau. Bonus conditionnel : avec 50 Électrons libres ou plus, chaque bâtiment possédé ajoute +100 APC, doublés tous les 50 niveaux de Sonde interstellaire. Tous les 50 niveaux, l’ionisation double le bonus total.',
       category: 'hybrid',
       baseCost: 5e6,
       costScale: 1.2,
@@ -455,7 +468,7 @@ function createShopBuildingDefinitions() {
       name: 'Station spatiale',
       description: 'Des bases orbitales coordonnent votre expansion.',
       effectSummary:
-        'Production passive : +50 000 APS par niveau. Tous les 50 niveaux, la rémanence convertit ce gain en bonus d’APC. Tous les 10 niveaux, l’ionisation double le bonus total.',
+        'Production passive : +50 000 APS par niveau. Tous les 50 niveaux, la rémanence convertit ce gain en bonus d’APC. Tous les 50 niveaux, l’ionisation double le bonus total.',
       category: 'hybrid',
       baseCost: 1e8,
       costScale: 1.2,
@@ -481,7 +494,7 @@ function createShopBuildingDefinitions() {
       name: 'Forgeron d’étoiles',
       description: 'Façonnez des étoiles et dopez votre production passive.',
       effectSummary:
-        'Production passive : +500 000 APS par niveau. Tous les 50 niveaux, la rémanence ajoute un bonus d’APC équivalent. Tous les 10 niveaux, l’ionisation double le bonus total.',
+        'Production passive : +500 000 APS par niveau. Tous les 50 niveaux, la rémanence ajoute un bonus d’APC équivalent. Tous les 50 niveaux, l’ionisation double le bonus total.',
       category: 'hybrid',
       baseCost: 5e10,
       costScale: 1.2,
@@ -507,7 +520,7 @@ function createShopBuildingDefinitions() {
       name: 'Galaxie artificielle',
       description: 'Ingénierie galactique pour une expansion sans fin.',
       effectSummary:
-        'Production passive : +5 000 000 APS par niveau. Tous les 25 niveaux, un stabilisateur ajoute +20 % de multiplicateur. Tous les 10 niveaux, l’ionisation double le bonus total.',
+        'Production passive : +5 000 000 APS par niveau. Tous les 25 niveaux, un stabilisateur ajoute +20 % de multiplicateur. Tous les 50 niveaux, l’ionisation double le bonus total.',
       category: 'auto',
       baseCost: 1e13,
       costScale: 1.2,
@@ -534,7 +547,7 @@ function createShopBuildingDefinitions() {
       name: 'Simulateur de Multivers',
       description: 'Simulez l’infini pour optimiser chaque seconde.',
       effectSummary:
-        'Production passive : +500 000 000 APS par niveau. Tous les 25 niveaux, un stabilisateur ajoute +20 % de multiplicateur. Tous les 10 niveaux, l’ionisation double le bonus total.',
+        'Production passive : +500 000 000 APS par niveau. Tous les 25 niveaux, un stabilisateur ajoute +20 % de multiplicateur. Tous les 50 niveaux, l’ionisation double le bonus total.',
       category: 'auto',
       baseCost: 1e16,
       costScale: 1.2,
@@ -561,7 +574,7 @@ function createShopBuildingDefinitions() {
       name: 'Tisseur de Réalité',
       description: 'Tissez les lois physiques à votre avantage.',
       effectSummary:
-        'Production passive : +10 000 000 000 APS par niveau. Tous les 150 niveaux, la surcharge critique ajoute +5 % de chance de critique. Tous les 10 niveaux, l’ionisation double le bonus total.',
+        'Production passive : +10 000 000 000 APS par niveau. Tous les 150 niveaux, la surcharge critique ajoute +5 % de chance de critique. Tous les 50 niveaux, l’ionisation double le bonus total.',
       category: 'hybrid',
       baseCost: 1e20,
       costScale: 1.25,
@@ -587,7 +600,7 @@ function createShopBuildingDefinitions() {
       name: 'Architecte Cosmique',
       description: 'Réécrivez les plans du cosmos pour libérer une énergie infinie.',
       effectSummary:
-        'Production passive : +1 000 000 000 000 APS par niveau. Tous les 150 niveaux, la surcharge critique ajoute +1 au multiplicateur critique. Tous les 10 niveaux, l’ionisation double le bonus total.',
+        'Production passive : +1 000 000 000 000 APS par niveau. Tous les 150 niveaux, la surcharge critique ajoute +1 au multiplicateur critique. Tous les 50 niveaux, l’ionisation double le bonus total.',
       category: 'hybrid',
       baseCost: 1e25,
       costScale: 1.25,
@@ -613,7 +626,7 @@ function createShopBuildingDefinitions() {
       name: 'Univers parallèle',
       description: 'Expérimentez des réalités alternatives à haut rendement.',
       effectSummary:
-        'Production passive : +100 000 000 000 000 APS par niveau. Tous les 10 niveaux, l’ionisation double le bonus total.',
+        'Production passive : +100 000 000 000 000 APS par niveau. Tous les 50 niveaux, l’ionisation double le bonus total.',
       category: 'auto',
       baseCost: 1e30,
       costScale: 1.25,
@@ -629,7 +642,7 @@ function createShopBuildingDefinitions() {
       name: 'Bibliothèque de l’Omnivers',
       description: 'Compilez le savoir infini pour booster toute production.',
       effectSummary:
-        'Production passive : +10 000 000 000 000 000 APS par niveau. Tous les 10 niveaux, l’ionisation double le bonus total.',
+        'Production passive : +10 000 000 000 000 000 APS par niveau. Tous les 50 niveaux, l’ionisation double le bonus total.',
       category: 'hybrid',
       baseCost: 1e36,
       costScale: 1.25,
@@ -645,7 +658,7 @@ function createShopBuildingDefinitions() {
       name: 'Grand Ordonnateur Quantique',
       description: 'Ordonnez le multivers et atteignez la singularité.',
       effectSummary:
-        'Production passive : +1 000 000 000 000 000 000 APS par niveau. Tous les 50 niveaux, la surcharge critique ajoute +10 % de chance et +0,5 de multiplicateur. Tous les 10 niveaux, l’ionisation double le bonus total.',
+        'Production passive : +1 000 000 000 000 000 000 APS par niveau. Tous les 50 niveaux, la surcharge critique ajoute +10 % de chance et +0,5 de multiplicateur. Tous les 50 niveaux, l’ionisation double le bonus total.',
       category: 'hybrid',
       baseCost: 1e42,
       costScale: 1.25,
