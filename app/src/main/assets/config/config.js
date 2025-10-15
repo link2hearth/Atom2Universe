@@ -2497,60 +2497,60 @@ const GAME_CONFIG = {
     ],
     weeklyRarityWeights: {
       monday: {
-        commun: 70,
-        essentiel: 10,
-        stellaire: 10,
-        singulier: 10,
+        commun: 80,
+        essentiel: 7,
+        stellaire: 7,
+        singulier: 6,
         mythique: 0,
         irreel: 0
       },
       tuesday: {
-        commun: 70,
-        essentiel: 10,
-        stellaire: 10,
+        commun: 80,
+        essentiel: 7,
+        stellaire: 7,
         singulier: 0,
-        mythique: 10,
+        mythique: 6,
         irreel: 0
       },
       wednesday: {
-        commun: 70,
-        essentiel: 10,
-        stellaire: 10,
+        commun: 80,
+        essentiel: 7,
+        stellaire: 7,
         singulier: 0,
         mythique: 0,
-        irreel: 10
+        irreel: 6
       },
       thursday: {
-        commun: 70,
-        essentiel: 10,
-        stellaire: 10,
-        singulier: 10,
+        commun: 80,
+        essentiel: 7,
+        stellaire: 7,
+        singulier: 6,
         mythique: 0,
         irreel: 0
       },
       friday: {
-        commun: 70,
-        essentiel: 10,
-        stellaire: 10,
+        commun: 80,
+        essentiel: 7,
+        stellaire: 7,
         singulier: 0,
-        mythique: 10,
+        mythique: 6,
         irreel: 0
       },
       saturday: {
-        commun: 70,
-        essentiel: 10,
-        stellaire: 10,
+        commun: 80,
+        essentiel: 7,
+        stellaire: 7,
         singulier: 0,
         mythique: 0,
-        irreel: 10
+        irreel: 6
       },
       sunday: {
-        commun: 71,
-        essentiel: 10,
-        stellaire: 10,
-        singulier: 3,
-        mythique: 3,
-        irreel: 3
+        commun: 80,
+        essentiel: 7,
+        stellaire: 7,
+        singulier: 2,
+        mythique: 2,
+        irreel: 2
       }
     }
   },
@@ -2577,12 +2577,12 @@ const GAME_CONFIG = {
   ticketStar: {
     averageSpawnIntervalSeconds: 600,
     minimumSpawnIntervalSeconds: 5,
-    clickReductionSeconds: 0.1,
+    clickReductionSeconds: 0.2,
     lifetimeSeconds: 15,
     speedPixelsPerSecond: 90,
     speedVariance: 0.35,
     spawnOffsetPixels: 48,
-    size: 72,
+    size: 92,
     rewardTickets: 1,
     gravity: 900,
     bounceRestitution: 0.86,
@@ -2618,7 +2618,7 @@ const GAME_CONFIG = {
     groups: {
       commun: {
         perCopy: {
-          clickAdd: 25
+          clickAdd: 250
         },
         setBonus: {
           clickAdd: 500,
@@ -2633,19 +2633,19 @@ const GAME_CONFIG = {
       },
       essentiel: {
         perCopy: {
-          uniqueClickAdd: 100,
-          duplicateClickAdd: 200,
+          uniqueClickAdd: 15000,
+          duplicateClickAdd: 20000,
           label: 'scripts.config.elementBonuses.essentiel.perCopy'
         },
         setBonus: [
           {
-            clickAdd: 1000,
+            clickAdd: 100000,
             requireAllUnique: true,
             label: 'scripts.config.elementBonuses.essentiel.setBonus'
           }
         ],
         multiplier: {
-          every: 50,
+          every: 25,
           increment: 1,
           targets: ['perClick', 'perSecond'],
           label: COLLECTION_MULTIPLIER_LABEL_KEY
@@ -2653,8 +2653,8 @@ const GAME_CONFIG = {
       },
       stellaire: {
         perCopy: {
-          uniqueClickAdd: 200,
-          duplicateClickAdd: 250,
+          uniqueClickAdd: 20000,
+          duplicateClickAdd: 25000,
           label: 'scripts.config.elementBonuses.stellaire.perCopy'
         },
         multiplier: {
@@ -2678,10 +2678,10 @@ const GAME_CONFIG = {
       },
       singulier: {
         perCopy: {
-          uniqueClickAdd: 50,
-          uniqueAutoAdd: 50,
-          duplicateClickAdd: 50,
-          duplicateAutoAdd: 50,
+          uniqueClickAdd: 500000,
+          uniqueAutoAdd: 500000,
+          duplicateClickAdd: 1500000,
+          duplicateAutoAdd: 1500000,
           label: 'scripts.config.elementBonuses.singulier.perCopy'
         },
         multiplier: {
@@ -2704,7 +2704,7 @@ const GAME_CONFIG = {
           frenzyBonus: 'scripts.config.elementBonuses.mythique.frenzyBonus'
         },
         ticketBonus: {
-          uniqueReductionSeconds: 15,
+          uniqueReductionSeconds: 10,
           minIntervalSeconds: 30
         },
         offlineBonus: {
@@ -2713,7 +2713,12 @@ const GAME_CONFIG = {
           cap: 0.5
         },
         duplicateOverflow: {
-          flatBonus: 50
+          multiplier: {
+          every: 10,
+          increment: 1,
+          targets: ['perClick', 'perSecond'],
+          label: COLLECTION_MULTIPLIER_LABEL_KEY
+          }
         },
         frenzyBonus: {
           multiplier: 1.5
@@ -2729,7 +2734,7 @@ const GAME_CONFIG = {
           }
         },
         multiplier: {
-          every: 5,
+          every: 10,
           increment: 1,
           targets: ['perClick', 'perSecond'],
           label: COLLECTION_MULTIPLIER_LABEL_KEY
@@ -3636,6 +3641,7 @@ GAME_CONFIG.progression.defaultTheme = GAME_CONFIG.themes.default;
 if (typeof globalThis !== 'undefined') {
   globalThis.GAME_CONFIG = GAME_CONFIG;
 }
+
 
 
 
