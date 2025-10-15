@@ -117,6 +117,14 @@ const MIDI_DEFAULT_KEYBOARD_LAYOUT_ID = '88';
 const MIDI_KEYBOARD_WINDOW_SIZE = 24;
 
 /**
+ * Durées utilisées pour les notes jouées manuellement depuis le clavier.
+ * Une durée plus longue améliore la tenue des sons sur les écrans tactiles,
+ * tout en laissant la possibilité d’écourter la note à la relâche.
+ */
+const MIDI_MANUAL_NOTE_DEFAULT_DURATION_SECONDS = 6;
+const MIDI_MANUAL_NOTE_MIN_DURATION_SECONDS = 2.5;
+
+/**
  * Délai (en secondes) entre l’apparition visuelle d’une note et sa lecture réelle.
  * Permet d’afficher les barres de prévisualisation qui descendent vers le clavier.
  */
@@ -171,6 +179,8 @@ if (typeof globalThis !== 'undefined') {
   globalThis.MIDI_KEYBOARD_LAYOUTS = MIDI_KEYBOARD_LAYOUTS;
   globalThis.MIDI_DEFAULT_KEYBOARD_LAYOUT_ID = MIDI_DEFAULT_KEYBOARD_LAYOUT_ID;
   globalThis.MIDI_KEYBOARD_WINDOW_SIZE = MIDI_KEYBOARD_WINDOW_SIZE;
+  globalThis.MIDI_MANUAL_NOTE_DEFAULT_DURATION_SECONDS = MIDI_MANUAL_NOTE_DEFAULT_DURATION_SECONDS;
+  globalThis.MIDI_MANUAL_NOTE_MIN_DURATION_SECONDS = MIDI_MANUAL_NOTE_MIN_DURATION_SECONDS;
   globalThis.MIDI_PLAYBACK_PREVIEW_LEAD_SECONDS = MIDI_PLAYBACK_PREVIEW_LEAD_SECONDS;
   globalThis.MIDI_PREVIEW_COLOR_PALETTE = MIDI_PREVIEW_COLOR_PALETTE;
   globalThis.PERFORMANCE_MODE_SETTINGS = PERFORMANCE_MODE_SETTINGS;

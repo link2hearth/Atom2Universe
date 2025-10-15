@@ -4085,8 +4085,23 @@
         : this.getManualProgram(channel);
       this.lastProgramByChannel.set(channel, program);
 
+      const manualScope = typeof globalThis !== 'undefined'
+        ? globalThis
+        : (typeof window !== 'undefined' ? window : null);
+      const minDurationConfig = manualScope && Number.isFinite(manualScope.MIDI_MANUAL_NOTE_MIN_DURATION_SECONDS)
+        ? manualScope.MIDI_MANUAL_NOTE_MIN_DURATION_SECONDS
+        : null;
+      const defaultDurationConfig = manualScope && Number.isFinite(manualScope.MIDI_MANUAL_NOTE_DEFAULT_DURATION_SECONDS)
+        ? manualScope.MIDI_MANUAL_NOTE_DEFAULT_DURATION_SECONDS
+        : null;
+      const minimumManualDuration = Math.max(0.2, minDurationConfig != null ? minDurationConfig : 0.2);
+      const defaultManualDuration = Math.max(
+        minimumManualDuration,
+        defaultDurationConfig != null ? defaultDurationConfig : 1.6
+      );
+      const requestedDuration = Number.isFinite(options.duration) ? options.duration : defaultManualDuration;
+      const duration = Math.max(minimumManualDuration, requestedDuration);
       const velocity = Math.max(0.05, Math.min(1, Number.isFinite(options.velocity) ? options.velocity : 0.75));
-      const duration = Math.max(0.2, Number.isFinite(options.duration) ? options.duration : 1.6);
       const pan = Number.isFinite(options.pan) ? options.pan : 0;
 
       const note = {
@@ -9455,6 +9470,15 @@
 
       renderFullKeyboard();
       updateView();
+
+      const preventKeyboardContextMenu = (event) => {
+        if (event) {
+          event.preventDefault();
+        }
+      };
+
+      fullContainer.addEventListener('contextmenu', preventKeyboardContextMenu);
+      miniContainer.addEventListener('contextmenu', preventKeyboardContextMenu);
 
       layoutSelect.addEventListener('change', () => {
         const nextLayout = findLayoutById(layoutSelect.value, layouts) || state.layout;
