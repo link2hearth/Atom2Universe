@@ -251,6 +251,17 @@ body:not(.view-game):not(.view-wave) .apc-frenzy-counter {
   animation: starTwinkle 7.5s ease-in-out infinite;
 }
 
+.starfield[data-starfield-mode='static'] .starfield__star {
+  width: 2px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.25);
+  mix-blend-mode: normal;
+  filter: none;
+  animation: none;
+  opacity: var(--star-opacity, 0.45);
+}
+
 @keyframes starTwinkle {
   0%, 100% {
     opacity: calc(var(--star-opacity, 0.32) * 0.55);
