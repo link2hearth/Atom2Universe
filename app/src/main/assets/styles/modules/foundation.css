@@ -407,6 +407,11 @@ body.theme-light .brand-button:focus-visible {
   text-shadow: 0 0.45rem 1.4rem var(--brand-portal-glow);
 }
 
+body[data-performance-mode='eco'] .brand--portal-ready {
+  animation: none;
+  background-position: 0% 50%;
+}
+
 .brand--portal-ready:hover,
 .brand--portal-ready:focus-visible {
   transform: translateY(-1px);
@@ -906,6 +911,11 @@ body.theme-aurora .frenzy-status__item {
   text-shadow: 0 0 12px rgba(255, 255, 255, 0.35);
 }
 
+body[data-performance-mode='eco'] .status-value--main {
+  animation: none;
+  background-position: 0% 50%;
+}
+
 @keyframes statusMainSheen {
   0% {
     background-position: 0% 50%;
@@ -986,6 +996,12 @@ body.theme-aurora .status-bar {
 .nav-button--vibrate:hover,
 .nav-button--vibrate:focus-visible {
   animation-name: navButtonVibrateHover;
+}
+
+body[data-performance-mode='eco'] .nav-button--vibrate,
+body[data-performance-mode='eco'] .nav-button--vibrate:hover,
+body[data-performance-mode='eco'] .nav-button--vibrate:focus-visible {
+  animation: none;
 }
 
 .nav-button.active {
