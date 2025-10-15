@@ -534,6 +534,8 @@
         this.boundHandleWindowResize = null;
       }
       document.removeEventListener('visibilitychange', this.boundHandleVisibility);
+      this.resetInputStates();
+      this.requestScrollUnlock();
     }
 
     onEnter() {
@@ -547,6 +549,51 @@
       this.state.active = false;
       this.pause();
       this.setSelectionEnabled(false);
+      this.resetInputStates();
+      this.requestScrollUnlock();
+    }
+
+    resetInputStates() {
+      this.pointerId = null;
+      this.panState.active = false;
+      this.panState.lastX = 0;
+      this.panState.lastY = 0;
+      this.dragState.active = false;
+      this.dragState.lastCellKey = null;
+      this.dragState.initialCellKey = null;
+      this.dragState.initialCellAlive = false;
+      this.touchState.isGesture = false;
+      this.touchState.initialDistance = 0;
+      this.touchState.initialCellSize = this.viewport.cellSize;
+      this.touchState.lastMidpoint = null;
+      if (this.touchState.pointers && typeof this.touchState.pointers.clear === 'function') {
+        this.touchState.pointers.clear();
+      }
+    }
+
+    requestScrollUnlock() {
+      if (typeof window === 'undefined') {
+        return;
+      }
+      if (typeof window.dispatchEvent === 'function') {
+        let event = null;
+        if (typeof window.CustomEvent === 'function') {
+          event = new window.CustomEvent('atom2univers:scroll-reset');
+        } else if (typeof window.Event === 'function') {
+          event = new window.Event('atom2univers:scroll-reset');
+        }
+        if (event) {
+          window.dispatchEvent(event);
+          return;
+        }
+      }
+      const body = typeof document !== 'undefined' ? document.body : null;
+      if (body) {
+        body.style.removeProperty('touch-action');
+        body.style.removeProperty('overscroll-behavior');
+        body.classList.remove('touch-scroll-lock');
+        body.classList.remove('touch-scroll-force');
+      }
     }
 
     setupUI() {
