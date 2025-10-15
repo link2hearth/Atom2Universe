@@ -1,4 +1,5 @@
 .page--math {
+  --math-scale: var(--font-scale-factor, 1);
   --math-surface-background: rgba(8, 11, 19, 0.65);
   --math-surface-border: rgba(255, 255, 255, 0.12);
   --math-surface-shadow: 0 24px 60px rgba(5, 12, 38, 0.45);
@@ -134,7 +135,7 @@ body.theme-aurora .page--math {
   border-radius: 999px;
   padding: 0.4rem 1rem;
   font: inherit;
-  font-size: 0.85rem;
+  font-size: calc(0.85rem * var(--math-scale, 1));
   font-weight: 600;
   color: var(--math-mode-button-color, inherit);
   background: var(--math-mode-button-background, rgba(255, 255, 255, 0.08));
@@ -173,12 +174,12 @@ body.theme-aurora .page--math {
 }
 
 .math-game__title {
-  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-size: calc(var(--math-scale, 1) * clamp(1.5rem, 4vw, 2rem));
   font-weight: 700;
 }
 
 .math-game__subtitle {
-  font-size: clamp(0.95rem, 2.6vw, 1.05rem);
+  font-size: calc(var(--math-scale, 1) * clamp(0.95rem, 2.6vw, 1.05rem));
   color: var(--math-subtitle-color, rgba(255, 255, 255, 0.75));
   margin: 0;
 }
@@ -198,14 +199,14 @@ body.theme-aurora .page--math {
 }
 
 .math-game__counter-label {
-  font-size: 0.85rem;
+  font-size: calc(0.85rem * var(--math-scale, 1));
   text-transform: uppercase;
   letter-spacing: 0.08em;
   opacity: 0.75;
 }
 
 .math-game__counter-value {
-  font-size: clamp(1.4rem, 4vw, 2rem);
+  font-size: calc(var(--math-scale, 1) * clamp(1.4rem, 4vw, 2rem));
   font-weight: 700;
   font-family: var(--font-digits, 'Orbitron', sans-serif);
 }
@@ -217,7 +218,7 @@ body.theme-aurora .page--math {
 }
 
 .math-game__expression {
-  font-size: clamp(1.35rem, 4.2vw, 2rem);
+  font-size: calc(var(--math-scale, 1) * clamp(1.35rem, 4.2vw, 2rem));
   font-weight: 600;
   text-align: center;
   margin: 0;
@@ -236,7 +237,7 @@ body.theme-aurora .page--math {
   border-radius: 14px;
   padding: 0.75rem 1rem;
   font: inherit;
-  font-size: 2rem;
+  font-size: calc(2rem * var(--math-scale, 1));
   font-weight: 600;
   color: var(--math-option-color, inherit);
   background: var(--math-option-background, rgba(255, 255, 255, 0.08));
@@ -279,7 +280,7 @@ body.theme-aurora .page--math {
 .math-game__feedback {
   min-height: 1.5rem;
   text-align: center;
-  font-size: 0.95rem;
+  font-size: calc(0.95rem * var(--math-scale, 1));
   margin: 0;
   color: var(--math-feedback-color, rgba(255, 255, 255, 0.8));
 }
