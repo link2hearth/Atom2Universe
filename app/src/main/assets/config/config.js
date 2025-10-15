@@ -10,7 +10,7 @@ const SHOP_MAX_PURCHASE_DEFAULT = 1000;
  * Ce délai est également réutilisé pour l’effet de transition lors d’un
  * rechargement automatique provoqué après un long passage en arrière-plan.
  */
-const STARTUP_FADE_DURATION_MS = 2000;
+const STARTUP_FADE_DURATION_MS = 1000;
 
 /**
  * Durée minimale (en millisecondes) passée en arrière-plan avant de forcer
@@ -3615,5 +3615,6 @@ GAME_CONFIG.progression.defaultTheme = GAME_CONFIG.themes.default;
 if (typeof globalThis !== 'undefined') {
   globalThis.GAME_CONFIG = GAME_CONFIG;
 }
+
 
 
