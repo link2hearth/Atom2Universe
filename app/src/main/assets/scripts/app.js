@@ -691,6 +691,9 @@ function applyPerformanceMode(modeId, options = {}) {
   performanceModeState.settings = settings;
   performanceModeState.lastManualFlush = now;
   performanceModeState.lastAutoFlush = now;
+  if (typeof document !== 'undefined' && document.body) {
+    document.body.setAttribute('data-performance-mode', normalized);
+  }
   if (changed && gameLoopControl.isActive) {
     restartGameLoop({ immediate: true });
   }
