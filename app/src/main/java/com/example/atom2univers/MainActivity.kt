@@ -140,9 +140,18 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         requestWebViewSave()
         if (::webView.isInitialized) {
+            webView.pauseTimers()
             webView.onPause()
         }
         super.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (::webView.isInitialized) {
+            webView.onResume()
+            webView.resumeTimers()
+        }
     }
 
     override fun onStop() {
