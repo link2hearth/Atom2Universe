@@ -25,6 +25,7 @@
   --card-surface: var(--card-dark);
   --max-width: min(1100px, 92vw);
   --transition: 0.2s ease;
+  --startup-fade-duration: 2000ms;
   --header-padding-y: calc(clamp(0.56rem, 0.896vw, 0.784rem) * var(--header-scale, 1));
   --header-padding-x: calc(clamp(1.2rem, 2vw, 2.4rem) * var(--header-scale, 1));
   --status-padding-y: calc(clamp(0.315rem, 0.51vw, 0.45rem) * var(--header-scale, 1));
@@ -59,6 +60,20 @@ body *:not(input):not(textarea):not(select):not(option):not([contenteditable='tr
 
 [hidden] {
   display: none !important;
+}
+
+.startup-overlay {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  opacity: 0;
+  transition: opacity var(--startup-fade-duration, 2000ms) ease;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.startup-overlay.startup-overlay--visible {
+  opacity: 1;
 }
 
 body {
