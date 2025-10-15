@@ -51,11 +51,12 @@
 }
 
 .game-of-life__menu {
-  --game-of-life-menu-scale: calc(0.5 * var(--ui-control-scale, 1));
+  --game-of-life-menu-scale: var(--ui-control-scale, 1);
+  --game-of-life-menu-height-scale: 0.5;
   position: fixed;
   top: 50%;
   right: 1.5rem;
-  transform: translateY(-50%) scale(var(--game-of-life-menu-scale));
+  transform: translateY(-50%);
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -67,7 +68,7 @@
     calc(100vw - 3rem)
   );
   max-height: min(
-    calc((100vh - 2.5rem) * var(--game-of-life-menu-scale)),
+    calc((100vh - 2.5rem) * var(--game-of-life-menu-height-scale)),
     calc(100vh - 2.5rem)
   );
   font-size: calc(1rem * var(--game-of-life-menu-scale));
@@ -133,7 +134,7 @@
   width: 100%;
   box-sizing: border-box;
   max-height: min(
-    calc((100vh - 5rem) * var(--game-of-life-menu-scale)),
+    calc((100vh - 5rem) * var(--game-of-life-menu-height-scale)),
     calc(38rem * var(--game-of-life-menu-scale))
   );
   overflow-y: auto;
@@ -267,6 +268,11 @@
   border-radius: calc(18px * var(--game-of-life-menu-scale));
   padding: calc(1.25rem * var(--game-of-life-menu-scale));
   box-shadow: var(--gol-panel-shadow, 0 18px 36px rgba(4, 10, 24, 0.4));
+  max-height: calc(
+    (50vh / var(--game-of-life-menu-scale)) *
+      var(--game-of-life-menu-height-scale)
+  );
+  overflow: auto;
 }
 
 .game-of-life__panel-title {
@@ -511,7 +517,11 @@ body.theme-aurora .page--game-of-life {
       calc(40rem * var(--game-of-life-menu-scale)),
       calc(100vw - 2rem)
     );
-    max-height: calc((100vh - 2rem) * var(--game-of-life-menu-scale));
+    max-height: calc((100vh - 2rem) * var(--game-of-life-menu-height-scale));
+  }
+
+  .game-of-life__panel {
+    max-height: calc(50vh * var(--game-of-life-menu-height-scale));
   }
 
   .view-game-of-life .game-of-life__menu {
