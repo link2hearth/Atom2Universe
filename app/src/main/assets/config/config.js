@@ -1340,7 +1340,7 @@ const GAME_CONFIG = {
         settleDurationMs: 600,
         physics: {
           gravity: 9.81, // Accélération gravitationnelle (m/s²) utilisée pour la simulation.
-          lengthMeters: 2.4, // Longueur approximative de la planche (m) servant de base aux leviers.
+          lengthMeters: 8.4, // Longueur approximative de la planche (m) servant de base aux leviers.
           boardMassKg: 2, // Masse estimée de la planche pour le calcul de l'inertie (kg).
           cubeMassPerWeight: 1.6, // Masse équivalente (kg) apportée par une unité de poids de bloc.
           pivotFriction: 14, // Coefficient de frottement du pivot (N·m·s) pour amortir la rotation.
@@ -1377,10 +1377,10 @@ const GAME_CONFIG = {
         ]
       },
       cubeRules: {
-        countPerSet: 5, // Nombre de blocs générés par série.
+        countPerSet: { min: 4, max: 8 }, // Nombre de blocs générés par série.
         widthRatio: 0.18, // Largeur uniforme des blocs par rapport à la planche.
         inventoryWidthPx: { min: 64, max: 112 }, // Largeur minimale et maximale affichée dans l'inventaire.
-        weightRange: { min: 1, max: 20 }, // Fourchette des poids aléatoires attribués aux blocs.
+        weightRange: { min: 1, max: 50 }, // Fourchette des poids aléatoires attribués aux blocs.
         stackOffsetMultiplier: 0.72, // Hauteur relative entre deux blocs empilés.
         stackGroupingThreshold: 0.08, // Distance horizontale maximale (en proportion de la planche) pour regrouper les blocs.
         randomizeWeights: true // Active la génération aléatoire des poids pour chaque série.
@@ -1389,17 +1389,17 @@ const GAME_CONFIG = {
         {
           id: 'equilibrium',
           labelKey: 'scripts.arcade.balance.sets.equilibrium',
-          cubeCount: 5
+          cubeCount: { min: 4, max: 8 }
         },
         {
           id: 'fractal',
           labelKey: 'scripts.arcade.balance.sets.fractal',
-          cubeCount: 5
+          cubeCount: { min: 4, max: 8 }
         },
         {
           id: 'binary',
           labelKey: 'scripts.arcade.balance.sets.binary',
-          cubeCount: 5
+          cubeCount: { min: 4, max: 8 }
         }
       ],
       defaultSetId: 'equilibrium',
@@ -1413,7 +1413,7 @@ const GAME_CONFIG = {
         perfectBalance: {
           maxAttempts: 2,
           ticketAmount: 1,
-          ticketChance: 0.1
+          ticketChance: 0.4
         }
       }
     },
@@ -3639,6 +3639,7 @@ GAME_CONFIG.progression.defaultTheme = GAME_CONFIG.themes.default;
 if (typeof globalThis !== 'undefined') {
   globalThis.GAME_CONFIG = GAME_CONFIG;
 }
+
 
 
 
