@@ -257,7 +257,7 @@
           "metaux": {
             "aria": "Accéder au mini-jeu Métaux",
             "title": "Métaux",
-            "description": "Boostez votre production d'APS grâce à ce jeu de match 3.",
+            "description": "Boostez votre production pour une durée limitée grâce à ce match 3.",
             "cta": "Forger"
           },
           "wave": {
@@ -281,7 +281,7 @@
           "math": {
             "aria": "Accéder au mini-jeu Math",
             "title": "Math",
-            "description": "Complétez les opérations et ne gagnez rien pour le moment.",
+            "description": "Complétez les opérations pour gagner des tickets de gacha.",
             "cta": "Calculer"
           },
           "sudoku": {
@@ -299,13 +299,13 @@
           "solitaire": {
             "aria": "Accéder au mini-jeu Solitaire",
             "title": "Solitaire",
-            "description": "Super connu, finissez le tableau, pas de récompense pour le moment.",
+            "description": "Super connu : finissez le tableau et gagnez des tickets de gacha.",
             "cta": "Jouer"
           },
           "echecs": {
             "aria": "Accéder au mini-jeu Échecs",
             "title": "Échecs",
-            "description": "Entraînez-vous, aucune récompense pour le moment.",
+            "description": "Affrontez l’IA pour gagner des tickets de gacha et un bonus multiplicateur temporaire.",
             "cta": "Planifier"
           },
           "gameOfLife": {

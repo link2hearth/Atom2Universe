@@ -257,7 +257,7 @@
           "metaux": {
             "aria": "Open the Metals mini-game",
             "title": "Metals",
-            "description": "Boost your APS production thanks to this match-3 game.",
+            "description": "Boost your production for a limited time thanks to this match-3.",
             "cta": "Forge"
           },
           "wave": {
@@ -281,7 +281,7 @@
           "math": {
             "aria": "Open the Math mini-game",
             "title": "Math",
-            "description": "Complete the equations and earn nothing for now.",
+            "description": "Complete the equations to earn gacha tickets.",
             "cta": "Solve"
           },
           "sudoku": {
@@ -299,13 +299,13 @@
           "solitaire": {
             "aria": "Open the Solitaire mini-game",
             "title": "Solitaire",
-            "description": "Super well-known: finish the tableau, no reward for now.",
+            "description": "Super well-known: finish the tableau and earn gacha tickets.",
             "cta": "Play"
           },
           "echecs": {
             "aria": "Open the Chess mini-game",
             "title": "Chess",
-            "description": "Practice; no reward for the moment.",
+            "description": "Practice to earn gacha tickets and a temporary multiplier bonus.",
             "cta": "Plan"
           },
           "gameOfLife": {
