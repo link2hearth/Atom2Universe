@@ -1475,8 +1475,18 @@
       this.soundFontLoadErrored = false;
       this.schedulerInterval = null;
       this.schedulerState = null;
-      this.scheduleAheadTime = 0.25;
-      this.scheduleIntervalSeconds = 0.03;
+      const scheduleAheadConfig = typeof globalThis !== 'undefined'
+        ? globalThis.MIDI_PLAYBACK_SCHEDULE_AHEAD_SECONDS
+        : undefined;
+      const schedulerIntervalConfig = typeof globalThis !== 'undefined'
+        ? globalThis.MIDI_PLAYBACK_SCHEDULER_INTERVAL_SECONDS
+        : undefined;
+      this.scheduleAheadTime = Number.isFinite(scheduleAheadConfig) && scheduleAheadConfig > 0
+        ? scheduleAheadConfig
+        : 0.12;
+      this.scheduleIntervalSeconds = Number.isFinite(schedulerIntervalConfig) && schedulerIntervalConfig > 0
+        ? schedulerIntervalConfig
+        : 0.06;
       const previewLeadConfig = typeof globalThis !== 'undefined'
         ? globalThis.MIDI_PLAYBACK_PREVIEW_LEAD_SECONDS
         : undefined;
@@ -1487,6 +1497,8 @@
       if (configuredPreviewLead > 0) {
         this.scheduleAheadTime = Math.max(this.scheduleAheadTime, configuredPreviewLead + 0.35);
       }
+      const maxInterval = Math.max(0.02, this.scheduleAheadTime * 0.75);
+      this.scheduleIntervalSeconds = Math.min(this.scheduleIntervalSeconds, maxInterval);
       this.limiterSettings = {
         threshold: -8,
         knee: 10,

@@ -131,6 +131,16 @@ const MIDI_MANUAL_NOTE_MIN_DURATION_SECONDS = 2.5;
 const MIDI_PLAYBACK_PREVIEW_LEAD_SECONDS = 2;
 
 /**
+ * Paramètres de planification des notes MIDI.
+ * `MIDI_PLAYBACK_SCHEDULE_AHEAD_SECONDS` définit la fenêtre (en secondes) dans laquelle
+ * les notes sont préparées. `MIDI_PLAYBACK_SCHEDULER_INTERVAL_SECONDS` contrôle la
+ * fréquence de recalcul. Des valeurs plus faibles allègent la charge CPU tout en
+ * conservant une marge suffisante pour éviter les coupures audio.
+ */
+const MIDI_PLAYBACK_SCHEDULE_AHEAD_SECONDS = 0.12;
+const MIDI_PLAYBACK_SCHEDULER_INTERVAL_SECONDS = 0.06;
+
+/**
  * Palette cyclique appliquée aux barres de notes de prévisualisation.
  * Chaque entrée définit un dégradé (start → end) et les teintes de halo associées.
  */
@@ -182,6 +192,8 @@ if (typeof globalThis !== 'undefined') {
   globalThis.MIDI_MANUAL_NOTE_DEFAULT_DURATION_SECONDS = MIDI_MANUAL_NOTE_DEFAULT_DURATION_SECONDS;
   globalThis.MIDI_MANUAL_NOTE_MIN_DURATION_SECONDS = MIDI_MANUAL_NOTE_MIN_DURATION_SECONDS;
   globalThis.MIDI_PLAYBACK_PREVIEW_LEAD_SECONDS = MIDI_PLAYBACK_PREVIEW_LEAD_SECONDS;
+  globalThis.MIDI_PLAYBACK_SCHEDULE_AHEAD_SECONDS = MIDI_PLAYBACK_SCHEDULE_AHEAD_SECONDS;
+  globalThis.MIDI_PLAYBACK_SCHEDULER_INTERVAL_SECONDS = MIDI_PLAYBACK_SCHEDULER_INTERVAL_SECONDS;
   globalThis.MIDI_PREVIEW_COLOR_PALETTE = MIDI_PREVIEW_COLOR_PALETTE;
   globalThis.PERFORMANCE_MODE_SETTINGS = PERFORMANCE_MODE_SETTINGS;
   globalThis.PERFORMANCE_MODE_DEFINITIONS = PERFORMANCE_MODE_DEFINITIONS;
