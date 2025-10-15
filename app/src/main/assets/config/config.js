@@ -50,7 +50,7 @@ const PERFORMANCE_MODE_SETTINGS = Object.freeze({
   eco: Object.freeze({
     apcFlushIntervalMs: 200,
     apsFlushIntervalMs: 1000,
-    frameIntervalMs: 120
+    frameIntervalMs: 100
   })
 });
 
@@ -287,7 +287,7 @@ const INTERSTELLAR_PROBE_BONUS_DOUBLING_INTERVAL = 50;
  * Incrément du multiplicateur automatique ajouté par le stabilisateur quantique.
  * Chaque palier de 25 niveaux augmente la production passive de 50 % avant ionisation.
  */
-const QUANTUM_STABILIZER_MULTIPLIER_INCREMENT = 0.5;
+const QUANTUM_STABILIZER_MULTIPLIER_INCREMENT = 0.2;
 
 /**
  * Paramètres de l'ionisation appliquée aux bâtiments du magasin.
@@ -389,7 +389,7 @@ function createShopBuildingDefinitions() {
       name: 'Supercalculateurs',
       description: 'Des centres de calcul quantique optimisent vos gains.',
       effectSummary:
-        'Production passive : +500 APS par niveau. Tous les 25 niveaux, un stabilisateur ajoute +50 % de multiplicateur à la production. Tous les 10 niveaux, l’ionisation double le bonus total.',
+        'Production passive : +500 APS par niveau. Tous les 25 niveaux, un stabilisateur ajoute +20 % de multiplicateur à la production. Tous les 10 niveaux, l’ionisation double le bonus total.',
       category: 'auto',
       baseCost: 200_000,
       costScale: 1.15,
@@ -507,7 +507,7 @@ function createShopBuildingDefinitions() {
       name: 'Galaxie artificielle',
       description: 'Ingénierie galactique pour une expansion sans fin.',
       effectSummary:
-        'Production passive : +5 000 000 APS par niveau. Tous les 25 niveaux, un stabilisateur ajoute +50 % de multiplicateur. Tous les 10 niveaux, l’ionisation double le bonus total.',
+        'Production passive : +5 000 000 APS par niveau. Tous les 25 niveaux, un stabilisateur ajoute +20 % de multiplicateur. Tous les 10 niveaux, l’ionisation double le bonus total.',
       category: 'auto',
       baseCost: 1e13,
       costScale: 1.2,
@@ -534,7 +534,7 @@ function createShopBuildingDefinitions() {
       name: 'Simulateur de Multivers',
       description: 'Simulez l’infini pour optimiser chaque seconde.',
       effectSummary:
-        'Production passive : +500 000 000 APS par niveau. Tous les 25 niveaux, un stabilisateur ajoute +50 % de multiplicateur. Tous les 10 niveaux, l’ionisation double le bonus total.',
+        'Production passive : +500 000 000 APS par niveau. Tous les 25 niveaux, un stabilisateur ajoute +20 % de multiplicateur. Tous les 10 niveaux, l’ionisation double le bonus total.',
       category: 'auto',
       baseCost: 1e16,
       costScale: 1.2,
@@ -561,7 +561,7 @@ function createShopBuildingDefinitions() {
       name: 'Tisseur de Réalité',
       description: 'Tissez les lois physiques à votre avantage.',
       effectSummary:
-        'Production passive : +10 000 000 000 APS par niveau. Tous les 150 niveaux, la surcharge critique ajoute +10 % de chance de critique. Tous les 10 niveaux, l’ionisation double le bonus total.',
+        'Production passive : +10 000 000 000 APS par niveau. Tous les 150 niveaux, la surcharge critique ajoute +5 % de chance de critique. Tous les 10 niveaux, l’ionisation double le bonus total.',
       category: 'hybrid',
       baseCost: 1e20,
       costScale: 1.25,
@@ -570,7 +570,7 @@ function createShopBuildingDefinitions() {
         const autoAddBase = level > 0 ? baseAmount : 0;
         // Surcharge critique : tous les 150 niveaux, ajoute +10 % de chance de critique.
         const overloadTier = Math.floor(level / 150);
-        const critChanceAddBase = overloadTier > 0 ? overloadTier * 0.1 : 0;
+        const critChanceAddBase = overloadTier > 0 ? overloadTier * 0.05 : 0;
         const ionizationBoost = getIonizationBoost(level);
         const result = { autoAdd: 0 };
         if (autoAddBase > 0) {
@@ -3718,6 +3718,7 @@ GAME_CONFIG.progression.defaultTheme = GAME_CONFIG.themes.default;
 if (typeof globalThis !== 'undefined') {
   globalThis.GAME_CONFIG = GAME_CONFIG;
 }
+
 
 
 
