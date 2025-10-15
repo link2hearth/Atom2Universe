@@ -61,12 +61,12 @@ const PERFORMANCE_MODE_SETTINGS = Object.freeze({
 const PERFORMANCE_MODE_DEFINITIONS = Object.freeze([
   Object.freeze({
     id: 'fluid',
-    labelKey: 'index.sections.options.performance.options.fluid',
-    isDefault: true
+    labelKey: 'index.sections.options.performance.options.fluid'
   }),
   Object.freeze({
     id: 'eco',
-    labelKey: 'index.sections.options.performance.options.eco'
+    labelKey: 'index.sections.options.performance.options.eco',
+    isDefault: true
   })
 ]);
 
@@ -1121,11 +1121,12 @@ const GAME_CONFIG = {
    */
   ui: {
     scale: {
-      default: 'normal',
+      default: 'large',
       options: [
         { id: 'small', factor: 0.75 },
         { id: 'normal', factor: 1 },
-        { id: 'large', factor: 1.5 }
+        { id: 'large', factor: 1.5 },
+        { id: 'x2', factor: 2 }
       ]
     }
   },

@@ -753,7 +753,8 @@
           "options": {
             "small": "Small size (×0.75)",
             "normal": "Standard size",
-            "large": "Large size (×1.5)"
+            "large": "Large size (×1.5)",
+            "x2": "Extra large size (×2)"
           }
         },
         "theme": {
