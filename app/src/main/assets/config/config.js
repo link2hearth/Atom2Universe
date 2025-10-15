@@ -1197,6 +1197,7 @@ const GAME_CONFIG = {
    * - windowMs : fenêtre temporelle (ms) utilisée pour lisser l'intensité du bouton.
    * - maxClicksPerSecond : nombre de clics par seconde considéré comme 100% de puissance.
    * - starCount : nombre d'étoiles utilisées dans l'arrière-plan animé.
+   * - ecoStarCount : nombre d'étoiles affichées lorsque le mode éco privilégie un rendu statique.
    */
   presentation: {
     clicks: {
@@ -1204,7 +1205,8 @@ const GAME_CONFIG = {
       maxClicksPerSecond: 18
     },
     starfield: {
-      starCount: 60
+      starCount: 60,
+      ecoStarCount: 24
     }
   },
 

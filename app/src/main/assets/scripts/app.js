@@ -694,6 +694,9 @@ function applyPerformanceMode(modeId, options = {}) {
   if (typeof document !== 'undefined' && document.body) {
     document.body.setAttribute('data-performance-mode', normalized);
   }
+  if (elements && elements.starfield && (changed || starfieldInitializedForMode !== normalized)) {
+    initStarfield(normalized);
+  }
   if (changed && gameLoopControl.isActive) {
     restartGameLoop({ immediate: true });
   }
@@ -9233,25 +9236,124 @@ function animateAtomPress(options = {}) {
   }
 }
 
-const STAR_COUNT = CONFIG.presentation?.starfield?.starCount ?? 60;
+function normalizeStarCount(value, fallback) {
+  const numeric = Number(value);
+  if (Number.isFinite(numeric) && numeric > 0) {
+    return Math.max(1, Math.floor(numeric));
+  }
+  const fallbackNumeric = Number(fallback);
+  if (Number.isFinite(fallbackNumeric) && fallbackNumeric > 0) {
+    return Math.max(1, Math.floor(fallbackNumeric));
+  }
+  return 1;
+}
+
+function randomBetween(min, max) {
+  const lower = Number(min);
+  const upper = Number(max);
+  const hasLower = Number.isFinite(lower);
+  const hasUpper = Number.isFinite(upper);
+  if (!hasLower && !hasUpper) {
+    return Math.random();
+  }
+  if (!hasLower) {
+    return hasUpper ? upper : Math.random();
+  }
+  if (!hasUpper) {
+    return lower;
+  }
+  if (upper <= lower) {
+    return lower;
+  }
+  return lower + Math.random() * (upper - lower);
+}
+
+function resolveRange(range, fallbackMin, fallbackMax) {
+  const minCandidate = Number(range?.min);
+  const maxCandidate = Number(range?.max);
+  const min = Number.isFinite(minCandidate) ? minCandidate : fallbackMin;
+  let max = Number.isFinite(maxCandidate) ? maxCandidate : fallbackMax;
+  if (max < min) {
+    max = min;
+  }
+  return { min, max };
+}
+
+const STARFIELD_CONFIG = CONFIG.presentation?.starfield ?? {};
+const STARFIELD_DEFAULT_COUNT = normalizeStarCount(STARFIELD_CONFIG.starCount, 60);
+const STARFIELD_ECO_COUNT = normalizeStarCount(
+  STARFIELD_CONFIG.ecoStarCount,
+  Math.max(8, Math.round(STARFIELD_DEFAULT_COUNT / 2.5))
+);
+const STARFIELD_MODE_SETTINGS = Object.freeze({
+  fluid: Object.freeze({
+    count: STARFIELD_DEFAULT_COUNT,
+    animated: true,
+    scale: Object.freeze({ min: 0.6, max: 2.3 }),
+    opacity: Object.freeze({ min: 0.26, max: 0.8 })
+  }),
+  eco: Object.freeze({
+    count: STARFIELD_ECO_COUNT,
+    animated: false,
+    scale: Object.freeze({ min: 0.55, max: 1.2 }),
+    opacity: Object.freeze({ min: 0.3, max: 0.6 })
+  })
+});
+let starfieldInitializedForMode = null;
+
+function resolveStarfieldMode(modeId) {
+  if (typeof modeId === 'string') {
+    const normalized = modeId.trim();
+    if (normalized && Object.prototype.hasOwnProperty.call(STARFIELD_MODE_SETTINGS, normalized)) {
+      return normalized;
+    }
+  }
+  if (Object.prototype.hasOwnProperty.call(STARFIELD_MODE_SETTINGS, PERFORMANCE_MODE_DEFAULT_ID)) {
+    return PERFORMANCE_MODE_DEFAULT_ID;
+  }
+  return 'fluid';
+}
+
+function getStarfieldSettings(modeId) {
+  const resolved = resolveStarfieldMode(modeId);
+  return {
+    id: resolved,
+    settings: STARFIELD_MODE_SETTINGS[resolved]
+  };
+}
+
 const ATOM_IMAGE_FALLBACK = 'Assets/Image/Atom.png';
 
-function initStarfield() {
+function initStarfield(modeId = performanceModeState?.id ?? PERFORMANCE_MODE_DEFAULT_ID) {
   if (!elements.starfield) return;
+  const { id: resolvedMode, settings } = getStarfieldSettings(modeId);
+  if (!settings) return;
   const fragment = document.createDocumentFragment();
-  for (let i = 0; i < STAR_COUNT; i += 1) {
+  const { min: scaleMin, max: scaleMax } = resolveRange(settings.scale, 0.6, 2.3);
+  const { min: opacityMin, max: opacityMax } = resolveRange(settings.opacity, 0.26, 0.54);
+  const count = Math.max(0, Math.floor(settings.count || 0));
+  for (let i = 0; i < count; i += 1) {
     const star = document.createElement('span');
     star.className = 'starfield__star';
     star.style.left = `${Math.random() * 100}%`;
     star.style.top = `${Math.random() * 100}%`;
-    star.style.setProperty('--star-scale', (0.6 + Math.random() * 1.7).toFixed(2));
-    const duration = 4 + Math.random() * 6;
-    star.style.animationDuration = `${duration.toFixed(2)}s`;
-    star.style.animationDelay = `-${(Math.random() * duration).toFixed(2)}s`;
-    star.style.setProperty('--star-opacity', (0.26 + Math.random() * 0.54).toFixed(2));
+    star.style.setProperty('--star-scale', randomBetween(scaleMin, scaleMax).toFixed(2));
+    star.style.setProperty('--star-opacity', randomBetween(opacityMin, opacityMax).toFixed(2));
+    if (settings.animated) {
+      const duration = randomBetween(4, 10);
+      star.style.animationDuration = `${duration.toFixed(2)}s`;
+      star.style.animationDelay = `-${randomBetween(0, duration).toFixed(2)}s`;
+    }
     fragment.appendChild(star);
   }
-  elements.starfield.appendChild(fragment);
+  if (typeof elements.starfield.replaceChildren === 'function') {
+    elements.starfield.replaceChildren(fragment);
+  } else {
+    elements.starfield.textContent = '';
+    elements.starfield.appendChild(fragment);
+  }
+  elements.starfield.dataset.starfieldMode = settings.animated ? 'animated' : 'static';
+  starfieldInitializedForMode = resolvedMode;
 }
 
 const CRIT_ATOM_IMAGES = (() => {
