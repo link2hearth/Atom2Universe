@@ -9171,6 +9171,12 @@ function registerManualClick() {
   clickHistory.push(now);
   updateClickVisuals(now);
   injectAtomImpulse(now);
+  if (
+    typeof globalThis !== 'undefined'
+    && typeof globalThis.registerTicketStarClickReduction === 'function'
+  ) {
+    globalThis.registerTicketStarClickReduction(1);
+  }
   if (gameState.stats) {
     const session = gameState.stats.session;
     const global = gameState.stats.global;

@@ -2558,19 +2558,40 @@ const GAME_CONFIG = {
   /**
    * Apparition de l'étoile à tickets sur la page principale.
    * - averageSpawnIntervalSeconds : intervalle moyen entre deux apparitions.
-   * - speedPixelsPerSecond : vitesse de déplacement de l'icône.
-   * - speedVariance : variation aléatoire relative appliquée à la vitesse (0.35 = ±35 %).
-   * - spawnOffsetPixels : distance (en px) à l'extérieur de l'écran lors de l'apparition.
+   * - minimumSpawnIntervalSeconds : durée minimale (après réduction) avant réapparition.
+   * - clickReductionSeconds : réduction appliquée au délai moyen à chaque clic manuel.
+   * - lifetimeSeconds : durée de vie maximale avant disparition manuelle (sans auto-collecte).
+   * - speedPixelsPerSecond : vitesse de base utilisée pour le calcul de l'impulsion initiale.
+   * - speedVariance : variation aléatoire relative appliquée à la vitesse horizontale (0.35 = ±35 %).
+   * - spawnOffsetPixels : marge (en px) dans laquelle l'étoile peut dépasser les bords.
    * - size : taille (en pixels) du sprite.
    * - rewardTickets : nombre de tickets octroyés par clic.
+   * - gravity : intensité de la gravité (en px/s²) appliquée pendant le rebond.
+   * - bounceRestitution : restitution verticale lors du rebond au sol (0-1).
+   * - wallRestitution : restitution lors du rebond sur les murs/ plafond (0-1).
+   * - floorFriction : coefficient de friction appliqué horizontalement lors d'un contact au sol (0-1).
+   * - launchVerticalSpeed : vitesse verticale initiale (en px/s) au moment de l'apparition.
+   * - minHorizontalSpeed : vitesse horizontale minimale assurant un déplacement suffisant.
+   * - horizontalSpeedMin / horizontalSpeedMax : bornes de la vitesse horizontale générée.
    */
   ticketStar: {
     averageSpawnIntervalSeconds: 600,
+    minimumSpawnIntervalSeconds: 5,
+    clickReductionSeconds: 0.1,
+    lifetimeSeconds: 15,
     speedPixelsPerSecond: 90,
     speedVariance: 0.35,
     spawnOffsetPixels: 48,
     size: 72,
-    rewardTickets: 1
+    rewardTickets: 1,
+    gravity: 900,
+    bounceRestitution: 0.86,
+    wallRestitution: 0.82,
+    floorFriction: 0.9,
+    launchVerticalSpeed: 420,
+    minHorizontalSpeed: 180,
+    horizontalSpeedMin: 260,
+    horizontalSpeedMax: 420
   },
 
   /**

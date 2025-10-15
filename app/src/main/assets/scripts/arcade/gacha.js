@@ -688,6 +688,35 @@ const TICKET_STAR_CONFIG = {
     const seconds = Number.isFinite(raw) && raw > 0 ? raw : 60;
     return seconds * 1000;
   })(),
+  minimumSpawnIntervalMs: (() => {
+    const raw = Number(
+      rawTicketStarConfig.minimumSpawnIntervalSeconds
+        ?? rawTicketStarConfig.minIntervalSeconds
+        ?? 5
+    );
+    const seconds = Number.isFinite(raw) && raw > 0 ? raw : 5;
+    return Math.max(1000, seconds * 1000);
+  })(),
+  clickReductionPerClickMs: (() => {
+    const raw = Number(
+      rawTicketStarConfig.clickReductionSeconds
+        ?? rawTicketStarConfig.clickReduction
+        ?? 0.1
+    );
+    if (!Number.isFinite(raw) || raw <= 0) {
+      return 0;
+    }
+    return raw * 1000;
+  })(),
+  lifetimeMs: (() => {
+    const raw = Number(
+      rawTicketStarConfig.lifetimeSeconds
+        ?? rawTicketStarConfig.lifetime
+        ?? 15
+    );
+    const seconds = Number.isFinite(raw) && raw > 0 ? raw : 15;
+    return seconds * 1000;
+  })(),
   speed: (() => {
     const raw = Number(
       rawTicketStarConfig.speedPixelsPerSecond
@@ -728,6 +757,68 @@ const TICKET_STAR_CONFIG = {
   rewardTickets: (() => {
     const raw = Number(rawTicketStarConfig.rewardTickets ?? rawTicketStarConfig.tickets ?? 1);
     return Number.isFinite(raw) && raw > 0 ? Math.floor(raw) : 1;
+  })(),
+  gravity: (() => {
+    const raw = Number(rawTicketStarConfig.gravity ?? rawTicketStarConfig.gravityPixelsPerSecondSquared ?? 900);
+    return Number.isFinite(raw) ? raw : 900;
+  })(),
+  bounceRestitution: (() => {
+    const raw = Number(rawTicketStarConfig.bounceRestitution ?? rawTicketStarConfig.floorBounce ?? 0.86);
+    if (!Number.isFinite(raw)) {
+      return 0.86;
+    }
+    return Math.min(Math.max(raw, 0), 0.98);
+  })(),
+  wallRestitution: (() => {
+    const raw = Number(rawTicketStarConfig.wallRestitution ?? rawTicketStarConfig.wallBounce ?? 0.82);
+    if (!Number.isFinite(raw)) {
+      return 0.82;
+    }
+    return Math.min(Math.max(raw, 0), 0.98);
+  })(),
+  floorFriction: (() => {
+    const raw = Number(rawTicketStarConfig.floorFriction ?? rawTicketStarConfig.horizontalFriction ?? 0.9);
+    if (!Number.isFinite(raw)) {
+      return 0.9;
+    }
+    return Math.min(Math.max(raw, 0), 1);
+  })(),
+  launchVerticalSpeed: (() => {
+    const raw = Number(
+      rawTicketStarConfig.launchVerticalSpeed
+        ?? rawTicketStarConfig.initialVerticalSpeed
+        ?? 420
+    );
+    return Number.isFinite(raw) && raw > 0 ? raw : 420;
+  })(),
+  minHorizontalSpeed: (() => {
+    const raw = Number(
+      rawTicketStarConfig.minHorizontalSpeed
+        ?? rawTicketStarConfig.minimumHorizontalSpeed
+        ?? 180
+    );
+    return Number.isFinite(raw) && raw > 0 ? raw : 180;
+  })(),
+  horizontalSpeedRange: (() => {
+    const baseSpeed = Number(
+      rawTicketStarConfig.speedPixelsPerSecond
+        ?? rawTicketStarConfig.speed
+        ?? 90
+    );
+    const normalizedBase = Number.isFinite(baseSpeed) && baseSpeed > 0 ? baseSpeed : 90;
+    const rawMin = Number(
+      rawTicketStarConfig.horizontalSpeedMin
+        ?? rawTicketStarConfig.horizontalSpeedRange?.min
+    );
+    const rawMax = Number(
+      rawTicketStarConfig.horizontalSpeedMax
+        ?? rawTicketStarConfig.horizontalSpeedRange?.max
+    );
+    const fallbackMin = normalizedBase * 2.6;
+    const fallbackMax = normalizedBase * 4.6;
+    const min = Number.isFinite(rawMin) && rawMin > 0 ? rawMin : fallbackMin;
+    const max = Number.isFinite(rawMax) && rawMax >= min ? rawMax : Math.max(min, fallbackMax);
+    return { min, max };
   })()
 };
 
@@ -3454,12 +3545,13 @@ function gainBonusParticulesTickets(amount = 1) {
 }
 
 let ticketStarAverageIntervalMsOverride = TICKET_STAR_CONFIG.averageSpawnIntervalMs;
+let ticketStarDelayReductionMs = 0;
 
 function getTicketStarAverageIntervalMs() {
   const value = Number.isFinite(ticketStarAverageIntervalMsOverride) && ticketStarAverageIntervalMsOverride > 0
     ? ticketStarAverageIntervalMsOverride
     : TICKET_STAR_CONFIG.averageSpawnIntervalMs;
-  return Math.max(1000, value);
+  return Math.max(TICKET_STAR_CONFIG.minimumSpawnIntervalMs, value);
 }
 
 function setTicketStarAverageIntervalSeconds(seconds) {
@@ -3468,7 +3560,7 @@ function setTicketStarAverageIntervalSeconds(seconds) {
   const resolvedSeconds = Number.isFinite(numericSeconds) && numericSeconds > 0
     ? numericSeconds
     : baseSeconds;
-  const normalizedMs = Math.max(1000, resolvedSeconds * 1000);
+  const normalizedMs = Math.max(TICKET_STAR_CONFIG.minimumSpawnIntervalMs, resolvedSeconds * 1000);
   if (Math.abs(ticketStarAverageIntervalMsOverride - normalizedMs) < 1) {
     gameState.ticketStarAverageIntervalSeconds = normalizedMs / 1000;
     return false;
@@ -3481,7 +3573,17 @@ function setTicketStarAverageIntervalSeconds(seconds) {
 function computeTicketStarDelay() {
   const average = getTicketStarAverageIntervalMs();
   const jitter = 0.5 + Math.random();
-  return average * jitter;
+  let delay = average * jitter;
+  if (ticketStarDelayReductionMs > 0) {
+    const minDelay = TICKET_STAR_CONFIG.minimumSpawnIntervalMs;
+    const maxReduction = Math.max(0, delay - minDelay);
+    const applied = Math.min(ticketStarDelayReductionMs, maxReduction);
+    if (applied > 0) {
+      delay -= applied;
+      ticketStarDelayReductionMs = Math.max(0, ticketStarDelayReductionMs - applied);
+    }
+  }
+  return Math.max(TICKET_STAR_CONFIG.minimumSpawnIntervalMs, delay);
 }
 
 function isTicketStarFeatureUnlocked() {
@@ -3534,7 +3636,7 @@ const ticketStarState = {
   height: 0,
   nextSpawnTime: performance.now() + computeTicketStarDelay(),
   spawnTime: 0,
-  lastSpawnEdge: null
+  expiryTime: 0
 };
 
 function resolveTicketLayer() {
@@ -3576,10 +3678,11 @@ function resetTicketStarState(options = {}) {
   ticketStarState.width = 0;
   ticketStarState.height = 0;
   ticketStarState.spawnTime = 0;
-  ticketStarState.lastSpawnEdge = null;
+  ticketStarState.expiryTime = 0;
   const now = performance.now();
   if (!isTicketStarFeatureUnlocked()) {
     ticketStarState.nextSpawnTime = Number.POSITIVE_INFINITY;
+    ticketStarDelayReductionMs = 0;
     return;
   }
   if (options.reschedule) {
@@ -3616,8 +3719,9 @@ function collectTicketStar(event) {
   ticketStarState.velocity.y = 0;
   ticketStarState.position.x = 0;
   ticketStarState.position.y = 0;
-  ticketStarState.lastSpawnEdge = null;
+  ticketStarState.expiryTime = 0;
   ticketStarState.nextSpawnTime = performance.now() + computeTicketStarDelay();
+  ticketStarDelayReductionMs = 0;
   saveGame();
 }
 
@@ -3655,40 +3759,65 @@ function spawnTicketStar(now = performance.now()) {
 
   const starWidth = star.offsetWidth || TICKET_STAR_CONFIG.size;
   const starHeight = star.offsetHeight || TICKET_STAR_CONFIG.size;
+  const padding = TICKET_STAR_CONFIG.edgePadding;
   const interiorMaxX = Math.max(0, layerWidth - starWidth);
   const interiorMaxY = Math.max(0, layerHeight - starHeight);
-  const padding = TICKET_STAR_CONFIG.edgePadding;
-  const horizontalRange = interiorMaxX + padding * 2;
-  const verticalRange = interiorMaxY + padding * 2;
-  let startX = Math.random() * horizontalRange - padding;
-  let startY = Math.random() * verticalRange - padding;
-  const edges = ['top', 'right', 'bottom', 'left'];
-  let edgePool = edges;
-  if (ticketStarState.lastSpawnEdge && edges.length > 1) {
-    const filtered = edges.filter(entry => entry !== ticketStarState.lastSpawnEdge);
-    if (filtered.length) {
-      edgePool = filtered;
-    }
+  const minX = -padding;
+  const maxX = interiorMaxX + padding;
+  const minY = -padding;
+  const maxY = interiorMaxY + padding;
+
+  let layerRect = null;
+  if (typeof layer.getBoundingClientRect === 'function') {
+    layerRect = layer.getBoundingClientRect();
   }
-  const edge = edgePool[Math.floor(Math.random() * edgePool.length)] ?? 'top';
-  ticketStarState.lastSpawnEdge = edge;
-  switch (edge) {
-    case 'top':
-      startX = Math.random() * horizontalRange - padding;
-      startY = -padding;
-      break;
-    case 'bottom':
-      startX = Math.random() * horizontalRange - padding;
-      startY = interiorMaxY + padding;
-      break;
-    case 'left':
-      startX = -padding;
-      startY = Math.random() * verticalRange - padding;
-      break;
-    default:
-      startX = interiorMaxX + padding;
-      startY = Math.random() * verticalRange - padding;
-      break;
+  const layerOffsetLeft = layerRect ? layerRect.left : 0;
+  const layerOffsetTop = layerRect ? layerRect.top : 0;
+  const fallbackCenterX = layerRect ? layerRect.width / 2 : layerWidth / 2;
+  const fallbackCenterY = layerRect ? layerRect.height / 2 : layerHeight / 2;
+
+  const rootElements = typeof elements === 'object' && elements ? elements : null;
+  const atomCore = rootElements?.atomButtonCore;
+  const atomButton = rootElements?.atomButton;
+  const atomRect = atomCore?.getBoundingClientRect?.()
+    || atomButton?.getBoundingClientRect?.()
+    || null;
+
+  let startX = (atomRect
+    ? atomRect.left + atomRect.width / 2 - layerOffsetLeft
+    : fallbackCenterX) - starWidth / 2;
+  let startY = (atomRect
+    ? atomRect.top + atomRect.height / 2 - layerOffsetTop
+    : fallbackCenterY) - starHeight / 2;
+
+  startX = Math.min(Math.max(startX, minX), maxX);
+  startY = Math.min(Math.max(startY, minY), maxY);
+
+  const speedRange = TICKET_STAR_CONFIG.horizontalSpeedRange;
+  const minHorizontal = Math.max(0, speedRange?.min ?? 0);
+  const maxHorizontal = Math.max(minHorizontal, speedRange?.max ?? minHorizontal);
+  let horizontalSpeed = minHorizontal + Math.random() * Math.max(0, maxHorizontal - minHorizontal);
+  const variance = Math.max(0, TICKET_STAR_CONFIG.speedVariance);
+  if (variance > 0 && Number.isFinite(horizontalSpeed) && horizontalSpeed > 0) {
+    const minMultiplier = Math.max(0.1, 1 - variance);
+    const maxMultiplier = 1 + variance;
+    const factor = minMultiplier + Math.random() * (maxMultiplier - minMultiplier);
+    horizontalSpeed *= factor;
+  }
+  if (!Number.isFinite(horizontalSpeed) || horizontalSpeed <= 0) {
+    horizontalSpeed = TICKET_STAR_CONFIG.minHorizontalSpeed;
+  }
+  const direction = Math.random() < 0.5 ? -1 : 1;
+  let velocityX = horizontalSpeed * direction;
+  const minSpeed = TICKET_STAR_CONFIG.minHorizontalSpeed;
+  if (Math.abs(velocityX) < minSpeed) {
+    velocityX = minSpeed * (direction >= 0 ? 1 : -1);
+  }
+
+  const baseVertical = TICKET_STAR_CONFIG.launchVerticalSpeed;
+  let velocityY = -(baseVertical * (0.9 + Math.random() * 0.5));
+  if (!Number.isFinite(velocityY)) {
+    velocityY = -baseVertical;
   }
 
   ticketStarState.element = star;
@@ -3697,49 +3826,51 @@ function spawnTicketStar(now = performance.now()) {
   ticketStarState.position.y = startY;
   ticketStarState.width = starWidth;
   ticketStarState.height = starHeight;
-  const targetX = interiorMaxX > 0 ? Math.random() * interiorMaxX : interiorMaxX * 0.5;
-  const targetY = interiorMaxY > 0 ? Math.random() * interiorMaxY : interiorMaxY * 0.5;
-  let deltaX = targetX - startX;
-  let deltaY = targetY - startY;
-  let distance = Math.hypot(deltaX, deltaY);
-  if (!Number.isFinite(distance) || distance <= 1e-3) {
-    switch (edge) {
-      case 'top':
-        deltaX = 0;
-        deltaY = 1;
-        break;
-      case 'bottom':
-        deltaX = 0;
-        deltaY = -1;
-        break;
-      case 'left':
-        deltaX = 1;
-        deltaY = 0;
-        break;
-      default:
-        deltaX = -1;
-        deltaY = 0;
-        break;
-    }
-    distance = Math.hypot(deltaX, deltaY) || 1;
-  }
-  const normalizedX = deltaX / distance;
-  const normalizedY = deltaY / distance;
-  const baseSpeed = TICKET_STAR_CONFIG.speed;
-  const variance = TICKET_STAR_CONFIG.speedVariance;
-  let speedMultiplier = 1;
-  if (variance > 0) {
-    const minMultiplier = Math.max(0.05, 1 - variance);
-    const maxMultiplier = 1 + variance;
-    speedMultiplier = minMultiplier + Math.random() * (maxMultiplier - minMultiplier);
-  }
-  const speed = baseSpeed * speedMultiplier;
-  ticketStarState.velocity.x = normalizedX * speed;
-  ticketStarState.velocity.y = normalizedY * speed;
+  ticketStarState.velocity.x = velocityX;
+  ticketStarState.velocity.y = velocityY;
   ticketStarState.nextSpawnTime = Number.POSITIVE_INFINITY;
   ticketStarState.spawnTime = now;
+  const autoCollectDelayMs = getTicketStarAutoCollectDelayMs();
+  ticketStarState.expiryTime = autoCollectDelayMs == null ? now + TICKET_STAR_CONFIG.lifetimeMs : 0;
 
   star.style.transform = `translate(${startX}px, ${startY}px)`;
+}
+
+function registerTicketStarClickReduction(clickCount = 1) {
+  const perClick = TICKET_STAR_CONFIG.clickReductionPerClickMs;
+  if (!Number.isFinite(perClick) || perClick <= 0) {
+    return;
+  }
+  if (!isTicketStarFeatureUnlocked()) {
+    return;
+  }
+  const normalizedClicks = Number.isFinite(Number(clickCount)) ? Number(clickCount) : 0;
+  if (normalizedClicks <= 0) {
+    return;
+  }
+  const added = perClick * normalizedClicks;
+  if (!Number.isFinite(added) || added <= 0) {
+    return;
+  }
+  ticketStarDelayReductionMs = Math.max(0, ticketStarDelayReductionMs + added);
+  if (
+    !ticketStarState.active
+    && Number.isFinite(ticketStarState.nextSpawnTime)
+    && ticketStarState.nextSpawnTime !== Number.POSITIVE_INFINITY
+  ) {
+    const nowTime = performance.now();
+    const minTime = nowTime + TICKET_STAR_CONFIG.minimumSpawnIntervalMs;
+    const targetTime = Math.max(minTime, ticketStarState.nextSpawnTime - added);
+    const applied = ticketStarState.nextSpawnTime - targetTime;
+    if (applied > 0) {
+      ticketStarState.nextSpawnTime = targetTime;
+      ticketStarDelayReductionMs = Math.max(0, ticketStarDelayReductionMs - applied);
+    }
+  }
+}
+
+if (typeof globalThis !== 'undefined') {
+  globalThis.registerTicketStarClickReduction = registerTicketStarClickReduction;
 }
 
 function updateTicketStar(deltaSeconds, now = performance.now()) {
@@ -3755,9 +3886,16 @@ function updateTicketStar(deltaSeconds, now = performance.now()) {
       ticketStarState.element = null;
       ticketStarState.active = false;
       ticketStarState.spawnTime = 0;
-      ticketStarState.lastSpawnEdge = null;
+      ticketStarState.expiryTime = 0;
+      ticketStarState.velocity.x = 0;
+      ticketStarState.velocity.y = 0;
+      ticketStarState.position.x = 0;
+      ticketStarState.position.y = 0;
+      ticketStarState.width = 0;
+      ticketStarState.height = 0;
     }
     ticketStarState.nextSpawnTime = Number.POSITIVE_INFINITY;
+    ticketStarDelayReductionMs = 0;
     return;
   }
   if (!ticketStarState.active && !Number.isFinite(ticketStarState.nextSpawnTime)) {
@@ -3774,12 +3912,37 @@ function updateTicketStar(deltaSeconds, now = performance.now()) {
     ticketStarState.active = false;
     ticketStarState.nextSpawnTime = now + computeTicketStarDelay();
     ticketStarState.spawnTime = 0;
-    ticketStarState.lastSpawnEdge = null;
+    ticketStarState.expiryTime = 0;
+    ticketStarState.velocity.x = 0;
+    ticketStarState.velocity.y = 0;
+    ticketStarState.position.x = 0;
+    ticketStarState.position.y = 0;
+    ticketStarState.width = 0;
+    ticketStarState.height = 0;
+    ticketStarDelayReductionMs = 0;
     return;
   }
   const width = layer.clientWidth;
   const height = layer.clientHeight;
   if (width <= 0 || height <= 0) {
+    return;
+  }
+  if (ticketStarState.expiryTime > 0 && now >= ticketStarState.expiryTime) {
+    if (star.parentNode) {
+      star.remove();
+    }
+    ticketStarState.element = null;
+    ticketStarState.active = false;
+    ticketStarState.spawnTime = 0;
+    ticketStarState.expiryTime = 0;
+    ticketStarState.velocity.x = 0;
+    ticketStarState.velocity.y = 0;
+    ticketStarState.position.x = 0;
+    ticketStarState.position.y = 0;
+    ticketStarState.width = 0;
+    ticketStarState.height = 0;
+    ticketStarDelayReductionMs = 0;
+    ticketStarState.nextSpawnTime = now + computeTicketStarDelay();
     return;
   }
   if (shouldAutoCollectTicketStar(now)) {
@@ -3795,23 +3958,35 @@ function updateTicketStar(deltaSeconds, now = performance.now()) {
   const maxX = interiorMaxX + padding;
   const minY = -padding;
   const maxY = interiorMaxY + padding;
-  let nextX = ticketStarState.position.x + ticketStarState.velocity.x * deltaSeconds;
-  let nextY = ticketStarState.position.y + ticketStarState.velocity.y * deltaSeconds;
+  const delta = Math.min(Math.max(deltaSeconds, 0), 0.05);
+  const gravity = TICKET_STAR_CONFIG.gravity;
+  ticketStarState.velocity.y += gravity * delta;
+  let nextX = ticketStarState.position.x + ticketStarState.velocity.x * delta;
+  let nextY = ticketStarState.position.y + ticketStarState.velocity.y * delta;
+
+  const wallRestitution = TICKET_STAR_CONFIG.wallRestitution;
+  const bounceRestitution = TICKET_STAR_CONFIG.bounceRestitution;
+  const floorFriction = TICKET_STAR_CONFIG.floorFriction;
 
   if (nextX <= minX) {
     nextX = minX;
-    ticketStarState.velocity.x = Math.abs(ticketStarState.velocity.x);
+    ticketStarState.velocity.x = Math.abs(ticketStarState.velocity.x) * wallRestitution;
   } else if (nextX >= maxX) {
     nextX = maxX;
-    ticketStarState.velocity.x = -Math.abs(ticketStarState.velocity.x);
+    ticketStarState.velocity.x = -Math.abs(ticketStarState.velocity.x) * wallRestitution;
   }
 
   if (nextY <= minY) {
     nextY = minY;
-    ticketStarState.velocity.y = Math.abs(ticketStarState.velocity.y);
+    ticketStarState.velocity.y = Math.abs(ticketStarState.velocity.y) * wallRestitution;
   } else if (nextY >= maxY) {
     nextY = maxY;
-    ticketStarState.velocity.y = -Math.abs(ticketStarState.velocity.y);
+    if (Math.abs(ticketStarState.velocity.y) > 60) {
+      ticketStarState.velocity.y = -Math.abs(ticketStarState.velocity.y) * bounceRestitution;
+    } else {
+      ticketStarState.velocity.y = 0;
+    }
+    ticketStarState.velocity.x *= floorFriction;
   }
 
   ticketStarState.position.x = nextX;
