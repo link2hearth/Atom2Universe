@@ -1201,6 +1201,7 @@
         "setBonus": "Étoiles massives · convergence ultime",
         "ticketBonus": "Étoiles massives · étoile compressée",
         "offlineBonus": "Étoiles massives · collecte persistante",
+        "multiplier": "Étoiles massives · résonance gravitationnelle",
         "duplicateOverflow": "Étoiles massives · surcharge fractale",
         "frenzyBonus": "Étoiles massives · catalyseur de frénésie"
       },
@@ -1502,6 +1503,7 @@
           "setBonus": "Étoiles massives · convergence ultime",
           "ticketBonus": "Étoiles massives · étoile compressée",
           "offlineBonus": "Étoiles massives · collecte persistante",
+          "multiplier": "Étoiles massives · résonance gravitationnelle",
           "duplicateOverflow": "Étoiles massives · surcharge fractale",
           "frenzyBonus": "Étoiles massives · catalyseur de frénésie"
         },

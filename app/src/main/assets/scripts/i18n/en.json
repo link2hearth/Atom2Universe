@@ -1201,6 +1201,7 @@
         "setBonus": "Massive Stars · Ultimate convergence",
         "ticketBonus": "Massive Stars · Compressed star",
         "offlineBonus": "Massive Stars · Persistent collection",
+        "multiplier": "Massive Stars · Gravitational resonance",
         "duplicateOverflow": "Massive Stars · Fractal overload",
         "frenzyBonus": "Massive Stars · Frenzy catalyst"
       },
@@ -1502,6 +1503,7 @@
           "setBonus": "Massive Stars · Ultimate convergence",
           "ticketBonus": "Massive Stars · Compressed star",
           "offlineBonus": "Massive Stars · Persistent collection",
+          "multiplier": "Massive Stars · Gravitational resonance",
           "duplicateOverflow": "Massive Stars · Fractal overload",
           "frenzyBonus": "Massive Stars · Frenzy catalyst"
         },

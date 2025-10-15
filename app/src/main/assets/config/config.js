@@ -2699,7 +2699,14 @@ const GAME_CONFIG = {
           ticketBonus: 'scripts.config.elementBonuses.mythique.ticketBonus',
           offlineBonus: 'scripts.config.elementBonuses.mythique.offlineBonus',
           duplicateOverflow: 'scripts.config.elementBonuses.mythique.duplicateOverflow',
-          frenzyBonus: 'scripts.config.elementBonuses.mythique.frenzyBonus'
+          frenzyBonus: 'scripts.config.elementBonuses.mythique.frenzyBonus',
+          multiplier: COLLECTION_MULTIPLIER_LABEL_KEY
+        },
+        multiplier: {
+          every: 10,
+          increment: 1,
+          targets: ['perClick', 'perSecond'],
+          label: COLLECTION_MULTIPLIER_LABEL_KEY
         },
         ticketBonus: {
           uniqueReductionSeconds: 10,
@@ -2710,14 +2717,7 @@ const GAME_CONFIG = {
           perDuplicate: 0.01,
           cap: 0.5
         },
-        duplicateOverflow: {
-          multiplier: {
-          every: 10,
-          increment: 1,
-          targets: ['perClick', 'perSecond'],
-          label: COLLECTION_MULTIPLIER_LABEL_KEY
-          }
-        },
+        duplicateOverflow: {},
         frenzyBonus: {
           multiplier: 1.5
         }
