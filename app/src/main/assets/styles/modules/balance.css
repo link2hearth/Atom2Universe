@@ -1,4 +1,5 @@
 .page--balance {
+  --balance-scale: var(--ui-control-scale, 1);
   --balance-viewport: 100vh;
   --balance-available-height: calc(
     var(--balance-viewport) - clamp(12.5rem, 30vh, 20rem)
@@ -73,15 +74,16 @@
   width: 100%;
   max-width: 100%;
   margin: 0 auto;
-  padding: clamp(0.8rem, min(1.8vw, 2.2vh), 1.8rem)
-    clamp(0.9rem, min(2vw, 2.6vh), 2rem)
-    clamp(0.85rem, min(2.2vw, 2.8vh), 1.9rem);
+  padding:
+    calc(clamp(0.8rem, min(1.8vw, 2.2vh), 1.8rem) * var(--balance-scale, 1))
+    calc(clamp(0.9rem, min(2vw, 2.6vh), 2rem) * var(--balance-scale, 1))
+    calc(clamp(0.85rem, min(2.2vw, 2.8vh), 1.9rem) * var(--balance-scale, 1));
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(0.75rem, min(2.2vw, 2.6vh), 1.9rem);
+  gap: calc(clamp(0.75rem, min(2.2vw, 2.6vh), 1.9rem) * var(--balance-scale, 1));
   min-height: 100vh;
-  min-height: var(--balance-viewport);
+  min-height: calc(var(--balance-viewport) * var(--balance-scale, 1));
   overscroll-behavior: contain;
 }
 
@@ -282,29 +284,31 @@ body.theme-aurora .page--balance {
   justify-items: center;
   align-items: center;
   align-content: center;
-  row-gap: clamp(0.6rem, min(1.7vw, 2vh), 1.45rem);
-  padding-block: clamp(0.8rem, 3.8vh, 1.8rem) clamp(1rem, 4.6vh, 2rem);
+  row-gap: calc(clamp(0.6rem, min(1.7vw, 2vh), 1.45rem) * var(--balance-scale, 1));
+  padding-block:
+    calc(clamp(0.8rem, 3.8vh, 1.8rem) * var(--balance-scale, 1))
+    calc(clamp(1rem, 4.6vh, 2rem) * var(--balance-scale, 1));
   flex: 1 1 auto;
   min-height: 0;
 }
 
 .balance-header {
   display: grid;
-  gap: 0.5rem;
+  gap: calc(0.5rem * var(--balance-scale, 1));
   text-align: center;
 }
 
 .balance-header__title {
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(1.6rem, 3vw, 2.3rem);
+  font-size: calc(clamp(1.6rem, 3vw, 2.3rem) * var(--balance-scale, 1));
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
 
 .balance-header__subtitle {
   margin: 0;
-  font-size: clamp(0.9rem, 1.6vw, 1.1rem);
+  font-size: calc(clamp(0.9rem, 1.6vw, 1.1rem) * var(--balance-scale, 1));
   line-height: 1.6;
   color: var(--balance-header-subtitle-color, rgba(226, 232, 255, 0.78));
 }
@@ -318,11 +322,11 @@ body.theme-aurora .page--balance {
 
 .balance-board-wrapper {
   position: relative;
-  width: min(100%, var(--balance-board-width));
+  width: min(100%, calc(var(--balance-board-width) * var(--balance-scale, 1)));
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(0.5rem, min(1.2vw, 1.6vh), 1.05rem);
+  gap: calc(clamp(0.5rem, min(1.2vw, 1.6vh), 1.05rem) * var(--balance-scale, 1));
 }
 
 .balance-stage {
@@ -332,10 +336,11 @@ body.theme-aurora .page--balance {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(0.45rem, min(1.3vw, 1.7vh), 1rem);
-  padding-block: clamp(1.1rem, min(5.5vh, 3.1rem), 2.8rem)
-    clamp(0.65rem, min(2.6vh, 1.5rem), 1.4rem);
-  max-height: var(--balance-available-height);
+  gap: calc(clamp(0.45rem, min(1.3vw, 1.7vh), 1rem) * var(--balance-scale, 1));
+  padding-block:
+    calc(clamp(1.1rem, min(5.5vh, 3.1rem), 2.8rem) * var(--balance-scale, 1))
+    calc(clamp(0.65rem, min(2.6vh, 1.5rem), 1.4rem) * var(--balance-scale, 1));
+  max-height: calc(var(--balance-available-height) * var(--balance-scale, 1));
   min-height: 0;
   touch-action: none;
 }
@@ -343,7 +348,8 @@ body.theme-aurora .page--balance {
 .balance-board {
   position: relative;
   width: 100%;
-  transform-origin: 50% calc(100% + var(--balance-pivot-height));
+  transform-origin: 50%
+    calc(100% + var(--balance-pivot-height) * var(--balance-scale, 1));
   transform: rotate(var(--balance-rotation));
   transition: transform var(--balance-tilt-duration) cubic-bezier(0.25, 0.8, 0.25, 1);
   will-change: transform;
@@ -353,7 +359,7 @@ body.theme-aurora .page--balance {
 .balance-board__surface {
   position: relative;
   width: 100%;
-  height: max(0.35rem, var(--balance-board-surface-height));
+  height: max(0.35rem, calc(var(--balance-board-surface-height) * var(--balance-scale, 1)));
   border-radius: 999px;
   background-color: var(--balance-surface-color, rgba(90, 124, 220, 0.92));
   box-shadow:
@@ -373,11 +379,11 @@ body.theme-aurora .page--balance {
 
 .balance-board__pivot {
   position: absolute;
-  top: calc(100% + clamp(0.2rem, 0.4vw, 0.5rem));
+  top: calc(100% + clamp(0.2rem, 0.4vw, 0.5rem) * var(--balance-scale, 1));
   left: 50%;
   transform: translateX(-50%);
-  width: clamp(0.8rem, 1.5vw, 1.625rem);
-  height: var(--balance-pivot-height);
+  width: calc(clamp(0.8rem, 1.5vw, 1.625rem) * var(--balance-scale, 1));
+  height: calc(var(--balance-pivot-height) * var(--balance-scale, 1));
   clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
   background: var(--balance-pivot-background, linear-gradient(180deg, rgba(64, 90, 180, 0.94), rgba(20, 28, 70, 0.88)));
   border: 1px solid var(--balance-pivot-border, rgba(24, 34, 78, 0.5));
@@ -390,16 +396,16 @@ body.theme-aurora .page--balance {
 
 .balance-board-shadow {
   width: 80%;
-  height: clamp(0.8rem, 1.6vw, 1.8rem);
+  height: calc(clamp(0.8rem, 1.6vw, 1.8rem) * var(--balance-scale, 1));
   border-radius: 999px;
   background: radial-gradient(circle at center, rgba(0, 0, 0, 0.3), transparent 72%);
   filter: blur(0.5px);
-  transform: translateY(calc(var(--balance-pivot-height) * 0.12));
+  transform: translateY(calc(var(--balance-pivot-height) * var(--balance-scale, 1) * 0.12));
   opacity: 0.55;
 }
 
 .balance-controls {
-  width: min(100%, var(--balance-board-width));
+  width: min(100%, calc(var(--balance-board-width) * var(--balance-scale, 1)));
   display: grid;
   grid-template-columns: minmax(0, auto) auto;
   grid-template-areas:
@@ -407,9 +413,9 @@ body.theme-aurora .page--balance {
     "difficulty buttons";
   justify-content: center;
   align-items: center;
-  row-gap: clamp(0.45rem, min(1.3vw, 1.7vh), 1.1rem);
-  column-gap: clamp(0.45rem, min(1.3vw, 1.7vh), 1.1rem);
-  margin-top: clamp(0.35rem, min(1.5vh, 0.9rem), 0.9rem);
+  row-gap: calc(clamp(0.45rem, min(1.3vw, 1.7vh), 1.1rem) * var(--balance-scale, 1));
+  column-gap: calc(clamp(0.45rem, min(1.3vw, 1.7vh), 1.1rem) * var(--balance-scale, 1));
+  margin-top: calc(clamp(0.35rem, min(1.5vh, 0.9rem), 0.9rem) * var(--balance-scale, 1));
 }
 
 @media (max-height: 720px) {
@@ -417,26 +423,27 @@ body.theme-aurora .page--balance {
     --balance-available-height: calc(
       var(--balance-viewport) - clamp(11.25rem, 32vh, 18rem)
     );
-    gap: clamp(0.65rem, min(1.9vw, 2.3vh), 1.55rem);
+    gap: calc(clamp(0.65rem, min(1.9vw, 2.3vh), 1.55rem) * var(--balance-scale, 1));
   }
 
   .balance-layout {
-    row-gap: clamp(0.5rem, min(1.4vw, 1.7vh), 1.2rem);
+    row-gap: calc(clamp(0.5rem, min(1.4vw, 1.7vh), 1.2rem) * var(--balance-scale, 1));
   }
 
   .balance-board-wrapper {
-    gap: clamp(0.45rem, min(1.1vw, 1.5vh), 1rem);
+    gap: calc(clamp(0.45rem, min(1.1vw, 1.5vh), 1rem) * var(--balance-scale, 1));
   }
 
   .balance-stage {
-    padding-block: clamp(0.85rem, min(2.4vw, 2.8vh), 1.7rem)
-      clamp(0.75rem, min(2.1vw, 2.4vh), 1.55rem);
-    gap: clamp(0.35rem, min(1vw, 1.4vh), 0.85rem);
+    padding-block:
+      calc(clamp(0.85rem, min(2.4vw, 2.8vh), 1.7rem) * var(--balance-scale, 1))
+      calc(clamp(0.75rem, min(2.1vw, 2.4vh), 1.55rem) * var(--balance-scale, 1));
+    gap: calc(clamp(0.35rem, min(1vw, 1.4vh), 0.85rem) * var(--balance-scale, 1));
   }
 
   .balance-controls {
-    row-gap: clamp(0.35rem, min(1vw, 1.3vh), 0.85rem);
-    column-gap: clamp(0.35rem, min(1vw, 1.3vh), 0.85rem);
+    row-gap: calc(clamp(0.35rem, min(1vw, 1.3vh), 0.85rem) * var(--balance-scale, 1));
+    column-gap: calc(clamp(0.35rem, min(1vw, 1.3vh), 0.85rem) * var(--balance-scale, 1));
   }
 }
 
@@ -451,42 +458,44 @@ body.theme-aurora .page--balance {
   }
 
   .balance-layout {
-    row-gap: clamp(0.4rem, min(1.2vw, 1.4vh), 1rem);
+    row-gap: calc(clamp(0.4rem, min(1.2vw, 1.4vh), 1rem) * var(--balance-scale, 1));
   }
 
   .balance-board-shadow {
-    height: clamp(0.5rem, 1vh, 1.2rem);
+    height: calc(clamp(0.5rem, 1vh, 1.2rem) * var(--balance-scale, 1));
   }
 }
 
 @media (orientation: landscape) and (max-height: 600px) {
   .page--balance {
-    padding: clamp(0.5rem, 1.8vh, 1.05rem)
-      clamp(0.7rem, 2.4vw, 1.5rem)
-      clamp(0.65rem, 2.2vh, 1.45rem);
-    gap: clamp(0.4rem, min(1.2vw, 1.4vh), 1.1rem);
+    padding:
+      calc(clamp(0.5rem, 1.8vh, 1.05rem) * var(--balance-scale, 1))
+      calc(clamp(0.7rem, 2.4vw, 1.5rem) * var(--balance-scale, 1))
+      calc(clamp(0.65rem, 2.2vh, 1.45rem) * var(--balance-scale, 1));
+    gap: calc(clamp(0.4rem, min(1.2vw, 1.4vh), 1.1rem) * var(--balance-scale, 1));
     --balance-available-height: calc(
       var(--balance-viewport) - clamp(9.5rem, 34vh, 14rem)
     );
   }
 
   .balance-layout {
-    row-gap: clamp(0.3rem, min(0.9vw, 1.1vh), 0.75rem);
+    row-gap: calc(clamp(0.3rem, min(0.9vw, 1.1vh), 0.75rem) * var(--balance-scale, 1));
   }
 
   .balance-board-wrapper {
-    gap: clamp(0.35rem, min(0.9vw, 1.1vh), 0.8rem);
+    gap: calc(clamp(0.35rem, min(0.9vw, 1.1vh), 0.8rem) * var(--balance-scale, 1));
   }
 
   .balance-stage {
-    padding-block: clamp(0.55rem, min(1.4vw, 1.8vh), 1.1rem)
-      clamp(0.5rem, min(1.3vw, 1.6vh), 1rem);
-    gap: clamp(0.3rem, min(0.9vw, 1.1vh), 0.7rem);
+    padding-block:
+      calc(clamp(0.55rem, min(1.4vw, 1.8vh), 1.1rem) * var(--balance-scale, 1))
+      calc(clamp(0.5rem, min(1.3vw, 1.6vh), 1rem) * var(--balance-scale, 1));
+    gap: calc(clamp(0.3rem, min(0.9vw, 1.1vh), 0.7rem) * var(--balance-scale, 1));
   }
 
   .balance-controls {
-    row-gap: clamp(0.3rem, min(0.9vw, 1.1vh), 0.65rem);
-    column-gap: clamp(0.3rem, min(0.9vw, 1.1vh), 0.65rem);
+    row-gap: calc(clamp(0.3rem, min(0.9vw, 1.1vh), 0.65rem) * var(--balance-scale, 1));
+    column-gap: calc(clamp(0.3rem, min(0.9vw, 1.1vh), 0.65rem) * var(--balance-scale, 1));
   }
 }
 
@@ -537,7 +546,7 @@ body.theme-aurora .page--balance {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0.75rem;
+  gap: calc(0.75rem * var(--balance-scale, 1));
 }
 
 @media (max-width: 600px) {
@@ -562,8 +571,10 @@ body.theme-aurora .page--balance {
   appearance: none;
   border: 1px solid var(--balance-button-border, rgba(140, 170, 255, 0.28));
   border-radius: 999px;
-  padding: 0.55rem 1.35rem;
-  font-size: 0.95rem;
+  padding:
+    calc(0.55rem * var(--balance-scale, 1))
+    calc(1.35rem * var(--balance-scale, 1));
+  font-size: calc(0.95rem * var(--balance-scale, 1));
   line-height: 1.2;
   cursor: pointer;
   color: var(--balance-button-color, inherit);
@@ -637,19 +648,21 @@ body.theme-aurora .page--balance {
   align-items: center;
   justify-content: center;
   margin: 0;
-  min-height: 2.5rem;
-  padding: 0.65rem 1rem;
-  border-radius: 0.9rem;
-  font-size: 0.95rem;
+  min-height: calc(2.5rem * var(--balance-scale, 1));
+  padding:
+    calc(0.65rem * var(--balance-scale, 1))
+    calc(1rem * var(--balance-scale, 1));
+  border-radius: calc(0.9rem * var(--balance-scale, 1));
+  font-size: calc(0.95rem * var(--balance-scale, 1));
   text-align: center;
-  width: min(32rem, 100%);
+  width: min(calc(32rem * var(--balance-scale, 1)), 100%);
   background: var(--balance-status-background, rgba(14, 18, 40, 0.55));
   border: 1px solid var(--balance-status-border, rgba(120, 150, 230, 0.15));
   box-shadow: inset 0 0 0 1px rgba(80, 110, 200, 0.08);
   transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
   cursor: pointer;
   color: var(--balance-status-color, inherit);
-  gap: 0.35rem;
+  gap: calc(0.35rem * var(--balance-scale, 1));
 }
 
 .balance-status:not([disabled]):not([aria-disabled="true"]):hover {
@@ -695,10 +708,10 @@ body.theme-aurora .page--balance {
 .balance-inventory__list {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.8rem;
+  gap: calc(0.8rem * var(--balance-scale, 1));
   align-items: flex-start;
   justify-content: center;
-  min-height: 3.5rem;
+  min-height: calc(3.5rem * var(--balance-scale, 1));
   touch-action: none;
 }
 
@@ -710,8 +723,8 @@ body.theme-aurora .page--balance {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: clamp(2.6rem, 4vw, 3.15rem);
-  border-radius: clamp(0.85rem, 1.6vw, 1.4rem);
+  height: calc(clamp(2.6rem, 4vw, 3.15rem) * var(--balance-scale, 1));
+  border-radius: calc(clamp(0.85rem, 1.6vw, 1.4rem) * var(--balance-scale, 1));
   color: var(--balance-cube-color, #f8fbff);
   background: var(--balance-cube-background, linear-gradient(140deg, rgba(120, 170, 255, 0.92), rgba(74, 118, 248, 0.9)));
   box-shadow:
@@ -720,7 +733,7 @@ body.theme-aurora .page--balance {
   cursor: grab;
   user-select: none;
   touch-action: none;
-  padding: 0.25rem;
+  padding: calc(0.25rem * var(--balance-scale, 1));
   font-weight: 600;
   letter-spacing: 0.03em;
   transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
@@ -733,7 +746,11 @@ body.theme-aurora .page--balance {
 
 .balance-cube--inventory {
   position: relative;
-  width: clamp(3.2rem, calc(var(--cube-width-ratio) * 14rem), 6.5rem);
+  width: clamp(
+    calc(3.2rem * var(--balance-scale, 1)),
+    calc(var(--cube-width-ratio) * 14rem * var(--balance-scale, 1)),
+    calc(6.5rem * var(--balance-scale, 1))
+  );
 }
 
 .balance-cube--board {
@@ -758,10 +775,10 @@ body.theme-aurora .page--balance {
 
 .balance-cube__label {
   position: absolute;
-  bottom: -1.1rem;
+  bottom: calc(-1.1rem * var(--balance-scale, 1));
   left: 50%;
   transform: translateX(-50%);
-  font-size: 0.75rem;
+  font-size: calc(0.75rem * var(--balance-scale, 1));
   letter-spacing: 0.02em;
   opacity: 0.75;
 }
@@ -813,12 +830,12 @@ body.theme-aurora.view-balance {
 
 .balance-stage--tilt-left .balance-board-shadow,
 .balance-stage--tilt-right .balance-board-shadow {
-  transform: translateY(calc(var(--balance-pivot-height) * 0.2)) scaleX(1.05);
+  transform: translateY(calc(var(--balance-pivot-height) * var(--balance-scale, 1) * 0.2)) scaleX(1.05);
   opacity: 0.7;
 }
 
 .balance-stage--balanced .balance-board-shadow {
-  transform: translateY(calc(var(--balance-pivot-height) * 0.12)) scaleX(0.95);
+  transform: translateY(calc(var(--balance-pivot-height) * var(--balance-scale, 1) * 0.12)) scaleX(0.95);
   opacity: 0.72;
 }
 
@@ -831,13 +848,13 @@ body.theme-aurora.view-balance {
 }
 
 .balance-cube__weight {
-  font-size: clamp(1rem, 1.65vw, 1.35rem);
+  font-size: calc(clamp(1rem, 1.65vw, 1.35rem) * var(--balance-scale, 1));
   text-shadow: 0 0 6px rgba(10, 10, 20, 0.5);
 }
 
 .balance-inventory__list:empty::after {
   content: attr(data-empty-text);
-  font-size: 0.85rem;
+  font-size: calc(0.85rem * var(--balance-scale, 1));
   opacity: 0.7;
 }
 

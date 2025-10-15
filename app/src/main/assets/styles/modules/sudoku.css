@@ -1,4 +1,5 @@
 .page--sudoku {
+  --sudoku-scale: var(--ui-control-scale, 1);
   --sudoku-surface-background: rgba(8, 11, 19, 0.6);
   --sudoku-surface-border: rgba(255, 255, 255, 0.12);
   --sudoku-surface-shadow: 0 24px 60px rgba(5, 12, 38, 0.45);
@@ -53,7 +54,9 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: clamp(1.5rem, 3vw, 3rem) var(--page-padding-x, clamp(1rem, 4vw, 3rem));
+  padding:
+    calc(clamp(1.5rem, 3vw, 3rem) * var(--sudoku-scale, 1))
+    var(--page-padding-x, clamp(1rem, 4vw, 3rem));
 }
 
 .page--sudoku.active {
@@ -221,11 +224,11 @@ body.theme-aurora .page--sudoku {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: clamp(1rem, 2vw, 1.8rem);
+  gap: calc(clamp(1rem, 2vw, 1.8rem) * var(--sudoku-scale, 1));
   background: var(--sudoku-surface-background, rgba(8, 11, 19, 0.6));
   border: 1px solid var(--sudoku-surface-border, rgba(255, 255, 255, 0.12));
-  border-radius: 18px;
-  padding: clamp(1.4rem, 3vw, 2.4rem);
+  border-radius: calc(18px * var(--sudoku-scale, 1));
+  padding: calc(clamp(1.4rem, 3vw, 2.4rem) * var(--sudoku-scale, 1));
   box-shadow: var(--sudoku-surface-shadow, 0 24px 60px rgba(5, 12, 38, 0.45));
   backdrop-filter: blur(18px);
   color: var(--sudoku-surface-color, inherit);
@@ -323,14 +326,16 @@ body.theme-aurora .page--sudoku {
 
 .sudoku-status {
   margin-left: auto;
-  padding: 0.45rem 0.75rem;
-  border-radius: 0.75rem;
-  font-size: 0.9rem;
+  padding:
+    calc(0.45rem * var(--sudoku-scale, 1))
+    calc(0.75rem * var(--sudoku-scale, 1));
+  border-radius: calc(0.75rem * var(--sudoku-scale, 1));
+  font-size: calc(0.9rem * var(--sudoku-scale, 1));
   background: var(--sudoku-status-background, rgba(30, 42, 82, 0.6));
   border: 1px solid var(--sudoku-status-border, rgba(255, 255, 255, 0.12));
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: calc(0.5rem * var(--sudoku-scale, 1));
   color: var(--sudoku-status-color, inherit);
 }
 
@@ -394,11 +399,11 @@ body.theme-aurora .page--sudoku {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(1.2rem, 2.2vw, 2rem);
+  gap: calc(clamp(1.2rem, 2.2vw, 2rem) * var(--sudoku-scale, 1));
 }
 
 :root {
-  --sudoku-cell-size: clamp(2.3rem, 5vw, 2.85rem);
+  --sudoku-cell-size: calc(clamp(2.3rem, 5vw, 2.85rem) * var(--sudoku-scale, 1));
   --sudoku-cell-border: 2px;
   --sudoku-subgrid-border: 6px;
   --sudoku-grid-border: var(--sudoku-subgrid-border);
@@ -420,32 +425,35 @@ body.theme-aurora .page--sudoku {
 .sudoku-pad {
   display: grid;
   width: min(100%, 420px);
-  gap: clamp(0.6rem, 1.4vw, 0.9rem);
+  gap: calc(clamp(0.6rem, 1.4vw, 0.9rem) * var(--sudoku-scale, 1));
   align-self: center;
 }
 
 .sudoku-pad__actions {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(0.6rem, 1.4vw, 0.9rem);
+  gap: calc(clamp(0.6rem, 1.4vw, 0.9rem) * var(--sudoku-scale, 1));
 }
 
 .sudoku-pad__numbers {
   display: grid;
-  grid-template-columns: repeat(3, minmax(3rem, 1fr));
-  gap: clamp(0.6rem, 1.4vw, 0.9rem);
+  grid-template-columns: repeat(
+    3,
+    minmax(calc(3rem * var(--sudoku-scale, 1)), 1fr)
+  );
+  gap: calc(clamp(0.6rem, 1.4vw, 0.9rem) * var(--sudoku-scale, 1));
 }
 
 .sudoku-pad__button {
   appearance: none;
   border: 1px solid var(--sudoku-pad-button-border, rgba(255, 255, 255, 0.14));
   background: var(--sudoku-pad-button-background, rgba(255, 255, 255, 0.08));
-  border-radius: 16px;
+  border-radius: calc(16px * var(--sudoku-scale, 1));
   color: var(--sudoku-pad-button-color, inherit);
   font: inherit;
   font-weight: 700;
-  font-size: clamp(1.1rem, 2vw, 1.35rem);
-  min-height: clamp(3rem, 9vw, 3.6rem);
+  font-size: calc(clamp(1.1rem, 2vw, 1.35rem) * var(--sudoku-scale, 1));
+  min-height: calc(clamp(3rem, 9vw, 3.6rem) * var(--sudoku-scale, 1));
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -455,7 +463,7 @@ body.theme-aurora .page--sudoku {
 }
 
 .sudoku-pad__button--action {
-  font-size: clamp(1rem, 1.8vw, 1.25rem);
+  font-size: calc(clamp(1rem, 1.8vw, 1.25rem) * var(--sudoku-scale, 1));
   font-weight: 700;
   font-family: inherit;
 }
@@ -507,7 +515,7 @@ body.theme-aurora .page--sudoku {
   background: transparent;
   color: inherit;
   text-align: center;
-  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  font-size: calc(clamp(1.2rem, 3vw, 1.8rem) * var(--sudoku-scale, 1));
   font-weight: 700;
   font-family: var(--font-digits-compact, 'Orbitron', monospace);
   text-transform: uppercase;
@@ -553,7 +561,7 @@ body.theme-aurora .page--sudoku {
     flex-direction: row;
     align-items: stretch;
     justify-content: center;
-    gap: clamp(2rem, 4vw, 3rem);
+    gap: calc(clamp(2rem, 4vw, 3rem) * var(--sudoku-scale, 1));
   }
 
   .sudoku-pad {
@@ -563,7 +571,7 @@ body.theme-aurora .page--sudoku {
   }
 
   .sudoku-pad__numbers {
-    grid-auto-rows: minmax(3rem, 1fr);
+    grid-auto-rows: minmax(calc(3rem * var(--sudoku-scale, 1)), 1fr);
   }
 }
 
@@ -573,13 +581,13 @@ body.theme-aurora .page--sudoku {
   }
 
   .sudoku-main {
-    gap: clamp(1.4rem, 3vw, 2.2rem);
+    gap: calc(clamp(1.4rem, 3vw, 2.2rem) * var(--sudoku-scale, 1));
   }
 
   .sudoku-grid {
     --sudoku-cell-size: min(
-      clamp(2rem, 4.8vw, 2.45rem),
-      clamp(1.8rem, 7vh, 2.2rem)
+      calc(clamp(2rem, 4.8vw, 2.45rem) * var(--sudoku-scale, 1)),
+      calc(clamp(1.8rem, 7vh, 2.2rem) * var(--sudoku-scale, 1))
     );
   }
 
@@ -588,27 +596,30 @@ body.theme-aurora .page--sudoku {
   }
 
   .sudoku-pad__numbers {
-    grid-auto-rows: minmax(clamp(2.2rem, 9vh, 2.8rem), 1fr);
+    grid-auto-rows: minmax(
+      calc(clamp(2.2rem, 9vh, 2.8rem) * var(--sudoku-scale, 1)),
+      1fr
+    );
   }
 
   .sudoku-pad__button {
-    min-height: clamp(2.4rem, 10vh, 3.1rem);
-    font-size: clamp(0.95rem, 2.2vh, 1.2rem);
+    min-height: calc(clamp(2.4rem, 10vh, 3.1rem) * var(--sudoku-scale, 1));
+    font-size: calc(clamp(0.95rem, 2.2vh, 1.2rem) * var(--sudoku-scale, 1));
   }
 
   .sudoku-pad__button--action {
-    font-size: clamp(0.9rem, 2vh, 1.1rem);
+    font-size: calc(clamp(0.9rem, 2vh, 1.1rem) * var(--sudoku-scale, 1));
   }
 }
 
 @media (max-width: 640px) {
   .sudoku-content {
-    padding: clamp(1rem, 4vw, 1.6rem);
-    border-radius: 16px;
+    padding: calc(clamp(1rem, 4vw, 1.6rem) * var(--sudoku-scale, 1));
+    border-radius: calc(16px * var(--sudoku-scale, 1));
   }
 
   .sudoku-main {
-    gap: clamp(1rem, 4vw, 1.4rem);
+    gap: calc(clamp(1rem, 4vw, 1.4rem) * var(--sudoku-scale, 1));
   }
 
   .sudoku-pad {
@@ -616,7 +627,7 @@ body.theme-aurora .page--sudoku {
   }
 
   .sudoku-grid {
-    --sudoku-cell-size: clamp(2.15rem, 8vw, 2.6rem);
+    --sudoku-cell-size: calc(clamp(2.15rem, 8vw, 2.6rem) * var(--sudoku-scale, 1));
   }
 
   .sudoku-toolbar__label {
