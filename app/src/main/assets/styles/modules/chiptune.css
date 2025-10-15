@@ -910,6 +910,10 @@ body.theme-aurora .midi-keyboard__range-value {
   grid-auto-flow: column;
   grid-auto-columns: minmax(0, 1fr);
   gap: 0.4rem;
+  touch-action: none;
+  -ms-touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .midi-keyboard__instrument--mini {
@@ -969,6 +973,13 @@ body.theme-aurora .midi-keyboard__range-value {
   text-transform: uppercase;
   cursor: pointer;
   transition: transform var(--transition), box-shadow var(--transition), filter var(--transition);
+  touch-action: none;
+  -ms-touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .midi-key--white {
