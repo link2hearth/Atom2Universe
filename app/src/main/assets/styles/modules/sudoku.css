@@ -490,6 +490,15 @@ body.theme-aurora .page--sudoku {
   transition: background 0.2s ease, box-shadow 0.2s ease;
 }
 
+.sudoku-cell::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  pointer-events: none;
+  transition: background 0.2s ease;
+}
+
 .sudoku-cell[data-r="2"],
 .sudoku-cell[data-r="5"] {
   border-bottom: var(--sudoku-subgrid-border) solid var(--sudoku-subgrid-color);
@@ -517,6 +526,18 @@ body.theme-aurora .page--sudoku {
   outline: 3px solid var(--sudoku-cell-focus-outline, rgba(0, 173, 140, 0.55));
   outline-offset: -3px;
   background: var(--sudoku-cell-focus-background, rgba(0, 173, 140, 0.2));
+}
+
+.sudoku-cell.is-highlighted-related::after {
+  background: var(--sudoku-cell-highlight-related, rgba(0, 173, 140, 0.18));
+}
+
+.sudoku-cell.is-highlighted-same::after {
+  background: var(--sudoku-cell-highlight-same, rgba(0, 173, 140, 0.32));
+}
+
+.sudoku-cell.is-highlighted-origin::after {
+  background: var(--sudoku-cell-highlight-origin, rgba(0, 173, 140, 0.45));
 }
 
 .sudoku-cell.fixed {

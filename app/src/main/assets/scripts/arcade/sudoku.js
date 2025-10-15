@@ -446,6 +446,7 @@
 
     let activeInput = null;
     let selectedPadValue = null;
+    let highlightedCell = null;
 
     let currentFixedMask = createEmptyBoard().map(row => row.map(() => false));
     let solutionBoard = createEmptyBoard();
@@ -813,12 +814,103 @@
       checkButton.disabled = isEasyLevel;
     }
 
+    function clearSelectionHighlights() {
+      highlightedCell = null;
+      gridElement.querySelectorAll('.sudoku-cell').forEach(cell => {
+        cell.classList.remove(
+          'is-highlighted-related',
+          'is-highlighted-same',
+          'is-highlighted-origin'
+        );
+      });
+    }
+
+    function highlightSelection(cell) {
+      if (!cell || !gridElement.contains(cell)) {
+        clearSelectionHighlights();
+        return;
+      }
+
+      const input = cell.querySelector('input');
+      const value = input ? input.value.trim() : '';
+      clearSelectionHighlights();
+
+      if (!value) {
+        return;
+      }
+
+      const row = Number(cell.dataset.r);
+      const col = Number(cell.dataset.c);
+      if (!Number.isInteger(row) || !Number.isInteger(col)) {
+        return;
+      }
+
+      highlightedCell = cell;
+      const blockRow = Math.floor(row / 3);
+      const blockCol = Math.floor(col / 3);
+
+      gridElement.querySelectorAll('.sudoku-cell').forEach(otherCell => {
+        const otherRow = Number(otherCell.dataset.r);
+        const otherCol = Number(otherCell.dataset.c);
+        const otherInput = otherCell.querySelector('input');
+        const otherValue = otherInput ? otherInput.value.trim() : '';
+
+        if (
+          Number.isInteger(otherRow)
+          && Number.isInteger(otherCol)
+          && (
+            otherRow === row
+            || otherCol === col
+            || (Math.floor(otherRow / 3) === blockRow && Math.floor(otherCol / 3) === blockCol)
+          )
+        ) {
+          otherCell.classList.add('is-highlighted-related');
+        }
+
+        if (otherValue && otherValue === value) {
+          otherCell.classList.add('is-highlighted-same');
+        }
+      });
+
+      cell.classList.add('is-highlighted-origin');
+    }
+
+    function refreshSelectionHighlights() {
+      if (!highlightedCell) {
+        return;
+      }
+      highlightSelection(highlightedCell);
+    }
+
+    function highlightPadSelection() {
+      if (highlightedCell) {
+        refreshSelectionHighlights();
+        return;
+      }
+
+      clearSelectionHighlights();
+
+      if (!selectedPadValue) {
+        return;
+      }
+
+      gridElement.querySelectorAll('.sudoku-cell').forEach(cell => {
+        const input = cell.querySelector('input');
+        const value = input ? input.value.trim() : '';
+        if (value && value === selectedPadValue) {
+          cell.classList.add('is-highlighted-same');
+        }
+      });
+    }
+
     function clearHighlights() {
       gridElement.querySelectorAll('.sudoku-cell').forEach(cell => {
         cell.classList.remove('error', 'ok');
       });
+      clearSelectionHighlights();
       lastConflictSet = new Set();
       lastConflictCount = 0;
+      highlightPadSelection();
     }
 
     function refreshMistakeVisibility() {
@@ -1009,6 +1101,7 @@
 
     function loadBoardToGrid(board, fixedMask) {
       gridElement.innerHTML = '';
+      clearSelectionHighlights();
       activeInput = null;
       currentFixedMask = fixedMask
         ? fixedMask.map(row => row.slice())
@@ -1054,6 +1147,9 @@
               refreshStatus();
             }
             scheduleAutosave();
+            if (highlightedCell && highlightedCell.contains(event.target)) {
+              refreshSelectionHighlights();
+            }
           });
           input.addEventListener('focus', () => {
             cell.classList.remove('error', 'ok');
@@ -1065,6 +1161,7 @@
 
       const { workingBoard } = updateMistakeHighlights(board);
       updateConflictState(workingBoard);
+      highlightPadSelection();
     }
 
     function updatePadSelection() {
@@ -1077,6 +1174,7 @@
       if (selectedPadValue !== null) {
         selectedPadValue = null;
         updatePadSelection();
+        highlightPadSelection();
       }
     }
 
@@ -1226,6 +1324,7 @@
         const isSameSelection = selectedPadValue === value;
         selectedPadValue = isSameSelection ? null : value;
         updatePadSelection();
+        highlightPadSelection();
         const appliedValue = isSameSelection ? value : selectedPadValue;
         if (activeInput) {
           activeInput.focus();
@@ -1238,6 +1337,10 @@
       if (event.target instanceof HTMLInputElement && event.target.dataset.fixed !== 'true') {
         activeInput = event.target;
       }
+      const cell = event.target.closest('.sudoku-cell');
+      if (cell) {
+        highlightSelection(cell);
+      }
     });
 
     gridElement.addEventListener('focusout', event => {
@@ -1249,6 +1352,8 @@
 
         if (!staysInInteractionZone) {
           activeInput = null;
+          clearSelectionHighlights();
+          highlightPadSelection();
         }
       }
     });
@@ -1259,12 +1364,24 @@
         return;
       }
       const input = cell.querySelector('input');
+      highlightSelection(cell);
       if (!input || input.dataset.fixed === 'true') {
+        activeInput = null;
         return;
       }
       input.focus();
       activeInput = input;
       applySelectionToInput(input, selectedPadValue);
+    });
+
+    document.addEventListener('click', event => {
+      if (
+        !gridElement.contains(event.target)
+        && !padElement.contains(event.target)
+      ) {
+        clearSelectionHighlights();
+        highlightPadSelection();
+      }
     });
 
     checkButton.addEventListener('click', () => {
