@@ -24,6 +24,21 @@ const FALLBACK_TROPHIES = Array.isArray(APP_DATA.FALLBACK_TROPHIES)
 
 const SHOP_UNLOCK_THRESHOLD = new LayeredNumber(15);
 
+const STARTUP_FADE_DURATION_MS = typeof globalThis !== 'undefined'
+  && typeof globalThis.STARTUP_FADE_DURATION_MS === 'number'
+  ? globalThis.STARTUP_FADE_DURATION_MS
+  : 2000;
+
+const BACKGROUND_RELOAD_THRESHOLD_MS = typeof globalThis !== 'undefined'
+  && typeof globalThis.BACKGROUND_RELOAD_THRESHOLD_MS === 'number'
+  ? globalThis.BACKGROUND_RELOAD_THRESHOLD_MS
+  : 30 * 60 * 1000;
+
+const BACKGROUND_RELOAD_OVERLAY_LEAD_MS = typeof globalThis !== 'undefined'
+  && typeof globalThis.BACKGROUND_RELOAD_OVERLAY_LEAD_MS === 'number'
+  ? globalThis.BACKGROUND_RELOAD_OVERLAY_LEAD_MS
+  : 250;
+
 const MUSIC_SUPPORTED_EXTENSIONS = Array.isArray(APP_DATA.MUSIC_SUPPORTED_EXTENSIONS)
   && APP_DATA.MUSIC_SUPPORTED_EXTENSIONS.length
     ? [...APP_DATA.MUSIC_SUPPORTED_EXTENSIONS]
@@ -3786,6 +3801,37 @@ function evaluateTrophies() {
 
 let elements = {};
 
+let pageHiddenAt = null;
+let backgroundReloadScheduled = false;
+let overlayFadeFallbackTimeout = null;
+let startupOverlayFailsafeTimeout = null;
+let visibilityChangeListenerAttached = false;
+
+function clearStartupOverlayFailsafe() {
+  if (startupOverlayFailsafeTimeout != null) {
+    clearTimeout(startupOverlayFailsafeTimeout);
+    startupOverlayFailsafeTimeout = null;
+  }
+}
+
+function scheduleStartupOverlayFailsafe() {
+  if (startupOverlayFailsafeTimeout != null) {
+    return;
+  }
+
+  const fadeDuration = typeof STARTUP_FADE_DURATION_MS === 'number'
+    ? Math.max(0, STARTUP_FADE_DURATION_MS)
+    : 0;
+  const bufferDuration = Math.max(2000, fadeDuration);
+  const failsafeDelay = fadeDuration + bufferDuration;
+
+  startupOverlayFailsafeTimeout = setTimeout(() => {
+    startupOverlayFailsafeTimeout = null;
+    console.warn('Startup overlay failsafe triggered');
+    hideStartupOverlay({ instant: true });
+  }, failsafeDelay);
+}
+
 const RESET_DIALOG_FOCUSABLE_SELECTOR = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
 const resetDialogState = {
@@ -4032,6 +4078,7 @@ function handleResetPromptFallback() {
 
 function collectDomElements() {
   return {
+    startupOverlay: document.getElementById('startupOverlay'),
     appHeader: document.querySelector('.app-header'),
     pageContainer: document.getElementById('pageContainer'),
     brandPortal: document.getElementById('brandPortal'),
@@ -4277,6 +4324,142 @@ function collectDomElements() {
   devkitToggleShop: document.getElementById('devkitToggleShop'),
   devkitToggleGacha: document.getElementById('devkitToggleGacha')
   };
+}
+
+function applyStartupOverlayDuration() {
+  if (typeof document === 'undefined') {
+    return;
+  }
+
+  const root = document.documentElement;
+  if (!root || !root.style || typeof root.style.setProperty !== 'function') {
+    return;
+  }
+
+  const normalizedDuration = typeof STARTUP_FADE_DURATION_MS === 'number'
+    ? Math.max(0, STARTUP_FADE_DURATION_MS)
+    : 0;
+
+  root.style.setProperty('--startup-fade-duration', `${normalizedDuration}ms`);
+}
+
+function showStartupOverlay(options = {}) {
+  const overlay = elements && elements.startupOverlay ? elements.startupOverlay : null;
+  if (!overlay) {
+    return;
+  }
+
+  if (overlayFadeFallbackTimeout != null) {
+    clearTimeout(overlayFadeFallbackTimeout);
+    overlayFadeFallbackTimeout = null;
+  }
+
+  overlay.removeAttribute('hidden');
+
+  const instant = options && options.instant === true;
+  if (instant) {
+    overlay.style.transitionDuration = '0ms';
+  }
+
+  if (!overlay.classList.contains('startup-overlay--visible')) {
+    overlay.classList.add('startup-overlay--visible');
+  }
+
+  if (instant) {
+    requestAnimationFrame(() => {
+      overlay.style.transitionDuration = '';
+    });
+  }
+}
+
+function hideStartupOverlay(options = {}) {
+  const overlay = elements && elements.startupOverlay ? elements.startupOverlay : null;
+  if (!overlay) {
+    clearStartupOverlayFailsafe();
+    return;
+  }
+
+  const delayMs = options && typeof options.delayMs === 'number' && options.delayMs > 0
+    ? options.delayMs
+    : 0;
+
+  clearStartupOverlayFailsafe();
+
+  const startFade = () => {
+    if (!overlay.classList.contains('startup-overlay--visible')) {
+      overlay.setAttribute('hidden', '');
+      return;
+    }
+
+    const finalize = () => {
+      if (overlayFadeFallbackTimeout != null) {
+        clearTimeout(overlayFadeFallbackTimeout);
+        overlayFadeFallbackTimeout = null;
+      }
+      overlay.setAttribute('hidden', '');
+    };
+
+    overlay.addEventListener('transitionend', finalize, { once: true });
+    overlay.classList.remove('startup-overlay--visible');
+
+    const fallbackDelay = typeof STARTUP_FADE_DURATION_MS === 'number'
+      ? Math.max(0, STARTUP_FADE_DURATION_MS)
+      : 0;
+
+    overlayFadeFallbackTimeout = setTimeout(() => {
+      overlay.removeEventListener('transitionend', finalize);
+      finalize();
+    }, fallbackDelay + 60);
+
+    if (overlay.style.transitionDuration === '0ms') {
+      overlay.style.transitionDuration = '';
+    }
+  };
+
+  if (delayMs > 0) {
+    setTimeout(startFade, delayMs);
+  } else {
+    requestAnimationFrame(startFade);
+  }
+}
+
+function handleVisibilityChange() {
+  if (typeof document === 'undefined') {
+    return;
+  }
+
+  const isHidden = document.visibilityState
+    ? document.visibilityState === 'hidden'
+    : document.hidden === true;
+
+  if (isHidden) {
+    pageHiddenAt = Date.now();
+    backgroundReloadScheduled = false;
+    return;
+  }
+
+  const hiddenSince = pageHiddenAt;
+  pageHiddenAt = null;
+
+  if (backgroundReloadScheduled || hiddenSince == null) {
+    return;
+  }
+
+  const hiddenDuration = Date.now() - hiddenSince;
+  if (hiddenDuration < BACKGROUND_RELOAD_THRESHOLD_MS) {
+    return;
+  }
+
+  backgroundReloadScheduled = true;
+  showStartupOverlay({ instant: true });
+
+  const leadTime = typeof BACKGROUND_RELOAD_OVERLAY_LEAD_MS === 'number'
+    ? Math.max(0, BACKGROUND_RELOAD_OVERLAY_LEAD_MS)
+    : 0;
+
+  setTimeout(() => {
+    window.location.reload();
+  }, leadTime);
 }
 
 function getOptionsWelcomeCardCopy() {
@@ -13830,6 +14013,16 @@ function startApp() {
   initStarfield();
   scheduleAutoUiScaleUpdate({ immediate: true });
   startGameLoop();
+  hideStartupOverlay();
+}
+
+function safelyStartApp() {
+  try {
+    startApp();
+  } catch (error) {
+    console.error('Unable to start the application', error);
+    hideStartupOverlay({ instant: true });
+  }
 }
 
 function initializeDomBoundModules() {
@@ -13861,6 +14054,12 @@ function initializeDomBoundModules() {
 
 function initializeApp() {
   elements = collectDomElements();
+  applyStartupOverlayDuration();
+  scheduleStartupOverlayFailsafe();
+  if (!visibilityChangeListenerAttached) {
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    visibilityChangeListenerAttached = true;
+  }
   applyActivePageScrollBehavior(document.querySelector('.page.active'));
   initializeDomBoundModules();
   populateLanguageSelectOptions();
@@ -13884,17 +14083,26 @@ function initializeApp() {
           i18n.updateTranslations(document);
         }
         updateLanguageSelectorValue(i18n.getCurrentLanguage ? i18n.getCurrentLanguage() : preferredLanguage);
-        startApp();
+        safelyStartApp();
       });
     return;
   }
   updateLanguageSelectorValue(getInitialLanguagePreference());
-  startApp();
+  safelyStartApp();
+}
+
+function bootApplication() {
+  try {
+    initializeApp();
+  } catch (error) {
+    console.error('Unable to initialize the application', error);
+    hideStartupOverlay({ instant: true });
+  }
 }
 
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initializeApp, { once: true });
+  document.addEventListener('DOMContentLoaded', bootApplication, { once: true });
 } else {
-  initializeApp();
+  bootApplication();
 }
 
