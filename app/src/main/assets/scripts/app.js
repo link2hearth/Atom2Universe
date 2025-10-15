@@ -24,20 +24,9 @@ const FALLBACK_TROPHIES = Array.isArray(APP_DATA.FALLBACK_TROPHIES)
 
 const SHOP_UNLOCK_THRESHOLD = new LayeredNumber(15);
 
-const STARTUP_FADE_DURATION_MS = typeof globalThis !== 'undefined'
-  && typeof globalThis.STARTUP_FADE_DURATION_MS === 'number'
-  ? globalThis.STARTUP_FADE_DURATION_MS
-  : 2000;
-
-const BACKGROUND_RELOAD_THRESHOLD_MS = typeof globalThis !== 'undefined'
-  && typeof globalThis.BACKGROUND_RELOAD_THRESHOLD_MS === 'number'
-  ? globalThis.BACKGROUND_RELOAD_THRESHOLD_MS
-  : 30 * 60 * 1000;
-
-const BACKGROUND_RELOAD_OVERLAY_LEAD_MS = typeof globalThis !== 'undefined'
-  && typeof globalThis.BACKGROUND_RELOAD_OVERLAY_LEAD_MS === 'number'
-  ? globalThis.BACKGROUND_RELOAD_OVERLAY_LEAD_MS
-  : 250;
+const DEFAULT_STARTUP_FADE_DURATION_MS = 2000;
+const DEFAULT_BACKGROUND_RELOAD_THRESHOLD_MS = 30 * 60 * 1000;
+const DEFAULT_BACKGROUND_RELOAD_OVERLAY_LEAD_MS = 250;
 
 const MUSIC_SUPPORTED_EXTENSIONS = Array.isArray(APP_DATA.MUSIC_SUPPORTED_EXTENSIONS)
   && APP_DATA.MUSIC_SUPPORTED_EXTENSIONS.length
@@ -3830,10 +3819,40 @@ function getStartupOverlayElement() {
   return overlay || null;
 }
 
+function resolveGlobalNumberOption(optionKey, fallback) {
+  if (typeof optionKey !== 'string' || !optionKey) {
+    return Number.isFinite(fallback) ? fallback : 0;
+  }
+  if (typeof globalThis !== 'undefined') {
+    const value = globalThis[optionKey];
+    if (typeof value === 'number' && Number.isFinite(value)) {
+      return value;
+    }
+  }
+  return Number.isFinite(fallback) ? fallback : 0;
+}
+
+function getConfiguredStartupFadeDurationMs() {
+  return resolveGlobalNumberOption('STARTUP_FADE_DURATION_MS', DEFAULT_STARTUP_FADE_DURATION_MS);
+}
+
+function getConfiguredBackgroundReloadThresholdMs() {
+  return resolveGlobalNumberOption(
+    'BACKGROUND_RELOAD_THRESHOLD_MS',
+    DEFAULT_BACKGROUND_RELOAD_THRESHOLD_MS
+  );
+}
+
+function getConfiguredBackgroundReloadLeadMs() {
+  return resolveGlobalNumberOption(
+    'BACKGROUND_RELOAD_OVERLAY_LEAD_MS',
+    DEFAULT_BACKGROUND_RELOAD_OVERLAY_LEAD_MS
+  );
+}
+
 function getNormalizedStartupFadeDuration() {
-  return typeof STARTUP_FADE_DURATION_MS === 'number'
-    ? Math.max(0, STARTUP_FADE_DURATION_MS)
-    : 0;
+  const configuredValue = getConfiguredStartupFadeDurationMs();
+  return Math.max(0, Number.isFinite(configuredValue) ? configuredValue : 0);
 }
 
 function getStartupOverlaySafetyDelay() {
@@ -4480,9 +4499,7 @@ function hideStartupOverlay(options = {}) {
     overlay.addEventListener('transitionend', finalize, { once: true });
     overlay.classList.remove('startup-overlay--visible');
 
-    const fallbackDelay = typeof STARTUP_FADE_DURATION_MS === 'number'
-      ? Math.max(0, STARTUP_FADE_DURATION_MS)
-      : 0;
+    const fallbackDelay = getNormalizedStartupFadeDuration();
 
     overlayFadeFallbackTimeout = setTimeout(() => {
       overlay.removeEventListener('transitionend', finalize);
@@ -4524,16 +4541,15 @@ function handleVisibilityChange() {
   }
 
   const hiddenDuration = Date.now() - hiddenSince;
-  if (hiddenDuration < BACKGROUND_RELOAD_THRESHOLD_MS) {
+  const backgroundReloadThreshold = Math.max(0, getConfiguredBackgroundReloadThresholdMs());
+  if (hiddenDuration < backgroundReloadThreshold) {
     return;
   }
 
   backgroundReloadScheduled = true;
   showStartupOverlay({ instant: true });
 
-  const leadTime = typeof BACKGROUND_RELOAD_OVERLAY_LEAD_MS === 'number'
-    ? Math.max(0, BACKGROUND_RELOAD_OVERLAY_LEAD_MS)
-    : 0;
+  const leadTime = Math.max(0, getConfiguredBackgroundReloadLeadMs());
 
   setTimeout(() => {
     window.location.reload();
