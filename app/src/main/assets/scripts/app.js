@@ -9881,6 +9881,9 @@ if (typeof window !== 'undefined' && typeof window.addEventListener === 'functio
   window.addEventListener('focus', () => {
     applyActivePageScrollBehavior();
   }, passiveEventListenerOptions);
+  window.addEventListener('atom2univers:scroll-reset', () => {
+    applyActivePageScrollBehavior();
+  });
   ['touchend', 'touchcancel'].forEach(eventName => {
     window.addEventListener(eventName, handleGlobalTouchCompletion, passiveEventListenerOptions);
   });
