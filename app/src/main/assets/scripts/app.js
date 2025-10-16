@@ -10810,13 +10810,13 @@ function bindDomEventListeners() {
   if (elements.brandPortal) {
     elements.brandPortal.addEventListener('click', () => {
       showPage('game');
-      scheduleManualGameReloadWithShortFade();
     });
   }
 
   if (elements.statusAtomsButton) {
     elements.statusAtomsButton.addEventListener('click', () => {
       showPage('game');
+      scheduleManualGameReloadWithShortFade();
     });
   }
 
