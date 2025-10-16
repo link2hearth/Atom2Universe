@@ -6022,7 +6022,6 @@ function updateBrandPortalState(options = {}) {
   const justUnlocked = !wasUnlocked && unlocked;
   lastArcadeUnlockState = unlocked;
   if (elements.brandPortal) {
-    elements.brandPortal.disabled = !unlocked;
     elements.brandPortal.setAttribute('aria-disabled', unlocked ? 'false' : 'true');
     elements.brandPortal.classList.toggle('brand--locked', !unlocked);
     elements.brandPortal.classList.toggle('brand--portal-ready', unlocked);
