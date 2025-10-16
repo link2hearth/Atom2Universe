@@ -9898,87 +9898,9 @@ function handleManualAtomClick(options = {}) {
   });
 }
 
-const SCROLL_BEHAVIOR = Object.freeze({
-  DEFAULT: 'default',
-  FORCE: 'force',
-  LOCK: 'lock'
-});
-
-let activeScrollBehavior = SCROLL_BEHAVIOR.DEFAULT;
-
-function resolveScrollBehaviorFromPage(pageElement) {
-  if (!pageElement) {
-    return SCROLL_BEHAVIOR.DEFAULT;
-  }
-  const pageId = typeof pageElement.id === 'string' ? pageElement.id.trim() : '';
-  const rawBehavior = typeof pageElement.dataset?.scrollBehavior === 'string'
-    ? pageElement.dataset.scrollBehavior.trim().toLowerCase()
-    : '';
-  if (pageId === 'game') {
-    return rawBehavior === 'force' ? SCROLL_BEHAVIOR.FORCE : SCROLL_BEHAVIOR.DEFAULT;
-  }
-  if (rawBehavior === 'lock') {
-    return SCROLL_BEHAVIOR.LOCK;
-  }
-  if (rawBehavior === 'force') {
-    return SCROLL_BEHAVIOR.FORCE;
-  }
-  return SCROLL_BEHAVIOR.DEFAULT;
-}
-
-function applyScrollBehaviorToken(target, behavior) {
-  if (!target) {
-    return;
-  }
-  target.classList.remove('touch-scroll-lock', 'touch-scroll-force');
-  target.style.removeProperty('touch-action');
-  target.style.removeProperty('overscroll-behavior');
-
-  if (behavior === SCROLL_BEHAVIOR.LOCK) {
-    target.style.touchAction = 'none';
-    target.style.overscrollBehavior = 'none';
-    target.classList.add('touch-scroll-lock');
-  } else if (behavior === SCROLL_BEHAVIOR.FORCE) {
-    target.style.touchAction = 'auto';
-    target.style.overscrollBehavior = 'auto';
-    target.classList.add('touch-scroll-force');
-  }
-}
-
-function applyScrollBehaviorFromPage(pageElement) {
-  if (typeof document === 'undefined') {
-    return;
-  }
-  const behavior = resolveScrollBehaviorFromPage(pageElement);
-  const html = document.documentElement || null;
-  const body = document.body || null;
-  const pageContainer = elements?.pageContainer || null;
-
-  applyScrollBehaviorToken(html, behavior);
-  applyScrollBehaviorToken(body, behavior);
-  applyScrollBehaviorToken(pageContainer, behavior);
-
-  if (body) {
-    body.dataset.scrollBehavior = behavior;
-  }
-  activeScrollBehavior = behavior;
-}
-
-function applyActivePageScrollBehavior() {
-  if (typeof document === 'undefined') {
-    return;
-  }
-  const activePageId = document.body?.dataset?.activePage || '';
-  const activePageElement = activePageId
-    ? document.getElementById(activePageId)
-    : null;
-  applyScrollBehaviorFromPage(activePageElement);
-}
-
 if (typeof globalThis !== 'undefined') {
   globalThis.handleManualAtomClick = handleManualAtomClick;
   globalThis.isManualClickContextActive = isManualClickContextActive;
-  globalThis.applyActivePageScrollBehavior = applyActivePageScrollBehavior;
 }
 
 function shouldTriggerGlobalClick(event) {
@@ -9986,6 +9908,37 @@ function shouldTriggerGlobalClick(event) {
   if (event.target.closest('.app-header')) return false;
   if (event.target.closest('.status-bar')) return false;
   return true;
+}
+
+function applyScrollBehaviorFromPage(pageElement) {
+  if (typeof document === 'undefined') {
+    return;
+  }
+  const body = document.body;
+  if (!body) {
+    return;
+  }
+  const pageId = typeof pageElement?.id === 'string'
+    ? pageElement.id.trim()
+    : '';
+  const rawBehavior = typeof pageElement?.dataset?.scrollBehavior === 'string'
+    ? pageElement.dataset.scrollBehavior.trim().toLowerCase()
+    : '';
+  const normalizedBehavior = rawBehavior || 'force';
+  const shouldSkipLock = pageId === 'game';
+
+  body.style.removeProperty('touch-action');
+  body.style.removeProperty('overscroll-behavior');
+  body.classList.remove('touch-scroll-lock', 'touch-scroll-force');
+
+  if (!shouldSkipLock && normalizedBehavior === 'lock') {
+    body.classList.add('touch-scroll-lock');
+    return;
+  }
+
+  if (normalizedBehavior === 'force') {
+    body.classList.add('touch-scroll-force');
+  }
 }
 
 function showPage(pageId) {
@@ -10166,7 +10119,18 @@ document.addEventListener('visibilitychange', () => {
 
 if (typeof window !== 'undefined') {
   window.addEventListener('atom2univers:scroll-reset', () => {
-    applyActivePageScrollBehavior();
+    if (typeof document === 'undefined') {
+      return;
+    }
+    const body = document.body;
+    if (!body) {
+      return;
+    }
+    const activePageId = body.dataset?.activePage || '';
+    const activePageElement = activePageId
+      ? document.getElementById(activePageId)
+      : null;
+    applyScrollBehaviorFromPage(activePageElement);
   });
 }
 
