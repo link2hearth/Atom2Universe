@@ -9908,6 +9908,7 @@ let activeScrollBehavior = SCROLL_BEHAVIOR.DEFAULT;
 
 const globalTouchPointers = new Set();
 let isScrollBehaviorRefreshScheduled = false;
+let activeGlobalTouches = 0;
 
 function scheduleScrollBehaviorRefresh() {
   if (isScrollBehaviorRefreshScheduled) {
@@ -9941,6 +9942,43 @@ function trackGlobalTouchPointer(event, isActive) {
   }
   globalTouchPointers.delete(pointerId);
   if (globalTouchPointers.size === 0) {
+    scheduleScrollBehaviorRefresh();
+  }
+}
+
+function updateGlobalTouchCount(event, isStart) {
+  if (!event) {
+    return activeGlobalTouches;
+  }
+
+  const normalizedTouches = typeof event.touches?.length === 'number'
+    ? event.touches.length
+    : null;
+  if (normalizedTouches != null) {
+    activeGlobalTouches = Math.max(0, normalizedTouches);
+    return activeGlobalTouches;
+  }
+
+  const deltaTouches = typeof event.changedTouches?.length === 'number' && event.changedTouches.length > 0
+    ? event.changedTouches.length
+    : 1;
+
+  if (isStart) {
+    activeGlobalTouches = Math.max(0, activeGlobalTouches + deltaTouches);
+  } else {
+    activeGlobalTouches = Math.max(0, activeGlobalTouches - deltaTouches);
+  }
+
+  return activeGlobalTouches;
+}
+
+function noteGlobalTouchStart(event) {
+  updateGlobalTouchCount(event, true);
+}
+
+function noteGlobalTouchEnd(event) {
+  const remainingTouches = updateGlobalTouchCount(event, false);
+  if (remainingTouches === 0) {
     scheduleScrollBehaviorRefresh();
   }
 }
@@ -10210,14 +10248,22 @@ if (typeof window !== 'undefined') {
   const handleGlobalPointerUp = event => {
     trackGlobalTouchPointer(event, false);
   };
-  window.addEventListener('pointerdown', handleGlobalPointerDown, { passive: true });
+  window.addEventListener('pointerdown', handleGlobalPointerDown, { passive: true, capture: true });
   ['pointerup', 'pointercancel', 'pointerleave', 'pointerout'].forEach(eventName => {
-    window.addEventListener(eventName, handleGlobalPointerUp, { passive: true });
+    window.addEventListener(eventName, handleGlobalPointerUp, { passive: true, capture: true });
   });
+  window.addEventListener('touchstart', noteGlobalTouchStart, { passive: true, capture: true });
   ['touchend', 'touchcancel'].forEach(eventName => {
-    window.addEventListener(eventName, () => {
-      scheduleScrollBehaviorRefresh();
-    }, { passive: true });
+    window.addEventListener(eventName, noteGlobalTouchEnd, { passive: true, capture: true });
+  });
+  window.addEventListener('blur', () => {
+    if (globalTouchPointers.size > 0) {
+      globalTouchPointers.clear();
+    }
+    if (activeGlobalTouches > 0) {
+      activeGlobalTouches = 0;
+    }
+    scheduleScrollBehaviorRefresh();
   });
   window.addEventListener('atom2univers:scroll-reset', () => {
     applyActivePageScrollBehavior();
@@ -10226,9 +10272,15 @@ if (typeof window !== 'undefined') {
 
 if (typeof document !== 'undefined') {
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'hidden' && globalTouchPointers.size > 0) {
-      globalTouchPointers.clear();
-      scheduleScrollBehaviorRefresh();
+    if (document.visibilityState === 'hidden') {
+      if (globalTouchPointers.size > 0) {
+        globalTouchPointers.clear();
+        scheduleScrollBehaviorRefresh();
+      }
+      if (activeGlobalTouches > 0) {
+        activeGlobalTouches = 0;
+        scheduleScrollBehaviorRefresh();
+      }
     }
   });
 }
