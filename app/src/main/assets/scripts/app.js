@@ -9898,9 +9898,87 @@ function handleManualAtomClick(options = {}) {
   });
 }
 
+const SCROLL_BEHAVIOR = Object.freeze({
+  DEFAULT: 'default',
+  FORCE: 'force',
+  LOCK: 'lock'
+});
+
+let activeScrollBehavior = SCROLL_BEHAVIOR.DEFAULT;
+
+function resolveScrollBehaviorFromPage(pageElement) {
+  if (!pageElement) {
+    return SCROLL_BEHAVIOR.DEFAULT;
+  }
+  const pageId = typeof pageElement.id === 'string' ? pageElement.id.trim() : '';
+  const rawBehavior = typeof pageElement.dataset?.scrollBehavior === 'string'
+    ? pageElement.dataset.scrollBehavior.trim().toLowerCase()
+    : '';
+  if (pageId === 'game') {
+    return rawBehavior === 'force' ? SCROLL_BEHAVIOR.FORCE : SCROLL_BEHAVIOR.DEFAULT;
+  }
+  if (rawBehavior === 'lock') {
+    return SCROLL_BEHAVIOR.LOCK;
+  }
+  if (rawBehavior === 'force') {
+    return SCROLL_BEHAVIOR.FORCE;
+  }
+  return SCROLL_BEHAVIOR.DEFAULT;
+}
+
+function applyScrollBehaviorToken(target, behavior) {
+  if (!target) {
+    return;
+  }
+  target.classList.remove('touch-scroll-lock', 'touch-scroll-force');
+  target.style.removeProperty('touch-action');
+  target.style.removeProperty('overscroll-behavior');
+
+  if (behavior === SCROLL_BEHAVIOR.LOCK) {
+    target.style.touchAction = 'none';
+    target.style.overscrollBehavior = 'none';
+    target.classList.add('touch-scroll-lock');
+  } else if (behavior === SCROLL_BEHAVIOR.FORCE) {
+    target.style.touchAction = 'auto';
+    target.style.overscrollBehavior = 'auto';
+    target.classList.add('touch-scroll-force');
+  }
+}
+
+function applyScrollBehaviorFromPage(pageElement) {
+  if (typeof document === 'undefined') {
+    return;
+  }
+  const behavior = resolveScrollBehaviorFromPage(pageElement);
+  const html = document.documentElement || null;
+  const body = document.body || null;
+  const pageContainer = elements?.pageContainer || null;
+
+  applyScrollBehaviorToken(html, behavior);
+  applyScrollBehaviorToken(body, behavior);
+  applyScrollBehaviorToken(pageContainer, behavior);
+
+  if (body) {
+    body.dataset.scrollBehavior = behavior;
+  }
+  activeScrollBehavior = behavior;
+}
+
+function applyActivePageScrollBehavior() {
+  if (typeof document === 'undefined') {
+    return;
+  }
+  const activePageId = document.body?.dataset?.activePage || '';
+  const activePageElement = activePageId
+    ? document.getElementById(activePageId)
+    : null;
+  applyScrollBehaviorFromPage(activePageElement);
+}
+
 if (typeof globalThis !== 'undefined') {
   globalThis.handleManualAtomClick = handleManualAtomClick;
   globalThis.isManualClickContextActive = isManualClickContextActive;
+  globalThis.applyActivePageScrollBehavior = applyActivePageScrollBehavior;
 }
 
 function shouldTriggerGlobalClick(event) {
@@ -9956,6 +10034,7 @@ function showPage(pageId) {
   document.body.classList.toggle('view-quantum2048', pageId === 'quantum2048');
   document.body.classList.toggle('view-sudoku', pageId === 'sudoku');
   document.body.classList.toggle('view-game-of-life', pageId === 'gameOfLife');
+  applyScrollBehaviorFromPage(activePageElement);
   if (pageId === 'game') {
     randomizeAtomButtonImage();
   }
@@ -10084,6 +10163,12 @@ document.addEventListener('visibilitychange', () => {
     quantum2048Game?.onEnter();
   }
 });
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('atom2univers:scroll-reset', () => {
+    applyActivePageScrollBehavior();
+  });
+}
 
 function bindDomEventListeners() {
   const initiallyActivePage = document.querySelector('.page.active') || elements.pages[0];
