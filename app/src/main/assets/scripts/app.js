@@ -4642,27 +4642,95 @@ function performHardApplicationReload() {
   }
 
   const { location } = window;
+  const targetHref = location && typeof location.href === 'string' ? location.href : null;
+  let attempted = false;
+  let lastError = null;
 
-  try {
-    if (typeof location.replace === 'function') {
-      location.replace(location.href);
-      return;
+  const attempts = [
+    {
+      run() {
+        if (location && typeof location.replace === 'function' && targetHref) {
+          location.replace(targetHref);
+          return true;
+        }
+        return false;
+      },
+      onError(error) {
+        console.warn('Unable to replace location during manual reload, falling back', error);
+      }
+    },
+    {
+      run() {
+        if (location && typeof location.reload === 'function') {
+          location.reload();
+          return true;
+        }
+        return false;
+      },
+      onError(error) {
+        console.warn('Unable to reload application via window.location.reload during manual request', error);
+      }
+    },
+    {
+      run() {
+        if (location && typeof location.assign === 'function' && targetHref) {
+          location.assign(targetHref);
+          return true;
+        }
+        return false;
+      },
+      onError(error) {
+        console.warn('Unable to assign location during manual reload, falling back', error);
+      }
+    },
+    {
+      run() {
+        if (targetHref) {
+          window.location = targetHref;
+          return true;
+        }
+        return false;
+      },
+      onError(error) {
+        console.warn('Unable to set window.location during manual reload', error);
+      }
+    },
+    {
+      run() {
+        if (targetHref) {
+          window.location.href = targetHref;
+          return true;
+        }
+        return false;
+      },
+      onError(error) {
+        console.warn('Unable to set window.location.href during manual reload', error);
+      }
     }
-  } catch (error) {
-    console.warn('Unable to replace location during manual reload, falling back', error);
+  ];
+
+  attempts.forEach(step => {
+    try {
+      const succeeded = step.run();
+      if (succeeded) {
+        attempted = true;
+      }
+    } catch (error) {
+      lastError = error;
+      if (typeof step.onError === 'function') {
+        step.onError(error);
+      }
+    }
+  });
+
+  if (!attempted) {
+    if (lastError) {
+      throw lastError;
+    }
+    return false;
   }
 
-  if (typeof location.reload === 'function') {
-    location.reload();
-    return;
-  }
-
-  if (typeof location.assign === 'function') {
-    location.assign(location.href);
-    return;
-  }
-
-  throw new Error('No navigation method available to reload the application');
+  return true;
 }
 
 function scheduleManualGameReloadWithShortFade() {
@@ -4694,13 +4762,51 @@ function scheduleManualGameReloadWithShortFade() {
   scheduleStartupOverlayFailsafe();
 
   let reloadDispatched = false;
+  let reloadConfirmed = false;
+  let fallbackAttemptTimeoutId = null;
+  let finalizeTimeoutId = null;
+  const unloadEvents = ['pagehide', 'beforeunload'];
+  let unloadHandler = null;
 
-  const finalizePendingReload = () => {
-    if (reloadDispatched) {
+  function cleanupTimers() {
+    if (fallbackAttemptTimeoutId != null) {
+      clearTimeout(fallbackAttemptTimeoutId);
+      fallbackAttemptTimeoutId = null;
+    }
+    if (finalizeTimeoutId != null) {
+      clearTimeout(finalizeTimeoutId);
+      finalizeTimeoutId = null;
+    }
+  }
+
+  function cleanupUnloadListeners() {
+    if (!unloadHandler || typeof window === 'undefined' || typeof window.removeEventListener !== 'function') {
       return;
     }
+    unloadEvents.forEach(eventName => window.removeEventListener(eventName, unloadHandler));
+    unloadHandler = null;
+  }
+
+  function handleReloadSignal() {
+    reloadConfirmed = true;
+    cleanupTimers();
+    cleanupUnloadListeners();
+  }
+
+  if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+    unloadHandler = handleReloadSignal;
+    unloadEvents.forEach(eventName => window.addEventListener(eventName, unloadHandler, { once: true }));
+  }
+
+  const finalizePendingReload = () => {
+    if (reloadConfirmed) {
+      return;
+    }
+    cleanupTimers();
+    cleanupUnloadListeners();
     applyStartupOverlayDuration();
     manualReloadScheduled = false;
+    reloadDispatched = false;
     hideStartupOverlay({ instant: true });
     try {
       startGameLoop({ immediate: true });
@@ -4710,16 +4816,43 @@ function scheduleManualGameReloadWithShortFade() {
   };
 
   const attemptReload = () => {
-    if (reloadDispatched) {
+    if (reloadDispatched || reloadConfirmed) {
       return;
     }
     try {
-      reloadDispatched = true;
-      performHardApplicationReload();
+      reloadDispatched = performHardApplicationReload();
+      if (!reloadDispatched) {
+        console.error('Unable to reload application after manual request: no navigation method available');
+        finalizePendingReload();
+        return;
+      }
     } catch (error) {
       reloadDispatched = false;
       console.error('Unable to reload application after manual request', error);
       finalizePendingReload();
+      return;
+    }
+
+    if (!reloadConfirmed) {
+      const retryDelay = Math.max(180, Math.min(480, fadeDuration > 0 ? Math.round(fadeDuration * 0.6) : 240));
+      fallbackAttemptTimeoutId = setTimeout(() => {
+        fallbackAttemptTimeoutId = null;
+        if (reloadConfirmed || !manualReloadScheduled) {
+          return;
+        }
+        try {
+          const retried = performHardApplicationReload();
+          if (!retried) {
+            reloadDispatched = false;
+            console.error('Unable to reload application after manual request (retry): no navigation method available');
+            finalizePendingReload();
+            return;
+          }
+        } catch (error) {
+          console.error('Unable to reload application after manual request (retry)', error);
+          finalizePendingReload();
+        }
+      }, retryDelay);
     }
   };
 
@@ -4727,13 +4860,13 @@ function scheduleManualGameReloadWithShortFade() {
 
   if (reloadDelay > 0) {
     setTimeout(attemptReload, reloadDelay);
-    setTimeout(finalizePendingReload, reloadDelay + 240);
+    finalizeTimeoutId = setTimeout(finalizePendingReload, reloadDelay + 360);
     return;
   }
 
   requestAnimationFrame(() => {
     attemptReload();
-    setTimeout(finalizePendingReload, 200);
+    finalizeTimeoutId = setTimeout(finalizePendingReload, 240);
   });
 }
 function getOptionsWelcomeCardCopy() {

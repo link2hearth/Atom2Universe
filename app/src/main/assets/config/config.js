@@ -14,7 +14,7 @@ const STARTUP_FADE_DURATION_MS = 1500;
 
 /**
  * Ratio appliqué à la durée de fondu lorsque le joueur relance manuellement le
- * jeu via le compteur d’atomes de l’en-tête.
+ * jeu via le titre « Atom2Univers » de l’en-tête.
  */
 const STATUS_ATOMS_RELOAD_FADE_RATIO = 0.5;
 
