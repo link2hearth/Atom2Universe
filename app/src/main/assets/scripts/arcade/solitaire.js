@@ -336,9 +336,16 @@
       const topCorner = document.createElement('span');
       topCorner.className = 'solitaire-card__corner solitaire-card__corner--top';
 
+      const topCornerSymbol = document.createElement('span');
+      topCornerSymbol.className = 'solitaire-card__corner-symbol';
+
+      const topCornerRank = document.createElement('span');
+      topCornerRank.className = 'solitaire-card__corner-rank';
+
       const value = document.createElement('span');
       value.className = 'solitaire-card__value';
 
+      topCorner.append(topCornerSymbol, topCornerRank);
       element.append(topCorner, value);
 
       element.addEventListener('click', (event) => {
@@ -358,7 +365,7 @@
       });
 
       card.element = element;
-      card.parts = { topCorner, value };
+      card.parts = { topCornerSymbol, topCornerRank, value };
       return element;
     }
 
@@ -368,7 +375,8 @@
         return;
       }
       const rankLabel = formatRank(card.rank);
-      card.parts.topCorner.textContent = card.symbol;
+      card.parts.topCornerSymbol.textContent = card.symbol;
+      card.parts.topCornerRank.textContent = rankLabel;
       card.parts.value.textContent = rankLabel;
       element.dataset.color = card.color;
       element.dataset.rank = rankLabel;
