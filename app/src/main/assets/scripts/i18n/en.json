@@ -839,6 +839,9 @@
           "note": "Unlock the “Rush to a Million” trophy to customize your bricks."
         },
         "reset": "Reset",
+        "devkit": {
+          "openButton": "Open the DevKit"
+        },
         "resetDialog": {
           "title": "Confirm reset",
           "description": "Type {keyword} to confirm. This action cannot be undone.",

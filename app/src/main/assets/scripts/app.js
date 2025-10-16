@@ -4353,6 +4353,7 @@ function collectDomElements() {
   brickSkinOptionCard: document.getElementById('brickSkinOptionCard'),
   brickSkinSelect: document.getElementById('brickSkinSelect'),
   brickSkinStatus: document.getElementById('brickSkinStatus'),
+  openDevkitButton: document.getElementById('openDevkitButton'),
   resetButton: document.getElementById('resetButton'),
   resetDialog: document.getElementById('resetDialog'),
   resetDialogForm: document.getElementById('resetDialogForm'),
@@ -11227,6 +11228,13 @@ function bindDomEventListeners() {
     });
     elements.musicVolumeSlider.addEventListener('change', event => {
       applyVolumeFromSlider(event.target.value, { announce: true });
+    });
+  }
+
+  if (elements.openDevkitButton) {
+    elements.openDevkitButton.addEventListener('click', event => {
+      event.preventDefault();
+      toggleDevKit();
     });
   }
 
