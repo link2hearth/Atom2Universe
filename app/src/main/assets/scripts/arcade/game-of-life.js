@@ -593,22 +593,6 @@
         body.style.removeProperty('overscroll-behavior');
         body.classList.remove('touch-scroll-lock');
         body.classList.remove('touch-scroll-force');
-        const activePageId = typeof body.dataset?.activePage === 'string'
-          ? body.dataset.activePage.trim()
-          : '';
-        const activePageElement = activePageId
-          ? document.getElementById(activePageId)
-          : null;
-        const rawBehavior = typeof activePageElement?.dataset?.scrollBehavior === 'string'
-          ? activePageElement.dataset.scrollBehavior.trim().toLowerCase()
-          : '';
-        const normalizedBehavior = rawBehavior || 'force';
-        const shouldSkipLock = activePageId === 'game';
-        if (!shouldSkipLock && normalizedBehavior === 'lock') {
-          body.classList.add('touch-scroll-lock');
-        } else if (normalizedBehavior === 'force') {
-          body.classList.add('touch-scroll-force');
-        }
       }
     }
 
