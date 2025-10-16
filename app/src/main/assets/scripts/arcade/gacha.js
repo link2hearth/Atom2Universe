@@ -1512,7 +1512,7 @@ const FALLBACK_UPGRADES = (function createFallbackUpgrades() {
       name: 'Laboratoire de Physique',
       description: 'Des équipes de chercheurs boostent votre production atomique.',
       effectSummary:
-        'Production passive : +1 APS par niveau. Chaque 10 labos accordent +5 % d’APC global. Accélérateur ≥200 : Labos +20 % APS.',
+        'Production passive : +2 APS par niveau. Chaque 10 labos accordent +5 % d’APC global. Accélérateur ≥200 : Labos +20 % APS.',
       category: 'auto',
       baseCost: 100,
       costScale: 1.15,
@@ -1522,8 +1522,9 @@ const FALLBACK_UPGRADES = (function createFallbackUpgrades() {
         if (acceleratorLevel >= 200) {
           productionMultiplier *= 1.2;
         }
-        const rawAutoAdd = level * productionMultiplier;
-        const autoAdd = level > 0 ? Math.max(level, Math.round(rawAutoAdd)) : 0;
+        const baseAmount = 2 * level;
+        const rawAutoAdd = baseAmount * productionMultiplier;
+        const autoAdd = level > 0 ? Math.max(baseAmount, Math.round(rawAutoAdd)) : 0;
         const clickBonus = Math.pow(1.05, Math.floor(level / 10));
         return {
           autoAdd,
