@@ -88,7 +88,7 @@
   justify-content: center;
   gap: calc(clamp(0.75rem, min(2.2vw, 2.6vh), 1.9rem) * var(--balance-scale, 1));
   min-height: 100vh;
-  min-height: calc(var(--balance-viewport) * var(--balance-scale, 1));
+  min-height: var(--balance-viewport);
   overscroll-behavior: contain;
 }
 
@@ -342,7 +342,7 @@ body.theme-aurora .page--balance {
   align-items: center;
   justify-content: center;
   gap: calc(clamp(0.45rem, min(1.3vw, 1.7vh), 1rem) * var(--balance-scale, 1));
-  margin-top: calc(var(--balance-inventory-gap-unit) * var(--balance-scale, 1) * 7);
+  margin-top: calc(var(--balance-inventory-gap-unit) * var(--balance-scale, 1) * 2.5);
   padding-block:
     calc(clamp(1.1rem, min(5.5vh, 3.1rem), 2.8rem) * var(--balance-scale, 1))
     calc(clamp(0.65rem, min(2.6vh, 1.5rem), 1.4rem) * var(--balance-scale, 1));
