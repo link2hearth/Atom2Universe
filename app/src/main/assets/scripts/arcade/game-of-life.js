@@ -2350,6 +2350,19 @@
 
     instance.init();
     window.gameOfLifeArcade = instance;
+    if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
+      const detail = { instance };
+      let readyEvent = null;
+      if (typeof window.CustomEvent === 'function') {
+        readyEvent = new window.CustomEvent('atom2univers:game-of-life-ready', { detail });
+      } else if (typeof window.Event === 'function') {
+        readyEvent = new window.Event('atom2univers:game-of-life-ready');
+        readyEvent.detail = detail;
+      }
+      if (readyEvent) {
+        window.dispatchEvent(readyEvent);
+      }
+    }
   });
 
   window.GameOfLifeArcade = GameOfLifeArcade;

@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+  />
+  <title data-i18n="index.meta.title">Atom to Univers</title>
+  <link rel="stylesheet" href="styles/fonts.css" />
+  <link rel="stylesheet" href="styles/main.css" />
+</head>
+<body class="theme-dark">
+  <header class="app-header app-header--arcade-touch">
+    <div class="header-main">
+      <div class="header-brand-group">
+        <a class="brand brand-button" href="index.html" data-i18n="index.header.brand">Atom2Univers</a>
+      </div>
+      <nav
+        class="nav-menu touch-arcade-nav"
+        aria-label="Navigation principale"
+        data-i18n="aria-label:index.navigation.primary"
+      >
+        <button class="nav-button" type="button" data-target="touchArcadeHub" aria-pressed="false">
+          <span data-i18n="index.navigation.items.arcade">Arcade</span>
+        </button>
+        <button class="nav-button" type="button" data-target="arcade" aria-pressed="false">
+          <span data-i18n="index.sections.arcadeHub.cards.particules.title">Particules</span>
+        </button>
+        <button class="nav-button" type="button" data-target="metaux" aria-pressed="false">
+          <span data-i18n="index.sections.arcadeHub.cards.metaux.title">Métaux</span>
+        </button>
+        <button class="nav-button" type="button" data-target="balance" aria-pressed="false">
+          <span data-i18n="index.sections.arcadeHub.cards.balance.title">Balance</span>
+        </button>
+        <button class="nav-button" type="button" data-target="gameOfLife" aria-pressed="false">
+          <span data-i18n="index.sections.arcadeHub.cards.gameOfLife.title">Game of Life</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="touchArcadeContainer">
+    <section
+      id="touchArcadeHub"
+      class="page page--touch-arcade-hub"
+      data-page-group="arcade"
+      aria-label="Hall tactile des mini-jeux"
+      data-i18n="aria-label:index.sections.arcadeHub.aria"
+      aria-hidden="false"
+    >
+      <div class="touch-arcade-hub__intro">
+        <h1 class="touch-arcade-hub__title" data-i18n="index.sections.arcadeHub.title">Arcade</h1>
+        <p
+          class="touch-arcade-hub__subtitle"
+          data-i18n="index.sections.arcadeHub.subtitle"
+        >Choisissez un mini-jeu optimisé pour le tactile.</p>
+      </div>
+      <div class="arcade-hub__grid touch-arcade-hub__grid">
+        <button
+          type="button"
+          class="arcade-hub-card"
+          data-target="arcade"
+          aria-label="Accéder au mini-jeu Particules"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.particules.aria"
+        >
+          <span
+            class="arcade-hub-card__title"
+            role="heading"
+            aria-level="3"
+            data-i18n="index.sections.arcadeHub.cards.particules.title"
+          >Particules</span>
+          <p
+            class="arcade-hub-card__description"
+            data-i18n="index.sections.arcadeHub.cards.particules.description"
+          >Collectez des tickets de gacha au prix de votre stock d'Atomes, ou entraînez-vous gratuitement.</p>
+          <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.particules.cta">Jouer</span>
+        </button>
+        <button
+          type="button"
+          class="arcade-hub-card"
+          data-target="metaux"
+          aria-label="Accéder au mini-jeu Métaux"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.metaux.aria"
+        >
+          <span
+            class="arcade-hub-card__title"
+            role="heading"
+            aria-level="3"
+            data-i18n="index.sections.arcadeHub.cards.metaux.title"
+          >Métaux</span>
+          <p
+            class="arcade-hub-card__description"
+            data-i18n="index.sections.arcadeHub.cards.metaux.description"
+          >Boostez votre production d'APS grâce à ce jeu de match 3.</p>
+          <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.metaux.cta">Forger</span>
+        </button>
+        <button
+          type="button"
+          class="arcade-hub-card"
+          data-target="balance"
+          aria-label="Accéder au mini-jeu Balance"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.balance.aria"
+        >
+          <span
+            class="arcade-hub-card__title"
+            role="heading"
+            aria-level="3"
+            data-i18n="index.sections.arcadeHub.cards.balance.title"
+          >Balance</span>
+          <p
+            class="arcade-hub-card__description"
+            data-i18n="index.sections.arcadeHub.cards.balance.description"
+          >Faites léviter les blocs quantiques en équilibrant la planche.</p>
+          <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.balance.cta">Tester</span>
+        </button>
+        <button
+          type="button"
+          class="arcade-hub-card"
+          data-target="gameOfLife"
+          aria-label="Accéder au mini-jeu Game of Life"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.gameOfLife.aria"
+        >
+          <span
+            class="arcade-hub-card__title"
+            role="heading"
+            aria-level="3"
+            data-i18n="index.sections.arcadeHub.cards.gameOfLife.title"
+          >Game of Life</span>
+          <p
+            class="arcade-hub-card__description"
+            data-i18n="index.sections.arcadeHub.cards.gameOfLife.description"
+          >Simulez des automates cellulaires et expérimentez vos motifs.</p>
+          <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.gameOfLife.cta">Observer</span>
+        </button>
+      </div>
+    </section>
+
+    <section
+      id="arcade"
+      class="page page--arcade"
+      data-page-group="arcade"
+      aria-label="Mini-jeu Particules"
+      data-i18n="aria-label:index.sections.arcade.aria"
+      hidden
+      aria-hidden="true"
+    >
+      <button
+        type="button"
+        class="touch-arcade__close"
+        data-action="exit-hub"
+        data-i18n-aria-label="arcadeTouch.actions.return"
+        aria-label="Retourner au hub arcade"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <div class="arcade-content">
+        <div class="arcade-stage">
+          <div class="arcade-stage__hud" aria-hidden="true">
+            <dl class="arcade-hud" role="presentation">
+              <div class="arcade-hud__item">
+                <dt class="arcade-hud__label" data-i18n="index.sections.arcade.hud.level">Niveau</dt>
+                <dd class="arcade-hud__value" id="arcadeLevelValue">1</dd>
+              </div>
+              <div class="arcade-hud__item">
+                <dt class="arcade-hud__label" data-i18n="index.sections.arcade.hud.lives">Vies</dt>
+                <dd class="arcade-hud__value" id="arcadeLivesValue">3</dd>
+              </div>
+              <div class="arcade-hud__item">
+                <dt class="arcade-hud__label" data-i18n="index.sections.arcade.hud.score">Score</dt>
+                <dd class="arcade-hud__value" id="arcadeScoreValue">0</dd>
+              </div>
+            </dl>
+            <p
+              class="arcade-hud__combo"
+              id="arcadeComboMessage"
+              aria-live="polite"
+              data-i18n="index.sections.arcade.hud.combo"
+            >
+              Combo prêt
+            </p>
+          </div>
+          <canvas
+            id="arcadeGameCanvas"
+            class="arcade-stage__canvas"
+            aria-label="Zone de jeu Particules"
+            data-i18n="aria-label:index.sections.arcade.canvasAria"
+            role="presentation"
+          ></canvas>
+          <div class="arcade-particle-layer" id="arcadeParticleLayer" aria-hidden="true"></div>
+          <div class="arcade-overlay" id="arcadeOverlay" role="dialog" aria-modal="false" hidden>
+            <div class="arcade-overlay__content">
+              <p
+                class="arcade-overlay__message"
+                id="arcadeOverlayMessage"
+                data-i18n="index.sections.arcade.overlay.message"
+              >
+                Touchez ou cliquez la raquette pour guider la particule et détruire les briques quantiques.
+              </p>
+              <div
+                class="arcade-overlay__field"
+                id="arcadeModeField"
+                aria-hidden="false"
+              >
+                <span
+                  class="arcade-overlay__label"
+                  data-i18n="index.sections.arcade.overlay.mode.label"
+                >Mode de jeu</span>
+                <div
+                  class="arcade-mode-switch"
+                  id="arcadeModeSwitch"
+                  role="group"
+                  aria-label="Choisissez le mode de jeu Particules"
+                  data-i18n="aria-label:index.sections.arcade.overlay.mode.aria"
+                >
+                  <button
+                    type="button"
+                    class="arcade-mode-switch__button arcade-mode-switch__button--active"
+                    data-arcade-mode="free"
+                    aria-pressed="true"
+                    data-i18n="index.sections.arcade.overlay.mode.free"
+                  >Mode libre</button>
+                  <button
+                    type="button"
+                    class="arcade-mode-switch__button"
+                    data-arcade-mode="paid"
+                    aria-pressed="false"
+                    data-i18n="index.sections.arcade.overlay.mode.paid"
+                  >Mode récompenses</button>
+                </div>
+                <p
+                  class="arcade-mode-hint"
+                  id="arcadeModeHint"
+                  data-i18n="scripts.particules.ui.mode.free.description"
+                >
+                  Entraînez-vous sans dépenser d’atomes ni gagner de récompenses.
+                </p>
+              </div>
+              <div class="arcade-overlay__field arcade-overlay__field--brick-skin">
+                <label
+                  for="arcadeBrickSkinSelect"
+                  class="arcade-overlay__label"
+                  data-i18n="index.sections.arcade.overlay.brickSkin.label"
+                >Apparence des briques</label>
+                <select
+                  id="arcadeBrickSkinSelect"
+                  class="arcade-overlay__select"
+                  aria-label="Choisissez l’apparence des briques de Particules."
+                  data-i18n="aria-label:index.sections.arcade.overlay.brickSkin.aria"
+                >
+                  <option value="original" data-i18n="index.sections.options.brickSkin.options.original">Original</option>
+                  <option value="particules" data-i18n="index.sections.options.brickSkin.options.particules">Particules</option>
+                  <option value="metallic" data-i18n="index.sections.options.brickSkin.options.metallic">Metallic</option>
+                  <option value="neon" data-i18n="index.sections.options.brickSkin.options.neon">Néon</option>
+                  <option value="pastels" data-i18n="index.sections.options.brickSkin.options.pastels">Pastels</option>
+                </select>
+              </div>
+              <div class="arcade-overlay__actions">
+                <button
+                  type="button"
+                  class="arcade-overlay__button"
+                  id="arcadeOverlayButton"
+                  data-i18n="index.sections.arcade.overlay.button"
+                >Commencer</button>
+                <button
+                  type="button"
+                  class="arcade-overlay__button arcade-overlay__button--secondary"
+                  id="arcadeOverlayQuitButton"
+                  data-i18n="index.sections.arcade.overlay.quit"
+                  hidden
+                  aria-hidden="true"
+                  disabled
+                >Quitter</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section
+      id="gameOfLife"
+      class="page page--game-of-life"
+      data-page-group="arcade"
+      aria-label="Mini-jeu Jeu de la vie de Conway"
+      data-i18n="aria-label:index.sections.gameOfLife.aria"
+      hidden
+      aria-hidden="true"
+    >
+      <button
+        type="button"
+        class="touch-arcade__close"
+        data-action="exit-hub"
+        data-i18n-aria-label="arcadeTouch.actions.return"
+        aria-label="Retourner au hub arcade"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <canvas
+        id="gameOfLifeCanvas"
+        class="game-of-life__canvas"
+        role="img"
+        aria-label="Grille du Jeu de la vie"
+        data-i18n="aria-label:index.sections.gameOfLife.canvas"
+      ></canvas>
+      <div class="game-of-life__menu" id="gameOfLifeMenu" data-expanded="true">
+        <div class="game-of-life__menu-header" id="gameOfLifeMenuHeader">
+          <span class="game-of-life__menu-handle" aria-hidden="true"></span>
+          <button
+            type="button"
+            class="game-of-life__menu-toggle"
+            id="gameOfLifeMenuToggle"
+            aria-expanded="true"
+            data-i18n="index.sections.gameOfLife.menu.collapse"
+          >Réduire le panneau</button>
+        </div>
+        <div class="game-of-life__menu-body" id="gameOfLifeMenuBody">
+          <div class="game-of-life__menu-content" id="gameOfLifeMenuContent">
+            <div
+              class="game-of-life__toolbar"
+              role="group"
+              aria-label="Commandes de la simulation"
+              data-i18n="aria-label:index.sections.gameOfLife.toolbar"
+            >
+              <div class="game-of-life__toolbar-group">
+                <button
+                  type="button"
+                  class="game-of-life__button"
+                  id="gameOfLifePlayPauseButton"
+                  aria-pressed="false"
+                  data-state="pause"
+                  data-i18n="index.sections.gameOfLife.controls.play"
+                >Lecture</button>
+                <button
+                  type="button"
+                  class="game-of-life__button game-of-life__button--secondary"
+                  id="gameOfLifeStepButton"
+                  data-i18n="index.sections.gameOfLife.controls.step"
+                >Pas-à-pas</button>
+                <button
+                  type="button"
+                  class="game-of-life__button game-of-life__button--secondary"
+                  id="gameOfLifeRewindButton"
+                  data-i18n="index.sections.gameOfLife.controls.rewind"
+                >Retour</button>
+                <button
+                  type="button"
+                  class="game-of-life__button game-of-life__button--secondary"
+                  id="gameOfLifeClearButton"
+                  data-i18n="index.sections.gameOfLife.controls.clear"
+                >Réinitialiser</button>
+                <button
+                  type="button"
+                  class="game-of-life__button game-of-life__button--secondary"
+                  id="gameOfLifeSelectButton"
+                  aria-pressed="false"
+                  data-i18n="index.sections.gameOfLife.controls.select"
+                >Sélectionner</button>
+              </div>
+              <div class="game-of-life__toolbar-group" role="group">
+                <label class="game-of-life__label" for="gameOfLifeSpeedSlider" data-i18n="index.sections.gameOfLife.controls.speed">
+                  Vitesse
+                </label>
+                <input
+                  type="range"
+                  min="50"
+                  max="600"
+                  step="10"
+                  value="200"
+                  id="gameOfLifeSpeedSlider"
+                  class="game-of-life__slider"
+                  aria-label="Régler la vitesse de simulation"
+                  data-i18n="aria-label:index.sections.gameOfLife.controls.speedSlider"
+                />
+              </div>
+              <div class="game-of-life__toolbar-group" role="group">
+                <label class="game-of-life__label" for="gameOfLifeZoomSlider" data-i18n="index.sections.gameOfLife.controls.zoom">
+                  Zoom
+                </label>
+                <input
+                  type="range"
+                  min="6"
+                  max="64"
+                  step="1"
+                  value="22"
+                  id="gameOfLifeZoomSlider"
+                  class="game-of-life__slider"
+                  aria-label="Régler le niveau de zoom"
+                  data-i18n="aria-label:index.sections.gameOfLife.controls.zoomSlider"
+                />
+              </div>
+              <dl class="game-of-life__status">
+                <div>
+                  <dt data-i18n="index.sections.gameOfLife.status.generation">Génération</dt>
+                  <dd id="gameOfLifeGenerationValue">0</dd>
+                </div>
+                <div>
+                  <dt data-i18n="index.sections.gameOfLife.status.population">Population</dt>
+                  <dd id="gameOfLifePopulationValue">0</dd>
+                </div>
+              </dl>
+            </div>
+            <aside class="game-of-life__sidebar">
+              <section class="game-of-life__panel" aria-labelledby="gameOfLifePatternsTitle">
+                <h3 class="game-of-life__panel-title" id="gameOfLifePatternsTitle" data-i18n="index.sections.gameOfLife.patterns.title">
+                  Motifs enregistrés
+                </h3>
+                <div class="game-of-life__panel-body">
+                  <p
+                    id="gameOfLifePatternDescription"
+                    class="game-of-life__pattern-description"
+                    data-i18n="index.sections.gameOfLife.patterns.description"
+                  >
+                    Sélectionnez un motif pour le placer sur la grille.
+                  </p>
+                  <p
+                    id="gameOfLifePatternEmpty"
+                    class="game-of-life__pattern-empty"
+                    hidden
+                    data-i18n="index.sections.gameOfLife.patterns.empty"
+                  >
+                    Aucun motif n’a encore été enregistré.
+                  </p>
+                  <div class="game-of-life__pattern-select">
+                    <label for="gameOfLifePatternSelect" data-i18n="index.sections.gameOfLife.patterns.label">
+                      Liste des motifs
+                    </label>
+                    <select id="gameOfLifePatternSelect"></select>
+                  </div>
+                  <div class="game-of-life__panel-actions">
+                    <button
+                      type="button"
+                      class="game-of-life__button"
+                      id="gameOfLifePatternPlace"
+                      data-i18n="index.sections.gameOfLife.patterns.place"
+                    >Placer</button>
+                    <button
+                      type="button"
+                      class="game-of-life__button game-of-life__button--secondary"
+                      id="gameOfLifePatternDelete"
+                      data-i18n="index.sections.gameOfLife.patterns.delete"
+                    >Supprimer</button>
+                  </div>
+                </div>
+              </section>
+              <section class="game-of-life__panel" aria-labelledby="gameOfLifeRandomTitle">
+                <h3 class="game-of-life__panel-title" id="gameOfLifeRandomTitle" data-i18n="index.sections.gameOfLife.random.title">
+                  Générateur aléatoire
+                </h3>
+                <form class="game-of-life__panel-body" id="gameOfLifeRandomForm">
+                  <div class="game-of-life__field">
+                    <label for="gameOfLifeRandomWidth" data-i18n="index.sections.gameOfLife.random.width">
+                      Largeur
+                    </label>
+                    <input
+                      type="number"
+                      id="gameOfLifeRandomWidth"
+                      min="1"
+                      max="200"
+                      value="40"
+                      inputmode="numeric"
+                    />
+                  </div>
+                  <div class="game-of-life__field">
+                    <label for="gameOfLifeRandomHeight" data-i18n="index.sections.gameOfLife.random.height">
+                      Hauteur
+                    </label>
+                    <input
+                      type="number"
+                      id="gameOfLifeRandomHeight"
+                      min="1"
+                      max="200"
+                      value="24"
+                      inputmode="numeric"
+                    />
+                  </div>
+                  <div class="game-of-life__field">
+                    <label for="gameOfLifeRandomDensity" data-i18n="index.sections.gameOfLife.random.density">
+                      Densité
+                    </label>
+                    <input
+                      type="range"
+                      id="gameOfLifeRandomDensity"
+                      min="5"
+                      max="75"
+                      step="1"
+                      value="25"
+                      aria-label="Régler la densité vivante"
+                      data-i18n="aria-label:index.sections.gameOfLife.random.densitySlider"
+                    />
+                    <div class="game-of-life__pattern-meta">
+                      <span class="game-of-life__badge" id="gameOfLifeRandomDensityValue">25%</span>
+                    </div>
+                  </div>
+                  <div class="game-of-life__actions">
+                    <button
+                      type="button"
+                      class="game-of-life__button"
+                      id="gameOfLifeRandomReplace"
+                      data-i18n="index.sections.gameOfLife.random.replace"
+                    >Remplacer</button>
+                    <button
+                      type="button"
+                      class="game-of-life__button game-of-life__button--secondary"
+                      id="gameOfLifeRandomAdd"
+                      data-i18n="index.sections.gameOfLife.random.add"
+                    >Ajouter</button>
+                  </div>
+                  <p class="game-of-life__hint" data-i18n="index.sections.gameOfLife.random.hint">
+                    Le générateur utilise une graine mémorisée pour reproduire vos galaxies vivantes.
+                  </p>
+                </form>
+              </section>
+              <section class="game-of-life__panel" aria-labelledby="gameOfLifeHelpTitle">
+                <h3 class="game-of-life__panel-title" id="gameOfLifeHelpTitle" data-i18n="index.sections.gameOfLife.help.title">
+                  Commandes rapides
+                </h3>
+                <ul class="game-of-life__pattern-list" id="gameOfLifeHelpList">
+                  <li data-i18n="index.sections.gameOfLife.help.draw">Clique gauche : activer/désactiver une cellule.</li>
+                  <li data-i18n="index.sections.gameOfLife.help.drag">Clique gauche maintenu : dessiner ou effacer une zone.</li>
+                  <li data-i18n="index.sections.gameOfLife.help.select">Sélection (pause) : activer le mode sélection puis glisser pour enregistrer un motif.</li>
+                  <li data-i18n="index.sections.gameOfLife.help.pan">Maintenez espace ou clic droit pour déplacer la caméra.</li>
+                  <li data-i18n="index.sections.gameOfLife.help.zoom">Molette ou pincement : zoomer et dézoomer autour du pointeur.</li>
+                  <li data-i18n="index.sections.gameOfLife.help.shortcut">Barre espace : lecture/pause · R : réinitialiser · Z : retour.</li>
+                </ul>
+              </section>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section
+      id="balance"
+      class="page page--balance"
+      data-page-group="arcade"
+      aria-label="Mini-jeu Balance"
+      data-i18n="aria-label:index.sections.balance.aria"
+      hidden
+      aria-hidden="true"
+    >
+      <button
+        type="button"
+        class="touch-arcade__close"
+        data-action="exit-hub"
+        data-i18n-aria-label="arcadeTouch.actions.return"
+        aria-label="Retourner au hub arcade"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <div class="balance-layout" id="balancePageLayout">
+        <div
+          class="balance-inventory"
+          id="balanceInventory"
+          role="region"
+          aria-label="Blocs disponibles"
+          data-i18n="aria-label:index.sections.balance.inventory.title"
+        >
+          <div
+            class="balance-inventory__list"
+            id="balancePieces"
+            aria-label="Inventaire des blocs prêts à être placés"
+            data-i18n="aria-label:index.sections.balance.inventory.list"
+          ></div>
+        </div>
+        <div class="balance-stage" id="balanceStage">
+          <div class="balance-board-wrapper">
+            <div class="balance-board" id="balanceBoard" aria-labelledby="balanceBoardLabel">
+              <div
+                class="balance-board__surface"
+                id="balanceBoardSurface"
+                role="presentation"
+                aria-labelledby="balanceBoardLabel"
+              ></div>
+              <div class="balance-board__beam" aria-hidden="true"></div>
+              <div class="balance-board__pivot" aria-hidden="true"></div>
+            </div>
+            <div class="balance-board-shadow" aria-hidden="true"></div>
+            <span
+              id="balanceBoardLabel"
+              class="visually-hidden"
+              data-i18n="index.sections.balance.instructions"
+            >Faites glisser un bloc depuis le plateau vers la planche, puis appuyez sur la zone de résultat pour lancer la
+              simulation.</span>
+          </div>
+        </div>
+        <div class="balance-controls" id="balanceControls">
+          <button
+            type="button"
+            class="balance-status"
+            id="balanceStatusButton"
+          >
+            <span
+              class="balance-status__text"
+              id="balanceStatus"
+              role="status"
+              aria-live="polite"
+              data-i18n="index.sections.balance.status.ready"
+            >Disposez les blocs puis appuyez sur la zone de résultat pour lancer le test.</span>
+          </button>
+          <div class="balance-difficulty" id="balanceDifficulty">
+            <select
+              class="balance-difficulty__select"
+              id="balanceDifficultySelect"
+              aria-label="Difficulté"
+              data-i18n-aria-label="index.sections.balance.difficulty.label"
+            >
+              <option value="easy" data-i18n="scripts.arcade.balance.difficulty.easy">Mode facile</option>
+              <option value="hard" data-i18n="scripts.arcade.balance.difficulty.hard">Mode difficile</option>
+            </select>
+          </div>
+          <div class="balance-controls__buttons">
+            <button
+              type="button"
+              class="balance-button"
+              id="balanceResetButton"
+              data-i18n="index.sections.balance.actions.reset"
+            >Réinitialiser les blocs</button>
+          </div>
+        </div>
+      </div>
+      <div class="balance-drag-layer" id="balanceDragLayer" aria-hidden="true"></div>
+    </section>
+
+    <section
+      id="metaux"
+      class="page page--metaux"
+      data-page-group="arcade"
+      aria-label="Mini-jeu Métaux"
+      data-i18n="aria-label:index.sections.metaux.aria"
+      hidden
+      aria-hidden="true"
+    >
+      <button
+        type="button"
+        class="touch-arcade__close"
+        data-action="exit-hub"
+        data-i18n-aria-label="arcadeTouch.actions.return"
+        aria-label="Retourner au hub arcade"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <div class="metaux-content">
+        <div class="metaux-board-wrapper">
+          <div class="metaux-timer" id="metauxTimer" role="timer" aria-live="polite">
+            <span
+              class="metaux-timer__label"
+              id="metauxTimerLabel"
+              data-i18n="index.sections.metaux.timerLabel"
+            >Temps restant</span>
+            <span
+              class="metaux-timer__max"
+              id="metauxTimerMaxValue"
+              data-i18n="index.sections.metaux.timerMax"
+            >Max&nbsp;: 6&nbsp;s</span>
+            <div class="metaux-timer__bar" aria-hidden="true">
+              <div class="metaux-timer__bar-fill" id="metauxTimerFill"></div>
+            </div>
+            <span class="metaux-timer__value" id="metauxTimerValue">6,0&nbsp;s</span>
+            <button
+              type="button"
+              id="metauxFreePlayExitButton"
+              class="metaux-timer__free-exit"
+              hidden
+            >
+              <span data-i18n="index.sections.metaux.freePlayExitButton">Quitter le mode libre</span>
+            </button>
+          </div>
+          <div
+            class="metaux-board"
+            id="metauxBoard"
+            role="grid"
+            aria-label="Grille de correspondances Métaux"
+            data-i18n="aria-label:index.sections.metaux.boardAria"
+          ></div>
+          <div class="metaux-end-screen" id="metauxEndScreen" hidden>
+            <div class="metaux-end-screen__panel" role="dialog" aria-modal="true" aria-labelledby="metauxEndTitle">
+              <h2 id="metauxEndTitle" data-i18n="index.sections.metaux.endTitle">Session terminée</h2>
+              <dl class="metaux-end-screen__summary">
+                <div class="metaux-end-screen__summary-item">
+                  <dt data-i18n="index.sections.metaux.summary.time">Durée</dt>
+                  <dd id="metauxEndTimeValue">0&nbsp;s</dd>
+                </div>
+                <div class="metaux-end-screen__summary-item">
+                  <dt data-i18n="index.sections.metaux.summary.matches">Combos</dt>
+                  <dd id="metauxEndMatchesValue">0</dd>
+                </div>
+              </dl>
+              <div class="metaux-end-screen__actions">
+                <button type="button" id="metauxNewGameButton" class="metaux-end-screen__button">
+                  <span data-i18n="index.sections.metaux.newGame">Nouvelle partie</span>
+                  <span
+                    id="metauxNewGameCredits"
+                    class="metaux-end-screen__button-note"
+                    data-i18n="index.sections.metaux.newGameCredits"
+                  >Coût : 1 crédit Mach3</span>
+                </button>
+                <button
+                  type="button"
+                  id="metauxFreePlayButton"
+                  class="metaux-end-screen__button metaux-end-screen__button--free"
+                >
+                  <span data-i18n="index.sections.metaux.freePlay">Mode libre</span>
+                </button>
+                <button
+                  type="button"
+                  id="metauxReturnButton"
+                  class="metaux-end-screen__button metaux-end-screen__button--ghost"
+                >
+                  <span data-i18n="index.sections.metaux.return">Retourner au clicker</span>
+                </button>
+              </div>
+              <p
+                id="metauxCreditStatus"
+                class="metaux-credit-status"
+                role="status"
+                aria-live="polite"
+                data-i18n="index.sections.metaux.creditStatus"
+              >Crédits Mach3 restants&nbsp;: 0</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="config/config.js"></script>
+  <script src="config/touch-mode.js"></script>
+  <script src="scripts/i18n/embedded-resources.js"></script>
+  <script src="scripts/modules/i18n.js"></script>
+  <script src="scripts/modules/info.js"></script>
+  <script src="scripts/arcade/autosave.js"></script>
+  <script src="scripts/modules/touch-interaction-manager.js"></script>
+  <script src="scripts/arcade/particules.js"></script>
+  <script src="scripts/arcade/balance.js"></script>
+  <script src="scripts/arcade/metaux-match3.js"></script>
+  <script src="scripts/arcade/game-of-life.js"></script>
+  <script src="scripts/arcade-touch.js"></script>
+</body>
+</html>

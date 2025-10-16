@@ -1,0 +1,93 @@
+.page--touch-arcade-hub {
+  padding: 2.5rem 1.5rem 3.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.touch-arcade-hub__intro {
+  max-width: 48rem;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.touch-arcade-hub__title {
+  font-size: clamp(1.75rem, 2.2vw + 1rem, 2.5rem);
+  font-weight: 600;
+  margin: 0;
+}
+
+.touch-arcade-hub__subtitle {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: clamp(1rem, 0.6vw + 0.9rem, 1.15rem);
+}
+
+.touch-arcade-hub__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 1.5rem;
+  width: min(72rem, 100%);
+  margin: 0 auto;
+}
+
+.touch-arcade-hub__grid .arcade-hub-card {
+  min-height: 12rem;
+}
+
+@media (max-width: 640px) {
+  .page--touch-arcade-hub {
+    padding: 1.5rem 1rem 2.5rem;
+    gap: 1.5rem;
+  }
+
+  .touch-arcade-hub__grid {
+    gap: 1rem;
+  }
+}
+
+.page--arcade,
+.page--game-of-life,
+.page--balance,
+.page--metaux {
+  position: relative;
+}
+
+.touch-arcade__close {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(12, 18, 34, 0.65);
+  color: #fff;
+  font-size: 1.4rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  z-index: 5;
+}
+
+.touch-arcade__close:hover,
+.touch-arcade__close:focus-visible {
+  background: rgba(28, 40, 62, 0.85);
+  transform: scale(1.05);
+}
+
+.touch-arcade__close:focus-visible {
+  outline: 2px solid rgba(102, 178, 255, 0.9);
+  outline-offset: 2px;
+}
+
+.touch-arcade__close span {
+  font-weight: 500;
+  pointer-events: none;
+}
