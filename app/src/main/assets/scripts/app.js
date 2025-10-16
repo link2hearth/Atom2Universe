@@ -9951,10 +9951,21 @@ const supportsPassiveEventListeners = (() => {
 })();
 
 const passiveEventListenerOptions = supportsPassiveEventListeners ? { passive: true } : false;
+const nonPassiveEventListenerOptions = supportsPassiveEventListeners ? { passive: false } : false;
 const supportsGlobalPointerEvents = typeof globalThis !== 'undefined'
   && typeof globalThis.PointerEvent === 'function';
 
 let activeBodyScrollBehavior = SCROLL_BEHAVIOR_MODES.DEFAULT;
+let bodyScrollTouchMoveListenerAttached = false;
+
+function preventBodyScrollTouchMove(event) {
+  if (!event) {
+    return;
+  }
+  if (typeof event.preventDefault === 'function') {
+    event.preventDefault();
+  }
+}
 
 function normalizeScrollBehaviorValue(value) {
   if (typeof value !== 'string') {
@@ -10003,15 +10014,21 @@ function applyBodyScrollBehavior(requestedBehavior) {
   activeBodyScrollBehavior = nextBehavior;
 
   if (nextBehavior === SCROLL_BEHAVIOR_MODES.LOCK) {
+    if (!bodyScrollTouchMoveListenerAttached && typeof body.addEventListener === 'function') {
+      body.addEventListener('touchmove', preventBodyScrollTouchMove, nonPassiveEventListenerOptions);
+      bodyScrollTouchMoveListenerAttached = true;
+    }
     body.style.setProperty('touch-action', 'none');
     body.style.setProperty('overscroll-behavior', 'none');
-    body.style.setProperty('overflow', 'hidden');
     body.classList.add('touch-scroll-lock');
     body.classList.remove('touch-scroll-force');
     return;
   }
 
-  body.style.removeProperty('overflow');
+  if (bodyScrollTouchMoveListenerAttached && typeof body.removeEventListener === 'function') {
+    body.removeEventListener('touchmove', preventBodyScrollTouchMove, nonPassiveEventListenerOptions);
+    bodyScrollTouchMoveListenerAttached = false;
+  }
 
   if (nextBehavior === SCROLL_BEHAVIOR_MODES.FORCE) {
     body.style.setProperty('touch-action', 'auto');
