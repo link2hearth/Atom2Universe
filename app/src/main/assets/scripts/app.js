@@ -9921,21 +9921,22 @@ function applyScrollBehaviorFromPage(pageElement) {
   const pageId = typeof pageElement?.id === 'string'
     ? pageElement.id.trim()
     : '';
-  if (!pageId || pageId === 'game') {
-    body.style.removeProperty('touch-action');
-    body.style.removeProperty('overscroll-behavior');
-    body.classList.remove('touch-scroll-lock', 'touch-scroll-force');
-    return;
-  }
   const rawBehavior = typeof pageElement?.dataset?.scrollBehavior === 'string'
     ? pageElement.dataset.scrollBehavior.trim().toLowerCase()
     : '';
+  const normalizedBehavior = rawBehavior || 'force';
+  const shouldSkipLock = pageId === 'game';
+
   body.style.removeProperty('touch-action');
   body.style.removeProperty('overscroll-behavior');
   body.classList.remove('touch-scroll-lock', 'touch-scroll-force');
-  if (rawBehavior === 'lock') {
+
+  if (!shouldSkipLock && normalizedBehavior === 'lock') {
     body.classList.add('touch-scroll-lock');
-  } else if (rawBehavior === 'force') {
+    return;
+  }
+
+  if (normalizedBehavior === 'force') {
     body.classList.add('touch-scroll-force');
   }
 }
