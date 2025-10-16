@@ -10117,6 +10117,7 @@ function handleManualAtomClick(options = {}) {
 if (typeof globalThis !== 'undefined') {
   globalThis.handleManualAtomClick = handleManualAtomClick;
   globalThis.isManualClickContextActive = isManualClickContextActive;
+  globalThis.resetTouchTrackingState = resetTouchTrackingState;
 }
 
 function shouldTriggerGlobalClick(event) {
@@ -10440,12 +10441,20 @@ function handleGlobalPointerStart(event) {
   }
 }
 
+function resetTouchTrackingState(options = {}) {
+  const { reapplyScrollBehavior = true } = options;
+  activeTouchIdentifiers.clear();
+  activePointerTouchIds.clear();
+  cancelScheduledScrollUnlockCheck();
+  if (reapplyScrollBehavior) {
+    applyActivePageScrollBehavior();
+  }
+}
+
 if (typeof document !== 'undefined' && typeof document.addEventListener === 'function') {
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
-      activeTouchIdentifiers.clear();
-      activePointerTouchIds.clear();
-      cancelScheduledScrollUnlockCheck();
+      resetTouchTrackingState({ reapplyScrollBehavior: false });
       return;
     }
     applyActivePageScrollBehavior();
