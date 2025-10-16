@@ -25,6 +25,7 @@ const FALLBACK_TROPHIES = Array.isArray(APP_DATA.FALLBACK_TROPHIES)
 const SHOP_UNLOCK_THRESHOLD = new LayeredNumber(15);
 
 const DEFAULT_STARTUP_FADE_DURATION_MS = 2000;
+const DEFAULT_STATUS_ATOMS_RELOAD_FADE_RATIO = 0.5;
 const DEFAULT_BACKGROUND_RELOAD_THRESHOLD_MS = 30 * 60 * 1000;
 const DEFAULT_BACKGROUND_RELOAD_OVERLAY_LEAD_MS = 250;
 
@@ -3800,6 +3801,7 @@ let elements = {};
 
 let pageHiddenAt = null;
 let backgroundReloadScheduled = false;
+let manualReloadScheduled = false;
 let overlayFadeFallbackTimeout = null;
 let startupOverlayFailsafeTimeout = null;
 let startupOverlayGlobalFallbackTimeout = null;
@@ -3863,10 +3865,35 @@ function getNormalizedStartupFadeDuration() {
   return Math.max(0, Number.isFinite(configuredValue) ? configuredValue : 0);
 }
 
+function getConfiguredStatusAtomsReloadFadeRatio() {
+  const configuredValue = resolveGlobalNumberOption(
+    'STATUS_ATOMS_RELOAD_FADE_RATIO',
+    DEFAULT_STATUS_ATOMS_RELOAD_FADE_RATIO
+  );
+  if (!Number.isFinite(configuredValue)) {
+    return DEFAULT_STATUS_ATOMS_RELOAD_FADE_RATIO;
+  }
+  return Math.max(0, configuredValue);
+}
+
+function getStatusAtomsReloadFadeDurationMs() {
+  const baseDuration = getNormalizedStartupFadeDuration();
+  if (baseDuration <= 0) {
+    return 0;
+  }
+  const ratio = getConfiguredStatusAtomsReloadFadeRatio();
+  const scaledDuration = baseDuration * Math.max(0, ratio);
+  return Math.max(0, Math.round(Number.isFinite(scaledDuration) ? scaledDuration : 0));
+}
+
 function getStartupOverlaySafetyDelay() {
   const fadeDuration = getNormalizedStartupFadeDuration();
   const bufferDuration = Math.max(2000, fadeDuration);
   return fadeDuration + bufferDuration;
+}
+
+function clearOverlayFadeFallbackTimeout() {
+  clearOverlayFadeFallbackTimeout();
 }
 
 function clearGlobalStartupOverlayFallback() {
@@ -4444,10 +4471,7 @@ function showStartupOverlay(options = {}) {
     return;
   }
 
-  if (overlayFadeFallbackTimeout != null) {
-    clearTimeout(overlayFadeFallbackTimeout);
-    overlayFadeFallbackTimeout = null;
-  }
+  clearOverlayFadeFallbackTimeout();
 
   overlay.removeAttribute('hidden');
 
@@ -4491,10 +4515,7 @@ function hideStartupOverlay(options = {}) {
     }
 
     const finalize = () => {
-      if (overlayFadeFallbackTimeout != null) {
-        clearTimeout(overlayFadeFallbackTimeout);
-        overlayFadeFallbackTimeout = null;
-      }
+      clearOverlayFadeFallbackTimeout();
       overlay.setAttribute('hidden', '');
     };
 
@@ -4562,6 +4583,291 @@ function handleVisibilityChange() {
   setTimeout(() => {
     window.location.reload();
   }, leadTime);
+}
+
+function teardownAppBeforeManualReload() {
+  try {
+    clearStartupOverlayFailsafe();
+  } catch (error) {
+    console.warn('Unable to clear startup overlay failsafe before manual reload', error);
+  }
+
+  clearGlobalStartupOverlayFallback();
+
+  clearOverlayFadeFallbackTimeout();
+
+  if (pendingAutoUiScaleFrame != null) {
+    if (autoUiScaleFrameUsesTimeout) {
+      clearTimeout(pendingAutoUiScaleFrame);
+    } else if (typeof window !== 'undefined' && typeof window.cancelAnimationFrame === 'function') {
+      window.cancelAnimationFrame(pendingAutoUiScaleFrame);
+    } else if (typeof cancelAnimationFrame === 'function') {
+      cancelAnimationFrame(pendingAutoUiScaleFrame);
+    }
+    pendingAutoUiScaleFrame = null;
+    autoUiScaleFrameUsesTimeout = false;
+  }
+
+  if (pendingAutoUiScaleTimeoutId != null) {
+    clearTimeout(pendingAutoUiScaleTimeoutId);
+    pendingAutoUiScaleTimeoutId = null;
+  }
+
+  if (gameLoopControl && typeof gameLoopControl === 'object') {
+    try {
+      clearScheduledGameLoop();
+    } catch (error) {
+      console.warn('Unable to clear scheduled game loop before manual reload', error);
+    }
+    gameLoopControl.isActive = false;
+    gameLoopControl.handle = null;
+    gameLoopControl.type = null;
+  }
+
+  pageHiddenAt = null;
+  backgroundReloadScheduled = false;
+}
+
+function performHardApplicationReload() {
+  if (typeof window === 'undefined' || !window.location) {
+    throw new Error('Window location is unavailable for reload');
+  }
+
+  try {
+    if (typeof window.stop === 'function') {
+      window.stop();
+    }
+  } catch (error) {
+    console.warn('Unable to stop active loading before manual reload', error);
+  }
+
+  const { location } = window;
+  const targetHref = location && typeof location.href === 'string' ? location.href : null;
+  let attempted = false;
+  let lastError = null;
+
+  const attempts = [
+    {
+      run() {
+        if (location && typeof location.replace === 'function' && targetHref) {
+          location.replace(targetHref);
+          return true;
+        }
+        return false;
+      },
+      onError(error) {
+        console.warn('Unable to replace location during manual reload, falling back', error);
+      }
+    },
+    {
+      run() {
+        if (location && typeof location.reload === 'function') {
+          location.reload();
+          return true;
+        }
+        return false;
+      },
+      onError(error) {
+        console.warn('Unable to reload application via window.location.reload during manual request', error);
+      }
+    },
+    {
+      run() {
+        if (location && typeof location.assign === 'function' && targetHref) {
+          location.assign(targetHref);
+          return true;
+        }
+        return false;
+      },
+      onError(error) {
+        console.warn('Unable to assign location during manual reload, falling back', error);
+      }
+    },
+    {
+      run() {
+        if (targetHref) {
+          window.location = targetHref;
+          return true;
+        }
+        return false;
+      },
+      onError(error) {
+        console.warn('Unable to set window.location during manual reload', error);
+      }
+    },
+    {
+      run() {
+        if (targetHref) {
+          window.location.href = targetHref;
+          return true;
+        }
+        return false;
+      },
+      onError(error) {
+        console.warn('Unable to set window.location.href during manual reload', error);
+      }
+    }
+  ];
+
+  attempts.forEach(step => {
+    try {
+      const succeeded = step.run();
+      if (succeeded) {
+        attempted = true;
+      }
+    } catch (error) {
+      lastError = error;
+      if (typeof step.onError === 'function') {
+        step.onError(error);
+      }
+    }
+  });
+
+  if (!attempted) {
+    if (lastError) {
+      throw lastError;
+    }
+    return false;
+  }
+
+  return true;
+}
+
+function scheduleManualGameReloadWithShortFade() {
+  if (manualReloadScheduled) {
+    return;
+  }
+
+  manualReloadScheduled = true;
+
+  try {
+    if (typeof saveGame === 'function') {
+      saveGame();
+    } else if (typeof window !== 'undefined' && typeof window.saveGame === 'function') {
+      window.saveGame();
+    }
+  } catch (error) {
+    console.error('Unable to save game before manual reload', error);
+  }
+
+  const fadeDuration = getStatusAtomsReloadFadeDurationMs();
+  const root = typeof document !== 'undefined' ? document.documentElement : null;
+
+  if (root && root.style && typeof root.style.setProperty === 'function') {
+    root.style.setProperty('--startup-fade-duration', `${fadeDuration}ms`);
+  }
+
+  teardownAppBeforeManualReload();
+  showStartupOverlay();
+  scheduleStartupOverlayFailsafe();
+
+  let reloadDispatched = false;
+  let reloadConfirmed = false;
+  let fallbackAttemptTimeoutId = null;
+  let finalizeTimeoutId = null;
+  const unloadEvents = ['pagehide', 'beforeunload'];
+  let unloadHandler = null;
+
+  function cleanupTimers() {
+    if (fallbackAttemptTimeoutId != null) {
+      clearTimeout(fallbackAttemptTimeoutId);
+      fallbackAttemptTimeoutId = null;
+    }
+    if (finalizeTimeoutId != null) {
+      clearTimeout(finalizeTimeoutId);
+      finalizeTimeoutId = null;
+    }
+  }
+
+  function cleanupUnloadListeners() {
+    if (!unloadHandler || typeof window === 'undefined' || typeof window.removeEventListener !== 'function') {
+      return;
+    }
+    unloadEvents.forEach(eventName => window.removeEventListener(eventName, unloadHandler));
+    unloadHandler = null;
+  }
+
+  function handleReloadSignal() {
+    reloadConfirmed = true;
+    cleanupTimers();
+    cleanupUnloadListeners();
+  }
+
+  if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+    unloadHandler = handleReloadSignal;
+    unloadEvents.forEach(eventName => window.addEventListener(eventName, unloadHandler, { once: true }));
+  }
+
+  const finalizePendingReload = () => {
+    if (reloadConfirmed) {
+      return;
+    }
+    cleanupTimers();
+    cleanupUnloadListeners();
+    applyStartupOverlayDuration();
+    manualReloadScheduled = false;
+    reloadDispatched = false;
+    hideStartupOverlay({ instant: true });
+    try {
+      startGameLoop({ immediate: true });
+    } catch (error) {
+      console.error('Unable to restart game loop after failed manual reload', error);
+    }
+  };
+
+  const attemptReload = () => {
+    if (reloadDispatched || reloadConfirmed) {
+      return;
+    }
+    try {
+      reloadDispatched = performHardApplicationReload();
+      if (!reloadDispatched) {
+        console.error('Unable to reload application after manual request: no navigation method available');
+        finalizePendingReload();
+        return;
+      }
+    } catch (error) {
+      reloadDispatched = false;
+      console.error('Unable to reload application after manual request', error);
+      finalizePendingReload();
+      return;
+    }
+
+    if (!reloadConfirmed) {
+      const retryDelay = Math.max(180, Math.min(480, fadeDuration > 0 ? Math.round(fadeDuration * 0.6) : 240));
+      fallbackAttemptTimeoutId = setTimeout(() => {
+        fallbackAttemptTimeoutId = null;
+        if (reloadConfirmed || !manualReloadScheduled) {
+          return;
+        }
+        try {
+          const retried = performHardApplicationReload();
+          if (!retried) {
+            reloadDispatched = false;
+            console.error('Unable to reload application after manual request (retry): no navigation method available');
+            finalizePendingReload();
+            return;
+          }
+        } catch (error) {
+          console.error('Unable to reload application after manual request (retry)', error);
+          finalizePendingReload();
+        }
+      }, retryDelay);
+    }
+  };
+
+  const reloadDelay = fadeDuration > 0 ? fadeDuration : 0;
+
+  if (reloadDelay > 0) {
+    setTimeout(attemptReload, reloadDelay);
+    finalizeTimeoutId = setTimeout(finalizePendingReload, reloadDelay + 360);
+    return;
+  }
+
+  requestAnimationFrame(() => {
+    attemptReload();
+    finalizeTimeoutId = setTimeout(finalizePendingReload, 240);
+  });
 }
 function getOptionsWelcomeCardCopy() {
   const api = getI18nApi();
@@ -5716,7 +6022,6 @@ function updateBrandPortalState(options = {}) {
   const justUnlocked = !wasUnlocked && unlocked;
   lastArcadeUnlockState = unlocked;
   if (elements.brandPortal) {
-    elements.brandPortal.disabled = !unlocked;
     elements.brandPortal.setAttribute('aria-disabled', unlocked ? 'false' : 'true');
     elements.brandPortal.classList.toggle('brand--locked', !unlocked);
     elements.brandPortal.classList.toggle('brand--portal-ready', unlocked);
@@ -10637,14 +10942,12 @@ function bindDomEventListeners() {
   if (elements.brandPortal) {
     elements.brandPortal.addEventListener('click', () => {
       showPage('game');
+      scheduleManualGameReloadWithShortFade();
     });
   }
 
   if (elements.statusAtomsButton) {
     elements.statusAtomsButton.addEventListener('click', () => {
-      if (document?.body?.dataset?.activePage === 'game') {
-        return;
-      }
       showPage('game');
     });
   }

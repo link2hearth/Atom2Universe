@@ -392,7 +392,6 @@ body.theme-light .brand-button:focus-visible {
 
 .brand--locked {
   opacity: 0.7;
-  pointer-events: none;
 }
 
 .brand--portal-ready {
