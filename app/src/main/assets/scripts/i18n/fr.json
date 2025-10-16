@@ -839,6 +839,9 @@
           "note": "Débloquez le trophée « Ruée vers le million » pour personnaliser vos briques."
         },
         "reset": "Réinitialiser",
+        "devkit": {
+          "openButton": "Ouvrir le DevKit"
+        },
         "resetDialog": {
           "title": "Confirmer la réinitialisation",
           "description": "Tapez {keyword} pour confirmer. Cette action est irréversible.",
