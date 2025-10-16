@@ -9985,9 +9985,6 @@ const supportsPassiveEventListeners = (() => {
 })();
 
 const passiveEventListenerOptions = supportsPassiveEventListeners ? { passive: true } : false;
-const passiveCaptureEventListenerOptions = supportsPassiveEventListeners
-  ? { passive: true, capture: true }
-  : true;
 const nonPassiveEventListenerOptions = supportsPassiveEventListeners ? { passive: false } : false;
 const supportsGlobalPointerEvents = typeof globalThis !== 'undefined'
   && typeof globalThis.PointerEvent === 'function';
@@ -10121,14 +10118,6 @@ if (typeof document !== 'undefined' && typeof document.addEventListener === 'fun
       applyActivePageScrollBehavior();
     }
   });
-  ['touchend', 'touchcancel'].forEach(eventName => {
-    document.addEventListener(eventName, handleGlobalTouchCompletion, passiveCaptureEventListenerOptions);
-  });
-  if (supportsGlobalPointerEvents) {
-    ['pointerup', 'pointercancel'].forEach(eventName => {
-      document.addEventListener(eventName, handleGlobalPointerCompletion, passiveCaptureEventListenerOptions);
-    });
-  }
 }
 
 if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
