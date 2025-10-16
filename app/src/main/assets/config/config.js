@@ -2586,6 +2586,25 @@ const GAME_CONFIG = {
         color: '#7f8c8d'
       }
     ],
+    /**
+     * Paliers de déblocage progressif des collections disponibles dans le gacha.
+     * - drawThreshold : nombre de tirages cumulés avant d'accéder au palier.
+     * - allowedRarityCount : nombre de collections accessibles (null = toutes).
+     */
+    collectionUnlocks: [
+      {
+        drawThreshold: 0,
+        allowedRarityCount: 2
+      },
+      {
+        drawThreshold: 50,
+        allowedRarityCount: 3
+      },
+      {
+        drawThreshold: 150,
+        allowedRarityCount: null
+      }
+    ],
     weeklyRarityWeights: {
       monday: {
         commun: 80,

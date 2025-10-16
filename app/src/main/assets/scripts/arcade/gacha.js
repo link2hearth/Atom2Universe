@@ -394,6 +394,106 @@ configuredRarityIds.forEach(id => {
 
 const BASE_GACHA_RARITY_ID_SET = new Set(BASE_GACHA_RARITIES.map(entry => entry.id));
 
+function sanitizeGachaCollectionUnlocks(rawUnlocks) {
+  if (!Array.isArray(rawUnlocks) || !rawUnlocks.length) {
+    return [];
+  }
+  const sanitized = [];
+  rawUnlocks.forEach(entry => {
+    if (!entry || typeof entry !== 'object') {
+      return;
+    }
+    const thresholdSource = entry.drawThreshold
+      ?? entry.drawCount
+      ?? entry.threshold
+      ?? entry.minDraw
+      ?? entry.start
+      ?? entry.unlockAt
+      ?? entry.after
+      ?? entry.from;
+    const thresholdValue = Number(thresholdSource);
+    if (!Number.isFinite(thresholdValue) || thresholdValue < 0) {
+      return;
+    }
+    const normalizedThreshold = Math.max(0, Math.floor(thresholdValue));
+    let allowedCount = null;
+    const countCandidates = [
+      entry.allowedRarityCount,
+      entry.rarityCount,
+      entry.maxRarityCount,
+      entry.maxCollections,
+      entry.collections
+    ];
+    for (let index = 0; index < countCandidates.length; index += 1) {
+      const candidate = countCandidates[index];
+      if (candidate == null) {
+        continue;
+      }
+      if (typeof candidate === 'string') {
+        const normalized = candidate.trim().toLowerCase();
+        if (normalized === 'all' || normalized === 'any' || normalized === 'full') {
+          allowedCount = null;
+          break;
+        }
+      }
+      const numeric = Number(candidate);
+      if (!Number.isFinite(numeric) || numeric <= 0) {
+        continue;
+      }
+      allowedCount = Math.floor(numeric);
+      break;
+    }
+    if (allowedCount != null) {
+      const totalRarities = BASE_GACHA_RARITIES.length;
+      if (totalRarities > 0) {
+        allowedCount = Math.min(Math.max(1, allowedCount), totalRarities);
+      } else {
+        allowedCount = Math.max(1, allowedCount);
+      }
+    }
+    if (allowedCount == null) {
+      const maxIndexCandidates = [entry.maxRarityIndex, entry.maxIndex];
+      for (let index = 0; index < maxIndexCandidates.length; index += 1) {
+        const candidate = maxIndexCandidates[index];
+        if (candidate == null) {
+          continue;
+        }
+        const numeric = Number(candidate);
+        if (!Number.isFinite(numeric) || numeric < 0) {
+          continue;
+        }
+        const normalizedIndex = Math.floor(numeric);
+        const totalRarities = BASE_GACHA_RARITIES.length;
+        if (totalRarities > 0) {
+          allowedCount = Math.min(normalizedIndex + 1, totalRarities);
+        } else {
+          allowedCount = normalizedIndex + 1;
+        }
+        break;
+      }
+      if (allowedCount != null) {
+        allowedCount = Math.max(1, allowedCount);
+      }
+    }
+    sanitized.push({
+      drawThreshold: normalizedThreshold,
+      allowedRarityCount: allowedCount
+    });
+  });
+  sanitized.sort((a, b) => a.drawThreshold - b.drawThreshold);
+  const deduped = [];
+  sanitized.forEach(entry => {
+    if (!deduped.length || deduped[deduped.length - 1].drawThreshold !== entry.drawThreshold) {
+      deduped.push(entry);
+    } else {
+      deduped[deduped.length - 1] = entry;
+    }
+  });
+  return deduped;
+}
+
+const GACHA_COLLECTION_UNLOCKS = sanitizeGachaCollectionUnlocks(rawGachaConfig.collectionUnlocks);
+
 const WEEKDAY_KEYS = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 
 const GACHA_FEATURED_LABEL_KEYS_BY_DAY = Object.freeze({
@@ -2307,11 +2407,53 @@ function handleFusionAttempt(fusionId) {
   }
 }
 
-function pickGachaRarity() {
-  const available = GACHA_RARITIES.filter(def => {
+function getAllowedRarityCountForDraw(drawIndex) {
+  if (!Array.isArray(GACHA_COLLECTION_UNLOCKS) || !GACHA_COLLECTION_UNLOCKS.length) {
+    return null;
+  }
+  const numericIndex = Math.max(0, Math.floor(Number(drawIndex) || 0));
+  let matched = GACHA_COLLECTION_UNLOCKS[0];
+  for (let index = 1; index < GACHA_COLLECTION_UNLOCKS.length; index += 1) {
+    const entry = GACHA_COLLECTION_UNLOCKS[index];
+    if (numericIndex < entry.drawThreshold) {
+      break;
+    }
+    matched = entry;
+  }
+  return matched ? matched.allowedRarityCount ?? null : null;
+}
+
+function filterAvailableRarities(rarities) {
+  if (!Array.isArray(rarities)) {
+    return [];
+  }
+  return rarities.filter(def => {
+    if (!def?.id) {
+      return false;
+    }
     const pool = gachaPools.get(def.id);
     return Array.isArray(pool) && pool.length > 0;
   });
+}
+
+function pickGachaRarity(drawIndex = null) {
+  const allowedCount = getAllowedRarityCountForDraw(drawIndex);
+  let candidates = GACHA_RARITIES;
+  let restricted = false;
+  if (allowedCount != null) {
+    const totalRarities = GACHA_RARITIES.length;
+    if (totalRarities > 0) {
+      const limit = Math.min(Math.max(1, allowedCount), totalRarities);
+      if (limit < totalRarities) {
+        candidates = GACHA_RARITIES.slice(0, limit);
+        restricted = true;
+      }
+    }
+  }
+  let available = filterAvailableRarities(candidates);
+  if (!available.length && restricted) {
+    available = filterAvailableRarities(GACHA_RARITIES);
+  }
   if (!available.length) {
     return null;
   }
@@ -2342,6 +2484,18 @@ function pickRandomElementFromRarity(rarityId) {
   const index = Math.floor(Math.random() * pool.length);
   const elementId = pool[index];
   return periodicElementIndex.get(elementId) || null;
+}
+
+function getTotalGachaDrawCount() {
+  if (!gameState || typeof gameState !== 'object' || !gameState.elements || typeof gameState.elements !== 'object') {
+    return 0;
+  }
+  const entries = Object.values(gameState.elements);
+  let total = 0;
+  for (let index = 0; index < entries.length; index += 1) {
+    total += getElementLifetimeCount(entries[index]);
+  }
+  return total;
 }
 
 function renderGachaResult(outcome) {
@@ -2770,9 +2924,10 @@ function performGachaRoll(count = 1) {
     gameState.gachaTickets = available - totalCost;
   }
 
+  const initialDrawCount = getTotalGachaDrawCount();
   const results = [];
   for (let rollIndex = 0; rollIndex < drawCount; rollIndex += 1) {
-    const rarity = pickGachaRarity();
+    const rarity = pickGachaRarity(initialDrawCount + rollIndex);
     if (!rarity) {
       showToast(t('scripts.gacha.errors.noElements'));
       break;
