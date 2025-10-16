@@ -2201,11 +2201,11 @@
           commitSeek();
         });
 
-        ['pointerdown', 'mousedown', 'touchstart'].forEach((eventName) => {
+        ['pointerdown', 'mousedown'].forEach((eventName) => {
           this.progressSlider.addEventListener(eventName, startScrub, { passive: true });
         });
 
-        ['pointerup', 'pointercancel', 'mouseup', 'touchend', 'touchcancel'].forEach((eventName) => {
+        ['pointerup', 'pointercancel', 'mouseup'].forEach((eventName) => {
           this.progressSlider.addEventListener(eventName, finishScrub, { passive: true });
         });
 
