@@ -57,6 +57,9 @@ body *:not(input):not(textarea):not(select):not(option):not([contenteditable='tr
   -webkit-user-select: none; /* Safari, Chrome */
   -ms-user-select: none;     /* IE 10+ */
   user-select: none;         /* Standard */
+
+  /* Remove tap highlight on touch devices */
+  -webkit-tap-highlight-color: transparent;
 }
 
 [hidden] {
@@ -91,6 +94,16 @@ body {
 body.view-game,
 body.view-wave {
   overflow: hidden;
+}
+
+body.touch-scroll-lock {
+  touch-action: none !important;
+  overscroll-behavior: none !important;
+}
+
+body.touch-scroll-force {
+  touch-action: auto !important;
+  overscroll-behavior: auto !important;
 }
 
 body[data-text-font='vt323'] {

@@ -382,7 +382,26 @@ class MetauxMatch3Game {
   }
 
   requestScrollUnlock() {
-    return;
+    if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
+      let event = null;
+      if (typeof window.CustomEvent === 'function') {
+        event = new window.CustomEvent('atom2univers:scroll-reset');
+      } else if (typeof window.Event === 'function') {
+        event = new window.Event('atom2univers:scroll-reset');
+      }
+      if (event) {
+        window.dispatchEvent(event);
+        return;
+      }
+    }
+
+    const body = typeof document !== 'undefined' ? document.body : null;
+    if (body) {
+      body.style.removeProperty('touch-action');
+      body.style.removeProperty('overscroll-behavior');
+      body.classList.remove('touch-scroll-lock');
+      body.classList.remove('touch-scroll-force');
+    }
   }
 
   buildBoard() {
