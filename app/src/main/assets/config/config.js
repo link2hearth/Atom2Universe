@@ -13,6 +13,12 @@ const SHOP_MAX_PURCHASE_DEFAULT = 1000;
 const STARTUP_FADE_DURATION_MS = 1500;
 
 /**
+ * Ratio appliqué à la durée de fondu lorsque le joueur relance manuellement le
+ * jeu via le titre « Atom2Univers » de l’en-tête.
+ */
+const STATUS_ATOMS_RELOAD_FADE_RATIO = 0.5;
+
+/**
  * Durée minimale (en millisecondes) passée en arrière-plan avant de forcer
  * un rechargement complet de l’application au retour au premier plan.
  */
@@ -198,6 +204,7 @@ if (typeof globalThis !== 'undefined') {
   globalThis.PERFORMANCE_MODE_SETTINGS = PERFORMANCE_MODE_SETTINGS;
   globalThis.PERFORMANCE_MODE_DEFINITIONS = PERFORMANCE_MODE_DEFINITIONS;
   globalThis.STARTUP_FADE_DURATION_MS = STARTUP_FADE_DURATION_MS;
+  globalThis.STATUS_ATOMS_RELOAD_FADE_RATIO = STATUS_ATOMS_RELOAD_FADE_RATIO;
   globalThis.BACKGROUND_RELOAD_THRESHOLD_MS = BACKGROUND_RELOAD_THRESHOLD_MS;
   globalThis.BACKGROUND_RELOAD_OVERLAY_LEAD_MS = BACKGROUND_RELOAD_OVERLAY_LEAD_MS;
 }
