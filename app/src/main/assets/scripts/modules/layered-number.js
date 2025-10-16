@@ -560,3 +560,21 @@ class LayeredNumber {
   }
 }
 
+const DEFAULT_LAYER1_THRESHOLD = 1e6;
+const DEFAULT_LAYER1_DOWNSHIFT = 5;
+const DEFAULT_LOG_DIFF_LIMIT = 15;
+const DEFAULT_EPSILON = 1e-12;
+
+LayeredNumber.LAYER1_THRESHOLD = Number.isFinite(LayeredNumber.LAYER1_THRESHOLD)
+  ? LayeredNumber.LAYER1_THRESHOLD
+  : DEFAULT_LAYER1_THRESHOLD;
+LayeredNumber.LAYER1_DOWN = Number.isFinite(LayeredNumber.LAYER1_DOWN)
+  ? LayeredNumber.LAYER1_DOWN
+  : DEFAULT_LAYER1_DOWNSHIFT;
+LayeredNumber.LOG_DIFF_LIMIT = Number.isFinite(LayeredNumber.LOG_DIFF_LIMIT)
+  ? LayeredNumber.LOG_DIFF_LIMIT
+  : DEFAULT_LOG_DIFF_LIMIT;
+LayeredNumber.EPSILON = Number.isFinite(LayeredNumber.EPSILON)
+  ? LayeredNumber.EPSILON
+  : DEFAULT_EPSILON;
+
