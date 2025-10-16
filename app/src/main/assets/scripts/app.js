@@ -3892,6 +3892,10 @@ function getStartupOverlaySafetyDelay() {
   return fadeDuration + bufferDuration;
 }
 
+function clearOverlayFadeFallbackTimeout() {
+  clearOverlayFadeFallbackTimeout();
+}
+
 function clearGlobalStartupOverlayFallback() {
   if (startupOverlayGlobalFallbackTimeout != null) {
     clearTimeout(startupOverlayGlobalFallbackTimeout);
@@ -4467,10 +4471,7 @@ function showStartupOverlay(options = {}) {
     return;
   }
 
-  if (overlayFadeFallbackTimeout != null) {
-    clearTimeout(overlayFadeFallbackTimeout);
-    overlayFadeFallbackTimeout = null;
-  }
+  clearOverlayFadeFallbackTimeout();
 
   overlay.removeAttribute('hidden');
 
@@ -4514,10 +4515,7 @@ function hideStartupOverlay(options = {}) {
     }
 
     const finalize = () => {
-      if (overlayFadeFallbackTimeout != null) {
-        clearTimeout(overlayFadeFallbackTimeout);
-        overlayFadeFallbackTimeout = null;
-      }
+      clearOverlayFadeFallbackTimeout();
       overlay.setAttribute('hidden', '');
     };
 
@@ -4587,6 +4585,86 @@ function handleVisibilityChange() {
   }, leadTime);
 }
 
+function teardownAppBeforeManualReload() {
+  try {
+    clearStartupOverlayFailsafe();
+  } catch (error) {
+    console.warn('Unable to clear startup overlay failsafe before manual reload', error);
+  }
+
+  clearGlobalStartupOverlayFallback();
+
+  clearOverlayFadeFallbackTimeout();
+
+  if (pendingAutoUiScaleFrame != null) {
+    if (autoUiScaleFrameUsesTimeout) {
+      clearTimeout(pendingAutoUiScaleFrame);
+    } else if (typeof window !== 'undefined' && typeof window.cancelAnimationFrame === 'function') {
+      window.cancelAnimationFrame(pendingAutoUiScaleFrame);
+    } else if (typeof cancelAnimationFrame === 'function') {
+      cancelAnimationFrame(pendingAutoUiScaleFrame);
+    }
+    pendingAutoUiScaleFrame = null;
+    autoUiScaleFrameUsesTimeout = false;
+  }
+
+  if (pendingAutoUiScaleTimeoutId != null) {
+    clearTimeout(pendingAutoUiScaleTimeoutId);
+    pendingAutoUiScaleTimeoutId = null;
+  }
+
+  if (gameLoopControl && typeof gameLoopControl === 'object') {
+    try {
+      clearScheduledGameLoop();
+    } catch (error) {
+      console.warn('Unable to clear scheduled game loop before manual reload', error);
+    }
+    gameLoopControl.isActive = false;
+    gameLoopControl.handle = null;
+    gameLoopControl.type = null;
+  }
+
+  pageHiddenAt = null;
+  backgroundReloadScheduled = false;
+}
+
+function performHardApplicationReload() {
+  if (typeof window === 'undefined' || !window.location) {
+    throw new Error('Window location is unavailable for reload');
+  }
+
+  try {
+    if (typeof window.stop === 'function') {
+      window.stop();
+    }
+  } catch (error) {
+    console.warn('Unable to stop active loading before manual reload', error);
+  }
+
+  const { location } = window;
+
+  try {
+    if (typeof location.replace === 'function') {
+      location.replace(location.href);
+      return;
+    }
+  } catch (error) {
+    console.warn('Unable to replace location during manual reload, falling back', error);
+  }
+
+  if (typeof location.reload === 'function') {
+    location.reload();
+    return;
+  }
+
+  if (typeof location.assign === 'function') {
+    location.assign(location.href);
+    return;
+  }
+
+  throw new Error('No navigation method available to reload the application');
+}
+
 function scheduleManualGameReloadWithShortFade() {
   if (manualReloadScheduled) {
     return;
@@ -4611,36 +4689,51 @@ function scheduleManualGameReloadWithShortFade() {
     root.style.setProperty('--startup-fade-duration', `${fadeDuration}ms`);
   }
 
+  teardownAppBeforeManualReload();
   showStartupOverlay();
+  scheduleStartupOverlayFailsafe();
+
+  let reloadDispatched = false;
+
+  const finalizePendingReload = () => {
+    if (reloadDispatched) {
+      return;
+    }
+    applyStartupOverlayDuration();
+    manualReloadScheduled = false;
+    hideStartupOverlay({ instant: true });
+    try {
+      startGameLoop({ immediate: true });
+    } catch (error) {
+      console.error('Unable to restart game loop after failed manual reload', error);
+    }
+  };
+
+  const attemptReload = () => {
+    if (reloadDispatched) {
+      return;
+    }
+    try {
+      reloadDispatched = true;
+      performHardApplicationReload();
+    } catch (error) {
+      reloadDispatched = false;
+      console.error('Unable to reload application after manual request', error);
+      finalizePendingReload();
+    }
+  };
 
   const reloadDelay = fadeDuration > 0 ? fadeDuration : 0;
 
   if (reloadDelay > 0) {
-    setTimeout(() => {
-      applyStartupOverlayDuration();
-      manualReloadScheduled = false;
-    }, reloadDelay + 120);
-
-    setTimeout(() => {
-      try {
-        window.location.reload();
-      } catch (error) {
-        manualReloadScheduled = false;
-        console.error('Unable to reload application after manual request', error);
-      }
-    }, reloadDelay);
-
+    setTimeout(attemptReload, reloadDelay);
+    setTimeout(finalizePendingReload, reloadDelay + 240);
     return;
   }
 
   requestAnimationFrame(() => {
-    applyStartupOverlayDuration();
-    manualReloadScheduled = false;
-    try {
-      window.location.reload();
-    } catch (error) {
-      console.error('Unable to reload application after manual request', error);
-    }
+    attemptReload();
+    setTimeout(finalizePendingReload, 200);
   });
 }
 function getOptionsWelcomeCardCopy() {
