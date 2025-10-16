@@ -537,6 +537,10 @@
       this.handlePointerDown = this.handlePointerDown.bind(this);
       this.handlePointerUp = this.handlePointerUp.bind(this);
       this.handlePointerCancel = this.handlePointerCancel.bind(this);
+      this.handleTouchStart = this.handleTouchStart.bind(this);
+      this.handleTouchEnd = this.handleTouchEnd.bind(this);
+      this.handleTouchCancel = this.handleTouchCancel.bind(this);
+      this.handleTouchMove = this.handleTouchMove.bind(this);
       this.handleKeyDown = this.handleKeyDown.bind(this);
       this.handleKeyUp = this.handleKeyUp.bind(this);
       this.handleResetClick = this.handleResetClick.bind(this);
@@ -689,11 +693,19 @@
         window.addEventListener('resize', this.handleResize);
       }
       const pointerTarget = this.stage || this.canvas;
+      const supportsPointerEvents =
+        typeof window !== 'undefined' && typeof window.PointerEvent === 'function';
       if (pointerTarget) {
         pointerTarget.addEventListener('pointerdown', this.handlePointerDown);
         pointerTarget.addEventListener('pointerup', this.handlePointerUp);
         pointerTarget.addEventListener('pointercancel', this.handlePointerCancel);
         pointerTarget.addEventListener('pointerleave', this.handlePointerCancel);
+        if (!supportsPointerEvents) {
+          pointerTarget.addEventListener('touchstart', this.handleTouchStart, { passive: false });
+          pointerTarget.addEventListener('touchend', this.handleTouchEnd, { passive: false });
+          pointerTarget.addEventListener('touchcancel', this.handleTouchCancel, { passive: false });
+          pointerTarget.addEventListener('touchmove', this.handleTouchMove, { passive: false });
+        }
       }
       if (this.resetButton) {
         this.resetButton.addEventListener('click', this.handleResetClick);
@@ -709,11 +721,19 @@
         window.removeEventListener('resize', this.handleResize);
       }
       const pointerTarget = this.stage || this.canvas;
+      const supportsPointerEvents =
+        typeof window !== 'undefined' && typeof window.PointerEvent === 'function';
       if (pointerTarget) {
         pointerTarget.removeEventListener('pointerdown', this.handlePointerDown);
         pointerTarget.removeEventListener('pointerup', this.handlePointerUp);
         pointerTarget.removeEventListener('pointercancel', this.handlePointerCancel);
         pointerTarget.removeEventListener('pointerleave', this.handlePointerCancel);
+        if (!supportsPointerEvents) {
+          pointerTarget.removeEventListener('touchstart', this.handleTouchStart, { passive: false });
+          pointerTarget.removeEventListener('touchend', this.handleTouchEnd, { passive: false });
+          pointerTarget.removeEventListener('touchcancel', this.handleTouchCancel, { passive: false });
+          pointerTarget.removeEventListener('touchmove', this.handleTouchMove, { passive: false });
+        }
       }
       if (this.resetButton) {
         this.resetButton.removeEventListener('click', this.handleResetClick);
@@ -1076,6 +1096,97 @@
       const pressed = this.activePointers.size > 0 || this.keyboardPressed;
       this.setPressingState(pressed);
       event.preventDefault();
+    }
+
+    handleTouchStart(event) {
+      if (this.isEventFromControls(event) || this.isEventFromInteractiveOverlay(event)) {
+        return;
+      }
+      if (!event) {
+        return;
+      }
+      const touches = Array.from(event.changedTouches || event.touches || []);
+      const wasPressing = this.isPressing;
+      if (touches.length > 0) {
+        touches.forEach(touch => {
+          const pointerId = Number.isFinite(touch?.identifier) ? touch.identifier : null;
+          if (pointerId != null) {
+            this.activePointers.add(pointerId);
+          }
+        });
+      }
+      const additionalClicks = wasPressing
+        ? touches.length
+        : Math.max(touches.length - 1, 0);
+      for (let index = 0; index < additionalClicks; index += 1) {
+        this.triggerManualAtomClick();
+      }
+      this.setPressingState(true);
+      if (typeof event.preventDefault === 'function') {
+        event.preventDefault();
+      }
+      if (typeof event.stopPropagation === 'function') {
+        event.stopPropagation();
+      }
+    }
+
+    handleTouchEnd(event) {
+      if (this.isEventFromControls(event) || this.isEventFromInteractiveOverlay(event)) {
+        return;
+      }
+      const touches = Array.from(event.changedTouches || []);
+      if (touches.length > 0) {
+        touches.forEach(touch => {
+          const pointerId = Number.isFinite(touch?.identifier) ? touch.identifier : null;
+          if (pointerId != null && this.activePointers.has(pointerId)) {
+            this.activePointers.delete(pointerId);
+          }
+        });
+      }
+      const remainingTouches = Number.isFinite(event?.touches?.length) ? event.touches.length : 0;
+      const pressed = this.activePointers.size > 0 || this.keyboardPressed || remainingTouches > 0;
+      this.setPressingState(pressed);
+      if (typeof event.preventDefault === 'function') {
+        event.preventDefault();
+      }
+      if (typeof event.stopPropagation === 'function') {
+        event.stopPropagation();
+      }
+    }
+
+    handleTouchCancel(event) {
+      if (this.isEventFromControls(event) || this.isEventFromInteractiveOverlay(event)) {
+        return;
+      }
+      const touches = Array.from(event.changedTouches || []);
+      if (touches.length > 0) {
+        touches.forEach(touch => {
+          const pointerId = Number.isFinite(touch?.identifier) ? touch.identifier : null;
+          if (pointerId != null && this.activePointers.has(pointerId)) {
+            this.activePointers.delete(pointerId);
+          }
+        });
+      }
+      const pressed = this.activePointers.size > 0 || this.keyboardPressed;
+      this.setPressingState(pressed);
+      if (typeof event.preventDefault === 'function') {
+        event.preventDefault();
+      }
+      if (typeof event.stopPropagation === 'function') {
+        event.stopPropagation();
+      }
+    }
+
+    handleTouchMove(event) {
+      if (this.isEventFromControls(event) || this.isEventFromInteractiveOverlay(event)) {
+        return;
+      }
+      if (typeof event.preventDefault === 'function') {
+        event.preventDefault();
+      }
+      if (typeof event.stopPropagation === 'function') {
+        event.stopPropagation();
+      }
     }
 
     handleKeyDown(event) {
