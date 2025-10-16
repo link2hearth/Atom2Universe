@@ -10167,6 +10167,9 @@ const supportsPassiveEventListeners = (() => {
 })();
 
 const passiveEventListenerOptions = supportsPassiveEventListeners ? { passive: true } : false;
+const passiveCaptureEventListenerOptions = supportsPassiveEventListeners
+  ? { passive: true, capture: true }
+  : true;
 const nonPassiveEventListenerOptions = supportsPassiveEventListeners ? { passive: false } : false;
 const supportsGlobalPointerEvents = typeof globalThis !== 'undefined'
   && typeof globalThis.PointerEvent === 'function';
@@ -10447,6 +10450,18 @@ if (typeof document !== 'undefined' && typeof document.addEventListener === 'fun
     }
     applyActivePageScrollBehavior();
   });
+
+  document.addEventListener('touchstart', handleGlobalTouchStart, passiveCaptureEventListenerOptions);
+  ['touchend', 'touchcancel'].forEach(eventName => {
+    document.addEventListener(eventName, handleGlobalTouchCompletion, passiveCaptureEventListenerOptions);
+  });
+
+  if (supportsGlobalPointerEvents) {
+    document.addEventListener('pointerdown', handleGlobalPointerStart, passiveCaptureEventListenerOptions);
+    ['pointerup', 'pointercancel'].forEach(eventName => {
+      document.addEventListener(eventName, handleGlobalPointerCompletion, passiveCaptureEventListenerOptions);
+    });
+  }
 }
 
 if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
@@ -10459,14 +10474,14 @@ if (typeof window !== 'undefined' && typeof window.addEventListener === 'functio
   window.addEventListener('atom2univers:scroll-reset', () => {
     applyActivePageScrollBehavior();
   });
-  window.addEventListener('touchstart', handleGlobalTouchStart, passiveEventListenerOptions);
+  window.addEventListener('touchstart', handleGlobalTouchStart, passiveCaptureEventListenerOptions);
   ['touchend', 'touchcancel'].forEach(eventName => {
-    window.addEventListener(eventName, handleGlobalTouchCompletion, passiveEventListenerOptions);
+    window.addEventListener(eventName, handleGlobalTouchCompletion, passiveCaptureEventListenerOptions);
   });
   if (supportsGlobalPointerEvents) {
-    window.addEventListener('pointerdown', handleGlobalPointerStart, passiveEventListenerOptions);
+    window.addEventListener('pointerdown', handleGlobalPointerStart, passiveCaptureEventListenerOptions);
     ['pointerup', 'pointercancel'].forEach(eventName => {
-      window.addEventListener(eventName, handleGlobalPointerCompletion, passiveEventListenerOptions);
+      window.addEventListener(eventName, handleGlobalPointerCompletion, passiveCaptureEventListenerOptions);
     });
   }
 }
