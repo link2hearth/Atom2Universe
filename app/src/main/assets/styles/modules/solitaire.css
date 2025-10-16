@@ -229,11 +229,26 @@
   justify-content: center;
   font-size: clamp(0.95rem, 2.2vw, 1.15rem);
   line-height: 1;
+  gap: clamp(0.12rem, 0.4vw, 0.24rem);
 }
 
 .solitaire-card__corner--top {
   justify-self: start;
   align-self: start;
+}
+
+.solitaire-card__corner-symbol,
+.solitaire-card__corner-rank {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.solitaire-card__corner-rank {
+  font-weight: 600;
+  letter-spacing: 0.01em;
 }
 
 .solitaire-card__value {
