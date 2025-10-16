@@ -9991,6 +9991,52 @@ const supportsGlobalPointerEvents = typeof globalThis !== 'undefined'
 
 let activeBodyScrollBehavior = SCROLL_BEHAVIOR_MODES.DEFAULT;
 let bodyScrollTouchMoveListenerAttached = false;
+const activeTouchIdentifiers = new Set();
+const activePointerTouchIds = new Set();
+
+function normalizeTouchIdentifier(touch) {
+  if (!touch || typeof touch !== 'object') {
+    return null;
+  }
+  if (Number.isFinite(touch.identifier)) {
+    return `touch:${touch.identifier}`;
+  }
+  if (Number.isFinite(touch.pointerId)) {
+    return `pointer:${touch.pointerId}`;
+  }
+  return null;
+}
+
+function registerActiveTouches(touchList) {
+  if (!touchList || typeof touchList.length !== 'number') {
+    return;
+  }
+  Array.from(touchList).forEach(touch => {
+    const identifier = normalizeTouchIdentifier(touch);
+    if (identifier) {
+      activeTouchIdentifiers.add(identifier);
+    }
+  });
+}
+
+function unregisterActiveTouches(touchList) {
+  if (!touchList || typeof touchList.length !== 'number') {
+    return;
+  }
+  Array.from(touchList).forEach(touch => {
+    const identifier = normalizeTouchIdentifier(touch);
+    if (identifier) {
+      activeTouchIdentifiers.delete(identifier);
+    }
+  });
+}
+
+function hasRemainingActiveTouches(event) {
+  if (Number.isFinite(event?.touches?.length) && event.touches.length > 0) {
+    return true;
+  }
+  return activeTouchIdentifiers.size > 0 || activePointerTouchIds.size > 0;
+}
 
 function preventBodyScrollTouchMove(event) {
   if (!event) {
@@ -10095,11 +10141,17 @@ function applyActivePageScrollBehavior(activePageElement) {
   applyBodyScrollBehavior(resolvePageScrollBehavior(pageElement));
 }
 
+function handleGlobalTouchStart(event) {
+  registerActiveTouches(event?.changedTouches || event?.touches);
+}
+
 function handleGlobalTouchCompletion(event) {
-  const touchesRemaining = Number.isFinite(event?.touches?.length)
-    ? event.touches.length
-    : 0;
-  if (touchesRemaining > 0) {
+  unregisterActiveTouches(event?.changedTouches || event?.touches);
+  if (event?.type === 'touchcancel' && (!event.changedTouches || event.changedTouches.length === 0)) {
+    activeTouchIdentifiers.clear();
+    activePointerTouchIds.clear();
+  }
+  if (hasRemainingActiveTouches(event)) {
     return;
   }
   applyActivePageScrollBehavior();
@@ -10109,14 +10161,36 @@ function handleGlobalPointerCompletion(event) {
   if (!event || event.pointerType !== 'touch') {
     return;
   }
+  if (Number.isFinite(event.pointerId)) {
+    activePointerTouchIds.delete(event.pointerId);
+  } else {
+    activePointerTouchIds.clear();
+  }
+  if (hasRemainingActiveTouches()) {
+    return;
+  }
   applyActivePageScrollBehavior();
+}
+
+function handleGlobalPointerStart(event) {
+  if (!event || event.pointerType !== 'touch') {
+    return;
+  }
+  if (Number.isFinite(event.pointerId)) {
+    activePointerTouchIds.add(event.pointerId);
+  } else {
+    activePointerTouchIds.add('pointer');
+  }
 }
 
 if (typeof document !== 'undefined' && typeof document.addEventListener === 'function') {
   document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) {
-      applyActivePageScrollBehavior();
+    if (document.hidden) {
+      activeTouchIdentifiers.clear();
+      activePointerTouchIds.clear();
+      return;
     }
+    applyActivePageScrollBehavior();
   });
 }
 
@@ -10130,10 +10204,12 @@ if (typeof window !== 'undefined' && typeof window.addEventListener === 'functio
   window.addEventListener('atom2univers:scroll-reset', () => {
     applyActivePageScrollBehavior();
   });
+  window.addEventListener('touchstart', handleGlobalTouchStart, passiveEventListenerOptions);
   ['touchend', 'touchcancel'].forEach(eventName => {
     window.addEventListener(eventName, handleGlobalTouchCompletion, passiveEventListenerOptions);
   });
   if (supportsGlobalPointerEvents) {
+    window.addEventListener('pointerdown', handleGlobalPointerStart, passiveEventListenerOptions);
     ['pointerup', 'pointercancel'].forEach(eventName => {
       window.addEventListener(eventName, handleGlobalPointerCompletion, passiveEventListenerOptions);
     });
