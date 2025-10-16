@@ -186,10 +186,39 @@
       <div class="shop-layout">
         <div class="shop-actions-header" id="shopActionsHeader" aria-hidden="true">
           <div class="shop-actions-header__spacer" aria-hidden="true"></div>
-          <div class="shop-actions-header__labels">
-            <span class="shop-actions-header__label">x1</span>
-            <span class="shop-actions-header__label">x10</span>
-            <span class="shop-actions-header__label">x100</span>
+          <div
+            class="shop-actions-header__controls"
+            role="group"
+            aria-label="Quantité d’achat"
+            data-i18n-aria-label="index.sections.shop.quantityGroupLabel"
+          >
+            <button
+              type="button"
+              class="shop-actions-header__control is-active"
+              aria-pressed="true"
+              aria-label="Sélectionner l’achat x1"
+              data-i18n-aria-label="index.sections.shop.quantityToggleX1"
+            >
+              x1
+            </button>
+            <button
+              type="button"
+              class="shop-actions-header__control"
+              aria-pressed="false"
+              aria-label="Sélectionner l’achat x10"
+              data-i18n-aria-label="index.sections.shop.quantityToggleX10"
+            >
+              x10
+            </button>
+            <button
+              type="button"
+              class="shop-actions-header__control"
+              aria-pressed="false"
+              aria-label="Sélectionner l’achat x100"
+              data-i18n-aria-label="index.sections.shop.quantityToggleX100"
+            >
+              x100
+            </button>
           </div>
           <p
             class="shop-actions-header__placeholder"
