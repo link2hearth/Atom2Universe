@@ -8836,6 +8836,40 @@ const clickHistory = [];
 let targetClickStrength = 0;
 let displayedClickStrength = 0;
 
+const TOUCH_POINTER_CLICK_SUPPRESSION_MS = 320;
+let suppressPointerClickUntil = 0;
+
+function getHighResTimestamp() {
+  if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+    return performance.now();
+  }
+  return Date.now();
+}
+
+function markTouchPointerManualClick(now = getHighResTimestamp()) {
+  suppressPointerClickUntil = now + TOUCH_POINTER_CLICK_SUPPRESSION_MS;
+}
+
+function shouldSuppressPointerDerivedClick(now = getHighResTimestamp()) {
+  if (suppressPointerClickUntil <= 0) {
+    return false;
+  }
+  if (now <= suppressPointerClickUntil) {
+    return true;
+  }
+  if (now - suppressPointerClickUntil > TOUCH_POINTER_CLICK_SUPPRESSION_MS * 4) {
+    suppressPointerClickUntil = 0;
+  }
+  return false;
+}
+
+function isTouchLikePointerEvent(event) {
+  const pointerType = typeof event?.pointerType === 'string'
+    ? event.pointerType.toLowerCase()
+    : '';
+  return pointerType === 'touch' || pointerType === 'pen';
+}
+
 const atomAnimationState = {
   intensity: 0,
   posX: 0,
@@ -10726,8 +10760,27 @@ function bindDomEventListeners() {
   if (elements.atomButton) {
     const atomButton = elements.atomButton;
 
-    atomButton.addEventListener('pointerdown', () => {
+    atomButton.addEventListener('pointerdown', event => {
       activateEcoClickFeedback();
+      if (!isTouchLikePointerEvent(event)) {
+        return;
+      }
+      if (typeof event.preventDefault === 'function') {
+        event.preventDefault();
+      }
+      if (typeof event.stopPropagation === 'function') {
+        event.stopPropagation();
+      }
+      markTouchPointerManualClick();
+      handleManualAtomClick({ contextId: 'game' });
+      const currentTarget = event.currentTarget;
+      if (currentTarget && typeof currentTarget.setPointerCapture === 'function') {
+        try {
+          currentTarget.setPointerCapture(event.pointerId);
+        } catch (error) {
+          // Ignore errors from pointer capture (unsupported or already captured)
+        }
+      }
     });
 
     const handleEcoPointerRelease = () => {
@@ -10737,11 +10790,36 @@ function bindDomEventListeners() {
       triggerEcoClickFeedbackPulse();
     };
 
-    atomButton.addEventListener('pointerup', handleEcoPointerRelease);
+    const handlePointerCompletion = event => {
+      handleEcoPointerRelease();
+      if (!isTouchLikePointerEvent(event)) {
+        return;
+      }
+      const currentTarget = event.currentTarget;
+      if (!currentTarget || typeof currentTarget.releasePointerCapture !== 'function') {
+        return;
+      }
+      try {
+        currentTarget.releasePointerCapture(event.pointerId);
+      } catch (error) {
+        // Ignore pointer capture release errors
+      }
+    };
+
+    atomButton.addEventListener('pointerup', handlePointerCompletion);
     atomButton.addEventListener('pointerleave', handleEcoPointerRelease);
-    atomButton.addEventListener('pointercancel', handleEcoPointerRelease);
+    atomButton.addEventListener('pointercancel', handlePointerCompletion);
 
     atomButton.addEventListener('click', event => {
+      if (shouldSuppressPointerDerivedClick()) {
+        if (typeof event.preventDefault === 'function') {
+          event.preventDefault();
+        }
+        if (typeof event.stopPropagation === 'function') {
+          event.stopPropagation();
+        }
+        return;
+      }
       if (typeof event?.preventDefault === 'function') {
         event.preventDefault();
       }
@@ -10941,6 +11019,7 @@ function bindDomEventListeners() {
 }
 
 document.addEventListener('click', event => {
+  if (shouldSuppressPointerDerivedClick()) return;
   if (!shouldTriggerGlobalClick(event)) return;
   handleManualAtomClick({ contextId: 'game' });
 });
