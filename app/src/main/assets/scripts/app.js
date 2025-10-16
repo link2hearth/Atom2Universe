@@ -9983,6 +9983,83 @@ function noteGlobalTouchEnd(event) {
   }
 }
 
+const globalTouchPointers = new Set();
+let isScrollBehaviorRefreshScheduled = false;
+let activeGlobalTouches = 0;
+
+function scheduleScrollBehaviorRefresh() {
+  if (isScrollBehaviorRefreshScheduled) {
+    return;
+  }
+  isScrollBehaviorRefreshScheduled = true;
+  const schedule = typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function'
+    ? window.requestAnimationFrame.bind(window)
+    : (callback) => setTimeout(callback, 0);
+  schedule(() => {
+    isScrollBehaviorRefreshScheduled = false;
+    applyActivePageScrollBehavior();
+  });
+}
+
+function trackGlobalTouchPointer(event, isActive) {
+  if (!event || event.pointerType !== 'touch') {
+    return;
+  }
+  const pointerId = Number.isFinite(event.pointerId) ? event.pointerId : null;
+  if (pointerId == null) {
+    if (!isActive && globalTouchPointers.size > 0) {
+      globalTouchPointers.clear();
+      scheduleScrollBehaviorRefresh();
+    }
+    return;
+  }
+  if (isActive) {
+    globalTouchPointers.add(pointerId);
+    return;
+  }
+  globalTouchPointers.delete(pointerId);
+  if (globalTouchPointers.size === 0) {
+    scheduleScrollBehaviorRefresh();
+  }
+}
+
+function updateGlobalTouchCount(event, isStart) {
+  if (!event) {
+    return activeGlobalTouches;
+  }
+
+  const normalizedTouches = typeof event.touches?.length === 'number'
+    ? event.touches.length
+    : null;
+  if (normalizedTouches != null) {
+    activeGlobalTouches = Math.max(0, normalizedTouches);
+    return activeGlobalTouches;
+  }
+
+  const deltaTouches = typeof event.changedTouches?.length === 'number' && event.changedTouches.length > 0
+    ? event.changedTouches.length
+    : 1;
+
+  if (isStart) {
+    activeGlobalTouches = Math.max(0, activeGlobalTouches + deltaTouches);
+  } else {
+    activeGlobalTouches = Math.max(0, activeGlobalTouches - deltaTouches);
+  }
+
+  return activeGlobalTouches;
+}
+
+function noteGlobalTouchStart(event) {
+  updateGlobalTouchCount(event, true);
+}
+
+function noteGlobalTouchEnd(event) {
+  const remainingTouches = updateGlobalTouchCount(event, false);
+  if (remainingTouches === 0) {
+    scheduleScrollBehaviorRefresh();
+  }
+}
+
 function resolveScrollBehaviorFromPage(pageElement) {
   if (!pageElement) {
     return SCROLL_BEHAVIOR.DEFAULT;
@@ -10022,6 +10099,75 @@ function applyScrollBehaviorToken(target, behavior) {
   }
 }
 
+function isElementScrollLocked(element) {
+  if (!element) {
+    return false;
+  }
+  const { classList, style } = element;
+  if (classList && classList.contains('touch-scroll-lock') && !classList.contains('touch-scroll-force')) {
+    return true;
+  }
+  let inlineTouchAction = '';
+  if (style && typeof style.touchAction === 'string') {
+    inlineTouchAction = style.touchAction.trim().toLowerCase();
+  } else if (style && typeof style.getPropertyValue === 'function') {
+    const rawTouchAction = style.getPropertyValue('touch-action');
+    if (typeof rawTouchAction === 'string') {
+      inlineTouchAction = rawTouchAction.trim().toLowerCase();
+    }
+  }
+  if (inlineTouchAction && inlineTouchAction !== 'auto' && inlineTouchAction !== 'initial'
+    && inlineTouchAction !== 'inherit' && inlineTouchAction !== 'unset'
+    && inlineTouchAction !== 'manipulation') {
+    return true;
+  }
+  let inlineOverscroll = '';
+  if (style && typeof style.overscrollBehavior === 'string') {
+    inlineOverscroll = style.overscrollBehavior.trim().toLowerCase();
+  } else if (style && typeof style.getPropertyValue === 'function') {
+    const rawOverscroll = style.getPropertyValue('overscroll-behavior');
+    if (typeof rawOverscroll === 'string') {
+      inlineOverscroll = rawOverscroll.trim().toLowerCase();
+    }
+  }
+  if (inlineOverscroll && inlineOverscroll !== 'auto' && inlineOverscroll !== 'initial'
+    && inlineOverscroll !== 'inherit' && inlineOverscroll !== 'unset') {
+    return true;
+  }
+  return false;
+}
+
+function ensureScrollBehaviorConsistency(options) {
+  if (typeof document === 'undefined') {
+    return;
+  }
+  const body = document.body || null;
+  if (!body) {
+    return;
+  }
+  const config = options && typeof options === 'object' ? options : {};
+  const force = Boolean(config.force);
+  const activePageId = typeof body.dataset?.activePage === 'string'
+    ? body.dataset.activePage.trim()
+    : '';
+  const activePageElement = activePageId
+    ? document.getElementById(activePageId)
+    : null;
+  const expectedBehavior = resolveScrollBehaviorFromPage(activePageElement);
+  if (!force && expectedBehavior === SCROLL_BEHAVIOR.LOCK) {
+    return;
+  }
+  const html = document.documentElement || null;
+  const pageContainer = elements?.pageContainer || null;
+  const targets = [html, body, pageContainer];
+  const isLocked = targets.some(isElementScrollLocked);
+  const shouldReapplyForce = expectedBehavior === SCROLL_BEHAVIOR.FORCE
+    && !body.classList.contains('touch-scroll-force');
+  if (force || isLocked || shouldReapplyForce) {
+    applyScrollBehaviorFromPage(activePageElement);
+  }
+}
+
 function applyScrollBehaviorFromPage(pageElement) {
   if (typeof document === 'undefined') {
     return;
@@ -10050,6 +10196,7 @@ function applyActivePageScrollBehavior() {
     ? document.getElementById(activePageId)
     : null;
   applyScrollBehaviorFromPage(activePageElement);
+  ensureScrollBehaviorConsistency();
 }
 
 if (typeof globalThis !== 'undefined') {
@@ -10242,20 +10389,33 @@ document.addEventListener('visibilitychange', () => {
 });
 
 if (typeof window !== 'undefined') {
+  const ensureScrollConsistency = () => ensureScrollBehaviorConsistency();
+  const ensureScrollConsistencyForced = () => ensureScrollBehaviorConsistency({ force: true });
   const handleGlobalPointerDown = event => {
     trackGlobalTouchPointer(event, true);
+    ensureScrollConsistency();
   };
   const handleGlobalPointerUp = event => {
     trackGlobalTouchPointer(event, false);
+    ensureScrollConsistency();
   };
   window.addEventListener('pointerdown', handleGlobalPointerDown, { passive: true, capture: true });
   ['pointerup', 'pointercancel', 'pointerleave', 'pointerout'].forEach(eventName => {
     window.addEventListener(eventName, handleGlobalPointerUp, { passive: true, capture: true });
   });
-  window.addEventListener('touchstart', noteGlobalTouchStart, { passive: true, capture: true });
+  const handleGlobalTouchStart = event => {
+    noteGlobalTouchStart(event);
+    ensureScrollConsistency();
+  };
+  const handleGlobalTouchEnd = event => {
+    noteGlobalTouchEnd(event);
+    ensureScrollConsistency();
+  };
+  window.addEventListener('touchstart', handleGlobalTouchStart, { passive: true, capture: true });
   ['touchend', 'touchcancel'].forEach(eventName => {
-    window.addEventListener(eventName, noteGlobalTouchEnd, { passive: true, capture: true });
+    window.addEventListener(eventName, handleGlobalTouchEnd, { passive: true, capture: true });
   });
+  window.addEventListener('wheel', ensureScrollConsistency, { passive: true, capture: true });
   window.addEventListener('blur', () => {
     if (globalTouchPointers.size > 0) {
       globalTouchPointers.clear();
@@ -10264,9 +10424,27 @@ if (typeof window !== 'undefined') {
       activeGlobalTouches = 0;
     }
     scheduleScrollBehaviorRefresh();
+    ensureScrollConsistencyForced();
   });
   window.addEventListener('atom2univers:scroll-reset', () => {
     applyActivePageScrollBehavior();
+    ensureScrollConsistencyForced();
+  });
+}
+
+if (typeof document !== 'undefined') {
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') {
+      if (globalTouchPointers.size > 0) {
+        globalTouchPointers.clear();
+        scheduleScrollBehaviorRefresh();
+      }
+      if (activeGlobalTouches > 0) {
+        activeGlobalTouches = 0;
+        scheduleScrollBehaviorRefresh();
+      }
+      ensureScrollBehaviorConsistency({ force: true });
+    }
   });
 }
 
