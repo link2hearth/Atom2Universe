@@ -1116,8 +1116,8 @@
         "physicsLab": {
           "name": "Laboratoire de Physique",
           "description": "Des équipes de chercheurs boostent votre production atomique.",
-          "effect": "Production passive : +1 APS par niveau. Tous les 10 niveaux, l’ionisation double le bonus total.",
-          "effectSummary": "Production passive +1 APS par niveau. Ionisation : bonus total x2 tous les 10 niveaux."
+          "effect": "Production passive : +2 APS par niveau. Tous les 10 niveaux, l’ionisation double le bonus total.",
+          "effectSummary": "Production passive +2 APS par niveau. Ionisation : bonus total x2 tous les 10 niveaux."
         },
         "nuclearReactor": {
           "name": "Réacteur nucléaire",

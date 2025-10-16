@@ -25,7 +25,7 @@ Atom → Univers est un idle/clicker cosmique actuellement jouable en français 
 ## Boutique scientifique
 La boutique regroupe quinze bâtiments (manuel, automatique ou hybrides). Chaque carte n’accorde désormais plus que des gains plats d’APC et/ou d’APS, sans multiplicateurs, synergies croisées ni réductions de coûts supplémentaires.【F:config/config.js†L45-L268】【F:scripts/app.js†L6056-L6078】
 - **Électrons libres** : +1 APC par niveau.【F:config/config.js†L45-L58】
-- **Laboratoire de Physique** : +1 APS par niveau.【F:config/config.js†L59-L72】
+- **Laboratoire de Physique** : +2 APS par niveau.【F:config/config.js†L342-L357】
 - **Réacteur nucléaire** : +10 APS par niveau.【F:config/config.js†L73-L87】
 - **Chaîne tardive** : du Forgeron d’étoiles au Grand Ordonnateur quantique, chaque bâtiment ajoute simplement son APS plat annoncé par niveau.【F:config/config.js†L149-L268】
 

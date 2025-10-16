@@ -343,7 +343,7 @@ function createShopBuildingDefinitions() {
       name: 'Laboratoire de Physique',
       description: 'Des équipes de chercheurs boostent votre production atomique.',
       effectSummary:
-        'Production passive : +1 APS par niveau. Tous les 10 niveaux, l’ionisation double le bonus total.',
+        'Production passive : +2 APS par niveau. Tous les 10 niveaux, l’ionisation double le bonus total.',
       category: 'auto',
       baseCost: 100,
       costScale: 1.15,
@@ -352,7 +352,8 @@ function createShopBuildingDefinitions() {
           level,
           SHOP_IONIZATION_INTERVAL_OVERRIDES.physicsLab
         );
-        const autoAdd = level > 0 ? level * ionizationBoost : 0;
+        const baseAmount = 2 * level;
+        const autoAdd = level > 0 ? baseAmount * ionizationBoost : 0;
         return { autoAdd };
       }
     },
