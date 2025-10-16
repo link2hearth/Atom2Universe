@@ -9985,12 +9985,127 @@ const supportsPassiveEventListeners = (() => {
 })();
 
 const passiveEventListenerOptions = supportsPassiveEventListeners ? { passive: true } : false;
+const passiveCaptureEventListenerOptions = supportsPassiveEventListeners
+  ? { passive: true, capture: true }
+  : true;
 const nonPassiveEventListenerOptions = supportsPassiveEventListeners ? { passive: false } : false;
 const supportsGlobalPointerEvents = typeof globalThis !== 'undefined'
   && typeof globalThis.PointerEvent === 'function';
 
 let activeBodyScrollBehavior = SCROLL_BEHAVIOR_MODES.DEFAULT;
 let bodyScrollTouchMoveListenerAttached = false;
+const activeTouchIdentifiers = new Map();
+const activePointerTouchIds = new Map();
+const TOUCH_TRACKING_STALE_THRESHOLD_MS = 500;
+let pendingScrollUnlockCheckId = null;
+
+function getCurrentTimestamp() {
+  if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+    return performance.now();
+  }
+  return Date.now();
+}
+
+function pruneStaleTouchTracking(now = getCurrentTimestamp()) {
+  const cutoff = now - TOUCH_TRACKING_STALE_THRESHOLD_MS;
+  activeTouchIdentifiers.forEach((timestamp, identifier) => {
+    if (!Number.isFinite(timestamp) || timestamp < cutoff) {
+      activeTouchIdentifiers.delete(identifier);
+    }
+  });
+  activePointerTouchIds.forEach((timestamp, identifier) => {
+    if (!Number.isFinite(timestamp) || timestamp < cutoff) {
+      activePointerTouchIds.delete(identifier);
+    }
+  });
+}
+
+function cancelScheduledScrollUnlockCheck() {
+  const timerHost = typeof window !== 'undefined'
+    ? window
+    : (typeof globalThis !== 'undefined' ? globalThis : null);
+  if (!timerHost || typeof timerHost.clearTimeout !== 'function') {
+    pendingScrollUnlockCheckId = null;
+    return;
+  }
+  if (pendingScrollUnlockCheckId !== null) {
+    timerHost.clearTimeout(pendingScrollUnlockCheckId);
+    pendingScrollUnlockCheckId = null;
+  }
+}
+
+function scheduleScrollUnlockCheck(delayMs = TOUCH_TRACKING_STALE_THRESHOLD_MS) {
+  const timerHost = typeof window !== 'undefined'
+    ? window
+    : (typeof globalThis !== 'undefined' ? globalThis : null);
+  if (!timerHost || typeof timerHost.setTimeout !== 'function') {
+    pruneStaleTouchTracking();
+    if (!hasRemainingActiveTouches()) {
+      applyActivePageScrollBehavior();
+    }
+    return;
+  }
+  if (pendingScrollUnlockCheckId !== null && typeof timerHost.clearTimeout === 'function') {
+    timerHost.clearTimeout(pendingScrollUnlockCheckId);
+  }
+  const timeout = Math.max(16, Number.isFinite(delayMs) ? delayMs : TOUCH_TRACKING_STALE_THRESHOLD_MS);
+  pendingScrollUnlockCheckId = timerHost.setTimeout(() => {
+    pendingScrollUnlockCheckId = null;
+    pruneStaleTouchTracking();
+    if (!hasRemainingActiveTouches()) {
+      applyActivePageScrollBehavior();
+    } else {
+      scheduleScrollUnlockCheck(TOUCH_TRACKING_STALE_THRESHOLD_MS);
+    }
+  }, timeout);
+}
+
+function normalizeTouchIdentifier(touch) {
+  if (!touch || typeof touch !== 'object') {
+    return null;
+  }
+  if (Number.isFinite(touch.identifier)) {
+    return `touch:${touch.identifier}`;
+  }
+  if (Number.isFinite(touch.pointerId)) {
+    return `pointer:${touch.pointerId}`;
+  }
+  return null;
+}
+
+function registerActiveTouches(touchList) {
+  cancelScheduledScrollUnlockCheck();
+  if (!touchList || typeof touchList.length !== 'number') {
+    return;
+  }
+  const now = getCurrentTimestamp();
+  Array.from(touchList).forEach(touch => {
+    const identifier = normalizeTouchIdentifier(touch);
+    if (identifier) {
+      activeTouchIdentifiers.set(identifier, now);
+    }
+  });
+}
+
+function unregisterActiveTouches(touchList) {
+  if (!touchList || typeof touchList.length !== 'number') {
+    return;
+  }
+  Array.from(touchList).forEach(touch => {
+    const identifier = normalizeTouchIdentifier(touch);
+    if (identifier) {
+      activeTouchIdentifiers.delete(identifier);
+    }
+  });
+}
+
+function hasRemainingActiveTouches(event) {
+  if (Number.isFinite(event?.touches?.length) && event.touches.length > 0) {
+    return true;
+  }
+  pruneStaleTouchTracking();
+  return activeTouchIdentifiers.size > 0 || activePointerTouchIds.size > 0;
+}
 
 function preventBodyScrollTouchMove(event) {
   if (!event) {
@@ -10095,13 +10210,21 @@ function applyActivePageScrollBehavior(activePageElement) {
   applyBodyScrollBehavior(resolvePageScrollBehavior(pageElement));
 }
 
+function handleGlobalTouchStart(event) {
+  registerActiveTouches(event?.changedTouches || event?.touches);
+}
+
 function handleGlobalTouchCompletion(event) {
-  const touchesRemaining = Number.isFinite(event?.touches?.length)
-    ? event.touches.length
-    : 0;
-  if (touchesRemaining > 0) {
+  unregisterActiveTouches(event?.changedTouches || event?.touches);
+  if (event?.type === 'touchcancel' && (!event.changedTouches || event.changedTouches.length === 0)) {
+    activeTouchIdentifiers.clear();
+    activePointerTouchIds.clear();
+  }
+  if (hasRemainingActiveTouches(event)) {
+    scheduleScrollUnlockCheck();
     return;
   }
+  cancelScheduledScrollUnlockCheck();
   applyActivePageScrollBehavior();
 }
 
@@ -10109,15 +10232,54 @@ function handleGlobalPointerCompletion(event) {
   if (!event || event.pointerType !== 'touch') {
     return;
   }
+  if (Number.isFinite(event.pointerId)) {
+    activePointerTouchIds.delete(event.pointerId);
+  } else {
+    activePointerTouchIds.clear();
+  }
+  if (hasRemainingActiveTouches()) {
+    scheduleScrollUnlockCheck();
+    return;
+  }
+  cancelScheduledScrollUnlockCheck();
   applyActivePageScrollBehavior();
+}
+
+function handleGlobalPointerStart(event) {
+  if (!event || event.pointerType !== 'touch') {
+    return;
+  }
+  cancelScheduledScrollUnlockCheck();
+  const now = getCurrentTimestamp();
+  if (Number.isFinite(event.pointerId)) {
+    activePointerTouchIds.set(event.pointerId, now);
+  } else {
+    activePointerTouchIds.set('pointer', now);
+  }
 }
 
 if (typeof document !== 'undefined' && typeof document.addEventListener === 'function') {
   document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) {
-      applyActivePageScrollBehavior();
+    if (document.hidden) {
+      activeTouchIdentifiers.clear();
+      activePointerTouchIds.clear();
+      cancelScheduledScrollUnlockCheck();
+      return;
     }
+    applyActivePageScrollBehavior();
   });
+
+  document.addEventListener('touchstart', handleGlobalTouchStart, passiveCaptureEventListenerOptions);
+  ['touchend', 'touchcancel'].forEach(eventName => {
+    document.addEventListener(eventName, handleGlobalTouchCompletion, passiveCaptureEventListenerOptions);
+  });
+
+  if (supportsGlobalPointerEvents) {
+    document.addEventListener('pointerdown', handleGlobalPointerStart, passiveCaptureEventListenerOptions);
+    ['pointerup', 'pointercancel'].forEach(eventName => {
+      document.addEventListener(eventName, handleGlobalPointerCompletion, passiveCaptureEventListenerOptions);
+    });
+  }
 }
 
 if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
@@ -10130,12 +10292,14 @@ if (typeof window !== 'undefined' && typeof window.addEventListener === 'functio
   window.addEventListener('atom2univers:scroll-reset', () => {
     applyActivePageScrollBehavior();
   });
+  window.addEventListener('touchstart', handleGlobalTouchStart, passiveCaptureEventListenerOptions);
   ['touchend', 'touchcancel'].forEach(eventName => {
-    window.addEventListener(eventName, handleGlobalTouchCompletion, passiveEventListenerOptions);
+    window.addEventListener(eventName, handleGlobalTouchCompletion, passiveCaptureEventListenerOptions);
   });
   if (supportsGlobalPointerEvents) {
+    window.addEventListener('pointerdown', handleGlobalPointerStart, passiveCaptureEventListenerOptions);
     ['pointerup', 'pointercancel'].forEach(eventName => {
-      window.addEventListener(eventName, handleGlobalPointerCompletion, passiveEventListenerOptions);
+      window.addEventListener(eventName, handleGlobalPointerCompletion, passiveCaptureEventListenerOptions);
     });
   }
 }
