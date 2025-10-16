@@ -62,8 +62,6 @@ body.theme-aurora.view-wave .app-header {
   --wave-hud-text: #f6f7fb;
   background: var(--wave-stage-bg);
   box-shadow: var(--wave-stage-shadow);
-  touch-action: none;
-  -ms-touch-action: none;
 }
 
 .wave-click-overlay {
@@ -77,8 +75,6 @@ body.theme-aurora.view-wave .app-header {
   width: 100%;
   height: 100%;
   display: block;
-  touch-action: none;
-  -ms-touch-action: none;
 }
 
 .wave-hud {
