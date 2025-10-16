@@ -19,12 +19,6 @@ const STARTUP_FADE_DURATION_MS = 1500;
 const STATUS_ATOMS_RELOAD_FADE_RATIO = 0.5;
 
 /**
- * Ratio appliqué à la durée de fondu lorsque le joueur relance manuellement le
- * jeu via le titre « Atom2Univers » de l’en-tête.
- */
-const STATUS_ATOMS_RELOAD_FADE_RATIO = 0.5;
-
-/**
  * Durée minimale (en millisecondes) passée en arrière-plan avant de forcer
  * un rechargement complet de l’application au retour au premier plan.
  */
