@@ -839,6 +839,9 @@
           "note": "Unlock the “Rush to a Million” trophy to customize your bricks."
         },
         "reset": "Reset",
+        "devkit": {
+          "openButton": "Open the DevKit"
+        },
         "resetDialog": {
           "title": "Confirm reset",
           "description": "Type {keyword} to confirm. This action cannot be undone.",
@@ -1084,6 +1087,18 @@
           "shop": "Free shop: off",
           "gacha": "Free draws: off",
           "note": "Modes remain active while the session stays open (shortcut F9)."
+        },
+        "shop": {
+          "title": "Shop buildings",
+          "description": "Individual APC/APS bonuses and total atoms invested.",
+          "empty": "No buildings purchased yet.",
+          "cost": "Total cost: {value}",
+          "labels": {
+            "apcAdd": "APC +",
+            "apcMult": "APC ×",
+            "apsAdd": "APS +",
+            "apsMult": "APS ×"
+          }
         },
         "footer": "Press F9 to open or close the DevKit."
       }

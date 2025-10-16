@@ -2912,6 +2912,14 @@
         </div>
       </div>
       <div class="options-reset">
+        <button
+          type="button"
+          id="openDevkitButton"
+          class="options-devkit-button"
+          data-i18n="index.sections.options.devkit.openButton"
+        >
+          Ouvrir le DevKit
+        </button>
         <button id="resetButton" class="danger" data-i18n="index.sections.options.reset">Réinitialiser</button>
       </div>
     </section>
@@ -3444,6 +3452,18 @@
           <p class="devkit-note" data-i18n="index.sections.devkit.modes.note">
             Les modes restent actifs tant que la session est ouverte (raccourci F9).
           </p>
+        </section>
+        <section class="devkit-section" aria-labelledby="devkitShopTitle">
+          <h3 id="devkitShopTitle" data-i18n="index.sections.devkit.shop.title">Bâtiments de la boutique</h3>
+          <p class="devkit-shop-description" data-i18n="index.sections.devkit.shop.description">
+            Bonus APC/APS individuels et coût total investi.
+          </p>
+          <div
+            id="devkitShopDetails"
+            class="devkit-shop-list"
+            role="list"
+            aria-live="polite"
+          ></div>
         </section>
       </div>
       <footer class="devkit-panel__footer">
