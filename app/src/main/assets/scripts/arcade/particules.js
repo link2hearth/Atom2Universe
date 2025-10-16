@@ -154,6 +154,29 @@
     });
   }
 
+  const supportsPassiveEventListeners = (() => {
+    if (typeof window === 'undefined' || typeof window.addEventListener !== 'function') {
+      return false;
+    }
+    let supported = false;
+    try {
+      const options = Object.defineProperty({}, 'passive', {
+        get() {
+          supported = true;
+          return false;
+        }
+      });
+      window.addEventListener('particulesPassiveTest', null, options);
+      window.removeEventListener('particulesPassiveTest', null, options);
+    } catch (error) {
+      supported = false;
+    }
+    return supported;
+  })();
+
+  const NON_PASSIVE_POINTER_EVENT_OPTIONS = supportsPassiveEventListeners ? { passive: false } : false;
+  const POINTER_MOVE_THRESHOLD_PX = 6;
+
   const readObject = (value, fallback = {}) => (value && typeof value === 'object' ? value : fallback);
   const readNumber = (value, fallback, { min, max, round } = {}) => {
     const numeric = typeof value === 'number' ? value : Number(value);
@@ -1658,6 +1681,13 @@
       this.pendingLevelAdvance = false;
       this.pendingFloorShieldBonus = false;
       this.pointerActive = false;
+      this.activePointerId = null;
+      this.activePointerType = null;
+      this.pointerStartX = 0;
+      this.pointerStartY = 0;
+      this.pointerLastX = 0;
+      this.pointerLastY = 0;
+      this.pointerMoved = false;
       this.pendingResume = false;
       this.running = false;
       this.lastTimestamp = 0;
@@ -1723,11 +1753,13 @@
       this.handleModeButtonClick = this.handleModeButtonClick.bind(this);
       this.handleLanguageChange = this.handleLanguageChange.bind(this);
 
-      this.canvas.addEventListener('pointerdown', this.handlePointerDown);
-      this.canvas.addEventListener('pointermove', this.handlePointerMove);
-      this.canvas.addEventListener('pointerup', this.handlePointerUp);
-      this.canvas.addEventListener('pointerleave', this.handlePointerUp);
-      this.canvas.addEventListener('pointercancel', this.handlePointerUp);
+      this.pointerEventOptions = NON_PASSIVE_POINTER_EVENT_OPTIONS;
+
+      this.canvas.addEventListener('pointerdown', this.handlePointerDown, this.pointerEventOptions);
+      this.canvas.addEventListener('pointermove', this.handlePointerMove, this.pointerEventOptions);
+      this.canvas.addEventListener('pointerup', this.handlePointerUp, this.pointerEventOptions);
+      this.canvas.addEventListener('pointerleave', this.handlePointerUp, this.pointerEventOptions);
+      this.canvas.addEventListener('pointercancel', this.handlePointerUp, this.pointerEventOptions);
 
       if (this.overlayButton) {
         this.overlayButton.addEventListener('click', this.handleOverlayButtonClick);
@@ -1771,11 +1803,11 @@
       this.stopAnimation();
       this.persistAutosave();
       this.clearAutosaveTimer();
-      this.canvas.removeEventListener('pointerdown', this.handlePointerDown);
-      this.canvas.removeEventListener('pointermove', this.handlePointerMove);
-      this.canvas.removeEventListener('pointerup', this.handlePointerUp);
-      this.canvas.removeEventListener('pointerleave', this.handlePointerUp);
-      this.canvas.removeEventListener('pointercancel', this.handlePointerUp);
+      this.canvas.removeEventListener('pointerdown', this.handlePointerDown, this.pointerEventOptions);
+      this.canvas.removeEventListener('pointermove', this.handlePointerMove, this.pointerEventOptions);
+      this.canvas.removeEventListener('pointerup', this.handlePointerUp, this.pointerEventOptions);
+      this.canvas.removeEventListener('pointerleave', this.handlePointerUp, this.pointerEventOptions);
+      this.canvas.removeEventListener('pointercancel', this.handlePointerUp, this.pointerEventOptions);
       if (this.overlayButton) {
         this.overlayButton.removeEventListener('click', this.handleOverlayButtonClick);
       }
@@ -1794,6 +1826,7 @@
         this.stagePulseTimeout = null;
       }
       this.paddleBounceAnimation = null;
+      this.resetPointerTracking();
       if (this.stage && typeof this.stage.classList?.remove === 'function') {
         this.stage.classList.remove('arcade-stage--pulse');
         this.stage.classList.remove('arcade-stage--vertical');
@@ -3679,37 +3712,100 @@
       this.scheduleAutosave();
     }
 
+    resetPointerTracking() {
+      this.pointerActive = false;
+      this.activePointerId = null;
+      this.activePointerType = null;
+      this.pointerStartX = 0;
+      this.pointerStartY = 0;
+      this.pointerLastX = 0;
+      this.pointerLastY = 0;
+      this.pointerMoved = false;
+    }
+
     handlePointerDown(event) {
-      if (!this.enabled || this.isOverlayVisible()) return;
+      if (!this.enabled || this.isOverlayVisible() || !event) return;
+      if (event.pointerType === 'touch' && event.isPrimary === false) {
+        return;
+      }
+      if (typeof event.button === 'number' && event.pointerType !== 'touch' && event.button !== 0) {
+        return;
+      }
+      const pointerId = Number.isFinite(event.pointerId) ? event.pointerId : null;
+      this.resetPointerTracking();
       this.pointerActive = true;
-      if (this.canvas.setPointerCapture) {
+      this.activePointerId = pointerId;
+      this.activePointerType = typeof event.pointerType === 'string' && event.pointerType
+        ? event.pointerType
+        : 'mouse';
+      if (this.activePointerType === 'touch') {
+        this.pointerStartX = Number.isFinite(event.clientX) ? event.clientX : 0;
+        this.pointerStartY = Number.isFinite(event.clientY) ? event.clientY : 0;
+        this.pointerLastX = this.pointerStartX;
+        this.pointerLastY = this.pointerStartY;
+        this.pointerMoved = false;
+      } else {
+        this.pointerStartX = 0;
+        this.pointerStartY = 0;
+        this.pointerLastX = 0;
+        this.pointerLastY = 0;
+        this.pointerMoved = false;
+      }
+      if (this.canvas.setPointerCapture && pointerId != null) {
         try {
-          this.canvas.setPointerCapture(event.pointerId);
+          this.canvas.setPointerCapture(pointerId);
         } catch (error) {
           // ignore pointer capture errors
         }
       }
       this.updatePaddleFromPointer(event);
       this.releaseHeldBalls();
-      event.preventDefault();
+      if (this.activePointerType === 'touch' && typeof event.preventDefault === 'function') {
+        event.preventDefault();
+      }
     }
 
     handlePointerMove(event) {
-      if (!this.enabled || !this.pointerActive) return;
+      if (!this.enabled || !this.pointerActive || !event) return;
+      const pointerId = Number.isFinite(event.pointerId) ? event.pointerId : null;
+      if (this.activePointerId != null && pointerId != null && pointerId !== this.activePointerId) {
+        return;
+      }
+      if (this.activePointerType === 'touch') {
+        const currentX = Number.isFinite(event.clientX) ? event.clientX : this.pointerLastX;
+        const currentY = Number.isFinite(event.clientY) ? event.clientY : this.pointerLastY;
+        if (!this.pointerMoved) {
+          const deltaX = Math.abs(currentX - this.pointerStartX);
+          const deltaY = Math.abs(currentY - this.pointerStartY);
+          if (deltaX > POINTER_MOVE_THRESHOLD_PX || deltaY > POINTER_MOVE_THRESHOLD_PX) {
+            this.pointerMoved = true;
+          }
+        }
+        this.pointerLastX = currentX;
+        this.pointerLastY = currentY;
+        if (typeof event.preventDefault === 'function') {
+          event.preventDefault();
+        }
+      }
       this.updatePaddleFromPointer(event);
-      event.preventDefault();
     }
 
     handlePointerUp(event) {
-      if (!this.enabled) return;
-      if (this.canvas.releasePointerCapture) {
+      const pointerId = Number.isFinite(event?.pointerId) ? event.pointerId : null;
+      if (this.canvas.releasePointerCapture && pointerId != null) {
         try {
-          this.canvas.releasePointerCapture(event.pointerId);
+          this.canvas.releasePointerCapture(pointerId);
         } catch (error) {
           // ignore pointer capture errors
         }
       }
-      this.pointerActive = false;
+      if (this.activePointerId != null && pointerId != null && pointerId !== this.activePointerId) {
+        return;
+      }
+      if (this.activePointerType === 'touch' && typeof event?.preventDefault === 'function') {
+        event.preventDefault();
+      }
+      this.resetPointerTracking();
     }
 
     updatePaddleFromPointer(event) {
