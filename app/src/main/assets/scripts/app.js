@@ -10725,12 +10725,40 @@ function bindDomEventListeners() {
   }
   if (elements.atomButton) {
     const atomButton = elements.atomButton;
+    const activeTouchPointers = new Set();
+    let lastTouchPointerDownTime = 0;
 
-    atomButton.addEventListener('pointerdown', () => {
+    const getNow = () => {
+      return typeof performance !== 'undefined' && typeof performance.now === 'function'
+        ? performance.now()
+        : Date.now();
+    };
+
+    const handleTouchPointerCompletion = event => {
+      if (event?.pointerType === 'touch') {
+        activeTouchPointers.delete(event.pointerId);
+      }
+    };
+
+    atomButton.addEventListener('pointerdown', event => {
+      if (event?.pointerType === 'touch') {
+        lastTouchPointerDownTime = getNow();
+        if (!activeTouchPointers.has(event.pointerId)) {
+          activeTouchPointers.add(event.pointerId);
+          if (typeof event.preventDefault === 'function') {
+            event.preventDefault();
+          }
+          if (typeof event.stopPropagation === 'function') {
+            event.stopPropagation();
+          }
+          handleManualAtomClick({ contextId: 'game' });
+        }
+      }
       activateEcoClickFeedback();
     });
 
-    const handleEcoPointerRelease = () => {
+    const handleEcoPointerRelease = event => {
+      handleTouchPointerCompletion(event);
       if (!isEcoPerformanceModeActive()) {
         return;
       }
@@ -10742,6 +10770,20 @@ function bindDomEventListeners() {
     atomButton.addEventListener('pointercancel', handleEcoPointerRelease);
 
     atomButton.addEventListener('click', event => {
+      const timeSinceLastTouch = lastTouchPointerDownTime > 0
+        ? getNow() - lastTouchPointerDownTime
+        : Infinity;
+      const shouldSuppressForTouch = timeSinceLastTouch < 400;
+      if (shouldSuppressForTouch) {
+        if (typeof event?.preventDefault === 'function') {
+          event.preventDefault();
+        }
+        if (typeof event?.stopPropagation === 'function') {
+          event.stopPropagation();
+        }
+        lastTouchPointerDownTime = 0;
+        return;
+      }
       if (typeof event?.preventDefault === 'function') {
         event.preventDefault();
       }
