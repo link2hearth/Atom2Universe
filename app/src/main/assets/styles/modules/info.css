@@ -34,6 +34,18 @@
   gap: clamp(0.8rem, 1.6vw, 1.4rem);
 }
 
+.info-card--shop {
+  grid-column: 1 / -1;
+  background: none;
+  box-shadow: none;
+  padding: 0;
+  gap: 0;
+}
+
+.info-card--shop .devkit-section {
+  width: 100%;
+}
+
 .info-card--characters {
   grid-column: 1 / -1;
   gap: clamp(1rem, 1.8vw, 1.5rem);
