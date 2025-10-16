@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.MotionEvent
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
@@ -89,6 +90,17 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+        }
+
+        webView.isFocusable = true
+        webView.isFocusableInTouchMode = true
+        webView.setOnTouchListener { view, motionEvent ->
+            if (motionEvent?.action == MotionEvent.ACTION_DOWN || motionEvent?.action == MotionEvent.ACTION_UP) {
+                if (!view.hasFocus()) {
+                    view.requestFocus()
+                }
+            }
+            false
         }
 
         with(webView.settings) {
