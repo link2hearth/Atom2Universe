@@ -589,6 +589,10 @@
       }
       const body = typeof document !== 'undefined' ? document.body : null;
       if (body) {
+        if (typeof window?.applyActivePageScrollBehavior === 'function') {
+          window.applyActivePageScrollBehavior();
+          return;
+        }
         body.style.removeProperty('touch-action');
         body.style.removeProperty('overscroll-behavior');
         body.classList.remove('touch-scroll-lock');
