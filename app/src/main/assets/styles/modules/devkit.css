@@ -239,6 +239,91 @@ body.theme-neon .devkit-form__controls input {
   opacity: 0.75;
 }
 
+.devkit-shop-description {
+  margin: 0.35rem 0 0;
+  font-size: 0.85rem;
+  opacity: 0.75;
+}
+
+.devkit-shop-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 0.75rem;
+  max-height: 22rem;
+  overflow-y: auto;
+  padding-right: 0.2rem;
+}
+
+.devkit-shop-card {
+  border-radius: 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+body.theme-light .devkit-shop-card {
+  border-color: rgba(12, 16, 32, 0.18);
+  background: rgba(12, 16, 32, 0.06);
+}
+
+body.theme-neon .devkit-shop-card {
+  border-color: rgba(140, 160, 255, 0.25);
+  background: rgba(20, 24, 60, 0.3);
+}
+
+.devkit-shop-card__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.devkit-shop-card__title {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.devkit-shop-card__level {
+  font-size: 0.85rem;
+  opacity: 0.75;
+}
+
+.devkit-shop-card__cost {
+  margin: 0;
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.devkit-shop-card__stats {
+  margin: 0;
+  display: grid;
+  gap: 0.35rem 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+
+.devkit-shop-card__stats dt {
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.devkit-shop-card__stats dd {
+  margin: 0;
+  font-size: 0.9rem;
+  font-family: var(--font-digits-compact, 'Orbitron', monospace);
+}
+
+.devkit-shop-empty {
+  margin: 0.35rem 0 0;
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
 .devkit-panel__footer {
   display: flex;
   justify-content: flex-end;
