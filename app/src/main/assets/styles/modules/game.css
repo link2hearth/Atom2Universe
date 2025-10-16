@@ -315,6 +315,8 @@ body:not(.view-game):not(.view-wave) .apc-frenzy-counter {
   background: transparent;
   cursor: pointer;
   z-index: 2;
+  touch-action: none;
+  -ms-touch-action: none;
 }
 
 .atom-button__core {
