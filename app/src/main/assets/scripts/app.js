@@ -25,7 +25,6 @@ const FALLBACK_TROPHIES = Array.isArray(APP_DATA.FALLBACK_TROPHIES)
 const SHOP_UNLOCK_THRESHOLD = new LayeredNumber(15);
 
 const DEFAULT_STARTUP_FADE_DURATION_MS = 2000;
-const DEFAULT_STATUS_ATOMS_RELOAD_FADE_RATIO = 0.5;
 const DEFAULT_BACKGROUND_RELOAD_THRESHOLD_MS = 30 * 60 * 1000;
 const DEFAULT_BACKGROUND_RELOAD_OVERLAY_LEAD_MS = 250;
 
@@ -3801,7 +3800,6 @@ let elements = {};
 
 let pageHiddenAt = null;
 let backgroundReloadScheduled = false;
-let manualReloadScheduled = false;
 let overlayFadeFallbackTimeout = null;
 let startupOverlayFailsafeTimeout = null;
 let startupOverlayGlobalFallbackTimeout = null;
@@ -3863,27 +3861,6 @@ function getConfiguredBackgroundReloadLeadMs() {
 function getNormalizedStartupFadeDuration() {
   const configuredValue = getConfiguredStartupFadeDurationMs();
   return Math.max(0, Number.isFinite(configuredValue) ? configuredValue : 0);
-}
-
-function getConfiguredStatusAtomsReloadFadeRatio() {
-  const configuredValue = resolveGlobalNumberOption(
-    'STATUS_ATOMS_RELOAD_FADE_RATIO',
-    DEFAULT_STATUS_ATOMS_RELOAD_FADE_RATIO
-  );
-  if (!Number.isFinite(configuredValue)) {
-    return DEFAULT_STATUS_ATOMS_RELOAD_FADE_RATIO;
-  }
-  return Math.max(0, configuredValue);
-}
-
-function getStatusAtomsReloadFadeDurationMs() {
-  const baseDuration = getNormalizedStartupFadeDuration();
-  if (baseDuration <= 0) {
-    return 0;
-  }
-  const ratio = getConfiguredStatusAtomsReloadFadeRatio();
-  const scaledDuration = baseDuration * Math.max(0, ratio);
-  return Math.max(0, Math.round(Number.isFinite(scaledDuration) ? scaledDuration : 0));
 }
 
 function getStartupOverlaySafetyDelay() {
@@ -4585,63 +4562,6 @@ function handleVisibilityChange() {
   setTimeout(() => {
     window.location.reload();
   }, leadTime);
-}
-
-function scheduleManualGameReloadWithShortFade() {
-  if (manualReloadScheduled) {
-    return;
-  }
-
-  manualReloadScheduled = true;
-
-  try {
-    if (typeof saveGame === 'function') {
-      saveGame();
-    } else if (typeof window !== 'undefined' && typeof window.saveGame === 'function') {
-      window.saveGame();
-    }
-  } catch (error) {
-    console.error('Unable to save game before manual reload', error);
-  }
-
-  const fadeDuration = getStatusAtomsReloadFadeDurationMs();
-  const root = typeof document !== 'undefined' ? document.documentElement : null;
-
-  if (root && root.style && typeof root.style.setProperty === 'function') {
-    root.style.setProperty('--startup-fade-duration', `${fadeDuration}ms`);
-  }
-
-  showStartupOverlay();
-
-  const reloadDelay = fadeDuration > 0 ? fadeDuration : 0;
-
-  if (reloadDelay > 0) {
-    setTimeout(() => {
-      applyStartupOverlayDuration();
-      manualReloadScheduled = false;
-    }, reloadDelay + 120);
-
-    setTimeout(() => {
-      try {
-        window.location.reload();
-      } catch (error) {
-        manualReloadScheduled = false;
-        console.error('Unable to reload application after manual request', error);
-      }
-    }, reloadDelay);
-
-    return;
-  }
-
-  requestAnimationFrame(() => {
-    applyStartupOverlayDuration();
-    manualReloadScheduled = false;
-    try {
-      window.location.reload();
-    } catch (error) {
-      console.error('Unable to reload application after manual request', error);
-    }
-  });
 }
 function getOptionsWelcomeCardCopy() {
   const api = getI18nApi();
@@ -10722,8 +10642,10 @@ function bindDomEventListeners() {
 
   if (elements.statusAtomsButton) {
     elements.statusAtomsButton.addEventListener('click', () => {
+      if (document?.body?.dataset?.activePage === 'game') {
+        return;
+      }
       showPage('game');
-      scheduleManualGameReloadWithShortFade();
     });
   }
 
