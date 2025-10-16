@@ -10328,6 +10328,9 @@ function resolvePageScrollBehavior(pageElement) {
   const pageId = typeof pageElement.id === 'string'
     ? pageElement.id.trim().toLowerCase()
     : '';
+  if (pageId && (pageId === 'arcade' || pageId === 'metaux' || pageId === 'balance')) {
+    return SCROLL_BEHAVIOR_MODES.LOCK;
+  }
   return SCROLL_BEHAVIOR_MODES.DEFAULT;
 }
 
