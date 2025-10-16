@@ -1122,8 +1122,8 @@
         "nuclearReactor": {
           "name": "Nuclear Reactor",
           "description": "Controlled reactors unleash colossal energy.",
-          "effect": "Passive production: +10 APS per level. Every 50 levels, ionization doubles the total bonus.",
-          "effectSummary": "Passive production +10 APS per level. Ionization: ×2 total bonus every 50 levels."
+          "effect": "Passive production: +10 APS per level. Every 25 levels, ionization doubles the total bonus.",
+          "effectSummary": "Passive production +10 APS per level. Ionization: ×2 total bonus every 25 levels."
         },
         "particleAccelerator": {
           "name": "Particle Accelerator",
