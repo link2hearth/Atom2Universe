@@ -9910,6 +9910,27 @@ function shouldTriggerGlobalClick(event) {
   return true;
 }
 
+function applyScrollBehaviorFromPage(pageElement) {
+  if (typeof document === 'undefined') {
+    return;
+  }
+  const body = document.body;
+  if (!body) {
+    return;
+  }
+  const rawBehavior = typeof pageElement?.dataset?.scrollBehavior === 'string'
+    ? pageElement.dataset.scrollBehavior.trim().toLowerCase()
+    : '';
+  body.style.removeProperty('touch-action');
+  body.style.removeProperty('overscroll-behavior');
+  body.classList.remove('touch-scroll-lock', 'touch-scroll-force');
+  if (rawBehavior === 'lock') {
+    body.classList.add('touch-scroll-lock');
+  } else if (rawBehavior === 'force') {
+    body.classList.add('touch-scroll-force');
+  }
+}
+
 function showPage(pageId) {
   if (!isPageUnlocked(pageId)) {
     if (pageId !== 'game') {
@@ -9956,6 +9977,7 @@ function showPage(pageId) {
   document.body.classList.toggle('view-quantum2048', pageId === 'quantum2048');
   document.body.classList.toggle('view-sudoku', pageId === 'sudoku');
   document.body.classList.toggle('view-game-of-life', pageId === 'gameOfLife');
+  applyScrollBehaviorFromPage(activePageElement);
   if (pageId === 'game') {
     randomizeAtomButtonImage();
   }
@@ -10084,6 +10106,23 @@ document.addEventListener('visibilitychange', () => {
     quantum2048Game?.onEnter();
   }
 });
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('atom2univers:scroll-reset', () => {
+    if (typeof document === 'undefined') {
+      return;
+    }
+    const body = document.body;
+    if (!body) {
+      return;
+    }
+    const activePageId = body.dataset?.activePage || '';
+    const activePageElement = activePageId
+      ? document.getElementById(activePageId)
+      : null;
+    applyScrollBehaviorFromPage(activePageElement);
+  });
+}
 
 function bindDomEventListeners() {
   const initiallyActivePage = document.querySelector('.page.active') || elements.pages[0];
