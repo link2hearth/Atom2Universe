@@ -47,15 +47,18 @@
   --sudoku-status-error-border: rgba(224, 82, 64, 0.45);
   --sudoku-status-error-color: #ff9c92;
   --sudoku-border-color: rgba(255, 255, 255, 0.9);
-  --sudoku-subgrid-color: rgba(255, 255, 255, 0.55);
+  --sudoku-subgrid-color: rgba(24, 138, 192, 0.85);
   --sudoku-fixed-color: rgba(255, 255, 255, 0.92);
   --sudoku-fixed-text: #12162a;
   --sudoku-cell-background: rgba(3, 7, 18, 0.75);
   --sudoku-cell-focus-outline: rgba(255, 255, 255, 0.7);
   --sudoku-cell-focus-background: rgba(255, 255, 255, 0.2);
-  --sudoku-cell-highlight-related: rgba(255, 255, 255, 0.16);
-  --sudoku-cell-highlight-same: rgba(255, 255, 255, 0.26);
-  --sudoku-cell-highlight-origin: rgba(255, 255, 255, 0.36);
+  --sudoku-cell-highlight-related: rgba(255, 214, 153, 0.18);
+  --sudoku-cell-highlight-line: rgba(255, 184, 120, 0.26);
+  --sudoku-cell-highlight-block: rgba(255, 220, 150, 0.28);
+  --sudoku-cell-highlight-mixed: rgba(255, 204, 140, 0.34);
+  --sudoku-cell-highlight-same: rgba(160, 220, 255, 0.32);
+  --sudoku-cell-highlight-origin: rgba(255, 238, 188, 0.46);
   --sudoku-cell-error-background: rgba(224, 82, 64, 0.24);
   --sudoku-cell-mistake-background: rgba(224, 82, 64, 0.18);
   --sudoku-cell-mistake-shadow: inset 0 0 0 2px rgba(224, 82, 64, 0.55);
@@ -111,15 +114,18 @@ body.theme-light .page--sudoku {
   --sudoku-status-error-border: rgba(214, 86, 66, 0.38);
   --sudoku-status-error-color: #9a281f;
   --sudoku-border-color: rgba(255, 255, 255, 0.95);
-  --sudoku-subgrid-color: rgba(226, 232, 255, 0.6);
+  --sudoku-subgrid-color: rgba(0, 120, 210, 0.55);
   --sudoku-fixed-color: rgba(255, 255, 255, 0.98);
   --sudoku-fixed-text: #12162a;
   --sudoku-cell-background: rgba(236, 238, 246, 0.94);
   --sudoku-cell-focus-outline: rgba(200, 206, 224, 0.75);
   --sudoku-cell-focus-background: rgba(228, 234, 246, 0.35);
-  --sudoku-cell-highlight-related: rgba(220, 226, 240, 0.28);
-  --sudoku-cell-highlight-same: rgba(220, 226, 240, 0.4);
-  --sudoku-cell-highlight-origin: rgba(220, 226, 240, 0.52);
+  --sudoku-cell-highlight-related: rgba(255, 218, 162, 0.22);
+  --sudoku-cell-highlight-line: rgba(255, 196, 140, 0.28);
+  --sudoku-cell-highlight-block: rgba(255, 224, 160, 0.34);
+  --sudoku-cell-highlight-mixed: rgba(255, 208, 150, 0.4);
+  --sudoku-cell-highlight-same: rgba(200, 226, 255, 0.38);
+  --sudoku-cell-highlight-origin: rgba(255, 238, 192, 0.5);
   --sudoku-cell-error-background: rgba(214, 86, 66, 0.16);
   --sudoku-cell-mistake-background: rgba(214, 86, 66, 0.12);
   --sudoku-cell-mistake-shadow: inset 0 0 0 2px rgba(214, 86, 66, 0.42);
@@ -166,15 +172,18 @@ body.theme-neon .page--sudoku {
   --sudoku-status-error-border: rgba(244, 142, 176, 0.45);
   --sudoku-status-error-color: #ff9ccb;
   --sudoku-border-color: rgba(255, 255, 255, 0.92);
-  --sudoku-subgrid-color: rgba(232, 236, 255, 0.65);
+  --sudoku-subgrid-color: rgba(48, 168, 232, 0.78);
   --sudoku-fixed-color: rgba(24, 32, 78, 0.9);
   --sudoku-fixed-text: rgba(228, 232, 255, 0.95);
   --sudoku-cell-background: rgba(14, 16, 48, 0.78);
   --sudoku-cell-focus-outline: rgba(232, 236, 255, 0.78);
   --sudoku-cell-focus-background: rgba(232, 236, 255, 0.3);
-  --sudoku-cell-highlight-related: rgba(232, 236, 255, 0.24);
-  --sudoku-cell-highlight-same: rgba(232, 236, 255, 0.34);
-  --sudoku-cell-highlight-origin: rgba(232, 236, 255, 0.48);
+  --sudoku-cell-highlight-related: rgba(255, 210, 170, 0.22);
+  --sudoku-cell-highlight-line: rgba(255, 188, 150, 0.3);
+  --sudoku-cell-highlight-block: rgba(255, 218, 160, 0.34);
+  --sudoku-cell-highlight-mixed: rgba(255, 204, 160, 0.42);
+  --sudoku-cell-highlight-same: rgba(170, 230, 255, 0.34);
+  --sudoku-cell-highlight-origin: rgba(255, 240, 194, 0.5);
   --sudoku-cell-error-background: rgba(216, 96, 140, 0.3);
   --sudoku-cell-mistake-background: rgba(216, 96, 140, 0.22);
   --sudoku-cell-mistake-shadow: inset 0 0 0 2px rgba(216, 96, 140, 0.55);
@@ -222,15 +231,18 @@ body.theme-aurora .page--sudoku {
   --sudoku-status-error-border: rgba(255, 150, 136, 0.45);
   --sudoku-status-error-color: #ffb4aa;
   --sudoku-border-color: rgba(230, 244, 240, 0.9);
-  --sudoku-subgrid-color: rgba(210, 234, 228, 0.6);
+  --sudoku-subgrid-color: rgba(32, 168, 196, 0.72);
   --sudoku-fixed-color: rgba(220, 255, 240, 0.95);
   --sudoku-fixed-text: #04221a;
   --sudoku-cell-background: rgba(12, 52, 42, 0.75);
   --sudoku-cell-focus-outline: rgba(214, 255, 238, 0.75);
   --sudoku-cell-focus-background: rgba(214, 255, 238, 0.28);
-  --sudoku-cell-highlight-related: rgba(214, 255, 238, 0.22);
-  --sudoku-cell-highlight-same: rgba(214, 255, 238, 0.32);
-  --sudoku-cell-highlight-origin: rgba(214, 255, 238, 0.46);
+  --sudoku-cell-highlight-related: rgba(255, 220, 170, 0.2);
+  --sudoku-cell-highlight-line: rgba(255, 194, 140, 0.28);
+  --sudoku-cell-highlight-block: rgba(255, 224, 160, 0.32);
+  --sudoku-cell-highlight-mixed: rgba(255, 208, 150, 0.4);
+  --sudoku-cell-highlight-same: rgba(196, 236, 248, 0.34);
+  --sudoku-cell-highlight-origin: rgba(255, 238, 190, 0.48);
   --sudoku-cell-error-background: rgba(242, 120, 104, 0.28);
   --sudoku-cell-mistake-background: rgba(242, 120, 104, 0.2);
   --sudoku-cell-mistake-shadow: inset 0 0 0 2px rgba(242, 120, 104, 0.5);
@@ -557,15 +569,36 @@ body.theme-aurora .page--sudoku {
 }
 
 .sudoku-cell.is-highlighted-related::after {
-  background: var(--sudoku-cell-highlight-related, rgba(0, 173, 140, 0.18));
+  background: var(--sudoku-cell-highlight-related, rgba(255, 214, 153, 0.18));
+}
+
+.sudoku-cell.is-highlighted-line::after {
+  background: var(
+    --sudoku-cell-highlight-line,
+    var(--sudoku-cell-highlight-related, rgba(255, 214, 153, 0.18))
+  );
+}
+
+.sudoku-cell.is-highlighted-block::after {
+  background: var(
+    --sudoku-cell-highlight-block,
+    var(--sudoku-cell-highlight-related, rgba(255, 214, 153, 0.18))
+  );
+}
+
+.sudoku-cell.is-highlighted-line.is-highlighted-block::after {
+  background: var(
+    --sudoku-cell-highlight-mixed,
+    var(--sudoku-cell-highlight-line, rgba(255, 214, 153, 0.18))
+  );
 }
 
 .sudoku-cell.is-highlighted-same::after {
-  background: var(--sudoku-cell-highlight-same, rgba(0, 173, 140, 0.32));
+  background: var(--sudoku-cell-highlight-same, rgba(160, 220, 255, 0.32));
 }
 
 .sudoku-cell.is-highlighted-origin::after {
-  background: var(--sudoku-cell-highlight-origin, rgba(0, 173, 140, 0.45));
+  background: var(--sudoku-cell-highlight-origin, rgba(255, 238, 188, 0.46));
 }
 
 .sudoku-cell.fixed {

@@ -819,6 +819,8 @@
       gridElement.querySelectorAll('.sudoku-cell').forEach(cell => {
         cell.classList.remove(
           'is-highlighted-related',
+          'is-highlighted-line',
+          'is-highlighted-block',
           'is-highlighted-same',
           'is-highlighted-origin'
         );
@@ -855,16 +857,25 @@
         const otherInput = otherCell.querySelector('input');
         const otherValue = otherInput ? otherInput.value.trim() : '';
 
-        if (
-          Number.isInteger(otherRow)
-          && Number.isInteger(otherCol)
-          && (
-            otherRow === row
-            || otherCol === col
-            || (Math.floor(otherRow / 3) === blockRow && Math.floor(otherCol / 3) === blockCol)
-          )
-        ) {
-          otherCell.classList.add('is-highlighted-related');
+        if (Number.isInteger(otherRow) && Number.isInteger(otherCol)) {
+          const sameRow = otherRow === row;
+          const sameCol = otherCol === col;
+          const sameBlock = (
+            Math.floor(otherRow / 3) === blockRow
+            && Math.floor(otherCol / 3) === blockCol
+          );
+
+          if (sameRow || sameCol || sameBlock) {
+            otherCell.classList.add('is-highlighted-related');
+          }
+
+          if (sameRow || sameCol) {
+            otherCell.classList.add('is-highlighted-line');
+          }
+
+          if (sameBlock) {
+            otherCell.classList.add('is-highlighted-block');
+          }
         }
 
         if (otherValue && otherValue === value) {
