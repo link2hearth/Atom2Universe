@@ -94,13 +94,16 @@
 .solitaire__board {
   --solitaire-card-width: clamp(4.8rem, 9vw, 7.4rem);
   --solitaire-card-height: calc(var(--solitaire-card-width) * 1.45);
+  --solitaire-board-gap: clamp(1.1rem, 3vw, 1.8rem);
+  --solitaire-board-padding: clamp(1rem, 2.4vw, 1.6rem);
+  --solitaire-tableau-gap: clamp(0.7rem, 2vw, 1.2rem);
   display: flex;
   flex-direction: column;
-  gap: clamp(1.1rem, 3vw, 1.8rem);
+  gap: var(--solitaire-board-gap);
   background: var(--solitaire-board-background);
   border: 1px solid var(--solitaire-board-border);
   border-radius: 18px;
-  padding: clamp(1rem, 2.4vw, 1.6rem);
+  padding: var(--solitaire-board-padding);
   box-shadow: var(--solitaire-board-shadow);
   min-height: calc(var(--solitaire-card-height) * 3.4);
 }
@@ -134,7 +137,9 @@
 .solitaire__row--tableau {
   display: grid;
   grid-template-columns: repeat(7, minmax(var(--solitaire-card-width), 1fr));
-  gap: clamp(0.7rem, 2vw, 1.2rem);
+  gap: var(--solitaire-tableau-gap);
+  justify-content: center;
+  justify-items: center;
 }
 
 .solitaire-pile {
@@ -183,7 +188,7 @@
   background: var(--solitaire-card-background);
   color: var(--solitaire-card-color, var(--solitaire-card-color-black));
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto 1fr;
   align-items: center;
   padding: 0.55rem 0.6rem;
   font: inherit;
@@ -229,13 +234,6 @@
 .solitaire-card__corner--top {
   justify-self: start;
   align-self: start;
-}
-
-.solitaire-card__corner--bottom {
-  align-items: center;
-  justify-self: end;
-  align-self: end;
-  transform: rotate(180deg);
 }
 
 .solitaire-card__value {
@@ -306,10 +304,32 @@
 }
 
 @media (orientation: portrait) {
+  .page--solitaire {
+    --page-padding-x: clamp(0.5rem, 2.8vw, 1.1rem);
+  }
+
+  .solitaire {
+    width: 100%;
+  }
+
   .solitaire__board {
-    --solitaire-card-width: clamp(3.2rem, 8vw, 5.2rem);
-    gap: clamp(0.85rem, 2.6vw, 1.2rem);
-    padding: clamp(0.8rem, 2.2vw, 1.2rem);
+    --solitaire-board-gap: clamp(0.75rem, 2.4vw, 1.1rem);
+    --solitaire-board-padding: 0px;
+    --solitaire-tableau-gap: clamp(0.55rem, 2vw, 0.85rem);
+    --solitaire-card-width: min(
+      clamp(3.6rem, 10.5vw, 6.2rem),
+      calc(
+        (100vw - (2 * var(--page-padding-x, clamp(0.5rem, 2.8vw, 1.1rem))) -
+          (2 * var(--solitaire-board-padding)) -
+          (6 * var(--solitaire-tableau-gap))) /
+          7
+      )
+    );
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    padding: 0;
+    align-items: center;
   }
 
   .solitaire__row--top,
@@ -318,7 +338,9 @@
   }
 
   .solitaire__row--tableau {
-    grid-template-columns: repeat(7, minmax(var(--solitaire-card-width), 1fr));
+    grid-template-columns: repeat(7, var(--solitaire-card-width));
+    width: 100%;
+    margin-inline: auto;
   }
 }
 
