@@ -404,14 +404,6 @@
         lastY: 0
       };
 
-      this.touchState = {
-        pointers: new Map(),
-        isGesture: false,
-        initialDistance: 0,
-        initialCellSize: this.viewport.cellSize,
-        lastMidpoint: null
-      };
-
       this.spacePressed = false;
       this.pointerId = null;
       this.randomSeed = loadSeed();
@@ -562,38 +554,10 @@
       this.dragState.lastCellKey = null;
       this.dragState.initialCellKey = null;
       this.dragState.initialCellAlive = false;
-      this.touchState.isGesture = false;
-      this.touchState.initialDistance = 0;
-      this.touchState.initialCellSize = this.viewport.cellSize;
-      this.touchState.lastMidpoint = null;
-      if (this.touchState.pointers && typeof this.touchState.pointers.clear === 'function') {
-        this.touchState.pointers.clear();
-      }
     }
 
     requestScrollUnlock() {
-      if (typeof window === 'undefined') {
-        return;
-      }
-      if (typeof window.dispatchEvent === 'function') {
-        let event = null;
-        if (typeof window.CustomEvent === 'function') {
-          event = new window.CustomEvent('atom2univers:scroll-reset');
-        } else if (typeof window.Event === 'function') {
-          event = new window.Event('atom2univers:scroll-reset');
-        }
-        if (event) {
-          window.dispatchEvent(event);
-          return;
-        }
-      }
-      const body = typeof document !== 'undefined' ? document.body : null;
-      if (body) {
-        body.style.removeProperty('touch-action');
-        body.style.removeProperty('overscroll-behavior');
-        body.classList.remove('touch-scroll-lock');
-        body.classList.remove('touch-scroll-force');
-      }
+      return;
     }
 
     setupUI() {
@@ -1752,108 +1716,11 @@
       });
     }
 
-    startTouchGesture() {
-      if (!this.canvas) {
-        return;
-      }
-      const pointers = Array.from(this.touchState.pointers.values());
-      if (pointers.length < 2) {
-        return;
-      }
-      const [first, second] = pointers;
-      const midpoint = {
-        x: (first.x + second.x) / 2,
-        y: (first.y + second.y) / 2
-      };
-      const distance = Math.hypot(second.x - first.x, second.y - first.y) || 1;
-      this.touchState.isGesture = true;
-      this.touchState.initialDistance = distance;
-      this.touchState.initialCellSize = this.viewport.cellSize;
-      this.touchState.lastMidpoint = midpoint;
-      if (this.dragState.active && this.dragState.initialCellKey) {
-        const originalCell = deserializeCell(
-          this.dragState.initialCellKey,
-          this.stepCellBuffer
-        );
-        if (originalCell) {
-          this.applyCellToggle(
-            originalCell.x,
-            originalCell.y,
-            this.dragState.initialCellAlive
-          );
-        }
-      }
-      if (this.selectionState.active) {
-        this.cancelSelection();
-      }
-      this.panState.active = true;
-      this.panState.lastX = midpoint.x;
-      this.panState.lastY = midpoint.y;
-      this.dragState.active = false;
-      this.dragState.lastCellKey = null;
-      this.dragState.initialCellKey = null;
-      this.dragState.initialCellAlive = false;
-    }
-
-    handleTouchGestureMove() {
-      if (!this.canvas) {
-        return;
-      }
-      const pointers = Array.from(this.touchState.pointers.values());
-      if (pointers.length < 2) {
-        return;
-      }
-      const [first, second] = pointers;
-      const midpoint = {
-        x: (first.x + second.x) / 2,
-        y: (first.y + second.y) / 2
-      };
-      const lastMidpoint = this.touchState.lastMidpoint || midpoint;
-      const dx = midpoint.x - lastMidpoint.x;
-      const dy = midpoint.y - lastMidpoint.y;
-      const rect = this.canvas.getBoundingClientRect();
-      const anchor = {
-        x: this.viewport.originX + (midpoint.x - rect.left) / this.viewport.cellSize,
-        y: this.viewport.originY + (midpoint.y - rect.top) / this.viewport.cellSize
-      };
-      if (dx !== 0 || dy !== 0) {
-        this.panByPixels(dx, dy);
-        this.panState.lastX = midpoint.x;
-        this.panState.lastY = midpoint.y;
-        this.touchState.lastMidpoint = midpoint;
-      }
-      const distance = Math.hypot(second.x - first.x, second.y - first.y);
-      if (!distance || !this.touchState.initialDistance) {
-        return;
-      }
-      const ratio = distance / this.touchState.initialDistance;
-      const newSize = clamp(
-        this.touchState.initialCellSize * ratio,
-        this.viewport.minCellSize,
-        this.viewport.maxCellSize
-      );
-      this.setZoom(newSize, anchor);
-    }
-
     handlePointerDown(event) {
       if (!this.canvas) {
         return;
       }
-      if (event.pointerType === 'touch') {
-        this.canvas.setPointerCapture?.(event.pointerId);
-        this.touchState.pointers.set(event.pointerId, {
-          x: event.clientX,
-          y: event.clientY
-        });
-        if (this.touchState.pointers.size >= 2) {
-          this.startTouchGesture();
-          event.preventDefault();
-          return;
-        }
-        this.pointerId = event.pointerId;
-      } else {
-        this.pointerId = event.pointerId;
-      }
+      this.pointerId = event.pointerId;
       const isPanButton = event.button === 1 || event.button === 2;
       const wantsPan = this.spacePressed || isPanButton;
       if (wantsPan) {
@@ -1887,17 +1754,6 @@
     }
 
     handlePointerMove(event) {
-      if (event.pointerType === 'touch' && this.touchState.pointers.has(event.pointerId)) {
-        this.touchState.pointers.set(event.pointerId, {
-          x: event.clientX,
-          y: event.clientY
-        });
-        if (this.touchState.isGesture) {
-          this.handleTouchGestureMove();
-          event.preventDefault();
-          return;
-        }
-      }
       if (this.selectionState.active && event.pointerId === this.selectionState.pointerId) {
         const cell = this.eventToCell(event);
         if (cell) {
@@ -1930,29 +1786,6 @@
     }
 
     handlePointerUp(event) {
-      if (event.pointerType === 'touch') {
-        this.touchState.pointers.delete(event.pointerId);
-        if (this.touchState.pointers.size >= 2) {
-          const pointers = Array.from(this.touchState.pointers.values());
-          const [first, second] = pointers;
-          this.touchState.initialDistance = Math.hypot(
-            second.x - first.x,
-            second.y - first.y
-          ) || this.touchState.initialDistance;
-          this.touchState.initialCellSize = this.viewport.cellSize;
-          this.touchState.lastMidpoint = {
-            x: (first.x + second.x) / 2,
-            y: (first.y + second.y) / 2
-          };
-        } else {
-          this.touchState.isGesture = false;
-          this.touchState.initialDistance = 0;
-          this.touchState.initialCellSize = this.viewport.cellSize;
-          this.touchState.lastMidpoint = null;
-          this.panState.active = false;
-          this.touchState.pointers.clear();
-        }
-      }
       if (this.selectionState.active && event.pointerId === this.selectionState.pointerId) {
         this.finishSelection();
         this.pointerId = null;

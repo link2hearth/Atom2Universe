@@ -9951,21 +9951,8 @@ const supportsPassiveEventListeners = (() => {
 })();
 
 const passiveEventListenerOptions = supportsPassiveEventListeners ? { passive: true } : false;
-const nonPassiveEventListenerOptions = supportsPassiveEventListeners ? { passive: false } : false;
-const supportsGlobalPointerEvents = typeof globalThis !== 'undefined'
-  && typeof globalThis.PointerEvent === 'function';
 
 let activeBodyScrollBehavior = SCROLL_BEHAVIOR_MODES.DEFAULT;
-let bodyScrollTouchMoveListenerAttached = false;
-
-function preventBodyScrollTouchMove(event) {
-  if (!event) {
-    return;
-  }
-  if (typeof event.preventDefault === 'function') {
-    event.preventDefault();
-  }
-}
 
 function normalizeScrollBehaviorValue(value) {
   if (typeof value !== 'string') {
@@ -10005,42 +9992,8 @@ function applyBodyScrollBehavior(requestedBehavior) {
     activeBodyScrollBehavior = normalizeScrollBehaviorValue(requestedBehavior);
     return;
   }
-  const body = document.body;
-  if (!body) {
-    activeBodyScrollBehavior = normalizeScrollBehaviorValue(requestedBehavior);
-    return;
-  }
   const nextBehavior = normalizeScrollBehaviorValue(requestedBehavior);
   activeBodyScrollBehavior = nextBehavior;
-
-  if (nextBehavior === SCROLL_BEHAVIOR_MODES.LOCK) {
-    if (!bodyScrollTouchMoveListenerAttached && typeof body.addEventListener === 'function') {
-      body.addEventListener('touchmove', preventBodyScrollTouchMove, nonPassiveEventListenerOptions);
-      bodyScrollTouchMoveListenerAttached = true;
-    }
-    body.style.setProperty('touch-action', 'none');
-    body.style.setProperty('overscroll-behavior', 'none');
-    body.classList.add('touch-scroll-lock');
-    body.classList.remove('touch-scroll-force');
-    return;
-  }
-
-  if (bodyScrollTouchMoveListenerAttached && typeof body.removeEventListener === 'function') {
-    body.removeEventListener('touchmove', preventBodyScrollTouchMove, nonPassiveEventListenerOptions);
-    bodyScrollTouchMoveListenerAttached = false;
-  }
-
-  if (nextBehavior === SCROLL_BEHAVIOR_MODES.FORCE) {
-    body.style.setProperty('touch-action', 'auto');
-    body.style.setProperty('overscroll-behavior', 'auto');
-    body.classList.add('touch-scroll-force');
-    body.classList.remove('touch-scroll-lock');
-  } else {
-    body.style.removeProperty('touch-action');
-    body.style.removeProperty('overscroll-behavior');
-    body.classList.remove('touch-scroll-lock');
-    body.classList.remove('touch-scroll-force');
-  }
 }
 
 function applyActivePageScrollBehavior(activePageElement) {
@@ -10061,23 +10014,6 @@ function applyActivePageScrollBehavior(activePageElement) {
   applyBodyScrollBehavior(resolvePageScrollBehavior(pageElement));
 }
 
-function handleGlobalTouchCompletion(event) {
-  const touchesRemaining = Number.isFinite(event?.touches?.length)
-    ? event.touches.length
-    : 0;
-  if (touchesRemaining > 0) {
-    return;
-  }
-  applyActivePageScrollBehavior();
-}
-
-function handleGlobalPointerCompletion(event) {
-  if (!event || event.pointerType !== 'touch') {
-    return;
-  }
-  applyActivePageScrollBehavior();
-}
-
 if (typeof document !== 'undefined' && typeof document.addEventListener === 'function') {
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden) {
@@ -10093,17 +10029,6 @@ if (typeof window !== 'undefined' && typeof window.addEventListener === 'functio
   window.addEventListener('focus', () => {
     applyActivePageScrollBehavior();
   }, passiveEventListenerOptions);
-  window.addEventListener('atom2univers:scroll-reset', () => {
-    applyActivePageScrollBehavior();
-  });
-  ['touchend', 'touchcancel'].forEach(eventName => {
-    window.addEventListener(eventName, handleGlobalTouchCompletion, passiveEventListenerOptions);
-  });
-  if (supportsGlobalPointerEvents) {
-    ['pointerup', 'pointercancel'].forEach(eventName => {
-      window.addEventListener(eventName, handleGlobalPointerCompletion, passiveEventListenerOptions);
-    });
-  }
 }
 
 function showPage(pageId) {

@@ -55,7 +55,6 @@
   display: block;
   position: relative;
   z-index: 1;
-  touch-action: none;
   cursor: pointer;
 }
 
