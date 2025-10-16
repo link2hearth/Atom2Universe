@@ -4418,6 +4418,7 @@ function collectDomElements() {
   devkitUnlockTrophies: document.getElementById('devkitUnlockTrophies'),
   devkitUnlockElements: document.getElementById('devkitUnlockElements'),
   devkitUnlockInfo: document.getElementById('devkitUnlockInfo'),
+  devkitShopDetails: document.getElementById('devkitShopDetails'),
   devkitToggleShop: document.getElementById('devkitToggleShop'),
   devkitToggleGacha: document.getElementById('devkitToggleGacha')
   };
@@ -6953,6 +6954,183 @@ function parseDevKitInteger(raw) {
   return Math.floor(numeric);
 }
 
+function collectDevkitShopSummaries() {
+  const productionBase = gameState.productionBase || createEmptyProductionBreakdown();
+  const clickEntry = productionBase.perClick || createEmptyProductionEntry();
+  const autoEntry = productionBase.perSecond || createEmptyProductionEntry();
+
+  const summaries = new Map();
+
+  UPGRADE_DEFS.forEach(def => {
+    const texts = getShopBuildingTexts(def);
+    const level = getUpgradeLevel(gameState.upgrades, def.id);
+    summaries.set(def.id, {
+      id: def.id,
+      name: texts.name || def.name || def.id,
+      level,
+      clickAdd: LayeredNumber.zero(),
+      autoAdd: LayeredNumber.zero(),
+      clickMult: LayeredNumber.one(),
+      autoMult: LayeredNumber.one(),
+      totalCost: computeUpgradeTotalSpent(def, level)
+    });
+  });
+
+  const accumulateAddition = (list, key) => {
+    if (!Array.isArray(list)) return;
+    list.forEach(entry => {
+      if (!entry || entry.source !== 'shop') return;
+      const summary = summaries.get(entry.id);
+      if (!summary) return;
+      const value = entry.value instanceof LayeredNumber
+        ? entry.value
+        : toLayeredValue(entry.value, 0);
+      if (!(value instanceof LayeredNumber) || value.isZero() || value.sign <= 0) {
+        return;
+      }
+      summary[key] = summary[key].add(value);
+    });
+  };
+
+  const accumulateMultiplier = (list, key) => {
+    if (!Array.isArray(list)) return;
+    list.forEach(entry => {
+      if (!entry || entry.source !== 'shop') return;
+      const summary = summaries.get(entry.id);
+      if (!summary) return;
+      const value = entry.value instanceof LayeredNumber
+        ? entry.value
+        : toMultiplierLayered(entry.value);
+      summary[key] = summary[key].multiply(value);
+    });
+  };
+
+  accumulateAddition(clickEntry.additions, 'clickAdd');
+  accumulateAddition(autoEntry.additions, 'autoAdd');
+  accumulateMultiplier(clickEntry.multipliers, 'clickMult');
+  accumulateMultiplier(autoEntry.multipliers, 'autoMult');
+
+  return UPGRADE_DEFS.map(def => summaries.get(def.id)).filter(Boolean);
+}
+
+function formatDevKitShopFlatBonus(value) {
+  if (!(value instanceof LayeredNumber)) {
+    value = toLayeredValue(value, 0);
+  }
+  if (!(value instanceof LayeredNumber) || value.isZero() || value.sign <= 0) {
+    return '';
+  }
+  const normalized = normalizeProductionUnit(value);
+  if (!(normalized instanceof LayeredNumber) || normalized.isZero() || normalized.sign <= 0) {
+    return '';
+  }
+  return formatLayeredLocalized(normalized, { mantissaDigits: 2 });
+}
+
+function formatDevKitShopMultiplier(value) {
+  if (!(value instanceof LayeredNumber)) {
+    value = toMultiplierLayered(value);
+  }
+  if (!(value instanceof LayeredNumber) || isLayeredOne(value)) {
+    return '';
+  }
+  return formatMultiplier(value);
+}
+
+function renderDevkitShopDetails() {
+  const container = elements.devkitShopDetails;
+  if (!container) {
+    return;
+  }
+
+  container.innerHTML = '';
+
+  const summaries = collectDevkitShopSummaries().filter(summary => summary && summary.level > 0);
+
+  if (!summaries.length) {
+    const empty = document.createElement('p');
+    empty.className = 'devkit-shop-empty';
+    empty.textContent = translateOrDefault(
+      'index.sections.devkit.shop.empty',
+      'No buildings purchased yet.'
+    );
+    container.appendChild(empty);
+    return;
+  }
+
+  summaries.forEach(summary => {
+    const card = document.createElement('article');
+    card.className = 'devkit-shop-card';
+    card.setAttribute('role', 'listitem');
+    card.dataset.upgradeId = summary.id;
+
+    const header = document.createElement('header');
+    header.className = 'devkit-shop-card__header';
+
+    const title = document.createElement('h4');
+    title.className = 'devkit-shop-card__title';
+    title.textContent = summary.name;
+
+    const levelDisplay = formatIntegerLocalized(summary.level);
+    let levelText = translateOrDefault('scripts.info.shop.level', '', { level: levelDisplay });
+    if (!levelText) {
+      levelText = `Level ${levelDisplay}`;
+    }
+    const level = document.createElement('span');
+    level.className = 'devkit-shop-card__level';
+    level.textContent = levelText;
+
+    header.append(title, level);
+    card.appendChild(header);
+
+    const costValue = formatLayeredLocalized(summary.totalCost, { mantissaDigits: 2 });
+    let costText = translateOrDefault(
+      'index.sections.devkit.shop.cost',
+      '',
+      { value: costValue }
+    );
+    if (!costText) {
+      costText = `Total cost: ${costValue}`;
+    }
+    const cost = document.createElement('p');
+    cost.className = 'devkit-shop-card__cost';
+    cost.textContent = costText;
+    card.appendChild(cost);
+
+    const stats = document.createElement('dl');
+    stats.className = 'devkit-shop-card__stats';
+    let hasStat = false;
+
+    const appendStat = (labelKey, fallback, valueText) => {
+      if (!valueText) {
+        return;
+      }
+      const label = document.createElement('dt');
+      label.textContent = translateOrDefault(labelKey, fallback);
+      const value = document.createElement('dd');
+      value.textContent = valueText;
+      stats.append(label, value);
+      hasStat = true;
+    };
+
+    const clickAddText = formatDevKitShopFlatBonus(summary.clickAdd);
+    const autoAddText = formatDevKitShopFlatBonus(summary.autoAdd);
+    const clickMultText = formatDevKitShopMultiplier(summary.clickMult);
+    const autoMultText = formatDevKitShopMultiplier(summary.autoMult);
+
+    appendStat('index.sections.devkit.shop.labels.apcAdd', 'APC +', clickAddText);
+    appendStat('index.sections.devkit.shop.labels.apcMult', 'APC ×', clickMultText);
+    appendStat('index.sections.devkit.shop.labels.apsAdd', 'APS +', autoAddText);
+    appendStat('index.sections.devkit.shop.labels.apsMult', 'APS ×', autoMultText);
+
+    if (hasStat) {
+      card.appendChild(stats);
+    }
+
+    container.appendChild(card);
+  });
+}
+
 function updateDevKitUI() {
   if (elements.devkitAutoStatus) {
     const bonus = getDevKitAutoFlatBonus();
@@ -6960,6 +7138,9 @@ function updateDevKitUI() {
       ? bonus.toString()
       : '0';
     elements.devkitAutoStatus.textContent = text;
+  }
+  if (elements.devkitShopDetails) {
+    renderDevkitShopDetails();
   }
   if (elements.devkitToggleShop) {
     const active = isDevKitShopFree();
@@ -11188,6 +11369,40 @@ function computeUpgradeCost(def, quantity = 1) {
   return new LayeredNumber(totalCost);
 }
 
+function computeUpgradeTotalSpent(definition, level) {
+  if (!definition) {
+    return LayeredNumber.zero();
+  }
+  const normalizedLevel = Number.isFinite(level) ? Math.max(0, Math.floor(level)) : 0;
+  if (normalizedLevel <= 0) {
+    return LayeredNumber.zero();
+  }
+  const baseCost = Number(definition.baseCost ?? 0);
+  if (!Number.isFinite(baseCost) || baseCost <= 0) {
+    return LayeredNumber.zero();
+  }
+  const baseLayered = new LayeredNumber(baseCost);
+  const scaleValue = Number(definition.costScale ?? 1);
+  let total;
+  if (!Number.isFinite(scaleValue) || scaleValue <= 0 || Math.abs(scaleValue - 1) <= 1e-9) {
+    total = baseLayered.multiplyNumber(normalizedLevel);
+  } else {
+    const scaleLayered = new LayeredNumber(scaleValue);
+    const numerator = scaleLayered.pow(normalizedLevel).subtract(LayeredNumber.one());
+    const denominator = scaleLayered.subtract(LayeredNumber.one());
+    if (denominator.isZero() || denominator.sign === 0) {
+      total = baseLayered.multiplyNumber(normalizedLevel);
+    } else {
+      total = baseLayered.multiply(numerator.divide(denominator));
+    }
+  }
+  const modifier = Number(computeGlobalCostModifier());
+  if (!Number.isFinite(modifier) || modifier === 1) {
+    return total;
+  }
+  return total.multiplyNumber(modifier);
+}
+
 function formatShopCost(cost) {
   const value = cost instanceof LayeredNumber ? cost : new LayeredNumber(cost);
   let display = '';
@@ -13476,6 +13691,9 @@ function updateUI() {
   refreshGoalCardTexts();
   updateGoalsUI();
   updateInfoPanels();
+  if (DEVKIT_STATE && DEVKIT_STATE.isOpen) {
+    updateDevKitUI();
+  }
 }
 
 function showToast(message) {
