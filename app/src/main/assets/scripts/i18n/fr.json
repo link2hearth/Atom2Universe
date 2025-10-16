@@ -1085,6 +1085,18 @@
           "gacha": "Tirages gratuits : désactivés",
           "note": "Les modes restent actifs tant que la session est ouverte (raccourci F9)."
         },
+        "shop": {
+          "title": "Bâtiments de la boutique",
+          "description": "Bonus APC/APS individuels et coût total investi.",
+          "empty": "Aucun bâtiment acheté pour le moment.",
+          "cost": "Coût total : {value}",
+          "labels": {
+            "apcAdd": "APC +",
+            "apcMult": "APC ×",
+            "apsAdd": "APS +",
+            "apsMult": "APS ×"
+          }
+        },
         "footer": "Appuyez sur F9 pour ouvrir ou fermer le DevKit."
       }
     }

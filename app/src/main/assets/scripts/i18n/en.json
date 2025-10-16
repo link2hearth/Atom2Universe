@@ -1085,6 +1085,18 @@
           "gacha": "Free draws: off",
           "note": "Modes remain active while the session stays open (shortcut F9)."
         },
+        "shop": {
+          "title": "Shop buildings",
+          "description": "Individual APC/APS bonuses and total atoms invested.",
+          "empty": "No buildings purchased yet.",
+          "cost": "Total cost: {value}",
+          "labels": {
+            "apcAdd": "APC +",
+            "apcMult": "APC ×",
+            "apsAdd": "APS +",
+            "apsMult": "APS ×"
+          }
+        },
         "footer": "Press F9 to open or close the DevKit."
       }
     }
