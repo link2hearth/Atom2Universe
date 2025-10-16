@@ -9906,45 +9906,6 @@ const SCROLL_BEHAVIOR = Object.freeze({
 
 let activeScrollBehavior = SCROLL_BEHAVIOR.DEFAULT;
 
-const globalTouchPointers = new Set();
-let isScrollBehaviorRefreshScheduled = false;
-
-function scheduleScrollBehaviorRefresh() {
-  if (isScrollBehaviorRefreshScheduled) {
-    return;
-  }
-  isScrollBehaviorRefreshScheduled = true;
-  const schedule = typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function'
-    ? window.requestAnimationFrame.bind(window)
-    : (callback) => setTimeout(callback, 0);
-  schedule(() => {
-    isScrollBehaviorRefreshScheduled = false;
-    applyActivePageScrollBehavior();
-  });
-}
-
-function trackGlobalTouchPointer(event, isActive) {
-  if (!event || event.pointerType !== 'touch') {
-    return;
-  }
-  const pointerId = Number.isFinite(event.pointerId) ? event.pointerId : null;
-  if (pointerId == null) {
-    if (!isActive && globalTouchPointers.size > 0) {
-      globalTouchPointers.clear();
-      scheduleScrollBehaviorRefresh();
-    }
-    return;
-  }
-  if (isActive) {
-    globalTouchPointers.add(pointerId);
-    return;
-  }
-  globalTouchPointers.delete(pointerId);
-  if (globalTouchPointers.size === 0) {
-    scheduleScrollBehaviorRefresh();
-  }
-}
-
 function resolveScrollBehaviorFromPage(pageElement) {
   if (!pageElement) {
     return SCROLL_BEHAVIOR.DEFAULT;
@@ -10204,32 +10165,8 @@ document.addEventListener('visibilitychange', () => {
 });
 
 if (typeof window !== 'undefined') {
-  const handleGlobalPointerDown = event => {
-    trackGlobalTouchPointer(event, true);
-  };
-  const handleGlobalPointerUp = event => {
-    trackGlobalTouchPointer(event, false);
-  };
-  window.addEventListener('pointerdown', handleGlobalPointerDown, { passive: true });
-  ['pointerup', 'pointercancel', 'pointerleave', 'pointerout'].forEach(eventName => {
-    window.addEventListener(eventName, handleGlobalPointerUp, { passive: true });
-  });
-  ['touchend', 'touchcancel'].forEach(eventName => {
-    window.addEventListener(eventName, () => {
-      scheduleScrollBehaviorRefresh();
-    }, { passive: true });
-  });
   window.addEventListener('atom2univers:scroll-reset', () => {
     applyActivePageScrollBehavior();
-  });
-}
-
-if (typeof document !== 'undefined') {
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'hidden' && globalTouchPointers.size > 0) {
-      globalTouchPointers.clear();
-      scheduleScrollBehaviorRefresh();
-    }
   });
 }
 
