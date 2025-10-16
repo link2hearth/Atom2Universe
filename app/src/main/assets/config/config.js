@@ -297,7 +297,8 @@ const IONIZATION_TOTAL_BONUS_MULTIPLIER = 2;
 const SHOP_DEFAULT_IONIZATION_DOUBLING_INTERVAL = 50;
 const SHOP_IONIZATION_INTERVAL_OVERRIDES = Object.freeze({
   freeElectrons: 10,
-  physicsLab: 10
+  physicsLab: 10,
+  nuclearReactor: 25
 });
 
 function getIonizationBoost(
@@ -360,13 +361,16 @@ function createShopBuildingDefinitions() {
       name: 'Réacteur nucléaire',
       description: 'Des réacteurs contrôlés libèrent une énergie colossale.',
       effectSummary:
-        'Production passive : +10 APS par niveau. Tous les 50 niveaux, l’ionisation double le bonus total.',
+        'Production passive : +10 APS par niveau. Tous les 25 niveaux, l’ionisation double le bonus total.',
       category: 'auto',
       baseCost: 1000,
       costScale: 1.15,
       effect: (level = 0) => {
         const baseAmount = 10 * level;
-        const ionizationBoost = getIonizationBoost(level);
+        const ionizationBoost = getIonizationBoost(
+          level,
+          SHOP_IONIZATION_INTERVAL_OVERRIDES.nuclearReactor
+        );
         const autoAdd = level > 0 ? baseAmount * ionizationBoost : 0;
         return { autoAdd };
       }

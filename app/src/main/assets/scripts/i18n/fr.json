@@ -1122,8 +1122,8 @@
         "nuclearReactor": {
           "name": "Réacteur nucléaire",
           "description": "Des réacteurs contrôlés libèrent une énergie colossale.",
-          "effect": "Production passive : +10 APS par niveau. Tous les 50 niveaux, l’ionisation double le bonus total.",
-          "effectSummary": "Production passive +10 APS par niveau. Ionisation : bonus total x2 tous les 50 niveaux."
+          "effect": "Production passive : +10 APS par niveau. Tous les 25 niveaux, l’ionisation double le bonus total.",
+          "effectSummary": "Production passive +10 APS par niveau. Ionisation : bonus total x2 tous les 25 niveaux."
         },
         "particleAccelerator": {
           "name": "Accélérateur de particules",
