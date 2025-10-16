@@ -7,7 +7,6 @@
       "primary": "Navigation principale",
       "items": {
         "arcade": "Arcade",
-        "arcadeTouch": "Arcade tactile",
         "shop": "Boutique",
         "gacha": "Gacha",
         "table": "Table",
@@ -255,12 +254,6 @@
           "default": "Débloquez ce mini-jeu pour y accéder."
         },
         "cards": {
-          "touch": {
-            "aria": "Ouvrir l’arcade tactile dédiée",
-            "title": "Arcade tactile",
-            "description": "Retrouvez Particules, Métaux, Balance et Game of Life sur une page optimisée pour les gestes tactiles.",
-            "cta": "Basculer"
-          },
           "particules": {
             "aria": "Accéder au mini-jeu Particules",
             "title": "Particules",
@@ -1430,11 +1423,6 @@
       "practiceScrollLabel": "Défilement des notes (zone de jeu)",
       "practiceScrollEnabled": "Défilement activé",
       "practiceScrollDisabled": "Défilement désactivé"
-    }
-  },
-  "arcadeTouch": {
-    "actions": {
-      "return": "Retourner au hub arcade"
     }
   },
   "scripts": {

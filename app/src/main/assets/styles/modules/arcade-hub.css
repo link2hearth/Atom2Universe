@@ -96,19 +96,6 @@
   filter: grayscale(0.25);
 }
 
-.arcade-hub-card--touch {
-  --arcade-hub-card-background: linear-gradient(150deg, rgba(64, 120, 255, 0.85), rgba(36, 210, 194, 0.88));
-  --arcade-hub-card-border: rgba(128, 212, 255, 0.32);
-  --arcade-hub-card-shadow: 0 22px 44px rgba(16, 32, 64, 0.42);
-  --arcade-hub-card-shadow-hover: 0 30px 58px rgba(16, 32, 64, 0.56);
-  --arcade-hub-card-outline: rgba(160, 236, 255, 0.64);
-  --arcade-hub-card-description-color: rgba(248, 252, 255, 0.92);
-  --arcade-hub-card-cta-bg: rgba(12, 28, 70, 0.18);
-  --arcade-hub-card-cta-border: rgba(200, 244, 255, 0.36);
-  --arcade-hub-card-cta-bg-hover: rgba(12, 28, 70, 0.26);
-  --arcade-hub-card-cta-border-hover: rgba(216, 248, 255, 0.56);
-}
-
 .arcade-hub-card--locked:hover,
 .arcade-hub-card--locked:focus-visible {
   transform: none;
