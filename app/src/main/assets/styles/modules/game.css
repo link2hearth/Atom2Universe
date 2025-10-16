@@ -50,6 +50,7 @@ body.theme-aurora .page--void {
 }
 
 .apc-frenzy-counter {
+  --apc-frenzy-scale: var(--ui-control-scale, 1);
   position: fixed;
   left: clamp(1.2rem, 3vw, 2rem);
   top: 44%;
@@ -63,12 +64,13 @@ body.theme-aurora .page--void {
   color: inherit;
   font-family: var(--font-digits, 'Orbitron', sans-serif);
   opacity: 0.92;
-  transform: translateY(-50%) scale(1);
+  transform: translateY(-50%) scale(var(--apc-frenzy-scale, 1));
   transition: transform 0.24s ease, opacity 0.24s ease;
   pointer-events: none;
 }
 
 .frenzy-status__item .apc-frenzy-counter {
+  --apc-frenzy-scale: var(--frenzy-scale, var(--ui-control-scale, 1));
   position: static;
   left: auto;
   bottom: auto;
@@ -86,7 +88,7 @@ body.theme-aurora .page--void {
 }
 
 .frenzy-status__item .apc-frenzy-counter__value {
-  font-size: clamp(0.8rem, 1.7vw, 1.1rem);
+  font-size: calc(clamp(0.8rem, 1.7vw, 1.1rem) * var(--apc-frenzy-scale, 1));
 }
 
 body.theme-light .frenzy-status__item .apc-frenzy-counter {
@@ -103,11 +105,11 @@ body.theme-aurora .frenzy-status__item .apc-frenzy-counter {
 
 .apc-frenzy-counter.is-active {
   opacity: 1;
-  transform: translateY(-50%) scale(1.05);
+  transform: translateY(-50%) scale(calc(var(--apc-frenzy-scale, 1) * 1.05));
 }
 
 .apc-frenzy-counter__value {
-  font-size: 1.1rem;
+  font-size: calc(1.1rem * var(--apc-frenzy-scale, 1));
   font-weight: 700;
   line-height: 1;
   color: inherit;
@@ -123,13 +125,13 @@ body:not(.view-game):not(.view-wave) .apc-frenzy-counter {
 
 @keyframes apcFrenzyPulse {
   0% {
-    transform: translateY(-50%) scale(1);
+    transform: translateY(-50%) scale(var(--apc-frenzy-scale, 1));
   }
   45% {
-    transform: translateY(-50%) scale(1.24);
+    transform: translateY(-50%) scale(calc(var(--apc-frenzy-scale, 1) * 1.24));
   }
   100% {
-    transform: translateY(-50%) scale(1);
+    transform: translateY(-50%) scale(var(--apc-frenzy-scale, 1));
   }
 }
 

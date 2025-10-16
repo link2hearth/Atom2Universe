@@ -238,12 +238,13 @@ body.theme-neon .arcade-hud__combo {
 
 
 .arcade-overlay {
+  --arcade-overlay-scale: var(--ui-control-scale, 1);
   position: absolute;
   inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: clamp(1.2rem, 4vw, 2.4rem);
+  padding: calc(clamp(1.2rem, 4vw, 2.4rem) * var(--arcade-overlay-scale, 1));
   background: var(--arcade-overlay-backdrop, rgba(4, 6, 18, 0.78));
   backdrop-filter: blur(10px);
   z-index: 2;
@@ -252,7 +253,7 @@ body.theme-neon .arcade-hud__combo {
 .arcade-overlay__content {
   display: flex;
   flex-direction: column;
-  gap: clamp(0.8rem, 2vw, 1.2rem);
+  gap: calc(clamp(0.8rem, 2vw, 1.2rem) * var(--arcade-overlay-scale, 1));
   max-width: min(420px, 86vw);
   text-align: center;
 }
@@ -260,20 +261,20 @@ body.theme-neon .arcade-hud__combo {
 .arcade-overlay__actions {
   display: flex;
   justify-content: center;
-  gap: clamp(0.6rem, 1.5vw, 1rem);
+  gap: calc(clamp(0.6rem, 1.5vw, 1rem) * var(--arcade-overlay-scale, 1));
   flex-wrap: wrap;
 }
 
 .arcade-overlay__message {
   margin: 0;
-  font-size: clamp(0.9rem, 1.6vw, 1.2rem);
+  font-size: calc(clamp(0.9rem, 1.6vw, 1.2rem) * var(--arcade-overlay-scale, 1));
   line-height: 1.5;
 }
 
 .arcade-overlay__field {
   display: flex;
   flex-direction: column;
-  gap: clamp(0.35rem, 0.9vw, 0.6rem);
+  gap: calc(clamp(0.35rem, 0.9vw, 0.6rem) * var(--arcade-overlay-scale, 1));
   width: 100%;
   text-align: left;
   align-items: stretch;
@@ -283,7 +284,7 @@ body.theme-neon .arcade-hud__combo {
   order: -1;
   align-self: flex-end;
   width: auto;
-  min-width: clamp(160px, 25vw, 220px);
+  min-width: calc(clamp(160px, 25vw, 220px) * var(--arcade-overlay-scale, 1));
   text-align: right;
   align-items: flex-end;
 }
@@ -293,15 +294,17 @@ body.theme-neon .arcade-hud__combo {
 }
 
 .arcade-overlay__field--brick-skin .arcade-overlay__select {
-  font-size: clamp(0.58rem, 0.85vw, 0.7rem);
-  padding: clamp(0.25em, 0.6vw, 0.4em) clamp(0.6em, 1.6vw, 1.1em);
-  min-width: clamp(150px, 24vw, 210px);
+  font-size: calc(clamp(0.58rem, 0.85vw, 0.7rem) * var(--arcade-overlay-scale, 1));
+  padding:
+    calc(clamp(0.25em, 0.6vw, 0.4em) * var(--arcade-overlay-scale, 1))
+    calc(clamp(0.6em, 1.6vw, 1.1em) * var(--arcade-overlay-scale, 1));
+  min-width: calc(clamp(150px, 24vw, 210px) * var(--arcade-overlay-scale, 1));
 }
 
 .arcade-mode-switch {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: clamp(0.4rem, 1vw, 0.8rem);
+  gap: calc(clamp(0.4rem, 1vw, 0.8rem) * var(--arcade-overlay-scale, 1));
 }
 
 .arcade-mode-switch__button {
@@ -350,7 +353,7 @@ body.theme-neon .arcade-hud__combo {
 
 .arcade-mode-hint {
   margin: 0;
-  font-size: clamp(0.68rem, 1vw, 0.85rem);
+  font-size: calc(clamp(0.68rem, 1vw, 0.85rem) * var(--arcade-overlay-scale, 1));
   line-height: 1.45;
   color: var(--arcade-mode-hint-color, rgba(210, 225, 255, 0.85));
 }
@@ -375,7 +378,7 @@ body.theme-light .arcade-mode-hint {
 }
 
 .arcade-overlay__label {
-  font-size: clamp(0.62rem, 1.05vw, 0.8rem);
+  font-size: calc(clamp(0.62rem, 1.05vw, 0.8rem) * var(--arcade-overlay-scale, 1));
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--arcade-overlay-label-color, rgba(210, 225, 255, 0.85));
@@ -384,7 +387,7 @@ body.theme-light .arcade-mode-hint {
 
 .arcade-overlay__select {
   appearance: none;
-  border-radius: 999px;
+  border-radius: calc(999px * var(--arcade-overlay-scale, 1));
   border: 1px solid var(--arcade-overlay-select-border, rgba(140, 190, 255, 0.6));
   background: var(
     --arcade-overlay-select-background,
@@ -392,7 +395,9 @@ body.theme-light .arcade-mode-hint {
   );
   color: var(--arcade-overlay-select-color, #fff);
   font: inherit;
-  padding: clamp(0.4em, 0.9vw, 0.65em) clamp(1em, 2.2vw, 1.5em);
+  padding:
+    calc(clamp(0.4em, 0.9vw, 0.65em) * var(--arcade-overlay-scale, 1))
+    calc(clamp(1em, 2.2vw, 1.5em) * var(--arcade-overlay-scale, 1));
   text-align: center;
   letter-spacing: 0.06em;
   cursor: pointer;
@@ -437,13 +442,15 @@ body.theme-light .arcade-overlay__select {
 
 .arcade-overlay__button {
   align-self: center;
-  padding: clamp(0.55rem, 1.2vw, 0.85rem) clamp(1.4rem, 3vw, 2.2rem);
-  border-radius: 999px;
+  padding:
+    calc(clamp(0.55rem, 1.2vw, 0.85rem) * var(--arcade-overlay-scale, 1))
+    calc(clamp(1.4rem, 3vw, 2.2rem) * var(--arcade-overlay-scale, 1));
+  border-radius: calc(999px * var(--arcade-overlay-scale, 1));
   border: none;
   font-family: var(--font-text, 'Orbitron', sans-serif);
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  font-size: clamp(0.68rem, 1vw, 0.82rem);
+  font-size: calc(clamp(0.68rem, 1vw, 0.82rem) * var(--arcade-overlay-scale, 1));
   cursor: pointer;
   color: var(--arcade-overlay-button-primary-color, #02040c);
   background: var(

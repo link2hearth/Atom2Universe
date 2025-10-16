@@ -289,6 +289,50 @@ body.theme-aurora .page--quantum2048 {
   justify-content: center;
 }
 
+.quantum2048-toolbar__status {
+  --quantum2048-status-scale: calc(var(--ui-control-scale, 1) * 2);
+}
+
+.quantum2048-toolbar__status .arcade-header__status {
+  gap: calc(
+    clamp(0.26rem, 0.68vw, 0.45rem)
+    * var(--quantum2048-status-scale, calc(var(--ui-control-scale, 1) * 2))
+  );
+  padding:
+    calc(
+      clamp(0.3rem, 0.6vw, 0.53rem)
+      * var(--quantum2048-status-scale, calc(var(--ui-control-scale, 1) * 2))
+    )
+    calc(
+      clamp(0.52rem, 0.88vw, 0.74rem)
+      * var(--quantum2048-status-scale, calc(var(--ui-control-scale, 1) * 2))
+    );
+  border-radius: calc(
+    1.2rem * var(--quantum2048-status-scale, calc(var(--ui-control-scale, 1) * 2))
+  );
+}
+
+.quantum2048-toolbar__status .arcade-header__status-label {
+  font-size: calc(
+    clamp(0.36rem, 0.55vw, 0.47rem)
+    * var(--quantum2048-status-scale, calc(var(--ui-control-scale, 1) * 2))
+  );
+}
+
+.quantum2048-toolbar__status .arcade-header__status-value {
+  font-size: calc(
+    clamp(0.62rem, 1.15vw, 0.84rem)
+    * var(--quantum2048-status-scale, calc(var(--ui-control-scale, 1) * 2))
+  );
+}
+
+.quantum2048-toolbar__status .arcade-header__status--info .arcade-header__status-value {
+  font-size: calc(
+    clamp(0.53rem, 0.99vw, 0.72rem)
+    * var(--quantum2048-status-scale, calc(var(--ui-control-scale, 1) * 2))
+  );
+}
+
 @media (min-width: 768px) {
   .quantum2048-toolbar {
     grid-template-columns: repeat(2, minmax(0, 1fr));
