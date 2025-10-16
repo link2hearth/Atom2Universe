@@ -35,16 +35,51 @@
   height: 1px;
 }
 
-.shop-actions-header__labels {
+.shop-actions-header__controls {
   grid-column: 2;
   display: flex;
   justify-content: flex-end;
+  align-items: center;
   gap: clamp(0.35rem, 0.8vw, 0.55rem);
+  flex-wrap: wrap;
 }
 
-.shop-actions-header__label {
+.shop-actions-header__control {
+  border: 1px solid var(--shop-toggle-border, rgba(255, 255, 255, 0.2));
+  background: var(--shop-toggle-background, rgba(255, 255, 255, 0.12));
+  color: var(--shop-toggle-color, rgba(255, 255, 255, 0.85));
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  font-family: var(--font-digits, 'Orbitron', sans-serif);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: calc(0.62rem * var(--font-scale-factor, 1));
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition), border var(--transition),
+    box-shadow var(--transition), transform var(--transition);
+  min-width: clamp(3rem, 6vw, 3.8rem);
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+}
+
+.shop-actions-header__control:hover {
+  background: var(--shop-toggle-hover-background, rgba(255, 255, 255, 0.18));
+  border-color: var(--shop-toggle-hover-border, rgba(255, 255, 255, 0.28));
+  transform: translateY(-1px);
+}
+
+.shop-actions-header__control.is-active {
+  background: var(--shop-toggle-active-background, var(--shop-action-background, var(--accent)));
+  color: var(--shop-toggle-active-color, var(--shop-action-color, #05070c));
+  border-color: var(--shop-toggle-active-border, var(--shop-action-border, rgba(255, 255, 255, 0.32)));
+  box-shadow: var(--shop-toggle-active-shadow, var(--shop-action-ready-shadow, none));
+}
+
+.shop-actions-header__control:focus-visible {
+  outline: 2px solid var(--focus, rgba(122, 197, 255, 0.85));
+  outline-offset: 2px;
 }
 
 .shop-list {
@@ -235,7 +270,18 @@ body.theme-aurora .shop-layout {
 
 @media (max-width: 960px) {
   .shop-actions-header {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    row-gap: 0.4rem;
+    padding: 0.45rem 0.75rem;
+  }
+
+  .shop-actions-header__spacer {
     display: none;
+  }
+
+  .shop-actions-header__controls {
+    justify-content: center;
   }
 
   .shop-item {
@@ -260,6 +306,7 @@ body.theme-aurora .shop-layout {
   }
 
   .shop-item__action {
-    flex: 1 1 calc(33% - 0.4rem);
+    flex: 1 1 100%;
+    width: 100%;
   }
 }

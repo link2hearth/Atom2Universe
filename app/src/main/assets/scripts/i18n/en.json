@@ -43,6 +43,12 @@
         "title": "Quantum shop",
         "placeholder": "The shop is loading…",
         "actionsPlaceholder": "Quantity options will appear here soon",
+        "quantityGroupLabel": "Purchase amount",
+        "quantityToggle": "Select {quantity} purchase amount",
+        "quantityToggleSelected": "{quantity} purchase amount selected",
+        "quantityToggleX1": "Select x1 purchase amount",
+        "quantityToggleX10": "Select x10 purchase amount",
+        "quantityToggleX100": "Select x100 purchase amount",
         "fallback": {
           "note": "Enable JavaScript to interact with the shop. A static preview of the available upgrades is shown below.",
           "action": "Enable JavaScript to purchase this upgrade."

@@ -7276,6 +7276,8 @@ function toggleDevKitCheat(key) {
 }
 
 const SHOP_PURCHASE_AMOUNTS = [1, 10, 100];
+let activeShopPurchaseAmount = SHOP_PURCHASE_AMOUNTS[0] ?? 1;
+const shopPurchaseControls = new Map();
 const shopRows = new Map();
 let lastVisibleShopIndex = -1;
 let lastVisibleShopBonusIds = new Set();
@@ -12492,6 +12494,69 @@ function formatShopAriaLabel({ state, action, name, quantity, limitNote, costVal
   );
 }
 
+function getActiveShopPurchaseAmount() {
+  if (!Array.isArray(SHOP_PURCHASE_AMOUNTS) || SHOP_PURCHASE_AMOUNTS.length === 0) {
+    activeShopPurchaseAmount = 1;
+    return activeShopPurchaseAmount;
+  }
+  if (!SHOP_PURCHASE_AMOUNTS.includes(activeShopPurchaseAmount)) {
+    activeShopPurchaseAmount = SHOP_PURCHASE_AMOUNTS[0];
+  }
+  return activeShopPurchaseAmount;
+}
+
+function updateShopPurchaseControlState() {
+  if (!shopPurchaseControls.size) {
+    return;
+  }
+  if (elements.shopActionsHeader) {
+    const controls = elements.shopActionsHeader.querySelector('.shop-actions-header__controls');
+    if (controls) {
+      const groupLabel = translateOrDefault(
+        'index.sections.shop.quantityGroupLabel',
+        "Quantité d'achat"
+      );
+      controls.setAttribute('aria-label', groupLabel);
+    }
+  }
+  const activeQuantity = getActiveShopPurchaseAmount();
+  shopPurchaseControls.forEach((button, quantity) => {
+    if (!button) return;
+    const isActive = quantity === activeQuantity;
+    const formattedQuantity = `x${quantity}`;
+    button.classList.toggle('is-active', isActive);
+    button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+    const key = isActive
+      ? 'index.sections.shop.quantityToggleSelected'
+      : 'index.sections.shop.quantityToggle';
+    const fallback = isActive
+      ? `${formattedQuantity} purchase amount selected`
+      : `Select ${formattedQuantity} purchase amount`;
+    const ariaLabel = translateOrDefault(key, fallback, { quantity: formattedQuantity });
+    button.setAttribute('aria-label', ariaLabel);
+    button.title = ariaLabel;
+  });
+}
+
+function setActiveShopPurchaseAmount(quantity) {
+  if (!Array.isArray(SHOP_PURCHASE_AMOUNTS) || SHOP_PURCHASE_AMOUNTS.length === 0) {
+    activeShopPurchaseAmount = 1;
+    updateShopPurchaseControlState();
+    updateShopAffordability();
+    return;
+  }
+  const numericQuantity = Number(quantity);
+  const normalized = SHOP_PURCHASE_AMOUNTS.find(value => value === numericQuantity)
+    ?? SHOP_PURCHASE_AMOUNTS[0];
+  if (activeShopPurchaseAmount === normalized) {
+    updateShopPurchaseControlState();
+    return;
+  }
+  activeShopPurchaseAmount = normalized;
+  updateShopPurchaseControlState();
+  updateShopAffordability();
+}
+
 function renderShopPurchaseHeader() {
   if (!elements.shopActionsHeader) return;
   const header = elements.shopActionsHeader;
@@ -12505,16 +12570,30 @@ function renderShopPurchaseHeader() {
   const spacer = document.createElement('div');
   spacer.className = 'shop-actions-header__spacer';
   fragment.appendChild(spacer);
-  const labels = document.createElement('div');
-  labels.className = 'shop-actions-header__labels';
+  const controls = document.createElement('div');
+  controls.className = 'shop-actions-header__controls';
+  const groupLabel = translateOrDefault(
+    'index.sections.shop.quantityGroupLabel',
+    "Quantité d'achat"
+  );
+  controls.setAttribute('role', 'group');
+  controls.setAttribute('aria-label', groupLabel);
+  shopPurchaseControls.clear();
   SHOP_PURCHASE_AMOUNTS.forEach(quantity => {
-    const label = document.createElement('span');
-    label.className = 'shop-actions-header__label';
-    label.textContent = `x${quantity}`;
-    labels.appendChild(label);
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'shop-actions-header__control';
+    button.textContent = `x${quantity}`;
+    button.dataset.quantity = String(quantity);
+    button.addEventListener('click', () => {
+      setActiveShopPurchaseAmount(quantity);
+    });
+    controls.appendChild(button);
+    shopPurchaseControls.set(quantity, button);
   });
-  fragment.appendChild(labels);
+  fragment.appendChild(controls);
   header.appendChild(fragment);
+  updateShopPurchaseControlState();
 }
 
 function getLocalizedUpgradeName(def) {
@@ -12545,33 +12624,34 @@ function buildShopItem(def) {
 
   const actions = document.createElement('div');
   actions.className = 'shop-item__actions';
-  const buttonMap = new Map();
 
-  SHOP_PURCHASE_AMOUNTS.forEach(quantity => {
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.className = 'shop-item__action';
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'shop-item__action';
 
-    const priceLabel = document.createElement('span');
-    priceLabel.className = 'shop-item__action-price';
-    priceLabel.textContent = '—';
+  const priceLabel = document.createElement('span');
+  priceLabel.className = 'shop-item__action-price';
+  priceLabel.textContent = '—';
 
-    button.append(priceLabel);
-    button.addEventListener('click', () => {
-      attemptPurchase(def, quantity);
-    });
-
-    actions.appendChild(button);
-    buttonMap.set(quantity, {
-      button,
-      price: priceLabel,
-      baseQuantity: quantity
-    });
+  button.append(priceLabel);
+  button.addEventListener('click', () => {
+    attemptPurchase(def, getActiveShopPurchaseAmount());
   });
+
+  actions.appendChild(button);
 
   item.append(header, desc, actions);
 
-  return { root: item, title, level, description: desc, buttons: buttonMap };
+  return {
+    root: item,
+    title,
+    level,
+    description: desc,
+    action: {
+      button,
+      price: priceLabel
+    }
+  };
 }
 
 function updateShopUnlockHint() {
@@ -12638,6 +12718,7 @@ function updateShopVisibility() {
 }
 
 function updateShopAffordability() {
+  updateShopPurchaseControlState();
   if (!shopRows.size) return;
   UPGRADE_DEFS.forEach(def => {
     const row = shopRows.get(def.id);
@@ -12659,59 +12740,62 @@ function updateShopAffordability() {
     const actionLabel = getShopActionLabel(level);
     const displayName = texts.name;
     const shopFree = isDevKitShopFree();
+    const entry = row.action;
 
-    SHOP_PURCHASE_AMOUNTS.forEach(quantity => {
-      const entry = row.buttons.get(quantity);
-      if (!entry) return;
-      const baseQuantity = entry.baseQuantity ?? quantity;
+    if (!entry) {
+      row.root.classList.toggle('shop-item--ready', anyAffordable);
+      return;
+    }
 
-      if (capReached) {
-        entry.price.textContent = t('scripts.app.shop.limitReached');
-        entry.button.disabled = true;
-        entry.button.classList.remove('is-ready');
-        const ariaLabel = translateOrDefault(
-          'scripts.app.shop.ariaMaxLevel',
-          `${displayName} a atteint son niveau maximum`,
-          { name: displayName }
-        );
-        entry.button.setAttribute('aria-label', ariaLabel);
-        entry.button.title = ariaLabel;
-        return;
-      }
+    const baseQuantity = getActiveShopPurchaseAmount();
 
-      const effectiveQuantity = Number.isFinite(remainingLevels)
-        ? Math.min(baseQuantity, remainingLevels)
-        : baseQuantity;
-      const limited = Number.isFinite(remainingLevels) && effectiveQuantity !== baseQuantity;
-
-      const cost = computeUpgradeCost(def, effectiveQuantity);
-      const affordable = shopFree || gameState.atoms.compare(cost) >= 0;
-      const costDisplay = formatShopCost(cost);
-      entry.price.textContent = formatShopPriceText({
-        isFree: shopFree,
-        limitedQuantity: limited,
-        quantity: limited ? effectiveQuantity : baseQuantity,
-        priceText: costDisplay
-      });
-      const enabled = affordable && effectiveQuantity > 0;
-      entry.button.disabled = !enabled;
-      entry.button.classList.toggle('is-ready', enabled);
-      if (enabled) {
-        anyAffordable = true;
-      }
-      const displayQuantity = limited ? effectiveQuantity : baseQuantity;
-      const limitNote = getShopLimitSuffix(limited);
-      const ariaLabel = formatShopAriaLabel({
-        state: enabled ? (shopFree ? 'free' : 'cost') : 'insufficient',
-        action: actionLabel,
-        name: displayName,
-        quantity: displayQuantity,
-        limitNote,
-        costValue: cost.toString()
-      });
+    if (capReached) {
+      entry.price.textContent = t('scripts.app.shop.limitReached');
+      entry.button.disabled = true;
+      entry.button.classList.remove('is-ready');
+      const ariaLabel = translateOrDefault(
+        'scripts.app.shop.ariaMaxLevel',
+        `${displayName} a atteint son niveau maximum`,
+        { name: displayName }
+      );
       entry.button.setAttribute('aria-label', ariaLabel);
       entry.button.title = ariaLabel;
+      row.root.classList.toggle('shop-item--ready', anyAffordable);
+      return;
+    }
+
+    const effectiveQuantity = Number.isFinite(remainingLevels)
+      ? Math.min(baseQuantity, remainingLevels)
+      : baseQuantity;
+    const limited = Number.isFinite(remainingLevels) && effectiveQuantity !== baseQuantity;
+
+    const cost = computeUpgradeCost(def, effectiveQuantity);
+    const affordable = shopFree || gameState.atoms.compare(cost) >= 0;
+    const costDisplay = formatShopCost(cost);
+    entry.price.textContent = formatShopPriceText({
+      isFree: shopFree,
+      limitedQuantity: limited,
+      quantity: limited ? effectiveQuantity : baseQuantity,
+      priceText: costDisplay
     });
+    const enabled = affordable && effectiveQuantity > 0;
+    entry.button.disabled = !enabled;
+    entry.button.classList.toggle('is-ready', enabled);
+    if (enabled) {
+      anyAffordable = true;
+    }
+    const displayQuantity = limited ? effectiveQuantity : baseQuantity;
+    const limitNote = getShopLimitSuffix(limited);
+    const ariaLabel = formatShopAriaLabel({
+      state: enabled ? (shopFree ? 'free' : 'cost') : 'insufficient',
+      action: actionLabel,
+      name: displayName,
+      quantity: displayQuantity,
+      limitNote,
+      costValue: cost.toString()
+    });
+    entry.button.setAttribute('aria-label', ariaLabel);
+    entry.button.title = ariaLabel;
 
     row.root.classList.toggle('shop-item--ready', anyAffordable);
   });

@@ -43,6 +43,12 @@
         "title": "Boutique quantique",
         "placeholder": "La boutique se charge…",
         "actionsPlaceholder": "Les options de quantité apparaîtront ici.",
+        "quantityGroupLabel": "Quantité d’achat",
+        "quantityToggle": "Sélectionner l’achat {quantity}",
+        "quantityToggleSelected": "Mode d’achat {quantity} sélectionné",
+        "quantityToggleX1": "Sélectionner l’achat x1",
+        "quantityToggleX10": "Sélectionner l’achat x10",
+        "quantityToggleX100": "Sélectionner l’achat x100",
         "fallback": {
           "note": "Activez JavaScript pour interagir avec la boutique. Aperçu des améliorations disponibles ci-dessous.",
           "action": "Activez JavaScript pour acheter cette amélioration."
