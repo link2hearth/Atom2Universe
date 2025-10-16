@@ -9951,21 +9951,10 @@ const supportsPassiveEventListeners = (() => {
 })();
 
 const passiveEventListenerOptions = supportsPassiveEventListeners ? { passive: true } : false;
-const nonPassiveEventListenerOptions = supportsPassiveEventListeners ? { passive: false } : false;
 const supportsGlobalPointerEvents = typeof globalThis !== 'undefined'
   && typeof globalThis.PointerEvent === 'function';
 
 let activeBodyScrollBehavior = SCROLL_BEHAVIOR_MODES.DEFAULT;
-let bodyScrollTouchMoveListenerAttached = false;
-
-function preventBodyScrollTouchMove(event) {
-  if (!event) {
-    return;
-  }
-  if (typeof event.preventDefault === 'function') {
-    event.preventDefault();
-  }
-}
 
 function normalizeScrollBehaviorValue(value) {
   if (typeof value !== 'string') {
@@ -10014,21 +10003,15 @@ function applyBodyScrollBehavior(requestedBehavior) {
   activeBodyScrollBehavior = nextBehavior;
 
   if (nextBehavior === SCROLL_BEHAVIOR_MODES.LOCK) {
-    if (!bodyScrollTouchMoveListenerAttached && typeof body.addEventListener === 'function') {
-      body.addEventListener('touchmove', preventBodyScrollTouchMove, nonPassiveEventListenerOptions);
-      bodyScrollTouchMoveListenerAttached = true;
-    }
     body.style.setProperty('touch-action', 'none');
     body.style.setProperty('overscroll-behavior', 'none');
+    body.style.setProperty('overflow', 'hidden');
     body.classList.add('touch-scroll-lock');
     body.classList.remove('touch-scroll-force');
     return;
   }
 
-  if (bodyScrollTouchMoveListenerAttached && typeof body.removeEventListener === 'function') {
-    body.removeEventListener('touchmove', preventBodyScrollTouchMove, nonPassiveEventListenerOptions);
-    bodyScrollTouchMoveListenerAttached = false;
-  }
+  body.style.removeProperty('overflow');
 
   if (nextBehavior === SCROLL_BEHAVIOR_MODES.FORCE) {
     body.style.setProperty('touch-action', 'auto');
@@ -10725,12 +10708,40 @@ function bindDomEventListeners() {
   }
   if (elements.atomButton) {
     const atomButton = elements.atomButton;
+    const activeTouchPointers = new Set();
+    let lastTouchPointerDownTime = 0;
 
-    atomButton.addEventListener('pointerdown', () => {
+    const getNow = () => {
+      return typeof performance !== 'undefined' && typeof performance.now === 'function'
+        ? performance.now()
+        : Date.now();
+    };
+
+    const handleTouchPointerCompletion = event => {
+      if (event?.pointerType === 'touch') {
+        activeTouchPointers.delete(event.pointerId);
+      }
+    };
+
+    atomButton.addEventListener('pointerdown', event => {
+      if (event?.pointerType === 'touch') {
+        lastTouchPointerDownTime = getNow();
+        if (!activeTouchPointers.has(event.pointerId)) {
+          activeTouchPointers.add(event.pointerId);
+          if (typeof event.preventDefault === 'function') {
+            event.preventDefault();
+          }
+          if (typeof event.stopPropagation === 'function') {
+            event.stopPropagation();
+          }
+          handleManualAtomClick({ contextId: 'game' });
+        }
+      }
       activateEcoClickFeedback();
     });
 
-    const handleEcoPointerRelease = () => {
+    const handleEcoPointerRelease = event => {
+      handleTouchPointerCompletion(event);
       if (!isEcoPerformanceModeActive()) {
         return;
       }
@@ -10742,6 +10753,20 @@ function bindDomEventListeners() {
     atomButton.addEventListener('pointercancel', handleEcoPointerRelease);
 
     atomButton.addEventListener('click', event => {
+      const timeSinceLastTouch = lastTouchPointerDownTime > 0
+        ? getNow() - lastTouchPointerDownTime
+        : Infinity;
+      const shouldSuppressForTouch = timeSinceLastTouch < 400;
+      if (shouldSuppressForTouch) {
+        if (typeof event?.preventDefault === 'function') {
+          event.preventDefault();
+        }
+        if (typeof event?.stopPropagation === 'function') {
+          event.stopPropagation();
+        }
+        lastTouchPointerDownTime = 0;
+        return;
+      }
       if (typeof event?.preventDefault === 'function') {
         event.preventDefault();
       }
