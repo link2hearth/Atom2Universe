@@ -10512,6 +10512,9 @@ function showPage(pageId) {
     btn.classList.toggle('active', btn.dataset.target === pageId);
   });
   document.body.dataset.activePage = pageId;
+  if (pageId === 'info') {
+    updateDevKitUI();
+  }
   const activePageElement = typeof document !== 'undefined'
     ? document.getElementById(pageId)
     : null;
@@ -13787,7 +13790,10 @@ function updateUI() {
   refreshGoalCardTexts();
   updateGoalsUI();
   updateInfoPanels();
-  if (DEVKIT_STATE && DEVKIT_STATE.isOpen) {
+  const infoPageActive = typeof document !== 'undefined'
+    && document.body?.dataset?.activePage === 'info';
+  const shouldRefreshDevkit = infoPageActive || (DEVKIT_STATE && DEVKIT_STATE.isOpen);
+  if (shouldRefreshDevkit) {
     updateDevKitUI();
   }
 }
