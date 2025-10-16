@@ -7,7 +7,6 @@
       "primary": "Main navigation",
       "items": {
         "arcade": "Arcade",
-        "arcadeTouch": "Touch arcade",
         "shop": "Shop",
         "gacha": "Gacha",
         "table": "Table",
@@ -255,12 +254,6 @@
           "default": "Unlock this minigame to access it."
         },
         "cards": {
-          "touch": {
-            "aria": "Open the dedicated touch arcade",
-            "title": "Touch arcade",
-            "description": "Play Particles, Metals, Balance and Game of Life on a page tailored for touch gestures.",
-            "cta": "Switch"
-          },
           "particules": {
             "aria": "Open the Particles mini-game",
             "title": "Particles",
@@ -1430,11 +1423,6 @@
       "practiceScrollLabel": "Practice note scroll",
       "practiceScrollEnabled": "Scroll enabled",
       "practiceScrollDisabled": "Scroll disabled"
-    }
-  },
-  "arcadeTouch": {
-    "actions": {
-      "return": "Return to the arcade hub"
     }
   },
   "scripts": {

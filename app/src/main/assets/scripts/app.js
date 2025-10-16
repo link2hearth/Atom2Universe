@@ -70,8 +70,6 @@ const PAGE_FEATURE_MAP = Object.freeze({
   gameOfLife: 'arcade.gameOfLife'
 });
 
-const TOUCH_ARCADE_URL = 'arcade-touch.html';
-
 const OPTIONS_DETAIL_FEATURE_MAP = Object.freeze({
   particles: 'arcade.particules',
   match3: 'arcade.metaux',
@@ -4182,16 +4180,15 @@ function collectDomElements() {
     pageContainer: document.getElementById('pageContainer'),
     brandPortal: document.getElementById('brandPortal'),
     navButtons: document.querySelectorAll('.nav-button'),
-    navArcadeButton: document.getElementById('navArcadeButton'),
-    touchArcadeNavButton: document.getElementById('navTouchArcadeButton'),
-    navShopButton: document.querySelector('.nav-button[data-target="shop"]'),
-    navGachaButton: document.querySelector('.nav-button[data-target="gacha"]'),
-    navTableButton: document.querySelector('.nav-button[data-target="tableau"]'),
-    navFusionButton: document.querySelector('.nav-button[data-target="fusion"]'),
-    navInfoButton: document.querySelector('.nav-button[data-target="info"]'),
-    navMidiButton: document.querySelector('.nav-button[data-target="midi"]'),
-    navBigBangButton: document.getElementById('navBigBangButton'),
-    pages: document.querySelectorAll('.page'),
+  navArcadeButton: document.getElementById('navArcadeButton'),
+  navShopButton: document.querySelector('.nav-button[data-target="shop"]'),
+  navGachaButton: document.querySelector('.nav-button[data-target="gacha"]'),
+  navTableButton: document.querySelector('.nav-button[data-target="tableau"]'),
+  navFusionButton: document.querySelector('.nav-button[data-target="fusion"]'),
+  navInfoButton: document.querySelector('.nav-button[data-target="info"]'),
+  navMidiButton: document.querySelector('.nav-button[data-target="midi"]'),
+  navBigBangButton: document.getElementById('navBigBangButton'),
+  pages: document.querySelectorAll('.page'),
   statusAtomsButton: document.getElementById('statusAtomsButton'),
   statusAtoms: document.getElementById('statusAtoms'),
   statusApc: document.getElementById('statusApc'),
@@ -4284,9 +4281,7 @@ function collectDomElements() {
   arcadeModeSwitch: document.getElementById('arcadeModeSwitch'),
   arcadeModeHint: document.getElementById('arcadeModeHint'),
   arcadeModeButtons: document.querySelectorAll('[data-arcade-mode]'),
-    arcadeHubCards: document.querySelectorAll('.arcade-hub-card'),
-    touchArcadeCard: document.querySelector('[data-touch-arcade-card]'),
-    touchArcadeTriggers: document.querySelectorAll('[data-action="open-touch-arcade"]'),
+  arcadeHubCards: document.querySelectorAll('.arcade-hub-card'),
   arcadeLevelValue: document.getElementById('arcadeLevelValue'),
   arcadeLivesValue: document.getElementById('arcadeLivesValue'),
   arcadeScoreValue: document.getElementById('arcadeScoreValue'),
@@ -5740,15 +5735,6 @@ function updateBrandPortalState(options = {}) {
     }
   } else if (unlocked) {
     updateArcadeTicketDisplay();
-  }
-  if (elements.touchArcadeNavButton) {
-    setNavButtonLockState(elements.touchArcadeNavButton, unlocked);
-  }
-  if (elements.touchArcadeCard) {
-    elements.touchArcadeCard.hidden = !unlocked;
-    elements.touchArcadeCard.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
-    elements.touchArcadeCard.disabled = !unlocked;
-    elements.touchArcadeCard.setAttribute('aria-disabled', unlocked ? 'false' : 'true');
   }
   updateArcadeHubLocks();
   if (justUnlocked) {
@@ -10922,26 +10908,9 @@ function bindDomEventListeners() {
 
   window.handleMetauxSessionEnd = handleMetauxSessionEnd;
 
-  function openTouchArcadeHub() {
-    try {
-      saveGame();
-    } catch (error) {
-      console.error('Unable to save before switching to touch arcade', error);
-    }
-    hiddenSinceTimestamp = Date.now();
-    if (typeof window !== 'undefined' && window?.location) {
-      window.location.assign(TOUCH_ARCADE_URL);
-    }
-  }
-
-  let touchArcadeNavigationPending = false;
-
   elements.navButtons.forEach(btn => {
     btn.addEventListener('click', () => {
       const target = btn.dataset.target;
-      if (!target) {
-        return;
-      }
       if (!isPageUnlocked(target)) {
         return;
       }
@@ -10966,19 +10935,6 @@ function bindDomEventListeners() {
           ensureGameOfLifeGame();
         }
         showPage(target);
-      });
-    });
-  }
-
-  if (elements.touchArcadeTriggers?.length) {
-    elements.touchArcadeTriggers.forEach(trigger => {
-      trigger.addEventListener('click', event => {
-        event.preventDefault();
-        if (trigger.disabled || touchArcadeNavigationPending) {
-          return;
-        }
-        touchArcadeNavigationPending = true;
-        openTouchArcadeHub();
       });
     });
   }
