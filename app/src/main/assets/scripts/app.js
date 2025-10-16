@@ -9918,15 +9918,6 @@ function applyScrollBehaviorFromPage(pageElement) {
   if (!body) {
     return;
   }
-  const pageId = typeof pageElement?.id === 'string'
-    ? pageElement.id.trim()
-    : '';
-  if (!pageId || pageId === 'game') {
-    body.style.removeProperty('touch-action');
-    body.style.removeProperty('overscroll-behavior');
-    body.classList.remove('touch-scroll-lock', 'touch-scroll-force');
-    return;
-  }
   const rawBehavior = typeof pageElement?.dataset?.scrollBehavior === 'string'
     ? pageElement.dataset.scrollBehavior.trim().toLowerCase()
     : '';
