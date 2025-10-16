@@ -336,13 +336,13 @@
       const topCorner = document.createElement('span');
       topCorner.className = 'solitaire-card__corner solitaire-card__corner--top';
 
-      const symbol = document.createElement('span');
-      symbol.className = 'solitaire-card__symbol';
+      const value = document.createElement('span');
+      value.className = 'solitaire-card__value';
 
       const bottomCorner = document.createElement('span');
       bottomCorner.className = 'solitaire-card__corner solitaire-card__corner--bottom';
 
-      element.append(topCorner, symbol, bottomCorner);
+      element.append(topCorner, value, bottomCorner);
 
       element.addEventListener('click', (event) => {
         handleCardClick(card, event);
@@ -361,7 +361,7 @@
       });
 
       card.element = element;
-      card.parts = { topCorner, symbol, bottomCorner };
+      card.parts = { topCorner, value, bottomCorner };
       return element;
     }
 
@@ -370,12 +370,12 @@
       if (!card.parts) {
         return;
       }
-      const label = `${formatRank(card.rank)}${card.symbol}`;
-      card.parts.topCorner.textContent = label;
-      card.parts.symbol.textContent = card.symbol;
-      card.parts.bottomCorner.textContent = label;
+      const rankLabel = formatRank(card.rank);
+      card.parts.topCorner.textContent = card.symbol;
+      card.parts.value.textContent = rankLabel;
+      card.parts.bottomCorner.textContent = card.symbol;
       element.dataset.color = card.color;
-      element.dataset.rank = formatRank(card.rank);
+      element.dataset.rank = rankLabel;
       element.dataset.suit = card.suit;
       element.classList.toggle('is-face-down', !card.faceUp);
     }

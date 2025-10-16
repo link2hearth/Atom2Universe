@@ -217,26 +217,34 @@
   --solitaire-card-color: var(--solitaire-card-color-black);
 }
 
+
 .solitaire-card__corner {
-  display: flex;
-  align-items: flex-start;
-  font-size: clamp(0.75rem, 1.8vw, 0.95rem);
-  line-height: 1;
-  gap: 0.15rem;
-}
-
-.solitaire-card__corner--bottom {
-  align-items: flex-end;
-  justify-self: flex-end;
-  transform: rotate(180deg);
-}
-
-.solitaire-card__symbol {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: clamp(1.6rem, 5vw, 2.3rem);
+  font-size: clamp(0.95rem, 2.2vw, 1.15rem);
   line-height: 1;
+}
+
+.solitaire-card__corner--top {
+  justify-self: start;
+  align-self: start;
+}
+
+.solitaire-card__corner--bottom {
+  align-items: center;
+  justify-self: end;
+  align-self: end;
+  transform: rotate(180deg);
+}
+
+.solitaire-card__value {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(2.2rem, 6vw, 3.2rem);
+  line-height: 1;
+  letter-spacing: 0.01em;
 }
 
 .solitaire-card.is-face-down {
@@ -247,7 +255,7 @@
 }
 
 .solitaire-card.is-face-down .solitaire-card__corner,
-.solitaire-card.is-face-down .solitaire-card__symbol {
+.solitaire-card.is-face-down .solitaire-card__value {
   opacity: 0;
 }
 
