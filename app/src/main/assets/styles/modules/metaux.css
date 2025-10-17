@@ -4,6 +4,7 @@
   padding: 0 clamp(1rem, 3.5vw, 3rem) clamp(1.2rem, 3vw, 2.6rem);
   position: relative;
   min-height: 100vh;
+  touch-action: pan-y;
 }
 
 .page--metaux.active {

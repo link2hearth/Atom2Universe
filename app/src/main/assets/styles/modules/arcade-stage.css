@@ -414,6 +414,7 @@ body.theme-neon .arcade-header__status--bonus {
   --arcade-overlay-button-secondary-color: rgba(236, 240, 250, 0.95);
   --arcade-overlay-button-secondary-shadow: 0 14px 28px rgba(0, 0, 0, 0.5);
   --arcade-overlay-button-secondary-shadow-hover: 0 18px 34px rgba(0, 0, 0, 0.58);
+  touch-action: pan-y;
 }
 
 body.theme-light .page--arcade {

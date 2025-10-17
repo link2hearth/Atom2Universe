@@ -9,6 +9,7 @@
   min-height: 0;
   overflow: auto;
   scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+  touch-action: pan-y;
 }
 
 .periodic-table-layout {
@@ -172,6 +173,7 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+  touch-action: pan-y;
 }
 
 .periodic-summary {
@@ -441,6 +443,7 @@ body.theme-light .element-details-overlay__close:focus-visible {
   overflow-y: auto;
   font-size: calc(var(--font-scale-factor, 1) * clamp(0.8rem, 1.5vw, 0.95rem));
   line-height: 1.5;
+  touch-action: pan-y;
 }
 
 .element-details-overlay__content {

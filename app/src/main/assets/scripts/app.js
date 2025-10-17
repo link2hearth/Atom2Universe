@@ -9018,8 +9018,8 @@ const clickHistory = [];
 let targetClickStrength = 0;
 let displayedClickStrength = 0;
 
-const TOUCH_POINTER_CLICK_SUPPRESSION_MS = 320;
-let suppressPointerClickUntil = 0;
+const POINTER_ACTIVATION_GUARD_MS = 320;
+let lastPointerActivationAt = 0;
 
 function getHighResTimestamp() {
   if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
@@ -9028,29 +9028,35 @@ function getHighResTimestamp() {
   return Date.now();
 }
 
-function markTouchPointerManualClick(now = getHighResTimestamp()) {
-  suppressPointerClickUntil = now + TOUCH_POINTER_CLICK_SUPPRESSION_MS;
+function recordPointerActivation(now = getHighResTimestamp()) {
+  lastPointerActivationAt = now;
 }
 
-function shouldSuppressPointerDerivedClick(now = getHighResTimestamp()) {
-  if (suppressPointerClickUntil <= 0) {
+function wasPointerActivationRecent(now = getHighResTimestamp()) {
+  if (lastPointerActivationAt <= 0) {
     return false;
   }
-  if (now <= suppressPointerClickUntil) {
+  const delta = now - lastPointerActivationAt;
+  if (delta <= POINTER_ACTIVATION_GUARD_MS) {
     return true;
   }
-  if (now - suppressPointerClickUntil > TOUCH_POINTER_CLICK_SUPPRESSION_MS * 4) {
-    suppressPointerClickUntil = 0;
+  if (delta > POINTER_ACTIVATION_GUARD_MS * 4) {
+    lastPointerActivationAt = 0;
   }
   return false;
 }
 
-function isTouchLikePointerEvent(event) {
-  const pointerType = typeof event?.pointerType === 'string'
-    ? event.pointerType.toLowerCase()
-    : '';
-  return pointerType === 'touch' || pointerType === 'pen';
+function getAtomPointerKey(event) {
+  if (Number.isFinite(event?.pointerId)) {
+    return event.pointerId;
+  }
+  if (typeof event?.pointerType === 'string' && event.pointerType) {
+    return `type:${event.pointerType}`;
+  }
+  return 'pointer:unknown';
 }
+
+const activeAtomPointerKeys = new Set();
 
 const atomAnimationState = {
   intensity: 0,
@@ -10193,12 +10199,10 @@ const passiveEventListenerOptions = supportsPassiveEventListeners ? { passive: t
 const passiveCaptureEventListenerOptions = supportsPassiveEventListeners
   ? { passive: true, capture: true }
   : true;
-const nonPassiveEventListenerOptions = supportsPassiveEventListeners ? { passive: false } : false;
 const supportsGlobalPointerEvents = typeof globalThis !== 'undefined'
   && typeof globalThis.PointerEvent === 'function';
 
 let activeBodyScrollBehavior = SCROLL_BEHAVIOR_MODES.DEFAULT;
-let bodyScrollTouchMoveListenerAttached = false;
 const activeTouchIdentifiers = new Map();
 const activePointerTouchIds = new Map();
 const TOUCH_TRACKING_STALE_THRESHOLD_MS = 500;
@@ -10312,15 +10316,6 @@ function hasRemainingActiveTouches(event) {
   return activeTouchIdentifiers.size > 0 || activePointerTouchIds.size > 0;
 }
 
-function preventBodyScrollTouchMove(event) {
-  if (!event) {
-    return;
-  }
-  if (typeof event.preventDefault === 'function') {
-    event.preventDefault();
-  }
-}
-
 function normalizeScrollBehaviorValue(value) {
   if (typeof value !== 'string') {
     return SCROLL_BEHAVIOR_MODES.DEFAULT;
@@ -10368,20 +10363,11 @@ function applyBodyScrollBehavior(requestedBehavior) {
   activeBodyScrollBehavior = nextBehavior;
 
   if (nextBehavior === SCROLL_BEHAVIOR_MODES.LOCK) {
-    if (!bodyScrollTouchMoveListenerAttached && typeof body.addEventListener === 'function') {
-      body.addEventListener('touchmove', preventBodyScrollTouchMove, nonPassiveEventListenerOptions);
-      bodyScrollTouchMoveListenerAttached = true;
-    }
     body.style.setProperty('touch-action', 'none');
     body.style.setProperty('overscroll-behavior', 'none');
     body.classList.add('touch-scroll-lock');
     body.classList.remove('touch-scroll-force');
     return;
-  }
-
-  if (bodyScrollTouchMoveListenerAttached && typeof body.removeEventListener === 'function') {
-    body.removeEventListener('touchmove', preventBodyScrollTouchMove, nonPassiveEventListenerOptions);
-    bodyScrollTouchMoveListenerAttached = false;
   }
 
   if (nextBehavior === SCROLL_BEHAVIOR_MODES.FORCE) {
@@ -11144,36 +11130,51 @@ function bindDomEventListeners() {
       if (event.pointerType === 'mouse' && event.button !== 0) {
         return;
       }
-
-      if (isTouchLikePointerEvent(event)) {
-        markTouchPointerManualClick();
-        activateSurface({ contextId: 'game', triggerPulse: false });
-        return;
-      }
-
+      const pointerKey = getAtomPointerKey(event);
+      activeAtomPointerKeys.add(pointerKey);
       activateEcoClickFeedback();
     };
 
-    const handleAtomPointerEnd = event => {
+    const handleAtomPointerUp = event => {
       if (event.pointerType === 'mouse' && event.button !== 0) {
         return;
       }
+      const pointerKey = getAtomPointerKey(event);
+      if (activeAtomPointerKeys.has(pointerKey)) {
+        activeAtomPointerKeys.delete(pointerKey);
+      }
+      activateSurface({ contextId: 'game', triggerPulse: false });
       triggerEcoClickFeedbackPulse();
+      recordPointerActivation();
+    };
+
+    const handleAtomPointerLeave = event => {
+      const pointerKey = getAtomPointerKey(event);
+      if (!activeAtomPointerKeys.has(pointerKey)) {
+        return;
+      }
+      activeAtomPointerKeys.delete(pointerKey);
+      if (event.buttons && event.buttons !== 0) {
+        resetEcoClickFeedback();
+      }
+    };
+
+    const handleAtomPointerCancel = event => {
+      const pointerKey = getAtomPointerKey(event);
+      if (!activeAtomPointerKeys.has(pointerKey)) {
+        return;
+      }
+      activeAtomPointerKeys.delete(pointerKey);
+      resetEcoClickFeedback();
     };
 
     atomButton.addEventListener('pointerdown', handleAtomPointerDown);
-    atomButton.addEventListener('pointerup', handleAtomPointerEnd);
-    atomButton.addEventListener('pointerleave', handleAtomPointerEnd);
-    atomButton.addEventListener('pointercancel', handleAtomPointerEnd);
+    atomButton.addEventListener('pointerup', handleAtomPointerUp);
+    atomButton.addEventListener('pointerleave', handleAtomPointerLeave);
+    atomButton.addEventListener('pointercancel', handleAtomPointerCancel);
 
-    atomButton.addEventListener('click', event => {
-      if (shouldSuppressPointerDerivedClick()) {
-        if (typeof event.preventDefault === 'function') {
-          event.preventDefault();
-        }
-        if (typeof event.stopPropagation === 'function') {
-          event.stopPropagation();
-        }
+    atomButton.addEventListener('click', () => {
+      if (wasPointerActivationRecent()) {
         return;
       }
       activateSurface({ contextId: 'game' });
@@ -11376,7 +11377,7 @@ function bindDomEventListeners() {
 }
 
 document.addEventListener('click', event => {
-  if (shouldSuppressPointerDerivedClick()) return;
+  if (wasPointerActivationRecent()) return;
   if (!shouldTriggerGlobalClick(event)) return;
   activateSurface({ contextId: 'game' });
 });
