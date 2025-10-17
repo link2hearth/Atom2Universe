@@ -5,6 +5,7 @@
   padding: 0;
   color: var(--gol-text-color, var(--color-text-primary, #f5f7ff));
   overflow: hidden;
+  touch-action: pan-y;
   --gol-text-color: var(--color-text-primary, #f5f7ff);
   --gol-canvas-bg: #040712;
   --gol-menu-handle-bg: rgba(144, 170, 240, 0.32);
@@ -140,6 +141,7 @@
   overflow-y: auto;
   scrollbar-gutter: stable both-edges;
   cursor: auto;
+  touch-action: pan-y;
 }
 
 .view-game-of-life .game-of-life__menu {

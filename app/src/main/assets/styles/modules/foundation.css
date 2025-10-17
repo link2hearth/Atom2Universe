@@ -89,6 +89,7 @@ body {
   flex-direction: column;
   transition: background 0.4s ease, color 0.4s ease;
   font-size: calc(var(--font-text-base-size, 1rem) * var(--font-scale-factor, 1));
+  touch-action: pan-y;
 }
 
 body.view-game,
