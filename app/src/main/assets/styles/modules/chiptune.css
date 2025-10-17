@@ -59,7 +59,6 @@
 .option-card--chiptune select.chiptune-select--scrollable {
   min-height: 12em;
   overflow-y: auto;
-  touch-action: pan-y;
 }
 
 @media (max-width: 720px) {

@@ -52,7 +52,6 @@ body.devkit-open {
   gap: clamp(1rem, 2vw, 1.5rem);
   color: inherit;
   overflow-y: auto;
-  touch-action: pan-y;
 }
 
 body.theme-light .devkit-overlay {
@@ -254,7 +253,6 @@ body.theme-neon .devkit-form__controls input {
   max-height: 22rem;
   overflow-y: auto;
   padding-right: 0.2rem;
-  touch-action: pan-y;
 }
 
 .devkit-shop-card {
