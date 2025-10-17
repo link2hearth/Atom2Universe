@@ -10114,8 +10114,30 @@ function handleManualAtomClick(options = {}) {
   });
 }
 
+function activateSurface(options = {}) {
+  const contextId = typeof options?.contextId === 'string' && options.contextId
+    ? options.contextId
+    : 'game';
+  const triggerPulse = options?.triggerPulse !== false;
+  const ecoPreference = options?.ecoFeedback;
+  const shouldApplyEcoFeedback = typeof ecoPreference === 'boolean'
+    ? ecoPreference
+    : contextId === 'game';
+
+  if (shouldApplyEcoFeedback) {
+    activateEcoClickFeedback();
+  }
+
+  handleManualAtomClick({ contextId });
+
+  if (shouldApplyEcoFeedback && triggerPulse) {
+    triggerEcoClickFeedbackPulse();
+  }
+}
+
 if (typeof globalThis !== 'undefined') {
   globalThis.handleManualAtomClick = handleManualAtomClick;
+  globalThis.activateSurface = activateSurface;
   globalThis.isManualClickContextActive = isManualClickContextActive;
   globalThis.resetTouchTrackingState = resetTouchTrackingState;
 }
@@ -11118,55 +11140,31 @@ function bindDomEventListeners() {
   if (elements.atomButton) {
     const atomButton = elements.atomButton;
 
-    atomButton.addEventListener('pointerdown', event => {
-      activateEcoClickFeedback();
-      if (!isTouchLikePointerEvent(event)) {
+    const handleAtomPointerDown = event => {
+      if (event.pointerType === 'mouse' && event.button !== 0) {
         return;
       }
-      if (typeof event.preventDefault === 'function') {
-        event.preventDefault();
-      }
-      if (typeof event.stopPropagation === 'function') {
-        event.stopPropagation();
-      }
-      markTouchPointerManualClick();
-      handleManualAtomClick({ contextId: 'game' });
-      const currentTarget = event.currentTarget;
-      if (currentTarget && typeof currentTarget.setPointerCapture === 'function') {
-        try {
-          currentTarget.setPointerCapture(event.pointerId);
-        } catch (error) {
-          // Ignore errors from pointer capture (unsupported or already captured)
-        }
-      }
-    });
 
-    const handleEcoPointerRelease = () => {
-      if (!isEcoPerformanceModeActive()) {
+      if (isTouchLikePointerEvent(event)) {
+        markTouchPointerManualClick();
+        activateSurface({ contextId: 'game', triggerPulse: false });
+        return;
+      }
+
+      activateEcoClickFeedback();
+    };
+
+    const handleAtomPointerEnd = event => {
+      if (event.pointerType === 'mouse' && event.button !== 0) {
         return;
       }
       triggerEcoClickFeedbackPulse();
     };
 
-    const handlePointerCompletion = event => {
-      handleEcoPointerRelease();
-      if (!isTouchLikePointerEvent(event)) {
-        return;
-      }
-      const currentTarget = event.currentTarget;
-      if (!currentTarget || typeof currentTarget.releasePointerCapture !== 'function') {
-        return;
-      }
-      try {
-        currentTarget.releasePointerCapture(event.pointerId);
-      } catch (error) {
-        // Ignore pointer capture release errors
-      }
-    };
-
-    atomButton.addEventListener('pointerup', handlePointerCompletion);
-    atomButton.addEventListener('pointerleave', handleEcoPointerRelease);
-    atomButton.addEventListener('pointercancel', handlePointerCompletion);
+    atomButton.addEventListener('pointerdown', handleAtomPointerDown);
+    atomButton.addEventListener('pointerup', handleAtomPointerEnd);
+    atomButton.addEventListener('pointerleave', handleAtomPointerEnd);
+    atomButton.addEventListener('pointercancel', handleAtomPointerEnd);
 
     atomButton.addEventListener('click', event => {
       if (shouldSuppressPointerDerivedClick()) {
@@ -11178,13 +11176,7 @@ function bindDomEventListeners() {
         }
         return;
       }
-      if (typeof event?.preventDefault === 'function') {
-        event.preventDefault();
-      }
-      if (typeof event?.stopPropagation === 'function') {
-        event.stopPropagation();
-      }
-      handleManualAtomClick({ contextId: 'game' });
+      activateSurface({ contextId: 'game' });
     });
 
     atomButton.addEventListener('dragstart', event => {
@@ -11386,7 +11378,7 @@ function bindDomEventListeners() {
 document.addEventListener('click', event => {
   if (shouldSuppressPointerDerivedClick()) return;
   if (!shouldTriggerGlobalClick(event)) return;
-  handleManualAtomClick({ contextId: 'game' });
+  activateSurface({ contextId: 'game' });
 });
 
 document.addEventListener('selectstart', event => {
