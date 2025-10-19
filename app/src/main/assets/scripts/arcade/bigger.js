@@ -806,14 +806,18 @@
               }
               const overlapRatio = minDistance > 0 ? overlap / minDistance : 0;
               if (a.value === b.value) {
-                if (overlapRatio > MERGE_OVERLAP_THRESHOLD) {
-                  contact.time += dt;
+                if (overlapRatio > 0) {
+                  const normalized = MERGE_OVERLAP_THRESHOLD > 0
+                    ? Math.min(1, overlapRatio / MERGE_OVERLAP_THRESHOLD)
+                    : 1;
+                  const accumulation = Math.max(0.25, normalized);
+                  contact.time += dt * accumulation;
                   if (contact.time >= MERGE_CONTACT_TIME) {
                     this.queueMerge(a, b);
                     contact.time = 0;
                   }
                 } else {
-                  contact.time = Math.max(0, contact.time - dt * 0.5);
+                  contact.time = 0;
                 }
               } else {
                 contact.time = 0;
