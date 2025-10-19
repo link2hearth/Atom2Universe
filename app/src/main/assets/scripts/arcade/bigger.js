@@ -228,6 +228,11 @@
       this.spawnPositions = [];
       this.hoverColumn = null;
       this.isActive = false;
+      this.physics = {
+        running: false,
+        lastTimestamp: null,
+        rafId: null
+      };
 
       this.physics = {
         running: false,
@@ -964,6 +969,10 @@
         if (ball.element && ball.element.parentNode) {
           ball.element.remove();
         }
+        if (Array.isArray(ball.animationHandles)) {
+          ball.animationHandles.forEach(handle => window.clearTimeout(handle));
+          ball.animationHandles.length = 0;
+        }
       });
       this.balls.clear();
       this.physics.contacts.clear();
@@ -1068,6 +1077,200 @@
       }
       this.overlayElement.classList.remove('is-visible');
       this.overlayElement.hidden = true;
+    }
+
+    handleMotionPreferenceChange(event) {
+      this.prefersReducedMotion = !!(event?.matches);
+      if (this.prefersReducedMotion) {
+        this.stopPhysicsLoop();
+        this.syncBallPositions();
+      } else {
+        this.startPhysicsLoop();
+      }
+    }
+
+    startPhysicsLoop() {
+      if (typeof window === 'undefined' || this.prefersReducedMotion) {
+        this.stopPhysicsLoop();
+        return;
+      }
+      if (this.physics.running) {
+        return;
+      }
+      this.physics.running = true;
+      this.physics.lastTimestamp = null;
+      if (this.boardElement) {
+        this.boardElement.classList.add('bigger-board--physics');
+      }
+      const step = timestamp => {
+        if (!this.physics.running) {
+          return;
+        }
+        this.stepPhysics(timestamp);
+        this.physics.rafId = window.requestAnimationFrame(step);
+      };
+      this.physics.rafId = window.requestAnimationFrame(step);
+    }
+
+    stopPhysicsLoop() {
+      if (typeof window === 'undefined') {
+        return;
+      }
+      if (this.physics.rafId != null) {
+        window.cancelAnimationFrame(this.physics.rafId);
+        this.physics.rafId = null;
+      }
+      this.physics.running = false;
+      this.physics.lastTimestamp = null;
+      if (this.boardElement) {
+        this.boardElement.classList.remove('bigger-board--physics');
+      }
+    }
+
+    stepPhysics(timestamp) {
+      if (this.prefersReducedMotion) {
+        this.stopPhysicsLoop();
+        return;
+      }
+      const previous = this.physics.lastTimestamp ?? timestamp;
+      let delta = timestamp - previous;
+      if (!Number.isFinite(delta) || delta <= 0) {
+        delta = 16;
+      }
+      delta = Math.min(delta, PHYSICS_MAX_STEP_MS);
+      this.physics.lastTimestamp = timestamp;
+      const dt = delta / 1000;
+      if (dt <= 0) {
+        return;
+      }
+      const boardWidth = this.cellSize * COLUMN_COUNT;
+      const boardHeight = this.cellSize * ROW_COUNT;
+      if (!Number.isFinite(boardWidth) || !Number.isFinite(boardHeight) || boardWidth <= 0 || boardHeight <= 0) {
+        return;
+      }
+
+      const balls = Array.from(this.balls.values());
+      balls.forEach(ball => {
+        if (!ball || !ball.element) {
+          return;
+        }
+        if (!Number.isFinite(ball.radius) || ball.radius <= 0) {
+          const multiplier = getDiameterMultiplier(ball.value);
+          const diameter = Math.max(28, this.cellSize * multiplier);
+          ball.radius = diameter / 2;
+          ball.mass = Math.max(1, ball.radius * ball.radius);
+          ball.invMass = 1 / ball.mass;
+          ball.element.style.width = `${diameter}px`;
+          ball.element.style.height = `${diameter}px`;
+        }
+        if (!Number.isFinite(ball.targetX)) {
+          if (Number.isFinite(ball.col)) {
+            ball.targetX = ball.col * this.cellSize + this.cellSize / 2;
+          } else {
+            ball.targetX = this.cellSize / 2;
+          }
+        }
+        if (!Number.isFinite(ball.targetY)) {
+          if (Number.isFinite(ball.row) && ball.row >= 0) {
+            ball.targetY = ball.row * this.cellSize + this.cellSize / 2 - PHYSICS_GRAVITY / PHYSICS_SPRING;
+          } else {
+            ball.targetY = -ball.radius - this.cellSize * 0.5;
+          }
+        }
+        if (!Number.isFinite(ball.x)) {
+          ball.x = ball.targetX;
+        }
+        if (!Number.isFinite(ball.y)) {
+          ball.y = ball.targetY;
+        }
+        if (!Number.isFinite(ball.vx)) {
+          ball.vx = 0;
+        }
+        if (!Number.isFinite(ball.vy)) {
+          ball.vy = 0;
+        }
+
+        const springX = (ball.targetX - ball.x) * PHYSICS_SPRING;
+        const springY = (ball.targetY - ball.y) * PHYSICS_SPRING;
+
+        ball.vx += springX * dt;
+        if (ball.targetY > ball.y) {
+          ball.vy += (springY + PHYSICS_GRAVITY) * dt;
+        } else {
+          ball.vy += springY * dt - PHYSICS_GRAVITY * 0.25 * dt;
+        }
+        ball.x += ball.vx * dt;
+        ball.y += ball.vy * dt;
+        ball.vx *= PHYSICS_DAMPING;
+        ball.vy *= PHYSICS_DAMPING;
+
+        const minX = ball.radius;
+        const maxX = boardWidth - ball.radius;
+        if (ball.x < minX) {
+          ball.x = minX;
+          ball.vx = Math.abs(ball.vx) * PHYSICS_WALL_BOUNCE;
+        } else if (ball.x > maxX) {
+          ball.x = maxX;
+          ball.vx = -Math.abs(ball.vx) * PHYSICS_WALL_BOUNCE;
+        }
+        const minY = -this.cellSize * 3;
+        if (ball.y < minY) {
+          ball.y = minY;
+          ball.vy = Math.max(ball.vy, 0);
+        }
+        const maxY = boardHeight - ball.radius;
+        if (ball.y > maxY) {
+          ball.y = maxY;
+          ball.vy = -Math.abs(ball.vy) * PHYSICS_FLOOR_BOUNCE;
+        }
+      });
+
+      for (let i = 0; i < balls.length; i += 1) {
+        const a = balls[i];
+        if (!a || !a.element) {
+          continue;
+        }
+        for (let j = i + 1; j < balls.length; j += 1) {
+          const b = balls[j];
+          if (!b || !b.element) {
+            continue;
+          }
+          const dx = b.x - a.x;
+          const dy = b.y - a.y;
+          const distance = Math.hypot(dx, dy) || 0.0001;
+          const minDistance = (a.radius || 0) + (b.radius || 0);
+          if (distance >= minDistance || minDistance <= 0) {
+            continue;
+          }
+          const overlap = minDistance - distance;
+          const nx = dx / distance;
+          const ny = dy / distance;
+          const invMassSum = a.invMass + b.invMass;
+          if (invMassSum <= 0) {
+            continue;
+          }
+          const shiftA = overlap * (a.invMass / invMassSum);
+          const shiftB = overlap * (b.invMass / invMassSum);
+          a.x -= nx * shiftA;
+          a.y -= ny * shiftA;
+          b.x += nx * shiftB;
+          b.y += ny * shiftB;
+
+          const relativeVelocity = (a.vx - b.vx) * nx + (a.vy - b.vy) * ny;
+          if (relativeVelocity > 0) {
+            continue;
+          }
+          const impulse = (-(1 + PHYSICS_RESTITUTION) * relativeVelocity) / invMassSum;
+          a.vx += impulse * nx * a.invMass;
+          a.vy += impulse * ny * a.invMass;
+          b.vx -= impulse * nx * b.invMass;
+          b.vy -= impulse * ny * b.invMass;
+        }
+      }
+
+      balls.forEach(ball => {
+        this.applyBallStyles(ball);
+      });
     }
 
     persistState() {
