@@ -12,6 +12,9 @@
   --bigger-board-bg: rgba(14, 16, 32, 0.94);
   --bigger-board-border: rgba(120, 140, 190, 0.32);
   --bigger-board-grid: rgba(140, 160, 210, 0.12);
+  --bigger-board-glow-top: rgba(140, 180, 255, 0.22);
+  --bigger-board-glow-left: rgba(90, 150, 255, 0.16);
+  --bigger-board-glow-right: rgba(255, 160, 210, 0.12);
   --bigger-queue-slot-bg: rgba(132, 156, 240, 0.18);
   --bigger-queue-slot-border: rgba(132, 156, 240, 0.32);
   --bigger-overlay-bg: rgba(6, 8, 18, 0.82);
@@ -251,23 +254,11 @@
   position: absolute;
   inset: 0;
   overflow: hidden;
-  background-image:
-    linear-gradient(
-      to right,
-      transparent calc(100% / var(--bigger-cols) * 0.5 - 0.5px),
-      var(--bigger-board-grid) calc(100% / var(--bigger-cols) * 0.5),
-      transparent calc(100% / var(--bigger-cols) * 0.5 + 0.5px)
-    ),
-    linear-gradient(
-      to bottom,
-      transparent calc(100% / var(--bigger-rows) * 0.5 - 0.5px),
-      var(--bigger-board-grid) calc(100% / var(--bigger-rows) * 0.5),
-      transparent calc(100% / var(--bigger-rows) * 0.5 + 0.5px)
-    );
-  background-size:
-    calc(100% / var(--bigger-cols)) 100%,
-    100% calc(100% / var(--bigger-rows));
-  background-position: center;
+  background:
+    radial-gradient(circle at 50% -18%, var(--bigger-board-glow-top), transparent 60%),
+    radial-gradient(circle at 12% 120%, var(--bigger-board-glow-left), transparent 70%),
+    radial-gradient(circle at 86% 126%, var(--bigger-board-glow-right), transparent 68%),
+    var(--bigger-board-bg);
 }
 
 .bigger-board__highlight {
@@ -488,6 +479,9 @@ body.theme-light .page--bigger {
   --bigger-board-bg: rgba(248, 250, 255, 0.92);
   --bigger-board-border: rgba(120, 140, 210, 0.24);
   --bigger-board-grid: rgba(80, 110, 190, 0.12);
+  --bigger-board-glow-top: rgba(128, 168, 255, 0.2);
+  --bigger-board-glow-left: rgba(100, 150, 255, 0.16);
+  --bigger-board-glow-right: rgba(255, 190, 210, 0.12);
   --bigger-queue-slot-bg: rgba(132, 156, 240, 0.22);
   --bigger-queue-slot-border: rgba(132, 156, 240, 0.36);
   --bigger-overlay-bg: rgba(240, 244, 255, 0.78);
@@ -514,6 +508,9 @@ body.theme-neon .page--bigger {
   --bigger-board-bg: rgba(10, 12, 30, 0.92);
   --bigger-board-border: rgba(150, 180, 255, 0.38);
   --bigger-board-grid: rgba(140, 170, 255, 0.15);
+  --bigger-board-glow-top: rgba(150, 200, 255, 0.28);
+  --bigger-board-glow-left: rgba(110, 170, 255, 0.22);
+  --bigger-board-glow-right: rgba(255, 120, 230, 0.18);
   --bigger-guide-bg: linear-gradient(200deg, rgba(18, 26, 70, 0.88), rgba(10, 16, 46, 0.92));
   --bigger-guide-border: rgba(130, 170, 255, 0.42);
   --bigger-guide-shadow: 0 24px 54px rgba(6, 10, 40, 0.6);
@@ -532,6 +529,9 @@ body.theme-aurora .page--bigger {
   --bigger-board-bg: rgba(6, 18, 20, 0.9);
   --bigger-board-border: rgba(80, 210, 190, 0.36);
   --bigger-board-grid: rgba(90, 210, 190, 0.18);
+  --bigger-board-glow-top: rgba(90, 220, 210, 0.24);
+  --bigger-board-glow-left: rgba(70, 190, 180, 0.18);
+  --bigger-board-glow-right: rgba(190, 240, 200, 0.14);
   --bigger-guide-bg: linear-gradient(180deg, rgba(18, 50, 46, 0.82), rgba(10, 24, 32, 0.85));
   --bigger-guide-border: rgba(80, 210, 190, 0.42);
   --bigger-guide-shadow: 0 22px 48px rgba(4, 26, 24, 0.5);
