@@ -363,7 +363,7 @@
           "restart": "Restart",
           "resume": "Keep playing"
         },
-        "dropButton": "Drop the marble in column {{column}}",
+        "dropButton": "Drop the {{value}} marble into column {{column}}",
         "dropbar": "Choose a column to drop the current marble",
         "boardAria": "Bigger mini-game playfield",
         "overlay": {
