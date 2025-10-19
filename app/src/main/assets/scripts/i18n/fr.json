@@ -1159,14 +1159,14 @@
         "godFinger": {
           "name": "Doigt créateur",
           "description": "Canalisez un pouvoir divin dans un seul clic.",
-          "effect": "Production manuelle : +1 APC par niveau. Le coût augmente légèrement à chaque achat.",
-          "effectSummary": "Production manuelle +1 APC par niveau. Coût en hausse progressive."
+          "effect": "Production manuelle : commence à +1 APC et progresse d’environ +12 % par niveau.",
+          "effectSummary": "Production manuelle évolutive (~+12 % par niveau). Coût en hausse progressive."
         },
         "starCore": {
           "name": "Cœur d’étoile",
           "description": "Condense une étoile pour alimenter vos récoltes automatiques.",
-          "effect": "Production passive : +1 APS par niveau. Le coût augmente légèrement à chaque achat.",
-          "effectSummary": "Production passive +1 APS par niveau. Coût en hausse progressive."
+          "effect": "Production passive : commence à +1 APS et progresse d’environ +12 % par niveau.",
+          "effectSummary": "Production passive évolutive (~+12 % par niveau). Coût en hausse progressive."
         }
       }
     },

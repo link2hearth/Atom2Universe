@@ -1159,14 +1159,14 @@
         "godFinger": {
           "name": "God Finger",
           "description": "Channel divine might into a single click.",
-          "effect": "Manual production: +1 APC per level. The cost rises slightly after each purchase.",
-          "effectSummary": "Manual production +1 APC per level. Gradually increasing cost."
+          "effect": "Manual production: starts at +1 APC and grows by roughly +12% per level.",
+          "effectSummary": "Manual production scales by ~+12% per level. Gradually increasing cost."
         },
         "starCore": {
           "name": "Star Core",
           "description": "Condense a star to power your automated harvests.",
-          "effect": "Passive production: +1 APS per level. The cost rises slightly after each purchase.",
-          "effectSummary": "Passive production +1 APS per level. Gradually increasing cost."
+          "effect": "Passive production: starts at +1 APS and grows by roughly +12% per level.",
+          "effectSummary": "Passive production scales by ~+12% per level. Gradually increasing cost."
         }
       }
     },
