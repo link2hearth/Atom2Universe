@@ -1156,95 +1156,17 @@
   "config": {
     "shop": {
       "buildings": {
-        "freeElectrons": {
-          "name": "Free Electrons",
-          "description": "Channel electrons to boost every quantum click.",
-          "effect": "Manual production: +1 APC per level. Every 10 levels, ionization doubles the total bonus.",
-          "effectSummary": "Manual production +1 APC per level. Ionization: ×2 total bonus every 10 levels."
+        "godFinger": {
+          "name": "God Finger",
+          "description": "Channel divine might into a single click.",
+          "effect": "Manual production: +1 APC per level. The cost rises slightly after each purchase.",
+          "effectSummary": "Manual production +1 APC per level. Gradually increasing cost."
         },
-        "physicsLab": {
-          "name": "Physics Laboratory",
-          "description": "Research teams supercharge your atomic production.",
-          "effect": "Passive production: +2 APS per level. Every 10 levels, ionization doubles the total bonus.",
-          "effectSummary": "Passive production +2 APS per level. Ionization: ×2 total bonus every 10 levels."
-        },
-        "nuclearReactor": {
-          "name": "Nuclear Reactor",
-          "description": "Controlled reactors unleash colossal energy.",
-          "effect": "Passive production: +10 APS per level. Every 25 levels, ionization doubles the total bonus.",
-          "effectSummary": "Passive production +10 APS per level. Ionization: ×2 total bonus every 25 levels."
-        },
-        "particleAccelerator": {
-          "name": "Particle Accelerator",
-          "description": "Boost your particles to intensify passive output.",
-          "effect": "Passive production: +50 APS per level. Every 50 levels, remanence adds an APC bonus equal to the passive gain. Every 50 levels, ionization doubles the total bonus.",
-          "effectSummary": "Passive production +50 APS per level. Remanence: +APC equal to the gain every 50 levels. Ionization: ×2 total bonus every 50 levels."
-        },
-        "supercomputer": {
-          "name": "Supercomputers",
-          "description": "Quantum compute centers optimize your gains.",
-          "effect": "Passive production: +500 APS per level. Every 25 levels, a stabilizer adds +20% multiplier. Every 50 levels, ionization doubles the total bonus.",
-          "effectSummary": "Passive production +500 APS per level. Stabilizer: +20% multiplier every 25 levels. Ionization: ×2 total bonus every 50 levels."
-        },
-        "interstellarProbe": {
-          "name": "Interstellar Probe",
-          "description": "Explore the galaxy to gather even more.",
-          "effect": "Passive production: +5,000 APS per level. Bonus: with 50+ Free Electrons, each owned building adds +100 APC, doubled every 50 Interstellar Probe levels. Every 50 levels, ionization doubles the total bonus.",
-          "effectSummary": "Passive +5,000 APS per level. Bonus: 50+ Free Electrons make each building grant +100 APC, doubled every 50 levels. Ionization: ×2 total bonus every 50 levels."
-        },
-        "spaceStation": {
-          "name": "Space Station",
-          "description": "Orbital bases coordinate your expansion.",
-          "effect": "Passive production: +50,000 APS per level. Every 50 levels, remanence converts that gain into APC. Every 50 levels, ionization doubles the total bonus.",
-          "effectSummary": "Passive production +50,000 APS per level. Remanence: APC conversion every 50 levels. Ionization: ×2 total bonus every 50 levels."
-        },
-        "starForge": {
-          "name": "Star Forger",
-          "description": "Forge stars and ramp up your passive production.",
-          "effect": "Passive production: +500,000 APS per level. Every 50 levels, remanence grants an APC bonus equal to the passive gain. Every 50 levels, ionization doubles the total bonus.",
-          "effectSummary": "Passive production +500,000 APS per level. Remanence: +APC equal to the gain every 50 levels. Ionization: ×2 total bonus every 50 levels."
-        },
-        "artificialGalaxy": {
-          "name": "Artificial Galaxy",
-          "description": "Galactic engineering for endless expansion.",
-          "effect": "Passive production: +5,000,000 APS per level. Every 25 levels, a stabilizer adds +20% multiplier. Every 50 levels, ionization doubles the total bonus.",
-          "effectSummary": "Passive production +5,000,000 APS per level. Stabilizer: +20% multiplier every 25 levels. Ionization: ×2 total bonus every 50 levels."
-        },
-        "multiverseSimulator": {
-          "name": "Multiverse Simulator",
-          "description": "Simulate infinity to optimize every second.",
-          "effect": "Passive production: +500,000,000 APS per level. Every 25 levels, a stabilizer adds +20% multiplier. Every 50 levels, ionization doubles the total bonus.",
-          "effectSummary": "Passive production +500,000,000 APS per level. Stabilizer: +20% multiplier every 25 levels. Ionization: ×2 total bonus every 50 levels."
-        },
-        "realityWeaver": {
-          "name": "Reality Weaver",
-          "description": "Weave physical laws to your advantage.",
-          "effect": "Passive production: +10,000,000,000 APS per level. Every 150 levels, critical overload adds +5% crit chance. Every 50 levels, ionization doubles the total bonus.",
-          "effectSummary": "Passive production +10,000,000,000 APS per level. Critical: +5% chance every 150 levels. Ionization: ×2 total bonus every 50 levels."
-        },
-        "cosmicArchitect": {
-          "name": "Cosmic Architect",
-          "description": "Rewrite the cosmos to unleash infinite energy.",
-          "effect": "Passive production: +1,000,000,000,000 APS per level. Every 150 levels, critical overload adds +1 crit multiplier. Every 50 levels, ionization doubles the total bonus.",
-          "effectSummary": "Passive production +1,000,000,000,000 APS per level. Critical: +1 multiplier every 150 levels. Ionization: ×2 total bonus every 50 levels."
-        },
-        "parallelUniverse": {
-          "name": "Parallel Universe",
-          "description": "Experiment with high-yield alternate realities.",
-          "effect": "Passive production: +100,000,000,000,000 APS per level. Every 50 levels, ionization doubles the total bonus.",
-          "effectSummary": "Passive production +100,000,000,000,000 APS per level. Ionization: ×2 total bonus every 50 levels."
-        },
-        "omniverseLibrary": {
-          "name": "Omniverse Library",
-          "description": "Compile infinite knowledge to boost all output.",
-          "effect": "Passive production: +10,000,000,000,000,000 APS per level. Every 50 levels, ionization doubles the total bonus.",
-          "effectSummary": "Passive production +10,000,000,000,000,000 APS per level. Ionization: ×2 total bonus every 50 levels."
-        },
-        "quantumOverseer": {
-          "name": "Grand Quantum Overseer",
-          "description": "Order the multiverse and reach singularity.",
-          "effect": "Passive production: +1,000,000,000,000,000,000 APS per level. Every 50 levels, critical overload adds +10% crit chance and +0.5 multiplier. Every 50 levels, ionization doubles the total bonus.",
-          "effectSummary": "Passive production +1,000,000,000,000,000,000 APS per level. Critical: +10% chance and +0.5 multiplier every 50 levels. Ionization: ×2 total bonus every 50 levels."
+        "starCore": {
+          "name": "Star Core",
+          "description": "Condense a star to power your automated harvests.",
+          "effect": "Passive production: +1 APS per level. The cost rises slightly after each purchase.",
+          "effectSummary": "Passive production +1 APS per level. Gradually increasing cost."
         }
       }
     },
