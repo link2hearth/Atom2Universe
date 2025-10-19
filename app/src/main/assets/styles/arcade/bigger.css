@@ -302,6 +302,11 @@
   pointer-events: none;
 }
 
+.bigger-board--physics .bigger-ball {
+  transition: none;
+  will-change: top, left;
+}
+
 .bigger-ball[data-state="merging"] {
   transform: scale(1.08);
 }
