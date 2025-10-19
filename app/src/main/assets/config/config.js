@@ -260,6 +260,29 @@ function getBuildingLevel(context, id) {
 
 const SHOP_BUILDING_IDS = ['godFinger', 'starCore'];
 
+const SHOP_PROGRESSIVE_GROWTH_RATE = 1.12;
+
+function calculateProgressiveBonus(level = 0, baseIncrement = 1, growthRate = SHOP_PROGRESSIVE_GROWTH_RATE) {
+  if (!Number.isFinite(level) || level <= 0) {
+    return 0;
+  }
+
+  const increment = Number.isFinite(baseIncrement) ? baseIncrement : 0;
+  if (increment <= 0) {
+    return 0;
+  }
+
+  const rate = Number.isFinite(growthRate) && growthRate > 0 ? growthRate : 1;
+
+  if (Math.abs(rate - 1) < 1e-9) {
+    return increment * level;
+  }
+
+  const total = increment * (Math.pow(rate, level) - 1) / (rate - 1);
+  const rounded = Math.round(total * 1000) / 1000;
+  return Number.isFinite(rounded) && rounded > 0 ? rounded : 0;
+}
+
 function createShopBuildingDefinitions() {
   const withDefaults = def => ({ maxLevel: SHOP_MAX_PURCHASE_DEFAULT, ...def });
   return [
@@ -268,12 +291,12 @@ function createShopBuildingDefinitions() {
       name: 'Doigt créateur',
       description: 'Le pouvoir divin canalisé dans un seul clic.',
       effectSummary:
-        'Production manuelle : +1 APC par niveau. Le coût augmente légèrement à chaque achat.',
+        'Production manuelle : commence à +1 APC et progresse d’environ +12 % par niveau.',
       category: 'manual',
       baseCost: 15,
       costScale: 1.15,
       effect: (level = 0) => {
-        const clickAdd = level > 0 ? level : 0;
+        const clickAdd = calculateProgressiveBonus(level, 1);
         return { clickAdd };
       }
     },
@@ -282,12 +305,12 @@ function createShopBuildingDefinitions() {
       name: 'Cœur d’étoile',
       description: 'Compactez une étoile pour générer des flux constants d’atomes.',
       effectSummary:
-        'Production passive : +1 APS par niveau. Le coût augmente légèrement à chaque achat.',
+        'Production passive : commence à +1 APS et progresse d’environ +12 % par niveau.',
       category: 'auto',
       baseCost: 100,
       costScale: 1.18,
       effect: (level = 0) => {
-        const autoAdd = level > 0 ? level : 0;
+        const autoAdd = calculateProgressiveBonus(level, 1);
         return { autoAdd };
       }
     }
