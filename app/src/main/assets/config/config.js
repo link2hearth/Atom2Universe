@@ -78,7 +78,7 @@ const PERFORMANCE_MODE_DEFINITIONS = Object.freeze([
  * générées automatiquement.
  */
 const MINESWEEPER_BOARD_SETTINGS = Object.freeze({
-  targetCellSize: 48,
+  targetCellSize: 42,
   minCellSize: 36,
   maxCellSize: 72,
   maxRows: 40,
