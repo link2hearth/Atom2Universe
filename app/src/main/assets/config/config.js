@@ -2343,10 +2343,11 @@ const GAME_CONFIG = {
     groups: {
       commun: {
         perCopy: {
-          clickAdd: 250
+          clickAdd: 2
+          
         },
         setBonus: {
-          clickAdd: 500,
+          clickAdd: 5,
           requireAllUnique: true
         },
         multiplier: {
@@ -2358,19 +2359,19 @@ const GAME_CONFIG = {
       },
       essentiel: {
         perCopy: {
-          uniqueClickAdd: 15000,
-          duplicateClickAdd: 20000,
+          uniqueClickAdd: 5,
+          duplicateClickAdd: 10,
           label: 'scripts.config.elementBonuses.essentiel.perCopy'
         },
         setBonus: [
           {
-            clickAdd: 100000,
+            clickAdd: 50,
             requireAllUnique: true,
             label: 'scripts.config.elementBonuses.essentiel.setBonus'
           }
         ],
         multiplier: {
-          every: 25,
+          every: 50,
           increment: 1,
           targets: ['perClick', 'perSecond'],
           label: COLLECTION_MULTIPLIER_LABEL_KEY
@@ -2378,8 +2379,8 @@ const GAME_CONFIG = {
       },
       stellaire: {
         perCopy: {
-          uniqueClickAdd: 20000,
-          duplicateClickAdd: 25000,
+          uniqueClickAdd: 20,
+          duplicateClickAdd: 25,
           label: 'scripts.config.elementBonuses.stellaire.perCopy'
         },
         multiplier: {
@@ -2403,10 +2404,10 @@ const GAME_CONFIG = {
       },
       singulier: {
         perCopy: {
-          uniqueClickAdd: 500000,
-          uniqueAutoAdd: 500000,
-          duplicateClickAdd: 1500000,
-          duplicateAutoAdd: 1500000,
+          uniqueClickAdd: 50,
+          uniqueAutoAdd: 50,
+          duplicateClickAdd: 100,
+          duplicateAutoAdd: 100,
           label: 'scripts.config.elementBonuses.singulier.perCopy'
         },
         multiplier: {
@@ -3366,6 +3367,7 @@ GAME_CONFIG.progression.defaultTheme = GAME_CONFIG.themes.default;
 if (typeof globalThis !== 'undefined') {
   globalThis.GAME_CONFIG = GAME_CONFIG;
 }
+
 
 
 
