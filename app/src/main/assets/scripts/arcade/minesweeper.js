@@ -4,12 +4,12 @@
   }
 
   const DIFFICULTY_PRESETS = Object.freeze({
-    facile: Object.freeze({ rows: 10, cols: 10, mines: 16 }),
+    facile: Object.freeze({ rows: 9, cols: 12, mines: 18 }),
     moyen: Object.freeze({ rows: 11, cols: 15, mines: 28 }),
     difficile: Object.freeze({ rows: 12, cols: 20, mines: 38 })
   });
 
-  const FIXED_CELL_SIZE = 48;
+  const FIXED_CELL_SIZE = 42;
 
   const ORIENTATION_MODE = Object.freeze({
     LANDSCAPE: 'landscape',
@@ -104,7 +104,8 @@
       status: 'ready',
       armed: false,
       cellSize: FIXED_CELL_SIZE,
-      orientation: ORIENTATION_MODE.LANDSCAPE
+      orientation: ORIENTATION_MODE.LANDSCAPE,
+      difficultyKey: 'moyen'
     };
 
     const orientationState = {
@@ -181,15 +182,65 @@
       setCellAriaLabel(cell, labelCache.hidden);
     }
 
+    function getLayoutDimensions() {
+      if (gameState.orientation === ORIENTATION_MODE.PORTRAIT) {
+        return {
+          columns: gameState.rows,
+          rows: gameState.cols
+        };
+      }
+      return {
+        columns: gameState.cols,
+        rows: gameState.rows
+      };
+    }
+
+    function updateBoardLayoutMetrics() {
+      if (!boardElement) {
+        return;
+      }
+      const layout = getLayoutDimensions();
+      boardElement.style.setProperty('--minesweeper-columns', layout.columns);
+      boardElement.style.setProperty('--minesweeper-rows', layout.rows);
+    }
+
+    function positionCellElement(cell) {
+      if (!cell || !cell.element) {
+        return;
+      }
+      let columnStart;
+      let rowStart;
+      if (gameState.orientation === ORIENTATION_MODE.PORTRAIT) {
+        columnStart = cell.row + 1;
+        rowStart = cell.col + 1;
+      } else {
+        columnStart = cell.col + 1;
+        rowStart = cell.row + 1;
+      }
+      cell.element.style.gridColumnStart = String(columnStart);
+      cell.element.style.gridRowStart = String(rowStart);
+    }
+
+    function applyOrientationLayout() {
+      if (!boardElement || !gameState.grid.length) {
+        return;
+      }
+      updateBoardLayoutMetrics();
+      for (let row = 0; row < gameState.rows; row += 1) {
+        for (let col = 0; col < gameState.cols; col += 1) {
+          positionCellElement(gameState.grid[row][col]);
+        }
+      }
+    }
+
     function renderBoard() {
       boardElement.innerHTML = '';
-      boardElement.style.setProperty('--minesweeper-columns', gameState.cols);
-      boardElement.style.setProperty('--minesweeper-rows', gameState.rows);
       boardElement.style.setProperty('--minesweeper-cell-size', `${gameState.cellSize}px`);
       boardElement.style.removeProperty('--minesweeper-board-width');
       boardElement.style.removeProperty('--minesweeper-board-height');
       boardElement.style.removeProperty('width');
       boardElement.style.removeProperty('height');
+      updateBoardLayoutMetrics();
       for (let row = 0; row < gameState.rows; row += 1) {
         for (let col = 0; col < gameState.cols; col += 1) {
           const cell = gameState.grid[row][col];
@@ -204,16 +255,20 @@
           button.addEventListener('keydown', handleCellKeydown);
           cell.element = button;
           boardElement.appendChild(button);
+          positionCellElement(cell);
         }
       }
       applyOrientationClass();
+      applyOrientationLayout();
     }
 
     function initializeGrid(difficultyKey) {
       const presetKey = normalizeDifficultyKey(difficultyKey);
       const preset = DIFFICULTY_PRESETS[presetKey];
-      const rows = Math.max(4, Number(preset.rows) || 8);
-      const cols = Math.max(4, Number(preset.cols) || 8);
+      const presetRows = Math.max(4, Number(preset.rows) || 8);
+      const presetCols = Math.max(4, Number(preset.cols) || 8);
+      const rows = Math.min(presetRows, presetCols);
+      const cols = Math.max(presetRows, presetCols);
       const mines = clampMines(rows, cols, Number(preset.mines));
       gameState.rows = rows;
       gameState.cols = cols;
@@ -223,6 +278,7 @@
       gameState.status = 'ready';
       gameState.armed = false;
       gameState.cellSize = FIXED_CELL_SIZE;
+      gameState.difficultyKey = presetKey;
       renderBoard();
       for (let row = 0; row < gameState.rows; row += 1) {
         for (let col = 0; col < gameState.cols; col += 1) {
@@ -262,6 +318,7 @@
       }
       gameState.orientation = mode;
       applyOrientationClass();
+      applyOrientationLayout();
     }
 
     function attachOrientationListeners() {
