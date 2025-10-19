@@ -8,8 +8,17 @@
   const VALUE_ORDER = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024];
   const SPAWN_VALUES = [1, 2, 4, 8, 16];
   const BALL_SIZE_STEPS = [0.68, 0.76, 0.88, 0.98, 1.08, 1.22, 1.36, 1.5, 1.64, 1.78, 1.92];
-  const DROP_ANIMATION_MS = 280;
-  const MERGE_ANIMATION_MS = 180;
+  const PHYSICS_MAX_STEP_MS = 16;
+  const PHYSICS_GRAVITY = 1600;
+  const PHYSICS_WALL_BOUNCE = 0.55;
+  const PHYSICS_FLOOR_BOUNCE = 0.68;
+  const PHYSICS_LINEAR_DAMPING = 0.995;
+  const PHYSICS_STATIC_FRICTION = 0.8;
+  const PHYSICS_DYNAMIC_FRICTION = 0.12;
+  const MERGE_OVERLAP_THRESHOLD = 0.22;
+  const MERGE_CONTACT_TIME = 0.18;
+  const MERGE_RELATIVE_SPEED = 90;
+  const DEFEAT_MARGIN = 96;
 
   const toInteger = value => {
     const parsed = Number(value);
@@ -194,6 +203,7 @@
       this.turnValueElement = opts.turnValueElement || null;
       this.mergeValueElement = opts.mergeValueElement || null;
       this.goalValueElement = opts.goalValueElement || null;
+      this.restartButton = opts.restartButton || null;
       this.overlayElement = opts.overlayElement || null;
       this.overlayTitleElement = opts.overlayTitleElement || null;
       this.overlayMessageElement = opts.overlayMessageElement || null;
@@ -201,7 +211,7 @@
       this.overlayDismissElement = opts.overlayDismissElement || null;
 
       this.state = {
-        grid: createEmptyGrid(),
+        balls: [],
         queue: [],
         currentValue: null,
         stats: { turns: 0, merges: 0, largest: 0 },
@@ -212,10 +222,20 @@
 
       this.balls = new Map();
       this.ballIdCounter = 1;
-      this.isAnimating = false;
       this.cellSize = 56;
+      this.boardWidth = 0;
+      this.boardHeight = 0;
+      this.spawnPositions = [];
       this.hoverColumn = null;
       this.isActive = false;
+
+      this.physics = {
+        running: false,
+        lastTimestamp: null,
+        rafId: null,
+        contacts: new Map(),
+        pendingMerges: []
+      };
 
       this.highlightElement = document.createElement('div');
       this.highlightElement.className = 'bigger-board__highlight';
@@ -229,15 +249,15 @@
       this.handleResize = this.handleResize.bind(this);
       this.handleOverlayAction = this.handleOverlayAction.bind(this);
       this.handleOverlayDismiss = this.handleOverlayDismiss.bind(this);
+      this.handleRestartClick = this.handleRestartClick.bind(this);
+      this.handleMotionPreferenceChange = this.handleMotionPreferenceChange.bind(this);
 
       this.prefersReducedMotionQuery = typeof window !== 'undefined' && window.matchMedia
         ? window.matchMedia('(prefers-reduced-motion: reduce)')
         : null;
       this.prefersReducedMotion = this.prefersReducedMotionQuery?.matches || false;
       if (this.prefersReducedMotionQuery && typeof this.prefersReducedMotionQuery.addEventListener === 'function') {
-        this.prefersReducedMotionQuery.addEventListener('change', event => {
-          this.prefersReducedMotion = !!event.matches;
-        });
+        this.prefersReducedMotionQuery.addEventListener('change', this.handleMotionPreferenceChange);
       }
 
       this.languageUnsubscribe = null;
@@ -269,6 +289,11 @@
         this.hideOverlay();
       }
       this.persistState();
+      this.startPhysics();
+      if (this.prefersReducedMotion) {
+        this.settleBallsInstantly();
+        this.persistState();
+      }
     }
 
     bindDomListeners() {
@@ -286,6 +311,10 @@
       }
       if (this.overlayDismissElement) {
         this.overlayDismissElement.addEventListener('click', this.handleOverlayDismiss);
+      }
+
+      if (this.restartButton) {
+        this.restartButton.addEventListener('click', this.handleRestartClick);
       }
 
       if (typeof window !== 'undefined') {
@@ -337,6 +366,11 @@
     handleOverlayAction() {
       this.resetGame();
       this.hideOverlay();
+      this.startPhysics();
+      if (this.prefersReducedMotion) {
+        this.settleBallsInstantly();
+        this.persistState();
+      }
     }
 
     handleOverlayDismiss() {
@@ -346,6 +380,13 @@
         this.persistState();
       }
       this.hideOverlay();
+      if (!this.state.isGameOver) {
+        this.startPhysics();
+        if (this.prefersReducedMotion) {
+          this.settleBallsInstantly();
+          this.persistState();
+        }
+      }
     }
 
     setHoverColumn(column) {
@@ -387,8 +428,8 @@
       return VALUE_ORDER.includes(value) ? value : SPAWN_VALUES[0];
     }
 
-    async dropInColumn(columnIndex) {
-      if (this.isAnimating || this.state.isGameOver) {
+    dropInColumn(columnIndex) {
+      if (this.state.isGameOver) {
         return;
       }
       if (!Number.isFinite(columnIndex) || columnIndex < 0 || columnIndex >= COLUMN_COUNT) {
@@ -396,226 +437,42 @@
       }
 
       this.ensureCurrentValue();
-      const landingRow = this.findLandingRow(columnIndex);
-      if (landingRow < 0) {
-        this.triggerDefeat();
+      const value = this.state.currentValue;
+      if (!VALUE_ORDER.includes(value)) {
         return;
       }
 
-      const value = this.state.currentValue;
+      const spawnX = this.spawnPositions[columnIndex] ?? (columnIndex * this.cellSize + this.cellSize / 2);
+      const spawnY = -DEFEAT_MARGIN * 0.5;
+
       this.state.currentValue = null;
       this.ensureCurrentValue();
-
-      this.isAnimating = true;
-      this.updateDropButtonLabels();
       this.state.stats.turns += 1;
+      this.updateDropButtonLabels();
 
-      const ball = this.createBall(value);
-      ball.col = columnIndex;
-      this.setBallPosition(ball, -1, columnIndex, { immediate: true });
+      const ball = this.createBall(value, { x: spawnX, y: spawnY });
       ball.element.dataset.state = 'spawn';
-      await nextAnimationFrame();
-      await this.animateTo(ball, landingRow, columnIndex);
-      ball.row = landingRow;
-      this.grid[landingRow][columnIndex] = ball;
+      this.applyBallPosition(ball);
+      this.refreshSerializedBalls();
+
+      window.requestAnimationFrame(() => {
+        if (ball.element) {
+          ball.element.dataset.state = '';
+        }
+      });
 
       this.state.stats.largest = Math.max(this.state.stats.largest, value);
-      await this.resolveMerges(ball);
       this.updateHud();
-
-      if (!this.state.gameResult && this.state.stats.largest >= MAX_VALUE && !this.state.victoryAchieved) {
-        this.handleVictory();
-      }
-
-      this.persistState();
-      this.isAnimating = false;
-      this.updateDropButtonLabels();
-    }
-
-    findLandingRow(columnIndex) {
-      for (let row = ROW_COUNT - 1; row >= 0; row -= 1) {
-        if (!this.grid[row][columnIndex]) {
-          return row;
-        }
-      }
-      return -1;
-    }
-
-    async resolveMerges(ball) {
-      if (!ball) {
-        return;
-      }
-      let current = ball;
-      let chained = false;
-
-      while (current) {
-        const cluster = this.collectCluster(current.row, current.col, current.value);
-        if (cluster.length < 2) {
-          break;
-        }
-
-        chained = true;
-        this.state.stats.merges += Math.max(1, cluster.length - 1);
-        const newValue = Math.min(MAX_VALUE, current.value * 2);
-        const anchor = this.selectMergeAnchor(cluster, current);
-
-        await this.animateMerge(cluster);
-        this.removeCluster(cluster);
-        await this.collapseColumns(cluster.map(cell => cell.col));
-
-        const mergedBall = this.createBall(newValue);
-        const landingColumn = Number.isFinite(anchor?.col) ? anchor.col : current.col;
-        const landingRow = this.findLandingRow(landingColumn);
-        this.setBallPosition(mergedBall, -1, landingColumn, { immediate: true });
-        mergedBall.element.dataset.state = 'spawn';
-        await nextAnimationFrame();
-        await this.animateTo(mergedBall, landingRow, landingColumn);
-        mergedBall.row = landingRow;
-        mergedBall.col = landingColumn;
-        this.grid[landingRow][landingColumn] = mergedBall;
-
-        this.state.stats.largest = Math.max(this.state.stats.largest, newValue);
-        current = mergedBall;
-      }
-
-      if (chained) {
-        this.updateHud();
-        if (!this.state.gameResult && this.state.stats.largest >= MAX_VALUE && !this.state.victoryAchieved) {
-          this.handleVictory();
-        }
-      }
-    }
-
-    collectCluster(row, col, value) {
-      const cluster = [];
-      if (!Number.isFinite(row) || !Number.isFinite(col)) {
-        return cluster;
-      }
-      const targetValue = VALUE_ORDER.includes(value) ? value : null;
-      if (targetValue == null) {
-        return cluster;
-      }
-      const visited = new Set();
-      const queue = [{ row, col }];
-      while (queue.length) {
-        const current = queue.pop();
-        const key = `${current.row}:${current.col}`;
-        if (visited.has(key)) {
-          continue;
-        }
-        visited.add(key);
-        if (
-          current.row < 0
-          || current.row >= ROW_COUNT
-          || current.col < 0
-          || current.col >= COLUMN_COUNT
-        ) {
-          continue;
-        }
-        const cell = this.grid[current.row][current.col];
-        if (!cell || cell.value !== targetValue) {
-          continue;
-        }
-        cluster.push(cell);
-        queue.push({ row: current.row - 1, col: current.col });
-        queue.push({ row: current.row + 1, col: current.col });
-        queue.push({ row: current.row, col: current.col - 1 });
-        queue.push({ row: current.row, col: current.col + 1 });
-      }
-      return cluster;
-    }
-
-    selectMergeAnchor(cluster, fallback) {
-      if (!Array.isArray(cluster) || !cluster.length) {
-        return fallback || null;
-      }
-      let anchor = cluster[0];
-      cluster.forEach(cell => {
-        if (!anchor) {
-          anchor = cell;
-          return;
-        }
-        if (cell.row > anchor.row) {
-          anchor = cell;
-          return;
-        }
-        if (cell.row === anchor.row && Math.abs(cell.col - fallback.col) < Math.abs(anchor.col - fallback.col)) {
-          anchor = cell;
-        }
-      });
-      return anchor;
-    }
-
-    async animateMerge(cluster) {
-      if (!Array.isArray(cluster) || !cluster.length) {
-        return;
-      }
-      cluster.forEach(cell => {
-        if (cell?.element) {
-          cell.element.dataset.state = 'merging';
-        }
-      });
       if (this.prefersReducedMotion) {
+        this.settleBallsInstantly();
+        this.persistState();
         return;
       }
-      await new Promise(resolve => setTimeout(resolve, MERGE_ANIMATION_MS));
+      this.persistState();
+      this.startPhysics();
     }
 
-    removeCluster(cluster) {
-      if (!Array.isArray(cluster)) {
-        return;
-      }
-      cluster.forEach(cell => {
-        if (!cell) {
-          return;
-        }
-        if (Number.isFinite(cell.row) && Number.isFinite(cell.col)) {
-          if (this.grid[cell.row][cell.col] === cell) {
-            this.grid[cell.row][cell.col] = null;
-          }
-        }
-        if (cell.element && cell.element.parentNode) {
-          cell.element.remove();
-        }
-        this.balls.delete(cell.id);
-      });
-    }
-
-    async collapseColumns(columns) {
-      const columnSet = new Set(columns);
-      const animations = [];
-      columnSet.forEach(col => {
-        if (!Number.isFinite(col) || col < 0 || col >= COLUMN_COUNT) {
-          return;
-        }
-        const columnBalls = [];
-        for (let row = ROW_COUNT - 1; row >= 0; row -= 1) {
-          const cell = this.grid[row][col];
-          if (cell) {
-            columnBalls.push(cell);
-            this.grid[row][col] = null;
-          }
-        }
-        let targetRow = ROW_COUNT - 1;
-        columnBalls.forEach(ball => {
-          this.grid[targetRow][col] = ball;
-          if (ball.row !== targetRow) {
-            animations.push(this.animateTo(ball, targetRow, col));
-            ball.row = targetRow;
-            ball.col = col;
-          }
-          targetRow -= 1;
-        });
-        for (; targetRow >= 0; targetRow -= 1) {
-          this.grid[targetRow][col] = null;
-        }
-      });
-      if (animations.length) {
-        await Promise.all(animations);
-      }
-    }
-
-    createBall(value) {
+    createBall(value, overrides = {}) {
       const tier = getTier(value);
       const element = document.createElement('div');
       element.className = `bigger-ball bigger-ball--tier-${tier}`;
@@ -624,70 +481,367 @@
       if (this.boardElement) {
         this.boardElement.appendChild(element);
       }
+      const multiplier = getDiameterMultiplier(value);
+      const diameter = Math.max(28, this.cellSize * multiplier);
+      element.style.width = `${diameter}px`;
+      element.style.height = `${diameter}px`;
+      const radius = diameter / 2;
+      const mass = Math.max(1, radius * radius);
       const ball = {
         id: `ball-${this.ballIdCounter++}`,
         value,
-        row: -1,
-        col: -1,
-        element
+        element,
+        radius,
+        mass,
+        invMass: 1 / mass,
+        x: Number.isFinite(overrides.x) ? overrides.x : radius,
+        y: Number.isFinite(overrides.y) ? overrides.y : radius,
+        vx: Number.isFinite(overrides.vx) ? overrides.vx : 0,
+        vy: Number.isFinite(overrides.vy) ? overrides.vy : 0,
+        overflowTime: 0
       };
       this.balls.set(ball.id, ball);
       return ball;
     }
 
-    setBallPosition(ball, row, col, options = {}) {
+    updateBallShape(ball) {
       if (!ball || !ball.element) {
         return;
       }
-      const { immediate = false } = options;
       const multiplier = getDiameterMultiplier(ball.value);
       const diameter = Math.max(28, this.cellSize * multiplier);
-      const clampedRow = Number.isFinite(row) ? row : ball.row;
-      const clampedCol = Number.isFinite(col) ? col : ball.col;
-      const left = clampedCol * this.cellSize + (this.cellSize - diameter) / 2;
-      const topBase = clampedRow * this.cellSize + (this.cellSize - diameter) / 2;
-      const top = clampedRow >= 0 ? topBase : -diameter - this.cellSize * 0.2;
-
-      if (immediate && this.prefersReducedMotion !== false) {
-        ball.element.style.transition = 'none';
-      }
+      ball.radius = diameter / 2;
+      ball.mass = Math.max(1, ball.radius * ball.radius);
+      ball.invMass = 1 / ball.mass;
       ball.element.style.width = `${diameter}px`;
       ball.element.style.height = `${diameter}px`;
+    }
+
+    applyBallPosition(ball) {
+      if (!ball || !ball.element) {
+        return;
+      }
+      const left = (Number.isFinite(ball.x) ? ball.x : 0) - (ball.radius || 0);
+      const top = (Number.isFinite(ball.y) ? ball.y : 0) - (ball.radius || 0);
       ball.element.style.left = `${left}px`;
       ball.element.style.top = `${top}px`;
-      if (immediate && this.prefersReducedMotion !== false) {
-        void ball.element.offsetWidth;
-        ball.element.style.transition = '';
+    }
+
+    serializeBall(ball) {
+      return {
+        id: ball.id,
+        value: ball.value,
+        x: Number(ball.x) || 0,
+        y: Number(ball.y) || 0,
+        vx: Number(ball.vx) || 0,
+        vy: Number(ball.vy) || 0
+      };
+    }
+
+    refreshSerializedBalls() {
+      this.state.balls = Array.from(this.balls.values()).map(ball => this.serializeBall(ball));
+    }
+
+    removeBall(ball) {
+      if (!ball) {
+        return;
+      }
+      this.balls.delete(ball.id);
+      if (ball.element && ball.element.parentNode) {
+        ball.element.remove();
+      }
+      const keys = Array.from(this.physics.contacts.keys());
+      keys.forEach(key => {
+        const [left, right] = key.split('|');
+        if (left === ball.id || right === ball.id) {
+          this.physics.contacts.delete(key);
+        }
+      });
+    }
+
+    queueMerge(ballA, ballB) {
+      if (!ballA || !ballB || ballA === ballB) {
+        return;
+      }
+      this.physics.pendingMerges.push([ballA.id, ballB.id]);
+    }
+
+    executePendingMerges() {
+      if (!this.physics.pendingMerges.length) {
+        return;
+      }
+      const pairs = this.physics.pendingMerges.splice(0, this.physics.pendingMerges.length);
+      let merged = false;
+      pairs.forEach(([idA, idB]) => {
+        const ballA = this.balls.get(idA);
+        const ballB = this.balls.get(idB);
+        if (!ballA || !ballB || ballA.value !== ballB.value || this.state.isGameOver) {
+          return;
+        }
+        this.mergeBalls(ballA, ballB);
+        merged = true;
+      });
+      if (merged) {
+        this.refreshSerializedBalls();
+        this.persistState();
       }
     }
 
-    animateTo(ball, row, col) {
-      if (!ball || !ball.element) {
-        return Promise.resolve();
+    mergeBalls(ballA, ballB) {
+      const totalMass = ballA.mass + ballB.mass;
+      const x = (ballA.x * ballA.mass + ballB.x * ballB.mass) / totalMass;
+      const y = (ballA.y * ballA.mass + ballB.y * ballB.mass) / totalMass;
+      const vx = (ballA.vx * ballA.mass + ballB.vx * ballB.mass) / totalMass;
+      const vy = (ballA.vy * ballA.mass + ballB.vy * ballB.mass) / totalMass;
+      const newValue = Math.min(MAX_VALUE, ballA.value * 2);
+
+      this.removeBall(ballA);
+      this.removeBall(ballB);
+
+      const merged = this.createBall(newValue, { x, y, vx, vy });
+      merged.element.dataset.state = 'spawn';
+      this.applyBallPosition(merged);
+      window.requestAnimationFrame(() => {
+        if (merged.element) {
+          merged.element.dataset.state = '';
+        }
+      });
+
+      this.state.stats.merges += 1;
+      this.state.stats.largest = Math.max(this.state.stats.largest, newValue);
+      this.updateHud();
+      if (!this.state.gameResult && this.state.stats.largest >= MAX_VALUE && !this.state.victoryAchieved) {
+        this.handleVictory();
+      }
+    }
+
+    handleRestartClick() {
+      this.resetGame();
+      this.startPhysics();
+    }
+
+    handleMotionPreferenceChange(event) {
+      if (event && typeof event.matches === 'boolean') {
+        this.prefersReducedMotion = event.matches;
+      } else if (this.prefersReducedMotionQuery) {
+        this.prefersReducedMotion = !!this.prefersReducedMotionQuery.matches;
       }
       if (this.prefersReducedMotion) {
-        this.setBallPosition(ball, row, col, { immediate: true });
-        return Promise.resolve();
+        this.stopPhysics();
+        this.settleBallsInstantly();
+        this.syncBallPositions();
+        this.persistState();
+      } else {
+        this.startPhysics();
       }
-      return new Promise(resolve => {
-        let resolved = false;
-        const cleanup = () => {
-          if (resolved) return;
-          resolved = true;
-          ball.element.removeEventListener('transitionend', onTransitionEnd);
-          ball.element.dataset.state = '';
-          resolve();
-        };
-        const onTransitionEnd = event => {
-          if (event.target === ball.element && (event.propertyName === 'top' || event.propertyName === 'left')) {
-            cleanup();
+    }
+
+    startPhysics() {
+      if (typeof window === 'undefined' || this.prefersReducedMotion) {
+        return;
+      }
+      if (this.physics.running) {
+        return;
+      }
+      if (this.boardElement) {
+        this.boardElement.classList.add('bigger-board--physics');
+      }
+      this.physics.running = true;
+      this.physics.lastTimestamp = null;
+      const step = timestamp => {
+        if (!this.physics.running) {
+          return;
+        }
+        this.stepPhysics(timestamp);
+        this.physics.rafId = window.requestAnimationFrame(step);
+      };
+      this.physics.rafId = window.requestAnimationFrame(step);
+    }
+
+    stopPhysics() {
+      if (typeof window === 'undefined') {
+        return;
+      }
+      if (this.physics.rafId != null) {
+        window.cancelAnimationFrame(this.physics.rafId);
+        this.physics.rafId = null;
+      }
+      this.physics.running = false;
+      this.physics.lastTimestamp = null;
+      if (this.boardElement) {
+        this.boardElement.classList.remove('bigger-board--physics');
+      }
+    }
+
+    stepPhysics(timestamp) {
+      if (this.prefersReducedMotion) {
+        this.stopPhysics();
+        return;
+      }
+      if (!this.balls.size) {
+        return;
+      }
+      const previous = this.physics.lastTimestamp ?? timestamp;
+      let delta = timestamp - previous;
+      if (!Number.isFinite(delta) || delta <= 0) {
+        delta = PHYSICS_MAX_STEP_MS;
+      }
+      delta = Math.min(delta, PHYSICS_MAX_STEP_MS);
+      this.physics.lastTimestamp = timestamp;
+      const dt = delta / 1000;
+      if (dt <= 0) {
+        return;
+      }
+      this.runPhysicsFrame(dt);
+    }
+
+    runPhysicsFrame(dt, options = {}) {
+      const { syncState = true } = options;
+      const width = this.boardWidth || this.boardElement?.clientWidth || this.cellSize * COLUMN_COUNT;
+      const height = this.boardHeight || this.cellSize * ROW_COUNT;
+      if (!Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0) {
+        if (syncState) {
+          this.refreshSerializedBalls();
+        }
+        return;
+      }
+      const balls = Array.from(this.balls.values());
+      const contacts = this.physics.contacts;
+      const activeContacts = new Set();
+
+      balls.forEach(ball => {
+        if (!Number.isFinite(ball.radius) || ball.radius <= 0) {
+          this.updateBallShape(ball);
+        }
+        ball.vy += PHYSICS_GRAVITY * dt;
+        ball.vx *= PHYSICS_LINEAR_DAMPING;
+        ball.vy *= PHYSICS_LINEAR_DAMPING;
+        ball.x += ball.vx * dt;
+        ball.y += ball.vy * dt;
+
+        const minX = ball.radius;
+        const maxX = width - ball.radius;
+        if (ball.x < minX) {
+          ball.x = minX;
+          ball.vx = Math.abs(ball.vx) * PHYSICS_WALL_BOUNCE;
+        } else if (ball.x > maxX) {
+          ball.x = maxX;
+          ball.vx = -Math.abs(ball.vx) * PHYSICS_WALL_BOUNCE;
+        }
+
+        const maxY = height - ball.radius;
+        if (ball.y > maxY) {
+          ball.y = maxY;
+          if (Math.abs(ball.vy) < 30) {
+            ball.vy = 0;
+            ball.vx *= 1 - PHYSICS_STATIC_FRICTION;
+          } else {
+            ball.vy = -ball.vy * PHYSICS_FLOOR_BOUNCE;
+            ball.vx *= 1 - PHYSICS_DYNAMIC_FRICTION;
           }
-        };
-        ball.element.addEventListener('transitionend', onTransitionEnd);
-        this.setBallPosition(ball, row, col);
-        ball.element.dataset.state = '';
-        setTimeout(cleanup, DROP_ANIMATION_MS + 80);
+        }
+
+        const minY = -DEFEAT_MARGIN;
+        if (ball.y < minY) {
+          ball.y = minY;
+          ball.vy = Math.max(ball.vy, 0);
+        }
+
+        if (ball.y - ball.radius < 0) {
+          ball.overflowTime = (ball.overflowTime || 0) + dt;
+        } else {
+          ball.overflowTime = Math.max(0, (ball.overflowTime || 0) - dt * 0.5);
+        }
       });
+
+      for (let i = 0; i < balls.length; i += 1) {
+        const a = balls[i];
+        for (let j = i + 1; j < balls.length; j += 1) {
+          const b = balls[j];
+          const dx = b.x - a.x;
+          const dy = b.y - a.y;
+          const distance = Math.hypot(dx, dy) || 0.0001;
+          const minDistance = (a.radius || 0) + (b.radius || 0);
+          const key = a.id < b.id ? `${a.id}|${b.id}` : `${b.id}|${a.id}`;
+          if (distance < minDistance && minDistance > 0) {
+            const overlap = minDistance - distance;
+            const nx = dx / distance;
+            const ny = dy / distance;
+            const invMassSum = a.invMass + b.invMass;
+            if (invMassSum > 0) {
+              const shiftA = overlap * (a.invMass / invMassSum);
+              const shiftB = overlap * (b.invMass / invMassSum);
+              a.x -= nx * shiftA;
+              a.y -= ny * shiftA;
+              b.x += nx * shiftB;
+              b.y += ny * shiftB;
+
+              const relativeVelocity = (b.vx - a.vx) * nx + (b.vy - a.vy) * ny;
+              const impulse = (-(1 + PHYSICS_FLOOR_BOUNCE) * relativeVelocity) / invMassSum;
+              a.vx -= impulse * nx * a.invMass;
+              a.vy -= impulse * ny * a.invMass;
+              b.vx += impulse * nx * b.invMass;
+              b.vy += impulse * ny * b.invMass;
+
+              activeContacts.add(key);
+              let contact = contacts.get(key);
+              if (!contact) {
+                contact = { time: 0 };
+                contacts.set(key, contact);
+              }
+              const relativeSpeed = Math.abs(relativeVelocity);
+              if (
+                a.value === b.value
+                && minDistance > 0
+                && overlap / minDistance > MERGE_OVERLAP_THRESHOLD
+                && relativeSpeed < MERGE_RELATIVE_SPEED
+              ) {
+                contact.time += dt;
+                if (contact.time >= MERGE_CONTACT_TIME) {
+                  this.queueMerge(a, b);
+                  contact.time = 0;
+                }
+              } else {
+                contact.time = Math.max(0, contact.time - dt * 0.5);
+              }
+            }
+          }
+        }
+      }
+
+      contacts.forEach((contact, key) => {
+        if (!activeContacts.has(key)) {
+          contacts.delete(key);
+        }
+      });
+
+      this.executePendingMerges();
+      balls.forEach(ball => {
+        this.applyBallPosition(ball);
+      });
+      if (syncState) {
+        this.refreshSerializedBalls();
+      }
+
+      if (!this.state.isGameOver && balls.some(ball => (ball.overflowTime || 0) > 0.75)) {
+        this.triggerDefeat();
+      }
+    }
+
+    settleBallsInstantly(iterations = 48) {
+      let steps = Number.isFinite(iterations) ? Math.trunc(iterations) : 0;
+      if (steps <= 0) {
+        steps = 32;
+      }
+      steps = Math.min(steps, 160);
+      for (let i = 0; i < steps; i += 1) {
+        this.runPhysicsFrame(PHYSICS_MAX_STEP_MS / 1000, { syncState: false });
+        if (this.state.isGameOver) {
+          break;
+        }
+      }
+      this.refreshSerializedBalls();
+      this.syncBallPositions();
     }
 
     updateHud() {
@@ -744,7 +898,7 @@
           button.setAttribute('aria-label', label);
           button.setAttribute('title', label);
         }
-        button.disabled = this.state.isGameOver || this.isAnimating;
+        button.disabled = this.state.isGameOver;
       });
     }
 
@@ -754,16 +908,33 @@
       }
       const width = this.boardElement.clientWidth || this.boardElement.parentElement?.clientWidth || 480;
       const computedCell = width / COLUMN_COUNT;
+      const previousCell = this.cellSize || computedCell;
       this.cellSize = Math.max(36, Math.min(82, computedCell));
+      this.boardWidth = this.cellSize * COLUMN_COUNT;
+      this.boardHeight = this.cellSize * ROW_COUNT;
+      this.spawnPositions = Array.from({ length: COLUMN_COUNT }, (_, index) => (index + 0.5) * this.cellSize);
       this.boardElement.style.setProperty('--bigger-cell-size', `${this.cellSize}px`);
       if (this.hoverColumn != null) {
         this.setHoverColumn(this.hoverColumn);
       }
+
+      const scale = previousCell > 0 ? this.cellSize / previousCell : 1;
+      this.balls.forEach(ball => {
+        this.updateBallShape(ball);
+        if (scale !== 1) {
+          ball.x *= scale;
+          ball.y *= scale;
+          ball.vx *= scale;
+          ball.vy *= scale;
+        }
+        this.applyBallPosition(ball);
+      });
     }
 
     syncBallPositions() {
       this.balls.forEach(ball => {
-        this.setBallPosition(ball, ball.row, ball.col, { immediate: true });
+        this.updateBallShape(ball);
+        this.applyBallPosition(ball);
       });
     }
 
@@ -772,20 +943,20 @@
         return;
       }
       this.clearBoard();
-      for (let row = 0; row < ROW_COUNT; row += 1) {
-        for (let col = 0; col < COLUMN_COUNT; col += 1) {
-          const value = this.state.grid[row]?.[col];
-          if (!VALUE_ORDER.includes(value)) {
-            this.grid[row][col] = null;
-            continue;
-          }
-          const ball = this.createBall(value);
-          ball.row = row;
-          ball.col = col;
-          this.grid[row][col] = ball;
-          this.setBallPosition(ball, row, col, { immediate: true });
+      const entries = Array.isArray(this.state.balls) ? this.state.balls : [];
+      entries.forEach(entry => {
+        if (!VALUE_ORDER.includes(entry.value)) {
+          return;
         }
-      }
+        const ball = this.createBall(entry.value, entry);
+        this.updateBallShape(ball);
+        ball.x = Number.isFinite(entry.x) ? entry.x : ball.x;
+        ball.y = Number.isFinite(entry.y) ? entry.y : ball.y;
+        ball.vx = Number.isFinite(entry.vx) ? entry.vx : 0;
+        ball.vy = Number.isFinite(entry.vy) ? entry.vy : 0;
+        this.applyBallPosition(ball);
+      });
+      this.refreshSerializedBalls();
     }
 
     clearBoard() {
@@ -795,14 +966,15 @@
         }
       });
       this.balls.clear();
-      this.grid = createEmptyGrid();
+      this.physics.contacts.clear();
+      this.physics.pendingMerges.length = 0;
     }
 
     resetGame(options = {}) {
       const { skipPersist = false } = options;
       this.clearBoard();
       this.state = {
-        grid: createEmptyGrid(),
+        balls: [],
         queue: [],
         currentValue: null,
         stats: { turns: 0, merges: 0, largest: 0 },
@@ -827,13 +999,20 @@
       this.state.victoryAchieved = true;
       this.state.gameResult = 'victory';
       this.state.isGameOver = true;
+      this.stopPhysics();
       this.showOverlayForResult('victory');
+      this.persistState();
     }
 
     triggerDefeat() {
+      if (this.state.isGameOver) {
+        return;
+      }
       this.state.gameResult = 'defeat';
       this.state.isGameOver = true;
+      this.stopPhysics();
       this.showOverlayForResult('defeat');
+      this.persistState();
     }
 
     showOverlayForResult(result, options = {}) {
@@ -911,10 +1090,11 @@
     }
 
     serializeState() {
-      const gridValues = this.grid.map(row => row.map(cell => (cell ? cell.value : 0)));
+      const balls = Array.from(this.balls.values()).map(ball => this.serializeBall(ball));
+      const largestBall = balls.reduce((max, entry) => Math.max(max, Number(entry.value) || 0), 0);
       return {
-        version: 1,
-        grid: gridValues,
+        version: 2,
+        balls,
         queue: this.state.queue.slice(0, 12),
         currentValue: VALUE_ORDER.includes(this.state.currentValue) ? this.state.currentValue : null,
         stats: {
@@ -922,7 +1102,7 @@
           merges: toInteger(this.state.stats.merges),
           largest: VALUE_ORDER.includes(this.state.stats.largest)
             ? this.state.stats.largest
-            : Math.max(...gridValues.flat())
+            : largestBall
         },
         isGameOver: !!this.state.isGameOver,
         gameResult: this.state.gameResult || null,
@@ -939,34 +1119,55 @@
         }
         return;
       }
-      const gridSource = Array.isArray(raw.grid) ? raw.grid : [];
-      this.state.grid = createEmptyGrid();
-      this.clearBoard();
 
-      for (let row = 0; row < ROW_COUNT; row += 1) {
-        const rowValues = Array.isArray(gridSource[row]) ? gridSource[row] : [];
-        for (let col = 0; col < COLUMN_COUNT; col += 1) {
-          const value = Number(rowValues[col]);
+      this.clearBoard();
+      const baseCell = this.cellSize || 56;
+      const normalizedBalls = [];
+      if (Array.isArray(raw.balls) && raw.balls.length) {
+        raw.balls.forEach(entry => {
+          const value = Number(entry.value);
           if (!VALUE_ORDER.includes(value)) {
-            continue;
+            return;
           }
-          const ball = this.createBall(value);
-          ball.row = row;
-          ball.col = col;
-          this.state.grid[row][col] = value;
-          this.grid[row][col] = ball;
-          this.setBallPosition(ball, row, col, { immediate: true });
-        }
+          normalizedBalls.push({
+            value,
+            x: Number.isFinite(entry.x) ? Number(entry.x) : baseCell * 0.5,
+            y: Number.isFinite(entry.y) ? Number(entry.y) : baseCell * 0.5,
+            vx: Number(entry.vx) || 0,
+            vy: Number(entry.vy) || 0
+          });
+        });
+      } else if (Array.isArray(raw.grid)) {
+        raw.grid.forEach((rowValues, row) => {
+          if (!Array.isArray(rowValues)) {
+            return;
+          }
+          rowValues.forEach((value, col) => {
+            const numeric = Number(value);
+            if (!VALUE_ORDER.includes(numeric)) {
+              return;
+            }
+            normalizedBalls.push({
+              value: numeric,
+              x: (col + 0.5) * baseCell,
+              y: (row + 0.5) * baseCell,
+              vx: 0,
+              vy: 0
+            });
+          });
+        });
       }
+      this.state.balls = normalizedBalls;
 
       this.state.queue = clampQueue(raw.queue);
       this.state.currentValue = VALUE_ORDER.includes(raw.currentValue) ? raw.currentValue : null;
+      const largestFromBalls = normalizedBalls.reduce((max, entry) => Math.max(max, Number(entry.value) || 0), 0);
       this.state.stats = {
         turns: Math.max(0, toInteger(raw.stats?.turns)),
         merges: Math.max(0, toInteger(raw.stats?.merges)),
         largest: VALUE_ORDER.includes(raw.stats?.largest)
           ? raw.stats.largest
-          : Math.max(...this.state.grid.flat().map(Number), 0)
+          : largestFromBalls
       };
       this.state.isGameOver = raw.isGameOver === true;
       this.state.gameResult = typeof raw.gameResult === 'string' ? raw.gameResult : null;
@@ -990,11 +1191,13 @@
       this.syncBallPositions();
       this.updateDropButtonLabels();
       this.updateOverlayTexts();
+      this.startPhysics();
     }
 
     onLeave() {
       this.isActive = false;
       this.setHoverColumn(null);
+      this.stopPhysics();
     }
 
     dispose() {
@@ -1011,12 +1214,19 @@
       if (this.overlayDismissElement) {
         this.overlayDismissElement.removeEventListener('click', this.handleOverlayDismiss);
       }
+      if (this.restartButton) {
+        this.restartButton.removeEventListener('click', this.handleRestartClick);
+      }
       if (typeof window !== 'undefined') {
         window.removeEventListener('resize', this.handleResize);
+      }
+      if (this.prefersReducedMotionQuery && typeof this.prefersReducedMotionQuery.removeEventListener === 'function') {
+        this.prefersReducedMotionQuery.removeEventListener('change', this.handleMotionPreferenceChange);
       }
       if (this.languageUnsubscribe) {
         this.languageUnsubscribe();
       }
+      this.stopPhysics();
     }
   }
 
