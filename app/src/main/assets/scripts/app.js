@@ -60,6 +60,7 @@ const PAGE_FEATURE_MAP = Object.freeze({
   metaux: 'arcade.metaux',
   wave: 'arcade.photon',
   quantum2048: 'arcade.objectx',
+  bigger: 'arcade.bigger',
   balance: 'arcade.balance',
   math: 'arcade.math',
   sudoku: 'arcade.sudoku',
@@ -2938,6 +2939,7 @@ const ARCADE_GAME_IDS = Object.freeze([
   'metaux',
   'wave',
   'quantum2048',
+  'bigger',
   'math',
   'balance',
   'sudoku',
@@ -4286,6 +4288,20 @@ function collectDomElements() {
   arcadeLivesValue: document.getElementById('arcadeLivesValue'),
   arcadeScoreValue: document.getElementById('arcadeScoreValue'),
   arcadeComboMessage: document.getElementById('arcadeComboMessage'),
+  biggerPage: document.getElementById('bigger'),
+  biggerBoard: document.getElementById('biggerBoard'),
+  biggerDropButtons: document.querySelectorAll('[data-bigger-drop-button]'),
+  biggerQueueSlots: document.querySelectorAll('[data-bigger-queue-slot]'),
+  biggerCurrentValue: document.getElementById('biggerCurrentValue'),
+  biggerLargestValue: document.getElementById('biggerLargestValue'),
+  biggerTurnValue: document.getElementById('biggerTurnValue'),
+  biggerMergeValue: document.getElementById('biggerMergeValue'),
+  biggerGoalValue: document.getElementById('biggerGoalValue'),
+  biggerOverlay: document.getElementById('biggerOverlay'),
+  biggerOverlayTitle: document.getElementById('biggerOverlayTitle'),
+  biggerOverlayMessage: document.getElementById('biggerOverlayMessage'),
+  biggerOverlayAction: document.getElementById('biggerOverlayAction'),
+  biggerOverlayDismiss: document.getElementById('biggerOverlayDismiss'),
   arcadeBrickSkinSelect: document.getElementById('arcadeBrickSkinSelect'),
   balancePage: document.getElementById('balance'),
   balanceStage: document.getElementById('balanceStage'),
@@ -5262,6 +5278,32 @@ function ensureWaveGame() {
     altitudeElement: elements.waveAltitudeValue
   });
   return waveGame;
+}
+
+function ensureBiggerGame() {
+  if (biggerGame || typeof BiggerGame !== 'function') {
+    return biggerGame;
+  }
+  if (!elements.biggerBoard) {
+    return null;
+  }
+  biggerGame = new BiggerGame({
+    pageElement: elements.biggerPage,
+    boardElement: elements.biggerBoard,
+    dropButtons: elements.biggerDropButtons,
+    queueSlots: elements.biggerQueueSlots,
+    currentValueElement: elements.biggerCurrentValue,
+    largestValueElement: elements.biggerLargestValue,
+    turnValueElement: elements.biggerTurnValue,
+    mergeValueElement: elements.biggerMergeValue,
+    goalValueElement: elements.biggerGoalValue,
+    overlayElement: elements.biggerOverlay,
+    overlayTitleElement: elements.biggerOverlayTitle,
+    overlayMessageElement: elements.biggerOverlayMessage,
+    overlayActionElement: elements.biggerOverlayAction,
+    overlayDismissElement: elements.biggerOverlayDismiss
+  });
+  return biggerGame;
 }
 
 function ensureBalanceGame() {
@@ -8962,6 +9004,7 @@ function renderProductionBreakdown(container, entry, context = null) {
 }
 
 let toastElement = null;
+let biggerGame = null;
 let waveGame = null;
 let balanceGame = null;
 let quantum2048Game = null;
@@ -10506,6 +10549,9 @@ function showPage(pageId) {
   if (pageId === 'wave') {
     ensureWaveGame();
   }
+  if (pageId === 'bigger') {
+    ensureBiggerGame();
+  }
   if (pageId === 'balance') {
     ensureBalanceGame();
   }
@@ -10540,6 +10586,7 @@ function showPage(pageId) {
   document.body.classList.toggle('view-arcade', pageId === 'arcade');
   document.body.classList.toggle('view-arcade-hub', pageId === 'arcadeHub');
   document.body.classList.toggle('view-metaux', pageId === 'metaux');
+  document.body.classList.toggle('view-bigger', pageId === 'bigger');
   document.body.classList.toggle('view-wave', pageId === 'wave');
   document.body.classList.toggle('view-balance', pageId === 'balance');
   document.body.classList.toggle('view-quantum2048', pageId === 'quantum2048');
@@ -10563,6 +10610,13 @@ function showPage(pageId) {
       metauxGame.onEnter();
     } else {
       metauxGame.onLeave();
+    }
+  }
+  if (biggerGame) {
+    if (pageId === 'bigger') {
+      biggerGame.onEnter();
+    } else {
+      biggerGame.onLeave();
     }
   }
   if (waveGame) {

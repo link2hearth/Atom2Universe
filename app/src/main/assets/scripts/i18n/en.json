@@ -278,6 +278,12 @@
             "description": "Reach the objective tile (shown in the top right) in this 2048-like to earn gacha tickets.",
             "cta": "Play"
           },
+          "bigger": {
+            "aria": "Open the Bigger mini-game",
+            "title": "Bigger",
+            "description": "Drop marbles of escalating sizes into a full-screen vat and merge twins into the next tier.",
+            "cta": "Drop"
+          },
           "balance": {
             "aria": "Open the Balance mini-game",
             "title": "Balance",
@@ -325,6 +331,49 @@
             "title": "Blackjack",
             "description": "Double your Atoms—or lose everything.",
             "cta": "Deal"
+          }
+        }
+      },
+      "bigger": {
+        "aria": "Bigger mini-game overview",
+        "title": "Bigger",
+        "subtitle": "Rain marbles into a screen-sized vat and watch merges ripple across the pool.",
+        "description": "Bigger is a physics-inspired merging puzzle: each turn you decide where the incoming marble drops.",
+        "rules": {
+          "drop": "Select a drop point along the vat to launch the current marble.",
+          "merge": "When two marbles of identical size touch, they fuse and become the next size up.",
+          "goal": "Stack fusions until you forge the monumental size 1024 marble."
+        },
+        "note": "Incoming marbles spawn at random between sizes 1 and 16, so plan ahead to orchestrate giant chains.",
+        "guideTitle": "How to play",
+        "hud": {
+          "aria": "Bigger game statistics",
+          "current": "Current marble",
+          "next": "Upcoming",
+          "largest": "Largest marble",
+          "goal": "Goal",
+          "turns": "Drops",
+          "merges": "Fusions"
+        },
+        "queue": {
+          "empty": "—",
+          "slotLabel": "Upcoming marble {{position}}: {{value}}"
+        },
+        "actions": {
+          "restart": "Restart",
+          "resume": "Keep playing"
+        },
+        "dropButton": "Drop the marble in column {{column}}",
+        "dropbar": "Choose a column to drop the current marble",
+        "boardAria": "Bigger mini-game playfield",
+        "overlay": {
+          "victory": {
+            "title": "Target reached!",
+            "message": "You forged the {{value}} marble in {{turns}} drops. Keep going to push the vat even further."
+          },
+          "defeat": {
+            "title": "Vat overflow",
+            "message": "No more room remains. Restart to reorganize your chain reactions."
           }
         }
       },

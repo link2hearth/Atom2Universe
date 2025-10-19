@@ -1021,6 +1021,12 @@ const GAME_CONFIG = {
               "Fusionnez des blocs quantiques sur la grille choisie jusqu’à atteindre la tuile objectif."
           },
           {
+            id: 'bigger',
+            label: 'Arcade Plus gros :',
+            description:
+              'Gérez un bac plein écran et fusionnez les billes identiques pour fabriquer la taille 1024.'
+          },
+          {
             id: 'balance',
             label: 'Arcade Balance :',
             description:
@@ -1193,6 +1199,7 @@ const GAME_CONFIG = {
         metaux: { type: 'flag', flagId: 'arcade.metaux' },
         photon: { type: 'trophy', trophyId: 'millionAtoms' },
         objectx: { type: 'trophy', trophyId: 'millionAtoms' },
+        bigger: { type: 'trophy', trophyId: 'millionAtoms' },
         balance: { type: 'trophy', trophyId: 'millionAtoms' },
         math: { type: 'trophy', trophyId: 'millionAtoms' },
         sudoku: { type: 'trophy', trophyId: 'millionAtoms' },

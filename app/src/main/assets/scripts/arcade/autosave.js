@@ -5,6 +5,7 @@
     'metaux',
     'wave',
     'quantum2048',
+    'bigger',
     'math',
     'balance',
     'sudoku',
