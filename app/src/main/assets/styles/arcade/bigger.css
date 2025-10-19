@@ -24,7 +24,7 @@
   --bigger-button-text: var(--bigger-heading-color);
   --bigger-ball-shadow: 0 16px 44px rgba(8, 10, 24, 0.45);
   --bigger-cell-size: 64px;
-  --bigger-cols: 8;
+  --bigger-cols: 10;
   --bigger-rows: 14;
   padding: clamp(1.2rem, 3vw, 2.4rem);
   display: flex;
@@ -161,7 +161,7 @@
   position: relative;
   flex: 1 1 auto;
   width: min(100%, calc(100vh * var(--bigger-cols) / var(--bigger-rows)));
-  max-width: 1100px;
+  max-width: 1280px;
   margin: 0 auto;
   aspect-ratio: var(--bigger-cols) / var(--bigger-rows);
   border-radius: clamp(1rem, 2vw, 1.6rem);
