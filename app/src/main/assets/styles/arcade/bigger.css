@@ -160,7 +160,7 @@
 .bigger-board-container {
   position: relative;
   flex: 1 1 auto;
-  width: min(100%, calc(100vh * var(--bigger-cols) / var(--bigger-rows)));
+  width: min(100%, clamp(520px, 80vw, 1280px));
   max-width: 1280px;
   margin: 0 auto;
   aspect-ratio: var(--bigger-cols) / var(--bigger-rows);
