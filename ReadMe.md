@@ -23,13 +23,11 @@ Atom → Univers est un idle/clicker cosmique actuellement jouable en français 
 - **Progression** : les valeurs de base (1 atome par clic, 0 APS) sont ajustées par les bâtiments, les collections et les mini-jeux ; l’intervalle moyen de la “star” à tickets est initialement de 60 s.【F:config/config.js†L655-L705】【F:scripts/app.js†L1270-L1283】
 
 ## Boutique scientifique
-La boutique regroupe quinze bâtiments (manuel, automatique ou hybrides). Chaque carte n’accorde désormais plus que des gains plats d’APC et/ou d’APS, sans multiplicateurs, synergies croisées ni réductions de coûts supplémentaires.【F:config/config.js†L45-L268】【F:scripts/app.js†L6056-L6078】
-- **Électrons libres** : +1 APC par niveau.【F:config/config.js†L45-L58】
-- **Laboratoire de Physique** : +2 APS par niveau.【F:config/config.js†L342-L357】
-- **Réacteur nucléaire** : +10 APS par niveau.【F:config/config.js†L73-L87】
-- **Chaîne tardive** : du Forgeron d’étoiles au Grand Ordonnateur quantique, chaque bâtiment ajoute simplement son APS plat annoncé par niveau.【F:config/config.js†L149-L268】
+La boutique repose désormais sur deux améliorations inspirées des clickers classiques, aux coûts progressifs standard (hausse de 15 % par achat).【F:app/src/main/assets/config/config.js†L261-L304】
+- **Doigt créateur** : +1 APC par niveau pour un coût de base de 15 atomes.【F:app/src/main/assets/config/config.js†L264-L276】
+- **Cœur d’étoile** : +5 APS par niveau pour un coût de base de 100 atomes.【F:app/src/main/assets/config/config.js†L277-L304】
 
-Chaque carte de boutique est décrite et générée dynamiquement à partir de `GAME_CONFIG`, ce qui permet d’ajuster facilement l’équilibrage sans modifier la logique d’interface.【F:scripts/app.js†L6089-L7576】
+Chaque carte de boutique reste décrite et générée dynamiquement à partir de `GAME_CONFIG`, ce qui permet d’ajuster facilement l’équilibrage sans modifier la logique d’interface.【F:app/src/main/assets/scripts/app.js†L6089-L7576】
 
 ## Collections, gacha et tickets
 - **Tickets** : la “star” apparaît automatiquement, peut être améliorée par la rareté Étoiles massives (−1 s par élément unique, minimum 5 s) et offre un mode de collecte automatique via les trophées dédiés.【F:scripts/app.js†L1270-L1318】【F:config/config.js†L990-L1014】【F:config/config.js†L810-L827】
