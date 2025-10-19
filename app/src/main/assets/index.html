@@ -3183,9 +3183,29 @@
                   <option value="5" data-i18n="midi.keyboard.windowOptions.five">5 octaves</option>
                 </select>
               </label>
+              <label class="midi-keyboard__control midi-keyboard__control--toggle" for="midiKeyboardFullPreviewToggle">
+                <span class="midi-keyboard__control-label" data-i18n="midi.keyboard.fullPreviewLabel">
+                  Touches animées (clavier du haut)
+                </span>
+                <div class="midi-keyboard__toggle">
+                  <input
+                    type="checkbox"
+                    id="midiKeyboardFullPreviewToggle"
+                    role="switch"
+                    aria-checked="false"
+                    aria-describedby="midiKeyboardFullPreviewValue"
+                  />
+                  <span
+                    class="midi-keyboard__toggle-value"
+                    id="midiKeyboardFullPreviewValue"
+                    aria-live="polite"
+                    data-i18n="midi.keyboard.fullPreviewDisabled"
+                  >Touches animées désactivées</span>
+                </div>
+              </label>
               <label class="midi-keyboard__control midi-keyboard__control--toggle" for="midiKeyboardMiniPreviewToggle">
                 <span class="midi-keyboard__control-label" data-i18n="midi.keyboard.practiceScrollLabel">
-                  Défilement des notes (zone de jeu)
+                  Touches animées (clavier du bas)
                 </span>
                 <div class="midi-keyboard__toggle">
                   <input
@@ -3200,7 +3220,7 @@
                     id="midiKeyboardMiniPreviewValue"
                     aria-live="polite"
                     data-i18n="midi.keyboard.practiceScrollDisabled"
-                  >Défilement désactivé</span>
+                  >Touches animées désactivées</span>
                 </div>
               </label>
             </div>

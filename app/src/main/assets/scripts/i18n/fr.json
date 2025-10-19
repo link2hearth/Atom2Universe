@@ -1420,9 +1420,12 @@
       "fullHint": "Cliquez sur une touche pour sélectionner une plage.",
       "rangeLabel": "Plage sélectionnée",
       "practiceRegionLabel": "Clavier d’entraînement",
-      "practiceScrollLabel": "Défilement des notes (zone de jeu)",
-      "practiceScrollEnabled": "Défilement activé",
-      "practiceScrollDisabled": "Défilement désactivé"
+      "fullPreviewLabel": "Touches animées (clavier du haut)",
+      "fullPreviewEnabled": "Touches animées activées",
+      "fullPreviewDisabled": "Touches animées désactivées",
+      "practiceScrollLabel": "Touches animées (clavier du bas)",
+      "practiceScrollEnabled": "Touches animées activées",
+      "practiceScrollDisabled": "Touches animées désactivées"
     }
   },
   "scripts": {

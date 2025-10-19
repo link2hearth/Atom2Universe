@@ -8481,6 +8481,8 @@
       const fullContainer = root.querySelector('#midiKeyboardFull');
       const miniContainer = root.querySelector('#midiKeyboardMini');
       const rangeValue = root.querySelector('#midiKeyboardRangeValue');
+      const fullPreviewToggle = root.querySelector('#midiKeyboardFullPreviewToggle');
+      const fullPreviewValue = root.querySelector('#midiKeyboardFullPreviewValue');
       const practiceScrollToggle = root.querySelector('#midiKeyboardMiniPreviewToggle');
       const practiceScrollValue = root.querySelector('#midiKeyboardMiniPreviewValue');
 
@@ -8508,7 +8510,10 @@
       let miniLaneRefs = new Map();
       const pointerNotes = new Map();
       const keyboardNotes = new Map();
+      let playbackPreviewOnFull = fullPreviewToggle ? Boolean(fullPreviewToggle.checked) : false;
       let playbackPreviewOnMini = practiceScrollToggle ? Boolean(practiceScrollToggle.checked) : false;
+
+      const isPlaybackPreviewEnabled = () => playbackPreviewOnFull || playbackPreviewOnMini;
 
       const laneMetrics = new WeakMap();
       const laneObserver = typeof ResizeObserver !== 'undefined'
@@ -8721,7 +8726,11 @@
           : 'playback';
 
         if (normalizedSource === 'playback') {
-          return true;
+          return isPlaybackPreviewEnabled();
+        }
+
+        if (!isPlaybackPreviewEnabled()) {
+          return false;
         }
 
         const program = resolveProgramForDetail(detail);
@@ -8809,11 +8818,61 @@
         };
       }
 
+      function formatFullPreviewStatus(enabled) {
+        const key = enabled
+          ? 'midi.keyboard.fullPreviewEnabled'
+          : 'midi.keyboard.fullPreviewDisabled';
+        const fallback = enabled ? 'Animated keys enabled' : 'Animated keys disabled';
+        const api = getI18n();
+        if (api && typeof api.t === 'function') {
+          return api.t(key, fallback);
+        }
+        return fallback;
+      }
+
+      function updateFullPreviewDisplay(enabled) {
+        if (!fullPreviewValue) {
+          return;
+        }
+        const key = enabled
+          ? 'midi.keyboard.fullPreviewEnabled'
+          : 'midi.keyboard.fullPreviewDisabled';
+        fullPreviewValue.dataset.i18n = key;
+        fullPreviewValue.textContent = formatFullPreviewStatus(enabled);
+        const api = getI18n();
+        if (api && typeof api.updateTranslations === 'function') {
+          api.updateTranslations(fullPreviewValue);
+        }
+      }
+
+      function setFullPreviewEnabled(value, options = {}) {
+        const { syncControl = true, refresh = true } = options;
+        const enabled = Boolean(value);
+        playbackPreviewOnFull = enabled;
+        if (fullPreviewToggle) {
+          if (syncControl) {
+            fullPreviewToggle.checked = enabled;
+          }
+          fullPreviewToggle.setAttribute('aria-checked', enabled ? 'true' : 'false');
+          if (fullPreviewValue) {
+            fullPreviewToggle.setAttribute('aria-describedby', fullPreviewValue.id);
+          }
+        }
+        updateFullPreviewDisplay(enabled);
+        if (!isPlaybackPreviewEnabled()) {
+          disablePlaybackPreviewProcessing();
+        }
+        if (refresh) {
+          refreshPreviewLanes();
+          refreshActiveHighlights();
+        }
+      }
+
       function formatPracticeScrollStatus(enabled) {
         const key = enabled
           ? 'midi.keyboard.practiceScrollEnabled'
           : 'midi.keyboard.practiceScrollDisabled';
-        const fallback = enabled ? 'Practice scroll enabled' : 'Practice scroll disabled';
+        const fallback = enabled ? 'Animated keys enabled' : 'Animated keys disabled';
         const api = getI18n();
         if (api && typeof api.t === 'function') {
           return api.t(key, fallback);
@@ -8850,13 +8909,24 @@
           }
         }
         updatePracticeScrollDisplay(enabled);
+        if (!isPlaybackPreviewEnabled()) {
+          disablePlaybackPreviewProcessing();
+        }
         if (refresh) {
           refreshPreviewLanes();
           refreshActiveHighlights();
         }
       }
 
+      setFullPreviewEnabled(playbackPreviewOnFull, { refresh: false });
       setPracticePreviewEnabled(playbackPreviewOnMini, { refresh: false });
+
+      const fullPreviewI18n = getI18n();
+      if (fullPreviewI18n && typeof fullPreviewI18n.onLanguageChanged === 'function') {
+        fullPreviewI18n.onLanguageChanged(() => {
+          updateFullPreviewDisplay(playbackPreviewOnFull);
+        });
+      }
 
       const practiceScrollI18n = getI18n();
       if (practiceScrollI18n && typeof practiceScrollI18n.onLanguageChanged === 'function') {
@@ -9015,11 +9085,17 @@
         }
         destroyPreviewBars(entry, { immediate: true });
         const { full: fullLanes, mini: miniLanes } = getKeyLanes(entry.note);
+        const includeFull = entry.source === 'manual'
+          || (entry.source !== 'manual' && playbackPreviewOnFull);
         const includeMini = entry.source === 'manual'
-          || (playbackPreviewOnMini && entry.source !== 'manual');
-        const laneTargets = includeMini
-          ? fullLanes.concat(miniLanes)
-          : fullLanes;
+          || (entry.source !== 'manual' && playbackPreviewOnMini);
+        const laneTargets = [];
+        if (includeFull) {
+          laneTargets.push(...fullLanes);
+        }
+        if (includeMini) {
+          laneTargets.push(...miniLanes);
+        }
         if (!laneTargets.length) {
           entry.bars = [];
           return;
@@ -9064,6 +9140,39 @@
         previewEntries.forEach((entry) => {
           buildPreviewBars(entry);
         });
+      }
+
+      function disablePlaybackPreviewProcessing() {
+        if (previewEntries.size > 0) {
+          const activePlaybackEntries = Array.from(previewEntries.values())
+            .filter((entry) => entry && entry.source === 'playback');
+          activePlaybackEntries.forEach((entry) => {
+            finalizePreviewEntry(entry, { immediate: true });
+          });
+        }
+
+        if (highlightState.size > 0) {
+          const playbackNotes = [];
+          highlightState.forEach((stats, note) => {
+            if (stats && stats.playback > 0) {
+              playbackNotes.push([note, stats]);
+            }
+          });
+
+          playbackNotes.forEach(([note, stats]) => {
+            if (!stats) {
+              return;
+            }
+            stats.playback = 0;
+            delete stats.playbackBrightness;
+            if (stats.manual > 0) {
+              highlightState.set(note, stats);
+            } else {
+              highlightState.delete(note);
+            }
+            updateKeyHighlight(note);
+          });
+        }
       }
 
       function startPreviewHighlight(entry) {
@@ -9176,30 +9285,42 @@
           });
         }
 
-        const playbackTargets = playbackPreviewOnMini ? fullKeys.concat(miniKeys) : fullKeys;
+        const showFullPlayback = playbackCount > 0 && playbackPreviewOnFull;
+        const showMiniPlayback = playbackCount > 0 && playbackPreviewOnMini;
 
-        if (playbackCount > 0) {
-          playbackTargets.forEach((element) => {
-            if (!element) {
-              return;
-            }
+        fullKeys.forEach((element) => {
+          if (!element) {
+            return;
+          }
+          if (showFullPlayback) {
             element.classList.add('is-playing');
             element.classList.add('is-playing--playback');
             if (Number.isFinite(stats.playbackBrightness)) {
               element.style.setProperty('--midi-key-playback-brightness', stats.playbackBrightness);
             }
-          });
-        } else {
-          playbackTargets.forEach((element) => {
-            if (!element) {
-              return;
-            }
+          } else {
             element.classList.remove('is-playing--playback');
             element.style.removeProperty('--midi-key-playback-brightness');
-          });
-        }
+          }
+        });
 
-        if (manualCount <= 0 && (!playbackPreviewOnMini || playbackCount <= 0)) {
+        miniKeys.forEach((element) => {
+          if (!element) {
+            return;
+          }
+          if (showMiniPlayback) {
+            element.classList.add('is-playing');
+            element.classList.add('is-playing--playback');
+            if (Number.isFinite(stats.playbackBrightness)) {
+              element.style.setProperty('--midi-key-playback-brightness', stats.playbackBrightness);
+            }
+          } else {
+            element.classList.remove('is-playing--playback');
+            element.style.removeProperty('--midi-key-playback-brightness');
+          }
+        });
+
+        if (manualCount <= 0 && !showMiniPlayback) {
           miniKeys.forEach((element) => {
             if (!element) {
               return;
@@ -9208,13 +9329,16 @@
           });
         }
 
-        if (manualCount <= 0 && playbackCount <= 0) {
+        if (manualCount <= 0 && !showFullPlayback) {
           fullKeys.forEach((element) => {
             if (!element) {
               return;
             }
             element.classList.remove('is-playing');
           });
+        }
+
+        if (manualCount <= 0 && playbackCount <= 0) {
           highlightState.delete(noteNumber);
         }
       }
@@ -9511,6 +9635,12 @@
           syncOctaveSelectFromWindowSize(state.windowSize);
           state.selectionStart = clampSelectionStart(state.selectionStart, state.layout, state.windowSize);
           updateView();
+        });
+      }
+
+      if (fullPreviewToggle) {
+        fullPreviewToggle.addEventListener('change', () => {
+          setFullPreviewEnabled(fullPreviewToggle.checked);
         });
       }
 
