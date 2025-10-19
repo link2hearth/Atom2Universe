@@ -556,29 +556,7 @@
       this.render(0);
     }
 
-    triggerManualAtomClick(options = {}) {
-      const contextId = typeof options?.contextId === 'string' && options.contextId
-        ? options.contextId
-        : 'wave';
-      const triggerPulse = options?.triggerPulse ?? false;
-      const ecoFeedback = options?.ecoFeedback ?? false;
-
-      let activator = null;
-      if (typeof globalThis !== 'undefined' && typeof globalThis.activateSurface === 'function') {
-        activator = globalThis.activateSurface;
-      } else if (typeof activateSurface === 'function') {
-        activator = activateSurface;
-      }
-
-      if (typeof activator === 'function') {
-        try {
-          activator({ contextId, triggerPulse, ecoFeedback });
-          return;
-        } catch (error) {
-          console.warn('Unable to activate surface from Wave game', error);
-        }
-      }
-
+    triggerManualAtomClick() {
       let handler = null;
       if (typeof globalThis !== 'undefined' && typeof globalThis.handleManualAtomClick === 'function') {
         handler = globalThis.handleManualAtomClick;
@@ -587,7 +565,7 @@
       }
       if (typeof handler === 'function') {
         try {
-          handler({ contextId });
+          handler({ contextId: 'wave' });
         } catch (error) {
           console.warn('Unable to trigger manual click from Wave game', error);
         }
@@ -1082,6 +1060,11 @@
         this.triggerManualAtomClick();
       }
       this.setPressingState(true);
+      if (typeof this.canvas?.setPointerCapture === 'function') {
+        const targetId = pointerId != null ? pointerId : event.pointerId;
+        this.canvas.setPointerCapture(targetId);
+      }
+      event.preventDefault();
     }
 
     handlePointerUp(event) {
@@ -1091,8 +1074,16 @@
       if (this.activePointers.has(event.pointerId)) {
         this.activePointers.delete(event.pointerId);
       }
+      if (typeof this.canvas?.releasePointerCapture === 'function') {
+        try {
+          this.canvas.releasePointerCapture(event.pointerId);
+        } catch (error) {
+          // Ignored when capture is not set.
+        }
+      }
       const pressed = this.activePointers.size > 0 || this.keyboardPressed;
       this.setPressingState(pressed);
+      event.preventDefault();
     }
 
     handlePointerCancel(event) {
@@ -1104,6 +1095,7 @@
       }
       const pressed = this.activePointers.size > 0 || this.keyboardPressed;
       this.setPressingState(pressed);
+      event.preventDefault();
     }
 
     handleTouchStart(event) {
