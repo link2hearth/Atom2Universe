@@ -1,7 +1,7 @@
 (function () {
   const GAME_ID = 'bigger';
   const LOCAL_STORAGE_KEY = 'atom2univers.arcade.bigger';
-  const COLUMN_COUNT = 8;
+  const COLUMN_COUNT = 10;
   const ROW_COUNT = 14;
   const QUEUE_LENGTH = 3;
   const MAX_VALUE = 1024;
@@ -15,9 +15,8 @@
   const PHYSICS_LINEAR_DAMPING = 0.995;
   const PHYSICS_STATIC_FRICTION = 0.32;
   const PHYSICS_DYNAMIC_FRICTION = 0.08;
-  const MERGE_OVERLAP_THRESHOLD = 0.22;
-  const MERGE_CONTACT_TIME = 0.18;
-  const MERGE_RELATIVE_SPEED = 90;
+  const MERGE_OVERLAP_THRESHOLD = 0.1;
+  const MERGE_CONTACT_TIME = 0.12;
   const DEFEAT_MARGIN = 96;
 
   const toInteger = value => {
@@ -805,20 +804,19 @@
                 contact = { time: 0 };
                 contacts.set(key, contact);
               }
-              const relativeSpeed = Math.abs(relativeVelocity);
-              if (
-                a.value === b.value
-                && minDistance > 0
-                && overlap / minDistance > MERGE_OVERLAP_THRESHOLD
-                && relativeSpeed < MERGE_RELATIVE_SPEED
-              ) {
-                contact.time += dt;
-                if (contact.time >= MERGE_CONTACT_TIME) {
-                  this.queueMerge(a, b);
-                  contact.time = 0;
+              const overlapRatio = minDistance > 0 ? overlap / minDistance : 0;
+              if (a.value === b.value) {
+                if (overlapRatio > MERGE_OVERLAP_THRESHOLD) {
+                  contact.time += dt;
+                  if (contact.time >= MERGE_CONTACT_TIME) {
+                    this.queueMerge(a, b);
+                    contact.time = 0;
+                  }
+                } else {
+                  contact.time = Math.max(0, contact.time - dt * 0.5);
                 }
               } else {
-                contact.time = Math.max(0, contact.time - dt * 0.5);
+                contact.time = 0;
               }
             }
           }
