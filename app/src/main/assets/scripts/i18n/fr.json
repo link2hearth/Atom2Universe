@@ -363,7 +363,7 @@
           "restart": "Recommencer",
           "resume": "Continuer"
         },
-        "dropButton": "Lâcher la bille dans la colonne {{column}}",
+        "dropButton": "Lâcher la bille {{value}} dans la colonne {{column}}",
         "dropbar": "Sélectionnez une colonne pour lâcher la bille actuelle",
         "boardAria": "Bac de jeu du mini-jeu Plus gros",
         "overlay": {

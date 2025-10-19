@@ -13,8 +13,8 @@
   const PHYSICS_WALL_BOUNCE = 0.55;
   const PHYSICS_FLOOR_BOUNCE = 0.68;
   const PHYSICS_LINEAR_DAMPING = 0.995;
-  const PHYSICS_STATIC_FRICTION = 0.8;
-  const PHYSICS_DYNAMIC_FRICTION = 0.12;
+  const PHYSICS_STATIC_FRICTION = 0.32;
+  const PHYSICS_DYNAMIC_FRICTION = 0.08;
   const MERGE_OVERLAP_THRESHOLD = 0.22;
   const MERGE_CONTACT_TIME = 0.18;
   const MERGE_RELATIVE_SPEED = 90;
@@ -198,10 +198,6 @@
       this.boardElement = opts.boardElement || null;
       this.dropButtons = Array.from(opts.dropButtons || []);
       this.queueSlots = Array.from(opts.queueSlots || []);
-      this.currentValueElement = opts.currentValueElement || null;
-      this.largestValueElement = opts.largestValueElement || null;
-      this.turnValueElement = opts.turnValueElement || null;
-      this.mergeValueElement = opts.mergeValueElement || null;
       this.goalValueElement = opts.goalValueElement || null;
       this.restartButton = opts.restartButton || null;
       this.overlayElement = opts.overlayElement || null;
@@ -401,6 +397,7 @@
       if (!Number.isFinite(column) || column < 0 || column >= COLUMN_COUNT) {
         this.hoverColumn = null;
         this.highlightElement.classList.remove('is-visible');
+        this.highlightElement.dataset.value = '';
         return;
       }
       this.hoverColumn = column;
@@ -410,6 +407,8 @@
         this.highlightElement.style.left = `${column * cellWidth}px`;
         this.highlightElement.style.width = `${cellWidth}px`;
       }
+      const displayValue = VALUE_ORDER.includes(this.state.currentValue) ? String(this.state.currentValue) : '—';
+      this.highlightElement.dataset.value = displayValue;
       this.highlightElement.classList.add('is-visible');
     }
 
@@ -447,7 +446,9 @@
         return;
       }
 
-      const spawnX = this.spawnPositions[columnIndex] ?? (columnIndex * this.cellSize + this.cellSize / 2);
+      const baseX = this.spawnPositions[columnIndex] ?? (columnIndex * this.cellSize + this.cellSize / 2);
+      const jitter = this.cellSize * 0.4;
+      const spawnX = baseX + (Math.random() - 0.5) * jitter;
       const spawnY = -DEFEAT_MARGIN * 0.5;
 
       this.state.currentValue = null;
@@ -455,7 +456,17 @@
       this.state.stats.turns += 1;
       this.updateDropButtonLabels();
 
-      const ball = this.createBall(value, { x: spawnX, y: spawnY });
+      const ball = this.createBall(value, {
+        x: spawnX,
+        y: spawnY,
+        vx: (Math.random() - 0.5) * this.cellSize * 2
+      });
+      const width = this.boardWidth || this.cellSize * COLUMN_COUNT;
+      const minX = ball.radius;
+      const maxX = width - ball.radius;
+      if (Number.isFinite(minX) && Number.isFinite(maxX)) {
+        ball.x = Math.max(minX, Math.min(maxX, ball.x));
+      }
       ball.element.dataset.state = 'spawn';
       this.applyBallPosition(ball);
       this.refreshSerializedBalls();
@@ -850,19 +861,7 @@
     }
 
     updateHud() {
-      if (this.currentValueElement) {
-        const value = this.state.currentValue;
-        this.currentValueElement.textContent = VALUE_ORDER.includes(value) ? String(value) : '—';
-      }
-      if (this.largestValueElement) {
-        this.largestValueElement.textContent = String(this.state.stats.largest || 0);
-      }
-      if (this.turnValueElement) {
-        this.turnValueElement.textContent = String(this.state.stats.turns || 0);
-      }
-      if (this.mergeValueElement) {
-        this.mergeValueElement.textContent = String(this.state.stats.merges || 0);
-      }
+      this.updateGoalValue();
       this.renderQueue();
       this.updateDropButtonLabels();
     }
@@ -892,16 +891,27 @@
     }
 
     updateDropButtonLabels() {
+      const currentValue = VALUE_ORDER.includes(this.state.currentValue) ? this.state.currentValue : null;
+      const displayValue = currentValue != null ? String(currentValue) : '—';
+      if (this.highlightElement) {
+        this.highlightElement.dataset.value = displayValue;
+      }
       this.dropButtons.forEach((button, index) => {
         const columnNumber = index + 1;
         const label = translate(
           'index.sections.bigger.dropButton',
-          'Lâcher la bille dans la colonne {{column}}',
-          { column: columnNumber }
+          'Lâcher la bille {{value}} dans la colonne {{column}}',
+          { column: columnNumber, value: displayValue }
         );
         if (label) {
           button.setAttribute('aria-label', label);
           button.setAttribute('title', label);
+        }
+        const valueElement = button.querySelector('.bigger-drop-button__value');
+        if (valueElement) {
+          valueElement.textContent = displayValue;
+        } else {
+          button.textContent = displayValue;
         }
         button.disabled = this.state.isGameOver;
       });
@@ -911,10 +921,15 @@
       if (!this.boardElement) {
         return;
       }
-      const width = this.boardElement.clientWidth || this.boardElement.parentElement?.clientWidth || 480;
-      const computedCell = width / COLUMN_COUNT;
+      const parent = this.boardElement.parentElement;
+      const width = this.boardElement.clientWidth || parent?.clientWidth || 480;
+      const heightLimit = parent?.clientHeight;
+      let computedCell = width / COLUMN_COUNT;
+      if (Number.isFinite(heightLimit) && heightLimit > 0) {
+        computedCell = Math.min(computedCell, heightLimit / ROW_COUNT);
+      }
       const previousCell = this.cellSize || computedCell;
-      this.cellSize = Math.max(36, Math.min(82, computedCell));
+      this.cellSize = Math.max(40, Math.min(120, computedCell));
       this.boardWidth = this.cellSize * COLUMN_COUNT;
       this.boardHeight = this.cellSize * ROW_COUNT;
       this.spawnPositions = Array.from({ length: COLUMN_COUNT }, (_, index) => (index + 0.5) * this.cellSize);
@@ -1077,200 +1092,6 @@
       }
       this.overlayElement.classList.remove('is-visible');
       this.overlayElement.hidden = true;
-    }
-
-    handleMotionPreferenceChange(event) {
-      this.prefersReducedMotion = !!(event?.matches);
-      if (this.prefersReducedMotion) {
-        this.stopPhysicsLoop();
-        this.syncBallPositions();
-      } else {
-        this.startPhysicsLoop();
-      }
-    }
-
-    startPhysicsLoop() {
-      if (typeof window === 'undefined' || this.prefersReducedMotion) {
-        this.stopPhysicsLoop();
-        return;
-      }
-      if (this.physics.running) {
-        return;
-      }
-      this.physics.running = true;
-      this.physics.lastTimestamp = null;
-      if (this.boardElement) {
-        this.boardElement.classList.add('bigger-board--physics');
-      }
-      const step = timestamp => {
-        if (!this.physics.running) {
-          return;
-        }
-        this.stepPhysics(timestamp);
-        this.physics.rafId = window.requestAnimationFrame(step);
-      };
-      this.physics.rafId = window.requestAnimationFrame(step);
-    }
-
-    stopPhysicsLoop() {
-      if (typeof window === 'undefined') {
-        return;
-      }
-      if (this.physics.rafId != null) {
-        window.cancelAnimationFrame(this.physics.rafId);
-        this.physics.rafId = null;
-      }
-      this.physics.running = false;
-      this.physics.lastTimestamp = null;
-      if (this.boardElement) {
-        this.boardElement.classList.remove('bigger-board--physics');
-      }
-    }
-
-    stepPhysics(timestamp) {
-      if (this.prefersReducedMotion) {
-        this.stopPhysicsLoop();
-        return;
-      }
-      const previous = this.physics.lastTimestamp ?? timestamp;
-      let delta = timestamp - previous;
-      if (!Number.isFinite(delta) || delta <= 0) {
-        delta = 16;
-      }
-      delta = Math.min(delta, PHYSICS_MAX_STEP_MS);
-      this.physics.lastTimestamp = timestamp;
-      const dt = delta / 1000;
-      if (dt <= 0) {
-        return;
-      }
-      const boardWidth = this.cellSize * COLUMN_COUNT;
-      const boardHeight = this.cellSize * ROW_COUNT;
-      if (!Number.isFinite(boardWidth) || !Number.isFinite(boardHeight) || boardWidth <= 0 || boardHeight <= 0) {
-        return;
-      }
-
-      const balls = Array.from(this.balls.values());
-      balls.forEach(ball => {
-        if (!ball || !ball.element) {
-          return;
-        }
-        if (!Number.isFinite(ball.radius) || ball.radius <= 0) {
-          const multiplier = getDiameterMultiplier(ball.value);
-          const diameter = Math.max(28, this.cellSize * multiplier);
-          ball.radius = diameter / 2;
-          ball.mass = Math.max(1, ball.radius * ball.radius);
-          ball.invMass = 1 / ball.mass;
-          ball.element.style.width = `${diameter}px`;
-          ball.element.style.height = `${diameter}px`;
-        }
-        if (!Number.isFinite(ball.targetX)) {
-          if (Number.isFinite(ball.col)) {
-            ball.targetX = ball.col * this.cellSize + this.cellSize / 2;
-          } else {
-            ball.targetX = this.cellSize / 2;
-          }
-        }
-        if (!Number.isFinite(ball.targetY)) {
-          if (Number.isFinite(ball.row) && ball.row >= 0) {
-            ball.targetY = ball.row * this.cellSize + this.cellSize / 2 - PHYSICS_GRAVITY / PHYSICS_SPRING;
-          } else {
-            ball.targetY = -ball.radius - this.cellSize * 0.5;
-          }
-        }
-        if (!Number.isFinite(ball.x)) {
-          ball.x = ball.targetX;
-        }
-        if (!Number.isFinite(ball.y)) {
-          ball.y = ball.targetY;
-        }
-        if (!Number.isFinite(ball.vx)) {
-          ball.vx = 0;
-        }
-        if (!Number.isFinite(ball.vy)) {
-          ball.vy = 0;
-        }
-
-        const springX = (ball.targetX - ball.x) * PHYSICS_SPRING;
-        const springY = (ball.targetY - ball.y) * PHYSICS_SPRING;
-
-        ball.vx += springX * dt;
-        if (ball.targetY > ball.y) {
-          ball.vy += (springY + PHYSICS_GRAVITY) * dt;
-        } else {
-          ball.vy += springY * dt - PHYSICS_GRAVITY * 0.25 * dt;
-        }
-        ball.x += ball.vx * dt;
-        ball.y += ball.vy * dt;
-        ball.vx *= PHYSICS_DAMPING;
-        ball.vy *= PHYSICS_DAMPING;
-
-        const minX = ball.radius;
-        const maxX = boardWidth - ball.radius;
-        if (ball.x < minX) {
-          ball.x = minX;
-          ball.vx = Math.abs(ball.vx) * PHYSICS_WALL_BOUNCE;
-        } else if (ball.x > maxX) {
-          ball.x = maxX;
-          ball.vx = -Math.abs(ball.vx) * PHYSICS_WALL_BOUNCE;
-        }
-        const minY = -this.cellSize * 3;
-        if (ball.y < minY) {
-          ball.y = minY;
-          ball.vy = Math.max(ball.vy, 0);
-        }
-        const maxY = boardHeight - ball.radius;
-        if (ball.y > maxY) {
-          ball.y = maxY;
-          ball.vy = -Math.abs(ball.vy) * PHYSICS_FLOOR_BOUNCE;
-        }
-      });
-
-      for (let i = 0; i < balls.length; i += 1) {
-        const a = balls[i];
-        if (!a || !a.element) {
-          continue;
-        }
-        for (let j = i + 1; j < balls.length; j += 1) {
-          const b = balls[j];
-          if (!b || !b.element) {
-            continue;
-          }
-          const dx = b.x - a.x;
-          const dy = b.y - a.y;
-          const distance = Math.hypot(dx, dy) || 0.0001;
-          const minDistance = (a.radius || 0) + (b.radius || 0);
-          if (distance >= minDistance || minDistance <= 0) {
-            continue;
-          }
-          const overlap = minDistance - distance;
-          const nx = dx / distance;
-          const ny = dy / distance;
-          const invMassSum = a.invMass + b.invMass;
-          if (invMassSum <= 0) {
-            continue;
-          }
-          const shiftA = overlap * (a.invMass / invMassSum);
-          const shiftB = overlap * (b.invMass / invMassSum);
-          a.x -= nx * shiftA;
-          a.y -= ny * shiftA;
-          b.x += nx * shiftB;
-          b.y += ny * shiftB;
-
-          const relativeVelocity = (a.vx - b.vx) * nx + (a.vy - b.vy) * ny;
-          if (relativeVelocity > 0) {
-            continue;
-          }
-          const impulse = (-(1 + PHYSICS_RESTITUTION) * relativeVelocity) / invMassSum;
-          a.vx += impulse * nx * a.invMass;
-          a.vy += impulse * ny * a.invMass;
-          b.vx -= impulse * nx * b.invMass;
-          b.vy -= impulse * ny * b.invMass;
-        }
-      }
-
-      balls.forEach(ball => {
-        this.applyBallStyles(ball);
-      });
     }
 
     persistState() {

@@ -2474,144 +2474,77 @@
       id="bigger"
       class="page page--bigger"
       data-page-group="arcade"
-      aria-labelledby="bigger-title"
       aria-label="Présentation du mini-jeu Plus gros"
       data-i18n="aria-label:index.sections.bigger.aria"
       hidden
     >
-      <div class="bigger-layout">
-        <div class="bigger-stage" id="biggerStage">
-          <div class="bigger-stage__header-row">
-            <div class="bigger-stage__titles">
-              <h2 id="bigger-title" data-i18n="index.sections.bigger.title">Plus gros</h2>
-              <p class="bigger-stage__subtitle" data-i18n="index.sections.bigger.subtitle">
-                Faites tomber des billes dans un bac grandeur écran et orchestrez leurs fusions.
-              </p>
-            </div>
-            <button type="button" class="bigger-stage__button" id="biggerRestartButton">
-              <span data-i18n="index.sections.bigger.actions.restart">Recommencer</span>
+      <div class="bigger-stage" id="biggerStage">
+        <div class="bigger-stage__topbar">
+          <button type="button" class="bigger-stage__button" id="biggerRestartButton">
+            <span data-i18n="index.sections.bigger.actions.restart">Recommencer</span>
+          </button>
+          <div class="bigger-stage__goal" role="group" aria-live="polite">
+            <span class="bigger-stage__goal-label" data-i18n="index.sections.bigger.hud.goal">Objectif</span>
+            <span class="bigger-stage__goal-value" id="biggerGoalValue">1024</span>
+          </div>
+        </div>
+        <div class="bigger-playfield">
+          <div
+            class="bigger-dropbar"
+            id="biggerDropbar"
+            role="toolbar"
+            aria-label="Sélectionner une colonne pour lâcher la bille"
+            data-i18n-aria-label="index.sections.bigger.dropbar"
+          >
+            <button type="button" class="bigger-drop-button" data-bigger-drop-button data-column="0">
+              <span class="bigger-drop-button__value">—</span>
+            </button>
+            <button type="button" class="bigger-drop-button" data-bigger-drop-button data-column="1">
+              <span class="bigger-drop-button__value">—</span>
+            </button>
+            <button type="button" class="bigger-drop-button" data-bigger-drop-button data-column="2">
+              <span class="bigger-drop-button__value">—</span>
+            </button>
+            <button type="button" class="bigger-drop-button" data-bigger-drop-button data-column="3">
+              <span class="bigger-drop-button__value">—</span>
+            </button>
+            <button type="button" class="bigger-drop-button" data-bigger-drop-button data-column="4">
+              <span class="bigger-drop-button__value">—</span>
+            </button>
+            <button type="button" class="bigger-drop-button" data-bigger-drop-button data-column="5">
+              <span class="bigger-drop-button__value">—</span>
+            </button>
+            <button type="button" class="bigger-drop-button" data-bigger-drop-button data-column="6">
+              <span class="bigger-drop-button__value">—</span>
+            </button>
+            <button type="button" class="bigger-drop-button" data-bigger-drop-button data-column="7">
+              <span class="bigger-drop-button__value">—</span>
             </button>
           </div>
-          <div
-            class="bigger-hud"
-            role="group"
-            aria-label="Statistiques de la partie"
-            data-i18n-aria-label="index.sections.bigger.hud.aria"
-          >
-            <div class="bigger-hud__group bigger-hud__group--current">
-              <span class="bigger-hud__label" data-i18n="index.sections.bigger.hud.current">Bille en jeu</span>
-              <div class="bigger-hud__value" id="biggerCurrentValue">—</div>
-            </div>
-            <div class="bigger-hud__group bigger-hud__group--queue">
-              <span class="bigger-hud__label" data-i18n="index.sections.bigger.hud.next">À venir</span>
-              <div class="bigger-hud__queue" id="biggerQueue" aria-live="polite">
-                <div class="bigger-hud__queue-slot" data-bigger-queue-slot="0">
-                  <span class="bigger-hud__queue-value">—</span>
-                </div>
-                <div class="bigger-hud__queue-slot" data-bigger-queue-slot="1">
-                  <span class="bigger-hud__queue-value">—</span>
-                </div>
-                <div class="bigger-hud__queue-slot" data-bigger-queue-slot="2">
-                  <span class="bigger-hud__queue-value">—</span>
-                </div>
-              </div>
-            </div>
-            <div class="bigger-hud__group bigger-hud__group--largest">
-              <span class="bigger-hud__label" data-i18n="index.sections.bigger.hud.largest">Plus grosse bille</span>
-              <div class="bigger-hud__value" id="biggerLargestValue">0</div>
-            </div>
-            <div class="bigger-hud__group bigger-hud__group--goal">
-              <span class="bigger-hud__label" data-i18n="index.sections.bigger.hud.goal">Objectif</span>
-              <div class="bigger-hud__value" id="biggerGoalValue">1024</div>
-            </div>
-            <div class="bigger-hud__group bigger-hud__group--turns">
-              <span class="bigger-hud__label" data-i18n="index.sections.bigger.hud.turns">Lancers</span>
-              <div class="bigger-hud__value" id="biggerTurnValue">0</div>
-            </div>
-            <div class="bigger-hud__group bigger-hud__group--merges">
-              <span class="bigger-hud__label" data-i18n="index.sections.bigger.hud.merges">Fusions</span>
-              <div class="bigger-hud__value" id="biggerMergeValue">0</div>
-            </div>
-          </div>
-          <div class="bigger-playfield">
+          <div class="bigger-board-container">
             <div
-              class="bigger-dropbar"
-              id="biggerDropbar"
-              role="toolbar"
-              aria-label="Sélectionner une colonne pour lâcher la bille"
-              data-i18n-aria-label="index.sections.bigger.dropbar"
-            >
-              <button type="button" class="bigger-drop-button" data-bigger-drop-button data-column="0">
-                <span class="bigger-drop-button__index">1</span>
-              </button>
-              <button type="button" class="bigger-drop-button" data-bigger-drop-button data-column="1">
-                <span class="bigger-drop-button__index">2</span>
-              </button>
-              <button type="button" class="bigger-drop-button" data-bigger-drop-button data-column="2">
-                <span class="bigger-drop-button__index">3</span>
-              </button>
-              <button type="button" class="bigger-drop-button" data-bigger-drop-button data-column="3">
-                <span class="bigger-drop-button__index">4</span>
-              </button>
-              <button type="button" class="bigger-drop-button" data-bigger-drop-button data-column="4">
-                <span class="bigger-drop-button__index">5</span>
-              </button>
-              <button type="button" class="bigger-drop-button" data-bigger-drop-button data-column="5">
-                <span class="bigger-drop-button__index">6</span>
-              </button>
-              <button type="button" class="bigger-drop-button" data-bigger-drop-button data-column="6">
-                <span class="bigger-drop-button__index">7</span>
-              </button>
-              <button type="button" class="bigger-drop-button" data-bigger-drop-button data-column="7">
-                <span class="bigger-drop-button__index">8</span>
-              </button>
-            </div>
-            <div class="bigger-board-container">
-              <div
-                class="bigger-board"
-                id="biggerBoard"
-                role="grid"
-                aria-label="Bac de jeu du mini-jeu Plus gros"
-                data-i18n-aria-label="index.sections.bigger.boardAria"
-              ></div>
-            </div>
-            <div class="bigger-overlay" id="biggerOverlay" hidden>
-              <div class="bigger-overlay__panel" role="dialog" aria-modal="true" aria-labelledby="biggerOverlayTitle">
-                <h3 class="bigger-overlay__title" id="biggerOverlayTitle">Titre</h3>
-                <p class="bigger-overlay__message" id="biggerOverlayMessage">Message</p>
-                <div class="bigger-overlay__actions">
-                  <button type="button" class="bigger-overlay__button primary" id="biggerOverlayAction">
-                    <span data-i18n="index.sections.bigger.actions.restart">Recommencer</span>
-                  </button>
-                  <button type="button" class="bigger-overlay__button ghost" id="biggerOverlayDismiss">
-                    <span data-i18n="index.sections.bigger.actions.resume">Continuer</span>
-                  </button>
-                </div>
+              class="bigger-board"
+              id="biggerBoard"
+              role="grid"
+              aria-label="Bac de jeu du mini-jeu Plus gros"
+              data-i18n-aria-label="index.sections.bigger.boardAria"
+            ></div>
+          </div>
+          <div class="bigger-overlay" id="biggerOverlay" hidden>
+            <div class="bigger-overlay__panel" role="dialog" aria-modal="true" aria-labelledby="biggerOverlayTitle">
+              <h3 class="bigger-overlay__title" id="biggerOverlayTitle">Titre</h3>
+              <p class="bigger-overlay__message" id="biggerOverlayMessage">Message</p>
+              <div class="bigger-overlay__actions">
+                <button type="button" class="bigger-overlay__button primary" id="biggerOverlayAction">
+                  <span data-i18n="index.sections.bigger.actions.restart">Recommencer</span>
+                </button>
+                <button type="button" class="bigger-overlay__button ghost" id="biggerOverlayDismiss">
+                  <span data-i18n="index.sections.bigger.actions.resume">Continuer</span>
+                </button>
               </div>
             </div>
           </div>
         </div>
-        <aside class="bigger-guide">
-          <h3 class="bigger-guide__title" data-i18n="index.sections.bigger.guideTitle">Comment jouer</h3>
-          <p data-i18n="index.sections.bigger.description">
-            Dans Plus gros, vous choisissez à chaque tour la position de chute de la prochaine bille.
-            Quand deux billes de même taille se rencontrent, elles fusionnent pour devenir la taille supérieure.
-          </p>
-          <ul class="bigger-guide__rules">
-            <li data-i18n="index.sections.bigger.rules.drop">
-              Sélectionnez un point sur le rebord du bac pour faire tomber la bille proposée.
-            </li>
-            <li data-i18n="index.sections.bigger.rules.merge">
-              Alignez les trajectoires pour combiner les billes identiques et gagner de la place.
-            </li>
-            <li data-i18n="index.sections.bigger.rules.goal">
-              Atteignez la bille de taille 1024 en déclenchant une chaîne parfaite de fusions.
-            </li>
-          </ul>
-          <p class="bigger-guide__note" data-i18n="index.sections.bigger.note">
-            Les billes apparaissent aléatoirement entre les tailles 1 et 16 : anticipez vos placements pour préparer les fusions géantes.
-          </p>
-        </aside>
       </div>
     </section>
 
