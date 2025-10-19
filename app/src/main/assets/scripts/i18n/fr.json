@@ -278,6 +278,12 @@
             "description": "Atteignez l'objectif (indiqué en haut à droite) dans ce 2048-like pour gagner des tickets de gacha.",
             "cta": "Fusionner"
           },
+          "bigger": {
+            "aria": "Accéder au mini-jeu Plus gros",
+            "title": "Plus gros",
+            "description": "Faites tomber des billes dans un bac plein écran et fusionnez les jumelles pour gagner en taille.",
+            "cta": "Lancer"
+          },
           "balance": {
             "aria": "Accéder au mini-jeu Balance",
             "title": "Balance",
@@ -325,6 +331,49 @@
             "title": "Blackjack",
             "description": "Doublez vos Atomes, ou perdez tout.",
             "cta": "Distribuer"
+          }
+        }
+      },
+      "bigger": {
+        "aria": "Présentation du mini-jeu Plus gros",
+        "title": "Plus gros",
+        "subtitle": "Faites pleuvoir des billes dans un bac géant et observez les fusions se propager.",
+        "description": "Plus gros est un puzzle inspiré de la physique : à chaque tour vous choisissez où laisser tomber la prochaine bille.",
+        "rules": {
+          "drop": "Choisissez un point de chute sur le rebord du bac pour lancer la bille courante.",
+          "merge": "Lorsque deux billes de même taille se touchent, elles fusionnent et deviennent la taille supérieure.",
+          "goal": "Enchaînez les fusions jusqu'à façonner la bille monumentale de taille 1024."
+        },
+        "note": "Les billes proposées apparaissent aléatoirement entre les tailles 1 et 16 : anticipez vos placements pour orchestrer des chaînes géantes.",
+        "guideTitle": "Mode d'emploi",
+        "hud": {
+          "aria": "Statistiques du mini-jeu Plus gros",
+          "current": "Bille en jeu",
+          "next": "À venir",
+          "largest": "Plus grosse bille",
+          "goal": "Objectif",
+          "turns": "Lancers",
+          "merges": "Fusions"
+        },
+        "queue": {
+          "empty": "—",
+          "slotLabel": "Bille à venir n°{{position}} : {{value}}"
+        },
+        "actions": {
+          "restart": "Recommencer",
+          "resume": "Continuer"
+        },
+        "dropButton": "Lâcher la bille dans la colonne {{column}}",
+        "dropbar": "Sélectionnez une colonne pour lâcher la bille actuelle",
+        "boardAria": "Bac de jeu du mini-jeu Plus gros",
+        "overlay": {
+          "victory": {
+            "title": "Objectif atteint !",
+            "message": "Vous avez forgé la bille {{value}} en {{turns}} lancers. Continuez pour repousser les limites !"
+          },
+          "defeat": {
+            "title": "Bac saturé",
+            "message": "Plus aucune colonne n’est disponible. Relancez une partie pour mieux organiser vos chaînes de fusion."
           }
         }
       },
