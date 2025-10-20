@@ -1141,12 +1141,11 @@
       const boardHeightValue = `${this.boardHeight}px`;
       this.boardElement.style.setProperty('--bigger-board-width', boardWidthValue);
       this.boardElement.style.setProperty('--bigger-board-height', boardHeightValue);
-      const boardContainer = this.boardElement.parentElement;
+      const boardContainer = parent;
       if (boardContainer) {
         boardContainer.style.setProperty('--bigger-board-width', boardWidthValue);
         boardContainer.style.setProperty('--bigger-board-height', boardHeightValue);
       }
-      const stageElement = this.boardElement.closest('.bigger-stage');
       if (stageElement) {
         stageElement.style.setProperty('--bigger-board-width', boardWidthValue);
         stageElement.style.setProperty('--bigger-board-height', boardHeightValue);
