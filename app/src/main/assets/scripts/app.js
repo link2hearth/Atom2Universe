@@ -11506,10 +11506,25 @@ function computeUpgradeCost(def, quantity = 1) {
     return LayeredNumber.zero();
   }
   const level = getUpgradeLevel(gameState.upgrades, def.id);
-  const baseScale = def.costScale ?? 1;
   const modifier = computeGlobalCostModifier();
-  const baseCost = def.baseCost;
   const buyAmount = Math.max(1, Math.floor(Number(quantity) || 0));
+
+  if (def.costCurve && typeof def.costCurve.costForLevel === 'function') {
+    let totalCost = LayeredNumber.zero();
+    for (let i = 0; i < buyAmount; i++) {
+      const raw = def.costCurve.costForLevel(level + i);
+      const addition = raw instanceof LayeredNumber ? raw.clone() : new LayeredNumber(raw);
+      totalCost = totalCost.add(addition);
+    }
+    const numericModifier = Number(modifier);
+    if (Number.isFinite(numericModifier) && numericModifier !== 1) {
+      totalCost = totalCost.multiplyNumber(numericModifier);
+    }
+    return totalCost;
+  }
+
+  const baseScale = def.costScale ?? 1;
+  const baseCost = def.baseCost;
 
   if (buyAmount === 1 || !Number.isFinite(baseScale) || baseScale === 1) {
     const singleCost = baseCost * Math.pow(baseScale, level) * modifier;
@@ -11530,6 +11545,15 @@ function computeUpgradeTotalSpent(definition, level) {
   const normalizedLevel = Number.isFinite(level) ? Math.max(0, Math.floor(level)) : 0;
   if (normalizedLevel <= 0) {
     return LayeredNumber.zero();
+  }
+  if (definition.costCurve && typeof definition.costCurve.totalSpentForLevel === 'function') {
+    const rawTotal = definition.costCurve.totalSpentForLevel(normalizedLevel);
+    let total = rawTotal instanceof LayeredNumber ? rawTotal.clone() : new LayeredNumber(rawTotal);
+    const modifier = Number(computeGlobalCostModifier());
+    if (Number.isFinite(modifier) && modifier !== 1) {
+      total = total.multiplyNumber(modifier);
+    }
+    return total;
   }
   const baseCost = Number(definition.baseCost ?? 0);
   if (!Number.isFinite(baseCost) || baseCost <= 0) {

@@ -261,6 +261,9 @@ function getBuildingLevel(context, id) {
 const SHOP_BUILDING_IDS = ['godFinger', 'starCore'];
 
 const SHOP_PROGRESSIVE_GROWTH_RATE = 1.12;
+const SHOP_LOG_COST_ASYMPTOTIC_GROWTH = 0.07;
+const SHOP_ACCELERATED_GAIN_SCALE = 0.055;
+const SHOP_ACCELERATED_GAIN_POWER = 1.5;
 
 function calculateProgressiveBonus(level = 0, baseIncrement = 1, growthRate = SHOP_PROGRESSIVE_GROWTH_RATE) {
   if (!Number.isFinite(level) || level <= 0) {
@@ -283,6 +286,111 @@ function calculateProgressiveBonus(level = 0, baseIncrement = 1, growthRate = SH
   return Number.isFinite(rounded) && rounded > 0 ? rounded : 0;
 }
 
+function calculateAcceleratingBonus(
+  level = 0,
+  baseIncrement = 1,
+  scale = SHOP_ACCELERATED_GAIN_SCALE,
+  power = SHOP_ACCELERATED_GAIN_POWER
+) {
+  if (!Number.isFinite(level) || level <= 0) {
+    return 0;
+  }
+
+  const increment = Number.isFinite(baseIncrement) ? baseIncrement : 0;
+  if (increment <= 0) {
+    return 0;
+  }
+
+  const normalizedLevel = Math.max(0, Math.floor(level));
+  const accelScale = Number.isFinite(scale) ? Math.max(0, scale) : 0;
+  const accelPower = Number.isFinite(power) ? Math.max(1, power) : 1;
+
+  let total = 0;
+  for (let i = 1; i <= normalizedLevel; i++) {
+    let delta = increment;
+    if (accelScale > 0 && accelPower > 1) {
+      const growth = Math.pow(i, accelPower) - i;
+      if (Number.isFinite(growth) && growth > 0) {
+        delta += increment * accelScale * growth;
+      }
+    }
+    total += delta;
+  }
+
+  const rounded = Math.round(total * 1000) / 1000;
+  return Number.isFinite(rounded) && rounded > 0 ? rounded : 0;
+}
+
+function createLogarithmicCostCurve({
+  baseCost = 0,
+  initialIncrease = 0.15,
+  asymptoticIncrease = SHOP_LOG_COST_ASYMPTOTIC_GROWTH
+} = {}) {
+  const base = Number(baseCost);
+  if (!Number.isFinite(base) || base <= 0) {
+    return {
+      costForLevel: () => 0,
+      costForQuantity: () => 0,
+      totalSpentForLevel: () => 0
+    };
+  }
+
+  const initial = Number.isFinite(initialIncrease) && initialIncrease > 0 ? initialIncrease : 0;
+  let asymptotic = Number.isFinite(asymptoticIncrease) && asymptoticIncrease >= 0
+    ? asymptoticIncrease
+    : 0;
+  if (asymptotic > initial) {
+    asymptotic = initial;
+  }
+  const logCoefficient = initial > asymptotic
+    ? (initial - asymptotic) / Math.log(2)
+    : 0;
+
+  const computeMultiplier = level => {
+    const normalized = Math.max(0, Math.floor(Number(level) || 0));
+    const linearComponent = asymptotic * normalized;
+    const logComponent = logCoefficient > 0 ? logCoefficient * Math.log1p(normalized) : 0;
+    return 1 + linearComponent + logComponent;
+  };
+
+  const costForLevel = level => {
+    const multiplier = computeMultiplier(level);
+    const cost = base * multiplier;
+    return Number.isFinite(cost) && cost > 0 ? cost : 0;
+  };
+
+  const costForQuantity = (level, quantity) => {
+    const startLevel = Math.max(0, Math.floor(Number(level) || 0));
+    const count = Math.max(0, Math.floor(Number(quantity) || 0));
+    if (count <= 0) {
+      return 0;
+    }
+    let total = 0;
+    for (let i = 0; i < count; i++) {
+      total += costForLevel(startLevel + i);
+    }
+    return total;
+  };
+
+  const totalSpentForLevel = level => {
+    const normalized = Math.max(0, Math.floor(Number(level) || 0));
+    if (normalized <= 0) {
+      return 0;
+    }
+    let total = 0;
+    for (let i = 0; i < normalized; i++) {
+      total += costForLevel(i);
+    }
+    return total;
+  };
+
+  return {
+    costForLevel,
+    costForQuantity,
+    totalSpentForLevel
+  };
+}
+
 function createShopBuildingDefinitions() {
   const withDefaults = def => ({ maxLevel: SHOP_MAX_PURCHASE_DEFAULT, ...def });
   return [
@@ -291,12 +399,16 @@ function createShopBuildingDefinitions() {
       name: 'Doigt créateur',
       description: 'Le pouvoir divin canalisé dans un seul clic.',
       effectSummary:
-        'Production manuelle : commence à +1 APC et progresse d’environ +12 % par niveau.',
+        'Production manuelle : +1 APC au départ, gains accélérés et coût à progression logarithmique.',
       category: 'manual',
       baseCost: 15,
-      costScale: 1.15,
+      costCurve: createLogarithmicCostCurve({
+        baseCost: 15,
+        initialIncrease: 0.15,
+        asymptoticIncrease: SHOP_LOG_COST_ASYMPTOTIC_GROWTH
+      }),
       effect: (level = 0) => {
-        const clickAdd = calculateProgressiveBonus(level, 1);
+        const clickAdd = calculateAcceleratingBonus(level, 1);
         return { clickAdd };
       }
     },
@@ -305,12 +417,16 @@ function createShopBuildingDefinitions() {
       name: 'Cœur d’étoile',
       description: 'Compactez une étoile pour générer des flux constants d’atomes.',
       effectSummary:
-        'Production passive : commence à +1 APS et progresse d’environ +12 % par niveau.',
+        'Production passive : +1 APS au départ, gains qui s’intensifient et coût adouci.',
       category: 'auto',
-      baseCost: 100,
-      costScale: 1.18,
+      baseCost: 25,
+      costCurve: createLogarithmicCostCurve({
+        baseCost: 25,
+        initialIncrease: 0.15,
+        asymptoticIncrease: SHOP_LOG_COST_ASYMPTOTIC_GROWTH
+      }),
       effect: (level = 0) => {
-        const autoAdd = calculateProgressiveBonus(level, 1);
+        const autoAdd = calculateAcceleratingBonus(level, 1);
         return { autoAdd };
       }
     }
