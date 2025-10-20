@@ -7,7 +7,16 @@
   const MAX_VALUE = 1024;
   const VALUE_ORDER = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024];
   const SPAWN_VALUES = [1, 2, 4, 8, 16];
-  const BALL_SIZE_STEPS = [0.68, 0.76, 0.88, 0.98, 1.08, 1.22, 1.36, 1.5, 1.64, 1.78, 1.92];
+  const BALL_AREA_GROWTH_FACTOR = Math.sqrt(1.5);
+  const BALL_SIZE_STEPS = (() => {
+    const steps = [0.68, 0.76];
+    while (steps.length < VALUE_ORDER.length) {
+      const previous = steps[steps.length - 1];
+      const next = previous * BALL_AREA_GROWTH_FACTOR;
+      steps.push(Math.round(next * 1000) / 1000);
+    }
+    return steps;
+  })();
   const PHYSICS_MAX_STEP_MS = 16;
   const PHYSICS_GRAVITY = 1600;
   const PHYSICS_WALL_BOUNCE = 0.55;
