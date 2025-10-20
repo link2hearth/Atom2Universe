@@ -23,6 +23,7 @@
   --bigger-cell-size: 64px;
   --bigger-cols: 10;
   --bigger-rows: 14;
+  --bigger-board-width: clamp(520px, 70vw, 960px);
   padding: clamp(1.2rem, 3vw, 2.4rem);
   display: flex;
   justify-content: center;
@@ -34,6 +35,8 @@
 .bigger-stage {
   flex: 1 1 auto;
   width: 100%;
+  max-width: clamp(960px, 92vw, 1400px);
+  margin: 0 auto;
   background: var(--bigger-panel-bg);
   border: 1px solid var(--bigger-panel-border);
   border-radius: clamp(1rem, 2.4vw, 1.8rem);
@@ -125,7 +128,7 @@
 .bigger-board-container {
   position: relative;
   flex: 1 1 auto;
-  width: min(100%, clamp(480px, 78vw, 1120px));
+  width: min(100%, var(--bigger-board-width, clamp(480px, 78vw, 1120px)));
   max-width: 1120px;
   max-height: min(82vh, 920px);
   margin: 0 auto;

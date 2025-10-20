@@ -1128,6 +1128,24 @@
       this.boardWidth = this.cellSize * COLUMN_COUNT;
       this.boardHeight = this.cellSize * ROW_COUNT;
       this.boardElement.style.setProperty('--bigger-cell-size', `${this.cellSize}px`);
+      const boardWidthValue = `${this.boardWidth}px`;
+      const boardHeightValue = `${this.boardHeight}px`;
+      this.boardElement.style.setProperty('--bigger-board-width', boardWidthValue);
+      this.boardElement.style.setProperty('--bigger-board-height', boardHeightValue);
+      const boardContainer = this.boardElement.parentElement;
+      if (boardContainer) {
+        boardContainer.style.setProperty('--bigger-board-width', boardWidthValue);
+        boardContainer.style.setProperty('--bigger-board-height', boardHeightValue);
+      }
+      const stageElement = this.boardElement.closest('.bigger-stage');
+      if (stageElement) {
+        stageElement.style.setProperty('--bigger-board-width', boardWidthValue);
+        stageElement.style.setProperty('--bigger-board-height', boardHeightValue);
+      }
+      if (this.pageElement) {
+        this.pageElement.style.setProperty('--bigger-board-width', boardWidthValue);
+        this.pageElement.style.setProperty('--bigger-board-height', boardHeightValue);
+      }
       this.updateDropIndicator();
 
       const scale = previousCell > 0 ? this.cellSize / previousCell : 1;
