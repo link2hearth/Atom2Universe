@@ -363,8 +363,6 @@
           "restart": "Recommencer",
           "resume": "Continuer"
         },
-        "dropButton": "Lâcher la bille {{value}} dans la colonne {{column}}",
-        "dropbar": "Sélectionnez une colonne pour lâcher la bille actuelle",
         "boardAria": "Bac de jeu du mini-jeu Plus gros",
         "overlay": {
           "victory": {
@@ -373,7 +371,7 @@
           },
           "defeat": {
             "title": "Bac saturé",
-            "message": "Plus aucune colonne n’est disponible. Relancez une partie pour mieux organiser vos chaînes de fusion."
+            "message": "Le bac est saturé. Relancez une partie pour mieux organiser vos chaînes de fusion."
           }
         }
       },

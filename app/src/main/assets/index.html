@@ -2483,44 +2483,16 @@
           <button type="button" class="bigger-stage__button" id="biggerRestartButton">
             <span data-i18n="index.sections.bigger.actions.restart">Recommencer</span>
           </button>
+          <div class="bigger-stage__current" role="status" aria-live="polite">
+            <span class="bigger-stage__current-label" data-i18n="index.sections.bigger.hud.current">Bille en jeu</span>
+            <span class="bigger-stage__current-value" id="biggerCurrentValue">—</span>
+          </div>
           <div class="bigger-stage__goal" role="group" aria-live="polite">
             <span class="bigger-stage__goal-label" data-i18n="index.sections.bigger.hud.goal">Objectif</span>
             <span class="bigger-stage__goal-value" id="biggerGoalValue">1024</span>
           </div>
         </div>
         <div class="bigger-playfield">
-          <div
-            class="bigger-dropbar"
-            id="biggerDropbar"
-            role="toolbar"
-            aria-label="Sélectionner une colonne pour lâcher la bille"
-            data-i18n-aria-label="index.sections.bigger.dropbar"
-          >
-            <button type="button" class="bigger-drop-button" data-bigger-drop-button data-column="0">
-              <span class="bigger-drop-button__value">—</span>
-            </button>
-            <button type="button" class="bigger-drop-button" data-bigger-drop-button data-column="1">
-              <span class="bigger-drop-button__value">—</span>
-            </button>
-            <button type="button" class="bigger-drop-button" data-bigger-drop-button data-column="2">
-              <span class="bigger-drop-button__value">—</span>
-            </button>
-            <button type="button" class="bigger-drop-button" data-bigger-drop-button data-column="3">
-              <span class="bigger-drop-button__value">—</span>
-            </button>
-            <button type="button" class="bigger-drop-button" data-bigger-drop-button data-column="4">
-              <span class="bigger-drop-button__value">—</span>
-            </button>
-            <button type="button" class="bigger-drop-button" data-bigger-drop-button data-column="5">
-              <span class="bigger-drop-button__value">—</span>
-            </button>
-            <button type="button" class="bigger-drop-button" data-bigger-drop-button data-column="6">
-              <span class="bigger-drop-button__value">—</span>
-            </button>
-            <button type="button" class="bigger-drop-button" data-bigger-drop-button data-column="7">
-              <span class="bigger-drop-button__value">—</span>
-            </button>
-          </div>
           <div class="bigger-board-container">
             <div
               class="bigger-board"
@@ -2528,6 +2500,7 @@
               role="grid"
               aria-label="Bac de jeu du mini-jeu Plus gros"
               data-i18n-aria-label="index.sections.bigger.boardAria"
+              tabindex="0"
             ></div>
           </div>
           <div class="bigger-overlay" id="biggerOverlay" hidden>

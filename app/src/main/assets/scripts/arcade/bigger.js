@@ -12,11 +12,11 @@
   const PHYSICS_GRAVITY = 1600;
   const PHYSICS_WALL_BOUNCE = 0.55;
   const PHYSICS_FLOOR_BOUNCE = 0.68;
+  const PHYSICS_BALL_BOUNCE = 0.38;
   const PHYSICS_LINEAR_DAMPING = 0.995;
   const PHYSICS_STATIC_FRICTION = 0.32;
   const PHYSICS_DYNAMIC_FRICTION = 0.08;
-  const MERGE_OVERLAP_THRESHOLD = 0.1;
-  const MERGE_CONTACT_TIME = 0.12;
+  const MERGE_PROXIMITY_EPSILON = 2;
   const DEFEAT_MARGIN = 96;
 
   const toInteger = value => {
@@ -195,7 +195,7 @@
       const opts = options || {};
       this.pageElement = opts.pageElement || null;
       this.boardElement = opts.boardElement || null;
-      this.dropButtons = Array.from(opts.dropButtons || []);
+      this.currentValueElement = opts.currentValueElement || null;
       this.queueSlots = Array.from(opts.queueSlots || []);
       this.goalValueElement = opts.goalValueElement || null;
       this.restartButton = opts.restartButton || null;
@@ -220,8 +220,8 @@
       this.cellSize = 56;
       this.boardWidth = 0;
       this.boardHeight = 0;
-      this.spawnPositions = [];
-      this.hoverColumn = null;
+      this.dropIndicator = { ratio: 0.5, visible: false };
+      this.activePointerId = null;
       this.isActive = false;
       this.physics = {
         running: false,
@@ -239,13 +239,20 @@
 
       this.highlightElement = document.createElement('div');
       this.highlightElement.className = 'bigger-board__highlight';
+      this.indicatorLineElement = document.createElement('div');
+      this.indicatorLineElement.className = 'bigger-board__indicator-line';
       if (this.boardElement) {
         this.boardElement.appendChild(this.highlightElement);
+        this.boardElement.appendChild(this.indicatorLineElement);
       }
 
-      this.handleDropClick = this.handleDropClick.bind(this);
-      this.handleDropEnter = this.handleDropEnter.bind(this);
-      this.handleDropLeave = this.handleDropLeave.bind(this);
+      this.handleBoardPointerMove = this.handleBoardPointerMove.bind(this);
+      this.handleBoardPointerLeave = this.handleBoardPointerLeave.bind(this);
+      this.handleBoardPointerDown = this.handleBoardPointerDown.bind(this);
+      this.handleBoardPointerUp = this.handleBoardPointerUp.bind(this);
+      this.handleBoardFocus = this.handleBoardFocus.bind(this);
+      this.handleBoardBlur = this.handleBoardBlur.bind(this);
+      this.handleBoardKeyDown = this.handleBoardKeyDown.bind(this);
       this.handleResize = this.handleResize.bind(this);
       this.handleOverlayAction = this.handleOverlayAction.bind(this);
       this.handleOverlayDismiss = this.handleOverlayDismiss.bind(this);
@@ -263,7 +270,7 @@
       this.languageUnsubscribe = null;
       if (typeof window !== 'undefined' && window.i18n && typeof window.i18n.onLanguageChanged === 'function') {
         this.languageUnsubscribe = window.i18n.onLanguageChanged(() => {
-          this.updateDropButtonLabels();
+          this.updateCurrentValueDisplay();
           this.updateOverlayTexts();
         });
       }
@@ -271,6 +278,7 @@
       this.bindDomListeners();
       this.ensureBoardAttributes();
       this.updateGoalValue();
+      this.updateDropIndicator();
 
       const stored = readStoredState();
       if (stored) {
@@ -297,14 +305,16 @@
     }
 
     bindDomListeners() {
-      this.dropButtons.forEach((button, index) => {
-        button.addEventListener('click', this.handleDropClick);
-        button.addEventListener('mouseenter', this.handleDropEnter);
-        button.addEventListener('mouseleave', this.handleDropLeave);
-        button.addEventListener('focus', this.handleDropEnter);
-        button.addEventListener('blur', this.handleDropLeave);
-        button.dataset.column = String(index);
-      });
+      if (this.boardElement) {
+        this.boardElement.addEventListener('pointermove', this.handleBoardPointerMove);
+        this.boardElement.addEventListener('pointerleave', this.handleBoardPointerLeave);
+        this.boardElement.addEventListener('pointerdown', this.handleBoardPointerDown);
+        this.boardElement.addEventListener('pointerup', this.handleBoardPointerUp);
+        this.boardElement.addEventListener('pointercancel', this.handleBoardPointerUp);
+        this.boardElement.addEventListener('focus', this.handleBoardFocus);
+        this.boardElement.addEventListener('blur', this.handleBoardBlur);
+        this.boardElement.addEventListener('keydown', this.handleBoardKeyDown);
+      }
 
       if (this.overlayActionElement) {
         this.overlayActionElement.addEventListener('click', this.handleOverlayAction);
@@ -337,25 +347,120 @@
       this.goalValueElement.textContent = String(MAX_VALUE);
     }
 
-    handleDropClick(event) {
-      const button = event.currentTarget;
-      if (!button || typeof button.dataset.column === 'undefined') {
+    handleBoardPointerMove(event) {
+      if (!this.boardElement || this.state.isGameOver) {
         return;
       }
-      const column = Number(button.dataset.column);
-      this.dropInColumn(column);
-    }
-
-    handleDropEnter(event) {
-      const column = Number(event.currentTarget?.dataset?.column);
-      if (!Number.isFinite(column)) {
+      const ratio = this.getPointerRatio(event);
+      if (ratio == null) {
         return;
       }
-      this.setHoverColumn(column);
+      this.setDropIndicatorVisibility(true);
+      this.setDropIndicatorPosition(ratio);
     }
 
-    handleDropLeave() {
-      this.setHoverColumn(null);
+    handleBoardPointerLeave() {
+      if (this.activePointerId != null) {
+        return;
+      }
+      if (typeof document !== 'undefined' && document.activeElement === this.boardElement) {
+        return;
+      }
+      this.setDropIndicatorVisibility(false);
+    }
+
+    handleBoardPointerDown(event) {
+      if (!this.boardElement || this.state.isGameOver) {
+        return;
+      }
+      if (typeof event.button === 'number' && event.button !== 0 && event.pointerType !== 'touch') {
+        return;
+      }
+      const ratio = this.getPointerRatio(event);
+      if (ratio == null) {
+        return;
+      }
+      this.activePointerId = event.pointerId;
+      if (typeof this.boardElement.setPointerCapture === 'function') {
+        try {
+          this.boardElement.setPointerCapture(event.pointerId);
+        } catch (error) {
+          // Ignore pointer capture errors (e.g. not supported)
+        }
+      }
+      if (typeof this.boardElement.focus === 'function') {
+        this.boardElement.focus({ preventScroll: true });
+      }
+      this.setDropIndicatorVisibility(true);
+      const clampedRatio = this.setDropIndicatorPosition(ratio);
+      this.dropAtRatio(clampedRatio);
+      event.preventDefault();
+    }
+
+    handleBoardPointerUp(event) {
+      if (!this.boardElement || (this.activePointerId != null && event.pointerId !== this.activePointerId)) {
+        return;
+      }
+      if (typeof this.boardElement.releasePointerCapture === 'function' && this.activePointerId != null) {
+        try {
+          this.boardElement.releasePointerCapture(this.activePointerId);
+        } catch (error) {
+          // Ignore pointer capture release errors
+        }
+      }
+      this.activePointerId = null;
+      if (typeof document !== 'undefined' && document.activeElement === this.boardElement) {
+        return;
+      }
+      this.setDropIndicatorVisibility(false);
+    }
+
+    handleBoardFocus() {
+      if (this.state.isGameOver) {
+        return;
+      }
+      this.setDropIndicatorVisibility(true);
+      if (!Number.isFinite(this.dropIndicator?.ratio)) {
+        this.setDropIndicatorPosition(0.5);
+      } else {
+        this.updateDropIndicator();
+      }
+    }
+
+    handleBoardBlur() {
+      if (this.activePointerId != null) {
+        return;
+      }
+      this.setDropIndicatorVisibility(false);
+    }
+
+    handleBoardKeyDown(event) {
+      if (this.state.isGameOver) {
+        return;
+      }
+      const width = this.resolveBoardWidth();
+      const step = width > 0 ? Math.max(0.02, Math.min(0.25, this.cellSize / width)) : 0.05;
+      if (event.key === 'ArrowLeft') {
+        this.setDropIndicatorVisibility(true);
+        this.setDropIndicatorPosition((this.dropIndicator?.ratio || 0) - step);
+        event.preventDefault();
+      } else if (event.key === 'ArrowRight') {
+        this.setDropIndicatorVisibility(true);
+        this.setDropIndicatorPosition((this.dropIndicator?.ratio || 0) + step);
+        event.preventDefault();
+      } else if (event.key === 'Home') {
+        this.setDropIndicatorVisibility(true);
+        this.setDropIndicatorPosition(0);
+        event.preventDefault();
+      } else if (event.key === 'End') {
+        this.setDropIndicatorVisibility(true);
+        this.setDropIndicatorPosition(1);
+        event.preventDefault();
+      } else if (event.key === 'Enter' || event.key === ' ') {
+        const ratio = this.dropIndicator?.ratio ?? 0.5;
+        this.dropAtRatio(ratio);
+        event.preventDefault();
+      }
     }
 
     handleResize() {
@@ -389,26 +494,130 @@
       }
     }
 
-    setHoverColumn(column) {
-      if (!this.highlightElement || !this.boardElement) {
+    getPointerRatio(event) {
+      if (!this.boardElement) {
+        return null;
+      }
+      const rect = this.boardElement.getBoundingClientRect();
+      const width = rect?.width;
+      if (!Number.isFinite(width) || width <= 0) {
+        return null;
+      }
+      const clientX = Number(event?.clientX);
+      if (!Number.isFinite(clientX)) {
+        return null;
+      }
+      const ratio = (clientX - rect.left) / width;
+      if (!Number.isFinite(ratio)) {
+        return null;
+      }
+      return Math.max(0, Math.min(1, ratio));
+    }
+
+    setDropIndicatorVisibility(isVisible) {
+      const shouldShow = isVisible && !this.state.isGameOver;
+      if (this.dropIndicator.visible === shouldShow) {
         return;
       }
-      if (!Number.isFinite(column) || column < 0 || column >= COLUMN_COUNT) {
-        this.hoverColumn = null;
-        this.highlightElement.classList.remove('is-visible');
-        this.highlightElement.dataset.value = '';
+      this.dropIndicator.visible = shouldShow;
+      this.updateDropIndicator();
+    }
+
+    setDropIndicatorPosition(ratio) {
+      const numeric = Number(ratio);
+      const value = VALUE_ORDER.includes(this.state.currentValue) ? this.state.currentValue : null;
+      const adjusted = this.constrainDropRatio(numeric, value);
+      if (this.dropIndicator.ratio === adjusted) {
+        this.updateDropIndicator();
+        return adjusted;
+      }
+      this.dropIndicator.ratio = adjusted;
+      this.updateDropIndicator();
+      return adjusted;
+    }
+
+    updateDropIndicator() {
+      if (!this.boardElement || !this.highlightElement) {
         return;
       }
-      this.hoverColumn = column;
-      const width = this.boardElement.clientWidth;
-      if (width > 0) {
-        const cellWidth = width / COLUMN_COUNT;
-        this.highlightElement.style.left = `${column * cellWidth}px`;
-        this.highlightElement.style.width = `${cellWidth}px`;
+      const currentValue = VALUE_ORDER.includes(this.state.currentValue) ? this.state.currentValue : null;
+      const ratio = this.constrainDropRatio(this.dropIndicator?.ratio ?? 0.5, currentValue);
+      if (this.dropIndicator) {
+        this.dropIndicator.ratio = ratio;
       }
-      const displayValue = VALUE_ORDER.includes(this.state.currentValue) ? String(this.state.currentValue) : '—';
+      const displayValue = currentValue != null ? String(currentValue) : '—';
+      const multiplier = currentValue != null ? getDiameterMultiplier(currentValue) : 1;
+      const diameter = Math.max(32, this.cellSize * multiplier);
+      const width = this.resolveBoardWidth();
+      if (Number.isFinite(width) && width > 0) {
+        const offset = ratio * width;
+        this.highlightElement.style.left = `${offset}px`;
+        if (this.indicatorLineElement) {
+          this.indicatorLineElement.style.left = `${offset}px`;
+        }
+      }
       this.highlightElement.dataset.value = displayValue;
-      this.highlightElement.classList.add('is-visible');
+      this.highlightElement.style.setProperty('--bigger-indicator-size', `${diameter}px`);
+      if (this.indicatorLineElement) {
+        this.indicatorLineElement.style.setProperty('--bigger-indicator-size', `${diameter}px`);
+      }
+      if (this.dropIndicator.visible && currentValue != null && !this.state.isGameOver) {
+        this.highlightElement.classList.add('is-visible');
+        if (this.indicatorLineElement) {
+          this.indicatorLineElement.classList.add('is-visible');
+        }
+      } else {
+        this.highlightElement.classList.remove('is-visible');
+        if (this.indicatorLineElement) {
+          this.indicatorLineElement.classList.remove('is-visible');
+        }
+      }
+    }
+
+    resolveBoardWidth() {
+      const width = this.boardWidth || this.boardElement?.clientWidth;
+      if (Number.isFinite(width) && width > 0) {
+        return width;
+      }
+      return this.cellSize * COLUMN_COUNT;
+    }
+
+    getExpectedRadiusForValue(value) {
+      if (!VALUE_ORDER.includes(value)) {
+        const fallbackDiameter = Math.max(28, this.cellSize);
+        return fallbackDiameter / 2;
+      }
+      const multiplier = getDiameterMultiplier(value);
+      const diameter = Math.max(28, this.cellSize * multiplier);
+      return diameter / 2;
+    }
+
+    constrainDropRatio(ratio, value) {
+      let normalized = Number(ratio);
+      if (!Number.isFinite(normalized)) {
+        normalized = 0.5;
+      }
+      normalized = Math.max(0, Math.min(1, normalized));
+      const width = this.resolveBoardWidth();
+      if (!Number.isFinite(width) || width <= 0) {
+        return normalized;
+      }
+      const radius = this.getExpectedRadiusForValue(value);
+      if (!Number.isFinite(radius) || radius <= 0) {
+        return normalized;
+      }
+      let minRatio = radius / width;
+      let maxRatio = (width - radius) / width;
+      if (!Number.isFinite(minRatio) || !Number.isFinite(maxRatio)) {
+        return normalized;
+      }
+      minRatio = Math.max(0, Math.min(1, minRatio));
+      maxRatio = Math.max(0, Math.min(1, maxRatio));
+      if (minRatio > maxRatio) {
+        const center = Math.max(0, Math.min(1, 0.5));
+        return center;
+      }
+      return Math.max(minRatio, Math.min(maxRatio, normalized));
     }
 
     ensureCurrentValue() {
@@ -431,11 +640,12 @@
       return VALUE_ORDER.includes(value) ? value : SPAWN_VALUES[0];
     }
 
-    dropInColumn(columnIndex) {
+    dropAtRatio(ratio) {
       if (this.state.isGameOver) {
         return;
       }
-      if (!Number.isFinite(columnIndex) || columnIndex < 0 || columnIndex >= COLUMN_COUNT) {
+      const width = this.resolveBoardWidth();
+      if (!Number.isFinite(width) || width <= 0) {
         return;
       }
 
@@ -445,22 +655,20 @@
         return;
       }
 
-      const baseX = this.spawnPositions[columnIndex] ?? (columnIndex * this.cellSize + this.cellSize / 2);
-      const jitter = this.cellSize * 0.4;
-      const spawnX = baseX + (Math.random() - 0.5) * jitter;
-      const spawnY = -DEFEAT_MARGIN * 0.5;
+      const normalized = this.constrainDropRatio(ratio, value);
 
       this.state.currentValue = null;
       this.ensureCurrentValue();
       this.state.stats.turns += 1;
-      this.updateDropButtonLabels();
+      this.updateCurrentValueDisplay();
 
+      const spawnY = -DEFEAT_MARGIN * 0.5;
+      const spawnX = normalized * width;
       const ball = this.createBall(value, {
         x: spawnX,
         y: spawnY,
-        vx: (Math.random() - 0.5) * this.cellSize * 2
+        vx: 0
       });
-      const width = this.boardWidth || this.cellSize * COLUMN_COUNT;
       const minX = ball.radius;
       const maxX = width - ball.radius;
       if (Number.isFinite(minX) && Number.isFinite(maxX)) {
@@ -778,6 +986,7 @@
           const distance = Math.hypot(dx, dy) || 0.0001;
           const minDistance = (a.radius || 0) + (b.radius || 0);
           const key = a.id < b.id ? `${a.id}|${b.id}` : `${b.id}|${a.id}`;
+          const closeEnoughForMerge = minDistance > 0 && distance <= (minDistance + MERGE_PROXIMITY_EPSILON);
           if (distance < minDistance && minDistance > 0) {
             const overlap = minDistance - distance;
             const nx = dx / distance;
@@ -792,33 +1001,33 @@
               b.y += ny * shiftB;
 
               const relativeVelocity = (b.vx - a.vx) * nx + (b.vy - a.vy) * ny;
-              const impulse = (-(1 + PHYSICS_FLOOR_BOUNCE) * relativeVelocity) / invMassSum;
-              a.vx -= impulse * nx * a.invMass;
-              a.vy -= impulse * ny * a.invMass;
-              b.vx += impulse * nx * b.invMass;
-              b.vy += impulse * ny * b.invMass;
-
-              activeContacts.add(key);
-              let contact = contacts.get(key);
-              if (!contact) {
-                contact = { time: 0 };
-                contacts.set(key, contact);
-              }
-              const overlapRatio = minDistance > 0 ? overlap / minDistance : 0;
-              if (a.value === b.value) {
-                if (overlapRatio > MERGE_OVERLAP_THRESHOLD) {
-                  contact.time += dt;
-                  if (contact.time >= MERGE_CONTACT_TIME) {
-                    this.queueMerge(a, b);
-                    contact.time = 0;
-                  }
-                } else {
-                  contact.time = Math.max(0, contact.time - dt * 0.5);
-                }
-              } else {
-                contact.time = 0;
+              if (relativeVelocity < 0) {
+                const impulse = (-(1 + PHYSICS_BALL_BOUNCE) * relativeVelocity) / invMassSum;
+                a.vx -= impulse * nx * a.invMass;
+                a.vy -= impulse * ny * a.invMass;
+                b.vx += impulse * nx * b.invMass;
+                b.vy += impulse * ny * b.invMass;
               }
             }
+          }
+
+          let contact = contacts.get(key);
+          if (closeEnoughForMerge) {
+            activeContacts.add(key);
+            if (!contact) {
+              contact = { merged: false };
+              contacts.set(key, contact);
+            }
+            if (a.value === b.value) {
+              if (!contact.merged) {
+                this.queueMerge(a, b);
+                contact.merged = true;
+              }
+            } else if (contact) {
+              contact.merged = false;
+            }
+          } else if (contact) {
+            contacts.delete(key);
           }
         }
       }
@@ -860,8 +1069,9 @@
 
     updateHud() {
       this.updateGoalValue();
+      this.updateCurrentValueDisplay();
       this.renderQueue();
-      this.updateDropButtonLabels();
+      this.updateDropIndicator();
     }
 
     renderQueue() {
@@ -888,31 +1098,18 @@
       });
     }
 
-    updateDropButtonLabels() {
+    updateCurrentValueDisplay() {
+      if (!this.currentValueElement) {
+        this.updateDropIndicator();
+        return;
+      }
       const currentValue = VALUE_ORDER.includes(this.state.currentValue) ? this.state.currentValue : null;
       const displayValue = currentValue != null ? String(currentValue) : '—';
-      if (this.highlightElement) {
-        this.highlightElement.dataset.value = displayValue;
-      }
-      this.dropButtons.forEach((button, index) => {
-        const columnNumber = index + 1;
-        const label = translate(
-          'index.sections.bigger.dropButton',
-          'Lâcher la bille {{value}} dans la colonne {{column}}',
-          { column: columnNumber, value: displayValue }
-        );
-        if (label) {
-          button.setAttribute('aria-label', label);
-          button.setAttribute('title', label);
-        }
-        const valueElement = button.querySelector('.bigger-drop-button__value');
-        if (valueElement) {
-          valueElement.textContent = displayValue;
-        } else {
-          button.textContent = displayValue;
-        }
-        button.disabled = this.state.isGameOver;
-      });
+      this.currentValueElement.textContent = displayValue;
+      const label = translate('index.sections.bigger.hud.current', 'Bille en jeu');
+      const ariaLabel = label ? `${label}: ${displayValue}` : displayValue;
+      this.currentValueElement.setAttribute('aria-label', ariaLabel);
+      this.updateDropIndicator();
     }
 
     updateBoardMetrics() {
@@ -930,11 +1127,8 @@
       this.cellSize = Math.max(40, Math.min(120, computedCell));
       this.boardWidth = this.cellSize * COLUMN_COUNT;
       this.boardHeight = this.cellSize * ROW_COUNT;
-      this.spawnPositions = Array.from({ length: COLUMN_COUNT }, (_, index) => (index + 0.5) * this.cellSize);
       this.boardElement.style.setProperty('--bigger-cell-size', `${this.cellSize}px`);
-      if (this.hoverColumn != null) {
-        this.setHoverColumn(this.hoverColumn);
-      }
+      this.updateDropIndicator();
 
       const scale = previousCell > 0 ? this.cellSize / previousCell : 1;
       this.balls.forEach(ball => {
@@ -995,6 +1189,11 @@
     resetGame(options = {}) {
       const { skipPersist = false } = options;
       this.clearBoard();
+      this.activePointerId = null;
+      if (this.dropIndicator) {
+        this.dropIndicator.ratio = 0.5;
+        this.dropIndicator.visible = false;
+      }
       this.state = {
         balls: [],
         queue: [],
@@ -1009,6 +1208,7 @@
       this.renderBoardFromState();
       this.updateHud();
       this.hideOverlay();
+      this.updateDropIndicator();
       if (!skipPersist) {
         this.persistState();
       }
@@ -1022,6 +1222,7 @@
       this.state.gameResult = 'victory';
       this.state.isGameOver = true;
       this.stopPhysics();
+      this.setDropIndicatorVisibility(false);
       this.showOverlayForResult('victory');
       this.persistState();
     }
@@ -1033,6 +1234,7 @@
       this.state.gameResult = 'defeat';
       this.state.isGameOver = true;
       this.stopPhysics();
+      this.setDropIndicatorVisibility(false);
       this.showOverlayForResult('defeat');
       this.persistState();
     }
@@ -1058,7 +1260,7 @@
         title = translate('index.sections.bigger.overlay.defeat.title', 'Bac saturé');
         message = translate(
           'index.sections.bigger.overlay.defeat.message',
-          'Plus aucune colonne n’est disponible. Relancez une partie pour tenter de mieux organiser les fusions.'
+          'Le bac est saturé. Relancez une partie pour mieux organiser vos chaînes de fusion.'
         );
         if (this.overlayDismissElement) {
           this.overlayDismissElement.hidden = false;
@@ -1211,25 +1413,27 @@
       this.isActive = true;
       this.updateBoardMetrics();
       this.syncBallPositions();
-      this.updateDropButtonLabels();
+      this.updateCurrentValueDisplay();
       this.updateOverlayTexts();
       this.startPhysics();
     }
 
     onLeave() {
       this.isActive = false;
-      this.setHoverColumn(null);
       this.stopPhysics();
     }
 
     dispose() {
-      this.dropButtons.forEach(button => {
-        button.removeEventListener('click', this.handleDropClick);
-        button.removeEventListener('mouseenter', this.handleDropEnter);
-        button.removeEventListener('mouseleave', this.handleDropLeave);
-        button.removeEventListener('focus', this.handleDropEnter);
-        button.removeEventListener('blur', this.handleDropLeave);
-      });
+      if (this.boardElement) {
+        this.boardElement.removeEventListener('pointermove', this.handleBoardPointerMove);
+        this.boardElement.removeEventListener('pointerleave', this.handleBoardPointerLeave);
+        this.boardElement.removeEventListener('pointerdown', this.handleBoardPointerDown);
+        this.boardElement.removeEventListener('pointerup', this.handleBoardPointerUp);
+        this.boardElement.removeEventListener('pointercancel', this.handleBoardPointerUp);
+        this.boardElement.removeEventListener('focus', this.handleBoardFocus);
+        this.boardElement.removeEventListener('blur', this.handleBoardBlur);
+        this.boardElement.removeEventListener('keydown', this.handleBoardKeyDown);
+      }
       if (this.overlayActionElement) {
         this.overlayActionElement.removeEventListener('click', this.handleOverlayAction);
       }

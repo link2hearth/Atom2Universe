@@ -6,9 +6,6 @@
   --bigger-heading-color: #f7f9ff;
   --bigger-subtle-text: rgba(210, 218, 255, 0.68);
   --bigger-accent: #7dd4ff;
-  --bigger-dropbar-bg: rgba(120, 150, 255, 0.08);
-  --bigger-dropbar-border: rgba(150, 170, 255, 0.26);
-  --bigger-dropbar-hover: rgba(128, 180, 255, 0.2);
   --bigger-board-bg: rgba(14, 16, 32, 0.94);
   --bigger-board-border: rgba(120, 140, 190, 0.32);
   --bigger-board-grid: rgba(140, 160, 210, 0.12);
@@ -56,6 +53,7 @@
   flex-wrap: wrap;
 }
 
+.bigger-stage__current,
 .bigger-stage__goal {
   display: inline-flex;
   align-items: center;
@@ -65,6 +63,18 @@
   border: 1px solid rgba(132, 156, 240, 0.35);
   border-radius: 999px;
   font-weight: 600;
+}
+
+.bigger-stage__current-label {
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgba(210, 218, 255, 0.78);
+}
+
+.bigger-stage__current-value {
+  font-size: clamp(1.35rem, 3vw, 1.85rem);
+  color: var(--bigger-heading-color);
 }
 
 .bigger-stage__goal-label {
@@ -112,56 +122,12 @@
   min-height: 0;
 }
 
-.bigger-dropbar {
-  display: grid;
-  grid-template-columns: repeat(var(--bigger-cols), minmax(0, 1fr));
-  gap: clamp(0.6rem, 1.5vw, 1rem);
-  padding: clamp(0.6rem, 1.5vw, 1rem);
-  background: var(--bigger-dropbar-bg);
-  border: 1px solid var(--bigger-dropbar-border);
-  border-radius: clamp(1.4rem, 4vw, 2.2rem);
-  box-shadow: inset 0 1px 6px rgba(10, 16, 34, 0.24);
-}
-
-.bigger-drop-button {
-  position: relative;
-  border: 1px solid rgba(180, 196, 255, 0.45);
-  background: radial-gradient(circle at 50% 25%, rgba(255, 255, 255, 0.22), rgba(128, 180, 255, 0.12));
-  color: var(--bigger-heading-color);
-  font-weight: 700;
-  font-size: clamp(1.2rem, 3vw, 1.6rem);
-  padding: clamp(0.85rem, 2.2vw, 1.1rem) 0.25rem;
-  border-radius: clamp(1rem, 3vw, 1.6rem);
-  transition: background-color 0.16s ease, border-color 0.16s ease, transform 0.16s ease, box-shadow 0.16s ease;
-}
-
-.bigger-drop-button:hover,
-.bigger-drop-button:focus-visible {
-  background: var(--bigger-dropbar-hover);
-  border-color: rgba(200, 210, 255, 0.45);
-  transform: translateY(-1px);
-  box-shadow: 0 8px 18px rgba(40, 80, 180, 0.28);
-}
-
-.bigger-drop-button:active {
-  transform: translateY(0);
-}
-
-.bigger-drop-button__value {
-  display: block;
-}
-
-.bigger-drop-button:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-  transform: none;
-}
-
 .bigger-board-container {
   position: relative;
   flex: 1 1 auto;
-  width: min(100%, calc(100vh * var(--bigger-cols) / var(--bigger-rows)));
-  max-width: 1280px;
+  width: min(100%, clamp(480px, 78vw, 1120px));
+  max-width: 1120px;
+  max-height: min(82vh, 920px);
   margin: 0 auto;
   aspect-ratio: var(--bigger-cols) / var(--bigger-rows);
   border-radius: clamp(1rem, 2vw, 1.6rem);
@@ -184,27 +150,60 @@
 
 .bigger-board__highlight {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  width: calc(100% / var(--bigger-cols));
+  top: clamp(0.4rem, 1.2vw, 0.9rem);
+  left: 50%;
+  width: var(--bigger-indicator-size, 72px);
+  height: var(--bigger-indicator-size, 72px);
   pointer-events: none;
-  background: linear-gradient(180deg, rgba(128, 200, 255, 0.18), rgba(64, 128, 255, 0.1));
   opacity: 0;
-  transition: opacity 0.18s ease;
-  display: grid;
-  place-items: start center;
-  padding-top: 0.8rem;
-  font-size: clamp(1.2rem, 3vw, 1.6rem);
+  transform: translate(-50%, 0);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(1.1rem, 2.6vw, 1.6rem);
   font-weight: 700;
-  color: rgba(245, 248, 255, 0.9);
+  color: rgba(245, 248, 255, 0.95);
+  z-index: 2;
 }
 
 .bigger-board__highlight.is-visible {
   opacity: 1;
+  transform: translate(-50%, 0) scale(1);
 }
 
 .bigger-board__highlight::after {
   content: attr(data-value);
+}
+
+.bigger-board__highlight::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: linear-gradient(145deg, rgba(120, 180, 255, 0.4), rgba(72, 110, 255, 0.3));
+  box-shadow: 0 12px 24px rgba(20, 40, 120, 0.35);
+  border: 1px solid rgba(190, 210, 255, 0.45);
+  z-index: -1;
+  opacity: 0.85;
+}
+
+.bigger-board__indicator-line {
+  position: absolute;
+  inset: calc(var(--bigger-indicator-size, 72px) + clamp(0.35rem, 1vw, 0.6rem)) auto 0;
+  left: 50%;
+  width: 2px;
+  background: linear-gradient(180deg, rgba(170, 200, 255, 0.35), rgba(120, 150, 255, 0.6));
+  border-radius: 999px;
+  pointer-events: none;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 1;
+}
+
+.bigger-board__indicator-line.is-visible {
+  opacity: 1;
 }
 
 .bigger-ball {
@@ -364,19 +363,10 @@
 
 @media (max-width: 720px) {
   .bigger-stage__button,
-  .bigger-stage__goal {
+  .bigger-stage__goal,
+  .bigger-stage__current {
     width: 100%;
     justify-content: center;
-  }
-
-  .bigger-dropbar {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 520px) {
-  .bigger-dropbar {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -387,9 +377,6 @@ body.theme-light .page--bigger {
   --bigger-text-color: rgba(32, 40, 72, 0.88);
   --bigger-heading-color: rgba(18, 28, 64, 0.95);
   --bigger-subtle-text: rgba(32, 48, 92, 0.58);
-  --bigger-dropbar-bg: rgba(120, 150, 255, 0.12);
-  --bigger-dropbar-border: rgba(120, 140, 210, 0.28);
-  --bigger-dropbar-hover: rgba(160, 190, 255, 0.32);
   --bigger-board-bg: rgba(248, 250, 255, 0.92);
   --bigger-board-border: rgba(120, 140, 210, 0.24);
   --bigger-board-grid: rgba(80, 110, 190, 0.12);
@@ -413,7 +400,6 @@ body.theme-neon .page--bigger {
   --bigger-text-color: rgba(224, 236, 255, 0.94);
   --bigger-heading-color: rgba(244, 248, 255, 0.98);
   --bigger-subtle-text: rgba(180, 206, 255, 0.7);
-  --bigger-dropbar-bg: rgba(120, 150, 255, 0.18);
   --bigger-board-bg: rgba(10, 12, 30, 0.92);
   --bigger-board-border: rgba(150, 180, 255, 0.38);
   --bigger-board-grid: rgba(140, 170, 255, 0.15);
@@ -430,8 +416,6 @@ body.theme-aurora .page--bigger {
   --bigger-text-color: rgba(220, 250, 240, 0.92);
   --bigger-heading-color: #effff9;
   --bigger-subtle-text: rgba(180, 230, 220, 0.68);
-  --bigger-dropbar-bg: rgba(120, 210, 190, 0.16);
-  --bigger-dropbar-border: rgba(90, 200, 170, 0.32);
   --bigger-board-bg: rgba(6, 18, 20, 0.9);
   --bigger-board-border: rgba(80, 210, 190, 0.36);
   --bigger-board-grid: rgba(90, 210, 190, 0.18);
