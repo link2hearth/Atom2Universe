@@ -307,8 +307,8 @@ function createShopBuildingDefinitions() {
       effectSummary:
         'Production passive : commence à +1 APS et progresse d’environ +12 % par niveau.',
       category: 'auto',
-      baseCost: 100,
-      costScale: 1.18,
+      baseCost: 20,
+      costScale: 1.15,
       effect: (level = 0) => {
         const autoAdd = calculateProgressiveBonus(level, 1);
         return { autoAdd };
@@ -3390,6 +3390,7 @@ GAME_CONFIG.progression.defaultTheme = GAME_CONFIG.themes.default;
 if (typeof globalThis !== 'undefined') {
   globalThis.GAME_CONFIG = GAME_CONFIG;
 }
+
 
 
 
