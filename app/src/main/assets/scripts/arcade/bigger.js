@@ -12,11 +12,11 @@
   const PHYSICS_GRAVITY = 1600;
   const PHYSICS_WALL_BOUNCE = 0.55;
   const PHYSICS_FLOOR_BOUNCE = 0.68;
+  const PHYSICS_BALL_BOUNCE = 0.38;
   const PHYSICS_LINEAR_DAMPING = 0.995;
   const PHYSICS_STATIC_FRICTION = 0.32;
   const PHYSICS_DYNAMIC_FRICTION = 0.08;
-  const MERGE_OVERLAP_THRESHOLD = 0.1;
-  const MERGE_CONTACT_TIME = 0.12;
+  const MERGE_PROXIMITY_EPSILON = 2;
   const DEFEAT_MARGIN = 96;
 
   const toInteger = value => {
@@ -778,6 +778,7 @@
           const distance = Math.hypot(dx, dy) || 0.0001;
           const minDistance = (a.radius || 0) + (b.radius || 0);
           const key = a.id < b.id ? `${a.id}|${b.id}` : `${b.id}|${a.id}`;
+          const closeEnoughForMerge = minDistance > 0 && distance <= (minDistance + MERGE_PROXIMITY_EPSILON);
           if (distance < minDistance && minDistance > 0) {
             const overlap = minDistance - distance;
             const nx = dx / distance;
@@ -792,33 +793,33 @@
               b.y += ny * shiftB;
 
               const relativeVelocity = (b.vx - a.vx) * nx + (b.vy - a.vy) * ny;
-              const impulse = (-(1 + PHYSICS_FLOOR_BOUNCE) * relativeVelocity) / invMassSum;
-              a.vx -= impulse * nx * a.invMass;
-              a.vy -= impulse * ny * a.invMass;
-              b.vx += impulse * nx * b.invMass;
-              b.vy += impulse * ny * b.invMass;
-
-              activeContacts.add(key);
-              let contact = contacts.get(key);
-              if (!contact) {
-                contact = { time: 0 };
-                contacts.set(key, contact);
-              }
-              const overlapRatio = minDistance > 0 ? overlap / minDistance : 0;
-              if (a.value === b.value) {
-                if (overlapRatio > MERGE_OVERLAP_THRESHOLD) {
-                  contact.time += dt;
-                  if (contact.time >= MERGE_CONTACT_TIME) {
-                    this.queueMerge(a, b);
-                    contact.time = 0;
-                  }
-                } else {
-                  contact.time = Math.max(0, contact.time - dt * 0.5);
-                }
-              } else {
-                contact.time = 0;
+              if (relativeVelocity < 0) {
+                const impulse = (-(1 + PHYSICS_BALL_BOUNCE) * relativeVelocity) / invMassSum;
+                a.vx -= impulse * nx * a.invMass;
+                a.vy -= impulse * ny * a.invMass;
+                b.vx += impulse * nx * b.invMass;
+                b.vy += impulse * ny * b.invMass;
               }
             }
+          }
+
+          let contact = contacts.get(key);
+          if (closeEnoughForMerge) {
+            activeContacts.add(key);
+            if (!contact) {
+              contact = { merged: false };
+              contacts.set(key, contact);
+            }
+            if (a.value === b.value) {
+              if (!contact.merged) {
+                this.queueMerge(a, b);
+                contact.merged = true;
+              }
+            } else if (contact) {
+              contact.merged = false;
+            }
+          } else if (contact) {
+            contacts.delete(key);
           }
         }
       }
