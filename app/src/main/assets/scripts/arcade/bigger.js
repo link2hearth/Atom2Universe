@@ -1117,14 +1117,23 @@
         return;
       }
       const parent = this.boardElement.parentElement;
-      const width = this.boardElement.clientWidth || parent?.clientWidth || 480;
-      const heightLimit = parent?.clientHeight;
+      const stageElement = this.boardElement.closest('.bigger-stage');
+      const stageRect = stageElement?.getBoundingClientRect();
+      const viewportWidth = typeof window !== 'undefined'
+        ? window.visualViewport?.width || window.innerWidth || document.documentElement?.clientWidth
+        : null;
+      const widthCandidates = [
+        this.boardElement.clientWidth,
+        parent?.clientWidth,
+        stageRect?.width,
+        this.pageElement?.clientWidth,
+        viewportWidth
+      ].filter(value => Number.isFinite(value) && value > 0);
+      const width = widthCandidates.length > 0 ? Math.max(...widthCandidates) : 480;
+
       let computedCell = width / COLUMN_COUNT;
-      if (Number.isFinite(heightLimit) && heightLimit > 0) {
-        computedCell = Math.min(computedCell, heightLimit / ROW_COUNT);
-      }
       const previousCell = this.cellSize || computedCell;
-      this.cellSize = Math.max(40, Math.min(120, computedCell));
+      this.cellSize = Math.max(40, Math.min(240, computedCell));
       this.boardWidth = this.cellSize * COLUMN_COUNT;
       this.boardHeight = this.cellSize * ROW_COUNT;
       this.boardElement.style.setProperty('--bigger-cell-size', `${this.cellSize}px`);

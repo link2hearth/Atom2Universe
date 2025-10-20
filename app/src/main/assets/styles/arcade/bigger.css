@@ -34,8 +34,8 @@
 
 .bigger-stage {
   flex: 1 1 auto;
-  width: 100%;
-  max-width: clamp(960px, 92vw, 1400px);
+  width: min(100%, calc(var(--bigger-board-width, clamp(640px, 86vw, 1280px)) + clamp(2.4rem, 6vw, 4.8rem)));
+  max-width: none;
   margin: 0 auto;
   background: var(--bigger-panel-bg);
   border: 1px solid var(--bigger-panel-border);
@@ -45,7 +45,10 @@
   display: flex;
   flex-direction: column;
   gap: clamp(1rem, 2vw, 1.6rem);
-  min-height: clamp(620px, 100vh - clamp(2.4rem, 6vw, 4.8rem), 100vh);
+  min-height: max(
+    clamp(620px, 100vh - clamp(2.4rem, 6vw, 4.8rem), 100vh),
+    calc(var(--bigger-board-height, 720px) + clamp(5.4rem, 12vw, 7.8rem))
+  );
 }
 
 .bigger-stage__topbar {
@@ -128,11 +131,9 @@
 .bigger-board-container {
   position: relative;
   flex: 1 1 auto;
-  width: min(100%, var(--bigger-board-width, clamp(480px, 78vw, 1120px)));
-  max-width: 1120px;
-  max-height: min(90vh, 1024px);
+  width: min(100%, var(--bigger-board-width, clamp(520px, 90vw, 1280px)));
+  height: var(--bigger-board-height, 82vh);
   margin: 0 auto;
-  aspect-ratio: var(--bigger-cols) / var(--bigger-rows);
   border-radius: clamp(1rem, 2vw, 1.6rem);
   background: var(--bigger-board-bg);
   border: 1px solid var(--bigger-board-border);
