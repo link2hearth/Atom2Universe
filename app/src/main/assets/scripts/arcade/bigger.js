@@ -1122,14 +1122,18 @@
       const viewportWidth = typeof window !== 'undefined'
         ? window.visualViewport?.width || window.innerWidth || document.documentElement?.clientWidth
         : null;
+      const parentRectWidth = typeof parent?.getBoundingClientRect === 'function'
+        ? parent.getBoundingClientRect().width
+        : null;
       const widthCandidates = [
         this.boardElement.clientWidth,
+        parentRectWidth,
         parent?.clientWidth,
         stageRect?.width,
         this.pageElement?.clientWidth,
         viewportWidth
       ].filter(value => Number.isFinite(value) && value > 0);
-      const width = widthCandidates.length > 0 ? Math.max(...widthCandidates) : 480;
+      const width = widthCandidates.length > 0 ? Math.min(...widthCandidates) : 480;
 
       let computedCell = width / COLUMN_COUNT;
       const previousCell = this.cellSize || computedCell;
