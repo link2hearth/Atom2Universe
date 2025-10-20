@@ -1140,9 +1140,11 @@
       const stageElement = this.boardElement.closest('.bigger-stage');
       if (stageElement) {
         stageElement.style.setProperty('--bigger-board-width', boardWidthValue);
+        stageElement.style.setProperty('--bigger-board-height', boardHeightValue);
       }
       if (this.pageElement) {
         this.pageElement.style.setProperty('--bigger-board-width', boardWidthValue);
+        this.pageElement.style.setProperty('--bigger-board-height', boardHeightValue);
       }
       this.updateDropIndicator();
 

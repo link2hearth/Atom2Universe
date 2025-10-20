@@ -33,11 +33,9 @@
 }
 
 .bigger-stage {
-  flex: 0 1 auto;
-  width: min(
-    100%,
-    calc(var(--bigger-board-width, 720px) + clamp(2.4rem, 5vw, 4.4rem))
-  );
+  flex: 1 1 auto;
+  width: 100%;
+  max-width: clamp(960px, 92vw, 1400px);
   margin: 0 auto;
   background: var(--bigger-panel-bg);
   border: 1px solid var(--bigger-panel-border);
