@@ -130,7 +130,7 @@
   flex: 1 1 auto;
   width: min(100%, var(--bigger-board-width, clamp(480px, 78vw, 1120px)));
   max-width: 1120px;
-  max-height: min(82vh, 920px);
+  max-height: min(90vh, 1024px);
   margin: 0 auto;
   aspect-ratio: var(--bigger-cols) / var(--bigger-rows);
   border-radius: clamp(1rem, 2vw, 1.6rem);
