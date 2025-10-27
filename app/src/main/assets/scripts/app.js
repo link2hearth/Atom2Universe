@@ -11227,6 +11227,7 @@ function bindDomEventListeners() {
     atomButton.addEventListener('pointerup', handlePointerCompletion);
     atomButton.addEventListener('pointerleave', handleEcoPointerRelease);
     atomButton.addEventListener('pointercancel', handlePointerCompletion);
+    atomButton.addEventListener('lostpointercapture', handlePointerCompletion);
 
     atomButton.addEventListener('click', event => {
       if (shouldSuppressPointerDerivedClick()) {

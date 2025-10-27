@@ -702,6 +702,16 @@
         originalNextSibling: cube.nextSibling,
         from: state.location
       };
+      if (typeof cube.addEventListener === 'function') {
+        const lostPointerHandler = event => {
+          if (!this.dragState || event.pointerId !== this.dragState.pointerId) {
+            return;
+          }
+          this.handlePointerCancel(event);
+        };
+        cube.addEventListener('lostpointercapture', lostPointerHandler);
+        this.dragState.lostPointerHandler = lostPointerHandler;
+      }
       cube.classList.add('balance-cube--dragging');
       if (this.dragLayer) {
         this.dragLayer.appendChild(cube);
@@ -769,6 +779,7 @@
         originalParent.insertBefore(cube, originalNextSibling);
       }
       this.releasePointerCapture();
+      this.removeDragCaptureListener();
       this.dragState = null;
       this.stopPointerListeners();
     }
@@ -791,6 +802,19 @@
           // Ignore failures when the pointer capture is already released.
         }
       }
+      this.removeDragCaptureListener();
+    }
+
+    removeDragCaptureListener() {
+      if (!this.dragState || !this.dragState.cube || !this.dragState.lostPointerHandler) {
+        return;
+      }
+      try {
+        this.dragState.cube.removeEventListener('lostpointercapture', this.dragState.lostPointerHandler);
+      } catch (listenerError) {
+        // Ignore failures when the listener is already removed or unsupported.
+      }
+      this.dragState.lostPointerHandler = null;
     }
 
     placeCubeOnBoard(cube, positionRatio) {

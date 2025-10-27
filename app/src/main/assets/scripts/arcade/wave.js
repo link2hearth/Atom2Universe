@@ -700,6 +700,7 @@
         pointerTarget.addEventListener('pointerup', this.handlePointerUp);
         pointerTarget.addEventListener('pointercancel', this.handlePointerCancel);
         pointerTarget.addEventListener('pointerleave', this.handlePointerCancel);
+        pointerTarget.addEventListener('lostpointercapture', this.handlePointerCancel);
         if (!supportsPointerEvents) {
           pointerTarget.addEventListener('touchstart', this.handleTouchStart, { passive: false });
           pointerTarget.addEventListener('touchend', this.handleTouchEnd, { passive: false });
@@ -728,6 +729,7 @@
         pointerTarget.removeEventListener('pointerup', this.handlePointerUp);
         pointerTarget.removeEventListener('pointercancel', this.handlePointerCancel);
         pointerTarget.removeEventListener('pointerleave', this.handlePointerCancel);
+        pointerTarget.removeEventListener('lostpointercapture', this.handlePointerCancel);
         if (!supportsPointerEvents) {
           pointerTarget.removeEventListener('touchstart', this.handleTouchStart, { passive: false });
           pointerTarget.removeEventListener('touchend', this.handleTouchEnd, { passive: false });

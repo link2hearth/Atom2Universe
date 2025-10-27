@@ -1728,6 +1728,7 @@
       this.canvas.addEventListener('pointerup', this.handlePointerUp);
       this.canvas.addEventListener('pointerleave', this.handlePointerUp);
       this.canvas.addEventListener('pointercancel', this.handlePointerUp);
+      this.canvas.addEventListener('lostpointercapture', this.handlePointerUp);
 
       if (this.overlayButton) {
         this.overlayButton.addEventListener('click', this.handleOverlayButtonClick);
@@ -1776,6 +1777,7 @@
       this.canvas.removeEventListener('pointerup', this.handlePointerUp);
       this.canvas.removeEventListener('pointerleave', this.handlePointerUp);
       this.canvas.removeEventListener('pointercancel', this.handlePointerUp);
+      this.canvas.removeEventListener('lostpointercapture', this.handlePointerUp);
       if (this.overlayButton) {
         this.overlayButton.removeEventListener('click', this.handleOverlayButtonClick);
       }
