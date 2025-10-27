@@ -190,6 +190,41 @@
     }
   }
 
+  function requestScrollUnlock() {
+    let eventDispatched = false;
+    if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
+      let event = null;
+      if (typeof window.CustomEvent === 'function') {
+        event = new window.CustomEvent('atom2univers:scroll-reset');
+      } else if (typeof window.Event === 'function') {
+        event = new window.Event('atom2univers:scroll-reset');
+      }
+      if (event) {
+        try {
+          window.dispatchEvent(event);
+          eventDispatched = true;
+        } catch (error) {
+          eventDispatched = false;
+        }
+      }
+    }
+
+    if (typeof globalThis !== 'undefined' && typeof globalThis.forceUnlockScrollSafe === 'function') {
+      globalThis.forceUnlockScrollSafe();
+      return;
+    }
+
+    if (!eventDispatched) {
+      const body = typeof document !== 'undefined' ? document.body : null;
+      if (body) {
+        body.style.removeProperty('touch-action');
+        body.style.removeProperty('overscroll-behavior');
+        body.classList.remove('touch-scroll-lock');
+        body.classList.remove('touch-scroll-force');
+      }
+    }
+  }
+
   function clamp(value, min, max) {
     if (value < min) {
       return min;
@@ -1296,6 +1331,7 @@
       this.stop();
       this.setPressingState(false);
       this.flushAutosave();
+      requestScrollUnlock();
     }
 
     tick(timestamp) {
