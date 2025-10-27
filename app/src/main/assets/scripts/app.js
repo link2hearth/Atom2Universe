@@ -10153,6 +10153,7 @@ if (typeof globalThis !== 'undefined') {
   globalThis.handleManualAtomClick = handleManualAtomClick;
   globalThis.isManualClickContextActive = isManualClickContextActive;
   globalThis.resetTouchTrackingState = resetTouchTrackingState;
+  globalThis.forceUnlockScrollSafe = forceUnlockScrollSafe;
 }
 
 function shouldTriggerGlobalClick(event) {
@@ -10634,7 +10635,7 @@ if (typeof window !== 'undefined' && typeof window.addEventListener === 'functio
     applyActivePageScrollBehavior();
   }, passiveEventListenerOptions);
   window.addEventListener('atom2univers:scroll-reset', () => {
-    applyActivePageScrollBehavior();
+    forceUnlockScrollSafe();
   });
   window.addEventListener('touchstart', handleGlobalTouchStart, passiveCaptureEventListenerOptions);
   window.addEventListener('touchmove', handleGlobalTouchMove, passiveCaptureEventListenerOptions);

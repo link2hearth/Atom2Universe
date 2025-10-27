@@ -575,6 +575,7 @@
       if (typeof window === 'undefined') {
         return;
       }
+      let eventDispatched = false;
       if (typeof window.dispatchEvent === 'function') {
         let event = null;
         if (typeof window.CustomEvent === 'function') {
@@ -583,16 +584,28 @@
           event = new window.Event('atom2univers:scroll-reset');
         }
         if (event) {
-          window.dispatchEvent(event);
-          return;
+          try {
+            window.dispatchEvent(event);
+            eventDispatched = true;
+          } catch (error) {
+            eventDispatched = false;
+          }
         }
       }
-      const body = typeof document !== 'undefined' ? document.body : null;
-      if (body) {
-        body.style.removeProperty('touch-action');
-        body.style.removeProperty('overscroll-behavior');
-        body.classList.remove('touch-scroll-lock');
-        body.classList.remove('touch-scroll-force');
+
+      if (typeof globalThis !== 'undefined' && typeof globalThis.forceUnlockScrollSafe === 'function') {
+        globalThis.forceUnlockScrollSafe();
+        return;
+      }
+
+      if (!eventDispatched) {
+        const body = typeof document !== 'undefined' ? document.body : null;
+        if (body) {
+          body.style.removeProperty('touch-action');
+          body.style.removeProperty('overscroll-behavior');
+          body.classList.remove('touch-scroll-lock');
+          body.classList.remove('touch-scroll-force');
+        }
       }
     }
 
