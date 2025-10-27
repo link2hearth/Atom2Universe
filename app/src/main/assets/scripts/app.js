@@ -10300,9 +10300,28 @@ function normalizeTouchIdentifier(touch) {
   return null;
 }
 
-function registerActiveTouches(touchList) {
+function registerActiveTouches(touchList, fullTouchList = null) {
   cancelScheduledScrollUnlockCheck();
   consecutiveScrollUnlockFailures = 0;
+  if (fullTouchList && typeof fullTouchList.length === 'number') {
+    const activeIdentifiers = new Set();
+    Array.from(fullTouchList).forEach(touch => {
+      const identifier = normalizeTouchIdentifier(touch);
+      if (identifier) {
+        activeIdentifiers.add(identifier);
+      }
+    });
+    if (activeIdentifiers.size > 0 || fullTouchList.length === 0) {
+      activeTouchIdentifiers.forEach((_, identifier) => {
+        if (!activeIdentifiers.has(identifier)) {
+          activeTouchIdentifiers.delete(identifier);
+        }
+      });
+      if (fullTouchList.length === 0) {
+        activePointerTouchIds.clear();
+      }
+    }
+  }
   if (!touchList || typeof touchList.length !== 'number') {
     return;
   }
@@ -10315,16 +10334,32 @@ function registerActiveTouches(touchList) {
   });
 }
 
-function unregisterActiveTouches(touchList) {
-  if (!touchList || typeof touchList.length !== 'number') {
-    return;
+function unregisterActiveTouches(touchList, activeTouchList = null) {
+  if (touchList && typeof touchList.length === 'number') {
+    Array.from(touchList).forEach(touch => {
+      const identifier = normalizeTouchIdentifier(touch);
+      if (identifier) {
+        activeTouchIdentifiers.delete(identifier);
+      }
+    });
   }
-  Array.from(touchList).forEach(touch => {
-    const identifier = normalizeTouchIdentifier(touch);
-    if (identifier) {
-      activeTouchIdentifiers.delete(identifier);
+  if (activeTouchList && typeof activeTouchList.length === 'number') {
+    const currentIdentifiers = new Set();
+    Array.from(activeTouchList).forEach(touch => {
+      const identifier = normalizeTouchIdentifier(touch);
+      if (identifier) {
+        currentIdentifiers.add(identifier);
+      }
+    });
+    activeTouchIdentifiers.forEach((_, identifier) => {
+      if (!currentIdentifiers.has(identifier)) {
+        activeTouchIdentifiers.delete(identifier);
+      }
+    });
+    if (activeTouchList.length === 0) {
+      activePointerTouchIds.clear();
     }
-  });
+  }
 }
 
 function hasRemainingActiveTouches(event) {
@@ -10439,11 +10474,13 @@ function applyActivePageScrollBehavior(activePageElement) {
 }
 
 function handleGlobalTouchStart(event) {
-  registerActiveTouches(event?.changedTouches || event?.touches);
+  const activeTouches = event?.touches || null;
+  registerActiveTouches(event?.changedTouches || activeTouches, activeTouches);
 }
 
 function handleGlobalTouchCompletion(event) {
-  unregisterActiveTouches(event?.changedTouches || event?.touches);
+  const activeTouches = event?.touches || null;
+  unregisterActiveTouches(event?.changedTouches || activeTouches, activeTouches);
   if (event?.type === 'touchcancel' && (!event.changedTouches || event.changedTouches.length === 0)) {
     activeTouchIdentifiers.clear();
     activePointerTouchIds.clear();
