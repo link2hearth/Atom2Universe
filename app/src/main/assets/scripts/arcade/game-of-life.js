@@ -728,6 +728,7 @@
         this.menuHeader.addEventListener('pointermove', this.boundHandleMenuPointerMove);
         this.menuHeader.addEventListener('pointerup', this.boundHandleMenuPointerUp);
         this.menuHeader.addEventListener('pointercancel', this.boundHandleMenuPointerUp);
+        this.menuHeader.addEventListener('lostpointercapture', this.boundHandleMenuPointerUp);
       }
 
       if (this.canvas) {
@@ -735,6 +736,7 @@
         this.canvas.addEventListener('pointermove', event => this.handlePointerMove(event));
         window.addEventListener('pointerup', event => this.handlePointerUp(event));
         window.addEventListener('pointercancel', event => this.handlePointerUp(event));
+        this.canvas.addEventListener('lostpointercapture', event => this.handlePointerUp(event));
         this.canvas.addEventListener('wheel', event => this.handleWheel(event), { passive: false });
       }
 

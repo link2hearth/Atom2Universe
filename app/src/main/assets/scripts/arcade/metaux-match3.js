@@ -431,6 +431,7 @@ class MetauxMatch3Game {
         tile.addEventListener('pointermove', this.boundPointerMove);
         tile.addEventListener('pointerup', this.boundPointerUp);
         tile.addEventListener('pointercancel', this.boundPointerCancel);
+        tile.addEventListener('lostpointercapture', this.boundPointerCancel);
         tile.addEventListener('contextmenu', event => {
           event.preventDefault();
         });
