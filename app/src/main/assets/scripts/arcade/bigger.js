@@ -320,6 +320,7 @@
         this.boardElement.addEventListener('pointerdown', this.handleBoardPointerDown);
         this.boardElement.addEventListener('pointerup', this.handleBoardPointerUp);
         this.boardElement.addEventListener('pointercancel', this.handleBoardPointerUp);
+        this.boardElement.addEventListener('lostpointercapture', this.handleBoardPointerUp);
         this.boardElement.addEventListener('focus', this.handleBoardFocus);
         this.boardElement.addEventListener('blur', this.handleBoardBlur);
         this.boardElement.addEventListener('keydown', this.handleBoardKeyDown);
@@ -1469,6 +1470,7 @@
         this.boardElement.removeEventListener('pointerdown', this.handleBoardPointerDown);
         this.boardElement.removeEventListener('pointerup', this.handleBoardPointerUp);
         this.boardElement.removeEventListener('pointercancel', this.handleBoardPointerUp);
+        this.boardElement.removeEventListener('lostpointercapture', this.handleBoardPointerUp);
         this.boardElement.removeEventListener('focus', this.handleBoardFocus);
         this.boardElement.removeEventListener('blur', this.handleBoardBlur);
         this.boardElement.removeEventListener('keydown', this.handleBoardKeyDown);

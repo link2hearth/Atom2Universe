@@ -9705,6 +9705,7 @@
       fullContainer.addEventListener('pointerup', stopPointerInteraction);
       fullContainer.addEventListener('pointerleave', stopPointerInteraction);
       fullContainer.addEventListener('pointercancel', stopPointerInteraction);
+      fullContainer.addEventListener('lostpointercapture', stopPointerInteraction);
 
       function startPointerNote(pointer, midiNote) {
         if (!midiPlayer || typeof midiPlayer.playManualNote !== 'function') {
