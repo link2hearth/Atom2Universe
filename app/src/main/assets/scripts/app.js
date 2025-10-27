@@ -10460,6 +10460,9 @@ function handleGlobalPointerCompletion(event) {
   if (!event || event.pointerType !== 'touch') {
     return;
   }
+  if (event.type === 'pointerout' && event.relatedTarget) {
+    return;
+  }
   if (Number.isFinite(event.pointerId)) {
     activePointerTouchIds.delete(event.pointerId);
   } else {
@@ -10513,7 +10516,7 @@ if (typeof document !== 'undefined' && typeof document.addEventListener === 'fun
 
   if (supportsGlobalPointerEvents) {
     document.addEventListener('pointerdown', handleGlobalPointerStart, passiveCaptureEventListenerOptions);
-    ['pointerup', 'pointercancel'].forEach(eventName => {
+    ['pointerup', 'pointercancel', 'pointerleave', 'pointerout', 'lostpointercapture'].forEach(eventName => {
       document.addEventListener(eventName, handleGlobalPointerCompletion, passiveCaptureEventListenerOptions);
     });
   }
@@ -10535,7 +10538,7 @@ if (typeof window !== 'undefined' && typeof window.addEventListener === 'functio
   });
   if (supportsGlobalPointerEvents) {
     window.addEventListener('pointerdown', handleGlobalPointerStart, passiveCaptureEventListenerOptions);
-    ['pointerup', 'pointercancel'].forEach(eventName => {
+    ['pointerup', 'pointercancel', 'pointerleave', 'pointerout', 'lostpointercapture'].forEach(eventName => {
       window.addEventListener(eventName, handleGlobalPointerCompletion, passiveCaptureEventListenerOptions);
     });
   }
