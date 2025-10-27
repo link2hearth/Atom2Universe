@@ -10456,8 +10456,24 @@ function handleGlobalTouchCompletion(event) {
   applyActivePageScrollBehavior();
 }
 
+function isTouchLikePointerEvent(event) {
+  if (!event) {
+    return false;
+  }
+  const pointerType = typeof event.pointerType === 'string'
+    ? event.pointerType.toLowerCase()
+    : '';
+  if (pointerType === 'touch') {
+    return true;
+  }
+  if (!pointerType && Number.isFinite(event.pointerId)) {
+    return activePointerTouchIds.has(event.pointerId);
+  }
+  return false;
+}
+
 function handleGlobalPointerCompletion(event) {
-  if (!event || event.pointerType !== 'touch') {
+  if (!isTouchLikePointerEvent(event)) {
     return;
   }
   if (event.type === 'pointerout' && event.relatedTarget) {
