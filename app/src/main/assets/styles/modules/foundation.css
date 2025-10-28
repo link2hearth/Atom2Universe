@@ -145,11 +145,6 @@ body.theme-aurora {
 
 body.view-arcade {
   background: radial-gradient(140% 160% at 50% 0%, #1a1e48 0%, #070918 55%, #01020a 100%);
-  --app-header-offset: 0;
-}
-
-body.view-arcade .app-header {
-  display: none;
 }
 
 body.theme-light.view-arcade {

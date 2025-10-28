@@ -38,8 +38,8 @@
   max-width: 100%;
   margin: 0 auto;
   --arcade-padding-x: clamp(0.5rem, 1.4vw, 0.82rem);
-  --arcade-padding-top: 0;
-  --arcade-padding-bottom: clamp(2.4rem, 16vh, 5.8rem);
+  --arcade-padding-top: clamp(0rem, 0.12vw, 0.08rem);
+  --arcade-padding-bottom: clamp(0.55rem, 1.8vw, 0.9rem);
   --arcade-stage-spacing: clamp(0.15rem, 0.9vh, 0.45rem);
   --arcade-header-height: var(--app-header-offset, 0rem);
   --arcade-vertical-offset: calc(
