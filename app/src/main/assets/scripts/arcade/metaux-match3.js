@@ -666,7 +666,6 @@ class MetauxMatch3Game {
     if (originTile && originTile.releasePointerCapture && pointerId != null) {
       originTile.releasePointerCapture(pointerId);
     }
-    this.requestScrollUnlock();
     if (target) {
       this.attemptSwap(origin, target);
     } else {
@@ -684,7 +683,6 @@ class MetauxMatch3Game {
     if (originTile && originTile.releasePointerCapture && pointerId != null) {
       originTile.releasePointerCapture(pointerId);
     }
-    this.requestScrollUnlock();
   }
 
   setHoverTarget(target) {

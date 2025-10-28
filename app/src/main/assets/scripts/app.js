@@ -10660,7 +10660,6 @@ function showPage(pageId) {
     }
     return;
   }
-  forceUnlockScrollSafe({ reapplyScrollBehavior: false });
   const now = performance.now();
   if (pageId === 'wave') {
     ensureWaveGame();
