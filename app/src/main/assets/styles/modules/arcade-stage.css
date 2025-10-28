@@ -186,12 +186,13 @@ body.theme-neon .arcade-header__status--bonus {
 
 .arcade-content {
   display: flex;
-  align-items: stretch;
+  align-items: flex-start;
   justify-content: center;
   gap: clamp(0.75rem, 2vw, 1.5rem);
   flex: 1 1 auto;
   width: 100%;
-  padding-block: var(--arcade-stage-spacing, clamp(0.15rem, 0.9vh, 0.45rem));
+  padding-block-start: 0;
+  padding-block-end: var(--arcade-stage-spacing, clamp(0.15rem, 0.9vh, 0.45rem));
   flex-wrap: wrap;
 }
 
