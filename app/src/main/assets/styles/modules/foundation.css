@@ -1201,14 +1201,6 @@ main {
   width: 100%;
 }
 
-body.view-arcade {
-  --app-header-offset: 0;
-}
-
-body.view-arcade .app-header {
-  display: none;
-}
-
 .page { 
   display: none;
   width: 100%;

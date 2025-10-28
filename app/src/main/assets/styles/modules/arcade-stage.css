@@ -195,17 +195,6 @@ body.theme-neon .arcade-header__status--bonus {
   flex-wrap: wrap;
 }
 
-body.view-arcade .page--arcade {
-  padding-top: clamp(0.4rem, 1.5vw, 1rem);
-  padding-bottom: clamp(3rem, 12vh, 6rem);
-}
-
-body.view-arcade .arcade-content {
-  align-items: flex-start;
-  padding-top: 0;
-  padding-bottom: clamp(1.5rem, 10vh, 4rem);
-}
-
 .arcade-stage {
   position: relative;
   flex: 0 1 auto;

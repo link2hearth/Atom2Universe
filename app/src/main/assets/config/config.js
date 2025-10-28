@@ -1670,14 +1670,9 @@ const GAME_CONFIG = {
           message: 'Particule perdue ! Touchez la raquette pour continuer.',
           buttonLabel: 'Reprendre'
         },
-        /**
-         * Libellé du bouton permettant de quitter une partie en cours depuis la bannière.
-         */
-        quitButtonLabel: 'Quitter',
         levelCleared: {
           template: 'Niveau {level} terminé !{reward}',
           buttonLabel: 'Continuer',
-          quitButtonLabel: 'Quitter la partie',
           rewardTemplate: ' {reward} obtenu !',
           noReward: ' Aucun ticket cette fois.',
           speedBonusTemplate: ' Bonus vitesse : +{bonus} !'
