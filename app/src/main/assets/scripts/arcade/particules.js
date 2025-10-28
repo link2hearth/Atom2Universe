@@ -1325,6 +1325,7 @@
   const GAME_OVER_WITH_TICKETS = SETTINGS.ui.gameOver.withTickets;
   const GAME_OVER_WITHOUT_TICKETS = SETTINGS.ui.gameOver.withoutTickets;
   const GAME_OVER_BUTTON = SETTINGS.ui.gameOver.buttonLabel;
+  const OVERLAY_QUIT_BUTTON = SETTINGS.ui.quitButtonLabel;
   const HUD_TICKET_SINGULAR = SETTINGS.ui.hud.ticketSingular;
   const HUD_TICKET_PLURAL = SETTINGS.ui.hud.ticketPlural;
   const HUD_BONUS_TICKET_SINGULAR = SETTINGS.ui.hud.bonusTicketSingular;
@@ -3616,9 +3617,17 @@
       if (this.overlayButton) {
         this.overlayButton.textContent = buttonLabel;
       }
-      const secondaryText = typeof secondaryButtonLabel === 'string'
+      let secondaryText = typeof secondaryButtonLabel === 'string'
         ? secondaryButtonLabel.trim()
         : '';
+      let effectiveSecondaryAction = secondaryAction;
+      if (!secondaryText && this.shouldShowDefaultOverlayQuit(action)) {
+        const fallbackQuitLabel = this.getOverlayQuitButtonLabel();
+        if (fallbackQuitLabel) {
+          secondaryText = fallbackQuitLabel;
+          effectiveSecondaryAction = 'quit';
+        }
+      }
       const hasSecondary = Boolean(secondaryText) && this.overlaySecondaryButton;
       if (this.overlaySecondaryButton) {
         if (hasSecondary) {
@@ -3633,8 +3642,8 @@
         }
       }
       this.overlayAction = action;
-      this.overlaySecondaryAction = hasSecondary && typeof secondaryAction === 'string'
-        ? secondaryAction
+      this.overlaySecondaryAction = hasSecondary && typeof effectiveSecondaryAction === 'string'
+        ? effectiveSecondaryAction
         : null;
       this.updateModeUI(action);
       if (!this.isRestoringState) {
@@ -3902,6 +3911,30 @@
       }
     }
 
+    getOverlayQuitButtonLabel() {
+      const translated = translate('index.sections.arcade.overlay.quit');
+      if (typeof translated === 'string') {
+        const trimmed = translated.trim();
+        if (trimmed && trimmed !== 'index.sections.arcade.overlay.quit') {
+          return trimmed;
+        }
+      }
+      const configured = typeof OVERLAY_QUIT_BUTTON === 'string'
+        ? OVERLAY_QUIT_BUTTON
+        : SETTINGS?.ui?.quitButtonLabel;
+      if (typeof configured === 'string') {
+        const trimmedConfigured = configured.trim();
+        if (trimmedConfigured && trimmedConfigured !== 'index.sections.arcade.overlay.quit') {
+          return trimmedConfigured;
+        }
+      }
+      return '';
+    }
+
+    shouldShowDefaultOverlayQuit(action = this.overlayAction) {
+      return action === 'start' || action === 'resume' || action === 'restart';
+    }
+
     getLevelClearedQuitButtonLabel() {
       const translated = translate('scripts.particules.ui.levelCleared.quitButton');
       if (typeof translated === 'string') {
@@ -4089,13 +4122,9 @@
         if (action === 'start') {
           message = START_OVERLAY_MESSAGE;
           buttonLabel = START_OVERLAY_BUTTON;
-          secondaryLabel = '';
-          secondaryAction = null;
         } else if (action === 'resume') {
           message = PAUSE_OVERLAY_MESSAGE;
           buttonLabel = PAUSE_OVERLAY_BUTTON;
-          secondaryLabel = '';
-          secondaryAction = null;
         } else if (action === 'next') {
           buttonLabel = LEVEL_CLEARED_BUTTON || buttonLabel;
           if (!secondaryLabel) {
@@ -4106,6 +4135,16 @@
           }
         } else if (action === 'restart') {
           buttonLabel = GAME_OVER_BUTTON || buttonLabel;
+        }
+        if (this.shouldShowDefaultOverlayQuit(action)) {
+          const defaultQuit = this.getOverlayQuitButtonLabel();
+          if (defaultQuit) {
+            secondaryLabel = defaultQuit;
+            secondaryAction = 'quit';
+          } else {
+            secondaryLabel = '';
+            secondaryAction = null;
+          }
         }
         this.showOverlay({
           message,
