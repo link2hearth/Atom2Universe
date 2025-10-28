@@ -7,7 +7,7 @@
   const MAX_VALUE = 1024;
   const VALUE_ORDER = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024];
   const SPAWN_VALUES = [1, 2, 4, 8, 16];
-  const BALL_AREA_GROWTH_FACTOR = Math.sqrt(1.5);
+  const BALL_AREA_GROWTH_FACTOR = Math.sqrt(1.75);
   const BALL_SIZE_STEPS = (() => {
     const steps = [0.68, 0.76];
     while (steps.length < VALUE_ORDER.length) {
@@ -585,11 +585,25 @@
     }
 
     resolveBoardWidth() {
-      const width = this.boardWidth || this.boardElement?.clientWidth;
+      const width = this.boardElement?.clientWidth;
       if (Number.isFinite(width) && width > 0) {
         return width;
       }
+      if (Number.isFinite(this.boardWidth) && this.boardWidth > 0) {
+        return this.boardWidth;
+      }
       return this.cellSize * COLUMN_COUNT;
+    }
+
+    resolveBoardHeight() {
+      const height = this.boardElement?.clientHeight;
+      if (Number.isFinite(height) && height > 0) {
+        return height;
+      }
+      if (Number.isFinite(this.boardHeight) && this.boardHeight > 0) {
+        return this.boardHeight;
+      }
+      return this.cellSize * ROW_COUNT;
     }
 
     getExpectedRadiusForValue(value) {
@@ -930,8 +944,8 @@
 
     runPhysicsFrame(dt, options = {}) {
       const { syncState = true } = options;
-      const width = this.boardWidth || this.boardElement?.clientWidth || this.cellSize * COLUMN_COUNT;
-      const height = this.boardHeight || this.cellSize * ROW_COUNT;
+      const width = this.resolveBoardWidth();
+      const height = this.resolveBoardHeight();
       if (!Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0) {
         if (syncState) {
           this.refreshSerializedBalls();
