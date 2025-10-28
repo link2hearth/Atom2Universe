@@ -41,7 +41,7 @@
   --arcade-padding-top: 0;
   --arcade-padding-bottom: clamp(2.4rem, 16vh, 5.8rem);
   --arcade-stage-spacing: clamp(0.15rem, 0.9vh, 0.45rem);
-  --arcade-header-height: var(--app-header-offset, 0rem);
+  --arcade-header-height: 0rem;
   --arcade-vertical-offset: calc(
     var(--arcade-padding-top) + var(--arcade-padding-bottom) + var(--arcade-stage-spacing) * 2 + var(--arcade-header-height)
   );
