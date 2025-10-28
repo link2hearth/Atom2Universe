@@ -147,6 +147,22 @@ body.view-arcade {
   background: radial-gradient(140% 160% at 50% 0%, #1a1e48 0%, #070918 55%, #01020a 100%);
 }
 
+body.view-arcade .app-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  clip: rect(0 0 0 0);
+  border: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
 body.theme-light.view-arcade {
   background: radial-gradient(140% 160% at 50% 0%, #fdfdff 0%, #e2e8ff 55%, #cbd6ff 100%);
 }

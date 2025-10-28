@@ -1318,7 +1318,7 @@
   const PAUSE_OVERLAY_BUTTON = SETTINGS.ui.pause.buttonLabel;
   const LEVEL_CLEARED_TEMPLATE = SETTINGS.ui.levelCleared.template;
   const LEVEL_CLEARED_BUTTON = SETTINGS.ui.levelCleared.buttonLabel;
-  const LEVEL_CLEARED_QUIT_BUTTON = SETTINGS.ui.levelCleared.quitButtonLabel;
+  const DEFAULT_QUIT_BUTTON_LABEL = SETTINGS.ui.levelCleared.quitButtonLabel;
   const LEVEL_CLEARED_REWARD_TEMPLATE = SETTINGS.ui.levelCleared.rewardTemplate;
   const LEVEL_CLEARED_SPEED_BONUS_TEMPLATE = SETTINGS.ui.levelCleared.speedBonusTemplate;
   const LEVEL_CLEARED_NO_REWARD_TEMPLATE = SETTINGS.ui.levelCleared.noReward;
@@ -1796,7 +1796,9 @@
             (this.overlayMessage?.textContent || '').trim()
             || START_OVERLAY_MESSAGE,
           buttonLabel: START_OVERLAY_BUTTON,
-          action: 'start'
+          action: 'start',
+          secondaryButtonLabel: this.getQuitButtonLabel(),
+          secondaryAction: 'quit'
         });
       }
       this.scheduleAutosave();
@@ -3561,7 +3563,7 @@
         message,
         buttonLabel: LEVEL_CLEARED_BUTTON,
         action: 'next',
-        secondaryButtonLabel: this.getLevelClearedQuitButtonLabel(),
+        secondaryButtonLabel: this.getQuitButtonLabel(),
         secondaryAction: 'quit'
       });
     }
@@ -3595,7 +3597,9 @@
       this.showOverlay({
         message,
         buttonLabel: GAME_OVER_BUTTON,
-        action: 'restart'
+        action: 'restart',
+        secondaryButtonLabel: this.getQuitButtonLabel(),
+        secondaryAction: 'quit'
       });
     }
 
@@ -3700,7 +3704,9 @@
       this.showOverlay({
         message: START_OVERLAY_MESSAGE,
         buttonLabel: START_OVERLAY_BUTTON,
-        action: 'start'
+        action: 'start',
+        secondaryButtonLabel: this.getQuitButtonLabel(),
+        secondaryAction: 'quit'
       });
       this.scheduleAutosave();
       requestScrollUnlock();
@@ -3902,7 +3908,7 @@
       }
     }
 
-    getLevelClearedQuitButtonLabel() {
+    getQuitButtonLabel() {
       const translated = translate('scripts.particules.ui.levelCleared.quitButton');
       if (typeof translated === 'string') {
         const trimmed = translated.trim();
@@ -3910,8 +3916,8 @@
           return trimmed;
         }
       }
-      const configured = typeof LEVEL_CLEARED_QUIT_BUTTON === 'string'
-        ? LEVEL_CLEARED_QUIT_BUTTON
+      const configured = typeof DEFAULT_QUIT_BUTTON_LABEL === 'string'
+        ? DEFAULT_QUIT_BUTTON_LABEL
         : SETTINGS?.ui?.levelCleared?.quitButtonLabel;
       if (typeof configured === 'string') {
         const trimmedConfigured = configured.trim();
@@ -4089,8 +4095,8 @@
         if (action === 'start') {
           message = START_OVERLAY_MESSAGE;
           buttonLabel = START_OVERLAY_BUTTON;
-          secondaryLabel = '';
-          secondaryAction = null;
+          secondaryLabel = this.getQuitButtonLabel();
+          secondaryAction = 'quit';
         } else if (action === 'resume') {
           message = PAUSE_OVERLAY_MESSAGE;
           buttonLabel = PAUSE_OVERLAY_BUTTON;
@@ -4099,13 +4105,15 @@
         } else if (action === 'next') {
           buttonLabel = LEVEL_CLEARED_BUTTON || buttonLabel;
           if (!secondaryLabel) {
-            secondaryLabel = this.getLevelClearedQuitButtonLabel();
+            secondaryLabel = this.getQuitButtonLabel();
           }
           if (!secondaryAction && secondaryLabel) {
             secondaryAction = 'quit';
           }
         } else if (action === 'restart') {
           buttonLabel = GAME_OVER_BUTTON || buttonLabel;
+          secondaryLabel = this.getQuitButtonLabel();
+          secondaryAction = 'quit';
         }
         this.showOverlay({
           message,
@@ -4128,7 +4136,7 @@
           message: savedState.overlay?.message || fallbackMessage,
           buttonLabel: LEVEL_CLEARED_BUTTON,
           action: 'next',
-          secondaryButtonLabel: this.getLevelClearedQuitButtonLabel(),
+          secondaryButtonLabel: this.getQuitButtonLabel(),
           secondaryAction: 'quit'
         });
       } else {
@@ -4176,7 +4184,7 @@
         && this.overlaySecondaryButton
         && !this.overlaySecondaryButton.hidden;
       if (hasQuitSecondary) {
-        this.overlaySecondaryButton.textContent = this.getLevelClearedQuitButtonLabel();
+        this.overlaySecondaryButton.textContent = this.getQuitButtonLabel();
       }
       if (this.isOverlayVisible() && !this.isRestoringState) {
         this.scheduleAutosave();
