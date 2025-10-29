@@ -11,6 +11,7 @@
     'sudoku',
     'minesweeper',
     'solitaire',
+    'holdem',
     'blackjack',
     'echecs'
   ];

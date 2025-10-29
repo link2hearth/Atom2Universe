@@ -335,6 +335,12 @@
             "title": "Blackjack",
             "description": "Doublez vos Atomes, ou perdez tout.",
             "cta": "Distribuer"
+          },
+          "holdem": {
+            "aria": "Accéder au mini-jeu Hold’em",
+            "title": "Hold’em",
+            "description": "Affrontez jusqu’à cinq IA en Texas Hold’em et empochez le pot avec la meilleure main.",
+            "cta": "S’asseoir"
           }
         }
       },
@@ -1684,6 +1690,80 @@
           "clubs": "trèfle"
         },
         "cardLabel": "{rank} de {suit}"
+      },
+      "holdem": {
+        "status": {
+          "intro": "Lancez une nouvelle donne pour jouer.",
+          "newHand": "Nouvelle donne — blinds {small}/{big}.",
+          "phasePrompt": "Phase {phase} — à vous de jouer.",
+          "playerWins": "Vous remportez le pot ({amount}).",
+          "playerFold": "{winner} remporte le pot ({amount}).",
+          "insufficientStack": "Pas assez de crédits pour suivre ({amount}).",
+          "invalidRaise": "Entrez un montant valide.",
+          "raiseTooSmall": "Relance insuffisante (minimum {amount}).",
+          "playerShowdownWin": "Vous gagnez {amount} avec {hand}.",
+          "playerSplitPot": "Partage du pot ({amount}) avec {names}.",
+          "playerShowdownLose": "Défaite face à {winner} ({hand})."
+        },
+        "pot": {
+          "aria": "Suivi du pot",
+          "gauge": "Jauge de pot",
+          "label": "Pot total",
+          "unit": "crédits"
+        },
+        "communityPlaceholder": "Les cartes communes apparaîtront ici.",
+        "hand": {
+          "label": "Votre main",
+          "placeholder": "Aucune carte distribuée pour le moment."
+        },
+        "controls": {
+          "newHand": "Nouvelle donne",
+          "check": "Checker",
+          "call": "Suivre",
+          "callWithAmount": "Suivre ({amount})",
+          "raise": "Relancer",
+          "fold": "Se coucher",
+          "raiseLabel": "Relancer à",
+          "raiseHelp": "Saisissez le montant total de votre mise pour ce tour."
+        },
+        "labels": {
+          "stack": "Stack",
+          "you": "Vous"
+        },
+        "phase": {
+          "preflop": "Préflop",
+          "flop": "Flop",
+          "turn": "Turn",
+          "river": "River"
+        },
+        "playerStatus": {
+          "waiting": "En attente",
+          "folded": "Couché",
+          "allIn": "All-in",
+          "raise": "Relance à {amount}",
+          "call": "Suit {amount}",
+          "check": "Check",
+          "blind": "Blind {amount}",
+          "revealed": "Main : {hand}"
+        },
+        "hands": {
+          "highCard": "Hauteur",
+          "pair": "Paire",
+          "twoPair": "Double paire",
+          "threeKind": "Brelan",
+          "straight": "Quinte",
+          "flush": "Couleur",
+          "fullHouse": "Full",
+          "fourKind": "Carré",
+          "straightFlush": "Quinte flush",
+          "royalFlush": "Quinte flush royale"
+        },
+        "aria": "Mini-jeu Poker Hold'em quantique",
+        "tableAria": "Table de poker Hold'em",
+        "communityAria": "Cartes communes",
+        "playersAria": "Adversaires",
+        "controlsAria": "Commandes de poker",
+        "playerHandAria": "Votre main"
       }
     },
     "particules": {
