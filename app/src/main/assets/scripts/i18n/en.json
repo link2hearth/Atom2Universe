@@ -1684,6 +1684,80 @@
           "clubs": "Clubs"
         },
         "cardLabel": "{rank} of {suit}"
+      },
+      "holdem": {
+        "status": {
+          "intro": "Start a new deal to play.",
+          "newHand": "New deal — blinds {small}/{big}.",
+          "phasePrompt": "{phase} phase — your move.",
+          "playerWins": "You win the pot ({amount}).",
+          "playerFold": "{winner} wins the pot ({amount}).",
+          "insufficientStack": "Not enough credits to call ({amount}).",
+          "invalidRaise": "Enter a valid amount.",
+          "raiseTooSmall": "Raise is too small (minimum {amount}).",
+          "playerShowdownWin": "You win {amount} with {hand}.",
+          "playerSplitPot": "Pot split ({amount}) with {names}.",
+          "playerShowdownLose": "Lost to {winner} ({hand})."
+        },
+        "pot": {
+          "aria": "Pot tracker",
+          "gauge": "Pot gauge",
+          "label": "Total pot",
+          "unit": "credits"
+        },
+        "communityPlaceholder": "Community cards will appear here.",
+        "hand": {
+          "label": "Your hand",
+          "placeholder": "No cards dealt yet."
+        },
+        "controls": {
+          "newHand": "New deal",
+          "check": "Check",
+          "call": "Call",
+          "callWithAmount": "Call ({amount})",
+          "raise": "Raise",
+          "fold": "Fold",
+          "raiseLabel": "Raise to",
+          "raiseHelp": "Enter the total amount you want to commit this street."
+        },
+        "labels": {
+          "stack": "Stack",
+          "you": "You"
+        },
+        "phase": {
+          "preflop": "Preflop",
+          "flop": "Flop",
+          "turn": "Turn",
+          "river": "River"
+        },
+        "playerStatus": {
+          "waiting": "Waiting",
+          "folded": "Folded",
+          "allIn": "All-in",
+          "raise": "Raises to {amount}",
+          "call": "Calls {amount}",
+          "check": "Checks",
+          "blind": "Blind {amount}",
+          "revealed": "Hand: {hand}"
+        },
+        "hands": {
+          "highCard": "High card",
+          "pair": "Pair",
+          "twoPair": "Two pair",
+          "threeKind": "Three of a kind",
+          "straight": "Straight",
+          "flush": "Flush",
+          "fullHouse": "Full house",
+          "fourKind": "Four of a kind",
+          "straightFlush": "Straight flush",
+          "royalFlush": "Royal flush"
+        },
+        "aria": "Quantum Hold'em mini-game",
+        "tableAria": "Hold'em poker table",
+        "communityAria": "Community cards",
+        "playersAria": "Opponents",
+        "controlsAria": "Poker controls",
+        "playerHandAria": "Your hand"
       }
     },
     "particules": {
