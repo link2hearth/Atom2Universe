@@ -245,7 +245,6 @@
     opponentsLeft: document.getElementById('holdemPlayersLeft'),
     opponentsRight: document.getElementById('holdemPlayersRight'),
     potValue: document.getElementById('holdemPotValue'),
-    potFill: document.getElementById('holdemPotFill'),
     playerCards: document.getElementById('holdemPlayerCards'),
     playerStack: document.getElementById('holdemPlayerStack'),
     playerStatus: document.getElementById('holdemPlayerStatus'),
@@ -753,12 +752,6 @@
   function renderPot() {
     if (elements.potValue) {
       elements.potValue.textContent = formatAmount(state.pot);
-    }
-    if (elements.potFill) {
-      const totalStacks = state.players.reduce((sum, player) => sum + Math.max(0, player.stack), 0);
-      const denominator = state.pot + totalStacks;
-      const ratio = denominator > 0 ? (state.pot / denominator) * 100 : 0;
-      elements.potFill.style.width = `${clamp(ratio, 0, 100)}%`;
     }
   }
 

@@ -156,20 +156,6 @@
   color: var(--holdem-muted-color);
 }
 
-.holdem-pot__gauge {
-  position: relative;
-  height: calc(0.75rem * var(--holdem-scale));
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 999px;
-  overflow: hidden;
-}
-
-.holdem-pot__fill {
-  height: 100%;
-  background: linear-gradient(90deg, rgba(34, 211, 238, 0.9), rgba(14, 165, 233, 0.9));
-  transition: width 0.4s ease;
-}
-
 
 .holdem-opponents {
   display: grid;

@@ -1763,7 +1763,6 @@
         },
         "pot": {
           "aria": "Pot tracker",
-          "gauge": "Pot gauge",
           "label": "Total pot",
           "unit": "credits"
         },

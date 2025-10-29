@@ -1763,7 +1763,6 @@
         },
         "pot": {
           "aria": "Suivi du pot",
-          "gauge": "Jauge de pot",
           "label": "Pot total",
           "unit": "crédits"
         },
