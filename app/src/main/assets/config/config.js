@@ -67,10 +67,10 @@ const PERFORMANCE_MODE_SETTINGS = Object.freeze({
   eco: Object.freeze({
     apcFlushIntervalMs: 250,
     apsFlushIntervalMs: 500,
-    frameIntervalMs: 250,
+    frameIntervalMs: 33,
     atomAnimation: Object.freeze({
-      amplitudeScale: 0.45,
-      motionScale: 0.6
+      amplitudeScale: 1,
+      motionScale: 1
     })
   })
 });
