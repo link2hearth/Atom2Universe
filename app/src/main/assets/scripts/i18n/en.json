@@ -249,7 +249,7 @@
         "subtitle": "Pick a bonus mini-game to extend your Atom2Univers session.",
         "locked": {
           "requiresAtoms": "Collect {{amount}} atoms to unlock the arcade.",
-          "requiresTrophy": "Unlock the \u201c{{trophy}}\u201d trophy to access this minigame.",
+          "requiresTrophy": "Unlock the “{{trophy}}” trophy to access this minigame.",
           "requiresMach3": "Earn a Mach3 ticket to unlock this minigame.",
           "default": "Unlock this minigame to access it."
         },
@@ -594,9 +594,22 @@
           "difficulty": "Choose difficulty",
           "reset": "Reset the game",
           "analyze": "Analyze the AI's last move",
+          "saveCompleted": "Save finished game",
           "notation": {
             "short": "Short notation",
             "long": "Long notation"
+          },
+          "twoPlayers": "Two-player mode",
+          "analyzeDisabled": "AI analysis unavailable in two-player mode.",
+          "archives": {
+            "label": "Saved games",
+            "placeholder": "Select a saved game",
+            "empty": "No saved games yet.",
+            "restore": "Back to current game",
+            "unnamed": "Saved game {{index}}",
+            "pgnWhite": "White player",
+            "pgnBlackAi": "AI ({{difficulty}})",
+            "pgnBlackTwoPlayer": "Black player"
           }
         },
         "history": {
@@ -610,6 +623,8 @@
           "standardDescription": "Balanced configuration: responsive, steady AI.",
           "expert": "Expert mode",
           "expertDescription": "Deeper analysis and longer think time for a tough challenge.",
+          "twoPlayers": "Two-player mode",
+          "twoPlayersDescription": "Challenge a friend on the same device. The AI stays disabled.",
           "reward": "Offline bonus: {duration} at {multiplier}"
         },
         "analysis": {
@@ -627,7 +642,8 @@
             "positive": "black advantage {{value}}",
             "negative": "white advantage {{value}}"
           },
-          "depth": " · depth {{value}}"
+          "depth": " · depth {{value}}",
+          "disabled": "AI analysis is unavailable in two-player mode."
         },
         "feedback": {
           "invalidMove": "That move isn’t legal.",
@@ -695,6 +711,34 @@
         "accessibility": {
           "pieceOnSquare": "{{piece}} on {{square}}",
           "emptySquare": "Empty square {{square}}"
+        },
+        "helper": "Tap or drag a piece to highlight its legal moves.",
+        "helperSaved": "Game saved to archives!",
+        "helperArchivePreview": "Viewing saved game “{{name}}”.",
+        "helperArchiveRestored": "Back to your current game.",
+        "saveDialog": {
+          "title": "Save the finished game",
+          "description": "Give this completed game a name to find it later.",
+          "nameLabel": "Save name",
+          "confirm": "Save",
+          "cancel": "Cancel"
+        },
+        "archives": {
+          "termination": {
+            "unknown": "Game archived from an intermediate position.",
+            "checkmateWhite": "Checkmate — White wins.",
+            "checkmateBlack": "Checkmate — Black wins.",
+            "checkmateGeneric": "Checkmate.",
+            "stalemate": "Stalemate.",
+            "draw": {
+              "generic": "Draw.",
+              "fiftyMove": "Draw by fifty-move rule.",
+              "repetition": "Draw by repetition.",
+              "insufficient": "Draw by insufficient material.",
+              "moveLimit": "Draw by move limit."
+            },
+            "generic": "Game concluded."
+          }
         }
       },
       "blackjack": {
@@ -1095,8 +1139,7 @@
             "webAudioUnavailable": "Web Audio API is not available in this browser.",
             "soundFontMissingSelection": "No SoundFont selected."
           }
-        },
-        "reset": "Reset"
+        }
       },
       "devkit": {
         "title": "Quantum DevKit",
@@ -4281,4 +4324,3 @@
     }
   }
 }
-
