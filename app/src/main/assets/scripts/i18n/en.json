@@ -335,6 +335,12 @@
             "title": "Blackjack",
             "description": "Double your Atoms—or lose everything.",
             "cta": "Deal"
+          },
+          "holdem": {
+            "aria": "Open the Hold’em mini-game",
+            "title": "Hold’em",
+            "description": "Face up to five AI opponents at a Texas Hold’em table and rake the pot with the best hand.",
+            "cta": "Take a seat"
           }
         }
       },

@@ -335,6 +335,12 @@
             "title": "Blackjack",
             "description": "Doublez vos Atomes, ou perdez tout.",
             "cta": "Distribuer"
+          },
+          "holdem": {
+            "aria": "Accéder au mini-jeu Hold’em",
+            "title": "Hold’em",
+            "description": "Affrontez jusqu’à cinq IA en Texas Hold’em et empochez le pot avec la meilleure main.",
+            "cta": "S’asseoir"
           }
         }
       },
