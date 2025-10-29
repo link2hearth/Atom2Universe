@@ -11,7 +11,7 @@
     dealerSpeedMs: 650,
     minRaise: 40,
     startingStack: 1000,
-    aiStack: 100000,
+    aiStack: 1e11,
     aiThinkingDelayMs: { min: 900, max: 2500 },
     opponentCount: { min: 4, max: 4 },
     aiProfiles: {
@@ -402,8 +402,13 @@
     if (stack <= 0) {
       return currentBet;
     }
-    const baseIncrement = Math.max(state.lastRaiseAmount || state.config.minRaise, state.config.minRaise);
-    let target = Math.max(state.currentBet, currentBet) + baseIncrement;
+    const callAmount = Math.max(0, state.currentBet - currentBet);
+    const baseIncrement = Math.max(
+      state.lastRaiseAmount || state.config.minRaise,
+      state.config.minRaise,
+      callAmount
+    );
+    let target = currentBet + callAmount + baseIncrement;
     if (target <= currentBet) {
       target = currentBet + baseIncrement;
     }
@@ -414,6 +419,95 @@
       target = available;
     }
     return Math.max(currentBet, Math.floor(target));
+  }
+
+  function getPlayerCount() {
+    return state.players.length;
+  }
+
+  function normalizeSeatIndex(index) {
+    const count = getPlayerCount();
+    if (!count) {
+      return -1;
+    }
+    const normalized = ((index % count) + count) % count;
+    return normalized;
+  }
+
+  function getDealerIndex() {
+    return normalizeSeatIndex(state.dealerPosition);
+  }
+
+  function getSmallBlindIndex() {
+    const count = getPlayerCount();
+    if (!count) {
+      return -1;
+    }
+    if (count === 1) {
+      return getDealerIndex();
+    }
+    return normalizeSeatIndex(getDealerIndex() + 1);
+  }
+
+  function getBigBlindIndex() {
+    const count = getPlayerCount();
+    if (!count) {
+      return -1;
+    }
+    if (count === 2) {
+      return getSmallBlindIndex();
+    }
+    return normalizeSeatIndex(getDealerIndex() + 2);
+  }
+
+  function getBettingOrder(options = {}) {
+    const includeHero = options.includeHero !== false;
+    const count = getPlayerCount();
+    if (!count) {
+      return [];
+    }
+    const dealerIndex = getDealerIndex();
+    if (dealerIndex < 0) {
+      return [];
+    }
+    const startIndex = state.phase === 'preflop'
+      ? normalizeSeatIndex(getBigBlindIndex() + 1)
+      : normalizeSeatIndex(dealerIndex + 1);
+    const order = [];
+    for (let offset = 0; offset < count; offset += 1) {
+      const seatIndex = normalizeSeatIndex(startIndex + offset);
+      const player = state.players[seatIndex];
+      if (!player) {
+        continue;
+      }
+      if (player.folded || player.allIn) {
+        continue;
+      }
+      if (!includeHero && player.id === 'hero') {
+        continue;
+      }
+      order.push(player);
+    }
+    return order;
+  }
+
+  function getResponseOrder() {
+    const order = getBettingOrder({ includeHero: true });
+    if (!order.length) {
+      return [];
+    }
+    const heroIndex = order.findIndex(player => player.id === 'hero');
+    if (heroIndex === -1) {
+      return order.filter(player => player.id !== 'hero');
+    }
+    const result = [];
+    for (let step = 1; step < order.length; step += 1) {
+      const player = order[(heroIndex + step) % order.length];
+      if (player && player.id !== 'hero') {
+        result.push(player);
+      }
+    }
+    return result;
   }
   function getAutosaveApi() {
     if (typeof window === 'undefined') {
@@ -1283,11 +1377,8 @@
     if (!playerCount) {
       return;
     }
-    const dealerIndex = ((state.dealerPosition % playerCount) + playerCount) % playerCount;
-    const smallBlindIndex = playerCount > 1 ? (dealerIndex + 1) % playerCount : dealerIndex;
-    const bigBlindIndex = playerCount > 2 ? (dealerIndex + 2) % playerCount : smallBlindIndex;
-    const smallBlindPlayer = state.players[smallBlindIndex];
-    const bigBlindPlayer = state.players[bigBlindIndex];
+    const smallBlindPlayer = state.players[getSmallBlindIndex()];
+    const bigBlindPlayer = state.players[getBigBlindIndex()];
 
     if (smallBlindPlayer) {
       const amount = Math.min(state.config.blinds.small, smallBlindPlayer.stack + smallBlindPlayer.bet);
@@ -1467,16 +1558,28 @@
   }
 
   function executeAiRound({ allowRaise = true, expectHeroAction, onComplete } = {}) {
+    const order = getBettingOrder({ includeHero: true });
+    const heroIndex = order.findIndex(player => player.id === 'hero');
+    const heroEligible = heroIsActiveForDecision() && heroIndex !== -1;
     const queue = [];
-    for (let i = 1; i < state.players.length; i += 1) {
-      const player = state.players[i];
-      if (!player || player.folded || player.allIn) {
-        continue;
+    if (heroEligible) {
+      for (let i = 0; i < heroIndex; i += 1) {
+        const player = order[i];
+        if (!player || player.id === 'hero') {
+          continue;
+        }
+        queue.push(player);
       }
-      queue.push(player);
+    } else {
+      for (let i = 0; i < order.length; i += 1) {
+        const player = order[i];
+        if (!player || player.id === 'hero') {
+          continue;
+        }
+        queue.push(player);
+      }
     }
 
-    const heroEligible = heroIsActiveForDecision();
     const shouldPromptHero = typeof expectHeroAction === 'boolean'
       ? expectHeroAction && heroEligible
       : heroEligible;
@@ -1582,8 +1685,9 @@
 
   function executeAiResponsesAfterPlayerAction(onComplete) {
     const queue = [];
-    for (let i = 1; i < state.players.length; i += 1) {
-      const player = state.players[i];
+    const responseOrder = getResponseOrder();
+    for (let i = 0; i < responseOrder.length; i += 1) {
+      const player = responseOrder[i];
       if (!player || player.folded || player.allIn) {
         continue;
       }
