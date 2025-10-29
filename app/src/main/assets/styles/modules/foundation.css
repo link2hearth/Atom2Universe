@@ -225,7 +225,23 @@ body[data-page-group="arcade"] main {
   gap: calc(clamp(0.5rem, 1vw, 0.75rem) * var(--header-scale, 1));
 }
 
-.header-playback-button {
+.app-header[data-collapsed="true"] .header-main {
+  padding-top: calc(var(--header-padding-y) * 0.45);
+  padding-bottom: calc(var(--header-padding-y) * 0.45);
+  gap: calc(0.75rem * var(--header-scale, 1));
+}
+
+.app-header[data-collapsed="true"] .nav-menu {
+  display: none;
+}
+
+.app-header[data-collapsed="true"] .status-bar,
+.app-header[data-collapsed="true"] .frenzy-status {
+  display: none !important;
+}
+
+.header-playback-button,
+.header-banner-toggle {
   appearance: none;
   border: 1px solid rgba(255, 255, 255, 0.18);
   background: rgba(255, 255, 255, 0.08);
@@ -254,60 +270,85 @@ body[data-page-group="arcade"] main {
   transform: none;
 }
 
+.header-banner-toggle::before {
+  content: '▾';
+  font-size: calc(clamp(0.5rem, 0.7vw, 0.6rem) * var(--header-scale, 1));
+  line-height: 1;
+}
+
+.header-banner-toggle[data-state="collapsed"]::before {
+  content: '▴';
+}
+
 .header-playback-button:hover:not(:disabled):not(.is-disabled),
-.header-playback-button:focus-visible:not(.is-disabled) {
+.header-playback-button:focus-visible:not(.is-disabled),
+.header-banner-toggle:hover:not(:disabled):not(.is-disabled),
+.header-banner-toggle:focus-visible:not(.is-disabled) {
   background: rgba(255, 255, 255, 0.16);
   border-color: rgba(255, 255, 255, 0.32);
   transform: translateY(-1px);
 }
 
-.header-playback-button:focus-visible:not(.is-disabled) {
+.header-playback-button:focus-visible:not(.is-disabled),
+.header-banner-toggle:focus-visible:not(.is-disabled) {
   outline: 2px solid rgba(255, 255, 255, 0.65);
   outline-offset: 3px;
 }
 
-body.theme-light .header-playback-button {
+body.theme-light .header-playback-button,
+body.theme-light .header-banner-toggle {
   background: rgba(12, 16, 32, 0.08);
   border-color: rgba(12, 16, 32, 0.12);
 }
 
 body.theme-light .header-playback-button:hover:not(:disabled):not(.is-disabled),
-body.theme-light .header-playback-button:focus-visible:not(.is-disabled) {
+body.theme-light .header-playback-button:focus-visible:not(.is-disabled),
+body.theme-light .header-banner-toggle:hover:not(:disabled):not(.is-disabled),
+body.theme-light .header-banner-toggle:focus-visible:not(.is-disabled) {
   background: rgba(12, 16, 32, 0.16);
   border-color: rgba(12, 16, 32, 0.28);
 }
 
-body.theme-light .header-playback-button:focus-visible:not(.is-disabled) {
+body.theme-light .header-playback-button:focus-visible:not(.is-disabled),
+body.theme-light .header-banner-toggle:focus-visible:not(.is-disabled) {
   outline-color: rgba(40, 48, 96, 0.65);
 }
 
-body.theme-neon .header-playback-button {
+body.theme-neon .header-playback-button,
+body.theme-neon .header-banner-toggle {
   background: rgba(120, 140, 255, 0.18);
   border-color: rgba(140, 160, 255, 0.28);
 }
 
-body.theme-aurora .header-playback-button {
+body.theme-aurora .header-playback-button,
+body.theme-aurora .header-banner-toggle {
   background: rgba(120, 255, 200, 0.18);
   border-color: rgba(140, 255, 210, 0.28);
 }
 
 body.theme-neon .header-playback-button:hover:not(:disabled):not(.is-disabled),
-body.theme-neon .header-playback-button:focus-visible:not(.is-disabled) {
+body.theme-neon .header-playback-button:focus-visible:not(.is-disabled),
+body.theme-neon .header-banner-toggle:hover:not(:disabled):not(.is-disabled),
+body.theme-neon .header-banner-toggle:focus-visible:not(.is-disabled) {
   background: rgba(140, 160, 255, 0.28);
   border-color: rgba(160, 180, 255, 0.36);
 }
 
 body.theme-aurora .header-playback-button:hover:not(:disabled):not(.is-disabled),
-body.theme-aurora .header-playback-button:focus-visible:not(.is-disabled) {
+body.theme-aurora .header-playback-button:focus-visible:not(.is-disabled),
+body.theme-aurora .header-banner-toggle:hover:not(:disabled):not(.is-disabled),
+body.theme-aurora .header-banner-toggle:focus-visible:not(.is-disabled) {
   background: rgba(150, 255, 220, 0.26);
   border-color: rgba(170, 255, 220, 0.36);
 }
 
-body.theme-neon .header-playback-button:focus-visible:not(.is-disabled) {
+body.theme-neon .header-playback-button:focus-visible:not(.is-disabled),
+body.theme-neon .header-banner-toggle:focus-visible:not(.is-disabled) {
   outline-color: rgba(150, 170, 255, 0.6);
 }
 
-body.theme-aurora .header-playback-button:focus-visible:not(.is-disabled) {
+body.theme-aurora .header-playback-button:focus-visible:not(.is-disabled),
+body.theme-aurora .header-banner-toggle:focus-visible:not(.is-disabled) {
   outline-color: rgba(120, 255, 200, 0.65);
 }
 
