@@ -1786,11 +1786,7 @@
         "labels": {
           "stack": "Solde",
           "currentBet": "Mise actuelle",
-          "you": "Vous",
-          "opponents": "Adversaires"
-        },
-        "info": {
-          "label": "Phase de jeu"
+          "you": "Vous"
         },
         "phase": {
           "preflop": "Préflop",
@@ -1823,6 +1819,7 @@
         "aria": "Mini-jeu Poker Hold'em quantique",
         "tableAria": "Table de poker Hold'em",
         "communityAria": "Cartes communes",
+        "summaryAria": "Informations de la manche",
         "playersAria": "Adversaires",
         "controlsAria": "Commandes de poker",
         "playerHandAria": "Votre main"
