@@ -33,6 +33,19 @@ const MAX_CANVAS_DEVICE_PIXEL_RATIO = 2;
 const COLLECTION_MULTIPLIER_LABEL_KEY = 'scripts.config.elementBonuses.collectionMultiplier';
 
 /**
+ * Réglages des moteurs audio chiptune.
+ * Permet d'ajuster le gain global et la coloration d'effets sans modifier le code du moteur.
+ */
+const AUDIO_ENGINE_SETTINGS = Object.freeze({
+  scc: Object.freeze({
+    masterGain: 0.6,
+    softClipperDrive: 2.0,
+    chorusDelayMs: 12,
+    chorusMix: 0.06
+  })
+});
+
+/**
  * Profils de performance disponibles pour la boucle principale du jeu.
  * - `apcFlushIntervalMs` contrôle la fréquence minimale (en millisecondes)
  *   à laquelle les gains manuels (APC) sont appliqués au total d'atomes.
@@ -607,6 +620,24 @@ const GAME_CONFIG = {
     path: './scripts/i18n',
     fetchOptions: {
       cache: 'no-store'
+    }
+  },
+
+  /**
+   * Paramètres dédiés aux moteurs audio.
+   * - engines.scc.masterGain : atténue le signal après mixage pour éviter la saturation.
+   * - engines.scc.softClipperDrive : intensité du lissage appliqué pour limiter les crêtes.
+   * - engines.scc.chorusDelayMs : délai du chorus (en millisecondes).
+   * - engines.scc.chorusMix : proportion du signal traité réinjectée.
+   */
+  audio: {
+    engines: {
+      scc: {
+        masterGain: AUDIO_ENGINE_SETTINGS.scc.masterGain,
+        softClipperDrive: AUDIO_ENGINE_SETTINGS.scc.softClipperDrive,
+        chorusDelayMs: AUDIO_ENGINE_SETTINGS.scc.chorusDelayMs,
+        chorusMix: AUDIO_ENGINE_SETTINGS.scc.chorusMix
+      }
     }
   },
 
