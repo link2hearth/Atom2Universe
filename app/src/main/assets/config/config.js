@@ -740,6 +740,12 @@ const GAME_CONFIG = {
               'Affrontez le croupier avec un sabot qui se régénère automatiquement.'
           },
           {
+            id: 'holdem',
+            label: 'Arcade Hold’em :',
+            description:
+              'Affrontez une table de poker quantique avec des adversaires adaptatifs et gérez vos relances.'
+          },
+          {
             id: 'gacha',
             label: 'Gacha :',
             description:
@@ -767,6 +773,32 @@ const GAME_CONFIG = {
       }
     }
   },
+
+  /**
+   * Liste des fonctionnalités configurables du jeu.
+   * Permet aux modules d’interface de parcourir facilement les identifiants déclarés.
+   */
+  featureList: Object.freeze([
+    'arcade.hub',
+    'arcade.particules',
+    'arcade.metaux',
+    'arcade.photon',
+    'arcade.objectx',
+    'arcade.bigger',
+    'arcade.balance',
+    'arcade.math',
+    'arcade.sudoku',
+    'arcade.demineur',
+    'arcade.solitaire',
+    'arcade.blackjack',
+    'arcade.holdem',
+    'arcade.echecs',
+    'arcade.gameOfLife',
+    'system.gacha',
+    'system.tableau',
+    'system.fusion',
+    'system.musique'
+  ]),
 
   /**
    * Thèmes visuels proposés dans l’interface.
@@ -871,6 +903,7 @@ const GAME_CONFIG = {
         demineur: { type: 'trophy', trophyId: 'millionAtoms' },
         solitaire: { type: 'trophy', trophyId: 'millionAtoms' },
         blackjack: { type: 'trophy', trophyId: 'millionAtoms' },
+        holdem: { type: 'trophy', trophyId: 'millionAtoms' },
         echecs: { type: 'trophy', trophyId: 'millionAtoms' },
         gameOfLife: { type: 'trophy', trophyId: 'millionAtoms' }
       },
@@ -995,6 +1028,39 @@ const GAME_CONFIG = {
       decks: 8,
       dealerHitSoft17: false,
       betOptions: [10, 20, 50, 100]
+    },
+    /**
+     * Paramètres du mini-jeu Hold’em.
+     * - blinds : valeurs des petites et grosses blinds versées au début de chaque donne.
+     * - dealerSpeedMs : cadence (en millisecondes) utilisée pour rythmer les animations du croupier.
+     * - minRaise : relance minimale autorisée (montant total sur le tour en cours).
+     * - startingStack : réserve de crédits attribuée à chaque participant lors d’un nouveau tableau.
+     * - opponentCount : fourchette du nombre d’adversaires IA présents à la table.
+     * - aiProfiles : profils disponibles pour les adversaires (aggressivité, prudence, bluff).
+     * - defaultAiProfile : identifiant du profil sélectionné par défaut.
+     */
+    holdem: {
+      blinds: {
+        small: 20,
+        big: 40
+      },
+      dealerSpeedMs: 650,
+      minRaise: 40,
+      startingStack: 1000,
+      opponentCount: { min: 4, max: 5 },
+      aiProfiles: {
+        patient: {
+          aggression: 0.35,
+          caution: 0.6,
+          bluff: 0.08
+        },
+        daring: {
+          aggression: 0.55,
+          caution: 0.4,
+          bluff: 0.18
+        }
+      },
+      defaultAiProfile: 'patient'
     },
     // Paramètres du mini-jeu Échecs.
     echecs: {
