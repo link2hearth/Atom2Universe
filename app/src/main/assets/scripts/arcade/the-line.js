@@ -900,8 +900,14 @@
     });
     const path = new Array(totalAccessible);
     const startCandidates = shuffle(accessible.slice());
+    const maxStartCandidates = Math.min(
+      startCandidates.length,
+      Math.max(6, Math.ceil(totalAccessible / 12))
+    );
+    const iterationLimit = Math.max(8000, totalAccessible * 60);
+    let iterationCount = 0;
 
-    for (let i = 0; i < startCandidates.length; i += 1) {
+    for (let i = 0; i < maxStartCandidates; i += 1) {
       const start = startCandidates[i];
       path[0] = start;
       visited[start] = 1;
@@ -919,6 +925,13 @@
     return null;
 
     function search(step, current) {
+      iterationCount += 1;
+      if (iterationCount >= iterationLimit) {
+        if (limiter && typeof limiter.forceTimeout === 'function') {
+          limiter.forceTimeout();
+        }
+        return false;
+      }
       if (limiter && limiter.timedOut()) {
         return false;
       }
@@ -1172,6 +1185,9 @@
         }
         timeoutReached = getNow() - start >= limit;
         return timeoutReached;
+      },
+      forceTimeout() {
+        timeoutReached = true;
       },
       get hasTimedOut() {
         return timeoutReached;
