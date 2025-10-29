@@ -1668,6 +1668,11 @@
           "gachaTicket": "Gacha ticket earned! (+{count})"
         }
       },
+      "theLine": {
+        "rewards": {
+          "gachaWin": "Won {count} gacha ticket{suffix}!"
+        }
+      },
       "sudoku": {
         "status": {
           "generating": "Generating…",

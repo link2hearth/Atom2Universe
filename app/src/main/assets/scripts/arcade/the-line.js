@@ -101,6 +101,8 @@
     Object.freeze({ id: 'citrus', value: '#ffc371' })
   ]);
 
+  const COMPLETION_REWARD = Object.freeze({ chance: 0.5, gachaTickets: 1 });
+
   const state = {
     config: null,
     mode: 'single',
@@ -171,6 +173,19 @@
       return fallback;
     }
     return key;
+  }
+
+  function formatIntegerLocalized(value) {
+    const numeric = Number(value);
+    if (!Number.isFinite(numeric)) {
+      return '0';
+    }
+    const integer = Math.trunc(numeric);
+    try {
+      return integer.toLocaleString();
+    } catch (error) {
+      return String(integer);
+    }
   }
 
   function clampNumber(value, min, max, fallback) {
@@ -1640,6 +1655,7 @@
       `Niveau ${currentLevel} terminé !`,
       { level: currentLevel }
     );
+    maybeAwardCompletionReward();
     counters[state.difficulty] = currentLevel + 1;
     updateLevelDisplay();
     state.messageTimeout = window.setTimeout(() => {
@@ -1651,6 +1667,38 @@
       state.messageTimeout = null;
       prepareNewPuzzle();
     }, 2200);
+  }
+
+  function maybeAwardCompletionReward() {
+    if (!COMPLETION_REWARD || Math.random() >= COMPLETION_REWARD.chance) {
+      return;
+    }
+    const awardGacha = typeof gainGachaTickets === 'function'
+      ? gainGachaTickets
+      : typeof window !== 'undefined' && typeof window.gainGachaTickets === 'function'
+        ? window.gainGachaTickets
+        : null;
+    if (typeof awardGacha !== 'function') {
+      return;
+    }
+    let gained = 0;
+    try {
+      gained = awardGacha(COMPLETION_REWARD.gachaTickets, { unlockTicketStar: true });
+    } catch (error) {
+      console.warn('The Line: unable to grant gacha tickets', error);
+      gained = 0;
+    }
+    if (!Number.isFinite(gained) || gained <= 0) {
+      return;
+    }
+    if (typeof showToast === 'function') {
+      const suffix = gained > 1 ? 's' : '';
+      showToast(translate(
+        'scripts.arcade.theLine.rewards.gachaWin',
+        'Ticket gacha obtenu !',
+        { count: formatIntegerLocalized(gained), suffix }
+      ));
+    }
   }
 
 })();
