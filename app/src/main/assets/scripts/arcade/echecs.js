@@ -26,6 +26,7 @@
   const ANALYSIS_TEXT_SELECTOR = '[data-chess-analysis-text]';
   const DIFFICULTY_SELECT_SELECTOR = '[data-chess-difficulty]';
   const DIFFICULTY_DESCRIPTION_SELECTOR = '[data-chess-difficulty-description]';
+  const TWO_PLAYER_TOGGLE_SELECTOR = '[data-chess-two-player]';
 
   const LOCAL_STORAGE_KEY = 'atom2univers.arcade.echecs';
   const POINTER_DRAG_THRESHOLD = 6;
@@ -2071,6 +2072,9 @@
     if (!state || state.isGameOver || state.pendingPromotion || state.activeColor !== BLACK) {
       return;
     }
+    if (isTwoPlayerMode(state)) {
+      return;
+    }
     ensureAiContext(state);
     if (state.aiThinking) {
       return;
@@ -3014,6 +3018,7 @@
           button.dataset.piece = pieceKey;
         }
         const existingSprite = button.querySelector('.chess-square__piece');
+        const existingGlyph = button.querySelector('.chess-square__glyph');
         const spriteUrl = getPieceSprite(piece);
         const shouldUseSprite = Boolean(piece) && canUseSprite(spriteUrl);
         const usesSprite = button.classList.contains('chess-square--with-sprite');
@@ -3032,14 +3037,38 @@
                 button.textContent = '';
               }
             }
+            if (existingGlyph) {
+              existingGlyph.remove();
+            }
             button.classList.add('chess-square--with-sprite');
           } else {
             if (existingSprite) {
               existingSprite.remove();
             }
-            const symbol = getPieceSymbol(piece);
-            button.textContent = piece ? symbol : '';
             button.classList.remove('chess-square--with-sprite');
+            if (piece) {
+              let glyph = existingGlyph;
+              if (!glyph) {
+                glyph = document.createElement('span');
+                glyph.className = 'chess-square__glyph';
+                glyph.setAttribute('aria-hidden', 'true');
+                button.textContent = '';
+                button.appendChild(glyph);
+              }
+              glyph.textContent = getPieceSymbol(piece);
+            } else if (existingGlyph) {
+              existingGlyph.remove();
+              if (button.textContent !== '') {
+                button.textContent = '';
+              }
+            } else if (button.textContent !== '') {
+              button.textContent = '';
+            }
+          }
+        } else if (!shouldUseSprite && piece && existingGlyph) {
+          const symbol = getPieceSymbol(piece);
+          if (existingGlyph.textContent !== symbol) {
+            existingGlyph.textContent = symbol;
           }
         }
         if (piece) {
@@ -3047,6 +3076,11 @@
         } else {
           button.classList.remove('has-piece');
         }
+        const isDragSource = state.dragContext
+          && state.dragContext.moved
+          && state.dragContext.fromRow === row
+          && state.dragContext.fromCol === col;
+        button.classList.toggle('is-drag-source', Boolean(isDragSource));
         updateSquareAccessibility(button, piece, pieceChanged || forceAccessibility);
         const squareIndex = (row * BOARD_SIZE) + col;
         if (squareIndex === selectionIndex) {
@@ -3200,7 +3234,21 @@
 
   function updateDifficultyUI(state, ui) {
     renderDifficultyOptions(state, ui);
-    updateDifficultyDescription(state, ui);
+    const isTwoPlayer = isTwoPlayerMode(state);
+    if (ui && ui.difficultySelect) {
+      ui.difficultySelect.disabled = isTwoPlayer;
+      ui.difficultySelect.setAttribute('aria-disabled', isTwoPlayer ? 'true' : 'false');
+    }
+    if (ui && ui.difficultyDescription) {
+      if (isTwoPlayer) {
+        ui.difficultyDescription.textContent = translate(
+          'index.sections.echecs.difficulty.twoPlayersDescription',
+          'Two-player mode: AI settings are disabled.'
+        );
+      } else {
+        updateDifficultyDescription(state, ui);
+      }
+    }
   }
 
   function applyAnalysisSummary(state, ui, analysis) {
@@ -3251,19 +3299,38 @@
   }
 
   function updateAnalysisState(state, ui) {
-    const analysis = state.lastAiAnalysis ? normalizeAiAnalysis(state.lastAiAnalysis) : null;
-    if (analysis) {
-      state.lastAiAnalysis = analysis;
-    }
+    const twoPlayer = isTwoPlayerMode(state);
     if (ui && ui.analyzeButton) {
-      ui.analyzeButton.disabled = !analysis;
-      ui.analyzeButton.textContent = translate(
-        'index.sections.echecs.controls.analyze',
-        'Analyse last AI move'
-      );
+      if (twoPlayer) {
+        ui.analyzeButton.disabled = true;
+        ui.analyzeButton.textContent = translate(
+          'index.sections.echecs.controls.analyzeDisabled',
+          'AI analysis unavailable in two-player mode.'
+        );
+      } else {
+        const hasAnalysis = Boolean(state.lastAiAnalysis);
+        ui.analyzeButton.disabled = !hasAnalysis;
+        ui.analyzeButton.textContent = translate(
+          'index.sections.echecs.controls.analyze',
+          'Analyse last AI move'
+        );
+      }
     }
     if (!ui || !ui.analysisElement || !ui.analysisText) {
       return;
+    }
+    if (twoPlayer) {
+      ui.analysisElement.hidden = true;
+      delete ui.analysisElement.dataset.visible;
+      ui.analysisText.textContent = translate(
+        'index.sections.echecs.analysis.disabled',
+        'AI analysis is unavailable in two-player mode.'
+      );
+      return;
+    }
+    const analysis = state.lastAiAnalysis ? normalizeAiAnalysis(state.lastAiAnalysis) : null;
+    if (analysis) {
+      state.lastAiAnalysis = analysis;
     }
     if (!analysis) {
       ui.analysisElement.hidden = true;
@@ -3286,6 +3353,10 @@
     if (!state || !ui) {
       return;
     }
+    if (isTwoPlayerMode(state)) {
+      updateAnalysisState(state, ui);
+      return;
+    }
     const analysis = state.lastAiAnalysis ? normalizeAiAnalysis(state.lastAiAnalysis) : null;
     if (!analysis) {
       updateAnalysisState(state, ui);
@@ -3296,6 +3367,10 @@
 
   function applyDifficulty(state, ui, modeId) {
     if (!state) {
+      return false;
+    }
+    if (isTwoPlayerMode(state)) {
+      updateDifficultyUI(state, ui);
       return false;
     }
     const mode = resolveDifficultyMode(modeId);
@@ -3319,7 +3394,7 @@
     updateDifficultyUI(state, ui);
     updateAnalysisState(state, ui);
     saveProgress(state);
-    if (!state.isGameOver && state.activeColor === BLACK) {
+    if (!state.isGameOver && state.activeColor === BLACK && !isTwoPlayerMode(state)) {
       scheduleAIMove(state, ui);
     }
     return true;
@@ -3444,6 +3519,43 @@
       state.helperTimeoutId = null;
     }
     state.helperMessage = null;
+  }
+
+  function isTwoPlayerMode(state) {
+    return Boolean(state && state.isTwoPlayer);
+  }
+
+  function setTwoPlayerMode(state, ui, enabled, options) {
+    if (!state) {
+      return false;
+    }
+    const next = Boolean(enabled);
+    const previous = isTwoPlayerMode(state);
+    state.isTwoPlayer = next;
+    if (ui && ui.twoPlayerToggle) {
+      ui.twoPlayerToggle.checked = next;
+    }
+    if (next) {
+      if (state.ai && Number.isInteger(state.ai.searchId)) {
+        state.ai.searchId += 1;
+      }
+      state.aiThinking = false;
+      state.lastAiAnalysis = null;
+      clearHelperMessage(state);
+    } else {
+      ensureAiContext(state);
+    }
+    updateDifficultyUI(state, ui);
+    updateAnalysisState(state, ui);
+    updateStatus(state, ui);
+    updateHelper(state, ui);
+    if (!(options && options.skipSave)) {
+      saveProgress(state);
+    }
+    if (!next && !(options && options.skipSchedule) && !state.isGameOver && state.activeColor === BLACK) {
+      scheduleAIMove(state, ui);
+    }
+    return next !== previous;
   }
 
   function showInteractionMessage(state, ui, key, fallback, params, options) {
@@ -3907,7 +4019,7 @@
       state,
       ui,
       'index.sections.echecs.helper',
-      'Tap or drag a white piece to highlight its legal moves.'
+      'Tap or drag a piece to highlight its legal moves.'
     );
   }
 
@@ -3934,6 +4046,73 @@
     return { row, col };
   }
 
+  function removeDragGhost(context) {
+    if (context && context.ghostElement && context.ghostElement.parentNode) {
+      context.ghostElement.parentNode.removeChild(context.ghostElement);
+    }
+    if (context) {
+      context.ghostElement = null;
+    }
+  }
+
+  function updateDragGhostPosition(context, clientX, clientY) {
+    if (!context || !context.ghostElement || !context.boardElement) {
+      return;
+    }
+    const rect = context.boardElement.getBoundingClientRect();
+    const width = context.squareRect ? context.squareRect.width : context.ghostElement.offsetWidth;
+    const height = context.squareRect ? context.squareRect.height : context.ghostElement.offsetHeight;
+    if (width > 0) {
+      context.ghostElement.style.inlineSize = width + 'px';
+    }
+    if (height > 0) {
+      context.ghostElement.style.blockSize = height + 'px';
+    }
+    const offsetX = typeof context.offsetX === 'number' ? context.offsetX : width / 2;
+    const offsetY = typeof context.offsetY === 'number' ? context.offsetY : height / 2;
+    const x = clientX - rect.left - offsetX;
+    const y = clientY - rect.top - offsetY;
+    context.ghostElement.style.transform = 'translate3d(' + x + 'px, ' + y + 'px, 0)';
+  }
+
+  function ensureDragGhost(state, ui, context) {
+    if (!context || context.ghostElement || !ui || !ui.boardElement) {
+      return;
+    }
+    const piece = state.board[context.fromRow] && state.board[context.fromRow][context.fromCol];
+    if (!piece) {
+      return;
+    }
+    const ghost = document.createElement('div');
+    ghost.className = 'chess-drag-ghost';
+    const spriteUrl = getPieceSprite(piece);
+    if (spriteUrl && canUseSprite(spriteUrl)) {
+      ghost.classList.add('chess-drag-ghost--sprite');
+      ghost.style.backgroundImage = 'url(' + spriteUrl + ')';
+    } else {
+      ghost.textContent = getPieceSymbol(piece);
+      const color = getPieceColor(piece);
+      ghost.style.color = color === WHITE ? 'var(--chess-square-light-color)' : 'var(--chess-square-dark-color)';
+    }
+    const squareButton = ui.squares[context.fromRow] && ui.squares[context.fromRow][context.fromCol];
+    if (squareButton) {
+      const rect = squareButton.getBoundingClientRect();
+      context.squareRect = rect;
+      if (typeof context.offsetX !== 'number') {
+        context.offsetX = context.startX - rect.left;
+      }
+      if (typeof context.offsetY !== 'number') {
+        context.offsetY = context.startY - rect.top;
+      }
+      ghost.style.inlineSize = rect.width + 'px';
+      ghost.style.blockSize = rect.height + 'px';
+    }
+    ui.boardElement.appendChild(ghost);
+    context.boardElement = ui.boardElement;
+    context.ghostElement = ghost;
+    updateDragGhostPosition(context, context.startX, context.startY);
+  }
+
   function cleanupDrag(state, ui) {
     const context = state.dragContext;
     if (!context) {
@@ -3948,6 +4127,7 @@
     if (context.cancelHandler) {
       document.removeEventListener('pointercancel', context.cancelHandler);
     }
+    removeDragGhost(context);
     state.dragContext = null;
     renderBoard(state, ui);
   }
@@ -3962,8 +4142,20 @@
       startY: event.clientY,
       moved: false,
       hoverRow: null,
-      hoverCol: null
+      hoverCol: null,
+      offsetX: 0,
+      offsetY: 0,
+      boardElement: ui.boardElement || null,
+      ghostElement: null,
+      squareRect: null
     };
+    const squareButton = ui.squares[row] && ui.squares[row][col];
+    if (squareButton) {
+      const rect = squareButton.getBoundingClientRect();
+      context.squareRect = rect;
+      context.offsetX = event.clientX - rect.left;
+      context.offsetY = event.clientY - rect.top;
+    }
     context.moveHandler = function (moveEvent) {
       handlePointerMove(state, ui, moveEvent);
     };
@@ -4021,11 +4213,15 @@
       const distance = Math.hypot(dx, dy);
       if (distance >= POINTER_DRAG_THRESHOLD) {
         context.moved = true;
+        ensureDragGhost(state, ui, context);
+        renderBoard(state, ui);
       }
     }
     if (!context.moved) {
       return;
     }
+    ensureDragGhost(state, ui, context);
+    updateDragGhostPosition(context, event.clientX, event.clientY);
     const square = getSquareFromPoint(event.clientX, event.clientY);
     const hoverRow = square ? square.row : null;
     const hoverCol = square ? square.col : null;
@@ -4275,6 +4471,9 @@
         : null;
     const difficulty = resolveDifficultyMode(difficultyIdRaw);
     const lastAiAnalysis = normalizeAiAnalysis(raw.lastAiAnalysis);
+    const isTwoPlayer = raw.isTwoPlayer === true
+      || raw.mode === 'twoPlayer'
+      || raw.twoPlayer === true;
 
     const isGameOver = raw.isGameOver === true || (gameOutcome != null);
 
@@ -4293,7 +4492,8 @@
       preferences,
       difficulty,
       difficultyId: difficulty.id,
-      lastAiAnalysis
+      lastAiAnalysis,
+      isTwoPlayer
     };
   }
 
@@ -4356,6 +4556,7 @@
     state.gameOutcome = stored.gameOutcome;
     state.isGameOver = stored.isGameOver;
     state.preferences = stored.preferences;
+    state.isTwoPlayer = Boolean(stored.isTwoPlayer);
     state.pendingPromotion = null;
     state.selection = null;
     state.dragContext = null;
@@ -4383,6 +4584,7 @@
     evaluateGameState(state);
     if (ui) {
       hidePromotionDialog(ui);
+      setTwoPlayerMode(state, ui, state.isTwoPlayer, { skipSave: true, skipSchedule: true });
     }
     return true;
   }
@@ -4391,6 +4593,7 @@
     if (!state) {
       return;
     }
+    const twoPlayerEnabled = isTwoPlayerMode(state);
     const difficulty = state.difficulty || getDefaultDifficultyMode();
     const preferences = {
       showCoordinates: state.preferences && state.preferences.showCoordinates !== false,
@@ -4415,6 +4618,7 @@
     state.isGameOver = false;
     state.history = [];
     state.preferences = preferences;
+    state.isTwoPlayer = twoPlayerEnabled;
     state.dragContext = null;
     state.helperMessage = null;
     state.helperTimeoutId = null;
@@ -4435,8 +4639,7 @@
     clearHelperMessage(state);
     updateHelper(state, ui);
     applyBoardPreferences(state, ui);
-    updateDifficultyUI(state, ui);
-    updateAnalysisState(state, ui);
+    setTwoPlayerMode(state, ui, twoPlayerEnabled, { skipSave: true, skipSchedule: true });
     saveProgress(state);
     showInteractionMessage(
       state,
@@ -4446,7 +4649,7 @@
       null,
       { duration: 2500 }
     );
-    if (!state.isGameOver && state.activeColor === BLACK) {
+    if (!state.isGameOver && state.activeColor === BLACK && !isTwoPlayerMode(state)) {
       scheduleAIMove(state, ui);
     }
   }
@@ -4503,6 +4706,7 @@
       ),
       gameOutcome: state.gameOutcome ? { ...state.gameOutcome } : null,
       isGameOver: Boolean(state.isGameOver),
+      isTwoPlayer: isTwoPlayerMode(state),
       preferences: {
         showCoordinates: preferences.showCoordinates !== false,
         showHistory: preferences.showHistory !== false,
@@ -4653,6 +4857,12 @@
         'Show coordinates'
       );
     }
+    if (ui.twoPlayerLabel) {
+      ui.twoPlayerLabel.textContent = translate(
+        'index.sections.echecs.controls.twoPlayers',
+        'Two-player mode'
+      );
+    }
     if (ui.historyLabel) {
       ui.historyLabel.textContent = translate(
         'index.sections.echecs.controls.history',
@@ -4711,6 +4921,7 @@
       helperMessage: null,
       helperTimeoutId: null,
       suppressClick: false,
+      isTwoPlayer: false,
       ai: createAiContext(difficulty),
       aiThinking: false,
       difficulty,
@@ -4745,7 +4956,9 @@
     const historyContainer = section.querySelector(HISTORY_CONTAINER_SELECTOR);
     const historyList = section.querySelector(HISTORY_LIST_SELECTOR);
     const historyEmpty = section.querySelector(HISTORY_EMPTY_SELECTOR);
+    const twoPlayerToggle = section.querySelector(TWO_PLAYER_TOGGLE_SELECTOR);
     const coordinatesLabel = section.querySelector('[data-i18n="index.sections.echecs.controls.coordinates"]');
+    const twoPlayerLabel = section.querySelector('[data-i18n="index.sections.echecs.controls.twoPlayers"]');
     const historyLabel = section.querySelector('[data-i18n="index.sections.echecs.controls.history"]');
     const historyTitle = section.querySelector('[data-i18n="index.sections.echecs.history.title"]');
     const resetButton = section.querySelector(RESET_BUTTON_SELECTOR);
@@ -4772,12 +4985,14 @@
       helperElement,
       promotionElement,
       promotionOptionsElement,
+      twoPlayerToggle,
       coordinatesToggle,
       historyToggle,
       notationToggle,
       historyContainer,
       historyList,
       historyEmpty,
+      twoPlayerLabel,
       coordinatesLabel,
       historyLabel,
       historyTitle,
@@ -4791,6 +5006,11 @@
 
     attachPointerHandlers(state, ui);
 
+    if (twoPlayerToggle) {
+      twoPlayerToggle.addEventListener('change', function () {
+        setTwoPlayerMode(state, ui, twoPlayerToggle.checked);
+      });
+    }
     if (coordinatesToggle) {
       coordinatesToggle.addEventListener('change', function () {
         state.preferences = state.preferences || {};

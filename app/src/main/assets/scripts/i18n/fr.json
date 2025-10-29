@@ -597,7 +597,9 @@
           "notation": {
             "short": "Notation courte",
             "long": "Notation longue"
-          }
+          },
+          "twoPlayers": "Mode deux joueurs",
+          "analyzeDisabled": "Analyse IA indisponible en mode deux joueurs."
         },
         "history": {
           "title": "Historique des coups",
@@ -610,7 +612,8 @@
           "standardDescription": "Réglage équilibré : l’IA joue vite et solidement.",
           "expert": "Mode expert",
           "expertDescription": "Profondeur accrue et temps de calcul prolongé pour un vrai défi.",
-          "reward": "Bonus hors ligne : {duration} à {multiplier}"
+          "reward": "Bonus hors ligne : {duration} à {multiplier}",
+          "twoPlayersDescription": "Mode deux joueurs activé : l’IA est désactivée."
         },
         "analysis": {
           "title": "Analyse du dernier coup de l'IA",
@@ -627,7 +630,8 @@
             "positive": "avantage noir {{value}}",
             "negative": "avantage blanc {{value}}"
           },
-          "depth": " · profondeur {{value}}"
+          "depth": " · profondeur {{value}}",
+          "disabled": "Analyse IA indisponible en mode deux joueurs."
         },
         "feedback": {
           "invalidMove": "Ce déplacement n’est pas légal.",
@@ -695,7 +699,8 @@
         "accessibility": {
           "pieceOnSquare": "{{piece}} sur {{square}}",
           "emptySquare": "Case {{square}} vide"
-        }
+        },
+        "helper": "Touchez ou faites glisser une pièce pour voir ses coups légaux."
       },
       "blackjack": {
         "aria": "Mini-jeu Blackjack quantique",
@@ -1095,8 +1100,7 @@
             "webAudioUnavailable": "API Web Audio non disponible dans ce navigateur.",
             "soundFontMissingSelection": "Aucune SoundFont sélectionnée."
           }
-        },
-        "reset": "Réinitialiser"
+        }
       },
       "devkit": {
         "title": "DevKit quantique",
@@ -4281,4 +4285,3 @@
     }
   }
 }
-
