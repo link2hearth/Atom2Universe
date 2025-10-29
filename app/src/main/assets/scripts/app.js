@@ -166,12 +166,20 @@ const RESOLVED_PERFORMANCE_MODE_SETTINGS = GLOBAL_PERFORMANCE_MODE_SETTINGS
     fluid: Object.freeze({
       apcFlushIntervalMs: 0,
       apsFlushIntervalMs: 0,
-      frameIntervalMs: 0
+      frameIntervalMs: 0,
+      atomAnimation: Object.freeze({
+        amplitudeScale: 1,
+        motionScale: 1
+      })
     }),
     eco: Object.freeze({
       apcFlushIntervalMs: 200,
       apsFlushIntervalMs: 1000,
-      frameIntervalMs: 120
+      frameIntervalMs: 120,
+      atomAnimation: Object.freeze({
+        amplitudeScale: 0.5,
+        motionScale: 0.65
+      })
     })
   };
 const GAME_LOOP_MIN_TIMEOUT_MS = 16;
@@ -193,6 +201,23 @@ const PERFORMANCE_MODE_NOTE_FALLBACKS = Object.freeze({
   fluid: 'Fluid mode: frequent updates for instant feedback.',
   eco: 'Eco mode: batches clicks every 200 ms and APS once per second to save battery.'
 });
+
+const DEFAULT_ATOM_ANIMATION_SETTINGS = Object.freeze({
+  amplitudeScale: 1,
+  motionScale: 1
+});
+
+function normalizeAtomAnimationSettings(settings) {
+  const amplitudeRaw = Number(settings?.amplitudeScale);
+  const motionRaw = Number(settings?.motionScale);
+  const amplitudeScale = Number.isFinite(amplitudeRaw) && amplitudeRaw > 0
+    ? Math.min(Math.max(amplitudeRaw, 0.1), 1)
+    : DEFAULT_ATOM_ANIMATION_SETTINGS.amplitudeScale;
+  const motionScale = Number.isFinite(motionRaw) && motionRaw > 0
+    ? Math.min(Math.max(motionRaw, 0.1), 1)
+    : DEFAULT_ATOM_ANIMATION_SETTINGS.motionScale;
+  return Object.freeze({ amplitudeScale, motionScale });
+}
 
 const FALLBACK_THEME_DEFINITIONS = Object.freeze([
   Object.freeze({
@@ -676,6 +701,7 @@ function flushPendingPerformanceQueues(options = {}) {
 function applyPerformanceMode(modeId, options = {}) {
   const normalized = normalizePerformanceMode(modeId);
   const settings = getPerformanceModeSettings(normalized);
+  const animationSettings = normalizeAtomAnimationSettings(settings?.atomAnimation);
   const config = Object.assign({ persist: true, updateControl: true }, options);
   const now = typeof performance !== 'undefined' && typeof performance.now === 'function'
     ? performance.now()
@@ -691,6 +717,7 @@ function applyPerformanceMode(modeId, options = {}) {
   }
   performanceModeState.id = normalized;
   performanceModeState.settings = settings;
+  performanceModeState.atomAnimation = animationSettings;
   performanceModeState.lastManualFlush = now;
   performanceModeState.lastAutoFlush = now;
   if (typeof document !== 'undefined' && document.body) {
@@ -3014,9 +3041,12 @@ if (typeof setParticulesBrickSkinPreference === 'function') {
   setParticulesBrickSkinPreference(gameState.arcadeBrickSkin);
 }
 
+const initialPerformanceModeSettings = getPerformanceModeSettings(PERFORMANCE_MODE_DEFAULT_ID);
+
 const performanceModeState = {
   id: PERFORMANCE_MODE_DEFAULT_ID,
-  settings: getPerformanceModeSettings(PERFORMANCE_MODE_DEFAULT_ID),
+  settings: initialPerformanceModeSettings,
+  atomAnimation: normalizeAtomAnimationSettings(initialPerformanceModeSettings?.atomAnimation),
   pendingManualGain: null,
   pendingAutoGain: null,
   autoAccumulatedMs: 0,
@@ -3027,6 +3057,10 @@ const performanceModeState = {
     ? performance.now()
     : Date.now()
 };
+
+function getAtomAnimationSettings() {
+  return performanceModeState?.atomAnimation || DEFAULT_ATOM_ANIMATION_SETTINGS;
+}
 
 const gameLoopControl = {
   handle: null,
@@ -9105,7 +9139,15 @@ const atomAnimationState = {
   lastTime: null
 };
 
-const ATOM_REBOUND_AMPLITUDE_SCALE = 0.5;
+const BASE_ATOM_REBOUND_AMPLITUDE_SCALE = 0.5;
+
+function getAtomReboundAmplitudeScale() {
+  return BASE_ATOM_REBOUND_AMPLITUDE_SCALE * getAtomAnimationSettings().amplitudeScale;
+}
+
+function getAtomMotionScale() {
+  return getAtomAnimationSettings().motionScale;
+}
 
 function getAtomVisualElement() {
   const current = elements.atomVisual;
@@ -9341,51 +9383,49 @@ function applyClickStrength(strength) {
 
 function injectAtomImpulse(now = performance.now()) {
   if (!getAtomVisualElement()) return;
-  if (isEcoPerformanceModeActive()) {
-    return;
-  }
   const state = atomAnimationState;
   if (state.lastTime == null) {
     state.lastTime = now;
   }
 
+  const motionScale = getAtomMotionScale();
+  const motionStrength = 0.35 + motionScale * 0.65;
   const drive = Math.max(targetClickStrength, displayedClickStrength, 0);
   const baseIntensity = Math.max(state.intensity, drive);
   const energy = Math.pow(Math.max(0, baseIntensity), 0.6);
   const impulseAngle = Math.random() * Math.PI * 2;
-  const impulseStrength = 180 + energy * 520;
+  const impulseStrength = (180 + energy * 520) * motionStrength;
 
   state.velX += Math.cos(impulseAngle) * impulseStrength;
   state.velY += Math.sin(impulseAngle) * impulseStrength;
 
-  const recenter = 20 + energy * 60;
+  const recenter = (20 + energy * 60) * motionStrength;
   state.velX += -state.posX * recenter;
   state.velY += -state.posY * recenter * 1.05;
 
-  const wobbleKick = (Math.random() - 0.5) * (220 + energy * 320);
+  const wobbleKick = (Math.random() - 0.5) * (220 + energy * 320) * motionStrength;
   state.tiltVelocity += wobbleKick;
-  state.squashVelocity += (Math.random() - 0.35) * (160 + energy * 220);
+  state.squashVelocity += (Math.random() - 0.35) * (160 + energy * 220) * motionStrength;
 
-  state.spinPhase += (Math.random() - 0.5) * (0.45 + energy * 1.2);
+  state.spinPhase += (Math.random() - 0.5) * (0.45 + energy * 1.2) * motionStrength;
   state.noiseOffset = Math.random() * Math.PI * 2;
 
-  state.intensity = Math.min(1, baseIntensity + 0.25 + drive * 0.4);
-  state.impulseTimer = Math.min(state.impulseTimer, 0.06);
+  const intensityBoost = (0.25 + drive * 0.4) * motionStrength;
+  state.intensity = Math.min(1, baseIntensity + intensityBoost);
+  const impulseCooldown = 0.06 + (1 - motionScale) * 0.04;
+  state.impulseTimer = Math.min(state.impulseTimer, impulseCooldown);
 }
 
 function updateAtomSpring(now = performance.now(), drive = 0) {
   const visual = getAtomVisualElement();
   if (!visual) return;
-  if (isEcoPerformanceModeActive()) {
-    resetAtomSpringStyles();
-    atomAnimationState.lastTime = null;
-    return;
-  }
   const state = atomAnimationState;
   if (state.lastTime == null) {
     state.lastTime = now;
   }
 
+  const motionScale = getAtomMotionScale();
+  const motionStrength = 0.35 + motionScale * 0.65;
   let delta = (now - state.lastTime) / 1000;
   if (!Number.isFinite(delta) || delta < 0) {
     delta = 0;
@@ -9394,15 +9434,15 @@ function updateAtomSpring(now = performance.now(), drive = 0) {
   state.lastTime = now;
 
   const input = Math.max(0, Math.min(1, drive));
-  state.intensity += (input - state.intensity) * Math.min(1, delta * 9);
+  state.intensity += (input - state.intensity) * Math.min(1, delta * 9 * motionStrength);
   const intensity = state.intensity;
   const energy = Math.pow(intensity, 0.65);
 
   const rangeX = 6 + energy * 34 + intensity * 6;
   const rangeY = 7 + energy * 40 + intensity * 8;
-  const centerPull = 10 + energy * 24;
-  const damping = 4.8 + energy * 16;
-  const maxSpeed = 120 + energy * 420;
+  const centerPull = (10 + energy * 24) * motionStrength;
+  const damping = (4.8 + energy * 16) * motionStrength;
+  const maxSpeed = (120 + energy * 420) * motionStrength;
 
   state.velX -= (state.posX / Math.max(rangeX, 1)) * centerPull * delta;
   state.velY -= (state.posY / Math.max(rangeY, 1)) * centerPull * delta;
@@ -9410,22 +9450,22 @@ function updateAtomSpring(now = performance.now(), drive = 0) {
   state.velX -= state.velX * damping * delta;
   state.velY -= state.velY * damping * delta;
 
-  state.noisePhase += delta * (1.2 + energy * 6.4);
+  state.noisePhase += delta * (1.2 + energy * 6.4) * motionStrength;
   const noiseX =
     Math.sin(state.noisePhase * 1.35 + state.noiseOffset) * (0.34 + energy * 0.9) +
     Math.cos(state.noisePhase * 2.35 + state.noiseOffset * 1.7) * (0.22 + energy * 0.55);
   const noiseY =
     Math.cos(state.noisePhase * 1.55 + state.noiseOffset * 0.4) * (0.32 + energy * 0.82) +
     Math.sin(state.noisePhase * 2.1 + state.noiseOffset) * (0.2 + energy * 0.5);
-  const noiseStrength = 12 + energy * 210 + intensity * 30;
+  const noiseStrength = (12 + energy * 210 + intensity * 30) * motionStrength;
   state.velX += noiseX * noiseStrength * delta;
   state.velY += noiseY * noiseStrength * delta;
 
   state.impulseTimer -= delta;
-  const impulseDelay = Math.max(0.085, 0.42 - energy * 0.32 - intensity * 0.1);
+  const impulseDelay = Math.max(0.085, 0.42 - energy * 0.32 - intensity * 0.1) + (1 - motionScale) * 0.12;
   if (state.impulseTimer <= 0) {
     const burstAngle = Math.random() * Math.PI * 2;
-    const burstStrength = 16 + energy * 240 + intensity * 120;
+    const burstStrength = (16 + energy * 240 + intensity * 120) * motionStrength;
     state.velX += Math.cos(burstAngle) * burstStrength;
     state.velY += Math.sin(burstAngle) * burstStrength;
     state.impulseTimer = impulseDelay;
@@ -9434,7 +9474,7 @@ function updateAtomSpring(now = performance.now(), drive = 0) {
   const gain = Math.max(0, input - state.lastInputIntensity);
   if (gain > 0.001) {
     const gainAngle = Math.random() * Math.PI * 2;
-    const gainStrength = 38 + gain * 480 + intensity * 140;
+    const gainStrength = (38 + gain * 480 + intensity * 140) * motionStrength;
     state.velX += Math.cos(gainAngle) * gainStrength;
     state.velY += Math.sin(gainAngle) * gainStrength;
   }
@@ -9466,27 +9506,27 @@ function updateAtomSpring(now = performance.now(), drive = 0) {
     state.velY *= scale;
   }
 
-  state.spinPhase += delta * (2.4 + energy * 14.5);
+  state.spinPhase += delta * (2.4 + energy * 14.5) * motionStrength;
   if (!Number.isFinite(state.spinPhase)) state.spinPhase = 0;
   if (!Number.isFinite(state.noisePhase)) state.noisePhase = 0;
   if (state.spinPhase > Math.PI * 1000) state.spinPhase %= Math.PI * 2;
   if (state.noisePhase > Math.PI * 1000) state.noisePhase %= Math.PI * 2;
 
-  const spin = Math.sin(state.spinPhase) * (4 + energy * 28);
+  const spin = Math.sin(state.spinPhase) * (4 + energy * 28) * motionStrength;
 
   const tiltTarget =
-    (state.posX / Math.max(rangeX, 1)) * (10 + energy * 18) +
-    (state.velX / Math.max(maxSpeed, 1)) * (34 + energy * 30);
-  const tiltSpring = 24 + energy * 32;
-  const tiltDamping = 7 + energy * 14;
+    (state.posX / Math.max(rangeX, 1)) * (10 + energy * 18) * motionStrength +
+    (state.velX / Math.max(maxSpeed, 1)) * (34 + energy * 30) * motionStrength;
+  const tiltSpring = (24 + energy * 32) * motionStrength;
+  const tiltDamping = (7 + energy * 14) * motionStrength;
   state.tiltVelocity += (tiltTarget - state.tilt) * tiltSpring * delta;
   state.tiltVelocity -= state.tiltVelocity * tiltDamping * delta;
   state.tilt += state.tiltVelocity * delta;
 
   const verticalMomentum = state.velY / Math.max(maxSpeed, 1);
-  const squashTarget = Math.max(-1, Math.min(1, -verticalMomentum * (1.6 + energy * 1.25)));
-  const squashSpring = 22 + energy * 28;
-  const squashDamping = 9 + energy * 12;
+  const squashTarget = Math.max(-1, Math.min(1, -verticalMomentum * (1.6 + energy * 1.25) * motionStrength));
+  const squashSpring = (22 + energy * 28) * motionStrength;
+  const squashDamping = (9 + energy * 12) * motionStrength;
   state.squashVelocity += (squashTarget - state.squash) * squashSpring * delta;
   state.squashVelocity -= state.squashVelocity * squashDamping * delta;
   state.squash += state.squashVelocity * delta;
@@ -9507,13 +9547,14 @@ function updateAtomSpring(now = performance.now(), drive = 0) {
   if (Math.abs(state.tilt) < 0.0005) state.tilt = 0;
   if (Math.abs(state.squash) < 0.0005) state.squash = 0;
 
-  const offsetX = state.posX * ATOM_REBOUND_AMPLITUDE_SCALE;
-  const offsetY = state.posY * ATOM_REBOUND_AMPLITUDE_SCALE;
+  const amplitudeScale = getAtomReboundAmplitudeScale();
+  const offsetX = state.posX * amplitudeScale;
+  const offsetY = state.posY * amplitudeScale;
   visual.style.setProperty('--shake-x', `${offsetX.toFixed(2)}px`);
   visual.style.setProperty('--shake-y', `${offsetY.toFixed(2)}px`);
   visual.style.setProperty(
     '--shake-rot',
-    `${((state.tilt + spin) * ATOM_REBOUND_AMPLITUDE_SCALE).toFixed(2)}deg`
+    `${((state.tilt + spin) * amplitudeScale).toFixed(2)}deg`
   );
   visual.style.setProperty('--shake-scale-x', '1');
   visual.style.setProperty('--shake-scale-y', '1');

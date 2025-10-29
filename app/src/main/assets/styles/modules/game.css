@@ -424,11 +424,6 @@ body:not(.view-game):not(.view-wave) .apc-frenzy-counter {
   transition: filter 0.14s ease;
 }
 
-body[data-performance-mode='eco'] .atom-visual {
-  transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
-  will-change: auto;
-}
-
 body[data-performance-mode='eco'] .atom-button__core::before,
 body[data-performance-mode='eco'] .atom-button__core::after {
   display: none;
