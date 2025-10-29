@@ -1762,8 +1762,8 @@
           "aiAutoProgress": "Opponents continue the hand."
         },
         "pot": {
-          "aria": "Pot tracker",
-          "label": "Total pot",
+          "aria": "Total pot and phase status",
+          "label": "Total pot:",
           "unit": "credits"
         },
         "communityPlaceholder": "Community cards will appear here.",

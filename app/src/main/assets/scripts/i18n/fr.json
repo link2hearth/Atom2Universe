@@ -1762,8 +1762,8 @@
           "aiAutoProgress": "Les adversaires poursuivent la manche."
         },
         "pot": {
-          "aria": "Suivi du pot",
-          "label": "Pot total",
+          "aria": "Pot total et phase en cours",
+          "label": "Pot total\u00a0:",
           "unit": "crédits"
         },
         "communityPlaceholder": "Les cartes communes apparaîtront ici.",

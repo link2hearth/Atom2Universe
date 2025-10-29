@@ -1844,16 +1844,26 @@
               data-i18n="aria-label:index.sections.holdem.summaryAria"
             >
               <div
-                class="holdem-summary__segment holdem-summary__pot"
+                class="holdem-summary__segment holdem-summary__info"
                 role="group"
-                aria-label="Suivi du pot"
+                aria-label="Pot total et phase en cours"
                 data-i18n="aria-label:index.sections.holdem.pot.aria"
               >
-                <span class="holdem-pot__label" data-i18n="index.sections.holdem.pot.label">Pot total</span>
-                <div class="holdem-pot__amount">
-                  <span id="holdemPotValue">0</span>
-                  <span class="holdem-pot__unit" data-i18n="index.sections.holdem.pot.unit">crédits</span>
-                </div>
+                <p class="holdem-summary__pot-line">
+                  <span class="holdem-pot__label" data-i18n="index.sections.holdem.pot.label">Pot total :</span>
+                  <span class="holdem-pot__amount">
+                    <span id="holdemPotValue">0</span>
+                    <span class="holdem-pot__unit" data-i18n="index.sections.holdem.pot.unit">crédits</span>
+                  </span>
+                </p>
+                <p
+                  class="holdem-summary__status"
+                  id="holdemStatus"
+                  aria-live="polite"
+                  data-i18n="index.sections.holdem.status.intro"
+                >
+                  Lancez une nouvelle donne pour jouer.
+                </p>
               </div>
               <div
                 class="holdem-summary__segment holdem-summary__community"
@@ -1870,14 +1880,6 @@
                   </li>
                 </ul>
               </div>
-              <p
-                class="holdem-summary__segment holdem-summary__status"
-                id="holdemStatus"
-                aria-live="polite"
-                data-i18n="index.sections.holdem.status.intro"
-              >
-                Lancez une nouvelle donne pour jouer.
-              </p>
             </section>
           </div>
           <div class="holdem-bottom">
