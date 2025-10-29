@@ -674,29 +674,6 @@
             >S’asseoir</span
           >
         </button>
-        <button
-          type="button"
-          class="arcade-hub-card"
-          aria-label="Accéder au mini-jeu de billard"
-          data-i18n="aria-label:index.sections.arcadeHub.cards.billard.aria"
-          data-page-target="billard"
-        >
-          <span
-            class="arcade-hub-card__title"
-            role="heading"
-            aria-level="3"
-            data-i18n="index.sections.arcadeHub.cards.billard.title"
-          >Billard français</span>
-          <p
-            class="arcade-hub-card__description"
-            data-i18n="index.sections.arcadeHub.cards.billard.description"
-          >
-            Maîtrisez le carambolage à trois billes sur une table sans poches, avec un mode entraînement libre.
-          </p>
-          <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.billard.cta"
-            >Jouer</span
-          >
-        </button>
       </div>
     </section>
 
@@ -1726,26 +1703,6 @@
     >
       <div class="holdem">
         <header class="holdem__header">
-          <div
-            class="holdem-pot"
-            role="group"
-            aria-label="Suivi du pot"
-            data-i18n="aria-label:index.sections.holdem.pot.aria"
-          >
-            <span class="holdem-pot__label" data-i18n="index.sections.holdem.pot.label">Pot total</span>
-            <div class="holdem-pot__amount">
-              <span id="holdemPotValue">0</span>
-              <span class="holdem-pot__unit" data-i18n="index.sections.holdem.pot.unit">crédits</span>
-            </div>
-            <div
-              class="holdem-pot__gauge"
-              role="img"
-              aria-label="Jauge de pot"
-              data-i18n="aria-label:index.sections.holdem.pot.gauge"
-            >
-              <div class="holdem-pot__fill" id="holdemPotFill" style="width: 0%"></div>
-            </div>
-          </div>
           <p
             class="holdem-status"
             id="holdemStatus"
@@ -1755,181 +1712,160 @@
             Lancez une nouvelle donne pour jouer.
           </p>
         </header>
-        <div
-          class="holdem-table"
-          role="group"
-          aria-label="Table de poker Hold'em"
-          data-i18n="aria-label:index.sections.holdem.tableAria"
-        >
-          <div
-            class="holdem-community"
+        <div class="holdem-layout">
+          <aside
+            class="holdem-panel holdem-player-panel"
             role="group"
-            aria-label="Cartes communes"
-            data-i18n="aria-label:index.sections.holdem.communityAria"
+            aria-label="Commandes de poker"
+            data-i18n="aria-label:index.sections.holdem.controlsAria"
           >
-            <ul class="holdem-cards holdem-cards--community" id="holdemCommunityCards">
-              <li
-                class="holdem-cards__placeholder"
-                data-i18n="index.sections.holdem.communityPlaceholder"
+            <section
+              class="holdem-hand"
+              aria-label="Votre main"
+              data-i18n="aria-label:index.sections.holdem.playerHandAria"
+            >
+              <header class="holdem-hand__header">
+                <h3 class="holdem-hand__title" data-i18n="index.sections.holdem.hand.label">Votre main</h3>
+                <div class="holdem-hand__meta">
+                  <span class="holdem-hand__stack">
+                    <span class="holdem-hand__label" data-i18n="index.sections.holdem.labels.stack">Stack</span>
+                    <span id="holdemPlayerStack" class="holdem-hand__value">0</span>
+                  </span>
+                  <span
+                    class="holdem-hand__status"
+                    id="holdemPlayerStatus"
+                    data-i18n="index.sections.holdem.playerStatus.waiting"
+                  >
+                    En attente
+                  </span>
+                </div>
+              </header>
+              <ul class="holdem-cards holdem-cards--player" id="holdemPlayerCards">
+                <li
+                  class="holdem-cards__placeholder"
+                  data-i18n="index.sections.holdem.hand.placeholder"
+                >
+                  Aucune carte distribuée pour le moment.
+                </li>
+              </ul>
+              <p class="holdem-hand__bet">
+                <span class="holdem-hand__label" data-i18n="index.sections.holdem.labels.currentBet">Mise actuelle</span>
+                <span id="holdemPlayerBet" class="holdem-hand__value">0</span>
+              </p>
+            </section>
+            <div class="holdem-actions">
+              <button
+                type="button"
+                class="holdem-button"
+                id="holdemNewHand"
+                data-i18n="index.sections.holdem.controls.newHand"
               >
-                Les cartes communes apparaîtront ici.
-              </li>
-            </ul>
-          </div>
-          <div
-            class="holdem-opponents"
-            id="holdemPlayers"
-            role="list"
+                Nouvelle donne
+              </button>
+              <div class="holdem-actions__row">
+                <button
+                  type="button"
+                  class="holdem-button"
+                  id="holdemCheckCall"
+                  data-i18n="index.sections.holdem.controls.check"
+                  disabled
+                >
+                  Checker
+                </button>
+                <button
+                  type="button"
+                  class="holdem-button"
+                  id="holdemRaise"
+                  data-i18n="index.sections.holdem.controls.raise"
+                  disabled
+                >
+                  Relancer
+                </button>
+                <button
+                  type="button"
+                  class="holdem-button holdem-button--danger"
+                  id="holdemFold"
+                  data-i18n="index.sections.holdem.controls.fold"
+                  disabled
+                >
+                  Se coucher
+                </button>
+              </div>
+              <label class="holdem-raise">
+                <span class="holdem-raise__label" data-i18n="index.sections.holdem.controls.raiseLabel"
+                  >Relancer à</span
+                >
+                <input
+                  type="number"
+                  id="holdemRaiseAmount"
+                  class="holdem-raise__input"
+                  min="0"
+                  step="10"
+                  aria-describedby="holdemRaiseHelp"
+                  disabled
+                />
+              </label>
+              <p
+                class="holdem-raise__help"
+                id="holdemRaiseHelp"
+                data-i18n="index.sections.holdem.controls.raiseHelp"
+              >
+                Saisissez le montant total de votre mise pour ce tour.
+              </p>
+            </div>
+          </aside>
+          <section
+            class="holdem-table"
+            role="group"
+            aria-label="Table de poker Hold'em"
+            data-i18n="aria-label:index.sections.holdem.tableAria"
+          >
+            <div
+              class="holdem-pot"
+              role="group"
+              aria-label="Suivi du pot"
+              data-i18n="aria-label:index.sections.holdem.pot.aria"
+            >
+              <span class="holdem-pot__label" data-i18n="index.sections.holdem.pot.label">Pot total</span>
+              <div class="holdem-pot__amount">
+                <span id="holdemPotValue">0</span>
+                <span class="holdem-pot__unit" data-i18n="index.sections.holdem.pot.unit">crédits</span>
+              </div>
+              <div
+                class="holdem-pot__gauge"
+                role="img"
+                aria-label="Jauge de pot"
+                data-i18n="aria-label:index.sections.holdem.pot.gauge"
+              >
+                <div class="holdem-pot__fill" id="holdemPotFill" style="width: 0%"></div>
+              </div>
+            </div>
+            <div
+              class="holdem-community"
+              role="group"
+              aria-label="Cartes communes"
+              data-i18n="aria-label:index.sections.holdem.communityAria"
+            >
+              <ul class="holdem-cards holdem-cards--community" id="holdemCommunityCards">
+                <li
+                  class="holdem-cards__placeholder"
+                  data-i18n="index.sections.holdem.communityPlaceholder"
+                >
+                  Les cartes communes apparaîtront ici.
+                </li>
+              </ul>
+            </div>
+          </section>
+          <aside
+            class="holdem-panel holdem-opponent-panel"
+            role="group"
             aria-label="Adversaires"
             data-i18n="aria-label:index.sections.holdem.playersAria"
-          ></div>
-        </div>
-        <aside
-          class="holdem-controls"
-          role="group"
-          aria-label="Commandes de poker"
-          data-i18n="aria-label:index.sections.holdem.controlsAria"
-        >
-          <section
-            class="holdem-hand"
-            aria-label="Votre main"
-            data-i18n="aria-label:index.sections.holdem.playerHandAria"
           >
-            <h3 class="holdem-hand__title" data-i18n="index.sections.holdem.hand.label">Votre main</h3>
-            <ul class="holdem-cards holdem-cards--player" id="holdemPlayerCards">
-              <li
-                class="holdem-cards__placeholder"
-                data-i18n="index.sections.holdem.hand.placeholder"
-              >
-                Aucune carte distribuée pour le moment.
-              </li>
-            </ul>
-          </section>
-          <div class="holdem-actions">
-            <button
-              type="button"
-              class="holdem-button"
-              id="holdemNewHand"
-              data-i18n="index.sections.holdem.controls.newHand"
-            >
-              Nouvelle donne
-            </button>
-            <div class="holdem-actions__row">
-              <button
-                type="button"
-                class="holdem-button"
-                id="holdemCheckCall"
-                data-i18n="index.sections.holdem.controls.check"
-                disabled
-              >
-                Checker
-              </button>
-              <button
-                type="button"
-                class="holdem-button"
-                id="holdemRaise"
-                data-i18n="index.sections.holdem.controls.raise"
-                disabled
-              >
-                Relancer
-              </button>
-              <button
-                type="button"
-                class="holdem-button holdem-button--danger"
-                id="holdemFold"
-                data-i18n="index.sections.holdem.controls.fold"
-                disabled
-              >
-                Se coucher
-              </button>
-            </div>
-            <label class="holdem-raise">
-              <span class="holdem-raise__label" data-i18n="index.sections.holdem.controls.raiseLabel"
-                >Relancer à</span
-              >
-              <input
-                type="number"
-                id="holdemRaiseAmount"
-                class="holdem-raise__input"
-                min="0"
-                step="10"
-                aria-describedby="holdemRaiseHelp"
-                disabled
-              />
-            </label>
-            <p
-              class="holdem-raise__help"
-              id="holdemRaiseHelp"
-              data-i18n="index.sections.holdem.controls.raiseHelp"
-            >
-              Saisissez le montant total de votre mise pour ce tour.
-            </p>
-          </div>
-        </aside>
-      </div>
-    </section>
-
-    <section
-      id="billard"
-      class="page page--billard"
-      data-page-group="arcade"
-      aria-label="Mini-jeu de billard français"
-      data-i18n="aria-label:index.sections.billard.aria"
-      hidden
-    >
-      <div class="billard-layout" id="billardLayout">
-        <div class="billard-table" id="billardTableContainer">
-          <canvas
-            id="billardCanvas"
-            class="billard-canvas"
-            role="application"
-            aria-label="Surface de jeu du billard"
-            data-i18n="aria-label:index.sections.billard.canvasAria"
-          ></canvas>
+            <h3 class="holdem-panel__title" data-i18n="index.sections.holdem.opponents.title">Adversaires IA</h3>
+            <div class="holdem-opponents" id="holdemPlayers" role="list"></div>
+          </aside>
         </div>
-        <aside class="billard-sidebar" aria-live="polite">
-          <div class="billard-power" role="group" aria-labelledby="billardPowerLabel billardPowerValue">
-            <span
-              class="billard-power__label"
-              id="billardPowerLabel"
-              data-i18n="index.sections.billard.power.label"
-            >
-              Puissance
-            </span>
-            <span
-              class="billard-power__value"
-              id="billardPowerValue"
-              data-i18n="index.sections.billard.power.value"
-            >
-              0 %
-            </span>
-            <div class="billard-power__meter" role="presentation">
-              <div class="billard-power__fill" id="billardPowerFill"></div>
-            </div>
-          </div>
-          <div class="billard-actions">
-            <button
-              id="billardResetButton"
-              class="billard-button"
-              type="button"
-              data-i18n="index.sections.billard.actions.reset"
-            >
-              Réinitialiser
-            </button>
-            <button
-              id="billardArrangeToggle"
-              class="billard-button"
-              type="button"
-              aria-pressed="false"
-              data-i18n="index.sections.billard.actions.arrange"
-            >
-              Arranger
-            </button>
-          </div>
-          <p class="billard-mode-hint" id="billardModeHint" data-i18n="index.sections.billard.playHint">
-            Touchez une bille, tirez à l’opposé de la direction voulue, puis relâchez pour jouer.
-          </p>
-        </aside>
       </div>
     </section>
 
@@ -3851,7 +3787,6 @@
   <script src="scripts/arcade/echecs.js"></script>
   <script src="scripts/arcade/game-of-life.js"></script>
   <script src="scripts/arcade/quantum-2048.js"></script>
-  <script src="scripts/arcade/billard.js"></script>
   <script src="scripts/i18n/embedded-resources.js"></script>
   <script src="scripts/modules/i18n.js"></script>
   <script src="scripts/modules/layered-number.js"></script>

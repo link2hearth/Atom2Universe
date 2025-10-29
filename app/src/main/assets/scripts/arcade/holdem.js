@@ -190,6 +190,9 @@
     potValue: document.getElementById('holdemPotValue'),
     potFill: document.getElementById('holdemPotFill'),
     playerCards: document.getElementById('holdemPlayerCards'),
+    playerStack: document.getElementById('holdemPlayerStack'),
+    playerStatus: document.getElementById('holdemPlayerStatus'),
+    playerBet: document.getElementById('holdemPlayerBet'),
     newHand: document.getElementById('holdemNewHand'),
     fold: document.getElementById('holdemFold'),
     checkCall: document.getElementById('holdemCheckCall'),
@@ -549,6 +552,23 @@
       placeholderKey: 'index.sections.holdem.hand.placeholder',
       placeholderFallback: 'Aucune carte distribuée pour le moment.'
     });
+    if (elements.playerStack) {
+      elements.playerStack.textContent = formatAmount(hero ? hero.stack : 0);
+    }
+    if (elements.playerBet) {
+      elements.playerBet.textContent = formatAmount(hero ? hero.bet : 0);
+    }
+    if (elements.playerStatus) {
+      const statusKey = hero && hero.statusKey
+        ? hero.statusKey
+        : 'index.sections.holdem.playerStatus.waiting';
+      elements.playerStatus.dataset.i18n = statusKey;
+      elements.playerStatus.textContent = translate(
+        statusKey,
+        getPlayerStatusFallback(statusKey),
+        hero ? hero.statusParams : null
+      );
+    }
   }
 
   function getPlayerStatusFallback(key) {
@@ -588,12 +608,20 @@
       if (player.allIn) {
         article.classList.add('holdem-player--all-in');
       }
+      article.setAttribute('role', 'listitem');
+
+      const header = document.createElement('div');
+      header.className = 'holdem-player__header';
+
       const name = document.createElement('h4');
       name.className = 'holdem-player__name';
       name.textContent = player.name;
-      article.appendChild(name);
+      header.appendChild(name);
 
-      const stack = document.createElement('p');
+      const meta = document.createElement('div');
+      meta.className = 'holdem-player__meta';
+
+      const stack = document.createElement('span');
       stack.className = 'holdem-player__stack';
       const label = document.createElement('span');
       label.className = 'holdem-player__stack-label';
@@ -604,20 +632,36 @@
       value.textContent = formatAmount(player.stack);
       stack.appendChild(label);
       stack.appendChild(value);
-      article.appendChild(stack);
+      meta.appendChild(stack);
 
-      const status = document.createElement('p');
+      const status = document.createElement('span');
       status.className = 'holdem-player__status';
       const statusKey = player.statusKey || 'index.sections.holdem.playerStatus.waiting';
       status.dataset.i18n = statusKey;
       status.textContent = translate(statusKey, getPlayerStatusFallback(statusKey), player.statusParams);
-      article.appendChild(status);
+      meta.appendChild(status);
+
+      header.appendChild(meta);
+      article.appendChild(header);
 
       const cardList = document.createElement('ul');
       cardList.className = 'holdem-cards holdem-cards--opponent';
       const reveal = state.phase === 'showdown' || state.phase === 'complete';
       renderCardList(cardList, player.cards, { hidden: !reveal });
       article.appendChild(cardList);
+
+      const bet = document.createElement('p');
+      bet.className = 'holdem-player__bet';
+      const betLabel = document.createElement('span');
+      betLabel.className = 'holdem-player__stack-label';
+      betLabel.dataset.i18n = 'index.sections.holdem.labels.currentBet';
+      betLabel.textContent = translate('index.sections.holdem.labels.currentBet', 'Current bet');
+      const betValue = document.createElement('span');
+      betValue.className = 'holdem-player__bet-value';
+      betValue.textContent = formatAmount(player.bet);
+      bet.appendChild(betLabel);
+      bet.appendChild(betValue);
+      article.appendChild(bet);
 
       fragment.appendChild(article);
     }

@@ -341,12 +341,6 @@
             "title": "Hold’em",
             "description": "Affrontez jusqu’à cinq IA en Texas Hold’em et empochez le pot avec la meilleure main.",
             "cta": "S’asseoir"
-          },
-          "billard": {
-            "aria": "Accéder au mini-jeu de billard",
-            "title": "Billard français",
-            "description": "Maîtrisez le carambolage à trois billes sur une table sans poches, avec un mode entraînement libre.",
-            "cta": "Jouer"
           }
         }
       },
@@ -1733,7 +1727,8 @@
           "raiseHelp": "Saisissez le montant total de votre mise pour ce tour."
         },
         "labels": {
-          "stack": "Stack",
+          "stack": "Solde",
+          "currentBet": "Mise actuelle",
           "you": "Vous"
         },
         "phase": {
@@ -1769,22 +1764,10 @@
         "communityAria": "Cartes communes",
         "playersAria": "Adversaires",
         "controlsAria": "Commandes de poker",
-        "playerHandAria": "Votre main"
-      },
-      "billard": {
-        "aria": "Table de billard français",
-        "canvasAria": "Surface de jeu du billard français",
-        "power": {
-          "label": "Puissance",
-          "value": "0 %",
-          "valueDynamic": "{{value}} %"
-        },
-        "actions": {
-          "reset": "Réinitialiser",
-          "arrange": "Arranger"
-        },
-        "playHint": "Touchez une bille, tirez à l’opposé de la direction souhaitée, puis relâchez pour jouer.",
-        "arrangeHint": "Le mode arranger permet de déplacer librement les billes sur la table."
+        "playerHandAria": "Votre main",
+        "opponents": {
+          "title": "Adversaires IA"
+        }
       }
     },
     "particules": {

@@ -62,7 +62,6 @@ const PAGE_FEATURE_MAP = Object.freeze({
   quantum2048: 'arcade.objectx',
   bigger: 'arcade.bigger',
   balance: 'arcade.balance',
-  billard: 'arcade.billard',
   math: 'arcade.math',
   sudoku: 'arcade.sudoku',
   minesweeper: 'arcade.demineur',
