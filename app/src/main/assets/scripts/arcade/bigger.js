@@ -22,6 +22,7 @@
   const PHYSICS_WALL_BOUNCE = 0.55;
   const PHYSICS_FLOOR_BOUNCE = 0.68;
   const PHYSICS_BALL_BOUNCE = 0.38;
+  const PHYSICS_BALL_RESTING_VELOCITY = 24;
   const PHYSICS_LINEAR_DAMPING = 0.995;
   const PHYSICS_STATIC_FRICTION = 0.32;
   const PHYSICS_DYNAMIC_FRICTION = 0.08;
@@ -1026,11 +1027,23 @@
 
               const relativeVelocity = (b.vx - a.vx) * nx + (b.vy - a.vy) * ny;
               if (relativeVelocity < 0) {
-                const impulse = (-(1 + PHYSICS_BALL_BOUNCE) * relativeVelocity) / invMassSum;
+                const collisionSpeed = Math.abs(relativeVelocity);
+                const restitution = collisionSpeed < PHYSICS_BALL_RESTING_VELOCITY
+                  ? 0
+                  : PHYSICS_BALL_BOUNCE;
+                const impulse = (-(1 + restitution) * relativeVelocity) / invMassSum;
                 a.vx -= impulse * nx * a.invMass;
                 a.vy -= impulse * ny * a.invMass;
                 b.vx += impulse * nx * b.invMass;
                 b.vy += impulse * ny * b.invMass;
+                if (collisionSpeed < PHYSICS_BALL_RESTING_VELOCITY) {
+                  const averageVx = (a.vx * a.invMass + b.vx * b.invMass) / invMassSum;
+                  const averageVy = (a.vy * a.invMass + b.vy * b.invMass) / invMassSum;
+                  a.vx = averageVx;
+                  b.vx = averageVx;
+                  a.vy = averageVy;
+                  b.vy = averageVy;
+                }
               }
             }
           }
