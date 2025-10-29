@@ -46,6 +46,19 @@ const AUDIO_ENGINE_SETTINGS = Object.freeze({
 });
 
 /**
+ * Réglages des moteurs audio chiptune.
+ * Permet d'ajuster le gain global et la coloration d'effets sans modifier le code du moteur.
+ */
+const AUDIO_ENGINE_SETTINGS = Object.freeze({
+  scc: Object.freeze({
+    masterGain: 0.28,
+    softClipperDrive: 1.2,
+    chorusDelayMs: 12,
+    chorusMix: 0.04
+  })
+});
+
+/**
  * Profils de performance disponibles pour la boucle principale du jeu.
  * - `apcFlushIntervalMs` contrôle la fréquence minimale (en millisecondes)
  *   à laquelle les gains manuels (APC) sont appliqués au total d'atomes.
