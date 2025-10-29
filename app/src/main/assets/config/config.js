@@ -1031,9 +1031,8 @@ const GAME_CONFIG = {
     },
     /**
      * Paramètres du mini-jeu Hold’em.
-     * - blinds : valeurs des petites et grosses blinds versées au début de chaque donne.
+     * - blind : montant unique utilisé comme blinde et relance de référence.
      * - dealerSpeedMs : cadence (en millisecondes) utilisée pour rythmer les animations du croupier.
-     * - minRaise : relance minimale autorisée (montant total sur le tour en cours).
      * - startingStack : réserve d’atomes attribuée à chaque participant lors d’un nouveau tableau.
      * - aiStack : pile de départ attribuée à chaque adversaire IA lors d’une nouvelle installation ou réintégration.
      * - opponentCount : fourchette du nombre d’adversaires IA présents à la table.
@@ -1043,10 +1042,7 @@ const GAME_CONFIG = {
      * - growth : configuration de la montée des enjeux (facteur +10 % et plafond maximum).
      */
     holdem: {
-      blinds: {
-        small: 5,
-        big: 10
-      },
+      blind: 10,
       dealerSpeedMs: 650,
       minRaise: 10,
       startingStack: 600,
@@ -1057,8 +1053,7 @@ const GAME_CONFIG = {
         openRaiseMultiplier: 2
       },
       growth: {
-        blindFactor: 1.1,
-        raiseFactor: 1.1,
+        usageFactor: 1.1,
         cap: 99e68
       },
       opponentCount: { min: 4, max: 5 },

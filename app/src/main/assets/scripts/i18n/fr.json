@@ -1740,7 +1740,7 @@
       "holdem": {
         "status": {
           "intro": "Lancez une nouvelle donne pour jouer.",
-          "newHand": "Nouvelle donne — blinds {small}/{big} atomes.",
+          "newHand": "Nouvelle donne — blinde {blind} atomes.",
           "phasePrompt": "Phase {phase} — à vous de jouer.",
           "playerWins": "Vous remportez le pot ({amount}).",
           "playerFold": "{winner} remporte le pot ({amount}).",
