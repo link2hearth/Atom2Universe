@@ -547,6 +547,29 @@
         <button
           type="button"
           class="arcade-hub-card"
+          aria-label="Accéder au mini-jeu The Line"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.theLine.aria"
+          data-page-target="theLine"
+        >
+          <span
+            class="arcade-hub-card__title"
+            role="heading"
+            aria-level="3"
+            data-i18n="index.sections.arcadeHub.cards.theLine.title"
+          >The Line</span>
+          <p
+            class="arcade-hub-card__description"
+            data-i18n="index.sections.arcadeHub.cards.theLine.description"
+          >
+            Tracez un chemin qui couvre toute la grille sans repasser sur une case et relevez le défi multicolore.
+          </p>
+          <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.theLine.cta"
+            >Tracer</span
+          >
+        </button>
+        <button
+          type="button"
+          class="arcade-hub-card"
           aria-label="Accéder au mini-jeu Démineur"
           data-i18n="aria-label:index.sections.arcadeHub.cards.minesweeper.aria"
           data-page-target="minesweeper"
@@ -1604,6 +1627,116 @@
             </div>
           </div>
         </div>
+      </div>
+    </section>
+
+    <section
+      id="theLine"
+      class="page page--the-line"
+      data-page-group="arcade"
+      aria-label="Mini-jeu The Line : tracez un parcours couvrant toute la grille."
+      data-i18n="aria-label:index.sections.theLine.aria"
+      hidden
+    >
+      <div class="the-line">
+        <header class="the-line__header">
+          <h2 class="the-line__title" data-i18n="index.sections.theLine.title">The Line</h2>
+          <p class="the-line__subtitle" data-i18n="index.sections.theLine.subtitle">
+            Tracez un chemin continu qui visite chaque case sans passer deux fois au même endroit.
+          </p>
+        </header>
+        <div class="the-line__controls">
+          <div
+            class="the-line__mode-group"
+            role="group"
+            aria-label="Choisir le mode de tracé"
+            data-i18n="aria-label:index.sections.theLine.mode.aria"
+          >
+            <span class="the-line__group-label" data-i18n="index.sections.theLine.mode.label">Mode</span>
+            <div class="the-line__buttons">
+              <button
+                type="button"
+                class="the-line__toggle the-line__toggle--active"
+                data-line-mode="single"
+                aria-pressed="true"
+                data-i18n="index.sections.theLine.mode.single"
+              >Parcours unique</button>
+              <button
+                type="button"
+                class="the-line__toggle"
+                data-line-mode="multi"
+                aria-pressed="false"
+                data-i18n="index.sections.theLine.mode.multi"
+              >Multicolore</button>
+            </div>
+          </div>
+          <div
+            class="the-line__mode-group"
+            role="group"
+            aria-label="Choisir la difficulté"
+            data-i18n="aria-label:index.sections.theLine.difficulty.aria"
+          >
+            <span class="the-line__group-label" data-i18n="index.sections.theLine.difficulty.label">Difficulté</span>
+            <div class="the-line__buttons">
+              <button
+                type="button"
+                class="the-line__toggle the-line__toggle--active"
+                data-line-difficulty="easy"
+                aria-pressed="true"
+                data-i18n="index.sections.theLine.difficulty.easy"
+              >Facile</button>
+              <button
+                type="button"
+                class="the-line__toggle"
+                data-line-difficulty="medium"
+                aria-pressed="false"
+                data-i18n="index.sections.theLine.difficulty.medium"
+              >Moyen</button>
+              <button
+                type="button"
+                class="the-line__toggle"
+                data-line-difficulty="hard"
+                aria-pressed="false"
+                data-i18n="index.sections.theLine.difficulty.hard"
+              >Difficile</button>
+            </div>
+          </div>
+        </div>
+        <dl class="the-line__status" role="presentation">
+          <div class="the-line__status-item">
+            <dt class="the-line__status-label" data-i18n="index.sections.theLine.status.level">Niveau</dt>
+            <dd class="the-line__status-value" id="theLineLevelValue">1</dd>
+          </div>
+          <div class="the-line__status-item">
+            <dt class="the-line__status-label" data-i18n="index.sections.theLine.status.remaining">Cases restantes</dt>
+            <dd class="the-line__status-value" id="theLineRemainingValue">0</dd>
+          </div>
+        </dl>
+        <div class="the-line__actions">
+          <button
+            type="button"
+            class="the-line__action-button"
+            id="theLineResetButton"
+            data-i18n="index.sections.theLine.actions.reset"
+          >Nouveau tracé</button>
+        </div>
+        <div class="the-line__board-wrapper">
+          <div
+            class="the-line__board"
+            id="theLineBoard"
+            role="application"
+            aria-label="Grille du puzzle The Line"
+            data-i18n="aria-label:index.sections.theLine.board"
+          ></div>
+        </div>
+        <p
+          class="the-line__message"
+          id="theLineMessage"
+          aria-live="polite"
+          data-i18n="index.sections.theLine.messages.ready"
+        >
+          Touchez une case de départ colorée pour commencer votre parcours.
+        </p>
       </div>
     </section>
 
@@ -3839,6 +3972,7 @@
   <script src="scripts/arcade/echecs.js"></script>
   <script src="scripts/arcade/game-of-life.js"></script>
   <script src="scripts/arcade/quantum-2048.js"></script>
+  <script src="scripts/arcade/the-line.js"></script>
   <script src="scripts/arcade/billard.js"></script>
   <script src="scripts/i18n/embedded-resources.js"></script>
   <script src="scripts/modules/i18n.js"></script>

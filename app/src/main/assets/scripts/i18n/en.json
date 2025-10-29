@@ -306,6 +306,12 @@
             "description": "Finish a board to boost offline production for the next few hours.",
             "cta": "Solve"
           },
+          "theLine": {
+            "aria": "Open the The Line mini-game",
+            "title": "The Line",
+            "description": "Draw a route that covers the entire grid without revisiting a square and tackle the multicolour challenge.",
+            "cta": "Draw"
+          },
           "minesweeper": {
             "aria": "Open the Minesweeper mini-game",
             "title": "Minesweeper",
@@ -541,6 +547,41 @@
           "ready": "Place the blocks, then press the result panel to run the test."
         },
         "cubeAria": "Block weighing {weight}"
+      },
+      "theLine": {
+        "aria": "The Line mini-game: cover every tile with a single stroke.",
+        "title": "The Line",
+        "subtitle": "Draw a continuous path that visits every tile without stepping on the same place twice.",
+        "mode": {
+          "aria": "Choose the drawing mode",
+          "label": "Mode",
+          "single": "Single path",
+          "multi": "Multicolour"
+        },
+        "difficulty": {
+          "aria": "Choose the difficulty",
+          "label": "Difficulty",
+          "easy": "Easy",
+          "medium": "Medium",
+          "hard": "Hard"
+        },
+        "status": {
+          "level": "Level",
+          "remaining": "Tiles remaining"
+        },
+        "actions": {
+          "reset": "New route"
+        },
+        "board": "The Line puzzle grid",
+        "messages": {
+          "ready": "Tap a coloured starting tile to begin your route.",
+          "single": "Draw a route that covers the entire grid without reusing a tile.",
+          "multi": "Connect each pair of colours while filling the grid without crossing paths.",
+          "completed": "Level {{level}} cleared!",
+          "autoNext": "Level {{level}} ready.",
+          "error": "We couldn’t create a new puzzle. Try again.",
+          "incompletePath": "Drag all the way to the matching endpoint to validate this colour."
+        }
       },
       "sudoku": {
         "aria": "Quantum Sudoku mini-game",
