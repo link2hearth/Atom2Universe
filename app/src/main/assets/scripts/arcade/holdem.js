@@ -6,6 +6,12 @@
   const GLOBAL_CONFIG = typeof globalThis !== 'undefined' ? globalThis.GAME_CONFIG : null;
   const AUTOSAVE_ID = 'holdem';
 
+  const DEFAULT_RAISE_GUIDANCE = Object.freeze({
+    potRatio: 0.25,
+    stackRatio: 0.12,
+    openRaiseMultiplier: 2
+  });
+
   const DEFAULT_CONFIG = Object.freeze({
     blinds: { small: 20, big: 40 },
     dealerSpeedMs: 650,
@@ -18,7 +24,8 @@
       patient: { aggression: 0.5, caution: 0.45, bluff: 0.15 },
       daring: { aggression: 0.72, caution: 0.33, bluff: 0.28 }
     },
-    defaultAiProfile: 'patient'
+    defaultAiProfile: 'patient',
+    raiseGuidance: DEFAULT_RAISE_GUIDANCE
   });
 
   const DEFAULT_AI_PROFILE = Object.freeze({ aggression: 0.55, caution: 0.4, bluff: 0.2 });
@@ -169,6 +176,15 @@
     };
   }
 
+  function normalizeRaiseGuidance(rawGuidance) {
+    const source = rawGuidance && typeof rawGuidance === 'object' ? rawGuidance : {};
+    const defaults = DEFAULT_CONFIG.raiseGuidance || DEFAULT_RAISE_GUIDANCE;
+    const potRatio = clamp(Number(source.potRatio) || defaults.potRatio || 0, 0, 1);
+    const stackRatio = clamp(Number(source.stackRatio) || defaults.stackRatio || 0, 0, 1);
+    const openRaiseMultiplier = Math.max(1, Number(source.openRaiseMultiplier) || defaults.openRaiseMultiplier || 1);
+    return { potRatio, stackRatio, openRaiseMultiplier };
+  }
+
   function getHoldemConfig() {
     const raw =
       GLOBAL_CONFIG
@@ -183,6 +199,7 @@
     const minRaise = toPositiveInteger(raw && raw.minRaise, DEFAULT_CONFIG.minRaise);
     const startingStack = toPositiveInteger(raw && raw.startingStack, DEFAULT_CONFIG.startingStack);
     const aiStack = toPositiveInteger(raw && raw.aiStack, DEFAULT_CONFIG.aiStack);
+    const raiseGuidance = normalizeRaiseGuidance(raw && raw.raiseGuidance);
 
     let opponentMin = DEFAULT_CONFIG.opponentCount.min;
     let opponentMax = DEFAULT_CONFIG.opponentCount.max;
@@ -230,6 +247,7 @@
       minRaise: Math.max(minRaise, Math.max(bigBlind, smallBlind * 2)),
       startingStack,
       aiStack,
+      raiseGuidance,
       aiThinkingDelayMs: { min: thinkingMin, max: thinkingMax },
       opponentCount: { min: clamp(opponentMin, 2, 7), max: clamp(opponentMax, 2, 7) },
       aiProfiles,
@@ -402,15 +420,30 @@
     if (stack <= 0) {
       return currentBet;
     }
+    const guidance = state.config.raiseGuidance || DEFAULT_RAISE_GUIDANCE;
+    const potPressure = Math.floor(Math.max(0, state.pot) * Math.max(0, guidance.potRatio || 0));
+    const stackPressure = Math.floor(stack * Math.max(0, guidance.stackRatio || 0));
+    const dynamicBoost = Math.max(potPressure, stackPressure);
+    const lastRaise = Math.max(state.lastRaiseAmount || 0, state.config.minRaise);
     const callAmount = Math.max(0, state.currentBet - currentBet);
-    const baseIncrement = Math.max(
-      state.lastRaiseAmount || state.config.minRaise,
-      state.config.minRaise,
-      callAmount
-    );
-    let target = currentBet + callAmount + baseIncrement;
+    let increment = Math.max(lastRaise, state.config.minRaise, callAmount);
+    if (dynamicBoost > 0) {
+      increment = Math.max(increment, dynamicBoost);
+    }
+
+    let target;
+    if (callAmount > 0) {
+      target = currentBet + callAmount + increment;
+    } else {
+      const openRaiseMultiplier = guidance.openRaiseMultiplier && guidance.openRaiseMultiplier > 1
+        ? guidance.openRaiseMultiplier
+        : 1;
+      const openRaise = Math.max(increment, Math.floor(lastRaise * openRaiseMultiplier));
+      target = currentBet + openRaise;
+    }
+
     if (target <= currentBet) {
-      target = currentBet + baseIncrement;
+      target = currentBet + increment;
     }
     if (target > available) {
       target = available;
