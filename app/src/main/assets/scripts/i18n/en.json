@@ -1785,7 +1785,8 @@
         "labels": {
           "stack": "Stack",
           "currentBet": "Current bet",
-          "you": "You"
+          "you": "You",
+          "opponents": "Opponents"
         },
         "phase": {
           "preflop": "Preflop",
