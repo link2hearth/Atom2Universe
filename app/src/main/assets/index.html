@@ -1721,6 +1721,7 @@
           >
             <section
               class="holdem-hand"
+              id="holdemPlayerPanel"
               aria-label="Votre main"
               data-i18n="aria-label:index.sections.holdem.playerHandAria"
             >
@@ -1792,8 +1793,10 @@
                 </button>
               </div>
               <label class="holdem-raise">
-                <span class="holdem-raise__label" data-i18n="index.sections.holdem.controls.raiseLabel"
-                  >Relancer à</span
+                <span
+                  class="holdem-raise__label"
+                  data-i18n="index.sections.holdem.controls.raiseSuggestedLabel"
+                  >Relance suggérée</span
                 >
                 <input
                   type="number"
@@ -1802,15 +1805,16 @@
                   min="0"
                   step="10"
                   aria-describedby="holdemRaiseHelp"
+                  readonly
                   disabled
                 />
               </label>
               <p
                 class="holdem-raise__help"
                 id="holdemRaiseHelp"
-                data-i18n="index.sections.holdem.controls.raiseHelp"
+                data-i18n="index.sections.holdem.controls.raiseAutoHelp"
               >
-                Saisissez le montant total de votre mise pour ce tour.
+                Le montant est ajusté automatiquement selon le tour.
               </p>
             </div>
           </aside>

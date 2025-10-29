@@ -7,6 +7,8 @@
   --holdem-accent-soft: rgba(34, 211, 238, 0.25);
   --holdem-text-color: var(--color-text-primary, #f0f7ff);
   --holdem-muted-color: rgba(236, 244, 255, 0.64);
+  --holdem-active-border: #f97316;
+  --holdem-active-glow: rgba(249, 115, 22, 0.35);
   display: none;
   padding: clamp(1rem, 3vw, 2.5rem) clamp(0.75rem, 3vw, 2.5rem);
   color: var(--holdem-text-color);
@@ -162,6 +164,7 @@
   display: grid;
   gap: calc(0.85rem * var(--holdem-scale));
   box-shadow: 0 16px 28px rgba(0, 0, 0, 0.35);
+  transition: box-shadow 0.35s ease, border-color 0.35s ease, transform 0.35s ease;
 }
 
 .holdem-player--folded {
@@ -171,6 +174,30 @@
 .holdem-player--all-in {
   border-color: rgba(234, 179, 8, 0.45);
   box-shadow: 0 18px 32px rgba(234, 179, 8, 0.22);
+}
+
+.holdem-player--active {
+  border-color: var(--holdem-active-border);
+  box-shadow: 0 20px 36px var(--holdem-active-glow);
+  transform: translateY(-4px);
+}
+
+.holdem-hand {
+  position: relative;
+  display: grid;
+  gap: calc(0.85rem * var(--holdem-scale));
+  padding: calc(1rem * var(--holdem-scale));
+  border-radius: calc(1rem * var(--holdem-scale));
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: rgba(12, 22, 40, 0.68);
+  box-shadow: 0 16px 28px rgba(0, 0, 0, 0.32);
+  transition: box-shadow 0.35s ease, border-color 0.35s ease, transform 0.35s ease;
+}
+
+.holdem-hand--active {
+  border-color: var(--holdem-active-border);
+  box-shadow: 0 22px 42px var(--holdem-active-glow);
+  transform: translateY(-3px);
 }
 
 
