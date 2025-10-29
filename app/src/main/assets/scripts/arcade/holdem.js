@@ -356,6 +356,11 @@
   }
 
   const CONFIG = getHoldemConfig();
+  const BASE_AI_STACK = Number.isFinite(CONFIG.aiStack)
+    ? CONFIG.aiStack
+    : Number.isFinite(DEFAULT_CONFIG.aiStack)
+      ? DEFAULT_CONFIG.aiStack
+      : 0;
 
   const elements = {
     status: document.getElementById('holdemStatus'),
@@ -376,6 +381,7 @@
 
   const state = {
     config: CONFIG,
+    baseAiStack: BASE_AI_STACK,
     blinds: { small: CONFIG.blinds.small, big: CONFIG.blinds.big },
     minRaise: Math.max(CONFIG.minRaise, CONFIG.blinds.big),
     deck: [],
@@ -778,6 +784,22 @@
     return fallback;
   }
 
+  function enforceBaseAiStack() {
+    const defaultStack = Number.isFinite(DEFAULT_CONFIG.aiStack) && DEFAULT_CONFIG.aiStack > 0
+      ? DEFAULT_CONFIG.aiStack
+      : 0;
+    const baseline = Number.isFinite(state.baseAiStack) && state.baseAiStack > 0
+      ? state.baseAiStack
+      : defaultStack;
+    const current = Number.isFinite(state.config && state.config.aiStack)
+      ? state.config.aiStack
+      : baseline;
+    if (!Number.isFinite(state.config.aiStack) || state.config.aiStack < baseline) {
+      state.config.aiStack = baseline;
+    }
+    return Math.max(baseline, current, defaultStack);
+  }
+
   function createAiPlayer(index, options = {}, context = {}) {
     const usedNames = context && context.usedNames instanceof Set
       ? context.usedNames
@@ -786,11 +808,12 @@
       ? options.profileId
       : state.config.defaultAiProfile;
     const name = resolveAiName(index, usedNames, options.name);
+    const fallbackStack = enforceBaseAiStack();
     return {
       id: `ai-${index}`,
       type: 'ai',
       name,
-      stack: sanitizeStack(options.stack, state.config.aiStack),
+      stack: sanitizeStack(options.stack, fallbackStack),
       bet: 0,
       cards: [],
       folded: false,
@@ -821,6 +844,8 @@
       state.dealerPosition = data.dealerPosition;
     }
 
+    enforceBaseAiStack();
+
     const heroEntry = Array.isArray(data.players)
       ? data.players.find(player => player && (player.type === 'human' || player.id === 'hero'))
       : null;
@@ -844,7 +869,7 @@
         id: `ai-${i}`,
         type: 'ai',
         name,
-        stack: sanitizeStack(entry.stack, state.config.startingStack),
+        stack: sanitizeStack(entry.stack, enforceBaseAiStack()),
         bet: 0,
         cards: [],
         folded: false,
@@ -893,12 +918,13 @@
       return;
     }
     const hero = createHero(state.config.startingStack);
+    const baseline = enforceBaseAiStack();
     const count = clamp(state.config.opponentCount.min, 2, state.config.opponentCount.max);
     const players = [hero];
     const usedNames = new Set([hero.name]);
     state.players = players;
     for (let i = 0; i < count; i += 1) {
-      players.push(createAiPlayer(i, {}, { usedNames }));
+      players.push(createAiPlayer(i, { stack: baseline }, { usedNames }));
     }
     syncHeroStackWithGameState();
   }
@@ -2094,8 +2120,8 @@
 
   function refreshStacksForNewHand() {
     const hero = getHero();
-    const heroStack = hero ? sanitizeStack(hero.stack, state.config.startingStack) : state.config.aiStack;
-    let respawnStack = state.config.aiStack;
+    const heroStack = hero ? sanitizeStack(hero.stack, state.config.startingStack) : enforceBaseAiStack();
+    let respawnStack = enforceBaseAiStack();
     let aiCount = 0;
     let bustedAiCount = 0;
 
@@ -2121,6 +2147,7 @@
       if (respawnStack <= 0) {
         respawnStack = state.config.aiStack;
       }
+      respawnStack = Math.max(enforceBaseAiStack(), respawnStack);
       state.config.aiStack = respawnStack;
     }
 
@@ -2167,6 +2194,7 @@
   }
 
   function startNewHand() {
+    enforceBaseAiStack();
     ensurePlayers();
     if (!state.players.length) {
       return;
