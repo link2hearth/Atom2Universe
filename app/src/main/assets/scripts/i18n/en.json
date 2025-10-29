@@ -345,7 +345,7 @@
           "holdem": {
             "aria": "Open the Hold’em mini-game",
             "title": "Hold’em",
-            "description": "Face up to five AI opponents at a Texas Hold’em table and rake the pot with the best hand.",
+            "description": "Face up to four AI opponents at a Texas Hold’em table and rake the pot with the best hand.",
             "cta": "Take a seat"
           },
           "billard": {
@@ -1757,7 +1757,9 @@
           "aiActionCall": "{name} calls {amount}.",
           "aiActionRaise": "{name} raises to {amount}.",
           "aiActionAllIn": "{name} goes all-in ({amount}).",
-          "aiActionFold": "{name} folds."
+          "aiActionFold": "{name} folds.",
+          "heroFolded": "You fold. The opponents play out the hand.",
+          "aiAutoProgress": "Opponents continue the hand."
         },
         "pot": {
           "aria": "Pot tracker",
@@ -1777,8 +1779,7 @@
           "callWithAmount": "Call ({amount})",
           "raise": "Raise",
           "fold": "Fold",
-          "raiseSuggestedLabel": "Suggested raise",
-          "raiseAutoHelp": "The amount is adjusted automatically for the current street.",
+          "allIn": "All-in ({amount})",
           "raiseTo": "Raise to {amount}",
           "raiseAllIn": "All-in ({amount})"
         },
@@ -1787,6 +1788,9 @@
           "currentBet": "Current bet",
           "you": "You",
           "opponents": "Opponents"
+        },
+        "info": {
+          "label": "Game phase"
         },
         "phase": {
           "preflop": "Preflop",

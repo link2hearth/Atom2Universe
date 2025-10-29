@@ -13,15 +13,15 @@
     startingStack: 1000,
     aiStack: 100000,
     aiThinkingDelayMs: { min: 900, max: 2500 },
-    opponentCount: { min: 4, max: 5 },
+    opponentCount: { min: 4, max: 4 },
     aiProfiles: {
-      patient: { aggression: 0.35, caution: 0.6, bluff: 0.08 },
-      daring: { aggression: 0.55, caution: 0.4, bluff: 0.18 }
+      patient: { aggression: 0.5, caution: 0.45, bluff: 0.15 },
+      daring: { aggression: 0.72, caution: 0.33, bluff: 0.28 }
     },
     defaultAiProfile: 'patient'
   });
 
-  const DEFAULT_AI_PROFILE = Object.freeze({ aggression: 0.4, caution: 0.5, bluff: 0.12 });
+  const DEFAULT_AI_PROFILE = Object.freeze({ aggression: 0.55, caution: 0.4, bluff: 0.2 });
 
   const SUITS = Object.freeze([
     { id: 'spades', symbol: '♠', color: 'black' },
@@ -46,7 +46,8 @@
     { id: 'A', value: 14 }
   ]);
 
-  const AI_NAME_POOL = Object.freeze(['Lyra', 'Mira', 'Orion', 'Nova', 'Vega', 'Altair', 'Sora', 'Cassiopeia']);
+  const AI_NAME_POOL = Object.freeze(['Jack', 'Morgan', 'Alex', 'Riley', 'Quinn']);
+  const AI_SEAT_NAMES = Object.freeze(['Peter', 'Wendy', 'Zelda', 'Link']);
   const HAND_LABEL_KEYS = Object.freeze([
     'index.sections.holdem.hands.highCard',
     'index.sections.holdem.hands.pair',
@@ -201,7 +202,8 @@
   const elements = {
     status: document.getElementById('holdemStatus'),
     community: document.getElementById('holdemCommunityCards'),
-    opponents: document.getElementById('holdemPlayers'),
+    opponentsLeft: document.getElementById('holdemPlayersLeft'),
+    opponentsRight: document.getElementById('holdemPlayersRight'),
     potValue: document.getElementById('holdemPotValue'),
     potFill: document.getElementById('holdemPotFill'),
     playerCards: document.getElementById('holdemPlayerCards'),
@@ -213,7 +215,7 @@
     fold: document.getElementById('holdemFold'),
     checkCall: document.getElementById('holdemCheckCall'),
     raise: document.getElementById('holdemRaise'),
-    raiseAmount: document.getElementById('holdemRaiseAmount')
+    allIn: document.getElementById('holdemAllIn')
   };
 
   const state = {
@@ -386,11 +388,36 @@
   }
 
   function formatAmount(value) {
+    if (typeof formatLayeredLocalized === 'function') {
+      let layeredValue = null;
+      if (value instanceof LayeredNumber) {
+        layeredValue = value;
+      } else if (typeof LayeredNumber === 'function') {
+        layeredValue = toLayeredNumber(value);
+      }
+      if (layeredValue) {
+        const formatted = formatLayeredLocalized(layeredValue, {
+          mantissaDigits: 2,
+          numberFormatOptions: {
+            maximumFractionDigits: 0,
+            minimumFractionDigits: 0
+          }
+        });
+        if (formatted) {
+          return formatted;
+        }
+      }
+    }
     const numeric = Number(value);
     if (!Number.isFinite(numeric)) {
       return '0';
     }
-    return Math.max(0, Math.round(numeric)).toLocaleString();
+    const rounded = Math.max(0, Math.round(numeric));
+    try {
+      return rounded.toLocaleString();
+    } catch (error) {
+      return String(rounded);
+    }
   }
 
   function sanitizeName(name, fallback) {
@@ -411,6 +438,21 @@
     return fallback;
   }
 
+  function getHero() {
+    return state.players.length ? state.players[0] : null;
+  }
+
+  function heroIsActiveForDecision() {
+    const hero = getHero();
+    if (!hero) {
+      return false;
+    }
+    if (hero.folded || hero.allIn) {
+      return false;
+    }
+    return hero.stack > 0;
+  }
+
   function createHero(stack) {
     return {
       id: 'hero',
@@ -428,25 +470,51 @@
     };
   }
 
-  function pickAiName(usedNames) {
+  function resolveAiName(index, usedNames, rawName) {
+    const candidates = [];
+
+    function pushCandidate(name) {
+      const sanitized = sanitizeName(name, null);
+      if (!sanitized) {
+        return;
+      }
+      if (!candidates.includes(sanitized)) {
+        candidates.push(sanitized);
+      }
+    }
+
+    pushCandidate(AI_SEAT_NAMES[index]);
+    if (typeof rawName !== 'undefined') {
+      pushCandidate(rawName);
+    }
+    for (let i = 0; i < AI_SEAT_NAMES.length; i += 1) {
+      pushCandidate(AI_SEAT_NAMES[i]);
+    }
     for (let i = 0; i < AI_NAME_POOL.length; i += 1) {
-      const candidate = AI_NAME_POOL[i];
+      pushCandidate(AI_NAME_POOL[i]);
+    }
+
+    for (let i = 0; i < candidates.length; i += 1) {
+      const candidate = candidates[i];
       if (!usedNames.has(candidate)) {
         usedNames.add(candidate);
         return candidate;
       }
     }
+
     const fallback = `IA ${usedNames.size + 1}`;
     usedNames.add(fallback);
     return fallback;
   }
 
-  function createAiPlayer(index, options = {}) {
-    const usedNames = new Set(state.players.map(player => player.name));
+  function createAiPlayer(index, options = {}, context = {}) {
+    const usedNames = context && context.usedNames instanceof Set
+      ? context.usedNames
+      : new Set(state.players.map(player => player.name));
     const profileId = options.profileId && state.config.aiProfiles[options.profileId]
       ? options.profileId
       : state.config.defaultAiProfile;
-    const name = sanitizeName(options.name, pickAiName(usedNames));
+    const name = resolveAiName(index, usedNames, options.name);
     return {
       id: `ai-${index}`,
       type: 'ai',
@@ -500,8 +568,7 @@
       const profileId = typeof entry.profileId === 'string' && state.config.aiProfiles[entry.profileId]
         ? entry.profileId
         : state.config.defaultAiProfile;
-      const name = sanitizeName(entry.name, pickAiName(usedNames));
-      usedNames.add(name);
+      const name = resolveAiName(aiPlayers.length, usedNames, entry.name);
       aiPlayers.push({
         id: `ai-${i}`,
         type: 'ai',
@@ -519,8 +586,7 @@
     }
 
     while (aiPlayers.length < targetOpponentCount) {
-      const player = createAiPlayer(aiPlayers.length, {});
-      usedNames.add(player.name);
+      const player = createAiPlayer(aiPlayers.length, {}, { usedNames });
       aiPlayers.push(player);
     }
 
@@ -558,10 +624,11 @@
     const hero = createHero(state.config.startingStack);
     const count = clamp(state.config.opponentCount.min, 2, state.config.opponentCount.max);
     const players = [hero];
-    for (let i = 0; i < count; i += 1) {
-      players.push(createAiPlayer(i, {}));
-    }
+    const usedNames = new Set([hero.name]);
     state.players = players;
+    for (let i = 0; i < count; i += 1) {
+      players.push(createAiPlayer(i, {}, { usedNames }));
+    }
     syncHeroStackWithGameState();
   }
   function clearPendingTimeouts() {
@@ -767,13 +834,22 @@
   }
 
   function renderOpponents() {
-    if (!elements.opponents) {
+    const leftColumn = elements.opponentsLeft;
+    const rightColumn = elements.opponentsRight;
+    if (!leftColumn || !rightColumn) {
       return;
     }
-    elements.opponents.innerHTML = '';
-    const fragment = document.createDocumentFragment();
-    for (let i = 1; i < state.players.length; i += 1) {
-      const player = state.players[i];
+    leftColumn.innerHTML = '';
+    rightColumn.innerHTML = '';
+    const opponents = state.players.slice(1);
+    if (!opponents.length) {
+      return;
+    }
+    const splitIndex = Math.ceil(opponents.length / 2);
+    const leftFragment = document.createDocumentFragment();
+    const rightFragment = document.createDocumentFragment();
+    for (let i = 0; i < opponents.length; i += 1) {
+      const player = opponents[i];
       const article = document.createElement('article');
       article.className = 'holdem-player';
       if (player.folded) {
@@ -840,32 +916,43 @@
       bet.appendChild(betValue);
       article.appendChild(bet);
 
-      fragment.appendChild(article);
+      if (i < splitIndex) {
+        leftFragment.appendChild(article);
+      } else {
+        rightFragment.appendChild(article);
+      }
     }
-    elements.opponents.appendChild(fragment);
+    leftColumn.appendChild(leftFragment);
+    rightColumn.appendChild(rightFragment);
   }
 
   function renderControls() {
-    if (!elements.checkCall || !elements.fold || !elements.raise || !elements.raiseAmount) {
+    if (!elements.checkCall || !elements.fold || !elements.raise || !elements.allIn) {
       return;
     }
     const hero = state.players[0];
     const activeHand = state.phase !== 'idle' && state.phase !== 'complete' && state.phase !== 'showdown';
     const canAct = activeHand && state.awaitingPlayer && hero && !hero.folded && !hero.allIn;
     elements.fold.disabled = !canAct;
-    elements.raiseAmount.disabled = !canAct;
     elements.checkCall.disabled = !canAct;
+
+    const allInAmount = hero ? hero.bet + hero.stack : 0;
+    const allInAmountLabel = formatAmount(allInAmount);
 
     if (!hero) {
       if (elements.raise) {
+        elements.raise.disabled = true;
         elements.raise.dataset.i18n = 'index.sections.holdem.controls.raise';
         elements.raise.textContent = translate('index.sections.holdem.controls.raise', 'Raise');
       }
-      if (elements.raiseAmount) {
-        elements.raiseAmount.value = '';
-      }
+      elements.allIn.disabled = true;
+      elements.allIn.dataset.i18n = 'index.sections.holdem.controls.allIn';
+      elements.allIn.textContent = translate('index.sections.holdem.controls.allIn', 'All-in', {
+        amount: allInAmountLabel
+      });
       return;
     }
+
     const nextRaise = computeNextRaiseAmount(hero);
     const canRaise = canAct && Number.isFinite(nextRaise) && nextRaise > hero.bet;
     if (elements.raise) {
@@ -886,16 +973,25 @@
         elements.raise.textContent = translate('index.sections.holdem.controls.raise', 'Raise');
       }
     }
-    if (elements.raiseAmount) {
-      elements.raiseAmount.value = canRaise ? nextRaise : '';
-    }
+
+    const canAllIn = canAct && hero.stack > 0;
+    elements.allIn.disabled = !canAllIn;
+    const allInFallback = `All-in (${allInAmountLabel})`;
+    elements.allIn.dataset.i18n = 'index.sections.holdem.controls.allIn';
+    elements.allIn.textContent = translate(
+      'index.sections.holdem.controls.allIn',
+      allInFallback,
+      { amount: allInAmountLabel }
+    );
+
     const requiredToCall = Math.max(0, state.currentBet - hero.bet);
     if (requiredToCall > 0) {
+      const requiredLabel = formatAmount(requiredToCall);
       elements.checkCall.dataset.i18n = 'index.sections.holdem.controls.callWithAmount';
       elements.checkCall.textContent = translate(
         'index.sections.holdem.controls.callWithAmount',
-        `Suivre (${formatAmount(requiredToCall)})`,
-        { amount: formatAmount(requiredToCall) }
+        `Suivre (${requiredLabel})`,
+        { amount: requiredLabel }
       );
     } else {
       elements.checkCall.dataset.i18n = 'index.sections.holdem.controls.check';
@@ -1052,21 +1148,26 @@
 
   function estimatePreflopStrength(cards) {
     if (!cards || cards.length < 2) {
-      return 0.1;
+      return 0.15;
     }
     const [cardA, cardB] = cards;
-    let strength = 0.2;
-    if (cardA.value === cardB.value) {
-      strength = 0.6 + (cardA.value / 20);
-    } else if (cardA.suit === cardB.suit) {
-      strength += 0.1;
-    }
+    const highCardBonus = (cardA.value + cardB.value) / 26;
+    const suitedBonus = cardA.suit === cardB.suit ? 0.12 : 0;
     const gap = Math.abs(cardA.value - cardB.value);
+    let connectorBonus = 0;
     if (gap <= 1) {
-      strength += 0.1;
+      connectorBonus = 0.14;
+    } else if (gap === 2) {
+      connectorBonus = 0.07;
     }
-    strength += (cardA.value + cardB.value) / 30;
-    return clamp(strength, 0, 0.95);
+    if (cardA.value === cardB.value) {
+      const pairStrength = 0.68 + (cardA.value / 18);
+      return clamp(pairStrength + suitedBonus, 0, 0.98);
+    }
+    const aceBonus = cardA.value === 14 || cardB.value === 14 ? 0.08 : 0;
+    const kingBonus = cardA.value === 13 || cardB.value === 13 ? 0.04 : 0;
+    const base = 0.28 + highCardBonus + suitedBonus + connectorBonus + aceBonus + kingBonus;
+    return clamp(base, 0, 0.92);
   }
 
   function estimateStrength(player) {
@@ -1177,44 +1278,49 @@
     const requiredToCall = Math.max(0, state.currentBet - player.bet);
     const strength = estimateStrength(player);
     const profile = player.profile || state.config.aiProfiles[player.profileId] || DEFAULT_AI_PROFILE;
+    const riskBoost = (1 - profile.caution) * 0.35;
+    const aggressionFactor = profile.aggression + riskBoost;
+    const bluffFactor = profile.bluff;
 
     if (requiredToCall > 0) {
-      const foldThreshold = 0.28 + (0.35 * (1 - profile.caution));
       const bluffRoll = Math.random();
-      if (strength < foldThreshold) {
-        if (allowRaise && bluffRoll < profile.bluff * 0.2 && player.stack > requiredToCall) {
-          const increment = Math.max(state.lastRaiseAmount, state.config.minRaise);
-          const bonus = Math.round(increment * (0.5 + strength + profile.bluff));
-          const raiseTarget = Math.min(player.bet + player.stack, state.currentBet + increment + bonus);
-          if (raiseTarget > player.bet) {
-            return { action: 'raise', target: raiseTarget };
-          }
-        }
-        if (bluffRoll > profile.bluff) {
-          return { action: 'fold', target: player.bet };
-        }
+      const disciplinedFoldThreshold = 0.2 + (0.22 * (1 - profile.caution));
+      if (strength + bluffFactor * 0.35 < disciplinedFoldThreshold && bluffRoll > bluffFactor * 0.55) {
+        return { action: 'fold', target: player.bet };
       }
-      if (allowRaise && (strength > 0.65 || Math.random() < profile.bluff * 0.45) && Math.random() < profile.aggression) {
+
+      if (allowRaise && (strength > 0.52 || bluffRoll < bluffFactor) && Math.random() < aggressionFactor) {
         const increment = Math.max(state.lastRaiseAmount, state.config.minRaise);
-        const bonus = Math.round(increment * (0.9 + strength + profile.bluff));
-        const raiseTarget = Math.min(player.bet + player.stack, state.currentBet + increment + bonus);
+        const pressureBonus = Math.round(increment * (0.9 + strength + bluffFactor));
+        const raiseTarget = Math.min(player.bet + player.stack, state.currentBet + increment + pressureBonus);
         if (raiseTarget > player.bet) {
           return { action: 'raise', target: raiseTarget };
         }
       }
+
+      if (allowRaise && strength > 0.35 && Math.random() < bluffFactor * 0.6 && player.stack > requiredToCall) {
+        const increment = Math.max(state.lastRaiseAmount, state.config.minRaise);
+        const semiBluff = Math.round(increment * (0.6 + bluffFactor));
+        const raiseTarget = Math.min(player.bet + player.stack, state.currentBet + increment + semiBluff);
+        if (raiseTarget > player.bet) {
+          return { action: 'raise', target: raiseTarget };
+        }
+      }
+
       const callTarget = player.bet + Math.min(player.stack, requiredToCall);
       return { action: requiredToCall ? 'call' : 'check', target: callTarget };
     }
 
-    if (allowRaise && (strength > 0.55 || Math.random() < profile.bluff * 0.5) && Math.random() < profile.aggression) {
+    if (allowRaise && (strength > 0.45 || Math.random() < bluffFactor * 0.75) && Math.random() < aggressionFactor) {
       const increment = Math.max(state.lastRaiseAmount, state.config.minRaise);
-      const bonus = Math.round(increment * (0.8 + strength + profile.bluff * 0.6));
+      const bonus = Math.round(increment * (0.85 + strength + bluffFactor * 0.7));
       const raiseTarget = Math.min(player.bet + player.stack, Math.max(state.currentBet, player.bet) + increment + bonus);
       if (raiseTarget > player.bet) {
         return { action: 'raise', target: raiseTarget };
       }
     }
-    if (allowRaise && Math.random() < profile.bluff * 0.2 && player.stack > 0) {
+
+    if (allowRaise && Math.random() < bluffFactor * 0.35 && player.stack > 0) {
       const increment = Math.max(state.lastRaiseAmount, state.config.minRaise);
       const raiseTarget = Math.min(player.bet + player.stack, Math.max(state.currentBet, player.bet) + increment);
       if (raiseTarget > player.bet) {
@@ -1231,11 +1337,23 @@
     }
     const strength = estimateStrength(player);
     const profile = player.profile || state.config.aiProfiles[player.profileId] || DEFAULT_AI_PROFILE;
-    const callThreshold = 0.22 + (0.5 * profile.aggression);
+    const aggressionFactor = profile.aggression + (1 - profile.caution) * 0.3;
     const bluffRoll = Math.random();
-    if (strength + profile.bluff < callThreshold && bluffRoll > profile.bluff * 0.3) {
+    const reluctantThreshold = 0.18 + (0.3 * (1 - profile.caution));
+
+    if (strength + profile.bluff * 0.4 < reluctantThreshold && bluffRoll > profile.bluff * 0.45) {
       return { action: 'fold', target: player.bet };
     }
+
+    if (Math.random() < aggressionFactor * 0.55 && (strength > 0.55 || bluffRoll < profile.bluff) && player.stack > requiredToCall) {
+      const increment = Math.max(state.lastRaiseAmount, state.config.minRaise);
+      const bonus = Math.round(increment * (0.75 + strength + profile.bluff));
+      const raiseTarget = Math.min(player.bet + player.stack, state.currentBet + increment + bonus);
+      if (raiseTarget > player.bet) {
+        return { action: 'raise', target: raiseTarget };
+      }
+    }
+
     const callTarget = player.bet + Math.min(player.stack, requiredToCall);
     return { action: 'call', target: callTarget };
   }
@@ -1315,7 +1433,7 @@
     return { handResolved: false };
   }
 
-  function executeAiRound({ allowRaise = true, onComplete } = {}) {
+  function executeAiRound({ allowRaise = true, expectHeroAction, onComplete } = {}) {
     const queue = [];
     for (let i = 1; i < state.players.length; i += 1) {
       const player = state.players[i];
@@ -1325,15 +1443,29 @@
       queue.push(player);
     }
 
+    const heroEligible = heroIsActiveForDecision();
+    const shouldPromptHero = typeof expectHeroAction === 'boolean'
+      ? expectHeroAction && heroEligible
+      : heroEligible;
+
     if (!queue.length) {
       if (state.phase !== 'complete') {
-        state.awaitingPlayer = true;
-        const phaseLabel = translate(`index.sections.holdem.phase.${state.phase}`, state.phase);
-        updateStatus(
-          'index.sections.holdem.status.phasePrompt',
-          `Phase ${phaseLabel} — à vous de jouer.`,
-          { phase: phaseLabel }
-        );
+        state.awaitingPlayer = shouldPromptHero;
+        if (shouldPromptHero) {
+          const phaseLabel = translate(`index.sections.holdem.phase.${state.phase}`, state.phase);
+          updateStatus(
+            'index.sections.holdem.status.phasePrompt',
+            `Phase ${phaseLabel} — à vous de jouer.`,
+            { phase: phaseLabel }
+          );
+        } else {
+          updateStatus(
+            'index.sections.holdem.status.aiAutoProgress',
+            'Les adversaires poursuivent la manche.'
+          );
+        }
+      } else {
+        state.awaitingPlayer = false;
       }
       render();
       commitAutosave();
@@ -1353,13 +1485,23 @@
       finished = true;
       state.activePlayerId = null;
       if (!handResolved && state.phase !== 'complete') {
-        state.awaitingPlayer = true;
-        const phaseLabel = translate(`index.sections.holdem.phase.${state.phase}`, state.phase);
-        updateStatus(
-          'index.sections.holdem.status.phasePrompt',
-          `Phase ${phaseLabel} — à vous de jouer.`,
-          { phase: phaseLabel }
-        );
+        if (shouldPromptHero) {
+          state.awaitingPlayer = true;
+          const phaseLabel = translate(`index.sections.holdem.phase.${state.phase}`, state.phase);
+          updateStatus(
+            'index.sections.holdem.status.phasePrompt',
+            `Phase ${phaseLabel} — à vous de jouer.`,
+            { phase: phaseLabel }
+          );
+        } else {
+          state.awaitingPlayer = false;
+          updateStatus(
+            'index.sections.holdem.status.aiAutoProgress',
+            'Les adversaires poursuivent la manche.'
+          );
+        }
+      } else {
+        state.awaitingPlayer = false;
       }
       render();
       if (typeof onComplete === 'function') {
@@ -1522,7 +1664,94 @@
 
     resetBetsForNextRound();
     render();
-    executeAiRound({ allowRaise: true });
+    executeAiRound({
+      allowRaise: true,
+      onComplete(handResolved) {
+        if (handResolved || state.phase === 'complete') {
+          return;
+        }
+        if (!heroIsActiveForDecision()) {
+          resetBetsForNextRound();
+          render();
+          schedulePhaseAdvance(state.config.dealerSpeedMs);
+        }
+      }
+    });
+  }
+
+  function continueHandWithoutHero() {
+    if (state.phase === 'complete') {
+      state.awaitingPlayer = false;
+      render();
+      commitAutosave();
+      return;
+    }
+
+    const finishIfResolved = () => {
+      if (resolveIfOnlyOne()) {
+        state.phase = 'complete';
+        state.awaitingPlayer = false;
+        render();
+        commitAutosave();
+        return true;
+      }
+      return false;
+    };
+
+    if (finishIfResolved()) {
+      return;
+    }
+
+    const proceed = () => {
+      if (state.phase === 'complete') {
+        state.awaitingPlayer = false;
+        render();
+        commitAutosave();
+        return;
+      }
+
+      if (finishIfResolved()) {
+        return;
+      }
+
+      if (state.phase === 'river') {
+        goToShowdown();
+        return;
+      }
+
+      if (state.phase === 'preflop') {
+        revealCommunityCards(3);
+        state.phase = 'flop';
+      } else if (state.phase === 'flop') {
+        revealCommunityCards(1);
+        state.phase = 'turn';
+      } else if (state.phase === 'turn') {
+        revealCommunityCards(1);
+        state.phase = 'river';
+      }
+
+      resetBetsForNextRound();
+      render();
+
+      executeAiRound({
+        allowRaise: true,
+        expectHeroAction: false,
+        onComplete(handResolved) {
+          if (handResolved) {
+            state.phase = 'complete';
+            state.awaitingPlayer = false;
+            render();
+            commitAutosave();
+            return;
+          }
+          resetBetsForNextRound();
+          render();
+          proceed();
+        }
+      });
+    };
+
+    proceed();
   }
 
   function distributePot(winners) {
@@ -1637,40 +1866,25 @@
       small,
       big
     });
-    if (elements.raiseAmount) {
-      elements.raiseAmount.value = '';
-    }
     executeAiRound({ allowRaise: true });
   }
 
   function handlePlayerFold() {
-    const hero = state.players[0];
+    const hero = getHero();
     if (!state.awaitingPlayer || !hero || hero.folded) {
       return;
     }
     hero.folded = true;
     setPlayerStatus(hero, 'index.sections.holdem.playerStatus.folded');
-    const winners = state.players.slice(1).filter(player => !player.folded);
-    if (!winners.length) {
-      winners.push(hero);
-    }
-    const potAmount = state.pot;
-    distributePot(winners);
-    const primaryWinner = winners[0];
-    if (primaryWinner.id === 'hero') {
-      updateStatus('index.sections.holdem.status.playerWins', 'Vous remportez le pot ({amount}).', {
-        amount: formatAmount(potAmount)
-      });
-    } else {
-      updateStatus('index.sections.holdem.status.playerFold', `${primaryWinner.name} remporte le pot ({amount}).`, {
-        winner: primaryWinner.name,
-        amount: formatAmount(potAmount)
-      });
-    }
-    state.phase = 'complete';
-    state.awaitingPlayer = false;
+    updateStatus(
+      'index.sections.holdem.status.heroFolded',
+      'Vous vous couchez. Les adversaires poursuivent la manche.'
+    );
     render();
-    commitAutosave();
+    state.awaitingPlayer = false;
+    resetBetsForNextRound();
+    render();
+    continueHandWithoutHero();
   }
 
   function handlePlayerCheckOrCall() {
@@ -1757,6 +1971,44 @@
     });
   }
 
+  function handlePlayerAllIn() {
+    const hero = state.players[0];
+    if (!state.awaitingPlayer || !hero || hero.folded || hero.allIn || hero.stack <= 0) {
+      return;
+    }
+    const target = hero.bet + hero.stack;
+    if (target <= hero.bet) {
+      return;
+    }
+    const previousCurrent = state.currentBet;
+    applyBet(hero, target);
+    if (hero.bet > previousCurrent) {
+      const raiseDiff = hero.bet - previousCurrent;
+      if (raiseDiff > 0) {
+        state.lastRaiseAmount = Math.max(state.config.minRaise, raiseDiff);
+      }
+      state.currentBet = hero.bet;
+    } else {
+      state.currentBet = Math.max(state.currentBet, hero.bet);
+    }
+
+    setPlayerStatus(hero, 'index.sections.holdem.playerStatus.allIn');
+    render();
+
+    state.awaitingPlayer = false;
+    executeAiResponsesAfterPlayerAction(handResolved => {
+      if (handResolved) {
+        state.phase = 'complete';
+        state.awaitingPlayer = false;
+        render();
+        return;
+      }
+      resetBetsForNextRound();
+      render();
+      schedulePhaseAdvance(state.config.dealerSpeedMs);
+    });
+  }
+
   function init() {
     loadAutosave();
     ensurePlayers();
@@ -1777,8 +2029,8 @@
     if (elements.raise) {
       elements.raise.addEventListener('click', handlePlayerRaise);
     }
-    if (elements.raiseAmount) {
-      elements.raiseAmount.setAttribute('aria-readonly', 'true');
+    if (elements.allIn) {
+      elements.allIn.addEventListener('click', handlePlayerAllIn);
     }
   }
 
