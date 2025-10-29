@@ -12,6 +12,10 @@
   }
 
   const existing = globalScope.SccAudioEngine || {};
+  const globalConfig = globalScope && typeof globalScope.GAME_CONFIG === 'object'
+    ? globalScope.GAME_CONFIG
+    : null;
+  const SCC_ENGINE_CONFIG = globalConfig?.audio?.engines?.scc || null;
 
   const SAMPLE_RATE = 44100;
   const TABLE_LENGTH = 32;
@@ -21,6 +25,23 @@
   const DEFAULT_VIBRATO_FADE_MS = 80;
   const DEFAULT_PORTAMENTO_MS = 40;
   const PITCH_BEND_RANGE = 2;
+
+  const DEFAULT_MASTER_GAIN = Number.isFinite(SCC_ENGINE_CONFIG?.masterGain)
+    ? clamp(SCC_ENGINE_CONFIG.masterGain, 0, 1)
+    : 0.18;
+  const DEFAULT_SOFT_CLIPPER_DRIVE = Number.isFinite(SCC_ENGINE_CONFIG?.softClipperDrive)
+    ? Math.max(0.1, SCC_ENGINE_CONFIG.softClipperDrive)
+    : 1.05;
+  const DEFAULT_CHORUS_DELAY_MS = Number.isFinite(SCC_ENGINE_CONFIG?.chorusDelayMs)
+    ? Math.max(1, SCC_ENGINE_CONFIG.chorusDelayMs)
+    : 12;
+  const DEFAULT_CHORUS_MIX = Number.isFinite(SCC_ENGINE_CONFIG?.chorusMix)
+    ? clamp(SCC_ENGINE_CONFIG.chorusMix, 0, 1)
+    : 0.025;
+
+  // Limite supérieure appliquée aux volumes MIDI afin de conserver une marge
+  // de sécurité lors du mixage et d'éviter la saturation perceptible.
+  const CHANNEL_LEVEL_LIMIT = 1.0;
 
   const VOL4_TO_GAIN = [
     0.0, 0.035, 0.055, 0.075,
@@ -92,6 +113,12 @@
 
   function clamp(value, min, max) {
     return Math.min(max, Math.max(min, value));
+  }
+
+  function computeChannelGain(volume, expression) {
+    const resolvedVolume = clamp(volume, 0, CHANNEL_LEVEL_LIMIT);
+    const resolvedExpression = clamp(expression, 0, CHANNEL_LEVEL_LIMIT);
+    return resolvedVolume * resolvedExpression;
   }
 
   function createDefaultInstrument() {
@@ -601,9 +628,17 @@
     }
   }
 
-  function applyChorus(left, right, sampleRate) {
-    const delaySamples = Math.max(1, Math.round((12 / 1000) * sampleRate));
-    const mix = 0.08;
+  function applyChorus(left, right, sampleRate, settings = {}) {
+    const delayMs = Number.isFinite(settings.delayMs)
+      ? Math.max(1, settings.delayMs)
+      : DEFAULT_CHORUS_DELAY_MS;
+    const mix = Number.isFinite(settings.mix)
+      ? clamp(settings.mix, 0, 1)
+      : DEFAULT_CHORUS_MIX;
+    if (mix <= 0) {
+      return;
+    }
+    const delaySamples = Math.max(1, Math.round((delayMs / 1000) * sampleRate));
     for (let i = delaySamples; i < left.length; i += 1) {
       const delayedL = left[i - delaySamples];
       const delayedR = right[i - delaySamples];
@@ -614,9 +649,9 @@
     }
   }
 
-  function applySoftClip(left, right) {
-    const k = 2.5;
-    const norm = Math.tanh(k);
+  function applySoftClip(left, right, drive = DEFAULT_SOFT_CLIPPER_DRIVE) {
+    const k = Math.max(0.1, drive);
+    const norm = Math.tanh(k) || 1;
     for (let i = 0; i < left.length; i += 1) {
       left[i] = Math.tanh(k * left[i]) / norm;
       right[i] = Math.tanh(k * right[i]) / norm;
@@ -684,6 +719,25 @@
       this.instrumentMap = { programs: {}, envelopes: {}, drums: {}, defaults: this.defaults };
       this.cachedEnvelopes = new Map();
       this.portamentoDurationMs = Number.isFinite(options.portamentoMs) ? options.portamentoMs : DEFAULT_PORTAMENTO_MS;
+      const resolvedMasterGain = Number.isFinite(options.masterGain)
+        ? options.masterGain
+        : DEFAULT_MASTER_GAIN;
+      this.masterGain = clamp(resolvedMasterGain, 0, 1);
+      const optionDrive = Number.isFinite(options.softClipDrive)
+        ? options.softClipDrive
+        : (Number.isFinite(options.softClipperDrive) ? options.softClipperDrive : undefined);
+      const resolvedDrive = Number.isFinite(optionDrive) ? optionDrive : DEFAULT_SOFT_CLIPPER_DRIVE;
+      this.softClipDrive = Math.max(0.1, resolvedDrive);
+      const resolvedChorusDelay = Number.isFinite(options.chorusDelayMs)
+        ? options.chorusDelayMs
+        : DEFAULT_CHORUS_DELAY_MS;
+      const resolvedChorusMix = Number.isFinite(options.chorusMix)
+        ? options.chorusMix
+        : DEFAULT_CHORUS_MIX;
+      this.chorusSettings = {
+        delayMs: Math.max(1, resolvedChorusDelay),
+        mix: clamp(resolvedChorusMix, 0, 1),
+      };
       this.loaded = false;
     }
 
@@ -868,7 +922,7 @@
     }
 
     updateChannelVolume(channelState) {
-      const volume = clamp(channelState.volume, 0, 2) * clamp(channelState.expression, 0, 2);
+      const volume = computeChannelGain(channelState.volume, channelState.expression);
       for (const voice of channelState.activeVoices) {
         voice.setChannelGain(volume);
       }
@@ -983,10 +1037,10 @@
             channelState.program = clamp(event.program ?? 0, 0, 127);
           } else if (event.type === 'control') {
             if (event.controller === 7) {
-              channelState.volume = clamp(event.value / 127, 0, 2);
+              channelState.volume = clamp(event.value / 127, 0, CHANNEL_LEVEL_LIMIT);
               this.updateChannelVolume(channelState);
             } else if (event.controller === 11) {
-              channelState.expression = clamp(event.value / 127, 0, 2);
+              channelState.expression = clamp(event.value / 127, 0, CHANNEL_LEVEL_LIMIT);
               this.updateChannelVolume(channelState);
             } else if (event.controller === 10) {
               const normalized = clamp((event.value / 127) * 2 - 1, -1, 1);
@@ -1017,7 +1071,7 @@
             }
             const velocityBase = Math.max(0, Math.min(1, (event.velocity || 0) / 127));
             const velocity = Math.pow(velocityBase || 0.001, 0.8);
-            const volume = clamp(channelState.volume, 0, 2) * clamp(channelState.expression, 0, 2);
+            const volume = computeChannelGain(channelState.volume, channelState.expression);
             const program = channelState.program || 0;
             const midiNote = clamp(event.note + transpose, 0, 127);
             const frequency = 440 * Math.pow(2, ((midiNote - 69) / 12)) * centsToRatio(fineDetune);
@@ -1095,14 +1149,14 @@
           mixL += result.left;
           mixR += result.right;
         }
-        left[sample] = mixL;
-        right[sample] = mixR;
+        left[sample] = mixL * this.masterGain;
+        right[sample] = mixR * this.masterGain;
       }
 
-      applyChorus(left, right, this.sampleRate);
+      applyChorus(left, right, this.sampleRate, this.chorusSettings);
       applyBiquadStereo(left, right, buildLowPassCoefficients(this.sampleRate, 12000, 0.7));
       applyBiquadStereo(left, right, buildHighShelfCoefficients(this.sampleRate, 6000, 2));
-      applySoftClip(left, right);
+      applySoftClip(left, right, this.softClipDrive);
 
       return {
         left,
