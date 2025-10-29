@@ -1,0 +1,777 @@
+{
+  "defaults": {
+    "envelope": "LEAD_FAST",
+    "vibrato": false,
+    "wavetable": "PULSE50"
+  },
+  "drums": {
+    "35": {
+      "drumType": "kick",
+      "envelope": "DRUM_SHORT",
+      "wavetable": "NOISE_KIT"
+    },
+    "36": {
+      "drumType": "kick",
+      "envelope": "DRUM_SHORT",
+      "wavetable": "NOISE_KIT"
+    },
+    "38": {
+      "drumType": "snare",
+      "envelope": "DRUM_SHORT",
+      "wavetable": "NOISE_KIT"
+    },
+    "40": {
+      "drumType": "snare",
+      "envelope": "DRUM_SHORT",
+      "wavetable": "NOISE_KIT"
+    },
+    "41": {
+      "drumType": "tom",
+      "envelope": "DRUM_SHORT",
+      "wavetable": "NOISE_KIT"
+    },
+    "42": {
+      "drumType": "hihat",
+      "envelope": "DRUM_SHORT",
+      "wavetable": "NOISE_KIT"
+    },
+    "43": {
+      "drumType": "tom",
+      "envelope": "DRUM_SHORT",
+      "wavetable": "NOISE_KIT"
+    },
+    "44": {
+      "drumType": "hihat",
+      "envelope": "DRUM_SHORT",
+      "wavetable": "NOISE_KIT"
+    },
+    "45": {
+      "drumType": "tom",
+      "envelope": "DRUM_SHORT",
+      "wavetable": "NOISE_KIT"
+    },
+    "46": {
+      "drumType": "hihat",
+      "envelope": "DRUM_SHORT",
+      "wavetable": "NOISE_KIT"
+    },
+    "49": {
+      "drumType": "crash",
+      "envelope": "DRUM_SHORT",
+      "wavetable": "NOISE_KIT"
+    },
+    "57": {
+      "drumType": "crash",
+      "envelope": "DRUM_SHORT",
+      "wavetable": "NOISE_KIT"
+    }
+  },
+  "envelopes": {
+    "BASS_PLUCK": {
+      "attack": 2,
+      "decay": 80,
+      "release": 100,
+      "sustain": 7
+    },
+    "BASS_SOLID": {
+      "attack": 4,
+      "decay": 120,
+      "release": 120,
+      "sustain": 10
+    },
+    "BRASS": {
+      "attack": 15,
+      "decay": 150,
+      "release": 180,
+      "sustain": 12
+    },
+    "DRUM_SHORT": {
+      "attack": 0,
+      "decay": 60,
+      "release": 0,
+      "sustain": 0
+    },
+    "E_PIANO": {
+      "attack": 4,
+      "decay": 220,
+      "release": 180,
+      "sustain": 6
+    },
+    "LEAD_FAST": {
+      "attack": 3,
+      "decay": 40,
+      "release": 60,
+      "sustain": 12
+    },
+    "LEAD_SLOW": {
+      "attack": 10,
+      "decay": 120,
+      "release": 120,
+      "sustain": 10
+    },
+    "PAD": {
+      "attack": 60,
+      "decay": 200,
+      "release": 300,
+      "sustain": 11
+    },
+    "STRINGS": {
+      "attack": 40,
+      "decay": 120,
+      "release": 220,
+      "sustain": 12
+    }
+  },
+  "meta": {
+    "name": "SCC Instrument Map",
+    "version": 1
+  },
+  "programs": {
+    "0": {
+      "envelope": "E_PIANO",
+      "vibrato": false,
+      "wavetable": "TRI_SOFT"
+    },
+    "1": {
+      "envelope": "E_PIANO",
+      "vibrato": false,
+      "wavetable": "TRI_SOFT"
+    },
+    "10": {
+      "envelope": "LEAD_FAST",
+      "vibrato": false,
+      "wavetable": "PULSE25"
+    },
+    "100": {
+      "envelope": "LEAD_FAST",
+      "vibrato": true,
+      "wavetable": "PULSE50"
+    },
+    "101": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "SAW_SOFT"
+    },
+    "102": {
+      "envelope": "LEAD_FAST",
+      "vibrato": false,
+      "wavetable": "NOISE_KIT"
+    },
+    "103": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "SAW_SOFT"
+    },
+    "104": {
+      "envelope": "LEAD_FAST",
+      "vibrato": true,
+      "wavetable": "PULSE25"
+    },
+    "105": {
+      "envelope": "LEAD_FAST",
+      "vibrato": true,
+      "wavetable": "PULSE25"
+    },
+    "106": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "TRI_SOFT"
+    },
+    "107": {
+      "envelope": "LEAD_FAST",
+      "vibrato": true,
+      "wavetable": "PULSE25"
+    },
+    "108": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "TRI_SOFT"
+    },
+    "109": {
+      "envelope": "LEAD_FAST",
+      "vibrato": true,
+      "wavetable": "PULSE25"
+    },
+    "11": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "SINE_COARSE"
+    },
+    "110": {
+      "envelope": "LEAD_FAST",
+      "vibrato": true,
+      "wavetable": "PULSE25"
+    },
+    "111": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "TRI_SOFT"
+    },
+    "112": {
+      "envelope": "LEAD_FAST",
+      "vibrato": false,
+      "wavetable": "PULSE50"
+    },
+    "113": {
+      "envelope": "LEAD_FAST",
+      "vibrato": false,
+      "wavetable": "PULSE50"
+    },
+    "114": {
+      "envelope": "LEAD_FAST",
+      "vibrato": false,
+      "wavetable": "PULSE25"
+    },
+    "115": {
+      "envelope": "LEAD_FAST",
+      "vibrato": false,
+      "wavetable": "PULSE25"
+    },
+    "116": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "TRI_SOFT"
+    },
+    "117": {
+      "envelope": "LEAD_FAST",
+      "vibrato": false,
+      "wavetable": "NOISE_KIT"
+    },
+    "118": {
+      "envelope": "LEAD_FAST",
+      "vibrato": false,
+      "wavetable": "NOISE_KIT"
+    },
+    "119": {
+      "envelope": "LEAD_FAST",
+      "vibrato": false,
+      "wavetable": "NOISE_KIT"
+    },
+    "12": {
+      "envelope": "LEAD_FAST",
+      "vibrato": false,
+      "wavetable": "PULSE25"
+    },
+    "120": {
+      "envelope": "LEAD_FAST",
+      "vibrato": false,
+      "wavetable": "NOISE_KIT"
+    },
+    "121": {
+      "envelope": "LEAD_FAST",
+      "vibrato": false,
+      "wavetable": "NOISE_KIT"
+    },
+    "122": {
+      "envelope": "LEAD_FAST",
+      "vibrato": false,
+      "wavetable": "NOISE_KIT"
+    },
+    "123": {
+      "envelope": "LEAD_FAST",
+      "vibrato": false,
+      "wavetable": "NOISE_KIT"
+    },
+    "124": {
+      "envelope": "LEAD_FAST",
+      "vibrato": false,
+      "wavetable": "NOISE_KIT"
+    },
+    "125": {
+      "envelope": "LEAD_FAST",
+      "vibrato": true,
+      "wavetable": "PULSE50"
+    },
+    "126": {
+      "envelope": "LEAD_FAST",
+      "vibrato": false,
+      "wavetable": "NOISE_KIT"
+    },
+    "127": {
+      "envelope": "LEAD_FAST",
+      "vibrato": false,
+      "wavetable": "NOISE_KIT"
+    },
+    "13": {
+      "envelope": "LEAD_FAST",
+      "vibrato": false,
+      "wavetable": "PULSE25"
+    },
+    "14": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "SINE_COARSE"
+    },
+    "15": {
+      "envelope": "LEAD_SLOW",
+      "vibrato": false,
+      "wavetable": "PULSE50"
+    },
+    "16": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "SAW_SOFT"
+    },
+    "17": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "SAW_SOFT"
+    },
+    "18": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "SAW_SOFT"
+    },
+    "19": {
+      "envelope": "LEAD_SLOW",
+      "vibrato": true,
+      "wavetable": "SAW_SOFT"
+    },
+    "2": {
+      "envelope": "E_PIANO",
+      "vibrato": false,
+      "wavetable": "TRI_SOFT"
+    },
+    "20": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "TRI_SOFT"
+    },
+    "21": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "TRI_SOFT"
+    },
+    "22": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "SAW_SOFT"
+    },
+    "23": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "SAW_SOFT"
+    },
+    "24": {
+      "envelope": "LEAD_SLOW",
+      "vibrato": false,
+      "wavetable": "PULSE25"
+    },
+    "25": {
+      "envelope": "LEAD_SLOW",
+      "vibrato": false,
+      "wavetable": "PULSE25"
+    },
+    "26": {
+      "envelope": "LEAD_FAST",
+      "vibrato": false,
+      "wavetable": "PULSE50"
+    },
+    "27": {
+      "envelope": "LEAD_FAST",
+      "vibrato": false,
+      "wavetable": "PULSE50"
+    },
+    "28": {
+      "envelope": "LEAD_FAST",
+      "vibrato": false,
+      "wavetable": "PULSE25"
+    },
+    "29": {
+      "envelope": "LEAD_FAST",
+      "portamento": true,
+      "vibrato": false,
+      "wavetable": "PULSE50"
+    },
+    "3": {
+      "envelope": "LEAD_SLOW",
+      "vibrato": false,
+      "wavetable": "PULSE25"
+    },
+    "30": {
+      "envelope": "LEAD_FAST",
+      "vibrato": true,
+      "wavetable": "PULSE50"
+    },
+    "31": {
+      "envelope": "LEAD_FAST",
+      "vibrato": true,
+      "wavetable": "PULSE25"
+    },
+    "32": {
+      "envelope": "BASS_PLUCK",
+      "vibrato": false,
+      "wavetable": "PULSE25"
+    },
+    "33": {
+      "envelope": "BASS_PLUCK",
+      "vibrato": false,
+      "wavetable": "PULSE25"
+    },
+    "34": {
+      "envelope": "BASS_SOLID",
+      "vibrato": false,
+      "wavetable": "PULSE50"
+    },
+    "35": {
+      "envelope": "BASS_PLUCK",
+      "vibrato": false,
+      "wavetable": "PULSE50"
+    },
+    "36": {
+      "envelope": "BASS_SOLID",
+      "vibrato": false,
+      "wavetable": "PULSE25"
+    },
+    "37": {
+      "envelope": "BASS_SOLID",
+      "vibrato": false,
+      "wavetable": "PULSE25"
+    },
+    "38": {
+      "envelope": "BASS_SOLID",
+      "vibrato": false,
+      "wavetable": "PULSE50"
+    },
+    "39": {
+      "envelope": "BASS_SOLID",
+      "vibrato": false,
+      "wavetable": "PULSE50"
+    },
+    "4": {
+      "envelope": "E_PIANO",
+      "vibrato": false,
+      "wavetable": "SINE_COARSE"
+    },
+    "40": {
+      "envelope": "STRINGS",
+      "vibrato": true,
+      "wavetable": "TRI_SOFT"
+    },
+    "41": {
+      "envelope": "STRINGS",
+      "vibrato": true,
+      "wavetable": "TRI_SOFT"
+    },
+    "42": {
+      "envelope": "STRINGS",
+      "vibrato": true,
+      "wavetable": "TRI_SOFT"
+    },
+    "43": {
+      "envelope": "STRINGS",
+      "vibrato": true,
+      "wavetable": "TRI_SOFT"
+    },
+    "44": {
+      "envelope": "STRINGS",
+      "vibrato": true,
+      "wavetable": "TRI_SOFT"
+    },
+    "45": {
+      "envelope": "STRINGS",
+      "portamento": true,
+      "vibrato": true,
+      "wavetable": "TRI_SOFT"
+    },
+    "46": {
+      "envelope": "STRINGS",
+      "vibrato": true,
+      "wavetable": "TRI_SOFT"
+    },
+    "47": {
+      "envelope": "STRINGS",
+      "vibrato": true,
+      "wavetable": "TRI_SOFT"
+    },
+    "48": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "TRI_SOFT"
+    },
+    "49": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "TRI_SOFT"
+    },
+    "5": {
+      "envelope": "E_PIANO",
+      "vibrato": false,
+      "wavetable": "SINE_COARSE"
+    },
+    "50": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "TRI_SOFT"
+    },
+    "51": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "TRI_SOFT"
+    },
+    "52": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "SINE_COARSE"
+    },
+    "53": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "SINE_COARSE"
+    },
+    "54": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "TRI_SOFT"
+    },
+    "55": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "TRI_SOFT"
+    },
+    "56": {
+      "envelope": "BRASS",
+      "vibrato": true,
+      "wavetable": "SAW_SOFT"
+    },
+    "57": {
+      "envelope": "BRASS",
+      "vibrato": true,
+      "wavetable": "SAW_SOFT"
+    },
+    "58": {
+      "envelope": "BRASS",
+      "vibrato": true,
+      "wavetable": "SAW_SOFT"
+    },
+    "59": {
+      "envelope": "BRASS",
+      "vibrato": true,
+      "wavetable": "SAW_SOFT"
+    },
+    "6": {
+      "envelope": "LEAD_FAST",
+      "vibrato": false,
+      "wavetable": "PULSE25"
+    },
+    "60": {
+      "envelope": "BRASS",
+      "vibrato": true,
+      "wavetable": "SAW_SOFT"
+    },
+    "61": {
+      "envelope": "BRASS",
+      "vibrato": true,
+      "wavetable": "SAW_SOFT"
+    },
+    "62": {
+      "envelope": "BRASS",
+      "vibrato": true,
+      "wavetable": "SAW_SOFT"
+    },
+    "63": {
+      "envelope": "BRASS",
+      "vibrato": true,
+      "wavetable": "SAW_SOFT"
+    },
+    "64": {
+      "envelope": "LEAD_SLOW",
+      "vibrato": true,
+      "wavetable": "PULSE25"
+    },
+    "65": {
+      "envelope": "LEAD_SLOW",
+      "vibrato": true,
+      "wavetable": "PULSE25"
+    },
+    "66": {
+      "envelope": "LEAD_SLOW",
+      "vibrato": true,
+      "wavetable": "PULSE50"
+    },
+    "67": {
+      "envelope": "LEAD_SLOW",
+      "vibrato": true,
+      "wavetable": "PULSE50"
+    },
+    "68": {
+      "envelope": "LEAD_SLOW",
+      "vibrato": true,
+      "wavetable": "PULSE50"
+    },
+    "69": {
+      "envelope": "LEAD_SLOW",
+      "vibrato": true,
+      "wavetable": "PULSE25"
+    },
+    "7": {
+      "envelope": "LEAD_FAST",
+      "portamento": true,
+      "vibrato": false,
+      "wavetable": "PULSE25"
+    },
+    "70": {
+      "envelope": "LEAD_SLOW",
+      "vibrato": true,
+      "wavetable": "PULSE25"
+    },
+    "71": {
+      "envelope": "LEAD_FAST",
+      "vibrato": true,
+      "wavetable": "PULSE25"
+    },
+    "72": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "SINE_COARSE"
+    },
+    "73": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "SINE_COARSE"
+    },
+    "74": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "SINE_COARSE"
+    },
+    "75": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "TRI_SOFT"
+    },
+    "76": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "TRI_SOFT"
+    },
+    "77": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "TRI_SOFT"
+    },
+    "78": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "SINE_COARSE"
+    },
+    "79": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "TRI_SOFT"
+    },
+    "8": {
+      "envelope": "LEAD_FAST",
+      "vibrato": true,
+      "wavetable": "SINE_COARSE"
+    },
+    "80": {
+      "envelope": "LEAD_FAST",
+      "portamento": true,
+      "vibrato": true,
+      "wavetable": "PULSE50"
+    },
+    "81": {
+      "envelope": "LEAD_FAST",
+      "portamento": true,
+      "vibrato": true,
+      "wavetable": "PULSE50"
+    },
+    "82": {
+      "envelope": "LEAD_FAST",
+      "portamento": true,
+      "vibrato": true,
+      "wavetable": "SAW_SOFT"
+    },
+    "83": {
+      "envelope": "LEAD_FAST",
+      "vibrato": true,
+      "wavetable": "SAW_SOFT"
+    },
+    "84": {
+      "envelope": "LEAD_FAST",
+      "vibrato": true,
+      "wavetable": "PULSE50"
+    },
+    "85": {
+      "envelope": "LEAD_FAST",
+      "vibrato": true,
+      "wavetable": "PULSE25"
+    },
+    "86": {
+      "envelope": "LEAD_FAST",
+      "vibrato": true,
+      "wavetable": "SAW_SOFT"
+    },
+    "87": {
+      "envelope": "LEAD_FAST",
+      "vibrato": true,
+      "wavetable": "SAW_SOFT"
+    },
+    "88": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "TRI_SOFT"
+    },
+    "89": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "TRI_SOFT"
+    },
+    "9": {
+      "envelope": "LEAD_FAST",
+      "vibrato": false,
+      "wavetable": "PULSE25"
+    },
+    "90": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "SINE_COARSE"
+    },
+    "91": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "SINE_COARSE"
+    },
+    "92": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "TRI_SOFT"
+    },
+    "93": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "SINE_COARSE"
+    },
+    "94": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "TRI_SOFT"
+    },
+    "95": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "TRI_SOFT"
+    },
+    "96": {
+      "envelope": "LEAD_FAST",
+      "vibrato": true,
+      "wavetable": "SAW_SOFT"
+    },
+    "97": {
+      "envelope": "LEAD_FAST",
+      "vibrato": true,
+      "wavetable": "PULSE50"
+    },
+    "98": {
+      "envelope": "LEAD_FAST",
+      "vibrato": false,
+      "wavetable": "NOISE_KIT"
+    },
+    "99": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "SAW_SOFT"
+    }
+  }
+}
