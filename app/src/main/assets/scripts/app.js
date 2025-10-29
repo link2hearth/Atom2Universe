@@ -2972,6 +2972,7 @@ const ARCADE_GAME_IDS = Object.freeze([
   'quantum2048',
   'bigger',
   'math',
+  'billard',
   'balance',
   'sudoku',
   'minesweeper',
