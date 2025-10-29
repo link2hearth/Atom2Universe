@@ -1707,9 +1707,16 @@
           "insufficientStack": "Not enough credits to call ({amount}).",
           "invalidRaise": "Enter a valid amount.",
           "raiseTooSmall": "Raise is too small (minimum {amount}).",
+          "raiseUnavailable": "You cannot raise with your current stack.",
           "playerShowdownWin": "You win {amount} with {hand}.",
           "playerSplitPot": "Pot split ({amount}) with {names}.",
-          "playerShowdownLose": "Lost to {winner} ({hand})."
+          "playerShowdownLose": "Lost to {winner} ({hand}).",
+          "aiThinking": "{name} is thinking…",
+          "aiActionCheck": "{name} checks.",
+          "aiActionCall": "{name} calls {amount}.",
+          "aiActionRaise": "{name} raises to {amount}.",
+          "aiActionAllIn": "{name} goes all-in ({amount}).",
+          "aiActionFold": "{name} folds."
         },
         "pot": {
           "aria": "Pot tracker",
@@ -1729,8 +1736,10 @@
           "callWithAmount": "Call ({amount})",
           "raise": "Raise",
           "fold": "Fold",
-          "raiseLabel": "Raise to",
-          "raiseHelp": "Enter the total amount you want to commit this street."
+          "raiseSuggestedLabel": "Suggested raise",
+          "raiseAutoHelp": "The amount is adjusted automatically for the current street.",
+          "raiseTo": "Raise to {amount}",
+          "raiseAllIn": "All-in ({amount})"
         },
         "labels": {
           "stack": "Stack",
