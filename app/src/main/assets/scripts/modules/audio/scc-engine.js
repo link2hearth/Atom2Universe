@@ -25,6 +25,20 @@
   const DEFAULT_VIBRATO_FADE_MS = 80;
   const DEFAULT_PORTAMENTO_MS = 40;
   const PITCH_BEND_RANGE = 2;
+  const MASTER_GAIN = 0.45;
+
+  const DEFAULT_MASTER_GAIN = Number.isFinite(SCC_ENGINE_CONFIG?.masterGain)
+    ? clamp(SCC_ENGINE_CONFIG.masterGain, 0, 1)
+    : 0.6;
+  const DEFAULT_SOFT_CLIPPER_DRIVE = Number.isFinite(SCC_ENGINE_CONFIG?.softClipperDrive)
+    ? Math.max(0.1, SCC_ENGINE_CONFIG.softClipperDrive)
+    : 2.0;
+  const DEFAULT_CHORUS_DELAY_MS = Number.isFinite(SCC_ENGINE_CONFIG?.chorusDelayMs)
+    ? Math.max(1, SCC_ENGINE_CONFIG.chorusDelayMs)
+    : 12;
+  const DEFAULT_CHORUS_MIX = Number.isFinite(SCC_ENGINE_CONFIG?.chorusMix)
+    ? clamp(SCC_ENGINE_CONFIG.chorusMix, 0, 1)
+    : 0.08;
 
   const DEFAULT_MASTER_GAIN = Number.isFinite(SCC_ENGINE_CONFIG?.masterGain)
     ? clamp(SCC_ENGINE_CONFIG.masterGain, 0, 1)
@@ -644,8 +658,8 @@
       const delayedR = right[i - delaySamples];
       const dryL = left[i];
       const dryR = right[i];
-      left[i] = (dryL * (1 - mix)) + (delayedR * mix);
-      right[i] = (dryR * (1 - mix)) + (delayedL * mix);
+      left[i] = dryL + (delayedL - dryL) * mix;
+      right[i] = dryR + (delayedR - dryR) * mix;
     }
   }
 
