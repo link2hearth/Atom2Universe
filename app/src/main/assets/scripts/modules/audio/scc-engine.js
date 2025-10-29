@@ -12,6 +12,10 @@
   }
 
   const existing = globalScope.SccAudioEngine || {};
+  const globalConfig = globalScope && typeof globalScope.GAME_CONFIG === 'object'
+    ? globalScope.GAME_CONFIG
+    : null;
+  const SCC_ENGINE_CONFIG = globalConfig?.audio?.engines?.scc || null;
 
   const SAMPLE_RATE = 44100;
   const TABLE_LENGTH = 32;
@@ -22,6 +26,19 @@
   const DEFAULT_PORTAMENTO_MS = 40;
   const PITCH_BEND_RANGE = 2;
   const MASTER_GAIN = 0.45;
+
+  const DEFAULT_MASTER_GAIN = Number.isFinite(SCC_ENGINE_CONFIG?.masterGain)
+    ? clamp(SCC_ENGINE_CONFIG.masterGain, 0, 1)
+    : 0.6;
+  const DEFAULT_SOFT_CLIPPER_DRIVE = Number.isFinite(SCC_ENGINE_CONFIG?.softClipperDrive)
+    ? Math.max(0.1, SCC_ENGINE_CONFIG.softClipperDrive)
+    : 2.0;
+  const DEFAULT_CHORUS_DELAY_MS = Number.isFinite(SCC_ENGINE_CONFIG?.chorusDelayMs)
+    ? Math.max(1, SCC_ENGINE_CONFIG.chorusDelayMs)
+    : 12;
+  const DEFAULT_CHORUS_MIX = Number.isFinite(SCC_ENGINE_CONFIG?.chorusMix)
+    ? clamp(SCC_ENGINE_CONFIG.chorusMix, 0, 1)
+    : 0.08;
 
   const VOL4_TO_GAIN = [
     0.0, 0.035, 0.055, 0.075,
@@ -602,9 +619,17 @@
     }
   }
 
-  function applyChorus(left, right, sampleRate) {
-    const delaySamples = Math.max(1, Math.round((12 / 1000) * sampleRate));
-    const mix = 0.06;
+  function applyChorus(left, right, sampleRate, settings = {}) {
+    const delayMs = Number.isFinite(settings.delayMs)
+      ? Math.max(1, settings.delayMs)
+      : DEFAULT_CHORUS_DELAY_MS;
+    const mix = Number.isFinite(settings.mix)
+      ? clamp(settings.mix, 0, 1)
+      : DEFAULT_CHORUS_MIX;
+    if (mix <= 0) {
+      return;
+    }
+    const delaySamples = Math.max(1, Math.round((delayMs / 1000) * sampleRate));
     for (let i = delaySamples; i < left.length; i += 1) {
       const delayedL = left[i - delaySamples];
       const delayedR = right[i - delaySamples];
@@ -615,9 +640,9 @@
     }
   }
 
-  function applySoftClip(left, right) {
-    const k = 2.5;
-    const norm = Math.tanh(k);
+  function applySoftClip(left, right, drive = DEFAULT_SOFT_CLIPPER_DRIVE) {
+    const k = Math.max(0.1, drive);
+    const norm = Math.tanh(k) || 1;
     for (let i = 0; i < left.length; i += 1) {
       left[i] = Math.tanh(k * left[i]) / norm;
       right[i] = Math.tanh(k * right[i]) / norm;
@@ -685,6 +710,25 @@
       this.instrumentMap = { programs: {}, envelopes: {}, drums: {}, defaults: this.defaults };
       this.cachedEnvelopes = new Map();
       this.portamentoDurationMs = Number.isFinite(options.portamentoMs) ? options.portamentoMs : DEFAULT_PORTAMENTO_MS;
+      const resolvedMasterGain = Number.isFinite(options.masterGain)
+        ? options.masterGain
+        : DEFAULT_MASTER_GAIN;
+      this.masterGain = clamp(resolvedMasterGain, 0, 1);
+      const optionDrive = Number.isFinite(options.softClipDrive)
+        ? options.softClipDrive
+        : (Number.isFinite(options.softClipperDrive) ? options.softClipperDrive : undefined);
+      const resolvedDrive = Number.isFinite(optionDrive) ? optionDrive : DEFAULT_SOFT_CLIPPER_DRIVE;
+      this.softClipDrive = Math.max(0.1, resolvedDrive);
+      const resolvedChorusDelay = Number.isFinite(options.chorusDelayMs)
+        ? options.chorusDelayMs
+        : DEFAULT_CHORUS_DELAY_MS;
+      const resolvedChorusMix = Number.isFinite(options.chorusMix)
+        ? options.chorusMix
+        : DEFAULT_CHORUS_MIX;
+      this.chorusSettings = {
+        delayMs: Math.max(1, resolvedChorusDelay),
+        mix: clamp(resolvedChorusMix, 0, 1),
+      };
       this.loaded = false;
     }
 
@@ -1096,14 +1140,14 @@
           mixL += result.left;
           mixR += result.right;
         }
-        left[sample] = mixL * MASTER_GAIN;
-        right[sample] = mixR * MASTER_GAIN;
+        left[sample] = mixL * this.masterGain;
+        right[sample] = mixR * this.masterGain;
       }
 
-      applyChorus(left, right, this.sampleRate);
+      applyChorus(left, right, this.sampleRate, this.chorusSettings);
       applyBiquadStereo(left, right, buildLowPassCoefficients(this.sampleRate, 12000, 0.7));
       applyBiquadStereo(left, right, buildHighShelfCoefficients(this.sampleRate, 6000, 2));
-      applySoftClip(left, right);
+      applySoftClip(left, right, this.softClipDrive);
 
       return {
         left,
