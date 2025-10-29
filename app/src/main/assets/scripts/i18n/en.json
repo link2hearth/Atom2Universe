@@ -1586,6 +1586,8 @@
           "standardDescription": "Balanced configuration: responsive, steady AI.",
           "expert": "Expert mode",
           "expertDescription": "Deeper analysis and longer think time for a tough challenge.",
+          "twoPlayers": "Two-player mode",
+          "twoPlayersDescription": "Challenge a friend on the same device. The AI stays disabled.",
           "reward": "Reward: {rewards}"
         },
         "reward": {

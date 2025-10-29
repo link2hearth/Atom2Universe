@@ -1051,6 +1051,14 @@ const GAME_CONFIG = {
                 durationSeconds: 300
               }
             }
+          },
+          {
+            id: 'twoPlayer',
+            labelKey: 'scripts.arcade.chess.difficulty.twoPlayers',
+            descriptionKey: 'scripts.arcade.chess.difficulty.twoPlayersDescription',
+            twoPlayer: true,
+            ai: null,
+            reward: null
           }
         ]
       },
