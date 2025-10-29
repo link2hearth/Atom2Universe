@@ -1865,17 +1865,12 @@
             Lancez une nouvelle donne pour jouer.
           </p>
         </header>
-        <div
-          class="holdem-table"
-          role="group"
-          aria-label="Table de poker Hold'em"
-          data-i18n="aria-label:index.sections.holdem.tableAria"
-        >
-          <div
-            class="holdem-community"
-            role="group"
-            aria-label="Cartes communes"
-            data-i18n="aria-label:index.sections.holdem.communityAria"
+        <div class="holdem-layout" id="holdemLayout">
+          <section
+            class="holdem-panel holdem-player-panel"
+            role="region"
+            aria-label="Votre main"
+            data-i18n="aria-label:index.sections.holdem.playerHandAria"
           >
             <section
               class="holdem-hand"
@@ -1912,15 +1907,19 @@
                 <span id="holdemPlayerBet" class="holdem-hand__value">0</span>
               </p>
             </section>
-            <div class="holdem-actions">
+            <div
+              class="holdem-actions"
+              role="group"
+              aria-label="Commandes de poker"
+              data-i18n="aria-label:index.sections.holdem.controlsAria"
+            >
               <button
                 type="button"
                 class="holdem-button"
-                id="holdemCheckCall"
-                data-i18n="index.sections.holdem.controls.check"
-                disabled
+                id="holdemNewHand"
+                data-i18n="index.sections.holdem.controls.newHand"
               >
-                Checker
+                Nouvelle donne
               </button>
               <div class="holdem-actions__row">
                 <button
@@ -1976,12 +1975,69 @@
                 Le montant est ajusté automatiquement selon le tour.
               </p>
             </div>
-          </aside>
+          </section>
           <section
-            class="holdem-table"
+            class="holdem-panel holdem-table"
             role="group"
-            aria-labelledby="billardSpinLabel billardSpinHint"
+            aria-label="Table de poker Hold'em"
+            data-i18n="aria-label:index.sections.holdem.tableAria"
           >
+            <div
+              class="holdem-community"
+              role="group"
+              aria-label="Cartes communes"
+              data-i18n="aria-label:index.sections.holdem.communityAria"
+            >
+              <ul class="holdem-cards" id="holdemCommunityCards">
+                <li
+                  class="holdem-cards__placeholder"
+                  data-i18n="index.sections.holdem.communityPlaceholder"
+                >
+                  Les cartes communes apparaîtront ici.
+                </li>
+              </ul>
+            </div>
+          </section>
+          <aside
+            class="holdem-panel holdem-opponent-panel"
+            role="region"
+            aria-label="Adversaires"
+            data-i18n="aria-label:index.sections.holdem.playersAria"
+          >
+            <h3 class="holdem-panel__title" data-i18n="index.sections.holdem.labels.opponents">Adversaires</h3>
+            <div
+              class="holdem-opponents"
+              id="holdemPlayers"
+              role="list"
+              aria-live="polite"
+            ></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section
+      id="billard"
+      class="page page--billard"
+      data-page-group="arcade"
+      aria-label="Table de billard français"
+      data-i18n="aria-label:index.sections.billard.aria"
+      hidden
+    >
+      <div class="billard-layout" id="billardLayout">
+        <div class="billard-table" id="billardTableContainer">
+          <canvas
+            id="billardCanvas"
+            class="billard-canvas"
+            role="img"
+            aria-label="Surface de jeu du billard français"
+            data-i18n="aria-label:index.sections.billard.canvasAria"
+          >
+            Surface de jeu du billard français
+          </canvas>
+        </div>
+        <aside class="billard-sidebar">
+          <div class="billard-spin">
             <span class="billard-spin__label" id="billardSpinLabel" data-i18n="index.sections.billard.spin.label">
               Effet
             </span>
@@ -1991,11 +2047,11 @@
               tabindex="0"
               role="application"
               aria-describedby="billardSpinHint"
-              aria-label="Sélection du point d’impact"
+              aria-label="Sélecteur du point d’impact"
               data-i18n="aria-label:index.sections.billard.spin.surfaceAria"
             >
               <span class="visually-hidden" id="billardSpinHint" data-i18n="index.sections.billard.spin.hint">
-                Touchez la bille pour indiquer le point d’impact et appliquer de l’effet.
+                Touchez la bille blanche pour indiquer le point d’impact et ajouter de l’effet.
               </span>
               <div class="billard-spin__ball">
                 <div class="billard-spin__marker" id="billardSpinMarker" aria-hidden="true"></div>
@@ -2025,7 +2081,7 @@
             </button>
           </div>
           <p class="billard-mode-hint" id="billardModeHint" data-i18n="index.sections.billard.playHint">
-            Touchez une bille, tirez à l’opposé de la direction voulue, puis relâchez pour jouer.
+            Touchez une bille, tirez à l’opposé de la direction souhaitée, puis relâchez pour jouer.
           </p>
         </aside>
       </div>

@@ -1785,7 +1785,8 @@
         "labels": {
           "stack": "Solde",
           "currentBet": "Mise actuelle",
-          "you": "Vous"
+          "you": "Vous",
+          "opponents": "Adversaires"
         },
         "phase": {
           "preflop": "Préflop",
