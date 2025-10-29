@@ -342,16 +342,8 @@
   flex-wrap: wrap;
   gap: calc(0.75rem * var(--holdem-scale));
   align-items: baseline;
-  justify-content: space-between;
+  justify-content: flex-start;
   width: 100%;
-}
-
-.holdem-hand__stack {
-  display: inline-flex;
-  gap: calc(0.35rem * var(--holdem-scale));
-  align-items: baseline;
-  font-size: calc(0.95rem * var(--holdem-scale));
-  color: var(--holdem-muted-color);
 }
 
 .holdem-hand__status {

@@ -12,11 +12,17 @@
     openRaiseMultiplier: 2
   });
 
+  const DEFAULT_STAKE_GROWTH = Object.freeze({
+    blindFactor: 1.1,
+    raiseFactor: 1.1,
+    cap: 99e68
+  });
+
   const DEFAULT_CONFIG = Object.freeze({
-    blinds: { small: 20, big: 40 },
+    blinds: { small: 5, big: 10 },
     dealerSpeedMs: 650,
-    minRaise: 40,
-    startingStack: 1000,
+    minRaise: 10,
+    startingStack: 600,
     aiStack: 1e11,
     aiThinkingDelayMs: { min: 900, max: 2500 },
     opponentCount: { min: 4, max: 4 },
@@ -25,7 +31,8 @@
       daring: { aggression: 0.72, caution: 0.33, bluff: 0.28 }
     },
     defaultAiProfile: 'patient',
-    raiseGuidance: DEFAULT_RAISE_GUIDANCE
+    raiseGuidance: DEFAULT_RAISE_GUIDANCE,
+    growth: DEFAULT_STAKE_GROWTH
   });
 
   const DEFAULT_AI_PROFILE = Object.freeze({ aggression: 0.55, caution: 0.4, bluff: 0.2 });
@@ -84,6 +91,82 @@
       return max;
     }
     return value;
+  }
+
+  function getGrowthConfig() {
+    return state.config && state.config.growth ? state.config.growth : DEFAULT_STAKE_GROWTH;
+  }
+
+  function getStakeCap() {
+    const growth = getGrowthConfig();
+    const capCandidate = growth && Number(growth.cap);
+    if (Number.isFinite(capCandidate) && capCandidate > 0) {
+      return capCandidate;
+    }
+    return DEFAULT_STAKE_GROWTH.cap;
+  }
+
+  function clampStakeValue(value) {
+    const cap = getStakeCap();
+    if (!Number.isFinite(value)) {
+      return cap;
+    }
+    const sanitized = Math.max(0, Math.ceil(value - 1e-9));
+    return Math.min(cap, sanitized);
+  }
+
+  function syncMinRaiseBaseline() {
+    const cap = getStakeCap();
+    state.blinds.small = clampStakeValue(Math.max(1, state.blinds.small));
+    state.blinds.big = clampStakeValue(Math.max(state.blinds.small * 2, state.blinds.big));
+    state.minRaise = clampStakeValue(Math.max(state.minRaise, state.blinds.big));
+    if (state.minRaise > cap) {
+      state.minRaise = cap;
+    }
+    if (state.lastRaiseAmount < state.minRaise) {
+      state.lastRaiseAmount = state.minRaise;
+    }
+  }
+
+  function applyBlindGrowth() {
+    const growth = getGrowthConfig();
+    const factor = Number(growth && growth.blindFactor);
+    if (!Number.isFinite(factor) || factor <= 1) {
+      return;
+    }
+    const nextSmall = clampStakeValue(state.blinds.small * factor);
+    const nextBig = clampStakeValue(Math.max(state.blinds.big * factor, nextSmall * 2));
+    state.blinds.small = Math.max(1, nextSmall);
+    state.blinds.big = Math.max(nextSmall * 2, nextBig);
+    syncMinRaiseBaseline();
+  }
+
+  function applyRaiseGrowth() {
+    const growth = getGrowthConfig();
+    const factor = Number(growth && growth.raiseFactor);
+    if (!Number.isFinite(factor) || factor <= 1) {
+      return;
+    }
+    const nextMinRaise = clampStakeValue(Math.max(state.minRaise * factor, state.blinds.big));
+    state.minRaise = Math.max(state.blinds.big, nextMinRaise);
+    if (state.lastRaiseAmount < state.minRaise) {
+      state.lastRaiseAmount = state.minRaise;
+    }
+  }
+
+  function registerRaise(raiseDiff) {
+    const sanitizedDiff = clampStakeValue(raiseDiff);
+    if (sanitizedDiff > state.minRaise) {
+      state.minRaise = sanitizedDiff;
+    }
+    if (state.lastRaiseAmount < sanitizedDiff) {
+      state.lastRaiseAmount = sanitizedDiff;
+    }
+    syncMinRaiseBaseline();
+    applyRaiseGrowth();
+    if (state.lastRaiseAmount < state.minRaise) {
+      state.lastRaiseAmount = state.minRaise;
+    }
   }
 
   function formatTemplateValue(value) {
@@ -193,13 +276,29 @@
         ? GLOBAL_CONFIG.arcade.holdem
         : null;
 
+    const growthDefaults = DEFAULT_CONFIG.growth || DEFAULT_STAKE_GROWTH;
+    const growthSource = raw && raw.growth ? raw.growth : growthDefaults;
+    const blindFactorCandidate = Number(growthSource.blindFactor);
+    const raiseFactorCandidate = Number(growthSource.raiseFactor);
+    const blindFactor = blindFactorCandidate > 1 ? blindFactorCandidate : growthDefaults.blindFactor;
+    const raiseFactor = raiseFactorCandidate > 1 ? raiseFactorCandidate : growthDefaults.raiseFactor;
+    const capCandidate = Number(growthSource.cap);
+    const stakeCap = capCandidate > 0 ? capCandidate : growthDefaults.cap;
+
     const blindsSource = raw && raw.blinds ? raw.blinds : DEFAULT_CONFIG.blinds;
-    const smallBlind = toPositiveInteger(blindsSource.small, DEFAULT_CONFIG.blinds.small);
-    const bigBlind = toPositiveInteger(blindsSource.big, DEFAULT_CONFIG.blinds.big);
-    const minRaise = toPositiveInteger(raw && raw.minRaise, DEFAULT_CONFIG.minRaise);
-    const startingStack = toPositiveInteger(raw && raw.startingStack, DEFAULT_CONFIG.startingStack);
-    const aiStack = toPositiveInteger(raw && raw.aiStack, DEFAULT_CONFIG.aiStack);
+    const smallBlindRaw = toPositiveInteger(blindsSource.small, DEFAULT_CONFIG.blinds.small);
+    const bigBlindRaw = toPositiveInteger(blindsSource.big, DEFAULT_CONFIG.blinds.big);
+    const minRaiseRaw = toPositiveInteger(raw && raw.minRaise, DEFAULT_CONFIG.minRaise);
+    const startingStackRaw = toPositiveInteger(raw && raw.startingStack, DEFAULT_CONFIG.startingStack);
+    const aiStackRaw = toPositiveInteger(raw && raw.aiStack, DEFAULT_CONFIG.aiStack);
     const raiseGuidance = normalizeRaiseGuidance(raw && raw.raiseGuidance);
+
+    const smallBlind = Math.max(1, Math.min(stakeCap, smallBlindRaw));
+    const bigBlind = Math.max(2, Math.min(stakeCap, bigBlindRaw));
+    const normalizedBigBlind = Math.min(stakeCap, Math.max(bigBlind, smallBlind * 2));
+    const normalizedMinRaise = Math.min(stakeCap, Math.max(minRaiseRaw, normalizedBigBlind));
+    const startingStack = Math.min(stakeCap, startingStackRaw);
+    const aiStack = Math.min(stakeCap, aiStackRaw);
 
     let opponentMin = DEFAULT_CONFIG.opponentCount.min;
     let opponentMax = DEFAULT_CONFIG.opponentCount.max;
@@ -242,12 +341,13 @@
     }
 
     return {
-      blinds: { small: smallBlind, big: Math.max(bigBlind, smallBlind * 2) },
+      blinds: { small: smallBlind, big: normalizedBigBlind },
       dealerSpeedMs,
-      minRaise: Math.max(minRaise, Math.max(bigBlind, smallBlind * 2)),
+      minRaise: normalizedMinRaise,
       startingStack,
       aiStack,
       raiseGuidance,
+      growth: { blindFactor, raiseFactor, cap: stakeCap },
       aiThinkingDelayMs: { min: thinkingMin, max: thinkingMax },
       opponentCount: { min: clamp(opponentMin, 2, 7), max: clamp(opponentMax, 2, 7) },
       aiProfiles,
@@ -264,7 +364,6 @@
     opponentsRight: document.getElementById('holdemPlayersRight'),
     potValue: document.getElementById('holdemPotValue'),
     playerCards: document.getElementById('holdemPlayerCards'),
-    playerStack: document.getElementById('holdemPlayerStack'),
     playerStatus: document.getElementById('holdemPlayerStatus'),
     playerBet: document.getElementById('holdemPlayerBet'),
     playerPanel: document.getElementById('holdemPlayerPanel'),
@@ -277,6 +376,8 @@
 
   const state = {
     config: CONFIG,
+    blinds: { small: CONFIG.blinds.small, big: CONFIG.blinds.big },
+    minRaise: Math.max(CONFIG.minRaise, CONFIG.blinds.big),
     deck: [],
     communityCards: [],
     players: [],
@@ -287,11 +388,14 @@
     dealerPosition: 0,
     heroBank: null,
     activePlayerId: null,
-    lastRaiseAmount: CONFIG.minRaise,
+    lastRaiseAmount: Math.max(CONFIG.minRaise, CONFIG.blinds.big),
     statusKey: 'index.sections.holdem.status.intro',
     statusParams: {},
-    pendingTimeouts: []
+    pendingTimeouts: [],
+    handCount: 0
   };
+
+  syncMinRaiseBaseline();
 
   function getGameState() {
     if (typeof window === 'undefined') {
@@ -421,12 +525,13 @@
       return currentBet;
     }
     const guidance = state.config.raiseGuidance || DEFAULT_RAISE_GUIDANCE;
+    const minRaise = state.minRaise;
     const potPressure = Math.floor(Math.max(0, state.pot) * Math.max(0, guidance.potRatio || 0));
     const stackPressure = Math.floor(stack * Math.max(0, guidance.stackRatio || 0));
     const dynamicBoost = Math.max(potPressure, stackPressure);
-    const lastRaise = Math.max(state.lastRaiseAmount || 0, state.config.minRaise);
+    const lastRaise = Math.max(state.lastRaiseAmount || 0, minRaise);
     const callAmount = Math.max(0, state.currentBet - currentBet);
-    let increment = Math.max(lastRaise, state.config.minRaise, callAmount);
+    let increment = Math.max(lastRaise, minRaise, callAmount);
     if (dynamicBoost > 0) {
       increment = Math.max(increment, dynamicBoost);
     }
@@ -859,7 +964,7 @@
     state.phase = 'preflop';
     state.awaitingPlayer = false;
     state.activePlayerId = null;
-    state.lastRaiseAmount = state.config.minRaise;
+    state.lastRaiseAmount = state.minRaise;
     clearPendingTimeouts();
     for (let i = 0; i < state.players.length; i += 1) {
       resetPlayerForHand(state.players[i]);
@@ -944,9 +1049,6 @@
       placeholderKey: 'index.sections.holdem.hand.placeholder',
       placeholderFallback: 'Aucune carte distribuée pour le moment.'
     });
-    if (elements.playerStack) {
-      elements.playerStack.textContent = formatAmount(hero ? hero.stack : 0);
-    }
     if (elements.playerBet) {
       elements.playerBet.textContent = formatAmount(hero ? hero.bet : 0);
     }
@@ -1039,7 +1141,7 @@
       const label = document.createElement('span');
       label.className = 'holdem-player__stack-label';
       label.dataset.i18n = 'index.sections.holdem.labels.stack';
-      label.textContent = translate('index.sections.holdem.labels.stack', 'Stack');
+      label.textContent = translate('index.sections.holdem.labels.stack', 'Atom reserve');
       const value = document.createElement('span');
       value.className = 'holdem-player__stack-value';
       value.textContent = formatAmount(player.stack);
@@ -1402,7 +1504,7 @@
       }
     }
     state.currentBet = 0;
-    state.lastRaiseAmount = state.config.minRaise;
+    state.lastRaiseAmount = state.minRaise;
   }
 
   function postBlinds() {
@@ -1414,21 +1516,21 @@
     const bigBlindPlayer = state.players[getBigBlindIndex()];
 
     if (smallBlindPlayer) {
-      const amount = Math.min(state.config.blinds.small, smallBlindPlayer.stack + smallBlindPlayer.bet);
+      const amount = Math.min(state.blinds.small, smallBlindPlayer.stack + smallBlindPlayer.bet);
       applyBet(smallBlindPlayer, smallBlindPlayer.bet + amount);
       setPlayerStatus(smallBlindPlayer, 'index.sections.holdem.playerStatus.blind', {
         amount: formatAmount(amount)
       });
     }
     if (bigBlindPlayer) {
-      const amount = Math.min(state.config.blinds.big, bigBlindPlayer.stack + bigBlindPlayer.bet);
+      const amount = Math.min(state.blinds.big, bigBlindPlayer.stack + bigBlindPlayer.bet);
       applyBet(bigBlindPlayer, bigBlindPlayer.bet + amount);
       setPlayerStatus(bigBlindPlayer, 'index.sections.holdem.playerStatus.blind', {
         amount: formatAmount(amount)
       });
       state.currentBet = Math.max(state.currentBet, bigBlindPlayer.bet);
     }
-    state.lastRaiseAmount = state.config.minRaise;
+    state.lastRaiseAmount = state.minRaise;
   }
 
   function decideAiRoundAction(player, allowRaise) {
@@ -1447,7 +1549,7 @@
       }
 
       if (allowRaise && (strength > 0.52 || bluffRoll < bluffFactor) && Math.random() < aggressionFactor) {
-        const increment = Math.max(state.lastRaiseAmount, state.config.minRaise);
+        const increment = Math.max(state.lastRaiseAmount, state.minRaise);
         const pressureBonus = Math.round(increment * (0.9 + strength + bluffFactor));
         const raiseTarget = Math.min(player.bet + player.stack, state.currentBet + increment + pressureBonus);
         if (raiseTarget > player.bet) {
@@ -1456,7 +1558,7 @@
       }
 
       if (allowRaise && strength > 0.35 && Math.random() < bluffFactor * 0.6 && player.stack > requiredToCall) {
-        const increment = Math.max(state.lastRaiseAmount, state.config.minRaise);
+        const increment = Math.max(state.lastRaiseAmount, state.minRaise);
         const semiBluff = Math.round(increment * (0.6 + bluffFactor));
         const raiseTarget = Math.min(player.bet + player.stack, state.currentBet + increment + semiBluff);
         if (raiseTarget > player.bet) {
@@ -1469,7 +1571,7 @@
     }
 
     if (allowRaise && (strength > 0.45 || Math.random() < bluffFactor * 0.75) && Math.random() < aggressionFactor) {
-      const increment = Math.max(state.lastRaiseAmount, state.config.minRaise);
+      const increment = Math.max(state.lastRaiseAmount, state.minRaise);
       const bonus = Math.round(increment * (0.85 + strength + bluffFactor * 0.7));
       const raiseTarget = Math.min(player.bet + player.stack, Math.max(state.currentBet, player.bet) + increment + bonus);
       if (raiseTarget > player.bet) {
@@ -1478,7 +1580,7 @@
     }
 
     if (allowRaise && Math.random() < bluffFactor * 0.35 && player.stack > 0) {
-      const increment = Math.max(state.lastRaiseAmount, state.config.minRaise);
+      const increment = Math.max(state.lastRaiseAmount, state.minRaise);
       const raiseTarget = Math.min(player.bet + player.stack, Math.max(state.currentBet, player.bet) + increment);
       if (raiseTarget > player.bet) {
         return { action: 'raise', target: raiseTarget };
@@ -1503,7 +1605,7 @@
     }
 
     if (Math.random() < aggressionFactor * 0.55 && (strength > 0.55 || bluffRoll < profile.bluff) && player.stack > requiredToCall) {
-      const increment = Math.max(state.lastRaiseAmount, state.config.minRaise);
+      const increment = Math.max(state.lastRaiseAmount, state.minRaise);
       const bonus = Math.round(increment * (0.75 + strength + profile.bluff));
       const raiseTarget = Math.min(player.bet + player.stack, state.currentBet + increment + bonus);
       if (raiseTarget > player.bet) {
@@ -1542,7 +1644,7 @@
     if (player.bet > previousCurrent) {
       const raiseDiff = player.bet - previousCurrent;
       if (raiseDiff > 0) {
-        state.lastRaiseAmount = Math.max(state.config.minRaise, raiseDiff);
+        registerRaise(raiseDiff);
       }
       state.currentBet = player.bet;
     } else {
@@ -1991,13 +2093,44 @@
   }
 
   function refreshStacksForNewHand() {
+    const hero = getHero();
+    const heroStack = hero ? sanitizeStack(hero.stack, state.config.startingStack) : state.config.aiStack;
+    let respawnStack = state.config.aiStack;
+    let aiCount = 0;
+    let bustedAiCount = 0;
+
+    for (let i = 0; i < state.players.length; i += 1) {
+      const player = state.players[i];
+      if (player.id === 'hero') {
+        continue;
+      }
+      aiCount += 1;
+      if (player.stack <= 0) {
+        bustedAiCount += 1;
+      }
+    }
+
+    if (aiCount > 0 && bustedAiCount === aiCount) {
+      let computedStack = heroStack * 100;
+      if (!Number.isFinite(computedStack) || computedStack <= 0) {
+        computedStack = state.config.aiStack;
+      } else if (computedStack > Number.MAX_SAFE_INTEGER) {
+        computedStack = Number.MAX_SAFE_INTEGER;
+      }
+      respawnStack = sanitizeStack(computedStack, state.config.aiStack);
+      if (respawnStack <= 0) {
+        respawnStack = state.config.aiStack;
+      }
+      state.config.aiStack = respawnStack;
+    }
+
     for (let i = 0; i < state.players.length; i += 1) {
       const player = state.players[i];
       if (player.id === 'hero') {
         continue;
       }
       if (player.stack <= 0) {
-        player.stack = state.config.aiStack;
+        player.stack = respawnStack;
         player.folded = false;
         player.allIn = false;
       }
@@ -2038,6 +2171,12 @@
     if (!state.players.length) {
       return;
     }
+    if (state.handCount > 0) {
+      applyBlindGrowth();
+      applyRaiseGrowth();
+    } else {
+      syncMinRaiseBaseline();
+    }
     advanceDealerPosition();
     syncHeroStackWithGameState();
     refreshStacksForNewHand();
@@ -2048,13 +2187,14 @@
     postBlinds();
     render();
 
-    const small = formatAmount(state.config.blinds.small);
-    const big = formatAmount(state.config.blinds.big);
-    updateStatus('index.sections.holdem.status.newHand', 'Nouvelle donne — blinds {small}/{big}.', {
+    const small = formatAmount(state.blinds.small);
+    const big = formatAmount(state.blinds.big);
+    updateStatus('index.sections.holdem.status.newHand', 'Nouvelle donne — blinds {small}/{big} atomes.', {
       small,
       big
     });
     executeAiRound({ allowRaise: true });
+    state.handCount += 1;
   }
 
   function handlePlayerFold() {
@@ -2082,7 +2222,7 @@
     }
     const requiredToCall = Math.max(0, state.currentBet - hero.bet);
     if (requiredToCall > hero.stack) {
-      updateStatus('index.sections.holdem.status.insufficientStack', 'Pas assez de crédits pour suivre ({amount}).', {
+      updateStatus('index.sections.holdem.status.insufficientStack', 'Pas assez d\'atomes pour suivre ({amount}).', {
         amount: formatAmount(requiredToCall)
       });
       return;
@@ -2115,12 +2255,12 @@
     }
     const target = computeNextRaiseAmount(hero);
     if (!Number.isFinite(target) || target <= hero.bet) {
-      updateStatus('index.sections.holdem.status.raiseUnavailable', 'You cannot raise with your current stack.');
+      updateStatus('index.sections.holdem.status.raiseUnavailable', 'Impossible de relancer avec votre réserve d\'atomes actuelle.');
       return;
     }
     const needed = target - hero.bet;
     if (needed > hero.stack) {
-      updateStatus('index.sections.holdem.status.insufficientStack', 'Pas assez de crédits pour suivre ({amount}).', {
+      updateStatus('index.sections.holdem.status.insufficientStack', 'Pas assez d\'atomes pour suivre ({amount}).', {
         amount: formatAmount(needed)
       });
       return;
@@ -2131,7 +2271,7 @@
     if (hero.bet > previousCurrent) {
       const raiseDiff = hero.bet - previousCurrent;
       if (raiseDiff > 0) {
-        state.lastRaiseAmount = Math.max(state.config.minRaise, raiseDiff);
+        registerRaise(raiseDiff);
       }
       state.currentBet = hero.bet;
     } else {
@@ -2173,7 +2313,7 @@
     if (hero.bet > previousCurrent) {
       const raiseDiff = hero.bet - previousCurrent;
       if (raiseDiff > 0) {
-        state.lastRaiseAmount = Math.max(state.config.minRaise, raiseDiff);
+        registerRaise(raiseDiff);
       }
       state.currentBet = hero.bet;
     } else {
