@@ -2093,13 +2093,44 @@
   }
 
   function refreshStacksForNewHand() {
+    const hero = getHero();
+    const heroStack = hero ? sanitizeStack(hero.stack, state.config.startingStack) : state.config.aiStack;
+    let respawnStack = state.config.aiStack;
+    let aiCount = 0;
+    let bustedAiCount = 0;
+
+    for (let i = 0; i < state.players.length; i += 1) {
+      const player = state.players[i];
+      if (player.id === 'hero') {
+        continue;
+      }
+      aiCount += 1;
+      if (player.stack <= 0) {
+        bustedAiCount += 1;
+      }
+    }
+
+    if (aiCount > 0 && bustedAiCount === aiCount) {
+      let computedStack = heroStack * 100;
+      if (!Number.isFinite(computedStack) || computedStack <= 0) {
+        computedStack = state.config.aiStack;
+      } else if (computedStack > Number.MAX_SAFE_INTEGER) {
+        computedStack = Number.MAX_SAFE_INTEGER;
+      }
+      respawnStack = sanitizeStack(computedStack, state.config.aiStack);
+      if (respawnStack <= 0) {
+        respawnStack = state.config.aiStack;
+      }
+      state.config.aiStack = respawnStack;
+    }
+
     for (let i = 0; i < state.players.length; i += 1) {
       const player = state.players[i];
       if (player.id === 'hero') {
         continue;
       }
       if (player.stack <= 0) {
-        player.stack = state.config.aiStack;
+        player.stack = respawnStack;
         player.folded = false;
         player.allIn = false;
       }
