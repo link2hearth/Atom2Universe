@@ -1586,6 +1586,8 @@
           "standardDescription": "Réglage équilibré : l’IA joue vite et solidement.",
           "expert": "Mode expert",
           "expertDescription": "Profondeur accrue et temps de calcul prolongé pour un vrai défi.",
+          "twoPlayers": "Mode deux joueurs",
+          "twoPlayersDescription": "Affrontez un autre joueur sur le même appareil. L’IA reste désactivée.",
           "reward": "Récompense : {rewards}"
         },
         "reward": {
