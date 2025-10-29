@@ -1032,22 +1032,11 @@ function freezeFeatureUnlockDefinition(definition) {
 }
 
 function createDefaultFeatureUnlockDefinitions() {
-  const millionAtomsId = 'millionAtoms';
   const defaults = new Map();
-  defaults.set(
-    'arcade.hub',
-    freezeFeatureUnlockDefinition({ type: 'lifetimeAtoms', amount: toLayeredNumber(1000, 0) })
-  );
-  defaults.set(
-    'arcade.particules',
-    freezeFeatureUnlockDefinition({ type: 'feature', requires: Object.freeze(['arcade.hub']) })
-  );
-  defaults.set(
-    METAL_FEATURE_ID,
-    freezeFeatureUnlockDefinition({ type: 'flag', flagId: METAL_FEATURE_ID })
-  );
-  const trophyRequirement = id => freezeFeatureUnlockDefinition({ type: 'trophy', trophyId: id });
   [
+    'arcade.hub',
+    'arcade.particules',
+    METAL_FEATURE_ID,
     'arcade.photon',
     'arcade.objectx',
     'arcade.balance',
@@ -1060,7 +1049,7 @@ function createDefaultFeatureUnlockDefinitions() {
     'arcade.echecs',
     'arcade.gameOfLife'
   ].forEach(id => {
-    defaults.set(id, trophyRequirement(millionAtomsId));
+    defaults.set(id, freezeFeatureUnlockDefinition({ type: 'always' }));
   });
   defaults.set('system.gacha', freezeFeatureUnlockDefinition({ type: 'page', pageId: 'gacha' }));
   defaults.set('system.tableau', freezeFeatureUnlockDefinition({ type: 'page', pageId: 'tableau' }));
