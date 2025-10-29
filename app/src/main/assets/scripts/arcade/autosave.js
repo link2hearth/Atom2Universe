@@ -6,6 +6,7 @@
     'wave',
     'quantum2048',
     'bigger',
+    'billard',
     'math',
     'balance',
     'sudoku',
