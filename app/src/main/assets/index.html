@@ -1837,34 +1837,36 @@
       <div class="holdem">
         <div class="holdem-layout" id="holdemLayout">
           <div class="holdem-top">
-            <div
-              class="holdem-pot holdem-top__item"
-              role="group"
-              aria-label="Suivi du pot"
-              data-i18n="aria-label:index.sections.holdem.pot.aria"
-            >
-              <span class="holdem-pot__label" data-i18n="index.sections.holdem.pot.label">Pot total</span>
-              <div class="holdem-pot__amount">
-                <span id="holdemPotValue">0</span>
-                <span class="holdem-pot__unit" data-i18n="index.sections.holdem.pot.unit">crédits</span>
-              </div>
-              <div
-                class="holdem-pot__gauge"
-                role="img"
-                aria-label="Jauge de pot"
-                data-i18n="aria-label:index.sections.holdem.pot.gauge"
-              >
-                <div class="holdem-pot__fill" id="holdemPotFill" style="width: 0%"></div>
-              </div>
-            </div>
             <section
-              class="holdem-panel holdem-table holdem-top__item"
+              class="holdem-summary"
               role="group"
-              aria-label="Table de poker Hold'em"
-              data-i18n="aria-label:index.sections.holdem.tableAria"
+              aria-label="Informations de la manche"
+              data-i18n="aria-label:index.sections.holdem.summaryAria"
             >
               <div
-                class="holdem-community"
+                class="holdem-summary__segment holdem-summary__info"
+                role="group"
+                aria-label="Pot total et phase en cours"
+                data-i18n="aria-label:index.sections.holdem.pot.aria"
+              >
+                <p class="holdem-summary__pot-line">
+                  <span class="holdem-pot__label" data-i18n="index.sections.holdem.pot.label">Pot total :</span>
+                  <span class="holdem-pot__amount">
+                    <span id="holdemPotValue">0</span>
+                    <span class="holdem-pot__unit" data-i18n="index.sections.holdem.pot.unit">crédits</span>
+                  </span>
+                </p>
+                <p
+                  class="holdem-summary__status"
+                  id="holdemStatus"
+                  aria-live="polite"
+                  data-i18n="index.sections.holdem.status.intro"
+                >
+                  Lancez une nouvelle donne pour jouer.
+                </p>
+              </div>
+              <div
+                class="holdem-summary__segment holdem-summary__community"
                 role="group"
                 aria-label="Cartes communes"
                 data-i18n="aria-label:index.sections.holdem.communityAria"
@@ -1879,27 +1881,17 @@
                 </ul>
               </div>
             </section>
-            <section class="holdem-panel holdem-info holdem-top__item" role="status">
-              <span class="holdem-info__label" data-i18n="index.sections.holdem.info.label">Phase de jeu</span>
-              <p
-                class="holdem-info__message"
-                id="holdemStatus"
-                aria-live="polite"
-                data-i18n="index.sections.holdem.status.intro"
-              >
-                Lancez une nouvelle donne pour jouer.
-              </p>
-            </section>
           </div>
           <div class="holdem-bottom">
-            <h3 class="holdem-opponents__title" id="holdemOpponentsTitle" data-i18n="index.sections.holdem.labels.opponents">
-              Adversaires
-            </h3>
-            <div class="holdem-bottom__grid" role="group" aria-labelledby="holdemOpponentsTitle">
+            <div
+              class="holdem-bottom__grid"
+              role="group"
+              aria-label="Adversaires"
+              data-i18n="aria-label:index.sections.holdem.playersAria"
+            >
               <aside
                 class="holdem-opponent-column"
                 role="region"
-                aria-labelledby="holdemOpponentsTitle"
                 aria-label="Adversaires"
                 data-i18n="aria-label:index.sections.holdem.playersAria"
               >
@@ -2003,7 +1995,6 @@
               <aside
                 class="holdem-opponent-column"
                 role="region"
-                aria-labelledby="holdemOpponentsTitle"
                 aria-label="Adversaires"
                 data-i18n="aria-label:index.sections.holdem.playersAria"
               >
