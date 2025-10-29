@@ -1039,6 +1039,7 @@ const GAME_CONFIG = {
      * - opponentCount : fourchette du nombre d’adversaires IA présents à la table.
      * - aiProfiles : profils disponibles pour les adversaires (aggressivité, prudence, bluff).
      * - defaultAiProfile : identifiant du profil sélectionné par défaut.
+     * - raiseGuidance : réglages de la suggestion de relance côté joueur (ratio sur le pot, stack et multiplicateur).
      */
     holdem: {
       blinds: {
@@ -1049,6 +1050,11 @@ const GAME_CONFIG = {
       minRaise: 40,
       startingStack: 1000,
       aiStack: 1e11,
+      raiseGuidance: {
+        potRatio: 0.25,
+        stackRatio: 0.12,
+        openRaiseMultiplier: 2
+      },
       opponentCount: { min: 4, max: 5 },
       aiProfiles: {
         patient: {
