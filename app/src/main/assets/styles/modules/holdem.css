@@ -33,28 +33,62 @@
 }
 
 .holdem-top {
-  display: grid;
-  gap: calc(1.25rem * var(--holdem-scale));
-  grid-template-columns: repeat(auto-fit, minmax(clamp(220px, 28vw, 320px), 1fr));
-  align-items: stretch;
+  display: block;
 }
 
-.holdem-top__item {
-  height: 100%;
+.holdem-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(1rem, 4vw, 2.5rem);
+  background: rgba(14, 20, 34, 0.82);
+  border: 1px solid var(--holdem-border-color);
+  border-radius: calc(1.25rem * var(--holdem-scale));
+  padding: calc(0.9rem * var(--holdem-scale)) clamp(1rem, 4vw, 2.25rem);
+  box-shadow: 0 20px 36px rgba(0, 0, 0, 0.38);
+}
+
+.holdem-summary__segment {
+  display: flex;
+  flex-direction: column;
+  gap: calc(0.4rem * var(--holdem-scale));
+  min-width: 0;
+}
+
+.holdem-summary__pot {
+  flex: 0 1 clamp(170px, 20%, 210px);
+  display: grid;
+  gap: calc(0.45rem * var(--holdem-scale));
+}
+
+.holdem-summary__community {
+  flex: 1 1 clamp(240px, 46%, 520px);
+  align-items: center;
+}
+
+.holdem-summary__community .holdem-cards {
+  justify-content: center;
+}
+
+.holdem-summary__status {
+  flex: 0 0 clamp(190px, 28%, 260px);
+  margin: 0;
+  font-size: calc(1rem * var(--holdem-scale));
+  line-height: 1.45;
+  text-align: right;
+  color: var(--holdem-text-color);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-clamp: 2;
 }
 
 .holdem-bottom {
   display: grid;
   gap: calc(1rem * var(--holdem-scale));
-}
-
-.holdem-opponents__title {
-  margin: 0;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-size: calc(0.85rem * var(--holdem-scale));
-  color: var(--holdem-muted-color);
-  text-align: center;
 }
 
 .holdem-bottom__grid {
@@ -93,24 +127,6 @@
   box-shadow: 0 20px 36px rgba(0, 0, 0, 0.4);
 }
 
-.holdem-info {
-  align-content: start;
-  gap: calc(0.5rem * var(--holdem-scale));
-}
-
-.holdem-info__label {
-  font-size: calc(0.85rem * var(--holdem-scale));
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--holdem-muted-color);
-}
-
-.holdem-info__message {
-  margin: 0;
-  font-size: calc(1rem * var(--holdem-scale));
-  line-height: 1.5;
-}
-
 .holdem-panel__title {
   margin: 0;
   font-size: calc(1.05rem * var(--holdem-scale));
@@ -118,18 +134,6 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--holdem-muted-color);
-}
-
-.holdem-pot {
-  background: var(--holdem-panel-background);
-  border: 1px solid var(--holdem-border-color);
-  border-radius: calc(1rem * var(--holdem-scale));
-  padding: calc(1rem * var(--holdem-scale));
-  min-width: clamp(220px, 28vw, 320px);
-  display: grid;
-  gap: calc(0.5rem * var(--holdem-scale));
-  box-shadow: 0 18px 32px rgba(0, 0, 0, 0.35);
-  height: 100%;
 }
 
 .holdem-pot__label {
@@ -166,36 +170,6 @@
   transition: width 0.4s ease;
 }
 
-.holdem-status {
-  margin: 0;
-  font-size: calc(1rem * var(--holdem-scale));
-  padding: calc(0.85rem * var(--holdem-scale));
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: calc(0.85rem * var(--holdem-scale));
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
-  max-width: min(900px, 100%);
-}
-
-.holdem-table {
-  background: var(--holdem-background);
-  border-radius: calc(1.5rem * var(--holdem-scale));
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  padding: calc(1.5rem * var(--holdem-scale));
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: calc(1.25rem * var(--holdem-scale));
-  box-shadow: 0 22px 40px rgba(5, 12, 28, 0.6);
-}
-
-.holdem-community {
-  background: rgba(16, 26, 44, 0.68);
-  border-radius: calc(1.1rem * var(--holdem-scale));
-  padding: calc(1rem * var(--holdem-scale));
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  width: min(100%, 520px);
-}
 
 .holdem-opponents {
   display: grid;
@@ -463,13 +437,20 @@
 }
 
 @media (max-width: 720px) {
-  .holdem-pot {
-    width: 100%;
-    min-width: 0;
+  .holdem-summary {
+    flex-direction: column;
+    align-items: stretch;
+    gap: calc(1rem * var(--holdem-scale));
   }
 
-  .holdem-top {
-    grid-template-columns: minmax(0, 1fr);
+  .holdem-summary__pot,
+  .holdem-summary__community,
+  .holdem-summary__status {
+    flex: 1 1 auto;
+  }
+
+  .holdem-summary__status {
+    text-align: left;
   }
 }
 
@@ -482,9 +463,5 @@
 @media (min-width: 1280px) {
   .holdem-bottom__grid {
     grid-template-columns: minmax(240px, 1fr) minmax(360px, 1.2fr) minmax(240px, 1fr);
-  }
-
-  .holdem-pot {
-    min-width: 280px;
   }
 }
