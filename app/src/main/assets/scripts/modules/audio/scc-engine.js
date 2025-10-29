@@ -57,6 +57,23 @@
   // de sécurité lors du mixage et d'éviter la saturation perceptible.
   const CHANNEL_LEVEL_LIMIT = 1.2;
 
+  const DEFAULT_MASTER_GAIN = Number.isFinite(SCC_ENGINE_CONFIG?.masterGain)
+    ? clamp(SCC_ENGINE_CONFIG.masterGain, 0, 1)
+    : 0.18;
+  const DEFAULT_SOFT_CLIPPER_DRIVE = Number.isFinite(SCC_ENGINE_CONFIG?.softClipperDrive)
+    ? Math.max(0.1, SCC_ENGINE_CONFIG.softClipperDrive)
+    : 1.05;
+  const DEFAULT_CHORUS_DELAY_MS = Number.isFinite(SCC_ENGINE_CONFIG?.chorusDelayMs)
+    ? Math.max(1, SCC_ENGINE_CONFIG.chorusDelayMs)
+    : 12;
+  const DEFAULT_CHORUS_MIX = Number.isFinite(SCC_ENGINE_CONFIG?.chorusMix)
+    ? clamp(SCC_ENGINE_CONFIG.chorusMix, 0, 1)
+    : 0.025;
+
+  // Limite supérieure appliquée aux volumes MIDI afin de conserver une marge
+  // de sécurité lors du mixage et d'éviter la saturation perceptible.
+  const CHANNEL_LEVEL_LIMIT = 1.0;
+
   const VOL4_TO_GAIN = [
     0.0, 0.035, 0.055, 0.075,
     0.1, 0.135, 0.17, 0.215,

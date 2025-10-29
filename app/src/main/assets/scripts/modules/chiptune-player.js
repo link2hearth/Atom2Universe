@@ -1479,6 +1479,7 @@
       this.reverbBuffer = null;
       this.reverbDefaultSend = 0.12;
       this.sccWaveform = typeof window !== 'undefined' ? window.SccWaveform || null : null;
+      this.sccEngineScriptPromise = null;
       this.engineMode = 'hifi';
       this.soundFontList = DEFAULT_SOUNDFONTS.map(font => ({ ...font }));
       this.soundFontFallback = DEFAULT_SOUNDFONTS;
@@ -1648,6 +1649,82 @@
       return Boolean(this.sccWaveform);
     }
 
+    async loadSccEngineLibrary() {
+      if (this.sccEngineScriptPromise) {
+        return this.sccEngineScriptPromise;
+      }
+
+      const scope = typeof window !== 'undefined'
+        ? window
+        : (typeof globalThis !== 'undefined' ? globalThis : null);
+
+      if (scope && scope.SccAudioEngine && typeof scope.SccAudioEngine.SccEngine === 'function') {
+        this.sccEngineScriptPromise = Promise.resolve();
+        return this.sccEngineScriptPromise;
+      }
+
+      const documentRef = scope && scope.document
+        ? scope.document
+        : (typeof document !== 'undefined' ? document : null);
+
+      if (!documentRef || typeof documentRef.createElement !== 'function') {
+        throw new Error('SCC engine unavailable');
+      }
+
+      const ensureReady = new Promise((resolve, reject) => {
+        const cleanupPromise = (nextValue) => {
+          this.sccEngineScriptPromise = nextValue;
+        };
+
+        const handleReady = () => {
+          if (scope && scope.SccAudioEngine && typeof scope.SccAudioEngine.SccEngine === 'function') {
+            cleanupPromise(Promise.resolve());
+            resolve();
+          } else {
+            cleanupPromise(null);
+            reject(new Error('SCC engine unavailable'));
+          }
+        };
+
+        const handleError = () => {
+          cleanupPromise(null);
+          reject(new Error('Failed to load SCC engine script.'));
+        };
+
+        const existingTag = documentRef.querySelector('script[data-audio-engine="scc"]');
+        if (existingTag) {
+          if (scope && scope.SccAudioEngine && typeof scope.SccAudioEngine.SccEngine === 'function') {
+            handleReady();
+            return;
+          }
+          existingTag.addEventListener('load', handleReady, { once: true });
+          existingTag.addEventListener('error', handleError, { once: true });
+          return;
+        }
+
+        const script = documentRef.createElement('script');
+        script.async = true;
+        script.src = 'scripts/modules/audio/scc-engine.js';
+        script.dataset.audioEngine = 'scc';
+        script.addEventListener('load', () => {
+          script.dataset.loaded = 'true';
+          handleReady();
+        }, { once: true });
+        script.addEventListener('error', () => {
+          if (script.parentNode) {
+            script.parentNode.removeChild(script);
+          }
+          handleError();
+        }, { once: true });
+
+        const parent = documentRef.head || documentRef.body || documentRef.documentElement;
+        parent.appendChild(script);
+      });
+
+      this.sccEngineScriptPromise = ensureReady;
+      return ensureReady;
+    }
+
     invalidateSccRender() {
       this.sccRenderCache = null;
       this.sccPlaybackDuration = 0;
@@ -1680,10 +1757,17 @@
       const EngineClass = scope && scope.SccAudioEngine && typeof scope.SccAudioEngine.SccEngine === 'function'
         ? scope.SccAudioEngine.SccEngine
         : null;
-      if (!EngineClass) {
+      let ResolvedEngineClass = EngineClass;
+      if (!ResolvedEngineClass) {
+        await this.loadSccEngineLibrary();
+        ResolvedEngineClass = scope && scope.SccAudioEngine && typeof scope.SccAudioEngine.SccEngine === 'function'
+          ? scope.SccAudioEngine.SccEngine
+          : null;
+      }
+      if (!ResolvedEngineClass) {
         throw new Error('SCC engine unavailable');
       }
-      this.sccEngine = new EngineClass({
+      this.sccEngine = new ResolvedEngineClass({
         sampleRate: 44100,
         portamentoMs: 40,
         panSpread: [-0.25, -0.1, 0.1, 0.25, 0],

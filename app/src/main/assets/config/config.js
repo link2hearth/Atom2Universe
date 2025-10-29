@@ -38,6 +38,19 @@ const COLLECTION_MULTIPLIER_LABEL_KEY = 'scripts.config.elementBonuses.collectio
  */
 const AUDIO_ENGINE_SETTINGS = Object.freeze({
   scc: Object.freeze({
+    masterGain: 0.18,
+    softClipperDrive: 1.05,
+    chorusDelayMs: 12,
+    chorusMix: 0.025
+  })
+});
+
+/**
+ * Réglages des moteurs audio chiptune.
+ * Permet d'ajuster le gain global et la coloration d'effets sans modifier le code du moteur.
+ */
+const AUDIO_ENGINE_SETTINGS = Object.freeze({
+  scc: Object.freeze({
     masterGain: 0.28,
     softClipperDrive: 1.2,
     chorusDelayMs: 12,
