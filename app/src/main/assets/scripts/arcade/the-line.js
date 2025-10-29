@@ -858,7 +858,7 @@
         timeoutReached = getNow() - start >= limit;
         return timeoutReached;
       },
-      get timedOut() {
+      get hasTimedOut() {
         return timeoutReached;
       }
     };
