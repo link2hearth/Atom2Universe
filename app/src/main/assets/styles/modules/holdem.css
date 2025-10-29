@@ -57,13 +57,13 @@
 }
 
 .holdem-summary__pot {
-  flex: 0 0 clamp(200px, 26%, 260px);
+  flex: 0 1 clamp(170px, 20%, 210px);
   display: grid;
-  gap: calc(0.5rem * var(--holdem-scale));
+  gap: calc(0.45rem * var(--holdem-scale));
 }
 
 .holdem-summary__community {
-  flex: 1 1 clamp(220px, 45%, 520px);
+  flex: 1 1 clamp(240px, 46%, 520px);
   align-items: center;
 }
 
@@ -72,7 +72,7 @@
 }
 
 .holdem-summary__status {
-  flex: 0 1 clamp(220px, 32%, 320px);
+  flex: 0 0 clamp(190px, 28%, 260px);
   margin: 0;
   font-size: calc(1rem * var(--holdem-scale));
   line-height: 1.45;
