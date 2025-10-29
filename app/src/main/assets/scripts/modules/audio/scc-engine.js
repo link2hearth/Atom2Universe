@@ -40,6 +40,23 @@
     ? clamp(SCC_ENGINE_CONFIG.chorusMix, 0, 1)
     : 0.08;
 
+  const DEFAULT_MASTER_GAIN = Number.isFinite(SCC_ENGINE_CONFIG?.masterGain)
+    ? clamp(SCC_ENGINE_CONFIG.masterGain, 0, 1)
+    : 0.28;
+  const DEFAULT_SOFT_CLIPPER_DRIVE = Number.isFinite(SCC_ENGINE_CONFIG?.softClipperDrive)
+    ? Math.max(0.1, SCC_ENGINE_CONFIG.softClipperDrive)
+    : 1.2;
+  const DEFAULT_CHORUS_DELAY_MS = Number.isFinite(SCC_ENGINE_CONFIG?.chorusDelayMs)
+    ? Math.max(1, SCC_ENGINE_CONFIG.chorusDelayMs)
+    : 12;
+  const DEFAULT_CHORUS_MIX = Number.isFinite(SCC_ENGINE_CONFIG?.chorusMix)
+    ? clamp(SCC_ENGINE_CONFIG.chorusMix, 0, 1)
+    : 0.04;
+
+  // Limite supérieure appliquée aux volumes MIDI afin de conserver une marge
+  // de sécurité lors du mixage et d'éviter la saturation perceptible.
+  const CHANNEL_LEVEL_LIMIT = 1.2;
+
   const VOL4_TO_GAIN = [
     0.0, 0.035, 0.055, 0.075,
     0.1, 0.135, 0.17, 0.215,
@@ -110,6 +127,12 @@
 
   function clamp(value, min, max) {
     return Math.min(max, Math.max(min, value));
+  }
+
+  function computeChannelGain(volume, expression) {
+    const resolvedVolume = clamp(volume, 0, CHANNEL_LEVEL_LIMIT);
+    const resolvedExpression = clamp(expression, 0, CHANNEL_LEVEL_LIMIT);
+    return resolvedVolume * resolvedExpression;
   }
 
   function createDefaultInstrument() {
@@ -913,7 +936,7 @@
     }
 
     updateChannelVolume(channelState) {
-      const volume = clamp(channelState.volume, 0, 2) * clamp(channelState.expression, 0, 2);
+      const volume = computeChannelGain(channelState.volume, channelState.expression);
       for (const voice of channelState.activeVoices) {
         voice.setChannelGain(volume);
       }
@@ -1028,10 +1051,10 @@
             channelState.program = clamp(event.program ?? 0, 0, 127);
           } else if (event.type === 'control') {
             if (event.controller === 7) {
-              channelState.volume = clamp(event.value / 127, 0, 2);
+              channelState.volume = clamp(event.value / 127, 0, CHANNEL_LEVEL_LIMIT);
               this.updateChannelVolume(channelState);
             } else if (event.controller === 11) {
-              channelState.expression = clamp(event.value / 127, 0, 2);
+              channelState.expression = clamp(event.value / 127, 0, CHANNEL_LEVEL_LIMIT);
               this.updateChannelVolume(channelState);
             } else if (event.controller === 10) {
               const normalized = clamp((event.value / 127) * 2 - 1, -1, 1);
@@ -1062,7 +1085,7 @@
             }
             const velocityBase = Math.max(0, Math.min(1, (event.velocity || 0) / 127));
             const velocity = Math.pow(velocityBase || 0.001, 0.8);
-            const volume = clamp(channelState.volume, 0, 2) * clamp(channelState.expression, 0, 2);
+            const volume = computeChannelGain(channelState.volume, channelState.expression);
             const program = channelState.program || 0;
             const midiNote = clamp(event.note + transpose, 0, 127);
             const frequency = 440 * Math.pow(2, ((midiNote - 69) / 12)) * centsToRatio(fineDetune);

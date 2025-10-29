@@ -38,10 +38,10 @@ const COLLECTION_MULTIPLIER_LABEL_KEY = 'scripts.config.elementBonuses.collectio
  */
 const AUDIO_ENGINE_SETTINGS = Object.freeze({
   scc: Object.freeze({
-    masterGain: 0.6,
-    softClipperDrive: 2.0,
+    masterGain: 0.28,
+    softClipperDrive: 1.2,
     chorusDelayMs: 12,
-    chorusMix: 0.06
+    chorusMix: 0.04
   })
 });
 
