@@ -79,9 +79,49 @@
     return value;
   }
 
+  function formatTemplateValue(value) {
+    if (value == null) {
+      return '';
+    }
+    if (Array.isArray(value)) {
+      return value
+        .map(item => (item == null ? '' : String(item)))
+        .filter(item => item.length > 0)
+        .join(', ');
+    }
+    if (typeof value === 'object') {
+      if (typeof value.toString === 'function' && value.toString !== Object.prototype.toString) {
+        return value.toString();
+      }
+      try {
+        return JSON.stringify(value);
+      } catch (error) {
+        return '';
+      }
+    }
+    return String(value);
+  }
+
+  function applyParams(template, params) {
+    if (typeof template !== 'string' || !template) {
+      return template;
+    }
+    if (!params || typeof params !== 'object') {
+      return template;
+    }
+    return template.replace(/\{([^{}]+)\}/g, (match, rawKey) => {
+      const key = rawKey.trim();
+      if (!Object.prototype.hasOwnProperty.call(params, key)) {
+        return match;
+      }
+      const formatted = formatTemplateValue(params[key]);
+      return formatted;
+    });
+  }
+
   function translate(key, fallback, params) {
     if (typeof key !== 'string' || !key) {
-      return fallback;
+      return applyParams(typeof fallback === 'string' ? fallback : key, params);
     }
     let translator = null;
     if (typeof window !== 'undefined') {
@@ -99,7 +139,7 @@
         if (typeof result === 'string') {
           const trimmed = result.trim();
           if (trimmed && trimmed !== key) {
-            return trimmed;
+            return applyParams(trimmed, params);
           }
         }
       } catch (error) {
@@ -107,9 +147,9 @@
       }
     }
     if (typeof fallback === 'string') {
-      return fallback;
+      return applyParams(fallback, params);
     }
-    return key;
+    return applyParams(key, params);
   }
 
   function toPositiveInteger(value, fallback) {
@@ -205,7 +245,6 @@
     opponentsLeft: document.getElementById('holdemPlayersLeft'),
     opponentsRight: document.getElementById('holdemPlayersRight'),
     potValue: document.getElementById('holdemPotValue'),
-    potFill: document.getElementById('holdemPotFill'),
     playerCards: document.getElementById('holdemPlayerCards'),
     playerStack: document.getElementById('holdemPlayerStack'),
     playerStatus: document.getElementById('holdemPlayerStatus'),
@@ -713,12 +752,6 @@
   function renderPot() {
     if (elements.potValue) {
       elements.potValue.textContent = formatAmount(state.pot);
-    }
-    if (elements.potFill) {
-      const totalStacks = state.players.reduce((sum, player) => sum + Math.max(0, player.stack), 0);
-      const denominator = state.pot + totalStacks;
-      const ratio = denominator > 0 ? (state.pot / denominator) * 100 : 0;
-      elements.potFill.style.width = `${clamp(ratio, 0, 100)}%`;
     }
   }
 
@@ -1845,12 +1878,30 @@
     }
   }
 
+  function advanceDealerPosition() {
+    const playerCount = state.players.length;
+    if (!playerCount) {
+      return;
+    }
+    let nextPosition = (state.dealerPosition + 1) % playerCount;
+    let checked = 0;
+    while (checked < playerCount) {
+      const candidate = state.players[nextPosition];
+      if (candidate && candidate.stack > 0) {
+        break;
+      }
+      nextPosition = (nextPosition + 1) % playerCount;
+      checked += 1;
+    }
+    state.dealerPosition = nextPosition;
+  }
+
   function startNewHand() {
     ensurePlayers();
     if (!state.players.length) {
       return;
     }
-    state.dealerPosition = (state.dealerPosition + 1) % state.players.length;
+    advanceDealerPosition();
     syncHeroStackWithGameState();
     refreshStacksForNewHand();
     resetTableState();
