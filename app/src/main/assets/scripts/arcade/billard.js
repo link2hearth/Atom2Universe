@@ -4,25 +4,33 @@
   }
 
   const TABLE_RATIO = 2;
-  const TABLE_PADDING_RATIO = 0.06;
-  const TABLE_PADDING_MIN = 28;
-  const TABLE_PADDING_MAX = 70;
+  const TABLE_RAIL_INSET_RATIO = 0.018;
+  const TABLE_RAIL_INSET_MIN = 10;
+  const TABLE_RAIL_INSET_MAX = 26;
   const BALL_RADIUS_RATIO = 0.024;
   const BALL_RADIUS_MIN = 10;
   const BALL_RADIUS_MAX = 18;
   const MAX_DRAG_DISTANCE = 180;
-  const MAX_LAUNCH_SPEED = 1500; // pixels per second
-  const FRICTION_PER_FRAME = 0.9925;
-  const RESTITUTION = 0.92;
-  const STOP_SPEED = 10; // pixels per second
+  const MAX_LAUNCH_SPEED = 1650; // pixels per second
+  const LINEAR_FRICTION = 420; // pixels per second squared
+  const RESTITUTION = 0.93;
+  const STOP_SPEED = 14; // pixels per second
   const TRAIL_OPACITY = 0.2;
   const POINTER_LINE_COLOR = 'rgba(240, 255, 245, 0.6)';
   const SPIN_UI_LIMIT = 0.42;
-  const SPIN_SIDE_LAUNCH = 0.14;
-  const SPIN_FORWARD_LAUNCH = 0.18;
-  const SPIN_CURVE_STRENGTH = 0.2;
-  const SPIN_ROLL_STRENGTH = 0.28;
-  const SPIN_DECAY_PER_FRAME = 0.94;
+  const SPIN_SIDE_LAUNCH = 0.16;
+  const SPIN_FORWARD_LAUNCH = 0.2;
+  const SPIN_CURVE_STRENGTH = 0.32;
+  const SPIN_ROLL_STRENGTH = 0.42;
+  const SPIN_DECAY_PER_SECOND = 1.6;
+  const CUSHION_SPIN_DAMPING = 0.45;
+  const CUSHION_ENGLISH = 0.32;
+  const HEAD_SPOT_OFFSET_RATIO = 0.106;
+  const FOOT_SPOT_OFFSET_RATIO = 0.055;
+  const START_LATERAL_OFFSET_RATIO = 0.112;
+  const COLLISION_SPIN_BLEND = 0.64;
+  const COLLISION_SIDE_SPIN_TRANSFER = 0.18;
+  const COLLISION_ROLL_TRANSFER = 0.14;
 
   function onReady(callback) {
     if (document.readyState === 'loading') {
@@ -81,13 +89,13 @@
       orientation: 'landscape',
       width: 0,
       height: 0,
-      bounds: {
-        left: 0,
-        right: 0,
-        top: 0,
-        bottom: 0,
-        padding: 0
-      },
+        bounds: {
+          left: 0,
+          right: 0,
+          top: 0,
+          bottom: 0,
+          railInset: 0
+        },
       ballRadius: 12,
       balls: [],
       lastTimestamp: null,
@@ -235,10 +243,10 @@
         state.width = width;
         state.height = height;
 
-        const padding = clamp(
-          Math.round(width * TABLE_PADDING_RATIO),
-          TABLE_PADDING_MIN,
-          TABLE_PADDING_MAX
+        const railInset = clamp(
+          Math.round(width * TABLE_RAIL_INSET_RATIO),
+          TABLE_RAIL_INSET_MIN,
+          TABLE_RAIL_INSET_MAX
         );
         const radius = clamp(
           Math.round(width * BALL_RADIUS_RATIO),
@@ -248,11 +256,11 @@
 
         state.ballRadius = radius;
         state.bounds = {
-          left: padding + radius,
-          right: width - padding - radius,
-          top: padding + radius,
-          bottom: height - padding - radius,
-          padding
+          left: railInset + radius,
+          right: width - railInset - radius,
+          top: railInset + radius,
+          bottom: height - railInset - radius,
+          railInset
         };
 
         const scaleX = width / previousWidth;
@@ -278,16 +286,21 @@
 
     function resetBalls(randomizeOrder) {
       const { left, right, top, bottom } = state.bounds;
-      const centerX = (left + right) / 2;
-      const topY = top + (bottom - top) * 0.25;
-      const bottomY = bottom - (bottom - top) * 0.2;
-      const offsetX = (right - left) * 0.18;
+      const width = right - left;
+      const height = bottom - top;
+      const centerX = left + width / 2;
+      const redY = top + height * HEAD_SPOT_OFFSET_RATIO;
+      const footY = bottom - height * FOOT_SPOT_OFFSET_RATIO;
+      const leftX = left + width * START_LATERAL_OFFSET_RATIO;
+      const rightX = right - width * START_LATERAL_OFFSET_RATIO;
 
-      const order = randomizeOrder && Math.random() < 0.5 ? ['white', 'yellow'] : ['yellow', 'white'];
+      const rightCueId = randomizeOrder && Math.random() < 0.5 ? 'yellow' : 'white';
+      const leftCueId = rightCueId === 'white' ? 'yellow' : 'white';
+
       const positions = {
-        red: { x: centerX, y: topY },
-        [order[0]]: { x: centerX - offsetX, y: bottomY },
-        [order[1]]: { x: centerX + offsetX, y: bottomY }
+        red: { x: centerX, y: redY },
+        [rightCueId]: { x: rightX, y: footY },
+        [leftCueId]: { x: leftX, y: footY }
       };
 
       state.balls.forEach(ball => {
@@ -324,6 +337,36 @@
       const { left, right, top, bottom } = state.bounds;
       ball.x = clamp(ball.x, left, right);
       ball.y = clamp(ball.y, top, bottom);
+    }
+
+    function applyFriction(ball, deltaSeconds) {
+      const speed = Math.hypot(ball.vx, ball.vy);
+      if (speed <= 0) {
+        ball.vx = 0;
+        ball.vy = 0;
+        return;
+      }
+
+      const deceleration = LINEAR_FRICTION * deltaSeconds;
+      if (!Number.isFinite(deceleration) || deceleration <= 0) {
+        return;
+      }
+
+      if (deceleration >= speed) {
+        ball.vx = 0;
+        ball.vy = 0;
+        return;
+      }
+
+      const newSpeed = speed - deceleration;
+      const scale = newSpeed / speed;
+      ball.vx *= scale;
+      ball.vy *= scale;
+
+      if (newSpeed < STOP_SPEED) {
+        ball.vx = 0;
+        ball.vy = 0;
+      }
     }
 
     function setArrangeMode(enabled) {
@@ -648,8 +691,8 @@
         return;
       }
 
-      const friction = Math.pow(FRICTION_PER_FRAME, deltaSeconds * 60);
       const { left, right, top, bottom } = state.bounds;
+      const spinDecay = Math.exp(-SPIN_DECAY_PER_SECOND * deltaSeconds);
 
       state.balls.forEach(ball => {
         ball.x += ball.vx * deltaSeconds;
@@ -678,7 +721,7 @@
           bouncedHorizontal = true;
         }
 
-        const speed = Math.hypot(ball.vx, ball.vy);
+        let speed = Math.hypot(ball.vx, ball.vy);
         if (speed > 0.1 && (Math.abs(ball.spinX) > 0.001 || Math.abs(ball.spinY) > 0.001)) {
           const ux = ball.vx / speed;
           const uy = ball.vy / speed;
@@ -690,45 +733,41 @@
           ball.vx += (sideX * spinCurve + ux * spinRoll) * deltaSeconds;
           ball.vy += (sideY * spinCurve + uy * spinRoll) * deltaSeconds;
 
-          const spinDecay = Math.pow(SPIN_DECAY_PER_FRAME, deltaSeconds * 60);
-          ball.spinX *= spinDecay;
-          ball.spinY *= spinDecay;
-          if (Math.abs(ball.spinX) < 0.01) {
-            ball.spinX = 0;
-          }
-          if (Math.abs(ball.spinY) < 0.01) {
-            ball.spinY = 0;
-          }
-        } else {
-          const spinDecay = Math.pow(SPIN_DECAY_PER_FRAME, deltaSeconds * 60);
-          ball.spinX *= spinDecay;
-          ball.spinY *= spinDecay;
-          if (Math.abs(ball.spinX) < 0.01) {
-            ball.spinX = 0;
-          }
-          if (Math.abs(ball.spinY) < 0.01) {
-            ball.spinY = 0;
-          }
+          speed = Math.hypot(ball.vx, ball.vy);
         }
 
-        if (bouncedVertical) {
-          ball.spinX *= -0.55;
-          ball.vy += ball.spinX * Math.max(0.2, Math.min(0.45, Math.abs(ball.vx) / (MAX_LAUNCH_SPEED || 1))) * MAX_LAUNCH_SPEED * 0.1;
-        }
-
-        if (bouncedHorizontal) {
-          ball.spinY *= -0.55;
-          ball.vx += ball.spinY * Math.max(0.2, Math.min(0.45, Math.abs(ball.vy) / (MAX_LAUNCH_SPEED || 1))) * MAX_LAUNCH_SPEED * 0.08;
-        }
-
-        ball.vx *= friction;
-        ball.vy *= friction;
-
-        if (Math.hypot(ball.vx, ball.vy) < STOP_SPEED) {
-          ball.vx = 0;
-          ball.vy = 0;
+        ball.spinX *= spinDecay;
+        ball.spinY *= spinDecay;
+        if (Math.abs(ball.spinX) < 0.01) {
           ball.spinX = 0;
+        }
+        if (Math.abs(ball.spinY) < 0.01) {
           ball.spinY = 0;
+        }
+
+        if (bouncedVertical && speed > 0) {
+          const normalSpeed = Math.abs(ball.vx);
+          const speedFactor = Math.max(0.18, Math.min(0.9, normalSpeed / (MAX_LAUNCH_SPEED || 1)));
+          ball.vy += ball.spinX * CUSHION_ENGLISH * MAX_LAUNCH_SPEED * speedFactor;
+          ball.spinX *= -CUSHION_SPIN_DAMPING;
+        }
+
+        if (bouncedHorizontal && speed > 0) {
+          const normalSpeed = Math.abs(ball.vy);
+          const speedFactor = Math.max(0.18, Math.min(0.9, normalSpeed / (MAX_LAUNCH_SPEED || 1)));
+          ball.vx += ball.spinY * CUSHION_ENGLISH * MAX_LAUNCH_SPEED * speedFactor;
+          ball.spinY *= -CUSHION_SPIN_DAMPING;
+        }
+
+        applyFriction(ball, deltaSeconds);
+
+        if (ball.vx === 0 && ball.vy === 0) {
+          if (Math.abs(ball.spinX) < 0.02) {
+            ball.spinX = 0;
+          }
+          if (Math.abs(ball.spinY) < 0.02) {
+            ball.spinY = 0;
+          }
         }
       });
 
@@ -776,13 +815,13 @@
       b.vx += impulseX / 2;
       b.vy += impulseY / 2;
 
-      const spinMix = 0.7;
+      const spinMix = COLLISION_SPIN_BLEND;
       const averageSpinX = (a.spinX + b.spinX) / 2;
       const averageSpinY = (a.spinY + b.spinY) / 2;
       const tangentX = -ny;
       const tangentY = nx;
-      const spinTransfer = (a.spinX - b.spinX) * 0.12;
-      const rollTransfer = (a.spinY - b.spinY) * 0.08;
+      const spinTransfer = (a.spinX - b.spinX) * COLLISION_SIDE_SPIN_TRANSFER;
+      const rollTransfer = (a.spinY - b.spinY) * COLLISION_ROLL_TRANSFER;
 
       a.vx -= tangentX * spinTransfer + nx * rollTransfer;
       a.vy -= tangentY * spinTransfer + ny * rollTransfer;
@@ -807,13 +846,20 @@
       context.globalAlpha = 0.25;
       context.fillStyle = '#ffffff';
       const { left, right, top, bottom } = state.bounds;
-      const centerX = (left + right) / 2;
-      const centerY = (top + bottom) / 2;
+      const width = right - left;
+      const height = bottom - top;
+      const centerX = left + width / 2;
+      const centerY = top + height / 2;
       const markerRadius = Math.max(2, Math.floor(state.ballRadius * 0.4));
 
-      drawSpot(centerX, top + (bottom - top) * 0.25, markerRadius);
-      drawSpot(centerX - (right - left) * 0.18, bottom - (bottom - top) * 0.2, markerRadius);
-      drawSpot(centerX + (right - left) * 0.18, bottom - (bottom - top) * 0.2, markerRadius);
+      const headSpotY = top + height * HEAD_SPOT_OFFSET_RATIO;
+      const footSpotY = bottom - height * FOOT_SPOT_OFFSET_RATIO;
+      const leftSpotX = left + width * START_LATERAL_OFFSET_RATIO;
+      const rightSpotX = right - width * START_LATERAL_OFFSET_RATIO;
+
+      drawSpot(centerX, headSpotY, markerRadius);
+      drawSpot(leftSpotX, footSpotY, markerRadius);
+      drawSpot(rightSpotX, footSpotY, markerRadius);
       drawSpot(centerX, centerY, Math.max(1, markerRadius - 1));
       context.restore();
     }
