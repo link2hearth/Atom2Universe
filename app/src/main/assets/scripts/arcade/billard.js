@@ -11,12 +11,18 @@
   const BALL_RADIUS_MIN = 10;
   const BALL_RADIUS_MAX = 18;
   const MAX_DRAG_DISTANCE = 180;
-  const MAX_LAUNCH_SPEED = 980; // pixels per second
-  const FRICTION_PER_FRAME = 0.985;
+  const MAX_LAUNCH_SPEED = 1500; // pixels per second
+  const FRICTION_PER_FRAME = 0.9925;
   const RESTITUTION = 0.92;
-  const STOP_SPEED = 14; // pixels per second
+  const STOP_SPEED = 10; // pixels per second
   const TRAIL_OPACITY = 0.2;
   const POINTER_LINE_COLOR = 'rgba(240, 255, 245, 0.6)';
+  const SPIN_UI_LIMIT = 0.42;
+  const SPIN_SIDE_LAUNCH = 0.14;
+  const SPIN_FORWARD_LAUNCH = 0.18;
+  const SPIN_CURVE_STRENGTH = 0.2;
+  const SPIN_ROLL_STRENGTH = 0.28;
+  const SPIN_DECAY_PER_FRAME = 0.94;
 
   function onReady(callback) {
     if (document.readyState === 'loading') {
@@ -56,13 +62,13 @@
     const layout = document.getElementById('billardLayout');
     const tableContainer = document.getElementById('billardTableContainer');
     const canvas = document.getElementById('billardCanvas');
-    const powerFill = document.getElementById('billardPowerFill');
-    const powerValue = document.getElementById('billardPowerValue');
+    const spinControl = document.getElementById('billardSpinControl');
+    const spinMarker = document.getElementById('billardSpinMarker');
     const resetButton = document.getElementById('billardResetButton');
     const arrangeButton = document.getElementById('billardArrangeToggle');
     const modeHint = document.getElementById('billardModeHint');
 
-    if (!section || !tableContainer || !canvas || !powerFill || !resetButton || !arrangeButton) {
+    if (!section || !tableContainer || !canvas || !resetButton || !arrangeButton || !spinControl || !spinMarker) {
       return;
     }
 
@@ -86,7 +92,12 @@
       balls: [],
       lastTimestamp: null,
       arrangeMode: false,
-      powerLevel: 0,
+      shotPower: 0,
+      spin: {
+        x: 0,
+        y: 0
+      },
+      spinPointerId: null,
       dragging: {
         active: false,
         id: null,
@@ -145,15 +156,23 @@
 
     resetButton.addEventListener('click', () => {
       resetBalls(true);
-      updatePowerBar(0);
+      updateShotPower(0);
     });
 
     arrangeButton.addEventListener('click', () => {
       setArrangeMode(!state.arrangeMode);
     });
 
+    spinControl.addEventListener('pointerdown', handleSpinPointerDown);
+    spinControl.addEventListener('pointermove', handleSpinPointerMove);
+    spinControl.addEventListener('pointerup', handleSpinPointerUp);
+    spinControl.addEventListener('pointercancel', handleSpinPointerCancel);
+    spinControl.addEventListener('pointerleave', handleSpinPointerCancel);
+    spinControl.addEventListener('keydown', handleSpinKeyDown);
+
     updateModeHint();
-    updatePowerBar(0);
+    updateShotPower(0);
+    updateSpinMarker();
     updateCanvasSize(true);
     requestAnimationFrame(step);
 
@@ -166,7 +185,9 @@
         x: 0,
         y: 0,
         vx: 0,
-        vy: 0
+        vy: 0,
+        spinX: 0,
+        spinY: 0
       };
     }
 
@@ -280,6 +301,8 @@
         }
         ball.vx = 0;
         ball.vy = 0;
+        ball.spinX = 0;
+        ball.spinY = 0;
         clampBallPosition(ball);
       });
     }
@@ -315,6 +338,8 @@
         state.balls.forEach(ball => {
           ball.vx = 0;
           ball.vy = 0;
+          ball.spinX = 0;
+          ball.spinY = 0;
         });
       }
       updateModeHint();
@@ -333,17 +358,136 @@
       modeHint.textContent = translate(key, fallback);
     }
 
-    function updatePowerBar(level) {
+    function updateShotPower(level) {
       const safeLevel = clamp(Number.isFinite(level) ? level : 0, 0, 1);
-      state.powerLevel = safeLevel;
-      const percentage = Math.round(safeLevel * 100);
-      powerFill.style.height = `${percentage}%`;
-      powerFill.dataset.power = String(percentage);
-      if (powerValue) {
-        const text = translate('index.sections.billard.power.valueDynamic', '{{value}} %', {
-          value: percentage
-        });
-        powerValue.textContent = typeof text === 'string' ? text : `${percentage} %`;
+      state.shotPower = safeLevel;
+    }
+
+    function setSpin(x, y) {
+      state.spin.x = clamp(Number.isFinite(x) ? x : 0, -1, 1);
+      state.spin.y = clamp(Number.isFinite(y) ? y : 0, -1, 1);
+      updateSpinMarker();
+    }
+
+    function setSpinFromEvent(event) {
+      if (!spinControl) {
+        return;
+      }
+      const rect = spinControl.getBoundingClientRect();
+      if (!rect.width || !rect.height) {
+        return;
+      }
+      const localX = clamp((event.clientX - rect.left) / rect.width, 0, 1);
+      const localY = clamp((event.clientY - rect.top) / rect.height, 0, 1);
+      let dx = localX - 0.5;
+      let dy = localY - 0.5;
+      const distance = Math.hypot(dx, dy);
+      const limit = SPIN_UI_LIMIT;
+      if (distance > limit && distance > 0) {
+        const scale = limit / distance;
+        dx *= scale;
+        dy *= scale;
+      }
+      const normalizedX = clamp(dx / limit, -1, 1);
+      const normalizedY = clamp(dy / limit, -1, 1);
+      setSpin(normalizedX, -normalizedY);
+    }
+
+    function updateSpinMarker() {
+      if (!spinMarker) {
+        return;
+      }
+      const offsetX = clamp(state.spin.x, -1, 1) * SPIN_UI_LIMIT * 100;
+      const offsetY = clamp(state.spin.y, -1, 1) * SPIN_UI_LIMIT * 100;
+      spinMarker.style.left = `${50 + offsetX}%`;
+      spinMarker.style.top = `${50 - offsetY}%`;
+    }
+
+    function setSpinInteraction(active) {
+      if (!spinControl) {
+        return;
+      }
+      if (active) {
+        spinControl.dataset.interaction = 'true';
+      } else {
+        delete spinControl.dataset.interaction;
+      }
+    }
+
+    function handleSpinPointerDown(event) {
+      event.preventDefault();
+      state.spinPointerId = event.pointerId;
+      setSpinInteraction(true);
+      try {
+        spinControl.setPointerCapture(event.pointerId);
+      } catch (error) {
+        // Ignore pointer capture issues.
+      }
+      setSpinFromEvent(event);
+    }
+
+    function handleSpinPointerMove(event) {
+      if (state.spinPointerId !== event.pointerId) {
+        return;
+      }
+      setSpinFromEvent(event);
+    }
+
+    function handleSpinPointerUp(event) {
+      if (state.spinPointerId !== event.pointerId) {
+        return;
+      }
+      setSpinFromEvent(event);
+      releaseSpinPointer(event.pointerId);
+    }
+
+    function handleSpinPointerCancel(event) {
+      if (state.spinPointerId !== event.pointerId) {
+        return;
+      }
+      releaseSpinPointer(event.pointerId);
+    }
+
+    function releaseSpinPointer(pointerId) {
+      state.spinPointerId = null;
+      setSpinInteraction(false);
+      try {
+        spinControl.releasePointerCapture(pointerId);
+      } catch (error) {
+        // Ignore release issues.
+      }
+    }
+
+    function handleSpinKeyDown(event) {
+      const step = event.shiftKey ? 0.35 : 0.18;
+      let handled = true;
+      switch (event.key) {
+        case 'ArrowUp':
+          setSpin(state.spin.x, state.spin.y + step);
+          break;
+        case 'ArrowDown':
+          setSpin(state.spin.x, state.spin.y - step);
+          break;
+        case 'ArrowLeft':
+          setSpin(state.spin.x - step, state.spin.y);
+          break;
+        case 'ArrowRight':
+          setSpin(state.spin.x + step, state.spin.y);
+          break;
+        case 'Enter':
+        case ' ':
+        case 'Spacebar':
+          setSpin(0, 0);
+          break;
+        default:
+          handled = false;
+      }
+      if (handled) {
+        event.preventDefault();
+        setSpinInteraction(true);
+        setTimeout(() => {
+          setSpinInteraction(false);
+        }, 160);
       }
     }
 
@@ -399,7 +543,7 @@
       } catch (error) {
         // Pointer capture may fail on some browsers; ignore.
       }
-      updatePowerBar(0);
+      updateShotPower(0);
     }
 
     function handlePointerMove(event) {
@@ -424,7 +568,7 @@
         const dy = y - state.dragging.startY;
         const distance = Math.hypot(dx, dy);
         const normalized = clamp(distance / MAX_DRAG_DISTANCE, 0, 1);
-        updatePowerBar(normalized);
+        updateShotPower(normalized);
       }
     }
 
@@ -439,16 +583,26 @@
         const distance = Math.hypot(dx, dy);
         const normalized = clamp(distance / MAX_DRAG_DISTANCE, 0, 1);
         if (distance > 2 && normalized > 0) {
-          const speed = normalized * MAX_LAUNCH_SPEED;
-          ball.vx = (-dx / distance) * speed;
-          ball.vy = (-dy / distance) * speed;
+          const aimX = -dx / distance;
+          const aimY = -dy / distance;
+          const baseSpeed = normalized * MAX_LAUNCH_SPEED;
+          const forwardModifier = clamp(1 + state.spin.y * SPIN_FORWARD_LAUNCH, 0.55, 1.45);
+          const launchSpeed = baseSpeed * forwardModifier;
+          const sideX = -aimY;
+          const sideY = aimX;
+          const sideStrength = state.spin.x * baseSpeed * SPIN_SIDE_LAUNCH;
+
+          ball.vx = aimX * launchSpeed + sideX * sideStrength;
+          ball.vy = aimY * launchSpeed + sideY * sideStrength;
+          ball.spinX = state.spin.x * normalized;
+          ball.spinY = state.spin.y * normalized;
         }
       } else if (mode === 'arrange' && ball) {
         clampBallPosition(ball);
         ball.vx = 0;
         ball.vy = 0;
       }
-      updatePowerBar(0);
+      updateShotPower(0);
       clearPointerState();
       try {
         canvas.releasePointerCapture(event.pointerId);
@@ -464,7 +618,7 @@
       if (state.dragging.ball) {
         clampBallPosition(state.dragging.ball);
       }
-      updatePowerBar(0);
+      updateShotPower(0);
       clearPointerState();
     }
 
@@ -501,20 +655,70 @@
         ball.x += ball.vx * deltaSeconds;
         ball.y += ball.vy * deltaSeconds;
 
+        let bouncedVertical = false;
+        let bouncedHorizontal = false;
+
         if (ball.x < left) {
           ball.x = left;
           ball.vx = Math.abs(ball.vx) * RESTITUTION;
+          bouncedVertical = true;
         } else if (ball.x > right) {
           ball.x = right;
           ball.vx = -Math.abs(ball.vx) * RESTITUTION;
+          bouncedVertical = true;
         }
 
         if (ball.y < top) {
           ball.y = top;
           ball.vy = Math.abs(ball.vy) * RESTITUTION;
+          bouncedHorizontal = true;
         } else if (ball.y > bottom) {
           ball.y = bottom;
           ball.vy = -Math.abs(ball.vy) * RESTITUTION;
+          bouncedHorizontal = true;
+        }
+
+        const speed = Math.hypot(ball.vx, ball.vy);
+        if (speed > 0.1 && (Math.abs(ball.spinX) > 0.001 || Math.abs(ball.spinY) > 0.001)) {
+          const ux = ball.vx / speed;
+          const uy = ball.vy / speed;
+          const sideX = -uy;
+          const sideY = ux;
+          const spinCurve = ball.spinX * SPIN_CURVE_STRENGTH * speed;
+          const spinRoll = ball.spinY * SPIN_ROLL_STRENGTH * speed;
+
+          ball.vx += (sideX * spinCurve + ux * spinRoll) * deltaSeconds;
+          ball.vy += (sideY * spinCurve + uy * spinRoll) * deltaSeconds;
+
+          const spinDecay = Math.pow(SPIN_DECAY_PER_FRAME, deltaSeconds * 60);
+          ball.spinX *= spinDecay;
+          ball.spinY *= spinDecay;
+          if (Math.abs(ball.spinX) < 0.01) {
+            ball.spinX = 0;
+          }
+          if (Math.abs(ball.spinY) < 0.01) {
+            ball.spinY = 0;
+          }
+        } else {
+          const spinDecay = Math.pow(SPIN_DECAY_PER_FRAME, deltaSeconds * 60);
+          ball.spinX *= spinDecay;
+          ball.spinY *= spinDecay;
+          if (Math.abs(ball.spinX) < 0.01) {
+            ball.spinX = 0;
+          }
+          if (Math.abs(ball.spinY) < 0.01) {
+            ball.spinY = 0;
+          }
+        }
+
+        if (bouncedVertical) {
+          ball.spinX *= -0.55;
+          ball.vy += ball.spinX * Math.max(0.2, Math.min(0.45, Math.abs(ball.vx) / (MAX_LAUNCH_SPEED || 1))) * MAX_LAUNCH_SPEED * 0.1;
+        }
+
+        if (bouncedHorizontal) {
+          ball.spinY *= -0.55;
+          ball.vx += ball.spinY * Math.max(0.2, Math.min(0.45, Math.abs(ball.vy) / (MAX_LAUNCH_SPEED || 1))) * MAX_LAUNCH_SPEED * 0.08;
         }
 
         ball.vx *= friction;
@@ -523,6 +727,8 @@
         if (Math.hypot(ball.vx, ball.vy) < STOP_SPEED) {
           ball.vx = 0;
           ball.vy = 0;
+          ball.spinX = 0;
+          ball.spinY = 0;
         }
       });
 
@@ -569,6 +775,24 @@
       a.vy -= impulseY / 2;
       b.vx += impulseX / 2;
       b.vy += impulseY / 2;
+
+      const spinMix = 0.7;
+      const averageSpinX = (a.spinX + b.spinX) / 2;
+      const averageSpinY = (a.spinY + b.spinY) / 2;
+      const tangentX = -ny;
+      const tangentY = nx;
+      const spinTransfer = (a.spinX - b.spinX) * 0.12;
+      const rollTransfer = (a.spinY - b.spinY) * 0.08;
+
+      a.vx -= tangentX * spinTransfer + nx * rollTransfer;
+      a.vy -= tangentY * spinTransfer + ny * rollTransfer;
+      b.vx += tangentX * spinTransfer + nx * rollTransfer;
+      b.vy += tangentY * spinTransfer + ny * rollTransfer;
+
+      a.spinX = averageSpinX * spinMix;
+      a.spinY = averageSpinY * spinMix;
+      b.spinX = averageSpinX * spinMix;
+      b.spinY = averageSpinY * spinMix;
     }
 
     function render() {
@@ -649,7 +873,7 @@
       context.lineTo(currentX, currentY);
       context.stroke();
 
-      const cueLength = state.powerLevel * 80;
+      const cueLength = state.shotPower * 80;
       const dx = ball.x - currentX;
       const dy = ball.y - currentY;
       const distance = Math.hypot(dx, dy) || 1;
@@ -658,7 +882,7 @@
       const cueX = ball.x + ux * cueLength;
       const cueY = ball.y + uy * cueLength;
 
-      context.globalAlpha = TRAIL_OPACITY + state.powerLevel * 0.3;
+      context.globalAlpha = TRAIL_OPACITY + state.shotPower * 0.3;
       context.beginPath();
       context.moveTo(ball.x, ball.y);
       context.lineTo(cueX, cueY);

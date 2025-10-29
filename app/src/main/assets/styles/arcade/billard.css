@@ -64,7 +64,7 @@
 }
 
 .billard-sidebar {
-  flex: 0 0 clamp(140px, 18vw, 220px);
+  flex: 0 0 clamp(160px, 20vw, 240px);
   display: flex;
   flex-direction: column;
   gap: clamp(0.75rem, 1.5vw, 1.5rem);
@@ -76,44 +76,67 @@
   align-self: stretch;
 }
 
-.billard-power {
+.billard-spin {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  text-align: center;
 }
 
-.billard-power__label {
+.billard-spin__label {
   font-family: var(--font-family-display, 'Orbitron', system-ui, sans-serif);
   letter-spacing: 0.08em;
   font-size: 0.85rem;
   text-transform: uppercase;
 }
 
-.billard-power__value {
-  font-size: 1.4rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-}
-
-.billard-power__meter {
+.billard-spin__surface {
   position: relative;
-  flex: 1;
-  min-height: 160px;
-  border-radius: 1rem;
+  border-radius: 1.25rem;
+  padding: 0.85rem;
   background: rgba(255, 255, 255, 0.06);
-  overflow: hidden;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  outline: none;
+  cursor: pointer;
+  user-select: none;
+  touch-action: none;
 }
 
-.billard-power__fill {
-  width: 100%;
-  height: 0%;
-  background: linear-gradient(180deg, rgba(0, 255, 148, 0.9) 0%, rgba(0, 169, 92, 0.95) 100%);
-  transition: height 120ms ease-out;
-  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.45);
+.billard-spin__surface:focus-visible {
+  box-shadow: inset 0 0 0 2px rgba(0, 255, 148, 0.8);
+}
+
+.billard-spin__ball {
+  position: relative;
+  width: min(180px, 100%);
+  aspect-ratio: 1 / 1;
+  margin: 0 auto;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 30%, #fdfdfd 0%, #dcdcdc 45%, #8a8a8a 100%);
+  box-shadow: inset 0 0 14px rgba(0, 0, 0, 0.32), 0 8px 18px rgba(0, 0, 0, 0.35);
+}
+
+.billard-spin__marker {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 22%;
+  aspect-ratio: 1 / 1;
+  border-radius: 999px;
+  background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.95) 0%, rgba(0, 255, 148, 0.85) 45%, rgba(0, 134, 92, 0.95) 100%);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transform: translate(-50%, -50%);
+  transition: transform 140ms ease-out;
+}
+
+.billard-spin__surface:active .billard-spin__marker,
+.billard-spin__surface[data-interaction='true'] .billard-spin__marker {
+  transition: none;
+}
+
+.billard-spin__helper {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: rgba(240, 255, 245, 0.82);
 }
 
 .billard-actions {
@@ -161,11 +184,7 @@
 }
 
 .page--billard[data-orientation='portrait'] .billard-sidebar {
-  flex-basis: clamp(120px, 40vw, 200px);
-}
-
-.page--billard[data-orientation='portrait'] .billard-power__meter {
-  min-height: 140px;
+  flex-basis: clamp(140px, 42vw, 220px);
 }
 
 @media (max-width: 900px) {
@@ -186,9 +205,5 @@
 
   .billard-sidebar {
     width: min(320px, 100%);
-  }
-
-  .billard-power__meter {
-    min-height: 120px;
   }
 }

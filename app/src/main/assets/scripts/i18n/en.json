@@ -341,6 +341,12 @@
             "title": "Hold’em",
             "description": "Face up to five AI opponents at a Texas Hold’em table and rake the pot with the best hand.",
             "cta": "Take a seat"
+          },
+          "billard": {
+            "aria": "Open the French billiards mini-game",
+            "title": "French Billiards",
+            "description": "Master three-ball carom on a pocket-less table, with a free arrangement practice mode.",
+            "cta": "Play"
           }
         }
       },
@@ -1773,10 +1779,23 @@
         "communityAria": "Community cards",
         "playersAria": "Opponents",
         "controlsAria": "Poker controls",
-        "playerHandAria": "Your hand",
-        "opponents": {
-          "title": "AI opponents"
-        }
+        "playerHandAria": "Your hand"
+      },
+      "billard": {
+        "aria": "French billiards practice table",
+        "canvasAria": "French billiards play area",
+        "spin": {
+          "label": "Spin",
+          "hint": "Tap the cue ball to pick your contact point and apply spin.",
+          "helper": "Touch the ball to decide where to strike and add english.",
+          "surfaceAria": "Spin target selector"
+        },
+        "actions": {
+          "reset": "Reset",
+          "arrange": "Arrange"
+        },
+        "playHint": "Tap a ball, pull opposite the direction you want it to travel, then release to shoot.",
+        "arrangeHint": "Arrange mode lets you freely place the balls anywhere on the table."
       }
     },
     "particules": {
