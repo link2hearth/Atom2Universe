@@ -876,6 +876,7 @@
     board.innerHTML = '';
     board.style.setProperty('--the-line-columns', String(puzzle.width));
     board.setAttribute('data-line-columns', String(puzzle.width));
+    board.dataset.lineDifficulty = state.difficulty;
 
     const fragment = document.createDocumentFragment();
     const cells = [];
