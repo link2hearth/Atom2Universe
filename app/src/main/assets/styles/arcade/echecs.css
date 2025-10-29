@@ -267,6 +267,11 @@
   z-index: 0;
 }
 
+.chess-board--two-player .chess-square[data-piece-color='b'] .chess-square__piece,
+.chess-board--two-player .chess-square[data-piece-color='b'] .chess-square__glyph {
+  transform: rotate(180deg);
+}
+
 .chess-square.is-drag-source .chess-square__piece,
 .chess-square.is-drag-source .chess-square__glyph {
   opacity: 0;
@@ -329,6 +334,75 @@
   display: grid;
   gap: 0.3rem;
   text-align: start;
+}
+
+.chess-game__archives {
+  display: grid;
+  gap: 0.35rem;
+  text-align: start;
+}
+
+.chess-archives {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.chess-archives__label {
+  font-size: clamp(0.85rem, 1.7vh, 1rem);
+  font-weight: 600;
+}
+
+.chess-archives__select {
+  inline-size: 100%;
+  padding: 0.4em 0.65em;
+  border-radius: 0.65em;
+  border: 1px solid var(--chess-select-border);
+  background: var(--chess-select-background);
+  color: var(--chess-select-color);
+  font-size: var(--chess-select-font-size);
+  font-weight: 500;
+}
+
+.chess-archives__select:focus-visible {
+  outline: 2px solid var(--chess-select-outline);
+  outline-offset: 2px;
+}
+
+.chess-archives__empty {
+  margin: 0;
+  font-size: clamp(0.8rem, 1.7vh, 0.95rem);
+  color: var(--chess-description-color);
+}
+
+.chess-archives__restore {
+  justify-self: start;
+  padding: 0.35em 0.9em;
+  border-radius: 999px;
+  border: 1px solid var(--chess-action-border);
+  background: var(--chess-action-secondary-background);
+  color: var(--chess-action-color);
+  font-size: calc(clamp(0.85rem, 1.8vh, 1rem) * var(--ui-control-scale, 1));
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease,
+    color 0.2s ease;
+}
+
+.chess-archives__restore[hidden] {
+  display: none;
+}
+
+.chess-archives__restore:not([hidden]):hover,
+.chess-archives__restore:not([hidden]):focus-visible {
+  background: var(--chess-action-hover-background);
+  border-color: var(--chess-action-hover-border);
+  color: var(--chess-action-color);
+  box-shadow: var(--chess-action-hover-shadow);
+}
+
+.chess-archives__restore:focus-visible {
+  outline: 2px solid var(--chess-select-outline);
+  outline-offset: 2px;
 }
 
 .chess-difficulty {
@@ -640,6 +714,108 @@
 .chess-promotion__option:hover {
   transform: translateY(-1px);
   background: var(--chess-promotion-hover-background);
+}
+
+.chess-save-dialog {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 4vh, 2.5rem);
+  background: color-mix(in srgb, var(--app-backdrop, #030712) 65%, transparent);
+  z-index: 80;
+}
+
+.chess-save-dialog[hidden] {
+  display: none;
+}
+
+.chess-save-dialog__panel {
+  inline-size: min(420px, 92vw);
+  border-radius: 1rem;
+  background: var(--chess-panel-background);
+  color: var(--chess-panel-color);
+  border: 1px solid var(--chess-panel-border);
+  box-shadow: 0 1.75rem 3.5rem rgba(8, 13, 26, 0.45);
+  padding: clamp(1rem, 2.6vh, 1.6rem);
+  display: grid;
+  gap: 0.85rem;
+  text-align: start;
+}
+
+.chess-save-dialog__title {
+  margin: 0;
+  font-size: clamp(1.05rem, 2.6vh, 1.35rem);
+  font-weight: 700;
+}
+
+.chess-save-dialog__description {
+  margin: 0;
+  font-size: clamp(0.85rem, 2vh, 1rem);
+  color: var(--chess-description-color);
+}
+
+.chess-save-dialog__label {
+  display: grid;
+  gap: 0.4rem;
+  font-size: clamp(0.85rem, 1.9vh, 1rem);
+  font-weight: 600;
+}
+
+.chess-save-dialog__input {
+  inline-size: 100%;
+  padding: 0.55em 0.75em;
+  border-radius: 0.65em;
+  border: 1px solid var(--chess-select-border);
+  background: var(--chess-select-background);
+  color: var(--chess-select-color);
+  font-size: var(--chess-select-font-size);
+  font-weight: 500;
+}
+
+.chess-save-dialog__input:focus-visible {
+  outline: 2px solid var(--chess-select-outline);
+  outline-offset: 2px;
+}
+
+.chess-save-dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.chess-save-dialog__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4em 1.15em;
+  border-radius: 999px;
+  border: 1px solid var(--chess-action-border);
+  background: var(--chess-action-background);
+  color: var(--chess-action-color);
+  font-size: calc(clamp(0.85rem, 1.8vh, 1rem) * var(--ui-control-scale, 1));
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease,
+    color 0.2s ease;
+}
+
+.chess-save-dialog__button:hover,
+.chess-save-dialog__button:focus-visible {
+  background: var(--chess-action-hover-background);
+  border-color: var(--chess-action-hover-border);
+  color: var(--chess-action-color);
+  box-shadow: var(--chess-action-hover-shadow);
+}
+
+.chess-save-dialog__button:focus-visible {
+  outline: 2px solid var(--chess-select-outline);
+  outline-offset: 2px;
+}
+
+.chess-save-dialog__button--secondary {
+  background: var(--chess-action-secondary-background);
 }
 
 body.theme-light .page--echecs {

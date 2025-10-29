@@ -1355,19 +1355,38 @@
                   data-chess-difficulty-description
                 ></p>
               </div>
-              <label class="chess-toggle">
-                <input
-                  class="chess-toggle__input"
-                  type="checkbox"
-                  data-chess-two-player
-                />
-                <span
-                  class="chess-toggle__label"
-                  data-i18n="index.sections.echecs.controls.twoPlayers"
+              <div class="chess-game__archives">
+                <label class="chess-archives">
+                  <span
+                    class="chess-archives__label"
+                    data-i18n="index.sections.echecs.controls.archives.label"
+                  >
+                    Anciennes parties
+                  </span>
+                  <select
+                    class="chess-archives__select"
+                    data-chess-archive
+                    aria-describedby="chessArchiveEmpty"
+                  ></select>
+                </label>
+                <p
+                  class="chess-archives__empty"
+                  id="chessArchiveEmpty"
+                  data-chess-archive-empty
+                  data-i18n="index.sections.echecs.controls.archives.empty"
                 >
-                  Mode deux joueurs
-                </span>
-              </label>
+                  Aucune partie sauvegardée pour le moment.
+                </p>
+                <button
+                  class="chess-archives__restore"
+                  type="button"
+                  data-chess-archive-restore
+                  data-i18n="index.sections.echecs.controls.archives.restore"
+                  hidden
+                >
+                  Revenir à la partie en cours
+                </button>
+              </div>
               <label class="chess-toggle">
                 <input
                   class="chess-toggle__input"
@@ -1418,6 +1437,15 @@
               <button
                 class="chess-action chess-action--secondary"
                 type="button"
+                data-chess-save-game
+                data-i18n="index.sections.echecs.controls.saveCompleted"
+                disabled
+              >
+                Sauvegarder la partie
+              </button>
+              <button
+                class="chess-action chess-action--secondary"
+                type="button"
                 data-chess-analyze
                 data-i18n="index.sections.echecs.controls.analyze"
                 disabled
@@ -1460,6 +1488,60 @@
                 Aucun coup de l'IA à analyser pour l'instant.
               </p>
             </section>
+            <div
+              class="chess-save-dialog"
+              data-chess-save-dialog
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="chessSaveDialogTitle"
+              hidden
+            >
+              <div class="chess-save-dialog__panel">
+                <h3
+                  class="chess-save-dialog__title"
+                  id="chessSaveDialogTitle"
+                  data-i18n="index.sections.echecs.saveDialog.title"
+                >
+                  Sauvegarder la partie terminée
+                </h3>
+                <p
+                  class="chess-save-dialog__description"
+                  data-i18n="index.sections.echecs.saveDialog.description"
+                >
+                  Donnez un nom à cette partie pour la retrouver plus tard.
+                </p>
+                <label class="chess-save-dialog__label">
+                  <span data-i18n="index.sections.echecs.saveDialog.nameLabel"
+                    >Nom de la sauvegarde</span
+                  >
+                  <input
+                    class="chess-save-dialog__input"
+                    type="text"
+                    data-chess-save-name
+                    maxlength="80"
+                    autocomplete="off"
+                  />
+                </label>
+                <div class="chess-save-dialog__actions">
+                  <button
+                    type="button"
+                    class="chess-save-dialog__button chess-save-dialog__button--secondary"
+                    data-chess-save-cancel
+                    data-i18n="index.sections.echecs.saveDialog.cancel"
+                  >
+                    Annuler
+                  </button>
+                  <button
+                    type="button"
+                    class="chess-save-dialog__button"
+                    data-chess-save-confirm
+                    data-i18n="index.sections.echecs.saveDialog.confirm"
+                  >
+                    Sauvegarder
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

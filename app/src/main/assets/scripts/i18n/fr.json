@@ -594,12 +594,23 @@
           "difficulty": "Choisir la difficulté",
           "reset": "Réinitialiser la partie",
           "analyze": "Analyser le dernier coup de l'IA",
+          "saveCompleted": "Sauvegarder la partie terminée",
           "notation": {
             "short": "Notation courte",
             "long": "Notation longue"
           },
           "twoPlayers": "Mode deux joueurs",
-          "analyzeDisabled": "Analyse IA indisponible en mode deux joueurs."
+          "analyzeDisabled": "Analyse IA indisponible en mode deux joueurs.",
+          "archives": {
+            "label": "Anciennes parties",
+            "placeholder": "Sélectionnez une sauvegarde",
+            "empty": "Aucune partie sauvegardée pour le moment.",
+            "restore": "Revenir à la partie en cours",
+            "unnamed": "Partie sauvegardée {{index}}",
+            "pgnWhite": "Joueur blanc",
+            "pgnBlackAi": "IA ({{difficulty}})",
+            "pgnBlackTwoPlayer": "Joueur noir"
+          }
         },
         "history": {
           "title": "Historique des coups",
@@ -612,8 +623,9 @@
           "standardDescription": "Réglage équilibré : l’IA joue vite et solidement.",
           "expert": "Mode expert",
           "expertDescription": "Profondeur accrue et temps de calcul prolongé pour un vrai défi.",
-          "reward": "Bonus hors ligne : {duration} à {multiplier}",
-          "twoPlayersDescription": "Mode deux joueurs activé : l’IA est désactivée."
+          "twoPlayers": "Mode deux joueurs",
+          "twoPlayersDescription": "Affrontez un autre joueur sur le même appareil. L’IA reste désactivée.",
+          "reward": "Bonus hors ligne : {duration} à {multiplier}"
         },
         "analysis": {
           "title": "Analyse du dernier coup de l'IA",
@@ -700,7 +712,34 @@
           "pieceOnSquare": "{{piece}} sur {{square}}",
           "emptySquare": "Case {{square}} vide"
         },
-        "helper": "Touchez ou faites glisser une pièce pour voir ses coups légaux."
+        "helper": "Touchez ou faites glisser une pièce pour voir ses coups légaux.",
+        "helperSaved": "Partie ajoutée aux archives !",
+        "helperArchivePreview": "Affichage de la partie « {{name}} ».",
+        "helperArchiveRestored": "Retour à la partie en cours.",
+        "saveDialog": {
+          "title": "Sauvegarder la partie terminée",
+          "description": "Donnez un nom à cette partie terminée pour la retrouver plus tard.",
+          "nameLabel": "Nom de la sauvegarde",
+          "confirm": "Sauvegarder",
+          "cancel": "Annuler"
+        },
+        "archives": {
+          "termination": {
+            "unknown": "Partie archivée depuis une position intermédiaire.",
+            "checkmateWhite": "Échec et mat — les blancs gagnent.",
+            "checkmateBlack": "Échec et mat — les noirs gagnent.",
+            "checkmateGeneric": "Échec et mat.",
+            "stalemate": "Pat.",
+            "draw": {
+              "generic": "Partie nulle.",
+              "fiftyMove": "Nulle par règle des cinquante coups.",
+              "repetition": "Nulle par répétition.",
+              "insufficient": "Nulle par matériel insuffisant.",
+              "moveLimit": "Nulle par limite de coups."
+            },
+            "generic": "Partie terminée."
+          }
+        }
       },
       "blackjack": {
         "aria": "Mini-jeu Blackjack quantique",
