@@ -67,6 +67,7 @@ const PAGE_FEATURE_MAP = Object.freeze({
   minesweeper: 'arcade.demineur',
   solitaire: 'arcade.solitaire',
   blackjack: 'arcade.blackjack',
+  holdem: 'arcade.holdem',
   echecs: 'arcade.echecs',
   gameOfLife: 'arcade.gameOfLife'
 });
@@ -82,6 +83,7 @@ const OPTIONS_DETAIL_FEATURE_MAP = Object.freeze({
   demineur: 'arcade.demineur',
   solitaire: 'arcade.solitaire',
   echecs: 'arcade.echecs',
+  holdem: 'arcade.holdem',
   gameOfLife: 'arcade.gameOfLife',
   blackjack: 'arcade.blackjack',
   gacha: 'system.gacha',
@@ -1051,6 +1053,7 @@ function createDefaultFeatureUnlockDefinitions() {
     'arcade.sudoku',
     'arcade.demineur',
     'arcade.solitaire',
+    'arcade.holdem',
     'arcade.blackjack',
     'arcade.echecs',
     'arcade.gameOfLife'
@@ -2973,6 +2976,7 @@ const ARCADE_GAME_IDS = Object.freeze([
   'sudoku',
   'minesweeper',
   'solitaire',
+  'holdem',
   'blackjack',
   'echecs'
 ]);
