@@ -1733,7 +1733,8 @@
           "raiseHelp": "Saisissez le montant total de votre mise pour ce tour."
         },
         "labels": {
-          "stack": "Stack",
+          "stack": "Solde",
+          "currentBet": "Mise actuelle",
           "you": "Vous"
         },
         "phase": {
