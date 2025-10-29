@@ -1595,7 +1595,15 @@
     const bluffRoll = Math.random();
     const reluctantThreshold = 0.18 + (0.3 * (1 - profile.caution));
 
-    if (strength + profile.bluff * 0.4 < reluctantThreshold && bluffRoll > profile.bluff * 0.45) {
+    const potAfterCall = state.pot + requiredToCall;
+    const normalizedPotOdds = clamp(potAfterCall > 0 ? requiredToCall / potAfterCall : 1, 0, 1);
+    const normalizedPressure = clamp(requiredToCall / Math.max(1, player.stack + player.bet), 0, 1);
+    const potReward = (1 - normalizedPotOdds) * (0.35 + (1 - profile.caution) * 0.2);
+    const pressureTax = normalizedPressure * (0.25 + profile.caution * 0.2);
+    const dynamicReluctance = clamp(reluctantThreshold + pressureTax - potReward, 0.05, 0.85);
+    const confidentStrength = 0.42 + (1 - profile.caution) * 0.18;
+
+    if (strength < confidentStrength && strength + profile.bluff * 0.4 < dynamicReluctance && bluffRoll > profile.bluff * 0.45) {
       return { action: 'fold', target: player.bet };
     }
 
