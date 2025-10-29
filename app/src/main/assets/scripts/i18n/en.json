@@ -1746,7 +1746,7 @@
       "holdem": {
         "status": {
           "intro": "Start a new deal to play.",
-          "newHand": "New deal — blinds {small}/{big} atoms.",
+          "newHand": "New deal — blind {blind} atoms.",
           "phasePrompt": "{phase} phase — your move.",
           "playerWins": "You win the pot ({amount}).",
           "playerFold": "{winner} wins the pot ({amount}).",
