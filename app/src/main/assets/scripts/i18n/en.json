@@ -1786,11 +1786,7 @@
         "labels": {
           "stack": "Stack",
           "currentBet": "Current bet",
-          "you": "You",
-          "opponents": "Opponents"
-        },
-        "info": {
-          "label": "Game phase"
+          "you": "You"
         },
         "phase": {
           "preflop": "Preflop",
@@ -1823,6 +1819,7 @@
         "aria": "Quantum Hold'em mini-game",
         "tableAria": "Hold'em poker table",
         "communityAria": "Community cards",
+        "summaryAria": "Hand overview",
         "playersAria": "Opponents",
         "controlsAria": "Poker controls",
         "playerHandAria": "Your hand"
