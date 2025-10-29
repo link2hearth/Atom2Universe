@@ -119,6 +119,15 @@ const TEXT_FONT_STORAGE_KEY = 'atom2univers.options.textFont';
 const INFO_WELCOME_COLLAPSED_STORAGE_KEY = 'atom2univers.info.welcomeCollapsed';
 const INFO_CHARACTERS_COLLAPSED_STORAGE_KEY = 'atom2univers.info.charactersCollapsed';
 const HEADER_COLLAPSED_STORAGE_KEY = 'atom2univers.ui.headerCollapsed';
+const ARCADE_AUTOSAVE_STORAGE_KEY = 'atom2univers.arcadeSaves.v1';
+const CHESS_LIBRARY_STORAGE_KEY = 'atom2univers.arcade.echecs';
+const QUANTUM_2048_STORAGE_KEY = 'atom2univers.quantum2048.parallelUniverses';
+const BIGGER_STORAGE_KEY = 'atom2univers.arcade.bigger';
+const GAME_OF_LIFE_STORAGE_KEYS = [
+  'atom2univers.arcade.gameOfLife.seed',
+  'atom2univers.arcade.gameOfLife.customPatterns',
+  'atom2univers.arcade.gameOfLife.customPatternCounter'
+];
 const TEXT_FONT_DEFAULT = 'orbitron';
 const TEXT_FONT_CHOICES = Object.freeze({
   orbitron: {
@@ -14532,7 +14541,154 @@ if (typeof window !== 'undefined') {
   window.saveGame = saveGame;
 }
 
+const RESET_LOCAL_STORAGE_KEYS = [
+  PRIMARY_SAVE_STORAGE_KEY,
+  LANGUAGE_STORAGE_KEY,
+  CLICK_SOUND_STORAGE_KEY,
+  CRIT_ATOM_VISUALS_STORAGE_KEY,
+  TEXT_FONT_STORAGE_KEY,
+  DIGIT_FONT_STORAGE_KEY,
+  INFO_WELCOME_COLLAPSED_STORAGE_KEY,
+  INFO_CHARACTERS_COLLAPSED_STORAGE_KEY,
+  HEADER_COLLAPSED_STORAGE_KEY,
+  PERFORMANCE_MODE_STORAGE_KEY,
+  UI_SCALE_STORAGE_KEY,
+  QUANTUM_2048_STORAGE_KEY,
+  BIGGER_STORAGE_KEY,
+  ...GAME_OF_LIFE_STORAGE_KEYS
+];
+
+function clearArcadeAutosaveData(options = {}) {
+  const preservedIds = new Set(
+    Array.isArray(options.preserveGameIds)
+      ? options.preserveGameIds.filter(id => typeof id === 'string' && id)
+      : []
+  );
+
+  const globalScope = typeof window !== 'undefined' ? window : null;
+  const autosaveApi = globalScope && globalScope.ArcadeAutosave;
+
+  if (autosaveApi) {
+    let knownGames = [];
+    if (typeof autosaveApi.knownGames === 'function') {
+      try {
+        knownGames = autosaveApi.knownGames() || [];
+      } catch (error) {
+        knownGames = [];
+      }
+    }
+    if (!Array.isArray(knownGames) || knownGames.length === 0) {
+      if (typeof autosaveApi.list === 'function') {
+        try {
+          knownGames = Object.keys(autosaveApi.list() || {});
+        } catch (error) {
+          knownGames = [];
+        }
+      }
+    }
+
+    if (Array.isArray(knownGames) && knownGames.length > 0) {
+      knownGames.forEach(gameId => {
+        if (!preservedIds.has(gameId)) {
+          try {
+            if (typeof autosaveApi.clear === 'function') {
+              autosaveApi.clear(gameId);
+            } else if (typeof autosaveApi.set === 'function') {
+              autosaveApi.set(gameId, null);
+            }
+          } catch (error) {
+            // Ignore autosave cleanup errors for individual games.
+          }
+        }
+      });
+    }
+  }
+
+  const storage = typeof globalThis !== 'undefined' ? globalThis.localStorage : null;
+  if (!storage) {
+    return;
+  }
+
+  if (autosaveApi && typeof autosaveApi.list === 'function') {
+    try {
+      const entries = autosaveApi.list();
+      const filteredEntries = {};
+      Object.keys(entries || {}).forEach(id => {
+        if (preservedIds.size === 0 || preservedIds.has(id)) {
+          const entry = entries[id];
+          if (entry && typeof entry === 'object') {
+            filteredEntries[id] = entry;
+          }
+        }
+      });
+      if (Object.keys(filteredEntries).length > 0) {
+        storage.setItem(
+          ARCADE_AUTOSAVE_STORAGE_KEY,
+          JSON.stringify({ version: 1, entries: filteredEntries })
+        );
+      } else {
+        storage.removeItem(ARCADE_AUTOSAVE_STORAGE_KEY);
+      }
+      return;
+    } catch (error) {
+      // Fall back to raw storage filtering if listing fails.
+    }
+  }
+
+  try {
+    const raw = storage.getItem(ARCADE_AUTOSAVE_STORAGE_KEY);
+    if (!raw) {
+      return;
+    }
+    const parsed = JSON.parse(raw);
+    const sourceEntries =
+      parsed && typeof parsed === 'object' && parsed.entries && typeof parsed.entries === 'object'
+        ? parsed.entries
+        : {};
+    const filteredEntries = {};
+    Object.keys(sourceEntries).forEach(id => {
+      if (preservedIds.size === 0 || preservedIds.has(id)) {
+        const entry = sourceEntries[id];
+        if (entry != null) {
+          filteredEntries[id] = entry;
+        }
+      }
+    });
+    if (Object.keys(filteredEntries).length > 0) {
+      const version = Number.isFinite(parsed.version) ? parsed.version : 1;
+      storage.setItem(
+        ARCADE_AUTOSAVE_STORAGE_KEY,
+        JSON.stringify({ version, entries: filteredEntries })
+      );
+    } else {
+      storage.removeItem(ARCADE_AUTOSAVE_STORAGE_KEY);
+    }
+  } catch (error) {
+    // Ignore storage filtering issues.
+  }
+}
+
+function clearLocalStorageForReset() {
+  const storage = typeof globalThis !== 'undefined' ? globalThis.localStorage : null;
+  if (!storage) {
+    return;
+  }
+
+  RESET_LOCAL_STORAGE_KEYS.forEach(key => {
+    if (!key || key === CHESS_LIBRARY_STORAGE_KEY || key === ARCADE_AUTOSAVE_STORAGE_KEY) {
+      return;
+    }
+    try {
+      storage.removeItem(key);
+    } catch (error) {
+      // Ignore cleanup errors for individual keys.
+    }
+  });
+}
+
 function resetGame() {
+  clearArcadeAutosaveData({ preserveGameIds: ['echecs'] });
+  clearLocalStorageForReset();
   Object.assign(gameState, {
     atoms: LayeredNumber.zero(),
     lifetime: LayeredNumber.zero(),
