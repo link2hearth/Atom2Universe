@@ -249,7 +249,7 @@
         "subtitle": "Pick a bonus mini-game to extend your Atom2Univers session.",
         "locked": {
           "requiresAtoms": "Collect {{amount}} atoms to unlock the arcade.",
-          "requiresTrophy": "Unlock the \u201c{{trophy}}\u201d trophy to access this minigame.",
+          "requiresTrophy": "Unlock the “{{trophy}}” trophy to access this minigame.",
           "requiresMach3": "Earn a Mach3 ticket to unlock this minigame.",
           "default": "Unlock this minigame to access it."
         },
@@ -597,7 +597,9 @@
           "notation": {
             "short": "Short notation",
             "long": "Long notation"
-          }
+          },
+          "twoPlayers": "Two-player mode",
+          "analyzeDisabled": "AI analysis unavailable in two-player mode."
         },
         "history": {
           "title": "Move list",
@@ -610,7 +612,8 @@
           "standardDescription": "Balanced configuration: responsive, steady AI.",
           "expert": "Expert mode",
           "expertDescription": "Deeper analysis and longer think time for a tough challenge.",
-          "reward": "Offline bonus: {duration} at {multiplier}"
+          "reward": "Offline bonus: {duration} at {multiplier}",
+          "twoPlayersDescription": "Two-player mode enabled: the AI is disabled."
         },
         "analysis": {
           "title": "AI move analysis",
@@ -627,7 +630,8 @@
             "positive": "black advantage {{value}}",
             "negative": "white advantage {{value}}"
           },
-          "depth": " · depth {{value}}"
+          "depth": " · depth {{value}}",
+          "disabled": "AI analysis is unavailable in two-player mode."
         },
         "feedback": {
           "invalidMove": "That move isn’t legal.",
@@ -695,7 +699,8 @@
         "accessibility": {
           "pieceOnSquare": "{{piece}} on {{square}}",
           "emptySquare": "Empty square {{square}}"
-        }
+        },
+        "helper": "Tap or drag a piece to highlight its legal moves."
       },
       "blackjack": {
         "aria": "Quantum Blackjack mini-game",
@@ -1095,8 +1100,7 @@
             "webAudioUnavailable": "Web Audio API is not available in this browser.",
             "soundFontMissingSelection": "No SoundFont selected."
           }
-        },
-        "reset": "Reset"
+        }
       },
       "devkit": {
         "title": "Quantum DevKit",
@@ -4281,4 +4285,3 @@
     }
   }
 }
-
