@@ -1035,6 +1035,7 @@ const GAME_CONFIG = {
      * - dealerSpeedMs : cadence (en millisecondes) utilisée pour rythmer les animations du croupier.
      * - minRaise : relance minimale autorisée (montant total sur le tour en cours).
      * - startingStack : réserve de crédits attribuée à chaque participant lors d’un nouveau tableau.
+     * - aiStack : pile de départ attribuée à chaque adversaire IA lors d’une nouvelle installation ou réintégration.
      * - opponentCount : fourchette du nombre d’adversaires IA présents à la table.
      * - aiProfiles : profils disponibles pour les adversaires (aggressivité, prudence, bluff).
      * - defaultAiProfile : identifiant du profil sélectionné par défaut.
@@ -1047,6 +1048,7 @@ const GAME_CONFIG = {
       dealerSpeedMs: 650,
       minRaise: 40,
       startingStack: 1000,
+      aiStack: 1e11,
       opponentCount: { min: 4, max: 5 },
       aiProfiles: {
         patient: {
