@@ -306,6 +306,12 @@
             "description": "Terminez un tableau pour booster la production hors ligne pour les prochaines heures.",
             "cta": "Résoudre"
           },
+          "theLine": {
+            "aria": "Accéder au mini-jeu The Line",
+            "title": "The Line",
+            "description": "Tracez un chemin qui couvre toute la grille sans repasser sur une case et relevez le défi multicolore.",
+            "cta": "Tracer"
+          },
           "minesweeper": {
             "aria": "Accéder au mini-jeu Démineur",
             "title": "Démineur",
@@ -541,6 +547,41 @@
           "ready": "Disposez les blocs puis appuyez sur la zone de résultat pour lancer le test."
         },
         "cubeAria": "Bloc de poids {weight}"
+      },
+      "theLine": {
+        "aria": "Mini-jeu The Line : tracez un parcours couvrant toute la grille.",
+        "title": "The Line",
+        "subtitle": "Tracez un chemin continu qui visite chaque case sans passer deux fois au même endroit.",
+        "mode": {
+          "aria": "Choisir le mode de tracé",
+          "label": "Mode",
+          "single": "Parcours unique",
+          "multi": "Multicolore"
+        },
+        "difficulty": {
+          "aria": "Choisir la difficulté",
+          "label": "Difficulté",
+          "easy": "Facile",
+          "medium": "Moyen",
+          "hard": "Difficile"
+        },
+        "status": {
+          "level": "Niveau",
+          "remaining": "Cases restantes"
+        },
+        "actions": {
+          "reset": "Nouveau tracé"
+        },
+        "board": "Grille du puzzle The Line",
+        "messages": {
+          "ready": "Touchez une case de départ colorée pour commencer votre parcours.",
+          "single": "Tracez un chemin qui couvre toute la grille sans repasser sur une case.",
+          "multi": "Reliez chaque paire de couleurs en couvrant toute la grille sans croiser les chemins.",
+          "completed": "Niveau {{level}} terminé !",
+          "autoNext": "Niveau {{level}} prêt.",
+          "error": "La génération de la grille a échoué. Réessayez.",
+          "incompletePath": "Reliez la paire jusqu’à l’autre extrémité pour valider la couleur."
+        }
       },
       "sudoku": {
         "aria": "Mini-jeu Sudoku quantique",
