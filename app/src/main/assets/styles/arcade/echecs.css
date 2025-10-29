@@ -1,5 +1,13 @@
 .page--echecs {
-  --chess-board-size: min(70vw, 416px);
+  --chess-vertical-padding: clamp(1.25rem, 3.2vh, 2.75rem);
+  --chess-horizontal-padding: clamp(1rem, 3.5vw, 3rem);
+  --chess-board-size: max(
+    0px,
+    min(
+      calc(100vw - 2 * var(--chess-horizontal-padding)),
+      calc(100vh - 2 * var(--chess-vertical-padding))
+    )
+  );
   --chess-text-color: inherit;
   --chess-board-border: rgba(255, 255, 255, 0.16);
   --chess-square-light: rgba(240, 245, 250, 0.9);
@@ -64,7 +72,7 @@
   display: grid;
   gap: clamp(1.5rem, 3vh, 2.5rem);
   justify-items: center;
-  padding: clamp(1.25rem, 3.2vh, 2.75rem) clamp(1rem, 3.5vw, 3rem);
+  padding: var(--chess-vertical-padding) var(--chess-horizontal-padding);
 }
 
 .chess-game__header {
@@ -119,7 +127,7 @@
 .chess-board {
   display: grid;
   grid-template-columns: repeat(8, minmax(0, 1fr));
-  inline-size: var(--chess-board-size);
+  inline-size: min(var(--chess-board-size), 100%);
   aspect-ratio: 1 / 1;
   border-radius: 1.25rem;
   border: 2px solid var(--chess-board-border);
