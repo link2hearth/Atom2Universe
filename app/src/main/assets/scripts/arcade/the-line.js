@@ -459,20 +459,26 @@
     }
     const maxAttempts = clampNumber(config.maxGenerationAttempts, 20, 2000, 200);
     const holeRetryLimit = Math.max(1, Math.floor(config.holeRetryLimit || 16));
+    const generationLimiter = createTimeLimiter(
+      computeGenerationLimitMs(width, height, mode, difficulty)
+    );
 
     let attempt = 0;
     let holeAttempts = 0;
     let currentHoleMax = holeMax;
     let bestCandidate = null;
 
-    while (attempt < maxAttempts) {
+    while (attempt < maxAttempts && !generationLimiter.timedOut()) {
       attempt += 1;
       holeAttempts += 1;
       const holeCount = holeMin === currentHoleMax
         ? holeMin
         : randomInt(holeMin, currentHoleMax);
       const blocked = generateBlockedSet(width, height, holeCount);
-      const path = findHamiltonianPath(width, height, blocked);
+      const path = findHamiltonianPath(width, height, blocked, generationLimiter);
+      if (generationLimiter.timedOut()) {
+        break;
+      }
       if (!path) {
         if (holeAttempts >= holeRetryLimit && currentHoleMax > holeMin) {
           currentHoleMax = Math.max(holeMin, currentHoleMax - 1);
@@ -490,6 +496,17 @@
       return buildPuzzleFromPath(mode, width, height, blocked, path, difficultyConfig);
     }
 
+    if (generationLimiter.timedOut() && bestCandidate) {
+      return buildPuzzleFromPath(
+        mode,
+        width,
+        height,
+        bestCandidate.blocked,
+        bestCandidate.path,
+        difficultyConfig
+      );
+    }
+
     if (bestCandidate) {
       return buildPuzzleFromPath(
         mode,
@@ -501,9 +518,9 @@
       );
     }
 
-    const fallbackPath = findHamiltonianPath(width, height, new Set());
-    if (fallbackPath) {
-      return buildPuzzleFromPath(mode, width, height, new Set(), fallbackPath, difficultyConfig);
+    const fallbackPuzzle = buildFallbackPuzzle(mode, width, height, difficultyConfig);
+    if (fallbackPuzzle) {
+      return fallbackPuzzle;
     }
     return null;
   }
@@ -525,7 +542,7 @@
     return blocked;
   }
 
-  function findHamiltonianPath(width, height, blockedIndices) {
+  function findHamiltonianPath(width, height, blockedIndices, limiter) {
     const totalCells = width * height;
     const totalAccessible = totalCells - blockedIndices.size;
     if (totalAccessible <= 0) {
@@ -584,14 +601,23 @@
       const start = startCandidates[i];
       path[0] = start;
       visited[start] = 1;
+      if (limiter && limiter.timedOut()) {
+        visited[start] = 0;
+        path[0] = undefined;
+        break;
+      }
       if (search(1, start)) {
         return path.slice();
       }
       visited[start] = 0;
+      path[0] = undefined;
     }
     return null;
 
     function search(step, current) {
+      if (limiter && limiter.timedOut()) {
+        return false;
+      }
       if (step >= totalAccessible) {
         return true;
       }
@@ -611,6 +637,10 @@
           return true;
         }
         visited[next] = 0;
+        path[step] = undefined;
+        if (limiter && limiter.timedOut()) {
+          return false;
+        }
       }
       return false;
     }
@@ -683,6 +713,67 @@
     };
   }
 
+  function createSimpleHamiltonianPath(width, height) {
+    if (!Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0) {
+      return null;
+    }
+    const path = [];
+    for (let y = 0; y < height; y += 1) {
+      if (y % 2 === 0) {
+        for (let x = 0; x < width; x += 1) {
+          path.push(y * width + x);
+        }
+      } else {
+        for (let x = width - 1; x >= 0; x -= 1) {
+          path.push(y * width + x);
+        }
+      }
+    }
+    return path;
+  }
+
+  function buildFallbackPuzzle(mode, width, height, difficultyConfig) {
+    const basePath = createSimpleHamiltonianPath(width, height);
+    if (!Array.isArray(basePath) || basePath.length < 2) {
+      return null;
+    }
+    const holeRange = difficultyConfig.holeRange || { min: 0, max: 0 };
+    const availableLength = basePath.length;
+    const minHoles = clampNumber(holeRange.min, 0, availableLength - 2, 0);
+    const maxHoles = clampNumber(holeRange.max, minHoles, availableLength - 2, minHoles);
+    if (maxHoles <= 0) {
+      return buildPuzzleFromPath(mode, width, height, new Set(), basePath, difficultyConfig);
+    }
+    const targetHoles = Math.max(minHoles, Math.min(maxHoles, Math.round((minHoles + maxHoles) / 2)));
+    const blocked = new Set();
+    let startIndex = 0;
+    let endIndex = basePath.length - 1;
+    let holesCreated = 0;
+    while (holesCreated < targetHoles && endIndex - startIndex + 1 > 2) {
+      const canRemoveStart = startIndex < endIndex - 1;
+      const canRemoveEnd = endIndex > startIndex + 1;
+      let removeStart = canRemoveStart && !canRemoveEnd ? true : false;
+      if (!removeStart && canRemoveEnd && canRemoveStart) {
+        removeStart = Math.random() < 0.5;
+      }
+      if (removeStart && canRemoveStart) {
+        blocked.add(basePath[startIndex]);
+        startIndex += 1;
+      } else if (canRemoveEnd) {
+        blocked.add(basePath[endIndex]);
+        endIndex -= 1;
+      } else {
+        break;
+      }
+      holesCreated += 1;
+    }
+    const trimmedPath = basePath.slice(startIndex, endIndex + 1);
+    if (trimmedPath.length < 2) {
+      return buildPuzzleFromPath(mode, width, height, new Set(), basePath, difficultyConfig);
+    }
+    return buildPuzzleFromPath(mode, width, height, blocked, trimmedPath, difficultyConfig);
+  }
+
   function createColorSegments(pathCoords, difficultyConfig) {
     const total = pathCoords.length;
     const configPairs = difficultyConfig.multiPairs || { min: 2, max: 3 };
@@ -733,6 +824,44 @@
     const x = index % width;
     const y = Math.floor(index / width);
     return { x, y };
+  }
+
+  function computeGenerationLimitMs(width, height, mode, difficulty) {
+    const totalCells = width * height;
+    let base = totalCells <= 36 ? 140 : totalCells <= 56 ? 220 : 380;
+    if (mode === 'multi') {
+      base += 60;
+    }
+    if (difficulty === 'hard') {
+      base += 90;
+    }
+    return base;
+  }
+
+  function createTimeLimiter(limitMs) {
+    const limit = Number.isFinite(limitMs) && limitMs > 0 ? limitMs : 0;
+    const getNow = typeof performance !== 'undefined'
+      && performance
+      && typeof performance.now === 'function'
+        ? () => performance.now()
+        : () => Date.now();
+    const start = getNow();
+    let timeoutReached = false;
+    return {
+      timedOut() {
+        if (timeoutReached) {
+          return true;
+        }
+        if (!limit) {
+          return false;
+        }
+        timeoutReached = getNow() - start >= limit;
+        return timeoutReached;
+      },
+      get timedOut() {
+        return timeoutReached;
+      }
+    };
   }
   function renderPuzzle(puzzle) {
     const elements = state.elements;
@@ -972,6 +1101,26 @@
     return (dx === 1 && dy === 0) || (dx === 0 && dy === 1);
   }
 
+  function getCellElementFromEvent(event) {
+    if (!event) {
+      return null;
+    }
+    const directTarget = event.target && typeof event.target.closest === 'function'
+      ? event.target.closest('.the-line__cell')
+      : null;
+    if (directTarget) {
+      return directTarget;
+    }
+    if (typeof document === 'undefined' || typeof document.elementFromPoint !== 'function') {
+      return null;
+    }
+    const fallbackTarget = document.elementFromPoint(event.clientX, event.clientY);
+    if (fallbackTarget && typeof fallbackTarget.closest === 'function') {
+      return fallbackTarget.closest('.the-line__cell');
+    }
+    return null;
+  }
+
   function handlePointerDown(event) {
     if (event.pointerType === 'mouse' && event.button !== 0) {
       return;
@@ -980,7 +1129,7 @@
     if (!elements || !elements.board) {
       return;
     }
-    const target = event.target.closest('.the-line__cell');
+    const target = getCellElementFromEvent(event);
     if (!target || target.getAttribute('data-blocked') === 'true') {
       return;
     }
@@ -1011,7 +1160,7 @@
     if (!active || active.pointerId !== event.pointerId) {
       return;
     }
-    const target = event.target.closest('.the-line__cell');
+    const target = getCellElementFromEvent(event);
     if (!target || target.getAttribute('data-blocked') === 'true') {
       return;
     }
