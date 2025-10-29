@@ -21,6 +21,7 @@
   const DEFAULT_VIBRATO_FADE_MS = 80;
   const DEFAULT_PORTAMENTO_MS = 40;
   const PITCH_BEND_RANGE = 2;
+  const MASTER_GAIN = 0.45;
 
   const VOL4_TO_GAIN = [
     0.0, 0.035, 0.055, 0.075,
@@ -603,14 +604,14 @@
 
   function applyChorus(left, right, sampleRate) {
     const delaySamples = Math.max(1, Math.round((12 / 1000) * sampleRate));
-    const mix = 0.08;
+    const mix = 0.06;
     for (let i = delaySamples; i < left.length; i += 1) {
       const delayedL = left[i - delaySamples];
       const delayedR = right[i - delaySamples];
       const dryL = left[i];
       const dryR = right[i];
-      left[i] = (dryL * (1 - mix)) + (delayedR * mix);
-      right[i] = (dryR * (1 - mix)) + (delayedL * mix);
+      left[i] = dryL + (delayedL - dryL) * mix;
+      right[i] = dryR + (delayedR - dryR) * mix;
     }
   }
 
@@ -1095,8 +1096,8 @@
           mixL += result.left;
           mixR += result.right;
         }
-        left[sample] = mixL;
-        right[sample] = mixR;
+        left[sample] = mixL * MASTER_GAIN;
+        right[sample] = mixR * MASTER_GAIN;
       }
 
       applyChorus(left, right, this.sampleRate);
