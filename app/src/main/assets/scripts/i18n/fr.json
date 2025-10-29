@@ -345,7 +345,7 @@
           "holdem": {
             "aria": "Accéder au mini-jeu Hold’em",
             "title": "Hold’em",
-            "description": "Affrontez jusqu’à cinq IA en Texas Hold’em et empochez le pot avec la meilleure main.",
+            "description": "Affrontez jusqu’à quatre IA en Texas Hold’em et empochez le pot avec la meilleure main.",
             "cta": "S’asseoir"
           },
           "billard": {
@@ -1757,7 +1757,9 @@
           "aiActionCall": "{name} suit {amount}.",
           "aiActionRaise": "{name} relance à {amount}.",
           "aiActionAllIn": "{name} part à tapis ({amount}).",
-          "aiActionFold": "{name} se couche."
+          "aiActionFold": "{name} se couche.",
+          "heroFolded": "Vous vous couchez. Les adversaires terminent la manche.",
+          "aiAutoProgress": "Les adversaires poursuivent la manche."
         },
         "pot": {
           "aria": "Suivi du pot",
@@ -1777,8 +1779,7 @@
           "callWithAmount": "Suivre ({amount})",
           "raise": "Relancer",
           "fold": "Se coucher",
-          "raiseSuggestedLabel": "Relance suggérée",
-          "raiseAutoHelp": "Le montant est calculé automatiquement selon la situation.",
+          "allIn": "Tapis ({amount})",
           "raiseTo": "Relancer à {amount}",
           "raiseAllIn": "Tapis ({amount})"
         },
@@ -1787,6 +1788,9 @@
           "currentBet": "Mise actuelle",
           "you": "Vous",
           "opponents": "Adversaires"
+        },
+        "info": {
+          "label": "Phase de jeu"
         },
         "phase": {
           "preflop": "Préflop",

@@ -26,32 +26,60 @@
   gap: calc(1.5rem * var(--holdem-scale));
 }
 
-.holdem__header {
+.holdem-layout {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  gap: calc(1.5rem * var(--holdem-scale));
 }
 
-.holdem-layout {
+.holdem-top {
   display: grid;
   gap: calc(1.25rem * var(--holdem-scale));
-  grid-template-areas:
-    "player"
-    "table"
-    "opponents";
+  grid-template-columns: repeat(auto-fit, minmax(clamp(220px, 28vw, 320px), 1fr));
   align-items: stretch;
 }
 
+.holdem-top__item {
+  height: 100%;
+}
+
+.holdem-bottom {
+  display: grid;
+  gap: calc(1rem * var(--holdem-scale));
+}
+
+.holdem-opponents__title {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: calc(0.85rem * var(--holdem-scale));
+  color: var(--holdem-muted-color);
+  text-align: center;
+}
+
+.holdem-bottom__grid {
+  display: grid;
+  gap: calc(1.25rem * var(--holdem-scale));
+  grid-template-columns: minmax(0, 1fr);
+  align-items: stretch;
+  justify-items: stretch;
+}
+
 .holdem-player-panel {
-  grid-area: player;
   align-content: start;
 }
 
-.holdem-table {
-  grid-area: table;
+.holdem-opponent-column {
+  display: flex;
+  flex-direction: column;
+  gap: calc(1rem * var(--holdem-scale));
+  align-items: stretch;
 }
 
-.holdem-opponent-panel {
-  grid-area: opponents;
+.holdem-opponent-column__list {
+  display: grid;
+  gap: calc(1rem * var(--holdem-scale));
+  grid-auto-rows: minmax(0, 1fr);
   align-content: start;
 }
 
@@ -63,6 +91,24 @@
   display: grid;
   gap: calc(1rem * var(--holdem-scale));
   box-shadow: 0 20px 36px rgba(0, 0, 0, 0.4);
+}
+
+.holdem-info {
+  align-content: start;
+  gap: calc(0.5rem * var(--holdem-scale));
+}
+
+.holdem-info__label {
+  font-size: calc(0.85rem * var(--holdem-scale));
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--holdem-muted-color);
+}
+
+.holdem-info__message {
+  margin: 0;
+  font-size: calc(1rem * var(--holdem-scale));
+  line-height: 1.5;
 }
 
 .holdem-panel__title {
@@ -83,7 +129,7 @@
   display: grid;
   gap: calc(0.5rem * var(--holdem-scale));
   box-shadow: 0 18px 32px rgba(0, 0, 0, 0.35);
-  margin-inline: auto;
+  height: 100%;
 }
 
 .holdem-pot__label {
@@ -358,20 +404,21 @@
   align-items: baseline;
 }
 
+
 .holdem-actions {
   display: grid;
   gap: calc(0.75rem * var(--holdem-scale));
 }
 
 .holdem-actions__row {
-  display: flex;
+  display: grid;
   gap: calc(0.75rem * var(--holdem-scale));
-  flex-wrap: wrap;
+  grid-template-columns: repeat(auto-fit, minmax(clamp(140px, 18vw, 200px), 1fr));
 }
 
 .holdem-button {
-  flex: 1;
-  min-width: clamp(140px, 18vw, 200px);
+  width: 100%;
+  min-width: 0;
   padding: calc(0.7rem * var(--holdem-scale)) calc(1rem * var(--holdem-scale));
   background: rgba(34, 52, 78, 0.86);
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -404,67 +451,36 @@
   box-shadow: 0 18px 30px rgba(190, 24, 60, 0.45);
 }
 
-.holdem-raise {
-  display: grid;
-  gap: calc(0.35rem * var(--holdem-scale));
+.holdem-button--accent {
+  background: var(--holdem-accent);
+  border-color: rgba(34, 211, 238, 0.45);
+  color: #04121f;
 }
 
-.holdem-raise__label {
-  font-size: calc(0.9rem * var(--holdem-scale));
-  color: var(--holdem-muted-color);
-}
-
-.holdem-raise__input {
-  padding: calc(0.65rem * var(--holdem-scale));
-  border-radius: calc(0.75rem * var(--holdem-scale));
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(16, 26, 44, 0.8);
-  color: var(--holdem-text-color);
-  font-size: calc(1rem * var(--holdem-scale));
-}
-
-.holdem-raise__input:disabled {
-  opacity: 0.5;
-}
-
-.holdem-raise__help {
-  margin: 0;
-  font-size: calc(0.85rem * var(--holdem-scale));
-  color: var(--holdem-muted-color);
+.holdem-button--accent:hover:not(:disabled) {
+  background: rgba(45, 212, 191, 0.95);
+  box-shadow: 0 18px 30px rgba(34, 211, 238, 0.35);
 }
 
 @media (max-width: 720px) {
   .holdem-pot {
     width: 100%;
+    min-width: 0;
   }
 
-  .holdem-actions__row {
-    flex-direction: column;
-  }
-
-  .holdem-button {
-    width: 100%;
+  .holdem-top {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
-@media (orientation: portrait) and (min-width: 721px) {
-  .holdem-layout {
-    grid-template-areas: "player table opponents";
-    grid-template-columns: minmax(220px, 0.9fr) minmax(260px, 1.2fr) minmax(220px, 0.9fr);
-    align-items: start;
-  }
-}
-
-@media (orientation: landscape) and (min-width: 900px) {
-  .holdem-layout {
-    grid-template-areas: "player table opponents";
-    grid-template-columns: minmax(220px, 0.9fr) minmax(320px, 1.3fr) minmax(220px, 0.9fr);
-    align-items: start;
+@media (min-width: 900px) {
+  .holdem-bottom__grid {
+    grid-template-columns: minmax(220px, 0.95fr) minmax(260px, 1.2fr) minmax(220px, 0.95fr);
   }
 }
 
 @media (min-width: 1280px) {
-  .holdem-layout {
+  .holdem-bottom__grid {
     grid-template-columns: minmax(240px, 1fr) minmax(360px, 1.2fr) minmax(240px, 1fr);
   }
 

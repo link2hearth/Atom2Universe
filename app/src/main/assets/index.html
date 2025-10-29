@@ -691,7 +691,7 @@
             class="arcade-hub-card__description"
             data-i18n="index.sections.arcadeHub.cards.holdem.description"
           >
-            Affrontez jusqu’à cinq IA en Texas Hold’em et empochez le pot avec la meilleure main.
+            Affrontez jusqu’à quatre IA en Texas Hold’em et empochez le pot avec la meilleure main.
           </p>
           <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.holdem.cta"
             >S’asseoir</span
@@ -1835,43 +1835,82 @@
       hidden
     >
       <div class="holdem">
-        <header class="holdem__header">
-          <div
-            class="holdem-pot"
-            role="group"
-            aria-label="Suivi du pot"
-            data-i18n="aria-label:index.sections.holdem.pot.aria"
-          >
-            <span class="holdem-pot__label" data-i18n="index.sections.holdem.pot.label">Pot total</span>
-            <div class="holdem-pot__amount">
-              <span id="holdemPotValue">0</span>
-              <span class="holdem-pot__unit" data-i18n="index.sections.holdem.pot.unit">crédits</span>
-            </div>
-            <div
-              class="holdem-pot__gauge"
-              role="img"
-              aria-label="Jauge de pot"
-              data-i18n="aria-label:index.sections.holdem.pot.gauge"
-            >
-              <div class="holdem-pot__fill" id="holdemPotFill" style="width: 0%"></div>
-            </div>
-          </div>
-          <p
-            class="holdem-status"
-            id="holdemStatus"
-            aria-live="polite"
-            data-i18n="index.sections.holdem.status.intro"
-          >
-            Lancez une nouvelle donne pour jouer.
-          </p>
-        </header>
         <div class="holdem-layout" id="holdemLayout">
-          <section
-            class="holdem-panel holdem-player-panel"
-            role="region"
-            aria-label="Votre main"
-            data-i18n="aria-label:index.sections.holdem.playerHandAria"
-          >
+          <div class="holdem-top">
+            <div
+              class="holdem-pot holdem-top__item"
+              role="group"
+              aria-label="Suivi du pot"
+              data-i18n="aria-label:index.sections.holdem.pot.aria"
+            >
+              <span class="holdem-pot__label" data-i18n="index.sections.holdem.pot.label">Pot total</span>
+              <div class="holdem-pot__amount">
+                <span id="holdemPotValue">0</span>
+                <span class="holdem-pot__unit" data-i18n="index.sections.holdem.pot.unit">crédits</span>
+              </div>
+              <div
+                class="holdem-pot__gauge"
+                role="img"
+                aria-label="Jauge de pot"
+                data-i18n="aria-label:index.sections.holdem.pot.gauge"
+              >
+                <div class="holdem-pot__fill" id="holdemPotFill" style="width: 0%"></div>
+              </div>
+            </div>
+            <section
+              class="holdem-panel holdem-table holdem-top__item"
+              role="group"
+              aria-label="Table de poker Hold'em"
+              data-i18n="aria-label:index.sections.holdem.tableAria"
+            >
+              <div
+                class="holdem-community"
+                role="group"
+                aria-label="Cartes communes"
+                data-i18n="aria-label:index.sections.holdem.communityAria"
+              >
+                <ul class="holdem-cards" id="holdemCommunityCards">
+                  <li
+                    class="holdem-cards__placeholder"
+                    data-i18n="index.sections.holdem.communityPlaceholder"
+                  >
+                    Les cartes communes apparaîtront ici.
+                  </li>
+                </ul>
+              </div>
+            </section>
+            <section class="holdem-panel holdem-info holdem-top__item" role="status">
+              <span class="holdem-info__label" data-i18n="index.sections.holdem.info.label">Phase de jeu</span>
+              <p
+                class="holdem-info__message"
+                id="holdemStatus"
+                aria-live="polite"
+                data-i18n="index.sections.holdem.status.intro"
+              >
+                Lancez une nouvelle donne pour jouer.
+              </p>
+            </section>
+          </div>
+          <div class="holdem-bottom">
+            <h3 class="holdem-opponents__title" id="holdemOpponentsTitle" data-i18n="index.sections.holdem.labels.opponents">
+              Adversaires
+            </h3>
+            <div class="holdem-bottom__grid" role="group" aria-labelledby="holdemOpponentsTitle">
+              <aside
+                class="holdem-opponent-column"
+                role="region"
+                aria-labelledby="holdemOpponentsTitle"
+                aria-label="Adversaires"
+                data-i18n="aria-label:index.sections.holdem.playersAria"
+              >
+                <div class="holdem-opponent-column__list" id="holdemPlayersLeft" role="list" aria-live="polite"></div>
+              </aside>
+              <section
+                class="holdem-panel holdem-player-panel"
+                role="region"
+                aria-label="Votre main"
+                data-i18n="aria-label:index.sections.holdem.playerHandAria"
+              >
             <section
               class="holdem-hand"
               id="holdemPlayerPanel"
@@ -1950,68 +1989,28 @@
                   Se coucher
                 </button>
               </div>
-              <label class="holdem-raise">
-                <span
-                  class="holdem-raise__label"
-                  data-i18n="index.sections.holdem.controls.raiseSuggestedLabel"
-                  >Relance suggérée</span
-                >
-                <input
-                  type="number"
-                  id="holdemRaiseAmount"
-                  class="holdem-raise__input"
-                  min="0"
-                  step="10"
-                  aria-describedby="holdemRaiseHelp"
-                  readonly
-                  disabled
-                />
-              </label>
-              <p
-                class="holdem-raise__help"
-                id="holdemRaiseHelp"
-                data-i18n="index.sections.holdem.controls.raiseAutoHelp"
+              <button
+                type="button"
+                class="holdem-button holdem-button--accent"
+                id="holdemAllIn"
+                data-i18n="index.sections.holdem.controls.allIn"
+                disabled
               >
-                Le montant est ajusté automatiquement selon le tour.
-              </p>
+                Tapis
+              </button>
             </div>
           </section>
-          <section
-            class="holdem-panel holdem-table"
-            role="group"
-            aria-label="Table de poker Hold'em"
-            data-i18n="aria-label:index.sections.holdem.tableAria"
-          >
-            <div
-              class="holdem-community"
-              role="group"
-              aria-label="Cartes communes"
-              data-i18n="aria-label:index.sections.holdem.communityAria"
-            >
-              <ul class="holdem-cards" id="holdemCommunityCards">
-                <li
-                  class="holdem-cards__placeholder"
-                  data-i18n="index.sections.holdem.communityPlaceholder"
-                >
-                  Les cartes communes apparaîtront ici.
-                </li>
-              </ul>
+              <aside
+                class="holdem-opponent-column"
+                role="region"
+                aria-labelledby="holdemOpponentsTitle"
+                aria-label="Adversaires"
+                data-i18n="aria-label:index.sections.holdem.playersAria"
+              >
+                <div class="holdem-opponent-column__list" id="holdemPlayersRight" role="list" aria-live="polite"></div>
+              </aside>
             </div>
-          </section>
-          <aside
-            class="holdem-panel holdem-opponent-panel"
-            role="region"
-            aria-label="Adversaires"
-            data-i18n="aria-label:index.sections.holdem.playersAria"
-          >
-            <h3 class="holdem-panel__title" data-i18n="index.sections.holdem.labels.opponents">Adversaires</h3>
-            <div
-              class="holdem-opponents"
-              id="holdemPlayers"
-              role="list"
-              aria-live="polite"
-            ></div>
-          </aside>
+          </div>
         </div>
       </div>
     </section>
