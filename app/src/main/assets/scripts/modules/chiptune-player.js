@@ -1140,7 +1140,20 @@
           continue;
         }
 
-        // Ignorer les autres évènements canal (pitch bend, aftertouch polyphonique...)
+        if (eventType === 0xe0) {
+          const rawValue = (data2 << 7) | data1;
+          events.push({
+            type: 'pitchBend',
+            value: rawValue - 8192,
+            channel,
+            ticks: absoluteTicks,
+            order,
+          });
+          order += 1;
+          continue;
+        }
+
+        // Ignorer les autres évènements canal (aftertouch polyphonique...)
         }
 
         reader.offset = trackEnd;
@@ -1189,6 +1202,7 @@
             pan: 0,
             reverb: 0.35,
             sustain: false,
+            pitchBend: 0,
             sustainedNotes: new Map(),
           });
         }
@@ -1287,6 +1301,9 @@
             } else if (event.controller === 91) {
               state.reverb = Math.max(0, Math.min(1, event.value / 127));
             }
+          } else if (event.type === 'pitchBend') {
+            const state = getChannelState(event.channel);
+            state.pitchBend = event.value;
           }
           continue;
         }
@@ -1499,6 +1516,13 @@
       }
       const maxInterval = Math.max(0.02, this.scheduleAheadTime * 0.75);
       this.scheduleIntervalSeconds = Math.min(this.scheduleIntervalSeconds, maxInterval);
+      this.parsedMidi = null;
+      this.sccEngine = null;
+      this.sccInstrumentMapPromise = null;
+      this.sccRenderCache = null;
+      this.sccPlaybackSource = null;
+      this.sccPlaybackGain = null;
+      this.sccPlaybackDuration = 0;
       this.limiterSettings = {
         threshold: -8,
         knee: 10,
@@ -1573,7 +1597,7 @@
         }
       }
       if (this.engineSelect) {
-        const hasScc = Boolean(this.sccWaveform);
+        const hasScc = this.hasSccSupport();
         const validModes = new Set(['original', 'scc', 'n163', 'ym2413', 'sid', 'hifi']);
         const requestedValue = typeof this.engineSelect.value === 'string' ? this.engineSelect.value : '';
         let initialValue = validModes.has(requestedValue)
@@ -1609,6 +1633,148 @@
       this.loadSoundFonts();
       this.loadLibrary();
       this.subscribeToLanguageChanges();
+    }
+
+    hasSccSupport() {
+      if (this.sccEngine) {
+        return true;
+      }
+      const scope = typeof window !== 'undefined'
+        ? window
+        : (typeof globalThis !== 'undefined' ? globalThis : null);
+      if (scope && scope.SccAudioEngine && typeof scope.SccAudioEngine.SccEngine === 'function') {
+        return true;
+      }
+      return Boolean(this.sccWaveform);
+    }
+
+    invalidateSccRender() {
+      this.sccRenderCache = null;
+      this.sccPlaybackDuration = 0;
+    }
+
+    getSccRenderSignature(speed = 1) {
+      const events = Array.isArray(this.parsedMidi?.events) ? this.parsedMidi.events.length : 0;
+      const notes = Array.isArray(this.timeline?.notes) ? this.timeline.notes.length : 0;
+      const duration = Number.isFinite(this.timeline?.duration)
+        ? Math.round(this.timeline.duration * 1000)
+        : 0;
+      const normalizedSpeed = Number.isFinite(speed) ? speed : 1;
+      return [
+        events,
+        notes,
+        duration,
+        normalizedSpeed.toFixed(4),
+        this.transposeSemitones,
+        this.fineDetuneCents,
+      ].join(':');
+    }
+
+    async ensureSccEngineReady() {
+      if (this.sccEngine) {
+        return this.sccEngine;
+      }
+      const scope = typeof window !== 'undefined'
+        ? window
+        : (typeof globalThis !== 'undefined' ? globalThis : null);
+      const EngineClass = scope && scope.SccAudioEngine && typeof scope.SccAudioEngine.SccEngine === 'function'
+        ? scope.SccAudioEngine.SccEngine
+        : null;
+      if (!EngineClass) {
+        throw new Error('SCC engine unavailable');
+      }
+      this.sccEngine = new EngineClass({
+        sampleRate: 44100,
+        portamentoMs: 40,
+        panSpread: [-0.25, -0.1, 0.1, 0.25, 0],
+      });
+      if (!this.sccInstrumentMapPromise) {
+        this.sccInstrumentMapPromise = this.sccEngine
+          .loadInstrumentMap('scripts/modules/audio/instrument_map.json')
+          .catch((error) => {
+            this.sccInstrumentMapPromise = null;
+            throw error;
+          });
+      }
+      await this.sccInstrumentMapPromise;
+      return this.sccEngine;
+    }
+
+    async renderSccIfNeeded(options = {}) {
+      if (!this.parsedMidi) {
+        throw new Error('No MIDI data to render.');
+      }
+      const speed = Number.isFinite(options.speed) ? options.speed : 1;
+      const signature = this.getSccRenderSignature(speed);
+      if (this.sccRenderCache && this.sccRenderCache.signature === signature) {
+        return this.sccRenderCache.result;
+      }
+      const engine = await this.ensureSccEngineReady();
+      const result = engine.render(this.parsedMidi, {
+        speed,
+        transpose: this.transposeSemitones,
+        fineDetune: this.fineDetuneCents,
+      });
+      this.sccRenderCache = { signature, result };
+      this.sccPlaybackDuration = result.duration;
+      return result;
+    }
+
+    stopSccPlayback() {
+      if (this.sccPlaybackSource) {
+        try {
+          this.sccPlaybackSource.stop();
+        } catch (error) {
+          // Ignore stop errors
+        }
+        try {
+          this.sccPlaybackSource.disconnect();
+        } catch (error) {
+          // Ignore disconnect errors
+        }
+        this.sccPlaybackSource.onended = null;
+        this.sccPlaybackSource = null;
+      }
+      if (this.sccPlaybackGain) {
+        try {
+          this.sccPlaybackGain.disconnect();
+        } catch (error) {
+          // Ignore disconnect errors
+        }
+        this.sccPlaybackGain = null;
+      }
+    }
+
+    async prepareSccPlayback({ context, audioStartTime, startOffset, playbackSpeed }) {
+      const engine = await this.ensureSccEngineReady();
+      const renderResult = await this.renderSccIfNeeded({ speed: playbackSpeed });
+      const buffer = engine.createAudioBuffer(context, renderResult);
+      this.stopSccPlayback();
+      const source = context.createBufferSource();
+      source.buffer = buffer;
+      source.playbackRate.setValueAtTime(1, audioStartTime);
+      const gainNode = context.createGain();
+      gainNode.gain.setValueAtTime(1, audioStartTime);
+      const destination = this.masterGain || context.destination;
+      source.connect(gainNode).connect(destination);
+      const speed = playbackSpeed > 0 ? playbackSpeed : 1;
+      const renderOffset = Math.max(0, startOffset / speed);
+      const duration = Math.max(0.001, renderResult.duration);
+      const clampedOffset = Math.min(renderOffset, Math.max(0, duration - 0.001));
+      source.onended = () => {
+        if (this.sccPlaybackSource === source) {
+          this.sccPlaybackSource = null;
+          this.sccPlaybackGain = null;
+        }
+      };
+      try {
+        source.start(audioStartTime, clampedOffset);
+      } catch (error) {
+        console.error('Unable to start SCC playback buffer', error);
+      }
+      this.sccPlaybackSource = source;
+      this.sccPlaybackGain = gainNode;
+      this.sccPlaybackDuration = renderResult.duration;
     }
 
     isMidiFile(file) {
@@ -2316,6 +2482,7 @@
       const { syncSlider = true, refreshVoices = true } = options;
       const clamped = this.clampTranspose(Number.isFinite(value) ? value : 0);
       this.transposeSemitones = clamped;
+      this.invalidateSccRender();
       const label = this.formatSemitoneLabel(clamped);
       if (this.transposeSlider && syncSlider) {
         const currentValue = Number.parseInt(this.transposeSlider.value, 10);
@@ -2338,6 +2505,7 @@
       const { syncSlider = true, refreshVoices = true } = options;
       const clamped = this.clampFineDetune(Number.isFinite(value) ? value : 0);
       this.fineDetuneCents = clamped;
+      this.invalidateSccRender();
       const label = this.formatCentsLabel(clamped);
       if (this.fineTuneSlider && syncSlider) {
         const currentValue = Number.parseInt(this.fineTuneSlider.value, 10);
@@ -2506,6 +2674,7 @@
 
       if (!enabled) {
         this.fadeOutVoicesBySource('playback');
+        this.stopSccPlayback();
       }
 
       this.updateReadyStatusMessage();
@@ -2567,7 +2736,7 @@
 
     setEngineMode(value, options = {}) {
       const { syncSelect = true } = options;
-      const hasScc = Boolean(this.sccWaveform);
+      const hasScc = this.hasSccSupport();
       let normalized = 'original';
       if (value === 'ym2413') {
         normalized = 'ym2413';
@@ -2590,6 +2759,11 @@
           sccOption.disabled = !hasScc;
         }
       }
+      if (normalized === 'scc') {
+        this.ensureSccEngineReady().catch((error) => {
+          console.error('Unable to prepare SCC engine', error);
+        });
+      }
       if (normalized === 'hifi' && this.selectedSoundFontId) {
         this.ensureSoundFontReady().catch((error) => {
           console.error('Unable to prepare SoundFont', error);
@@ -2604,7 +2778,7 @@
     }
 
     getEngineLabel() {
-      if (this.engineMode === 'scc' && this.sccWaveform) {
+      if (this.engineMode === 'scc' && this.hasSccSupport()) {
         return this.translate('index.sections.options.chiptune.engineLabels.scc', 'SCC engine');
       }
       if (this.engineMode === 'n163') {
@@ -3958,6 +4132,8 @@
       this.readyStatusMessage = null;
       try {
         const midi = MidiParser.parse(buffer);
+        this.parsedMidi = midi;
+        this.invalidateSccRender();
         const timeline = MidiTimeline.fromMidi(midi);
         this.timeline = timeline;
         this.cacheChannelPrograms(timeline);
@@ -3995,6 +4171,8 @@
         this.readyStatusMessage = null;
         this.currentTitle = '';
         this.currentTitleDescriptor = null;
+        this.parsedMidi = null;
+        this.invalidateSccRender();
         this.cacheChannelPrograms(null);
         this.pendingSeekSeconds = 0;
         this.lastKnownPosition = 0;
@@ -6923,6 +7101,18 @@
         }
         return silentEventId;
       }
+      if (this.engineMode === 'scc') {
+        const eventId = this.scheduleNoteVisualization(note, visualizationContext);
+        if (returnHandle) {
+          return {
+            eventId,
+            voice: null,
+            startAt,
+            stopAt: startAt + duration,
+          };
+        }
+        return eventId;
+      }
       if (note.channel === 9) {
         const usesSoundFont = instrument && instrument.type === 'soundfont';
         if (!usesSoundFont) {
@@ -7815,6 +8005,28 @@
         this.lastKnownPosition = startOffset;
         this.pendingSeekSeconds = startOffset;
         this.refreshProgressControls(this.timeline);
+        if (this.engineMode === 'scc') {
+          try {
+            await this.prepareSccPlayback({
+              context,
+              audioStartTime,
+              startOffset,
+              playbackSpeed,
+            });
+          } catch (error) {
+            console.error('Unable to prepare SCC playback', error);
+            this.setStatusMessage(
+              'index.sections.options.chiptune.status.playbackError',
+              'Playback failed: {error}',
+              { error: error.message },
+              'error',
+            );
+            this.stop(false, { preservePosition: true, skipRandomReset: true });
+            this.playing = false;
+            this.updateButtons();
+            return;
+          }
+        }
         this.startScheduler(schedulerStartTime, startOffset);
         this.startProgressMonitor(audioStartTime, startOffset, playbackSpeed, timelineDuration);
 
@@ -7919,6 +8131,8 @@
       }
       this.pendingTimers.clear();
       this.clearNoteVisualizations({ notify: true });
+
+      this.stopSccPlayback();
 
       if (this.audioContext) {
         const now = this.audioContext.currentTime;
