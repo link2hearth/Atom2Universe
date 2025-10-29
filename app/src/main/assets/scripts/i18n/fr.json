@@ -18,7 +18,11 @@
       }
     },
     "header": {
-      "brand": "Atom2Univers"
+      "brand": "Atom2Univers",
+      "bannerToggle": {
+        "collapse": "Réduire la bannière",
+        "expand": "Déployer la bannière"
+      }
     },
     "status": {
       "totalAtoms": "Total d’atomes",

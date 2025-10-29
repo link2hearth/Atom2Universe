@@ -114,6 +114,7 @@ const CRIT_ATOM_VISUALS_STORAGE_KEY = 'atom2univers.options.critAtomVisualsDisab
 const TEXT_FONT_STORAGE_KEY = 'atom2univers.options.textFont';
 const INFO_WELCOME_COLLAPSED_STORAGE_KEY = 'atom2univers.info.welcomeCollapsed';
 const INFO_CHARACTERS_COLLAPSED_STORAGE_KEY = 'atom2univers.info.charactersCollapsed';
+const HEADER_COLLAPSED_STORAGE_KEY = 'atom2univers.ui.headerCollapsed';
 const TEXT_FONT_DEFAULT = 'orbitron';
 const TEXT_FONT_CHOICES = Object.freeze({
   orbitron: {
@@ -4213,8 +4214,10 @@ function collectDomElements() {
   return {
     startupOverlay: getStartupOverlayElement(),
     appHeader: document.querySelector('.app-header'),
+    headerBannerToggle: document.getElementById('headerBannerToggle'),
     pageContainer: document.getElementById('pageContainer'),
     brandPortal: document.getElementById('brandPortal'),
+    navMenu: document.querySelector('.nav-menu'),
     navButtons: document.querySelectorAll('.nav-button'),
   navArcadeButton: document.getElementById('navArcadeButton'),
   navShopButton: document.querySelector('.nav-button[data-target="shop"]'),
@@ -4236,6 +4239,7 @@ function collectDomElements() {
   statusApsCritMultiplier: document.getElementById('statusApsCritMultiplier'),
   statusApsCritSeparator: document.querySelector('.status-aps-crit-separator'),
   frenzyStatus: document.getElementById('frenzyStatus'),
+  statusBar: document.querySelector('.status-bar'),
   statusApcFrenzy: {
     container: document.getElementById('statusApcFrenzy'),
     multiplier: document.getElementById('statusApcFrenzyMultiplier'),
@@ -5440,6 +5444,144 @@ function writeStoredInfoCardCollapsed(storageKey, collapsed) {
     globalThis.localStorage?.setItem(storageKey, collapsed ? 'true' : 'false');
   } catch (error) {
     console.warn('Unable to persist info card preference', storageKey, error);
+  }
+}
+
+function readStoredHeaderCollapsed(defaultValue = false) {
+  try {
+    const stored = globalThis.localStorage?.getItem(HEADER_COLLAPSED_STORAGE_KEY);
+    if (typeof stored === 'string') {
+      const normalized = stored.trim().toLowerCase();
+      if (normalized === 'true' || normalized === '1') {
+        return true;
+      }
+      if (normalized === 'false' || normalized === '0') {
+        return false;
+      }
+    }
+  } catch (error) {
+    console.warn('Unable to read header collapse preference', error);
+  }
+  return !!defaultValue;
+}
+
+function writeStoredHeaderCollapsed(collapsed) {
+  try {
+    globalThis.localStorage?.setItem(HEADER_COLLAPSED_STORAGE_KEY, collapsed ? 'true' : 'false');
+  } catch (error) {
+    console.warn('Unable to persist header collapse preference', error);
+  }
+}
+
+function updateHeaderBannerToggleLabel(collapsed) {
+  if (!elements.headerBannerToggle) {
+    return;
+  }
+  const key = collapsed
+    ? 'index.header.bannerToggle.expand'
+    : 'index.header.bannerToggle.collapse';
+  const fallback = collapsed ? 'Déployer la bannière' : 'Réduire la bannière';
+  const label = translateOrDefault(key, fallback);
+  elements.headerBannerToggle.setAttribute(
+    'data-i18n',
+    `aria-label:${key};title:${key}`
+  );
+  elements.headerBannerToggle.setAttribute('aria-label', label);
+  elements.headerBannerToggle.setAttribute('title', label);
+  const hiddenLabel = elements.headerBannerToggle.querySelector('.visually-hidden');
+  if (hiddenLabel) {
+    hiddenLabel.textContent = label;
+    hiddenLabel.setAttribute('data-i18n', key);
+  }
+}
+
+function setHeaderCollapsed(collapsed, options = {}) {
+  if (!elements.appHeader || !elements.headerBannerToggle) {
+    return;
+  }
+  const shouldCollapse = !!collapsed;
+  const isCollapsed = elements.appHeader.dataset.collapsed === 'true';
+  if (!options.force && shouldCollapse === isCollapsed) {
+    updateHeaderBannerToggleLabel(shouldCollapse);
+    return;
+  }
+
+  if (shouldCollapse) {
+    elements.appHeader.dataset.collapsed = 'true';
+  } else {
+    delete elements.appHeader.dataset.collapsed;
+  }
+
+  if (elements.navMenu) {
+    if (shouldCollapse) {
+      elements.navMenu.hidden = true;
+      elements.navMenu.setAttribute('aria-hidden', 'true');
+    } else {
+      elements.navMenu.hidden = false;
+      elements.navMenu.removeAttribute('aria-hidden');
+    }
+  }
+
+  if (elements.statusBar) {
+    if (shouldCollapse) {
+      elements.statusBar.setAttribute('aria-hidden', 'true');
+    } else {
+      elements.statusBar.removeAttribute('aria-hidden');
+    }
+  }
+
+  if (elements.frenzyStatus) {
+    if (shouldCollapse) {
+      elements.frenzyStatus.setAttribute('aria-hidden', 'true');
+    } else if (elements.frenzyStatus.hidden) {
+      elements.frenzyStatus.removeAttribute('aria-hidden');
+    } else {
+      elements.frenzyStatus.setAttribute('aria-hidden', 'false');
+    }
+  }
+
+  elements.headerBannerToggle.setAttribute('aria-pressed', shouldCollapse ? 'true' : 'false');
+  elements.headerBannerToggle.setAttribute('data-state', shouldCollapse ? 'collapsed' : 'expanded');
+  updateHeaderBannerToggleLabel(shouldCollapse);
+  if (options.persist !== false) {
+    writeStoredHeaderCollapsed(shouldCollapse);
+  }
+}
+
+function toggleHeaderCollapsed() {
+  if (!elements.appHeader) {
+    return;
+  }
+  const currentlyCollapsed = elements.appHeader.dataset.collapsed === 'true';
+  setHeaderCollapsed(!currentlyCollapsed);
+}
+
+function initHeaderBannerToggle() {
+  if (!elements.headerBannerToggle || !elements.appHeader) {
+    return;
+  }
+  const initiallyCollapsed = readStoredHeaderCollapsed(false);
+  setHeaderCollapsed(initiallyCollapsed, { persist: false, force: true });
+  elements.headerBannerToggle.addEventListener('click', event => {
+    event.preventDefault();
+    toggleHeaderCollapsed();
+  });
+}
+
+function subscribeHeaderBannerLanguageUpdates() {
+  const handler = () => {
+    const collapsed = elements.appHeader
+      ? elements.appHeader.dataset.collapsed === 'true'
+      : false;
+    updateHeaderBannerToggleLabel(collapsed);
+  };
+  const api = getI18nApi();
+  if (api && typeof api.onLanguageChanged === 'function') {
+    api.onLanguageChanged(handler);
+    return;
+  }
+  if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
+    globalThis.addEventListener('i18n:languagechange', handler);
   }
 }
 
@@ -15157,6 +15299,7 @@ function initializeDomBoundModules() {
   subscribeOptionsWelcomeContentUpdates();
   renderThemeOptions();
   updateBigBangVisibility();
+  initHeaderBannerToggle();
   bindDomEventListeners();
   initUiScaleOption();
   initResponsiveAutoScale();
@@ -15167,6 +15310,7 @@ function initializeDomBoundModules() {
   subscribeClickSoundLanguageUpdates();
   initCritAtomOption();
   subscribeCritAtomLanguageUpdates();
+  subscribeHeaderBannerLanguageUpdates();
   subscribePerformanceModeLanguageUpdates();
   subscribeInfoWelcomeLanguageUpdates();
   subscribeInfoCharactersLanguageUpdates();
