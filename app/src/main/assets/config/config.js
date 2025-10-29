@@ -1034,26 +1034,32 @@ const GAME_CONFIG = {
      * - blinds : valeurs des petites et grosses blinds versées au début de chaque donne.
      * - dealerSpeedMs : cadence (en millisecondes) utilisée pour rythmer les animations du croupier.
      * - minRaise : relance minimale autorisée (montant total sur le tour en cours).
-     * - startingStack : réserve de crédits attribuée à chaque participant lors d’un nouveau tableau.
+     * - startingStack : réserve d’atomes attribuée à chaque participant lors d’un nouveau tableau.
      * - aiStack : pile de départ attribuée à chaque adversaire IA lors d’une nouvelle installation ou réintégration.
      * - opponentCount : fourchette du nombre d’adversaires IA présents à la table.
      * - aiProfiles : profils disponibles pour les adversaires (aggressivité, prudence, bluff).
      * - defaultAiProfile : identifiant du profil sélectionné par défaut.
      * - raiseGuidance : réglages de la suggestion de relance côté joueur (ratio sur le pot, stack et multiplicateur).
+     * - growth : configuration de la montée des enjeux (facteur +10 % et plafond maximum).
      */
     holdem: {
       blinds: {
-        small: 20,
-        big: 40
+        small: 5,
+        big: 10
       },
       dealerSpeedMs: 650,
-      minRaise: 40,
-      startingStack: 1000,
+      minRaise: 10,
+      startingStack: 600,
       aiStack: 1e11,
       raiseGuidance: {
         potRatio: 0.25,
         stackRatio: 0.12,
         openRaiseMultiplier: 2
+      },
+      growth: {
+        blindFactor: 1.1,
+        raiseFactor: 1.1,
+        cap: 99e68
       },
       opponentCount: { min: 4, max: 5 },
       aiProfiles: {

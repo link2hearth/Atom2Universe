@@ -1741,14 +1741,14 @@
       "holdem": {
         "status": {
           "intro": "Start a new deal to play.",
-          "newHand": "New deal — blinds {small}/{big}.",
+          "newHand": "New deal — blinds {small}/{big} atoms.",
           "phasePrompt": "{phase} phase — your move.",
           "playerWins": "You win the pot ({amount}).",
           "playerFold": "{winner} wins the pot ({amount}).",
-          "insufficientStack": "Not enough credits to call ({amount}).",
+          "insufficientStack": "Not enough atoms to call ({amount}).",
           "invalidRaise": "Enter a valid amount.",
           "raiseTooSmall": "Raise is too small (minimum {amount}).",
-          "raiseUnavailable": "You cannot raise with your current stack.",
+          "raiseUnavailable": "You cannot raise with your current atom reserve.",
           "playerShowdownWin": "You win {amount} with {hand}.",
           "playerSplitPot": "Pot split ({amount}) with {names}.",
           "playerShowdownLose": "Lost to {winner} ({hand}).",
@@ -1764,7 +1764,7 @@
         "pot": {
           "aria": "Total pot and phase status",
           "label": "Total pot:",
-          "unit": "credits"
+          "unit": "atoms"
         },
         "communityPlaceholder": "Community cards will appear here.",
         "hand": {
@@ -1783,7 +1783,7 @@
           "raiseAllIn": "All-in ({amount})"
         },
         "labels": {
-          "stack": "Stack",
+          "stack": "Atom reserve",
           "currentBet": "Current bet",
           "you": "You"
         },
