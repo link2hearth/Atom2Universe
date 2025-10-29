@@ -10,21 +10,82 @@
     difficulties: Object.freeze({
       easy: Object.freeze({
         gridSizes: Object.freeze([[5, 5], [5, 6], [6, 6]]),
-        holeRange: Object.freeze({ min: 0, max: 2 }),
+        holeRange: Object.freeze({ min: 1, max: 3 }),
         minTurns: 6,
         multiPairs: Object.freeze({ min: 2, max: 3 })
       }),
       medium: Object.freeze({
         gridSizes: Object.freeze([[7, 6], [7, 7], [8, 6], [8, 7]]),
-        holeRange: Object.freeze({ min: 2, max: 6 }),
+        holeRange: Object.freeze({ min: 3, max: 8 }),
         minTurns: 12,
         multiPairs: Object.freeze({ min: 3, max: 4 })
       }),
       hard: Object.freeze({
         gridSizes: Object.freeze([[8, 8], [9, 7], [9, 8], [9, 9]]),
-        holeRange: Object.freeze({ min: 1, max: 5 }),
+        holeRange: Object.freeze({ min: 5, max: 12 }),
         minTurns: 18,
         multiPairs: Object.freeze({ min: 4, max: 5 })
+      })
+    }),
+    layout: Object.freeze({
+      centerBias: Object.freeze({
+        easy: 0.35,
+        medium: 0.58,
+        hard: 0.85
+      }),
+      clusterBias: Object.freeze({
+        easy: 0.3,
+        medium: 0.5,
+        hard: 0.7
+      }),
+      templates: Object.freeze({
+        easy: Object.freeze([]),
+        medium: Object.freeze([
+          Object.freeze({
+            width: 7,
+            height: 7,
+            mask: Object.freeze([
+              '..###..',
+              '.#####.',
+              '.##.##.',
+              '.#...#.',
+              '.##.##.',
+              '.#####.',
+              '..###..'
+            ])
+          })
+        ]),
+        hard: Object.freeze([
+          Object.freeze({
+            width: 8,
+            height: 8,
+            mask: Object.freeze([
+              '..####..',
+              '.######.',
+              '.##..##.',
+              '.#....#.',
+              '.##..##.',
+              '.######.',
+              '..####..',
+              '........'
+            ])
+          }),
+          Object.freeze({
+            width: 9,
+            height: 9,
+            mask: Object.freeze([
+              '...###...',
+              '..#####..',
+              '.#######.',
+              '.##...##.',
+              '.##...##.',
+              '.#######.',
+              '..#####..',
+              '...###...',
+              '.........'
+            ])
+          })
+        ])
       })
     })
   });
@@ -164,10 +225,12 @@
         base.difficulties[key]
       );
     });
+    const layout = normalizeLayoutConfig(source.layout, base.layout);
     return {
       maxGenerationAttempts,
       holeRetryLimit,
-      difficulties
+      difficulties,
+      layout
     };
   }
 
@@ -224,6 +287,84 @@
       minTurns,
       multiPairs: { min: multiMin, max: multiMax }
     };
+  }
+
+  function normalizeLayoutConfig(config, fallback) {
+    const base = fallback && typeof fallback === 'object'
+      ? fallback
+      : DEFAULT_CONFIG.layout;
+    const source = config && typeof config === 'object' ? config : {};
+
+    const centerBias = {};
+    const clusterBias = {};
+    ['easy', 'medium', 'hard'].forEach(key => {
+      const baseCenter = clampNumber(base?.centerBias?.[key], 0, 4, 0.4);
+      const baseCluster = clampNumber(base?.clusterBias?.[key], 0, 1, 0.4);
+      centerBias[key] = clampNumber(source?.centerBias?.[key], 0, 4, baseCenter);
+      clusterBias[key] = clampNumber(source?.clusterBias?.[key], 0, 1, baseCluster);
+    });
+
+    const templates = {};
+    const templateSource = source.templates && typeof source.templates === 'object'
+      ? source.templates
+      : base?.templates || {};
+    ['easy', 'medium', 'hard'].forEach(key => {
+      const list = Array.isArray(templateSource?.[key]) ? templateSource[key] : [];
+      const normalized = [];
+      list.forEach(entry => {
+        if (!entry || typeof entry !== 'object') {
+          return;
+        }
+        const width = Number.isFinite(entry.width) ? Math.max(3, Math.floor(entry.width)) : null;
+        const height = Number.isFinite(entry.height) ? Math.max(3, Math.floor(entry.height)) : null;
+        if (!width || !height) {
+          return;
+        }
+        const rawMask = Array.isArray(entry.mask)
+          ? entry.mask
+          : Array.isArray(entry.masks)
+            ? entry.masks
+            : null;
+        const directIndices = Array.isArray(entry.indices)
+          ? entry.indices.filter(index => Number.isFinite(index) && index >= 0)
+          : null;
+        const indices = [];
+        if (directIndices && directIndices.length) {
+          directIndices.forEach(index => {
+            const normalizedIndex = Math.floor(index);
+            if (normalizedIndex >= 0 && normalizedIndex < width * height) {
+              indices.push(normalizedIndex);
+            }
+          });
+        } else if (rawMask && rawMask.length) {
+          for (let y = 0; y < Math.min(rawMask.length, height); y += 1) {
+            const row = rawMask[y];
+            if (typeof row !== 'string') {
+              continue;
+            }
+            for (let x = 0; x < Math.min(row.length, width); x += 1) {
+              const symbol = row[x];
+              if (symbol === '#' || symbol === '1' || symbol === 'X' || symbol === 'x') {
+                indices.push(y * width + x);
+              }
+            }
+          }
+        }
+        if (!indices.length) {
+          return;
+        }
+        const unique = Array.from(new Set(indices)).filter(index => index >= 0 && index < width * height);
+        if (!unique.length) {
+          return;
+        }
+        normalized.push({ width, height, indices: unique });
+      });
+      if (normalized.length) {
+        templates[key] = normalized;
+      }
+    });
+
+    return { centerBias, clusterBias, templates };
   }
 
   function loadRemoteConfig() {
@@ -446,6 +587,7 @@
   }
   function generatePuzzle(mode, difficulty, config) {
     const difficultyConfig = config.difficulties[difficulty] || config.difficulties.easy;
+    const layoutConfig = config.layout || DEFAULT_CONFIG.layout;
     const sizes = Array.isArray(difficultyConfig.gridSizes)
       ? difficultyConfig.gridSizes
       : [[5, 5]];
@@ -474,7 +616,13 @@
       const holeCount = holeMin === currentHoleMax
         ? holeMin
         : randomInt(holeMin, currentHoleMax);
-      const blocked = generateBlockedSet(width, height, holeCount);
+      const blocked = generateBlockedSet(
+        width,
+        height,
+        holeCount,
+        layoutConfig,
+        difficulty
+      );
       const path = findHamiltonianPath(width, height, blocked, generationLimiter);
       if (generationLimiter.timedOut()) {
         break;
@@ -518,28 +666,184 @@
       );
     }
 
-    const fallbackPuzzle = buildFallbackPuzzle(mode, width, height, difficultyConfig);
+    const fallbackPuzzle = buildFallbackPuzzle(
+      mode,
+      width,
+      height,
+      difficultyConfig,
+      layoutConfig,
+      difficulty
+    );
     if (fallbackPuzzle) {
       return fallbackPuzzle;
     }
     return null;
   }
 
-  function generateBlockedSet(width, height, count) {
+  function generateBlockedSet(width, height, count, layoutConfig, difficultyKey) {
     const total = width * height;
     const limit = Math.max(0, Math.min(count, total - 2));
     if (limit <= 0) {
       return new Set();
     }
     const blocked = new Set();
-    while (blocked.size < limit) {
-      const index = randomInt(0, total - 1);
-      blocked.add(index);
-      if (blocked.size >= limit) {
-        break;
+    const clusterProbability = clampNumber(
+      layoutConfig?.clusterBias?.[difficultyKey],
+      0,
+      1,
+      clampNumber(DEFAULT_CONFIG.layout.clusterBias?.[difficultyKey], 0, 1, 0.4)
+    );
+    const centerBiasValue = clampNumber(
+      layoutConfig?.centerBias?.[difficultyKey],
+      0,
+      4,
+      clampNumber(DEFAULT_CONFIG.layout.centerBias?.[difficultyKey], 0, 4, 0.4)
+    );
+    const weights = createCenterWeightedMap(width, height, centerBiasValue);
+    const preferred = selectTemplateIndices(layoutConfig?.templates, difficultyKey, width, height);
+    if (preferred && preferred.length) {
+      const prioritized = shuffle(preferred.slice());
+      for (let i = 0; i < prioritized.length && blocked.size < limit; i += 1) {
+        blocked.add(prioritized[i]);
       }
     }
+    let safety = 0;
+    while (blocked.size < limit && safety < total * 4) {
+      safety += 1;
+      let candidate = null;
+      if (blocked.size > 0 && Math.random() < clusterProbability) {
+        candidate = selectClusterNeighbor(blocked, width, height, weights);
+      }
+      if (candidate === null || blocked.has(candidate)) {
+        candidate = selectWeightedIndex(weights, blocked);
+      }
+      if (candidate === null) {
+        break;
+      }
+      blocked.add(candidate);
+    }
     return blocked;
+  }
+
+  function selectTemplateIndices(templates, difficultyKey, width, height) {
+    if (!templates || !templates[difficultyKey]) {
+      return null;
+    }
+    const candidates = templates[difficultyKey].filter(template => (
+      template
+      && template.width === width
+      && template.height === height
+      && Array.isArray(template.indices)
+    ));
+    if (!candidates.length) {
+      return null;
+    }
+    const choice = candidates[randomInt(0, candidates.length - 1)];
+    return choice.indices ? choice.indices.slice() : null;
+  }
+
+  function createCenterWeightedMap(width, height, biasValue) {
+    const weights = new Array(width * height);
+    const centerX = (width - 1) / 2;
+    const centerY = (height - 1) / 2;
+    const maxDistance = Math.sqrt(centerX * centerX + centerY * centerY) || 1;
+    const exponent = 1 + Math.max(0, biasValue || 0) * 2.5;
+    for (let y = 0; y < height; y += 1) {
+      for (let x = 0; x < width; x += 1) {
+        const dx = x - centerX;
+        const dy = y - centerY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const normalized = Math.max(0, Math.min(1, distance / maxDistance));
+        const inverted = 1 - normalized;
+        const weight = Math.pow(Math.max(0, inverted), exponent) + 0.05;
+        const jitter = 0.85 + Math.random() * 0.3;
+        weights[y * width + x] = weight * jitter;
+      }
+    }
+    return weights;
+  }
+
+  function selectWeightedIndex(weights, blocked) {
+    if (!Array.isArray(weights) || !weights.length) {
+      return null;
+    }
+    let totalWeight = 0;
+    for (let i = 0; i < weights.length; i += 1) {
+      if (!blocked.has(i)) {
+        totalWeight += Math.max(0, weights[i] || 0);
+      }
+    }
+    if (totalWeight <= 0) {
+      return null;
+    }
+    let threshold = Math.random() * totalWeight;
+    for (let i = 0; i < weights.length; i += 1) {
+      if (blocked.has(i)) {
+        continue;
+      }
+      threshold -= Math.max(0, weights[i] || 0);
+      if (threshold <= 0) {
+        return i;
+      }
+    }
+    for (let i = weights.length - 1; i >= 0; i -= 1) {
+      if (!blocked.has(i)) {
+        return i;
+      }
+    }
+    return null;
+  }
+
+  function selectClusterNeighbor(blocked, width, height, weights) {
+    const blockedIndices = Array.from(blocked);
+    if (!blockedIndices.length) {
+      return null;
+    }
+    for (let attempt = 0; attempt < blockedIndices.length * 2; attempt += 1) {
+      const anchor = blockedIndices[randomInt(0, blockedIndices.length - 1)];
+      const neighbors = getNeighborIndices(anchor, width, height);
+      const available = neighbors.filter(index => !blocked.has(index));
+      if (!available.length) {
+        continue;
+      }
+      if (!weights || !weights.length) {
+        return available[randomInt(0, available.length - 1)];
+      }
+      let bestCandidate = null;
+      let bestWeight = -1;
+      available.forEach(index => {
+        const weight = Math.max(0, weights[index] || 0);
+        const noise = 0.9 + Math.random() * 0.2;
+        const score = weight * noise;
+        if (score > bestWeight) {
+          bestWeight = score;
+          bestCandidate = index;
+        }
+      });
+      if (bestCandidate !== null && bestCandidate !== undefined) {
+        return bestCandidate;
+      }
+    }
+    return null;
+  }
+
+  function getNeighborIndices(index, width, height) {
+    const neighbors = [];
+    const x = index % width;
+    const y = Math.floor(index / width);
+    if (x > 0) {
+      neighbors.push(index - 1);
+    }
+    if (x < width - 1) {
+      neighbors.push(index + 1);
+    }
+    if (y > 0) {
+      neighbors.push(index - width);
+    }
+    if (y < height - 1) {
+      neighbors.push(index + width);
+    }
+    return neighbors;
   }
 
   function findHamiltonianPath(width, height, blockedIndices, limiter) {
@@ -732,7 +1036,7 @@
     return path;
   }
 
-  function buildFallbackPuzzle(mode, width, height, difficultyConfig) {
+  function buildFallbackPuzzle(mode, width, height, difficultyConfig, layoutConfig, difficultyKey) {
     const basePath = createSimpleHamiltonianPath(width, height);
     if (!Array.isArray(basePath) || basePath.length < 2) {
       return null;
@@ -745,6 +1049,17 @@
       return buildPuzzleFromPath(mode, width, height, new Set(), basePath, difficultyConfig);
     }
     const targetHoles = Math.max(minHoles, Math.min(maxHoles, Math.round((minHoles + maxHoles) / 2)));
+    const biasedBlocked = generateBlockedSet(
+      width,
+      height,
+      targetHoles,
+      layoutConfig,
+      difficultyKey
+    );
+    const biasedPath = findHamiltonianPath(width, height, biasedBlocked, null);
+    if (biasedPath && biasedPath.length >= 2) {
+      return buildPuzzleFromPath(mode, width, height, biasedBlocked, biasedPath, difficultyConfig);
+    }
     const blocked = new Set();
     let startIndex = 0;
     let endIndex = basePath.length - 1;
