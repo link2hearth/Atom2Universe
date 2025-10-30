@@ -14,6 +14,7 @@
     'holdem',
     'dice',
     'blackjack',
+    'othello',
     'echecs'
   ];
 
