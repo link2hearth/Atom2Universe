@@ -120,6 +120,13 @@
     state.blind = clamped;
     state.minRaise = clamped;
     state.lastRaiseAmount = clamped;
+    if (state.config) {
+      state.config.blind = clamped;
+      if (!Number.isFinite(state.config.minRaise) || state.config.minRaise < clamped) {
+        state.config.minRaise = clamped;
+      }
+    }
+    dispatchHoldemEvent('blindChange', { blind: clamped });
   }
 
   function syncMinRaiseBaseline() {
@@ -191,6 +198,18 @@
       const formatted = formatTemplateValue(params[key]);
       return formatted;
     });
+  }
+
+  function dispatchHoldemEvent(name, detail) {
+    if (typeof window === 'undefined' || typeof window.dispatchEvent !== 'function') {
+      return;
+    }
+    try {
+      const event = new CustomEvent(`holdem:${name}`, { detail });
+      window.dispatchEvent(event);
+    } catch (error) {
+      // Ignore CustomEvent issues in unsupported environments
+    }
   }
 
   function translate(key, fallback, params) {
@@ -2335,11 +2354,93 @@
     });
   }
 
+  function applyHoldemBlindFromOptions(value) {
+    const numeric = Number(value);
+    if (!Number.isFinite(numeric) || numeric <= 0) {
+      return { success: false, reason: 'invalid' };
+    }
+    setStakeValue(numeric);
+    render();
+    commitAutosave();
+    return { success: true, blind: state.blind };
+  }
+
+  function scaleHoldemBlindFromOptions(factor) {
+    const numericFactor = Number(factor);
+    if (!Number.isFinite(numericFactor) || numericFactor <= 0) {
+      return { success: false, reason: 'invalid' };
+    }
+    const baseline = state.blind > 0 ? state.blind : CONFIG.blind;
+    return applyHoldemBlindFromOptions(baseline * numericFactor);
+  }
+
+  function wipeHoldemOpponentsFromOptions() {
+    ensurePlayers();
+    syncHeroStackWithGameState();
+    const hero = getHero();
+    const heroStack = hero ? sanitizeStack(hero.stack, state.config.startingStack) : enforceBaseAiStack();
+    let computedStack = heroStack * 100;
+    if (!Number.isFinite(computedStack) || computedStack <= 0) {
+      computedStack = state.config.aiStack;
+    } else if (computedStack > Number.MAX_SAFE_INTEGER) {
+      computedStack = Number.MAX_SAFE_INTEGER;
+    }
+    let respawnStack = sanitizeStack(computedStack, state.config.aiStack);
+    if (!Number.isFinite(respawnStack) || respawnStack <= 0) {
+      respawnStack = state.config.aiStack;
+    }
+    const baseline = enforceBaseAiStack();
+    respawnStack = Math.max(baseline, respawnStack);
+    state.config.aiStack = respawnStack;
+    state.baseAiStack = respawnStack;
+    for (let i = 0; i < state.players.length; i += 1) {
+      const player = state.players[i];
+      if (player.id === 'hero') {
+        continue;
+      }
+      player.stack = respawnStack;
+      player.folded = false;
+      player.allIn = false;
+    }
+    resetTableState();
+    state.phase = 'idle';
+    state.awaitingPlayer = false;
+    state.activePlayerId = null;
+    updateStatus('index.sections.holdem.status.intro', 'Lancez une nouvelle donne pour jouer.');
+    render();
+    commitAutosave();
+    dispatchHoldemEvent('aiWipe', { stack: respawnStack, blind: state.blind });
+    return { success: true, stack: respawnStack, blind: state.blind };
+  }
+
+  function registerHoldemOptionsBridge() {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    const existing = window.atom2universHoldem && typeof window.atom2universHoldem === 'object'
+      ? window.atom2universHoldem
+      : {};
+    const api = {
+      getBlind: () => state.blind,
+      setBlind: value => applyHoldemBlindFromOptions(value),
+      scaleBlind: factor => scaleHoldemBlindFromOptions(factor),
+      wipeOpponents: () => wipeHoldemOpponentsFromOptions()
+    };
+    window.atom2universHoldem = Object.freeze({ ...existing, ...api });
+  }
+
   function init() {
     loadAutosave();
     ensurePlayers();
     render();
     updateStatus('index.sections.holdem.status.intro', 'Lancez une nouvelle donne pour jouer.');
+
+    registerHoldemOptionsBridge();
+    if (typeof setTimeout === 'function') {
+      setTimeout(() => {
+        dispatchHoldemEvent('blindChange', { blind: state.blind });
+      }, 0);
+    }
 
     if (elements.newHand) {
       elements.newHand.addEventListener('click', () => {

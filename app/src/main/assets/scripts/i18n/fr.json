@@ -992,6 +992,17 @@
           "confirm": "Réinitialiser ma progression",
           "cancel": "Conserver ma progression"
         },
+        "holdem": {
+          "title": "Table Hold’em",
+          "description": "Relancez les adversaires IA et ajustez la blinde du mini-jeu de poker Hold’em.",
+          "wipeButton": "Wipe — réinitialiser les IA",
+          "wipeAria": "Réinitialiser les réserves des IA Hold’em",
+          "blindLabel": "Blinde actuelle",
+          "divideButton": "÷10",
+          "divideAria": "Diviser la blinde Hold’em par dix",
+          "multiplyButton": "×10",
+          "multiplyAria": "Multiplier la blinde Hold’em par dix"
+        },
         "chiptune": {
           "title": "Module Musique Midi",
           "linkDescription": "Retrouvez le lecteur MIDI directement dans l’interface du jeu.",
@@ -1908,6 +1919,12 @@
         "brickSkin": {
           "unlocked": "Choisissez l’apparence des briques de Particules."
         }
+      },
+      "holdemOptions": {
+        "wipeSuccess": "Réserve des IA fixée à {stack} atomes.",
+        "wipeFailure": "Table Hold’em indisponible.",
+        "blindUpdated": "Blinde Hold’em ajustée à {blind}.",
+        "blindUnavailable": "Impossible d’ajuster la blinde pour le moment."
       },
       "frenzy": "Frénésie",
       "frenzyActivate": "Activer la {label} ({multiplier})",

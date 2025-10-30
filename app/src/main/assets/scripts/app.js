@@ -468,6 +468,8 @@ const DEFAULT_LANGUAGE_CODE = (() => {
   return 'fr';
 })();
 
+const HOLDEM_NUMBER_FORMAT = Object.freeze({ maximumFractionDigits: 0, minimumFractionDigits: 0 });
+
 function normalizeLanguageCode(raw) {
   if (typeof raw !== 'string') {
     return '';
@@ -966,6 +968,118 @@ function formatNumberLocalized(value, options) {
 
 function formatIntegerLocalized(value) {
   return formatNumberLocalized(value, { maximumFractionDigits: 0, minimumFractionDigits: 0 });
+}
+
+function getHoldemBridge() {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+  const bridge = window.atom2universHoldem;
+  if (!bridge || typeof bridge !== 'object') {
+    return null;
+  }
+  return bridge;
+}
+
+function formatHoldemOptionValue(value) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) {
+    return formatNumberLocalized(0, HOLDEM_NUMBER_FORMAT);
+  }
+  const clamped = Math.max(0, Math.floor(numeric));
+  return formatNumberLocalized(clamped, HOLDEM_NUMBER_FORMAT);
+}
+
+function updateHoldemBlindOption(blind) {
+  if (!elements.holdemBlindValue) {
+    return;
+  }
+  let numeric = Number(blind);
+  if (!Number.isFinite(numeric) || numeric <= 0) {
+    const bridge = getHoldemBridge();
+    if (bridge && typeof bridge.getBlind === 'function') {
+      try {
+        numeric = Number(bridge.getBlind());
+      } catch (error) {
+        numeric = Number.NaN;
+      }
+    }
+  }
+  if (Number.isFinite(numeric) && numeric > 0) {
+    const rounded = Math.max(1, Math.floor(numeric));
+    elements.holdemBlindValue.textContent = formatNumberLocalized(rounded, HOLDEM_NUMBER_FORMAT);
+  } else {
+    elements.holdemBlindValue.textContent = '—';
+  }
+}
+
+function handleHoldemWipeRequest() {
+  const bridge = getHoldemBridge();
+  if (!bridge || typeof bridge.wipeOpponents !== 'function') {
+    showToast(t('scripts.app.holdemOptions.wipeFailure', 'Hold’em table unavailable.'));
+    return;
+  }
+  try {
+    const result = bridge.wipeOpponents();
+    if (result && result.success) {
+      updateHoldemBlindOption(result.blind);
+      const stackLabel = formatHoldemOptionValue(result.stack);
+      showToast(t('scripts.app.holdemOptions.wipeSuccess', { stack: stackLabel }));
+      return;
+    }
+  } catch (error) {
+    console.error('Unable to wipe Hold’em opponents', error);
+  }
+  showToast(t('scripts.app.holdemOptions.wipeFailure', 'Hold’em table unavailable.'));
+}
+
+function handleHoldemBlindScaling(factor) {
+  const bridge = getHoldemBridge();
+  if (!bridge || typeof bridge.scaleBlind !== 'function') {
+    showToast(t('scripts.app.holdemOptions.blindUnavailable', 'Unable to adjust the blind right now.'));
+    return;
+  }
+  try {
+    const result = bridge.scaleBlind(factor);
+    if (result && result.success) {
+      updateHoldemBlindOption(result.blind);
+      const blindLabel = formatHoldemOptionValue(result.blind);
+      showToast(t('scripts.app.holdemOptions.blindUpdated', { blind: blindLabel }));
+      return;
+    }
+  } catch (error) {
+    console.error('Unable to adjust Hold’em blind', error);
+  }
+  showToast(t('scripts.app.holdemOptions.blindUnavailable', 'Unable to adjust the blind right now.'));
+}
+
+function initializeHoldemOptionsUI() {
+  updateHoldemBlindOption();
+  if (!holdemBlindListenerAttached && typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+    window.addEventListener('holdem:blindChange', event => {
+      const detail = event && event.detail ? event.detail.blind : undefined;
+      updateHoldemBlindOption(detail);
+    });
+    window.addEventListener('holdem:aiWipe', event => {
+      const detail = event && event.detail ? event.detail.blind : undefined;
+      updateHoldemBlindOption(detail);
+    });
+    holdemBlindListenerAttached = true;
+  }
+}
+
+function subscribeHoldemOptionsLanguageUpdates() {
+  const handler = () => {
+    updateHoldemBlindOption();
+  };
+  const api = getI18nApi();
+  if (api && typeof api.onLanguageChanged === 'function') {
+    api.onLanguageChanged(handler);
+    return;
+  }
+  if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
+    globalThis.addEventListener('i18n:languagechange', handler);
+  }
 }
 
 function formatLayeredLocalized(value, options = {}) {
@@ -3838,6 +3952,7 @@ function evaluateTrophies() {
 }
 
 let elements = {};
+let holdemBlindListenerAttached = false;
 
 let pageHiddenAt = null;
 let backgroundReloadScheduled = false;
@@ -4407,6 +4522,11 @@ function collectDomElements() {
   brickSkinOptionCard: document.getElementById('brickSkinOptionCard'),
   brickSkinSelect: document.getElementById('brickSkinSelect'),
   brickSkinStatus: document.getElementById('brickSkinStatus'),
+  holdemOptionCard: document.getElementById('holdemOptionCard'),
+  holdemWipeButton: document.getElementById('holdemWipeButton'),
+  holdemBlindValue: document.getElementById('holdemBlindValue'),
+  holdemBlindDivideButton: document.getElementById('holdemBlindDivideButton'),
+  holdemBlindMultiplyButton: document.getElementById('holdemBlindMultiplyButton'),
   openDevkitButton: document.getElementById('openDevkitButton'),
   resetButton: document.getElementById('resetButton'),
   resetDialog: document.getElementById('resetDialog'),
@@ -11182,6 +11302,27 @@ function bindDomEventListeners() {
     });
   }
 
+  if (elements.holdemWipeButton) {
+    elements.holdemWipeButton.addEventListener('click', event => {
+      event.preventDefault();
+      handleHoldemWipeRequest();
+    });
+  }
+
+  if (elements.holdemBlindMultiplyButton) {
+    elements.holdemBlindMultiplyButton.addEventListener('click', event => {
+      event.preventDefault();
+      handleHoldemBlindScaling(10);
+    });
+  }
+
+  if (elements.holdemBlindDivideButton) {
+    elements.holdemBlindDivideButton.addEventListener('click', event => {
+      event.preventDefault();
+      handleHoldemBlindScaling(0.1);
+    });
+  }
+
   document.addEventListener('keydown', event => {
     if (event.key === 'F9') {
       event.preventDefault();
@@ -15452,6 +15593,7 @@ function initializeDomBoundModules() {
   updateBigBangVisibility();
   initHeaderBannerToggle();
   bindDomEventListeners();
+  initializeHoldemOptionsUI();
   initUiScaleOption();
   initResponsiveAutoScale();
   initTextFontOption();
@@ -15465,6 +15607,7 @@ function initializeDomBoundModules() {
   subscribePerformanceModeLanguageUpdates();
   subscribeInfoWelcomeLanguageUpdates();
   subscribeInfoCharactersLanguageUpdates();
+  subscribeHoldemOptionsLanguageUpdates();
   updateDevKitUI();
   if (typeof initParticulesGame === 'function') {
     initParticulesGame();
