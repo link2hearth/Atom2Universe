@@ -654,6 +654,27 @@
         <button
           type="button"
           class="arcade-hub-card"
+          aria-label="Ouvrir le mini-jeu Joker Roulette"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.roulette.aria"
+          data-page-target="roulette"
+        >
+          <span
+            class="arcade-hub-card__title"
+            role="heading"
+            aria-level="3"
+            data-i18n="index.sections.arcadeHub.cards.roulette.title"
+          >Joker Roulette</span>
+          <p
+            class="arcade-hub-card__description"
+            data-i18n="index.sections.arcadeHub.cards.roulette.description"
+          >Lancez une machine à sous néon et misez vos atomes sur les couleurs des cartes.</p>
+          <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.roulette.cta"
+            >Tourner</span
+          >
+        </button>
+        <button
+          type="button"
+          class="arcade-hub-card"
           aria-label="Ouvrir le mini-jeu Blackjack"
           data-i18n="aria-label:index.sections.arcadeHub.cards.blackjack.aria"
           data-page-target="blackjack"
@@ -1690,6 +1711,115 @@
             aria-label="Grille du puzzle The Line"
             data-i18n="aria-label:index.sections.theLine.board"
           ></div>
+        </div>
+      </div>
+    </section>
+
+    <section
+      id="roulette"
+      class="page page--roulette"
+      data-page-group="arcade"
+      aria-label="Mini-jeu Joker Roulette : misez sur les couleurs des cartes."
+      data-i18n="aria-label:index.sections.roulette.aria"
+      hidden
+    >
+      <div class="roulette">
+        <h2 class="visually-hidden" data-i18n="index.sections.roulette.title">Joker Roulette</h2>
+        <header class="roulette__header">
+          <div class="roulette-meta">
+            <p class="roulette-meta__line">
+              <span data-i18n="index.sections.roulette.betLabel">Mise&nbsp;:</span>
+              <strong id="rouletteCurrentBet">0</strong>
+            </p>
+            <p class="roulette-meta__line">
+              <span data-i18n="index.sections.roulette.balanceLabel">Solde&nbsp;:</span>
+              <strong id="rouletteAtomsBalance">0</strong>
+            </p>
+            <p class="roulette-meta__line">
+              <span data-i18n="index.sections.roulette.multiplierLabel">Dernier multiplicateur&nbsp;:</span>
+              <strong id="rouletteLastMultiplier">×1</strong>
+            </p>
+          </div>
+          <div class="roulette-actions">
+            <button
+              type="button"
+              class="roulette-action-button"
+              id="rouletteSpinButton"
+              data-i18n="index.sections.roulette.controls.spin"
+            >Lancer</button>
+          </div>
+        </header>
+        <div class="roulette-stage" data-roulette-stage>
+          <div
+            class="roulette-grid"
+            role="grid"
+            aria-label="Grille de la machine à sous"
+            data-i18n="aria-label:index.sections.roulette.gridAria"
+          >
+            <div class="roulette-column" data-roulette-column="0">
+              <div class="roulette-cell" role="gridcell" data-roulette-cell data-row="0" data-col="0">♥</div>
+              <div class="roulette-cell" role="gridcell" data-roulette-cell data-row="1" data-col="0">♣</div>
+              <div class="roulette-cell" role="gridcell" data-roulette-cell data-row="2" data-col="0">♦</div>
+            </div>
+            <div class="roulette-column" data-roulette-column="1">
+              <div class="roulette-cell" role="gridcell" data-roulette-cell data-row="0" data-col="1">♠</div>
+              <div class="roulette-cell" role="gridcell" data-roulette-cell data-row="1" data-col="1">♥</div>
+              <div class="roulette-cell" role="gridcell" data-roulette-cell data-row="2" data-col="1">♣</div>
+            </div>
+            <div class="roulette-column" data-roulette-column="2">
+              <div class="roulette-cell" role="gridcell" data-roulette-cell data-row="0" data-col="2">♦</div>
+              <div class="roulette-cell" role="gridcell" data-roulette-cell data-row="1" data-col="2">♠</div>
+              <div class="roulette-cell" role="gridcell" data-roulette-cell data-row="2" data-col="2">🃏</div>
+            </div>
+          </div>
+        </div>
+        <p
+          class="roulette-status"
+          id="rouletteStatus"
+          aria-live="polite"
+          data-i18n="index.sections.roulette.status.ready"
+        >Préparez votre mise et lancez la roulette.</p>
+        <div class="roulette-controls">
+          <section
+            class="roulette-bet"
+            id="rouletteBet"
+            role="group"
+            aria-label="Gestion des mises"
+            data-i18n="aria-label:index.sections.roulette.bet.aria"
+          >
+            <div
+              class="roulette-bet__options"
+              id="rouletteBetOptions"
+              role="group"
+              aria-label="Montants de mise disponibles"
+              data-i18n="aria-label:index.sections.roulette.bet.optionsAria"
+            ></div>
+            <div class="roulette-bet__summary">
+              <span>
+                <span data-i18n="index.sections.roulette.bet.current">Mise sélectionnée&nbsp;:</span>
+                <strong id="rouletteBetSummary">0</strong>
+              </span>
+              <span>
+                <span data-i18n="index.sections.roulette.bet.multiplier">Multiplicateur&nbsp;:</span>
+                <strong id="rouletteBetMultiplier">×1</strong>
+              </span>
+            </div>
+          </section>
+          <aside
+            class="roulette-payouts"
+            aria-label="Table des gains"
+            data-i18n="aria-label:index.sections.roulette.payouts.aria"
+          >
+            <h3 class="roulette-payouts__title" data-i18n="index.sections.roulette.payouts.title">Table des gains</h3>
+            <ul class="roulette-payouts__list">
+              <li id="roulettePayoutDiagonal" data-i18n="index.sections.roulette.payouts.diagonal">
+                Diagonale de couleur → ×2
+              </li>
+              <li id="roulettePayoutJoker" data-i18n="index.sections.roulette.payouts.jokerRow">
+                Ligne de Jokers → ×10
+              </li>
+            </ul>
+          </aside>
         </div>
       </div>
     </section>
@@ -3892,6 +4022,7 @@
   <script src="scripts/arcade/sudoku.js"></script>
   <script src="scripts/arcade/minesweeper.js"></script>
   <script src="scripts/arcade/solitaire.js"></script>
+  <script src="scripts/arcade/roulette.js"></script>
   <script src="scripts/arcade/holdem.js"></script>
   <script src="scripts/arcade/blackjack.js"></script>
   <script src="scripts/arcade/echecs.js"></script>

@@ -336,6 +336,12 @@
             "description": "Nothing to gain; it's a testing area for Conway's Game of Life.",
             "cta": "Explore"
           },
+          "roulette": {
+            "aria": "Open the Joker Roulette mini-game",
+            "title": "Joker Roulette",
+            "description": "Spin a neon slot machine and bet your Atoms on card suits.",
+            "cta": "Spin"
+          },
           "blackjack": {
             "aria": "Open the Blackjack mini-game",
             "title": "Blackjack",
@@ -790,6 +796,41 @@
             },
             "generic": "Game concluded."
           }
+        }
+      },
+      "roulette": {
+        "aria": "Joker Roulette mini-game",
+        "gridAria": "Slot machine grid",
+        "title": "Joker Roulette",
+        "betLabel": "Bet:",
+        "balanceLabel": "Balance:",
+        "multiplierLabel": "Last multiplier:",
+        "controls": {
+          "spin": "Spin"
+        },
+        "status": {
+          "ready": "Prepare your bet and launch the reels."
+        },
+        "bet": {
+          "aria": "Bet controls",
+          "optionsAria": "Available bet amounts",
+          "current": "Selected bet:",
+          "multiplier": "Multiplier:",
+          "option": "{amount} atoms",
+          "summary": "{amount} atoms",
+          "none": "None",
+          "scale": {
+            "multiplyLabel": "×10",
+            "multiplyAria": "Multiply bet options by 10 (current multiplier: ×{multiplier})",
+            "divideLabel": "÷10",
+            "divideAria": "Divide bet options by 10 (current multiplier: ×{multiplier})"
+          }
+        },
+        "payouts": {
+          "aria": "Payout table",
+          "title": "Payout table",
+          "diagonal": "Same-color diagonal → ×{multiplier}",
+          "jokerRow": "Row of Jokers → ×{multiplier}"
         }
       },
       "blackjack": {
@@ -1682,6 +1723,29 @@
           "solved": "Solution found ✔︎",
           "noSolution": "No solution found (or the puzzle is invalid).",
           "cleared": "Grid cleared."
+        }
+      },
+      "roulette": {
+        "status": {
+          "spinning": "Reels are spinning…",
+          "selectBet": "Select a bet before launching the reels.",
+          "insufficientAtoms": "Not enough atoms for this bet.",
+          "lose": "No win this time.",
+          "winDiagonal": "{color} diagonal! Payout ×{multiplier}.",
+          "winJokerRow": "Joker row! Payout ×{multiplier}.",
+          "winMultiple": "Multiple combos! Total payout ×{multiplier}.",
+          "win": "Payout ×{multiplier}."
+        },
+        "colors": {
+          "red": "Red",
+          "black": "Black"
+        },
+        "symbols": {
+          "hearts": "Heart",
+          "diamonds": "Diamond",
+          "clubs": "Club",
+          "spades": "Spade",
+          "joker": "Joker"
         }
       },
       "blackjack": {

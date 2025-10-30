@@ -790,6 +790,7 @@ const GAME_CONFIG = {
     'arcade.sudoku',
     'arcade.demineur',
     'arcade.solitaire',
+    'arcade.roulette',
     'arcade.blackjack',
     'arcade.holdem',
     'arcade.echecs',
@@ -902,6 +903,7 @@ const GAME_CONFIG = {
         sudoku: { type: 'feature', requires: 'arcade.hub' },
         demineur: { type: 'feature', requires: 'arcade.hub' },
         solitaire: { type: 'feature', requires: 'arcade.hub' },
+        roulette: { type: 'feature', requires: 'arcade.hub' },
         blackjack: { type: 'feature', requires: 'arcade.hub' },
         holdem: { type: 'feature', requires: 'arcade.hub' },
         echecs: { type: 'feature', requires: 'arcade.hub' },
@@ -1024,6 +1026,24 @@ const GAME_CONFIG = {
    * (vitesses, probabilités, textes, etc.) afin de centraliser les réglages.
    */
   arcade: {
+    /**
+     * Paramètres du mini-jeu Joker Roulette.
+     * - betOptions : mises de base proposées dans l’interface (avant multiplicateur).
+     * - payouts : multiplicateurs de gains pour chaque combinaison gagnante.
+     * - animation : rythme des arrêts de colonnes et cadence de brassage visuel.
+     */
+    roulette: {
+      betOptions: [10, 20, 50, 100],
+      payouts: {
+        diagonalColor: 2,
+        jokerRow: 10
+      },
+      animation: {
+        initialMs: 3000,
+        columnDelayMs: 1000,
+        shuffleIntervalMs: 90
+      }
+    },
     blackjack: {
       decks: 8,
       dealerHitSoft17: false,
