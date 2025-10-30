@@ -8,90 +8,93 @@
   const SAVE_VERSION = 1;
   const AUTOSAVE_DELAY_MS = 200;
   const BLOCKED_STATUS_RESET_MS = 1600;
+  const COMPLETION_HIGHLIGHT_DURATION_MS = 450;
+  const AUTO_ADVANCE_DELAY_MS = 520;
+  const COMPLETION_GACHA_REWARD = Object.freeze({ chance: 0.25, tickets: 1 });
 
   const DEFAULT_LEVELS = Object.freeze([
     Object.freeze({
       name: 'Training Dock',
       layout: Object.freeze([
-        '#####',
-        '#@  #',
-        '# $ #',
-        '# . #',
-        '#####'
+        '.....',
+        '.@  .',
+        '. $ .',
+        '. . .',
+        '.....'
       ])
     }),
     Object.freeze({
       name: 'Double Shift',
       layout: Object.freeze([
-        '######',
-        '# .  #',
-        '# $$ #',
-        '#  .@#',
-        '######'
+        '......',
+        '. .  .',
+        '. $$ .',
+        '.  .@.',
+        '......'
       ])
     }),
     Object.freeze({
       name: 'Crossing Lanes',
       layout: Object.freeze([
-        '#######',
-        '# . . #',
-        '# $$@ #',
-        '#     #',
-        '#######'
+        '.......',
+        '. . . .',
+        '. $$@ .',
+        '.     .',
+        '.......'
       ])
     }),
     Object.freeze({
       name: 'Storage Split',
       layout: Object.freeze([
-        '#######',
-        '#  .  #',
-        '# $$# #',
-        '#  .@ #',
-        '#######'
+        '.......',
+        '.  .  .',
+        '. $$# .',
+        '.  .@ .',
+        '.......'
       ])
     }),
     Object.freeze({
       name: 'Warehouse Loop',
       layout: Object.freeze([
-        '########',
-        '#  .  @#',
-        '# $$ $ #',
-        '#  . . #',
-        '########'
+        '........',
+        '.  .  @.',
+        '. $$ $ .',
+        '.  . . .',
+        '........'
       ])
     }),
     Object.freeze({
       name: 'Orbital Depot',
       layout: Object.freeze([
-        '########',
-        '# @    #',
-        '# $$#  #',
-        '#  .$. #',
-        '#   .  #',
-        '########'
+        '........',
+        '. @    .',
+        '. $$#  .',
+        '.  .$. .',
+        '.   .  .',
+        '........'
       ])
     }),
     Object.freeze({
       name: 'Tight Corners',
       layout: Object.freeze([
-        '########',
-        '#  .  ##',
-        '# $$@  #',
-        '#  # $ #',
-        '#  . . #',
-        '########'
+        '........',
+        '.  .  ..',
+        '. $$@  .',
+        '.  # $ .',
+        '.  . . .',
+        '........'
       ])
     }),
     Object.freeze({
       name: 'Central Support',
       layout: Object.freeze([
-        '########',
-        '#  . . #',
-        '# $$#$ #',
-        '# @  $ #',
-        '#  ##  #',
-        '#  . . #',
-        '########'
+        '........',
+        '.  . . .',
+        '. $$#$ .',
+        '. @  $ .',
+        '.  ##  .',
+        '.  . . .',
+        '........'
       ])
     })
   ]);
@@ -99,15 +102,15 @@
   const DEFAULT_CONFIG = Object.freeze({
     shuffleMoves: Object.freeze({ min: 48, max: 160 }),
     map: Object.freeze([
-      '#########',
-      '#.......#',
-      '#..#.#..#',
-      '#.......#',
-      '#.#...#.#',
-      '#.......#',
-      '#..#.#..#',
-      '#.......#',
-      '#########'
+      '.........',
+      '.........',
+      '...#.#...',
+      '.........',
+      '..#...#..',
+      '.........',
+      '...#.#...',
+      '.........',
+      '.........'
     ]),
     targets: Object.freeze([
       [2, 4],
@@ -166,6 +169,8 @@
     pointer: null,
     statusTimeout: null,
     autosaveTimer: null,
+    celebrationTimer: null,
+    autoAdvanceTimer: null,
     baseStatus: null,
     initialSnapshot: null,
     cellElements: [],
@@ -608,6 +613,7 @@
     state.config = normalized;
     state.configSignature = computeConfigSignature(normalized);
     state.levelDefinitions = Array.isArray(normalized.levels) ? normalized.levels : [];
+    clearCompletionEffects();
 
     if (state.levelDefinitions.length > 0) {
       loadLevel(0);
@@ -678,21 +684,15 @@
     if (!board) {
       return false;
     }
-    const status = document.getElementById('sokobanStatus');
-    const moves = document.getElementById('sokobanMovesValue');
-    const pushes = document.getElementById('sokobanPushesValue');
-    const level = document.getElementById('sokobanLevelValue');
     const restart = document.getElementById('sokobanRestartButton');
-    const newButton = document.getElementById('sokobanNewButton');
 
     state.elements = {
       board,
-      status,
-      moves,
-      pushes,
-      level,
-      restart,
-      newButton
+      status: null,
+      moves: null,
+      pushes: null,
+      level: null,
+      restart
     };
 
     board.setAttribute('role', 'grid');
@@ -700,19 +700,7 @@
 
     if (restart) {
       restart.addEventListener('click', () => {
-        if (!state.ready) {
-          return;
-        }
-        resetToInitialState();
-      });
-    }
-    if (newButton) {
-      newButton.addEventListener('click', () => {
-        if (!state.ready) {
-          prepareNewPuzzle({ incrementLevel: true, force: true });
-        } else {
-          prepareNewPuzzle({ incrementLevel: true });
-        }
+        prepareNewPuzzle({ randomizeLevel: true, force: true });
       });
     }
 
@@ -751,6 +739,21 @@
         board.appendChild(cell);
       }
       state.cellElements[row] = rowElements;
+    }
+  }
+
+  function clearCompletionEffects() {
+    if (state.celebrationTimer != null) {
+      window.clearTimeout(state.celebrationTimer);
+      state.celebrationTimer = null;
+    }
+    if (state.autoAdvanceTimer != null) {
+      window.clearTimeout(state.autoAdvanceTimer);
+      state.autoAdvanceTimer = null;
+    }
+    const board = state.elements?.board;
+    if (board) {
+      board.classList.remove('sokoban__board--celebrate');
     }
   }
 
@@ -920,7 +923,8 @@
     state.moveCount = clampInt(payload.moveCount, 0, 999999, 0);
     state.pushCount = clampInt(payload.pushCount, 0, 999999, 0);
     state.level = clampInt(payload.level, 1, 9999, 1);
-    state.solved = Boolean(payload.solved) && checkSolved();
+    const solvedFromSave = Boolean(payload.solved) && checkSolved();
+    state.solved = solvedFromSave;
     state.ready = !state.solved;
     if (state.solved) {
       setStatus(
@@ -936,7 +940,7 @@
     } else {
       setStatus(
         'scripts.arcade.sokoban.status.ready',
-        'Poussez les caisses sur les cibles lumineuses.',
+        'Niveau prêt.',
         null,
         { rememberBase: true }
       );
@@ -962,6 +966,9 @@
       state.initialSnapshot = fallbackSnapshot;
     } else {
       state.initialSnapshot = takeSnapshot();
+    }
+    if (solvedFromSave) {
+      handleLevelCompleted({ skipRewards: true, skipCelebration: true });
     }
     return true;
   }
@@ -1063,6 +1070,95 @@
     }
   }
 
+  function triggerBoardCelebration() {
+    const board = state.elements?.board;
+    if (!board) {
+      return;
+    }
+    board.classList.remove('sokoban__board--celebrate');
+    void board.offsetWidth;
+    board.classList.add('sokoban__board--celebrate');
+    if (state.celebrationTimer != null) {
+      window.clearTimeout(state.celebrationTimer);
+      state.celebrationTimer = null;
+    }
+    state.celebrationTimer = window.setTimeout(() => {
+      state.celebrationTimer = null;
+      board.classList.remove('sokoban__board--celebrate');
+    }, COMPLETION_HIGHLIGHT_DURATION_MS);
+  }
+
+  function maybeAwardCompletionReward() {
+    const tickets = Math.max(0, Math.floor(Number(COMPLETION_GACHA_REWARD.tickets) || 0));
+    const chance = Number(COMPLETION_GACHA_REWARD.chance);
+    if (!Number.isFinite(tickets) || tickets <= 0) {
+      return;
+    }
+    if (!Number.isFinite(chance) || chance <= 0) {
+      return;
+    }
+    if (Math.random() >= chance) {
+      return;
+    }
+    const awardGacha = typeof gainGachaTickets === 'function'
+      ? gainGachaTickets
+      : typeof window !== 'undefined' && typeof window.gainGachaTickets === 'function'
+        ? window.gainGachaTickets
+        : null;
+    if (typeof awardGacha !== 'function') {
+      return;
+    }
+    let gained = 0;
+    try {
+      gained = awardGacha(tickets, { unlockTicketStar: true });
+    } catch (error) {
+      console.warn('Sokoban: unable to grant gacha tickets', error);
+      gained = 0;
+    }
+    if (!Number.isFinite(gained) || gained <= 0 || typeof showToast !== 'function') {
+      return;
+    }
+    try {
+      const message = translateText(
+        'scripts.arcade.sokoban.rewards.gachaWin',
+        'Ticket gacha obtenu ! (+{count})',
+        { count: formatIntegerLocalized(gained) }
+      );
+      showToast(message);
+    } catch (error) {
+      console.warn('Sokoban: unable to display gacha reward toast', error);
+    }
+  }
+
+  function scheduleAutoAdvance() {
+    if (state.autoAdvanceTimer != null) {
+      window.clearTimeout(state.autoAdvanceTimer);
+      state.autoAdvanceTimer = null;
+    }
+    state.autoAdvanceTimer = window.setTimeout(() => {
+      state.autoAdvanceTimer = null;
+      prepareNewPuzzle({ randomizeLevel: true, force: true });
+    }, AUTO_ADVANCE_DELAY_MS);
+  }
+
+  function handleLevelCompleted(options = {}) {
+    const { skipRewards = false, skipCelebration = false } = options;
+    state.ready = false;
+    if (!skipCelebration) {
+      triggerBoardCelebration();
+    }
+    if (!skipRewards) {
+      maybeAwardCompletionReward();
+    }
+    if (state.autosaveTimer != null) {
+      window.clearTimeout(state.autosaveTimer);
+      state.autosaveTimer = null;
+    }
+    state.initialSnapshot = null;
+    flushAutosave();
+    scheduleAutoAdvance();
+  }
+
   function checkSolved() {
     if (state.boxes.size !== state.targetKeys.size) {
       return false;
@@ -1157,11 +1253,10 @@
         },
         { rememberBase: true }
       );
-      state.ready = false;
     } else if (!skipStatus && countMove) {
       setStatus(
         'scripts.arcade.sokoban.status.ready',
-        'Poussez les caisses sur les cibles lumineuses.',
+        'Niveau prêt.',
         null,
         { rememberBase: true }
       );
@@ -1169,7 +1264,9 @@
 
     renderBoard();
     updateHud();
-    if (!skipAutosave) {
+    if (solvedNow) {
+      handleLevelCompleted();
+    } else if (!skipAutosave) {
       scheduleAutosave();
     }
     return true;
@@ -1235,13 +1332,14 @@
     if (!applied) {
       return;
     }
+    clearCompletionEffects();
     state.moveCount = 0;
     state.pushCount = 0;
     state.solved = false;
     state.ready = true;
     setStatus(
       'scripts.arcade.sokoban.status.ready',
-      'Poussez les caisses sur les cibles lumineuses.',
+      'Niveau prêt.',
       null,
       { rememberBase: true }
     );
@@ -1250,20 +1348,41 @@
     scheduleAutosave();
   }
 
+  function selectRandomLevelIndex(excludeIndex) {
+    const total = Array.isArray(state.levelDefinitions) ? state.levelDefinitions.length : 0;
+    if (total <= 0) {
+      return 0;
+    }
+    const sanitizedExclude = Number.isInteger(excludeIndex) ? excludeIndex : -1;
+    let index = Math.floor(Math.random() * total);
+    if (total > 1 && sanitizedExclude >= 0 && sanitizedExclude < total) {
+      let guard = 0;
+      while (index === sanitizedExclude && guard < 6) {
+        index = Math.floor(Math.random() * total);
+        guard += 1;
+      }
+      if (index === sanitizedExclude) {
+        index = (sanitizedExclude + 1) % total;
+      }
+    }
+    return index;
+  }
+
   function prepareNewPuzzle(options = {}) {
-    const { incrementLevel = false, force = false } = options;
+    const { randomizeLevel = false, force = false } = options;
     if (!force && !state.ready && !state.solved) {
       // avoid interrupting initialization
       return;
     }
+    clearCompletionEffects();
     if (state.levelDefinitions.length > 0) {
       const totalLevels = state.levelDefinitions.length;
       if (totalLevels <= 0) {
         return;
       }
       let nextIndex = state.levelIndex;
-      if (incrementLevel) {
-        nextIndex = (state.levelIndex + 1) % totalLevels;
+      if (randomizeLevel || !Number.isInteger(nextIndex) || nextIndex < 0 || nextIndex >= totalLevels) {
+        nextIndex = selectRandomLevelIndex(state.levelIndex);
       }
       const loaded = loadLevel(nextIndex);
       if (!loaded) {
@@ -1277,7 +1396,7 @@
       state.ready = true;
       setStatus(
         'scripts.arcade.sokoban.status.ready',
-        'Poussez les caisses sur les cibles lumineuses.',
+        'Niveau prêt.',
         null,
         { rememberBase: true }
       );
@@ -1287,7 +1406,7 @@
       return;
     }
 
-    if (incrementLevel) {
+    if (randomizeLevel) {
       state.level = clampInt(state.level + 1, 1, 9999, 1);
     }
     shuffleFromSolvedState();
@@ -1298,7 +1417,7 @@
     state.ready = true;
     setStatus(
       'scripts.arcade.sokoban.status.ready',
-      'Poussez les caisses sur les cibles lumineuses.',
+      'Niveau prêt.',
       null,
       { rememberBase: true }
     );
@@ -1438,7 +1557,7 @@
       updateHud();
       refreshBaseStatus();
     } else {
-      prepareNewPuzzle({ incrementLevel: false, force: true });
+      prepareNewPuzzle({ randomizeLevel: true, force: true });
     }
   }
 
