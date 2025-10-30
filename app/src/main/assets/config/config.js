@@ -1062,6 +1062,11 @@ const GAME_CONFIG = {
     pachinko: {
       betOptions: [10, 20, 50],
       slotMultipliers: [0, 0.5, 1.5, 5, 1.5, 0.5, 0],
+      /**
+       * Bonus multiplicateur ajouté automatiquement aux lancers non rentables
+       * afin d'offrir un avantage au joueur (1.1 = +110 % de la mise).
+       */
+      advantageBonus: 1.1,
       board: {
         rows: 8,
         stepMs: 280
