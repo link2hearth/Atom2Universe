@@ -1688,6 +1688,22 @@
           </p>
         </header>
         <div class="othello__controls">
+          <div
+            class="othello__mode"
+            role="group"
+            aria-label="Choisir le mode de jeu"
+            data-i18n="aria-label:index.sections.othello.mode.aria"
+          >
+            <button
+              type="button"
+              class="othello__mode-toggle"
+              id="othelloModeToggle"
+              aria-pressed="false"
+              data-i18n="index.sections.othello.mode.solo"
+            >
+              Mode : Solo vs IA
+            </button>
+          </div>
           <button
             type="button"
             class="othello__reset"
@@ -1702,7 +1718,7 @@
               id="othelloStatus"
               role="status"
               aria-live="polite"
-              data-i18n="index.sections.othello.status.ready"
+              data-i18n="index.sections.othello.status.readySolo"
             >
               L’IA joue les noirs. Préparez-vous à jouer les blancs.
             </span>

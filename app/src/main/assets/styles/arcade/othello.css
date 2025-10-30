@@ -43,6 +43,39 @@
   gap: clamp(0.6rem, 1.5vw, 1.1rem);
 }
 
+.othello__mode {
+  display: flex;
+  align-items: center;
+}
+
+.othello__mode-toggle {
+  appearance: none;
+  border: 1px solid rgba(120, 190, 255, 0.35);
+  border-radius: 999px;
+  padding: clamp(0.35rem, 1vw, 0.55rem) clamp(1rem, 2.4vw, 1.5rem);
+  background: linear-gradient(135deg, rgba(40, 120, 220, 0.32), rgba(150, 90, 255, 0.26));
+  color: rgba(238, 244, 255, 0.9);
+  font-weight: 600;
+  font-size: clamp(0.85rem, 2.2vw, 0.95rem);
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.othello__mode-toggle:hover,
+.othello__mode-toggle:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 28px rgba(16, 26, 60, 0.45);
+  outline: none;
+  filter: brightness(1.05);
+}
+
+.othello__mode-toggle[aria-pressed='true'] {
+  border-color: rgba(160, 230, 140, 0.65);
+  background: linear-gradient(135deg, rgba(70, 200, 150, 0.35), rgba(60, 150, 255, 0.32));
+  color: rgba(250, 252, 255, 0.95);
+}
+
 .othello__reset {
   appearance: none;
   border: 1px solid rgba(120, 190, 255, 0.55);

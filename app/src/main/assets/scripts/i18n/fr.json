@@ -565,11 +565,42 @@
         "title": "Othello",
         "subtitle": "Encerclez les pions adverses pour les retourner.",
         "reset": "Réinitialiser la partie",
+        "mode": {
+          "aria": "Choisir le mode de jeu",
+          "solo": "Mode : Solo vs IA",
+          "duo": "Mode : 2 joueurs"
+        },
         "board": "Plateau d'Othello",
         "status": {
-          "ready": "L’IA joue les noirs. Préparez-vous à jouer les blancs."
+          "ready": "L’IA joue les noirs. Préparez-vous à jouer les blancs.",
+          "readySolo": "L’IA joue les noirs. Préparez-vous à jouer les blancs.",
+          "readyDuo": "Les deux joueurs contrôlent les pions. Les noirs commencent.",
+          "humanTurn": {
+            "black": "Aux noirs de jouer.",
+            "white": "À vous de jouer (blancs)."
+          },
+          "aiTurn": "L’IA (noirs) réfléchit…",
+          "invalid": "Coup invalide. Choisissez une case surlignée.",
+          "pass": "Aucun coup disponible pour les {player}. Tour passé.",
+          "gameOver": "Partie terminée. Noir {black} – Blanc {white}. {result}",
+          "result": {
+            "black": "Victoire des noirs !",
+            "white": "Victoire des blancs !",
+            "draw": "Match nul."
+          }
         },
-        "score": "Noirs : {black} · Blancs : {white}"
+        "score": "Noirs : {black} · Blancs : {white}",
+        "cell": "Case {row}, colonne {column} : {content}",
+        "cellValid": "Coup disponible",
+        "cellStates": {
+          "black": "pion noir",
+          "white": "pion blanc",
+          "empty": "vide"
+        },
+        "players": {
+          "black": "noirs",
+          "white": "blancs"
+        }
       },
       "theLine": {
         "aria": "Mini-jeu The Line : tracez un parcours couvrant toute la grille.",
@@ -1751,6 +1782,38 @@
       }
     },
     "arcade": {
+      "othello": {
+        "mode": {
+          "solo": "Mode : Solo vs IA",
+          "duo": "Mode : 2 joueurs"
+        },
+        "status": {
+          "humanTurn": {
+            "black": "Aux noirs de jouer.",
+            "white": "À vous de jouer (blancs)."
+          },
+          "aiTurn": "L’IA (noirs) réfléchit…",
+          "invalid": "Coup invalide. Choisissez une case surlignée.",
+          "pass": "Aucun coup disponible pour les {player}. Tour passé.",
+          "gameOver": "Partie terminée. Noir {black} – Blanc {white}. {result}",
+          "result": {
+            "black": "Victoire des noirs !",
+            "white": "Victoire des blancs !",
+            "draw": "Match nul."
+          }
+        },
+        "cell": "Case {row}, colonne {column} : {content}",
+        "cellValid": "Coup disponible",
+        "cellStates": {
+          "black": "pion noir",
+          "white": "pion blanc",
+          "empty": "vide"
+        },
+        "players": {
+          "black": "noirs",
+          "white": "blancs"
+        }
+      },
       "balance": {
         "status": {
           "ready": "Disposez les blocs puis appuyez sur la zone de résultat pour lancer le test.",

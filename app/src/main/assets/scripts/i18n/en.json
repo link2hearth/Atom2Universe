@@ -565,11 +565,42 @@
         "title": "Othello",
         "subtitle": "Trap and flip the opposing discs to control the board.",
         "reset": "Reset game",
+        "mode": {
+          "aria": "Choose the game mode",
+          "solo": "Mode: Solo vs AI",
+          "duo": "Mode: Two players"
+        },
         "board": "Othello board",
         "status": {
-          "ready": "The AI plays black. Get ready to play as white."
+          "ready": "The AI plays black. Get ready to play as white.",
+          "readySolo": "The AI plays black. Get ready to play as white.",
+          "readyDuo": "Both players control the discs. Black moves first.",
+          "humanTurn": {
+            "black": "Black to move.",
+            "white": "Your turn as white."
+          },
+          "aiTurn": "The AI (black) is thinking…",
+          "invalid": "Illegal move. Pick a highlighted square.",
+          "pass": "No moves available for the {player}. Turn skipped.",
+          "gameOver": "Game over. Black {black} – White {white}. {result}",
+          "result": {
+            "black": "Black wins!",
+            "white": "White wins!",
+            "draw": "Draw game."
+          }
         },
-        "score": "Black: {black} · White: {white}"
+        "score": "Black: {black} · White: {white}",
+        "cell": "Row {row}, column {column}: {content}",
+        "cellValid": "Available move",
+        "cellStates": {
+          "black": "black disc",
+          "white": "white disc",
+          "empty": "empty"
+        },
+        "players": {
+          "black": "black",
+          "white": "white"
+        }
       },
       "theLine": {
         "aria": "The Line mini-game: cover every tile with a single stroke.",
@@ -1751,6 +1782,38 @@
       }
     },
     "arcade": {
+      "othello": {
+        "mode": {
+          "solo": "Mode: Solo vs AI",
+          "duo": "Mode: Two players"
+        },
+        "status": {
+          "humanTurn": {
+            "black": "Black to move.",
+            "white": "Your turn as white."
+          },
+          "aiTurn": "The AI (black) is thinking…",
+          "invalid": "Illegal move. Pick a highlighted square.",
+          "pass": "No moves available for the {player}. Turn skipped.",
+          "gameOver": "Game over. Black {black} – White {white}. {result}",
+          "result": {
+            "black": "Black wins!",
+            "white": "White wins!",
+            "draw": "Draw game."
+          }
+        },
+        "cell": "Row {row}, column {column}: {content}",
+        "cellValid": "Available move",
+        "cellStates": {
+          "black": "black disc",
+          "white": "white disc",
+          "empty": "empty"
+        },
+        "players": {
+          "black": "black",
+          "white": "white"
+        }
+      },
       "balance": {
         "status": {
           "ready": "Arrange the blocks, then press the result panel when you're ready to test.",
