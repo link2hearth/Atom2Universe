@@ -72,6 +72,69 @@ const periodicElementByAtomicNumber = new Map(
     .filter(([atomicNumber]) => Number.isFinite(atomicNumber))
 );
 
+const GACHA_SPECIAL_CARD_DEFINITIONS = [
+  {
+    id: 'hydrogene',
+    assetPath: 'Assets/Cartes/Hydrogene.png',
+    labelKey: 'scripts.gacha.cards.names.hydrogene',
+    labelFallback: 'Carte Hydrogène'
+  },
+  {
+    id: 'helium',
+    assetPath: 'Assets/Cartes/Helium.png',
+    labelKey: 'scripts.gacha.cards.names.helium',
+    labelFallback: 'Carte Hélium'
+  },
+  {
+    id: 'carbone',
+    assetPath: 'Assets/Cartes/Carbone.png',
+    labelKey: 'scripts.gacha.cards.names.carbone',
+    labelFallback: 'Carte Carbone'
+  },
+  {
+    id: 'azote',
+    assetPath: 'Assets/Cartes/Azote.png',
+    labelKey: 'scripts.gacha.cards.names.azote',
+    labelFallback: 'Carte Azote'
+  },
+  {
+    id: 'oxygene',
+    assetPath: 'Assets/Cartes/Oxygene.png',
+    labelKey: 'scripts.gacha.cards.names.oxygene',
+    labelFallback: 'Carte Oxygène'
+  },
+  {
+    id: 'fer',
+    assetPath: 'Assets/Cartes/Fer.png',
+    labelKey: 'scripts.gacha.cards.names.fer',
+    labelFallback: 'Carte Fer'
+  },
+  {
+    id: 'or',
+    assetPath: 'Assets/Cartes/Or.png',
+    labelKey: 'scripts.gacha.cards.names.or',
+    labelFallback: 'Carte Or'
+  },
+  {
+    id: 'argent',
+    assetPath: 'Assets/Cartes/Argent.png',
+    labelKey: 'scripts.gacha.cards.names.argent',
+    labelFallback: 'Carte Argent'
+  },
+  {
+    id: 'cuivre',
+    assetPath: 'Assets/Cartes/Cuivre.png',
+    labelKey: 'scripts.gacha.cards.names.cuivre',
+    labelFallback: 'Carte Cuivre'
+  },
+  {
+    id: 'plutonium',
+    assetPath: 'Assets/Cartes/Plutonium.png',
+    labelKey: 'scripts.gacha.cards.names.plutonium',
+    labelFallback: 'Carte Plutonium'
+  }
+];
+
 const configElements = Array.isArray(CONFIG.elements) ? CONFIG.elements : [];
 
 const elementConfigByAtomicNumber = new Map();
@@ -1577,6 +1640,17 @@ function createInitialElementCollection() {
       effects,
       bonuses
     };
+  });
+  return collection;
+}
+
+function createInitialGachaCardCollection() {
+  const collection = {};
+  GACHA_SPECIAL_CARD_DEFINITIONS.forEach(def => {
+    if (!def || !def.id) {
+      return;
+    }
+    collection[def.id] = { id: def.id, count: 0 };
   });
   return collection;
 }

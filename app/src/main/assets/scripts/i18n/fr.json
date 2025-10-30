@@ -2725,6 +2725,22 @@
         "bonusSingle": "ticket Mach3",
         "bonusPlural": "tickets Mach3"
       },
+      "cards": {
+        "names": {
+          "hydrogene": "Carte Hydrogène",
+          "helium": "Carte Hélium",
+          "carbone": "Carte Carbone",
+          "azote": "Carte Azote",
+          "oxygene": "Carte Oxygène",
+          "fer": "Carte Fer",
+          "or": "Carte Or",
+          "argent": "Carte Argent",
+          "cuivre": "Carte Cuivre",
+          "plutonium": "Carte Plutonium"
+        },
+        "toastNew": "Nouvelle carte spéciale obtenue : {card}",
+        "toastDuplicate": "Carte spéciale obtenue à nouveau : {card}"
+      },
       "controls": {
         "modeSingle": "Tirage x1",
         "modeMulti": "Tirage x{count}",

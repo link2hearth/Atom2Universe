@@ -2725,6 +2725,22 @@
         "bonusSingle": "Mach3 ticket",
         "bonusPlural": "Mach3 tickets"
       },
+      "cards": {
+        "names": {
+          "hydrogene": "Hydrogen card",
+          "helium": "Helium card",
+          "carbone": "Carbon card",
+          "azote": "Nitrogen card",
+          "oxygene": "Oxygen card",
+          "fer": "Iron card",
+          "or": "Gold card",
+          "argent": "Silver card",
+          "cuivre": "Copper card",
+          "plutonium": "Plutonium card"
+        },
+        "toastNew": "Special card unlocked: {card}",
+        "toastDuplicate": "Special card found again: {card}"
+      },
       "controls": {
         "modeSingle": "Draw x1",
         "modeMulti": "Draw x{count}",

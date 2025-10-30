@@ -251,6 +251,137 @@ function getGachaLocalizedElementName(definition) {
   return '';
 }
 
+const SPECIAL_GACHA_CARD_CHANCE = 1 / 1000;
+
+const SPECIAL_GACHA_ELEMENT_CARD_MAP = Object.freeze({
+  hydrogene: 'hydrogene',
+  helium: 'helium'
+});
+
+const SPECIAL_GACHA_RARITY_CARD_MAP = Object.freeze({
+  stellaire: ['carbone', 'azote', 'oxygene'],
+  mythique: ['fer'],
+  singulier: ['or', 'argent', 'cuivre'],
+  irreel: ['plutonium']
+});
+
+const SPECIAL_GACHA_CARD_DEFINITION_INDEX = new Map(
+  Array.isArray(GACHA_SPECIAL_CARD_DEFINITIONS)
+    ? GACHA_SPECIAL_CARD_DEFINITIONS.map(def => [def.id, def])
+    : []
+);
+
+const SPECIAL_GACHA_CARD_ELEMENT_INDEX = (() => {
+  const map = new Map();
+  if (Array.isArray(periodicElements)) {
+    periodicElements.forEach(def => {
+      const gachaId = typeof def.gachaId === 'string' ? def.gachaId.trim() : '';
+      const id = gachaId || def.id;
+      if (id) {
+        map.set(id, def);
+      }
+    });
+  }
+  return map;
+})();
+
+function ensureGachaCardCollection() {
+  if (!gameState.gachaCards || typeof gameState.gachaCards !== 'object') {
+    if (typeof createInitialGachaCardCollection === 'function') {
+      gameState.gachaCards = createInitialGachaCardCollection();
+    } else {
+      gameState.gachaCards = {};
+    }
+  }
+  return gameState.gachaCards;
+}
+
+function getSpecialGachaCardDefinition(cardId) {
+  if (!cardId) {
+    return null;
+  }
+  return SPECIAL_GACHA_CARD_DEFINITION_INDEX.get(cardId) || null;
+}
+
+function resolveSpecialGachaCardLabel(cardId) {
+  if (!cardId) {
+    return '';
+  }
+  const definition = getSpecialGachaCardDefinition(cardId);
+  const elementDef = SPECIAL_GACHA_CARD_ELEMENT_INDEX.get(cardId) || null;
+  const elementName = elementDef ? getGachaLocalizedElementName(elementDef) : cardId;
+  const fallback = definition?.labelFallback || `Carte ${elementName}`;
+  return translateWithFallback(definition?.labelKey, fallback, { element: elementName });
+}
+
+function rollForSpecialGachaCard() {
+  return Math.random() < SPECIAL_GACHA_CARD_CHANCE;
+}
+
+function awardSpecialGachaCard(cardId) {
+  if (!cardId) {
+    return null;
+  }
+  const collection = ensureGachaCardCollection();
+  if (!collection[cardId]) {
+    collection[cardId] = { id: cardId, count: 0 };
+  }
+  const entry = collection[cardId];
+  const previousCount = Number(entry.count) || 0;
+  const newCount = previousCount + 1;
+  entry.count = newCount;
+  const definition = getSpecialGachaCardDefinition(cardId);
+  const label = resolveSpecialGachaCardLabel(cardId);
+  return {
+    cardId,
+    definition,
+    label,
+    assetPath: definition?.assetPath || null,
+    count: newCount,
+    isNew: previousCount === 0
+  };
+}
+
+function maybeAwardElementSpecialCard(elementDef) {
+  if (!elementDef) {
+    return null;
+  }
+  const gachaId = typeof elementDef.gachaId === 'string' ? elementDef.gachaId.trim() : '';
+  if (!gachaId) {
+    return null;
+  }
+  const cardId = SPECIAL_GACHA_ELEMENT_CARD_MAP[gachaId];
+  if (!cardId) {
+    return null;
+  }
+  if (!rollForSpecialGachaCard()) {
+    return null;
+  }
+  return awardSpecialGachaCard(cardId);
+}
+
+function maybeAwardRaritySpecialCard(rarity) {
+  const rarityId = typeof rarity === 'string'
+    ? rarity
+    : (typeof rarity?.id === 'string' ? rarity.id : '');
+  if (!rarityId) {
+    return null;
+  }
+  const candidates = SPECIAL_GACHA_RARITY_CARD_MAP[rarityId];
+  if (!Array.isArray(candidates) || candidates.length === 0) {
+    return null;
+  }
+  if (!rollForSpecialGachaCard()) {
+    return null;
+  }
+  let cardId = candidates[0];
+  if (candidates.length > 1) {
+    const index = Math.floor(Math.random() * candidates.length);
+    cardId = candidates[index];
+  }
+  return awardSpecialGachaCard(cardId);
+}
+
 const DEFAULT_GACHA_RARITIES = [
   {
     id: 'commun',
@@ -2927,6 +3058,7 @@ function performGachaRoll(count = 1) {
 
   const initialDrawCount = getTotalGachaDrawCount();
   const results = [];
+  const specialCardRewards = [];
   for (let rollIndex = 0; rollIndex < drawCount; rollIndex += 1) {
     const rarity = pickGachaRarity(initialDrawCount + rollIndex);
     if (!rarity) {
@@ -2965,6 +3097,15 @@ function performGachaRoll(count = 1) {
     }
     entry.owned = entry.lifetime > 0;
 
+    const elementCardReward = maybeAwardElementSpecialCard(elementDef);
+    if (elementCardReward) {
+      specialCardRewards.push(elementCardReward);
+    }
+    const rarityCardReward = maybeAwardRaritySpecialCard(rarity);
+    if (rarityCardReward) {
+      specialCardRewards.push(rarityCardReward);
+    }
+
     const isNew = previousLifetime === 0;
     results.push({ rarity, elementDef, isNew });
   }
@@ -2975,6 +3116,21 @@ function performGachaRoll(count = 1) {
       updateGachaUI();
     }
     return null;
+  }
+
+  if (specialCardRewards.length) {
+    specialCardRewards.forEach(reward => {
+      const toastKey = reward.isNew
+        ? 'scripts.gacha.cards.toastNew'
+        : 'scripts.gacha.cards.toastDuplicate';
+      const fallback = reward.isNew
+        ? 'Special card unlocked: {card}'
+        : 'Special card obtained again: {card}';
+      const message = translateWithFallback(toastKey, fallback, { card: reward.label });
+      if (message) {
+        showToast(message);
+      }
+    });
   }
 
   recalcProduction();
@@ -3001,7 +3157,8 @@ function performGachaRoll(count = 1) {
     newEntries,
     confettiColors,
     newCount,
-    duplicateCount
+    duplicateCount,
+    specialCards: specialCardRewards
   };
 }
 
