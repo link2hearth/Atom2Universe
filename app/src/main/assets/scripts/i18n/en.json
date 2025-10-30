@@ -2059,6 +2059,7 @@
         "labels": {
           "stack": "Atom reserve",
           "currentBet": "Current bet",
+          "status": "Status",
           "you": "You"
         },
         "phase": {
