@@ -743,6 +743,12 @@ const GAME_CONFIG = {
               'Affrontez le croupier avec un sabot qui se régénère automatiquement.'
           },
           {
+            id: 'pachinko',
+            label: 'Arcade Pachinko :',
+            description:
+              'Lâchez des orbes prismatiques sur un plateau étoilé et visez les cases à fort multiplicateur.'
+          },
+          {
             id: 'holdem',
             label: 'Arcade Hold’em :',
             description:
@@ -794,6 +800,7 @@ const GAME_CONFIG = {
     'arcade.demineur',
     'arcade.solitaire',
     'arcade.roulette',
+    'arcade.pachinko',
     'arcade.blackjack',
     'arcade.holdem',
     'arcade.echecs',
@@ -907,6 +914,7 @@ const GAME_CONFIG = {
         demineur: { type: 'feature', requires: 'arcade.hub' },
         solitaire: { type: 'feature', requires: 'arcade.hub' },
         roulette: { type: 'feature', requires: 'arcade.hub' },
+        pachinko: { type: 'feature', requires: 'arcade.hub' },
         blackjack: { type: 'feature', requires: 'arcade.hub' },
         holdem: { type: 'feature', requires: 'arcade.hub' },
         echecs: { type: 'feature', requires: 'arcade.hub' },
@@ -1049,6 +1057,14 @@ const GAME_CONFIG = {
         initialMs: 3000,
         columnDelayMs: 1000,
         shuffleIntervalMs: 90
+      }
+    },
+    pachinko: {
+      betOptions: [10, 20, 50],
+      slotMultipliers: [0, 0.5, 1.5, 5, 1.5, 0.5, 0],
+      board: {
+        rows: 8,
+        stepMs: 280
       }
     },
     blackjack: {

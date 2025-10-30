@@ -380,6 +380,12 @@
             "description": "Spin a neon slot machine and bet your Atoms on card suits.",
             "cta": "Spin"
           },
+          "pachinko": {
+            "aria": "Open the Prism Pachinko mini-game",
+            "title": "Prism Pachinko",
+            "description": "Drop radiant orbs across a neon forest of pegs and chase huge slot multipliers.",
+            "cta": "Drop"
+          },
           "blackjack": {
             "aria": "Open the Blackjack mini-game",
             "title": "Blackjack",
@@ -983,6 +989,47 @@
           "title": "Payout table",
           "diagonal": "Same-color diagonal → ×{multiplier}",
           "jokerRow": "Row of Jokers → ×{multiplier}"
+        }
+      },
+      "pachinko": {
+        "aria": "Prism Pachinko mini-game",
+        "title": "Prism Pachinko",
+        "status": {
+          "ready": "Choose a bet and launch a prism orb."
+        },
+        "board": {
+          "aria": "Pachinko board",
+          "title": "Pachinko board"
+        },
+        "controls": {
+          "aria": "Pachinko controls",
+          "title": "Controls",
+          "drop": "Drop orb"
+        },
+        "bet": {
+          "title": "Bet",
+          "aria": "Bet selection",
+          "current": "Selected bet:",
+          "none": "None",
+          "balance": "Atoms balance:",
+          "option": "{amount} atoms",
+          "optionsAria": "Available bet amounts",
+          "scale": {
+            "multiply": "×10",
+            "divide": "÷10",
+            "multiplyAria": "Multiply bet options by 10 (current multiplier: ×{multiplier})",
+            "divideAria": "Divide bet options by 10 (current multiplier: ×{multiplier})"
+          }
+        },
+        "history": {
+          "title": "Recent drops",
+          "empty": "No drops yet."
+        },
+        "slots": {
+          "void": "Void Rift",
+          "stardust": "Stardust Trail",
+          "aurora": "Aurora Gate",
+          "core": "Supernova Core"
         }
       },
       "blackjack": {
@@ -1899,6 +1946,10 @@
                 "label": "Arcade Blackjack:",
                 "description": "Bet your Atoms.."
               },
+              "pachinko": {
+                "label": "Arcade Pachinko:",
+                "description": "Drop radiant orbs across a neon peg garden and aim for dazzling multipliers."
+              },
               "gacha": {
                 "label": "Gacha:",
                 "description": "Spend your tickets to obtain atoms from the periodic table; completing collections grants APS and APC bonuses among others."
@@ -1952,6 +2003,24 @@
       }
     },
     "arcade": {
+      "pachinko": {
+        "status": {
+          "ready": "Choose a bet and launch a prism orb.",
+          "dropping": "Orb in freefall…",
+          "selectBet": "Select a bet before dropping an orb.",
+          "insufficientAtoms": "Not enough atoms for this bet.",
+          "win": "Supernova! {slot} pays {multiplier}. Net gain: {net}.",
+          "even": "{slot} returns your stake. Net: {net}.",
+          "softLoss": "{slot} only pays {multiplier}. Net: {net}.",
+          "loss": "{slot} swallows the orb. Net loss: {net}."
+        },
+        "toast": {
+          "win": "Pachinko jackpot!",
+          "even": "Break-even drop.",
+          "softLoss": "Partial payout.",
+          "loss": "No payout this time."
+        }
+      },
       "othello": {
         "mode": {
           "solo": "Mode: Solo vs AI",

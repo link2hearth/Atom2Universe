@@ -380,6 +380,12 @@
             "description": "Faites tourner une machine à sous néon et misez vos atomes sur les couleurs des cartes.",
             "cta": "Tourner"
           },
+          "pachinko": {
+            "aria": "Ouvrir le mini-jeu Prisme Pachinko",
+            "title": "Prisme Pachinko",
+            "description": "Lâchez des orbes prismatiques sur une forêt de picots néon et visez les multiplicateurs cosmiques.",
+            "cta": "Lâcher"
+          },
           "blackjack": {
             "aria": "Ouvrir le mini-jeu Blackjack",
             "title": "Blackjack",
@@ -983,6 +989,47 @@
           "title": "Table des gains",
           "diagonal": "Diagonale de couleur → ×{multiplier}",
           "jokerRow": "Ligne de Jokers → ×{multiplier}"
+        }
+      },
+      "pachinko": {
+        "aria": "Mini-jeu Prisme Pachinko",
+        "title": "Prisme Pachinko",
+        "status": {
+          "ready": "Choisissez une mise et lâchez une orbe prismatique."
+        },
+        "board": {
+          "aria": "Plateau de Pachinko",
+          "title": "Plateau de Pachinko"
+        },
+        "controls": {
+          "aria": "Commandes du Pachinko",
+          "title": "Commandes",
+          "drop": "Lâcher une orbe"
+        },
+        "bet": {
+          "title": "Mise",
+          "aria": "Sélection de mise",
+          "current": "Mise sélectionnée :",
+          "none": "Aucune",
+          "balance": "Solde d’atomes :",
+          "option": "{amount} atomes",
+          "optionsAria": "Montants de mise disponibles",
+          "scale": {
+            "multiply": "×10",
+            "divide": "÷10",
+            "multiplyAria": "Multiplier les mises par 10 (multiplicateur actuel : ×{multiplier})",
+            "divideAria": "Diviser les mises par 10 (multiplicateur actuel : ×{multiplier})"
+          }
+        },
+        "history": {
+          "title": "Derniers lancers",
+          "empty": "Aucun lancer pour le moment."
+        },
+        "slots": {
+          "void": "Faille du néant",
+          "stardust": "Trainée d’étoiles",
+          "aurora": "Porte aurore",
+          "core": "Cœur supernova"
         }
       },
       "blackjack": {
@@ -1899,6 +1946,10 @@
                 "label": "Arcade Blackjack :",
                 "description": "Pariez vous Atomes."
               },
+              "pachinko": {
+                "label": "Arcade Pachinko :",
+                "description": "Lâchez des orbes prismatiques dans un jardin de picots néon et ciblez les multiplicateurs flamboyants."
+              },
               "gacha": {
                 "label": "Gacha :",
                 "description": "Grâce à vos tickets gagnez des Atomes du tableau périodique des éléments, leurs collections vous octroieront des bonus de APS et APC notamment."
@@ -1952,6 +2003,24 @@
       }
     },
     "arcade": {
+      "pachinko": {
+        "status": {
+          "ready": "Choisissez une mise et lâchez une orbe prismatique.",
+          "dropping": "Orbe en chute libre…",
+          "selectBet": "Sélectionnez une mise avant de lâcher une orbe.",
+          "insufficientAtoms": "Vous n’avez pas assez d’atomes pour cette mise.",
+          "win": "Supernova ! {slot} paie {multiplier}. Gain net : {net}.",
+          "even": "{slot} vous rend votre mise. Net : {net}.",
+          "softLoss": "{slot} ne paie que {multiplier}. Net : {net}.",
+          "loss": "{slot} absorbe l’orbe. Perte nette : {net}."
+        },
+        "toast": {
+          "win": "Jackpot Pachinko !",
+          "even": "Lancer à l’équilibre.",
+          "softLoss": "Paiement partiel.",
+          "loss": "Aucun gain cette fois."
+        }
+      },
       "othello": {
         "mode": {
           "solo": "Mode : Solo vs IA",
