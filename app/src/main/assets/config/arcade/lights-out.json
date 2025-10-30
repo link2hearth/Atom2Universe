@@ -1,0 +1,20 @@
+{
+  "autoAdvanceDelayMs": 1800,
+  "difficulties": {
+    "easy": {
+      "gridSizes": [5],
+      "shuffleMoves": { "min": 8, "max": 14 },
+      "gachaTickets": 1
+    },
+    "medium": {
+      "gridSizes": [6],
+      "shuffleMoves": { "min": 14, "max": 24 },
+      "gachaTickets": 2
+    },
+    "hard": {
+      "gridSizes": [7, 8],
+      "shuffleMoves": { "min": 22, "max": 36 },
+      "gachaTickets": 3
+    }
+  }
+}

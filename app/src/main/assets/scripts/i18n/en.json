@@ -316,6 +316,12 @@
             "description": "Draw a route that covers the entire grid without revisiting a square and tackle the multicolour challenge.",
             "cta": "Draw"
           },
+          "lightsOut": {
+            "aria": "Open the Lights Out mini-game",
+            "title": "Lights Out",
+            "description": "Switch every light off: each tap flips the selected tile and its orthogonal neighbours.",
+            "cta": "Play"
+          },
           "minesweeper": {
             "aria": "Open the Minesweeper mini-game",
             "title": "Minesweeper",
@@ -649,6 +655,36 @@
           "autoNext": "Level {{level}} ready.",
           "error": "We couldn’t create a new puzzle. Try again.",
           "incompletePath": "Drag all the way to the matching endpoint to validate this colour."
+        }
+      },
+      "lightsOut": {
+        "aria": "Lights Out mini-game: switch off every tile.",
+        "title": "Lights Out",
+        "difficulty": {
+          "aria": "Choose the difficulty",
+          "label": "Difficulty",
+          "easy": "Easy",
+          "medium": "Medium",
+          "hard": "Hard"
+        },
+        "status": {
+          "level": "Level",
+          "size": "Size"
+        },
+        "actions": {
+          "new": "New grid"
+        },
+        "board": "Lights Out grid",
+        "messages": {
+          "intro": "Switch every light off. Each tap flips the selected tile and its orthogonal neighbours.",
+          "victory": "Grid cleared! Level {{level}} complete."
+        },
+        "cell": {
+          "label": "Row {row}, column {column}: {state}",
+          "states": {
+            "on": "Light on",
+            "off": "Light off"
+          }
         }
       },
       "sudoku": {
@@ -1960,6 +1996,11 @@
       "theLine": {
         "rewards": {
           "gachaWin": "Won {count} gacha ticket{suffix}!"
+        }
+      },
+      "lightsOut": {
+        "rewards": {
+          "gacha": "Gacha ticket{suffix} earned: {count}"
         }
       },
       "sudoku": {

@@ -316,6 +316,12 @@
             "description": "Tracez un chemin qui couvre toute la grille sans repasser sur une case et relevez le défi multicolore.",
             "cta": "Tracer"
           },
+          "lightsOut": {
+            "aria": "Accéder au mini-jeu Lights Out",
+            "title": "Lights Out",
+            "description": "Éteignez toutes les lumières : chaque clic inverse la case visée et ses voisines orthogonales.",
+            "cta": "Éteindre"
+          },
           "minesweeper": {
             "aria": "Accéder au mini-jeu Démineur",
             "title": "Démineur",
@@ -649,6 +655,36 @@
           "autoNext": "Niveau {{level}} prêt.",
           "error": "La génération de la grille a échoué. Réessayez.",
           "incompletePath": "Reliez la paire jusqu’à l’autre extrémité pour valider la couleur."
+        }
+      },
+      "lightsOut": {
+        "aria": "Mini-jeu Lights Out : éteignez toutes les lumières.",
+        "title": "Lights Out",
+        "difficulty": {
+          "aria": "Choisir la difficulté",
+          "label": "Difficulté",
+          "easy": "Facile",
+          "medium": "Moyen",
+          "hard": "Difficile"
+        },
+        "status": {
+          "level": "Niveau",
+          "size": "Taille"
+        },
+        "actions": {
+          "new": "Nouvelle grille"
+        },
+        "board": "Grille Lights Out",
+        "messages": {
+          "intro": "Éteignez toutes les lumières. Chaque clic inverse la case visée et ses voisines orthogonales.",
+          "victory": "Grille réussie ! Niveau {{level}} terminé."
+        },
+        "cell": {
+          "label": "Ligne {row}, colonne {column} : {state}",
+          "states": {
+            "on": "Lumière allumée",
+            "off": "Lumière éteinte"
+          }
         }
       },
       "sudoku": {
@@ -1960,6 +1996,11 @@
       "theLine": {
         "rewards": {
           "gachaWin": "{count} ticket{suffix} gacha obtenu !"
+        }
+      },
+      "lightsOut": {
+        "rewards": {
+          "gacha": "Ticket gacha obtenu : {count}"
         }
       },
       "sudoku": {
