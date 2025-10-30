@@ -55,6 +55,19 @@
     { row: 0, col: 1 }
   ]);
 
+  function decodeKey(key) {
+    if (typeof key !== 'string') {
+      return { row: 0, col: 0 };
+    }
+    const [rowString, colString] = key.split(',');
+    const row = Number(rowString);
+    const col = Number(colString);
+    return {
+      row: Number.isFinite(row) ? row : 0,
+      col: Number.isFinite(col) ? col : 0
+    };
+  }
+
   const state = {
     config: DEFAULT_CONFIG,
     configSignature: computeConfigSignature(DEFAULT_CONFIG),
@@ -255,6 +268,45 @@
     }
   }
 
+  function isGridWall(grid, row, col) {
+    if (!Array.isArray(grid) || grid.length <= 0) {
+      return true;
+    }
+    const height = grid.length;
+    const width = grid[0]?.length || 0;
+    if (row < 0 || row >= height || col < 0 || col >= width) {
+      return true;
+    }
+    return grid[row][col] === '#';
+  }
+
+  function gridCellHasPushSpace(grid, row, col) {
+    if (isGridWall(grid, row, col)) {
+      return false;
+    }
+    for (const direction of DIRECTIONS) {
+      const behindRow = row - direction.row;
+      const behindCol = col - direction.col;
+      const aheadRow = row + direction.row;
+      const aheadCol = col + direction.col;
+      if (!isGridWall(grid, behindRow, behindCol) && !isGridWall(grid, aheadRow, aheadCol)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function isGridDeadCell(grid, row, col) {
+    if (isGridWall(grid, row, col)) {
+      return true;
+    }
+    const up = isGridWall(grid, row - 1, col);
+    const down = isGridWall(grid, row + 1, col);
+    const left = isGridWall(grid, row, col - 1);
+    const right = isGridWall(grid, row, col + 1);
+    return (up && left) || (up && right) || (down && left) || (down && right);
+  }
+
   function normalizeCoordinate(value, maxIndex) {
     const numeric = Number(value);
     if (!Number.isFinite(numeric)) {
@@ -418,15 +470,49 @@
       return null;
     }
 
-    shuffleArray(floorCells);
-    const targets = [];
-    for (let index = 0; index < boxCount; index += 1) {
-      targets.push([floorCells[index][0], floorCells[index][1]]);
+    const candidateTargets = floorCells.filter(cell => gridCellHasPushSpace(grid, cell[0], cell[1]));
+    let targetPool = candidateTargets.length >= boxCount
+      ? candidateTargets.slice()
+      : floorCells.filter(cell => !isGridDeadCell(grid, cell[0], cell[1]));
+    if (targetPool.length < boxCount) {
+      targetPool = floorCells.slice();
     }
-    const playerCell = floorCells[boxCount];
-    if (!playerCell) {
+    shuffleArray(targetPool);
+    const usedKeys = new Set();
+    const targets = [];
+    for (let index = 0; index < targetPool.length && targets.length < boxCount; index += 1) {
+      const [row, col] = targetPool[index];
+      const key = `${row},${col}`;
+      if (usedKeys.has(key)) {
+        continue;
+      }
+      usedKeys.add(key);
+      targets.push([row, col]);
+    }
+    if (targets.length !== boxCount) {
       return null;
     }
+
+    const playerCandidates = floorCells.filter(cell => {
+      const key = `${cell[0]},${cell[1]}`;
+      if (usedKeys.has(key)) {
+        return false;
+      }
+      for (const direction of DIRECTIONS) {
+        const nextRow = cell[0] + direction.row;
+        const nextCol = cell[1] + direction.col;
+        if (!isGridWall(grid, nextRow, nextCol)) {
+          return true;
+        }
+      }
+      return false;
+    });
+
+    if (!playerCandidates.length) {
+      return null;
+    }
+
+    const playerCell = chooseRandomEntry(playerCandidates) || playerCandidates[0];
 
     const mapRows = grid.map(row => row.join(''));
     return {
@@ -474,6 +560,69 @@
 
   function isWalkable(row, col) {
     return isInside(row, col) && !isWall(row, col);
+  }
+
+  function buildStaticDeadCellSet() {
+    const deadCells = new Set();
+    for (let row = 0; row < state.height; row += 1) {
+      for (let col = 0; col < state.width; col += 1) {
+        if (isWall(row, col)) {
+          continue;
+        }
+        const key = keyFor(row, col);
+        if (state.targetKeys.has(key)) {
+          continue;
+        }
+        const up = isWall(row - 1, col);
+        const down = isWall(row + 1, col);
+        const left = isWall(row, col - 1);
+        const right = isWall(row, col + 1);
+        if ((up && left) || (up && right) || (down && left) || (down && right)) {
+          deadCells.add(key);
+        }
+      }
+    }
+    return deadCells;
+  }
+
+  function computeReachableCells(startRow, startCol, blockedKeys) {
+    if (!isWalkable(startRow, startCol)) {
+      return new Set();
+    }
+    const visited = new Set();
+    const queue = [];
+    queue.push([startRow, startCol]);
+    for (let index = 0; index < queue.length; index += 1) {
+      const [row, col] = queue[index];
+      const key = keyFor(row, col);
+      if (visited.has(key)) {
+        continue;
+      }
+      visited.add(key);
+      for (const direction of DIRECTIONS) {
+        const nextRow = row + direction.row;
+        const nextCol = col + direction.col;
+        const nextKey = keyFor(nextRow, nextCol);
+        if (!isWalkable(nextRow, nextCol)) {
+          continue;
+        }
+        if (blockedKeys && blockedKeys.has(nextKey)) {
+          continue;
+        }
+        if (!visited.has(nextKey)) {
+          queue.push([nextRow, nextCol]);
+        }
+      }
+    }
+    return visited;
+  }
+
+  function chooseRandomEntry(array) {
+    if (!Array.isArray(array) || array.length === 0) {
+      return null;
+    }
+    const index = randomInt(0, array.length - 1);
+    return array[index];
   }
 
   function sanitizeLevels(rawLevels) {
@@ -1557,57 +1706,119 @@
     return true;
   }
 
-  function performRandomShuffleMove() {
-    const directions = [...DIRECTIONS];
-    for (let i = directions.length - 1; i > 0; i -= 1) {
-      const j = Math.floor(Math.random() * (i + 1));
-      const tmp = directions[i];
-      directions[i] = directions[j];
-      directions[j] = tmp;
-    }
-    for (const direction of directions) {
-      const moved = attemptMove(direction.row, direction.col, {
-        countMove: false,
-        announceBlocked: false,
-        allowWhenSolved: true,
-        skipAutosave: true,
-        skipStatus: true,
-        force: true,
-        skipCompletion: true
-      });
-      if (moved) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   function shuffleFromSolvedState() {
-    const iterations = clampInt(
-      Math.floor(Math.random() * (state.config.shuffleMoves.max - state.config.shuffleMoves.min + 1))
-        + state.config.shuffleMoves.min,
+    if (state.targetKeys.size <= 0) {
+      return false;
+    }
+
+    const requestedMoves = clampInt(
+      randomInt(state.config.shuffleMoves.min, state.config.shuffleMoves.max),
       8,
       2000,
       64
     );
+
     state.player = { row: state.playerStart.row, col: state.playerStart.col };
     state.boxes = new Set(state.targetKeys);
-    let moves = 0;
-    let attempts = 0;
-    while (moves < iterations && attempts < iterations * 10) {
-      const moved = performRandomShuffleMove();
-      attempts += 1;
-      if (moved) {
-        moves += 1;
+
+    const deadCells = buildStaticDeadCellSet();
+    const targetCells = new Set(state.targetKeys);
+
+    const requiredPushes = Math.max(4, Math.floor(requestedMoves * 0.6));
+    let pushes = 0;
+    let stagnation = 0;
+
+    while (pushes < requestedMoves && stagnation < requestedMoves * 24) {
+      const reachable = computeReachableCells(state.player.row, state.player.col, state.boxes);
+      const candidates = [];
+
+      for (const key of state.boxes) {
+        const { row, col } = decodeKey(key);
+        for (const direction of DIRECTIONS) {
+          const behindRow = row - direction.row;
+          const behindCol = col - direction.col;
+          const behindKey = keyFor(behindRow, behindCol);
+          if (!isWalkable(behindRow, behindCol) || state.boxes.has(behindKey)) {
+            continue;
+          }
+          if (!reachable.has(behindKey)) {
+            continue;
+          }
+          const destinationRow = row + direction.row;
+          const destinationCol = col + direction.col;
+          if (!isWalkable(destinationRow, destinationCol)) {
+            continue;
+          }
+          const destinationKey = keyFor(destinationRow, destinationCol);
+          if (state.boxes.has(destinationKey)) {
+            continue;
+          }
+          if (deadCells.has(destinationKey) && !targetCells.has(destinationKey)) {
+            continue;
+          }
+          candidates.push({
+            boxKey: key,
+            destinationKey,
+            destinationRow,
+            destinationCol,
+            boxRow: row,
+            boxCol: col,
+            behindRow,
+            behindCol
+          });
+        }
       }
+
+      if (!candidates.length) {
+        stagnation += 1;
+        const reachableArray = Array.from(reachable).filter(entry => !state.boxes.has(entry));
+        const randomKey = chooseRandomEntry(reachableArray);
+        if (randomKey) {
+          const coords = decodeKey(randomKey);
+          state.player = { row: coords.row, col: coords.col };
+        }
+        continue;
+      }
+
+      const choice = chooseRandomEntry(candidates);
+      if (!choice) {
+        stagnation += 1;
+        continue;
+      }
+
+      state.player = { row: choice.behindRow, col: choice.behindCol };
+      state.boxes.delete(choice.boxKey);
+      state.boxes.add(choice.destinationKey);
+      state.player = { row: choice.boxRow, col: choice.boxCol };
+      pushes += 1;
+      stagnation = 0;
     }
+
+    if (pushes < requiredPushes) {
+      return false;
+    }
+
     if (checkSolved()) {
-      let guard = 0;
-      while (checkSolved() && guard < 16) {
-        performRandomShuffleMove();
-        guard += 1;
-      }
+      return false;
     }
+
+    const unsettled = Array.from(state.boxes).some(key => !targetCells.has(key));
+    if (!unsettled) {
+      return false;
+    }
+
+    if (!isWalkable(state.player.row, state.player.col) || state.boxes.has(keyFor(state.player.row, state.player.col))) {
+      const reachable = computeReachableCells(state.player.row, state.player.col, state.boxes);
+      const alternatives = Array.from(reachable).filter(entry => !state.boxes.has(entry));
+      const randomKey = chooseRandomEntry(alternatives);
+      if (!randomKey) {
+        return false;
+      }
+      const coords = decodeKey(randomKey);
+      state.player = { row: coords.row, col: coords.col };
+    }
+
+    return true;
   }
 
   function resetToInitialState() {
@@ -1679,8 +1890,8 @@
         playerStart: { row: applied.playerStart.row, col: applied.playerStart.col }
       };
 
-      shuffleFromSolvedState();
-      if (checkSolved()) {
+      const shuffled = shuffleFromSolvedState();
+      if (!shuffled || checkSolved()) {
         continue;
       }
 
@@ -1771,7 +1982,17 @@
     if (randomizeLevel) {
       state.level = clampInt(state.level + 1, 1, 9999, 1);
     }
-    shuffleFromSolvedState();
+    const shuffled = shuffleFromSolvedState();
+    if (!shuffled || checkSolved()) {
+      state.ready = false;
+      setStatus(
+        'scripts.arcade.sokoban.status.generationFailed',
+        'Impossible de générer un niveau. Réessayez.',
+        null,
+        { rememberBase: true }
+      );
+      return;
+    }
     state.initialSnapshot = takeSnapshot();
     state.moveCount = 0;
     state.pushCount = 0;
