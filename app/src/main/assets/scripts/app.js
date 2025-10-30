@@ -3322,6 +3322,7 @@ const gameState = {
   upgrades: {},
   shopUnlocks: new Set(),
   elements: createInitialElementCollection(),
+  gachaCards: createInitialGachaCardCollection(),
   fusions: createInitialFusionState(),
   fusionBonuses: createInitialFusionBonuses(),
   pageUnlocks: createInitialPageUnlockState(),
@@ -14727,6 +14728,26 @@ function serializeState() {
     upgrades: gameState.upgrades,
     shopUnlocks: Array.from(getShopUnlockSet()),
     elements: gameState.elements,
+    gachaCards: (() => {
+      const source = gameState.gachaCards && typeof gameState.gachaCards === 'object'
+        ? gameState.gachaCards
+        : {};
+      const result = {};
+      const knownIds = Array.isArray(GACHA_SPECIAL_CARD_DEFINITIONS)
+        ? GACHA_SPECIAL_CARD_DEFINITIONS.map(def => def.id)
+        : Object.keys(source);
+      knownIds.forEach(cardId => {
+        if (!cardId) {
+          return;
+        }
+        const entry = source[cardId];
+        const rawCount = Number(entry?.count ?? entry);
+        if (Number.isFinite(rawCount) && rawCount > 0) {
+          result[cardId] = { count: Math.floor(rawCount) };
+        }
+      });
+      return result;
+    })(),
     fusions: (() => {
       const base = createInitialFusionState();
       const source = gameState.fusions && typeof gameState.fusions === 'object'
@@ -15092,6 +15113,7 @@ function resetGame() {
     upgrades: {},
     shopUnlocks: new Set(),
     elements: createInitialElementCollection(),
+    gachaCards: createInitialGachaCardCollection(),
     fusions: createInitialFusionState(),
     fusionBonuses: createInitialFusionBonuses(),
     pageUnlocks: createInitialPageUnlockState(),
@@ -15611,6 +15633,19 @@ function loadGame() {
       });
     }
     gameState.elements = baseCollection;
+    const baseCardCollection = createInitialGachaCardCollection();
+    if (data.gachaCards && typeof data.gachaCards === 'object') {
+      Object.entries(data.gachaCards).forEach(([cardId, stored]) => {
+        if (!baseCardCollection[cardId]) {
+          return;
+        }
+        const rawCount = Number(stored?.count ?? stored);
+        baseCardCollection[cardId].count = Number.isFinite(rawCount) && rawCount > 0
+          ? Math.floor(rawCount)
+          : 0;
+      });
+    }
+    gameState.gachaCards = baseCardCollection;
     const fusionState = createInitialFusionState();
     if (data.fusions && typeof data.fusions === 'object') {
       Object.keys(fusionState).forEach(id => {
