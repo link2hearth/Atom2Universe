@@ -360,21 +360,41 @@
       hidden
     >
       <div class="arcade-hub__grid">
-        <button
-          type="button"
+        <article
           class="arcade-hub-card"
+          role="button"
+          tabindex="0"
           aria-label="Accéder au mini-jeu Particules"
+          aria-describedby="arcadeCardDescription-arcade"
+          data-card-id="arcade"
           data-i18n="aria-label:index.sections.arcadeHub.cards.particules.aria"
           data-page-target="arcade"
         >
-          <span
-            class="arcade-hub-card__title"
-            role="heading"
-            aria-level="3"
-            data-i18n="index.sections.arcadeHub.cards.particules.title"
-          >Particules</span>
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.particules.title"
+            >Particules</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-arcade"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
           <p
             class="arcade-hub-card__description"
+            id="arcadeCardDescription-arcade"
             data-i18n="index.sections.arcadeHub.cards.particules.description"
           >
             Collectez des tickets de gacha au prix de votre stock d'Atomes, ou entraînez-vous gratuitement.
@@ -382,22 +402,42 @@
           <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.particules.cta"
             >Jouer</span
           >
-        </button>
-        <button
-          type="button"
+        </article>
+        <article
           class="arcade-hub-card"
+          role="button"
+          tabindex="0"
           aria-label="Accéder au mini-jeu Métaux"
+          aria-describedby="arcadeCardDescription-metaux"
+          data-card-id="metaux"
           data-i18n="aria-label:index.sections.arcadeHub.cards.metaux.aria"
           data-page-target="metaux"
         >
-          <span
-            class="arcade-hub-card__title"
-            role="heading"
-            aria-level="3"
-            data-i18n="index.sections.arcadeHub.cards.metaux.title"
-          >Métaux</span>
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.metaux.title"
+            >Métaux</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-metaux"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
           <p
             class="arcade-hub-card__description"
+            id="arcadeCardDescription-metaux"
             data-i18n="index.sections.arcadeHub.cards.metaux.description"
           >
             Boostez votre production d'APS grâce à ce jeu de match 3.
@@ -405,22 +445,42 @@
           <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.metaux.cta"
             >Forger</span
           >
-        </button>
-        <button
-          type="button"
+        </article>
+        <article
           class="arcade-hub-card"
+          role="button"
+          tabindex="0"
           aria-label="Accéder au mini-jeu Photon"
+          aria-describedby="arcadeCardDescription-wave"
+          data-card-id="wave"
           data-i18n="aria-label:index.sections.arcadeHub.cards.wave.aria"
           data-page-target="wave"
         >
-          <span
-            class="arcade-hub-card__title"
-            role="heading"
-            aria-level="3"
-            data-i18n="index.sections.arcadeHub.cards.wave.title"
-          >Photon</span>
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.wave.title"
+            >Photon</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-wave"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
           <p
             class="arcade-hub-card__description"
+            id="arcadeCardDescription-wave"
             data-i18n="index.sections.arcadeHub.cards.wave.description"
           >
             Page alternative du clicker.
@@ -428,22 +488,42 @@
           <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.wave.cta"
             >Surfer</span
           >
-        </button>
-        <button
-          type="button"
+        </article>
+        <article
           class="arcade-hub-card"
+          role="button"
+          tabindex="0"
           aria-label="Accéder au mini-jeu ObjectX"
+          aria-describedby="arcadeCardDescription-quantum2048"
+          data-card-id="quantum2048"
           data-i18n="aria-label:index.sections.arcadeHub.cards.quantum2048.aria"
           data-page-target="quantum2048"
         >
-          <span
-            class="arcade-hub-card__title"
-            role="heading"
-            aria-level="3"
-            data-i18n="index.sections.arcadeHub.cards.quantum2048.title"
-          >ObjectX</span>
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.quantum2048.title"
+            >ObjectX</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-quantum2048"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
           <p
             class="arcade-hub-card__description"
+            id="arcadeCardDescription-quantum2048"
             data-i18n="index.sections.arcadeHub.cards.quantum2048.description"
           >
             Atteignez l'objectif (indiqué en haut à droite) dans ce 2048-like pour gagner des tickets de gacha.
@@ -451,22 +531,42 @@
           <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.quantum2048.cta"
             >Fusionner</span
           >
-        </button>
-        <button
-          type="button"
+        </article>
+        <article
           class="arcade-hub-card"
+          role="button"
+          tabindex="0"
           aria-label="Accéder au mini-jeu Plus gros"
+          aria-describedby="arcadeCardDescription-bigger"
+          data-card-id="bigger"
           data-i18n="aria-label:index.sections.arcadeHub.cards.bigger.aria"
           data-page-target="bigger"
         >
-          <span
-            class="arcade-hub-card__title"
-            role="heading"
-            aria-level="3"
-            data-i18n="index.sections.arcadeHub.cards.bigger.title"
-          >Plus gros</span>
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.bigger.title"
+            >Plus gros</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-bigger"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
           <p
             class="arcade-hub-card__description"
+            id="arcadeCardDescription-bigger"
             data-i18n="index.sections.arcadeHub.cards.bigger.description"
           >
             Faites tomber des billes de différentes tailles dans un bac géant pour créer la bille ultime.
@@ -474,45 +574,85 @@
           <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.bigger.cta"
             >Lancer</span
           >
-        </button>
-        <button
-          type="button"
+        </article>
+        <article
           class="arcade-hub-card"
+          role="button"
+          tabindex="0"
           aria-label="Accéder au mini-jeu Math"
+          aria-describedby="arcadeCardDescription-math"
+          data-card-id="math"
           data-i18n="aria-label:index.sections.arcadeHub.cards.math.aria"
           data-page-target="math"
         >
-          <span
-            class="arcade-hub-card__title"
-            role="heading"
-            aria-level="3"
-            data-i18n="index.sections.arcadeHub.cards.math.title"
-          >Math</span>
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.math.title"
+            >Math</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-math"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
           <p
             class="arcade-hub-card__description"
+            id="arcadeCardDescription-math"
             data-i18n="index.sections.arcadeHub.cards.math.description"
           >
             Complétez les opérations et ne gagnez rien pour le moment.
           </p>
           <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.math.cta"
-            >Calculer</span
+            >Résoudre</span
           >
-        </button>
-        <button
-          type="button"
+        </article>
+        <article
           class="arcade-hub-card"
+          role="button"
+          tabindex="0"
           aria-label="Accéder au mini-jeu Balance"
+          aria-describedby="arcadeCardDescription-balance"
+          data-card-id="balance"
           data-i18n="aria-label:index.sections.arcadeHub.cards.balance.aria"
           data-page-target="balance"
         >
-          <span
-            class="arcade-hub-card__title"
-            role="heading"
-            aria-level="3"
-            data-i18n="index.sections.arcadeHub.cards.balance.title"
-          >Balance</span>
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.balance.title"
+            >Balance</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-balance"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
           <p
             class="arcade-hub-card__description"
+            id="arcadeCardDescription-balance"
             data-i18n="index.sections.arcadeHub.cards.balance.description"
           >
             Équilibrez la balance avec tous les poids, gagnez des tentatives du jeu Métaux.
@@ -520,22 +660,42 @@
           <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.balance.cta"
             >Équilibrer</span
           >
-        </button>
-        <button
-          type="button"
+        </article>
+        <article
           class="arcade-hub-card"
+          role="button"
+          tabindex="0"
           aria-label="Accéder au mini-jeu Sudoku"
+          aria-describedby="arcadeCardDescription-sudoku"
+          data-card-id="sudoku"
           data-i18n="aria-label:index.sections.arcadeHub.cards.sudoku.aria"
           data-page-target="sudoku"
         >
-          <span
-            class="arcade-hub-card__title"
-            role="heading"
-            aria-level="3"
-            data-i18n="index.sections.arcadeHub.cards.sudoku.title"
-          >Sudoku</span>
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.sudoku.title"
+            >Sudoku</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-sudoku"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
           <p
             class="arcade-hub-card__description"
+            id="arcadeCardDescription-sudoku"
             data-i18n="index.sections.arcadeHub.cards.sudoku.description"
           >
             Terminez un tableau pour booster la production hors ligne pour les prochaines heures.
@@ -543,22 +703,42 @@
           <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.sudoku.cta"
             >Résoudre</span
           >
-        </button>
-        <button
-          type="button"
+        </article>
+        <article
           class="arcade-hub-card"
+          role="button"
+          tabindex="0"
           aria-label="Accéder au mini-jeu The Line"
+          aria-describedby="arcadeCardDescription-theLine"
+          data-card-id="theLine"
           data-i18n="aria-label:index.sections.arcadeHub.cards.theLine.aria"
           data-page-target="theLine"
         >
-          <span
-            class="arcade-hub-card__title"
-            role="heading"
-            aria-level="3"
-            data-i18n="index.sections.arcadeHub.cards.theLine.title"
-          >The Line</span>
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.theLine.title"
+            >The Line</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-theLine"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
           <p
             class="arcade-hub-card__description"
+            id="arcadeCardDescription-theLine"
             data-i18n="index.sections.arcadeHub.cards.theLine.description"
           >
             Tracez un chemin qui couvre toute la grille sans repasser sur une case et relevez le défi multicolore.
@@ -566,148 +746,288 @@
           <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.theLine.cta"
             >Tracer</span
           >
-        </button>
-        <button
-          type="button"
+        </article>
+        <article
           class="arcade-hub-card"
+          role="button"
+          tabindex="0"
           aria-label="Accéder au mini-jeu Démineur"
+          aria-describedby="arcadeCardDescription-minesweeper"
+          data-card-id="minesweeper"
           data-i18n="aria-label:index.sections.arcadeHub.cards.minesweeper.aria"
           data-page-target="minesweeper"
         >
-          <span
-            class="arcade-hub-card__title"
-            role="heading"
-            aria-level="3"
-            data-i18n="index.sections.arcadeHub.cards.minesweeper.title"
-          >Démineur</span>
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.minesweeper.title"
+            >Démineur</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-minesweeper"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
           <p
             class="arcade-hub-card__description"
+            id="arcadeCardDescription-minesweeper"
             data-i18n="index.sections.arcadeHub.cards.minesweeper.description"
           >Validez une grille pour gagner des tickets de gacha.</p>
           <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.minesweeper.cta"
-            >Désarmer</span
+            >Désamorcer</span
           >
-        </button>
-        <button
-          type="button"
+        </article>
+        <article
           class="arcade-hub-card"
+          role="button"
+          tabindex="0"
           aria-label="Accéder au mini-jeu Solitaire"
+          aria-describedby="arcadeCardDescription-solitaire"
+          data-card-id="solitaire"
           data-i18n="aria-label:index.sections.arcadeHub.cards.solitaire.aria"
           data-page-target="solitaire"
         >
-          <span
-            class="arcade-hub-card__title"
-            role="heading"
-            aria-level="3"
-            data-i18n="index.sections.arcadeHub.cards.solitaire.title"
-          >Solitaire</span>
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.solitaire.title"
+            >Solitaire</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-solitaire"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
           <p
             class="arcade-hub-card__description"
+            id="arcadeCardDescription-solitaire"
             data-i18n="index.sections.arcadeHub.cards.solitaire.description"
           >Super connu, finissez le tableau, pas de récompense pour le moment.</p>
           <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.solitaire.cta"
             >Jouer</span
           >
-        </button>
-        <button
-          type="button"
+        </article>
+        <article
           class="arcade-hub-card"
+          role="button"
+          tabindex="0"
           aria-label="Accéder au mini-jeu Échecs"
+          aria-describedby="arcadeCardDescription-echecs"
+          data-card-id="echecs"
           data-i18n="aria-label:index.sections.arcadeHub.cards.echecs.aria"
           data-page-target="echecs"
         >
-          <span
-            class="arcade-hub-card__title"
-            role="heading"
-            aria-level="3"
-            data-i18n="index.sections.arcadeHub.cards.echecs.title"
-          >Échecs</span>
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.echecs.title"
+            >Échecs</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-echecs"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
           <p
             class="arcade-hub-card__description"
+            id="arcadeCardDescription-echecs"
             data-i18n="index.sections.arcadeHub.cards.echecs.description"
           >Entraînez-vous, aucune récompense pour le moment.</p>
           <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.echecs.cta"
-            >Planifier</span
+            >Jouer</span
           >
-        </button>
-        <button
-          type="button"
+        </article>
+        <article
           class="arcade-hub-card"
+          role="button"
+          tabindex="0"
           aria-label="Accéder au mini-jeu Othello"
+          aria-describedby="arcadeCardDescription-othello"
+          data-card-id="othello"
           data-i18n="aria-label:index.sections.arcadeHub.cards.othello.aria"
           data-page-target="othello"
         >
-          <span
-            class="arcade-hub-card__title"
-            role="heading"
-            aria-level="3"
-            data-i18n="index.sections.arcadeHub.cards.othello.title"
-          >Othello</span>
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.othello.title"
+            >Othello</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-othello"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
           <p
             class="arcade-hub-card__description"
+            id="arcadeCardDescription-othello"
             data-i18n="index.sections.arcadeHub.cards.othello.description"
           >Retournez les pions de votre adversaire en les encerclant sur un plateau 8×8.</p>
           <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.othello.cta"
             >Jouer</span
           >
-        </button>
-        <button
-          type="button"
+        </article>
+        <article
           class="arcade-hub-card"
+          role="button"
+          tabindex="0"
           aria-label="Accéder au mini-jeu Jeu de la vie"
+          aria-describedby="arcadeCardDescription-gameOfLife"
+          data-card-id="gameOfLife"
           data-i18n="aria-label:index.sections.arcadeHub.cards.gameOfLife.aria"
           data-page-target="gameOfLife"
         >
-          <span
-            class="arcade-hub-card__title"
-            role="heading"
-            aria-level="3"
-            data-i18n="index.sections.arcadeHub.cards.gameOfLife.title"
-          >Jeu de la vie</span>
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.gameOfLife.title"
+            >Jeu de la vie</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-gameOfLife"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
           <p
             class="arcade-hub-card__description"
+            id="arcadeCardDescription-gameOfLife"
             data-i18n="index.sections.arcadeHub.cards.gameOfLife.description"
           >Rien à gagner, c'est une aire de test pour le jeu de la vie de Conway.</p>
           <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.gameOfLife.cta"
             >Explorer</span
           >
-        </button>
-        <button
-          type="button"
+        </article>
+        <article
           class="arcade-hub-card"
+          role="button"
+          tabindex="0"
           aria-label="Ouvrir le mini-jeu Joker Roulette"
+          aria-describedby="arcadeCardDescription-roulette"
+          data-card-id="roulette"
           data-i18n="aria-label:index.sections.arcadeHub.cards.roulette.aria"
           data-page-target="roulette"
         >
-          <span
-            class="arcade-hub-card__title"
-            role="heading"
-            aria-level="3"
-            data-i18n="index.sections.arcadeHub.cards.roulette.title"
-          >Joker Roulette</span>
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.roulette.title"
+            >Joker Roulette</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-roulette"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
           <p
             class="arcade-hub-card__description"
+            id="arcadeCardDescription-roulette"
             data-i18n="index.sections.arcadeHub.cards.roulette.description"
           >Lancez une machine à sous néon et misez vos atomes sur les couleurs des cartes.</p>
           <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.roulette.cta"
             >Tourner</span
           >
-        </button>
-        <button
-          type="button"
+        </article>
+        <article
           class="arcade-hub-card"
+          role="button"
+          tabindex="0"
           aria-label="Ouvrir le mini-jeu Blackjack"
+          aria-describedby="arcadeCardDescription-blackjack"
+          data-card-id="blackjack"
           data-i18n="aria-label:index.sections.arcadeHub.cards.blackjack.aria"
           data-page-target="blackjack"
         >
-          <span
-            class="arcade-hub-card__title"
-            role="heading"
-            aria-level="3"
-            data-i18n="index.sections.arcadeHub.cards.blackjack.title"
-          >Blackjack</span>
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.blackjack.title"
+            >Blackjack</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-blackjack"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
           <p
             class="arcade-hub-card__description"
+            id="arcadeCardDescription-blackjack"
             data-i18n="index.sections.arcadeHub.cards.blackjack.description"
           >
             Doublez vos Atomes, ou perdez tout.
@@ -715,22 +1035,42 @@
           <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.blackjack.cta"
             >Distribuer</span
           >
-        </button>
-        <button
-          type="button"
+        </article>
+        <article
           class="arcade-hub-card"
+          role="button"
+          tabindex="0"
           aria-label="Accéder au mini-jeu Hold’em"
+          aria-describedby="arcadeCardDescription-holdem"
+          data-card-id="holdem"
           data-i18n="aria-label:index.sections.arcadeHub.cards.holdem.aria"
           data-page-target="holdem"
         >
-          <span
-            class="arcade-hub-card__title"
-            role="heading"
-            aria-level="3"
-            data-i18n="index.sections.arcadeHub.cards.holdem.title"
-          >Hold’em</span>
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.holdem.title"
+            >Hold’em</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-holdem"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
           <p
             class="arcade-hub-card__description"
+            id="arcadeCardDescription-holdem"
             data-i18n="index.sections.arcadeHub.cards.holdem.description"
           >
             Affrontez jusqu’à quatre IA en Texas Hold’em et empochez le pot avec la meilleure main.
@@ -738,22 +1078,42 @@
           <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.holdem.cta"
             >S’asseoir</span
           >
-        </button>
-        <button
-          type="button"
+        </article>
+        <article
           class="arcade-hub-card"
+          role="button"
+          tabindex="0"
           aria-label="Accéder au mini-jeu Dice"
+          aria-describedby="arcadeCardDescription-dice"
+          data-card-id="dice"
           data-i18n="aria-label:index.sections.arcadeHub.cards.dice.aria"
           data-page-target="dice"
         >
-          <span
-            class="arcade-hub-card__title"
-            role="heading"
-            aria-level="3"
-            data-i18n="index.sections.arcadeHub.cards.dice.title"
-          >Dice</span>
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.dice.title"
+            >Dice</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-dice"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
           <p
             class="arcade-hub-card__description"
+            id="arcadeCardDescription-dice"
             data-i18n="index.sections.arcadeHub.cards.dice.description"
           >
             Lancez cinq dés sur un tapis néon, gardez vos combinaisons et visez les meilleures figures de yams.
@@ -761,7 +1121,7 @@
           <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.dice.cta"
             >Jouer</span
           >
-        </button>
+        </article>
       </div>
     </section>
 
