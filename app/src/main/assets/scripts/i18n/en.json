@@ -2129,7 +2129,8 @@
         "status": {
           "ready": "Level ready.",
           "blocked": "That crate can't move in that direction.",
-          "completed": "Level {level} complete."
+          "completed": "Level {level} complete.",
+          "generationFailed": "Unable to generate a playable level. Please try again."
         },
         "rewards": {
           "gachaWin": "Gacha ticket earned! (+{count})"
