@@ -811,6 +811,25 @@
     return hero.stack > 0;
   }
 
+  function promptHeroForCurrentPhase() {
+    if (state.phase === 'complete') {
+      state.awaitingPlayer = false;
+      return;
+    }
+    const hero = getHero();
+    if (!hero || hero.folded || hero.allIn || hero.stack <= 0) {
+      state.awaitingPlayer = false;
+      return;
+    }
+    state.awaitingPlayer = true;
+    const phaseLabel = translate(`index.sections.holdem.phase.${state.phase}`, state.phase);
+    updateStatus(
+      'index.sections.holdem.status.phasePrompt',
+      `Phase ${phaseLabel} — à vous de jouer.`,
+      { phase: phaseLabel }
+    );
+  }
+
   function createHero(stack) {
     return {
       id: 'hero',
@@ -1812,15 +1831,10 @@
 
     if (!queue.length) {
       if (state.phase !== 'complete') {
-        state.awaitingPlayer = shouldPromptHero;
         if (shouldPromptHero) {
-          const phaseLabel = translate(`index.sections.holdem.phase.${state.phase}`, state.phase);
-          updateStatus(
-            'index.sections.holdem.status.phasePrompt',
-            `Phase ${phaseLabel} — à vous de jouer.`,
-            { phase: phaseLabel }
-          );
+          promptHeroForCurrentPhase();
         } else {
+          state.awaitingPlayer = false;
           updateStatus(
             'index.sections.holdem.status.aiAutoProgress',
             'Les adversaires poursuivent la manche.'
@@ -1848,13 +1862,7 @@
       state.activePlayerId = null;
       if (!handResolved && state.phase !== 'complete') {
         if (shouldPromptHero) {
-          state.awaitingPlayer = true;
-          const phaseLabel = translate(`index.sections.holdem.phase.${state.phase}`, state.phase);
-          updateStatus(
-            'index.sections.holdem.status.phasePrompt',
-            `Phase ${phaseLabel} — à vous de jouer.`,
-            { phase: phaseLabel }
-          );
+          promptHeroForCurrentPhase();
         } else {
           state.awaitingPlayer = false;
           updateStatus(
@@ -1909,7 +1917,10 @@
     processNext();
   }
 
-  function executeAiResponsesAfterPlayerAction(onComplete) {
+  function executeAiResponsesAfterPlayerAction(options) {
+    const config = typeof options === 'function' ? { onComplete: options } : options || {};
+    const { onComplete } = config;
+
     const queue = [];
     const responseOrder = getResponseOrder();
     for (let i = 0; i < responseOrder.length; i += 1) {
@@ -1917,17 +1928,25 @@
       if (!player || player.folded || player.allIn) {
         continue;
       }
-      const requiredToCall = Math.max(0, state.currentBet - player.bet);
-      if (requiredToCall <= 0) {
-        continue;
-      }
       queue.push(player);
     }
+
+    const heroNeedsAction = () => {
+      const hero = getHero();
+      if (!hero || hero.folded || hero.allIn || state.phase === 'complete') {
+        return false;
+      }
+      if (hero.stack <= 0) {
+        return false;
+      }
+      const requiredToCall = Math.max(0, state.currentBet - hero.bet);
+      return requiredToCall > 0;
+    };
 
     if (!queue.length) {
       state.activePlayerId = null;
       if (typeof onComplete === 'function') {
-        onComplete(false);
+        onComplete({ handResolved: false, heroShouldAct: heroNeedsAction() });
       }
       return;
     }
@@ -1943,7 +1962,7 @@
       state.activePlayerId = null;
       render();
       if (typeof onComplete === 'function') {
-        onComplete(Boolean(handResolved));
+        onComplete({ handResolved: Boolean(handResolved), heroShouldAct: heroNeedsAction() });
       }
       commitAutosave();
     };
@@ -1971,7 +1990,10 @@
       );
       render();
       const timer = setTimeout(() => {
-        const decision = decideAiResponseAction(player);
+        const requiresCall = Math.max(0, state.currentBet - player.bet) > 0;
+        const decision = requiresCall
+          ? decideAiResponseAction(player)
+          : decideAiRoundAction(player, true);
         const result = applyAiDecision(player, decision);
         if (result.handResolved) {
           finish(true);
@@ -2325,16 +2347,24 @@
     render();
 
     state.awaitingPlayer = false;
-    executeAiResponsesAfterPlayerAction(handResolved => {
-      if (handResolved) {
-        state.phase = 'complete';
-        state.awaitingPlayer = false;
+    executeAiResponsesAfterPlayerAction({
+      onComplete(result) {
+        const outcome = result || {};
+        if (outcome.handResolved) {
+          state.phase = 'complete';
+          state.awaitingPlayer = false;
+          render();
+          return;
+        }
+        if (outcome.heroShouldAct) {
+          promptHeroForCurrentPhase();
+          render();
+          return;
+        }
+        resetBetsForNextRound();
         render();
-        return;
+        schedulePhaseAdvance(state.config.dealerSpeedMs);
       }
-      resetBetsForNextRound();
-      render();
-      schedulePhaseAdvance(state.config.dealerSpeedMs);
     });
   }
 
@@ -2377,16 +2407,24 @@
     render();
 
     state.awaitingPlayer = false;
-    executeAiResponsesAfterPlayerAction(handResolved => {
-      if (handResolved) {
-        state.phase = 'complete';
-        state.awaitingPlayer = false;
+    executeAiResponsesAfterPlayerAction({
+      onComplete(result) {
+        const outcome = result || {};
+        if (outcome.handResolved) {
+          state.phase = 'complete';
+          state.awaitingPlayer = false;
+          render();
+          return;
+        }
+        if (outcome.heroShouldAct) {
+          promptHeroForCurrentPhase();
+          render();
+          return;
+        }
+        resetBetsForNextRound();
         render();
-        return;
+        schedulePhaseAdvance(state.config.dealerSpeedMs);
       }
-      resetBetsForNextRound();
-      render();
-      schedulePhaseAdvance(state.config.dealerSpeedMs);
     });
   }
 
@@ -2415,16 +2453,24 @@
     render();
 
     state.awaitingPlayer = false;
-    executeAiResponsesAfterPlayerAction(handResolved => {
-      if (handResolved) {
-        state.phase = 'complete';
-        state.awaitingPlayer = false;
+    executeAiResponsesAfterPlayerAction({
+      onComplete(result) {
+        const outcome = result || {};
+        if (outcome.handResolved) {
+          state.phase = 'complete';
+          state.awaitingPlayer = false;
+          render();
+          return;
+        }
+        if (outcome.heroShouldAct) {
+          promptHeroForCurrentPhase();
+          render();
+          return;
+        }
+        resetBetsForNextRound();
         render();
-        return;
+        schedulePhaseAdvance(state.config.dealerSpeedMs);
       }
-      resetBetsForNextRound();
-      render();
-      schedulePhaseAdvance(state.config.dealerSpeedMs);
     });
   }
 
