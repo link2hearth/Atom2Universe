@@ -44,21 +44,27 @@
           rightMinRatio: 0.3,
           diagonalGroupChance: 0.45,
           serpentineChance: 0.42,
-          serpentineDensity: Object.freeze({ min: 0.38, max: 0.58 })
+          serpentineDensity: Object.freeze({ min: 0.38, max: 0.58 }),
+          edgeRowMaxRatio: 0.58,
+          minRowSpread: 3
         }),
         medium: Object.freeze({
           centerMinRatio: 0.32,
           rightMinRatio: 0.26,
           diagonalGroupChance: 0.3,
           serpentineChance: 0.18,
-          serpentineDensity: Object.freeze({ min: 0.32, max: 0.48 })
+          serpentineDensity: Object.freeze({ min: 0.32, max: 0.48 }),
+          edgeRowMaxRatio: 0.48,
+          minRowSpread: 4
         }),
         hard: Object.freeze({
           centerMinRatio: 0.3,
           rightMinRatio: 0.24,
           diagonalGroupChance: 0.25,
           serpentineChance: 0.12,
-          serpentineDensity: Object.freeze({ min: 0.28, max: 0.45 })
+          serpentineDensity: Object.freeze({ min: 0.28, max: 0.45 }),
+          edgeRowMaxRatio: 0.42,
+          minRowSpread: 5
         })
       }),
       templates: Object.freeze({
@@ -475,6 +481,21 @@
     );
     const minDensity = Math.min(serpMin, serpMax);
     const maxDensity = Math.max(serpMin, serpMax);
+    const baseEdgeRatio = clampNumber(base.edgeRowMaxRatio, 0.05, 0.95, 0.6);
+    const edgeRowMaxRatio = clampNumber(
+      source.edgeRowMaxRatio,
+      0.05,
+      0.95,
+      baseEdgeRatio
+    );
+    const baseRowSpread = clampNumber(base.minRowSpread, 1, 20, 0);
+    const spreadCandidate = clampNumber(
+      source.minRowSpread,
+      1,
+      20,
+      baseRowSpread
+    );
+    const minRowSpread = Math.max(0, Math.floor(spreadCandidate || 0));
     return {
       centerMinRatio,
       rightMinRatio,
@@ -483,7 +504,9 @@
       serpentineDensity: {
         min: clampNumber(minDensity, 0.15, 0.95, 0.35),
         max: clampNumber(maxDensity, 0.2, 0.98, Math.max(minDensity, 0.55))
-      }
+      },
+      edgeRowMaxRatio,
+      minRowSpread
     };
   }
 
@@ -893,6 +916,7 @@
     }
     maybeInjectPattern(blocked, protectedIndices, width, height, limit, layoutConfig, difficultyKey);
     enforceDistributionTargets(blocked, protectedIndices, width, height, limit, layoutConfig, difficultyKey);
+    balanceRowDistribution(blocked, protectedIndices, width, height, limit, layoutConfig, difficultyKey);
     return blocked;
   }
 
@@ -1135,6 +1159,111 @@
     }
   }
 
+  function balanceRowDistribution(blocked, protectedIndices, width, height, limit, layoutConfig, difficultyKey) {
+    if (!blocked || !blocked.size || limit <= 0 || height <= 2) {
+      return;
+    }
+    const distribution = layoutConfig?.distribution?.[difficultyKey];
+    if (!distribution) {
+      return;
+    }
+    const edgeThreshold = clampNumber(distribution.edgeRowMaxRatio, 0.05, 0.95, 0.65);
+    const minRowSpread = Math.max(0, Math.floor(distribution.minRowSpread || 0));
+    if (edgeThreshold <= 0 && minRowSpread <= 0) {
+      return;
+    }
+    const maxIterations = Math.max(1, limit * 6);
+    for (let iteration = 0; iteration < maxIterations; iteration += 1) {
+      const data = computeRowBalanceData(blocked, width, height, protectedIndices);
+      const totalBlocked = Math.min(limit, blocked.size);
+      if (!totalBlocked) {
+        break;
+      }
+      const currentEdgeRatio = data.edgeBlocked / totalBlocked;
+      const needsEdgeRebalance = edgeThreshold > 0 && currentEdgeRatio > edgeThreshold;
+      const needsSpread = minRowSpread > 0 && data.blockedRowCount < minRowSpread;
+      if (!needsEdgeRebalance && !needsSpread) {
+        break;
+      }
+      let donor = null;
+      let recipient = null;
+      if (needsEdgeRebalance) {
+        const edgeRows = data.rows.filter(row => (row.isTop || row.isBottom) && row.blocked.length > 0);
+        const interiorRows = data.rows.filter(row => !row.isTop && !row.isBottom && row.available.length > 0);
+        donor = pickRowDonor(edgeRows);
+        recipient = pickRowRecipient(interiorRows);
+      }
+      if ((!donor || !recipient) && needsSpread) {
+        const donorRows = data.rows.filter(row => row.blocked.length > 1 || (row.isTop || row.isBottom));
+        const recipientRows = data.rows.filter(row => row.available.length > 0);
+        donor = donor || pickRowDonor(donorRows);
+        recipient = recipient || pickRowRecipient(recipientRows);
+      }
+      if (!donor || !recipient) {
+        break;
+      }
+      blocked.delete(donor.index);
+      blocked.add(recipient.index);
+    }
+  }
+
+  function computeRowBalanceData(blocked, width, height, protectedIndices) {
+    const total = width * height;
+    const protectedSet = protectedIndices instanceof Set ? protectedIndices : null;
+    const rows = Array.from({ length: height }, (_, y) => ({
+      y,
+      isTop: y === 0,
+      isBottom: y === height - 1,
+      blocked: [],
+      available: []
+    }));
+    for (let index = 0; index < total; index += 1) {
+      const cell = describeCell(index, width, height);
+      cell.protected = protectedSet ? protectedSet.has(index) : false;
+      if (blocked.has(index)) {
+        rows[cell.y].blocked.push(cell);
+      } else {
+        rows[cell.y].available.push(cell);
+      }
+    }
+    const edgeBlocked = rows.reduce((sum, row) => {
+      if (row.isTop || row.isBottom) {
+        return sum + row.blocked.length;
+      }
+      return sum;
+    }, 0);
+    const blockedRowCount = rows.reduce((count, row) => (row.blocked.length ? count + 1 : count), 0);
+    return { rows, edgeBlocked, blockedRowCount };
+  }
+
+  function pickRowDonor(rows) {
+    if (!Array.isArray(rows) || !rows.length) {
+      return null;
+    }
+    const ordered = rows.slice().sort((a, b) => b.blocked.length - a.blocked.length);
+    for (let i = 0; i < ordered.length; i += 1) {
+      const candidates = ordered[i].blocked.filter(cell => !cell.protected);
+      if (candidates.length) {
+        return candidates[randomInt(0, candidates.length - 1)];
+      }
+    }
+    return null;
+  }
+
+  function pickRowRecipient(rows) {
+    if (!Array.isArray(rows) || !rows.length) {
+      return null;
+    }
+    const ordered = rows.slice().sort((a, b) => a.blocked.length - b.blocked.length);
+    for (let i = 0; i < ordered.length; i += 1) {
+      const candidates = ordered[i].available;
+      if (candidates && candidates.length) {
+        return candidates[randomInt(0, candidates.length - 1)];
+      }
+    }
+    return null;
+  }
+
   function computeDistributionData(blocked, width, height, protectedIndices) {
     const total = width * height;
     const protectedSet = protectedIndices instanceof Set ? protectedIndices : null;
@@ -1237,6 +1366,8 @@
       isCorner,
       isEdge,
       isCenter: !isEdge,
+      isTop: isTopEdge,
+      isBottom: isBottomEdge,
       isLeft,
       isRight
     };

@@ -32,6 +32,35 @@
       "medium": 0.5,
       "hard": 0.7
     },
+    "distribution": {
+      "easy": {
+        "centerMinRatio": 0.4,
+        "rightMinRatio": 0.3,
+        "diagonalGroupChance": 0.45,
+        "serpentineChance": 0.42,
+        "serpentineDensity": { "min": 0.38, "max": 0.58 },
+        "edgeRowMaxRatio": 0.58,
+        "minRowSpread": 3
+      },
+      "medium": {
+        "centerMinRatio": 0.32,
+        "rightMinRatio": 0.26,
+        "diagonalGroupChance": 0.3,
+        "serpentineChance": 0.18,
+        "serpentineDensity": { "min": 0.32, "max": 0.48 },
+        "edgeRowMaxRatio": 0.48,
+        "minRowSpread": 4
+      },
+      "hard": {
+        "centerMinRatio": 0.3,
+        "rightMinRatio": 0.24,
+        "diagonalGroupChance": 0.25,
+        "serpentineChance": 0.12,
+        "serpentineDensity": { "min": 0.28, "max": 0.45 },
+        "edgeRowMaxRatio": 0.42,
+        "minRowSpread": 5
+      }
+    },
     "templates": {
       "medium": [
         {
