@@ -227,6 +227,8 @@
     boardField.height = boardField.bottom - boardField.top;
 
     const physicsPegs = [];
+    const movingPegStates = [];
+    let movingPegAnimationHandle = null;
     const slotTargets = slotLayoutMultipliers.map((_, index) => {
       if (slotCount <= 1) {
         return boardField.left + boardField.width / 2;
@@ -573,6 +575,13 @@
       updateBetOptionValues();
     }
 
+    function nowSeconds() {
+      if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+        return performance.now() / 1000;
+      }
+      return Date.now() / 1000;
+    }
+
     function buildPegField() {
       const pegs = [];
       if (slotCount <= 0) {
@@ -609,36 +618,86 @@
         }
       }
 
-      const bumperRadius = 0.068;
-      const bumperY = boardField.top + boardField.height * 0.44;
-      pegs.push(
-        {
-          x: boardField.left + boardField.width * 0.3,
-          y: bumperY,
-          radius: bumperRadius,
-          bounce: 0.94,
+      const movingConfigs = [
+        { xRatio: 0.26, yRatio: 0.28, radius: 0.032, amplitudeRatio: 0.035, speed: 0.7 },
+        { xRatio: 0.72, yRatio: 0.33, radius: 0.03, amplitudeRatio: 0.04, speed: 0.55 },
+        { xRatio: 0.4, yRatio: 0.52, radius: 0.034, amplitudeRatio: 0.03, speed: 0.65 },
+        { xRatio: 0.6, yRatio: 0.6, radius: 0.031, amplitudeRatio: 0.028, speed: 0.58 }
+      ];
+      for (let i = 0; i < movingConfigs.length; i += 1) {
+        const config = movingConfigs[i];
+        const amplitude = Math.abs(config.amplitudeRatio || 0) * boardField.width;
+        const baseX = clampValue(
+          boardField.left + boardField.width * config.xRatio,
+          boardField.left + 0.08,
+          boardField.right - 0.08
+        );
+        pegs.push({
+          x: baseX,
+          y: clampValue(boardField.top + boardField.height * config.yRatio, boardField.top + 0.12, boardField.bottom - 0.2),
+          radius: clampValue(config.radius || 0.032, 0.02, 0.05),
+          bounce: 0.86,
           spin: 0.12,
-          type: 'bumper'
-        },
-        {
-          x: boardField.right - boardField.width * 0.3,
-          y: bumperY,
-          radius: bumperRadius,
-          bounce: 0.94,
-          spin: 0.12,
-          type: 'bumper'
-        },
-        {
-          x: boardField.left + boardField.width * 0.5,
-          y: boardField.top + boardField.height * 0.62,
-          radius: 0.076,
-          bounce: 0.96,
-          spin: 0.16,
-          type: 'bumper'
-        }
-      );
+          type: 'moving',
+          amplitude,
+          speed: Math.max(0.2, config.speed || 0.6),
+          phase: Math.random() * Math.PI * 2
+        });
+      }
 
       return pegs;
+    }
+
+    function updateMovingPegPhysics(timeSeconds) {
+      if (!movingPegStates.length) {
+        return;
+      }
+      const margin = 0.04;
+      for (let i = 0; i < movingPegStates.length; i += 1) {
+        const state = movingPegStates[i];
+        const { physicsPeg } = state;
+        const amplitude = physicsPeg.amplitude || 0;
+        const speed = physicsPeg.speed || 0.6;
+        const phase = physicsPeg.phase || 0;
+        const offset = Math.sin(timeSeconds * speed + phase) * amplitude;
+        const minX = boardField.left + physicsPeg.radius + margin;
+        const maxX = boardField.right - physicsPeg.radius - margin;
+        physicsPeg.x = clampValue(physicsPeg.baseX + offset, minX, maxX);
+      }
+    }
+
+    function updateMovingPegDisplays() {
+      if (!movingPegStates.length) {
+        return;
+      }
+      for (let i = 0; i < movingPegStates.length; i += 1) {
+        const state = movingPegStates[i];
+        const { element, physicsPeg } = state;
+        const leftPercent = clampValue((physicsPeg.x - physicsPeg.radius) * 100, 0, 100);
+        element.style.left = `${leftPercent}%`;
+      }
+    }
+
+    function animateMovingPegs() {
+      updateMovingPegPhysics(nowSeconds());
+      updateMovingPegDisplays();
+      if (typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
+        movingPegAnimationHandle = window.requestAnimationFrame(animateMovingPegs);
+      }
+    }
+
+    function startMovingPegAnimation() {
+      if (typeof window === 'undefined' || typeof window.requestAnimationFrame !== 'function') {
+        return;
+      }
+      if (movingPegAnimationHandle != null && typeof window.cancelAnimationFrame === 'function') {
+        window.cancelAnimationFrame(movingPegAnimationHandle);
+      }
+      if (!movingPegStates.length) {
+        movingPegAnimationHandle = null;
+        return;
+      }
+      movingPegAnimationHandle = window.requestAnimationFrame(animateMovingPegs);
     }
 
     function renderPegLayer() {
@@ -647,11 +706,12 @@
       }
       pegLayerElement.innerHTML = '';
       physicsPegs.length = 0;
+      movingPegStates.length = 0;
       const layout = buildPegField();
       for (let i = 0; i < layout.length; i += 1) {
         const peg = layout[i];
         const element = document.createElement('span');
-        element.className = peg.type === 'bumper' ? 'pachinko-peg pachinko-peg--bumper' : 'pachinko-peg';
+        element.className = 'pachinko-peg';
         const diameterPercent = clampValue(peg.radius * 200, 1.8, 18);
         element.style.width = `${diameterPercent}%`;
         element.style.height = `${diameterPercent}%`;
@@ -660,15 +720,25 @@
         element.style.left = `${leftPercent}%`;
         element.style.top = `${topPercent}%`;
         pegLayerElement.appendChild(element);
-        physicsPegs.push({
+        const physicsPeg = {
           x: peg.x,
           y: peg.y,
           radius: peg.radius,
           bounce: peg.bounce,
           spin: peg.spin,
           type: peg.type
-        });
+        };
+        if (peg.type === 'moving') {
+          element.classList.add('pachinko-peg--moving');
+          physicsPeg.baseX = peg.x;
+          physicsPeg.amplitude = peg.amplitude || 0;
+          physicsPeg.speed = Math.max(0.2, peg.speed || 0.6);
+          physicsPeg.phase = peg.phase || 0;
+          movingPegStates.push({ element, physicsPeg });
+        }
+        physicsPegs.push(physicsPeg);
       }
+      startMovingPegAnimation();
     }
 
     const slotElements = Array.from(slotsContainer.querySelectorAll('.pachinko-slot')).slice(0, slotCount);
@@ -817,6 +887,8 @@
       }
 
       const points = [];
+      const simulationStart = nowSeconds();
+      updateMovingPegPhysics(simulationStart);
       let x = clampValue(
         boardField.left + boardField.width / 2 + randomOffset(0.05),
         boardField.left + BALL_RADIUS,
@@ -847,6 +919,8 @@
           vy = Math.abs(vy) * 0.6;
         }
 
+        const stepTime = simulationStart + step * 0.016;
+        updateMovingPegPhysics(stepTime);
         for (let i = 0; i < physicsPegs.length; i += 1) {
           const peg = physicsPegs[i];
           const minimumDistance = peg.radius + BALL_RADIUS;
@@ -879,9 +953,8 @@
           if (Math.abs(vy) < 0.004) {
             vy = vy >= 0 ? 0.004 : -0.004;
           }
-          if (peg.type === 'bumper') {
-            vy -= 0.0025;
-            vx *= 1.05;
+          if (peg.type === 'moving') {
+            vx *= 1.02;
           }
         }
 
