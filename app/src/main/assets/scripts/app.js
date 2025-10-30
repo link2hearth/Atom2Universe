@@ -1721,7 +1721,8 @@ function updateArcadeHubCardToggleLabel(toggleButton, collapsed) {
   const label = translateOrDefault(labelKey, fallback);
   toggleButton.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
   toggleButton.setAttribute('aria-label', label);
-  toggleButton.dataset.i18n = `aria-label:${labelKey}`;
+  toggleButton.setAttribute('title', label);
+  toggleButton.dataset.i18n = `aria-label:${labelKey};title:${labelKey}`;
   const hiddenLabel = toggleButton.querySelector('[data-role="arcade-hub-card-toggle-label"]');
   if (hiddenLabel) {
     hiddenLabel.textContent = label;
@@ -1736,6 +1737,7 @@ function applyArcadeHubCardCollapsedState(card, collapsed, options = {}) {
   const { persist = true } = options;
   const normalized = !!collapsed;
   card.classList.toggle('arcade-hub-card--collapsed', normalized);
+  card.setAttribute('aria-expanded', normalized ? 'false' : 'true');
   const description = card.querySelector('.arcade-hub-card__description');
   if (description) {
     description.hidden = normalized;
@@ -1763,6 +1765,7 @@ function initializeArcadeHubCard(card) {
   if (!card) {
     return;
   }
+  card.setAttribute('aria-expanded', 'true');
   const cardId = getArcadeHubCardId(card);
   const description = card.querySelector('.arcade-hub-card__description');
   if (description) {

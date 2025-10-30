@@ -73,7 +73,6 @@
   align-items: stretch;
   justify-content: flex-start;
   padding: calc(clamp(0.9rem, 2.2vw, 1.6rem) * var(--arcade-hub-scale));
-  min-height: calc(clamp(6.2rem, 18vw, 9rem) * var(--arcade-hub-scale));
   border-radius: calc(clamp(0.85rem, 2vw, 1.4rem) * var(--arcade-hub-scale));
   background: var(--arcade-hub-card-background);
   border: 1px solid var(--arcade-hub-card-border);
@@ -89,8 +88,16 @@
   gap: calc(clamp(0.35rem, 1.2vw, 0.8rem) * var(--arcade-hub-scale));
 }
 
+.arcade-hub-card:not(.arcade-hub-card--collapsed) {
+  min-height: calc(clamp(6.2rem, 18vw, 9rem) * var(--arcade-hub-scale));
+}
+
 .arcade-hub-card--collapsed {
-  min-height: calc(clamp(4.8rem, 12vw, 6.5rem) * var(--arcade-hub-scale));
+  min-height: auto;
+  padding-block: calc(clamp(0.45rem, 1.4vw, 0.75rem) * var(--arcade-hub-scale));
+  padding-top: calc(clamp(0.45rem, 1.4vw, 0.75rem) * var(--arcade-hub-scale));
+  padding-bottom: calc(clamp(0.45rem, 1.4vw, 0.75rem) * var(--arcade-hub-scale));
+  gap: 0;
 }
 
 .arcade-hub-card--locked {
@@ -185,29 +192,6 @@
 
 .arcade-hub-card__description[hidden] {
   display: none;
-}
-
-.arcade-hub-card__cta {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: calc(0.35rem * var(--arcade-hub-scale))
-    calc(0.9rem * var(--arcade-hub-scale));
-  font-family: 'Orbitron', 'Audiowide', sans-serif;
-  font-size: calc(var(--arcade-hub-font-scale) * clamp(0.7rem, 1.2vw, 0.9rem));
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  border-radius: calc(999px * var(--arcade-hub-scale));
-  background: var(--arcade-hub-card-cta-bg);
-  border: 1px solid var(--arcade-hub-card-cta-border);
-  transition: background var(--transition), border-color var(--transition), color var(--transition);
-  align-self: flex-start;
-}
-
-.arcade-hub-card:hover .arcade-hub-card__cta,
-.arcade-hub-card:focus-visible .arcade-hub-card__cta {
-  background: var(--arcade-hub-card-cta-bg-hover);
-  border-color: var(--arcade-hub-card-cta-border-hover);
 }
 
 body.theme-light .page--arcade-hub {
