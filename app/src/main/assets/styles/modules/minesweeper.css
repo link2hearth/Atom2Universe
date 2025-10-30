@@ -34,6 +34,7 @@
   --minesweeper-cell-mine-color: #ff8173;
   --minesweeper-cell-detonated-background: linear-gradient(135deg, rgba(156, 32, 42, 0.92), rgba(232, 76, 64, 0.95));
   --minesweeper-cell-empty-color: rgba(255, 255, 255, 0.72);
+  --page-padding-x: clamp(0.75rem, 2.3vw, 1.35rem);
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -169,7 +170,7 @@ body.theme-aurora .page--minesweeper {
   justify-content: center;
   flex: 1 1 auto;
   gap: clamp(0.85rem, 2vw, 1.4rem);
-  padding: clamp(1rem, 3vw, 1.6rem) clamp(1rem, 4vw, 2rem);
+  padding: clamp(1rem, 2.8vw, 1.6rem) clamp(0.75rem, 2.6vw, 1.2rem);
   min-height: 0;
   margin: 0 auto;
   color: var(--minesweeper-surface-color, inherit);
