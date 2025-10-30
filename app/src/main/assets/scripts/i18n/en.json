@@ -1004,11 +1004,7 @@
         "controls": {
           "aria": "Pachinko controls",
           "title": "Controls",
-          "drop": "Drop orb",
-          "multi": {
-            "label": "Number of drops",
-            "hint": "Orbs will be released one after another."
-          }
+          "drop": "Drop orb"
         },
         "bet": {
           "title": "Bet",
@@ -2011,8 +2007,7 @@
         "status": {
           "ready": "Choose a bet and launch a prism orb.",
           "dropping": "Orb in freefall…",
-          "seriesQueued": "Series queued: {count} drops lined up.",
-          "seriesActive": "Series running… {remaining} drop(s) left.",
+          "droppingMultiple": "{count} orbs in freefall…",
           "selectBet": "Select a bet before dropping an orb.",
           "insufficientAtoms": "Not enough atoms for this bet.",
           "advantage": "Advantage bonus! {slot} adds {bonus}. Net gain: {net}.",

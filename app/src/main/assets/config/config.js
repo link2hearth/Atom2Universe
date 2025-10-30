@@ -1064,9 +1064,9 @@ const GAME_CONFIG = {
       slotMultipliers: [0, 0.5, 1.5, 5, 1.5, 0.5, 0],
       /**
        * Bonus multiplicateur ajouté automatiquement aux lancers non rentables
-       * afin d'offrir un avantage au joueur (1.1 = +110 % de la mise).
+       * afin d'offrir un léger avantage au joueur (0.3 = +30 % de la mise).
        */
-      advantageBonus: 1.1,
+      advantageBonus: 0.3,
       board: {
         rows: 8,
         stepMs: 280
