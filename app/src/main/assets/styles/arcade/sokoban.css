@@ -16,96 +16,46 @@
   padding: clamp(1rem, 4vw, 2.8rem) clamp(0.75rem, 4vw, 3rem);
 }
 
+
 .sokoban {
-  display: grid;
-  gap: clamp(1rem, 2.4vw, 2rem);
-  max-width: min(960px, 100%);
-  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
   color: var(--sokoban-text-primary);
 }
 
-.sokoban__header {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(0.75rem, 1.6vw, 1.25rem);
-}
-
-.sokoban__hud {
-  display: flex;
-  flex-wrap: wrap;
-  gap: clamp(0.65rem, 1.6vw, 1rem);
-}
-
-.sokoban__stat {
-  flex: 1 1 clamp(140px, 28%, 220px);
-  min-width: clamp(120px, 26%, 200px);
-  padding: clamp(0.65rem, 1.4vw, 0.9rem) clamp(0.9rem, 1.8vw, 1.25rem);
-  border-radius: 1rem;
-  border: 1px solid rgba(140, 170, 236, 0.32);
-  background: rgba(20, 26, 48, 0.7);
-  box-shadow: 0 18px 36px rgba(6, 10, 28, 0.45);
-  display: grid;
-  gap: 0.25rem;
-}
-
-.sokoban__stat-label {
-  font-size: clamp(0.75rem, 1.6vw, 0.92rem);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--sokoban-text-muted);
-}
-
-.sokoban__stat-value {
-  font-size: clamp(1.4rem, 3.6vw, 2rem);
-  font-weight: 700;
-}
-
-.sokoban__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: clamp(0.5rem, 1.2vw, 0.8rem);
+.sokoban__board-wrapper {
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  width: min(100%, clamp(320px, 90vw, 520px));
 }
 
 .sokoban__button {
   appearance: none;
   border-radius: 999px;
   border: 1px solid rgba(132, 168, 252, 0.55);
-  padding: clamp(0.5rem, 1.4vw, 0.75rem) clamp(1.2rem, 3vw, 1.9rem);
-  font-size: clamp(0.9rem, 2vw, 1.05rem);
+  padding: clamp(0.25rem, 1vw, 0.4rem) clamp(0.6rem, 1.6vw, 0.95rem);
+  font-size: clamp(0.7rem, 1.6vw, 0.85rem);
   font-weight: 600;
   color: rgba(238, 244, 255, 0.95);
   background: linear-gradient(135deg, rgba(112, 168, 255, 0.36), rgba(144, 132, 255, 0.34));
-  box-shadow: 0 18px 32px rgba(12, 18, 46, 0.46);
+  box-shadow: 0 12px 22px rgba(12, 18, 46, 0.38);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .sokoban__button:hover,
 .sokoban__button:focus-visible {
-  transform: translateY(-2px);
-  box-shadow: 0 22px 36px rgba(14, 22, 54, 0.52);
+  transform: translateY(-1px);
+  box-shadow: 0 16px 28px rgba(14, 22, 54, 0.45);
   outline: none;
 }
 
-.sokoban__status {
-  margin: 0;
-  padding: clamp(0.6rem, 1.4vw, 0.9rem) clamp(0.9rem, 1.8vw, 1.3rem);
-  border-radius: 1rem;
-  border: 1px solid rgba(130, 162, 236, 0.28);
-  background: rgba(18, 26, 46, 0.65);
-  box-shadow: 0 16px 28px rgba(6, 10, 26, 0.4);
-  color: var(--sokoban-text-primary);
-  min-height: clamp(2.4rem, 4vw, 3rem);
-}
-
-.sokoban__hint {
-  margin: 0;
-  font-size: clamp(0.85rem, 1.8vw, 1rem);
-  color: var(--sokoban-text-muted);
-}
-
-.sokoban__board-wrapper {
-  display: flex;
-  justify-content: center;
+.sokoban__button--restart {
+  position: absolute;
+  top: clamp(0.35rem, 1.4vw, 0.55rem);
+  left: clamp(0.35rem, 1.4vw, 0.55rem);
+  z-index: 2;
 }
 
 .sokoban__board {
@@ -118,9 +68,30 @@
   border: 1px solid var(--sokoban-border);
   box-shadow: var(--sokoban-shadow);
   min-width: min(280px, 100%);
-  width: min(100%, clamp(320px, 90vw, 520px));
+  width: 100%;
   touch-action: none;
   user-select: none;
+}
+
+.sokoban__board--celebrate {
+  animation: sokoban-celebrate 0.45s ease;
+  border-color: rgba(90, 214, 164, 0.85);
+  box-shadow: 0 0 32px rgba(72, 208, 140, 0.45), var(--sokoban-shadow);
+}
+
+@keyframes sokoban-celebrate {
+  0% {
+    border-color: var(--sokoban-border);
+    box-shadow: var(--sokoban-shadow);
+  }
+  40% {
+    border-color: rgba(90, 214, 164, 0.9);
+    box-shadow: 0 0 42px rgba(72, 208, 140, 0.6), var(--sokoban-shadow);
+  }
+  100% {
+    border-color: var(--sokoban-border);
+    box-shadow: var(--sokoban-shadow);
+  }
 }
 
 .sokoban__cell {
@@ -203,22 +174,6 @@
 .sokoban__board:focus-visible {
   outline: 3px solid rgba(148, 188, 255, 0.5);
   outline-offset: 6px;
-}
-
-@media (min-width: 920px) {
-  .sokoban {
-    grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
-    grid-template-areas: 'header board';
-    align-items: start;
-  }
-
-  .sokoban__header {
-    grid-area: header;
-  }
-
-  .sokoban__board-wrapper {
-    grid-area: board;
-  }
 }
 
 body.theme-light .page--sokoban {

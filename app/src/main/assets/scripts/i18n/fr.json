@@ -2053,9 +2053,12 @@
       },
       "sokoban": {
         "status": {
-          "ready": "Poussez les caisses sur les cibles lumineuses pour gagner.",
+          "ready": "Niveau prêt.",
           "blocked": "Impossible de pousser la caisse dans cette direction.",
-          "completed": "Niveau {level} terminé en {moves} déplacements ({pushes} poussées)."
+          "completed": "Niveau {level} terminé."
+        },
+        "rewards": {
+          "gachaWin": "Ticket gacha obtenu ! (+{count})"
         },
         "cell": {
           "combined": "{occupant} sur {base}"

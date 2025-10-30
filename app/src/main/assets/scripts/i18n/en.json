@@ -2053,9 +2053,12 @@
       },
       "sokoban": {
         "status": {
-          "ready": "Push the crates onto the highlighted goals to win.",
+          "ready": "Level ready.",
           "blocked": "That crate can't move in that direction.",
-          "completed": "Level {level} cleared in {moves} moves ({pushes} pushes)."
+          "completed": "Level {level} complete."
+        },
+        "rewards": {
+          "gachaWin": "Gacha ticket earned! (+{count})"
         },
         "cell": {
           "combined": "{occupant} on {base}"
