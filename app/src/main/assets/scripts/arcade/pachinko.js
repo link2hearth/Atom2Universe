@@ -60,6 +60,7 @@
   const DEFAULT_STEP_MS = 280;
   const DEFAULT_ADVANTAGE_BONUS = 0.3;
   const HISTORY_LIMIT = 8;
+  const MOVING_PEG_TRAVEL_MARGIN = 0.04;
 
   function onReady(callback) {
     if (document.readyState === 'loading') {
@@ -619,29 +620,44 @@
       }
 
       const movingConfigs = [
-        { xRatio: 0.26, yRatio: 0.28, radius: 0.032, amplitudeRatio: 0.035, speed: 0.7 },
-        { xRatio: 0.72, yRatio: 0.33, radius: 0.03, amplitudeRatio: 0.04, speed: 0.55 },
-        { xRatio: 0.4, yRatio: 0.52, radius: 0.034, amplitudeRatio: 0.03, speed: 0.65 },
-        { xRatio: 0.6, yRatio: 0.6, radius: 0.031, amplitudeRatio: 0.028, speed: 0.58 }
+        { yRatio: 0.28, radius: 0.032, travelSeconds: 2, startRatio: 1 },
+        { yRatio: 0.33, radius: 0.03, travelSeconds: 4, startRatio: 0.25 },
+        { yRatio: 0.52, radius: 0.034, travelSeconds: 6, startRatio: 0.65 },
+        { yRatio: 0.6, radius: 0.031, travelSeconds: 10, startRatio: 0 }
       ];
       for (let i = 0; i < movingConfigs.length; i += 1) {
         const config = movingConfigs[i];
-        const amplitude = Math.abs(config.amplitudeRatio || 0) * boardField.width;
-        const baseX = clampValue(
-          boardField.left + boardField.width * config.xRatio,
-          boardField.left + 0.08,
-          boardField.right - 0.08
+        const radius = clampValue(config.radius || 0.032, 0.02, 0.05);
+        const travelMin = boardField.left + radius + MOVING_PEG_TRAVEL_MARGIN;
+        const travelMax = boardField.right - radius - MOVING_PEG_TRAVEL_MARGIN;
+        const travelWidth = Math.max(0, travelMax - travelMin);
+        const amplitude = travelWidth / 2;
+        const baseX = travelMin + amplitude;
+        const normalizedStart = clampValue(
+          typeof config.startRatio === 'number' ? config.startRatio : Math.random(),
+          0,
+          1
         );
+        const startOffset = clampValue(normalizedStart * 2 - 1, -1, 1);
+        const phase = Math.asin(startOffset);
+        const travelSeconds = Math.max(0.5, Number(config.travelSeconds) || 2);
+        const speed = Math.PI / travelSeconds;
+        const initialX = amplitude > 0 ? baseX + amplitude * Math.sin(phase) : baseX;
         pegs.push({
-          x: baseX,
-          y: clampValue(boardField.top + boardField.height * config.yRatio, boardField.top + 0.12, boardField.bottom - 0.2),
-          radius: clampValue(config.radius || 0.032, 0.02, 0.05),
+          x: initialX,
+          baseX,
+          y: clampValue(
+            boardField.top + boardField.height * config.yRatio,
+            boardField.top + 0.12,
+            boardField.bottom - 0.2
+          ),
+          radius,
           bounce: 0.78,
           spin: 0.1,
           type: 'moving',
           amplitude,
-          speed: Math.max(0.2, config.speed || 0.6),
-          phase: Math.random() * Math.PI * 2
+          speed,
+          phase
         });
       }
 
@@ -652,7 +668,6 @@
       if (!movingPegStates.length) {
         return;
       }
-      const margin = 0.04;
       for (let i = 0; i < movingPegStates.length; i += 1) {
         const state = movingPegStates[i];
         const { physicsPeg } = state;
@@ -660,8 +675,8 @@
         const speed = physicsPeg.speed || 0.6;
         const phase = physicsPeg.phase || 0;
         const offset = Math.sin(timeSeconds * speed + phase) * amplitude;
-        const minX = boardField.left + physicsPeg.radius + margin;
-        const maxX = boardField.right - physicsPeg.radius - margin;
+        const minX = boardField.left + physicsPeg.radius + MOVING_PEG_TRAVEL_MARGIN;
+        const maxX = boardField.right - physicsPeg.radius - MOVING_PEG_TRAVEL_MARGIN;
         physicsPeg.x = clampValue(physicsPeg.baseX + offset, minX, maxX);
       }
     }
@@ -730,7 +745,7 @@
         };
         if (peg.type === 'moving') {
           element.classList.add('pachinko-peg--moving');
-          physicsPeg.baseX = peg.x;
+          physicsPeg.baseX = typeof peg.baseX === 'number' ? peg.baseX : peg.x;
           physicsPeg.amplitude = peg.amplitude || 0;
           physicsPeg.speed = Math.max(0.2, peg.speed || 0.6);
           physicsPeg.phase = peg.phase || 0;
