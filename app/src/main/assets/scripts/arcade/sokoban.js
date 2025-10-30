@@ -1178,7 +1178,8 @@
       allowWhenSolved = false,
       skipAutosave = false,
       skipStatus = false,
-      force = false
+      force = false,
+      skipCompletion = false
     } = options;
 
     if (!allowWhenSolved && state.solved) {
@@ -1265,6 +1266,9 @@
     renderBoard();
     updateHud();
     if (solvedNow) {
+      if (skipCompletion) {
+        return true;
+      }
       handleLevelCompleted();
     } else if (!skipAutosave) {
       scheduleAutosave();
@@ -1287,7 +1291,8 @@
         allowWhenSolved: true,
         skipAutosave: true,
         skipStatus: true,
-        force: true
+        force: true,
+        skipCompletion: true
       });
       if (moved) {
         return true;
