@@ -2059,6 +2059,7 @@
         "labels": {
           "stack": "Réserve d’atomes",
           "currentBet": "Mise actuelle",
+          "status": "État",
           "you": "Vous"
         },
         "phase": {

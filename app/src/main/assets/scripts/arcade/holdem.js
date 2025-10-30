@@ -1089,14 +1089,12 @@
       elements.playerBet.textContent = formatAmount(hero ? hero.bet : 0);
     }
     if (elements.playerStatus) {
-      const statusKey = hero && hero.statusKey
-        ? hero.statusKey
-        : 'index.sections.holdem.playerStatus.waiting';
-      elements.playerStatus.dataset.i18n = statusKey;
+      const statusInfo = resolvePlayerStatusInfo(hero);
+      elements.playerStatus.dataset.i18n = statusInfo.key;
       elements.playerStatus.textContent = translate(
-        statusKey,
-        getPlayerStatusFallback(statusKey),
-        hero ? hero.statusParams : null
+        statusInfo.key,
+        statusInfo.fallback,
+        statusInfo.params
       );
     }
     if (elements.playerPanel) {
@@ -1123,12 +1121,25 @@
       case 'index.sections.holdem.playerStatus.check':
         return 'Check';
       case 'index.sections.holdem.playerStatus.blind':
-        return 'Blind';
+        return 'Blind {amount}';
       case 'index.sections.holdem.playerStatus.waiting':
         return 'En attente';
+      case 'index.sections.holdem.playerStatus.revealed':
+        return 'Main : {hand}';
       default:
         return 'En jeu';
     }
+  }
+
+  function resolvePlayerStatusInfo(player) {
+    const statusKey = player && player.statusKey
+      ? player.statusKey
+      : 'index.sections.holdem.playerStatus.waiting';
+    return {
+      key: statusKey,
+      fallback: getPlayerStatusFallback(statusKey),
+      params: player && player.statusParams ? player.statusParams : null
+    };
   }
 
   function renderOpponents() {
@@ -1190,6 +1201,21 @@
       bet.appendChild(betLabel);
       bet.appendChild(betValue);
       article.appendChild(bet);
+
+      const statusInfo = resolvePlayerStatusInfo(player);
+      const status = document.createElement('p');
+      status.className = 'holdem-player__status';
+      const statusLabel = document.createElement('span');
+      statusLabel.className = 'holdem-player__stack-label';
+      statusLabel.dataset.i18n = 'index.sections.holdem.labels.status';
+      statusLabel.textContent = translate('index.sections.holdem.labels.status', 'Status');
+      const statusValue = document.createElement('span');
+      statusValue.className = 'holdem-player__status-value';
+      statusValue.dataset.i18n = statusInfo.key;
+      statusValue.textContent = translate(statusInfo.key, statusInfo.fallback, statusInfo.params);
+      status.appendChild(statusLabel);
+      status.appendChild(statusValue);
+      article.appendChild(status);
 
       if (i < splitIndex) {
         leftFragment.appendChild(article);

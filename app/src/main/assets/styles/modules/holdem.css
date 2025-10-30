@@ -254,7 +254,8 @@
   font-size: calc(0.75rem * var(--holdem-scale));
 }
 
-.holdem-player__bet {
+.holdem-player__bet,
+.holdem-player__status {
   margin: 0;
   font-size: calc(0.9rem * var(--holdem-scale));
   color: var(--holdem-muted-color);
@@ -270,6 +271,11 @@
   font-size: calc(1.05rem * var(--holdem-scale));
   color: var(--holdem-text-color);
   font-weight: 600;
+}
+
+.holdem-player__status-value {
+  color: var(--holdem-text-color);
+  font-weight: 500;
 }
 
 .holdem-cards {
