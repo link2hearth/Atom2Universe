@@ -288,40 +288,51 @@
   function evaluateGrid(grid, payouts) {
     const wins = [];
 
-    function isUniformSuit(cells) {
+    function getUniformSuit(cells) {
       if (!cells || !cells.length) {
-        return false;
+        return null;
       }
-      const base = cells[0];
-      if (!base || base.id === 'joker' || base.id === 'void') {
-        return false;
-      }
-      const baseId = base.id;
-      for (let i = 1; i < cells.length; i += 1) {
+      let baseSuit = null;
+      for (let i = 0; i < cells.length; i += 1) {
         const cell = cells[i];
-        if (!cell || cell.id !== baseId || cell.id === 'joker' || cell.id === 'void') {
-          return false;
+        if (!cell || cell.id === 'void') {
+          return null;
+        }
+        if (cell.id === 'joker') {
+          continue;
+        }
+        if (baseSuit == null) {
+          baseSuit = cell.id;
+        } else if (cell.id !== baseSuit) {
+          return null;
         }
       }
-      return true;
+      return baseSuit;
     }
 
-    function isUniformColor(cells) {
+    function getUniformColor(cells) {
       if (!cells || !cells.length) {
-        return false;
+        return null;
       }
-      const base = cells[0];
-      if (!base || (base.color !== 'red' && base.color !== 'black')) {
-        return false;
-      }
-      const baseColor = base.color;
-      for (let i = 1; i < cells.length; i += 1) {
+      let baseColor = null;
+      for (let i = 0; i < cells.length; i += 1) {
         const cell = cells[i];
-        if (!cell || cell.color !== baseColor || cell.color === 'joker' || cell.color === 'void') {
-          return false;
+        if (!cell || cell.color === 'void') {
+          return null;
+        }
+        if (cell.id === 'joker') {
+          continue;
+        }
+        if (cell.color !== 'red' && cell.color !== 'black') {
+          return null;
+        }
+        if (baseColor == null) {
+          baseColor = cell.color;
+        } else if (cell.color !== baseColor) {
+          return null;
         }
       }
-      return true;
+      return baseColor;
     }
 
     const diagonals = [
@@ -348,18 +359,20 @@
       if (!diagonal) {
         continue;
       }
-      if (isUniformSuit(diagonal.cells)) {
+      const uniformSuit = getUniformSuit(diagonal.cells);
+      if (uniformSuit) {
         wins.push({
           type: 'suitDiagonal',
-          suit: diagonal.cells[0].id,
+          suit: uniformSuit,
           multiplier: payouts.suitDiagonal,
           cells: diagonal.coords
         });
       }
-      if (isUniformColor(diagonal.cells)) {
+      const uniformColor = getUniformColor(diagonal.cells);
+      if (uniformColor) {
         wins.push({
           type: 'colorDiagonal',
-          color: diagonal.cells[0].color,
+          color: uniformColor,
           multiplier: payouts.colorDiagonal,
           cells: diagonal.coords
         });
@@ -383,11 +396,13 @@
         });
       }
 
-      if (isUniformSuit(rowCells)) {
+      const rowSuit = getUniformSuit(rowCells);
+      if (rowSuit) {
         wins.push({
           type: 'suitLine',
+          orientation: 'row',
           row,
-          suit: rowCells[0].id,
+          suit: rowSuit,
           multiplier: payouts.suitLine,
           cells: [
             { row, col: 0 },
@@ -397,16 +412,53 @@
         });
       }
 
-      if (isUniformColor(rowCells)) {
+      const rowColor = getUniformColor(rowCells);
+      if (rowColor) {
         wins.push({
           type: 'colorLine',
+          orientation: 'row',
           row,
-          color: rowCells[0].color,
+          color: rowColor,
           multiplier: payouts.colorLine,
           cells: [
             { row, col: 0 },
             { row, col: 1 },
             { row, col: 2 }
+          ]
+        });
+      }
+    }
+
+    for (let col = 0; col < 3; col += 1) {
+      const columnCells = [grid[0][col], grid[1][col], grid[2][col]];
+      const columnSuit = getUniformSuit(columnCells);
+      if (columnSuit) {
+        wins.push({
+          type: 'suitLine',
+          orientation: 'column',
+          column: col,
+          suit: columnSuit,
+          multiplier: payouts.suitLine,
+          cells: [
+            { row: 0, col },
+            { row: 1, col },
+            { row: 2, col }
+          ]
+        });
+      }
+
+      const columnColor = getUniformColor(columnCells);
+      if (columnColor) {
+        wins.push({
+          type: 'colorLine',
+          orientation: 'column',
+          column: col,
+          color: columnColor,
+          multiplier: payouts.colorLine,
+          cells: [
+            { row: 0, col },
+            { row: 1, col },
+            { row: 2, col }
           ]
         });
       }
@@ -870,11 +922,13 @@
         if (win.type === 'suitLine') {
           const suitSymbol = SYMBOL_BY_ID.get(win.suit);
           const suit = translateSymbolName(suitSymbol);
-          setStatus(
-            'winSuitLine',
-            `Ligne de ${suit} ! Gain ×${multiplierText}.`,
-            { suit, multiplier: multiplierText }
-          );
+          const orientation = win.orientation === 'column' ? 'column' : 'row';
+          const translationKey = orientation === 'column' ? 'winSuitColumn' : 'winSuitLine';
+          const fallback =
+            orientation === 'column'
+              ? `Colonne de ${suit} ! Gain ×${multiplierText}.`
+              : `Ligne de ${suit} ! Gain ×${multiplierText}.`;
+          setStatus(translationKey, fallback, { suit, multiplier: multiplierText });
         } else if (win.type === 'suitDiagonal') {
           const suitSymbol = SYMBOL_BY_ID.get(win.suit);
           const suit = translateSymbolName(suitSymbol);
@@ -885,11 +939,13 @@
           );
         } else if (win.type === 'colorLine') {
           const color = translateColor(win.color);
-          setStatus(
-            'winColorLine',
-            `Ligne ${color} ! Bonus couleur ×${multiplierText}.`,
-            { color, multiplier: multiplierText }
-          );
+          const orientation = win.orientation === 'column' ? 'column' : 'row';
+          const translationKey = orientation === 'column' ? 'winColorColumn' : 'winColorLine';
+          const fallback =
+            orientation === 'column'
+              ? `Colonne ${color} ! Bonus couleur ×${multiplierText}.`
+              : `Ligne ${color} ! Bonus couleur ×${multiplierText}.`;
+          setStatus(translationKey, fallback, { color, multiplier: multiplierText });
         } else if (win.type === 'colorDiagonal') {
           const color = translateColor(win.color);
           setStatus(
