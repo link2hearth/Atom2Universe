@@ -114,6 +114,24 @@
   });
 
   const SINGLE_PATH_COLOR = Object.freeze({ id: 'single', value: '#7ad3ff' });
+  const ENDPOINT_TYPES = Object.freeze({
+    START: 'start',
+    FINISH: 'finish'
+  });
+  const ENDPOINT_LABEL_CONFIG = Object.freeze({
+    [ENDPOINT_TYPES.START]: Object.freeze({
+      symbolKey: 'index.sections.theLine.endpointLabels.start.symbol',
+      ariaKey: 'index.sections.theLine.endpointLabels.start.aria',
+      fallbackSymbol: 'S',
+      fallbackAria: 'Start tile'
+    }),
+    [ENDPOINT_TYPES.FINISH]: Object.freeze({
+      symbolKey: 'index.sections.theLine.endpointLabels.finish.symbol',
+      ariaKey: 'index.sections.theLine.endpointLabels.finish.aria',
+      fallbackSymbol: 'F',
+      fallbackAria: 'Finish tile'
+    })
+  });
   const COLOR_PALETTE = Object.freeze([
     Object.freeze({ id: 'amber', value: '#f7b731' }),
     Object.freeze({ id: 'azure', value: '#34d1ff' }),
@@ -547,6 +565,7 @@
       return;
     }
     const handler = () => {
+      refreshEndpointLabels();
       const message = state.lastMessage;
       if (!message) {
         return;
@@ -1691,6 +1710,7 @@
           element: cellElement,
           endpointColor: null,
           endpointColorValue: null,
+          endpointType: null,
           occupantColor: null
         });
       }
@@ -1710,8 +1730,8 @@
         const startCell = getCellAt(segment.start.x, segment.start.y);
         const endCell = getCellAt(segment.end.x, segment.end.y);
         const color = COLOR_PALETTE[index % COLOR_PALETTE.length];
-        markEndpoint(startCell, color);
-        markEndpoint(endCell, color);
+        markEndpoint(startCell, color, ENDPOINT_TYPES.START);
+        markEndpoint(endCell, color, ENDPOINT_TYPES.FINISH);
         state.paths.set(color.id, {
           colorId: color.id,
           colorValue: color.value,
@@ -1725,8 +1745,8 @@
       const endCoord = puzzle.path[puzzle.path.length - 1];
       const startCell = getCellAt(startCoord.x, startCoord.y);
       const endCell = getCellAt(endCoord.x, endCoord.y);
-      markEndpoint(startCell, SINGLE_PATH_COLOR);
-      markEndpoint(endCell, SINGLE_PATH_COLOR);
+      markEndpoint(startCell, SINGLE_PATH_COLOR, ENDPOINT_TYPES.START);
+      markEndpoint(endCell, SINGLE_PATH_COLOR, ENDPOINT_TYPES.FINISH);
       state.paths.set(SINGLE_PATH_COLOR.id, {
         colorId: SINGLE_PATH_COLOR.id,
         colorValue: SINGLE_PATH_COLOR.value,
@@ -1739,15 +1759,73 @@
     updateRemainingValue();
   }
 
-  function markEndpoint(cell, color) {
+  function markEndpoint(cell, color, type) {
     if (!cell) {
       return;
     }
     cell.endpointColor = color.id;
     cell.endpointColorValue = color.value;
+    cell.endpointType = type === ENDPOINT_TYPES.START || type === ENDPOINT_TYPES.FINISH
+      ? type
+      : null;
     cell.element.classList.add('the-line__cell--endpoint');
+    cell.element.classList.toggle('the-line__cell--endpoint-start', cell.endpointType === ENDPOINT_TYPES.START);
+    cell.element.classList.toggle('the-line__cell--endpoint-finish', cell.endpointType === ENDPOINT_TYPES.FINISH);
+    if (cell.endpointType) {
+      cell.element.dataset.lineEndpoint = cell.endpointType;
+    } else {
+      delete cell.element.dataset.lineEndpoint;
+    }
+    updateEndpointLabel(cell);
     cell.element.dataset.lineColor = color.id;
     cell.element.style.setProperty('--line-color-value', color.value);
+  }
+
+  function updateEndpointLabel(cell) {
+    if (!cell || !cell.element) {
+      return;
+    }
+    const type = cell.endpointType;
+    const config = type ? ENDPOINT_LABEL_CONFIG[type] : null;
+    if (!config) {
+      delete cell.element.dataset.lineEndpointLabel;
+      cell.element.removeAttribute('aria-label');
+      return;
+    }
+    const symbol = translate(config.symbolKey, config.fallbackSymbol);
+    const trimmedSymbol = typeof symbol === 'string' ? symbol.trim() : '';
+    if (trimmedSymbol) {
+      cell.element.dataset.lineEndpointLabel = trimmedSymbol;
+    } else {
+      delete cell.element.dataset.lineEndpointLabel;
+    }
+    const ariaText = translate(config.ariaKey, config.fallbackAria);
+    const trimmedAria = typeof ariaText === 'string' ? ariaText.trim() : '';
+    if (trimmedAria) {
+      const finalLabel = trimmedSymbol ? `${trimmedAria} (${trimmedSymbol})` : trimmedAria;
+      cell.element.setAttribute('aria-label', finalLabel);
+    } else if (trimmedSymbol) {
+      cell.element.setAttribute('aria-label', trimmedSymbol);
+    } else {
+      cell.element.removeAttribute('aria-label');
+    }
+  }
+
+  function refreshEndpointLabels() {
+    if (!state.paths || typeof state.paths.forEach !== 'function') {
+      return;
+    }
+    state.paths.forEach(pathState => {
+      if (!pathState || !Array.isArray(pathState.endpoints)) {
+        return;
+      }
+      pathState.endpoints.forEach(cell => {
+        if (!cell) {
+          return;
+        }
+        updateEndpointLabel(cell);
+      });
+    });
   }
 
   function getCellAt(x, y) {

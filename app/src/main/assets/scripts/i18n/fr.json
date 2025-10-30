@@ -631,6 +631,16 @@
           "reset": "Nouveau tracé"
         },
         "board": "Grille du puzzle The Line",
+        "endpointLabels": {
+          "start": {
+            "symbol": "D",
+            "aria": "Case de départ"
+          },
+          "finish": {
+            "symbol": "A",
+            "aria": "Case d’arrivée"
+          }
+        },
         "messages": {
           "ready": "Touchez une case de départ colorée pour commencer votre parcours.",
           "single": "Tracez un chemin qui couvre toute la grille sans repasser sur une case.",
