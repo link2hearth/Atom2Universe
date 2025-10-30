@@ -348,6 +348,12 @@
             "description": "Doublez vos Atomes, ou perdez tout.",
             "cta": "Distribuer"
           },
+          "dice": {
+            "aria": "Accéder au mini-jeu Dice",
+            "title": "Dice",
+            "description": "Lancez cinq dés sur un tapis néon, gardez vos combinaisons et visez les meilleures figures de yams.",
+            "cta": "Jouer"
+          },
           "holdem": {
             "aria": "Accéder au mini-jeu Hold’em",
             "title": "Hold’em",
@@ -872,6 +878,52 @@
           }
         },
         "hiddenCard": "Carte cachée"
+      },
+      "dice": {
+        "aria": "Mini-jeu Dice",
+        "title": "Dice",
+        "table": {
+          "title": "Tapis de lancer",
+          "aria": "Tapis de lancer de dés"
+        },
+        "controls": {
+          "aria": "Commandes de lancer",
+          "rollsLabel": "Lancers restants :",
+          "roll": "Lancer les dés",
+          "clear": "Libérer les dés"
+        },
+        "status": {
+          "start": "Lancez les dés pour commencer."
+        },
+        "scorecard": {
+          "aria": "Feuille de score de Dice",
+          "title": "Feuille de score",
+          "reset": "Nouvelle partie",
+          "upperSection": "Section supérieure",
+          "lowerSection": "Section inférieure",
+          "categories": {
+            "ones": "As",
+            "twos": "Deux",
+            "threes": "Trois",
+            "fours": "Quatre",
+            "fives": "Cinq",
+            "sixes": "Six",
+            "threeKind": "Brelan",
+            "fourKind": "Carré",
+            "fullHouse": "Full",
+            "smallStraight": "Petite suite",
+            "largeStraight": "Grande suite",
+            "yahtzee": "Yams",
+            "chance": "Chance"
+          },
+          "totals": {
+            "upperSubtotal": "Sous-total supérieur",
+            "upperBonus": "Bonus supérieur",
+            "upperTotal": "Total supérieur",
+            "lowerTotal": "Total inférieur",
+            "grandTotal": "Total général"
+          }
+        }
       },
       "wave": {
         "aria": "Mini-jeu Photon",
@@ -1824,6 +1876,27 @@
           "clubs": "trèfle"
         },
         "cardLabel": "{rank} de {suit}"
+      },
+      "dice": {
+        "status": {
+          "start": "Lancez les dés pour commencer.",
+          "rollsLeft": "Lancers restants : {rolls}. Sélectionnez des dés à garder ou relancez.",
+          "noRolls": "Plus de lancers disponibles : validez une combinaison.",
+          "dieHeld": "Dé {index} mis de côté.",
+          "dieReleased": "Dé {index} relâché.",
+          "holdsCleared": "Tous les dés ont été libérés.",
+          "needRoll": "Effectuez au moins un lancer avant de marquer.",
+          "categoryLocked": "Combinaison {category} validée pour {score} points.",
+          "gameComplete": "Partie terminée ! Score final : {score}.",
+          "newGame": "Feuille de score réinitialisée. Lancez les dés."
+        },
+        "die": {
+          "available": "Dé {index} affichant {value}.",
+          "held": "Dé {index} affichant {value}, mis de côté."
+        },
+        "categoryAction": "Valider {score} points dans {category}.",
+        "categoryLockedAria": "{category} verrouillée avec {score} points.",
+        "categoryDisabled": "{category} indisponible tant que vous n’avez pas lancé."
       },
       "holdem": {
         "status": {
