@@ -3538,6 +3538,58 @@
         </article>
 
         <article
+          id="infoCardsCard"
+          class="info-card info-card--cards"
+          aria-labelledby="info-cards-title"
+          hidden
+        >
+          <header class="info-card__header info-card__header--collapsible">
+            <h3
+              id="info-cards-title"
+              data-i18n="index.sections.info.cards.title"
+            >
+              Cartes spéciales
+            </h3>
+            <button
+              type="button"
+              id="infoCardsToggle"
+              class="info-card__collapse-button"
+              aria-expanded="true"
+              aria-controls="info-cards-content"
+              data-i18n="index.sections.info.cards.toggle.collapse"
+            >
+              Réduire
+            </button>
+          </header>
+          <div
+            id="info-cards-content"
+            class="info-card__content info-card__content--cards"
+            aria-hidden="false"
+          >
+            <p
+              class="info-card__subtitle info-card__subtitle--cards"
+              id="infoCardsSubtitle"
+              data-i18n="index.sections.info.cards.subtitle"
+            >
+              Votre collection de cartes spéciales gagnées dans le gacha cosmique.
+            </p>
+            <p
+              id="infoCardsEmpty"
+              class="info-card__empty"
+              data-i18n="index.sections.info.cards.empty"
+            >
+              Aucune carte spéciale débloquée pour le moment.
+            </p>
+            <ul
+              id="infoCardsList"
+              class="info-card-list"
+              role="list"
+              hidden
+            ></ul>
+          </div>
+        </article>
+
+        <article
           class="info-card info-card--characters"
           aria-labelledby="info-characters-title"
         >
@@ -4683,6 +4735,63 @@
           data-i18n="index.sections.table.family.modal.placeholder"
         >Description de la famille à venir.</div>
       </div>
+    </section>
+  </div>
+
+  <div class="gacha-card-overlay" id="gachaCardOverlay" hidden aria-hidden="true">
+    <section
+      class="gacha-card-overlay__dialog"
+      id="gachaCardOverlayDialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="gachaCardOverlayTitle"
+      aria-describedby="gachaCardOverlayHint"
+      tabindex="-1"
+    >
+      <button
+        type="button"
+        class="gacha-card-overlay__close"
+        id="gachaCardOverlayClose"
+        aria-label="Fermer"
+        title="Fermer"
+        data-i18n="aria-label:scripts.gacha.cards.overlay.close;title:scripts.gacha.cards.overlay.close"
+      >
+        ×
+      </button>
+      <p
+        class="gacha-card-overlay__title"
+        id="gachaCardOverlayTitle"
+        data-i18n="scripts.gacha.cards.overlay.newTitle"
+      >
+        Carte spéciale obtenue !
+      </p>
+      <figure class="gacha-card-overlay__figure">
+        <img
+          id="gachaCardOverlayImage"
+          class="gacha-card-overlay__image"
+          alt="Carte spéciale"
+          src=""
+        />
+        <figcaption
+          class="gacha-card-overlay__label"
+          id="gachaCardOverlayLabel"
+        >
+          Carte spéciale
+        </figcaption>
+        <span
+          class="gacha-card-overlay__count"
+          id="gachaCardOverlayCount"
+        >
+          ×1
+        </span>
+      </figure>
+      <p
+        class="gacha-card-overlay__hint"
+        id="gachaCardOverlayHint"
+        data-i18n="scripts.gacha.cards.overlay.hint"
+      >
+        Touchez la croix pour revenir au jeu.
+      </p>
     </section>
   </div>
 

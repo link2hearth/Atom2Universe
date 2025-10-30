@@ -183,6 +183,17 @@
             "expand": "Expand"
           }
         },
+        "cards": {
+          "title": "Special cards",
+          "subtitle": "Browse the ultra-rare cards unlocked from the gacha.",
+          "toggle": {
+            "collapse": "Collapse",
+            "expand": "Expand"
+          },
+          "empty": "No special card unlocked yet.",
+          "count": "×{count}",
+          "view": "View {card}"
+        },
         "characters": {
           "title": "Who are the characters?",
           "subtitle": "The brilliant minds guiding your journey.",
@@ -2739,7 +2750,14 @@
           "plutonium": "Plutonium card"
         },
         "toastNew": "Special card unlocked: {card}",
-        "toastDuplicate": "Special card found again: {card}"
+        "toastDuplicate": "Special card found again: {card}",
+        "overlay": {
+          "newTitle": "Special card unlocked!",
+          "duplicateTitle": "Special card found again!",
+          "count": "×{count}",
+          "hint": "Tap the cross to return to the game.",
+          "close": "Close card"
+        }
       },
       "controls": {
         "modeSingle": "Draw x1",

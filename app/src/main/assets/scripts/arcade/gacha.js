@@ -3131,6 +3131,9 @@ function performGachaRoll(count = 1) {
         showToast(message);
       }
     });
+    if (typeof window !== 'undefined' && typeof window.enqueueSpecialCardReveal === 'function') {
+      window.enqueueSpecialCardReveal(specialCardRewards);
+    }
   }
 
   recalcProduction();

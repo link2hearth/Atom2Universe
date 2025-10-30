@@ -183,6 +183,17 @@
             "expand": "Dérouler"
           }
         },
+        "cards": {
+          "title": "Cartes spéciales",
+          "subtitle": "Votre collection de cartes ultra rares débloquées dans le gacha.",
+          "toggle": {
+            "collapse": "Réduire",
+            "expand": "Dérouler"
+          },
+          "empty": "Aucune carte spéciale débloquée pour le moment.",
+          "count": "×{count}",
+          "view": "Afficher {card}"
+        },
         "characters": {
           "title": "Qui sont les personnages ?",
           "subtitle": "Les esprits brillants qui accompagnent votre aventure.",
@@ -2739,7 +2750,14 @@
           "plutonium": "Carte Plutonium"
         },
         "toastNew": "Nouvelle carte spéciale obtenue : {card}",
-        "toastDuplicate": "Carte spéciale obtenue à nouveau : {card}"
+        "toastDuplicate": "Carte spéciale obtenue à nouveau : {card}",
+        "overlay": {
+          "newTitle": "Carte spéciale obtenue !",
+          "duplicateTitle": "Carte spéciale retrouvée !",
+          "count": "×{count}",
+          "hint": "Touchez la croix pour revenir au jeu.",
+          "close": "Fermer la carte"
+        }
       },
       "controls": {
         "modeSingle": "Tirage x1",

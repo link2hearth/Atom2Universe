@@ -132,6 +132,7 @@ const CRIT_ATOM_VISUALS_STORAGE_KEY = 'atom2univers.options.critAtomVisualsDisab
 const TEXT_FONT_STORAGE_KEY = 'atom2univers.options.textFont';
 const INFO_WELCOME_COLLAPSED_STORAGE_KEY = 'atom2univers.info.welcomeCollapsed';
 const INFO_CHARACTERS_COLLAPSED_STORAGE_KEY = 'atom2univers.info.charactersCollapsed';
+const INFO_CARDS_COLLAPSED_STORAGE_KEY = 'atom2univers.info.cardsCollapsed';
 const HEADER_COLLAPSED_STORAGE_KEY = 'atom2univers.ui.headerCollapsed';
 const ARCADE_HUB_CARD_STATE_STORAGE_KEY = 'atom2univers.arcadeHub.cardStates.v1';
 const ARCADE_AUTOSAVE_STORAGE_KEY = 'atom2univers.arcadeSaves.v1';
@@ -4783,9 +4784,22 @@ function collectDomElements() {
   infoWelcomeCard: document.querySelector('.info-card--welcome'),
   infoWelcomeContent: document.getElementById('info-welcome-content'),
   infoWelcomeToggle: document.getElementById('infoWelcomeToggle'),
+  infoCardsCard: document.getElementById('infoCardsCard'),
+  infoCardsContent: document.getElementById('info-cards-content'),
+  infoCardsToggle: document.getElementById('infoCardsToggle'),
+  infoCardsList: document.getElementById('infoCardsList'),
+  infoCardsEmpty: document.getElementById('infoCardsEmpty'),
   infoCharactersCard: document.querySelector('.info-card--characters'),
   infoCharactersContent: document.getElementById('info-characters-content'),
   infoCharactersToggle: document.getElementById('infoCharactersToggle'),
+  gachaCardOverlay: document.getElementById('gachaCardOverlay'),
+  gachaCardOverlayDialog: document.getElementById('gachaCardOverlayDialog'),
+  gachaCardOverlayClose: document.getElementById('gachaCardOverlayClose'),
+  gachaCardOverlayImage: document.getElementById('gachaCardOverlayImage'),
+  gachaCardOverlayLabel: document.getElementById('gachaCardOverlayLabel'),
+  gachaCardOverlayCount: document.getElementById('gachaCardOverlayCount'),
+  gachaCardOverlayTitle: document.getElementById('gachaCardOverlayTitle'),
+  gachaCardOverlayHint: document.getElementById('gachaCardOverlayHint'),
   critAtomLayer: null,
   devkitOverlay: document.getElementById('devkitOverlay'),
   devkitPanel: document.getElementById('devkitPanel'),
@@ -5779,6 +5793,15 @@ function updateInfoBonusVisibility() {
   }
 }
 
+function updateInfoCardsVisibility() {
+  if (!elements.infoCardsCard) {
+    return;
+  }
+  const unlocked = isPageUnlocked('gacha');
+  elements.infoCardsCard.hidden = !unlocked;
+  elements.infoCardsCard.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
+}
+
 function readStoredInfoCardCollapsed(storageKey, defaultValue = false) {
   try {
     const stored = globalThis.localStorage?.getItem(storageKey);
@@ -6006,6 +6029,20 @@ function updateInfoCharactersToggleLabel(collapsed) {
   elements.infoCharactersToggle.setAttribute('aria-label', label);
 }
 
+function updateInfoCardsToggleLabel(collapsed) {
+  if (!elements.infoCardsToggle) {
+    return;
+  }
+  const key = collapsed
+    ? 'index.sections.info.cards.toggle.expand'
+    : 'index.sections.info.cards.toggle.collapse';
+  const fallback = collapsed ? 'Expand' : 'Collapse';
+  const label = translateOrDefault(key, fallback);
+  elements.infoCardsToggle.setAttribute('data-i18n', key);
+  elements.infoCardsToggle.textContent = label;
+  elements.infoCardsToggle.setAttribute('aria-label', label);
+}
+
 function setInfoCharactersCollapsed(collapsed, options = {}) {
   if (!elements.infoCharactersCard || !elements.infoCharactersContent || !elements.infoCharactersToggle) {
     return;
@@ -6041,6 +6078,41 @@ function initInfoCharactersCard() {
   });
 }
 
+function setInfoCardsCollapsed(collapsed, options = {}) {
+  if (!elements.infoCardsCard || !elements.infoCardsContent || !elements.infoCardsToggle) {
+    return;
+  }
+  const shouldCollapse = !!collapsed;
+  elements.infoCardsCard.classList.toggle('info-card--collapsed', shouldCollapse);
+  elements.infoCardsContent.hidden = shouldCollapse;
+  elements.infoCardsContent.setAttribute('aria-hidden', shouldCollapse ? 'true' : 'false');
+  elements.infoCardsToggle.setAttribute('aria-expanded', shouldCollapse ? 'false' : 'true');
+  updateInfoCardsToggleLabel(shouldCollapse);
+  if (options.persist !== false) {
+    writeStoredInfoCardCollapsed(INFO_CARDS_COLLAPSED_STORAGE_KEY, shouldCollapse);
+  }
+}
+
+function toggleInfoCardsCollapsed() {
+  if (!elements.infoCardsCard) {
+    return;
+  }
+  const currentlyCollapsed = elements.infoCardsCard.classList.contains('info-card--collapsed');
+  setInfoCardsCollapsed(!currentlyCollapsed);
+}
+
+function initInfoCardsCard() {
+  if (!elements.infoCardsCard || !elements.infoCardsContent || !elements.infoCardsToggle) {
+    return;
+  }
+  const initialCollapsed = readStoredInfoCardCollapsed(INFO_CARDS_COLLAPSED_STORAGE_KEY, false);
+  setInfoCardsCollapsed(initialCollapsed, { persist: false });
+  elements.infoCardsToggle.addEventListener('click', event => {
+    event.preventDefault();
+    toggleInfoCardsCollapsed();
+  });
+}
+
 function subscribeInfoWelcomeLanguageUpdates() {
   const handler = () => {
     const collapsed = elements.infoWelcomeCard
@@ -6064,6 +6136,23 @@ function subscribeInfoCharactersLanguageUpdates() {
       ? elements.infoCharactersCard.classList.contains('info-card--collapsed')
       : false;
     updateInfoCharactersToggleLabel(collapsed);
+  };
+  const api = getI18nApi();
+  if (api && typeof api.onLanguageChanged === 'function') {
+    api.onLanguageChanged(handler);
+    return;
+  }
+  if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
+    globalThis.addEventListener('i18n:languagechange', handler);
+  }
+}
+
+function subscribeInfoCardsLanguageUpdates() {
+  const handler = () => {
+    const collapsed = elements.infoCardsCard
+      ? elements.infoCardsCard.classList.contains('info-card--collapsed')
+      : false;
+    updateInfoCardsToggleLabel(collapsed);
   };
   const api = getI18nApi();
   if (api && typeof api.onLanguageChanged === 'function') {
@@ -6103,6 +6192,7 @@ function updatePrimaryNavigationLocks() {
   updateShopUnlockHint();
 
   updateInfoAchievementsVisibility();
+  updateInfoCardsVisibility();
 
   ensureActivePageUnlocked();
 }
@@ -11433,6 +11523,10 @@ function bindDomEventListeners() {
 
   initInfoWelcomeCard();
   initInfoCharactersCard();
+  initInfoCardsCard();
+  if (typeof initSpecialCardOverlay === 'function') {
+    initSpecialCardOverlay();
+  }
 
   if (elements.devkitOverlay) {
     elements.devkitOverlay.addEventListener('click', event => {
@@ -14996,6 +15090,7 @@ const RESET_LOCAL_STORAGE_KEYS = [
   DIGIT_FONT_STORAGE_KEY,
   INFO_WELCOME_COLLAPSED_STORAGE_KEY,
   INFO_CHARACTERS_COLLAPSED_STORAGE_KEY,
+  INFO_CARDS_COLLAPSED_STORAGE_KEY,
   HEADER_COLLAPSED_STORAGE_KEY,
   PERFORMANCE_MODE_STORAGE_KEY,
   UI_SCALE_STORAGE_KEY,
@@ -15928,6 +16023,10 @@ function initializeDomBoundModules() {
   subscribePerformanceModeLanguageUpdates();
   subscribeInfoWelcomeLanguageUpdates();
   subscribeInfoCharactersLanguageUpdates();
+  subscribeInfoCardsLanguageUpdates();
+  if (typeof subscribeSpecialCardOverlayLanguageUpdates === 'function') {
+    subscribeSpecialCardOverlayLanguageUpdates();
+  }
   subscribeHoldemOptionsLanguageUpdates();
   updateDevKitUI();
   if (typeof initParticulesGame === 'function') {

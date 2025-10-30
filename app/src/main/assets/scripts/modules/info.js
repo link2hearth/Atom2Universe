@@ -968,6 +968,377 @@ function normalizeCollectionDetailText(text) {
   return lowered || collapsed.toLowerCase();
 }
 
+const specialCardOverlayState = {
+  queue: [],
+  active: null,
+  lastFocus: null,
+  hideTimer: null,
+  initialized: false
+};
+
+function getSpecialCardDefinitions() {
+  return Array.isArray(GACHA_SPECIAL_CARD_DEFINITIONS)
+    ? GACHA_SPECIAL_CARD_DEFINITIONS
+    : [];
+}
+
+function getSpecialCardCollection() {
+  if (gameState.gachaCards && typeof gameState.gachaCards === 'object') {
+    return gameState.gachaCards;
+  }
+  return {};
+}
+
+function resolveSpecialCardLabel(cardId) {
+  if (typeof resolveSpecialGachaCardLabel === 'function') {
+    const resolved = resolveSpecialGachaCardLabel(cardId);
+    if (resolved) {
+      return resolved;
+    }
+  }
+  const definition = getSpecialCardDefinitions().find(def => def.id === cardId);
+  if (definition) {
+    const fallback = definition.labelFallback || `Carte ${cardId}`;
+    return translateOrDefault(definition.labelKey, fallback);
+  }
+  return translateOrDefault(`scripts.gacha.cards.names.${cardId}`, `Carte ${cardId}`);
+}
+
+function normalizeSpecialCardReward(reward) {
+  if (!reward) {
+    return null;
+  }
+  let cardId = typeof reward.cardId === 'string' ? reward.cardId.trim() : '';
+  if (!cardId && typeof reward === 'string') {
+    cardId = reward.trim();
+  }
+  if (!cardId && typeof reward.id === 'string') {
+    cardId = reward.id.trim();
+  }
+  if (!cardId) {
+    return null;
+  }
+  const definition = typeof getSpecialGachaCardDefinition === 'function'
+    ? getSpecialGachaCardDefinition(cardId)
+    : getSpecialCardDefinitions().find(def => def.id === cardId);
+  const label = reward.label ? reward.label : resolveSpecialCardLabel(cardId);
+  const collection = getSpecialCardCollection();
+  const stored = collection[cardId];
+  const storedCount = Number.isFinite(Number(stored?.count ?? stored))
+    ? Math.max(0, Math.floor(Number(stored?.count ?? stored)))
+    : 0;
+  const rewardCount = Number.isFinite(Number(reward.count))
+    ? Math.max(0, Math.floor(Number(reward.count)))
+    : null;
+  const count = rewardCount != null ? rewardCount : storedCount;
+  const assetPath = typeof reward.assetPath === 'string' && reward.assetPath.trim()
+    ? reward.assetPath.trim()
+    : (definition?.assetPath || null);
+  return {
+    cardId,
+    label,
+    count,
+    assetPath,
+    isNew: reward.isNew === true,
+    definition: definition || null
+  };
+}
+
+function formatSpecialCardCount(count) {
+  const normalized = Math.max(0, Math.floor(Number(count) || 0));
+  const formatted = formatIntegerLocalized(normalized);
+  const fallback = `×${formatted}`;
+  return translateOrDefault('scripts.gacha.cards.overlay.count', fallback, { count: formatted });
+}
+
+function applySpecialCardOverlayContent(card) {
+  if (!card) {
+    return;
+  }
+  if (elements.gachaCardOverlayLabel) {
+    elements.gachaCardOverlayLabel.textContent = card.label;
+  }
+  if (elements.gachaCardOverlayCount) {
+    elements.gachaCardOverlayCount.textContent = formatSpecialCardCount(card.count);
+  }
+  if (elements.gachaCardOverlayImage) {
+    if (card.assetPath) {
+      elements.gachaCardOverlayImage.src = card.assetPath;
+      elements.gachaCardOverlayImage.hidden = false;
+    } else {
+      elements.gachaCardOverlayImage.removeAttribute('src');
+      elements.gachaCardOverlayImage.hidden = true;
+    }
+    elements.gachaCardOverlayImage.alt = card.label;
+  }
+  if (elements.gachaCardOverlayTitle) {
+    const titleKey = card.isNew
+      ? 'scripts.gacha.cards.overlay.newTitle'
+      : 'scripts.gacha.cards.overlay.duplicateTitle';
+    const fallback = card.isNew ? 'Carte spéciale obtenue !' : 'Carte spéciale retrouvée !';
+    elements.gachaCardOverlayTitle.textContent = translateOrDefault(titleKey, fallback, { card: card.label });
+  }
+  if (elements.gachaCardOverlayHint) {
+    elements.gachaCardOverlayHint.textContent = translateOrDefault(
+      'scripts.gacha.cards.overlay.hint',
+      'Touchez la croix pour revenir au jeu.'
+    );
+  }
+  if (elements.gachaCardOverlayClose) {
+    const closeLabel = translateOrDefault('scripts.gacha.cards.overlay.close', 'Fermer la carte');
+    elements.gachaCardOverlayClose.setAttribute('aria-label', closeLabel);
+    elements.gachaCardOverlayClose.setAttribute('title', closeLabel);
+  }
+}
+
+function finishHidingSpecialCardOverlay() {
+  const overlay = elements.gachaCardOverlay;
+  if (!overlay) {
+    return;
+  }
+  if (overlay.classList.contains('is-visible')) {
+    specialCardOverlayState.hideTimer = null;
+    return;
+  }
+  overlay.hidden = true;
+  overlay.classList.remove('is-visible');
+  if (elements.gachaCardOverlayImage) {
+    elements.gachaCardOverlayImage.removeAttribute('src');
+  }
+  if (document && document.body) {
+    document.body.classList.remove('has-gacha-card-overlay');
+  }
+  if (specialCardOverlayState.lastFocus && typeof specialCardOverlayState.lastFocus.focus === 'function') {
+    try {
+      specialCardOverlayState.lastFocus.focus();
+    } catch (error) {
+      // Ignore focus errors.
+    }
+  }
+  specialCardOverlayState.lastFocus = null;
+  specialCardOverlayState.hideTimer = null;
+  specialCardOverlayState.active = null;
+  processSpecialCardOverlayQueue();
+}
+
+function openSpecialCardOverlay(card) {
+  const overlay = elements.gachaCardOverlay;
+  if (!overlay) {
+    return;
+  }
+  if (specialCardOverlayState.hideTimer != null) {
+    clearTimeout(specialCardOverlayState.hideTimer);
+    specialCardOverlayState.hideTimer = null;
+  }
+  const alreadyVisible = !overlay.hidden && overlay.classList.contains('is-visible');
+  specialCardOverlayState.active = card;
+  applySpecialCardOverlayContent(card);
+  if (!alreadyVisible) {
+    overlay.hidden = false;
+    overlay.setAttribute('aria-hidden', 'false');
+    if (document && document.body) {
+      document.body.classList.add('has-gacha-card-overlay');
+    }
+    requestAnimationFrame(() => {
+      overlay.classList.add('is-visible');
+    });
+    specialCardOverlayState.lastFocus = typeof document !== 'undefined' ? document.activeElement : null;
+    document.addEventListener('keydown', handleSpecialCardOverlayKeydown);
+  }
+  const focusTarget = elements.gachaCardOverlayClose || elements.gachaCardOverlayDialog;
+  if (focusTarget && typeof focusTarget.focus === 'function') {
+    try {
+      focusTarget.focus({ preventScroll: true });
+    } catch (error) {
+      focusTarget.focus();
+    }
+  }
+}
+
+function closeSpecialCardOverlay() {
+  const overlay = elements.gachaCardOverlay;
+  if (!overlay || overlay.hidden) {
+    specialCardOverlayState.active = null;
+    processSpecialCardOverlayQueue();
+    return;
+  }
+  overlay.setAttribute('aria-hidden', 'true');
+  overlay.classList.remove('is-visible');
+  document.removeEventListener('keydown', handleSpecialCardOverlayKeydown);
+  if (specialCardOverlayState.hideTimer != null) {
+    clearTimeout(specialCardOverlayState.hideTimer);
+  }
+  overlay.addEventListener('transitionend', finishHidingSpecialCardOverlay, { once: true });
+  specialCardOverlayState.hideTimer = setTimeout(finishHidingSpecialCardOverlay, 260);
+}
+
+function processSpecialCardOverlayQueue() {
+  if (specialCardOverlayState.active || !specialCardOverlayState.queue.length) {
+    return;
+  }
+  const next = specialCardOverlayState.queue.shift();
+  if (!next) {
+    processSpecialCardOverlayQueue();
+    return;
+  }
+  openSpecialCardOverlay(next);
+}
+
+function enqueueSpecialCardReveal(rewards) {
+  const list = Array.isArray(rewards) ? rewards : [rewards];
+  list.forEach(entry => {
+    const normalized = normalizeSpecialCardReward(entry);
+    if (normalized) {
+      specialCardOverlayState.queue.push(normalized);
+    }
+  });
+  processSpecialCardOverlayQueue();
+}
+
+function showSpecialCardFromCollection(cardId) {
+  const normalized = normalizeSpecialCardReward({ cardId });
+  if (!normalized || normalized.count <= 0) {
+    return;
+  }
+  normalized.isNew = false;
+  specialCardOverlayState.queue = [];
+  openSpecialCardOverlay(normalized);
+}
+
+function handleInfoCardListClick(event) {
+  const button = event.target.closest('[data-card-id]');
+  if (!button) {
+    return;
+  }
+  event.preventDefault();
+  const cardId = button.getAttribute('data-card-id');
+  if (!cardId) {
+    return;
+  }
+  showSpecialCardFromCollection(cardId);
+}
+
+function handleSpecialCardOverlayKeydown(event) {
+  if (event.key === 'Escape') {
+    event.preventDefault();
+    closeSpecialCardOverlay();
+  }
+}
+
+function initSpecialCardOverlay() {
+  if (specialCardOverlayState.initialized) {
+    return;
+  }
+  specialCardOverlayState.initialized = true;
+  if (elements.infoCardsList) {
+    elements.infoCardsList.addEventListener('click', handleInfoCardListClick);
+  }
+  if (elements.gachaCardOverlayClose) {
+    elements.gachaCardOverlayClose.addEventListener('click', event => {
+      event.preventDefault();
+      closeSpecialCardOverlay();
+    });
+  }
+  if (elements.gachaCardOverlayDialog) {
+    elements.gachaCardOverlayDialog.addEventListener('click', event => {
+      event.stopPropagation();
+    });
+  }
+  if (elements.gachaCardOverlay) {
+    elements.gachaCardOverlay.addEventListener('click', event => {
+      event.preventDefault();
+      event.stopPropagation();
+    });
+  }
+  renderSpecialCardCollection();
+}
+
+function renderSpecialCardCollection() {
+  if (!elements.infoCardsList || !elements.infoCardsEmpty) {
+    return;
+  }
+  const container = elements.infoCardsList;
+  container.innerHTML = '';
+  const definitions = getSpecialCardDefinitions();
+  const collection = getSpecialCardCollection();
+  const owned = definitions
+    .map(def => {
+      const entry = collection[def.id];
+      const count = Number.isFinite(Number(entry?.count ?? entry))
+        ? Math.max(0, Math.floor(Number(entry?.count ?? entry)))
+        : 0;
+      const label = resolveSpecialCardLabel(def.id);
+      return { id: def.id, count, label };
+    })
+    .filter(entry => entry.count > 0);
+
+  if (!owned.length) {
+    container.hidden = true;
+    container.setAttribute('aria-hidden', 'true');
+    elements.infoCardsEmpty.hidden = false;
+    elements.infoCardsEmpty.setAttribute('aria-hidden', 'false');
+    return;
+  }
+
+  owned.sort((a, b) => compareTextLocalized(a.label, b.label));
+
+  owned.forEach(entry => {
+    const item = document.createElement('li');
+    item.className = 'info-card-list__item';
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'info-card-list__button';
+    button.dataset.cardId = entry.id;
+    const viewLabel = translateOrDefault(
+      'index.sections.info.cards.view',
+      `Afficher ${entry.label}`,
+      { card: entry.label }
+    );
+    button.setAttribute('aria-label', viewLabel);
+    button.title = viewLabel;
+
+    const name = document.createElement('span');
+    name.className = 'info-card-list__name';
+    name.textContent = entry.label;
+
+    const count = document.createElement('span');
+    count.className = 'info-card-list__count';
+    const formattedCount = formatIntegerLocalized(entry.count);
+    count.textContent = translateOrDefault(
+      'index.sections.info.cards.count',
+      `×${formattedCount}`,
+      { count: formattedCount }
+    );
+
+    button.appendChild(name);
+    button.appendChild(count);
+    item.appendChild(button);
+    container.appendChild(item);
+  });
+
+  container.hidden = false;
+  container.setAttribute('aria-hidden', 'false');
+  elements.infoCardsEmpty.hidden = true;
+  elements.infoCardsEmpty.setAttribute('aria-hidden', 'true');
+}
+
+function subscribeSpecialCardOverlayLanguageUpdates() {
+  const handler = () => {
+    renderSpecialCardCollection();
+    if (specialCardOverlayState.active) {
+      applySpecialCardOverlayContent(specialCardOverlayState.active);
+    }
+  };
+  const api = getI18nApi();
+  if (api && typeof api.onLanguageChanged === 'function') {
+    api.onLanguageChanged(handler);
+    return;
+  }
+  if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
+    globalThis.addEventListener('i18n:languagechange', handler);
+  }
+}
+
 function renderElementBonuses() {
   const container = elements.infoElementBonuses;
   if (!container) return;
@@ -1823,9 +2194,16 @@ function updateInfoPanels() {
     renderProductionBreakdown(elements.infoApcBreakdown, null, 'perClick');
   }
 
+  renderSpecialCardCollection();
   updateSessionStats();
   updateGlobalStats();
   renderElementBonuses();
   renderShopBonuses();
+}
+
+if (typeof window !== 'undefined') {
+  window.enqueueSpecialCardReveal = enqueueSpecialCardReveal;
+  window.initSpecialCardOverlay = initSpecialCardOverlay;
+  window.subscribeSpecialCardOverlayLanguageUpdates = subscribeSpecialCardOverlayLanguageUpdates;
 }
 
