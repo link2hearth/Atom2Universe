@@ -258,6 +258,10 @@
           "default": "Unlock this minigame to access it."
         },
         "cards": {
+          "toggle": {
+            "collapse": "Hide description",
+            "expand": "Show description"
+          },
           "particules": {
             "aria": "Open the Particles mini-game",
             "title": "Particles",

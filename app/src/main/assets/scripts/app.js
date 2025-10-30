@@ -109,6 +109,10 @@ const FEATURE_UNLOCK_DEFINITIONS = buildFeatureUnlockDefinitions(
 let featureUnlockCache = new Map();
 let cachedOptionsDetailMetadata = null;
 let lastArcadeUnlockState = null;
+let arcadeHubCardStateCache = null;
+
+const ARCADE_HUB_CARD_COLLAPSE_LABEL_KEY = 'index.sections.arcadeHub.cards.toggle.collapse';
+const ARCADE_HUB_CARD_EXPAND_LABEL_KEY = 'index.sections.arcadeHub.cards.toggle.expand';
 
 const DEFAULT_SUDOKU_COMPLETION_REWARD = Object.freeze({
   enabled: true,
@@ -125,6 +129,7 @@ const TEXT_FONT_STORAGE_KEY = 'atom2univers.options.textFont';
 const INFO_WELCOME_COLLAPSED_STORAGE_KEY = 'atom2univers.info.welcomeCollapsed';
 const INFO_CHARACTERS_COLLAPSED_STORAGE_KEY = 'atom2univers.info.charactersCollapsed';
 const HEADER_COLLAPSED_STORAGE_KEY = 'atom2univers.ui.headerCollapsed';
+const ARCADE_HUB_CARD_STATE_STORAGE_KEY = 'atom2univers.arcadeHub.cardStates.v1';
 const ARCADE_AUTOSAVE_STORAGE_KEY = 'atom2univers.arcadeSaves.v1';
 const CHESS_LIBRARY_STORAGE_KEY = 'atom2univers.arcade.echecs';
 const QUANTUM_2048_STORAGE_KEY = 'atom2univers.quantum2048.parallelUniverses';
@@ -1646,6 +1651,182 @@ function getFeatureLockedReason(featureId, visited = new Set()) {
   );
 }
 
+function readStoredArcadeHubCardStates() {
+  try {
+    const raw = globalThis.localStorage?.getItem(ARCADE_HUB_CARD_STATE_STORAGE_KEY);
+    if (typeof raw === 'string' && raw.trim()) {
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === 'object') {
+        const normalized = {};
+        Object.keys(parsed).forEach(key => {
+          if (typeof key === 'string' && key.trim()) {
+            normalized[key.trim()] = !!parsed[key];
+          }
+        });
+        return normalized;
+      }
+    }
+  } catch (error) {
+    console.warn('Unable to read arcade hub card states', error);
+  }
+  return {};
+}
+
+function writeStoredArcadeHubCardStates(map) {
+  const normalized = {};
+  if (map && typeof map === 'object') {
+    Object.keys(map).forEach(key => {
+      if (typeof key === 'string') {
+        const trimmed = key.trim();
+        if (trimmed) {
+          normalized[trimmed] = !!map[key];
+        }
+      }
+    });
+  }
+  arcadeHubCardStateCache = normalized;
+  try {
+    globalThis.localStorage?.setItem(ARCADE_HUB_CARD_STATE_STORAGE_KEY, JSON.stringify(normalized));
+  } catch (error) {
+    console.warn('Unable to persist arcade hub card states', error);
+  }
+}
+
+function getArcadeHubCardStateMap() {
+  if (!arcadeHubCardStateCache) {
+    arcadeHubCardStateCache = readStoredArcadeHubCardStates();
+  }
+  return arcadeHubCardStateCache;
+}
+
+function getArcadeHubCardId(card) {
+  if (!card || !card.dataset) {
+    return '';
+  }
+  if (typeof card.dataset.cardId === 'string' && card.dataset.cardId.trim()) {
+    return card.dataset.cardId.trim();
+  }
+  if (typeof card.dataset.pageTarget === 'string' && card.dataset.pageTarget.trim()) {
+    return card.dataset.pageTarget.trim();
+  }
+  return '';
+}
+
+function updateArcadeHubCardToggleLabel(toggleButton, collapsed) {
+  if (!toggleButton) {
+    return;
+  }
+  const labelKey = collapsed ? ARCADE_HUB_CARD_EXPAND_LABEL_KEY : ARCADE_HUB_CARD_COLLAPSE_LABEL_KEY;
+  const fallback = collapsed ? 'Afficher la description' : 'Masquer la description';
+  const label = translateOrDefault(labelKey, fallback);
+  toggleButton.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+  toggleButton.setAttribute('aria-label', label);
+  toggleButton.dataset.i18n = `aria-label:${labelKey}`;
+  const hiddenLabel = toggleButton.querySelector('[data-role="arcade-hub-card-toggle-label"]');
+  if (hiddenLabel) {
+    hiddenLabel.textContent = label;
+    hiddenLabel.dataset.i18n = labelKey;
+  }
+}
+
+function applyArcadeHubCardCollapsedState(card, collapsed, options = {}) {
+  if (!card) {
+    return;
+  }
+  const { persist = true } = options;
+  const normalized = !!collapsed;
+  card.classList.toggle('arcade-hub-card--collapsed', normalized);
+  const description = card.querySelector('.arcade-hub-card__description');
+  if (description) {
+    description.hidden = normalized;
+    description.setAttribute('aria-hidden', normalized ? 'true' : 'false');
+  }
+  const toggleButton = card.querySelector('.arcade-hub-card__toggle');
+  if (toggleButton) {
+    updateArcadeHubCardToggleLabel(toggleButton, normalized);
+  }
+  if (persist) {
+    const cardId = getArcadeHubCardId(card);
+    if (cardId) {
+      const map = Object.assign({}, getArcadeHubCardStateMap());
+      if (normalized) {
+        map[cardId] = true;
+      } else {
+        delete map[cardId];
+      }
+      writeStoredArcadeHubCardStates(map);
+    }
+  }
+}
+
+function initializeArcadeHubCard(card) {
+  if (!card) {
+    return;
+  }
+  const cardId = getArcadeHubCardId(card);
+  const description = card.querySelector('.arcade-hub-card__description');
+  if (description) {
+    if (!description.id && cardId) {
+      description.id = `arcadeCardDescription-${cardId}`;
+    }
+    if (description.id) {
+      card.setAttribute('aria-describedby', description.id);
+    }
+    description.setAttribute('aria-hidden', 'false');
+  }
+  const toggleButton = card.querySelector('.arcade-hub-card__toggle');
+  if (toggleButton) {
+    toggleButton.addEventListener('click', event => {
+      event.preventDefault();
+      event.stopPropagation();
+      const collapsed = card.classList.contains('arcade-hub-card--collapsed');
+      applyArcadeHubCardCollapsedState(card, !collapsed);
+    });
+    toggleButton.addEventListener('keydown', event => {
+      const key = event.key;
+      if (key === ' ' || key === 'Enter') {
+        event.preventDefault();
+        event.stopPropagation();
+        const collapsed = card.classList.contains('arcade-hub-card--collapsed');
+        applyArcadeHubCardCollapsedState(card, !collapsed);
+      }
+    });
+  }
+  const stateMap = getArcadeHubCardStateMap();
+  const initialCollapsed = cardId ? stateMap?.[cardId] === true : false;
+  applyArcadeHubCardCollapsedState(card, initialCollapsed, { persist: false });
+}
+
+function isArcadeHubCardLocked(card) {
+  if (!card) {
+    return true;
+  }
+  return card.classList.contains('arcade-hub-card--locked');
+}
+
+function activateArcadeHubCard(card) {
+  if (!card) {
+    return;
+  }
+  if (isArcadeHubCardLocked(card)) {
+    return;
+  }
+  const target = card.dataset?.pageTarget;
+  if (!target || !isPageUnlocked(target)) {
+    return;
+  }
+  if (target === 'wave') {
+    ensureWaveGame();
+  }
+  if (target === 'quantum2048') {
+    ensureQuantum2048Game();
+  }
+  if (target === 'gameOfLife') {
+    ensureGameOfLifeGame();
+  }
+  showPage(target);
+}
+
 function getArcadeCardLockedMessage(pageId) {
   const featureId = PAGE_FEATURE_MAP[pageId];
   if (!featureId) {
@@ -1684,25 +1865,31 @@ function updateArcadeHubLocks() {
       card.dataset.originalAriaLabel = originalLabel;
     }
     if (unlocked) {
-      card.disabled = false;
-      card.setAttribute('aria-disabled', 'false');
+      delete card.dataset.arcadeLocked;
       card.classList.remove('arcade-hub-card--locked');
-      card.title = '';
+      card.setAttribute('aria-disabled', 'false');
+      card.setAttribute('tabindex', '0');
+      card.removeAttribute('title');
       if (originalLabel) {
         card.setAttribute('aria-label', originalLabel);
       }
       return;
     }
     const hint = getArcadeCardLockedMessage(target);
-    card.disabled = true;
-    card.setAttribute('aria-disabled', 'true');
+    card.dataset.arcadeLocked = 'true';
     card.classList.add('arcade-hub-card--locked');
+    card.setAttribute('aria-disabled', 'true');
+    card.setAttribute('tabindex', '-1');
     if (hint) {
       card.title = hint;
       const combined = originalLabel ? `${originalLabel} — ${hint}` : hint;
       card.setAttribute('aria-label', combined);
     } else if (originalLabel) {
+      card.removeAttribute('title');
       card.setAttribute('aria-label', originalLabel);
+    } else {
+      card.removeAttribute('title');
+      card.removeAttribute('aria-label');
     }
   });
 }
@@ -11426,21 +11613,28 @@ function bindDomEventListeners() {
 
   if (elements.arcadeHubCards?.length) {
     elements.arcadeHubCards.forEach(card => {
-      card.addEventListener('click', () => {
-        const target = card.dataset.pageTarget;
-        if (!target || !isPageUnlocked(target)) {
+      initializeArcadeHubCard(card);
+      card.addEventListener('click', event => {
+        if (event && event.target && event.target.closest('.arcade-hub-card__toggle')) {
           return;
         }
-        if (target === 'wave') {
-          ensureWaveGame();
+        if (event?.defaultPrevented) {
+          return;
         }
-        if (target === 'quantum2048') {
-          ensureQuantum2048Game();
+        activateArcadeHubCard(card);
+      });
+      card.addEventListener('keydown', event => {
+        if (!event) {
+          return;
         }
-        if (target === 'gameOfLife') {
-          ensureGameOfLifeGame();
+        if (event.target && event.target.closest('.arcade-hub-card__toggle')) {
+          return;
         }
-        showPage(target);
+        const key = event.key;
+        if (key === 'Enter' || key === ' ') {
+          event.preventDefault();
+          activateArcadeHubCard(card);
+        }
       });
     });
   }

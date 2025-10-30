@@ -258,6 +258,10 @@
           "default": "Débloquez ce mini-jeu pour y accéder."
         },
         "cards": {
+          "toggle": {
+            "collapse": "Masquer la description",
+            "expand": "Afficher la description"
+          },
           "particules": {
             "aria": "Accéder au mini-jeu Particules",
             "title": "Particules",
