@@ -52,11 +52,11 @@
   appearance: none;
   border: 1px solid rgba(120, 190, 255, 0.35);
   border-radius: 999px;
-  padding: clamp(0.35rem, 1vw, 0.55rem) clamp(1rem, 2.4vw, 1.5rem);
+  padding: clamp(0.23rem, 0.65vw, 0.36rem) clamp(0.65rem, 1.56vw, 0.98rem);
   background: linear-gradient(135deg, rgba(40, 120, 220, 0.32), rgba(150, 90, 255, 0.26));
   color: rgba(238, 244, 255, 0.9);
   font-weight: 600;
-  font-size: clamp(0.85rem, 2.2vw, 0.95rem);
+  font-size: clamp(0.55rem, 1.43vw, 0.62rem);
   letter-spacing: 0.02em;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
@@ -80,11 +80,11 @@
   appearance: none;
   border: 1px solid rgba(120, 190, 255, 0.55);
   border-radius: 999px;
-  padding: clamp(0.45rem, 1.2vw, 0.65rem) clamp(1.2rem, 2.8vw, 1.8rem);
+  padding: clamp(0.29rem, 0.78vw, 0.42rem) clamp(0.78rem, 1.82vw, 1.17rem);
   background: linear-gradient(135deg, rgba(60, 150, 255, 0.38), rgba(130, 90, 255, 0.32));
   color: rgba(248, 250, 255, 0.95);
   font-weight: 600;
-  font-size: clamp(0.9rem, 2.3vw, 1rem);
+  font-size: clamp(0.59rem, 1.5vw, 0.65rem);
   letter-spacing: 0.03em;
   cursor: pointer;
   box-shadow: 0 16px 32px rgba(10, 18, 46, 0.55);
@@ -100,9 +100,7 @@
 }
 
 .othello__status-group {
-  display: grid;
-  gap: clamp(0.35rem, 1vw, 0.6rem);
-  justify-items: center;
+  display: none;
 }
 
 .othello__status {
