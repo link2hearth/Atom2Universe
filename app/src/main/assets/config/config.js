@@ -1104,16 +1104,20 @@ const GAME_CONFIG = {
      * - faces : nombre de faces par dé.
      * - rollsPerTurn : lancers disponibles par manche.
      * - fullHouseScore / smallStraightScore / largeStraightScore / yahtzeeScore : valeurs fixes des combinaisons spéciales.
+     * - threeKindBonus / fourKindBonus / twoPairBonus : bonus ajoutés aux figures concernées.
      * - bonusThreshold / bonusValue : palier et valeur du bonus de la section supérieure.
      */
     dice: {
       diceCount: 5,
       faces: 6,
       rollsPerTurn: 3,
-      fullHouseScore: 25,
+      fullHouseScore: 45,
       smallStraightScore: 30,
       largeStraightScore: 40,
-      yahtzeeScore: 50,
+      yahtzeeScore: 80,
+      threeKindBonus: 8,
+      fourKindBonus: 40,
+      twoPairBonus: 5,
       bonusThreshold: 63,
       bonusValue: 35
     },
