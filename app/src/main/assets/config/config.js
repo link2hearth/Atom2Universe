@@ -1095,6 +1095,25 @@ const GAME_CONFIG = {
       },
       defaultAiProfile: 'patient'
     },
+    /**
+     * Paramètres du mini-jeu Dice (Yams).
+     * - diceCount : nombre de dés utilisés.
+     * - faces : nombre de faces par dé.
+     * - rollsPerTurn : lancers disponibles par manche.
+     * - fullHouseScore / smallStraightScore / largeStraightScore / yahtzeeScore : valeurs fixes des combinaisons spéciales.
+     * - bonusThreshold / bonusValue : palier et valeur du bonus de la section supérieure.
+     */
+    dice: {
+      diceCount: 5,
+      faces: 6,
+      rollsPerTurn: 3,
+      fullHouseScore: 25,
+      smallStraightScore: 30,
+      largeStraightScore: 40,
+      yahtzeeScore: 50,
+      bonusThreshold: 63,
+      bonusValue: 35
+    },
     // Paramètres du mini-jeu Échecs.
     echecs: {
       ai: {

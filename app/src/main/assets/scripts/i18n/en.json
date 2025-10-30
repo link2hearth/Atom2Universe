@@ -354,6 +354,12 @@
             "description": "Double your Atoms—or lose everything.",
             "cta": "Deal"
           },
+          "dice": {
+            "aria": "Open the Dice mini-game",
+            "title": "Dice",
+            "description": "Roll five dice on a neon felt, lock the combinations you need, and chase classic Yahtzee hands.",
+            "cta": "Play"
+          },
           "holdem": {
             "aria": "Open the Hold’em mini-game",
             "title": "Hold’em",
@@ -889,6 +895,52 @@
           }
         },
         "hiddenCard": "Hidden card"
+      },
+      "dice": {
+        "aria": "Dice mini-game",
+        "title": "Dice",
+        "table": {
+          "title": "Dice table",
+          "aria": "Dice rolling felt"
+        },
+        "controls": {
+          "aria": "Dice controls",
+          "rollsLabel": "Rolls left:",
+          "roll": "Roll dice",
+          "clear": "Release dice"
+        },
+        "status": {
+          "start": "Roll the dice to begin."
+        },
+        "scorecard": {
+          "aria": "Dice scorecard",
+          "title": "Scorecard",
+          "reset": "New game",
+          "upperSection": "Upper section",
+          "lowerSection": "Lower section",
+          "categories": {
+            "ones": "Ones",
+            "twos": "Twos",
+            "threes": "Threes",
+            "fours": "Fours",
+            "fives": "Fives",
+            "sixes": "Sixes",
+            "threeKind": "Three of a kind",
+            "fourKind": "Four of a kind",
+            "fullHouse": "Full house",
+            "smallStraight": "Small straight",
+            "largeStraight": "Large straight",
+            "yahtzee": "Yahtzee",
+            "chance": "Chance"
+          },
+          "totals": {
+            "upperSubtotal": "Upper subtotal",
+            "upperBonus": "Upper bonus",
+            "upperTotal": "Upper total",
+            "lowerTotal": "Lower total",
+            "grandTotal": "Grand total"
+          }
+        }
       },
       "wave": {
         "aria": "Photon mini-game",
@@ -1866,6 +1918,27 @@
           "clubs": "Clubs"
         },
         "cardLabel": "{rank} of {suit}"
+      },
+      "dice": {
+        "status": {
+          "start": "Roll the dice to begin.",
+          "rollsLeft": "Rolls left: {rolls}. Select dice to hold or roll again.",
+          "noRolls": "No rolls left—lock in a category.",
+          "dieHeld": "Die {index} held.",
+          "dieReleased": "Die {index} released.",
+          "holdsCleared": "All dice released.",
+          "needRoll": "Roll at least once before scoring.",
+          "categoryLocked": "Locked {category} for {score} points.",
+          "gameComplete": "Game complete! Final score: {score}.",
+          "newGame": "Scorecard reset. Roll to begin."
+        },
+        "die": {
+          "available": "Die {index} showing {value}.",
+          "held": "Die {index} showing {value}, held."
+        },
+        "categoryAction": "Lock {score} points in {category}.",
+        "categoryLockedAria": "{category} locked for {score} points.",
+        "categoryDisabled": "{category} unavailable until you roll."
       },
       "holdem": {
         "status": {
