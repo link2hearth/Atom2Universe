@@ -94,6 +94,7 @@
     autoAdvanceTimer: null,
     baseStatus: null,
     initialSnapshot: null,
+    currentMetrics: null,
     cellElements: [],
     elements: null,
     languageHandler: null
@@ -562,29 +563,6 @@
     return isInside(row, col) && !isWall(row, col);
   }
 
-  function buildStaticDeadCellSet() {
-    const deadCells = new Set();
-    for (let row = 0; row < state.height; row += 1) {
-      for (let col = 0; col < state.width; col += 1) {
-        if (isWall(row, col)) {
-          continue;
-        }
-        const key = keyFor(row, col);
-        if (state.targetKeys.has(key)) {
-          continue;
-        }
-        const up = isWall(row - 1, col);
-        const down = isWall(row + 1, col);
-        const left = isWall(row, col - 1);
-        const right = isWall(row, col + 1);
-        if ((up && left) || (up && right) || (down && left) || (down && right)) {
-          deadCells.add(key);
-        }
-      }
-    }
-    return deadCells;
-  }
-
   function computeReachableCells(startRow, startCol, blockedKeys) {
     if (!isWalkable(startRow, startCol)) {
       return new Set();
@@ -615,6 +593,416 @@
       }
     }
     return visited;
+  }
+
+  function computeReachableWithDistances(startRow, startCol, blockedKeys) {
+    const distances = new Map();
+    if (!isWalkable(startRow, startCol)) {
+      return distances;
+    }
+    const queue = [];
+    queue.push([startRow, startCol]);
+    distances.set(keyFor(startRow, startCol), 0);
+    for (let index = 0; index < queue.length; index += 1) {
+      const [row, col] = queue[index];
+      const currentDistance = distances.get(keyFor(row, col)) || 0;
+      for (const direction of DIRECTIONS) {
+        const nextRow = row + direction.row;
+        const nextCol = col + direction.col;
+        const nextKey = keyFor(nextRow, nextCol);
+        if (distances.has(nextKey)) {
+          continue;
+        }
+        if (!isWalkable(nextRow, nextCol)) {
+          continue;
+        }
+        if (blockedKeys && blockedKeys.has(nextKey)) {
+          continue;
+        }
+        distances.set(nextKey, currentDistance + 1);
+        queue.push([nextRow, nextCol]);
+      }
+    }
+    return distances;
+  }
+
+  function manhattanDistance(rowA, colA, rowB, colB) {
+    return Math.abs(rowA - rowB) + Math.abs(colA - colB);
+  }
+
+  function decodeKeyToTuple(key) {
+    const { row, col } = decodeKey(key);
+    return [row, col];
+  }
+
+  function countBoxesOnTargets(boxesSet, targetSet) {
+    let count = 0;
+    for (const key of boxesSet) {
+      if (targetSet.has(key)) {
+        count += 1;
+      }
+    }
+    return count;
+  }
+
+  function computeMinimalMatchingDistance(boxesArray, targetsArray) {
+    if (!boxesArray.length || !targetsArray.length) {
+      return 0;
+    }
+    const memo = new Map();
+    const targetCount = targetsArray.length;
+
+    function helper(index, usedMask) {
+      if (index >= boxesArray.length) {
+        return 0;
+      }
+      const memoKey = `${index}:${usedMask}`;
+      if (memo.has(memoKey)) {
+        return memo.get(memoKey);
+      }
+      let best = Infinity;
+      for (let targetIndex = 0; targetIndex < targetCount; targetIndex += 1) {
+        if (usedMask & (1 << targetIndex)) {
+          continue;
+        }
+        const [boxRow, boxCol] = boxesArray[index];
+        const [goalRow, goalCol] = targetsArray[targetIndex];
+        const distance = manhattanDistance(boxRow, boxCol, goalRow, goalCol);
+        const candidate = distance + helper(index + 1, usedMask | (1 << targetIndex));
+        if (candidate < best) {
+          best = candidate;
+        }
+      }
+      memo.set(memoKey, best);
+      return best;
+    }
+
+    return helper(0, 0);
+  }
+
+  function computeAverageBoxGoalDistance(boxesSet, targetSet) {
+    const boxesArray = Array.from(boxesSet, decodeKeyToTuple);
+    const targetsArray = Array.from(targetSet, decodeKeyToTuple);
+    if (!boxesArray.length || !targetsArray.length) {
+      return 0;
+    }
+    const totalDistance = computeMinimalMatchingDistance(boxesArray, targetsArray);
+    return totalDistance / boxesArray.length;
+  }
+
+  function encodeBoxes(boxesSet) {
+    return Array.from(boxesSet).sort().join('|');
+  }
+
+  function buildRowTargetPresence() {
+    const rowTargets = new Array(state.height).fill(false);
+    const columnTargets = new Array(state.width).fill(false);
+    for (const key of state.targetKeys) {
+      const { row, col } = decodeKey(key);
+      if (row >= 0 && row < rowTargets.length) {
+        rowTargets[row] = true;
+      }
+      if (col >= 0 && col < columnTargets.length) {
+        columnTargets[col] = true;
+      }
+    }
+    return { rowTargets, columnTargets };
+  }
+
+  function isCornerCell(row, col) {
+    const up = isWall(row - 1, col);
+    const down = isWall(row + 1, col);
+    const left = isWall(row, col - 1);
+    const right = isWall(row, col + 1);
+    if ((up && left) || (up && right) || (down && left) || (down && right)) {
+      return true;
+    }
+    return false;
+  }
+
+  function isStaticDeadlockForBox(row, col, boxesSet, targetSet, caches) {
+    const key = keyFor(row, col);
+    if (targetSet.has(key)) {
+      return false;
+    }
+    if (isCornerCell(row, col)) {
+      return true;
+    }
+    const up = isWall(row - 1, col);
+    const down = isWall(row + 1, col);
+    const left = isWall(row, col - 1);
+    const right = isWall(row, col + 1);
+    if ((up || down) && !caches.rowTargets[row]) {
+      return true;
+    }
+    if ((left || right) && !caches.columnTargets[col]) {
+      return true;
+    }
+    return false;
+  }
+
+  function hasPairDeadlock(boxesSet, targetSet) {
+    const boxesArray = Array.from(boxesSet, decodeKeyToTuple);
+    for (let i = 0; i < boxesArray.length; i += 1) {
+      const [rowA, colA] = boxesArray[i];
+      const keyA = keyFor(rowA, colA);
+      const targetA = targetSet.has(keyA);
+      for (let j = i + 1; j < boxesArray.length; j += 1) {
+        const [rowB, colB] = boxesArray[j];
+        if (Math.abs(rowA - rowB) + Math.abs(colA - colB) !== 1) {
+          continue;
+        }
+        const keyB = keyFor(rowB, colB);
+        const targetB = targetSet.has(keyB);
+        if (targetA || targetB) {
+          continue;
+        }
+        if (rowA === rowB) {
+          const aboveWall = isWall(rowA - 1, colA) && isWall(rowB - 1, colB);
+          const belowWall = isWall(rowA + 1, colA) && isWall(rowB + 1, colB);
+          if (aboveWall || belowWall) {
+            return true;
+          }
+        } else if (colA === colB) {
+          const leftWall = isWall(rowA, colA - 1) && isWall(rowB, colB - 1);
+          const rightWall = isWall(rowA, colA + 1) && isWall(rowB, colB + 1);
+          if (leftWall || rightWall) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  function containsStaticDeadlock(boxesSet, targetSet, caches) {
+    if (!boxesSet || boxesSet.size === 0) {
+      return false;
+    }
+    const lookupCaches = caches || buildRowTargetPresence();
+    for (const key of boxesSet) {
+      const { row, col } = decodeKey(key);
+      if (isStaticDeadlockForBox(row, col, boxesSet, targetSet, lookupCaches)) {
+        return true;
+      }
+    }
+    if (hasPairDeadlock(boxesSet, targetSet)) {
+      return true;
+    }
+    return false;
+  }
+
+  function legalInverseActions(player, boxesSet, caches) {
+    const actions = [];
+    const blocked = boxesSet;
+    for (const direction of DIRECTIONS) {
+      const nextRow = player.row + direction.row;
+      const nextCol = player.col + direction.col;
+      const nextKey = keyFor(nextRow, nextCol);
+      if (isWalkable(nextRow, nextCol) && !blocked.has(nextKey)) {
+        actions.push({ type: 'move', row: nextRow, col: nextCol });
+      }
+      const pullRow = player.row + direction.row;
+      const pullCol = player.col + direction.col;
+      const pullKey = keyFor(pullRow, pullCol);
+      const retreatRow = player.row - direction.row;
+      const retreatCol = player.col - direction.col;
+      const retreatKey = keyFor(retreatRow, retreatCol);
+      if (!isWalkable(retreatRow, retreatCol)) {
+        continue;
+      }
+      if (boxesSet.has(retreatKey)) {
+        continue;
+      }
+      if (!boxesSet.has(pullKey)) {
+        continue;
+      }
+      if (!isWalkable(pullRow, pullCol)) {
+        continue;
+      }
+      const newBoxKey = keyFor(player.row, player.col);
+      if (boxesSet.has(newBoxKey)) {
+        continue;
+      }
+      const tentativeBoxes = new Set(boxesSet);
+      tentativeBoxes.delete(pullKey);
+      tentativeBoxes.add(newBoxKey);
+      if (containsStaticDeadlock(tentativeBoxes, state.targetKeys, caches)) {
+        continue;
+      }
+      actions.push({
+        type: 'pull',
+        boxFrom: pullKey,
+        boxTo: newBoxKey,
+        playerRow: retreatRow,
+        playerCol: retreatCol
+      });
+    }
+    return actions;
+  }
+
+  function applyInverseAction(player, boxesSet, action) {
+    if (!action) {
+      return { player, boxes: new Set(boxesSet) };
+    }
+    if (action.type === 'move') {
+      return {
+        player: { row: action.row, col: action.col },
+        boxes: new Set(boxesSet)
+      };
+    }
+    if (action.type === 'pull') {
+      const updatedBoxes = new Set(boxesSet);
+      updatedBoxes.delete(action.boxFrom);
+      updatedBoxes.add(action.boxTo);
+      return {
+        player: { row: action.playerRow, col: action.playerCol },
+        boxes: updatedBoxes
+      };
+    }
+    return { player, boxes: new Set(boxesSet) };
+  }
+
+  function solveForwardMinPushes(startPlayer, startBoxes, targetSet, options = {}) {
+    if (!startPlayer || !startBoxes || !targetSet || targetSet.size === 0) {
+      return null;
+    }
+    const timeLimitMs = clampNumber(options?.timeLimitMs, 200, 8000, 2000);
+    const startTime = Date.now();
+    const targetCount = targetSet.size;
+    const targetArray = Array.from(targetSet, decodeKeyToTuple);
+    const caches = buildRowTargetPresence();
+
+    const startBoxesKey = encodeBoxes(startBoxes);
+    const startState = {
+      playerRow: startPlayer.row,
+      playerCol: startPlayer.col,
+      boxes: new Set(startBoxes),
+      boxesKey: startBoxesKey,
+      pushes: 0,
+      steps: 0,
+      heuristic: computeMinimalMatchingDistance(Array.from(startBoxes, decodeKeyToTuple), targetArray)
+    };
+
+    const open = [startState];
+    const visited = new Map();
+    let expandedStates = 0;
+    let generatedTransitions = 0;
+
+    while (open.length > 0) {
+      if (Date.now() - startTime > timeLimitMs) {
+        return null;
+      }
+      let bestIndex = 0;
+      for (let index = 1; index < open.length; index += 1) {
+        if (open[index].pushes + open[index].heuristic < open[bestIndex].pushes + open[bestIndex].heuristic) {
+          bestIndex = index;
+        }
+      }
+      const current = open.splice(bestIndex, 1)[0];
+      const playerKey = `${current.playerRow},${current.playerCol}`;
+      const visitKey = `${current.boxesKey}@${playerKey}`;
+      const bestPushes = visited.get(visitKey);
+      if (bestPushes != null && bestPushes <= current.pushes) {
+        continue;
+      }
+      visited.set(visitKey, current.pushes);
+
+      if (countBoxesOnTargets(current.boxes, targetSet) === targetCount) {
+        return {
+          pushes: current.pushes,
+          steps: current.steps,
+          expandedStates,
+          generatedTransitions
+        };
+      }
+
+      expandedStates += 1;
+
+      const blocked = new Set(current.boxes);
+      const distances = computeReachableWithDistances(current.playerRow, current.playerCol, blocked);
+
+      for (const boxKey of current.boxes) {
+        const { row: boxRow, col: boxCol } = decodeKey(boxKey);
+        for (const direction of DIRECTIONS) {
+          const targetRow = boxRow + direction.row;
+          const targetCol = boxCol + direction.col;
+          const targetKey = keyFor(targetRow, targetCol);
+          if (!isWalkable(targetRow, targetCol)) {
+            continue;
+          }
+          if (blocked.has(targetKey)) {
+            continue;
+          }
+          const pushRow = boxRow - direction.row;
+          const pushCol = boxCol - direction.col;
+          const pushKey = keyFor(pushRow, pushCol);
+          const distanceToPush = distances.get(pushKey);
+          if (distanceToPush == null) {
+            continue;
+          }
+          const newBoxes = new Set(current.boxes);
+          newBoxes.delete(boxKey);
+          newBoxes.add(targetKey);
+          if (containsStaticDeadlock(newBoxes, targetSet, caches)) {
+            continue;
+          }
+          generatedTransitions += 1;
+          const newPlayerRow = boxRow;
+          const newPlayerCol = boxCol;
+          const newSteps = current.steps + distanceToPush + 1;
+          const newPushes = current.pushes + 1;
+          const newBoxesKey = encodeBoxes(newBoxes);
+          const heuristic = computeMinimalMatchingDistance(Array.from(newBoxes, decodeKeyToTuple), targetArray);
+          open.push({
+            playerRow: newPlayerRow,
+            playerCol: newPlayerCol,
+            boxes: newBoxes,
+            boxesKey: newBoxesKey,
+            pushes: newPushes,
+            steps: newSteps,
+            heuristic
+          });
+        }
+      }
+    }
+
+    return null;
+  }
+
+  function computeSolverMetrics(result) {
+    if (!result) {
+      return null;
+    }
+    const { pushes, steps, expandedStates, generatedTransitions } = result;
+    const branching = expandedStates > 0 ? generatedTransitions / expandedStates : 0;
+    return {
+      minPushes: pushes,
+      pathLength: steps,
+      exploredStates: expandedStates,
+      branching
+    };
+  }
+
+  function fitsDifficulty(metrics, difficultyHint, totalBoxes) {
+    if (!metrics) {
+      return false;
+    }
+    const flooredHint = Math.floor(difficultyHint);
+    const cappedHint = Number.isFinite(flooredHint) ? clampInt(flooredHint, 0, 120, flooredHint) : 0;
+    const baseline = Math.max(4, cappedHint, totalBoxes * 3);
+    const minPushTarget = Math.max(4, Math.floor(baseline * 0.3));
+    const maxPushTarget = Math.max(minPushTarget + 4, Math.floor(baseline * 1.8));
+    if (metrics.minPushes < minPushTarget) {
+      return false;
+    }
+    if (metrics.minPushes > maxPushTarget) {
+      return false;
+    }
+    if (metrics.pathLength < metrics.minPushes * 2) {
+      return false;
+    }
+    return true;
   }
 
   function chooseRandomEntry(array) {
@@ -869,6 +1257,7 @@
     state.width = width;
     state.tiles = new Array(height);
     state.targetKeys = new Set();
+    state.currentMetrics = null;
 
     for (let row = 0; row < height; row += 1) {
       const rowTiles = new Array(width);
@@ -1711,112 +2100,116 @@
       return false;
     }
 
-    const requestedMoves = clampInt(
+    const requestedSteps = clampInt(
       randomInt(state.config.shuffleMoves.min, state.config.shuffleMoves.max),
-      8,
-      2000,
-      64
+      12,
+      2400,
+      120
     );
 
-    state.player = { row: state.playerStart.row, col: state.playerStart.col };
-    state.boxes = new Set(state.targetKeys);
+    const caches = buildRowTargetPresence();
+    const totalBoxes = state.targetKeys.size;
+    const pullBias = 0.7;
 
-    const deadCells = buildStaticDeadCellSet();
-    const targetCells = new Set(state.targetKeys);
+    let player = { row: state.playerStart.row, col: state.playerStart.col };
+    let boxes = new Set(state.targetKeys);
 
-    const requiredPushes = Math.max(4, Math.floor(requestedMoves * 0.6));
-    let pushes = 0;
-    let stagnation = 0;
-
-    while (pushes < requestedMoves && stagnation < requestedMoves * 24) {
-      const reachable = computeReachableCells(state.player.row, state.player.col, state.boxes);
-      const candidates = [];
-
-      for (const key of state.boxes) {
-        const { row, col } = decodeKey(key);
-        for (const direction of DIRECTIONS) {
-          const behindRow = row - direction.row;
-          const behindCol = col - direction.col;
-          const behindKey = keyFor(behindRow, behindCol);
-          if (!isWalkable(behindRow, behindCol) || state.boxes.has(behindKey)) {
-            continue;
-          }
-          if (!reachable.has(behindKey)) {
-            continue;
-          }
-          const destinationRow = row + direction.row;
-          const destinationCol = col + direction.col;
-          if (!isWalkable(destinationRow, destinationCol)) {
-            continue;
-          }
-          const destinationKey = keyFor(destinationRow, destinationCol);
-          if (state.boxes.has(destinationKey)) {
-            continue;
-          }
-          if (deadCells.has(destinationKey) && !targetCells.has(destinationKey)) {
-            continue;
-          }
-          candidates.push({
-            boxKey: key,
-            destinationKey,
-            destinationRow,
-            destinationCol,
-            boxRow: row,
-            boxCol: col,
-            behindRow,
-            behindCol
-          });
-        }
-      }
-
-      if (!candidates.length) {
-        stagnation += 1;
-        const reachableArray = Array.from(reachable).filter(entry => !state.boxes.has(entry));
-        const randomKey = chooseRandomEntry(reachableArray);
-        if (randomKey) {
-          const coords = decodeKey(randomKey);
-          state.player = { row: coords.row, col: coords.col };
-        }
-        continue;
-      }
-
-      const choice = chooseRandomEntry(candidates);
-      if (!choice) {
-        stagnation += 1;
-        continue;
-      }
-
-      state.player = { row: choice.behindRow, col: choice.behindCol };
-      state.boxes.delete(choice.boxKey);
-      state.boxes.add(choice.destinationKey);
-      state.player = { row: choice.boxRow, col: choice.boxCol };
-      pushes += 1;
-      stagnation = 0;
-    }
-
-    if (pushes < requiredPushes) {
-      return false;
-    }
-
-    if (checkSolved()) {
-      return false;
-    }
-
-    const unsettled = Array.from(state.boxes).some(key => !targetCells.has(key));
-    if (!unsettled) {
-      return false;
-    }
-
-    if (!isWalkable(state.player.row, state.player.col) || state.boxes.has(keyFor(state.player.row, state.player.col))) {
-      const reachable = computeReachableCells(state.player.row, state.player.col, state.boxes);
-      const alternatives = Array.from(reachable).filter(entry => !state.boxes.has(entry));
+    const initialReachable = computeReachableCells(player.row, player.col, boxes);
+    if (!initialReachable.has(keyFor(player.row, player.col))) {
+      const alternatives = Array.from(initialReachable).filter(entry => !boxes.has(entry));
       const randomKey = chooseRandomEntry(alternatives);
       if (!randomKey) {
         return false;
       }
       const coords = decodeKey(randomKey);
-      state.player = { row: coords.row, col: coords.col };
+      player = { row: coords.row, col: coords.col };
     }
+
+    let pulls = 0;
+    let stagnation = 0;
+    const maxStagnation = requestedSteps * 18;
+
+    for (let step = 0; step < requestedSteps && stagnation < maxStagnation; step += 1) {
+      const actions = legalInverseActions(player, boxes, caches);
+      if (!actions.length) {
+        stagnation += 1;
+        const reachable = computeReachableCells(player.row, player.col, boxes);
+        const alternatives = Array.from(reachable).filter(entry => !boxes.has(entry));
+        const randomKey = chooseRandomEntry(alternatives);
+        if (randomKey) {
+          const coords = decodeKey(randomKey);
+          player = { row: coords.row, col: coords.col };
+        }
+        continue;
+      }
+
+      const pullActions = actions.filter(action => action.type === 'pull');
+      let chosen = null;
+      if (pullActions.length && (Math.random() < pullBias || pullActions.length === actions.length)) {
+        chosen = chooseRandomEntry(pullActions);
+      } else {
+        chosen = chooseRandomEntry(actions);
+      }
+
+      if (!chosen) {
+        stagnation += 1;
+        continue;
+      }
+
+      const result = applyInverseAction(player, boxes, chosen);
+      player = result.player;
+      boxes = result.boxes;
+      stagnation = 0;
+      if (chosen.type === 'pull') {
+        pulls += 1;
+      }
+    }
+
+    const stepQuota = Math.max(1, Math.floor(requestedSteps * 0.25));
+    const boxQuota = Math.max(totalBoxes * 2, totalBoxes + 2);
+    const requiredPulls = Math.max(4, Math.min(stepQuota, boxQuota));
+    if (pulls < requiredPulls) {
+      return false;
+    }
+
+    if (containsStaticDeadlock(boxes, state.targetKeys, caches)) {
+      return false;
+    }
+
+    const boxesOnTargets = countBoxesOnTargets(boxes, state.targetKeys);
+    if (boxesOnTargets / totalBoxes > 0.5) {
+      return false;
+    }
+
+    const averageDistance = computeAverageBoxGoalDistance(boxes, state.targetKeys);
+    if (!Number.isFinite(averageDistance) || averageDistance < 3) {
+      return false;
+    }
+
+    if (!isWalkable(player.row, player.col) || boxes.has(keyFor(player.row, player.col))) {
+      const reachable = computeReachableCells(player.row, player.col, boxes);
+      const alternatives = Array.from(reachable).filter(entry => !boxes.has(entry));
+      const randomKey = chooseRandomEntry(alternatives);
+      if (!randomKey) {
+        return false;
+      }
+      const coords = decodeKey(randomKey);
+      player = { row: coords.row, col: coords.col };
+    }
+
+    const solverResult = solveForwardMinPushes(player, boxes, state.targetKeys, { timeLimitMs: 2500 });
+    const metrics = computeSolverMetrics(solverResult);
+    if (!metrics) {
+      return false;
+    }
+    const difficultyHint = Math.max(pulls, Math.floor(requestedSteps * 0.25));
+    if (!fitsDifficulty(metrics, difficultyHint, totalBoxes)) {
+      return false;
+    }
+
+    state.player = { row: player.row, col: player.col };
+    state.boxes = boxes;
+    state.currentMetrics = metrics;
 
     return true;
   }
