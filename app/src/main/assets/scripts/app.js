@@ -68,6 +68,7 @@ const PAGE_FEATURE_MAP = Object.freeze({
   bigger: 'arcade.bigger',
   balance: 'arcade.balance',
   theLine: 'arcade.theLine',
+  lightsOut: 'arcade.lightsOut',
   math: 'arcade.math',
   sudoku: 'arcade.sudoku',
   minesweeper: 'arcade.demineur',
@@ -93,6 +94,7 @@ const OPTIONS_DETAIL_FEATURE_MAP = Object.freeze({
   holdem: 'arcade.holdem',
   dice: 'arcade.dice',
   gameOfLife: 'arcade.gameOfLife',
+  lightsOut: 'arcade.lightsOut',
   blackjack: 'arcade.blackjack',
   gacha: 'system.gacha',
   tableau: 'system.tableau',
@@ -1824,6 +1826,9 @@ function activateArcadeHubCard(card) {
   if (target === 'quantum2048') {
     ensureQuantum2048Game();
   }
+  if (target === 'lightsOut') {
+    ensureLightsOutGame();
+  }
   if (target === 'gameOfLife') {
     ensureGameOfLifeGame();
   }
@@ -3284,6 +3289,7 @@ const ARCADE_GAME_IDS = Object.freeze([
   'bigger',
   'math',
   'theLine',
+  'lightsOut',
   'balance',
   'sudoku',
   'minesweeper',
@@ -4643,6 +4649,13 @@ function collectDomElements() {
   arcadeLivesValue: document.getElementById('arcadeLivesValue'),
   arcadeScoreValue: document.getElementById('arcadeScoreValue'),
   arcadeComboMessage: document.getElementById('arcadeComboMessage'),
+  lightsOutPage: document.getElementById('lightsOut'),
+  lightsOutBoard: document.getElementById('lightsOutBoard'),
+  lightsOutMessage: document.getElementById('lightsOutMessage'),
+  lightsOutLevelValue: document.getElementById('lightsOutLevelValue'),
+  lightsOutSizeValue: document.getElementById('lightsOutSizeValue'),
+  lightsOutDifficultyButtons: document.querySelectorAll('[data-lights-difficulty]'),
+  lightsOutNewButton: document.getElementById('lightsOutNewButton'),
   biggerPage: document.getElementById('bigger'),
   biggerBoard: document.getElementById('biggerBoard'),
   biggerRestartButton: document.getElementById('biggerRestartButton'),
@@ -5692,6 +5705,17 @@ function ensureQuantum2048Game() {
     parallelUniverseElement: elements.quantum2048ParallelUniverseValue
   });
   return quantum2048Game;
+}
+
+function ensureLightsOutGame() {
+  if (lightsOutGame && typeof lightsOutGame === 'object') {
+    return lightsOutGame;
+  }
+  if (window.lightsOutArcade && typeof window.lightsOutArcade === 'object') {
+    lightsOutGame = window.lightsOutArcade;
+    return lightsOutGame;
+  }
+  return null;
 }
 
 function ensureGameOfLifeGame() {
@@ -9497,6 +9521,7 @@ let biggerGame = null;
 let waveGame = null;
 let balanceGame = null;
 let quantum2048Game = null;
+let lightsOutGame = null;
 let gameOfLifeGame = null;
 let apsCritPulseTimeoutId = null;
 
@@ -11178,6 +11203,9 @@ function showPage(pageId) {
   if (pageId === 'quantum2048') {
     ensureQuantum2048Game();
   }
+  if (pageId === 'lightsOut') {
+    ensureLightsOutGame();
+  }
   elements.pages.forEach(page => {
     const isActive = page.id === pageId;
     page.classList.toggle('active', isActive);
@@ -11211,6 +11239,7 @@ function showPage(pageId) {
   document.body.classList.toggle('view-balance', pageId === 'balance');
   document.body.classList.toggle('view-quantum2048', pageId === 'quantum2048');
   document.body.classList.toggle('view-sudoku', pageId === 'sudoku');
+  document.body.classList.toggle('view-lights-out', pageId === 'lightsOut');
   document.body.classList.toggle('view-game-of-life', pageId === 'gameOfLife');
   if (pageId === 'game') {
     randomizeAtomButtonImage();
@@ -11260,6 +11289,14 @@ function showPage(pageId) {
       quantum2048Game.onLeave();
     }
   }
+  const lightsOut = ensureLightsOutGame();
+  if (lightsOut) {
+    if (pageId === 'lightsOut') {
+      lightsOut.onEnter?.();
+    } else {
+      lightsOut.onLeave?.();
+    }
+  }
   const gameOfLife = ensureGameOfLifeGame();
   if (gameOfLife) {
     if (pageId === 'gameOfLife') {
@@ -11302,6 +11339,10 @@ document.addEventListener('visibilitychange', () => {
     }
     if (quantum2048Game && activePage === 'quantum2048') {
       quantum2048Game.onLeave();
+    }
+    const lightsOut = ensureLightsOutGame();
+    if (lightsOut && activePage === 'lightsOut') {
+      lightsOut.onLeave?.();
     }
     saveGame();
     return;

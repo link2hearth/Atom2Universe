@@ -742,6 +742,48 @@
           class="arcade-hub-card"
           role="button"
           tabindex="0"
+          aria-label="Accéder au mini-jeu Lights Out"
+          aria-describedby="arcadeCardDescription-lightsOut"
+          data-card-id="lightsOut"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.lightsOut.aria"
+          data-page-target="lightsOut"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.lightsOut.title"
+            >Lights Out</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-lightsOut"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-lightsOut"
+            data-i18n="index.sections.arcadeHub.cards.lightsOut.description"
+          >
+            Éteignez toutes les lumières en inversant chaque case et ses voisines orthogonales.
+          </p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
           aria-label="Accéder au mini-jeu Démineur"
           aria-describedby="arcadeCardDescription-minesweeper"
           data-card-id="minesweeper"
@@ -2170,6 +2212,88 @@
             aria-label="Grille du puzzle The Line"
             data-i18n="aria-label:index.sections.theLine.board"
           ></div>
+        </div>
+      </div>
+    </section>
+
+    <section
+      id="lightsOut"
+      class="page page--lights-out"
+      data-page-group="arcade"
+      aria-label="Mini-jeu Lights Out : éteignez toutes les lumières."
+      data-i18n="aria-label:index.sections.lightsOut.aria"
+      hidden
+    >
+      <div class="lights-out">
+        <h2 class="visually-hidden" data-i18n="index.sections.lightsOut.title">Lights Out</h2>
+        <div class="lights-out__header">
+          <div
+            class="lights-out__controls"
+            role="group"
+            aria-label="Choisir la difficulté"
+            data-i18n="aria-label:index.sections.lightsOut.difficulty.aria"
+          >
+            <span class="lights-out__controls-label" data-i18n="index.sections.lightsOut.difficulty.label">Difficulté</span>
+            <div class="lights-out__toggle-group">
+              <button
+                type="button"
+                class="lights-out__toggle lights-out__toggle--active"
+                data-lights-difficulty="easy"
+                aria-pressed="true"
+                data-i18n="index.sections.lightsOut.difficulty.easy"
+              >Facile</button>
+              <button
+                type="button"
+                class="lights-out__toggle"
+                data-lights-difficulty="medium"
+                aria-pressed="false"
+                data-i18n="index.sections.lightsOut.difficulty.medium"
+              >Moyen</button>
+              <button
+                type="button"
+                class="lights-out__toggle"
+                data-lights-difficulty="hard"
+                aria-pressed="false"
+                data-i18n="index.sections.lightsOut.difficulty.hard"
+              >Difficile</button>
+            </div>
+          </div>
+          <div class="lights-out__status" aria-live="polite">
+            <span class="lights-out__status-item">
+              <span class="lights-out__status-label" data-i18n="index.sections.lightsOut.status.level">Niveau</span>
+              <span id="lightsOutLevelValue">1</span>
+            </span>
+            <span class="lights-out__status-item">
+              <span class="lights-out__status-label" data-i18n="index.sections.lightsOut.status.size">Taille</span>
+              <span id="lightsOutSizeValue">5×5</span>
+            </span>
+          </div>
+          <p
+            class="lights-out__message"
+            id="lightsOutMessage"
+            role="status"
+            aria-live="polite"
+            data-i18n="index.sections.lightsOut.messages.intro"
+          >
+            Éteignez toutes les lumières. Chaque clic inverse la case visée et ses voisines orthogonales.
+          </p>
+        </div>
+        <div class="lights-out__board-wrapper">
+          <div
+            class="lights-out__board"
+            id="lightsOutBoard"
+            role="grid"
+            aria-label="Grille Lights Out"
+            data-i18n="aria-label:index.sections.lightsOut.board"
+          ></div>
+        </div>
+        <div class="lights-out__actions">
+          <button
+            type="button"
+            class="lights-out__action-button"
+            id="lightsOutNewButton"
+            data-i18n="index.sections.lightsOut.actions.new"
+          >Nouvelle grille</button>
         </div>
       </div>
     </section>
@@ -4721,6 +4845,7 @@
   <script src="scripts/arcade/othello.js"></script>
   <script src="scripts/arcade/game-of-life.js"></script>
   <script src="scripts/arcade/quantum-2048.js"></script>
+  <script src="scripts/arcade/lights-out.js"></script>
   <script src="scripts/arcade/the-line.js"></script>
   <script src="scripts/i18n/embedded-resources.js"></script>
   <script src="scripts/modules/i18n.js"></script>
