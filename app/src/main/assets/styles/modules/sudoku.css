@@ -445,6 +445,7 @@ body.theme-aurora .page--sudoku {
   display: grid;
   grid-template-columns: repeat(9, var(--sudoku-cell-track-size));
   grid-template-rows: repeat(9, var(--sudoku-cell-track-size));
+  --sudoku-scale: 1.5;
   border: var(--sudoku-grid-border) solid var(--sudoku-subgrid-color);
   border-radius: calc(18px * var(--sudoku-scale, 1));
   overflow: hidden;
