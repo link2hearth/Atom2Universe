@@ -784,6 +784,46 @@
           class="arcade-hub-card"
           role="button"
           tabindex="0"
+          aria-label="Accéder au mini-jeu Sokoban"
+          aria-describedby="arcadeCardDescription-sokoban"
+          data-card-id="sokoban"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.sokoban.aria"
+          data-page-target="sokoban"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.sokoban.title"
+            >Sokoban</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-sokoban"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-sokoban"
+            data-i18n="index.sections.arcadeHub.cards.sokoban.description"
+          >Poussez les caisses sur toutes les cibles lumineuses dans ce casse-tête inspiré du Sokoban classique.</p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
           aria-label="Accéder au mini-jeu Démineur"
           aria-describedby="arcadeCardDescription-minesweeper"
           data-card-id="minesweeper"
@@ -2283,6 +2323,69 @@
             data-i18n="aria-label:index.sections.lightsOut.board"
           ></div>
         </div>
+      </div>
+    </section>
+
+    <section
+      id="sokoban"
+      class="page page--sokoban"
+      data-page-group="arcade"
+      aria-label="Mini-jeu Sokoban : poussez toutes les caisses sur les cibles."
+      data-i18n="aria-label:index.sections.sokoban.aria"
+      hidden
+    >
+      <div class="sokoban">
+        <h2 class="visually-hidden" data-i18n="index.sections.sokoban.title">Sokoban</h2>
+        <div class="sokoban__header">
+          <div class="sokoban__hud" role="presentation">
+            <div class="sokoban__stat">
+              <span class="sokoban__stat-label" data-i18n="index.sections.sokoban.hud.level">Niveau</span>
+              <span class="sokoban__stat-value" id="sokobanLevelValue">1</span>
+            </div>
+            <div class="sokoban__stat">
+              <span class="sokoban__stat-label" data-i18n="index.sections.sokoban.hud.moves">Déplacements</span>
+              <span class="sokoban__stat-value" id="sokobanMovesValue">0</span>
+            </div>
+            <div class="sokoban__stat">
+              <span class="sokoban__stat-label" data-i18n="index.sections.sokoban.hud.pushes">Poussées</span>
+              <span class="sokoban__stat-value" id="sokobanPushesValue">0</span>
+            </div>
+          </div>
+          <div class="sokoban__actions">
+            <button
+              type="button"
+              class="sokoban__button"
+              id="sokobanRestartButton"
+              data-i18n="index.sections.sokoban.actions.restart"
+            >Recommencer</button>
+            <button
+              type="button"
+              class="sokoban__button"
+              id="sokobanNewButton"
+              data-i18n="index.sections.sokoban.actions.new"
+            >Nouvelle grille</button>
+          </div>
+          <p
+            class="sokoban__status"
+            id="sokobanStatus"
+            role="status"
+            aria-live="polite"
+            data-i18n="index.sections.sokoban.messages.intro"
+          >Poussez chaque caisse sur une cible lumineuse pour terminer le niveau.</p>
+        </div>
+        <div class="sokoban__board-wrapper">
+          <div
+            class="sokoban__board"
+            id="sokobanBoard"
+            role="grid"
+            aria-label="Grille du Sokoban"
+            data-i18n="aria-label:index.sections.sokoban.board"
+            tabindex="0"
+          ></div>
+        </div>
+        <p class="sokoban__hint" data-i18n="index.sections.sokoban.controls">
+          Utilisez les flèches du clavier ou glissez votre doigt pour déplacer le manutentionnaire.
+        </p>
       </div>
     </section>
 
@@ -4838,6 +4941,7 @@
   <script src="scripts/arcade/game-of-life.js"></script>
   <script src="scripts/arcade/quantum-2048.js"></script>
   <script src="scripts/arcade/lights-out.js"></script>
+  <script src="scripts/arcade/sokoban.js"></script>
   <script src="scripts/arcade/the-line.js"></script>
   <script src="scripts/i18n/embedded-resources.js"></script>
   <script src="scripts/modules/i18n.js"></script>

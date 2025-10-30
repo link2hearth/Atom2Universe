@@ -6,6 +6,7 @@
     'wave',
     'quantum2048',
     'lightsOut',
+    'sokoban',
     'bigger',
     'math',
     'balance',

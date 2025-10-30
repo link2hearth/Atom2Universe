@@ -322,6 +322,12 @@
             "description": "Éteignez toutes les lumières : chaque clic inverse la case visée et ses voisines orthogonales.",
             "cta": "Éteindre"
           },
+          "sokoban": {
+            "aria": "Accéder au mini-jeu Sokoban",
+            "title": "Sokoban",
+            "description": "Poussez chaque caisse sur les objectifs lumineux sans jamais tirer, dans une version tactile du classique.",
+            "cta": "Organiser"
+          },
           "minesweeper": {
             "aria": "Accéder au mini-jeu Démineur",
             "title": "Démineur",
@@ -681,6 +687,33 @@
             "on": "Lumière allumée",
             "off": "Lumière éteinte"
           }
+        }
+      },
+      "sokoban": {
+        "aria": "Mini-jeu Sokoban : poussez toutes les caisses sur les cibles.",
+        "title": "Sokoban",
+        "hud": {
+          "level": "Niveau",
+          "moves": "Déplacements",
+          "pushes": "Poussées"
+        },
+        "actions": {
+          "restart": "Recommencer",
+          "new": "Nouvelle grille"
+        },
+        "messages": {
+          "intro": "Poussez chaque caisse sur une cible lumineuse pour terminer le niveau."
+        },
+        "controls": "Utilisez les flèches du clavier ou glissez votre doigt pour déplacer le manutentionnaire.",
+        "board": "Grille du Sokoban",
+        "cell": {
+          "wall": "Mur",
+          "floor": "Sol",
+          "target": "Cible"
+        },
+        "occupant": {
+          "player": "Manutentionnaire",
+          "box": "Caisse"
         }
       },
       "sudoku": {
@@ -1096,6 +1129,10 @@
             "lightsOut": {
               "label": "Mini jeu Lights Out :",
               "description": "Éteignez chaque case d’une grille qui change de taille selon la difficulté choisie en planifiant vos clics."
+            },
+            "sokoban": {
+              "label": "Mini jeu Sokoban :",
+              "description": "Faites glisser ou touchez pour pousser les caisses sur chaque cible sans jamais les tirer."
             },
             "sudoku": {
               "label": "Mini jeu Sudoku :",
@@ -2001,6 +2038,16 @@
       "lightsOut": {
         "rewards": {
           "gacha": "Ticket gacha obtenu : {count}"
+        }
+      },
+      "sokoban": {
+        "status": {
+          "ready": "Poussez les caisses sur les cibles lumineuses pour gagner.",
+          "blocked": "Impossible de pousser la caisse dans cette direction.",
+          "completed": "Niveau {level} terminé en {moves} déplacements ({pushes} poussées)."
+        },
+        "cell": {
+          "combined": "{occupant} sur {base}"
         }
       },
       "sudoku": {

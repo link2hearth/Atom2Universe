@@ -69,6 +69,7 @@ const PAGE_FEATURE_MAP = Object.freeze({
   balance: 'arcade.balance',
   theLine: 'arcade.theLine',
   lightsOut: 'arcade.lightsOut',
+  sokoban: 'arcade.sokoban',
   math: 'arcade.math',
   sudoku: 'arcade.sudoku',
   minesweeper: 'arcade.demineur',
@@ -95,6 +96,7 @@ const OPTIONS_DETAIL_FEATURE_MAP = Object.freeze({
   dice: 'arcade.dice',
   gameOfLife: 'arcade.gameOfLife',
   lightsOut: 'arcade.lightsOut',
+  sokoban: 'arcade.sokoban',
   blackjack: 'arcade.blackjack',
   gacha: 'system.gacha',
   tableau: 'system.tableau',
@@ -1826,6 +1828,9 @@ function activateArcadeHubCard(card) {
   if (target === 'quantum2048') {
     ensureQuantum2048Game();
   }
+  if (target === 'sokoban') {
+    ensureSokobanGame();
+  }
   if (target === 'lightsOut') {
     ensureLightsOutGame();
   }
@@ -3290,6 +3295,7 @@ const ARCADE_GAME_IDS = Object.freeze([
   'math',
   'theLine',
   'lightsOut',
+  'sokoban',
   'balance',
   'sudoku',
   'minesweeper',
@@ -5703,6 +5709,17 @@ function ensureQuantum2048Game() {
     parallelUniverseElement: elements.quantum2048ParallelUniverseValue
   });
   return quantum2048Game;
+}
+
+function ensureSokobanGame() {
+  if (sokobanGame && typeof sokobanGame === 'object') {
+    return sokobanGame;
+  }
+  if (window.sokobanArcade && typeof window.sokobanArcade === 'object') {
+    sokobanGame = window.sokobanArcade;
+    return sokobanGame;
+  }
+  return null;
 }
 
 function ensureLightsOutGame() {
@@ -9519,6 +9536,7 @@ let biggerGame = null;
 let waveGame = null;
 let balanceGame = null;
 let quantum2048Game = null;
+let sokobanGame = null;
 let lightsOutGame = null;
 let gameOfLifeGame = null;
 let apsCritPulseTimeoutId = null;
@@ -11201,6 +11219,9 @@ function showPage(pageId) {
   if (pageId === 'quantum2048') {
     ensureQuantum2048Game();
   }
+  if (pageId === 'sokoban') {
+    ensureSokobanGame();
+  }
   if (pageId === 'lightsOut') {
     ensureLightsOutGame();
   }
@@ -11236,6 +11257,7 @@ function showPage(pageId) {
   document.body.classList.toggle('view-wave', pageId === 'wave');
   document.body.classList.toggle('view-balance', pageId === 'balance');
   document.body.classList.toggle('view-quantum2048', pageId === 'quantum2048');
+  document.body.classList.toggle('view-sokoban', pageId === 'sokoban');
   document.body.classList.toggle('view-sudoku', pageId === 'sudoku');
   document.body.classList.toggle('view-lights-out', pageId === 'lightsOut');
   document.body.classList.toggle('view-game-of-life', pageId === 'gameOfLife');
@@ -11285,6 +11307,14 @@ function showPage(pageId) {
       quantum2048Game.onEnter();
     } else {
       quantum2048Game.onLeave();
+    }
+  }
+  const sokoban = ensureSokobanGame();
+  if (sokoban) {
+    if (pageId === 'sokoban') {
+      sokoban.onEnter?.();
+    } else {
+      sokoban.onLeave?.();
     }
   }
   const lightsOut = ensureLightsOutGame();
@@ -11337,6 +11367,10 @@ document.addEventListener('visibilitychange', () => {
     }
     if (quantum2048Game && activePage === 'quantum2048') {
       quantum2048Game.onLeave();
+    }
+    const sokoban = ensureSokobanGame();
+    if (sokoban && activePage === 'sokoban') {
+      sokoban.onLeave?.();
     }
     const lightsOut = ensureLightsOutGame();
     if (lightsOut && activePage === 'lightsOut') {

@@ -322,6 +322,12 @@
             "description": "Switch every light off: each tap flips the selected tile and its orthogonal neighbours.",
             "cta": "Play"
           },
+          "sokoban": {
+            "aria": "Open the Sokoban mini-game",
+            "title": "Sokoban",
+            "description": "Push every crate onto the glowing goals without pulling them in this tactile spin on the classic puzzle.",
+            "cta": "Organise"
+          },
           "minesweeper": {
             "aria": "Open the Minesweeper mini-game",
             "title": "Minesweeper",
@@ -681,6 +687,33 @@
             "on": "Light on",
             "off": "Light off"
           }
+        }
+      },
+      "sokoban": {
+        "aria": "Sokoban mini-game: push every crate onto its target.",
+        "title": "Sokoban",
+        "hud": {
+          "level": "Level",
+          "moves": "Moves",
+          "pushes": "Pushes"
+        },
+        "actions": {
+          "restart": "Restart level",
+          "new": "New layout"
+        },
+        "messages": {
+          "intro": "Push each crate onto a target pad to clear the level."
+        },
+        "controls": "Use the arrow keys or swipe to move the handler.",
+        "board": "Sokoban grid",
+        "cell": {
+          "wall": "Wall",
+          "floor": "Floor",
+          "target": "Target"
+        },
+        "occupant": {
+          "player": "Handler",
+          "box": "Crate"
         }
       },
       "sudoku": {
@@ -1096,6 +1129,10 @@
             "lightsOut": {
               "label": "Lights Out mini-game:",
               "description": "Plan each move to switch off every tile on grids that grow with the selected difficulty."
+            },
+            "sokoban": {
+              "label": "Sokoban mini-game:",
+              "description": "Slide or tap to push crates onto every target without ever pulling them back."
             },
             "sudoku": {
               "label": "Sudoku mini-game:",
@@ -2001,6 +2038,16 @@
       "lightsOut": {
         "rewards": {
           "gacha": "Gacha ticket{suffix} earned: {count}"
+        }
+      },
+      "sokoban": {
+        "status": {
+          "ready": "Push the crates onto the highlighted goals to win.",
+          "blocked": "That crate can't move in that direction.",
+          "completed": "Level {level} cleared in {moves} moves ({pushes} pushes)."
+        },
+        "cell": {
+          "combined": "{occupant} on {base}"
         }
       },
       "sudoku": {
