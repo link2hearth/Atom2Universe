@@ -18,7 +18,12 @@
       }
     },
     "header": {
-      "brand": "Atom2Univers",
+      "brand": {
+        "home": "Atom2Univers",
+        "homeAria": "Return to the main page",
+        "portal": "Arcade",
+        "portalAria": "Enter the arcade"
+      },
       "bannerToggle": {
         "collapse": "Collapse banner",
         "expand": "Expand banner"

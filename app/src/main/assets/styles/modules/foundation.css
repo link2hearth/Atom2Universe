@@ -422,6 +422,21 @@ body.theme-aurora .header-playback-button.is-playing {
   transition: color 0.3s ease, text-shadow 0.3s ease, transform 0.3s ease;
 }
 
+.brand-button--home {
+  cursor: pointer;
+}
+
+.brand-button--home:hover,
+.brand-button--home:focus-visible {
+  transform: translateY(-1px);
+  text-shadow: 0 0.45rem 1.2rem rgba(255, 255, 255, 0.38);
+}
+
+body.theme-light .brand-button--home:hover,
+body.theme-light .brand-button--home:focus-visible {
+  text-shadow: 0 0.45rem 1.2rem rgba(40, 48, 96, 0.28);
+}
+
 .brand-button:focus-visible {
   outline: 2px solid rgba(255, 255, 255, 0.65);
   outline-offset: 4px;

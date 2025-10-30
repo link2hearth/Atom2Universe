@@ -16,12 +16,24 @@
     <div class="header-main">
       <div class="header-brand-group">
         <button
-          class="brand brand-button"
-          id="brandPortal"
+          class="brand brand-button brand-button--home"
+          id="brandHomeButton"
           type="button"
-          data-i18n="index.header.brand"
+          data-i18n="index.header.brand.home;aria-label:index.header.brand.homeAria;title:index.header.brand.homeAria"
+          aria-label="Revenir à la page principale"
+          title="Revenir à la page principale"
         >
           Atom2Univers
+        </button>
+        <button
+          class="brand brand-button brand-button--portal"
+          id="brandPortal"
+          type="button"
+          data-i18n="index.header.brand.portal;aria-label:index.header.brand.portalAria;title:index.header.brand.portalAria"
+          aria-label="Ouvrir l’arcade"
+          title="Ouvrir l’arcade"
+        >
+          Arcade
         </button>
         <button
           class="header-playback-button"
@@ -57,17 +69,6 @@
         aria-label="Navigation principale"
         data-i18n="aria-label:index.navigation.primary"
       >
-        <button
-          class="nav-button"
-          data-target="arcadeHub"
-          id="navArcadeButton"
-          hidden
-          aria-hidden="true"
-          disabled
-          aria-disabled="true"
-        >
-          <span data-i18n="index.navigation.items.arcade">Arcade</span>
-        </button>
         <button
           class="nav-button"
           data-target="shop"

@@ -4547,6 +4547,7 @@ function collectDomElements() {
     appHeader: document.querySelector('.app-header'),
     headerBannerToggle: document.getElementById('headerBannerToggle'),
     pageContainer: document.getElementById('pageContainer'),
+    brandHomeButton: document.getElementById('brandHomeButton'),
     brandPortal: document.getElementById('brandPortal'),
     navMenu: document.querySelector('.nav-menu'),
     navButtons: document.querySelectorAll('.nav-button'),
@@ -6232,13 +6233,17 @@ function isArcadeUnlocked() {
 }
 
 function triggerBrandPortalPulse() {
-  const pulseTarget = elements.navArcadeButton;
+  const pulseTarget = elements.brandPortal || elements.navArcadeButton;
   if (!pulseTarget) {
     return;
   }
-  pulseTarget.classList.add('nav-button--pulse');
+  const pulseClass = pulseTarget === elements.brandPortal ? 'brand--pulse' : 'nav-button--pulse';
+  pulseTarget.classList.add(pulseClass);
   clearTimeout(triggerBrandPortalPulse.timeoutId);
   triggerBrandPortalPulse.timeoutId = setTimeout(() => {
+    if (elements.brandPortal) {
+      elements.brandPortal.classList.remove('brand--pulse');
+    }
     if (elements.navArcadeButton) {
       elements.navArcadeButton.classList.remove('nav-button--pulse');
     }
@@ -11897,9 +11902,18 @@ function bindDomEventListeners() {
     });
   }
 
+  if (elements.brandHomeButton) {
+    elements.brandHomeButton.addEventListener('click', () => {
+      showPage('game');
+    });
+  }
+
   if (elements.brandPortal) {
     elements.brandPortal.addEventListener('click', () => {
-      showPage('game');
+      if (!isArcadeUnlocked()) {
+        return;
+      }
+      showPage('arcadeHub');
     });
   }
 
