@@ -1,3 +1,6 @@
+/** Active ou désactive complètement l'accès au DevKit. */
+const DEVKIT_ENABLED = true;
+
 /**
  * Configuration centrale du jeu Atom → Univers.
  * Toutes les valeurs ajustables (équilibrage, affichage, grands nombres, etc.)
@@ -3554,6 +3557,7 @@ GAME_CONFIG.progression.defaultTheme = GAME_CONFIG.themes.default;
 
 if (typeof globalThis !== 'undefined') {
   globalThis.GAME_CONFIG = GAME_CONFIG;
+  globalThis.DEVKIT_ENABLED = DEVKIT_ENABLED;
 }
 
 
