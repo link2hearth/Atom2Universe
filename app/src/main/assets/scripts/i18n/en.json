@@ -561,7 +561,7 @@
         "reset": "Reset game",
         "board": "Othello board",
         "status": {
-          "ready": "Black to move."
+          "ready": "The AI plays black. Get ready to play as white."
         },
         "score": "Black: {black} · White: {white}"
       },
@@ -1512,6 +1512,8 @@
           "white": "White"
         },
         "status": {
+          "humanTurn": "Your turn (white discs).",
+          "aiTurn": "The AI is thinking for the black discs…",
           "turn": "It's {player}'s turn",
           "pass": "No legal moves for {player}. Passing turn.",
           "invalid": "Invalid move. Pick a highlighted square.",
