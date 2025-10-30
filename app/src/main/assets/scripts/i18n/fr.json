@@ -574,7 +574,7 @@
         "status": {
           "ready": "L’IA joue les noirs. Préparez-vous à jouer les blancs.",
           "readySolo": "L’IA joue les noirs. Préparez-vous à jouer les blancs.",
-          "readyDuo": "Les deux joueurs contrôlent les pions. Les noirs commencent.",
+          "readyDuo": "Les deux joueurs contrôlent les pions. Les blancs commencent.",
           "humanTurn": {
             "black": "Aux noirs de jouer.",
             "white": "À vous de jouer (blancs)."
