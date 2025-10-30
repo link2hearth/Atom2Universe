@@ -699,10 +699,10 @@
         },
         "actions": {
           "restart": "Recommencer",
-          "new": "Nouvelle grille"
+          "new": "Niveau suivant"
         },
         "messages": {
-          "intro": "Poussez chaque caisse sur une cible lumineuse pour terminer le niveau."
+          "intro": "Terminez chaque niveau en poussant chaque caisse sur une cible lumineuse."
         },
         "controls": "Utilisez les flèches du clavier ou glissez votre doigt pour déplacer le manutentionnaire.",
         "board": "Grille du Sokoban",
