@@ -1033,7 +1033,7 @@ const GAME_CONFIG = {
      * - animation : rythme des arrêts de colonnes et cadence de brassage visuel.
      */
     roulette: {
-      betOptions: [10, 20, 50, 100],
+      betOptions: [10, 20, 50],
       payouts: {
         suitLine: 5,
         suitDiagonal: 5,
