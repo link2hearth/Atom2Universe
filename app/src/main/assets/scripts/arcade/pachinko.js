@@ -237,7 +237,7 @@
       return boardField.left + ratio * boardField.width;
     });
     const BALL_RADIUS = 0.014;
-    const GRAVITY_FORCE = 0.00078;
+    const GRAVITY_FORCE = 0.00118;
     const MAX_SIMULATION_STEPS = 900;
     const PATH_SAMPLE_INTERVAL = 2;
 
@@ -611,8 +611,8 @@
             x: pegX,
             y: pegY,
             radius: 0.026,
-            bounce: 0.74,
-            spin: 0.05,
+            bounce: 0.66,
+            spin: 0.045,
             type: 'peg'
           });
         }
@@ -636,8 +636,8 @@
           x: baseX,
           y: clampValue(boardField.top + boardField.height * config.yRatio, boardField.top + 0.12, boardField.bottom - 0.2),
           radius: clampValue(config.radius || 0.032, 0.02, 0.05),
-          bounce: 0.86,
-          spin: 0.12,
+          bounce: 0.78,
+          spin: 0.1,
           type: 'moving',
           amplitude,
           speed: Math.max(0.2, config.speed || 0.6),
@@ -895,13 +895,13 @@
         boardField.right - BALL_RADIUS
       );
       let y = boardField.top - 0.12;
-      let vx = randomOffset(0.02);
-      let vy = 0.002;
+      let vx = randomOffset(0.022);
+      let vy = 0.0025;
 
       for (let step = 0; step < MAX_SIMULATION_STEPS; step += 1) {
         vy += GRAVITY_FORCE;
-        vx *= 0.996;
-        vy *= 0.998;
+        vx *= 0.998;
+        vy *= 0.999;
 
         x += vx;
         y += vy;
@@ -949,9 +949,11 @@
           vx += tangentX * tangentForce;
           vy += tangentY * tangentForce * 0.6;
           vx += randomOffset(peg.spin * 0.8);
-          vy -= Math.random() * peg.spin * 0.35;
-          if (Math.abs(vy) < 0.004) {
-            vy = vy >= 0 ? 0.004 : -0.004;
+          vy += randomOffset(peg.spin * 0.35);
+          vx *= 0.94;
+          vy *= 0.9;
+          if (vy < GRAVITY_FORCE * 6) {
+            vy = GRAVITY_FORCE * 6;
           }
           if (peg.type === 'moving') {
             vx *= 1.02;
