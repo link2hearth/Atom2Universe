@@ -330,6 +330,12 @@
             "description": "Affrontez l’IA pour gagner des tickets de gacha et un bonus multiplicateur temporaire.",
             "cta": "Planifier"
           },
+          "othello": {
+            "aria": "Accéder au mini-jeu Othello",
+            "title": "Othello",
+            "description": "Retournez les pions de votre adversaire en les encerclant sur un plateau 8×8.",
+            "cta": "Jouer"
+          },
           "gameOfLife": {
             "aria": "Accéder au mini-jeu Jeu de la vie",
             "title": "Jeu de la vie",
@@ -553,6 +559,17 @@
           "ready": "Disposez les blocs puis appuyez sur la zone de résultat pour lancer le test."
         },
         "cubeAria": "Bloc de poids {weight}"
+      },
+      "othello": {
+        "aria": "Mini-jeu Othello",
+        "title": "Othello",
+        "subtitle": "Encerclez les pions adverses pour les retourner.",
+        "reset": "Réinitialiser la partie",
+        "board": "Plateau d'Othello",
+        "status": {
+          "ready": "Tour des noirs."
+        },
+        "score": "Noirs : {black} · Blancs : {white}"
       },
       "theLine": {
         "aria": "Mini-jeu The Line : tracez un parcours couvrant toute la grille.",
@@ -1539,6 +1556,31 @@
           "solved": "Solution trouvée ✔︎",
           "noSolution": "Pas de solution trouvée (ou puzzle invalide).",
           "cleared": "Grille vidée."
+        }
+      },
+      "othello": {
+        "players": {
+          "black": "noirs",
+          "white": "blancs"
+        },
+        "status": {
+          "turn": "Tour des {player}",
+          "pass": "Aucun coup disponible pour les {player}. Tour passé.",
+          "invalid": "Coup invalide. Choisissez une case surlignée.",
+          "gameOver": "Partie terminée. Noir {black} – Blanc {white}. {result}",
+          "result": {
+            "black": "Victoire des noirs !",
+            "white": "Victoire des blancs !",
+            "draw": "Match nul."
+          }
+        },
+        "score": "Noirs : {black} · Blancs : {white}",
+        "cell": "Case {row}, colonne {column} : {content}",
+        "cellValid": "Coup disponible",
+        "cellStates": {
+          "empty": "vide",
+          "black": "pion noir",
+          "white": "pion blanc"
         }
       },
       "balance": {
