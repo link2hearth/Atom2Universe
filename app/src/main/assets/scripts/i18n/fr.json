@@ -1004,8 +1004,7 @@
         "controls": {
           "aria": "Commandes du Pachinko",
           "title": "Commandes",
-          "drop": "Lâcher une orbe",
-          "hint": "Ajustez votre mise, multipliez-la par 10 ou divisez-la, puis visez le cœur supernova."
+          "drop": "Lâcher une orbe"
         },
         "bet": {
           "title": "Mise",
@@ -1021,12 +1020,6 @@
             "multiplyAria": "Multiplier les mises par 10 (multiplicateur actuel : ×{multiplier})",
             "divideAria": "Diviser les mises par 10 (multiplicateur actuel : ×{multiplier})"
           }
-        },
-        "stats": {
-          "drops": "Lancers",
-          "wins": "Victoires",
-          "best": "Meilleur multiplicateur",
-          "streak": "Série de réussites"
         },
         "history": {
           "title": "Derniers lancers",

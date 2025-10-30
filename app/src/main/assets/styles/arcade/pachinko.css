@@ -6,7 +6,7 @@
   --pachinko-panel-shadow: 0 18px 48px rgba(5, 9, 25, 0.6);
   --pachinko-accent: rgba(255, 116, 217, 0.9);
   --pachinko-accent-strong: rgba(120, 190, 255, 0.95);
-  --pachinko-slot-height: 112px;
+  --pachinko-slot-height: 134px;
   --pachinko-slot-shadow: 0 16px 32px rgba(0, 0, 0, 0.45);
   --pachinko-slot-border: rgba(255, 255, 255, 0.2);
   --pachinko-slot-font: 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -48,7 +48,7 @@
 
 .pachinko__layout {
   display: grid;
-  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  grid-template-columns: minmax(0, 3.6fr) minmax(0, 2fr);
   gap: clamp(1.5rem, 3vw, 3rem);
   align-items: stretch;
 }
@@ -63,21 +63,21 @@
   position: relative;
   background: var(--pachinko-panel-background);
   border: 1px solid var(--pachinko-panel-border);
-  border-radius: 1.5rem;
-  padding: clamp(1.5rem, 3vw, 2.5rem);
+  border-radius: 1.6rem;
+  padding: clamp(1.8rem, 3.4vw, 2.9rem);
   box-shadow: var(--pachinko-panel-shadow);
   overflow: hidden;
 }
 
 .pachinko-board__inner {
   position: relative;
-  aspect-ratio: 3 / 4;
-  border-radius: 1.25rem;
+  aspect-ratio: 3 / 4.8;
+  border-radius: 1.35rem;
   background: radial-gradient(circle at 30% 20%, rgba(102, 0, 255, 0.28), transparent 62%),
-    radial-gradient(circle at 70% 30%, rgba(0, 245, 255, 0.18), transparent 64%),
-    linear-gradient(180deg, rgba(16, 20, 60, 0.92) 0%, rgba(9, 12, 28, 0.95) 65%, rgba(3, 7, 18, 0.98) 100%);
+    radial-gradient(circle at 72% 28%, rgba(0, 245, 255, 0.18), transparent 64%),
+    linear-gradient(180deg, rgba(16, 20, 60, 0.92) 0%, rgba(9, 12, 28, 0.95) 68%, rgba(3, 7, 18, 0.98) 100%);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: inset 0 24px 45px rgba(0, 0, 0, 0.6);
+  box-shadow: inset 0 28px 55px rgba(0, 0, 0, 0.6);
   overflow: hidden;
 }
 
@@ -92,49 +92,49 @@
 
 .pachinko-board__peg-layer {
   position: absolute;
-  inset: 6% 6% 30% 6%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
+  inset: 0;
   pointer-events: none;
   z-index: 1;
 }
 
-.pachinko-pegs__row {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: clamp(0.4rem, 1vw, 0.75rem);
-  width: 100%;
-  align-items: center;
-  justify-items: center;
-}
-
-.pachinko-pegs__row--offset {
-  padding-left: clamp(0.9rem, 2vw, 1.25rem);
-  padding-right: clamp(0.9rem, 2vw, 1.25rem);
-}
-
-.pachinko-pegs__peg {
-  width: clamp(0.65rem, 1.4vw, 0.85rem);
-  height: clamp(0.65rem, 1.4vw, 0.85rem);
+.pachinko-peg {
+  position: absolute;
   border-radius: 50%;
   background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 0%, rgba(120, 200, 255, 0.5) 45%, rgba(0, 108, 221, 0.2) 100%);
   box-shadow: 0 0 12px rgba(120, 200, 255, 0.45), 0 0 24px rgba(255, 92, 184, 0.35);
+  opacity: 0.95;
+}
+
+.pachinko-peg--bumper {
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 0%, rgba(255, 138, 235, 0.6) 45%, rgba(120, 200, 255, 0.4) 100%);
+  box-shadow: 0 0 24px rgba(255, 140, 240, 0.5), 0 0 42px rgba(90, 210, 255, 0.35);
+  opacity: 0.9;
+}
+
+.pachinko-board__drop {
+  position: absolute;
+  top: 3.5%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(72%, 24rem);
+  display: flex;
+  justify-content: center;
+  z-index: 4;
 }
 
 .pachinko-board__ball {
   position: absolute;
   top: 0;
   left: 50%;
-  width: clamp(1.4rem, 2.8vw, 2rem);
-  height: clamp(1.4rem, 2.8vw, 2rem);
-  margin-left: calc(-1 * clamp(0.7rem, 1.4vw, 1rem));
+  width: clamp(1.55rem, 3vw, 2.2rem);
+  height: clamp(1.55rem, 3vw, 2.2rem);
+  margin-left: calc(-1 * clamp(0.775rem, 1.5vw, 1.1rem));
   border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.95), rgba(120, 220, 255, 0.95) 45%, rgba(92, 0, 255, 0.8) 75%, rgba(3, 5, 24, 0.95) 100%);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5), 0 0 28px rgba(255, 105, 240, 0.5);
+  background: radial-gradient(circle at 28% 28%, rgba(255, 255, 255, 0.95), rgba(120, 220, 255, 0.95) 48%, rgba(92, 0, 255, 0.82) 76%, rgba(3, 5, 24, 0.95) 100%);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.5), 0 0 32px rgba(255, 105, 240, 0.5);
   opacity: 0;
-  transform: translate(-50%, -100%);
-  transition: top 0.28s ease, left 0.28s ease, opacity 0.24s ease;
+  transform: translate(-50%, -110%);
+  transition: top 0.14s linear, left 0.16s ease, opacity 0.24s ease, transform 0.24s ease;
   z-index: 3;
 }
 
@@ -144,10 +144,10 @@
 
 .pachinko-board__slots {
   position: absolute;
-  inset: auto 6% 6% 6%;
+  inset: auto 5% 5% 5%;
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: clamp(0.6rem, 1.5vw, 1rem);
+  gap: clamp(0.55rem, 1.4vw, 1.1rem);
   list-style: none;
   padding: 0;
   margin: 0;
@@ -157,17 +157,11 @@
 .pachinko-slot {
   position: relative;
   height: var(--pachinko-slot-height);
-  border-radius: 1.1rem;
-  padding: 1.1rem 0.6rem 1rem;
+  border-radius: 1.2rem;
+  padding: 0;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  font-family: var(--pachinko-slot-font);
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  text-align: center;
-  color: rgba(255, 255, 255, 0.92);
+  align-items: flex-end;
+  justify-content: center;
   border: 1px solid var(--pachinko-slot-border);
   box-shadow: var(--pachinko-slot-shadow);
   overflow: hidden;
@@ -178,9 +172,22 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.18), transparent 60%);
-  opacity: 0.5;
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.2), transparent 65%);
+  opacity: 0.55;
   pointer-events: none;
+  z-index: -1;
+}
+
+.pachinko-slot::after {
+  content: '';
+  position: absolute;
+  inset: 18% 22% 20% 22%;
+  border-radius: 45% 45% 60% 60% / 65% 65% 40% 40%;
+  background: radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.28), transparent 70%);
+  opacity: 0.55;
+  transform: scale(0.96);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
   z-index: -1;
 }
 
@@ -204,31 +211,19 @@
   border-color: rgba(255, 205, 120, 0.6);
 }
 
-.pachinko-slot__name {
-  font-size: clamp(0.75rem, 1.8vw, 0.95rem);
-  text-transform: uppercase;
-  line-height: 1.4;
-  color: rgba(255, 255, 255, 0.85);
-}
-
+.pachinko-slot__name,
 .pachinko-slot__multiplier {
-  font-size: clamp(1rem, 2.5vw, 1.55rem);
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.95);
-  text-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+  display: none;
 }
 
 .pachinko-slot--active {
-  box-shadow: 0 0 24px rgba(255, 255, 255, 0.55), 0 20px 50px rgba(255, 126, 255, 0.4);
+  box-shadow: 0 0 26px rgba(255, 255, 255, 0.55), 0 22px 54px rgba(255, 126, 255, 0.42);
   border-color: rgba(255, 255, 255, 0.85);
 }
 
 .pachinko-slot--active::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.4), transparent 65%);
-  opacity: 0.85;
+  opacity: 0.95;
+  transform: scale(1.08);
   mix-blend-mode: screen;
 }
 
@@ -244,24 +239,23 @@
   color: inherit;
 }
 
-.pachinko-controls__actions {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
 .pachinko-button {
-  align-self: flex-start;
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 999px;
-  background: linear-gradient(135deg, rgba(255, 90, 210, 0.8), rgba(90, 180, 255, 0.85));
+  background: linear-gradient(135deg, rgba(255, 90, 210, 0.85), rgba(90, 180, 255, 0.88));
   color: rgba(10, 12, 25, 0.96);
   font-weight: 600;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
-  padding: 0.85rem 1.8rem;
+  padding: 0.85rem 2.1rem;
   transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
   cursor: pointer;
+  pointer-events: auto;
 }
 
 .pachinko-button:hover:not(:disabled) {
@@ -274,11 +268,36 @@
   cursor: not-allowed;
 }
 
-.pachinko-controls__hint {
-  color: var(--pachinko-muted-color);
-  font-size: 0.95rem;
-  line-height: 1.5;
-  max-width: 28rem;
+.pachinko-button--drop {
+  font-size: clamp(0.85rem, 2vw, 1rem);
+  padding: 0.85rem clamp(1.75rem, 5vw, 2.6rem);
+  letter-spacing: 0.1em;
+  box-shadow: 0 18px 40px rgba(255, 128, 255, 0.45);
+  backdrop-filter: blur(6px);
+  pointer-events: auto;
+}
+
+.pachinko-button--drop:disabled {
+  transform: translateY(0) scale(0.96);
+  box-shadow: 0 10px 26px rgba(120, 140, 180, 0.28);
+  opacity: 0.65;
+}
+
+@media (max-width: 1024px) {
+  .pachinko-board__drop {
+    top: 4.5%;
+    width: min(82%, 26rem);
+  }
+}
+
+@media (max-width: 680px) {
+  .pachinko-board__drop {
+    width: 88%;
+  }
+
+  .pachinko-button--drop {
+    padding: 0.75rem 1.8rem;
+  }
 }
 
 .pachinko-bet {
@@ -379,35 +398,6 @@
 .pachinko-bet__balance {
   color: var(--pachinko-muted-color);
   font-size: 0.95rem;
-}
-
-.pachinko-stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-  gap: 0.8rem;
-}
-
-.pachinko-stat {
-  background: rgba(28, 32, 60, 0.7);
-  border-radius: 1rem;
-  padding: 0.85rem 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-}
-
-.pachinko-stat__label {
-  font-size: 0.8rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(200, 210, 245, 0.65);
-}
-
-.pachinko-stat__value {
-  font-size: 1.3rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.92);
 }
 
 .pachinko-history {

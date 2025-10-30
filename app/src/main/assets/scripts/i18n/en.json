@@ -1004,8 +1004,7 @@
         "controls": {
           "aria": "Pachinko controls",
           "title": "Controls",
-          "drop": "Drop orb",
-          "hint": "Scale your bet up or down, multiply it by 10 or divide it, then aim for the supernova core."
+          "drop": "Drop orb"
         },
         "bet": {
           "title": "Bet",
@@ -1021,12 +1020,6 @@
             "multiplyAria": "Multiply bet options by 10 (current multiplier: ×{multiplier})",
             "divideAria": "Divide bet options by 10 (current multiplier: ×{multiplier})"
           }
-        },
-        "stats": {
-          "drops": "Drops",
-          "wins": "Wins",
-          "best": "Best multiplier",
-          "streak": "Win streak"
         },
         "history": {
           "title": "Recent drops",

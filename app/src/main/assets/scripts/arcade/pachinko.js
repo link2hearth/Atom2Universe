@@ -159,6 +159,23 @@
     return Math.max(140, Math.min(600, Math.floor(numeric)));
   }
 
+  function clampValue(value, min, max) {
+    if (!Number.isFinite(value)) {
+      return min;
+    }
+    if (value < min) {
+      return min;
+    }
+    if (value > max) {
+      return max;
+    }
+    return value;
+  }
+
+  function randomOffset(scale) {
+    return (Math.random() - 0.5) * scale;
+  }
+
   onReady(() => {
     const section = document.getElementById('pachinko');
     if (!section) {
@@ -196,6 +213,28 @@
     const rowCount = clampRowCount(resolvedConfig && resolvedConfig.board ? resolvedConfig.board.rows : null);
     const dropStepMs = clampStepMs(resolvedConfig && resolvedConfig.board ? resolvedConfig.board.stepMs : null);
     const slotCount = DEFAULT_SLOT_LAYOUT.length;
+
+    const boardField = {
+      left: 0.08,
+      right: 0.92,
+      top: 0.06,
+      bottom: 0.86
+    };
+    boardField.width = boardField.right - boardField.left;
+    boardField.height = boardField.bottom - boardField.top;
+
+    const physicsPegs = [];
+    const slotTargets = slotLayoutMultipliers.map((_, index) => {
+      if (slotCount <= 1) {
+        return boardField.left + boardField.width / 2;
+      }
+      const ratio = index / (slotCount - 1);
+      return boardField.left + ratio * boardField.width;
+    });
+    const BALL_RADIUS = 0.028;
+    const GRAVITY_FORCE = 0.00078;
+    const MAX_SIMULATION_STEPS = 900;
+    const PATH_SAMPLE_INTERVAL = 2;
 
     const slotDefinitions = DEFAULT_SLOT_LAYOUT.map((slot, index) => ({
       id: slot.id,
@@ -548,23 +587,98 @@
       updateBetOptionValues();
     }
 
+    function buildPegField() {
+      const pegs = [];
+      if (slotCount <= 0) {
+        return pegs;
+      }
+      const usableRows = Math.max(3, rowCount);
+      const horizontalSpacing = boardField.width / Math.max(1, slotCount - 1);
+      const verticalSpan = boardField.height * 0.76;
+      const verticalSpacing = verticalSpan / (usableRows + 1);
+      const startY = boardField.top + verticalSpacing;
+      for (let row = 0; row < usableRows; row += 1) {
+        const rowOffset = (row % 2 === 0 ? 0 : horizontalSpacing / 2);
+        const baseY = startY + row * verticalSpacing;
+        for (let col = 0; col < slotCount; col += 1) {
+          const baseX = boardField.left + col * horizontalSpacing + rowOffset;
+          if (baseX < boardField.left || baseX > boardField.right) {
+            continue;
+          }
+          const jitterX = randomOffset(horizontalSpacing * 0.18);
+          const jitterY = randomOffset(verticalSpacing * 0.18);
+          const pegX = clampValue(baseX + jitterX, boardField.left + 0.025, boardField.right - 0.025);
+          const pegY = clampValue(baseY + jitterY, boardField.top + 0.08, boardField.bottom - 0.2);
+          pegs.push({
+            x: pegX,
+            y: pegY,
+            radius: 0.024,
+            bounce: 0.6,
+            spin: 0.02,
+            type: 'peg'
+          });
+        }
+      }
+
+      const bumperRadius = 0.058;
+      const bumperY = boardField.top + boardField.height * 0.44;
+      pegs.push(
+        {
+          x: boardField.left + boardField.width * 0.3,
+          y: bumperY,
+          radius: bumperRadius,
+          bounce: 0.85,
+          spin: 0.06,
+          type: 'bumper'
+        },
+        {
+          x: boardField.right - boardField.width * 0.3,
+          y: bumperY,
+          radius: bumperRadius,
+          bounce: 0.85,
+          spin: 0.06,
+          type: 'bumper'
+        },
+        {
+          x: boardField.left + boardField.width * 0.5,
+          y: boardField.top + boardField.height * 0.62,
+          radius: 0.066,
+          bounce: 0.88,
+          spin: 0.075,
+          type: 'bumper'
+        }
+      );
+
+      return pegs;
+    }
+
     function renderPegLayer() {
       if (!pegLayerElement) {
         return;
       }
       pegLayerElement.innerHTML = '';
-      for (let row = 0; row < rowCount; row += 1) {
-        const rowElement = document.createElement('div');
-        rowElement.className = 'pachinko-pegs__row';
-        if (row % 2 === 1) {
-          rowElement.classList.add('pachinko-pegs__row--offset');
-        }
-        for (let col = 0; col < slotCount; col += 1) {
-          const peg = document.createElement('span');
-          peg.className = 'pachinko-pegs__peg';
-          rowElement.appendChild(peg);
-        }
-        pegLayerElement.appendChild(rowElement);
+      physicsPegs.length = 0;
+      const layout = buildPegField();
+      for (let i = 0; i < layout.length; i += 1) {
+        const peg = layout[i];
+        const element = document.createElement('span');
+        element.className = peg.type === 'bumper' ? 'pachinko-peg pachinko-peg--bumper' : 'pachinko-peg';
+        const diameterPercent = clampValue(peg.radius * 200, 1.8, 18);
+        element.style.width = `${diameterPercent}%`;
+        element.style.height = `${diameterPercent}%`;
+        const leftPercent = clampValue((peg.x - peg.radius) * 100, 0, 100);
+        const topPercent = clampValue((peg.y - peg.radius) * 100, 0, 100);
+        element.style.left = `${leftPercent}%`;
+        element.style.top = `${topPercent}%`;
+        pegLayerElement.appendChild(element);
+        physicsPegs.push({
+          x: peg.x,
+          y: peg.y,
+          radius: peg.radius,
+          bounce: peg.bounce,
+          spin: peg.spin,
+          type: peg.type
+        });
       }
     }
 
@@ -580,10 +694,8 @@
         slotElement.dataset.multiplier = `${slotDefinition.multiplier}`;
         slotElement.dataset.slotId = slotDefinition.id;
         slotElement.classList.add(slotDefinition.className);
-        const multiplierElement = slotElement.querySelector('.pachinko-slot__multiplier');
-        if (multiplierElement) {
-          multiplierElement.textContent = formatMultiplier(slotDefinition.multiplier);
-        }
+        slotElement.setAttribute('data-i18n-aria-label', slotDefinition.labelKey);
+        slotElement.setAttribute('aria-label', translate(slotDefinition.labelKey, slotDefinition.fallback));
       }
     }
 
@@ -654,12 +766,12 @@
       ballElement.style.top = '0%';
       ballElement.style.left = '50%';
       ballElement.style.opacity = '0';
-      ballElement.style.transform = 'translate(-50%, -100%)';
+      ballElement.style.transform = 'translate(-50%, -110%)';
     }
 
-    function animateBall(path) {
+    function animateBall(points) {
       return new Promise(resolve => {
-        if (!ballElement || !Array.isArray(path) || !path.length) {
+        if (!ballElement || !Array.isArray(points) || !points.length) {
           resolve();
           return;
         }
@@ -667,23 +779,24 @@
         ballElement.style.opacity = '1';
         ballElement.style.transform = 'translate(-50%, -50%)';
         let stepIndex = 0;
-        const totalSteps = path.length;
+        const totalSteps = points.length;
+        const frameDelay = Math.max(14, Math.min(36, Math.floor(dropStepMs / 7)));
 
         function step() {
           if (!ballElement) {
             resolve();
             return;
           }
-          const { row, column } = path[stepIndex];
-          const verticalPercent = Math.min(100, (row / (rowCount + 0.6)) * 100);
-          const horizontalPercent = slotCount <= 1 ? 50 : (column / (slotCount - 1)) * 100;
+          const { x, y } = points[stepIndex];
+          const verticalPercent = clampValue(y * 100, -10, 100);
+          const horizontalPercent = clampValue(x * 100, 0, 100);
           ballElement.style.top = `${verticalPercent}%`;
           ballElement.style.left = `${horizontalPercent}%`;
           stepIndex += 1;
           if (stepIndex < totalSteps) {
-            scheduleTimeout(step, dropStepMs);
+            scheduleTimeout(step, frameDelay);
           } else {
-            scheduleTimeout(resolve, dropStepMs + 40);
+            scheduleTimeout(resolve, frameDelay + 80);
           }
         }
 
@@ -691,26 +804,113 @@
       });
     }
 
+    function createFallbackPath() {
+      const fallbackPoints = [];
+      const totalSteps = rowCount + 4;
+      const centerX = boardField.left + boardField.width / 2;
+      for (let step = 0; step <= totalSteps; step += 1) {
+        const progress = step / totalSteps;
+        const y = boardField.top + progress * (boardField.height + 0.1);
+        fallbackPoints.push({ x: centerX, y });
+      }
+      return {
+        points: fallbackPoints,
+        slotIndex: Math.floor(slotCount / 2)
+      };
+    }
+
     function generatePath() {
-      const path = [];
-      let column = Math.floor(slotCount / 2);
-      const lastIndex = slotCount - 1;
-      for (let row = 0; row <= rowCount; row += 1) {
-        path.push({ row, column });
-        if (row === rowCount) {
+      if (!physicsPegs.length) {
+        return createFallbackPath();
+      }
+
+      const points = [];
+      let x = clampValue(
+        boardField.left + boardField.width / 2 + randomOffset(0.05),
+        boardField.left + BALL_RADIUS,
+        boardField.right - BALL_RADIUS
+      );
+      let y = boardField.top - 0.12;
+      let vx = randomOffset(0.02);
+      let vy = 0.002;
+
+      for (let step = 0; step < MAX_SIMULATION_STEPS; step += 1) {
+        vy += GRAVITY_FORCE;
+        vx *= 0.996;
+        vy *= 0.998;
+
+        x += vx;
+        y += vy;
+
+        if (x < boardField.left + BALL_RADIUS) {
+          x = boardField.left + BALL_RADIUS;
+          vx = Math.abs(vx) * 0.62;
+        } else if (x > boardField.right - BALL_RADIUS) {
+          x = boardField.right - BALL_RADIUS;
+          vx = -Math.abs(vx) * 0.62;
+        }
+
+        if (y < boardField.top - 0.05) {
+          y = boardField.top - 0.05;
+          vy = Math.abs(vy) * 0.6;
+        }
+
+        for (let i = 0; i < physicsPegs.length; i += 1) {
+          const peg = physicsPegs[i];
+          const minimumDistance = peg.radius + BALL_RADIUS;
+          const dx = x - peg.x;
+          const dy = y - peg.y;
+          const distanceSq = dx * dx + dy * dy;
+          if (distanceSq >= minimumDistance * minimumDistance || distanceSq === 0) {
+            continue;
+          }
+          const distance = Math.sqrt(distanceSq) || minimumDistance;
+          const nx = dx / (distance || 1);
+          const ny = dy / (distance || 1);
+          const overlap = minimumDistance - distance + 0.0006;
+          x += nx * overlap;
+          y += ny * overlap;
+          const velocityDot = vx * nx + vy * ny;
+          if (velocityDot < 0) {
+            vx -= (1 + peg.bounce) * velocityDot * nx;
+            vy -= (1 + peg.bounce) * velocityDot * ny;
+          }
+          vx *= peg.bounce;
+          vy *= peg.bounce;
+          vx += randomOffset(peg.spin);
+          vy -= Math.random() * peg.spin * 0.2;
+          if (peg.type === 'bumper') {
+            vy -= 0.0025;
+          }
+        }
+
+        if (step % PATH_SAMPLE_INTERVAL === 0) {
+          points.push({ x, y });
+        }
+
+        if (y >= boardField.bottom) {
+          y = boardField.bottom;
+          points.push({ x, y });
           break;
         }
-        const options = [0];
-        if (column > 0) {
-          options.push(-1);
-        }
-        if (column < lastIndex) {
-          options.push(1);
-        }
-        const choice = options[Math.floor(Math.random() * options.length)];
-        column = Math.max(0, Math.min(lastIndex, column + choice));
       }
-      return path;
+
+      if (!points.length) {
+        return createFallbackPath();
+      }
+
+      const normalizedX = clampValue((x - boardField.left) / boardField.width, 0, 1);
+      const slotIndex = Math.max(0, Math.min(slotCount - 1, Math.round(normalizedX * (slotCount - 1))));
+      const slotCenterX = clampValue(
+        slotTargets[slotIndex] != null ? slotTargets[slotIndex] : boardField.left + boardField.width / 2,
+        boardField.left + BALL_RADIUS,
+        boardField.right - BALL_RADIUS
+      );
+      const settleY = Math.min(1, boardField.bottom + 0.08);
+      points.push({ x: slotCenterX, y: settleY });
+      points.push({ x: slotCenterX, y: Math.min(1, settleY + 0.05) });
+
+      return { points, slotIndex };
     }
 
     function updateStatsDisplay() {
@@ -848,11 +1048,14 @@
       }
       updateBalanceDisplay();
 
-      const path = generatePath();
-      animateBall(path).then(() => {
-        const lastStep = path[path.length - 1] || { column: 0 };
-        const index = Math.max(0, Math.min(slotDefinitions.length - 1, lastStep.column));
-        const slotDefinition = slotDefinitions[index];
+      const pathResult = generatePath();
+      const pathPoints = pathResult && Array.isArray(pathResult.points) ? pathResult.points : [];
+      const landingIndex = pathResult && Number.isInteger(pathResult.slotIndex)
+        ? pathResult.slotIndex
+        : Math.floor(slotCount / 2);
+      animateBall(pathPoints).then(() => {
+        const index = Math.max(0, Math.min(slotDefinitions.length - 1, landingIndex));
+        const slotDefinition = slotDefinitions[index] || slotDefinitions[Math.floor(slotDefinitions.length / 2)];
         finishDrop(index, slotDefinition, layeredBet);
       });
     }

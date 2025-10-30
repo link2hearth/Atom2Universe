@@ -2601,7 +2601,7 @@
     >
       <div class="pachinko">
         <header class="pachinko__header">
-          <h1 data-i18n="index.sections.pachinko.title">Prisme Pachinko</h1>
+          <h1 class="visually-hidden" data-i18n="index.sections.pachinko.title">Prisme Pachinko</h1>
           <p
             class="pachinko-status"
             id="pachinkoStatus"
@@ -2619,38 +2619,69 @@
           >
             <h2 class="visually-hidden" data-i18n="index.sections.pachinko.board.title">Plateau Pachinko</h2>
             <div class="pachinko-board__inner">
+              <div class="pachinko-board__drop">
+                <button
+                  type="button"
+                  class="pachinko-button pachinko-button--drop"
+                  id="pachinkoDropButton"
+                  data-i18n="index.sections.pachinko.controls.drop"
+                >
+                  Lâcher une orbe
+                </button>
+              </div>
               <div class="pachinko-board__nebula" aria-hidden="true"></div>
               <div class="pachinko-board__peg-layer" id="pachinkoPegLayer" aria-hidden="true"></div>
               <div class="pachinko-board__ball" id="pachinkoBall" aria-hidden="true"></div>
               <ul class="pachinko-board__slots" id="pachinkoSlots" role="list">
-                <li class="pachinko-slot pachinko-slot--void" data-slot-index="0" data-multiplier="0">
-                  <span class="pachinko-slot__name" data-i18n="index.sections.pachinko.slots.void">Faille du néant</span>
-                  <span class="pachinko-slot__multiplier">×0</span>
-                </li>
-                <li class="pachinko-slot pachinko-slot--stardust" data-slot-index="1" data-multiplier="0.5">
-                  <span class="pachinko-slot__name" data-i18n="index.sections.pachinko.slots.stardust">Trainée d’étoiles</span>
-                  <span class="pachinko-slot__multiplier">×0,5</span>
-                </li>
-                <li class="pachinko-slot pachinko-slot--aurora" data-slot-index="2" data-multiplier="1.5">
-                  <span class="pachinko-slot__name" data-i18n="index.sections.pachinko.slots.aurora">Porte aurore</span>
-                  <span class="pachinko-slot__multiplier">×1,5</span>
-                </li>
-                <li class="pachinko-slot pachinko-slot--core" data-slot-index="3" data-multiplier="5">
-                  <span class="pachinko-slot__name" data-i18n="index.sections.pachinko.slots.core">Cœur supernova</span>
-                  <span class="pachinko-slot__multiplier">×5</span>
-                </li>
-                <li class="pachinko-slot pachinko-slot--aurora" data-slot-index="4" data-multiplier="1.5">
-                  <span class="pachinko-slot__name" data-i18n="index.sections.pachinko.slots.aurora">Porte aurore</span>
-                  <span class="pachinko-slot__multiplier">×1,5</span>
-                </li>
-                <li class="pachinko-slot pachinko-slot--stardust" data-slot-index="5" data-multiplier="0.5">
-                  <span class="pachinko-slot__name" data-i18n="index.sections.pachinko.slots.stardust">Trainée d’étoiles</span>
-                  <span class="pachinko-slot__multiplier">×0,5</span>
-                </li>
-                <li class="pachinko-slot pachinko-slot--void" data-slot-index="6" data-multiplier="0">
-                  <span class="pachinko-slot__name" data-i18n="index.sections.pachinko.slots.void">Faille du néant</span>
-                  <span class="pachinko-slot__multiplier">×0</span>
-                </li>
+                <li
+                  class="pachinko-slot pachinko-slot--void"
+                  data-slot-index="0"
+                  data-multiplier="0"
+                  aria-label="Faille du néant"
+                  data-i18n-aria-label="index.sections.pachinko.slots.void"
+                ></li>
+                <li
+                  class="pachinko-slot pachinko-slot--stardust"
+                  data-slot-index="1"
+                  data-multiplier="0.5"
+                  aria-label="Trainée d’étoiles"
+                  data-i18n-aria-label="index.sections.pachinko.slots.stardust"
+                ></li>
+                <li
+                  class="pachinko-slot pachinko-slot--aurora"
+                  data-slot-index="2"
+                  data-multiplier="1.5"
+                  aria-label="Porte aurore"
+                  data-i18n-aria-label="index.sections.pachinko.slots.aurora"
+                ></li>
+                <li
+                  class="pachinko-slot pachinko-slot--core"
+                  data-slot-index="3"
+                  data-multiplier="5"
+                  aria-label="Cœur supernova"
+                  data-i18n-aria-label="index.sections.pachinko.slots.core"
+                ></li>
+                <li
+                  class="pachinko-slot pachinko-slot--aurora"
+                  data-slot-index="4"
+                  data-multiplier="1.5"
+                  aria-label="Porte aurore"
+                  data-i18n-aria-label="index.sections.pachinko.slots.aurora"
+                ></li>
+                <li
+                  class="pachinko-slot pachinko-slot--stardust"
+                  data-slot-index="5"
+                  data-multiplier="0.5"
+                  aria-label="Trainée d’étoiles"
+                  data-i18n-aria-label="index.sections.pachinko.slots.stardust"
+                ></li>
+                <li
+                  class="pachinko-slot pachinko-slot--void"
+                  data-slot-index="6"
+                  data-multiplier="0"
+                  aria-label="Faille du néant"
+                  data-i18n-aria-label="index.sections.pachinko.slots.void"
+                ></li>
               </ul>
             </div>
           </section>
@@ -2660,19 +2691,6 @@
             data-i18n="aria-label:index.sections.pachinko.controls.aria"
           >
             <h2 class="visually-hidden" data-i18n="index.sections.pachinko.controls.title">Commandes</h2>
-            <div class="pachinko-controls__actions">
-              <button
-                type="button"
-                class="pachinko-button"
-                id="pachinkoDropButton"
-                data-i18n="index.sections.pachinko.controls.drop"
-              >
-                Lâcher une orbe
-              </button>
-              <p class="pachinko-controls__hint" data-i18n="index.sections.pachinko.controls.hint">
-                Ajustez votre mise, multipliez-la par 10 ou divisez-la pour viser le cœur supernova.
-              </p>
-            </div>
             <div
               class="pachinko-bet"
               id="pachinkoBet"
@@ -2714,24 +2732,6 @@
                 <span data-i18n="index.sections.pachinko.bet.balance">Solde d’atomes&nbsp;:</span>
                 <strong id="pachinkoAtomsBalance">0</strong>
               </p>
-            </div>
-            <div class="pachinko-stats" aria-live="polite">
-              <div class="pachinko-stat">
-                <span class="pachinko-stat__label" data-i18n="index.sections.pachinko.stats.drops">Lancers</span>
-                <span class="pachinko-stat__value" id="pachinkoTotalDrops">0</span>
-              </div>
-              <div class="pachinko-stat">
-                <span class="pachinko-stat__label" data-i18n="index.sections.pachinko.stats.wins">Victoires</span>
-                <span class="pachinko-stat__value" id="pachinkoTotalWins">0</span>
-              </div>
-              <div class="pachinko-stat">
-                <span class="pachinko-stat__label" data-i18n="index.sections.pachinko.stats.best">Meilleur multiplicateur</span>
-                <span class="pachinko-stat__value" id="pachinkoBestMultiplier">×0</span>
-              </div>
-              <div class="pachinko-stat">
-                <span class="pachinko-stat__label" data-i18n="index.sections.pachinko.stats.streak">Série de réussites</span>
-                <span class="pachinko-stat__value" id="pachinkoStreakValue">0</span>
-              </div>
             </div>
             <section class="pachinko-history">
               <h3 class="pachinko-history__title" data-i18n="index.sections.pachinko.history.title">Derniers lancers</h3>
