@@ -15,11 +15,11 @@
   const DEFAULT_LEVELS = Object.freeze([]);
 
   const DEFAULT_CONFIG = Object.freeze({
-    shuffleMoves: Object.freeze({ min: 40, max: 140 }),
+    shuffleMoves: Object.freeze({ min: 56, max: 180 }),
     generator: Object.freeze({
       width: Object.freeze({ min: 5, max: 9 }),
       height: Object.freeze({ min: 5, max: 9 }),
-      boxes: Object.freeze({ min: 1, max: 3 }),
+      boxes: Object.freeze({ min: 2, max: 4 }),
       wallDensity: Object.freeze({ min: 0.12, max: 0.32 }),
       attempts: 48
     }),
@@ -1406,17 +1406,17 @@
       return false;
     }
     const flooredHint = Math.floor(difficultyHint);
-    const cappedHint = Number.isFinite(flooredHint) ? clampInt(flooredHint, 0, 120, flooredHint) : 0;
-    const baseline = Math.max(4, cappedHint, totalBoxes * 3);
-    const minPushTarget = Math.max(4, Math.floor(baseline * 0.3));
-    const maxPushTarget = Math.max(minPushTarget + 4, Math.floor(baseline * 1.8));
+    const cappedHint = Number.isFinite(flooredHint) ? clampInt(flooredHint, 0, 160, flooredHint) : 0;
+    const baseline = Math.max(6, cappedHint, totalBoxes * 4);
+    const minPushTarget = Math.max(totalBoxes * 4, Math.floor(baseline * 0.4), 6);
+    const maxPushTarget = Math.max(minPushTarget + Math.max(6, totalBoxes * 2), Math.floor(baseline * 1.9));
     if (metrics.minPushes < minPushTarget) {
       return false;
     }
     if (metrics.minPushes > maxPushTarget) {
       return false;
     }
-    if (metrics.pathLength < metrics.minPushes * 2) {
+    if (metrics.pathLength < metrics.minPushes * 2.2) {
       return false;
     }
     return true;
@@ -2726,6 +2726,40 @@
     return true;
   }
 
+  function shuffleWithRetries(maxAttempts) {
+    const attempts = clampInt(maxAttempts, 1, 20, 1);
+    for (let index = 0; index < attempts; index += 1) {
+      const shuffled = shuffleFromSolvedState();
+      if (!shuffled) {
+        continue;
+      }
+      if (!checkSolved()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function finalizePreparedPuzzle(nextLevel) {
+    const levelValue = clampInt(nextLevel, 1, 9999, 1);
+    state.level = levelValue;
+    buildBoardCells();
+    state.initialSnapshot = takeSnapshot();
+    state.moveCount = 0;
+    state.pushCount = 0;
+    state.solved = false;
+    state.ready = true;
+    setStatus(
+      'scripts.arcade.sokoban.status.ready',
+      'Niveau prêt.',
+      null,
+      { rememberBase: true }
+    );
+    renderBoard();
+    updateHud();
+    scheduleAutosave();
+  }
+
   function resetToInitialState() {
     if (!state.initialSnapshot) {
       return;
@@ -2803,8 +2837,8 @@
         }
       }
       if (!prepared) {
-        const shuffled = shuffleFromSolvedState();
-        if (!shuffled || checkSolved()) {
+        prepared = shuffleWithRetries(randomizeLevel ? 6 : 4);
+        if (!prepared) {
           continue;
         }
       }
@@ -2812,24 +2846,7 @@
       const nextLevel = randomizeLevel
         ? clampInt(baseLevel + 1, 1, 9999, baseLevel + 1)
         : baseLevel;
-      state.level = nextLevel;
-
-      buildBoardCells();
-      state.initialSnapshot = takeSnapshot();
-      state.moveCount = 0;
-      state.pushCount = 0;
-      state.solved = false;
-      state.ready = true;
-
-      setStatus(
-        'scripts.arcade.sokoban.status.ready',
-        'Niveau prêt.',
-        null,
-        { rememberBase: true }
-      );
-      renderBoard();
-      updateHud();
-      scheduleAutosave();
+      finalizePreparedPuzzle(nextLevel);
       return true;
     }
 
@@ -2842,6 +2859,33 @@
       { rememberBase: true }
     );
     return false;
+  }
+
+  function reuseCurrentProceduralLayout(options = {}) {
+    if (!state.currentLevelLayout || !state.config?.generator) {
+      return false;
+    }
+    const { randomizeLevel = false } = options;
+    const applied = applyDynamicLayout(state.currentLevelLayout);
+    if (!applied) {
+      state.currentLevelLayout = null;
+      return false;
+    }
+    state.currentLevelLayout = {
+      map: applied.map.slice(),
+      targets: applied.targets.map(entry => [entry[0], entry[1]]),
+      playerStart: { row: applied.playerStart.row, col: applied.playerStart.col }
+    };
+    const shuffleAttempts = randomizeLevel ? 6 : 4;
+    if (!shuffleWithRetries(shuffleAttempts)) {
+      return false;
+    }
+    const baseLevel = clampInt(state.level, 1, 9999, 1);
+    const nextLevel = randomizeLevel
+      ? clampInt(baseLevel + 1, 1, 9999, baseLevel + 1)
+      : baseLevel;
+    finalizePreparedPuzzle(nextLevel);
+    return true;
   }
 
   function prepareNewPuzzle(options = {}) {
@@ -2885,6 +2929,9 @@
     }
 
     if (state.config?.generator) {
+      if (reuseCurrentProceduralLayout({ randomizeLevel })) {
+        return;
+      }
       prepareProceduralLevel({ randomizeLevel });
       return;
     }
