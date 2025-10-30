@@ -984,19 +984,22 @@
     };
   }
 
-  function fitsDifficulty(metrics, requestedMoves) {
+  function fitsDifficulty(metrics, difficultyHint, totalBoxes) {
     if (!metrics) {
       return false;
     }
-    const minPushTarget = Math.max(4, Math.floor(requestedMoves * 0.35));
-    const maxPushTarget = Math.max(minPushTarget + 2, Math.floor(requestedMoves * 1.5));
+    const flooredHint = Math.floor(difficultyHint);
+    const cappedHint = Number.isFinite(flooredHint) ? clampInt(flooredHint, 0, 120, flooredHint) : 0;
+    const baseline = Math.max(4, cappedHint, totalBoxes * 3);
+    const minPushTarget = Math.max(4, Math.floor(baseline * 0.3));
+    const maxPushTarget = Math.max(minPushTarget + 4, Math.floor(baseline * 1.8));
     if (metrics.minPushes < minPushTarget) {
       return false;
     }
     if (metrics.minPushes > maxPushTarget) {
       return false;
     }
-    if (metrics.pathLength < metrics.minPushes + 4) {
+    if (metrics.pathLength < metrics.minPushes * 2) {
       return false;
     }
     return true;
@@ -2197,7 +2200,8 @@
     if (!metrics) {
       return false;
     }
-    if (!fitsDifficulty(metrics, requestedSteps)) {
+    const difficultyHint = Math.max(pulls, Math.floor(requestedSteps * 0.25));
+    if (!fitsDifficulty(metrics, difficultyHint, totalBoxes)) {
       return false;
     }
 
