@@ -2457,6 +2457,9 @@
         },
         "minesweeper": {
           "rewardToast": "Minesweeper reward: {tickets} secured!"
+        },
+        "bigger": {
+          "rewardToast": "512 marble forged! {tickets} earned."
         }
       }
     },

@@ -2457,6 +2457,9 @@
         },
         "minesweeper": {
           "rewardToast": "Récompense Démineur : {tickets} remportés !"
+        },
+        "bigger": {
+          "rewardToast": "Bille 512 forgée ! {tickets} remportés."
         }
       }
     },
