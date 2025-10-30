@@ -9,6 +9,93 @@
   const AUTOSAVE_DELAY_MS = 200;
   const BLOCKED_STATUS_RESET_MS = 1600;
 
+  const DEFAULT_LEVELS = Object.freeze([
+    Object.freeze({
+      name: 'Training Dock',
+      layout: Object.freeze([
+        '#####',
+        '#@  #',
+        '# $ #',
+        '# . #',
+        '#####'
+      ])
+    }),
+    Object.freeze({
+      name: 'Double Shift',
+      layout: Object.freeze([
+        '######',
+        '# .  #',
+        '# $$ #',
+        '#  .@#',
+        '######'
+      ])
+    }),
+    Object.freeze({
+      name: 'Crossing Lanes',
+      layout: Object.freeze([
+        '#######',
+        '# . . #',
+        '# $$@ #',
+        '#     #',
+        '#######'
+      ])
+    }),
+    Object.freeze({
+      name: 'Storage Split',
+      layout: Object.freeze([
+        '#######',
+        '#  .  #',
+        '# $$# #',
+        '#  .@ #',
+        '#######'
+      ])
+    }),
+    Object.freeze({
+      name: 'Warehouse Loop',
+      layout: Object.freeze([
+        '########',
+        '#  .  @#',
+        '# $$ $ #',
+        '#  . . #',
+        '########'
+      ])
+    }),
+    Object.freeze({
+      name: 'Orbital Depot',
+      layout: Object.freeze([
+        '########',
+        '# @    #',
+        '# $$#  #',
+        '#  .$. #',
+        '#   .  #',
+        '########'
+      ])
+    }),
+    Object.freeze({
+      name: 'Tight Corners',
+      layout: Object.freeze([
+        '########',
+        '#  .  ##',
+        '# $$@  #',
+        '#  # $ #',
+        '#  . . #',
+        '########'
+      ])
+    }),
+    Object.freeze({
+      name: 'Central Support',
+      layout: Object.freeze([
+        '########',
+        '#  . . #',
+        '# $$#$ #',
+        '# @  $ #',
+        '#  ##  #',
+        '#  . . #',
+        '########'
+      ])
+    })
+  ]);
+
   const DEFAULT_CONFIG = Object.freeze({
     shuffleMoves: Object.freeze({ min: 48, max: 160 }),
     map: Object.freeze([
@@ -28,7 +115,8 @@
       [4, 5],
       [6, 4]
     ]),
-    playerStart: Object.freeze([4, 4])
+    playerStart: Object.freeze([4, 4]),
+    levels: DEFAULT_LEVELS
   });
 
   const KEY_DIRECTIONS = Object.freeze({
@@ -59,12 +147,14 @@
 
   const state = {
     config: DEFAULT_CONFIG,
-    configSignature: computeMapSignature(DEFAULT_CONFIG.map),
+    configSignature: computeConfigSignature(DEFAULT_CONFIG),
     width: DEFAULT_CONFIG.map[0].length,
     height: DEFAULT_CONFIG.map.length,
     tiles: [],
     targetKeys: new Set(),
     boxes: new Set(),
+    levelDefinitions: [],
+    levelIndex: 0,
     player: { row: 4, col: 4 },
     playerStart: { row: 4, col: 4 },
     moveCount: 0,
@@ -88,6 +178,49 @@
       return 'default';
     }
     return map.map(row => String(row)).join('|');
+  }
+
+  function computeConfigSignature(config) {
+    if (!config || typeof config !== 'object') {
+      return 'default';
+    }
+    if (Array.isArray(config.levels) && config.levels.length > 0) {
+      const parts = config.levels.map(level => {
+        if (!level || typeof level !== 'object') {
+          return '';
+        }
+        const mapSource = Array.isArray(level.map)
+          ? level.map
+          : Array.isArray(level.layout)
+            ? level.layout
+            : [];
+        const mapSignature = computeMapSignature(mapSource);
+        const targetSignature = Array.isArray(level.targets)
+          ? level.targets
+              .map(entry => (Array.isArray(entry) && entry.length >= 2 ? `${entry[0]},${entry[1]}` : ''))
+              .filter(Boolean)
+              .sort()
+              .join(';')
+          : '';
+        const boxSignature = Array.isArray(level.boxes)
+          ? level.boxes
+              .map(entry => (Array.isArray(entry) && entry.length >= 2 ? `${entry[0]},${entry[1]}` : ''))
+              .filter(Boolean)
+              .sort()
+              .join(';')
+          : '';
+        const playerSignature = Array.isArray(level.playerStart)
+          ? `${clampInt(level.playerStart[0], -9999, 9999, 0)},${clampInt(level.playerStart[1], -9999, 9999, 0)}`
+          : '0,0';
+        const nameSignature = typeof level.name === 'string' ? level.name : '';
+        return `${mapSignature}#${targetSignature}#${boxSignature}#${playerSignature}#${nameSignature}`;
+      });
+      return `levels:${parts.join('||')}`;
+    }
+    if (Array.isArray(config.map)) {
+      return computeMapSignature(config.map);
+    }
+    return 'default';
   }
 
   function translateText(key, fallback, params) {
@@ -166,9 +299,163 @@
     return isInside(row, col) && !isWall(row, col);
   }
 
+  function sanitizeLevels(rawLevels) {
+    if (!Array.isArray(rawLevels)) {
+      return [];
+    }
+    const sanitized = [];
+    rawLevels.forEach(entry => {
+      const layoutSource = Array.isArray(entry?.layout)
+        ? entry.layout
+        : Array.isArray(entry?.map)
+          ? entry.map
+          : null;
+      if (!layoutSource) {
+        return;
+      }
+      const rows = layoutSource
+        .map(row => (typeof row === 'string' ? row.replace(/\r/g, '') : ''))
+        .filter(row => row.length > 0);
+      if (!rows.length) {
+        return;
+      }
+      const width = rows.reduce((acc, row) => Math.max(acc, row.length), 0);
+      if (width < 3 || rows.length < 3) {
+        return;
+      }
+      const normalizedRows = new Array(rows.length);
+      const targetSet = new Set();
+      const targets = [];
+      const boxSet = new Set();
+      const boxes = [];
+      const walkableCandidates = [];
+      let player = null;
+
+      for (let row = 0; row < rows.length; row += 1) {
+        const sourceRow = rows[row];
+        let normalizedRow = '';
+        for (let col = 0; col < width; col += 1) {
+          const char = sourceRow[col] ?? '#';
+          let walkable = false;
+          let markTarget = false;
+          let markBox = false;
+          let markPlayer = false;
+          switch (char) {
+            case '#':
+              break;
+            case '.':
+            case 'o':
+            case 'O':
+            case 'T':
+            case 't':
+              walkable = true;
+              markTarget = true;
+              break;
+            case '+':
+              walkable = true;
+              markTarget = true;
+              markPlayer = true;
+              break;
+            case '*':
+            case 'X':
+            case 'x':
+              walkable = true;
+              markTarget = true;
+              markBox = true;
+              break;
+            case '$':
+            case 'B':
+            case 'b':
+              walkable = true;
+              markBox = true;
+              break;
+            case '@':
+            case 'P':
+            case 'p':
+              walkable = true;
+              markPlayer = true;
+              break;
+            case ' ':
+            case '-':
+            case '_':
+              walkable = true;
+              break;
+            default:
+              if (typeof char === 'string' && char.trim() === '') {
+                walkable = true;
+              } else {
+                walkable = true;
+              }
+          }
+          if (walkable) {
+            normalizedRow += '.';
+            walkableCandidates.push([row, col]);
+            if (markTarget) {
+              const targetKey = keyFor(row, col);
+              if (!targetSet.has(targetKey)) {
+                targetSet.add(targetKey);
+                targets.push([row, col]);
+              }
+            }
+            if (markBox) {
+              const boxKey = keyFor(row, col);
+              if (!boxSet.has(boxKey)) {
+                boxSet.add(boxKey);
+                boxes.push([row, col]);
+              }
+            }
+            if (markPlayer && !player) {
+              player = { row, col };
+            }
+          } else {
+            normalizedRow += '#';
+          }
+        }
+        normalizedRows[row] = normalizedRow;
+      }
+
+      if (!player) {
+        for (const [row, col] of walkableCandidates) {
+          const key = keyFor(row, col);
+          if (!boxSet.has(key)) {
+            player = { row, col };
+            break;
+          }
+        }
+      }
+
+      if (!player || !targets.length || !boxes.length || boxes.length !== targets.length) {
+        return;
+      }
+
+      sanitized.push({
+        name: typeof entry?.name === 'string' && entry.name.trim() ? entry.name.trim() : null,
+        map: normalizedRows,
+        targets,
+        boxes,
+        playerStart: [player.row, player.col]
+      });
+    });
+    return sanitized;
+  }
+
   function sanitizeConfig(rawConfig) {
+    const fallbackLevels = sanitizeLevels(DEFAULT_CONFIG.levels);
     if (!rawConfig || typeof rawConfig !== 'object') {
-      return DEFAULT_CONFIG;
+      return {
+        shuffleMoves: { ...DEFAULT_CONFIG.shuffleMoves },
+        map: Array.from(DEFAULT_CONFIG.map),
+        targets: Array.from(DEFAULT_CONFIG.targets),
+        playerStart: Array.from(DEFAULT_CONFIG.playerStart),
+        levels: fallbackLevels
+      };
+    }
+
+    const hasLevelsProperty = Object.prototype.hasOwnProperty.call(rawConfig, 'levels');
+    const rawLevels = hasLevelsProperty ? rawConfig.levels : DEFAULT_CONFIG.levels;
+    let normalizedLevels = sanitizeLevels(rawLevels);
+    if (!normalizedLevels.length) {
+      normalizedLevels = fallbackLevels;
     }
 
     const mapSource = Array.isArray(rawConfig.map) ? rawConfig.map : null;
@@ -226,14 +513,109 @@
       shuffleMoves: { min: shuffleMin, max: shuffleMax },
       map: normalizedMap,
       targets,
-      playerStart: playerCandidate
+      playerStart: playerCandidate,
+      levels: normalizedLevels
     };
+  }
+
+  function loadLevel(levelIndex) {
+    if (!Array.isArray(state.levelDefinitions) || !state.levelDefinitions.length) {
+      return false;
+    }
+    const maxIndex = state.levelDefinitions.length - 1;
+    const clampedIndex = clampInt(levelIndex, 0, maxIndex, 0);
+    const level = state.levelDefinitions[clampedIndex];
+    if (!level) {
+      return false;
+    }
+
+    state.levelIndex = clampedIndex;
+    state.level = clampInt(clampedIndex + 1, 1, 9999, clampedIndex + 1);
+    state.height = level.map.length;
+    state.width = level.map[0]?.length || 0;
+    state.tiles = new Array(state.height);
+    state.targetKeys = new Set();
+
+    for (let row = 0; row < state.height; row += 1) {
+      const rowTiles = new Array(state.width);
+      const rowString = level.map[row] || '';
+      for (let col = 0; col < state.width; col += 1) {
+        const wall = rowString[col] === '#';
+        rowTiles[col] = { wall, target: false };
+      }
+      state.tiles[row] = rowTiles;
+    }
+
+    level.targets.forEach(target => {
+      if (!Array.isArray(target) || target.length < 2) {
+        return;
+      }
+      const row = clampInt(target[0], 0, state.height - 1, 0);
+      const col = clampInt(target[1], 0, state.width - 1, 0);
+      if (!isWall(row, col)) {
+        state.tiles[row][col].target = true;
+        state.targetKeys.add(keyFor(row, col));
+      }
+    });
+
+    const startRow = clampInt(level.playerStart?.[0], 0, state.height - 1, 0);
+    const startCol = clampInt(level.playerStart?.[1], 0, state.width - 1, 0);
+    if (isWalkable(startRow, startCol)) {
+      state.playerStart = { row: startRow, col: startCol };
+    } else if (state.targetKeys.size > 0) {
+      const [firstTarget] = Array.from(state.targetKeys);
+      const [row, col] = firstTarget.split(',').map(Number);
+      state.playerStart = { row, col };
+    } else {
+      let fallback = null;
+      for (let row = 0; row < state.height; row += 1) {
+        for (let col = 0; col < state.width; col += 1) {
+          if (isWalkable(row, col)) {
+            fallback = { row, col };
+            break;
+          }
+        }
+        if (fallback) {
+          break;
+        }
+      }
+      state.playerStart = fallback || { row: 0, col: 0 };
+    }
+
+    state.player = { row: state.playerStart.row, col: state.playerStart.col };
+    state.boxes = new Set();
+    level.boxes.forEach(box => {
+      if (!Array.isArray(box) || box.length < 2) {
+        return;
+      }
+      const row = clampInt(box[0], 0, state.height - 1, 0);
+      const col = clampInt(box[1], 0, state.width - 1, 0);
+      if (isWalkable(row, col)) {
+        state.boxes.add(keyFor(row, col));
+      }
+    });
+
+    state.moveCount = 0;
+    state.pushCount = 0;
+    state.ready = false;
+    state.solved = false;
+    state.initialSnapshot = null;
+    return true;
   }
 
   function applyConfig(config) {
     const normalized = sanitizeConfig(config);
     state.config = normalized;
-    state.configSignature = computeMapSignature(normalized.map);
+    state.configSignature = computeConfigSignature(normalized);
+    state.levelDefinitions = Array.isArray(normalized.levels) ? normalized.levels : [];
+
+    if (state.levelDefinitions.length > 0) {
+      loadLevel(0);
+      return;
+    }
+
+    state.levelDefinitions = [];
+    state.levelIndex = 0;
     state.height = normalized.map.length;
     state.width = normalized.map[0]?.length || 0;
     state.tiles = new Array(state.height);
@@ -281,6 +663,14 @@
         }
       }
     }
+
+    state.player = { row: state.playerStart.row, col: state.playerStart.col };
+    state.boxes = new Set();
+    state.moveCount = 0;
+    state.pushCount = 0;
+    state.ready = false;
+    state.solved = false;
+    state.initialSnapshot = null;
   }
 
   function initElements() {
@@ -508,6 +898,18 @@
     if (payload.configSignature !== state.configSignature) {
       return false;
     }
+    let fallbackSnapshot = null;
+    if (state.levelDefinitions.length > 0) {
+      const totalLevels = state.levelDefinitions.length;
+      const targetIndex = clampInt(payload.level - 1, 0, totalLevels - 1, 0);
+      const loaded = loadLevel(targetIndex);
+      if (!loaded) {
+        return false;
+      }
+      buildBoardCells();
+      fallbackSnapshot = takeSnapshot();
+    }
+
     const applied = applySnapshot({
       player: payload.player,
       boxes: payload.boxes
@@ -543,10 +945,21 @@
       const validInitial = applySnapshot(payload.initial);
       if (validInitial) {
         state.initialSnapshot = takeSnapshot();
-        applySnapshot(payload); // reapply current state after validation
+        applySnapshot({
+          player: payload.player,
+          boxes: payload.boxes
+        });
+      } else if (fallbackSnapshot) {
+        state.initialSnapshot = fallbackSnapshot;
+        applySnapshot({
+          player: payload.player,
+          boxes: payload.boxes
+        });
       } else {
         state.initialSnapshot = takeSnapshot();
       }
+    } else if (fallbackSnapshot) {
+      state.initialSnapshot = fallbackSnapshot;
     } else {
       state.initialSnapshot = takeSnapshot();
     }
@@ -843,6 +1256,37 @@
       // avoid interrupting initialization
       return;
     }
+    if (state.levelDefinitions.length > 0) {
+      const totalLevels = state.levelDefinitions.length;
+      if (totalLevels <= 0) {
+        return;
+      }
+      let nextIndex = state.levelIndex;
+      if (incrementLevel) {
+        nextIndex = (state.levelIndex + 1) % totalLevels;
+      }
+      const loaded = loadLevel(nextIndex);
+      if (!loaded) {
+        return;
+      }
+      buildBoardCells();
+      state.initialSnapshot = takeSnapshot();
+      state.moveCount = 0;
+      state.pushCount = 0;
+      state.solved = false;
+      state.ready = true;
+      setStatus(
+        'scripts.arcade.sokoban.status.ready',
+        'Poussez les caisses sur les cibles lumineuses.',
+        null,
+        { rememberBase: true }
+      );
+      renderBoard();
+      updateHud();
+      scheduleAutosave();
+      return;
+    }
+
     if (incrementLevel) {
       state.level = clampInt(state.level + 1, 1, 9999, 1);
     }

@@ -710,10 +710,10 @@
         },
         "actions": {
           "restart": "Restart level",
-          "new": "New layout"
+          "new": "Next level"
         },
         "messages": {
-          "intro": "Push each crate onto a target pad to clear the level."
+          "intro": "Clear each level by pushing every crate onto a target pad."
         },
         "controls": "Use the arrow keys or swipe to move the handler.",
         "board": "Sokoban grid",
