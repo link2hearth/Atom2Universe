@@ -631,6 +631,16 @@
           "reset": "New route"
         },
         "board": "The Line puzzle grid",
+        "endpointLabels": {
+          "start": {
+            "symbol": "S",
+            "aria": "Start tile"
+          },
+          "finish": {
+            "symbol": "F",
+            "aria": "Finish tile"
+          }
+        },
         "messages": {
           "ready": "Tap a coloured starting tile to begin your route.",
           "single": "Draw a route that covers the entire grid without reusing a tile.",

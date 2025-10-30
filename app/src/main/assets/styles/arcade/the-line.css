@@ -18,6 +18,8 @@
   --the-line-cell-radius: 0.42rem;
   --the-line-cell-shadow: 0 12px 24px rgba(0, 0, 0, 0.45);
   --the-line-endpoint-ring: rgba(255, 255, 255, 0.75);
+  --the-line-endpoint-label-color: rgba(10, 16, 32, 0.94);
+  --the-line-endpoint-label-shadow: 0 1px 3px rgba(255, 255, 255, 0.75), 0 3px 12px rgba(6, 10, 24, 0.4);
   padding: clamp(1rem, 4vw, 2.5rem) clamp(0.5rem, 3vw, 2.5rem);
 }
 
@@ -198,9 +200,26 @@
   position: absolute;
   inset: 18%;
   border-radius: calc(var(--the-line-cell-radius) * 0.75);
+  z-index: 1;
   background: rgba(255, 255, 255, 0.04);
   opacity: 0;
   transition: opacity 0.2s ease;
+}
+
+.the-line__cell[data-line-endpoint-label]::before {
+  content: attr(data-line-endpoint-label);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: clamp(0.82rem, 2.4vw, 1.35rem);
+  color: var(--the-line-endpoint-label-color);
+  text-shadow: var(--the-line-endpoint-label-shadow);
+  pointer-events: none;
+  z-index: 2;
+  letter-spacing: 0.02em;
 }
 
 .the-line__cell--filled {
@@ -258,6 +277,8 @@ body.theme-light .page--the-line {
   --the-line-toggle-active-background: linear-gradient(135deg, rgba(128, 178, 248, 0.4), rgba(158, 118, 244, 0.32));
   --the-line-toggle-active-border: rgba(108, 128, 214, 0.82);
   --the-line-board-background: radial-gradient(circle at 30% 25%, rgba(242, 246, 255, 0.95), rgba(206, 216, 250, 0.92));
+  --the-line-endpoint-label-color: rgba(18, 24, 48, 0.9);
+  --the-line-endpoint-label-shadow: 0 1px 3px rgba(255, 255, 255, 0.85), 0 4px 12px rgba(48, 60, 120, 0.25);
   --the-line-board-border: rgba(108, 128, 214, 0.38);
   --the-line-board-shadow: 0 24px 48px rgba(32, 42, 96, 0.2);
   --the-line-cell-background: rgba(224, 232, 252, 0.9);
