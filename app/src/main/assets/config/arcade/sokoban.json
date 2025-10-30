@@ -6,21 +6,21 @@
   "generator": {
     "width": {
       "min": 6,
-      "max": 12
+      "max": 9
     },
     "height": {
       "min": 6,
-      "max": 12
+      "max": 9
     },
     "boxes": {
       "min": 1,
       "max": 4
     },
     "wallDensity": {
-      "min": 0.05,
-      "max": 0.2
+      "min": 0.12,
+      "max": 0.3
     },
-    "attempts": 32
+    "attempts": 48
   },
   "levels": []
 }

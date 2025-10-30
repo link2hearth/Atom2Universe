@@ -17,11 +17,11 @@
   const DEFAULT_CONFIG = Object.freeze({
     shuffleMoves: Object.freeze({ min: 40, max: 140 }),
     generator: Object.freeze({
-      width: Object.freeze({ min: 5, max: 8 }),
-      height: Object.freeze({ min: 5, max: 8 }),
+      width: Object.freeze({ min: 5, max: 9 }),
+      height: Object.freeze({ min: 5, max: 9 }),
       boxes: Object.freeze({ min: 1, max: 3 }),
-      wallDensity: Object.freeze({ min: 0.08, max: 0.22 }),
-      attempts: 36
+      wallDensity: Object.freeze({ min: 0.12, max: 0.32 }),
+      attempts: 48
     }),
     map: Object.freeze([]),
     targets: Object.freeze([]),
@@ -380,17 +380,190 @@
     return visitedCount === expectedOpenCells;
   }
 
+  function countOpenCells(grid) {
+    if (!Array.isArray(grid)) {
+      return 0;
+    }
+    let open = 0;
+    for (let row = 0; row < grid.length; row += 1) {
+      const rowCells = grid[row];
+      if (!Array.isArray(rowCells)) {
+        continue;
+      }
+      for (let col = 0; col < rowCells.length; col += 1) {
+        if (rowCells[col] !== '#') {
+          open += 1;
+        }
+      }
+    }
+    return open;
+  }
+
+  function computeGridInterestMetrics(grid) {
+    const height = grid.length;
+    const width = grid[0]?.length || 0;
+    const metrics = { deadEnds: 0, chokepoints: 0, openTiles: 0 };
+    if (height <= 0 || width <= 0) {
+      return metrics;
+    }
+    for (let row = 1; row < height - 1; row += 1) {
+      for (let col = 1; col < width - 1; col += 1) {
+        if (grid[row][col] === '#') {
+          continue;
+        }
+        metrics.openTiles += 1;
+        let neighborCount = 0;
+        let straightPairs = 0;
+        if (grid[row - 1][col] !== '#') {
+          neighborCount += 1;
+        }
+        if (grid[row + 1][col] !== '#') {
+          neighborCount += 1;
+        }
+        if (grid[row][col - 1] !== '#') {
+          neighborCount += 1;
+        }
+        if (grid[row][col + 1] !== '#') {
+          neighborCount += 1;
+        }
+        if (grid[row - 1][col] !== '#' && grid[row + 1][col] !== '#') {
+          straightPairs += 1;
+        }
+        if (grid[row][col - 1] !== '#' && grid[row][col + 1] !== '#') {
+          straightPairs += 1;
+        }
+        if (neighborCount === 1) {
+          metrics.deadEnds += 1;
+        } else if (neighborCount === 2) {
+          // treat corridors and corners as chokepoints
+          metrics.chokepoints += 1;
+        } else if (neighborCount === 3) {
+          metrics.chokepoints += 1;
+        } else if (neighborCount === 4 && straightPairs <= 1) {
+          metrics.chokepoints += 1;
+        }
+      }
+    }
+    return metrics;
+  }
+
+  function tryPlaceObstacleCluster(grid, minOpenCells, baselineMetrics) {
+    const height = grid.length;
+    const width = grid[0]?.length || 0;
+    if (height <= 2 || width <= 2) {
+      return null;
+    }
+    const shapes = [
+      [[0, 0]],
+      [[0, 0], [1, 0]],
+      [[0, 0], [0, 1]],
+      [[0, 0], [1, 0], [0, 1]],
+      [[0, 0], [1, 0], [-1, 0]],
+      [[0, 0], [0, 1], [0, -1]],
+      [[0, 0], [1, 0], [0, 1], [1, 1]]
+    ];
+
+    const candidates = [];
+    for (let row = 1; row < height - 1; row += 1) {
+      for (let col = 1; col < width - 1; col += 1) {
+        if (grid[row][col] !== '#') {
+          candidates.push([row, col]);
+        }
+      }
+    }
+    shuffleArray(candidates);
+
+    for (const [baseRow, baseCol] of candidates) {
+      shuffleArray(shapes);
+      for (const shape of shapes) {
+        const placed = [];
+        let valid = true;
+        for (const [offsetRow, offsetCol] of shape) {
+          const row = baseRow + offsetRow;
+          const col = baseCol + offsetCol;
+          if (row <= 0 || row >= height - 1 || col <= 0 || col >= width - 1) {
+            valid = false;
+            break;
+          }
+          if (grid[row][col] === '#') {
+            valid = false;
+            break;
+          }
+          placed.push([row, col]);
+        }
+        if (!valid || placed.length === 0) {
+          continue;
+        }
+        for (const [row, col] of placed) {
+          grid[row][col] = '#';
+        }
+        const openCells = countOpenCells(grid);
+        if (openCells < minOpenCells || !gridHasSingleRegion(grid, openCells)) {
+          for (const [row, col] of placed) {
+            grid[row][col] = '.';
+          }
+          continue;
+        }
+        const metrics = computeGridInterestMetrics(grid);
+        const improvedDeadEnds = metrics.deadEnds > baselineMetrics.deadEnds;
+        const improvedChokepoints = metrics.chokepoints > baselineMetrics.chokepoints;
+        if (improvedDeadEnds || improvedChokepoints) {
+          return metrics;
+        }
+        for (const [row, col] of placed) {
+          grid[row][col] = '.';
+        }
+      }
+    }
+
+    return null;
+  }
+
+  function ensureInterestingFeatures(grid) {
+    const height = grid.length;
+    const width = grid[0]?.length || 0;
+    if (height <= 2 || width <= 2) {
+      return;
+    }
+    const minOpenCells = Math.max(
+      Math.floor((width - 2) * (height - 2) * 0.55),
+      width + height,
+      6
+    );
+    const targetDeadEnds = Math.max(2, Math.floor(Math.min(width, height) / 2));
+    const targetChokepoints = Math.max(3, Math.floor((width + height) / 2));
+    let metrics = computeGridInterestMetrics(grid);
+    if (metrics.deadEnds >= targetDeadEnds && metrics.chokepoints >= targetChokepoints) {
+      return;
+    }
+    const maxAttempts = width * height * 6;
+    let attempts = 0;
+    while (attempts < maxAttempts) {
+      const updatedMetrics = tryPlaceObstacleCluster(grid, minOpenCells, metrics);
+      attempts += 1;
+      if (!updatedMetrics) {
+        continue;
+      }
+      metrics = updatedMetrics;
+      if (metrics.deadEnds >= targetDeadEnds && metrics.chokepoints >= targetChokepoints) {
+        break;
+      }
+    }
+  }
+
   function buildConnectedGrid(width, height, wallDensityRange) {
-    const safeWidth = clampInt(width, 3, 24, 6);
-    const safeHeight = clampInt(height, 3, 24, 6);
+    const safeWidth = clampInt(width, 5, 9, 6);
+    const safeHeight = clampInt(height, 5, 9, 6);
     const grid = new Array(safeHeight);
     for (let row = 0; row < safeHeight; row += 1) {
       const rowCells = new Array(safeWidth);
       for (let col = 0; col < safeWidth; col += 1) {
-        rowCells[col] = '.';
+        const border = row === 0 || row === safeHeight - 1 || col === 0 || col === safeWidth - 1;
+        rowCells[col] = border ? '#' : '.';
       }
       grid[row] = rowCells;
     }
+
     const interiorCells = [];
     for (let row = 1; row < safeHeight - 1; row += 1) {
       for (let col = 1; col < safeWidth - 1; col += 1) {
@@ -399,14 +572,27 @@
     }
     shuffleArray(interiorCells);
 
-    const minDensity = clampNumber(wallDensityRange?.min, 0, 0.45, DEFAULT_CONFIG.generator.wallDensity.min);
-    const maxDensity = clampNumber(wallDensityRange?.max, minDensity, 0.45, Math.max(minDensity, DEFAULT_CONFIG.generator.wallDensity.max));
+    const minDensity = clampNumber(
+      wallDensityRange?.min,
+      0,
+      0.45,
+      DEFAULT_CONFIG.generator.wallDensity.min
+    );
+    const maxDensity = clampNumber(
+      wallDensityRange?.max,
+      minDensity,
+      0.45,
+      Math.max(minDensity, DEFAULT_CONFIG.generator.wallDensity.max)
+    );
     const density = randomFloat(minDensity, maxDensity);
-    const totalCells = safeWidth * safeHeight;
-    const maxWalls = Math.min(interiorCells.length, Math.floor(totalCells * Math.min(Math.max(density, 0), 0.45)));
-    let openCells = totalCells;
+    const totalInterior = interiorCells.length;
+    const maxWalls = Math.min(
+      totalInterior,
+      Math.floor(totalInterior * Math.min(Math.max(density, 0), 0.5))
+    );
+    let openCells = countOpenCells(grid);
+    const minimumOpenCells = Math.max(Math.floor(totalInterior * 0.55), safeWidth + safeHeight, 6);
     let placed = 0;
-    const minimumOpenCells = Math.max(safeWidth + safeHeight, 6);
 
     for (let index = 0; index < interiorCells.length && placed < maxWalls; index += 1) {
       const [row, col] = interiorCells[index];
@@ -424,6 +610,15 @@
     }
 
     if (openCells < minimumOpenCells) {
+      return null;
+    }
+
+    ensureInterestingFeatures(grid);
+    const finalOpenCells = countOpenCells(grid);
+    if (finalOpenCells < minimumOpenCells) {
+      return null;
+    }
+    if (!gridHasSingleRegion(grid, finalOpenCells)) {
       return null;
     }
 
@@ -661,12 +856,12 @@
     if (!generator || typeof generator !== 'object') {
       return null;
     }
-    const widthMin = clampInt(generator?.width?.min, 3, 24, DEFAULT_CONFIG.generator.width.min);
-    const widthMax = clampInt(generator?.width?.max, widthMin, 24, DEFAULT_CONFIG.generator.width.max);
-    const heightMin = clampInt(generator?.height?.min, 3, 24, DEFAULT_CONFIG.generator.height.min);
-    const heightMax = clampInt(generator?.height?.max, heightMin, 24, DEFAULT_CONFIG.generator.height.max);
+    const widthMin = clampInt(generator?.width?.min, 3, 9, DEFAULT_CONFIG.generator.width.min);
+    const widthMax = clampInt(generator?.width?.max, widthMin, 9, DEFAULT_CONFIG.generator.width.max);
+    const heightMin = clampInt(generator?.height?.min, 3, 9, DEFAULT_CONFIG.generator.height.min);
+    const heightMax = clampInt(generator?.height?.max, heightMin, 9, DEFAULT_CONFIG.generator.height.max);
     const boxesMin = clampInt(generator?.boxes?.min, 1, 8, DEFAULT_CONFIG.generator.boxes.min);
-    const boxesMax = clampInt(generator?.boxes?.max, boxesMin, 12, DEFAULT_CONFIG.generator.boxes.max);
+    const boxesMax = clampInt(generator?.boxes?.max, boxesMin, 8, DEFAULT_CONFIG.generator.boxes.max);
 
     const width = randomInt(widthMin, widthMax);
     const height = randomInt(heightMin, heightMax);
@@ -748,12 +943,12 @@
   function sanitizeGeneratorConfig(rawGenerator) {
     const defaultGenerator = DEFAULT_CONFIG.generator;
     const source = rawGenerator && typeof rawGenerator === 'object' ? rawGenerator : {};
-    const widthMin = clampInt(source?.width?.min, 3, 24, defaultGenerator.width.min);
-    const widthMax = clampInt(source?.width?.max, widthMin, 24, defaultGenerator.width.max);
-    const heightMin = clampInt(source?.height?.min, 3, 24, defaultGenerator.height.min);
-    const heightMax = clampInt(source?.height?.max, heightMin, 24, defaultGenerator.height.max);
+    const widthMin = clampInt(source?.width?.min, 3, 9, defaultGenerator.width.min);
+    const widthMax = clampInt(source?.width?.max, widthMin, 9, defaultGenerator.width.max);
+    const heightMin = clampInt(source?.height?.min, 3, 9, defaultGenerator.height.min);
+    const heightMax = clampInt(source?.height?.max, heightMin, 9, defaultGenerator.height.max);
     const boxesMin = clampInt(source?.boxes?.min, 1, 8, defaultGenerator.boxes.min);
-    const boxesMax = clampInt(source?.boxes?.max, boxesMin, 12, defaultGenerator.boxes.max);
+    const boxesMax = clampInt(source?.boxes?.max, boxesMin, 8, defaultGenerator.boxes.max);
     const densityMin = clampNumber(source?.wallDensity?.min, 0, 0.45, defaultGenerator.wallDensity.min);
     const densityMax = clampNumber(source?.wallDensity?.max, densityMin, 0.45, Math.max(densityMin, defaultGenerator.wallDensity.max));
     const attempts = clampInt(source?.attempts, 3, 200, defaultGenerator.attempts);
