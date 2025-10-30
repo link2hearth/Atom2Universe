@@ -9,12 +9,15 @@
     diceCount: 5,
     faces: 6,
     rollsPerTurn: 3,
-    fullHouseScore: 25,
+    fullHouseScore: 45,
     smallStraightScore: 30,
     largeStraightScore: 40,
-    yahtzeeScore: 50,
+    yahtzeeScore: 80,
     bonusThreshold: 63,
-    bonusValue: 35
+    bonusValue: 35,
+    threeKindBonus: 8,
+    fourKindBonus: 40,
+    twoPairBonus: 5
   });
 
   const DICE_SECTION = document.getElementById('dice');
@@ -109,6 +112,18 @@
       { min: 0, max: 200 }
     ),
     bonusValue: resolveNumericSetting(resolvedConfig?.bonusValue, DEFAULT_SETTINGS.bonusValue, {
+      min: 0,
+      max: 200
+    }),
+    threeKindBonus: resolveNumericSetting(resolvedConfig?.threeKindBonus, DEFAULT_SETTINGS.threeKindBonus, {
+      min: 0,
+      max: 200
+    }),
+    fourKindBonus: resolveNumericSetting(resolvedConfig?.fourKindBonus, DEFAULT_SETTINGS.fourKindBonus, {
+      min: 0,
+      max: 400
+    }),
+    twoPairBonus: resolveNumericSetting(resolvedConfig?.twoPairBonus, DEFAULT_SETTINGS.twoPairBonus, {
       min: 0,
       max: 200
     })
@@ -274,7 +289,7 @@
       case 'threeKind': {
         for (let i = 1; i < counts.length; i += 1) {
           if (counts[i] >= 3) {
-            return sum;
+            return sum + settings.threeKindBonus;
           }
         }
         return 0;
@@ -282,7 +297,10 @@
       case 'fourKind': {
         for (let i = 1; i < counts.length; i += 1) {
           if (counts[i] >= 4) {
-            return sum;
+            if (counts[i] === activeDiceCount) {
+              return settings.yahtzeeScore;
+            }
+            return sum + settings.fourKindBonus;
           }
         }
         return 0;
@@ -359,9 +377,78 @@
         return 0;
       }
       case 'chance':
-        return sum;
+        {
+          let pairValues = 0;
+          let hasTriple = false;
+          for (let i = 1; i < counts.length; i += 1) {
+            const count = counts[i] ?? 0;
+            if (count >= 3) {
+              hasTriple = true;
+            }
+            if (count >= 2) {
+              pairValues += 1;
+            }
+          }
+          const hasTwoPair = pairValues >= 2 && !hasTriple;
+          const bonus = hasTwoPair ? settings.twoPairBonus : 0;
+          return sum + bonus;
+        }
       default:
         return 0;
+    }
+  }
+
+  function computeCategoryPriority(definition, score, counts) {
+    if (!definition) {
+      return Number.NEGATIVE_INFINITY;
+    }
+    if (score <= 0) {
+      return -1;
+    }
+    switch (definition.id) {
+      case 'yahtzee':
+        return 900;
+      case 'fourKind': {
+        let containsYahtzee = false;
+        if (Array.isArray(counts)) {
+          for (let i = 1; i < counts.length; i += 1) {
+            if (counts[i] === activeDiceCount) {
+              containsYahtzee = true;
+              break;
+            }
+          }
+        }
+        return containsYahtzee ? 850 : 800;
+      }
+      case 'fullHouse':
+        return 700;
+      case 'largeStraight':
+        return 650;
+      case 'smallStraight':
+        return 600;
+      case 'threeKind':
+        return 500;
+      case 'chance': {
+        let pairValues = 0;
+        let hasTriple = false;
+        if (Array.isArray(counts)) {
+          for (let i = 1; i < counts.length; i += 1) {
+            const count = counts[i] ?? 0;
+            if (count >= 3) {
+              hasTriple = true;
+            }
+            if (count >= 2) {
+              pairValues += 1;
+            }
+          }
+        }
+        return pairValues >= 2 && !hasTriple ? 450 : 300;
+      }
+      default:
+        if (definition.section === 'upper') {
+          return 200 + (definition.face ?? 0);
+        }
+        return 250;
     }
   }
 
@@ -439,15 +526,22 @@
   function selectBestCategory(counts, sum, uniqueValues) {
     let bestDefinition = null;
     let bestScore = -1;
+    let bestPriority = Number.NEGATIVE_INFINITY;
     for (let i = 0; i < CATEGORY_DEFINITIONS.length; i += 1) {
       const definition = CATEGORY_DEFINITIONS[i];
       if (assignedScores.has(definition.id)) {
         continue;
       }
       const score = Math.max(0, computeCategoryScore(definition, counts, sum, uniqueValues));
-      if (score > bestScore || (score === bestScore && bestDefinition === null)) {
+      const priority = computeCategoryPriority(definition, score, counts);
+      if (
+        priority > bestPriority ||
+        (priority === bestPriority && score > bestScore) ||
+        (priority === bestPriority && score === bestScore && bestDefinition === null)
+      ) {
         bestScore = score;
         bestDefinition = definition;
+        bestPriority = priority;
       }
     }
     return bestDefinition ? { definition: bestDefinition, score: bestScore } : null;
