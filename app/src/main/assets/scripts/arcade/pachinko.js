@@ -58,7 +58,7 @@
   ]);
   const DEFAULT_ROW_COUNT = 8;
   const DEFAULT_STEP_MS = 280;
-  const DEFAULT_ADVANTAGE_BONUS = 1.1;
+  const DEFAULT_ADVANTAGE_BONUS = 0.3;
   const HISTORY_LIMIT = 8;
 
   function onReady(callback) {
@@ -564,9 +564,6 @@
         button.className = 'pachinko-bet__option';
         button.dataset.baseBet = `${baseAmount}`;
         button.addEventListener('click', () => {
-          if (dropping) {
-            return;
-          }
           const scaled = baseAmount * betMultiplier;
           setSelectedBet(scaled, baseAmount);
         });
