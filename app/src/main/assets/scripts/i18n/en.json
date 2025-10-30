@@ -938,7 +938,8 @@
           "aria": "Dice controls",
           "rollsLabel": "Rolls left:",
           "roll": "Roll dice",
-          "clear": "Release dice"
+          "clear": "Release dice",
+          "lastScore": "Last score: {score}"
         },
         "status": {
           "start": "Roll the dice to begin."
@@ -1988,14 +1989,15 @@
         "status": {
           "start": "Roll the dice to begin.",
           "rollsLeft": "Rolls left: {rolls}. Select dice to hold or roll again.",
-          "noRolls": "No rolls left—lock in a category.",
+          "autoScored": "Picked {category} for {score} points. Current total: {total}.",
+          "noRolls": "No rolls left—scoring current hand.",
           "dieHeld": "Die {index} held.",
           "dieReleased": "Die {index} released.",
           "holdsCleared": "All dice released.",
           "needRoll": "Roll at least once before scoring.",
           "categoryLocked": "Locked {category} for {score} points.",
           "gameComplete": "Game complete! Final score: {score}.",
-          "newGame": "Scorecard reset. Roll to begin."
+          "newGame": "New game ready. Roll to begin."
         },
         "die": {
           "available": "Die {index} showing {value}.",

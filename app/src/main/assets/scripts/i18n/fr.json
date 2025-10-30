@@ -938,7 +938,8 @@
           "aria": "Commandes de lancer",
           "rollsLabel": "Lancers restants :",
           "roll": "Lancer les dés",
-          "clear": "Libérer les dés"
+          "clear": "Libérer les dés",
+          "lastScore": "Dernier score : {score}"
         },
         "status": {
           "start": "Lancez les dés pour commencer."
@@ -1988,14 +1989,15 @@
         "status": {
           "start": "Lancez les dés pour commencer.",
           "rollsLeft": "Lancers restants : {rolls}. Sélectionnez des dés à garder ou relancez.",
-          "noRolls": "Plus de lancers disponibles : validez une combinaison.",
+          "autoScored": "Meilleure option retenue : {category} pour {score} points. Total actuel : {total}.",
+          "noRolls": "Plus de lancers disponibles : calcul du score en cours.",
           "dieHeld": "Dé {index} mis de côté.",
           "dieReleased": "Dé {index} relâché.",
           "holdsCleared": "Tous les dés ont été libérés.",
           "needRoll": "Effectuez au moins un lancer avant de marquer.",
           "categoryLocked": "Combinaison {category} validée pour {score} points.",
           "gameComplete": "Partie terminée ! Score final : {score}.",
-          "newGame": "Feuille de score réinitialisée. Lancez les dés."
+          "newGame": "Nouvelle partie prête. Lancez les dés."
         },
         "die": {
           "available": "Dé {index} affichant {value}.",

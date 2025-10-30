@@ -2157,6 +2157,12 @@
                     disabled
                   >Libérer les dés</button>
                 </div>
+                <button
+                  type="button"
+                  class="dice-button dice-table__new-game"
+                  id="diceNewGameButton"
+                  data-i18n="index.sections.dice.scorecard.reset"
+                >Nouvelle partie</button>
               </div>
               <p
                 class="dice-status dice-table__status"
@@ -2168,149 +2174,12 @@
               </p>
             </div>
           </section>
-          <section
-            class="dice-scorecard"
-            aria-label="Feuille de score"
-            data-i18n="aria-label:index.sections.dice.scorecard.aria"
-          >
-            <div class="dice-scorecard__header">
-              <h2 class="dice-scorecard__title visually-hidden" data-i18n="index.sections.dice.scorecard.title">Feuille de score</h2>
-              <button
-                type="button"
-                class="dice-button dice-scorecard__reset"
-                id="diceNewGameButton"
-                data-i18n="index.sections.dice.scorecard.reset"
-              >Nouvelle partie</button>
-            </div>
-            <div class="dice-scorecard__sections">
-              <div class="dice-scorecard__group" data-section="lower">
-                <h3 class="dice-scorecard__group-title visually-hidden" data-i18n="index.sections.dice.scorecard.lowerSection">Section inférieure</h3>
-                <ol class="dice-scorecard__list">
-                  <li class="dice-scorecard__item">
-                    <button type="button" class="dice-scorecard__entry" data-category="threeKind">
-                      <span class="dice-scorecard__label" data-i18n="index.sections.dice.scorecard.categories.threeKind">Brelan</span>
-                      <span class="dice-scorecard__value" data-role="value">—</span>
-                      <span class="dice-scorecard__preview" data-role="preview">+0</span>
-                    </button>
-                  </li>
-                  <li class="dice-scorecard__item">
-                    <button type="button" class="dice-scorecard__entry" data-category="fourKind">
-                      <span class="dice-scorecard__label" data-i18n="index.sections.dice.scorecard.categories.fourKind">Carré</span>
-                      <span class="dice-scorecard__value" data-role="value">—</span>
-                      <span class="dice-scorecard__preview" data-role="preview">+0</span>
-                    </button>
-                  </li>
-                  <li class="dice-scorecard__item">
-                    <button type="button" class="dice-scorecard__entry" data-category="fullHouse">
-                      <span class="dice-scorecard__label" data-i18n="index.sections.dice.scorecard.categories.fullHouse">Full</span>
-                      <span class="dice-scorecard__value" data-role="value">—</span>
-                      <span class="dice-scorecard__preview" data-role="preview">+0</span>
-                    </button>
-                  </li>
-                  <li class="dice-scorecard__item">
-                    <button type="button" class="dice-scorecard__entry" data-category="smallStraight">
-                      <span class="dice-scorecard__label" data-i18n="index.sections.dice.scorecard.categories.smallStraight">Petite suite</span>
-                      <span class="dice-scorecard__value" data-role="value">—</span>
-                      <span class="dice-scorecard__preview" data-role="preview">+0</span>
-                    </button>
-                  </li>
-                  <li class="dice-scorecard__item">
-                    <button type="button" class="dice-scorecard__entry" data-category="largeStraight">
-                      <span class="dice-scorecard__label" data-i18n="index.sections.dice.scorecard.categories.largeStraight">Grande suite</span>
-                      <span class="dice-scorecard__value" data-role="value">—</span>
-                      <span class="dice-scorecard__preview" data-role="preview">+0</span>
-                    </button>
-                  </li>
-                  <li class="dice-scorecard__item">
-                    <button type="button" class="dice-scorecard__entry" data-category="yahtzee">
-                      <span class="dice-scorecard__label" data-i18n="index.sections.dice.scorecard.categories.yahtzee">Yams</span>
-                      <span class="dice-scorecard__value" data-role="value">—</span>
-                      <span class="dice-scorecard__preview" data-role="preview">+0</span>
-                    </button>
-                  </li>
-                  <li class="dice-scorecard__item">
-                    <button type="button" class="dice-scorecard__entry" data-category="chance">
-                      <span class="dice-scorecard__label" data-i18n="index.sections.dice.scorecard.categories.chance">Chance</span>
-                      <span class="dice-scorecard__value" data-role="value">—</span>
-                      <span class="dice-scorecard__preview" data-role="preview">+0</span>
-                    </button>
-                  </li>
-                </ol>
-                <div class="dice-scorecard__totals">
-                  <div class="dice-scorecard__total-row">
-                    <span class="dice-scorecard__total-label" data-i18n="index.sections.dice.scorecard.totals.lowerTotal">Total inférieur</span>
-                    <span id="diceLowerTotal">0</span>
-                  </div>
-                  <div class="dice-scorecard__total-row">
-                    <span class="dice-scorecard__total-label" data-i18n="index.sections.dice.scorecard.totals.grandTotal">Total général</span>
-                    <span id="diceGrandTotal">0</span>
-                  </div>
-                </div>
-              </div>
-              <div class="dice-scorecard__group" data-section="upper">
-                <h3 class="dice-scorecard__group-title visually-hidden" data-i18n="index.sections.dice.scorecard.upperSection">Section supérieure</h3>
-                <ol class="dice-scorecard__list">
-                  <li class="dice-scorecard__item">
-                    <button type="button" class="dice-scorecard__entry" data-category="ones">
-                      <span class="dice-scorecard__label" data-i18n="index.sections.dice.scorecard.categories.ones">As</span>
-                      <span class="dice-scorecard__value" data-role="value">—</span>
-                      <span class="dice-scorecard__preview" data-role="preview">+0</span>
-                    </button>
-                  </li>
-                  <li class="dice-scorecard__item">
-                    <button type="button" class="dice-scorecard__entry" data-category="twos">
-                      <span class="dice-scorecard__label" data-i18n="index.sections.dice.scorecard.categories.twos">Deux</span>
-                      <span class="dice-scorecard__value" data-role="value">—</span>
-                      <span class="dice-scorecard__preview" data-role="preview">+0</span>
-                    </button>
-                  </li>
-                  <li class="dice-scorecard__item">
-                    <button type="button" class="dice-scorecard__entry" data-category="threes">
-                      <span class="dice-scorecard__label" data-i18n="index.sections.dice.scorecard.categories.threes">Trois</span>
-                      <span class="dice-scorecard__value" data-role="value">—</span>
-                      <span class="dice-scorecard__preview" data-role="preview">+0</span>
-                    </button>
-                  </li>
-                  <li class="dice-scorecard__item">
-                    <button type="button" class="dice-scorecard__entry" data-category="fours">
-                      <span class="dice-scorecard__label" data-i18n="index.sections.dice.scorecard.categories.fours">Quatre</span>
-                      <span class="dice-scorecard__value" data-role="value">—</span>
-                      <span class="dice-scorecard__preview" data-role="preview">+0</span>
-                    </button>
-                  </li>
-                  <li class="dice-scorecard__item">
-                    <button type="button" class="dice-scorecard__entry" data-category="fives">
-                      <span class="dice-scorecard__label" data-i18n="index.sections.dice.scorecard.categories.fives">Cinq</span>
-                      <span class="dice-scorecard__value" data-role="value">—</span>
-                      <span class="dice-scorecard__preview" data-role="preview">+0</span>
-                    </button>
-                  </li>
-                  <li class="dice-scorecard__item">
-                    <button type="button" class="dice-scorecard__entry" data-category="sixes">
-                      <span class="dice-scorecard__label" data-i18n="index.sections.dice.scorecard.categories.sixes">Six</span>
-                      <span class="dice-scorecard__value" data-role="value">—</span>
-                      <span class="dice-scorecard__preview" data-role="preview">+0</span>
-                    </button>
-                  </li>
-                </ol>
-                <div class="dice-scorecard__totals">
-                  <div class="dice-scorecard__total-row">
-                    <span class="dice-scorecard__total-label" data-i18n="index.sections.dice.scorecard.totals.upperSubtotal">Sous-total supérieur</span>
-                    <span id="diceUpperSubtotal">0</span>
-                  </div>
-                  <div class="dice-scorecard__total-row">
-                    <span class="dice-scorecard__total-label" data-i18n="index.sections.dice.scorecard.totals.upperBonus">Bonus supérieur</span>
-                    <span id="diceUpperBonus">0</span>
-                  </div>
-                  <div class="dice-scorecard__total-row">
-                    <span class="dice-scorecard__total-label" data-i18n="index.sections.dice.scorecard.totals.upperTotal">Total supérieur</span>
-                    <span id="diceUpperTotal">0</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
         </div>
+        <p
+          class="dice-last-score"
+          id="diceLastScore"
+          data-i18n="index.sections.dice.controls.lastScore"
+        >Dernier score : 0</p>
       </div>
     </section>
 
