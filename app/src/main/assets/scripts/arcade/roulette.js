@@ -5,7 +5,14 @@
 
   const GLOBAL_CONFIG = typeof globalThis !== 'undefined' ? globalThis.GAME_CONFIG : null;
   const DEFAULT_BET_AMOUNTS = Object.freeze([10, 20, 50, 100]);
-  const DEFAULT_PAYOUTS = Object.freeze({ diagonalColor: 2, jokerRow: 10 });
+  const DEFAULT_PAYOUTS = Object.freeze({
+    suitLine: 5,
+    suitDiagonal: 5,
+    colorLine: 2,
+    colorDiagonal: 2,
+    jokerRowTopBottom: 10,
+    jokerRowMiddle: 25
+  });
   const DEFAULT_ANIMATION = Object.freeze({ initialMs: 3000, columnDelayMs: 1000, shuffleIntervalMs: 90 });
 
   const SYMBOLS = Object.freeze([
@@ -13,7 +20,8 @@
     Object.freeze({ id: 'diamonds', label: '♦', color: 'red', translationKey: 'scripts.arcade.roulette.symbols.diamonds' }),
     Object.freeze({ id: 'clubs', label: '♣', color: 'black', translationKey: 'scripts.arcade.roulette.symbols.clubs' }),
     Object.freeze({ id: 'spades', label: '♠', color: 'black', translationKey: 'scripts.arcade.roulette.symbols.spades' }),
-    Object.freeze({ id: 'joker', label: '🃏', color: 'joker', translationKey: 'scripts.arcade.roulette.symbols.joker' })
+    Object.freeze({ id: 'joker', label: '🃏', color: 'joker', translationKey: 'scripts.arcade.roulette.symbols.joker' }),
+    Object.freeze({ id: 'void', label: '●', color: 'void', translationKey: 'scripts.arcade.roulette.symbols.void' })
   ]);
 
   const SYMBOL_BY_ID = SYMBOLS.reduce((map, symbol) => {
@@ -95,11 +103,35 @@
 
   function normalizePayouts(payouts) {
     const source = payouts && typeof payouts === 'object' ? payouts : {};
-    const diagonal = Number(source.diagonalColor);
-    const jokerRow = Number(source.jokerRow);
+    const sanitize = (value, fallback) => {
+      const numeric = Number(value);
+      return Number.isFinite(numeric) && numeric > 0 ? numeric : fallback;
+    };
+    const suitLine = sanitize(source.suitLine, DEFAULT_PAYOUTS.suitLine);
+    const suitDiagonal = sanitize(
+      source.suitDiagonal != null ? source.suitDiagonal : source.suitLine,
+      DEFAULT_PAYOUTS.suitDiagonal
+    );
+    const colorLine = sanitize(source.colorLine, DEFAULT_PAYOUTS.colorLine);
+    const colorDiagonal = sanitize(
+      source.colorDiagonal != null ? source.colorDiagonal : source.diagonalColor,
+      DEFAULT_PAYOUTS.colorDiagonal
+    );
+    const jokerRowMiddle = sanitize(
+      source.jokerRowMiddle != null ? source.jokerRowMiddle : source.jokerRow,
+      DEFAULT_PAYOUTS.jokerRowMiddle
+    );
+    const jokerRowTopBottom = sanitize(
+      source.jokerRowTopBottom != null ? source.jokerRowTopBottom : source.jokerRow,
+      DEFAULT_PAYOUTS.jokerRowTopBottom
+    );
     return {
-      diagonalColor: Number.isFinite(diagonal) && diagonal > 0 ? diagonal : DEFAULT_PAYOUTS.diagonalColor,
-      jokerRow: Number.isFinite(jokerRow) && jokerRow > 0 ? jokerRow : DEFAULT_PAYOUTS.jokerRow
+      suitLine,
+      suitDiagonal,
+      colorLine,
+      colorDiagonal,
+      jokerRowTopBottom,
+      jokerRowMiddle
     };
   }
 
@@ -197,7 +229,8 @@
       diamonds: 'Carreau',
       clubs: 'Trèfle',
       spades: 'Pique',
-      joker: 'Joker'
+      joker: 'Joker',
+      void: 'Trou noir'
     };
     return translate(symbol.translationKey, fallbackMap[symbol.id] || symbol.id);
   }
@@ -211,6 +244,33 @@
       default:
         return color;
     }
+  }
+
+  function translateJokerRowPosition(rowOrKey) {
+    let key = rowOrKey;
+    if (typeof rowOrKey === 'number') {
+      if (rowOrKey === 0) {
+        key = 'top';
+      } else if (rowOrKey === 1) {
+        key = 'middle';
+      } else {
+        key = 'bottom';
+      }
+    }
+    let fallback;
+    switch (key) {
+      case 'top':
+        fallback = 'supérieure';
+        break;
+      case 'middle':
+        fallback = 'centrale';
+        break;
+      default:
+        key = 'bottom';
+        fallback = 'inférieure';
+        break;
+    }
+    return translate(`scripts.arcade.roulette.rows.${key}`, fallback);
   }
 
   function createResultGrid() {
@@ -228,58 +288,121 @@
   function evaluateGrid(grid, payouts) {
     const wins = [];
 
-    function isUniformColor(cells) {
+    function isUniformSuit(cells) {
       if (!cells || !cells.length) {
         return false;
       }
-      const baseColor = cells[0].color;
-      if (baseColor === 'joker') {
+      const base = cells[0];
+      if (!base || base.id === 'joker' || base.id === 'void') {
         return false;
       }
+      const baseId = base.id;
       for (let i = 1; i < cells.length; i += 1) {
-        if (!cells[i] || cells[i].color !== baseColor || cells[i].color === 'joker') {
+        const cell = cells[i];
+        if (!cell || cell.id !== baseId || cell.id === 'joker' || cell.id === 'void') {
           return false;
         }
       }
       return true;
     }
 
-    const diag1Cells = [grid[0][0], grid[1][1], grid[2][2]];
-    if (isUniformColor(diag1Cells)) {
-      wins.push({
-        type: 'diagonal',
-        color: diag1Cells[0].color,
-        multiplier: payouts.diagonalColor,
-        cells: [
+    function isUniformColor(cells) {
+      if (!cells || !cells.length) {
+        return false;
+      }
+      const base = cells[0];
+      if (!base || (base.color !== 'red' && base.color !== 'black')) {
+        return false;
+      }
+      const baseColor = base.color;
+      for (let i = 1; i < cells.length; i += 1) {
+        const cell = cells[i];
+        if (!cell || cell.color !== baseColor || cell.color === 'joker' || cell.color === 'void') {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    const diagonals = [
+      {
+        cells: [grid[0][0], grid[1][1], grid[2][2]],
+        coords: [
           { row: 0, col: 0 },
           { row: 1, col: 1 },
           { row: 2, col: 2 }
         ]
-      });
-    }
-
-    const diag2Cells = [grid[0][2], grid[1][1], grid[2][0]];
-    if (isUniformColor(diag2Cells)) {
-      wins.push({
-        type: 'diagonal',
-        color: diag2Cells[0].color,
-        multiplier: payouts.diagonalColor,
-        cells: [
+      },
+      {
+        cells: [grid[0][2], grid[1][1], grid[2][0]],
+        coords: [
           { row: 0, col: 2 },
           { row: 1, col: 1 },
           { row: 2, col: 0 }
         ]
-      });
+      }
+    ];
+
+    for (let i = 0; i < diagonals.length; i += 1) {
+      const diagonal = diagonals[i];
+      if (!diagonal) {
+        continue;
+      }
+      if (isUniformSuit(diagonal.cells)) {
+        wins.push({
+          type: 'suitDiagonal',
+          suit: diagonal.cells[0].id,
+          multiplier: payouts.suitDiagonal,
+          cells: diagonal.coords
+        });
+      }
+      if (isUniformColor(diagonal.cells)) {
+        wins.push({
+          type: 'colorDiagonal',
+          color: diagonal.cells[0].color,
+          multiplier: payouts.colorDiagonal,
+          cells: diagonal.coords
+        });
+      }
     }
 
     for (let row = 0; row < 3; row += 1) {
       const rowCells = [grid[row][0], grid[row][1], grid[row][2]];
       const allJokers = rowCells.every(cell => cell && cell.id === 'joker');
       if (allJokers) {
+        const multiplier = row === 1 ? payouts.jokerRowMiddle : payouts.jokerRowTopBottom;
         wins.push({
           type: 'jokerRow',
           row,
-          multiplier: payouts.jokerRow,
+          multiplier,
+          cells: [
+            { row, col: 0 },
+            { row, col: 1 },
+            { row, col: 2 }
+          ]
+        });
+      }
+
+      if (isUniformSuit(rowCells)) {
+        wins.push({
+          type: 'suitLine',
+          row,
+          suit: rowCells[0].id,
+          multiplier: payouts.suitLine,
+          cells: [
+            { row, col: 0 },
+            { row, col: 1 },
+            { row, col: 2 }
+          ]
+        });
+      }
+
+      if (isUniformColor(rowCells)) {
+        wins.push({
+          type: 'colorLine',
+          row,
+          color: rowCells[0].color,
+          multiplier: payouts.colorLine,
           cells: [
             { row, col: 0 },
             { row, col: 1 },
@@ -314,11 +437,10 @@
     const betOptionsElement = document.getElementById('rouletteBetOptions');
     const betSummaryElement = document.getElementById('rouletteBetSummary');
     const betMultiplierElement = document.getElementById('rouletteBetMultiplier');
-    const payoutDiagonalElement = document.getElementById('roulettePayoutDiagonal');
-    const payoutJokerElement = document.getElementById('roulettePayoutJoker');
+    const lastWinElement = document.getElementById('rouletteLastWin');
     const betContainer = document.getElementById('rouletteBet');
 
-    if (!startButton || !statusElement || !betOptionsElement || !betSummaryElement || !betMultiplierElement) {
+    if (!startButton || !statusElement || !betOptionsElement || !betSummaryElement || !betMultiplierElement || !lastWinElement) {
       return;
     }
 
@@ -354,23 +476,6 @@
     const betButtons = [];
     let multiplyButton = null;
     let divideButton = null;
-
-    function updatePayoutDescriptions() {
-      if (payoutDiagonalElement) {
-        payoutDiagonalElement.textContent = translate(
-          'index.sections.roulette.payouts.diagonal',
-          `Diagonale de couleur → ×${formatBetAmount(payouts.diagonalColor)}`,
-          { multiplier: formatBetAmount(payouts.diagonalColor) }
-        );
-      }
-      if (payoutJokerElement) {
-        payoutJokerElement.textContent = translate(
-          'index.sections.roulette.payouts.jokerRow',
-          `Ligne de Jokers → ×${formatBetAmount(payouts.jokerRow)}`,
-          { multiplier: formatBetAmount(payouts.jokerRow) }
-        );
-      }
-    }
 
     function applySymbolToCell(cell, symbol) {
       if (!cell || !symbol) {
@@ -422,6 +527,46 @@
       }
       const message = translate(`scripts.arcade.roulette.status.${key}`, fallback, params);
       statusElement.textContent = message;
+    }
+
+    function updateLastWinDisplay(betAmount, multiplier, payoutAmount) {
+      if (!lastWinElement) {
+        return;
+      }
+      const betValue = betAmount != null ? betAmount : 0;
+      const numericMultiplier = Number(multiplier);
+      const multiplierValue = Number.isFinite(numericMultiplier) && numericMultiplier > 0 ? numericMultiplier : 0;
+      const betDisplay = formatBetAmount(betValue);
+      const multiplierDisplay = formatBetAmount(multiplierValue);
+      let totalDisplay = formatBetAmount(0);
+
+      if (payoutAmount != null) {
+        totalDisplay = formatBetAmount(payoutAmount);
+      } else if (betAmount != null && multiplierValue > 0) {
+        try {
+          if (typeof betAmount.multiplyNumber === 'function') {
+            totalDisplay = formatBetAmount(betAmount.multiplyNumber(multiplierValue));
+          } else {
+            const numericBet = Number(betAmount);
+            if (Number.isFinite(numericBet)) {
+              totalDisplay = formatBetAmount(numericBet * multiplierValue);
+            }
+          }
+        } catch (error) {
+          const numericBet = Number(betAmount);
+          if (Number.isFinite(numericBet)) {
+            totalDisplay = formatBetAmount(numericBet * multiplierValue);
+          }
+        }
+      }
+
+      const fallback = `Dernier gain : ${betDisplay} × ${multiplierDisplay} = ${totalDisplay}`;
+      const message = translate(
+        'scripts.arcade.roulette.lastWin',
+        fallback,
+        { bet: betDisplay, multiplier: multiplierDisplay, total: totalDisplay }
+      );
+      lastWinElement.textContent = message;
     }
 
     function updateMultiplierDisplay(multiplier) {
@@ -695,10 +840,13 @@
       highlightWins(wins);
       updateMultiplierDisplay(totalMultiplier);
 
-      if (totalMultiplier > 0 && activeBet && typeof gameState !== 'undefined') {
+      const betForResult = activeBet;
+      let payoutAmount = null;
+
+      if (totalMultiplier > 0 && betForResult && typeof gameState !== 'undefined') {
         try {
-          const payout = activeBet.multiplyNumber(totalMultiplier);
-          gameState.atoms = gameState.atoms.add(payout);
+          payoutAmount = betForResult.multiplyNumber(totalMultiplier);
+          gameState.atoms = gameState.atoms.add(payoutAmount);
           if (typeof updateUI === 'function') {
             updateUI();
           }
@@ -712,29 +860,50 @@
 
       updateBalanceDisplay();
       ensureSelectedBetAffordable();
+      updateLastWinDisplay(betForResult, totalMultiplier, payoutAmount);
 
       if (!wins.length) {
         setStatus('lose', 'Pas de gain cette fois.');
       } else if (wins.length === 1) {
         const win = wins[0];
-        if (win.type === 'diagonal') {
+        const multiplierText = formatBetAmount(win.multiplier);
+        if (win.type === 'suitLine') {
+          const suitSymbol = SYMBOL_BY_ID.get(win.suit);
+          const suit = translateSymbolName(suitSymbol);
+          setStatus(
+            'winSuitLine',
+            `Ligne de ${suit} ! Gain ×${multiplierText}.`,
+            { suit, multiplier: multiplierText }
+          );
+        } else if (win.type === 'suitDiagonal') {
+          const suitSymbol = SYMBOL_BY_ID.get(win.suit);
+          const suit = translateSymbolName(suitSymbol);
+          setStatus(
+            'winSuitDiagonal',
+            `Diagonale de ${suit} ! Gain ×${multiplierText}.`,
+            { suit, multiplier: multiplierText }
+          );
+        } else if (win.type === 'colorLine') {
           const color = translateColor(win.color);
           setStatus(
-            'winDiagonal',
-            `Diagonale ${color} ! Gain ×${formatBetAmount(win.multiplier)}.`,
-            {
-              color,
-              multiplier: formatBetAmount(win.multiplier)
-            }
+            'winColorLine',
+            `Ligne ${color} ! Bonus couleur ×${multiplierText}.`,
+            { color, multiplier: multiplierText }
+          );
+        } else if (win.type === 'colorDiagonal') {
+          const color = translateColor(win.color);
+          setStatus(
+            'winColorDiagonal',
+            `Diagonale ${color} ! Bonus couleur ×${multiplierText}.`,
+            { color, multiplier: multiplierText }
           );
         } else if (win.type === 'jokerRow') {
+          const positionKey = win.row === 0 ? 'top' : win.row === 1 ? 'middle' : 'bottom';
+          const position = translateJokerRowPosition(positionKey);
           setStatus(
-            'winJokerRow',
-            `Ligne de Jokers ! Gain ×${formatBetAmount(win.multiplier)}.`,
-            {
-              multiplier: formatBetAmount(win.multiplier),
-              row: win.row + 1
-            }
+            'winJokerRowPosition',
+            `Ligne ${position} de Jokers ! Gain ×${multiplierText}.`,
+            { position, multiplier: multiplierText }
           );
         } else {
           setStatus('win', `Gain ×${formatBetAmount(totalMultiplier)}.`);
@@ -879,12 +1048,12 @@
       }
     }
 
-    updatePayoutDescriptions();
     initializeGrid();
     initializeBetOptions();
     updateBetSummary();
     updateBalanceDisplay();
     updateMultiplierDisplay(null);
+    updateLastWinDisplay(0, 0, 0);
     startBalanceUpdates();
 
     startButton.addEventListener('click', startSpin);

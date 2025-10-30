@@ -811,6 +811,9 @@
         "status": {
           "ready": "Préparez votre mise et lancez la roulette."
         },
+        "lastWin": {
+          "placeholder": "Dernier gain : 0 × 0 = 0"
+        },
         "bet": {
           "aria": "Commandes des mises",
           "optionsAria": "Montants de mise disponibles",
@@ -1742,8 +1745,11 @@
           "selectBet": "Sélectionnez une mise avant de lancer la roulette.",
           "insufficientAtoms": "Solde insuffisant pour cette mise.",
           "lose": "Pas de gain cette fois-ci.",
-          "winDiagonal": "Diagonale {color} ! Gain ×{multiplier}.",
-          "winJokerRow": "Ligne de Jokers ! Gain ×{multiplier}.",
+          "winSuitLine": "Ligne de {suit} ! Gain ×{multiplier}.",
+          "winSuitDiagonal": "Diagonale de {suit} ! Gain ×{multiplier}.",
+          "winColorLine": "Ligne {color} ! Bonus couleur ×{multiplier}.",
+          "winColorDiagonal": "Diagonale {color} ! Bonus couleur ×{multiplier}.",
+          "winJokerRowPosition": "Ligne {position} de Jokers ! Gain ×{multiplier}.",
           "winMultiple": "Combinaisons multiples ! Gain total ×{multiplier}.",
           "win": "Gain ×{multiplier}."
         },
@@ -1756,8 +1762,15 @@
           "diamonds": "Carreau",
           "clubs": "Trèfle",
           "spades": "Pique",
-          "joker": "Joker"
-        }
+          "joker": "Joker",
+          "void": "Trou noir"
+        },
+        "rows": {
+          "top": "supérieure",
+          "middle": "centrale",
+          "bottom": "inférieure"
+        },
+        "lastWin": "Dernier gain : {bet} × {multiplier} = {total}"
       },
       "blackjack": {
         "status": {

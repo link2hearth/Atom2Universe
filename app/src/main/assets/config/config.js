@@ -1035,8 +1035,12 @@ const GAME_CONFIG = {
     roulette: {
       betOptions: [10, 20, 50, 100],
       payouts: {
-        diagonalColor: 2,
-        jokerRow: 10
+        suitLine: 5,
+        suitDiagonal: 5,
+        colorLine: 2,
+        colorDiagonal: 2,
+        jokerRowTopBottom: 10,
+        jokerRowMiddle: 25
       },
       animation: {
         initialMs: 3000,

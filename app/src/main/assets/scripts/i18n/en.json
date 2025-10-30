@@ -811,6 +811,9 @@
         "status": {
           "ready": "Prepare your bet and launch the reels."
         },
+        "lastWin": {
+          "placeholder": "Last win: 0 × 0 = 0"
+        },
         "bet": {
           "aria": "Bet controls",
           "optionsAria": "Available bet amounts",
@@ -1742,8 +1745,11 @@
           "selectBet": "Select a bet before launching the reels.",
           "insufficientAtoms": "Not enough atoms for this bet.",
           "lose": "No win this time.",
-          "winDiagonal": "{color} diagonal! Payout ×{multiplier}.",
-          "winJokerRow": "Joker row! Payout ×{multiplier}.",
+          "winSuitLine": "Line of {suit}! Payout ×{multiplier}.",
+          "winSuitDiagonal": "Diagonal of {suit}! Payout ×{multiplier}.",
+          "winColorLine": "{color} line! Color bonus ×{multiplier}.",
+          "winColorDiagonal": "{color} diagonal! Color bonus ×{multiplier}.",
+          "winJokerRowPosition": "{position} row of Jokers! Payout ×{multiplier}.",
           "winMultiple": "Multiple combos! Total payout ×{multiplier}.",
           "win": "Payout ×{multiplier}."
         },
@@ -1756,8 +1762,15 @@
           "diamonds": "Diamond",
           "clubs": "Club",
           "spades": "Spade",
-          "joker": "Joker"
-        }
+          "joker": "Joker",
+          "void": "Black hole"
+        },
+        "rows": {
+          "top": "top",
+          "middle": "center",
+          "bottom": "bottom"
+        },
+        "lastWin": "Last win: {bet} × {multiplier} = {total}"
       },
       "blackjack": {
         "status": {
