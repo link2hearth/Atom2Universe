@@ -58,6 +58,7 @@
   ]);
   const DEFAULT_ROW_COUNT = 8;
   const DEFAULT_STEP_MS = 280;
+  const DEFAULT_ADVANTAGE_BONUS = 1.1;
   const HISTORY_LIMIT = 8;
 
   function onReady(callback) {
@@ -188,6 +189,7 @@
     const ballElement = section.querySelector('#pachinkoBall');
     const statusElement = section.querySelector('#pachinkoStatus');
     const dropButton = section.querySelector('#pachinkoDropButton');
+    const dropCountElement = section.querySelector('#pachinkoDropCount');
     const betContainer = section.querySelector('#pachinkoBet');
     const betOptionsElement = section.querySelector('#pachinkoBetOptions');
     const betCurrentElement = section.querySelector('#pachinkoCurrentBet');
@@ -213,6 +215,9 @@
     const rowCount = clampRowCount(resolvedConfig && resolvedConfig.board ? resolvedConfig.board.rows : null);
     const dropStepMs = clampStepMs(resolvedConfig && resolvedConfig.board ? resolvedConfig.board.stepMs : null);
     const slotCount = DEFAULT_SLOT_LAYOUT.length;
+    const advantageBonusMultiplier = resolvedConfig && typeof resolvedConfig.advantageBonus === 'number'
+      ? Math.max(0, resolvedConfig.advantageBonus)
+      : DEFAULT_ADVANTAGE_BONUS;
 
     const boardField = {
       left: 0.08,
@@ -224,6 +229,7 @@
     boardField.height = boardField.bottom - boardField.top;
 
     const physicsPegs = [];
+    let pendingDropCount = 0;
     const slotTargets = slotLayoutMultipliers.map((_, index) => {
       if (slotCount <= 1) {
         return boardField.left + boardField.width / 2;
@@ -231,7 +237,7 @@
       const ratio = index / (slotCount - 1);
       return boardField.left + ratio * boardField.width;
     });
-    const BALL_RADIUS = 0.028;
+    const BALL_RADIUS = 0.014;
     const GRAVITY_FORCE = 0.00078;
     const MAX_SIMULATION_STEPS = 900;
     const PATH_SAMPLE_INTERVAL = 2;
@@ -452,8 +458,19 @@
       if (!dropButton) {
         return;
       }
-      const disabled = dropping || selectedBet == null || !canAffordBet(selectedBet);
+      const disabled = selectedBet == null || !canAffordBet(selectedBet);
       dropButton.disabled = disabled;
+    }
+
+    function getRequestedDropCount() {
+      if (!dropCountElement) {
+        return 1;
+      }
+      const value = Number(dropCountElement.value);
+      if (!Number.isFinite(value)) {
+        return 1;
+      }
+      return Math.max(1, Math.floor(value));
     }
 
     function updateBetButtons() {
@@ -601,6 +618,9 @@
         const rowOffset = (row % 2 === 0 ? 0 : horizontalSpacing / 2);
         const baseY = startY + row * verticalSpacing;
         for (let col = 0; col < slotCount; col += 1) {
+          if ((row + col) % 2 !== 0) {
+            continue;
+          }
           const baseX = boardField.left + col * horizontalSpacing + rowOffset;
           if (baseX < boardField.left || baseX > boardField.right) {
             continue;
@@ -943,6 +963,16 @@
         net = LayeredNumber.zero();
       }
 
+      let appliedAdvantage = null;
+      if (net.sign <= 0 && advantageBonusMultiplier > 0) {
+        const bonus = layeredBet.multiplyNumber(advantageBonusMultiplier);
+        if (bonus instanceof LayeredNumber) {
+          appliedAdvantage = bonus;
+          payout = payout ? payout.add(bonus) : bonus;
+          net = net.add(bonus);
+        }
+      }
+
       if (payout && typeof gameState !== 'undefined') {
         gameState.atoms = gameState.atoms.add(payout);
         if (typeof updateUI === 'function') {
@@ -971,11 +1001,16 @@
       const params = {
         multiplier: formatMultiplier(multiplier),
         slot: slotName,
-        net: formatLayeredNumber(net)
+        net: formatLayeredNumber(net),
+        bonus: appliedAdvantage ? formatMultiplier(advantageBonusMultiplier) : null
       };
 
       if (net.sign > 0) {
-        setStatus('win', 'You win!', params);
+        if (appliedAdvantage && multiplier <= 0) {
+          setStatus('advantage', 'Advantage bonus awarded!', params);
+        } else {
+          setStatus('win', 'You win!', params);
+        }
       } else if (net.sign === 0) {
         setStatus('even', 'Break even.', params);
       } else if (multiplier > 0) {
@@ -999,39 +1034,59 @@
       dropping = false;
       updateBetButtons();
       updateMultiplierControls();
-      updateDropButtonState();
       scheduleTimeout(resetBallPosition, 300);
       ensureSelectedBetAffordable();
+      if (pendingDropCount > 0) {
+        const remaining = pendingDropCount;
+        const delay = Math.max(360, dropStepMs);
+        pendingDropCount -= 1;
+        setStatus('seriesActive', 'Launching queued drops...', { remaining: `${remaining}` });
+        scheduleTimeout(() => {
+          if (!beginDrop(true)) {
+            pendingDropCount = 0;
+            updateDropButtonState();
+          }
+        }, delay);
+      } else {
+        updateDropButtonState();
+      }
     }
 
-    function beginDrop() {
+    function beginDrop(fromQueue = false) {
       if (dropping) {
-        return;
+        return false;
       }
       if (selectedBet == null) {
         setStatus('selectBet', 'Select a bet first.');
-        if (typeof showToast === 'function') {
+        if (!fromQueue && typeof showToast === 'function') {
           showToast(translate('scripts.arcade.pachinko.status.selectBet', 'Select a bet first.'));
         }
-        return;
+        pendingDropCount = 0;
+        return false;
       }
       if (!canAffordBet(selectedBet)) {
         setStatus('insufficientAtoms', 'Not enough atoms for this bet.');
-        if (typeof showToast === 'function') {
+        if (!fromQueue && typeof showToast === 'function') {
           showToast(translate('scripts.arcade.pachinko.status.insufficientAtoms', 'Not enough atoms for this bet.'));
         }
         ensureSelectedBetAffordable();
         updateBalanceDisplay();
-        return;
+        pendingDropCount = 0;
+        return false;
       }
       const layeredBet = createLayeredAmount(selectedBet);
       if (!layeredBet) {
-        return;
+        pendingDropCount = 0;
+        return false;
       }
       activeBet = layeredBet;
       dropping = true;
       clearPendingTimeouts();
-      setStatus('dropping', 'Dropping...');
+      if (pendingDropCount > 0) {
+        setStatus('seriesActive', 'Launching queued drops...', { remaining: `${pendingDropCount + 1}` });
+      } else {
+        setStatus('dropping', 'Dropping...');
+      }
       resetBallPosition();
       updateBetButtons();
       updateMultiplierControls();
@@ -1058,11 +1113,32 @@
         const slotDefinition = slotDefinitions[index] || slotDefinitions[Math.floor(slotDefinitions.length / 2)];
         finishDrop(index, slotDefinition, layeredBet);
       });
+      return true;
+    }
+
+    function queueDropSeries(count) {
+      const normalized = Math.max(1, Math.floor(Number(count) || 1));
+      if (dropping) {
+        pendingDropCount += normalized;
+        setStatus('seriesQueued', 'Queued additional drops.', { count: `${pendingDropCount + 1}` });
+        return;
+      }
+      pendingDropCount += normalized - 1;
+      const started = beginDrop(false);
+      if (!started) {
+        pendingDropCount = 0;
+        updateDropButtonState();
+        return;
+      }
+      if (pendingDropCount > 0) {
+        setStatus('seriesActive', 'Launching queued drops...', { remaining: `${pendingDropCount + 1}` });
+      }
+      updateDropButtonState();
     }
 
     if (dropButton) {
       dropButton.addEventListener('click', () => {
-        beginDrop();
+        queueDropSeries(getRequestedDropCount());
       });
     }
 

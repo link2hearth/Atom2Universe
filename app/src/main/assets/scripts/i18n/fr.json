@@ -1004,7 +1004,11 @@
         "controls": {
           "aria": "Commandes du Pachinko",
           "title": "Commandes",
-          "drop": "Lâcher une orbe"
+          "drop": "Lâcher une orbe",
+          "multi": {
+            "label": "Nombre de lancers",
+            "hint": "Les orbes seront lâchées l’une après l’autre."
+          }
         },
         "bet": {
           "title": "Mise",
@@ -2007,8 +2011,11 @@
         "status": {
           "ready": "Choisissez une mise et lâchez une orbe prismatique.",
           "dropping": "Orbe en chute libre…",
+          "seriesQueued": "Série programmée : {count} lancers alignés.",
+          "seriesActive": "Série en cours… {remaining} lancer(s) restants.",
           "selectBet": "Sélectionnez une mise avant de lâcher une orbe.",
           "insufficientAtoms": "Vous n’avez pas assez d’atomes pour cette mise.",
+          "advantage": "Bonus d’avantage ! {slot} vous offre {bonus}. Gain net : {net}.",
           "win": "Supernova ! {slot} paie {multiplier}. Gain net : {net}.",
           "even": "{slot} vous rend votre mise. Net : {net}.",
           "softLoss": "{slot} ne paie que {multiplier}. Net : {net}.",
