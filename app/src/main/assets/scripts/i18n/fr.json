@@ -336,6 +336,12 @@
             "description": "Rien à gagner, c'est une aire de test pour le jeu de la vie de Conway.",
             "cta": "Explorer"
           },
+          "roulette": {
+            "aria": "Ouvrir le mini-jeu Joker Roulette",
+            "title": "Joker Roulette",
+            "description": "Faites tourner une machine à sous néon et misez vos atomes sur les couleurs des cartes.",
+            "cta": "Tourner"
+          },
           "blackjack": {
             "aria": "Ouvrir le mini-jeu Blackjack",
             "title": "Blackjack",
@@ -790,6 +796,41 @@
             },
             "generic": "Partie terminée."
           }
+        }
+      },
+      "roulette": {
+        "aria": "Mini-jeu Joker Roulette",
+        "gridAria": "Grille de la machine à sous",
+        "title": "Joker Roulette",
+        "betLabel": "Mise :",
+        "balanceLabel": "Solde :",
+        "multiplierLabel": "Dernier multiplicateur :",
+        "controls": {
+          "spin": "Lancer"
+        },
+        "status": {
+          "ready": "Préparez votre mise et lancez la roulette."
+        },
+        "bet": {
+          "aria": "Commandes des mises",
+          "optionsAria": "Montants de mise disponibles",
+          "current": "Mise sélectionnée :",
+          "multiplier": "Multiplicateur :",
+          "option": "{amount} atomes",
+          "summary": "{amount} atomes",
+          "none": "Aucune",
+          "scale": {
+            "multiplyLabel": "×10",
+            "multiplyAria": "Multiplier les mises par 10 (multiplicateur actuel : ×{multiplier})",
+            "divideLabel": "÷10",
+            "divideAria": "Diviser les mises par 10 (multiplicateur actuel : ×{multiplier})"
+          }
+        },
+        "payouts": {
+          "aria": "Table des gains",
+          "title": "Table des gains",
+          "diagonal": "Diagonale de couleur → ×{multiplier}",
+          "jokerRow": "Ligne de Jokers → ×{multiplier}"
         }
       },
       "blackjack": {
@@ -1682,6 +1723,29 @@
           "solved": "Solution trouvée ✔︎",
           "noSolution": "Pas de solution trouvée (ou puzzle invalide).",
           "cleared": "Grille vidée."
+        }
+      },
+      "roulette": {
+        "status": {
+          "spinning": "La roulette tourne…",
+          "selectBet": "Sélectionnez une mise avant de lancer la roulette.",
+          "insufficientAtoms": "Solde insuffisant pour cette mise.",
+          "lose": "Pas de gain cette fois-ci.",
+          "winDiagonal": "Diagonale {color} ! Gain ×{multiplier}.",
+          "winJokerRow": "Ligne de Jokers ! Gain ×{multiplier}.",
+          "winMultiple": "Combinaisons multiples ! Gain total ×{multiplier}.",
+          "win": "Gain ×{multiplier}."
+        },
+        "colors": {
+          "red": "Rouge",
+          "black": "Noir"
+        },
+        "symbols": {
+          "hearts": "Cœur",
+          "diamonds": "Carreau",
+          "clubs": "Trèfle",
+          "spades": "Pique",
+          "joker": "Joker"
         }
       },
       "blackjack": {
