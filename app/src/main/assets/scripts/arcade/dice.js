@@ -156,6 +156,8 @@
     status: DICE_SECTION.querySelector('#diceStatus')
   };
 
+  const GACHA_TICKET_POINTS = 50;
+
   const diceValues = Array.from({ length: activeDiceCount }, (_, index) => ((index % facesPerDie) + 1));
   const heldDice = Array.from({ length: activeDiceCount }, () => false);
   let rollsLeft = maxRollsPerTurn;
@@ -607,7 +609,49 @@
     scheduleAutosave();
   }
 
+  function resolveGachaTicketAwarder() {
+    if (typeof gainGachaTickets === 'function') {
+      return gainGachaTickets;
+    }
+    if (typeof window !== 'undefined' && typeof window.gainGachaTickets === 'function') {
+      return window.gainGachaTickets;
+    }
+    return null;
+  }
+
+  function awardTicketsFromScore(score) {
+    const normalizedScore = Math.max(0, Math.floor(Number(score) || 0));
+    if (normalizedScore < GACHA_TICKET_POINTS) {
+      return 0;
+    }
+    const tickets = Math.floor(normalizedScore / GACHA_TICKET_POINTS);
+    if (tickets <= 0) {
+      return 0;
+    }
+    const awarder = resolveGachaTicketAwarder();
+    if (typeof awarder !== 'function') {
+      return 0;
+    }
+    try {
+      const granted = awarder(tickets, { unlockTicketStar: true });
+      const normalizedGranted = Number.isFinite(Number(granted)) ? Math.floor(Number(granted)) : tickets;
+      return Math.max(0, normalizedGranted);
+    } catch (error) {
+      console.warn('Dice: unable to grant gacha tickets', error);
+      return 0;
+    }
+  }
+
   function resetGame() {
+    const previousGameCompleted = gameComplete || assignedScores.size >= CATEGORY_DEFINITIONS.length;
+    let previousScore = 0;
+    let ticketsGranted = 0;
+    if (previousGameCompleted && assignedScores.size > 0) {
+      const totals = computeTotals();
+      previousScore = Math.max(0, Math.floor(Number(totals?.grandTotal) || 0));
+      ticketsGranted = awardTicketsFromScore(previousScore);
+    }
+
     assignedScores.clear();
     hasRolledThisTurn = false;
     gameComplete = false;
@@ -619,10 +663,34 @@
     updateDiceDisplay();
     updateRollInfo();
     updateControls();
-    setStatus(
-      'scripts.arcade.dice.status.newGame',
-      'New game started. Roll to begin.'
-    );
+
+    if (ticketsGranted > 0) {
+      const suffix = ticketsGranted === 1 ? '' : 's';
+      setStatus(
+        'scripts.arcade.dice.status.ticketsAwarded',
+        'Converted previous score ({score}) into {tickets} gacha ticket{suffix}. New game ready.',
+        {
+          score: formatScore(previousScore),
+          tickets: formatScore(ticketsGranted),
+          suffix,
+          points: formatScore(GACHA_TICKET_POINTS)
+        }
+      );
+    } else if (previousGameCompleted && previousScore > 0) {
+      setStatus(
+        'scripts.arcade.dice.status.ticketsNone',
+        'Previous score ({score}). No gacha tickets this time (needs {points} points each). New game ready.',
+        {
+          score: formatScore(previousScore),
+          points: formatScore(GACHA_TICKET_POINTS)
+        }
+      );
+    } else {
+      setStatus(
+        'scripts.arcade.dice.status.newGame',
+        'New game started. Roll to begin.'
+      );
+    }
     scheduleAutosave();
   }
 
