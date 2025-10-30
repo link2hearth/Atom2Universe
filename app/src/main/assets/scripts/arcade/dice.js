@@ -154,27 +154,8 @@
     newGameButton: DICE_SECTION.querySelector('#diceNewGameButton'),
     rollsValue: DICE_SECTION.querySelector('#diceRollsValue'),
     status: DICE_SECTION.querySelector('#diceStatus'),
-    upperSubtotal: DICE_SECTION.querySelector('#diceUpperSubtotal'),
-    upperBonus: DICE_SECTION.querySelector('#diceUpperBonus'),
-    upperTotal: DICE_SECTION.querySelector('#diceUpperTotal'),
-    lowerTotal: DICE_SECTION.querySelector('#diceLowerTotal'),
-    grandTotal: DICE_SECTION.querySelector('#diceGrandTotal')
+    lastScore: DICE_SECTION.querySelector('#diceLastScore')
   };
-
-  const categoryUi = new Map();
-  CATEGORY_DEFINITIONS.forEach(definition => {
-    const button = DICE_SECTION.querySelector(`[data-category="${definition.id}"]`);
-    if (!button) {
-      return;
-    }
-    const valueElement = button.querySelector('[data-role="value"]');
-    const previewElement = button.querySelector('[data-role="preview"]');
-    categoryUi.set(definition.id, {
-      button,
-      valueElement,
-      previewElement
-    });
-  });
 
   const diceValues = Array.from({ length: activeDiceCount }, (_, index) => ((index % facesPerDie) + 1));
   const heldDice = Array.from({ length: activeDiceCount }, () => false);
@@ -182,6 +163,7 @@
   let hasRolledThisTurn = false;
   let gameComplete = false;
   const assignedScores = new Map();
+  let lastGameScore = 0;
 
   function computeCounts(values) {
     const counts = new Array(facesPerDie + 1).fill(0);
@@ -335,23 +317,15 @@
     return { upperSubtotal, bonus, upperTotal, lowerTotal, grandTotal };
   }
 
-  function updateTotalsDisplay() {
-    const totals = computeTotals();
-    if (elements.upperSubtotal) {
-      elements.upperSubtotal.textContent = formatScore(totals.upperSubtotal);
+  function updateLastScoreDisplay() {
+    if (!elements.lastScore) {
+      return;
     }
-    if (elements.upperBonus) {
-      elements.upperBonus.textContent = formatScore(totals.bonus);
-    }
-    if (elements.upperTotal) {
-      elements.upperTotal.textContent = formatScore(totals.upperTotal);
-    }
-    if (elements.lowerTotal) {
-      elements.lowerTotal.textContent = formatScore(totals.lowerTotal);
-    }
-    if (elements.grandTotal) {
-      elements.grandTotal.textContent = formatScore(totals.grandTotal);
-    }
+    elements.lastScore.textContent = translate(
+      'index.sections.dice.controls.lastScore',
+      'Last score: {score}',
+      { score: formatScore(lastGameScore) }
+    );
   }
 
   function setStatus(key, fallback, params) {
@@ -409,85 +383,83 @@
     button.setAttribute('aria-label', translate(key, fallback, params));
   }
 
-  function updateScorecard(previewCounts, previewSum, previewUnique) {
-    const previews = new Map();
-    const previewEnabled = hasRolledThisTurn && !gameComplete;
-    CATEGORY_DEFINITIONS.forEach(definition => {
-      const ui = categoryUi.get(definition.id);
-      if (!ui || !ui.button) {
-        return;
+  function selectBestCategory(counts, sum, uniqueValues) {
+    let bestDefinition = null;
+    let bestScore = -1;
+    for (let i = 0; i < CATEGORY_DEFINITIONS.length; i += 1) {
+      const definition = CATEGORY_DEFINITIONS[i];
+      if (assignedScores.has(definition.id)) {
+        continue;
       }
-      const isAssigned = assignedScores.has(definition.id);
-      if (isAssigned) {
-        const score = assignedScores.get(definition.id) ?? 0;
-        if (ui.valueElement) {
-          ui.valueElement.textContent = formatScore(score);
-        }
-        if (ui.previewElement) {
-          ui.previewElement.textContent = '—';
-        }
-        ui.button.disabled = true;
-        ui.button.classList.remove('dice-scorecard__entry--active');
-        const label = translate(
-          'scripts.arcade.dice.categoryLockedAria',
-          '{category} locked for {score} points.',
-          {
-            category: getCategoryLabel(definition),
-            score: formatScore(score)
-          }
-        );
-        ui.button.setAttribute('aria-label', label);
-      } else {
-        const previewScore = previewEnabled
-          ? Math.max(0, computeCategoryScore(definition, previewCounts, previewSum, previewUnique))
-          : 0;
-        previews.set(definition.id, previewScore);
-        if (ui.valueElement) {
-          ui.valueElement.textContent = '—';
-        }
-        if (ui.previewElement) {
-          ui.previewElement.textContent = `+${formatScore(previewScore)}`;
-        }
-        const ariaLabel = previewEnabled
-          ? translate(
-            'scripts.arcade.dice.categoryAction',
-            'Lock {score} points in {category}.',
-            {
-              category: getCategoryLabel(definition),
-              score: formatScore(previewScore)
-            }
-          )
-          : translate(
-            'scripts.arcade.dice.categoryDisabled',
-            '{category} unavailable until you roll.',
-            { category: getCategoryLabel(definition) }
-          );
-        ui.button.setAttribute('aria-label', ariaLabel);
-        ui.button.disabled = !previewEnabled;
+      const score = Math.max(0, computeCategoryScore(definition, counts, sum, uniqueValues));
+      if (score > bestScore || (score === bestScore && bestDefinition === null)) {
+        bestScore = score;
+        bestDefinition = definition;
       }
-    });
+    }
+    return bestDefinition ? { definition: bestDefinition, score: bestScore } : null;
+  }
 
-    let bestPreview = 0;
-    previews.forEach(score => {
-      if (score > bestPreview) {
-        bestPreview = score;
-      }
-    });
-    previews.forEach((score, categoryId) => {
-      const ui = categoryUi.get(categoryId);
-      if (!ui || !ui.button) {
-        return;
-      }
-      ui.button.classList.toggle(
-        'dice-scorecard__entry--active',
-        hasRolledThisTurn && !gameComplete && bestPreview > 0 && score === bestPreview
+  function autoAssignBestCategory(precomputed) {
+    if (gameComplete || !hasRolledThisTurn) {
+      return;
+    }
+    const counts = precomputed?.counts ?? computeCounts(diceValues);
+    const sum = precomputed?.sum ?? computeSum(diceValues);
+    const uniqueValues = precomputed?.uniqueValues ?? new Set(diceValues);
+    const best = selectBestCategory(counts, sum, uniqueValues);
+    if (!best) {
+      const totals = computeTotals();
+      gameComplete = true;
+      lastGameScore = totals.grandTotal;
+      updateRollInfo();
+      updateControls();
+      updateLastScoreDisplay();
+      setStatus(
+        'scripts.arcade.dice.status.gameComplete',
+        'Game complete! Final score: {score}.',
+        { score: formatScore(totals.grandTotal) }
       );
-    });
+      return;
+    }
+
+    assignedScores.set(best.definition.id, best.score);
+    const totals = computeTotals();
+    heldDice.fill(false);
+    hasRolledThisTurn = false;
+    rollsLeft = maxRollsPerTurn;
+    updateDiceDisplay();
+    updateRollInfo();
+
+    const completed = assignedScores.size >= CATEGORY_DEFINITIONS.length;
+    if (completed) {
+      gameComplete = true;
+      lastGameScore = totals.grandTotal;
+      updateControls();
+      updateLastScoreDisplay();
+      setStatus(
+        'scripts.arcade.dice.status.gameComplete',
+        'Game complete! Final score: {score}.',
+        { score: formatScore(totals.grandTotal) }
+      );
+      return;
+    }
+
+    updateControls();
+    setStatus(
+      'scripts.arcade.dice.status.autoScored',
+      'Picked {category} for {score} points. Current total: {total}.',
+      {
+        category: getCategoryLabel(best.definition),
+        score: formatScore(best.score),
+        total: formatScore(totals.grandTotal)
+      }
+    );
   }
 
   function updateControls() {
     if (elements.rollButton) {
-      elements.rollButton.disabled = rollsLeft <= 0 || gameComplete;
+      elements.rollButton.disabled = gameComplete;
     }
     if (elements.clearButton) {
       const hasHeld = heldDice.some(Boolean);
@@ -496,25 +468,14 @@
     if (elements.newGameButton) {
       elements.newGameButton.disabled = false;
     }
-    CATEGORY_DEFINITIONS.forEach(definition => {
-      const ui = categoryUi.get(definition.id);
-      if (!ui || !ui.button) {
-        return;
-      }
-      if (assignedScores.has(definition.id)) {
-        ui.button.disabled = true;
-        return;
-      }
-      ui.button.disabled = !hasRolledThisTurn || gameComplete;
-    });
   }
 
   function rollDice() {
-    if (rollsLeft <= 0 || gameComplete) {
-      setStatus(
-        'scripts.arcade.dice.status.noRolls',
-        'No rolls left—lock in a category.'
-      );
+    if (gameComplete) {
+      return;
+    }
+    if (rollsLeft <= 0) {
+      autoAssignBestCategory();
       return;
     }
     for (let i = 0; i < activeDiceCount; i += 1) {
@@ -546,7 +507,6 @@
     const counts = computeCounts(diceValues);
     const sum = computeSum(diceValues);
     const uniqueValues = new Set(diceValues);
-    updateScorecard(counts, sum, uniqueValues);
     updateControls();
     if (rollsLeft > 0) {
       setStatus(
@@ -554,12 +514,9 @@
         'Rolls left: {rolls}. Select dice to hold or roll again.',
         { rolls: formatScore(rollsLeft) }
       );
-    } else {
-      setStatus(
-        'scripts.arcade.dice.status.noRolls',
-        'No rolls left—lock in a category.'
-      );
+      return;
     }
+    autoAssignBestCategory({ counts, sum, uniqueValues });
   }
 
   function toggleHold(index) {
@@ -597,57 +554,6 @@
     setStatus('scripts.arcade.dice.status.holdsCleared', 'All dice released.');
   }
 
-  function finalizeCategory(categoryId) {
-    if (gameComplete) {
-      return;
-    }
-    if (!hasRolledThisTurn) {
-      setStatus(
-        'scripts.arcade.dice.status.needRoll',
-        'Roll at least once before scoring.'
-      );
-      return;
-    }
-    if (!CATEGORY_MAP.has(categoryId)) {
-      return;
-    }
-    if (assignedScores.has(categoryId)) {
-      return;
-    }
-    const counts = computeCounts(diceValues);
-    const sum = computeSum(diceValues);
-    const uniqueValues = new Set(diceValues);
-    const definition = CATEGORY_MAP.get(categoryId);
-    const score = Math.max(0, computeCategoryScore(definition, counts, sum, uniqueValues));
-    assignedScores.set(categoryId, score);
-    heldDice.fill(false);
-    hasRolledThisTurn = false;
-    rollsLeft = maxRollsPerTurn;
-    updateDiceDisplay();
-    updateRollInfo();
-    updateControls();
-    updateScorecard(counts, sum, uniqueValues);
-    updateTotalsDisplay();
-    const totals = computeTotals();
-    setStatus(
-      'scripts.arcade.dice.status.categoryLocked',
-      'Locked {category} for {score} points.',
-      {
-        category: getCategoryLabel(definition),
-        score: formatScore(score)
-      }
-    );
-    if (assignedScores.size >= CATEGORY_DEFINITIONS.length) {
-      gameComplete = true;
-      updateControls();
-      setStatus(
-        'scripts.arcade.dice.status.gameComplete',
-        'Game complete! Final score: {score}.',
-        { score: formatScore(totals.grandTotal) }
-      );
-    }
-  }
-
   function resetGame() {
     assignedScores.clear();
     hasRolledThisTurn = false;
@@ -660,24 +566,11 @@
     updateDiceDisplay();
     updateRollInfo();
     updateControls();
-    updateScorecard(computeCounts(diceValues), computeSum(diceValues), new Set(diceValues));
-    updateTotalsDisplay();
+    updateLastScoreDisplay();
     setStatus(
       'scripts.arcade.dice.status.newGame',
-      'Scorecard reset. Roll to begin.'
+      'New game started. Roll to begin.'
     );
-  }
-
-  function handleCategoryClick(event) {
-    if (!(event.currentTarget instanceof HTMLElement)) {
-      return;
-    }
-    event.preventDefault();
-    const categoryId = event.currentTarget.dataset.category;
-    if (!categoryId) {
-      return;
-    }
-    finalizeCategory(categoryId);
   }
 
   diceButtons.forEach((button, index) => {
@@ -696,14 +589,6 @@
     button.addEventListener('animationend', () => {
       button.classList.remove('dice-die--rolling');
     });
-  });
-
-  CATEGORY_DEFINITIONS.forEach(definition => {
-    const ui = categoryUi.get(definition.id);
-    if (!ui || !ui.button) {
-      return;
-    }
-    ui.button.addEventListener('click', handleCategoryClick);
   });
 
   if (elements.rollButton) {
@@ -729,8 +614,7 @@
 
   updateDiceDisplay();
   updateRollInfo();
-  updateTotalsDisplay();
-  updateScorecard(computeCounts(diceValues), computeSum(diceValues), new Set(diceValues));
+  updateLastScoreDisplay();
   updateControls();
   setStatus(
     'scripts.arcade.dice.status.start',
