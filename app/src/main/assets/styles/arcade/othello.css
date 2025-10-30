@@ -126,11 +126,12 @@
   border: 1px solid var(--othello-border);
   box-shadow: var(--othello-shadow);
   border-radius: clamp(0.6rem, 2vw, 1.1rem);
-  padding: clamp(0.7rem, 2vw, 1.1rem);
+  padding: clamp(0.95rem, 2.7vw, 1.5rem);
   display: grid;
-  grid-template-columns: repeat(8, minmax(2.8rem, 1fr));
-  gap: clamp(0.18rem, 0.6vw, 0.35rem);
-  width: min(100%, clamp(18rem, 60vw, 28rem));
+  grid-template-columns: repeat(8, minmax(3.78rem, 1fr));
+  gap: clamp(0.24rem, 0.81vw, 0.47rem);
+  width: min(100%, clamp(24.3rem, 81vw, 37.8rem));
+  margin-inline: auto;
 }
 
 .othello__cell {
@@ -188,6 +189,6 @@
 
 @media (max-width: 520px) {
   .othello__board {
-    grid-template-columns: repeat(8, minmax(2.4rem, 1fr));
+    grid-template-columns: repeat(8, minmax(3.24rem, 1fr));
   }
 }
