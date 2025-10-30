@@ -61,6 +61,7 @@
 
   const AI_NAME_POOL = Object.freeze(['Jack', 'Morgan', 'Alex', 'Riley', 'Quinn']);
   const AI_SEAT_NAMES = Object.freeze(['Peter', 'Wendy', 'Zelda', 'Link']);
+  const SEAT_ROTATION_ORDER = Object.freeze(['Peter', 'Wendy', 'hero', 'Zelda', 'Link']);
   const HAND_LABEL_KEYS = Object.freeze([
     'index.sections.holdem.hands.highCard',
     'index.sections.holdem.hands.pair',
@@ -620,29 +621,99 @@
     if (!count) {
       return [];
     }
+
     const dealerIndex = getDealerIndex();
     if (dealerIndex < 0) {
       return [];
     }
-    const startIndex = state.phase === 'preflop'
+
+    function isEligible(player) {
+      if (!player) {
+        return false;
+      }
+      if (player.folded || player.allIn) {
+        return false;
+      }
+      if (!includeHero && player.id === 'hero') {
+        return false;
+      }
+      return true;
+    }
+
+    const startingSeat = state.phase === 'preflop'
       ? normalizeSeatIndex(getBigBlindIndex() + 1)
       : normalizeSeatIndex(dealerIndex + 1);
-    const order = [];
+
+    let firstActor = null;
     for (let offset = 0; offset < count; offset += 1) {
-      const seatIndex = normalizeSeatIndex(startIndex + offset);
-      const player = state.players[seatIndex];
+      const seatIndex = normalizeSeatIndex(startingSeat + offset);
+      const candidate = state.players[seatIndex];
+      if (isEligible(candidate)) {
+        firstActor = candidate;
+        break;
+      }
+    }
+
+    const playersByName = new Map();
+    for (let i = 0; i < state.players.length; i += 1) {
+      const player = state.players[i];
       if (!player) {
         continue;
       }
-      if (player.folded || player.allIn) {
-        continue;
+      if (player.id === 'hero') {
+        playersByName.set('hero', player);
       }
-      if (!includeHero && player.id === 'hero') {
-        continue;
+      if (typeof player.name === 'string') {
+        playersByName.set(player.name, player);
       }
-      order.push(player);
     }
-    return order;
+
+    const ordered = [];
+    const seen = new Set();
+
+    function addPlayer(player) {
+      if (!isEligible(player)) {
+        return;
+      }
+      if (seen.has(player.id)) {
+        return;
+      }
+      seen.add(player.id);
+      ordered.push(player);
+    }
+
+    for (let i = 0; i < SEAT_ROTATION_ORDER.length; i += 1) {
+      const key = SEAT_ROTATION_ORDER[i];
+      const player = playersByName.get(key);
+      addPlayer(player);
+    }
+
+    for (let i = 0; i < state.players.length; i += 1) {
+      addPlayer(state.players[i]);
+    }
+
+    if (!ordered.length) {
+      return [];
+    }
+
+    if (!firstActor) {
+      return ordered;
+    }
+
+    const startIndex = ordered.findIndex(player => player.id === firstActor.id);
+    if (startIndex <= 0) {
+      if (startIndex === 0) {
+        return ordered;
+      }
+      return [firstActor, ...ordered.filter(player => player.id !== firstActor.id)];
+    }
+
+    const rotated = [];
+    for (let offset = 0; offset < ordered.length; offset += 1) {
+      const index = (startIndex + offset) % ordered.length;
+      rotated.push(ordered[index]);
+    }
+    return rotated;
   }
 
   function getResponseOrder() {
