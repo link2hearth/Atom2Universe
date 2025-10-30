@@ -2257,19 +2257,15 @@
                 data-i18n="index.sections.lightsOut.difficulty.hard"
               >Difficile</button>
             </div>
-          </div>
-          <div class="lights-out__status" aria-live="polite">
-            <span class="lights-out__status-item">
-              <span class="lights-out__status-label" data-i18n="index.sections.lightsOut.status.level">Niveau</span>
-              <span id="lightsOutLevelValue">1</span>
-            </span>
-            <span class="lights-out__status-item">
-              <span class="lights-out__status-label" data-i18n="index.sections.lightsOut.status.size">Taille</span>
-              <span id="lightsOutSizeValue">5×5</span>
-            </span>
+            <button
+              type="button"
+              class="lights-out__action-button"
+              id="lightsOutNewButton"
+              data-i18n="index.sections.lightsOut.actions.new"
+            >Nouvelle grille</button>
           </div>
           <p
-            class="lights-out__message"
+            class="visually-hidden"
             id="lightsOutMessage"
             role="status"
             aria-live="polite"
@@ -2286,14 +2282,6 @@
             aria-label="Grille Lights Out"
             data-i18n="aria-label:index.sections.lightsOut.board"
           ></div>
-        </div>
-        <div class="lights-out__actions">
-          <button
-            type="button"
-            class="lights-out__action-button"
-            id="lightsOutNewButton"
-            data-i18n="index.sections.lightsOut.actions.new"
-          >Nouvelle grille</button>
         </div>
       </div>
     </section>
@@ -3155,6 +3143,10 @@
               <p>
                 <strong data-i18n="index.sections.options.welcome.details.balance.label">Mini jeu Balance :</strong>
                 <span data-i18n="index.sections.options.welcome.details.balance.description">Disposez chaque poids pour garder la planche stable et gagner des essais supplémentaires pour Métaux.</span>
+              </p>
+              <p>
+                <strong data-i18n="index.sections.options.welcome.details.lightsOut.label">Mini jeu Lights Out :</strong>
+                <span data-i18n="index.sections.options.welcome.details.lightsOut.description">Éteignez chaque case d’une grille qui change de taille selon la difficulté choisie en planifiant vos clics.</span>
               </p>
               <p>
                 <strong data-i18n="index.sections.options.welcome.details.sudoku.label">Mini jeu Sudoku :</strong>

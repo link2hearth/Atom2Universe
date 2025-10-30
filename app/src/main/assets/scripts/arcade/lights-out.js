@@ -339,8 +339,6 @@
       section,
       board,
       message: document.getElementById('lightsOutMessage'),
-      levelValue: document.getElementById('lightsOutLevelValue'),
-      sizeValue: document.getElementById('lightsOutSizeValue'),
       difficultyButtons: Array.from(section.querySelectorAll('[data-lights-difficulty]')),
       newGridButton: document.getElementById('lightsOutNewButton')
     };
@@ -748,14 +746,6 @@
   }
 
   function updateLevelDisplay(skipMessageUpdate) {
-    const { levelValue, sizeValue } = state.elements;
-    if (levelValue) {
-      const level = state.levelCounters[state.difficulty] || 1;
-      levelValue.textContent = formatIntegerLocalized(level);
-    }
-    if (sizeValue) {
-      sizeValue.textContent = `${state.size}×${state.size}`;
-    }
     if (skipMessageUpdate !== true && state.lastMessage) {
       setMessage(state.lastMessage.key, state.lastMessage.fallback, state.lastMessage.params, true);
     }
