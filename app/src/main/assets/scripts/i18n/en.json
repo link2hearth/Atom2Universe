@@ -2000,7 +2000,9 @@
           "categoryLocked": "Locked {category} for {score} points.",
           "gameComplete": "Game complete! Final score: {score}.",
           "resume": "Game resumed. Current total: {total}. Roll to continue.",
-          "newGame": "New game ready. Roll to begin."
+          "newGame": "New game ready. Roll to begin.",
+          "ticketsAwarded": "Converted previous score ({score}) into {tickets} gacha ticket{suffix}. New game ready.",
+          "ticketsNone": "Previous score ({score}). No gacha tickets this time (needs {points} points each). New game ready."
         },
         "die": {
           "available": "Die {index} showing {value}.",

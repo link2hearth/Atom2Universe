@@ -2000,7 +2000,9 @@
           "categoryLocked": "Combinaison {category} validée pour {score} points.",
           "gameComplete": "Partie terminée ! Score final : {score}.",
           "resume": "Partie reprise. Total actuel : {total}. Lancez les dés pour continuer.",
-          "newGame": "Nouvelle partie prête. Lancez les dés."
+          "newGame": "Nouvelle partie prête. Lancez les dés.",
+          "ticketsAwarded": "Score précédent ({score}) converti en {tickets} ticket{suffix} gacha. Nouvelle partie prête.",
+          "ticketsNone": "Score précédent ({score}). Aucun ticket gacha cette fois (il faut {points} points par ticket). Nouvelle partie prête."
         },
         "die": {
           "available": "Dé {index} affichant {value}.",
