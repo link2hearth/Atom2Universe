@@ -1160,6 +1160,7 @@
         article.classList.add('holdem-player--active');
       }
       article.setAttribute('role', 'listitem');
+      article.setAttribute('aria-label', player.name);
 
       const header = document.createElement('div');
       header.className = 'holdem-player__header';
@@ -1169,30 +1170,6 @@
       name.textContent = player.name;
       header.appendChild(name);
 
-      const meta = document.createElement('div');
-      meta.className = 'holdem-player__meta';
-
-      const stack = document.createElement('span');
-      stack.className = 'holdem-player__stack';
-      const label = document.createElement('span');
-      label.className = 'holdem-player__stack-label';
-      label.dataset.i18n = 'index.sections.holdem.labels.stack';
-      label.textContent = translate('index.sections.holdem.labels.stack', 'Atom reserve');
-      const value = document.createElement('span');
-      value.className = 'holdem-player__stack-value';
-      value.textContent = formatAmount(player.stack);
-      stack.appendChild(label);
-      stack.appendChild(value);
-      meta.appendChild(stack);
-
-      const status = document.createElement('span');
-      status.className = 'holdem-player__status';
-      const statusKey = player.statusKey || 'index.sections.holdem.playerStatus.waiting';
-      status.dataset.i18n = statusKey;
-      status.textContent = translate(statusKey, getPlayerStatusFallback(statusKey), player.statusParams);
-      meta.appendChild(status);
-
-      header.appendChild(meta);
       article.appendChild(header);
 
       const cardList = document.createElement('ul');
