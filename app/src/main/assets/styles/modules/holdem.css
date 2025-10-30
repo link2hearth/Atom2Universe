@@ -397,6 +397,21 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
+.holdem-button--compact {
+  width: auto;
+  min-width: unset;
+  padding: calc(0.45rem * var(--holdem-scale)) calc(0.85rem * var(--holdem-scale));
+  font-size: calc(0.85rem * var(--holdem-scale));
+  line-height: 1.2;
+  align-self: flex-end;
+  white-space: nowrap;
+}
+
+.holdem-summary__community .holdem-button--compact {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
 .holdem-button:hover:not(:disabled) {
   background: rgba(46, 68, 102, 0.92);
   transform: translateY(-1px);
