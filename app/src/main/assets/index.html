@@ -1725,30 +1725,6 @@
     >
       <div class="roulette">
         <h2 class="visually-hidden" data-i18n="index.sections.roulette.title">Joker Roulette</h2>
-        <header class="roulette__header">
-          <div class="roulette-meta">
-            <p class="roulette-meta__line">
-              <span data-i18n="index.sections.roulette.betLabel">Mise&nbsp;:</span>
-              <strong id="rouletteCurrentBet">0</strong>
-            </p>
-            <p class="roulette-meta__line">
-              <span data-i18n="index.sections.roulette.balanceLabel">Solde&nbsp;:</span>
-              <strong id="rouletteAtomsBalance">0</strong>
-            </p>
-            <p class="roulette-meta__line">
-              <span data-i18n="index.sections.roulette.multiplierLabel">Dernier multiplicateur&nbsp;:</span>
-              <strong id="rouletteLastMultiplier">×1</strong>
-            </p>
-          </div>
-          <div class="roulette-actions">
-            <button
-              type="button"
-              class="roulette-action-button"
-              id="rouletteSpinButton"
-              data-i18n="index.sections.roulette.controls.spin"
-            >Lancer</button>
-          </div>
-        </header>
         <div class="roulette-stage" data-roulette-stage>
           <div
             class="roulette-grid"
@@ -1773,27 +1749,35 @@
             </div>
           </div>
         </div>
-        <p
-          class="roulette-status"
-          id="rouletteStatus"
-          aria-live="polite"
-          data-i18n="index.sections.roulette.status.ready"
-        >Préparez votre mise et lancez la roulette.</p>
-        <div class="roulette-controls">
-          <section
-            class="roulette-bet"
-            id="rouletteBet"
+        <div class="roulette-summary">
+          <p
+            class="roulette-status"
+            id="rouletteStatus"
+            aria-live="polite"
+            data-i18n="index.sections.roulette.status.ready"
+          >Préparez votre mise et lancez la roulette.</p>
+          <p
+            class="roulette-last-win"
+            id="rouletteLastWin"
+            aria-live="polite"
+            data-i18n="index.sections.roulette.lastWin.placeholder"
+          >Dernier gain&nbsp;: 0 × 0 = 0</p>
+        </div>
+        <section
+          class="roulette-bet"
+          id="rouletteBet"
+          role="group"
+          aria-label="Gestion des mises"
+          data-i18n="aria-label:index.sections.roulette.bet.aria"
+        >
+          <div
+            class="roulette-bet__options"
+            id="rouletteBetOptions"
             role="group"
-            aria-label="Gestion des mises"
-            data-i18n="aria-label:index.sections.roulette.bet.aria"
-          >
-            <div
-              class="roulette-bet__options"
-              id="rouletteBetOptions"
-              role="group"
-              aria-label="Montants de mise disponibles"
-              data-i18n="aria-label:index.sections.roulette.bet.optionsAria"
-            ></div>
+            aria-label="Montants de mise disponibles"
+            data-i18n="aria-label:index.sections.roulette.bet.optionsAria"
+          ></div>
+          <div class="roulette-bet__footer">
             <div class="roulette-bet__summary">
               <span>
                 <span data-i18n="index.sections.roulette.bet.current">Mise sélectionnée&nbsp;:</span>
@@ -1804,23 +1788,14 @@
                 <strong id="rouletteBetMultiplier">×1</strong>
               </span>
             </div>
-          </section>
-          <aside
-            class="roulette-payouts"
-            aria-label="Table des gains"
-            data-i18n="aria-label:index.sections.roulette.payouts.aria"
-          >
-            <h3 class="roulette-payouts__title" data-i18n="index.sections.roulette.payouts.title">Table des gains</h3>
-            <ul class="roulette-payouts__list">
-              <li id="roulettePayoutDiagonal" data-i18n="index.sections.roulette.payouts.diagonal">
-                Diagonale de couleur → ×2
-              </li>
-              <li id="roulettePayoutJoker" data-i18n="index.sections.roulette.payouts.jokerRow">
-                Ligne de Jokers → ×10
-              </li>
-            </ul>
-          </aside>
-        </div>
+            <button
+              type="button"
+              class="roulette-action-button roulette-bet__spin"
+              id="rouletteSpinButton"
+              data-i18n="index.sections.roulette.controls.spin"
+            >Lancer</button>
+          </div>
+        </section>
       </div>
     </section>
 
