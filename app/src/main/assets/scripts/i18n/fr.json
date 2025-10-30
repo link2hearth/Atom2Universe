@@ -567,7 +567,7 @@
         "reset": "Réinitialiser la partie",
         "board": "Plateau d'Othello",
         "status": {
-          "ready": "Tour des noirs."
+          "ready": "L’IA joue les noirs. Préparez-vous à jouer les blancs."
         },
         "score": "Noirs : {black} · Blancs : {white}"
       },
@@ -1564,6 +1564,8 @@
           "white": "blancs"
         },
         "status": {
+          "humanTurn": "À vous de jouer (blancs).",
+          "aiTurn": "L’IA (noirs) réfléchit…",
           "turn": "Tour des {player}",
           "pass": "Aucun coup disponible pour les {player}. Tour passé.",
           "invalid": "Coup invalide. Choisissez une case surlignée.",

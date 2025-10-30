@@ -20,6 +20,10 @@
     WHITE: -1
   });
 
+  const AI_PLAYER = PLAYERS.BLACK;
+  const HUMAN_PLAYER = PLAYERS.WHITE;
+  const AI_MOVE_DELAY = 500;
+
   const state = {
     board: createEmptyBoard(),
     currentPlayer: PLAYERS.BLACK,
@@ -29,7 +33,8 @@
     cells: [],
     languageHandlerAttached: false,
     languageHandler: null,
-    lastStatus: null
+    lastStatus: null,
+    aiTimeout: null
   };
 
   onReady(() => {
@@ -112,6 +117,9 @@
     if (!cell) {
       return;
     }
+    if (state.currentPlayer !== HUMAN_PLAYER) {
+      return;
+    }
     const row = Number.parseInt(cell.dataset.row || '', 10);
     const col = Number.parseInt(cell.dataset.col || '', 10);
     if (Number.isNaN(row) || Number.isNaN(col)) {
@@ -145,6 +153,7 @@
   }
 
   function resetGame() {
+    clearAIMoveTimer();
     state.board = createEmptyBoard();
     const mid = BOARD_SIZE / 2;
     state.board[mid - 1][mid - 1] = PLAYERS.WHITE;
@@ -157,14 +166,11 @@
   }
 
   function prepareTurn() {
+    clearAIMoveTimer();
     state.validMoves = computeValidMoves(state.currentPlayer);
     renderBoard();
     if (state.validMoves.size > 0) {
-      setStatus(
-        'scripts.arcade.othello.status.turn',
-        'Tour des {player}',
-        { player: getPlayerName(state.currentPlayer) }
-      );
+      beginTurn();
       return;
     }
 
@@ -186,14 +192,11 @@
       endGame();
       return;
     }
-    setStatus(
-      'scripts.arcade.othello.status.turn',
-      'Tour des {player}',
-      { player: getPlayerName(state.currentPlayer) }
-    );
+    beginTurn();
   }
 
   function endGame() {
+    clearAIMoveTimer();
     const score = getScore();
     const resultKey = score.black > score.white
       ? 'black'
@@ -270,15 +273,17 @@
   }
 
   function renderBoard() {
+    const isHumanTurn = state.currentPlayer === HUMAN_PLAYER && state.validMoves.size > 0;
     for (let row = 0; row < BOARD_SIZE; row += 1) {
       for (let col = 0; col < BOARD_SIZE; col += 1) {
         const cell = state.cells[row][col];
         const value = state.board[row][col];
         const key = getMoveKey(row, col);
+        const isValidMove = isHumanTurn && state.validMoves.has(key);
         cell.classList.toggle('othello__cell--black', value === PLAYERS.BLACK);
         cell.classList.toggle('othello__cell--white', value === PLAYERS.WHITE);
-        cell.classList.toggle('othello__cell--valid', state.validMoves.has(key));
-        cell.disabled = value !== 0;
+        cell.classList.toggle('othello__cell--valid', isValidMove);
+        cell.disabled = value !== 0 || !isHumanTurn;
         const contentKey = value === PLAYERS.BLACK
           ? 'black'
           : value === PLAYERS.WHITE
@@ -299,7 +304,7 @@
           column: String(col + 1),
           content: contentLabel
         });
-        if (state.validMoves.has(key)) {
+        if (isValidMove) {
           const moveLabel = translate(
             'scripts.arcade.othello.cellValid',
             'Coup disponible',
@@ -337,6 +342,86 @@
   function setStatus(key, fallback, params) {
     state.lastStatus = { key, fallback, params: params || null };
     refreshStatus();
+  }
+
+  function beginTurn() {
+    if (state.currentPlayer === HUMAN_PLAYER) {
+      setStatus(
+        'scripts.arcade.othello.status.humanTurn',
+        'À vous de jouer (blancs).',
+        null
+      );
+      return;
+    }
+    setStatus(
+      'scripts.arcade.othello.status.aiTurn',
+      'L’IA (noirs) réfléchit…',
+      null
+    );
+    scheduleAIMove();
+  }
+
+  function scheduleAIMove() {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    state.aiTimeout = window.setTimeout(() => {
+      state.aiTimeout = null;
+      if (state.currentPlayer !== AI_PLAYER) {
+        return;
+      }
+      const move = chooseAIMove();
+      if (!move) {
+        prepareTurn();
+        return;
+      }
+      const flips = state.validMoves.get(getMoveKey(move.row, move.col));
+      if (!flips) {
+        prepareTurn();
+        return;
+      }
+      placeDisc(move.row, move.col, flips);
+    }, AI_MOVE_DELAY);
+  }
+
+  function chooseAIMove() {
+    if (state.validMoves.size === 0) {
+      return null;
+    }
+    const weights = [
+      [120, -20, 20, 5, 5, 20, -20, 120],
+      [-20, -40, -5, -5, -5, -5, -40, -20],
+      [20, -5, 15, 3, 3, 15, -5, 20],
+      [5, -5, 3, 3, 3, 3, -5, 5],
+      [5, -5, 3, 3, 3, 3, -5, 5],
+      [20, -5, 15, 3, 3, 15, -5, 20],
+      [-20, -40, -5, -5, -5, -5, -40, -20],
+      [120, -20, 20, 5, 5, 20, -20, 120]
+    ];
+    let bestMove = null;
+    let bestScore = -Infinity;
+    state.validMoves.forEach((flips, key) => {
+      const [rowStr, colStr] = key.split(',');
+      const row = Number.parseInt(rowStr, 10);
+      const col = Number.parseInt(colStr, 10);
+      if (Number.isNaN(row) || Number.isNaN(col)) {
+        return;
+      }
+      const positional = weights[row][col] || 0;
+      const score = positional + flips.length * 10;
+      if (!bestMove || score > bestScore) {
+        bestMove = { row, col };
+        bestScore = score;
+      }
+    });
+    return bestMove;
+  }
+
+  function clearAIMoveTimer() {
+    if (state.aiTimeout !== null && typeof window !== 'undefined') {
+      window.clearTimeout(state.aiTimeout);
+      state.aiTimeout = null;
+    }
   }
 
   function getScore() {
