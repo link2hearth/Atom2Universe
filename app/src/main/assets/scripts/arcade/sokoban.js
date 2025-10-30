@@ -14,6 +14,18 @@
 
   const DEFAULT_LEVELS = Object.freeze([]);
 
+  const DEFAULT_FALLBACK_LEVEL = Object.freeze({
+    map: Object.freeze([
+      '#######',
+      '#.....#',
+      '#.T$..#',
+      '#..P..#',
+      '#..$T.#',
+      '#.....#',
+      '#######'
+    ])
+  });
+
   const DEFAULT_CONFIG = Object.freeze({
     shuffleMoves: Object.freeze({ min: 56, max: 180 }),
     generator: Object.freeze({
@@ -26,7 +38,8 @@
     map: Object.freeze([]),
     targets: Object.freeze([]),
     playerStart: Object.freeze([0, 0]),
-    levels: DEFAULT_LEVELS
+    levels: DEFAULT_LEVELS,
+    fallbackLevel: DEFAULT_FALLBACK_LEVEL
   });
 
   const KEY_DIRECTIONS = Object.freeze({
@@ -77,8 +90,10 @@
     targetKeys: new Set(),
     boxes: new Set(),
     levelDefinitions: [],
+    fallbackLevel: null,
     levelIndex: 0,
     currentLevelLayout: null,
+    usingFallbackLayout: false,
     player: { row: 0, col: 0 },
     playerStart: { row: 0, col: 0 },
     moveCount: 0,
@@ -1407,16 +1422,16 @@
     }
     const flooredHint = Math.floor(difficultyHint);
     const cappedHint = Number.isFinite(flooredHint) ? clampInt(flooredHint, 0, 160, flooredHint) : 0;
-    const baseline = Math.max(6, cappedHint, totalBoxes * 4);
-    const minPushTarget = Math.max(totalBoxes * 4, Math.floor(baseline * 0.4), 6);
-    const maxPushTarget = Math.max(minPushTarget + Math.max(6, totalBoxes * 2), Math.floor(baseline * 1.9));
+    const baseline = Math.max(5, cappedHint, totalBoxes * 3);
+    const minPushTarget = Math.max(totalBoxes * 3, Math.floor(baseline * 0.35), 5);
+    const maxPushTarget = Math.max(minPushTarget + Math.max(4, totalBoxes * 2), Math.floor(baseline * 1.6));
     if (metrics.minPushes < minPushTarget) {
       return false;
     }
     if (metrics.minPushes > maxPushTarget) {
       return false;
     }
-    if (metrics.pathLength < metrics.minPushes * 2.2) {
+    if (metrics.pathLength < metrics.minPushes * 1.7) {
       return false;
     }
     return true;
@@ -1573,6 +1588,8 @@
   function sanitizeConfig(rawConfig) {
     const fallbackLevels = sanitizeLevels(DEFAULT_CONFIG.levels);
     const fallbackGenerator = sanitizeGeneratorConfig(DEFAULT_CONFIG.generator);
+    const defaultFallbackCandidates = sanitizeLevels([DEFAULT_CONFIG.fallbackLevel]);
+    const defaultFallbackLevel = defaultFallbackCandidates[0] || null;
     if (!rawConfig || typeof rawConfig !== 'object') {
       return {
         shuffleMoves: { ...DEFAULT_CONFIG.shuffleMoves },
@@ -1580,7 +1597,8 @@
         map: Array.from(DEFAULT_CONFIG.map),
         targets: Array.from(DEFAULT_CONFIG.targets),
         playerStart: Array.from(DEFAULT_CONFIG.playerStart),
-        levels: fallbackLevels
+        levels: fallbackLevels,
+        fallbackLevel: defaultFallbackLevel
       };
     }
 
@@ -1589,6 +1607,17 @@
     let normalizedLevels = sanitizeLevels(rawLevels);
     if (!normalizedLevels.length) {
       normalizedLevels = fallbackLevels;
+    }
+
+    let normalizedFallback = defaultFallbackLevel;
+    if (Object.prototype.hasOwnProperty.call(rawConfig, 'fallbackLevel')) {
+      const fallbackCandidates = sanitizeLevels([rawConfig.fallbackLevel]);
+      if (fallbackCandidates.length > 0) {
+        [normalizedFallback] = fallbackCandidates;
+      }
+    }
+    if (!normalizedFallback && normalizedLevels.length > 0) {
+      [normalizedFallback] = normalizedLevels;
     }
 
     const generator = sanitizeGeneratorConfig(rawConfig.generator);
@@ -1650,8 +1679,32 @@
       map: normalizedMap,
       targets,
       playerStart: playerCandidate,
-      levels: normalizedLevels
+      levels: normalizedLevels,
+      fallbackLevel: normalizedFallback
     };
+  }
+
+  function cloneLevelDefinition(level) {
+    if (!level || typeof level !== 'object') {
+      return null;
+    }
+    const map = Array.isArray(level.map)
+      ? level.map.map(row => (typeof row === 'string' ? row : String(row)))
+      : [];
+    const targets = Array.isArray(level.targets)
+      ? level.targets
+          .map(entry => (Array.isArray(entry) && entry.length >= 2 ? [Number(entry[0]), Number(entry[1])] : null))
+          .filter(entry => Number.isInteger(entry?.[0]) && Number.isInteger(entry?.[1]))
+      : [];
+    const boxes = Array.isArray(level.boxes)
+      ? level.boxes
+          .map(entry => (Array.isArray(entry) && entry.length >= 2 ? [Number(entry[0]), Number(entry[1])] : null))
+          .filter(entry => Number.isInteger(entry?.[0]) && Number.isInteger(entry?.[1]))
+      : [];
+    const playerStart = Array.isArray(level.playerStart) && level.playerStart.length >= 2
+      ? [Number(level.playerStart[0]), Number(level.playerStart[1])]
+      : [0, 0];
+    return { map, targets, boxes, playerStart };
   }
 
   function applyDynamicLayout(definition) {
@@ -1755,36 +1808,34 @@
     };
   }
 
-  function loadLevel(levelIndex) {
-    if (!Array.isArray(state.levelDefinitions) || !state.levelDefinitions.length) {
+  function applyLevelDefinition(level) {
+    if (!level || !Array.isArray(level.map) || !level.map.length) {
       return false;
     }
-    const maxIndex = state.levelDefinitions.length - 1;
-    const clampedIndex = clampInt(levelIndex, 0, maxIndex, 0);
-    const level = state.levelDefinitions[clampedIndex];
-    if (!level) {
+    const height = level.map.length;
+    const width = level.map[0]?.length || 0;
+    if (height <= 0 || width <= 0) {
       return false;
     }
 
-    state.levelIndex = clampedIndex;
-    state.level = clampInt(clampedIndex + 1, 1, 9999, clampedIndex + 1);
-    state.currentLevelLayout = null;
-    state.height = level.map.length;
-    state.width = level.map[0]?.length || 0;
-    state.tiles = new Array(state.height);
+    state.height = height;
+    state.width = width;
+    state.tiles = new Array(height);
     state.targetKeys = new Set();
+    state.currentMetrics = null;
 
-    for (let row = 0; row < state.height; row += 1) {
-      const rowTiles = new Array(state.width);
+    for (let row = 0; row < height; row += 1) {
+      const rowTiles = new Array(width);
       const rowString = level.map[row] || '';
-      for (let col = 0; col < state.width; col += 1) {
+      for (let col = 0; col < width; col += 1) {
         const wall = rowString[col] === '#';
         rowTiles[col] = { wall, target: false };
       }
       state.tiles[row] = rowTiles;
     }
 
-    level.targets.forEach(target => {
+    const targets = Array.isArray(level.targets) ? level.targets : [];
+    targets.forEach(target => {
       if (!Array.isArray(target) || target.length < 2) {
         return;
       }
@@ -1798,31 +1849,43 @@
 
     const startRow = clampInt(level.playerStart?.[0], 0, state.height - 1, 0);
     const startCol = clampInt(level.playerStart?.[1], 0, state.width - 1, 0);
-    if (isWalkable(startRow, startCol)) {
-      state.playerStart = { row: startRow, col: startCol };
-    } else if (state.targetKeys.size > 0) {
-      const [firstTarget] = Array.from(state.targetKeys);
-      const [row, col] = firstTarget.split(',').map(Number);
-      state.playerStart = { row, col };
-    } else {
-      let fallback = null;
-      for (let row = 0; row < state.height; row += 1) {
-        for (let col = 0; col < state.width; col += 1) {
-          if (isWalkable(row, col)) {
-            fallback = { row, col };
+    let playerRow = startRow;
+    let playerCol = startCol;
+    if (!isWalkable(playerRow, playerCol)) {
+      if (state.targetKeys.size > 0) {
+        const [firstTarget] = Array.from(state.targetKeys);
+        const [row, col] = firstTarget.split(',').map(Number);
+        playerRow = row;
+        playerCol = col;
+      } else {
+        let fallback = null;
+        for (let row = 0; row < state.height; row += 1) {
+          for (let col = 0; col < state.width; col += 1) {
+            if (isWalkable(row, col)) {
+              fallback = { row, col };
+              break;
+            }
+          }
+          if (fallback) {
             break;
           }
         }
         if (fallback) {
-          break;
+          playerRow = fallback.row;
+          playerCol = fallback.col;
+        } else {
+          playerRow = 0;
+          playerCol = 0;
         }
       }
-      state.playerStart = fallback || { row: 0, col: 0 };
     }
 
-    state.player = { row: state.playerStart.row, col: state.playerStart.col };
+    state.playerStart = { row: playerRow, col: playerCol };
+    state.player = { row: playerRow, col: playerCol };
+
     state.boxes = new Set();
-    level.boxes.forEach(box => {
+    const boxes = Array.isArray(level.boxes) ? level.boxes : [];
+    boxes.forEach(box => {
       if (!Array.isArray(box) || box.length < 2) {
         return;
       }
@@ -1833,6 +1896,26 @@
       }
     });
 
+    return true;
+  }
+
+  function loadLevel(levelIndex) {
+    if (!Array.isArray(state.levelDefinitions) || !state.levelDefinitions.length) {
+      return false;
+    }
+    const maxIndex = state.levelDefinitions.length - 1;
+    const clampedIndex = clampInt(levelIndex, 0, maxIndex, 0);
+    const level = state.levelDefinitions[clampedIndex];
+    if (!level) {
+      return false;
+    }
+    if (!applyLevelDefinition(level)) {
+      return false;
+    }
+    state.levelIndex = clampedIndex;
+    state.level = clampInt(clampedIndex + 1, 1, 9999, clampedIndex + 1);
+    state.currentLevelLayout = null;
+    state.usingFallbackLayout = false;
     state.moveCount = 0;
     state.pushCount = 0;
     state.ready = false;
@@ -1845,8 +1928,12 @@
     const normalized = sanitizeConfig(config);
     state.config = normalized;
     state.configSignature = computeConfigSignature(normalized);
-    state.levelDefinitions = Array.isArray(normalized.levels) ? normalized.levels : [];
+    state.levelDefinitions = Array.isArray(normalized.levels)
+      ? normalized.levels.map(cloneLevelDefinition).filter(Boolean)
+      : [];
+    state.fallbackLevel = cloneLevelDefinition(normalized.fallbackLevel);
     state.currentLevelLayout = null;
+    state.usingFallbackLayout = false;
     clearCompletionEffects();
 
     if (state.levelDefinitions.length > 0) {
@@ -2101,6 +2188,9 @@
           state.currentLevelLayout.playerStart?.col ?? state.playerStart.col
         ]
       };
+      if (state.usingFallbackLayout || state.currentLevelLayout.isFallback) {
+        payload.procedural.fallback = true;
+      }
     }
     return payload;
   }
@@ -2125,6 +2215,7 @@
       }
       buildBoardCells();
       fallbackSnapshot = takeSnapshot();
+      state.usingFallbackLayout = false;
     } else if (payload.procedural && state.config?.generator) {
       const layout = {
         map: Array.isArray(payload.procedural.map) ? payload.procedural.map : [],
@@ -2140,6 +2231,12 @@
         targets: appliedLayout.targets.map(coords => [coords[0], coords[1]]),
         playerStart: { row: appliedLayout.playerStart.row, col: appliedLayout.playerStart.col }
       };
+      if (payload.procedural.fallback) {
+        state.currentLevelLayout.isFallback = true;
+        state.usingFallbackLayout = true;
+      } else {
+        state.usingFallbackLayout = false;
+      }
       buildBoardCells();
       fallbackSnapshot = takeSnapshot();
     } else if (state.config?.generator) {
@@ -2147,6 +2244,7 @@
     } else {
       buildBoardCells();
       fallbackSnapshot = takeSnapshot();
+      state.usingFallbackLayout = false;
     }
 
     const applied = applySnapshot({
@@ -2804,6 +2902,45 @@
     return index;
   }
 
+  function applyFallbackLevel(options = {}) {
+    if (!state.fallbackLevel) {
+      return false;
+    }
+    const applied = applyLevelDefinition(state.fallbackLevel);
+    if (!applied) {
+      return false;
+    }
+    const { randomizeLevel = false } = options;
+    state.levelIndex = -1;
+    const fallbackMap = Array.isArray(state.fallbackLevel.map)
+      ? state.fallbackLevel.map.map(row => String(row))
+      : [];
+    const fallbackTargets = Array.isArray(state.fallbackLevel.targets)
+      ? state.fallbackLevel.targets
+          .map(entry => (Array.isArray(entry) && entry.length >= 2 ? [Number(entry[0]), Number(entry[1])] : null))
+          .filter(entry => Number.isInteger(entry?.[0]) && Number.isInteger(entry?.[1]))
+      : [];
+    const fallbackPlayerStart = Array.isArray(state.fallbackLevel.playerStart)
+      ? [Number(state.fallbackLevel.playerStart[0]), Number(state.fallbackLevel.playerStart[1])]
+      : [state.playerStart.row, state.playerStart.col];
+    state.currentLevelLayout = {
+      map: fallbackMap,
+      targets: fallbackTargets,
+      playerStart: {
+        row: fallbackPlayerStart[0],
+        col: fallbackPlayerStart[1]
+      },
+      isFallback: true
+    };
+    state.usingFallbackLayout = true;
+    const baseLevel = clampInt(state.level, 1, 9999, 1);
+    const nextLevel = randomizeLevel
+      ? clampInt(baseLevel + 1, 1, 9999, baseLevel + 1)
+      : baseLevel;
+    finalizePreparedPuzzle(nextLevel);
+    return true;
+  }
+
   function prepareProceduralLevel(options = {}) {
     const { randomizeLevel = false } = options;
     const generator = state.config?.generator;
@@ -2828,6 +2965,7 @@
         targets: applied.targets.map(target => [target[0], target[1]]),
         playerStart: { row: applied.playerStart.row, col: applied.playerStart.col }
       };
+      state.usingFallbackLayout = false;
 
       let prepared = false;
       if (layout.initialState) {
@@ -2852,6 +2990,10 @@
 
     state.ready = false;
     state.currentLevelLayout = null;
+    state.usingFallbackLayout = false;
+    if (applyFallbackLevel({ randomizeLevel })) {
+      return true;
+    }
     setStatus(
       'scripts.arcade.sokoban.status.generationFailed',
       'Impossible de générer un niveau. Réessayez.',
@@ -2865,6 +3007,9 @@
     if (!state.currentLevelLayout || !state.config?.generator) {
       return false;
     }
+    if (state.usingFallbackLayout) {
+      return false;
+    }
     const { randomizeLevel = false } = options;
     const applied = applyDynamicLayout(state.currentLevelLayout);
     if (!applied) {
@@ -2876,6 +3021,7 @@
       targets: applied.targets.map(entry => [entry[0], entry[1]]),
       playerStart: { row: applied.playerStart.row, col: applied.playerStart.col }
     };
+    state.usingFallbackLayout = false;
     const shuffleAttempts = randomizeLevel ? 6 : 4;
     if (!shuffleWithRetries(shuffleAttempts)) {
       return false;
@@ -2937,6 +3083,9 @@
     }
 
     if (state.height <= 0 || state.width <= 0 || !state.tiles.length) {
+      if (applyFallbackLevel({ randomizeLevel })) {
+        return;
+      }
       return;
     }
 
