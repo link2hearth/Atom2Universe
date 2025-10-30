@@ -1033,6 +1033,17 @@
           "confirm": "Reset progress",
           "cancel": "Keep my progress"
         },
+        "holdem": {
+          "title": "Hold’em table",
+          "description": "Reset AI opponents and tweak the blind for the Hold’em poker mini-game.",
+          "wipeButton": "Wipe (reset AI stacks)",
+          "wipeAria": "Reset Hold’em AI stacks",
+          "blindLabel": "Current blind",
+          "divideButton": "÷10",
+          "divideAria": "Divide the Hold’em blind by ten",
+          "multiplyButton": "×10",
+          "multiplyAria": "Multiply the Hold’em blind by ten"
+        },
         "chiptune": {
           "title": "MIDI Music Module",
           "linkDescription": "Access the MIDI player directly inside the main interface.",
@@ -1972,6 +1983,12 @@
         "brickSkin": {
           "unlocked": "Choose the appearance of Particles bricks."
         }
+      },
+      "holdemOptions": {
+        "wipeSuccess": "Hold’em AI stacks reset to {stack}.",
+        "wipeFailure": "Hold’em table unavailable.",
+        "blindUpdated": "Hold’em blind adjusted to {blind}.",
+        "blindUnavailable": "Unable to adjust the blind right now."
       },
       "frenzy": "Frenzy",
       "frenzyActivate": "Activate {label} ({multiplier})",
