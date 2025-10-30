@@ -3,11 +3,11 @@
  * L'accent est mis sur l'animation des colonnes et l'ambiance casino.
  */
 :root {
-  --roulette-cell-size: clamp(72px, 18vw, 112px);
-  --roulette-column-gap: clamp(10px, 3vw, 18px);
-  --roulette-row-gap: clamp(10px, 3vw, 18px);
-  --roulette-stage-padding: clamp(16px, 5vw, 32px);
-  --roulette-stage-radius: 28px;
+  --roulette-cell-size: clamp(54px, 13.5vw, 84px);
+  --roulette-column-gap: clamp(8px, 2.25vw, 14px);
+  --roulette-row-gap: clamp(8px, 2.25vw, 14px);
+  --roulette-stage-padding: clamp(12px, 4vw, 24px);
+  --roulette-stage-radius: 22px;
   --roulette-stage-bg: radial-gradient(circle at 20% 20%, rgba(89, 120, 255, 0.28), transparent 70%),
     radial-gradient(circle at 80% 30%, rgba(255, 92, 158, 0.32), transparent 65%),
     radial-gradient(circle at 50% 80%, rgba(103, 247, 235, 0.24), transparent 70%),
@@ -22,9 +22,9 @@
 .roulette {
   display: flex;
   flex-direction: column;
-  gap: clamp(20px, 4vw, 36px);
-  padding: clamp(16px, 5vw, 40px);
-  max-width: 960px;
+  gap: clamp(10px, 2.8vw, 20px);
+  padding: clamp(12px, 4vw, 28px);
+  max-width: 840px;
   margin: 0 auto;
 }
 
@@ -102,9 +102,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: clamp(2.2rem, 6vw, 3.4rem);
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
   font-weight: 700;
-  border-radius: 18px;
+  border-radius: 14px;
   color: #fff;
   background: rgba(21, 27, 48, 0.72);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0 10px 24px rgba(0, 0, 0, 0.35);
@@ -173,7 +173,8 @@
 .roulette-summary {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
+  margin-top: -4px;
 }
 
 @media (min-width: 720px) {
@@ -188,11 +189,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 1.05rem;
-  line-height: 1.6;
-  padding: 14px 18px;
-  border-radius: 16px;
-  background: rgba(12, 16, 32, 0.65);
+  font-size: 1rem;
+  line-height: 1.5;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: rgba(12, 16, 32, 0.68);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
   color: #f3f7ff;
 }
@@ -204,15 +205,15 @@
 }
 
 .roulette-action-button {
-  min-width: 160px;
-  padding: 14px 24px;
-  font-size: 1.05rem;
+  min-width: 120px;
+  padding: 12px 20px;
+  font-size: 1rem;
   font-weight: 600;
   color: #0d1226;
   background: linear-gradient(135deg, #ffe072, #ff8c5c);
   border: none;
-  border-radius: 999px;
-  box-shadow: 0 18px 32px rgba(255, 143, 92, 0.35), inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+  border-radius: 16px;
+  box-shadow: 0 14px 28px rgba(255, 143, 92, 0.32), inset 0 0 0 1px rgba(255, 255, 255, 0.35);
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
 }
@@ -232,9 +233,9 @@
 .roulette-bet {
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  padding: 18px;
-  border-radius: 18px;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 16px;
   background: rgba(12, 16, 30, 0.72);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
 }
@@ -242,31 +243,31 @@
 .roulette-bet__options {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  align-items: center;
+  gap: 8px;
+  align-items: stretch;
 }
 
 .roulette-bet__footer {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
-  align-items: center;
-  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+  justify-content: flex-start;
 }
 
 .roulette-bet__summary {
   display: grid;
-  gap: 8px;
-  font-size: 0.95rem;
+  gap: 6px;
+  font-size: 0.9rem;
   color: rgba(236, 242, 255, 0.85);
   flex: 1;
-  min-width: 220px;
+  min-width: 200px;
 }
 
 .roulette-bet__summary span {
   display: flex;
   align-items: baseline;
-  gap: 6px;
+  gap: 4px;
 }
 
 .roulette-bet__summary strong {
@@ -276,21 +277,28 @@
 
 .roulette-bet__spin {
   margin-left: auto;
+  align-self: center;
 }
 
 .roulette-bet__option {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 82px;
-  padding: 10px 14px;
-  border-radius: 14px;
+  min-width: 70px;
+  padding: 8px 12px;
+  border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.18);
   background: rgba(22, 28, 52, 0.82);
   color: #f7f9ff;
   font-weight: 600;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.roulette-bet__options .roulette-bet__spin {
+  padding-inline: 18px;
+  border-radius: 999px;
+  min-width: 130px;
 }
 
 .roulette-bet__option--selected {
@@ -314,15 +322,15 @@
 
 .roulette-bet__scale {
   display: inline-flex;
-  gap: 8px;
+  gap: 6px;
   padding: 4px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.06);
 }
 
 .roulette-bet__scale-button {
-  min-width: 64px;
-  padding: 8px 14px;
+  min-width: 58px;
+  padding: 6px 12px;
   border-radius: 999px;
   background: rgba(19, 24, 48, 0.85);
   border: 1px solid rgba(255, 255, 255, 0.14);
@@ -346,12 +354,12 @@
   }
 
   .roulette-grid {
-    gap: clamp(8px, 2.4vw, 14px);
+    gap: clamp(6px, 2vw, 12px);
   }
 
   .roulette-bet__option {
-    min-width: 70px;
-    font-size: 0.95rem;
+    min-width: 64px;
+    font-size: 0.9rem;
   }
 
   .roulette-action-button {

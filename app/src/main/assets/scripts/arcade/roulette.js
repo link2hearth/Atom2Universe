@@ -1029,6 +1029,10 @@
         betButtons.push(button);
       }
 
+      if (startButton) {
+        betOptionsElement.appendChild(startButton);
+      }
+
       updateBetOptionValues();
       if (baseBetOptions.length) {
         setSelectedBet(baseBetOptions[0] * betMultiplier, baseBetOptions[0]);
