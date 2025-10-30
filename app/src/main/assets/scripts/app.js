@@ -2,6 +2,11 @@ const APP_DATA = typeof globalThis !== 'undefined' && globalThis.APP_DATA ? glob
 const GLOBAL_CONFIG =
   typeof globalThis !== 'undefined' && globalThis.GAME_CONFIG ? globalThis.GAME_CONFIG : {};
 
+const DEVKIT_FEATURE_ENABLED =
+  typeof globalThis !== 'undefined' && typeof globalThis.DEVKIT_ENABLED === 'boolean'
+    ? globalThis.DEVKIT_ENABLED
+    : true;
+
 const CONFIG_OPTIONS_WELCOME_CARD =
   GLOBAL_CONFIG
   && GLOBAL_CONFIG.uiText
@@ -7513,7 +7518,7 @@ function focusDevKitDefault() {
 }
 
 function openDevKit() {
-  if (DEVKIT_STATE.isOpen || !elements.devkitOverlay) {
+  if (!DEVKIT_FEATURE_ENABLED || DEVKIT_STATE.isOpen || !elements.devkitOverlay) {
     return;
   }
   DEVKIT_STATE.isOpen = true;
@@ -7542,6 +7547,9 @@ function closeDevKit() {
 }
 
 function toggleDevKit() {
+  if (!DEVKIT_FEATURE_ENABLED) {
+    return;
+  }
   if (DEVKIT_STATE.isOpen) {
     closeDevKit();
   } else {
@@ -11323,7 +11331,7 @@ function bindDomEventListeners() {
   }
 
   document.addEventListener('keydown', event => {
-    if (event.key === 'F9') {
+    if (DEVKIT_FEATURE_ENABLED && event.key === 'F9') {
       event.preventDefault();
       toggleDevKit();
     } else if (event.key === 'Escape' && DEVKIT_STATE.isOpen) {
@@ -11831,10 +11839,19 @@ function bindDomEventListeners() {
   }
 
   if (elements.openDevkitButton) {
-    elements.openDevkitButton.addEventListener('click', event => {
-      event.preventDefault();
-      toggleDevKit();
-    });
+    if (!DEVKIT_FEATURE_ENABLED) {
+      if (typeof elements.openDevkitButton.remove === 'function') {
+        elements.openDevkitButton.remove();
+      } else {
+        elements.openDevkitButton.style.display = 'none';
+      }
+      elements.openDevkitButton = null;
+    } else {
+      elements.openDevkitButton.addEventListener('click', event => {
+        event.preventDefault();
+        toggleDevKit();
+      });
+    }
   }
 
   if (elements.resetButton) {
