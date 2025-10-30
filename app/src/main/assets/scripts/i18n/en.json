@@ -330,6 +330,12 @@
             "description": "Practice to earn gacha tickets and a temporary multiplier bonus.",
             "cta": "Plan"
           },
+          "othello": {
+            "aria": "Open the Othello mini-game",
+            "title": "Othello",
+            "description": "Flip your opponent's discs by surrounding them on an 8×8 board.",
+            "cta": "Play"
+          },
           "gameOfLife": {
             "aria": "Open the Game of Life mini-game",
             "title": "Game of Life",
@@ -547,6 +553,17 @@
           "ready": "Place the blocks, then press the result panel to run the test."
         },
         "cubeAria": "Block weighing {weight}"
+      },
+      "othello": {
+        "aria": "Othello mini-game",
+        "title": "Othello",
+        "subtitle": "Trap and flip the opposing discs to control the board.",
+        "reset": "Reset game",
+        "board": "Othello board",
+        "status": {
+          "ready": "Black to move."
+        },
+        "score": "Black: {black} · White: {white}"
       },
       "theLine": {
         "aria": "The Line mini-game: cover every tile with a single stroke.",
@@ -1487,6 +1504,31 @@
           "solved": "Solution found ✔︎",
           "noSolution": "No solution found (or the puzzle is invalid).",
           "cleared": "Grid cleared."
+        }
+      },
+      "othello": {
+        "players": {
+          "black": "Black",
+          "white": "White"
+        },
+        "status": {
+          "turn": "It's {player}'s turn",
+          "pass": "No legal moves for {player}. Passing turn.",
+          "invalid": "Invalid move. Pick a highlighted square.",
+          "gameOver": "Game over. Black {black} – White {white}. {result}",
+          "result": {
+            "black": "Black wins!",
+            "white": "White wins!",
+            "draw": "Draw."
+          }
+        },
+        "score": "Black: {black} · White: {white}",
+        "cell": "Row {row}, column {column}: {content}",
+        "cellValid": "Playable move",
+        "cellStates": {
+          "empty": "empty square",
+          "black": "black disc",
+          "white": "white disc"
         }
       },
       "balance": {

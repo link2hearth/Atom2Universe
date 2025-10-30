@@ -633,6 +633,27 @@
         <button
           type="button"
           class="arcade-hub-card"
+          aria-label="Accéder au mini-jeu Othello"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.othello.aria"
+          data-page-target="othello"
+        >
+          <span
+            class="arcade-hub-card__title"
+            role="heading"
+            aria-level="3"
+            data-i18n="index.sections.arcadeHub.cards.othello.title"
+          >Othello</span>
+          <p
+            class="arcade-hub-card__description"
+            data-i18n="index.sections.arcadeHub.cards.othello.description"
+          >Retournez les pions de votre adversaire en les encerclant sur un plateau 8×8.</p>
+          <span class="arcade-hub-card__cta" data-i18n="index.sections.arcadeHub.cards.othello.cta"
+            >Jouer</span
+          >
+        </button>
+        <button
+          type="button"
+          class="arcade-hub-card"
           aria-label="Accéder au mini-jeu Jeu de la vie"
           data-i18n="aria-label:index.sections.arcadeHub.cards.gameOfLife.aria"
           data-page-target="gameOfLife"
@@ -1624,6 +1645,63 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section
+      id="othello"
+      class="page page--othello"
+      data-page-group="arcade"
+      aria-label="Mini-jeu Othello"
+      data-i18n="aria-label:index.sections.othello.aria"
+      hidden
+    >
+      <div class="othello">
+        <header class="othello__header">
+          <h2 class="othello__title" data-i18n="index.sections.othello.title">Othello</h2>
+          <p class="othello__subtitle" data-i18n="index.sections.othello.subtitle">
+            Encerclez les pions adverses pour les retourner.
+          </p>
+        </header>
+        <div class="othello__controls">
+          <button
+            type="button"
+            class="othello__reset"
+            id="othelloResetButton"
+            data-i18n="index.sections.othello.reset"
+          >
+            Réinitialiser la partie
+          </button>
+          <div class="othello__status-group">
+            <span
+              class="othello__status"
+              id="othelloStatus"
+              role="status"
+              aria-live="polite"
+              data-i18n="index.sections.othello.status.ready"
+            >
+              Tour des noirs.
+            </span>
+            <span
+              class="othello__score"
+              id="othelloScore"
+              data-i18n="index.sections.othello.score"
+            >
+              Noirs : 2 · Blancs : 2
+            </span>
+          </div>
+        </div>
+        <div class="othello__board-wrapper">
+          <div
+            class="othello__board"
+            id="othelloBoard"
+            role="grid"
+            aria-rowcount="8"
+            aria-colcount="8"
+            aria-label="Plateau d'Othello"
+            data-i18n="aria-label:index.sections.othello.board"
+          ></div>
         </div>
       </div>
     </section>
@@ -4052,6 +4130,7 @@
   <script src="scripts/arcade/holdem.js"></script>
   <script src="scripts/arcade/blackjack.js"></script>
   <script src="scripts/arcade/echecs.js"></script>
+  <script src="scripts/arcade/othello.js"></script>
   <script src="scripts/arcade/game-of-life.js"></script>
   <script src="scripts/arcade/quantum-2048.js"></script>
   <script src="scripts/arcade/the-line.js"></script>
