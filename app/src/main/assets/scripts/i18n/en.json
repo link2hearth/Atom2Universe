@@ -667,10 +667,6 @@
           "medium": "Medium",
           "hard": "Hard"
         },
-        "status": {
-          "level": "Level",
-          "size": "Size"
-        },
         "actions": {
           "new": "New grid"
         },
@@ -1096,6 +1092,10 @@
             "balance": {
               "label": "Balance mini-game:",
               "description": "Place every weight to keep the beam level and earn extra Metals attempts."
+            },
+            "lightsOut": {
+              "label": "Lights Out mini-game:",
+              "description": "Plan each move to switch off every tile on grids that grow with the selected difficulty."
             },
             "sudoku": {
               "label": "Sudoku mini-game:",

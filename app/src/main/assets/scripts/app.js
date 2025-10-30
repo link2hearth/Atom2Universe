@@ -4652,8 +4652,6 @@ function collectDomElements() {
   lightsOutPage: document.getElementById('lightsOut'),
   lightsOutBoard: document.getElementById('lightsOutBoard'),
   lightsOutMessage: document.getElementById('lightsOutMessage'),
-  lightsOutLevelValue: document.getElementById('lightsOutLevelValue'),
-  lightsOutSizeValue: document.getElementById('lightsOutSizeValue'),
   lightsOutDifficultyButtons: document.querySelectorAll('[data-lights-difficulty]'),
   lightsOutNewButton: document.getElementById('lightsOutNewButton'),
   biggerPage: document.getElementById('bigger'),

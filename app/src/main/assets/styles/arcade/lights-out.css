@@ -80,40 +80,8 @@
   box-shadow: 0 14px 28px rgba(26, 42, 92, 0.4);
 }
 
-.lights-out__status {
-  display: flex;
-  flex-wrap: wrap;
-  gap: clamp(0.5rem, 1.4vw, 0.9rem);
-  color: var(--lights-out-text-primary);
-  font-size: clamp(0.9rem, 2vw, 1.05rem);
-}
-
-.lights-out__status-item {
-  display: flex;
-  align-items: baseline;
-  gap: 0.45rem;
-  padding: 0.35rem 0.75rem;
-  border-radius: 999px;
-  background: rgba(30, 38, 64, 0.75);
-  border: 1px solid var(--lights-out-border);
-}
-
-.lights-out__status-label {
-  color: var(--lights-out-text-muted);
-  font-size: 0.85em;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.lights-out__message {
-  padding: clamp(0.75rem, 1.8vw, 1.1rem) clamp(1rem, 2vw, 1.6rem);
-  background: var(--lights-out-message-background);
-  border: 1px solid var(--lights-out-message-border);
-  border-radius: 1rem;
-  box-shadow: var(--lights-out-shadow);
-  color: var(--lights-out-text-primary);
-  font-size: clamp(0.95rem, 2.2vw, 1.05rem);
-  min-height: 3.2rem;
+.lights-out__controls .lights-out__action-button {
+  align-self: flex-start;
 }
 
 .lights-out__board-wrapper {
@@ -172,11 +140,6 @@
   opacity: 1;
 }
 
-.lights-out__actions {
-  display: flex;
-  justify-content: center;
-}
-
 .lights-out__action-button {
   appearance: none;
   border-radius: 999px;
@@ -200,19 +163,12 @@
 @media (min-width: 920px) {
   .lights-out {
     grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
-    grid-template-areas:
-      'header board'
-      'actions board';
+    grid-template-areas: 'header board';
     align-items: start;
   }
 
   .lights-out__header {
     grid-area: header;
-  }
-
-  .lights-out__actions {
-    grid-area: actions;
-    justify-content: flex-start;
   }
 
   .lights-out__board-wrapper {

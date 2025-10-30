@@ -667,10 +667,6 @@
           "medium": "Moyen",
           "hard": "Difficile"
         },
-        "status": {
-          "level": "Niveau",
-          "size": "Taille"
-        },
         "actions": {
           "new": "Nouvelle grille"
         },
@@ -1096,6 +1092,10 @@
             "balance": {
               "label": "Mini jeu Balance :",
               "description": "Disposez chaque poids pour garder la planche stable et gagner des essais supplémentaires pour Métaux."
+            },
+            "lightsOut": {
+              "label": "Mini jeu Lights Out :",
+              "description": "Éteignez chaque case d’une grille qui change de taille selon la difficulté choisie en planifiant vos clics."
             },
             "sudoku": {
               "label": "Mini jeu Sudoku :",
