@@ -582,8 +582,11 @@
     if (translator) {
       try {
         const result = translator(key, params || undefined);
-        if (typeof result === 'string' && result.trim()) {
-          return formatString(result, params);
+        if (typeof result === 'string') {
+          const trimmed = result.trim();
+          if (trimmed && trimmed !== key) {
+            return formatString(trimmed, params);
+          }
         }
       } catch (error) {
         console.warn('Othello translation error for', key, error);
