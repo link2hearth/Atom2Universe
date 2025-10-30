@@ -1,0 +1,1054 @@
+(function () {
+  if (typeof window === 'undefined' || typeof document === 'undefined') {
+    return;
+  }
+
+  const CONFIG_PATH = 'config/arcade/sokoban.json';
+  const GAME_ID = 'sokoban';
+  const SAVE_VERSION = 1;
+  const AUTOSAVE_DELAY_MS = 200;
+  const BLOCKED_STATUS_RESET_MS = 1600;
+
+  const DEFAULT_CONFIG = Object.freeze({
+    shuffleMoves: Object.freeze({ min: 48, max: 160 }),
+    map: Object.freeze([
+      '#########',
+      '#.......#',
+      '#..#.#..#',
+      '#.......#',
+      '#.#...#.#',
+      '#.......#',
+      '#..#.#..#',
+      '#.......#',
+      '#########'
+    ]),
+    targets: Object.freeze([
+      [2, 4],
+      [4, 3],
+      [4, 5],
+      [6, 4]
+    ]),
+    playerStart: Object.freeze([4, 4])
+  });
+
+  const KEY_DIRECTIONS = Object.freeze({
+    ArrowUp: { row: -1, col: 0 },
+    ArrowDown: { row: 1, col: 0 },
+    ArrowLeft: { row: 0, col: -1 },
+    ArrowRight: { row: 0, col: 1 },
+    z: { row: -1, col: 0 },
+    Z: { row: -1, col: 0 },
+    w: { row: -1, col: 0 },
+    W: { row: -1, col: 0 },
+    s: { row: 1, col: 0 },
+    S: { row: 1, col: 0 },
+    q: { row: 0, col: -1 },
+    Q: { row: 0, col: -1 },
+    a: { row: 0, col: -1 },
+    A: { row: 0, col: -1 },
+    d: { row: 0, col: 1 },
+    D: { row: 0, col: 1 }
+  });
+
+  const DIRECTIONS = Object.freeze([
+    { row: -1, col: 0 },
+    { row: 1, col: 0 },
+    { row: 0, col: -1 },
+    { row: 0, col: 1 }
+  ]);
+
+  const state = {
+    config: DEFAULT_CONFIG,
+    configSignature: computeMapSignature(DEFAULT_CONFIG.map),
+    width: DEFAULT_CONFIG.map[0].length,
+    height: DEFAULT_CONFIG.map.length,
+    tiles: [],
+    targetKeys: new Set(),
+    boxes: new Set(),
+    player: { row: 4, col: 4 },
+    playerStart: { row: 4, col: 4 },
+    moveCount: 0,
+    pushCount: 0,
+    level: 1,
+    solved: false,
+    ready: false,
+    active: false,
+    pointer: null,
+    statusTimeout: null,
+    autosaveTimer: null,
+    baseStatus: null,
+    initialSnapshot: null,
+    cellElements: [],
+    elements: null,
+    languageHandler: null
+  };
+
+  function computeMapSignature(map) {
+    if (!Array.isArray(map)) {
+      return 'default';
+    }
+    return map.map(row => String(row)).join('|');
+  }
+
+  function translateText(key, fallback, params) {
+    if (typeof key !== 'string' || !key) {
+      return typeof fallback === 'string' ? fallback : '';
+    }
+    const translator = typeof window !== 'undefined'
+      && window.i18n
+      && typeof window.i18n.t === 'function'
+        ? window.i18n.t
+        : typeof window !== 'undefined' && typeof window.t === 'function'
+          ? window.t
+          : null;
+    if (translator) {
+      try {
+        const result = translator(key, params);
+        if (typeof result === 'string' && result.trim()) {
+          return result;
+        }
+      } catch (error) {
+        console.warn('Sokoban translation error for', key, error);
+      }
+    }
+    if (typeof fallback === 'string') {
+      return fallback;
+    }
+    return key;
+  }
+
+  function formatIntegerLocalized(value) {
+    const numeric = Number(value);
+    if (!Number.isFinite(numeric)) {
+      return '0';
+    }
+    try {
+      const formatter = typeof Intl !== 'undefined' && Intl.NumberFormat
+        ? new Intl.NumberFormat()
+        : null;
+      if (formatter) {
+        return formatter.format(Math.floor(Math.abs(numeric)));
+      }
+    } catch (error) {
+      console.warn('Sokoban number formatting error', error);
+    }
+    return String(Math.floor(Math.abs(numeric)));
+  }
+
+  function clampInt(value, min, max, fallback) {
+    if (typeof clampInteger === 'function') {
+      return clampInteger(value, min, max, fallback);
+    }
+    const numeric = Number(value);
+    if (!Number.isFinite(numeric)) {
+      return fallback;
+    }
+    const clamped = Math.min(Math.max(Math.floor(numeric), min), max);
+    return Number.isFinite(clamped) ? clamped : fallback;
+  }
+
+  function keyFor(row, col) {
+    return `${row},${col}`;
+  }
+
+  function isInside(row, col) {
+    return row >= 0 && row < state.height && col >= 0 && col < state.width;
+  }
+
+  function isWall(row, col) {
+    if (!isInside(row, col)) {
+      return true;
+    }
+    return Boolean(state.tiles[row][col]?.wall);
+  }
+
+  function isWalkable(row, col) {
+    return isInside(row, col) && !isWall(row, col);
+  }
+
+  function sanitizeConfig(rawConfig) {
+    if (!rawConfig || typeof rawConfig !== 'object') {
+      return DEFAULT_CONFIG;
+    }
+
+    const mapSource = Array.isArray(rawConfig.map) ? rawConfig.map : null;
+    let normalizedMap = Array.isArray(mapSource)
+      ? mapSource
+          .map(row => (typeof row === 'string' ? row : ''))
+          .filter(row => row.length > 0)
+      : null;
+
+    const width = normalizedMap && normalizedMap.length ? normalizedMap[0].length : 0;
+    const mapValid = normalizedMap
+      && normalizedMap.length >= 3
+      && normalizedMap.every(row => row.length === width && width >= 3);
+
+    if (!mapValid) {
+      normalizedMap = Array.from(DEFAULT_CONFIG.map);
+    }
+
+    const extractedTargets = [];
+    normalizedMap = normalizedMap.map((row, rowIndex) => {
+      let resultRow = row;
+      for (let col = 0; col < row.length; col += 1) {
+        if (row[col] === 'T') {
+          extractedTargets.push([rowIndex, col]);
+          resultRow = `${resultRow.slice(0, col)}.${resultRow.slice(col + 1)}`;
+        }
+      }
+      return resultRow;
+    });
+
+    let targets = [];
+    if (Array.isArray(rawConfig.targets) && rawConfig.targets.length) {
+      targets = rawConfig.targets
+        .map(entry => (Array.isArray(entry) && entry.length >= 2 ? [Number(entry[0]), Number(entry[1])] : null))
+        .filter(entry => Number.isInteger(entry?.[0]) && Number.isInteger(entry?.[1]));
+    }
+    if (!targets.length) {
+      targets = extractedTargets;
+    }
+    if (!targets.length) {
+      targets = Array.from(DEFAULT_CONFIG.targets);
+    }
+
+    let shuffleMin = clampInt(rawConfig?.shuffleMoves?.min, 8, 800, DEFAULT_CONFIG.shuffleMoves.min);
+    let shuffleMax = clampInt(rawConfig?.shuffleMoves?.max, shuffleMin, 1200, DEFAULT_CONFIG.shuffleMoves.max);
+    if (shuffleMax < shuffleMin) {
+      shuffleMax = shuffleMin;
+    }
+
+    const playerCandidate = Array.isArray(rawConfig.playerStart) && rawConfig.playerStart.length >= 2
+      ? [Number(rawConfig.playerStart[0]), Number(rawConfig.playerStart[1])]
+      : Array.from(DEFAULT_CONFIG.playerStart);
+
+    return {
+      shuffleMoves: { min: shuffleMin, max: shuffleMax },
+      map: normalizedMap,
+      targets,
+      playerStart: playerCandidate
+    };
+  }
+
+  function applyConfig(config) {
+    const normalized = sanitizeConfig(config);
+    state.config = normalized;
+    state.configSignature = computeMapSignature(normalized.map);
+    state.height = normalized.map.length;
+    state.width = normalized.map[0]?.length || 0;
+    state.tiles = new Array(state.height);
+    state.targetKeys = new Set();
+
+    for (let row = 0; row < state.height; row += 1) {
+      const rowTiles = new Array(state.width);
+      const rowString = normalized.map[row];
+      for (let col = 0; col < state.width; col += 1) {
+        const char = rowString[col];
+        const wall = char === '#';
+        rowTiles[col] = { wall, target: false };
+      }
+      state.tiles[row] = rowTiles;
+    }
+
+    normalized.targets.forEach(target => {
+      if (!Array.isArray(target) || target.length < 2) {
+        return;
+      }
+      const row = clampInt(target[0], 0, state.height - 1, 0);
+      const col = clampInt(target[1], 0, state.width - 1, 0);
+      if (!isWall(row, col)) {
+        state.tiles[row][col].target = true;
+        state.targetKeys.add(keyFor(row, col));
+      }
+    });
+
+    const candidateRow = clampInt(normalized.playerStart?.[0], 0, state.height - 1, 0);
+    const candidateCol = clampInt(normalized.playerStart?.[1], 0, state.width - 1, 0);
+    if (isWalkable(candidateRow, candidateCol)) {
+      state.playerStart = { row: candidateRow, col: candidateCol };
+    } else if (state.targetKeys.size > 0) {
+      const [firstTarget] = Array.from(state.targetKeys);
+      const [row, col] = firstTarget.split(',').map(Number);
+      state.playerStart = { row, col };
+    } else {
+      outer:
+      for (let row = 0; row < state.height; row += 1) {
+        for (let col = 0; col < state.width; col += 1) {
+          if (isWalkable(row, col)) {
+            state.playerStart = { row, col };
+            break outer;
+          }
+        }
+      }
+    }
+  }
+
+  function initElements() {
+    const board = document.getElementById('sokobanBoard');
+    if (!board) {
+      return false;
+    }
+    const status = document.getElementById('sokobanStatus');
+    const moves = document.getElementById('sokobanMovesValue');
+    const pushes = document.getElementById('sokobanPushesValue');
+    const level = document.getElementById('sokobanLevelValue');
+    const restart = document.getElementById('sokobanRestartButton');
+    const newButton = document.getElementById('sokobanNewButton');
+
+    state.elements = {
+      board,
+      status,
+      moves,
+      pushes,
+      level,
+      restart,
+      newButton
+    };
+
+    board.setAttribute('role', 'grid');
+    board.setAttribute('aria-live', 'polite');
+
+    if (restart) {
+      restart.addEventListener('click', () => {
+        if (!state.ready) {
+          return;
+        }
+        resetToInitialState();
+      });
+    }
+    if (newButton) {
+      newButton.addEventListener('click', () => {
+        if (!state.ready) {
+          prepareNewPuzzle({ incrementLevel: true, force: true });
+        } else {
+          prepareNewPuzzle({ incrementLevel: true });
+        }
+      });
+    }
+
+    board.addEventListener('keydown', handleBoardKeydown);
+    board.addEventListener('pointerdown', handlePointerDown);
+    board.addEventListener('pointermove', handlePointerMove);
+    board.addEventListener('pointerup', handlePointerUp);
+    board.addEventListener('pointercancel', handlePointerCancel);
+    board.addEventListener('pointerleave', handlePointerCancel);
+
+    window.addEventListener('keydown', handleGlobalKeydown, { passive: false });
+
+    return true;
+  }
+
+  function buildBoardCells() {
+    const board = state.elements?.board;
+    if (!board) {
+      return;
+    }
+    board.innerHTML = '';
+    board.style.setProperty('--sokoban-width', String(state.width));
+    board.setAttribute('aria-rowcount', String(state.height));
+    board.setAttribute('aria-colcount', String(state.width));
+
+    state.cellElements = new Array(state.height);
+    for (let row = 0; row < state.height; row += 1) {
+      const rowElements = new Array(state.width);
+      for (let col = 0; col < state.width; col += 1) {
+        const cell = document.createElement('div');
+        cell.className = 'sokoban__cell';
+        cell.setAttribute('role', 'gridcell');
+        cell.dataset.row = String(row);
+        cell.dataset.col = String(col);
+        rowElements[col] = cell;
+        board.appendChild(cell);
+      }
+      state.cellElements[row] = rowElements;
+    }
+  }
+
+  function takeSnapshot() {
+    return {
+      player: { row: state.player.row, col: state.player.col },
+      boxes: Array.from(state.boxes).map(entry => {
+        const [row, col] = entry.split(',').map(Number);
+        return [row, col];
+      })
+    };
+  }
+
+  function applySnapshot(snapshot) {
+    if (!snapshot || typeof snapshot !== 'object') {
+      return false;
+    }
+    const boxes = new Set();
+    if (Array.isArray(snapshot.boxes)) {
+      for (const entry of snapshot.boxes) {
+        if (!Array.isArray(entry) || entry.length < 2) {
+          continue;
+        }
+        const row = Number(entry[0]);
+        const col = Number(entry[1]);
+        if (!Number.isInteger(row) || !Number.isInteger(col) || isWall(row, col)) {
+          continue;
+        }
+        boxes.add(keyFor(row, col));
+      }
+    }
+    if (boxes.size !== state.targetKeys.size) {
+      return false;
+    }
+    const playerRow = Number(snapshot.player?.row);
+    const playerCol = Number(snapshot.player?.col);
+    if (!Number.isInteger(playerRow) || !Number.isInteger(playerCol) || !isWalkable(playerRow, playerCol)) {
+      return false;
+    }
+    state.boxes = boxes;
+    state.player = { row: playerRow, col: playerCol };
+    return true;
+  }
+
+  function scheduleAutosave() {
+    if (state.autosaveTimer != null) {
+      window.clearTimeout(state.autosaveTimer);
+      state.autosaveTimer = null;
+    }
+    state.autosaveTimer = window.setTimeout(() => {
+      state.autosaveTimer = null;
+      persistAutosaveNow();
+    }, AUTOSAVE_DELAY_MS);
+  }
+
+  function flushAutosave() {
+    if (state.autosaveTimer != null) {
+      window.clearTimeout(state.autosaveTimer);
+      state.autosaveTimer = null;
+    }
+    persistAutosaveNow();
+  }
+
+  function getAutosaveApi() {
+    if (typeof window === 'undefined') {
+      return null;
+    }
+    const autosave = window.ArcadeAutosave;
+    if (!autosave || typeof autosave !== 'object') {
+      return null;
+    }
+    if (typeof autosave.get !== 'function' || typeof autosave.set !== 'function') {
+      return null;
+    }
+    return autosave;
+  }
+
+  function persistAutosaveNow() {
+    const autosave = getAutosaveApi();
+    if (!autosave) {
+      return;
+    }
+    const payload = buildSavePayload();
+    if (payload == null) {
+      if (typeof autosave.clear === 'function') {
+        try {
+          autosave.clear(GAME_ID);
+        } catch (error) {
+          // Ignore autosave clearance errors
+        }
+      }
+      return;
+    }
+    try {
+      autosave.set(GAME_ID, payload);
+    } catch (error) {
+      // Ignore autosave persistence errors
+    }
+  }
+
+  function readAutosave() {
+    const autosave = getAutosaveApi();
+    if (!autosave) {
+      return null;
+    }
+    try {
+      return autosave.get(GAME_ID);
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function buildSavePayload() {
+    if (!state.initialSnapshot) {
+      return null;
+    }
+    const boxes = Array.from(state.boxes).map(entry => {
+      const [row, col] = entry.split(',').map(Number);
+      return [row, col];
+    });
+    const initialBoxes = Array.from(state.initialSnapshot.boxes || []);
+    return {
+      version: SAVE_VERSION,
+      configSignature: state.configSignature,
+      level: clampInt(state.level, 1, 9999, 1),
+      moveCount: clampInt(state.moveCount, 0, 999999, 0),
+      pushCount: clampInt(state.pushCount, 0, 999999, 0),
+      solved: Boolean(state.solved),
+      player: { row: state.player.row, col: state.player.col },
+      boxes,
+      initial: {
+        player: state.initialSnapshot.player,
+        boxes: initialBoxes
+      }
+    };
+  }
+
+  function restoreFromSave(payload) {
+    if (!payload || typeof payload !== 'object') {
+      return false;
+    }
+    if (payload.version !== SAVE_VERSION) {
+      return false;
+    }
+    if (payload.configSignature !== state.configSignature) {
+      return false;
+    }
+    const applied = applySnapshot({
+      player: payload.player,
+      boxes: payload.boxes
+    });
+    if (!applied) {
+      return false;
+    }
+    state.moveCount = clampInt(payload.moveCount, 0, 999999, 0);
+    state.pushCount = clampInt(payload.pushCount, 0, 999999, 0);
+    state.level = clampInt(payload.level, 1, 9999, 1);
+    state.solved = Boolean(payload.solved) && checkSolved();
+    state.ready = !state.solved;
+    if (state.solved) {
+      setStatus(
+        'scripts.arcade.sokoban.status.completed',
+        'Niveau terminé !',
+        {
+          level: formatIntegerLocalized(state.level),
+          moves: formatIntegerLocalized(state.moveCount),
+          pushes: formatIntegerLocalized(state.pushCount)
+        },
+        { rememberBase: true }
+      );
+    } else {
+      setStatus(
+        'scripts.arcade.sokoban.status.ready',
+        'Poussez les caisses sur les cibles lumineuses.',
+        null,
+        { rememberBase: true }
+      );
+    }
+    if (payload.initial) {
+      const validInitial = applySnapshot(payload.initial);
+      if (validInitial) {
+        state.initialSnapshot = takeSnapshot();
+        applySnapshot(payload); // reapply current state after validation
+      } else {
+        state.initialSnapshot = takeSnapshot();
+      }
+    } else {
+      state.initialSnapshot = takeSnapshot();
+    }
+    return true;
+  }
+
+  function updateHud() {
+    if (state.elements?.moves) {
+      state.elements.moves.textContent = formatIntegerLocalized(state.moveCount);
+    }
+    if (state.elements?.pushes) {
+      state.elements.pushes.textContent = formatIntegerLocalized(state.pushCount);
+    }
+    if (state.elements?.level) {
+      state.elements.level.textContent = formatIntegerLocalized(state.level);
+    }
+  }
+
+  function setStatus(key, fallback, params, options = {}) {
+    const statusElement = state.elements?.status;
+    if (!statusElement) {
+      return;
+    }
+    const message = translateText(key, fallback, params);
+    statusElement.textContent = message;
+    if (options.rememberBase) {
+      state.baseStatus = { key, fallback, params };
+    }
+    if (state.statusTimeout != null) {
+      window.clearTimeout(state.statusTimeout);
+      state.statusTimeout = null;
+    }
+    if (options.transient === true && state.baseStatus) {
+      state.statusTimeout = window.setTimeout(() => {
+        state.statusTimeout = null;
+        const base = state.baseStatus;
+        setStatus(base.key, base.fallback, base.params);
+      }, BLOCKED_STATUS_RESET_MS);
+    }
+  }
+
+  function refreshBaseStatus() {
+    if (state.baseStatus) {
+      setStatus(state.baseStatus.key, state.baseStatus.fallback, state.baseStatus.params);
+    }
+  }
+
+  function renderBoard() {
+    const board = state.elements?.board;
+    if (!board || !Array.isArray(state.cellElements) || !state.cellElements.length) {
+      return;
+    }
+    for (let row = 0; row < state.height; row += 1) {
+      for (let col = 0; col < state.width; col += 1) {
+        const cell = state.cellElements[row]?.[col];
+        if (!cell) {
+          continue;
+        }
+        const tile = state.tiles[row][col];
+        const key = keyFor(row, col);
+        const hasBox = state.boxes.has(key);
+        const isPlayer = state.player.row === row && state.player.col === col;
+        let className = 'sokoban__cell';
+        if (tile.wall) {
+          className += ' sokoban__cell--wall';
+        } else {
+          if (tile.target) {
+            className += ' sokoban__cell--target';
+          }
+          if (hasBox) {
+            className += ' sokoban__cell--box';
+          }
+          if (isPlayer) {
+            className += ' sokoban__cell--player';
+          }
+        }
+        cell.className = className;
+        const baseKey = tile.wall
+          ? 'index.sections.sokoban.cell.wall'
+          : tile.target
+            ? 'index.sections.sokoban.cell.target'
+            : 'index.sections.sokoban.cell.floor';
+        const occupantKey = isPlayer
+          ? 'index.sections.sokoban.occupant.player'
+          : hasBox
+            ? 'index.sections.sokoban.occupant.box'
+            : null;
+        const baseText = translateText(baseKey, tile.wall ? 'Mur' : tile.target ? 'Cible' : 'Sol');
+        if (occupantKey) {
+          const occupantText = translateText(occupantKey, isPlayer ? 'Manutentionnaire' : 'Caisse');
+          const combined = translateText(
+            'scripts.arcade.sokoban.cell.combined',
+            '{occupant} sur {base}',
+            { occupant: occupantText, base: baseText }
+          );
+          cell.setAttribute('aria-label', combined);
+        } else {
+          cell.setAttribute('aria-label', baseText);
+        }
+      }
+    }
+  }
+
+  function checkSolved() {
+    if (state.boxes.size !== state.targetKeys.size) {
+      return false;
+    }
+    for (const key of state.targetKeys) {
+      if (!state.boxes.has(key)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function attemptMove(deltaRow, deltaCol, options = {}) {
+    const {
+      countMove = true,
+      announceBlocked = true,
+      allowWhenSolved = false,
+      skipAutosave = false,
+      skipStatus = false,
+      force = false
+    } = options;
+
+    if (!allowWhenSolved && state.solved) {
+      return false;
+    }
+    if (!state.ready && !force) {
+      return false;
+    }
+    const nextRow = state.player.row + deltaRow;
+    const nextCol = state.player.col + deltaCol;
+    if (!isWalkable(nextRow, nextCol)) {
+      if (announceBlocked && !skipStatus) {
+        setStatus(
+          'scripts.arcade.sokoban.status.blocked',
+          'La caisse est bloquée dans cette direction.',
+          null,
+          { transient: true }
+        );
+      }
+      return false;
+    }
+    const nextKey = keyFor(nextRow, nextCol);
+    const hasBox = state.boxes.has(nextKey);
+    if (hasBox) {
+      const boxRow = nextRow + deltaRow;
+      const boxCol = nextCol + deltaCol;
+      if (!isWalkable(boxRow, boxCol)) {
+        if (announceBlocked && !skipStatus) {
+          setStatus(
+            'scripts.arcade.sokoban.status.blocked',
+            'La caisse est bloquée dans cette direction.',
+            null,
+            { transient: true }
+          );
+        }
+        return false;
+      }
+      const boxKey = keyFor(boxRow, boxCol);
+      if (state.boxes.has(boxKey)) {
+        if (announceBlocked && !skipStatus) {
+          setStatus(
+            'scripts.arcade.sokoban.status.blocked',
+            'La caisse est bloquée dans cette direction.',
+            null,
+            { transient: true }
+          );
+        }
+        return false;
+      }
+      state.boxes.delete(nextKey);
+      state.boxes.add(boxKey);
+      if (countMove) {
+        state.pushCount += 1;
+      }
+    }
+
+    state.player = { row: nextRow, col: nextCol };
+    if (countMove) {
+      state.moveCount += 1;
+    }
+
+    const solvedNow = checkSolved();
+    state.solved = solvedNow;
+    if (solvedNow && !skipStatus) {
+      setStatus(
+        'scripts.arcade.sokoban.status.completed',
+        'Niveau terminé !',
+        {
+          level: formatIntegerLocalized(state.level),
+          moves: formatIntegerLocalized(state.moveCount),
+          pushes: formatIntegerLocalized(state.pushCount)
+        },
+        { rememberBase: true }
+      );
+      state.ready = false;
+    } else if (!skipStatus && countMove) {
+      setStatus(
+        'scripts.arcade.sokoban.status.ready',
+        'Poussez les caisses sur les cibles lumineuses.',
+        null,
+        { rememberBase: true }
+      );
+    }
+
+    renderBoard();
+    updateHud();
+    if (!skipAutosave) {
+      scheduleAutosave();
+    }
+    return true;
+  }
+
+  function performRandomShuffleMove() {
+    const directions = [...DIRECTIONS];
+    for (let i = directions.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const tmp = directions[i];
+      directions[i] = directions[j];
+      directions[j] = tmp;
+    }
+    for (const direction of directions) {
+      const moved = attemptMove(direction.row, direction.col, {
+        countMove: false,
+        announceBlocked: false,
+        allowWhenSolved: true,
+        skipAutosave: true,
+        skipStatus: true,
+        force: true
+      });
+      if (moved) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function shuffleFromSolvedState() {
+    const iterations = clampInt(
+      Math.floor(Math.random() * (state.config.shuffleMoves.max - state.config.shuffleMoves.min + 1))
+        + state.config.shuffleMoves.min,
+      8,
+      2000,
+      64
+    );
+    state.player = { row: state.playerStart.row, col: state.playerStart.col };
+    state.boxes = new Set(state.targetKeys);
+    let moves = 0;
+    let attempts = 0;
+    while (moves < iterations && attempts < iterations * 10) {
+      const moved = performRandomShuffleMove();
+      attempts += 1;
+      if (moved) {
+        moves += 1;
+      }
+    }
+    if (checkSolved()) {
+      let guard = 0;
+      while (checkSolved() && guard < 16) {
+        performRandomShuffleMove();
+        guard += 1;
+      }
+    }
+  }
+
+  function resetToInitialState() {
+    if (!state.initialSnapshot) {
+      return;
+    }
+    const applied = applySnapshot(state.initialSnapshot);
+    if (!applied) {
+      return;
+    }
+    state.moveCount = 0;
+    state.pushCount = 0;
+    state.solved = false;
+    state.ready = true;
+    setStatus(
+      'scripts.arcade.sokoban.status.ready',
+      'Poussez les caisses sur les cibles lumineuses.',
+      null,
+      { rememberBase: true }
+    );
+    renderBoard();
+    updateHud();
+    scheduleAutosave();
+  }
+
+  function prepareNewPuzzle(options = {}) {
+    const { incrementLevel = false, force = false } = options;
+    if (!force && !state.ready && !state.solved) {
+      // avoid interrupting initialization
+      return;
+    }
+    if (incrementLevel) {
+      state.level = clampInt(state.level + 1, 1, 9999, 1);
+    }
+    shuffleFromSolvedState();
+    state.initialSnapshot = takeSnapshot();
+    state.moveCount = 0;
+    state.pushCount = 0;
+    state.solved = false;
+    state.ready = true;
+    setStatus(
+      'scripts.arcade.sokoban.status.ready',
+      'Poussez les caisses sur les cibles lumineuses.',
+      null,
+      { rememberBase: true }
+    );
+    renderBoard();
+    updateHud();
+    scheduleAutosave();
+  }
+
+  function handleBoardKeydown(event) {
+    if (!state.active) {
+      return;
+    }
+    const direction = KEY_DIRECTIONS[event.key];
+    if (!direction) {
+      return;
+    }
+    event.preventDefault();
+    attemptMove(direction.row, direction.col);
+  }
+
+  function handleGlobalKeydown(event) {
+    if (!state.active) {
+      return;
+    }
+    if (event.defaultPrevented) {
+      return;
+    }
+    const direction = KEY_DIRECTIONS[event.key];
+    if (!direction) {
+      return;
+    }
+    event.preventDefault();
+    attemptMove(direction.row, direction.col);
+  }
+
+  function handlePointerDown(event) {
+    if (!state.active) {
+      return;
+    }
+    if (event.pointerType === 'mouse' && event.button !== 0) {
+      return;
+    }
+    state.pointer = {
+      id: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      lastX: event.clientX,
+      lastY: event.clientY
+    };
+    if (event.currentTarget && typeof event.currentTarget.setPointerCapture === 'function') {
+      try {
+        event.currentTarget.setPointerCapture(event.pointerId);
+      } catch (error) {
+        // Ignore pointer capture errors
+      }
+    }
+  }
+
+  function handlePointerMove(event) {
+    if (!state.pointer || event.pointerId !== state.pointer.id) {
+      return;
+    }
+    state.pointer.lastX = event.clientX;
+    state.pointer.lastY = event.clientY;
+  }
+
+  function handlePointerUp(event) {
+    if (!state.pointer || event.pointerId !== state.pointer.id) {
+      return;
+    }
+    const dx = event.clientX - state.pointer.startX;
+    const dy = event.clientY - state.pointer.startY;
+    if (event.currentTarget && typeof event.currentTarget.releasePointerCapture === 'function') {
+      try {
+        event.currentTarget.releasePointerCapture(event.pointerId);
+      } catch (error) {
+        // Ignore release errors
+      }
+    }
+    const threshold = 24;
+    const absX = Math.abs(dx);
+    const absY = Math.abs(dy);
+    if (absX >= threshold || absY >= threshold) {
+      if (absX > absY) {
+        attemptMove(0, dx > 0 ? 1 : -1);
+      } else {
+        attemptMove(dy > 0 ? 1 : -1, 0);
+      }
+    }
+    state.pointer = null;
+  }
+
+  function handlePointerCancel(event) {
+    if (!state.pointer || event.pointerId !== state.pointer.id) {
+      return;
+    }
+    if (event.currentTarget && typeof event.currentTarget.releasePointerCapture === 'function') {
+      try {
+        event.currentTarget.releasePointerCapture(event.pointerId);
+      } catch (error) {
+        // Ignore
+      }
+    }
+    state.pointer = null;
+  }
+
+  function attachLanguageListener() {
+    if (state.languageHandler) {
+      return;
+    }
+    const handler = () => {
+      renderBoard();
+      refreshBaseStatus();
+    };
+    window.addEventListener('i18n:languagechange', handler);
+    state.languageHandler = handler;
+  }
+
+  function detachLanguageListener() {
+    if (!state.languageHandler) {
+      return;
+    }
+    window.removeEventListener('i18n:languagechange', state.languageHandler);
+    state.languageHandler = null;
+  }
+
+  function initializeGame() {
+    if (!initElements()) {
+      return;
+    }
+    applyConfig(state.config);
+    buildBoardCells();
+    attachLanguageListener();
+    const saved = readAutosave();
+    if (saved && restoreFromSave(saved)) {
+      renderBoard();
+      updateHud();
+      refreshBaseStatus();
+    } else {
+      prepareNewPuzzle({ incrementLevel: false, force: true });
+    }
+  }
+
+  function loadConfigAndInit() {
+    if (typeof fetch !== 'function') {
+      initializeGame();
+      return;
+    }
+    fetch(CONFIG_PATH)
+      .then(response => (response && response.ok ? response.json() : null))
+      .then(data => {
+        if (data) {
+          applyConfig(data);
+        } else {
+          applyConfig(DEFAULT_CONFIG);
+        }
+        initializeGame();
+      })
+      .catch(() => {
+        applyConfig(DEFAULT_CONFIG);
+        initializeGame();
+      });
+  }
+
+  const api = {
+    onEnter() {
+      state.active = true;
+      if (state.elements?.board) {
+        try {
+          state.elements.board.focus({ preventScroll: true });
+        } catch (error) {
+          state.elements.board.focus();
+        }
+      }
+      renderBoard();
+      refreshBaseStatus();
+    },
+    onLeave() {
+      state.active = false;
+      if (state.pointer) {
+        state.pointer = null;
+      }
+      flushAutosave();
+    }
+  };
+
+  window.sokobanArcade = api;
+
+  loadConfigAndInit();
+
+  window.addEventListener('beforeunload', () => {
+    flushAutosave();
+  });
+  window.addEventListener('pagehide', () => {
+    flushAutosave();
+  });
+})();
