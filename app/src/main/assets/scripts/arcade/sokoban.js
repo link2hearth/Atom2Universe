@@ -2165,7 +2165,9 @@
       }
     }
 
-    const requiredPulls = Math.max(4, Math.floor(requestedSteps * 0.4));
+    const stepQuota = Math.max(1, Math.floor(requestedSteps * 0.25));
+    const boxQuota = Math.max(totalBoxes * 2, totalBoxes + 2);
+    const requiredPulls = Math.max(4, Math.min(stepQuota, boxQuota));
     if (pulls < requiredPulls) {
       return false;
     }
