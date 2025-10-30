@@ -30,7 +30,7 @@
 
   const state = {
     board: createEmptyBoard(),
-    currentPlayer: PLAYERS.BLACK,
+    currentPlayer: PLAYERS.WHITE,
     validMoves: new Map(),
     passes: 0,
     elements: null,
@@ -191,7 +191,7 @@
     state.board[mid][mid] = PLAYERS.WHITE;
     state.board[mid - 1][mid] = PLAYERS.BLACK;
     state.board[mid][mid - 1] = PLAYERS.BLACK;
-    state.currentPlayer = PLAYERS.BLACK;
+    state.currentPlayer = PLAYERS.WHITE;
     state.passes = 0;
     prepareTurn();
   }

@@ -574,7 +574,7 @@
         "status": {
           "ready": "The AI plays black. Get ready to play as white.",
           "readySolo": "The AI plays black. Get ready to play as white.",
-          "readyDuo": "Both players control the discs. Black moves first.",
+          "readyDuo": "Both players control the discs. White moves first.",
           "humanTurn": {
             "black": "Black to move.",
             "white": "Your turn as white."
