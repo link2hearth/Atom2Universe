@@ -186,10 +186,8 @@
     const boardElement = section.querySelector('.pachinko-board__inner');
     const pegLayerElement = section.querySelector('#pachinkoPegLayer');
     const slotsContainer = section.querySelector('#pachinkoSlots');
-    const ballElement = section.querySelector('#pachinkoBall');
     const statusElement = section.querySelector('#pachinkoStatus');
     const dropButton = section.querySelector('#pachinkoDropButton');
-    const dropCountElement = section.querySelector('#pachinkoDropCount');
     const betContainer = section.querySelector('#pachinkoBet');
     const betOptionsElement = section.querySelector('#pachinkoBetOptions');
     const betCurrentElement = section.querySelector('#pachinkoCurrentBet');
@@ -229,7 +227,6 @@
     boardField.height = boardField.bottom - boardField.top;
 
     const physicsPegs = [];
-    let pendingDropCount = 0;
     const slotTargets = slotLayoutMultipliers.map((_, index) => {
       if (slotCount <= 1) {
         return boardField.left + boardField.width / 2;
@@ -369,9 +366,7 @@
     let betButtons = [];
     let selectedBet = null;
     let selectedBaseBet = null;
-    let activeBet = null;
-    let dropping = false;
-    let currentTimeouts = [];
+    let activeDropCount = 0;
     let balanceIntervalId = null;
 
     const stats = {
@@ -382,18 +377,6 @@
     };
 
     const historyEntries = [];
-
-    function clearPendingTimeouts() {
-      for (let i = 0; i < currentTimeouts.length; i += 1) {
-        window.clearTimeout(currentTimeouts[i]);
-      }
-      currentTimeouts = [];
-    }
-
-    function scheduleTimeout(callback, delay) {
-      const id = window.setTimeout(callback, delay);
-      currentTimeouts.push(id);
-    }
 
     function formatBetAmount(amount) {
       if (!Number.isFinite(amount)) {
@@ -462,24 +445,13 @@
       dropButton.disabled = disabled;
     }
 
-    function getRequestedDropCount() {
-      if (!dropCountElement) {
-        return 1;
-      }
-      const value = Number(dropCountElement.value);
-      if (!Number.isFinite(value)) {
-        return 1;
-      }
-      return Math.max(1, Math.floor(value));
-    }
-
     function updateBetButtons() {
       for (let i = 0; i < betButtons.length; i += 1) {
         const button = betButtons[i];
         const amount = Number(button.dataset.bet);
-        const disable = dropping || !canAffordBet(amount);
+        const disable = !canAffordBet(amount);
         button.disabled = disable;
-        button.classList.toggle('pachinko-bet__option--unavailable', !dropping && disable);
+        button.classList.toggle('pachinko-bet__option--unavailable', disable);
         const isSelected = selectedBet === amount;
         button.classList.toggle('pachinko-bet__option--selected', isSelected);
         button.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
@@ -495,7 +467,7 @@
           `Multiply bet options by 10 (current multiplier: ×${multiplierText})`,
           { multiplier: multiplierText }
         );
-        multiplyButton.disabled = dropping;
+        multiplyButton.disabled = false;
         multiplyButton.setAttribute('aria-label', aria);
         multiplyButton.title = aria;
       }
@@ -506,7 +478,7 @@
           `Divide bet options by 10 (current multiplier: ×${multiplierText})`,
           { multiplier: multiplierText }
         );
-        const disabled = dropping || betMultiplier <= 1;
+        const disabled = betMultiplier <= 1;
         divideButton.disabled = disabled;
         divideButton.setAttribute('aria-label', aria);
         divideButton.title = aria;
@@ -632,39 +604,39 @@
           pegs.push({
             x: pegX,
             y: pegY,
-            radius: 0.024,
-            bounce: 0.6,
-            spin: 0.02,
+            radius: 0.026,
+            bounce: 0.74,
+            spin: 0.05,
             type: 'peg'
           });
         }
       }
 
-      const bumperRadius = 0.058;
+      const bumperRadius = 0.068;
       const bumperY = boardField.top + boardField.height * 0.44;
       pegs.push(
         {
           x: boardField.left + boardField.width * 0.3,
           y: bumperY,
           radius: bumperRadius,
-          bounce: 0.85,
-          spin: 0.06,
+          bounce: 0.94,
+          spin: 0.12,
           type: 'bumper'
         },
         {
           x: boardField.right - boardField.width * 0.3,
           y: bumperY,
           radius: bumperRadius,
-          bounce: 0.85,
-          spin: 0.06,
+          bounce: 0.94,
+          spin: 0.12,
           type: 'bumper'
         },
         {
           x: boardField.left + boardField.width * 0.5,
           y: boardField.top + boardField.height * 0.62,
-          radius: 0.066,
-          bounce: 0.88,
-          spin: 0.075,
+          radius: 0.076,
+          bounce: 0.96,
+          spin: 0.16,
           type: 'bumper'
         }
       );
@@ -771,52 +743,55 @@
       for (let i = 0; i < slotElements.length; i += 1) {
         slotElements[i].classList.toggle('pachinko-slot--active', i === index);
       }
-      scheduleTimeout(() => {
+      window.setTimeout(() => {
         for (let i = 0; i < slotElements.length; i += 1) {
           slotElements[i].classList.remove('pachinko-slot--active');
         }
       }, 1500);
     }
 
-    function resetBallPosition() {
-      if (!ballElement) {
-        return;
-      }
-      ballElement.classList.remove('pachinko-board__ball--active');
-      ballElement.style.top = '0%';
-      ballElement.style.left = '50%';
-      ballElement.style.opacity = '0';
-      ballElement.style.transform = 'translate(-50%, -110%)';
-    }
-
     function animateBall(points) {
       return new Promise(resolve => {
-        if (!ballElement || !Array.isArray(points) || !points.length) {
+        if (!boardElement || !Array.isArray(points) || !points.length) {
           resolve();
           return;
         }
-        ballElement.classList.add('pachinko-board__ball--active');
-        ballElement.style.opacity = '1';
-        ballElement.style.transform = 'translate(-50%, -50%)';
+        const ball = document.createElement('div');
+        ball.className = 'pachinko-board__ball pachinko-board__ball--active';
+        ball.setAttribute('aria-hidden', 'true');
+        ball.style.top = '-8%';
+        ball.style.left = '50%';
+        ball.style.opacity = '1';
+        ball.style.transform = 'translate(-50%, -50%)';
+        boardElement.appendChild(ball);
         let stepIndex = 0;
         const totalSteps = points.length;
         const frameDelay = Math.max(14, Math.min(36, Math.floor(dropStepMs / 7)));
 
         function step() {
-          if (!ballElement) {
+          if (!ball.isConnected) {
             resolve();
             return;
           }
           const { x, y } = points[stepIndex];
           const verticalPercent = clampValue(y * 100, -10, 100);
           const horizontalPercent = clampValue(x * 100, 0, 100);
-          ballElement.style.top = `${verticalPercent}%`;
-          ballElement.style.left = `${horizontalPercent}%`;
+          ball.style.top = `${verticalPercent}%`;
+          ball.style.left = `${horizontalPercent}%`;
           stepIndex += 1;
           if (stepIndex < totalSteps) {
-            scheduleTimeout(step, frameDelay);
+            window.setTimeout(step, frameDelay);
           } else {
-            scheduleTimeout(resolve, frameDelay + 80);
+            window.setTimeout(() => {
+              ball.classList.remove('pachinko-board__ball--active');
+              ball.style.opacity = '0';
+              window.setTimeout(() => {
+                if (ball.parentElement) {
+                  ball.parentElement.removeChild(ball);
+                }
+                resolve();
+              }, 160);
+            }, frameDelay + 80);
           }
         }
 
@@ -897,10 +872,19 @@
           }
           vx *= peg.bounce;
           vy *= peg.bounce;
-          vx += randomOffset(peg.spin);
-          vy -= Math.random() * peg.spin * 0.2;
+          const tangentX = -ny;
+          const tangentY = nx;
+          const tangentForce = randomOffset(peg.spin * 1.6);
+          vx += tangentX * tangentForce;
+          vy += tangentY * tangentForce * 0.6;
+          vx += randomOffset(peg.spin * 0.8);
+          vy -= Math.random() * peg.spin * 0.35;
+          if (Math.abs(vy) < 0.004) {
+            vy = vy >= 0 ? 0.004 : -0.004;
+          }
           if (peg.type === 'bumper') {
             vy -= 0.0025;
+            vx *= 1.05;
           }
         }
 
@@ -1030,67 +1014,36 @@
         showToast(translate(toastKey, statusElement ? statusElement.textContent : ''));
       }
 
-      activeBet = null;
-      dropping = false;
-      updateBetButtons();
-      updateMultiplierControls();
-      scheduleTimeout(resetBallPosition, 300);
-      ensureSelectedBetAffordable();
-      if (pendingDropCount > 0) {
-        const remaining = pendingDropCount;
-        const delay = Math.max(360, dropStepMs);
-        pendingDropCount -= 1;
-        setStatus('seriesActive', 'Launching queued drops...', { remaining: `${remaining}` });
-        scheduleTimeout(() => {
-          if (!beginDrop(true)) {
-            pendingDropCount = 0;
-            updateDropButtonState();
-          }
-        }, delay);
-      } else {
-        updateDropButtonState();
-      }
+      updateDropButtonState();
     }
 
-    function beginDrop(fromQueue = false) {
-      if (dropping) {
-        return false;
-      }
+    function beginDrop() {
       if (selectedBet == null) {
         setStatus('selectBet', 'Select a bet first.');
-        if (!fromQueue && typeof showToast === 'function') {
+        if (typeof showToast === 'function') {
           showToast(translate('scripts.arcade.pachinko.status.selectBet', 'Select a bet first.'));
         }
-        pendingDropCount = 0;
         return false;
       }
       if (!canAffordBet(selectedBet)) {
         setStatus('insufficientAtoms', 'Not enough atoms for this bet.');
-        if (!fromQueue && typeof showToast === 'function') {
+        if (typeof showToast === 'function') {
           showToast(translate('scripts.arcade.pachinko.status.insufficientAtoms', 'Not enough atoms for this bet.'));
         }
         ensureSelectedBetAffordable();
         updateBalanceDisplay();
-        pendingDropCount = 0;
         return false;
       }
       const layeredBet = createLayeredAmount(selectedBet);
       if (!layeredBet) {
-        pendingDropCount = 0;
         return false;
       }
-      activeBet = layeredBet;
-      dropping = true;
-      clearPendingTimeouts();
-      if (pendingDropCount > 0) {
-        setStatus('seriesActive', 'Launching queued drops...', { remaining: `${pendingDropCount + 1}` });
+      activeDropCount += 1;
+      if (activeDropCount > 1) {
+        setStatus('droppingMultiple', 'Multiple orbs descending...', { count: `${activeDropCount}` });
       } else {
         setStatus('dropping', 'Dropping...');
       }
-      resetBallPosition();
-      updateBetButtons();
-      updateMultiplierControls();
-      updateDropButtonState();
 
       if (typeof gameState !== 'undefined') {
         gameState.atoms = gameState.atoms.subtract(layeredBet);
@@ -1102,6 +1055,9 @@
         }
       }
       updateBalanceDisplay();
+      updateBetButtons();
+      updateMultiplierControls();
+      updateDropButtonState();
 
       const pathResult = generatePath();
       const pathPoints = pathResult && Array.isArray(pathResult.points) ? pathResult.points : [];
@@ -1112,48 +1068,30 @@
         const index = Math.max(0, Math.min(slotDefinitions.length - 1, landingIndex));
         const slotDefinition = slotDefinitions[index] || slotDefinitions[Math.floor(slotDefinitions.length / 2)];
         finishDrop(index, slotDefinition, layeredBet);
+        activeDropCount = Math.max(0, activeDropCount - 1);
+        ensureSelectedBetAffordable();
+        updateBetButtons();
+        updateMultiplierControls();
+        updateDropButtonState();
       });
       return true;
     }
 
-    function queueDropSeries(count) {
-      const normalized = Math.max(1, Math.floor(Number(count) || 1));
-      if (dropping) {
-        pendingDropCount += normalized;
-        setStatus('seriesQueued', 'Queued additional drops.', { count: `${pendingDropCount + 1}` });
-        return;
-      }
-      pendingDropCount += normalized - 1;
-      const started = beginDrop(false);
-      if (!started) {
-        pendingDropCount = 0;
-        updateDropButtonState();
-        return;
-      }
-      if (pendingDropCount > 0) {
-        setStatus('seriesActive', 'Launching queued drops...', { remaining: `${pendingDropCount + 1}` });
-      }
-      updateDropButtonState();
-    }
-
     if (dropButton) {
       dropButton.addEventListener('click', () => {
-        queueDropSeries(getRequestedDropCount());
+        beginDrop();
       });
     }
 
     if (multiplyButton) {
       multiplyButton.addEventListener('click', () => {
-        if (dropping) {
-          return;
-        }
         setBetMultiplier(betMultiplier * 10);
       });
     }
 
     if (divideButton) {
       divideButton.addEventListener('click', () => {
-        if (dropping || betMultiplier <= 1) {
+        if (betMultiplier <= 1) {
           return;
         }
         setBetMultiplier(Math.max(1, Math.floor(betMultiplier / 10)));
@@ -1179,7 +1117,7 @@
         if (betCurrentElement && selectedBet == null) {
           betCurrentElement.textContent = translate('index.sections.pachinko.bet.none', 'None');
         }
-        if (!dropping) {
+        if (activeDropCount === 0) {
           setStatus('ready', 'Pick a bet and drop a quantum orb.');
         }
       });
