@@ -27,6 +27,7 @@
 
   const AI_PLAYER = PLAYERS.BLACK;
   const AI_MOVE_DELAY = 500;
+  const SOLO_VICTORY_REWARD_TICKETS = 10;
 
   const state = {
     board: createEmptyBoard(),
@@ -39,8 +40,13 @@
     languageHandler: null,
     lastStatus: null,
     aiTimeout: null,
-    mode: GAME_MODES.SOLO
+    mode: GAME_MODES.SOLO,
+    gameOver: false,
+    rewardGranted: false
   };
+
+  const AUTOSAVE_GAME_ID = 'othello';
+  let autosaveTimerId = null;
 
   onReady(() => {
     const elements = getElements();
@@ -48,11 +54,13 @@
       return;
     }
     state.elements = elements;
-    updateModeToggle();
     buildBoard();
     attachEvents();
-    resetGame();
     attachLanguageListener();
+    if (!restoreAutosave()) {
+      updateModeToggle();
+      resetGame();
+    }
   });
 
   function onReady(callback) {
@@ -77,7 +85,7 @@
 
   function attachEvents() {
     state.elements.board.addEventListener('click', handleBoardClick);
-    state.elements.resetButton.addEventListener('click', resetGame);
+    state.elements.resetButton.addEventListener('click', () => resetGame());
     if (state.elements.modeToggle) {
       state.elements.modeToggle.addEventListener('click', toggleMode);
     }
@@ -193,6 +201,8 @@
     state.board[mid][mid - 1] = PLAYERS.BLACK;
     state.currentPlayer = PLAYERS.WHITE;
     state.passes = 0;
+    state.gameOver = false;
+    state.rewardGranted = false;
     prepareTurn();
   }
 
@@ -202,6 +212,7 @@
     renderBoard();
     if (state.validMoves.size > 0) {
       beginTurn();
+      scheduleAutosave();
       return;
     }
 
@@ -224,6 +235,7 @@
       return;
     }
     beginTurn();
+    scheduleAutosave();
   }
 
   function endGame() {
@@ -234,6 +246,7 @@
       : score.white > score.black
         ? 'white'
         : 'draw';
+    state.gameOver = true;
     const resultText = translate(
       `scripts.arcade.othello.status.result.${resultKey}`,
       resultKey === 'black'
@@ -254,6 +267,66 @@
     );
     state.validMoves = new Map();
     renderBoard();
+    maybeGrantVictoryReward(resultKey);
+    scheduleAutosave();
+  }
+
+  function maybeGrantVictoryReward(resultKey) {
+    if (
+      state.mode !== GAME_MODES.SOLO ||
+      resultKey !== 'white' ||
+      state.rewardGranted
+    ) {
+      return;
+    }
+    const award = typeof gainGachaTickets === 'function'
+      ? gainGachaTickets
+      : typeof window !== 'undefined' && typeof window.gainGachaTickets === 'function'
+        ? window.gainGachaTickets
+        : null;
+    if (typeof award !== 'function') {
+      return;
+    }
+    let granted = 0;
+    try {
+      granted = award(SOLO_VICTORY_REWARD_TICKETS, { unlockTicketStar: true });
+    } catch (error) {
+      console.warn('Othello: unable to grant gacha tickets', error);
+      granted = 0;
+    }
+    if (!Number.isFinite(granted) || granted <= 0) {
+      return;
+    }
+    state.rewardGranted = true;
+    if (typeof showToast === 'function') {
+      const suffix = granted > 1 ? 's' : '';
+      const message = translate(
+        'scripts.arcade.othello.rewards.gachaWin',
+        'Victory! {count} gacha ticket{suffix} earned.',
+        {
+          count: formatRewardTicketCount(granted),
+          suffix
+        }
+      );
+      showToast(message);
+    }
+    if (typeof updateArcadeTicketDisplay === 'function') {
+      updateArcadeTicketDisplay();
+    }
+  }
+
+  function formatRewardTicketCount(value) {
+    if (typeof formatIntegerLocalized === 'function') {
+      return formatIntegerLocalized(value);
+    }
+    if (typeof formatInteger === 'function') {
+      return formatInteger(value);
+    }
+    const numeric = Number(value);
+    if (Number.isFinite(numeric)) {
+      return String(Math.floor(numeric));
+    }
+    return '0';
   }
 
   function computeValidMoves(player) {
@@ -533,6 +606,181 @@
       }
       return params[key];
     });
+  }
+
+  function getAutosaveApi() {
+    if (typeof window === 'undefined') {
+      return null;
+    }
+    return window.ArcadeAutosave || null;
+  }
+
+  function scheduleAutosave() {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    const api = getAutosaveApi();
+    if (!api || typeof api.set !== 'function') {
+      return;
+    }
+    if (autosaveTimerId != null) {
+      window.clearTimeout(autosaveTimerId);
+    }
+    autosaveTimerId = window.setTimeout(() => {
+      autosaveTimerId = null;
+      persistAutosave();
+    }, 120);
+  }
+
+  function persistAutosave() {
+    const api = getAutosaveApi();
+    if (!api || typeof api.set !== 'function') {
+      return;
+    }
+    const payload = buildAutosavePayload();
+    if (!payload) {
+      return;
+    }
+    try {
+      api.set(AUTOSAVE_GAME_ID, payload);
+    } catch (error) {
+      // Ignore autosave persistence errors to avoid disrupting gameplay
+    }
+  }
+
+  function buildAutosavePayload() {
+    if (!Array.isArray(state.board) || state.board.length !== BOARD_SIZE) {
+      return null;
+    }
+    const board = new Array(BOARD_SIZE);
+    for (let row = 0; row < BOARD_SIZE; row += 1) {
+      const sourceRow = Array.isArray(state.board[row]) ? state.board[row] : [];
+      board[row] = new Array(BOARD_SIZE);
+      for (let col = 0; col < BOARD_SIZE; col += 1) {
+        const value = Number(sourceRow[col]);
+        if (value === PLAYERS.BLACK) {
+          board[row][col] = PLAYERS.BLACK;
+        } else if (value === PLAYERS.WHITE) {
+          board[row][col] = PLAYERS.WHITE;
+        } else {
+          board[row][col] = 0;
+        }
+      }
+    }
+    const currentPlayer = state.currentPlayer === PLAYERS.BLACK ? PLAYERS.BLACK : PLAYERS.WHITE;
+    const rawPasses = Number(state.passes);
+    const passes = Number.isFinite(rawPasses) ? Math.max(0, Math.min(2, Math.floor(rawPasses))) : 0;
+    const mode = state.mode === GAME_MODES.DUO ? GAME_MODES.DUO : GAME_MODES.SOLO;
+    const blackMoves = computeValidMoves(PLAYERS.BLACK);
+    const whiteMoves = computeValidMoves(PLAYERS.WHITE);
+    const gameOver = state.gameOver || passes >= 2 || (blackMoves.size === 0 && whiteMoves.size === 0);
+    return {
+      board,
+      currentPlayer,
+      mode,
+      passes,
+      gameOver,
+      rewardGranted: state.rewardGranted === true,
+      updatedAt: Date.now()
+    };
+  }
+
+  function restoreAutosave() {
+    const api = getAutosaveApi();
+    if (!api || typeof api.get !== 'function') {
+      return false;
+    }
+    let saved;
+    try {
+      saved = api.get(AUTOSAVE_GAME_ID);
+    } catch (error) {
+      return false;
+    }
+    const normalized = sanitizeSavedState(saved);
+    if (!normalized) {
+      return false;
+    }
+    state.mode = normalized.mode;
+    state.board = normalized.board;
+    state.currentPlayer = normalized.currentPlayer;
+    state.passes = normalized.passes;
+    state.rewardGranted = normalized.rewardGranted;
+    state.gameOver = normalized.gameOver;
+    updateModeToggle();
+    clearAIMoveTimer();
+    const blackMoves = computeValidMoves(PLAYERS.BLACK);
+    const whiteMoves = computeValidMoves(PLAYERS.WHITE);
+    const gameOver = normalized.gameOver || normalized.passes >= 2 || (blackMoves.size === 0 && whiteMoves.size === 0);
+    if (gameOver) {
+      endGame();
+      return true;
+    }
+    state.validMoves = computeValidMoves(state.currentPlayer);
+    renderBoard();
+    if (state.validMoves.size === 0) {
+      prepareTurn();
+      return true;
+    }
+    beginTurn();
+    scheduleAutosave();
+    return true;
+  }
+
+  function sanitizeSavedState(saved) {
+    if (!saved || typeof saved !== 'object') {
+      return null;
+    }
+    const board = sanitizeSavedBoard(saved.board);
+    if (!board) {
+      return null;
+    }
+    const playerValue = Number(saved.currentPlayer);
+    const currentPlayer = playerValue === PLAYERS.BLACK
+      ? PLAYERS.BLACK
+      : playerValue === PLAYERS.WHITE
+        ? PLAYERS.WHITE
+        : null;
+    if (currentPlayer == null) {
+      return null;
+    }
+    const mode = saved.mode === GAME_MODES.DUO ? GAME_MODES.DUO : GAME_MODES.SOLO;
+    const rawPasses = Number(saved.passes);
+    const passes = Number.isFinite(rawPasses) ? Math.max(0, Math.min(2, Math.floor(rawPasses))) : 0;
+    const gameOver = saved.gameOver === true;
+    const rewardGranted = saved.rewardGranted === true;
+    return {
+      board,
+      currentPlayer,
+      mode,
+      passes,
+      gameOver,
+      rewardGranted
+    };
+  }
+
+  function sanitizeSavedBoard(data) {
+    if (!Array.isArray(data) || data.length !== BOARD_SIZE) {
+      return null;
+    }
+    const board = new Array(BOARD_SIZE);
+    for (let row = 0; row < BOARD_SIZE; row += 1) {
+      const sourceRow = data[row];
+      if (!Array.isArray(sourceRow) || sourceRow.length !== BOARD_SIZE) {
+        return null;
+      }
+      board[row] = new Array(BOARD_SIZE);
+      for (let col = 0; col < BOARD_SIZE; col += 1) {
+        const value = Number(sourceRow[col]);
+        if (value === PLAYERS.BLACK) {
+          board[row][col] = PLAYERS.BLACK;
+        } else if (value === PLAYERS.WHITE) {
+          board[row][col] = PLAYERS.WHITE;
+        } else {
+          board[row][col] = 0;
+        }
+      }
+    }
+    return board;
   }
 
   function getMoveKey(row, col) {

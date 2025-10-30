@@ -1607,6 +1607,9 @@
             "draw": "Draw."
           }
         },
+        "rewards": {
+          "gachaWin": "Victory! {count} gacha ticket{suffix} earned."
+        },
         "score": "Black: {black} · White: {white}",
         "cell": "Row {row}, column {column}: {content}",
         "cellValid": "Playable move",

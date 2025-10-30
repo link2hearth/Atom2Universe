@@ -1607,6 +1607,9 @@
             "draw": "Match nul."
           }
         },
+        "rewards": {
+          "gachaWin": "Victoire ! {count} ticket{suffix} gacha obtenu{suffix}."
+        },
         "score": "Noirs : {black} · Blancs : {white}",
         "cell": "Case {row}, colonne {column} : {content}",
         "cellValid": "Coup disponible",
