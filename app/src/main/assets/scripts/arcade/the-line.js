@@ -38,6 +38,29 @@
         medium: 0.5,
         hard: 0.7
       }),
+      distribution: Object.freeze({
+        easy: Object.freeze({
+          centerMinRatio: 0.4,
+          rightMinRatio: 0.3,
+          diagonalGroupChance: 0.45,
+          serpentineChance: 0.42,
+          serpentineDensity: Object.freeze({ min: 0.38, max: 0.58 })
+        }),
+        medium: Object.freeze({
+          centerMinRatio: 0.32,
+          rightMinRatio: 0.26,
+          diagonalGroupChance: 0.3,
+          serpentineChance: 0.18,
+          serpentineDensity: Object.freeze({ min: 0.32, max: 0.48 })
+        }),
+        hard: Object.freeze({
+          centerMinRatio: 0.3,
+          rightMinRatio: 0.24,
+          diagonalGroupChance: 0.25,
+          serpentineChance: 0.12,
+          serpentineDensity: Object.freeze({ min: 0.28, max: 0.45 })
+        })
+      }),
       templates: Object.freeze({
         easy: Object.freeze([]),
         medium: Object.freeze([
@@ -312,11 +335,16 @@
 
     const centerBias = {};
     const clusterBias = {};
+    const distribution = {};
     ['easy', 'medium', 'hard'].forEach(key => {
       const baseCenter = clampNumber(base?.centerBias?.[key], 0, 4, 0.4);
       const baseCluster = clampNumber(base?.clusterBias?.[key], 0, 1, 0.4);
       centerBias[key] = clampNumber(source?.centerBias?.[key], 0, 4, baseCenter);
       clusterBias[key] = clampNumber(source?.clusterBias?.[key], 0, 1, baseCluster);
+      distribution[key] = normalizeDistributionConfig(
+        source?.distribution?.[key],
+        base?.distribution?.[key]
+      );
     });
 
     const templates = {};
@@ -379,7 +407,66 @@
       }
     });
 
-    return { centerBias, clusterBias, templates };
+    return { centerBias, clusterBias, distribution, templates };
+  }
+
+  function normalizeDistributionConfig(config, fallback) {
+    const base = fallback && typeof fallback === 'object' ? fallback : {};
+    const source = config && typeof config === 'object' ? config : {};
+    const centerMinRatio = clampNumber(
+      source.centerMinRatio,
+      0,
+      0.9,
+      clampNumber(base.centerMinRatio, 0, 0.9, 0)
+    );
+    const rightMinRatio = clampNumber(
+      source.rightMinRatio,
+      0,
+      0.9,
+      clampNumber(base.rightMinRatio, 0, 0.9, 0)
+    );
+    const diagonalGroupChance = clampNumber(
+      source.diagonalGroupChance,
+      0,
+      1,
+      clampNumber(base.diagonalGroupChance, 0, 1, 0)
+    );
+    const serpentineChance = clampNumber(
+      source.serpentineChance,
+      0,
+      1,
+      clampNumber(base.serpentineChance, 0, 1, 0)
+    );
+    const baseSerp = base && typeof base.serpentineDensity === 'object'
+      ? base.serpentineDensity
+      : null;
+    const serpSource = source && typeof source.serpentineDensity === 'object'
+      ? source.serpentineDensity
+      : baseSerp;
+    const serpMin = clampNumber(
+      serpSource?.min,
+      0.15,
+      0.85,
+      clampNumber(baseSerp?.min, 0.15, 0.85, 0.4)
+    );
+    const serpMax = clampNumber(
+      serpSource?.max,
+      0.2,
+      0.95,
+      clampNumber(baseSerp?.max, 0.2, 0.95, Math.max(serpMin, 0.5))
+    );
+    const minDensity = Math.min(serpMin, serpMax);
+    const maxDensity = Math.max(serpMin, serpMax);
+    return {
+      centerMinRatio,
+      rightMinRatio,
+      diagonalGroupChance,
+      serpentineChance,
+      serpentineDensity: {
+        min: clampNumber(minDensity, 0.15, 0.95, 0.35),
+        max: clampNumber(maxDensity, 0.2, 0.98, Math.max(minDensity, 0.55))
+      }
+    };
   }
 
   function loadRemoteConfig() {
@@ -624,13 +711,27 @@
     let holeAttempts = 0;
     let currentHoleMax = holeMax;
     let bestCandidate = null;
+    const holeStrategy = selectHoleStrategy(
+      mode,
+      difficulty,
+      layoutConfig,
+      totalCells,
+      holeMin,
+      holeMax
+    );
+    let useFixedHoles = holeStrategy.type === 'fixed' && Number.isFinite(holeStrategy.count);
+    let fixedHoleAttempts = 0;
 
     while (attempt < maxAttempts && !generationLimiter.timedOut()) {
       attempt += 1;
       holeAttempts += 1;
-      const holeCount = holeMin === currentHoleMax
+      let holeCount = holeMin === currentHoleMax
         ? holeMin
         : randomInt(holeMin, currentHoleMax);
+      if (useFixedHoles) {
+        holeCount = Math.max(holeMin, Math.min(totalCells - 2, Math.floor(holeStrategy.count)));
+        fixedHoleAttempts += 1;
+      }
       const blocked = generateBlockedSet(
         width,
         height,
@@ -643,6 +744,10 @@
         break;
       }
       if (!path) {
+        if (useFixedHoles && fixedHoleAttempts >= holeRetryLimit) {
+          useFixedHoles = false;
+          holeAttempts = 0;
+        }
         if (holeAttempts >= holeRetryLimit && currentHoleMax > holeMin) {
           currentHoleMax = Math.max(holeMin, currentHoleMax - 1);
           holeAttempts = 0;
@@ -695,6 +800,34 @@
     return null;
   }
 
+  function selectHoleStrategy(mode, difficultyKey, layoutConfig, totalCells, holeMin, holeMax) {
+    if (mode !== 'single') {
+      return { type: 'range' };
+    }
+    const distribution = layoutConfig?.distribution?.[difficultyKey];
+    if (!distribution) {
+      return { type: 'range' };
+    }
+    const chance = clampNumber(distribution.serpentineChance, 0, 1, 0);
+    if (!(Math.random() < chance)) {
+      return { type: 'range' };
+    }
+    const density = distribution.serpentineDensity;
+    if (!density || typeof density !== 'object') {
+      return { type: 'range' };
+    }
+    const minRatio = clampNumber(density.min, 0.15, 0.9, 0.35);
+    const maxRatio = clampNumber(density.max, minRatio, 0.95, Math.max(minRatio, 0.55));
+    const ratio = minRatio === maxRatio
+      ? minRatio
+      : minRatio + Math.random() * (maxRatio - minRatio);
+    const count = Math.max(holeMin, Math.min(totalCells - 2, Math.round(totalCells * ratio)));
+    if (!Number.isFinite(count) || count <= holeMin) {
+      return { type: 'range' };
+    }
+    return { type: 'fixed', count: Math.max(holeMin, Math.min(totalCells - 2, count)) };
+  }
+
   function generateBlockedSet(width, height, count, layoutConfig, difficultyKey) {
     const total = width * height;
     const limit = Math.max(0, Math.min(count, total - 2));
@@ -702,6 +835,7 @@
       return new Set();
     }
     const blocked = new Set();
+    const protectedIndices = new Set();
     const clusterProbability = clampNumber(
       layoutConfig?.clusterBias?.[difficultyKey],
       0,
@@ -720,6 +854,7 @@
       const prioritized = shuffle(preferred.slice());
       for (let i = 0; i < prioritized.length && blocked.size < limit; i += 1) {
         blocked.add(prioritized[i]);
+        protectedIndices.add(prioritized[i]);
       }
     }
     let safety = 0;
@@ -737,6 +872,8 @@
       }
       blocked.add(candidate);
     }
+    maybeInjectPattern(blocked, protectedIndices, width, height, limit, layoutConfig, difficultyKey);
+    enforceDistributionTargets(blocked, protectedIndices, width, height, limit, layoutConfig, difficultyKey);
     return blocked;
   }
 
@@ -840,6 +977,310 @@
       }
     }
     return null;
+  }
+
+  function maybeInjectPattern(blocked, protectedIndices, width, height, limit, layoutConfig, difficultyKey) {
+    if (!blocked || !blocked.size || limit < 2) {
+      return;
+    }
+    const distribution = layoutConfig?.distribution?.[difficultyKey];
+    if (!distribution) {
+      return;
+    }
+    const chance = clampNumber(distribution.diagonalGroupChance, 0, 1, 0);
+    if (Math.random() >= chance) {
+      return;
+    }
+    const data = computeDistributionData(blocked, width, height, protectedIndices);
+    const anchors = data.availableInterior.length ? data.availableInterior : data.availableCells;
+    const anchor = pickRandomCell(anchors);
+    if (!anchor) {
+      return;
+    }
+    const directions = shuffle([
+      { dx: 1, dy: 1 },
+      { dx: 1, dy: -1 },
+      { dx: -1, dy: 1 },
+      { dx: -1, dy: -1 },
+      { dx: 1, dy: 0 },
+      { dx: 0, dy: 1 }
+    ]);
+    const donorCandidates = buildDonorList([
+      data.blockedCorners,
+      data.blockedLeftEdge,
+      data.blockedRightEdge,
+      data.blockedNeutralEdge,
+      data.blockedLeftInterior,
+      data.blockedRightInterior,
+      data.blockedInterior
+    ], protectedIndices);
+    if (!donorCandidates.length) {
+      return;
+    }
+    for (let i = 0; i < directions.length; i += 1) {
+      const pattern = collectPatternCells(anchor, directions[i], width, height, blocked, limit);
+      if (!pattern.length) {
+        continue;
+      }
+      const additions = pattern.filter(index => !blocked.has(index));
+      if (!additions.length || additions.length > donorCandidates.length) {
+        continue;
+      }
+      const donorPool = donorCandidates.slice();
+      const donors = [];
+      let valid = true;
+      for (let j = 0; j < additions.length; j += 1) {
+        if (!donorPool.length) {
+          valid = false;
+          break;
+        }
+        const donor = donorPool.splice(randomInt(0, donorPool.length - 1), 1)[0];
+        if (!donor) {
+          valid = false;
+          break;
+        }
+        donors.push(donor);
+      }
+      if (!valid || donors.length !== additions.length) {
+        continue;
+      }
+      donors.forEach(donor => {
+        blocked.delete(donor.index);
+      });
+      additions.forEach(index => {
+        blocked.add(index);
+      });
+      return;
+    }
+  }
+
+  function enforceDistributionTargets(blocked, protectedIndices, width, height, limit, layoutConfig, difficultyKey) {
+    if (!blocked || !blocked.size || !limit) {
+      return;
+    }
+    const distribution = layoutConfig?.distribution?.[difficultyKey];
+    if (!distribution) {
+      return;
+    }
+    const centerRatio = clampNumber(distribution.centerMinRatio, 0, 0.9, 0);
+    const rightRatio = clampNumber(distribution.rightMinRatio, 0, 0.9, 0);
+    const targetCenter = Math.min(limit, Math.round(limit * centerRatio));
+    const targetRight = Math.min(limit, Math.round(limit * rightRatio));
+    if (targetCenter <= 0 && targetRight <= 0) {
+      return;
+    }
+    const maxIterations = Math.max(1, limit * 3);
+    for (let iteration = 0; iteration < maxIterations; iteration += 1) {
+      const data = computeDistributionData(blocked, width, height, protectedIndices);
+      let adjusted = false;
+      if (targetCenter > 0 && data.blockedCenter.length < targetCenter) {
+        const recipient = pickRandomCell(data.availableCenter);
+        const donors = buildDonorList([
+          data.blockedCorners,
+          data.blockedLeftEdge,
+          data.blockedRightEdge,
+          data.blockedNeutralEdge,
+          data.blockedLeftInterior,
+          data.blockedRightInterior,
+          data.blockedInterior
+        ], protectedIndices);
+        const donor = pickPriorityDonor(donors);
+        if (recipient && donor) {
+          blocked.delete(donor.index);
+          blocked.add(recipient.index);
+          adjusted = true;
+          continue;
+        }
+      }
+      if (targetRight > 0 && data.blockedRight.length < targetRight) {
+        const recipient = pickRandomCell(data.availableRight);
+        const donors = buildDonorList([
+          data.blockedLeftInterior,
+          data.blockedLeftEdge,
+          data.blockedLeftCorners,
+          data.blockedNeutralEdge,
+          data.blockedInterior,
+          data.blockedCells
+        ], protectedIndices);
+        const donor = pickPriorityDonor(donors);
+        if (recipient && donor) {
+          blocked.delete(donor.index);
+          blocked.add(recipient.index);
+          adjusted = true;
+          continue;
+        }
+      }
+      if (!adjusted) {
+        break;
+      }
+    }
+  }
+
+  function computeDistributionData(blocked, width, height, protectedIndices) {
+    const total = width * height;
+    const protectedSet = protectedIndices instanceof Set ? protectedIndices : null;
+    const data = {
+      blockedCells: [],
+      blockedCenter: [],
+      blockedRight: [],
+      blockedLeftInterior: [],
+      blockedRightInterior: [],
+      blockedInterior: [],
+      blockedCorners: [],
+      blockedLeftCorners: [],
+      blockedRightCorners: [],
+      blockedLeftEdge: [],
+      blockedRightEdge: [],
+      blockedNeutralEdge: [],
+      availableCells: [],
+      availableCenter: [],
+      availableRight: [],
+      availableInterior: [],
+      availableLeftInterior: [],
+      availableRightInterior: []
+    };
+    for (let index = 0; index < total; index += 1) {
+      const cell = describeCell(index, width, height);
+      cell.protected = protectedSet ? protectedSet.has(index) : false;
+      if (blocked.has(index)) {
+        data.blockedCells.push(cell);
+        if (cell.isCenter) {
+          data.blockedCenter.push(cell);
+        }
+        if (!cell.isEdge) {
+          data.blockedInterior.push(cell);
+        }
+        if (!cell.isEdge && cell.isLeft) {
+          data.blockedLeftInterior.push(cell);
+        }
+        if (!cell.isEdge && cell.isRight) {
+          data.blockedRightInterior.push(cell);
+        }
+        if (cell.isCorner) {
+          data.blockedCorners.push(cell);
+          if (cell.isLeft) {
+            data.blockedLeftCorners.push(cell);
+          }
+          if (cell.isRight) {
+            data.blockedRightCorners.push(cell);
+          }
+        } else if (cell.isEdge) {
+          if (cell.isLeft) {
+            data.blockedLeftEdge.push(cell);
+          } else if (cell.isRight) {
+            data.blockedRightEdge.push(cell);
+          } else {
+            data.blockedNeutralEdge.push(cell);
+          }
+        }
+        if (cell.isRight) {
+          data.blockedRight.push(cell);
+        }
+      } else {
+        data.availableCells.push(cell);
+        if (cell.isCenter) {
+          data.availableCenter.push(cell);
+        }
+        if (!cell.isEdge) {
+          data.availableInterior.push(cell);
+        }
+        if (!cell.isEdge && cell.isLeft) {
+          data.availableLeftInterior.push(cell);
+        }
+        if (!cell.isEdge && cell.isRight) {
+          data.availableRightInterior.push(cell);
+        }
+        if (cell.isRight) {
+          data.availableRight.push(cell);
+        }
+      }
+    }
+    return data;
+  }
+
+  function describeCell(index, width, height) {
+    const x = index % width;
+    const y = Math.floor(index / width);
+    const isLeftEdge = x === 0;
+    const isRightEdge = x === width - 1;
+    const isTopEdge = y === 0;
+    const isBottomEdge = y === height - 1;
+    const isCorner = (isLeftEdge || isRightEdge) && (isTopEdge || isBottomEdge);
+    const isEdge = isCorner || isLeftEdge || isRightEdge || isTopEdge || isBottomEdge;
+    const midLeft = Math.floor((width - 1) / 2);
+    const midRight = Math.ceil(width / 2);
+    const isLeft = x <= midLeft;
+    const isRight = x >= midRight;
+    return {
+      index,
+      x,
+      y,
+      isCorner,
+      isEdge,
+      isCenter: !isEdge,
+      isLeft,
+      isRight
+    };
+  }
+
+  function collectPatternCells(anchor, direction, width, height, blocked, limit) {
+    if (!anchor || !direction) {
+      return [];
+    }
+    const maxLength = Math.max(2, Math.min(limit, Math.max(width, height)));
+    const length = Math.max(2, Math.min(maxLength, randomInt(2, Math.min(5, maxLength))));
+    const cells = [];
+    let x = anchor.x;
+    let y = anchor.y;
+    for (let step = 0; step < length; step += 1) {
+      if (x < 0 || x >= width || y < 0 || y >= height) {
+        break;
+      }
+      const index = y * width + x;
+      if (step > 0 && blocked.has(index)) {
+        break;
+      }
+      cells.push(index);
+      x += direction.dx;
+      y += direction.dy;
+    }
+    return cells;
+  }
+
+  function buildDonorList(groups, protectedIndices) {
+    const donors = [];
+    const seen = new Set();
+    if (!Array.isArray(groups)) {
+      return donors;
+    }
+    groups.forEach(group => {
+      if (!Array.isArray(group) || !group.length) {
+        return;
+      }
+      group.forEach(cell => {
+        if (!cell || cell.protected || seen.has(cell.index)) {
+          return;
+        }
+        donors.push(cell);
+        seen.add(cell.index);
+      });
+    });
+    return donors;
+  }
+
+  function pickPriorityDonor(donors) {
+    if (!Array.isArray(donors) || !donors.length) {
+      return null;
+    }
+    const sampleSize = Math.min(donors.length, 3);
+    return donors[randomInt(0, sampleSize - 1)];
+  }
+
+  function pickRandomCell(cells) {
+    if (!Array.isArray(cells) || !cells.length) {
+      return null;
+    }
+    return cells[randomInt(0, cells.length - 1)];
   }
 
   function getNeighborIndices(index, width, height) {
