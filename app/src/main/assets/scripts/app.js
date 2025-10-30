@@ -4450,8 +4450,6 @@ function collectDomElements() {
   arcadeComboMessage: document.getElementById('arcadeComboMessage'),
   biggerPage: document.getElementById('bigger'),
   biggerBoard: document.getElementById('biggerBoard'),
-  biggerCurrentValue: document.getElementById('biggerCurrentValue'),
-  biggerGoalValue: document.getElementById('biggerGoalValue'),
   biggerRestartButton: document.getElementById('biggerRestartButton'),
   biggerOverlay: document.getElementById('biggerOverlay'),
   biggerOverlayTitle: document.getElementById('biggerOverlayTitle'),
@@ -5451,8 +5449,6 @@ function ensureBiggerGame() {
   biggerGame = new BiggerGame({
     pageElement: elements.biggerPage,
     boardElement: elements.biggerBoard,
-    currentValueElement: elements.biggerCurrentValue,
-    goalValueElement: elements.biggerGoalValue,
     restartButton: elements.biggerRestartButton,
     overlayElement: elements.biggerOverlay,
     overlayTitleElement: elements.biggerOverlayTitle,

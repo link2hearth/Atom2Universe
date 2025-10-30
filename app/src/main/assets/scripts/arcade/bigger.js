@@ -858,9 +858,71 @@
       this.state.stats.merges += 1;
       this.state.stats.largest = Math.max(this.state.stats.largest, newValue);
       this.updateHud();
+      this.grantMilestoneTickets(newValue);
       if (!this.state.gameResult && this.state.stats.largest >= MAX_VALUE && !this.state.victoryAchieved) {
         this.handleVictory();
       }
+    }
+
+    grantMilestoneTickets(value) {
+      if (value !== 512) {
+        return;
+      }
+
+      const minTickets = 1;
+      const maxTickets = 5;
+      const range = Math.max(0, maxTickets - minTickets + 1);
+      const reward = range > 0
+        ? Math.floor(Math.random() * range) + minTickets
+        : minTickets;
+      if (!Number.isFinite(reward) || reward <= 0) {
+        return;
+      }
+
+      const awardFn = typeof gainGachaTickets === 'function'
+        ? gainGachaTickets
+        : typeof window !== 'undefined' && typeof window.gainGachaTickets === 'function'
+          ? window.gainGachaTickets
+          : null;
+
+      let gained = reward;
+      if (typeof awardFn === 'function') {
+        try {
+          gained = awardFn(reward, { unlockTicketStar: true });
+        } catch (error) {
+          console.warn('Bigger: unable to grant gacha tickets', error);
+          gained = 0;
+        }
+      }
+
+      if (!Number.isFinite(gained) || gained <= 0) {
+        return;
+      }
+
+      let ticketLabel;
+      if (typeof formatTicketLabel === 'function') {
+        ticketLabel = formatTicketLabel(gained);
+      } else if (typeof formatIntegerLocalized === 'function') {
+        ticketLabel = `${formatIntegerLocalized(gained)} tickets`;
+      } else {
+        ticketLabel = `${gained} tickets`;
+      }
+
+      const message = translate(
+        'scripts.arcade.bigger.rewardToast',
+        '512 marble forged! {tickets} earned.',
+        { tickets: ticketLabel }
+      );
+
+      if (message && typeof showToast === 'function') {
+        showToast(message);
+      }
+
+      if (typeof updateArcadeTicketDisplay === 'function') {
+        updateArcadeTicketDisplay();
+      }
+
+      requestSave();
     }
 
     handleRestartClick() {

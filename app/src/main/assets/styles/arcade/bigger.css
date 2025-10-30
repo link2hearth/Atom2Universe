@@ -54,45 +54,7 @@
 .bigger-stage__topbar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: clamp(0.8rem, 2vw, 1.4rem);
-  flex-wrap: wrap;
-}
-
-.bigger-stage__current,
-.bigger-stage__goal {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.65rem 1.2rem;
-  background: rgba(18, 22, 40, 0.6);
-  border: 1px solid rgba(132, 156, 240, 0.35);
-  border-radius: 999px;
-  font-weight: 600;
-}
-
-.bigger-stage__current-label {
-  font-size: 0.95rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: rgba(210, 218, 255, 0.78);
-}
-
-.bigger-stage__current-value {
-  font-size: clamp(1.35rem, 3vw, 1.85rem);
-  color: var(--bigger-heading-color);
-}
-
-.bigger-stage__goal-label {
-  font-size: 0.95rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: rgba(210, 218, 255, 0.78);
-}
-
-.bigger-stage__goal-value {
-  font-size: clamp(1.35rem, 3vw, 1.85rem);
-  color: var(--bigger-heading-color);
+  justify-content: flex-start;
 }
 
 .bigger-stage__button {
