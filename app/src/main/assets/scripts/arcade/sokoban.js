@@ -15,13 +15,13 @@
   const DEFAULT_LEVELS = Object.freeze([]);
 
   const DEFAULT_CONFIG = Object.freeze({
-    shuffleMoves: Object.freeze({ min: 48, max: 160 }),
+    shuffleMoves: Object.freeze({ min: 40, max: 140 }),
     generator: Object.freeze({
-      width: Object.freeze({ min: 6, max: 12 }),
-      height: Object.freeze({ min: 6, max: 12 }),
-      boxes: Object.freeze({ min: 1, max: 4 }),
-      wallDensity: Object.freeze({ min: 0.05, max: 0.2 }),
-      attempts: 24
+      width: Object.freeze({ min: 5, max: 8 }),
+      height: Object.freeze({ min: 5, max: 8 }),
+      boxes: Object.freeze({ min: 1, max: 3 }),
+      wallDensity: Object.freeze({ min: 0.08, max: 0.22 }),
+      attempts: 36
     }),
     map: Object.freeze([]),
     targets: Object.freeze([]),
@@ -430,6 +430,233 @@
     return grid;
   }
 
+  function createTilesFromGrid(grid, targets) {
+    const height = grid.length;
+    const width = grid[0]?.length || 0;
+    const tiles = new Array(height);
+    for (let row = 0; row < height; row += 1) {
+      const rowTiles = new Array(width);
+      for (let col = 0; col < width; col += 1) {
+        rowTiles[col] = { wall: grid[row][col] === '#', target: false };
+      }
+      tiles[row] = rowTiles;
+    }
+    if (Array.isArray(targets)) {
+      targets.forEach(entry => {
+        const [row, col] = entry;
+        if (row >= 0 && row < height && col >= 0 && col < width) {
+          tiles[row][col].target = true;
+        }
+      });
+    }
+    return tiles;
+  }
+
+  function selectPlayerAnchor(grid, targetKeys) {
+    const height = grid.length;
+    const width = grid[0]?.length || 0;
+    const neighborCandidates = new Set();
+    targetKeys.forEach(key => {
+      const { row, col } = decodeKey(key);
+      for (const direction of DIRECTIONS) {
+        const nextRow = row + direction.row;
+        const nextCol = col + direction.col;
+        if (nextRow < 0 || nextRow >= height || nextCol < 0 || nextCol >= width) {
+          continue;
+        }
+        if (grid[nextRow][nextCol] === '#') {
+          continue;
+        }
+        const nextKey = keyFor(nextRow, nextCol);
+        if (!targetKeys.has(nextKey)) {
+          neighborCandidates.add(nextKey);
+        }
+      }
+    });
+
+    let chosenKey = null;
+    if (neighborCandidates.size > 0) {
+      chosenKey = chooseRandomEntry(Array.from(neighborCandidates));
+    } else {
+      const fallback = [];
+      for (let row = 0; row < height; row += 1) {
+        for (let col = 0; col < width; col += 1) {
+          if (grid[row][col] === '#') {
+            continue;
+          }
+          const key = keyFor(row, col);
+          if (!targetKeys.has(key)) {
+            fallback.push(key);
+          }
+        }
+      }
+      chosenKey = chooseRandomEntry(fallback);
+    }
+
+    if (!chosenKey) {
+      return null;
+    }
+    const { row, col } = decodeKey(chosenKey);
+    return { row, col };
+  }
+
+  function simulateReversePlacement(grid, targets, options = {}) {
+    if (!Array.isArray(grid) || !Array.isArray(targets) || !targets.length) {
+      return null;
+    }
+    const height = grid.length;
+    const width = grid[0]?.length || 0;
+    if (!height || !width) {
+      return null;
+    }
+
+    const normalizedTargets = [];
+    const targetKeys = new Set();
+    for (const entry of targets) {
+      if (!Array.isArray(entry) || entry.length < 2) {
+        continue;
+      }
+      const row = clampInt(entry[0], 0, height - 1, entry[0]);
+      const col = clampInt(entry[1], 0, width - 1, entry[1]);
+      if (grid[row]?.[col] === '#') {
+        continue;
+      }
+      const key = keyFor(row, col);
+      if (targetKeys.has(key)) {
+        continue;
+      }
+      normalizedTargets.push([row, col]);
+      targetKeys.add(key);
+    }
+
+    if (!normalizedTargets.length) {
+      return null;
+    }
+
+    const savedState = {
+      width: state.width,
+      height: state.height,
+      tiles: state.tiles,
+      targetKeys: state.targetKeys
+    };
+
+    try {
+      const tiles = createTilesFromGrid(grid, normalizedTargets);
+      state.width = width;
+      state.height = height;
+      state.tiles = tiles;
+      state.targetKeys = new Set(targetKeys);
+
+      const playerStart = selectPlayerAnchor(grid, targetKeys);
+      if (!playerStart) {
+        return null;
+      }
+
+      const stepsMin = clampInt(options?.stepsMin, 1, 240, 3);
+      const stepsMax = clampInt(options?.stepsMax, stepsMin, 240, 12);
+      const requestedSteps = clampInt(randomInt(stepsMin, stepsMax), stepsMin, stepsMax, stepsMin);
+      const pullBias = clampNumber(options?.pullBias, 0.1, 0.95, 0.78);
+
+      let player = { row: playerStart.row, col: playerStart.col };
+      let boxes = new Set(state.targetKeys);
+      const caches = buildRowTargetPresence();
+
+      const reachableAtStart = computeReachableCells(player.row, player.col, boxes);
+      if (!reachableAtStart.has(keyFor(player.row, player.col))) {
+        const alternatives = Array.from(reachableAtStart).filter(entry => !boxes.has(entry));
+        const alternateKey = chooseRandomEntry(alternatives);
+        if (!alternateKey) {
+          return null;
+        }
+        const coords = decodeKey(alternateKey);
+        player = { row: coords.row, col: coords.col };
+      }
+
+      let pulls = 0;
+      let stagnation = 0;
+      const maxStagnation = requestedSteps * 6;
+
+      for (let step = 0; step < requestedSteps && stagnation < maxStagnation; step += 1) {
+        const actions = legalInverseActions(player, boxes, caches);
+        if (!actions.length) {
+          stagnation += 1;
+          const reachable = computeReachableCells(player.row, player.col, boxes);
+          const optionsWithoutBoxes = Array.from(reachable).filter(entry => !boxes.has(entry));
+          const randomKey = chooseRandomEntry(optionsWithoutBoxes);
+          if (randomKey) {
+            const coords = decodeKey(randomKey);
+            player = { row: coords.row, col: coords.col };
+          }
+          continue;
+        }
+
+        const pullActions = actions.filter(action => action.type === 'pull');
+        let chosen = null;
+        if (pullActions.length && (Math.random() < pullBias || pullActions.length === actions.length)) {
+          chosen = chooseRandomEntry(pullActions);
+        } else {
+          chosen = chooseRandomEntry(actions);
+        }
+
+        if (!chosen) {
+          stagnation += 1;
+          continue;
+        }
+
+        const result = applyInverseAction(player, boxes, chosen);
+        player = result.player;
+        boxes = result.boxes;
+        stagnation = 0;
+        if (chosen.type === 'pull') {
+          pulls += 1;
+        }
+      }
+
+      const minPulls = Math.max(3, Math.min(normalizedTargets.length * 2, requestedSteps));
+      if (pulls < minPulls) {
+        return null;
+      }
+
+      if (containsStaticDeadlock(boxes, state.targetKeys, caches)) {
+        return null;
+      }
+
+      const boxesOnTargets = countBoxesOnTargets(boxes, state.targetKeys);
+      if (boxesOnTargets === state.targetKeys.size) {
+        return null;
+      }
+
+      const averageDistance = computeAverageBoxGoalDistance(boxes, state.targetKeys);
+      if (!Number.isFinite(averageDistance) || averageDistance < 2) {
+        return null;
+      }
+
+      if (!isWalkable(player.row, player.col) || boxes.has(keyFor(player.row, player.col))) {
+        const reachable = computeReachableCells(player.row, player.col, boxes);
+        const alternatives = Array.from(reachable).filter(entry => !boxes.has(entry));
+        const randomKey = chooseRandomEntry(alternatives);
+        if (!randomKey) {
+          return null;
+        }
+        const coords = decodeKey(randomKey);
+        player = { row: coords.row, col: coords.col };
+      }
+
+      const initialBoxes = Array.from(boxes, decodeKeyToTuple);
+      return {
+        solvedPlayer: { row: playerStart.row, col: playerStart.col },
+        initialPlayer: { row: player.row, col: player.col },
+        initialBoxes,
+        pulls
+      };
+    } finally {
+      state.width = savedState.width;
+      state.height = savedState.height;
+      state.tiles = savedState.tiles;
+      state.targetKeys = savedState.targetKeys;
+    }
+  }
+
   function generateProceduralLayout(generator) {
     if (!generator || typeof generator !== 'object') {
       return null;
@@ -494,32 +721,27 @@
       return null;
     }
 
-    const playerCandidates = floorCells.filter(cell => {
-      const key = `${cell[0]},${cell[1]}`;
-      if (usedKeys.has(key)) {
-        return false;
-      }
-      for (const direction of DIRECTIONS) {
-        const nextRow = cell[0] + direction.row;
-        const nextCol = cell[1] + direction.col;
-        if (!isGridWall(grid, nextRow, nextCol)) {
-          return true;
-        }
-      }
-      return false;
-    });
-
-    if (!playerCandidates.length) {
+    const simulation = simulateReversePlacement(grid, targets, { stepsMin: 3, stepsMax: 12 });
+    if (!simulation || !simulation.initialBoxes || simulation.initialBoxes.length !== targets.length) {
       return null;
     }
-
-    const playerCell = chooseRandomEntry(playerCandidates) || playerCandidates[0];
+    if (!simulation.solvedPlayer || !Number.isInteger(simulation.solvedPlayer.row) || !Number.isInteger(simulation.solvedPlayer.col)) {
+      return null;
+    }
+    if (!simulation.initialPlayer || !Number.isInteger(simulation.initialPlayer.row) || !Number.isInteger(simulation.initialPlayer.col)) {
+      return null;
+    }
 
     const mapRows = grid.map(row => row.join(''));
     return {
       map: mapRows,
       targets,
-      playerStart: { row: playerCell[0], col: playerCell[1] }
+      playerStart: { row: simulation.solvedPlayer.row, col: simulation.solvedPlayer.col },
+      initialState: {
+        player: { row: simulation.initialPlayer.row, col: simulation.initialPlayer.col },
+        boxes: simulation.initialBoxes.map(entry => [entry[0], entry[1]]),
+        pulls: simulation.pulls
+      }
     };
   }
 
@@ -2095,6 +2317,101 @@
     return true;
   }
 
+  function applyInitialProceduralState(initialState) {
+    if (!initialState || typeof initialState !== 'object') {
+      return false;
+    }
+    const rawBoxes = Array.isArray(initialState.boxes) ? initialState.boxes : [];
+    if (!rawBoxes.length) {
+      return false;
+    }
+    const sanitizedBoxes = new Set();
+    for (const entry of rawBoxes) {
+      if (!Array.isArray(entry) || entry.length < 2) {
+        return false;
+      }
+      const row = clampInt(entry[0], 0, state.height - 1, entry[0]);
+      const col = clampInt(entry[1], 0, state.width - 1, entry[1]);
+      if (!Number.isInteger(row) || !Number.isInteger(col)) {
+        return false;
+      }
+      if (!isWalkable(row, col)) {
+        return false;
+      }
+      const key = keyFor(row, col);
+      if (sanitizedBoxes.has(key)) {
+        return false;
+      }
+      sanitizedBoxes.add(key);
+    }
+
+    if (sanitizedBoxes.size !== state.targetKeys.size) {
+      return false;
+    }
+
+    const rawPlayer = initialState.player;
+    const playerRowCandidate = Array.isArray(rawPlayer)
+      ? rawPlayer[0]
+      : rawPlayer?.row ?? rawPlayer?.[0];
+    const playerColCandidate = Array.isArray(rawPlayer)
+      ? rawPlayer[1]
+      : rawPlayer?.col ?? rawPlayer?.[1];
+    let playerRow = clampInt(playerRowCandidate, 0, state.height - 1, playerRowCandidate);
+    let playerCol = clampInt(playerColCandidate, 0, state.width - 1, playerColCandidate);
+    if (!Number.isInteger(playerRow) || !Number.isInteger(playerCol)) {
+      return false;
+    }
+
+    let playerKey = keyFor(playerRow, playerCol);
+    if (!isWalkable(playerRow, playerCol) || sanitizedBoxes.has(playerKey)) {
+      const reachable = computeReachableCells(state.playerStart.row, state.playerStart.col, sanitizedBoxes);
+      const alternatives = Array.from(reachable).filter(entry => !sanitizedBoxes.has(entry));
+      const alternativeKey = chooseRandomEntry(alternatives);
+      if (!alternativeKey) {
+        return false;
+      }
+      const coords = decodeKey(alternativeKey);
+      playerRow = coords.row;
+      playerCol = coords.col;
+      playerKey = alternativeKey;
+      if (!isWalkable(playerRow, playerCol) || sanitizedBoxes.has(playerKey)) {
+        return false;
+      }
+    }
+
+    const caches = buildRowTargetPresence();
+    if (containsStaticDeadlock(sanitizedBoxes, state.targetKeys, caches)) {
+      return false;
+    }
+
+    const boxesOnTargets = countBoxesOnTargets(sanitizedBoxes, state.targetKeys);
+    if (boxesOnTargets === sanitizedBoxes.size) {
+      return false;
+    }
+
+    const solverResult = solveForwardMinPushes(
+      { row: playerRow, col: playerCol },
+      sanitizedBoxes,
+      state.targetKeys,
+      { timeLimitMs: 2500 }
+    );
+    const metrics = computeSolverMetrics(solverResult);
+    if (!metrics) {
+      return false;
+    }
+
+    const pullsHint = clampInt(initialState.pulls, 1, 9999, metrics.minPushes);
+    const difficultyHint = Math.max(pullsHint, sanitizedBoxes.size * 3);
+    if (!fitsDifficulty(metrics, difficultyHint, sanitizedBoxes.size)) {
+      return false;
+    }
+
+    state.player = { row: playerRow, col: playerCol };
+    state.boxes = sanitizedBoxes;
+    state.currentMetrics = metrics;
+    return true;
+  }
+
   function shuffleFromSolvedState() {
     if (state.targetKeys.size <= 0) {
       return false;
@@ -2283,9 +2600,18 @@
         playerStart: { row: applied.playerStart.row, col: applied.playerStart.col }
       };
 
-      const shuffled = shuffleFromSolvedState();
-      if (!shuffled || checkSolved()) {
-        continue;
+      let prepared = false;
+      if (layout.initialState) {
+        prepared = applyInitialProceduralState(layout.initialState);
+        if (prepared && checkSolved()) {
+          prepared = false;
+        }
+      }
+      if (!prepared) {
+        const shuffled = shuffleFromSolvedState();
+        if (!shuffled || checkSolved()) {
+          continue;
+        }
       }
 
       const nextLevel = randomizeLevel
