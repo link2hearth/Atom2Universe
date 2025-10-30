@@ -60,6 +60,7 @@
   const DEFAULT_STEP_MS = 280;
   const DEFAULT_ADVANTAGE_BONUS = 0.3;
   const HISTORY_LIMIT = 8;
+  const MOVING_PEG_TRAVEL_MARGIN = 0.04;
 
   function onReady(callback) {
     if (document.readyState === 'loading') {
@@ -229,6 +230,7 @@
     const physicsPegs = [];
     const movingPegStates = [];
     let movingPegAnimationHandle = null;
+    let lastDropSpawnRatio = 0.5;
     const slotTargets = slotLayoutMultipliers.map((_, index) => {
       if (slotCount <= 1) {
         return boardField.left + boardField.width / 2;
@@ -588,25 +590,25 @@
         return pegs;
       }
       const usableRows = Math.max(3, rowCount);
-      const horizontalSpacing = boardField.width / Math.max(1, slotCount - 1);
       const verticalSpan = boardField.height * 0.76;
       const verticalSpacing = verticalSpan / (usableRows + 1);
       const startY = boardField.top + verticalSpacing;
+      const centerX = boardField.left + boardField.width / 2;
+      let hasCentralPeg = false;
+
       for (let row = 0; row < usableRows; row += 1) {
-        const rowOffset = (row % 2 === 0 ? 0 : horizontalSpacing / 2);
         const baseY = startY + row * verticalSpacing;
-        for (let col = 0; col < slotCount; col += 1) {
-          if ((row + col) % 2 !== 0) {
-            continue;
-          }
-          const baseX = boardField.left + col * horizontalSpacing + rowOffset;
-          if (baseX < boardField.left || baseX > boardField.right) {
-            continue;
-          }
-          const jitterX = randomOffset(horizontalSpacing * 0.18);
-          const jitterY = randomOffset(verticalSpacing * 0.18);
-          const pegX = clampValue(baseX + jitterX, boardField.left + 0.025, boardField.right - 0.025);
+        const rowPegCount = Math.max(3, Math.round(slotCount * (0.45 + Math.random() * 0.3)));
+        const segmentWidth = boardField.width / (rowPegCount + 1);
+        for (let index = 0; index < rowPegCount; index += 1) {
+          const baseX = boardField.left + segmentWidth * (index + 1);
+          const jitterX = randomOffset(segmentWidth * 0.4);
+          const jitterY = randomOffset(verticalSpacing * 0.28);
+          const pegX = clampValue(baseX + jitterX, boardField.left + 0.035, boardField.right - 0.035);
           const pegY = clampValue(baseY + jitterY, boardField.top + 0.08, boardField.bottom - 0.2);
+          if (Math.abs(pegX - centerX) <= boardField.width * 0.08) {
+            hasCentralPeg = true;
+          }
           pegs.push({
             x: pegX,
             y: pegY,
@@ -618,30 +620,66 @@
         }
       }
 
+      if (!hasCentralPeg) {
+        const extraY = clampValue(
+          boardField.top + boardField.height * (0.25 + Math.random() * 0.4),
+          boardField.top + 0.12,
+          boardField.bottom - 0.28
+        );
+        const extraX = clampValue(
+          centerX + randomOffset(boardField.width * 0.12),
+          boardField.left + 0.04,
+          boardField.right - 0.04
+        );
+        pegs.push({
+          x: extraX,
+          y: extraY,
+          radius: 0.028,
+          bounce: 0.68,
+          spin: 0.05,
+          type: 'peg'
+        });
+      }
+
       const movingConfigs = [
-        { xRatio: 0.26, yRatio: 0.28, radius: 0.032, amplitudeRatio: 0.035, speed: 0.7 },
-        { xRatio: 0.72, yRatio: 0.33, radius: 0.03, amplitudeRatio: 0.04, speed: 0.55 },
-        { xRatio: 0.4, yRatio: 0.52, radius: 0.034, amplitudeRatio: 0.03, speed: 0.65 },
-        { xRatio: 0.6, yRatio: 0.6, radius: 0.031, amplitudeRatio: 0.028, speed: 0.58 }
+        { yRatio: 0.28, radius: 0.032, travelSeconds: 2, startRatio: 1 },
+        { yRatio: 0.33, radius: 0.03, travelSeconds: 4, startRatio: 0.25 },
+        { yRatio: 0.52, radius: 0.034, travelSeconds: 6, startRatio: 0.65 },
+        { yRatio: 0.6, radius: 0.031, travelSeconds: 10, startRatio: 0 }
       ];
       for (let i = 0; i < movingConfigs.length; i += 1) {
         const config = movingConfigs[i];
-        const amplitude = Math.abs(config.amplitudeRatio || 0) * boardField.width;
-        const baseX = clampValue(
-          boardField.left + boardField.width * config.xRatio,
-          boardField.left + 0.08,
-          boardField.right - 0.08
+        const radius = clampValue(config.radius || 0.032, 0.02, 0.05);
+        const travelMin = boardField.left + radius + MOVING_PEG_TRAVEL_MARGIN;
+        const travelMax = boardField.right - radius - MOVING_PEG_TRAVEL_MARGIN;
+        const travelWidth = Math.max(0, travelMax - travelMin);
+        const amplitude = travelWidth / 2;
+        const baseX = travelMin + amplitude;
+        const normalizedStart = clampValue(
+          typeof config.startRatio === 'number' ? config.startRatio : Math.random(),
+          0,
+          1
         );
+        const startOffset = clampValue(normalizedStart * 2 - 1, -1, 1);
+        const phase = Math.asin(startOffset);
+        const travelSeconds = Math.max(0.5, Number(config.travelSeconds) || 2);
+        const speed = Math.PI / travelSeconds;
+        const initialX = amplitude > 0 ? baseX + amplitude * Math.sin(phase) : baseX;
         pegs.push({
-          x: baseX,
-          y: clampValue(boardField.top + boardField.height * config.yRatio, boardField.top + 0.12, boardField.bottom - 0.2),
-          radius: clampValue(config.radius || 0.032, 0.02, 0.05),
+          x: initialX,
+          baseX,
+          y: clampValue(
+            boardField.top + boardField.height * config.yRatio,
+            boardField.top + 0.12,
+            boardField.bottom - 0.2
+          ),
+          radius,
           bounce: 0.78,
           spin: 0.1,
           type: 'moving',
           amplitude,
-          speed: Math.max(0.2, config.speed || 0.6),
-          phase: Math.random() * Math.PI * 2
+          speed,
+          phase
         });
       }
 
@@ -652,7 +690,6 @@
       if (!movingPegStates.length) {
         return;
       }
-      const margin = 0.04;
       for (let i = 0; i < movingPegStates.length; i += 1) {
         const state = movingPegStates[i];
         const { physicsPeg } = state;
@@ -660,8 +697,8 @@
         const speed = physicsPeg.speed || 0.6;
         const phase = physicsPeg.phase || 0;
         const offset = Math.sin(timeSeconds * speed + phase) * amplitude;
-        const minX = boardField.left + physicsPeg.radius + margin;
-        const maxX = boardField.right - physicsPeg.radius - margin;
+        const minX = boardField.left + physicsPeg.radius + MOVING_PEG_TRAVEL_MARGIN;
+        const maxX = boardField.right - physicsPeg.radius - MOVING_PEG_TRAVEL_MARGIN;
         physicsPeg.x = clampValue(physicsPeg.baseX + offset, minX, maxX);
       }
     }
@@ -730,7 +767,7 @@
         };
         if (peg.type === 'moving') {
           element.classList.add('pachinko-peg--moving');
-          physicsPeg.baseX = peg.x;
+          physicsPeg.baseX = typeof peg.baseX === 'number' ? peg.baseX : peg.x;
           physicsPeg.amplitude = peg.amplitude || 0;
           physicsPeg.speed = Math.max(0.2, peg.speed || 0.6);
           physicsPeg.phase = peg.phase || 0;
@@ -889,8 +926,23 @@
       const points = [];
       const simulationStart = nowSeconds();
       updateMovingPegPhysics(simulationStart);
+      const dropMargin = 0.12;
+      let spawnRatio = lastDropSpawnRatio;
+      for (let attempt = 0; attempt < 4; attempt += 1) {
+        const candidate = clampValue(
+          dropMargin + Math.random() * (1 - dropMargin * 2),
+          dropMargin,
+          1 - dropMargin
+        );
+        if (Math.abs(candidate - lastDropSpawnRatio) >= 0.12 || attempt === 3) {
+          spawnRatio = candidate;
+          break;
+        }
+      }
+      lastDropSpawnRatio = spawnRatio;
+
       let x = clampValue(
-        boardField.left + boardField.width / 2 + randomOffset(0.05),
+        boardField.left + boardField.width * spawnRatio + randomOffset(boardField.width * 0.02),
         boardField.left + BALL_RADIUS,
         boardField.right - BALL_RADIUS
       );
