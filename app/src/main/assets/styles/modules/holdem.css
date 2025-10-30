@@ -1,5 +1,5 @@
 .page--holdem {
-  --holdem-scale: var(--ui-control-scale, 1);
+  --holdem-scale: calc(var(--ui-control-scale, 1) * 0.75);
   --holdem-background: linear-gradient(160deg, rgba(10, 18, 36, 0.92), rgba(18, 32, 54, 0.88));
   --holdem-panel-background: rgba(18, 28, 46, 0.72);
   --holdem-border-color: rgba(255, 255, 255, 0.08);
