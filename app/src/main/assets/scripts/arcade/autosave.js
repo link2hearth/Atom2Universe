@@ -12,6 +12,7 @@
     'minesweeper',
     'solitaire',
     'holdem',
+    'dice',
     'blackjack',
     'echecs'
   ];

@@ -153,8 +153,7 @@
     clearButton: DICE_SECTION.querySelector('#diceClearHoldsButton'),
     newGameButton: DICE_SECTION.querySelector('#diceNewGameButton'),
     rollsValue: DICE_SECTION.querySelector('#diceRollsValue'),
-    status: DICE_SECTION.querySelector('#diceStatus'),
-    lastScore: DICE_SECTION.querySelector('#diceLastScore')
+    status: DICE_SECTION.querySelector('#diceStatus')
   };
 
   const diceValues = Array.from({ length: activeDiceCount }, (_, index) => ((index % facesPerDie) + 1));
@@ -163,7 +162,74 @@
   let hasRolledThisTurn = false;
   let gameComplete = false;
   const assignedScores = new Map();
-  let lastGameScore = 0;
+  const AUTOSAVE_ID = 'dice';
+  let autosaveTimerId = null;
+
+  function getAutosaveApi() {
+    if (typeof window === 'undefined' || !window.ArcadeAutosave) {
+      return null;
+    }
+    return window.ArcadeAutosave;
+  }
+
+  function persistState() {
+    const autosave = getAutosaveApi();
+    if (!autosave || typeof autosave.set !== 'function') {
+      return;
+    }
+    const normalizedDice = [];
+    for (let i = 0; i < activeDiceCount; i += 1) {
+      const value = Number(diceValues[i]);
+      if (Number.isFinite(value) && value >= 1 && value <= facesPerDie) {
+        normalizedDice.push(Math.floor(value));
+      } else {
+        normalizedDice.push(((i % facesPerDie) + 1));
+      }
+    }
+    const normalizedHeld = [];
+    for (let i = 0; i < activeDiceCount; i += 1) {
+      normalizedHeld.push(Boolean(heldDice[i]));
+    }
+    const scoresPayload = {};
+    assignedScores.forEach((score, id) => {
+      if (!CATEGORY_MAP.has(id)) {
+        return;
+      }
+      const numericScore = Number(score);
+      if (!Number.isFinite(numericScore) || numericScore < 0) {
+        return;
+      }
+      scoresPayload[id] = Math.floor(numericScore);
+    });
+    const payload = {
+      version: 1,
+      diceValues: normalizedDice,
+      held: normalizedHeld,
+      rollsLeft: Math.max(0, Math.min(maxRollsPerTurn, Math.floor(Number(rollsLeft) || 0))),
+      hasRolledThisTurn: Boolean(!gameComplete && hasRolledThisTurn && (rollsLeft < maxRollsPerTurn)),
+      gameComplete: Boolean(gameComplete),
+      assignedScores: scoresPayload,
+      updatedAt: Date.now()
+    };
+    try {
+      autosave.set(AUTOSAVE_ID, payload);
+    } catch (error) {
+      // Ignore autosave persistence errors
+    }
+  }
+
+  function scheduleAutosave() {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    if (autosaveTimerId != null) {
+      window.clearTimeout(autosaveTimerId);
+    }
+    autosaveTimerId = window.setTimeout(() => {
+      autosaveTimerId = null;
+      persistState();
+    }, 120);
+  }
 
   function computeCounts(values) {
     const counts = new Array(facesPerDie + 1).fill(0);
@@ -317,17 +383,6 @@
     return { upperSubtotal, bonus, upperTotal, lowerTotal, grandTotal };
   }
 
-  function updateLastScoreDisplay() {
-    if (!elements.lastScore) {
-      return;
-    }
-    elements.lastScore.textContent = translate(
-      'index.sections.dice.controls.lastScore',
-      'Last score: {score}',
-      { score: formatScore(lastGameScore) }
-    );
-  }
-
   function setStatus(key, fallback, params) {
     if (!elements.status) {
       return;
@@ -357,10 +412,6 @@
       button.dataset.value = String(value);
       button.dataset.held = held ? 'true' : 'false';
       button.setAttribute('aria-pressed', held ? 'true' : 'false');
-      const valueElement = button.querySelector('.dice-die__value');
-      if (valueElement) {
-        valueElement.textContent = String(value);
-      }
       updateDieAriaLabel(i);
     }
   }
@@ -411,15 +462,14 @@
     if (!best) {
       const totals = computeTotals();
       gameComplete = true;
-      lastGameScore = totals.grandTotal;
       updateRollInfo();
       updateControls();
-      updateLastScoreDisplay();
       setStatus(
         'scripts.arcade.dice.status.gameComplete',
         'Game complete! Final score: {score}.',
         { score: formatScore(totals.grandTotal) }
       );
+      scheduleAutosave();
       return;
     }
 
@@ -434,14 +484,13 @@
     const completed = assignedScores.size >= CATEGORY_DEFINITIONS.length;
     if (completed) {
       gameComplete = true;
-      lastGameScore = totals.grandTotal;
       updateControls();
-      updateLastScoreDisplay();
       setStatus(
         'scripts.arcade.dice.status.gameComplete',
         'Game complete! Final score: {score}.',
         { score: formatScore(totals.grandTotal) }
       );
+      scheduleAutosave();
       return;
     }
 
@@ -455,6 +504,7 @@
         total: formatScore(totals.grandTotal)
       }
     );
+    scheduleAutosave();
   }
 
   function updateControls() {
@@ -514,6 +564,7 @@
         'Rolls left: {rolls}. Select dice to hold or roll again.',
         { rolls: formatScore(rollsLeft) }
       );
+      scheduleAutosave();
       return;
     }
     autoAssignBestCategory({ counts, sum, uniqueValues });
@@ -533,6 +584,7 @@
       ? `Die ${index + 1} held.`
       : `Die ${index + 1} released.`;
     setStatus(key, fallback, { index: formatScore(index + 1) });
+    scheduleAutosave();
   }
 
   function clearHolds() {
@@ -552,6 +604,7 @@
     updateDiceDisplay();
     updateControls();
     setStatus('scripts.arcade.dice.status.holdsCleared', 'All dice released.');
+    scheduleAutosave();
   }
 
   function resetGame() {
@@ -566,11 +619,113 @@
     updateDiceDisplay();
     updateRollInfo();
     updateControls();
-    updateLastScoreDisplay();
     setStatus(
       'scripts.arcade.dice.status.newGame',
       'New game started. Roll to begin.'
     );
+    scheduleAutosave();
+  }
+
+  function applySavedState() {
+    const autosave = getAutosaveApi();
+    if (!autosave || typeof autosave.get !== 'function') {
+      return false;
+    }
+    let savedState = null;
+    try {
+      savedState = autosave.get(AUTOSAVE_ID);
+    } catch (error) {
+      return false;
+    }
+    if (!savedState || typeof savedState !== 'object') {
+      return false;
+    }
+
+    const savedDice = Array.isArray(savedState.diceValues) ? savedState.diceValues : [];
+    for (let i = 0; i < activeDiceCount; i += 1) {
+      const value = Number(savedDice[i]);
+      if (Number.isFinite(value) && value >= 1 && value <= facesPerDie) {
+        diceValues[i] = Math.floor(value);
+      } else {
+        diceValues[i] = ((i % facesPerDie) + 1);
+      }
+    }
+
+    const savedHeld = Array.isArray(savedState.held) ? savedState.held : [];
+    for (let i = 0; i < activeDiceCount; i += 1) {
+      heldDice[i] = Boolean(savedHeld[i]);
+    }
+
+    const normalizedRolls = Number(savedState.rollsLeft);
+    rollsLeft = Number.isFinite(normalizedRolls)
+      ? Math.max(0, Math.min(maxRollsPerTurn, Math.floor(normalizedRolls)))
+      : maxRollsPerTurn;
+
+    hasRolledThisTurn = savedState.hasRolledThisTurn === true && rollsLeft < maxRollsPerTurn;
+
+    assignedScores.clear();
+    const savedScores = savedState.assignedScores && typeof savedState.assignedScores === 'object'
+      ? savedState.assignedScores
+      : null;
+    if (savedScores) {
+      Object.keys(savedScores).forEach(key => {
+        const definition = CATEGORY_MAP.get(key);
+        if (!definition) {
+          return;
+        }
+        const numericScore = Number(savedScores[key]);
+        if (!Number.isFinite(numericScore) || numericScore < 0) {
+          return;
+        }
+        assignedScores.set(definition.id, Math.floor(numericScore));
+      });
+    }
+
+    gameComplete = savedState.gameComplete === true || assignedScores.size >= CATEGORY_DEFINITIONS.length;
+    if (gameComplete) {
+      hasRolledThisTurn = false;
+      rollsLeft = 0;
+      heldDice.fill(false);
+    }
+
+    updateDiceDisplay();
+    updateRollInfo();
+    updateControls();
+
+    const totals = computeTotals();
+    if (gameComplete) {
+      setStatus(
+        'scripts.arcade.dice.status.gameComplete',
+        'Game complete! Final score: {score}.',
+        { score: formatScore(totals.grandTotal) }
+      );
+    } else if (hasRolledThisTurn) {
+      if (rollsLeft > 0) {
+        setStatus(
+          'scripts.arcade.dice.status.rollsLeft',
+          'Rolls left: {rolls}. Select dice to hold or roll again.',
+          { rolls: formatScore(rollsLeft) }
+        );
+      } else {
+        setStatus(
+          'scripts.arcade.dice.status.noRolls',
+          'No rolls left—scoring current hand.'
+        );
+      }
+    } else if (assignedScores.size > 0) {
+      setStatus(
+        'scripts.arcade.dice.status.resume',
+        'Game resumed. Current total: {total}. Roll to continue.',
+        { total: formatScore(totals.grandTotal) }
+      );
+    } else {
+      setStatus(
+        'scripts.arcade.dice.status.start',
+        'Roll the dice to begin.'
+      );
+    }
+
+    return true;
   }
 
   diceButtons.forEach((button, index) => {
@@ -612,12 +767,15 @@
     });
   }
 
-  updateDiceDisplay();
-  updateRollInfo();
-  updateLastScoreDisplay();
-  updateControls();
-  setStatus(
-    'scripts.arcade.dice.status.start',
-    'Roll the dice to begin.'
-  );
+  const restored = applySavedState();
+  if (!restored) {
+    updateDiceDisplay();
+    updateRollInfo();
+    updateControls();
+    setStatus(
+      'scripts.arcade.dice.status.start',
+      'Roll the dice to begin.'
+    );
+  }
+  scheduleAutosave();
 })();

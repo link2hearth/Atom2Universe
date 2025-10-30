@@ -938,8 +938,7 @@
           "aria": "Commandes de lancer",
           "rollsLabel": "Lancers restants :",
           "roll": "Lancer les dés",
-          "clear": "Libérer les dés",
-          "lastScore": "Dernier score : {score}"
+          "clear": "Libérer les dés"
         },
         "status": {
           "start": "Lancez les dés pour commencer."
@@ -1997,6 +1996,7 @@
           "needRoll": "Effectuez au moins un lancer avant de marquer.",
           "categoryLocked": "Combinaison {category} validée pour {score} points.",
           "gameComplete": "Partie terminée ! Score final : {score}.",
+          "resume": "Partie reprise. Total actuel : {total}. Lancez les dés pour continuer.",
           "newGame": "Nouvelle partie prête. Lancez les dés."
         },
         "die": {
