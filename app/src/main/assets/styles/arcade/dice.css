@@ -33,7 +33,7 @@
 
 .dice-layout {
   display: grid;
-  gap: clamp(1.5rem, 3vw, 2.5rem);
+  gap: clamp(1rem, 2.5vw, 2rem);
   grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
 }
 
@@ -45,17 +45,21 @@
 
 .dice-table {
   display: grid;
-  gap: clamp(1rem, 2.5vw, 1.8rem);
+  gap: clamp(0.75rem, 2vw, 1.4rem);
 }
 
 .dice-table__felt {
   background: var(--dice-felt-background);
   border-radius: clamp(1.25rem, 3vw, 2.4rem);
   border: 1px solid var(--dice-felt-border);
-  padding: clamp(1.75rem, 4vw, 2.75rem);
+  padding: clamp(1.1rem, 3vw, 1.9rem);
   box-shadow: var(--dice-felt-shadow);
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.8rem, 2vw, 1.2rem);
 }
 
 .dice-table__felt::after {
@@ -70,10 +74,38 @@
 .dice-table__dice {
   position: relative;
   display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(0.65rem, 1.6vw, 1.1rem);
+  flex-wrap: wrap;
+}
+
+.dice-table__footer {
+  display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: clamp(0.75rem, 2vw, 1.4rem);
+  width: 100%;
+  gap: clamp(0.5rem, 1.5vw, 0.85rem);
   flex-wrap: wrap;
+}
+
+.dice-table__rolls {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: clamp(0.7rem, 1.6vw, 0.85rem);
+  color: var(--dice-muted);
+  margin: 0;
+}
+
+.dice-table__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.dice-table__status {
+  width: 100%;
 }
 
 .dice-die {
@@ -183,40 +215,17 @@
   }
 }
 
-.dice-controls {
-  display: grid;
-  gap: clamp(0.75rem, 2vw, 1.3rem);
-  background: rgba(9, 14, 22, 0.65);
-  border-radius: clamp(1rem, 2.5vw, 1.75rem);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  padding: clamp(1rem, 2.5vw, 1.5rem);
-  box-shadow: 0 16px 28px rgba(0, 0, 0, 0.35);
-}
-
-.dice-controls__rolls {
-  display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
-  font-size: clamp(0.95rem, 2.2vw, 1.1rem);
-  color: var(--dice-muted);
-}
-
-.dice-controls__buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-
 .dice-button {
   background: rgba(37, 56, 88, 0.82);
   border: 1px solid rgba(255, 255, 255, 0.12);
   color: inherit;
-  padding: 0.65rem 1.2rem;
-  border-radius: 999px;
+  padding: 0.35rem 0.8rem;
+  border-radius: 0.75rem;
   font-weight: 600;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
+  font-size: clamp(0.7rem, 1.6vw, 0.85rem);
   transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-  box-shadow: 0 16px 28px rgba(0, 0, 0, 0.32);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.28);
 }
 
 .dice-button:hover:not(:disabled) {
@@ -236,20 +245,21 @@
 
 .dice-status {
   margin: 0;
-  font-size: clamp(0.95rem, 2.2vw, 1.15rem);
+  font-size: clamp(0.75rem, 1.6vw, 0.95rem);
   color: var(--dice-preview-color);
-  min-height: 1.5em;
+  min-height: 1.4em;
+  text-align: center;
 }
 
 .dice-scorecard {
   background: var(--dice-scorecard-background);
-  border-radius: clamp(1.1rem, 2.5vw, 1.9rem);
+  border-radius: clamp(0.6rem, 2vw, 1.2rem);
   border: 1px solid var(--dice-scorecard-border);
   box-shadow: var(--dice-scorecard-shadow);
-  padding: clamp(1.25rem, 3vw, 2rem);
+  padding: clamp(0.65rem, 2vw, 1.1rem);
   display: flex;
   flex-direction: column;
-  gap: clamp(1rem, 2.5vw, 1.75rem);
+  gap: clamp(0.5rem, 1.6vw, 0.9rem);
 }
 
 .dice-scorecard__header {
@@ -257,7 +267,7 @@
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
 
 .dice-scorecard__title {
@@ -268,12 +278,12 @@
 
 .dice-scorecard__sections {
   display: grid;
-  gap: clamp(1.25rem, 3vw, 2rem);
+  gap: clamp(0.6rem, 1.8vw, 1.1rem);
 }
 
 .dice-scorecard__group {
   display: grid;
-  gap: clamp(0.75rem, 2vw, 1.3rem);
+  gap: clamp(0.4rem, 1.4vw, 0.8rem);
 }
 
 .dice-scorecard__group-title {
@@ -288,7 +298,7 @@
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 0.5rem;
+  gap: 0.35rem;
 }
 
 .dice-scorecard__item {
@@ -300,11 +310,11 @@
   display: grid;
   grid-template-columns: 1fr auto auto;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
   background: rgba(15, 23, 42, 0.35);
   border: 1px solid transparent;
-  border-radius: 0.9rem;
-  padding: 0.75rem 1rem;
+  border-radius: 0.6rem;
+  padding: 0.5rem 0.75rem;
   color: inherit;
   text-align: left;
   font-weight: 600;
@@ -330,40 +340,40 @@
 }
 
 .dice-scorecard__label {
-  font-size: clamp(1rem, 2.4vw, 1.15rem);
+  font-size: clamp(0.8rem, 1.8vw, 0.95rem);
 }
 
 .dice-scorecard__value {
   font-variant-numeric: tabular-nums;
-  font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+  font-size: clamp(0.75rem, 1.6vw, 0.9rem);
 }
 
 .dice-scorecard__preview {
   font-variant-numeric: tabular-nums;
-  font-size: clamp(0.9rem, 2vw, 1rem);
+  font-size: clamp(0.7rem, 1.5vw, 0.85rem);
   color: var(--dice-preview-color);
 }
 
 .dice-scorecard__totals {
   display: grid;
-  gap: 0.5rem;
+  gap: 0.35rem;
   background: rgba(15, 23, 42, 0.45);
-  border-radius: 0.85rem;
-  padding: 0.85rem 1rem;
+  border-radius: 0.65rem;
+  padding: 0.6rem 0.75rem;
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .dice-scorecard__total-row {
   display: flex;
   justify-content: space-between;
-  gap: 0.75rem;
-  font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+  gap: 0.5rem;
+  font-size: clamp(0.8rem, 1.6vw, 0.95rem);
   font-variant-numeric: tabular-nums;
 }
 
 .dice-scorecard__total-row:last-child {
   font-weight: 700;
-  font-size: clamp(1.05rem, 2.5vw, 1.25rem);
+  font-size: clamp(0.9rem, 1.8vw, 1.05rem);
 }
 
 .dice-scorecard__total-label {
