@@ -343,7 +343,7 @@
           "gameOfLife": {
             "aria": "Open the Game of Life mini-game",
             "title": "Game of Life",
-            "description": "Nothing to gain; it's a testing area for Conway's Game of Life.",
+            "description": "Place cells and watch them evolve: they survive with 2 or 3 neighbours, are born with exactly 3, and die otherwise.",
             "cta": "Explore"
           },
           "roulette": {
@@ -1040,6 +1040,70 @@
             "match3": {
               "label": "Metals mini-game:",
               "description": "Align metals as fast as possible to boost your APS gains."
+            },
+            "photon": {
+              "label": "Photon mini-game:",
+              "description": "Guide a photon along its wave to turn light into bonus atoms."
+            },
+            "objectx": {
+              "label": "ObjectX mini-game:",
+              "description": "Merge quantum tiles until you hit the target value and earn tickets."
+            },
+            "bigger": {
+              "label": "Bigger mini-game:",
+              "description": "Choose where each ball drops to build the largest mass possible."
+            },
+            "math": {
+              "label": "Math mini-game:",
+              "description": "Solve timed equations by filling in the missing numbers or operators."
+            },
+            "balance": {
+              "label": "Balance mini-game:",
+              "description": "Place every weight to keep the beam level and earn extra Metals attempts."
+            },
+            "sudoku": {
+              "label": "Sudoku mini-game:",
+              "description": "Complete each procedurally generated grid to boost offline production."
+            },
+            "theLine": {
+              "label": "The Line mini-game:",
+              "description": "Draw a continuous path that covers every tile without revisiting it, colours included."
+            },
+            "minesweeper": {
+              "label": "Minesweeper mini-game:",
+              "description": "Use the numbers to locate every mine and clear the board to win tickets."
+            },
+            "solitaire": {
+              "label": "Solitaire mini-game:",
+              "description": "Stack cards by suit and rank to complete the four foundations."
+            },
+            "echecs": {
+              "label": "Chess mini-game:",
+              "description": "Challenge an adaptable AI to polish your openings and tactics at your own pace."
+            },
+            "othello": {
+              "label": "Othello mini-game:",
+              "description": "Surround your opponent’s discs to flip them and control most of the 8×8 board."
+            },
+            "gameOfLife": {
+              "label": "Game of Life mini-game:",
+              "description": "Seed live cells and watch the rules in action: survive on 2 or 3 neighbours, be born on exactly 3, otherwise die."
+            },
+            "roulette": {
+              "label": "Joker Roulette mini-game:",
+              "description": "Wager your atoms on the neon wheel and pick the winning card colour to multiply your stash."
+            },
+            "blackjack": {
+              "label": "Blackjack mini-game:",
+              "description": "Draw cards against the dealer, aiming for 21 without busting to double your atoms."
+            },
+            "holdem": {
+              "label": "Hold’em mini-game:",
+              "description": "Face up to four AIs in Texas Hold’em and build the best five-card hand from the board."
+            },
+            "dice": {
+              "label": "Dice mini-game:",
+              "description": "Roll five glowing dice, lock your favourites, and chase Yahtzee-style combinations."
             }
           }
         },

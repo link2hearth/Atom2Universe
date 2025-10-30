@@ -343,7 +343,7 @@
           "gameOfLife": {
             "aria": "Accéder au mini-jeu Jeu de la vie",
             "title": "Jeu de la vie",
-            "description": "Rien à gagner, c'est une aire de test pour le jeu de la vie de Conway.",
+            "description": "Placez des cellules et observez leur évolution : elles survivent avec 2 ou 3 voisines, naissent avec exactement 3 et meurent autrement.",
             "cta": "Explorer"
           },
           "roulette": {
@@ -1040,6 +1040,70 @@
             "match3": {
               "label": "Mini jeu Mach3 :",
               "description": "Alignez les métaux le plus vite possible pour booster vos gains d’APS."
+            },
+            "photon": {
+              "label": "Mini jeu Photon :",
+              "description": "Faites vibrer un photon le long de son onde lumineuse pour transformer son énergie en atomes bonus."
+            },
+            "objectx": {
+              "label": "Mini jeu ObjectX :",
+              "description": "Fusionnez les blocs quantiques jusqu’à atteindre la tuile objectif et décrocher des tickets."
+            },
+            "bigger": {
+              "label": "Mini jeu Plus gros :",
+              "description": "Choisissez où laisser tomber chaque bille pour fabriquer la masse la plus imposante."
+            },
+            "math": {
+              "label": "Mini jeu Math :",
+              "description": "Complétez les nombres ou symboles manquants avant la fin du chronomètre."
+            },
+            "balance": {
+              "label": "Mini jeu Balance :",
+              "description": "Disposez chaque poids pour garder la planche stable et gagner des essais supplémentaires pour Métaux."
+            },
+            "sudoku": {
+              "label": "Mini jeu Sudoku :",
+              "description": "Remplissez les lignes, colonnes et blocs de la grille générée pour booster la production hors ligne."
+            },
+            "theLine": {
+              "label": "Mini jeu The Line :",
+              "description": "Tracez un chemin continu qui couvre chaque case sans repasser dessus, même quand les couleurs s’en mêlent."
+            },
+            "minesweeper": {
+              "label": "Mini jeu Démineur :",
+              "description": "Déduisez l’emplacement des mines et ouvrez toutes les cases sûres pour remporter des tickets."
+            },
+            "solitaire": {
+              "label": "Mini jeu Solitaire :",
+              "description": "Organisez les cartes par couleur et valeur pour compléter les quatre fondations."
+            },
+            "echecs": {
+              "label": "Mini jeu Échecs :",
+              "description": "Affrontez une IA adaptable et peaufinez vos ouvertures et tactiques à votre rythme."
+            },
+            "othello": {
+              "label": "Mini jeu Othello :",
+              "description": "Encerclez les pions adverses pour retourner la majorité du plateau 8×8."
+            },
+            "gameOfLife": {
+              "label": "Mini jeu Jeu de la vie :",
+              "description": "Placez des cellules vivantes et observez les règles : une cellule survit avec 2 ou 3 voisines, naît avec exactement 3 et meurt autrement."
+            },
+            "roulette": {
+              "label": "Mini jeu Joker Roulette :",
+              "description": "Misez vos atomes sur la roue néon et choisissez la couleur gagnante pour multiplier vos gains."
+            },
+            "blackjack": {
+              "label": "Mini jeu Blackjack :",
+              "description": "Affrontez le croupier, approchez-vous de 21 sans le dépasser pour tenter de doubler vos atomes."
+            },
+            "holdem": {
+              "label": "Mini jeu Hold’em :",
+              "description": "Affrontez jusqu’à quatre IA en Texas Hold’em et combinez vos cartes avec le tapis pour rafler le pot."
+            },
+            "dice": {
+              "label": "Mini jeu Dice :",
+              "description": "Lancez cinq dés électroniques, verrouillez vos meilleurs jets et chassez les figures façon yams."
             }
           }
         },
