@@ -20,8 +20,12 @@
     WHITE: -1
   });
 
+  const GAME_MODES = Object.freeze({
+    SOLO: 'solo',
+    DUO: 'duo'
+  });
+
   const AI_PLAYER = PLAYERS.BLACK;
-  const HUMAN_PLAYER = PLAYERS.WHITE;
   const AI_MOVE_DELAY = 500;
 
   const state = {
@@ -34,7 +38,8 @@
     languageHandlerAttached: false,
     languageHandler: null,
     lastStatus: null,
-    aiTimeout: null
+    aiTimeout: null,
+    mode: GAME_MODES.SOLO
   };
 
   onReady(() => {
@@ -43,6 +48,7 @@
       return;
     }
     state.elements = elements;
+    updateModeToggle();
     buildBoard();
     attachEvents();
     resetGame();
@@ -62,15 +68,19 @@
     const resetButton = document.getElementById('othelloResetButton');
     const status = document.getElementById('othelloStatus');
     const score = document.getElementById('othelloScore');
+    const modeToggle = document.getElementById('othelloModeToggle');
     if (!board || !resetButton || !status || !score) {
       return null;
     }
-    return { board, resetButton, status, score };
+    return { board, resetButton, status, score, modeToggle };
   }
 
   function attachEvents() {
     state.elements.board.addEventListener('click', handleBoardClick);
     state.elements.resetButton.addEventListener('click', resetGame);
+    if (state.elements.modeToggle) {
+      state.elements.modeToggle.addEventListener('click', toggleMode);
+    }
   }
 
   function attachLanguageListener() {
@@ -81,10 +91,31 @@
       renderBoard();
       updateScore();
       refreshStatus();
+      updateModeToggle();
     };
     window.addEventListener('i18n:languagechange', handler);
     state.languageHandlerAttached = true;
     state.languageHandler = handler;
+  }
+
+  function toggleMode() {
+    state.mode = state.mode === GAME_MODES.SOLO ? GAME_MODES.DUO : GAME_MODES.SOLO;
+    updateModeToggle();
+    resetGame();
+  }
+
+  function updateModeToggle() {
+    if (!state.elements || !state.elements.modeToggle) {
+      return;
+    }
+    const isDuo = state.mode === GAME_MODES.DUO;
+    state.elements.modeToggle.setAttribute('aria-pressed', isDuo ? 'true' : 'false');
+    state.elements.modeToggle.dataset.mode = state.mode;
+    const key = isDuo
+      ? 'scripts.arcade.othello.mode.duo'
+      : 'scripts.arcade.othello.mode.solo';
+    const fallback = isDuo ? 'Mode : 2 joueurs' : 'Mode : Solo vs IA';
+    state.elements.modeToggle.textContent = translate(key, fallback, null);
   }
 
   function buildBoard() {
@@ -117,7 +148,7 @@
     if (!cell) {
       return;
     }
-    if (state.currentPlayer !== HUMAN_PLAYER) {
+    if (!isHumanControlled(state.currentPlayer)) {
       return;
     }
     const row = Number.parseInt(cell.dataset.row || '', 10);
@@ -273,7 +304,7 @@
   }
 
   function renderBoard() {
-    const isHumanTurn = state.currentPlayer === HUMAN_PLAYER && state.validMoves.size > 0;
+    const isHumanTurn = isHumanControlled(state.currentPlayer) && state.validMoves.size > 0;
     for (let row = 0; row < BOARD_SIZE; row += 1) {
       for (let col = 0; col < BOARD_SIZE; col += 1) {
         const cell = state.cells[row][col];
@@ -345,29 +376,30 @@
   }
 
   function beginTurn() {
-    if (state.currentPlayer === HUMAN_PLAYER) {
+    if (!isHumanControlled(state.currentPlayer)) {
       setStatus(
-        'scripts.arcade.othello.status.humanTurn',
-        'À vous de jouer (blancs).',
+        'scripts.arcade.othello.status.aiTurn',
+        'L’IA (noirs) réfléchit…',
         null
       );
+      scheduleAIMove();
       return;
     }
+    const playerKey = state.currentPlayer === PLAYERS.BLACK ? 'black' : 'white';
     setStatus(
-      'scripts.arcade.othello.status.aiTurn',
-      'L’IA (noirs) réfléchit…',
+      `scripts.arcade.othello.status.humanTurn.${playerKey}`,
+      playerKey === 'black' ? 'Aux noirs de jouer.' : 'À vous de jouer (blancs).',
       null
     );
-    scheduleAIMove();
   }
 
   function scheduleAIMove() {
-    if (typeof window === 'undefined') {
+    if (typeof window === 'undefined' || state.mode !== GAME_MODES.SOLO) {
       return;
     }
     state.aiTimeout = window.setTimeout(() => {
       state.aiTimeout = null;
-      if (state.currentPlayer !== AI_PLAYER) {
+      if (state.currentPlayer !== AI_PLAYER || state.mode !== GAME_MODES.SOLO) {
         return;
       }
       const move = chooseAIMove();
@@ -459,6 +491,13 @@
       player === PLAYERS.BLACK ? 'noirs' : 'blancs',
       null
     );
+  }
+
+  function isHumanControlled(player) {
+    if (state.mode === GAME_MODES.DUO) {
+      return true;
+    }
+    return player !== AI_PLAYER;
   }
 
   function translate(key, fallback, params) {
