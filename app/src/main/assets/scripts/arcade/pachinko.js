@@ -4,7 +4,7 @@
   }
 
   const GLOBAL_CONFIG = typeof globalThis !== 'undefined' ? globalThis.GAME_CONFIG : null;
-  const DEFAULT_BET_OPTIONS = Object.freeze([100, 200, 500]);
+  const DEFAULT_BET_OPTIONS = Object.freeze([10, 20, 50]);
   const DEFAULT_SLOT_LAYOUT = Object.freeze([
     Object.freeze({
       id: 'void-left',
