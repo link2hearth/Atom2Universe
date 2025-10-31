@@ -190,6 +190,9 @@ class LayeredNumber {
   }
 
   toLayer(targetLayer) {
+    if (this.sign === 0) {
+      return LayeredNumber.zero();
+    }
     if (targetLayer === this.layer) {
       return this.clone();
     }
