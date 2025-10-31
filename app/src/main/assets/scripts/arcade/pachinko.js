@@ -285,6 +285,16 @@
       if (value instanceof LayeredNumber) {
         return value.toString();
       }
+      if (typeof LayeredNumber === 'function') {
+        try {
+          const layered = new LayeredNumber(value);
+          if (layered instanceof LayeredNumber) {
+            return layered.toString();
+          }
+        } catch (error) {
+          // ignore conversion error and fall back to numeric formatting
+        }
+      }
       const numeric = Number(value);
       if (!Number.isFinite(numeric)) {
         return '0';
@@ -383,24 +393,15 @@
     const historyEntries = [];
 
     function formatBetAmount(amount) {
+      const layered = createLayeredAmount(amount);
+      if (layered) {
+        return formatLayeredNumber(layered);
+      }
       if (!Number.isFinite(amount)) {
         return '0';
       }
       const numeric = Math.floor(amount);
-      if (typeof formatNumberLocalized === 'function') {
-        try {
-          const formatted = formatNumberLocalized(numeric, { maximumFractionDigits: 0 });
-          if (formatted) {
-            return formatted;
-          }
-        } catch (error) {
-          // ignore formatting error
-        }
-      }
-      if (typeof numeric.toLocaleString === 'function') {
-        return numeric.toLocaleString();
-      }
-      return `${numeric}`;
+      return formatLayeredNumber(numeric);
     }
 
     function translateBetOptionLabel(amountLabel) {
