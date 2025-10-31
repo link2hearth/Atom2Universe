@@ -9,7 +9,8 @@ const CONFIG_OVERRIDE_STORAGE_PREFIX = 'atom2univers.config.';
 
 const CONFIG_OVERRIDE_KEYS = Object.freeze({
   devkit: `${CONFIG_OVERRIDE_STORAGE_PREFIX}devkitEnabled`,
-  collection: `${CONFIG_OVERRIDE_STORAGE_PREFIX}collectionEnabled`
+  collection: `${CONFIG_OVERRIDE_STORAGE_PREFIX}collectionEnabled`,
+  info: `${CONFIG_OVERRIDE_STORAGE_PREFIX}infoSectionsEnabled`
 });
 
 function getConfigStorage() {
@@ -78,6 +79,13 @@ const COLLECTION_SYSTEM_ENABLED = resolveConfigBoolean(
   DEFAULT_COLLECTION_SYSTEM_ENABLED
 );
 
+const DEFAULT_INFO_SECTIONS_ENABLED = true;
+
+const INFO_SECTIONS_ENABLED = resolveConfigBoolean(
+  CONFIG_OVERRIDE_KEYS.info,
+  DEFAULT_INFO_SECTIONS_ENABLED
+);
+
 function toggleDevkitFeatureEnabled() {
   const next = toggleConfigBoolean(CONFIG_OVERRIDE_KEYS.devkit, DEFAULT_DEVKIT_ENABLED);
   if (typeof globalThis !== 'undefined') {
@@ -93,6 +101,17 @@ function toggleCollectionFeatureEnabled() {
   );
   if (typeof globalThis !== 'undefined') {
     globalThis.COLLECTION_SYSTEM_ENABLED = next;
+  }
+  return next;
+}
+
+function toggleInfoSectionsFeatureEnabled() {
+  const next = toggleConfigBoolean(
+    CONFIG_OVERRIDE_KEYS.info,
+    DEFAULT_INFO_SECTIONS_ENABLED
+  );
+  if (typeof globalThis !== 'undefined') {
+    globalThis.INFO_SECTIONS_ENABLED = next;
   }
   return next;
 }
@@ -3740,8 +3759,10 @@ if (typeof globalThis !== 'undefined') {
   globalThis.GAME_CONFIG = GAME_CONFIG;
   globalThis.DEVKIT_ENABLED = DEVKIT_ENABLED;
   globalThis.COLLECTION_SYSTEM_ENABLED = COLLECTION_SYSTEM_ENABLED;
+  globalThis.INFO_SECTIONS_ENABLED = INFO_SECTIONS_ENABLED;
   globalThis.toggleDevkitFeatureEnabled = toggleDevkitFeatureEnabled;
   globalThis.toggleCollectionFeatureEnabled = toggleCollectionFeatureEnabled;
+  globalThis.toggleInfoSectionsFeatureEnabled = toggleInfoSectionsFeatureEnabled;
 }
 
 
