@@ -10,6 +10,17 @@ function getCurrentLocale() {
   return 'fr-FR';
 }
 
+function getCurrentLanguage() {
+  const api = getI18nApi();
+  if (api && typeof api.getCurrentLanguage === 'function') {
+    const language = api.getCurrentLanguage();
+    if (typeof language === 'string' && language.trim()) {
+      return language.trim();
+    }
+  }
+  return 'fr';
+}
+
 function formatNumberLocalized(value, options) {
   const api = getI18nApi();
   if (api && typeof api.formatNumber === 'function') {
@@ -989,6 +1000,26 @@ function getSpecialCardCollection() {
   return {};
 }
 
+function getBonusImageDefinitions() {
+  return Array.isArray(GACHA_BONUS_IMAGE_DEFINITIONS)
+    ? GACHA_BONUS_IMAGE_DEFINITIONS
+    : [];
+}
+
+function getBonusImageDefinition(imageId) {
+  if (!imageId) {
+    return null;
+  }
+  return getBonusImageDefinitions().find(def => def.id === imageId) || null;
+}
+
+function getBonusImageCollection() {
+  if (gameState.gachaImages && typeof gameState.gachaImages === 'object') {
+    return gameState.gachaImages;
+  }
+  return {};
+}
+
 function resolveSpecialCardLabel(cardId) {
   if (typeof resolveSpecialGachaCardLabel === 'function') {
     const resolved = resolveSpecialGachaCardLabel(cardId);
@@ -1002,6 +1033,34 @@ function resolveSpecialCardLabel(cardId) {
     return translateOrDefault(definition.labelKey, fallback);
   }
   return translateOrDefault(`scripts.gacha.cards.names.${cardId}`, `Carte ${cardId}`);
+}
+
+function resolveBonusImageLabel(imageId) {
+  const definition = getBonusImageDefinition(imageId);
+  if (!definition) {
+    return translateOrDefault(`scripts.gacha.images.names.${imageId}`, `Image ${imageId}`);
+  }
+  const language = getCurrentLanguage();
+  if (definition.names && typeof definition.names === 'object') {
+    const direct = definition.names[language];
+    if (typeof direct === 'string' && direct.trim()) {
+      return direct.trim();
+    }
+    const [base] = language.split('-');
+    if (base && typeof definition.names[base] === 'string' && definition.names[base].trim()) {
+      return definition.names[base].trim();
+    }
+  }
+  if (definition.labelKey) {
+    const translated = translateOrDefault(definition.labelKey, definition.labelFallback);
+    if (translated) {
+      return translated;
+    }
+  }
+  if (definition.labelFallback) {
+    return definition.labelFallback;
+  }
+  return translateOrDefault(`scripts.gacha.images.names.${imageId}`, `Image ${imageId}`);
 }
 
 function normalizeSpecialCardReward(reward) {
@@ -1018,11 +1077,20 @@ function normalizeSpecialCardReward(reward) {
   if (!cardId) {
     return null;
   }
-  const definition = typeof getSpecialGachaCardDefinition === 'function'
-    ? getSpecialGachaCardDefinition(cardId)
-    : getSpecialCardDefinitions().find(def => def.id === cardId);
-  const label = reward.label ? reward.label : resolveSpecialCardLabel(cardId);
-  const collection = getSpecialCardCollection();
+  const rewardType = reward.type === 'image' ? 'image' : 'card';
+  const definition = rewardType === 'image'
+    ? getBonusImageDefinition(cardId)
+    : (typeof getSpecialGachaCardDefinition === 'function'
+        ? getSpecialGachaCardDefinition(cardId)
+        : getSpecialCardDefinitions().find(def => def.id === cardId));
+  const label = reward.label
+    ? reward.label
+    : (rewardType === 'image'
+        ? resolveBonusImageLabel(cardId)
+        : resolveSpecialCardLabel(cardId));
+  const collection = rewardType === 'image'
+    ? getBonusImageCollection()
+    : getSpecialCardCollection();
   const stored = collection[cardId];
   const storedCount = Number.isFinite(Number(stored?.count ?? stored))
     ? Math.max(0, Math.floor(Number(stored?.count ?? stored)))
@@ -1040,15 +1108,19 @@ function normalizeSpecialCardReward(reward) {
     count,
     assetPath,
     isNew: reward.isNew === true,
-    definition: definition || null
+    definition: definition || null,
+    type: rewardType
   };
 }
 
-function formatSpecialCardCount(count) {
+function formatSpecialCardCount(count, type = 'card') {
   const normalized = Math.max(0, Math.floor(Number(count) || 0));
   const formatted = formatIntegerLocalized(normalized);
   const fallback = `×${formatted}`;
-  return translateOrDefault('scripts.gacha.cards.overlay.count', fallback, { count: formatted });
+  const key = type === 'image'
+    ? 'scripts.gacha.images.overlay.count'
+    : 'scripts.gacha.cards.overlay.count';
+  return translateOrDefault(key, fallback, { count: formatted });
 }
 
 function applySpecialCardOverlayContent(card) {
@@ -1059,7 +1131,7 @@ function applySpecialCardOverlayContent(card) {
     elements.gachaCardOverlayLabel.textContent = card.label;
   }
   if (elements.gachaCardOverlayCount) {
-    elements.gachaCardOverlayCount.textContent = formatSpecialCardCount(card.count);
+    elements.gachaCardOverlayCount.textContent = formatSpecialCardCount(card.count, card.type);
   }
   if (elements.gachaCardOverlayImage) {
     if (card.assetPath) {
@@ -1072,20 +1144,28 @@ function applySpecialCardOverlayContent(card) {
     elements.gachaCardOverlayImage.alt = card.label;
   }
   if (elements.gachaCardOverlayTitle) {
+    const isImage = card.type === 'image';
     const titleKey = card.isNew
-      ? 'scripts.gacha.cards.overlay.newTitle'
-      : 'scripts.gacha.cards.overlay.duplicateTitle';
-    const fallback = card.isNew ? 'Carte spéciale obtenue !' : 'Carte spéciale retrouvée !';
+      ? (isImage ? 'scripts.gacha.images.overlay.newTitle' : 'scripts.gacha.cards.overlay.newTitle')
+      : (isImage ? 'scripts.gacha.images.overlay.duplicateTitle' : 'scripts.gacha.cards.overlay.duplicateTitle');
+    const fallback = card.isNew
+      ? (isImage ? 'Image bonus obtenue !' : 'Carte spéciale obtenue !')
+      : (isImage ? 'Image bonus retrouvée !' : 'Carte spéciale retrouvée !');
     elements.gachaCardOverlayTitle.textContent = translateOrDefault(titleKey, fallback, { card: card.label });
   }
   if (elements.gachaCardOverlayHint) {
-    elements.gachaCardOverlayHint.textContent = translateOrDefault(
-      'scripts.gacha.cards.overlay.hint',
-      'Touchez la croix pour revenir au jeu.'
-    );
+    const isImage = card.type === 'image';
+    const hintKey = isImage ? 'scripts.gacha.images.overlay.hint' : 'scripts.gacha.cards.overlay.hint';
+    const hintFallback = isImage
+      ? 'Touchez la croix pour refermer l’image.'
+      : 'Touchez la croix pour revenir au jeu.';
+    elements.gachaCardOverlayHint.textContent = translateOrDefault(hintKey, hintFallback);
   }
   if (elements.gachaCardOverlayClose) {
-    const closeLabel = translateOrDefault('scripts.gacha.cards.overlay.close', 'Fermer la carte');
+    const isImage = card.type === 'image';
+    const closeKey = isImage ? 'scripts.gacha.images.overlay.close' : 'scripts.gacha.cards.overlay.close';
+    const closeFallback = isImage ? 'Fermer l’image' : 'Fermer la carte';
+    const closeLabel = translateOrDefault(closeKey, closeFallback);
     elements.gachaCardOverlayClose.setAttribute('aria-label', closeLabel);
     elements.gachaCardOverlayClose.setAttribute('title', closeLabel);
   }
@@ -1195,8 +1275,8 @@ function enqueueSpecialCardReveal(rewards) {
   processSpecialCardOverlayQueue();
 }
 
-function showSpecialCardFromCollection(cardId) {
-  const normalized = normalizeSpecialCardReward({ cardId });
+function showSpecialCardFromCollection(cardId, type = 'card') {
+  const normalized = normalizeSpecialCardReward({ cardId, type });
   if (!normalized || normalized.count <= 0) {
     return;
   }
@@ -1205,7 +1285,7 @@ function showSpecialCardFromCollection(cardId) {
   openSpecialCardOverlay(normalized);
 }
 
-function handleInfoCardListClick(event) {
+function handleCollectionListClick(event) {
   const button = event.target.closest('[data-card-id]');
   if (!button) {
     return;
@@ -1215,7 +1295,9 @@ function handleInfoCardListClick(event) {
   if (!cardId) {
     return;
   }
-  showSpecialCardFromCollection(cardId);
+  const rawType = button.getAttribute('data-card-type') || button.dataset.cardType || '';
+  const type = rawType === 'image' ? 'image' : 'card';
+  showSpecialCardFromCollection(cardId, type);
 }
 
 function handleSpecialCardOverlayKeydown(event) {
@@ -1231,7 +1313,10 @@ function initSpecialCardOverlay() {
   }
   specialCardOverlayState.initialized = true;
   if (elements.infoCardsList) {
-    elements.infoCardsList.addEventListener('click', handleInfoCardListClick);
+    elements.infoCardsList.addEventListener('click', handleCollectionListClick);
+  }
+  if (elements.collectionImagesList) {
+    elements.collectionImagesList.addEventListener('click', handleCollectionListClick);
   }
   if (elements.gachaCardOverlayClose) {
     elements.gachaCardOverlayClose.addEventListener('click', event => {
@@ -1253,30 +1338,44 @@ function initSpecialCardOverlay() {
   renderSpecialCardCollection();
 }
 
-function renderSpecialCardCollection() {
-  if (!elements.infoCardsList || !elements.infoCardsEmpty) {
+function resolveCollectionEntryLabel(id, type) {
+  return type === 'image' ? resolveBonusImageLabel(id) : resolveSpecialCardLabel(id);
+}
+
+function renderCollectionList(options) {
+  const {
+    definitions,
+    collection,
+    container,
+    emptyElement,
+    type,
+    viewKey,
+    countKey
+  } = options;
+
+  if (!container || !emptyElement) {
     return;
   }
-  const container = elements.infoCardsList;
+
   container.innerHTML = '';
-  const definitions = getSpecialCardDefinitions();
-  const collection = getSpecialCardCollection();
-  const owned = definitions
+
+  const entries = Array.isArray(definitions) ? definitions : [];
+  const owned = entries
     .map(def => {
-      const entry = collection[def.id];
-      const count = Number.isFinite(Number(entry?.count ?? entry))
-        ? Math.max(0, Math.floor(Number(entry?.count ?? entry)))
+      const source = collection && typeof collection === 'object' ? collection[def.id] : null;
+      const rawCount = Number.isFinite(Number(source?.count ?? source))
+        ? Math.max(0, Math.floor(Number(source?.count ?? source)))
         : 0;
-      const label = resolveSpecialCardLabel(def.id);
-      return { id: def.id, count, label };
+      const label = resolveCollectionEntryLabel(def.id, type);
+      return { id: def.id, count: rawCount, label };
     })
     .filter(entry => entry.count > 0);
 
   if (!owned.length) {
     container.hidden = true;
     container.setAttribute('aria-hidden', 'true');
-    elements.infoCardsEmpty.hidden = false;
-    elements.infoCardsEmpty.setAttribute('aria-hidden', 'false');
+    emptyElement.hidden = false;
+    emptyElement.setAttribute('aria-hidden', 'false');
     return;
   }
 
@@ -1289,8 +1388,9 @@ function renderSpecialCardCollection() {
     button.type = 'button';
     button.className = 'info-card-list__button';
     button.dataset.cardId = entry.id;
+    button.dataset.cardType = type;
     const viewLabel = translateOrDefault(
-      'index.sections.info.cards.view',
+      viewKey,
       `Afficher ${entry.label}`,
       { card: entry.label }
     );
@@ -1305,7 +1405,7 @@ function renderSpecialCardCollection() {
     count.className = 'info-card-list__count';
     const formattedCount = formatIntegerLocalized(entry.count);
     count.textContent = translateOrDefault(
-      'index.sections.info.cards.count',
+      countKey,
       `×${formattedCount}`,
       { count: formattedCount }
     );
@@ -1318,8 +1418,30 @@ function renderSpecialCardCollection() {
 
   container.hidden = false;
   container.setAttribute('aria-hidden', 'false');
-  elements.infoCardsEmpty.hidden = true;
-  elements.infoCardsEmpty.setAttribute('aria-hidden', 'true');
+  emptyElement.hidden = true;
+  emptyElement.setAttribute('aria-hidden', 'true');
+}
+
+function renderSpecialCardCollection() {
+  renderCollectionList({
+    definitions: getSpecialCardDefinitions(),
+    collection: getSpecialCardCollection(),
+    container: elements.infoCardsList,
+    emptyElement: elements.infoCardsEmpty,
+    type: 'card',
+    viewKey: 'index.sections.collection.cards.view',
+    countKey: 'index.sections.collection.cards.count'
+  });
+
+  renderCollectionList({
+    definitions: getBonusImageDefinitions(),
+    collection: getBonusImageCollection(),
+    container: elements.collectionImagesList,
+    emptyElement: elements.collectionImagesEmpty,
+    type: 'image',
+    viewKey: 'index.sections.collection.images.view',
+    countKey: 'index.sections.collection.images.count'
+  });
 }
 
 function subscribeSpecialCardOverlayLanguageUpdates() {
