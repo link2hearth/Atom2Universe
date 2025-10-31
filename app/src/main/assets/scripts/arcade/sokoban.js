@@ -33,7 +33,8 @@
       height: Object.freeze({ min: 5, max: 9 }),
       boxes: Object.freeze({ min: 2, max: 4 }),
       wallDensity: Object.freeze({ min: 0.12, max: 0.32 }),
-      attempts: 48
+      attempts: 48,
+      timeLimitMs: 1500
     }),
     map: Object.freeze([]),
     targets: Object.freeze([]),
@@ -170,9 +171,10 @@
       const densityMin = clampNumber(generator?.wallDensity?.min, 0, 1, 0);
       const densityMax = clampNumber(generator?.wallDensity?.max, densityMin, 1, densityMin);
       const attempts = clampInt(generator?.attempts, 1, 9999, 0);
+      const timeLimit = clampInt(generator?.timeLimitMs, 100, 60000, DEFAULT_CONFIG.generator.timeLimitMs);
       const shuffleMin = clampInt(config?.shuffleMoves?.min, 1, 9999, 0);
       const shuffleMax = clampInt(config?.shuffleMoves?.max, shuffleMin, 9999, shuffleMin);
-      return `generator:${widthMin}-${widthMax}x${heightMin}-${heightMax}|boxes:${boxesMin}-${boxesMax}|density:${densityMin.toFixed(3)}-${densityMax.toFixed(3)}|attempts:${attempts}|shuffle:${shuffleMin}-${shuffleMax}`;
+      return `generator:${widthMin}-${widthMax}x${heightMin}-${heightMax}|boxes:${boxesMin}-${boxesMax}|density:${densityMin.toFixed(3)}-${densityMax.toFixed(3)}|attempts:${attempts}|time:${timeLimit}|shuffle:${shuffleMin}-${shuffleMax}`;
     }
     if (Array.isArray(config.map)) {
       return computeMapSignature(config.map);
@@ -573,19 +575,18 @@
     for (let row = 0; row < safeHeight; row += 1) {
       const rowCells = new Array(safeWidth);
       for (let col = 0; col < safeWidth; col += 1) {
-        const border = row === 0 || row === safeHeight - 1 || col === 0 || col === safeWidth - 1;
-        rowCells[col] = border ? '#' : '.';
+        rowCells[col] = '.';
       }
       grid[row] = rowCells;
     }
 
-    const interiorCells = [];
-    for (let row = 1; row < safeHeight - 1; row += 1) {
-      for (let col = 1; col < safeWidth - 1; col += 1) {
-        interiorCells.push([row, col]);
+    const candidateCells = [];
+    for (let row = 0; row < safeHeight; row += 1) {
+      for (let col = 0; col < safeWidth; col += 1) {
+        candidateCells.push([row, col]);
       }
     }
-    shuffleArray(interiorCells);
+    shuffleArray(candidateCells);
 
     const minDensity = clampNumber(
       wallDensityRange?.min,
@@ -600,17 +601,20 @@
       Math.max(minDensity, DEFAULT_CONFIG.generator.wallDensity.max)
     );
     const density = randomFloat(minDensity, maxDensity);
-    const totalInterior = interiorCells.length;
+    const totalCells = candidateCells.length;
     const maxWalls = Math.min(
-      totalInterior,
-      Math.floor(totalInterior * Math.min(Math.max(density, 0), 0.5))
+      Math.max(totalCells - 1, 0),
+      Math.floor(totalCells * Math.min(Math.max(density, 0), 0.5))
     );
-    let openCells = countOpenCells(grid);
-    const minimumOpenCells = Math.max(Math.floor(totalInterior * 0.55), safeWidth + safeHeight, 6);
+    let openCells = totalCells;
+    const minimumOpenCells = Math.max(Math.floor(totalCells * 0.55), safeWidth + safeHeight, 6);
     let placed = 0;
 
-    for (let index = 0; index < interiorCells.length && placed < maxWalls; index += 1) {
-      const [row, col] = interiorCells[index];
+    for (let index = 0; index < candidateCells.length && placed < maxWalls; index += 1) {
+      const [row, col] = candidateCells[index];
+      if (grid[row][col] === '#') {
+        continue;
+      }
       if (openCells - 1 < minimumOpenCells) {
         break;
       }
@@ -787,17 +791,30 @@
       const maxStagnation = requestedSteps * 6;
 
       for (let step = 0; step < requestedSteps && stagnation < maxStagnation; step += 1) {
-        const actions = legalInverseActions(player, boxes, caches);
+        let actions = legalInverseActions(player, boxes, caches);
         if (!actions.length) {
-          stagnation += 1;
           const reachable = computeReachableCells(player.row, player.col, boxes);
-          const optionsWithoutBoxes = Array.from(reachable).filter(entry => !boxes.has(entry));
-          const randomKey = chooseRandomEntry(optionsWithoutBoxes);
-          if (randomKey) {
-            const coords = decodeKey(randomKey);
-            player = { row: coords.row, col: coords.col };
+          let reassigned = false;
+          for (const key of reachable) {
+            const coords = decodeKey(key);
+            const candidateActions = legalInverseActions({ row: coords.row, col: coords.col }, boxes, caches);
+            if (candidateActions.length) {
+              player = { row: coords.row, col: coords.col };
+              actions = candidateActions;
+              reassigned = true;
+              break;
+            }
           }
-          continue;
+        if (!reassigned) {
+            stagnation += 1;
+            const optionsWithoutBoxes = Array.from(reachable).filter(entry => !boxes.has(entry));
+            const randomKey = chooseRandomEntry(optionsWithoutBoxes);
+            if (randomKey) {
+              const coords = decodeKey(randomKey);
+              player = { row: coords.row, col: coords.col };
+            }
+            continue;
+          }
         }
 
         const pullActions = actions.filter(action => action.type === 'pull');
@@ -822,7 +839,7 @@
         }
       }
 
-      const minPulls = Math.max(3, Math.min(normalizedTargets.length * 2, requestedSteps));
+      const minPulls = Math.max(2, Math.min(normalizedTargets.length + 1, requestedSteps));
       if (pulls < minPulls) {
         return null;
       }
@@ -837,7 +854,7 @@
       }
 
       const averageDistance = computeAverageBoxGoalDistance(boxes, state.targetKeys);
-      if (!Number.isFinite(averageDistance) || averageDistance < 2) {
+      if (!Number.isFinite(averageDistance) || averageDistance < 1.8) {
         return null;
       }
 
@@ -931,27 +948,47 @@
       return null;
     }
 
+    const targetKeySet = new Set();
+    for (const [row, col] of targets) {
+      targetKeySet.add(keyFor(row, col));
+    }
+
     const simulation = simulateReversePlacement(grid, targets, { stepsMin: 3, stepsMax: 12 });
-    if (!simulation || !simulation.initialBoxes || simulation.initialBoxes.length !== targets.length) {
-      return null;
-    }
-    if (!simulation.solvedPlayer || !Number.isInteger(simulation.solvedPlayer.row) || !Number.isInteger(simulation.solvedPlayer.col)) {
-      return null;
-    }
-    if (!simulation.initialPlayer || !Number.isInteger(simulation.initialPlayer.row) || !Number.isInteger(simulation.initialPlayer.col)) {
-      return null;
+    let playerStartRow = 0;
+    let playerStartCol = 0;
+    let initialState = null;
+
+    if (simulation
+      && simulation.initialBoxes
+      && simulation.initialBoxes.length === targets.length
+      && simulation.solvedPlayer
+      && Number.isInteger(simulation.solvedPlayer.row)
+      && Number.isInteger(simulation.solvedPlayer.col)
+      && simulation.initialPlayer
+      && Number.isInteger(simulation.initialPlayer.row)
+      && Number.isInteger(simulation.initialPlayer.col)) {
+      playerStartRow = simulation.solvedPlayer.row;
+      playerStartCol = simulation.solvedPlayer.col;
+      initialState = {
+        player: { row: simulation.initialPlayer.row, col: simulation.initialPlayer.col },
+        boxes: simulation.initialBoxes.map(entry => [entry[0], entry[1]]),
+        pulls: simulation.pulls
+      };
+    } else {
+      const anchor = selectPlayerAnchor(grid, targetKeySet);
+      if (!anchor) {
+        return null;
+      }
+      playerStartRow = anchor.row;
+      playerStartCol = anchor.col;
     }
 
     const mapRows = grid.map(row => row.join(''));
     return {
       map: mapRows,
       targets,
-      playerStart: { row: simulation.solvedPlayer.row, col: simulation.solvedPlayer.col },
-      initialState: {
-        player: { row: simulation.initialPlayer.row, col: simulation.initialPlayer.col },
-        boxes: simulation.initialBoxes.map(entry => [entry[0], entry[1]]),
-        pulls: simulation.pulls
-      }
+      playerStart: { row: playerStartRow, col: playerStartCol },
+      initialState
     };
   }
 
@@ -967,12 +1004,14 @@
     const densityMin = clampNumber(source?.wallDensity?.min, 0, 0.45, defaultGenerator.wallDensity.min);
     const densityMax = clampNumber(source?.wallDensity?.max, densityMin, 0.45, Math.max(densityMin, defaultGenerator.wallDensity.max));
     const attempts = clampInt(source?.attempts, 3, 200, defaultGenerator.attempts);
+    const timeLimitMs = clampInt(source?.timeLimitMs, 200, 60000, defaultGenerator.timeLimitMs);
     return {
       width: { min: widthMin, max: widthMax },
       height: { min: heightMin, max: heightMax },
       boxes: { min: boxesMin, max: boxesMax },
       wallDensity: { min: densityMin, max: densityMax },
-      attempts
+      attempts,
+      timeLimitMs
     };
   }
 
@@ -2707,10 +2746,12 @@
     return true;
   }
 
-  function shuffleFromSolvedState() {
+  function shuffleFromSolvedState(deadlineTimestamp = null) {
     if (state.targetKeys.size <= 0) {
       return false;
     }
+
+    const deadline = Number.isFinite(deadlineTimestamp) ? deadlineTimestamp : null;
 
     const requestedSteps = clampInt(
       randomInt(state.config.shuffleMoves.min, state.config.shuffleMoves.max),
@@ -2742,17 +2783,33 @@
     const maxStagnation = requestedSteps * 18;
 
     for (let step = 0; step < requestedSteps && stagnation < maxStagnation; step += 1) {
-      const actions = legalInverseActions(player, boxes, caches);
+      if (deadline && Date.now() > deadline) {
+        return false;
+      }
+      let actions = legalInverseActions(player, boxes, caches);
       if (!actions.length) {
-        stagnation += 1;
         const reachable = computeReachableCells(player.row, player.col, boxes);
-        const alternatives = Array.from(reachable).filter(entry => !boxes.has(entry));
-        const randomKey = chooseRandomEntry(alternatives);
-        if (randomKey) {
-          const coords = decodeKey(randomKey);
-          player = { row: coords.row, col: coords.col };
+        let reassigned = false;
+        for (const key of reachable) {
+          const coords = decodeKey(key);
+          const candidateActions = legalInverseActions({ row: coords.row, col: coords.col }, boxes, caches);
+          if (candidateActions.length) {
+            player = { row: coords.row, col: coords.col };
+            actions = candidateActions;
+            reassigned = true;
+            break;
+          }
         }
-        continue;
+        if (!reassigned) {
+          stagnation += 1;
+          const alternatives = Array.from(reachable).filter(entry => !boxes.has(entry));
+          const randomKey = chooseRandomEntry(alternatives);
+          if (randomKey) {
+            const coords = decodeKey(randomKey);
+            player = { row: coords.row, col: coords.col };
+          }
+          continue;
+        }
       }
 
       const pullActions = actions.filter(action => action.type === 'pull');
@@ -2779,7 +2836,7 @@
 
     const stepQuota = Math.max(1, Math.floor(requestedSteps * 0.25));
     const boxQuota = Math.max(totalBoxes * 2, totalBoxes + 2);
-    const requiredPulls = Math.max(4, Math.min(stepQuota, boxQuota));
+    const requiredPulls = Math.max(3, Math.min(stepQuota, totalBoxes * 2));
     if (pulls < requiredPulls) {
       return false;
     }
@@ -2794,7 +2851,7 @@
     }
 
     const averageDistance = computeAverageBoxGoalDistance(boxes, state.targetKeys);
-    if (!Number.isFinite(averageDistance) || averageDistance < 3) {
+    if (!Number.isFinite(averageDistance) || averageDistance < 1.8) {
       return false;
     }
 
@@ -2809,7 +2866,18 @@
       player = { row: coords.row, col: coords.col };
     }
 
-    const solverResult = solveForwardMinPushes(player, boxes, state.targetKeys, { timeLimitMs: 2500 });
+    if (deadline && Date.now() > deadline) {
+      return false;
+    }
+    let solverTimeLimit = 2500;
+    if (deadline) {
+      const remaining = deadline - Date.now();
+      if (remaining <= 200) {
+        return false;
+      }
+      solverTimeLimit = clampInt(Math.min(remaining, 2500), 200, 3500, 2500);
+    }
+    const solverResult = solveForwardMinPushes(player, boxes, state.targetKeys, { timeLimitMs: solverTimeLimit });
     const metrics = computeSolverMetrics(solverResult);
     if (!metrics) {
       return false;
@@ -2826,16 +2894,126 @@
     return true;
   }
 
-  function shuffleWithRetries(maxAttempts) {
+  function shuffleWithRetries(maxAttempts, deadlineTimestamp = null) {
     const attempts = clampInt(maxAttempts, 1, 20, 1);
+    const deadline = Number.isFinite(deadlineTimestamp) ? deadlineTimestamp : null;
     for (let index = 0; index < attempts; index += 1) {
-      const shuffled = shuffleFromSolvedState();
+      if (deadline && Date.now() > deadline) {
+        break;
+      }
+      const shuffled = shuffleFromSolvedState(deadline);
       if (!shuffled) {
         continue;
       }
       if (!checkSolved()) {
         return true;
       }
+    }
+    return false;
+  }
+
+  function tileHasPushSpace(row, col) {
+    if (isWall(row, col)) {
+      return false;
+    }
+    for (const direction of DIRECTIONS) {
+      const behindRow = row - direction.row;
+      const behindCol = col - direction.col;
+      const aheadRow = row + direction.row;
+      const aheadCol = col + direction.col;
+      if (!isWall(behindRow, behindCol) && !isWall(aheadRow, aheadCol)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function generateFallbackProceduralState(maxAttempts = 64, deadlineTimestamp = null) {
+    const totalTargets = state.targetKeys.size;
+    if (totalTargets <= 0) {
+      return false;
+    }
+    const attempts = clampInt(maxAttempts, 1, 400, 48);
+    const deadline = Number.isFinite(deadlineTimestamp) ? deadlineTimestamp : null;
+    const walkableCells = [];
+    const preferredCells = [];
+    for (let row = 0; row < state.height; row += 1) {
+      for (let col = 0; col < state.width; col += 1) {
+        if (!isWall(row, col)) {
+          walkableCells.push([row, col]);
+          if (tileHasPushSpace(row, col)) {
+            preferredCells.push([row, col]);
+          }
+        }
+      }
+    }
+    if (walkableCells.length <= totalTargets) {
+      return false;
+    }
+    const caches = buildRowTargetPresence();
+    for (let attempt = 0; attempt < attempts; attempt += 1) {
+      if (deadline && Date.now() > deadline) {
+        break;
+      }
+      const source = preferredCells.length >= totalTargets ? preferredCells : walkableCells;
+      const shuffled = source.slice();
+      shuffleArray(shuffled);
+      const boxesList = shuffled.slice(0, totalTargets);
+      const boxesSet = new Set();
+      let validBoxes = true;
+      let offTarget = false;
+      for (const [row, col] of boxesList) {
+        const key = keyFor(row, col);
+        if (boxesSet.has(key)) {
+          validBoxes = false;
+          break;
+        }
+        boxesSet.add(key);
+        if (!state.targetKeys.has(key)) {
+          offTarget = true;
+        }
+      }
+      if (!validBoxes || !offTarget) {
+        continue;
+      }
+      if (containsStaticDeadlock(boxesSet, state.targetKeys, caches)) {
+        continue;
+      }
+      const playerCandidates = shuffled.filter(entry => !boxesSet.has(keyFor(entry[0], entry[1])));
+      if (!playerCandidates.length) {
+        continue;
+      }
+      const [playerRow, playerCol] = chooseRandomEntry(playerCandidates);
+      const reachable = computeReachableCells(playerRow, playerCol, boxesSet);
+      if (!reachable.has(keyFor(playerRow, playerCol))) {
+        continue;
+      }
+      let solverTimeLimit = 3500;
+      if (deadline) {
+        const remaining = deadline - Date.now();
+        if (remaining <= 200) {
+          continue;
+        }
+        solverTimeLimit = clampInt(remaining, 200, 3500, 3500);
+      }
+      const solverResult = solveForwardMinPushes(
+        { row: playerRow, col: playerCol },
+        boxesSet,
+        state.targetKeys,
+        { timeLimitMs: solverTimeLimit }
+      );
+      const metrics = computeSolverMetrics(solverResult);
+      if (!metrics) {
+        continue;
+      }
+      const difficultyHint = Math.max(metrics.minPushes, totalTargets * 2);
+      if (!fitsDifficulty(metrics, difficultyHint, totalTargets)) {
+        continue;
+      }
+      state.player = { row: playerRow, col: playerCol };
+      state.boxes = boxesSet;
+      state.currentMetrics = metrics;
+      return true;
     }
     return false;
   }
@@ -2950,9 +3128,19 @@
       return false;
     }
     const attempts = clampInt(generator.attempts, 3, 200, DEFAULT_CONFIG.generator.attempts);
+    const timeLimitMs = clampInt(
+      generator.timeLimitMs,
+      200,
+      60000,
+      DEFAULT_CONFIG.generator.timeLimitMs
+    );
+    const deadline = Date.now() + timeLimitMs;
     const baseLevel = clampInt(state.level, 1, 9999, 1);
 
     for (let attempt = 0; attempt < attempts; attempt += 1) {
+      if (Date.now() > deadline) {
+        break;
+      }
       const layout = generateProceduralLayout(generator);
       if (!layout) {
         continue;
@@ -2976,8 +3164,11 @@
           prepared = false;
         }
       }
-      if (!prepared) {
-        prepared = shuffleWithRetries(randomizeLevel ? 6 : 4);
+      if (!prepared && Date.now() <= deadline) {
+        prepared = generateFallbackProceduralState(randomizeLevel ? 96 : 64, deadline);
+      }
+      if (!prepared && Date.now() <= deadline) {
+        prepared = shuffleWithRetries(randomizeLevel ? 6 : 4, deadline);
         if (!prepared) {
           continue;
         }
