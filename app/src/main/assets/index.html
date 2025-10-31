@@ -5395,6 +5395,51 @@
   </div>
 
   <div
+    id="bigBangDialog"
+    class="bigbang-dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="bigBangDialogTitle"
+    aria-describedby="bigBangDialogMessage"
+    hidden
+  >
+    <div class="bigbang-dialog__panel" role="document">
+      <h2
+        id="bigBangDialogTitle"
+        class="bigbang-dialog__title"
+        data-i18n="index.sections.bigbang.confirm.title"
+      >
+        Confirmer le Big Bang
+      </h2>
+      <p
+        id="bigBangDialogMessage"
+        class="bigbang-dialog__message"
+        data-i18n="index.sections.bigbang.confirm.message"
+      >
+        Relancer l’univers ? Vous perdrez vos atomes actuels, vos APC/APS et les niveaux du magasin, mais débloquerez +100 niveaux supplémentaires.
+      </p>
+      <div class="bigbang-dialog__actions">
+        <button
+          type="button"
+          id="bigBangDialogCancel"
+          class="bigbang-dialog__button"
+          data-i18n="index.sections.bigbang.confirm.cancel"
+        >
+          Annuler
+        </button>
+        <button
+          type="button"
+          id="bigBangDialogConfirm"
+          class="bigbang-dialog__button bigbang-dialog__button--confirm"
+          data-i18n="index.sections.bigbang.confirm.confirm"
+        >
+          Déclencher le Big Bang
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div
     id="resetDialog"
     class="reset-dialog"
     role="dialog"

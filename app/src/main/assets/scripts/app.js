@@ -4431,6 +4431,13 @@ const resetDialogState = {
   previousFocus: null
 };
 
+const BIG_BANG_DIALOG_FOCUSABLE_SELECTOR = RESET_DIALOG_FOCUSABLE_SELECTOR;
+
+const bigBangDialogState = {
+  isOpen: false,
+  previousFocus: null
+};
+
 const CONFIG_RELOAD_DELAY_MS = 500;
 let configReloadTimerId = null;
 
@@ -4779,6 +4786,11 @@ function collectDomElements() {
   bigBangBonusInfo: document.getElementById('bigBangBonusInfo'),
   bigBangRequirement: document.getElementById('bigBangRequirement'),
   bigBangRestartButton: document.getElementById('bigBangRestartButton'),
+  bigBangDialog: document.getElementById('bigBangDialog'),
+  bigBangDialogTitle: document.getElementById('bigBangDialogTitle'),
+  bigBangDialogMessage: document.getElementById('bigBangDialogMessage'),
+  bigBangDialogConfirm: document.getElementById('bigBangDialogConfirm'),
+  bigBangDialogCancel: document.getElementById('bigBangDialogCancel'),
   pages: document.querySelectorAll('.page'),
   statusAtomsButton: document.getElementById('statusAtomsButton'),
   statusAtoms: document.getElementById('statusAtoms'),
@@ -6631,6 +6643,168 @@ function updateBigBangActionUI() {
     elements.bigBangRestartButton.disabled = !ready;
     elements.bigBangRestartButton.setAttribute('aria-disabled', ready ? 'false' : 'true');
   }
+  updateBigBangDialogCopy();
+}
+
+function updateBigBangDialogCopy() {
+  if (!elements.bigBangDialog) {
+    return;
+  }
+  const bonusStepDisplay = getBigBangBonusStepDisplay();
+  if (elements.bigBangDialogTitle) {
+    elements.bigBangDialogTitle.textContent = translateOrDefault(
+      'index.sections.bigbang.confirm.title',
+      'Confirmer le Big Bang'
+    );
+  }
+  if (elements.bigBangDialogMessage) {
+    const fallback = `Relancer l’univers ? Vous perdrez vos atomes actuels, vos APC/APS et les niveaux du magasin, mais débloquerez +${bonusStepDisplay} niveaux supplémentaires.`;
+    elements.bigBangDialogMessage.textContent = translateOrDefault(
+      'index.sections.bigbang.confirm.message',
+      fallback,
+      { bonus: bonusStepDisplay }
+    );
+    elements.bigBangDialog.setAttribute('aria-describedby', 'bigBangDialogMessage');
+  } else {
+    elements.bigBangDialog.removeAttribute('aria-describedby');
+  }
+  if (elements.bigBangDialogCancel) {
+    elements.bigBangDialogCancel.textContent = translateOrDefault(
+      'index.sections.bigbang.confirm.cancel',
+      'Annuler'
+    );
+  }
+  if (elements.bigBangDialogConfirm) {
+    const actionLabel = translateOrDefault(
+      'index.sections.bigbang.confirm.confirm',
+      'Déclencher le Big Bang'
+    );
+    elements.bigBangDialogConfirm.textContent = actionLabel;
+    elements.bigBangDialogConfirm.setAttribute('aria-label', actionLabel);
+  }
+}
+
+function getBigBangDialogFocusableElements() {
+  if (!elements.bigBangDialog) {
+    return [];
+  }
+  return Array.from(
+    elements.bigBangDialog.querySelectorAll(BIG_BANG_DIALOG_FOCUSABLE_SELECTOR)
+  ).filter(node => node instanceof HTMLElement && !node.hasAttribute('disabled') && !node.hidden);
+}
+
+function handleBigBangDialogKeydown(event) {
+  if (!bigBangDialogState.isOpen) {
+    return;
+  }
+  if (event.key === 'Escape') {
+    event.preventDefault();
+    closeBigBangDialog({ cancelled: true });
+    return;
+  }
+  if (event.key !== 'Tab') {
+    return;
+  }
+  const focusable = getBigBangDialogFocusableElements();
+  if (!focusable.length) {
+    event.preventDefault();
+    return;
+  }
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+  const active = document && document.activeElement instanceof HTMLElement
+    ? document.activeElement
+    : null;
+  if (event.shiftKey) {
+    if (!active || active === first) {
+      event.preventDefault();
+      last.focus();
+    }
+  } else if (active === last) {
+    event.preventDefault();
+    first.focus();
+  }
+}
+
+function openBigBangDialog() {
+  if (
+    !elements.bigBangDialog
+    || !elements.bigBangDialogConfirm
+    || !elements.bigBangDialogCancel
+  ) {
+    return false;
+  }
+  if (bigBangDialogState.isOpen) {
+    return true;
+  }
+  bigBangDialogState.isOpen = true;
+  bigBangDialogState.previousFocus = document && document.activeElement instanceof HTMLElement
+    ? document.activeElement
+    : null;
+  updateBigBangDialogCopy();
+  elements.bigBangDialog.hidden = false;
+  document.addEventListener('keydown', handleBigBangDialogKeydown);
+  requestAnimationFrame(() => {
+    const focusTarget = elements.bigBangDialogConfirm || elements.bigBangDialogCancel;
+    if (focusTarget && typeof focusTarget.focus === 'function') {
+      focusTarget.focus();
+    }
+  });
+  return true;
+}
+
+function closeBigBangDialog({ cancelled = false } = {}) {
+  if (!bigBangDialogState.isOpen) {
+    return;
+  }
+  bigBangDialogState.isOpen = false;
+  if (elements.bigBangDialog) {
+    elements.bigBangDialog.hidden = true;
+  }
+  document.removeEventListener('keydown', handleBigBangDialogKeydown);
+  const { previousFocus } = bigBangDialogState;
+  bigBangDialogState.previousFocus = null;
+  const focusTarget = previousFocus && typeof previousFocus.focus === 'function'
+    ? previousFocus
+    : elements.bigBangRestartButton && typeof elements.bigBangRestartButton.focus === 'function'
+      ? elements.bigBangRestartButton
+      : null;
+  if (focusTarget) {
+    focusTarget.focus();
+  }
+  if (cancelled) {
+    showToast(translateOrDefault('scripts.app.bigBang.cancelled', 'Big Bang annulé'));
+  }
+}
+
+function handleBigBangDialogConfirm(event) {
+  event.preventDefault();
+  if (!canPerformBigBang()) {
+    closeBigBangDialog();
+    const remainingInfo = getBigBangRemainingLevels();
+    const fallback = `Achetez tous les niveaux restants du magasin (${remainingInfo.display}) pour relancer l’univers.`;
+    showToast(translateOrDefault(
+      'scripts.app.bigBang.notReady',
+      fallback,
+      { remaining: remainingInfo.display }
+    ));
+    return;
+  }
+  closeBigBangDialog();
+  performBigBang();
+}
+
+function handleBigBangDialogCancel(event) {
+  event.preventDefault();
+  closeBigBangDialog({ cancelled: true });
+}
+
+function handleBigBangDialogBackdrop(event) {
+  if (!elements.bigBangDialog || event.target !== elements.bigBangDialog) {
+    return;
+  }
+  event.preventDefault();
+  closeBigBangDialog({ cancelled: true });
 }
 
 function handleBigBangRestart() {
@@ -6644,17 +6818,19 @@ function handleBigBangRestart() {
     ));
     return;
   }
-  let confirmed = true;
+  if (openBigBangDialog()) {
+    return;
+  }
   const bonusStepDisplay = getBigBangBonusStepDisplay();
   const confirmMessage = translateOrDefault(
     'scripts.app.bigBang.confirm',
     `Relancer l’univers ? Vous perdrez vos atomes actuels et les niveaux du magasin, mais gagnerez +${bonusStepDisplay} niveaux maximum.`,
     { bonus: bonusStepDisplay }
   );
-  if (typeof window !== 'undefined' && typeof window.confirm === 'function') {
-    confirmed = window.confirm(confirmMessage);
-  }
-  if (!confirmed) {
+  const confirmFn = typeof window !== 'undefined' && typeof window.confirm === 'function'
+    ? window.confirm
+    : null;
+  if (confirmFn && !confirmFn(confirmMessage)) {
     showToast(translateOrDefault('scripts.app.bigBang.cancelled', 'Big Bang annulé'));
     return;
   }
@@ -12795,6 +12971,16 @@ function bindDomEventListeners() {
       event.preventDefault();
       handleBigBangRestart();
     });
+  }
+
+  if (elements.bigBangDialogConfirm) {
+    elements.bigBangDialogConfirm.addEventListener('click', handleBigBangDialogConfirm);
+  }
+  if (elements.bigBangDialogCancel) {
+    elements.bigBangDialogCancel.addEventListener('click', handleBigBangDialogCancel);
+  }
+  if (elements.bigBangDialog) {
+    elements.bigBangDialog.addEventListener('click', handleBigBangDialogBackdrop);
   }
 
 
