@@ -262,7 +262,15 @@
       },
       "bigbang": {
         "title": "Big Bang",
-        "description": "Coming soon"
+        "description": "Trigger a cosmic reset to push your shop beyond its limits while keeping everything else intact.",
+        "restart": {
+          "title": "Restart the universe",
+          "summary": "Reset your current atoms along with both shop tracks to raise their cap by +{{bonus}} levels.",
+          "bonus": "Extra shop levels unlocked: +{{bonus}}",
+          "requirementLocked": "Buy every remaining shop level ({{remaining}}) to unlock the next Big Bang.",
+          "requirementReady": "Shop complete! Launch a new Big Bang to add +{{bonus}} purchasable levels.",
+          "cta": "Trigger the Big Bang"
+        }
       },
       "arcade": {
         "aria": "Particles mini-game",
@@ -2643,6 +2651,12 @@
       "bigBangToggle": {
         "shown": "Big Bang button shown",
         "hidden": "Big Bang button hidden"
+      },
+      "bigBang": {
+        "confirm": "Restart the universe? You will lose your current atoms, APC/APS and shop levels, but unlock +{bonus} extra levels.",
+        "cancelled": "Big Bang cancelled",
+        "notReady": "Buy every remaining shop level ({remaining}) to trigger the Big Bang.",
+        "done": "Big Bang complete! Shop cap increased by +{bonus} (total +{total})."
       },
       "metaux": {
         "chronoBonus": "Timer +{value} s",

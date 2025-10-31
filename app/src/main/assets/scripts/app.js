@@ -171,6 +171,7 @@ let featureUnlockCache = new Map();
 let cachedOptionsDetailMetadata = null;
 let lastArcadeUnlockState = null;
 let arcadeHubCardStateCache = null;
+let lastBigBangUnlockedState = false;
 
 const ARCADE_HUB_CARD_COLLAPSE_LABEL_KEY = 'index.sections.arcadeHub.cards.toggle.collapse';
 const ARCADE_HUB_CARD_EXPAND_LABEL_KEY = 'index.sections.arcadeHub.cards.toggle.expand';
@@ -597,6 +598,41 @@ function translateOrDefault(key, fallback, params) {
     return strippedKey;
   }
   return fallback;
+}
+
+function resolveLayeredConfigValue(entry, fallback) {
+  const fallbackValue = fallback instanceof LayeredNumber
+    ? fallback.clone()
+    : new LayeredNumber(fallback != null ? fallback : 0);
+  if (entry instanceof LayeredNumber) {
+    return entry.clone();
+  }
+  if (typeof entry === 'number' || typeof entry === 'string') {
+    return new LayeredNumber(entry);
+  }
+  if (entry && typeof entry === 'object') {
+    if (typeof entry.sign === 'number' && typeof entry.layer === 'number') {
+      return LayeredNumber.fromJSON(entry);
+    }
+    const type = entry.type ?? entry.layer;
+    if (type === 'layer0' || type === 0) {
+      const mantissa = Number(entry.mantissa ?? entry.value ?? entry.amount ?? 1);
+      const exponent = Number(entry.exponent ?? entry.power ?? entry.exp ?? 0);
+      if (Number.isFinite(mantissa) && Number.isFinite(exponent)) {
+        return LayeredNumber.fromLayer0(mantissa, exponent);
+      }
+    }
+    if (type === 'layer1' || type === 1) {
+      const value = Number(entry.value ?? entry.amount ?? entry.exponent ?? 0);
+      if (Number.isFinite(value)) {
+        return LayeredNumber.fromLayer1(value);
+      }
+    }
+    if (typeof entry.value === 'number') {
+      return new LayeredNumber(entry.value);
+    }
+  }
+  return fallbackValue;
 }
 
 function resolveDefaultPerformanceModeId() {
@@ -3329,6 +3365,7 @@ const DEFAULT_STATE = {
   elementBonusSummary: {},
   trophies: [],
   offlineGainMultiplier: MYTHIQUE_OFFLINE_BASE,
+  bigBangLevelBonus: 0,
   offlineTickets: {
     secondsPerTicket: OFFLINE_TICKET_CONFIG.secondsPerTicket,
     capSeconds: OFFLINE_TICKET_CONFIG.capSeconds,
@@ -3406,6 +3443,7 @@ const gameState = {
   elementBonusSummary: {},
   trophies: new Set(),
   offlineGainMultiplier: MYTHIQUE_OFFLINE_BASE,
+  bigBangLevelBonus: 0,
   offlineTickets: {
     secondsPerTicket: OFFLINE_TICKET_CONFIG.secondsPerTicket,
     capSeconds: OFFLINE_TICKET_CONFIG.capSeconds,
@@ -3808,7 +3846,14 @@ const TROPHY_DEFS = trophySource
   .sort((a, b) => a.order - b.order);
 
 const TROPHY_MAP = new Map(TROPHY_DEFS.map(def => [def.id, def]));
-const BIG_BANG_TROPHY_ID = 'scaleObservableUniverse';
+const BIG_BANG_CONFIG = GLOBAL_CONFIG?.bigBang || {};
+const BIG_BANG_LEVEL_BONUS_STEP = (() => {
+  const rawStep = Number(BIG_BANG_CONFIG.levelBonusStep);
+  if (Number.isFinite(rawStep)) {
+    return Math.max(0, Math.floor(rawStep));
+  }
+  return 100;
+})();
 const ARCADE_TROPHY_ID = 'millionAtoms';
 const INFO_TROPHY_ID = 'scaleSandGrain';
 const ACHIEVEMENTS_UNLOCK_TROPHY_ID = ARCADE_TROPHY_ID;
@@ -4730,6 +4775,10 @@ function collectDomElements() {
     navCollectionButton: document.querySelector('.nav-button[data-target="collection"]'),
     navMidiButton: document.querySelector('.nav-button[data-target="midi"]'),
   navBigBangButton: document.getElementById('navBigBangButton'),
+  bigBangSummary: document.getElementById('bigBangSummary'),
+  bigBangBonusInfo: document.getElementById('bigBangBonusInfo'),
+  bigBangRequirement: document.getElementById('bigBangRequirement'),
+  bigBangRestartButton: document.getElementById('bigBangRestartButton'),
   pages: document.querySelectorAll('.page'),
   statusAtomsButton: document.getElementById('statusAtomsButton'),
   statusAtoms: document.getElementById('statusAtoms'),
@@ -6436,6 +6485,20 @@ function subscribeCollectionImagesLanguageUpdates() {
   }
 }
 
+function subscribeBigBangLanguageUpdates() {
+  const handler = () => {
+    updateBigBangActionUI();
+  };
+  const api = getI18nApi();
+  if (api && typeof api.onLanguageChanged === 'function') {
+    api.onLanguageChanged(handler);
+    return;
+  }
+  if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
+    globalThis.addEventListener('i18n:languagechange', handler);
+  }
+}
+
 function updatePageUnlockUI() {
   const unlocks = getPageUnlockState();
   const buttonConfig = [
@@ -6473,16 +6536,161 @@ function updatePrimaryNavigationLocks() {
   ensureActivePageUnlocked();
 }
 
-function isBigBangTrophyUnlocked() {
-  return getUnlockedTrophySet().has(BIG_BANG_TROPHY_ID);
+function getBigBangLevelBonus() {
+  const raw = Number(gameState.bigBangLevelBonus ?? 0);
+  if (!Number.isFinite(raw)) {
+    return 0;
+  }
+  return Math.max(0, Math.floor(raw));
+}
+
+function setBigBangLevelBonus(value) {
+  const numeric = Number(value);
+  const sanitized = Number.isFinite(numeric) ? Math.max(0, Math.floor(numeric)) : 0;
+  gameState.bigBangLevelBonus = sanitized;
+  return sanitized;
+}
+
+function getBigBangRemainingLevels() {
+  if (!Array.isArray(UPGRADE_DEFS) || UPGRADE_DEFS.length === 0) {
+    return { total: 0, infinite: false, display: '0' };
+  }
+  let total = 0;
+  let infinite = false;
+  UPGRADE_DEFS.forEach(def => {
+    const remaining = getRemainingUpgradeCapacity(def);
+    if (!Number.isFinite(remaining)) {
+      infinite = true;
+    } else {
+      total += remaining;
+    }
+  });
+  const display = infinite ? '∞' : formatIntegerLocalized(total);
+  return { total, infinite, display };
+}
+
+function isBigBangUnlocked() {
+  const { total, infinite } = getBigBangRemainingLevels();
+  return !infinite && total <= 0;
+}
+
+function getBigBangBonusStepDisplay() {
+  return formatIntegerLocalized(BIG_BANG_LEVEL_BONUS_STEP);
+}
+
+function canPerformBigBang() {
+  return isBigBangUnlocked();
+}
+
+function updateBigBangActionUI() {
+  const bonusTotal = getBigBangLevelBonus();
+  const bonusDisplay = formatIntegerLocalized(bonusTotal);
+  const bonusStepDisplay = getBigBangBonusStepDisplay();
+  if (elements.bigBangSummary) {
+    const summaryFallback = `Réinitialise vos atomes actuels ainsi que les deux pistes du magasin pour augmenter leur plafond de +${bonusStepDisplay} niveaux.`;
+    const summaryText = translateOrDefault(
+      'index.sections.bigbang.restart.summary',
+      summaryFallback,
+      { bonus: bonusStepDisplay }
+    );
+    elements.bigBangSummary.textContent = summaryText;
+  }
+  if (elements.bigBangBonusInfo) {
+    const fallbackBonus = `Niveaux supplémentaires débloqués : +${bonusDisplay}`;
+    elements.bigBangBonusInfo.textContent = translateOrDefault(
+      'index.sections.bigbang.restart.bonus',
+      fallbackBonus,
+      { bonus: bonusDisplay }
+    );
+  }
+  if (elements.bigBangRequirement) {
+    const remainingInfo = getBigBangRemainingLevels();
+    const ready = canPerformBigBang();
+    const key = ready
+      ? 'index.sections.bigbang.restart.requirementReady'
+      : 'index.sections.bigbang.restart.requirementLocked';
+    const fallback = ready
+      ? `Boutique complétée ! Lancez un nouveau Big Bang pour ajouter +${bonusStepDisplay} niveaux au magasin.`
+      : `Achetez tous les niveaux restants du magasin (${remainingInfo.display}) pour déclencher un nouveau Big Bang.`;
+    const message = translateOrDefault(key, fallback, {
+      remaining: remainingInfo.display,
+      bonus: bonusStepDisplay
+    });
+    elements.bigBangRequirement.textContent = message;
+    if (elements.bigBangRestartButton) {
+      elements.bigBangRestartButton.title = message;
+      const actionLabel = translateOrDefault(
+        'index.sections.bigbang.restart.cta',
+        elements.bigBangRestartButton.textContent?.trim() || 'Trigger the Big Bang'
+      );
+      elements.bigBangRestartButton.setAttribute('aria-label', `${actionLabel} — ${message}`);
+    }
+  }
+  if (elements.bigBangRestartButton) {
+    const ready = canPerformBigBang();
+    elements.bigBangRestartButton.disabled = !ready;
+    elements.bigBangRestartButton.setAttribute('aria-disabled', ready ? 'false' : 'true');
+  }
+}
+
+function handleBigBangRestart() {
+  if (!canPerformBigBang()) {
+    const remainingInfo = getBigBangRemainingLevels();
+    const fallback = `Achetez tous les niveaux restants du magasin (${remainingInfo.display}) pour relancer l’univers.`;
+    showToast(translateOrDefault(
+      'scripts.app.bigBang.notReady',
+      fallback,
+      { remaining: remainingInfo.display }
+    ));
+    return;
+  }
+  let confirmed = true;
+  const bonusStepDisplay = getBigBangBonusStepDisplay();
+  const confirmMessage = translateOrDefault(
+    'scripts.app.bigBang.confirm',
+    `Relancer l’univers ? Vous perdrez vos atomes actuels et les niveaux du magasin, mais gagnerez +${bonusStepDisplay} niveaux maximum.`,
+    { bonus: bonusStepDisplay }
+  );
+  if (typeof window !== 'undefined' && typeof window.confirm === 'function') {
+    confirmed = window.confirm(confirmMessage);
+  }
+  if (!confirmed) {
+    showToast(translateOrDefault('scripts.app.bigBang.cancelled', 'Big Bang annulé'));
+    return;
+  }
+  performBigBang();
+}
+
+function performBigBang() {
+  const totalBonus = setBigBangLevelBonus(getBigBangLevelBonus() + BIG_BANG_LEVEL_BONUS_STEP);
+  gameState.atoms = LayeredNumber.zero();
+  gameState.perClick = BASE_PER_CLICK.clone();
+  gameState.perSecond = BASE_PER_SECOND.clone();
+  gameState.basePerClick = BASE_PER_CLICK.clone();
+  gameState.basePerSecond = BASE_PER_SECOND.clone();
+  gameState.upgrades = {};
+  gameState.shopUnlocks = new Set();
+  recalcProduction();
+  renderShop();
+  invalidateFeatureUnlockCache();
+  updateBigBangActionUI();
+  updateUI();
+  saveGame();
+  const bonusStepDisplay = getBigBangBonusStepDisplay();
+  const totalDisplay = formatIntegerLocalized(totalBonus);
+  const fallback = `Big Bang réussi ! Cap du magasin augmenté de +${bonusStepDisplay} (total +${totalDisplay}).`;
+  showToast(translateOrDefault('scripts.app.bigBang.done', fallback, {
+    bonus: bonusStepDisplay,
+    total: totalDisplay
+  }));
 }
 
 function updateBigBangVisibility() {
-  const unlocked = isBigBangTrophyUnlocked();
+  const unlocked = isBigBangUnlocked();
   if (!unlocked && gameState.bigBangButtonVisible) {
     gameState.bigBangButtonVisible = false;
   }
-  if (!elements.bigBangOptionToggle && unlocked && !gameState.bigBangButtonVisible) {
+  if (unlocked && !lastBigBangUnlockedState && !gameState.bigBangButtonVisible) {
     gameState.bigBangButtonVisible = true;
   }
   if (elements.bigBangOptionCard) {
@@ -6501,6 +6709,8 @@ function updateBigBangVisibility() {
   if (!shouldShowButton && document.body && document.body.dataset.activePage === 'bigbang') {
     showPage('game');
   }
+  lastBigBangUnlockedState = unlocked;
+  updateBigBangActionUI();
 }
 
 function isArcadeUnlocked() {
@@ -12556,7 +12766,7 @@ function bindDomEventListeners() {
   if (elements.bigBangOptionToggle) {
     elements.bigBangOptionToggle.addEventListener('change', event => {
       const enabled = event.target.checked;
-      if (!isBigBangTrophyUnlocked()) {
+      if (!isBigBangUnlocked()) {
         event.target.checked = false;
         gameState.bigBangButtonVisible = false;
         updateBigBangVisibility();
@@ -12568,6 +12778,13 @@ function bindDomEventListeners() {
       showToast(enabled
         ? t('scripts.app.bigBangToggle.shown')
         : t('scripts.app.bigBangToggle.hidden'));
+    });
+  }
+
+  if (elements.bigBangRestartButton) {
+    elements.bigBangRestartButton.addEventListener('click', event => {
+      event.preventDefault();
+      handleBigBangRestart();
     });
   }
 
@@ -12627,10 +12844,17 @@ function getUpgradeLevel(state, id) {
 function resolveUpgradeMaxLevel(definition) {
   const raw = definition?.maxLevel ?? definition?.maxPurchase;
   const numeric = Number(raw);
+  let baseLevel;
   if (Number.isFinite(numeric) && numeric > 0) {
-    return Math.max(1, Math.floor(numeric));
+    baseLevel = Math.max(1, Math.floor(numeric));
+  } else {
+    baseLevel = DEFAULT_UPGRADE_MAX_LEVEL;
   }
-  return DEFAULT_UPGRADE_MAX_LEVEL;
+  if (!Number.isFinite(baseLevel)) {
+    return baseLevel;
+  }
+  const bonus = getBigBangLevelBonus();
+  return baseLevel + bonus;
 }
 
 function getRemainingUpgradeCapacity(definition) {
@@ -15164,6 +15388,7 @@ function serializeState() {
       : 0,
     ticketStarUnlocked: gameState.ticketStarUnlocked === true,
     featureUnlockFlags: Array.from(ensureFeatureUnlockFlagSet()),
+    bigBangLevelBonus: getBigBangLevelBonus(),
     upgrades: gameState.upgrades,
     shopUnlocks: Array.from(getShopUnlockSet()),
     elements: gameState.elements,
@@ -15591,6 +15816,7 @@ function resetGame() {
     elementBonusSummary: {},
     trophies: new Set(),
     offlineGainMultiplier: MYTHIQUE_OFFLINE_BASE,
+    bigBangLevelBonus: 0,
     offlineTickets: {
       secondsPerTicket: OFFLINE_TICKET_CONFIG.secondsPerTicket,
       capSeconds: OFFLINE_TICKET_CONFIG.capSeconds,
@@ -15968,6 +16194,14 @@ function loadGame() {
     } else {
       gameState.pageUnlocks = createInitialPageUnlockState();
     }
+    const storedBigBangBonus = Number(
+      data.bigBangLevelBonus
+      ?? data.bigBangBonus
+      ?? data.bigBangLevels
+      ?? data.bigBangLevel
+      ?? 0
+    );
+    setBigBangLevelBonus(storedBigBangBonus);
     const storedBigBangPreference =
       data.bigBangButtonVisible ?? data.showBigBangButton ?? data.bigBangVisible ?? null;
     const wantsBigBang =
@@ -15975,7 +16209,7 @@ function loadGame() {
       || storedBigBangPreference === 'true'
       || storedBigBangPreference === 1
       || storedBigBangPreference === '1';
-    const hasBigBangUnlock = gameState.trophies.has(BIG_BANG_TROPHY_ID);
+    const hasBigBangUnlock = isBigBangUnlocked();
     gameState.bigBangButtonVisible = wantsBigBang && hasBigBangUnlock;
     const storedOffline = Number(data.offlineGainMultiplier);
     if (Number.isFinite(storedOffline) && storedOffline > 0) {
@@ -16372,6 +16606,7 @@ function initializeDomBoundModules() {
   subscribeInfoCharactersLanguageUpdates();
   subscribeInfoCardsLanguageUpdates();
   subscribeCollectionImagesLanguageUpdates();
+  subscribeBigBangLanguageUpdates();
   if (typeof subscribeSpecialCardOverlayLanguageUpdates === 'function') {
     subscribeSpecialCardOverlayLanguageUpdates();
   }
