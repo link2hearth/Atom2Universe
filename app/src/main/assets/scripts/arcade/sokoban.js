@@ -14,17 +14,52 @@
 
   const DEFAULT_LEVELS = Object.freeze([]);
 
-  const DEFAULT_FALLBACK_LEVEL = Object.freeze({
-    map: Object.freeze([
-      '#######',
-      '#.....#',
-      '#.T$..#',
-      '#..P..#',
-      '#..$T.#',
-      '#.....#',
-      '#######'
-    ])
-  });
+  const DEFAULT_FALLBACK_LEVELS = Object.freeze([
+    Object.freeze({
+      map: Object.freeze([
+        '#######',
+        '#.....#',
+        '#.T$..#',
+        '#..P..#',
+        '#..$T.#',
+        '#.....#',
+        '#######'
+      ]),
+      targets: Object.freeze([[2, 2], [4, 4]]),
+      boxes: Object.freeze([[2, 3], [4, 3]]),
+      playerStart: Object.freeze([3, 3])
+    }),
+    Object.freeze({
+      map: Object.freeze([
+        '########',
+        '#......#',
+        '#.T$...#',
+        '#..#...#',
+        '#...$T.#',
+        '#..P$..#',
+        '#..T...#',
+        '########'
+      ]),
+      targets: Object.freeze([[2, 2], [4, 5], [6, 3]]),
+      boxes: Object.freeze([[2, 3], [4, 4], [5, 4]]),
+      playerStart: Object.freeze([5, 3])
+    }),
+    Object.freeze({
+      map: Object.freeze([
+        '#####',
+        '#...#',
+        '#.P$#',
+        '#...#',
+        '#.T.#',
+        '#####'
+      ]),
+      targets: Object.freeze([[4, 2]]),
+      boxes: Object.freeze([[2, 3]]),
+      playerStart: Object.freeze([2, 2])
+    })
+  ]);
+
+  const DEFAULT_FALLBACK_LEVEL = DEFAULT_FALLBACK_LEVELS[0];
 
   const RECENT_LAYOUT_MEMORY = 12;
 
@@ -42,7 +77,8 @@
     targets: Object.freeze([]),
     playerStart: Object.freeze([0, 0]),
     levels: DEFAULT_LEVELS,
-    fallbackLevel: DEFAULT_FALLBACK_LEVEL
+    fallbackLevel: DEFAULT_FALLBACK_LEVEL,
+    fallbackLevels: DEFAULT_FALLBACK_LEVELS
   });
 
   const KEY_DIRECTIONS = Object.freeze({
@@ -94,6 +130,8 @@
     boxes: new Set(),
     levelDefinitions: [],
     fallbackLevel: null,
+    fallbackLevels: [],
+    lastFallbackIndex: -1,
     levelIndex: 0,
     currentLevelLayout: null,
     usingFallbackLayout: false,
@@ -127,44 +165,60 @@
     return map.map(row => String(row)).join('|');
   }
 
+  function computeLevelsSignature(levels) {
+    if (!Array.isArray(levels) || levels.length === 0) {
+      return '';
+    }
+    const parts = [];
+    levels.forEach(level => {
+      if (!level || typeof level !== 'object') {
+        return;
+      }
+      const mapSource = Array.isArray(level.map)
+        ? level.map
+        : Array.isArray(level.layout)
+          ? level.layout
+          : [];
+      const mapSignature = computeMapSignature(mapSource);
+      const targetSignature = Array.isArray(level.targets)
+        ? level.targets
+            .map(entry => (Array.isArray(entry) && entry.length >= 2 ? `${entry[0]},${entry[1]}` : ''))
+            .filter(Boolean)
+            .sort()
+            .join(';')
+        : '';
+      const boxSignature = Array.isArray(level.boxes)
+        ? level.boxes
+            .map(entry => (Array.isArray(entry) && entry.length >= 2 ? `${entry[0]},${entry[1]}` : ''))
+            .filter(Boolean)
+            .sort()
+            .join(';')
+        : '';
+      const playerSignature = Array.isArray(level.playerStart)
+        ? `${clampInt(level.playerStart[0], -9999, 9999, 0)},${clampInt(level.playerStart[1], -9999, 9999, 0)}`
+        : '0,0';
+      const nameSignature = typeof level.name === 'string' ? level.name : '';
+      parts.push(`${mapSignature}#${targetSignature}#${boxSignature}#${playerSignature}#${nameSignature}`);
+    });
+    return parts.filter(Boolean).join('||');
+  }
+
   function computeConfigSignature(config) {
     if (!config || typeof config !== 'object') {
       return 'default';
     }
+    const fallbackSignature = computeLevelsSignature(
+      Array.isArray(config.fallbackLevels) && config.fallbackLevels.length
+        ? config.fallbackLevels
+        : config.fallbackLevel
+          ? [config.fallbackLevel]
+          : []
+    );
+    let signature = 'default';
     if (Array.isArray(config.levels) && config.levels.length > 0) {
-      const parts = config.levels.map(level => {
-        if (!level || typeof level !== 'object') {
-          return '';
-        }
-        const mapSource = Array.isArray(level.map)
-          ? level.map
-          : Array.isArray(level.layout)
-            ? level.layout
-            : [];
-        const mapSignature = computeMapSignature(mapSource);
-        const targetSignature = Array.isArray(level.targets)
-          ? level.targets
-              .map(entry => (Array.isArray(entry) && entry.length >= 2 ? `${entry[0]},${entry[1]}` : ''))
-              .filter(Boolean)
-              .sort()
-              .join(';')
-          : '';
-        const boxSignature = Array.isArray(level.boxes)
-          ? level.boxes
-              .map(entry => (Array.isArray(entry) && entry.length >= 2 ? `${entry[0]},${entry[1]}` : ''))
-              .filter(Boolean)
-              .sort()
-              .join(';')
-          : '';
-        const playerSignature = Array.isArray(level.playerStart)
-          ? `${clampInt(level.playerStart[0], -9999, 9999, 0)},${clampInt(level.playerStart[1], -9999, 9999, 0)}`
-          : '0,0';
-        const nameSignature = typeof level.name === 'string' ? level.name : '';
-        return `${mapSignature}#${targetSignature}#${boxSignature}#${playerSignature}#${nameSignature}`;
-      });
-      return `levels:${parts.join('||')}`;
-    }
-    if (config.generator && typeof config.generator === 'object') {
+      const levelSignature = computeLevelsSignature(config.levels);
+      signature = levelSignature ? `levels:${levelSignature}` : 'levels:';
+    } else if (config.generator && typeof config.generator === 'object') {
       const generator = config.generator;
       const widthMin = clampInt(generator?.width?.min, 3, 9999, 0);
       const widthMax = clampInt(generator?.width?.max, widthMin, 9999, widthMin);
@@ -178,12 +232,14 @@
       const timeLimit = clampInt(generator?.timeLimitMs, 100, 60000, DEFAULT_CONFIG.generator.timeLimitMs);
       const shuffleMin = clampInt(config?.shuffleMoves?.min, 1, 9999, 0);
       const shuffleMax = clampInt(config?.shuffleMoves?.max, shuffleMin, 9999, shuffleMin);
-      return `generator:${widthMin}-${widthMax}x${heightMin}-${heightMax}|boxes:${boxesMin}-${boxesMax}|density:${densityMin.toFixed(3)}-${densityMax.toFixed(3)}|attempts:${attempts}|time:${timeLimit}|shuffle:${shuffleMin}-${shuffleMax}`;
+      signature = `generator:${widthMin}-${widthMax}x${heightMin}-${heightMax}|boxes:${boxesMin}-${boxesMax}|density:${densityMin.toFixed(3)}-${densityMax.toFixed(3)}|attempts:${attempts}|time:${timeLimit}|shuffle:${shuffleMin}-${shuffleMax}`;
+    } else if (Array.isArray(config.map)) {
+      signature = computeMapSignature(config.map);
     }
-    if (Array.isArray(config.map)) {
-      return computeMapSignature(config.map);
+    if (fallbackSignature) {
+      signature = `${signature}|fallback:${fallbackSignature}`;
     }
-    return 'default';
+    return signature;
   }
 
   function computeLayoutSignatureFromParts(mapRows, targets, playerStart) {
@@ -1869,8 +1925,13 @@
   function sanitizeConfig(rawConfig) {
     const fallbackLevels = sanitizeLevels(DEFAULT_CONFIG.levels);
     const fallbackGenerator = sanitizeGeneratorConfig(DEFAULT_CONFIG.generator);
-    const defaultFallbackCandidates = sanitizeLevels([DEFAULT_CONFIG.fallbackLevel]);
-    const defaultFallbackLevel = defaultFallbackCandidates[0] || null;
+    const defaultFallbackCandidates = sanitizeLevels(Array.isArray(DEFAULT_CONFIG.fallbackLevels)
+      ? DEFAULT_CONFIG.fallbackLevels
+      : [DEFAULT_CONFIG.fallbackLevel]);
+    const defaultFallbackLevels = defaultFallbackCandidates.length
+      ? defaultFallbackCandidates
+      : fallbackLevels;
+    const defaultFallbackLevel = defaultFallbackLevels[0] || null;
     if (!rawConfig || typeof rawConfig !== 'object') {
       return {
         shuffleMoves: { ...DEFAULT_CONFIG.shuffleMoves },
@@ -1879,7 +1940,8 @@
         targets: Array.from(DEFAULT_CONFIG.targets),
         playerStart: Array.from(DEFAULT_CONFIG.playerStart),
         levels: fallbackLevels,
-        fallbackLevel: defaultFallbackLevel
+        fallbackLevel: defaultFallbackLevel,
+        fallbackLevels: defaultFallbackLevels
       };
     }
 
@@ -1890,15 +1952,27 @@
       normalizedLevels = fallbackLevels;
     }
 
+    let normalizedFallbackLevels = defaultFallbackLevels;
     let normalizedFallback = defaultFallbackLevel;
-    if (Object.prototype.hasOwnProperty.call(rawConfig, 'fallbackLevel')) {
+    if (Array.isArray(rawConfig.fallbackLevels)) {
+      const fallbackCandidates = sanitizeLevels(rawConfig.fallbackLevels);
+      if (fallbackCandidates.length > 0) {
+        normalizedFallbackLevels = fallbackCandidates;
+        [normalizedFallback] = fallbackCandidates;
+      }
+    } else if (Object.prototype.hasOwnProperty.call(rawConfig, 'fallbackLevel')) {
       const fallbackCandidates = sanitizeLevels([rawConfig.fallbackLevel]);
       if (fallbackCandidates.length > 0) {
+        normalizedFallbackLevels = fallbackCandidates;
         [normalizedFallback] = fallbackCandidates;
       }
     }
-    if (!normalizedFallback && normalizedLevels.length > 0) {
-      [normalizedFallback] = normalizedLevels;
+    if (!normalizedFallback && normalizedFallbackLevels.length > 0) {
+      [normalizedFallback] = normalizedFallbackLevels;
+    }
+    if (!normalizedFallbackLevels.length && normalizedLevels.length > 0) {
+      normalizedFallbackLevels = [normalizedLevels[0]];
+      [normalizedFallback] = normalizedFallbackLevels;
     }
 
     const generator = sanitizeGeneratorConfig(rawConfig.generator);
@@ -1961,7 +2035,8 @@
       targets,
       playerStart: playerCandidate,
       levels: normalizedLevels,
-      fallbackLevel: normalizedFallback
+      fallbackLevel: normalizedFallback,
+      fallbackLevels: normalizedFallbackLevels
     };
   }
 
@@ -2218,7 +2293,16 @@
     state.levelDefinitions = Array.isArray(normalized.levels)
       ? normalized.levels.map(cloneLevelDefinition).filter(Boolean)
       : [];
-    state.fallbackLevel = cloneLevelDefinition(normalized.fallbackLevel);
+    state.fallbackLevels = Array.isArray(normalized.fallbackLevels)
+      ? normalized.fallbackLevels.map(cloneLevelDefinition).filter(Boolean)
+      : [];
+    state.fallbackLevel = cloneLevelDefinition(normalized.fallbackLevel)
+      || state.fallbackLevels[0]
+      || null;
+    if (!state.fallbackLevels.length && state.fallbackLevel) {
+      state.fallbackLevels = [state.fallbackLevel];
+    }
+    state.lastFallbackIndex = -1;
     state.currentLevelLayout = null;
     state.usingFallbackLayout = false;
     state.recentLayoutSignatures = [];
@@ -3348,26 +3432,59 @@
     return index;
   }
 
+  function selectRandomFallbackLevelIndex(total, excludeIndex) {
+    if (!Number.isInteger(total) || total <= 0) {
+      return 0;
+    }
+    const sanitizedExclude = Number.isInteger(excludeIndex) ? excludeIndex : -1;
+    let index = Math.floor(Math.random() * total);
+    if (total > 1 && sanitizedExclude >= 0 && sanitizedExclude < total) {
+      let guard = 0;
+      while (index === sanitizedExclude && guard < 6) {
+        index = Math.floor(Math.random() * total);
+        guard += 1;
+      }
+      if (index === sanitizedExclude) {
+        index = (sanitizedExclude + 1) % total;
+      }
+    }
+    return index;
+  }
+
   function applyFallbackLevel(options = {}) {
-    if (!state.fallbackLevel) {
+    const fallbackCandidates = Array.isArray(state.fallbackLevels) && state.fallbackLevels.length
+      ? state.fallbackLevels
+      : state.fallbackLevel
+        ? [state.fallbackLevel]
+        : [];
+    const totalFallbacks = fallbackCandidates.length;
+    if (!totalFallbacks) {
       return false;
     }
-    const applied = applyLevelDefinition(state.fallbackLevel);
+    const index = selectRandomFallbackLevelIndex(totalFallbacks, state.lastFallbackIndex);
+    const chosenFallback = fallbackCandidates[index];
+    if (!chosenFallback) {
+      return false;
+    }
+    const applied = applyLevelDefinition(chosenFallback);
     if (!applied) {
+      return false;
+    }
+    if (!state.boxes || state.boxes.size <= 0) {
       return false;
     }
     const { randomizeLevel = false } = options;
     state.levelIndex = -1;
-    const fallbackMap = Array.isArray(state.fallbackLevel.map)
-      ? state.fallbackLevel.map.map(row => String(row))
+    const fallbackMap = Array.isArray(chosenFallback.map)
+      ? chosenFallback.map.map(row => String(row))
       : [];
-    const fallbackTargets = Array.isArray(state.fallbackLevel.targets)
-      ? state.fallbackLevel.targets
+    const fallbackTargets = Array.isArray(chosenFallback.targets)
+      ? chosenFallback.targets
           .map(entry => (Array.isArray(entry) && entry.length >= 2 ? [Number(entry[0]), Number(entry[1])] : null))
           .filter(entry => Number.isInteger(entry?.[0]) && Number.isInteger(entry?.[1]))
       : [];
-    const fallbackPlayerStart = Array.isArray(state.fallbackLevel.playerStart)
-      ? [Number(state.fallbackLevel.playerStart[0]), Number(state.fallbackLevel.playerStart[1])]
+    const fallbackPlayerStart = Array.isArray(chosenFallback.playerStart)
+      ? [Number(chosenFallback.playerStart[0]), Number(chosenFallback.playerStart[1])]
       : [state.playerStart.row, state.playerStart.col];
     const fallbackSignature = computeLayoutSignatureFromParts(
       fallbackMap,
@@ -3385,6 +3502,7 @@
       signature: fallbackSignature
     };
     state.usingFallbackLayout = true;
+    state.lastFallbackIndex = index;
     const baseLevel = clampInt(state.level, 1, 9999, 1);
     const nextLevel = randomizeLevel
       ? clampInt(baseLevel + 1, 1, 9999, baseLevel + 1)
@@ -3452,6 +3570,10 @@
         if (!prepared) {
           continue;
         }
+      }
+
+      if (!state.boxes || state.boxes.size <= 0) {
+        continue;
       }
 
       const nextLevel = randomizeLevel
