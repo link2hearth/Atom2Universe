@@ -1,5 +1,5 @@
 /** Active ou désactive complètement l'accès au DevKit. */
-const DEFAULT_DEVKIT_ENABLED = true;
+const DEFAULT_DEVKIT_ENABLED = false;
 
 /**
  * Préfixe commun utilisé pour stocker les surcharges de configuration dans le localStorage.
@@ -71,7 +71,7 @@ const DEVKIT_ENABLED = resolveConfigBoolean(CONFIG_OVERRIDE_KEYS.devkit, DEFAULT
  * Active ou désactive l'ensemble des fonctionnalités de collection.
  * Lorsque désactivé, le bouton de navigation et les récompenses gacha associées sont masqués.
  */
-const DEFAULT_COLLECTION_SYSTEM_ENABLED = true;
+const DEFAULT_COLLECTION_SYSTEM_ENABLED = false;
 
 const COLLECTION_SYSTEM_ENABLED = resolveConfigBoolean(
   CONFIG_OVERRIDE_KEYS.collection,
@@ -3743,6 +3743,7 @@ if (typeof globalThis !== 'undefined') {
   globalThis.toggleDevkitFeatureEnabled = toggleDevkitFeatureEnabled;
   globalThis.toggleCollectionFeatureEnabled = toggleCollectionFeatureEnabled;
 }
+
 
 
 
