@@ -77,10 +77,11 @@
     const status = document.getElementById('othelloStatus');
     const score = document.getElementById('othelloScore');
     const modeToggle = document.getElementById('othelloModeToggle');
+    const result = document.getElementById('othelloResult');
     if (!board || !resetButton || !status || !score) {
       return null;
     }
-    return { board, resetButton, status, score, modeToggle };
+    return { board, resetButton, status, score, modeToggle, result: result || null };
   }
 
   function attachEvents() {
@@ -203,6 +204,7 @@
     state.passes = 0;
     state.gameOver = false;
     state.rewardGranted = false;
+    updateResultIndicator(null, null);
     prepareTurn();
   }
 
@@ -265,6 +267,7 @@
         result: resultText
       }
     );
+    updateResultIndicator(resultKey, score);
     state.validMoves = new Map();
     renderBoard();
     maybeGrantVictoryReward(resultKey);
@@ -446,6 +449,41 @@
   function setStatus(key, fallback, params) {
     state.lastStatus = { key, fallback, params: params || null };
     refreshStatus();
+  }
+
+  function updateResultIndicator(resultKey, score) {
+    if (!state.elements || !state.elements.result) {
+      return;
+    }
+    const element = state.elements.result;
+    element.classList.remove('othello__result--black', 'othello__result--white', 'othello__result--draw');
+    if (!resultKey) {
+      const placeholder = translate(
+        'index.sections.othello.result.placeholder',
+        'Le résultat de la partie s’affichera ici.',
+        null
+      );
+      element.textContent = placeholder;
+      element.hidden = true;
+      return;
+    }
+    const params = {
+      black: String(score?.black ?? ''),
+      white: String(score?.white ?? '')
+    };
+    const fallback = resultKey === 'black'
+      ? 'Victoire des noirs ! Noir {black} – Blanc {white}.'
+      : resultKey === 'white'
+        ? 'Victoire des blancs ! Noir {black} – Blanc {white}.'
+        : 'Égalité parfaite ! Noir {black} – Blanc {white}.';
+    const text = translate(
+      `scripts.arcade.othello.resultBanner.${resultKey}`,
+      fallback,
+      params
+    );
+    element.textContent = formatString(text, params);
+    element.hidden = false;
+    element.classList.add(`othello__result--${resultKey}`);
   }
 
   function beginTurn() {
@@ -709,6 +747,9 @@
     state.passes = normalized.passes;
     state.rewardGranted = normalized.rewardGranted;
     state.gameOver = normalized.gameOver;
+    if (!state.gameOver) {
+      updateResultIndicator(null, null);
+    }
     updateModeToggle();
     clearAIMoveTimer();
     const blackMoves = computeValidMoves(PLAYERS.BLACK);

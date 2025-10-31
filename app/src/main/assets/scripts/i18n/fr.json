@@ -634,6 +634,9 @@
           }
         },
         "score": "Noirs : {black} · Blancs : {white}",
+        "result": {
+          "placeholder": "Le résultat final s’affichera ici à la fin de la partie."
+        },
         "cell": "Case {row}, colonne {column} : {content}",
         "cellValid": "Coup disponible",
         "cellStates": {
@@ -1866,6 +1869,11 @@
         },
         "rewards": {
           "gachaWin": "Victoire ! {count} ticket{suffix} gacha obtenu{suffix}."
+        },
+        "resultBanner": {
+          "black": "Victoire des noirs ! Noir {black} – Blanc {white}.",
+          "white": "Victoire des blancs ! Noir {black} – Blanc {white}.",
+          "draw": "Match nul. Noir {black} – Blanc {white}."
         },
         "score": "Noirs : {black} · Blancs : {white}",
         "cell": "Case {row}, colonne {column} : {content}",

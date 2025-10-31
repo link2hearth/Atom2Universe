@@ -634,6 +634,9 @@
           }
         },
         "score": "Black: {black} · White: {white}",
+        "result": {
+          "placeholder": "The final result will appear here once the game ends."
+        },
         "cell": "Row {row}, column {column}: {content}",
         "cellValid": "Available move",
         "cellStates": {
@@ -1866,6 +1869,11 @@
         },
         "rewards": {
           "gachaWin": "Victory! {count} gacha ticket{suffix} earned."
+        },
+        "resultBanner": {
+          "black": "Black wins! Black {black} – White {white}.",
+          "white": "White wins! Black {black} – White {white}.",
+          "draw": "Draw game. Black {black} – White {white}."
         },
         "score": "Black: {black} · White: {white}",
         "cell": "Row {row}, column {column}: {content}",
