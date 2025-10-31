@@ -121,7 +121,7 @@ function toggleInfoSectionsFeatureEnabled() {
  * Toutes les valeurs ajustables (équilibrage, affichage, grands nombres, etc.)
  * sont rassemblées ici pour faciliter les modifications futures.
  */
-const SHOP_MAX_PURCHASE_DEFAULT = 1000;
+const SHOP_MAX_PURCHASE_DEFAULT = 100;
 
 /**
  * Durée (en millisecondes) de l’animation de fondu appliquée au démarrage.
@@ -3773,6 +3773,7 @@ if (typeof globalThis !== 'undefined') {
   globalThis.toggleCollectionFeatureEnabled = toggleCollectionFeatureEnabled;
   globalThis.toggleInfoSectionsFeatureEnabled = toggleInfoSectionsFeatureEnabled;
 }
+
 
 
 
