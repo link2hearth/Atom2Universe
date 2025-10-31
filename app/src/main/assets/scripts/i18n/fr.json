@@ -2378,6 +2378,8 @@
           "call": "Suit {amount}",
           "check": "Check",
           "blind": "Blind {amount}",
+          "smallBlind": "Petite blinde {amount}",
+          "bigBlind": "Grosse blinde {amount}",
           "revealed": "Main : {hand}"
         },
         "hands": {

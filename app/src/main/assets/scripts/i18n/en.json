@@ -2378,6 +2378,8 @@
           "call": "Calls {amount}",
           "check": "Checks",
           "blind": "Blind {amount}",
+          "smallBlind": "Small blind {amount}",
+          "bigBlind": "Big blind {amount}",
           "revealed": "Hand: {hand}"
         },
         "hands": {
