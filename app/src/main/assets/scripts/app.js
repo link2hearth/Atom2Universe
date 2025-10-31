@@ -189,6 +189,7 @@ const CLICK_SOUND_STORAGE_KEY = 'atom2univers.options.clickSoundMuted';
 const CRIT_ATOM_VISUALS_STORAGE_KEY = 'atom2univers.options.critAtomVisualsDisabled';
 const TEXT_FONT_STORAGE_KEY = 'atom2univers.options.textFont';
 const INFO_WELCOME_COLLAPSED_STORAGE_KEY = 'atom2univers.info.welcomeCollapsed';
+const INFO_ACHIEVEMENTS_COLLAPSED_STORAGE_KEY = 'atom2univers.info.achievementsCollapsed';
 const INFO_CHARACTERS_COLLAPSED_STORAGE_KEY = 'atom2univers.info.charactersCollapsed';
 const INFO_CARDS_COLLAPSED_STORAGE_KEY = 'atom2univers.info.cardsCollapsed';
 const COLLECTION_IMAGES_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.imagesCollapsed';
@@ -5001,6 +5002,9 @@ function collectDomElements() {
   infoBonusSubtitle: document.getElementById('infoBonusSubtitle'),
   infoElementBonuses: document.getElementById('infoElementBonuses'),
   infoElementBonusCard: document.getElementById('infoElementBonusCard'),
+  infoAchievementsCard: document.getElementById('infoAchievementsCard'),
+  infoAchievementsContent: document.getElementById('info-achievements-content'),
+  infoAchievementsToggle: document.getElementById('infoAchievementsToggle'),
   infoDevkitShopCard: document.getElementById('infoDevkitShopCard'),
   infoWelcomeCard: document.querySelector('.info-card--welcome'),
   infoWelcomeContent: document.getElementById('info-welcome-content'),
@@ -6266,6 +6270,59 @@ function initInfoWelcomeCard() {
   });
 }
 
+function updateInfoAchievementsToggleLabel(collapsed) {
+  if (!elements.infoAchievementsToggle) {
+    return;
+  }
+  const key = collapsed
+    ? 'index.sections.info.achievements.toggle.expand'
+    : 'index.sections.info.achievements.toggle.collapse';
+  const fallback = collapsed ? 'Expand' : 'Collapse';
+  const label = translateOrDefault(key, fallback);
+  elements.infoAchievementsToggle.setAttribute('data-i18n', key);
+  elements.infoAchievementsToggle.textContent = label;
+  elements.infoAchievementsToggle.setAttribute('aria-label', label);
+}
+
+function setInfoAchievementsCollapsed(collapsed, options = {}) {
+  if (!elements.infoAchievementsCard
+    || !elements.infoAchievementsContent
+    || !elements.infoAchievementsToggle) {
+    return;
+  }
+  const shouldCollapse = !!collapsed;
+  elements.infoAchievementsCard.classList.toggle('info-card--collapsed', shouldCollapse);
+  elements.infoAchievementsContent.hidden = shouldCollapse;
+  elements.infoAchievementsContent.setAttribute('aria-hidden', shouldCollapse ? 'true' : 'false');
+  elements.infoAchievementsToggle.setAttribute('aria-expanded', shouldCollapse ? 'false' : 'true');
+  updateInfoAchievementsToggleLabel(shouldCollapse);
+  if (options.persist !== false) {
+    writeStoredInfoCardCollapsed(INFO_ACHIEVEMENTS_COLLAPSED_STORAGE_KEY, shouldCollapse);
+  }
+}
+
+function toggleInfoAchievementsCollapsed() {
+  if (!elements.infoAchievementsCard) {
+    return;
+  }
+  const currentlyCollapsed = elements.infoAchievementsCard.classList.contains('info-card--collapsed');
+  setInfoAchievementsCollapsed(!currentlyCollapsed);
+}
+
+function initInfoAchievementsCard() {
+  if (!elements.infoAchievementsCard
+    || !elements.infoAchievementsContent
+    || !elements.infoAchievementsToggle) {
+    return;
+  }
+  const initialCollapsed = readStoredInfoCardCollapsed(INFO_ACHIEVEMENTS_COLLAPSED_STORAGE_KEY, false);
+  setInfoAchievementsCollapsed(initialCollapsed, { persist: false });
+  elements.infoAchievementsToggle.addEventListener('click', event => {
+    event.preventDefault();
+    toggleInfoAchievementsCollapsed();
+  });
+}
+
 function updateInfoCharactersToggleLabel(collapsed) {
   if (!elements.infoCharactersToggle) {
     return;
@@ -6423,6 +6480,23 @@ function subscribeInfoWelcomeLanguageUpdates() {
       ? elements.infoWelcomeCard.classList.contains('info-card--collapsed')
       : false;
     updateInfoWelcomeToggleLabel(collapsed);
+  };
+  const api = getI18nApi();
+  if (api && typeof api.onLanguageChanged === 'function') {
+    api.onLanguageChanged(handler);
+    return;
+  }
+  if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
+    globalThis.addEventListener('i18n:languagechange', handler);
+  }
+}
+
+function subscribeInfoAchievementsLanguageUpdates() {
+  const handler = () => {
+    const collapsed = elements.infoAchievementsCard
+      ? elements.infoAchievementsCard.classList.contains('info-card--collapsed')
+      : false;
+    updateInfoAchievementsToggleLabel(collapsed);
   };
   const api = getI18nApi();
   if (api && typeof api.onLanguageChanged === 'function') {
@@ -12042,6 +12116,7 @@ function bindDomEventListeners() {
   }
 
   initInfoWelcomeCard();
+  initInfoAchievementsCard();
   initInfoCharactersCard();
   initInfoCardsCard();
   initCollectionImagesCard();
@@ -16612,6 +16687,7 @@ function initializeDomBoundModules() {
   subscribeHeaderBannerLanguageUpdates();
   subscribePerformanceModeLanguageUpdates();
   subscribeInfoWelcomeLanguageUpdates();
+  subscribeInfoAchievementsLanguageUpdates();
   subscribeInfoCharactersLanguageUpdates();
   subscribeInfoCardsLanguageUpdates();
   subscribeCollectionImagesLanguageUpdates();

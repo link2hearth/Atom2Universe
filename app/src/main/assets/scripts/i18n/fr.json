@@ -194,7 +194,11 @@
         "achievements": {
           "title": "Succès débloqués",
           "subtitle": "Visualisez les trophées obtenus au cours de votre aventure.",
-          "empty": "Aucun trophée complété pour le moment. Terminez des objectifs pour les afficher ici."
+          "empty": "Aucun trophée complété pour le moment. Terminez des objectifs pour les afficher ici.",
+          "toggle": {
+            "collapse": "Réduire",
+            "expand": "Dérouler"
+          }
         },
         "calculations": {
           "title": "Calculs de production",
