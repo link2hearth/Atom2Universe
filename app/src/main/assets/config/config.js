@@ -1060,7 +1060,7 @@ const GAME_CONFIG = {
       }
     },
     pachinko: {
-      betOptions: [10, 20, 50],
+      betOptions: [100, 200, 500],
       slotMultipliers: [0, 0.5, 1.5, 5, 1.5, 0.5, 0],
       /**
        * Bonus multiplicateur ajouté automatiquement aux lancers non rentables

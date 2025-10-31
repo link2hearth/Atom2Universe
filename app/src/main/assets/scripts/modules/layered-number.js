@@ -478,11 +478,19 @@ class LayeredNumber {
         }
         return `${numeric}`;
       }
-      const mantissa = LayeredNumber.formatLocalizedNumber(this.sign * this.mantissa, {
-        maximumFractionDigits: 2,
-        minimumFractionDigits: 2
-      }) || (this.sign * this.mantissa).toFixed(2);
-      return `${mantissa}e${this.exponent}`;
+      const mantissaValue = this.mantissa;
+      const approxInteger = Math.abs(mantissaValue - Math.round(mantissaValue)) < 1e-9;
+      const prefix = this.sign < 0 ? '-' : '';
+      let mantissaText;
+      if (approxInteger) {
+        mantissaText = `${Math.round(mantissaValue)}`;
+      } else {
+        const normalized = Number.parseFloat(mantissaValue.toFixed(2));
+        mantissaText = Number.isFinite(normalized)
+          ? normalized.toString()
+          : mantissaValue.toString();
+      }
+      return `${prefix}${mantissaText}e${this.exponent}`;
     }
     const exponentText = LayeredNumber.formatExponent(this.value);
     const prefix = this.sign < 0 ? '-' : '';
