@@ -2765,6 +2765,9 @@
         "minesweeper": {
           "rewardToast": "Minesweeper reward: {tickets} secured!"
         },
+        "pipeTap": {
+          "rewardToast": "PipeTap: +{count} gacha ticket{suffix}!"
+        },
         "bigger": {
           "rewardToast": "512 marble forged! {tickets} earned."
         }

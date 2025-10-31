@@ -2765,6 +2765,9 @@
         "minesweeper": {
           "rewardToast": "Récompense Démineur : {tickets} remportés !"
         },
+        "pipeTap": {
+          "rewardToast": "PipeTap : +{count} ticket{suffix} gacha !"
+        },
         "bigger": {
           "rewardToast": "Bille 512 forgée ! {tickets} remportés."
         }

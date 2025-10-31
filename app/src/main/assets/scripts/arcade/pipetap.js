@@ -26,6 +26,13 @@
 
   const ALLOWED_SIZES = Object.freeze([4, 5, 6, 7, 8]);
   const DEFAULT_SIZE = 5;
+  const COMPLETION_REWARD_BY_SIZE = Object.freeze({
+    4: 1,
+    5: 1,
+    6: 2,
+    7: 3,
+    8: 4
+  });
 
   const DIRECTIONS = Object.freeze({
     NORTH: 1,
@@ -65,7 +72,8 @@
     timerId: null,
     timerAnchor: 0,
     elapsedSeconds: 0,
-    shareResetTimer: null
+    shareResetTimer: null,
+    rewardClaimed: false
   };
 
   function translate(key, fallback, params) {
@@ -140,6 +148,16 @@
     const minutes = Math.floor(safe / 60);
     const secs = safe % 60;
     return `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+  }
+
+  function formatIntegerLocalized(value) {
+    const numeric = Number.isFinite(Number(value)) ? Math.floor(Number(value)) : 0;
+    const safe = numeric >= 0 ? numeric : 0;
+    try {
+      return safe.toLocaleString();
+    } catch (error) {
+      return String(safe);
+    }
   }
 
   function rotCW(mask) {
@@ -490,8 +508,60 @@
     if (isSolved(state.grid, state.source)) {
       state.solved = true;
       pauseTimer();
+      awardCompletionTickets();
       updateWinMessage();
       showWin();
+    }
+  }
+
+  function getCompletionReward(size) {
+    const reward = COMPLETION_REWARD_BY_SIZE[size];
+    if (!Number.isFinite(reward) || reward <= 0) {
+      return 0;
+    }
+    return Math.floor(reward);
+  }
+
+  function awardCompletionTickets() {
+    if (state.rewardClaimed) {
+      return;
+    }
+    const tickets = getCompletionReward(state.size);
+    if (tickets <= 0) {
+      state.rewardClaimed = true;
+      return;
+    }
+    const awardGacha = typeof gainGachaTickets === 'function'
+      ? gainGachaTickets
+      : typeof window !== 'undefined' && typeof window.gainGachaTickets === 'function'
+        ? window.gainGachaTickets
+        : null;
+    if (typeof awardGacha !== 'function') {
+      state.rewardClaimed = true;
+      return;
+    }
+    let gained = 0;
+    try {
+      gained = awardGacha(tickets, { unlockTicketStar: true });
+    } catch (error) {
+      console.warn('PipeTap: unable to grant gacha tickets', error);
+      gained = 0;
+    }
+    state.rewardClaimed = true;
+    if (!Number.isFinite(gained) || gained <= 0) {
+      return;
+    }
+    if (typeof showToast === 'function') {
+      const suffix = gained > 1 ? 's' : '';
+      const message = translate(
+        'scripts.arcade.pipeTap.rewardToast',
+        'PipeTap : +{count} ticket{suffix} gacha !',
+        {
+          count: formatIntegerLocalized(gained),
+          suffix
+        }
+      );
+      showToast(message);
     }
   }
 
@@ -508,6 +578,7 @@
     state.moves = 0;
     state.elapsedSeconds = 0;
     state.solved = false;
+    state.rewardClaimed = false;
     hideWin();
     resetShareLabel();
 
@@ -578,6 +649,35 @@
     window.alert(message);
   }
 
+  function focusSeedInputForTouch(event) {
+    if (!elements.seedInput) {
+      return;
+    }
+    if (event?.type === 'touchstart' && typeof window !== 'undefined' && 'PointerEvent' in window) {
+      return;
+    }
+    const pointerType = event && typeof event === 'object'
+      ? event.pointerType || (event.type === 'touchstart' ? 'touch' : null)
+      : null;
+    if (pointerType && pointerType.toLowerCase() === 'mouse') {
+      return;
+    }
+    window.requestAnimationFrame(() => {
+      try {
+        if (typeof elements.seedInput.focus === 'function') {
+          elements.seedInput.focus({ preventScroll: true });
+        }
+      } catch (error) {
+        if (typeof elements.seedInput.focus === 'function') {
+          elements.seedInput.focus();
+        }
+      }
+      if (typeof elements.seedInput.select === 'function') {
+        elements.seedInput.select();
+      }
+    });
+  }
+
   function attachEventListeners() {
     elements.newButton?.addEventListener('click', handleNewGridRequest);
     elements.againButton?.addEventListener('click', handleNewGridRequest);
@@ -585,6 +685,8 @@
     elements.shareButton?.addEventListener('click', handleShareRequest);
     elements.howLink?.addEventListener('click', handleHowRequest);
     elements.sizeSelect?.addEventListener('change', handleNewGridRequest);
+    elements.seedInput?.addEventListener('pointerdown', focusSeedInputForTouch);
+    elements.seedInput?.addEventListener('touchstart', focusSeedInputForTouch, { passive: true });
   }
 
   function detachTimer() {
