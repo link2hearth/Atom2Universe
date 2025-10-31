@@ -289,6 +289,91 @@ body.theme-aurora .info-card-list__button:hover {
   white-space: nowrap;
 }
 
+.info-card-list--images {
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: clamp(0.6rem, 1.4vw, 1rem);
+}
+
+.info-card-list__item--image {
+  aspect-ratio: 3 / 4;
+  min-height: clamp(120px, 24vw, 220px);
+}
+
+.collection-image-button {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: none;
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  display: block;
+  line-height: 0;
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.24);
+  transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
+}
+
+.collection-image-button__figure {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.collection-image-button__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.collection-image-button:focus-visible,
+.collection-image-button:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 22px 38px rgba(0, 0, 0, 0.32);
+  filter: brightness(1.05);
+}
+
+.collection-image-button:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, 0.85);
+  outline-offset: 4px;
+}
+
+body.theme-light .collection-image-button {
+  background: rgba(12, 16, 32, 0.12);
+  box-shadow: 0 18px 32px rgba(12, 16, 32, 0.18);
+}
+
+body.theme-light .collection-image-button:focus-visible,
+body.theme-light .collection-image-button:hover {
+  box-shadow: 0 22px 42px rgba(12, 16, 32, 0.26);
+}
+
+body.theme-light .collection-image-button:focus-visible {
+  outline-color: rgba(12, 16, 32, 0.85);
+}
+
+body.theme-neon .collection-image-button {
+  background: rgba(90, 110, 255, 0.22);
+  box-shadow: 0 20px 36px rgba(70, 90, 255, 0.32);
+}
+
+body.theme-neon .collection-image-button:focus-visible,
+body.theme-neon .collection-image-button:hover {
+  box-shadow: 0 24px 44px rgba(70, 90, 255, 0.42);
+}
+
+body.theme-aurora .collection-image-button {
+  background: rgba(40, 170, 140, 0.26);
+  box-shadow: 0 20px 36px rgba(34, 130, 96, 0.28);
+}
+
+body.theme-aurora .collection-image-button:focus-visible,
+body.theme-aurora .collection-image-button:hover {
+  box-shadow: 0 24px 44px rgba(34, 130, 96, 0.36);
+}
+
 .info-card__collapse-button {
   appearance: none;
   border: 1px solid rgba(255, 255, 255, 0.32);
