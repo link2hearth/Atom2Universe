@@ -787,17 +787,30 @@
       const maxStagnation = requestedSteps * 6;
 
       for (let step = 0; step < requestedSteps && stagnation < maxStagnation; step += 1) {
-        const actions = legalInverseActions(player, boxes, caches);
+        let actions = legalInverseActions(player, boxes, caches);
         if (!actions.length) {
-          stagnation += 1;
           const reachable = computeReachableCells(player.row, player.col, boxes);
-          const optionsWithoutBoxes = Array.from(reachable).filter(entry => !boxes.has(entry));
-          const randomKey = chooseRandomEntry(optionsWithoutBoxes);
-          if (randomKey) {
-            const coords = decodeKey(randomKey);
-            player = { row: coords.row, col: coords.col };
+          let reassigned = false;
+          for (const key of reachable) {
+            const coords = decodeKey(key);
+            const candidateActions = legalInverseActions({ row: coords.row, col: coords.col }, boxes, caches);
+            if (candidateActions.length) {
+              player = { row: coords.row, col: coords.col };
+              actions = candidateActions;
+              reassigned = true;
+              break;
+            }
           }
-          continue;
+        if (!reassigned) {
+            stagnation += 1;
+            const optionsWithoutBoxes = Array.from(reachable).filter(entry => !boxes.has(entry));
+            const randomKey = chooseRandomEntry(optionsWithoutBoxes);
+            if (randomKey) {
+              const coords = decodeKey(randomKey);
+              player = { row: coords.row, col: coords.col };
+            }
+            continue;
+          }
         }
 
         const pullActions = actions.filter(action => action.type === 'pull');
@@ -822,7 +835,7 @@
         }
       }
 
-      const minPulls = Math.max(3, Math.min(normalizedTargets.length * 2, requestedSteps));
+      const minPulls = Math.max(2, Math.min(normalizedTargets.length + 1, requestedSteps));
       if (pulls < minPulls) {
         return null;
       }
@@ -837,7 +850,7 @@
       }
 
       const averageDistance = computeAverageBoxGoalDistance(boxes, state.targetKeys);
-      if (!Number.isFinite(averageDistance) || averageDistance < 2) {
+      if (!Number.isFinite(averageDistance) || averageDistance < 1.8) {
         return null;
       }
 
@@ -931,27 +944,47 @@
       return null;
     }
 
+    const targetKeySet = new Set();
+    for (const [row, col] of targets) {
+      targetKeySet.add(keyFor(row, col));
+    }
+
     const simulation = simulateReversePlacement(grid, targets, { stepsMin: 3, stepsMax: 12 });
-    if (!simulation || !simulation.initialBoxes || simulation.initialBoxes.length !== targets.length) {
-      return null;
-    }
-    if (!simulation.solvedPlayer || !Number.isInteger(simulation.solvedPlayer.row) || !Number.isInteger(simulation.solvedPlayer.col)) {
-      return null;
-    }
-    if (!simulation.initialPlayer || !Number.isInteger(simulation.initialPlayer.row) || !Number.isInteger(simulation.initialPlayer.col)) {
-      return null;
+    let playerStartRow = 0;
+    let playerStartCol = 0;
+    let initialState = null;
+
+    if (simulation
+      && simulation.initialBoxes
+      && simulation.initialBoxes.length === targets.length
+      && simulation.solvedPlayer
+      && Number.isInteger(simulation.solvedPlayer.row)
+      && Number.isInteger(simulation.solvedPlayer.col)
+      && simulation.initialPlayer
+      && Number.isInteger(simulation.initialPlayer.row)
+      && Number.isInteger(simulation.initialPlayer.col)) {
+      playerStartRow = simulation.solvedPlayer.row;
+      playerStartCol = simulation.solvedPlayer.col;
+      initialState = {
+        player: { row: simulation.initialPlayer.row, col: simulation.initialPlayer.col },
+        boxes: simulation.initialBoxes.map(entry => [entry[0], entry[1]]),
+        pulls: simulation.pulls
+      };
+    } else {
+      const anchor = selectPlayerAnchor(grid, targetKeySet);
+      if (!anchor) {
+        return null;
+      }
+      playerStartRow = anchor.row;
+      playerStartCol = anchor.col;
     }
 
     const mapRows = grid.map(row => row.join(''));
     return {
       map: mapRows,
       targets,
-      playerStart: { row: simulation.solvedPlayer.row, col: simulation.solvedPlayer.col },
-      initialState: {
-        player: { row: simulation.initialPlayer.row, col: simulation.initialPlayer.col },
-        boxes: simulation.initialBoxes.map(entry => [entry[0], entry[1]]),
-        pulls: simulation.pulls
-      }
+      playerStart: { row: playerStartRow, col: playerStartCol },
+      initialState
     };
   }
 
@@ -2742,17 +2775,30 @@
     const maxStagnation = requestedSteps * 18;
 
     for (let step = 0; step < requestedSteps && stagnation < maxStagnation; step += 1) {
-      const actions = legalInverseActions(player, boxes, caches);
+      let actions = legalInverseActions(player, boxes, caches);
       if (!actions.length) {
-        stagnation += 1;
         const reachable = computeReachableCells(player.row, player.col, boxes);
-        const alternatives = Array.from(reachable).filter(entry => !boxes.has(entry));
-        const randomKey = chooseRandomEntry(alternatives);
-        if (randomKey) {
-          const coords = decodeKey(randomKey);
-          player = { row: coords.row, col: coords.col };
+        let reassigned = false;
+        for (const key of reachable) {
+          const coords = decodeKey(key);
+          const candidateActions = legalInverseActions({ row: coords.row, col: coords.col }, boxes, caches);
+          if (candidateActions.length) {
+            player = { row: coords.row, col: coords.col };
+            actions = candidateActions;
+            reassigned = true;
+            break;
+          }
         }
-        continue;
+        if (!reassigned) {
+          stagnation += 1;
+          const alternatives = Array.from(reachable).filter(entry => !boxes.has(entry));
+          const randomKey = chooseRandomEntry(alternatives);
+          if (randomKey) {
+            const coords = decodeKey(randomKey);
+            player = { row: coords.row, col: coords.col };
+          }
+          continue;
+        }
       }
 
       const pullActions = actions.filter(action => action.type === 'pull');
@@ -2779,7 +2825,7 @@
 
     const stepQuota = Math.max(1, Math.floor(requestedSteps * 0.25));
     const boxQuota = Math.max(totalBoxes * 2, totalBoxes + 2);
-    const requiredPulls = Math.max(4, Math.min(stepQuota, boxQuota));
+    const requiredPulls = Math.max(3, Math.min(stepQuota, totalBoxes * 2));
     if (pulls < requiredPulls) {
       return false;
     }
@@ -2794,7 +2840,7 @@
     }
 
     const averageDistance = computeAverageBoxGoalDistance(boxes, state.targetKeys);
-    if (!Number.isFinite(averageDistance) || averageDistance < 3) {
+    if (!Number.isFinite(averageDistance) || averageDistance < 1.8) {
       return false;
     }
 
@@ -2836,6 +2882,100 @@
       if (!checkSolved()) {
         return true;
       }
+    }
+    return false;
+  }
+
+  function tileHasPushSpace(row, col) {
+    if (isWall(row, col)) {
+      return false;
+    }
+    for (const direction of DIRECTIONS) {
+      const behindRow = row - direction.row;
+      const behindCol = col - direction.col;
+      const aheadRow = row + direction.row;
+      const aheadCol = col + direction.col;
+      if (!isWall(behindRow, behindCol) && !isWall(aheadRow, aheadCol)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function generateFallbackProceduralState(maxAttempts = 64) {
+    const totalTargets = state.targetKeys.size;
+    if (totalTargets <= 0) {
+      return false;
+    }
+    const attempts = clampInt(maxAttempts, 1, 400, 48);
+    const walkableCells = [];
+    const preferredCells = [];
+    for (let row = 0; row < state.height; row += 1) {
+      for (let col = 0; col < state.width; col += 1) {
+        if (!isWall(row, col)) {
+          walkableCells.push([row, col]);
+          if (tileHasPushSpace(row, col)) {
+            preferredCells.push([row, col]);
+          }
+        }
+      }
+    }
+    if (walkableCells.length <= totalTargets) {
+      return false;
+    }
+    const caches = buildRowTargetPresence();
+    for (let attempt = 0; attempt < attempts; attempt += 1) {
+      const source = preferredCells.length >= totalTargets ? preferredCells : walkableCells;
+      const shuffled = source.slice();
+      shuffleArray(shuffled);
+      const boxesList = shuffled.slice(0, totalTargets);
+      const boxesSet = new Set();
+      let validBoxes = true;
+      let offTarget = false;
+      for (const [row, col] of boxesList) {
+        const key = keyFor(row, col);
+        if (boxesSet.has(key)) {
+          validBoxes = false;
+          break;
+        }
+        boxesSet.add(key);
+        if (!state.targetKeys.has(key)) {
+          offTarget = true;
+        }
+      }
+      if (!validBoxes || !offTarget) {
+        continue;
+      }
+      if (containsStaticDeadlock(boxesSet, state.targetKeys, caches)) {
+        continue;
+      }
+      const playerCandidates = shuffled.filter(entry => !boxesSet.has(keyFor(entry[0], entry[1])));
+      if (!playerCandidates.length) {
+        continue;
+      }
+      const [playerRow, playerCol] = chooseRandomEntry(playerCandidates);
+      const reachable = computeReachableCells(playerRow, playerCol, boxesSet);
+      if (!reachable.has(keyFor(playerRow, playerCol))) {
+        continue;
+      }
+      const solverResult = solveForwardMinPushes(
+        { row: playerRow, col: playerCol },
+        boxesSet,
+        state.targetKeys,
+        { timeLimitMs: 3500 }
+      );
+      const metrics = computeSolverMetrics(solverResult);
+      if (!metrics) {
+        continue;
+      }
+      const difficultyHint = Math.max(metrics.minPushes, totalTargets * 2);
+      if (!fitsDifficulty(metrics, difficultyHint, totalTargets)) {
+        continue;
+      }
+      state.player = { row: playerRow, col: playerCol };
+      state.boxes = boxesSet;
+      state.currentMetrics = metrics;
+      return true;
     }
     return false;
   }
@@ -2975,6 +3115,9 @@
         if (prepared && checkSolved()) {
           prepared = false;
         }
+      }
+      if (!prepared) {
+        prepared = generateFallbackProceduralState(randomizeLevel ? 96 : 64);
       }
       if (!prepared) {
         prepared = shuffleWithRetries(randomizeLevel ? 6 : 4);
