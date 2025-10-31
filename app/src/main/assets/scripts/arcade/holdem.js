@@ -23,6 +23,7 @@
     minRaise: 10,
     startingStack: 600,
     aiStack: 1e11,
+    maxRaisesPerRound: 2,
     aiThinkingDelayMs: { min: 900, max: 2500 },
     opponentCount: { min: 4, max: 4 },
     aiProfiles: {
@@ -159,6 +160,30 @@
       syncMinRaiseBaseline();
     }
     applyStakeGrowth();
+    state.raiseCountThisRound = Math.max(0, (state.raiseCountThisRound || 0) + 1);
+  }
+
+  function getMaxRaisesPerRound() {
+    const configured = Number(state.config && state.config.maxRaisesPerRound);
+    if (Number.isFinite(configured)) {
+      if (configured < 0) {
+        return Infinity;
+      }
+      return Math.floor(configured);
+    }
+    const fallback = Number(DEFAULT_CONFIG.maxRaisesPerRound);
+    if (!Number.isFinite(fallback) || fallback < 0) {
+      return Infinity;
+    }
+    return Math.floor(fallback);
+  }
+
+  function hasRaiseAllowance() {
+    const limit = getMaxRaisesPerRound();
+    if (!Number.isFinite(limit)) {
+      return true;
+    }
+    return state.raiseCountThisRound < limit;
   }
 
   function formatTemplateValue(value) {
@@ -293,6 +318,10 @@
     const startingStackRaw = toPositiveInteger(raw && raw.startingStack, DEFAULT_CONFIG.startingStack);
     const aiStackRaw = toPositiveInteger(raw && raw.aiStack, DEFAULT_CONFIG.aiStack);
     const raiseGuidance = normalizeRaiseGuidance(raw && raw.raiseGuidance);
+    const maxRaisesCandidate = Number(raw && raw.maxRaisesPerRound);
+    const maxRaisesPerRound = Number.isFinite(maxRaisesCandidate)
+      ? Math.floor(maxRaisesCandidate)
+      : DEFAULT_CONFIG.maxRaisesPerRound;
 
     const blind = Math.max(1, Math.min(stakeCap, blindRaw));
     const normalizedMinRaise = Math.min(stakeCap, Math.max(minRaiseRaw, blind));
@@ -346,6 +375,7 @@
       startingStack,
       aiStack,
       raiseGuidance,
+      maxRaisesPerRound,
       growth: { usageFactor, cap: stakeCap },
       aiThinkingDelayMs: { min: thinkingMin, max: thinkingMax },
       opponentCount: { min: clamp(opponentMin, 2, 7), max: clamp(opponentMax, 2, 7) },
@@ -394,6 +424,7 @@
     heroBank: null,
     activePlayerId: null,
     lastRaiseAmount: Math.max(CONFIG.minRaise, CONFIG.blind),
+    raiseCountThisRound: 0,
     statusKey: 'index.sections.holdem.status.intro',
     statusParams: {},
     pendingTimeouts: [],
@@ -1109,6 +1140,7 @@
     state.awaitingPlayer = false;
     state.activePlayerId = null;
     state.lastRaiseAmount = state.minRaise;
+    state.raiseCountThisRound = 0;
     clearPendingTimeouts();
     for (let i = 0; i < state.players.length; i += 1) {
       resetPlayerForHand(state.players[i]);
@@ -1368,7 +1400,7 @@
 
     const raisePlan = computeRaisePlan(hero);
     const nextRaise = raisePlan ? Math.floor(raisePlan.target) : hero.bet;
-    const canRaise = canAct && raisePlan && raisePlan.canRaise && nextRaise > hero.bet;
+    const canRaise = canAct && raisePlan && raisePlan.canRaise && nextRaise > hero.bet && hasRaiseAllowance();
     if (elements.raise) {
       elements.raise.disabled = !canRaise;
       if (canRaise) {
@@ -1388,7 +1420,8 @@
       }
     }
 
-    const canAllIn = canAct && hero.stack > 0;
+    const wouldRaiseAllIn = hero.bet + hero.stack > state.currentBet;
+    const canAllIn = canAct && hero.stack > 0 && (!wouldRaiseAllIn || hasRaiseAllowance());
     elements.allIn.disabled = !canAllIn;
     const allInFallback = `All-in (${allInAmountLabel})`;
     elements.allIn.dataset.i18n = 'index.sections.holdem.controls.allIn';
@@ -1657,6 +1690,7 @@
     }
     state.currentBet = 0;
     state.lastRaiseAmount = state.minRaise;
+    state.raiseCountThisRound = 0;
   }
 
   function postBlinds() {
@@ -1700,6 +1734,7 @@
     }
 
     state.lastRaiseAmount = state.minRaise;
+    state.raiseCountThisRound = 0;
   }
 
   function decideAiRoundAction(player, allowRaise) {
@@ -1710,6 +1745,9 @@
     const riskBoost = (1 - profile.caution) * 0.35;
     const aggressionFactor = profile.aggression + riskBoost;
     const bluffFactor = profile.bluff;
+    const preflop = state.phase === 'preflop';
+    const raiseCount = state.raiseCountThisRound;
+    const canAttemptRaise = allowRaise && plan.canRaise && hasRaiseAllowance();
 
     if (requiredToCall > 0) {
       const bluffRoll = Math.random();
@@ -1718,11 +1756,13 @@
         return { action: 'fold', target: player.bet };
       }
 
-      if (allowRaise && plan.canRaise && (strength > 0.52 || bluffRoll < bluffFactor) && Math.random() < aggressionFactor) {
+      const pressureBonus = preflop ? 0.08 : 0;
+      if (canAttemptRaise && (strength > 0.52 + pressureBonus || bluffRoll < bluffFactor) && Math.random() < aggressionFactor) {
         return { action: 'raise', target: plan.target };
       }
 
-      if (allowRaise && plan.canRaise && strength > 0.35 && Math.random() < bluffFactor * 0.6) {
+      const bluffCeiling = preflop ? 0.45 : 0.6;
+      if (canAttemptRaise && strength > 0.35 + pressureBonus * 0.5 && Math.random() < bluffFactor * bluffCeiling) {
         return { action: 'raise', target: plan.target };
       }
 
@@ -1730,11 +1770,13 @@
       return { action: requiredToCall ? 'call' : 'check', target: callTarget };
     }
 
-    if (allowRaise && plan.canRaise && (strength > 0.45 || Math.random() < bluffFactor * 0.75) && Math.random() < aggressionFactor) {
+    const openRaiseThreshold = preflop ? 0.52 + raiseCount * 0.08 : 0.45;
+    if (canAttemptRaise && (strength > openRaiseThreshold || Math.random() < bluffFactor * 0.75) && Math.random() < aggressionFactor) {
       return { action: 'raise', target: plan.target };
     }
 
-    if (allowRaise && plan.canRaise && Math.random() < bluffFactor * 0.35 && player.stack > 0) {
+    const opportunisticBluffFactor = preflop ? 0.2 : 0.35;
+    if (canAttemptRaise && Math.random() < bluffFactor * opportunisticBluffFactor && player.stack > 0) {
       return { action: 'raise', target: plan.target };
     }
     return { action: 'check', target: player.bet };
@@ -1751,6 +1793,8 @@
     const aggressionFactor = profile.aggression + (1 - profile.caution) * 0.3;
     const bluffRoll = Math.random();
     const reluctantThreshold = 0.18 + (0.3 * (1 - profile.caution));
+    const preflop = state.phase === 'preflop';
+    const canAttemptRaise = plan.canRaise && hasRaiseAllowance();
 
     const potAfterCall = state.pot + requiredToCall;
     const normalizedPotOdds = clamp(potAfterCall > 0 ? requiredToCall / potAfterCall : 1, 0, 1);
@@ -1764,7 +1808,8 @@
       return { action: 'fold', target: player.bet };
     }
 
-    if (plan.canRaise && Math.random() < aggressionFactor * 0.55 && (strength > 0.55 || bluffRoll < profile.bluff)) {
+    const raiseDiscipline = preflop ? 0.07 : 0;
+    if (canAttemptRaise && Math.random() < aggressionFactor * 0.55 && (strength > 0.55 + raiseDiscipline || bluffRoll < profile.bluff)) {
       return { action: 'raise', target: plan.target };
     }
 
@@ -1948,7 +1993,7 @@
       );
       render();
       const timer = setTimeout(() => {
-        const decision = decideAiRoundAction(player, allowRaise);
+        const decision = decideAiRoundAction(player, allowRaise && hasRaiseAllowance());
         const result = applyAiDecision(player, decision);
         if (result.handResolved) {
           finish(true);
@@ -2038,7 +2083,7 @@
         const requiresCall = Math.max(0, state.currentBet - player.bet) > 0;
         const decision = requiresCall
           ? decideAiResponseAction(player)
-          : decideAiRoundAction(player, true);
+          : decideAiRoundAction(player, hasRaiseAllowance());
         const result = applyAiDecision(player, decision);
         if (result.handResolved) {
           finish(true);
@@ -2418,6 +2463,13 @@
     if (!state.awaitingPlayer || !hero || hero.folded || hero.allIn) {
       return;
     }
+    if (!hasRaiseAllowance()) {
+      updateStatus(
+        'index.sections.holdem.status.raiseCapReached',
+        'Limite de relances atteinte pour cette phase.'
+      );
+      return;
+    }
     const plan = computeRaisePlan(hero);
     const target = plan && plan.canRaise ? Math.floor(plan.target) : hero.bet;
     if (!plan || !plan.canRaise || !Number.isFinite(target) || target <= hero.bet) {
@@ -2480,6 +2532,13 @@
     }
     const target = hero.bet + hero.stack;
     if (target <= hero.bet) {
+      return;
+    }
+    if (target > state.currentBet && !hasRaiseAllowance()) {
+      updateStatus(
+        'index.sections.holdem.status.raiseCapReached',
+        'Limite de relances atteinte pour cette phase.'
+      );
       return;
     }
     const previousCurrent = state.currentBet;

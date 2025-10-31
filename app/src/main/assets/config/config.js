@@ -1099,6 +1099,7 @@ const GAME_CONFIG = {
      * - aiProfiles : profils disponibles pour les adversaires (aggressivité, prudence, bluff).
      * - defaultAiProfile : identifiant du profil sélectionné par défaut.
      * - raiseGuidance : réglages de la suggestion de relance côté joueur (ratio sur le pot, stack et multiplicateur).
+     * - maxRaisesPerRound : nombre maximum de relances autorisées par phase (valeur négative = illimité).
      * - growth : configuration de la montée des enjeux (facteur +10 % et plafond maximum).
      */
     holdem: {
@@ -1107,6 +1108,7 @@ const GAME_CONFIG = {
       minRaise: 10,
       startingStack: 600,
       aiStack: 1e11,
+      maxRaisesPerRound: 2,
       raiseGuidance: {
         potRatio: 0.25,
         stackRatio: 0.12,

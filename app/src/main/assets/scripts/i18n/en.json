@@ -2333,6 +2333,7 @@
           "invalidRaise": "Enter a valid amount.",
           "raiseTooSmall": "Raise is too small (minimum {amount}).",
           "raiseUnavailable": "You cannot raise with your current atom reserve.",
+          "raiseCapReached": "Raise limit reached for this phase.",
           "playerShowdownWin": "You win {amount} with {hand}.",
           "playerSplitPot": "Pot split ({amount}) with {names}.",
           "playerShowdownLose": "Lost to {winner} ({hand}).",
