@@ -63,6 +63,7 @@
   --sudoku-cell-mistake-background: rgba(224, 82, 64, 0.18);
   --sudoku-cell-mistake-shadow: inset 0 0 0 2px rgba(224, 82, 64, 0.55);
   --sudoku-cell-ok-background: rgba(34, 180, 116, 0.18);
+  --sudoku-cell-filled-background: rgba(238, 242, 250, 0.9);
   --sudoku-number-color-1: #1e90ff;
   --sudoku-number-color-2: #ff4d4f;
   --sudoku-number-color-3: #8a2be2;
@@ -139,6 +140,7 @@ body.theme-light .page--sudoku {
   --sudoku-cell-mistake-background: rgba(214, 86, 66, 0.12);
   --sudoku-cell-mistake-shadow: inset 0 0 0 2px rgba(214, 86, 66, 0.42);
   --sudoku-cell-ok-background: rgba(40, 166, 115, 0.12);
+  --sudoku-cell-filled-background: rgba(245, 248, 255, 0.92);
   --sudoku-pad-button-background: rgba(255, 255, 255, 0.94);
   --sudoku-pad-button-border: rgba(12, 16, 32, 0.12);
   --sudoku-pad-button-color: #050a1c;
@@ -197,6 +199,7 @@ body.theme-neon .page--sudoku {
   --sudoku-cell-mistake-background: rgba(216, 96, 140, 0.22);
   --sudoku-cell-mistake-shadow: inset 0 0 0 2px rgba(216, 96, 140, 0.55);
   --sudoku-cell-ok-background: rgba(60, 196, 170, 0.2);
+  --sudoku-cell-filled-background: rgba(232, 236, 255, 0.92);
   --sudoku-pad-button-background: rgba(16, 20, 54, 0.92);
   --sudoku-pad-button-border: rgba(86, 120, 255, 0.38);
   --sudoku-pad-button-color: rgba(226, 232, 255, 0.92);
@@ -256,6 +259,7 @@ body.theme-aurora .page--sudoku {
   --sudoku-cell-mistake-background: rgba(242, 120, 104, 0.2);
   --sudoku-cell-mistake-shadow: inset 0 0 0 2px rgba(242, 120, 104, 0.5);
   --sudoku-cell-ok-background: rgba(60, 210, 150, 0.24);
+  --sudoku-cell-filled-background: rgba(224, 244, 236, 0.9);
   --sudoku-pad-button-background: rgba(20, 74, 60, 0.85);
   --sudoku-pad-button-border: rgba(90, 220, 180, 0.28);
   --sudoku-pad-button-color: rgba(214, 255, 238, 0.9);
@@ -618,6 +622,13 @@ body.theme-aurora .page--sudoku {
 
 .sudoku-cell.fixed input {
   font-weight: 800;
+}
+
+.sudoku-cell[data-value]:not(.fixed):not(.error):not(.mistake):not(.ok) {
+  background: var(
+    --sudoku-cell-filled-background,
+    rgba(238, 242, 250, 0.9)
+  );
 }
 
 .sudoku-cell.error {
