@@ -79,7 +79,7 @@ const COLLECTION_SYSTEM_ENABLED = resolveConfigBoolean(
   DEFAULT_COLLECTION_SYSTEM_ENABLED
 );
 
-const DEFAULT_INFO_SECTIONS_ENABLED = true;
+const DEFAULT_INFO_SECTIONS_ENABLED = false;
 
 const INFO_SECTIONS_ENABLED = resolveConfigBoolean(
   CONFIG_OVERRIDE_KEYS.info,
@@ -3764,6 +3764,7 @@ if (typeof globalThis !== 'undefined') {
   globalThis.toggleCollectionFeatureEnabled = toggleCollectionFeatureEnabled;
   globalThis.toggleInfoSectionsFeatureEnabled = toggleInfoSectionsFeatureEnabled;
 }
+
 
 
 
