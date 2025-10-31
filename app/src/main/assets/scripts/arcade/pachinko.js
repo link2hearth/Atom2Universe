@@ -104,47 +104,28 @@
   }
 
   function sanitizeBetOptions(source) {
-    const rawOptions = Array.isArray(source) && source.length ? source : DEFAULT_BET_OPTIONS;
-    const normalized = [];
+    if (!Array.isArray(source)) {
+      return [...DEFAULT_BET_OPTIONS];
+    }
     const unique = new Set();
-
-    for (let i = 0; i < rawOptions.length; i += 1) {
-      const layered = createLayeredAmount(rawOptions[i]);
-      if (!layered) {
+    const cleaned = [];
+    for (let i = 0; i < source.length; i += 1) {
+      const value = Number(source[i]);
+      if (!Number.isFinite(value)) {
         continue;
       }
-      const key = layered.toString();
-      if (unique.has(key)) {
+      const normalized = Math.floor(value);
+      if (normalized <= 0 || unique.has(normalized)) {
         continue;
       }
-      unique.add(key);
-      const approximate = layered.toNumber();
-      const numeric = Number.isFinite(approximate)
-        ? Math.max(1, Math.min(Math.floor(approximate), Number.MAX_SAFE_INTEGER))
-        : Number.NaN;
-      normalized.push({
-        layered,
-        numeric
-      });
+      unique.add(normalized);
+      cleaned.push(normalized);
     }
-
-    if (!normalized.length) {
-      return DEFAULT_BET_OPTIONS.map(amount => ({
-        layered: createLayeredAmount(amount),
-        numeric: Math.max(1, Math.floor(Number(amount) || 0))
-      }));
+    if (!cleaned.length) {
+      return [...DEFAULT_BET_OPTIONS];
     }
-
-    normalized.sort((a, b) => {
-      if (a.layered && b.layered) {
-        return a.layered.compare(b.layered);
-      }
-      const left = Number.isFinite(a.numeric) ? a.numeric : Number.MAX_SAFE_INTEGER;
-      const right = Number.isFinite(b.numeric) ? b.numeric : Number.MAX_SAFE_INTEGER;
-      return left - right;
-    });
-
-    return normalized;
+    cleaned.sort((a, b) => a - b);
+    return cleaned;
   }
 
   function sanitizeSlotMultipliers(layout, source) {
@@ -300,27 +281,9 @@
       return `×${rounded}`;
     }
 
-    function formatLayeredNumber(value, options) {
+    function formatLayeredNumber(value) {
       if (value instanceof LayeredNumber) {
-        if (typeof formatLayeredLocalized === 'function') {
-          try {
-            const formatted = formatLayeredLocalized(value, options || { mantissaDigits: 2 });
-            if (formatted) {
-              return formatted;
-            }
-          } catch (error) {
-            // ignore layered formatting error
-          }
-        }
         return value.toString();
-      }
-      if (typeof LayeredNumber === 'function') {
-        try {
-          const layered = new LayeredNumber(value);
-          return formatLayeredNumber(layered, options);
-        } catch (error) {
-          // fall back to numeric formatting
-        }
       }
       const numeric = Number(value);
       if (!Number.isFinite(numeric)) {
@@ -375,12 +338,12 @@
       if (typeof LayeredNumber !== 'function') {
         return null;
       }
-      if (amount instanceof LayeredNumber) {
-        return amount.sign > 0 ? amount.clone() : null;
+      const numeric = Number(amount);
+      if (!Number.isFinite(numeric) || numeric <= 0) {
+        return null;
       }
       try {
-        const layered = new LayeredNumber(amount);
-        return layered.sign > 0 ? layered : null;
+        return new LayeredNumber(numeric);
       } catch (error) {
         return null;
       }
@@ -388,80 +351,22 @@
 
     function canAffordBet(amount) {
       const atoms = getGameAtoms();
-      const bet = toLayeredBet(amount);
+      const bet = createLayeredAmount(amount);
       if (!atoms || !bet) {
         return false;
       }
       return atoms.compare(bet) >= 0;
     }
 
-    function toLayeredBet(value) {
-      if (!value) {
-        return null;
-      }
-      if (value instanceof LayeredNumber) {
-        return value.sign > 0 ? value.clone() : null;
-      }
-      if (value && typeof value === 'object') {
-        if (value.layered instanceof LayeredNumber) {
-          return value.layered.sign > 0 ? value.layered.clone() : null;
-        }
-        if ('numeric' in value) {
-          return createLayeredAmount(value.numeric);
-        }
-      }
-      return createLayeredAmount(value);
-    }
-
-    function cloneBetOption(option) {
-      const layered = toLayeredBet(option);
-      if (!layered) {
-        return null;
-      }
-      let numeric = Number.NaN;
-      if (option && typeof option === 'object' && Number.isFinite(option.numeric)) {
-        numeric = option.numeric;
-      } else if (Number.isFinite(option)) {
-        numeric = option;
-      }
-      return {
-        layered,
-        numeric
-      };
-    }
-
-    function scaleBetOption(option, multiplier) {
-      const base = cloneBetOption(option);
-      if (!base) {
-        return { layered: null, numeric: Number.NaN };
-      }
-      const factor = Number.isFinite(multiplier) && multiplier > 0 ? multiplier : 1;
-      const layered = base.layered.multiplyNumber(factor);
-      let numeric = Number.NaN;
-      if (Number.isFinite(base.numeric)) {
-        const scaledNumeric = base.numeric * factor;
-        numeric = Number.isFinite(scaledNumeric)
-          ? Math.max(1, Math.min(Math.floor(scaledNumeric), Number.MAX_SAFE_INTEGER))
-          : Number.NaN;
-      } else {
-        const approx = layered.toNumber();
-        numeric = Number.isFinite(approx)
-          ? Math.max(1, Math.min(Math.floor(approx), Number.MAX_SAFE_INTEGER))
-          : Number.NaN;
-      }
-      return { layered, numeric };
-    }
-
     function cloneLayered(value) {
       if (value instanceof LayeredNumber) {
         return value.clone();
       }
-      const layered = toLayeredBet(value);
-      return layered || LayeredNumber.zero();
+      return createLayeredAmount(value) || LayeredNumber.zero();
     }
 
     let betMultiplier = 1;
-    let betOptions = [];
+    let betOptions = baseBetOptions.map(amount => amount * betMultiplier);
     let betButtons = [];
     let selectedBet = null;
     let selectedBaseBet = null;
@@ -478,38 +383,13 @@
     const historyEntries = [];
 
     function formatBetAmount(amount) {
-      if (amount && typeof amount === 'object') {
-        if (amount.layered instanceof LayeredNumber) {
-          return formatLayeredNumber(amount.layered, {
-            mantissaDigits: 1,
-            numberFormatOptions: { maximumFractionDigits: 0, minimumFractionDigits: 0 }
-          });
-        }
-        if (Number.isFinite(amount.numeric)) {
-          return formatBetAmount(amount.numeric);
-        }
-      }
-      if (amount instanceof LayeredNumber) {
-        return formatLayeredNumber(amount, {
-          mantissaDigits: 1,
-          numberFormatOptions: { maximumFractionDigits: 0, minimumFractionDigits: 0 }
-        });
-      }
-      const numeric = Number(amount);
-      if (!Number.isFinite(numeric) || numeric <= 0) {
+      if (!Number.isFinite(amount)) {
         return '0';
       }
-      const layered = createLayeredAmount(numeric);
-      if (layered) {
-        return formatLayeredNumber(layered, {
-          mantissaDigits: 1,
-          numberFormatOptions: { maximumFractionDigits: 0, minimumFractionDigits: 0 }
-        });
-      }
-      const floored = Math.floor(numeric);
+      const numeric = Math.floor(amount);
       if (typeof formatNumberLocalized === 'function') {
         try {
-          const formatted = formatNumberLocalized(floored, { maximumFractionDigits: 0 });
+          const formatted = formatNumberLocalized(numeric, { maximumFractionDigits: 0 });
           if (formatted) {
             return formatted;
           }
@@ -517,10 +397,10 @@
           // ignore formatting error
         }
       }
-      if (typeof floored.toLocaleString === 'function') {
-        return floored.toLocaleString();
+      if (typeof numeric.toLocaleString === 'function') {
+        return numeric.toLocaleString();
       }
-      return `${floored}`;
+      return `${numeric}`;
     }
 
     function translateBetOptionLabel(amountLabel) {
@@ -565,26 +445,18 @@
       if (!dropButton) {
         return;
       }
-      const disabled =
-        !selectedBet ||
-        !(selectedBet.layered instanceof LayeredNumber) ||
-        !canAffordBet(selectedBet);
+      const disabled = selectedBet == null || !canAffordBet(selectedBet);
       dropButton.disabled = disabled;
     }
 
     function updateBetButtons() {
       for (let i = 0; i < betButtons.length; i += 1) {
         const button = betButtons[i];
-        const option = betOptions[i];
-        const disable = !option || !canAffordBet(option);
+        const amount = Number(button.dataset.bet);
+        const disable = !canAffordBet(amount);
         button.disabled = disable;
         button.classList.toggle('pachinko-bet__option--unavailable', disable);
-        const isSelected =
-          !!selectedBet &&
-          !!option &&
-          selectedBet.layered instanceof LayeredNumber &&
-          option.layered instanceof LayeredNumber &&
-          selectedBet.layered.compare(option.layered) === 0;
+        const isSelected = selectedBet === amount;
         button.classList.toggle('pachinko-bet__option--selected', isSelected);
         button.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
       }
@@ -618,28 +490,26 @@
     }
 
     function ensureSelectedBetAffordable() {
-      if (selectedBet && !canAffordBet(selectedBet)) {
+      if (selectedBet != null && !canAffordBet(selectedBet)) {
         setSelectedBet(null);
       }
     }
 
-    function setSelectedBet(option, baseOption) {
-      if (!option) {
+    function setSelectedBet(amount, baseAmount) {
+      if (amount == null) {
         selectedBet = null;
         selectedBaseBet = null;
       } else {
-        const cloned = cloneBetOption(option);
-        if (cloned && cloned.layered instanceof LayeredNumber) {
-          selectedBet = cloned;
-          if (baseOption) {
-            const baseClone = cloneBetOption(baseOption);
-            selectedBaseBet = baseClone && baseClone.layered instanceof LayeredNumber
-              ? baseClone
+        const numeric = Number(amount);
+        if (Number.isFinite(numeric) && numeric > 0) {
+          selectedBet = Math.floor(numeric);
+          if (baseAmount != null) {
+            const numericBase = Number(baseAmount);
+            selectedBaseBet = Number.isFinite(numericBase) && numericBase > 0
+              ? Math.floor(numericBase)
               : null;
-          } else if (selectedBaseBet && selectedBaseBet.layered instanceof LayeredNumber) {
-            selectedBaseBet = cloneBetOption(selectedBaseBet);
-          } else {
-            selectedBaseBet = null;
+          } else if (betMultiplier > 0) {
+            selectedBaseBet = Math.floor(selectedBet / betMultiplier);
           }
         } else {
           selectedBet = null;
@@ -649,7 +519,7 @@
 
       if (betCurrentElement) {
         betCurrentElement.removeAttribute('data-i18n');
-        betCurrentElement.textContent = selectedBet
+        betCurrentElement.textContent = selectedBet != null
           ? formatBetAmount(selectedBet)
           : translate('index.sections.pachinko.bet.none', 'None');
       }
@@ -657,19 +527,19 @@
     }
 
     function updateBetOptionValues() {
-      betOptions = baseBetOptions.map(option => scaleBetOption(option, betMultiplier));
+      betOptions = baseBetOptions.map(amount => amount * betMultiplier);
       for (let i = 0; i < betButtons.length; i += 1) {
         const button = betButtons[i];
-        const option = betOptions[i];
-        button.dataset.index = `${i}`;
-        const label = formatBetAmount(option);
+        const amount = betOptions[i];
+        button.dataset.bet = `${amount}`;
+        const label = formatBetAmount(amount);
         button.textContent = label;
         button.setAttribute('aria-label', translateBetOptionLabel(label));
       }
-      if (selectedBaseBet && selectedBaseBet.layered instanceof LayeredNumber) {
-        const scaledSelection = scaleBetOption(selectedBaseBet, betMultiplier);
+      if (selectedBaseBet != null) {
+        const scaledSelection = selectedBaseBet * betMultiplier;
         setSelectedBet(scaledSelection, selectedBaseBet);
-      } else if (selectedBet && selectedBet.layered instanceof LayeredNumber) {
+      } else if (selectedBet != null) {
         setSelectedBet(selectedBet);
       }
       ensureSelectedBetAffordable();
@@ -692,13 +562,14 @@
       betButtons = [];
       betOptionsElement.innerHTML = '';
       for (let i = 0; i < baseBetOptions.length; i += 1) {
+        const baseAmount = baseBetOptions[i];
         const button = document.createElement('button');
         button.type = 'button';
         button.className = 'pachinko-bet__option';
+        button.dataset.baseBet = `${baseAmount}`;
         button.addEventListener('click', () => {
-          const scaled = betOptions[i];
-          const baseOption = baseBetOptions[i];
-          setSelectedBet(scaled, baseOption);
+          const scaled = baseAmount * betMultiplier;
+          setSelectedBet(scaled, baseAmount);
         });
         betButtons.push(button);
         betOptionsElement.appendChild(button);
@@ -1271,7 +1142,7 @@
     }
 
     function beginDrop() {
-      if (!selectedBet || !(selectedBet.layered instanceof LayeredNumber)) {
+      if (selectedBet == null) {
         setStatus('selectBet', 'Select a bet first.');
         if (typeof showToast === 'function') {
           showToast(translate('scripts.arcade.pachinko.status.selectBet', 'Select a bet first.'));
@@ -1287,7 +1158,7 @@
         updateBalanceDisplay();
         return false;
       }
-      const layeredBet = selectedBet.layered.clone();
+      const layeredBet = createLayeredAmount(selectedBet);
       if (!layeredBet) {
         return false;
       }
