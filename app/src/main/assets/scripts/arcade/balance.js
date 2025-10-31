@@ -28,6 +28,17 @@
   const DEFAULT_CUBE_RULES = {
     countPerSet: 5,
     widthRatio: 0.18,
+    widthScaling: {
+      groupSize: 10,
+      minMultiplier: 0.5,
+      maxMultiplier: 2
+    },
+    sliding: {
+      tiltThreshold: 0.03,
+      supportRatio: 1.35,
+      weightRatioThreshold: 1.5,
+      distanceMultiplier: 0.55
+    },
     inventoryWidthPx: { min: 60, max: 120 },
     weightRange: { min: 1, max: 20 },
     stackOffsetMultiplier: 0.72,
@@ -197,6 +208,8 @@
         12
       ),
       widthRatio: normalizeWidthRatio(rawCubeRules?.widthRatio ?? DEFAULT_CUBE_RULES.widthRatio),
+      widthScaling: normalizeWidthScaling(rawCubeRules?.widthScaling),
+      sliding: normalizeSlidingRules(rawCubeRules?.sliding),
       inventoryWidthPx: {
         min: normalizeInventoryWidth(rawCubeRules?.inventoryWidthPx?.min) ?? DEFAULT_CUBE_RULES.inventoryWidthPx.min,
         max: normalizeInventoryWidth(rawCubeRules?.inventoryWidthPx?.max) ?? DEFAULT_CUBE_RULES.inventoryWidthPx.max
@@ -251,7 +264,57 @@
     if (!Number.isFinite(numeric)) {
       return DEFAULT_CUBE_RULES.widthRatio;
     }
-    return clamp(numeric, 0.08, 0.32);
+    return clamp(numeric, 0.08, 0.4);
+  }
+
+  function normalizeWidthScaling(rawScaling) {
+    const defaults = DEFAULT_CUBE_RULES.widthScaling;
+    const normalized = { ...defaults };
+    if (!rawScaling || typeof rawScaling !== 'object') {
+      return { ...normalized };
+    }
+    const groupSize = Math.floor(Number(rawScaling.groupSize));
+    if (Number.isFinite(groupSize) && groupSize > 0) {
+      normalized.groupSize = clamp(groupSize, 2, 20);
+    }
+    const minMultiplier = Number(rawScaling.minMultiplier);
+    if (Number.isFinite(minMultiplier)) {
+      normalized.minMultiplier = clamp(minMultiplier, 0.2, 1);
+    }
+    const maxMultiplier = Number(rawScaling.maxMultiplier);
+    if (Number.isFinite(maxMultiplier)) {
+      const candidate = clamp(maxMultiplier, 0.5, 3);
+      normalized.maxMultiplier = Math.max(candidate, normalized.minMultiplier + 0.05);
+    } else if (normalized.maxMultiplier <= normalized.minMultiplier) {
+      normalized.maxMultiplier = normalized.minMultiplier + 0.05;
+    }
+    normalized.maxMultiplier = clamp(normalized.maxMultiplier, normalized.minMultiplier + 0.05, 3);
+    return { ...normalized };
+  }
+
+  function normalizeSlidingRules(rawSliding) {
+    const defaults = DEFAULT_CUBE_RULES.sliding;
+    const normalized = { ...defaults };
+    if (!rawSliding || typeof rawSliding !== 'object') {
+      return { ...normalized };
+    }
+    const tiltThreshold = Number(rawSliding.tiltThreshold);
+    if (Number.isFinite(tiltThreshold)) {
+      normalized.tiltThreshold = clamp(tiltThreshold, 0.005, 0.12);
+    }
+    const supportRatio = Number(rawSliding.supportRatio);
+    if (Number.isFinite(supportRatio)) {
+      normalized.supportRatio = clamp(supportRatio, 1, 4);
+    }
+    const weightRatioThreshold = Number(rawSliding.weightRatioThreshold);
+    if (Number.isFinite(weightRatioThreshold)) {
+      normalized.weightRatioThreshold = clamp(weightRatioThreshold, 1, 6);
+    }
+    const distanceMultiplier = Number(rawSliding.distanceMultiplier);
+    if (Number.isFinite(distanceMultiplier)) {
+      normalized.distanceMultiplier = clamp(distanceMultiplier, 0.2, 1.5);
+    }
+    return { ...normalized };
   }
 
   function normalizeBoardPhysics(rawPhysics) {
@@ -891,9 +954,65 @@
       this.recalculateStacking();
     }
 
+    computeWidthRatioForWeight(weight) {
+      const rules = this.config?.cubeRules || DEFAULT_CUBE_RULES;
+      const baseRatio = normalizeWidthRatio(rules.widthRatio ?? DEFAULT_CUBE_RULES.widthRatio);
+      const scaling = rules.widthScaling;
+      const numericWeight = Number(weight);
+      if (!scaling || !Number.isFinite(numericWeight)) {
+        return baseRatio;
+      }
+      const groupSize = Number(scaling.groupSize);
+      if (!Number.isFinite(groupSize) || groupSize <= 0) {
+        return baseRatio;
+      }
+      const minMultiplierValue = Number(scaling.minMultiplier);
+      const minMultiplier = Number.isFinite(minMultiplierValue)
+        ? minMultiplierValue
+        : DEFAULT_CUBE_RULES.widthScaling.minMultiplier;
+      const maxMultiplierValue = Number(scaling.maxMultiplier);
+      const maxMultiplier = Number.isFinite(maxMultiplierValue)
+        ? maxMultiplierValue
+        : DEFAULT_CUBE_RULES.widthScaling.maxMultiplier;
+      const rangeMinValue = Number(rules.weightRange?.min);
+      const rangeMaxValue = Number(rules.weightRange?.max);
+      const rangeMin = Number.isFinite(rangeMinValue)
+        ? Math.floor(rangeMinValue)
+        : DEFAULT_CUBE_RULES.weightRange.min;
+      const rangeMax = Number.isFinite(rangeMaxValue)
+        ? Math.floor(rangeMaxValue)
+        : DEFAULT_CUBE_RULES.weightRange.max;
+      const minWeight = Math.min(rangeMin, rangeMax);
+      const maxWeight = Math.max(rangeMin, rangeMax);
+      if (maxWeight <= minWeight) {
+        return baseRatio;
+      }
+      const safeWeight = clamp(Math.floor(numericWeight), minWeight, maxWeight);
+      const totalGroups = Math.max(Math.floor((maxWeight - minWeight) / groupSize) + 1, 1);
+      if (totalGroups <= 1) {
+        return baseRatio;
+      }
+      const groupIndex = clamp(Math.floor((safeWeight - minWeight) / groupSize), 0, totalGroups - 1);
+      const normalizedMultiplier =
+        minMultiplier + ((maxMultiplier - minMultiplier) * (groupIndex / (totalGroups - 1)));
+      if (!Number.isFinite(normalizedMultiplier)) {
+        return baseRatio;
+      }
+      const scaledRatio = baseRatio * normalizedMultiplier;
+      if (!Number.isFinite(scaledRatio)) {
+        return baseRatio;
+      }
+      return normalizeWidthRatio(scaledRatio);
+    }
+
     updateCubeWidths() {
       this.cubes.forEach((state, cube) => {
-        this.updateCubeWidth(cube, state.widthRatio);
+        if (!state) {
+          return;
+        }
+        const ratio = this.computeWidthRatioForWeight(state.weight);
+        state.widthRatio = ratio;
+        this.updateCubeWidth(cube, ratio);
       });
       this.recalculateStacking();
     }
@@ -944,7 +1063,7 @@
         if (!cube) {
           return;
         }
-        const widthRatio = normalizeWidthRatio(this.config.cubeRules.widthRatio);
+        const widthRatio = this.computeWidthRatioForWeight(weight);
         this.cubes.set(cube, {
           definition: def,
           widthRatio,
@@ -1180,6 +1299,9 @@
       this.updateStatus(statusKey, { offset: offsetDisplay });
       this.applyRotation(result.rotation, this.config.board.testDurationMs);
       this.applyTiltState(statusKey);
+      if (statusKey !== 'success') {
+        this.applySlidingPhysics(result);
+      }
       if (statusKey === 'success') {
         this.maybeAwardPerfectReward();
       }
@@ -1218,6 +1340,119 @@
         totalTorque
       });
       return { centerOffset, rotation, totalWeight, totalTorque };
+    }
+
+    applySlidingPhysics(result) {
+      if (!result || typeof result.centerOffset !== 'number') {
+        return;
+      }
+      const direction = result.centerOffset < 0 ? -1 : result.centerOffset > 0 ? 1 : 0;
+      if (!direction) {
+        return;
+      }
+      const cubeRules = this.config?.cubeRules || DEFAULT_CUBE_RULES;
+      const sliding = cubeRules.sliding || DEFAULT_CUBE_RULES.sliding;
+      const tiltThreshold = Number(sliding.tiltThreshold) || DEFAULT_CUBE_RULES.sliding.tiltThreshold;
+      if (Math.abs(result.centerOffset) < tiltThreshold) {
+        return;
+      }
+      const supportRatio = Math.max(
+        Number(sliding.supportRatio) || DEFAULT_CUBE_RULES.sliding.supportRatio,
+        1
+      );
+      const weightRatioThreshold = Math.max(
+        Number(sliding.weightRatioThreshold) || DEFAULT_CUBE_RULES.sliding.weightRatioThreshold,
+        1
+      );
+      const distanceMultiplier = Math.max(
+        Number(sliding.distanceMultiplier) || DEFAULT_CUBE_RULES.sliding.distanceMultiplier,
+        0
+      );
+      if (distanceMultiplier <= 0) {
+        return;
+      }
+      const groupingThreshold = cubeRules.stackGroupingThreshold || DEFAULT_CUBE_RULES.stackGroupingThreshold;
+      const candidates = [];
+      this.cubes.forEach((state, cube) => {
+        if (state && state.location === 'board' && typeof state.position === 'number') {
+          candidates.push({ state, cube });
+        }
+      });
+      if (!candidates.length) {
+        return;
+      }
+      let slid = false;
+      candidates.forEach(entry => {
+        const { state, cube } = entry;
+        if (!state || state.stackIndex <= 0) {
+          return;
+        }
+        const position = Number(state.position) || 0;
+        if ((direction < 0 && position > 0) || (direction > 0 && position < 0)) {
+          return;
+        }
+        const support = this.findSupportingCube(state, candidates, groupingThreshold);
+        if (!support) {
+          return;
+        }
+        const widthRatio = Number(state.widthRatio) || 0;
+        const supportWidth = Number(support.state.widthRatio) || 0;
+        if (!supportWidth || widthRatio <= supportWidth * supportRatio) {
+          return;
+        }
+        const weight = Number(state.weight) || 0;
+        const supportWeight = Number(support.state.weight) || 0;
+        if (!weight || weight <= supportWeight * weightRatioThreshold) {
+          return;
+        }
+        const shift = Math.max(Math.max(widthRatio, supportWidth) * distanceMultiplier, 0);
+        if (!Number.isFinite(shift) || shift <= 0) {
+          return;
+        }
+        const proposed = position + (shift * direction);
+        const halfSpan = Math.max(widthRatio, 0) / 2;
+        const clamped = clamp(proposed, -0.5 + halfSpan, 0.5 - halfSpan);
+        if (!Number.isFinite(clamped)) {
+          return;
+        }
+        state.position = clamped;
+        state.stackIndex = 0;
+        this.clearCubeStackStyles(cube);
+        cube.style.left = `${(clamped + 0.5) * 100}%`;
+        cube.style.setProperty('--cube-stack-level', '0');
+        slid = true;
+      });
+      if (slid) {
+        if (typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
+          window.requestAnimationFrame(() => this.recalculateStacking());
+        } else {
+          this.recalculateStacking();
+        }
+      }
+    }
+
+    findSupportingCube(targetState, entries, threshold) {
+      if (!targetState || !Array.isArray(entries) || !entries.length) {
+        return null;
+      }
+      let closest = null;
+      let bestDistance = Infinity;
+      const limit = Number.isFinite(threshold) ? Math.max(threshold, 0.001) : DEFAULT_CUBE_RULES.stackGroupingThreshold;
+      entries.forEach(entry => {
+        if (!entry || !entry.state || entry.state === targetState) {
+          return;
+        }
+        if (entry.state.stackIndex !== 0) {
+          return;
+        }
+        const position = Number(entry.state.position) || 0;
+        const distance = Math.abs(position - (Number(targetState.position) || 0));
+        if (distance <= limit && distance < bestDistance) {
+          closest = entry;
+          bestDistance = distance;
+        }
+      });
+      return closest;
     }
 
     legacyRotation(centerOffset) {

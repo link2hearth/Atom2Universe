@@ -1316,12 +1316,23 @@ const GAME_CONFIG = {
       },
       cubeRules: {
         countPerSet: { min: 4, max: 8 }, // Nombre de blocs générés par série.
-        widthRatio: 0.18, // Largeur uniforme des blocs par rapport à la planche.
+        widthRatio: 0.18, // Largeur de base des blocs par rapport à la planche.
+        widthScaling: { // Multiplicateurs appliqués à la largeur en fonction de la tranche de poids.
+          groupSize: 10,
+          minMultiplier: 0.5,
+          maxMultiplier: 2
+        },
         inventoryWidthPx: { min: 64, max: 112 }, // Largeur minimale et maximale affichée dans l'inventaire.
         weightRange: { min: 1, max: 50 }, // Fourchette des poids aléatoires attribués aux blocs.
         stackOffsetMultiplier: 0.72, // Hauteur relative entre deux blocs empilés.
         stackGroupingThreshold: 0.08, // Distance horizontale maximale (en proportion de la planche) pour regrouper les blocs.
-        randomizeWeights: true // Active la génération aléatoire des poids pour chaque série.
+        randomizeWeights: true, // Active la génération aléatoire des poids pour chaque série.
+        sliding: { // Paramètres de glissade des blocs en cas de déséquilibre.
+          tiltThreshold: 0.035,
+          supportRatio: 1.4,
+          weightRatioThreshold: 1.6,
+          distanceMultiplier: 0.55
+        }
       },
       cubeSets: [
         {

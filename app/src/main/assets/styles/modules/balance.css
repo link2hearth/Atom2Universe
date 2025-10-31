@@ -737,7 +737,7 @@ body.theme-aurora .page--balance {
   padding: calc(0.25rem * var(--balance-scale, 1));
   font-weight: 600;
   letter-spacing: 0.03em;
-  transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease, width 0.22s ease;
 }
 
 .balance-cube:focus-visible {
@@ -760,6 +760,11 @@ body.theme-aurora .page--balance {
   transform: translate(-50%, calc(-100% - var(--cube-stack-offset, 0px)));
   width: calc(var(--cube-width-ratio) * 100%);
   z-index: calc(24 + var(--cube-stack-level, 0));
+  transition: left 0.28s cubic-bezier(0.25, 0.8, 0.25, 1),
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    opacity 0.18s ease,
+    width 0.22s ease;
 }
 
 .balance-cube--dragging {
