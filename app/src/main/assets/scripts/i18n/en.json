@@ -338,6 +338,12 @@
             "description": "Switch every light off: each tap flips the selected tile and its orthogonal neighbours.",
             "cta": "Play"
           },
+          "pipeTap": {
+            "aria": "Open the PipeTap mini-game",
+            "title": "PipeTap",
+            "description": "Rotate the pipes to connect the full pipeline without leaks.",
+            "cta": "Connect"
+          },
           "sokoban": {
             "aria": "Open the Sokoban mini-game",
             "title": "Sokoban",
@@ -709,6 +715,43 @@
             "on": "Light on",
             "off": "Light off"
           }
+        }
+      },
+      "pipeTap": {
+        "aria": "PipeTap mini-game: rotate every tile to connect the pipeline.",
+        "title": "PipeTap",
+        "controls": {
+          "seed": {
+            "label": "Seed",
+            "placeholder": "auto"
+          },
+          "size": {
+            "label": "Size"
+          },
+          "new": "New grid"
+        },
+        "stats": {
+          "seedLabel": "Seed",
+          "movesLabel": "Taps",
+          "timeLabel": "Time"
+        },
+        "board": "PipeTap board",
+        "win": {
+          "message": "Solved in {{time}} with {{moves}} taps.",
+          "again": "Play again",
+          "nextSize": "Increase size",
+          "share": "Copy seed"
+        },
+        "share": {
+          "success": "Copied!",
+          "fallback": "Seed: {{seed}}"
+        },
+        "how": {
+          "label": "How does it work?",
+          "message": "Rotate each tile to link every pipe from the highlighted source. The grid comes from a random spanning tree then every tile is rotated, which keeps the puzzle solvable."
+        },
+        "tile": {
+          "aria": "Tile {{row}}, column {{column}}"
         }
       },
       "sokoban": {
