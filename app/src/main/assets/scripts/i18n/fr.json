@@ -2210,7 +2210,7 @@
       },
       "lightsOut": {
         "rewards": {
-          "gacha": "Ticket gacha obtenu : {count}"
+          "gacha": "Ticket{suffix} gacha obtenu{suffix} : {formattedCount}"
         }
       },
       "sokoban": {

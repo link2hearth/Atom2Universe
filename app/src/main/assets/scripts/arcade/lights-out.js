@@ -720,10 +720,11 @@
     }
     if (Number.isFinite(gained) && gained > 0 && typeof showToast === 'function') {
       const suffix = gained > 1 ? 's' : '';
+      const formattedCount = formatIntegerLocalized(gained);
       showToast(translate(
         'scripts.arcade.lightsOut.rewards.gacha',
-        'Ticket gacha obtenu : {count}',
-        { count: formatIntegerLocalized(gained), suffix }
+        'Ticket{suffix} gacha obtenu{suffix} : {formattedCount}',
+        { count: gained, formattedCount, suffix }
       ));
     }
   }
@@ -756,9 +757,25 @@
     return min + Math.floor(Math.random() * (range + 1));
   }
 
+  function formatTemplate(template, params) {
+    if (typeof template !== 'string') {
+      return '';
+    }
+    if (!template || !params || typeof params !== 'object') {
+      return template;
+    }
+    return template.replace(/\{\s*([^{}\s]+)\s*\}/g, (match, key) => {
+      if (Object.prototype.hasOwnProperty.call(params, key)) {
+        const value = params[key];
+        return value == null ? '' : String(value);
+      }
+      return match;
+    });
+  }
+
   function translate(key, fallback, params) {
     if (typeof key !== 'string' || !key) {
-      return typeof fallback === 'string' ? fallback : '';
+      return typeof fallback === 'string' ? formatTemplate(fallback, params) : '';
     }
     const translator = typeof window !== 'undefined'
       && window.i18n
@@ -778,7 +795,7 @@
       }
     }
     if (typeof fallback === 'string') {
-      return fallback;
+      return formatTemplate(fallback, params);
     }
     return key;
   }
