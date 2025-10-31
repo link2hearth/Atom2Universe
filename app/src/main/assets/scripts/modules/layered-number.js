@@ -484,7 +484,9 @@ class LayeredNumber {
       }) || (this.sign * this.mantissa).toFixed(2);
       return `${mantissa}e${this.exponent}`;
     }
-    return `10^${LayeredNumber.formatExponent(this.value)}`;
+    const exponentText = LayeredNumber.formatExponent(this.value);
+    const prefix = this.sign < 0 ? '-' : '';
+    return `${prefix}10^${exponentText}`;
   }
 
   format() {
