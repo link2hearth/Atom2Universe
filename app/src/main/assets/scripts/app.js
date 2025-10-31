@@ -2,10 +2,45 @@ const APP_DATA = typeof globalThis !== 'undefined' && globalThis.APP_DATA ? glob
 const GLOBAL_CONFIG =
   typeof globalThis !== 'undefined' && globalThis.GAME_CONFIG ? globalThis.GAME_CONFIG : {};
 
-const DEVKIT_FEATURE_ENABLED =
-  typeof globalThis !== 'undefined' && typeof globalThis.DEVKIT_ENABLED === 'boolean'
-    ? globalThis.DEVKIT_ENABLED
-    : true;
+function resolveGlobalBooleanFlag(flagName, fallback = true) {
+  if (typeof globalThis !== 'undefined' && typeof globalThis[flagName] === 'boolean') {
+    return globalThis[flagName];
+  }
+  return fallback;
+}
+
+function isDevkitFeatureEnabled() {
+  return resolveGlobalBooleanFlag('DEVKIT_ENABLED', true);
+}
+
+function isCollectionFeatureEnabled() {
+  return resolveGlobalBooleanFlag('COLLECTION_SYSTEM_ENABLED', true);
+}
+
+function toggleDevkitFeatureAvailability() {
+  if (typeof globalThis !== 'undefined' && typeof globalThis.toggleDevkitFeatureEnabled === 'function') {
+    return globalThis.toggleDevkitFeatureEnabled();
+  }
+  const next = !isDevkitFeatureEnabled();
+  if (typeof globalThis !== 'undefined') {
+    globalThis.DEVKIT_ENABLED = next;
+  }
+  return next;
+}
+
+function toggleCollectionFeatureAvailability() {
+  if (
+    typeof globalThis !== 'undefined'
+    && typeof globalThis.toggleCollectionFeatureEnabled === 'function'
+  ) {
+    return globalThis.toggleCollectionFeatureEnabled();
+  }
+  const next = !isCollectionFeatureEnabled();
+  if (typeof globalThis !== 'undefined') {
+    globalThis.COLLECTION_SYSTEM_ENABLED = next;
+  }
+  return next;
+}
 
 const CONFIG_OPTIONS_WELCOME_CARD =
   GLOBAL_CONFIG
@@ -3769,6 +3804,9 @@ function getPageUnlockState() {
 }
 
 function isPageUnlocked(pageId) {
+  if (pageId === 'collection' && !isCollectionFeatureEnabled()) {
+    return false;
+  }
   const featureId = PAGE_FEATURE_MAP[pageId];
   if (featureId) {
     return isFeatureUnlocked(featureId);
@@ -3790,6 +3828,9 @@ function isPageUnlocked(pageId) {
 }
 
 function unlockPage(pageId, options = {}) {
+  if (pageId === 'collection' && !isCollectionFeatureEnabled()) {
+    return false;
+  }
   if (!LOCKABLE_PAGE_IDS.has(pageId)) {
     return false;
   }
@@ -4327,6 +4368,26 @@ const resetDialogState = {
   previousFocus: null
 };
 
+const CONFIG_RELOAD_DELAY_MS = 500;
+let configReloadTimerId = null;
+
+const RESET_KEYWORD_ACTIONS = Object.freeze({
+  DEVKIT: Object.freeze({
+    toggle: toggleDevkitFeatureAvailability,
+    enabledKey: 'devkitEnabled',
+    enabledFallback: 'DevKit enabled. Reloading to apply…',
+    disabledKey: 'devkitDisabled',
+    disabledFallback: 'DevKit disabled. Reloading to apply…'
+  }),
+  COLLECTION: Object.freeze({
+    toggle: toggleCollectionFeatureAvailability,
+    enabledKey: 'collectionEnabled',
+    enabledFallback: 'Collection enabled. Reloading to apply…',
+    disabledKey: 'collectionDisabled',
+    disabledFallback: 'Collection disabled. Reloading to apply…'
+  })
+});
+
 function translateResetString(key, fallback, params) {
   return translateOrDefault(`scripts.app.reset.${key}`, fallback, params);
 }
@@ -4345,6 +4406,58 @@ function normalizeResetConfirmation(value) {
     return '';
   }
   return value.trim().toUpperCase();
+}
+
+function scheduleConfigReload() {
+  if (typeof globalThis === 'undefined') {
+    return;
+  }
+  const location = globalThis.location;
+  if (!location || typeof location.reload !== 'function') {
+    return;
+  }
+  if (configReloadTimerId !== null) {
+    return;
+  }
+  const setTimer = typeof globalThis.setTimeout === 'function' ? globalThis.setTimeout : null;
+  if (!setTimer) {
+    try {
+      location.reload();
+    } catch (error) {
+      if (typeof location.replace === 'function' && typeof location.href === 'string') {
+        location.replace(location.href);
+      }
+    }
+    return;
+  }
+  configReloadTimerId = setTimer(() => {
+    configReloadTimerId = null;
+    try {
+      location.reload();
+    } catch (error) {
+      if (typeof location.replace === 'function' && typeof location.href === 'string') {
+        location.replace(location.href);
+      }
+    }
+  }, CONFIG_RELOAD_DELAY_MS);
+}
+
+function handleResetSpecialKeyword(normalizedKeyword) {
+  const action = RESET_KEYWORD_ACTIONS[normalizedKeyword];
+  if (!action) {
+    return false;
+  }
+  const toggleFn = action.toggle;
+  const nextValue = typeof toggleFn === 'function' ? toggleFn() : undefined;
+  if (typeof nextValue !== 'boolean') {
+    showToast(translateResetString('toggleFailed', 'Unable to update configuration.'));
+    return true;
+  }
+  const messageKey = nextValue ? action.enabledKey : action.disabledKey;
+  const fallbackMessage = nextValue ? action.enabledFallback : action.disabledFallback;
+  showToast(translateResetString(messageKey, fallbackMessage));
+  scheduleConfigReload();
+  return true;
 }
 
 function updateResetDialogCopy() {
@@ -4507,7 +4620,12 @@ function handleResetDialogSubmit(event) {
   event.preventDefault();
   const keyword = getResetConfirmationKeyword();
   const expected = normalizeResetConfirmation(keyword);
-  const provided = elements.resetDialogInput ? normalizeResetConfirmation(elements.resetDialogInput.value) : '';
+  const rawInput = elements.resetDialogInput ? elements.resetDialogInput.value : '';
+  const provided = normalizeResetConfirmation(rawInput);
+  if (handleResetSpecialKeyword(provided)) {
+    closeResetDialog();
+    return;
+  }
   if (provided !== expected) {
     const invalidMessage = translateResetString('invalid', 'Incorrect confirmation word');
     setResetDialogError(invalidMessage);
@@ -4556,7 +4674,11 @@ function handleResetPromptFallback() {
     showToast(translateResetString('cancelled', 'Reset cancelled'));
     return;
   }
-  if (normalizeResetConfirmation(response) !== expected) {
+  const provided = normalizeResetConfirmation(response);
+  if (handleResetSpecialKeyword(provided)) {
+    return;
+  }
+  if (provided !== expected) {
     showToast(translateResetString('invalid', 'Incorrect confirmation word'));
     return;
   }
@@ -5839,7 +5961,7 @@ function updateInfoCardsVisibility() {
   if (!elements.infoCardsCard) {
     return;
   }
-  const unlocked = isPageUnlocked('collection');
+  const unlocked = isCollectionFeatureEnabled() && isPageUnlocked('collection');
   elements.infoCardsCard.hidden = !unlocked;
   elements.infoCardsCard.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
 }
@@ -5848,7 +5970,7 @@ function updateCollectionImagesVisibility() {
   if (!elements.collectionImagesCard) {
     return;
   }
-  const unlocked = isPageUnlocked('collection');
+  const unlocked = isCollectionFeatureEnabled() && isPageUnlocked('collection');
   elements.collectionImagesCard.hidden = !unlocked;
   elements.collectionImagesCard.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
 }
@@ -6295,7 +6417,8 @@ function updatePageUnlockUI() {
   ];
 
   buttonConfig.forEach(([pageId, button]) => {
-    const unlocked = unlocks?.[pageId] === true;
+    const unlocked = unlocks?.[pageId] === true
+      && (pageId !== 'collection' || isCollectionFeatureEnabled());
     setNavButtonLockState(button, unlocked);
   });
 
@@ -7965,7 +8088,7 @@ function focusDevKitDefault() {
 }
 
 function openDevKit() {
-  if (!DEVKIT_FEATURE_ENABLED || DEVKIT_STATE.isOpen || !elements.devkitOverlay) {
+  if (!isDevkitFeatureEnabled() || DEVKIT_STATE.isOpen || !elements.devkitOverlay) {
     return;
   }
   DEVKIT_STATE.isOpen = true;
@@ -7994,7 +8117,7 @@ function closeDevKit() {
 }
 
 function toggleDevKit() {
-  if (!DEVKIT_FEATURE_ENABLED) {
+  if (!isDevkitFeatureEnabled()) {
     return;
   }
   if (DEVKIT_STATE.isOpen) {
@@ -11838,7 +11961,7 @@ function bindDomEventListeners() {
   }
 
   document.addEventListener('keydown', event => {
-    if (DEVKIT_FEATURE_ENABLED && event.key === 'F9') {
+    if (isDevkitFeatureEnabled() && event.key === 'F9') {
       event.preventDefault();
       toggleDevKit();
     } else if (event.key === 'Escape' && DEVKIT_STATE.isOpen) {
@@ -12362,7 +12485,7 @@ function bindDomEventListeners() {
   }
 
   if (elements.openDevkitButton) {
-    if (!DEVKIT_FEATURE_ENABLED) {
+    if (!isDevkitFeatureEnabled()) {
       if (typeof elements.openDevkitButton.remove === 'function') {
         elements.openDevkitButton.remove();
       } else {

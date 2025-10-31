@@ -2631,6 +2631,11 @@
         "cancelled": "Réinitialisation annulée",
         "invalid": "Mot de confirmation incorrect",
         "done": "Progression réinitialisée",
+        "devkitEnabled": "DevKit activé. Redémarrage pour appliquer les changements…",
+        "devkitDisabled": "DevKit désactivé. Redémarrage pour appliquer les changements…",
+        "collectionEnabled": "Collection activée. Redémarrage pour appliquer les changements…",
+        "collectionDisabled": "Collection désactivée. Redémarrage pour appliquer les changements…",
+        "toggleFailed": "Impossible de mettre à jour la configuration.",
         "prompt": "Réinitialisation complète du jeu. Tapez \"{keyword}\" pour confirmer.\\nCette action est irréversible."
       },
       "bigBangToggle": {
