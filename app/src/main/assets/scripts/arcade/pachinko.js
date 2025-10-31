@@ -537,13 +537,6 @@
       }
       const atoms = getGameAtoms();
       balanceElement.textContent = atoms ? atoms.toString() : '0';
-
-      // Keep bet buttons in sync with the current balance so that newly
-      // affordable options become selectable without requiring a manual
-      // refresh or multiplier change from the player.
-      if (betButtons.length) {
-        updateBetButtons();
-      }
     }
 
     function startBalanceUpdates() {
