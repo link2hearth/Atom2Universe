@@ -1361,13 +1361,7 @@ const GAME_CONFIG = {
             labelKey: 'scripts.arcade.chess.difficulty.training',
             descriptionKey: 'scripts.arcade.chess.difficulty.trainingDescription',
             ai: { depth: 2, timeLimitMs: 600 },
-            reward: {
-              gachaTickets: 100,
-              crit: {
-                multiplier: 1000,
-                durationSeconds: 300
-              }
-            }
+            reward: null
           },
           {
             id: 'standard',
