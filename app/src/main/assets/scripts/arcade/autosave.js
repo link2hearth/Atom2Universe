@@ -6,6 +6,7 @@
     'wave',
     'quantum2048',
     'lightsOut',
+    'pipeTap',
     'sokoban',
     'bigger',
     'math',
