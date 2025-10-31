@@ -1338,21 +1338,34 @@
     if (!startPlayer || !startBoxes || !targetSet || targetSet.size === 0) {
       return null;
     }
+    if (!Number.isInteger(startPlayer.row) || !Number.isInteger(startPlayer.col)) {
+      return null;
+    }
     const timeLimitMs = clampNumber(options?.timeLimitMs, 200, 8000, 2000);
     const startTime = Date.now();
-    const targetCount = targetSet.size;
-    const targetArray = Array.from(targetSet, decodeKeyToTuple);
+    const normalizedTargets = targetSet instanceof Set ? targetSet : new Set(targetSet);
+    if (normalizedTargets.size === 0) {
+      return null;
+    }
+    const initialBoxes = new Set(startBoxes);
+    if (initialBoxes.size !== normalizedTargets.size) {
+      return null;
+    }
+    const targetCount = normalizedTargets.size;
+    const targetArray = Array.from(normalizedTargets, decodeKeyToTuple);
     const caches = buildRowTargetPresence();
 
-    const startBoxesKey = encodeBoxes(startBoxes);
+    const startBoxesKey = encodeBoxes(initialBoxes);
     const startState = {
       playerRow: startPlayer.row,
       playerCol: startPlayer.col,
-      boxes: new Set(startBoxes),
+      boxes: initialBoxes,
       boxesKey: startBoxesKey,
       pushes: 0,
       steps: 0,
-      heuristic: computeMinimalMatchingDistance(Array.from(startBoxes, decodeKeyToTuple), targetArray)
+      heuristic: computeMinimalMatchingDistance(Array.from(initialBoxes, decodeKeyToTuple), targetArray),
+      prev: null,
+      move: null
     };
 
     const open = [startState];
@@ -1379,12 +1392,14 @@
       }
       visited.set(visitKey, current.pushes);
 
-      if (countBoxesOnTargets(current.boxes, targetSet) === targetCount) {
+      if (countBoxesOnTargets(current.boxes, normalizedTargets) === targetCount) {
+        const moves = reconstructSolutionMoves(current);
         return {
           pushes: current.pushes,
           steps: current.steps,
           expandedStates,
-          generatedTransitions
+          generatedTransitions,
+          moves
         };
       }
 
@@ -1415,7 +1430,7 @@
           const newBoxes = new Set(current.boxes);
           newBoxes.delete(boxKey);
           newBoxes.add(targetKey);
-          if (containsStaticDeadlock(newBoxes, targetSet, caches)) {
+          if (containsStaticDeadlock(newBoxes, normalizedTargets, caches)) {
             continue;
           }
           generatedTransitions += 1;
@@ -1432,7 +1447,13 @@
             boxesKey: newBoxesKey,
             pushes: newPushes,
             steps: newSteps,
-            heuristic
+            heuristic,
+            prev: current,
+            move: {
+              pushFrom: pushKey,
+              boxFrom: boxKey,
+              boxTo: targetKey
+            }
           });
         }
       }
@@ -1453,6 +1474,108 @@
       exploredStates: expandedStates,
       branching
     };
+  }
+
+  function reconstructSolutionMoves(finalState) {
+    const sequence = [];
+    let current = finalState;
+    while (current) {
+      if (current.move) {
+        sequence.push(current.move);
+      }
+      current = current.prev;
+    }
+    sequence.reverse();
+    return sequence;
+  }
+
+  function isSolvedConfiguration(boxesSet, targetSet) {
+    if (!boxesSet || !targetSet) {
+      return false;
+    }
+    if (boxesSet.size !== targetSet.size) {
+      return false;
+    }
+    return countBoxesOnTargets(boxesSet, targetSet) === targetSet.size;
+  }
+
+  function simulateSolutionPath(startPlayer, boxesSet, targetSet, moves) {
+    if (!startPlayer || !boxesSet || !targetSet) {
+      return false;
+    }
+    if (!Number.isInteger(startPlayer.row) || !Number.isInteger(startPlayer.col)) {
+      return false;
+    }
+    const workingBoxes = new Set(boxesSet);
+    const targets = targetSet instanceof Set ? targetSet : new Set(targetSet);
+    if (targets.size === 0 || workingBoxes.size !== targets.size) {
+      return false;
+    }
+    const sequence = Array.isArray(moves) ? moves : [];
+    let playerRow = startPlayer.row;
+    let playerCol = startPlayer.col;
+    for (const move of sequence) {
+      if (!move || typeof move !== 'object') {
+        return false;
+      }
+      const pushKey = typeof move.pushFrom === 'string' ? move.pushFrom : null;
+      const boxFromKey = typeof move.boxFrom === 'string' ? move.boxFrom : null;
+      const boxToKey = typeof move.boxTo === 'string' ? move.boxTo : null;
+      if (!pushKey || !boxFromKey || !boxToKey) {
+        return false;
+      }
+      if (!workingBoxes.has(boxFromKey) || workingBoxes.has(boxToKey)) {
+        return false;
+      }
+      const reachable = computeReachableWithDistances(playerRow, playerCol, workingBoxes);
+      if (!reachable.has(pushKey)) {
+        return false;
+      }
+      const pushCoords = decodeKey(pushKey);
+      const boxCoords = decodeKey(boxFromKey);
+      const targetCoords = decodeKey(boxToKey);
+      if (!Number.isInteger(pushCoords.row)
+        || !Number.isInteger(pushCoords.col)
+        || !Number.isInteger(boxCoords.row)
+        || !Number.isInteger(boxCoords.col)
+        || !Number.isInteger(targetCoords.row)
+        || !Number.isInteger(targetCoords.col)) {
+        return false;
+      }
+      const deltaRow = boxCoords.row - pushCoords.row;
+      const deltaCol = boxCoords.col - pushCoords.col;
+      if (Math.abs(deltaRow) + Math.abs(deltaCol) !== 1) {
+        return false;
+      }
+      if (targetCoords.row !== boxCoords.row + deltaRow || targetCoords.col !== boxCoords.col + deltaCol) {
+        return false;
+      }
+      if (!isWalkable(targetCoords.row, targetCoords.col)) {
+        return false;
+      }
+      workingBoxes.delete(boxFromKey);
+      workingBoxes.add(boxToKey);
+      playerRow = boxCoords.row;
+      playerCol = boxCoords.col;
+    }
+    return isSolvedConfiguration(workingBoxes, targets);
+  }
+
+  function validateSolverSolution(startPlayer, boxesSet, targetSet, solverResult) {
+    if (!solverResult || typeof solverResult !== 'object') {
+      return false;
+    }
+    if (!startPlayer || !boxesSet || !targetSet) {
+      return false;
+    }
+    const pushes = Number(solverResult.pushes);
+    if (!Number.isFinite(pushes) || pushes < 0) {
+      return false;
+    }
+    if (!Array.isArray(solverResult.moves) || solverResult.moves.length !== pushes) {
+      return false;
+    }
+    return simulateSolutionPath(startPlayer, boxesSet, targetSet, solverResult.moves);
   }
 
   function fitsDifficulty(metrics, difficultyHint, totalBoxes) {
@@ -2729,6 +2852,9 @@
       state.targetKeys,
       { timeLimitMs: 2500 }
     );
+    if (!validateSolverSolution({ row: playerRow, col: playerCol }, sanitizedBoxes, state.targetKeys, solverResult)) {
+      return false;
+    }
     const metrics = computeSolverMetrics(solverResult);
     if (!metrics) {
       return false;
@@ -2878,6 +3004,9 @@
       solverTimeLimit = clampInt(Math.min(remaining, 2500), 200, 3500, 2500);
     }
     const solverResult = solveForwardMinPushes(player, boxes, state.targetKeys, { timeLimitMs: solverTimeLimit });
+    if (!validateSolverSolution({ row: player.row, col: player.col }, boxes, state.targetKeys, solverResult)) {
+      return false;
+    }
     const metrics = computeSolverMetrics(solverResult);
     if (!metrics) {
       return false;
@@ -3002,6 +3131,9 @@
         state.targetKeys,
         { timeLimitMs: solverTimeLimit }
       );
+      if (!validateSolverSolution({ row: playerRow, col: playerCol }, boxesSet, state.targetKeys, solverResult)) {
+        continue;
+      }
       const metrics = computeSolverMetrics(solverResult);
       if (!metrics) {
         continue;
