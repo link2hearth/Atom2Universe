@@ -286,6 +286,7 @@ class MetauxMatch3Game {
   constructor(options = {}) {
     this.boardElement = options.boardElement || null;
     this.timerValueElement = options.timerValueElement || null;
+    this.messageElement = options.messageElement || null;
     this.timerFillElement = options.timerFillElement || null;
     this.timerMaxElement = options.timerMaxElement || null;
     this.timerLabelElement = options.timerLabelElement || null;
@@ -318,6 +319,11 @@ class MetauxMatch3Game {
     this.comboChain = 0;
     this.gameOver = false;
     this.tileShakeTimeouts = new Map();
+    this.lastMessageData = null;
+    if (this.messageElement) {
+      this.messageElement.textContent = '';
+      this.messageElement.hidden = true;
+    }
     this.timerState = {
       current: METAUX_TIMER_CONFIG.initialSeconds,
       max: METAUX_TIMER_CONFIG.maxSeconds,
@@ -367,7 +373,10 @@ class MetauxMatch3Game {
     if (this.boardElement && !this.gameOver) {
       if (!this.isFreePlayMode()) {
         this.startTimer();
-        this.updateMessage('Repérez un alignement et glissez pour fusionner les métaux.');
+        this.updateMessage({
+          key: 'scripts.metaux.message.start',
+          fallback: 'Repérez un alignement et glissez pour fusionner les métaux.'
+        });
       } else {
         this.updateTimerModeUI();
         this.updateTimerUI();
@@ -670,7 +679,10 @@ class MetauxMatch3Game {
     if (target) {
       this.attemptSwap(origin, target);
     } else {
-      this.updateMessage('Sélectionnez un lingot adjacent pour forger un match.');
+      this.updateMessage({
+        key: 'scripts.metaux.message.selectTarget',
+        fallback: 'Sélectionnez un lingot adjacent pour forger un match.'
+      });
     }
   }
 
@@ -714,7 +726,10 @@ class MetauxMatch3Game {
       return;
     }
     if (!this.isAdjacent(origin, target)) {
-      this.updateMessage('Déplacez-vous seulement vers une case voisine.');
+      this.updateMessage({
+        key: 'scripts.metaux.message.adjacentOnly',
+        fallback: 'Déplacez-vous seulement vers une case voisine.'
+      });
       return;
     }
     this.processing = true;
@@ -727,7 +742,10 @@ class MetauxMatch3Game {
       this.updateTileElement(origin.row, origin.col, this.board[origin.row][origin.col]);
       this.updateTileElement(target.row, target.col, this.board[target.row][target.col]);
       this.processing = false;
-      this.updateMessage('Aucun alignement créé, échange annulé.');
+      this.updateMessage({
+        key: 'scripts.metaux.message.swapReverted',
+        fallback: 'Aucun alignement créé, échange annulé.'
+      });
       return;
     }
     this.stats.moves += 1;
@@ -789,7 +807,11 @@ class MetauxMatch3Game {
     }
     this.updateStats();
     if (this.comboChain > 1) {
-      this.updateMessage(`Combo x${this.comboChain} ! Réaction en chaîne réussie.`);
+      this.updateMessage({
+        key: 'scripts.metaux.message.combo',
+        fallback: 'Combo x{combo} ! Réaction en chaîne réussie.',
+        params: { combo: formatIntegerLocalized(this.comboChain) }
+      });
     }
     this.comboChain = 0;
     this.lastComboSoundLevel = 0;
@@ -988,7 +1010,10 @@ class MetauxMatch3Game {
 
   forceReshuffle(manual = true) {
     if (this.gameOver) {
-      this.updateMessage('Partie terminée : relancez la forge pour recommencer.');
+      this.updateMessage({
+        key: 'scripts.metaux.message.sessionEnded',
+        fallback: 'Partie terminée : relancez la forge pour recommencer.'
+      });
       return;
     }
     if (!this.initialized) {
@@ -1017,7 +1042,13 @@ class MetauxMatch3Game {
     this.refreshBoard();
     this.stats.reshuffles += 1;
     this.updateStats();
-    this.updateMessage(manual ? 'Grille re-mélangée.' : 'Aucun coup possible, réorganisation automatique.');
+    const reshuffleKey = manual
+      ? 'scripts.metaux.message.shuffleManual'
+      : 'scripts.metaux.message.shuffleAuto';
+    const reshuffleFallback = manual
+      ? 'Grille re-mélangée.'
+      : 'Aucun coup possible, réorganisation automatique.';
+    this.updateMessage({ key: reshuffleKey, fallback: reshuffleFallback });
   }
 
   assignFromArray(values) {
@@ -1054,7 +1085,10 @@ class MetauxMatch3Game {
   enterIdleState(options = {}) {
     const message = Object.prototype.hasOwnProperty.call(options, 'message')
       ? options.message
-      : 'Utilisez un crédit Mach3 pour lancer une nouvelle partie.';
+      : {
+          key: 'scripts.metaux.message.idle',
+          fallback: 'Utilisez un crédit Mach3 pour lancer une nouvelle partie.'
+        };
     this.pauseTimer();
     this.clearDragState();
     this.clearAllShakeEffects();
@@ -1169,11 +1203,11 @@ class MetauxMatch3Game {
         if (reduced) {
           const decimals = Number.isInteger(reduced) ? 0 : 1;
           const amountLabel = this.formatSeconds(reduced, { decimals });
-          this.updateMessage(
-            t('scripts.metaux.timer.decay', {
-              amount: amountLabel
-            })
-          );
+          this.updateMessage({
+            key: 'scripts.metaux.timer.decay',
+            fallback: 'Le chrono se contracte : perte de {amount} sur la durée maximale.',
+            params: { amount: amountLabel }
+          });
         }
       }
     }
@@ -1195,7 +1229,10 @@ class MetauxMatch3Game {
     this.stopTimer();
     this.gameOver = true;
     this.clearDragState();
-    this.updateMessage('Temps écoulé ! Forge interrompue.');
+    this.updateMessage({
+      key: 'scripts.metaux.message.timeUp',
+      fallback: 'Temps écoulé ! Forge interrompue.'
+    });
     this.showEndScreen();
     this.notifySessionEnd();
   }
@@ -1237,7 +1274,11 @@ class MetauxMatch3Game {
         const reduced = this.reduceTimerMax();
         this.lastMatchPerType.set(type.id, now);
         if (reduced) {
-          this.updateMessage(`Le chrono se contracte : ${this.getTypeLabel(type.id)} tarde à apparaître.`);
+          this.updateMessage({
+            key: 'scripts.metaux.message.penalty',
+            fallback: 'Le chrono se contracte : {type} tarde à apparaître.',
+            params: { type: this.getTypeLabel(type.id) }
+          });
         }
       }
     });
@@ -1558,7 +1599,10 @@ class MetauxMatch3Game {
     this.refreshBoard();
     this.prepareNewSession();
     const messageKey = freeMode ? 'scripts.metaux.session.free' : 'scripts.metaux.session.start';
-    this.updateMessage(t(messageKey));
+    const fallbackMessage = freeMode
+      ? 'Mode libre : expérimentez sans pression temporelle.'
+      : 'Partie lancée ! Enchaînez les correspondances pour booster votre production.';
+    this.updateMessage({ key: messageKey, fallback: fallbackMessage });
   }
 
   startFreePlay() {
@@ -1666,7 +1710,65 @@ class MetauxMatch3Game {
     }
   }
 
-  updateMessage() {}
+  updateMessage(message) {
+    const normalized = this.normalizeMessagePayload(message);
+    this.lastMessageData = normalized;
+    this.applyMessageText(normalized.text);
+  }
+
+  refreshMessage() {
+    if (!this.lastMessageData) {
+      this.applyMessageText('');
+      return;
+    }
+    const { key, fallback, params, text } = this.lastMessageData;
+    const translated = key ? translateMetauxMessage(key, fallback, params) : text;
+    const nextText = typeof translated === 'string' ? translated.trim() : '';
+    this.lastMessageData = {
+      key,
+      fallback,
+      params,
+      text: nextText
+    };
+    this.applyMessageText(nextText);
+  }
+
+  normalizeMessagePayload(message) {
+    if (!message) {
+      return { key: null, fallback: '', params: null, text: '' };
+    }
+    if (typeof message === 'object' && !(message instanceof String)) {
+      const key = typeof message.key === 'string' ? message.key : null;
+      const fallback = typeof message.fallback === 'string' ? message.fallback : '';
+      const params = message.params && typeof message.params === 'object'
+        ? { ...message.params }
+        : null;
+      const explicitText = typeof message.text === 'string' ? message.text : null;
+      const translated = explicitText != null
+        ? explicitText
+        : key
+          ? translateMetauxMessage(key, fallback, params)
+          : fallback;
+      const text = typeof translated === 'string' ? translated.trim() : '';
+      return { key, fallback, params, text };
+    }
+    const literal = typeof message === 'string' ? message : '';
+    return { key: null, fallback: literal, params: null, text: literal.trim() };
+  }
+
+  applyMessageText(text) {
+    if (!this.messageElement) {
+      return;
+    }
+    const trimmed = text ? text.trim() : '';
+    if (trimmed) {
+      this.messageElement.hidden = false;
+      this.messageElement.textContent = trimmed;
+    } else {
+      this.messageElement.textContent = '';
+      this.messageElement.hidden = true;
+    }
+  }
 
   playMach3ComboSound() {
     if (this.comboSound && typeof this.comboSound.play === 'function') {
@@ -1841,6 +1943,7 @@ function initMetauxGame() {
     boardElement: elements.metauxBoard,
     timerLabelElement: elements.metauxTimerLabel,
     timerValueElement: elements.metauxTimerValue,
+    messageElement: elements.metauxMessage,
     timerFillElement: elements.metauxTimerFill,
     timerMaxElement: elements.metauxTimerMaxValue,
     freePlayExitButton: elements.metauxFreePlayExitButton,
@@ -1876,6 +1979,36 @@ function getCurrentLocale() {
   return 'fr-FR';
 }
 
+function translateMetauxMessage(key, fallback, params) {
+  if (!key || typeof key !== 'string') {
+    return typeof fallback === 'string' ? fallback : '';
+  }
+  const api = getI18nApi();
+  let translator = null;
+  if (api && typeof api.t === 'function') {
+    translator = api.t.bind(api);
+  } else if (typeof window !== 'undefined' && typeof window.t === 'function') {
+    translator = window.t.bind(window);
+  } else if (typeof globalThis !== 'undefined' && typeof globalThis.t === 'function') {
+    translator = globalThis.t.bind(globalThis);
+  }
+  if (!translator) {
+    return typeof fallback === 'string' && fallback ? fallback : key;
+  }
+  try {
+    const result = translator(key, params);
+    if (typeof result === 'string') {
+      const trimmed = result.trim();
+      if (trimmed && trimmed !== key) {
+        return trimmed;
+      }
+    }
+  } catch (error) {
+    console.warn('Metaux translation error for key', key, error);
+  }
+  return typeof fallback === 'string' && fallback ? fallback : key;
+}
+
 function formatNumberLocalized(value, options) {
   const api = getI18nApi();
   if (api && typeof api.formatNumber === 'function') {
@@ -1899,6 +2032,7 @@ if (typeof window !== 'undefined') {
       metauxGame.updateTimerUI();
       metauxGame.updateStats();
       metauxGame.populateEndScreen();
+      metauxGame.refreshMessage();
     }
   });
 }

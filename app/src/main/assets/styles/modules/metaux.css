@@ -342,6 +342,20 @@
   color: rgba(255, 255, 255, 0.82);
 }
 
+.metaux-message {
+  margin: calc(0.9rem * var(--ui-control-scale, 1)) auto 0;
+  max-width: min(32rem, 90vw);
+  font-size: calc(0.86rem * var(--ui-control-scale, 1));
+  letter-spacing: 0.04em;
+  line-height: 1.35;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.metaux-message[hidden] {
+  display: none !important;
+}
+
 .metaux-board::before {
   content: '';
   position: absolute;
