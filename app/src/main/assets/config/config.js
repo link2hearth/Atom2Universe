@@ -1,5 +1,101 @@
 /** Active ou désactive complètement l'accès au DevKit. */
-const DEVKIT_ENABLED = true;
+const DEFAULT_DEVKIT_ENABLED = true;
+
+/**
+ * Préfixe commun utilisé pour stocker les surcharges de configuration dans le localStorage.
+ * Permet de persister les modifications réalisées via l'interface (DevKit, Collection, etc.).
+ */
+const CONFIG_OVERRIDE_STORAGE_PREFIX = 'atom2univers.config.';
+
+const CONFIG_OVERRIDE_KEYS = Object.freeze({
+  devkit: `${CONFIG_OVERRIDE_STORAGE_PREFIX}devkitEnabled`,
+  collection: `${CONFIG_OVERRIDE_STORAGE_PREFIX}collectionEnabled`
+});
+
+function getConfigStorage() {
+  if (typeof globalThis === 'undefined' || typeof globalThis.localStorage === 'undefined') {
+    return null;
+  }
+  return globalThis.localStorage;
+}
+
+function readConfigBoolean(key) {
+  const storage = getConfigStorage();
+  if (!storage) {
+    return undefined;
+  }
+  try {
+    const raw = storage.getItem(key);
+    if (raw === 'true') {
+      return true;
+    }
+    if (raw === 'false') {
+      return false;
+    }
+  } catch (error) {
+    return undefined;
+  }
+  return undefined;
+}
+
+function writeConfigBoolean(key, value) {
+  const storage = getConfigStorage();
+  if (!storage) {
+    return false;
+  }
+  try {
+    storage.setItem(key, value ? 'true' : 'false');
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
+function resolveConfigBoolean(key, fallback) {
+  const stored = readConfigBoolean(key);
+  if (typeof stored === 'boolean') {
+    return stored;
+  }
+  return fallback;
+}
+
+function toggleConfigBoolean(key, fallback) {
+  const next = !resolveConfigBoolean(key, fallback);
+  writeConfigBoolean(key, next);
+  return next;
+}
+
+const DEVKIT_ENABLED = resolveConfigBoolean(CONFIG_OVERRIDE_KEYS.devkit, DEFAULT_DEVKIT_ENABLED);
+
+/**
+ * Active ou désactive l'ensemble des fonctionnalités de collection.
+ * Lorsque désactivé, le bouton de navigation et les récompenses gacha associées sont masqués.
+ */
+const DEFAULT_COLLECTION_SYSTEM_ENABLED = true;
+
+const COLLECTION_SYSTEM_ENABLED = resolveConfigBoolean(
+  CONFIG_OVERRIDE_KEYS.collection,
+  DEFAULT_COLLECTION_SYSTEM_ENABLED
+);
+
+function toggleDevkitFeatureEnabled() {
+  const next = toggleConfigBoolean(CONFIG_OVERRIDE_KEYS.devkit, DEFAULT_DEVKIT_ENABLED);
+  if (typeof globalThis !== 'undefined') {
+    globalThis.DEVKIT_ENABLED = next;
+  }
+  return next;
+}
+
+function toggleCollectionFeatureEnabled() {
+  const next = toggleConfigBoolean(
+    CONFIG_OVERRIDE_KEYS.collection,
+    DEFAULT_COLLECTION_SYSTEM_ENABLED
+  );
+  if (typeof globalThis !== 'undefined') {
+    globalThis.COLLECTION_SYSTEM_ENABLED = next;
+  }
+  return next;
+}
 
 /**
  * Configuration centrale du jeu Atom → Univers.
@@ -3643,6 +3739,9 @@ GAME_CONFIG.progression.defaultTheme = GAME_CONFIG.themes.default;
 if (typeof globalThis !== 'undefined') {
   globalThis.GAME_CONFIG = GAME_CONFIG;
   globalThis.DEVKIT_ENABLED = DEVKIT_ENABLED;
+  globalThis.COLLECTION_SYSTEM_ENABLED = COLLECTION_SYSTEM_ENABLED;
+  globalThis.toggleDevkitFeatureEnabled = toggleDevkitFeatureEnabled;
+  globalThis.toggleCollectionFeatureEnabled = toggleCollectionFeatureEnabled;
 }
 
 

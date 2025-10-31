@@ -1,5 +1,12 @@
 const DEFAULT_GACHA_TICKET_COST = 1;
 
+function isCollectionSystemActive() {
+  if (typeof globalThis !== 'undefined' && typeof globalThis.COLLECTION_SYSTEM_ENABLED === 'boolean') {
+    return globalThis.COLLECTION_SYSTEM_ENABLED;
+  }
+  return true;
+}
+
 const GACHA_SMOKE_FRAME_COUNT = 91;
 const GACHA_SMOKE_FRAME_RATE = 12;
 const GACHA_SMOKE_FRAME_PAD = 4;
@@ -401,6 +408,9 @@ function getAvailableBonusGachaImageIds() {
 }
 
 function awardSpecialGachaCard(cardId) {
+  if (!isCollectionSystemActive()) {
+    return null;
+  }
   if (!cardId) {
     return null;
   }
@@ -426,6 +436,9 @@ function awardSpecialGachaCard(cardId) {
 }
 
 function awardBonusGachaImage(imageId) {
+  if (!isCollectionSystemActive()) {
+    return null;
+  }
   if (!imageId) {
     return null;
   }
@@ -451,6 +464,9 @@ function awardBonusGachaImage(imageId) {
 }
 
 function maybeAwardElementSpecialCard(elementDef) {
+  if (!isCollectionSystemActive()) {
+    return null;
+  }
   if (!elementDef) {
     return null;
   }
@@ -469,6 +485,9 @@ function maybeAwardElementSpecialCard(elementDef) {
 }
 
 function maybeAwardRaritySpecialCard(rarity) {
+  if (!isCollectionSystemActive()) {
+    return null;
+  }
   const rarityId = typeof rarity === 'string'
     ? rarity
     : (typeof rarity?.id === 'string' ? rarity.id : '');
@@ -491,6 +510,9 @@ function maybeAwardRaritySpecialCard(rarity) {
 }
 
 function maybeAwardBonusGachaImage() {
+  if (!isCollectionSystemActive()) {
+    return null;
+  }
   const availableIds = getAvailableBonusGachaImageIds();
   if (!availableIds.length) {
     return null;
@@ -3183,6 +3205,7 @@ function performGachaRoll(count = 1) {
   const initialDrawCount = getTotalGachaDrawCount();
   const results = [];
   const collectionRewards = [];
+  const shouldAwardCollectionRewards = isCollectionSystemActive();
   for (let rollIndex = 0; rollIndex < drawCount; rollIndex += 1) {
     const rarity = pickGachaRarity(initialDrawCount + rollIndex);
     if (!rarity) {
@@ -3221,17 +3244,19 @@ function performGachaRoll(count = 1) {
     }
     entry.owned = entry.lifetime > 0;
 
-    const elementCardReward = maybeAwardElementSpecialCard(elementDef);
-    if (elementCardReward) {
-      collectionRewards.push(elementCardReward);
-    }
-    const rarityCardReward = maybeAwardRaritySpecialCard(rarity);
-    if (rarityCardReward) {
-      collectionRewards.push(rarityCardReward);
-    }
-    const bonusImageReward = maybeAwardBonusGachaImage();
-    if (bonusImageReward) {
-      collectionRewards.push(bonusImageReward);
+    if (shouldAwardCollectionRewards) {
+      const elementCardReward = maybeAwardElementSpecialCard(elementDef);
+      if (elementCardReward) {
+        collectionRewards.push(elementCardReward);
+      }
+      const rarityCardReward = maybeAwardRaritySpecialCard(rarity);
+      if (rarityCardReward) {
+        collectionRewards.push(rarityCardReward);
+      }
+      const bonusImageReward = maybeAwardBonusGachaImage();
+      if (bonusImageReward) {
+        collectionRewards.push(bonusImageReward);
+      }
     }
 
     const isNew = previousLifetime === 0;

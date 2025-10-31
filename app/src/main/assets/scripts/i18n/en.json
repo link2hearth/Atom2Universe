@@ -2631,6 +2631,11 @@
         "cancelled": "Reset cancelled",
         "invalid": "Incorrect confirmation word",
         "done": "Progress reset",
+        "devkitEnabled": "DevKit enabled. Reloading to apply…",
+        "devkitDisabled": "DevKit disabled. Reloading to apply…",
+        "collectionEnabled": "Collection enabled. Reloading to apply…",
+        "collectionDisabled": "Collection disabled. Reloading to apply…",
+        "toggleFailed": "Unable to update configuration.",
         "prompt": "Full game reset. Type \"{keyword}\" to confirm.\\nThis action cannot be undone."
       },
       "bigBangToggle": {
