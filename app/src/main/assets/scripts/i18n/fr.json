@@ -267,6 +267,7 @@
         "aria": "Hall de sélection des mini-jeux",
         "title": "Arcade",
         "subtitle": "Choisissez un mini-jeu pour prolonger l’expérience Atom2Univers.",
+        "instructions": "Choisissez un jeu et tentez de gagner des tickets Gacha.",
         "locked": {
           "requiresAtoms": "Collectez {{amount}} atomes pour débloquer l’arcade.",
           "requiresTrophy": "Débloquez le trophée « {{trophy}} » pour accéder à ce mini-jeu.",
