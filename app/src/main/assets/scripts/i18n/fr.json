@@ -2643,6 +2643,8 @@
         "devkitDisabled": "DevKit désactivé. Redémarrage pour appliquer les changements…",
         "collectionEnabled": "Collection activée. Redémarrage pour appliquer les changements…",
         "collectionDisabled": "Collection désactivée. Redémarrage pour appliquer les changements…",
+        "infoEnabled": "Sections Infos activées. Redémarrage pour appliquer les changements…",
+        "infoDisabled": "Sections Infos désactivées. Redémarrage pour appliquer les changements…",
         "toggleFailed": "Impossible de mettre à jour la configuration.",
         "prompt": "Réinitialisation complète du jeu. Tapez \"{keyword}\" pour confirmer.\\nCette action est irréversible."
       },

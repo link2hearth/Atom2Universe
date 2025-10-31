@@ -2643,6 +2643,8 @@
         "devkitDisabled": "DevKit disabled. Reloading to apply…",
         "collectionEnabled": "Collection enabled. Reloading to apply…",
         "collectionDisabled": "Collection disabled. Reloading to apply…",
+        "infoEnabled": "Info sections enabled. Reloading to apply…",
+        "infoDisabled": "Info sections disabled. Reloading to apply…",
         "toggleFailed": "Unable to update configuration.",
         "prompt": "Full game reset. Type \"{keyword}\" to confirm.\\nThis action cannot be undone."
       },
