@@ -1350,7 +1350,7 @@
         selectedPadValue = isSameSelection ? null : value;
         updatePadSelection();
         highlightPadSelection();
-        const appliedValue = isSameSelection ? value : selectedPadValue;
+        const appliedValue = isSameSelection ? null : selectedPadValue;
         if (activeInput) {
           activeInput.focus();
           applySelectionToInput(activeInput, appliedValue);
