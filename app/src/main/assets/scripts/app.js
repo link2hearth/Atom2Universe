@@ -4729,6 +4729,7 @@ function collectDomElements() {
   metauxBoard: document.getElementById('metauxBoard'),
   metauxTimerLabel: document.getElementById('metauxTimerLabel'),
   metauxTimerValue: document.getElementById('metauxTimerValue'),
+  metauxMessage: document.getElementById('metauxMessage'),
   metauxTimerFill: document.getElementById('metauxTimerFill'),
   metauxTimerMaxValue: document.getElementById('metauxTimerMaxValue'),
   metauxFreePlayExitButton: document.getElementById('metauxFreePlayExitButton'),

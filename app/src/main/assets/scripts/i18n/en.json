@@ -2646,7 +2646,29 @@
         "toast": "Metals: {details}",
         "unavailable": "Forge unavailable at the moment.",
         "gameInProgress": "A game is already in progress. Finish it before starting a new one.",
-        "noCredits": "No Mach3 credit available."
+        "noCredits": "No Mach3 credit available.",
+        "message": {
+          "start": "Spot a match and drag to forge the metals.",
+          "selectTarget": "Select an adjacent ingot to forge a match.",
+          "adjacentOnly": "Move only toward a neighboring tile.",
+          "swapReverted": "No alignment created, swap reverted.",
+          "combo": "Combo x{combo}! Chain reaction achieved.",
+          "sessionEnded": "Session complete: relaunch the forge to play again.",
+          "shuffleManual": "Board reshuffled.",
+          "shuffleAuto": "No move available, automatic reorganization.",
+          "idle": "Use a Mach3 credit to start a new game.",
+          "timeUp": "Time is up! Forge interrupted.",
+          "penalty": "The timer contracts: {type} is slow to appear."
+        },
+        "session": {
+          "start": "Game started! Chain matches to boost your production.",
+          "free": "Free mode: experiment without time pressure."
+        },
+        "timer": {
+          "free": "Free mode",
+          "max": "Max: {value}",
+          "decay": "The timer contracts: losing {amount} from the maximum duration."
+        }
       },
       "fusion": {
         "prompt": "Select a recipe to attempt your first fusion.",

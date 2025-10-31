@@ -2646,7 +2646,29 @@
         "toast": "Métaux : {details}",
         "unavailable": "Forge indisponible pour le moment.",
         "gameInProgress": "Une partie est déjà en cours. Terminez-la avant de relancer.",
-        "noCredits": "Aucun crédit Mach3 disponible."
+        "noCredits": "Aucun crédit Mach3 disponible.",
+        "message": {
+          "start": "Repérez un alignement et glissez pour fusionner les métaux.",
+          "selectTarget": "Sélectionnez un lingot adjacent pour forger un match.",
+          "adjacentOnly": "Déplacez-vous seulement vers une case voisine.",
+          "swapReverted": "Aucun alignement créé, échange annulé.",
+          "combo": "Combo x{combo} ! Réaction en chaîne réussie.",
+          "sessionEnded": "Partie terminée : relancez la forge pour recommencer.",
+          "shuffleManual": "Grille re-mélangée.",
+          "shuffleAuto": "Aucun coup possible, réorganisation automatique.",
+          "idle": "Utilisez un crédit Mach3 pour lancer une nouvelle partie.",
+          "timeUp": "Temps écoulé ! Forge interrompue.",
+          "penalty": "Le chrono se contracte : {type} tarde à apparaître."
+        },
+        "session": {
+          "start": "Partie lancée ! Enchaînez les correspondances pour booster votre production.",
+          "free": "Mode libre : expérimentez sans pression temporelle."
+        },
+        "timer": {
+          "free": "Mode libre",
+          "max": "Max : {value}",
+          "decay": "Le chrono se contracte : perte de {amount} sur la durée maximale."
+        }
       },
       "fusion": {
         "prompt": "Sélectionnez une recette pour tenter votre première fusion.",
