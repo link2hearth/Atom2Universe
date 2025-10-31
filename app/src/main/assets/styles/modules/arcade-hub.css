@@ -5,7 +5,7 @@
   margin: 0 auto;
   --arcade-hub-scale: var(--ui-control-scale, 1);
   --arcade-hub-font-scale: var(--font-scale-factor, 1);
-  --arcade-hub-banner-offset: calc(var(--app-header-offset, 0rem) * 2);
+  --arcade-hub-banner-offset: 0;
   padding: var(--arcade-hub-banner-offset)
     calc(clamp(1.2rem, 4vw, 3rem) * var(--arcade-hub-scale))
     calc(clamp(2rem, 5vw, 3.4rem) * var(--arcade-hub-scale));
