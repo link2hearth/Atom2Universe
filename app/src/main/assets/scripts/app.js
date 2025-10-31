@@ -137,6 +137,7 @@ const TEXT_FONT_STORAGE_KEY = 'atom2univers.options.textFont';
 const INFO_WELCOME_COLLAPSED_STORAGE_KEY = 'atom2univers.info.welcomeCollapsed';
 const INFO_CHARACTERS_COLLAPSED_STORAGE_KEY = 'atom2univers.info.charactersCollapsed';
 const INFO_CARDS_COLLAPSED_STORAGE_KEY = 'atom2univers.info.cardsCollapsed';
+const COLLECTION_IMAGES_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.imagesCollapsed';
 const HEADER_COLLAPSED_STORAGE_KEY = 'atom2univers.ui.headerCollapsed';
 const ARCADE_HUB_CARD_STATE_STORAGE_KEY = 'atom2univers.arcadeHub.cardStates.v1';
 const ARCADE_AUTOSAVE_STORAGE_KEY = 'atom2univers.arcadeSaves.v1';
@@ -3261,6 +3262,7 @@ const DEFAULT_STATE = {
   elements: createInitialElementCollection(),
   fusions: createInitialFusionState(),
   fusionBonuses: createInitialFusionBonuses(),
+  gachaImages: createInitialGachaImageCollection(),
   pageUnlocks: createInitialPageUnlockState(),
   lastSave: Date.now(),
   theme: DEFAULT_THEME_ID,
@@ -3336,6 +3338,7 @@ const gameState = {
   shopUnlocks: new Set(),
   elements: createInitialElementCollection(),
   gachaCards: createInitialGachaCardCollection(),
+  gachaImages: createInitialGachaImageCollection(),
   fusions: createInitialFusionState(),
   fusionBonuses: createInitialFusionBonuses(),
   pageUnlocks: createInitialPageUnlockState(),
@@ -3756,7 +3759,7 @@ const BIG_BANG_TROPHY_ID = 'scaleObservableUniverse';
 const ARCADE_TROPHY_ID = 'millionAtoms';
 const INFO_TROPHY_ID = 'scaleSandGrain';
 const ACHIEVEMENTS_UNLOCK_TROPHY_ID = ARCADE_TROPHY_ID;
-const LOCKABLE_PAGE_IDS = new Set(['gacha', 'tableau', 'fusion', 'info']);
+const LOCKABLE_PAGE_IDS = new Set(['gacha', 'tableau', 'fusion', 'info', 'collection']);
 
 function getPageUnlockState() {
   if (!gameState.pageUnlocks || typeof gameState.pageUnlocks !== 'object') {
@@ -3853,6 +3856,20 @@ function evaluatePageUnlocks(options = {}) {
   if (!unlocks.info) {
     if (getUnlockedTrophySet().has(INFO_TROPHY_ID)) {
       changed = unlockPage('info', { save: false, deferUI: true }) || changed;
+    }
+  }
+
+  if (!unlocks.collection) {
+    const hasCards = Object.values(gameState.gachaCards || {}).some(entry => {
+      const count = Number(entry?.count ?? entry);
+      return Number.isFinite(count) && count > 0;
+    });
+    const hasImages = Object.values(gameState.gachaImages || {}).some(entry => {
+      const count = Number(entry?.count ?? entry);
+      return Number.isFinite(count) && count > 0;
+    });
+    if (hasCards || hasImages) {
+      changed = unlockPage('collection', { save: false, deferUI: true }) || changed;
     }
   }
 
@@ -4559,11 +4576,12 @@ function collectDomElements() {
     navButtons: document.querySelectorAll('.nav-button'),
   navArcadeButton: document.getElementById('navArcadeButton'),
   navShopButton: document.querySelector('.nav-button[data-target="shop"]'),
-  navGachaButton: document.querySelector('.nav-button[data-target="gacha"]'),
-  navTableButton: document.querySelector('.nav-button[data-target="tableau"]'),
-  navFusionButton: document.querySelector('.nav-button[data-target="fusion"]'),
-  navInfoButton: document.querySelector('.nav-button[data-target="info"]'),
-  navMidiButton: document.querySelector('.nav-button[data-target="midi"]'),
+    navGachaButton: document.querySelector('.nav-button[data-target="gacha"]'),
+    navTableButton: document.querySelector('.nav-button[data-target="tableau"]'),
+    navFusionButton: document.querySelector('.nav-button[data-target="fusion"]'),
+    navInfoButton: document.querySelector('.nav-button[data-target="info"]'),
+    navCollectionButton: document.querySelector('.nav-button[data-target="collection"]'),
+    navMidiButton: document.querySelector('.nav-button[data-target="midi"]'),
   navBigBangButton: document.getElementById('navBigBangButton'),
   pages: document.querySelectorAll('.page'),
   statusAtomsButton: document.getElementById('statusAtomsButton'),
@@ -4793,9 +4811,14 @@ function collectDomElements() {
   infoWelcomeToggle: document.getElementById('infoWelcomeToggle'),
   infoCardsCard: document.getElementById('infoCardsCard'),
   infoCardsContent: document.getElementById('info-cards-content'),
-  infoCardsToggle: document.getElementById('infoCardsToggle'),
-  infoCardsList: document.getElementById('infoCardsList'),
-  infoCardsEmpty: document.getElementById('infoCardsEmpty'),
+    infoCardsToggle: document.getElementById('infoCardsToggle'),
+    infoCardsList: document.getElementById('infoCardsList'),
+    infoCardsEmpty: document.getElementById('infoCardsEmpty'),
+    collectionImagesCard: document.getElementById('collectionImagesCard'),
+    collectionImagesContent: document.getElementById('collection-images-content'),
+    collectionImagesToggle: document.getElementById('collectionImagesToggle'),
+    collectionImagesList: document.getElementById('collectionImagesList'),
+    collectionImagesEmpty: document.getElementById('collectionImagesEmpty'),
   infoCharactersCard: document.querySelector('.info-card--characters'),
   infoCharactersContent: document.getElementById('info-characters-content'),
   infoCharactersToggle: document.getElementById('infoCharactersToggle'),
@@ -5815,9 +5838,18 @@ function updateInfoCardsVisibility() {
   if (!elements.infoCardsCard) {
     return;
   }
-  const unlocked = isPageUnlocked('gacha');
+  const unlocked = isPageUnlocked('collection');
   elements.infoCardsCard.hidden = !unlocked;
   elements.infoCardsCard.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
+}
+
+function updateCollectionImagesVisibility() {
+  if (!elements.collectionImagesCard) {
+    return;
+  }
+  const unlocked = isPageUnlocked('collection');
+  elements.collectionImagesCard.hidden = !unlocked;
+  elements.collectionImagesCard.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
 }
 
 function readStoredInfoCardCollapsed(storageKey, defaultValue = false) {
@@ -6061,6 +6093,20 @@ function updateInfoCardsToggleLabel(collapsed) {
   elements.infoCardsToggle.setAttribute('aria-label', label);
 }
 
+function updateCollectionImagesToggleLabel(collapsed) {
+  if (!elements.collectionImagesToggle) {
+    return;
+  }
+  const key = collapsed
+    ? 'index.sections.collection.images.toggle.expand'
+    : 'index.sections.collection.images.toggle.collapse';
+  const fallback = collapsed ? 'Expand' : 'Collapse';
+  const label = translateOrDefault(key, fallback);
+  elements.collectionImagesToggle.setAttribute('data-i18n', key);
+  elements.collectionImagesToggle.textContent = label;
+  elements.collectionImagesToggle.setAttribute('aria-label', label);
+}
+
 function setInfoCharactersCollapsed(collapsed, options = {}) {
   if (!elements.infoCharactersCard || !elements.infoCharactersContent || !elements.infoCharactersToggle) {
     return;
@@ -6131,6 +6177,45 @@ function initInfoCardsCard() {
   });
 }
 
+function setCollectionImagesCollapsed(collapsed, options = {}) {
+  if (!elements.collectionImagesCard
+    || !elements.collectionImagesContent
+    || !elements.collectionImagesToggle) {
+    return;
+  }
+  const shouldCollapse = !!collapsed;
+  elements.collectionImagesCard.classList.toggle('info-card--collapsed', shouldCollapse);
+  elements.collectionImagesContent.hidden = shouldCollapse;
+  elements.collectionImagesContent.setAttribute('aria-hidden', shouldCollapse ? 'true' : 'false');
+  elements.collectionImagesToggle.setAttribute('aria-expanded', shouldCollapse ? 'false' : 'true');
+  updateCollectionImagesToggleLabel(shouldCollapse);
+  if (options.persist !== false) {
+    writeStoredInfoCardCollapsed(COLLECTION_IMAGES_COLLAPSED_STORAGE_KEY, shouldCollapse);
+  }
+}
+
+function toggleCollectionImagesCollapsed() {
+  if (!elements.collectionImagesCard) {
+    return;
+  }
+  const currentlyCollapsed = elements.collectionImagesCard.classList.contains('info-card--collapsed');
+  setCollectionImagesCollapsed(!currentlyCollapsed);
+}
+
+function initCollectionImagesCard() {
+  if (!elements.collectionImagesCard
+    || !elements.collectionImagesContent
+    || !elements.collectionImagesToggle) {
+    return;
+  }
+  const initialCollapsed = readStoredInfoCardCollapsed(COLLECTION_IMAGES_COLLAPSED_STORAGE_KEY, false);
+  setCollectionImagesCollapsed(initialCollapsed, { persist: false });
+  elements.collectionImagesToggle.addEventListener('click', event => {
+    event.preventDefault();
+    toggleCollectionImagesCollapsed();
+  });
+}
+
 function subscribeInfoWelcomeLanguageUpdates() {
   const handler = () => {
     const collapsed = elements.infoWelcomeCard
@@ -6182,12 +6267,30 @@ function subscribeInfoCardsLanguageUpdates() {
   }
 }
 
+function subscribeCollectionImagesLanguageUpdates() {
+  const handler = () => {
+    const collapsed = elements.collectionImagesCard
+      ? elements.collectionImagesCard.classList.contains('info-card--collapsed')
+      : false;
+    updateCollectionImagesToggleLabel(collapsed);
+  };
+  const api = getI18nApi();
+  if (api && typeof api.onLanguageChanged === 'function') {
+    api.onLanguageChanged(handler);
+    return;
+  }
+  if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
+    globalThis.addEventListener('i18n:languagechange', handler);
+  }
+}
+
 function updatePageUnlockUI() {
   const unlocks = getPageUnlockState();
   const buttonConfig = [
     ['gacha', elements.navGachaButton],
     ['tableau', elements.navTableButton],
-    ['fusion', elements.navFusionButton]
+    ['fusion', elements.navFusionButton],
+    ['collection', elements.navCollectionButton]
   ];
 
   buttonConfig.forEach(([pageId, button]) => {
@@ -6211,6 +6314,7 @@ function updatePrimaryNavigationLocks() {
 
   updateInfoAchievementsVisibility();
   updateInfoCardsVisibility();
+  updateCollectionImagesVisibility();
 
   ensureActivePageUnlocked();
 }
@@ -11567,6 +11671,7 @@ function bindDomEventListeners() {
   initInfoWelcomeCard();
   initInfoCharactersCard();
   initInfoCardsCard();
+  initCollectionImagesCard();
   if (typeof initSpecialCardOverlay === 'function') {
     initSpecialCardOverlay();
   }
@@ -14928,6 +15033,26 @@ function serializeState() {
       });
       return result;
     })(),
+    gachaImages: (() => {
+      const source = gameState.gachaImages && typeof gameState.gachaImages === 'object'
+        ? gameState.gachaImages
+        : {};
+      const result = {};
+      const knownIds = Array.isArray(GACHA_BONUS_IMAGE_DEFINITIONS)
+        ? GACHA_BONUS_IMAGE_DEFINITIONS.map(def => def.id)
+        : Object.keys(source);
+      knownIds.forEach(imageId => {
+        if (!imageId) {
+          return;
+        }
+        const entry = source[imageId];
+        const rawCount = Number(entry?.count ?? entry);
+        if (Number.isFinite(rawCount) && rawCount > 0) {
+          result[imageId] = { count: Math.floor(rawCount) };
+        }
+      });
+      return result;
+    })(),
     fusions: (() => {
       const base = createInitialFusionState();
       const source = gameState.fusions && typeof gameState.fusions === 'object'
@@ -14951,7 +15076,8 @@ function serializeState() {
         gacha: unlocks?.gacha === true,
         tableau: unlocks?.tableau === true,
         fusion: unlocks?.fusion === true,
-        info: unlocks?.info === true
+        info: unlocks?.info === true,
+        collection: unlocks?.collection === true
       };
     })(),
     fusionBonuses: (() => {
@@ -15143,6 +15269,7 @@ const RESET_LOCAL_STORAGE_KEYS = [
   INFO_WELCOME_COLLAPSED_STORAGE_KEY,
   INFO_CHARACTERS_COLLAPSED_STORAGE_KEY,
   INFO_CARDS_COLLAPSED_STORAGE_KEY,
+  COLLECTION_IMAGES_COLLAPSED_STORAGE_KEY,
   HEADER_COLLAPSED_STORAGE_KEY,
   PERFORMANCE_MODE_STORAGE_KEY,
   UI_SCALE_STORAGE_KEY,
@@ -15295,6 +15422,7 @@ function resetGame() {
     shopUnlocks: new Set(),
     elements: createInitialElementCollection(),
     gachaCards: createInitialGachaCardCollection(),
+    gachaImages: createInitialGachaImageCollection(),
     fusions: createInitialFusionState(),
     fusionBonuses: createInitialFusionBonuses(),
     pageUnlocks: createInitialPageUnlockState(),
@@ -15827,6 +15955,19 @@ function loadGame() {
       });
     }
     gameState.gachaCards = baseCardCollection;
+    const baseImageCollection = createInitialGachaImageCollection();
+    if (data.gachaImages && typeof data.gachaImages === 'object') {
+      Object.entries(data.gachaImages).forEach(([imageId, stored]) => {
+        if (!baseImageCollection[imageId]) {
+          return;
+        }
+        const rawCount = Number(stored?.count ?? stored);
+        baseImageCollection[imageId].count = Number.isFinite(rawCount) && rawCount > 0
+          ? Math.floor(rawCount)
+          : 0;
+      });
+    }
+    gameState.gachaImages = baseImageCollection;
     const fusionState = createInitialFusionState();
     if (data.fusions && typeof data.fusions === 'object') {
       Object.keys(fusionState).forEach(id => {
@@ -16076,6 +16217,7 @@ function initializeDomBoundModules() {
   subscribeInfoWelcomeLanguageUpdates();
   subscribeInfoCharactersLanguageUpdates();
   subscribeInfoCardsLanguageUpdates();
+  subscribeCollectionImagesLanguageUpdates();
   if (typeof subscribeSpecialCardOverlayLanguageUpdates === 'function') {
     subscribeSpecialCardOverlayLanguageUpdates();
   }
