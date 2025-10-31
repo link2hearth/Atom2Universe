@@ -274,6 +274,12 @@
           "requirementLocked": "Achetez tous les niveaux restants du magasin ({{remaining}}) pour déclencher un nouveau Big Bang.",
           "requirementReady": "Boutique complétée ! Lancez un nouveau Big Bang pour ajouter +{{bonus}} niveaux achetables.",
           "cta": "Déclencher le Big Bang"
+        },
+        "confirm": {
+          "title": "Confirmer le Big Bang",
+          "message": "Relancer l’univers ? Vous perdrez vos atomes actuels, vos APC/APS et les niveaux du magasin, mais débloquerez +{bonus} niveaux supplémentaires.",
+          "cancel": "Annuler",
+          "confirm": "Déclencher le Big Bang"
         }
       },
       "arcade": {

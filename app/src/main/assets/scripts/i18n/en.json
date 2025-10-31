@@ -274,6 +274,12 @@
           "requirementLocked": "Buy every remaining shop level ({{remaining}}) to unlock the next Big Bang.",
           "requirementReady": "Shop complete! Launch a new Big Bang to add +{{bonus}} purchasable levels.",
           "cta": "Trigger the Big Bang"
+        },
+        "confirm": {
+          "title": "Confirm the Big Bang",
+          "message": "Restart the universe? You will lose your current atoms, APC/APS and shop levels, but unlock +{bonus} additional levels.",
+          "cancel": "Cancel",
+          "confirm": "Trigger the Big Bang"
         }
       },
       "arcade": {

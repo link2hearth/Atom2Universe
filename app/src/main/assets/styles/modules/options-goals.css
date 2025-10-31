@@ -297,7 +297,8 @@ body.theme-neon .options-devkit-button:focus-visible {
   align-self: flex-end;
 }
 
-.reset-dialog {
+.reset-dialog,
+.bigbang-dialog {
   position: fixed;
   inset: 0;
   display: flex;
@@ -309,19 +310,23 @@ body.theme-neon .options-devkit-button:focus-visible {
   z-index: 1200;
 }
 
-.reset-dialog[hidden] {
+.reset-dialog[hidden],
+.bigbang-dialog[hidden] {
   display: none !important;
 }
 
-body.theme-light .reset-dialog {
+body.theme-light .reset-dialog,
+body.theme-light .bigbang-dialog {
   background: rgba(230, 236, 255, 0.82);
 }
 
-body.theme-neon .reset-dialog {
+body.theme-neon .reset-dialog,
+body.theme-neon .bigbang-dialog {
   background: rgba(6, 12, 42, 0.78);
 }
 
-.reset-dialog__panel {
+.reset-dialog__panel,
+.bigbang-dialog__panel {
   width: min(480px, 100%);
   display: flex;
   flex-direction: column;
@@ -333,24 +338,28 @@ body.theme-neon .reset-dialog {
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
 }
 
-body.theme-light .reset-dialog__panel {
+body.theme-light .reset-dialog__panel,
+body.theme-light .bigbang-dialog__panel {
   border-color: rgba(12, 16, 32, 0.12);
   box-shadow: 0 20px 48px rgba(30, 40, 70, 0.22);
 }
 
-body.theme-neon .reset-dialog__panel {
+body.theme-neon .reset-dialog__panel,
+body.theme-neon .bigbang-dialog__panel {
   border-color: rgba(140, 200, 255, 0.28);
   box-shadow: 0 28px 70px rgba(0, 40, 120, 0.45);
 }
 
-.reset-dialog__title {
+.reset-dialog__title,
+.bigbang-dialog__title {
   margin: 0;
   font-size: clamp(1.05rem, 2.4vw, 1.35rem);
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
-.reset-dialog__message {
+.reset-dialog__message,
+.bigbang-dialog__message {
   margin: 0;
   line-height: 1.6;
   opacity: 0.85;
@@ -392,14 +401,16 @@ body.theme-neon .reset-dialog__input {
   background: rgba(10, 18, 42, 0.85);
 }
 
-.reset-dialog__actions {
+.reset-dialog__actions,
+.bigbang-dialog__actions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
   justify-content: flex-end;
 }
 
-.reset-dialog__button {
+.reset-dialog__button,
+.bigbang-dialog__button {
   padding: 0.55rem 1.15rem;
   border-radius: 999px;
   font-size: 0.85rem;
@@ -413,7 +424,9 @@ body.theme-neon .reset-dialog__input {
 }
 
 .reset-dialog__button:hover,
-.reset-dialog__button:focus-visible {
+.reset-dialog__button:focus-visible,
+.bigbang-dialog__button:hover,
+.bigbang-dialog__button:focus-visible {
   transform: translateY(-1px);
   border-color: rgba(120, 200, 255, 0.65);
   background: rgba(120, 200, 255, 0.18);
@@ -421,14 +434,33 @@ body.theme-neon .reset-dialog__input {
   outline: none;
 }
 
-body.theme-light .reset-dialog__button {
+body.theme-light .reset-dialog__button,
+body.theme-light .bigbang-dialog__button {
   background: rgba(12, 16, 32, 0.08);
   border-color: rgba(12, 16, 32, 0.18);
 }
 
-body.theme-neon .reset-dialog__button {
+body.theme-neon .reset-dialog__button,
+body.theme-neon .bigbang-dialog__button {
   border-color: rgba(140, 200, 255, 0.3);
   background: rgba(20, 30, 60, 0.4);
+}
+
+.bigbang-dialog__button--confirm {
+  background: rgba(120, 200, 255, 0.22);
+  border-color: rgba(120, 200, 255, 0.55);
+  color: var(--accent-strong);
+}
+
+body.theme-light .bigbang-dialog__button--confirm {
+  background: rgba(40, 80, 180, 0.16);
+  border-color: rgba(40, 80, 180, 0.38);
+  color: #0c1226;
+}
+
+body.theme-neon .bigbang-dialog__button--confirm {
+  background: rgba(160, 210, 255, 0.28);
+  border-color: rgba(180, 220, 255, 0.6);
 }
 
 .reset-dialog__error {
