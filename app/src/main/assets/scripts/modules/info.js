@@ -1127,11 +1127,32 @@ function applySpecialCardOverlayContent(card) {
   if (!card) {
     return;
   }
+  const overlayType = card.type === 'image' ? 'image' : 'card';
+  if (elements.gachaCardOverlay) {
+    elements.gachaCardOverlay.dataset.overlayType = overlayType;
+  }
+  if (elements.gachaCardOverlayDialog) {
+    if (overlayType === 'image') {
+      elements.gachaCardOverlayDialog.setAttribute('aria-label', card.label);
+      elements.gachaCardOverlayDialog.removeAttribute('aria-labelledby');
+      elements.gachaCardOverlayDialog.removeAttribute('aria-describedby');
+    } else {
+      elements.gachaCardOverlayDialog.setAttribute('aria-labelledby', 'gachaCardOverlayTitle');
+      elements.gachaCardOverlayDialog.setAttribute('aria-describedby', 'gachaCardOverlayHint');
+      elements.gachaCardOverlayDialog.removeAttribute('aria-label');
+    }
+  }
   if (elements.gachaCardOverlayLabel) {
     elements.gachaCardOverlayLabel.textContent = card.label;
+    const hidden = overlayType === 'image';
+    elements.gachaCardOverlayLabel.hidden = hidden;
+    elements.gachaCardOverlayLabel.setAttribute('aria-hidden', hidden ? 'true' : 'false');
   }
   if (elements.gachaCardOverlayCount) {
     elements.gachaCardOverlayCount.textContent = formatSpecialCardCount(card.count, card.type);
+    const hidden = overlayType === 'image';
+    elements.gachaCardOverlayCount.hidden = hidden;
+    elements.gachaCardOverlayCount.setAttribute('aria-hidden', hidden ? 'true' : 'false');
   }
   if (elements.gachaCardOverlayImage) {
     if (card.assetPath) {
@@ -1144,7 +1165,7 @@ function applySpecialCardOverlayContent(card) {
     elements.gachaCardOverlayImage.alt = card.label;
   }
   if (elements.gachaCardOverlayTitle) {
-    const isImage = card.type === 'image';
+    const isImage = overlayType === 'image';
     const titleKey = card.isNew
       ? (isImage ? 'scripts.gacha.images.overlay.newTitle' : 'scripts.gacha.cards.overlay.newTitle')
       : (isImage ? 'scripts.gacha.images.overlay.duplicateTitle' : 'scripts.gacha.cards.overlay.duplicateTitle');
@@ -1152,17 +1173,21 @@ function applySpecialCardOverlayContent(card) {
       ? (isImage ? 'Image bonus obtenue !' : 'Carte spéciale obtenue !')
       : (isImage ? 'Image bonus retrouvée !' : 'Carte spéciale retrouvée !');
     elements.gachaCardOverlayTitle.textContent = translateOrDefault(titleKey, fallback, { card: card.label });
+    elements.gachaCardOverlayTitle.hidden = isImage;
+    elements.gachaCardOverlayTitle.setAttribute('aria-hidden', isImage ? 'true' : 'false');
   }
   if (elements.gachaCardOverlayHint) {
-    const isImage = card.type === 'image';
+    const isImage = overlayType === 'image';
     const hintKey = isImage ? 'scripts.gacha.images.overlay.hint' : 'scripts.gacha.cards.overlay.hint';
     const hintFallback = isImage
       ? 'Touchez la croix pour refermer l’image.'
       : 'Touchez la croix pour revenir au jeu.';
     elements.gachaCardOverlayHint.textContent = translateOrDefault(hintKey, hintFallback);
+    elements.gachaCardOverlayHint.hidden = isImage;
+    elements.gachaCardOverlayHint.setAttribute('aria-hidden', isImage ? 'true' : 'false');
   }
   if (elements.gachaCardOverlayClose) {
-    const isImage = card.type === 'image';
+    const isImage = overlayType === 'image';
     const closeKey = isImage ? 'scripts.gacha.images.overlay.close' : 'scripts.gacha.cards.overlay.close';
     const closeFallback = isImage ? 'Fermer l’image' : 'Fermer la carte';
     const closeLabel = translateOrDefault(closeKey, closeFallback);
@@ -1180,10 +1205,16 @@ function finishHidingSpecialCardOverlay() {
     specialCardOverlayState.hideTimer = null;
     return;
   }
+  delete overlay.dataset.overlayType;
   overlay.hidden = true;
   overlay.classList.remove('is-visible');
   if (elements.gachaCardOverlayImage) {
     elements.gachaCardOverlayImage.removeAttribute('src');
+  }
+  if (elements.gachaCardOverlayDialog) {
+    elements.gachaCardOverlayDialog.removeAttribute('aria-label');
+    elements.gachaCardOverlayDialog.setAttribute('aria-labelledby', 'gachaCardOverlayTitle');
+    elements.gachaCardOverlayDialog.setAttribute('aria-describedby', 'gachaCardOverlayHint');
   }
   if (document && document.body) {
     document.body.classList.remove('has-gacha-card-overlay');
@@ -1342,6 +1373,102 @@ function resolveCollectionEntryLabel(id, type) {
   return type === 'image' ? resolveBonusImageLabel(id) : resolveSpecialCardLabel(id);
 }
 
+function buildOwnedCollectionEntries(definitions, collection, type) {
+  if (!Array.isArray(definitions)) {
+    return [];
+  }
+  const sourceCollection = collection && typeof collection === 'object' ? collection : {};
+  return definitions
+    .map(def => {
+      if (!def || !def.id) {
+        return null;
+      }
+      const stored = sourceCollection[def.id];
+      const rawCount = Number.isFinite(Number(stored?.count ?? stored))
+        ? Math.max(0, Math.floor(Number(stored?.count ?? stored)))
+        : 0;
+      const label = resolveCollectionEntryLabel(def.id, type);
+      const assetPath = typeof def.assetPath === 'string' && def.assetPath.trim()
+        ? def.assetPath.trim()
+        : null;
+      return { id: def.id, count: rawCount, label, assetPath };
+    })
+    .filter(entry => entry && entry.count > 0);
+}
+
+function renderBonusImageCollectionList(options) {
+  const {
+    definitions,
+    collection,
+    container,
+    emptyElement,
+    viewKey
+  } = options;
+
+  if (!container || !emptyElement) {
+    return;
+  }
+
+  container.classList.add('info-card-list--images');
+  container.dataset.collectionType = 'image';
+  container.innerHTML = '';
+
+  const owned = buildOwnedCollectionEntries(definitions, collection, 'image');
+
+  if (!owned.length) {
+    container.hidden = true;
+    container.setAttribute('aria-hidden', 'true');
+    emptyElement.hidden = false;
+    emptyElement.setAttribute('aria-hidden', 'false');
+    return;
+  }
+
+  owned.forEach(entry => {
+    const item = document.createElement('li');
+    item.className = 'info-card-list__item info-card-list__item--image';
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'collection-image-button';
+    button.dataset.cardId = entry.id;
+    button.dataset.cardType = 'image';
+    const viewLabel = translateOrDefault(
+      viewKey,
+      `Afficher ${entry.label}`,
+      { card: entry.label }
+    );
+    button.setAttribute('aria-label', viewLabel);
+    button.title = viewLabel;
+
+    const figure = document.createElement('span');
+    figure.className = 'collection-image-button__figure';
+
+    const img = document.createElement('img');
+    img.className = 'collection-image-button__image';
+    img.alt = entry.label;
+    img.loading = 'lazy';
+    img.decoding = 'async';
+    img.draggable = false;
+    if (entry.assetPath) {
+      img.src = entry.assetPath;
+    }
+
+    figure.appendChild(img);
+
+    const srLabel = document.createElement('span');
+    srLabel.className = 'visually-hidden';
+    srLabel.textContent = entry.label;
+
+    button.append(figure, srLabel);
+    item.appendChild(button);
+    container.appendChild(item);
+  });
+
+  container.hidden = false;
+  container.setAttribute('aria-hidden', 'false');
+  emptyElement.hidden = true;
+  emptyElement.setAttribute('aria-hidden', 'true');
+}
+
 function renderCollectionList(options) {
   const {
     definitions,
@@ -1353,23 +1480,26 @@ function renderCollectionList(options) {
     countKey
   } = options;
 
+  if (type === 'image') {
+    renderBonusImageCollectionList({
+      definitions,
+      collection,
+      container,
+      emptyElement,
+      viewKey
+    });
+    return;
+  }
+
   if (!container || !emptyElement) {
     return;
   }
 
+  container.classList.remove('info-card-list--images');
+  container.dataset.collectionType = type || '';
   container.innerHTML = '';
 
-  const entries = Array.isArray(definitions) ? definitions : [];
-  const owned = entries
-    .map(def => {
-      const source = collection && typeof collection === 'object' ? collection[def.id] : null;
-      const rawCount = Number.isFinite(Number(source?.count ?? source))
-        ? Math.max(0, Math.floor(Number(source?.count ?? source)))
-        : 0;
-      const label = resolveCollectionEntryLabel(def.id, type);
-      return { id: def.id, count: rawCount, label };
-    })
-    .filter(entry => entry.count > 0);
+  const owned = buildOwnedCollectionEntries(definitions, collection, type);
 
   if (!owned.length) {
     container.hidden = true;

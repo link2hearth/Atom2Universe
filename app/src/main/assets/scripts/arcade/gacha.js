@@ -279,7 +279,7 @@ const BONUS_GACHA_IMAGE_DEFINITION_INDEX = new Map(
     : []
 );
 
-const BONUS_GACHA_IMAGE_ID_POOL = Array.isArray(GACHA_BONUS_IMAGE_DEFINITIONS)
+const BONUS_GACHA_IMAGE_ALL_IDS = Array.isArray(GACHA_BONUS_IMAGE_DEFINITIONS)
   ? GACHA_BONUS_IMAGE_DEFINITIONS.map(def => def.id).filter(Boolean)
   : [];
 
@@ -383,6 +383,23 @@ function rollForBonusGachaImage() {
   return Math.random() < BONUS_GACHA_IMAGE_CHANCE;
 }
 
+function getAvailableBonusGachaImageIds() {
+  if (!BONUS_GACHA_IMAGE_ALL_IDS.length) {
+    return [];
+  }
+  const collection = ensureGachaImageCollection();
+  if (!collection || typeof collection !== 'object') {
+    return [...BONUS_GACHA_IMAGE_ALL_IDS];
+  }
+  return BONUS_GACHA_IMAGE_ALL_IDS.filter(imageId => {
+    const stored = collection[imageId];
+    const rawCount = Number.isFinite(Number(stored?.count ?? stored))
+      ? Math.max(0, Math.floor(Number(stored?.count ?? stored)))
+      : 0;
+    return rawCount <= 0;
+  });
+}
+
 function awardSpecialGachaCard(cardId) {
   if (!cardId) {
     return null;
@@ -474,14 +491,15 @@ function maybeAwardRaritySpecialCard(rarity) {
 }
 
 function maybeAwardBonusGachaImage() {
-  if (!BONUS_GACHA_IMAGE_ID_POOL.length) {
+  const availableIds = getAvailableBonusGachaImageIds();
+  if (!availableIds.length) {
     return null;
   }
   if (!rollForBonusGachaImage()) {
     return null;
   }
-  const index = Math.floor(Math.random() * BONUS_GACHA_IMAGE_ID_POOL.length);
-  const imageId = BONUS_GACHA_IMAGE_ID_POOL[index];
+  const index = Math.floor(Math.random() * availableIds.length);
+  const imageId = availableIds[index];
   if (!imageId) {
     return null;
   }

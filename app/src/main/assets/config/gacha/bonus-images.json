@@ -1,4 +1,15 @@
 {
   "_comment": "Add bonus image definitions with fields: id, file (optional), assetPath (optional), label/name overrides.",
-  "images": []
+  "images": [
+    { "id": "image1", "fileName": "image1.png" },
+    { "id": "image2", "fileName": "image2.png" },
+    { "id": "image3", "fileName": "image3.png" },
+    { "id": "image4", "fileName": "image4.png" },
+    { "id": "image5", "fileName": "image5.png" },
+    { "id": "image6", "fileName": "image6.png" },
+    { "id": "image7", "fileName": "image7.png" },
+    { "id": "image8", "fileName": "image8.png" },
+    { "id": "image9", "fileName": "image9.png" },
+    { "id": "image10", "fileName": "image10.png" }
+  ]
 }
