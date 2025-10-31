@@ -4197,9 +4197,24 @@ function spawnTicketStar(now = performance.now()) {
   const star = document.createElement('button');
   star.type = 'button';
   star.className = 'ticket-star';
-  star.setAttribute('aria-label', 'Collecter un ticket de tirage');
   star.style.setProperty('--ticket-star-size', `${TICKET_STAR_CONFIG.size}px`);
-  star.innerHTML = '<img src="Assets/Image/Star.png" alt="Étoile bonus" draggable="false" />';
+
+  const ticketStarLabel = translateWithFallback(
+    'scripts.gacha.ticketStar.collectAria',
+    'Collecter un ticket de tirage'
+  );
+  star.setAttribute('aria-label', ticketStarLabel);
+
+  const ticketStarImageAlt = translateWithFallback(
+    'scripts.gacha.ticketStar.imageAlt',
+    'Étoile bonus'
+  );
+
+  const starImage = document.createElement('img');
+  starImage.src = 'Assets/Image/Star.png';
+  starImage.alt = ticketStarImageAlt;
+  starImage.draggable = false;
+  star.appendChild(starImage);
   star.addEventListener('click', collectTicketStar);
   star.addEventListener('dragstart', event => event.preventDefault());
 

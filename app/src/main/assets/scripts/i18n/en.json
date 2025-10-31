@@ -2995,7 +2995,9 @@
       },
       "ticketStar": {
         "single": "Draw ticket obtained!",
-        "multiple": "+{count} draw tickets!"
+        "multiple": "+{count} draw tickets!",
+        "collectAria": "Collect a draw ticket",
+        "imageAlt": "Bonus star"
       }
     },
     "appData": {
