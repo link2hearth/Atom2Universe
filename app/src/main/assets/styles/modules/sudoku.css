@@ -63,6 +63,15 @@
   --sudoku-cell-mistake-background: rgba(224, 82, 64, 0.18);
   --sudoku-cell-mistake-shadow: inset 0 0 0 2px rgba(224, 82, 64, 0.55);
   --sudoku-cell-ok-background: rgba(34, 180, 116, 0.18);
+  --sudoku-number-color-1: #1e90ff;
+  --sudoku-number-color-2: #ff4d4f;
+  --sudoku-number-color-3: #8a2be2;
+  --sudoku-number-color-4: #f7c948;
+  --sudoku-number-color-5: #2ecc71;
+  --sudoku-number-color-6: #7f8c8d;
+  --sudoku-number-color-7: #ff6fba;
+  --sudoku-number-color-8: #ff9248;
+  --sudoku-number-color-9: #111111;
   --sudoku-pad-button-background: rgba(255, 255, 255, 0.08);
   --sudoku-pad-button-border: rgba(255, 255, 255, 0.14);
   --sudoku-pad-button-color: inherit;
@@ -625,6 +634,51 @@ body.theme-aurora .page--sudoku {
 
 .sudoku-cell.ok {
   background: var(--sudoku-cell-ok-background, rgba(34, 180, 116, 0.18));
+}
+
+.sudoku-cell[data-value='1'],
+.sudoku-pad__button[data-value='1'] {
+  color: var(--sudoku-number-color-1, #1e90ff);
+}
+
+.sudoku-cell[data-value='2'],
+.sudoku-pad__button[data-value='2'] {
+  color: var(--sudoku-number-color-2, #ff4d4f);
+}
+
+.sudoku-cell[data-value='3'],
+.sudoku-pad__button[data-value='3'] {
+  color: var(--sudoku-number-color-3, #8a2be2);
+}
+
+.sudoku-cell[data-value='4'],
+.sudoku-pad__button[data-value='4'] {
+  color: var(--sudoku-number-color-4, #f7c948);
+}
+
+.sudoku-cell[data-value='5'],
+.sudoku-pad__button[data-value='5'] {
+  color: var(--sudoku-number-color-5, #2ecc71);
+}
+
+.sudoku-cell[data-value='6'],
+.sudoku-pad__button[data-value='6'] {
+  color: var(--sudoku-number-color-6, #7f8c8d);
+}
+
+.sudoku-cell[data-value='7'],
+.sudoku-pad__button[data-value='7'] {
+  color: var(--sudoku-number-color-7, #ff6fba);
+}
+
+.sudoku-cell[data-value='8'],
+.sudoku-pad__button[data-value='8'] {
+  color: var(--sudoku-number-color-8, #ff9248);
+}
+
+.sudoku-cell[data-value='9'],
+.sudoku-pad__button[data-value='9'] {
+  color: var(--sudoku-number-color-9, #111111);
 }
 
 @media (min-aspect-ratio: 16/9), (orientation: landscape) and (max-width: 1024px) {
