@@ -98,10 +98,7 @@
       descriptionKey: 'index.sections.echecs.difficulty.trainingDescription',
       fallbackDescription: 'Recherche plus courte et coups rapides pour tester librement le plateau.',
       ai: Object.freeze({ depth: 2, timeLimitMs: 600, moveDelayMs: 120 }),
-      reward: Object.freeze({
-        gachaTickets: 100,
-        crit: Object.freeze({ multiplier: 1000, durationSeconds: 300 })
-      })
+      reward: null
     }),
     Object.freeze({
       id: 'standard',
@@ -371,8 +368,13 @@
       ? { multiplier, durationSeconds }
       : null;
 
+    const normalizedTickets = Math.max(0, gachaTickets);
+    if (!normalizedTickets && !crit) {
+      return null;
+    }
+
     return {
-      gachaTickets: Math.max(0, gachaTickets),
+      gachaTickets: normalizedTickets,
       crit
     };
   }
