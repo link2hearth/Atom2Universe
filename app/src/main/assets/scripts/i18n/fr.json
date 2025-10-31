@@ -338,6 +338,12 @@
             "description": "Éteignez toutes les lumières : chaque clic inverse la case visée et ses voisines orthogonales.",
             "cta": "Éteindre"
           },
+          "pipeTap": {
+            "aria": "Accéder au mini-jeu PipeTap",
+            "title": "PipeTap",
+            "description": "Tournez les conduites pour relier toute la canalisation sans fuite.",
+            "cta": "Relier"
+          },
           "sokoban": {
             "aria": "Accéder au mini-jeu Sokoban",
             "title": "Sokoban",
@@ -709,6 +715,43 @@
             "on": "Lumière allumée",
             "off": "Lumière éteinte"
           }
+        }
+      },
+      "pipeTap": {
+        "aria": "Mini-jeu PipeTap : faites pivoter les tuiles pour relier la canalisation.",
+        "title": "PipeTap",
+        "controls": {
+          "seed": {
+            "label": "Seed",
+            "placeholder": "auto"
+          },
+          "size": {
+            "label": "Taille"
+          },
+          "new": "Nouvelle grille"
+        },
+        "stats": {
+          "seedLabel": "Seed",
+          "movesLabel": "Taps",
+          "timeLabel": "Temps"
+        },
+        "board": "Plateau PipeTap",
+        "win": {
+          "message": "Bravo ! Résolu en {{time}} avec {{moves}} taps.",
+          "again": "Rejouer",
+          "nextSize": "Taille +1",
+          "share": "Copier seed"
+        },
+        "share": {
+          "success": "Copié !",
+          "fallback": "Seed : {{seed}}"
+        },
+        "how": {
+          "label": "Comment ça marche ?",
+          "message": "Faites pivoter chaque tuile pour relier toutes les conduites à partir de la source entourée. La grille est générée depuis un arbre couvrant puis chaque tuile est mélangée, le puzzle reste donc toujours solvable."
+        },
+        "tile": {
+          "aria": "Tuile {{row}}, colonne {{column}}"
         }
       },
       "sokoban": {

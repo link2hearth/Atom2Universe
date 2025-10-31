@@ -785,6 +785,48 @@
           class="arcade-hub-card"
           role="button"
           tabindex="0"
+          aria-label="Accéder au mini-jeu PipeTap"
+          aria-describedby="arcadeCardDescription-pipeTap"
+          data-card-id="pipeTap"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.pipeTap.aria"
+          data-page-target="pipeTap"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.pipeTap.title"
+            >PipeTap</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-pipeTap"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-pipeTap"
+            data-i18n="index.sections.arcadeHub.cards.pipeTap.description"
+          >
+            Tournez les conduites pour relier toute la canalisation sans fuite.
+          </p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
           aria-label="Accéder au mini-jeu Sokoban"
           aria-describedby="arcadeCardDescription-sokoban"
           data-card-id="sokoban"
@@ -2365,6 +2407,119 @@
             aria-label="Grille Lights Out"
             data-i18n="aria-label:index.sections.lightsOut.board"
           ></div>
+        </div>
+      </div>
+    </section>
+
+    <section
+      id="pipeTap"
+      class="page page--pipe-tap"
+      data-page-group="arcade"
+      aria-label="Mini-jeu PipeTap : faites pivoter les tuiles pour relier la canalisation."
+      data-i18n="aria-label:index.sections.pipeTap.aria"
+      hidden
+    >
+      <div class="pipetap" data-pipetap-root>
+        <div class="pipetap__header">
+          <h2 class="visually-hidden" data-i18n="index.sections.pipeTap.title">PipeTap</h2>
+          <div class="pipetap__controls">
+            <div class="pipetap__controls-group">
+              <label class="pipetap__field">
+                <span class="pipetap__label" data-i18n="index.sections.pipeTap.controls.seed.label">Seed</span>
+                <input
+                  type="text"
+                  id="pipeTapSeedInput"
+                  class="pipetap__input"
+                  placeholder="auto"
+                  autocomplete="off"
+                  inputmode="text"
+                  data-i18n="placeholder:index.sections.pipeTap.controls.seed.placeholder"
+                />
+              </label>
+              <label class="pipetap__field">
+                <span class="pipetap__label" data-i18n="index.sections.pipeTap.controls.size.label">Taille</span>
+                <select id="pipeTapSizeSelect" class="pipetap__select">
+                  <option value="4">4×4</option>
+                  <option value="5" selected>5×5</option>
+                  <option value="6">6×6</option>
+                  <option value="7">7×7</option>
+                  <option value="8">8×8</option>
+                </select>
+              </label>
+            </div>
+            <button
+              type="button"
+              class="pipetap__button"
+              id="pipeTapNewButton"
+              data-i18n="index.sections.pipeTap.controls.new"
+            >
+              Nouvelle grille
+            </button>
+          </div>
+          <div class="pipetap__stats">
+            <span class="pipetap__pill">
+              <span class="pipetap__pill-label" data-i18n="index.sections.pipeTap.stats.seedLabel">Seed</span>
+              <span class="pipetap__pill-value" id="pipeTapSeedValue">—</span>
+            </span>
+            <span class="pipetap__pill">
+              <span class="pipetap__pill-label" data-i18n="index.sections.pipeTap.stats.movesLabel">Taps</span>
+              <span class="pipetap__pill-value" id="pipeTapMovesValue">0</span>
+            </span>
+            <span class="pipetap__pill">
+              <span class="pipetap__pill-label" data-i18n="index.sections.pipeTap.stats.timeLabel">Temps</span>
+              <span class="pipetap__pill-value" id="pipeTapTimeValue">00:00</span>
+            </span>
+          </div>
+        </div>
+        <div class="pipetap__board-wrapper">
+          <div
+            class="pipetap__board"
+            id="pipeTapBoard"
+            role="grid"
+            aria-label="Plateau PipeTap"
+            data-i18n="aria-label:index.sections.pipeTap.board"
+          ></div>
+        </div>
+        <div class="pipetap__overlay" id="pipeTapWin" role="status" aria-live="polite" hidden>
+          <p class="pipetap__overlay-message" id="pipeTapWinMessage">
+            Bravo ! Résolu en 00:00 avec 0 taps.
+          </p>
+          <div class="pipetap__overlay-actions">
+            <button
+              type="button"
+              class="pipetap__button"
+              id="pipeTapAgainButton"
+              data-i18n="index.sections.pipeTap.win.again"
+            >
+              Rejouer
+            </button>
+            <button
+              type="button"
+              class="pipetap__button pipetap__button--secondary"
+              id="pipeTapNextButton"
+              data-i18n="index.sections.pipeTap.win.nextSize"
+            >
+              Taille +1
+            </button>
+            <button
+              type="button"
+              class="pipetap__button pipetap__button--link"
+              id="pipeTapShareButton"
+              data-i18n="index.sections.pipeTap.win.share"
+            >
+              Copier seed
+            </button>
+          </div>
+        </div>
+        <div class="pipetap__footer">
+          <a
+            href="#"
+            class="pipetap__how"
+            id="pipeTapHowLink"
+            data-i18n="index.sections.pipeTap.how.label"
+          >
+            Comment ça marche ?
+          </a>
         </div>
       </div>
     </section>
@@ -5212,6 +5367,7 @@
   <script src="scripts/arcade/game-of-life.js"></script>
   <script src="scripts/arcade/quantum-2048.js"></script>
   <script src="scripts/arcade/lights-out.js"></script>
+  <script src="scripts/arcade/pipetap.js"></script>
   <script src="scripts/arcade/sokoban.js"></script>
   <script src="scripts/arcade/the-line.js"></script>
   <script src="scripts/i18n/embedded-resources.js"></script>
