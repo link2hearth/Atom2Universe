@@ -3965,19 +3965,34 @@
           hidden
           aria-hidden="true"
         >
-          <header class="info-card__header">
+          <header class="info-card__header info-card__header--collapsible">
             <h3 id="info-achievements-title" data-i18n="index.sections.info.achievements.title">Succès débloqués</h3>
-            <p class="info-card__subtitle" data-i18n="index.sections.info.achievements.subtitle">Visualisez les trophées obtenus au cours de votre aventure.</p>
+            <button
+              type="button"
+              id="infoAchievementsToggle"
+              class="info-card__collapse-button"
+              aria-expanded="true"
+              aria-controls="info-achievements-content"
+              data-i18n="index.sections.info.achievements.toggle.collapse"
+            >
+              Réduire
+            </button>
           </header>
-          <p
-            class="goals-empty"
-            id="goalsEmpty"
-            hidden
-            data-i18n="index.sections.info.achievements.empty"
+          <div
+            id="info-achievements-content"
+            class="info-card__content info-card__content--achievements"
+            aria-hidden="false"
           >
-            Aucun trophée complété pour le moment. Terminez des objectifs pour les afficher ici.
-          </p>
-          <div class="goals-list" id="goalsList" role="list"></div>
+            <p
+              class="goals-empty"
+              id="goalsEmpty"
+              hidden
+              data-i18n="index.sections.info.achievements.empty"
+            >
+              Aucun trophée complété pour le moment. Terminez des objectifs pour les afficher ici.
+            </p>
+            <div class="goals-list" id="goalsList" role="list"></div>
+          </div>
         </article>
 
         <article

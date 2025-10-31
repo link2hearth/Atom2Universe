@@ -194,7 +194,11 @@
         "achievements": {
           "title": "Unlocked achievements",
           "subtitle": "Review the trophies you have earned on your journey.",
-          "empty": "No trophy completed yet. Finish objectives to display them here."
+          "empty": "No trophy completed yet. Finish objectives to display them here.",
+          "toggle": {
+            "collapse": "Collapse",
+            "expand": "Expand"
+          }
         },
         "calculations": {
           "title": "Production breakdown",
