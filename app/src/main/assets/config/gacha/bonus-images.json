@@ -1,15 +1,509 @@
 {
   "_comment": "Add bonus image definitions with fields: id, file (optional), assetPath (optional), label/name overrides.",
   "images": [
-    { "id": "image1", "fileName": "image1.png" },
-    { "id": "image2", "fileName": "image2.png" },
-    { "id": "image3", "fileName": "image3.png" },
-    { "id": "image4", "fileName": "image4.png" },
-    { "id": "image5", "fileName": "image5.png" },
-    { "id": "image6", "fileName": "image6.png" },
-    { "id": "image7", "fileName": "image7.png" },
-    { "id": "image8", "fileName": "image8.png" },
-    { "id": "image9", "fileName": "image9.png" },
-    { "id": "image10", "fileName": "image10.png" }
+    {
+      "id": "image1",
+      "fileName": "image (1).png"
+    },
+    {
+      "id": "image2",
+      "fileName": "image (2).png"
+    },
+    {
+      "id": "image3",
+      "fileName": "image (3).png"
+    },
+    {
+      "id": "image4",
+      "fileName": "image (4).png"
+    },
+    {
+      "id": "image5",
+      "fileName": "image (5).png"
+    },
+    {
+      "id": "image6",
+      "fileName": "image (6).png"
+    },
+    {
+      "id": "image7",
+      "fileName": "image (7).png"
+    },
+    {
+      "id": "image8",
+      "fileName": "image (8).png"
+    },
+    {
+      "id": "image9",
+      "fileName": "image (9).png"
+    },
+    {
+      "id": "image10",
+      "fileName": "image (10).png"
+    },
+    {
+      "id": "image11",
+      "fileName": "image (11).png"
+    },
+    {
+      "id": "image12",
+      "fileName": "image (12).png"
+    },
+    {
+      "id": "image13",
+      "fileName": "image (13).png"
+    },
+    {
+      "id": "image14",
+      "fileName": "image (14).png"
+    },
+    {
+      "id": "image15",
+      "fileName": "image (15).png"
+    },
+    {
+      "id": "image16",
+      "fileName": "image (16).png"
+    },
+    {
+      "id": "image17",
+      "fileName": "image (17).png"
+    },
+    {
+      "id": "image18",
+      "fileName": "image (18).png"
+    },
+    {
+      "id": "image19",
+      "fileName": "image (19).png"
+    },
+    {
+      "id": "image20",
+      "fileName": "image (20).png"
+    },
+    {
+      "id": "image21",
+      "fileName": "image (21).png"
+    },
+    {
+      "id": "image22",
+      "fileName": "image (22).png"
+    },
+    {
+      "id": "image23",
+      "fileName": "image (23).png"
+    },
+    {
+      "id": "image24",
+      "fileName": "image (24).png"
+    },
+    {
+      "id": "image25",
+      "fileName": "image (25).png"
+    },
+    {
+      "id": "image26",
+      "fileName": "image (26).png"
+    },
+    {
+      "id": "image27",
+      "fileName": "image (27).png"
+    },
+    {
+      "id": "image28",
+      "fileName": "image (28).png"
+    },
+    {
+      "id": "image29",
+      "fileName": "image (29).png"
+    },
+    {
+      "id": "image30",
+      "fileName": "image (30).png"
+    },
+    {
+      "id": "image31",
+      "fileName": "image (31).png"
+    },
+    {
+      "id": "image32",
+      "fileName": "image (32).png"
+    },
+    {
+      "id": "image33",
+      "fileName": "image (33).png"
+    },
+    {
+      "id": "image34",
+      "fileName": "image (34).png"
+    },
+    {
+      "id": "image35",
+      "fileName": "image (35).png"
+    },
+    {
+      "id": "image36",
+      "fileName": "image (36).png"
+    },
+    {
+      "id": "image37",
+      "fileName": "image (37).png"
+    },
+    {
+      "id": "image38",
+      "fileName": "image (38).png"
+    },
+    {
+      "id": "image39",
+      "fileName": "image (39).png"
+    },
+    {
+      "id": "image40",
+      "fileName": "image (40).png"
+    },
+    {
+      "id": "image41",
+      "fileName": "image (41).png"
+    },
+    {
+      "id": "image42",
+      "fileName": "image (42).png"
+    },
+    {
+      "id": "image43",
+      "fileName": "image (43).png"
+    },
+    {
+      "id": "image44",
+      "fileName": "image (44).png"
+    },
+    {
+      "id": "image45",
+      "fileName": "image (45).png"
+    },
+    {
+      "id": "image46",
+      "fileName": "image (46).png"
+    },
+    {
+      "id": "image47",
+      "fileName": "image (47).png"
+    },
+    {
+      "id": "image48",
+      "fileName": "image (48).png"
+    },
+    {
+      "id": "image49",
+      "fileName": "image (49).png"
+    },
+    {
+      "id": "image50",
+      "fileName": "image (50).png"
+    },
+    {
+      "id": "image51",
+      "fileName": "image (51).png"
+    },
+    {
+      "id": "image52",
+      "fileName": "image (52).png"
+    },
+    {
+      "id": "image53",
+      "fileName": "image (53).png"
+    },
+    {
+      "id": "image54",
+      "fileName": "image (54).png"
+    },
+    {
+      "id": "image55",
+      "fileName": "image (55).png"
+    },
+    {
+      "id": "image56",
+      "fileName": "image (56).png"
+    },
+    {
+      "id": "image57",
+      "fileName": "image (57).png"
+    },
+    {
+      "id": "image58",
+      "fileName": "image (58).png"
+    },
+    {
+      "id": "image59",
+      "fileName": "image (59).png"
+    },
+    {
+      "id": "image60",
+      "fileName": "image (60).png"
+    },
+    {
+      "id": "image61",
+      "fileName": "image (61).png"
+    },
+    {
+      "id": "image62",
+      "fileName": "image (62).png"
+    },
+    {
+      "id": "image63",
+      "fileName": "image (63).png"
+    },
+    {
+      "id": "image64",
+      "fileName": "image (64).png"
+    },
+    {
+      "id": "image65",
+      "fileName": "image (65).png"
+    },
+    {
+      "id": "image66",
+      "fileName": "image (66).png"
+    },
+    {
+      "id": "image67",
+      "fileName": "image (67).png"
+    },
+    {
+      "id": "image68",
+      "fileName": "image (68).png"
+    },
+    {
+      "id": "image69",
+      "fileName": "image (69).png"
+    },
+    {
+      "id": "image70",
+      "fileName": "image (70).png"
+    },
+    {
+      "id": "image71",
+      "fileName": "image (71).png"
+    },
+    {
+      "id": "image72",
+      "fileName": "image (72).png"
+    },
+    {
+      "id": "image73",
+      "fileName": "image (73).png"
+    },
+    {
+      "id": "image74",
+      "fileName": "image (74).png"
+    },
+    {
+      "id": "image75",
+      "fileName": "image (75).png"
+    },
+    {
+      "id": "image76",
+      "fileName": "image (76).png"
+    },
+    {
+      "id": "image77",
+      "fileName": "image (77).png"
+    },
+    {
+      "id": "image78",
+      "fileName": "image (78).png"
+    },
+    {
+      "id": "image79",
+      "fileName": "image (79).png"
+    },
+    {
+      "id": "image80",
+      "fileName": "image (80).png"
+    },
+    {
+      "id": "image81",
+      "fileName": "image (81).png"
+    },
+    {
+      "id": "image82",
+      "fileName": "image (82).png"
+    },
+    {
+      "id": "image83",
+      "fileName": "image (83).png"
+    },
+    {
+      "id": "image84",
+      "fileName": "image (84).png"
+    },
+    {
+      "id": "image85",
+      "fileName": "image (85).png"
+    },
+    {
+      "id": "image86",
+      "fileName": "image (86).png"
+    },
+    {
+      "id": "image87",
+      "fileName": "image (87).png"
+    },
+    {
+      "id": "image88",
+      "fileName": "image (88).png"
+    },
+    {
+      "id": "image89",
+      "fileName": "image (89).png"
+    },
+    {
+      "id": "image90",
+      "fileName": "image (90).png"
+    },
+    {
+      "id": "image91",
+      "fileName": "image (91).png"
+    },
+    {
+      "id": "image92",
+      "fileName": "image (92).png"
+    },
+    {
+      "id": "image93",
+      "fileName": "image (93).png"
+    },
+    {
+      "id": "image94",
+      "fileName": "image (94).png"
+    },
+    {
+      "id": "image95",
+      "fileName": "image (95).png"
+    },
+    {
+      "id": "image96",
+      "fileName": "image (96).png"
+    },
+    {
+      "id": "image97",
+      "fileName": "image (97).png"
+    },
+    {
+      "id": "image98",
+      "fileName": "image (98).png"
+    },
+    {
+      "id": "image99",
+      "fileName": "image (99).png"
+    },
+    {
+      "id": "image100",
+      "fileName": "image (100).png"
+    },
+    {
+      "id": "image101",
+      "fileName": "image (101).png"
+    },
+    {
+      "id": "image102",
+      "fileName": "image (102).png"
+    },
+    {
+      "id": "image103",
+      "fileName": "image (103).png"
+    },
+    {
+      "id": "image104",
+      "fileName": "image (104).png"
+    },
+    {
+      "id": "image105",
+      "fileName": "image (105).png"
+    },
+    {
+      "id": "image106",
+      "fileName": "image (106).png"
+    },
+    {
+      "id": "image107",
+      "fileName": "image (107).png"
+    },
+    {
+      "id": "image108",
+      "fileName": "image (108).png"
+    },
+    {
+      "id": "image109",
+      "fileName": "image (109).png"
+    },
+    {
+      "id": "image110",
+      "fileName": "image (110).png"
+    },
+    {
+      "id": "image111",
+      "fileName": "image (111).png"
+    },
+    {
+      "id": "image112",
+      "fileName": "image (112).png"
+    },
+    {
+      "id": "image113",
+      "fileName": "image (113).png"
+    },
+    {
+      "id": "image114",
+      "fileName": "image (114).png"
+    },
+    {
+      "id": "image115",
+      "fileName": "image (115).png"
+    },
+    {
+      "id": "image116",
+      "fileName": "image (116).png"
+    },
+    {
+      "id": "image117",
+      "fileName": "image (117).png"
+    },
+    {
+      "id": "image118",
+      "fileName": "image (118).png"
+    },
+    {
+      "id": "image119",
+      "fileName": "image (119).png"
+    },
+    {
+      "id": "image120",
+      "fileName": "image (120).png"
+    },
+    {
+      "id": "image121",
+      "fileName": "image (121).png"
+    },
+    {
+      "id": "image122",
+      "fileName": "image (122).png"
+    },
+    {
+      "id": "image123",
+      "fileName": "image (123).png"
+    },
+    {
+      "id": "image124",
+      "fileName": "image (124).png"
+    },
+    {
+      "id": "image125",
+      "fileName": "image (125).png"
+    },
+    {
+      "id": "image126",
+      "fileName": "image (126).png"
+    }
   ]
 }
