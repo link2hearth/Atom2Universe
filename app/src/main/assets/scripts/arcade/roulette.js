@@ -29,6 +29,70 @@
     return map;
   }, new Map());
 
+  const DEFAULT_SYMBOL_WEIGHTS = Object.freeze({
+    hearts: 1,
+    diamonds: 1,
+    clubs: 1,
+    spades: 1,
+    joker: 0.5,
+    void: 2
+  });
+
+  let currentSymbolPicker = null;
+
+  function normalizeSymbolWeights(weights) {
+    const normalized = {};
+    let total = 0;
+    const source = weights && typeof weights === 'object' ? weights : null;
+    for (let i = 0; i < SYMBOLS.length; i += 1) {
+      const symbol = SYMBOLS[i];
+      const fallback = Number(DEFAULT_SYMBOL_WEIGHTS[symbol.id]);
+      const raw = source != null ? Number(source[symbol.id]) : NaN;
+      const value = Number.isFinite(raw) && raw > 0 ? raw : Number.isFinite(fallback) && fallback > 0 ? fallback : 0;
+      normalized[symbol.id] = value;
+      total += value;
+    }
+    if (total <= 0) {
+      for (let i = 0; i < SYMBOLS.length; i += 1) {
+        const symbol = SYMBOLS[i];
+        const fallback = Number(DEFAULT_SYMBOL_WEIGHTS[symbol.id]);
+        normalized[symbol.id] = Number.isFinite(fallback) && fallback > 0 ? fallback : 1;
+      }
+    }
+    return normalized;
+  }
+
+  function createSymbolPicker(weights) {
+    const normalized = normalizeSymbolWeights(weights);
+    const entries = [];
+    let cumulative = 0;
+    for (let i = 0; i < SYMBOLS.length; i += 1) {
+      const symbol = SYMBOLS[i];
+      const weight = Number(normalized[symbol.id]);
+      if (Number.isFinite(weight) && weight > 0) {
+        cumulative += weight;
+        entries.push({ symbol, cumulative });
+      }
+    }
+    if (!entries.length) {
+      return () => SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
+    }
+    if (entries.length === 1) {
+      const onlySymbol = entries[0].symbol;
+      return () => onlySymbol;
+    }
+    const totalWeight = entries[entries.length - 1].cumulative;
+    return () => {
+      const roll = Math.random() * totalWeight;
+      for (let i = 0; i < entries.length; i += 1) {
+        if (roll < entries[i].cumulative) {
+          return entries[i].symbol;
+        }
+      }
+      return entries[entries.length - 1].symbol;
+    };
+  }
+
   function onReady(callback) {
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', callback, { once: true });
@@ -217,7 +281,10 @@
   }
 
   function randomSymbol() {
-    return SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
+    if (!currentSymbolPicker) {
+      currentSymbolPicker = createSymbolPicker();
+    }
+    return currentSymbolPicker();
   }
 
   function translateSymbolName(symbol) {
@@ -514,6 +581,7 @@
     const baseBetOptions = normalizeBetOptions(arcadeConfig && arcadeConfig.betOptions);
     const payouts = normalizePayouts(arcadeConfig && arcadeConfig.payouts);
     const animation = normalizeAnimation(arcadeConfig && arcadeConfig.animation);
+    currentSymbolPicker = createSymbolPicker(arcadeConfig && arcadeConfig.symbolWeights);
 
     let betMultiplier = 1;
     let betOptions = baseBetOptions.map(value => value);
