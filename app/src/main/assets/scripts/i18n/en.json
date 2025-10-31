@@ -903,7 +903,12 @@
             "pgnWhite": "White player",
             "pgnBlackAi": "AI ({{difficulty}})",
             "pgnBlackTwoPlayer": "Black player"
-          }
+          },
+          "help": "Help",
+          "helpWorking": "Calculating…",
+          "helpOpponentTurn": "Wait for the AI to finish its move.",
+          "helpGameOver": "The game is over.",
+          "helpPromotionPending": "Choose a promotion to continue."
         },
         "history": {
           "title": "Move list",
@@ -1032,7 +1037,10 @@
             },
             "generic": "Game concluded."
           }
-        }
+        },
+        "helperTrainingHintPending": "Searching for the best move ({{difficulty}})…",
+        "helperTrainingHint": "Suggestion ({{difficulty}}): {{move}} ({{from}}→{{to}})",
+        "helperTrainingHintUnavailable": "No hint available ({{difficulty}})."
       },
       "roulette": {
         "aria": "Joker Roulette mini-game",

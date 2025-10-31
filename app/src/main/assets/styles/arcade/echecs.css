@@ -15,6 +15,8 @@
   --chess-highlight-capture-ring: rgba(255, 90, 90, 0.18);
   --chess-highlight-check: rgba(255, 89, 89, 0.55);
   --chess-highlight-last: rgba(103, 218, 255, 0.35);
+  --chess-hint-target: rgba(120, 255, 210, 0.42);
+  --chess-hint-target-ring: rgba(120, 255, 210, 0.24);
   --chess-drag-target-color: rgba(159, 248, 255, 0.6);
   --chess-panel-background: rgba(255, 255, 255, 0.05);
   --chess-panel-border: rgba(255, 255, 255, 0.12);
@@ -233,6 +235,40 @@
 
 .chess-square.is-check {
   box-shadow: inset 0 0 0 3px var(--chess-highlight-check);
+}
+
+.chess-square.is-hint-target {
+  box-shadow: inset 0 0 0 3px var(--chess-hint-target), 0 0 18px var(--chess-hint-target);
+  animation: chess-hint-target 1.2s ease-in-out 0s 2;
+}
+
+.chess-square.is-hint-source .chess-square__piece,
+.chess-square.is-hint-source .chess-square__glyph {
+  animation: chess-hint-shake 120ms ease-in-out 0s 8 alternate;
+}
+
+@keyframes chess-hint-shake {
+  0% {
+    transform: translate3d(-1.5px, 0, 0);
+  }
+  50% {
+    transform: translate3d(1.5px, 0, 0);
+  }
+  100% {
+    transform: translate3d(-1.5px, 0, 0);
+  }
+}
+
+@keyframes chess-hint-target {
+  0% {
+    box-shadow: inset 0 0 0 3px var(--chess-hint-target), 0 0 6px var(--chess-hint-target-ring);
+  }
+  50% {
+    box-shadow: inset 0 0 0 3px var(--chess-hint-target), 0 0 26px var(--chess-hint-target);
+  }
+  100% {
+    box-shadow: inset 0 0 0 3px var(--chess-hint-target), 0 0 6px var(--chess-hint-target-ring);
+  }
 }
 
 .chess-square.has-piece {
@@ -513,6 +549,13 @@
 
 .chess-action--secondary {
   background: var(--chess-action-secondary-background);
+}
+
+.chess-action--helper {
+  margin-block-start: calc(0.75rem * var(--ui-control-scale, 1));
+  inline-size: 100%;
+  display: inline-flex;
+  justify-content: center;
 }
 
 .chess-action:disabled {
@@ -834,6 +877,8 @@ body.theme-light .page--echecs {
   --chess-highlight-capture-ring: rgba(214, 86, 86, 0.2);
   --chess-highlight-check: rgba(232, 82, 82, 0.52);
   --chess-highlight-last: rgba(92, 156, 255, 0.32);
+  --chess-hint-target: rgba(34, 197, 94, 0.38);
+  --chess-hint-target-ring: rgba(34, 197, 94, 0.2);
   --chess-drag-target-color: rgba(96, 165, 250, 0.5);
   --chess-panel-background: rgba(247, 248, 252, 0.92);
   --chess-panel-border: rgba(12, 16, 32, 0.12);
@@ -893,6 +938,8 @@ body.theme-neon .page--echecs {
   --chess-highlight-capture-ring: rgba(255, 120, 176, 0.25);
   --chess-highlight-check: rgba(255, 120, 140, 0.6);
   --chess-highlight-last: rgba(120, 168, 255, 0.4);
+  --chess-hint-target: rgba(148, 255, 220, 0.42);
+  --chess-hint-target-ring: rgba(148, 255, 220, 0.24);
   --chess-drag-target-color: rgba(144, 220, 255, 0.65);
   --chess-panel-background: rgba(18, 22, 68, 0.78);
   --chess-panel-border: rgba(120, 150, 255, 0.38);
@@ -952,6 +999,8 @@ body.theme-aurora .page--echecs {
   --chess-highlight-capture-ring: rgba(255, 150, 140, 0.24);
   --chess-highlight-check: rgba(255, 140, 132, 0.58);
   --chess-highlight-last: rgba(96, 232, 192, 0.38);
+  --chess-hint-target: rgba(126, 255, 210, 0.42);
+  --chess-hint-target-ring: rgba(126, 255, 210, 0.24);
   --chess-drag-target-color: rgba(120, 246, 208, 0.58);
   --chess-panel-background: rgba(14, 70, 56, 0.7);
   --chess-panel-border: rgba(90, 220, 180, 0.32);
