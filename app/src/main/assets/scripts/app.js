@@ -17,6 +17,10 @@ function isCollectionFeatureEnabled() {
   return resolveGlobalBooleanFlag('COLLECTION_SYSTEM_ENABLED', true);
 }
 
+function isInfoSectionsFeatureEnabled() {
+  return resolveGlobalBooleanFlag('INFO_SECTIONS_ENABLED', true);
+}
+
 function toggleDevkitFeatureAvailability() {
   if (typeof globalThis !== 'undefined' && typeof globalThis.toggleDevkitFeatureEnabled === 'function') {
     return globalThis.toggleDevkitFeatureEnabled();
@@ -38,6 +42,20 @@ function toggleCollectionFeatureAvailability() {
   const next = !isCollectionFeatureEnabled();
   if (typeof globalThis !== 'undefined') {
     globalThis.COLLECTION_SYSTEM_ENABLED = next;
+  }
+  return next;
+}
+
+function toggleInfoSectionsFeatureAvailability() {
+  if (
+    typeof globalThis !== 'undefined'
+    && typeof globalThis.toggleInfoSectionsFeatureEnabled === 'function'
+  ) {
+    return globalThis.toggleInfoSectionsFeatureEnabled();
+  }
+  const next = !isInfoSectionsFeatureEnabled();
+  if (typeof globalThis !== 'undefined') {
+    globalThis.INFO_SECTIONS_ENABLED = next;
   }
   return next;
 }
@@ -4385,6 +4403,13 @@ const RESET_KEYWORD_ACTIONS = Object.freeze({
     enabledFallback: 'Collection enabled. Reloading to apply…',
     disabledKey: 'collectionDisabled',
     disabledFallback: 'Collection disabled. Reloading to apply…'
+  }),
+  INFO: Object.freeze({
+    toggle: toggleInfoSectionsFeatureAvailability,
+    enabledKey: 'infoEnabled',
+    enabledFallback: 'Info sections enabled. Reloading to apply…',
+    disabledKey: 'infoDisabled',
+    disabledFallback: 'Info sections disabled. Reloading to apply…'
   })
 });
 
@@ -4926,22 +4951,21 @@ function collectDomElements() {
   infoPhotonAltitudeValue: document.getElementById('infoPhotonAltitudeValue'),
   infoBonusSubtitle: document.getElementById('infoBonusSubtitle'),
   infoElementBonuses: document.getElementById('infoElementBonuses'),
-  infoShopBonuses: document.getElementById('infoShopBonuses'),
-  infoShopBonusCard: document.getElementById('infoShopBonusCard'),
   infoElementBonusCard: document.getElementById('infoElementBonusCard'),
+  infoDevkitShopCard: document.getElementById('infoDevkitShopCard'),
   infoWelcomeCard: document.querySelector('.info-card--welcome'),
   infoWelcomeContent: document.getElementById('info-welcome-content'),
   infoWelcomeToggle: document.getElementById('infoWelcomeToggle'),
   infoCardsCard: document.getElementById('infoCardsCard'),
   infoCardsContent: document.getElementById('info-cards-content'),
-    infoCardsToggle: document.getElementById('infoCardsToggle'),
-    infoCardsList: document.getElementById('infoCardsList'),
-    infoCardsEmpty: document.getElementById('infoCardsEmpty'),
-    collectionImagesCard: document.getElementById('collectionImagesCard'),
-    collectionImagesContent: document.getElementById('collection-images-content'),
-    collectionImagesToggle: document.getElementById('collectionImagesToggle'),
-    collectionImagesList: document.getElementById('collectionImagesList'),
-    collectionImagesEmpty: document.getElementById('collectionImagesEmpty'),
+  infoCardsToggle: document.getElementById('infoCardsToggle'),
+  infoCardsList: document.getElementById('infoCardsList'),
+  infoCardsEmpty: document.getElementById('infoCardsEmpty'),
+  collectionImagesCard: document.getElementById('collectionImagesCard'),
+  collectionImagesContent: document.getElementById('collection-images-content'),
+  collectionImagesToggle: document.getElementById('collectionImagesToggle'),
+  collectionImagesList: document.getElementById('collectionImagesList'),
+  collectionImagesEmpty: document.getElementById('collectionImagesEmpty'),
   infoCharactersCard: document.querySelector('.info-card--characters'),
   infoCharactersContent: document.getElementById('info-characters-content'),
   infoCharactersToggle: document.getElementById('infoCharactersToggle'),
@@ -5946,11 +5970,7 @@ function updateInfoAchievementsVisibility() {
 }
 
 function updateInfoBonusVisibility() {
-  const visible = areInfoBonusesUnlocked();
-  if (elements.infoShopBonusCard) {
-    elements.infoShopBonusCard.hidden = !visible;
-    elements.infoShopBonusCard.setAttribute('aria-hidden', visible ? 'false' : 'true');
-  }
+  const visible = areInfoBonusesUnlocked() && isInfoSectionsFeatureEnabled();
   if (elements.infoElementBonusCard) {
     elements.infoElementBonusCard.hidden = !visible;
     elements.infoElementBonusCard.setAttribute('aria-hidden', visible ? 'false' : 'true');
@@ -5973,6 +5993,15 @@ function updateCollectionImagesVisibility() {
   const unlocked = isCollectionFeatureEnabled() && isPageUnlocked('collection');
   elements.collectionImagesCard.hidden = !unlocked;
   elements.collectionImagesCard.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
+}
+
+function updateInfoDevkitVisibility() {
+  if (!elements.infoDevkitShopCard) {
+    return;
+  }
+  const visible = isInfoSectionsFeatureEnabled();
+  elements.infoDevkitShopCard.hidden = !visible;
+  elements.infoDevkitShopCard.setAttribute('aria-hidden', visible ? 'false' : 'true');
 }
 
 function readStoredInfoCardCollapsed(storageKey, defaultValue = false) {
@@ -6437,6 +6466,7 @@ function updatePrimaryNavigationLocks() {
   updateShopUnlockHint();
 
   updateInfoAchievementsVisibility();
+  updateInfoDevkitVisibility();
   updateInfoCardsVisibility();
   updateCollectionImagesVisibility();
 
