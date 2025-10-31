@@ -1053,6 +1053,18 @@ const GAME_CONFIG = {
         jokerRowTopBottom: 10,
         jokerRowMiddle: 25
       },
+      /**
+       * Pondération des symboles utilisés pour générer les tirages.
+       * Les valeurs représentent le poids relatif de chaque case.
+       */
+      symbolWeights: {
+        hearts: 1,
+        diamonds: 1,
+        clubs: 1,
+        spades: 1,
+        joker: 0.5,
+        void: 2
+      },
       animation: {
         initialMs: 3000,
         columnDelayMs: 1000,
