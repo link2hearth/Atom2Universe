@@ -605,14 +605,32 @@
     if (!count) {
       return -1;
     }
-    if (count === 1) {
-      return getDealerIndex();
+    const dealerIndex = getDealerIndex();
+    if (dealerIndex < 0) {
+      return -1;
     }
-    return normalizeSeatIndex(getDealerIndex() + 1);
+    if (count === 1) {
+      return dealerIndex;
+    }
+    if (count === 2) {
+      return dealerIndex;
+    }
+    return normalizeSeatIndex(dealerIndex + 1);
   }
 
   function getBigBlindIndex() {
-    return getSmallBlindIndex();
+    const count = getPlayerCount();
+    if (!count) {
+      return -1;
+    }
+    const smallBlindIndex = getSmallBlindIndex();
+    if (smallBlindIndex < 0) {
+      return -1;
+    }
+    if (count === 1) {
+      return smallBlindIndex;
+    }
+    return normalizeSeatIndex(smallBlindIndex + 1);
   }
 
   function getBettingOrder(options = {}) {
@@ -1212,6 +1230,10 @@
         return 'Check';
       case 'index.sections.holdem.playerStatus.blind':
         return 'Blind {amount}';
+      case 'index.sections.holdem.playerStatus.smallBlind':
+        return 'Small blind {amount}';
+      case 'index.sections.holdem.playerStatus.bigBlind':
+        return 'Big blind {amount}';
       case 'index.sections.holdem.playerStatus.waiting':
         return 'En attente';
       case 'index.sections.holdem.playerStatus.revealed':
@@ -1642,18 +1664,41 @@
     if (!playerCount) {
       return;
     }
-    const blindPlayer = state.players[getBigBlindIndex()];
+    state.currentBet = 0;
 
-    if (blindPlayer) {
-      const amount = Math.min(state.blind, blindPlayer.stack + blindPlayer.bet);
-      applyBet(blindPlayer, blindPlayer.bet + amount);
-      setPlayerStatus(blindPlayer, 'index.sections.holdem.playerStatus.blind', {
-        amount: formatAmount(amount)
-      });
-      state.currentBet = Math.max(state.currentBet, blindPlayer.bet);
-    } else {
-      state.currentBet = 0;
+    const smallBlindIndex = getSmallBlindIndex();
+    const bigBlindIndex = getBigBlindIndex();
+    const smallBlindAmount = Math.max(1, Math.floor(state.blind / 2));
+    const bigBlindAmount = Math.max(state.blind, state.minRaise);
+
+    const postBlindFor = (index, amount, statusKey) => {
+      if (index < 0) {
+        return;
+      }
+      const player = state.players[index];
+      if (!player || player.folded || player.allIn) {
+        return;
+      }
+      const previousBet = player.bet;
+      applyBet(player, player.bet + amount);
+      const posted = player.bet - previousBet;
+      if (posted <= 0) {
+        return;
+      }
+      if (!player.allIn) {
+        setPlayerStatus(player, statusKey, { amount: formatAmount(posted) });
+      }
+      state.currentBet = Math.max(state.currentBet, player.bet);
+    };
+
+    if (smallBlindIndex >= 0 && smallBlindIndex !== bigBlindIndex) {
+      postBlindFor(smallBlindIndex, smallBlindAmount, 'index.sections.holdem.playerStatus.smallBlind');
     }
+
+    if (bigBlindIndex >= 0) {
+      postBlindFor(bigBlindIndex, bigBlindAmount, 'index.sections.holdem.playerStatus.bigBlind');
+    }
+
     state.lastRaiseAmount = state.minRaise;
   }
 
