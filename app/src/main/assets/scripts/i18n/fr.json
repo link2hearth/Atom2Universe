@@ -2995,7 +2995,9 @@
       },
       "ticketStar": {
         "single": "Ticket de tirage obtenu !",
-        "multiple": "+{count} tickets de tirage !"
+        "multiple": "+{count} tickets de tirage !",
+        "collectAria": "Collecter un ticket de tirage",
+        "imageAlt": "Étoile bonus"
       }
     },
     "appData": {
