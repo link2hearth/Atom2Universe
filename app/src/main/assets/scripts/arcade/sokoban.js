@@ -26,6 +26,8 @@
     ])
   });
 
+  const RECENT_LAYOUT_MEMORY = 12;
+
   const DEFAULT_CONFIG = Object.freeze({
     shuffleMoves: Object.freeze({ min: 56, max: 180 }),
     generator: Object.freeze({
@@ -113,7 +115,9 @@
     currentMetrics: null,
     cellElements: [],
     elements: null,
-    languageHandler: null
+    languageHandler: null,
+    recentLayoutSignatures: [],
+    recentLayoutSignatureSet: new Set()
   };
 
   function computeMapSignature(map) {
@@ -180,6 +184,113 @@
       return computeMapSignature(config.map);
     }
     return 'default';
+  }
+
+  function computeLayoutSignatureFromParts(mapRows, targets, playerStart) {
+    if (!Array.isArray(mapRows) || mapRows.length === 0) {
+      return '';
+    }
+    const normalizedRows = mapRows
+      .map(row => (typeof row === 'string' ? row.replace(/\r/g, '') : ''))
+      .filter(row => row.length > 0);
+    if (!normalizedRows.length) {
+      return '';
+    }
+    const width = normalizedRows[0].length;
+    if (!normalizedRows.every(row => row.length === width)) {
+      return '';
+    }
+    const mapSignature = normalizedRows.join('|');
+    const targetEntries = Array.isArray(targets)
+      ? targets
+          .map(entry => {
+            if (Array.isArray(entry) && entry.length >= 2) {
+              const row = Number(entry[0]);
+              const col = Number(entry[1]);
+              return Number.isInteger(row) && Number.isInteger(col) ? `${row},${col}` : '';
+            }
+            if (entry && typeof entry === 'object') {
+              const row = Number(entry.row ?? entry[0]);
+              const col = Number(entry.col ?? entry[1]);
+              return Number.isInteger(row) && Number.isInteger(col) ? `${row},${col}` : '';
+            }
+            return '';
+          })
+          .filter(Boolean)
+          .sort()
+      : [];
+    const targetSignature = targetEntries.join(';');
+    let playerRow = 0;
+    let playerCol = 0;
+    if (Array.isArray(playerStart)) {
+      const row = Number(playerStart[0]);
+      const col = Number(playerStart[1]);
+      if (Number.isInteger(row)) {
+        playerRow = row;
+      }
+      if (Number.isInteger(col)) {
+        playerCol = col;
+      }
+    } else if (playerStart && typeof playerStart === 'object') {
+      const row = Number(playerStart.row ?? playerStart[0]);
+      const col = Number(playerStart.col ?? playerStart[1]);
+      if (Number.isInteger(row)) {
+        playerRow = row;
+      }
+      if (Number.isInteger(col)) {
+        playerCol = col;
+      }
+    }
+    return `${mapSignature}#${targetSignature}#${playerRow},${playerCol}`;
+  }
+
+  function wasLayoutRecentlyUsed(signature) {
+    if (typeof signature !== 'string' || !signature) {
+      return false;
+    }
+    return state.recentLayoutSignatureSet.has(signature);
+  }
+
+  function rememberLayoutSignature(signature) {
+    if (typeof signature !== 'string') {
+      return;
+    }
+    const trimmed = signature.trim();
+    if (!trimmed) {
+      return;
+    }
+    const list = state.recentLayoutSignatures;
+    const set = state.recentLayoutSignatureSet;
+    if (set.has(trimmed)) {
+      const index = list.indexOf(trimmed);
+      if (index >= 0) {
+        list.splice(index, 1);
+      }
+    }
+    list.push(trimmed);
+    set.add(trimmed);
+    while (list.length > RECENT_LAYOUT_MEMORY) {
+      const removed = list.shift();
+      if (removed != null) {
+        set.delete(removed);
+      }
+    }
+  }
+
+  function recordCurrentLayoutSignature() {
+    if (!state.currentLevelLayout || state.usingFallbackLayout || state.currentLevelLayout.isFallback) {
+      return;
+    }
+    const signature = state.currentLevelLayout.signature
+      || computeLayoutSignatureFromParts(
+        state.currentLevelLayout.map,
+        state.currentLevelLayout.targets,
+        state.currentLevelLayout.playerStart
+      );
+    if (!signature) {
+      return;
+    }
+    rememberLayoutSignature(signature);
   }
 
   function translateText(key, fallback, params) {
@@ -984,11 +1095,17 @@
     }
 
     const mapRows = grid.map(row => row.join(''));
+    const signature = computeLayoutSignatureFromParts(
+      mapRows,
+      targets,
+      { row: playerStartRow, col: playerStartCol }
+    );
     return {
       map: mapRows,
       targets,
       playerStart: { row: playerStartRow, col: playerStartCol },
-      initialState
+      initialState,
+      signature
     };
   }
 
@@ -1965,10 +2082,16 @@
     state.player = { row: startRow, col: startCol };
     state.boxes = new Set();
 
+    const signature = computeLayoutSignatureFromParts(
+      rows,
+      sanitizedTargets,
+      { row: startRow, col: startCol }
+    );
     return {
       map: rows,
       targets: sanitizedTargets,
-      playerStart: { row: startRow, col: startCol }
+      playerStart: { row: startRow, col: startCol },
+      signature
     };
   }
 
@@ -2098,6 +2221,8 @@
     state.fallbackLevel = cloneLevelDefinition(normalized.fallbackLevel);
     state.currentLevelLayout = null;
     state.usingFallbackLayout = false;
+    state.recentLayoutSignatures = [];
+    state.recentLayoutSignatureSet = new Set();
     clearCompletionEffects();
 
     if (state.levelDefinitions.length > 0) {
@@ -2393,13 +2518,21 @@
       state.currentLevelLayout = {
         map: appliedLayout.map.slice(),
         targets: appliedLayout.targets.map(coords => [coords[0], coords[1]]),
-        playerStart: { row: appliedLayout.playerStart.row, col: appliedLayout.playerStart.col }
+        playerStart: { row: appliedLayout.playerStart.row, col: appliedLayout.playerStart.col },
+        signature: appliedLayout.signature || computeLayoutSignatureFromParts(
+          appliedLayout.map,
+          appliedLayout.targets,
+          appliedLayout.playerStart
+        )
       };
       if (payload.procedural.fallback) {
         state.currentLevelLayout.isFallback = true;
         state.usingFallbackLayout = true;
       } else {
         state.usingFallbackLayout = false;
+        if (state.currentLevelLayout.signature) {
+          rememberLayoutSignature(state.currentLevelLayout.signature);
+        }
       }
       buildBoardCells();
       fallbackSnapshot = takeSnapshot();
@@ -3159,6 +3292,7 @@
     state.pushCount = 0;
     state.solved = false;
     state.ready = true;
+    recordCurrentLayoutSignature();
     setStatus(
       'scripts.arcade.sokoban.status.ready',
       'Niveau prêt.',
@@ -3235,6 +3369,11 @@
     const fallbackPlayerStart = Array.isArray(state.fallbackLevel.playerStart)
       ? [Number(state.fallbackLevel.playerStart[0]), Number(state.fallbackLevel.playerStart[1])]
       : [state.playerStart.row, state.playerStart.col];
+    const fallbackSignature = computeLayoutSignatureFromParts(
+      fallbackMap,
+      fallbackTargets,
+      { row: fallbackPlayerStart[0], col: fallbackPlayerStart[1] }
+    );
     state.currentLevelLayout = {
       map: fallbackMap,
       targets: fallbackTargets,
@@ -3242,7 +3381,8 @@
         row: fallbackPlayerStart[0],
         col: fallbackPlayerStart[1]
       },
-      isFallback: true
+      isFallback: true,
+      signature: fallbackSignature
     };
     state.usingFallbackLayout = true;
     const baseLevel = clampInt(state.level, 1, 9999, 1);
@@ -3277,15 +3417,23 @@
       if (!layout) {
         continue;
       }
+      if (layout.signature && wasLayoutRecentlyUsed(layout.signature)) {
+        continue;
+      }
       const applied = applyDynamicLayout(layout);
       if (!applied) {
+        continue;
+      }
+      const appliedSignature = applied.signature || layout.signature;
+      if (appliedSignature && wasLayoutRecentlyUsed(appliedSignature)) {
         continue;
       }
 
       state.currentLevelLayout = {
         map: applied.map.slice(),
         targets: applied.targets.map(target => [target[0], target[1]]),
-        playerStart: { row: applied.playerStart.row, col: applied.playerStart.col }
+        playerStart: { row: applied.playerStart.row, col: applied.playerStart.col },
+        signature: appliedSignature
       };
       state.usingFallbackLayout = false;
 
@@ -3344,7 +3492,12 @@
     state.currentLevelLayout = {
       map: applied.map.slice(),
       targets: applied.targets.map(entry => [entry[0], entry[1]]),
-      playerStart: { row: applied.playerStart.row, col: applied.playerStart.col }
+      playerStart: { row: applied.playerStart.row, col: applied.playerStart.col },
+      signature: applied.signature || computeLayoutSignatureFromParts(
+        applied.map,
+        applied.targets,
+        applied.playerStart
+      )
     };
     state.usingFallbackLayout = false;
     const shuffleAttempts = randomizeLevel ? 6 : 4;
@@ -3400,7 +3553,7 @@
     }
 
     if (state.config?.generator) {
-      if (reuseCurrentProceduralLayout({ randomizeLevel })) {
+      if (!randomizeLevel && reuseCurrentProceduralLayout({ randomizeLevel })) {
         return;
       }
       prepareProceduralLevel({ randomizeLevel });
