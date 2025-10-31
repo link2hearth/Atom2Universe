@@ -1490,6 +1490,8 @@
             case '#':
               break;
             case '.':
+              walkable = true;
+              break;
             case 'o':
             case 'O':
             case 'T':
