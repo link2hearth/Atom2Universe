@@ -73,20 +73,8 @@
     timerAnchor: 0,
     elapsedSeconds: 0,
     shareResetTimer: null,
-    rewardClaimed: false,
-    lastAnalysis: null
+    rewardClaimed: false
   };
-
-  const DIRECTION_ORDER = Object.freeze([
-    { bit: DIRECTIONS.NORTH, dx: 0, dy: -1, opp: DIRECTIONS.SOUTH },
-    { bit: DIRECTIONS.EAST, dx: 1, dy: 0, opp: DIRECTIONS.WEST },
-    { bit: DIRECTIONS.SOUTH, dx: 0, dy: 1, opp: DIRECTIONS.NORTH },
-    { bit: DIRECTIONS.WEST, dx: -1, dy: 0, opp: DIRECTIONS.EAST }
-  ]);
-
-  function indexFor(x, y, size) {
-    return y * size + x;
-  }
 
   function translate(key, fallback, params) {
     const translator = typeof window !== 'undefined'
@@ -256,104 +244,74 @@
     return { x: 0, y: 0 };
   }
 
-  function evaluateConnections(grid) {
+  function isSolved(grid, source) {
     const size = grid.length;
-    const adjacency = new Map();
-    const satisfied = new Set();
-    const leakIds = new Set();
-    const pipeIds = new Set();
+    const totalPipeTiles = grid.flat().reduce((count, mask) => (mask !== 0 ? count + 1 : count), 0);
+    if (totalPipeTiles === 0) {
+      return false;
+    }
+    const visited = new Set();
+    const queue = [{ x: source.x, y: source.y }];
+    visited.add(source.y * size + source.x);
 
-    for (let y = 0; y < size; y += 1) {
-      for (let x = 0; x < size; x += 1) {
-        const mask = grid[y][x];
-        if (mask === 0) {
+    while (queue.length) {
+      const current = queue.shift();
+      const mask = grid[current.y][current.x];
+      if (mask === 0) {
+        continue;
+      }
+      const neighbors = neighborsOf(current.x, current.y, size);
+      for (const neighbor of neighbors) {
+        if (!(mask & neighbor.dir)) {
           continue;
         }
-        const id = indexFor(x, y, size);
-        pipeIds.add(id);
-        adjacency.set(id, []);
-
-        const neighbors = neighborsOf(x, y, size);
-        const neighborByDir = new Map(neighbors.map(neighbor => [neighbor.dir, neighbor]));
-
-        let hasConnection = false;
-        let hasLeak = false;
-
-        DIRECTION_ORDER.forEach(direction => {
-          const neighbor = neighborByDir.get(direction.bit);
-          const neighborMask = neighbor ? grid[neighbor.y][neighbor.x] : 0;
-          const outgoing = (mask & direction.bit) !== 0;
-          const incoming = neighbor ? (neighborMask & direction.opp) !== 0 : false;
-
-          if (outgoing && incoming) {
-            hasConnection = true;
-            adjacency.get(id).push(indexFor(neighbor.x, neighbor.y, size));
-          } else if (outgoing || incoming) {
-            hasLeak = true;
-          }
-        });
-
-        if (hasLeak) {
-          leakIds.add(id);
+        const neighborMask = grid[neighbor.y][neighbor.x];
+        if (!(neighborMask & neighbor.opp)) {
+          return false;
         }
-
-        if (hasConnection && !hasLeak) {
-          satisfied.add(id);
+        const id = neighbor.y * size + neighbor.x;
+        if (!visited.has(id) && neighborMask !== 0) {
+          visited.add(id);
+          queue.push({ x: neighbor.x, y: neighbor.y });
         }
       }
     }
 
-    const components = [];
-    const visited = new Set();
-
-    satisfied.forEach(id => {
-      if (visited.has(id)) {
-        return;
-      }
-      const component = new Set();
-      const queue = [id];
-      visited.add(id);
-      component.add(id);
-
-      while (queue.length) {
-        const current = queue.shift();
-        const neighbors = adjacency.get(current) || [];
-        neighbors.forEach(nextId => {
-          if (!satisfied.has(nextId) || visited.has(nextId)) {
-            return;
-          }
-          visited.add(nextId);
-          component.add(nextId);
-          queue.push(nextId);
-        });
-      }
-
-      components.push(component);
-    });
-
-    return {
-      satisfied,
-      leakIds,
-      components,
-      pipeCount: pipeIds.size
-    };
+    return visited.size === totalPipeTiles;
   }
 
-  function isSolved(grid, analysis) {
-    const result = analysis || evaluateConnections(grid);
-    if (!result || result.pipeCount === 0) {
-      return false;
+  function computeReachableTiles(grid, source) {
+    const size = grid.length;
+    const visited = new Set();
+    const queue = [{ x: source.x, y: source.y }];
+    visited.add(source.y * size + source.x);
+
+    while (queue.length) {
+      const current = queue.shift();
+      const mask = grid[current.y][current.x];
+      if (mask === 0) {
+        continue;
+      }
+      const neighbors = neighborsOf(current.x, current.y, size);
+      neighbors.forEach(neighbor => {
+        if (!(mask & neighbor.dir)) {
+          return;
+        }
+        const neighborMask = grid[neighbor.y][neighbor.x];
+        if (!(neighborMask & neighbor.opp)) {
+          return;
+        }
+        const id = neighbor.y * size + neighbor.x;
+        if (!visited.has(id)) {
+          visited.add(id);
+          if (neighborMask !== 0) {
+            queue.push({ x: neighbor.x, y: neighbor.y });
+          }
+        }
+      });
     }
-    if (result.leakIds.size > 0) {
-      return false;
-    }
-    if (result.satisfied.size !== result.pipeCount) {
-      return false;
-    }
-    if (result.components.length !== 1) {
-      return false;
-    }
-    return result.components[0]?.size === result.pipeCount;
+
+    return visited;
   }
 
   function updateStats() {
@@ -508,30 +466,23 @@
 
   function paintConnectedTiles() {
     if (!state.tiles.length) {
-      return null;
+      return;
     }
-    const analysis = evaluateConnections(state.grid);
-    state.lastAnalysis = analysis;
+    const connected = computeReachableTiles(state.grid, state.source);
     for (let y = 0; y < state.tiles.length; y += 1) {
       for (let x = 0; x < state.tiles[y].length; x += 1) {
         const tile = state.tiles[y][x];
         if (!tile) {
           continue;
         }
-        const id = indexFor(x, y, state.size);
-        if (state.grid[y][x] !== 0 && analysis.satisfied.has(id)) {
+        const id = y * state.size + x;
+        if (connected.has(id) && state.grid[y][x] !== 0) {
           tile.classList.add('pipetap__tile--connected');
         } else {
           tile.classList.remove('pipetap__tile--connected');
         }
-        if (analysis.leakIds.has(id)) {
-          tile.classList.add('pipetap__tile--leaking');
-        } else {
-          tile.classList.remove('pipetap__tile--leaking');
-        }
       }
     }
-    return analysis;
   }
 
   function handleTileClick(event) {
@@ -552,9 +503,9 @@
     updateTileButton(button, state.grid[y][x]);
     state.moves += 1;
     updateStats();
-    const analysis = paintConnectedTiles();
+    paintConnectedTiles();
 
-    if (isSolved(state.grid, analysis)) {
+    if (isSolved(state.grid, state.source)) {
       state.solved = true;
       pauseTimer();
       awardCompletionTickets();
@@ -628,7 +579,6 @@
     state.elapsedSeconds = 0;
     state.solved = false;
     state.rewardClaimed = false;
-    state.lastAnalysis = null;
     hideWin();
     resetShareLabel();
 
