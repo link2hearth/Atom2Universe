@@ -32,6 +32,13 @@
   margin-inline: auto;
 }
 
+.arcade-hub__intro {
+  margin: 0;
+  font-size: calc(var(--arcade-hub-font-scale) * clamp(0.95rem, 1.5vw, 1.15rem));
+  color: var(--arcade-hub-card-description-color);
+  text-align: center;
+}
+
 .page--arcade {
   display: none;
   width: 100%;
