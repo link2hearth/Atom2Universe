@@ -71,6 +71,14 @@ class MainActivity : AppCompatActivity() {
                         return@evaluateJavascript
                     }
 
+                    if (stylesheetCount < 0) {
+                        Log.w(TAG, "Unable to inspect stylesheets due to WebView restrictions")
+                        if (cssRecoveryAttempted) {
+                            cssRecoveryAttempted = false
+                        }
+                        return@evaluateJavascript
+                    }
+
                     if (stylesheetCount > 0) {
                         if (cssRecoveryAttempted) {
                             cssRecoveryAttempted = false
