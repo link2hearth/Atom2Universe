@@ -23,6 +23,7 @@
   --gol-slider-track-bg: rgba(255, 255, 255, 0.16);
   --gol-slider-thumb-bg: linear-gradient(135deg, #90f7ff, #7f6bff);
   --gol-slider-thumb-glow: rgba(144, 247, 255, 0.18);
+  --gol-cell-color: rgba(255, 255, 255, 0.92);
   --gol-status-color: rgba(230, 236, 255, 0.86);
   --gol-status-accent-color: rgba(255, 255, 255, 0.88);
   --gol-panel-bg: rgba(10, 14, 28, 0.78);
@@ -413,6 +414,7 @@ body.theme-light .page--game-of-life {
   --gol-slider-track-bg: rgba(24, 32, 58, 0.16);
   --gol-slider-thumb-bg: linear-gradient(135deg, #7fb7ff, #6d8bff);
   --gol-slider-thumb-glow: rgba(110, 160, 255, 0.22);
+  --gol-cell-color: rgba(120, 200, 255, 0.85);
   --gol-status-color: rgba(32, 44, 80, 0.78);
   --gol-status-accent-color: rgba(16, 26, 52, 0.85);
   --gol-panel-bg: rgba(237, 241, 255, 0.94);
@@ -449,6 +451,7 @@ body.theme-neon .page--game-of-life {
   --gol-slider-track-bg: rgba(190, 210, 255, 0.24);
   --gol-slider-thumb-bg: linear-gradient(135deg, #90f7ff, #a06bff);
   --gol-slider-thumb-glow: rgba(144, 247, 255, 0.25);
+  --gol-cell-color: rgba(255, 255, 255, 0.92);
   --gol-status-color: rgba(220, 230, 255, 0.82);
   --gol-status-accent-color: rgba(255, 255, 255, 0.9);
   --gol-panel-bg: rgba(12, 16, 50, 0.88);
@@ -485,6 +488,7 @@ body.theme-aurora .page--game-of-life {
   --gol-slider-track-bg: rgba(180, 250, 224, 0.22);
   --gol-slider-thumb-bg: linear-gradient(135deg, #5fffb9, #36d6ff);
   --gol-slider-thumb-glow: rgba(90, 255, 210, 0.28);
+  --gol-cell-color: rgba(255, 255, 255, 0.92);
   --gol-status-color: rgba(210, 250, 236, 0.82);
   --gol-status-accent-color: rgba(230, 255, 244, 0.9);
   --gol-panel-bg: rgba(12, 34, 28, 0.86);
