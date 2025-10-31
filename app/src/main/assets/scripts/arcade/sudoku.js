@@ -1110,6 +1110,17 @@
       };
     }
 
+    function syncCellValueState(cell, value) {
+      if (!cell) {
+        return;
+      }
+      if (value) {
+        cell.dataset.value = String(value);
+      } else {
+        delete cell.dataset.value;
+      }
+    }
+
     function loadBoardToGrid(board, fixedMask) {
       gridElement.innerHTML = '';
       clearSelectionHighlights();
@@ -1136,6 +1147,7 @@
           if (value) {
             input.value = String(value);
           }
+          syncCellValueState(cell, value);
           input.readOnly = true;
           input.dataset.fixed = isFixedCell ? 'true' : 'false';
           if (isFixedCell) {
@@ -1146,7 +1158,9 @@
           }
           input.addEventListener('input', event => {
             const sanitized = event.target.value.replace(/[^1-9]/g, '');
-            event.target.value = sanitized.slice(-1);
+            const normalizedValue = sanitized.slice(-1);
+            event.target.value = normalizedValue;
+            syncCellValueState(event.target.closest('.sudoku-cell'), normalizedValue);
             const { workingBoard } = updateMistakeHighlights();
             if (currentLevel !== 'facile' && manualMistakeReveal) {
               manualMistakeReveal = false;
