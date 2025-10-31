@@ -580,3 +580,7 @@ LayeredNumber.EPSILON = Number.isFinite(LayeredNumber.EPSILON)
   ? LayeredNumber.EPSILON
   : DEFAULT_EPSILON;
 
+if (typeof globalThis !== 'undefined') {
+  globalThis.LayeredNumber = LayeredNumber;
+}
+
