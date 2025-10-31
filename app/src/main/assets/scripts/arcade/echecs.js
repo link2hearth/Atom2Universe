@@ -12,6 +12,7 @@
   const STATUS_SELECTOR = '[data-chess-status]';
   const OUTCOME_SELECTOR = '[data-chess-outcome]';
   const HELPER_SELECTOR = '[data-chess-helper]';
+  const HELP_BUTTON_SELECTOR = '[data-chess-help]';
   const PROMOTION_SELECTOR = '[data-chess-promotion]';
   const PROMOTION_OPTIONS_SELECTOR = '[data-chess-promotion-options]';
   const COORDINATES_TOGGLE_SELECTOR = '[data-chess-toggle-coordinates]';
@@ -142,6 +143,19 @@
     defaultMode: 'standard',
     modes: DEFAULT_DIFFICULTY_MODES
   });
+
+  const TRAINING_MODE_ID = 'training';
+  const HELP_MODE_CANDIDATE_IDS = Object.freeze([
+    'veryHard',
+    'very-hard',
+    'tresDifficile',
+    'tresdifficile',
+    'tres-difficile',
+    'extreme',
+    'hard',
+    'hardcore',
+    'expert'
+  ]);
 
   const DEFAULT_MATCH_LIMIT = 80;
 
@@ -1187,6 +1201,7 @@
   });
 
   const MATE_SCORE = 100000;
+  const MAX_QUIESCENCE_PLY = 18;
   const TRANSPOSITION_FLAG_EXACT = 0;
   const TRANSPOSITION_FLAG_LOWER = 1;
   const TRANSPOSITION_FLAG_UPPER = 2;
@@ -1930,6 +1945,50 @@
     });
   }
 
+  function quiescenceSearch(state, alpha, beta, colorSign, context, ply) {
+    const evaluation = colorSign * evaluateStaticPosition(state);
+    if (context && context.deadline && getCurrentTimeMs() >= context.deadline) {
+      return { score: evaluation, move: null, aborted: true };
+    }
+    if (ply >= MAX_QUIESCENCE_PLY) {
+      return { score: evaluation, move: null, aborted: false };
+    }
+
+    if (evaluation >= beta) {
+      return { score: evaluation, move: null, aborted: false };
+    }
+    let localAlpha = Math.max(alpha, evaluation);
+    let bestScore = evaluation;
+    let aborted = false;
+
+    const tacticalMoves = generateQuiescenceMoves(state);
+    if (!tacticalMoves.length) {
+      return { score: evaluation, move: null, aborted: false };
+    }
+
+    const orderedMoves = orderMovesForSearch(state, tacticalMoves, null, context, ply);
+    for (let i = 0; i < orderedMoves.length; i += 1) {
+      const move = orderedMoves[i];
+      const nextState = applyMove(state, move);
+      const child = quiescenceSearch(nextState, -beta, -localAlpha, -colorSign, context, ply + 1);
+      if (child.aborted) {
+        aborted = true;
+      }
+      const score = -child.score;
+      if (score > bestScore) {
+        bestScore = score;
+      }
+      if (score > localAlpha) {
+        localAlpha = score;
+      }
+      if (localAlpha >= beta || aborted) {
+        break;
+      }
+    }
+
+    return { score: bestScore, move: null, aborted };
+  }
+
   function negamax(state, depth, alpha, beta, colorSign, context, ply) {
     const alphaOriginal = alpha;
     const isRoot = ply === 1;
@@ -1941,7 +2000,7 @@
     }
 
     if (depth === 0) {
-      return { score: colorSign * evaluateStaticPosition(state), move: null, aborted: false };
+      return quiescenceSearch(state, alpha, beta, colorSign, context, ply);
     }
 
     if (state.halfmoveClock >= 100 || isInsufficientMaterial(state.board)) {
@@ -2122,6 +2181,7 @@
     }
 
     state.aiThinking = true;
+    updateTrainingHelpState(state, ui);
     state.ai.searchId += 1;
     const searchId = state.ai.searchId;
     const settings = state.ai.settings || DEFAULT_AI_SETTINGS;
@@ -2153,6 +2213,7 @@
         return;
       }
       state.aiThinking = false;
+      updateTrainingHelpState(state, ui);
       clearHelperMessage(state);
       updateHelper(state, ui);
       if (!result.move) {
@@ -2612,6 +2673,21 @@
       }
     }
     return legalMoves;
+  }
+
+  function generateQuiescenceMoves(state) {
+    const moves = generateLegalMoves(state);
+    const tacticalMoves = [];
+    for (let i = 0; i < moves.length; i += 1) {
+      const move = moves[i];
+      if (!move) {
+        continue;
+      }
+      if (move.isCapture || move.promotion) {
+        tacticalMoves.push(move);
+      }
+    }
+    return tacticalMoves;
   }
 
   function applyMove(state, move) {
@@ -3142,6 +3218,11 @@
           && state.dragContext.hoverRow === row
           && state.dragContext.hoverCol === col;
         button.classList.toggle('is-drag-target', Boolean(isDragTarget));
+        const hint = state.trainingHint;
+        const isHintSource = hint && hint.fromRow === row && hint.fromCol === col;
+        const isHintTarget = hint && hint.toRow === row && hint.toCol === col;
+        button.classList.toggle('is-hint-source', Boolean(isHintSource));
+        button.classList.toggle('is-hint-target', Boolean(isHintTarget));
         if (selection) {
           if (selectionTargets && selectionTargets.size > 0) {
             const move = selectionTargets.get(squareIndex);
@@ -3293,6 +3374,268 @@
       }
     }
     updateDifficultyDescription(state, ui);
+    updateTrainingHelpState(state, ui);
+  }
+
+  function isTrainingDifficultyMode(mode) {
+    return Boolean(mode && mode.id === TRAINING_MODE_ID);
+  }
+
+  function isTrainingMode(state) {
+    if (!state) {
+      return false;
+    }
+    const difficulty = state.difficulty || resolveDifficultyMode(state.difficultyId);
+    return isTrainingDifficultyMode(difficulty) && !isTwoPlayerMode(state);
+  }
+
+  function resolveTrainingHelpDifficultyMode() {
+    const modes = Array.isArray(DIFFICULTY_CONFIG.modes) && DIFFICULTY_CONFIG.modes.length
+      ? DIFFICULTY_CONFIG.modes
+      : DEFAULT_DIFFICULTY_MODES;
+
+    for (let index = 0; index < HELP_MODE_CANDIDATE_IDS.length; index += 1) {
+      const candidateId = HELP_MODE_CANDIDATE_IDS[index];
+      if (typeof candidateId !== 'string' || !candidateId) {
+        continue;
+      }
+      const candidate = findDifficultyMode(DIFFICULTY_CONFIG, candidateId);
+      if (candidate && candidate.ai && !candidate.twoPlayer) {
+        return candidate;
+      }
+    }
+
+    let bestMode = null;
+    let bestScore = Number.NEGATIVE_INFINITY;
+    for (let i = 0; i < modes.length; i += 1) {
+      const mode = modes[i];
+      if (!mode || mode.twoPlayer || !mode.ai) {
+        continue;
+      }
+      const settings = getConfiguredChessAiSettings(mode);
+      const depth = clampDepth(settings.depth);
+      const time = toNonNegativeNumber(settings.timeLimitMs, 0);
+      const transposition = clampTranspositionSize(settings.transpositionSize);
+      const score = (depth * 1e9) + (time * 1e3) + transposition;
+      if (score > bestScore || !bestMode) {
+        bestMode = mode;
+        bestScore = score;
+      }
+    }
+    return bestMode || resolveDifficultyMode('expert');
+  }
+
+  function canRequestTrainingHint(state) {
+    if (!state) {
+      return false;
+    }
+    if (!isTrainingMode(state)) {
+      return false;
+    }
+    if (state.trainingHintPending || state.aiThinking) {
+      return false;
+    }
+    if (state.pendingPromotion || state.isGameOver) {
+      return false;
+    }
+    return state.activeColor === WHITE;
+  }
+
+  function updateTrainingHelpState(state, ui) {
+    if (!ui || !ui.helpButton) {
+      return;
+    }
+    const button = ui.helpButton;
+    if (!isTrainingMode(state)) {
+      button.hidden = true;
+      button.setAttribute('aria-hidden', 'true');
+      button.disabled = true;
+      button.setAttribute('aria-disabled', 'true');
+      button.textContent = translate('index.sections.echecs.controls.help', 'Aide');
+      button.removeAttribute('aria-busy');
+      button.removeAttribute('title');
+      return;
+    }
+
+    button.hidden = false;
+    button.setAttribute('aria-hidden', 'false');
+
+    const workingLabel = translate('index.sections.echecs.controls.helpWorking', 'Calcul en cours…');
+    const idleLabel = translate('index.sections.echecs.controls.help', 'Aide');
+    const opponentTurnMessage = translate(
+      'index.sections.echecs.controls.helpOpponentTurn',
+      'Patientez, c’est au tour de l’IA.'
+    );
+    const gameOverMessage = translate(
+      'index.sections.echecs.controls.helpGameOver',
+      'La partie est terminée.'
+    );
+    const promotionMessage = translate(
+      'index.sections.echecs.controls.helpPromotionPending',
+      'Choisissez une promotion pour continuer.'
+    );
+
+    const opponentTurn = state.activeColor !== WHITE;
+    const canRequest = canRequestTrainingHint(state);
+    const isPending = state.trainingHintPending;
+    const isGameOver = state.isGameOver;
+    const awaitingPromotion = state.pendingPromotion;
+
+    button.disabled = !canRequest;
+    button.setAttribute('aria-disabled', button.disabled ? 'true' : 'false');
+    button.textContent = isPending ? workingLabel : idleLabel;
+    if (isPending) {
+      button.setAttribute('aria-busy', 'true');
+      button.title = workingLabel;
+    } else {
+      button.removeAttribute('aria-busy');
+      if (isGameOver) {
+        button.title = gameOverMessage;
+      } else if (awaitingPromotion) {
+        button.title = promotionMessage;
+      } else if (opponentTurn || state.aiThinking) {
+        button.title = opponentTurnMessage;
+      } else {
+        button.removeAttribute('title');
+      }
+    }
+  }
+
+  function clearTrainingHint(state) {
+    if (!state) {
+      return;
+    }
+    state.trainingHint = null;
+  }
+
+  function requestTrainingHint(state, ui) {
+    if (!state || !ui || !ui.helpButton) {
+      return;
+    }
+    if (!canRequestTrainingHint(state)) {
+      updateTrainingHelpState(state, ui);
+      return;
+    }
+
+    const helpMode = resolveTrainingHelpDifficultyMode();
+    const effectiveMode = helpMode && helpMode.ai ? helpMode : resolveDifficultyMode('expert');
+    const difficultyLabel = getDifficultyDisplayName(effectiveMode);
+
+    clearTrainingHint(state);
+    state.trainingHintPending = true;
+    state.trainingHintRequestId = Number.isInteger(state.trainingHintRequestId)
+      ? state.trainingHintRequestId + 1
+      : 1;
+    const requestId = state.trainingHintRequestId;
+    const initialKey = state.positionKey;
+
+    updateTrainingHelpState(state, ui);
+    renderBoard(state, ui);
+    showInteractionMessage(
+      state,
+      ui,
+      'index.sections.echecs.helperTrainingHintPending',
+      'Recherche du meilleur coup ({difficulty})…',
+      { difficulty: difficultyLabel },
+      { duration: 0 }
+    );
+
+    const scheduler = typeof window !== 'undefined' && typeof window.setTimeout === 'function'
+      ? window.setTimeout.bind(window)
+      : typeof setTimeout === 'function'
+        ? setTimeout
+        : null;
+
+    const execute = function () {
+      let result = null;
+      try {
+        const settings = getConfiguredChessAiSettings(effectiveMode);
+        const context = {
+          settings: { ...settings, moveDelayMs: 0 },
+          table: new Map(),
+          searchId: 0,
+          lastBestMove: null
+        };
+        result = findBestAIMove(state, context);
+      } catch (error) {
+        console.warn('Training hint search failed', error);
+        if (requestId !== state.trainingHintRequestId) {
+          return;
+        }
+        state.trainingHintPending = false;
+        clearTrainingHint(state);
+        renderBoard(state, ui);
+        showInteractionMessage(
+          state,
+          ui,
+          'index.sections.echecs.helperTrainingHintUnavailable',
+          'Aucun conseil disponible ({difficulty}).',
+          { difficulty: difficultyLabel },
+          { duration: 5500 }
+        );
+        updateTrainingHelpState(state, ui);
+        return;
+      }
+
+      if (requestId !== state.trainingHintRequestId) {
+        return;
+      }
+
+      state.trainingHintPending = false;
+      if (state.positionKey !== initialKey) {
+        updateTrainingHelpState(state, ui);
+        return;
+      }
+
+      if (result && result.move) {
+        const preview = applyMove(state, result.move);
+        const notation = buildAlgebraicNotation(state, result.move, preview);
+        const from = toSquareNotation(result.move.fromRow, result.move.fromCol);
+        const to = toSquareNotation(result.move.toRow, result.move.toCol);
+        state.trainingHint = {
+          fromRow: result.move.fromRow,
+          fromCol: result.move.fromCol,
+          toRow: result.move.toRow,
+          toCol: result.move.toCol,
+          san: notation.san,
+          fromSquare: from,
+          toSquare: to,
+          difficulty: difficultyLabel
+        };
+        renderBoard(state, ui, { forceAccessibility: true });
+        showInteractionMessage(
+          state,
+          ui,
+          'index.sections.echecs.helperTrainingHint',
+          'Suggestion ({difficulty}) : {move} ({from}→{to})',
+          {
+            difficulty: difficultyLabel,
+            move: notation.san || (from + '→' + to),
+            from,
+            to
+          },
+          { duration: 6500 }
+        );
+      } else {
+        clearTrainingHint(state);
+        renderBoard(state, ui);
+        showInteractionMessage(
+          state,
+          ui,
+          'index.sections.echecs.helperTrainingHintUnavailable',
+          'Aucun conseil disponible ({difficulty}).',
+          { difficulty: difficultyLabel },
+          { duration: 5500 }
+        );
+      }
+      updateTrainingHelpState(state, ui);
+    };
+
+    if (scheduler) {
+      scheduler(execute, 0);
+    } else {
+      execute();
+    }
   }
 
   function applyAnalysisSummary(state, ui, analysis) {
@@ -3430,6 +3773,12 @@
       return false;
     }
     saveProgress(state);
+
+    clearTrainingHint(state);
+    state.trainingHintPending = false;
+    state.trainingHintRequestId = Number.isInteger(state.trainingHintRequestId)
+      ? state.trainingHintRequestId + 1
+      : 0;
 
     if (!(state.savedSlots instanceof Map)) {
       state.savedSlots = new Map();
@@ -5113,6 +5462,9 @@
     state.dragContext = null;
     state.helperMessage = null;
     state.helperTimeoutId = null;
+    state.trainingHint = null;
+    state.trainingHintPending = false;
+    state.trainingHintRequestId = 0;
     state.suppressClick = false;
     state.difficulty = difficulty;
     state.difficultyId = difficulty.id;
@@ -5137,6 +5489,7 @@
     updateStatus(state, ui);
     clearHelperMessage(state);
     updateHelper(state, ui);
+    updateTrainingHelpState(state, ui);
     updateSaveControls(state, ui);
     updateArchiveControls(state, ui);
     applyBoardPreferences(state, ui);
@@ -5744,6 +6097,11 @@
     const hadGameOutcome = Boolean(state.gameOutcome);
     const moveNumber = state.fullmove;
     const movingColor = state.activeColor;
+    clearTrainingHint(state);
+    state.trainingHintPending = false;
+    state.trainingHintRequestId = Number.isInteger(state.trainingHintRequestId)
+      ? state.trainingHintRequestId + 1
+      : 0;
     const nextState = applyMove(state, move);
     const notation = buildAlgebraicNotation(state, move, nextState);
     state.board = nextState.board;
@@ -5794,6 +6152,7 @@
     updateStatus(state, ui);
     clearHelperMessage(state);
     updateHelper(state, ui);
+    updateTrainingHelpState(state, ui);
     applyBoardPreferences(state, ui);
     if (metadata && metadata.analysis && metadata.analysis.type === 'ai') {
       state.lastAiAnalysis = createAiMoveAnalysis(state, move, metadata.analysis, notation);
@@ -5910,6 +6269,9 @@
       dragContext: null,
       helperMessage: null,
       helperTimeoutId: null,
+      trainingHint: null,
+      trainingHintPending: false,
+      trainingHintRequestId: 0,
       suppressClick: false,
       isTwoPlayer: twoPlayer,
       ai: twoPlayer ? null : createAiContext(difficulty),
@@ -5947,6 +6309,7 @@
     const statusElement = section.querySelector(STATUS_SELECTOR);
     const outcomeElement = section.querySelector(OUTCOME_SELECTOR);
     const helperElement = section.querySelector(HELPER_SELECTOR);
+    const helpButton = section.querySelector(HELP_BUTTON_SELECTOR);
     const promotionElement = section.querySelector(PROMOTION_SELECTOR);
     const promotionOptionsElement = section.querySelector(PROMOTION_OPTIONS_SELECTOR);
     const coordinatesToggle = section.querySelector(COORDINATES_TOGGLE_SELECTOR);
@@ -5988,6 +6351,7 @@
       statusElement,
       outcomeElement,
       helperElement,
+      helpButton,
       promotionElement,
       promotionOptionsElement,
       coordinatesToggle,
@@ -6065,6 +6429,11 @@
         revealAnalysis(state, ui);
       });
     }
+    if (helpButton) {
+      helpButton.addEventListener('click', function () {
+        requestTrainingHint(state, ui);
+      });
+    }
     if (saveButton) {
       saveButton.addEventListener('click', function () {
         if (!saveButton.disabled) {
@@ -6138,6 +6507,7 @@
     const hasStored = applyStoredProgress(state, storedProgress, ui);
 
     applyBoardPreferences(state, ui);
+    updateTrainingHelpState(state, ui);
     updateBoardTranslations(section, ui, state);
     if (!hasStored) {
       saveProgress(state);

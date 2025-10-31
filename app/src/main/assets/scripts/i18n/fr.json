@@ -903,7 +903,12 @@
             "pgnWhite": "Joueur blanc",
             "pgnBlackAi": "IA ({{difficulty}})",
             "pgnBlackTwoPlayer": "Joueur noir"
-          }
+          },
+          "help": "Aide",
+          "helpWorking": "Calcul en cours…",
+          "helpOpponentTurn": "Patientez, c’est au tour de l’IA.",
+          "helpGameOver": "La partie est terminée.",
+          "helpPromotionPending": "Choisissez une promotion pour continuer."
         },
         "history": {
           "title": "Historique des coups",
@@ -1032,7 +1037,10 @@
             },
             "generic": "Partie terminée."
           }
-        }
+        },
+        "helperTrainingHintPending": "Recherche du meilleur coup ({{difficulty}})…",
+        "helperTrainingHint": "Suggestion ({{difficulty}}) : {{move}} ({{from}}→{{to}})",
+        "helperTrainingHintUnavailable": "Aucun conseil disponible ({{difficulty}})."
       },
       "roulette": {
         "aria": "Mini-jeu Joker Roulette",
@@ -2391,7 +2399,7 @@
         },
         "pot": {
           "aria": "Pot total et phase en cours",
-          "label": "Pot total\u00a0:",
+          "label": "Pot total :",
           "unit": "atomes"
         },
         "communityPlaceholder": "Les cartes communes apparaîtront ici.",
