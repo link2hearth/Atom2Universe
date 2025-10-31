@@ -1266,6 +1266,10 @@
               "label": "Lights Out mini-game:",
               "description": "Plan each move to switch off every tile on grids that grow with the selected difficulty."
             },
+            "pipeTap": {
+              "label": "PipeTap mini-game:",
+              "description": "Rotate pipe tiles to connect the full circuit without leaks and claim extra gacha tickets."
+            },
             "sokoban": {
               "label": "Sokoban mini-game:",
               "description": "Slide or tap to push crates onto every target without ever pulling them back."
@@ -1297,6 +1301,10 @@
             "gameOfLife": {
               "label": "Game of Life mini-game:",
               "description": "Seed live cells and watch the rules in action: survive on 2 or 3 neighbours, be born on exactly 3, otherwise die."
+            },
+            "pachinko": {
+              "label": "Prism Pachinko mini-game:",
+              "description": "Drop prismatic orbs through a neon forest of pegs to hit cosmic multipliers and grow your atom stash."
             },
             "roulette": {
               "label": "Joker Roulette mini-game:",

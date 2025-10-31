@@ -1266,6 +1266,10 @@
               "label": "Mini jeu Lights Out :",
               "description": "Éteignez chaque case d’une grille qui change de taille selon la difficulté choisie en planifiant vos clics."
             },
+            "pipeTap": {
+              "label": "Mini jeu PipeTap :",
+              "description": "Faites pivoter les tuiles pour relier toute la canalisation sans fuite et décrocher des tickets de gacha."
+            },
             "sokoban": {
               "label": "Mini jeu Sokoban :",
               "description": "Faites glisser ou touchez pour pousser les caisses sur chaque cible sans jamais les tirer."
@@ -1297,6 +1301,10 @@
             "gameOfLife": {
               "label": "Mini jeu Jeu de la vie :",
               "description": "Placez des cellules vivantes et observez les règles : une cellule survit avec 2 ou 3 voisines, naît avec exactement 3 et meurt autrement."
+            },
+            "pachinko": {
+              "label": "Mini jeu Prisme Pachinko :",
+              "description": "Lâchez des orbes prismatiques sur un champ de picots néon pour viser les multiplicateurs cosmiques et gonfler vos atomes."
             },
             "roulette": {
               "label": "Mini jeu Joker Roulette :",
