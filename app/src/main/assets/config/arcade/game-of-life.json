@@ -1,7 +1,7 @@
 {
   "_comment": "Paramètres par défaut du mini-jeu Jeu de la vie",
   "simulation": {
-    "tickMs": 200,
+    "tickMs": 400,
     "fastForwardMultiplier": 4,
     "historyLimit": 240,
     "maxOffscreenDistance": 160

@@ -9,9 +9,11 @@
   const CUSTOM_PATTERNS_STORAGE_KEY = 'atom2univers.arcade.gameOfLife.customPatterns';
   const CUSTOM_PATTERN_COUNTER_STORAGE_KEY = 'atom2univers.arcade.gameOfLife.customPatternCounter';
 
+  const DEFAULT_CELL_COLOR = 'rgba(255, 255, 255, 0.92)';
+
   const DEFAULT_CONFIG = Object.freeze({
     simulation: Object.freeze({
-      tickMs: 200,
+      tickMs: 400,
       fastForwardMultiplier: 4,
       historyLimit: 240,
       maxOffscreenDistance: 160
@@ -421,8 +423,10 @@
       this.boundHandleVisibility = this.handleVisibilityChange.bind(this);
       this.boundHandleMenuPointerMove = this.handleMenuPointerMove.bind(this);
       this.boundHandleMenuPointerUp = this.handleMenuPointerUp.bind(this);
+      this.themeObserver = null;
       this.needsRedraw = false;
       this.canvasRect = { width: 0, height: 0 };
+      this.cellColor = DEFAULT_CELL_COLOR;
       this.boundHandleWindowResize = null;
 
       this.selectionState = {
@@ -452,6 +456,8 @@
       this.renderCellBuffer = { x: 0, y: 0 };
       this.boundsCellBuffer = { x: 0, y: 0 };
       this.selectionCellBuffer = { x: 0, y: 0 };
+
+      this.observeThemeChanges();
     }
 
     ensureAnimationLoop() {
@@ -536,6 +542,10 @@
       document.removeEventListener('visibilitychange', this.boundHandleVisibility);
       this.resetInputStates();
       this.requestScrollUnlock();
+      if (this.themeObserver && typeof this.themeObserver.disconnect === 'function') {
+        this.themeObserver.disconnect();
+      }
+      this.themeObserver = null;
     }
 
     onEnter() {
@@ -2110,11 +2120,23 @@
     }
 
     generateRandomPattern(mode) {
-      const width = clamp(Number(this.randomWidthInput?.value) || this.config.random.defaultWidth, 5, this.config.random.maxWidth);
-      const height = clamp(Number(this.randomHeightInput?.value) || this.config.random.defaultHeight, 5, this.config.random.maxHeight);
+      const widthInput = clamp(
+        Number(this.randomWidthInput?.value) || this.config.random.defaultWidth,
+        5,
+        this.config.random.maxWidth
+      );
+      const heightInput = clamp(
+        Number(this.randomHeightInput?.value) || this.config.random.defaultHeight,
+        5,
+        this.config.random.maxHeight
+      );
+      const width = Math.round(widthInput);
+      const height = Math.round(heightInput);
       const densityPercent = clamp(Number(this.randomDensitySlider?.value) || Math.round(this.config.random.defaultDensity * 100), 0, 100);
       const density = densityPercent / 100;
-      const area = Math.max(1, Math.round(width * height * density));
+      const totalCells = Math.max(0, width * height);
+      const desiredCells = Math.round(totalCells * density);
+      const area = Math.max(0, Math.min(totalCells, desiredCells));
       let seed = this.randomSeed;
       const rng = createMulberry32(seed);
       seed = advanceSeed(seed);
@@ -2232,7 +2254,10 @@
       const padding = this.viewport.paddingCells;
 
       ctx.save();
-      ctx.fillStyle = 'rgba(120, 200, 255, 0.85)';
+      const cellFill = typeof this.cellColor === 'string' && this.cellColor.trim()
+        ? this.cellColor.trim()
+        : DEFAULT_CELL_COLOR;
+      ctx.fillStyle = cellFill;
       const aliveCells = this.state.aliveCells;
       const renderCell = this.renderCellBuffer;
       const minDrawX = bounds.minX - padding;
@@ -2296,6 +2321,42 @@
       }
 
       this.needsRedraw = false;
+    }
+
+    readCellColor() {
+      if (!this.root || typeof window === 'undefined' || typeof window.getComputedStyle !== 'function') {
+        return DEFAULT_CELL_COLOR;
+      }
+      try {
+        const styles = window.getComputedStyle(this.root);
+        const value = styles.getPropertyValue('--gol-cell-color');
+        return value && value.trim() ? value.trim() : DEFAULT_CELL_COLOR;
+      } catch (error) {
+        return DEFAULT_CELL_COLOR;
+      }
+    }
+
+    updateCellColor(force = false) {
+      const next = this.readCellColor();
+      if (!force && next === this.cellColor) {
+        return;
+      }
+      this.cellColor = next;
+      this.requestRedraw();
+    }
+
+    observeThemeChanges() {
+      this.updateCellColor(true);
+      if (typeof MutationObserver !== 'function' || typeof document === 'undefined' || !document.body) {
+        return;
+      }
+      if (this.themeObserver && typeof this.themeObserver.disconnect === 'function') {
+        this.themeObserver.disconnect();
+      }
+      this.themeObserver = new MutationObserver(() => {
+        this.updateCellColor();
+      });
+      this.themeObserver.observe(document.body, { attributes: true, attributeFilter: ['class', 'data-theme'] });
     }
   }
 
