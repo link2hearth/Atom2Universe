@@ -2129,6 +2129,15 @@ const GAME_CONFIG = {
   },
 
   /**
+   * Paramètres du Big Bang.
+   * - levelBonusStep : nombre de niveaux supplémentaires ajoutés au plafond des magasins après activation.
+   *   Le Big Bang se débloque automatiquement lorsque tous les niveaux de boutique sont achetés.
+   */
+  bigBang: {
+    levelBonusStep: 100
+  },
+
+  /**
    * Définitions complètes des améliorations de la boutique.
    * Chaque entrée décrit :
    * - baseCost : coût initial de l'amélioration.
