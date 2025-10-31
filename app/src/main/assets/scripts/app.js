@@ -6663,6 +6663,7 @@ function handleBigBangRestart() {
 
 function performBigBang() {
   const totalBonus = setBigBangLevelBonus(getBigBangLevelBonus() + BIG_BANG_LEVEL_BONUS_STEP);
+  resetPendingProductionGains();
   gameState.atoms = LayeredNumber.zero();
   gameState.perClick = BASE_PER_CLICK.clone();
   gameState.perSecond = BASE_PER_SECOND.clone();
@@ -6683,6 +6684,14 @@ function performBigBang() {
     bonus: bonusStepDisplay,
     total: totalDisplay
   }));
+}
+
+function resetPendingProductionGains(now = getLoopTimestamp()) {
+  performanceModeState.pendingManualGain = null;
+  performanceModeState.pendingAutoGain = null;
+  performanceModeState.autoAccumulatedMs = 0;
+  performanceModeState.lastManualFlush = now;
+  performanceModeState.lastAutoFlush = now;
 }
 
 function updateBigBangVisibility() {
