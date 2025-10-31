@@ -88,6 +88,9 @@
         <button class="nav-button" data-target="fusion" hidden aria-hidden="true">
           <span data-i18n="index.navigation.items.fusion">Fusion</span>
         </button>
+        <button class="nav-button" data-target="collection" hidden aria-hidden="true" disabled aria-disabled="true">
+          <span data-i18n="index.navigation.items.collection">Collection</span>
+        </button>
         <button class="nav-button" data-target="info">
           <span data-i18n="index.navigation.items.info">Infos</span>
         </button>
@@ -3510,6 +3513,124 @@
     </section>
 
     <section
+      id="collection"
+      class="page"
+      data-page-group="clicker"
+      aria-labelledby="collection-title"
+    >
+      <h2
+        id="collection-title"
+        class="visually-hidden"
+        data-i18n="index.sections.collection.title"
+      >Galerie des collections</h2>
+      <div class="info-grid">
+        <article
+          id="infoCardsCard"
+          class="info-card info-card--cards"
+          aria-labelledby="info-cards-title"
+          hidden
+        >
+          <header class="info-card__header info-card__header--collapsible">
+            <h3
+              id="info-cards-title"
+              data-i18n="index.sections.collection.cards.title"
+            >
+              Cartes spéciales
+            </h3>
+            <button
+              type="button"
+              id="infoCardsToggle"
+              class="info-card__collapse-button"
+              aria-expanded="true"
+              aria-controls="info-cards-content"
+              data-i18n="index.sections.collection.cards.toggle.collapse"
+            >
+              Réduire
+            </button>
+          </header>
+          <div
+            id="info-cards-content"
+            class="info-card__content info-card__content--cards"
+            aria-hidden="false"
+          >
+            <p
+              class="info-card__subtitle info-card__subtitle--cards"
+              id="infoCardsSubtitle"
+              data-i18n="index.sections.collection.cards.subtitle"
+            >
+              Votre collection de cartes spéciales gagnées dans le gacha cosmique.
+            </p>
+            <p
+              id="infoCardsEmpty"
+              class="info-card__empty"
+              data-i18n="index.sections.collection.cards.empty"
+            >
+              Aucune carte spéciale débloquée pour le moment.
+            </p>
+            <ul
+              id="infoCardsList"
+              class="info-card-list"
+              role="list"
+              hidden
+            ></ul>
+          </div>
+        </article>
+
+        <article
+          id="collectionImagesCard"
+          class="info-card info-card--cards"
+          aria-labelledby="collection-images-title"
+          hidden
+        >
+          <header class="info-card__header info-card__header--collapsible">
+            <h3
+              id="collection-images-title"
+              data-i18n="index.sections.collection.images.title"
+            >
+              Images bonus
+            </h3>
+            <button
+              type="button"
+              id="collectionImagesToggle"
+              class="info-card__collapse-button"
+              aria-expanded="true"
+              aria-controls="collection-images-content"
+              data-i18n="index.sections.collection.images.toggle.collapse"
+            >
+              Réduire
+            </button>
+          </header>
+          <div
+            id="collection-images-content"
+            class="info-card__content info-card__content--cards"
+            aria-hidden="false"
+          >
+            <p
+              class="info-card__subtitle info-card__subtitle--cards"
+              id="collectionImagesSubtitle"
+              data-i18n="index.sections.collection.images.subtitle"
+            >
+              Vos images rares remportées lors des tirages bonus.
+            </p>
+            <p
+              id="collectionImagesEmpty"
+              class="info-card__empty"
+              data-i18n="index.sections.collection.images.empty"
+            >
+              Aucune image bonus débloquée pour le moment.
+            </p>
+            <ul
+              id="collectionImagesList"
+              class="info-card-list"
+              role="list"
+              hidden
+            ></ul>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section
       id="info"
       class="page"
       data-page-group="clicker"
@@ -3867,58 +3988,6 @@
             >Effets cumulés de vos collections élémentaires.</p>
           </header>
           <div id="infoElementBonuses" class="element-bonus-list" role="list" aria-live="polite"></div>
-        </article>
-
-        <article
-          id="infoCardsCard"
-          class="info-card info-card--cards"
-          aria-labelledby="info-cards-title"
-          hidden
-        >
-          <header class="info-card__header info-card__header--collapsible">
-            <h3
-              id="info-cards-title"
-              data-i18n="index.sections.info.cards.title"
-            >
-              Cartes spéciales
-            </h3>
-            <button
-              type="button"
-              id="infoCardsToggle"
-              class="info-card__collapse-button"
-              aria-expanded="true"
-              aria-controls="info-cards-content"
-              data-i18n="index.sections.info.cards.toggle.collapse"
-            >
-              Réduire
-            </button>
-          </header>
-          <div
-            id="info-cards-content"
-            class="info-card__content info-card__content--cards"
-            aria-hidden="false"
-          >
-            <p
-              class="info-card__subtitle info-card__subtitle--cards"
-              id="infoCardsSubtitle"
-              data-i18n="index.sections.info.cards.subtitle"
-            >
-              Votre collection de cartes spéciales gagnées dans le gacha cosmique.
-            </p>
-            <p
-              id="infoCardsEmpty"
-              class="info-card__empty"
-              data-i18n="index.sections.info.cards.empty"
-            >
-              Aucune carte spéciale débloquée pour le moment.
-            </p>
-            <ul
-              id="infoCardsList"
-              class="info-card-list"
-              role="list"
-              hidden
-            ></ul>
-          </div>
         </article>
 
         <article

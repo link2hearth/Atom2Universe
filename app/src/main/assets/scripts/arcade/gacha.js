@@ -271,6 +271,18 @@ const SPECIAL_GACHA_CARD_DEFINITION_INDEX = new Map(
     : []
 );
 
+const BONUS_GACHA_IMAGE_CHANCE = 0.01;
+
+const BONUS_GACHA_IMAGE_DEFINITION_INDEX = new Map(
+  Array.isArray(GACHA_BONUS_IMAGE_DEFINITIONS)
+    ? GACHA_BONUS_IMAGE_DEFINITIONS.map(def => [def.id, def])
+    : []
+);
+
+const BONUS_GACHA_IMAGE_ID_POOL = Array.isArray(GACHA_BONUS_IMAGE_DEFINITIONS)
+  ? GACHA_BONUS_IMAGE_DEFINITIONS.map(def => def.id).filter(Boolean)
+  : [];
+
 const SPECIAL_GACHA_CARD_ELEMENT_INDEX = (() => {
   const map = new Map();
   if (Array.isArray(periodicElements)) {
@@ -296,6 +308,17 @@ function ensureGachaCardCollection() {
   return gameState.gachaCards;
 }
 
+function ensureGachaImageCollection() {
+  if (!gameState.gachaImages || typeof gameState.gachaImages !== 'object') {
+    if (typeof createInitialGachaImageCollection === 'function') {
+      gameState.gachaImages = createInitialGachaImageCollection();
+    } else {
+      gameState.gachaImages = {};
+    }
+  }
+  return gameState.gachaImages;
+}
+
 function getSpecialGachaCardDefinition(cardId) {
   if (!cardId) {
     return null;
@@ -314,8 +337,50 @@ function resolveSpecialGachaCardLabel(cardId) {
   return translateWithFallback(definition?.labelKey, fallback, { element: elementName });
 }
 
+function getBonusGachaImageDefinition(imageId) {
+  if (!imageId) {
+    return null;
+  }
+  return BONUS_GACHA_IMAGE_DEFINITION_INDEX.get(imageId) || null;
+}
+
+function resolveBonusGachaImageLabel(imageId) {
+  if (!imageId) {
+    return '';
+  }
+  const definition = getBonusGachaImageDefinition(imageId);
+  if (!definition) {
+    return translateWithFallback(`scripts.gacha.images.names.${imageId}`, `Image ${imageId}`);
+  }
+  const api = getI18nApi();
+  const language = api && typeof api.getCurrentLanguage === 'function'
+    ? api.getCurrentLanguage()
+    : null;
+  if (language && definition.names && typeof definition.names === 'object') {
+    const direct = definition.names[language];
+    if (typeof direct === 'string' && direct.trim()) {
+      return direct.trim();
+    }
+    const [base] = language.split('-');
+    if (base && typeof definition.names[base] === 'string' && definition.names[base].trim()) {
+      return definition.names[base].trim();
+    }
+  }
+  if (definition.labelKey) {
+    const translated = translateWithFallback(definition.labelKey, definition.labelFallback);
+    if (translated) {
+      return translated;
+    }
+  }
+  return definition.labelFallback || `Image ${imageId}`;
+}
+
 function rollForSpecialGachaCard() {
   return Math.random() < SPECIAL_GACHA_CARD_CHANCE;
+}
+
+function rollForBonusGachaImage() {
+  return Math.random() < BONUS_GACHA_IMAGE_CHANCE;
 }
 
 function awardSpecialGachaCard(cardId) {
@@ -338,7 +403,33 @@ function awardSpecialGachaCard(cardId) {
     label,
     assetPath: definition?.assetPath || null,
     count: newCount,
-    isNew: previousCount === 0
+    isNew: previousCount === 0,
+    type: 'card'
+  };
+}
+
+function awardBonusGachaImage(imageId) {
+  if (!imageId) {
+    return null;
+  }
+  const collection = ensureGachaImageCollection();
+  if (!collection[imageId]) {
+    collection[imageId] = { id: imageId, count: 0 };
+  }
+  const entry = collection[imageId];
+  const previousCount = Number(entry.count) || 0;
+  const newCount = previousCount + 1;
+  entry.count = newCount;
+  const definition = getBonusGachaImageDefinition(imageId);
+  const label = resolveBonusGachaImageLabel(imageId);
+  return {
+    cardId: imageId,
+    definition,
+    label,
+    assetPath: definition?.assetPath || null,
+    count: newCount,
+    isNew: previousCount === 0,
+    type: 'image'
   };
 }
 
@@ -380,6 +471,21 @@ function maybeAwardRaritySpecialCard(rarity) {
     cardId = candidates[index];
   }
   return awardSpecialGachaCard(cardId);
+}
+
+function maybeAwardBonusGachaImage() {
+  if (!BONUS_GACHA_IMAGE_ID_POOL.length) {
+    return null;
+  }
+  if (!rollForBonusGachaImage()) {
+    return null;
+  }
+  const index = Math.floor(Math.random() * BONUS_GACHA_IMAGE_ID_POOL.length);
+  const imageId = BONUS_GACHA_IMAGE_ID_POOL[index];
+  if (!imageId) {
+    return null;
+  }
+  return awardBonusGachaImage(imageId);
 }
 
 const DEFAULT_GACHA_RARITIES = [
@@ -3058,7 +3164,7 @@ function performGachaRoll(count = 1) {
 
   const initialDrawCount = getTotalGachaDrawCount();
   const results = [];
-  const specialCardRewards = [];
+  const collectionRewards = [];
   for (let rollIndex = 0; rollIndex < drawCount; rollIndex += 1) {
     const rarity = pickGachaRarity(initialDrawCount + rollIndex);
     if (!rarity) {
@@ -3099,11 +3205,15 @@ function performGachaRoll(count = 1) {
 
     const elementCardReward = maybeAwardElementSpecialCard(elementDef);
     if (elementCardReward) {
-      specialCardRewards.push(elementCardReward);
+      collectionRewards.push(elementCardReward);
     }
     const rarityCardReward = maybeAwardRaritySpecialCard(rarity);
     if (rarityCardReward) {
-      specialCardRewards.push(rarityCardReward);
+      collectionRewards.push(rarityCardReward);
+    }
+    const bonusImageReward = maybeAwardBonusGachaImage();
+    if (bonusImageReward) {
+      collectionRewards.push(bonusImageReward);
     }
 
     const isNew = previousLifetime === 0;
@@ -3118,21 +3228,25 @@ function performGachaRoll(count = 1) {
     return null;
   }
 
-  if (specialCardRewards.length) {
-    specialCardRewards.forEach(reward => {
+  if (collectionRewards.length) {
+    collectionRewards.forEach(reward => {
+      if (!reward) {
+        return;
+      }
+      const isImage = reward.type === 'image';
       const toastKey = reward.isNew
-        ? 'scripts.gacha.cards.toastNew'
-        : 'scripts.gacha.cards.toastDuplicate';
+        ? (isImage ? 'scripts.gacha.images.toastNew' : 'scripts.gacha.cards.toastNew')
+        : (isImage ? 'scripts.gacha.images.toastDuplicate' : 'scripts.gacha.cards.toastDuplicate');
       const fallback = reward.isNew
-        ? 'Special card unlocked: {card}'
-        : 'Special card obtained again: {card}';
+        ? (isImage ? 'Bonus image unlocked: {card}' : 'Special card unlocked: {card}')
+        : (isImage ? 'Bonus image found again: {card}' : 'Special card obtained again: {card}');
       const message = translateWithFallback(toastKey, fallback, { card: reward.label });
       if (message) {
         showToast(message);
       }
     });
     if (typeof window !== 'undefined' && typeof window.enqueueSpecialCardReveal === 'function') {
-      window.enqueueSpecialCardReveal(specialCardRewards);
+      window.enqueueSpecialCardReveal(collectionRewards);
     }
   }
 
@@ -3161,7 +3275,7 @@ function performGachaRoll(count = 1) {
     confettiColors,
     newCount,
     duplicateCount,
-    specialCards: specialCardRewards
+    specialCards: collectionRewards
   };
 }
 

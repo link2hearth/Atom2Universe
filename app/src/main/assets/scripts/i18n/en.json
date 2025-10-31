@@ -11,6 +11,7 @@
         "gacha": "Gacha",
         "table": "Table",
         "fusion": "Fusion",
+        "collection": "Collection",
         "info": "Info",
         "midi": "MIDI",
         "bigbang": "Big Bang",
@@ -111,6 +112,31 @@
       "fusion": {
         "title": "Molecular fusion chamber",
         "intro": "Combine your elements to attempt creating brand new molecules. Ingredients are taken from your current stock and success is never guaranteed."
+      },
+      "collection": {
+        "title": "Collection gallery",
+        "cards": {
+          "title": "Special cards",
+          "subtitle": "Your collection of special cards earned from the cosmic gacha.",
+          "toggle": {
+            "collapse": "Collapse",
+            "expand": "Expand"
+          },
+          "empty": "No special card unlocked yet.",
+          "view": "View {card}",
+          "count": "×{count}"
+        },
+        "images": {
+          "title": "Bonus images",
+          "subtitle": "Your rare images won from bonus draws.",
+          "toggle": {
+            "collapse": "Collapse",
+            "expand": "Expand"
+          },
+          "empty": "No bonus image unlocked yet.",
+          "view": "View {card}",
+          "count": "×{count}"
+        }
       },
       "info": {
         "title": "Progress information",
@@ -2895,6 +2921,18 @@
           "count": "×{count}",
           "hint": "Tap the cross to return to the game.",
           "close": "Close card"
+        }
+      },
+      "images": {
+        "names": {},
+        "toastNew": "Bonus image unlocked: {card}",
+        "toastDuplicate": "Bonus image found again: {card}",
+        "overlay": {
+          "newTitle": "Bonus image unlocked!",
+          "duplicateTitle": "Bonus image found again!",
+          "count": "×{count}",
+          "hint": "Tap the cross to close the image.",
+          "close": "Close image"
         }
       },
       "controls": {

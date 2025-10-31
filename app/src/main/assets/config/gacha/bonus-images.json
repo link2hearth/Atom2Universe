@@ -1,0 +1,4 @@
+{
+  "_comment": "Add bonus image definitions with fields: id, file (optional), assetPath (optional), label/name overrides.",
+  "images": []
+}

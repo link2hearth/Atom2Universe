@@ -11,6 +11,7 @@
         "gacha": "Gacha",
         "table": "Table",
         "fusion": "Fusion",
+        "collection": "Collection",
         "info": "Infos",
         "midi": "MIDI",
         "bigbang": "Big Bang",
@@ -111,6 +112,31 @@
       "fusion": {
         "title": "Chambre de fusion moléculaire",
         "intro": "Combinez vos éléments pour tenter de former des molécules inédites. Les ingrédients sont prélevés sur vos stocks actuels et la réussite n’est jamais garantie."
+      },
+      "collection": {
+        "title": "Galerie des collections",
+        "cards": {
+          "title": "Cartes spéciales",
+          "subtitle": "Votre collection de cartes spéciales gagnées dans le gacha cosmique.",
+          "toggle": {
+            "collapse": "Réduire",
+            "expand": "Développer"
+          },
+          "empty": "Aucune carte spéciale débloquée pour le moment.",
+          "view": "Afficher {card}",
+          "count": "×{count}"
+        },
+        "images": {
+          "title": "Images bonus",
+          "subtitle": "Vos images rares remportées lors des tirages bonus.",
+          "toggle": {
+            "collapse": "Réduire",
+            "expand": "Développer"
+          },
+          "empty": "Aucune image bonus débloquée pour le moment.",
+          "view": "Afficher {card}",
+          "count": "×{count}"
+        }
       },
       "info": {
         "title": "Informations de progression",
@@ -2895,6 +2921,18 @@
           "count": "×{count}",
           "hint": "Touchez la croix pour revenir au jeu.",
           "close": "Fermer la carte"
+        }
+      },
+      "images": {
+        "names": {},
+        "toastNew": "Nouvelle image bonus obtenue : {card}",
+        "toastDuplicate": "Image bonus obtenue à nouveau : {card}",
+        "overlay": {
+          "newTitle": "Image bonus obtenue !",
+          "duplicateTitle": "Image bonus retrouvée !",
+          "count": "×{count}",
+          "hint": "Touchez la croix pour refermer l’image.",
+          "close": "Fermer l’image"
         }
       },
       "controls": {

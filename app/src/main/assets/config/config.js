@@ -307,6 +307,30 @@ function calculateProgressiveBonus(level = 0, baseIncrement = 1, growthRate = SH
   return Number.isFinite(rounded) && rounded > 0 ? rounded : 0;
 }
 
+function loadConfigJson(path, fallback) {
+  if (typeof path !== 'string' || !path.trim()) {
+    return fallback;
+  }
+  if (typeof XMLHttpRequest === 'undefined') {
+    return fallback;
+  }
+  try {
+    const request = new XMLHttpRequest();
+    request.open('GET', path, false);
+    request.overrideMimeType('application/json');
+    request.send(null);
+    if (request.status >= 200 && request.status < 300) {
+      const responseText = request.responseText;
+      if (typeof responseText === 'string' && responseText.trim()) {
+        return JSON.parse(responseText);
+      }
+    }
+  } catch (error) {
+    console.warn('Unable to load configuration JSON', path, error);
+  }
+  return fallback;
+}
+
 function createShopBuildingDefinitions() {
   const withDefaults = def => ({ maxLevel: SHOP_MAX_PURCHASE_DEFAULT, ...def });
   return [
@@ -613,6 +637,11 @@ function createAtomScaleTrophies() {
     };
   });
 }
+
+const RAW_GACHA_BONUS_IMAGE_CONFIG = loadConfigJson(
+  './config/gacha/bonus-images.json',
+  { images: [] }
+);
 
 const GAME_CONFIG = {
   /**
@@ -2398,6 +2427,12 @@ const GAME_CONFIG = {
 
   gacha: {
     ticketCost: 1, // Nombre de tickets requis par tirage
+    bonusImages: {
+      folder: 'Assets/Image/Gacha',
+      images: Array.isArray(RAW_GACHA_BONUS_IMAGE_CONFIG?.images)
+        ? RAW_GACHA_BONUS_IMAGE_CONFIG.images
+        : []
+    },
     rarities: [
       {
         id: 'commun',
