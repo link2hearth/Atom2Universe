@@ -383,6 +383,12 @@
             "description": "Switch every light off: each tap flips the selected tile and its orthogonal neighbours.",
             "cta": "Play"
           },
+          "starBridges": {
+            "aria": "Open the Star Bridges mini-game",
+            "title": "Star Bridges",
+          "description": "Connect every star with horizontal, vertical, or diagonal bridges without crossing paths.",
+            "cta": "Link"
+          },
           "pipeTap": {
             "aria": "Open the PipeTap mini-game",
             "title": "PipeTap",
@@ -763,6 +769,49 @@
             "on": "Light on",
             "off": "Light off"
           }
+        }
+      },
+      "starBridges": {
+        "aria": "Star Bridges mini-game: connect every star without crossing bridges.",
+        "title": "Star Bridges",
+        "controls": {
+          "seed": {
+            "label": "Seed",
+            "placeholder": "auto"
+          },
+          "size": {
+            "label": "Size"
+          },
+          "new": "New constellation"
+        },
+        "stats": {
+          "seedLabel": "Seed",
+          "bridgesLabel": "Bridges",
+          "timeLabel": "Time"
+        },
+        "board": "Star Bridges constellation",
+        "messages": {
+          "selectSource": "Tap a star to start a bridge.",
+          "selectTarget": "Select an aligned or diagonal star to extend the bridge.",
+          "completed": "Constellation complete!",
+          "error": "We couldn't generate a constellation. Try again."
+        },
+        "win": {
+          "message": "Constellation complete in {{time}} with {{moves}} actions ({{bridges}} bridges).",
+          "again": "Play again",
+          "nextSize": "Size +1",
+          "share": "Copy seed"
+        },
+        "share": {
+          "success": "Copied!",
+          "fallback": "Seed: {{seed}}"
+        },
+        "how": {
+          "label": "How does it work?",
+          "message": "Connect every star using horizontal, vertical, or diagonal single bridges. The numbers tell you how many bridges must leave each star. Bridges can't cross and each pair of stars can share only one bridge."
+        },
+        "node": {
+          "aria": "Star row {{row}}, column {{column}}: {{current}}/{{required}} bridges"
         }
       },
       "pipeTap": {
@@ -2872,6 +2921,9 @@
         },
         "pipeTap": {
           "rewardToast": "PipeTap: +{count} gacha ticket{suffix}!"
+        },
+        "starBridges": {
+          "rewardToast": "Star Bridges: +{count} gacha ticket{suffix}!"
         },
         "bigger": {
           "rewardToast": "512 marble forged! {tickets} earned."

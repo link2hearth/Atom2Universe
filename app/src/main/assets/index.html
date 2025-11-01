@@ -794,6 +794,48 @@
           class="arcade-hub-card"
           role="button"
           tabindex="0"
+          aria-label="Accéder au mini-jeu Ponts Stellaires"
+          aria-describedby="arcadeCardDescription-starBridges"
+          data-card-id="starBridges"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.starBridges.aria"
+          data-page-target="starBridges"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.starBridges.title"
+            >Ponts Stellaires</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-starBridges"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-starBridges"
+            data-i18n="index.sections.arcadeHub.cards.starBridges.description"
+          >
+            Reliez toutes les étoiles avec des ponts sans croiser les chemins.
+          </p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
           aria-label="Accéder au mini-jeu PipeTap"
           aria-describedby="arcadeCardDescription-pipeTap"
           data-card-id="pipeTap"
@@ -2435,6 +2477,130 @@
             aria-label="Grille Lights Out"
             data-i18n="aria-label:index.sections.lightsOut.board"
           ></div>
+        </div>
+      </div>
+    </section>
+
+    <section
+      id="starBridges"
+      class="page page--star-bridges"
+      data-page-group="arcade"
+      aria-label="Mini-jeu Ponts Stellaires : reliez toutes les étoiles sans croiser les ponts."
+      data-i18n="aria-label:index.sections.starBridges.aria"
+      hidden
+    >
+      <div class="starbridges" data-star-bridges-root>
+        <div class="starbridges__header">
+          <h2 class="visually-hidden" data-i18n="index.sections.starBridges.title">Ponts Stellaires</h2>
+          <div class="starbridges__controls">
+            <div class="starbridges__controls-group">
+              <label class="starbridges__field">
+                <span class="starbridges__label" data-i18n="index.sections.starBridges.controls.seed.label">Seed</span>
+                <input
+                  type="text"
+                  id="starBridgesSeedInput"
+                  class="starbridges__input"
+                  placeholder="auto"
+                  autocomplete="off"
+                  inputmode="text"
+                  data-i18n="placeholder:index.sections.starBridges.controls.seed.placeholder"
+                />
+              </label>
+              <label class="starbridges__field">
+                <span class="starbridges__label" data-i18n="index.sections.starBridges.controls.size.label">Taille</span>
+                <select id="starBridgesSizeSelect" class="starbridges__select">
+                  <option value="6" selected>6×6</option>
+                  <option value="7">7×7</option>
+                  <option value="8">8×8</option>
+                </select>
+              </label>
+            </div>
+            <button
+              type="button"
+              class="starbridges__button"
+              id="starBridgesNewButton"
+              data-i18n="index.sections.starBridges.controls.new"
+            >
+              Nouvelle constellation
+            </button>
+          </div>
+          <div class="starbridges__stats">
+            <span class="starbridges__pill">
+              <span class="starbridges__pill-label" data-i18n="index.sections.starBridges.stats.seedLabel">Seed</span>
+              <span class="starbridges__pill-value" id="starBridgesSeedValue">—</span>
+            </span>
+            <span class="starbridges__pill">
+              <span class="starbridges__pill-label" data-i18n="index.sections.starBridges.stats.bridgesLabel">Ponts</span>
+              <span class="starbridges__pill-value" id="starBridgesBridgesValue">0 / 0</span>
+            </span>
+            <span class="starbridges__pill">
+              <span class="starbridges__pill-label" data-i18n="index.sections.starBridges.stats.timeLabel">Temps</span>
+              <span class="starbridges__pill-value" id="starBridgesTimeValue">00:00</span>
+            </span>
+          </div>
+        </div>
+        <div class="starbridges__board-wrapper">
+          <p
+            class="starbridges__board-message"
+            id="starBridgesBoardMessage"
+            role="status"
+            aria-live="polite"
+            data-i18n="index.sections.starBridges.messages.selectSource"
+          >
+            Touchez une étoile pour commencer un pont.
+          </p>
+          <div
+            class="starbridges__board"
+            id="starBridgesBoard"
+            role="grid"
+            aria-label="Constellation de Ponts Stellaires"
+            data-i18n="aria-label:index.sections.starBridges.board"
+          ></div>
+        </div>
+        <div class="starbridges__overlay" id="starBridgesWin" role="status" aria-live="polite" hidden>
+          <p
+            class="starbridges__overlay-message"
+            id="starBridgesWinMessage"
+            data-i18n="index.sections.starBridges.win.message"
+          >
+            Constellation complétée en 00:00.
+          </p>
+          <div class="starbridges__overlay-actions">
+            <button
+              type="button"
+              class="starbridges__button"
+              id="starBridgesAgainButton"
+              data-i18n="index.sections.starBridges.win.again"
+            >
+              Rejouer
+            </button>
+            <button
+              type="button"
+              class="starbridges__button starbridges__button--secondary"
+              id="starBridgesNextButton"
+              data-i18n="index.sections.starBridges.win.nextSize"
+            >
+              Taille +1
+            </button>
+            <button
+              type="button"
+              class="starbridges__button starbridges__button--link"
+              id="starBridgesShareButton"
+              data-i18n="index.sections.starBridges.win.share"
+            >
+              Copier seed
+            </button>
+          </div>
+        </div>
+        <div class="starbridges__footer">
+          <a
+            href="#"
+            class="starbridges__how"
+            id="starBridgesHowLink"
+            data-i18n="index.sections.starBridges.how.label"
+          >
+            Comment ça marche ?
+          </a>
         </div>
       </div>
     </section>
@@ -5552,6 +5718,7 @@
   <script src="scripts/arcade/game-of-life.js"></script>
   <script src="scripts/arcade/quantum-2048.js"></script>
   <script src="scripts/arcade/lights-out.js"></script>
+  <script src="scripts/arcade/star-bridges.js"></script>
   <script src="scripts/arcade/pipetap.js"></script>
   <script src="scripts/arcade/sokoban.js"></script>
   <script src="scripts/arcade/the-line.js"></script>
