@@ -1526,25 +1526,8 @@
               <span class="stars-war__label" data-i18n="index.sections.starsWar.hud.difficulty">D</span>
               <span class="stars-war__value" id="starsWarDifficultyValue">1.0</span>
             </div>
-            <div class="stars-war__stat stars-war__stat--seed">
-              <span class="stars-war__label" data-i18n="index.sections.starsWar.hud.seed">Seed</span>
-              <span class="stars-war__value" id="starsWarSeedDisplay">—</span>
-            </div>
           </div>
           <div class="stars-war__controls">
-            <label class="stars-war__seed">
-              <span class="stars-war__label" data-i18n="index.sections.starsWar.controls.seed">Graine</span>
-              <input
-                id="starsWarSeedInput"
-                class="stars-war__seed-input"
-                type="text"
-                maxlength="32"
-                autocomplete="off"
-                spellcheck="false"
-                data-i18n="placeholder:index.sections.starsWar.controls.seedPlaceholder"
-                placeholder="aléatoire"
-              />
-            </label>
             <button
               type="button"
               class="stars-war__button"
@@ -1582,54 +1565,26 @@
                 <h3
                   class="stars-war__overlay-title"
                   id="starsWarOverlayTitle"
-                  data-i18n="index.sections.starsWar.overlay.ready.title"
-                >Prêt au décollage</h3>
+                  data-i18n="index.sections.starsWar.overlay.gameOver.title"
+                >Mission échouée</h3>
                 <p
                   class="stars-war__overlay-message"
                   id="starsWarOverlayMessage"
-                  data-i18n="index.sections.starsWar.overlay.ready.message"
-                >
-                  Survivrez-vous à la tempête stellaire ?
-                </p>
+                  data-i18n="index.sections.starsWar.overlay.gameOver.message"
+                >Durée : 00:00 · Score : 0</p>
                 <div class="stars-war__overlay-actions">
                   <button
                     type="button"
                     class="stars-war__button"
                     id="starsWarOverlayButton"
-                    data-i18n="index.sections.starsWar.overlay.start"
+                    data-i18n="index.sections.starsWar.overlay.retry"
                   >
-                    Commencer
+                    Rejouer
                   </button>
-                  <button
-                    type="button"
-                    class="stars-war__button stars-war__button--ghost"
-                    id="starsWarOverlaySecondary"
-                    data-i18n="index.sections.starsWar.overlay.random"
-                  >Nouvelle seed</button>
                 </div>
               </div>
             </div>
           </div>
-          <aside class="stars-war__panel">
-            <h3 class="stars-war__panel-title" data-i18n="index.sections.starsWar.panel.title">Briefing de mission</h3>
-            <p class="stars-war__panel-text" data-i18n="index.sections.starsWar.panel.description">
-              Pilotez le vaisseau Sentinel et repoussez des vagues générées procéduralement. Les ennemis gagnent en vitesse et en blindage sans fin : survivez le plus longtemps possible.
-            </p>
-            <dl class="stars-war__panel-list">
-              <div class="stars-war__panel-item">
-                <dt data-i18n="index.sections.starsWar.panel.controls">Contrôles</dt>
-                <dd data-i18n="index.sections.starsWar.panel.controlsDescription">ZQSD ou flèches pour bouger · tirer automatique · touchez l’écran pour piloter.</dd>
-              </div>
-              <div class="stars-war__panel-item">
-                <dt data-i18n="index.sections.starsWar.panel.objective">Objectif</dt>
-                <dd data-i18n="index.sections.starsWar.panel.objectiveDescription">Accumulez du score, récoltez des bonus et tenez jusqu’à la submersion finale.</dd>
-              </div>
-              <div class="stars-war__panel-item">
-                <dt data-i18n="index.sections.starsWar.panel.powerups">Power-ups</dt>
-                <dd data-i18n="index.sections.starsWar.panel.powerupsDescription">Bouclier, tir multiple, cadence, ralentissement global, aimant et coeurs rares.</dd>
-              </div>
-            </dl>
-          </aside>
         </div>
       </div>
     </section>

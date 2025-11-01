@@ -14,13 +14,10 @@
     overlayTitle: document.getElementById('starsWarOverlayTitle'),
     overlayMessage: document.getElementById('starsWarOverlayMessage'),
     overlayButton: document.getElementById('starsWarOverlayButton'),
-    overlaySecondary: document.getElementById('starsWarOverlaySecondary'),
     scoreValue: document.getElementById('starsWarScoreValue'),
     timeValue: document.getElementById('starsWarTimeValue'),
     waveValue: document.getElementById('starsWarWaveValue'),
     difficultyValue: document.getElementById('starsWarDifficultyValue'),
-    seedInput: document.getElementById('starsWarSeedInput'),
-    seedDisplay: document.getElementById('starsWarSeedDisplay'),
     restartButton: document.getElementById('starsWarRestartButton'),
     powerupList: document.getElementById('starsWarPowerupList'),
     livesContainer: document.getElementById('starsWarLives'),
@@ -299,7 +296,7 @@
     nextSpawnDensityPush: { at12: false, at14: false },
     activeMilestones: new Set(),
     gameOver: false,
-    overlayMode: 'intro',
+    overlayMode: 'ready',
     powerups: {},
     timeSinceLastUpdate: 0,
     records: {
@@ -528,7 +525,7 @@
     state.nextSpawnDensityPush = { at12: false, at14: false };
     state.activeMilestones.clear();
     state.gameOver = false;
-    state.overlayMode = 'intro';
+    state.overlayMode = 'ready';
     state.lastTimestamp = 0;
     state.timeSinceLastUpdate = 0;
     clearState();
@@ -553,12 +550,6 @@
     state.rng = rngMulberry32(seed);
     state.lastSeed = state.rngSeed;
     scheduleAutosave();
-    if (elements.seedDisplay) {
-      elements.seedDisplay.textContent = state.rngSeed;
-    }
-    if (elements.seedInput) {
-      elements.seedInput.value = state.rngSeed;
-    }
   }
 
   function getRandomFloat() {
@@ -1199,9 +1190,6 @@
     if (elements.difficultyValue) {
       elements.difficultyValue.textContent = state.difficulty.toFixed(1);
     }
-    if (elements.seedDisplay) {
-      elements.seedDisplay.textContent = state.rngSeed;
-    }
     if (elements.livesContainer) {
       const fragments = document.createDocumentFragment();
       for (let i = 0; i < PLAYER_MAX_HP; i += 1) {
@@ -1425,16 +1413,6 @@
     elements.overlayButton.textContent = primaryLabel || '';
     elements.overlayButton.hidden = !primaryLabel;
     elements.overlayButton.disabled = !primaryLabel;
-    if (elements.overlaySecondary) {
-      if (secondaryLabel) {
-        elements.overlaySecondary.hidden = false;
-        elements.overlaySecondary.disabled = false;
-        elements.overlaySecondary.textContent = secondaryLabel;
-      } else {
-        elements.overlaySecondary.hidden = true;
-        elements.overlaySecondary.disabled = true;
-      }
-    }
     elements.overlay.hidden = false;
     elements.overlay.setAttribute('aria-hidden', 'false');
   }
@@ -1454,24 +1432,24 @@
     state.running = true;
     state.gameOver = false;
     state.overlayMode = 'running';
-    state.lastTimestamp = performance.now();
+    const now = typeof performance !== 'undefined' && typeof performance.now === 'function'
+      ? performance.now()
+      : Date.now();
+    state.lastTimestamp = now;
     hideOverlay();
     requestAnimationFrame(loop);
   }
 
-  function restartRun() {
+  function restartRun(options = {}) {
+    const { preserveSeed = false } = options;
+    state.running = false;
+    hideOverlay();
     flushAutosave();
-    const seedValue = elements.seedInput?.value || state.rngSeed;
-    applySeed(seedValue || randomSeedString());
+    const seedValue = preserveSeed && state.rngSeed ? state.rngSeed : randomSeedString();
+    applySeed(seedValue);
     resetGame();
     scheduleNextWave();
-    state.overlayMode = 'intro';
-    showOverlay(
-      translate('index.sections.starsWar.overlay.ready.title'),
-      translate('index.sections.starsWar.overlay.ready.message'),
-      translate('index.sections.starsWar.overlay.start'),
-      translate('index.sections.starsWar.overlay.random')
-    );
+    startRun();
   }
 
   function loop(timestamp) {
@@ -1494,14 +1472,9 @@
     if (action) {
       inputState[action] = true;
     }
-    if (event.code === 'Space') {
-      if (state.overlayMode === 'intro') {
-        startRun();
-        event.preventDefault();
-      } else if (state.gameOver) {
-        restartRun();
-        event.preventDefault();
-      }
+    if (event.code === 'Space' && state.gameOver) {
+      restartRun({ preserveSeed: true });
+      event.preventDefault();
     }
   }
 
@@ -1570,42 +1543,26 @@
     loadAutosave();
     if (elements.overlayButton) {
       elements.overlayButton.addEventListener('click', () => {
-        if (state.overlayMode === 'intro') {
-          startRun();
-        } else if (state.gameOver) {
-          restartRun();
+        if (state.gameOver) {
+          restartRun({ preserveSeed: true });
         }
-      });
-    }
-    if (elements.overlaySecondary) {
-      elements.overlaySecondary.addEventListener('click', () => {
-        const newSeed = randomSeedString();
-        applySeed(newSeed);
-        restartRun();
       });
     }
     if (elements.restartButton) {
       elements.restartButton.addEventListener('click', () => {
-        restartRun();
-      });
-    }
-    if (elements.seedInput) {
-      elements.seedInput.addEventListener('change', () => {
-        const seedValue = elements.seedInput.value || randomSeedString();
-        applySeed(seedValue);
-        restartRun();
+        restartRun({ preserveSeed: false });
       });
     }
     const initialSeed = state.lastSeed || randomSeedString();
     applySeed(initialSeed);
     resetGame();
     scheduleNextWave();
-    showOverlay(
-      translate('index.sections.starsWar.overlay.ready.title'),
-      translate('index.sections.starsWar.overlay.ready.message'),
-      translate('index.sections.starsWar.overlay.start'),
-      translate('index.sections.starsWar.overlay.random')
-    );
+    const pageElement = typeof document !== 'undefined'
+      ? document.getElementById('starsWar')
+      : null;
+    if (pageElement && !pageElement.hasAttribute('hidden')) {
+      startRun();
+    }
     if (typeof window !== 'undefined') {
       window.addEventListener('beforeunload', flushAutosave);
       window.addEventListener('pagehide', flushAutosave);
@@ -1620,14 +1577,16 @@
   }
 
   function onEnter() {
-    if (!state.running && !state.gameOver && state.overlayMode !== 'intro') {
+    if (!state.running && !state.gameOver) {
       startRun();
     }
   }
 
   function onLeave() {
     state.running = false;
-    hideOverlay();
+    if (state.overlayMode !== 'gameover') {
+      hideOverlay();
+    }
     flushAutosave();
   }
 

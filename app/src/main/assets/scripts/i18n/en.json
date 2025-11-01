@@ -1289,37 +1289,18 @@
           "time": "Time",
           "wave": "Wave",
           "difficulty": "D",
-          "seed": "Seed",
           "lives": "Ship hull",
           "powerups": "Active power-ups"
         },
         "controls": {
-          "seed": "Seed",
-          "seedPlaceholder": "random",
           "restart": "Restart run"
         },
         "overlay": {
-          "ready": {
-            "title": "Briefing",
-            "message": "Guide the Sentinel in the lower lanes, dodge incoming fire and scoop drops to stay alive.",
-            "start": "Launch",
-            "random": "New seed"
-          },
           "gameOver": {
             "title": "Mission failed",
             "message": "Time: {time} · Score: {score}"
           },
           "retry": "Retry"
-        },
-        "panel": {
-          "title": "Mission briefing",
-          "description": "Pilot the Sentinel through procedural waves. Enemies gain speed and armor endlessly—last as long as possible.",
-          "controls": "Controls",
-          "controlsDescription": "WASD or arrows to move · auto-fire enabled · drag or tap to steer on touch devices.",
-          "objective": "Objective",
-          "objectiveDescription": "Build score, collect power-ups and survive until the fleet overwhelms you.",
-          "powerups": "Power-ups",
-          "powerupsDescription": "Shield, extra cannons, fire rate boost, global slow, magnet and rare hearts."
         },
         "powerups": {
           "multi": "Side cannons",
