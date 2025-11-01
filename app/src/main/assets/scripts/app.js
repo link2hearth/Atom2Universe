@@ -4531,6 +4531,11 @@ function handleResetSpecialKeyword(normalizedKeyword) {
   if (!action) {
     return false;
   }
+  const saved = saveGame();
+  if (!saved) {
+    showToast(translateResetString('saveFailed', 'Unable to save progress. Changes cancelled.'));
+    return true;
+  }
   const toggleFn = action.toggle;
   const nextValue = typeof toggleFn === 'function' ? toggleFn() : undefined;
   if (typeof nextValue !== 'boolean') {
@@ -4539,8 +4544,6 @@ function handleResetSpecialKeyword(normalizedKeyword) {
   }
   const messageKey = nextValue ? action.enabledKey : action.disabledKey;
   const fallbackMessage = nextValue ? action.enabledFallback : action.disabledFallback;
-  // Sauvegarde immédiate pour éviter toute perte de progression avant le rechargement.
-  saveGame();
   showToast(translateResetString(messageKey, fallbackMessage));
   scheduleConfigReload();
   return true;
@@ -15708,33 +15711,39 @@ function readNativeSaveData() {
 function writeNativeSaveData(serialized) {
   const bridge = getAndroidSaveBridge();
   if (!bridge) {
-    return;
+    return false;
   }
   if (!serialized) {
     if (typeof bridge.clearData === 'function') {
       try {
         bridge.clearData();
+        return true;
       } catch (error) {
         console.error('Unable to clear native save data', error);
+        return false;
       }
-      return;
     }
     if (typeof bridge.saveData === 'function') {
       try {
         bridge.saveData(null);
+        return true;
       } catch (error) {
         console.error('Unable to clear native save data', error);
+        return false;
       }
     }
-    return;
+    return false;
   }
   if (typeof bridge.saveData === 'function') {
     try {
       bridge.saveData(serialized);
+      return true;
     } catch (error) {
       console.error('Unable to write native save data', error);
+      return false;
     }
   }
+  return false;
 }
 
 function serializeState() {
@@ -15990,20 +15999,29 @@ function serializeState() {
 }
 
 function saveGame() {
+  let serialized;
   try {
     const payload = serializeState();
-    const serialized = JSON.stringify(payload);
+    serialized = JSON.stringify(payload);
+  } catch (err) {
+    console.error('Erreur de sauvegarde', err);
+    return false;
+  }
+
+  let persisted = false;
+
+  if (typeof localStorage !== 'undefined' && localStorage) {
     try {
-      if (typeof localStorage !== 'undefined' && localStorage) {
-        localStorage.setItem(PRIMARY_SAVE_STORAGE_KEY, serialized);
-      }
+      localStorage.setItem(PRIMARY_SAVE_STORAGE_KEY, serialized);
+      persisted = true;
     } catch (storageError) {
       console.error('Erreur de sauvegarde locale', storageError);
     }
-    writeNativeSaveData(serialized);
-  } catch (err) {
-    console.error('Erreur de sauvegarde', err);
   }
+
+  const nativePersisted = writeNativeSaveData(serialized);
+
+  return persisted || nativePersisted;
 }
 
 if (typeof window !== 'undefined') {

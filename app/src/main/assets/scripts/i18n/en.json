@@ -2755,6 +2755,7 @@
         "infoEnabled": "Info sections enabled. Reloading to apply…",
         "infoDisabled": "Info sections disabled. Reloading to apply…",
         "toggleFailed": "Unable to update configuration.",
+        "saveFailed": "Unable to save your progress. Changes cancelled.",
         "prompt": "Full game reset. Type \"{keyword}\" to confirm.\\nThis action cannot be undone."
       },
       "bigBangToggle": {
