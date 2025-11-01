@@ -220,11 +220,13 @@ body.theme-neon .arcade-header__status--bonus {
 .arcade-stage--vertical {
   aspect-ratio: 2 / 3;
   width: min(
+    100%,
     calc(100vw - var(--arcade-padding-x) * 2),
     calc((100vh - var(--arcade-vertical-offset)) * 2 / 3)
   );
   min-width: min(280px, calc(100vw - var(--arcade-padding-x) * 2));
   max-height: max(0px, calc(100vh - var(--arcade-vertical-offset)));
+  margin-inline: auto;
 }
 
 .arcade-stage--vertical .arcade-stage__hud {
