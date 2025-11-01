@@ -118,9 +118,10 @@ class MainActivity : AppCompatActivity() {
             allowContentAccess = true
             loadsImagesAutomatically = true
             databaseEnabled = true
-            setSupportZoom(false)
-            builtInZoomControls = false
+            setSupportZoom(true)
+            builtInZoomControls = true
             displayZoomControls = false
+            useWideViewPort = true
         }
 
         webView.addJavascriptInterface(
