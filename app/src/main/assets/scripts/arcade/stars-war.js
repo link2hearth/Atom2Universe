@@ -31,6 +31,7 @@
   const CANVAS_WIDTH = 480;
   const CANVAS_HEIGHT = 720;
   const PLAYER_MAX_HP = 3;
+  const PLAYER_DAMAGE_COOLDOWN = 0.7;
   const PLAYER_AREA_TOP_RATIO = 0.35;
   const BASE_SPAWN_INTERVAL = 0.8;
   const MIN_SPAWN_INTERVAL = 0.35;
@@ -254,8 +255,8 @@
     const pixelRatio = Math.max(1, Math.floor(window.devicePixelRatio || 1));
     canvas.width = CANVAS_WIDTH * pixelRatio;
     canvas.height = CANVAS_HEIGHT * pixelRatio;
-    canvas.style.width = `${CANVAS_WIDTH}px`;
-    canvas.style.height = `${CANVAS_HEIGHT}px`;
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
     context.scale(pixelRatio, pixelRatio);
     return context;
   }
@@ -932,10 +933,15 @@
   }
 
   function damagePlayer() {
+    const timeSinceLastHit = state.elapsed - player.lastDamageTime;
+    if (timeSinceLastHit < PLAYER_DAMAGE_COOLDOWN) {
+      return;
+    }
     if (player.shieldCharges > 0) {
       player.shieldCharges -= 1;
       delete state.powerups.shield;
       announceStatus('index.sections.starsWar.status.shield');
+      player.lastDamageTime = state.elapsed;
       return;
     }
     if (player.hp <= 0) {
