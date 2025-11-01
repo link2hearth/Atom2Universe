@@ -28,3 +28,9 @@ This audit uses the helper script [`tools/checkArcadeAutosave.js`](../tools/chec
 | Métaux Match-3 | `app/src/main/assets/scripts/arcade/metaux-match3.js` | ✅
 
 The audit identifies games where the autosave integration still needs to be implemented (`❌`).
+
+## 2024-05 Save System Review
+
+- Confirmed the main clicker save pipeline (`serializeState` ➜ `saveGame` ➜ `loadGame`) correctly survives resets and respects the special reset keywords that toggle DevKit, Collection and Info features without wiping progress.【F:app/src/main/assets/scripts/app.js†L15899-L16840】【F:app/src/main/assets/scripts/app.js†L4440-L4794】
+- Exercised the arcade autosave API to ensure it keeps calling `saveGame` when entries persist, and validated that global resets preserve chess autosaves while clearing the rest.【F:app/src/main/assets/scripts/arcade/autosave.js†L1-L187】【F:app/src/main/assets/scripts/app.js†L15960-L16167】
+- Fixed the Balance mini-game so perfect-equilibrium rewards call `saveGame`, guaranteeing Mach3 tickets are saved immediately even though the game does not use the shared autosave helper.【F:app/src/main/assets/scripts/arcade/balance.js†L1668-L1694】

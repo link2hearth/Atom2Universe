@@ -1686,6 +1686,9 @@
         return;
       }
       this.successRewardClaimed = true;
+      if (typeof saveGame === 'function') {
+        saveGame();
+      }
       if (typeof showToast === 'function') {
         const messageKey = gained === 1
           ? 'scripts.arcade.balance.toast.perfectReward.single'
