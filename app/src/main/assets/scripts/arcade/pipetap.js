@@ -43,11 +43,11 @@
 
   const GLYPH = Object.freeze({
     0: '·',
-    [DIRECTIONS.NORTH]: '│',
-    [DIRECTIONS.SOUTH]: '│',
+    [DIRECTIONS.NORTH]: '╷',
+    [DIRECTIONS.SOUTH]: '╵',
     [DIRECTIONS.NORTH | DIRECTIONS.SOUTH]: '│',
-    [DIRECTIONS.EAST]: '─',
-    [DIRECTIONS.WEST]: '─',
+    [DIRECTIONS.EAST]: '╴',
+    [DIRECTIONS.WEST]: '╶',
     [DIRECTIONS.EAST | DIRECTIONS.WEST]: '─',
     [DIRECTIONS.NORTH | DIRECTIONS.EAST]: '└',
     [DIRECTIONS.EAST | DIRECTIONS.SOUTH]: '┌',
