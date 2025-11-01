@@ -4694,17 +4694,29 @@ function closeResetDialog({ cancelled = false } = {}) {
   }
 }
 
+// ✅ Nouvelle version corrigée
 function handleResetDialogSubmit(event) {
   event.preventDefault();
+
   const keyword = getResetConfirmationKeyword();
   const expected = normalizeResetConfirmation(keyword);
   const rawInput = elements.resetDialogInput ? elements.resetDialogInput.value : '';
   const provided = normalizeResetConfirmation(rawInput);
+
+  // 1) Mot-clé spécial (devkit / collection / infos)
   if (handleResetSpecialKeyword(provided)) {
     closeResetDialog();
     return;
   }
-  if (provided !== expected) {
+  // 2) Mot de confirmation correct -> reset
+  else if (provided === expected) {
+    closeResetDialog();
+    resetGame();
+    showToast(translateResetString('done', 'Progress reset'));
+    return;
+  }
+  // 3) Mot incorrect -> erreur
+  else {
     const invalidMessage = translateResetString('invalid', 'Incorrect confirmation word');
     setResetDialogError(invalidMessage);
     if (elements.resetDialogInput) {
@@ -4714,9 +4726,6 @@ function handleResetDialogSubmit(event) {
     showToast(invalidMessage);
     return;
   }
-  closeResetDialog();
-  resetGame();
-  showToast(translateResetString('done', 'Progress reset'));
 }
 
 function handleResetDialogCancel(event) {
@@ -4732,6 +4741,7 @@ function handleResetDialogBackdrop(event) {
   closeResetDialog({ cancelled: true });
 }
 
+// ✅ Nouvelle version corrigée
 function handleResetPromptFallback() {
   const keyword = getResetConfirmationKeyword();
   const expected = normalizeResetConfirmation(keyword);
@@ -4743,25 +4753,35 @@ function handleResetPromptFallback() {
   const promptFn = typeof window !== 'undefined' && typeof window.prompt === 'function'
     ? window.prompt
     : null;
+
   if (!promptFn) {
     showToast(translateResetString('cancelled', 'Reset cancelled'));
     return;
   }
+
   const response = promptFn(promptMessage);
   if (response == null) {
     showToast(translateResetString('cancelled', 'Reset cancelled'));
     return;
   }
+
   const provided = normalizeResetConfirmation(response);
+
+  // 1) Mot-clé spécial
   if (handleResetSpecialKeyword(provided)) {
     return;
   }
-  if (provided !== expected) {
+  // 2) Mot correct -> reset
+  else if (provided === expected) {
+    resetGame();
+    showToast(translateResetString('done', 'Progress reset'));
+    return;
+  }
+  // 3) Mot incorrect -> erreur
+  else {
     showToast(translateResetString('invalid', 'Incorrect confirmation word'));
     return;
   }
-  resetGame();
-  showToast(translateResetString('done', 'Progress reset'));
 }
 
 function collectDomElements() {
@@ -16946,4 +16966,5 @@ if (document.readyState === 'loading') {
 } else {
   bootApplication();
 }
+
 
