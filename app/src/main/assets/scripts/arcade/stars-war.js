@@ -555,7 +555,9 @@
       path: options.path || 'LINE',
       delay,
       lane: clampLaneIndex(lane, laneCount),
-      offset: options.offset ?? 0
+      offset: options.offset ?? 0,
+      laneCount,
+      props: options.props ? { ...options.props } : undefined
     };
   }
 
@@ -565,6 +567,33 @@
       lanes.push(clampLaneIndex(center + delta, laneCount));
     }
     return Array.from(new Set(lanes));
+  }
+
+  function planTopSkirmish({ laneCount, startDelay, difficulty }) {
+    const entries = [];
+    const usableTypes = [ENEMY_TYPES.drone, ENEMY_TYPES.fast];
+    if (difficulty >= 3) {
+      usableTypes.push(ENEMY_TYPES.gunner);
+    }
+    const count = Math.max(2, Math.min(laneCount, getRandomInt(2, 5)));
+    for (let i = 0; i < count; i += 1) {
+      const lane = getRandomInt(0, laneCount);
+      const type = pickRandom(usableTypes);
+      entries.push(makePatternEntry(type, lane, startDelay + i * 0.18, laneCount, {
+        formation: 'SWARM',
+        path: 'FIGURE8',
+        offset: (getRandomFloat() - 0.5) * 40,
+        props: {
+          anchorY: CANVAS_HEIGHT * 0.2,
+          figure8RadiusX: 60 + getRandomFloat() * 40,
+          figure8RadiusY: 26 + getRandomFloat() * 12
+        }
+      }));
+    }
+    const nextDelay = entries.length
+      ? entries[entries.length - 1].delay + 0.8
+      : startDelay + 0.8;
+    return { entries, nextDelay };
   }
 
   const WAVE_PATTERNS = Object.freeze([
@@ -709,40 +738,35 @@
       }
     },
     {
-      id: 'shield_column',
+      id: 'figure_eight_flyby',
       minDifficulty: 3,
       build({ laneCount, startDelay }) {
         const entries = [];
-        const lane = clampLaneIndex(Math.floor(laneCount / 2) + 1, laneCount);
-        const spacing = 0.33;
-        entries.push(makePatternEntry(ENEMY_TYPES.tank, lane, startDelay, laneCount, {
-          formation: 'COLUMN',
-          path: 'LINE'
+        const center = Math.floor(laneCount / 2);
+        const lanes = makeLaneBand(center, Math.min(2, Math.floor((laneCount - 1) / 2)), laneCount);
+        lanes.forEach((lane, index) => {
+          entries.push(makePatternEntry(ENEMY_TYPES.drone, lane, startDelay + index * 0.18, laneCount, {
+            formation: 'LINE',
+            path: 'FIGURE8',
+            offset: (lane - center) * 14,
+            props: {
+              anchorY: CANVAS_HEIGHT * 0.18,
+              figure8RadiusX: 60 + index * 10,
+              figure8RadiusY: 24 + index * 4
+            }
+          }));
+        });
+        const tailDelay = startDelay + lanes.length * 0.18 + 0.25;
+        entries.push(makePatternEntry(ENEMY_TYPES.fast, clampLaneIndex(center, laneCount), tailDelay, laneCount, {
+          formation: 'SWARM',
+          path: 'FIGURE8',
+          props: {
+            anchorY: CANVAS_HEIGHT * 0.18,
+            figure8RadiusX: 80,
+            figure8RadiusY: 30
+          }
         }));
-        entries.push(makePatternEntry(ENEMY_TYPES.gunner, lane, startDelay + spacing, laneCount, {
-          formation: 'COLUMN',
-          path: 'LINE'
-        }));
-        entries.push(makePatternEntry(ENEMY_TYPES.tank, lane, startDelay + spacing * 2, laneCount, {
-          formation: 'COLUMN',
-          path: 'LINE'
-        }));
-        entries.push(makePatternEntry(ENEMY_TYPES.gunner, lane, startDelay + spacing * 3, laneCount, {
-          formation: 'COLUMN',
-          path: 'LINE'
-        }));
-        const flankDelay = startDelay + spacing * 1.5;
-        entries.push(makePatternEntry(ENEMY_TYPES.fast, clampLaneIndex(lane - 2, laneCount), flankDelay, laneCount, {
-          formation: 'V',
-          path: 'SIN',
-          offset: -30
-        }));
-        entries.push(makePatternEntry(ENEMY_TYPES.fast, clampLaneIndex(lane + 2, laneCount), flankDelay, laneCount, {
-          formation: 'V',
-          path: 'SIN',
-          offset: 30
-        }));
-        return { entries, nextDelay: startDelay + spacing * 3 + 1 };
+        return { entries, nextDelay: tailDelay + 1.1 };
       }
     },
     {
@@ -771,71 +795,76 @@
       }
     },
     {
-      id: 'sniper_caravan',
-      minDifficulty: 5,
-      build({ laneCount, startDelay }) {
-        const entries = [];
-        const centerLane = clampLaneIndex(Math.floor(laneCount / 2), laneCount);
-        const spacing = 0.36;
-        entries.push(makePatternEntry(ENEMY_TYPES.sniper, centerLane, startDelay, laneCount, {
-          formation: 'LINE',
-          path: 'LINE'
-        }));
-        entries.push(makePatternEntry(ENEMY_TYPES.fast, clampLaneIndex(centerLane - 1, laneCount), startDelay + 0.2, laneCount, {
-          formation: 'SWARM',
-          path: 'SIN',
-          offset: -18
-        }));
-        for (let i = 1; i <= 3; i += 1) {
-          entries.push(makePatternEntry(ENEMY_TYPES.gunner, centerLane, startDelay + i * spacing, laneCount, {
-            formation: 'LINE',
-            path: 'LINE'
-          }));
-        }
-        entries.push(makePatternEntry(ENEMY_TYPES.fast, clampLaneIndex(centerLane + 1, laneCount), startDelay + spacing * 3 + 0.2, laneCount, {
-          formation: 'SWARM',
-          path: 'SIN',
-          offset: 18
-        }));
-        entries.push(makePatternEntry(ENEMY_TYPES.sniper, centerLane, startDelay + spacing * 4, laneCount, {
-          formation: 'LINE',
-          path: 'LINE'
-        }));
-        return { entries, nextDelay: startDelay + spacing * 4 + 1.1 };
-      }
-    },
-    {
-      id: 'carrier_parade',
+      id: 'tank_sniper_column',
       minDifficulty: 5,
       build({ laneCount, startDelay }) {
         const entries = [];
         const center = Math.floor(laneCount / 2);
-        const lanes = makeLaneBand(center, Math.min(1, laneCount - 1), laneCount);
-        let delay = startDelay;
+        const lanes = makeLaneBand(center, Math.min(2, Math.floor((laneCount - 1) / 2)), laneCount);
+        const spacing = 0.28;
         lanes.forEach((lane, index) => {
-          entries.push(makePatternEntry(ENEMY_TYPES.carrier, lane, delay, laneCount, {
-            formation: 'COLUMN',
+          entries.push(makePatternEntry(ENEMY_TYPES.tank, lane, startDelay + index * spacing, laneCount, {
+            formation: 'LINE',
             path: 'LINE',
             offset: (lane - center) * 12
           }));
-          entries.push(makePatternEntry(ENEMY_TYPES.fast, lane, delay + 0.3, laneCount, {
-            formation: 'SWARM',
-            path: 'SIN',
-            offset: (index % 2 === 0 ? -1 : 1) * 14
-          }));
-          delay += 0.5;
         });
-        const escortLaneLeft = clampLaneIndex(center - 2, laneCount);
-        const escortLaneRight = clampLaneIndex(center + 2, laneCount);
-        entries.push(makePatternEntry(ENEMY_TYPES.gunner, escortLaneLeft, delay, laneCount, {
-          formation: 'LINE',
-          path: 'ARC'
+        const sniperDelay = startDelay + lanes.length * spacing + 0.35;
+        lanes.forEach((lane, index) => {
+          entries.push(makePatternEntry(ENEMY_TYPES.sniper, lane, sniperDelay + index * 0.18, laneCount, {
+            formation: 'LINE',
+            path: 'LINE',
+            offset: (lane - center) * 12
+          }));
+        });
+        return { entries, nextDelay: sniperDelay + lanes.length * 0.18 + 1.1 };
+      }
+    },
+    {
+      id: 'twin_commanders',
+      minDifficulty: 6,
+      build({ laneCount, startDelay }) {
+        const entries = [];
+        const center = Math.floor(laneCount / 2);
+        const leftLane = clampLaneIndex(center - 2, laneCount);
+        const rightLane = clampLaneIndex(center + 2, laneCount);
+        const bossProps = phase => ({
+          anchorY: CANVAS_HEIGHT * PLAYER_AREA_TOP_RATIO,
+          swayAmplitude: CANVAS_WIDTH * 0.28,
+          swayFrequency: 0.65,
+          swayPhase: phase
+        });
+        entries.push(makePatternEntry(ENEMY_TYPES.miniboss, leftLane, startDelay, laneCount, {
+          formation: 'COLUMN',
+          path: 'BOSS_SWAY',
+          props: bossProps(0)
         }));
-        entries.push(makePatternEntry(ENEMY_TYPES.gunner, escortLaneRight, delay, laneCount, {
-          formation: 'LINE',
-          path: 'ARC'
+        entries.push(makePatternEntry(ENEMY_TYPES.miniboss, rightLane, startDelay, laneCount, {
+          formation: 'COLUMN',
+          path: 'BOSS_SWAY',
+          props: bossProps(Math.PI)
         }));
-        return { entries, nextDelay: delay + 1.2 };
+        const escortDelay = startDelay + 0.6;
+        entries.push(makePatternEntry(ENEMY_TYPES.fast, clampLaneIndex(center - 3, laneCount), escortDelay, laneCount, {
+          formation: 'V',
+          path: 'SIN',
+          offset: -26
+        }));
+        entries.push(makePatternEntry(ENEMY_TYPES.fast, clampLaneIndex(center + 3, laneCount), escortDelay, laneCount, {
+          formation: 'V',
+          path: 'SIN',
+          offset: 26
+        }));
+        const gunnerDelay = escortDelay + 0.45;
+        entries.push(makePatternEntry(ENEMY_TYPES.gunner, clampLaneIndex(center - 1, laneCount), gunnerDelay, laneCount, {
+          formation: 'LINE',
+          path: 'LINE'
+        }));
+        entries.push(makePatternEntry(ENEMY_TYPES.gunner, clampLaneIndex(center + 1, laneCount), gunnerDelay, laneCount, {
+          formation: 'LINE',
+          path: 'LINE'
+        }));
+        return { entries, nextDelay: gunnerDelay + 1.4 };
       }
     }
   ]);
@@ -1410,16 +1439,53 @@
     const path = pickRandom(PATHS);
     const allowed = getAllowedEnemies(D);
     const waveEntries = [];
-    const baseCount = Math.max(6, Math.floor(6 + 1.5 * D));
+    const isFirstWave = state.wave === 1;
+    const isSecondWave = state.wave === 2;
+    let baseCount = Math.max(6, Math.floor(6 + 1.5 * D));
+    if (isFirstWave) {
+      baseCount = 5;
+    } else if (isSecondWave) {
+      baseCount = Math.max(6, Math.floor(5 + 1.2 * D));
+    }
     for (let i = 0; i < baseCount; i += 1) {
       const type = pickRandom(allowed);
       waveEntries.push(createSpawnEntry(type, formation, path, laneCount, i, baseCount));
     }
 
-    const availablePatterns = WAVE_PATTERNS.filter(pattern => D >= pattern.minDifficulty);
+    let sequenceDelay = waveEntries.length ? waveEntries[waveEntries.length - 1].delay + 0.6 : 0.6;
+    const allowSpecialSequences = state.elapsed >= 30 || state.wave >= 3;
+
+    if (allowSpecialSequences && D >= 3 && getRandomFloat() < 0.45) {
+      const skirmish = planTopSkirmish({ laneCount, startDelay: sequenceDelay, difficulty: D });
+      if (skirmish.entries.length) {
+        waveEntries.push(...skirmish.entries);
+        sequenceDelay = skirmish.nextDelay;
+      }
+    }
+
+    if (allowSpecialSequences && D >= 4 && getRandomFloat() < 0.25) {
+      const lane = getRandomInt(0, laneCount);
+      const bossDelay = Math.max(sequenceDelay, waveEntries.length ? waveEntries[waveEntries.length - 1].delay + 1 : 1);
+      const bossEntry = makePatternEntry(ENEMY_TYPES.miniboss, lane, bossDelay, laneCount, {
+        formation: 'COLUMN',
+        path: 'BOSS_SWAY',
+        props: {
+          anchorY: CANVAS_HEIGHT * PLAYER_AREA_TOP_RATIO,
+          swayAmplitude: CANVAS_WIDTH * 0.24,
+          swayFrequency: 0.7,
+          swayPhase: getRandomFloat() * Math.PI * 2
+        }
+      });
+      waveEntries.push(bossEntry);
+      sequenceDelay = bossDelay + 1.2;
+    }
+
+    const availablePatterns = allowSpecialSequences
+      ? WAVE_PATTERNS.filter(pattern => D >= pattern.minDifficulty)
+      : [];
     if (availablePatterns.length) {
       const patternRuns = Math.min(availablePatterns.length, 1 + Math.floor(D / 2));
-      let startDelay = waveEntries.length ? waveEntries[waveEntries.length - 1].delay + 0.8 : 0;
+      let startDelay = Math.max(sequenceDelay, waveEntries.length ? waveEntries[waveEntries.length - 1].delay + 0.8 : 0.8);
       for (let i = 0; i < patternRuns; i += 1) {
         const pattern = pickRandom(availablePatterns);
         const plan = pattern.build({
@@ -1436,9 +1502,19 @@
     }
 
     if (state.wave % 5 === 0) {
+      const center = Math.floor(laneCount / 2);
+      const lane = clampLaneIndex(center + getRandomInt(-1, Math.min(2, laneCount - center)), laneCount);
       const minibossDelay = waveEntries.length ? waveEntries[waveEntries.length - 1].delay + 1.2 : 1.2;
-      const miniboss = createSpawnEntry(ENEMY_TYPES.miniboss, 'COLUMN', 'LINE', laneCount, Math.floor(baseCount / 2), baseCount);
-      miniboss.delay = minibossDelay;
+      const miniboss = makePatternEntry(ENEMY_TYPES.miniboss, lane, minibossDelay, laneCount, {
+        formation: 'COLUMN',
+        path: 'BOSS_SWAY',
+        props: {
+          anchorY: CANVAS_HEIGHT * PLAYER_AREA_TOP_RATIO,
+          swayAmplitude: CANVAS_WIDTH * 0.26,
+          swayFrequency: 0.6,
+          swayPhase: 0
+        }
+      });
       waveEntries.push(miniboss);
     }
 
@@ -1479,7 +1555,9 @@
       path,
       delay,
       lane,
-      offset
+      offset,
+      laneCount,
+      props: undefined
     };
   }
 
@@ -1487,7 +1565,8 @@
     const D = state.difficulty;
     const enemyWidth = entry.type.id === 'miniboss' ? 60 : entry.type.id === 'tank' ? 48 : 40;
     const enemyHeight = enemyWidth;
-    const laneWidth = CANVAS_WIDTH / Math.max(4, 6);
+    const laneSpan = Math.max(1, entry.laneCount || 6);
+    const laneWidth = CANVAS_WIDTH / laneSpan;
     const baseX = laneWidth * (entry.lane + 0.5);
     const spawnX = clamp(baseX + entry.offset, enemyWidth / 2, CANVAS_WIDTH - enemyWidth / 2);
     const spawnY = -enemyHeight - getRandomFloat() * 60;
@@ -1515,6 +1594,30 @@
       remove: false,
       waveIndex: state.wave
     };
+    enemy.anchorX = enemy.x;
+    if (entry.props) {
+      if (entry.props.anchorY != null) {
+        enemy.anchorY = entry.props.anchorY;
+      }
+      if (entry.props.swayAmplitude != null) {
+        enemy.swayAmplitude = entry.props.swayAmplitude;
+      }
+      if (entry.props.swayFrequency != null) {
+        enemy.swayFrequency = entry.props.swayFrequency;
+      }
+      if (entry.props.swayPhase != null) {
+        enemy.swayPhase = entry.props.swayPhase;
+      }
+      if (entry.props.figure8RadiusX != null) {
+        enemy.figure8RadiusX = entry.props.figure8RadiusX;
+      }
+      if (entry.props.figure8RadiusY != null) {
+        enemy.figure8RadiusY = entry.props.figure8RadiusY;
+      }
+    }
+    enemy.anchorReached = false;
+    enemy.figure8Timer = 0;
+    enemy.swayTimer = 0;
     state.enemies.push(enemy);
   }
 
@@ -1620,6 +1723,29 @@
         nextY = enemy.y + speed;
         break;
       }
+      case 'FIGURE8': {
+        const anchorY = enemy.anchorY != null ? enemy.anchorY : CANVAS_HEIGHT * 0.2;
+        const approachSpeed = speed * 0.9;
+        if (!enemy.anchorReached) {
+          const direction = Math.sign(anchorY - enemy.y) || 1;
+          const step = Math.min(Math.abs(anchorY - enemy.y), approachSpeed);
+          nextY = enemy.y + direction * step;
+          nextX = enemy.x;
+          if (Math.abs(anchorY - nextY) <= 1.5) {
+            enemy.anchorReached = true;
+            enemy.figure8Timer = 0;
+            enemy.anchorY = anchorY;
+          }
+        } else {
+          enemy.figure8Timer = (enemy.figure8Timer || 0) + delta;
+          const timer = enemy.figure8Timer * 1.6;
+          const radiusX = enemy.figure8RadiusX != null ? enemy.figure8RadiusX : 80;
+          const radiusY = enemy.figure8RadiusY != null ? enemy.figure8RadiusY : 28;
+          nextX = enemy.anchorX + Math.sin(timer) * radiusX;
+          nextY = anchorY + Math.sin(timer * 2) * radiusY;
+        }
+        break;
+      }
       case 'CIRCLE': {
         const radius = 40 + Math.sin(enemy.age * 0.5) * 12;
         const angle = enemy.age * 2;
@@ -1638,6 +1764,29 @@
         const curve = Math.sin(t * Math.PI) * 90;
         nextX = enemy.x + curve * delta * (enemy.waveIndex % 2 === 0 ? 1 : -1);
         nextY = enemy.y + speed;
+        break;
+      }
+      case 'BOSS_SWAY': {
+        const anchorY = enemy.anchorY != null ? enemy.anchorY : CANVAS_HEIGHT * PLAYER_AREA_TOP_RATIO;
+        if (!enemy.anchorReached) {
+          const direction = Math.sign(anchorY - enemy.y) || 1;
+          const step = Math.min(Math.abs(anchorY - enemy.y), speed);
+          nextY = enemy.y + direction * step;
+          nextX = enemy.x;
+          if (Math.abs(anchorY - nextY) <= 1.5) {
+            enemy.anchorReached = true;
+            enemy.swayTimer = 0;
+            enemy.anchorY = anchorY;
+          }
+        } else {
+          enemy.swayTimer = (enemy.swayTimer || 0) + delta;
+          const amplitude = enemy.swayAmplitude != null ? enemy.swayAmplitude : CANVAS_WIDTH * 0.25;
+          const frequency = enemy.swayFrequency != null ? enemy.swayFrequency : 0.65;
+          const phase = enemy.swayPhase || 0;
+          const theta = enemy.swayTimer * Math.PI * frequency;
+          nextX = enemy.anchorX + Math.sin(theta + phase) * amplitude;
+          nextY = anchorY + Math.sin((theta + phase) * 0.6) * 18;
+        }
         break;
       }
       case 'LINE':
@@ -2351,7 +2500,7 @@
       inputState[action] = true;
     }
     if (event.code === 'Space' && state.gameOver) {
-      restartRun({ preserveSeed: true });
+      restartRun({ preserveSeed: false });
       event.preventDefault();
     }
   }
@@ -2422,7 +2571,7 @@
     if (elements.overlayButton) {
       elements.overlayButton.addEventListener('click', () => {
         if (state.gameOver) {
-          restartRun({ preserveSeed: true });
+          restartRun({ preserveSeed: false });
         }
       });
     }
@@ -2431,7 +2580,7 @@
         restartRun({ preserveSeed: false });
       });
     }
-    const initialSeed = state.lastSeed || randomSeedString();
+    const initialSeed = randomSeedString();
     applySeed(initialSeed);
     resetGame();
     scheduleNextWave();
