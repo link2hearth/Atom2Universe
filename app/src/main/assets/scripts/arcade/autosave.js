@@ -7,6 +7,7 @@
     'quantum2048',
     'gameOfLife',
     'lightsOut',
+    'starBridges',
     'pipeTap',
     'sokoban',
     'bigger',
