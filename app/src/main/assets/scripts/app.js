@@ -4429,7 +4429,8 @@ const RESET_DIALOG_FOCUSABLE_SELECTOR = 'button, [href], input, select, textarea
 
 const resetDialogState = {
   isOpen: false,
-  previousFocus: null
+  previousFocus: null,
+  isProcessing: false
 };
 
 const BIG_BANG_DIALOG_FOCUSABLE_SELECTOR = RESET_DIALOG_FOCUSABLE_SELECTOR;
@@ -4649,6 +4650,7 @@ function openResetDialog() {
   if (resetDialogState.isOpen) {
     return;
   }
+  resetDialogState.isProcessing = false;
   resetDialogState.isOpen = true;
   resetDialogState.previousFocus = document && document.activeElement instanceof HTMLElement
     ? document.activeElement
@@ -4669,6 +4671,7 @@ function closeResetDialog({ cancelled = false } = {}) {
   if (!resetDialogState.isOpen) {
     return;
   }
+  resetDialogState.isProcessing = false;
   resetDialogState.isOpen = false;
   if (elements.resetDialog) {
     elements.resetDialog.hidden = true;
@@ -4698,33 +4701,42 @@ function closeResetDialog({ cancelled = false } = {}) {
 function handleResetDialogSubmit(event) {
   event.preventDefault();
 
-  const keyword = getResetConfirmationKeyword();
-  const expected = normalizeResetConfirmation(keyword);
-  const rawInput = elements.resetDialogInput ? elements.resetDialogInput.value : '';
-  const provided = normalizeResetConfirmation(rawInput);
+  if (resetDialogState.isProcessing) {
+    return;
+  }
+  resetDialogState.isProcessing = true;
 
-  // 1) Mot-clé spécial (devkit / collection / infos)
-  if (handleResetSpecialKeyword(provided)) {
-    closeResetDialog();
-    return;
-  }
-  // 2) Mot de confirmation correct -> reset
-  else if (provided === expected) {
-    closeResetDialog();
-    resetGame();
-    showToast(translateResetString('done', 'Progress reset'));
-    return;
-  }
-  // 3) Mot incorrect -> erreur
-  else {
-    const invalidMessage = translateResetString('invalid', 'Incorrect confirmation word');
-    setResetDialogError(invalidMessage);
-    if (elements.resetDialogInput) {
-      elements.resetDialogInput.focus();
-      elements.resetDialogInput.select();
+  try {
+    const keyword = getResetConfirmationKeyword();
+    const expected = normalizeResetConfirmation(keyword);
+    const rawInput = elements.resetDialogInput ? elements.resetDialogInput.value : '';
+    const provided = normalizeResetConfirmation(rawInput);
+
+    // 1) Mot-clé spécial (devkit / collection / infos)
+    if (handleResetSpecialKeyword(provided)) {
+      closeResetDialog();
+      return;
     }
-    showToast(invalidMessage);
-    return;
+    // 2) Mot de confirmation correct -> reset
+    else if (provided === expected) {
+      closeResetDialog();
+      resetGame();
+      showToast(translateResetString('done', 'Progress reset'));
+      return;
+    }
+    // 3) Mot incorrect -> erreur
+    else {
+      const invalidMessage = translateResetString('invalid', 'Incorrect confirmation word');
+      setResetDialogError(invalidMessage);
+      if (elements.resetDialogInput) {
+        elements.resetDialogInput.focus();
+        elements.resetDialogInput.select();
+      }
+      showToast(invalidMessage);
+      return;
+    }
+  } finally {
+    resetDialogState.isProcessing = false;
   }
 }
 
