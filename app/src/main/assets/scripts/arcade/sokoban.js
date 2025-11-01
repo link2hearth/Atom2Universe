@@ -17,13 +17,13 @@
   const DEFAULT_FALLBACK_LEVELS = Object.freeze([
     Object.freeze({
       map: Object.freeze([
-        '#######',
-        '#.....#',
-        '#.T$..#',
-        '#..P..#',
-        '#..$T.#',
-        '#.....#',
-        '#######'
+        '.......',
+        '.......',
+        '..T$...',
+        '...P...',
+        '...$T..',
+        '.......',
+        '.......'
       ]),
       targets: Object.freeze([[2, 2], [4, 4]]),
       boxes: Object.freeze([[2, 3], [4, 3]]),
@@ -31,14 +31,14 @@
     }),
     Object.freeze({
       map: Object.freeze([
-        '########',
-        '#......#',
-        '#.T$...#',
-        '#..#...#',
-        '#...$T.#',
-        '#..P$..#',
-        '#..T...#',
-        '########'
+        '........',
+        '........',
+        '..T$....',
+        '...#....',
+        '....$T..',
+        '...P$...',
+        '...T....',
+        '........'
       ]),
       targets: Object.freeze([[2, 2], [4, 5], [6, 3]]),
       boxes: Object.freeze([[2, 3], [4, 4], [5, 4]]),
@@ -46,12 +46,12 @@
     }),
     Object.freeze({
       map: Object.freeze([
-        '#####',
-        '#...#',
-        '#.P$#',
-        '#...#',
-        '#.T.#',
-        '#####'
+        '.....',
+        '.....',
+        '..P$.',
+        '.....',
+        '..T..',
+        '.....'
       ]),
       targets: Object.freeze([[4, 2]]),
       boxes: Object.freeze([[2, 3]]),
@@ -735,6 +735,74 @@
     }
   }
 
+  function ensureEdgeOpenings(grid) {
+    const height = grid.length;
+    const width = grid[0]?.length || 0;
+    if (height <= 2 || width <= 2) {
+      return;
+    }
+
+    const edges = [
+      Array.from({ length: width }, (_, col) => [0, col]),
+      Array.from({ length: width }, (_, col) => [height - 1, col]),
+      Array.from({ length: height }, (_, row) => [row, 0]),
+      Array.from({ length: height }, (_, row) => [row, width - 1])
+    ];
+
+    function openRandomCell(cells) {
+      const candidates = cells.slice();
+      shuffleArray(candidates);
+      for (const [row, col] of candidates) {
+        if (grid[row][col] === '#') {
+          grid[row][col] = '.';
+          return true;
+        }
+      }
+      return false;
+    }
+
+    let openedEdge = false;
+    edges.forEach(edgeCells => {
+      if (edgeCells.some(([row, col]) => grid[row][col] !== '#')) {
+        return;
+      }
+      if (openRandomCell(edgeCells)) {
+        openedEdge = true;
+      }
+    });
+
+    if (openedEdge) {
+      return;
+    }
+
+    let fullyEncircled = true;
+    outer: for (let row = 0; row < height; row += 1) {
+      for (let col = 0; col < width; col += 1) {
+        if (row === 0 || row === height - 1 || col === 0 || col === width - 1) {
+          if (grid[row][col] !== '#') {
+            fullyEncircled = false;
+            break outer;
+          }
+        }
+      }
+    }
+
+    if (!fullyEncircled) {
+      return;
+    }
+
+    const perimeter = [];
+    for (let col = 0; col < width; col += 1) {
+      perimeter.push([0, col]);
+      perimeter.push([height - 1, col]);
+    }
+    for (let row = 1; row < height - 1; row += 1) {
+      perimeter.push([row, 0]);
+      perimeter.push([row, width - 1]);
+    }
+    openRandomCell(perimeter);
+  }
+
   function buildConnectedGrid(width, height, wallDensityRange) {
     const safeWidth = clampInt(width, 5, 9, 6);
     const safeHeight = clampInt(height, 5, 9, 6);
@@ -800,6 +868,7 @@
     }
 
     ensureInterestingFeatures(grid);
+    ensureEdgeOpenings(grid);
     const finalOpenCells = countOpenCells(grid);
     if (finalOpenCells < minimumOpenCells) {
       return null;
