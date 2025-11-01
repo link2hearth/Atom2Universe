@@ -1307,7 +1307,8 @@
           "rapid": "Rapid fire",
           "magnet": "Magnet",
           "slow": "Enemy slow",
-          "shield": "Shield"
+          "shield": "Shield",
+          "heart": "Extra life"
         },
         "status": {
           "heart": "Heart recovered!",
