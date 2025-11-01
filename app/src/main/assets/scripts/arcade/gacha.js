@@ -290,6 +290,7 @@ const SPECIAL_GACHA_CARD_DEFINITION_INDEX = new Map(
 );
 
 const BONUS_GACHA_IMAGE_CHANCE = 0.01;
+const BONUS_GACHA_IMAGE_AVAILABILITY_BATCH_SIZE = 12;
 
 const BONUS_GACHA_IMAGE_DEFINITION_INDEX = new Map(
   Array.isArray(GACHA_BONUS_IMAGE_DEFINITIONS)
@@ -592,11 +593,6 @@ function getAvailableBonusGachaImageIds() {
     if (isBonusGachaImageMarkedMissing(imageId)) {
       return false;
     }
-    const definition = getBonusGachaImageDefinition(imageId);
-    if (!definition || !isBonusGachaImageAssetAvailable(definition)) {
-      markBonusGachaImageMissing(imageId, definition);
-      return false;
-    }
     const stored = collection[imageId];
     const rawCount = Number.isFinite(Number(stored?.count ?? stored))
       ? Math.max(0, Math.floor(Number(stored?.count ?? stored)))
@@ -633,20 +629,25 @@ function awardSpecialGachaCard(cardId) {
   };
 }
 
-function awardBonusGachaImage(imageId) {
+function awardBonusGachaImage(imageId, options = null) {
   if (!isGachaImageCollectionEnabled()) {
     return null;
   }
   if (!imageId) {
     return null;
   }
+  const { definition: providedDefinition = null, skipAssetCheck = false } = options || {};
   const collection = ensureGachaImageCollection();
   if (!collection[imageId]) {
     collection[imageId] = { id: imageId, count: 0 };
   }
   const entry = collection[imageId];
-  const definition = getBonusGachaImageDefinition(imageId);
-  if (!definition || !isBonusGachaImageAssetAvailable(definition)) {
+  const definition = providedDefinition || getBonusGachaImageDefinition(imageId);
+  if (!definition) {
+    markBonusGachaImageMissing(imageId, definition);
+    return null;
+  }
+  if (!skipAssetCheck && !isBonusGachaImageAssetAvailable(definition)) {
     markBonusGachaImageMissing(imageId, definition);
     return null;
   }
@@ -722,23 +723,32 @@ function maybeAwardBonusGachaImage() {
   if (!rollForBonusGachaImage()) {
     return null;
   }
-  const remainingIds = [...availableIds];
-  while (remainingIds.length) {
-    const index = Math.floor(Math.random() * remainingIds.length);
-    const [imageId] = remainingIds.splice(index, 1);
-    if (!imageId) {
-      continue;
-    }
-    const definition = getBonusGachaImageDefinition(imageId);
-    if (!definition || !isBonusGachaImageAssetAvailable(definition)) {
+  const shuffledIds = availableIds.slice();
+  for (let i = shuffledIds.length - 1; i > 0; i -= 1) {
+    const swapIndex = Math.floor(Math.random() * (i + 1));
+    const temp = shuffledIds[i];
+    shuffledIds[i] = shuffledIds[swapIndex];
+    shuffledIds[swapIndex] = temp;
+  }
+  const batchSize = Math.max(1, Math.floor(BONUS_GACHA_IMAGE_AVAILABILITY_BATCH_SIZE));
+  for (let offset = 0; offset < shuffledIds.length; offset += batchSize) {
+    const batch = shuffledIds.slice(offset, offset + batchSize);
+    for (let index = 0; index < batch.length; index += 1) {
+      const imageId = batch[index];
+      if (!imageId) {
+        continue;
+      }
+      const definition = getBonusGachaImageDefinition(imageId);
+      if (!definition || !isBonusGachaImageAssetAvailable(definition)) {
+        markBonusGachaImageMissing(imageId, definition);
+        continue;
+      }
+      const reward = awardBonusGachaImage(imageId, { definition, skipAssetCheck: true });
+      if (reward) {
+        return reward;
+      }
       markBonusGachaImageMissing(imageId, definition);
-      continue;
     }
-    const reward = awardBonusGachaImage(imageId);
-    if (reward) {
-      return reward;
-    }
-    markBonusGachaImageMissing(imageId, definition);
   }
   return null;
 }
