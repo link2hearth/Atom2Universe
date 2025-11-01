@@ -1307,7 +1307,8 @@
           "rapid": "Cadence boostée",
           "magnet": "Aimant",
           "slow": "Ralentissement ennemi",
-          "shield": "Bouclier"
+          "shield": "Bouclier",
+          "heart": "Cœur supplémentaire"
         },
         "status": {
           "heart": "Cœur récupéré !",

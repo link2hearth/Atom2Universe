@@ -38,6 +38,8 @@
   const ENEMY_BULLET_SIZE = { width: 6, height: 18 };
   const PLAYER_BULLET_SIZE = { width: 8, height: 18 };
   const DROP_SIZE = 20;
+  const DROP_BASE_SPEED = 120;
+  const MAGNET_PULL_SPEED = 240;
   const MAGNET_RADIUS = 120;
 
   const PLAYER_BASE_STATS = Object.freeze({
@@ -63,6 +65,410 @@
     shield: { duration: Infinity, type: 'shield' },
     heart: { duration: 0, type: 'heal' }
   });
+
+  const POWERUP_VISUALS = Object.freeze({
+    multi_shot: {
+      glow: 'rgba(64, 218, 255, 0.55)',
+      body: {
+        highlight: '#6ff0ff',
+        base: '#2da7ff',
+        shadow: '#0a499f',
+        edge: '#031835',
+        shine: 'rgba(255, 255, 255, 0.35)'
+      },
+      bodyAccent: 'rgba(102, 228, 255, 0.4)',
+      icon: drawDoubleCannonIcon,
+      iconFill: '#f4fbff',
+      iconStroke: '#082d5a',
+      iconAccent: '#3dd2ff',
+      iconScale: 0.72
+    },
+    rapid_fire: {
+      glow: 'rgba(255, 134, 61, 0.6)',
+      body: {
+        highlight: '#ffb36a',
+        base: '#ff7438',
+        shadow: '#a52a00',
+        edge: '#401101',
+        shine: 'rgba(255, 238, 215, 0.4)'
+      },
+      bodyAccent: 'rgba(255, 214, 150, 0.35)',
+      icon: drawRapidFireIcon,
+      iconFill: '#fff5e6',
+      iconStroke: '#742400',
+      iconAccent: '#ff9b48',
+      iconScale: 0.78
+    },
+    magnet: {
+      glow: 'rgba(120, 244, 192, 0.55)',
+      body: {
+        highlight: '#a6ffd8',
+        base: '#2fc684',
+        shadow: '#0e6140',
+        edge: '#04301c',
+        shine: 'rgba(220, 255, 240, 0.38)'
+      },
+      icon: drawMagnetIcon,
+      iconFill: '#eafff6',
+      iconStroke: '#06402a',
+      iconAccent: '#4af1a9',
+      iconScale: 0.78
+    },
+    enemy_slow: {
+      glow: 'rgba(150, 130, 255, 0.6)',
+      body: {
+        highlight: '#d5c8ff',
+        base: '#8f82ff',
+        shadow: '#3b2aa5',
+        edge: '#1b1454',
+        shine: 'rgba(240, 232, 255, 0.42)'
+      },
+      icon: drawSnowflakeIcon,
+      iconFill: '#f4f0ff',
+      iconStroke: '#352180',
+      iconAccent: '#c7bdff',
+      iconScale: 0.7
+    },
+    shield: {
+      glow: 'rgba(88, 190, 255, 0.6)',
+      body: {
+        highlight: '#bfe4ff',
+        base: '#4faaf6',
+        shadow: '#0b4b9c',
+        edge: '#06223f',
+        shine: 'rgba(220, 242, 255, 0.45)'
+      },
+      icon: drawShieldIcon,
+      iconFill: 'rgba(194, 232, 255, 0.9)',
+      iconStroke: '#0d3a6b',
+      iconAccent: 'rgba(115, 198, 255, 0.65)',
+      iconScale: 0.76,
+      iconOffsetY: -1
+    },
+    heart: {
+      glow: 'rgba(255, 107, 129, 0.6)',
+      body: {
+        highlight: '#ff9db0',
+        base: '#ff5c7a',
+        shadow: '#b31230',
+        edge: '#4a0c1b',
+        shine: 'rgba(255, 220, 230, 0.45)'
+      },
+      icon: drawHeartIcon,
+      iconFill: '#fff2f6',
+      iconStroke: '#931e36',
+      iconAccent: '#ffccd8',
+      iconScale: 0.8
+    },
+    default: {
+      glow: 'rgba(139, 233, 253, 0.45)',
+      body: {
+        highlight: '#d7f7ff',
+        base: '#8be9fd',
+        shadow: '#3088b0',
+        edge: '#16475e',
+        shine: 'rgba(255, 255, 255, 0.35)'
+      },
+      icon: drawStarIcon,
+      iconFill: '#ffffff',
+      iconStroke: '#14506a',
+      iconScale: 0.75
+    }
+  });
+
+  function beginCapsulePath(ctx, width, height, radius) {
+    const r = Math.min(radius, height / 2, width / 2);
+    ctx.beginPath();
+    ctx.moveTo(-width / 2 + r, -height / 2);
+    ctx.lineTo(width / 2 - r, -height / 2);
+    ctx.arc(width / 2 - r, -height / 2 + r, r, -Math.PI / 2, 0);
+    ctx.lineTo(width / 2, height / 2 - r);
+    ctx.arc(width / 2 - r, height / 2 - r, r, 0, Math.PI / 2);
+    ctx.lineTo(-width / 2 + r, height / 2);
+    ctx.arc(-width / 2 + r, height / 2 - r, r, Math.PI / 2, Math.PI);
+    ctx.lineTo(-width / 2, -height / 2 + r);
+    ctx.arc(-width / 2 + r, -height / 2 + r, r, Math.PI, -Math.PI / 2);
+    ctx.closePath();
+  }
+
+  function drawRoundedRect(ctx, x, y, width, height, radius) {
+    const r = Math.min(radius, width / 2, height / 2);
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + width - r, y);
+    ctx.quadraticCurveTo(x + width, y, x + width, y + r);
+    ctx.lineTo(x + width, y + height - r);
+    ctx.quadraticCurveTo(x + width, y + height, x + width - r, y + height);
+    ctx.lineTo(x + r, y + height);
+    ctx.quadraticCurveTo(x, y + height, x, y + height - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+  }
+
+  function drawPowerupBadge(ctx, style, size, options = {}) {
+    const height = size * 0.95;
+    const width = size * 1.12;
+    const radius = height / 2;
+    const glowStrength = options.forHud ? 6 : 10;
+
+    ctx.save();
+    ctx.shadowColor = style.glow;
+    ctx.shadowBlur = glowStrength;
+    beginCapsulePath(ctx, width, height, radius);
+    const gradient = ctx.createLinearGradient(0, -height / 2, 0, height / 2);
+    gradient.addColorStop(0, style.body.highlight);
+    gradient.addColorStop(0.55, style.body.base);
+    gradient.addColorStop(1, style.body.shadow);
+    ctx.fillStyle = gradient;
+    ctx.fill();
+
+    ctx.shadowBlur = 0;
+    ctx.lineWidth = Math.max(1.5, size * 0.08);
+    ctx.strokeStyle = style.body.edge;
+    beginCapsulePath(ctx, width, height, radius);
+    ctx.stroke();
+
+    ctx.save();
+    beginCapsulePath(ctx, width, height, radius);
+    ctx.clip();
+    const shineGradient = ctx.createLinearGradient(-width / 2, -height / 2, width / 2, -height / 2 + height * 0.7);
+    shineGradient.addColorStop(0, style.body.shine);
+    shineGradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    ctx.fillStyle = shineGradient;
+    ctx.fillRect(-width / 2, -height / 2, width, height);
+    ctx.restore();
+
+    if (style.bodyAccent) {
+      ctx.save();
+      beginCapsulePath(ctx, width, height, radius);
+      ctx.clip();
+      ctx.fillStyle = style.bodyAccent;
+      const stripeHeight = height * 0.18;
+      ctx.globalAlpha = 0.6;
+      ctx.fillRect(-width / 2, -stripeHeight / 2, width, stripeHeight);
+      ctx.restore();
+    }
+
+    if (typeof style.icon === 'function') {
+      ctx.save();
+      ctx.translate(0, style.iconOffsetY || 0);
+      const iconSize = size * (style.iconScale || 0.75);
+      style.icon(ctx, iconSize, style);
+      ctx.restore();
+    }
+
+    ctx.restore();
+  }
+
+  function drawHeartIcon(ctx, size, style) {
+    const width = size * 0.95;
+    const height = size * 0.88;
+    const topCurveHeight = height * 0.45;
+    ctx.beginPath();
+    ctx.moveTo(0, height / 2);
+    ctx.bezierCurveTo(width / 2, height / 2, width / 2, -topCurveHeight, 0, -height / 4);
+    ctx.bezierCurveTo(-width / 2, -topCurveHeight, -width / 2, height / 2, 0, height / 2);
+    ctx.closePath();
+    ctx.fillStyle = style.iconFill;
+    ctx.fill();
+    ctx.lineWidth = Math.max(1, size * 0.08);
+    ctx.strokeStyle = style.iconStroke;
+    ctx.stroke();
+    ctx.save();
+    ctx.clip();
+    const highlight = ctx.createLinearGradient(-width / 2, -height / 2, width / 2, 0);
+    highlight.addColorStop(0, style.iconAccent || 'rgba(255, 255, 255, 0.4)');
+    highlight.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    ctx.globalAlpha = 0.8;
+    ctx.fillStyle = highlight;
+    ctx.fillRect(-width / 2, -height / 2, width, height);
+    ctx.restore();
+  }
+
+  function drawShieldIcon(ctx, size, style) {
+    const width = size * 0.95;
+    const height = size;
+    ctx.beginPath();
+    ctx.moveTo(0, -height / 2);
+    ctx.quadraticCurveTo(width / 2, -height / 2 + height * 0.2, width / 2, -height * 0.05);
+    ctx.quadraticCurveTo(width / 2, height * 0.55, 0, height / 2);
+    ctx.quadraticCurveTo(-width / 2, height * 0.55, -width / 2, -height * 0.05);
+    ctx.quadraticCurveTo(-width / 2, -height / 2 + height * 0.2, 0, -height / 2);
+    ctx.closePath();
+    const gradient = ctx.createLinearGradient(0, -height / 2, 0, height / 2);
+    gradient.addColorStop(0, style.iconFill);
+    gradient.addColorStop(1, style.iconAccent || style.iconFill);
+    ctx.fillStyle = gradient;
+    ctx.fill();
+    ctx.lineWidth = Math.max(1, size * 0.08);
+    ctx.strokeStyle = style.iconStroke;
+    ctx.stroke();
+    ctx.save();
+    ctx.clip();
+    const shine = ctx.createRadialGradient(0, -height / 3, height * 0.1, 0, -height / 3, height * 0.8);
+    shine.addColorStop(0, 'rgba(255, 255, 255, 0.65)');
+    shine.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    ctx.fillStyle = shine;
+    ctx.fillRect(-width / 2, -height / 2, width, height);
+    ctx.restore();
+  }
+
+  function drawDoubleCannonIcon(ctx, size, style) {
+    const barrelWidth = size * 0.24;
+    const barrelHeight = size * 0.72;
+    const spacing = size * 0.34;
+    ctx.fillStyle = style.iconFill;
+    ctx.strokeStyle = style.iconStroke;
+    ctx.lineWidth = Math.max(1, size * 0.08);
+    [-1, 1].forEach(dir => {
+      const x = (spacing / 2) * dir - barrelWidth / 2;
+      const y = -barrelHeight / 2;
+      drawRoundedRect(ctx, x, y, barrelWidth, barrelHeight, barrelWidth / 3);
+      ctx.fill();
+      drawRoundedRect(ctx, x, y, barrelWidth, barrelHeight, barrelWidth / 3);
+      ctx.stroke();
+    });
+    ctx.fillStyle = style.iconAccent || style.iconFill;
+    const bridgeHeight = size * 0.18;
+    drawRoundedRect(ctx, -spacing / 2, -bridgeHeight / 2, spacing, bridgeHeight, bridgeHeight / 2);
+    ctx.fill();
+    drawRoundedRect(ctx, -spacing / 2, -bridgeHeight / 2, spacing, bridgeHeight, bridgeHeight / 2);
+    ctx.stroke();
+  }
+
+  function drawRapidFireIcon(ctx, size, style) {
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    ctx.lineWidth = Math.max(1.2, size * 0.12);
+    ctx.strokeStyle = style.iconStroke;
+    ctx.fillStyle = style.iconFill;
+    const length = size * 0.9;
+    const height = size * 0.45;
+    ctx.beginPath();
+    ctx.moveTo(-length / 2, height / 2);
+    ctx.lineTo(length * 0.1, height / 2);
+    ctx.lineTo(-length / 10, -height / 2);
+    ctx.lineTo(length / 2, 0);
+    ctx.lineTo(-length / 10, height / 2);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.lineWidth = Math.max(1, size * 0.08);
+    ctx.strokeStyle = style.iconAccent || style.iconStroke;
+    ctx.beginPath();
+    ctx.moveTo(-length / 2 + size * 0.12, -height * 0.1);
+    ctx.lineTo(-length / 2 + size * 0.12, height * 0.5);
+    ctx.stroke();
+  }
+
+  function drawMagnetIcon(ctx, size, style) {
+    const outerWidth = size * 0.9;
+    const outerHeight = size;
+    const innerWidth = outerWidth * 0.55;
+    const innerHeight = outerHeight * 0.65;
+    const legHeight = outerHeight * 0.5;
+    ctx.lineWidth = Math.max(1, size * 0.08);
+    ctx.strokeStyle = style.iconStroke;
+    ctx.fillStyle = style.iconFill;
+    ctx.beginPath();
+    ctx.moveTo(-outerWidth / 2, -legHeight / 2);
+    ctx.lineTo(-outerWidth / 2, legHeight / 2);
+    ctx.arc(0, legHeight / 2, outerWidth / 2, Math.PI, 0);
+    ctx.lineTo(outerWidth / 2, -legHeight / 2);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.save();
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.beginPath();
+    ctx.moveTo(-innerWidth / 2, -legHeight / 2);
+    ctx.lineTo(-innerWidth / 2, innerHeight / 2);
+    ctx.arc(0, innerHeight / 2, innerWidth / 2, Math.PI, 0);
+    ctx.lineTo(innerWidth / 2, -legHeight / 2);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+    ctx.fillStyle = style.iconAccent || style.iconFill;
+    const tipHeight = size * 0.22;
+    ctx.beginPath();
+    ctx.rect(-outerWidth / 2, -legHeight / 2, outerWidth / 2, tipHeight);
+    ctx.rect(0, -legHeight / 2, outerWidth / 2, tipHeight);
+    ctx.fill();
+    ctx.stroke();
+  }
+
+  function drawSnowflakeIcon(ctx, size, style) {
+    const radius = size * 0.42;
+    ctx.strokeStyle = style.iconStroke;
+    ctx.lineWidth = Math.max(1, size * 0.12);
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(-radius, 0);
+    ctx.lineTo(radius, 0);
+    ctx.moveTo(0, -radius);
+    ctx.lineTo(0, radius);
+    const diagonal = radius * Math.cos(Math.PI / 6);
+    ctx.moveTo(-diagonal, -diagonal);
+    ctx.lineTo(diagonal, diagonal);
+    ctx.moveTo(-diagonal, diagonal);
+    ctx.lineTo(diagonal, -diagonal);
+    ctx.stroke();
+
+    ctx.strokeStyle = style.iconAccent || style.iconStroke;
+    ctx.lineWidth = Math.max(1, size * 0.06);
+    const branch = radius * 0.32;
+    [-1, 1].forEach(sign => {
+      ctx.beginPath();
+      ctx.moveTo(sign * radius, 0);
+      ctx.lineTo(sign * (radius - branch), branch);
+      ctx.moveTo(sign * radius, 0);
+      ctx.lineTo(sign * (radius - branch), -branch);
+      ctx.moveTo(0, sign * radius);
+      ctx.lineTo(branch, sign * (radius - branch));
+      ctx.moveTo(0, sign * radius);
+      ctx.lineTo(-branch, sign * (radius - branch));
+      ctx.stroke();
+    });
+  }
+
+  function drawStarIcon(ctx, size, style) {
+    const points = 5;
+    const outerRadius = size * 0.48;
+    const innerRadius = outerRadius * 0.5;
+    ctx.beginPath();
+    for (let i = 0; i < points * 2; i += 1) {
+      const angle = (Math.PI / points) * i;
+      const radius = i % 2 === 0 ? outerRadius : innerRadius;
+      ctx.lineTo(Math.cos(angle) * radius, Math.sin(angle) * radius);
+    }
+    ctx.closePath();
+    ctx.fillStyle = style.iconFill;
+    ctx.fill();
+    ctx.lineWidth = Math.max(1, size * 0.08);
+    ctx.strokeStyle = style.iconStroke;
+    ctx.stroke();
+  }
+
+  function createPowerupIconElement(id, size = 28) {
+    const canvas = document.createElement('canvas');
+    const scale = window.devicePixelRatio || 1;
+    const logicalSize = size;
+    const actualSize = Math.ceil(logicalSize * scale);
+    canvas.width = actualSize;
+    canvas.height = actualSize;
+    canvas.style.width = `${logicalSize}px`;
+    canvas.style.height = `${logicalSize}px`;
+    canvas.className = 'stars-war__life-icon';
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      ctx.scale(scale, scale);
+      ctx.translate(logicalSize / 2, logicalSize / 2);
+      drawPowerupBadge(ctx, POWERUP_VISUALS[id] || POWERUP_VISUALS.default, logicalSize * 0.72, { forHud: true });
+    }
+    canvas.setAttribute('aria-hidden', 'true');
+    return canvas;
+  }
 
   const ENEMY_TYPES = Object.freeze({
     drone: {
@@ -131,6 +537,305 @@
 
   const FORMATIONS = Object.freeze(['LINE', 'V', 'COLUMN', 'ARC', 'SWARM']);
   const PATHS = Object.freeze(['SIN', 'CIRCLE', 'SWOOP', 'LINE', 'ARC']);
+
+  function clampLaneIndex(lane, laneCount) {
+    if (!Number.isFinite(lane)) {
+      return 0;
+    }
+    return Math.max(0, Math.min(laneCount - 1, Math.floor(lane)));
+  }
+
+  function makePatternEntry(type, lane, delay, laneCount, options = {}) {
+    return {
+      type,
+      formation: options.formation || 'LINE',
+      path: options.path || 'LINE',
+      delay,
+      lane: clampLaneIndex(lane, laneCount),
+      offset: options.offset ?? 0
+    };
+  }
+
+  function makeLaneBand(center, spread, laneCount) {
+    const lanes = [];
+    for (let delta = -spread; delta <= spread; delta += 1) {
+      lanes.push(clampLaneIndex(center + delta, laneCount));
+    }
+    return Array.from(new Set(lanes));
+  }
+
+  const WAVE_PATTERNS = Object.freeze([
+    {
+      id: 'scout_serpentine',
+      minDifficulty: 1,
+      build({ laneCount, startDelay }) {
+        const entries = [];
+        const center = Math.floor(laneCount / 2);
+        const spacing = 0.32;
+        for (let i = 0; i < 8; i += 1) {
+          const step = Math.ceil(i / 2);
+          const direction = i % 2 === 0 ? 1 : -1;
+          const lane = clampLaneIndex(center + direction * step, laneCount);
+          const type = i % 3 === 0 ? ENEMY_TYPES.drone : ENEMY_TYPES.fast;
+          entries.push(makePatternEntry(type, lane, startDelay + i * spacing, laneCount, {
+            path: 'SIN',
+            formation: 'SWARM',
+            offset: direction * 12
+          }));
+        }
+        const nextDelay = entries.length ? entries[entries.length - 1].delay + 1 : startDelay + 1;
+        return { entries, nextDelay };
+      }
+    },
+    {
+      id: 'drone_screen',
+      minDifficulty: 1,
+      build({ laneCount, startDelay }) {
+        const entries = [];
+        const center = Math.floor(laneCount / 2);
+        const lanes = makeLaneBand(center, Math.min(2, Math.floor(laneCount / 2)), laneCount);
+        lanes.forEach(lane => {
+          entries.push(makePatternEntry(ENEMY_TYPES.drone, lane, startDelay, laneCount, {
+            formation: 'LINE',
+            path: 'LINE'
+          }));
+        });
+        const secondDelay = startDelay + 0.4;
+        lanes.forEach((lane, index) => {
+          const type = index % 2 === 0 ? ENEMY_TYPES.fast : ENEMY_TYPES.drone;
+          entries.push(makePatternEntry(type, lane, secondDelay, laneCount, {
+            formation: 'LINE',
+            path: 'LINE',
+            offset: (lane - center) * 8
+          }));
+        });
+        return { entries, nextDelay: secondDelay + 1 };
+      }
+    },
+    {
+      id: 'flanking_darts',
+      minDifficulty: 2,
+      build({ laneCount, startDelay }) {
+        const entries = [];
+        const spacing = 0.28;
+        for (let i = 0; i < 6; i += 1) {
+          const fromLeft = i % 2 === 0;
+          const lane = fromLeft ? 0 : laneCount - 1;
+          entries.push(makePatternEntry(ENEMY_TYPES.fast, lane, startDelay + i * spacing, laneCount, {
+            path: 'SWOOP',
+            formation: 'V',
+            offset: fromLeft ? -40 : 40
+          }));
+        }
+        const centerLane = clampLaneIndex(Math.floor(laneCount / 2), laneCount);
+        entries.push(makePatternEntry(ENEMY_TYPES.gunner, centerLane, startDelay + 6 * spacing + 0.4, laneCount, {
+          path: 'LINE',
+          formation: 'LINE'
+        }));
+        entries.push(makePatternEntry(ENEMY_TYPES.gunner, clampLaneIndex(centerLane + 1, laneCount), startDelay + 6 * spacing + 0.7, laneCount, {
+          path: 'LINE',
+          formation: 'LINE'
+        }));
+        return { entries, nextDelay: startDelay + 6 * spacing + 1.2 };
+      }
+    },
+    {
+      id: 'gunner_phalanx',
+      minDifficulty: 2,
+      build({ laneCount, startDelay }) {
+        const entries = [];
+        const center = Math.floor(laneCount / 2);
+        const lanes = makeLaneBand(center, Math.min(2, Math.floor((laneCount - 1) / 2)), laneCount);
+        lanes.forEach((lane, index) => {
+          const delay = startDelay + index * 0.2;
+          entries.push(makePatternEntry(ENEMY_TYPES.drone, lane, delay, laneCount, {
+            formation: 'LINE',
+            path: 'LINE'
+          }));
+          entries.push(makePatternEntry(ENEMY_TYPES.gunner, lane, delay + 0.25, laneCount, {
+            formation: 'LINE',
+            path: 'LINE',
+            offset: 6
+          }));
+        });
+        const lastDelay = lanes.length ? startDelay + (lanes.length - 1) * 0.2 + 0.6 : startDelay + 0.6;
+        return { entries, nextDelay: lastDelay + 0.8 };
+      }
+    },
+    {
+      id: 'arc_barrage',
+      minDifficulty: 2,
+      build({ laneCount, startDelay }) {
+        const entries = [];
+        const total = Math.min(laneCount + 1, 7);
+        for (let i = 0; i < total; i += 1) {
+          const lane = clampLaneIndex(i, laneCount);
+          const type = i % 2 === 0 ? ENEMY_TYPES.fast : ENEMY_TYPES.drone;
+          entries.push(makePatternEntry(type, lane, startDelay + i * 0.22, laneCount, {
+            formation: 'ARC',
+            path: 'ARC',
+            offset: (i - (total - 1) / 2) * 20
+          }));
+        }
+        return { entries, nextDelay: startDelay + total * 0.22 + 0.9 };
+      }
+    },
+    {
+      id: 'tank_wall',
+      minDifficulty: 3,
+      build({ laneCount, startDelay }) {
+        const entries = [];
+        const center = Math.floor(laneCount / 2);
+        const lanes = makeLaneBand(center, Math.min(2, Math.floor((laneCount - 1) / 2)), laneCount);
+        lanes.forEach(lane => {
+          entries.push(makePatternEntry(ENEMY_TYPES.tank, lane, startDelay, laneCount, {
+            formation: 'LINE',
+            path: 'LINE',
+            offset: (lane - center) * 10
+          }));
+        });
+        const supportDelay = startDelay + 0.45;
+        lanes.forEach((lane, index) => {
+          const type = index % 2 === 0 ? ENEMY_TYPES.gunner : ENEMY_TYPES.fast;
+          entries.push(makePatternEntry(type, lane, supportDelay, laneCount, {
+            formation: 'LINE',
+            path: 'LINE'
+          }));
+        });
+        return { entries, nextDelay: supportDelay + 1.1 };
+      }
+    },
+    {
+      id: 'shield_column',
+      minDifficulty: 3,
+      build({ laneCount, startDelay }) {
+        const entries = [];
+        const lane = clampLaneIndex(Math.floor(laneCount / 2) + 1, laneCount);
+        const spacing = 0.33;
+        entries.push(makePatternEntry(ENEMY_TYPES.tank, lane, startDelay, laneCount, {
+          formation: 'COLUMN',
+          path: 'LINE'
+        }));
+        entries.push(makePatternEntry(ENEMY_TYPES.gunner, lane, startDelay + spacing, laneCount, {
+          formation: 'COLUMN',
+          path: 'LINE'
+        }));
+        entries.push(makePatternEntry(ENEMY_TYPES.tank, lane, startDelay + spacing * 2, laneCount, {
+          formation: 'COLUMN',
+          path: 'LINE'
+        }));
+        entries.push(makePatternEntry(ENEMY_TYPES.gunner, lane, startDelay + spacing * 3, laneCount, {
+          formation: 'COLUMN',
+          path: 'LINE'
+        }));
+        const flankDelay = startDelay + spacing * 1.5;
+        entries.push(makePatternEntry(ENEMY_TYPES.fast, clampLaneIndex(lane - 2, laneCount), flankDelay, laneCount, {
+          formation: 'V',
+          path: 'SIN',
+          offset: -30
+        }));
+        entries.push(makePatternEntry(ENEMY_TYPES.fast, clampLaneIndex(lane + 2, laneCount), flankDelay, laneCount, {
+          formation: 'V',
+          path: 'SIN',
+          offset: 30
+        }));
+        return { entries, nextDelay: startDelay + spacing * 3 + 1 };
+      }
+    },
+    {
+      id: 'kamikaze_rush',
+      minDifficulty: 4,
+      build({ laneCount, startDelay }) {
+        const entries = [];
+        const center = Math.floor(laneCount / 2);
+        const spacing = 0.22;
+        for (let i = 0; i < 8; i += 1) {
+          const step = Math.ceil(i / 2);
+          const direction = i % 2 === 0 ? 1 : -1;
+          const lane = clampLaneIndex(center + direction * step, laneCount);
+          entries.push(makePatternEntry(ENEMY_TYPES.kamikaze, lane, startDelay + i * spacing, laneCount, {
+            formation: 'SWARM',
+            path: 'SWOOP',
+            offset: direction * 24
+          }));
+        }
+        const anchorDelay = startDelay + 8 * spacing + 0.35;
+        entries.push(makePatternEntry(ENEMY_TYPES.gunner, center, anchorDelay, laneCount, {
+          formation: 'LINE',
+          path: 'LINE'
+        }));
+        return { entries, nextDelay: anchorDelay + 1 };
+      }
+    },
+    {
+      id: 'sniper_caravan',
+      minDifficulty: 5,
+      build({ laneCount, startDelay }) {
+        const entries = [];
+        const centerLane = clampLaneIndex(Math.floor(laneCount / 2), laneCount);
+        const spacing = 0.36;
+        entries.push(makePatternEntry(ENEMY_TYPES.sniper, centerLane, startDelay, laneCount, {
+          formation: 'LINE',
+          path: 'LINE'
+        }));
+        entries.push(makePatternEntry(ENEMY_TYPES.fast, clampLaneIndex(centerLane - 1, laneCount), startDelay + 0.2, laneCount, {
+          formation: 'SWARM',
+          path: 'SIN',
+          offset: -18
+        }));
+        for (let i = 1; i <= 3; i += 1) {
+          entries.push(makePatternEntry(ENEMY_TYPES.gunner, centerLane, startDelay + i * spacing, laneCount, {
+            formation: 'LINE',
+            path: 'LINE'
+          }));
+        }
+        entries.push(makePatternEntry(ENEMY_TYPES.fast, clampLaneIndex(centerLane + 1, laneCount), startDelay + spacing * 3 + 0.2, laneCount, {
+          formation: 'SWARM',
+          path: 'SIN',
+          offset: 18
+        }));
+        entries.push(makePatternEntry(ENEMY_TYPES.sniper, centerLane, startDelay + spacing * 4, laneCount, {
+          formation: 'LINE',
+          path: 'LINE'
+        }));
+        return { entries, nextDelay: startDelay + spacing * 4 + 1.1 };
+      }
+    },
+    {
+      id: 'carrier_parade',
+      minDifficulty: 5,
+      build({ laneCount, startDelay }) {
+        const entries = [];
+        const center = Math.floor(laneCount / 2);
+        const lanes = makeLaneBand(center, Math.min(1, laneCount - 1), laneCount);
+        let delay = startDelay;
+        lanes.forEach((lane, index) => {
+          entries.push(makePatternEntry(ENEMY_TYPES.carrier, lane, delay, laneCount, {
+            formation: 'COLUMN',
+            path: 'LINE',
+            offset: (lane - center) * 12
+          }));
+          entries.push(makePatternEntry(ENEMY_TYPES.fast, lane, delay + 0.3, laneCount, {
+            formation: 'SWARM',
+            path: 'SIN',
+            offset: (index % 2 === 0 ? -1 : 1) * 14
+          }));
+          delay += 0.5;
+        });
+        const escortLaneLeft = clampLaneIndex(center - 2, laneCount);
+        const escortLaneRight = clampLaneIndex(center + 2, laneCount);
+        entries.push(makePatternEntry(ENEMY_TYPES.gunner, escortLaneLeft, delay, laneCount, {
+          formation: 'LINE',
+          path: 'ARC'
+        }));
+        entries.push(makePatternEntry(ENEMY_TYPES.gunner, escortLaneRight, delay, laneCount, {
+          formation: 'LINE',
+          path: 'ARC'
+        }));
+        return { entries, nextDelay: delay + 1.2 };
+      }
+    }
+  ]);
   const AUTOSAVE_KEY = 'starsWar';
   let autosaveTimerId = null;
 
@@ -351,24 +1056,114 @@
     rapid_fire: 'index.sections.starsWar.powerups.rapid',
     magnet: 'index.sections.starsWar.powerups.magnet',
     enemy_slow: 'index.sections.starsWar.powerups.slow',
-    shield: 'index.sections.starsWar.powerups.shield'
+    shield: 'index.sections.starsWar.powerups.shield',
+    heart: 'index.sections.starsWar.powerups.heart'
   });
 
-  const translate = (() => {
-    const translator = typeof window !== 'undefined' && typeof window.t === 'function'
-      ? window.t.bind(window)
-      : null;
-    return (key, params) => {
-      if (translator) {
-        try {
-          return translator(key, params);
-        } catch (error) {
-          return key;
-        }
+  const LOCAL_FALLBACK_TRANSLATIONS = Object.freeze({
+    'index.sections.starsWar.powerups.multi': { en: 'Side cannons', fr: 'Tir latéral' },
+    'index.sections.starsWar.powerups.rapid': { en: 'Rapid fire', fr: 'Cadence boostée' },
+    'index.sections.starsWar.powerups.magnet': { en: 'Magnet', fr: 'Aimant' },
+    'index.sections.starsWar.powerups.slow': { en: 'Enemy slow', fr: 'Ralentissement ennemi' },
+    'index.sections.starsWar.powerups.shield': { en: 'Shield', fr: 'Bouclier' },
+    'index.sections.starsWar.powerups.heart': { en: 'Extra life', fr: 'Cœur supplémentaire' },
+    'index.sections.starsWar.status.powerup': { en: 'Power-up equipped: {powerup}', fr: 'Bonus activé : {powerup}' },
+    'index.sections.starsWar.status.heart': { en: 'Heart recovered!', fr: 'Cœur récupéré !' },
+    'index.sections.starsWar.status.shield': { en: 'Shield absorbed the hit.', fr: 'Bouclier absorbé.' },
+    'index.sections.starsWar.status.damage': { en: 'Hit! Hull at {hp} HP.', fr: 'Touché ! PV restants : {hp}' },
+    'index.sections.starsWar.overlay.gameOver.title': { en: 'Mission failed', fr: 'Mission échouée' },
+    'index.sections.starsWar.overlay.gameOver.message': { en: 'Time: {time} · Score: {score}', fr: 'Durée : {time} · Score : {score}' },
+    'index.sections.starsWar.overlay.retry': { en: 'Retry', fr: 'Rejouer' }
+  });
+
+  function resolveLanguageCode() {
+    if (typeof document !== 'undefined' && document.documentElement && typeof document.documentElement.lang === 'string') {
+      const lang = document.documentElement.lang.trim();
+      if (lang) {
+        return lang.toLowerCase().split('-')[0];
       }
-      return key;
-    };
-  })();
+    }
+    if (typeof navigator !== 'undefined' && typeof navigator.language === 'string') {
+      const lang = navigator.language.trim();
+      if (lang) {
+        return lang.toLowerCase().split('-')[0];
+      }
+    }
+    return 'en';
+  }
+
+  function formatTemplateValue(value) {
+    if (value == null) {
+      return '';
+    }
+    if (typeof value === 'number' && Number.isFinite(value)) {
+      return value.toString();
+    }
+    return String(value);
+  }
+
+  function applyTemplateParams(template, params) {
+    if (typeof template !== 'string' || !params || typeof params !== 'object') {
+      return template;
+    }
+    return template.replace(/\{([^}]+)\}/g, (match, key) => {
+      if (!Object.prototype.hasOwnProperty.call(params, key)) {
+        return match;
+      }
+      return formatTemplateValue(params[key]);
+    });
+  }
+
+  function getFallbackTranslation(key, params) {
+    const entry = LOCAL_FALLBACK_TRANSLATIONS[key];
+    if (!entry) {
+      return null;
+    }
+    const locale = resolveLanguageCode();
+    const normalized = locale ? locale.toLowerCase() : 'en';
+    const text = entry[normalized] || entry[normalized.slice(0, 2)] || entry.en || entry.fr;
+    if (!text) {
+      return null;
+    }
+    return applyTemplateParams(text, params);
+  }
+
+  function resolveTranslator() {
+    if (typeof window !== 'undefined') {
+      if (window.i18n && typeof window.i18n.t === 'function') {
+        return window.i18n.t.bind(window.i18n);
+      }
+      if (typeof window.t === 'function') {
+        return window.t.bind(window);
+      }
+    }
+    if (typeof globalThis !== 'undefined' && typeof globalThis.t === 'function') {
+      return globalThis.t.bind(globalThis);
+    }
+    return null;
+  }
+
+  function translate(key, params) {
+    if (typeof key !== 'string' || !key) {
+      return '';
+    }
+    const translator = resolveTranslator();
+    if (translator) {
+      try {
+        const result = translator(key, params);
+        if (typeof result === 'string' && result.trim() && result !== key) {
+          return result;
+        }
+      } catch (error) {
+        // Ignore translation runtime errors and fall back to local values
+      }
+    }
+    const fallback = getFallbackTranslation(key, params);
+    if (typeof fallback === 'string' && fallback.trim()) {
+      return fallback;
+    }
+    return key;
+  }
 
   function getAutosaveApi() {
     if (typeof window === 'undefined') {
@@ -594,22 +1389,43 @@
 
   function generateWave() {
     const D = state.difficulty;
-    const baseCount = 8;
-    const count = baseCount + Math.floor(2 * D);
+    const laneCount = Math.max(4, Math.min(8, Math.floor(4 + D)));
     const formation = pickRandom(FORMATIONS);
     const path = pickRandom(PATHS);
     const allowed = getAllowedEnemies(D);
     const waveEntries = [];
-    const laneCount = Math.max(3, Math.min(7, Math.floor(3 + D)));
-    for (let i = 0; i < count; i += 1) {
+    const baseCount = Math.max(6, Math.floor(6 + 1.5 * D));
+    for (let i = 0; i < baseCount; i += 1) {
       const type = pickRandom(allowed);
-      waveEntries.push(createSpawnEntry(type, formation, path, laneCount, i, count));
+      waveEntries.push(createSpawnEntry(type, formation, path, laneCount, i, baseCount));
     }
+
+    const availablePatterns = WAVE_PATTERNS.filter(pattern => D >= pattern.minDifficulty);
+    if (availablePatterns.length) {
+      const patternRuns = Math.min(availablePatterns.length, 1 + Math.floor(D / 2));
+      let startDelay = waveEntries.length ? waveEntries[waveEntries.length - 1].delay + 0.8 : 0;
+      for (let i = 0; i < patternRuns; i += 1) {
+        const pattern = pickRandom(availablePatterns);
+        const plan = pattern.build({
+          laneCount,
+          startDelay,
+          difficulty: D
+        });
+        if (plan && Array.isArray(plan.entries) && plan.entries.length) {
+          waveEntries.push(...plan.entries);
+          const lastEntry = plan.entries[plan.entries.length - 1];
+          startDelay = plan.nextDelay != null ? plan.nextDelay : lastEntry.delay + 0.9;
+        }
+      }
+    }
+
     if (state.wave % 5 === 0) {
-      const miniboss = createSpawnEntry(ENEMY_TYPES.miniboss, 'COLUMN', 'LINE', laneCount, Math.floor(count / 2), count);
-      miniboss.delay += 2;
+      const minibossDelay = waveEntries.length ? waveEntries[waveEntries.length - 1].delay + 1.2 : 1.2;
+      const miniboss = createSpawnEntry(ENEMY_TYPES.miniboss, 'COLUMN', 'LINE', laneCount, Math.floor(baseCount / 2), baseCount);
+      miniboss.delay = minibossDelay;
       waveEntries.push(miniboss);
     }
+
     waveEntries.sort((a, b) => a.delay - b.delay);
     return waveEntries;
   }
@@ -917,7 +1733,7 @@
       id,
       x,
       y,
-      vy: 40,
+      vy: DROP_BASE_SPEED,
       remove: false
     });
   }
@@ -968,12 +1784,15 @@
   function updateDrops(delta) {
     const playerBounds = getPlayerBounds();
     state.drops.forEach(drop => {
+      if (!Number.isFinite(drop.vy) || drop.vy < DROP_BASE_SPEED) {
+        drop.vy = DROP_BASE_SPEED;
+      }
       if (player.magnetActive) {
         const dx = player.x - drop.x;
         const dy = player.y - drop.y;
         const distance = Math.hypot(dx, dy);
         if (distance < MAGNET_RADIUS && distance > 1) {
-          const speed = 240 * delta;
+          const speed = MAGNET_PULL_SPEED * delta;
           drop.x += (dx / distance) * speed;
           drop.y += (dy / distance) * speed;
         } else {
@@ -1199,19 +2018,30 @@
     if (elements.livesContainer) {
       const fragments = document.createDocumentFragment();
       for (let i = 0; i < PLAYER_MAX_HP; i += 1) {
-        const span = document.createElement('span');
-        span.className = 'stars-war__life';
-        span.setAttribute('aria-hidden', 'true');
+        const life = document.createElement('span');
+        life.className = 'stars-war__life';
+        life.setAttribute('aria-hidden', 'true');
+        const icon = createPowerupIconElement('heart', 26);
         if (i < player.hp) {
-          span.classList.add('stars-war__life--full');
+          life.classList.add('stars-war__life--full');
+        } else {
+          life.classList.add('stars-war__life--empty');
         }
-        fragments.appendChild(span);
+        life.appendChild(icon);
+        fragments.appendChild(life);
       }
       if (player.shieldCharges > 0) {
         const shield = document.createElement('span');
         shield.className = 'stars-war__life stars-war__life--shield';
         shield.setAttribute('aria-hidden', 'true');
-        shield.textContent = player.shieldCharges > 1 ? `×${player.shieldCharges}` : '';
+        const icon = createPowerupIconElement('shield', 28);
+        shield.appendChild(icon);
+        if (player.shieldCharges > 1) {
+          const count = document.createElement('span');
+          count.className = 'stars-war__life-count';
+          count.textContent = `×${player.shieldCharges}`;
+          shield.appendChild(count);
+        }
         fragments.appendChild(shield);
       }
       elements.livesContainer.innerHTML = '';
@@ -1230,7 +2060,13 @@
           li.className = 'stars-war__powerup-item';
           const label = document.createElement('span');
           label.className = 'stars-war__powerup-label';
-          label.textContent = translate(POWERUP_LABEL_KEYS[id] || id);
+          const labelKey = POWERUP_LABEL_KEYS[id];
+          if (labelKey) {
+            label.dataset.i18n = labelKey;
+          } else {
+            delete label.dataset.i18n;
+          }
+          label.textContent = translate(labelKey || id);
           li.appendChild(label);
           if (entry.expiresAt !== Infinity) {
             const remaining = Math.max(0, entry.expiresAt - state.elapsed);
@@ -1248,6 +2084,7 @@
         li.className = 'stars-war__powerup-item';
         const label = document.createElement('span');
         label.className = 'stars-war__powerup-label';
+        label.dataset.i18n = POWERUP_LABEL_KEYS.shield;
         label.textContent = translate(POWERUP_LABEL_KEYS.shield);
         const count = document.createElement('span');
         count.className = 'stars-war__powerup-count';
@@ -1300,32 +2137,33 @@
 
   function drawBullets(ctx) {
     ctx.fillStyle = '#c3f0ff';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.65)';
+    ctx.lineWidth = 1.5;
     state.playerBullets.forEach(bullet => {
-      ctx.fillRect(
-        bullet.x - bullet.width / 2,
-        bullet.y - bullet.height / 2,
-        bullet.width,
-        bullet.height
-      );
+      const radius = Math.max(3, Math.min(bullet.width, bullet.height) / 2);
+      ctx.beginPath();
+      ctx.arc(bullet.x, bullet.y, radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
     });
     ctx.fillStyle = '#ff8a8a';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
     state.enemyBullets.forEach(bullet => {
-      ctx.fillRect(
-        bullet.x - bullet.width / 2,
-        bullet.y - bullet.height / 2,
-        bullet.width,
-        bullet.height
-      );
+      const radius = Math.max(3, Math.min(bullet.width, bullet.height) / 2);
+      ctx.beginPath();
+      ctx.arc(bullet.x, bullet.y, radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
     });
   }
 
   function drawDrops(ctx) {
     state.drops.forEach(drop => {
-      ctx.beginPath();
-      ctx.fillStyle = drop.id === 'heart' ? '#ff6b81' : '#8be9fd';
-      ctx.arc(drop.x, drop.y, DROP_SIZE / 2, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.closePath();
+      const style = POWERUP_VISUALS[drop.id] || POWERUP_VISUALS.default;
+      ctx.save();
+      ctx.translate(drop.x, drop.y);
+      drawPowerupBadge(ctx, style, DROP_SIZE);
+      ctx.restore();
     });
   }
 
