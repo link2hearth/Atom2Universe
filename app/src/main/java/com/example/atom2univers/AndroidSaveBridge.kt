@@ -2,6 +2,7 @@ package com.example.atom2univers
 
 import android.content.Context
 import android.webkit.JavascriptInterface
+import androidx.core.content.edit
 
 class AndroidSaveBridge(context: Context) {
 
@@ -9,10 +10,12 @@ class AndroidSaveBridge(context: Context) {
 
     @JavascriptInterface
     fun saveData(payload: String?) {
-        if (payload.isNullOrEmpty()) {
-            preferences.edit().remove(KEY_SAVE).apply()
-        } else {
-            preferences.edit().putString(KEY_SAVE, payload).apply()
+        preferences.edit(commit = true) {
+            if (payload.isNullOrEmpty()) {
+                remove(KEY_SAVE)
+            } else {
+                putString(KEY_SAVE, payload)
+            }
         }
     }
 
@@ -21,7 +24,9 @@ class AndroidSaveBridge(context: Context) {
 
     @JavascriptInterface
     fun clearData() {
-        preferences.edit().remove(KEY_SAVE).apply()
+        preferences.edit(commit = true) {
+            remove(KEY_SAVE)
+        }
     }
 
     private companion object {
