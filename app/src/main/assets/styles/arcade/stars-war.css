@@ -95,10 +95,12 @@
   display: grid;
   gap: clamp(1rem, 2.5vw, 2rem);
   align-items: start;
+  justify-items: center;
 }
 
 .stars-war__stage {
   position: relative;
+  margin-inline: auto;
 }
 
 .stars-war__hud {
