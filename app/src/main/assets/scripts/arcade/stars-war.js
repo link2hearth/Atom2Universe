@@ -1439,15 +1439,23 @@
     const path = pickRandom(PATHS);
     const allowed = getAllowedEnemies(D);
     const waveEntries = [];
-    const baseCount = Math.max(6, Math.floor(6 + 1.5 * D));
+    const isFirstWave = state.wave === 1;
+    const isSecondWave = state.wave === 2;
+    let baseCount = Math.max(6, Math.floor(6 + 1.5 * D));
+    if (isFirstWave) {
+      baseCount = 5;
+    } else if (isSecondWave) {
+      baseCount = Math.max(6, Math.floor(5 + 1.2 * D));
+    }
     for (let i = 0; i < baseCount; i += 1) {
       const type = pickRandom(allowed);
       waveEntries.push(createSpawnEntry(type, formation, path, laneCount, i, baseCount));
     }
 
     let sequenceDelay = waveEntries.length ? waveEntries[waveEntries.length - 1].delay + 0.6 : 0.6;
+    const allowSpecialSequences = state.elapsed >= 30 || state.wave >= 3;
 
-    if (D >= 2 && getRandomFloat() < 0.45) {
+    if (allowSpecialSequences && D >= 3 && getRandomFloat() < 0.45) {
       const skirmish = planTopSkirmish({ laneCount, startDelay: sequenceDelay, difficulty: D });
       if (skirmish.entries.length) {
         waveEntries.push(...skirmish.entries);
@@ -1455,7 +1463,7 @@
       }
     }
 
-    if (D >= 4 && getRandomFloat() < 0.25) {
+    if (allowSpecialSequences && D >= 4 && getRandomFloat() < 0.25) {
       const lane = getRandomInt(0, laneCount);
       const bossDelay = Math.max(sequenceDelay, waveEntries.length ? waveEntries[waveEntries.length - 1].delay + 1 : 1);
       const bossEntry = makePatternEntry(ENEMY_TYPES.miniboss, lane, bossDelay, laneCount, {
@@ -1472,7 +1480,9 @@
       sequenceDelay = bossDelay + 1.2;
     }
 
-    const availablePatterns = WAVE_PATTERNS.filter(pattern => D >= pattern.minDifficulty);
+    const availablePatterns = allowSpecialSequences
+      ? WAVE_PATTERNS.filter(pattern => D >= pattern.minDifficulty)
+      : [];
     if (availablePatterns.length) {
       const patternRuns = Math.min(availablePatterns.length, 1 + Math.floor(D / 2));
       let startDelay = Math.max(sequenceDelay, waveEntries.length ? waveEntries[waveEntries.length - 1].delay + 0.8 : 0.8);
@@ -2490,7 +2500,7 @@
       inputState[action] = true;
     }
     if (event.code === 'Space' && state.gameOver) {
-      restartRun({ preserveSeed: true });
+      restartRun({ preserveSeed: false });
       event.preventDefault();
     }
   }
@@ -2561,7 +2571,7 @@
     if (elements.overlayButton) {
       elements.overlayButton.addEventListener('click', () => {
         if (state.gameOver) {
-          restartRun({ preserveSeed: true });
+          restartRun({ preserveSeed: false });
         }
       });
     }
@@ -2570,7 +2580,7 @@
         restartRun({ preserveSeed: false });
       });
     }
-    const initialSeed = state.lastSeed || randomSeedString();
+    const initialSeed = randomSeedString();
     applySeed(initialSeed);
     resetGame();
     scheduleNextWave();
