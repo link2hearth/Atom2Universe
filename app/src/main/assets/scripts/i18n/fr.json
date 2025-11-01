@@ -386,7 +386,7 @@
           "starBridges": {
             "aria": "Accéder au mini-jeu Ponts Stellaires",
             "title": "Ponts Stellaires",
-            "description": "Reliez toutes les étoiles avec des ponts horizontaux et verticaux sans croisement.",
+          "description": "Reliez toutes les étoiles avec des ponts horizontaux, verticaux ou diagonaux sans croisement.",
             "cta": "Relier"
           },
           "pipeTap": {
@@ -792,7 +792,7 @@
         "board": "Constellation de Ponts Stellaires",
         "messages": {
           "selectSource": "Touchez une étoile pour commencer un pont.",
-          "selectTarget": "Sélectionnez une étoile alignée pour prolonger le pont.",
+          "selectTarget": "Sélectionnez une étoile alignée ou diagonale pour prolonger le pont.",
           "completed": "Constellation complétée !",
           "error": "Impossible de générer une constellation. Réessayez."
         },
@@ -808,7 +808,7 @@
         },
         "how": {
           "label": "Comment ça marche ?",
-          "message": "Reliez toutes les étoiles avec des ponts horizontaux ou verticaux. Les nombres indiquent combien de ponts doivent partir de chaque étoile. Les ponts ne peuvent ni se croiser ni dépasser deux par direction."
+          "message": "Reliez toutes les étoiles avec des ponts horizontaux, verticaux ou diagonaux. Les nombres indiquent combien de ponts simples doivent partir de chaque étoile. Les ponts ne se croisent pas et chaque paire d’étoiles ne partage qu’un seul pont."
         },
         "node": {
           "aria": "Étoile ligne {{row}}, colonne {{column}} : {{current}}/{{required}} ponts"

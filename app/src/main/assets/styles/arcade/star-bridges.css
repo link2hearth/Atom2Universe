@@ -1,19 +1,19 @@
 .page--star-bridges {
-  --starbridges-surface: rgba(18, 20, 36, 0.9);
-  --starbridges-surface-strong: rgba(12, 14, 28, 0.95);
-  --starbridges-border: rgba(124, 156, 255, 0.35);
-  --starbridges-border-strong: rgba(156, 196, 255, 0.7);
-  --starbridges-accent: #7dd3fc;
-  --starbridges-accent-strong: #a855f7;
-  --starbridges-danger: #fb7185;
-  --starbridges-muted: rgba(194, 208, 240, 0.78);
-  --starbridges-text: rgba(234, 238, 250, 0.97);
+  --starbridges-surface: rgba(16, 20, 42, 0.9);
+  --starbridges-surface-strong: rgba(12, 16, 32, 0.95);
+  --starbridges-border: rgba(94, 129, 255, 0.38);
+  --starbridges-border-strong: rgba(129, 161, 255, 0.72);
+  --starbridges-accent: #22d3ee;
+  --starbridges-accent-strong: #38bdf8;
+  --starbridges-danger: #f87171;
+  --starbridges-muted: rgba(206, 222, 255, 0.78);
+  --starbridges-text: rgba(244, 248, 255, 0.98);
   --starbridges-node-size: clamp(46px, 7.6vw, 60px);
-  --starbridges-bridge-thickness: clamp(6px, 1.4vw, 10px);
-  --starbridges-shadow: 0 28px 52px rgba(6, 8, 24, 0.55);
+  --starbridges-bridge-thickness: clamp(6px, 1.4vw, 9px);
+  --starbridges-shadow: 0 28px 52px rgba(4, 6, 22, 0.56);
   --starbridges-radius: 1.1rem;
   padding: clamp(1rem, 4vw, 2.75rem) clamp(0.75rem, 4vw, 3rem);
-  background: radial-gradient(1100px 540px at 50% -200px, rgba(42, 32, 76, 0.55), rgba(6, 8, 18, 0.94));
+  background: radial-gradient(1100px 540px at 50% -200px, rgba(36, 34, 84, 0.6), rgba(5, 9, 24, 0.95));
 }
 
 .starbridges {
@@ -167,64 +167,20 @@
 
 .starbridges__bridge {
   position: absolute;
-  transform: translate(-50%, -50%);
-  background: linear-gradient(90deg, rgba(125, 211, 252, 0.8), rgba(168, 85, 247, 0.85));
+  left: 0;
+  top: 0;
+  height: var(--starbridges-bridge-thickness);
   border-radius: 999px;
   pointer-events: none;
   z-index: 1;
-  box-shadow: 0 0 12px rgba(124, 156, 255, 0.35);
+  background: linear-gradient(90deg, rgba(34, 211, 238, 0.88), rgba(129, 140, 248, 0.92));
+  box-shadow: 0 0 18px rgba(56, 189, 248, 0.45);
+  transform-origin: 50% 50%;
 }
 
-.starbridges__bridge--horizontal {
-  height: var(--starbridges-bridge-thickness);
-}
-
-.starbridges__bridge--vertical {
-  width: var(--starbridges-bridge-thickness);
-}
-
-.starbridges__bridge--horizontal[data-count='2'],
-.starbridges__bridge--vertical[data-count='2'] {
-  background: none;
-}
-
-.starbridges__bridge--horizontal[data-count='2']::before,
-.starbridges__bridge--horizontal[data-count='2']::after,
-.starbridges__bridge--vertical[data-count='2']::before,
-.starbridges__bridge--vertical[data-count='2']::after {
-  content: '';
-  position: absolute;
-  border-radius: inherit;
-  background: linear-gradient(90deg, rgba(125, 211, 252, 0.8), rgba(168, 85, 247, 0.85));
-  box-shadow: 0 0 12px rgba(124, 156, 255, 0.35);
-}
-
-.starbridges__bridge--horizontal[data-count='2']::before,
-.starbridges__bridge--horizontal[data-count='2']::after {
-  inset: 0;
-  height: calc(var(--starbridges-bridge-thickness) * 0.46);
-}
-
-.starbridges__bridge--horizontal[data-count='2']::before {
-  transform: translateY(-45%);
-}
-
-.starbridges__bridge--horizontal[data-count='2']::after {
-  transform: translateY(45%);
-}
-
-.starbridges__bridge--vertical[data-count='2']::before,
-.starbridges__bridge--vertical[data-count='2']::after {
-  inset: 0;
-  width: calc(var(--starbridges-bridge-thickness) * 0.46);
-}
-
-.starbridges__bridge--vertical[data-count='2']::before {
-  transform: translateX(-45%);
-}
-
-.starbridges__bridge--vertical[data-count='2']::after {
-  transform: translateX(45%);
+.starbridges__bridge[data-orientation^='diagonal'] {
+  background: linear-gradient(90deg, rgba(110, 231, 183, 0.9), rgba(34, 211, 238, 0.9));
+  box-shadow: 0 0 18px rgba(110, 231, 183, 0.45);
 }
 
 .starbridges__node {
@@ -234,8 +190,8 @@
   width: var(--starbridges-node-size);
   height: var(--starbridges-node-size);
   border-radius: 50%;
-  border: 2px solid rgba(168, 196, 255, 0.5);
-  background: radial-gradient(circle at 40% 35%, rgba(136, 168, 255, 0.9), rgba(60, 80, 152, 0.85));
+  border: 2px solid rgba(129, 140, 248, 0.55);
+  background: radial-gradient(circle at 42% 32%, rgba(153, 132, 255, 0.42), rgba(49, 46, 129, 0.9));
   color: var(--starbridges-text);
   font-size: clamp(1.1rem, 2.9vw, 1.6rem);
   font-weight: 700;
@@ -243,8 +199,8 @@
   place-items: center;
   cursor: pointer;
   transform: translate(-50%, -50%);
-  box-shadow: 0 16px 28px rgba(6, 10, 30, 0.55);
-  transition: transform 0.12s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  box-shadow: 0 16px 28px rgba(7, 12, 36, 0.6);
+  transition: transform 0.12s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
   touch-action: manipulation;
 }
 
@@ -258,20 +214,22 @@
 }
 
 .starbridges__node--selected {
-  border-color: rgba(168, 85, 247, 0.9);
-  box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.35), 0 16px 28px rgba(6, 10, 30, 0.55);
+  border-color: rgba(34, 211, 238, 0.85);
+  box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.35), 0 18px 30px rgba(5, 12, 32, 0.6);
+  background: radial-gradient(circle at 40% 32%, rgba(34, 211, 238, 0.32), rgba(30, 64, 175, 0.9));
 }
 
 .starbridges__node--satisfied {
-  background: radial-gradient(circle at 40% 35%, rgba(125, 211, 252, 0.95), rgba(59, 130, 246, 0.85));
-  border-color: rgba(125, 211, 252, 0.8);
-  box-shadow: 0 0 0 4px rgba(125, 211, 252, 0.28), 0 18px 32px rgba(4, 12, 32, 0.6);
+  background: radial-gradient(circle at 45% 32%, rgba(45, 212, 191, 0.95), rgba(14, 165, 233, 0.9));
+  border-color: rgba(45, 212, 191, 0.85);
+  box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.32), 0 20px 32px rgba(2, 14, 32, 0.6);
+  color: rgba(3, 37, 48, 0.9);
 }
 
 .starbridges__node--overloaded {
-  background: radial-gradient(circle at 40% 35%, rgba(248, 113, 113, 0.92), rgba(185, 28, 28, 0.88));
-  border-color: rgba(248, 113, 113, 0.75);
-  box-shadow: 0 0 0 4px rgba(248, 113, 113, 0.3), 0 18px 32px rgba(46, 12, 20, 0.6);
+  background: radial-gradient(circle at 45% 32%, rgba(248, 113, 113, 0.95), rgba(220, 38, 38, 0.9));
+  border-color: rgba(248, 113, 113, 0.78);
+  box-shadow: 0 0 0 4px rgba(248, 113, 113, 0.32), 0 20px 34px rgba(46, 12, 20, 0.64);
 }
 
 .starbridges__overlay {

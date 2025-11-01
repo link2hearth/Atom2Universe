@@ -26,7 +26,7 @@
   };
 
   const AUTOSAVE_GAME_ID = 'starBridges';
-  const AUTOSAVE_VERSION = 1;
+  const AUTOSAVE_VERSION = 2;
   const AUTOSAVE_DEBOUNCE_MS = 200;
 
   const ALLOWED_SIZES = Object.freeze([6, 7, 8]);
@@ -39,9 +39,13 @@
 
   const DIRECTIONS = Object.freeze({
     NORTH: 'north',
+    NORTH_EAST: 'northEast',
     EAST: 'east',
+    SOUTH_EAST: 'southEast',
     SOUTH: 'south',
-    WEST: 'west'
+    SOUTH_WEST: 'southWest',
+    WEST: 'west',
+    NORTH_WEST: 'northWest'
   });
 
   const state = {
@@ -84,9 +88,6 @@
     const numeric = Number(value);
     if (!Number.isFinite(numeric) || numeric <= 0) {
       return 0;
-    }
-    if (numeric >= 2) {
-      return 2;
     }
     return 1;
   }
@@ -345,18 +346,55 @@
     if (a.key === b.key) {
       return false;
     }
-    if (a.orientation === b.orientation) {
+    if (a.from === b.from || a.from === b.to || a.to === b.from || a.to === b.to) {
       return false;
     }
-    const horizontal = a.orientation === 'horizontal' ? a : b;
-    const vertical = horizontal === a ? b : a;
-    const vx = vertical.x1;
-    const hy = horizontal.y1;
-    const crosses = vx > horizontal.x1
-      && vx < horizontal.x2
-      && hy > vertical.y1
-      && hy < vertical.y2;
-    return crosses;
+
+    const ax1 = a.x1;
+    const ay1 = a.y1;
+    const ax2 = a.x2;
+    const ay2 = a.y2;
+    const bx1 = b.x1;
+    const by1 = b.y1;
+    const bx2 = b.x2;
+    const by2 = b.y2;
+
+    const EPSILON = 1e-9;
+
+    function orientation(px, py, qx, qy, rx, ry) {
+      const value = (qx - px) * (ry - py) - (qy - py) * (rx - px);
+      if (Math.abs(value) <= EPSILON) {
+        return 0;
+      }
+      return value > 0 ? 1 : -1;
+    }
+
+    function onSegment(px, py, qx, qy, rx, ry) {
+      return rx <= Math.max(px, qx) + EPSILON
+        && rx + EPSILON >= Math.min(px, qx)
+        && ry <= Math.max(py, qy) + EPSILON
+        && ry + EPSILON >= Math.min(py, qy);
+    }
+
+    const o1 = orientation(ax1, ay1, ax2, ay2, bx1, by1);
+    const o2 = orientation(ax1, ay1, ax2, ay2, bx2, by2);
+    const o3 = orientation(bx1, by1, bx2, by2, ax1, ay1);
+    const o4 = orientation(bx1, by1, bx2, by2, ax2, ay2);
+
+    if (o1 === 0 && onSegment(ax1, ay1, ax2, ay2, bx1, by1)) {
+      return true;
+    }
+    if (o2 === 0 && onSegment(ax1, ay1, ax2, ay2, bx2, by2)) {
+      return true;
+    }
+    if (o3 === 0 && onSegment(bx1, by1, bx2, by2, ax1, ay1)) {
+      return true;
+    }
+    if (o4 === 0 && onSegment(bx1, by1, bx2, by2, ax2, ay2)) {
+      return true;
+    }
+
+    return o1 !== o2 && o3 !== o4;
   }
 
   function addBridgeCount(nodeCounts, nodeId, direction, amount) {
@@ -364,13 +402,20 @@
       nodeCounts.set(nodeId, {
         total: 0,
         north: 0,
+        northEast: 0,
         east: 0,
+        southEast: 0,
         south: 0,
-        west: 0
+        southWest: 0,
+        west: 0,
+        northWest: 0
       });
     }
     const entry = nodeCounts.get(nodeId);
     entry.total += amount;
+    if (entry[direction] == null) {
+      entry[direction] = 0;
+    }
     entry[direction] += amount;
   }
 
@@ -451,78 +496,68 @@
     nodes.forEach(node => {
       grid[node.y][node.x] = node;
     });
+
+    const directions = [
+      { dx: -1, dy: 0 },
+      { dx: 1, dy: 0 },
+      { dx: 0, dy: -1 },
+      { dx: 0, dy: 1 },
+      { dx: -1, dy: -1 },
+      { dx: 1, dy: -1 },
+      { dx: 1, dy: 1 },
+      { dx: -1, dy: 1 }
+    ];
+
+    function orientationFromDelta(dx, dy) {
+      if (dy === 0) {
+        return 'horizontal';
+      }
+      if (dx === 0) {
+        return 'vertical';
+      }
+      return dx === dy ? 'diagonal-down' : 'diagonal-up';
+    }
+
     const edges = [];
+
     nodes.forEach(node => {
       const { x, y } = node;
-      for (let nx = x - 1; nx >= 0; nx -= 1) {
-        const neighbor = grid[y][nx];
-        if (neighbor) {
-          edges.push({
-            from: node.id,
-            to: neighbor.id,
-            orientation: 'horizontal',
-            key: makeEdgeKey(node.id, neighbor.id),
-            x1: Math.min(node.x, neighbor.x) + 0.5,
-            x2: Math.max(node.x, neighbor.x) + 0.5,
-            y1: node.y + 0.5,
-            y2: node.y + 0.5,
-            distance: Math.abs(node.x - neighbor.x)
-          });
-          break;
+      directions.forEach(({ dx, dy }) => {
+        let nx = x + dx;
+        let ny = y + dy;
+        while (nx >= 0 && nx < size && ny >= 0 && ny < size) {
+          const neighbor = grid[ny][nx];
+          if (neighbor) {
+            const key = makeEdgeKey(node.id, neighbor.id);
+            const fromX = node.x + 0.5;
+            const fromY = node.y + 0.5;
+            const toX = neighbor.x + 0.5;
+            const toY = neighbor.y + 0.5;
+            const angle = Math.atan2(toY - fromY, toX - fromX);
+            const length = Math.hypot(toX - fromX, toY - fromY);
+            edges.push({
+              from: node.id,
+              to: neighbor.id,
+              orientation: orientationFromDelta(dx, dy),
+              key,
+              x1: fromX,
+              y1: fromY,
+              x2: toX,
+              y2: toY,
+              cx: (fromX + toX) / 2,
+              cy: (fromY + toY) / 2,
+              angle,
+              length,
+              distance: Math.hypot(neighbor.x - node.x, neighbor.y - node.y)
+            });
+            break;
+          }
+          nx += dx;
+          ny += dy;
         }
-      }
-      for (let nx = x + 1; nx < size; nx += 1) {
-        const neighbor = grid[y][nx];
-        if (neighbor) {
-          edges.push({
-            from: node.id,
-            to: neighbor.id,
-            orientation: 'horizontal',
-            key: makeEdgeKey(node.id, neighbor.id),
-            x1: Math.min(node.x, neighbor.x) + 0.5,
-            x2: Math.max(node.x, neighbor.x) + 0.5,
-            y1: node.y + 0.5,
-            y2: node.y + 0.5,
-            distance: Math.abs(node.x - neighbor.x)
-          });
-          break;
-        }
-      }
-      for (let ny = y - 1; ny >= 0; ny -= 1) {
-        const neighbor = grid[ny][x];
-        if (neighbor) {
-          edges.push({
-            from: node.id,
-            to: neighbor.id,
-            orientation: 'vertical',
-            key: makeEdgeKey(node.id, neighbor.id),
-            x1: node.x + 0.5,
-            x2: node.x + 0.5,
-            y1: Math.min(node.y, neighbor.y) + 0.5,
-            y2: Math.max(node.y, neighbor.y) + 0.5,
-            distance: Math.abs(node.y - neighbor.y)
-          });
-          break;
-        }
-      }
-      for (let ny = y + 1; ny < size; ny += 1) {
-        const neighbor = grid[ny][x];
-        if (neighbor) {
-          edges.push({
-            from: node.id,
-            to: neighbor.id,
-            orientation: 'vertical',
-            key: makeEdgeKey(node.id, neighbor.id),
-            x1: node.x + 0.5,
-            x2: node.x + 0.5,
-            y1: Math.min(node.y, neighbor.y) + 0.5,
-            y2: Math.max(node.y, neighbor.y) + 0.5,
-            distance: Math.abs(node.y - neighbor.y)
-          });
-          break;
-        }
-      }
+      });
     });
+
     const unique = new Map();
     edges.forEach(edge => {
       if (!unique.has(edge.key) || unique.get(edge.key).distance > edge.distance) {
@@ -581,10 +616,30 @@
     if (!from || !other) {
       return DIRECTIONS.EAST;
     }
-    if (from.x === other.x) {
-      return from.y > other.y ? DIRECTIONS.NORTH : DIRECTIONS.SOUTH;
+    const dx = other.x - from.x;
+    const dy = other.y - from.y;
+    if (dx === 0 && dy < 0) {
+      return DIRECTIONS.NORTH;
     }
-    return from.x > other.x ? DIRECTIONS.WEST : DIRECTIONS.EAST;
+    if (dx === 0 && dy > 0) {
+      return DIRECTIONS.SOUTH;
+    }
+    if (dy === 0 && dx > 0) {
+      return DIRECTIONS.EAST;
+    }
+    if (dy === 0 && dx < 0) {
+      return DIRECTIONS.WEST;
+    }
+    if (dx > 0 && dy < 0) {
+      return DIRECTIONS.NORTH_EAST;
+    }
+    if (dx > 0 && dy > 0) {
+      return DIRECTIONS.SOUTH_EAST;
+    }
+    if (dx < 0 && dy > 0) {
+      return DIRECTIONS.SOUTH_WEST;
+    }
+    return DIRECTIONS.NORTH_WEST;
   }
 
   function generatePuzzle(size, rng) {
@@ -616,11 +671,6 @@
         }
         const dirFrom = directionBetween(nodes, edge, edge.from);
         const dirTo = directionBetween(nodes, edge, edge.to);
-        const fromEntry = nodeCounts.get(edge.from) || { [dirFrom]: 0 };
-        const toEntry = nodeCounts.get(edge.to) || { [dirTo]: 0 };
-        if ((fromEntry[dirFrom] || 0) >= 2 || (toEntry[dirTo] || 0) >= 2) {
-          return;
-        }
         const crosses = Array.from(activeEdges.keys()).some(key => {
           if (key === edge.key) {
             return false;
@@ -634,28 +684,6 @@
         activeEdges.set(edge.key, 1);
         addBridgeCount(nodeCounts, edge.from, dirFrom, 1);
         addBridgeCount(nodeCounts, edge.to, dirTo, 1);
-      });
-
-      Array.from(activeEdges.entries()).forEach(([key, count]) => {
-        if (rng() < 0.3) {
-          const edge = edgesByKey.get(key);
-          if (!edge) {
-            return;
-          }
-          const dirFrom = directionBetween(nodes, edge, edge.from);
-          const dirTo = directionBetween(nodes, edge, edge.to);
-          const fromEntry = nodeCounts.get(edge.from);
-          const toEntry = nodeCounts.get(edge.to);
-          if (!fromEntry || !toEntry) {
-            return;
-          }
-          if ((fromEntry[dirFrom] || 0) >= 2 || (toEntry[dirTo] || 0) >= 2) {
-            return;
-          }
-          activeEdges.set(key, count + 1);
-          addBridgeCount(nodeCounts, edge.from, dirFrom, 1);
-          addBridgeCount(nodeCounts, edge.to, dirTo, 1);
-        }
       });
 
       nodes.forEach(node => {
@@ -690,9 +718,13 @@
       state.bridgeTotals.set(node.id, {
         total: 0,
         north: 0,
+        northEast: 0,
         east: 0,
+        southEast: 0,
         south: 0,
-        west: 0
+        southWest: 0,
+        west: 0,
+        northWest: 0
       });
     });
     state.bridges.forEach((count, key) => {
@@ -729,7 +761,7 @@
     solution.forEach(count => {
       total += count;
     });
-    return total / 2;
+    return total;
   }
 
   function applyPuzzle(puzzle) {
@@ -760,22 +792,16 @@
       }
       const bridge = document.createElement('div');
       bridge.className = 'starbridges__bridge';
-      bridge.dataset.count = String(playerCount);
       bridge.dataset.key = key;
-      bridge.classList.add(edge.orientation === 'horizontal'
-        ? 'starbridges__bridge--horizontal'
-        : 'starbridges__bridge--vertical');
-      const left = ((edge.x1 + edge.x2) / (2 * size)) * 100;
-      const top = ((edge.y1 + edge.y2) / (2 * size)) * 100;
+      bridge.dataset.orientation = edge.orientation;
+      const left = (edge.cx / size) * 100;
+      const top = (edge.cy / size) * 100;
+      const length = (edge.length / size) * 100;
       bridge.style.left = `${left}%`;
       bridge.style.top = `${top}%`;
-      if (edge.orientation === 'horizontal') {
-        const width = Math.abs(edge.x2 - edge.x1) / size * 100;
-        bridge.style.width = `${width}%`;
-      } else {
-        const height = Math.abs(edge.y2 - edge.y1) / size * 100;
-        bridge.style.height = `${height}%`;
-      }
+      bridge.style.width = `${length}%`;
+      bridge.style.height = 'var(--starbridges-bridge-thickness)';
+      bridge.style.transform = `translate(-50%, -50%) rotate(${edge.angle}rad)`;
       fragment.appendChild(bridge);
     });
 
@@ -819,7 +845,7 @@
       elements.seedValue.textContent = state.seed || '—';
     }
     if (elements.bridgesValue) {
-      const placed = Array.from(state.bridges.values()).reduce((sum, count) => sum + count, 0) / 2;
+      const placed = Array.from(state.bridges.values()).reduce((sum, count) => sum + count, 0);
       elements.bridgesValue.textContent = `${formatIntegerLocalized(placed)} / ${formatIntegerLocalized(state.totalRequired)}`;
     }
     if (elements.timeValue) {
@@ -872,7 +898,7 @@
     if (!elements.winMessage) {
       return;
     }
-    const placed = Array.from(state.bridges.values()).reduce((sum, count) => sum + count, 0) / 2;
+    const placed = Array.from(state.bridges.values()).reduce((sum, count) => sum + count, 0);
     const message = translate(
       'index.sections.starBridges.win.message',
       'Constellation complétée en {{time}} avec {{moves}} actions ({{bridges}} ponts).',
@@ -911,7 +937,7 @@
     if (state.selectedNodeId != null) {
       elements.boardMessage.textContent = translate(
         'index.sections.starBridges.messages.selectTarget',
-        'Sélectionnez une étoile alignée pour prolonger le pont.'
+        'Sélectionnez une étoile alignée ou diagonale pour prolonger le pont.'
       );
       return;
     }
@@ -932,28 +958,15 @@
     return edges.some(existing => edgesCross(existing, edge));
   }
 
-  function canAddBridge(edge, increment) {
-    if (!edge || increment <= 0) {
+  function canAddBridge(edge) {
+    if (!edge) {
       return false;
     }
     const current = state.bridges.get(edge.key) || 0;
-    if (current >= 2) {
+    if (current >= 1) {
       return false;
     }
-    if (current + increment > 2) {
-      return false;
-    }
-    const dirA = directionBetween(state.nodes, edge, edge.from);
-    const dirB = directionBetween(state.nodes, edge, edge.to);
-    const totalA = state.bridgeTotals.get(edge.from) || { total: 0, [dirA]: 0 };
-    const totalB = state.bridgeTotals.get(edge.to) || { total: 0, [dirB]: 0 };
-    if ((totalA[dirA] || 0) >= 2 && increment > 0) {
-      return false;
-    }
-    if ((totalB[dirB] || 0) >= 2 && increment > 0) {
-      return false;
-    }
-    if (bridgeWouldCross(edge, current + increment)) {
+    if (bridgeWouldCross(edge, 1)) {
       return false;
     }
     return true;
@@ -966,20 +979,13 @@
       return;
     }
     const current = state.bridges.get(key) || 0;
-    const next = (current + 1) % 3;
-    if (next > current) {
-      if (!canAddBridge(edge, 1)) {
+    if (current >= 1) {
+      state.bridges.delete(key);
+    } else {
+      if (!canAddBridge(edge)) {
         return;
       }
-      state.bridges.set(key, current + 1);
-    } else if (next < current) {
-      if (next <= 0) {
-        state.bridges.delete(key);
-      } else {
-        state.bridges.set(key, next);
-      }
-    } else {
-      return;
+      state.bridges.set(key, 1);
     }
     state.moves += 1;
     recomputeBridgeTotals();

@@ -386,7 +386,7 @@
           "starBridges": {
             "aria": "Open the Star Bridges mini-game",
             "title": "Star Bridges",
-            "description": "Connect every star with straight bridges without crossing paths.",
+          "description": "Connect every star with horizontal, vertical, or diagonal bridges without crossing paths.",
             "cta": "Link"
           },
           "pipeTap": {
@@ -792,7 +792,7 @@
         "board": "Star Bridges constellation",
         "messages": {
           "selectSource": "Tap a star to start a bridge.",
-          "selectTarget": "Select an aligned star to extend the bridge.",
+          "selectTarget": "Select an aligned or diagonal star to extend the bridge.",
           "completed": "Constellation complete!",
           "error": "We couldn't generate a constellation. Try again."
         },
@@ -808,7 +808,7 @@
         },
         "how": {
           "label": "How does it work?",
-          "message": "Connect every star using horizontal or vertical bridges. The numbers tell you how many bridges must leave each star. Bridges can't cross and each direction allows at most two bridges."
+          "message": "Connect every star using horizontal, vertical, or diagonal single bridges. The numbers tell you how many bridges must leave each star. Bridges can't cross and each pair of stars can share only one bridge."
         },
         "node": {
           "aria": "Star row {{row}}, column {{column}}: {{current}}/{{required}} bridges"
