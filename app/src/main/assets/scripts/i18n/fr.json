@@ -383,6 +383,12 @@
             "description": "Éteignez toutes les lumières : chaque clic inverse la case visée et ses voisines orthogonales.",
             "cta": "Éteindre"
           },
+          "starBridges": {
+            "aria": "Accéder au mini-jeu Ponts Stellaires",
+            "title": "Ponts Stellaires",
+            "description": "Reliez toutes les étoiles avec des ponts horizontaux et verticaux sans croisement.",
+            "cta": "Relier"
+          },
           "pipeTap": {
             "aria": "Accéder au mini-jeu PipeTap",
             "title": "PipeTap",
@@ -763,6 +769,49 @@
             "on": "Lumière allumée",
             "off": "Lumière éteinte"
           }
+        }
+      },
+      "starBridges": {
+        "aria": "Mini-jeu Ponts Stellaires : reliez toutes les étoiles sans croiser les ponts.",
+        "title": "Ponts Stellaires",
+        "controls": {
+          "seed": {
+            "label": "Seed",
+            "placeholder": "auto"
+          },
+          "size": {
+            "label": "Taille"
+          },
+          "new": "Nouvelle constellation"
+        },
+        "stats": {
+          "seedLabel": "Seed",
+          "bridgesLabel": "Ponts",
+          "timeLabel": "Temps"
+        },
+        "board": "Constellation de Ponts Stellaires",
+        "messages": {
+          "selectSource": "Touchez une étoile pour commencer un pont.",
+          "selectTarget": "Sélectionnez une étoile alignée pour prolonger le pont.",
+          "completed": "Constellation complétée !",
+          "error": "Impossible de générer une constellation. Réessayez."
+        },
+        "win": {
+          "message": "Constellation complétée en {{time}} avec {{moves}} actions ({{bridges}} ponts).",
+          "again": "Rejouer",
+          "nextSize": "Taille +1",
+          "share": "Copier seed"
+        },
+        "share": {
+          "success": "Copié !",
+          "fallback": "Seed : {{seed}}"
+        },
+        "how": {
+          "label": "Comment ça marche ?",
+          "message": "Reliez toutes les étoiles avec des ponts horizontaux ou verticaux. Les nombres indiquent combien de ponts doivent partir de chaque étoile. Les ponts ne peuvent ni se croiser ni dépasser deux par direction."
+        },
+        "node": {
+          "aria": "Étoile ligne {{row}}, colonne {{column}} : {{current}}/{{required}} ponts"
         }
       },
       "pipeTap": {
@@ -2872,6 +2921,9 @@
         },
         "pipeTap": {
           "rewardToast": "PipeTap : +{count} ticket{suffix} gacha !"
+        },
+        "starBridges": {
+          "rewardToast": "Ponts Stellaires : +{count} ticket{suffix} gacha !"
         },
         "bigger": {
           "rewardToast": "Bille 512 forgée ! {tickets} remportés."

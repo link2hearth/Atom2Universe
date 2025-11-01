@@ -122,6 +122,7 @@ const PAGE_FEATURE_MAP = Object.freeze({
   balance: 'arcade.balance',
   theLine: 'arcade.theLine',
   lightsOut: 'arcade.lightsOut',
+  starBridges: 'arcade.starBridges',
   pipeTap: 'arcade.pipeTap',
   sokoban: 'arcade.sokoban',
   math: 'arcade.math',
@@ -152,6 +153,7 @@ const OPTIONS_DETAIL_FEATURE_MAP = Object.freeze({
   dice: 'arcade.dice',
   gameOfLife: 'arcade.gameOfLife',
   lightsOut: 'arcade.lightsOut',
+  starBridges: 'arcade.starBridges',
   pipeTap: 'arcade.pipeTap',
   sokoban: 'arcade.sokoban',
   blackjack: 'arcade.blackjack',
@@ -1282,6 +1284,7 @@ function createDefaultFeatureUnlockDefinitions() {
     'arcade.dice',
     'arcade.blackjack',
     'arcade.echecs',
+    'arcade.starBridges',
     'arcade.pipeTap',
     'arcade.gameOfLife'
   ].forEach(id => {
@@ -3394,6 +3397,7 @@ const ARCADE_GAME_IDS = Object.freeze([
   'math',
   'theLine',
   'lightsOut',
+  'starBridges',
   'pipeTap',
   'sokoban',
   'balance',
@@ -5998,6 +6002,17 @@ function ensureQuantum2048Game() {
     parallelUniverseElement: elements.quantum2048ParallelUniverseValue
   });
   return quantum2048Game;
+}
+
+function ensureStarBridgesGame() {
+  if (starBridgesGame && typeof starBridgesGame === 'object') {
+    return starBridgesGame;
+  }
+  if (window.starBridgesArcade && typeof window.starBridgesArcade === 'object') {
+    starBridgesGame = window.starBridgesArcade;
+    return starBridgesGame;
+  }
+  return null;
 }
 
 function ensurePipeTapGame() {
@@ -10411,6 +10426,7 @@ let quantum2048Game = null;
 let sokobanGame = null;
 let lightsOutGame = null;
 let gameOfLifeGame = null;
+let starBridgesGame = null;
 let pipeTapGame = null;
 let apsCritPulseTimeoutId = null;
 
@@ -12092,6 +12108,9 @@ function showPage(pageId) {
   if (pageId === 'quantum2048') {
     ensureQuantum2048Game();
   }
+  if (pageId === 'starBridges') {
+    ensureStarBridgesGame();
+  }
   if (pageId === 'pipeTap') {
     ensurePipeTapGame();
   }
@@ -12133,6 +12152,7 @@ function showPage(pageId) {
   document.body.classList.toggle('view-wave', pageId === 'wave');
   document.body.classList.toggle('view-balance', pageId === 'balance');
   document.body.classList.toggle('view-quantum2048', pageId === 'quantum2048');
+  document.body.classList.toggle('view-star-bridges', pageId === 'starBridges');
   document.body.classList.toggle('view-pipe-tap', pageId === 'pipeTap');
   document.body.classList.toggle('view-sokoban', pageId === 'sokoban');
   document.body.classList.toggle('view-sudoku', pageId === 'sudoku');
@@ -12184,6 +12204,14 @@ function showPage(pageId) {
       quantum2048Game.onEnter();
     } else {
       quantum2048Game.onLeave();
+    }
+  }
+  const starBridges = ensureStarBridgesGame();
+  if (starBridges) {
+    if (pageId === 'starBridges') {
+      starBridges.onEnter?.();
+    } else {
+      starBridges.onLeave?.();
     }
   }
   const pipeTap = ensurePipeTapGame();
@@ -12261,6 +12289,10 @@ document.addEventListener('visibilitychange', () => {
     if (lightsOut && activePage === 'lightsOut') {
       lightsOut.onLeave?.();
     }
+    const starBridgesGameInstance = ensureStarBridgesGame();
+    if (starBridgesGameInstance && activePage === 'starBridges') {
+      starBridgesGameInstance.onLeave?.();
+    }
     const pipeTap = ensurePipeTapGame();
     if (pipeTap && activePage === 'pipeTap') {
       pipeTap.onLeave?.();
@@ -12308,6 +12340,10 @@ document.addEventListener('visibilitychange', () => {
   if (activePage === 'quantum2048') {
     ensureQuantum2048Game();
     quantum2048Game?.onEnter();
+  }
+  if (activePage === 'starBridges') {
+    const starBridgesGameInstance = ensureStarBridgesGame();
+    starBridgesGameInstance?.onEnter?.();
   }
   if (activePage === 'pipeTap') {
     const pipeTap = ensurePipeTapGame();
