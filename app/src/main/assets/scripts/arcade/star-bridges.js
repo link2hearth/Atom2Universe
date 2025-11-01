@@ -32,9 +32,9 @@
   const ALLOWED_SIZES = Object.freeze([6, 7, 8]);
   const DEFAULT_SIZE = 6;
   const COMPLETION_REWARD_BY_SIZE = Object.freeze({
-    6: 2,
-    7: 3,
-    8: 4
+    6: Object.freeze({ min: 2, max: 4 }),
+    7: Object.freeze({ min: 3, max: 6 }),
+    8: Object.freeze({ min: 4, max: 8 })
   });
 
   const DIRECTIONS = Object.freeze({
@@ -52,6 +52,8 @@
     rng: null,
     size: DEFAULT_SIZE,
     seed: '',
+    seedEntry: '',
+    seedWasRandom: true,
     nodes: [],
     solution: new Map(),
     bridges: new Map(),
@@ -102,6 +104,8 @@
     return {
       version: AUTOSAVE_VERSION,
       seed: typeof state.seed === 'string' ? state.seed : '',
+      seedEntry: typeof state.seedEntry === 'string' ? state.seedEntry : '',
+      seedWasRandom: Boolean(state.seedWasRandom),
       size: normalizeSize(state.size),
       bridges,
       moves: Math.max(0, Math.floor(Number(state.moves) || 0)),
@@ -188,10 +192,11 @@
     const bridgesPayload = payload.bridges && typeof payload.bridges === 'object'
       ? payload.bridges
       : {};
+    const validEdges = new Set(restored.edges.map(edge => edge.key));
     const bridges = new Map();
     Object.keys(bridgesPayload).forEach(key => {
       const count = sanitizeBridgeCount(bridgesPayload[key]);
-      if (!restored.solution.has(key)) {
+      if (!validEdges.has(key)) {
         return;
       }
       if (count > 0) {
@@ -202,11 +207,17 @@
     const elapsedSeconds = Math.max(0, Math.floor(Number(payload.elapsedSeconds) || 0));
     const solved = Boolean(payload.solved);
     const rewardClaimed = Boolean(payload.rewardClaimed);
+    const seedEntry = typeof payload.seedEntry === 'string' ? payload.seedEntry : '';
+    const seedWasRandom = typeof payload.seedWasRandom === 'boolean'
+      ? payload.seedWasRandom
+      : seedEntry.trim().length === 0;
 
     withAutosaveSuppressed(() => {
       pauseTimer();
       applyPuzzle(restored);
       state.seed = seed;
+      state.seedEntry = seedEntry;
+      state.seedWasRandom = seedWasRandom;
       state.size = size;
       state.moves = moves;
       state.elapsedSeconds = elapsedSeconds;
@@ -215,7 +226,7 @@
       state.bridges = bridges;
       recomputeBridgeTotals();
       if (elements.seedInput) {
-        elements.seedInput.value = seed;
+        elements.seedInput.value = seedEntry;
       }
       if (elements.sizeSelect) {
         elements.sizeSelect.value = String(size);
@@ -1038,28 +1049,41 @@
   }
 
   function isSolved() {
-    if (state.bridges.size !== state.solution.size) {
+    if (!state.nodes.length) {
       return false;
     }
-    let allMatch = true;
-    state.solution.forEach((required, key) => {
-      const value = state.bridges.get(key) || 0;
-      if (value !== required) {
-        allMatch = false;
-      }
-    });
-    if (!allMatch) {
+    if (!state.bridges.size) {
       return false;
     }
     const totals = new Map();
     state.nodes.forEach(node => {
       totals.set(node.id, 0);
     });
+    let valid = true;
     state.bridges.forEach((count, key) => {
+      if (!valid) {
+        return;
+      }
+      const numeric = Math.max(0, Math.floor(Number(count) || 0));
+      if (numeric <= 0) {
+        valid = false;
+        return;
+      }
+      if (!state.edgesByKey?.has(key)) {
+        valid = false;
+        return;
+      }
       const [a, b] = key.split('-').map(part => Number.parseInt(part, 10));
-      totals.set(a, (totals.get(a) || 0) + count);
-      totals.set(b, (totals.get(b) || 0) + count);
+      if (!Number.isFinite(a) || !Number.isFinite(b)) {
+        valid = false;
+        return;
+      }
+      totals.set(a, (totals.get(a) || 0) + numeric);
+      totals.set(b, (totals.get(b) || 0) + numeric);
     });
+    if (!valid) {
+      return false;
+    }
     for (let i = 0; i < state.nodes.length; i += 1) {
       const node = state.nodes[i];
       if ((totals.get(node.id) || 0) !== node.required) {
@@ -1104,15 +1128,29 @@
   }
 
   function getCompletionReward(size) {
-    const reward = COMPLETION_REWARD_BY_SIZE[size];
-    if (!Number.isFinite(reward) || reward <= 0) {
+    const range = COMPLETION_REWARD_BY_SIZE[size];
+    if (!range || typeof range !== 'object') {
       return 0;
     }
-    return Math.floor(reward);
+    const min = Math.max(0, Math.floor(Number(range.min) || 0));
+    const max = Math.max(min, Math.floor(Number(range.max) || 0));
+    if (max <= 0) {
+      return 0;
+    }
+    if (max === min) {
+      return max;
+    }
+    const roll = Math.random();
+    const span = max - min + 1;
+    return min + Math.floor(roll * span);
   }
 
   function awardCompletionTickets() {
     if (state.rewardClaimed) {
+      return;
+    }
+    if (!state.seedWasRandom) {
+      state.rewardClaimed = true;
       return;
     }
     const tickets = getCompletionReward(state.size);
@@ -1158,7 +1196,8 @@
   function startNewGame(seedValue, requestedSize) {
     const size = normalizeSize(requestedSize);
     const trimmedSeed = typeof seedValue === 'string' ? seedValue.trim() : '';
-    const seed = trimmedSeed ? trimmedSeed : Date.now().toString(36);
+    const isRandomSeed = !trimmedSeed;
+    const seed = isRandomSeed ? Date.now().toString(36) : trimmedSeed;
     const puzzle = generatePuzzleWithSeed(seed, size);
     if (!puzzle) {
       window.alert(
@@ -1173,6 +1212,8 @@
       pauseTimer();
       applyPuzzle(puzzle);
       state.seed = seed;
+      state.seedEntry = trimmedSeed;
+      state.seedWasRandom = isRandomSeed;
       state.size = size;
       state.moves = 0;
       state.elapsedSeconds = 0;
