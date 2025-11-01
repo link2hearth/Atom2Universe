@@ -341,6 +341,12 @@
             "description": "Alternate page for the clicker.",
             "cta": "Ride"
           },
+          "starsWar": {
+            "aria": "Open the Stars War mini-game",
+            "title": "Stars War",
+            "description": "Procedural vertical shoot’em up: pilot the Sentinel, harvest power-ups and endure endless waves.",
+            "cta": "Launch"
+          },
           "quantum2048": {
             "aria": "Open the ObjectX mini-game",
             "title": "ObjectX",
@@ -1273,6 +1279,41 @@
           "speedUnit": "km/h",
           "altitude": "Altitude",
           "altitudeUnit": "m"
+        }
+      },
+      "starsWar": {
+        "aria": "Stars War mini-game: survive the invading fleet.",
+        "canvas": "Stars War battlefield",
+        "hud": {
+          "score": "Score",
+          "time": "Time",
+          "wave": "Wave",
+          "difficulty": "D",
+          "lives": "Ship hull",
+          "powerups": "Active power-ups"
+        },
+        "controls": {
+          "restart": "Restart run"
+        },
+        "overlay": {
+          "gameOver": {
+            "title": "Mission failed",
+            "message": "Time: {time} · Score: {score}"
+          },
+          "retry": "Retry"
+        },
+        "powerups": {
+          "multi": "Side cannons",
+          "rapid": "Rapid fire",
+          "magnet": "Magnet",
+          "slow": "Enemy slow",
+          "shield": "Shield"
+        },
+        "status": {
+          "heart": "Heart recovered!",
+          "powerup": "Power-up equipped: {powerup}",
+          "shield": "Shield absorbed the hit.",
+          "damage": "Hit! Hull at {hp} HP."
         }
       },
       "metaux": {

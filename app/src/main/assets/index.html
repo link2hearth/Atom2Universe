@@ -500,6 +500,48 @@
           class="arcade-hub-card"
           role="button"
           tabindex="0"
+          aria-label="Accéder au mini-jeu Stars War"
+          aria-describedby="arcadeCardDescription-starsWar"
+          data-card-id="starsWar"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.starsWar.aria"
+          data-page-target="starsWar"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.starsWar.title"
+            >Stars War</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-starsWar"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-starsWar"
+            data-i18n="index.sections.arcadeHub.cards.starsWar.description"
+          >
+            Affrontez des vagues stellaires dans un shoot’em up vertical procédural et survivez le plus longtemps possible.
+          </p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
           aria-label="Accéder au mini-jeu ObjectX"
           aria-describedby="arcadeCardDescription-quantum2048"
           data-card-id="quantum2048"
@@ -1450,6 +1492,96 @@
                   aria-hidden="true"
                   disabled
                 >Quitter</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section
+      id="starsWar"
+      class="page page--stars-war"
+      data-page-group="arcade"
+      aria-label="Mini-jeu Stars War : survivez à la flotte ennemie."
+      data-i18n="aria-label:index.sections.starsWar.aria"
+      hidden
+    >
+      <div class="stars-war" data-stars-war-root>
+        <header class="stars-war__header">
+          <div class="stars-war__stats">
+            <div class="stars-war__stat">
+              <span class="stars-war__label" data-i18n="index.sections.starsWar.hud.score">Score</span>
+              <span class="stars-war__value" id="starsWarScoreValue">0</span>
+            </div>
+            <div class="stars-war__stat">
+              <span class="stars-war__label" data-i18n="index.sections.starsWar.hud.time">Temps</span>
+              <span class="stars-war__value" id="starsWarTimeValue">00:00</span>
+            </div>
+            <div class="stars-war__stat">
+              <span class="stars-war__label" data-i18n="index.sections.starsWar.hud.wave">Vague</span>
+              <span class="stars-war__value" id="starsWarWaveValue">1</span>
+            </div>
+            <div class="stars-war__stat">
+              <span class="stars-war__label" data-i18n="index.sections.starsWar.hud.difficulty">D</span>
+              <span class="stars-war__value" id="starsWarDifficultyValue">1.0</span>
+            </div>
+          </div>
+          <div class="stars-war__controls">
+            <button
+              type="button"
+              class="stars-war__button"
+              id="starsWarRestartButton"
+              data-i18n="index.sections.starsWar.controls.restart"
+            >Relancer</button>
+          </div>
+        </header>
+        <div class="stars-war__layout">
+          <div class="arcade-stage arcade-stage--vertical stars-war__stage">
+            <div class="stars-war__hud" role="status" aria-live="polite">
+              <div
+                class="stars-war__lives"
+                id="starsWarLives"
+                aria-label="Vies du vaisseau"
+                data-i18n="aria-label:index.sections.starsWar.hud.lives"
+              ></div>
+              <ul
+                class="stars-war__powerups"
+                id="starsWarPowerupList"
+                aria-label="Bonus actifs"
+                data-i18n="aria-label:index.sections.starsWar.hud.powerups"
+              ></ul>
+              <p id="starsWarStatus" class="visually-hidden" aria-live="polite"></p>
+            </div>
+            <canvas
+              id="starsWarCanvas"
+              class="arcade-stage__canvas"
+              role="presentation"
+              aria-label="Champ de bataille Stars War"
+              data-i18n="aria-label:index.sections.starsWar.canvas"
+            ></canvas>
+            <div class="stars-war__overlay" id="starsWarOverlay" role="dialog" aria-modal="true" hidden>
+              <div class="stars-war__overlay-panel">
+                <h3
+                  class="stars-war__overlay-title"
+                  id="starsWarOverlayTitle"
+                  data-i18n="index.sections.starsWar.overlay.gameOver.title"
+                >Mission échouée</h3>
+                <p
+                  class="stars-war__overlay-message"
+                  id="starsWarOverlayMessage"
+                  data-i18n="index.sections.starsWar.overlay.gameOver.message"
+                >Durée : 00:00 · Score : 0</p>
+                <div class="stars-war__overlay-actions">
+                  <button
+                    type="button"
+                    class="stars-war__button"
+                    id="starsWarOverlayButton"
+                    data-i18n="index.sections.starsWar.overlay.retry"
+                  >
+                    Rejouer
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -5720,6 +5852,7 @@
   <script src="scripts/arcade/lights-out.js"></script>
   <script src="scripts/arcade/star-bridges.js"></script>
   <script src="scripts/arcade/pipetap.js"></script>
+  <script src="scripts/arcade/stars-war.js"></script>
   <script src="scripts/arcade/sokoban.js"></script>
   <script src="scripts/arcade/the-line.js"></script>
   <script src="scripts/i18n/embedded-resources.js"></script>
