@@ -18,6 +18,24 @@
 
   const DEFAULT_TICKET_REWARD_RATIO = 0.5;
 
+  const AUTOSAVE_GAME_ID = 'minesweeper';
+  const AUTOSAVE_VERSION = 1;
+  const AUTOSAVE_DEBOUNCE_MS = 200;
+
+  function getAutosaveApi() {
+    if (typeof window === 'undefined') {
+      return null;
+    }
+    const autosave = window.ArcadeAutosave;
+    if (!autosave || typeof autosave !== 'object') {
+      return null;
+    }
+    if (typeof autosave.get !== 'function' || typeof autosave.set !== 'function') {
+      return null;
+    }
+    return autosave;
+  }
+
   function onReady(callback) {
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', callback, { once: true });
@@ -117,6 +135,219 @@
       handleOrientationChange();
     };
 
+    let autosaveTimer = null;
+    let autosaveSuppressed = false;
+
+    function clampInteger(value, min, max, fallback) {
+      const numeric = Math.round(Number(value));
+      if (!Number.isFinite(numeric)) {
+        return fallback;
+      }
+      return Math.min(Math.max(numeric, min), max);
+    }
+
+    function buildAutosavePayload() {
+      const rows = clampInteger(gameState.rows, 0, 128, 0);
+      const cols = clampInteger(gameState.cols, 0, 128, 0);
+      const cells = [];
+      if (Array.isArray(gameState.grid) && gameState.grid.length) {
+        for (let row = 0; row < gameState.rows; row += 1) {
+          for (let col = 0; col < gameState.cols; col += 1) {
+            const cell = gameState.grid[row][col];
+            if (!cell) {
+              continue;
+            }
+            const detonated = Boolean(cell.element?.classList?.contains('minesweeper-cell--detonated'));
+            cells.push({
+              row,
+              col,
+              mine: Boolean(cell.mine),
+              adjacent: clampInteger(cell.adjacent, 0, 8, 0),
+              revealed: Boolean(cell.revealed),
+              flagged: Boolean(cell.flagged),
+              detonated
+            });
+          }
+        }
+      }
+      return {
+        version: AUTOSAVE_VERSION,
+        difficultyKey: gameState.difficultyKey,
+        rows,
+        cols,
+        mineCount: clampInteger(gameState.mineCount, 0, 512, 0),
+        safeRemaining: clampInteger(gameState.safeRemaining, 0, rows * cols, rows * cols),
+        armed: Boolean(gameState.armed),
+        status: typeof gameState.status === 'string' ? gameState.status : 'ready',
+        cells
+      };
+    }
+
+    function persistAutosaveNow() {
+      const autosave = getAutosaveApi();
+      if (!autosave) {
+        return;
+      }
+      const payload = buildAutosavePayload();
+      try {
+        autosave.set(AUTOSAVE_GAME_ID, payload);
+      } catch (error) {
+        // ignore autosave persistence errors
+      }
+    }
+
+    function scheduleAutosave() {
+      if (autosaveSuppressed) {
+        return;
+      }
+      if (typeof window === 'undefined') {
+        return;
+      }
+      if (autosaveTimer != null) {
+        window.clearTimeout(autosaveTimer);
+      }
+      autosaveTimer = window.setTimeout(() => {
+        autosaveTimer = null;
+        persistAutosaveNow();
+      }, AUTOSAVE_DEBOUNCE_MS);
+    }
+
+    function flushAutosave() {
+      if (typeof window !== 'undefined' && autosaveTimer != null) {
+        window.clearTimeout(autosaveTimer);
+        autosaveTimer = null;
+      }
+      persistAutosaveNow();
+    }
+
+    function restoreFromAutosave() {
+      const autosave = getAutosaveApi();
+      if (!autosave) {
+        return false;
+      }
+      let payload = null;
+      try {
+        payload = autosave.get(AUTOSAVE_GAME_ID);
+      } catch (error) {
+        return false;
+      }
+      if (!payload || typeof payload !== 'object') {
+        return false;
+      }
+      if (Number(payload.version) !== AUTOSAVE_VERSION) {
+        return false;
+      }
+
+      const rows = clampInteger(payload.rows, 1, 128, 0);
+      const cols = clampInteger(payload.cols, 1, 128, 0);
+      const mineCount = clampInteger(payload.mineCount, 1, rows * cols, 1);
+      const safeRemaining = clampInteger(payload.safeRemaining, 0, rows * cols, rows * cols - mineCount);
+      const status = typeof payload.status === 'string' ? payload.status : 'ready';
+      const difficultyKey = normalizeDifficultyKey(payload.difficultyKey);
+      const armed = Boolean(payload.armed);
+      const cellsData = Array.isArray(payload.cells) ? payload.cells : [];
+
+      if (rows <= 0 || cols <= 0) {
+        return false;
+      }
+
+      autosaveSuppressed = true;
+      try {
+        if (difficultySelect.value !== difficultyKey) {
+          difficultySelect.value = difficultyKey;
+        }
+        initializeGrid(difficultyKey);
+
+        if (gameState.rows !== rows || gameState.cols !== cols) {
+          gameState.rows = rows;
+          gameState.cols = cols;
+          gameState.grid = createEmptyGrid(rows, cols);
+          renderBoard();
+        }
+
+        for (let row = 0; row < gameState.rows; row += 1) {
+          for (let col = 0; col < gameState.cols; col += 1) {
+            resetCellVisual(gameState.grid[row][col]);
+          }
+        }
+
+        const cellsMap = new Map();
+        cellsData.forEach(entry => {
+          if (!entry || typeof entry !== 'object') {
+            return;
+          }
+          const rawRow = Number(entry.row);
+          const rawCol = Number(entry.col);
+          const rowIndex = Number.isFinite(rawRow) ? Math.min(rows - 1, Math.max(0, Math.floor(rawRow))) : null;
+          const colIndex = Number.isFinite(rawCol) ? Math.min(cols - 1, Math.max(0, Math.floor(rawCol))) : null;
+          if (rowIndex == null || colIndex == null) {
+            return;
+          }
+          const key = `${rowIndex}:${colIndex}`;
+          if (!cellsMap.has(key)) {
+            cellsMap.set(key, {
+              mine: Boolean(entry.mine),
+              adjacent: clampInteger(entry.adjacent, 0, 8, 0),
+              revealed: Boolean(entry.revealed),
+              flagged: Boolean(entry.flagged),
+              detonated: Boolean(entry.detonated)
+            });
+          }
+        });
+
+        let computedSafeRemaining = 0;
+        for (let row = 0; row < gameState.rows; row += 1) {
+          for (let col = 0; col < gameState.cols; col += 1) {
+            const cell = gameState.grid[row][col];
+            const saved = cellsMap.get(`${row}:${col}`) || null;
+            const mine = Boolean(saved && saved.mine);
+            const adjacent = clampInteger(saved?.adjacent, 0, 8, 0);
+            const revealed = Boolean(saved && saved.revealed);
+            const flagged = Boolean(saved && saved.flagged);
+            const detonated = Boolean(saved && saved.detonated);
+
+            cell.mine = mine;
+            cell.adjacent = adjacent;
+            cell.revealed = false;
+            cell.flagged = false;
+            resetCellVisual(cell);
+
+            if (revealed) {
+              if (mine) {
+                revealMine(cell, detonated);
+              } else if (adjacent > 0) {
+                revealNumber(cell, adjacent);
+              } else {
+                revealEmpty(cell);
+              }
+            } else if (flagged) {
+              setFlag(cell, true);
+            }
+
+            if (revealed && flagged && !mine && cell.element) {
+              cell.element.classList.add('minesweeper-cell--misflag');
+            }
+
+            if (!mine && !revealed) {
+              computedSafeRemaining += 1;
+            }
+          }
+        }
+
+        gameState.mineCount = mineCount;
+        gameState.safeRemaining = Math.max(0, Math.min(safeRemaining, computedSafeRemaining));
+        gameState.armed = armed;
+        updateBoardState(status);
+        updateAllCellLabels();
+        applyOrientationLayout();
+      } finally {
+        autosaveSuppressed = false;
+      }
+
+      scheduleAutosave();
+      return true;
+    }
+
     function refreshLabelCache() {
       labelCache.hidden = boardElement.getAttribute('data-hidden-label') || labelCache.hidden;
       labelCache.flagged = boardElement.getAttribute('data-flagged-label') || labelCache.flagged;
@@ -128,6 +359,7 @@
     function updateBoardState(status) {
       gameState.status = status;
       boardElement.setAttribute('data-state', status);
+      scheduleAutosave();
     }
 
     function normalizeDifficultyKey(rawKey) {
@@ -493,6 +725,7 @@
         cell.element.classList.remove('minesweeper-cell--misflag');
         setCellAriaLabel(cell, labelCache.hidden);
       }
+      scheduleAutosave();
     }
 
     function toggleFlag(cell) {
@@ -540,6 +773,7 @@
         revealMine(cell, true);
         updateBoardState('lost');
         exposeBoardAfterLoss(cell);
+        scheduleAutosave();
         return;
       }
       cascadeReveal(cell);
@@ -547,7 +781,10 @@
         updateBoardState('won');
         exposeMinesAfterWin();
         grantVictoryTickets();
+        scheduleAutosave();
+        return;
       }
+      scheduleAutosave();
     }
 
     function exposeBoardAfterLoss(triggerCell) {
@@ -770,12 +1007,30 @@
 
     attachOrientationListeners();
 
+    const restored = restoreFromAutosave();
+    if (!restored) {
+      resetGame();
+    }
+
     if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
       window.addEventListener('i18n:languagechange', () => {
         refreshLabelCache();
       });
+      window.addEventListener('beforeunload', () => {
+        try {
+          flushAutosave();
+        } catch (error) {
+          // ignore autosave flush errors during unload
+        }
+      });
     }
 
-    resetGame();
+    if (typeof document !== 'undefined' && typeof document.addEventListener === 'function') {
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          flushAutosave();
+        }
+      });
+    }
   });
 })();

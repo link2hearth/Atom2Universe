@@ -22,6 +22,9 @@
   const TABLEAU_FACE_DOWN_OFFSET = 24;
   const TABLEAU_FACE_UP_OFFSET = 38;
   const WASTE_HORIZONTAL_OFFSET = 18;
+  const AUTOSAVE_GAME_ID = 'solitaire';
+  const AUTOSAVE_VERSION = 1;
+  const AUTOSAVE_DEBOUNCE_MS = 200;
 
   function onReady(callback) {
     if (document.readyState === 'loading') {
@@ -76,6 +79,20 @@
     } catch (error) {
       return String(safe);
     }
+  }
+
+  function getAutosaveApi() {
+    if (typeof window === 'undefined') {
+      return null;
+    }
+    const autosave = window.ArcadeAutosave;
+    if (!autosave || typeof autosave !== 'object') {
+      return null;
+    }
+    if (typeof autosave.get !== 'function' || typeof autosave.set !== 'function') {
+      return null;
+    }
+    return autosave;
   }
 
   function getSolitaireRewardConfig() {
@@ -186,17 +203,230 @@
       rewardClaimed: false
     };
 
-    function resetGame() {
-      clearSelection();
+    let autosaveTimer = null;
+    let autosaveSuppressed = false;
+
+    function serializeCardList(list) {
+      if (!Array.isArray(list)) {
+        return [];
+      }
+      const serialized = [];
+      for (let index = 0; index < list.length; index += 1) {
+        const card = list[index];
+        if (!card || typeof card.id !== 'string') {
+          continue;
+        }
+        serialized.push({
+          id: card.id,
+          faceUp: Boolean(card.faceUp)
+        });
+      }
+      return serialized;
+    }
+
+    function buildAutosavePayload() {
+      return {
+        version: AUTOSAVE_VERSION,
+        stock: serializeCardList(state.stock),
+        waste: serializeCardList(state.waste),
+        foundations: state.foundations.map(serializeCardList),
+        tableau: state.tableau.map(serializeCardList),
+        rewardClaimed: Boolean(state.rewardClaimed)
+      };
+    }
+
+    function persistAutosaveNow() {
+      const autosave = getAutosaveApi();
+      if (!autosave) {
+        return;
+      }
+      try {
+        autosave.set(AUTOSAVE_GAME_ID, buildAutosavePayload());
+      } catch (error) {
+        // Ignore autosave persistence errors
+      }
+    }
+
+    function scheduleAutosave() {
+      if (autosaveSuppressed || typeof window === 'undefined') {
+        return;
+      }
+      if (autosaveTimer != null) {
+        window.clearTimeout(autosaveTimer);
+      }
+      autosaveTimer = window.setTimeout(() => {
+        autosaveTimer = null;
+        persistAutosaveNow();
+      }, AUTOSAVE_DEBOUNCE_MS);
+    }
+
+    function flushAutosave() {
+      if (typeof window !== 'undefined' && autosaveTimer != null) {
+        window.clearTimeout(autosaveTimer);
+        autosaveTimer = null;
+      }
+      persistAutosaveNow();
+    }
+
+    function withAutosaveSuppressed(callback) {
+      autosaveSuppressed = true;
+      try {
+        callback();
+      } finally {
+        autosaveSuppressed = false;
+      }
+    }
+
+    function restoreFromAutosave() {
+      const autosave = getAutosaveApi();
+      if (!autosave) {
+        return false;
+      }
+      let payload = null;
+      try {
+        payload = autosave.get(AUTOSAVE_GAME_ID);
+      } catch (error) {
+        return false;
+      }
+      if (!payload || typeof payload !== 'object') {
+        return false;
+      }
+      if (Number(payload.version) !== AUTOSAVE_VERSION) {
+        return false;
+      }
+
+      const stockData = Array.isArray(payload.stock) ? payload.stock : [];
+      const wasteData = Array.isArray(payload.waste) ? payload.waste : [];
+      const foundationsData = Array.isArray(payload.foundations) ? payload.foundations : [];
+      const tableauData = Array.isArray(payload.tableau) ? payload.tableau : [];
+
       const deck = createDeck();
-      shuffleInPlace(deck);
-      state.stock = [];
-      state.waste = [];
-      state.foundations = Array.from({ length: 4 }, () => []);
-      state.tableau = Array.from({ length: 7 }, () => []);
-      state.rewardClaimed = false;
-      dealInitialLayout(deck);
+      const pool = new Map();
+      deck.forEach(card => {
+        pool.set(card.id, card);
+      });
+
+      const takeCard = (entry) => {
+        if (!entry || typeof entry.id !== 'string') {
+          return null;
+        }
+        const card = pool.get(entry.id);
+        if (!card) {
+          return null;
+        }
+        pool.delete(entry.id);
+        card.element = null;
+        card.parts = null;
+        card.faceUp = Boolean(entry.faceUp);
+        return card;
+      };
+
+      withAutosaveSuppressed(() => {
+        clearSelection();
+        state.stock = [];
+        state.waste = [];
+        state.foundations = Array.from({ length: 4 }, () => []);
+        state.tableau = Array.from({ length: 7 }, () => []);
+        state.rewardClaimed = Boolean(payload.rewardClaimed);
+
+        stockData.forEach(entry => {
+          const card = takeCard(entry);
+          if (!card) {
+            return;
+          }
+          card.faceUp = false;
+          card.pile = 'stock';
+          card.pileIndex = -1;
+          state.stock.push(card);
+        });
+
+        wasteData.forEach(entry => {
+          const card = takeCard(entry);
+          if (!card) {
+            return;
+          }
+          card.faceUp = true;
+          card.pile = 'waste';
+          card.pileIndex = null;
+          state.waste.push(card);
+        });
+
+        for (let foundationIndex = 0; foundationIndex < state.foundations.length; foundationIndex += 1) {
+          const pileData = Array.isArray(foundationsData[foundationIndex])
+            ? foundationsData[foundationIndex]
+            : [];
+          const destination = state.foundations[foundationIndex];
+          pileData.forEach(entry => {
+            const card = takeCard(entry);
+            if (!card) {
+              return;
+            }
+            card.faceUp = true;
+            card.pile = 'foundation';
+            card.pileIndex = foundationIndex;
+            destination.push(card);
+          });
+        }
+
+        for (let columnIndex = 0; columnIndex < state.tableau.length; columnIndex += 1) {
+          const columnData = Array.isArray(tableauData[columnIndex])
+            ? tableauData[columnIndex]
+            : [];
+          const destination = state.tableau[columnIndex];
+          columnData.forEach(entry => {
+            const card = takeCard(entry);
+            if (!card) {
+              return;
+            }
+            card.pile = 'tableau';
+            card.pileIndex = columnIndex;
+            card.faceUp = Boolean(entry.faceUp);
+            destination.push(card);
+          });
+        }
+
+        const leftovers = Array.from(pool.values());
+        for (let index = leftovers.length - 1; index >= 0; index -= 1) {
+          const card = leftovers[index];
+          pool.delete(card.id);
+          card.element = null;
+          card.parts = null;
+          card.faceUp = false;
+          card.pile = 'stock';
+          card.pileIndex = -1;
+          state.stock.unshift(card);
+        }
+      });
+
+      const totalCards = state.stock.length
+        + state.waste.length
+        + state.foundations.reduce((sum, pile) => sum + pile.length, 0)
+        + state.tableau.reduce((sum, column) => sum + column.length, 0);
+
+      if (totalCards === 0) {
+        return false;
+      }
+
       renderAll();
+      updateCompletionState();
+      persistAutosaveNow();
+      return true;
+    }
+
+    function resetGame() {
+      withAutosaveSuppressed(() => {
+        clearSelection();
+        const deck = createDeck();
+        shuffleInPlace(deck);
+        state.stock = [];
+        state.waste = [];
+        state.foundations = Array.from({ length: 4 }, () => []);
+        state.tableau = Array.from({ length: 7 }, () => []);
+        state.rewardClaimed = false;
+        dealInitialLayout(deck);
+        renderAll();
+      });
+      persistAutosaveNow();
     }
 
     function dealInitialLayout(deck) {
@@ -401,18 +631,18 @@
 
     function maybeAwardCompletionReward() {
       if (state.rewardClaimed) {
-        return;
+        return false;
       }
       const reward = rewardConfig && rewardConfig.completion ? rewardConfig.completion : null;
       if (!reward) {
         state.rewardClaimed = true;
-        return;
+        return true;
       }
       const gachaAmount = Math.max(0, Math.floor(Number(reward.gachaTickets) || 0));
       const bonusAmount = Math.max(0, Math.floor(Number(reward.bonusTicketAmount) || 0));
       if (gachaAmount <= 0 && bonusAmount <= 0) {
         state.rewardClaimed = true;
-        return;
+        return true;
       }
       let gachaGained = 0;
       if (gachaAmount > 0) {
@@ -447,7 +677,7 @@
       }
       if (gachaGained <= 0 && bonusGained <= 0) {
         state.rewardClaimed = true;
-        return;
+        return true;
       }
       state.rewardClaimed = true;
       if (typeof showToast === 'function') {
@@ -478,6 +708,7 @@
           showToast(message);
         }
       }
+      return true;
     }
 
     function updateCompletionState() {
@@ -486,7 +717,10 @@
         rootElement.classList.toggle('solitaire--complete', complete);
       }
       if (complete) {
-        maybeAwardCompletionReward();
+        const rewardUpdated = maybeAwardCompletionReward();
+        if (rewardUpdated) {
+          scheduleAutosave();
+        }
       }
     }
 
@@ -508,6 +742,7 @@
         }
       }
       renderAll();
+      scheduleAutosave();
     }
 
     function handleCardClick(card, event) {
@@ -524,6 +759,7 @@
           card.faceUp = true;
           renderTableauPile(card.pileIndex);
           updateDropTargets();
+          scheduleAutosave();
         }
         return;
       }
@@ -662,6 +898,7 @@
       }
       clearSelection();
       renderAll();
+      scheduleAutosave();
       return true;
     }
 
@@ -697,6 +934,7 @@
       }
       clearSelection();
       renderAll();
+      scheduleAutosave();
       return true;
     }
 
@@ -752,6 +990,7 @@
       }
       clearSelection();
       renderAll();
+      scheduleAutosave();
     }
 
     function isTopCard(card) {
@@ -893,7 +1132,28 @@
       }
     });
 
-    resetGame();
+    const restored = restoreFromAutosave();
+    if (!restored) {
+      resetGame();
+    }
+
+    if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+      window.addEventListener('beforeunload', () => {
+        try {
+          flushAutosave();
+        } catch (error) {
+          // Ignore autosave flush errors during unload
+        }
+      });
+    }
+
+    if (typeof document !== 'undefined' && typeof document.addEventListener === 'function') {
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          flushAutosave();
+        }
+      });
+    }
   });
 
   function setupBoard(boardElement) {

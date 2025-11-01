@@ -149,6 +149,9 @@
   ]);
 
   const COMPLETION_REWARD = Object.freeze({ chance: 0.5, gachaTickets: 1 });
+  const AUTOSAVE_GAME_ID = 'theLine';
+  const AUTOSAVE_VERSION = 1;
+  const AUTOSAVE_DEBOUNCE_MS = 200;
 
   const state = {
     config: null,
@@ -170,6 +173,399 @@
     languageChangeHandler: null
   };
 
+  let autosaveTimer = null;
+  let autosaveSuppressed = false;
+
+  function sanitizeCoord(coord, width, height) {
+    if (!coord || !Number.isFinite(coord.x) || !Number.isFinite(coord.y)) {
+      return null;
+    }
+    let x = Math.round(coord.x);
+    let y = Math.round(coord.y);
+    if (Number.isFinite(width)) {
+      x = Math.max(0, Math.min(width - 1, x));
+    }
+    if (Number.isFinite(height)) {
+      y = Math.max(0, Math.min(height - 1, y));
+    }
+    if (x < 0 || y < 0) {
+      return null;
+    }
+    return { x, y };
+  }
+
+  function serializeLevelCounters(counters) {
+    const result = {
+      single: { easy: 1, medium: 1, hard: 1 },
+      multi: { easy: 1, medium: 1, hard: 1 }
+    };
+    if (!counters || typeof counters !== 'object') {
+      return result;
+    }
+    ['single', 'multi'].forEach(group => {
+      const source = counters[group] && typeof counters[group] === 'object' ? counters[group] : {};
+      ['easy', 'medium', 'hard'].forEach(difficulty => {
+        const value = clampInteger(source[difficulty], 1, 9999, result[group][difficulty]);
+        result[group][difficulty] = Math.max(1, value || 1);
+      });
+    });
+    return result;
+  }
+
+  function serializePuzzle(puzzle) {
+    if (!puzzle || typeof puzzle !== 'object') {
+      return null;
+    }
+    const width = clampInteger(puzzle.width, 3, 64, null);
+    const height = clampInteger(puzzle.height, 3, 64, null);
+    if (!Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0) {
+      return null;
+    }
+    const totalCells = width * height;
+    const blocked = new Set();
+    const blockedSource = puzzle.blockedIndices instanceof Set
+      ? Array.from(puzzle.blockedIndices)
+      : Array.isArray(puzzle.blockedIndices)
+        ? puzzle.blockedIndices
+        : [];
+    blockedSource.forEach(value => {
+      const index = clampInteger(value, 0, totalCells - 1, null);
+      if (Number.isFinite(index)) {
+        blocked.add(index);
+      }
+    });
+    const path = [];
+    const pathSource = Array.isArray(puzzle.path) ? puzzle.path : [];
+    pathSource.forEach(coord => {
+      const sanitized = sanitizeCoord(coord, width, height);
+      if (sanitized) {
+        path.push(sanitized);
+      }
+    });
+    if (!path.length) {
+      return null;
+    }
+    const payload = {
+      mode: puzzle.mode === 'multi' ? 'multi' : 'single',
+      width,
+      height,
+      blocked: Array.from(blocked),
+      path
+    };
+    if (payload.mode === 'multi') {
+      const segments = [];
+      if (Array.isArray(puzzle.segments)) {
+        puzzle.segments.forEach(segment => {
+          if (!segment || typeof segment !== 'object') {
+            return;
+          }
+          const colorId = typeof segment.colorId === 'string' ? segment.colorId : null;
+          if (!colorId) {
+            return;
+          }
+          const cells = [];
+          if (Array.isArray(segment.cells)) {
+            segment.cells.forEach(coord => {
+              const sanitized = sanitizeCoord(coord, width, height);
+              if (sanitized) {
+                cells.push(sanitized);
+              }
+            });
+          }
+          if (!cells.length) {
+            return;
+          }
+          const start = sanitizeCoord(segment.start, width, height) || cells[0];
+          const end = sanitizeCoord(segment.end, width, height) || cells[cells.length - 1];
+          segments.push({
+            colorId,
+            colorValue: typeof segment.colorValue === 'string' ? segment.colorValue : '',
+            cells,
+            start,
+            end
+          });
+        });
+      }
+      payload.segments = segments;
+    } else {
+      payload.endpoints = {
+        start: sanitizeCoord(puzzle.endpoints && puzzle.endpoints.start, width, height) || path[0],
+        end: sanitizeCoord(puzzle.endpoints && puzzle.endpoints.end, width, height) || path[path.length - 1]
+      };
+    }
+    return payload;
+  }
+
+  function serializePaths() {
+    const result = [];
+    if (!state.paths || typeof state.paths.forEach !== 'function') {
+      return result;
+    }
+    const width = state.board ? state.board.width : state.currentPuzzle ? state.currentPuzzle.width : null;
+    const height = state.board ? state.board.height : state.currentPuzzle ? state.currentPuzzle.height : null;
+    state.paths.forEach(pathState => {
+      if (!pathState || typeof pathState.colorId !== 'string') {
+        return;
+      }
+      const sequence = [];
+      if (Array.isArray(pathState.sequence)) {
+        pathState.sequence.forEach(cell => {
+          if (!cell) {
+            return;
+          }
+          const sanitized = sanitizeCoord({ x: cell.x, y: cell.y }, width, height);
+          if (sanitized) {
+            sequence.push(sanitized);
+          }
+        });
+      }
+      result.push({
+        colorId: pathState.colorId,
+        complete: Boolean(pathState.complete),
+        sequence
+      });
+    });
+    return result;
+  }
+
+  function buildAutosavePayload() {
+    return {
+      version: AUTOSAVE_VERSION,
+      mode: state.mode === 'multi' ? 'multi' : 'single',
+      difficulty: ['easy', 'medium', 'hard'].includes(state.difficulty) ? state.difficulty : 'easy',
+      levelCounters: serializeLevelCounters(state.levelCounters),
+      puzzle: serializePuzzle(state.currentPuzzle),
+      paths: serializePaths(),
+      cellsRemaining: clampInteger(state.cellsRemaining, 0, 10000, 0)
+    };
+  }
+
+  function persistAutosaveNow() {
+    const autosave = getAutosaveApi();
+    if (!autosave) {
+      return;
+    }
+    try {
+      autosave.set(AUTOSAVE_GAME_ID, buildAutosavePayload());
+    } catch (error) {
+      // Ignore autosave persistence errors
+    }
+  }
+
+  function scheduleAutosave() {
+    if (autosaveSuppressed || typeof window === 'undefined') {
+      return;
+    }
+    if (autosaveTimer != null) {
+      window.clearTimeout(autosaveTimer);
+    }
+    autosaveTimer = window.setTimeout(() => {
+      autosaveTimer = null;
+      persistAutosaveNow();
+    }, AUTOSAVE_DEBOUNCE_MS);
+  }
+
+  function flushAutosave() {
+    if (typeof window !== 'undefined' && autosaveTimer != null) {
+      window.clearTimeout(autosaveTimer);
+      autosaveTimer = null;
+    }
+    persistAutosaveNow();
+  }
+
+  function withAutosaveSuppressed(callback) {
+    autosaveSuppressed = true;
+    try {
+      callback();
+    } finally {
+      autosaveSuppressed = false;
+    }
+  }
+
+  function normalizeLevelCountersPayload(payload) {
+    return serializeLevelCounters(payload);
+  }
+
+  function rebuildPuzzleFromPayload(puzzlePayload, mode) {
+    if (!puzzlePayload || typeof puzzlePayload !== 'object') {
+      return null;
+    }
+    const width = clampInteger(puzzlePayload.width, 3, 64, null);
+    const height = clampInteger(puzzlePayload.height, 3, 64, null);
+    if (!Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0) {
+      return null;
+    }
+    const totalCells = width * height;
+    const blocked = new Set();
+    const blockedSource = Array.isArray(puzzlePayload.blocked) ? puzzlePayload.blocked : [];
+    blockedSource.forEach(value => {
+      const index = clampInteger(value, 0, totalCells - 1, null);
+      if (Number.isFinite(index)) {
+        blocked.add(index);
+      }
+    });
+    const path = [];
+    const pathSource = Array.isArray(puzzlePayload.path) ? puzzlePayload.path : [];
+    pathSource.forEach(coord => {
+      const sanitized = sanitizeCoord(coord, width, height);
+      if (sanitized) {
+        path.push(sanitized);
+      }
+    });
+    if (!path.length) {
+      return null;
+    }
+    if (mode === 'multi') {
+      const segments = [];
+      const segmentsSource = Array.isArray(puzzlePayload.segments) ? puzzlePayload.segments : [];
+      segmentsSource.forEach(segment => {
+        if (!segment || typeof segment !== 'object') {
+          return;
+        }
+        const colorId = typeof segment.colorId === 'string' ? segment.colorId : null;
+        if (!colorId) {
+          return;
+        }
+        const cells = [];
+        if (Array.isArray(segment.cells)) {
+          segment.cells.forEach(coord => {
+            const sanitized = sanitizeCoord(coord, width, height);
+            if (sanitized) {
+              cells.push(sanitized);
+            }
+          });
+        }
+        if (!cells.length) {
+          return;
+        }
+        const start = sanitizeCoord(segment.start, width, height) || cells[0];
+        const end = sanitizeCoord(segment.end, width, height) || cells[cells.length - 1];
+        segments.push({
+          colorId,
+          colorValue: typeof segment.colorValue === 'string' ? segment.colorValue : '',
+          cells,
+          start,
+          end
+        });
+      });
+      if (!segments.length) {
+        return null;
+      }
+      return {
+        mode: 'multi',
+        width,
+        height,
+        blockedIndices: blocked,
+        path,
+        segments
+      };
+    }
+    const endpoints = {
+      start: sanitizeCoord(puzzlePayload.endpoints && puzzlePayload.endpoints.start, width, height) || path[0],
+      end: sanitizeCoord(puzzlePayload.endpoints && puzzlePayload.endpoints.end, width, height) || path[path.length - 1]
+    };
+    return {
+      mode: 'single',
+      width,
+      height,
+      blockedIndices: blocked,
+      path,
+      endpoints
+    };
+  }
+
+  function applySavedPaths(entries, puzzle) {
+    if (!Array.isArray(entries)) {
+      return;
+    }
+    const occupied = new Set();
+    entries.forEach(entry => {
+      if (!entry || typeof entry.colorId !== 'string') {
+        return;
+      }
+      const pathState = state.paths.get(entry.colorId);
+      if (!pathState) {
+        return;
+      }
+      pathState.sequence = [];
+      if (Array.isArray(entry.sequence)) {
+        entry.sequence.forEach(coord => {
+          const sanitized = sanitizeCoord(coord, puzzle.width, puzzle.height);
+          if (!sanitized) {
+            return;
+          }
+          const cell = getCellAt(sanitized.x, sanitized.y);
+          if (!cell || cell.blocked) {
+            return;
+          }
+          pathState.sequence.push(cell);
+          occupyCellIfNeeded(cell, pathState);
+          occupied.add(`${cell.x},${cell.y}`);
+        });
+      }
+      pathState.complete = Boolean(entry.complete) && pathState.sequence.length > 0;
+    });
+    const totalCells = puzzle.width * puzzle.height;
+    const blockedCount = puzzle.blockedIndices instanceof Set ? puzzle.blockedIndices.size : 0;
+    const available = Math.max(0, totalCells - blockedCount);
+    state.cellsRemaining = Math.max(0, available - occupied.size);
+    updateRemainingValue();
+  }
+
+  function restoreFromAutosave() {
+    const autosave = getAutosaveApi();
+    if (!autosave) {
+      return false;
+    }
+    let payload = null;
+    try {
+      payload = autosave.get(AUTOSAVE_GAME_ID);
+    } catch (error) {
+      return false;
+    }
+    if (!payload || typeof payload !== 'object') {
+      return false;
+    }
+    if (Number(payload.version) !== AUTOSAVE_VERSION) {
+      return false;
+    }
+    const mode = payload.mode === 'multi' ? 'multi' : 'single';
+    const difficulty = ['easy', 'medium', 'hard'].includes(payload.difficulty)
+      ? payload.difficulty
+      : 'easy';
+    const counters = normalizeLevelCountersPayload(payload.levelCounters);
+    const puzzle = rebuildPuzzleFromPayload(payload.puzzle, mode);
+    if (!puzzle) {
+      return false;
+    }
+    const paths = Array.isArray(payload.paths) ? payload.paths : [];
+
+    withAutosaveSuppressed(() => {
+      state.mode = mode;
+      state.difficulty = difficulty;
+      state.levelCounters = counters;
+      updateModeButtons();
+      updateDifficultyButtons();
+      updateLevelDisplay();
+      clearMessageTimeout();
+      state.messageTimeout = null;
+      state.lastMessage = null;
+      state.currentPuzzle = puzzle;
+      renderPuzzle(puzzle);
+      applySavedPaths(paths, puzzle);
+      const hintKey = mode === 'multi'
+        ? 'index.sections.theLine.messages.multi'
+        : 'index.sections.theLine.messages.single';
+      const fallback = mode === 'multi'
+        ? 'Reliez chaque paire de couleurs sans croiser les chemins.'
+        : 'Tracez un parcours continu qui visite chaque case.';
+      setMessage(hintKey, fallback, { width: puzzle.width, height: puzzle.height });
+    });
+
+    persistAutosaveNow();
+    return true;
+  }
+
   onReady(() => {
     const elements = getElements();
     if (!elements) {
@@ -183,8 +579,29 @@
     setupBoardEvents();
     setupLanguageChangeListener();
     state.config = normalizeConfig(DEFAULT_CONFIG, null);
-    prepareNewPuzzle();
+    const restored = restoreFromAutosave();
+    if (!restored) {
+      prepareNewPuzzle();
+    }
     loadRemoteConfig();
+
+    if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+      window.addEventListener('beforeunload', () => {
+        try {
+          flushAutosave();
+        } catch (error) {
+          // Ignore autosave flush errors during unload
+        }
+      });
+    }
+
+    if (typeof document !== 'undefined' && typeof document.addEventListener === 'function') {
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          flushAutosave();
+        }
+      });
+    }
   });
 
   function onReady(callback) {
@@ -247,6 +664,39 @@
       return numeric;
     }
     return fallback;
+  }
+
+  function clampInteger(value, min, max, fallback) {
+    const numeric = Number(value);
+    if (!Number.isFinite(numeric)) {
+      return fallback;
+    }
+    const clamped = clampNumber(Math.round(numeric), min, max, Math.round(numeric));
+    if (!Number.isFinite(clamped)) {
+      return fallback;
+    }
+    const rounded = Math.round(clamped);
+    if (typeof min === 'number' && rounded < min) {
+      return min;
+    }
+    if (typeof max === 'number' && rounded > max) {
+      return max;
+    }
+    return rounded;
+  }
+
+  function getAutosaveApi() {
+    if (typeof window === 'undefined') {
+      return null;
+    }
+    const autosave = window.ArcadeAutosave;
+    if (!autosave || typeof autosave !== 'object') {
+      return null;
+    }
+    if (typeof autosave.get !== 'function' || typeof autosave.set !== 'function') {
+      return null;
+    }
+    return autosave;
   }
 
   function randomInt(min, max) {
@@ -728,6 +1178,7 @@
       ? 'Reliez chaque paire de couleurs sans croiser les chemins.'
       : 'Tracez un parcours continu qui visite chaque case.';
     setMessage(hintKey, fallback, { width: puzzle.width, height: puzzle.height });
+    scheduleAutosave();
   }
   function generatePuzzle(mode, difficulty, config) {
     const difficultyConfig = config.difficulties[difficulty] || config.difficulties.easy;
@@ -2100,6 +2551,7 @@
     cell.element.style.setProperty('--line-color-value', pathState.colorValue);
     state.cellsRemaining = Math.max(0, state.cellsRemaining - 1);
     updateRemainingValue();
+    scheduleAutosave();
   }
 
   function clearCellOccupant(cell) {
@@ -2117,6 +2569,7 @@
       cell.element.style.removeProperty('--line-color-value');
     }
     updateRemainingValue();
+    scheduleAutosave();
   }
 
   function clearPath(pathState) {
@@ -2404,6 +2857,7 @@
     maybeAwardCompletionReward();
     counters[state.difficulty] = currentLevel + 1;
     updateLevelDisplay();
+    scheduleAutosave();
     state.messageTimeout = window.setTimeout(() => {
       setMessage(
         'index.sections.theLine.messages.autoNext',
