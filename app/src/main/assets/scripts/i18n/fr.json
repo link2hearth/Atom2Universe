@@ -341,6 +341,12 @@
             "description": "Page alternative du clicker.",
             "cta": "Surfer"
           },
+          "starsWar": {
+            "aria": "Accéder au mini-jeu Stars War",
+            "title": "Stars War",
+            "description": "Shoot’em up vertical procédural : pilotez le Sentinel, récoltez les bonus et tenez face aux vagues infinies.",
+            "cta": "Décoller"
+          },
           "quantum2048": {
             "aria": "Accéder au mini-jeu ObjectX",
             "title": "ObjectX",
@@ -1273,6 +1279,60 @@
           "speedUnit": "km/h",
           "altitude": "Altitude",
           "altitudeUnit": "m"
+        }
+      },
+      "starsWar": {
+        "aria": "Mini-jeu Stars War : survivez à la flotte ennemie.",
+        "canvas": "Champ de bataille Stars War",
+        "hud": {
+          "score": "Score",
+          "time": "Temps",
+          "wave": "Vague",
+          "difficulty": "D",
+          "seed": "Seed",
+          "lives": "Vies du vaisseau",
+          "powerups": "Bonus actifs"
+        },
+        "controls": {
+          "seed": "Graine",
+          "seedPlaceholder": "aléatoire",
+          "restart": "Relancer"
+        },
+        "overlay": {
+          "ready": {
+            "title": "Briefing",
+            "message": "Déplacez le Sentinel dans le tiers inférieur, évitez les tirs et récoltez les drops pour survivre.",
+            "start": "Décoller",
+            "random": "Nouvelle seed"
+          },
+          "gameOver": {
+            "title": "Mission échouée",
+            "message": "Durée : {time} · Score : {score}"
+          },
+          "retry": "Rejouer"
+        },
+        "panel": {
+          "title": "Briefing de mission",
+          "description": "Pilotez le vaisseau Sentinel et repoussez des vagues générées procéduralement. Les ennemis gagnent en vitesse et en blindage sans fin : survivez le plus longtemps possible.",
+          "controls": "Contrôles",
+          "controlsDescription": "ZQSD ou flèches pour bouger · tir automatique · touchez l’écran pour piloter.",
+          "objective": "Objectif",
+          "objectiveDescription": "Accumulez du score, récoltez des bonus et tenez jusqu’à la submersion finale.",
+          "powerups": "Power-ups",
+          "powerupsDescription": "Bouclier, tir multiple, cadence, ralentissement global, aimant et cœurs rares."
+        },
+        "powerups": {
+          "multi": "Tir latéral",
+          "rapid": "Cadence boostée",
+          "magnet": "Aimant",
+          "slow": "Ralentissement ennemi",
+          "shield": "Bouclier"
+        },
+        "status": {
+          "heart": "Cœur récupéré !",
+          "powerup": "Bonus activé : {powerup}",
+          "shield": "Bouclier absorbé.",
+          "damage": "Touché ! PV restants : {hp}"
         }
       },
       "metaux": {

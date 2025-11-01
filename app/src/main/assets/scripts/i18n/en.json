@@ -341,6 +341,12 @@
             "description": "Alternate page for the clicker.",
             "cta": "Ride"
           },
+          "starsWar": {
+            "aria": "Open the Stars War mini-game",
+            "title": "Stars War",
+            "description": "Procedural vertical shoot’em up: pilot the Sentinel, harvest power-ups and endure endless waves.",
+            "cta": "Launch"
+          },
           "quantum2048": {
             "aria": "Open the ObjectX mini-game",
             "title": "ObjectX",
@@ -1273,6 +1279,60 @@
           "speedUnit": "km/h",
           "altitude": "Altitude",
           "altitudeUnit": "m"
+        }
+      },
+      "starsWar": {
+        "aria": "Stars War mini-game: survive the invading fleet.",
+        "canvas": "Stars War battlefield",
+        "hud": {
+          "score": "Score",
+          "time": "Time",
+          "wave": "Wave",
+          "difficulty": "D",
+          "seed": "Seed",
+          "lives": "Ship hull",
+          "powerups": "Active power-ups"
+        },
+        "controls": {
+          "seed": "Seed",
+          "seedPlaceholder": "random",
+          "restart": "Restart run"
+        },
+        "overlay": {
+          "ready": {
+            "title": "Briefing",
+            "message": "Guide the Sentinel in the lower lanes, dodge incoming fire and scoop drops to stay alive.",
+            "start": "Launch",
+            "random": "New seed"
+          },
+          "gameOver": {
+            "title": "Mission failed",
+            "message": "Time: {time} · Score: {score}"
+          },
+          "retry": "Retry"
+        },
+        "panel": {
+          "title": "Mission briefing",
+          "description": "Pilot the Sentinel through procedural waves. Enemies gain speed and armor endlessly—last as long as possible.",
+          "controls": "Controls",
+          "controlsDescription": "WASD or arrows to move · auto-fire enabled · drag or tap to steer on touch devices.",
+          "objective": "Objective",
+          "objectiveDescription": "Build score, collect power-ups and survive until the fleet overwhelms you.",
+          "powerups": "Power-ups",
+          "powerupsDescription": "Shield, extra cannons, fire rate boost, global slow, magnet and rare hearts."
+        },
+        "powerups": {
+          "multi": "Side cannons",
+          "rapid": "Rapid fire",
+          "magnet": "Magnet",
+          "slow": "Enemy slow",
+          "shield": "Shield"
+        },
+        "status": {
+          "heart": "Heart recovered!",
+          "powerup": "Power-up equipped: {powerup}",
+          "shield": "Shield absorbed the hit.",
+          "damage": "Hit! Hull at {hp} HP."
         }
       },
       "metaux": {
