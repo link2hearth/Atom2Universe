@@ -4539,6 +4539,8 @@ function handleResetSpecialKeyword(normalizedKeyword) {
   }
   const messageKey = nextValue ? action.enabledKey : action.disabledKey;
   const fallbackMessage = nextValue ? action.enabledFallback : action.disabledFallback;
+  // Sauvegarde immédiate pour éviter toute perte de progression avant le rechargement.
+  saveGame();
   showToast(translateResetString(messageKey, fallbackMessage));
   scheduleConfigReload();
   return true;
