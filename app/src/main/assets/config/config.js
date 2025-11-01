@@ -1033,7 +1033,7 @@ const GAME_CONFIG = {
   progression: {
     basePerClick: { type: 'number', value: 1 },
     basePerSecond: { type: 'number', value: 0 },
-    offlineCapSeconds: 60 * 60 * 12,
+    offlineCapSeconds: 60 * 60 * 240,
     offlineTickets: {
       secondsPerTicket: 15 * 60,
       capSeconds: 60 * 60 * 60
@@ -1042,7 +1042,7 @@ const GAME_CONFIG = {
     crit: {
       baseChance: 0.05,
       baseMultiplier: 2,
-      maxMultiplier: 100
+      maxMultiplier: 1000
     },
     featureUnlocks: {
       arcade: {
@@ -1210,19 +1210,19 @@ const GAME_CONFIG = {
         void: 2
       },
       animation: {
-        initialMs: 3000,
+        initialMs: 2500,
         columnDelayMs: 1000,
-        shuffleIntervalMs: 90
+        shuffleIntervalMs: 100
       }
     },
     pachinko: {
       betOptions: [10, 20, 50],
-      slotMultipliers: [0, 0.5, 1.5, 5, 1.5, 0.5, 0],
+      slotMultipliers: [0, 0.3, 1.5, 2.5, 1.5, 0.3, 0],
       /**
        * Bonus multiplicateur ajouté automatiquement aux lancers non rentables
        * afin d'offrir un léger avantage au joueur (0.3 = +30 % de la mise).
        */
-      advantageBonus: 0.3,
+      advantageBonus: 0.1,
       board: {
         rows: 8,
         stepMs: 280
@@ -1290,13 +1290,13 @@ const GAME_CONFIG = {
       diceCount: 5,
       faces: 6,
       rollsPerTurn: 3,
-      fullHouseScore: 45,
+      fullHouseScore: 55,
       smallStraightScore: 30,
-      largeStraightScore: 40,
-      yahtzeeScore: 80,
-      threeKindBonus: 8,
+      largeStraightScore: 65,
+      yahtzeeScore: 100,
+      threeKindBonus: 25,
       fourKindBonus: 40,
-      twoPairBonus: 5,
+      twoPairBonus: 25,
       bonusThreshold: 63,
       bonusValue: 35
     },
@@ -2737,11 +2737,11 @@ const GAME_CONFIG = {
     groups: {
       commun: {
         perCopy: {
-          clickAdd: 2
+          clickAdd: 25
           
         },
         setBonus: {
-          clickAdd: 5,
+          clickAdd: 500,
           requireAllUnique: true
         },
         multiplier: {
@@ -2753,13 +2753,13 @@ const GAME_CONFIG = {
       },
       essentiel: {
         perCopy: {
-          uniqueClickAdd: 5,
-          duplicateClickAdd: 10,
+          uniqueClickAdd: 50,
+          duplicateClickAdd: 1000,
           label: 'scripts.config.elementBonuses.essentiel.perCopy'
         },
         setBonus: [
           {
-            clickAdd: 50,
+            clickAdd: 50000,
             requireAllUnique: true,
             label: 'scripts.config.elementBonuses.essentiel.setBonus'
           }
@@ -2773,8 +2773,8 @@ const GAME_CONFIG = {
       },
       stellaire: {
         perCopy: {
-          uniqueClickAdd: 20,
-          duplicateClickAdd: 25,
+          uniqueClickAdd: 20000,
+          duplicateClickAdd: 25000,
           label: 'scripts.config.elementBonuses.stellaire.perCopy'
         },
         multiplier: {
@@ -2798,10 +2798,10 @@ const GAME_CONFIG = {
       },
       singulier: {
         perCopy: {
-          uniqueClickAdd: 50,
-          uniqueAutoAdd: 50,
-          duplicateClickAdd: 100,
-          duplicateAutoAdd: 100,
+          uniqueClickAdd: 50000,
+          uniqueAutoAdd: 50000,
+          duplicateClickAdd: 100000,
+          duplicateAutoAdd: 100000,
           label: 'scripts.config.elementBonuses.singulier.perCopy'
         },
         multiplier: {
@@ -3767,6 +3767,7 @@ if (typeof globalThis !== 'undefined') {
   globalThis.toggleCollectionFeatureEnabled = toggleCollectionFeatureEnabled;
   globalThis.toggleInfoSectionsFeatureEnabled = toggleInfoSectionsFeatureEnabled;
 }
+
 
 
 
