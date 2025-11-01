@@ -26,6 +26,7 @@ This audit uses the helper script [`tools/checkArcadeAutosave.js`](../tools/chec
 | Balance | `app/src/main/assets/scripts/arcade/balance.js` | ❌
 | Bigger | `app/src/main/assets/scripts/arcade/bigger.js` | ✅
 | Métaux Match-3 | `app/src/main/assets/scripts/arcade/metaux-match3.js` | ✅
+| Stars War | `app/src/main/assets/scripts/arcade/stars-war.js` | ✅
 
 The audit identifies games where the autosave integration still needs to be implemented (`❌`).
 
