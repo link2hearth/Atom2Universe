@@ -187,6 +187,7 @@ const DEFAULT_SUDOKU_COMPLETION_REWARD = Object.freeze({
 });
 
 const PRIMARY_SAVE_STORAGE_KEY = 'atom2univers';
+const RELOAD_SAVE_STORAGE_KEY = 'atom2univers.reloadPendingSave';
 const LANGUAGE_STORAGE_KEY = 'atom2univers.language';
 const CLICK_SOUND_STORAGE_KEY = 'atom2univers.options.clickSoundMuted';
 const CRIT_ATOM_VISUALS_STORAGE_KEY = 'atom2univers.options.critAtomVisualsDisabled';
@@ -207,6 +208,8 @@ const GAME_OF_LIFE_STORAGE_KEYS = [
   'atom2univers.arcade.gameOfLife.customPatterns',
   'atom2univers.arcade.gameOfLife.customPatternCounter'
 ];
+
+let lastSerializedSave = null;
 const TEXT_FONT_DEFAULT = 'orbitron';
 const TEXT_FONT_CHOICES = Object.freeze({
   orbitron: {
@@ -4492,6 +4495,59 @@ function normalizeResetConfirmation(value) {
   return value.trim().toUpperCase();
 }
 
+function getSessionStorageSafe() {
+  if (typeof globalThis === 'undefined') {
+    return null;
+  }
+  try {
+    return globalThis.sessionStorage || null;
+  } catch (error) {
+    return null;
+  }
+}
+
+function storeReloadSaveSnapshot(serialized) {
+  if (typeof serialized !== 'string' || !serialized) {
+    return;
+  }
+  const storage = getSessionStorageSafe();
+  if (!storage) {
+    return;
+  }
+  try {
+    storage.setItem(RELOAD_SAVE_STORAGE_KEY, serialized);
+  } catch (error) {
+    console.warn('Unable to cache reload save data', error);
+  }
+}
+
+function consumeReloadSaveSnapshot() {
+  const storage = getSessionStorageSafe();
+  if (!storage) {
+    return null;
+  }
+  try {
+    const snapshot = storage.getItem(RELOAD_SAVE_STORAGE_KEY);
+    storage.removeItem(RELOAD_SAVE_STORAGE_KEY);
+    return typeof snapshot === 'string' && snapshot ? snapshot : null;
+  } catch (error) {
+    console.warn('Unable to consume reload save data', error);
+    return null;
+  }
+}
+
+function clearReloadSaveSnapshot() {
+  const storage = getSessionStorageSafe();
+  if (!storage) {
+    return;
+  }
+  try {
+    storage.removeItem(RELOAD_SAVE_STORAGE_KEY);
+  } catch (error) {
+    // Ignore cleanup failures silently to avoid blocking resets.
+  }
+}
+
 function scheduleConfigReload() {
   if (typeof globalThis === 'undefined') {
     return;
@@ -4531,6 +4587,11 @@ function handleResetSpecialKeyword(normalizedKeyword) {
   if (!action) {
     return false;
   }
+  const saved = saveGame();
+  if (!saved) {
+    showToast(translateResetString('saveFailed', 'Unable to save progress. Changes cancelled.'));
+    return true;
+  }
   const toggleFn = action.toggle;
   const nextValue = typeof toggleFn === 'function' ? toggleFn() : undefined;
   if (typeof nextValue !== 'boolean') {
@@ -4539,8 +4600,6 @@ function handleResetSpecialKeyword(normalizedKeyword) {
   }
   const messageKey = nextValue ? action.enabledKey : action.disabledKey;
   const fallbackMessage = nextValue ? action.enabledFallback : action.disabledFallback;
-  // Sauvegarde immédiate pour éviter toute perte de progression avant le rechargement.
-  saveGame();
   showToast(translateResetString(messageKey, fallbackMessage));
   scheduleConfigReload();
   return true;
@@ -15708,33 +15767,39 @@ function readNativeSaveData() {
 function writeNativeSaveData(serialized) {
   const bridge = getAndroidSaveBridge();
   if (!bridge) {
-    return;
+    return false;
   }
   if (!serialized) {
     if (typeof bridge.clearData === 'function') {
       try {
         bridge.clearData();
+        return true;
       } catch (error) {
         console.error('Unable to clear native save data', error);
+        return false;
       }
-      return;
     }
     if (typeof bridge.saveData === 'function') {
       try {
         bridge.saveData(null);
+        return true;
       } catch (error) {
         console.error('Unable to clear native save data', error);
+        return false;
       }
     }
-    return;
+    return false;
   }
   if (typeof bridge.saveData === 'function') {
     try {
       bridge.saveData(serialized);
+      return true;
     } catch (error) {
       console.error('Unable to write native save data', error);
+      return false;
     }
   }
+  return false;
 }
 
 function serializeState() {
@@ -15990,20 +16055,40 @@ function serializeState() {
 }
 
 function saveGame() {
+  let serialized;
   try {
     const payload = serializeState();
-    const serialized = JSON.stringify(payload);
+    serialized = JSON.stringify(payload);
+  } catch (err) {
+    console.error('Erreur de sauvegarde', err);
+    lastSerializedSave = null;
+    return false;
+  }
+
+  let persisted = false;
+
+  if (typeof localStorage !== 'undefined' && localStorage) {
     try {
-      if (typeof localStorage !== 'undefined' && localStorage) {
-        localStorage.setItem(PRIMARY_SAVE_STORAGE_KEY, serialized);
-      }
+      localStorage.setItem(PRIMARY_SAVE_STORAGE_KEY, serialized);
+      persisted = true;
     } catch (storageError) {
       console.error('Erreur de sauvegarde locale', storageError);
     }
-    writeNativeSaveData(serialized);
-  } catch (err) {
-    console.error('Erreur de sauvegarde', err);
   }
+
+  const nativePersisted = writeNativeSaveData(serialized);
+  const success = persisted || nativePersisted;
+
+  if (success) {
+    if (lastSerializedSave !== serialized) {
+      storeReloadSaveSnapshot(serialized);
+    }
+    lastSerializedSave = serialized;
+  } else {
+    lastSerializedSave = null;
+  }
+
+  return success;
 }
 
 if (typeof window !== 'undefined') {
@@ -16143,8 +16228,11 @@ function clearArcadeAutosaveData(options = {}) {
 function clearLocalStorageForReset() {
   const storage = typeof globalThis !== 'undefined' ? globalThis.localStorage : null;
   if (!storage) {
+    clearReloadSaveSnapshot();
     return;
   }
+
+  clearReloadSaveSnapshot();
 
   RESET_LOCAL_STORAGE_KEYS.forEach(key => {
     if (!key || key === CHESS_LIBRARY_STORAGE_KEY || key === ARCADE_AUTOSAVE_STORAGE_KEY) {
@@ -16474,6 +16562,7 @@ function loadGame() {
     gameState.crit = createDefaultCritState();
     gameState.lastCritical = null;
     let raw = null;
+    const reloadSnapshot = consumeReloadSaveSnapshot();
     try {
       if (typeof localStorage !== 'undefined' && localStorage) {
         raw = localStorage.getItem(PRIMARY_SAVE_STORAGE_KEY);
@@ -16492,6 +16581,16 @@ function loadGame() {
         } catch (syncError) {
           console.warn('Unable to sync native save with local storage', syncError);
         }
+      }
+    }
+    if (!raw && reloadSnapshot) {
+      raw = reloadSnapshot;
+      try {
+        if (typeof localStorage !== 'undefined' && localStorage) {
+          localStorage.setItem(PRIMARY_SAVE_STORAGE_KEY, reloadSnapshot);
+        }
+      } catch (syncError) {
+        console.warn('Unable to persist reload snapshot to local storage', syncError);
       }
     }
     if (!raw) {

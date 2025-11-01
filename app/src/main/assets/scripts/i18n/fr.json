@@ -2755,6 +2755,7 @@
         "infoEnabled": "Sections Infos activées. Redémarrage pour appliquer les changements…",
         "infoDisabled": "Sections Infos désactivées. Redémarrage pour appliquer les changements…",
         "toggleFailed": "Impossible de mettre à jour la configuration.",
+        "saveFailed": "Impossible de sauvegarder la progression. Modification annulée.",
         "prompt": "Réinitialisation complète du jeu. Tapez \"{keyword}\" pour confirmer.\\nCette action est irréversible."
       },
       "bigBangToggle": {
