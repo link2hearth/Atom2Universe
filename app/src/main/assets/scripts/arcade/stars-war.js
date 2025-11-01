@@ -1038,6 +1038,7 @@
     overlayMode: 'ready',
     powerups: {},
     timeSinceLastUpdate: 0,
+    lastWaveDifficultyBoost: 0,
     records: {
       bestScore: 0,
       bestTime: 0,
@@ -1354,6 +1355,7 @@
     state.nextDifficultyTick = 60;
     state.nextSpawnDensityPush = { at12: false, at14: false };
     state.activeMilestones.clear();
+    state.lastWaveDifficultyBoost = 0;
     state.gameOver = false;
     state.overlayMode = 'ready';
     state.lastTimestamp = 0;
@@ -2153,8 +2155,11 @@
       state.nextDifficultyTick += 60;
     }
     if (state.wave > 0 && !state.spawnQueue.length && !state.enemies.length) {
-      state.difficulty = Math.min(8, state.difficulty + 0.25);
-      state.waveTimer = Math.min(state.waveTimer, 2);
+      if (state.lastWaveDifficultyBoost !== state.wave) {
+        state.difficulty = Math.min(8, state.difficulty + 0.25);
+        state.waveTimer = Math.min(state.waveTimer, 2);
+        state.lastWaveDifficultyBoost = state.wave;
+      }
     }
     if (previousDifficulty !== state.difficulty) {
       state.maxOnScreen = 10 + Math.floor(3 * state.difficulty);
