@@ -1107,6 +1107,7 @@
     'index.sections.starsWar.status.damage': { en: 'Hit! Hull at {hp} HP.', fr: 'Touché ! PV restants : {hp}' },
     'index.sections.starsWar.overlay.gameOver.title': { en: 'Mission failed', fr: 'Mission échouée' },
     'index.sections.starsWar.overlay.gameOver.message': { en: 'Time: {time} · Score: {score}', fr: 'Durée : {time} · Score : {score}' },
+    'index.sections.starsWar.overlay.gameOver.reward': { en: 'Reward: +{count} gacha ticket{suffix}', fr: 'Récompense : +{count} ticket{suffix} gacha' },
     'index.sections.starsWar.overlay.retry': { en: 'Retry', fr: 'Rejouer' }
   });
 
@@ -2421,17 +2422,71 @@
     }
   }
 
+  function getTimeRewardTickets(elapsedSeconds) {
+    if (!Number.isFinite(elapsedSeconds) || elapsedSeconds <= 0) {
+      return 0;
+    }
+    const totalSeconds = Math.max(0, elapsedSeconds);
+    return Math.floor(totalSeconds / 60);
+  }
+
+  function grantTimeRewardTickets(amount) {
+    const tickets = Math.max(0, Math.floor(Number(amount) || 0));
+    if (!tickets) {
+      return 0;
+    }
+    const award = typeof gainGachaTickets === 'function'
+      ? gainGachaTickets
+      : typeof window !== 'undefined' && typeof window.gainGachaTickets === 'function'
+        ? window.gainGachaTickets
+        : null;
+    if (typeof award !== 'function') {
+      return 0;
+    }
+    try {
+      const granted = award(tickets, { unlockTicketStar: true });
+      if (Number.isFinite(granted)) {
+        return Math.max(0, Math.floor(granted));
+      }
+    } catch (error) {
+      console.warn('Stars War: unable to grant gacha tickets', error);
+    }
+    return 0;
+  }
+
   function handleGameOver() {
     state.gameOver = true;
     state.running = false;
     updateRecords();
     state.overlayMode = 'gameover';
+    const baseMessage = translate('index.sections.starsWar.overlay.gameOver.message', {
+      time: formatTime(state.elapsed),
+      score: formatNumber(state.score)
+    });
+    const rewardTarget = getTimeRewardTickets(state.elapsed);
+    const grantedTickets = rewardTarget > 0 ? grantTimeRewardTickets(rewardTarget) : 0;
+    let overlayMessage = baseMessage;
+    if (grantedTickets > 0) {
+      const suffix = grantedTickets > 1 ? 's' : '';
+      const formattedCount = formatNumber(grantedTickets);
+      const rewardText = translate('index.sections.starsWar.overlay.gameOver.reward', {
+        count: formattedCount,
+        suffix
+      });
+      if (rewardText) {
+        overlayMessage = `${baseMessage}\n${rewardText}`;
+        if (typeof showToast === 'function') {
+          showToast(rewardText);
+        }
+        announceStatus('index.sections.starsWar.overlay.gameOver.reward', {
+          count: formattedCount,
+          suffix
+        });
+      }
+    }
     showOverlay(
       translate('index.sections.starsWar.overlay.gameOver.title'),
-      translate('index.sections.starsWar.overlay.gameOver.message', {
-        time: formatTime(state.elapsed),
-        score: formatNumber(state.score)
-      }),
+      overlayMessage,
       translate('index.sections.starsWar.overlay.retry')
     );
   }
