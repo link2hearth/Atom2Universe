@@ -38,6 +38,8 @@
   const ENEMY_BULLET_SIZE = { width: 6, height: 18 };
   const PLAYER_BULLET_SIZE = { width: 8, height: 18 };
   const DROP_SIZE = 20;
+  const DROP_BASE_SPEED = 120;
+  const MAGNET_PULL_SPEED = 240;
   const MAGNET_RADIUS = 120;
 
   const PLAYER_BASE_STATS = Object.freeze({
@@ -62,6 +64,65 @@
     enemy_slow: { duration: 6, type: 'timed' },
     shield: { duration: Infinity, type: 'shield' },
     heart: { duration: 0, type: 'heal' }
+  });
+
+  const POWERUP_VISUALS = Object.freeze({
+    multi_shot: {
+      letter: 'M',
+      base: '#37c9ff',
+      accent: '#aee7ff',
+      cabin: '#0b1836',
+      text: '#04101f',
+      glow: 'rgba(55, 201, 255, 0.55)'
+    },
+    rapid_fire: {
+      letter: 'F',
+      base: '#ff5a5a',
+      accent: '#ffd37a',
+      cabin: '#360b0b',
+      text: '#320808',
+      glow: 'rgba(255, 90, 90, 0.6)'
+    },
+    magnet: {
+      letter: 'A',
+      base: '#52e0a1',
+      accent: '#c3ffe0',
+      cabin: '#08311f',
+      text: '#042616',
+      glow: 'rgba(82, 224, 161, 0.6)'
+    },
+    enemy_slow: {
+      letter: 'L',
+      base: '#9185ff',
+      accent: '#d5ceff',
+      cabin: '#1b1740',
+      text: '#120d2e',
+      glow: 'rgba(145, 133, 255, 0.6)'
+    },
+    shield: {
+      letter: 'B',
+      base: '#4bb3ff',
+      accent: '#c6e7ff',
+      cabin: '#0b1a2e',
+      text: '#082037',
+      glow: 'rgba(75, 179, 255, 0.6)'
+    },
+    heart: {
+      letter: 'V',
+      base: '#ff6b81',
+      accent: '#ffc2d1',
+      cabin: '#401018',
+      text: '#3a0811',
+      glow: 'rgba(255, 107, 129, 0.6)'
+    },
+    default: {
+      letter: '?',
+      base: '#8be9fd',
+      accent: '#dff9ff',
+      cabin: '#0b1d2d',
+      text: '#06212e',
+      glow: 'rgba(139, 233, 253, 0.45)'
+    }
   });
 
   const ENEMY_TYPES = Object.freeze({
@@ -917,7 +978,7 @@
       id,
       x,
       y,
-      vy: 40,
+      vy: DROP_BASE_SPEED,
       remove: false
     });
   }
@@ -968,12 +1029,15 @@
   function updateDrops(delta) {
     const playerBounds = getPlayerBounds();
     state.drops.forEach(drop => {
+      if (!Number.isFinite(drop.vy) || drop.vy < DROP_BASE_SPEED) {
+        drop.vy = DROP_BASE_SPEED;
+      }
       if (player.magnetActive) {
         const dx = player.x - drop.x;
         const dy = player.y - drop.y;
         const distance = Math.hypot(dx, dy);
         if (distance < MAGNET_RADIUS && distance > 1) {
-          const speed = 240 * delta;
+          const speed = MAGNET_PULL_SPEED * delta;
           drop.x += (dx / distance) * speed;
           drop.y += (dy / distance) * speed;
         } else {
@@ -1321,11 +1385,52 @@
 
   function drawDrops(ctx) {
     state.drops.forEach(drop => {
+      const style = POWERUP_VISUALS[drop.id] || POWERUP_VISUALS.default;
+      const half = DROP_SIZE / 2;
+      const nose = half;
+      ctx.save();
+      ctx.translate(drop.x, drop.y);
+
+      ctx.shadowColor = style.glow;
+      ctx.shadowBlur = 8;
       ctx.beginPath();
-      ctx.fillStyle = drop.id === 'heart' ? '#ff6b81' : '#8be9fd';
-      ctx.arc(drop.x, drop.y, DROP_SIZE / 2, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.moveTo(0, -nose);
+      ctx.lineTo(half * 0.78, -half * 0.1);
+      ctx.lineTo(half * 0.6, half * 0.65);
+      ctx.lineTo(0, half * 0.95);
+      ctx.lineTo(-half * 0.6, half * 0.65);
+      ctx.lineTo(-half * 0.78, -half * 0.1);
       ctx.closePath();
+      ctx.fillStyle = style.base;
+      ctx.fill();
+
+      ctx.shadowBlur = 0;
+      ctx.strokeStyle = 'rgba(5, 9, 18, 0.65)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      ctx.fillStyle = style.accent;
+      ctx.fillRect(-half * 0.7, -half * 0.05, half * 0.25, half * 0.6);
+      ctx.fillRect(half * 0.45, -half * 0.05, half * 0.25, half * 0.6);
+      ctx.fillRect(-half * 0.22, -half * 0.35, half * 0.44, half * 0.72);
+
+      ctx.fillStyle = style.cabin;
+      ctx.beginPath();
+      ctx.ellipse(0, -half * 0.2, half * 0.2, half * 0.28, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      const textSize = Math.floor(DROP_SIZE * 0.48);
+      ctx.font = `700 ${textSize}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = style.text;
+      const textY = half * 0.35;
+      ctx.fillText(style.letter, 0, textY);
+      ctx.lineWidth = 1.5;
+      ctx.strokeStyle = 'rgba(5, 9, 18, 0.6)';
+      ctx.strokeText(style.letter, 0, textY);
+
+      ctx.restore();
     });
   }
 
