@@ -214,21 +214,27 @@ body[data-page-group="arcade"] main {
 .header-main {
   padding: calc(var(--header-padding-y) * 0.7) calc(var(--header-padding-x) * 0.85);
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: calc(1.2rem * var(--header-scale, 1));
+  align-content: flex-start;
+  justify-content: flex-start;
+  column-gap: calc(0.3rem * var(--header-scale, 1));
+  row-gap: calc(0.3rem * var(--header-scale, 1));
 }
 
 .header-brand-group {
   display: inline-flex;
   align-items: center;
   gap: calc(clamp(0.5rem, 1vw, 0.75rem) * var(--header-scale, 1));
+  flex: 0 0 auto;
+  margin-inline-end: calc(0.4rem * var(--header-scale, 1));
 }
 
 .app-header[data-collapsed="true"] .header-main {
   padding-top: calc(var(--header-padding-y) * 0.45);
   padding-bottom: calc(var(--header-padding-y) * 0.45);
-  gap: calc(0.75rem * var(--header-scale, 1));
+  column-gap: calc(0.25rem * var(--header-scale, 1));
+  row-gap: calc(0.22rem * var(--header-scale, 1));
 }
 
 .app-header[data-collapsed="true"] .nav-menu {
@@ -1040,11 +1046,22 @@ body.theme-aurora .status-bar {
 
 .nav-menu {
   display: flex;
-  gap: calc(0.3rem * var(--header-scale, 1));
   flex-wrap: wrap;
-  justify-content: flex-end;
-  margin-left: auto;
-  text-align: right;
+  gap: calc(0.3rem * var(--header-scale, 1));
+  justify-content: flex-start;
+  align-content: flex-start;
+  flex: 1 1 18rem;
+}
+
+@supports (display: contents) {
+  .nav-menu {
+    display: contents;
+    gap: 0;
+  }
+
+  .header-main > .nav-button {
+    flex: 0 0 auto;
+  }
 }
 
 .nav-button {
@@ -1066,7 +1083,15 @@ body.theme-aurora .status-bar {
   background: var(--nav-button-bg);
   border: none;
   color: var(--nav-button-color);
-  font-family: 'Audiowide', 'Orbitron', sans-serif;
+  font-family: var(
+    --font-text,
+    'Orbitron',
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif
+  );
   font-size: calc(0.48rem * var(--font-scale-factor, 1) * var(--header-scale, 1));
   letter-spacing: 0.08em;
   text-transform: uppercase;
