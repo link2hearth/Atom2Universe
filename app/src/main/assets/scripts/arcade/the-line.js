@@ -1679,33 +1679,129 @@
     if (biasedPath && biasedPath.length >= 2) {
       return buildPuzzleFromPath(mode, width, height, biasedBlocked, biasedPath, difficultyConfig);
     }
+    const distributedBlocked = createDistributedHoleSetFromPath(basePath, width, height, targetHoles);
+    if (distributedBlocked.size) {
+      const distributedPath = findHamiltonianPath(width, height, distributedBlocked, null);
+      if (distributedPath && distributedPath.length >= 2) {
+        return buildPuzzleFromPath(mode, width, height, distributedBlocked, distributedPath, difficultyConfig);
+      }
+    }
     const blocked = new Set();
     let startIndex = 0;
     let endIndex = basePath.length - 1;
     let holesCreated = 0;
+    let removeStartNext = true;
     while (holesCreated < targetHoles && endIndex - startIndex + 1 > 2) {
       const canRemoveStart = startIndex < endIndex - 1;
       const canRemoveEnd = endIndex > startIndex + 1;
-      let removeStart = canRemoveStart && !canRemoveEnd ? true : false;
-      if (!removeStart && canRemoveEnd && canRemoveStart) {
-        removeStart = Math.random() < 0.5;
-      }
-      if (removeStart && canRemoveStart) {
+      let removed = false;
+      if (removeStartNext && canRemoveStart) {
         blocked.add(basePath[startIndex]);
         startIndex += 1;
+        removed = true;
+      } else if (!removeStartNext && canRemoveEnd) {
+        blocked.add(basePath[endIndex]);
+        endIndex -= 1;
+        removed = true;
+      } else if (canRemoveStart) {
+        blocked.add(basePath[startIndex]);
+        startIndex += 1;
+        removed = true;
       } else if (canRemoveEnd) {
         blocked.add(basePath[endIndex]);
         endIndex -= 1;
-      } else {
+        removed = true;
+      }
+      if (!removed) {
         break;
       }
       holesCreated += 1;
+      removeStartNext = !removeStartNext;
     }
     const trimmedPath = basePath.slice(startIndex, endIndex + 1);
     if (trimmedPath.length < 2) {
       return buildPuzzleFromPath(mode, width, height, new Set(), basePath, difficultyConfig);
     }
     return buildPuzzleFromPath(mode, width, height, blocked, trimmedPath, difficultyConfig);
+  }
+
+  function createDistributedHoleSetFromPath(basePath, width, height, targetHoles) {
+    if (!Array.isArray(basePath) || basePath.length < 3 || !Number.isFinite(width) || !Number.isFinite(height)) {
+      return new Set();
+    }
+    const available = Math.max(0, basePath.length - 2);
+    const limit = Math.min(Math.max(0, targetHoles), available);
+    if (limit <= 0) {
+      return new Set();
+    }
+    const evenInterior = [];
+    const oddInterior = [];
+    const evenEdge = [];
+    const oddEdge = [];
+    for (let position = 1; position < basePath.length - 1; position += 1) {
+      const index = basePath[position];
+      const y = Math.floor(index / width);
+      const isEdgeRow = y === 0 || y === height - 1;
+      const entry = { index };
+      if (position % 2 === 0) {
+        (isEdgeRow ? evenEdge : evenInterior).push(entry);
+      } else {
+        (isEdgeRow ? oddEdge : oddInterior).push(entry);
+      }
+    }
+    const pools = {
+      even: { interior: evenInterior, edge: evenEdge },
+      odd: { interior: oddInterior, edge: oddEdge }
+    };
+    const swapParity = parity => (parity === 'even' ? 'odd' : 'even');
+    const pickFromPool = pool => {
+      if (!Array.isArray(pool) || pool.length === 0) {
+        return null;
+      }
+      const idx = randomInt(0, pool.length - 1);
+      const [choice] = pool.splice(idx, 1);
+      return choice;
+    };
+    const result = new Set();
+    let preferredParity = pools.even.interior.length >= pools.odd.interior.length ? 'even' : 'odd';
+    let guard = 0;
+    while (result.size < limit && guard < limit * 8) {
+      guard += 1;
+      const alternateParity = swapParity(preferredParity);
+      const order = [
+        pools[preferredParity].interior,
+        pools[alternateParity].interior,
+        pools[preferredParity].edge,
+        pools[alternateParity].edge
+      ];
+      let picked = null;
+      for (let i = 0; i < order.length; i += 1) {
+        picked = pickFromPool(order[i]);
+        if (picked) {
+          result.add(picked.index);
+          break;
+        }
+      }
+      if (!picked) {
+        break;
+      }
+      preferredParity = swapParity(preferredParity);
+    }
+    if (result.size < limit) {
+      const remaining = [];
+      for (let position = 1; position < basePath.length - 1; position += 1) {
+        const index = basePath[position];
+        if (!result.has(index)) {
+          remaining.push(index);
+        }
+      }
+      while (result.size < limit && remaining.length) {
+        const idx = randomInt(0, remaining.length - 1);
+        const [choice] = remaining.splice(idx, 1);
+        result.add(choice);
+      }
+    }
+    return result;
   }
 
   function createColorSegments(pathCoords, difficultyConfig) {
