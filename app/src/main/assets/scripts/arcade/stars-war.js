@@ -41,9 +41,12 @@
   const DROP_BASE_SPEED = 120;
   const MAGNET_PULL_SPEED = 240;
   const MAGNET_RADIUS = 120;
+  const INITIAL_WAVE_INTERVAL = 30;
+  const MIN_WAVE_INTERVAL = 10;
+  const WAVE_ACCELERATION_DURATION = 10 * 60;
 
   const PLAYER_BASE_STATS = Object.freeze({
-    speed: 220,
+    speed: 275,
     cooldown: 0.18,
     bulletSpeed: 360,
     multi: 1
@@ -990,6 +993,7 @@
     spawnQueue: [],
     spawnTimer: 0,
     spawnInterval: BASE_SPAWN_INTERVAL,
+    waveTimer: INITIAL_WAVE_INTERVAL,
     maxOnScreen: 10 + Math.floor(3 * 1),
     enemies: [],
     enemyBullets: [],
@@ -1314,6 +1318,7 @@
     state.difficulty = 1;
     state.wave = 0;
     state.spawnInterval = BASE_SPAWN_INTERVAL;
+    state.waveTimer = INITIAL_WAVE_INTERVAL;
     state.maxOnScreen = 10 + Math.floor(3 * state.difficulty);
     state.spawnTimer = 0;
     state.heartPitySeconds = 0;
@@ -1363,11 +1368,22 @@
     return array[getRandomInt(0, array.length)];
   }
 
+  function computeWaveInterval() {
+    const progress = Math.min(1, state.elapsed / WAVE_ACCELERATION_DURATION);
+    const reduction = (INITIAL_WAVE_INTERVAL - MIN_WAVE_INTERVAL) * progress;
+    return INITIAL_WAVE_INTERVAL - reduction;
+  }
+
+  function resetWaveTimer() {
+    state.waveTimer = computeWaveInterval();
+  }
+
   function scheduleNextWave() {
     state.wave += 1;
     const spawnPlan = generateWave();
     state.spawnQueue.push(...spawnPlan);
     state.spawnTimer = 0;
+    resetWaveTimer();
   }
 
   function getAllowedEnemies(difficulty) {
@@ -1640,7 +1656,15 @@
       nextY += speed * 0.6;
     }
 
-    enemy.x = clamp(nextX, enemy.width / 2, CANVAS_WIDTH - enemy.width / 2);
+    const minX = enemy.width / 2;
+    const maxX = CANVAS_WIDTH - enemy.width / 2;
+    let clampedX = clamp(nextX, minX, maxX);
+    if (clampedX === minX || clampedX === maxX) {
+      const center = CANVAS_WIDTH / 2;
+      const towardCenter = clampedX < center ? 1 : -1;
+      clampedX = clamp(clampedX + towardCenter * enemy.speed * delta * 0.6, minX, maxX);
+    }
+    enemy.x = clampedX;
     enemy.y = nextY;
   }
 
@@ -1944,6 +1968,15 @@
     state.effects = state.effects.filter(effect => !effect.remove);
   }
 
+  function updateWaveTimer(delta) {
+    state.waveTimer -= delta;
+    while (state.waveTimer <= 0) {
+      const overrun = -state.waveTimer;
+      scheduleNextWave();
+      state.waveTimer -= overrun;
+    }
+  }
+
   function maybeSpawnEnemies(delta) {
     if (!state.spawnQueue.length) {
       return;
@@ -1972,7 +2005,7 @@
     }
     if (state.wave > 0 && !state.spawnQueue.length && !state.enemies.length) {
       state.difficulty = Math.min(8, state.difficulty + 0.25);
-      scheduleNextWave();
+      state.waveTimer = Math.min(state.waveTimer, 2);
     }
     if (previousDifficulty !== state.difficulty) {
       state.maxOnScreen = 10 + Math.floor(3 * state.difficulty);
@@ -2196,6 +2229,7 @@
     applyMilestones();
     updateHeartPity(delta);
     updatePowerups(delta);
+    updateWaveTimer(delta);
     maybeSpawnEnemies(delta);
     updateEnemies(delta);
     updatePlayer(delta);
