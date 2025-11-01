@@ -24,6 +24,10 @@
     howLink: document.getElementById('pipeTapHowLink')
   };
 
+  const AUTOSAVE_GAME_ID = 'pipeTap';
+  const AUTOSAVE_VERSION = 1;
+  const AUTOSAVE_DEBOUNCE_MS = 200;
+
   const ALLOWED_SIZES = Object.freeze([4, 5, 6, 7, 8]);
   const DEFAULT_SIZE = 5;
   const COMPLETION_REWARD_BY_SIZE = Object.freeze({
@@ -75,6 +79,196 @@
     shareResetTimer: null,
     rewardClaimed: false
   };
+
+  let autosaveTimer = null;
+  let autosaveSuppressed = false;
+
+  function getAutosaveApi() {
+    if (typeof window === 'undefined') {
+      return null;
+    }
+    const autosave = window.ArcadeAutosave;
+    if (!autosave || typeof autosave !== 'object') {
+      return null;
+    }
+    if (typeof autosave.get !== 'function' || typeof autosave.set !== 'function') {
+      return null;
+    }
+    return autosave;
+  }
+
+  function sanitizeMask(value) {
+    const numeric = Number(value);
+    if (!Number.isFinite(numeric) || numeric <= 0) {
+      return 0;
+    }
+    const mask = Math.floor(numeric) & (
+      DIRECTIONS.NORTH
+      | DIRECTIONS.EAST
+      | DIRECTIONS.SOUTH
+      | DIRECTIONS.WEST
+    );
+    return mask;
+  }
+
+  function buildAutosavePayload() {
+    const size = normalizeSize(state.size);
+    const grid = [];
+    for (let y = 0; y < size; y += 1) {
+      const row = [];
+      for (let x = 0; x < size; x += 1) {
+        const mask = state.grid?.[y]?.[x];
+        row.push(sanitizeMask(mask));
+      }
+      grid.push(row);
+    }
+    const sourceX = Number.isFinite(state.source?.x) ? Math.max(0, Math.min(size - 1, Math.floor(state.source.x))) : 0;
+    const sourceY = Number.isFinite(state.source?.y) ? Math.max(0, Math.min(size - 1, Math.floor(state.source.y))) : 0;
+    return {
+      version: AUTOSAVE_VERSION,
+      seed: typeof state.seed === 'string' ? state.seed : '',
+      size,
+      grid,
+      source: { x: sourceX, y: sourceY },
+      moves: Math.max(0, Math.floor(Number(state.moves) || 0)),
+      elapsedSeconds: Math.max(0, Math.floor(Number(state.elapsedSeconds) || 0)),
+      solved: Boolean(state.solved),
+      rewardClaimed: Boolean(state.rewardClaimed)
+    };
+  }
+
+  function persistAutosaveNow() {
+    const autosave = getAutosaveApi();
+    if (!autosave) {
+      return;
+    }
+    const payload = buildAutosavePayload();
+    try {
+      autosave.set(AUTOSAVE_GAME_ID, payload);
+    } catch (error) {
+      // Ignore autosave persistence errors.
+    }
+  }
+
+  function scheduleAutosave() {
+    if (autosaveSuppressed) {
+      return;
+    }
+    if (typeof window === 'undefined') {
+      return;
+    }
+    if (autosaveTimer != null) {
+      window.clearTimeout(autosaveTimer);
+    }
+    autosaveTimer = window.setTimeout(() => {
+      autosaveTimer = null;
+      persistAutosaveNow();
+    }, AUTOSAVE_DEBOUNCE_MS);
+  }
+
+  function flushAutosave() {
+    if (typeof window !== 'undefined' && autosaveTimer != null) {
+      window.clearTimeout(autosaveTimer);
+      autosaveTimer = null;
+    }
+    persistAutosaveNow();
+  }
+
+  function withAutosaveSuppressed(callback) {
+    autosaveSuppressed = true;
+    try {
+      callback();
+    } finally {
+      autosaveSuppressed = false;
+    }
+  }
+
+  function restoreFromAutosave() {
+    const autosave = getAutosaveApi();
+    if (!autosave) {
+      return false;
+    }
+    let payload = null;
+    try {
+      payload = autosave.get(AUTOSAVE_GAME_ID);
+    } catch (error) {
+      return false;
+    }
+    if (!payload || typeof payload !== 'object') {
+      return false;
+    }
+    if (Number(payload.version) !== AUTOSAVE_VERSION) {
+      return false;
+    }
+
+    const size = normalizeSize(payload.size);
+    const gridPayload = Array.isArray(payload.grid) ? payload.grid : [];
+    const grid = Array.from({ length: size }, (_, y) => {
+      const rowSource = Array.isArray(gridPayload[y]) ? gridPayload[y] : [];
+      return Array.from({ length: size }, (_, x) => sanitizeMask(rowSource[x]));
+    });
+    let nonZeroTiles = 0;
+    for (let y = 0; y < grid.length; y += 1) {
+      for (let x = 0; x < grid[y].length; x += 1) {
+        if (grid[y][x] !== 0) {
+          nonZeroTiles += 1;
+        }
+      }
+    }
+    if (nonZeroTiles === 0) {
+      return false;
+    }
+
+    const seed = typeof payload.seed === 'string' ? payload.seed : '';
+    const moves = Math.max(0, Math.floor(Number(payload.moves) || 0));
+    const elapsedSeconds = Math.max(0, Math.floor(Number(payload.elapsedSeconds) || 0));
+    const solved = Boolean(payload.solved);
+    const rewardClaimed = Boolean(payload.rewardClaimed);
+    const sourceX = Number.isFinite(payload.source?.x) ? Math.floor(payload.source.x) : null;
+    const sourceY = Number.isFinite(payload.source?.y) ? Math.floor(payload.source.y) : null;
+    const safeSource = sourceX != null && sourceY != null && sourceX >= 0 && sourceY >= 0
+      && sourceX < size && sourceY < size
+      ? { x: sourceX, y: sourceY }
+      : findSource(grid);
+
+    withAutosaveSuppressed(() => {
+      pauseTimer();
+      state.seed = seed;
+      state.size = size;
+      state.rng = seeded(seed || Date.now().toString(36));
+      state.grid = grid;
+      state.source = safeSource;
+      state.moves = moves;
+      state.elapsedSeconds = elapsedSeconds;
+      state.solved = solved;
+      state.rewardClaimed = rewardClaimed;
+      state.shareResetTimer = null;
+      if (elements.seedInput) {
+        elements.seedInput.value = seed;
+      }
+      if (elements.sizeSelect) {
+        elements.sizeSelect.value = String(size);
+      }
+      resetShareLabel();
+      renderBoard();
+      updateStats();
+      if (solved) {
+        updateWinMessage();
+        showWin();
+      } else {
+        hideWin();
+      }
+    });
+
+    if (solved) {
+      pauseTimer();
+    } else {
+      resumeTimer();
+    }
+
+    scheduleAutosave();
+    return true;
+  }
 
   function translate(key, fallback, params) {
     const translator = typeof window !== 'undefined'
@@ -339,6 +533,7 @@
       if (Number.isFinite(seconds) && seconds !== state.elapsedSeconds) {
         state.elapsedSeconds = seconds;
         updateStats();
+        scheduleAutosave();
       }
     }, 250);
     updateStats();
@@ -504,6 +699,7 @@
     state.moves += 1;
     updateStats();
     paintConnectedTiles();
+    scheduleAutosave();
 
     if (isSolved(state.grid, state.source)) {
       state.solved = true;
@@ -511,6 +707,7 @@
       awardCompletionTickets();
       updateWinMessage();
       showWin();
+      flushAutosave();
     }
   }
 
@@ -548,6 +745,7 @@
       gained = 0;
     }
     state.rewardClaimed = true;
+    scheduleAutosave();
     if (!Number.isFinite(gained) || gained <= 0) {
       return;
     }
@@ -569,24 +767,25 @@
     const size = normalizeSize(requestedSize);
     const trimmedSeed = typeof seedValue === 'string' ? seedValue.trim() : '';
     const seed = trimmedSeed ? trimmedSeed : Date.now().toString(36);
-
-    state.seed = seed;
-    state.size = size;
-    state.rng = seeded(seed);
-    state.grid = generateGrid(size, state.rng);
-    state.source = findSource(state.grid);
-    state.moves = 0;
-    state.elapsedSeconds = 0;
-    state.solved = false;
-    state.rewardClaimed = false;
-    hideWin();
-    resetShareLabel();
-
-    renderBoard();
-    updateStats();
-    pauseTimer();
-    state.elapsedSeconds = 0;
+    withAutosaveSuppressed(() => {
+      pauseTimer();
+      state.seed = seed;
+      state.size = size;
+      state.rng = seeded(seed);
+      state.grid = generateGrid(size, state.rng);
+      state.source = findSource(state.grid);
+      state.moves = 0;
+      state.elapsedSeconds = 0;
+      state.solved = false;
+      state.rewardClaimed = false;
+      state.shareResetTimer = null;
+      hideWin();
+      resetShareLabel();
+      renderBoard();
+      updateStats();
+    });
     resumeTimer();
+    scheduleAutosave();
   }
 
   function handleNewGridRequest() {
@@ -695,11 +894,36 @@
 
   function init() {
     attachEventListeners();
-    const initialSize = normalizeSize(elements.sizeSelect?.value);
-    startNewGame(elements.seedInput?.value || '', initialSize);
+    const restored = restoreFromAutosave();
+    if (!restored) {
+      const initialSize = normalizeSize(elements.sizeSelect?.value);
+      startNewGame(elements.seedInput?.value || '', initialSize);
+    }
   }
 
   init();
+
+  if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+    window.addEventListener('beforeunload', () => {
+      try {
+        flushAutosave();
+      } catch (error) {
+        // Ignore flush errors during unload.
+      }
+    });
+  }
+
+  if (typeof document !== 'undefined' && typeof document.addEventListener === 'function') {
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        try {
+          flushAutosave();
+        } catch (error) {
+          // Ignore visibility flush errors.
+        }
+      }
+    });
+  }
 
   window.pipeTapArcade = {
     onEnter() {
@@ -707,6 +931,7 @@
     },
     onLeave() {
       detachTimer();
+      flushAutosave();
     }
   };
 })();

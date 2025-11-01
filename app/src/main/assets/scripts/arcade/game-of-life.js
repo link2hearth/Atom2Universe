@@ -8,6 +8,9 @@
   const RANDOM_SEED_STORAGE_KEY = 'atom2univers.arcade.gameOfLife.seed';
   const CUSTOM_PATTERNS_STORAGE_KEY = 'atom2univers.arcade.gameOfLife.customPatterns';
   const CUSTOM_PATTERN_COUNTER_STORAGE_KEY = 'atom2univers.arcade.gameOfLife.customPatternCounter';
+  const GAME_ID = 'gameOfLife';
+  const AUTOSAVE_VERSION = 1;
+  const AUTOSAVE_DEBOUNCE_MS = 200;
 
   const DEFAULT_CELL_COLOR = 'rgba(255, 255, 255, 0.92)';
 
@@ -88,6 +91,28 @@
 
   function clamp(value, min, max) {
     return Math.min(Math.max(value, min), max);
+  }
+
+  function clampInteger(value, min, max, fallback) {
+    const numeric = Math.round(Number(value));
+    if (!Number.isFinite(numeric)) {
+      return fallback;
+    }
+    return clamp(numeric, min, max);
+  }
+
+  function getAutosaveApi() {
+    if (typeof window === 'undefined') {
+      return null;
+    }
+    const autosave = window.ArcadeAutosave;
+    if (!autosave || typeof autosave !== 'object') {
+      return null;
+    }
+    if (typeof autosave.get !== 'function' || typeof autosave.set !== 'function') {
+      return null;
+    }
+    return autosave;
   }
 
   function toNumber(value, fallback) {
@@ -357,6 +382,9 @@
       this.menuToggle = menuToggle;
       this.menuHeader = menuHeader;
 
+      this.autosaveTimer = null;
+      this.autosaveSuppressed = false;
+
       this.config = DEFAULT_CONFIG;
       this.builtinPatterns = [];
       this.customPatterns = [];
@@ -516,6 +544,7 @@
       this.attachEvents();
       this.renderPatterns();
       this.updateRandomInputs();
+      this.restoreFromAutosave();
       this.updateUI();
       this.observeResize();
       this.state.active = false;
@@ -525,7 +554,230 @@
       document.addEventListener('visibilitychange', this.boundHandleVisibility);
     }
 
+    buildAutosavePayload() {
+      const aliveCells = [];
+      const cellBuffer = this.autosaveCellBuffer || { x: 0, y: 0 };
+      this.autosaveCellBuffer = cellBuffer;
+      if (this.state.aliveCells && typeof this.state.aliveCells.forEach === 'function') {
+        this.state.aliveCells.forEach(key => {
+          const cell = deserializeCell(key, cellBuffer);
+          const x = Number.isFinite(cell.x) ? Math.round(cell.x) : null;
+          const y = Number.isFinite(cell.y) ? Math.round(cell.y) : null;
+          if (x == null || y == null) {
+            return;
+          }
+          aliveCells.push([x, y]);
+        });
+      }
+
+      const viewport = {
+        originX: Number.isFinite(this.viewport.originX) ? Number(this.viewport.originX) : 0,
+        originY: Number.isFinite(this.viewport.originY) ? Number(this.viewport.originY) : 0,
+        cellSize: clamp(
+          Number.isFinite(this.viewport.cellSize) ? Number(this.viewport.cellSize) : DEFAULT_CONFIG.viewport.baseCellSize,
+          this.viewport.minCellSize,
+          this.viewport.maxCellSize
+        )
+      };
+
+      const payload = {
+        version: AUTOSAVE_VERSION,
+        generation: clampInteger(this.state.generation, 0, 1000000, 0),
+        running: Boolean(this.state.running),
+        fastForward: Boolean(this.state.fastForward),
+        speedMs: clamp(Number(this.state.speedMs) || DEFAULT_CONFIG.simulation.tickMs, 30, 2000),
+        selectionEnabled: Boolean(this.selectionState.enabled),
+        selectedPatternId: typeof this.selectedPatternId === 'string' ? this.selectedPatternId : null,
+        viewport,
+        aliveCells
+      };
+
+      if (this.menu) {
+        const expanded = this.menu.dataset.expanded !== 'false';
+        const left = Number.parseFloat(this.menu.style.left);
+        const top = Number.parseFloat(this.menu.style.top);
+        const menuState = { expanded };
+        if (Number.isFinite(left) && Number.isFinite(top)) {
+          menuState.left = left;
+          menuState.top = top;
+        }
+        payload.menu = menuState;
+      }
+
+      return payload;
+    }
+
+    persistAutosaveNow() {
+      const autosave = getAutosaveApi();
+      if (!autosave) {
+        return;
+      }
+      const payload = this.buildAutosavePayload();
+      if (!payload) {
+        if (typeof autosave.clear === 'function') {
+          try {
+            autosave.clear(GAME_ID);
+          } catch (error) {
+            // ignore autosave clearance errors
+          }
+        } else if (typeof autosave.set === 'function') {
+          try {
+            autosave.set(GAME_ID, null);
+          } catch (error) {
+            // ignore autosave persistence errors
+          }
+        }
+        return;
+      }
+      try {
+        autosave.set(GAME_ID, payload);
+      } catch (error) {
+        // ignore autosave persistence errors
+      }
+    }
+
+    scheduleAutosave() {
+      if (this.autosaveSuppressed) {
+        return;
+      }
+      if (typeof window === 'undefined') {
+        return;
+      }
+      if (this.autosaveTimer != null) {
+        window.clearTimeout(this.autosaveTimer);
+      }
+      this.autosaveTimer = window.setTimeout(() => {
+        this.autosaveTimer = null;
+        this.persistAutosaveNow();
+      }, AUTOSAVE_DEBOUNCE_MS);
+    }
+
+    flushAutosave() {
+      if (typeof window !== 'undefined' && this.autosaveTimer != null) {
+        window.clearTimeout(this.autosaveTimer);
+        this.autosaveTimer = null;
+      }
+      this.persistAutosaveNow();
+    }
+
+    restoreFromAutosave() {
+      const autosave = getAutosaveApi();
+      if (!autosave) {
+        return;
+      }
+      let payload = null;
+      try {
+        payload = autosave.get(GAME_ID);
+      } catch (error) {
+        return;
+      }
+      if (!payload || typeof payload !== 'object') {
+        return;
+      }
+      const version = Number(payload.version) || 0;
+      if (version !== AUTOSAVE_VERSION) {
+        return;
+      }
+
+      this.autosaveSuppressed = true;
+      try {
+        const cells = Array.isArray(payload.aliveCells) ? payload.aliveCells : [];
+        const nextCells = new Set();
+        const cellBuffer = this.autosaveCellBuffer || { x: 0, y: 0 };
+        this.autosaveCellBuffer = cellBuffer;
+        cells.forEach(entry => {
+          if (!entry) {
+            return;
+          }
+          let rawX = null;
+          let rawY = null;
+          if (Array.isArray(entry)) {
+            rawX = entry[0];
+            rawY = entry[1];
+          } else if (typeof entry === 'object') {
+            rawX = entry.x;
+            rawY = entry.y;
+          }
+          const x = Number(rawX);
+          const y = Number(rawY);
+          if (!Number.isFinite(x) || !Number.isFinite(y)) {
+            return;
+          }
+          nextCells.add(serializeCell(Math.round(x), Math.round(y)));
+        });
+        this.state.aliveCells = nextCells;
+        this.state.generation = clampInteger(payload.generation, 0, 1000000, 0);
+        this.state.running = Boolean(payload.running);
+        this.state.fastForward = Boolean(payload.fastForward);
+        this.state.history = [];
+        this.state.accumulator = 0;
+        if (typeof performance === 'object' && typeof performance.now === 'function') {
+          this.state.lastFrameTime = performance.now();
+        } else {
+          this.state.lastFrameTime = 0;
+        }
+
+        const speedCandidate = Number(payload.speedMs);
+        if (Number.isFinite(speedCandidate)) {
+          this.setSpeed(speedCandidate);
+        }
+
+        const viewport = payload.viewport && typeof payload.viewport === 'object' ? payload.viewport : null;
+        if (viewport) {
+          const originX = Number(viewport.originX);
+          const originY = Number(viewport.originY);
+          const cellSize = Number(viewport.cellSize);
+          if (Number.isFinite(originX)) {
+            this.viewport.originX = originX;
+          }
+          if (Number.isFinite(originY)) {
+            this.viewport.originY = originY;
+          }
+          if (Number.isFinite(cellSize)) {
+            const clampedSize = clamp(cellSize, this.viewport.minCellSize, this.viewport.maxCellSize);
+            this.viewport.cellSize = clampedSize;
+            if (this.zoomSlider) {
+              this.zoomSlider.value = String(Math.round(clampedSize));
+            }
+          }
+        }
+
+        const selectionEnabled = Boolean(payload.selectionEnabled);
+        this.setSelectionEnabled(selectionEnabled);
+
+        const selectedPatternId = typeof payload.selectedPatternId === 'string' ? payload.selectedPatternId : null;
+        this.selectedPatternId = selectedPatternId;
+        if (this.patternSelect) {
+          this.patternSelect.value = selectedPatternId || '';
+        }
+
+        const menuState = payload.menu && typeof payload.menu === 'object' ? payload.menu : null;
+        if (this.menu && menuState) {
+          const expanded = menuState.expanded !== false;
+          this.menu.dataset.expanded = expanded ? 'true' : 'false';
+          const left = Number(menuState.left);
+          const top = Number(menuState.top);
+          if (Number.isFinite(left) && Number.isFinite(top)) {
+            this.menu.style.left = `${left}px`;
+            this.menu.style.top = `${top}px`;
+            this.menu.style.right = 'auto';
+            this.menu.style.bottom = 'auto';
+            this.menu.style.transform = 'none';
+          }
+        }
+
+        this.updatePatternDescription();
+        this.updateMenuToggleLabel();
+        this.updateUI();
+        this.requestRedraw();
+      } finally {
+        this.autosaveSuppressed = false;
+      }
+      this.scheduleAutosave();
+    }
+
     destroy() {
+      this.flushAutosave();
       this.state.active = false;
       if (this.frameId) {
         cancelAnimationFrame(this.frameId);
@@ -561,6 +813,7 @@
       this.setSelectionEnabled(false);
       this.resetInputStates();
       this.requestScrollUnlock();
+      this.flushAutosave();
     }
 
     resetInputStates() {
@@ -735,6 +988,7 @@
           const value = this.patternSelect.value;
           this.selectedPatternId = value || null;
           this.updatePatternDescription();
+          this.scheduleAutosave();
         });
       }
 
@@ -783,6 +1037,7 @@
     handleVisibilityChange() {
       if (document.hidden) {
         this.pause();
+        this.flushAutosave();
       }
     }
 
@@ -1076,7 +1331,12 @@
       if (!totalPatterns) {
         this.patternSelect.disabled = true;
         this.patternSelect.value = '';
-        this.selectedPatternId = null;
+        if (this.selectedPatternId !== null) {
+          this.selectedPatternId = null;
+          this.scheduleAutosave();
+        } else {
+          this.selectedPatternId = null;
+        }
         if (this.patternEmpty) {
           this.patternEmpty.hidden = false;
         }
@@ -1123,7 +1383,12 @@
       }
 
       if (!hasSelectedPattern) {
-        this.selectedPatternId = null;
+        if (this.selectedPatternId !== null) {
+          this.selectedPatternId = null;
+          this.scheduleAutosave();
+        } else {
+          this.selectedPatternId = null;
+        }
         this.patternSelect.value = '';
       }
 
@@ -1228,6 +1493,7 @@
         this.selectionButton.setAttribute('aria-pressed', pressed ? 'true' : 'false');
       }
       this.requestRedraw();
+      this.scheduleAutosave();
     }
 
     play() {
@@ -1247,6 +1513,7 @@
       if (this.fastForwardButton) {
         this.fastForwardButton.setAttribute('aria-pressed', this.state.fastForward ? 'true' : 'false');
       }
+      this.scheduleAutosave();
     }
 
     step() {
@@ -1362,6 +1629,7 @@
       if (this.speedSlider) {
         this.speedSlider.value = this.speedToSliderValue(this.state.speedMs);
       }
+      this.scheduleAutosave();
     }
 
     setZoom(newCellSize, anchorCell) {
@@ -1417,6 +1685,7 @@
       const nextState = typeof forceState === 'boolean' ? forceState : !isExpanded;
       this.menu.dataset.expanded = nextState ? 'true' : 'false';
       this.updateMenuToggleLabel();
+      this.scheduleAutosave();
     }
 
     updateMenuToggleLabel() {
@@ -1480,6 +1749,7 @@
       this.menuDragState.pointerId = null;
       this.menuHeader?.releasePointerCapture?.(event.pointerId);
       this.clampMenuPosition();
+      this.scheduleAutosave();
     }
 
     clampMenuPosition() {
@@ -1515,6 +1785,7 @@
       }
       this.requestRedraw();
       this.updatePatternDescription();
+      this.scheduleAutosave();
     }
 
     cancelSelection() {
@@ -1624,7 +1895,12 @@
           key: 'index.sections.gameOfLife.patterns.selectionEmpty',
           fallback: 'The selected area does not contain any living cells.'
         };
-        this.selectedPatternId = null;
+        if (this.selectedPatternId !== null) {
+          this.selectedPatternId = null;
+          this.scheduleAutosave();
+        } else {
+          this.selectedPatternId = null;
+        }
         this.updatePatternDescription();
         return;
       }
@@ -1722,6 +1998,7 @@
       };
       this.selectedPatternId = pattern.id;
       this.renderPatterns();
+      this.scheduleAutosave();
     }
 
     cancelPendingSelection(silent) {
@@ -2090,6 +2367,7 @@
       this.viewport.originX -= dx / scale;
       this.viewport.originY -= dy / scale;
       this.requestRedraw();
+      this.scheduleAutosave();
     }
 
     applyCellToggle(x, y, alive) {
@@ -2426,6 +2704,16 @@
 
     instance.init();
     window.gameOfLifeArcade = instance;
+
+    if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+      window.addEventListener('beforeunload', () => {
+        try {
+          instance.flushAutosave();
+        } catch (error) {
+          // ignore autosave flush errors on unload
+        }
+      });
+    }
   });
 
   window.GameOfLifeArcade = GameOfLifeArcade;
