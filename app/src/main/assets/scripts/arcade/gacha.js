@@ -7,6 +7,17 @@ function isCollectionSystemActive() {
   return true;
 }
 
+function isGachaImageCollectionEnabled() {
+  return isCollectionSystemActive();
+}
+
+function isGachaCardCollectionEnabled() {
+  if (typeof globalThis !== 'undefined' && typeof globalThis.COLLECTION_CARDS_ENABLED === 'boolean') {
+    return globalThis.COLLECTION_CARDS_ENABLED;
+  }
+  return true;
+}
+
 const GACHA_SMOKE_FRAME_COUNT = 91;
 const GACHA_SMOKE_FRAME_RATE = 12;
 const GACHA_SMOKE_FRAME_PAD = 4;
@@ -290,6 +301,182 @@ const BONUS_GACHA_IMAGE_ALL_IDS = Array.isArray(GACHA_BONUS_IMAGE_DEFINITIONS)
   ? GACHA_BONUS_IMAGE_DEFINITIONS.map(def => def.id).filter(Boolean)
   : [];
 
+const bonusGachaImageAssetAvailabilityCache = new Map();
+const missingBonusGachaImageIds = new Set();
+
+function normalizeBonusGachaAssetPath(path) {
+  if (typeof path !== 'string') {
+    return '';
+  }
+  return path.replace(/^[./]+/, '').replace(/\\+/g, '/');
+}
+
+function checkBonusGachaImageManifest(normalizedPath) {
+  if (typeof globalThis === 'undefined') {
+    return null;
+  }
+  let hasManifest = false;
+  const candidates = [
+    globalThis.__GACHA_BONUS_IMAGE_FILE_SET__,
+    globalThis.__GACHA_BONUS_IMAGE_FILE_LIST__,
+    globalThis.GACHA_BONUS_IMAGE_FILES,
+    globalThis.gachaBonusImageFiles
+  ];
+  for (let index = 0; index < candidates.length; index += 1) {
+    const source = candidates[index];
+    if (!source) {
+      continue;
+    }
+    hasManifest = true;
+    if (source instanceof Set) {
+      if (source.has(normalizedPath) || source.has(`./${normalizedPath}`)) {
+        return true;
+      }
+      continue;
+    }
+    if (Array.isArray(source)) {
+      const match = source.find(entry => {
+        if (typeof entry !== 'string') {
+          return false;
+        }
+        const normalizedEntry = normalizeBonusGachaAssetPath(entry);
+        return normalizedEntry === normalizedPath;
+      });
+      if (match) {
+        return true;
+      }
+      continue;
+    }
+    if (typeof source === 'object') {
+      if (Object.prototype.hasOwnProperty.call(source, normalizedPath)) {
+        return Boolean(source[normalizedPath]);
+      }
+      if (Object.prototype.hasOwnProperty.call(source, `./${normalizedPath}`)) {
+        return Boolean(source[`./${normalizedPath}`]);
+      }
+      const values = Object.values(source);
+      const match = values.find(entry => {
+        if (typeof entry !== 'string') {
+          return false;
+        }
+        const normalizedEntry = normalizeBonusGachaAssetPath(entry);
+        return normalizedEntry === normalizedPath;
+      });
+      if (match) {
+        return true;
+      }
+      continue;
+    }
+  }
+  if (hasManifest) {
+    return false;
+  }
+  return null;
+}
+
+function checkBonusGachaImageAssetWithFs(assetPath) {
+  if (typeof require !== 'function') {
+    return null;
+  }
+  try {
+    const fs = require('fs');
+    const path = require('path');
+    const baseDir = typeof __dirname === 'string' ? __dirname : '';
+    const resolved = baseDir
+      ? path.resolve(baseDir, '..', '..', assetPath)
+      : path.resolve(assetPath);
+    if (fs.existsSync(resolved)) {
+      return true;
+    }
+    return false;
+  } catch (error) {
+    return null;
+  }
+}
+
+function checkBonusGachaImageAssetWithRequest(assetPath) {
+  if (typeof XMLHttpRequest !== 'function') {
+    return null;
+  }
+  try {
+    const request = new XMLHttpRequest();
+    request.open('HEAD', assetPath, false);
+    request.send(null);
+    if (request.status >= 200 && request.status < 400) {
+      return true;
+    }
+    if (request.status === 0) {
+      return null;
+    }
+    return false;
+  } catch (error) {
+    return false;
+  }
+}
+
+function isBonusGachaImageAssetAvailable(definition) {
+  if (!definition) {
+    return false;
+  }
+  const assetPath = definition.assetPath;
+  if (typeof assetPath !== 'string' || !assetPath.trim()) {
+    return false;
+  }
+  const cached = bonusGachaImageAssetAvailabilityCache.get(assetPath);
+  if (typeof cached === 'boolean') {
+    return cached;
+  }
+  const normalizedPath = normalizeBonusGachaAssetPath(assetPath);
+  let determined = false;
+  let exists = false;
+
+  const manifestResult = checkBonusGachaImageManifest(normalizedPath);
+  if (manifestResult != null) {
+    exists = Boolean(manifestResult);
+    determined = true;
+  }
+
+  if (!determined) {
+    const fsResult = checkBonusGachaImageAssetWithFs(assetPath);
+    if (fsResult != null) {
+      exists = Boolean(fsResult);
+      determined = true;
+    }
+  }
+
+  if (!determined) {
+    const requestResult = checkBonusGachaImageAssetWithRequest(assetPath);
+    if (requestResult != null) {
+      exists = Boolean(requestResult);
+      determined = true;
+    }
+  }
+
+  if (!determined) {
+    exists = true;
+  }
+
+  bonusGachaImageAssetAvailabilityCache.set(assetPath, exists);
+  return exists;
+}
+
+function markBonusGachaImageMissing(imageId, definition = null) {
+  if (!imageId) {
+    return;
+  }
+  missingBonusGachaImageIds.add(imageId);
+  if (definition && typeof definition.assetPath === 'string') {
+    bonusGachaImageAssetAvailabilityCache.set(definition.assetPath, false);
+  }
+}
+
+function isBonusGachaImageMarkedMissing(imageId) {
+  if (!imageId) {
+    return false;
+  }
+  return missingBonusGachaImageIds.has(imageId);
+}
+
 const SPECIAL_GACHA_CARD_ELEMENT_INDEX = (() => {
   const map = new Map();
   if (Array.isArray(periodicElements)) {
@@ -391,14 +578,25 @@ function rollForBonusGachaImage() {
 }
 
 function getAvailableBonusGachaImageIds() {
+  if (!isGachaImageCollectionEnabled()) {
+    return [];
+  }
   if (!BONUS_GACHA_IMAGE_ALL_IDS.length) {
     return [];
   }
   const collection = ensureGachaImageCollection();
   if (!collection || typeof collection !== 'object') {
-    return [...BONUS_GACHA_IMAGE_ALL_IDS];
+    return BONUS_GACHA_IMAGE_ALL_IDS.filter(imageId => !isBonusGachaImageMarkedMissing(imageId));
   }
   return BONUS_GACHA_IMAGE_ALL_IDS.filter(imageId => {
+    if (isBonusGachaImageMarkedMissing(imageId)) {
+      return false;
+    }
+    const definition = getBonusGachaImageDefinition(imageId);
+    if (!definition || !isBonusGachaImageAssetAvailable(definition)) {
+      markBonusGachaImageMissing(imageId, definition);
+      return false;
+    }
     const stored = collection[imageId];
     const rawCount = Number.isFinite(Number(stored?.count ?? stored))
       ? Math.max(0, Math.floor(Number(stored?.count ?? stored)))
@@ -408,7 +606,7 @@ function getAvailableBonusGachaImageIds() {
 }
 
 function awardSpecialGachaCard(cardId) {
-  if (!isCollectionSystemActive()) {
+  if (!isGachaCardCollectionEnabled()) {
     return null;
   }
   if (!cardId) {
@@ -436,7 +634,7 @@ function awardSpecialGachaCard(cardId) {
 }
 
 function awardBonusGachaImage(imageId) {
-  if (!isCollectionSystemActive()) {
+  if (!isGachaImageCollectionEnabled()) {
     return null;
   }
   if (!imageId) {
@@ -447,10 +645,14 @@ function awardBonusGachaImage(imageId) {
     collection[imageId] = { id: imageId, count: 0 };
   }
   const entry = collection[imageId];
+  const definition = getBonusGachaImageDefinition(imageId);
+  if (!definition || !isBonusGachaImageAssetAvailable(definition)) {
+    markBonusGachaImageMissing(imageId, definition);
+    return null;
+  }
   const previousCount = Number(entry.count) || 0;
   const newCount = previousCount + 1;
   entry.count = newCount;
-  const definition = getBonusGachaImageDefinition(imageId);
   const label = resolveBonusGachaImageLabel(imageId);
   return {
     cardId: imageId,
@@ -464,7 +666,7 @@ function awardBonusGachaImage(imageId) {
 }
 
 function maybeAwardElementSpecialCard(elementDef) {
-  if (!isCollectionSystemActive()) {
+  if (!isGachaCardCollectionEnabled()) {
     return null;
   }
   if (!elementDef) {
@@ -485,7 +687,7 @@ function maybeAwardElementSpecialCard(elementDef) {
 }
 
 function maybeAwardRaritySpecialCard(rarity) {
-  if (!isCollectionSystemActive()) {
+  if (!isGachaCardCollectionEnabled()) {
     return null;
   }
   const rarityId = typeof rarity === 'string'
@@ -510,7 +712,7 @@ function maybeAwardRaritySpecialCard(rarity) {
 }
 
 function maybeAwardBonusGachaImage() {
-  if (!isCollectionSystemActive()) {
+  if (!isGachaImageCollectionEnabled()) {
     return null;
   }
   const availableIds = getAvailableBonusGachaImageIds();
@@ -520,12 +722,25 @@ function maybeAwardBonusGachaImage() {
   if (!rollForBonusGachaImage()) {
     return null;
   }
-  const index = Math.floor(Math.random() * availableIds.length);
-  const imageId = availableIds[index];
-  if (!imageId) {
-    return null;
+  const remainingIds = [...availableIds];
+  while (remainingIds.length) {
+    const index = Math.floor(Math.random() * remainingIds.length);
+    const [imageId] = remainingIds.splice(index, 1);
+    if (!imageId) {
+      continue;
+    }
+    const definition = getBonusGachaImageDefinition(imageId);
+    if (!definition || !isBonusGachaImageAssetAvailable(definition)) {
+      markBonusGachaImageMissing(imageId, definition);
+      continue;
+    }
+    const reward = awardBonusGachaImage(imageId);
+    if (reward) {
+      return reward;
+    }
+    markBonusGachaImageMissing(imageId, definition);
   }
-  return awardBonusGachaImage(imageId);
+  return null;
 }
 
 const DEFAULT_GACHA_RARITIES = [
@@ -3205,7 +3420,7 @@ function performGachaRoll(count = 1) {
   const initialDrawCount = getTotalGachaDrawCount();
   const results = [];
   const collectionRewards = [];
-  const shouldAwardCollectionRewards = isCollectionSystemActive();
+  const shouldAwardCollectionRewards = isGachaCardCollectionEnabled() || isGachaImageCollectionEnabled();
   for (let rollIndex = 0; rollIndex < drawCount; rollIndex += 1) {
     const rarity = pickGachaRarity(initialDrawCount + rollIndex);
     if (!rarity) {
