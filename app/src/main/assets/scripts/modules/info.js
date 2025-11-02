@@ -1391,9 +1391,65 @@ function buildOwnedCollectionEntries(definitions, collection, type) {
       const assetPath = typeof def.assetPath === 'string' && def.assetPath.trim()
         ? def.assetPath.trim()
         : null;
-      return { id: def.id, count: rawCount, label, assetPath };
+      const rawAcquiredOrder = Number(stored?.acquiredOrder);
+      const acquiredOrder = Number.isFinite(rawAcquiredOrder) && rawAcquiredOrder > 0
+        ? Math.floor(rawAcquiredOrder)
+        : null;
+      const rawFirstAcquiredAt = Number(stored?.firstAcquiredAt);
+      const firstAcquiredAt = Number.isFinite(rawFirstAcquiredAt) && rawFirstAcquiredAt > 0
+        ? rawFirstAcquiredAt
+        : null;
+      return {
+        id: def.id,
+        count: rawCount,
+        label,
+        assetPath,
+        acquiredOrder,
+        firstAcquiredAt
+      };
     })
     .filter(entry => entry && entry.count > 0);
+}
+
+function compareCollectionImagesByAcquisition(a, b) {
+  if (!a || !b) {
+    return 0;
+  }
+  const rawOrderA = Number(a.acquiredOrder);
+  const orderA = Number.isFinite(rawOrderA) && rawOrderA > 0 ? rawOrderA : null;
+  const rawOrderB = Number(b.acquiredOrder);
+  const orderB = Number.isFinite(rawOrderB) && rawOrderB > 0 ? rawOrderB : null;
+  const hasOrderA = orderA != null;
+  const hasOrderB = orderB != null;
+  if (hasOrderA || hasOrderB) {
+    if (!hasOrderA && hasOrderB) {
+      return -1;
+    }
+    if (hasOrderA && !hasOrderB) {
+      return 1;
+    }
+    if (orderA !== orderB) {
+      return orderA - orderB;
+    }
+  }
+  const rawTimeA = Number(a.firstAcquiredAt);
+  const timeA = Number.isFinite(rawTimeA) && rawTimeA > 0 ? rawTimeA : null;
+  const rawTimeB = Number(b.firstAcquiredAt);
+  const timeB = Number.isFinite(rawTimeB) && rawTimeB > 0 ? rawTimeB : null;
+  const hasTimeA = timeA != null;
+  const hasTimeB = timeB != null;
+  if (hasTimeA || hasTimeB) {
+    if (!hasTimeA && hasTimeB) {
+      return -1;
+    }
+    if (hasTimeA && !hasTimeB) {
+      return 1;
+    }
+    if (timeA !== timeB) {
+      return timeA - timeB;
+    }
+  }
+  return compareTextLocalized(a.label, b.label);
 }
 
 function renderBonusImageCollectionList(options) {
@@ -1422,6 +1478,8 @@ function renderBonusImageCollectionList(options) {
     emptyElement.setAttribute('aria-hidden', 'false');
     return;
   }
+
+  owned.sort(compareCollectionImagesByAcquisition);
 
   owned.forEach(entry => {
     const item = document.createElement('li');
