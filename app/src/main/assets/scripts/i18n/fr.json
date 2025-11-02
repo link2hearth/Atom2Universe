@@ -1287,9 +1287,14 @@
           "powerups": "Bonus actifs"
         },
         "controls": {
-          "restart": "Relancer"
+          "restart": "Lancer / Relancer"
         },
         "overlay": {
+          "start": {
+            "title": "Prêt au décollage ?",
+            "message": "Cliquez sur « Lancer la mission » pour commencer.",
+            "action": "Lancer la mission"
+          },
           "gameOver": {
             "title": "Mission échouée",
             "message": "Durée : {time} · Score : {score}",
