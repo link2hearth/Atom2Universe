@@ -1496,6 +1496,9 @@ body.theme-aurora .midi-page__module .chiptune-usage__summary {
   }
 
   .midi-page__module .option-row--selectors .option-field {
+    flex: 0 1 auto;
+    min-width: 0;
+    min-height: 0;
     width: 100%;
     gap: 0.12rem;
   }
