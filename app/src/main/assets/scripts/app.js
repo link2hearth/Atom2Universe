@@ -6755,6 +6755,18 @@ function setBigBangLevelBonus(value) {
   return sanitized;
 }
 
+function getBigBangCompletionCount() {
+  const step = Number(BIG_BANG_LEVEL_BONUS_STEP);
+  if (!Number.isFinite(step) || step <= 0) {
+    return 0;
+  }
+  const bonus = getBigBangLevelBonus();
+  if (!Number.isFinite(bonus) || bonus <= 0) {
+    return 0;
+  }
+  return Math.max(0, Math.floor(bonus / step));
+}
+
 function getBigBangRemainingLevels() {
   if (!Array.isArray(UPGRADE_DEFS) || UPGRADE_DEFS.length === 0) {
     return { total: 0, infinite: false, display: '0' };
@@ -13306,6 +13318,19 @@ function computeGlobalCostModifier() {
   return 1;
 }
 
+function getUpgradeCostBigBangMultiplier(definition) {
+  const multiplierRaw = Number(definition?.bigBangBaseCostMultiplier ?? 1);
+  if (!Number.isFinite(multiplierRaw) || multiplierRaw <= 0 || Math.abs(multiplierRaw - 1) < 1e-9) {
+    return 1;
+  }
+  const completions = getBigBangCompletionCount();
+  if (!Number.isFinite(completions) || completions <= 0) {
+    return 1;
+  }
+  const factor = Math.pow(multiplierRaw, completions);
+  return Number.isFinite(factor) && factor > 0 ? factor : 1;
+}
+
 function computeUpgradeCost(def, quantity = 1) {
   if (isDevKitShopFree()) {
     return LayeredNumber.zero();
@@ -13313,10 +13338,13 @@ function computeUpgradeCost(def, quantity = 1) {
   const level = getUpgradeLevel(gameState.upgrades, def.id);
   const baseScale = def.costScale ?? 1;
   const modifier = computeGlobalCostModifier();
-  const baseCost = Number(def.baseCost ?? 0);
+  const baseCostRaw = Number(def.baseCost ?? 0);
   const buyAmount = Math.max(1, Math.floor(Number(quantity) || 0));
 
-  const linearIncrement = Number(def.costIncrement ?? 0);
+  const linearIncrementRaw = Number(def.costIncrement ?? 0);
+  const bigBangMultiplier = getUpgradeCostBigBangMultiplier(def);
+  const baseCost = baseCostRaw * bigBangMultiplier;
+  const linearIncrement = linearIncrementRaw * bigBangMultiplier;
   const hasLinearIncrement = Number.isFinite(linearIncrement) && Math.abs(linearIncrement) > 1e-9;
   if (hasLinearIncrement) {
     const normalizedLevel = Math.max(0, Math.floor(Number(level) || 0));

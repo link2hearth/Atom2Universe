@@ -1834,8 +1834,8 @@
         "gachaTicketBooth": {
           "name": "Guichet gacha",
           "description": "Convertissez vos atomes en tickets de tirage garantis.",
-          "effect": "Achetez 1 ticket gacha garanti par niveau. Limite : 1 000 niveaux (+1 000 par Big Bang). Chaque achat augmente le coût de 25 000 atomes.",
-          "effectSummary": "Achetez des tickets gacha garantis : +1 ticket par niveau, coût +25 000 atomes et limite portée à 1 000 niveaux (+1 000 par Big Bang)."
+          "effect": "Achetez 1 ticket gacha garanti par niveau. Limite : 1 000 niveaux (+1 000 par Big Bang). Chaque achat augmente le coût de 25 000 atomes et le coût de base est multiplié par 4 000 après chaque Big Bang.",
+          "effectSummary": "Achetez des tickets gacha garantis : +1 ticket par niveau, coût +25 000 atomes, limite portée à 1 000 niveaux (+1 000 par Big Bang) et coût de base ×4 000 après chaque Big Bang."
         }
       }
     },

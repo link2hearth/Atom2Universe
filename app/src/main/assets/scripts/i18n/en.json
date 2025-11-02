@@ -1834,8 +1834,8 @@
         "gachaTicketBooth": {
           "name": "Gacha Booth",
           "description": "Turn atoms into guaranteed draw tickets.",
-          "effect": "Buy 1 guaranteed gacha ticket per level. Cap: 1,000 levels (+1,000 per Big Bang). Each purchase increases the price by 25,000 atoms.",
-          "effectSummary": "Purchase guaranteed gacha tickets: +1 ticket per level, +25,000 atoms added to the cost, and a 1,000-level cap (+1,000 per Big Bang)."
+          "effect": "Buy 1 guaranteed gacha ticket per level. Cap: 1,000 levels (+1,000 per Big Bang). Each purchase increases the price by 25,000 atoms and the base cost is multiplied by 4,000 after each Big Bang.",
+          "effectSummary": "Purchase guaranteed gacha tickets: +1 ticket per level, +25,000 atoms added to the cost, a 1,000-level cap (+1,000 per Big Bang), and the base cost ×4,000 after each Big Bang."
         }
       }
     },

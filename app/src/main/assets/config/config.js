@@ -482,10 +482,12 @@ function createShopBuildingDefinitions() {
       name: 'Guichet gacha',
       description: 'Échangez vos atomes contre des tickets de tirage garantis.',
       effectSummary:
-        'Convertit les atomes en tickets gacha : +1 ticket par achat. Limite portée à 1 000 niveaux (+1 000 par Big Bang). Le prix augmente de 25 000 atomes à chaque niveau.',
+        'Convertit les atomes en tickets gacha : +1 ticket par achat. Limite portée à 1 000 niveaux (+1 000 par Big Bang). Le prix augmente de 25 000 atomes à chaque niveau et ce coût de base est multiplié par 4 000 après chaque Big Bang.',
       category: 'special',
       baseCost: 25000,
       costIncrement: 25000,
+      bigBangBaseCostMultiplier: 4000,
+      // Multiplie le coût de base (et l'incrément) du magasin après chaque Big Bang.
       gachaTicketsPerPurchase: 1,
       maxLevel: 1000,
       bigBangLevelBonusMultiplier: 10,
