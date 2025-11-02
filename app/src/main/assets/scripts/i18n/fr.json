@@ -756,12 +756,16 @@
           "hard": "Difficile"
         },
         "actions": {
-          "new": "Nouvelle grille"
+          "new": "Nouvelle grille",
+          "help": "Indice"
         },
         "board": "Grille Lights Out",
         "messages": {
           "intro": "Éteignez toutes les lumières. Chaque clic inverse la case visée et ses voisines orthogonales.",
-          "victory": "Grille réussie ! Niveau {{level}} terminé."
+          "victory": "Grille réussie ! Niveau {{level}} terminé.",
+          "hint": "Indice : cliquez sur la case ligne {{row}}, colonne {{column}}.",
+          "hintSolved": "La grille est déjà éteinte : aucun indice nécessaire !",
+          "hintUnavailable": "Impossible de calculer un indice pour cette grille pour le moment."
         },
         "cell": {
           "label": "Ligne {row}, colonne {column} : {state}",

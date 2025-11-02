@@ -756,12 +756,16 @@
           "hard": "Hard"
         },
         "actions": {
-          "new": "New grid"
+          "new": "New grid",
+          "help": "Hint"
         },
         "board": "Lights Out grid",
         "messages": {
           "intro": "Switch every light off. Each tap flips the selected tile and its orthogonal neighbours.",
-          "victory": "Grid cleared! Level {{level}} complete."
+          "victory": "Grid cleared! Level {{level}} complete.",
+          "hint": "Hint: try toggling row {{row}}, column {{column}}.",
+          "hintSolved": "All lights are already off — no hint needed!",
+          "hintUnavailable": "We couldn’t compute a hint for this grid right now."
         },
         "cell": {
           "label": "Row {row}, column {column}: {state}",
