@@ -44,6 +44,8 @@
   const INITIAL_WAVE_INTERVAL = 30;
   const MIN_WAVE_INTERVAL = 10;
   const WAVE_ACCELERATION_DURATION = 10 * 60;
+  const TOUCH_DEADZONE = 14;
+  const TOUCH_MAX_DRAG = 140;
 
   const PLAYER_BASE_STATS = Object.freeze({
     speed: 275,
@@ -1006,8 +1008,11 @@
     up: false,
     down: false,
     pointerActive: false,
+    pointerMode: 'absolute',
     pointerX: CANVAS_WIDTH / 2,
-    pointerY: CANVAS_HEIGHT * 0.8
+    pointerY: CANVAS_HEIGHT * 0.8,
+    pointerOriginX: CANVAS_WIDTH / 2,
+    pointerOriginY: CANVAS_HEIGHT * 0.8
   };
 
   const state = {
@@ -1653,9 +1658,14 @@
     const baseX = laneWidth * (entry.lane + 0.5);
     const spawnX = clamp(baseX + entry.offset, enemyWidth / 2, CANVAS_WIDTH - enemyWidth / 2);
     const spawnY = -enemyHeight - getRandomFloat() * 60;
-    const hp = entry.type.id === 'miniboss'
-      ? ENEMY_TYPES.miniboss.baseHp + Math.floor(3 * D)
-      : entry.type.baseHp + Math.floor(0.6 * D);
+    const baseHp = entry.type.id === 'miniboss'
+      ? ENEMY_TYPES.miniboss.baseHp
+      : entry.type.baseHp;
+    const difficultyBonus = entry.type.id === 'miniboss'
+      ? Math.floor(3 * D)
+      : Math.floor(0.6 * D);
+    const minuteMultiplier = Math.pow(1.1, state.elapsed / 60);
+    const hp = Math.max(1, Math.floor((baseHp + difficultyBonus) * minuteMultiplier));
     const speed = entry.type.id === 'miniboss'
       ? ENEMY_TYPES.miniboss.baseSpeed * (1 + 0.03 * D)
       : entry.type.baseSpeed * (1 + 0.09 * D);
@@ -2085,12 +2095,24 @@
     if (inputState.down) moveY += 1;
 
     if (inputState.pointerActive) {
-      const dx = inputState.pointerX - player.x;
-      const dy = inputState.pointerY - player.y;
-      const dist = Math.hypot(dx, dy);
-      if (dist > 4) {
-        moveX += (dx / dist) * Math.min(1, dist / 60);
-        moveY += (dy / dist) * Math.min(1, dist / 60);
+      if (inputState.pointerMode === 'relative') {
+        const dx = inputState.pointerX - inputState.pointerOriginX;
+        const dy = inputState.pointerY - inputState.pointerOriginY;
+        const dist = Math.hypot(dx, dy);
+        if (dist > TOUCH_DEADZONE) {
+          const denominator = Math.max(1, TOUCH_MAX_DRAG - TOUCH_DEADZONE);
+          const normalized = Math.min(1, Math.max(0, (dist - TOUCH_DEADZONE) / denominator));
+          moveX += (dx / dist) * normalized;
+          moveY += (dy / dist) * normalized;
+        }
+      } else {
+        const dx = inputState.pointerX - player.x;
+        const dy = inputState.pointerY - player.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist > 4) {
+          moveX += (dx / dist) * Math.min(1, dist / 60);
+          moveY += (dy / dist) * Math.min(1, dist / 60);
+        }
       }
     }
 
@@ -2701,7 +2723,11 @@
   function handlePointerDown(event) {
     event.preventDefault();
     const coords = toCanvasCoordinates(event);
+    const pointerType = typeof event.pointerType === 'string' ? event.pointerType : 'mouse';
     inputState.pointerActive = true;
+    inputState.pointerMode = pointerType === 'touch' ? 'relative' : 'absolute';
+    inputState.pointerOriginX = coords.x;
+    inputState.pointerOriginY = coords.y;
     inputState.pointerX = coords.x;
     inputState.pointerY = coords.y;
   }
@@ -2713,10 +2739,15 @@
     const coords = toCanvasCoordinates(event);
     inputState.pointerX = coords.x;
     inputState.pointerY = coords.y;
+    if (inputState.pointerMode !== 'relative') {
+      inputState.pointerOriginX = coords.x;
+      inputState.pointerOriginY = coords.y;
+    }
   }
 
   function handlePointerUp() {
     inputState.pointerActive = false;
+    inputState.pointerMode = 'absolute';
   }
 
   function attachInputListeners() {
