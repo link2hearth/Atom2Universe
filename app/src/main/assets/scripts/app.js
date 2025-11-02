@@ -3360,6 +3360,7 @@ const DEFAULT_STATE = {
   fusions: createInitialFusionState(),
   fusionBonuses: createInitialFusionBonuses(),
   gachaImages: createInitialGachaImageCollection(),
+  gachaImageAcquisitionCounter: 0,
   pageUnlocks: createInitialPageUnlockState(),
   lastSave: Date.now(),
   theme: DEFAULT_THEME_ID,
@@ -3438,6 +3439,7 @@ const gameState = {
   elements: createInitialElementCollection(),
   gachaCards: createInitialGachaCardCollection(),
   gachaImages: createInitialGachaImageCollection(),
+  gachaImageAcquisitionCounter: 0,
   fusions: createInitialFusionState(),
   fusionBonuses: createInitialFusionBonuses(),
   pageUnlocks: createInitialPageUnlockState(),
@@ -15861,10 +15863,26 @@ function serializeState() {
         const entry = source[imageId];
         const rawCount = Number(entry?.count ?? entry);
         if (Number.isFinite(rawCount) && rawCount > 0) {
-          result[imageId] = { count: Math.floor(rawCount) };
+          const stored = { count: Math.floor(rawCount) };
+          const acquiredOrder = Number(entry?.acquiredOrder);
+          if (Number.isFinite(acquiredOrder) && acquiredOrder > 0) {
+            stored.acquiredOrder = Math.floor(acquiredOrder);
+          }
+          const firstAcquiredAt = Number(entry?.firstAcquiredAt);
+          if (Number.isFinite(firstAcquiredAt) && firstAcquiredAt > 0) {
+            stored.firstAcquiredAt = firstAcquiredAt;
+          }
+          result[imageId] = stored;
         }
       });
       return result;
+    })(),
+    gachaImageAcquisitionCounter: (() => {
+      const counter = Number(gameState.gachaImageAcquisitionCounter);
+      if (!Number.isFinite(counter) || counter <= 0) {
+        return 0;
+      }
+      return Math.max(0, Math.floor(counter));
     })(),
     fusions: (() => {
       const base = createInitialFusionState();
@@ -16259,6 +16277,7 @@ function resetGame() {
     elements: createInitialElementCollection(),
     gachaCards: createInitialGachaCardCollection(),
     gachaImages: createInitialGachaImageCollection(),
+    gachaImageAcquisitionCounter: 0,
     fusions: createInitialFusionState(),
     fusionBonuses: createInitialFusionBonuses(),
     pageUnlocks: createInitialPageUnlockState(),
@@ -16812,18 +16831,40 @@ function loadGame() {
     }
     gameState.gachaCards = baseCardCollection;
     const baseImageCollection = createInitialGachaImageCollection();
+    let inferredImageAcquisitionCounter = 0;
     if (data.gachaImages && typeof data.gachaImages === 'object') {
       Object.entries(data.gachaImages).forEach(([imageId, stored]) => {
-        if (!baseImageCollection[imageId]) {
+        const reference = baseImageCollection[imageId];
+        if (!reference) {
           return;
         }
         const rawCount = Number(stored?.count ?? stored);
-        baseImageCollection[imageId].count = Number.isFinite(rawCount) && rawCount > 0
+        const normalizedCount = Number.isFinite(rawCount) && rawCount > 0
           ? Math.floor(rawCount)
           : 0;
+        reference.count = normalizedCount;
+        if (normalizedCount > 0) {
+          const storedOrder = Number(stored?.acquiredOrder);
+          if (Number.isFinite(storedOrder) && storedOrder > 0) {
+            reference.acquiredOrder = Math.floor(storedOrder);
+            if (reference.acquiredOrder > inferredImageAcquisitionCounter) {
+              inferredImageAcquisitionCounter = reference.acquiredOrder;
+            }
+          }
+          const storedFirstAcquiredAt = Number(stored?.firstAcquiredAt);
+          if (Number.isFinite(storedFirstAcquiredAt) && storedFirstAcquiredAt > 0) {
+            reference.firstAcquiredAt = storedFirstAcquiredAt;
+          }
+        }
       });
     }
     gameState.gachaImages = baseImageCollection;
+    const storedImageCounter = Number(data.gachaImageAcquisitionCounter);
+    if (Number.isFinite(storedImageCounter) && storedImageCounter > inferredImageAcquisitionCounter) {
+      gameState.gachaImageAcquisitionCounter = Math.floor(storedImageCounter);
+    } else {
+      gameState.gachaImageAcquisitionCounter = inferredImageAcquisitionCounter;
+    }
     const fusionState = createInitialFusionState();
     if (data.fusions && typeof data.fusions === 'object') {
       Object.keys(fusionState).forEach(id => {

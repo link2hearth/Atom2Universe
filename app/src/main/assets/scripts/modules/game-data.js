@@ -1735,7 +1735,12 @@ function createInitialGachaImageCollection() {
     if (!def || !def.id) {
       return;
     }
-    collection[def.id] = { id: def.id, count: 0 };
+    collection[def.id] = {
+      id: def.id,
+      count: 0,
+      firstAcquiredAt: null,
+      acquiredOrder: null
+    };
   });
   return collection;
 }

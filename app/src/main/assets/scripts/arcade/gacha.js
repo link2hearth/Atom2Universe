@@ -639,7 +639,12 @@ function awardBonusGachaImage(imageId, options = null) {
   const { definition: providedDefinition = null, skipAssetCheck = false } = options || {};
   const collection = ensureGachaImageCollection();
   if (!collection[imageId]) {
-    collection[imageId] = { id: imageId, count: 0 };
+    collection[imageId] = {
+      id: imageId,
+      count: 0,
+      firstAcquiredAt: null,
+      acquiredOrder: null
+    };
   }
   const entry = collection[imageId];
   const definition = providedDefinition || getBonusGachaImageDefinition(imageId);
@@ -654,6 +659,19 @@ function awardBonusGachaImage(imageId, options = null) {
   const previousCount = Number(entry.count) || 0;
   const newCount = previousCount + 1;
   entry.count = newCount;
+  if (previousCount === 0) {
+    const now = Date.now();
+    if (!Number.isFinite(Number(entry.firstAcquiredAt)) || Number(entry.firstAcquiredAt) <= 0) {
+      entry.firstAcquiredAt = now;
+    }
+    let counter = Number(gameState.gachaImageAcquisitionCounter);
+    if (!Number.isFinite(counter) || counter < 0) {
+      counter = 0;
+    }
+    counter = Math.floor(counter) + 1;
+    entry.acquiredOrder = counter;
+    gameState.gachaImageAcquisitionCounter = counter;
+  }
   const label = resolveBonusGachaImageLabel(imageId);
   return {
     cardId: imageId,
