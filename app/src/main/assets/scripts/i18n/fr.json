@@ -293,17 +293,11 @@
         "canvasAria": "Zone de jeu Particules",
         "overlay": {
           "message": "Touchez ou cliquez la raquette pour guider la particule et détruire les briques quantiques.",
-          "mode": {
-            "label": "Mode de jeu",
-            "aria": "Choisissez le mode de jeu Particules",
-            "free": "Mode libre",
-            "paid": "Mode récompenses"
-          },
           "brickSkin": {
             "label": "Apparence des briques",
             "aria": "Choisissez l’apparence des briques de Particules."
           },
-          "button": "Commencer",
+          "button": "Jouer",
           "quit": "Quitter"
         }
       },
@@ -326,7 +320,7 @@
           "particules": {
             "aria": "Accéder au mini-jeu Particules",
             "title": "Particules",
-            "description": "Collectez des tickets de gacha au prix de votre stock d'Atomes, ou entraînez-vous gratuitement.",
+            "description": "Jouez gratuitement et gagnez des tickets de gacha.",
             "cta": "Jouer"
           },
           "metaux": {

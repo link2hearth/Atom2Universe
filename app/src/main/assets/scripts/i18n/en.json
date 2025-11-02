@@ -293,17 +293,11 @@
         "canvasAria": "Particles play area",
         "overlay": {
           "message": "Tap or click the paddle to guide the particle and shatter the quantum bricks.",
-          "mode": {
-            "label": "Game mode",
-            "aria": "Choose the Particules game mode",
-            "free": "Free mode",
-            "paid": "Reward mode"
-          },
           "brickSkin": {
             "label": "Brick appearance",
             "aria": "Choose the brick appearance for Particles."
           },
-          "button": "Start",
+          "button": "Play",
           "quit": "Quit"
         }
       },
@@ -326,7 +320,7 @@
           "particules": {
             "aria": "Open the Particles mini-game",
             "title": "Particles",
-            "description": "Collect gacha tickets at the cost of your Atom stock, or practice for free.",
+            "description": "Play for free to earn gacha tickets.",
             "cta": "Play"
           },
           "metaux": {

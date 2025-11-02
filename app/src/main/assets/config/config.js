@@ -1567,19 +1567,9 @@ const GAME_CONFIG = {
     particules: {
       ticketReward: 1,
       /**
-       * Modes de jeu disponibles pour Particules.
-       * - free : partie d'entraînement sans coût ni récompense.
-       * - paid : mode avec récompenses qui prélève un pourcentage du solde actuel d'atomes.
+       * Les parties de Particules sont entièrement gratuites et génèrent des tickets gacha.
+       * L'ancien mode payant a été retiré : aucun coût d'entrée n'est appliqué.
        */
-      modes: {
-        defaultMode: 'paid',
-        free: { id: 'free' },
-        paid: {
-          id: 'paid',
-          /** Pourcentage du solde d'atomes utilisé comme coût d'entrée (0,9 = 90%). */
-          costRatio: 0.99
-        }
-      },
       /**
        * Contrôle des effets visuels optionnels pour limiter l'impact sur les performances.
        * Tous les effets sont désactivés par défaut et peuvent être réactivés individuellement au besoin.
