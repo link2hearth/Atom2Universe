@@ -1298,7 +1298,8 @@
         "overlay": {
           "gameOver": {
             "title": "Mission échouée",
-            "message": "Durée : {time} · Score : {score}"
+            "message": "Durée : {time} · Score : {score}",
+            "reward": "Récompense : +{count} ticket{suffix} gacha"
           },
           "retry": "Rejouer"
         },
@@ -2282,8 +2283,8 @@
         },
         "toast": {
           "perfectReward": {
-            "single": "Équilibre parfait ! Ticket Mach3 gagné.",
-            "multiple": "Équilibre parfait ! {count} tickets Mach3 gagnés."
+            "single": "Équilibre parfait ! Ticket gacha gagné.",
+            "multiple": "Équilibre parfait ! {count} tickets gacha gagnés."
           }
         }
       },

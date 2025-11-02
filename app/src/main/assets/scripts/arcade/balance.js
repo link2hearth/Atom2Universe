@@ -58,7 +58,12 @@
     perfectBalance: {
       maxAttempts: 2,
       ticketAmount: 1,
-      ticketChance: 1
+      ticketChance: 1,
+      gachaTickets: {
+        default: 1,
+        easy: 1,
+        hard: 2
+      }
     }
   };
 
@@ -240,17 +245,22 @@
     const rawMaxAttempts = Math.floor(Number(perfectBalanceConfig.maxAttempts));
     const rawTicketAmount = Math.floor(Number(perfectBalanceConfig.ticketAmount));
     const rawTicketChance = Number(perfectBalanceConfig.ticketChance);
+    const gachaTickets = normalizeGachaTickets(
+      perfectBalanceConfig.gachaTickets,
+      rawTicketAmount
+    );
     const rewards = {
       perfectBalance: {
         maxAttempts: Number.isFinite(rawMaxAttempts) && rawMaxAttempts > 0
           ? clamp(rawMaxAttempts, 1, 10)
           : DEFAULT_REWARD_RULES.perfectBalance.maxAttempts,
         ticketAmount: Number.isFinite(rawTicketAmount)
-          ? clamp(rawTicketAmount, 0, 10)
+          ? clamp(rawTicketAmount, 0, 99)
           : DEFAULT_REWARD_RULES.perfectBalance.ticketAmount,
         ticketChance: Number.isFinite(rawTicketChance)
           ? clamp(rawTicketChance, 0, 1)
-          : DEFAULT_REWARD_RULES.perfectBalance.ticketChance
+          : DEFAULT_REWARD_RULES.perfectBalance.ticketChance,
+        gachaTickets
       }
     };
 
@@ -315,6 +325,40 @@
       normalized.distanceMultiplier = clamp(distanceMultiplier, 0.2, 1.5);
     }
     return { ...normalized };
+  }
+
+  function normalizeGachaTickets(rawTickets, ticketAmountCandidate) {
+    const defaults = DEFAULT_REWARD_RULES.perfectBalance.gachaTickets;
+    const normalized = { ...defaults };
+    const hasTicketAmount = Number.isFinite(ticketAmountCandidate);
+    if (hasTicketAmount) {
+      const fallback = clamp(Math.floor(ticketAmountCandidate), 0, 99);
+      normalized.default = fallback;
+      if (!rawTickets || typeof rawTickets !== 'object') {
+        normalized.easy = fallback;
+        normalized.hard = fallback;
+      }
+    }
+    if (rawTickets && typeof rawTickets === 'object') {
+      Object.entries(rawTickets).forEach(([key, value]) => {
+        const numeric = Math.floor(Number(value));
+        if (Number.isFinite(numeric) && numeric >= 0) {
+          normalized[key] = clamp(numeric, 0, 99);
+        }
+      });
+    }
+    const enforceBounds = key => {
+      const numeric = Math.floor(Number(normalized[key]));
+      if (!Number.isFinite(numeric) || numeric < 0) {
+        normalized[key] = normalized.default;
+      } else {
+        normalized[key] = clamp(numeric, 0, 99);
+      }
+    };
+    enforceBounds('default');
+    enforceBounds('easy');
+    enforceBounds('hard');
+    return normalized;
   }
 
   function normalizeBoardPhysics(rawPhysics) {
@@ -1668,8 +1712,33 @@
       if (!this.areAllCubesPlaced()) {
         return;
       }
-      const amount = Number(rules.ticketAmount) || 0;
-      if (amount <= 0 || typeof gainBonusParticulesTickets !== 'function') {
+      const gachaTicketsConfig = rules.gachaTickets || {};
+      const activeMode = this.getDifficultyMode(this.activeDifficultyId);
+      const difficultyId = activeMode?.id;
+      const amountCandidates = [];
+      if (difficultyId && Object.prototype.hasOwnProperty.call(gachaTicketsConfig, difficultyId)) {
+        amountCandidates.push(gachaTicketsConfig[difficultyId]);
+      }
+      if (Object.prototype.hasOwnProperty.call(gachaTicketsConfig, 'default')) {
+        amountCandidates.push(gachaTicketsConfig.default);
+      }
+      if (Object.prototype.hasOwnProperty.call(rules, 'ticketAmount')) {
+        amountCandidates.push(rules.ticketAmount);
+      }
+      let amount = 0;
+      for (let index = 0; index < amountCandidates.length; index += 1) {
+        const numeric = Math.floor(Number(amountCandidates[index]));
+        if (Number.isFinite(numeric) && numeric > 0) {
+          amount = clamp(numeric, 1, 99);
+          break;
+        }
+      }
+      const awardGacha = typeof gainGachaTickets === 'function'
+        ? gainGachaTickets
+        : typeof window !== 'undefined' && typeof window.gainGachaTickets === 'function'
+          ? window.gainGachaTickets
+          : null;
+      if (amount <= 0 || typeof awardGacha !== 'function') {
         return;
       }
       const chance = typeof rules.ticketChance === 'number'
@@ -1681,8 +1750,14 @@
       if (chance < 1 && Math.random() >= chance) {
         return;
       }
-      const gained = gainBonusParticulesTickets(amount);
-      if (gained <= 0) {
+      let gained = 0;
+      try {
+        gained = awardGacha(amount, { unlockTicketStar: true });
+      } catch (error) {
+        console.warn('Balance: unable to grant gacha tickets', error);
+        gained = 0;
+      }
+      if (!Number.isFinite(gained) || gained <= 0) {
         return;
       }
       this.successRewardClaimed = true;
@@ -1694,9 +1769,14 @@
           ? 'scripts.arcade.balance.toast.perfectReward.single'
           : 'scripts.arcade.balance.toast.perfectReward.multiple';
         const fallback = gained === 1
-          ? 'Équilibre parfait ! Ticket Mach3 gagné.'
-          : 'Équilibre parfait ! {count} tickets Mach3 gagnés.';
-        const message = translate(messageKey, fallback, { count: formatNumber(gained) });
+          ? 'Équilibre parfait ! Ticket gacha gagné.'
+          : 'Équilibre parfait ! {count} tickets gacha gagnés.';
+        const suffix = gained > 1 ? 's' : '';
+        const message = translate(
+          messageKey,
+          fallback,
+          { count: formatNumber(gained), suffix }
+        );
         showToast(message);
       }
     }
