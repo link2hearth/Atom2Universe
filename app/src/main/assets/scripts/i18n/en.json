@@ -1826,6 +1826,12 @@
           "description": "Condense a star to power your automated harvests.",
           "effect": "Passive production: starts at +1 APS and grows by roughly +12% per level.",
           "effectSummary": "Passive production scales by ~+12% per level. Gradually increasing cost."
+        },
+        "gachaTicketBooth": {
+          "name": "Gacha Booth",
+          "description": "Turn atoms into guaranteed draw tickets.",
+          "effect": "Buy 1 guaranteed gacha ticket per level. Cap: 1,000 levels (+1,000 per Big Bang). Each purchase increases the price by 25,000 atoms.",
+          "effectSummary": "Purchase guaranteed gacha tickets: +1 ticket per level, +25,000 atoms added to the cost, and a 1,000-level cap (+1,000 per Big Bang)."
         }
       }
     },
@@ -2718,7 +2724,12 @@
         "devkitFreePurchase": "DevKit: \"{name}\" ×{quantity} unlocked for free!{suffix}",
         "purchase": "Upgrade \"{name}\" ×{quantity} purchased!{suffix}",
         "milestoneHint": "Keep exploring ever larger orders of magnitude!",
-        "costLabel": "{value}"
+        "costLabel": "{value}",
+        "ticketUnit": {
+          "single": "gacha ticket",
+          "plural": "gacha tickets"
+        },
+        "ticketReward": "Gacha tickets purchased: +{count} {unit}."
       },
       "themeUpdated": "Theme updated: {name}",
       "language": {

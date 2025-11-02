@@ -397,7 +397,7 @@ function getBuildingLevel(context, id) {
   return Number.isFinite(value) && value > 0 ? value : 0;
 }
 
-const SHOP_BUILDING_IDS = ['godFinger', 'starCore'];
+const SHOP_BUILDING_IDS = ['godFinger', 'starCore', 'gachaTicketBooth'];
 
 const SHOP_PROGRESSIVE_GROWTH_RATE = 1.12;
 
@@ -476,6 +476,21 @@ function createShopBuildingDefinitions() {
         const autoAdd = calculateProgressiveBonus(level, 1);
         return { autoAdd };
       }
+    },
+    {
+      id: 'gachaTicketBooth',
+      name: 'Guichet gacha',
+      description: 'Échangez vos atomes contre des tickets de tirage garantis.',
+      effectSummary:
+        'Convertit les atomes en tickets gacha : +1 ticket par achat. Limite portée à 1 000 niveaux (+1 000 par Big Bang). Le prix augmente de 25 000 atomes à chaque niveau.',
+      category: 'special',
+      baseCost: 25000,
+      costIncrement: 25000,
+      gachaTicketsPerPurchase: 1,
+      maxLevel: 1000,
+      bigBangLevelBonusMultiplier: 10,
+      // Multiplie le bonus de niveaux supplémentaires accordé après chaque Big Bang.
+      effect: () => ({})
     }
   ].map(withDefaults);
 }
