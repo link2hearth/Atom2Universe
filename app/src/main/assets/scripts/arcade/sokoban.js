@@ -10,7 +10,7 @@
   const BLOCKED_STATUS_RESET_MS = 1600;
   const COMPLETION_HIGHLIGHT_DURATION_MS = 450;
   const AUTO_ADVANCE_DELAY_MS = 520;
-  const COMPLETION_GACHA_REWARD = Object.freeze({ chance: 0.25, tickets: 1 });
+  const COMPLETION_GACHA_REWARD = Object.freeze({ chance: 0.5, tickets: 1 });
 
   const DEFAULT_LEVELS = Object.freeze([]);
 
