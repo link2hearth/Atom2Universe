@@ -7,6 +7,7 @@
   const GAME_ID = 'lightsOut';
   const SAVE_VERSION = 1;
   const AUTOSAVE_DEBOUNCE_MS = 150;
+  const HINT_FLASH_DURATION_MS = 2400;
   const DEFAULT_CONFIG = Object.freeze({
     autoAdvanceDelayMs: 1800,
     difficulties: Object.freeze({
@@ -42,7 +43,9 @@
     lastMessage: null,
     languageListenerAttached: false,
     languageChangeHandler: null,
-    autosaveTimer: null
+    autosaveTimer: null,
+    hintTimeout: null,
+    hintActiveCell: null
   };
 
   function getAutosaveApi() {
@@ -340,12 +343,13 @@
       board,
       message: document.getElementById('lightsOutMessage'),
       difficultyButtons: Array.from(section.querySelectorAll('[data-lights-difficulty]')),
-      newGridButton: document.getElementById('lightsOutNewButton')
+      newGridButton: document.getElementById('lightsOutNewButton'),
+      helpButton: document.getElementById('lightsOutHelpButton')
     };
   }
 
   function setupButtons() {
-    const { difficultyButtons, newGridButton } = state.elements;
+    const { difficultyButtons, newGridButton, helpButton } = state.elements;
     difficultyButtons.forEach(button => {
       button.addEventListener('click', () => {
         const value = button.dataset.lightsDifficulty;
@@ -357,6 +361,9 @@
         clearTimeouts();
         prepareNewPuzzle();
       });
+    }
+    if (helpButton) {
+      helpButton.addEventListener('click', handleHelpRequest);
     }
   }
 
@@ -379,6 +386,17 @@
     state.languageListenerAttached = true;
   }
 
+  function clearHint() {
+    if (state.hintTimeout != null && typeof window !== 'undefined') {
+      window.clearTimeout(state.hintTimeout);
+      state.hintTimeout = null;
+    }
+    if (state.hintActiveCell && state.hintActiveCell.classList) {
+      state.hintActiveCell.classList.remove('lights-out__cell--hint');
+    }
+    state.hintActiveCell = null;
+  }
+
   function clearTimeouts() {
     if (state.messageTimeout != null) {
       window.clearTimeout(state.messageTimeout);
@@ -389,6 +407,7 @@
       state.autoAdvanceTimeout = null;
     }
     state.autoAdvanceAt = null;
+    clearHint();
   }
 
   function normalizeConfig(source) {
@@ -481,6 +500,7 @@
   }
 
   function prepareNewPuzzle() {
+    clearHint();
     const config = getDifficultyConfig(state.difficulty);
     const size = pickGridSize(config);
     state.isBusy = false;
@@ -554,6 +574,7 @@
   }
 
   function renderBoard() {
+    clearHint();
     const { board: boardElement } = state.elements;
     const size = state.size;
     boardElement.innerHTML = '';
@@ -581,6 +602,186 @@
       }
     }
     updateCells();
+  }
+
+  function getCellElement(row, col) {
+    const { board: boardElement } = state.elements;
+    if (!boardElement) {
+      return null;
+    }
+    if (!Number.isInteger(row) || !Number.isInteger(col)) {
+      return null;
+    }
+    if (row < 0 || col < 0 || row >= state.size || col >= state.size) {
+      return null;
+    }
+    const index = row * state.size + col;
+    return boardElement.children[index] || null;
+  }
+
+  function applyHintHighlight(row, col) {
+    const cell = getCellElement(row, col);
+    if (!cell) {
+      return;
+    }
+    clearHint();
+    cell.classList.add('lights-out__cell--hint');
+    state.hintActiveCell = cell;
+    if (typeof window !== 'undefined') {
+      state.hintTimeout = window.setTimeout(() => {
+        if (state.hintActiveCell === cell) {
+          cell.classList.remove('lights-out__cell--hint');
+          state.hintActiveCell = null;
+        }
+        state.hintTimeout = null;
+      }, HINT_FLASH_DURATION_MS);
+    }
+  }
+
+  function handleHelpRequest() {
+    if (state.isBusy) {
+      return;
+    }
+    if (isBoardCleared(state.board)) {
+      clearHint();
+      setMessage(
+        'index.sections.lightsOut.messages.hintSolved',
+        'La grille est déjà éteinte : aucun indice nécessaire !'
+      );
+      return;
+    }
+    const hint = findHintMove(state.board, state.size);
+    if (!hint) {
+      clearHint();
+      setMessage(
+        'index.sections.lightsOut.messages.hintUnavailable',
+        'Impossible de calculer un indice pour cette grille pour le moment.'
+      );
+      return;
+    }
+    applyHintHighlight(hint.row, hint.col);
+    setMessage(
+      'index.sections.lightsOut.messages.hint',
+      'Indice : cliquez sur la case ligne {row}, colonne {column}.',
+      { row: hint.row + 1, column: hint.col + 1 }
+    );
+  }
+
+  function findHintMove(board, size) {
+    if (!Array.isArray(board) || !Number.isInteger(size) || size <= 0) {
+      return null;
+    }
+    const solution = solveLightsOut(board, size);
+    if (!solution) {
+      return null;
+    }
+    for (let index = 0; index < solution.length; index += 1) {
+      if (solution[index] === 1) {
+        return {
+          row: Math.floor(index / size),
+          col: index % size
+        };
+      }
+    }
+    return null;
+  }
+
+  function solveLightsOut(board, size) {
+    const matrix = buildAugmentedMatrix(board, size);
+    if (!matrix) {
+      return null;
+    }
+    const total = size * size;
+    const pivotColumns = new Array(total).fill(-1);
+    let pivotRow = 0;
+    for (let col = 0; col < total && pivotRow < total; col += 1) {
+      let candidate = pivotRow;
+      while (candidate < total && matrix[candidate][col] !== 1) {
+        candidate += 1;
+      }
+      if (candidate >= total) {
+        continue;
+      }
+      if (candidate !== pivotRow) {
+        const tmp = matrix[pivotRow];
+        matrix[pivotRow] = matrix[candidate];
+        matrix[candidate] = tmp;
+      }
+      pivotColumns[pivotRow] = col;
+      for (let row = 0; row < total; row += 1) {
+        if (row !== pivotRow && matrix[row][col] === 1) {
+          const source = matrix[pivotRow];
+          const target = matrix[row];
+          for (let k = col; k <= total; k += 1) {
+            target[k] ^= source[k];
+          }
+        }
+      }
+      pivotRow += 1;
+    }
+    for (let row = 0; row < total; row += 1) {
+      let hasCoefficient = false;
+      for (let col = 0; col < total; col += 1) {
+        if (matrix[row][col] === 1) {
+          hasCoefficient = true;
+          break;
+        }
+      }
+      if (!hasCoefficient && matrix[row][total] === 1) {
+        return null;
+      }
+    }
+    const solution = new Array(total).fill(0);
+    for (let row = pivotRow - 1; row >= 0; row -= 1) {
+      const pivotCol = pivotColumns[row];
+      if (pivotCol < 0) {
+        continue;
+      }
+      let value = matrix[row][total];
+      for (let col = pivotCol + 1; col < total; col += 1) {
+        if (matrix[row][col] === 1 && solution[col] === 1) {
+          value ^= 1;
+        }
+      }
+      solution[pivotCol] = value;
+    }
+    return solution;
+  }
+
+  function buildAugmentedMatrix(board, size) {
+    if (!Array.isArray(board) || board.length !== size) {
+      return null;
+    }
+    const total = size * size;
+    const matrix = new Array(total);
+    const indexFromCoord = (row, col) => row * size + col;
+    for (let row = 0; row < size; row += 1) {
+      const boardRow = board[row];
+      if (!Array.isArray(boardRow) || boardRow.length !== size) {
+        return null;
+      }
+      for (let col = 0; col < size; col += 1) {
+        const matrixRow = new Uint8Array(total + 1);
+        const equationIndex = indexFromCoord(row, col);
+        const positions = [
+          [row, col],
+          [row - 1, col],
+          [row + 1, col],
+          [row, col - 1],
+          [row, col + 1]
+        ];
+        for (let i = 0; i < positions.length; i += 1) {
+          const [r, c] = positions[i];
+          if (r >= 0 && r < size && c >= 0 && c < size) {
+            const variableIndex = indexFromCoord(r, c);
+            matrixRow[variableIndex] = 1;
+          }
+        }
+        matrixRow[total] = boardRow[col] ? 1 : 0;
+        matrix[equationIndex] = matrixRow;
+      }
+    }
+    return matrix;
   }
 
   function handleCellInteraction(row, col) {
@@ -675,6 +876,7 @@
   }
 
   function handleWin() {
+    clearHint();
     state.isBusy = true;
     const counters = state.levelCounters;
     const currentLevel = counters[state.difficulty] || 1;
