@@ -1287,9 +1287,14 @@
           "powerups": "Active power-ups"
         },
         "controls": {
-          "restart": "Restart run"
+          "restart": "Start / Restart run"
         },
         "overlay": {
+          "start": {
+            "title": "Ready for launch?",
+            "message": "Click \"Launch mission\" to begin.",
+            "action": "Launch mission"
+          },
           "gameOver": {
             "title": "Mission failed",
             "message": "Time: {time} · Score: {score}",

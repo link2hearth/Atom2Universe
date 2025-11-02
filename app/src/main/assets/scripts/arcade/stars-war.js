@@ -569,7 +569,7 @@
     return Array.from(new Set(lanes));
   }
 
-  function planTopSkirmish({ laneCount, startDelay, difficulty }) {
+  function planTopSkirmish({ laneCount, startDelay, difficulty, elapsed }) {
     const entries = [];
     const usableTypes = [ENEMY_TYPES.drone, ENEMY_TYPES.fast];
     if (difficulty >= 3) {
@@ -578,7 +578,7 @@
     const count = Math.max(2, Math.min(laneCount, getRandomInt(2, 5)));
     for (let i = 0; i < count; i += 1) {
       const lane = getRandomInt(0, laneCount);
-      const type = pickRandom(usableTypes);
+      const type = pickWeightedEnemy(usableTypes, elapsed);
       entries.push(makePatternEntry(type, lane, startDelay + i * 0.18, laneCount, {
         formation: 'SWARM',
         path: 'FIGURE8',
@@ -1435,6 +1435,44 @@
     return allowed;
   }
 
+  function computeEnemyWeight(type, elapsed) {
+    let weight = 1;
+    if (!type.canShoot) {
+      weight *= 0.55;
+    }
+    if (type.id === 'sniper') {
+      if (elapsed >= 600) {
+        weight *= 2.4;
+      } else if (elapsed >= 300) {
+        weight *= 1.6;
+      }
+    }
+    if (type.id === 'miniboss') {
+      if (elapsed >= 600) {
+        weight *= 2.6;
+      } else if (elapsed >= 300) {
+        weight *= 1.8;
+      }
+    }
+    return weight;
+  }
+
+  function pickWeightedEnemy(types, elapsed) {
+    if (!types.length) {
+      throw new Error('Cannot pick enemy from empty list');
+    }
+    const weights = types.map(type => Math.max(0.01, computeEnemyWeight(type, elapsed)));
+    const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
+    let roll = getRandomFloat() * totalWeight;
+    for (let i = 0; i < types.length; i += 1) {
+      roll -= weights[i];
+      if (roll <= 0) {
+        return types[i];
+      }
+    }
+    return types[types.length - 1];
+  }
+
   function generateWave() {
     const D = state.difficulty;
     const laneCount = Math.max(4, Math.min(8, Math.floor(4 + D)));
@@ -1444,6 +1482,7 @@
     const waveEntries = [];
     const isFirstWave = state.wave === 1;
     const isSecondWave = state.wave === 2;
+    const elapsed = state.elapsed;
     let baseCount = Math.max(6, Math.floor(6 + 1.5 * D));
     if (isFirstWave) {
       baseCount = 5;
@@ -1451,7 +1490,7 @@
       baseCount = Math.max(6, Math.floor(5 + 1.2 * D));
     }
     for (let i = 0; i < baseCount; i += 1) {
-      const type = pickRandom(allowed);
+      const type = pickWeightedEnemy(allowed, elapsed);
       waveEntries.push(createSpawnEntry(type, formation, path, laneCount, i, baseCount));
     }
 
@@ -1459,14 +1498,15 @@
     const allowSpecialSequences = state.elapsed >= 30 || state.wave >= 3;
 
     if (allowSpecialSequences && D >= 3 && getRandomFloat() < 0.45) {
-      const skirmish = planTopSkirmish({ laneCount, startDelay: sequenceDelay, difficulty: D });
+      const skirmish = planTopSkirmish({ laneCount, startDelay: sequenceDelay, difficulty: D, elapsed });
       if (skirmish.entries.length) {
         waveEntries.push(...skirmish.entries);
         sequenceDelay = skirmish.nextDelay;
       }
     }
 
-    if (allowSpecialSequences && D >= 4 && getRandomFloat() < 0.25) {
+    const minibossChance = elapsed >= 600 ? 0.55 : elapsed >= 300 ? 0.38 : 0.25;
+    if (allowSpecialSequences && D >= 4 && getRandomFloat() < minibossChance) {
       const lane = getRandomInt(0, laneCount);
       const bossDelay = Math.max(sequenceDelay, waveEntries.length ? waveEntries[waveEntries.length - 1].delay + 1 : 1);
       const bossEntry = makePatternEntry(ENEMY_TYPES.miniboss, lane, bossDelay, laneCount, {
@@ -1481,6 +1521,22 @@
       });
       waveEntries.push(bossEntry);
       sequenceDelay = bossDelay + 1.2;
+      if (elapsed >= 600) {
+        const offsetLane = clampLaneIndex(lane + (getRandomFloat() < 0.5 ? 1 : -1), laneCount);
+        const extraDelay = sequenceDelay + 1.4;
+        const extraBoss = makePatternEntry(ENEMY_TYPES.miniboss, offsetLane, extraDelay, laneCount, {
+          formation: 'COLUMN',
+          path: 'BOSS_SWAY',
+          props: {
+            anchorY: CANVAS_HEIGHT * PLAYER_AREA_TOP_RATIO,
+            swayAmplitude: CANVAS_WIDTH * 0.28,
+            swayFrequency: 0.75,
+            swayPhase: getRandomFloat() * Math.PI * 2
+          }
+        });
+        waveEntries.push(extraBoss);
+        sequenceDelay = extraDelay + 1.2;
+      }
     }
 
     const availablePatterns = allowSpecialSequences
@@ -1519,6 +1575,30 @@
         }
       });
       waveEntries.push(miniboss);
+      if (elapsed >= 600) {
+        const alternateLane = clampLaneIndex(lane + (getRandomFloat() < 0.5 ? -1 : 1), laneCount);
+        const followUpDelay = minibossDelay + 1.6;
+        const followUp = makePatternEntry(ENEMY_TYPES.miniboss, alternateLane, followUpDelay, laneCount, {
+          formation: 'COLUMN',
+          path: 'BOSS_SWAY',
+          props: {
+            anchorY: CANVAS_HEIGHT * PLAYER_AREA_TOP_RATIO,
+            swayAmplitude: CANVAS_WIDTH * 0.3,
+            swayFrequency: 0.78,
+            swayPhase: Math.PI / 2
+          }
+        });
+        waveEntries.push(followUp);
+      }
+    }
+
+    if (elapsed >= 300) {
+      const sniperUpgradeChance = elapsed >= 600 ? 0.45 : 0.22;
+      for (const entry of waveEntries) {
+        if (!entry.type.canShoot && entry.type.id !== 'carrier' && getRandomFloat() < sniperUpgradeChance) {
+          entry.type = ENEMY_TYPES.sniper;
+        }
+      }
     }
 
     waveEntries.sort((a, b) => a.delay - b.delay);
@@ -2487,21 +2567,57 @@
     showOverlay(
       translate('index.sections.starsWar.overlay.gameOver.title'),
       overlayMessage,
-      translate('index.sections.starsWar.overlay.retry')
+      translate('index.sections.starsWar.overlay.retry'),
+      {
+        titleKey: 'index.sections.starsWar.overlay.gameOver.title',
+        primaryKey: 'index.sections.starsWar.overlay.retry'
+      }
     );
   }
 
-  function showOverlay(title, message, primaryLabel, secondaryLabel) {
+  function showOverlay(title, message, primaryLabel, options = {}) {
     if (!elements.overlay || !elements.overlayTitle || !elements.overlayMessage || !elements.overlayButton) {
       return;
     }
+    const { titleKey, messageKey, primaryKey } = options;
+    if (titleKey) {
+      elements.overlayTitle.dataset.i18n = titleKey;
+    } else {
+      delete elements.overlayTitle.dataset.i18n;
+    }
     elements.overlayTitle.textContent = title || '';
+    if (messageKey) {
+      elements.overlayMessage.dataset.i18n = messageKey;
+    } else {
+      delete elements.overlayMessage.dataset.i18n;
+    }
     elements.overlayMessage.textContent = message || '';
+    if (primaryKey) {
+      elements.overlayButton.dataset.i18n = primaryKey;
+    } else {
+      delete elements.overlayButton.dataset.i18n;
+    }
     elements.overlayButton.textContent = primaryLabel || '';
     elements.overlayButton.hidden = !primaryLabel;
     elements.overlayButton.disabled = !primaryLabel;
     elements.overlay.hidden = false;
     elements.overlay.setAttribute('aria-hidden', 'false');
+  }
+
+  function promptForNewRun() {
+    state.running = false;
+    state.gameOver = false;
+    state.overlayMode = 'ready';
+    showOverlay(
+      translate('index.sections.starsWar.overlay.start.title'),
+      translate('index.sections.starsWar.overlay.start.message'),
+      translate('index.sections.starsWar.overlay.start.action'),
+      {
+        titleKey: 'index.sections.starsWar.overlay.start.title',
+        messageKey: 'index.sections.starsWar.overlay.start.message',
+        primaryKey: 'index.sections.starsWar.overlay.start.action'
+      }
+    );
   }
 
   function hideOverlay() {
@@ -2559,7 +2675,7 @@
     if (action) {
       inputState[action] = true;
     }
-    if (event.code === 'Space' && state.gameOver) {
+    if (event.code === 'Space' && (state.gameOver || state.overlayMode === 'ready')) {
       restartRun({ preserveSeed: false });
       event.preventDefault();
     }
@@ -2630,7 +2746,7 @@
     loadAutosave();
     if (elements.overlayButton) {
       elements.overlayButton.addEventListener('click', () => {
-        if (state.gameOver) {
+        if (state.overlayMode === 'ready' || state.gameOver) {
           restartRun({ preserveSeed: false });
         }
       });
@@ -2644,12 +2760,7 @@
     applySeed(initialSeed);
     resetGame();
     scheduleNextWave();
-    const pageElement = typeof document !== 'undefined'
-      ? document.getElementById('starsWar')
-      : null;
-    if (pageElement && !pageElement.hasAttribute('hidden')) {
-      startRun();
-    }
+    promptForNewRun();
     if (typeof window !== 'undefined') {
       window.addEventListener('beforeunload', flushAutosave);
       window.addEventListener('pagehide', flushAutosave);
@@ -2664,14 +2775,16 @@
   }
 
   function onEnter() {
-    if (!state.running && !state.gameOver) {
+    if (state.overlayMode === 'ready') {
+      promptForNewRun();
+    } else if (!state.running && !state.gameOver && state.overlayMode === 'running') {
       startRun();
     }
   }
 
   function onLeave() {
     state.running = false;
-    if (state.overlayMode !== 'gameover') {
+    if (state.overlayMode === 'running') {
       hideOverlay();
     }
     flushAutosave();
