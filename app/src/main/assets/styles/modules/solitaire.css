@@ -188,9 +188,8 @@
   background: var(--solitaire-card-background);
   color: var(--solitaire-card-color, var(--solitaire-card-color-black));
   display: grid;
-  grid-template-columns: auto 1fr auto;
   grid-template-rows: auto 1fr;
-  align-items: start;
+  align-items: center;
   padding: 0.55rem 0.6rem;
   font: inherit;
   font-weight: 700;
@@ -233,18 +232,9 @@
   gap: clamp(0.12rem, 0.4vw, 0.24rem);
 }
 
-.solitaire-card__corner--top-left {
+.solitaire-card__corner--top {
   justify-self: start;
   align-self: start;
-  grid-row: 1;
-  grid-column: 1;
-}
-
-.solitaire-card__corner--top-right {
-  justify-self: end;
-  align-self: start;
-  grid-row: 1;
-  grid-column: 3;
 }
 
 .solitaire-card__corner-symbol,
@@ -268,11 +258,6 @@
   font-size: clamp(2.2rem, 6vw, 3.2rem);
   line-height: 1;
   letter-spacing: 0.01em;
-  grid-row: 1;
-  grid-column: 1 / -1;
-  justify-self: center;
-  align-self: start;
-  margin-top: clamp(0.1rem, 0.6vw, 0.25rem);
 }
 
 .solitaire-card.is-face-down {

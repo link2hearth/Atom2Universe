@@ -563,28 +563,20 @@
       element.dataset.rank = formatRank(card.rank);
       element.dataset.suit = card.suit;
 
-      const createCorner = (position) => {
-        const corner = document.createElement('span');
-        corner.className = `solitaire-card__corner solitaire-card__corner--${position}`;
+      const topCorner = document.createElement('span');
+      topCorner.className = 'solitaire-card__corner solitaire-card__corner--top';
 
-        const symbol = document.createElement('span');
-        symbol.className = 'solitaire-card__corner-symbol';
+      const topCornerSymbol = document.createElement('span');
+      topCornerSymbol.className = 'solitaire-card__corner-symbol';
 
-        const rank = document.createElement('span');
-        rank.className = 'solitaire-card__corner-rank';
-
-        corner.append(symbol, rank);
-
-        return { container: corner, symbol, rank };
-      };
-
-      const topLeftCorner = createCorner('top-left');
-      const topRightCorner = createCorner('top-right');
+      const topCornerRank = document.createElement('span');
+      topCornerRank.className = 'solitaire-card__corner-rank';
 
       const value = document.createElement('span');
       value.className = 'solitaire-card__value';
 
-      element.append(topLeftCorner.container, value, topRightCorner.container);
+      topCorner.append(topCornerSymbol, topCornerRank);
+      element.append(topCorner, value);
 
       element.addEventListener('click', (event) => {
         handleCardClick(card, event);
@@ -603,11 +595,7 @@
       });
 
       card.element = element;
-      card.parts = {
-        value,
-        topLeft: topLeftCorner,
-        topRight: topRightCorner
-      };
+      card.parts = { topCornerSymbol, topCornerRank, value };
       return element;
     }
 
@@ -617,22 +605,9 @@
         return;
       }
       const rankLabel = formatRank(card.rank);
-      const { topLeft, topRight, value } = card.parts;
-      const displayOnRight = card.suit === 'clubs' || card.suit === 'diamonds';
-      const activeCorner = displayOnRight ? topRight : topLeft;
-      const inactiveCorner = displayOnRight ? topLeft : topRight;
-
-      activeCorner.symbol.textContent = card.symbol;
-      activeCorner.rank.textContent = rankLabel;
-      activeCorner.container.hidden = false;
-      activeCorner.container.removeAttribute('aria-hidden');
-
-      inactiveCorner.symbol.textContent = '';
-      inactiveCorner.rank.textContent = '';
-      inactiveCorner.container.hidden = true;
-      inactiveCorner.container.setAttribute('aria-hidden', 'true');
-
-      value.textContent = rankLabel;
+      card.parts.topCornerSymbol.textContent = card.symbol;
+      card.parts.topCornerRank.textContent = rankLabel;
+      card.parts.value.textContent = rankLabel;
       element.dataset.color = card.color;
       element.dataset.rank = rankLabel;
       element.dataset.suit = card.suit;
