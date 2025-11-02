@@ -2283,8 +2283,8 @@
         },
         "toast": {
           "perfectReward": {
-            "single": "Équilibre parfait ! Ticket Mach3 gagné.",
-            "multiple": "Équilibre parfait ! {count} tickets Mach3 gagnés."
+            "single": "Équilibre parfait ! Ticket gacha gagné.",
+            "multiple": "Équilibre parfait ! {count} tickets gacha gagnés."
           }
         }
       },
