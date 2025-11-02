@@ -326,7 +326,7 @@
           "metaux": {
             "aria": "Accéder au mini-jeu Métaux",
             "title": "Métaux",
-            "description": "Boostez votre production pour une durée limitée grâce à ce match 3.",
+            "description": "Boostez votre production grâce à ce match 3.",
             "cta": "Forger"
           },
           "wave": {
@@ -356,7 +356,7 @@
           "balance": {
             "aria": "Accéder au mini-jeu Balance",
             "title": "Balance",
-            "description": "Équilibrez la balance avec tous les poids, gagnez des tentatives du jeu Métaux.",
+            "description": "Équilibrez la balance avec tous les poids et gagnez des tickets de gacha.",
             "cta": "Équilibrer"
           },
           "math": {
@@ -416,7 +416,7 @@
           "echecs": {
             "aria": "Accéder au mini-jeu Échecs",
             "title": "Échecs",
-            "description": "Affrontez l’IA pour gagner des tickets de gacha et un bonus multiplicateur temporaire.",
+            "description": "Affrontez l’IA pour gagner des tickets de gacha et un bonus de Frénésie spécial.",
             "cta": "Planifier"
           },
           "othello": {

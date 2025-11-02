@@ -326,7 +326,7 @@
           "metaux": {
             "aria": "Open the Metals mini-game",
             "title": "Metals",
-            "description": "Boost your production for a limited time thanks to this match-3.",
+            "description": "Boost your production with this match-3.",
             "cta": "Forge"
           },
           "wave": {
@@ -356,7 +356,7 @@
           "balance": {
             "aria": "Open the Balance mini-game",
             "title": "Balance",
-            "description": "Balance the scale with all the weights, earn extra attempts for the Metals game.",
+            "description": "Balance the scale with every weight and earn gacha tickets.",
             "cta": "Balance"
           },
           "math": {
@@ -416,7 +416,7 @@
           "echecs": {
             "aria": "Open the Chess mini-game",
             "title": "Chess",
-            "description": "Practice to earn gacha tickets and a temporary multiplier bonus.",
+            "description": "Face the AI to earn gacha tickets and a special Frenzy bonus.",
             "cta": "Plan"
           },
           "othello": {
