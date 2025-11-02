@@ -444,8 +444,8 @@
             "cta": "Spin"
           },
           "pachinko": {
-            "aria": "Open the Prism Pachinko mini-game",
-            "title": "Prism Pachinko",
+            "aria": "Open the Pachinko mini-game",
+            "title": "Pachinko",
             "description": "Drop radiant orbs across a neon forest of pegs and chase huge slot multipliers.",
             "cta": "Drop"
           },
@@ -1146,8 +1146,8 @@
         }
       },
       "pachinko": {
-        "aria": "Prism Pachinko mini-game",
-        "title": "Prism Pachinko",
+        "aria": "Pachinko mini-game",
+        "title": "Pachinko",
         "status": {
           "ready": "Choose a bet and launch a prism orb."
         },
@@ -1421,7 +1421,7 @@
               "description": "Seed live cells and watch the rules in action: survive on 2 or 3 neighbours, be born on exactly 3, otherwise die."
             },
             "pachinko": {
-              "label": "Prism Pachinko mini-game:",
+              "label": "Pachinko mini-game:",
               "description": "Drop prismatic orbs through a neon forest of pegs to hit cosmic multipliers and grow your atom stash."
             },
             "roulette": {

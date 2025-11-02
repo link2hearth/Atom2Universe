@@ -241,3 +241,193 @@ body.theme-aurora .page--arcade-hub {
   --arcade-hub-card-cta-bg-hover: rgba(70, 255, 200, 0.26);
   --arcade-hub-card-cta-border-hover: rgba(110, 255, 210, 0.52);
 }
+
+
+/* Fixed color themes for arcade hub tiles */
+.arcade-hub__grid > .arcade-hub-card:nth-child(-n + 18) {
+  color: #f5f8ff;
+  --arcade-hub-card-description-color: rgba(245, 248, 255, 0.84);
+  --arcade-hub-card-cta-bg: rgba(255, 255, 255, 0.16);
+  --arcade-hub-card-cta-border: rgba(255, 255, 255, 0.32);
+  --arcade-hub-card-cta-bg-hover: rgba(255, 255, 255, 0.24);
+  --arcade-hub-card-cta-border-hover: rgba(255, 255, 255, 0.4);
+  --arcade-hub-card-outline: rgba(255, 255, 255, 0.5);
+}
+
+.arcade-hub__grid > .arcade-hub-card:nth-child(n + 19) {
+  color: #0f1424;
+  --arcade-hub-card-description-color: rgba(14, 22, 44, 0.78);
+  --arcade-hub-card-cta-bg: rgba(12, 20, 40, 0.1);
+  --arcade-hub-card-cta-border: rgba(12, 20, 40, 0.18);
+  --arcade-hub-card-cta-bg-hover: rgba(12, 20, 40, 0.2);
+  --arcade-hub-card-cta-border-hover: rgba(12, 20, 40, 0.32);
+  --arcade-hub-card-outline: rgba(12, 20, 40, 0.38);
+}
+
+.arcade-hub-card[data-card-id="wave"] {
+  --arcade-hub-card-background: linear-gradient(135deg, #11213f, #25508a);
+  --arcade-hub-card-border: rgba(62, 125, 204, 0.55);
+  --arcade-hub-card-shadow: 0 22px 38px rgba(10, 36, 84, 0.55);
+  --arcade-hub-card-shadow-hover: 0 30px 56px rgba(16, 52, 108, 0.68);
+}
+
+.arcade-hub-card[data-card-id="sudoku"] {
+  --arcade-hub-card-background: linear-gradient(135deg, #0f3838, #1e6b67);
+  --arcade-hub-card-border: rgba(58, 160, 148, 0.55);
+  --arcade-hub-card-shadow: 0 22px 38px rgba(8, 52, 50, 0.55);
+  --arcade-hub-card-shadow-hover: 0 30px 54px rgba(12, 82, 78, 0.68);
+}
+
+.arcade-hub-card[data-card-id="echecs"] {
+  --arcade-hub-card-background: linear-gradient(135deg, #162d1c, #3b6a3d);
+  --arcade-hub-card-border: rgba(72, 150, 92, 0.5);
+  --arcade-hub-card-shadow: 0 22px 38px rgba(16, 48, 26, 0.56);
+  --arcade-hub-card-shadow-hover: 0 30px 56px rgba(26, 78, 46, 0.7);
+}
+
+.arcade-hub-card[data-card-id="arcade"] {
+  --arcade-hub-card-background: linear-gradient(135deg, #280c3a, #652b78);
+  --arcade-hub-card-border: rgba(160, 88, 200, 0.52);
+  --arcade-hub-card-shadow: 0 22px 38px rgba(44, 12, 66, 0.58);
+  --arcade-hub-card-shadow-hover: 0 30px 56px rgba(70, 22, 104, 0.72);
+}
+
+.arcade-hub-card[data-card-id="starsWar"] {
+  --arcade-hub-card-background: linear-gradient(135deg, #081634, #1d3f7a);
+  --arcade-hub-card-border: rgba(70, 120, 210, 0.52);
+  --arcade-hub-card-shadow: 0 22px 38px rgba(12, 34, 80, 0.6);
+  --arcade-hub-card-shadow-hover: 0 30px 56px rgba(20, 58, 130, 0.72);
+}
+
+.arcade-hub-card[data-card-id="quantum2048"] {
+  --arcade-hub-card-background: linear-gradient(135deg, #0b2b36, #1e6374);
+  --arcade-hub-card-border: rgba(64, 150, 170, 0.52);
+  --arcade-hub-card-shadow: 0 22px 38px rgba(10, 48, 58, 0.58);
+  --arcade-hub-card-shadow-hover: 0 30px 56px rgba(16, 72, 88, 0.7);
+}
+
+.arcade-hub-card[data-card-id="theLine"] {
+  --arcade-hub-card-background: linear-gradient(135deg, #2f103a, #7a2e8a);
+  --arcade-hub-card-border: rgba(170, 80, 190, 0.5);
+  --arcade-hub-card-shadow: 0 22px 38px rgba(46, 12, 66, 0.6);
+  --arcade-hub-card-shadow-hover: 0 30px 56px rgba(76, 24, 104, 0.74);
+}
+
+.arcade-hub-card[data-card-id="solitaire"] {
+  --arcade-hub-card-background: linear-gradient(135deg, #103322, #2c7b52);
+  --arcade-hub-card-border: rgba(86, 180, 130, 0.5);
+  --arcade-hub-card-shadow: 0 22px 38px rgba(14, 54, 34, 0.58);
+  --arcade-hub-card-shadow-hover: 0 30px 56px rgba(24, 88, 60, 0.72);
+}
+
+.arcade-hub-card[data-card-id="balance"] {
+  --arcade-hub-card-background: linear-gradient(135deg, #3a210d, #7a4a1b);
+  --arcade-hub-card-border: rgba(190, 120, 70, 0.5);
+  --arcade-hub-card-shadow: 0 22px 38px rgba(54, 28, 10, 0.6);
+  --arcade-hub-card-shadow-hover: 0 30px 56px rgba(86, 46, 18, 0.74);
+}
+
+.arcade-hub-card[data-card-id="pipeTap"] {
+  --arcade-hub-card-background: linear-gradient(135deg, #0d2e44, #2483a8);
+  --arcade-hub-card-border: rgba(72, 160, 196, 0.5);
+  --arcade-hub-card-shadow: 0 22px 38px rgba(12, 52, 72, 0.6);
+  --arcade-hub-card-shadow-hover: 0 30px 56px rgba(18, 82, 108, 0.75);
+}
+
+.arcade-hub-card[data-card-id="starBridges"] {
+  --arcade-hub-card-background: linear-gradient(135deg, #1a133c, #473781);
+  --arcade-hub-card-border: rgba(120, 100, 210, 0.5);
+  --arcade-hub-card-shadow: 0 22px 38px rgba(28, 20, 76, 0.62);
+  --arcade-hub-card-shadow-hover: 0 30px 56px rgba(44, 34, 120, 0.76);
+}
+
+.arcade-hub-card[data-card-id="sokoban"] {
+  --arcade-hub-card-background: linear-gradient(135deg, #2a2e12, #697422);
+  --arcade-hub-card-border: rgba(170, 180, 80, 0.48);
+  --arcade-hub-card-shadow: 0 22px 38px rgba(40, 46, 14, 0.58);
+  --arcade-hub-card-shadow-hover: 0 30px 56px rgba(68, 76, 22, 0.72);
+}
+
+.arcade-hub-card[data-card-id="lightsOut"] {
+  --arcade-hub-card-background: linear-gradient(135deg, #191f2c, #3f4c66);
+  --arcade-hub-card-border: rgba(120, 140, 200, 0.48);
+  --arcade-hub-card-shadow: 0 22px 38px rgba(22, 30, 54, 0.6);
+  --arcade-hub-card-shadow-hover: 0 30px 56px rgba(36, 44, 84, 0.75);
+}
+
+.arcade-hub-card[data-card-id="othello"] {
+  --arcade-hub-card-background: linear-gradient(135deg, #0f2e23, #259072);
+  --arcade-hub-card-border: rgba(70, 190, 150, 0.5);
+  --arcade-hub-card-shadow: 0 22px 38px rgba(12, 52, 44, 0.6);
+  --arcade-hub-card-shadow-hover: 0 30px 56px rgba(20, 86, 70, 0.74);
+}
+
+.arcade-hub-card[data-card-id="bigger"] {
+  --arcade-hub-card-background: linear-gradient(135deg, #360f1b, #8a2f53);
+  --arcade-hub-card-border: rgba(200, 90, 130, 0.5);
+  --arcade-hub-card-shadow: 0 22px 38px rgba(52, 14, 34, 0.62);
+  --arcade-hub-card-shadow-hover: 0 30px 56px rgba(92, 30, 64, 0.78);
+}
+
+.arcade-hub-card[data-card-id="math"] {
+  --arcade-hub-card-background: linear-gradient(135deg, #0f3044, #1f6787);
+  --arcade-hub-card-border: rgba(80, 170, 210, 0.5);
+  --arcade-hub-card-shadow: 0 22px 38px rgba(12, 54, 76, 0.6);
+  --arcade-hub-card-shadow-hover: 0 30px 56px rgba(20, 88, 122, 0.76);
+}
+
+.arcade-hub-card[data-card-id="minesweeper"] {
+  --arcade-hub-card-background: linear-gradient(135deg, #33160e, #8a3f28);
+  --arcade-hub-card-border: rgba(210, 110, 70, 0.52);
+  --arcade-hub-card-shadow: 0 22px 38px rgba(54, 24, 12, 0.62);
+  --arcade-hub-card-shadow-hover: 0 30px 56px rgba(94, 42, 22, 0.78);
+}
+
+.arcade-hub-card[data-card-id="dice"] {
+  --arcade-hub-card-background: linear-gradient(135deg, #2b1040, #7b3494);
+  --arcade-hub-card-border: rgba(186, 100, 210, 0.52);
+  --arcade-hub-card-shadow: 0 22px 38px rgba(46, 16, 70, 0.62);
+  --arcade-hub-card-shadow-hover: 0 30px 56px rgba(82, 30, 110, 0.78);
+}
+
+.arcade-hub-card[data-card-id="gameOfLife"] {
+  --arcade-hub-card-background: linear-gradient(135deg, #e7fff5, #bdf1dd);
+  --arcade-hub-card-border: rgba(120, 200, 170, 0.45);
+  --arcade-hub-card-shadow: 0 20px 32px rgba(90, 150, 130, 0.28);
+  --arcade-hub-card-shadow-hover: 0 26px 40px rgba(76, 130, 120, 0.36);
+}
+
+.arcade-hub-card[data-card-id="roulette"] {
+  --arcade-hub-card-background: linear-gradient(135deg, #ffe8d6, #f4bea6);
+  --arcade-hub-card-border: rgba(232, 160, 120, 0.45);
+  --arcade-hub-card-shadow: 0 20px 32px rgba(200, 140, 110, 0.26);
+  --arcade-hub-card-shadow-hover: 0 26px 40px rgba(184, 120, 96, 0.34);
+}
+
+.arcade-hub-card[data-card-id="blackjack"] {
+  --arcade-hub-card-background: linear-gradient(135deg, #e8ffd9, #c8f4a8);
+  --arcade-hub-card-border: rgba(176, 220, 120, 0.45);
+  --arcade-hub-card-shadow: 0 20px 32px rgba(140, 184, 100, 0.26);
+  --arcade-hub-card-shadow-hover: 0 26px 40px rgba(126, 170, 88, 0.34);
+}
+
+.arcade-hub-card[data-card-id="holdem"] {
+  --arcade-hub-card-background: linear-gradient(135deg, #e2f2ff, #b8d5ff);
+  --arcade-hub-card-border: rgba(150, 190, 250, 0.45);
+  --arcade-hub-card-shadow: 0 20px 32px rgba(120, 160, 220, 0.28);
+  --arcade-hub-card-shadow-hover: 0 26px 40px rgba(108, 140, 200, 0.36);
+}
+
+.arcade-hub-card[data-card-id="pachinko"] {
+  --arcade-hub-card-background: linear-gradient(135deg, #ffeaff, #f3c7f5);
+  --arcade-hub-card-border: rgba(220, 160, 220, 0.45);
+  --arcade-hub-card-shadow: 0 20px 32px rgba(190, 130, 200, 0.28);
+  --arcade-hub-card-shadow-hover: 0 26px 40px rgba(170, 112, 188, 0.36);
+}
+
+.arcade-hub-card[data-card-id="metaux"] {
+  --arcade-hub-card-background: linear-gradient(135deg, #eef2ff, #c7cff4);
+  --arcade-hub-card-border: rgba(180, 190, 240, 0.45);
+  --arcade-hub-card-shadow: 0 20px 32px rgba(150, 160, 220, 0.28);
+  --arcade-hub-card-shadow-hover: 0 26px 42px rgba(132, 140, 200, 0.36);
+}

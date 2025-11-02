@@ -444,8 +444,8 @@
             "cta": "Tourner"
           },
           "pachinko": {
-            "aria": "Ouvrir le mini-jeu Prisme Pachinko",
-            "title": "Prisme Pachinko",
+            "aria": "Ouvrir le mini-jeu Pachinko",
+            "title": "Pachinko",
             "description": "Lâchez des orbes prismatiques sur une forêt de picots néon et visez les multiplicateurs cosmiques.",
             "cta": "Lâcher"
           },
@@ -1146,8 +1146,8 @@
         }
       },
       "pachinko": {
-        "aria": "Mini-jeu Prisme Pachinko",
-        "title": "Prisme Pachinko",
+        "aria": "Mini-jeu Pachinko",
+        "title": "Pachinko",
         "status": {
           "ready": "Choisissez une mise et lâchez une orbe prismatique."
         },
@@ -1421,7 +1421,7 @@
               "description": "Placez des cellules vivantes et observez les règles : une cellule survit avec 2 ou 3 voisines, naît avec exactement 3 et meurt autrement."
             },
             "pachinko": {
-              "label": "Mini jeu Prisme Pachinko :",
+              "label": "Mini jeu Pachinko :",
               "description": "Lâchez des orbes prismatiques sur un champ de picots néon pour viser les multiplicateurs cosmiques et gonfler vos atomes."
             },
             "roulette": {
