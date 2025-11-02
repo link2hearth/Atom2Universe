@@ -1826,6 +1826,12 @@
           "description": "Condense une étoile pour alimenter vos récoltes automatiques.",
           "effect": "Production passive : commence à +1 APS et progresse d’environ +12 % par niveau.",
           "effectSummary": "Production passive évolutive (~+12 % par niveau). Coût en hausse progressive."
+        },
+        "gachaTicketBooth": {
+          "name": "Guichet gacha",
+          "description": "Convertissez vos atomes en tickets de tirage garantis.",
+          "effect": "Achetez 1 ticket gacha garanti par niveau. Limite : 1 000 niveaux (+1 000 par Big Bang). Chaque achat augmente le coût de 25 000 atomes.",
+          "effectSummary": "Achetez des tickets gacha garantis : +1 ticket par niveau, coût +25 000 atomes et limite portée à 1 000 niveaux (+1 000 par Big Bang)."
         }
       }
     },
@@ -2718,7 +2724,12 @@
         "devkitFreePurchase": "DevKit : \"{name}\" ×{quantity} débloqué gratuitement !{suffix}",
         "purchase": "Amélioration \"{name}\" ×{quantity} achetée !{suffix}",
         "milestoneHint": "Continuez à explorer des ordres de grandeur toujours plus vastes !",
-        "costLabel": "{value}"
+        "costLabel": "{value}",
+        "ticketUnit": {
+          "single": "ticket gacha",
+          "plural": "tickets gacha"
+        },
+        "ticketReward": "Tickets gacha achetés : +{count} {unit}."
       },
       "themeUpdated": "Thème mis à jour : {name}",
       "language": {

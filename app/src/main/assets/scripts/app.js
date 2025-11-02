@@ -13284,7 +13284,12 @@ function resolveUpgradeMaxLevel(definition) {
     return baseLevel;
   }
   const bonus = getBigBangLevelBonus();
-  return baseLevel + bonus;
+  const bonusMultiplierRaw = Number(definition?.bigBangLevelBonusMultiplier ?? 1);
+  // Permet d'augmenter (ou réduire) l'impact du Big Bang sur la limite de niveaux d'une amélioration.
+  const bonusMultiplier = Number.isFinite(bonusMultiplierRaw) && bonusMultiplierRaw > 0
+    ? bonusMultiplierRaw
+    : 1;
+  return baseLevel + bonus * bonusMultiplier;
 }
 
 function getRemainingUpgradeCapacity(definition) {
@@ -13308,8 +13313,21 @@ function computeUpgradeCost(def, quantity = 1) {
   const level = getUpgradeLevel(gameState.upgrades, def.id);
   const baseScale = def.costScale ?? 1;
   const modifier = computeGlobalCostModifier();
-  const baseCost = def.baseCost;
+  const baseCost = Number(def.baseCost ?? 0);
   const buyAmount = Math.max(1, Math.floor(Number(quantity) || 0));
+
+  const linearIncrement = Number(def.costIncrement ?? 0);
+  const hasLinearIncrement = Number.isFinite(linearIncrement) && Math.abs(linearIncrement) > 1e-9;
+  if (hasLinearIncrement) {
+    const normalizedLevel = Math.max(0, Math.floor(Number(level) || 0));
+    const startCost = baseCost + linearIncrement * normalizedLevel;
+    const totalCost = buyAmount * (2 * startCost + linearIncrement * (buyAmount - 1)) / 2;
+    const adjusted = totalCost * modifier;
+    if (!Number.isFinite(adjusted) || adjusted <= 0) {
+      return LayeredNumber.zero();
+    }
+    return new LayeredNumber(adjusted);
+  }
 
   if (buyAmount === 1 || !Number.isFinite(baseScale) || baseScale === 1) {
     const singleCost = baseCost * Math.pow(baseScale, level) * modifier;
@@ -13335,19 +13353,26 @@ function computeUpgradeTotalSpent(definition, level) {
   if (!Number.isFinite(baseCost) || baseCost <= 0) {
     return LayeredNumber.zero();
   }
-  const baseLayered = new LayeredNumber(baseCost);
-  const scaleValue = Number(definition.costScale ?? 1);
+  const linearIncrement = Number(definition.costIncrement ?? 0);
+  const hasLinearIncrement = Number.isFinite(linearIncrement) && Math.abs(linearIncrement) > 1e-9;
   let total;
-  if (!Number.isFinite(scaleValue) || scaleValue <= 0 || Math.abs(scaleValue - 1) <= 1e-9) {
-    total = baseLayered.multiplyNumber(normalizedLevel);
+  if (hasLinearIncrement) {
+    const sum = normalizedLevel * (2 * baseCost + linearIncrement * (normalizedLevel - 1)) / 2;
+    total = new LayeredNumber(sum);
   } else {
-    const scaleLayered = new LayeredNumber(scaleValue);
-    const numerator = scaleLayered.pow(normalizedLevel).subtract(LayeredNumber.one());
-    const denominator = scaleLayered.subtract(LayeredNumber.one());
-    if (denominator.isZero() || denominator.sign === 0) {
+    const baseLayered = new LayeredNumber(baseCost);
+    const scaleValue = Number(definition.costScale ?? 1);
+    if (!Number.isFinite(scaleValue) || scaleValue <= 0 || Math.abs(scaleValue - 1) <= 1e-9) {
       total = baseLayered.multiplyNumber(normalizedLevel);
     } else {
-      total = baseLayered.multiply(numerator.divide(denominator));
+      const scaleLayered = new LayeredNumber(scaleValue);
+      const numerator = scaleLayered.pow(normalizedLevel).subtract(LayeredNumber.one());
+      const denominator = scaleLayered.subtract(LayeredNumber.one());
+      if (denominator.isZero() || denominator.sign === 0) {
+        total = baseLayered.multiplyNumber(normalizedLevel);
+      } else {
+        total = baseLayered.multiply(numerator.divide(denominator));
+      }
     }
   }
   const modifier = Number(computeGlobalCostModifier());
@@ -13355,6 +13380,75 @@ function computeUpgradeTotalSpent(definition, level) {
     return total;
   }
   return total.multiplyNumber(modifier);
+}
+
+function grantShopGachaTickets(definition, purchaseAmount) {
+  if (!definition || typeof definition !== 'object') {
+    return 0;
+  }
+  const perPurchase = Number(definition.gachaTicketsPerPurchase ?? 0);
+  if (!Number.isFinite(perPurchase) || perPurchase <= 0) {
+    return 0;
+  }
+  const normalizedAmount = Math.max(0, Math.floor(Number(purchaseAmount) || 0));
+  if (normalizedAmount <= 0) {
+    return 0;
+  }
+  const requested = Math.max(0, Math.floor(perPurchase * normalizedAmount));
+  if (!Number.isFinite(requested) || requested <= 0) {
+    return 0;
+  }
+
+  let awardFn = null;
+  if (typeof gainGachaTickets === 'function') {
+    awardFn = gainGachaTickets;
+  } else if (typeof globalThis !== 'undefined' && typeof globalThis.gainGachaTickets === 'function') {
+    awardFn = globalThis.gainGachaTickets;
+  }
+
+  if (awardFn) {
+    try {
+      const granted = awardFn(requested, { unlockTicketStar: true });
+      const grantedNumeric = Math.floor(Number(granted));
+      if (Number.isFinite(grantedNumeric) && grantedNumeric > 0) {
+        return grantedNumeric;
+      }
+      return requested;
+    } catch (error) {
+      console.warn('Shop: unable to grant gacha tickets via award function', error);
+    }
+  }
+
+  const fallbackGain = requested;
+  const currentTickets = Number.isFinite(Number(gameState.gachaTickets))
+    ? Math.max(0, Math.floor(Number(gameState.gachaTickets)))
+    : 0;
+  gameState.gachaTickets = currentTickets + fallbackGain;
+  if (fallbackGain > 0 && gameState.ticketStarUnlocked !== true) {
+    gameState.ticketStarUnlocked = true;
+    if (typeof resetTicketStarState === 'function') {
+      try {
+        resetTicketStarState({ reschedule: true });
+      } catch (error) {
+        console.warn('Shop: unable to reset ticket star state', error);
+      }
+    }
+  }
+  if (typeof evaluatePageUnlocks === 'function') {
+    try {
+      evaluatePageUnlocks();
+    } catch (error) {
+      console.warn('Shop: unable to refresh page unlocks after granting tickets', error);
+    }
+  }
+  if (typeof updateGachaUI === 'function') {
+    try {
+      updateGachaUI();
+    } catch (error) {
+      console.warn('Shop: unable to refresh gacha UI after granting tickets', error);
+    }
+  }
+  return fallbackGain;
 }
 
 function formatShopCost(cost) {
@@ -15385,6 +15479,7 @@ function attemptPurchase(def, quantity = 1) {
     ? Math.floor(currentLevel)
     : 0;
   gameState.upgrades[def.id] = normalizedLevel + finalAmount;
+  const ticketsAwarded = grantShopGachaTickets(def, finalAmount);
   recalcProduction();
   updateUI();
   const limitSuffix = finalAmount < buyAmount ? getShopLimitSuffix(true) : '';
@@ -15400,6 +15495,15 @@ function attemptPurchase(def, quantity = 1) {
       quantity: finalAmount,
       suffix: limitSuffix
     }));
+  if (ticketsAwarded > 0) {
+    const unitKey = ticketsAwarded === 1
+      ? 'scripts.app.shop.ticketUnit.single'
+      : 'scripts.app.shop.ticketUnit.plural';
+    const fallbackUnit = ticketsAwarded === 1 ? 'gacha ticket' : 'gacha tickets';
+    const unitLabel = translateOrDefault(unitKey, fallbackUnit);
+    const countLabel = formatIntegerLocalized(ticketsAwarded);
+    showToast(t('scripts.app.shop.ticketReward', { count: countLabel, unit: unitLabel }));
+  }
 }
 
 function updateMilestone() {
