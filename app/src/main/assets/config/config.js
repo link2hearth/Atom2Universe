@@ -13,6 +13,20 @@ const CONFIG_OVERRIDE_KEYS = Object.freeze({
   info: `${CONFIG_OVERRIDE_STORAGE_PREFIX}infoSectionsEnabled`
 });
 
+/**
+ * Paramètres globaux pour la gestion des sauvegardes.
+ * `storageKey` est utilisé pour stocker les métadonnées côté web.
+ * `maxEntries` limite le nombre de sauvegardes conservées.
+ * `minAutoIntervalMs` impose un délai minimal entre deux sauvegardes auto.
+ * `maxNativeEntries` aligne la limite avec le stockage natif Android.
+ */
+const SAVE_BACKUP_SETTINGS = Object.freeze({
+  storageKey: 'atom2univers.backups',
+  maxEntries: 8,
+  minAutoIntervalMs: 5 * 60 * 1000,
+  maxNativeEntries: 8
+});
+
 function getConfigStorage() {
   if (typeof globalThis === 'undefined' || typeof globalThis.localStorage === 'undefined') {
     return null;
