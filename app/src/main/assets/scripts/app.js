@@ -4929,6 +4929,7 @@ function collectDomElements() {
   shopActionsHeader: document.getElementById('shopActionsHeader'),
   shopList: document.getElementById('shopList'),
   periodicTable: document.getElementById('periodicTable'),
+  fusionModeButton: document.getElementById('fusionModeButton'),
   fusionList: document.getElementById('fusionList'),
   fusionLog: document.getElementById('fusionLog'),
   elementInfoPanel: document.getElementById('elementInfoPanel'),

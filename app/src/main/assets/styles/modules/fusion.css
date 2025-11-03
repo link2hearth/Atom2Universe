@@ -48,6 +48,59 @@
   line-height: 1.5;
 }
 
+.fusion-controls {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.fusion-mode-toggle {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  border: 0;
+  background: var(--fusion-button-bg, linear-gradient(120deg, #5079ff, #6ebeff));
+  color: var(--fusion-button-color, #f4f7ff);
+  font-weight: 600;
+  font-size: calc(var(--font-scale-factor, 1) * 0.85rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+}
+
+.fusion-mode-toggle:hover,
+.fusion-mode-toggle:focus-visible {
+  box-shadow: var(--fusion-button-shadow, 0 12px 24px rgba(72, 118, 255, 0.35));
+  transform: translateY(-1px);
+}
+
+.fusion-mode-toggle:focus-visible {
+  outline: 3px solid rgba(112, 148, 255, 0.55);
+  outline-offset: 2px;
+}
+
+.fusion-mode-toggle[aria-pressed='true'] {
+  box-shadow: var(--fusion-button-shadow, 0 12px 24px rgba(72, 118, 255, 0.35));
+  transform: translateY(-1px);
+}
+
+.fusion-mode-toggle:active {
+  transform: translateY(0);
+}
+
+.fusion-mode-toggle:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  box-shadow: none;
+  transform: none;
+}
+
 .fusion-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));

@@ -3032,7 +3032,15 @@
       "fusion": {
         "empty": "Aucune recette de fusion disponible",
         "tryButton": "Tenter la fusion",
-        "tryButtonAria": "Tenter la fusion {name}",
+        "tryButtonAria": "Tenter la fusion {name} ×{count}",
+        "controls": {
+          "modeSingle": "×1",
+          "modeMulti": "×10",
+          "modeLabel": "Tentatives par clic : {mode}",
+          "modeTitle": "Tentatives par clic : {mode}",
+          "modeAria": "Basculer le nombre de tentatives de fusion (actuel : {mode})",
+          "tryButton": "Tenter ×{count}"
+        },
         "checking": "Vérification des ingrédients…",
         "successChance": "Chance de réussite : {chance}",
         "stats": "Tentatives : {attempts} · Succès : {successes}",
@@ -3053,8 +3061,10 @@
         "logMissingResources": "Vous n’avez pas assez de ressources pour cette fusion.",
         "toastMissingResources": "Ressources insuffisantes pour cette fusion.",
         "logSuccess": "Fusion {name} réussie ! Bonus obtenu : {reward}",
+        "logBatchSuccess": "Fusions {name} ×{attempts} : {successes} réussite(s), {failures} échec(s). Bonus total : {reward}",
         "toastSuccess": "Fusion réussie !",
         "logFailure": "La fusion {name} a échoué. Les éléments ont été consommés.",
+        "logBatchFailure": "Fusions {name} ×{attempts} : aucune réussite. Les éléments ont été consommés.",
         "toastFailure": "Fusion échouée."
       },
       "productionSteps": {
