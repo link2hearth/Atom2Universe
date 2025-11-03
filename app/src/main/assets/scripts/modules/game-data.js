@@ -182,12 +182,26 @@ function normalizeBonusImageDefinition(entry, folder) {
     || names['en_us']
     || '';
   const labelFallback = labelValue || nameValue || fallbackFromNames || `Image ${id}`;
+  const rawCollectionType = (typeof entry.collectionType === 'string' && entry.collectionType.trim())
+    ? entry.collectionType.trim()
+    : (typeof entry.category === 'string' && entry.category.trim() ? entry.category.trim() : '');
+  const normalizedCollection = rawCollectionType.toLowerCase();
+  let collectionType = 'optional';
+  if (normalizedCollection === 'permanent'
+    || normalizedCollection === 'always'
+    || normalizedCollection === 'bonus'
+    || normalizedCollection === 'alwayson'
+    || normalizedCollection === 'always-on'
+  ) {
+    collectionType = 'permanent';
+  }
   return {
     id,
     assetPath: assetPath || null,
     labelKey,
     labelFallback,
-    names
+    names,
+    collectionType
   };
 }
 
@@ -208,6 +222,12 @@ const RAW_BONUS_IMAGE_ENTRIES = (() => {
 const GACHA_BONUS_IMAGE_DEFINITIONS = RAW_BONUS_IMAGE_ENTRIES
   .map(entry => normalizeBonusImageDefinition(entry, CONFIG?.gacha?.bonusImages?.folder))
   .filter(def => def && def.id);
+
+const GACHA_OPTIONAL_BONUS_IMAGE_DEFINITIONS = GACHA_BONUS_IMAGE_DEFINITIONS
+  .filter(def => (def.collectionType || 'optional') !== 'permanent');
+
+const GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS = GACHA_BONUS_IMAGE_DEFINITIONS
+  .filter(def => def.collectionType === 'permanent');
 
 const configElements = Array.isArray(CONFIG.elements) ? CONFIG.elements : [];
 
@@ -1731,7 +1751,23 @@ function createInitialGachaCardCollection() {
 
 function createInitialGachaImageCollection() {
   const collection = {};
-  GACHA_BONUS_IMAGE_DEFINITIONS.forEach(def => {
+  GACHA_OPTIONAL_BONUS_IMAGE_DEFINITIONS.forEach(def => {
+    if (!def || !def.id) {
+      return;
+    }
+    collection[def.id] = {
+      id: def.id,
+      count: 0,
+      firstAcquiredAt: null,
+      acquiredOrder: null
+    };
+  });
+  return collection;
+}
+
+function createInitialGachaBonusImageCollection() {
+  const collection = {};
+  GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS.forEach(def => {
     if (!def || !def.id) {
       return;
     }

@@ -1001,8 +1001,8 @@ function getSpecialCardCollection() {
 }
 
 function getBonusImageDefinitions() {
-  return Array.isArray(GACHA_BONUS_IMAGE_DEFINITIONS)
-    ? GACHA_BONUS_IMAGE_DEFINITIONS
+  return Array.isArray(GACHA_OPTIONAL_BONUS_IMAGE_DEFINITIONS)
+    ? GACHA_OPTIONAL_BONUS_IMAGE_DEFINITIONS
     : [];
 }
 
@@ -1010,12 +1010,29 @@ function getBonusImageDefinition(imageId) {
   if (!imageId) {
     return null;
   }
-  return getBonusImageDefinitions().find(def => def.id === imageId) || null;
+  return getBonusImageDefinitions().find(def => def.id === imageId)
+    || (Array.isArray(GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS)
+      ? GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS.find(def => def.id === imageId)
+      : null)
+    || null;
 }
 
 function getBonusImageCollection() {
   if (gameState.gachaImages && typeof gameState.gachaImages === 'object') {
     return gameState.gachaImages;
+  }
+  return {};
+}
+
+function getPermanentBonusImageDefinitions() {
+  return Array.isArray(GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS)
+    ? GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS
+    : [];
+}
+
+function getPermanentBonusImageCollection() {
+  if (gameState.gachaBonusImages && typeof gameState.gachaBonusImages === 'object') {
+    return gameState.gachaBonusImages;
   }
   return {};
 }
@@ -1083,13 +1100,20 @@ function normalizeSpecialCardReward(reward) {
     : (typeof getSpecialGachaCardDefinition === 'function'
         ? getSpecialGachaCardDefinition(cardId)
         : getSpecialCardDefinitions().find(def => def.id === cardId));
+  const collectionType = rewardType === 'image'
+    ? (typeof reward.collectionType === 'string'
+      ? reward.collectionType.toLowerCase()
+      : (definition?.collectionType || 'optional'))
+    : null;
   const label = reward.label
     ? reward.label
     : (rewardType === 'image'
         ? resolveBonusImageLabel(cardId)
         : resolveSpecialCardLabel(cardId));
   const collection = rewardType === 'image'
-    ? getBonusImageCollection()
+    ? (collectionType === 'permanent'
+        ? getPermanentBonusImageCollection()
+        : getBonusImageCollection())
     : getSpecialCardCollection();
   const stored = collection[cardId];
   const storedCount = Number.isFinite(Number(stored?.count ?? stored))
@@ -1109,7 +1133,8 @@ function normalizeSpecialCardReward(reward) {
     assetPath,
     isNew: reward.isNew === true,
     definition: definition || null,
-    type: rewardType
+    type: rewardType,
+    collectionType: collectionType || null
   };
 }
 
@@ -1327,8 +1352,8 @@ function handleCollectionListClick(event) {
     return;
   }
   const rawType = button.getAttribute('data-card-type') || button.dataset.cardType || '';
-  const type = rawType === 'image' ? 'image' : 'card';
-  showSpecialCardFromCollection(cardId, type);
+  const normalizedType = rawType === 'card' ? 'card' : 'image';
+  showSpecialCardFromCollection(cardId, normalizedType);
 }
 
 function handleSpecialCardOverlayKeydown(event) {
@@ -1348,6 +1373,9 @@ function initSpecialCardOverlay() {
   }
   if (elements.collectionImagesList) {
     elements.collectionImagesList.addEventListener('click', handleCollectionListClick);
+  }
+  if (elements.collectionBonusImagesList) {
+    elements.collectionBonusImagesList.addEventListener('click', handleCollectionListClick);
   }
   if (elements.gachaCardOverlayClose) {
     elements.gachaCardOverlayClose.addEventListener('click', event => {
@@ -1458,7 +1486,8 @@ function renderBonusImageCollectionList(options) {
     collection,
     container,
     emptyElement,
-    viewKey
+    viewKey,
+    collectionType = 'image'
   } = options;
 
   if (!container || !emptyElement) {
@@ -1466,7 +1495,7 @@ function renderBonusImageCollectionList(options) {
   }
 
   container.classList.add('info-card-list--images');
-  container.dataset.collectionType = 'image';
+  container.dataset.collectionType = collectionType || 'image';
   container.innerHTML = '';
 
   const owned = buildOwnedCollectionEntries(definitions, collection, 'image');
@@ -1538,13 +1567,14 @@ function renderCollectionList(options) {
     countKey
   } = options;
 
-  if (type === 'image') {
+  if (type === 'image' || type === 'bonusImage') {
     renderBonusImageCollectionList({
       definitions,
       collection,
       container,
       emptyElement,
-      viewKey
+      viewKey,
+      collectionType: type === 'bonusImage' ? 'bonusImage' : 'image'
     });
     return;
   }
@@ -1629,6 +1659,16 @@ function renderSpecialCardCollection() {
     type: 'image',
     viewKey: 'index.sections.collection.images.view',
     countKey: 'index.sections.collection.images.count'
+  });
+
+  renderCollectionList({
+    definitions: getPermanentBonusImageDefinitions(),
+    collection: getPermanentBonusImageCollection(),
+    container: elements.collectionBonusImagesList,
+    emptyElement: elements.collectionBonusImagesEmpty,
+    type: 'bonusImage',
+    viewKey: 'index.sections.collection.bonusImages.view',
+    countKey: 'index.sections.collection.bonusImages.count'
   });
 }
 
