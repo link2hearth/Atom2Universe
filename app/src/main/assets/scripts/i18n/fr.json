@@ -397,7 +397,7 @@
           "starBridges": {
             "aria": "Accéder au mini-jeu Ponts Stellaires",
             "title": "Ponts Stellaires",
-          "description": "Reliez toutes les étoiles avec des ponts horizontaux, verticaux ou diagonaux sans croisement.",
+            "description": "Reliez toutes les étoiles avec des ponts horizontaux, verticaux ou diagonaux sans croisement.",
             "cta": "Relier"
           },
           "pipeTap": {
@@ -1474,6 +1474,18 @@
             "large": "Grande taille (×1,5)",
             "x2": "Taille maximale (×2)"
           }
+        },
+        "saves": {
+          "title": "Gestion des sauvegardes",
+          "description": "Créez des copies de secours et restaurez votre progression en cas de problème.",
+          "createButton": "Créer une sauvegarde manuelle",
+          "refreshButton": "Actualiser",
+          "empty": "Aucune sauvegarde disponible pour le moment.",
+          "restore": "Restaurer",
+          "delete": "Supprimer",
+          "prompt": "Nom de la sauvegarde :",
+          "restoreConfirm": "Restaurer cette sauvegarde ?",
+          "deleteConfirm": "Supprimer définitivement cette sauvegarde ?"
         },
         "theme": {
           "label": "Thème visuel",
@@ -2997,6 +3009,18 @@
         "bigger": {
           "rewardToast": "Bille 512 forgée ! {tickets} remportés."
         }
+      },
+      "saves": {
+        "autoLabel": "Sauvegarde automatique",
+        "manualLabel": "Sauvegarde manuelle",
+        "manualFailed": "Impossible de créer la sauvegarde.",
+        "manualCreated": "Sauvegarde enregistrée.",
+        "restoreFailed": "Impossible de charger cette sauvegarde.",
+        "restoreSuccess": "Sauvegarde restaurée.",
+        "deleteSuccess": "Sauvegarde supprimée.",
+        "deleteFailed": "Impossible de supprimer cette sauvegarde.",
+        "fallbackRestored": "Sauvegarde de secours restaurée.",
+        "fallbackFailed": "Aucune sauvegarde de secours valide n’a pu être chargée."
       }
     },
     "gacha": {
@@ -3027,8 +3051,16 @@
         }
       },
       "images": {
-        "toastNew": "Image de collection débloquée : {card}",
-        "toastDuplicate": "Image de collection obtenue à nouveau : {card}"
+        "names": {},
+        "toastNew": "Nouvelle image bonus obtenue : {card}",
+        "toastDuplicate": "Image bonus obtenue à nouveau : {card}",
+        "overlay": {
+          "newTitle": "Image bonus obtenue !",
+          "duplicateTitle": "Image bonus retrouvée !",
+          "count": "×{count}",
+          "hint": "Touchez la croix pour refermer l’image.",
+          "close": "Fermer l’image"
+        }
       },
       "bonusImages": {
         "toastNew": "Image bonus débloquée : {card}",
@@ -3129,18 +3161,6 @@
           "count": "×{count}",
           "hint": "Touchez la croix pour revenir au jeu.",
           "close": "Fermer la carte"
-        }
-      },
-      "images": {
-        "names": {},
-        "toastNew": "Nouvelle image bonus obtenue : {card}",
-        "toastDuplicate": "Image bonus obtenue à nouveau : {card}",
-        "overlay": {
-          "newTitle": "Image bonus obtenue !",
-          "duplicateTitle": "Image bonus retrouvée !",
-          "count": "×{count}",
-          "hint": "Touchez la croix pour refermer l’image.",
-          "close": "Fermer l’image"
         }
       },
       "controls": {

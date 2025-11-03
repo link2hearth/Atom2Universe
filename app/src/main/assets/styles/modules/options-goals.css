@@ -122,6 +122,107 @@ body.theme-aurora .option-card--holdem {
   flex-wrap: wrap;
 }
 
+.option-card--saves {
+  gap: clamp(0.9rem, 1.6vw, 1.3rem);
+}
+
+.option-row--saves-actions {
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.save-manager {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.save-manager__empty {
+  margin: 0;
+  font-size: calc(0.75rem * var(--font-scale-factor, 1));
+  opacity: 0.75;
+}
+
+.save-manager__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.save-manager__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 14px;
+  background: rgba(18, 24, 38, 0.65);
+  backdrop-filter: blur(4px);
+}
+
+.save-manager__details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.save-manager__name {
+  font-weight: 600;
+  font-size: calc(0.85rem * var(--font-scale-factor, 1));
+  word-break: break-word;
+}
+
+.save-manager__meta {
+  font-size: calc(0.7rem * var(--font-scale-factor, 1));
+  opacity: 0.7;
+}
+
+.save-manager__actions {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.option-link-button--danger {
+  color: #ff9b9b;
+  border-color: rgba(255, 120, 120, 0.4);
+}
+
+.option-link-button--danger:hover,
+.option-link-button--danger:focus-visible {
+  color: #ffd2d2;
+  border-color: rgba(255, 150, 150, 0.65);
+  box-shadow: 0 0 0 2px rgba(255, 130, 130, 0.25);
+}
+
+body.theme-light .save-manager__item {
+  background: rgba(236, 240, 250, 0.85);
+}
+
+body.theme-light .option-link-button--danger {
+  color: #c93333;
+  border-color: rgba(220, 68, 68, 0.4);
+}
+
+body.theme-light .option-link-button--danger:hover,
+body.theme-light .option-link-button--danger:focus-visible {
+  color: #8b1212;
+  border-color: rgba(220, 68, 68, 0.6);
+  box-shadow: 0 0 0 2px rgba(220, 68, 68, 0.2);
+}
+
+body.theme-neon .save-manager__item {
+  background: rgba(46, 76, 150, 0.55);
+}
+
+body.theme-aurora .save-manager__item {
+  background: rgba(32, 120, 104, 0.55);
+}
+
 .holdem-option__blind {
   display: flex;
   flex-direction: column;

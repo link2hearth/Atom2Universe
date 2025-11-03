@@ -210,7 +210,359 @@ const GAME_OF_LIFE_STORAGE_KEYS = [
   'atom2univers.arcade.gameOfLife.customPatternCounter'
 ];
 
+const SAVE_BACKUP_SETTINGS_GLOBAL = typeof globalThis !== 'undefined'
+  && globalThis.SAVE_BACKUP_SETTINGS
+  && typeof globalThis.SAVE_BACKUP_SETTINGS === 'object'
+  ? globalThis.SAVE_BACKUP_SETTINGS
+  : null;
+const SAVE_BACKUP_STORAGE_KEY = SAVE_BACKUP_SETTINGS_GLOBAL?.storageKey || 'atom2univers.backups';
+const SAVE_BACKUP_MAX_ENTRIES = Math.max(
+  1,
+  Math.floor(Number(SAVE_BACKUP_SETTINGS_GLOBAL?.maxEntries) || 8)
+);
+const SAVE_BACKUP_MIN_AUTO_INTERVAL_MS = Math.max(
+  0,
+  Math.floor(Number(SAVE_BACKUP_SETTINGS_GLOBAL?.minAutoIntervalMs) || 5 * 60 * 1000)
+);
+const SAVE_BACKUP_NATIVE_LIMIT = Math.max(
+  1,
+  Math.floor(Number(SAVE_BACKUP_SETTINGS_GLOBAL?.maxNativeEntries) || SAVE_BACKUP_MAX_ENTRIES)
+);
+
 let lastSerializedSave = null;
+let lastBackupAutoTimestamp = 0;
+
+function getSaveBackupStorage() {
+  if (typeof globalThis === 'undefined' || typeof globalThis.localStorage === 'undefined') {
+    return null;
+  }
+  return globalThis.localStorage;
+}
+
+function computeSerializedSize(serialized) {
+  if (typeof serialized !== 'string') {
+    return 0;
+  }
+  if (typeof TextEncoder !== 'undefined') {
+    try {
+      return new TextEncoder().encode(serialized).length;
+    } catch (error) {
+      // Ignore encoding issues and fall back to string length.
+    }
+  }
+  return serialized.length;
+}
+
+function normalizeStoredBackupEntry(entry) {
+  if (!entry || typeof entry !== 'object') {
+    return null;
+  }
+  const id = typeof entry.id === 'string' && entry.id ? entry.id : null;
+  const data = typeof entry.data === 'string' && entry.data ? entry.data : null;
+  if (!id || !data) {
+    return null;
+  }
+  const savedAt = Number(entry.savedAt);
+  const label = typeof entry.label === 'string' && entry.label.trim() ? entry.label.trim() : null;
+  const source = entry.source === 'auto' ? 'auto' : 'manual';
+  const size = Math.max(0, Number(entry.size) || computeSerializedSize(data));
+  return {
+    id,
+    data,
+    savedAt: Number.isFinite(savedAt) ? savedAt : Date.now(),
+    label,
+    source,
+    size
+  };
+}
+
+function readLocalSaveBackupState() {
+  const storage = getSaveBackupStorage();
+  if (!storage) {
+    return { version: 1, entries: [] };
+  }
+  try {
+    const raw = storage.getItem(SAVE_BACKUP_STORAGE_KEY);
+    if (!raw) {
+      return { version: 1, entries: [] };
+    }
+    const parsed = JSON.parse(raw);
+    const sourceEntries = Array.isArray(parsed?.entries) ? parsed.entries : [];
+    const entries = sourceEntries
+      .map(normalizeStoredBackupEntry)
+      .filter(entry => entry);
+    return { version: 1, entries };
+  } catch (error) {
+    try {
+      storage.removeItem(SAVE_BACKUP_STORAGE_KEY);
+    } catch (cleanupError) {
+      // Ignore cleanup issues.
+    }
+    return { version: 1, entries: [] };
+  }
+}
+
+function writeLocalSaveBackupState(state) {
+  const storage = getSaveBackupStorage();
+  if (!storage) {
+    return false;
+  }
+  const safeEntries = Array.isArray(state?.entries) ? state.entries : [];
+  try {
+    const payload = {
+      version: 1,
+      entries: safeEntries.map(entry => ({
+        id: entry.id,
+        savedAt: entry.savedAt,
+        label: entry.label,
+        source: entry.source,
+        size: entry.size,
+        data: entry.data
+      }))
+    };
+    storage.setItem(SAVE_BACKUP_STORAGE_KEY, JSON.stringify(payload));
+    return true;
+  } catch (error) {
+    console.error('Unable to persist local save backups', error);
+    return false;
+  }
+}
+
+function toBackupListEntry(entry) {
+  if (!entry) {
+    return null;
+  }
+  return {
+    id: entry.id,
+    savedAt: entry.savedAt,
+    label: entry.label,
+    source: entry.source,
+    size: entry.size
+  };
+}
+
+function createLocalSaveBackup(serialized, options = {}) {
+  if (typeof serialized !== 'string' || !serialized) {
+    return null;
+  }
+  const state = readLocalSaveBackupState();
+  const savedAt = Date.now();
+  const entry = {
+    id: `bk_${savedAt}`,
+    data: serialized,
+    savedAt,
+    label: typeof options.label === 'string' && options.label.trim() ? options.label.trim() : null,
+    source: options.source === 'auto' ? 'auto' : 'manual',
+    size: computeSerializedSize(serialized)
+  };
+  state.entries.unshift(entry);
+  while (state.entries.length > SAVE_BACKUP_MAX_ENTRIES) {
+    state.entries.pop();
+  }
+  writeLocalSaveBackupState(state);
+  return toBackupListEntry(entry);
+}
+
+function listLocalSaveBackups() {
+  const state = readLocalSaveBackupState();
+  return state.entries.map(toBackupListEntry).filter(entry => entry);
+}
+
+function loadLocalSaveBackup(id) {
+  if (!id) {
+    return null;
+  }
+  const state = readLocalSaveBackupState();
+  const match = state.entries.find(entry => entry.id === id);
+  return match ? match.data : null;
+}
+
+function deleteLocalSaveBackup(id) {
+  if (!id) {
+    return false;
+  }
+  const state = readLocalSaveBackupState();
+  const nextEntries = state.entries.filter(entry => entry.id !== id);
+  if (nextEntries.length === state.entries.length) {
+    return false;
+  }
+  state.entries = nextEntries;
+  writeLocalSaveBackupState(state);
+  return true;
+}
+
+function parseNativeBackupEntry(entry) {
+  if (!entry) {
+    return null;
+  }
+  let payload = entry;
+  if (typeof entry === 'string') {
+    try {
+      payload = JSON.parse(entry);
+    } catch (error) {
+      return null;
+    }
+  }
+  if (!payload || typeof payload !== 'object') {
+    return null;
+  }
+  const id = typeof payload.id === 'string' && payload.id ? payload.id : null;
+  if (!id) {
+    return null;
+  }
+  const savedAt = Number(payload.savedAt);
+  const label = typeof payload.label === 'string' && payload.label.trim() ? payload.label.trim() : null;
+  const source = payload.source === 'auto' ? 'auto' : 'manual';
+  const size = Math.max(0, Number(payload.size) || 0);
+  return {
+    id,
+    savedAt: Number.isFinite(savedAt) ? savedAt : Date.now(),
+    label,
+    source,
+    size
+  };
+}
+
+function fetchNativeSaveBackups() {
+  const bridge = getAndroidSaveBridge();
+  if (!bridge || typeof bridge.listBackups !== 'function') {
+    return null;
+  }
+  try {
+    const raw = bridge.listBackups();
+    if (!raw) {
+      return [];
+    }
+    const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
+    if (!Array.isArray(parsed)) {
+      return [];
+    }
+    return parsed.map(parseNativeBackupEntry).filter(entry => entry);
+  } catch (error) {
+    console.error('Unable to list native backups', error);
+    return [];
+  }
+}
+
+function nativeSaveBackup(serialized, options = {}) {
+  const bridge = getAndroidSaveBridge();
+  if (!bridge || typeof bridge.saveBackup !== 'function') {
+    return null;
+  }
+  try {
+    const label = typeof options.label === 'string' && options.label.trim() ? options.label.trim() : null;
+    const source = options.source === 'auto' ? 'auto' : 'manual';
+    const raw = bridge.saveBackup(serialized, label, source);
+    if (!raw) {
+      return null;
+    }
+    return parseNativeBackupEntry(typeof raw === 'string' ? JSON.parse(raw) : raw);
+  } catch (error) {
+    console.error('Unable to create native backup', error);
+    return null;
+  }
+}
+
+function nativeLoadBackup(id) {
+  const bridge = getAndroidSaveBridge();
+  if (!bridge || typeof bridge.loadBackup !== 'function') {
+    return null;
+  }
+  try {
+    const raw = bridge.loadBackup(id);
+    return typeof raw === 'string' && raw ? raw : null;
+  } catch (error) {
+    console.error('Unable to load native backup', error);
+    return null;
+  }
+}
+
+function nativeDeleteBackup(id) {
+  const bridge = getAndroidSaveBridge();
+  if (!bridge || typeof bridge.deleteBackup !== 'function') {
+    return false;
+  }
+  try {
+    bridge.deleteBackup(id);
+    return true;
+  } catch (error) {
+    console.error('Unable to delete native backup', error);
+    return false;
+  }
+}
+
+const saveBackupManager = (() => {
+  function hasNativeSupport() {
+    const bridge = getAndroidSaveBridge();
+    return !!(bridge && typeof bridge.listBackups === 'function');
+  }
+
+  return {
+    list() {
+      const entries = hasNativeSupport()
+        ? fetchNativeSaveBackups()
+        : listLocalSaveBackups();
+      if (!Array.isArray(entries)) {
+        return [];
+      }
+      return entries
+        .filter(entry => entry)
+        .sort((a, b) => Number(b.savedAt || 0) - Number(a.savedAt || 0));
+    },
+    createManual(serialized, options = {}) {
+      if (typeof serialized !== 'string' || !serialized) {
+        return null;
+      }
+      let entry = null;
+      if (hasNativeSupport()) {
+        entry = nativeSaveBackup(serialized, Object.assign({}, options, { source: 'manual' }));
+      } else {
+        entry = createLocalSaveBackup(serialized, Object.assign({}, options, { source: 'manual' }));
+      }
+      if (entry) {
+        lastBackupAutoTimestamp = Date.now();
+      }
+      return entry;
+    },
+    load(id) {
+      if (!id) {
+        return null;
+      }
+      if (hasNativeSupport()) {
+        return nativeLoadBackup(id);
+      }
+      return loadLocalSaveBackup(id);
+    },
+    remove(id) {
+      if (!id) {
+        return false;
+      }
+      const nativeRemoved = hasNativeSupport() ? nativeDeleteBackup(id) : false;
+      const localRemoved = deleteLocalSaveBackup(id);
+      return nativeRemoved || localRemoved;
+    },
+    recordSuccessfulSave(options = {}) {
+      const previous = typeof options.previousSerialized === 'string' ? options.previousSerialized : null;
+      const current = typeof options.currentSerialized === 'string' ? options.currentSerialized : null;
+      if (!previous || previous === current) {
+        if (hasNativeSupport()) {
+          lastBackupAutoTimestamp = Date.now();
+        }
+        return;
+      }
+      if (hasNativeSupport()) {
+        lastBackupAutoTimestamp = Date.now();
+        return;
+      }
+      const now = Date.now();
+      if (now - lastBackupAutoTimestamp < SAVE_BACKUP_MIN_AUTO_INTERVAL_MS) {
+        return;
+      }
+      createLocalSaveBackup(previous, { source: 'auto' });
+      lastBackupAutoTimestamp = now;
+    }
+  };
+})();
 const TEXT_FONT_DEFAULT = 'orbitron';
 const TEXT_FONT_CHOICES = Object.freeze({
   orbitron: {
@@ -1087,6 +1439,44 @@ function formatNumberLocalized(value, options) {
 
 function formatIntegerLocalized(value) {
   return formatNumberLocalized(value, { maximumFractionDigits: 0, minimumFractionDigits: 0 });
+}
+
+function formatDateTimeLocalized(value, options = {}) {
+  const timestamp = Number(value);
+  if (!Number.isFinite(timestamp)) {
+    return '';
+  }
+  const date = new Date(timestamp);
+  if (!(date instanceof Date) || Number.isNaN(date.getTime())) {
+    return '';
+  }
+  const locale = getCurrentLocale();
+  const formatOptions = Object.assign({ dateStyle: 'medium', timeStyle: 'short' }, options);
+  try {
+    return new Intl.DateTimeFormat(locale, formatOptions).format(date);
+  } catch (error) {
+    return new Intl.DateTimeFormat('fr-FR', formatOptions).format(date);
+  }
+}
+
+function formatByteSizeLocalized(value) {
+  const bytes = Number(value);
+  if (!Number.isFinite(bytes) || bytes <= 0) {
+    return '0 B';
+  }
+  const thresholds = [
+    { unit: 'GB', size: 1024 * 1024 * 1024 },
+    { unit: 'MB', size: 1024 * 1024 },
+    { unit: 'KB', size: 1024 }
+  ];
+  for (let index = 0; index < thresholds.length; index += 1) {
+    const threshold = thresholds[index];
+    if (bytes >= threshold.size) {
+      const valueInUnit = bytes / threshold.size;
+      return `${formatNumberLocalized(valueInUnit, { maximumFractionDigits: 1 })} ${threshold.unit}`;
+    }
+  }
+  return `${formatIntegerLocalized(bytes)} B`;
 }
 
 function getHoldemBridge() {
@@ -5098,6 +5488,12 @@ function collectDomElements() {
   brickSkinOptionCard: document.getElementById('brickSkinOptionCard'),
   brickSkinSelect: document.getElementById('brickSkinSelect'),
   brickSkinStatus: document.getElementById('brickSkinStatus'),
+  saveManagerCard: document.getElementById('saveManagerCard'),
+  saveManagerContainer: document.getElementById('saveManagerContainer'),
+  saveManagerCreateButton: document.getElementById('saveManagerCreateButton'),
+  saveManagerRefreshButton: document.getElementById('saveManagerRefreshButton'),
+  saveManagerEmpty: document.getElementById('saveManagerEmpty'),
+  saveManagerList: document.getElementById('saveManagerList'),
   holdemOptionCard: document.getElementById('holdemOptionCard'),
   holdemWipeButton: document.getElementById('holdemWipeButton'),
   holdemBlindValue: document.getElementById('holdemBlindValue'),
@@ -6001,6 +6397,235 @@ function updateOptionsIntroDetails(options = {}) {
   const hasDetails = renderIds.length > 0;
   elements.optionsArcadeDetails.hidden = !hasDetails;
   elements.optionsArcadeDetails.setAttribute('aria-hidden', hasDetails ? 'false' : 'true');
+}
+
+function resolveBackupEntryLabel(entry) {
+  if (!entry) {
+    return '';
+  }
+  if (typeof entry.label === 'string' && entry.label.trim()) {
+    return entry.label.trim();
+  }
+  if (entry.source === 'auto') {
+    return translateOrDefault(
+      'scripts.app.saves.autoLabel',
+      'Sauvegarde automatique'
+    );
+  }
+  return translateOrDefault(
+    'scripts.app.saves.manualLabel',
+    'Sauvegarde manuelle'
+  );
+}
+
+function renderSaveManagerList() {
+  if (!elements.saveManagerList || !elements.saveManagerContainer) {
+    return;
+  }
+  const entries = saveBackupManager.list();
+  const list = elements.saveManagerList;
+  list.textContent = '';
+  if (elements.saveManagerEmpty) {
+    elements.saveManagerEmpty.hidden = Array.isArray(entries) && entries.length > 0;
+  }
+  if (!Array.isArray(entries) || entries.length === 0) {
+    return;
+  }
+  entries.slice(0, SAVE_BACKUP_MAX_ENTRIES).forEach(entry => {
+    if (!entry || typeof entry.id !== 'string' || !entry.id) {
+      return;
+    }
+    const item = document.createElement('li');
+    item.className = 'save-manager__item';
+    item.dataset.backupId = entry.id;
+
+    const details = document.createElement('div');
+    details.className = 'save-manager__details';
+
+    const name = document.createElement('span');
+    name.className = 'save-manager__name';
+    name.textContent = resolveBackupEntryLabel(entry);
+
+    const meta = document.createElement('span');
+    meta.className = 'save-manager__meta';
+    const dateText = formatDateTimeLocalized(entry.savedAt);
+    const sizeText = formatByteSizeLocalized(entry.size);
+    meta.textContent = dateText
+      ? `${dateText} · ${sizeText}`
+      : sizeText;
+
+    details.appendChild(name);
+    details.appendChild(meta);
+
+    const actions = document.createElement('div');
+    actions.className = 'save-manager__actions';
+
+    const restoreButton = document.createElement('button');
+    restoreButton.type = 'button';
+    restoreButton.className = 'option-link-button';
+    restoreButton.dataset.action = 'restore';
+    restoreButton.dataset.id = entry.id;
+    restoreButton.textContent = translateOrDefault(
+      'index.sections.options.saves.restore',
+      'Restaurer'
+    );
+
+    const deleteButton = document.createElement('button');
+    deleteButton.type = 'button';
+    deleteButton.className = 'option-link-button option-link-button--danger';
+    deleteButton.dataset.action = 'delete';
+    deleteButton.dataset.id = entry.id;
+    deleteButton.textContent = translateOrDefault(
+      'index.sections.options.saves.delete',
+      'Supprimer'
+    );
+
+    actions.appendChild(restoreButton);
+    actions.appendChild(deleteButton);
+
+    item.appendChild(details);
+    item.appendChild(actions);
+
+    list.appendChild(item);
+  });
+}
+
+function handleSaveManagerCreate(event) {
+  if (event) {
+    event.preventDefault();
+  }
+  const promptMessage = translateOrDefault(
+    'index.sections.options.saves.prompt',
+    'Nom de la sauvegarde :'
+  );
+  const rawName = typeof window !== 'undefined' && typeof window.prompt === 'function'
+    ? window.prompt(promptMessage, '')
+    : '';
+  if (rawName === null) {
+    return;
+  }
+  const trimmedName = rawName ? rawName.trim() : '';
+  saveGame();
+  const serialized = typeof lastSerializedSave === 'string' ? lastSerializedSave : null;
+  if (!serialized) {
+    showToast(translateOrDefault(
+      'scripts.app.saves.manualFailed',
+      'Impossible de créer la sauvegarde.'
+    ));
+    return;
+  }
+  const entry = saveBackupManager.createManual(serialized, {
+    label: trimmedName || null
+  });
+  if (!entry) {
+    showToast(translateOrDefault(
+      'scripts.app.saves.manualFailed',
+      'Impossible de créer la sauvegarde.'
+    ));
+    return;
+  }
+  renderSaveManagerList();
+  showToast(translateOrDefault(
+    'scripts.app.saves.manualCreated',
+    'Sauvegarde enregistrée.'
+  ));
+}
+
+function handleSaveManagerRefresh(event) {
+  if (event) {
+    event.preventDefault();
+  }
+  renderSaveManagerList();
+}
+
+function restoreBackupById(backupId) {
+  if (!backupId) {
+    return false;
+  }
+  const serialized = saveBackupManager.load(backupId);
+  if (typeof serialized !== 'string' || !serialized) {
+    showToast(translateOrDefault(
+      'scripts.app.saves.restoreFailed',
+      'Impossible de charger cette sauvegarde.'
+    ));
+    return false;
+  }
+  try {
+    applySerializedGameState(serialized);
+    if (typeof localStorage !== 'undefined' && localStorage) {
+      try {
+        localStorage.setItem(PRIMARY_SAVE_STORAGE_KEY, serialized);
+      } catch (storageError) {
+        console.warn('Unable to persist restored backup to local storage', storageError);
+      }
+    }
+    writeNativeSaveData(serialized);
+    lastSerializedSave = serialized;
+    storeReloadSaveSnapshot(serialized);
+    renderSaveManagerList();
+    showToast(translateOrDefault(
+      'scripts.app.saves.restoreSuccess',
+      'Sauvegarde restaurée.'
+    ));
+    return true;
+  } catch (error) {
+    console.error('Unable to restore selected backup', error);
+    showToast(translateOrDefault(
+      'scripts.app.saves.restoreFailed',
+      'Impossible de charger cette sauvegarde.'
+    ));
+    return false;
+  }
+}
+
+function handleSaveManagerListClick(event) {
+  if (!elements.saveManagerList) {
+    return;
+  }
+  const target = event.target instanceof Element
+    ? event.target.closest('button[data-action]')
+    : null;
+  if (!target) {
+    return;
+  }
+  event.preventDefault();
+  const action = target.dataset.action;
+  const backupId = target.dataset.id;
+  if (!backupId) {
+    return;
+  }
+  if (action === 'restore') {
+    const confirmMessage = translateOrDefault(
+      'index.sections.options.saves.restoreConfirm',
+      'Restaurer cette sauvegarde ?'
+    );
+    if (typeof window === 'undefined' || typeof window.confirm !== 'function' || window.confirm(confirmMessage)) {
+      restoreBackupById(backupId);
+    }
+    return;
+  }
+  if (action === 'delete') {
+    const confirmMessage = translateOrDefault(
+      'index.sections.options.saves.deleteConfirm',
+      'Supprimer définitivement cette sauvegarde ?'
+    );
+    if (typeof window !== 'undefined' && typeof window.confirm === 'function' && !window.confirm(confirmMessage)) {
+      return;
+    }
+    const removed = saveBackupManager.remove(backupId);
+    if (removed) {
+      renderSaveManagerList();
+      showToast(translateOrDefault(
+        'scripts.app.saves.deleteSuccess',
+        'Sauvegarde supprimée.'
+      ));
+    } else {
+      showToast(translateOrDefault(
+        'scripts.app.saves.deleteFailed',
+        'Impossible de supprimer cette sauvegarde.'
+      ));
+    }
+  }
 }
 
 function commitBrickSkinSelection(rawValue) {
@@ -13276,6 +13901,16 @@ function bindDomEventListeners() {
     });
   }
 
+  if (elements.saveManagerCreateButton) {
+    elements.saveManagerCreateButton.addEventListener('click', handleSaveManagerCreate);
+  }
+  if (elements.saveManagerRefreshButton) {
+    elements.saveManagerRefreshButton.addEventListener('click', handleSaveManagerRefresh);
+  }
+  if (elements.saveManagerList) {
+    elements.saveManagerList.addEventListener('click', handleSaveManagerListClick);
+  }
+
   if (elements.openDevkitButton) {
     if (!isDevkitFeatureEnabled()) {
       if (typeof elements.openDevkitButton.remove === 'function') {
@@ -16358,6 +16993,7 @@ function serializeState() {
 
 function saveGame() {
   let serialized;
+  const previousSerialized = lastSerializedSave;
   try {
     const payload = serializeState();
     serialized = JSON.stringify(payload);
@@ -16382,6 +17018,10 @@ function saveGame() {
   const success = persisted || nativePersisted;
 
   if (success) {
+    saveBackupManager.recordSuccessfulSave({
+      previousSerialized,
+      currentSerialized: serialized
+    });
     if (lastSerializedSave !== serialized) {
       storeReloadSaveSnapshot(serialized);
     }
@@ -16858,6 +17498,409 @@ function normalizeArcadeProgress(raw) {
   return result;
 }
 
+function applySerializedGameState(raw) {
+  const data = JSON.parse(raw);
+  gameState.atoms = LayeredNumber.fromJSON(data.atoms);
+  gameState.lifetime = LayeredNumber.fromJSON(data.lifetime);
+  gameState.perClick = LayeredNumber.fromJSON(data.perClick);
+  gameState.perSecond = LayeredNumber.fromJSON(data.perSecond);
+  const tickets = Number(data.gachaTickets);
+  gameState.gachaTickets = Number.isFinite(tickets) && tickets > 0 ? Math.floor(tickets) : 0;
+  const bonusTickets = Number(data.bonusParticulesTickets ?? data.bonusTickets);
+  gameState.bonusParticulesTickets = Number.isFinite(bonusTickets) && bonusTickets > 0
+    ? Math.floor(bonusTickets)
+    : 0;
+  const storedFeatureFlags = data.featureUnlockFlags ?? data.featureFlags ?? null;
+  gameState.featureUnlockFlags = normalizeFeatureUnlockFlags(storedFeatureFlags);
+  const storedTicketStarUnlock = data.ticketStarUnlocked ?? data.ticketStarUnlock;
+  if (storedTicketStarUnlock != null) {
+    gameState.ticketStarUnlocked = storedTicketStarUnlock === true
+      || storedTicketStarUnlock === 'true'
+      || storedTicketStarUnlock === 1
+      || storedTicketStarUnlock === '1';
+  } else {
+    gameState.ticketStarUnlocked = gameState.gachaTickets > 0;
+  }
+  gameState.arcadeProgress = normalizeArcadeProgress(data.arcadeProgress);
+  applyDerivedFeatureUnlockFlags();
+  const storedUpgrades = data.upgrades;
+  if (storedUpgrades && typeof storedUpgrades === 'object') {
+    const normalizedUpgrades = {};
+    Object.entries(storedUpgrades).forEach(([id, value]) => {
+      const numeric = Number(value);
+      if (!Number.isFinite(numeric)) {
+        return;
+      }
+      const sanitized = Math.max(0, Math.floor(numeric));
+      if (sanitized > 0) {
+        normalizedUpgrades[id] = sanitized;
+      }
+    });
+    gameState.upgrades = normalizedUpgrades;
+  } else {
+    gameState.upgrades = {};
+  }
+  const storedShopUnlocks = data.shopUnlocks;
+  if (Array.isArray(storedShopUnlocks)) {
+    gameState.shopUnlocks = new Set(storedShopUnlocks);
+  } else if (storedShopUnlocks && typeof storedShopUnlocks === 'object') {
+    gameState.shopUnlocks = new Set(Object.keys(storedShopUnlocks));
+  } else {
+    gameState.shopUnlocks = new Set();
+  }
+  gameState.stats = parseStats(data.stats);
+  gameState.trophies = new Set(Array.isArray(data.trophies) ? data.trophies : []);
+  const storedPageUnlocks = data.pageUnlocks;
+  if (storedPageUnlocks && typeof storedPageUnlocks === 'object') {
+    const baseUnlocks = createInitialPageUnlockState();
+    Object.keys(baseUnlocks).forEach(key => {
+      const rawValue = storedPageUnlocks[key];
+      baseUnlocks[key] = rawValue === true || rawValue === 'true' || rawValue === 1;
+    });
+    gameState.pageUnlocks = baseUnlocks;
+  } else {
+    gameState.pageUnlocks = createInitialPageUnlockState();
+  }
+  const storedBigBangBonus = Number(
+    data.bigBangLevelBonus
+    ?? data.bigBangBonus
+    ?? data.bigBangLevels
+    ?? data.bigBangLevel
+    ?? 0
+  );
+  setBigBangLevelBonus(storedBigBangBonus);
+  const storedBigBangPreference =
+    data.bigBangButtonVisible ?? data.showBigBangButton ?? data.bigBangVisible ?? null;
+  const wantsBigBang =
+    storedBigBangPreference === true
+    || storedBigBangPreference === 'true'
+    || storedBigBangPreference === 1
+    || storedBigBangPreference === '1';
+  const hasBigBangUnlock = isBigBangUnlocked();
+  gameState.bigBangButtonVisible = wantsBigBang && hasBigBangUnlock;
+  const storedOffline = Number(data.offlineGainMultiplier);
+  if (Number.isFinite(storedOffline) && storedOffline > 0) {
+    gameState.offlineGainMultiplier = Math.min(MYTHIQUE_OFFLINE_CAP, storedOffline);
+  } else {
+    gameState.offlineGainMultiplier = MYTHIQUE_OFFLINE_BASE;
+  }
+  const storedOfflineTickets = data.offlineTickets;
+  if (storedOfflineTickets && typeof storedOfflineTickets === 'object') {
+    const secondsPerTicket = Number(storedOfflineTickets.secondsPerTicket);
+    const normalizedSecondsPerTicket = Number.isFinite(secondsPerTicket) && secondsPerTicket > 0
+      ? secondsPerTicket
+      : OFFLINE_TICKET_CONFIG.secondsPerTicket;
+    const capSeconds = Number(storedOfflineTickets.capSeconds);
+    const normalizedCapSeconds = Number.isFinite(capSeconds) && capSeconds > 0
+      ? Math.max(capSeconds, normalizedSecondsPerTicket)
+      : Math.max(OFFLINE_TICKET_CONFIG.capSeconds, normalizedSecondsPerTicket);
+    const progressSeconds = Number(storedOfflineTickets.progressSeconds);
+    const normalizedProgressSeconds = Number.isFinite(progressSeconds) && progressSeconds > 0
+      ? Math.max(0, Math.min(progressSeconds, normalizedCapSeconds))
+      : 0;
+    gameState.offlineTickets = {
+      secondsPerTicket: normalizedSecondsPerTicket,
+      capSeconds: normalizedCapSeconds,
+      progressSeconds: normalizedProgressSeconds
+    };
+  } else if (typeof storedOfflineTickets === 'number' && storedOfflineTickets > 0) {
+    const interval = Number(storedOfflineTickets);
+    const normalizedSecondsPerTicket = Number.isFinite(interval) && interval > 0
+      ? interval
+      : OFFLINE_TICKET_CONFIG.secondsPerTicket;
+    const normalizedCapSeconds = Math.max(
+      OFFLINE_TICKET_CONFIG.capSeconds,
+      normalizedSecondsPerTicket
+    );
+    gameState.offlineTickets = {
+      secondsPerTicket: normalizedSecondsPerTicket,
+      capSeconds: normalizedCapSeconds,
+      progressSeconds: 0
+    };
+  } else {
+    gameState.offlineTickets = {
+      secondsPerTicket: OFFLINE_TICKET_CONFIG.secondsPerTicket,
+      capSeconds: OFFLINE_TICKET_CONFIG.capSeconds,
+      progressSeconds: 0
+    };
+  }
+  gameState.sudokuOfflineBonus = normalizeSudokuOfflineBonusState(data.sudokuOfflineBonus);
+  const storedInterval = Number(data.ticketStarIntervalSeconds);
+  if (Number.isFinite(storedInterval) && storedInterval > 0) {
+    gameState.ticketStarAverageIntervalSeconds = storedInterval;
+  } else {
+    gameState.ticketStarAverageIntervalSeconds = DEFAULT_TICKET_STAR_INTERVAL_SECONDS;
+  }
+  const storedAutoCollect = data.ticketStarAutoCollect;
+  if (storedAutoCollect && typeof storedAutoCollect === 'object') {
+    const rawDelay = storedAutoCollect.delaySeconds
+      ?? storedAutoCollect.delay
+      ?? storedAutoCollect.seconds
+      ?? storedAutoCollect.value;
+    const delaySeconds = Number(rawDelay);
+    gameState.ticketStarAutoCollect = Number.isFinite(delaySeconds) && delaySeconds >= 0
+      ? { delaySeconds }
+      : null;
+  } else if (storedAutoCollect === true) {
+    gameState.ticketStarAutoCollect = { delaySeconds: 0 };
+  } else if (typeof storedAutoCollect === 'number' && Number.isFinite(storedAutoCollect) && storedAutoCollect >= 0) {
+    gameState.ticketStarAutoCollect = { delaySeconds: storedAutoCollect };
+  } else {
+    gameState.ticketStarAutoCollect = null;
+  }
+  const storedFrenzyBonus = data.frenzySpawnBonus;
+  if (storedFrenzyBonus && typeof storedFrenzyBonus === 'object') {
+    const perClick = Number(storedFrenzyBonus.perClick);
+    const perSecond = Number(storedFrenzyBonus.perSecond);
+    gameState.frenzySpawnBonus = {
+      perClick: Number.isFinite(perClick) && perClick > 0 ? perClick : 1,
+      perSecond: Number.isFinite(perSecond) && perSecond > 0 ? perSecond : 1
+    };
+  } else {
+    gameState.frenzySpawnBonus = { perClick: 1, perSecond: 1 };
+  }
+  applyFrenzySpawnChanceBonus(gameState.frenzySpawnBonus);
+  gameState.apsCrit = normalizeApsCritState(data.apsCrit);
+  const storedApsCritEffects = data.apsCrit?.effects;
+  if (Array.isArray(storedApsCritEffects) && storedApsCritEffects.length > 0) {
+    gameState.apsCrit.effects = storedApsCritEffects
+      .map(effect => ({
+        remainingSeconds: Math.max(0, Number(effect?.remainingSeconds) || 0),
+        multiplierAdd: Math.max(0, Number(effect?.multiplierAdd) || 0)
+      }))
+      .filter(effect => effect.remainingSeconds > 0 && effect.multiplierAdd > 0);
+  }
+  const storedBigBangState = data.bigBangButtonVisible ?? data.bigBangVisible;
+  if (typeof storedBigBangState === 'boolean') {
+    gameState.bigBangButtonVisible = storedBigBangState && isBigBangUnlocked();
+  }
+  const storedElementSummary = data.elementBonusSummary;
+  gameState.elementBonusSummary = storedElementSummary && typeof storedElementSummary === 'object'
+    ? storedElementSummary
+    : {};
+  const storedGachaCards = data.gachaCards;
+  if (storedGachaCards && typeof storedGachaCards === 'object') {
+    const base = createInitialGachaCardCollection();
+    Object.keys(base).forEach(id => {
+      const stored = storedGachaCards[id];
+      if (!stored || typeof stored !== 'object') {
+        base[id] = { owned: 0, seen: 0, level: 0 };
+        return;
+      }
+      const owned = Number(stored.owned ?? stored.count ?? stored.total);
+      const seen = Number(stored.seen ?? stored.viewed ?? stored.visited);
+      const level = Number(stored.level ?? stored.rank);
+      base[id] = {
+        owned: Number.isFinite(owned) && owned > 0 ? Math.floor(owned) : 0,
+        seen: Number.isFinite(seen) && seen > 0 ? Math.floor(seen) : 0,
+        level: Number.isFinite(level) && level > 0 ? Math.floor(level) : 0
+      };
+    });
+    gameState.gachaCards = base;
+  } else {
+    gameState.gachaCards = createInitialGachaCardCollection();
+  }
+  const storedGachaImages = data.gachaImages;
+  const baseImageCollection = createInitialGachaImageCollection();
+  let inferredImageAcquisitionCounter = 0;
+  if (storedGachaImages && typeof storedGachaImages === 'object') {
+    Object.entries(storedGachaImages).forEach(([imageId, stored]) => {
+      const reference = baseImageCollection[imageId];
+      if (!reference) {
+        return;
+      }
+      const rawCount = Number(stored?.count ?? stored);
+      const normalizedCount = Number.isFinite(rawCount) && rawCount > 0
+        ? Math.floor(rawCount)
+        : 0;
+      reference.count = normalizedCount;
+      if (normalizedCount > 0) {
+        const storedOrder = Number(stored?.acquiredOrder);
+        if (Number.isFinite(storedOrder) && storedOrder > 0) {
+          reference.acquiredOrder = Math.floor(storedOrder);
+          if (reference.acquiredOrder > inferredImageAcquisitionCounter) {
+            inferredImageAcquisitionCounter = reference.acquiredOrder;
+          }
+        }
+        const storedFirstAcquiredAt = Number(stored?.firstAcquiredAt);
+        if (Number.isFinite(storedFirstAcquiredAt) && storedFirstAcquiredAt > 0) {
+          reference.firstAcquiredAt = storedFirstAcquiredAt;
+        }
+      }
+    });
+  }
+  gameState.gachaImages = baseImageCollection;
+  const storedImageCounter = Number(data.gachaImageAcquisitionCounter);
+  if (Number.isFinite(storedImageCounter) && storedImageCounter > inferredImageAcquisitionCounter) {
+    gameState.gachaImageAcquisitionCounter = Math.floor(storedImageCounter);
+  } else {
+    gameState.gachaImageAcquisitionCounter = inferredImageAcquisitionCounter;
+  }
+  const baseBonusImageCollection = createInitialGachaBonusImageCollection();
+  let inferredBonusImageAcquisitionCounter = 0;
+  if (data.gachaBonusImages && typeof data.gachaBonusImages === 'object') {
+    Object.entries(data.gachaBonusImages).forEach(([imageId, stored]) => {
+      const reference = baseBonusImageCollection[imageId];
+      if (!reference) {
+        return;
+      }
+      const rawCount = Number(stored?.count ?? stored);
+      const normalizedCount = Number.isFinite(rawCount) && rawCount > 0
+        ? Math.floor(rawCount)
+        : 0;
+      reference.count = normalizedCount;
+      if (normalizedCount > 0) {
+        const storedOrder = Number(stored?.acquiredOrder);
+        if (Number.isFinite(storedOrder) && storedOrder > 0) {
+          reference.acquiredOrder = Math.floor(storedOrder);
+          if (reference.acquiredOrder > inferredBonusImageAcquisitionCounter) {
+            inferredBonusImageAcquisitionCounter = reference.acquiredOrder;
+          }
+        }
+        const storedFirstAcquiredAt = Number(stored?.firstAcquiredAt);
+        if (Number.isFinite(storedFirstAcquiredAt) && storedFirstAcquiredAt > 0) {
+          reference.firstAcquiredAt = storedFirstAcquiredAt;
+        }
+      }
+    });
+  }
+  gameState.gachaBonusImages = baseBonusImageCollection;
+  const storedBonusCounter = Number(data.gachaBonusImageAcquisitionCounter);
+  if (Number.isFinite(storedBonusCounter) && storedBonusCounter > inferredBonusImageAcquisitionCounter) {
+    gameState.gachaBonusImageAcquisitionCounter = Math.floor(storedBonusCounter);
+  } else {
+    gameState.gachaBonusImageAcquisitionCounter = inferredBonusImageAcquisitionCounter;
+  }
+  const fusionState = createInitialFusionState();
+  if (data.fusions && typeof data.fusions === 'object') {
+    Object.keys(fusionState).forEach(id => {
+      const stored = data.fusions[id];
+      if (!stored || typeof stored !== 'object') {
+        fusionState[id] = { attempts: 0, successes: 0 };
+        return;
+      }
+      const attemptsRaw = Number(
+        stored.attempts
+          ?? stored.tries
+          ?? stored.tentatives
+          ?? stored.total
+          ?? 0
+      );
+      const successesRaw = Number(
+        stored.successes
+          ?? stored.success
+          ?? stored.victories
+          ?? stored.wins
+          ?? 0
+      );
+      fusionState[id] = {
+        attempts: Number.isFinite(attemptsRaw) && attemptsRaw > 0 ? Math.floor(attemptsRaw) : 0,
+        successes: Number.isFinite(successesRaw) && successesRaw > 0 ? Math.floor(successesRaw) : 0
+      };
+    });
+  }
+  gameState.fusions = fusionState;
+  const fusionBonuses = createInitialFusionBonuses();
+  const storedFusionBonuses = data.fusionBonuses;
+  if (storedFusionBonuses && typeof storedFusionBonuses === 'object') {
+    const apc = Number(
+      storedFusionBonuses.apcFlat
+        ?? storedFusionBonuses.apc
+        ?? storedFusionBonuses.perClick
+        ?? storedFusionBonuses.click
+        ?? 0
+    );
+    const aps = Number(
+      storedFusionBonuses.apsFlat
+        ?? storedFusionBonuses.aps
+        ?? storedFusionBonuses.perSecond
+        ?? storedFusionBonuses.auto
+        ?? 0
+    );
+    fusionBonuses.apcFlat = Number.isFinite(apc) ? apc : 0;
+    fusionBonuses.apsFlat = Number.isFinite(aps) ? aps : 0;
+  }
+  gameState.fusionBonuses = fusionBonuses;
+  gameState.theme = getThemeDefinition(data.theme) ? data.theme : DEFAULT_THEME_ID;
+  const storedBrickSkin = data.arcadeBrickSkin
+    ?? data.particulesBrickSkin
+    ?? data.brickSkin
+    ?? null;
+  gameState.arcadeBrickSkin = normalizeBrickSkinSelection(storedBrickSkin);
+  if (typeof setParticulesBrickSkinPreference === 'function') {
+    setParticulesBrickSkinPreference(gameState.arcadeBrickSkin);
+  }
+  const parseStoredVolume = rawVolume => {
+    const numeric = Number(rawVolume);
+    if (!Number.isFinite(numeric)) {
+      return null;
+    }
+    if (numeric > 1) {
+      return clampMusicVolume(numeric / 100, DEFAULT_MUSIC_VOLUME);
+    }
+    return clampMusicVolume(numeric, DEFAULT_MUSIC_VOLUME);
+  };
+
+  const storedMusic = data.music;
+  if (storedMusic && typeof storedMusic === 'object') {
+    const selected = storedMusic.selectedTrack
+      ?? storedMusic.track
+      ?? storedMusic.id
+      ?? storedMusic.filename;
+    gameState.musicTrackId = typeof selected === 'string' && selected ? selected : null;
+    const storedVolume = parseStoredVolume(storedMusic.volume);
+    if (storedVolume != null) {
+      gameState.musicVolume = storedVolume;
+    } else if (typeof data.musicVolume === 'number') {
+      const fallbackVolume = parseStoredVolume(data.musicVolume);
+      gameState.musicVolume = fallbackVolume != null ? fallbackVolume : DEFAULT_MUSIC_VOLUME;
+    } else {
+      gameState.musicVolume = DEFAULT_MUSIC_VOLUME;
+    }
+    if (typeof storedMusic.enabled === 'boolean') {
+      gameState.musicEnabled = storedMusic.enabled;
+    } else if (typeof data.musicEnabled === 'boolean') {
+      gameState.musicEnabled = data.musicEnabled;
+    } else if (gameState.musicTrackId) {
+      gameState.musicEnabled = true;
+    } else {
+      gameState.musicEnabled = DEFAULT_MUSIC_ENABLED;
+    }
+  } else {
+    if (typeof data.musicTrackId === 'string' && data.musicTrackId) {
+      gameState.musicTrackId = data.musicTrackId;
+    } else if (typeof data.musicTrack === 'string' && data.musicTrack) {
+      gameState.musicTrackId = data.musicTrack;
+    } else {
+      gameState.musicTrackId = null;
+    }
+    if (typeof data.musicEnabled === 'boolean') {
+      gameState.musicEnabled = data.musicEnabled;
+    } else if (gameState.musicTrackId) {
+      gameState.musicEnabled = true;
+    } else {
+      gameState.musicEnabled = DEFAULT_MUSIC_ENABLED;
+    }
+    const fallbackVolume = parseStoredVolume(data.musicVolume);
+    gameState.musicVolume = fallbackVolume != null ? fallbackVolume : DEFAULT_MUSIC_VOLUME;
+  }
+  if (gameState.musicEnabled === false) {
+    gameState.musicTrackId = null;
+  }
+  evaluatePageUnlocks({ save: false, deferUI: true });
+  getShopUnlockSet();
+  invalidateFeatureUnlockCache({ resetArcadeState: true });
+  applyTheme();
+  recalcProduction();
+  renderShop();
+  updateBigBangVisibility();
+  updateUI();
+  if (data.lastSave) {
+    const diff = Math.max(0, (Date.now() - data.lastSave) / 1000);
+    applyOfflineProgress(diff);
+  }
+}
+
 function loadGame() {
   try {
     resetFrenzyState({ skipApply: true });
@@ -17319,8 +18362,60 @@ function loadGame() {
     }
   } catch (err) {
     console.error('Erreur de chargement', err);
+    if (attemptRestoreFromBackup()) {
+      return;
+    }
     resetGame();
   }
+}
+
+function attemptRestoreFromBackup() {
+  try {
+    const entries = saveBackupManager.list();
+    if (!Array.isArray(entries) || entries.length === 0) {
+      return false;
+    }
+    for (let index = 0; index < entries.length; index += 1) {
+      const entry = entries[index];
+      if (!entry || typeof entry.id !== 'string' || !entry.id) {
+        continue;
+      }
+      const serialized = saveBackupManager.load(entry.id);
+      if (typeof serialized !== 'string' || !serialized) {
+        continue;
+      }
+      try {
+        applySerializedGameState(serialized);
+        if (typeof localStorage !== 'undefined' && localStorage) {
+          try {
+            localStorage.setItem(PRIMARY_SAVE_STORAGE_KEY, serialized);
+          } catch (storageError) {
+            console.warn('Unable to persist restored backup to local storage', storageError);
+          }
+        }
+        writeNativeSaveData(serialized);
+        lastSerializedSave = serialized;
+        storeReloadSaveSnapshot(serialized);
+        renderSaveManagerList();
+        const message = translateOrDefault(
+          'scripts.app.saves.fallbackRestored',
+          'Sauvegarde de secours restaurée.'
+        );
+        showToast(message);
+        return true;
+      } catch (error) {
+        console.error('Unable to apply backup save', error);
+      }
+    }
+    const failureMessage = translateOrDefault(
+      'scripts.app.saves.fallbackFailed',
+      'Aucune sauvegarde de secours valide n’a pu être chargée.'
+    );
+    showToast(failureMessage);
+  } catch (error) {
+    console.error('Unable to restore from backup', error);
+  }
+  return false;
 }
 
 let lastUpdate = performance.now();
@@ -17381,6 +18476,7 @@ function startApp() {
   evaluateTrophies();
   renderShop();
   renderGoals();
+  renderSaveManagerList();
   updateUI();
   randomizeAtomButtonImage();
   initStarfield();
