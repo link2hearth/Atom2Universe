@@ -3870,6 +3870,20 @@ const INFO_TROPHY_ID = 'scaleSandGrain';
 const ACHIEVEMENTS_UNLOCK_TROPHY_ID = ARCADE_TROPHY_ID;
 const LOCKABLE_PAGE_IDS = new Set(['gacha', 'tableau', 'fusion', 'info', 'collection']);
 
+function hasOwnedGachaCards() {
+  return Object.values(gameState.gachaCards || {}).some(entry => {
+    const count = Number(entry?.count ?? entry);
+    return Number.isFinite(count) && count > 0;
+  });
+}
+
+function hasOwnedGachaImages() {
+  return Object.values(gameState.gachaImages || {}).some(entry => {
+    const count = Number(entry?.count ?? entry);
+    return Number.isFinite(count) && count > 0;
+  });
+}
+
 function getPageUnlockState() {
   if (!gameState.pageUnlocks || typeof gameState.pageUnlocks !== 'object') {
     gameState.pageUnlocks = createInitialPageUnlockState();
@@ -3878,8 +3892,10 @@ function getPageUnlockState() {
 }
 
 function isPageUnlocked(pageId) {
-  if (pageId === 'collection' && !isCollectionFeatureEnabled()) {
-    return false;
+  if (pageId === 'collection') {
+    if (!isCollectionFeatureEnabled()) {
+      return hasOwnedGachaCards();
+    }
   }
   const featureId = PAGE_FEATURE_MAP[pageId];
   if (featureId) {
@@ -3975,15 +3991,7 @@ function evaluatePageUnlocks(options = {}) {
   }
 
   if (!unlocks.collection) {
-    const hasCards = Object.values(gameState.gachaCards || {}).some(entry => {
-      const count = Number(entry?.count ?? entry);
-      return Number.isFinite(count) && count > 0;
-    });
-    const hasImages = Object.values(gameState.gachaImages || {}).some(entry => {
-      const count = Number(entry?.count ?? entry);
-      return Number.isFinite(count) && count > 0;
-    });
-    if (hasCards || hasImages) {
+    if (hasOwnedGachaCards() || hasOwnedGachaImages()) {
       changed = unlockPage('collection', { save: false, deferUI: true }) || changed;
     }
   }
@@ -6705,7 +6713,6 @@ function subscribeBigBangLanguageUpdates() {
 }
 
 function updatePageUnlockUI() {
-  const unlocks = getPageUnlockState();
   const buttonConfig = [
     ['gacha', elements.navGachaButton],
     ['tableau', elements.navTableButton],
@@ -6714,8 +6721,7 @@ function updatePageUnlockUI() {
   ];
 
   buttonConfig.forEach(([pageId, button]) => {
-    const unlocked = unlocks?.[pageId] === true
-      && (pageId !== 'collection' || isCollectionFeatureEnabled());
+    const unlocked = isPageUnlocked(pageId);
     setNavButtonLockState(button, unlocked);
   });
 
