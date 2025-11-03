@@ -399,7 +399,7 @@ function getBuildingLevel(context, id) {
 
 const SHOP_BUILDING_IDS = ['godFinger', 'starCore', 'gachaTicketBooth'];
 
-const SHOP_PROGRESSIVE_GROWTH_RATE = 1.12;
+const SHOP_PROGRESSIVE_GROWTH_RATE = 1.11;
 
 function calculateProgressiveBonus(level = 0, baseIncrement = 1, growthRate = SHOP_PROGRESSIVE_GROWTH_RATE) {
   if (!Number.isFinite(level) || level <= 0) {
@@ -454,10 +454,10 @@ function createShopBuildingDefinitions() {
       name: 'Doigt créateur',
       description: 'Le pouvoir divin canalisé dans un seul clic.',
       effectSummary:
-        'Production manuelle : commence à +1 APC et progresse d’environ +12 % par niveau.',
+        'Production manuelle : commence à +1 APC et progresse d’environ +11 % par niveau.',
       category: 'manual',
-      baseCost: 15,
-      costScale: 1.15,
+      baseCost: 25,
+      costScale: 1.16,
       effect: (level = 0) => {
         const clickAdd = calculateProgressiveBonus(level, 1);
         return { clickAdd };
@@ -468,10 +468,10 @@ function createShopBuildingDefinitions() {
       name: 'Cœur d’étoile',
       description: 'Compactez une étoile pour générer des flux constants d’atomes.',
       effectSummary:
-        'Production passive : commence à +1 APS et progresse d’environ +12 % par niveau.',
+        'Production passive : commence à +1 APS et progresse d’environ +11 % par niveau.',
       category: 'auto',
-      baseCost: 20,
-      costScale: 1.15,
+      baseCost: 30,
+      costScale: 1.16,
       effect: (level = 0) => {
         const autoAdd = calculateProgressiveBonus(level, 1);
         return { autoAdd };
@@ -484,8 +484,8 @@ function createShopBuildingDefinitions() {
       effectSummary:
         'Convertit les atomes en tickets gacha : +1 ticket par achat. Limite portée à 1 000 niveaux (+1 000 par Big Bang). Le prix augmente de 25 000 atomes à chaque niveau et ce coût de base est multiplié par 4 000 après chaque Big Bang.',
       category: 'special',
-      baseCost: 25000,
-      costIncrement: 25000,
+      baseCost: 250000,
+      costIncrement: 250000,
       bigBangBaseCostMultiplier: 4000,
       // Multiplie le coût de base (et l'incrément) du magasin après chaque Big Bang.
       gachaTicketsPerPurchase: 1,
@@ -3774,6 +3774,7 @@ if (typeof globalThis !== 'undefined') {
   globalThis.toggleCollectionFeatureEnabled = toggleCollectionFeatureEnabled;
   globalThis.toggleInfoSectionsFeatureEnabled = toggleInfoSectionsFeatureEnabled;
 }
+
 
 
 
