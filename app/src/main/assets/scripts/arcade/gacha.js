@@ -2447,6 +2447,138 @@ function updateGachaRarityProgress() {
 const fusionCards = new Map();
 let isRenderingFusionList = false;
 
+const FUSION_ATTEMPT_OPTIONS = [1, 10];
+let fusionAttemptMultiplier = FUSION_ATTEMPT_OPTIONS[0];
+let fusionModeControlInitialized = false;
+
+function normalizeFusionAttemptMultiplier(value) {
+  const numeric = Math.max(1, Math.floor(Number(value) || 0));
+  if (FUSION_ATTEMPT_OPTIONS.includes(numeric)) {
+    return numeric;
+  }
+  return FUSION_ATTEMPT_OPTIONS[0];
+}
+
+function getFusionAttemptMultiplier() {
+  fusionAttemptMultiplier = normalizeFusionAttemptMultiplier(fusionAttemptMultiplier);
+  return fusionAttemptMultiplier;
+}
+
+function computeFusionRequirementTotal(baseCount, multiplier = getFusionAttemptMultiplier()) {
+  const normalizedBase = Math.max(0, Number(baseCount) || 0);
+  const normalizedMultiplier = Math.max(1, Math.floor(Number(multiplier) || 0));
+  return normalizedBase * normalizedMultiplier;
+}
+
+function getFusionModeLabel(multiplier = getFusionAttemptMultiplier()) {
+  const formattedCount = formatIntegerLocalized(multiplier);
+  const modeKey = multiplier > 1 ? 'modeMulti' : 'modeSingle';
+  return translateWithFallback(
+    `scripts.gacha.fusion.controls.${modeKey}`,
+    multiplier > 1 ? `×${formattedCount}` : `×${formattedCount}`,
+    { count: formattedCount }
+  );
+}
+
+function getFusionModeDescription(multiplier = getFusionAttemptMultiplier()) {
+  const modeLabel = getFusionModeLabel(multiplier);
+  const formattedCount = formatIntegerLocalized(multiplier);
+  return translateWithFallback(
+    'scripts.gacha.fusion.controls.modeLabel',
+    `Tentatives par clic : ${modeLabel}`,
+    { mode: modeLabel, count: formattedCount }
+  );
+}
+
+function refreshFusionModeButton() {
+  if (typeof elements === 'undefined' || !elements) {
+    return;
+  }
+  const button = elements.fusionModeButton;
+  if (!button) {
+    fusionModeControlInitialized = false;
+    return;
+  }
+  const multiplier = getFusionAttemptMultiplier();
+  const modeKey = multiplier > 1 ? 'modeMulti' : 'modeSingle';
+  const modeLabel = getFusionModeLabel(multiplier);
+  const description = getFusionModeDescription(multiplier);
+  const formattedCount = formatIntegerLocalized(multiplier);
+  button.textContent = modeLabel;
+  button.dataset.mode = modeKey === 'modeMulti' ? 'multi' : 'single';
+  button.setAttribute('data-i18n', `scripts.gacha.fusion.controls.${modeKey}`);
+  button.setAttribute('title', translateWithFallback(
+    'scripts.gacha.fusion.controls.modeTitle',
+    description,
+    { mode: modeLabel, count: formattedCount }
+  ));
+  button.setAttribute('aria-pressed', multiplier > 1 ? 'true' : 'false');
+  button.setAttribute('aria-label', translateWithFallback(
+    'scripts.gacha.fusion.controls.modeAria',
+    `Basculer le nombre de tentatives de fusion (actuel : ${modeLabel})`,
+    { mode: modeLabel, count: formattedCount }
+  ));
+}
+
+function initFusionModeControl() {
+  if (fusionModeControlInitialized) {
+    refreshFusionModeButton();
+    return;
+  }
+  if (typeof elements === 'undefined' || !elements) {
+    return;
+  }
+  const button = elements.fusionModeButton;
+  if (!button) {
+    fusionModeControlInitialized = false;
+    return;
+  }
+  fusionModeControlInitialized = true;
+  button.addEventListener('click', event => {
+    event.preventDefault();
+    toggleFusionAttemptMode();
+  });
+  refreshFusionModeButton();
+}
+
+function setFusionAttemptMultiplier(value) {
+  const normalized = normalizeFusionAttemptMultiplier(value);
+  if (normalized === fusionAttemptMultiplier) {
+    refreshFusionModeButton();
+    return;
+  }
+  fusionAttemptMultiplier = normalized;
+  refreshFusionModeButton();
+  updateFusionUI();
+}
+
+function toggleFusionAttemptMode() {
+  const current = getFusionAttemptMultiplier();
+  const next = current === FUSION_ATTEMPT_OPTIONS[0]
+    ? FUSION_ATTEMPT_OPTIONS[FUSION_ATTEMPT_OPTIONS.length - 1]
+    : FUSION_ATTEMPT_OPTIONS[0];
+  setFusionAttemptMultiplier(next);
+}
+
+function getFusionTryButtonLabel(multiplier = getFusionAttemptMultiplier()) {
+  const formattedCount = formatIntegerLocalized(multiplier);
+  return translateWithFallback(
+    'scripts.gacha.fusion.controls.tryButton',
+    `Tenter ×${formattedCount}`,
+    { count: formattedCount }
+  );
+}
+
+function getFusionTryButtonAria(definition, multiplier = getFusionAttemptMultiplier()) {
+  const formattedCount = formatIntegerLocalized(multiplier);
+  const name = definition?.name || '';
+  return translateWithFallback(
+    'scripts.gacha.fusion.tryButtonAria',
+    `Tenter la fusion ${name} ×${formattedCount}`,
+    { name, count: formattedCount }
+  );
+}
+
 function formatFusionChance(chance) {
   const ratio = Math.max(0, Math.min(1, Number(chance) || 0));
   const percent = ratio * 100;
@@ -2496,14 +2628,16 @@ function setFusionLog(message, status = null) {
   }
 }
 
-function canAttemptFusion(definition) {
+function canAttemptFusion(definition, attemptCount = getFusionAttemptMultiplier()) {
   if (!definition) return false;
   if (!Array.isArray(definition.inputs) || !definition.inputs.length) {
     return false;
   }
   return definition.inputs.every(input => {
     const entry = gameState.elements?.[input.elementId];
-    return getElementCurrentCount(entry) >= input.count;
+    const available = getElementCurrentCount(entry);
+    const required = computeFusionRequirementTotal(input.count, attemptCount);
+    return available >= required;
   });
 }
 
@@ -2610,6 +2744,46 @@ function applyFusionRewards(rewards) {
   return summaries;
 }
 
+function getFusionBatchRewardSummary(definition, successCount) {
+  if (!definition || successCount <= 0) {
+    return [];
+  }
+  const rewards = definition.rewards || {};
+  const summary = [];
+  if (rewards.apcFlat) {
+    const totalApc = rewards.apcFlat * successCount;
+    if (totalApc) {
+      summary.push(t('scripts.gacha.fusion.apcBonus', {
+        value: formatNumberLocalized(totalApc)
+      }));
+    }
+  }
+  if (rewards.apsFlat) {
+    const totalAps = rewards.apsFlat * successCount;
+    if (totalAps) {
+      summary.push(t('scripts.gacha.fusion.apsBonus', {
+        value: formatNumberLocalized(totalAps)
+      }));
+    }
+  }
+  if (Array.isArray(rewards.elements)) {
+    rewards.elements.forEach(reward => {
+      const baseCount = Number(reward?.count ?? reward?.quantity ?? reward?.amount ?? 0);
+      if (!Number.isFinite(baseCount) || baseCount <= 0) {
+        return;
+      }
+      const totalCount = baseCount * successCount;
+      if (totalCount <= 0) {
+        return;
+      }
+      const formattedTotal = formatNumberLocalized(totalCount, { maximumFractionDigits: 0 });
+      const label = formatFusionElementLabel(reward);
+      summary.push(t('scripts.gacha.fusion.elementBonus', { count: formattedTotal, element: label }));
+    });
+  }
+  return summary;
+}
+
 function buildFusionCard(definition) {
   const card = document.createElement('article');
   card.className = 'fusion-card';
@@ -2658,7 +2832,9 @@ function buildFusionCard(definition) {
 
     const count = document.createElement('span');
     count.className = 'fusion-requirement__count';
-    count.textContent = `×${input.count}`;
+    const initialRequired = computeFusionRequirementTotal(input.count);
+    const formattedRequired = formatNumberLocalized(initialRequired, { maximumFractionDigits: 0 });
+    count.textContent = `×${formattedRequired}`;
 
     const availability = document.createElement('span');
     availability.className = 'fusion-requirement__availability';
@@ -2668,7 +2844,8 @@ function buildFusionCard(definition) {
     requirementList.appendChild(item);
     return {
       elementId: input.elementId,
-      requiredCount: input.count,
+      baseCount: input.count,
+      countLabel: count,
       availabilityLabel: availability
     };
   });
@@ -2681,10 +2858,10 @@ function buildFusionCard(definition) {
   const button = document.createElement('button');
   button.type = 'button';
   button.className = 'fusion-card__button';
-  button.textContent = t('scripts.gacha.fusion.tryButton');
-  button.setAttribute('aria-label', t('scripts.gacha.fusion.tryButtonAria', {
-    name: definition.name
-  }));
+  const initialLabel = getFusionTryButtonLabel();
+  button.textContent = initialLabel;
+  button.setAttribute('title', initialLabel);
+  button.setAttribute('aria-label', getFusionTryButtonAria(definition));
   button.addEventListener('click', () => {
     handleFusionAttempt(definition.id);
   });
@@ -2777,6 +2954,8 @@ function ensureFusionListVisibility() {
 }
 
 function renderFusionList() {
+  initFusionModeControl();
+  refreshFusionModeButton();
   if (!elements.fusionList || isRenderingFusionList) return;
   isRenderingFusionList = true;
   try {
@@ -2811,9 +2990,13 @@ function updateFusionUI() {
   if (!elements.fusionList || !FUSION_DEFS.length) {
     return;
   }
+  initFusionModeControl();
+  refreshFusionModeButton();
   if (ensureFusionListVisibility()) {
     return;
   }
+  const multiplier = getFusionAttemptMultiplier();
+  const tryButtonLabel = getFusionTryButtonLabel(multiplier);
   FUSION_DEFS.forEach(def => {
     const card = fusionCards.get(def.id);
     if (!card) {
@@ -2824,17 +3007,24 @@ function updateFusionUI() {
       attempts: state.attempts,
       successes: state.successes
     });
+    card.button.textContent = tryButtonLabel;
+    card.button.setAttribute('title', tryButtonLabel);
+    card.button.setAttribute('aria-label', getFusionTryButtonAria(def, multiplier));
     let canAttempt = true;
     card.requirements.forEach(requirement => {
       const entry = gameState.elements?.[requirement.elementId];
       const available = getElementCurrentCount(entry);
       const availableText = formatNumberLocalized(available, { maximumFractionDigits: 0 });
-      const requiredText = formatNumberLocalized(requirement.requiredCount, { maximumFractionDigits: 0 });
+      const requiredCount = computeFusionRequirementTotal(requirement.baseCount, multiplier);
+      const requiredText = formatNumberLocalized(requiredCount, { maximumFractionDigits: 0 });
+      if (requirement.countLabel) {
+        requirement.countLabel.textContent = `×${requiredText}`;
+      }
       requirement.availabilityLabel.textContent = t('scripts.gacha.fusion.availabilityProgress', {
         available: availableText,
         required: requiredText
       });
-      if (available < requirement.requiredCount) {
+      if (available < requiredCount) {
         canAttempt = false;
       }
     });
@@ -2877,12 +3067,13 @@ function updateFusionUI() {
   });
 }
 
-function handleFusionAttempt(fusionId) {
+function handleFusionAttempt(fusionId, attemptCount = getFusionAttemptMultiplier()) {
   const definition = FUSION_DEFINITION_MAP.get(fusionId);
   if (!definition) {
     return;
   }
-  if (!canAttemptFusion(definition)) {
+  const attempts = Math.max(1, Math.floor(Number(attemptCount) || 0));
+  if (!canAttemptFusion(definition, attempts)) {
     setFusionLog(t('scripts.gacha.fusion.logMissingResources'), 'failure');
     showToast(t('scripts.gacha.fusion.toastMissingResources'));
     return;
@@ -2894,18 +3085,20 @@ function handleFusionAttempt(fusionId) {
       return;
     }
     const current = getElementCurrentCount(entry);
-    const nextCount = Math.max(0, current - input.count);
+    const required = computeFusionRequirementTotal(input.count, attempts);
+    const nextCount = Math.max(0, current - required);
     entry.count = nextCount;
   });
 
   const state = getFusionStateById(definition.id);
-  state.attempts += 1;
-
-  const success = Math.random() < definition.successChance;
-  let rewardSummary = [];
-  if (success) {
-    state.successes += 1;
-    rewardSummary = applyFusionRewards(definition.rewards);
+  let successCount = 0;
+  for (let index = 0; index < attempts; index += 1) {
+    state.attempts += 1;
+    if (Math.random() < definition.successChance) {
+      successCount += 1;
+      state.successes += 1;
+      applyFusionRewards(definition.rewards);
+    }
   }
 
   recalcProduction();
@@ -2913,17 +3106,39 @@ function handleFusionAttempt(fusionId) {
   evaluateTrophies();
   saveGame();
 
-  if (success) {
+  if (successCount > 0) {
+    const rewardSummary = getFusionBatchRewardSummary(definition, successCount);
     const rewardText = rewardSummary.length
       ? rewardSummary.join(' · ')
       : t('scripts.gacha.fusion.noRewardSummary');
-    setFusionLog(t('scripts.gacha.fusion.logSuccess', {
-      name: definition.name,
-      reward: rewardText
-    }), 'success');
+    if (attempts > 1) {
+      const attemptsText = formatIntegerLocalized(attempts);
+      const successesText = formatIntegerLocalized(successCount);
+      const failuresText = formatIntegerLocalized(Math.max(0, attempts - successCount));
+      setFusionLog(t('scripts.gacha.fusion.logBatchSuccess', {
+        name: definition.name,
+        attempts: attemptsText,
+        successes: successesText,
+        failures: failuresText,
+        reward: rewardText
+      }), 'success');
+    } else {
+      setFusionLog(t('scripts.gacha.fusion.logSuccess', {
+        name: definition.name,
+        reward: rewardText
+      }), 'success');
+    }
     showToast(t('scripts.gacha.fusion.toastSuccess'));
   } else {
-    setFusionLog(t('scripts.gacha.fusion.logFailure', { name: definition.name }), 'failure');
+    if (attempts > 1) {
+      const attemptsText = formatIntegerLocalized(attempts);
+      setFusionLog(t('scripts.gacha.fusion.logBatchFailure', {
+        name: definition.name,
+        attempts: attemptsText
+      }), 'failure');
+    } else {
+      setFusionLog(t('scripts.gacha.fusion.logFailure', { name: definition.name }), 'failure');
+    }
     showToast(t('scripts.gacha.fusion.toastFailure'));
   }
 }
