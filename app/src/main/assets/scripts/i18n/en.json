@@ -127,13 +127,24 @@
           "count": "×{count}"
         },
         "images": {
-          "title": "Bonus images",
-          "subtitle": "Your rare images won from bonus draws.",
+          "title": "Collection images",
+          "subtitle": "Your rare images earned while the collection feature is active.",
           "toggle": {
             "collapse": "Collapse",
             "expand": "Expand"
           },
-          "empty": "No bonus image unlocked yet.",
+          "empty": "No collection image unlocked yet.",
+          "view": "View {card}",
+          "count": "×{count}"
+        },
+        "bonusImages": {
+          "title": "Bonus images",
+          "subtitle": "Your permanent bonus images won from the gacha.",
+          "toggle": {
+            "collapse": "Collapse",
+            "expand": "Expand"
+          },
+          "empty": "No permanent bonus image unlocked yet.",
           "view": "View {card}",
           "count": "×{count}"
         }
@@ -3014,6 +3025,14 @@
           "label": "Artificial",
           "description": "Unstable elements created artificially by humans in reactors and accelerators."
         }
+      },
+      "images": {
+        "toastNew": "Collection image unlocked: {card}",
+        "toastDuplicate": "Collection image found again: {card}"
+      },
+      "bonusImages": {
+        "toastNew": "Bonus image unlocked: {card}",
+        "toastDuplicate": "Bonus image found again: {card}"
       },
       "featured": {
         "today": "Today",

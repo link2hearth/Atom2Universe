@@ -1060,6 +1060,300 @@
     {
       "id": "civitai115",
       "fileName": "civitai (115).png"
+    },
+    {
+      "id": "bonusImage1",
+      "fileName": "images (1).png",
+      "assetPath": "Assets/Cartes/bonus/images (1).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage2",
+      "fileName": "images (2).png",
+      "assetPath": "Assets/Cartes/bonus/images (2).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage3",
+      "fileName": "images (3).png",
+      "assetPath": "Assets/Cartes/bonus/images (3).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage4",
+      "fileName": "images (4).png",
+      "assetPath": "Assets/Cartes/bonus/images (4).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage5",
+      "fileName": "images (5).png",
+      "assetPath": "Assets/Cartes/bonus/images (5).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage6",
+      "fileName": "images (6).png",
+      "assetPath": "Assets/Cartes/bonus/images (6).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage7",
+      "fileName": "images (7).png",
+      "assetPath": "Assets/Cartes/bonus/images (7).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage8",
+      "fileName": "images (8).png",
+      "assetPath": "Assets/Cartes/bonus/images (8).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage9",
+      "fileName": "images (9).png",
+      "assetPath": "Assets/Cartes/bonus/images (9).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage10",
+      "fileName": "images (10).png",
+      "assetPath": "Assets/Cartes/bonus/images (10).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage11",
+      "fileName": "images (11).png",
+      "assetPath": "Assets/Cartes/bonus/images (11).png",
+      "collectionType": "permanent"
+    },,
+    {
+      "id": "bonusImage12",
+      "fileName": "images (12).png",
+      "assetPath": "Assets/Cartes/bonus/images (12).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage13",
+      "fileName": "images (13).png",
+      "assetPath": "Assets/Cartes/bonus/images (13).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage14",
+      "fileName": "images (14).png",
+      "assetPath": "Assets/Cartes/bonus/images (14).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage15",
+      "fileName": "images (15).png",
+      "assetPath": "Assets/Cartes/bonus/images (15).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage16",
+      "fileName": "images (16).png",
+      "assetPath": "Assets/Cartes/bonus/images (16).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage17",
+      "fileName": "images (17).png",
+      "assetPath": "Assets/Cartes/bonus/images (17).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage18",
+      "fileName": "images (18).png",
+      "assetPath": "Assets/Cartes/bonus/images (18).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage19",
+      "fileName": "images (19).png",
+      "assetPath": "Assets/Cartes/bonus/images (19).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage20",
+      "fileName": "images (20).png",
+      "assetPath": "Assets/Cartes/bonus/images (20).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage21",
+      "fileName": "images (21).png",
+      "assetPath": "Assets/Cartes/bonus/images (21).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage22",
+      "fileName": "images (22).png",
+      "assetPath": "Assets/Cartes/bonus/images (22).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage23",
+      "fileName": "images (23).png",
+      "assetPath": "Assets/Cartes/bonus/images (23).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage24",
+      "fileName": "images (24).png",
+      "assetPath": "Assets/Cartes/bonus/images (24).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage25",
+      "fileName": "images (25).png",
+      "assetPath": "Assets/Cartes/bonus/images (25).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage26",
+      "fileName": "images (26).png",
+      "assetPath": "Assets/Cartes/bonus/images (26).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage27",
+      "fileName": "images (27).png",
+      "assetPath": "Assets/Cartes/bonus/images (27).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage28",
+      "fileName": "images (28).png",
+      "assetPath": "Assets/Cartes/bonus/images (28).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage29",
+      "fileName": "images (29).png",
+      "assetPath": "Assets/Cartes/bonus/images (29).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage30",
+      "fileName": "images (30).png",
+      "assetPath": "Assets/Cartes/bonus/images (30).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage31",
+      "fileName": "images (31).png",
+      "assetPath": "Assets/Cartes/bonus/images (31).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage32",
+      "fileName": "images (32).png",
+      "assetPath": "Assets/Cartes/bonus/images (32).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage33",
+      "fileName": "images (33).png",
+      "assetPath": "Assets/Cartes/bonus/images (33).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage34",
+      "fileName": "images (34).png",
+      "assetPath": "Assets/Cartes/bonus/images (34).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage35",
+      "fileName": "images (35).png",
+      "assetPath": "Assets/Cartes/bonus/images (35).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage36",
+      "fileName": "images (36).png",
+      "assetPath": "Assets/Cartes/bonus/images (36).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage37",
+      "fileName": "images (37).png",
+      "assetPath": "Assets/Cartes/bonus/images (37).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage38",
+      "fileName": "images (38).png",
+      "assetPath": "Assets/Cartes/bonus/images (38).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage39",
+      "fileName": "images (39).png",
+      "assetPath": "Assets/Cartes/bonus/images (39).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage40",
+      "fileName": "images (40).png",
+      "assetPath": "Assets/Cartes/bonus/images (40).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage41",
+      "fileName": "images (41).png",
+      "assetPath": "Assets/Cartes/bonus/images (41).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage42",
+      "fileName": "images (42).png",
+      "assetPath": "Assets/Cartes/bonus/images (42).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage43",
+      "fileName": "images (43).png",
+      "assetPath": "Assets/Cartes/bonus/images (43).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage44",
+      "fileName": "images (44).png",
+      "assetPath": "Assets/Cartes/bonus/images (44).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage45",
+      "fileName": "images (45).png",
+      "assetPath": "Assets/Cartes/bonus/images (45).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage46",
+      "fileName": "images (46).png",
+      "assetPath": "Assets/Cartes/bonus/images (46).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage47",
+      "fileName": "images (47).png",
+      "assetPath": "Assets/Cartes/bonus/images (47).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage48",
+      "fileName": "images (48).png",
+      "assetPath": "Assets/Cartes/bonus/images (48).png",
+      "collectionType": "permanent"
+    },
+    {
+      "id": "bonusImage49",
+      "fileName": "images (49).png",
+      "assetPath": "Assets/Cartes/bonus/images (49).png",
+      "collectionType": "permanent"
     }
   ]
 }

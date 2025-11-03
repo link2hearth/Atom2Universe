@@ -127,13 +127,24 @@
           "count": "×{count}"
         },
         "images": {
-          "title": "Images bonus",
-          "subtitle": "Vos images rares remportées lors des tirages bonus.",
+          "title": "Images de collection",
+          "subtitle": "Vos images rares gagnées lorsque la collection est activée.",
           "toggle": {
             "collapse": "Réduire",
             "expand": "Développer"
           },
-          "empty": "Aucune image bonus débloquée pour le moment.",
+          "empty": "Aucune image de collection débloquée pour le moment.",
+          "view": "Afficher {card}",
+          "count": "×{count}"
+        },
+        "bonusImages": {
+          "title": "Images bonus",
+          "subtitle": "Vos images bonus permanentes gagnées dans le gacha.",
+          "toggle": {
+            "collapse": "Réduire",
+            "expand": "Développer"
+          },
+          "empty": "Aucune image bonus permanente débloquée pour le moment.",
           "view": "Afficher {card}",
           "count": "×{count}"
         }
@@ -3014,6 +3025,14 @@
           "label": "Artificiels",
           "description": "Éléments instables créés artificiellement par l’homme dans des réacteurs et accélérateurs."
         }
+      },
+      "images": {
+        "toastNew": "Image de collection débloquée : {card}",
+        "toastDuplicate": "Image de collection obtenue à nouveau : {card}"
+      },
+      "bonusImages": {
+        "toastNew": "Image bonus débloquée : {card}",
+        "toastDuplicate": "Image bonus obtenue à nouveau : {card}"
       },
       "featured": {
         "today": "Aujourd’hui",

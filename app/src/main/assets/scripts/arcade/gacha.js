@@ -18,6 +18,15 @@ function isGachaCardCollectionEnabled() {
   return true;
 }
 
+function isGachaBonusImageCollectionEnabled() {
+  if (typeof globalThis !== 'undefined'
+    && typeof globalThis.COLLECTION_BONUS_IMAGES_ENABLED === 'boolean'
+  ) {
+    return globalThis.COLLECTION_BONUS_IMAGES_ENABLED;
+  }
+  return true;
+}
+
 const GACHA_SMOKE_FRAME_COUNT = 91;
 const GACHA_SMOKE_FRAME_RATE = 12;
 const GACHA_SMOKE_FRAME_PAD = 4;
@@ -290,16 +299,27 @@ const SPECIAL_GACHA_CARD_DEFINITION_INDEX = new Map(
 );
 
 const BONUS_GACHA_IMAGE_CHANCE = 0.01;
+const BONUS_GACHA_PERMANENT_IMAGE_CHANCE = 1 / 500;
 const BONUS_GACHA_IMAGE_AVAILABILITY_BATCH_SIZE = 12;
 
 const BONUS_GACHA_IMAGE_DEFINITION_INDEX = new Map(
-  Array.isArray(GACHA_BONUS_IMAGE_DEFINITIONS)
-    ? GACHA_BONUS_IMAGE_DEFINITIONS.map(def => [def.id, def])
+  Array.isArray(GACHA_OPTIONAL_BONUS_IMAGE_DEFINITIONS)
+    ? GACHA_OPTIONAL_BONUS_IMAGE_DEFINITIONS.map(def => [def.id, def])
     : []
 );
 
-const BONUS_GACHA_IMAGE_ALL_IDS = Array.isArray(GACHA_BONUS_IMAGE_DEFINITIONS)
-  ? GACHA_BONUS_IMAGE_DEFINITIONS.map(def => def.id).filter(Boolean)
+const BONUS_GACHA_PERMANENT_IMAGE_DEFINITION_INDEX = new Map(
+  Array.isArray(GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS)
+    ? GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS.map(def => [def.id, def])
+    : []
+);
+
+const BONUS_GACHA_IMAGE_ALL_IDS = Array.isArray(GACHA_OPTIONAL_BONUS_IMAGE_DEFINITIONS)
+  ? GACHA_OPTIONAL_BONUS_IMAGE_DEFINITIONS.map(def => def.id).filter(Boolean)
+  : [];
+
+const BONUS_GACHA_PERMANENT_IMAGE_ALL_IDS = Array.isArray(GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS)
+  ? GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS.map(def => def.id).filter(Boolean)
   : [];
 
 const bonusGachaImageAssetAvailabilityCache = new Map();
@@ -514,6 +534,17 @@ function ensureGachaImageCollection() {
   return gameState.gachaImages;
 }
 
+function ensureGachaBonusImageCollection() {
+  if (!gameState.gachaBonusImages || typeof gameState.gachaBonusImages !== 'object') {
+    if (typeof createInitialGachaBonusImageCollection === 'function') {
+      gameState.gachaBonusImages = createInitialGachaBonusImageCollection();
+    } else {
+      gameState.gachaBonusImages = {};
+    }
+  }
+  return gameState.gachaBonusImages;
+}
+
 function getSpecialGachaCardDefinition(cardId) {
   if (!cardId) {
     return null;
@@ -536,7 +567,9 @@ function getBonusGachaImageDefinition(imageId) {
   if (!imageId) {
     return null;
   }
-  return BONUS_GACHA_IMAGE_DEFINITION_INDEX.get(imageId) || null;
+  return BONUS_GACHA_IMAGE_DEFINITION_INDEX.get(imageId)
+    || BONUS_GACHA_PERMANENT_IMAGE_DEFINITION_INDEX.get(imageId)
+    || null;
 }
 
 function resolveBonusGachaImageLabel(imageId) {
@@ -590,6 +623,27 @@ function getAvailableBonusGachaImageIds() {
     return BONUS_GACHA_IMAGE_ALL_IDS.filter(imageId => !isBonusGachaImageMarkedMissing(imageId));
   }
   return BONUS_GACHA_IMAGE_ALL_IDS.filter(imageId => {
+    if (isBonusGachaImageMarkedMissing(imageId)) {
+      return false;
+    }
+    const stored = collection[imageId];
+    const rawCount = Number.isFinite(Number(stored?.count ?? stored))
+      ? Math.max(0, Math.floor(Number(stored?.count ?? stored)))
+      : 0;
+    return rawCount <= 0;
+  });
+}
+
+function rollForPermanentBonusGachaImage() {
+  return Math.random() < BONUS_GACHA_PERMANENT_IMAGE_CHANCE;
+}
+
+function getAvailablePermanentBonusGachaImageIds() {
+  if (!BONUS_GACHA_PERMANENT_IMAGE_ALL_IDS.length) {
+    return [];
+  }
+  const collection = ensureGachaBonusImageCollection();
+  return BONUS_GACHA_PERMANENT_IMAGE_ALL_IDS.filter(imageId => {
     if (isBonusGachaImageMarkedMissing(imageId)) {
       return false;
     }
@@ -680,7 +734,64 @@ function awardBonusGachaImage(imageId, options = null) {
     assetPath: definition?.assetPath || null,
     count: newCount,
     isNew: previousCount === 0,
-    type: 'image'
+    type: 'image',
+    collectionType: definition?.collectionType || 'optional'
+  };
+}
+
+function awardPermanentBonusGachaImage(imageId, options = null) {
+  if (!isGachaBonusImageCollectionEnabled()) {
+    return null;
+  }
+  if (!imageId) {
+    return null;
+  }
+  const { definition: providedDefinition = null, skipAssetCheck = false } = options || {};
+  const collection = ensureGachaBonusImageCollection();
+  if (!collection[imageId]) {
+    collection[imageId] = {
+      id: imageId,
+      count: 0,
+      firstAcquiredAt: null,
+      acquiredOrder: null
+    };
+  }
+  const entry = collection[imageId];
+  const definition = providedDefinition || getBonusGachaImageDefinition(imageId);
+  if (!definition) {
+    markBonusGachaImageMissing(imageId, definition);
+    return null;
+  }
+  if (!skipAssetCheck && !isBonusGachaImageAssetAvailable(definition)) {
+    markBonusGachaImageMissing(imageId, definition);
+    return null;
+  }
+  const previousCount = Number(entry.count) || 0;
+  const newCount = previousCount + 1;
+  entry.count = newCount;
+  if (previousCount === 0) {
+    const now = Date.now();
+    if (!Number.isFinite(Number(entry.firstAcquiredAt)) || Number(entry.firstAcquiredAt) <= 0) {
+      entry.firstAcquiredAt = now;
+    }
+    let counter = Number(gameState.gachaBonusImageAcquisitionCounter);
+    if (!Number.isFinite(counter) || counter < 0) {
+      counter = 0;
+    }
+    counter = Math.floor(counter) + 1;
+    entry.acquiredOrder = counter;
+    gameState.gachaBonusImageAcquisitionCounter = counter;
+  }
+  const label = resolveBonusGachaImageLabel(imageId);
+  return {
+    cardId: imageId,
+    definition,
+    label,
+    assetPath: definition?.assetPath || null,
+    count: newCount,
+    isNew: previousCount === 0,
+    type: 'image',
+    collectionType: definition?.collectionType || 'permanent'
   };
 }
 
@@ -767,6 +878,43 @@ function maybeAwardBonusGachaImage() {
       }
       markBonusGachaImageMissing(imageId, definition);
     }
+  }
+  return null;
+}
+
+function maybeAwardPermanentBonusGachaImage() {
+  if (!isGachaBonusImageCollectionEnabled()) {
+    return null;
+  }
+  const availableIds = getAvailablePermanentBonusGachaImageIds();
+  if (!availableIds.length) {
+    return null;
+  }
+  if (!rollForPermanentBonusGachaImage()) {
+    return null;
+  }
+  const shuffledIds = availableIds.slice();
+  for (let i = shuffledIds.length - 1; i > 0; i -= 1) {
+    const swapIndex = Math.floor(Math.random() * (i + 1));
+    const temp = shuffledIds[i];
+    shuffledIds[i] = shuffledIds[swapIndex];
+    shuffledIds[swapIndex] = temp;
+  }
+  for (let index = 0; index < shuffledIds.length; index += 1) {
+    const imageId = shuffledIds[index];
+    if (!imageId) {
+      continue;
+    }
+    const definition = getBonusGachaImageDefinition(imageId);
+    if (!definition || !isBonusGachaImageAssetAvailable(definition)) {
+      markBonusGachaImageMissing(imageId, definition);
+      continue;
+    }
+    const reward = awardPermanentBonusGachaImage(imageId, { definition, skipAssetCheck: true });
+    if (reward) {
+      return reward;
+    }
+    markBonusGachaImageMissing(imageId, definition);
   }
   return null;
 }
@@ -3618,7 +3766,9 @@ function performGachaRoll(count = 1) {
   const initialDrawCount = getTotalGachaDrawCount();
   const results = [];
   const collectionRewards = [];
-  const shouldAwardCollectionRewards = isGachaCardCollectionEnabled() || isGachaImageCollectionEnabled();
+  const shouldAwardCollectionRewards = isGachaCardCollectionEnabled()
+    || isGachaImageCollectionEnabled()
+    || isGachaBonusImageCollectionEnabled();
   for (let rollIndex = 0; rollIndex < drawCount; rollIndex += 1) {
     const rarity = pickGachaRarity(initialDrawCount + rollIndex);
     if (!rarity) {
@@ -3670,6 +3820,10 @@ function performGachaRoll(count = 1) {
       if (bonusImageReward) {
         collectionRewards.push(bonusImageReward);
       }
+      const permanentImageReward = maybeAwardPermanentBonusGachaImage();
+      if (permanentImageReward) {
+        collectionRewards.push(permanentImageReward);
+      }
     }
 
     const isNew = previousLifetime === 0;
@@ -3690,12 +3844,27 @@ function performGachaRoll(count = 1) {
         return;
       }
       const isImage = reward.type === 'image';
+      const imageCollectionType = typeof reward.collectionType === 'string'
+        ? reward.collectionType.toLowerCase()
+        : '';
+      const isPermanentImage = isImage && imageCollectionType === 'permanent';
+      const namespace = isImage
+        ? (isPermanentImage ? 'scripts.gacha.bonusImages' : 'scripts.gacha.images')
+        : 'scripts.gacha.cards';
       const toastKey = reward.isNew
-        ? (isImage ? 'scripts.gacha.images.toastNew' : 'scripts.gacha.cards.toastNew')
-        : (isImage ? 'scripts.gacha.images.toastDuplicate' : 'scripts.gacha.cards.toastDuplicate');
+        ? `${namespace}.toastNew`
+        : `${namespace}.toastDuplicate`;
       const fallback = reward.isNew
-        ? (isImage ? 'Bonus image unlocked: {card}' : 'Special card unlocked: {card}')
-        : (isImage ? 'Bonus image found again: {card}' : 'Special card obtained again: {card}');
+        ? (isImage
+            ? (isPermanentImage
+                ? 'Bonus image unlocked: {card}'
+                : 'Gallery image unlocked: {card}')
+            : 'Special card unlocked: {card}')
+        : (isImage
+            ? (isPermanentImage
+                ? 'Bonus image found again: {card}'
+                : 'Gallery image found again: {card}')
+            : 'Special card obtained again: {card}');
       const message = translateWithFallback(toastKey, fallback, { card: reward.label });
       if (message) {
         showToast(message);

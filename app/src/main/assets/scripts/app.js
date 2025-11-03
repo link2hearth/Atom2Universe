@@ -197,6 +197,7 @@ const INFO_ACHIEVEMENTS_COLLAPSED_STORAGE_KEY = 'atom2univers.info.achievementsC
 const INFO_CHARACTERS_COLLAPSED_STORAGE_KEY = 'atom2univers.info.charactersCollapsed';
 const INFO_CARDS_COLLAPSED_STORAGE_KEY = 'atom2univers.info.cardsCollapsed';
 const COLLECTION_IMAGES_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.imagesCollapsed';
+const COLLECTION_BONUS_IMAGES_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.bonusImagesCollapsed';
 const HEADER_COLLAPSED_STORAGE_KEY = 'atom2univers.ui.headerCollapsed';
 const ARCADE_HUB_CARD_STATE_STORAGE_KEY = 'atom2univers.arcadeHub.cardStates.v1';
 const ARCADE_AUTOSAVE_STORAGE_KEY = 'atom2univers.arcadeSaves.v1';
@@ -3361,6 +3362,8 @@ const DEFAULT_STATE = {
   fusionBonuses: createInitialFusionBonuses(),
   gachaImages: createInitialGachaImageCollection(),
   gachaImageAcquisitionCounter: 0,
+  gachaBonusImages: createInitialGachaBonusImageCollection(),
+  gachaBonusImageAcquisitionCounter: 0,
   pageUnlocks: createInitialPageUnlockState(),
   lastSave: Date.now(),
   theme: DEFAULT_THEME_ID,
@@ -3870,6 +3873,27 @@ const INFO_TROPHY_ID = 'scaleSandGrain';
 const ACHIEVEMENTS_UNLOCK_TROPHY_ID = ARCADE_TROPHY_ID;
 const LOCKABLE_PAGE_IDS = new Set(['gacha', 'tableau', 'fusion', 'info', 'collection']);
 
+function hasOwnedGachaCards() {
+  return Object.values(gameState.gachaCards || {}).some(entry => {
+    const count = Number(entry?.count ?? entry);
+    return Number.isFinite(count) && count > 0;
+  });
+}
+
+function hasOwnedGachaImages() {
+  return Object.values(gameState.gachaImages || {}).some(entry => {
+    const count = Number(entry?.count ?? entry);
+    return Number.isFinite(count) && count > 0;
+  });
+}
+
+function hasOwnedGachaBonusImages() {
+  return Object.values(gameState.gachaBonusImages || {}).some(entry => {
+    const count = Number(entry?.count ?? entry);
+    return Number.isFinite(count) && count > 0;
+  });
+}
+
 function getPageUnlockState() {
   if (!gameState.pageUnlocks || typeof gameState.pageUnlocks !== 'object') {
     gameState.pageUnlocks = createInitialPageUnlockState();
@@ -3878,8 +3902,10 @@ function getPageUnlockState() {
 }
 
 function isPageUnlocked(pageId) {
-  if (pageId === 'collection' && !isCollectionFeatureEnabled()) {
-    return false;
+  if (pageId === 'collection') {
+    if (!isCollectionFeatureEnabled()) {
+      return hasOwnedGachaCards() || hasOwnedGachaBonusImages();
+    }
   }
   const featureId = PAGE_FEATURE_MAP[pageId];
   if (featureId) {
@@ -3975,15 +4001,7 @@ function evaluatePageUnlocks(options = {}) {
   }
 
   if (!unlocks.collection) {
-    const hasCards = Object.values(gameState.gachaCards || {}).some(entry => {
-      const count = Number(entry?.count ?? entry);
-      return Number.isFinite(count) && count > 0;
-    });
-    const hasImages = Object.values(gameState.gachaImages || {}).some(entry => {
-      const count = Number(entry?.count ?? entry);
-      return Number.isFinite(count) && count > 0;
-    });
-    if (hasCards || hasImages) {
+    if (hasOwnedGachaCards() || hasOwnedGachaImages() || hasOwnedGachaBonusImages()) {
       changed = unlockPage('collection', { save: false, deferUI: true }) || changed;
     }
   }
@@ -5128,6 +5146,11 @@ function collectDomElements() {
   collectionImagesToggle: document.getElementById('collectionImagesToggle'),
   collectionImagesList: document.getElementById('collectionImagesList'),
   collectionImagesEmpty: document.getElementById('collectionImagesEmpty'),
+  collectionBonusImagesCard: document.getElementById('collectionBonusImagesCard'),
+  collectionBonusImagesContent: document.getElementById('collection-bonus-images-content'),
+  collectionBonusImagesToggle: document.getElementById('collectionBonusImagesToggle'),
+  collectionBonusImagesList: document.getElementById('collectionBonusImagesList'),
+  collectionBonusImagesEmpty: document.getElementById('collectionBonusImagesEmpty'),
   infoCharactersCard: document.querySelector('.info-card--characters'),
   infoCharactersContent: document.getElementById('info-characters-content'),
   infoCharactersToggle: document.getElementById('infoCharactersToggle'),
@@ -6179,6 +6202,15 @@ function updateCollectionImagesVisibility() {
   elements.collectionImagesCard.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
 }
 
+function updateCollectionBonusImagesVisibility() {
+  if (!elements.collectionBonusImagesCard) {
+    return;
+  }
+  const unlocked = isPageUnlocked('collection') && hasOwnedGachaBonusImages();
+  elements.collectionBonusImagesCard.hidden = !unlocked;
+  elements.collectionBonusImagesCard.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
+}
+
 function updateInfoDevkitVisibility() {
   if (!elements.infoDevkitShopCard) {
     return;
@@ -6496,6 +6528,20 @@ function updateCollectionImagesToggleLabel(collapsed) {
   elements.collectionImagesToggle.setAttribute('aria-label', label);
 }
 
+function updateCollectionBonusImagesToggleLabel(collapsed) {
+  if (!elements.collectionBonusImagesToggle) {
+    return;
+  }
+  const key = collapsed
+    ? 'index.sections.collection.bonusImages.toggle.expand'
+    : 'index.sections.collection.bonusImages.toggle.collapse';
+  const fallback = collapsed ? 'Expand' : 'Collapse';
+  const label = translateOrDefault(key, fallback);
+  elements.collectionBonusImagesToggle.setAttribute('data-i18n', key);
+  elements.collectionBonusImagesToggle.textContent = label;
+  elements.collectionBonusImagesToggle.setAttribute('aria-label', label);
+}
+
 function setInfoCharactersCollapsed(collapsed, options = {}) {
   if (!elements.infoCharactersCard || !elements.infoCharactersContent || !elements.infoCharactersToggle) {
     return;
@@ -6583,12 +6629,37 @@ function setCollectionImagesCollapsed(collapsed, options = {}) {
   }
 }
 
+function setCollectionBonusImagesCollapsed(collapsed, options = {}) {
+  if (!elements.collectionBonusImagesCard
+    || !elements.collectionBonusImagesContent
+    || !elements.collectionBonusImagesToggle) {
+    return;
+  }
+  const shouldCollapse = !!collapsed;
+  elements.collectionBonusImagesCard.classList.toggle('info-card--collapsed', shouldCollapse);
+  elements.collectionBonusImagesContent.hidden = shouldCollapse;
+  elements.collectionBonusImagesContent.setAttribute('aria-hidden', shouldCollapse ? 'true' : 'false');
+  elements.collectionBonusImagesToggle.setAttribute('aria-expanded', shouldCollapse ? 'false' : 'true');
+  updateCollectionBonusImagesToggleLabel(shouldCollapse);
+  if (options.persist !== false) {
+    writeStoredInfoCardCollapsed(COLLECTION_BONUS_IMAGES_COLLAPSED_STORAGE_KEY, shouldCollapse);
+  }
+}
+
 function toggleCollectionImagesCollapsed() {
   if (!elements.collectionImagesCard) {
     return;
   }
   const currentlyCollapsed = elements.collectionImagesCard.classList.contains('info-card--collapsed');
   setCollectionImagesCollapsed(!currentlyCollapsed);
+}
+
+function toggleCollectionBonusImagesCollapsed() {
+  if (!elements.collectionBonusImagesCard) {
+    return;
+  }
+  const currentlyCollapsed = elements.collectionBonusImagesCard.classList.contains('info-card--collapsed');
+  setCollectionBonusImagesCollapsed(!currentlyCollapsed);
 }
 
 function initCollectionImagesCard() {
@@ -6602,6 +6673,23 @@ function initCollectionImagesCard() {
   elements.collectionImagesToggle.addEventListener('click', event => {
     event.preventDefault();
     toggleCollectionImagesCollapsed();
+  });
+}
+
+function initCollectionBonusImagesCard() {
+  if (!elements.collectionBonusImagesCard
+    || !elements.collectionBonusImagesContent
+    || !elements.collectionBonusImagesToggle) {
+    return;
+  }
+  const initialCollapsed = readStoredInfoCardCollapsed(
+    COLLECTION_BONUS_IMAGES_COLLAPSED_STORAGE_KEY,
+    false
+  );
+  setCollectionBonusImagesCollapsed(initialCollapsed, { persist: false });
+  elements.collectionBonusImagesToggle.addEventListener('click', event => {
+    event.preventDefault();
+    toggleCollectionBonusImagesCollapsed();
   });
 }
 
@@ -6690,6 +6778,23 @@ function subscribeCollectionImagesLanguageUpdates() {
   }
 }
 
+function subscribeCollectionBonusImagesLanguageUpdates() {
+  const handler = () => {
+    const collapsed = elements.collectionBonusImagesCard
+      ? elements.collectionBonusImagesCard.classList.contains('info-card--collapsed')
+      : false;
+    updateCollectionBonusImagesToggleLabel(collapsed);
+  };
+  const api = getI18nApi();
+  if (api && typeof api.onLanguageChanged === 'function') {
+    api.onLanguageChanged(handler);
+    return;
+  }
+  if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
+    globalThis.addEventListener('i18n:languagechange', handler);
+  }
+}
+
 function subscribeBigBangLanguageUpdates() {
   const handler = () => {
     updateBigBangActionUI();
@@ -6705,7 +6810,6 @@ function subscribeBigBangLanguageUpdates() {
 }
 
 function updatePageUnlockUI() {
-  const unlocks = getPageUnlockState();
   const buttonConfig = [
     ['gacha', elements.navGachaButton],
     ['tableau', elements.navTableButton],
@@ -6714,8 +6818,7 @@ function updatePageUnlockUI() {
   ];
 
   buttonConfig.forEach(([pageId, button]) => {
-    const unlocked = unlocks?.[pageId] === true
-      && (pageId !== 'collection' || isCollectionFeatureEnabled());
+    const unlocked = isPageUnlocked(pageId);
     setNavButtonLockState(button, unlocked);
   });
 
@@ -6737,6 +6840,7 @@ function updatePrimaryNavigationLocks() {
   updateInfoDevkitVisibility();
   updateInfoCardsVisibility();
   updateCollectionImagesVisibility();
+  updateCollectionBonusImagesVisibility();
 
   ensureActivePageUnlocked();
 }
@@ -12472,6 +12576,7 @@ function bindDomEventListeners() {
   initInfoCharactersCard();
   initInfoCardsCard();
   initCollectionImagesCard();
+  initCollectionBonusImagesCard();
   if (typeof initSpecialCardOverlay === 'function') {
     initSpecialCardOverlay();
   }
@@ -15989,8 +16094,8 @@ function serializeState() {
         ? gameState.gachaImages
         : {};
       const result = {};
-      const knownIds = Array.isArray(GACHA_BONUS_IMAGE_DEFINITIONS)
-        ? GACHA_BONUS_IMAGE_DEFINITIONS.map(def => def.id)
+      const knownIds = Array.isArray(GACHA_OPTIONAL_BONUS_IMAGE_DEFINITIONS)
+        ? GACHA_OPTIONAL_BONUS_IMAGE_DEFINITIONS.map(def => def.id)
         : Object.keys(source);
       knownIds.forEach(imageId => {
         if (!imageId) {
@@ -16015,6 +16120,42 @@ function serializeState() {
     })(),
     gachaImageAcquisitionCounter: (() => {
       const counter = Number(gameState.gachaImageAcquisitionCounter);
+      if (!Number.isFinite(counter) || counter <= 0) {
+        return 0;
+      }
+      return Math.max(0, Math.floor(counter));
+    })(),
+    gachaBonusImages: (() => {
+      const source = gameState.gachaBonusImages && typeof gameState.gachaBonusImages === 'object'
+        ? gameState.gachaBonusImages
+        : {};
+      const result = {};
+      const knownIds = Array.isArray(GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS)
+        ? GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS.map(def => def.id)
+        : Object.keys(source);
+      knownIds.forEach(imageId => {
+        if (!imageId) {
+          return;
+        }
+        const entry = source[imageId];
+        const rawCount = Number(entry?.count ?? entry);
+        if (Number.isFinite(rawCount) && rawCount > 0) {
+          const stored = { count: Math.floor(rawCount) };
+          const acquiredOrder = Number(entry?.acquiredOrder);
+          if (Number.isFinite(acquiredOrder) && acquiredOrder > 0) {
+            stored.acquiredOrder = Math.floor(acquiredOrder);
+          }
+          const firstAcquiredAt = Number(entry?.firstAcquiredAt);
+          if (Number.isFinite(firstAcquiredAt) && firstAcquiredAt > 0) {
+            stored.firstAcquiredAt = firstAcquiredAt;
+          }
+          result[imageId] = stored;
+        }
+      });
+      return result;
+    })(),
+    gachaBonusImageAcquisitionCounter: (() => {
+      const counter = Number(gameState.gachaBonusImageAcquisitionCounter);
       if (!Number.isFinite(counter) || counter <= 0) {
         return 0;
       }
@@ -16257,6 +16398,7 @@ const RESET_LOCAL_STORAGE_KEYS = [
   INFO_CHARACTERS_COLLAPSED_STORAGE_KEY,
   INFO_CARDS_COLLAPSED_STORAGE_KEY,
   COLLECTION_IMAGES_COLLAPSED_STORAGE_KEY,
+  COLLECTION_BONUS_IMAGES_COLLAPSED_STORAGE_KEY,
   HEADER_COLLAPSED_STORAGE_KEY,
   PERFORMANCE_MODE_STORAGE_KEY,
   UI_SCALE_STORAGE_KEY,
@@ -17001,6 +17143,41 @@ function loadGame() {
     } else {
       gameState.gachaImageAcquisitionCounter = inferredImageAcquisitionCounter;
     }
+    const baseBonusImageCollection = createInitialGachaBonusImageCollection();
+    let inferredBonusImageAcquisitionCounter = 0;
+    if (data.gachaBonusImages && typeof data.gachaBonusImages === 'object') {
+      Object.entries(data.gachaBonusImages).forEach(([imageId, stored]) => {
+        const reference = baseBonusImageCollection[imageId];
+        if (!reference) {
+          return;
+        }
+        const rawCount = Number(stored?.count ?? stored);
+        const normalizedCount = Number.isFinite(rawCount) && rawCount > 0
+          ? Math.floor(rawCount)
+          : 0;
+        reference.count = normalizedCount;
+        if (normalizedCount > 0) {
+          const storedOrder = Number(stored?.acquiredOrder);
+          if (Number.isFinite(storedOrder) && storedOrder > 0) {
+            reference.acquiredOrder = Math.floor(storedOrder);
+            if (reference.acquiredOrder > inferredBonusImageAcquisitionCounter) {
+              inferredBonusImageAcquisitionCounter = reference.acquiredOrder;
+            }
+          }
+          const storedFirstAcquiredAt = Number(stored?.firstAcquiredAt);
+          if (Number.isFinite(storedFirstAcquiredAt) && storedFirstAcquiredAt > 0) {
+            reference.firstAcquiredAt = storedFirstAcquiredAt;
+          }
+        }
+      });
+    }
+    gameState.gachaBonusImages = baseBonusImageCollection;
+    const storedBonusCounter = Number(data.gachaBonusImageAcquisitionCounter);
+    if (Number.isFinite(storedBonusCounter) && storedBonusCounter > inferredBonusImageAcquisitionCounter) {
+      gameState.gachaBonusImageAcquisitionCounter = Math.floor(storedBonusCounter);
+    } else {
+      gameState.gachaBonusImageAcquisitionCounter = inferredBonusImageAcquisitionCounter;
+    }
     const fusionState = createInitialFusionState();
     if (data.fusions && typeof data.fusions === 'object') {
       Object.keys(fusionState).forEach(id => {
@@ -17252,6 +17429,7 @@ function initializeDomBoundModules() {
   subscribeInfoCharactersLanguageUpdates();
   subscribeInfoCardsLanguageUpdates();
   subscribeCollectionImagesLanguageUpdates();
+  subscribeCollectionBonusImagesLanguageUpdates();
   subscribeBigBangLanguageUpdates();
   if (typeof subscribeSpecialCardOverlayLanguageUpdates === 'function') {
     subscribeSpecialCardOverlayLanguageUpdates();
