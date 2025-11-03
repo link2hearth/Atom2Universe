@@ -23,7 +23,7 @@ const CONFIG_OVERRIDE_KEYS = Object.freeze({
 const SAVE_BACKUP_SETTINGS = Object.freeze({
   storageKey: 'atom2univers.backups',
   maxEntries: 8,
-  minAutoIntervalMs: 5 * 60 * 1000,
+  minAutoIntervalMs: 3 * 60 * 1000,
   maxNativeEntries: 8
 });
 
@@ -142,19 +142,19 @@ const SHOP_MAX_PURCHASE_DEFAULT = 100;
  * Ce délai est également réutilisé pour l’effet de transition lors d’un
  * rechargement automatique provoqué après un long passage en arrière-plan.
  */
-const STARTUP_FADE_DURATION_MS = 1500;
+const STARTUP_FADE_DURATION_MS = 1000;
 
 /**
  * Durée minimale (en millisecondes) passée en arrière-plan avant de forcer
  * un rechargement complet de l’application au retour au premier plan.
  */
-const BACKGROUND_RELOAD_THRESHOLD_MS = 1 * 60 * 1000;
+const BACKGROUND_RELOAD_THRESHOLD_MS = 1500 * 60 * 1000;
 
 /**
  * Délai (en millisecondes) laissé à l’overlay pour recouvrir l’écran avant
  * de déclencher un rechargement forcé.
  */
-const BACKGROUND_RELOAD_OVERLAY_LEAD_MS = 250;
+const BACKGROUND_RELOAD_OVERLAY_LEAD_MS = 1000;
 
 /**
  * Ratio maximal appliqué lors du rendu des canvas.
@@ -1032,8 +1032,8 @@ const GAME_CONFIG = {
       options: [
         { id: 'small', factor: 0.75 },
         { id: 'normal', factor: 1 },
-        { id: 'large', factor: 1.5 },
-        { id: 'x2', factor: 2 }
+        { id: 'large', factor: 1.25 },
+        { id: 'x2', factor: 1.5 }
       ]
     }
   },
@@ -3788,6 +3788,7 @@ if (typeof globalThis !== 'undefined') {
   globalThis.toggleCollectionFeatureEnabled = toggleCollectionFeatureEnabled;
   globalThis.toggleInfoSectionsFeatureEnabled = toggleInfoSectionsFeatureEnabled;
 }
+
 
 
 
