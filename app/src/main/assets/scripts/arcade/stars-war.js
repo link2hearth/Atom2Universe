@@ -44,8 +44,6 @@
   const INITIAL_WAVE_INTERVAL = 30;
   const MIN_WAVE_INTERVAL = 10;
   const WAVE_ACCELERATION_DURATION = 10 * 60;
-  const TOUCH_DEADZONE = 14;
-  const TOUCH_MAX_DRAG = 140;
 
   const PLAYER_BASE_STATS = Object.freeze({
     speed: 275,
@@ -2094,25 +2092,13 @@
     if (inputState.up) moveY -= 1;
     if (inputState.down) moveY += 1;
 
-    if (inputState.pointerActive) {
-      if (inputState.pointerMode === 'relative') {
-        const dx = inputState.pointerX - inputState.pointerOriginX;
-        const dy = inputState.pointerY - inputState.pointerOriginY;
-        const dist = Math.hypot(dx, dy);
-        if (dist > TOUCH_DEADZONE) {
-          const denominator = Math.max(1, TOUCH_MAX_DRAG - TOUCH_DEADZONE);
-          const normalized = Math.min(1, Math.max(0, (dist - TOUCH_DEADZONE) / denominator));
-          moveX += (dx / dist) * normalized;
-          moveY += (dy / dist) * normalized;
-        }
-      } else {
-        const dx = inputState.pointerX - player.x;
-        const dy = inputState.pointerY - player.y;
-        const dist = Math.hypot(dx, dy);
-        if (dist > 4) {
-          moveX += (dx / dist) * Math.min(1, dist / 60);
-          moveY += (dy / dist) * Math.min(1, dist / 60);
-        }
+    if (inputState.pointerActive && inputState.pointerMode !== 'relative') {
+      const dx = inputState.pointerX - player.x;
+      const dy = inputState.pointerY - player.y;
+      const dist = Math.hypot(dx, dy);
+      if (dist > 4) {
+        moveX += (dx / dist) * Math.min(1, dist / 60);
+        moveY += (dy / dist) * Math.min(1, dist / 60);
       }
     }
 
@@ -2122,8 +2108,22 @@
       player.y += (moveY / length) * speed;
     }
 
+    if (inputState.pointerActive && inputState.pointerMode === 'relative') {
+      const dx = inputState.pointerX - inputState.pointerOriginX;
+      const dy = inputState.pointerY - inputState.pointerOriginY;
+      if (Math.abs(dx) > 0.01 || Math.abs(dy) > 0.01) {
+        player.x += dx;
+        player.y += dy;
+      }
+    }
+
     player.x = clamp(player.x, player.width / 2, CANVAS_WIDTH - player.width / 2);
     player.y = clamp(player.y, areaTop, CANVAS_HEIGHT - player.height / 2);
+
+    if (inputState.pointerActive && inputState.pointerMode === 'relative') {
+      inputState.pointerOriginX = inputState.pointerX;
+      inputState.pointerOriginY = inputState.pointerY;
+    }
   }
 
   function updatePlayerBullets(delta) {
