@@ -4495,6 +4495,13 @@ const RESET_KEYWORD_ACTIONS = Object.freeze({
   })
 });
 
+function isResetSpecialKeyword(normalizedKeyword) {
+  if (typeof normalizedKeyword !== 'string' || !normalizedKeyword) {
+    return false;
+  }
+  return Object.prototype.hasOwnProperty.call(RESET_KEYWORD_ACTIONS, normalizedKeyword);
+}
+
 function translateResetString(key, fallback, params) {
   return translateOrDefault(`scripts.app.reset.${key}`, fallback, params);
 }
@@ -4798,13 +4805,15 @@ function handleResetDialogSubmit(event) {
     const rawInput = elements.resetDialogInput ? elements.resetDialogInput.value : '';
     const provided = normalizeResetConfirmation(rawInput);
 
+    const isSpecialKeyword = isResetSpecialKeyword(provided);
+
     // 1) Mot-clé spécial (devkit / collection / infos)
     if (handleResetSpecialKeyword(provided)) {
       closeResetDialog();
       return;
     }
     // 2) Mot de confirmation correct -> reset
-    else if (provided === expected) {
+    else if (!isSpecialKeyword && provided === expected) {
       closeResetDialog();
       resetGame();
       showToast(translateResetString('done', 'Progress reset'));
@@ -4865,12 +4874,14 @@ function handleResetPromptFallback() {
 
   const provided = normalizeResetConfirmation(response);
 
+  const isSpecialKeyword = isResetSpecialKeyword(provided);
+
   // 1) Mot-clé spécial
   if (handleResetSpecialKeyword(provided)) {
     return;
   }
   // 2) Mot correct -> reset
-  else if (provided === expected) {
+  else if (!isSpecialKeyword && provided === expected) {
     resetGame();
     showToast(translateResetString('done', 'Progress reset'));
     return;
