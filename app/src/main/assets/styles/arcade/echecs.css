@@ -445,6 +445,47 @@
   outline-offset: 2px;
 }
 
+.chess-archives__navigation {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.chess-archives__navigation[hidden] {
+  display: none;
+}
+
+.chess-archives__navigate {
+  padding: 0.35em 0.9em;
+  border-radius: 999px;
+  border: 1px solid var(--chess-action-border);
+  background: var(--chess-action-secondary-background);
+  color: var(--chess-action-color);
+  font-size: calc(clamp(0.85rem, 1.8vh, 1rem) * var(--ui-control-scale, 1));
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease,
+    color 0.2s ease;
+}
+
+.chess-archives__navigate:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.chess-archives__navigate:hover:not(:disabled),
+.chess-archives__navigate:focus-visible:not(:disabled) {
+  background: var(--chess-action-hover-background);
+  border-color: var(--chess-action-hover-border);
+  color: var(--chess-action-color);
+  box-shadow: var(--chess-action-hover-shadow);
+}
+
+.chess-archives__navigate:focus-visible {
+  outline: 2px solid var(--chess-select-outline);
+  outline-offset: 2px;
+}
+
 .chess-difficulty {
   display: grid;
   gap: 0.35rem;

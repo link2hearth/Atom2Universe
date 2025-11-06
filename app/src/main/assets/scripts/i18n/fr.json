@@ -973,6 +973,8 @@
             "placeholder": "Sélectionnez une sauvegarde",
             "empty": "Aucune partie sauvegardée pour le moment.",
             "restore": "Revenir à la partie en cours",
+            "previous": "Coup précédent",
+            "next": "Coup suivant",
             "unnamed": "Partie sauvegardée {{index}}",
             "pgnWhite": "Joueur blanc",
             "pgnBlackAi": "IA ({{difficulty}})",

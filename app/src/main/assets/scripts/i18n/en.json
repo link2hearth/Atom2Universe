@@ -973,6 +973,8 @@
             "placeholder": "Select a saved game",
             "empty": "No saved games yet.",
             "restore": "Back to current game",
+            "previous": "Previous move",
+            "next": "Next move",
             "unnamed": "Saved game {{index}}",
             "pgnWhite": "White player",
             "pgnBlackAi": "AI ({{difficulty}})",

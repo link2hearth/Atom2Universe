@@ -35,6 +35,9 @@
   const ARCHIVE_SELECT_SELECTOR = '[data-chess-archive]';
   const ARCHIVE_EMPTY_SELECTOR = '[data-chess-archive-empty]';
   const ARCHIVE_RESTORE_SELECTOR = '[data-chess-archive-restore]';
+  const ARCHIVE_NAVIGATION_SELECTOR = '[data-chess-archive-navigation]';
+  const ARCHIVE_PREVIOUS_SELECTOR = '[data-chess-archive-prev]';
+  const ARCHIVE_NEXT_SELECTOR = '[data-chess-archive-next]';
 
   const LOCAL_STORAGE_KEY = 'atom2univers.arcade.echecs';
   const STORAGE_VERSION = 3;
@@ -4008,6 +4011,34 @@
     if (ui.archiveRestore) {
       ui.archiveRestore.hidden = !(state && state.isArchivePreview);
     }
+    updateArchiveNavigation(state, ui);
+  }
+
+  function updateArchiveNavigation(state, ui) {
+    if (!ui) {
+      return;
+    }
+    const navigation = ui.archiveNavigation;
+    const previous = ui.archivePrevious;
+    const next = ui.archiveNext;
+    const isPreview = Boolean(state && state.isArchivePreview);
+    const history = Array.isArray(state && state.archivePreviewHistory)
+      ? state.archivePreviewHistory
+      : [];
+    const maxIndex = history.length;
+    const currentIndex = Number.isInteger(state && state.archivePreviewIndex)
+      ? state.archivePreviewIndex
+      : maxIndex;
+
+    if (navigation) {
+      navigation.hidden = !isPreview;
+    }
+    if (previous) {
+      previous.disabled = !isPreview || currentIndex <= 0;
+    }
+    if (next) {
+      next.disabled = !isPreview || currentIndex >= maxIndex;
+    }
   }
 
   function formatArchiveTimestamp(timestamp) {
@@ -4143,7 +4174,18 @@
     state.isArchivePreview = true;
     state.preventAutosave = true;
     state.reviewingArchiveId = entry.id;
-    applyNormalizedState(state, ui, entry.normalizedState, { skipSave: true });
+    const baseNormalized = entry.normalizedState;
+    const history = Array.isArray(baseNormalized.history) ? baseNormalized.history.slice() : [];
+    const mode = baseNormalized.difficulty || resolveDifficultyMode(baseNormalized.difficultyId);
+    const initialSnapshot = createInitialSlotSnapshot(mode, baseNormalized.preferences);
+    if (initialSnapshot) {
+      initialSnapshot.isTwoPlayer = baseNormalized.isTwoPlayer === true;
+    }
+    state.archivePreviewBaseState = baseNormalized;
+    state.archivePreviewHistory = history;
+    state.archivePreviewInitialState = initialSnapshot || null;
+    state.archivePreviewIndex = history.length;
+    applyNormalizedState(state, ui, baseNormalized, { skipSave: true });
     state.activeSlotId = state.previewReturnSlotId;
     updateArchiveControls(state, ui);
     updateSaveControls(state, ui);
@@ -4169,6 +4211,10 @@
     state.reviewingArchiveId = null;
     state.previewReturnSnapshot = null;
     state.previewReturnSlotId = null;
+    state.archivePreviewBaseState = null;
+    state.archivePreviewHistory = null;
+    state.archivePreviewInitialState = null;
+    state.archivePreviewIndex = 0;
     if (snapshot) {
       applyNormalizedState(state, ui, snapshot, { skipSave: true });
     } else if (slotId && state.savedSlots instanceof Map && state.savedSlots.has(slotId)) {
@@ -4487,6 +4533,305 @@
   function getFenString(state) {
     const base = getPositionKey(state);
     return base + ' ' + state.halfmoveClock + ' ' + state.fullmove;
+  }
+
+  function parseFenString(fen) {
+    if (typeof fen !== 'string') {
+      return null;
+    }
+    const parts = fen.trim().split(/\s+/);
+    if (parts.length < 4) {
+      return null;
+    }
+    const placement = parts[0];
+    const activePart = parts[1];
+    const castlingPart = parts[2];
+    const enPassantPart = parts[3];
+    const halfmovePart = parts[4];
+    const fullmovePart = parts[5];
+
+    const rows = placement.split('/');
+    if (rows.length !== BOARD_SIZE) {
+      return null;
+    }
+
+    const board = [];
+    for (let rowIndex = 0; rowIndex < BOARD_SIZE; rowIndex += 1) {
+      const rowString = rows[rowIndex];
+      const cells = [];
+      let colIndex = 0;
+      for (let i = 0; i < rowString.length && colIndex < BOARD_SIZE; i += 1) {
+        const char = rowString[i];
+        if (char >= '1' && char <= '8') {
+          const emptyCount = Number(char);
+          for (let empty = 0; empty < emptyCount && colIndex < BOARD_SIZE; empty += 1) {
+            cells.push('');
+            colIndex += 1;
+          }
+        } else {
+          const lower = char.toLowerCase();
+          const pieceMap = { p: 'P', n: 'N', b: 'B', r: 'R', q: 'Q', k: 'K' };
+          const type = pieceMap[lower];
+          if (!type) {
+            return null;
+          }
+          const color = char === char.toUpperCase() ? WHITE : BLACK;
+          cells.push(color + type);
+          colIndex += 1;
+        }
+      }
+      if (cells.length !== BOARD_SIZE) {
+        return null;
+      }
+      board.push(cells);
+    }
+
+    const activeColor = activePart === BLACK ? BLACK : WHITE;
+    const castling = {
+      w: { king: false, queen: false },
+      b: { king: false, queen: false }
+    };
+    if (typeof castlingPart === 'string' && castlingPart !== '-') {
+      for (let index = 0; index < castlingPart.length; index += 1) {
+        const token = castlingPart[index];
+        if (token === 'K') {
+          castling.w.king = true;
+        } else if (token === 'Q') {
+          castling.w.queen = true;
+        } else if (token === 'k') {
+          castling.b.king = true;
+        } else if (token === 'q') {
+          castling.b.queen = true;
+        }
+      }
+    }
+
+    let enPassant = null;
+    if (typeof enPassantPart === 'string' && enPassantPart !== '-') {
+      const file = enPassantPart[0];
+      const rank = enPassantPart[1];
+      const col = FILES.indexOf(file);
+      const row = RANKS.indexOf(rank);
+      if (col >= 0 && row >= 0) {
+        enPassant = { row, col };
+      }
+    }
+
+    const halfmoveClock = Number.isFinite(Number(halfmovePart)) && Number(halfmovePart) >= 0
+      ? Math.floor(Number(halfmovePart))
+      : 0;
+    const fullmove = Number.isFinite(Number(fullmovePart)) && Number(fullmovePart) > 0
+      ? Math.floor(Number(fullmovePart))
+      : 1;
+
+    return {
+      board,
+      activeColor,
+      castling,
+      enPassant,
+      halfmoveClock,
+      fullmove
+    };
+  }
+
+  function parseLanMoveCoordinates(lan) {
+    if (typeof lan !== 'string') {
+      return null;
+    }
+    let trimmed = lan.trim();
+    if (!trimmed) {
+      return null;
+    }
+    while (trimmed.endsWith('+') || trimmed.endsWith('#')) {
+      trimmed = trimmed.slice(0, -1);
+    }
+    let promotion = null;
+    const promotionIndex = trimmed.indexOf('=');
+    if (promotionIndex !== -1) {
+      promotion = trimmed.slice(promotionIndex + 1).toLowerCase();
+      trimmed = trimmed.slice(0, promotionIndex);
+    }
+    const match = trimmed.match(/^([KQRBNP])([a-h][1-8])([x-])([a-h][1-8])$/);
+    if (!match) {
+      return null;
+    }
+    const fromSquare = match[2];
+    const toSquare = match[4];
+    const fromCol = FILES.indexOf(fromSquare[0]);
+    const fromRow = RANKS.indexOf(fromSquare[1]);
+    const toCol = FILES.indexOf(toSquare[0]);
+    const toRow = RANKS.indexOf(toSquare[1]);
+    if (fromCol < 0 || fromRow < 0 || toCol < 0 || toRow < 0) {
+      return null;
+    }
+    return {
+      fromRow,
+      fromCol,
+      toRow,
+      toCol,
+      isCapture: match[3] === 'x',
+      promotion,
+      pieceLetter: match[1]
+    };
+  }
+
+  function cloneHistorySlice(history, count) {
+    const result = [];
+    if (!Array.isArray(history) || count <= 0) {
+      return result;
+    }
+    const limit = Math.min(history.length, Math.max(0, count));
+    for (let index = 0; index < limit; index += 1) {
+      const entry = history[index];
+      if (!entry || typeof entry !== 'object') {
+        continue;
+      }
+      result.push({
+        moveNumber: entry.moveNumber,
+        color: entry.color,
+        san: entry.san,
+        lan: typeof entry.lan === 'string' ? entry.lan : null,
+        fen: typeof entry.fen === 'string' ? entry.fen : null,
+        captured: entry.captured ? sanitizePiece(entry.captured) || null : null
+      });
+    }
+    return result;
+  }
+
+  function createPreviewLastMove(entry) {
+    if (!entry || typeof entry !== 'object') {
+      return null;
+    }
+    const parsed = parseLanMoveCoordinates(entry.lan);
+    if (!parsed) {
+      return null;
+    }
+    return {
+      fromRow: parsed.fromRow,
+      fromCol: parsed.fromCol,
+      toRow: parsed.toRow,
+      toCol: parsed.toCol,
+      piece: null,
+      placedPiece: null,
+      captured: sanitizePiece(entry.captured) || null,
+      promotion: parsed.promotion || null,
+      isCastle: parsed.pieceLetter === 'K' && Math.abs(parsed.toCol - parsed.fromCol) === 2,
+      isEnPassant: false
+    };
+  }
+
+  function buildArchivePreviewSnapshot(baseNormalized, history, moveCount, initialSnapshot) {
+    if (!baseNormalized) {
+      return null;
+    }
+    const totalMoves = Array.isArray(history) ? history.length : 0;
+    const clamped = Math.max(0, Math.min(moveCount, totalMoves));
+    if (clamped === totalMoves) {
+      return baseNormalized;
+    }
+    if (clamped === 0) {
+      if (initialSnapshot) {
+        return initialSnapshot;
+      }
+      const mode = baseNormalized.difficulty || resolveDifficultyMode(baseNormalized.difficultyId);
+      const snapshot = createInitialSlotSnapshot(mode, baseNormalized.preferences);
+      if (snapshot) {
+        snapshot.isTwoPlayer = baseNormalized.isTwoPlayer === true;
+      }
+      return snapshot;
+    }
+    const entry = history[clamped - 1];
+    const fenData = entry ? parseFenString(entry.fen) : null;
+    if (!fenData) {
+      return null;
+    }
+    const preferencesSource = baseNormalized.preferences || {};
+    const preferences = {
+      showCoordinates: preferencesSource.showCoordinates !== false,
+      showHistory: preferencesSource.showHistory !== false,
+      notation: preferencesSource.notation === NOTATION_STYLES.LONG
+        ? NOTATION_STYLES.LONG
+        : NOTATION_STYLES.SHORT
+    };
+    const positionCounts = new Map();
+    const snapshot = {
+      board: fenData.board,
+      activeColor: fenData.activeColor,
+      castling: cloneCastlingRights(fenData.castling),
+      enPassant: fenData.enPassant ? { ...fenData.enPassant } : null,
+      halfmoveClock: fenData.halfmoveClock,
+      fullmove: fenData.fullmove,
+      lastMove: createPreviewLastMove(entry),
+      history: cloneHistorySlice(history, clamped),
+      positionCounts,
+      gameOutcome: null,
+      isGameOver: false,
+      preferences,
+      difficulty: baseNormalized.difficulty,
+      difficultyId: baseNormalized.difficultyId,
+      lastAiAnalysis: null,
+      isTwoPlayer: baseNormalized.isTwoPlayer === true
+    };
+    const key = getPositionKey(snapshot);
+    positionCounts.set(key, 1);
+    return snapshot;
+  }
+
+  function setArchivePreviewIndex(state, ui, index) {
+    if (!state || !state.isArchivePreview) {
+      return false;
+    }
+    const history = Array.isArray(state.archivePreviewHistory) ? state.archivePreviewHistory : [];
+    const baseNormalized = state.archivePreviewBaseState;
+    if (!baseNormalized) {
+      return false;
+    }
+    const maxIndex = history.length;
+    const numericIndex = Number.isFinite(Number(index)) ? Number(index) : maxIndex;
+    const clamped = Math.max(0, Math.min(Math.floor(numericIndex), maxIndex));
+    let snapshot = null;
+    if (clamped === maxIndex) {
+      snapshot = baseNormalized;
+    } else if (clamped === 0) {
+      snapshot = state.archivePreviewInitialState
+        || buildArchivePreviewSnapshot(baseNormalized, history, 0, null);
+      if (snapshot && !state.archivePreviewInitialState) {
+        state.archivePreviewInitialState = snapshot;
+      }
+    } else {
+      snapshot = buildArchivePreviewSnapshot(
+        baseNormalized,
+        history,
+        clamped,
+        state.archivePreviewInitialState
+      );
+    }
+    if (!snapshot) {
+      return false;
+    }
+    applyNormalizedState(state, ui, snapshot, { skipSave: true });
+    state.isArchivePreview = true;
+    state.preventAutosave = true;
+    state.archivePreviewHistory = history;
+    state.archivePreviewBaseState = baseNormalized;
+    state.archivePreviewIndex = clamped;
+    if (state.previewReturnSlotId) {
+      state.activeSlotId = state.previewReturnSlotId;
+    }
+    updateArchiveControls(state, ui);
+    updateSaveControls(state, ui);
+    return true;
+  }
+
+  function stepArchivePreview(state, ui, delta) {
+    if (!state || !state.isArchivePreview) {
+      return;
+    }
+    const history = Array.isArray(state.archivePreviewHistory) ? state.archivePreviewHistory : [];
+    const currentIndex = Number.isInteger(state.archivePreviewIndex)
+      ? state.archivePreviewIndex
+      : history.length;
+    setArchivePreviewIndex(state, ui, currentIndex + delta);
   }
 
   function buildAlgebraicNotation(state, move, nextState) {
@@ -5480,6 +5825,10 @@
     state.previewReturnSnapshot = null;
     state.previewReturnSlotId = null;
     state.lastSavedOutcomeSignature = null;
+    state.archivePreviewBaseState = null;
+    state.archivePreviewHistory = null;
+    state.archivePreviewInitialState = null;
+    state.archivePreviewIndex = 0;
     state.ai = twoPlayerEnabled ? null : createAiContext(difficulty);
     state.aiThinking = false;
     updateLegalMoves(state);
@@ -6290,7 +6639,11 @@
       previewReturnSlotId: null,
       isArchivePreview: false,
       preventAutosave: false,
-      lastSavedOutcomeSignature: null
+      lastSavedOutcomeSignature: null,
+      archivePreviewBaseState: null,
+      archivePreviewHistory: null,
+      archivePreviewInitialState: null,
+      archivePreviewIndex: 0
     };
     const key = getPositionKey(state);
     state.positionKey = key;
@@ -6337,6 +6690,9 @@
     const archiveSelect = section.querySelector(ARCHIVE_SELECT_SELECTOR);
     const archiveEmpty = section.querySelector(ARCHIVE_EMPTY_SELECTOR);
     const archiveRestore = section.querySelector(ARCHIVE_RESTORE_SELECTOR);
+    const archiveNavigation = section.querySelector(ARCHIVE_NAVIGATION_SELECTOR);
+    const archivePrevious = section.querySelector(ARCHIVE_PREVIOUS_SELECTOR);
+    const archiveNext = section.querySelector(ARCHIVE_NEXT_SELECTOR);
 
     if (!boardElement || !statusElement) {
       return;
@@ -6378,7 +6734,10 @@
       saveCancel,
       archiveSelect,
       archiveEmpty,
-      archiveRestore
+      archiveRestore,
+      archiveNavigation,
+      archivePrevious,
+      archiveNext
     };
 
     if (ui.boardElement) {
@@ -6501,6 +6860,20 @@
       archiveRestore.addEventListener('click', function () {
         if (restoreArchivePreview(state, ui) && archiveSelect) {
           archiveSelect.value = '';
+        }
+      });
+    }
+    if (archivePrevious) {
+      archivePrevious.addEventListener('click', function () {
+        if (!archivePrevious.disabled) {
+          stepArchivePreview(state, ui, -1);
+        }
+      });
+    }
+    if (archiveNext) {
+      archiveNext.addEventListener('click', function () {
+        if (!archiveNext.disabled) {
+          stepArchivePreview(state, ui, 1);
         }
       });
     }
