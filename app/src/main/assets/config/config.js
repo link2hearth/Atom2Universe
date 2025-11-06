@@ -916,6 +916,12 @@ const GAME_CONFIG = {
               'Orchestrez vos motifs favoris dans l’automate cellulaire de Conway.'
           },
           {
+            id: 'escape',
+            label: 'Arcade Escape :',
+            description:
+              'Progressez en infiltration dans un labyrinthe procédural sans entrer dans le champ de vision des gardiens.'
+          },
+          {
             id: 'blackjack',
             label: 'Arcade Blackjack :',
             description:
@@ -984,6 +990,7 @@ const GAME_CONFIG = {
     'arcade.holdem',
     'arcade.echecs',
     'arcade.gameOfLife',
+    'arcade.escape',
     'system.gacha',
     'system.tableau',
     'system.fusion',
@@ -1097,7 +1104,8 @@ const GAME_CONFIG = {
         blackjack: { type: 'feature', requires: 'arcade.hub' },
         holdem: { type: 'feature', requires: 'arcade.hub' },
         echecs: { type: 'feature', requires: 'arcade.hub' },
-        gameOfLife: { type: 'feature', requires: 'arcade.hub' }
+        gameOfLife: { type: 'feature', requires: 'arcade.hub' },
+        escape: { type: 'feature', requires: 'arcade.hub' }
       },
       systems: {
         gacha: { type: 'page', pageId: 'gacha' },

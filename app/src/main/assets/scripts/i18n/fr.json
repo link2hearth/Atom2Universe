@@ -448,6 +448,12 @@
             "description": "Placez des cellules et observez leur évolution : elles survivent avec 2 ou 3 voisines, naissent avec exactement 3 et meurent autrement.",
             "cta": "Explorer"
           },
+          "escape": {
+            "aria": "Accéder au mini-jeu Escape",
+            "title": "Escape",
+            "description": "Contournez les cônes de vision des gardiens dans un labyrinthe généré à chaque partie.",
+            "cta": "Infiltrer"
+          },
           "roulette": {
             "aria": "Ouvrir le mini-jeu Joker Roulette",
             "title": "Joker Roulette",
@@ -839,6 +845,57 @@
         },
         "cell": {
           "label": "Ligne {row}, colonne {column} : {value} (objectif {target})"
+        }
+      },
+      "escape": {
+        "aria": "Infiltration Escape : rejoignez la sortie du labyrinthe sans être repéré.",
+        "title": "Escape",
+        "subtitle": "Traversez un labyrinthe généré procéduralement tour par tour. Étudiez la carte, anticipez les patrouilles et préparez vos plans de fuite.",
+        "controls": {
+          "aria": "Contrôles de génération Escape"
+        },
+        "difficulty": {
+          "aria": "Choisir la difficulté",
+          "label": "Difficulté",
+          "easy": "Facile",
+          "medium": "Moyen",
+          "hard": "Difficile"
+        },
+        "seed": {
+          "label": "Seed",
+          "placeholder": "auto"
+        },
+        "actions": {
+          "generate": "Générer un niveau",
+          "daily": "Seed du jour"
+        },
+        "messages": {
+          "loading": "Chargement de la configuration…"
+        },
+        "summary": {
+          "title": "Résumé",
+          "seed": "Seed",
+          "size": "Grille",
+          "cycle": "Cycles",
+          "path": "Chemin optimal",
+          "objects": "Objets",
+          "guards": "Patrouilles",
+          "vision": "Vision",
+          "score": "Score estimé"
+        },
+        "legend": {
+          "title": "Légende",
+          "wall": "Mur",
+          "floor": "Sol",
+          "start": "Départ",
+          "exit": "Sortie",
+          "door": "Porte",
+          "key": "Clé",
+          "plate": "Plaque",
+          "bonus": "Orbe bonus",
+          "patrol": "Trajet de garde",
+          "guard": "Gardien",
+          "vision": "Vision"
         }
       },
       "starBridges": {
@@ -2435,6 +2492,24 @@
         },
         "cell": {
           "combined": "{occupant} sur {base}"
+        }
+      },
+      "escape": {
+        "messages": {
+          "ready": "Configuration Escape chargée.",
+          "generated": "Seed {{seed}} prête. Grille {{size}}.",
+          "error": "Impossible de générer un niveau. Essayez une autre seed.",
+          "configError": "Configuration Escape par défaut appliquée (chargement impossible)."
+        },
+        "summary": {
+          "sizeValue": "{{tilesWidth}}×{{tilesHeight}} tuiles ({{cellsWidth}}×{{cellsHeight}} cellules)",
+          "cycleValue": "{{count}} ouvertures (~{{ratio}} %)",
+          "pathValue": "Par : {{par}} pas · Solution validée : {{solution}}",
+          "objectsValue": "{{keys}} clé(s) · {{plates}} plaque(s) · {{bonuses}} orbe(s)",
+          "guardsValue": "{{count}} garde(s) · R={{range}} · {{angle}}°",
+          "guardsNone": "Aucune patrouille active",
+          "visionValue": "Zone surveillée : {{coverage}}",
+          "scoreValue": "Score estimé {{score}}"
         }
       },
       "sudoku": {

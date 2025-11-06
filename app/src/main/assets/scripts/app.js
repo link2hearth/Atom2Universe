@@ -124,18 +124,19 @@ const BRICK_SKIN_TOAST_KEYS = Object.freeze({
     starBridges: 'arcade.starBridges',
     starsWar: 'arcade.starsWar',
     pipeTap: 'arcade.pipeTap',
-  sokoban: 'arcade.sokoban',
-  math: 'arcade.math',
-  sudoku: 'arcade.sudoku',
-  minesweeper: 'arcade.demineur',
-  solitaire: 'arcade.solitaire',
-  pachinko: 'arcade.pachinko',
-  blackjack: 'arcade.blackjack',
-  holdem: 'arcade.holdem',
-  dice: 'arcade.dice',
-  echecs: 'arcade.echecs',
-  gameOfLife: 'arcade.gameOfLife'
-});
+    sokoban: 'arcade.sokoban',
+    math: 'arcade.math',
+    sudoku: 'arcade.sudoku',
+    minesweeper: 'arcade.demineur',
+    solitaire: 'arcade.solitaire',
+    pachinko: 'arcade.pachinko',
+    blackjack: 'arcade.blackjack',
+    holdem: 'arcade.holdem',
+    dice: 'arcade.dice',
+    echecs: 'arcade.echecs',
+    gameOfLife: 'arcade.gameOfLife',
+    escape: 'arcade.escape'
+  });
 
 const OPTIONS_DETAIL_FEATURE_MAP = Object.freeze({
   particles: 'arcade.particules',
@@ -2382,6 +2383,9 @@ function activateArcadeHubCard(card) {
   }
   if (target === 'gameOfLife') {
     ensureGameOfLifeGame();
+  }
+  if (target === 'escape') {
+    ensureEscapeGame();
   }
   showPage(target);
 }
@@ -6579,6 +6583,17 @@ function ensureGameOfLifeGame() {
   if (window.gameOfLifeArcade && typeof window.gameOfLifeArcade === 'object') {
     gameOfLifeGame = window.gameOfLifeArcade;
     return gameOfLifeGame;
+  }
+  return null;
+}
+
+function ensureEscapeGame() {
+  if (escapeGame && typeof escapeGame === 'object') {
+    return escapeGame;
+  }
+  if (window.escapeArcade && typeof window.escapeArcade === 'object') {
+    escapeGame = window.escapeArcade;
+    return escapeGame;
   }
   return null;
 }
@@ -11064,6 +11079,7 @@ let sokobanGame = null;
 let linkGame = null;
 let lightsOutGame = null;
 let gameOfLifeGame = null;
+let escapeGame = null;
 let starBridgesGame = null;
 let starsWarGame = null;
 let pipeTapGame = null;
