@@ -797,12 +797,29 @@
     const distances = Array.from({ length: height }, () => Array(width).fill(-1));
     const queue = [];
     let front = 0;
-    const startKey = getCellKey(start.row, start.col);
+    const startRowCandidate = start && typeof start === 'object' ? start.row : undefined;
+    const startColCandidate = start && typeof start === 'object' ? start.col : undefined;
+    const startCellRowCandidate = start && typeof start === 'object' ? start.cellRow : undefined;
+    const startCellColCandidate = start && typeof start === 'object' ? start.cellCol : undefined;
+    const startRow = Number.isFinite(startRowCandidate)
+      ? Math.trunc(startRowCandidate)
+      : Number.isFinite(startCellRowCandidate)
+        ? Math.trunc(startCellRowCandidate)
+        : null;
+    const startCol = Number.isFinite(startColCandidate)
+      ? Math.trunc(startColCandidate)
+      : Number.isFinite(startCellColCandidate)
+        ? Math.trunc(startCellColCandidate)
+        : null;
+    if (startRow === null || startCol === null || !isInsideCell(startRow, startCol, width, height)) {
+      return distances;
+    }
+    const startKey = getCellKey(startRow, startCol);
     if (blockedCells.has(startKey)) {
       return distances;
     }
-    distances[start.row][start.col] = 0;
-    queue.push(start);
+    distances[startRow][startCol] = 0;
+    queue.push({ row: startRow, col: startCol });
     while (front < queue.length) {
       const current = queue[front];
       front += 1;
