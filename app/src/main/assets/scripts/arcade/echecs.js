@@ -4809,10 +4809,10 @@
     if (context.rotateForTwoPlayer) {
       ghost.dataset.rotated = 'true';
     }
-    ui.boardElement.appendChild(ghost);
     context.boardElement = ui.boardElement;
     context.ghostElement = ghost;
     updateDragGhostPosition(context, context.startX, context.startY);
+    ui.boardElement.appendChild(ghost);
   }
 
   function cleanupDrag(state, ui) {
