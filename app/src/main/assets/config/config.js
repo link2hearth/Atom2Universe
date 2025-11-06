@@ -2169,7 +2169,7 @@ const GAME_CONFIG = {
   /**
    * Paramètres du Big Bang.
    * - levelBonusStep : nombre de niveaux supplémentaires ajoutés au plafond des magasins après activation.
-   *   Le Big Bang se débloque automatiquement lorsque tous les niveaux de boutique sont achetés.
+   *   Le Big Bang se débloque lorsque Doigt créateur et Cœur d’étoile atteignent leur niveau maximum.
    */
   bigBang: {
     levelBonusStep: 100

@@ -282,8 +282,8 @@
           "title": "Restart the universe",
           "summary": "Reset your current atoms along with both shop tracks to raise their cap by +{{bonus}} levels.",
           "bonus": "Extra shop levels unlocked: +{{bonus}}",
-          "requirementLocked": "Buy every remaining shop level ({{remaining}}) to unlock the next Big Bang.",
-          "requirementReady": "Shop complete! Launch a new Big Bang to add +{{bonus}} purchasable levels.",
+          "requirementLocked": "Max out {{firstShop}} and {{secondShop}} ({{remaining}} levels remaining) to unlock the next Big Bang.",
+          "requirementReady": "{{firstShop}} and {{secondShop}} are maxed out! Launch a new Big Bang to add +{{bonus}} purchasable levels.",
           "cta": "Trigger the Big Bang"
         },
         "confirm": {
@@ -2871,7 +2871,7 @@
       "bigBang": {
         "confirm": "Restart the universe? You will lose your current atoms, APC/APS and shop levels, but unlock +{bonus} extra levels.",
         "cancelled": "Big Bang cancelled",
-        "notReady": "Buy every remaining shop level ({remaining}) to trigger the Big Bang.",
+        "notReady": "Max out {{firstShop}} and {{secondShop}} ({{remaining}} levels remaining) to trigger the Big Bang.",
         "done": "Big Bang complete! Shop cap increased by +{bonus} (total +{total})."
       },
       "metaux": {
