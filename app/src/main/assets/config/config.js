@@ -395,7 +395,7 @@ function getBuildingLevel(context, id) {
   return Number.isFinite(value) && value > 0 ? value : 0;
 }
 
-const SHOP_BUILDING_IDS = ['godFinger', 'starCore', 'gachaTicketBooth'];
+const SHOP_BUILDING_IDS = ['godFinger', 'starCore', 'gachaTicketBooth', 'mach3TicketBooth'];
 
 const SHOP_PROGRESSIVE_GROWTH_RATE = 1.11;
 
@@ -485,16 +485,31 @@ function createShopBuildingDefinitions() {
       name: 'Guichet gacha',
       description: 'Échangez vos atomes contre des tickets de tirage garantis.',
       effectSummary:
-        'Convertit les atomes en tickets gacha : +1 ticket par achat. Limite portée à 1 000 niveaux (+1 000 par Big Bang). Le prix augmente de 25 000 atomes à chaque niveau et ce coût de base est multiplié par 4 000 après chaque Big Bang.',
+        'Convertit les atomes en tickets gacha : +1 ticket par achat. Limite portée à 200 niveaux (+200 par Big Bang). Le prix augmente de 25 000 atomes à chaque niveau et ce coût de base est multiplié par 4 000 après chaque Big Bang.',
       category: 'special',
       baseCost: 250000,
       costIncrement: 250000,
       bigBangBaseCostMultiplier: 4000,
       // Multiplie le coût de base (et l'incrément) du magasin après chaque Big Bang.
       gachaTicketsPerPurchase: 1,
-      maxLevel: 1000,
-      bigBangLevelBonusMultiplier: 10,
+      maxLevel: 200,
+      bigBangLevelBonusMultiplier: 2,
       // Multiplie le bonus de niveaux supplémentaires accordé après chaque Big Bang.
+      effect: () => ({})
+    },
+    {
+      id: 'mach3TicketBooth',
+      name: 'Terminal Mach3',
+      description: 'Échangez vos tickets gacha contre des crédits Mach3 garantis.',
+      effectSummary:
+        'Convertit 100 tickets gacha en 1 crédit Mach3 par achat. Limite portée à 2 niveaux (+2 par Big Bang).',
+      category: 'special',
+      baseCost: 0,
+      gachaTicketCostPerPurchase: 100,
+      mach3TicketsPerPurchase: 1,
+      maxLevel: 2,
+      bigBangLevelBonusMultiplier: 0.02,
+      // 0,02 = +2 niveaux par Big Bang avec un palier de 100.
       effect: () => ({})
     }
   ].map(withDefaults);
