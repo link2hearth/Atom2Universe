@@ -1478,14 +1478,6 @@
         "saves": {
           "title": "Save manager",
           "description": "Create safety copies and restore your progress when something goes wrong.",
-          "folderButton": "Choose folder…",
-          "exportFileButton": "Export to file",
-          "importFileButton": "Import a save",
-          "folderStatus": {
-            "idle": "No folder selected.",
-            "ready": "Backup folder ready.",
-            "error": "Unable to access the backup folder."
-          },
           "createButton": "Create manual backup",
           "refreshButton": "Refresh",
           "empty": "No saves available yet.",
@@ -3028,15 +3020,7 @@
         "deleteSuccess": "Backup deleted.",
         "deleteFailed": "Unable to delete this backup.",
         "fallbackRestored": "Safety backup restored.",
-        "fallbackFailed": "No valid safety backup could be loaded.",
-        "folderReady": "Backup folder ready.",
-        "folderError": "Unable to access the backup folder.",
-        "folderMissing": "Please choose a backup folder.",
-        "exportSuccess": "Backup exported: {name}.",
-        "exportFailed": "Unable to export the backup.",
-        "importSuccess": "Backup imported.",
-        "importFailed": "Unable to read this backup.",
-        "fallbackUnsupported": "Your browser does not support automatic export."
+        "fallbackFailed": "No valid safety backup could be loaded."
       }
     },
     "gacha": {

@@ -131,11 +131,6 @@ body.theme-aurora .option-card--holdem {
   gap: 0.6rem;
 }
 
-.option-row--saves-bridge {
-  flex-wrap: wrap;
-  gap: 0.6rem;
-}
-
 .save-manager {
   display: flex;
   flex-direction: column;
@@ -146,12 +141,6 @@ body.theme-aurora .option-card--holdem {
   margin: 0;
   font-size: calc(0.75rem * var(--font-scale-factor, 1));
   opacity: 0.75;
-}
-
-.save-manager__status {
-  margin: 0;
-  font-size: calc(0.75rem * var(--font-scale-factor, 1));
-  opacity: 0.85;
 }
 
 .save-manager__list {
