@@ -1490,32 +1490,73 @@ function getHoldemBridge() {
 }
 
 function formatHoldemOptionValue(value) {
-  const numeric = Number(value);
-  if (!Number.isFinite(numeric)) {
-    return formatNumberLocalized(0, HOLDEM_NUMBER_FORMAT);
+  let normalized = value;
+  if (!(normalized instanceof LayeredNumber)) {
+    const numeric = Number(normalized);
+    normalized = Number.isFinite(numeric) ? Math.max(0, Math.floor(numeric)) : 0;
   }
-  const clamped = Math.max(0, Math.floor(numeric));
-  return formatNumberLocalized(clamped, HOLDEM_NUMBER_FORMAT);
+
+  if (typeof formatLayeredLocalized === 'function') {
+    const formatted = formatLayeredLocalized(normalized, {
+      mantissaDigits: 2,
+      numberFormatOptions: HOLDEM_NUMBER_FORMAT
+    });
+    if (typeof formatted === 'string' && formatted.length > 0) {
+      return formatted;
+    }
+  }
+
+  if (normalized instanceof LayeredNumber) {
+    return normalized.toString();
+  }
+
+  return formatNumberLocalized(normalized, HOLDEM_NUMBER_FORMAT);
 }
 
 function updateHoldemBlindOption(blind) {
   if (!elements.holdemBlindValue) {
     return;
   }
-  let numeric = Number(blind);
-  if (!Number.isFinite(numeric) || numeric <= 0) {
+  const resolveBlindValue = source => {
+    if (typeof LayeredNumber === 'function') {
+      try {
+        const layered = source instanceof LayeredNumber
+          ? (typeof source.clone === 'function' ? source.clone() : new LayeredNumber(source))
+          : new LayeredNumber(source);
+        if (layered && layered.sign > 0 && !layered.isZero()) {
+          if (layered.layer === 0) {
+            const numeric = layered.toNumber();
+            if (Number.isFinite(numeric)) {
+              return Math.max(1, Math.floor(numeric));
+            }
+          }
+          return layered;
+        }
+      } catch (error) {
+        // Ignore invalid layered values and fall back to numeric parsing.
+      }
+    }
+    const numeric = Number(source);
+    if (Number.isFinite(numeric) && numeric > 0) {
+      return Math.max(1, Math.floor(numeric));
+    }
+    return null;
+  };
+
+  let resolved = resolveBlindValue(blind);
+  if (!resolved) {
     const bridge = getHoldemBridge();
     if (bridge && typeof bridge.getBlind === 'function') {
       try {
-        numeric = Number(bridge.getBlind());
+        resolved = resolveBlindValue(bridge.getBlind());
       } catch (error) {
-        numeric = Number.NaN;
+        resolved = null;
       }
     }
   }
-  if (Number.isFinite(numeric) && numeric > 0) {
-    const rounded = Math.max(1, Math.floor(numeric));
-    elements.holdemBlindValue.textContent = formatNumberLocalized(rounded, HOLDEM_NUMBER_FORMAT);
+
+  if (resolved) {
+    elements.holdemBlindValue.textContent = formatHoldemOptionValue(resolved);
   } else {
     elements.holdemBlindValue.textContent = '—';
   }
