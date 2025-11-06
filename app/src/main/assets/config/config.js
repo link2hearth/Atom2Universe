@@ -139,22 +139,8 @@ const SHOP_MAX_PURCHASE_DEFAULT = 100;
 
 /**
  * Durée (en millisecondes) de l’animation de fondu appliquée au démarrage.
- * Ce délai est également réutilisé pour l’effet de transition lors d’un
- * rechargement automatique provoqué après un long passage en arrière-plan.
  */
 const STARTUP_FADE_DURATION_MS = 1000;
-
-/**
- * Durée minimale (en millisecondes) passée en arrière-plan avant de forcer
- * un rechargement complet de l’application au retour au premier plan.
- */
-const BACKGROUND_RELOAD_THRESHOLD_MS = 1500 * 60 * 1000;
-
-/**
- * Délai (en millisecondes) laissé à l’overlay pour recouvrir l’écran avant
- * de déclencher un rechargement forcé.
- */
-const BACKGROUND_RELOAD_OVERLAY_LEAD_MS = 1000;
 
 /**
  * Ratio maximal appliqué lors du rendu des canvas.
@@ -351,8 +337,6 @@ if (typeof globalThis !== 'undefined') {
   globalThis.PERFORMANCE_MODE_SETTINGS = PERFORMANCE_MODE_SETTINGS;
   globalThis.PERFORMANCE_MODE_DEFINITIONS = PERFORMANCE_MODE_DEFINITIONS;
   globalThis.STARTUP_FADE_DURATION_MS = STARTUP_FADE_DURATION_MS;
-  globalThis.BACKGROUND_RELOAD_THRESHOLD_MS = BACKGROUND_RELOAD_THRESHOLD_MS;
-  globalThis.BACKGROUND_RELOAD_OVERLAY_LEAD_MS = BACKGROUND_RELOAD_OVERLAY_LEAD_MS;
 }
 
 function translateOrDefault(key, fallback, params) {
