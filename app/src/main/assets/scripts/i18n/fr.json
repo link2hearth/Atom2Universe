@@ -878,7 +878,9 @@
         },
         "how": {
           "label": "Comment ça marche ?",
-          "message": "Reliez toutes les étoiles avec des ponts horizontaux, verticaux ou diagonaux. Les nombres indiquent combien de ponts simples doivent partir de chaque étoile. Les ponts ne se croisent pas et chaque paire d’étoiles ne partage qu’un seul pont."
+          "title": "Comment ça marche ?",
+          "message": "Reliez toutes les étoiles avec des ponts horizontaux, verticaux ou diagonaux. Les nombres indiquent combien de ponts simples doivent partir de chaque étoile. Les ponts ne se croisent pas et chaque paire d’étoiles ne partage qu’un seul pont.",
+          "close": "Fermer"
         },
         "node": {
           "aria": "Étoile ligne {{row}}, colonne {{column}} : {{current}}/{{required}} ponts"
@@ -915,7 +917,9 @@
         },
         "how": {
           "label": "Comment ça marche ?",
-          "message": "Faites pivoter chaque tuile pour relier toutes les conduites à partir de la source entourée. La grille est générée depuis un arbre couvrant puis chaque tuile est mélangée, le puzzle reste donc toujours solvable."
+          "title": "Comment ça marche ?",
+          "message": "Faites pivoter chaque tuile pour relier toutes les conduites à partir de la source entourée. La grille est générée depuis un arbre couvrant puis chaque tuile est mélangée, le puzzle reste donc toujours solvable.",
+          "close": "Fermer"
         },
         "tile": {
           "aria": "Tuile {{row}}, colonne {{column}}"

@@ -294,6 +294,85 @@
   color: var(--starbridges-accent-strong);
 }
 
+.starbridges__how-dialog {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 6vw, 2.75rem);
+  background: rgba(6, 10, 26, 0.78);
+  backdrop-filter: blur(6px);
+  z-index: 60;
+}
+
+.starbridges__how-dialog[hidden] {
+  display: none;
+}
+
+.starbridges__how-dialog-panel {
+  width: min(520px, 100%);
+  background: var(--starbridges-surface-strong);
+  color: var(--starbridges-text);
+  border-radius: var(--starbridges-radius);
+  border: 1px solid var(--starbridges-border-strong);
+  box-shadow: var(--starbridges-shadow);
+  padding: clamp(1rem, 3.4vw, 1.8rem);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.8rem, 2.5vw, 1.2rem);
+}
+
+body.theme-light .starbridges__how-dialog {
+  background: rgba(12, 16, 32, 0.48);
+}
+
+body.theme-light .starbridges__how-dialog-panel {
+  background: rgba(255, 255, 255, 0.98);
+  color: rgba(12, 16, 32, 0.92);
+  border-color: rgba(80, 110, 200, 0.25);
+  box-shadow: 0 22px 44px rgba(12, 16, 32, 0.18);
+}
+
+body.theme-neon .starbridges__how-dialog-panel {
+  border-color: rgba(120, 160, 255, 0.45);
+  box-shadow: 0 24px 52px rgba(60, 90, 220, 0.38);
+}
+
+body.theme-aurora .starbridges__how-dialog-panel {
+  border-color: rgba(80, 220, 180, 0.45);
+  box-shadow: 0 24px 52px rgba(26, 96, 70, 0.32);
+}
+
+.starbridges__how-dialog-title {
+  margin: 0;
+  font-size: clamp(1.05rem, 3vw, 1.35rem);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--starbridges-accent);
+}
+
+body.theme-light .starbridges__how-dialog-title {
+  color: var(--starbridges-accent-strong);
+}
+
+.starbridges__how-dialog-message {
+  margin: 0;
+  font-size: clamp(0.75rem, 1.8vw, 0.95rem);
+  line-height: 1.6;
+  color: var(--starbridges-muted);
+}
+
+body.theme-light .starbridges__how-dialog-message {
+  color: rgba(12, 16, 32, 0.78);
+}
+
+.starbridges__how-dialog-close {
+  align-self: flex-end;
+  font-size: clamp(0.6rem, 1.4vw, 0.72rem);
+  padding-inline: clamp(0.7rem, 1.6vw, 1rem);
+}
+
 @media (max-width: 540px) {
   .page--star-bridges {
     --starbridges-node-size: clamp(47.5px, 15vw, 65px);
