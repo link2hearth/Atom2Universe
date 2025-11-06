@@ -1124,7 +1124,12 @@
       runtime: null
     };
 
-    level.distancesFromStart = computeDistances(level.adjacency, width, height, level.start);
+    level.distancesFromStart = computeDistances(
+      level.adjacency,
+      width,
+      height,
+      { row: level.start.cellRow, col: level.start.cellCol }
+    );
     return level;
   }
 
@@ -1192,7 +1197,7 @@
       level.adjacency,
       level.cellWidth,
       level.cellHeight,
-      level.start,
+      { row: level.start.cellRow, col: level.start.cellCol },
       blocked
     );
     const doorDistance = level.distancesFromStart?.[doorCell.row]?.[doorCell.col] ?? Number.POSITIVE_INFINITY;
