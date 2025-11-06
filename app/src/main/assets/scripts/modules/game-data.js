@@ -355,6 +355,17 @@ function normalizeFusionDefinition(entry, index = 0) {
   const rawAps = Number(rewardsRaw.apsFlat ?? rewardsRaw.aps ?? rewardsRaw.perSecond ?? rewardsRaw.auto ?? 0);
   const apcFlat = Number.isFinite(rawApc) ? rawApc : 0;
   const apsFlat = Number.isFinite(rawAps) ? rawAps : 0;
+  const rawGrowthMultiplier = Number(
+    rewardsRaw.growthMultiplier
+    ?? rewardsRaw.rewardGrowth
+    ?? rewardsRaw.growth
+    ?? rewardsRaw.scale
+    ?? rewardsRaw.multiplier
+    ?? 1
+  );
+  const rewardGrowthMultiplier = Number.isFinite(rawGrowthMultiplier) && rawGrowthMultiplier > 1
+    ? rawGrowthMultiplier
+    : 1;
   const rewardElementSource = rewardsRaw.elements ?? rewardsRaw.items ?? rewardsRaw.element ?? [];
   const elementRewards = normalizeFusionElementList(rewardElementSource);
   return {
@@ -368,6 +379,7 @@ function normalizeFusionDefinition(entry, index = 0) {
       apsFlat,
       elements: elementRewards
     },
+    rewardGrowthMultiplier,
     localization: {
       nameKey,
       nameFallback,
