@@ -432,10 +432,15 @@ function loadConfigJson(path, fallback) {
     request.open('GET', path, false);
     request.overrideMimeType('application/json');
     request.send(null);
-    if (request.status >= 200 && request.status < 300) {
-      const responseText = request.responseText;
-      if (typeof responseText === 'string' && responseText.trim()) {
+    const status = Number(request.status) || 0;
+    const responseText = request.responseText;
+    const hasBody = typeof responseText === 'string' && responseText.trim();
+    const successfulRequest = (status >= 200 && status < 300) || (status === 0 && hasBody);
+    if (successfulRequest && hasBody) {
+      try {
         return JSON.parse(responseText);
+      } catch (parseError) {
+        console.warn('Unable to parse configuration JSON', path, parseError);
       }
     }
   } catch (error) {
