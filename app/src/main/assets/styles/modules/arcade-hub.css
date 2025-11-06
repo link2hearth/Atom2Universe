@@ -77,6 +77,8 @@
 }
 
 .arcade-hub-card {
+  --arcade-hub-card-translate-x: 0px;
+  --arcade-hub-card-translate-y: 0px;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -87,6 +89,10 @@
   border: 1px solid var(--arcade-hub-card-border);
   box-shadow: var(--arcade-hub-card-shadow);
   transition: transform var(--transition), box-shadow var(--transition);
+  transform: translate(
+    var(--arcade-hub-card-translate-x),
+    var(--arcade-hub-card-translate-y)
+  );
   appearance: none;
   cursor: pointer;
   color: inherit;
@@ -118,17 +124,83 @@
 
 .arcade-hub-card--locked:hover,
 .arcade-hub-card--locked:focus-visible {
-  transform: none;
+  --arcade-hub-card-translate-y: 0px;
   box-shadow: none;
   outline: none;
 }
 
 .arcade-hub-card:hover,
 .arcade-hub-card:focus-visible {
-  transform: translateY(calc(-4px * var(--arcade-hub-scale)));
+  --arcade-hub-card-translate-y: calc(-4px * var(--arcade-hub-scale));
   box-shadow: var(--arcade-hub-card-shadow-hover);
   outline: calc(2px * var(--arcade-hub-scale)) solid var(--arcade-hub-card-outline);
   outline-offset: calc(4px * var(--arcade-hub-scale));
+}
+
+.arcade-hub-card--dragging {
+  cursor: grabbing;
+  animation: arcade-hub-card-wiggle 160ms ease-in-out infinite;
+  box-shadow: var(--arcade-hub-card-shadow-hover);
+  outline: calc(2px * var(--arcade-hub-scale)) solid var(--arcade-hub-card-outline);
+  outline-offset: calc(6px * var(--arcade-hub-scale));
+}
+
+.arcade-hub-card--dragging,
+.arcade-hub-card--dragging * {
+  pointer-events: none !important;
+}
+
+.arcade-hub-card--drop-target {
+  outline: calc(2px * var(--arcade-hub-scale)) dashed var(--arcade-hub-card-outline);
+  outline-offset: calc(8px * var(--arcade-hub-scale));
+}
+
+.arcade-hub-card--swap-feedback {
+  animation: arcade-hub-card-swap-pulse 220ms ease-out;
+}
+
+body.arcade-hub-reordering {
+  cursor: grabbing;
+  user-select: none;
+}
+
+body.arcade-hub-reordering .arcade-hub-card {
+  cursor: grabbing;
+}
+
+@keyframes arcade-hub-card-wiggle {
+  0%,
+  100% {
+    transform: translate(
+        var(--arcade-hub-card-translate-x),
+        var(--arcade-hub-card-translate-y)
+      )
+      rotate(-1.4deg);
+  }
+  50% {
+    transform: translate(
+        var(--arcade-hub-card-translate-x),
+        var(--arcade-hub-card-translate-y)
+      )
+      rotate(1.4deg);
+  }
+}
+
+@keyframes arcade-hub-card-swap-pulse {
+  0% {
+    transform: translate(
+        var(--arcade-hub-card-translate-x),
+        var(--arcade-hub-card-translate-y)
+      )
+      scale(0.96);
+  }
+  100% {
+    transform: translate(
+        var(--arcade-hub-card-translate-x),
+        var(--arcade-hub-card-translate-y)
+      )
+      scale(1);
+  }
 }
 
 .arcade-hub-card__header {
