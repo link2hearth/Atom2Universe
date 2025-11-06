@@ -91,7 +91,8 @@
       path: [],
       pointerId: null,
       mode: null,
-      finalizeTimeoutId: null
+      finalizeTimeoutId: null,
+      isActive: false
     },
     initialized: false,
     isVictory: false,
@@ -451,6 +452,7 @@
     state.interaction.path = [];
     state.interaction.pointerId = null;
     state.interaction.mode = null;
+    state.interaction.isActive = false;
   }
 
   function getCellElement(row, col) {
@@ -1004,6 +1006,7 @@
     state.interaction.mode = mode;
     state.interaction.pointerId = pointerId || null;
     state.interaction.path = [{ row, col }];
+    state.interaction.isActive = mode === 'pointer';
     element.dataset.state = 'selected';
   }
 
@@ -1066,6 +1069,9 @@
     if (!Number.isFinite(row) || !Number.isFinite(col)) {
       return;
     }
+    if (typeof event.preventDefault === 'function') {
+      event.preventDefault();
+    }
     startSelection(row, col, 'pointer', event.pointerId);
   }
 
@@ -1076,7 +1082,7 @@
     if (state.interaction.pointerId !== event.pointerId) {
       return;
     }
-    if (event.buttons === 0) {
+    if (!state.interaction.isActive) {
       return;
     }
     const element = event.currentTarget;
@@ -1104,6 +1110,7 @@
     if (state.interaction.pointerId !== event.pointerId) {
       return;
     }
+    state.interaction.isActive = false;
     if (state.interaction.path.length === getRequiredLinkLength()) {
       if (!state.interaction.finalizeTimeoutId) {
         scheduleFinalizeSelection();
@@ -1120,6 +1127,7 @@
     if (state.interaction.pointerId !== event.pointerId) {
       return;
     }
+    state.interaction.isActive = false;
     resetInteraction();
   }
 

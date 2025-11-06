@@ -11,7 +11,7 @@
   --link-board-background: rgba(18, 24, 38, 0.92);
   --link-cell-border: rgba(110, 136, 198, 0.42);
   --link-cell-shadow: 0 14px 26px rgba(0, 0, 0, 0.5);
-  --link-cell-text: rgba(236, 244, 255, 0.95);
+  --link-cell-text: rgba(0, 0, 0, 0.92);
   --link-cell-plus-text: rgba(255, 210, 120, 0.96);
   --link-cell-selected: rgba(120, 198, 255, 0.35);
   --link-message-background: rgba(24, 32, 52, 0.84);
@@ -179,6 +179,8 @@
   border: 1px solid var(--link-border);
   box-shadow: var(--link-shadow);
   max-width: min(90vw, 46rem);
+  touch-action: none;
+  -ms-touch-action: none;
 }
 
 .link__cell {
