@@ -2201,6 +2201,10 @@ const GAME_CONFIG = {
       successChance: 0.5,
       rewards: {
         apcFlat: 10000,
+        /**
+         * Chaque réussite augmente ce gain de 10 % par rapport à la précédente.
+         */
+        growthMultiplier: 1.1,
         elements: [
           { elementId: 'element-002-helium', count: 1 }
         ]
@@ -2218,6 +2222,10 @@ const GAME_CONFIG = {
       rewards: {
         apcFlat: 100000,
         apsFlat: 100000,
+        /**
+         * Chaque réussite augmente ces gains de 10 % par rapport à la précédente.
+         */
+        growthMultiplier: 1.1,
       }
     },
     {

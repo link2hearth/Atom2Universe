@@ -2827,23 +2827,64 @@ function formatFusionElementLabel(reward) {
   return t('scripts.gacha.results.unknownElement');
 }
 
-function applyFusionRewards(rewards) {
+function getFusionRewardGrowthFactor(definition) {
+  const multiplier = Number(definition?.rewardGrowthMultiplier);
+  if (!Number.isFinite(multiplier) || multiplier <= 1) {
+    return 1;
+  }
+  return multiplier;
+}
+
+function getFusionRewardMultiplier(definition, successCount) {
+  const factor = getFusionRewardGrowthFactor(definition);
+  if (factor <= 1) {
+    return 1;
+  }
+  const normalizedCount = Math.max(0, Math.floor(Number(successCount) || 0));
+  if (normalizedCount <= 1) {
+    return 1;
+  }
+  return factor ** (normalizedCount - 1);
+}
+
+function computeFusionRewardSum(definition, baseValue, successCount, previousSuccessCount = 0) {
+  if (!Number.isFinite(baseValue) || baseValue === 0) {
+    return 0;
+  }
+  const totalSuccesses = Math.max(0, Math.floor(Number(successCount) || 0));
+  if (totalSuccesses <= 0) {
+    return 0;
+  }
+  const factor = getFusionRewardGrowthFactor(definition);
+  if (factor <= 1) {
+    return baseValue * totalSuccesses;
+  }
+  const startExponent = Math.max(0, Math.floor(Number(previousSuccessCount) || 0));
+  const powerOffset = factor ** startExponent;
+  const growthSpan = factor ** totalSuccesses;
+  return baseValue * powerOffset * ((growthSpan - 1) / (factor - 1));
+}
+
+function applyFusionRewards(rewards, multiplier = 1) {
   if (!rewards || typeof rewards !== 'object') {
     return [];
   }
   const bonuses = getFusionBonusState();
   const summaries = [];
   let awardedElements = false;
+  const appliedMultiplier = Number.isFinite(Number(multiplier)) ? Number(multiplier) : 1;
   const apcIncrement = Number(rewards.apcFlat);
-  if (Number.isFinite(apcIncrement) && apcIncrement !== 0) {
-    bonuses.apcFlat += apcIncrement;
-    const formatted = formatNumberLocalized(apcIncrement);
+  if (Number.isFinite(apcIncrement) && apcIncrement !== 0 && appliedMultiplier !== 0) {
+    const apcGain = apcIncrement * appliedMultiplier;
+    bonuses.apcFlat += apcGain;
+    const formatted = formatNumberLocalized(apcGain);
     summaries.push(`+${formatted} APC`);
   }
   const apsIncrement = Number(rewards.apsFlat);
-  if (Number.isFinite(apsIncrement) && apsIncrement !== 0) {
-    bonuses.apsFlat += apsIncrement;
-    const formatted = formatNumberLocalized(apsIncrement);
+  if (Number.isFinite(apsIncrement) && apsIncrement !== 0 && appliedMultiplier !== 0) {
+    const apsGain = apsIncrement * appliedMultiplier;
+    bonuses.apsFlat += apsGain;
+    const formatted = formatNumberLocalized(apsGain);
     summaries.push(`+${formatted} APS`);
   }
   const elementRewards = Array.isArray(rewards.elements) ? rewards.elements : [];
@@ -2892,14 +2933,14 @@ function applyFusionRewards(rewards) {
   return summaries;
 }
 
-function getFusionBatchRewardSummary(definition, successCount) {
+function getFusionBatchRewardSummary(definition, successCount, previousSuccessCount = 0) {
   if (!definition || successCount <= 0) {
     return [];
   }
   const rewards = definition.rewards || {};
   const summary = [];
   if (rewards.apcFlat) {
-    const totalApc = rewards.apcFlat * successCount;
+    const totalApc = computeFusionRewardSum(definition, rewards.apcFlat, successCount, previousSuccessCount);
     if (totalApc) {
       summary.push(t('scripts.gacha.fusion.apcBonus', {
         value: formatNumberLocalized(totalApc)
@@ -2907,7 +2948,7 @@ function getFusionBatchRewardSummary(definition, successCount) {
     }
   }
   if (rewards.apsFlat) {
-    const totalAps = rewards.apsFlat * successCount;
+    const totalAps = computeFusionRewardSum(definition, rewards.apsFlat, successCount, previousSuccessCount);
     if (totalAps) {
       summary.push(t('scripts.gacha.fusion.apsBonus', {
         value: formatNumberLocalized(totalAps)
@@ -3183,13 +3224,13 @@ function updateFusionUI() {
       : t('scripts.gacha.fusion.statusMissing');
     const totalParts = [];
     if (def.rewards.apcFlat) {
-      const totalApc = def.rewards.apcFlat * state.successes;
+      const totalApc = computeFusionRewardSum(def, def.rewards.apcFlat, state.successes);
       totalParts.push(t('scripts.gacha.fusion.apcTotal', {
         value: formatNumberLocalized(totalApc)
       }));
     }
     if (def.rewards.apsFlat) {
-      const totalAps = def.rewards.apsFlat * state.successes;
+      const totalAps = computeFusionRewardSum(def, def.rewards.apsFlat, state.successes);
       totalParts.push(t('scripts.gacha.fusion.apsTotal', {
         value: formatNumberLocalized(totalAps)
       }));
@@ -3245,7 +3286,8 @@ function handleFusionAttempt(fusionId, attemptCount = getFusionAttemptMultiplier
     if (Math.random() < definition.successChance) {
       successCount += 1;
       state.successes += 1;
-      applyFusionRewards(definition.rewards);
+      const rewardMultiplier = getFusionRewardMultiplier(definition, state.successes);
+      applyFusionRewards(definition.rewards, rewardMultiplier);
     }
   }
 
@@ -3255,7 +3297,8 @@ function handleFusionAttempt(fusionId, attemptCount = getFusionAttemptMultiplier
   saveGame();
 
   if (successCount > 0) {
-    const rewardSummary = getFusionBatchRewardSummary(definition, successCount);
+    const previousSuccessCount = Math.max(0, state.successes - successCount);
+    const rewardSummary = getFusionBatchRewardSummary(definition, successCount, previousSuccessCount);
     const rewardText = rewardSummary.length
       ? rewardSummary.join(' · ')
       : t('scripts.gacha.fusion.noRewardSummary');
