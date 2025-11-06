@@ -394,6 +394,12 @@
             "description": "Éteignez toutes les lumières : chaque clic inverse la case visée et ses voisines orthogonales.",
             "cta": "Éteindre"
           },
+          "link": {
+            "aria": "Accéder au mini-jeu Link",
+            "title": "Link",
+            "description": "Tracez un motif de trois cases en ligne ou en L pour atteindre toutes les valeurs cibles.",
+            "cta": "Relier"
+          },
           "starBridges": {
             "aria": "Accéder au mini-jeu Ponts Stellaires",
             "title": "Ponts Stellaires",
@@ -784,6 +790,41 @@
             "on": "Lumière allumée",
             "off": "Lumière éteinte"
           }
+        }
+      },
+      "link": {
+        "aria": "Puzzle Link : tracez des motifs de trois cases orthogonales.",
+        "title": "Link",
+        "subtitle": "Tracez un motif de trois cases adjacentes en ligne ou en angle droit pour ajuster les valeurs et synchroniser la grille.",
+        "hud": "Suivi de partie",
+        "moves": {
+          "label": "Coups"
+        },
+        "difficulty": {
+          "aria": "Choisir la difficulté du puzzle Link",
+          "label": "Difficulté",
+          "easy": "Facile",
+          "medium": "Moyen",
+          "hard": "Difficile"
+        },
+        "actions": {
+          "undo": "Annuler",
+          "restart": "Recommencer",
+          "newLevel": "Nouveau niveau"
+        },
+        "board": "Grille du puzzle Link",
+        "messages": {
+          "intro": "Reliez exactement trois cases orthogonales pour modifier leurs valeurs et celles de leurs jumelles.",
+          "invalidPattern": "Le motif doit être une ligne ou un angle droit.",
+          "progress": "Encore {normal} cases normales et {plus} cases +1 à ajuster.",
+          "victory": "Bravo ! Puzzle résolu en {moves} coups.",
+          "undo": "Dernier coup annulé.",
+          "restart": "Puzzle réinitialisé.",
+          "newLevel": "Nouveau niveau {difficulty} généré. Reliez trois cases pour ajuster les valeurs !",
+          "nothingToUndo": "Aucun coup à annuler."
+        },
+        "cell": {
+          "label": "Ligne {row}, colonne {column} : {value} (objectif {target})"
         }
       },
       "starBridges": {

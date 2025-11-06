@@ -120,6 +120,7 @@ const BRICK_SKIN_TOAST_KEYS = Object.freeze({
     balance: 'arcade.balance',
     theLine: 'arcade.theLine',
     lightsOut: 'arcade.lightsOut',
+    link: 'arcade.link',
     starBridges: 'arcade.starBridges',
     starsWar: 'arcade.starsWar',
     pipeTap: 'arcade.pipeTap',
@@ -2324,6 +2325,9 @@ function activateArcadeHubCard(card) {
   if (target === 'sokoban') {
     ensureSokobanGame();
   }
+  if (target === 'link') {
+    ensureLinkGame();
+  }
   if (target === 'lightsOut') {
     ensureLightsOutGame();
   }
@@ -3793,6 +3797,7 @@ const ARCADE_GAME_IDS = Object.freeze([
   'math',
   'theLine',
   'lightsOut',
+  'link',
   'starBridges',
   'pipeTap',
   'sokoban',
@@ -6492,6 +6497,17 @@ function ensureSokobanGame() {
   if (window.sokobanArcade && typeof window.sokobanArcade === 'object') {
     sokobanGame = window.sokobanArcade;
     return sokobanGame;
+  }
+  return null;
+}
+
+function ensureLinkGame() {
+  if (linkGame && typeof linkGame === 'object') {
+    return linkGame;
+  }
+  if (window.linkArcade && typeof window.linkArcade === 'object') {
+    linkGame = window.linkArcade;
+    return linkGame;
   }
   return null;
 }
@@ -10976,6 +10992,7 @@ let waveGame = null;
 let balanceGame = null;
 let quantum2048Game = null;
 let sokobanGame = null;
+let linkGame = null;
 let lightsOutGame = null;
 let gameOfLifeGame = null;
 let starBridgesGame = null;
@@ -12676,6 +12693,9 @@ function showPage(pageId) {
   if (pageId === 'sokoban') {
     ensureSokobanGame();
   }
+  if (pageId === 'link') {
+    ensureLinkGame();
+  }
   if (pageId === 'lightsOut') {
     ensureLightsOutGame();
   }
@@ -12717,6 +12737,7 @@ function showPage(pageId) {
   document.body.classList.toggle('view-sokoban', pageId === 'sokoban');
   document.body.classList.toggle('view-sudoku', pageId === 'sudoku');
   document.body.classList.toggle('view-lights-out', pageId === 'lightsOut');
+  document.body.classList.toggle('view-link', pageId === 'link');
   document.body.classList.toggle('view-game-of-life', pageId === 'gameOfLife');
   if (pageId === 'game') {
     randomizeAtomButtonImage();
@@ -12796,6 +12817,14 @@ function showPage(pageId) {
       sokoban.onEnter?.();
     } else {
       sokoban.onLeave?.();
+    }
+  }
+  const link = ensureLinkGame();
+  if (link) {
+    if (pageId === 'link') {
+      link.onEnter?.();
+    } else {
+      link.onLeave?.();
     }
   }
   const lightsOut = ensureLightsOutGame();

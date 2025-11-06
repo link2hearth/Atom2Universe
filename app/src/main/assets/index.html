@@ -431,6 +431,46 @@
           class="arcade-hub-card"
           role="button"
           tabindex="0"
+          aria-label="Accéder au mini-jeu Link"
+          aria-describedby="arcadeCardDescription-link"
+          data-card-id="link"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.link.aria"
+          data-page-target="link"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.link.title"
+            >Link</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-link"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-link"
+            data-i18n="index.sections.arcadeHub.cards.link.description"
+          >Tracez un motif de trois cases en ligne ou en L pour aligner toutes les valeurs sur leur objectif.</p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
           aria-label="Accéder au mini-jeu Sudoku"
           aria-describedby="arcadeCardDescription-sudoku"
           data-card-id="sudoku"
@@ -2616,6 +2656,94 @@
             data-i18n="aria-label:index.sections.lightsOut.board"
           ></div>
         </div>
+      </div>
+    </section>
+
+    <section
+      id="link"
+      class="page page--link"
+      data-page-group="arcade"
+      aria-label="Puzzle Link : tracez des motifs de trois cases orthogonales."
+      data-i18n="aria-label:index.sections.link.aria"
+      hidden
+    >
+      <div class="link">
+        <header class="link__header">
+          <div class="link__title-group">
+            <h2 class="link__title" data-i18n="index.sections.link.title">Link</h2>
+            <p class="link__subtitle" data-i18n="index.sections.link.subtitle">
+              Tracez un motif de trois cases orthogonales (ligne ou L) pour ajuster les valeurs et atteindre les objectifs.
+            </p>
+          </div>
+          <div
+            class="link__hud"
+            role="group"
+            aria-label="Suivi de partie"
+            data-i18n="aria-label:index.sections.link.hud"
+          >
+            <div class="link__moves">
+              <span class="link__moves-label" data-i18n="index.sections.link.moves.label">Coups</span>
+              <span class="link__moves-value" id="linkMovesValue">0</span>
+            </div>
+            <div class="link__difficulty">
+              <label
+                class="link__difficulty-label"
+                for="linkDifficultySelect"
+                data-i18n="index.sections.link.difficulty.label"
+              >
+                Difficulté
+              </label>
+              <select
+                class="link__difficulty-select"
+                id="linkDifficultySelect"
+                data-i18n="aria-label:index.sections.link.difficulty.aria"
+                aria-label="Choisir la difficulté"
+              >
+                <option value="easy" data-i18n="index.sections.link.difficulty.easy">Facile</option>
+                <option value="medium" data-i18n="index.sections.link.difficulty.medium">Moyen</option>
+                <option value="hard" data-i18n="index.sections.link.difficulty.hard">Difficile</option>
+              </select>
+            </div>
+            <div class="link__actions">
+              <button
+                type="button"
+                class="link__button"
+                id="linkUndoButton"
+                data-i18n="index.sections.link.actions.undo"
+              >Annuler</button>
+              <button
+                type="button"
+                class="link__button"
+                id="linkRestartButton"
+                data-i18n="index.sections.link.actions.restart"
+              >Recommencer</button>
+              <button
+                type="button"
+                class="link__button"
+                id="linkNewLevelButton"
+                data-i18n="index.sections.link.actions.newLevel"
+              >Nouveau niveau</button>
+            </div>
+          </div>
+        </header>
+        <div class="link__board-wrapper">
+          <div
+            class="link__board"
+            id="linkBoard"
+            role="grid"
+            aria-label="Grille du puzzle Link"
+            data-i18n="aria-label:index.sections.link.board"
+          ></div>
+        </div>
+        <p
+          class="link__message"
+          id="linkMessage"
+          role="status"
+          aria-live="polite"
+          data-i18n="index.sections.link.messages.intro"
+        >
+          Reliez exactement trois cases adjacentes orthogonalement pour modifier leurs valeurs et celles de leurs jumelles. Mettez toutes les cases normales à 0 et les cases +1 à 10.
+        </p>
       </div>
     </section>
 
@@ -5919,6 +6047,7 @@
   <script src="scripts/arcade/game-of-life.js"></script>
   <script src="scripts/arcade/quantum-2048.js"></script>
   <script src="scripts/arcade/lights-out.js"></script>
+  <script src="scripts/arcade/link.js"></script>
   <script src="scripts/arcade/star-bridges.js"></script>
   <script src="scripts/arcade/pipetap.js"></script>
   <script src="scripts/arcade/stars-war.js"></script>
