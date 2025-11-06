@@ -2834,12 +2834,6 @@
       hidden
     >
       <div class="escape">
-        <div class="escape__intro">
-          <h2 class="escape__title" data-i18n="index.sections.escape.title">Escape</h2>
-          <p class="escape__subtitle" data-i18n="index.sections.escape.subtitle">
-            Traversez un labyrinthe généré procéduralement tour par tour. Étudiez la carte, anticipez les patrouilles et préparez vos plans de fuite.
-          </p>
-        </div>
         <div
           class="escape__toolbar"
           role="group"
@@ -2866,71 +2860,9 @@
             data-i18n="index.sections.escape.actions.generate"
           >Générer un niveau</button>
         </div>
-        <p
-          class="escape__message"
-          id="escapeMessage"
-          role="status"
-          aria-live="polite"
-          data-i18n="index.sections.escape.messages.loading"
-        >
-          Chargement de la configuration…
-        </p>
         <div class="escape__board-wrapper">
           <div class="escape__board" id="escapeBoard" aria-hidden="true" tabindex="0"></div>
         </div>
-        <section class="escape__legend" aria-live="polite">
-          <h3 class="escape__legend-title" data-i18n="index.sections.escape.legend.title">Légende</h3>
-          <div class="escape__legend-list">
-            <div class="escape__legend-item">
-              <span class="escape__legend-swatch escape__cell escape__cell--wall" aria-hidden="true"></span>
-              <span data-i18n="index.sections.escape.legend.wall">Mur</span>
-            </div>
-            <div class="escape__legend-item">
-              <span class="escape__legend-swatch escape__cell escape__cell--floor" aria-hidden="true"></span>
-              <span data-i18n="index.sections.escape.legend.floor">Sol</span>
-            </div>
-            <div class="escape__legend-item">
-              <span class="escape__legend-swatch escape__cell escape__cell--start" aria-hidden="true"></span>
-              <span data-i18n="index.sections.escape.legend.start">Départ</span>
-            </div>
-            <div class="escape__legend-item">
-              <span class="escape__legend-swatch escape__legend-swatch--player" aria-hidden="true"></span>
-              <span data-i18n="index.sections.escape.legend.player">Vous</span>
-            </div>
-            <div class="escape__legend-item">
-              <span class="escape__legend-swatch escape__cell escape__cell--exit" aria-hidden="true"></span>
-              <span data-i18n="index.sections.escape.legend.exit">Sortie</span>
-            </div>
-            <div class="escape__legend-item">
-              <span class="escape__legend-swatch escape__cell escape__cell--door" aria-hidden="true"></span>
-              <span data-i18n="index.sections.escape.legend.door">Porte</span>
-            </div>
-            <div class="escape__legend-item">
-              <span class="escape__legend-swatch escape__cell escape__cell--key" aria-hidden="true"></span>
-              <span data-i18n="index.sections.escape.legend.key">Clé</span>
-            </div>
-            <div class="escape__legend-item">
-              <span class="escape__legend-swatch escape__cell escape__cell--plate" aria-hidden="true"></span>
-              <span data-i18n="index.sections.escape.legend.plate">Plaque</span>
-            </div>
-            <div class="escape__legend-item">
-              <span class="escape__legend-swatch escape__cell escape__cell--bonus" aria-hidden="true"></span>
-              <span data-i18n="index.sections.escape.legend.bonus">Orbe bonus</span>
-            </div>
-            <div class="escape__legend-item">
-              <span class="escape__legend-swatch escape__cell escape__cell--patrol" aria-hidden="true"></span>
-              <span data-i18n="index.sections.escape.legend.patrol">Trajet de garde</span>
-            </div>
-            <div class="escape__legend-item">
-              <span class="escape__legend-swatch escape__cell escape__cell--guard" aria-hidden="true"></span>
-              <span data-i18n="index.sections.escape.legend.guard">Gardien</span>
-            </div>
-            <div class="escape__legend-item">
-              <span class="escape__legend-swatch escape__cell escape__cell--vision" aria-hidden="true"></span>
-              <span data-i18n="index.sections.escape.legend.vision">Vision</span>
-            </div>
-          </div>
-        </section>
       </div>
     </section>
 
