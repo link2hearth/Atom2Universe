@@ -1902,8 +1902,14 @@
         "gachaTicketBooth": {
           "name": "Guichet gacha",
           "description": "Convertissez vos atomes en tickets de tirage garantis.",
-          "effect": "Achetez 1 ticket gacha garanti par niveau. Limite : 1 000 niveaux (+1 000 par Big Bang). Chaque achat augmente le coût de 25 000 atomes et le coût de base est multiplié par 4 000 après chaque Big Bang.",
-          "effectSummary": "Achetez des tickets gacha garantis : +1 ticket par niveau, coût +25 000 atomes, limite portée à 1 000 niveaux (+1 000 par Big Bang) et coût de base ×4 000 après chaque Big Bang."
+          "effect": "Achetez 1 ticket gacha garanti par niveau. Limite : 200 niveaux (+200 par Big Bang). Chaque achat augmente le coût de 25 000 atomes et le coût de base est multiplié par 4 000 après chaque Big Bang.",
+          "effectSummary": "Achetez des tickets gacha garantis : +1 ticket par niveau, coût +25 000 atomes, limite portée à 200 niveaux (+200 par Big Bang) et coût de base ×4 000 après chaque Big Bang."
+        },
+        "mach3TicketBooth": {
+          "name": "Terminal Mach3",
+          "description": "Échangez vos tickets gacha contre des crédits Mach3 garantis.",
+          "effect": "Convertissez 100 tickets gacha en 1 crédit Mach3 par niveau. Limite : 2 niveaux (+2 par Big Bang).",
+          "effectSummary": "Échangez 100 tickets gacha contre 1 crédit Mach3 par achat. Limite augmentée de +2 par Big Bang."
         }
       }
     },
@@ -2787,21 +2793,29 @@
         "levelMaxSuffix": " (max)",
         "ariaMaxLevel": "{name} a atteint son niveau maximum",
         "ariaActionFree": "{action} {name} ×{quantity}{limitNote} (gratuit)",
-        "ariaActionCost": "{action} {name} ×{quantity}{limitNote} (coût {cost} atomes)",
+        "ariaActionCost": "{action} {name} ×{quantity}{limitNote} (coût {cost})",
         "ariaActionInsufficient": "{action} {name} ×{quantity}{limitNote} (atomes insuffisants)",
+        "ariaActionInsufficientTickets": "{action} {name} ×{quantity}{limitNote} (tickets gacha insuffisants)",
         "priceLimited": "Limité à x{quantity} — {price}",
         "limitSuffix": " (limité aux niveaux restants)",
         "maxLevel": "Niveau maximum atteint.",
         "notEnoughAtoms": "Pas assez d’atomes.",
+        "notEnoughGachaTickets": "Pas assez de tickets gacha.",
         "devkitFreePurchase": "DevKit : \"{name}\" ×{quantity} débloqué gratuitement !{suffix}",
         "purchase": "Amélioration \"{name}\" ×{quantity} achetée !{suffix}",
         "milestoneHint": "Continuez à explorer des ordres de grandeur toujours plus vastes !",
         "costLabel": "{value}",
+        "gachaTicketCost": "{count} {unit}",
         "ticketUnit": {
           "single": "ticket gacha",
           "plural": "tickets gacha"
         },
-        "ticketReward": "Tickets gacha achetés : +{count} {unit}."
+        "ticketReward": "Tickets gacha achetés : +{count} {unit}.",
+        "mach3Unit": {
+          "single": "ticket Mach3",
+          "plural": "tickets Mach3"
+        },
+        "mach3Reward": "Tickets Mach3 obtenus : +{count} {unit}."
       },
       "themeUpdated": "Thème mis à jour : {name}",
       "language": {
