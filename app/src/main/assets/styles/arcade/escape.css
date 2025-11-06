@@ -1,5 +1,4 @@
 .page--escape {
-  --escape-bg: radial-gradient(circle at 20% 20%, rgba(22, 26, 38, 0.92), rgba(10, 12, 20, 0.94));
   --escape-panel-bg: rgba(18, 22, 32, 0.82);
   --escape-panel-border: rgba(139, 211, 255, 0.2);
   --escape-shadow: 0 26px 48px rgba(0, 0, 0, 0.55);
@@ -14,35 +13,16 @@
   --escape-grid-gap: 4px;
   --escape-grid-border: rgba(139, 211, 255, 0.16);
   --escape-outline: rgba(139, 211, 255, 0.5);
-  background: var(--escape-bg);
+  background: transparent;
 }
 
 .escape {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  align-items: center;
+  gap: 1.25rem;
   color: var(--escape-text);
-  padding: clamp(1.25rem, 2vw, 2.5rem) clamp(1rem, 2.5vw, 3rem);
-}
-
-.escape__intro {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.escape__title {
-  font-size: clamp(1.65rem, 2.8vw, 2.35rem);
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.escape__subtitle {
-  max-width: 52rem;
-  font-size: clamp(0.9rem, 1vw, 1.05rem);
-  color: var(--escape-muted);
-  line-height: 1.5;
+  padding: clamp(1rem, 2vw, 1.75rem);
 }
 
 .escape__toolbar {
@@ -50,6 +30,7 @@
   flex-wrap: wrap;
   gap: 0.75rem 1.5rem;
   align-items: center;
+  justify-content: center;
   padding: 0.75rem 1rem;
   background: rgba(18, 22, 32, 0.68);
   border: 1px solid var(--escape-panel-border);
@@ -125,6 +106,7 @@
   border: 1px solid var(--escape-grid-border);
   box-shadow: var(--escape-shadow);
   padding: clamp(0.75rem, 1.6vw, 1.5rem);
+  width: min(100%, 42rem);
 }
 
 .escape__board {
@@ -256,67 +238,11 @@
   pointer-events: none;
 }
 
-.escape__legend {
-  background: var(--escape-panel-bg);
-  border: 1px solid var(--escape-panel-border);
-  border-radius: 1rem;
-  padding: 0.9rem 1.25rem;
-  box-shadow: var(--escape-shadow);
-}
-
-.escape__legend-title {
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--escape-muted);
-  margin-bottom: 0.5rem;
-}
-
-.escape__legend-list {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.65rem 1.5rem;
-  font-size: 0.85rem;
-  color: var(--escape-muted);
-}
-
-.escape__legend-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.escape__legend-swatch {
-  width: 1.15rem;
-  height: 1.15rem;
-  border-radius: 0.35rem;
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.35);
-}
-
-.escape__legend-swatch--player {
-  display: inline-block;
-  width: 1.15rem;
-  height: 1.15rem;
-  border-radius: 50%;
-  background: radial-gradient(circle at 50% 50%, #ffe066 0%, #ffba08 55%, #ff8c00 100%);
-  box-shadow: 0 0 8px rgba(255, 176, 0, 0.6);
-}
-
-.escape__message {
-  margin-top: 0.75rem;
-  font-size: 0.85rem;
-  color: var(--escape-muted);
-}
-
-.escape__message--warning {
-  color: var(--escape-danger);
-}
-
 @media (max-width: 40rem) {
   .escape__toolbar {
     border-radius: 1.25rem;
+    width: 100%;
+    justify-content: center;
   }
 }
 
