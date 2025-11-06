@@ -2504,6 +2504,8 @@
           "turnStatus": "Seed {{seed}} — {{difficulty}} — Tour {{turn}} — Clés {{keys}}/{{keysTotal}} · Bonus {{bonuses}}/{{bonusesTotal}}",
           "caught": "Repéré au tour {{turns}}. Relancez pour tenter une nouvelle évasion.",
           "invalid": "Mouvement impossible.",
+          "missingBonuses": "Il manque encore {{remaining}} orbe{{suffix}} bonus pour déverrouiller la sortie.",
+          "victoryPerfect": "Évasion parfaite en {{turns}} tours ! +{{tickets}} ticket{{suffix}} gacha.",
           "victory": "Évasion réussie en {{turns}} tours !"
         },
         "summary": {

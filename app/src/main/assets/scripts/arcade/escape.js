@@ -1013,8 +1013,16 @@
 
   function createLevelAttempt(seed, difficultyKey, difficulty, rng) {
     const level = buildBaseMaze(seed, difficultyKey, difficulty, rng);
-    decorateLevel(level, difficultyKey, rng);
+    const decoration = decorateLevel(level, difficultyKey, rng);
     generateGuards(level, difficultyKey, rng);
+    const bonusConfig = state.config.objects?.bonusOrbs;
+    if (bonusConfig?.maxCount > 0 && difficultyKey !== 'easy') {
+      placeBonusOrbs(level, bonusConfig, rng, difficultyKey, {
+        keyDoorData: decoration?.keyDoorData || null,
+        ensurePlateOrb: Boolean(decoration?.keyDoorData?.door?.plateId),
+        ensureGuardOrb: true
+      });
+    }
     prepareRuntime(level);
     let validation = validateLevelLayout(level);
     if (!validation.success && level.guards.length) {
@@ -1160,9 +1168,7 @@
         keyDoorData.distancesWithoutDoor
       );
     }
-    if (objectsConfig.bonusOrbs?.maxCount > 0 && difficultyKey !== 'easy') {
-      placeBonusOrbs(level, objectsConfig.bonusOrbs, rng, difficultyKey);
-    }
+    return { keyDoorData };
   }
 
   function placeKeyDoor(level, keyConfig, rng) {
@@ -1277,11 +1283,11 @@
 
   function placePressurePlate(level, door, plateConfig, difficultyKey, rng, distancesWithoutDoor) {
     if (!door) {
-      return;
+      return null;
     }
     const probability = difficultyKey === 'hard' ? 0.85 : 0.6;
     if (rng() > probability) {
-      return;
+      return null;
     }
     const doorKey = getCellKey(door.cellRow, door.cellCol);
     const doorDistance = level.distancesFromStart?.[door.cellRow]?.[door.cellCol] ?? Number.POSITIVE_INFINITY;
@@ -1309,7 +1315,7 @@
       }
     }
     if (!candidates.length) {
-      return;
+      return null;
     }
     candidates.sort((a, b) => a.delta - b.delta || b.distance - a.distance);
     const selected = candidates[Math.floor(rng() * Math.min(3, candidates.length))] || candidates[0];
@@ -1337,9 +1343,10 @@
     door.plateId = plate.id;
     door.timerDuration = duration;
     door.kind = 'hybrid';
+    return plate;
   }
 
-  function placeBonusOrbs(level, bonusConfig, rng, difficultyKey) {
+  function placeBonusOrbs(level, bonusConfig, rng, difficultyKey, options = {}) {
     const maxCount = Math.max(0, bonusConfig.maxCount || 0);
     if (maxCount <= 0) {
       return;
@@ -1350,34 +1357,59 @@
     level.objects.plates.forEach(item => occupied.add(getCellKey(item.cellRow, item.cellCol)));
     occupied.add(getCellKey(level.start.cellRow, level.start.cellCol));
     occupied.add(getCellKey(level.exit.cellRow, level.exit.cellCol));
-
     const culDepth = Math.max(0, bonusConfig.culDeSacDepth || 0);
-    const candidates = [];
+    const deadEndCandidates = [];
+    const guardCandidates = [];
+    const doorCandidates = [];
+    const corridorCandidates = [];
+    const guardPathCells = new Set();
+    level.guards.forEach(guard => {
+      guard.path.forEach(segment => {
+        guardPathCells.add(getCellKey(segment.row, segment.col));
+      });
+    });
+    const doorDistances = options?.keyDoorData?.distancesWithoutDoor || null;
     for (let row = 0; row < level.cellHeight; row += 1) {
       for (let col = 0; col < level.cellWidth; col += 1) {
         const key = getCellKey(row, col);
         if (occupied.has(key)) {
           continue;
         }
+        const distance = level.distancesFromStart?.[row]?.[col];
+        if (typeof distance !== 'number' || distance < 0) {
+          continue;
+        }
         const degree = level.adjacency[row][col].size;
-        if (degree > 1) {
-          continue;
+        const deadEnd = degree <= 1;
+        const candidate = { row, col, key, distance, deadEnd };
+        const behindDoor = Boolean(doorDistances && doorDistances[row]?.[col] === -1);
+        if (behindDoor) {
+          doorCandidates.push({ ...candidate, behindDoor: true });
         }
-        const distance = level.distancesFromStart?.[row]?.[col] ?? 0;
-        if (distance < culDepth) {
-          continue;
+        if (guardPathCells.has(key)) {
+          guardCandidates.push({ ...candidate, onGuardPath: true });
         }
-        candidates.push({ row, col, distance });
+        if (deadEnd && distance >= culDepth) {
+          deadEndCandidates.push(candidate);
+        } else if (distance >= culDepth) {
+          corridorCandidates.push(candidate);
+        }
       }
     }
-    if (!candidates.length) {
+    const difficultyFactor = difficultyKey === 'hard' ? 1 : difficultyKey === 'medium' ? 0.75 : 0.4;
+    const baseTarget = Math.max(0, Math.min(maxCount, Math.round(deadEndCandidates.length * 0.5 * difficultyFactor)));
+    const requireDoorOrb = options.ensurePlateOrb && doorCandidates.length > 0;
+    const requireGuardOrb = options.ensureGuardOrb && guardCandidates.length > 0;
+    let targetCount = Math.max(baseTarget, (requireDoorOrb ? 1 : 0) + (requireGuardOrb ? 1 : 0));
+    targetCount = Math.min(maxCount, targetCount);
+    if (targetCount <= 0) {
       return;
     }
-    shuffle(candidates, rng);
-    const difficultyFactor = difficultyKey === 'hard' ? 1 : difficultyKey === 'medium' ? 0.75 : 0.4;
-    const targetCount = Math.max(0, Math.min(maxCount, Math.round(candidates.length * 0.5 * difficultyFactor)));
-    for (let i = 0; i < targetCount && i < candidates.length; i += 1) {
-      const candidate = candidates[i];
+
+    function placeOrb(candidate) {
+      if (!candidate || occupied.has(candidate.key)) {
+        return false;
+      }
       const coords = getTileCoords(candidate.row, candidate.col);
       level.grid[coords.tileRow][coords.tileCol] = TILE_TYPES.BONUS;
       const bonusIndex = level.objects.bonuses.length;
@@ -1389,6 +1421,62 @@
         tileRow: coords.tileRow,
         tileCol: coords.tileCol
       });
+      occupied.add(candidate.key);
+      return true;
+    }
+
+    function tryPlaceFromList(list, { preferDeadEnd = false } = {}) {
+      if (!Array.isArray(list) || !list.length) {
+        return false;
+      }
+      const shuffled = list.slice();
+      shuffle(shuffled, rng);
+      const primary = preferDeadEnd ? shuffled.filter(item => item.deadEnd) : shuffled;
+      const secondary = preferDeadEnd ? shuffled.filter(item => !item.deadEnd) : [];
+      for (let i = 0; i < primary.length; i += 1) {
+        if (placeOrb(primary[i])) {
+          return true;
+        }
+      }
+      for (let i = 0; i < secondary.length; i += 1) {
+        if (placeOrb(secondary[i])) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    let placed = 0;
+    if (requireDoorOrb && placed < targetCount) {
+      if (tryPlaceFromList(doorCandidates, { preferDeadEnd: true })) {
+        placed += 1;
+      }
+    }
+    if (requireGuardOrb && placed < targetCount) {
+      if (tryPlaceFromList(guardCandidates, { preferDeadEnd: true })) {
+        placed += 1;
+      }
+    }
+
+    const fillerPools = [
+      { list: deadEndCandidates, options: { preferDeadEnd: true } },
+      { list: doorCandidates, options: { preferDeadEnd: true } },
+      { list: guardCandidates, options: { preferDeadEnd: true } },
+      { list: corridorCandidates, options: { preferDeadEnd: false } }
+    ];
+
+    while (placed < targetCount) {
+      let progress = false;
+      for (let i = 0; i < fillerPools.length && placed < targetCount; i += 1) {
+        const pool = fillerPools[i];
+        if (tryPlaceFromList(pool.list, pool.options)) {
+          placed += 1;
+          progress = true;
+        }
+      }
+      if (!progress) {
+        break;
+      }
     }
   }
 
@@ -1826,8 +1914,8 @@
     return visible;
   }
 
-  function encodeState(row, col, keysMask, guardPhase, timers) {
-    return `${row},${col}|${keysMask}|${guardPhase}|${timers.join(',')}`;
+  function encodeState(row, col, keysMask, guardPhase, timers, bonusesMask) {
+    return `${row},${col}|${keysMask}|${bonusesMask}|${guardPhase}|${timers.join(',')}`;
   }
 
   function validateLevelLayout(level) {
@@ -1838,12 +1926,15 @@
     const guardCycle = level.runtime?.guardCycle || 1;
     const timerCount = level.runtime?.timerCount || 0;
     const initialTimers = Array.from({ length: timerCount }, () => 0);
+    const totalBonuses = level.objects?.bonuses?.length || 0;
+    const allBonusesMask = totalBonuses > 0 ? Math.pow(2, totalBonuses) - 1 : 0;
     const startState = {
       row: level.start.cellRow,
       col: level.start.cellCol,
       keysMask: 0,
       guardPhase: 0,
       timers: initialTimers,
+      bonusesMask: 0,
       turns: 0,
       parent: -1,
       action: 'start'
@@ -1851,7 +1942,14 @@
     const states = [startState];
     const queue = [0];
     const visited = new Set([
-      encodeState(startState.row, startState.col, startState.keysMask, startState.guardPhase, startState.timers)
+      encodeState(
+        startState.row,
+        startState.col,
+        startState.keysMask,
+        startState.guardPhase,
+        startState.timers,
+        startState.bonusesMask
+      )
     ]);
     let successIndex = -1;
     let front = 0;
@@ -1863,7 +1961,11 @@
       if (current.turns > validationConfig.maxTurns) {
         continue;
       }
-      if (current.row === level.exit.cellRow && current.col === level.exit.cellCol) {
+      if (
+        current.row === level.exit.cellRow
+        && current.col === level.exit.cellCol
+        && current.bonusesMask === allBonusesMask
+      ) {
         successIndex = stateIndex;
         break;
       }
@@ -1889,6 +1991,7 @@
         const currentKey = getCellKey(current.row, current.col);
         const timersBefore = current.timers.slice();
         let keysMask = current.keysMask;
+        let bonusesMask = current.bonusesMask;
         const doorAtTarget = level.runtime.doorByCell.get(targetKey);
         const doorAtCurrent = level.runtime.doorByCell.get(currentKey);
         if (doorAtTarget && !isDoorOpen(doorAtTarget, keysMask, timersBefore)) {
@@ -1907,6 +2010,11 @@
           if ((keysMask & bit) === 0) {
             keysMask |= bit;
           }
+        }
+        const bonusObject = level.runtime.bonusByCell.get(targetKey);
+        if (bonusObject) {
+          const bit = Math.pow(2, bonusObject.index);
+          bonusesMask |= bit;
         }
         const nextPhase = guardCycle > 0 ? (guardPhase + 1) % guardCycle : 0;
         const guardStatesAfter = level.runtime.guardStates[nextPhase] || [];
@@ -1941,11 +2049,19 @@
           keysMask,
           guardPhase: nextPhase,
           timers: timersAfter,
+          bonusesMask,
           turns: current.turns + 1,
           parent: stateIndex,
           action: action.id
         };
-        const stateKey = encodeState(newState.row, newState.col, newState.keysMask, newState.guardPhase, newState.timers);
+        const stateKey = encodeState(
+          newState.row,
+          newState.col,
+          newState.keysMask,
+          newState.guardPhase,
+          newState.timers,
+          newState.bonusesMask
+        );
         if (!visited.has(stateKey)) {
           visited.add(stateKey);
           states.push(newState);
@@ -2035,9 +2151,6 @@
           cell.classList.add(`escape__cell--${type}`);
         }
         const tileKey = getTileKey(row, col);
-        if (guardVisionTiles.has(tileKey)) {
-          cell.classList.add('escape__cell--vision');
-        }
         if (guardPathTiles.has(tileKey)) {
           cell.classList.add('escape__cell--patrol');
         }
@@ -2421,12 +2534,55 @@
     updateBoardEntities();
 
     if (result.reachedExit) {
+      const totalBonuses = state.level.objects?.bonuses?.length || 0;
+      const collectedBonuses = state.play.bonusesCollected ? state.play.bonusesCollected.size : 0;
+      const missing = totalBonuses - collectedBonuses;
+      if (missing > 0) {
+        const suffix = missing === 1 ? '' : 's';
+        setMessage(
+          'scripts.arcade.escape.messages.missingBonuses',
+          'Il manque encore {remaining} orbe{suffix} bonus pour déverrouiller la sortie.',
+          { remaining: formatInteger(missing), suffix },
+          { warning: true }
+        );
+        return;
+      }
+
+      const rewardTickets = totalBonuses > 0 ? collectedBonuses : 0;
+      if (rewardTickets > 0) {
+        const awardGacha = typeof gainGachaTickets === 'function'
+          ? gainGachaTickets
+          : typeof window !== 'undefined' && typeof window.gainGachaTickets === 'function'
+            ? window.gainGachaTickets
+            : null;
+        if (typeof awardGacha === 'function') {
+          try {
+            awardGacha(rewardTickets, { unlockTicketStar: true });
+          } catch (error) {
+            console.warn('Escape: unable to grant gacha tickets', error);
+          }
+        }
+      }
+
       state.play.completed = true;
-      setMessage(
-        'scripts.arcade.escape.messages.victory',
-        'Évasion réussie en {turns} tours !',
-        { turns: formatInteger(state.play.turn) }
-      );
+      if (rewardTickets > 0) {
+        const suffix = rewardTickets === 1 ? '' : 's';
+        setMessage(
+          'scripts.arcade.escape.messages.victoryPerfect',
+          'Évasion parfaite en {turns} tours ! +{tickets} ticket{suffix} gacha.',
+          {
+            turns: formatInteger(state.play.turn),
+            tickets: formatInteger(rewardTickets),
+            suffix
+          }
+        );
+      } else {
+        setMessage(
+          'scripts.arcade.escape.messages.victory',
+          'Évasion réussie en {turns} tours !',
+          { turns: formatInteger(state.play.turn) }
+        );
+      }
       return;
     }
 
