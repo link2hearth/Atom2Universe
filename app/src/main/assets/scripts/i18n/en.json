@@ -2504,6 +2504,8 @@
           "turnStatus": "Seed {{seed}} — {{difficulty}} — Turn {{turn}} — Keys {{keys}}/{{keysTotal}} · Bonus {{bonuses}}/{{bonusesTotal}}",
           "caught": "Detected on turn {{turns}}. Generate a new maze to try again.",
           "invalid": "You can't move there.",
+          "missingBonuses": "{{remaining}} bonus orb{{suffix}} still needed to unlock the exit.",
+          "victoryPerfect": "Perfect escape in {{turns}} turns! +{{tickets}} gacha ticket{{suffix}}.",
           "victory": "Escaped in {{turns}} turns!"
         },
         "summary": {
