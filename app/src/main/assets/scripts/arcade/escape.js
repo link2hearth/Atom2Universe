@@ -75,7 +75,12 @@
       }),
       pressurePlate: Object.freeze({
         enabled: true,
-        timerRange: Object.freeze({ min: 4, max: 6 })
+        timerRange: Object.freeze({ min: 4, max: 6 }),
+        pairsPerDifficulty: Object.freeze({
+          easy: Object.freeze({ min: 0, max: 1 }),
+          medium: Object.freeze({ min: 1, max: 2 }),
+          hard: Object.freeze({ min: 2, max: 3 })
+        })
       }),
       bonusOrbs: Object.freeze({ maxCount: 6, culDeSacDepth: 2 })
     }),
@@ -215,6 +220,17 @@
       clampNumber(fallback.max, resolvedMin, max, resolvedMin)
     );
     return { min: resolvedMin, max: resolvedMax };
+  }
+
+  function normalizeDifficultyPairCounts(rawPairs, fallbackPairs) {
+    const fallback = fallbackPairs && typeof fallbackPairs === 'object' ? fallbackPairs : {};
+    const source = rawPairs && typeof rawPairs === 'object' ? rawPairs : {};
+    const result = {};
+    Object.keys(fallback).forEach(key => {
+      const entry = source[key] && typeof source[key] === 'object' ? source[key] : null;
+      result[key] = normalizeRange(entry, fallback[key], 0, 6);
+    });
+    return result;
   }
 
   function gcd(a, b) {
@@ -397,6 +413,10 @@
           DEFAULT_CONFIG.objects.pressurePlate.timerRange,
           1,
           20
+        ),
+        pairsPerDifficulty: normalizeDifficultyPairCounts(
+          objectsSource.pressurePlate?.pairsPerDifficulty,
+          DEFAULT_CONFIG.objects.pressurePlate.pairsPerDifficulty
         )
       },
       bonusOrbs: {
@@ -607,8 +627,8 @@
     return array;
   }
   function generatePerfectMaze(width, height, rng) {
-    const tileWidth = width * 2 + 1;
-    const tileHeight = height * 2 + 1;
+    const tileWidth = Math.max(1, width * 2 - 1);
+    const tileHeight = Math.max(1, height * 2 - 1);
     const grid = Array.from({ length: tileHeight }, () => Array(tileWidth).fill(TILE_TYPES.WALL));
     const adjacency = Array.from({ length: height }, () => Array.from({ length: width }, () => new Set()));
     const visited = Array.from({ length: height }, () => Array(width).fill(false));
@@ -616,7 +636,7 @@
     const startCol = Math.floor(rng() * width);
     const stack = [{ row: startRow, col: startCol }];
     visited[startRow][startCol] = true;
-    grid[startRow * 2 + 1][startCol * 2 + 1] = TILE_TYPES.FLOOR;
+    grid[startRow * 2][startCol * 2] = TILE_TYPES.FLOOR;
 
     const directions = [
       { row: -1, col: 0 },
@@ -644,10 +664,10 @@
         continue;
       }
       const next = neighbors[Math.floor(rng() * neighbors.length)];
-      const wallRow = current.row + next.row + 1;
-      const wallCol = current.col + next.col + 1;
+      const wallRow = current.row + next.row;
+      const wallCol = current.col + next.col;
       grid[wallRow][wallCol] = TILE_TYPES.FLOOR;
-      grid[next.row * 2 + 1][next.col * 2 + 1] = TILE_TYPES.FLOOR;
+      grid[next.row * 2][next.col * 2] = TILE_TYPES.FLOOR;
       const currentKey = `${current.row},${current.col}`;
       const nextKey = `${next.row},${next.col}`;
       adjacency[current.row][current.col].add(nextKey);
@@ -677,8 +697,8 @@
           if (adjacency[row][col].has(neighborKey)) {
             continue;
           }
-          const wallRow = row + neighbor.row + 1;
-          const wallCol = col + neighbor.col + 1;
+          const wallRow = row + neighbor.row;
+          const wallCol = col + neighbor.col;
           candidates.push({
             from: key,
             to: neighborKey,
@@ -846,7 +866,7 @@
   }
 
   function getTileCoords(row, col) {
-    return { tileRow: row * 2 + 1, tileCol: col * 2 + 1 };
+    return { tileRow: row * 2, tileCol: col * 2 };
   }
 
   function getTileKey(row, col) {
@@ -1106,8 +1126,8 @@
       difficulty: difficultyKey,
       cellWidth: width,
       cellHeight: height,
-      tileWidth: width * 2 + 1,
-      tileHeight: height * 2 + 1,
+      tileWidth: Math.max(1, width * 2 - 1),
+      tileHeight: Math.max(1, height * 2 - 1),
       grid: perfect.grid,
       adjacency: perfect.adjacency,
       cycles: {
@@ -1151,6 +1171,7 @@
   function decorateLevel(level, difficultyKey, rng) {
     const objectsConfig = state.config.objects || {};
     let keyDoorData = null;
+    let pairCount = 0;
     if (objectsConfig.keyDoor?.enabled && difficultyKey !== 'easy') {
       keyDoorData = placeKeyDoor(level, objectsConfig.keyDoor, rng);
     }
@@ -1159,14 +1180,27 @@
       && difficultyKey !== 'easy'
       && keyDoorData?.door
     ) {
-      placePressurePlate(
+      const plate = placePressurePlate(
         level,
         keyDoorData.door,
         objectsConfig.pressurePlate,
         difficultyKey,
         rng,
-        keyDoorData.distancesWithoutDoor
+        keyDoorData.distancesWithoutDoor,
+        { forcePlacement: true }
       );
+      if (plate) {
+        keyDoorData.door.pairIndex = pairCount;
+        plate.pairIndex = pairCount;
+        pairCount += 1;
+      }
+    }
+    if (objectsConfig.pressurePlate?.enabled && difficultyKey !== 'easy') {
+      const created = placeAdditionalPlateDoors(level, objectsConfig.pressurePlate, difficultyKey, rng, {
+        existingPairs: pairCount,
+        startIndex: 0
+      });
+      pairCount += created;
     }
     return { keyDoorData };
   }
@@ -1281,11 +1315,11 @@
     return { door, key: keyObject, distancesWithoutDoor };
   }
 
-  function placePressurePlate(level, door, plateConfig, difficultyKey, rng, distancesWithoutDoor) {
+  function placePressurePlate(level, door, plateConfig, difficultyKey, rng, distancesWithoutDoor, options = {}) {
     if (!door) {
       return null;
     }
-    const probability = difficultyKey === 'hard' ? 0.85 : 0.6;
+    const probability = options.forcePlacement ? 1 : difficultyKey === 'hard' ? 0.85 : 0.6;
     if (rng() > probability) {
       return null;
     }
@@ -1305,6 +1339,12 @@
           continue;
         }
         if (level.objects.keys.some(k => getCellKey(k.cellRow, k.cellCol) === key)) {
+          continue;
+        }
+        if (level.objects.doors.some(existing => getCellKey(existing.cellRow, existing.cellCol) === key)) {
+          continue;
+        }
+        if (level.objects.plates.some(existing => getCellKey(existing.cellRow, existing.cellCol) === key)) {
           continue;
         }
         const distance = distancesWithoutDoor?.[row]?.[col];
@@ -1342,8 +1382,130 @@
     level.objects.plates.push(plate);
     door.plateId = plate.id;
     door.timerDuration = duration;
-    door.kind = 'hybrid';
+    if (door.kind === 'key') {
+      door.kind = 'hybrid';
+    } else if (!door.kind || door.kind === 'plate') {
+      door.kind = 'plate';
+    }
     return plate;
+  }
+
+  function placeAdditionalPlateDoors(level, plateConfig, difficultyKey, rng, options = {}) {
+    if (!plateConfig || !plateConfig.pairsPerDifficulty) {
+      return 0;
+    }
+    const range = plateConfig.pairsPerDifficulty[difficultyKey];
+    if (!range) {
+      return 0;
+    }
+    const existingPairs = Math.max(0, options.existingPairs || 0);
+    const startIndex = Math.max(0, options.startIndex || 0);
+    const span = Math.max(range.max - range.min, 0);
+    const targetTotal = clampInteger(
+      Math.floor(range.min + rng() * (span + 1)),
+      range.min,
+      range.max,
+      range.min
+    );
+    const desiredAdditional = Math.max(0, targetTotal - existingPairs);
+    if (desiredAdditional <= 0) {
+      return 0;
+    }
+
+    const pathCells = Array.isArray(level.optimalPath?.cells) ? level.optimalPath.cells : [];
+    if (pathCells.length < 4) {
+      return 0;
+    }
+
+    const usedDoorCells = new Set(level.objects.doors.map(door => getCellKey(door.cellRow, door.cellCol)));
+    const startCoords = normalizeCellPosition(level.start);
+    let created = 0;
+    let attempts = 0;
+    const maxAttempts = Math.max(pathCells.length * 3, 30);
+
+    while (created < desiredAdditional && attempts < maxAttempts) {
+      attempts += 1;
+      const minIndex = Math.max(1, Math.floor(pathCells.length * 0.2));
+      const maxIndex = Math.max(minIndex + 1, Math.floor(pathCells.length * 0.92));
+      const candidateIndex = clampInteger(
+        Math.floor(minIndex + rng() * (maxIndex - minIndex + 1)),
+        minIndex,
+        maxIndex,
+        minIndex
+      );
+      const doorCell = pathCells[candidateIndex];
+      if (!doorCell) {
+        continue;
+      }
+      const doorKey = getCellKey(doorCell.row, doorCell.col);
+      if (
+        usedDoorCells.has(doorKey)
+        || doorKey === getCellKey(level.start.cellRow, level.start.cellCol)
+        || doorKey === getCellKey(level.exit.cellRow, level.exit.cellCol)
+      ) {
+        continue;
+      }
+      if (level.objects.keys.some(item => getCellKey(item.cellRow, item.cellCol) === doorKey)) {
+        continue;
+      }
+      if (level.objects.plates.some(item => getCellKey(item.cellRow, item.cellCol) === doorKey)) {
+        continue;
+      }
+
+      const coords = getTileCoords(doorCell.row, doorCell.col);
+      const previousTile = level.grid[coords.tileRow][coords.tileCol];
+      level.grid[coords.tileRow][coords.tileCol] = TILE_TYPES.DOOR;
+      const doorIndex = level.objects.doors.length;
+      const door = {
+        id: `door-${doorIndex}`,
+        index: doorIndex,
+        cellRow: doorCell.row,
+        cellCol: doorCell.col,
+        tileRow: coords.tileRow,
+        tileCol: coords.tileCol,
+        keyId: null,
+        keyIndex: null,
+        plateId: null,
+        timerDuration: 0,
+        timerIndex: null,
+        kind: 'plate'
+      };
+      level.objects.doors.push(door);
+      usedDoorCells.add(doorKey);
+
+      const blocked = new Set([doorKey]);
+      const distancesWithoutDoor = computeDistances(
+        level.adjacency,
+        level.cellWidth,
+        level.cellHeight,
+        startCoords,
+        blocked
+      );
+
+      const plate = placePressurePlate(
+        level,
+        door,
+        plateConfig,
+        difficultyKey,
+        rng,
+        distancesWithoutDoor,
+        { forcePlacement: true }
+      );
+
+      if (!plate) {
+        level.objects.doors.pop();
+        usedDoorCells.delete(doorKey);
+        level.grid[coords.tileRow][coords.tileCol] = previousTile;
+        continue;
+      }
+
+      const pairIndex = startIndex + existingPairs + created;
+      door.pairIndex = pairIndex;
+      plate.pairIndex = pairIndex;
+      created += 1;
+    }
+
+    return created;
   }
 
   function placeBonusOrbs(level, bonusConfig, rng, difficultyKey, options = {}) {
@@ -1557,6 +1719,29 @@
     }
 
     level.guards = bestGuards;
+    const minimumRequired = difficultyKey === 'hard' ? 2 : 1;
+    if (level.guards.length < minimumRequired) {
+      const fallback = attemptGuardGeneration(level, difficultyKey, rng, {
+        minPadding: 0,
+        minGuards: minimumRequired,
+        maxGuards: Math.max(minimumRequired, maxGuards),
+        minCycleLength: 3,
+        paddingMap,
+        forbiddenCells: baseForbidden,
+        rangeOverride: shortRange,
+        defaultLongRange: longRange,
+        angleOverride: difficultyKey === 'hard' ? 90 : 75
+      });
+      if (fallback.length >= minimumRequired) {
+        level.guards = fallback;
+      }
+    }
+    if (level.guards.length < minimumRequired) {
+      const forced = forceMinimalGuards(level, minimumRequired, rng, { forbiddenCells: baseForbidden });
+      if (forced.length >= minimumRequired) {
+        level.guards = forced;
+      }
+    }
   }
 
   function attemptGuardGeneration(level, difficultyKey, rng, options = {}) {
@@ -1666,6 +1851,62 @@
     return guards;
   }
 
+  function forceMinimalGuards(level, requirement, rng, context = {}) {
+    const target = Math.max(0, requirement);
+    if (target <= 0) {
+      return [];
+    }
+    const forbidden = new Set(Array.isArray(context.forbiddenCells) ? context.forbiddenCells : []);
+    const occupied = new Set();
+    const candidates = [];
+    for (let row = 0; row < level.cellHeight; row += 1) {
+      for (let col = 0; col < level.cellWidth; col += 1) {
+        const key = getCellKey(row, col);
+        if (forbidden.has(key)) {
+          continue;
+        }
+        const degree = level.adjacency[row][col].size;
+        if (degree === 0) {
+          continue;
+        }
+        candidates.push({ row, col, degree });
+      }
+    }
+    if (!candidates.length) {
+      return [];
+    }
+    shuffle(candidates, rng);
+    const difficulty = level.difficulty || state.config.defaultDifficulty;
+    const difficultyConfig = state.config.difficulties[difficulty]
+      || DEFAULT_CONFIG.difficulties[difficulty]
+      || DEFAULT_CONFIG.difficulties[state.config.defaultDifficulty]
+      || DEFAULT_CONFIG.difficulties.medium;
+    const shortRange = Math.max(1, difficultyConfig?.visionRange?.short ?? DEFAULT_CONFIG.difficulties.medium.visionRange.short);
+    const longRange = Math.max(shortRange, difficultyConfig?.visionRange?.long ?? shortRange);
+    const result = [];
+    let index = 0;
+    while (result.length < target && index < candidates.length) {
+      const candidate = candidates[index];
+      index += 1;
+      const key = getCellKey(candidate.row, candidate.col);
+      if (occupied.has(key)) {
+        continue;
+      }
+      occupied.add(key);
+      const guardIndex = result.length;
+      const path = [{ row: candidate.row, col: candidate.col, dir: DIRECTIONS.EAST }];
+      result.push({
+        id: `guard-forced-${guardIndex}`,
+        path,
+        range: difficulty === 'easy' ? shortRange : longRange,
+        angle: difficulty === 'hard' ? 90 : 75,
+        templates: [],
+        visionUnion: new Set()
+      });
+    }
+    return result;
+  }
+
   function buildGuardCycle(level, startCell, rng, forbidden, occupied, options = {}) {
     const configuredMax = Number.isFinite(state.config.patrol?.maxLength)
       ? state.config.patrol.maxLength
@@ -1771,9 +2012,11 @@
       doorByTile.set(getTileKey(door.tileRow, door.tileCol), door);
     });
     const plateByCell = new Map();
+    const plateByTile = new Map();
     level.objects.plates.forEach((plate, index) => {
       plate.index = index;
       plateByCell.set(getCellKey(plate.cellRow, plate.cellCol), plate);
+      plateByTile.set(getTileKey(plate.tileRow, plate.tileCol), plate);
     });
     const bonusByCell = new Map();
     level.objects.bonuses.forEach((bonus, index) => {
@@ -1842,6 +2085,7 @@
       doorByCell,
       doorByTile,
       plateByCell,
+      plateByTile,
       bonusByCell,
       timerCount: timerIndex,
       guardCycle,
@@ -2127,6 +2371,59 @@
     };
   }
 
+  function refreshDoorAndPlateTiles(playState = state.play) {
+    if (!state.level || !state.tileMap) {
+      return;
+    }
+    const tileMap = state.tileMap;
+    const keysMask = playState && Number.isInteger(playState.keysMask) ? playState.keysMask : 0;
+    const timers = Array.isArray(playState?.timers) ? playState.timers : [];
+    const doorById = new Map(state.level.objects.doors.map(door => [door.id, door]));
+
+    state.level.objects.doors.forEach(door => {
+      const coords = getTileCoords(door.cellRow, door.cellCol);
+      const tileKey = getTileKey(coords.tileRow, coords.tileCol);
+      const tile = tileMap.get(tileKey);
+      if (!tile) {
+        return;
+      }
+      const open = isDoorOpen(door, keysMask, timers);
+      if (open) {
+        tile.classList.remove('escape__cell--door');
+        tile.classList.add('escape__cell--floor', 'escape__cell--door-open');
+      } else {
+        tile.classList.remove('escape__cell--door-open');
+        tile.classList.remove('escape__cell--floor');
+        tile.classList.add('escape__cell--door');
+      }
+      if (Number.isInteger(door.pairIndex)) {
+        tile.classList.add(`escape__cell--door-pair-${door.pairIndex}`);
+      }
+    });
+
+    state.level.objects.plates.forEach(plate => {
+      const coords = getTileCoords(plate.cellRow, plate.cellCol);
+      const tileKey = getTileKey(coords.tileRow, coords.tileCol);
+      const tile = tileMap.get(tileKey);
+      if (!tile) {
+        return;
+      }
+      const door = plate.doorId ? doorById.get(plate.doorId) : null;
+      const open = door ? isDoorOpen(door, keysMask, timers) : false;
+      tile.classList.add('escape__cell--floor');
+      if (Number.isInteger(plate.pairIndex)) {
+        tile.classList.add(`escape__cell--plate-pair-${plate.pairIndex}`);
+      }
+      if (open) {
+        tile.classList.remove('escape__cell--plate');
+        tile.classList.add('escape__cell--plate-open');
+      } else {
+        tile.classList.remove('escape__cell--plate-open');
+        tile.classList.add('escape__cell--plate');
+      }
+    });
+  }
+
   function renderBoard(level) {
     if (!state.elements || !state.elements.board) {
       return;
@@ -2147,10 +2444,24 @@
         const cell = document.createElement('div');
         cell.className = 'escape__cell';
         const type = line[col];
-        if (type && type !== TILE_TYPES.WALL) {
+        if (type === TILE_TYPES.PLATE) {
+          cell.classList.add('escape__cell--floor', 'escape__cell--plate');
+        } else if (type && type !== TILE_TYPES.WALL) {
           cell.classList.add(`escape__cell--${type}`);
         }
         const tileKey = getTileKey(row, col);
+        if (type === TILE_TYPES.DOOR) {
+          const door = level.runtime?.doorByTile?.get(tileKey);
+          if (door && Number.isInteger(door.pairIndex)) {
+            cell.classList.add(`escape__cell--door-pair-${door.pairIndex}`);
+          }
+        }
+        if (type === TILE_TYPES.PLATE) {
+          const plate = level.runtime?.plateByTile?.get(tileKey);
+          if (plate && Number.isInteger(plate.pairIndex)) {
+            cell.classList.add(`escape__cell--plate-pair-${plate.pairIndex}`);
+          }
+        }
         if (guardPathTiles.has(tileKey)) {
           cell.classList.add('escape__cell--patrol');
         }
@@ -2169,6 +2480,7 @@
     board.appendChild(fragment);
     state.tileMap = tileMap;
     state.entityMap = entityMap;
+    refreshDoorAndPlateTiles({ keysMask: 0, timers: [] });
   }
 
   function clearRenderedEntities() {
@@ -2251,6 +2563,7 @@
       }
     });
     state.renderState.visionTiles = visionTiles;
+    refreshDoorAndPlateTiles(playState);
   }
 
   function countBits(value) {
