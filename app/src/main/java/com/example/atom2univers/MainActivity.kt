@@ -9,8 +9,6 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -20,23 +18,8 @@ import androidx.webkit.WebViewAssetLoader
 class MainActivity : AppCompatActivity() {
 
     private lateinit var webView: GameWebView
-    private lateinit var androidBridge: AndroidBridge
     private var webViewSaveScript: String? = null
     private var cssRecoveryAttempted = false
-
-    private val folderPickerLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-            if (::androidBridge.isInitialized) {
-                androidBridge.handleFolderPickerResult(result)
-            }
-        }
-
-    private val importPickerLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-            if (::androidBridge.isInitialized) {
-                androidBridge.handleImportPickerResult(result)
-            }
-        }
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,9 +58,6 @@ class MainActivity : AppCompatActivity() {
                 super.onPageFinished(view, url)
                 if (!url.startsWith(ASSET_URL_PREFIX)) {
                     return
-                }
-                if (::androidBridge.isInitialized) {
-                    androidBridge.onPageLoaded(url)
                 }
                 ensureStylesheetsLoaded(view, url)
             }
@@ -144,10 +124,10 @@ class MainActivity : AppCompatActivity() {
             useWideViewPort = true
         }
 
-        androidBridge = AndroidBridge(this, webView, folderPickerLauncher, importPickerLauncher)
-
-        webView.addJavascriptInterface(androidBridge, "AndroidBridge")
-        webView.addJavascriptInterface(AndroidSaveBridge(applicationContext), "AndroidSaveBridge")
+        webView.addJavascriptInterface(
+            AndroidSaveBridge(applicationContext),
+            "AndroidSaveBridge"
+        )
 
         webViewSaveScript = """
             (function() {
@@ -212,7 +192,7 @@ class MainActivity : AppCompatActivity() {
 
     private companion object {
         private const val TAG = "Atom2Univers"
-        internal const val ASSET_URL_PREFIX = "https://appassets.androidplatform.net/assets/"
+        private const val ASSET_URL_PREFIX = "https://appassets.androidplatform.net/assets/"
         private const val CSS_PRESENCE_CHECK = """
             (function() {
               try {

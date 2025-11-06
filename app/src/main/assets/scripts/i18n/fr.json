@@ -1478,14 +1478,6 @@
         "saves": {
           "title": "Gestion des sauvegardes",
           "description": "Créez des copies de secours et restaurez votre progression en cas de problème.",
-          "folderButton": "Choisir le dossier…",
-          "exportFileButton": "Exporter vers un fichier",
-          "importFileButton": "Importer une sauvegarde",
-          "folderStatus": {
-            "idle": "Aucun dossier sélectionné.",
-            "ready": "Dossier de sauvegarde prêt.",
-            "error": "Impossible d’accéder au dossier de sauvegarde."
-          },
           "createButton": "Créer une sauvegarde manuelle",
           "refreshButton": "Actualiser",
           "empty": "Aucune sauvegarde disponible pour le moment.",
@@ -3028,15 +3020,7 @@
         "deleteSuccess": "Sauvegarde supprimée.",
         "deleteFailed": "Impossible de supprimer cette sauvegarde.",
         "fallbackRestored": "Sauvegarde de secours restaurée.",
-        "fallbackFailed": "Aucune sauvegarde de secours valide n’a pu être chargée.",
-        "folderReady": "Dossier de sauvegarde prêt.",
-        "folderError": "Impossible d’accéder au dossier de sauvegarde.",
-        "folderMissing": "Veuillez choisir un dossier de sauvegarde.",
-        "exportSuccess": "Sauvegarde exportée : {name}.",
-        "exportFailed": "Impossible d’exporter la sauvegarde.",
-        "importSuccess": "Sauvegarde importée.",
-        "importFailed": "Impossible de lire cette sauvegarde.",
-        "fallbackUnsupported": "Votre navigateur ne permet pas l’export automatique."
+        "fallbackFailed": "Aucune sauvegarde de secours valide n’a pu être chargée."
       }
     },
     "gacha": {
