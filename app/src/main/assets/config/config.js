@@ -2198,13 +2198,14 @@ const GAME_CONFIG = {
       inputs: [
         { elementId: 'element-001-hydrogene', count: 4 }
       ],
-      successChance: 0.5,
+      successChance: 0.4,
       rewards: {
-        apcFlat: 10000,
+        apcFlat: 1000,
+        apsFlat: 1000,
         /**
-         * Chaque réussite augmente ce gain de 10 % par rapport à la précédente.
+         * Chaque réussite augmente ces gains de 10 % par rapport à la précédente.
          */
-        growthMultiplier: 1.1,
+        growthMultiplier: 1.2,
         elements: [
           { elementId: 'element-002-helium', count: 1 }
         ]
@@ -2218,105 +2219,14 @@ const GAME_CONFIG = {
       inputs: [
         { elementId: 'element-002-helium', count: 3 }
       ],
-      successChance: 0.5,
+      successChance: 0.2,
       rewards: {
-        apcFlat: 100000,
-        apsFlat: 100000,
+        apcFlat: 10000,
+        apsFlat: 10000,
         /**
          * Chaque réussite augmente ces gains de 10 % par rapport à la précédente.
          */
-        growthMultiplier: 1.1,
-      }
-    },
-    {
-      id: 'oxygen',
-      name: 'Oxygène (O₂)',
-      translationKey: 'scripts.gameData.fusions.recipes.oxygen',
-      description: 'Assemblez 2 atomes d’Oxygène pour produire du dioxygène.',
-      inputs: [
-        { elementId: 'element-008-oxygene', count: 2 }
-      ],
-      successChance: 0.5,
-      rewards: {
-        apcFlat: 10000
-      }
-    },
-    {
-      id: 'fluorine',
-      name: 'Fluor (F₂)',
-      translationKey: 'scripts.gameData.fusions.recipes.fluorine',
-      description: 'Fusionnez 2 atomes de Fluor pour générer une molécule de difluor.',
-      inputs: [
-        { elementId: 'element-009-fluor', count: 2 }
-      ],
-      successChance: 0.5,
-      rewards: {
-        apcFlat: 100
-      }
-    },
-    {
-      id: 'chlorine',
-      name: 'Chlore (Cl₂)',
-      translationKey: 'scripts.gameData.fusions.recipes.chlorine',
-      description: 'Associez 2 atomes de Chlore pour obtenir du dichlore.',
-      inputs: [
-        { elementId: 'element-017-chlore', count: 2 }
-      ],
-      successChance: 0.5,
-      rewards: {
-        apcFlat: 100
-      }
-    },
-    {
-      id: 'bromine',
-      name: 'Brome (Br₂)',
-      translationKey: 'scripts.gameData.fusions.recipes.bromine',
-      description: 'Combinez 2 atomes de Brome pour produire du dibrome.',
-      inputs: [
-        { elementId: 'element-035-brome', count: 2 }
-      ],
-      successChance: 0.5,
-      rewards: {
-        apcFlat: 100
-      }
-    },
-    {
-      id: 'iodine',
-      name: 'Iode (I₂)',
-      translationKey: 'scripts.gameData.fusions.recipes.iodine',
-      description: 'Assemblez 2 atomes d’Iode pour créer du diiode.',
-      inputs: [
-        { elementId: 'element-053-iode', count: 2 }
-      ],
-      successChance: 0.5,
-      rewards: {
-        apcFlat: 100
-      }
-    },
-    {
-      id: 'sulfur',
-      name: 'Soufre (S₈)',
-      translationKey: 'scripts.gameData.fusions.recipes.sulfur',
-      description: 'Regroupez 8 atomes de Soufre pour former une couronne cyclique S₈.',
-      inputs: [
-        { elementId: 'element-016-soufre', count: 8 }
-      ],
-      successChance: 0.5,
-      rewards: {
-        apcFlat: 100
-      }
-    },
-    {
-      id: 'phosphorus',
-      name: 'Phosphore (P₄)',
-      translationKey: 'scripts.gameData.fusions.recipes.phosphorus',
-      description: 'Fusionnez 4 atomes de Phosphore pour synthétiser du tétraphosphore.',
-      inputs: [
-        { elementId: 'element-015-phosphore', count: 4 }
-      ],
-      successChance: 0.5,
-      rewards: {
-        apcFlat: 100
+        growthMultiplier: 1.2,
       }
     },
     {
@@ -2345,122 +2255,6 @@ const GAME_CONFIG = {
       successChance: 0.5,
       rewards: {
         apcFlat: 100
-      }
-    },
-    {
-      id: 'siliconDioxide',
-      name: 'Dioxyde de silicium (SiO₂)',
-      translationKey: 'scripts.gameData.fusions.recipes.siliconDioxide',
-      description: 'Associez Silicium et Oxygène pour obtenir du quartz.',
-      inputs: [
-        { elementId: 'element-014-silicium', count: 1 },
-        { elementId: 'element-008-oxygene', count: 2 }
-      ],
-      successChance: 0.5,
-      rewards: {
-        apcFlat: 100
-      }
-    },
-    {
-      id: 'bronzeAlloy',
-      name: 'Bronze (alliage Cu-Sn)',
-      translationKey: 'scripts.gameData.fusions.recipes.bronzeAlloy',
-      description: 'Alliez ~88 % de Cuivre avec ~12 % d’Étain pour obtenir un bronze protohistorique.',
-      inputs: [
-        { elementId: 'element-029-cuivre', count: 9 },
-        { elementId: 'element-050-etain', count: 1 }
-      ],
-      successChance: 0.5,
-      rewards: {
-        apcFlat: 150
-      }
-    },
-    {
-      id: 'stainlessSteel18_8',
-      name: 'Acier inoxydable 18/8',
-      translationKey: 'scripts.gameData.fusions.recipes.stainlessSteel18_8',
-      description: 'Combinez ~70 % de Fer, ~18 % de Chrome et ~8 % de Nickel pour former l’inox 18/8.',
-      inputs: [
-        { elementId: 'element-026-fer', count: 7 },
-        { elementId: 'element-024-chrome', count: 2 },
-        { elementId: 'element-028-nickel', count: 1 }
-      ],
-      successChance: 0.5,
-      rewards: {
-        apcFlat: 200
-      }
-    },
-    {
-      id: 'duraluminAlloy',
-      name: 'Duralumin (alliage Al-Cu-Mn)',
-      translationKey: 'scripts.gameData.fusions.recipes.duraluminAlloy',
-      description: 'Assemblez ~95 % d’Aluminium avec ~4 % de Cuivre et des traces de Manganèse/Magnésium (~1 %).',
-      inputs: [
-        { elementId: 'element-013-aluminium', count: 8 },
-        { elementId: 'element-029-cuivre', count: 1 },
-        { elementId: 'element-025-manganese', count: 1 }
-      ],
-      successChance: 0.5,
-      rewards: {
-        apcFlat: 250
-      }
-    },
-    {
-      id: 'laitonAlloy',
-      name: 'Laiton (alliage Cu-Zn)',
-      translationKey: 'scripts.gameData.fusions.recipes.laitonAlloy',
-      description: 'Mélangez ~65 % de Cuivre et ~35 % de Zinc pour façonner un laiton de plomberie.',
-      inputs: [
-        { elementId: 'element-029-cuivre', count: 7 },
-        { elementId: 'element-030-zinc', count: 3 }
-      ],
-      successChance: 0.5,
-      rewards: {
-        apcFlat: 150
-      }
-    },
-    {
-      id: 'leadAcidAlloy',
-      name: 'Alliage plomb-acide',
-      translationKey: 'scripts.gameData.fusions.recipes.leadAcidAlloy',
-      description: 'Solidifiez ~93 % de Plomb avec ~7 % d’Antimoine pour vos batteries au plomb.',
-      inputs: [
-        { elementId: 'element-082-plomb', count: 9 },
-        { elementId: 'element-051-antimoine', count: 1 }
-      ],
-      successChance: 0.5,
-      rewards: {
-        apcFlat: 200
-      }
-    },
-    {
-      id: 'ti6Al4VAlloy',
-      name: 'Alliage Ti-6Al-4V',
-      translationKey: 'scripts.gameData.fusions.recipes.ti6Al4VAlloy',
-      description: 'Fusionnez ~90 % de Titane avec ~6 % d’Aluminium et ~4 % de Vanadium pour l’aéronautique.',
-      inputs: [
-        { elementId: 'element-022-titane', count: 8 },
-        { elementId: 'element-013-aluminium', count: 1 },
-        { elementId: 'element-023-vanadium', count: 1 }
-      ],
-      successChance: 0.5,
-      rewards: {
-        apcFlat: 300
-      }
-    },
-    {
-      id: 'roseGoldAlloy',
-      name: 'Or rose (alliage Au-Cu-Ag)',
-      translationKey: 'scripts.gameData.fusions.recipes.roseGoldAlloy',
-      description: 'Alliez ~75 % d’Or, ~22 % de Cuivre et ~3 % d’Argent pour une teinte rosée 18 carats.',
-      inputs: [
-        { elementId: 'element-079-or', count: 7 },
-        { elementId: 'element-029-cuivre', count: 2 },
-        { elementId: 'element-047-argent', count: 1 }
-      ],
-      successChance: 0.5,
-      rewards: {
-        apcFlat: 300
       }
     },
     {
@@ -3800,6 +3594,7 @@ if (typeof globalThis !== 'undefined') {
   globalThis.toggleCollectionFeatureEnabled = toggleCollectionFeatureEnabled;
   globalThis.toggleInfoSectionsFeatureEnabled = toggleInfoSectionsFeatureEnabled;
 }
+
 
 
 
