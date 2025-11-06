@@ -5474,6 +5474,10 @@ function collectDomElements() {
   brickSkinStatus: document.getElementById('brickSkinStatus'),
   saveManagerCard: document.getElementById('saveManagerCard'),
   saveManagerContainer: document.getElementById('saveManagerContainer'),
+  saveFolderPickerButton: document.getElementById('saveFolderPickerButton'),
+  saveExportButton: document.getElementById('saveExportButton'),
+  saveImportButton: document.getElementById('saveImportButton'),
+  saveBridgeStatus: document.getElementById('saveBridgeStatus'),
   saveManagerCreateButton: document.getElementById('saveManagerCreateButton'),
   saveManagerRefreshButton: document.getElementById('saveManagerRefreshButton'),
   saveManagerEmpty: document.getElementById('saveManagerEmpty'),
@@ -13881,6 +13885,16 @@ function bindDomEventListeners() {
     });
   }
 
+  if (elements.saveFolderPickerButton) {
+    elements.saveFolderPickerButton.addEventListener('click', handleSaveFolderPickerRequest);
+  }
+  if (elements.saveExportButton) {
+    elements.saveExportButton.addEventListener('click', handleSaveExportRequest);
+  }
+  if (elements.saveImportButton) {
+    elements.saveImportButton.addEventListener('click', handleSaveImportRequest);
+  }
+
   if (elements.saveManagerCreateButton) {
     elements.saveManagerCreateButton.addEventListener('click', handleSaveManagerCreate);
   }
@@ -18398,6 +18412,401 @@ function attemptRestoreFromBackup() {
   return false;
 }
 
+const externalSaveBridgeState = {
+  folderReady: false,
+  fallbackImportInput: null
+};
+
+function getAndroidStorageBridge() {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+  const bridge = window.AndroidBridge;
+  const type = typeof bridge;
+  if (type === 'object' || type === 'function') {
+    return bridge;
+  }
+  return null;
+}
+
+function updateSaveBridgeStatus(key, fallback, params) {
+  if (!elements.saveBridgeStatus) {
+    return;
+  }
+  if (typeof key === 'string' && key.trim()) {
+    elements.saveBridgeStatus.dataset.i18n = key;
+  }
+  elements.saveBridgeStatus.textContent = translateOrDefault(key, fallback, params);
+}
+
+function applyFolderReadyState(ok, options = {}) {
+  const silent = options && options.silent === true;
+  const toastKey = options.toastKey
+    || (ok ? 'scripts.app.saves.folderReady' : 'scripts.app.saves.folderError');
+  const toastFallback = options.toastFallback
+    || (ok ? 'Dossier de sauvegarde prêt.' : 'Impossible d’accéder au dossier de sauvegarde.');
+  const statusKey = ok
+    ? 'index.sections.options.saves.folderStatus.ready'
+    : 'index.sections.options.saves.folderStatus.error';
+  const statusFallback = ok
+    ? 'Dossier de sauvegarde prêt.'
+    : 'Impossible d’accéder au dossier de sauvegarde.';
+  updateSaveBridgeStatus(statusKey, statusFallback);
+  externalSaveBridgeState.folderReady = ok === true;
+  if (!silent) {
+    showToast(translateOrDefault(toastKey, toastFallback));
+  }
+}
+
+function formatExportTimestamp(date) {
+  const pad = value => String(value).padStart(2, '0');
+  return (
+    `${date.getFullYear()}${pad(date.getMonth() + 1)}${pad(date.getDate())}`
+    + `-${pad(date.getHours())}${pad(date.getMinutes())}${pad(date.getSeconds())}`
+  );
+}
+
+function prepareSerializedSavePayload() {
+  let serialized = null;
+  try {
+    const success = saveGame();
+    if (success && typeof lastSerializedSave === 'string' && lastSerializedSave) {
+      serialized = lastSerializedSave;
+    }
+  } catch (error) {
+    console.error('Unable to persist game before export', error);
+  }
+  if (!serialized) {
+    try {
+      const payload = serializeState();
+      serialized = JSON.stringify(payload);
+    } catch (error) {
+      console.error('Unable to serialize game state for export', error);
+      showToast(translateOrDefault(
+        'scripts.app.saves.exportFailed',
+        'Impossible d’exporter la sauvegarde.'
+      ));
+      return null;
+    }
+  }
+  return serialized;
+}
+
+function fallbackDownloadSave(serialized) {
+  if (typeof window === 'undefined' || typeof document === 'undefined' || typeof Blob === 'undefined') {
+    showToast(translateOrDefault(
+      'scripts.app.saves.fallbackUnsupported',
+      'Votre navigateur ne permet pas l’export automatique.'
+    ));
+    return;
+  }
+  try {
+    const blob = new Blob([serialized], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const fileName = `savegame-${formatExportTimestamp(new Date())}.json`;
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = fileName;
+    anchor.style.display = 'none';
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
+    URL.revokeObjectURL(url);
+    showToast(translateOrDefault(
+      'scripts.app.saves.exportSuccess',
+      `Sauvegarde exportée : ${fileName}.`,
+      { name: fileName }
+    ));
+  } catch (error) {
+    console.error('Unable to export save using fallback', error);
+    const detail = error && typeof error.message === 'string' ? error.message : '';
+    showToast(translateOrDefault(
+      'scripts.app.saves.exportFailed',
+      detail ? `Impossible d’exporter la sauvegarde : ${detail}` : 'Impossible d’exporter la sauvegarde.',
+      { error: detail }
+    ));
+  }
+}
+
+function handleSaveFolderPickerRequest(event) {
+  if (event) {
+    event.preventDefault();
+  }
+  const bridge = getAndroidStorageBridge();
+  if (bridge && typeof bridge.requestFolder === 'function') {
+    try {
+      bridge.requestFolder();
+    } catch (error) {
+      console.error('Unable to open Android folder picker', error);
+      applyFolderReadyState(false, {
+        toastKey: 'scripts.app.saves.folderError',
+        toastFallback: 'Impossible d’accéder au dossier de sauvegarde.'
+      });
+    }
+    return;
+  }
+  applyFolderReadyState(true, {
+    toastKey: 'scripts.app.saves.folderReady',
+    toastFallback: 'Dossier de sauvegarde prêt.'
+  });
+}
+
+function handleSaveExportRequest(event) {
+  if (event) {
+    event.preventDefault();
+  }
+  const serialized = prepareSerializedSavePayload();
+  if (!serialized) {
+    return;
+  }
+  const bridge = getAndroidStorageBridge();
+  if (bridge && typeof bridge.exportSave === 'function') {
+    try {
+      bridge.exportSave(serialized, 'savegame.json');
+    } catch (error) {
+      console.error('Unable to export save through Android bridge', error);
+      const detail = error && typeof error.message === 'string' ? error.message : '';
+      showToast(translateOrDefault(
+        'scripts.app.saves.exportFailed',
+        detail ? `Impossible d’exporter la sauvegarde : ${detail}` : 'Impossible d’exporter la sauvegarde.',
+        { error: detail }
+      ));
+    }
+    return;
+  }
+  fallbackDownloadSave(serialized);
+}
+
+function ensureFallbackImportInput() {
+  if (externalSaveBridgeState.fallbackImportInput && document.body && document.body.contains(externalSaveBridgeState.fallbackImportInput)) {
+    return externalSaveBridgeState.fallbackImportInput;
+  }
+  if (typeof document === 'undefined') {
+    return null;
+  }
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'application/json';
+  input.style.display = 'none';
+  input.addEventListener('change', handleFallbackImportChange);
+  document.body.appendChild(input);
+  externalSaveBridgeState.fallbackImportInput = input;
+  return input;
+}
+
+function handleFallbackImportChange(event) {
+  const input = event && event.target instanceof HTMLInputElement ? event.target : null;
+  if (!input || !input.files || input.files.length === 0) {
+    return;
+  }
+  const [file] = input.files;
+  const reader = new FileReader();
+  reader.addEventListener('load', () => {
+    const result = typeof reader.result === 'string'
+      ? reader.result
+      : reader.result != null
+        ? String(reader.result)
+        : '';
+    processImportedSaveText(result);
+  });
+  reader.addEventListener('error', () => {
+    showToast(translateOrDefault(
+      'scripts.app.saves.importFailed',
+      'Impossible de lire cette sauvegarde.'
+    ));
+  });
+  reader.readAsText(file, 'utf-8');
+  input.value = '';
+}
+
+function handleSaveImportRequest(event) {
+  if (event) {
+    event.preventDefault();
+  }
+  const bridge = getAndroidStorageBridge();
+  if (bridge && typeof bridge.importSave === 'function') {
+    try {
+      bridge.importSave();
+    } catch (error) {
+      console.error('Unable to import save through Android bridge', error);
+      showToast(translateOrDefault(
+        'scripts.app.saves.importFailed',
+        'Impossible de lire cette sauvegarde.'
+      ));
+    }
+    return;
+  }
+  const input = ensureFallbackImportInput();
+  if (input) {
+    input.click();
+    return;
+  }
+  showToast(translateOrDefault(
+    'scripts.app.saves.fallbackUnsupported',
+    'Votre navigateur ne permet pas l’export automatique.'
+  ));
+}
+
+function handleSaveExportedResult(ok, detail, options = {}) {
+  const silent = options && options.silent === true;
+  if (ok) {
+    const fileName = typeof detail === 'string' && detail ? detail : 'savegame.json';
+    if (!silent) {
+      showToast(translateOrDefault(
+        'scripts.app.saves.exportSuccess',
+        `Sauvegarde exportée : ${fileName}.`,
+        { name: fileName }
+      ));
+    }
+    externalSaveBridgeState.folderReady = true;
+    return;
+  }
+  const errorMessage = typeof detail === 'string' && detail ? detail : '';
+  if (!silent) {
+    showToast(translateOrDefault(
+      'scripts.app.saves.exportFailed',
+      errorMessage ? `Impossible d’exporter la sauvegarde : ${errorMessage}` : 'Impossible d’exporter la sauvegarde.',
+      { error: errorMessage }
+    ));
+  }
+}
+
+function processImportedSaveText(text, options = {}) {
+  const silent = options && options.silent === true;
+  if (text == null) {
+    if (!silent) {
+      showToast(translateOrDefault(
+        'scripts.app.saves.importFailed',
+        'Impossible de lire cette sauvegarde.'
+      ));
+    }
+    return false;
+  }
+  const serialized = typeof text === 'string' ? text.trim() : String(text).trim();
+  if (!serialized) {
+    if (!silent) {
+      showToast(translateOrDefault(
+        'scripts.app.saves.importFailed',
+        'Impossible de lire cette sauvegarde.'
+      ));
+    }
+    return false;
+  }
+  try {
+    JSON.parse(serialized);
+  } catch (error) {
+    console.error('Invalid JSON provided for import', error);
+    if (!silent) {
+      showToast(translateOrDefault(
+        'scripts.app.saves.importFailed',
+        'Impossible de lire cette sauvegarde.'
+      ));
+    }
+    return false;
+  }
+  try {
+    applySerializedGameState(serialized);
+    if (typeof localStorage !== 'undefined' && localStorage) {
+      try {
+        localStorage.setItem(PRIMARY_SAVE_STORAGE_KEY, serialized);
+      } catch (storageError) {
+        console.warn('Unable to persist imported save to local storage', storageError);
+      }
+    }
+    writeNativeSaveData(serialized);
+    lastSerializedSave = serialized;
+    storeReloadSaveSnapshot(serialized);
+    renderSaveManagerList();
+    if (!silent) {
+      showToast(translateOrDefault(
+        'scripts.app.saves.importSuccess',
+        'Sauvegarde importée.'
+      ));
+    }
+    return true;
+  } catch (error) {
+    console.error('Unable to apply imported save data', error);
+    if (!silent) {
+      showToast(translateOrDefault(
+        'scripts.app.saves.importFailed',
+        'Impossible de lire cette sauvegarde.'
+      ));
+    }
+    return false;
+  }
+}
+
+function syncAndroidBridgeQueue() {
+  if (typeof window === 'undefined') {
+    return;
+  }
+  const folderStatus = window.__atom2uFolderStatus;
+  if (folderStatus && !folderStatus.__consumed) {
+    folderStatus.__consumed = true;
+    window.onFolderReady(folderStatus.ok);
+  }
+  const lastExport = window.__atom2uLastExport;
+  if (lastExport && !lastExport.__consumed) {
+    lastExport.__consumed = true;
+    window.onSaveExported(lastExport.ok, lastExport.message ?? null);
+  }
+  const lastImport = window.__atom2uLastImport;
+  if (lastImport && !lastImport.__consumed) {
+    lastImport.__consumed = true;
+    window.onSaveImported(lastImport.text ?? null);
+  }
+}
+
+function initSaveBridgeControls() {
+  updateSaveBridgeStatus(
+    'index.sections.options.saves.folderStatus.idle',
+    'Aucun dossier sélectionné.'
+  );
+  if (!getAndroidStorageBridge()) {
+    ensureFallbackImportInput();
+  }
+  syncAndroidBridgeQueue();
+}
+
+if (typeof window !== 'undefined') {
+  window.onFolderReady = ok => {
+    if (window.__atom2uFolderStatus) {
+      window.__atom2uFolderStatus.__consumed = true;
+    }
+    const ready = ok === true;
+    if (ready) {
+      const alreadyReady = externalSaveBridgeState.folderReady === true;
+      applyFolderReadyState(true, { silent: alreadyReady });
+      return;
+    }
+    const alreadyMissing = externalSaveBridgeState.folderReady === false;
+    applyFolderReadyState(false, {
+      silent: alreadyMissing,
+      toastKey: 'scripts.app.saves.folderMissing',
+      toastFallback: 'Veuillez choisir un dossier de sauvegarde.'
+    });
+  };
+  window.onSaveExported = (ok, detail) => {
+    if (window.__atom2uLastExport) {
+      window.__atom2uLastExport.__consumed = true;
+    }
+    handleSaveExportedResult(ok === true, detail, { silent: false });
+  };
+  window.onSaveImported = text => {
+    if (window.__atom2uLastImport) {
+      window.__atom2uLastImport.__consumed = true;
+    }
+    if (text == null) {
+      showToast(translateOrDefault(
+        'scripts.app.saves.importFailed',
+        'Impossible de lire cette sauvegarde.'
+      ));
+      return;
+    }
+    processImportedSaveText(text, { silent: false });
+  };
+}
+
 let lastUpdate = performance.now();
 let lastSaveTime = performance.now();
 let lastUIUpdate = performance.now();
@@ -18499,6 +18908,7 @@ function initializeDomBoundModules() {
   updateBigBangVisibility();
   initHeaderBannerToggle();
   bindDomEventListeners();
+  initSaveBridgeControls();
   initializeHoldemOptionsUI();
   initUiScaleOption();
   initResponsiveAutoScale();
