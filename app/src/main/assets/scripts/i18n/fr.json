@@ -1475,18 +1475,6 @@
             "x2": "Taille maximale (×2)"
           }
         },
-        "saves": {
-          "title": "Gestion des sauvegardes",
-          "description": "Créez des copies de secours et restaurez votre progression en cas de problème.",
-          "createButton": "Créer une sauvegarde manuelle",
-          "refreshButton": "Actualiser",
-          "empty": "Aucune sauvegarde disponible pour le moment.",
-          "restore": "Restaurer",
-          "delete": "Supprimer",
-          "prompt": "Nom de la sauvegarde :",
-          "restoreConfirm": "Restaurer cette sauvegarde ?",
-          "deleteConfirm": "Supprimer définitivement cette sauvegarde ?"
-        },
         "theme": {
           "label": "Thème visuel",
           "ariaLabel": "Choisir le thème visuel de l’interface",
@@ -3011,14 +2999,6 @@
         }
       },
       "saves": {
-        "autoLabel": "Sauvegarde automatique",
-        "manualLabel": "Sauvegarde manuelle",
-        "manualFailed": "Impossible de créer la sauvegarde.",
-        "manualCreated": "Sauvegarde enregistrée.",
-        "restoreFailed": "Impossible de charger cette sauvegarde.",
-        "restoreSuccess": "Sauvegarde restaurée.",
-        "deleteSuccess": "Sauvegarde supprimée.",
-        "deleteFailed": "Impossible de supprimer cette sauvegarde.",
         "fallbackRestored": "Sauvegarde de secours restaurée.",
         "fallbackFailed": "Aucune sauvegarde de secours valide n’a pu être chargée."
       }

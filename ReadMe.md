@@ -54,7 +54,7 @@ L’onglet Arcade propose trois expériences qui alimentent les tickets et bonus
 ## Infos, DevKit et options
 - **Page Infos** : breakdown complet des gains APC/APS, statistiques de session et globales, liste des bonus actifs par source.【F:index.html†L714-L804】【F:scripts/app.js†L7522-L7569】
 - **DevKit quantique** : accessible via F9, permet d’ajouter des ressources, tickets, crédits Mach3 ou de passer le magasin/gacha en mode gratuit pour les tests. Les actions mettent à jour l’UI et consignent les gains via des toasts dédiés.【F:index.html†L1163-L1269】【F:scripts/app.js†L3727-L3957】
-- **Options** : thèmes visuels, langue, import/export de sauvegarde et paramètres audio sont gérés via l’onglet Options (chargement dynamiques par `app.js`).【F:index.html†L35-L69】【F:scripts/app.js†L5435-L5712】
+- **Options** : thèmes visuels, langue et paramètres audio sont gérés via l’onglet Options (chargements dynamiques par `app.js`).【F:index.html†L35-L69】【F:scripts/app.js†L5435-L5712】
 
 ## Sauvegardes, hors-ligne et grands nombres
 - Les sauvegardes sont automatiques (localStorage) et incluent tickets, fusions, bonus, statistiques et paramètres.【F:scripts/app.js†L8820-L9137】

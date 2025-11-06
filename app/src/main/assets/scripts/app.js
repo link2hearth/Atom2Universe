@@ -5472,12 +5472,6 @@ function collectDomElements() {
   brickSkinOptionCard: document.getElementById('brickSkinOptionCard'),
   brickSkinSelect: document.getElementById('brickSkinSelect'),
   brickSkinStatus: document.getElementById('brickSkinStatus'),
-  saveManagerCard: document.getElementById('saveManagerCard'),
-  saveManagerContainer: document.getElementById('saveManagerContainer'),
-  saveManagerCreateButton: document.getElementById('saveManagerCreateButton'),
-  saveManagerRefreshButton: document.getElementById('saveManagerRefreshButton'),
-  saveManagerEmpty: document.getElementById('saveManagerEmpty'),
-  saveManagerList: document.getElementById('saveManagerList'),
   holdemOptionCard: document.getElementById('holdemOptionCard'),
   holdemWipeButton: document.getElementById('holdemWipeButton'),
   holdemBlindValue: document.getElementById('holdemBlindValue'),
@@ -6360,252 +6354,6 @@ function updateOptionsIntroDetails(options = {}) {
   const hasDetails = renderIds.length > 0;
   elements.optionsArcadeDetails.hidden = !hasDetails;
   elements.optionsArcadeDetails.setAttribute('aria-hidden', hasDetails ? 'false' : 'true');
-}
-
-function resolveBackupEntryLabel(entry) {
-  if (!entry) {
-    return '';
-  }
-  if (typeof entry.label === 'string' && entry.label.trim()) {
-    return entry.label.trim();
-  }
-  if (entry.source === 'auto') {
-    return translateOrDefault(
-      'scripts.app.saves.autoLabel',
-      'Sauvegarde automatique'
-    );
-  }
-  return translateOrDefault(
-    'scripts.app.saves.manualLabel',
-    'Sauvegarde manuelle'
-  );
-}
-
-function renderSaveManagerList() {
-  if (!elements.saveManagerList || !elements.saveManagerContainer) {
-    return;
-  }
-  const entries = saveBackupManager.list();
-  const list = elements.saveManagerList;
-  list.textContent = '';
-  if (elements.saveManagerEmpty) {
-    elements.saveManagerEmpty.hidden = Array.isArray(entries) && entries.length > 0;
-  }
-  if (!Array.isArray(entries) || entries.length === 0) {
-    return;
-  }
-  entries.slice(0, SAVE_BACKUP_MAX_ENTRIES).forEach(entry => {
-    if (!entry || typeof entry.id !== 'string' || !entry.id) {
-      return;
-    }
-    const item = document.createElement('li');
-    item.className = 'save-manager__item';
-    item.dataset.backupId = entry.id;
-
-    const details = document.createElement('div');
-    details.className = 'save-manager__details';
-
-    const name = document.createElement('span');
-    name.className = 'save-manager__name';
-    name.textContent = resolveBackupEntryLabel(entry);
-
-    const meta = document.createElement('span');
-    meta.className = 'save-manager__meta';
-    const dateText = formatDateTimeLocalized(entry.savedAt);
-    const sizeText = formatByteSizeLocalized(entry.size);
-    meta.textContent = dateText
-      ? `${dateText} · ${sizeText}`
-      : sizeText;
-
-    details.appendChild(name);
-    details.appendChild(meta);
-
-    const actions = document.createElement('div');
-    actions.className = 'save-manager__actions';
-
-    const restoreButton = document.createElement('button');
-    restoreButton.type = 'button';
-    restoreButton.className = 'option-link-button';
-    restoreButton.dataset.action = 'restore';
-    restoreButton.dataset.id = entry.id;
-    restoreButton.textContent = translateOrDefault(
-      'index.sections.options.saves.restore',
-      'Restaurer'
-    );
-
-    const deleteButton = document.createElement('button');
-    deleteButton.type = 'button';
-    deleteButton.className = 'option-link-button option-link-button--danger';
-    deleteButton.dataset.action = 'delete';
-    deleteButton.dataset.id = entry.id;
-    deleteButton.textContent = translateOrDefault(
-      'index.sections.options.saves.delete',
-      'Supprimer'
-    );
-
-    actions.appendChild(restoreButton);
-    actions.appendChild(deleteButton);
-
-    item.appendChild(details);
-    item.appendChild(actions);
-
-    list.appendChild(item);
-  });
-}
-
-function handleSaveManagerCreate(event) {
-  if (event) {
-    event.preventDefault();
-  }
-  const promptMessage = translateOrDefault(
-    'index.sections.options.saves.prompt',
-    'Nom de la sauvegarde :'
-  );
-  const promptFn = typeof window !== 'undefined' && typeof window.prompt === 'function'
-    ? window.prompt
-    : null;
-  let rawName = '';
-  let promptDurationMs = null;
-  if (promptFn) {
-    const hasTimer = typeof performance !== 'undefined' && typeof performance.now === 'function';
-    const start = hasTimer ? performance.now() : null;
-    rawName = promptFn(promptMessage, '');
-    if (hasTimer && start != null) {
-      promptDurationMs = performance.now() - start;
-    }
-  }
-  const promptLikelyUnsupported = Boolean(
-    promptFn
-      && rawName === null
-      && typeof promptDurationMs === 'number'
-      && promptDurationMs >= 0
-      && promptDurationMs < 50
-  );
-  if (rawName === null && !promptLikelyUnsupported) {
-    return;
-  }
-  const trimmedName = typeof rawName === 'string' ? rawName.trim() : '';
-  saveGame();
-  const serialized = typeof lastSerializedSave === 'string' ? lastSerializedSave : null;
-  if (!serialized) {
-    showToast(translateOrDefault(
-      'scripts.app.saves.manualFailed',
-      'Impossible de créer la sauvegarde.'
-    ));
-    return;
-  }
-  const entry = saveBackupManager.createManual(serialized, {
-    label: trimmedName || null
-  });
-  if (!entry) {
-    showToast(translateOrDefault(
-      'scripts.app.saves.manualFailed',
-      'Impossible de créer la sauvegarde.'
-    ));
-    return;
-  }
-  renderSaveManagerList();
-  showToast(translateOrDefault(
-    'scripts.app.saves.manualCreated',
-    'Sauvegarde enregistrée.'
-  ));
-}
-
-function handleSaveManagerRefresh(event) {
-  if (event) {
-    event.preventDefault();
-  }
-  renderSaveManagerList();
-}
-
-function restoreBackupById(backupId) {
-  if (!backupId) {
-    return false;
-  }
-  const serialized = saveBackupManager.load(backupId);
-  if (typeof serialized !== 'string' || !serialized) {
-    showToast(translateOrDefault(
-      'scripts.app.saves.restoreFailed',
-      'Impossible de charger cette sauvegarde.'
-    ));
-    return false;
-  }
-  try {
-    applySerializedGameState(serialized);
-    if (typeof localStorage !== 'undefined' && localStorage) {
-      try {
-        localStorage.setItem(PRIMARY_SAVE_STORAGE_KEY, serialized);
-      } catch (storageError) {
-        console.warn('Unable to persist restored backup to local storage', storageError);
-      }
-    }
-    writeNativeSaveData(serialized);
-    lastSerializedSave = serialized;
-    storeReloadSaveSnapshot(serialized);
-    renderSaveManagerList();
-    showToast(translateOrDefault(
-      'scripts.app.saves.restoreSuccess',
-      'Sauvegarde restaurée.'
-    ));
-    return true;
-  } catch (error) {
-    console.error('Unable to restore selected backup', error);
-    showToast(translateOrDefault(
-      'scripts.app.saves.restoreFailed',
-      'Impossible de charger cette sauvegarde.'
-    ));
-    return false;
-  }
-}
-
-function handleSaveManagerListClick(event) {
-  if (!elements.saveManagerList) {
-    return;
-  }
-  const target = event.target instanceof Element
-    ? event.target.closest('button[data-action]')
-    : null;
-  if (!target) {
-    return;
-  }
-  event.preventDefault();
-  const action = target.dataset.action;
-  const backupId = target.dataset.id;
-  if (!backupId) {
-    return;
-  }
-  if (action === 'restore') {
-    const confirmMessage = translateOrDefault(
-      'index.sections.options.saves.restoreConfirm',
-      'Restaurer cette sauvegarde ?'
-    );
-    if (typeof window === 'undefined' || typeof window.confirm !== 'function' || window.confirm(confirmMessage)) {
-      restoreBackupById(backupId);
-    }
-    return;
-  }
-  if (action === 'delete') {
-    const confirmMessage = translateOrDefault(
-      'index.sections.options.saves.deleteConfirm',
-      'Supprimer définitivement cette sauvegarde ?'
-    );
-    if (typeof window !== 'undefined' && typeof window.confirm === 'function' && !window.confirm(confirmMessage)) {
-      return;
-    }
-    const removed = saveBackupManager.remove(backupId);
-    if (removed) {
-      renderSaveManagerList();
-      showToast(translateOrDefault(
-        'scripts.app.saves.deleteSuccess',
-        'Sauvegarde supprimée.'
-      ));
-    } else {
-      showToast(translateOrDefault(
-        'scripts.app.saves.deleteFailed',
-        'Impossible de supprimer cette sauvegarde.'
-      ));
-    }
-  }
 }
 
 function commitBrickSkinSelection(rawValue) {
@@ -13881,16 +13629,6 @@ function bindDomEventListeners() {
     });
   }
 
-  if (elements.saveManagerCreateButton) {
-    elements.saveManagerCreateButton.addEventListener('click', handleSaveManagerCreate);
-  }
-  if (elements.saveManagerRefreshButton) {
-    elements.saveManagerRefreshButton.addEventListener('click', handleSaveManagerRefresh);
-  }
-  if (elements.saveManagerList) {
-    elements.saveManagerList.addEventListener('click', handleSaveManagerListClick);
-  }
-
   if (elements.openDevkitButton) {
     if (!isDevkitFeatureEnabled()) {
       if (typeof elements.openDevkitButton.remove === 'function') {
@@ -18376,7 +18114,6 @@ function attemptRestoreFromBackup() {
         writeNativeSaveData(serialized);
         lastSerializedSave = serialized;
         storeReloadSaveSnapshot(serialized);
-        renderSaveManagerList();
         const message = translateOrDefault(
           'scripts.app.saves.fallbackRestored',
           'Sauvegarde de secours restaurée.'
@@ -18456,7 +18193,6 @@ function startApp() {
   evaluateTrophies();
   renderShop();
   renderGoals();
-  renderSaveManagerList();
   updateUI();
   randomizeAtomButtonImage();
   initStarfield();

@@ -1475,18 +1475,6 @@
             "x2": "Extra large size (×2)"
           }
         },
-        "saves": {
-          "title": "Save manager",
-          "description": "Create safety copies and restore your progress when something goes wrong.",
-          "createButton": "Create manual backup",
-          "refreshButton": "Refresh",
-          "empty": "No saves available yet.",
-          "restore": "Restore",
-          "delete": "Delete",
-          "prompt": "Backup name:",
-          "restoreConfirm": "Restore this save?",
-          "deleteConfirm": "Permanently delete this save?"
-        },
         "theme": {
           "label": "Visual theme",
           "ariaLabel": "Choose the interface visual theme",
@@ -3011,14 +2999,6 @@
         }
       },
       "saves": {
-        "autoLabel": "Automatic backup",
-        "manualLabel": "Manual backup",
-        "manualFailed": "Unable to create the backup.",
-        "manualCreated": "Backup saved.",
-        "restoreFailed": "Unable to load this backup.",
-        "restoreSuccess": "Backup restored.",
-        "deleteSuccess": "Backup deleted.",
-        "deleteFailed": "Unable to delete this backup.",
         "fallbackRestored": "Safety backup restored.",
         "fallbackFailed": "No valid safety backup could be loaded."
       }
