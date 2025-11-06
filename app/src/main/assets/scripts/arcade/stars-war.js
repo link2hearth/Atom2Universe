@@ -60,6 +60,12 @@
     { time: 600, apply(player) { player.baseSpeed *= 1.1; } }
   ]);
 
+  const TIME_REWARD_PER_MINUTE = 1;
+  const TIME_REWARD_MILESTONES = Object.freeze([
+    Object.freeze({ time: 300, bonus: 5 }),
+    Object.freeze({ time: 600, bonus: 10 })
+  ]);
+
   const POWERUP_DEFS = Object.freeze({
     multi_shot: { duration: 15, type: 'timed' },
     rapid_fire: { duration: 15, type: 'timed' },
@@ -2529,7 +2535,13 @@
       return 0;
     }
     const totalSeconds = Math.max(0, elapsedSeconds);
-    return Math.floor(totalSeconds / 60);
+    let tickets = Math.floor(totalSeconds / 60) * TIME_REWARD_PER_MINUTE;
+    TIME_REWARD_MILESTONES.forEach(milestone => {
+      if (totalSeconds >= milestone.time) {
+        tickets += milestone.bonus;
+      }
+    });
+    return tickets;
   }
 
   function grantTimeRewardTickets(amount) {
