@@ -1005,8 +1005,20 @@
     decorateLevel(level, difficultyKey, rng);
     generateGuards(level, difficultyKey, rng);
     prepareRuntime(level);
-    const validation = validateLevelLayout(level);
-    if (!validation.success) {
+    let validation = validateLevelLayout(level);
+    if (!validation.success && level.guards.length) {
+      const originalGuards = level.guards;
+      level.guards = [];
+      prepareRuntime(level);
+      const fallbackValidation = validateLevelLayout(level);
+      if (fallbackValidation.success) {
+        validation = fallbackValidation;
+      } else {
+        level.guards = originalGuards;
+        prepareRuntime(level);
+        throw new Error('Escape level unsolvable');
+      }
+    } else if (!validation.success) {
       throw new Error('Escape level unsolvable');
     }
     level.validation = validation;
@@ -1214,7 +1226,13 @@
     }
 
     if (!candidates.length) {
-      throw new Error('No key placement candidates');
+      level.grid[doorCoords.tileRow][doorCoords.tileCol] = TILE_TYPES.FLOOR;
+      if (level.objects.doors.length > doorIndex) {
+        level.objects.doors.splice(doorIndex, 1);
+      } else {
+        level.objects.doors.pop();
+      }
+      return null;
     }
 
     candidates.sort((a, b) => {
@@ -1368,24 +1386,105 @@
       level.guards = [];
       return;
     }
-    const targetGuards = clampInteger(
-      Math.floor(patrolRange.min + rng() * (patrolRange.max - patrolRange.min + 1)),
-      patrolRange.min,
-      patrolRange.max,
-      patrolRange.min
-    );
-    if (targetGuards <= 0) {
-      level.guards = [];
-      return;
-    }
+
+    const baseForbidden = [
+      getCellKey(level.start.cellRow, level.start.cellCol),
+      getCellKey(level.exit.cellRow, level.exit.cellCol)
+    ];
+    level.objects.keys.forEach(item => baseForbidden.push(getCellKey(item.cellRow, item.cellCol)));
+    level.objects.doors.forEach(item => baseForbidden.push(getCellKey(item.cellRow, item.cellCol)));
+    level.objects.plates.forEach(item => baseForbidden.push(getCellKey(item.cellRow, item.cellCol)));
+
     const paddingMap = computeTilePadding(level.grid);
-    const requiredPadding = Math.max(0, state.config.patrol?.minCorridorPadding || 0);
-    const forbidden = new Set();
-    forbidden.add(getCellKey(level.start.cellRow, level.start.cellCol));
-    forbidden.add(getCellKey(level.exit.cellRow, level.exit.cellCol));
-    level.objects.keys.forEach(item => forbidden.add(getCellKey(item.cellRow, item.cellCol)));
-    level.objects.doors.forEach(item => forbidden.add(getCellKey(item.cellRow, item.cellCol)));
-    level.objects.plates.forEach(item => forbidden.add(getCellKey(item.cellRow, item.cellCol)));
+    const basePadding = Math.max(0, (state.config.patrol?.minCorridorPadding || 0) + 1);
+    const minGuards = Math.max(0, patrolRange.min);
+    const maxGuards = Math.max(minGuards, patrolRange.max);
+    const shortRange = Math.max(1, difficulty?.visionRange?.short ?? DEFAULT_CONFIG.difficulties.medium.visionRange.short);
+    const longRange = Math.max(shortRange, difficulty?.visionRange?.long ?? shortRange);
+
+    const attemptConfigs = [];
+    const seenConfigs = new Set();
+    [
+      { minPadding: basePadding, minGuards, maxGuards, minCycleLength: 4 },
+      {
+        minPadding: Math.max(0, basePadding - 1),
+        minGuards: Math.max(1, Math.min(maxGuards, minGuards)),
+        maxGuards,
+        minCycleLength: 4
+      },
+      {
+        minPadding: Math.max(0, basePadding - 2),
+        minGuards: Math.max(0, Math.min(maxGuards, Math.floor(minGuards / 2))),
+        maxGuards,
+        minCycleLength: 3,
+        rangeOverride: shortRange,
+        angleOverride: 60
+      },
+      {
+        minPadding: 0,
+        minGuards: 0,
+        maxGuards,
+        minCycleLength: 3,
+        rangeOverride: shortRange,
+        angleOverride: 60
+      }
+    ].forEach(config => {
+      const key = `${config.minPadding}|${config.minGuards}|${config.minCycleLength}|${config.rangeOverride ?? 'd'}|${config.angleOverride ?? 'd'}`;
+      if (!seenConfigs.has(key)) {
+        seenConfigs.add(key);
+        attemptConfigs.push(config);
+      }
+    });
+
+    let bestGuards = [];
+    for (let i = 0; i < attemptConfigs.length; i += 1) {
+      const attempt = attemptConfigs[i];
+      const guards = attemptGuardGeneration(level, difficultyKey, rng, {
+        ...attempt,
+        paddingMap,
+        forbiddenCells: baseForbidden,
+        defaultLongRange: longRange
+      });
+      if (guards.length > bestGuards.length) {
+        bestGuards = guards;
+      }
+      const requirementMet = attempt.minGuards > 0 ? guards.length >= attempt.minGuards : guards.length > 0;
+      if (requirementMet) {
+        level.guards = guards;
+        return;
+      }
+    }
+
+    level.guards = bestGuards;
+  }
+
+  function attemptGuardGeneration(level, difficultyKey, rng, options = {}) {
+    const difficulty = state.config.difficulties[difficultyKey] || state.config.difficulties[state.config.defaultDifficulty];
+    const patrolRange = difficulty?.patrols;
+    if (!patrolRange || patrolRange.max <= 0) {
+      return [];
+    }
+
+    const paddingMap = options.paddingMap || computeTilePadding(level.grid);
+    const forbiddenCells = Array.isArray(options.forbiddenCells) ? options.forbiddenCells : [];
+    const forbidden = new Set(forbiddenCells);
+    const defaultMinPadding = (state.config.patrol?.minCorridorPadding || 0) + 1;
+    const minPadding = Math.max(0, options.minPadding ?? defaultMinPadding);
+    const maxGuards = Math.max(0, Math.min(patrolRange.max, options.maxGuards ?? patrolRange.max));
+    const minGuards = Math.max(0, Math.min(maxGuards, options.minGuards ?? patrolRange.min));
+    if (maxGuards <= 0) {
+      return [];
+    }
+
+    const targetCount = clampInteger(
+      Math.floor(minGuards + rng() * (Math.max(maxGuards - minGuards, 0) + 1)),
+      minGuards,
+      maxGuards,
+      minGuards
+    );
+    if (targetCount <= 0) {
+      return [];
+    }
 
     const candidates = [];
     for (let row = 0; row < level.cellHeight; row += 1) {
@@ -1398,28 +1497,43 @@
         if (degree < 2) {
           continue;
         }
-        if (getCellPadding(paddingMap, row, col) <= requiredPadding) {
+        const paddingValue = getCellPadding(paddingMap, row, col);
+        if (paddingValue < minPadding) {
           continue;
         }
         candidates.push({ row, col });
       }
     }
+
     if (!candidates.length) {
-      throw new Error('No guard placement candidates');
+      return [];
     }
+
     const guards = [];
     const occupied = new Set();
+    const maxAttempts = Math.max(
+      1,
+      options.maxAttempts
+        ?? state.config.patrol?.maxAttempts
+        ?? DEFAULT_CONFIG.patrol.maxAttempts
+    );
+    const minCycleLength = Math.max(3, options.minCycleLength || 4);
+    const requestedMaxLength = Number.isFinite(options.maxCycleLength)
+      ? Math.max(options.maxCycleLength, minCycleLength)
+      : undefined;
     let attempts = 0;
-    const maxAttempts = Math.max(1, state.config.patrol?.maxAttempts || 80);
-    while (guards.length < targetGuards && attempts < maxAttempts) {
+    while (guards.length < targetCount && attempts < maxAttempts) {
       attempts += 1;
       const candidate = candidates[Math.floor(rng() * candidates.length)];
       const startKey = getCellKey(candidate.row, candidate.col);
       if (occupied.has(startKey)) {
         continue;
       }
-      const cycle = buildGuardCycle(level, candidate, rng, forbidden, occupied);
-      if (!cycle || cycle.length < 4) {
+      const cycle = buildGuardCycle(level, candidate, rng, forbidden, occupied, {
+        minLength: minCycleLength,
+        maxLength: requestedMaxLength
+      });
+      if (!cycle || cycle.length < minCycleLength) {
         continue;
       }
       const guardIndex = guards.length;
@@ -1432,8 +1546,12 @@
         };
       });
       cycle.forEach(cell => occupied.add(getCellKey(cell.row, cell.col)));
-      const rangeValue = difficultyKey === 'easy' ? difficulty.visionRange.short : difficulty.visionRange.long;
-      const angleValue = difficultyKey === 'hard' ? 90 : difficultyKey === 'medium' ? 75 : 60;
+      const shortRange = Math.max(1, difficulty?.visionRange?.short ?? DEFAULT_CONFIG.difficulties.medium.visionRange.short);
+      const longRange = Math.max(shortRange, options.defaultLongRange ?? difficulty?.visionRange?.long ?? shortRange);
+      const defaultRange = difficultyKey === 'easy' ? shortRange : longRange;
+      const rangeValue = Math.max(1, options.rangeOverride ?? defaultRange);
+      const defaultAngle = difficultyKey === 'hard' ? 90 : difficultyKey === 'medium' ? 75 : 60;
+      const angleValue = Math.max(30, options.angleOverride ?? defaultAngle);
       guards.push({
         id: `guard-${guardIndex}`,
         path,
@@ -1443,14 +1561,18 @@
         visionUnion: new Set()
       });
     }
-    if (guards.length < patrolRange.min) {
-      throw new Error('Insufficient guard patrols');
-    }
-    level.guards = guards;
+
+    return guards;
   }
 
-  function buildGuardCycle(level, startCell, rng, forbidden, occupied) {
-    const maxLength = Math.max(4, state.config.patrol?.maxLength || 22);
+  function buildGuardCycle(level, startCell, rng, forbidden, occupied, options = {}) {
+    const configuredMax = Number.isFinite(state.config.patrol?.maxLength)
+      ? state.config.patrol.maxLength
+      : DEFAULT_CONFIG.patrol.maxLength;
+    const baseMax = Math.max(4, configuredMax || 22);
+    const requestedMax = Number.isFinite(options.maxLength) ? Math.max(options.maxLength, 4) : baseMax;
+    const maxLength = Math.max(4, Math.min(baseMax, requestedMax));
+    const minLength = Math.max(3, Math.min(options.minLength || 4, maxLength));
     const startKey = getCellKey(startCell.row, startCell.col);
     const stack = [{ cell: startCell, prev: null }];
     const visited = new Set([startKey]);
@@ -1468,7 +1590,7 @@
         if (current.prev && neighbor.row === current.prev.row && neighbor.col === current.prev.col && neighbors.length > 1) {
           continue;
         }
-        if (neighborKey === startKey && stack.length >= 4) {
+        if (neighborKey === startKey && stack.length >= minLength) {
           return stack.map(entry => entry.cell);
         }
         if (!visited.has(neighborKey) && stack.length < maxLength) {
