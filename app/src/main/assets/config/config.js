@@ -430,12 +430,24 @@ function loadConfigJson(path, fallback) {
   try {
     const request = new XMLHttpRequest();
     request.open('GET', path, false);
+    try {
+      request.setRequestHeader('Cache-Control', 'no-cache');
+      request.setRequestHeader('Pragma', 'no-cache');
+      request.setRequestHeader('If-Modified-Since', 'Mon, 01 Jan 1990 00:00:00 GMT');
+    } catch (error) {
+      // Ignore les erreurs liées aux en-têtes (par exemple lorsque le navigateur les bloque).
+    }
     request.overrideMimeType('application/json');
     request.send(null);
-    if (request.status >= 200 && request.status < 300) {
-      const responseText = request.responseText;
-      if (typeof responseText === 'string' && responseText.trim()) {
+    const status = Number(request.status) || 0;
+    const responseText = request.responseText;
+    const hasBody = typeof responseText === 'string' && responseText.trim();
+    const successfulRequest = (status >= 200 && status < 400) || (status === 0 && hasBody);
+    if (successfulRequest && hasBody) {
+      try {
         return JSON.parse(responseText);
+      } catch (parseError) {
+        console.warn('Unable to parse configuration JSON', path, parseError);
       }
     }
   } catch (error) {
