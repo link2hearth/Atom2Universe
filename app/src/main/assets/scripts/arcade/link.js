@@ -91,7 +91,8 @@
       path: [],
       pointerId: null,
       mode: null,
-      finalizeTimeoutId: null
+      finalizeTimeoutId: null,
+      isActive: false
     },
     initialized: false,
     isVictory: false,
@@ -451,6 +452,7 @@
     state.interaction.path = [];
     state.interaction.pointerId = null;
     state.interaction.mode = null;
+    state.interaction.isActive = false;
   }
 
   function getCellElement(row, col) {
@@ -1004,11 +1006,25 @@
     state.interaction.mode = mode;
     state.interaction.pointerId = pointerId || null;
     state.interaction.path = [{ row, col }];
+    state.interaction.isActive = mode === 'pointer';
     element.dataset.state = 'selected';
   }
 
   function isOrthogonalNeighbor(a, b) {
     return Math.abs(a.row - b.row) + Math.abs(a.col - b.col) === 1;
+  }
+
+  function processPointerCell(row, col) {
+    if (tryBacktrackSelection(row, col)) {
+      return;
+    }
+    const added = addCellToSelection(row, col);
+    if (!added) {
+      return;
+    }
+    if (state.interaction.path.length === getRequiredLinkLength()) {
+      scheduleFinalizeSelection();
+    }
   }
 
   function tryBacktrackSelection(row, col) {
@@ -1066,6 +1082,9 @@
     if (!Number.isFinite(row) || !Number.isFinite(col)) {
       return;
     }
+    if (typeof event.preventDefault === 'function') {
+      event.preventDefault();
+    }
     startSelection(row, col, 'pointer', event.pointerId);
   }
 
@@ -1076,7 +1095,7 @@
     if (state.interaction.pointerId !== event.pointerId) {
       return;
     }
-    if (event.buttons === 0) {
+    if (!state.interaction.isActive) {
       return;
     }
     const element = event.currentTarget;
@@ -1085,16 +1104,44 @@
     if (!Number.isFinite(row) || !Number.isFinite(col)) {
       return;
     }
-    if (tryBacktrackSelection(row, col)) {
+    processPointerCell(row, col);
+  }
+
+  function resolvePointerMoveTarget(event) {
+    const rawTarget = event.target instanceof Element ? event.target : null;
+    const element = rawTarget?.closest?.('.link__cell');
+    if (element) {
+      return element;
+    }
+    if (typeof document.elementFromPoint === 'function') {
+      const fromPoint = document.elementFromPoint(event.clientX, event.clientY);
+      if (fromPoint instanceof Element) {
+        return fromPoint.closest('.link__cell');
+      }
+    }
+    return null;
+  }
+
+  function handlePointerMove(event) {
+    if (state.interaction.mode !== 'pointer') {
       return;
     }
-    const added = addCellToSelection(row, col);
-    if (!added) {
+    if (state.interaction.pointerId !== event.pointerId) {
       return;
     }
-    if (state.interaction.path.length === getRequiredLinkLength()) {
-      scheduleFinalizeSelection();
+    if (!state.interaction.isActive) {
+      return;
     }
+    const element = resolvePointerMoveTarget(event);
+    if (!element) {
+      return;
+    }
+    const row = Number.parseInt(element.dataset.row, 10);
+    const col = Number.parseInt(element.dataset.col, 10);
+    if (!Number.isFinite(row) || !Number.isFinite(col)) {
+      return;
+    }
+    processPointerCell(row, col);
   }
 
   function handlePointerUp(event) {
@@ -1104,6 +1151,7 @@
     if (state.interaction.pointerId !== event.pointerId) {
       return;
     }
+    state.interaction.isActive = false;
     if (state.interaction.path.length === getRequiredLinkLength()) {
       if (!state.interaction.finalizeTimeoutId) {
         scheduleFinalizeSelection();
@@ -1120,6 +1168,7 @@
     if (state.interaction.pointerId !== event.pointerId) {
       return;
     }
+    state.interaction.isActive = false;
     resetInteraction();
   }
 
@@ -1247,6 +1296,7 @@
         cellButton.appendChild(content);
         cellButton.addEventListener('pointerdown', handlePointerDown);
         cellButton.addEventListener('pointerenter', handlePointerEnter);
+        cellButton.addEventListener('pointermove', handlePointerMove);
         cellButton.addEventListener('pointerup', handlePointerUp);
         cellButton.addEventListener('pointercancel', handlePointerCancel);
         cellButton.addEventListener('click', handleCellClick);
