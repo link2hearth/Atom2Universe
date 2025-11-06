@@ -793,16 +793,47 @@
     return path;
   }
 
+  function normalizeCellPosition(cell) {
+    if (!cell || typeof cell !== 'object') {
+      return { row: 0, col: 0 };
+    }
+    if (Number.isInteger(cell.row) && Number.isInteger(cell.col)) {
+      return { row: cell.row, col: cell.col };
+    }
+    if (Number.isInteger(cell.cellRow) && Number.isInteger(cell.cellCol)) {
+      return { row: cell.cellRow, col: cell.cellCol };
+    }
+    const parsedRow = Number.parseInt(cell.row, 10);
+    const parsedCol = Number.parseInt(cell.col, 10);
+    if (Number.isInteger(parsedRow) && Number.isInteger(parsedCol)) {
+      return { row: parsedRow, col: parsedCol };
+    }
+    const parsedCellRow = Number.parseInt(cell.cellRow, 10);
+    const parsedCellCol = Number.parseInt(cell.cellCol, 10);
+    if (Number.isInteger(parsedCellRow) && Number.isInteger(parsedCellCol)) {
+      return { row: parsedCellRow, col: parsedCellCol };
+    }
+    return { row: 0, col: 0 };
+  }
+
   function computeDistances(adjacency, width, height, start, blockedCells = new Set()) {
     const distances = Array.from({ length: height }, () => Array(width).fill(-1));
     const queue = [];
     let front = 0;
-    const startKey = getCellKey(start.row, start.col);
+    const startRow = Number.isInteger(start?.row) ? start.row : Number.parseInt(start?.row, 10);
+    const startCol = Number.isInteger(start?.col) ? start.col : Number.parseInt(start?.col, 10);
+    if (!Number.isInteger(startRow) || !Number.isInteger(startCol)) {
+      return distances;
+    }
+    if (!isInsideCell(startRow, startCol, width, height)) {
+      return distances;
+    }
+    const startKey = getCellKey(startRow, startCol);
     if (blockedCells.has(startKey)) {
       return distances;
     }
-    distances[start.row][start.col] = 0;
-    queue.push(start);
+    distances[startRow][startCol] = 0;
+    queue.push({ row: startRow, col: startCol });
     while (front < queue.length) {
       const current = queue[front];
       front += 1;
@@ -1124,7 +1155,8 @@
       runtime: null
     };
 
-    level.distancesFromStart = computeDistances(level.adjacency, width, height, level.start);
+    const startCoords = normalizeCellPosition(level.start);
+    level.distancesFromStart = computeDistances(level.adjacency, width, height, startCoords);
     return level;
   }
 
@@ -1188,11 +1220,12 @@
     level.objects.doors.push(door);
 
     const blocked = new Set([getCellKey(doorCell.row, doorCell.col)]);
+    const startCoords = normalizeCellPosition(level.start);
     const distancesWithoutDoor = computeDistances(
       level.adjacency,
       level.cellWidth,
       level.cellHeight,
-      level.start,
+      startCoords,
       blocked
     );
     const doorDistance = level.distancesFromStart?.[doorCell.row]?.[doorCell.col] ?? Number.POSITIVE_INFINITY;
@@ -1576,7 +1609,13 @@
     const startKey = getCellKey(startCell.row, startCell.col);
     const stack = [{ cell: startCell, prev: null }];
     const visited = new Set([startKey]);
+    const maxIterations = Math.max(100, level.cellWidth * level.cellHeight * maxLength);
+    let iterations = 0;
     while (stack.length > 0 && stack.length <= maxLength) {
+      iterations += 1;
+      if (iterations > maxIterations) {
+        break;
+      }
       const current = stack[stack.length - 1];
       const neighbors = getNeighborCells(level.adjacency, current.cell.row, current.cell.col);
       shuffle(neighbors, rng);
