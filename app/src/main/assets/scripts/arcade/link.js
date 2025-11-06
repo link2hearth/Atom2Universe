@@ -47,6 +47,7 @@
   ]);
 
   const MAX_HISTORY_ENTRIES = 200;
+  const MAX_CREATION_VISITS = 7;
 
   const numberFormatter = typeof Intl !== 'undefined' && Intl.NumberFormat
     ? new Intl.NumberFormat(undefined, { maximumFractionDigits: 0 })
@@ -486,6 +487,25 @@
     }
   }
 
+  function applyCreationCellEffect(cell) {
+    if (!cell) {
+      return;
+    }
+    if (cell.type === 'plus') {
+      if (cell.value > 0) {
+        cell.value -= 1;
+      } else {
+        cell.value = 1;
+      }
+      return;
+    }
+    if (cell.value < 10) {
+      cell.value += 1;
+    } else {
+      cell.value = 9;
+    }
+  }
+
   function getPairPartner(row, col, pairId) {
     if (!state.pairs || !state.pairs.has(pairId)) {
       return null;
@@ -508,12 +528,48 @@
     return `${row}:${col}`;
   }
 
+  function collectAffectedCells(path) {
+    if (!Array.isArray(path) || path.length !== 3) {
+      return [];
+    }
+    const affected = new Map();
+    const selectedKeys = new Set(path.map(cell => keyForCell(cell.row, cell.col)));
+    const triggeredPairs = new Set();
+    path.forEach(cell => {
+      const cellData = getCellData(cell.row, cell.col);
+      if (!cellData) {
+        return;
+      }
+      const key = keyForCell(cell.row, cell.col);
+      if (!affected.has(key)) {
+        affected.set(key, { row: cell.row, col: cell.col });
+      }
+      if (cellData.pairId == null) {
+        return;
+      }
+      const partner = getPairPartner(cell.row, cell.col, cellData.pairId);
+      if (!partner) {
+        return;
+      }
+      const partnerKey = keyForCell(partner.row, partner.col);
+      if (selectedKeys.has(partnerKey) || triggeredPairs.has(cellData.pairId)) {
+        return;
+      }
+      triggeredPairs.add(cellData.pairId);
+      if (!affected.has(partnerKey)) {
+        affected.set(partnerKey, { row: partner.row, col: partner.col });
+      }
+    });
+    return Array.from(affected.values());
+  }
+
   function applyPattern(path, options = {}) {
     if (!Array.isArray(path) || path.length !== 3) {
       return false;
     }
     const record = options.recordHistory !== false;
     const skipRender = options.skipRender === true;
+    const effectFn = typeof options.effect === 'function' ? options.effect : applyCellEffect;
     const affected = new Map();
     const selectedKeys = new Set(path.map(cell => keyForCell(cell.row, cell.col)));
     const triggeredPairs = new Set();
@@ -531,7 +587,7 @@
           next: null
         });
       }
-      applyCellEffect(cellData);
+      effectFn(cellData);
       affected.get(key).next = cellData.value;
     });
     path.forEach(cell => {
@@ -563,7 +619,7 @@
           next: null
         });
       }
-      applyCellEffect(partnerData);
+      effectFn(partnerData);
       affected.get(partnerKey).next = partnerData.value;
     });
     if (!skipRender) {
@@ -1046,11 +1102,34 @@
 
   function scrambleBoard(board, moveCount) {
     const size = board.length;
-    for (let move = 0; move < moveCount; move += 1) {
+    const visitCounts = Array.from({ length: size }, () => new Array(size).fill(0));
+    let appliedMoves = 0;
+    let attempts = 0;
+    const maxAttempts = moveCount * 8 + 50;
+    while (appliedMoves < moveCount && attempts < maxAttempts) {
+      attempts += 1;
       const useLine = Math.random() < 0.5;
       const pattern = useLine ? randomLinePattern(size) : randomLPattern(size);
       state.board = board;
-      applyPattern(pattern, { recordHistory: false, skipRender: true });
+      const affectedCells = collectAffectedCells(pattern);
+      if (!affectedCells.length) {
+        continue;
+      }
+      if (affectedCells.some(cell => visitCounts[cell.row][cell.col] >= MAX_CREATION_VISITS)) {
+        continue;
+      }
+      const applied = applyPattern(pattern, {
+        recordHistory: false,
+        skipRender: true,
+        effect: applyCreationCellEffect
+      });
+      if (!applied) {
+        continue;
+      }
+      affectedCells.forEach(cell => {
+        visitCounts[cell.row][cell.col] += 1;
+      });
+      appliedMoves += 1;
     }
   }
 
