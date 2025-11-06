@@ -2413,6 +2413,11 @@
           "gachaWin": "{count} ticket{suffix} gacha obtenu !"
         }
       },
+      "link": {
+        "rewards": {
+          "gachaVictory": "Link : +{count} ticket{suffix} gacha !"
+        }
+      },
       "lightsOut": {
         "rewards": {
           "gacha": "Ticket{suffix} gacha obtenu{suffix} : {formattedCount}"
