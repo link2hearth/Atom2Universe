@@ -793,16 +793,43 @@
     return path;
   }
 
+  function normalizeCellPosition(cell) {
+    if (!cell || typeof cell !== 'object') {
+      return { row: 0, col: 0 };
+    }
+    if (Number.isInteger(cell.row) && Number.isInteger(cell.col)) {
+      return { row: cell.row, col: cell.col };
+    }
+    if (Number.isInteger(cell.cellRow) && Number.isInteger(cell.cellCol)) {
+      return { row: cell.cellRow, col: cell.cellCol };
+    }
+    const parsedRow = Number.parseInt(cell.row, 10);
+    const parsedCol = Number.parseInt(cell.col, 10);
+    if (Number.isInteger(parsedRow) && Number.isInteger(parsedCol)) {
+      return { row: parsedRow, col: parsedCol };
+    }
+    const parsedCellRow = Number.parseInt(cell.cellRow, 10);
+    const parsedCellCol = Number.parseInt(cell.cellCol, 10);
+    if (Number.isInteger(parsedCellRow) && Number.isInteger(parsedCellCol)) {
+      return { row: parsedCellRow, col: parsedCellCol };
+    }
+    return { row: 0, col: 0 };
+  }
+
   function computeDistances(adjacency, width, height, start, blockedCells = new Set()) {
     const distances = Array.from({ length: height }, () => Array(width).fill(-1));
     const queue = [];
     let front = 0;
-    const startKey = getCellKey(start.row, start.col);
+    const startCell = normalizeCellPosition(start);
+    if (!isInsideCell(startCell.row, startCell.col, width, height)) {
+      return distances;
+    }
+    const startKey = getCellKey(startCell.row, startCell.col);
     if (blockedCells.has(startKey)) {
       return distances;
     }
-    distances[start.row][start.col] = 0;
-    queue.push(start);
+    distances[startCell.row][startCell.col] = 0;
+    queue.push({ row: startCell.row, col: startCell.col });
     while (front < queue.length) {
       const current = queue[front];
       front += 1;
