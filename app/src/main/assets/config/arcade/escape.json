@@ -1,0 +1,121 @@
+{
+  "defaultDifficulty": "medium",
+  "seed": {
+    "randomLength": 8,
+    "alphabet": "ABCDEFGHJKMNPQRSTUVWXYZ23456789",
+    "paramNames": {
+      "seed": "seed",
+      "difficulty": "d"
+    }
+  },
+  "dailyChallenge": {
+    "enabled": true,
+    "offsetHours": 0,
+    "format": "YYYYMMDD"
+  },
+  "generation": {
+    "maxRetryCount": 24,
+    "maxCycleAttempts": 120,
+    "cycleDensityLimits": {
+      "min": 0.06,
+      "max": 0.22
+    },
+    "minMazeSize": 7,
+    "maxMazeSize": 25
+  },
+  "validation": {
+    "maxTurns": 90,
+    "maxStates": 60000
+  },
+  "patrol": {
+    "maxLength": 22,
+    "maxAttempts": 80,
+    "minCorridorPadding": 1
+  },
+  "objects": {
+    "keyDoor": {
+      "enabled": true,
+      "minDistanceFromStart": 3,
+      "minKeyDoorSeparation": 3
+    },
+    "pressurePlate": {
+      "enabled": true,
+      "timerRange": {
+        "min": 4,
+        "max": 6
+      }
+    },
+    "bonusOrbs": {
+      "maxCount": 6,
+      "culDeSacDepth": 2
+    }
+  },
+  "difficulties": {
+    "easy": {
+      "mazeSize": {
+        "min": 10,
+        "max": 11
+      },
+      "extraConnections": {
+        "min": 0.08,
+        "max": 0.12
+      },
+      "optionalCycles": {
+        "min": 2,
+        "max": 4
+      },
+      "visionRange": {
+        "short": 3,
+        "long": 3
+      },
+      "patrols": {
+        "min": 1,
+        "max": 2
+      }
+    },
+    "medium": {
+      "mazeSize": {
+        "min": 12,
+        "max": 13
+      },
+      "extraConnections": {
+        "min": 0.1,
+        "max": 0.16
+      },
+      "optionalCycles": {
+        "min": 3,
+        "max": 5
+      },
+      "visionRange": {
+        "short": 4,
+        "long": 4
+      },
+      "patrols": {
+        "min": 2,
+        "max": 3
+      }
+    },
+    "hard": {
+      "mazeSize": {
+        "min": 14,
+        "max": 15
+      },
+      "extraConnections": {
+        "min": 0.14,
+        "max": 0.2
+      },
+      "optionalCycles": {
+        "min": 4,
+        "max": 6
+      },
+      "visionRange": {
+        "short": 4,
+        "long": 5
+      },
+      "patrols": {
+        "min": 3,
+        "max": 4
+      }
+    }
+  }
+}

@@ -448,6 +448,12 @@
             "description": "Place cells and watch them evolve: they survive with 2 or 3 neighbours, are born with exactly 3, and die otherwise.",
             "cta": "Explore"
           },
+          "escape": {
+            "aria": "Open the Escape mini-game",
+            "title": "Escape",
+            "description": "Sneak past guard vision cones inside a freshly generated labyrinth.",
+            "cta": "Sneak"
+          },
           "roulette": {
             "aria": "Open the Joker Roulette mini-game",
             "title": "Joker Roulette",
@@ -839,6 +845,57 @@
         },
         "cell": {
           "label": "Row {row}, column {column}: {value} (target {target})"
+        }
+      },
+      "escape": {
+        "aria": "Escape infiltration: reach the exit without being spotted.",
+        "title": "Escape",
+        "subtitle": "Navigate a procedurally generated labyrinth turn by turn. Study the map, anticipate patrols, and plan your getaway.",
+        "controls": {
+          "aria": "Escape generation controls"
+        },
+        "difficulty": {
+          "aria": "Choose the difficulty",
+          "label": "Difficulty",
+          "easy": "Easy",
+          "medium": "Medium",
+          "hard": "Hard"
+        },
+        "seed": {
+          "label": "Seed",
+          "placeholder": "auto"
+        },
+        "actions": {
+          "generate": "Generate level",
+          "daily": "Daily seed"
+        },
+        "messages": {
+          "loading": "Loading configuration…"
+        },
+        "summary": {
+          "title": "Summary",
+          "seed": "Seed",
+          "size": "Grid",
+          "cycle": "Cycles",
+          "path": "Optimal path",
+          "objects": "Objects",
+          "guards": "Patrols",
+          "vision": "Vision",
+          "score": "Estimated score"
+        },
+        "legend": {
+          "title": "Legend",
+          "wall": "Wall",
+          "floor": "Floor",
+          "start": "Start",
+          "exit": "Exit",
+          "door": "Door",
+          "key": "Key",
+          "plate": "Plate",
+          "bonus": "Bonus orb",
+          "patrol": "Guard route",
+          "guard": "Guard",
+          "vision": "Vision"
         }
       },
       "starBridges": {
@@ -2435,6 +2492,24 @@
         },
         "cell": {
           "combined": "{occupant} on {base}"
+        }
+      },
+      "escape": {
+        "messages": {
+          "ready": "Escape configuration loaded.",
+          "generated": "Seed {{seed}} ready. Grid {{size}}.",
+          "error": "Unable to generate a level. Try another seed.",
+          "configError": "Fallback Escape configuration applied (could not load remote settings)."
+        },
+        "summary": {
+          "sizeValue": "{{tilesWidth}}×{{tilesHeight}} tiles ({{cellsWidth}}×{{cellsHeight}} cells)",
+          "cycleValue": "{{count}} openings (~{{ratio}} %)",
+          "pathValue": "Par: {{par}} steps · Validated route: {{solution}}",
+          "objectsValue": "{{keys}} key(s) · {{plates}} plate(s) · {{bonuses}} orb(s)",
+          "guardsValue": "{{count}} guard(s) · R={{range}} · {{angle}}°",
+          "guardsNone": "No active patrols",
+          "visionValue": "Watched area: {{coverage}}",
+          "scoreValue": "Estimated score {{score}}"
         }
       },
       "sudoku": {
