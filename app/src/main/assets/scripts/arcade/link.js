@@ -28,6 +28,13 @@
         twinPairs: Object.freeze({ min: 3, max: 5 }),
         scrambleMoves: Object.freeze({ min: 30, max: 50 })
       })
+    }),
+    rewards: Object.freeze({
+      victoryGachaTickets: Object.freeze({
+        easy: 2,
+        medium: 5,
+        hard: 10
+      })
     })
   });
 
@@ -97,6 +104,7 @@
     },
     initialized: false,
     isVictory: false,
+    rewardClaimed: false,
     messageData: {
       key: 'index.sections.link.messages.intro',
       fallback:
@@ -225,6 +233,31 @@
     };
   }
 
+  function resolveVictoryTicketConfig(rawMap, fallbackMap) {
+    const raw = rawMap && typeof rawMap === 'object' ? rawMap : {};
+    const fallback = fallbackMap && typeof fallbackMap === 'object' ? fallbackMap : {};
+    const keys = new Set([...Object.keys(fallback), ...Object.keys(raw)]);
+    const resolved = {};
+    keys.forEach(key => {
+      const fallbackValue = clampInteger(fallback[key], 0, 999, 0);
+      resolved[key] = Object.prototype.hasOwnProperty.call(raw, key)
+        ? clampInteger(raw[key], 0, 999, fallbackValue)
+        : fallbackValue;
+    });
+    return resolved;
+  }
+
+  function resolveRewardsConfig(rawRewards, fallbackRewards) {
+    const fallback = fallbackRewards && typeof fallbackRewards === 'object' ? fallbackRewards : {};
+    const raw = rawRewards && typeof rawRewards === 'object' ? rawRewards : {};
+    return {
+      victoryGachaTickets: resolveVictoryTicketConfig(
+        raw.victoryGachaTickets,
+        fallback.victoryGachaTickets || DEFAULT_CONFIG.rewards.victoryGachaTickets
+      )
+    };
+  }
+
   function translate(key, fallback, params) {
     if (typeof key !== 'string' || !key) {
       return fallback;
@@ -301,7 +334,8 @@
       : fallback.defaultDifficulty;
     return {
       defaultDifficulty,
-      difficulties: resolvedDifficulties
+      difficulties: resolvedDifficulties,
+      rewards: resolveRewardsConfig(rawConfig.rewards, fallback.rewards)
     };
   }
 
@@ -318,6 +352,13 @@
     const fallbackLabels = { easy: 'Easy', medium: 'Medium', hard: 'Hard' };
     const fallback = fallbackLabels[key] || key;
     return translate(`index.sections.link.difficulty.${key}`, fallback);
+  }
+
+  function getVictoryRewardTicketsForDifficulty(difficulty) {
+    const fallbackMap = DEFAULT_CONFIG.rewards?.victoryGachaTickets || {};
+    const configMap = state.config?.rewards?.victoryGachaTickets || {};
+    const fallbackValue = clampInteger(fallbackMap[difficulty], 0, 999, 0);
+    return clampInteger(configMap[difficulty], 0, 999, fallbackValue);
   }
 
   function syncDifficultySelect() {
@@ -932,6 +973,47 @@
     return remaining.normal === 0 && remaining.plus === 0;
   }
 
+  function awardVictoryTickets() {
+    if (state.rewardClaimed) {
+      return;
+    }
+    const tickets = getVictoryRewardTicketsForDifficulty(state.difficulty);
+    if (!Number.isFinite(tickets) || tickets <= 0) {
+      state.rewardClaimed = true;
+      return;
+    }
+    const awardGacha = typeof gainGachaTickets === 'function'
+      ? gainGachaTickets
+      : typeof window !== 'undefined' && typeof window.gainGachaTickets === 'function'
+        ? window.gainGachaTickets
+        : null;
+    if (typeof awardGacha !== 'function') {
+      state.rewardClaimed = true;
+      return;
+    }
+    let gained = 0;
+    try {
+      gained = awardGacha(tickets, { unlockTicketStar: true });
+    } catch (error) {
+      console.warn('Link: unable to grant gacha tickets', error);
+      gained = 0;
+    }
+    state.rewardClaimed = true;
+    if (!Number.isFinite(gained) || gained <= 0) {
+      return;
+    }
+    if (typeof showToast === 'function') {
+      const suffix = gained > 1 ? 's' : '';
+      const formattedCount = formatNumber(gained);
+      const message = translate(
+        'scripts.arcade.link.rewards.gachaVictory',
+        'Link victory! +{count} gacha ticket{suffix}.',
+        { count: formattedCount, suffix }
+      );
+      showToast(message);
+    }
+  }
+
   function handleMove(path) {
     const applied = applyPattern(path);
     if (!applied) {
@@ -948,6 +1030,7 @@
         `Bravo ! Puzzle résolu en ${formatNumber(state.moves)} coups.`,
         { moves: formatNumber(state.moves) }
       );
+      awardVictoryTickets();
       return;
     }
     setVictoryState(false);
@@ -1306,6 +1389,7 @@
     state.board = cloneBoard(state.initialBoard) || [];
     state.history = [];
     state.moves = 0;
+    state.rewardClaimed = false;
     setVictoryState(false);
     updateAllCells();
     updateMovesDisplay();
@@ -1748,6 +1832,7 @@
     state.size = size;
     state.moves = 0;
     state.history = [];
+    state.rewardClaimed = false;
     setVictoryState(false);
     updateMovesDisplay();
     updateButtonsState();

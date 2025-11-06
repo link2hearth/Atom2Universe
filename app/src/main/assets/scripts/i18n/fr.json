@@ -282,8 +282,8 @@
           "title": "Relancer l’univers",
           "summary": "Réinitialise vos atomes actuels ainsi que les deux pistes du magasin pour augmenter leur plafond de +{{bonus}} niveaux.",
           "bonus": "Niveaux supplémentaires débloqués : +{{bonus}}",
-          "requirementLocked": "Achetez tous les niveaux restants du magasin ({{remaining}}) pour déclencher un nouveau Big Bang.",
-          "requirementReady": "Boutique complétée ! Lancez un nouveau Big Bang pour ajouter +{{bonus}} niveaux achetables.",
+          "requirementLocked": "Montez {{firstShop}} et {{secondShop}} au maximum ({{remaining}} niveaux restants) pour déclencher un nouveau Big Bang.",
+          "requirementReady": "{{firstShop}} et {{secondShop}} sont au maximum ! Lancez un nouveau Big Bang pour ajouter +{{bonus}} niveaux achetables.",
           "cta": "Déclencher le Big Bang"
         },
         "confirm": {
@@ -2413,6 +2413,11 @@
           "gachaWin": "{count} ticket{suffix} gacha obtenu !"
         }
       },
+      "link": {
+        "rewards": {
+          "gachaVictory": "Link : +{count} ticket{suffix} gacha !"
+        }
+      },
       "lightsOut": {
         "rewards": {
           "gacha": "Ticket{suffix} gacha obtenu{suffix} : {formattedCount}"
@@ -2866,7 +2871,7 @@
       "bigBang": {
         "confirm": "Relancer l’univers ? Vous perdrez vos atomes actuels, vos APC/APS et les niveaux du magasin, mais débloquerez +{bonus} niveaux supplémentaires.",
         "cancelled": "Big Bang annulé",
-        "notReady": "Achetez tous les niveaux restants du magasin ({remaining}) pour déclencher le Big Bang.",
+        "notReady": "Montez {{firstShop}} et {{secondShop}} au maximum ({{remaining}} niveaux restants) pour déclencher le Big Bang.",
         "done": "Big Bang réussi ! Cap du magasin augmenté de +{bonus} (total +{total})."
       },
       "metaux": {

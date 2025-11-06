@@ -19,5 +19,12 @@
       "twinPairs": { "min": 3, "max": 5 },
       "scrambleMoves": { "min": 30, "max": 50 }
     }
+  },
+  "rewards": {
+    "victoryGachaTickets": {
+      "easy": 2,
+      "medium": 5,
+      "hard": 10
+    }
   }
 }

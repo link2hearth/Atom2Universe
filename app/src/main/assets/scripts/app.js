@@ -1490,32 +1490,73 @@ function getHoldemBridge() {
 }
 
 function formatHoldemOptionValue(value) {
-  const numeric = Number(value);
-  if (!Number.isFinite(numeric)) {
-    return formatNumberLocalized(0, HOLDEM_NUMBER_FORMAT);
+  let normalized = value;
+  if (!(normalized instanceof LayeredNumber)) {
+    const numeric = Number(normalized);
+    normalized = Number.isFinite(numeric) ? Math.max(0, Math.floor(numeric)) : 0;
   }
-  const clamped = Math.max(0, Math.floor(numeric));
-  return formatNumberLocalized(clamped, HOLDEM_NUMBER_FORMAT);
+
+  if (typeof formatLayeredLocalized === 'function') {
+    const formatted = formatLayeredLocalized(normalized, {
+      mantissaDigits: 2,
+      numberFormatOptions: HOLDEM_NUMBER_FORMAT
+    });
+    if (typeof formatted === 'string' && formatted.length > 0) {
+      return formatted;
+    }
+  }
+
+  if (normalized instanceof LayeredNumber) {
+    return normalized.toString();
+  }
+
+  return formatNumberLocalized(normalized, HOLDEM_NUMBER_FORMAT);
 }
 
 function updateHoldemBlindOption(blind) {
   if (!elements.holdemBlindValue) {
     return;
   }
-  let numeric = Number(blind);
-  if (!Number.isFinite(numeric) || numeric <= 0) {
+  const resolveBlindValue = source => {
+    if (typeof LayeredNumber === 'function') {
+      try {
+        const layered = source instanceof LayeredNumber
+          ? (typeof source.clone === 'function' ? source.clone() : new LayeredNumber(source))
+          : new LayeredNumber(source);
+        if (layered && layered.sign > 0 && !layered.isZero()) {
+          if (layered.layer === 0) {
+            const numeric = layered.toNumber();
+            if (Number.isFinite(numeric)) {
+              return Math.max(1, Math.floor(numeric));
+            }
+          }
+          return layered;
+        }
+      } catch (error) {
+        // Ignore invalid layered values and fall back to numeric parsing.
+      }
+    }
+    const numeric = Number(source);
+    if (Number.isFinite(numeric) && numeric > 0) {
+      return Math.max(1, Math.floor(numeric));
+    }
+    return null;
+  };
+
+  let resolved = resolveBlindValue(blind);
+  if (!resolved) {
     const bridge = getHoldemBridge();
     if (bridge && typeof bridge.getBlind === 'function') {
       try {
-        numeric = Number(bridge.getBlind());
+        resolved = resolveBlindValue(bridge.getBlind());
       } catch (error) {
-        numeric = Number.NaN;
+        resolved = null;
       }
     }
   }
-  if (Number.isFinite(numeric) && numeric > 0) {
-    const rounded = Math.max(1, Math.floor(numeric));
-    elements.holdemBlindValue.textContent = formatNumberLocalized(rounded, HOLDEM_NUMBER_FORMAT);
+
+  if (resolved) {
+    elements.holdemBlindValue.textContent = formatHoldemOptionValue(resolved);
   } else {
     elements.holdemBlindValue.textContent = '—';
   }
@@ -7252,13 +7293,28 @@ function getBigBangCompletionCount() {
   return Math.max(0, Math.floor(bonus / step));
 }
 
-function getBigBangRemainingLevels() {
+const BIG_BANG_REQUIRED_SHOP_IDS = ['godFinger', 'starCore'];
+
+function getBigBangRequiredUpgrades() {
   if (!Array.isArray(UPGRADE_DEFS) || UPGRADE_DEFS.length === 0) {
+    return [];
+  }
+  const requiredIds = new Set(BIG_BANG_REQUIRED_SHOP_IDS);
+  return UPGRADE_DEFS.filter(def => requiredIds.has(def.id));
+}
+
+function getBigBangRequiredShopNames() {
+  return BIG_BANG_REQUIRED_SHOP_IDS.map(id => UPGRADE_NAME_MAP.get(id) || id);
+}
+
+function getBigBangRemainingLevels() {
+  const requiredUpgrades = getBigBangRequiredUpgrades();
+  if (!requiredUpgrades.length) {
     return { total: 0, infinite: false, display: '0' };
   }
   let total = 0;
   let infinite = false;
-  UPGRADE_DEFS.forEach(def => {
+  requiredUpgrades.forEach(def => {
     const remaining = getRemainingUpgradeCapacity(def);
     if (!Number.isFinite(remaining)) {
       infinite = true;
@@ -7307,15 +7363,18 @@ function updateBigBangActionUI() {
   if (elements.bigBangRequirement) {
     const remainingInfo = getBigBangRemainingLevels();
     const ready = canPerformBigBang();
+    const [firstShopName = 'Doigt créateur', secondShopName = 'Cœur d’étoile'] = getBigBangRequiredShopNames();
     const key = ready
       ? 'index.sections.bigbang.restart.requirementReady'
       : 'index.sections.bigbang.restart.requirementLocked';
     const fallback = ready
-      ? `Boutique complétée ! Lancez un nouveau Big Bang pour ajouter +${bonusStepDisplay} niveaux au magasin.`
-      : `Achetez tous les niveaux restants du magasin (${remainingInfo.display}) pour déclencher un nouveau Big Bang.`;
+      ? `${firstShopName} et ${secondShopName} sont au maximum ! Lancez un nouveau Big Bang pour ajouter +${bonusStepDisplay} niveaux au magasin.`
+      : `Montez ${firstShopName} et ${secondShopName} au maximum (${remainingInfo.display} niveaux restants) pour déclencher un nouveau Big Bang.`;
     const message = translateOrDefault(key, fallback, {
       remaining: remainingInfo.display,
-      bonus: bonusStepDisplay
+      bonus: bonusStepDisplay,
+      firstShop: firstShopName,
+      secondShop: secondShopName
     });
     elements.bigBangRequirement.textContent = message;
     if (elements.bigBangRestartButton) {
@@ -7471,11 +7530,12 @@ function handleBigBangDialogConfirm(event) {
   if (!canPerformBigBang()) {
     closeBigBangDialog();
     const remainingInfo = getBigBangRemainingLevels();
-    const fallback = `Achetez tous les niveaux restants du magasin (${remainingInfo.display}) pour relancer l’univers.`;
+    const [firstShopName = 'Doigt créateur', secondShopName = 'Cœur d’étoile'] = getBigBangRequiredShopNames();
+    const fallback = `Montez ${firstShopName} et ${secondShopName} au maximum (${remainingInfo.display} niveaux restants) pour relancer l’univers.`;
     showToast(translateOrDefault(
       'scripts.app.bigBang.notReady',
       fallback,
-      { remaining: remainingInfo.display }
+      { remaining: remainingInfo.display, firstShop: firstShopName, secondShop: secondShopName }
     ));
     return;
   }
@@ -7499,11 +7559,12 @@ function handleBigBangDialogBackdrop(event) {
 function handleBigBangRestart() {
   if (!canPerformBigBang()) {
     const remainingInfo = getBigBangRemainingLevels();
-    const fallback = `Achetez tous les niveaux restants du magasin (${remainingInfo.display}) pour relancer l’univers.`;
+    const [firstShopName = 'Doigt créateur', secondShopName = 'Cœur d’étoile'] = getBigBangRequiredShopNames();
+    const fallback = `Montez ${firstShopName} et ${secondShopName} au maximum (${remainingInfo.display} niveaux restants) pour relancer l’univers.`;
     showToast(translateOrDefault(
       'scripts.app.bigBang.notReady',
       fallback,
-      { remaining: remainingInfo.display }
+      { remaining: remainingInfo.display, firstShop: firstShopName, secondShop: secondShopName }
     ));
     return;
   }
