@@ -793,9 +793,9 @@
         }
       },
       "link": {
-        "aria": "Link puzzle: draw three-cell orthogonal patterns.",
+        "aria": "Link puzzle: draw orthogonal patterns of adjacent cells.",
         "title": "Link",
-        "subtitle": "Draw three orthogonally adjacent cells in a line or right angle to adjust the values and synchronise the grid.",
+        "subtitle": "Draw adjacent-cell patterns in lines, corners, squares or zigzags to adjust the values and synchronise the grid.",
         "hud": "Run summary",
         "moves": {
           "label": "Moves"
@@ -807,6 +807,20 @@
           "medium": "Medium",
           "hard": "Hard"
         },
+        "generation": {
+          "aria": "Choose the Link generation mode",
+          "label": "Generation",
+          "base": "Base",
+          "plus": "Plus",
+          "random": "Random"
+        },
+        "linkLength": {
+          "aria": "Choose how many cells to link per move",
+          "label": "Links",
+          "two": "2 links",
+          "three": "3 links",
+          "four": "4 links"
+        },
         "actions": {
           "undo": "Undo",
           "restart": "Restart",
@@ -814,13 +828,13 @@
         },
         "board": "Link puzzle grid",
         "messages": {
-          "intro": "Connect exactly three orthogonal cells to adjust their values and their twin partners.",
-          "invalidPattern": "The pattern must be a straight line or a right angle.",
+          "intro": "Connect exactly {count} orthogonal cells to adjust their values and their twin partners.",
+          "invalidPattern": "Invalid pattern for a {count}-cell chain.",
           "progress": "Still {normal} normal cells and {plus} +1 cells to align.",
           "victory": "Great! Puzzle solved in {moves} moves.",
           "undo": "Last move undone.",
           "restart": "Puzzle reset.",
-          "newLevel": "New {difficulty} level ready. Link three tiles to adjust the values!",
+          "newLevel": "New {difficulty} level ready. Link {count} cells to adjust the values!",
           "nothingToUndo": "No move to undo."
         },
         "cell": {

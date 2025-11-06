@@ -793,9 +793,9 @@
         }
       },
       "link": {
-        "aria": "Puzzle Link : tracez des motifs de trois cases orthogonales.",
+        "aria": "Puzzle Link : tracez des motifs de cases orthogonales.",
         "title": "Link",
-        "subtitle": "Tracez un motif de trois cases adjacentes en ligne ou en angle droit pour ajuster les valeurs et synchroniser la grille.",
+        "subtitle": "Tracez un motif de cases adjacentes en ligne, en angle ou en autres formes pour ajuster les valeurs et synchroniser la grille.",
         "hud": "Suivi de partie",
         "moves": {
           "label": "Coups"
@@ -807,6 +807,20 @@
           "medium": "Moyen",
           "hard": "Difficile"
         },
+        "generation": {
+          "aria": "Choisir le mode de génération du puzzle Link",
+          "label": "Génération",
+          "base": "Base",
+          "plus": "Plus",
+          "random": "Aléatoire"
+        },
+        "linkLength": {
+          "aria": "Choisir le nombre de cases à relier dans Link",
+          "label": "Liens",
+          "two": "2 liens",
+          "three": "3 liens",
+          "four": "4 liens"
+        },
         "actions": {
           "undo": "Annuler",
           "restart": "Recommencer",
@@ -814,13 +828,13 @@
         },
         "board": "Grille du puzzle Link",
         "messages": {
-          "intro": "Reliez exactement trois cases orthogonales pour modifier leurs valeurs et celles de leurs jumelles.",
-          "invalidPattern": "Le motif doit être une ligne ou un angle droit.",
+          "intro": "Reliez exactement {count} cases orthogonales pour modifier leurs valeurs et celles de leurs jumelles.",
+          "invalidPattern": "Motif invalide pour une chaîne de {count} cases.",
           "progress": "Encore {normal} cases normales et {plus} cases +1 à ajuster.",
           "victory": "Bravo ! Puzzle résolu en {moves} coups.",
           "undo": "Dernier coup annulé.",
           "restart": "Puzzle réinitialisé.",
-          "newLevel": "Nouveau niveau {difficulty} généré. Reliez trois cases pour ajuster les valeurs !",
+          "newLevel": "Nouveau niveau {difficulty} généré. Reliez {count} cases pour ajuster les valeurs !",
           "nothingToUndo": "Aucun coup à annuler."
         },
         "cell": {

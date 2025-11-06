@@ -48,6 +48,26 @@
 
   const MAX_HISTORY_ENTRIES = 200;
   const MAX_CREATION_VISITS = 7;
+  const GENERATION_MODES = Object.freeze(['base', 'plus', 'random']);
+  const DEFAULT_GENERATION_MODE = 'plus';
+  const LINK_LENGTH_OPTIONS = Object.freeze([2, 3, 4]);
+  const DEFAULT_LINK_LENGTH = 3;
+  const BASE_L_SHAPE = Object.freeze([
+    { row: 0, col: 0 },
+    { row: 1, col: 0 },
+    { row: 2, col: 0 },
+    { row: 2, col: 1 }
+  ]);
+  const BASE_ZIGZAG_SHAPE = Object.freeze([
+    { row: 0, col: 0 },
+    { row: 0, col: 1 },
+    { row: 1, col: 1 },
+    { row: 1, col: 2 }
+  ]);
+  const L_SHAPE_VARIANT_LIST = createShapeVariantList(BASE_L_SHAPE);
+  const ZIGZAG_SHAPE_VARIANT_LIST = createShapeVariantList(BASE_ZIGZAG_SHAPE);
+  const L_SHAPE_VARIANTS = createShapeVariantSet(BASE_L_SHAPE);
+  const ZIGZAG_SHAPE_VARIANTS = createShapeVariantSet(BASE_ZIGZAG_SHAPE);
 
   const numberFormatter = typeof Intl !== 'undefined' && Intl.NumberFormat
     ? new Intl.NumberFormat(undefined, { maximumFractionDigits: 0 })
@@ -56,6 +76,8 @@
   const state = {
     config: DEFAULT_CONFIG,
     difficulty: DEFAULT_CONFIG.defaultDifficulty,
+    generationMode: DEFAULT_GENERATION_MODE,
+    linkLength: DEFAULT_LINK_LENGTH,
     size: 0,
     board: [],
     cellElements: [],
@@ -74,8 +96,8 @@
     messageData: {
       key: 'index.sections.link.messages.intro',
       fallback:
-        'Reliez exactement trois cases adjacentes orthogonalement pour modifier leurs valeurs et celles de leurs jumelles. Mettez toutes les cases normales à 0 et les cases +1 à 10.',
-      params: null
+        `Reliez exactement ${DEFAULT_LINK_LENGTH} cases adjacentes orthogonalement pour modifier leurs valeurs et celles de leurs jumelles. Mettez toutes les cases normales à 0 et les cases +1 à 10.`,
+      params: { count: formatNumber(DEFAULT_LINK_LENGTH) }
     },
     languageHandlerAttached: false,
     languageHandler: null
@@ -104,6 +126,84 @@
     const resolvedMin = clampInteger(source ? source.min : undefined, min, max, fallback.min);
     const resolvedMax = clampInteger(source ? source.max : undefined, resolvedMin, max, Math.max(resolvedMin, fallback.max));
     return { min: resolvedMin, max: resolvedMax };
+  }
+
+  function normalizeShapeKey(points) {
+    if (!Array.isArray(points) || points.length === 0) {
+      return '';
+    }
+    let minRow = Infinity;
+    let minCol = Infinity;
+    points.forEach(point => {
+      if (!point) {
+        return;
+      }
+      if (point.row < minRow) {
+        minRow = point.row;
+      }
+      if (point.col < minCol) {
+        minCol = point.col;
+      }
+    });
+    return points
+      .map(point => ({ row: point.row - minRow, col: point.col - minCol }))
+      .sort((a, b) => (a.row - b.row) || (a.col - b.col))
+      .map(point => `${point.row},${point.col}`)
+      .join('|');
+  }
+
+  function normalizeShapePoints(points) {
+    if (!Array.isArray(points)) {
+      return [];
+    }
+    let minRow = Infinity;
+    let minCol = Infinity;
+    points.forEach(point => {
+      if (!point) {
+        return;
+      }
+      if (point.row < minRow) {
+        minRow = point.row;
+      }
+      if (point.col < minCol) {
+        minCol = point.col;
+      }
+    });
+    return points.map(point => ({ row: point.row - minRow, col: point.col - minCol }));
+  }
+
+  function createShapeVariantList(basePoints) {
+    if (!Array.isArray(basePoints)) {
+      return [];
+    }
+    const transforms = [
+      point => ({ row: point.row, col: point.col }),
+      point => ({ row: point.col, col: -point.row }),
+      point => ({ row: -point.row, col: -point.col }),
+      point => ({ row: -point.col, col: point.row })
+    ];
+    const variants = [];
+    const seenKeys = new Set();
+    transforms.forEach(transform => {
+      const rotated = basePoints.map(transform);
+      const rotatedKey = normalizeShapeKey(rotated);
+      if (!seenKeys.has(rotatedKey)) {
+        seenKeys.add(rotatedKey);
+        variants.push(normalizeShapePoints(rotated));
+      }
+      const mirrored = rotated.map(point => ({ row: point.row, col: -point.col }));
+      const mirroredKey = normalizeShapeKey(mirrored);
+      if (!seenKeys.has(mirroredKey)) {
+        seenKeys.add(mirroredKey);
+        variants.push(normalizeShapePoints(mirrored));
+      }
+    });
+    return variants;
+  }
+
+  function createShapeVariantSet(basePoints) {
+    const variants = createShapeVariantList(basePoints);
+    return new Set(variants.map(variant => normalizeShapeKey(variant)));
   }
 
   function resolveDifficultyConfig(rawDifficulty, fallbackDifficulty) {
@@ -226,6 +326,33 @@
     }
   }
 
+  function syncGenerationSelect() {
+    if (!state.elements || !state.elements.generationSelect) {
+      return;
+    }
+    const select = state.elements.generationSelect;
+    if (typeof select.value !== 'string' || select.value !== state.generationMode) {
+      select.value = state.generationMode;
+    }
+  }
+
+  function getRequiredLinkLength() {
+    return LINK_LENGTH_OPTIONS.includes(state.linkLength)
+      ? state.linkLength
+      : DEFAULT_LINK_LENGTH;
+  }
+
+  function syncLinkLengthSelect() {
+    if (!state.elements || !state.elements.linkLengthSelect) {
+      return;
+    }
+    const select = state.elements.linkLengthSelect;
+    const value = String(getRequiredLinkLength());
+    if (select.value !== value) {
+      select.value = value;
+    }
+  }
+
   function loadRemoteConfig() {
     if (typeof window.fetch !== 'function') {
       return;
@@ -263,6 +390,8 @@
       movesValue: document.getElementById('linkMovesValue'),
       message: document.getElementById('linkMessage'),
       difficultySelect: document.getElementById('linkDifficultySelect'),
+      generationSelect: document.getElementById('linkGenerationSelect'),
+      linkLengthSelect: document.getElementById('linkLengthSelect'),
       undo: document.getElementById('linkUndoButton'),
       restart: document.getElementById('linkRestartButton'),
       newLevel: document.getElementById('linkNewLevelButton')
@@ -434,36 +563,147 @@
     }
   }
 
-  function isPatternValid(path) {
-    if (!Array.isArray(path) || path.length !== 3) {
+  function areCoordsConnected(coords) {
+    if (!Array.isArray(coords) || coords.length === 0) {
       return false;
     }
-    const [a, b, c] = path;
-    const rows = [a.row, b.row, c.row];
-    const cols = [a.col, b.col, c.col];
+    const visited = new Set();
+    const queue = [coords[0]];
+    visited.add(`${coords[0].row}:${coords[0].col}`);
+    while (queue.length > 0) {
+      const current = queue.shift();
+      coords.forEach(coord => {
+        const key = `${coord.row}:${coord.col}`;
+        if (visited.has(key)) {
+          return;
+        }
+        const distance = Math.abs(coord.row - current.row) + Math.abs(coord.col - current.col);
+        if (distance === 1) {
+          visited.add(key);
+          queue.push(coord);
+        }
+      });
+    }
+    return visited.size === coords.length;
+  }
+
+  function isLineShape(coords) {
+    if (!Array.isArray(coords) || coords.length < 2) {
+      return false;
+    }
+    const rows = coords.map(coord => coord.row);
+    const cols = coords.map(coord => coord.col);
     const uniqueRows = new Set(rows).size;
     const uniqueCols = new Set(cols).size;
     if (uniqueRows === 1) {
-      const sortedCols = cols.slice().sort((x, y) => x - y);
-      return sortedCols[2] - sortedCols[0] === 2
-        && sortedCols[1] - sortedCols[0] === 1;
-    }
-    if (uniqueCols === 1) {
-      const sortedRows = rows.slice().sort((x, y) => x - y);
-      return sortedRows[2] - sortedRows[0] === 2
-        && sortedRows[1] - sortedRows[0] === 1;
-    }
-    if (uniqueRows === 2 && uniqueCols === 2) {
-      const points = path.map(cell => `${cell.row},${cell.col}`);
-      for (let i = 0; i < 3; i += 1) {
-        const pivot = path[i];
-        const others = path.filter((_, index) => index !== i);
-        const adjacentBoth = others.every(other => Math.abs(other.row - pivot.row) + Math.abs(other.col - pivot.col) === 1);
-        if (adjacentBoth) {
-          const [first, second] = others;
-          return Math.abs(first.row - second.row) + Math.abs(first.col - second.col) === 2;
+      const sortedCols = cols.slice().sort((a, b) => a - b);
+      for (let i = 1; i < sortedCols.length; i += 1) {
+        if (sortedCols[i] !== sortedCols[i - 1] + 1) {
+          return false;
         }
       }
+      return true;
+    }
+    if (uniqueCols === 1) {
+      const sortedRows = rows.slice().sort((a, b) => a - b);
+      for (let i = 1; i < sortedRows.length; i += 1) {
+        if (sortedRows[i] !== sortedRows[i - 1] + 1) {
+          return false;
+        }
+      }
+      return true;
+    }
+    return false;
+  }
+
+  function isCornerShape(coords) {
+    if (!Array.isArray(coords) || coords.length !== 3) {
+      return false;
+    }
+    const rowValues = Array.from(new Set(coords.map(coord => coord.row)));
+    const colValues = Array.from(new Set(coords.map(coord => coord.col)));
+    if (rowValues.length !== 2 || colValues.length !== 2) {
+      return false;
+    }
+    const present = new Set(coords.map(coord => `${coord.row}:${coord.col}`));
+    let missing = 0;
+    for (let i = 0; i < rowValues.length; i += 1) {
+      for (let j = 0; j < colValues.length; j += 1) {
+        if (!present.has(`${rowValues[i]}:${colValues[j]}`)) {
+          missing += 1;
+        }
+      }
+    }
+    return missing === 1;
+  }
+
+  function isSquareShape(coords) {
+    if (!Array.isArray(coords) || coords.length !== 4) {
+      return false;
+    }
+    const rowValues = Array.from(new Set(coords.map(coord => coord.row)));
+    const colValues = Array.from(new Set(coords.map(coord => coord.col)));
+    if (rowValues.length !== 2 || colValues.length !== 2) {
+      return false;
+    }
+    const present = new Set(coords.map(coord => `${coord.row}:${coord.col}`));
+    for (let i = 0; i < rowValues.length; i += 1) {
+      for (let j = 0; j < colValues.length; j += 1) {
+        if (!present.has(`${rowValues[i]}:${colValues[j]}`)) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  function isPatternValid(path) {
+    const requiredLength = getRequiredLinkLength();
+    if (!Array.isArray(path) || path.length !== requiredLength) {
+      return false;
+    }
+    const uniqueKeys = new Set();
+    const coords = [];
+    for (let index = 0; index < path.length; index += 1) {
+      const cell = path[index];
+      if (!cell) {
+        return false;
+      }
+      const row = Number.isFinite(cell.row) ? cell.row : Number.parseInt(cell.row, 10);
+      const col = Number.isFinite(cell.col) ? cell.col : Number.parseInt(cell.col, 10);
+      if (!Number.isFinite(row) || !Number.isFinite(col)) {
+        return false;
+      }
+      const normalizedRow = Math.round(row);
+      const normalizedCol = Math.round(col);
+      const key = `${normalizedRow}:${normalizedCol}`;
+      if (uniqueKeys.has(key)) {
+        return false;
+      }
+      uniqueKeys.add(key);
+      coords.push({ row: normalizedRow, col: normalizedCol });
+    }
+    if (!areCoordsConnected(coords)) {
+      return false;
+    }
+    if (requiredLength === 2) {
+      return isLineShape(coords);
+    }
+    if (requiredLength === 3) {
+      return isLineShape(coords) || isCornerShape(coords);
+    }
+    if (requiredLength === 4) {
+      if (isLineShape(coords) || isSquareShape(coords)) {
+        return true;
+      }
+      const shapeKey = normalizeShapeKey(coords);
+      if (ZIGZAG_SHAPE_VARIANTS.has(shapeKey)) {
+        return true;
+      }
+      if (L_SHAPE_VARIANTS.has(shapeKey)) {
+        return true;
+      }
+      return false;
     }
     return false;
   }
@@ -529,7 +769,7 @@
   }
 
   function collectAffectedCells(path) {
-    if (!Array.isArray(path) || path.length !== 3) {
+    if (!Array.isArray(path) || path.length === 0) {
       return [];
     }
     const affected = new Map();
@@ -564,7 +804,8 @@
   }
 
   function applyPattern(path, options = {}) {
-    if (!Array.isArray(path) || path.length !== 3) {
+    const requiredLength = getRequiredLinkLength();
+    if (!Array.isArray(path) || path.length !== requiredLength) {
       return false;
     }
     const record = options.recordHistory !== false;
@@ -716,14 +957,16 @@
   function finalizeSelection() {
     const currentPath = state.interaction.path.slice();
     resetInteraction();
-    if (currentPath.length !== 3) {
+    const requiredLength = getRequiredLinkLength();
+    if (currentPath.length !== requiredLength) {
       return;
     }
     if (!isPatternValid(currentPath)) {
       flashInvalidSelection(currentPath);
       setMessage(
         'index.sections.link.messages.invalidPattern',
-        'Le motif doit être une ligne ou un angle droit.'
+        'Motif invalide pour ce nombre de cases.',
+        { count: formatNumber(requiredLength) }
       );
       return;
     }
@@ -751,7 +994,8 @@
     if (!Array.isArray(state.interaction.path)) {
       state.interaction.path = [];
     }
-    if (state.interaction.path.length >= 3) {
+    const limit = getRequiredLinkLength();
+    if (state.interaction.path.length >= limit) {
       return false;
     }
     const exists = state.interaction.path.some(cell => cell.row === row && cell.col === col);
@@ -805,7 +1049,8 @@
     if (!added) {
       return;
     }
-    if (state.interaction.path.length === 3) {
+    const limit = getRequiredLinkLength();
+    if (state.interaction.path.length === limit) {
       finalizeSelection();
     }
   }
@@ -851,7 +1096,8 @@
     if (!added) {
       return;
     }
-    if (state.interaction.path.length === 3) {
+    const limit = getRequiredLinkLength();
+    if (state.interaction.path.length === limit) {
       finalizeSelection();
     }
   }
@@ -1043,27 +1289,28 @@
     return board;
   }
 
-  function randomLinePattern(size) {
+  function randomLinePattern(size, length) {
+    const segments = Math.max(2, Math.round(length));
+    if (!Number.isFinite(size) || size < segments) {
+      return null;
+    }
     const horizontal = Math.random() < 0.5;
     if (horizontal) {
       const row = Math.floor(Math.random() * size);
-      const startCol = Math.floor(Math.random() * (size - 2));
-      return [
-        { row, col: startCol },
-        { row, col: startCol + 1 },
-        { row, col: startCol + 2 }
-      ];
+      const maxStart = size - segments;
+      const startCol = Math.floor(Math.random() * (maxStart + 1));
+      return Array.from({ length: segments }, (_, index) => ({ row, col: startCol + index }));
     }
     const col = Math.floor(Math.random() * size);
-    const startRow = Math.floor(Math.random() * (size - 2));
-    return [
-      { row: startRow, col },
-      { row: startRow + 1, col },
-      { row: startRow + 2, col }
-    ];
+    const maxStart = size - segments;
+    const startRow = Math.floor(Math.random() * (maxStart + 1));
+    return Array.from({ length: segments }, (_, index) => ({ row: startRow + index, col }));
   }
 
-  function randomLPattern(size) {
+  function randomCornerPattern(size) {
+    if (!Number.isFinite(size) || size < 2) {
+      return null;
+    }
     for (let attempts = 0; attempts < 40; attempts += 1) {
       const pivotRow = Math.floor(Math.random() * size);
       const pivotCol = Math.floor(Math.random() * size);
@@ -1097,19 +1344,126 @@
         }
       }
     }
-    return randomLinePattern(size);
+    return randomLinePattern(size, 3);
   }
 
-  function scrambleBoard(board, moveCount) {
+  function randomSquarePattern(size) {
+    if (!Number.isFinite(size) || size < 2) {
+      return null;
+    }
+    const maxStart = size - 2;
+    const row = Math.floor(Math.random() * (maxStart + 1));
+    const col = Math.floor(Math.random() * (maxStart + 1));
+    return [
+      { row, col },
+      { row, col: col + 1 },
+      { row: row + 1, col: col + 1 },
+      { row: row + 1, col }
+    ];
+  }
+
+  function randomVariantPattern(size, variants) {
+    if (!Array.isArray(variants) || variants.length === 0) {
+      return null;
+    }
+    const candidates = shuffle(variants.slice());
+    for (let index = 0; index < candidates.length; index += 1) {
+      const variant = candidates[index];
+      const maxRow = variant.reduce((max, point) => Math.max(max, point.row), 0);
+      const maxCol = variant.reduce((max, point) => Math.max(max, point.col), 0);
+      if (!Number.isFinite(size) || size <= maxRow || size <= maxCol) {
+        continue;
+      }
+      const rowLimit = size - maxRow - 1;
+      const colLimit = size - maxCol - 1;
+      if (rowLimit < 0 || colLimit < 0) {
+        continue;
+      }
+      const baseRow = Math.floor(Math.random() * (rowLimit + 1));
+      const baseCol = Math.floor(Math.random() * (colLimit + 1));
+      return variant.map(point => ({ row: baseRow + point.row, col: baseCol + point.col }));
+    }
+    return null;
+  }
+
+  function randomZigZagPattern(size) {
+    return randomVariantPattern(size, ZIGZAG_SHAPE_VARIANT_LIST);
+  }
+
+  function randomLongLPattern(size) {
+    return randomVariantPattern(size, L_SHAPE_VARIANT_LIST);
+  }
+
+  function randomPatternForLength(size, length) {
+    const segments = Math.round(length);
+    if (segments === 2) {
+      return randomLinePattern(size, segments);
+    }
+    if (segments === 3) {
+      const generators = shuffle([
+        () => randomLinePattern(size, segments),
+        () => randomCornerPattern(size)
+      ]);
+      for (let i = 0; i < generators.length; i += 1) {
+        const pattern = generators[i]();
+        if (Array.isArray(pattern) && pattern.length === segments) {
+          return pattern;
+        }
+      }
+      return null;
+    }
+    if (segments === 4) {
+      const generators = shuffle([
+        () => randomLinePattern(size, segments),
+        () => randomSquarePattern(size),
+        () => randomZigZagPattern(size),
+        () => randomLongLPattern(size)
+      ]);
+      for (let i = 0; i < generators.length; i += 1) {
+        const pattern = generators[i]();
+        if (Array.isArray(pattern) && pattern.length === segments) {
+          return pattern;
+        }
+      }
+      return null;
+    }
+    return null;
+  }
+
+  function scrambleBoardBase(board, moveCount) {
     const size = board.length;
+    const linkLength = getRequiredLinkLength();
+    let appliedMoves = 0;
+    let attempts = 0;
+    const maxAttempts = moveCount * 6 + 30;
+    while (appliedMoves < moveCount && attempts < maxAttempts) {
+      attempts += 1;
+      const pattern = randomPatternForLength(size, linkLength);
+      if (!Array.isArray(pattern) || pattern.length !== linkLength) {
+        continue;
+      }
+      state.board = board;
+      const applied = applyPattern(pattern, { recordHistory: false, skipRender: true });
+      if (!applied) {
+        continue;
+      }
+      appliedMoves += 1;
+    }
+  }
+
+  function scrambleBoardPlus(board, moveCount) {
+    const size = board.length;
+    const linkLength = getRequiredLinkLength();
     const visitCounts = Array.from({ length: size }, () => new Array(size).fill(0));
     let appliedMoves = 0;
     let attempts = 0;
     const maxAttempts = moveCount * 8 + 50;
     while (appliedMoves < moveCount && attempts < maxAttempts) {
       attempts += 1;
-      const useLine = Math.random() < 0.5;
-      const pattern = useLine ? randomLinePattern(size) : randomLPattern(size);
+      const pattern = randomPatternForLength(size, linkLength);
+      if (!Array.isArray(pattern) || pattern.length !== linkLength) {
+        continue;
+      }
       state.board = board;
       const affectedCells = collectAffectedCells(pattern);
       if (!affectedCells.length) {
@@ -1133,11 +1487,72 @@
     }
   }
 
+  function scrambleBoardRandom(board, moveCount) {
+    const size = board.length;
+    const linkLength = getRequiredLinkLength();
+    const visitCounts = Array.from({ length: size }, () => new Array(size).fill(0));
+    let appliedMoves = 0;
+    let attempts = 0;
+    const maxAttempts = moveCount * 8 + 50;
+    while (appliedMoves < moveCount && attempts < maxAttempts) {
+      attempts += 1;
+      const pattern = randomPatternForLength(size, linkLength);
+      if (!Array.isArray(pattern) || pattern.length !== linkLength) {
+        continue;
+      }
+      state.board = board;
+      const usePlus = Math.random() < 0.5;
+      if (usePlus) {
+        const affectedCells = collectAffectedCells(pattern);
+        if (!affectedCells.length) {
+          continue;
+        }
+        if (affectedCells.some(cell => visitCounts[cell.row][cell.col] >= MAX_CREATION_VISITS)) {
+          continue;
+        }
+        const applied = applyPattern(pattern, {
+          recordHistory: false,
+          skipRender: true,
+          effect: applyCreationCellEffect
+        });
+        if (!applied) {
+          continue;
+        }
+        affectedCells.forEach(cell => {
+          visitCounts[cell.row][cell.col] += 1;
+        });
+        appliedMoves += 1;
+      } else {
+        const applied = applyPattern(pattern, { recordHistory: false, skipRender: true });
+        if (!applied) {
+          continue;
+        }
+        appliedMoves += 1;
+      }
+    }
+    if (appliedMoves < moveCount) {
+      scrambleBoardBase(board, moveCount - appliedMoves);
+    }
+  }
+
+  function scrambleBoard(board, moveCount, mode) {
+    if (mode === 'base') {
+      scrambleBoardBase(board, moveCount);
+      return;
+    }
+    if (mode === 'plus') {
+      scrambleBoardPlus(board, moveCount);
+      return;
+    }
+    scrambleBoardRandom(board, moveCount);
+  }
+
   function generateLevel() {
     const difficultyConfig = getDifficultyConfig(state.difficulty);
     const fallbackDifficulty =
       DEFAULT_CONFIG.difficulties[state.difficulty]
       || DEFAULT_CONFIG.difficulties[DEFAULT_CONFIG.defaultDifficulty];
+    syncGenerationSelect();
     const sizeRange = difficultyConfig.size || fallbackDifficulty.size;
     const sizeMin = clampInteger(sizeRange.min, 3, MAX_BOARD_SIZE, fallbackDifficulty.size.min);
     const sizeMax = clampInteger(
@@ -1157,7 +1572,7 @@
       Math.max(scrambleMin, fallbackDifficulty.scrambleMoves.max)
     );
     const scrambleCount = Math.floor(Math.random() * (scrambleMax - scrambleMin + 1)) + scrambleMin;
-    scrambleBoard(board, scrambleCount);
+    scrambleBoard(board, scrambleCount, state.generationMode);
     state.board = board;
     state.initialBoard = cloneBoard(board);
     state.size = size;
@@ -1167,13 +1582,67 @@
     updateMovesDisplay();
     updateButtonsState();
     const difficultyLabel = getDifficultyLabel(state.difficulty);
+    const linkLength = getRequiredLinkLength();
     setMessage(
       'index.sections.link.messages.newLevel',
-      `Nouveau niveau ${difficultyLabel} généré. Reliez trois cases pour ajuster les valeurs !`,
-      { difficulty: difficultyLabel }
+      `Nouveau niveau ${difficultyLabel} généré. Reliez ${formatNumber(linkLength)} cases pour ajuster les valeurs !`,
+      {
+        difficulty: difficultyLabel,
+        count: formatNumber(linkLength)
+      }
     );
     buildBoardElements();
     syncDifficultySelect();
+    syncLinkLengthSelect();
+  }
+
+  function setGenerationMode(mode, options) {
+    const normalized = typeof mode === 'string' ? mode.toLowerCase() : '';
+    if (!GENERATION_MODES.includes(normalized)) {
+      return;
+    }
+    const shouldRegenerate = !options || options.regenerate !== false;
+    if (state.generationMode === normalized) {
+      if (shouldRegenerate) {
+        resetInteraction();
+        generateLevel();
+      }
+      return;
+    }
+    state.generationMode = normalized;
+    syncGenerationSelect();
+    if (shouldRegenerate) {
+      resetInteraction();
+      generateLevel();
+    }
+  }
+
+  function setLinkLength(value, options) {
+    const fallback = getRequiredLinkLength();
+    const numeric = typeof value === 'number' ? value : Number.parseInt(value, 10);
+    const resolved = clampInteger(
+      numeric,
+      LINK_LENGTH_OPTIONS[0],
+      LINK_LENGTH_OPTIONS[LINK_LENGTH_OPTIONS.length - 1],
+      fallback
+    );
+    if (!LINK_LENGTH_OPTIONS.includes(resolved)) {
+      return;
+    }
+    const shouldRegenerate = !options || options.regenerate !== false;
+    if (state.linkLength === resolved) {
+      if (shouldRegenerate) {
+        resetInteraction();
+        generateLevel();
+      }
+      return;
+    }
+    state.linkLength = resolved;
+    syncLinkLengthSelect();
+    if (shouldRegenerate) {
+      resetInteraction();
+      generateLevel();
+    }
   }
 
   function setDifficulty(key, options) {
@@ -1198,6 +1667,22 @@
       resetInteraction();
       generateLevel();
     }
+  }
+
+  function handleGenerationChange(event) {
+    const select = event && event.target ? event.target : null;
+    if (!select || typeof select.value !== 'string') {
+      return;
+    }
+    setGenerationMode(select.value, { regenerate: true });
+  }
+
+  function handleLinkLengthChange(event) {
+    const select = event && event.target ? event.target : null;
+    if (!select || typeof select.value !== 'string') {
+      return;
+    }
+    setLinkLength(select.value, { regenerate: true });
   }
 
   function handleDifficultyChange(event) {
@@ -1233,6 +1718,8 @@
     }
     state.initialized = true;
     attachLanguageListener();
+    state.elements.generationSelect?.addEventListener('change', handleGenerationChange);
+    state.elements.linkLengthSelect?.addEventListener('change', handleLinkLengthChange);
     state.elements.difficultySelect?.addEventListener('change', handleDifficultyChange);
     state.elements.undo?.addEventListener('click', handleUndoClick);
     state.elements.restart?.addEventListener('click', handleRestartClick);
@@ -1241,6 +1728,8 @@
     window.addEventListener('pointercancel', handlePointerCancel);
     window.addEventListener('keydown', handleKeyDown);
     syncDifficultySelect();
+    syncGenerationSelect();
+    syncLinkLengthSelect();
     loadRemoteConfig();
     generateLevel();
   }
