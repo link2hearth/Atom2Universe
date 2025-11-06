@@ -173,6 +173,8 @@ let featureUnlockCache = new Map();
 let cachedOptionsDetailMetadata = null;
 let lastArcadeUnlockState = null;
 let arcadeHubCardStateCache = null;
+let arcadeHubCardOrderCache = null;
+let activeArcadeHubCardDrag = null;
 let lastBigBangUnlockedState = false;
 
 const ARCADE_HUB_CARD_COLLAPSE_LABEL_KEY = 'index.sections.arcadeHub.cards.toggle.collapse';
@@ -199,6 +201,9 @@ const COLLECTION_IMAGES_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.imagesC
 const COLLECTION_BONUS_IMAGES_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.bonusImagesCollapsed';
 const HEADER_COLLAPSED_STORAGE_KEY = 'atom2univers.ui.headerCollapsed';
 const ARCADE_HUB_CARD_STATE_STORAGE_KEY = 'atom2univers.arcadeHub.cardStates.v1';
+const ARCADE_HUB_CARD_ORDER_STORAGE_KEY = 'atom2univers.arcadeHub.cardOrder.v1';
+const ARCADE_HUB_CARD_REORDER_DELAY_MS = 1500;
+const ARCADE_HUB_CARD_REORDER_MOVE_THRESHOLD = 8;
 const ARCADE_AUTOSAVE_STORAGE_KEY = 'atom2univers.arcadeSaves.v1';
 const CHESS_LIBRARY_STORAGE_KEY = 'atom2univers.arcade.echecs';
 const QUANTUM_2048_STORAGE_KEY = 'atom2univers.quantum2048.parallelUniverses';
@@ -2337,6 +2342,9 @@ function initializeArcadeHubCard(card) {
   const stateMap = getArcadeHubCardStateMap();
   const initialCollapsed = cardId ? stateMap?.[cardId] === true : false;
   applyArcadeHubCardCollapsedState(card, initialCollapsed, { persist: false });
+  card.addEventListener('pointerdown', event => {
+    handleArcadeHubCardPointerDown(event, card);
+  });
 }
 
 function isArcadeHubCardLocked(card) {
@@ -13293,6 +13301,18 @@ function bindDomEventListeners() {
     elements.arcadeHubCards.forEach(card => {
       initializeArcadeHubCard(card);
       card.addEventListener('click', event => {
+        if (
+          card.dataset.arcadeDragSuppressClick === 'true'
+          || card.dataset.arcadeDragging === 'true'
+          || card.dataset.arcadeDragPending === 'true'
+        ) {
+          if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          delete card.dataset.arcadeDragSuppressClick;
+          return;
+        }
         if (event && event.target && event.target.closest('.arcade-hub-card__toggle')) {
           return;
         }
@@ -16233,6 +16253,433 @@ function attemptPurchase(def, quantity = 1) {
   }
 }
 
+function getArcadeHubCardContainer(card) {
+  return card?.closest('.arcade-hub__grid') || null;
+}
+
+function clearArcadeHubCardLongPressTimer(state) {
+  if (state?.longPressTimer) {
+    clearTimeout(state.longPressTimer);
+    state.longPressTimer = null;
+  }
+}
+
+function setArcadeHubCardDropTarget(state, target) {
+  if (!state) {
+    return;
+  }
+  if (state.dropTarget && state.dropTarget !== target) {
+    state.dropTarget.classList.remove('arcade-hub-card--drop-target');
+  }
+  const normalizedTarget = target && target !== state.card ? target : null;
+  state.dropTarget = normalizedTarget;
+  if (state.dropTarget) {
+    state.dropTarget.classList.add('arcade-hub-card--drop-target');
+  }
+}
+
+function findArcadeHubCardDropTarget(state, clientX, clientY) {
+  if (!state || !state.container) {
+    return null;
+  }
+  const element = document.elementFromPoint(clientX, clientY);
+  if (!element) {
+    return null;
+  }
+  const candidate = element.closest('.arcade-hub-card');
+  if (!candidate || candidate === state.card) {
+    return null;
+  }
+  if (candidate.parentElement !== state.container) {
+    return null;
+  }
+  return candidate;
+}
+
+function updateArcadeHubCardDragPosition(state, clientX, clientY) {
+  if (!state || !state.card) {
+    return;
+  }
+  const targetLeft = clientX - state.offsetX;
+  const targetTop = clientY - state.offsetY;
+  const deltaX = targetLeft - state.originLeft;
+  const deltaY = targetTop - state.originTop;
+  state.card.style.setProperty('--arcade-hub-card-translate-x', `${deltaX}px`);
+  state.card.style.setProperty('--arcade-hub-card-translate-y', `${deltaY}px`);
+}
+
+function beginArcadeHubCardDrag(state) {
+  if (!state || state.dragging || activeArcadeHubCardDrag !== state) {
+    return;
+  }
+  if (!state.card || !state.container) {
+    return;
+  }
+  state.dragging = true;
+  const card = state.card;
+  card.dataset.arcadeDragging = 'true';
+  card.classList.add('arcade-hub-card--dragging');
+  card.style.transition = 'none';
+  card.style.pointerEvents = 'none';
+  card.style.touchAction = 'none';
+  card.style.zIndex = '1000';
+  card.style.willChange = 'transform';
+  document.body.classList.add('arcade-hub-reordering');
+  updateArcadeHubCardDragPosition(state, state.lastClientX, state.lastClientY);
+  try {
+    if (typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function') {
+      navigator.vibrate(10);
+    }
+  } catch (error) {
+    // Ignore vibration errors (unsupported device or permissions)
+  }
+}
+
+function swapArcadeHubCards(source, target) {
+  if (!source || !target) {
+    return false;
+  }
+  const parent = source.parentElement;
+  if (!parent || parent !== target.parentElement) {
+    return false;
+  }
+  const marker = document.createTextNode('');
+  parent.insertBefore(marker, source);
+  parent.replaceChild(source, target);
+  parent.insertBefore(target, marker);
+  parent.removeChild(marker);
+  return true;
+}
+
+function finalizeArcadeHubCardDrag({ dropTarget } = {}) {
+  const state = activeArcadeHubCardDrag;
+  if (!state) {
+    return;
+  }
+  activeArcadeHubCardDrag = null;
+  clearArcadeHubCardLongPressTimer(state);
+  const card = state.card;
+  const container = state.container;
+  const target = dropTarget && dropTarget !== card ? dropTarget : state.dropTarget;
+  let swapped = false;
+  if (state.dragging && card && container && target && target.parentElement === container) {
+    swapped = swapArcadeHubCards(card, target);
+    if (swapped) {
+      persistArcadeHubCardOrder(container);
+      target.classList.add('arcade-hub-card--swap-feedback');
+      card.classList.add('arcade-hub-card--swap-feedback');
+      setTimeout(() => {
+        target.classList.remove('arcade-hub-card--swap-feedback');
+        card.classList.remove('arcade-hub-card--swap-feedback');
+      }, 220);
+    }
+  }
+  setArcadeHubCardDropTarget(state, null);
+  if (state.dragging && card) {
+    card.dataset.arcadeDragSuppressClick = 'true';
+    setTimeout(() => {
+      if (card.dataset.arcadeDragSuppressClick === 'true') {
+        delete card.dataset.arcadeDragSuppressClick;
+      }
+    }, 0);
+  }
+  if (card) {
+    if (state.dragging) {
+      card.style.transition = 'transform 180ms ease';
+      requestAnimationFrame(() => {
+        if (state.originalTranslateX) {
+          card.style.setProperty('--arcade-hub-card-translate-x', state.originalTranslateX);
+        } else {
+          card.style.removeProperty('--arcade-hub-card-translate-x');
+        }
+        if (state.originalTranslateY) {
+          card.style.setProperty('--arcade-hub-card-translate-y', state.originalTranslateY);
+        } else {
+          card.style.removeProperty('--arcade-hub-card-translate-y');
+        }
+      });
+    } else {
+      if (state.originalTranslateX) {
+        card.style.setProperty('--arcade-hub-card-translate-x', state.originalTranslateX);
+      } else {
+        card.style.removeProperty('--arcade-hub-card-translate-x');
+      }
+      if (state.originalTranslateY) {
+        card.style.setProperty('--arcade-hub-card-translate-y', state.originalTranslateY);
+      } else {
+        card.style.removeProperty('--arcade-hub-card-translate-y');
+      }
+      card.style.transition = state.originalTransition || '';
+    }
+  }
+  const restore = () => {
+    if (!card) {
+      return;
+    }
+    card.style.transition = state.originalTransition || '';
+    card.style.pointerEvents = state.originalPointerEvents || '';
+    card.style.touchAction = state.originalTouchAction || '';
+    card.style.zIndex = state.originalZIndex || '';
+    card.style.willChange = state.originalWillChange || '';
+    card.classList.remove('arcade-hub-card--dragging');
+    delete card.dataset.arcadeDragging;
+    delete card.dataset.arcadeDragPending;
+    document.body.classList.remove('arcade-hub-reordering');
+    if (state.focusOnReturn && typeof card.focus === 'function') {
+      card.focus({ preventScroll: true });
+    }
+  };
+  if (state.dragging && card) {
+    setTimeout(restore, 200);
+  } else {
+    restore();
+  }
+}
+
+function cancelArcadeHubCardDrag(options = {}) {
+  const state = activeArcadeHubCardDrag;
+  if (!state) {
+    return;
+  }
+  activeArcadeHubCardDrag = null;
+  clearArcadeHubCardLongPressTimer(state);
+  setArcadeHubCardDropTarget(state, null);
+  const card = state.card;
+  if (!card) {
+    return;
+  }
+  if (state.originalTranslateX) {
+    card.style.setProperty('--arcade-hub-card-translate-x', state.originalTranslateX);
+  } else {
+    card.style.removeProperty('--arcade-hub-card-translate-x');
+  }
+  if (state.originalTranslateY) {
+    card.style.setProperty('--arcade-hub-card-translate-y', state.originalTranslateY);
+  } else {
+    card.style.removeProperty('--arcade-hub-card-translate-y');
+  }
+  card.style.transition = state.originalTransition || '';
+  card.style.pointerEvents = state.originalPointerEvents || '';
+  card.style.touchAction = state.originalTouchAction || '';
+  card.style.zIndex = state.originalZIndex || '';
+  card.style.willChange = state.originalWillChange || '';
+  card.classList.remove('arcade-hub-card--dragging');
+  delete card.dataset.arcadeDragging;
+  delete card.dataset.arcadeDragPending;
+  document.body.classList.remove('arcade-hub-reordering');
+  if (options.suppressClick) {
+    card.dataset.arcadeDragSuppressClick = 'true';
+    setTimeout(() => {
+      if (card.dataset.arcadeDragSuppressClick === 'true') {
+        delete card.dataset.arcadeDragSuppressClick;
+      }
+    }, 0);
+  }
+}
+
+function handleArcadeHubCardPointerDown(event, card) {
+  if (!card || activeArcadeHubCardDrag) {
+    return;
+  }
+  if (event.button !== undefined && event.button !== 0) {
+    return;
+  }
+  if (event.target && event.target.closest('.arcade-hub-card__toggle')) {
+    return;
+  }
+  const container = getArcadeHubCardContainer(card);
+  if (!container) {
+    return;
+  }
+  const rect = card.getBoundingClientRect();
+  activeArcadeHubCardDrag = {
+    card,
+    container,
+    pointerId: event.pointerId,
+    originLeft: rect.left,
+    originTop: rect.top,
+    offsetX: event.clientX - rect.left,
+    offsetY: event.clientY - rect.top,
+    startClientX: event.clientX,
+    startClientY: event.clientY,
+    lastClientX: event.clientX,
+    lastClientY: event.clientY,
+    originalTransition: card.style.transition || '',
+    originalPointerEvents: card.style.pointerEvents || '',
+    originalTouchAction: card.style.touchAction || '',
+    originalZIndex: card.style.zIndex || '',
+    originalWillChange: card.style.willChange || '',
+    originalTranslateX: card.style.getPropertyValue('--arcade-hub-card-translate-x') || '',
+    originalTranslateY: card.style.getPropertyValue('--arcade-hub-card-translate-y') || '',
+    dropTarget: null,
+    dragging: false,
+    focusOnReturn: card === document.activeElement
+  };
+  const state = activeArcadeHubCardDrag;
+  state.longPressTimer = setTimeout(() => {
+    beginArcadeHubCardDrag(state);
+  }, ARCADE_HUB_CARD_REORDER_DELAY_MS);
+  card.dataset.arcadeDragPending = 'true';
+}
+
+function handleArcadeHubPointerMove(event) {
+  const state = activeArcadeHubCardDrag;
+  if (!state || event.pointerId !== state.pointerId) {
+    return;
+  }
+  state.lastClientX = event.clientX;
+  state.lastClientY = event.clientY;
+  if (!state.dragging) {
+    const deltaX = event.clientX - state.startClientX;
+    const deltaY = event.clientY - state.startClientY;
+    if (Math.hypot(deltaX, deltaY) > ARCADE_HUB_CARD_REORDER_MOVE_THRESHOLD) {
+      cancelArcadeHubCardDrag();
+    }
+    return;
+  }
+  if (event.cancelable) {
+    event.preventDefault();
+  }
+  updateArcadeHubCardDragPosition(state, event.clientX, event.clientY);
+  const target = findArcadeHubCardDropTarget(state, event.clientX, event.clientY);
+  setArcadeHubCardDropTarget(state, target);
+}
+
+function handleArcadeHubPointerUp(event) {
+  const state = activeArcadeHubCardDrag;
+  if (!state || event.pointerId !== state.pointerId) {
+    return;
+  }
+  if (state.dragging && event.cancelable) {
+    event.preventDefault();
+  }
+  finalizeArcadeHubCardDrag();
+}
+
+function handleArcadeHubPointerCancel(event) {
+  const state = activeArcadeHubCardDrag;
+  if (!state || event.pointerId !== state.pointerId) {
+    return;
+  }
+  cancelArcadeHubCardDrag({ suppressClick: true });
+}
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('pointermove', handleArcadeHubPointerMove, { passive: false });
+  window.addEventListener('pointerup', handleArcadeHubPointerUp);
+  window.addEventListener('pointercancel', handleArcadeHubPointerCancel);
+}
+
+function readStoredArcadeHubCardOrder() {
+  try {
+    const raw = globalThis.localStorage?.getItem(ARCADE_HUB_CARD_ORDER_STORAGE_KEY);
+    if (!raw) {
+      return [];
+    }
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) {
+      return [];
+    }
+    return parsed
+      .map(value => (typeof value === 'string' ? value.trim() : ''))
+      .filter(value => !!value);
+  } catch (error) {
+    console.warn('Unable to read arcade hub card order', error);
+  }
+  return [];
+}
+
+function writeStoredArcadeHubCardOrder(order) {
+  const normalized = [];
+  if (Array.isArray(order)) {
+    const seen = new Set();
+    order.forEach(value => {
+      if (typeof value !== 'string') {
+        return;
+      }
+      const trimmed = value.trim();
+      if (!trimmed || seen.has(trimmed)) {
+        return;
+      }
+      seen.add(trimmed);
+      normalized.push(trimmed);
+    });
+  }
+  arcadeHubCardOrderCache = normalized;
+  try {
+    globalThis.localStorage?.setItem(ARCADE_HUB_CARD_ORDER_STORAGE_KEY, JSON.stringify(normalized));
+  } catch (error) {
+    console.warn('Unable to persist arcade hub card order', error);
+  }
+}
+
+function getArcadeHubCardOrder() {
+  if (!Array.isArray(arcadeHubCardOrderCache)) {
+    arcadeHubCardOrderCache = readStoredArcadeHubCardOrder();
+  }
+  return arcadeHubCardOrderCache;
+}
+
+function persistArcadeHubCardOrder(container) {
+  const parent = container || document.querySelector('.arcade-hub__grid');
+  if (!parent) {
+    return;
+  }
+  const ids = Array.from(parent.querySelectorAll('.arcade-hub-card'))
+    .map(card => getArcadeHubCardId(card))
+    .filter(id => !!id);
+  if (!ids.length) {
+    writeStoredArcadeHubCardOrder([]);
+    return;
+  }
+  const cached = getArcadeHubCardOrder();
+  if (
+    cached.length === ids.length
+    && cached.every((value, index) => value === ids[index])
+  ) {
+    return;
+  }
+  writeStoredArcadeHubCardOrder(ids);
+}
+
+function applyStoredArcadeHubCardOrder() {
+  const order = getArcadeHubCardOrder();
+  if (!order.length) {
+    return;
+  }
+  const grid = document.querySelector('.arcade-hub__grid');
+  if (!grid) {
+    return;
+  }
+  const cards = Array.from(grid.querySelectorAll('.arcade-hub-card'));
+  if (!cards.length) {
+    return;
+  }
+  const cardMap = new Map();
+  cards.forEach(card => {
+    const id = getArcadeHubCardId(card);
+    if (id) {
+      cardMap.set(id, card);
+    }
+  });
+  const fragment = document.createDocumentFragment();
+  order.forEach(id => {
+    const card = cardMap.get(id);
+    if (card && card.parentElement === grid) {
+      fragment.appendChild(card);
+      cardMap.delete(id);
+    }
+  });
+  cardMap.forEach(card => {
+    if (card.parentElement === grid) {
+      fragment.appendChild(card);
+    }
+  });
+  if (fragment.childNodes.length) {
+    grid.appendChild(fragment);
+  }
+}
+
 function updateMilestone() {
   if (!elements.nextMilestone) return;
   for (const milestone of milestoneList) {
@@ -18494,6 +18941,7 @@ function initializeDomBoundModules() {
 }
 
 function initializeApp() {
+  applyStoredArcadeHubCardOrder();
   elements = collectDomElements();
   applyStartupOverlayDuration();
   scheduleStartupOverlayFailsafe();
