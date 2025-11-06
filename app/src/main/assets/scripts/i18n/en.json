@@ -888,6 +888,7 @@
           "wall": "Wall",
           "floor": "Floor",
           "start": "Start",
+          "player": "You",
           "exit": "Exit",
           "door": "Door",
           "key": "Key",
@@ -2499,7 +2500,11 @@
           "ready": "Escape configuration loaded.",
           "generated": "Seed {{seed}} ready. Grid {{size}}.",
           "error": "Unable to generate a level. Try another seed.",
-          "configError": "Fallback Escape configuration applied (could not load remote settings)."
+          "configError": "Fallback Escape configuration applied (could not load remote settings).",
+          "turnStatus": "Seed {{seed}} — {{difficulty}} — Turn {{turn}} — Keys {{keys}}/{{keysTotal}} · Bonus {{bonuses}}/{{bonusesTotal}}",
+          "caught": "Detected on turn {{turns}}. Generate a new maze to try again.",
+          "invalid": "You can't move there.",
+          "victory": "Escaped in {{turns}} turns!"
         },
         "summary": {
           "sizeValue": "{{tilesWidth}}×{{tilesHeight}} tiles ({{cellsWidth}}×{{cellsHeight}} cells)",
