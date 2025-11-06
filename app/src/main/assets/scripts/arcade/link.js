@@ -5,14 +5,30 @@
 
   const CONFIG_PATH = 'config/arcade/link.json';
   const GAME_ID = 'link';
+  const MAX_BOARD_SIZE = 24;
+  const MAX_CELL_COUNT = MAX_BOARD_SIZE * MAX_BOARD_SIZE;
   const DEFAULT_CONFIG = Object.freeze({
-    boardSize: 10,
-    boardSizeMin: 5,
-    boardSizeMax: 12,
-    plusCellRatio: 0.18,
-    plusCellMinimum: 10,
-    twinPairs: Object.freeze({ min: 4, max: 8 }),
-    scrambleMoves: Object.freeze({ min: 20, max: 32 })
+    defaultDifficulty: 'medium',
+    difficulties: Object.freeze({
+      easy: Object.freeze({
+        size: Object.freeze({ min: 4, max: 6 }),
+        plusCells: Object.freeze({ min: 0, max: 2 }),
+        twinPairs: Object.freeze({ min: 0, max: 2 }),
+        scrambleMoves: Object.freeze({ min: 10, max: 15 })
+      }),
+      medium: Object.freeze({
+        size: Object.freeze({ min: 7, max: 9 }),
+        plusCells: Object.freeze({ min: 2, max: 5 }),
+        twinPairs: Object.freeze({ min: 1, max: 3 }),
+        scrambleMoves: Object.freeze({ min: 15, max: 25 })
+      }),
+      hard: Object.freeze({
+        size: Object.freeze({ min: 10, max: 12 }),
+        plusCells: Object.freeze({ min: 5, max: 10 }),
+        twinPairs: Object.freeze({ min: 3, max: 5 }),
+        scrambleMoves: Object.freeze({ min: 30, max: 50 })
+      })
+    })
   });
 
   const PAIR_COLORS = Object.freeze([
@@ -38,7 +54,8 @@
 
   const state = {
     config: DEFAULT_CONFIG,
-    size: DEFAULT_CONFIG.boardSize,
+    difficulty: DEFAULT_CONFIG.defaultDifficulty,
+    size: 0,
     board: [],
     cellElements: [],
     pairs: new Map(),
@@ -78,6 +95,29 @@
     }
     const clamped = Math.min(Math.max(numeric, min), max);
     return Math.round(clamped);
+  }
+
+  function clampRange(rawRange, fallbackRange, min, max) {
+    const source = rawRange && typeof rawRange === 'object' ? rawRange : null;
+    const fallback = fallbackRange || { min, max };
+    const resolvedMin = clampInteger(source ? source.min : undefined, min, max, fallback.min);
+    const resolvedMax = clampInteger(source ? source.max : undefined, resolvedMin, max, Math.max(resolvedMin, fallback.max));
+    return { min: resolvedMin, max: resolvedMax };
+  }
+
+  function resolveDifficultyConfig(rawDifficulty, fallbackDifficulty) {
+    const fallback = fallbackDifficulty || DEFAULT_CONFIG.difficulties[DEFAULT_CONFIG.defaultDifficulty];
+    return {
+      size: clampRange(rawDifficulty?.size, fallback.size, 3, MAX_BOARD_SIZE),
+      plusCells: clampRange(rawDifficulty?.plusCells, fallback.plusCells, 0, MAX_CELL_COUNT),
+      twinPairs: clampRange(
+        rawDifficulty?.twinPairs,
+        fallback.twinPairs,
+        0,
+        Math.floor(MAX_CELL_COUNT / 2)
+      ),
+      scrambleMoves: clampRange(rawDifficulty?.scrambleMoves, fallback.scrambleMoves, 0, 999)
+    };
   }
 
   function translate(key, fallback, params) {
@@ -142,36 +182,47 @@
     if (!rawConfig || typeof rawConfig !== 'object') {
       return DEFAULT_CONFIG;
     }
-    const minSize = clampInteger(rawConfig.boardSizeMin, 3, 24, DEFAULT_CONFIG.boardSizeMin);
-    const maxSize = clampInteger(rawConfig.boardSizeMax, minSize, 24, DEFAULT_CONFIG.boardSizeMax);
-    const resolvedSize = clampInteger(rawConfig.boardSize, minSize, maxSize, DEFAULT_CONFIG.boardSize);
-    const plusRatio = clampNumber(rawConfig.plusCellRatio, 0, 1, DEFAULT_CONFIG.plusCellRatio);
-    const plusMinimum = clampInteger(
-      rawConfig.plusCellMinimum,
-      0,
-      resolvedSize * resolvedSize,
-      DEFAULT_CONFIG.plusCellMinimum
-    );
-    const rawPairs = rawConfig.twinPairs || {};
-    const minPairs = clampInteger(rawPairs.min, 0, Math.floor((resolvedSize * resolvedSize) / 2), DEFAULT_CONFIG.twinPairs.min);
-    const maxPairs = clampInteger(
-      rawPairs.max,
-      minPairs,
-      Math.floor((resolvedSize * resolvedSize) / 2),
-      Math.max(DEFAULT_CONFIG.twinPairs.max, minPairs)
-    );
-    const rawScramble = rawConfig.scrambleMoves || {};
-    const scrambleMin = clampInteger(rawScramble.min, 0, 999, DEFAULT_CONFIG.scrambleMoves.min);
-    const scrambleMax = clampInteger(rawScramble.max, scrambleMin, 999, Math.max(scrambleMin, DEFAULT_CONFIG.scrambleMoves.max));
+    const fallback = DEFAULT_CONFIG;
+    const rawDifficulties = rawConfig.difficulties && typeof rawConfig.difficulties === 'object'
+      ? rawConfig.difficulties
+      : {};
+    const resolvedDifficulties = {};
+    Object.keys(fallback.difficulties).forEach(key => {
+      resolvedDifficulties[key] = resolveDifficultyConfig(rawDifficulties[key], fallback.difficulties[key]);
+    });
+    const defaultDifficulty = typeof rawConfig.defaultDifficulty === 'string'
+      && Object.prototype.hasOwnProperty.call(resolvedDifficulties, rawConfig.defaultDifficulty)
+      ? rawConfig.defaultDifficulty
+      : fallback.defaultDifficulty;
     return {
-      boardSize: resolvedSize,
-      boardSizeMin: minSize,
-      boardSizeMax: maxSize,
-      plusCellRatio: plusRatio,
-      plusCellMinimum: plusMinimum,
-      twinPairs: { min: minPairs, max: maxPairs },
-      scrambleMoves: { min: scrambleMin, max: scrambleMax }
+      defaultDifficulty,
+      difficulties: resolvedDifficulties
     };
+  }
+
+  function getDifficultyConfig(key) {
+    const available = state.config && state.config.difficulties ? state.config.difficulties : null;
+    if (available && Object.prototype.hasOwnProperty.call(available, key)) {
+      return available[key];
+    }
+    const fallbackKey = state.config?.defaultDifficulty || DEFAULT_CONFIG.defaultDifficulty;
+    return (available && available[fallbackKey]) || DEFAULT_CONFIG.difficulties[fallbackKey];
+  }
+
+  function getDifficultyLabel(key) {
+    const fallbackLabels = { easy: 'Easy', medium: 'Medium', hard: 'Hard' };
+    const fallback = fallbackLabels[key] || key;
+    return translate(`index.sections.link.difficulty.${key}`, fallback);
+  }
+
+  function syncDifficultySelect() {
+    if (!state.elements || !state.elements.difficultySelect) {
+      return;
+    }
+    const select = state.elements.difficultySelect;
+    if (typeof select.value !== 'string' || select.value !== state.difficulty) {
+      select.value = state.difficulty;
+    }
   }
 
   function loadRemoteConfig() {
@@ -183,6 +234,15 @@
       .then(data => {
         if (data && typeof data === 'object') {
           state.config = resolveConfig(data);
+          if (!state.config.difficulties || !state.config.difficulties[state.difficulty]) {
+            state.difficulty = state.config.defaultDifficulty;
+            syncDifficultySelect();
+            if (state.initialized) {
+              generateLevel();
+            }
+          } else {
+            syncDifficultySelect();
+          }
         }
       })
       .catch(error => {
@@ -201,6 +261,7 @@
       board: document.getElementById('linkBoard'),
       movesValue: document.getElementById('linkMovesValue'),
       message: document.getElementById('linkMessage'),
+      difficultySelect: document.getElementById('linkDifficultySelect'),
       undo: document.getElementById('linkUndoButton'),
       restart: document.getElementById('linkRestartButton'),
       newLevel: document.getElementById('linkNewLevelButton')
@@ -882,26 +943,22 @@
     return pairs;
   }
 
-  function buildInitialBoard(size) {
+  function buildInitialBoard(size, difficultyConfig) {
     const totalCells = size * size;
-    const plusTarget = Math.min(
-      totalCells,
-      Math.max(
-        state.config.plusCellMinimum,
-        Math.round(totalCells * state.config.plusCellRatio)
-      )
-    );
+    const fallbackDifficulty =
+      DEFAULT_CONFIG.difficulties[state.difficulty]
+      || DEFAULT_CONFIG.difficulties[DEFAULT_CONFIG.defaultDifficulty];
+    const plusRange = difficultyConfig.plusCells || fallbackDifficulty.plusCells;
+    const plusMin = Math.min(plusRange.min, totalCells);
+    const plusMax = Math.min(Math.max(plusRange.max, plusMin), totalCells);
+    const plusTarget = Math.floor(Math.random() * (plusMax - plusMin + 1)) + plusMin;
     const indices = shuffle(Array.from({ length: totalCells }, (_, index) => index));
     const plusSet = new Set(indices.slice(0, plusTarget));
-    const maxPairs = Math.min(state.config.twinPairs.max, Math.floor(totalCells / 2));
-    const minPairs = Math.min(state.config.twinPairs.min, maxPairs);
-    const pairCount = Math.min(
-      maxPairs,
-      Math.max(
-        minPairs,
-        Math.floor(Math.random() * (maxPairs - minPairs + 1)) + minPairs
-      )
-    );
+    const twinRange = difficultyConfig.twinPairs || fallbackDifficulty.twinPairs;
+    const maxPairsAllowed = Math.floor(totalCells / 2);
+    const minPairs = Math.min(twinRange.min, maxPairsAllowed);
+    const maxPairs = Math.min(Math.max(twinRange.max, minPairs), maxPairsAllowed);
+    const pairCount = Math.floor(Math.random() * (maxPairs - minPairs + 1)) + minPairs;
     const pairAssignments = generatePairs(size, totalCells, pairCount);
     const board = new Array(size);
     const pairMap = new Map();
@@ -998,10 +1055,28 @@
   }
 
   function generateLevel() {
-    const size = clampInteger(state.config.boardSize, state.config.boardSizeMin, state.config.boardSizeMax, 10);
-    const board = buildInitialBoard(size);
-    const scrambleMin = clampInteger(state.config.scrambleMoves.min, 0, 999, 20);
-    const scrambleMax = clampInteger(state.config.scrambleMoves.max, scrambleMin, 999, 32);
+    const difficultyConfig = getDifficultyConfig(state.difficulty);
+    const fallbackDifficulty =
+      DEFAULT_CONFIG.difficulties[state.difficulty]
+      || DEFAULT_CONFIG.difficulties[DEFAULT_CONFIG.defaultDifficulty];
+    const sizeRange = difficultyConfig.size || fallbackDifficulty.size;
+    const sizeMin = clampInteger(sizeRange.min, 3, MAX_BOARD_SIZE, fallbackDifficulty.size.min);
+    const sizeMax = clampInteger(
+      sizeRange.max,
+      sizeMin,
+      MAX_BOARD_SIZE,
+      Math.max(sizeMin, fallbackDifficulty.size.max)
+    );
+    const size = Math.floor(Math.random() * (sizeMax - sizeMin + 1)) + sizeMin;
+    const board = buildInitialBoard(size, difficultyConfig);
+    const scrambleRange = difficultyConfig.scrambleMoves || fallbackDifficulty.scrambleMoves;
+    const scrambleMin = clampInteger(scrambleRange.min, 0, 999, fallbackDifficulty.scrambleMoves.min);
+    const scrambleMax = clampInteger(
+      scrambleRange.max,
+      scrambleMin,
+      999,
+      Math.max(scrambleMin, fallbackDifficulty.scrambleMoves.max)
+    );
     const scrambleCount = Math.floor(Math.random() * (scrambleMax - scrambleMin + 1)) + scrambleMin;
     scrambleBoard(board, scrambleCount);
     state.board = board;
@@ -1012,11 +1087,46 @@
     setVictoryState(false);
     updateMovesDisplay();
     updateButtonsState();
+    const difficultyLabel = getDifficultyLabel(state.difficulty);
     setMessage(
       'index.sections.link.messages.newLevel',
-      'Nouveau niveau généré. Reliez trois cases pour ajuster les valeurs !'
+      `Nouveau niveau ${difficultyLabel} généré. Reliez trois cases pour ajuster les valeurs !`,
+      { difficulty: difficultyLabel }
     );
     buildBoardElements();
+    syncDifficultySelect();
+  }
+
+  function setDifficulty(key, options) {
+    if (!state.config || !state.config.difficulties) {
+      return;
+    }
+    const normalized = typeof key === 'string' ? key.toLowerCase() : '';
+    if (!Object.prototype.hasOwnProperty.call(state.config.difficulties, normalized)) {
+      return;
+    }
+    const shouldRegenerate = !options || options.regenerate !== false;
+    if (state.difficulty === normalized) {
+      if (shouldRegenerate) {
+        resetInteraction();
+        generateLevel();
+      }
+      return;
+    }
+    state.difficulty = normalized;
+    syncDifficultySelect();
+    if (shouldRegenerate) {
+      resetInteraction();
+      generateLevel();
+    }
+  }
+
+  function handleDifficultyChange(event) {
+    const select = event && event.target ? event.target : null;
+    if (!select || typeof select.value !== 'string') {
+      return;
+    }
+    setDifficulty(select.value, { regenerate: true });
   }
 
   function handleUndoClick() {
@@ -1044,12 +1154,14 @@
     }
     state.initialized = true;
     attachLanguageListener();
+    state.elements.difficultySelect?.addEventListener('change', handleDifficultyChange);
     state.elements.undo?.addEventListener('click', handleUndoClick);
     state.elements.restart?.addEventListener('click', handleRestartClick);
     state.elements.newLevel?.addEventListener('click', handleNewLevelClick);
     window.addEventListener('pointerup', handlePointerUp);
     window.addEventListener('pointercancel', handlePointerCancel);
     window.addEventListener('keydown', handleKeyDown);
+    syncDifficultySelect();
     loadRemoteConfig();
     generateLevel();
   }

@@ -1,9 +1,23 @@
 {
-  "boardSize": 10,
-  "boardSizeMin": 6,
-  "boardSizeMax": 12,
-  "plusCellRatio": 0.18,
-  "plusCellMinimum": 10,
-  "twinPairs": { "min": 4, "max": 8 },
-  "scrambleMoves": { "min": 20, "max": 32 }
+  "defaultDifficulty": "medium",
+  "difficulties": {
+    "easy": {
+      "size": { "min": 4, "max": 6 },
+      "plusCells": { "min": 0, "max": 2 },
+      "twinPairs": { "min": 0, "max": 2 },
+      "scrambleMoves": { "min": 10, "max": 15 }
+    },
+    "medium": {
+      "size": { "min": 7, "max": 9 },
+      "plusCells": { "min": 2, "max": 5 },
+      "twinPairs": { "min": 1, "max": 3 },
+      "scrambleMoves": { "min": 15, "max": 25 }
+    },
+    "hard": {
+      "size": { "min": 10, "max": 12 },
+      "plusCells": { "min": 5, "max": 10 },
+      "twinPairs": { "min": 3, "max": 5 },
+      "scrambleMoves": { "min": 30, "max": 50 }
+    }
+  }
 }

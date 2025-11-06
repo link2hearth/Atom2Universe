@@ -800,6 +800,13 @@
         "moves": {
           "label": "Moves"
         },
+        "difficulty": {
+          "aria": "Choose the Link puzzle difficulty",
+          "label": "Difficulty",
+          "easy": "Easy",
+          "medium": "Medium",
+          "hard": "Hard"
+        },
         "actions": {
           "undo": "Undo",
           "restart": "Restart",
@@ -813,7 +820,7 @@
           "victory": "Great! Puzzle solved in {moves} moves.",
           "undo": "Last move undone.",
           "restart": "Puzzle reset.",
-          "newLevel": "New level ready. Link three tiles to adjust the values!",
+          "newLevel": "New {difficulty} level ready. Link three tiles to adjust the values!",
           "nothingToUndo": "No move to undo."
         },
         "cell": {

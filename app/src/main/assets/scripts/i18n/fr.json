@@ -800,6 +800,13 @@
         "moves": {
           "label": "Coups"
         },
+        "difficulty": {
+          "aria": "Choisir la difficulté du puzzle Link",
+          "label": "Difficulté",
+          "easy": "Facile",
+          "medium": "Moyen",
+          "hard": "Difficile"
+        },
         "actions": {
           "undo": "Annuler",
           "restart": "Recommencer",
@@ -813,7 +820,7 @@
           "victory": "Bravo ! Puzzle résolu en {moves} coups.",
           "undo": "Dernier coup annulé.",
           "restart": "Puzzle réinitialisé.",
-          "newLevel": "Nouveau niveau généré. Reliez trois cases pour ajuster les valeurs !",
+          "newLevel": "Nouveau niveau {difficulty} généré. Reliez trois cases pour ajuster les valeurs !",
           "nothingToUndo": "Aucun coup à annuler."
         },
         "cell": {
