@@ -120,7 +120,18 @@
     messageData: null,
     languageHandlerAttached: false,
     languageHandler: null,
-    ready: false
+    ready: false,
+    play: null,
+    renderState: {
+      playerEntity: null,
+      guardEntities: [],
+      visionTiles: []
+    },
+    tileMap: null,
+    entityMap: null,
+    inputHandlers: null,
+    touchTracking: null,
+    touchSkipClick: false
   };
 
   function translate(key, fallback, params) {
@@ -428,17 +439,7 @@
       board: document.getElementById('escapeBoard'),
       message: document.getElementById('escapeMessage'),
       difficultySelect: document.getElementById('escapeDifficultySelect'),
-      seedInput: document.getElementById('escapeSeedInput'),
-      generateButton: document.getElementById('escapeGenerateButton'),
-      dailyButton: document.getElementById('escapeDailyButton'),
-      summarySeed: document.getElementById('escapeSummarySeed'),
-      summarySize: document.getElementById('escapeSummarySize'),
-      summaryCycles: document.getElementById('escapeSummaryCycles'),
-      summaryPath: document.getElementById('escapeSummaryPath'),
-      summaryObjects: document.getElementById('escapeSummaryObjects'),
-      summaryGuards: document.getElementById('escapeSummaryGuards'),
-      summaryVision: document.getElementById('escapeSummaryVision'),
-      summaryScore: document.getElementById('escapeSummaryScore')
+      generateButton: document.getElementById('escapeGenerateButton')
     };
   }
 
@@ -465,8 +466,11 @@
       return;
     }
     const handler = () => {
-      updateSummary(state.level);
-      refreshMessage();
+      if (state.play && !state.play.completed && !state.play.caught) {
+        updateGameplayStatus();
+      } else {
+        refreshMessage();
+      }
     };
     window.addEventListener('i18n:languagechange', handler);
     state.languageHandlerAttached = true;
@@ -522,30 +526,6 @@
       }
     }
     return buffer.join('');
-  }
-
-  function getDailySeed() {
-    if (!state.config?.dailyChallenge?.enabled) {
-      return '';
-    }
-    const now = new Date();
-    const offsetHours = Number.isFinite(state.config.dailyChallenge.offsetHours)
-      ? state.config.dailyChallenge.offsetHours
-      : 0;
-    if (offsetHours) {
-      now.setUTCHours(now.getUTCHours() + offsetHours);
-    }
-    const format = state.config.dailyChallenge.format || 'YYYYMMDD';
-    const year = now.getUTCFullYear();
-    const month = String(now.getUTCMonth() + 1).padStart(2, '0');
-    const day = String(now.getUTCDate()).padStart(2, '0');
-    if (format === 'yyyyMMdd' || format === 'YYYYMMDD') {
-      return `${year}${month}${day}`;
-    }
-    if (format === 'YYYY-MM-DD' || format === 'yyyy-MM-dd') {
-      return `${year}-${month}-${day}`;
-    }
-    return `${year}${month}${day}`;
   }
 
   function normalizeDifficultyKey(rawDifficulty) {
@@ -2036,11 +2016,14 @@
       return;
     }
     const board = state.elements.board;
+    clearRenderedEntities();
     board.innerHTML = '';
     board.style.setProperty('--escape-columns', String(level.grid[0]?.length || 0));
     const guardPathTiles = level.runtime?.guardPathTiles || new Set();
     const guardStartTiles = level.runtime?.guardStartTiles || new Set();
     const guardVisionTiles = level.runtime?.guardVisionTiles || new Set();
+    const tileMap = new Map();
+    const entityMap = new Map();
     const fragment = document.createDocumentFragment();
     for (let row = 0; row < level.grid.length; row += 1) {
       const line = level.grid[row];
@@ -2061,143 +2044,415 @@
         if (guardStartTiles.has(tileKey)) {
           cell.classList.add('escape__cell--guard');
         }
+        const entity = document.createElement('span');
+        entity.className = 'escape__cell-entity';
+        entity.setAttribute('aria-hidden', 'true');
+        cell.appendChild(entity);
+        tileMap.set(tileKey, cell);
+        entityMap.set(tileKey, entity);
         fragment.appendChild(cell);
       }
     }
     board.appendChild(fragment);
+    state.tileMap = tileMap;
+    state.entityMap = entityMap;
   }
 
-  function updateSummary(level) {
-    if (!state.elements || !level) {
+  function clearRenderedEntities() {
+    if (!state.renderState) {
+      state.renderState = {
+        playerEntity: null,
+        guardEntities: [],
+        visionTiles: []
+      };
       return;
     }
-    const metrics = level.metrics || {};
-    const keysCount = level.objects.keys.length;
-    const platesCount = level.objects.plates.length;
-    const bonusesCount = level.objects.bonuses.length;
-    const guardCount = metrics.guardCount || 0;
-    const rangeText = guardCount > 0
-      ? (metrics.minRange === metrics.maxRange
-        ? formatInteger(metrics.maxRange || 0)
-        : `${formatInteger(metrics.minRange || 0)}-${formatInteger(metrics.maxRange || 0)}`)
-      : '—';
-    const angleText = guardCount > 0 ? formatInteger(metrics.maxAngle || 0) : '—';
-    const sizeText = translate(
-      'scripts.arcade.escape.summary.sizeValue',
-      `${formatInteger(level.tileWidth)}×${formatInteger(level.tileHeight)} tuiles (${formatInteger(level.cellWidth)}×${formatInteger(level.cellHeight)} cellules)`,
-      {
-        tilesWidth: formatInteger(level.tileWidth),
-        tilesHeight: formatInteger(level.tileHeight),
-        cellsWidth: formatInteger(level.cellWidth),
-        cellsHeight: formatInteger(level.cellHeight)
-      }
-    );
-    const cyclesText = translate(
-      'scripts.arcade.escape.summary.cycleValue',
-      `${formatInteger(level.cycles.added)} ouvertures (~${formatPercent(level.cycles.ratio)} %)`,
-      {
-        count: formatInteger(level.cycles.added),
-        ratio: formatPercent(level.cycles.ratio)
-      }
-    );
-    const pathText = translate(
-      'scripts.arcade.escape.summary.pathValue',
-      `${formatInteger(level.optimalPath.length)} pas (solution ${formatInteger(metrics.optimalTurns ?? level.optimalPath.length)})`,
-      {
-        par: formatInteger(level.optimalPath.length),
-        solution: formatInteger(metrics.optimalTurns ?? level.optimalPath.length)
-      }
-    );
-    const objectsText = translate(
-      'scripts.arcade.escape.summary.objectsValue',
-      `${formatInteger(keysCount)} clés · ${formatInteger(platesCount)} plaques · ${formatInteger(bonusesCount)} orbes`,
-      {
-        keys: formatInteger(keysCount),
-        plates: formatInteger(platesCount),
-        bonuses: formatInteger(bonusesCount)
-      }
-    );
-    const guardsText = guardCount > 0
-      ? translate(
-        'scripts.arcade.escape.summary.guardsValue',
-        `${formatInteger(guardCount)} gardiens · R=${rangeText} · ${angleText}°`,
-        {
-          count: formatInteger(guardCount),
-          range: rangeText,
-          angle: angleText
+    if (state.renderState.playerEntity) {
+      state.renderState.playerEntity.classList.remove('escape__cell-entity--player');
+    }
+    if (Array.isArray(state.renderState.guardEntities)) {
+      state.renderState.guardEntities.forEach(entity => {
+        if (entity) {
+          entity.classList.remove('escape__cell-entity--guard');
         }
-      )
-      : translate('scripts.arcade.escape.summary.guardsNone', 'Aucune patrouille active');
-    const visionText = translate(
-      'scripts.arcade.escape.summary.visionValue',
-      `${formatPercent(metrics.visionCoverage || 0)} du labyrinthe`,
-      {
-        coverage: formatPercent(metrics.visionCoverage || 0)
-      }
-    );
-    const scoreText = translate(
-      'scripts.arcade.escape.summary.scoreValue',
-      metrics.score === null || metrics.score === undefined
-        ? 'Score estimé —'
-        : `Score estimé ${formatInteger(metrics.score)}`,
-      {
-        score: metrics.score === null || metrics.score === undefined ? '—' : formatInteger(metrics.score)
-      }
-    );
-
-    if (state.elements.summarySeed) {
-      state.elements.summarySeed.textContent = level.seed;
+      });
     }
-    if (state.elements.summarySize) {
-      state.elements.summarySize.textContent = sizeText;
+    if (Array.isArray(state.renderState.visionTiles)) {
+      state.renderState.visionTiles.forEach(tile => {
+        if (tile) {
+          tile.classList.remove('escape__cell--vision-active');
+        }
+      });
     }
-    if (state.elements.summaryCycles) {
-      state.elements.summaryCycles.textContent = cyclesText;
-    }
-    if (state.elements.summaryPath) {
-      state.elements.summaryPath.textContent = pathText;
-    }
-    if (state.elements.summaryObjects) {
-      state.elements.summaryObjects.textContent = objectsText;
-    }
-    if (state.elements.summaryGuards) {
-      state.elements.summaryGuards.textContent = guardsText;
-    }
-    if (state.elements.summaryVision) {
-      state.elements.summaryVision.textContent = visionText;
-    }
-    if (state.elements.summaryScore) {
-      state.elements.summaryScore.textContent = scoreText;
-    }
+    state.renderState.playerEntity = null;
+    state.renderState.guardEntities = [];
+    state.renderState.visionTiles = [];
   }
 
-  function applyLevel(level, options = {}) {
+  function updateBoardEntities() {
+    clearRenderedEntities();
+    if (!state.level || !state.play || !state.tileMap || !state.entityMap) {
+      return;
+    }
+    const tileMap = state.tileMap;
+    const entityMap = state.entityMap;
+    const playState = state.play;
+    const playerCoords = getTileCoords(playState.row, playState.col);
+    const playerKey = getTileKey(playerCoords.tileRow, playerCoords.tileCol);
+    const playerEntity = entityMap.get(playerKey);
+    if (playerEntity) {
+      playerEntity.classList.add('escape__cell-entity--player');
+      state.renderState.playerEntity = playerEntity;
+    }
+    const guardStates = state.level.runtime?.guardStates?.[playState.guardPhase] || [];
+    const guardEntities = [];
+    for (let i = 0; i < guardStates.length; i += 1) {
+      const guard = guardStates[i];
+      if (!guard) {
+        continue;
+      }
+      const guardCoords = getTileCoords(guard.row, guard.col);
+      const guardKey = getTileKey(guardCoords.tileRow, guardCoords.tileCol);
+      const guardEntity = entityMap.get(guardKey);
+      if (guardEntity) {
+        guardEntity.classList.add('escape__cell-entity--guard');
+        guardEntities.push(guardEntity);
+      }
+    }
+    state.renderState.guardEntities = guardEntities;
+    const visionTiles = [];
+    const visionSet = getGuardVisionAtPhase(
+      state.level,
+      playState.guardPhase,
+      playState.keysMask || 0,
+      playState.timers || []
+    );
+    visionSet.forEach(cellKey => {
+      const { row, col } = parseCellKey(cellKey);
+      const coords = getTileCoords(row, col);
+      const tileKey = getTileKey(coords.tileRow, coords.tileCol);
+      const tile = tileMap.get(tileKey);
+      if (tile) {
+        tile.classList.add('escape__cell--vision-active');
+        visionTiles.push(tile);
+      }
+    });
+    state.renderState.visionTiles = visionTiles;
+  }
+
+  function countBits(value) {
+    let count = 0;
+    let working = value >>> 0;
+    while (working) {
+      count += working & 1;
+      working >>>= 1;
+    }
+    return count;
+  }
+
+  function updateGameplayStatus() {
+    if (!state.level || !state.play) {
+      return;
+    }
+    const totalKeys = state.level.objects?.keys?.length || 0;
+    const collectedKeys = countBits(state.play.keysMask || 0);
+    const totalBonuses = state.level.objects?.bonuses?.length || 0;
+    const collectedBonuses = state.play.bonusesCollected ? state.play.bonusesCollected.size : 0;
+    const difficultyLabel = translate(
+      `index.sections.escape.difficulty.${state.level.difficulty}`,
+      state.level.difficulty
+    );
+    const fallback = `Seed ${state.level.seed} — ${difficultyLabel} — Tour ${formatInteger(state.play.turn)} — Clés ${formatInteger(collectedKeys)}/${formatInteger(totalKeys)} · Bonus ${formatInteger(collectedBonuses)}/${formatInteger(totalBonuses)}`;
+    setMessage(
+      'scripts.arcade.escape.messages.turnStatus',
+      fallback,
+      {
+        seed: state.level.seed,
+        difficulty: difficultyLabel,
+        turn: formatInteger(state.play.turn),
+        keys: formatInteger(collectedKeys),
+        keysTotal: formatInteger(totalKeys),
+        bonuses: formatInteger(collectedBonuses),
+        bonusesTotal: formatInteger(totalBonuses)
+      }
+    );
+  }
+
+  function initializePlayState(level) {
+    if (!level) {
+      state.play = null;
+      clearRenderedEntities();
+      return;
+    }
+    const timerCount = level.runtime?.timerCount || 0;
+    state.play = {
+      row: level.start?.cellRow ?? 0,
+      col: level.start?.cellCol ?? 0,
+      guardPhase: 0,
+      keysMask: 0,
+      timers: Array.from({ length: timerCount }, () => 0),
+      turn: 0,
+      bonusesCollected: new Set(),
+      collectedKeys: new Set(),
+      completed: false,
+      caught: false
+    };
+    updateBoardEntities();
+    updateGameplayStatus();
+  }
+
+  const ACTION_BY_ID = PLAYER_ACTIONS.reduce((accumulator, action) => {
+    accumulator[action.id] = action;
+    return accumulator;
+  }, Object.create(null));
+
+  const KEY_TO_ACTION = Object.freeze({
+    ArrowUp: 'north',
+    ArrowDown: 'south',
+    ArrowLeft: 'west',
+    ArrowRight: 'east',
+    w: 'north',
+    z: 'north',
+    s: 'south',
+    a: 'west',
+    q: 'west',
+    d: 'east',
+    ' ': 'wait',
+    Spacebar: 'wait'
+  });
+
+  function canAcceptInput() {
+    return state.ready && state.level && state.play && !state.play.completed && !state.play.caught;
+  }
+
+  function resolveAction(action) {
+    if (!state.level || !state.play || !action) {
+      return { success: false, reason: 'invalid' };
+    }
+    const level = state.level;
+    const playState = state.play;
+    const currentRow = playState.row;
+    const currentCol = playState.col;
+    const targetRow = currentRow + action.row;
+    const targetCol = currentCol + action.col;
+    if (action.id !== 'wait') {
+      if (!isInsideCell(targetRow, targetCol, level.cellWidth, level.cellHeight)) {
+        return { success: false, reason: 'boundary' };
+      }
+      const neighborKey = getCellKey(targetRow, targetCol);
+      if (!level.adjacency[currentRow][currentCol].has(neighborKey)) {
+        return { success: false, reason: 'wall' };
+      }
+    }
+
+    const targetKey = getCellKey(targetRow, targetCol);
+    const currentKey = getCellKey(currentRow, currentCol);
+    const timersBefore = Array.isArray(playState.timers) ? playState.timers.slice() : [];
+    let keysMask = playState.keysMask || 0;
+
+    const doorAtTarget = level.runtime?.doorByCell.get(targetKey);
+    const doorAtCurrent = level.runtime?.doorByCell.get(currentKey);
+    if (action.id !== 'wait') {
+      if (doorAtTarget && !isDoorOpen(doorAtTarget, keysMask, timersBefore)) {
+        return { success: false, reason: 'doorClosed' };
+      }
+    } else if (doorAtCurrent && !isDoorOpen(doorAtCurrent, keysMask, timersBefore)) {
+      return { success: false, reason: 'doorClosed' };
+    }
+
+    const plate = level.runtime?.plateByCell.get(targetKey);
+    if (plate && Number.isInteger(plate.timerIndex)) {
+      timersBefore[plate.timerIndex] = plate.duration;
+    }
+
+    let collectedKey = null;
+    const keyObject = level.runtime?.keyByCell.get(targetKey);
+    if (keyObject) {
+      const bit = 1 << keyObject.index;
+      if ((keysMask & bit) === 0) {
+        keysMask |= bit;
+        collectedKey = keyObject;
+      }
+    }
+
+    let collectedBonus = null;
+    const bonusObject = level.runtime?.bonusByCell.get(targetKey);
+    if (bonusObject) {
+      collectedBonus = bonusObject;
+    }
+
+    const guardCycle = level.runtime?.guardCycle || 1;
+    const nextPhase = guardCycle > 0 ? (playState.guardPhase + 1) % guardCycle : 0;
+    const guardStatesBefore = level.runtime?.guardStates?.[playState.guardPhase] || [];
+    const guardStatesAfter = level.runtime?.guardStates?.[nextPhase] || [];
+
+    for (let i = 0; i < guardStatesAfter.length; i += 1) {
+      const after = guardStatesAfter[i];
+      if (!after) {
+        continue;
+      }
+      if (after.row === targetRow && after.col === targetCol) {
+        return {
+          success: false,
+          reason: 'guard',
+          guardPhase: nextPhase,
+          timers: timersBefore
+        };
+      }
+      const before = guardStatesBefore[i];
+      if (
+        before
+        && before.row === targetRow
+        && before.col === targetCol
+        && after.row === currentRow
+        && after.col === currentCol
+      ) {
+        return {
+          success: false,
+          reason: 'guard',
+          guardPhase: nextPhase,
+          timers: timersBefore
+        };
+      }
+    }
+
+    const visionSet = getGuardVisionAtPhase(level, nextPhase, keysMask, timersBefore);
+    if (visionSet.has(targetKey)) {
+      return {
+        success: false,
+        reason: 'vision',
+        guardPhase: nextPhase,
+        timers: timersBefore
+      };
+    }
+
+    const timersAfter = timersBefore.map(value => (value > 0 ? value - 1 : 0));
+    const doorAfter = level.runtime?.doorByCell.get(targetKey);
+    if (doorAfter && !isDoorOpen(doorAfter, keysMask, timersAfter)) {
+      return { success: false, reason: 'doorClosed' };
+    }
+
+    return {
+      success: true,
+      row: targetRow,
+      col: targetCol,
+      guardPhase: nextPhase,
+      keysMask,
+      timers: timersAfter,
+      turn: playState.turn + 1,
+      collectedKey,
+      collectedBonus,
+      reachedExit: targetRow === level.exit.cellRow && targetCol === level.exit.cellCol
+    };
+  }
+
+  function attemptAction(actionId) {
+    if (!canAcceptInput()) {
+      return;
+    }
+    const action = ACTION_BY_ID[actionId];
+    if (!action) {
+      return;
+    }
+    const result = resolveAction(action);
+    if (!result.success) {
+      if (result.reason === 'guard' || result.reason === 'vision') {
+        if (Number.isInteger(result.guardPhase)) {
+          state.play.guardPhase = result.guardPhase;
+        }
+        if (Array.isArray(result.timers)) {
+          state.play.timers = result.timers.slice();
+        }
+        state.play.turn += 1;
+        state.play.caught = true;
+        updateBoardEntities();
+        setMessage(
+          'scripts.arcade.escape.messages.caught',
+          'Repéré ! Relancez pour retenter.',
+          { turns: formatInteger(state.play.turn) },
+          { warning: true }
+        );
+        return;
+      }
+      setMessage(
+        'scripts.arcade.escape.messages.invalid',
+        'Mouvement impossible.',
+        null,
+        { warning: true }
+      );
+      return;
+    }
+
+    state.play.row = result.row;
+    state.play.col = result.col;
+    state.play.guardPhase = result.guardPhase;
+    state.play.keysMask = result.keysMask;
+    state.play.timers = result.timers;
+    state.play.turn = result.turn;
+
+    if (result.collectedKey) {
+      const key = result.collectedKey;
+      state.play.collectedKeys.add(key.id);
+      const coords = getTileCoords(key.cellRow, key.cellCol);
+      const tileKey = getTileKey(coords.tileRow, coords.tileCol);
+      const tile = state.tileMap?.get(tileKey);
+      if (tile) {
+        tile.classList.remove('escape__cell--key');
+        tile.classList.add('escape__cell--floor', 'escape__cell--collected');
+      }
+      const cellKey = getCellKey(key.cellRow, key.cellCol);
+      state.level.runtime?.keyByCell.delete(cellKey);
+    }
+
+    if (result.collectedBonus) {
+      const bonus = result.collectedBonus;
+      state.play.bonusesCollected.add(bonus.id);
+      const coords = getTileCoords(bonus.cellRow, bonus.cellCol);
+      const tileKey = getTileKey(coords.tileRow, coords.tileCol);
+      const tile = state.tileMap?.get(tileKey);
+      if (tile) {
+        tile.classList.remove('escape__cell--bonus');
+        tile.classList.add('escape__cell--floor', 'escape__cell--collected');
+      }
+      const cellKey = getCellKey(bonus.cellRow, bonus.cellCol);
+      state.level.runtime?.bonusByCell.delete(cellKey);
+    }
+
+    updateBoardEntities();
+
+    if (result.reachedExit) {
+      state.play.completed = true;
+      setMessage(
+        'scripts.arcade.escape.messages.victory',
+        'Évasion réussie en {turns} tours !',
+        { turns: formatInteger(state.play.turn) }
+      );
+      return;
+    }
+
+    updateGameplayStatus();
+  }
+
+  function applyLevel(level) {
     state.level = level;
     state.seed = level.seed;
     state.difficulty = level.difficulty;
     renderBoard(level);
-    updateSummary(level);
-    if (options.updateSeedInput !== false && state.elements?.seedInput) {
-      state.elements.seedInput.value = level.seed;
-    }
     if (state.elements?.difficultySelect) {
       state.elements.difficultySelect.value = level.difficulty;
     }
     updateUrl(level.seed, level.difficulty);
   }
 
-  function regenerateLevel(seed, difficulty, options = {}) {
-    const normalizedDifficulty = normalizeDifficultyKey(difficulty || state.difficulty);
-    const sanitizedSeed = sanitizeSeed(seed);
-    const finalSeed = sanitizedSeed || generateRandomSeed();
+  function regenerateLevel(options = {}) {
+    const normalizedDifficulty = normalizeDifficultyKey(options.difficulty || state.difficulty);
+    const sanitizedSeed = sanitizeSeed(options.seed);
+    const preserve = options.preserveSeed && !!sanitizedSeed;
+    const finalSeed = preserve ? sanitizedSeed : sanitizedSeed || generateRandomSeed();
     try {
       const level = createLevel(finalSeed, normalizedDifficulty);
-      applyLevel(level, { updateSeedInput: options.updateSeedInput !== false });
-      setMessage(
-        'scripts.arcade.escape.messages.generated',
-        'Niveau généré.',
-        { seed: level.seed, size: `${formatInteger(level.tileWidth)}×${formatInteger(level.tileHeight)}` }
-      );
+      applyLevel(level);
+      initializePlayState(level);
     } catch (error) {
       console.error('Escape generation failed', error);
       setMessage(
@@ -2208,6 +2463,144 @@
       );
     }
   }
+
+  function attachInputListeners() {
+    if (state.inputHandlers) {
+      return;
+    }
+    const handlers = {};
+    handlers.keydown = event => {
+      if (!canAcceptInput()) {
+        return;
+      }
+      const target = event.target;
+      if (target && target instanceof HTMLElement) {
+        const tag = target.tagName;
+        if (target.isContentEditable || tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') {
+          return;
+        }
+      }
+      const key = typeof event.key === 'string' && event.key.length === 1
+        ? event.key.toLowerCase()
+        : event.key;
+      const actionId = KEY_TO_ACTION[key] || KEY_TO_ACTION[event.key];
+      if (!actionId) {
+        return;
+      }
+      event.preventDefault();
+      attemptAction(actionId);
+    };
+    window.addEventListener('keydown', handlers.keydown);
+
+    const board = state.elements?.board;
+    if (board) {
+      handlers.touchStart = event => {
+        if (!canAcceptInput()) {
+          return;
+        }
+        if (!event.touches || event.touches.length !== 1) {
+          state.touchTracking = null;
+          return;
+        }
+        const touch = event.touches[0];
+        state.touchTracking = {
+          startX: touch.clientX,
+          startY: touch.clientY
+        };
+      };
+      handlers.touchMove = event => {
+        if (!state.touchTracking) {
+          return;
+        }
+        if (!event.touches || event.touches.length !== 1) {
+          state.touchTracking = null;
+        }
+      };
+      handlers.touchEnd = event => {
+        const tracking = state.touchTracking;
+        state.touchTracking = null;
+        if (!tracking || !canAcceptInput()) {
+          return;
+        }
+        if (!event.changedTouches || event.changedTouches.length === 0) {
+          return;
+        }
+        const touch = event.changedTouches[0];
+        const dx = touch.clientX - tracking.startX;
+        const dy = touch.clientY - tracking.startY;
+        const distance = Math.hypot(dx, dy);
+        const threshold = 24;
+        let actionId = 'wait';
+        if (distance >= threshold) {
+          if (Math.abs(dx) > Math.abs(dy)) {
+            actionId = dx > 0 ? 'east' : 'west';
+          } else {
+            actionId = dy > 0 ? 'south' : 'north';
+          }
+        }
+        state.touchSkipClick = true;
+        window.setTimeout(() => {
+          state.touchSkipClick = false;
+        }, 0);
+        attemptAction(actionId);
+      };
+      handlers.touchCancel = () => {
+        state.touchTracking = null;
+        state.touchSkipClick = true;
+        window.setTimeout(() => {
+          state.touchSkipClick = false;
+        }, 0);
+      };
+      handlers.click = () => {
+        if (state.touchSkipClick) {
+          state.touchSkipClick = false;
+          return;
+        }
+        if (!canAcceptInput()) {
+          return;
+        }
+        attemptAction('wait');
+      };
+      board.addEventListener('touchstart', handlers.touchStart, { passive: true });
+      board.addEventListener('touchmove', handlers.touchMove, { passive: true });
+      board.addEventListener('touchend', handlers.touchEnd, { passive: true });
+      board.addEventListener('touchcancel', handlers.touchCancel, { passive: true });
+      board.addEventListener('click', handlers.click);
+    }
+
+    state.inputHandlers = handlers;
+  }
+
+  function detachInputListeners() {
+    if (!state.inputHandlers) {
+      return;
+    }
+    const handlers = state.inputHandlers;
+    if (handlers.keydown) {
+      window.removeEventListener('keydown', handlers.keydown);
+    }
+    const board = state.elements?.board;
+    if (board) {
+      if (handlers.touchStart) {
+        board.removeEventListener('touchstart', handlers.touchStart);
+      }
+      if (handlers.touchMove) {
+        board.removeEventListener('touchmove', handlers.touchMove);
+      }
+      if (handlers.touchEnd) {
+        board.removeEventListener('touchend', handlers.touchEnd);
+      }
+      if (handlers.touchCancel) {
+        board.removeEventListener('touchcancel', handlers.touchCancel);
+      }
+      if (handlers.click) {
+        board.removeEventListener('click', handlers.click);
+      }
+    }
+    state.inputHandlers = null;
+    state.touchTracking = null;
+    state.touchSkipClick = false;
+  }
   function attachEvents() {
     if (!state.elements) {
       return;
@@ -2215,35 +2608,16 @@
     if (state.elements.difficultySelect) {
       state.elements.difficultySelect.addEventListener('change', event => {
         const value = event.target.value;
-        regenerateLevel(state.elements?.seedInput?.value || state.seed, value);
+        regenerateLevel({ difficulty: value });
       });
     }
     if (state.elements.generateButton) {
       state.elements.generateButton.addEventListener('click', () => {
-        regenerateLevel(state.elements?.seedInput?.value || state.seed, state.elements?.difficultySelect?.value || state.difficulty);
+        const difficulty = state.elements?.difficultySelect?.value || state.difficulty;
+        regenerateLevel({ difficulty });
       });
     }
-    if (state.elements.dailyButton) {
-      state.elements.dailyButton.addEventListener('click', () => {
-        const dailySeed = sanitizeSeed(getDailySeed());
-        if (state.elements?.seedInput) {
-          state.elements.seedInput.value = dailySeed;
-        }
-        regenerateLevel(dailySeed, state.elements?.difficultySelect?.value || state.difficulty);
-      });
-    }
-    if (state.elements.seedInput) {
-      state.elements.seedInput.addEventListener('keydown', event => {
-        if (event.key === 'Enter') {
-          event.preventDefault();
-          regenerateLevel(event.target.value, state.elements?.difficultySelect?.value || state.difficulty);
-        }
-      });
-      state.elements.seedInput.addEventListener('blur', event => {
-        const sanitized = sanitizeSeed(event.target.value);
-        event.target.value = sanitized;
-      });
-    }
+    attachInputListeners();
   }
 
   async function loadConfig() {
@@ -2279,19 +2653,24 @@
     if (state.elements.difficultySelect) {
       state.elements.difficultySelect.value = initialParams.difficulty;
     }
-    if (state.elements.seedInput && initialParams.seed) {
-      state.elements.seedInput.value = initialParams.seed;
-    }
     loadConfig()
       .finally(() => {
-        const seed = initialParams.seed || state.elements?.seedInput?.value || '';
-        regenerateLevel(seed, initialParams.difficulty, { updateSeedInput: true });
+        regenerateLevel({
+          seed: initialParams.seed,
+          difficulty: initialParams.difficulty,
+          preserveSeed: !!initialParams.seed
+        });
         state.ready = true;
       });
   }
 
   function destroy() {
     removeLanguageListener();
+    detachInputListeners();
+    clearRenderedEntities();
+    state.play = null;
+    state.tileMap = null;
+    state.entityMap = null;
   }
 
   if (document.readyState === 'loading') {
@@ -2300,10 +2679,10 @@
     initialize();
   }
 
-  window.escapeArcade = {
-    regenerate(seed, difficulty) {
-      regenerateLevel(seed, difficulty, { updateSeedInput: true });
-    },
-    destroy
-  };
+    window.escapeArcade = {
+      regenerate(seed, difficulty) {
+        regenerateLevel({ seed, difficulty, preserveSeed: true });
+      },
+      destroy
+    };
 })();

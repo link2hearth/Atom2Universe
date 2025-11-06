@@ -2834,175 +2834,103 @@
       hidden
     >
       <div class="escape">
-        <header class="escape__header">
-          <div class="escape__title-group">
-            <h2 class="escape__title" data-i18n="index.sections.escape.title">Escape</h2>
-            <p class="escape__subtitle" data-i18n="index.sections.escape.subtitle">
-              Traversez un labyrinthe généré procéduralement tour par tour. Étudiez la carte, anticipez les patrouilles et préparez vos plans de fuite.
-            </p>
-          </div>
-          <div
-            class="escape__controls"
-            role="group"
-            aria-label="Contrôles de génération Escape"
-            data-i18n="aria-label:index.sections.escape.controls.aria"
-          >
-            <div class="escape__control-group">
-              <label
-                class="escape__control-label"
-                for="escapeDifficultySelect"
-                data-i18n="index.sections.escape.difficulty.label"
-              >
-                Difficulté
-              </label>
-              <select
-                class="escape__select"
-                id="escapeDifficultySelect"
-                data-i18n="aria-label:index.sections.escape.difficulty.aria"
-                aria-label="Choisir la difficulté"
-              >
-                <option value="easy" data-i18n="index.sections.escape.difficulty.easy">Facile</option>
-                <option value="medium" data-i18n="index.sections.escape.difficulty.medium">Moyen</option>
-                <option value="hard" data-i18n="index.sections.escape.difficulty.hard">Difficile</option>
-              </select>
-            </div>
-            <div class="escape__control-group">
-              <label
-                class="escape__control-label"
-                for="escapeSeedInput"
-                data-i18n="index.sections.escape.seed.label"
-              >
-                Seed
-              </label>
-              <input
-                type="text"
-                id="escapeSeedInput"
-                class="escape__input"
-                autocomplete="off"
-                inputmode="text"
-                spellcheck="false"
-                placeholder="auto"
-                data-i18n="placeholder:index.sections.escape.seed.placeholder"
-              />
-            </div>
-            <div class="escape__actions">
-              <button
-                type="button"
-                class="escape__button"
-                id="escapeGenerateButton"
-                data-i18n="index.sections.escape.actions.generate"
-              >Générer un niveau</button>
-              <button
-                type="button"
-                class="escape__button"
-                id="escapeDailyButton"
-                data-i18n="index.sections.escape.actions.daily"
-              >Seed du jour</button>
-            </div>
-          </div>
-          <p
-            class="escape__message"
-            id="escapeMessage"
-            role="status"
-            aria-live="polite"
-            data-i18n="index.sections.escape.messages.loading"
-          >
-            Chargement de la configuration…
+        <div class="escape__intro">
+          <h2 class="escape__title" data-i18n="index.sections.escape.title">Escape</h2>
+          <p class="escape__subtitle" data-i18n="index.sections.escape.subtitle">
+            Traversez un labyrinthe généré procéduralement tour par tour. Étudiez la carte, anticipez les patrouilles et préparez vos plans de fuite.
           </p>
-        </header>
-        <div class="escape__layout">
-          <div class="escape__board-wrapper">
-            <div class="escape__board" id="escapeBoard" aria-hidden="true"></div>
-          </div>
-          <aside class="escape__sidebar">
-            <section class="escape__summary" aria-live="polite">
-              <h3 class="escape__summary-title" data-i18n="index.sections.escape.summary.title">Résumé</h3>
-              <dl class="escape__summary-list">
-                <div>
-                  <dt class="escape__summary-term" data-i18n="index.sections.escape.summary.seed">Seed</dt>
-                  <dd class="escape__summary-value" id="escapeSummarySeed">—</dd>
-                </div>
-                <div>
-                  <dt class="escape__summary-term" data-i18n="index.sections.escape.summary.size">Grille</dt>
-                  <dd class="escape__summary-value" id="escapeSummarySize">—</dd>
-                </div>
-                <div>
-                  <dt class="escape__summary-term" data-i18n="index.sections.escape.summary.cycle">Cycles</dt>
-                  <dd class="escape__summary-value" id="escapeSummaryCycles">—</dd>
-                </div>
-                <div>
-                  <dt class="escape__summary-term" data-i18n="index.sections.escape.summary.path">Chemin optimal</dt>
-                  <dd class="escape__summary-value" id="escapeSummaryPath">—</dd>
-                </div>
-                <div>
-                  <dt class="escape__summary-term" data-i18n="index.sections.escape.summary.objects">Objets</dt>
-                  <dd class="escape__summary-value" id="escapeSummaryObjects">—</dd>
-                </div>
-                <div>
-                  <dt class="escape__summary-term" data-i18n="index.sections.escape.summary.guards">Patrouilles</dt>
-                  <dd class="escape__summary-value" id="escapeSummaryGuards">—</dd>
-                </div>
-                <div>
-                  <dt class="escape__summary-term" data-i18n="index.sections.escape.summary.vision">Vision</dt>
-                  <dd class="escape__summary-value" id="escapeSummaryVision">—</dd>
-                </div>
-                <div>
-                  <dt class="escape__summary-term" data-i18n="index.sections.escape.summary.score">Score estimé</dt>
-                  <dd class="escape__summary-value" id="escapeSummaryScore">—</dd>
-                </div>
-              </dl>
-            </section>
-            <section class="escape__legend">
-              <h3 class="escape__legend-title" data-i18n="index.sections.escape.legend.title">Légende</h3>
-              <div class="escape__legend-list">
-                <div class="escape__legend-item">
-                  <span class="escape__legend-swatch escape__cell escape__cell--wall" aria-hidden="true"></span>
-                  <span data-i18n="index.sections.escape.legend.wall">Mur</span>
-                </div>
-                <div class="escape__legend-item">
-                  <span class="escape__legend-swatch escape__cell escape__cell--floor" aria-hidden="true"></span>
-                  <span data-i18n="index.sections.escape.legend.floor">Sol</span>
-                </div>
-                <div class="escape__legend-item">
-                  <span class="escape__legend-swatch escape__cell escape__cell--start" aria-hidden="true"></span>
-                  <span data-i18n="index.sections.escape.legend.start">Départ</span>
-                </div>
-                <div class="escape__legend-item">
-                  <span class="escape__legend-swatch escape__cell escape__cell--exit" aria-hidden="true"></span>
-                  <span data-i18n="index.sections.escape.legend.exit">Sortie</span>
-                </div>
-                <div class="escape__legend-item">
-                  <span class="escape__legend-swatch escape__cell escape__cell--door" aria-hidden="true"></span>
-                  <span data-i18n="index.sections.escape.legend.door">Porte</span>
-                </div>
-                <div class="escape__legend-item">
-                  <span class="escape__legend-swatch escape__cell escape__cell--key" aria-hidden="true"></span>
-                  <span data-i18n="index.sections.escape.legend.key">Clé</span>
-                </div>
-                <div class="escape__legend-item">
-                  <span class="escape__legend-swatch escape__cell escape__cell--plate" aria-hidden="true"></span>
-                  <span data-i18n="index.sections.escape.legend.plate">Plaque</span>
-                </div>
-                <div class="escape__legend-item">
-                  <span class="escape__legend-swatch escape__cell escape__cell--bonus" aria-hidden="true"></span>
-                  <span data-i18n="index.sections.escape.legend.bonus">Orbe bonus</span>
-                </div>
-                <div class="escape__legend-item">
-                  <span class="escape__legend-swatch escape__cell escape__cell--patrol" aria-hidden="true"></span>
-                  <span data-i18n="index.sections.escape.legend.patrol">Trajet de garde</span>
-                </div>
-                <div class="escape__legend-item">
-                  <span class="escape__legend-swatch escape__cell escape__cell--guard" aria-hidden="true"></span>
-                  <span data-i18n="index.sections.escape.legend.guard">Gardien</span>
-                </div>
-                <div class="escape__legend-item">
-                  <span class="escape__legend-swatch escape__cell escape__cell--vision" aria-hidden="true"></span>
-                  <span data-i18n="index.sections.escape.legend.vision">Vision</span>
-                </div>
-              </div>
-            </section>
-          </aside>
         </div>
+        <div
+          class="escape__toolbar"
+          role="group"
+          aria-label="Contrôles de génération Escape"
+          data-i18n="aria-label:index.sections.escape.controls.aria"
+        >
+          <label class="escape__toolbar-field" for="escapeDifficultySelect">
+            <span class="escape__control-label" data-i18n="index.sections.escape.difficulty.label">Difficulté</span>
+            <select
+              class="escape__select"
+              id="escapeDifficultySelect"
+              data-i18n="aria-label:index.sections.escape.difficulty.aria"
+              aria-label="Choisir la difficulté"
+            >
+              <option value="easy" data-i18n="index.sections.escape.difficulty.easy">Facile</option>
+              <option value="medium" data-i18n="index.sections.escape.difficulty.medium">Moyen</option>
+              <option value="hard" data-i18n="index.sections.escape.difficulty.hard">Difficile</option>
+            </select>
+          </label>
+          <button
+            type="button"
+            class="escape__button"
+            id="escapeGenerateButton"
+            data-i18n="index.sections.escape.actions.generate"
+          >Générer un niveau</button>
+        </div>
+        <p
+          class="escape__message"
+          id="escapeMessage"
+          role="status"
+          aria-live="polite"
+          data-i18n="index.sections.escape.messages.loading"
+        >
+          Chargement de la configuration…
+        </p>
+        <div class="escape__board-wrapper">
+          <div class="escape__board" id="escapeBoard" aria-hidden="true" tabindex="0"></div>
+        </div>
+        <section class="escape__legend" aria-live="polite">
+          <h3 class="escape__legend-title" data-i18n="index.sections.escape.legend.title">Légende</h3>
+          <div class="escape__legend-list">
+            <div class="escape__legend-item">
+              <span class="escape__legend-swatch escape__cell escape__cell--wall" aria-hidden="true"></span>
+              <span data-i18n="index.sections.escape.legend.wall">Mur</span>
+            </div>
+            <div class="escape__legend-item">
+              <span class="escape__legend-swatch escape__cell escape__cell--floor" aria-hidden="true"></span>
+              <span data-i18n="index.sections.escape.legend.floor">Sol</span>
+            </div>
+            <div class="escape__legend-item">
+              <span class="escape__legend-swatch escape__cell escape__cell--start" aria-hidden="true"></span>
+              <span data-i18n="index.sections.escape.legend.start">Départ</span>
+            </div>
+            <div class="escape__legend-item">
+              <span class="escape__legend-swatch escape__legend-swatch--player" aria-hidden="true"></span>
+              <span data-i18n="index.sections.escape.legend.player">Vous</span>
+            </div>
+            <div class="escape__legend-item">
+              <span class="escape__legend-swatch escape__cell escape__cell--exit" aria-hidden="true"></span>
+              <span data-i18n="index.sections.escape.legend.exit">Sortie</span>
+            </div>
+            <div class="escape__legend-item">
+              <span class="escape__legend-swatch escape__cell escape__cell--door" aria-hidden="true"></span>
+              <span data-i18n="index.sections.escape.legend.door">Porte</span>
+            </div>
+            <div class="escape__legend-item">
+              <span class="escape__legend-swatch escape__cell escape__cell--key" aria-hidden="true"></span>
+              <span data-i18n="index.sections.escape.legend.key">Clé</span>
+            </div>
+            <div class="escape__legend-item">
+              <span class="escape__legend-swatch escape__cell escape__cell--plate" aria-hidden="true"></span>
+              <span data-i18n="index.sections.escape.legend.plate">Plaque</span>
+            </div>
+            <div class="escape__legend-item">
+              <span class="escape__legend-swatch escape__cell escape__cell--bonus" aria-hidden="true"></span>
+              <span data-i18n="index.sections.escape.legend.bonus">Orbe bonus</span>
+            </div>
+            <div class="escape__legend-item">
+              <span class="escape__legend-swatch escape__cell escape__cell--patrol" aria-hidden="true"></span>
+              <span data-i18n="index.sections.escape.legend.patrol">Trajet de garde</span>
+            </div>
+            <div class="escape__legend-item">
+              <span class="escape__legend-swatch escape__cell escape__cell--guard" aria-hidden="true"></span>
+              <span data-i18n="index.sections.escape.legend.guard">Gardien</span>
+            </div>
+            <div class="escape__legend-item">
+              <span class="escape__legend-swatch escape__cell escape__cell--vision" aria-hidden="true"></span>
+              <span data-i18n="index.sections.escape.legend.vision">Vision</span>
+            </div>
+          </div>
+        </section>
       </div>
     </section>
 

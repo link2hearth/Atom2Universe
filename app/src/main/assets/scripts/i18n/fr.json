@@ -888,6 +888,7 @@
           "wall": "Mur",
           "floor": "Sol",
           "start": "Départ",
+          "player": "Vous",
           "exit": "Sortie",
           "door": "Porte",
           "key": "Clé",
@@ -2499,7 +2500,11 @@
           "ready": "Configuration Escape chargée.",
           "generated": "Seed {{seed}} prête. Grille {{size}}.",
           "error": "Impossible de générer un niveau. Essayez une autre seed.",
-          "configError": "Configuration Escape par défaut appliquée (chargement impossible)."
+          "configError": "Configuration Escape par défaut appliquée (chargement impossible).",
+          "turnStatus": "Seed {{seed}} — {{difficulty}} — Tour {{turn}} — Clés {{keys}}/{{keysTotal}} · Bonus {{bonuses}}/{{bonusesTotal}}",
+          "caught": "Repéré au tour {{turns}}. Relancez pour tenter une nouvelle évasion.",
+          "invalid": "Mouvement impossible.",
+          "victory": "Évasion réussie en {{turns}} tours !"
         },
         "summary": {
           "sizeValue": "{{tilesWidth}}×{{tilesHeight}} tuiles ({{cellsWidth}}×{{cellsHeight}} cellules)",
