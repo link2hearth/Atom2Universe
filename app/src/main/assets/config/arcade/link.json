@@ -1,0 +1,9 @@
+{
+  "boardSize": 10,
+  "boardSizeMin": 6,
+  "boardSizeMax": 12,
+  "plusCellRatio": 0.18,
+  "plusCellMinimum": 10,
+  "twinPairs": { "min": 4, "max": 8 },
+  "scrambleMoves": { "min": 20, "max": 32 }
+}
