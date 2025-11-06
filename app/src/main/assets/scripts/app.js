@@ -13912,6 +13912,26 @@ function computeUpgradeTotalSpent(definition, level) {
   return total.multiplyNumber(modifier);
 }
 
+function computeShopGachaTicketCost(definition, purchaseAmount) {
+  if (!definition || typeof definition !== 'object') {
+    return 0;
+  }
+  const perPurchaseRaw = Number(definition.gachaTicketCostPerPurchase ?? 0);
+  if (!Number.isFinite(perPurchaseRaw) || perPurchaseRaw <= 0) {
+    return 0;
+  }
+  const perPurchase = Math.max(0, Math.floor(perPurchaseRaw));
+  if (perPurchase <= 0) {
+    return 0;
+  }
+  const amount = Math.max(0, Math.floor(Number(purchaseAmount) || 0));
+  if (amount <= 0) {
+    return 0;
+  }
+  const total = perPurchase * amount;
+  return Number.isFinite(total) && total > 0 ? total : 0;
+}
+
 function grantShopGachaTickets(definition, purchaseAmount) {
   if (!definition || typeof definition !== 'object') {
     return 0;
@@ -13981,28 +14001,99 @@ function grantShopGachaTickets(definition, purchaseAmount) {
   return fallbackGain;
 }
 
-function formatShopCost(cost) {
-  const value = cost instanceof LayeredNumber ? cost : new LayeredNumber(cost);
-  let display = '';
+function grantShopMach3Tickets(definition, purchaseAmount) {
+  if (!definition || typeof definition !== 'object') {
+    return 0;
+  }
+  const perPurchase = Number(definition.mach3TicketsPerPurchase ?? 0);
+  if (!Number.isFinite(perPurchase) || perPurchase <= 0) {
+    return 0;
+  }
+  const normalizedAmount = Math.max(0, Math.floor(Number(purchaseAmount) || 0));
+  if (normalizedAmount <= 0) {
+    return 0;
+  }
+  const requested = Math.max(0, Math.floor(perPurchase * normalizedAmount));
+  if (!Number.isFinite(requested) || requested <= 0) {
+    return 0;
+  }
 
-  if (value instanceof LayeredNumber) {
-    if (value.layer === 0) {
-      const numeric = value.toNumber();
-      if (Number.isFinite(numeric)) {
-        if (Math.abs(numeric) < 1_000_000) {
-          const rounded = Math.round(numeric);
-          display = formatIntegerLocalized(rounded);
-        }
+  if (typeof gainBonusParticulesTickets === 'function') {
+    try {
+      const granted = gainBonusParticulesTickets(requested);
+      const grantedNumeric = Math.floor(Number(granted));
+      if (Number.isFinite(grantedNumeric) && grantedNumeric > 0) {
+        return grantedNumeric;
       }
-    }
-
-    if (!display) {
-      display = value.toString();
+      return requested;
+    } catch (error) {
+      console.warn('Shop: unable to grant Mach3 tickets via award function', error);
     }
   }
 
-  return translateOrDefault('scripts.app.shop.costLabel', display, {
-    value: display
+  const fallbackGain = requested;
+  const currentTickets = Number.isFinite(Number(gameState.bonusParticulesTickets))
+    ? Math.max(0, Math.floor(Number(gameState.bonusParticulesTickets)))
+    : 0;
+  gameState.bonusParticulesTickets = currentTickets + fallbackGain;
+  if (typeof updateArcadeTicketDisplay === 'function') {
+    try {
+      updateArcadeTicketDisplay();
+    } catch (error) {
+      console.warn('Shop: unable to refresh Mach3 UI after granting tickets', error);
+    }
+  }
+  return fallbackGain;
+}
+
+function formatShopCost({ atomCost, gachaTicketCost }) {
+  const value = atomCost instanceof LayeredNumber
+    ? atomCost
+    : new LayeredNumber(atomCost ?? 0);
+  let atomDisplay = '';
+
+  if (value instanceof LayeredNumber && !value.isZero()) {
+    if (value.layer === 0) {
+      const numeric = value.toNumber();
+      if (Number.isFinite(numeric) && Math.abs(numeric) < 1_000_000) {
+        const rounded = Math.round(numeric);
+        atomDisplay = formatIntegerLocalized(rounded);
+      }
+    }
+
+    if (!atomDisplay) {
+      atomDisplay = value.toString();
+    }
+  }
+
+  const parts = [];
+  if (atomDisplay) {
+    parts.push(atomDisplay);
+  }
+
+  const ticketCostNumeric = Math.max(0, Math.floor(Number(gachaTicketCost) || 0));
+  if (ticketCostNumeric > 0) {
+    const unitKey = ticketCostNumeric === 1
+      ? 'scripts.app.shop.ticketUnit.single'
+      : 'scripts.app.shop.ticketUnit.plural';
+    const fallbackUnit = ticketCostNumeric === 1 ? 'gacha ticket' : 'gacha tickets';
+    const unit = translateOrDefault(unitKey, fallbackUnit);
+    const countLabel = formatIntegerLocalized(ticketCostNumeric);
+    const ticketLabel = translateOrDefault(
+      'scripts.app.shop.gachaTicketCost',
+      `${countLabel} ${unit}`,
+      { count: countLabel, unit }
+    );
+    parts.push(ticketLabel);
+  }
+
+  if (parts.length === 0) {
+    parts.push(atomDisplay || '0');
+  }
+
+  const label = parts.join(' + ');
+  return translateOrDefault('scripts.app.shop.costLabel', label, {
+    value: label
   });
 }
 
@@ -15431,7 +15522,14 @@ function formatShopAriaLabel({ state, action, name, quantity, limitNote, costVal
   if (state === 'cost') {
     return translateOrDefault(
       'scripts.app.shop.ariaActionCost',
-      `${params.action} ${params.name} ${fallbackQuantity} (coût ${params.cost} atomes)`,
+      `${params.action} ${params.name} ${fallbackQuantity} (coût ${params.cost})`,
+      params
+    );
+  }
+  if (state === 'insufficientTickets') {
+    return translateOrDefault(
+      'scripts.app.shop.ariaActionInsufficientTickets',
+      `${params.action} ${params.name} ${fallbackQuantity} (tickets gacha insuffisants)`,
       params
     );
   }
@@ -15718,8 +15816,12 @@ function updateShopAffordability() {
     const limited = Number.isFinite(remainingLevels) && effectiveQuantity !== baseQuantity;
 
     const cost = computeUpgradeCost(def, effectiveQuantity);
-    const affordable = shopFree || gameState.atoms.compare(cost) >= 0;
-    const costDisplay = formatShopCost(cost);
+    const gachaCost = computeShopGachaTicketCost(def, effectiveQuantity);
+    const ticketsAvailable = Math.max(0, Math.floor(Number(gameState.gachaTickets) || 0));
+    const ticketAffordable = gachaCost <= 0 || ticketsAvailable >= gachaCost;
+    const atomAffordable = gameState.atoms.compare(cost) >= 0;
+    const affordable = shopFree || (atomAffordable && ticketAffordable);
+    const costDisplay = formatShopCost({ atomCost: cost, gachaTicketCost: gachaCost });
     entry.price.textContent = formatShopPriceText({
       isFree: shopFree,
       limitedQuantity: limited,
@@ -15734,13 +15836,21 @@ function updateShopAffordability() {
     }
     const displayQuantity = limited ? effectiveQuantity : baseQuantity;
     const limitNote = getShopLimitSuffix(limited);
+    let ariaState = enabled ? (shopFree ? 'free' : 'cost') : 'cost';
+    if (!enabled && !shopFree) {
+      if (!ticketAffordable) {
+        ariaState = 'insufficientTickets';
+      } else if (!atomAffordable) {
+        ariaState = 'insufficient';
+      }
+    }
     const ariaLabel = formatShopAriaLabel({
-      state: enabled ? (shopFree ? 'free' : 'cost') : 'insufficient',
+      state: ariaState,
       action: actionLabel,
       name: displayName,
       quantity: displayQuantity,
       limitNote,
-      costValue: cost.toString()
+      costValue: costDisplay
     });
     entry.button.setAttribute('aria-label', ariaLabel);
     entry.button.title = ariaLabel;
@@ -15997,12 +16107,28 @@ function attemptPurchase(def, quantity = 1) {
   }
   const cost = computeUpgradeCost(def, finalAmount);
   const shopFree = isDevKitShopFree();
+  const gachaCost = computeShopGachaTicketCost(def, finalAmount);
+  const availableTickets = Math.max(0, Math.floor(Number(gameState.gachaTickets) || 0));
   if (!shopFree && gameState.atoms.compare(cost) < 0) {
     showToast(t('scripts.app.shop.notEnoughAtoms'));
     return;
   }
+  if (!shopFree && gachaCost > availableTickets) {
+    showToast(t('scripts.app.shop.notEnoughGachaTickets'));
+    return;
+  }
   if (!shopFree) {
     gameState.atoms = gameState.atoms.subtract(cost);
+    if (gachaCost > 0) {
+      gameState.gachaTickets = availableTickets - gachaCost;
+      if (typeof updateArcadeTicketDisplay === 'function') {
+        try {
+          updateArcadeTicketDisplay();
+        } catch (error) {
+          console.warn('Shop: unable to refresh ticket display after purchase', error);
+        }
+      }
+    }
   }
   const currentLevel = Number(gameState.upgrades[def.id]);
   const normalizedLevel = Number.isFinite(currentLevel) && currentLevel > 0
@@ -16010,6 +16136,7 @@ function attemptPurchase(def, quantity = 1) {
     : 0;
   gameState.upgrades[def.id] = normalizedLevel + finalAmount;
   const ticketsAwarded = grantShopGachaTickets(def, finalAmount);
+  const mach3TicketsAwarded = grantShopMach3Tickets(def, finalAmount);
   recalcProduction();
   updateUI();
   const limitSuffix = finalAmount < buyAmount ? getShopLimitSuffix(true) : '';
@@ -16033,6 +16160,15 @@ function attemptPurchase(def, quantity = 1) {
     const unitLabel = translateOrDefault(unitKey, fallbackUnit);
     const countLabel = formatIntegerLocalized(ticketsAwarded);
     showToast(t('scripts.app.shop.ticketReward', { count: countLabel, unit: unitLabel }));
+  }
+  if (mach3TicketsAwarded > 0) {
+    const unitKey = mach3TicketsAwarded === 1
+      ? 'scripts.app.shop.mach3Unit.single'
+      : 'scripts.app.shop.mach3Unit.plural';
+    const fallbackUnit = mach3TicketsAwarded === 1 ? 'ticket Mach3' : 'tickets Mach3';
+    const unitLabel = translateOrDefault(unitKey, fallbackUnit);
+    const countLabel = formatIntegerLocalized(mach3TicketsAwarded);
+    showToast(t('scripts.app.shop.mach3Reward', { count: countLabel, unit: unitLabel }));
   }
 }
 
