@@ -52,7 +52,12 @@
     },
     "bonusOrbs": {
       "maxCount": 6,
-      "culDeSacDepth": 2
+      "culDeSacDepth": 2,
+      "perDifficulty": {
+        "easy": { "min": 2, "max": 4 },
+        "medium": { "min": 2, "max": 5 },
+        "hard": { "min": 3, "max": 6 }
+      }
     }
   },
   "difficulties": {

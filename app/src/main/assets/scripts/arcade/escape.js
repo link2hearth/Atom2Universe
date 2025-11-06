@@ -82,7 +82,15 @@
           hard: Object.freeze({ min: 2, max: 3 })
         })
       }),
-      bonusOrbs: Object.freeze({ maxCount: 6, culDeSacDepth: 2 })
+      bonusOrbs: Object.freeze({
+        maxCount: 6,
+        culDeSacDepth: 2,
+        perDifficulty: Object.freeze({
+          easy: Object.freeze({ min: 2, max: 4 }),
+          medium: Object.freeze({ min: 2, max: 5 }),
+          hard: Object.freeze({ min: 3, max: 6 })
+        })
+      })
     }),
     difficulties: Object.freeze({
       easy: Object.freeze({
@@ -226,9 +234,24 @@
     const fallback = fallbackPairs && typeof fallbackPairs === 'object' ? fallbackPairs : {};
     const source = rawPairs && typeof rawPairs === 'object' ? rawPairs : {};
     const result = {};
-    Object.keys(fallback).forEach(key => {
+    const keys = new Set([...Object.keys(fallback), ...Object.keys(source)]);
+    keys.forEach(key => {
+      const fallbackEntry = fallback[key] && typeof fallback[key] === 'object' ? fallback[key] : { min: 0, max: 6 };
       const entry = source[key] && typeof source[key] === 'object' ? source[key] : null;
-      result[key] = normalizeRange(entry, fallback[key], 0, 6);
+      result[key] = normalizeRange(entry, fallbackEntry, 0, 6);
+    });
+    return result;
+  }
+
+  function normalizeDifficultyRangeMap(rawRanges, fallbackRanges, min, max) {
+    const fallback = fallbackRanges && typeof fallbackRanges === 'object' ? fallbackRanges : {};
+    const source = rawRanges && typeof rawRanges === 'object' ? rawRanges : {};
+    const result = {};
+    const keys = new Set([...Object.keys(fallback), ...Object.keys(source)]);
+    keys.forEach(key => {
+      const fallbackEntry = fallback[key] && typeof fallback[key] === 'object' ? fallback[key] : { min, max };
+      const entry = source[key] && typeof source[key] === 'object' ? source[key] : null;
+      result[key] = normalizeRange(entry, fallbackEntry, min, max);
     });
     return result;
   }
@@ -390,6 +413,15 @@
     };
 
     const objectsSource = source.objects && typeof source.objects === 'object' ? source.objects : {};
+    const bonusSource = objectsSource.bonusOrbs && typeof objectsSource.bonusOrbs === 'object'
+      ? objectsSource.bonusOrbs
+      : {};
+    const bonusMaxCount = clampInteger(
+      bonusSource.maxCount,
+      0,
+      30,
+      DEFAULT_CONFIG.objects.bonusOrbs.maxCount
+    );
     const objects = {
       keyDoor: {
         enabled: objectsSource.keyDoor?.enabled !== false,
@@ -420,12 +452,18 @@
         )
       },
       bonusOrbs: {
-        maxCount: clampInteger(objectsSource.bonusOrbs?.maxCount, 0, 30, DEFAULT_CONFIG.objects.bonusOrbs.maxCount),
+        maxCount: bonusMaxCount,
         culDeSacDepth: clampInteger(
-          objectsSource.bonusOrbs?.culDeSacDepth,
+          bonusSource.culDeSacDepth,
           0,
           12,
           DEFAULT_CONFIG.objects.bonusOrbs.culDeSacDepth
+        ),
+        perDifficulty: normalizeDifficultyRangeMap(
+          bonusSource.perDifficulty,
+          DEFAULT_CONFIG.objects.bonusOrbs.perDifficulty,
+          0,
+          Math.max(0, bonusMaxCount)
         )
       }
     };
@@ -1036,7 +1074,7 @@
     const decoration = decorateLevel(level, difficultyKey, rng);
     generateGuards(level, difficultyKey, rng);
     const bonusConfig = state.config.objects?.bonusOrbs;
-    if (bonusConfig?.maxCount > 0 && difficultyKey !== 'easy') {
+    if (bonusConfig?.maxCount > 0) {
       placeBonusOrbs(level, bonusConfig, rng, difficultyKey, {
         keyDoorData: decoration?.keyDoorData || null,
         ensurePlateOrb: Boolean(decoration?.keyDoorData?.door?.plateId),
@@ -1046,18 +1084,29 @@
     prepareRuntime(level);
     let validation = validateLevelLayout(level);
     if (!validation.success && level.guards.length) {
-      const originalGuards = level.guards;
-      level.guards = [];
-      prepareRuntime(level);
-      const fallbackValidation = validateLevelLayout(level);
-      if (fallbackValidation.success) {
-        validation = fallbackValidation;
-      } else {
-        level.guards = originalGuards;
-        prepareRuntime(level);
+      const guardForbidden = [
+        getCellKey(level.start.cellRow, level.start.cellCol),
+        getCellKey(level.exit.cellRow, level.exit.cellCol)
+      ];
+      level.objects.keys.forEach(item => guardForbidden.push(getCellKey(item.cellRow, item.cellCol)));
+      level.objects.doors.forEach(item => guardForbidden.push(getCellKey(item.cellRow, item.cellCol)));
+      level.objects.plates.forEach(item => guardForbidden.push(getCellKey(item.cellRow, item.cellCol)));
+      const difficultyConfig = state.config.difficulties[difficultyKey]
+        || state.config.difficulties[state.config.defaultDifficulty];
+      const patrolRange = difficultyConfig?.patrols;
+      const minimumRequired = Math.max(
+        difficultyKey === 'hard' ? 2 : 1,
+        Math.max(1, patrolRange?.min ?? 1)
+      );
+      const fallbackGuards = forceMinimalGuards(level, minimumRequired, rng, { forbiddenCells: guardForbidden });
+      if (fallbackGuards.length < minimumRequired) {
         throw new Error('Escape level unsolvable');
       }
-    } else if (!validation.success) {
+      level.guards = fallbackGuards;
+      prepareRuntime(level);
+      validation = validateLevelLayout(level);
+    }
+    if (!validation.success) {
       throw new Error('Escape level unsolvable');
     }
     level.validation = validation;
@@ -1524,6 +1573,7 @@
     const guardCandidates = [];
     const doorCandidates = [];
     const corridorCandidates = [];
+    const candidateKeys = new Set();
     const guardPathCells = new Set();
     level.guards.forEach(guard => {
       guard.path.forEach(segment => {
@@ -1544,6 +1594,7 @@
         const degree = level.adjacency[row][col].size;
         const deadEnd = degree <= 1;
         const candidate = { row, col, key, distance, deadEnd };
+        candidateKeys.add(key);
         const behindDoor = Boolean(doorDistances && doorDistances[row]?.[col] === -1);
         if (behindDoor) {
           doorCandidates.push({ ...candidate, behindDoor: true });
@@ -1558,12 +1609,26 @@
         }
       }
     }
-    const difficultyFactor = difficultyKey === 'hard' ? 1 : difficultyKey === 'medium' ? 0.75 : 0.4;
-    const baseTarget = Math.max(0, Math.min(maxCount, Math.round(deadEndCandidates.length * 0.5 * difficultyFactor)));
+    const normalizedDifficulty = normalizeDifficultyKey(difficultyKey);
+    const rangeConfig = bonusConfig.perDifficulty?.[normalizedDifficulty]
+      || bonusConfig.perDifficulty?.[state.config.defaultDifficulty]
+      || { min: 0, max: maxCount };
+    const availableSlots = Math.min(Math.max(candidateKeys.size, 0), maxCount);
+    const rangeMax = Math.min(
+      Math.max(rangeConfig.max ?? rangeConfig.min ?? 0, rangeConfig.min ?? 0),
+      maxCount,
+      availableSlots
+    );
+    const rangeMin = Math.min(Math.max(rangeConfig.min ?? 0, 0), rangeMax);
+    const difficultyFactor = normalizedDifficulty === 'hard' ? 1 : normalizedDifficulty === 'medium' ? 0.75 : 0.4;
+    const baseTarget = Math.max(0, Math.min(rangeMax, Math.round(deadEndCandidates.length * 0.5 * difficultyFactor)));
     const requireDoorOrb = options.ensurePlateOrb && doorCandidates.length > 0;
     const requireGuardOrb = options.ensureGuardOrb && guardCandidates.length > 0;
-    let targetCount = Math.max(baseTarget, (requireDoorOrb ? 1 : 0) + (requireGuardOrb ? 1 : 0));
-    targetCount = Math.min(maxCount, targetCount);
+    const specialRequirement = Math.min(rangeMax, (requireDoorOrb ? 1 : 0) + (requireGuardOrb ? 1 : 0));
+    let targetCount = clampInteger(baseTarget, rangeMin, rangeMax, rangeMin);
+    targetCount = Math.max(targetCount, specialRequirement);
+    targetCount = Math.max(targetCount, rangeMin);
+    targetCount = Math.min(targetCount, rangeMax);
     if (targetCount <= 0) {
       return;
     }
