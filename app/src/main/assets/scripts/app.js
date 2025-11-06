@@ -6461,13 +6461,30 @@ function handleSaveManagerCreate(event) {
     'index.sections.options.saves.prompt',
     'Nom de la sauvegarde :'
   );
-  const rawName = typeof window !== 'undefined' && typeof window.prompt === 'function'
-    ? window.prompt(promptMessage, '')
-    : '';
-  if (rawName === null) {
+  const promptFn = typeof window !== 'undefined' && typeof window.prompt === 'function'
+    ? window.prompt
+    : null;
+  let rawName = '';
+  let promptDurationMs = null;
+  if (promptFn) {
+    const hasTimer = typeof performance !== 'undefined' && typeof performance.now === 'function';
+    const start = hasTimer ? performance.now() : null;
+    rawName = promptFn(promptMessage, '');
+    if (hasTimer && start != null) {
+      promptDurationMs = performance.now() - start;
+    }
+  }
+  const promptLikelyUnsupported = Boolean(
+    promptFn
+      && rawName === null
+      && typeof promptDurationMs === 'number'
+      && promptDurationMs >= 0
+      && promptDurationMs < 50
+  );
+  if (rawName === null && !promptLikelyUnsupported) {
     return;
   }
-  const trimmedName = rawName ? rawName.trim() : '';
+  const trimmedName = typeof rawName === 'string' ? rawName.trim() : '';
   saveGame();
   const serialized = typeof lastSerializedSave === 'string' ? lastSerializedSave : null;
   if (!serialized) {
