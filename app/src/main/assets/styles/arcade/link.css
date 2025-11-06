@@ -27,10 +27,10 @@
 
 .link__header {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
+  gap: 1.5rem;
+  text-align: center;
 }
 
 .link__title-group {
@@ -54,6 +54,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
   gap: 1rem;
 }
 
@@ -198,12 +199,6 @@
   transition: transform 120ms ease, box-shadow 120ms ease, background 180ms ease;
 }
 
-.link__cell::before {
-  content: attr(data-value);
-  position: relative;
-  z-index: 2;
-}
-
 .link__cell::after {
   content: '';
   position: absolute;
@@ -220,13 +215,31 @@
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--link-pair-color, transparent) 55%, transparent);
 }
 
-.link__cell[data-type="plus"] {
-  color: var(--link-cell-plus-text);
-  text-shadow: 0 0 12px rgba(255, 214, 120, 0.4);
+.link__cell-content {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  position: relative;
+  z-index: 2;
 }
 
-.link__cell[data-type="plus"]::before {
-  content: '+ ' attr(data-value);
+.link__cell-plus {
+  display: none;
+  color: #ff8c32;
+  font-size: 1.5em;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.link__cell-value {
+  line-height: 1;
+  font-weight: inherit;
+  color: inherit;
+}
+
+.link__cell[data-type="plus"] .link__cell-plus {
+  display: inline-flex;
 }
 
 .link__cell[data-state="selected"] {

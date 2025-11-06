@@ -32,18 +32,18 @@
   });
 
   const PAIR_COLORS = Object.freeze([
-    '#7ec4ff',
-    '#ffb86c',
-    '#9cf6ad',
-    '#d8b4fe',
-    '#f28fb5',
-    '#ffd25f',
-    '#8be9fd',
-    '#ff9ac5',
-    '#a1ffe0',
-    '#c4a7ff',
-    '#ffb2a1',
-    '#9ea7ff'
+    '#8f3fff',
+    '#34c759',
+    '#111111',
+    '#ff2d20',
+    '#ff9500',
+    '#ffcc00',
+    '#ff6f61',
+    '#c51162',
+    '#6d28d9',
+    '#2ba84a',
+    '#fa4eab',
+    '#ff4f00'
   ]);
 
   const MAX_HISTORY_ENTRIES = 200;
@@ -52,6 +52,7 @@
   const DEFAULT_GENERATION_MODE = 'plus';
   const LINK_LENGTH_OPTIONS = Object.freeze([2, 3, 4]);
   const DEFAULT_LINK_LENGTH = 3;
+  const SELECTION_FINALIZE_DELAY = 500;
   const BASE_L_SHAPE = Object.freeze([
     { row: 0, col: 0 },
     { row: 1, col: 0 },
@@ -89,7 +90,8 @@
     interaction: {
       path: [],
       pointerId: null,
-      mode: null
+      mode: null,
+      finalizeTimeoutId: null
     },
     initialized: false,
     isVictory: false,
@@ -428,7 +430,15 @@
     state.languageHandler = handler;
   }
 
+  function clearFinalizeTimer() {
+    if (state.interaction.finalizeTimeoutId != null) {
+      clearTimeout(state.interaction.finalizeTimeoutId);
+      state.interaction.finalizeTimeoutId = null;
+    }
+  }
+
   function resetInteraction() {
+    clearFinalizeTimer();
     const path = state.interaction.path;
     if (Array.isArray(path)) {
       path.forEach(cell => {
@@ -481,12 +491,6 @@
 
   function computeCellBackground(cell) {
     const ratio = clampNumber(cell.value / 10, 0, 1, 0);
-    if (cell.type === 'plus') {
-      const startLight = 78;
-      const endLight = 46;
-      const light = startLight - (startLight - endLight) * ratio;
-      return `hsl(36, 82%, ${Math.round(light)}%)`;
-    }
     const startLight = 82;
     const endLight = 34;
     const light = startLight - (startLight - endLight) * ratio;
@@ -499,8 +503,13 @@
     if (!cell || !element) {
       return;
     }
-    element.dataset.value = formatNumber(cell.value);
+    const formattedValue = formatNumber(cell.value);
+    element.dataset.value = formattedValue;
     element.dataset.type = cell.type;
+    const valueElement = element.querySelector('.link__cell-value');
+    if (valueElement) {
+      valueElement.textContent = formattedValue;
+    }
     if (cell.pairId != null) {
       element.dataset.hasPair = 'true';
       element.style.setProperty('--link-pair-color', cell.pairColor || 'transparent');
@@ -954,6 +963,18 @@
     });
   }
 
+  function scheduleFinalizeSelection() {
+    const requiredLength = getRequiredLinkLength();
+    if (!Array.isArray(state.interaction.path) || state.interaction.path.length !== requiredLength) {
+      return;
+    }
+    clearFinalizeTimer();
+    state.interaction.finalizeTimeoutId = setTimeout(() => {
+      state.interaction.finalizeTimeoutId = null;
+      finalizeSelection();
+    }, SELECTION_FINALIZE_DELAY);
+  }
+
   function finalizeSelection() {
     const currentPath = state.interaction.path.slice();
     resetInteraction();
@@ -988,6 +1009,25 @@
 
   function isOrthogonalNeighbor(a, b) {
     return Math.abs(a.row - b.row) + Math.abs(a.col - b.col) === 1;
+  }
+
+  function tryBacktrackSelection(row, col) {
+    if (!Array.isArray(state.interaction.path) || state.interaction.path.length < 2) {
+      return false;
+    }
+    const previous = state.interaction.path[state.interaction.path.length - 2];
+    if (previous.row === row && previous.col === col) {
+      const removed = state.interaction.path.pop();
+      if (removed) {
+        const removedElement = getCellElement(removed.row, removed.col);
+        if (removedElement) {
+          removedElement.dataset.state = '';
+        }
+      }
+      clearFinalizeTimer();
+      return true;
+    }
+    return false;
   }
 
   function addCellToSelection(row, col) {
@@ -1045,13 +1085,15 @@
     if (!Number.isFinite(row) || !Number.isFinite(col)) {
       return;
     }
+    if (tryBacktrackSelection(row, col)) {
+      return;
+    }
     const added = addCellToSelection(row, col);
     if (!added) {
       return;
     }
-    const limit = getRequiredLinkLength();
-    if (state.interaction.path.length === limit) {
-      finalizeSelection();
+    if (state.interaction.path.length === getRequiredLinkLength()) {
+      scheduleFinalizeSelection();
     }
   }
 
@@ -1062,7 +1104,13 @@
     if (state.interaction.pointerId !== event.pointerId) {
       return;
     }
-    finalizeSelection();
+    if (state.interaction.path.length === getRequiredLinkLength()) {
+      if (!state.interaction.finalizeTimeoutId) {
+        scheduleFinalizeSelection();
+      }
+      return;
+    }
+    resetInteraction();
   }
 
   function handlePointerCancel(event) {
@@ -1096,9 +1144,8 @@
     if (!added) {
       return;
     }
-    const limit = getRequiredLinkLength();
-    if (state.interaction.path.length === limit) {
-      finalizeSelection();
+    if (state.interaction.path.length === getRequiredLinkLength()) {
+      scheduleFinalizeSelection();
     }
   }
 
@@ -1186,6 +1233,18 @@
         cellButton.dataset.value = '0';
         cellButton.dataset.type = 'normal';
         cellButton.setAttribute('aria-label', `Ligne ${row + 1}, colonne ${col + 1}`);
+        const content = document.createElement('span');
+        content.className = 'link__cell-content';
+        content.setAttribute('aria-hidden', 'true');
+        const plusSpan = document.createElement('span');
+        plusSpan.className = 'link__cell-plus';
+        plusSpan.textContent = '+';
+        const valueSpan = document.createElement('span');
+        valueSpan.className = 'link__cell-value';
+        valueSpan.textContent = '0';
+        content.appendChild(plusSpan);
+        content.appendChild(valueSpan);
+        cellButton.appendChild(content);
         cellButton.addEventListener('pointerdown', handlePointerDown);
         cellButton.addEventListener('pointerenter', handlePointerEnter);
         cellButton.addEventListener('pointerup', handlePointerUp);
