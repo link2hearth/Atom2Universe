@@ -83,8 +83,6 @@ const FALLBACK_TROPHIES = Array.isArray(APP_DATA.FALLBACK_TROPHIES)
 const SHOP_UNLOCK_THRESHOLD = new LayeredNumber(15);
 
 const DEFAULT_STARTUP_FADE_DURATION_MS = 2000;
-const DEFAULT_BACKGROUND_RELOAD_THRESHOLD_MS = 30 * 60 * 1000;
-const DEFAULT_BACKGROUND_RELOAD_OVERLAY_LEAD_MS = 250;
 
 const MUSIC_SUPPORTED_EXTENSIONS = Array.isArray(APP_DATA.MUSIC_SUPPORTED_EXTENSIONS)
   && APP_DATA.MUSIC_SUPPORTED_EXTENSIONS.length
@@ -4713,7 +4711,6 @@ let elements = {};
 let holdemBlindListenerAttached = false;
 
 let pageHiddenAt = null;
-let backgroundReloadScheduled = false;
 let overlayFadeFallbackTimeout = null;
 let startupOverlayFailsafeTimeout = null;
 let startupOverlayGlobalFallbackTimeout = null;
@@ -4756,20 +4753,6 @@ function resolveGlobalNumberOption(optionKey, fallback) {
 
 function getConfiguredStartupFadeDurationMs() {
   return resolveGlobalNumberOption('STARTUP_FADE_DURATION_MS', DEFAULT_STARTUP_FADE_DURATION_MS);
-}
-
-function getConfiguredBackgroundReloadThresholdMs() {
-  return resolveGlobalNumberOption(
-    'BACKGROUND_RELOAD_THRESHOLD_MS',
-    DEFAULT_BACKGROUND_RELOAD_THRESHOLD_MS
-  );
-}
-
-function getConfiguredBackgroundReloadLeadMs() {
-  return resolveGlobalNumberOption(
-    'BACKGROUND_RELOAD_OVERLAY_LEAD_MS',
-    DEFAULT_BACKGROUND_RELOAD_OVERLAY_LEAD_MS
-  );
 }
 
 function getNormalizedStartupFadeDuration() {
@@ -4865,23 +4848,23 @@ const RESET_KEYWORD_ACTIONS = Object.freeze({
   DEVKIT: Object.freeze({
     toggle: toggleDevkitFeatureAvailability,
     enabledKey: 'devkitEnabled',
-    enabledFallback: 'DevKit enabled. Reloading to apply…',
+    enabledFallback: 'DevKit enabled. Changes applied.',
     disabledKey: 'devkitDisabled',
-    disabledFallback: 'DevKit disabled. Reloading to apply…'
+    disabledFallback: 'DevKit disabled. Changes applied.'
   }),
   COLLECTION: Object.freeze({
     toggle: toggleCollectionFeatureAvailability,
     enabledKey: 'collectionEnabled',
-    enabledFallback: 'Collection enabled. Reloading to apply…',
+    enabledFallback: 'Collection enabled. Changes applied.',
     disabledKey: 'collectionDisabled',
-    disabledFallback: 'Collection disabled. Reloading to apply…'
+    disabledFallback: 'Collection disabled. Changes applied.'
   }),
   INFO: Object.freeze({
     toggle: toggleInfoSectionsFeatureAvailability,
     enabledKey: 'infoEnabled',
-    enabledFallback: 'Info sections enabled. Reloading to apply…',
+    enabledFallback: 'Info sections enabled. Changes applied.',
     disabledKey: 'infoDisabled',
-    disabledFallback: 'Info sections disabled. Reloading to apply…'
+    disabledFallback: 'Info sections disabled. Changes applied.'
   })
 });
 
@@ -5018,7 +5001,6 @@ function handleResetSpecialKeyword(normalizedKeyword) {
   const messageKey = nextValue ? action.enabledKey : action.disabledKey;
   const fallbackMessage = nextValue ? action.enabledFallback : action.disabledFallback;
   showToast(translateResetString(messageKey, fallbackMessage));
-  scheduleConfigReload();
   return true;
 }
 
@@ -5207,6 +5189,7 @@ function handleResetDialogSubmit(event) {
       closeResetDialog();
       resetGame();
       showToast(translateResetString('done', 'Progress reset'));
+      scheduleConfigReload();
       return;
     }
     // 3) Mot incorrect -> erreur
@@ -5274,6 +5257,7 @@ function handleResetPromptFallback() {
   else if (!isSpecialKeyword && provided === expected) {
     resetGame();
     showToast(translateResetString('done', 'Progress reset'));
+    scheduleConfigReload();
     return;
   }
   // 3) Mot incorrect -> erreur
@@ -5710,31 +5694,10 @@ function handleVisibilityChange() {
 
   if (isHidden) {
     pageHiddenAt = Date.now();
-    backgroundReloadScheduled = false;
     return;
   }
 
-  const hiddenSince = pageHiddenAt;
   pageHiddenAt = null;
-
-  if (backgroundReloadScheduled || hiddenSince == null) {
-    return;
-  }
-
-  const hiddenDuration = Date.now() - hiddenSince;
-  const backgroundReloadThreshold = Math.max(0, getConfiguredBackgroundReloadThresholdMs());
-  if (hiddenDuration < backgroundReloadThreshold) {
-    return;
-  }
-
-  backgroundReloadScheduled = true;
-  showStartupOverlay({ instant: true });
-
-  const leadTime = Math.max(0, getConfiguredBackgroundReloadLeadMs());
-
-  setTimeout(() => {
-    window.location.reload();
-  }, leadTime);
 }
 function getOptionsWelcomeCardCopy() {
   const api = getI18nApi();
