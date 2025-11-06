@@ -91,7 +91,9 @@
       path: [],
       pointerId: null,
       mode: null,
-      finalizeTimeoutId: null
+      finalizeTimeoutId: null,
+      isActive: false,
+      captureElement: null
     },
     initialized: false,
     isVictory: false,
@@ -439,6 +441,18 @@
 
   function resetInteraction() {
     clearFinalizeTimer();
+    if (state.interaction.captureElement) {
+      const element = state.interaction.captureElement;
+      const pointerId = state.interaction.pointerId;
+      if (
+        element instanceof Element
+        && typeof element.releasePointerCapture === 'function'
+        && Number.isFinite(pointerId)
+        && element.hasPointerCapture?.(pointerId)
+      ) {
+        element.releasePointerCapture(pointerId);
+      }
+    }
     const path = state.interaction.path;
     if (Array.isArray(path)) {
       path.forEach(cell => {
@@ -451,6 +465,8 @@
     state.interaction.path = [];
     state.interaction.pointerId = null;
     state.interaction.mode = null;
+    state.interaction.isActive = false;
+    state.interaction.captureElement = null;
   }
 
   function getCellElement(row, col) {
@@ -1004,11 +1020,25 @@
     state.interaction.mode = mode;
     state.interaction.pointerId = pointerId || null;
     state.interaction.path = [{ row, col }];
+    state.interaction.isActive = mode === 'pointer';
     element.dataset.state = 'selected';
   }
 
   function isOrthogonalNeighbor(a, b) {
     return Math.abs(a.row - b.row) + Math.abs(a.col - b.col) === 1;
+  }
+
+  function processPointerCell(row, col) {
+    if (tryBacktrackSelection(row, col)) {
+      return;
+    }
+    const added = addCellToSelection(row, col);
+    if (!added) {
+      return;
+    }
+    if (state.interaction.path.length === getRequiredLinkLength()) {
+      scheduleFinalizeSelection();
+    }
   }
 
   function tryBacktrackSelection(row, col) {
@@ -1066,7 +1096,24 @@
     if (!Number.isFinite(row) || !Number.isFinite(col)) {
       return;
     }
+    if (typeof event.preventDefault === 'function') {
+      event.preventDefault();
+    }
     startSelection(row, col, 'pointer', event.pointerId);
+    if (
+      element instanceof Element
+      && typeof element.setPointerCapture === 'function'
+      && Number.isFinite(event.pointerId)
+    ) {
+      try {
+        element.setPointerCapture(event.pointerId);
+        state.interaction.captureElement = element;
+      } catch (captureError) {
+        state.interaction.captureElement = null;
+      }
+    } else {
+      state.interaction.captureElement = null;
+    }
   }
 
   function handlePointerEnter(event) {
@@ -1076,7 +1123,7 @@
     if (state.interaction.pointerId !== event.pointerId) {
       return;
     }
-    if (event.buttons === 0) {
+    if (!state.interaction.isActive) {
       return;
     }
     const element = event.currentTarget;
@@ -1085,16 +1132,53 @@
     if (!Number.isFinite(row) || !Number.isFinite(col)) {
       return;
     }
-    if (tryBacktrackSelection(row, col)) {
+    processPointerCell(row, col);
+  }
+
+  function resolvePointerMoveTarget(event) {
+    const currentTarget = event.currentTarget instanceof Element ? event.currentTarget : null;
+    const rawTarget = event.target instanceof Element ? event.target : null;
+    const hasCapture = Boolean(
+      currentTarget
+      && typeof currentTarget.hasPointerCapture === 'function'
+      && Number.isFinite(event.pointerId)
+      && currentTarget.hasPointerCapture(event.pointerId)
+    );
+    if (!hasCapture) {
+      const element = rawTarget?.closest?.('.link__cell');
+      if (element) {
+        return element;
+      }
+    }
+    if (typeof document.elementFromPoint === 'function') {
+      const fromPoint = document.elementFromPoint(event.clientX, event.clientY);
+      if (fromPoint instanceof Element) {
+        return fromPoint.closest('.link__cell');
+      }
+    }
+    return null;
+  }
+
+  function handlePointerMove(event) {
+    if (state.interaction.mode !== 'pointer') {
       return;
     }
-    const added = addCellToSelection(row, col);
-    if (!added) {
+    if (state.interaction.pointerId !== event.pointerId) {
       return;
     }
-    if (state.interaction.path.length === getRequiredLinkLength()) {
-      scheduleFinalizeSelection();
+    if (!state.interaction.isActive) {
+      return;
     }
+    const element = resolvePointerMoveTarget(event);
+    if (!element) {
+      return;
+    }
+    const row = Number.parseInt(element.dataset.row, 10);
+    const col = Number.parseInt(element.dataset.col, 10);
+    if (!Number.isFinite(row) || !Number.isFinite(col)) {
+      return;
+    }
+    processPointerCell(row, col);
   }
 
   function handlePointerUp(event) {
@@ -1104,6 +1188,19 @@
     if (state.interaction.pointerId !== event.pointerId) {
       return;
     }
+    if (state.interaction.captureElement) {
+      const captureElement = state.interaction.captureElement;
+      if (
+        captureElement instanceof Element
+        && typeof captureElement.releasePointerCapture === 'function'
+        && Number.isFinite(event.pointerId)
+        && captureElement.hasPointerCapture?.(event.pointerId)
+      ) {
+        captureElement.releasePointerCapture(event.pointerId);
+      }
+      state.interaction.captureElement = null;
+    }
+    state.interaction.isActive = false;
     if (state.interaction.path.length === getRequiredLinkLength()) {
       if (!state.interaction.finalizeTimeoutId) {
         scheduleFinalizeSelection();
@@ -1120,6 +1217,19 @@
     if (state.interaction.pointerId !== event.pointerId) {
       return;
     }
+    if (state.interaction.captureElement) {
+      const captureElement = state.interaction.captureElement;
+      if (
+        captureElement instanceof Element
+        && typeof captureElement.releasePointerCapture === 'function'
+        && Number.isFinite(event.pointerId)
+        && captureElement.hasPointerCapture?.(event.pointerId)
+      ) {
+        captureElement.releasePointerCapture(event.pointerId);
+      }
+      state.interaction.captureElement = null;
+    }
+    state.interaction.isActive = false;
     resetInteraction();
   }
 
@@ -1247,6 +1357,7 @@
         cellButton.appendChild(content);
         cellButton.addEventListener('pointerdown', handlePointerDown);
         cellButton.addEventListener('pointerenter', handlePointerEnter);
+        cellButton.addEventListener('pointermove', handlePointerMove);
         cellButton.addEventListener('pointerup', handlePointerUp);
         cellButton.addEventListener('pointercancel', handlePointerCancel);
         cellButton.addEventListener('click', handleCellClick);
