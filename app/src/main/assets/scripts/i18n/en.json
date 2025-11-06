@@ -878,7 +878,9 @@
         },
         "how": {
           "label": "How does it work?",
-          "message": "Connect every star using horizontal, vertical, or diagonal single bridges. The numbers tell you how many bridges must leave each star. Bridges can't cross and each pair of stars can share only one bridge."
+          "title": "How does it work?",
+          "message": "Connect every star using horizontal, vertical, or diagonal single bridges. The numbers tell you how many bridges must leave each star. Bridges can't cross and each pair of stars can share only one bridge.",
+          "close": "Close"
         },
         "node": {
           "aria": "Star row {{row}}, column {{column}}: {{current}}/{{required}} bridges"
@@ -915,7 +917,9 @@
         },
         "how": {
           "label": "How does it work?",
-          "message": "Rotate each tile to link every pipe from the highlighted source. The grid comes from a random spanning tree then every tile is rotated, which keeps the puzzle solvable."
+          "title": "How does it work?",
+          "message": "Rotate each tile to link every pipe from the highlighted source. The grid comes from a random spanning tree then every tile is rotated, which keeps the puzzle solvable.",
+          "close": "Close"
         },
         "tile": {
           "aria": "Tile {{row}}, column {{column}}"

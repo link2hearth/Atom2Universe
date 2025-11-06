@@ -22,7 +22,11 @@
     againButton: document.getElementById('starBridgesAgainButton'),
     nextButton: document.getElementById('starBridgesNextButton'),
     shareButton: document.getElementById('starBridgesShareButton'),
-    howLink: document.getElementById('starBridgesHowLink')
+    howLink: document.getElementById('starBridgesHowLink'),
+    howDialog: document.getElementById('starBridgesHowDialog'),
+    howDialogTitle: document.getElementById('starBridgesHowDialogTitle'),
+    howDialogMessage: document.getElementById('starBridgesHowDialogMessage'),
+    howDialogClose: document.getElementById('starBridgesHowDialogClose')
   };
 
   const AUTOSAVE_GAME_ID = 'starBridges';
@@ -48,6 +52,10 @@
     NORTH_WEST: 'northWest'
   });
 
+  const HOW_DIALOG_FALLBACK_TITLE = 'Comment ça marche ?';
+  const HOW_DIALOG_FALLBACK_MESSAGE = 'Reliez toutes les étoiles avec des ponts horizontaux, verticaux ou diagonaux. Les nombres indiquent combien de ponts simples doivent partir de chaque étoile. Les ponts ne se croisent pas et chaque paire d’étoiles ne partage qu’un seul pont.';
+  const HOW_DIALOG_FALLBACK_CLOSE = 'Fermer';
+
   const state = {
     rng: null,
     size: DEFAULT_SIZE,
@@ -71,6 +79,7 @@
 
   let autosaveTimer = null;
   let autosaveSuppressed = false;
+  let howDialogLastTrigger = null;
 
   function getAutosaveApi() {
     if (typeof window === 'undefined') {
@@ -1290,13 +1299,109 @@
     }
   }
 
+  function updateHowDialogTexts() {
+    if (!elements.howDialog) {
+      return;
+    }
+    if (elements.howDialogTitle) {
+      elements.howDialogTitle.textContent = translate(
+        'index.sections.starBridges.how.title',
+        HOW_DIALOG_FALLBACK_TITLE
+      );
+    }
+    if (elements.howDialogMessage) {
+      elements.howDialogMessage.textContent = translate(
+        'index.sections.starBridges.how.message',
+        HOW_DIALOG_FALLBACK_MESSAGE
+      );
+    }
+    if (elements.howDialogClose) {
+      elements.howDialogClose.textContent = translate(
+        'index.sections.starBridges.how.close',
+        HOW_DIALOG_FALLBACK_CLOSE
+      );
+    }
+  }
+
+  function closeHowDialog() {
+    if (!elements.howDialog || elements.howDialog.hidden !== false) {
+      return;
+    }
+    elements.howDialog.hidden = true;
+    elements.howDialog.setAttribute('aria-hidden', 'true');
+    const trigger = howDialogLastTrigger;
+    howDialogLastTrigger = null;
+    if (trigger && typeof trigger.focus === 'function') {
+      window.requestAnimationFrame(() => {
+        try {
+          trigger.focus({ preventScroll: true });
+        } catch (error) {
+          trigger.focus();
+        }
+      });
+    }
+  }
+
+  function openHowDialog(triggerElement) {
+    if (!elements.howDialog || !elements.howDialogMessage || !elements.howDialogClose) {
+      const fallbackMessage = translate(
+        'index.sections.starBridges.how.message',
+        HOW_DIALOG_FALLBACK_MESSAGE
+      );
+      window.alert(fallbackMessage);
+      return;
+    }
+    updateHowDialogTexts();
+    elements.howDialog.hidden = false;
+    elements.howDialog.setAttribute('aria-hidden', 'false');
+    const activeElement = triggerElement && typeof triggerElement.focus === 'function'
+      ? triggerElement
+      : typeof document !== 'undefined' && document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
+    howDialogLastTrigger = activeElement;
+    window.requestAnimationFrame(() => {
+      if (elements.howDialogClose && typeof elements.howDialogClose.focus === 'function') {
+        try {
+          elements.howDialogClose.focus({ preventScroll: true });
+        } catch (error) {
+          elements.howDialogClose.focus();
+        }
+      } else if (typeof elements.howDialog.focus === 'function') {
+        elements.howDialog.focus();
+      }
+    });
+  }
+
   function handleHowRequest(event) {
     event.preventDefault();
-    const message = translate(
-      'index.sections.starBridges.how.message',
-      'Reliez toutes les étoiles avec des ponts horizontaux ou verticaux. Les nombres indiquent combien de ponts doivent partir de chaque étoile. Les ponts ne peuvent ni se croiser ni dépasser deux par direction.'
-    );
-    window.alert(message);
+    const triggerElement = event && event.currentTarget instanceof HTMLElement
+      ? event.currentTarget
+      : null;
+    openHowDialog(triggerElement);
+  }
+
+  function handleHowDialogClose(event) {
+    event.preventDefault();
+    closeHowDialog();
+  }
+
+  function handleHowDialogBackdrop(event) {
+    if (event.target === elements.howDialog) {
+      closeHowDialog();
+    }
+  }
+
+  function handleHowDialogKeyDown(event) {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      closeHowDialog();
+      return;
+    }
+    if (event.key === 'Tab' && elements.howDialogClose) {
+      event.preventDefault();
+      elements.howDialogClose.focus();
+    }
   }
 
   function focusSeedInputForTouch(event) {
@@ -1334,6 +1439,9 @@
     elements.nextButton?.addEventListener('click', handleNextSizeRequest);
     elements.shareButton?.addEventListener('click', handleShareRequest);
     elements.howLink?.addEventListener('click', handleHowRequest);
+    elements.howDialogClose?.addEventListener('click', handleHowDialogClose);
+    elements.howDialog?.addEventListener('click', handleHowDialogBackdrop);
+    elements.howDialog?.addEventListener('keydown', handleHowDialogKeyDown);
     elements.sizeSelect?.addEventListener('change', handleNewPuzzleRequest);
     elements.seedInput?.addEventListener('pointerdown', focusSeedInputForTouch);
     elements.seedInput?.addEventListener('touchstart', focusSeedInputForTouch, { passive: true });

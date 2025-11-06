@@ -21,7 +21,11 @@
     againButton: document.getElementById('pipeTapAgainButton'),
     nextButton: document.getElementById('pipeTapNextButton'),
     shareButton: document.getElementById('pipeTapShareButton'),
-    howLink: document.getElementById('pipeTapHowLink')
+    howLink: document.getElementById('pipeTapHowLink'),
+    howDialog: document.getElementById('pipeTapHowDialog'),
+    howDialogTitle: document.getElementById('pipeTapHowDialogTitle'),
+    howDialogMessage: document.getElementById('pipeTapHowDialogMessage'),
+    howDialogClose: document.getElementById('pipeTapHowDialogClose')
   };
 
   const AUTOSAVE_GAME_ID = 'pipeTap';
@@ -82,6 +86,11 @@
 
   let autosaveTimer = null;
   let autosaveSuppressed = false;
+  let howDialogLastTrigger = null;
+
+  const HOW_DIALOG_FALLBACK_TITLE = 'Comment ça marche ?';
+  const HOW_DIALOG_FALLBACK_MESSAGE = 'Faites pivoter chaque tuile pour relier toutes les conduites à partir de la source entourée. La grille est générée depuis un arbre couvrant puis chaque tuile est mélangée, le puzzle reste donc toujours solvable.';
+  const HOW_DIALOG_FALLBACK_CLOSE = 'Fermer';
 
   function getAutosaveApi() {
     if (typeof window === 'undefined') {
@@ -839,13 +848,109 @@
     }
   }
 
+  function updateHowDialogTexts() {
+    if (!elements.howDialog) {
+      return;
+    }
+    if (elements.howDialogTitle) {
+      elements.howDialogTitle.textContent = translate(
+        'index.sections.pipeTap.how.title',
+        HOW_DIALOG_FALLBACK_TITLE
+      );
+    }
+    if (elements.howDialogMessage) {
+      elements.howDialogMessage.textContent = translate(
+        'index.sections.pipeTap.how.message',
+        HOW_DIALOG_FALLBACK_MESSAGE
+      );
+    }
+    if (elements.howDialogClose) {
+      elements.howDialogClose.textContent = translate(
+        'index.sections.pipeTap.how.close',
+        HOW_DIALOG_FALLBACK_CLOSE
+      );
+    }
+  }
+
+  function closeHowDialog() {
+    if (!elements.howDialog || elements.howDialog.hidden !== false) {
+      return;
+    }
+    elements.howDialog.hidden = true;
+    elements.howDialog.setAttribute('aria-hidden', 'true');
+    const trigger = howDialogLastTrigger;
+    howDialogLastTrigger = null;
+    if (trigger && typeof trigger.focus === 'function') {
+      window.requestAnimationFrame(() => {
+        try {
+          trigger.focus({ preventScroll: true });
+        } catch (error) {
+          trigger.focus();
+        }
+      });
+    }
+  }
+
+  function openHowDialog(triggerElement) {
+    if (!elements.howDialog || !elements.howDialogMessage || !elements.howDialogClose) {
+      const fallbackMessage = translate(
+        'index.sections.pipeTap.how.message',
+        HOW_DIALOG_FALLBACK_MESSAGE
+      );
+      window.alert(fallbackMessage);
+      return;
+    }
+    updateHowDialogTexts();
+    elements.howDialog.hidden = false;
+    elements.howDialog.setAttribute('aria-hidden', 'false');
+    const activeElement = triggerElement && typeof triggerElement.focus === 'function'
+      ? triggerElement
+      : typeof document !== 'undefined' && document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
+    howDialogLastTrigger = activeElement;
+    window.requestAnimationFrame(() => {
+      if (elements.howDialogClose && typeof elements.howDialogClose.focus === 'function') {
+        try {
+          elements.howDialogClose.focus({ preventScroll: true });
+        } catch (error) {
+          elements.howDialogClose.focus();
+        }
+      } else if (typeof elements.howDialog.focus === 'function') {
+        elements.howDialog.focus();
+      }
+    });
+  }
+
   function handleHowRequest(event) {
     event.preventDefault();
-    const message = translate(
-      'index.sections.pipeTap.how.message',
-      'Faites pivoter chaque tuile pour relier toutes les conduites à partir de la source entourée. Les puzzles sont générés à partir d’un arbre couvrant puis mélangés, ils sont donc toujours solvables.'
-    );
-    window.alert(message);
+    const triggerElement = event && event.currentTarget instanceof HTMLElement
+      ? event.currentTarget
+      : null;
+    openHowDialog(triggerElement);
+  }
+
+  function handleHowDialogClose(event) {
+    event.preventDefault();
+    closeHowDialog();
+  }
+
+  function handleHowDialogBackdrop(event) {
+    if (event.target === elements.howDialog) {
+      closeHowDialog();
+    }
+  }
+
+  function handleHowDialogKeyDown(event) {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      closeHowDialog();
+      return;
+    }
+    if (event.key === 'Tab' && elements.howDialogClose) {
+      event.preventDefault();
+      elements.howDialogClose.focus();
+    }
   }
 
   function focusSeedInputForTouch(event) {
@@ -883,6 +988,9 @@
     elements.nextButton?.addEventListener('click', handleNextSizeRequest);
     elements.shareButton?.addEventListener('click', handleShareRequest);
     elements.howLink?.addEventListener('click', handleHowRequest);
+    elements.howDialogClose?.addEventListener('click', handleHowDialogClose);
+    elements.howDialog?.addEventListener('click', handleHowDialogBackdrop);
+    elements.howDialog?.addEventListener('keydown', handleHowDialogKeyDown);
     elements.sizeSelect?.addEventListener('change', handleNewGridRequest);
     elements.seedInput?.addEventListener('pointerdown', focusSeedInputForTouch);
     elements.seedInput?.addEventListener('touchstart', focusSeedInputForTouch, { passive: true });
