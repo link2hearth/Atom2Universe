@@ -6804,7 +6804,7 @@ function updateInfoCardsVisibility() {
   if (!elements.infoCardsCard) {
     return;
   }
-  const unlocked = isCollectionFeatureEnabled() && isPageUnlocked('collection');
+  const unlocked = isPageUnlocked('collection');
   elements.infoCardsCard.hidden = !unlocked;
   elements.infoCardsCard.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
 }
