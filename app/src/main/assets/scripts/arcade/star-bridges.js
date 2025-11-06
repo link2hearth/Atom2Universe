@@ -32,6 +32,7 @@
   const AUTOSAVE_GAME_ID = 'starBridges';
   const AUTOSAVE_VERSION = 2;
   const AUTOSAVE_DEBOUNCE_MS = 200;
+  const MIN_BRIDGE_VISIBLE_LENGTH_PX = 6;
 
   const ALLOWED_SIZES = Object.freeze([6, 7, 8]);
   const DEFAULT_SIZE = 6;
@@ -80,6 +81,7 @@
   let autosaveTimer = null;
   let autosaveSuppressed = false;
   let howDialogLastTrigger = null;
+  let resizeRenderScheduled = false;
 
   function getAutosaveApi() {
     if (typeof window === 'undefined') {
@@ -802,6 +804,31 @@
     const fragment = document.createDocumentFragment();
 
     const size = state.size;
+    const boardRect = elements.board.getBoundingClientRect();
+    const boardSizePx = boardRect.width || elements.board.clientWidth || elements.board.offsetWidth || 0;
+    const cellSizePx = size > 0 ? boardSizePx / size : 0;
+    let nodeDiameterPx = 0;
+
+    if (typeof window !== 'undefined') {
+      const probe = document.createElement('button');
+      probe.type = 'button';
+      probe.tabIndex = -1;
+      probe.setAttribute('aria-hidden', 'true');
+      probe.className = 'starbridges__node';
+      probe.style.position = 'absolute';
+      probe.style.visibility = 'hidden';
+      probe.style.pointerEvents = 'none';
+      probe.style.left = '0';
+      probe.style.top = '0';
+      probe.style.transform = 'none';
+      probe.textContent = '0';
+      elements.board.appendChild(probe);
+      const rect = probe.getBoundingClientRect();
+      nodeDiameterPx = rect.width || rect.height || 0;
+      elements.board.removeChild(probe);
+    }
+    const hasMeasurements = cellSizePx > 0 && nodeDiameterPx > 0;
+
     state.bridges.forEach((playerCount, key) => {
       if (playerCount <= 0) {
         return;
@@ -816,10 +843,19 @@
       bridge.dataset.orientation = edge.orientation;
       const left = (edge.cx / size) * 100;
       const top = (edge.cy / size) * 100;
-      const length = (edge.length / size) * 100;
       bridge.style.left = `${left}%`;
       bridge.style.top = `${top}%`;
-      bridge.style.width = `${length}%`;
+      if (hasMeasurements) {
+        const rawLengthPx = cellSizePx * edge.length;
+        const trimmedPx = Math.max(
+          0,
+          rawLengthPx - Math.min(nodeDiameterPx, Math.max(0, rawLengthPx - MIN_BRIDGE_VISIBLE_LENGTH_PX))
+        );
+        bridge.style.width = trimmedPx > 0 ? `${trimmedPx}px` : '0';
+      } else {
+        const length = (edge.length / size) * 100;
+        bridge.style.width = `${length}%`;
+      }
       bridge.style.height = 'var(--starbridges-bridge-thickness)';
       bridge.style.transform = `translate(-50%, -50%) rotate(${edge.angle}rad)`;
       fragment.appendChild(bridge);
@@ -858,6 +894,23 @@
     });
 
     elements.board.appendChild(fragment);
+  }
+
+  function handleWindowResize() {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    if (resizeRenderScheduled) {
+      return;
+    }
+    resizeRenderScheduled = true;
+    const schedule = typeof window.requestAnimationFrame === 'function'
+      ? window.requestAnimationFrame.bind(window)
+      : callback => window.setTimeout(callback, 16);
+    schedule(() => {
+      resizeRenderScheduled = false;
+      renderBoard();
+    });
   }
 
   function updateStats() {
@@ -1445,6 +1498,9 @@
     elements.sizeSelect?.addEventListener('change', handleNewPuzzleRequest);
     elements.seedInput?.addEventListener('pointerdown', focusSeedInputForTouch);
     elements.seedInput?.addEventListener('touchstart', focusSeedInputForTouch, { passive: true });
+    if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+      window.addEventListener('resize', handleWindowResize);
+    }
   }
 
   function detachTimer() {
@@ -1487,6 +1543,7 @@
   window.starBridgesArcade = {
     onEnter() {
       resumeTimer();
+      renderBoard();
       updateBoardMessage();
     },
     onLeave() {
