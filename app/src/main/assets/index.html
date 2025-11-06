@@ -5067,6 +5067,39 @@
           <p class="option-card__description" data-i18n="index.sections.options.saves.description">
             Créez une copie de secours et restaurez votre progression si nécessaire.
           </p>
+          <div class="option-row option-row--buttons option-row--saves-bridge">
+            <button
+              type="button"
+              class="option-link-button"
+              id="saveFolderPickerButton"
+              data-i18n="index.sections.options.saves.folderButton"
+            >
+              Choisir le dossier…
+            </button>
+            <button
+              type="button"
+              class="option-link-button option-link-button--secondary"
+              id="saveExportButton"
+              data-i18n="index.sections.options.saves.exportFileButton"
+            >
+              Exporter vers un fichier
+            </button>
+            <button
+              type="button"
+              class="option-link-button option-link-button--secondary"
+              id="saveImportButton"
+              data-i18n="index.sections.options.saves.importFileButton"
+            >
+              Importer une sauvegarde
+            </button>
+          </div>
+          <p
+            class="save-manager__status"
+            id="saveBridgeStatus"
+            data-i18n="index.sections.options.saves.folderStatus.idle"
+          >
+            Aucun dossier sélectionné.
+          </p>
           <div class="option-row option-row--buttons option-row--saves-actions">
             <button
               type="button"
