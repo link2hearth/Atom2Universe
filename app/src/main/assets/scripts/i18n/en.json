@@ -394,6 +394,12 @@
             "description": "Switch every light off: each tap flips the selected tile and its orthogonal neighbours.",
             "cta": "Play"
           },
+          "link": {
+            "aria": "Open the Link mini-game",
+            "title": "Link",
+            "description": "Draw a three-cell line or L-shape to align every cell with its target value.",
+            "cta": "Link"
+          },
           "starBridges": {
             "aria": "Open the Star Bridges mini-game",
             "title": "Star Bridges",
@@ -784,6 +790,34 @@
             "on": "Light on",
             "off": "Light off"
           }
+        }
+      },
+      "link": {
+        "aria": "Link puzzle: draw three-cell orthogonal patterns.",
+        "title": "Link",
+        "subtitle": "Draw three orthogonally adjacent cells in a line or right angle to adjust the values and synchronise the grid.",
+        "hud": "Run summary",
+        "moves": {
+          "label": "Moves"
+        },
+        "actions": {
+          "undo": "Undo",
+          "restart": "Restart",
+          "newLevel": "New level"
+        },
+        "board": "Link puzzle grid",
+        "messages": {
+          "intro": "Connect exactly three orthogonal cells to adjust their values and their twin partners.",
+          "invalidPattern": "The pattern must be a straight line or a right angle.",
+          "progress": "Still {normal} normal cells and {plus} +1 cells to align.",
+          "victory": "Great! Puzzle solved in {moves} moves.",
+          "undo": "Last move undone.",
+          "restart": "Puzzle reset.",
+          "newLevel": "New level ready. Link three tiles to adjust the values!",
+          "nothingToUndo": "No move to undo."
+        },
+        "cell": {
+          "label": "Row {row}, column {column}: {value} (target {target})"
         }
       },
       "starBridges": {
