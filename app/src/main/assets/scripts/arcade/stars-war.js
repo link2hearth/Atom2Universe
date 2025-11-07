@@ -28,6 +28,68 @@
     return;
   }
 
+  const CONFIG_PATH = 'config/arcade/stars-war.json';
+  const DEFAULT_CONFIG = Object.freeze({
+    maxWaveDurationSeconds: 15,
+    enemyBulletCap: Object.freeze({
+      base: 10,
+      perWave: 2
+    })
+  });
+
+  function toFiniteNumber(value, fallback) {
+    const numeric = Number(value);
+    return Number.isFinite(numeric) ? numeric : fallback;
+  }
+
+  function clampNumber(value, min, max, fallback) {
+    const numeric = toFiniteNumber(value, fallback);
+    if (!Number.isFinite(numeric)) {
+      return fallback;
+    }
+    if (numeric < min) {
+      return min;
+    }
+    if (numeric > max) {
+      return max;
+    }
+    return numeric;
+  }
+
+  function resolveConfig(raw) {
+    if (!raw || typeof raw !== 'object') {
+      return DEFAULT_CONFIG;
+    }
+    const maxWaveDuration = clampNumber(
+      raw.maxWaveDurationSeconds,
+      5,
+      120,
+      DEFAULT_CONFIG.maxWaveDurationSeconds
+    );
+    const bulletConfig = raw.enemyBulletCap && typeof raw.enemyBulletCap === 'object'
+      ? raw.enemyBulletCap
+      : {};
+    const bulletBase = clampNumber(
+      bulletConfig.base,
+      0,
+      999,
+      DEFAULT_CONFIG.enemyBulletCap.base
+    );
+    const bulletPerWave = clampNumber(
+      bulletConfig.perWave,
+      0,
+      200,
+      DEFAULT_CONFIG.enemyBulletCap.perWave
+    );
+    return Object.freeze({
+      maxWaveDurationSeconds: Math.max(5, Math.floor(maxWaveDuration)),
+      enemyBulletCap: Object.freeze({
+        base: Math.max(0, Math.floor(bulletBase)),
+        perWave: Math.max(0, Math.floor(bulletPerWave))
+      })
+    });
+  }
+
   const CANVAS_WIDTH = 480;
   const CANVAS_HEIGHT = 720;
   const PLAYER_MAX_HP = 3;
@@ -1573,7 +1635,8 @@
     spawnQueue: [],
     spawnTimer: 0,
     spawnInterval: BASE_SPAWN_INTERVAL,
-    waveTimer: INITIAL_WAVE_INTERVAL,
+    waveTimer: Math.min(INITIAL_WAVE_INTERVAL, DEFAULT_CONFIG.maxWaveDurationSeconds),
+    waveElapsed: 0,
     maxOnScreen: 10 + Math.floor(3 * 1),
     enemies: [],
     enemyBullets: [],
@@ -1596,7 +1659,9 @@
       bestWave: 0,
       bestDifficulty: 1
     },
-    lastSeed: ''
+    lastSeed: '',
+    config: DEFAULT_CONFIG,
+    scriptedSequence: SCRIPTED_WAVE_SEQUENCE.slice()
   };
 
   const player = {
@@ -1868,6 +1933,24 @@
     state.lastSeed = data.lastSeed;
   }
 
+  function loadConfig() {
+    if (typeof window === 'undefined' || typeof window.fetch !== 'function') {
+      return;
+    }
+    fetch(CONFIG_PATH)
+      .then(response => (response.ok ? response.json() : null))
+      .then(data => {
+        if (!data || typeof data !== 'object') {
+          return;
+        }
+        state.config = resolveConfig(data);
+        state.waveTimer = Math.min(state.waveTimer, getMaxWaveDuration());
+      })
+      .catch(error => {
+        console.warn('Stars War config load error', error);
+      });
+  }
+
   function announceStatus(key, params) {
     if (!elements.screenReaderStatus) {
       return;
@@ -1910,7 +1993,8 @@
     state.difficulty = 1;
     state.wave = 0;
     state.spawnInterval = BASE_SPAWN_INTERVAL;
-    state.waveTimer = INITIAL_WAVE_INTERVAL;
+    state.waveElapsed = 0;
+    resetWaveTimer();
     state.maxOnScreen = 10 + Math.floor(3 * state.difficulty);
     state.spawnTimer = 0;
     state.heartPitySeconds = 0;
@@ -1965,6 +2049,27 @@
     return array[getRandomInt(0, array.length)];
   }
 
+  function getMaxWaveDuration() {
+    const config = state.config || DEFAULT_CONFIG;
+    const duration = toFiniteNumber(config.maxWaveDurationSeconds, DEFAULT_CONFIG.maxWaveDurationSeconds);
+    if (!Number.isFinite(duration) || duration <= 0) {
+      return DEFAULT_CONFIG.maxWaveDurationSeconds;
+    }
+    return Math.max(5, duration);
+  }
+
+  function getEnemyBulletCapForWave() {
+    const config = state.config && state.config.enemyBulletCap
+      ? state.config.enemyBulletCap
+      : DEFAULT_CONFIG.enemyBulletCap;
+    const base = toFiniteNumber(config.base, DEFAULT_CONFIG.enemyBulletCap.base);
+    const perWave = toFiniteNumber(config.perWave, DEFAULT_CONFIG.enemyBulletCap.perWave);
+    const safeBase = Math.max(0, Math.floor(Number.isFinite(base) ? base : DEFAULT_CONFIG.enemyBulletCap.base));
+    const safeIncrement = Math.max(0, Math.floor(Number.isFinite(perWave) ? perWave : DEFAULT_CONFIG.enemyBulletCap.perWave));
+    const waveIndex = Math.max(1, Math.floor(state.wave || 1));
+    return safeBase + Math.max(0, waveIndex - 1) * safeIncrement;
+  }
+
   function computeWaveInterval() {
     const progress = Math.min(1, state.elapsed / WAVE_ACCELERATION_DURATION);
     const reduction = (INITIAL_WAVE_INTERVAL - MIN_WAVE_INTERVAL) * progress;
@@ -1972,13 +2077,18 @@
   }
 
   function resetWaveTimer() {
-    state.waveTimer = computeWaveInterval();
+    const interval = computeWaveInterval();
+    const maxDuration = getMaxWaveDuration();
+    state.waveTimer = Math.min(interval, maxDuration);
   }
 
   function scheduleNextWave() {
     state.wave += 1;
     let spawnPlan = [];
-    const scriptedName = SCRIPTED_WAVE_SEQUENCE[state.wave - 1];
+    const scriptedSequence = Array.isArray(state.scriptedSequence) && state.scriptedSequence.length
+      ? state.scriptedSequence
+      : SCRIPTED_WAVE_SEQUENCE;
+    const scriptedName = scriptedSequence[state.wave - 1];
     if (scriptedName) {
       spawnPlan = buildScriptedWavePlan(scriptedName);
     }
@@ -2005,7 +2115,19 @@
     });
     state.spawnQueue.push(...spawnPlan);
     state.spawnQueue.sort((a, b) => (a.spawnAt || now) - (b.spawnAt || now));
+    state.waveElapsed = 0;
     resetWaveTimer();
+  }
+
+  function createScriptedSequence() {
+    const sequence = SCRIPTED_WAVE_SEQUENCE.slice();
+    for (let i = sequence.length - 1; i > 0; i -= 1) {
+      const j = getRandomInt(0, i + 1);
+      const tmp = sequence[i];
+      sequence[i] = sequence[j];
+      sequence[j] = tmp;
+    }
+    return sequence;
   }
 
   function getAllowedEnemies(difficulty) {
@@ -2478,6 +2600,9 @@
   }
 
   function spawnEnemyBullet(enemy, angle, speedMultiplier = 1) {
+    if (state.enemyBullets.length >= getEnemyBulletCapForWave()) {
+      return;
+    }
     const vx = Math.cos(angle);
     const vy = Math.sin(angle);
     const slowFactor = isPowerupActive('enemy_slow') ? 0.75 : 1;
@@ -2952,6 +3077,22 @@
     state.effects = state.effects.filter(effect => !effect.remove);
   }
 
+  function updateWaveProgress() {
+    if (state.wave <= 0) {
+      return;
+    }
+    const waveCleared = !state.spawnQueue.length && !state.enemies.length;
+    if (waveCleared && state.lastWaveDifficultyBoost !== state.wave) {
+      state.difficulty = Math.min(8, state.difficulty + 0.25);
+      state.lastWaveDifficultyBoost = state.wave;
+      state.maxOnScreen = 10 + Math.floor(3 * state.difficulty);
+    }
+    const maxDuration = getMaxWaveDuration();
+    if ((waveCleared && state.waveTimer > 0) || state.waveElapsed >= maxDuration) {
+      state.waveTimer = Math.min(state.waveTimer, 0);
+    }
+  }
+
   function updateWaveTimer(delta) {
     state.waveTimer -= delta;
     while (state.waveTimer <= 0) {
@@ -2982,13 +3123,6 @@
     while (state.elapsed >= state.nextDifficultyTick) {
       state.difficulty = Math.min(8, state.difficulty + 0.4);
       state.nextDifficultyTick += 60;
-    }
-    if (state.wave > 0 && !state.spawnQueue.length && !state.enemies.length) {
-      if (state.lastWaveDifficultyBoost !== state.wave) {
-        state.difficulty = Math.min(8, state.difficulty + 0.25);
-        state.waveTimer = Math.min(state.waveTimer, 2);
-        state.lastWaveDifficultyBoost = state.wave;
-      }
     }
     if (previousDifficulty !== state.difficulty) {
       state.maxOnScreen = 10 + Math.floor(3 * state.difficulty);
@@ -3208,9 +3342,11 @@
 
   function update(delta) {
     state.elapsed += delta;
+    state.waveElapsed += delta;
     state.timeSinceLastUpdate += delta;
     applyMilestones();
     updateHeartPity(delta);
+    updateWaveProgress();
     updatePowerups(delta);
     updateWaveTimer(delta);
     maybeSpawnEnemies(delta);
@@ -3404,6 +3540,7 @@
     flushAutosave();
     const seedValue = preserveSeed && state.rngSeed ? state.rngSeed : randomSeedString();
     applySeed(seedValue);
+    state.scriptedSequence = createScriptedSequence();
     resetGame();
     scheduleNextWave();
     startRun();
@@ -3507,6 +3644,7 @@
   function init() {
     attachInputListeners();
     loadAutosave();
+    loadConfig();
     if (elements.overlayButton) {
       elements.overlayButton.addEventListener('click', () => {
         if (state.overlayMode === 'ready' || state.gameOver) {
@@ -3521,6 +3659,7 @@
     }
     const initialSeed = randomSeedString();
     applySeed(initialSeed);
+    state.scriptedSequence = createScriptedSequence();
     resetGame();
     scheduleNextWave();
     promptForNewRun();
