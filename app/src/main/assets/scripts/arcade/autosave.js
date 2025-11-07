@@ -9,6 +9,7 @@
     'lightsOut',
     'starBridges',
     'pipeTap',
+    'colorStack',
     'sokoban',
     'bigger',
     'math',

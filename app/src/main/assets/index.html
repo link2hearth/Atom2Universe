@@ -845,6 +845,48 @@
           class="arcade-hub-card"
           role="button"
           tabindex="0"
+          aria-label="Accéder au mini-jeu Color Stack"
+          aria-describedby="arcadeCardDescription-colorStack"
+          data-card-id="colorStack"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.colorStack.aria"
+          data-page-target="colorStack"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.colorStack.title"
+            >Color Stack</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-colorStack"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-colorStack"
+            data-i18n="index.sections.arcadeHub.cards.colorStack.description"
+          >
+            Triez les jetons colorés colonne par colonne pour uniformiser chaque pile.
+          </p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
           aria-label="Accéder au mini-jeu Ponts Stellaires"
           aria-describedby="arcadeCardDescription-starBridges"
           data-card-id="starBridges"
@@ -3171,6 +3213,99 @@
             </button>
           </div>
         </div>
+      </div>
+    </section>
+
+    <section
+      id="colorStack"
+      class="page page--color-stack"
+      data-page-group="arcade"
+      aria-label="Color Stack : triez chaque pile de jetons colorés."
+      data-i18n="aria-label:index.sections.colorStack.aria"
+      hidden
+    >
+      <div class="color-stack" data-color-stack-root>
+        <header class="color-stack__header">
+          <h2 class="color-stack__title" data-i18n="index.sections.colorStack.title">Color Stack</h2>
+          <p class="color-stack__subtitle" data-i18n="index.sections.colorStack.subtitle">
+            Déplacez toujours le jeton du haut vers une colonne compatible pour regrouper chaque couleur dans sa pile dédiée.
+          </p>
+        </header>
+        <div class="color-stack__toolbar">
+          <div class="color-stack__group">
+            <label
+              class="color-stack__label"
+              for="colorStackDifficultySelect"
+              data-i18n="index.sections.colorStack.difficulty.label"
+            >
+              Difficulté
+            </label>
+            <select
+              class="color-stack__select"
+              id="colorStackDifficultySelect"
+              data-i18n="aria-label:index.sections.colorStack.difficulty.aria"
+              aria-label="Choisir la difficulté"
+            >
+              <option value="easy" data-i18n="index.sections.colorStack.difficulty.easy">Facile</option>
+              <option value="medium" data-i18n="index.sections.colorStack.difficulty.medium">Moyen</option>
+              <option value="hard" data-i18n="index.sections.colorStack.difficulty.hard">Difficile</option>
+            </select>
+          </div>
+          <div class="color-stack__group">
+            <button
+              type="button"
+              class="color-stack__button"
+              id="colorStackNewButton"
+              data-i18n="index.sections.colorStack.actions.new"
+            >
+              Nouveau mélange
+            </button>
+            <button
+              type="button"
+              class="color-stack__button"
+              id="colorStackRestartButton"
+              data-i18n="index.sections.colorStack.actions.restart"
+            >
+              Recommencer
+            </button>
+            <button
+              type="button"
+              class="color-stack__button"
+              id="colorStackUndoButton"
+              data-i18n="index.sections.colorStack.actions.undo"
+            >
+              Annuler
+            </button>
+          </div>
+        </div>
+        <div class="color-stack__status-bar">
+          <div class="color-stack__status-item">
+            <span class="color-stack__status-label" data-i18n="index.sections.colorStack.stats.moves">Coups</span>
+            <span class="color-stack__status-value" id="colorStackMovesValue">0</span>
+          </div>
+          <div class="color-stack__status-item">
+            <span class="color-stack__status-label" data-i18n="index.sections.colorStack.stats.completed">Colonnes complètes</span>
+            <span class="color-stack__status-value" id="colorStackCompletedValue">0/0</span>
+          </div>
+        </div>
+        <div class="color-stack__board-wrapper">
+          <div
+            class="color-stack__board"
+            id="colorStackBoard"
+            role="application"
+            aria-label="Plateau Color Stack"
+            data-i18n="aria-label:index.sections.colorStack.board"
+          ></div>
+        </div>
+        <p
+          class="color-stack__message"
+          id="colorStackMessage"
+          role="status"
+          aria-live="polite"
+          data-i18n="index.sections.colorStack.messages.selectSource"
+        >
+          Sélectionnez une colonne contenant un jeton pour commencer.
+        </p>
       </div>
     </section>
 
@@ -6240,6 +6375,7 @@
   <script src="scripts/arcade/link.js"></script>
   <script src="scripts/arcade/star-bridges.js"></script>
   <script src="scripts/arcade/pipetap.js"></script>
+  <script src="scripts/arcade/color-stack.js"></script>
   <script src="scripts/arcade/stars-war.js"></script>
   <script src="scripts/arcade/sokoban.js"></script>
   <script src="scripts/arcade/escape.js"></script>

@@ -124,6 +124,7 @@ const BRICK_SKIN_TOAST_KEYS = Object.freeze({
     starBridges: 'arcade.starBridges',
     starsWar: 'arcade.starsWar',
     pipeTap: 'arcade.pipeTap',
+    colorStack: 'arcade.colorStack',
     sokoban: 'arcade.sokoban',
     math: 'arcade.math',
     sudoku: 'arcade.sudoku',
@@ -156,6 +157,7 @@ const OPTIONS_DETAIL_FEATURE_MAP = Object.freeze({
   lightsOut: 'arcade.lightsOut',
   starBridges: 'arcade.starBridges',
   pipeTap: 'arcade.pipeTap',
+  colorStack: 'arcade.colorStack',
   sokoban: 'arcade.sokoban',
   blackjack: 'arcade.blackjack',
   gacha: 'system.gacha',
@@ -3855,6 +3857,7 @@ const ARCADE_GAME_IDS = Object.freeze([
   'link',
   'starBridges',
   'pipeTap',
+  'colorStack',
   'sokoban',
   'balance',
   'sudoku',
@@ -6541,6 +6544,17 @@ function ensurePipeTapGame() {
   if (window.pipeTapArcade && typeof window.pipeTapArcade === 'object') {
     pipeTapGame = window.pipeTapArcade;
     return pipeTapGame;
+  }
+  return null;
+}
+
+function ensureColorStackGame() {
+  if (colorStackGame && typeof colorStackGame === 'object') {
+    return colorStackGame;
+  }
+  if (window.colorStackArcade && typeof window.colorStackArcade === 'object') {
+    colorStackGame = window.colorStackArcade;
+    return colorStackGame;
   }
   return null;
 }
@@ -11085,6 +11099,7 @@ let escapeGame = null;
 let starBridgesGame = null;
 let starsWarGame = null;
 let pipeTapGame = null;
+let colorStackGame = null;
 let apsCritPulseTimeoutId = null;
 
 const APS_CRIT_TIMER_EPSILON = 1e-3;
@@ -12777,6 +12792,9 @@ function showPage(pageId) {
   if (pageId === 'pipeTap') {
     ensurePipeTapGame();
   }
+  if (pageId === 'colorStack') {
+    ensureColorStackGame();
+  }
   if (pageId === 'sokoban') {
     ensureSokobanGame();
   }
@@ -12821,6 +12839,7 @@ function showPage(pageId) {
   document.body.classList.toggle('view-star-bridges', pageId === 'starBridges');
   document.body.classList.toggle('view-stars-war', pageId === 'starsWar');
   document.body.classList.toggle('view-pipe-tap', pageId === 'pipeTap');
+  document.body.classList.toggle('view-color-stack', pageId === 'colorStack');
   document.body.classList.toggle('view-sokoban', pageId === 'sokoban');
   document.body.classList.toggle('view-sudoku', pageId === 'sudoku');
   document.body.classList.toggle('view-lights-out', pageId === 'lightsOut');
@@ -12896,6 +12915,14 @@ function showPage(pageId) {
       pipeTap.onEnter?.();
     } else {
       pipeTap.onLeave?.();
+    }
+  }
+  const colorStack = ensureColorStackGame();
+  if (colorStack) {
+    if (pageId === 'colorStack') {
+      colorStack.onEnter?.();
+    } else {
+      colorStack.onLeave?.();
     }
   }
   const sokoban = ensureSokobanGame();
@@ -12985,6 +13012,10 @@ document.addEventListener('visibilitychange', () => {
     if (pipeTap && activePage === 'pipeTap') {
       pipeTap.onLeave?.();
     }
+    const colorStack = ensureColorStackGame();
+    if (colorStack && activePage === 'colorStack') {
+      colorStack.onLeave?.();
+    }
     saveGame();
     return;
   }
@@ -13040,6 +13071,10 @@ document.addEventListener('visibilitychange', () => {
   if (activePage === 'pipeTap') {
     const pipeTap = ensurePipeTapGame();
     pipeTap?.onEnter?.();
+  }
+  if (activePage === 'colorStack') {
+    const colorStack = ensureColorStackGame();
+    colorStack?.onEnter?.();
   }
 });
 
