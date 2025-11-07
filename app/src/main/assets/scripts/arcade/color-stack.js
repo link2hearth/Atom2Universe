@@ -18,6 +18,7 @@
     preferDifferentColorWeight: 2.5,
     preferSameColorWeight: 1,
     minMovePool: 6,
+    extraTopSpace: 1,
     palette: Object.freeze([
       Object.freeze({ id: 'ruby', value: '#ff6b6b' }),
       Object.freeze({ id: 'azure', value: '#4ab3ff' }),
@@ -189,6 +190,7 @@
       fallback.preferSameColorWeight
     );
     const minMovePool = Math.max(1, toInteger(rawConfig.minMovePool, fallback.minMovePool));
+    const extraTopSpace = Math.max(0, toInteger(rawConfig.extraTopSpace, fallback.extraTopSpace || 0));
     const palette = normalizePalette(rawConfig.palette, fallback.palette);
     const difficulties = {};
     DIFFICULTY_ORDER.forEach(key => {
@@ -199,9 +201,16 @@
       preferDifferentColorWeight,
       preferSameColorWeight,
       minMovePool,
+      extraTopSpace,
       palette,
       difficulties
     };
+  }
+
+  function getEffectiveCapacity(difficultyConfig) {
+    const baseCapacity = Math.max(1, toInteger(difficultyConfig?.capacity, 1));
+    const extraSpace = Math.max(0, toInteger(state.config?.extraTopSpace, DEFAULT_CONFIG.extraTopSpace));
+    return baseCapacity + extraSpace;
   }
 
   function loadRemoteConfig() {
@@ -369,7 +378,7 @@
 
   function collectScrambleCandidates(board, difficultyConfig, lastMove) {
     const candidates = [];
-    const { capacity } = difficultyConfig;
+    const capacity = getEffectiveCapacity(difficultyConfig);
     board.forEach((sourceColumn, sourceIndex) => {
       if (!sourceColumn || sourceColumn.length === 0) {
         return;
@@ -455,7 +464,7 @@
     if (emptyCount >= required) {
       return true;
     }
-    const { capacity } = difficultyConfig;
+    const capacity = getEffectiveCapacity(difficultyConfig);
     const maxIterations = board.length * Math.max(1, capacity) * 4;
     let iterations = 0;
     while (emptyCount < required && iterations < maxIterations) {
@@ -663,7 +672,8 @@
     if (!source || !dest || source.length === 0) {
       return false;
     }
-    const capacity = state.config.difficulties[state.difficulty]?.capacity || 1;
+    const difficultyConfig = state.config.difficulties[state.difficulty] || state.config.difficulties.easy;
+    const capacity = getEffectiveCapacity(difficultyConfig);
     if (dest.length >= capacity) {
       return false;
     }
