@@ -396,7 +396,6 @@
     const candidates = [];
     const { capacity } = difficultyConfig;
     const currentEmpty = countEmptyColumns(board);
-    const minEmptyDuringScramble = Math.max(1, emptyRequirement - 1);
     board.forEach((sourceColumn, sourceIndex) => {
       if (!Array.isArray(sourceColumn) || sourceColumn.length === 0) {
         return;
@@ -424,7 +423,7 @@
         const destWasEmpty = destColumn.length === 0;
         const sourceWillBeEmpty = sourceColumn.length === 1;
         const projectedEmpty = currentEmpty + (sourceWillBeEmpty ? 1 : 0) - (destWasEmpty ? 1 : 0);
-        if (projectedEmpty < minEmptyDuringScramble) {
+        if (projectedEmpty < emptyRequirement) {
           return;
         }
         const weight = sameColor
