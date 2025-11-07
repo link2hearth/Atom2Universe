@@ -3,6 +3,7 @@
   "preferDifferentColorWeight": 2.5,
   "preferSameColorWeight": 1,
   "minMovePool": 6,
+  "extraTopSpace": 1,
   "palette": [
     { "id": "ruby", "value": "#ff6b6b" },
     { "id": "azure", "value": "#4ab3ff" },
