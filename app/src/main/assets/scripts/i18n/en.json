@@ -2508,6 +2508,9 @@
           "victoryPerfect": "Perfect escape in {{turns}} turns! +{{tickets}} gacha ticket{{suffix}}.",
           "victory": "Escaped in {{turns}} turns!"
         },
+        "toast": {
+          "reward": "+{{tickets}} gacha ticket{{suffix}} earned!"
+        },
         "summary": {
           "sizeValue": "{{tilesWidth}}×{{tilesHeight}} tiles ({{cellsWidth}}×{{cellsHeight}} cells)",
           "cycleValue": "{{count}} openings (~{{ratio}} %)",
