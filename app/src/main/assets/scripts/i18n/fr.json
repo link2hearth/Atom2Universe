@@ -2514,6 +2514,11 @@
           "gachaWin": "{count} ticket{suffix} gacha obtenu !"
         }
       },
+      "colorStack": {
+        "rewards": {
+          "gachaVictory": "Color Stack : +{count} ticket{suffix} gacha !"
+        }
+      },
       "link": {
         "rewards": {
           "gachaVictory": "Link : +{count} ticket{suffix} gacha !"
