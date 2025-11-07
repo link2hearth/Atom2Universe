@@ -960,76 +960,81 @@
     return h >>> 0;
   }
 
-  const PALETTES = [
-    ['#0b0e17', '#4de0ff', '#c3f0ff', '#ffffff'],
-    ['#0b0e17', '#ff5a5a', '#ffd37a', '#ffffff'],
-    ['#0b0e17', '#9dff6b', '#6be6ff', '#ffffff']
-  ];
+  const SPRITE_SHEET_PATH = 'Assets/sprites/StarsWar.png';
+  const SPRITE_DEFINITIONS = Object.freeze({
+    drone: { sx: 0, sy: 512, sw: 256, sh: 256, size: 40 },
+    tank: { sx: 256, sy: 512, sw: 256, sh: 256, size: 48 },
+    carrier: { sx: 512, sy: 512, sw: 256, sh: 256, size: 40 },
+    kamikaze: { sx: 768, sy: 512, sw: 256, sh: 256, size: 40 },
+    gunner: { sx: 0, sy: 768, sw: 256, sh: 256, size: 40 },
+    sniper: { sx: 256, sy: 768, sw: 256, sh: 256, size: 40 },
+    fast: { sx: 512, sy: 768, sw: 256, sh: 256, size: 40 },
+    player: { sx: 768, sy: 768, sw: 256, sh: 256, size: 32, rotate180: true },
+    miniboss: { sx: 512, sy: 0, sw: 512, sh: 512, size: 60 }
+  });
 
-  function makeShipCanvas(seedStr, w = 24, h = 24, scale = 2, paletteIdx = 0, density = 0.55) {
-    const rnd = rngMulberry32(strToSeed(seedStr));
-    const pal = PALETTES[paletteIdx % PALETTES.length];
-    const cols = Math.floor(w / scale);
-    const rows = Math.floor(h / scale);
-    const half = Math.ceil(cols / 2);
-
-    const bits = Array.from({ length: rows }, () => Array(half).fill(0));
-    for (let y = 0; y < rows; y += 1) {
-      const rowDensity = density * (0.85 + rnd() * 0.3);
-      for (let x = 0; x < half; x += 1) {
-        const nx = x / half;
-        const ny = y / rows;
-        let bias = 0;
-        if (ny < 0.2) bias += 0.08;
-        if (ny > 0.75) bias -= 0.05;
-        if (nx < 0.2) bias += 0.05;
-        const p = rowDensity + bias - Math.abs(nx - 0.05) * 0.1;
-        bits[y][x] = rnd() < p ? 1 : 0;
-      }
-    }
-    bits[0][0] = 1;
-    bits[1][0] = 1;
-
+  function createSpriteCanvas(width, height) {
     const canvas = document.createElement('canvas');
-    canvas.width = cols * scale;
-    canvas.height = rows * scale;
-    const ctx = canvas.getContext('2d');
-    ctx.fillStyle = pal[0];
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    const body = pal[1];
-    const accent = pal[2];
-    const light = pal[3];
-
-    for (let y = 0; y < rows; y += 1) {
-      for (let x = 0; x < cols; x += 1) {
-        const sx = x < half ? x : cols - 1 - x;
-        if (!bits[y][sx]) {
-          continue;
-        }
-        const c = x === Math.floor(cols / 2) ? light : (x % 3 === 0 ? accent : body);
-        ctx.fillStyle = c;
-        ctx.fillRect(x * scale, y * scale, scale, scale);
-      }
-    }
-
-    ctx.fillStyle = light;
-    ctx.fillRect(Math.floor(cols / 2) * scale, 2 * scale, scale, scale);
+    canvas.width = width;
+    canvas.height = height;
     return canvas;
   }
 
-  function generateFleet(seed = 'stars-war-fleet') {
-    const names = ['player', 'drone', 'fast', 'gunner', 'tank', 'kamikaze', 'sniper', 'carrier', 'miniboss'];
-    const fleet = {};
-    for (let i = 0; i < names.length; i += 1) {
-      const size = names[i] === 'miniboss' ? 40 : names[i] === 'tank' ? 28 : 24;
-      const scale = 2;
-      fleet[names[i]] = makeShipCanvas(`${seed}-${names[i]}`, size, size, scale, i % PALETTES.length, 0.52 + 0.03 * i);
-    }
-    return fleet;
+  function createFleetSprites() {
+    const sprites = {};
+    Object.entries(SPRITE_DEFINITIONS).forEach(([key, def]) => {
+      const size = Math.max(1, Math.round(def.size));
+      sprites[key] = createSpriteCanvas(size, size);
+    });
+
+    const image = new Image();
+    image.src = SPRITE_SHEET_PATH;
+    image.addEventListener('load', () => {
+      Object.entries(SPRITE_DEFINITIONS).forEach(([key, def]) => {
+        const canvas = sprites[key];
+        if (!canvas) {
+          return;
+        }
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.save();
+        if (def.rotate180) {
+          ctx.translate(canvas.width / 2, canvas.height / 2);
+          ctx.rotate(Math.PI);
+          ctx.drawImage(
+            image,
+            def.sx,
+            def.sy,
+            def.sw,
+            def.sh,
+            -canvas.width / 2,
+            -canvas.height / 2,
+            canvas.width,
+            canvas.height
+          );
+        } else {
+          ctx.drawImage(
+            image,
+            def.sx,
+            def.sy,
+            def.sw,
+            def.sh,
+            0,
+            0,
+            canvas.width,
+            canvas.height
+          );
+        }
+        ctx.restore();
+      });
+    });
+
+    return sprites;
   }
 
-  const fleet = generateFleet('stars-war');
+  const fleet = createFleetSprites();
 
   function clamp(value, min, max) {
     if (value < min) return min;
