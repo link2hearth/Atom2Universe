@@ -975,6 +975,411 @@
     return value;
   }
 
+  const lerp = (a, b, t) => a + (b - a) * t;
+
+  function easeInOutQuad(t) {
+    if (t <= 0) return 0;
+    if (t >= 1) return 1;
+    return t < 0.5
+      ? 2 * t * t
+      : 1 - Math.pow(-2 * t + 2, 2) / 2;
+  }
+
+  function cubicBezier(p0, p1, p2, p3, t) {
+    const u = 1 - t;
+    const tt = t * t;
+    const uu = u * u;
+    const uuu = uu * u;
+    const ttt = tt * t;
+    const x = uuu * p0[0]
+      + 3 * uu * t * p1[0]
+      + 3 * u * tt * p2[0]
+      + ttt * p3[0];
+    const y = uuu * p0[1]
+      + 3 * uu * t * p1[1]
+      + 3 * u * tt * p2[1]
+      + ttt * p3[1];
+    return { x, y };
+  }
+
+  function degToRad(degrees) {
+    return degrees * Math.PI / 180;
+  }
+
+  const PATTERN_IMPLEMENTATIONS = Object.freeze({
+    spiral(params, t) {
+      const {
+        centerX = CANVAS_WIDTH / 2,
+        centerY = CANVAS_HEIGHT / 3,
+        radiusStart = 0,
+        radiusGrow = 0,
+        angularSpeed = 1,
+        phase = 0
+      } = params;
+      const radius = radiusStart + radiusGrow * t;
+      const angle = angularSpeed * t + phase;
+      const x = centerX + radius * Math.cos(angle);
+      const y = centerY + radius * Math.sin(angle);
+      const rotation = angle + Math.PI / 2;
+      return { x, y, rotation };
+    },
+
+    sine(params, t) {
+      const {
+        startX = CANVAS_WIDTH / 2,
+        startY = -40,
+        amplitude = 80,
+        freq = 1,
+        speedY = 100
+      } = params;
+      const angular = 2 * Math.PI * freq;
+      const y = startY + speedY * t;
+      const x = startX + amplitude * Math.sin(angular * t);
+      const slope = angular * amplitude * Math.cos(angular * t);
+      const rotation = Math.atan2(speedY, slope);
+      return { x, y, rotation };
+    },
+
+    bezier(params, t) {
+      const {
+        p0,
+        p1,
+        p2,
+        p3,
+        duration = 2,
+        easing = 'easeInOutQuad'
+      } = params;
+      if (!p0 || !p1 || !p2 || !p3) {
+        return { x: 0, y: 0, rotation: 0 };
+      }
+      const tt = clamp(t / duration, 0, 1);
+      const eased = easing === 'easeInOutQuad' ? easeInOutQuad(tt) : tt;
+      const pose = cubicBezier(p0, p1, p2, p3, eased);
+      const epsilon = 0.001;
+      const nextT = clamp(tt + epsilon, 0, 1);
+      const poseB = cubicBezier(p0, p1, p2, p3, nextT);
+      const rotation = Math.atan2(poseB.y - pose.y, poseB.x - pose.x);
+      return { x: pose.x, y: pose.y, rotation };
+    },
+
+    waypoints(params, t) {
+      const { points, segmentSpeed = 150, easing = 'linear' } = params;
+      if (!Array.isArray(points) || points.length < 2) {
+        const [fallbackX = 0, fallbackY = 0] = points?.[0] || [];
+        return { x: fallbackX, y: fallbackY, rotation: 0 };
+      }
+
+      let totalLength = 0;
+      const lengths = [];
+      for (let i = 0; i < points.length - 1; i += 1) {
+        const [x1, y1] = points[i];
+        const [x2, y2] = points[i + 1];
+        const length = Math.hypot(x2 - x1, y2 - y1);
+        lengths.push(length);
+        totalLength += length;
+      }
+
+      if (totalLength <= 0) {
+        const [x = 0, y = 0] = points[0];
+        return { x, y, rotation: 0 };
+      }
+
+      const travelled = clamp(segmentSpeed * t, 0, totalLength);
+      let segmentIndex = 0;
+      let accumulated = 0;
+      while (segmentIndex < lengths.length && accumulated + lengths[segmentIndex] < travelled) {
+        accumulated += lengths[segmentIndex];
+        segmentIndex += 1;
+      }
+
+      const segmentLength = lengths[segmentIndex] || 1;
+      const rawK = segmentLength > 0
+        ? (travelled - accumulated) / segmentLength
+        : 0;
+      const easingFn = easing === 'easeOutQuad'
+        ? value => 1 - Math.pow(1 - value, 2)
+        : easing === 'easeInOutQuad'
+          ? easeInOutQuad
+          : value => value;
+      const k = easingFn(clamp(rawK, 0, 1));
+      const [sx, sy] = points[segmentIndex];
+      const [ex, ey] = points[segmentIndex + 1] || points[segmentIndex];
+      const x = lerp(sx, ex, k);
+      const y = lerp(sy, ey, k);
+      const rotation = Math.atan2(ey - sy, ex - sx);
+      return { x, y, rotation };
+    },
+
+    homing(params, t, state, previousPose) {
+      const { speed = 200, maxTurnDegPerSec = 180 } = params;
+      const { playerX = CANVAS_WIDTH / 2, playerY = CANVAS_HEIGHT } = state || {};
+      const dt = state?.dt || 0.016;
+      const from = previousPose || { x: 0, y: -60, rotation: Math.PI / 2 };
+      const desired = Math.atan2(playerY - from.y, playerX - from.x);
+      const maxTurn = degToRad(maxTurnDegPerSec) * dt;
+      let delta = ((desired - from.rotation + Math.PI * 3) % (Math.PI * 2)) - Math.PI;
+      if (delta > maxTurn) delta = maxTurn;
+      if (delta < -maxTurn) delta = -maxTurn;
+      const rotation = from.rotation + delta;
+      const velocity = speed * dt;
+      const x = from.x + Math.cos(rotation) * velocity;
+      const y = from.y + Math.sin(rotation) * velocity;
+      return { x, y, rotation };
+    },
+
+    idle(params, t) {
+      const { x = CANVAS_WIDTH / 2, y = CANVAS_HEIGHT / 3, jitter = 0, jitterFreq = 1 } = params;
+      if (!jitter) {
+        return { x, y, rotation: 0 };
+      }
+      const oscillation = 2 * Math.PI * jitterFreq * t;
+      return {
+        x: x + Math.sin(oscillation) * jitter,
+        y: y + Math.cos(oscillation) * jitter,
+        rotation: 0
+      };
+    }
+  });
+
+  function positionFromPattern(patternDef, t, state = {}, previousPose = null) {
+    if (!patternDef || !patternDef.type) {
+      return { x: 0, y: 0, rotation: 0 };
+    }
+    const handler = PATTERN_IMPLEMENTATIONS[patternDef.type];
+    if (!handler) {
+      throw new Error(`Unknown pattern type: ${patternDef.type}`);
+    }
+    return handler(patternDef.params || {}, t, state, previousPose || undefined);
+  }
+
+  class PatternController {
+    constructor(primaryDef, options = {}) {
+      this.primary = primaryDef;
+      this.secondary = options.thenDef || null;
+      this.switchAt = Number.isFinite(options.thenAt) ? Math.max(0, options.thenAt) : null;
+      this.formationOffset = Array.isArray(options.formationOffset) ? options.formationOffset.slice(0, 2) : [0, 0];
+      this.activeDef = this.primary;
+      this.patternTime = 0;
+      this.previousPose = null;
+      this.lastPose = null;
+      this.totalTime = 0;
+    }
+
+    advance(delta, runtimeState) {
+      const dt = Math.max(0, delta);
+      this.totalTime += dt;
+      this.patternTime += dt;
+      if (this.secondary && this.activeDef === this.primary && this.switchAt != null && this.patternTime >= this.switchAt) {
+        const overflow = this.patternTime - this.switchAt;
+        this.activeDef = this.secondary;
+        this.patternTime = overflow;
+        this.previousPose = this.lastPose;
+      }
+      const pose = positionFromPattern(this.activeDef, this.patternTime, runtimeState, this.previousPose);
+      this.previousPose = pose;
+      this.lastPose = pose;
+      return this.withOffset(pose);
+    }
+
+    snapshot(runtimeState) {
+      const pose = positionFromPattern(this.activeDef, this.patternTime, runtimeState, this.previousPose);
+      this.previousPose = pose;
+      this.lastPose = pose;
+      return this.withOffset(pose);
+    }
+
+    withOffset(pose) {
+      return {
+        x: pose.x + this.formationOffset[0],
+        y: pose.y + this.formationOffset[1],
+        rotation: pose.rotation
+      };
+    }
+  }
+
+  const SCRIPTED_PATTERN_LIBRARY = Object.freeze({
+    patterns: Object.freeze([
+      Object.freeze({
+        name: 'entrance_spiral',
+        type: 'spiral',
+        params: Object.freeze({
+          centerX: CANVAS_WIDTH / 2,
+          centerY: CANVAS_HEIGHT * 0.22,
+          radiusStart: -50,
+          radiusGrow: 30,
+          angularSpeed: 2.2,
+          phase: 0
+        })
+      }),
+      Object.freeze({
+        name: 'sine_sweep',
+        type: 'sine',
+        params: Object.freeze({
+          startX: CANVAS_WIDTH / 2,
+          startY: -40,
+          amplitude: 90,
+          freq: 1.1,
+          speedY: 110
+        })
+      }),
+      Object.freeze({
+        name: 'bezier_entry',
+        type: 'bezier',
+        params: Object.freeze({
+          p0: [-40, 60],
+          p1: [80, -20],
+          p2: [280, 140],
+          p3: [CANVAS_WIDTH / 2, CANVAS_HEIGHT * 0.24],
+          duration: 3,
+          easing: 'easeInOutQuad'
+        })
+      }),
+      Object.freeze({
+        name: 'waypoints_to_formation',
+        type: 'waypoints',
+        params: Object.freeze({
+          points: Object.freeze([
+            [CANVAS_WIDTH - 180, -40],
+            [CANVAS_WIDTH - 200, 40],
+            [CANVAS_WIDTH - 220, 120],
+            [CANVAS_WIDTH - 240, CANVAS_HEIGHT * 0.25]
+          ]),
+          segmentSpeed: 180,
+          easing: 'easeOutQuad'
+        })
+      }),
+      Object.freeze({
+        name: 'dive_at_player',
+        type: 'homing',
+        params: Object.freeze({
+          speed: 240,
+          maxTurnDegPerSec: 260
+        })
+      }),
+      Object.freeze({
+        name: 'idle_formation',
+        type: 'idle',
+        params: Object.freeze({
+          x: CANVAS_WIDTH / 2,
+          y: CANVAS_HEIGHT * 0.22,
+          jitter: 4,
+          jitterFreq: 0.8
+        })
+      })
+    ]),
+    waves: Object.freeze([
+      Object.freeze({
+        name: 'Wave_1_SpiralToFormation',
+        enemies: Object.freeze([
+          Object.freeze({ pattern: 'entrance_spiral', timeOffset: 0, then: 'idle_formation', thenAt: 2.4, formationOffset: [-60, -40], enemyType: 'drone' }),
+          Object.freeze({ pattern: 'entrance_spiral', timeOffset: 0.2, then: 'idle_formation', thenAt: 2.6, formationOffset: [-20, -40], enemyType: 'drone' }),
+          Object.freeze({ pattern: 'entrance_spiral', timeOffset: 0.4, then: 'idle_formation', thenAt: 2.8, formationOffset: [20, -40], enemyType: 'fast' }),
+          Object.freeze({ pattern: 'entrance_spiral', timeOffset: 0.6, then: 'idle_formation', thenAt: 3, formationOffset: [60, -40], enemyType: 'fast' })
+        ])
+      }),
+      Object.freeze({
+        name: 'Wave_2_SineThenDive',
+        enemies: Object.freeze([
+          Object.freeze({ pattern: 'sine_sweep', timeOffset: 0, then: 'dive_at_player', thenAt: 2.2, enemyType: 'fast' }),
+          Object.freeze({ pattern: 'sine_sweep', timeOffset: 0.25, then: 'dive_at_player', thenAt: 2.4, enemyType: 'fast' }),
+          Object.freeze({ pattern: 'sine_sweep', timeOffset: 0.5, then: 'dive_at_player', thenAt: 2.6, enemyType: 'kamikaze' })
+        ])
+      }),
+      Object.freeze({
+        name: 'Wave_3_BezierEscort',
+        enemies: Object.freeze([
+          Object.freeze({ pattern: 'bezier_entry', timeOffset: 0, then: 'idle_formation', thenAt: 3.2, formationOffset: [-80, -32], enemyType: 'gunner' }),
+          Object.freeze({ pattern: 'bezier_entry', timeOffset: 0.4, then: 'idle_formation', thenAt: 3.4, formationOffset: [0, -24], enemyType: 'drone' }),
+          Object.freeze({ pattern: 'bezier_entry', timeOffset: 0.8, then: 'idle_formation', thenAt: 3.6, formationOffset: [80, -32], enemyType: 'gunner' })
+        ])
+      }),
+      Object.freeze({
+        name: 'Wave_4_WaypointScreen',
+        enemies: Object.freeze([
+          Object.freeze({ pattern: 'waypoints_to_formation', timeOffset: 0, then: 'idle_formation', thenAt: 2.6, formationOffset: [-100, -36], enemyType: 'tank' }),
+          Object.freeze({ pattern: 'waypoints_to_formation', timeOffset: 0.3, then: 'idle_formation', thenAt: 2.8, formationOffset: [-40, -28], enemyType: 'gunner' }),
+          Object.freeze({ pattern: 'waypoints_to_formation', timeOffset: 0.6, then: 'idle_formation', thenAt: 3, formationOffset: [20, -28], enemyType: 'tank' }),
+          Object.freeze({ pattern: 'waypoints_to_formation', timeOffset: 0.9, then: 'idle_formation', thenAt: 3.2, formationOffset: [80, -36], enemyType: 'gunner' })
+        ])
+      })
+    ])
+  });
+
+  const SCRIPTED_PATTERN_INDEX = new Map();
+  const SCRIPTED_WAVE_INDEX = new Map();
+  SCRIPTED_PATTERN_LIBRARY.patterns.forEach(pattern => {
+    SCRIPTED_PATTERN_INDEX.set(pattern.name, pattern);
+  });
+  SCRIPTED_PATTERN_LIBRARY.waves.forEach(wave => {
+    SCRIPTED_WAVE_INDEX.set(wave.name, wave);
+  });
+
+  const SCRIPTED_WAVE_SEQUENCE = Object.freeze([
+    'Wave_1_SpiralToFormation',
+    'Wave_2_SineThenDive',
+    'Wave_3_BezierEscort',
+    'Wave_4_WaypointScreen'
+  ]);
+
+  function clonePatternParams(params = {}) {
+    const clone = {};
+    Object.keys(params).forEach(key => {
+      const value = params[key];
+      if (Array.isArray(value)) {
+        clone[key] = value.map(item => (Array.isArray(item) ? item.slice() : item));
+      } else if (value && typeof value === 'object') {
+        clone[key] = { ...value };
+      } else {
+        clone[key] = value;
+      }
+    });
+    return clone;
+  }
+
+  function clonePatternDef(definition) {
+    if (!definition) {
+      return null;
+    }
+    return {
+      type: definition.type,
+      params: clonePatternParams(definition.params)
+    };
+  }
+
+  function resolveScriptedEnemyType(id) {
+    if (!id) {
+      return ENEMY_TYPES.drone;
+    }
+    return ENEMY_TYPES[id] || ENEMY_TYPES.drone;
+  }
+
+  function buildScriptedWavePlan(name, options = {}) {
+    const waveDef = SCRIPTED_WAVE_INDEX.get(name);
+    if (!waveDef) {
+      return [];
+    }
+    const startDelay = options.startDelay || 0;
+    const entries = [];
+    waveDef.enemies.forEach(entry => {
+      const patternDef = clonePatternDef(SCRIPTED_PATTERN_INDEX.get(entry.pattern));
+      if (!patternDef) {
+        return;
+      }
+      const thenPattern = entry.then ? clonePatternDef(SCRIPTED_PATTERN_INDEX.get(entry.then)) : null;
+      entries.push({
+        scripted: true,
+        delay: startDelay + (entry.timeOffset || 0),
+        pattern: patternDef,
+        thenDef: thenPattern,
+        thenAt: entry.thenAt,
+        formationOffset: Array.isArray(entry.formationOffset) ? entry.formationOffset.slice(0, 2) : [0, 0],
+        enemyType: resolveScriptedEnemyType(entry.enemyType)
+      });
+    });
+    entries.sort((a, b) => a.delay - b.delay);
+    return entries;
+  }
+
   function formatTime(seconds) {
     const total = Math.max(0, Math.floor(seconds));
     const m = Math.floor(total / 60);
@@ -1076,6 +1481,16 @@
     magnetActive: false,
     lastDamageTime: -Infinity
   };
+
+  function createPatternRuntimeState(dt = 0) {
+    return {
+      dt,
+      playerX: player.x,
+      playerY: player.y,
+      screenW: CANVAS_WIDTH,
+      screenH: CANVAS_HEIGHT
+    };
+  }
 
   const KEY_BINDINGS = Object.freeze({
     ArrowLeft: 'left',
@@ -1421,9 +1836,21 @@
 
   function scheduleNextWave() {
     state.wave += 1;
-    const spawnPlan = generateWave();
+    let spawnPlan = [];
+    const scriptedName = SCRIPTED_WAVE_SEQUENCE[state.wave - 1];
+    if (scriptedName) {
+      spawnPlan = buildScriptedWavePlan(scriptedName);
+    }
+    if (!spawnPlan.length) {
+      spawnPlan = generateWave();
+    }
+    const now = state.elapsed;
+    spawnPlan.forEach(entry => {
+      const delay = Number.isFinite(entry.delay) ? Math.max(0, entry.delay) : 0;
+      entry.spawnAt = now + delay;
+    });
     state.spawnQueue.push(...spawnPlan);
-    state.spawnTimer = 0;
+    state.spawnQueue.sort((a, b) => (a.spawnAt || now) - (b.spawnAt || now));
     resetWaveTimer();
   }
 
@@ -1653,7 +2080,64 @@
     };
   }
 
+  function spawnScriptedEnemy(entry) {
+    const type = entry.enemyType || ENEMY_TYPES.drone;
+    const enemyWidth = type.id === 'miniboss' ? 60 : type.id === 'tank' ? 48 : 40;
+    const enemyHeight = enemyWidth;
+    const baseHp = type.id === 'miniboss' ? ENEMY_TYPES.miniboss.baseHp : type.baseHp;
+    const difficultyBonus = type.id === 'miniboss'
+      ? Math.floor(3 * state.difficulty)
+      : Math.floor(0.6 * state.difficulty);
+    const minuteMultiplier = Math.pow(1.1, state.elapsed / 60);
+    const hp = Math.max(1, Math.floor((baseHp + difficultyBonus) * minuteMultiplier));
+    const speed = type.id === 'miniboss'
+      ? ENEMY_TYPES.miniboss.baseSpeed * (1 + 0.03 * state.difficulty)
+      : type.baseSpeed * (1 + 0.09 * state.difficulty);
+
+    const controller = new PatternController(entry.pattern, {
+      thenDef: entry.thenDef,
+      thenAt: entry.thenAt,
+      formationOffset: entry.formationOffset
+    });
+
+    const enemy = {
+      id: type.id,
+      type,
+      x: 0,
+      y: -enemyHeight,
+      width: enemyWidth,
+      height: enemyHeight,
+      hp,
+      maxHp: hp,
+      speed,
+      path: 'SCRIPTED',
+      formation: 'SCRIPTED',
+      age: 0,
+      fireTimer: type.canShoot ? (type.fireRate / (1 + 0.06 * state.difficulty)) * getRandomFloat() : 0,
+      lockedTargetX: null,
+      remove: false,
+      waveIndex: state.wave,
+      motionController: controller,
+      rotation: 0
+    };
+
+    const pose = controller.snapshot(createPatternRuntimeState(0));
+    enemy.x = pose.x;
+    enemy.y = pose.y;
+    enemy.rotation = pose.rotation;
+    enemy.anchorX = enemy.x;
+    enemy.anchorReached = false;
+    enemy.figure8Timer = 0;
+    enemy.swayTimer = 0;
+
+    state.enemies.push(enemy);
+  }
+
   function spawnEnemy(entry) {
+    if (entry && entry.scripted) {
+      spawnScriptedEnemy(entry);
+      return;
+    }
     const D = state.difficulty;
     const enemyWidth = entry.type.id === 'miniboss' ? 60 : entry.type.id === 'tank' ? 48 : 40;
     const enemyHeight = enemyWidth;
@@ -1808,8 +2292,18 @@
 
   function moveEnemy(enemy, delta) {
     const slowFactor = isPowerupActive('enemy_slow') ? 0.75 : 1;
-    const speed = enemy.speed * delta * slowFactor;
+    const movementDelta = delta * slowFactor;
     enemy.age += delta;
+
+    if (enemy.motionController) {
+      const pose = enemy.motionController.advance(movementDelta, createPatternRuntimeState(movementDelta));
+      enemy.x = pose.x;
+      enemy.y = pose.y;
+      enemy.rotation = pose.rotation;
+      return;
+    }
+
+    const speed = enemy.speed * movementDelta;
     let nextX = enemy.x;
     let nextY = enemy.y;
     switch (enemy.path) {
@@ -2241,20 +2735,16 @@
     if (!state.spawnQueue.length) {
       return;
     }
-    state.spawnTimer -= delta;
-    if (state.spawnTimer > 0) {
+    const next = state.spawnQueue[0];
+    const spawnAt = next.spawnAt != null ? next.spawnAt : state.elapsed;
+    if (state.elapsed + 1e-6 < spawnAt) {
       return;
     }
-    const activeCount = state.enemies.length;
-    if (activeCount >= state.maxOnScreen) {
-      state.spawnTimer = 0.1;
+    if (state.enemies.length >= state.maxOnScreen) {
       return;
     }
-    const next = state.spawnQueue.shift();
-    if (next) {
-      spawnEnemy(next);
-    }
-    state.spawnTimer = Math.max(MIN_SPAWN_INTERVAL, state.spawnInterval * (0.8 + getRandomFloat() * 0.4));
+    state.spawnQueue.shift();
+    spawnEnemy(next);
   }
 
   function updateDifficulty(delta) {
