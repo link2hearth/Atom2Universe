@@ -204,7 +204,9 @@ const HEADER_COLLAPSED_STORAGE_KEY = 'atom2univers.ui.headerCollapsed';
 const ARCADE_HUB_CARD_STATE_STORAGE_KEY = 'atom2univers.arcadeHub.cardStates.v1';
 const ARCADE_HUB_CARD_ORDER_STORAGE_KEY = 'atom2univers.arcadeHub.cardOrder.v1';
 const ARCADE_HUB_CARD_REORDER_DELAY_MS = 1500;
-const ARCADE_HUB_CARD_REORDER_MOVE_THRESHOLD = 8;
+const ARCADE_HUB_CARD_REORDER_MOVE_THRESHOLD = 16;
+const ARCADE_HUB_CARD_REORDER_TOUCH_MOVE_THRESHOLD = 36;
+const ARCADE_HUB_CARD_REORDER_PEN_MOVE_THRESHOLD = 24;
 const ARCADE_AUTOSAVE_STORAGE_KEY = 'atom2univers.arcadeSaves.v1';
 const CHESS_LIBRARY_STORAGE_KEY = 'atom2univers.arcade.echecs';
 const QUANTUM_2048_STORAGE_KEY = 'atom2univers.quantum2048.parallelUniverses';
@@ -16340,6 +16342,14 @@ function beginArcadeHubCardDrag(state) {
   card.style.touchAction = 'none';
   card.style.zIndex = '1000';
   card.style.willChange = 'transform';
+  if (state.pointerType === 'touch') {
+    if (state.container) {
+      state.container.style.touchAction = 'none';
+    }
+    if (document?.body) {
+      document.body.style.touchAction = 'none';
+    }
+  }
   document.body.classList.add('arcade-hub-reordering');
   updateArcadeHubCardDragPosition(state, state.lastClientX, state.lastClientY);
   try {
@@ -16441,6 +16451,14 @@ function finalizeArcadeHubCardDrag({ dropTarget } = {}) {
     delete card.dataset.arcadeDragging;
     delete card.dataset.arcadeDragPending;
     document.body.classList.remove('arcade-hub-reordering');
+    if (state.pointerType === 'touch') {
+      if (state.container) {
+        state.container.style.touchAction = state.originalContainerTouchAction || '';
+      }
+      if (document?.body) {
+        document.body.style.touchAction = state.originalBodyTouchAction || '';
+      }
+    }
     if (state.focusOnReturn && typeof card.focus === 'function') {
       card.focus({ preventScroll: true });
     }
@@ -16483,6 +16501,14 @@ function cancelArcadeHubCardDrag(options = {}) {
   delete card.dataset.arcadeDragging;
   delete card.dataset.arcadeDragPending;
   document.body.classList.remove('arcade-hub-reordering');
+  if (state.pointerType === 'touch') {
+    if (state.container) {
+      state.container.style.touchAction = state.originalContainerTouchAction || '';
+    }
+    if (document?.body) {
+      document.body.style.touchAction = state.originalBodyTouchAction || '';
+    }
+  }
   if (options.suppressClick) {
     card.dataset.arcadeDragSuppressClick = 'true';
     setTimeout(() => {
@@ -16512,6 +16538,7 @@ function handleArcadeHubCardPointerDown(event, card) {
     card,
     container,
     pointerId: event.pointerId,
+    pointerType: event.pointerType || '',
     originLeft: rect.left,
     originTop: rect.top,
     offsetX: event.clientX - rect.left,
@@ -16527,6 +16554,8 @@ function handleArcadeHubCardPointerDown(event, card) {
     originalWillChange: card.style.willChange || '',
     originalTranslateX: card.style.getPropertyValue('--arcade-hub-card-translate-x') || '',
     originalTranslateY: card.style.getPropertyValue('--arcade-hub-card-translate-y') || '',
+    originalContainerTouchAction: container?.style?.touchAction || '',
+    originalBodyTouchAction: document?.body?.style?.touchAction || '',
     dropTarget: null,
     dragging: false,
     focusOnReturn: card === document.activeElement
@@ -16536,6 +16565,20 @@ function handleArcadeHubCardPointerDown(event, card) {
     beginArcadeHubCardDrag(state);
   }, ARCADE_HUB_CARD_REORDER_DELAY_MS);
   card.dataset.arcadeDragPending = 'true';
+}
+
+function getArcadeHubCardMoveThreshold(state) {
+  if (!state) {
+    return ARCADE_HUB_CARD_REORDER_MOVE_THRESHOLD;
+  }
+  const pointerType = state.pointerType;
+  if (pointerType === 'touch') {
+    return ARCADE_HUB_CARD_REORDER_TOUCH_MOVE_THRESHOLD;
+  }
+  if (pointerType === 'pen') {
+    return ARCADE_HUB_CARD_REORDER_PEN_MOVE_THRESHOLD;
+  }
+  return ARCADE_HUB_CARD_REORDER_MOVE_THRESHOLD;
 }
 
 function handleArcadeHubPointerMove(event) {
@@ -16548,7 +16591,8 @@ function handleArcadeHubPointerMove(event) {
   if (!state.dragging) {
     const deltaX = event.clientX - state.startClientX;
     const deltaY = event.clientY - state.startClientY;
-    if (Math.hypot(deltaX, deltaY) > ARCADE_HUB_CARD_REORDER_MOVE_THRESHOLD) {
+    const threshold = getArcadeHubCardMoveThreshold(state);
+    if (Math.hypot(deltaX, deltaY) > threshold) {
       cancelArcadeHubCardDrag();
     }
     return;
