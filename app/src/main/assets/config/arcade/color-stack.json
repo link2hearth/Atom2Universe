@@ -2,6 +2,7 @@
   "maxScrambleAttempts": 200,
   "preferDifferentColorWeight": 2.5,
   "preferSameColorWeight": 1,
+  "scrambleWeightJitter": { "min": 0.6, "max": 1.4 },
   "minMovePool": 6,
   "preparedPoolSize": 1,
   "palette": [
