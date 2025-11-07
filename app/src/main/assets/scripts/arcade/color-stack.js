@@ -37,25 +37,28 @@
         emptyColumns: 2,
         scrambleMoves: 48,
         minMulticoloredColumns: 2,
-        minDisplacedRatio: 0.5
+        minDisplacedRatio: 0.5,
+        gachaTickets: 1
       }),
       medium: Object.freeze({
         columns: 6,
         capacity: 5,
-        filledColumns: Object.freeze([0, 1, 2, 3, 0]),
+        filledColumns: Object.freeze([0, 1, 2, 3, 4]),
         emptyColumns: 1,
         scrambleMoves: 72,
         minMulticoloredColumns: 3,
-        minDisplacedRatio: 0.6
+        minDisplacedRatio: 0.6,
+        gachaTickets: 2
       }),
       hard: Object.freeze({
         columns: 8,
         capacity: 6,
-        filledColumns: Object.freeze([0, 1, 2, 3, 4, 5, 0]),
+        filledColumns: Object.freeze([0, 1, 2, 3, 4, 5, 6]),
         emptyColumns: 1,
         scrambleMoves: 96,
         minMulticoloredColumns: 4,
-        minDisplacedRatio: 0.65
+        minDisplacedRatio: 0.65,
+        gachaTickets: 3
       })
     })
   });
@@ -77,6 +80,7 @@
     initialBoard: [],
     history: [],
     solved: false,
+    rewardClaimed: false,
     selectedColumn: null,
     autosaveTimer: null,
     autosaveSuppressed: false,
@@ -158,6 +162,7 @@
       1,
       typeof base.minDisplacedRatio === 'number' ? base.minDisplacedRatio : 0.5
     );
+    const gachaTickets = Math.max(0, toInteger(entry?.gachaTickets, base.gachaTickets || 0));
     const filledColumns = Array.isArray(entry?.filledColumns) && entry.filledColumns.length
       ? entry.filledColumns.map(index => toInteger(index, 0))
       : Array.from({ length: Math.max(0, columns - emptyColumns) }, (_, idx) => idx);
@@ -168,7 +173,8 @@
       scrambleMoves,
       minMulticoloredColumns: minMulticolored,
       minDisplacedRatio,
-      filledColumns
+      filledColumns,
+      gachaTickets
     };
   }
 
@@ -357,8 +363,23 @@
     const filledColumns = Array.isArray(difficultyConfig.filledColumns)
       ? difficultyConfig.filledColumns
       : [];
+    const paletteLength = palette.length;
+    const requireUniqueColors = paletteLength >= filledColumns.length && paletteLength > 0;
+    const usedPaletteIndices = new Set();
     filledColumns.forEach((colorIndex, columnIndex) => {
-      const paletteIndex = Number.isFinite(colorIndex) ? Math.abs(colorIndex) % palette.length : columnIndex % palette.length;
+      let paletteIndex = paletteLength > 0
+        ? (Number.isFinite(colorIndex) ? Math.abs(colorIndex) % paletteLength : columnIndex % paletteLength)
+        : 0;
+      if (requireUniqueColors) {
+        let attempts = 0;
+        while (usedPaletteIndices.has(paletteIndex) && attempts < paletteLength) {
+          paletteIndex = (paletteIndex + 1) % paletteLength;
+          attempts += 1;
+        }
+      }
+      if (paletteLength > 0) {
+        usedPaletteIndices.add(paletteIndex);
+      }
       const color = palette[paletteIndex] || palette[0];
       const column = [];
       for (let slot = 0; slot < difficultyConfig.capacity; slot += 1) {
@@ -616,6 +637,79 @@
     };
   }
 
+  function formatTicketCount(value) {
+    if (typeof formatIntegerLocalized === 'function') {
+      try {
+        return formatIntegerLocalized(value);
+      } catch (error) {
+        // Ignore formatting errors and fallback below.
+      }
+    }
+    if (Number.isFinite(value)) {
+      try {
+        return Number(value).toLocaleString();
+      } catch (error) {
+        // Ignore locale formatting errors.
+      }
+    }
+    return String(value);
+  }
+
+  function getGachaTicketsForDifficulty(difficultyKey) {
+    const difficultyConfig = state.config?.difficulties?.[difficultyKey]
+      || state.config?.difficulties?.easy
+      || DEFAULT_CONFIG.difficulties.easy;
+    const amount = Number(difficultyConfig?.gachaTickets);
+    if (!Number.isFinite(amount) || amount <= 0) {
+      return 0;
+    }
+    return Math.max(0, Math.floor(amount));
+  }
+
+  function awardVictoryTickets() {
+    if (state.rewardClaimed) {
+      return;
+    }
+    const tickets = getGachaTicketsForDifficulty(state.difficulty);
+    if (tickets <= 0) {
+      state.rewardClaimed = true;
+      scheduleAutosave();
+      return;
+    }
+    const awardGacha = typeof gainGachaTickets === 'function'
+      ? gainGachaTickets
+      : typeof window !== 'undefined' && typeof window.gainGachaTickets === 'function'
+        ? window.gainGachaTickets
+        : null;
+    if (typeof awardGacha !== 'function') {
+      state.rewardClaimed = true;
+      scheduleAutosave();
+      return;
+    }
+    let gained = 0;
+    try {
+      gained = awardGacha(tickets, { unlockTicketStar: true });
+    } catch (error) {
+      console.warn('Color Stack: unable to grant gacha tickets', error);
+      gained = 0;
+    }
+    state.rewardClaimed = true;
+    scheduleAutosave();
+    if (!Number.isFinite(gained) || gained <= 0) {
+      return;
+    }
+    if (typeof showToast === 'function') {
+      const suffix = gained > 1 ? 's' : '';
+      const formattedCount = formatTicketCount(gained);
+      const message = translate(
+        'scripts.arcade.colorStack.rewards.gachaVictory',
+        'Color Stack victory! +{count} gacha ticket{suffix}.',
+        { count: formattedCount, suffix }
+      );
+      showToast(message);
+    }
+  }
+
   function setMessage(key, fallback, isSuccess = false) {
     const messageElement = state.elements.message;
     if (!messageElement) {
@@ -762,6 +856,7 @@
       initialBoard: serializeBoard(state.initialBoard),
       history: state.history.slice(),
       solved: Boolean(state.solved),
+      rewardClaimed: Boolean(state.rewardClaimed),
       selectedColumn: state.selectedColumn
     };
     try {
@@ -809,7 +904,11 @@
           .filter(Boolean)
       : [];
     state.solved = Boolean(payload.solved);
+    state.rewardClaimed = Boolean(payload.rewardClaimed);
     state.selectedColumn = Number.isInteger(payload.selectedColumn) ? payload.selectedColumn : null;
+    if (state.solved && !state.rewardClaimed) {
+      awardVictoryTickets();
+    }
     renderBoard();
     updateStatus();
     setMessage('index.sections.colorStack.messages.restored', FALLBACK_MESSAGES.resumed, false);
@@ -848,6 +947,7 @@
       state.board = cloneBoard(state.initialBoard);
       state.history = [];
       state.solved = false;
+      state.rewardClaimed = false;
       resetSelection();
       renderBoard();
       updateStatus();
@@ -865,6 +965,7 @@
       state.initialBoard = cloneBoard(puzzle.initial);
       state.history = [];
       state.solved = false;
+      state.rewardClaimed = false;
       resetSelection();
       if (state.elements.difficulty) {
         state.elements.difficulty.value = normalizedDifficulty;
@@ -912,6 +1013,7 @@
     scheduleAutosave();
     if (isBoardSolved(state.board, state.config.difficulties[state.difficulty].capacity)) {
       state.solved = true;
+      awardVictoryTickets();
       setMessage('index.sections.colorStack.messages.victory', FALLBACK_MESSAGES.victory, true);
     } else {
       setMessage('index.sections.colorStack.messages.move', '', false);
