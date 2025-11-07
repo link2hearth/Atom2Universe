@@ -17,7 +17,6 @@
     maxScrambleAttempts: 200,
     preferDifferentColorWeight: 2.5,
     preferSameColorWeight: 1,
-    scrambleWeightJitter: Object.freeze({ min: 0.6, max: 1.4 }),
     minMovePool: 6,
     preparedPoolSize: 1,
     palette: Object.freeze([
@@ -130,14 +129,6 @@
     return Math.max(0, Math.floor(numeric));
   }
 
-  function toFiniteNumber(value, fallback) {
-    const numeric = Number(value);
-    if (!Number.isFinite(numeric)) {
-      return fallback;
-    }
-    return numeric;
-  }
-
   function isNonEmptyString(value) {
     return typeof value === 'string' && value.trim().length > 0;
   }
@@ -201,17 +192,6 @@
       10,
       fallback.preferSameColorWeight
     );
-    const fallbackJitter = fallback.scrambleWeightJitter || { min: 1, max: 1 };
-    const jitterMin = toFiniteNumber(rawConfig.scrambleWeightJitter?.min, fallbackJitter.min);
-    const jitterMax = toFiniteNumber(rawConfig.scrambleWeightJitter?.max, fallbackJitter.max);
-    const normalizedJitterMin = Number.isFinite(jitterMin) ? Math.max(0, jitterMin) : Math.max(0, fallbackJitter.min || 0);
-    const normalizedJitterMaxCandidate = Number.isFinite(jitterMax)
-      ? Math.max(normalizedJitterMin, jitterMax)
-      : Math.max(normalizedJitterMin, fallbackJitter.max || normalizedJitterMin);
-    const scrambleWeightJitter = Object.freeze({
-      min: normalizedJitterMin,
-      max: normalizedJitterMaxCandidate
-    });
     const minMovePool = Math.max(1, toInteger(rawConfig.minMovePool, fallback.minMovePool));
     const preparedPoolSize = Math.max(1, toInteger(rawConfig.preparedPoolSize, fallback.preparedPoolSize || 1));
     const palette = normalizePalette(rawConfig.palette, fallback.palette);
@@ -232,7 +212,6 @@
       maxScrambleAttempts,
       preferDifferentColorWeight,
       preferSameColorWeight,
-      scrambleWeightJitter,
       minMovePool,
       preparedPoolSize,
       palette,
@@ -417,10 +396,7 @@
     const candidates = [];
     const { capacity } = difficultyConfig;
     const currentEmpty = countEmptyColumns(board);
-    const minEmptyDuringScramble = Math.max(0, emptyRequirement - 1);
-    const jitterRange = state.config.scrambleWeightJitter || { min: 1, max: 1 };
-    const jitterMin = Number.isFinite(jitterRange.min) ? jitterRange.min : 1;
-    const jitterMax = Number.isFinite(jitterRange.max) ? jitterRange.max : jitterMin;
+    const minEmptyDuringScramble = Math.max(1, emptyRequirement - 1);
     board.forEach((sourceColumn, sourceIndex) => {
       if (!Array.isArray(sourceColumn) || sourceColumn.length === 0) {
         return;
@@ -429,7 +405,8 @@
       if (!movingToken) {
         return;
       }
-      if (!isReversibleAfterPop(sourceColumn)) {
+      const belowToken = sourceColumn[sourceColumn.length - 2];
+      if (belowToken && belowToken.colorId !== movingToken.colorId) {
         return;
       }
       board.forEach((destColumn, destIndex) => {
@@ -450,39 +427,13 @@
         if (projectedEmpty < minEmptyDuringScramble) {
           return;
         }
-        const baseWeight = sameColor
+        const weight = sameColor
           ? Math.max(0.1, state.config.preferSameColorWeight)
           : Math.max(0.1, state.config.preferDifferentColorWeight);
-        const jitterSpan = Math.max(0, jitterMax - jitterMin);
-        const jitter = jitterMin + Math.random() * jitterSpan;
-        const weight = baseWeight * (jitter > 0 ? jitter : 1);
         candidates.push({ from: sourceIndex, to: destIndex, weight });
       });
     });
     return candidates;
-  }
-
-  function isReversibleAfterPop(column) {
-    if (!Array.isArray(column) || column.length === 0) {
-      return false;
-    }
-    if (column.length <= 1) {
-      return true;
-    }
-    const referenceColor = column[0]?.colorId;
-    for (let index = 0; index < column.length - 1; index += 1) {
-      const token = column[index];
-      if (!token) {
-        return false;
-      }
-      if (referenceColor == null) {
-        return false;
-      }
-      if (token.colorId !== referenceColor) {
-        return false;
-      }
-    }
-    return true;
   }
 
   function performScrambleMove(board, move) {
