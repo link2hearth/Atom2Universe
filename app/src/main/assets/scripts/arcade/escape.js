@@ -2968,6 +2968,27 @@
             console.warn('Escape: unable to grant gacha tickets', error);
           }
         }
+
+        const toast = typeof showToast === 'function'
+          ? showToast
+          : typeof window !== 'undefined' && typeof window.showToast === 'function'
+            ? window.showToast
+            : null;
+        if (typeof toast === 'function') {
+          const toastMessage = translate(
+            'scripts.arcade.escape.toast.reward',
+            '+{tickets} ticket{suffix} gacha obtenu{suffix} !',
+            {
+              tickets: formatInteger(rewardTickets),
+              suffix: rewardTickets === 1 ? '' : 's'
+            }
+          );
+          try {
+            toast(toastMessage);
+          } catch (error) {
+            console.warn('Escape: unable to display gacha reward toast', error);
+          }
+        }
       }
 
       state.play.completed = true;
