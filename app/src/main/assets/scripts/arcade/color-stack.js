@@ -298,6 +298,10 @@
     });
   }
 
+  function countEmptyColumns(board) {
+    return board.reduce((count, column) => count + (Array.isArray(column) && column.length === 0 ? 1 : 0), 0);
+  }
+
   function countMulticoloredColumns(board) {
     return board.reduce((count, column) => count + (column.length > 1 && !isUniformColumn(column) ? 1 : 0), 0);
   }
@@ -409,6 +413,89 @@
     return true;
   }
 
+  function chooseRelocationDestination(board, sourceIndex, token, capacity) {
+    let bestIndex = null;
+    let bestScore = -Infinity;
+    board.forEach((column, index) => {
+      if (index === sourceIndex || !column || column.length >= capacity) {
+        return;
+      }
+      let score = 0;
+      if (index === token.origin) {
+        score -= 4;
+      }
+      if (column.length === 0) {
+        score += 1;
+      } else {
+        score += 3 - column.length / Math.max(1, capacity);
+        const top = column[column.length - 1];
+        if (top && top.colorId !== token.colorId) {
+          score += 1;
+        } else if (top && top.colorId === token.colorId) {
+          score -= 1;
+        }
+      }
+      if (column.length < capacity - 1) {
+        score += 0.5;
+      }
+      if (score > bestScore) {
+        bestScore = score;
+        bestIndex = index;
+      }
+    });
+    return bestIndex;
+  }
+
+  function ensureEmptyColumns(board, difficultyConfig) {
+    const required = Math.max(0, Number.isFinite(difficultyConfig.emptyColumns) ? difficultyConfig.emptyColumns : 0);
+    if (required === 0) {
+      return true;
+    }
+    let emptyCount = countEmptyColumns(board);
+    if (emptyCount >= required) {
+      return true;
+    }
+    const { capacity } = difficultyConfig;
+    const maxIterations = board.length * Math.max(1, capacity) * 4;
+    let iterations = 0;
+    while (emptyCount < required && iterations < maxIterations) {
+      iterations += 1;
+      const candidates = board
+        .map((column, index) => ({ column, index }))
+        .filter(entry => Array.isArray(entry.column) && entry.column.length > 0)
+        .sort((a, b) => a.column.length - b.column.length);
+      let moved = false;
+      for (let idx = 0; idx < candidates.length; idx += 1) {
+        const candidateIndex = candidates[idx].index;
+        const sourceColumn = board[candidateIndex];
+        if (!sourceColumn || sourceColumn.length === 0) {
+          continue;
+        }
+        const token = sourceColumn[sourceColumn.length - 1];
+        if (!token) {
+          continue;
+        }
+        const destinationIndex = chooseRelocationDestination(board, candidateIndex, token, capacity);
+        if (destinationIndex === null || destinationIndex === undefined) {
+          continue;
+        }
+        const destinationColumn = board[destinationIndex];
+        if (!destinationColumn || destinationColumn.length >= capacity) {
+          continue;
+        }
+        sourceColumn.pop();
+        destinationColumn.push(token);
+        moved = true;
+        break;
+      }
+      if (!moved) {
+        break;
+      }
+      emptyCount = countEmptyColumns(board);
+    }
+    return emptyCount >= required;
+  }
+
   function meetsScrambleDiversity(board, difficultyConfig) {
     if (isBoardSolved(board, difficultyConfig.capacity)) {
       return false;
@@ -454,6 +541,9 @@
     if (performedMoves < requiredMoves) {
       return null;
     }
+    if (!ensureEmptyColumns(attemptBoard, difficultyConfig)) {
+      return null;
+    }
     if (!meetsScrambleDiversity(attemptBoard, difficultyConfig)) {
       return null;
     }
@@ -476,31 +566,38 @@
     }
     if (!scrambled) {
       scrambled = cloneBoard(solvedBoard);
-      const sourceIndex = scrambled.findIndex(column => column.length);
-      const emptyIndex = scrambled.findIndex((column, index) => index !== sourceIndex && column.length === 0);
-      if (sourceIndex >= 0) {
+      const populated = scrambled
+        .map((column, index) => ({ column, index }))
+        .filter(entry => Array.isArray(entry.column) && entry.column.length > 0);
+      const cycleLength = Math.min(populated.length, Math.max(2, config.minMulticoloredColumns || 2));
+      for (let idx = 0; idx < cycleLength; idx += 1) {
+        const sourceIndex = populated[idx]?.index;
+        const targetIndex = populated[(idx + 1) % populated.length]?.index;
+        if (sourceIndex === undefined || targetIndex === undefined || sourceIndex === targetIndex) {
+          continue;
+        }
         const sourceColumn = scrambled[sourceIndex];
         const token = sourceColumn?.pop();
         if (token) {
-          if (emptyIndex >= 0) {
-            scrambled[emptyIndex].push(token);
-          } else {
-            const targetIndex = scrambled.findIndex((column, idx) => idx !== sourceIndex && column.length < config.capacity);
-            if (targetIndex >= 0) {
-              scrambled[targetIndex].push(token);
-            } else {
-              sourceColumn.push(token);
-            }
-          }
-        }
-        const secondSource = scrambled.findIndex((column, idx) => column.length && idx !== sourceIndex);
-        if (secondSource >= 0) {
-          const secondaryToken = scrambled[secondSource].pop();
-          if (secondaryToken) {
-            scrambled[sourceIndex].push(secondaryToken);
-          }
+          scrambled[targetIndex].push(token);
         }
       }
+      const extraSource = populated.find(entry => entry.column.length > 1)?.index;
+      const extraTarget = populated.find(entry => entry.index !== extraSource && entry.column.length > 0)?.index;
+      if (extraSource !== undefined && extraTarget !== undefined && extraSource !== extraTarget) {
+        const token = scrambled[extraSource].pop();
+        if (token) {
+          scrambled[extraTarget].push(token);
+        }
+      }
+      ensureEmptyColumns(scrambled, config);
+      if (!meetsScrambleDiversity(scrambled, config)) {
+        const attempt = scrambleBoard(solvedBoard, config);
+        if (attempt) {
+          scrambled = attempt;
+        }
+      }
+      ensureEmptyColumns(scrambled, config);
     }
     return {
       board: scrambled,
