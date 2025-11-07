@@ -1,0 +1,45 @@
+{
+  "maxScrambleAttempts": 120,
+  "preferDifferentColorWeight": 2.5,
+  "preferSameColorWeight": 1,
+  "minMovePool": 6,
+  "palette": [
+    { "id": "ruby", "value": "#ff6b6b" },
+    { "id": "azure", "value": "#4ab3ff" },
+    { "id": "emerald", "value": "#2ecc71" },
+    { "id": "amber", "value": "#f6b93b" },
+    { "id": "violet", "value": "#9b59b6" },
+    { "id": "rose", "value": "#ff9ff3" },
+    { "id": "teal", "value": "#1abc9c" },
+    { "id": "slate", "value": "#95a5a6" }
+  ],
+  "difficulties": {
+    "easy": {
+      "columns": 5,
+      "capacity": 4,
+      "filledColumns": [0, 1, 2],
+      "emptyColumns": 2,
+      "scrambleMoves": 48,
+      "minMulticoloredColumns": 2,
+      "minDisplacedRatio": 0.5
+    },
+    "medium": {
+      "columns": 6,
+      "capacity": 5,
+      "filledColumns": [0, 1, 2, 3, 0],
+      "emptyColumns": 1,
+      "scrambleMoves": 72,
+      "minMulticoloredColumns": 3,
+      "minDisplacedRatio": 0.6
+    },
+    "hard": {
+      "columns": 8,
+      "capacity": 6,
+      "filledColumns": [0, 1, 2, 3, 4, 5, 0],
+      "emptyColumns": 1,
+      "scrambleMoves": 96,
+      "minMulticoloredColumns": 4,
+      "minDisplacedRatio": 0.65
+    }
+  }
+}

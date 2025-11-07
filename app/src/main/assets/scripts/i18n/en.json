@@ -412,6 +412,12 @@
             "description": "Rotate the pipes to connect the full pipeline without leaks.",
             "cta": "Connect"
           },
+          "colorStack": {
+            "aria": "Open the Color Stack mini-game",
+            "title": "Color Stack",
+            "description": "Stack and sort the discs until every column holds a single colour.",
+            "cta": "Sort"
+          },
           "sokoban": {
             "aria": "Open the Sokoban mini-game",
             "title": "Sokoban",
@@ -983,6 +989,39 @@
           "aria": "Tile {{row}}, column {{column}}"
         }
       },
+      "colorStack": {
+        "aria": "Color Stack mini-game: sort every column by colour.",
+        "title": "Color Stack",
+        "subtitle": "Move the top token onto a matching colour or into an empty column until every stack is uniform.",
+        "difficulty": {
+          "label": "Difficulty",
+          "aria": "Select difficulty",
+          "easy": "Easy",
+          "medium": "Medium",
+          "hard": "Hard"
+        },
+        "actions": {
+          "new": "New shuffle",
+          "restart": "Restart",
+          "undo": "Undo"
+        },
+        "stats": {
+          "moves": "Moves",
+          "completed": "Completed columns"
+        },
+        "board": "Color Stack board",
+        "columnLabel": "Column {{index}} · {{count}} token(s)",
+        "messages": {
+          "selectSource": "Pick a column that still has a token to begin.",
+          "invalidMove": "You can only place a token on the same colour or into an empty column.",
+          "victory": "Great job! Every column is uniform or empty.",
+          "restart": "Board reset.",
+          "new": "A fresh shuffle is ready.",
+          "undo": "Move undone.",
+          "restored": "Game restored.",
+          "move": ""
+        }
+      },
       "sokoban": {
         "aria": "Sokoban mini-game: push every crate onto its target.",
         "title": "Sokoban",
@@ -1520,6 +1559,10 @@
             "pipeTap": {
               "label": "PipeTap mini-game:",
               "description": "Rotate pipe tiles to connect the full circuit without leaks and claim extra gacha tickets."
+            },
+            "colorStack": {
+              "label": "Color Stack mini-game:",
+              "description": "Move the top discs only to gather each colour in its own column while keeping an empty slot handy."
             },
             "sokoban": {
               "label": "Sokoban mini-game:",

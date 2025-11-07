@@ -412,6 +412,12 @@
             "description": "Tournez les conduites pour relier toute la canalisation sans fuite.",
             "cta": "Relier"
           },
+          "colorStack": {
+            "aria": "Accéder au mini-jeu Color Stack",
+            "title": "Color Stack",
+            "description": "Empilez et triez les jetons pour que chaque colonne ne contienne qu’une seule couleur.",
+            "cta": "Trier"
+          },
           "sokoban": {
             "aria": "Accéder au mini-jeu Sokoban",
             "title": "Sokoban",
@@ -983,6 +989,39 @@
           "aria": "Tuile {{row}}, colonne {{column}}"
         }
       },
+      "colorStack": {
+        "aria": "Color Stack : triez chaque pile de jetons colorés.",
+        "title": "Color Stack",
+        "subtitle": "Déplacez toujours le jeton du haut vers une colonne compatible pour regrouper chaque couleur dans sa pile dédiée.",
+        "difficulty": {
+          "label": "Difficulté",
+          "aria": "Choisir la difficulté",
+          "easy": "Facile",
+          "medium": "Moyen",
+          "hard": "Difficile"
+        },
+        "actions": {
+          "new": "Nouveau mélange",
+          "restart": "Recommencer",
+          "undo": "Annuler"
+        },
+        "stats": {
+          "moves": "Coups",
+          "completed": "Colonnes complètes"
+        },
+        "board": "Plateau Color Stack",
+        "columnLabel": "Colonne {{index}} · {{count}} jeton(s)",
+        "messages": {
+          "selectSource": "Sélectionnez une colonne contenant un jeton pour commencer.",
+          "invalidMove": "Vous ne pouvez déplacer un jeton que sur une couleur identique ou une colonne vide.",
+          "victory": "Bravo ! Toutes les colonnes sont uniformes ou vides.",
+          "restart": "Plateau réinitialisé.",
+          "new": "Un nouveau mélange est prêt.",
+          "undo": "Coup annulé.",
+          "restored": "Partie restaurée.",
+          "move": ""
+        }
+      },
       "sokoban": {
         "aria": "Mini-jeu Sokoban : poussez toutes les caisses sur les cibles.",
         "title": "Sokoban",
@@ -1520,6 +1559,10 @@
             "pipeTap": {
               "label": "Mini jeu PipeTap :",
               "description": "Faites pivoter les tuiles pour relier toute la canalisation sans fuite et décrocher des tickets de gacha."
+            },
+            "colorStack": {
+              "label": "Mini jeu Color Stack :",
+              "description": "Déplacez les jetons du haut pour regrouper chaque couleur dans sa colonne tout en gérant l’espace libre." 
             },
             "sokoban": {
               "label": "Mini jeu Sokoban :",
