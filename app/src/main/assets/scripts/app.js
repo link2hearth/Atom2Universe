@@ -204,7 +204,9 @@ const HEADER_COLLAPSED_STORAGE_KEY = 'atom2univers.ui.headerCollapsed';
 const ARCADE_HUB_CARD_STATE_STORAGE_KEY = 'atom2univers.arcadeHub.cardStates.v1';
 const ARCADE_HUB_CARD_ORDER_STORAGE_KEY = 'atom2univers.arcadeHub.cardOrder.v1';
 const ARCADE_HUB_CARD_REORDER_DELAY_MS = 1500;
-const ARCADE_HUB_CARD_REORDER_MOVE_THRESHOLD = 8;
+const ARCADE_HUB_CARD_REORDER_MOVE_THRESHOLD = 16;
+const ARCADE_HUB_CARD_REORDER_TOUCH_MOVE_THRESHOLD = 36;
+const ARCADE_HUB_CARD_REORDER_PEN_MOVE_THRESHOLD = 24;
 const ARCADE_AUTOSAVE_STORAGE_KEY = 'atom2univers.arcadeSaves.v1';
 const CHESS_LIBRARY_STORAGE_KEY = 'atom2univers.arcade.echecs';
 const QUANTUM_2048_STORAGE_KEY = 'atom2univers.quantum2048.parallelUniverses';
@@ -16512,6 +16514,7 @@ function handleArcadeHubCardPointerDown(event, card) {
     card,
     container,
     pointerId: event.pointerId,
+    pointerType: event.pointerType || '',
     originLeft: rect.left,
     originTop: rect.top,
     offsetX: event.clientX - rect.left,
@@ -16538,6 +16541,20 @@ function handleArcadeHubCardPointerDown(event, card) {
   card.dataset.arcadeDragPending = 'true';
 }
 
+function getArcadeHubCardMoveThreshold(state) {
+  if (!state) {
+    return ARCADE_HUB_CARD_REORDER_MOVE_THRESHOLD;
+  }
+  const pointerType = state.pointerType;
+  if (pointerType === 'touch') {
+    return ARCADE_HUB_CARD_REORDER_TOUCH_MOVE_THRESHOLD;
+  }
+  if (pointerType === 'pen') {
+    return ARCADE_HUB_CARD_REORDER_PEN_MOVE_THRESHOLD;
+  }
+  return ARCADE_HUB_CARD_REORDER_MOVE_THRESHOLD;
+}
+
 function handleArcadeHubPointerMove(event) {
   const state = activeArcadeHubCardDrag;
   if (!state || event.pointerId !== state.pointerId) {
@@ -16548,7 +16565,8 @@ function handleArcadeHubPointerMove(event) {
   if (!state.dragging) {
     const deltaX = event.clientX - state.startClientX;
     const deltaY = event.clientY - state.startClientY;
-    if (Math.hypot(deltaX, deltaY) > ARCADE_HUB_CARD_REORDER_MOVE_THRESHOLD) {
+    const threshold = getArcadeHubCardMoveThreshold(state);
+    if (Math.hypot(deltaX, deltaY) > threshold) {
       cancelArcadeHubCardDrag();
     }
     return;
