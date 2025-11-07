@@ -409,14 +409,31 @@
     return true;
   }
 
+  function meetsScrambleDiversity(board, difficultyConfig) {
+    if (isBoardSolved(board, difficultyConfig.capacity)) {
+      return false;
+    }
+    if (countMulticoloredColumns(board) < difficultyConfig.minMulticoloredColumns) {
+      return false;
+    }
+    if (computeDisplacedRatio(board) < difficultyConfig.minDisplacedRatio) {
+      return false;
+    }
+    return true;
+  }
+
   function scrambleBoard(solvedBoard, difficultyConfig) {
     const attemptBoard = cloneBoard(solvedBoard);
+    const minMovePool = Math.max(1, state.config.minMovePool);
+    const baseRequiredMoves = Math.max(3, Math.floor(difficultyConfig.scrambleMoves * 0.6));
+    const requiredMoves = Math.max(baseRequiredMoves, minMovePool);
+    const maxMoves = Math.max(difficultyConfig.scrambleMoves * 5, requiredMoves + minMovePool);
     let lastMove = null;
     let performedMoves = 0;
-    for (let moveIndex = 0; moveIndex < difficultyConfig.scrambleMoves; moveIndex += 1) {
+    for (let moveIndex = 0; moveIndex < maxMoves; moveIndex += 1) {
       const candidates = collectScrambleCandidates(attemptBoard, difficultyConfig, lastMove);
       if (!candidates.length) {
-        if (moveIndex < state.config.minMovePool) {
+        if (performedMoves < minMovePool) {
           return null;
         }
         break;
@@ -430,17 +447,14 @@
       }
       performedMoves += 1;
       lastMove = move;
+      if (performedMoves >= difficultyConfig.scrambleMoves && meetsScrambleDiversity(attemptBoard, difficultyConfig)) {
+        break;
+      }
     }
-    if (performedMoves < Math.max(3, Math.floor(difficultyConfig.scrambleMoves * 0.6))) {
+    if (performedMoves < requiredMoves) {
       return null;
     }
-    if (isBoardSolved(attemptBoard, difficultyConfig.capacity)) {
-      return null;
-    }
-    if (countMulticoloredColumns(attemptBoard) < difficultyConfig.minMulticoloredColumns) {
-      return null;
-    }
-    if (computeDisplacedRatio(attemptBoard) < difficultyConfig.minDisplacedRatio) {
+    if (!meetsScrambleDiversity(attemptBoard, difficultyConfig)) {
       return null;
     }
     return attemptBoard;
