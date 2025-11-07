@@ -14,10 +14,11 @@
   const AUTOSAVE_DEBOUNCE_MS = 180;
 
   const DEFAULT_CONFIG = Object.freeze({
-    maxScrambleAttempts: 120,
+    maxScrambleAttempts: 200,
     preferDifferentColorWeight: 2.5,
     preferSameColorWeight: 1,
     minMovePool: 6,
+    preparedPoolSize: 1,
     palette: Object.freeze([
       Object.freeze({ id: 'ruby', value: '#ff6b6b' }),
       Object.freeze({ id: 'azure', value: '#4ab3ff' }),
@@ -30,31 +31,31 @@
     ]),
     difficulties: Object.freeze({
       easy: Object.freeze({
-        columns: 5,
-        capacity: 4,
-        filledColumns: Object.freeze([0, 1, 2]),
-        emptyColumns: 2,
-        scrambleMoves: 48,
-        minMulticoloredColumns: 2,
-        minDisplacedRatio: 0.5
-      }),
-      medium: Object.freeze({
+        colors: 4,
         columns: 6,
         capacity: 5,
-        filledColumns: Object.freeze([0, 1, 2, 3, 0]),
-        emptyColumns: 1,
-        scrambleMoves: 72,
+        emptyColumns: 2,
+        scrambleMoves: Object.freeze({ min: 10, max: 30 }),
+        minMulticoloredColumns: 2,
+        minDisplacedRatio: 0.45
+      }),
+      medium: Object.freeze({
+        colors: 5,
+        columns: 7,
+        capacity: 5,
+        emptyColumns: 2,
+        scrambleMoves: Object.freeze({ min: 40, max: 60 }),
         minMulticoloredColumns: 3,
-        minDisplacedRatio: 0.6
+        minDisplacedRatio: 0.55
       }),
       hard: Object.freeze({
-        columns: 8,
+        colors: 6,
+        columns: 7,
         capacity: 6,
-        filledColumns: Object.freeze([0, 1, 2, 3, 4, 5, 0]),
         emptyColumns: 1,
-        scrambleMoves: 96,
+        scrambleMoves: Object.freeze({ min: 70, max: 100 }),
         minMulticoloredColumns: 4,
-        minDisplacedRatio: 0.65
+        minDisplacedRatio: 0.6
       })
     })
   });
@@ -79,6 +80,8 @@
     selectedColumn: null,
     autosaveTimer: null,
     autosaveSuppressed: false,
+    preparedPuzzles: { easy: [], medium: [], hard: [] },
+    preparationTimers: { easy: null, medium: null, hard: null },
     elements: getElements()
   };
 
@@ -146,28 +149,29 @@
 
   function normalizeDifficulty(entry, fallback) {
     const base = fallback || DEFAULT_CONFIG.difficulties.easy;
-    const columns = Math.max(1, toInteger(entry?.columns, base.columns));
+    const colors = Math.max(1, toInteger(entry?.colors, base.colors));
     const capacity = Math.max(1, toInteger(entry?.capacity, base.capacity));
-    const emptyColumns = Math.max(0, toInteger(entry?.emptyColumns, base.emptyColumns));
-    const scrambleMoves = Math.max(capacity, toInteger(entry?.scrambleMoves, base.scrambleMoves));
-    const minMulticolored = Math.max(0, toInteger(entry?.minMulticoloredColumns, base.minMulticoloredColumns || 1));
+    const emptyColumns = Math.max(1, toInteger(entry?.emptyColumns, base.emptyColumns));
+    const baseRange = base.scrambleMoves || { min: capacity, max: capacity };
+    const scrambleMin = Math.max(1, toInteger(entry?.scrambleMoves?.min, baseRange.min));
+    const scrambleMax = Math.max(scrambleMin, toInteger(entry?.scrambleMoves?.max, baseRange.max));
+    const minMulticolored = Math.max(1, toInteger(entry?.minMulticoloredColumns, base.minMulticoloredColumns || 1));
     const minDisplacedRatio = clampNumber(
       entry?.minDisplacedRatio,
       0,
       1,
       typeof base.minDisplacedRatio === 'number' ? base.minDisplacedRatio : 0.5
     );
-    const filledColumns = Array.isArray(entry?.filledColumns) && entry.filledColumns.length
-      ? entry.filledColumns.map(index => toInteger(index, 0))
-      : Array.from({ length: Math.max(0, columns - emptyColumns) }, (_, idx) => idx);
+    const minimumColumns = colors + Math.max(0, emptyColumns);
+    const columns = Math.max(minimumColumns, toInteger(entry?.columns, base.columns || minimumColumns));
     return {
+      colors,
       columns,
       capacity,
       emptyColumns,
-      scrambleMoves,
+      scrambleMoves: { min: scrambleMin, max: scrambleMax },
       minMulticoloredColumns: minMulticolored,
-      minDisplacedRatio,
-      filledColumns
+      minDisplacedRatio
     };
   }
 
@@ -189,16 +193,27 @@
       fallback.preferSameColorWeight
     );
     const minMovePool = Math.max(1, toInteger(rawConfig.minMovePool, fallback.minMovePool));
+    const preparedPoolSize = Math.max(1, toInteger(rawConfig.preparedPoolSize, fallback.preparedPoolSize || 1));
     const palette = normalizePalette(rawConfig.palette, fallback.palette);
     const difficulties = {};
     DIFFICULTY_ORDER.forEach(key => {
-      difficulties[key] = normalizeDifficulty(rawConfig.difficulties?.[key], fallback.difficulties[key]);
+      const normalized = normalizeDifficulty(rawConfig.difficulties?.[key], fallback.difficulties[key]);
+      difficulties[key] = Object.freeze({
+        colors: normalized.colors,
+        columns: normalized.columns,
+        capacity: normalized.capacity,
+        emptyColumns: normalized.emptyColumns,
+        scrambleMoves: Object.freeze({ min: normalized.scrambleMoves.min, max: normalized.scrambleMoves.max }),
+        minMulticoloredColumns: normalized.minMulticoloredColumns,
+        minDisplacedRatio: normalized.minDisplacedRatio
+      });
     });
     return {
       maxScrambleAttempts,
       preferDifferentColorWeight,
       preferSameColorWeight,
       minMovePool,
+      preparedPoolSize,
       palette,
       difficulties
     };
@@ -213,6 +228,7 @@
       .then(data => {
         if (data && typeof data === 'object') {
           state.config = normalizeConfig(data, state.config || DEFAULT_CONFIG);
+          resetPreparedPuzzles();
         }
       })
       .catch(error => {
@@ -234,7 +250,17 @@
     };
   }
 
-  function createToken(color, originColumn) {
+  function createToken(color, originColumn, counter) {
+    if (counter && typeof counter === 'object') {
+      const nextValue = Number.isFinite(counter.value) ? counter.value + 1 : 1;
+      counter.value = nextValue;
+      return {
+        id: `t${counter.value}`,
+        colorId: color.id,
+        colorHex: color.value,
+        origin: originColumn
+      };
+    }
     state.nextTokenId += 1;
     return {
       id: `t${state.nextTokenId}`,
@@ -343,46 +369,50 @@
   }
 
   function generateSolvedBoard(difficultyConfig, palette) {
-    state.nextTokenId = 0;
+    const counter = { value: 0 };
     const board = [];
-    const filledColumns = Array.isArray(difficultyConfig.filledColumns)
-      ? difficultyConfig.filledColumns
-      : [];
-    filledColumns.forEach((colorIndex, columnIndex) => {
-      const paletteIndex = Number.isFinite(colorIndex) ? Math.abs(colorIndex) % palette.length : columnIndex % palette.length;
+    const colorCount = Math.max(1, Math.min(palette.length, toInteger(difficultyConfig.colors, palette.length)));
+    for (let colorIndex = 0; colorIndex < colorCount; colorIndex += 1) {
+      const paletteIndex = colorIndex % palette.length;
       const color = palette[paletteIndex] || palette[0];
+      const columnIndex = board.length;
       const column = [];
       for (let slot = 0; slot < difficultyConfig.capacity; slot += 1) {
-        column.push(createToken(color, columnIndex));
+        column.push(createToken(color, columnIndex, counter));
       }
       board.push(column);
-    });
+    }
     const requiredColumns = Math.max(
-      difficultyConfig.columns,
-      board.length + Math.max(0, difficultyConfig.emptyColumns)
+      Math.max(colorCount + Math.max(0, difficultyConfig.emptyColumns || 0), board.length),
+      Math.max(1, toInteger(difficultyConfig.columns, board.length))
     );
     while (board.length < requiredColumns) {
       board.push([]);
     }
-    return board;
+    return { board, nextTokenId: counter.value };
   }
 
-  function collectScrambleCandidates(board, difficultyConfig, lastMove) {
+  function collectScrambleCandidates(board, difficultyConfig, lastMove, emptyRequirement) {
     const candidates = [];
     const { capacity } = difficultyConfig;
+    const currentEmpty = countEmptyColumns(board);
     board.forEach((sourceColumn, sourceIndex) => {
-      if (!sourceColumn || sourceColumn.length === 0) {
+      if (!Array.isArray(sourceColumn) || sourceColumn.length === 0) {
         return;
       }
       const movingToken = sourceColumn[sourceColumn.length - 1];
       if (!movingToken) {
         return;
       }
+      const belowToken = sourceColumn[sourceColumn.length - 2];
+      if (belowToken && belowToken.colorId !== movingToken.colorId) {
+        return;
+      }
       board.forEach((destColumn, destIndex) => {
         if (destIndex === sourceIndex) {
           return;
         }
-        if (!destColumn || destColumn.length >= capacity) {
+        if (!Array.isArray(destColumn) || destColumn.length >= capacity) {
           return;
         }
         if (lastMove && lastMove.from === destIndex && lastMove.to === sourceIndex) {
@@ -390,6 +420,12 @@
         }
         const destTop = destColumn[destColumn.length - 1] || null;
         const sameColor = destTop && destTop.colorId === movingToken.colorId;
+        const destWasEmpty = destColumn.length === 0;
+        const sourceWillBeEmpty = sourceColumn.length === 1;
+        const projectedEmpty = currentEmpty + (sourceWillBeEmpty ? 1 : 0) - (destWasEmpty ? 1 : 0);
+        if (projectedEmpty < emptyRequirement) {
+          return;
+        }
         const weight = sameColor
           ? Math.max(0.1, state.config.preferSameColorWeight)
           : Math.max(0.1, state.config.preferDifferentColorWeight);
@@ -413,89 +449,6 @@
     return true;
   }
 
-  function chooseRelocationDestination(board, sourceIndex, token, capacity) {
-    let bestIndex = null;
-    let bestScore = -Infinity;
-    board.forEach((column, index) => {
-      if (index === sourceIndex || !column || column.length >= capacity) {
-        return;
-      }
-      let score = 0;
-      if (index === token.origin) {
-        score -= 4;
-      }
-      if (column.length === 0) {
-        score += 1;
-      } else {
-        score += 3 - column.length / Math.max(1, capacity);
-        const top = column[column.length - 1];
-        if (top && top.colorId !== token.colorId) {
-          score += 1;
-        } else if (top && top.colorId === token.colorId) {
-          score -= 1;
-        }
-      }
-      if (column.length < capacity - 1) {
-        score += 0.5;
-      }
-      if (score > bestScore) {
-        bestScore = score;
-        bestIndex = index;
-      }
-    });
-    return bestIndex;
-  }
-
-  function ensureEmptyColumns(board, difficultyConfig) {
-    const required = Math.max(0, Number.isFinite(difficultyConfig.emptyColumns) ? difficultyConfig.emptyColumns : 0);
-    if (required === 0) {
-      return true;
-    }
-    let emptyCount = countEmptyColumns(board);
-    if (emptyCount >= required) {
-      return true;
-    }
-    const { capacity } = difficultyConfig;
-    const maxIterations = board.length * Math.max(1, capacity) * 4;
-    let iterations = 0;
-    while (emptyCount < required && iterations < maxIterations) {
-      iterations += 1;
-      const candidates = board
-        .map((column, index) => ({ column, index }))
-        .filter(entry => Array.isArray(entry.column) && entry.column.length > 0)
-        .sort((a, b) => a.column.length - b.column.length);
-      let moved = false;
-      for (let idx = 0; idx < candidates.length; idx += 1) {
-        const candidateIndex = candidates[idx].index;
-        const sourceColumn = board[candidateIndex];
-        if (!sourceColumn || sourceColumn.length === 0) {
-          continue;
-        }
-        const token = sourceColumn[sourceColumn.length - 1];
-        if (!token) {
-          continue;
-        }
-        const destinationIndex = chooseRelocationDestination(board, candidateIndex, token, capacity);
-        if (destinationIndex === null || destinationIndex === undefined) {
-          continue;
-        }
-        const destinationColumn = board[destinationIndex];
-        if (!destinationColumn || destinationColumn.length >= capacity) {
-          continue;
-        }
-        sourceColumn.pop();
-        destinationColumn.push(token);
-        moved = true;
-        break;
-      }
-      if (!moved) {
-        break;
-      }
-      emptyCount = countEmptyColumns(board);
-    }
-    return emptyCount >= required;
-  }
-
   function meetsScrambleDiversity(board, difficultyConfig) {
     if (isBoardSolved(board, difficultyConfig.capacity)) {
       return false;
@@ -511,18 +464,21 @@
 
   function scrambleBoard(solvedBoard, difficultyConfig) {
     const attemptBoard = cloneBoard(solvedBoard);
+    const range = difficultyConfig.scrambleMoves || { min: difficultyConfig.capacity, max: difficultyConfig.capacity };
     const minMovePool = Math.max(1, state.config.minMovePool);
-    const baseRequiredMoves = Math.max(3, Math.floor(difficultyConfig.scrambleMoves * 0.6));
-    const requiredMoves = Math.max(baseRequiredMoves, minMovePool);
-    const maxMoves = Math.max(difficultyConfig.scrambleMoves * 5, requiredMoves + minMovePool);
-    let lastMove = null;
-    let performedMoves = 0;
-    for (let moveIndex = 0; moveIndex < maxMoves; moveIndex += 1) {
-      const candidates = collectScrambleCandidates(attemptBoard, difficultyConfig, lastMove);
+    const minMoves = Math.max(minMovePool, toInteger(range.min, minMovePool));
+    const maxMoves = Math.max(minMoves, toInteger(range.max, minMoves));
+    const desiredMoves = minMoves + Math.floor(Math.random() * (maxMoves - minMoves + 1));
+    const emptyRequirement = Math.max(1, toInteger(difficultyConfig.emptyColumns, 1));
+    const moves = [];
+    let satisfied = false;
+    let iterations = 0;
+    const iterationLimit = Math.max(200, maxMoves * attemptBoard.length * Math.max(1, difficultyConfig.capacity));
+    while (moves.length < maxMoves && iterations < iterationLimit) {
+      iterations += 1;
+      const lastMove = moves.length ? moves[moves.length - 1] : null;
+      const candidates = collectScrambleCandidates(attemptBoard, difficultyConfig, lastMove, emptyRequirement);
       if (!candidates.length) {
-        if (performedMoves < minMovePool) {
-          return null;
-        }
         break;
       }
       const move = chooseWeighted(candidates);
@@ -532,79 +488,171 @@
       if (!performScrambleMove(attemptBoard, move)) {
         break;
       }
-      performedMoves += 1;
-      lastMove = move;
-      if (performedMoves >= difficultyConfig.scrambleMoves && meetsScrambleDiversity(attemptBoard, difficultyConfig)) {
+      moves.push({ from: move.from, to: move.to });
+      if (
+        moves.length >= minMoves &&
+        moves.length >= desiredMoves &&
+        meetsScrambleDiversity(attemptBoard, difficultyConfig)
+      ) {
+        satisfied = true;
         break;
       }
     }
-    if (performedMoves < requiredMoves) {
+    if (!satisfied) {
+      if (moves.length < minMoves) {
+        return null;
+      }
+      if (!meetsScrambleDiversity(attemptBoard, difficultyConfig)) {
+        return null;
+      }
+    }
+    if (moves.length < minMoves || moves.length > maxMoves) {
       return null;
     }
-    if (!ensureEmptyColumns(attemptBoard, difficultyConfig)) {
+    if (countEmptyColumns(attemptBoard) < emptyRequirement) {
       return null;
     }
-    if (!meetsScrambleDiversity(attemptBoard, difficultyConfig)) {
-      return null;
-    }
-    return attemptBoard;
+    return { board: attemptBoard, moves };
   }
 
-  function generatePuzzle(difficultyKey) {
+  function canMoveTokenOnBoard(board, capacity, fromIndex, toIndex) {
+    if (!Number.isInteger(fromIndex) || !Number.isInteger(toIndex) || fromIndex === toIndex) {
+      return false;
+    }
+    const source = board[fromIndex];
+    const dest = board[toIndex];
+    if (!Array.isArray(source) || !Array.isArray(dest) || source.length === 0) {
+      return false;
+    }
+    if (dest.length >= capacity) {
+      return false;
+    }
+    const movingToken = source[source.length - 1];
+    if (!movingToken) {
+      return false;
+    }
+    const destTop = dest[dest.length - 1];
+    return !destTop || destTop.colorId === movingToken.colorId;
+  }
+
+  function simulateReverseSolution(scrambledBoard, difficultyConfig, scrambleMoves) {
+    const capacity = difficultyConfig.capacity;
+    const moves = Array.isArray(scrambleMoves) ? scrambleMoves : [];
+    if (!moves.length) {
+      return isBoardSolved(scrambledBoard, capacity);
+    }
+    const workBoard = cloneBoard(scrambledBoard);
+    for (let index = moves.length - 1; index >= 0; index -= 1) {
+      const move = moves[index];
+      if (!move || !Number.isInteger(move.from) || !Number.isInteger(move.to)) {
+        return false;
+      }
+      const fromIndex = move.to;
+      const toIndex = move.from;
+      if (!canMoveTokenOnBoard(workBoard, capacity, fromIndex, toIndex)) {
+        return false;
+      }
+      const token = workBoard[fromIndex].pop();
+      if (!token) {
+        return false;
+      }
+      workBoard[toIndex].push(token);
+    }
+    return isBoardSolved(workBoard, capacity);
+  }
+
+  function createPuzzle(difficultyKey) {
     const config = state.config.difficulties[difficultyKey] || state.config.difficulties.easy;
     const palette = state.config.palette && state.config.palette.length
       ? state.config.palette
       : DEFAULT_CONFIG.palette;
-    let solvedBoard = generateSolvedBoard(config, palette);
-    let scrambled = null;
-    for (let attempt = 0; attempt < state.config.maxScrambleAttempts; attempt += 1) {
-      solvedBoard = generateSolvedBoard(config, palette);
-      scrambled = scrambleBoard(solvedBoard, config);
-      if (scrambled) {
-        break;
+    const attempts = Math.max(1, state.config.maxScrambleAttempts);
+    for (let attempt = 0; attempt < attempts; attempt += 1) {
+      const solved = generateSolvedBoard(config, palette);
+      const scramble = scrambleBoard(solved.board, config);
+      if (!scramble) {
+        continue;
       }
+      if (!simulateReverseSolution(scramble.board, config, scramble.moves)) {
+        continue;
+      }
+      return {
+        board: scramble.board,
+        initial: cloneBoard(scramble.board),
+        capacity: config.capacity,
+        nextTokenId: solved.nextTokenId,
+        scrambleMoves: scramble.moves.length
+      };
     }
-    if (!scrambled) {
-      scrambled = cloneBoard(solvedBoard);
-      const populated = scrambled
-        .map((column, index) => ({ column, index }))
-        .filter(entry => Array.isArray(entry.column) && entry.column.length > 0);
-      const cycleLength = Math.min(populated.length, Math.max(2, config.minMulticoloredColumns || 2));
-      for (let idx = 0; idx < cycleLength; idx += 1) {
-        const sourceIndex = populated[idx]?.index;
-        const targetIndex = populated[(idx + 1) % populated.length]?.index;
-        if (sourceIndex === undefined || targetIndex === undefined || sourceIndex === targetIndex) {
-          continue;
-        }
-        const sourceColumn = scrambled[sourceIndex];
-        const token = sourceColumn?.pop();
-        if (token) {
-          scrambled[targetIndex].push(token);
-        }
-      }
-      const extraSource = populated.find(entry => entry.column.length > 1)?.index;
-      const extraTarget = populated.find(entry => entry.index !== extraSource && entry.column.length > 0)?.index;
-      if (extraSource !== undefined && extraTarget !== undefined && extraSource !== extraTarget) {
-        const token = scrambled[extraSource].pop();
-        if (token) {
-          scrambled[extraTarget].push(token);
-        }
-      }
-      ensureEmptyColumns(scrambled, config);
-      if (!meetsScrambleDiversity(scrambled, config)) {
-        const attempt = scrambleBoard(solvedBoard, config);
-        if (attempt) {
-          scrambled = attempt;
-        }
-      }
-      ensureEmptyColumns(scrambled, config);
-    }
+    const fallbackSolved = generateSolvedBoard(config, palette);
+    const fallbackBoard = cloneBoard(fallbackSolved.board);
     return {
-      board: scrambled,
-      initial: cloneBoard(scrambled),
+      board: fallbackBoard,
+      initial: cloneBoard(fallbackBoard),
       capacity: config.capacity,
-      goalColumns: solvedBoard.length
+      nextTokenId: fallbackSolved.nextTokenId,
+      scrambleMoves: 0
     };
+  }
+
+  function getPreparedPoolTarget() {
+    return Math.max(1, state.config.preparedPoolSize || 1);
+  }
+
+  function clearPreparationTimer(difficulty) {
+    if (typeof window !== 'undefined' && state.preparationTimers[difficulty] != null) {
+      window.clearTimeout(state.preparationTimers[difficulty]);
+    }
+    state.preparationTimers[difficulty] = null;
+  }
+
+  function schedulePuzzlePreparation(difficulty) {
+    if (!DIFFICULTY_ORDER.includes(difficulty)) {
+      return;
+    }
+    if (!Array.isArray(state.preparedPuzzles[difficulty])) {
+      state.preparedPuzzles[difficulty] = [];
+    }
+    const target = getPreparedPoolTarget();
+    if (state.preparedPuzzles[difficulty].length >= target) {
+      return;
+    }
+    if (state.preparationTimers[difficulty] != null && typeof window !== 'undefined') {
+      return;
+    }
+    if (typeof window === 'undefined') {
+      const puzzle = createPuzzle(difficulty);
+      if (puzzle) {
+        state.preparedPuzzles[difficulty].push(puzzle);
+      }
+      return;
+    }
+    state.preparationTimers[difficulty] = window.setTimeout(() => {
+      state.preparationTimers[difficulty] = null;
+      const puzzle = createPuzzle(difficulty);
+      if (puzzle) {
+        state.preparedPuzzles[difficulty].push(puzzle);
+      }
+      if (state.preparedPuzzles[difficulty].length < getPreparedPoolTarget()) {
+        schedulePuzzlePreparation(difficulty);
+      }
+    }, 0);
+  }
+
+  function resetPreparedPuzzles() {
+    DIFFICULTY_ORDER.forEach(difficulty => {
+      clearPreparationTimer(difficulty);
+      state.preparedPuzzles[difficulty] = [];
+      schedulePuzzlePreparation(difficulty);
+    });
+  }
+
+  function takePreparedPuzzle(difficultyKey) {
+    const normalized = DIFFICULTY_ORDER.includes(difficultyKey) ? difficultyKey : 'easy';
+    const pool = state.preparedPuzzles[normalized] || [];
+    const puzzle = pool.length ? pool.shift() : createPuzzle(normalized);
+    schedulePuzzlePreparation(normalized);
+    return puzzle || createPuzzle(normalized);
   }
 
   function setMessage(key, fallback, isSuccess = false) {
@@ -849,8 +897,9 @@
   function startNewGame(difficultyKey) {
     const normalizedDifficulty = DIFFICULTY_ORDER.includes(difficultyKey) ? difficultyKey : state.difficulty;
     state.difficulty = normalizedDifficulty;
-    const puzzle = generatePuzzle(normalizedDifficulty);
+    const puzzle = takePreparedPuzzle(normalizedDifficulty);
     withAutosaveSuppressed(() => {
+      state.nextTokenId = Math.max(0, toInteger(puzzle?.nextTokenId, state.nextTokenId));
       state.board = cloneBoard(puzzle.board);
       state.initialBoard = cloneBoard(puzzle.initial);
       state.history = [];
@@ -960,6 +1009,7 @@
   }
 
   bindEvents();
+  resetPreparedPuzzles();
   loadRemoteConfig();
   if (!restoreFromAutosave()) {
     startNewGame(state.difficulty);
