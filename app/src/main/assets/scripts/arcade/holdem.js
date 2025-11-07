@@ -27,15 +27,17 @@
     aiThinkingDelayMs: { min: 900, max: 2500 },
     opponentCount: { min: 4, max: 4 },
     aiProfiles: {
-      patient: { aggression: 0.5, caution: 0.45, bluff: 0.15 },
-      daring: { aggression: 0.72, caution: 0.33, bluff: 0.28 }
+      peter: { aggression: 0.32, caution: 0.72, bluff: 0.07 },
+      wendy: { aggression: 0.5, caution: 0.52, bluff: 0.19 },
+      zelda: { aggression: 0.64, caution: 0.4, bluff: 0.25 },
+      link: { aggression: 0.78, caution: 0.3, bluff: 0.32 }
     },
-    defaultAiProfile: 'patient',
+    defaultAiProfile: 'peter',
     raiseGuidance: DEFAULT_RAISE_GUIDANCE,
     growth: DEFAULT_STAKE_GROWTH
   });
 
-  const DEFAULT_AI_PROFILE = Object.freeze({ aggression: 0.55, caution: 0.4, bluff: 0.2 });
+  const DEFAULT_AI_PROFILE = Object.freeze({ aggression: 0.52, caution: 0.5, bluff: 0.2 });
 
   const SUITS = Object.freeze([
     { id: 'spades', symbol: '♠', color: 'black' },
@@ -62,6 +64,12 @@
 
   const AI_NAME_POOL = Object.freeze(['Jack', 'Morgan', 'Alex', 'Riley', 'Quinn']);
   const AI_SEAT_NAMES = Object.freeze(['Peter', 'Wendy', 'Zelda', 'Link']);
+  const AI_PROFILE_BY_SEAT = Object.freeze({
+    Peter: 'peter',
+    Wendy: 'wendy',
+    Zelda: 'zelda',
+    Link: 'link'
+  });
   const SEAT_ROTATION_ORDER = Object.freeze(['Peter', 'Wendy', 'hero', 'Zelda', 'Link']);
   const HAND_LABEL_KEYS = Object.freeze([
     'index.sections.holdem.hands.highCard',
@@ -286,6 +294,19 @@
       caution: clamp(Number(source.caution) || DEFAULT_AI_PROFILE.caution, 0, 1),
       bluff: clamp(Number(source.bluff) || DEFAULT_AI_PROFILE.bluff, 0, 1)
     };
+  }
+
+  function deriveAiTendencies(profile) {
+    const normalized = normalizeAiProfile(profile);
+    const aggression = normalized.aggression;
+    const caution = normalized.caution;
+    const bluff = normalized.bluff;
+    const foldDiscipline = clamp(0.22 + caution * 0.55 - aggression * 0.25, 0.05, 0.9);
+    const valueRaise = clamp(0.48 + aggression * 0.42 - caution * 0.25, 0.28, 0.92);
+    const bluffRaise = clamp(bluff * (0.25 + (1 - caution) * 0.45), 0, 0.85);
+    const probeRaise = clamp(0.08 + aggression * 0.25 + bluff * 0.15 - caution * 0.1, 0.02, 0.4);
+    const trapping = clamp(caution * 0.25 + (1 - aggression) * 0.2, 0, 0.4);
+    return { aggression, caution, bluff, foldDiscipline, valueRaise, bluffRaise, probeRaise, trapping };
   }
 
   function normalizeRaiseGuidance(rawGuidance) {
@@ -933,6 +954,52 @@
     return fallback;
   }
 
+  function resolveProfileIdFromName(name) {
+    if (typeof name !== 'string') {
+      return null;
+    }
+    const trimmed = name.trim();
+    if (!trimmed) {
+      return null;
+    }
+    const mapped = AI_PROFILE_BY_SEAT[trimmed];
+    if (mapped && state.config.aiProfiles[mapped]) {
+      return mapped;
+    }
+    const normalized = trimmed.toLowerCase();
+    if (state.config.aiProfiles[normalized]) {
+      return normalized;
+    }
+    return null;
+  }
+
+  function resolveSeatProfileId(index) {
+    if (!AI_SEAT_NAMES.length) {
+      return state.config.defaultAiProfile;
+    }
+    const seatName = AI_SEAT_NAMES[index % AI_SEAT_NAMES.length];
+    const mapped = seatName && AI_PROFILE_BY_SEAT[seatName];
+    if (mapped && state.config.aiProfiles[mapped]) {
+      return mapped;
+    }
+    const normalized = typeof seatName === 'string' ? seatName.trim().toLowerCase() : '';
+    if (normalized && state.config.aiProfiles[normalized]) {
+      return normalized;
+    }
+    return state.config.defaultAiProfile;
+  }
+
+  function selectProfileIdForSeat(index, requestedProfileId, name) {
+    if (requestedProfileId && state.config.aiProfiles[requestedProfileId]) {
+      return requestedProfileId;
+    }
+    const nameProfile = resolveProfileIdFromName(name);
+    if (nameProfile) {
+      return nameProfile;
+    }
+    return resolveSeatProfileId(index);
+  }
+
   function enforceBaseAiStack() {
     const defaultStack = Number.isFinite(DEFAULT_CONFIG.aiStack) && DEFAULT_CONFIG.aiStack > 0
       ? DEFAULT_CONFIG.aiStack
@@ -953,10 +1020,8 @@
     const usedNames = context && context.usedNames instanceof Set
       ? context.usedNames
       : new Set(state.players.map(player => player.name));
-    const profileId = options.profileId && state.config.aiProfiles[options.profileId]
-      ? options.profileId
-      : state.config.defaultAiProfile;
     const name = resolveAiName(index, usedNames, options.name);
+    const profileId = selectProfileIdForSeat(index, options.profileId, name);
     const fallbackStack = enforceBaseAiStack();
     return {
       id: `ai-${index}`,
@@ -1010,10 +1075,15 @@
     usedNames.add(hero.name);
     for (let i = 0; i < aiEntries.length && aiPlayers.length < targetOpponentCount; i += 1) {
       const entry = aiEntries[i];
-      const profileId = typeof entry.profileId === 'string' && state.config.aiProfiles[entry.profileId]
-        ? entry.profileId
-        : state.config.defaultAiProfile;
       const name = resolveAiName(aiPlayers.length, usedNames, entry.name);
+      const savedProfileId = typeof entry.profileId === 'string' && state.config.aiProfiles[entry.profileId]
+        ? entry.profileId
+        : null;
+      const profileId = selectProfileIdForSeat(
+        aiPlayers.length,
+        savedProfileId,
+        entry.name || name
+      );
       aiPlayers.push({
         id: `ai-${i}`,
         type: 'ai',
@@ -1742,27 +1812,51 @@
     const requiredToCall = plan.requiredToCall;
     const strength = estimateStrength(player);
     const profile = player.profile || state.config.aiProfiles[player.profileId] || DEFAULT_AI_PROFILE;
-    const riskBoost = (1 - profile.caution) * 0.35;
-    const aggressionFactor = profile.aggression + riskBoost;
-    const bluffFactor = profile.bluff;
+    const tendencies = deriveAiTendencies(profile);
     const preflop = state.phase === 'preflop';
     const raiseCount = state.raiseCountThisRound;
     const canAttemptRaise = allowRaise && plan.canRaise && hasRaiseAllowance();
+    const randomAggression = Math.random();
+    const randomBluff = Math.random();
+    const randomProbe = Math.random();
+    const stackPressure = clamp(
+      requiredToCall > 0
+        ? requiredToCall / Math.max(1, player.stack + requiredToCall)
+        : state.currentBet > 0
+          ? state.currentBet / Math.max(1, player.stack + state.currentBet)
+          : 0,
+      0,
+      1
+    );
+    const potAfterCall = state.pot + requiredToCall;
+    const potOdds = clamp(potAfterCall > 0 ? requiredToCall / potAfterCall : 1, 0, 1);
+    const incentive = (1 - potOdds) * (0.4 + tendencies.aggression * 0.25);
+    const foldBarrier = clamp(
+      tendencies.foldDiscipline + stackPressure * (0.3 + tendencies.caution * 0.2) - incentive,
+      0.05,
+      0.9
+    );
+    const stageAggressionBoost = state.phase === 'river'
+      ? 0.08
+      : state.phase === 'turn'
+        ? 0.05
+        : state.phase === 'flop'
+          ? 0.03
+          : -0.02;
 
     if (requiredToCall > 0) {
-      const bluffRoll = Math.random();
-      const disciplinedFoldThreshold = 0.2 + (0.22 * (1 - profile.caution));
-      if (strength + bluffFactor * 0.35 < disciplinedFoldThreshold && bluffRoll > bluffFactor * 0.55) {
+      if (strength + tendencies.bluff * 0.35 < foldBarrier && randomBluff > tendencies.bluffRaise + 0.1) {
         return { action: 'fold', target: player.bet };
       }
 
-      const pressureBonus = preflop ? 0.08 : 0;
-      if (canAttemptRaise && (strength > 0.52 + pressureBonus || bluffRoll < bluffFactor) && Math.random() < aggressionFactor) {
-        return { action: 'raise', target: plan.target };
-      }
-
-      const bluffCeiling = preflop ? 0.45 : 0.6;
-      if (canAttemptRaise && strength > 0.35 + pressureBonus * 0.5 && Math.random() < bluffFactor * bluffCeiling) {
+      const raiseAmbition = clamp(
+        tendencies.valueRaise - (preflop ? 0.05 : stageAggressionBoost) - raiseCount * 0.05 + incentive * 0.15,
+        0.25,
+        0.95
+      );
+      const wantsValueRaise = strength > raiseAmbition && randomAggression < clamp(tendencies.aggression + 0.12, 0, 1);
+      const wantsBluffRaise = strength > foldBarrier - 0.08 && randomBluff < tendencies.bluffRaise;
+      if (canAttemptRaise && (wantsValueRaise || wantsBluffRaise)) {
         return { action: 'raise', target: plan.target };
       }
 
@@ -1770,13 +1864,24 @@
       return { action: requiredToCall ? 'call' : 'check', target: callTarget };
     }
 
-    const openRaiseThreshold = preflop ? 0.52 + raiseCount * 0.08 : 0.45;
-    if (canAttemptRaise && (strength > openRaiseThreshold || Math.random() < bluffFactor * 0.75) && Math.random() < aggressionFactor) {
+    if (strength > 0.82 && randomProbe < tendencies.trapping) {
+      return { action: 'check', target: player.bet };
+    }
+
+    const openRaiseThreshold = clamp(
+      tendencies.valueRaise - (preflop ? 0.08 : stageAggressionBoost) + raiseCount * 0.04,
+      0.2,
+      0.9
+    );
+    if (canAttemptRaise && strength > openRaiseThreshold && randomAggression < clamp(tendencies.aggression + 0.08, 0, 1)) {
       return { action: 'raise', target: plan.target };
     }
 
-    const opportunisticBluffFactor = preflop ? 0.2 : 0.35;
-    if (canAttemptRaise && Math.random() < bluffFactor * opportunisticBluffFactor && player.stack > 0) {
+    if (canAttemptRaise && randomBluff < tendencies.bluffRaise * (preflop ? 0.95 : 0.75)) {
+      return { action: 'raise', target: plan.target };
+    }
+
+    if (canAttemptRaise && randomProbe < tendencies.probeRaise && strength > foldBarrier) {
       return { action: 'raise', target: plan.target };
     }
     return { action: 'check', target: player.bet };
@@ -1790,27 +1895,49 @@
     }
     const strength = estimateStrength(player);
     const profile = player.profile || state.config.aiProfiles[player.profileId] || DEFAULT_AI_PROFILE;
-    const aggressionFactor = profile.aggression + (1 - profile.caution) * 0.3;
-    const bluffRoll = Math.random();
-    const reluctantThreshold = 0.18 + (0.3 * (1 - profile.caution));
+    const tendencies = deriveAiTendencies(profile);
     const preflop = state.phase === 'preflop';
     const canAttemptRaise = plan.canRaise && hasRaiseAllowance();
+    const randomAggression = Math.random();
+    const randomBluff = Math.random();
+    const randomProbe = Math.random();
 
     const potAfterCall = state.pot + requiredToCall;
-    const normalizedPotOdds = clamp(potAfterCall > 0 ? requiredToCall / potAfterCall : 1, 0, 1);
-    const normalizedPressure = clamp(requiredToCall / Math.max(1, player.stack + player.bet), 0, 1);
-    const potReward = (1 - normalizedPotOdds) * (0.35 + (1 - profile.caution) * 0.2);
-    const pressureTax = normalizedPressure * (0.25 + profile.caution * 0.2);
-    const dynamicReluctance = clamp(reluctantThreshold + pressureTax - potReward, 0.05, 0.85);
-    const confidentStrength = 0.42 + (1 - profile.caution) * 0.18;
+    const potOdds = clamp(potAfterCall > 0 ? requiredToCall / potAfterCall : 1, 0, 1);
+    const stackPressure = clamp(requiredToCall / Math.max(1, player.stack + requiredToCall), 0, 1);
+    const incentive = (1 - potOdds) * (0.45 + tendencies.aggression * 0.3);
+    const reluctance = clamp(
+      tendencies.foldDiscipline + stackPressure * (0.32 + tendencies.caution * 0.25) - incentive,
+      0.05,
+      0.92
+    );
 
-    if (strength < confidentStrength && strength + profile.bluff * 0.4 < dynamicReluctance && bluffRoll > profile.bluff * 0.45) {
+    if (strength + tendencies.bluff * 0.35 < reluctance && randomBluff > tendencies.bluffRaise + 0.12) {
       return { action: 'fold', target: player.bet };
     }
 
-    const raiseDiscipline = preflop ? 0.07 : 0;
-    if (canAttemptRaise && Math.random() < aggressionFactor * 0.55 && (strength > 0.55 + raiseDiscipline || bluffRoll < profile.bluff)) {
-      return { action: 'raise', target: plan.target };
+    const stageAggressionBoost = state.phase === 'river'
+      ? 0.09
+      : state.phase === 'turn'
+        ? 0.06
+        : state.phase === 'flop'
+          ? 0.03
+          : preflop
+            ? -0.01
+            : 0;
+    const valueRaiseThreshold = clamp(
+      tendencies.valueRaise + stageAggressionBoost - stackPressure * 0.1,
+      0.25,
+      0.95
+    );
+
+    if (canAttemptRaise) {
+      const wantsValueRaise = strength > valueRaiseThreshold && randomAggression < clamp(tendencies.aggression + 0.15, 0, 1);
+      const wantsBluffRaise = strength > reluctance - 0.06 && randomBluff < tendencies.bluffRaise;
+      const wantsProbeRaise = randomProbe < tendencies.probeRaise * (1 - stackPressure) && strength > reluctance;
+      if (wantsValueRaise || wantsBluffRaise || wantsProbeRaise) {
+        return { action: 'raise', target: plan.target };
+      }
     }
 
     const callTarget = Math.max(player.bet, plan.callTarget);

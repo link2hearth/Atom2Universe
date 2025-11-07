@@ -1307,18 +1307,28 @@ const GAME_CONFIG = {
       },
       opponentCount: { min: 4, max: 5 },
       aiProfiles: {
-        patient: {
-          aggression: 0.35,
-          caution: 0.6,
-          bluff: 0.08
+        peter: {
+          aggression: 0.32,
+          caution: 0.72,
+          bluff: 0.07
         },
-        daring: {
-          aggression: 0.55,
+        wendy: {
+          aggression: 0.5,
+          caution: 0.52,
+          bluff: 0.19
+        },
+        zelda: {
+          aggression: 0.62,
           caution: 0.4,
-          bluff: 0.18
+          bluff: 0.24
+        },
+        link: {
+          aggression: 0.78,
+          caution: 0.3,
+          bluff: 0.32
         }
       },
-      defaultAiProfile: 'patient'
+      defaultAiProfile: 'peter'
     },
     /**
      * Paramètres du mini-jeu Dice (Yams).
