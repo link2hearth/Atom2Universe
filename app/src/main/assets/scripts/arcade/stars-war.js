@@ -1346,6 +1346,143 @@
     };
   }
 
+  function randomizePatternDef(definition, difficulty = 1) {
+    const clone = clonePatternDef(definition);
+    if (!clone) {
+      return null;
+    }
+    const params = clone.params || {};
+    switch (clone.type) {
+      case 'spiral': {
+        const baseCenterX = params.centerX != null ? params.centerX : CANVAS_WIDTH / 2;
+        const baseCenterY = params.centerY != null ? params.centerY : CANVAS_HEIGHT * 0.22;
+        const baseGrow = params.radiusGrow != null ? params.radiusGrow : 30;
+        const baseStart = params.radiusStart != null ? params.radiusStart : -60;
+        const baseAngular = params.angularSpeed != null ? params.angularSpeed : 2.2;
+        params.centerX = clamp(baseCenterX + randomRange(-80, 80), 60, CANVAS_WIDTH - 60);
+        params.centerY = clamp(baseCenterY + randomRange(-40, 40), 40, CANVAS_HEIGHT * 0.35);
+        params.radiusGrow = clamp(baseGrow * randomRange(0.85, 1.2), 18, 52);
+        params.radiusStart = clamp(baseStart + randomRange(-18, 18), -90, -20);
+        params.angularSpeed = clamp(baseAngular * randomRange(0.85, 1.15), 1.6, 2.8);
+        params.phase = randomRange(0, Math.PI * 2);
+        break;
+      }
+      case 'sine': {
+        const baseStartX = params.startX != null ? params.startX : CANVAS_WIDTH / 2;
+        const baseAmplitude = params.amplitude != null ? params.amplitude : 80;
+        const baseFreq = params.freq != null ? params.freq : 1.1;
+        const baseSpeedY = params.speedY != null ? params.speedY : 110;
+        params.startX = clamp(baseStartX + randomRange(-140, 140), 40, CANVAS_WIDTH - 40);
+        params.startY = -60 + randomRange(-20, 20);
+        params.amplitude = clamp(baseAmplitude * randomRange(0.85, 1.2), 50, 130);
+        params.freq = clamp(baseFreq * randomRange(0.85, 1.2), 0.8, 1.5);
+        params.speedY = clamp(baseSpeedY * randomRange(0.85, 1.2), 80, 160);
+        break;
+      }
+      case 'bezier': {
+        const adjustPoint = (point, spreadX, spreadY) => {
+          if (!Array.isArray(point)) {
+            return [CANVAS_WIDTH / 2, CANVAS_HEIGHT * 0.25];
+          }
+          const [px, py] = point;
+          return [
+            clamp(px + randomRange(-spreadX, spreadX), -80, CANVAS_WIDTH + 80),
+            clamp(py + randomRange(-spreadY, spreadY), -80, CANVAS_HEIGHT * 0.5)
+          ];
+        };
+        params.p0 = adjustPoint(params.p0, 40, 30);
+        params.p1 = adjustPoint(params.p1, 80, 40);
+        params.p2 = adjustPoint(params.p2, 80, 50);
+        params.p3 = adjustPoint(params.p3, 40, 30);
+        params.duration = clamp((params.duration || 3) * randomRange(0.9, 1.15), 2.2, 3.8);
+        break;
+      }
+      case 'waypoints': {
+        if (Array.isArray(params.points)) {
+          params.points = params.points.map(point => {
+            if (!Array.isArray(point)) {
+              return [CANVAS_WIDTH / 2, CANVAS_HEIGHT * 0.25];
+            }
+            const [px, py] = point;
+            return [
+              clamp(px + randomRange(-60, 60), -120, CANVAS_WIDTH + 120),
+              clamp(py + randomRange(-50, 50), -100, CANVAS_HEIGHT * 0.55)
+            ];
+          });
+        }
+        params.segmentSpeed = clamp((params.segmentSpeed || 180) * randomRange(0.85, 1.15), 140, 240);
+        break;
+      }
+      case 'homing': {
+        params.speed = clamp((params.speed || 220) * randomRange(0.9, 1.1), 170, 280);
+        params.maxTurnDegPerSec = clamp((params.maxTurnDegPerSec || 240) * randomRange(0.85, 1.2), 180, 320);
+        break;
+      }
+      case 'idle': {
+        const baseX = params.x != null ? params.x : CANVAS_WIDTH / 2;
+        const baseY = params.y != null ? params.y : CANVAS_HEIGHT * 0.24;
+        const baseJitter = params.jitter != null ? params.jitter : 0;
+        const baseFreq = params.jitterFreq != null ? params.jitterFreq : 1;
+        params.x = clamp(baseX + randomRange(-60, 60), 80, CANVAS_WIDTH - 80);
+        params.y = clamp(baseY + randomRange(-36, 36), 60, CANVAS_HEIGHT * 0.4);
+        params.jitter = Math.max(0, baseJitter * randomRange(0.85, 1.3) + randomRange(-1.5, 1.5));
+        params.jitterFreq = clamp(baseFreq * randomRange(0.85, 1.2), 0.5, 1.4);
+        break;
+      }
+      default:
+        break;
+    }
+    clone.params = params;
+    return clone;
+  }
+
+  function estimatePatternFollowTime(patternDef) {
+    if (!patternDef) {
+      return 2.4;
+    }
+    switch (patternDef.type) {
+      case 'spiral':
+        return randomRange(2.2, 3.2);
+      case 'sine':
+        return randomRange(2, 2.8);
+      case 'bezier':
+        return (patternDef.params?.duration || 3) + randomRange(0.2, 0.6);
+      case 'waypoints':
+        return randomRange(2.2, 3.1);
+      default:
+        return randomRange(2, 3);
+    }
+  }
+
+  function createDynamicFollowUp(primaryDef, difficulty = 1) {
+    if (!primaryDef) {
+      return null;
+    }
+    const roll = getRandomFloat();
+    const preferDive = difficulty >= 2 && roll > 0.55;
+    const baseFollowTime = estimatePatternFollowTime(primaryDef);
+    if (preferDive) {
+      const diveBase = SCRIPTED_PATTERN_INDEX.get('dive_at_player');
+      if (!diveBase) {
+        return null;
+      }
+      const dive = randomizePatternDef(diveBase, difficulty);
+      return {
+        def: dive,
+        at: Math.max(1.4, baseFollowTime - 0.3 + randomRange(0, 0.6))
+      };
+    }
+    const idleBase = SCRIPTED_PATTERN_INDEX.get('idle_formation');
+    if (!idleBase) {
+      return null;
+    }
+    const idle = randomizePatternDef(idleBase, difficulty);
+    return {
+      def: idle,
+      at: Math.max(1.8, baseFollowTime + randomRange(-0.3, 0.4))
+    };
+  }
+
   function resolveScriptedEnemyType(id) {
     if (!id) {
       return ENEMY_TYPES.drone;
@@ -1813,6 +1950,10 @@
     return state.rng();
   }
 
+  function randomRange(min, max) {
+    return min + getRandomFloat() * (max - min);
+  }
+
   function getRandomInt(minInclusive, maxExclusive) {
     return Math.floor(getRandomFloat() * (maxExclusive - minInclusive)) + minInclusive;
   }
@@ -1840,6 +1981,19 @@
     const scriptedName = SCRIPTED_WAVE_SEQUENCE[state.wave - 1];
     if (scriptedName) {
       spawnPlan = buildScriptedWavePlan(scriptedName);
+    }
+    if (!spawnPlan.length && state.wave > SCRIPTED_WAVE_SEQUENCE.length) {
+      const dynamicChanceBase = 0.35 + 0.05 * state.difficulty;
+      const elapsedBonus = state.elapsed >= 120 ? 0.15 : 0;
+      const dynamicChance = Math.min(0.75, dynamicChanceBase + elapsedBonus);
+      if (getRandomFloat() < dynamicChance) {
+        spawnPlan = buildDynamicPatternWave({
+          startDelay: 0,
+          difficulty: state.difficulty,
+          elapsed: state.elapsed,
+          maxOnScreen: state.maxOnScreen
+        });
+      }
     }
     if (!spawnPlan.length) {
       spawnPlan = generateWave();
@@ -1909,6 +2063,73 @@
     return types[types.length - 1];
   }
 
+  function buildDynamicPatternWave(options = {}) {
+    const startDelay = options.startDelay || 0;
+    const difficulty = options.difficulty != null ? options.difficulty : state.difficulty;
+    const elapsed = options.elapsed != null ? options.elapsed : state.elapsed;
+    const maxOnScreen = Math.max(6, options.maxOnScreen || state.maxOnScreen || 12);
+    const primaryPatterns = SCRIPTED_PATTERN_LIBRARY.patterns.filter(pattern => pattern.type !== 'idle' && pattern.type !== 'homing');
+    if (!primaryPatterns.length) {
+      return [];
+    }
+    const allowedTypes = getAllowedEnemies(difficulty);
+    if (!allowedTypes.length) {
+      return [];
+    }
+    const entries = [];
+    const entryCap = Math.max(3, Math.min(6, Math.floor(maxOnScreen * 0.6)));
+    const target = Math.max(3, Math.min(entryCap, Math.round(3 + difficulty * 0.6 + getRandomFloat() * 2)));
+    let delayCursor = startDelay;
+    while (entries.length < target) {
+      const basePattern = pickRandom(primaryPatterns);
+      if (!basePattern) {
+        break;
+      }
+      const pattern = randomizePatternDef(basePattern, difficulty);
+      if (!pattern) {
+        break;
+      }
+      const followUp = createDynamicFollowUp(pattern, difficulty);
+      const spreadX = Math.min(200, 60 + difficulty * 18);
+      const spreadY = Math.min(140, 40 + difficulty * 10);
+      const formationOffset = [
+        (getRandomFloat() - 0.5) * spreadX,
+        (getRandomFloat() - 0.5) * spreadY
+      ];
+      entries.push({
+        scripted: true,
+        delay: delayCursor,
+        pattern,
+        thenDef: followUp ? followUp.def : null,
+        thenAt: followUp ? followUp.at : null,
+        formationOffset,
+        enemyType: pickWeightedEnemy(allowedTypes, elapsed)
+      });
+      if (entries.length >= entryCap) {
+        break;
+      }
+      if (getRandomFloat() < 0.3 && entries.length < entryCap) {
+        const partnerPattern = randomizePatternDef(basePattern, difficulty);
+        const partnerFollow = partnerPattern ? createDynamicFollowUp(partnerPattern, difficulty) : null;
+        entries.push({
+          scripted: true,
+          delay: delayCursor + randomRange(0.12, 0.3),
+          pattern: partnerPattern || pattern,
+          thenDef: partnerFollow ? partnerFollow.def : followUp ? followUp.def : null,
+          thenAt: partnerFollow ? partnerFollow.at : followUp ? followUp.at : null,
+          formationOffset: [
+            -formationOffset[0],
+            formationOffset[1] + randomRange(-20, 20)
+          ],
+          enemyType: pickWeightedEnemy(allowedTypes, elapsed)
+        });
+      }
+      delayCursor += randomRange(0.35, 0.7);
+    }
+    entries.sort((a, b) => a.delay - b.delay);
+    return entries;
+  }
+
   function generateWave() {
     const D = state.difficulty;
     const laneCount = Math.max(4, Math.min(8, Math.floor(4 + D)));
@@ -1919,13 +2140,15 @@
     const isFirstWave = state.wave === 1;
     const isSecondWave = state.wave === 2;
     const elapsed = state.elapsed;
-    let baseCount = Math.max(6, Math.floor(6 + 1.5 * D));
+    const entryCap = Math.max(6, Math.floor(state.maxOnScreen * 0.9));
+    let baseCount = Math.max(5, Math.floor(5 + 1.05 * D));
     if (isFirstWave) {
       baseCount = 5;
     } else if (isSecondWave) {
-      baseCount = Math.max(6, Math.floor(5 + 1.2 * D));
+      baseCount = Math.max(6, Math.floor(5 + 0.9 * D));
     }
-    for (let i = 0; i < baseCount; i += 1) {
+    baseCount = Math.min(baseCount, entryCap);
+    for (let i = 0; i < baseCount && waveEntries.length < entryCap; i += 1) {
       const type = pickWeightedEnemy(allowed, elapsed);
       waveEntries.push(createSpawnEntry(type, formation, path, laneCount, i, baseCount));
     }
@@ -1933,16 +2156,19 @@
     let sequenceDelay = waveEntries.length ? waveEntries[waveEntries.length - 1].delay + 0.6 : 0.6;
     const allowSpecialSequences = state.elapsed >= 30 || state.wave >= 3;
 
-    if (allowSpecialSequences && D >= 3 && getRandomFloat() < 0.45) {
+    if (allowSpecialSequences && D >= 3 && getRandomFloat() < 0.45 && waveEntries.length < entryCap) {
       const skirmish = planTopSkirmish({ laneCount, startDelay: sequenceDelay, difficulty: D, elapsed });
       if (skirmish.entries.length) {
         waveEntries.push(...skirmish.entries);
         sequenceDelay = skirmish.nextDelay;
+        if (waveEntries.length > entryCap) {
+          waveEntries.length = entryCap;
+        }
       }
     }
 
     const minibossChance = elapsed >= 600 ? 0.55 : elapsed >= 300 ? 0.38 : 0.25;
-    if (allowSpecialSequences && D >= 4 && getRandomFloat() < minibossChance) {
+    if (allowSpecialSequences && D >= 4 && getRandomFloat() < minibossChance && waveEntries.length < entryCap) {
       const lane = getRandomInt(0, laneCount);
       const bossDelay = Math.max(sequenceDelay, waveEntries.length ? waveEntries[waveEntries.length - 1].delay + 1 : 1);
       const bossEntry = makePatternEntry(ENEMY_TYPES.miniboss, lane, bossDelay, laneCount, {
@@ -1957,7 +2183,7 @@
       });
       waveEntries.push(bossEntry);
       sequenceDelay = bossDelay + 1.2;
-      if (elapsed >= 600) {
+      if (elapsed >= 600 && waveEntries.length < entryCap) {
         const offsetLane = clampLaneIndex(lane + (getRandomFloat() < 0.5 ? 1 : -1), laneCount);
         const extraDelay = sequenceDelay + 1.4;
         const extraBoss = makePatternEntry(ENEMY_TYPES.miniboss, offsetLane, extraDelay, laneCount, {
@@ -1978,7 +2204,7 @@
     const availablePatterns = allowSpecialSequences
       ? WAVE_PATTERNS.filter(pattern => D >= pattern.minDifficulty)
       : [];
-    if (availablePatterns.length) {
+    if (availablePatterns.length && waveEntries.length < entryCap) {
       const patternRuns = Math.min(availablePatterns.length, 1 + Math.floor(D / 2));
       let startDelay = Math.max(sequenceDelay, waveEntries.length ? waveEntries[waveEntries.length - 1].delay + 0.8 : 0.8);
       for (let i = 0; i < patternRuns; i += 1) {
@@ -1992,6 +2218,10 @@
           waveEntries.push(...plan.entries);
           const lastEntry = plan.entries[plan.entries.length - 1];
           startDelay = plan.nextDelay != null ? plan.nextDelay : lastEntry.delay + 0.9;
+          if (waveEntries.length >= entryCap) {
+            waveEntries.length = entryCap;
+            break;
+          }
         }
       }
     }
