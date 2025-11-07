@@ -374,10 +374,6 @@
       if (!movingToken) {
         return;
       }
-      const underneath = sourceColumn[sourceColumn.length - 2] || null;
-      if (underneath && underneath.colorId !== movingToken.colorId) {
-        return;
-      }
       board.forEach((destColumn, destIndex) => {
         if (destIndex === sourceIndex) {
           return;
