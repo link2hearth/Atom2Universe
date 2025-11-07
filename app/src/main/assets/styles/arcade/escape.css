@@ -143,8 +143,8 @@
 }
 
 .escape__cell--start {
-  background: linear-gradient(135deg, rgba(14, 129, 255, 0.8), rgba(10, 78, 176, 0.85));
-  box-shadow: inset 0 0 0 1px rgba(22, 161, 255, 0.75), 0 0 18px rgba(41, 151, 255, 0.35);
+  background: var(--escape-floor);
+  box-shadow: inset 0 0 0 1px rgba(18, 22, 32, 0.15);
 }
 
 .escape__cell--exit {
@@ -260,8 +260,10 @@
 .escape__cell-entity--player {
   opacity: 1;
   transform: scale(1);
-  background: radial-gradient(circle at 50% 50%, #ffe066 0%, #ffba08 60%, #ff8c00 100%);
-  box-shadow: 0 0 12px rgba(255, 180, 0, 0.6);
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(14, 129, 255, 0.8), rgba(10, 78, 176, 0.85));
+  box-shadow: inset 0 0 0 1px rgba(22, 161, 255, 0.75), 0 0 18px rgba(41, 151, 255, 0.35);
 }
 
 .escape__cell-entity--guard {
@@ -269,10 +271,29 @@
   transform: scale(1);
   background: radial-gradient(circle at 50% 50%, #ff6b6b 0%, #e5383b 60%, #7b1118 100%);
   box-shadow: 0 0 14px rgba(229, 56, 59, 0.55);
+  z-index: 3;
 }
 
 .escape__cell--vision-active {
   box-shadow: inset 0 0 0 2px rgba(255, 214, 112, 0.5), 0 0 10px rgba(255, 214, 112, 0.35);
+}
+
+.escape__vision-indicator {
+  position: absolute;
+  inset: 28%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 149, 0, 0.9), rgba(204, 93, 0, 0.85));
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 120ms ease, transform 120ms ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.escape__vision-indicator--active {
+  opacity: 1;
+  transform: scale(1);
+  box-shadow: 0 0 10px rgba(255, 149, 0, 0.45);
 }
 
 .escape__cell--highlight-door {

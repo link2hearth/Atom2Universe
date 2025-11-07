@@ -138,10 +138,12 @@
     renderState: {
       playerEntity: null,
       guardEntities: [],
-      visionTiles: []
+      visionTiles: [],
+      visionIndicators: []
     },
     tileMap: null,
     entityMap: null,
+    visionMap: null,
     inputHandlers: null,
     touchTracking: null,
     touchSkipClick: false
@@ -2311,7 +2313,7 @@
         }
         const plate = level.runtime.plateByCell.get(targetKey);
         if (plate && Number.isInteger(plate.timerIndex)) {
-          timersBefore[plate.timerIndex] = plate.duration;
+          timersBefore[plate.timerIndex] = Number.POSITIVE_INFINITY;
         }
         const keyObject = level.runtime.keyByCell.get(targetKey);
         if (keyObject) {
@@ -2502,6 +2504,7 @@
     const guardVisionTiles = level.runtime?.guardVisionTiles || new Set();
     const tileMap = new Map();
     const entityMap = new Map();
+    const visionIndicatorMap = new Map();
     const fragment = document.createDocumentFragment();
     for (let row = 0; row < level.grid.length; row += 1) {
       const line = level.grid[row];
@@ -2511,6 +2514,8 @@
         const type = line[col];
         if (type === TILE_TYPES.PLATE) {
           cell.classList.add('escape__cell--floor', 'escape__cell--plate');
+        } else if (type === TILE_TYPES.START) {
+          cell.classList.add('escape__cell--floor');
         } else if (type && type !== TILE_TYPES.WALL) {
           cell.classList.add(`escape__cell--${type}`);
         }
@@ -2533,18 +2538,24 @@
         if (guardStartTiles.has(tileKey)) {
           cell.classList.add('escape__cell--guard');
         }
+        const visionIndicator = document.createElement('span');
+        visionIndicator.className = 'escape__vision-indicator';
+        visionIndicator.setAttribute('aria-hidden', 'true');
+        cell.appendChild(visionIndicator);
         const entity = document.createElement('span');
         entity.className = 'escape__cell-entity';
         entity.setAttribute('aria-hidden', 'true');
         cell.appendChild(entity);
         tileMap.set(tileKey, cell);
         entityMap.set(tileKey, entity);
+        visionIndicatorMap.set(tileKey, visionIndicator);
         fragment.appendChild(cell);
       }
     }
     board.appendChild(fragment);
     state.tileMap = tileMap;
     state.entityMap = entityMap;
+    state.visionMap = visionIndicatorMap;
     refreshDoorAndPlateTiles({ keysMask: 0, timers: [] });
   }
 
@@ -2553,7 +2564,8 @@
       state.renderState = {
         playerEntity: null,
         guardEntities: [],
-        visionTiles: []
+        visionTiles: [],
+        visionIndicators: []
       };
       return;
     }
@@ -2574,9 +2586,17 @@
         }
       });
     }
+    if (Array.isArray(state.renderState.visionIndicators)) {
+      state.renderState.visionIndicators.forEach(indicator => {
+        if (indicator) {
+          indicator.classList.remove('escape__vision-indicator--active');
+        }
+      });
+    }
     state.renderState.playerEntity = null;
     state.renderState.guardEntities = [];
     state.renderState.visionTiles = [];
+    state.renderState.visionIndicators = [];
   }
 
   function updateBoardEntities() {
@@ -2586,6 +2606,7 @@
     }
     const tileMap = state.tileMap;
     const entityMap = state.entityMap;
+    const visionIndicatorMap = state.visionMap;
     const playState = state.play;
     const playerCoords = getTileCoords(playState.row, playState.col);
     const playerKey = getTileKey(playerCoords.tileRow, playerCoords.tileCol);
@@ -2611,6 +2632,7 @@
     }
     state.renderState.guardEntities = guardEntities;
     const visionTiles = [];
+    const visionIndicators = [];
     const visionSet = getGuardVisionAtPhase(
       state.level,
       playState.guardPhase,
@@ -2626,8 +2648,14 @@
         tile.classList.add('escape__cell--vision-active');
         visionTiles.push(tile);
       }
+      const indicator = visionIndicatorMap ? visionIndicatorMap.get(tileKey) : null;
+      if (indicator) {
+        indicator.classList.add('escape__vision-indicator--active');
+        visionIndicators.push(indicator);
+      }
     });
     state.renderState.visionTiles = visionTiles;
+    state.renderState.visionIndicators = visionIndicators;
     refreshDoorAndPlateTiles(playState);
   }
 
@@ -2753,7 +2781,7 @@
 
     const plate = level.runtime?.plateByCell.get(targetKey);
     if (plate && Number.isInteger(plate.timerIndex)) {
-      timersBefore[plate.timerIndex] = plate.duration;
+      timersBefore[plate.timerIndex] = Number.POSITIVE_INFINITY;
     }
 
     let collectedKey = null;
