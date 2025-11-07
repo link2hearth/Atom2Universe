@@ -1,9 +1,8 @@
 {
-  "maxScrambleAttempts": 200,
+  "maxScrambleAttempts": 120,
   "preferDifferentColorWeight": 2.5,
   "preferSameColorWeight": 1,
   "minMovePool": 6,
-  "preparedPoolSize": 1,
   "palette": [
     { "id": "ruby", "value": "#ff6b6b" },
     { "id": "azure", "value": "#4ab3ff" },
@@ -16,31 +15,31 @@
   ],
   "difficulties": {
     "easy": {
-      "colors": 4,
-      "columns": 6,
-      "capacity": 5,
+      "columns": 5,
+      "capacity": 4,
+      "filledColumns": [0, 1, 2],
       "emptyColumns": 2,
-      "scrambleMoves": { "min": 10, "max": 30 },
+      "scrambleMoves": 48,
       "minMulticoloredColumns": 2,
-      "minDisplacedRatio": 0.45
+      "minDisplacedRatio": 0.5
     },
     "medium": {
-      "colors": 5,
-      "columns": 7,
+      "columns": 6,
       "capacity": 5,
-      "emptyColumns": 2,
-      "scrambleMoves": { "min": 40, "max": 60 },
+      "filledColumns": [0, 1, 2, 3, 0],
+      "emptyColumns": 1,
+      "scrambleMoves": 72,
       "minMulticoloredColumns": 3,
-      "minDisplacedRatio": 0.55
+      "minDisplacedRatio": 0.6
     },
     "hard": {
-      "colors": 6,
-      "columns": 7,
+      "columns": 8,
       "capacity": 6,
+      "filledColumns": [0, 1, 2, 3, 4, 5, 0],
       "emptyColumns": 1,
-      "scrambleMoves": { "min": 70, "max": 100 },
+      "scrambleMoves": 96,
       "minMulticoloredColumns": 4,
-      "minDisplacedRatio": 0.6
+      "minDisplacedRatio": 0.65
     }
   }
 }
