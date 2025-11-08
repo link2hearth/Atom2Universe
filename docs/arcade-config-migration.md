@@ -9,12 +9,12 @@ L'objectif de cette migration est d'alléger `config/config.js` tout en conserva
 - [x] Roulette
 - [x] Pachinko
 - [x] Hold'em
-- [ ] Dice
+- [x] Dice
 - [ ] Échecs
 - [x] Balance
 - [x] Math
 - [ ] Solitaire
-- [ ] Particules
+- [x] Particules
 - [ ] Sudoku
 - [ ] Quantum 2048
 - [ ] Démineur
