@@ -178,7 +178,8 @@
   background: var(--link-background);
   border: 1px solid var(--link-border);
   box-shadow: var(--link-shadow);
-  max-width: min(90vw, 46rem);
+  width: min(90vmin, 46rem);
+  aspect-ratio: 1 / 1;
   touch-action: none;
   -ms-touch-action: none;
 }
