@@ -1664,14 +1664,21 @@
               <span class="stars-war__label" data-i18n="index.sections.starsWar.hud.difficulty">D</span>
               <span class="stars-war__value" id="starsWarDifficultyValue">1.0</span>
             </div>
-          </div>
-          <div class="stars-war__controls">
             <button
               type="button"
-              class="stars-war__button"
+              class="stars-war__stat-button"
+              id="starsWarPauseButton"
+              data-i18n="index.sections.starsWar.controls.pause"
+              data-pause-i18n="index.sections.starsWar.controls.pause"
+              data-resume-i18n="index.sections.starsWar.controls.resume"
+              aria-pressed="false"
+            >Pause</button>
+            <button
+              type="button"
+              class="stars-war__stat-button stars-war__stat-button--restart"
               id="starsWarRestartButton"
               data-i18n="index.sections.starsWar.controls.restart"
-            >Lancer / Relancer</button>
+            >Nouveau</button>
           </div>
         </header>
         <div class="stars-war__layout">

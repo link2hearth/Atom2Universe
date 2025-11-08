@@ -18,6 +18,7 @@
     timeValue: document.getElementById('starsWarTimeValue'),
     waveValue: document.getElementById('starsWarWaveValue'),
     difficultyValue: document.getElementById('starsWarDifficultyValue'),
+    pauseButton: document.getElementById('starsWarPauseButton'),
     restartButton: document.getElementById('starsWarRestartButton'),
     powerupList: document.getElementById('starsWarPowerupList'),
     livesContainer: document.getElementById('starsWarLives'),
@@ -1732,6 +1733,8 @@
     'index.sections.starsWar.powerups.slow': { en: 'Enemy slow', fr: 'Ralentissement ennemi' },
     'index.sections.starsWar.powerups.shield': { en: 'Shield', fr: 'Bouclier' },
     'index.sections.starsWar.powerups.heart': { en: 'Extra life', fr: 'Cœur supplémentaire' },
+    'index.sections.starsWar.controls.pause': { en: 'Pause', fr: 'Pause' },
+    'index.sections.starsWar.controls.resume': { en: 'Resume', fr: 'Reprendre' },
     'index.sections.starsWar.status.powerup': { en: 'Power-up equipped: {powerup}', fr: 'Bonus activé : {powerup}' },
     'index.sections.starsWar.status.heart': { en: 'Heart recovered!', fr: 'Cœur récupéré !' },
     'index.sections.starsWar.status.shield': { en: 'Shield absorbed the hit.', fr: 'Bouclier absorbé.' },
@@ -1997,6 +2000,7 @@
     state.elapsed = 0;
     state.difficulty = 1;
     state.wave = 0;
+    state.paused = false;
     state.spawnInterval = BASE_SPAWN_INTERVAL;
     state.waveElapsed = 0;
     resetWaveTimer();
@@ -3157,7 +3161,45 @@
     }
   }
 
+  function updatePauseButtonState() {
+    if (!elements.pauseButton) {
+      return;
+    }
+    const button = elements.pauseButton;
+    const pauseKey = typeof button.dataset.pauseI18n === 'string'
+      ? button.dataset.pauseI18n
+      : 'index.sections.starsWar.controls.pause';
+    const resumeKey = typeof button.dataset.resumeI18n === 'string'
+      ? button.dataset.resumeI18n
+      : 'index.sections.starsWar.controls.resume';
+    const isPaused = Boolean(state.paused);
+    const activeKey = isPaused ? resumeKey : pauseKey;
+    if (activeKey) {
+      button.dataset.i18n = activeKey;
+    } else {
+      delete button.dataset.i18n;
+    }
+    const canInteract = state.overlayMode === 'running' || isPaused;
+    const nextPressed = isPaused ? 'true' : 'false';
+    if (button.getAttribute('aria-pressed') !== nextPressed) {
+      button.setAttribute('aria-pressed', nextPressed);
+    }
+    if (button.disabled !== !canInteract) {
+      button.disabled = !canInteract;
+    }
+    const currentLang = resolveLanguageCode();
+    const previousLang = button.dataset.pauseLang || '';
+    const previousKey = button.dataset.pauseActiveKey || '';
+    if (previousLang !== (currentLang || '') || previousKey !== (activeKey || '')) {
+      const label = activeKey ? translate(activeKey) : '';
+      button.textContent = label || (isPaused ? 'Resume' : 'Pause');
+      button.dataset.pauseLang = currentLang || '';
+      button.dataset.pauseActiveKey = activeKey || '';
+    }
+  }
+
   function updateUi() {
+    updatePauseButtonState();
     if (elements.scoreValue) {
       elements.scoreValue.textContent = formatNumber(state.score);
     }
@@ -3432,8 +3474,10 @@
   function handleGameOver() {
     state.gameOver = true;
     state.running = false;
+    state.paused = false;
     updateRecords();
     state.overlayMode = 'gameover';
+    updatePauseButtonState();
     const baseMessage = translate('index.sections.starsWar.overlay.gameOver.message', {
       time: formatTime(state.elapsed),
       score: formatNumber(state.score)
@@ -3502,7 +3546,9 @@
   function promptForNewRun() {
     state.running = false;
     state.gameOver = false;
+    state.paused = false;
     state.overlayMode = 'ready';
+    updatePauseButtonState();
     showOverlay(
       translate('index.sections.starsWar.overlay.start.title'),
       translate('index.sections.starsWar.overlay.start.message'),
@@ -3528,6 +3574,7 @@
       return;
     }
     state.running = true;
+    state.paused = false;
     state.gameOver = false;
     state.overlayMode = 'running';
     const now = typeof performance !== 'undefined' && typeof performance.now === 'function'
@@ -3535,12 +3582,14 @@
       : Date.now();
     state.lastTimestamp = now;
     hideOverlay();
+    updatePauseButtonState();
     requestAnimationFrame(loop);
   }
 
   function restartRun(options = {}) {
     const { preserveSeed = false } = options;
     state.running = false;
+    state.paused = false;
     hideOverlay();
     flushAutosave();
     const seedValue = preserveSeed && state.rngSeed ? state.rngSeed : randomSeedString();
@@ -3548,6 +3597,24 @@
     state.scriptedSequence = createScriptedSequence();
     resetGame();
     scheduleNextWave();
+    startRun();
+  }
+
+  function pauseRun() {
+    if (!state.running || state.gameOver || state.overlayMode !== 'running') {
+      return;
+    }
+    state.running = false;
+    state.paused = true;
+    state.overlayMode = 'paused';
+    state.lastTimestamp = 0;
+    updatePauseButtonState();
+  }
+
+  function resumeRun() {
+    if (!state.paused || state.gameOver) {
+      return;
+    }
     startRun();
   }
 
@@ -3657,6 +3724,15 @@
         }
       });
     }
+    if (elements.pauseButton) {
+      elements.pauseButton.addEventListener('click', () => {
+        if (state.paused) {
+          resumeRun();
+        } else {
+          pauseRun();
+        }
+      });
+    }
     if (elements.restartButton) {
       elements.restartButton.addEventListener('click', () => {
         restartRun({ preserveSeed: false });
@@ -3668,6 +3744,7 @@
     resetGame();
     scheduleNextWave();
     promptForNewRun();
+    updatePauseButtonState();
     if (typeof window !== 'undefined') {
       window.addEventListener('beforeunload', flushAutosave);
       window.addEventListener('pagehide', flushAutosave);
@@ -3691,9 +3768,11 @@
 
   function onLeave() {
     state.running = false;
+    state.paused = false;
     if (state.overlayMode === 'running') {
       hideOverlay();
     }
+    updatePauseButtonState();
     flushAutosave();
   }
 
@@ -3702,6 +3781,8 @@
   window.starsWarArcade = {
     onEnter,
     onLeave,
-    restart: restartRun
+    restart: restartRun,
+    pause: pauseRun,
+    resume: resumeRun
   };
 })();

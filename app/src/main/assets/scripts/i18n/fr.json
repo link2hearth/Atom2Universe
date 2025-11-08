@@ -1486,7 +1486,9 @@
           "powerups": "Bonus actifs"
         },
         "controls": {
-          "restart": "Lancer / Relancer"
+          "restart": "Nouveau",
+          "pause": "Pause",
+          "resume": "Reprendre"
         },
         "overlay": {
           "start": {

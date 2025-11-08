@@ -48,6 +48,59 @@
   letter-spacing: 0.08em;
 }
 
+.stars-war__stat-button {
+  appearance: none;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(120, 160, 240, 0.35);
+  background: rgba(12, 18, 32, 0.65);
+  min-width: 45px;
+  padding: 0.36rem 0.6rem;
+  color: inherit;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-family: var(--font-digits, 'Orbitron', sans-serif);
+  font-size: clamp(0.6rem, 1.3vw, 0.85rem);
+  font-weight: 600;
+  display: grid;
+  place-items: center;
+  line-height: 1.15;
+  cursor: pointer;
+  transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+  box-shadow: 0 12px 24px rgba(6, 10, 24, 0.25);
+  white-space: nowrap;
+}
+
+.stars-war__stat-button--restart {
+  min-width: 0;
+  padding-inline: 0.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.stars-war__stat-button:hover,
+.stars-war__stat-button:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(140, 200, 255, 0.6);
+  box-shadow: 0 16px 30px rgba(10, 20, 40, 0.35);
+}
+
+.stars-war__stat-button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(92, 228, 255, 0.25), 0 16px 30px rgba(10, 20, 40, 0.35);
+}
+
+.stars-war__stat-button[aria-pressed='true'] {
+  background: linear-gradient(135deg, rgba(92, 228, 255, 0.28), rgba(139, 93, 255, 0.24));
+  border-color: rgba(120, 180, 255, 0.55);
+}
+
+.stars-war__stat-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none;
+  box-shadow: none;
+}
+
 .stars-war__label {
   font-size: clamp(0.4rem, 0.8vw, 0.48rem);
   color: var(--stars-war-muted);
@@ -57,13 +110,6 @@
   font-size: clamp(0.6rem, 1.3vw, 0.85rem);
   font-family: var(--font-digits, 'Orbitron', sans-serif);
   font-weight: 600;
-}
-
-.stars-war__controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: clamp(0.4rem, 1vw, 0.8rem);
-  align-items: center;
 }
 
 .stars-war__button {
@@ -257,12 +303,6 @@
 }
 
 @media (max-width: 720px) {
-  .stars-war__stats {
-    justify-content: flex-start;
-  }
-  .stars-war__controls {
-    width: 100%;
-  }
   .stars-war__button {
     width: 100%;
     text-align: center;

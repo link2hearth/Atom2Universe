@@ -1486,7 +1486,9 @@
           "powerups": "Active power-ups"
         },
         "controls": {
-          "restart": "Start / Restart run"
+          "restart": "New Run",
+          "pause": "Pause",
+          "resume": "Resume"
         },
         "overlay": {
           "start": {
