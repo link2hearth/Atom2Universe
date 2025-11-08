@@ -456,6 +456,9 @@ const ARCADE_DICE_CONFIG = loadConfigJson('./config/arcade/dice.json', {});
 const ARCADE_PARTICULES_CONFIG = loadConfigJson('./config/arcade/particules.json', {});
 const ARCADE_ECHECS_CONFIG = loadConfigJson('./config/arcade/echecs.json', {});
 const ARCADE_SUDOKU_CONFIG = loadConfigJson('./config/arcade/sudoku.json', {});
+const ARCADE_SOLITAIRE_CONFIG = loadConfigJson('./config/arcade/solitaire.json', {});
+const ARCADE_QUANTUM2048_CONFIG = loadConfigJson('./config/arcade/quantum2048.json', {});
+const ARCADE_DEMINEUR_CONFIG = loadConfigJson('./config/arcade/demineur.json', {});
 
 function createShopBuildingDefinitions() {
   const withDefaults = def => ({ maxLevel: SHOP_MAX_PURCHASE_DEFAULT, ...def });
@@ -1268,65 +1271,12 @@ const GAME_CONFIG = {
     // Paramètres du mini-jeu Math (progression des opérations).
     math: ARCADE_MATH_CONFIG,
     // Paramètres du mini-jeu Solitaire (patience classique).
-    solitaire: {
-      rewards: {
-        /**
-         * Récompense distribuée lorsque les quatre fondations sont complétées.
-         * - gachaTickets : tickets gacha accordés au joueur.
-         * - bonusTicketAmount : tickets Mach3 bonus octroyés simultanément.
-         */
-        completion: {
-          gachaTickets: 50,
-          bonusTicketAmount: 1
-        }
-      }
-    },
+    solitaire: ARCADE_SOLITAIRE_CONFIG,
     particules: ARCADE_PARTICULES_CONFIG,
     // Paramètres du mini-jeu Sudoku.
     sudoku: ARCADE_SUDOKU_CONFIG,
-    quantum2048: {
-      gridSizes: [3, 4, 5, 6],
-      targetValues: [16, 32, 64, 128, 256, 512, 1024, 2048],
-      defaultGridSize: 4,
-      recommendedTargetBySize: {
-        3: 64,
-        4: 256,
-        5: 1024,
-        6: 2048
-      },
-      targetPoolsBySize: {
-        3: [16, 32, 64],
-        4: [64, 128, 256, 512],
-        5: [128, 256, 512, 1024],
-        6: [128, 256, 512, 1024, 2048]
-      },
-      randomizeGames: true,
-      spawnValues: [2, 4],
-      spawnWeights: [0.9, 0.1],
-      /**
-       * Configuration des récompenses accordées lorsqu'une partie est gagnée.
-       * Les intervalles correspondent aux tickets de tirage obtenus pour la
-       * difficulté la plus basse et la plus haute. Les valeurs intermédiaires
-       * sont interpolées automatiquement en fonction de l'objectif sélectionné.
-       */
-      rewards: {
-        gachaTickets: {
-          minRange: { min: 10, max: 20 },
-          maxRange: { min: 50, max: 100 }
-        }
-      }
-    },
-    demineur: {
-      /**
-       * Ratio de tickets de tirage accordés par mine présente sur le plateau
-       * lorsqu'une partie est gagnée. Le total est arrondi à l'entier inférieur.
-       */
-      rewards: {
-        gachaTickets: {
-          perMineRatio: 1
-        }
-      }
-    },
+    quantum2048: ARCADE_QUANTUM2048_CONFIG,
+    demineur: ARCADE_DEMINEUR_CONFIG,
   },
 
   /**

@@ -13,8 +13,8 @@ L'objectif de cette migration est d'alléger `config/config.js` tout en conserva
 - [x] Échecs
 - [x] Balance
 - [x] Math
-- [ ] Solitaire
+- [x] Solitaire
 - [x] Particules
 - [x] Sudoku
-- [ ] Quantum 2048
-- [ ] Démineur
+- [x] Quantum 2048
+- [x] Démineur
