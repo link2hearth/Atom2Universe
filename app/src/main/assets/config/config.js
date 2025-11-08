@@ -1271,11 +1271,6 @@ const GAME_CONFIG = {
         stepMs: 280
       }
     },
-    blackjack: {
-      decks: 8,
-      dealerHitSoft17: false,
-      betOptions: [10, 20, 50, 100]
-    },
     /**
      * Paramètres du mini-jeu Hold’em.
      * - blind : montant unique utilisé comme blinde et relance de référence.
