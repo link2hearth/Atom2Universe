@@ -449,6 +449,115 @@ function loadConfigJson(path, fallback) {
   return fallback;
 }
 
+function createDefaultHoldemConfig() {
+  return {
+    blind: 10,
+    dealerSpeedMs: 650,
+    minRaise: 10,
+    startingStack: 600,
+    aiStack: 1e11,
+    maxRaisesPerRound: 2,
+    raiseGuidance: {
+      potRatio: 0.25,
+      stackRatio: 0.12,
+      openRaiseMultiplier: 2
+    },
+    growth: {
+      usageFactor: 1.1,
+      cap: 99e68
+    },
+    opponentCount: { min: 4, max: 5 },
+    aiProfiles: {
+      peter: {
+        aggression: 0.32,
+        caution: 0.72,
+        bluff: 0.07
+      },
+      wendy: {
+        aggression: 0.5,
+        caution: 0.52,
+        bluff: 0.19
+      },
+      zelda: {
+        aggression: 0.62,
+        caution: 0.4,
+        bluff: 0.24
+      },
+      link: {
+        aggression: 0.78,
+        caution: 0.3,
+        bluff: 0.32
+      }
+    },
+    defaultAiProfile: 'peter'
+  };
+}
+
+const RAW_ARCADE_HOLDEM_CONFIG = loadConfigJson(
+  './config/arcade/holdem.json',
+  createDefaultHoldemConfig()
+);
+
+function createHoldemConfig(rawConfig) {
+  const defaults = createDefaultHoldemConfig();
+  const source = rawConfig && typeof rawConfig === 'object' ? rawConfig : {};
+  const toNumber = (value, fallback) =>
+    Number.isFinite(value) ? value : fallback;
+  const toObject = value => (value && typeof value === 'object' ? value : {});
+  const toStringOr = (value, fallback) =>
+    typeof value === 'string' && value.trim() ? value : fallback;
+
+  const raiseGuidanceSource = toObject(source.raiseGuidance);
+  const growthSource = toObject(source.growth);
+  const opponentCountSource = toObject(source.opponentCount);
+  const aiProfilesSource = toObject(source.aiProfiles);
+
+  const profileOrder = [
+    ...Object.keys(defaults.aiProfiles),
+    ...Object.keys(aiProfilesSource).filter(id => !(id in defaults.aiProfiles))
+  ];
+
+  const aiProfiles = profileOrder.reduce((profiles, id) => {
+    const baseProfile = defaults.aiProfiles[id] || { aggression: 0, caution: 0, bluff: 0 };
+    const profileSource = toObject(aiProfilesSource[id]);
+    return {
+      ...profiles,
+      [id]: {
+        aggression: toNumber(profileSource.aggression, baseProfile.aggression),
+        caution: toNumber(profileSource.caution, baseProfile.caution),
+        bluff: toNumber(profileSource.bluff, baseProfile.bluff)
+      }
+    };
+  }, {});
+
+  return {
+    blind: toNumber(source.blind, defaults.blind),
+    dealerSpeedMs: toNumber(source.dealerSpeedMs, defaults.dealerSpeedMs),
+    minRaise: toNumber(source.minRaise, defaults.minRaise),
+    startingStack: toNumber(source.startingStack, defaults.startingStack),
+    aiStack: toNumber(source.aiStack, defaults.aiStack),
+    maxRaisesPerRound: toNumber(source.maxRaisesPerRound, defaults.maxRaisesPerRound),
+    raiseGuidance: {
+      potRatio: toNumber(raiseGuidanceSource.potRatio, defaults.raiseGuidance.potRatio),
+      stackRatio: toNumber(raiseGuidanceSource.stackRatio, defaults.raiseGuidance.stackRatio),
+      openRaiseMultiplier: toNumber(
+        raiseGuidanceSource.openRaiseMultiplier,
+        defaults.raiseGuidance.openRaiseMultiplier
+      )
+    },
+    growth: {
+      usageFactor: toNumber(growthSource.usageFactor, defaults.growth.usageFactor),
+      cap: toNumber(growthSource.cap, defaults.growth.cap)
+    },
+    opponentCount: {
+      min: toNumber(opponentCountSource.min, defaults.opponentCount.min),
+      max: toNumber(opponentCountSource.max, defaults.opponentCount.max)
+    },
+    aiProfiles,
+    defaultAiProfile: toStringOr(source.defaultAiProfile, defaults.defaultAiProfile)
+  };
+}
+
 function createShopBuildingDefinitions() {
   const withDefaults = def => ({ maxLevel: SHOP_MAX_PURCHASE_DEFAULT, ...def });
   return [
@@ -1224,8 +1333,9 @@ const GAME_CONFIG = {
    * (vitesses, probabilités, textes, etc.) afin de centraliser les réglages.
    */
   arcade: {
-    // Les configurations des mini-jeux Roulette et Pachinko sont définies dans
-    // des fichiers JSON dédiés (`config/arcade/roulette.json` et `config/arcade/pachinko.json`).
+    // Les configurations des mini-jeux Hold’em, Roulette et Pachinko sont définies dans
+    // des fichiers JSON dédiés (`config/arcade/holdem.json`, `config/arcade/roulette.json`
+    // et `config/arcade/pachinko.json`).
     /**
      * Paramètres du mini-jeu Hold’em.
      * - blind : montant unique utilisé comme blinde et relance de référence.
@@ -1239,47 +1349,7 @@ const GAME_CONFIG = {
      * - maxRaisesPerRound : nombre maximum de relances autorisées par phase (valeur négative = illimité).
      * - growth : configuration de la montée des enjeux (facteur +10 % et plafond maximum).
      */
-    holdem: {
-      blind: 10,
-      dealerSpeedMs: 650,
-      minRaise: 10,
-      startingStack: 600,
-      aiStack: 1e11,
-      maxRaisesPerRound: 2,
-      raiseGuidance: {
-        potRatio: 0.25,
-        stackRatio: 0.12,
-        openRaiseMultiplier: 2
-      },
-      growth: {
-        usageFactor: 1.1,
-        cap: 99e68
-      },
-      opponentCount: { min: 4, max: 5 },
-      aiProfiles: {
-        peter: {
-          aggression: 0.32,
-          caution: 0.72,
-          bluff: 0.07
-        },
-        wendy: {
-          aggression: 0.5,
-          caution: 0.52,
-          bluff: 0.19
-        },
-        zelda: {
-          aggression: 0.62,
-          caution: 0.4,
-          bluff: 0.24
-        },
-        link: {
-          aggression: 0.78,
-          caution: 0.3,
-          bluff: 0.32
-        }
-      },
-      defaultAiProfile: 'peter'
-    },
+    holdem: createHoldemConfig(RAW_ARCADE_HOLDEM_CONFIG),
     /**
      * Paramètres du mini-jeu Dice (Yams).
      * - diceCount : nombre de dés utilisés.

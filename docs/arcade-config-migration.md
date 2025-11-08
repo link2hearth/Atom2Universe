@@ -7,7 +7,7 @@ Ce document recense les mini-jeux d'arcade dont les paramètres sont encore déf
 - [x] Blackjack – configuration déportée dans `config/arcade/blackjack.json`
 - [x] Roulette
 - [x] Pachinko
-- [ ] Hold'em
+- [x] Hold'em
 - [ ] Dice
 - [ ] Échecs
 - [ ] Balance
