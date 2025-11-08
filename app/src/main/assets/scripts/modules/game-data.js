@@ -1406,6 +1406,135 @@ function normalizeElementFamilyConfig(raw, familyId) {
   };
 }
 
+function normalizeElementEffectNotes(source) {
+  const notes = [];
+  const appendNote = value => {
+    if (typeof value !== 'string') {
+      return;
+    }
+    const translated = translateElementLabel(value);
+    if (!translated) {
+      return;
+    }
+    if (!notes.includes(translated)) {
+      notes.push(translated);
+    }
+  };
+  if (Array.isArray(source)) {
+    source.forEach(appendNote);
+  } else if (typeof source === 'string') {
+    appendNote(source);
+  }
+  return notes;
+}
+
+function normalizeElementEffectEntry(raw, { elementId, defaultLabel, index }) {
+  if (!raw || typeof raw !== 'object') {
+    return null;
+  }
+
+  const id = typeof raw.id === 'string' && raw.id.trim()
+    ? raw.id.trim()
+    : `${elementId}:effect:${index + 1}`;
+
+  const triggerValue = typeof raw.trigger === 'string' ? raw.trigger.trim().toLowerCase() : '';
+  let trigger = 'lifetime';
+  let minLifetime = 1;
+  let minActive = 0;
+  if (['always', 'permanent', 'constant'].includes(triggerValue)) {
+    trigger = 'always';
+    minLifetime = 0;
+  } else if (['active', 'owned', 'current'].includes(triggerValue)) {
+    trigger = 'active';
+    minLifetime = 0;
+    minActive = 1;
+  } else if (['first', 'firstacquisition', 'first-acquisition', 'initial', 'firstdrop'].includes(triggerValue)) {
+    trigger = 'firstAcquisition';
+    minLifetime = 1;
+  }
+
+  const lifetimeCandidate = coerceFiniteNumber(
+    readNumberProperty(raw, ['minLifetime', 'minCopies', 'minOwned']),
+    { allowZero: true }
+  );
+  const activeCandidate = coerceFiniteNumber(
+    readNumberProperty(raw, ['minActive', 'minCurrent', 'minCount']),
+    { allowZero: true }
+  );
+  if (lifetimeCandidate != null) {
+    const normalized = Math.max(0, Math.floor(lifetimeCandidate));
+    if (trigger === 'firstAcquisition') {
+      minLifetime = Math.max(1, normalized);
+    } else if (trigger === 'always') {
+      minLifetime = normalized;
+    } else {
+      minLifetime = Math.max(1, normalized);
+    }
+  }
+  if (activeCandidate != null) {
+    const normalized = Math.max(0, Math.floor(activeCandidate));
+    if (trigger === 'active') {
+      minActive = Math.max(1, normalized);
+    } else {
+      minActive = normalized;
+    }
+  }
+
+  const effects = {};
+  const clickAdd = coerceFiniteNumber(
+    readNumberProperty(raw, ['clickAdd', 'apcFlat', 'apc', 'perClick', 'manual', 'click'])
+  , { allowZero: false });
+  if (clickAdd != null) {
+    effects.clickAdd = clickAdd;
+  }
+  const autoAdd = coerceFiniteNumber(
+    readNumberProperty(raw, ['autoAdd', 'apsFlat', 'aps', 'perSecond', 'auto', 'automatic'])
+  , { allowZero: false });
+  if (autoAdd != null) {
+    effects.autoAdd = autoAdd;
+  }
+
+  if (Object.keys(effects).length === 0) {
+    return null;
+  }
+
+  const label = translateElementLabel(raw.label ?? raw.name) || defaultLabel;
+  const description = translateElementLabel(raw.description ?? raw.detail);
+  const notes = normalizeElementEffectNotes(raw.notes);
+  if (typeof raw.note === 'string') {
+    const translated = translateElementLabel(raw.note);
+    if (translated && !notes.includes(translated)) {
+      notes.push(translated);
+    }
+  }
+
+  return {
+    id,
+    trigger,
+    minLifetime: Math.max(0, minLifetime),
+    minActive: Math.max(0, minActive),
+    label,
+    description: description || null,
+    notes,
+    effects
+  };
+}
+
+function normalizeElementEffects(source, { elementId, defaultLabel }) {
+  if (!source) {
+    return [];
+  }
+  const list = Array.isArray(source) ? source : [source];
+  const effects = [];
+  list.forEach((entry, index) => {
+    const normalized = normalizeElementEffectEntry(entry, { elementId, defaultLabel, index });
+    if (normalized) {
+      effects.push(normalized);
+    }
+  });
+  return effects;
+}
+
 const RAW_ELEMENT_FAMILY_CONFIG = (() => {
   const raw = CONFIG.elementFamilies
     ?? CONFIG.elementFamilyBonuses
@@ -1722,9 +1851,36 @@ function createInitialElementCollection() {
       ? elementConfigByAtomicNumber.get(atomicNumber)
       : null;
     const rarity = elementRarityIndex.get(def.id) || null;
-    const effects = Array.isArray(configEntry?.effects)
-      ? [...configEntry.effects]
-      : [];
+    const labelCandidates = [
+      configEntry?.label,
+      configEntry?.name,
+      def?.label,
+      def?.name,
+      def?.symbol,
+      def?.id
+    ];
+    let defaultLabel = null;
+    for (const candidate of labelCandidates) {
+      if (typeof candidate !== 'string') {
+        continue;
+      }
+      const translated = translateElementLabel(candidate);
+      if (translated) {
+        defaultLabel = translated;
+        break;
+      }
+    }
+    if (!defaultLabel) {
+      if (Number.isFinite(atomicNumber) && atomicNumber > 0) {
+        defaultLabel = `Élément ${atomicNumber}`;
+      } else {
+        defaultLabel = def?.id || 'Élément';
+      }
+    }
+    const effects = normalizeElementEffects(configEntry?.effects, {
+      elementId: def.id,
+      defaultLabel
+    });
     const bonuses = [];
     const bonusValue = configEntry?.bonus;
     if (Array.isArray(bonusValue)) {
