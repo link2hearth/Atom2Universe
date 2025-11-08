@@ -33,7 +33,7 @@
       "scrambleMoves": 72,
       "minMulticoloredColumns": 3,
       "minDisplacedRatio": 0.6,
-      "gachaTickets": 2
+      "gachaTickets": 3
     },
     "hard": {
       "columns": 8,
@@ -43,7 +43,7 @@
       "scrambleMoves": 96,
       "minMulticoloredColumns": 4,
       "minDisplacedRatio": 0.65,
-      "gachaTickets": 3
+      "gachaTickets": 5
     }
   }
 }
