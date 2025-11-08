@@ -3,18 +3,17 @@
     return;
   }
 
-  const DEFAULT_SEED = 'at2u';
-  const DEFAULT_LENGTH = 1800;
   const DEFAULT_DIFFICULTY = 'normal';
-  const MIN_LENGTH = 800;
-  const MAX_LENGTH = 3200;
   const CHECKPOINT_INTERVAL = 400;
   const SLOPE_STEP = 0.12;
   const ELEVATION_LIMIT = 260;
+  const INITIAL_BLOCK_COUNT = 14;
+  const EXTEND_BLOCK_COUNT = 6;
+  const TRACK_AHEAD_BUFFER = 1400;
 
   const PHYSICS_STEP = 1 / 120;
   const MAX_FRAME_STEP = 1 / 30;
-  const MASS = 120;
+  const MASS = 110;
   const GRAVITY = 1800;
   const CHASSIS_WIDTH = 108;
   const CHASSIS_HEIGHT = 32;
@@ -22,20 +21,21 @@
   const WHEEL_RADIUS = 18;
   const WHEEL_VERTICAL_OFFSET = 20;
   const BIKE_INERTIA = (MASS * (CHASSIS_WIDTH * CHASSIS_WIDTH + CHASSIS_HEIGHT * CHASSIS_HEIGHT)) / 12;
-  const ENGINE_FORCE = 6800;
-  const BRAKE_FORCE = 5200;
+  const ENGINE_FORCE = 11800;
+  const BRAKE_FORCE = 6400;
   const TILT_TORQUE = 22000;
   const SPRING_STIFFNESS = 3600;
   const SPRING_DAMPING = 140;
-  const FRICTION_DAMPING = 34;
-  const FRICTION_COEFFICIENT = 0.85;
-  const LINEAR_DAMPING = 0.12;
+  const FRICTION_DAMPING = 28;
+  const FRICTION_COEFFICIENT = 0.88;
+  const LINEAR_DAMPING = 0.08;
   const ANGULAR_DAMPING = 0.18;
-  const NORMAL_CORRECTION_FACTOR = 0.55;
-  const CAMERA_LOOK_AHEAD = 0.22;
-  const CAMERA_OFFSET_Y = 140;
+  const NORMAL_CORRECTION_FACTOR = 0.7;
+  const CAMERA_LOOK_AHEAD = 0.24;
+  const CAMERA_OFFSET_Y = 120;
   const CAMERA_SMOOTH = 6.5;
   const FALL_EXTRA_MARGIN = 320;
+  const CAMERA_VERTICAL_ANCHOR = 0.55;
 
   const translate = (() => {
     if (typeof window !== 'undefined' && typeof window.t === 'function') {
@@ -96,21 +96,15 @@
     return current + (target - current) * factor;
   }
 
-  function hashSeed(value) {
-    if (typeof value === 'number' && Number.isFinite(value)) {
-      let normalized = value | 0;
-      if (normalized === 0) {
-        normalized = 1;
-      }
-      return normalized >>> 0;
+  function createEntropySeed() {
+    if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+      const buffer = new Uint32Array(1);
+      crypto.getRandomValues(buffer);
+      const value = buffer[0] >>> 0;
+      return value === 0 ? 1 : value;
     }
-    const text = typeof value === 'string' ? value : DEFAULT_SEED;
-    let hash = 2166136261 >>> 0;
-    for (let i = 0; i < text.length; i += 1) {
-      hash ^= text.charCodeAt(i);
-      hash = Math.imul(hash, 16777619);
-    }
-    return hash >>> 0;
+    const fallback = Math.floor(Math.random() * 4294967295) >>> 0;
+    return fallback === 0 ? 1 : fallback;
   }
 
   function mulberry32(seed) {
@@ -610,92 +604,181 @@
     };
   }
 
-  function createCheckpoints(track, interval) {
-    const checkpoints = [];
-    const totalLength = track.points[track.points.length - 1][0];
-    const startX = Math.max(40, track.points[0][0] + 40);
-    let currentX = startX;
-    let hint = 0;
-    checkpoints.push(createCheckpoint(track, track.points[0][0] + 10, 0));
-    while (currentX < totalLength) {
-      const checkpoint = createCheckpoint(track, currentX, hint);
-      checkpoints.push(checkpoint);
-      hint = checkpoint.segmentIndex;
-      currentX += interval;
+  function rebuildSegments(track, startIndex) {
+    if (!track || !Array.isArray(track.points)) {
+      return;
     }
-    checkpoints.push(createCheckpoint(track, totalLength, hint));
-    return checkpoints;
+    const points = track.points;
+    const segments = Array.isArray(track.segments) ? track.segments : [];
+    const begin = clamp(Number.isFinite(startIndex) ? Math.floor(startIndex) : 0, 0, Math.max(0, points.length - 1));
+    if (segments.length > begin) {
+      segments.length = begin;
+    }
+    for (let i = begin; i < points.length - 1; i += 1) {
+      const [x1, y1] = points[i];
+      const [x2, y2] = points[i + 1];
+      const dx = x2 - x1;
+      const dy = y2 - y1;
+      const length = Math.hypot(dx, dy);
+      if (length <= 0.0001) {
+        continue;
+      }
+      const tangent = { x: dx / length, y: dy / length };
+      const normal = { x: tangent.y, y: -tangent.x };
+      segments.push({
+        p0: { x: x1, y: y1 },
+        p1: { x: x2, y: y2 },
+        tangent,
+        normal,
+        length,
+        minX: Math.min(x1, x2),
+        maxX: Math.max(x1, x2)
+      });
+    }
+    track.segments = segments;
   }
 
-  function buildTrack(seed, targetLength, difficulty) {
-    const rng = mulberry32(seed || 1);
+  function updateTrackElevation(track, startIndex) {
+    if (!track || !Array.isArray(track.points)) {
+      return;
+    }
+    const begin = clamp(Number.isFinite(startIndex) ? Math.floor(startIndex) : 0, 0, track.points.length);
+    if (!Number.isFinite(track.highestY)) {
+      track.highestY = -Infinity;
+    }
+    for (let i = begin; i < track.points.length; i += 1) {
+      const [, y] = track.points[i];
+      if (y > track.highestY) {
+        track.highestY = y;
+      }
+    }
+    if (!Number.isFinite(track.highestY)) {
+      track.highestY = 0;
+    }
+    track.maxY = track.highestY + FALL_EXTRA_MARGIN;
+  }
+
+  function ensureTrackCheckpoints(track) {
+    if (!track || !Array.isArray(track.checkpoints)) {
+      return;
+    }
+    const interval = track.checkpointInterval || intervalClamp(CHECKPOINT_INTERVAL);
+    const maxLength = track.length || 0;
+    let hint = track.lastCheckpointHint || 0;
+    while (track.nextCheckpointX <= maxLength) {
+      const checkpoint = createCheckpoint(track, track.nextCheckpointX, hint);
+      track.checkpoints.push(checkpoint);
+      hint = checkpoint.segmentIndex;
+      track.lastCheckpointHint = hint;
+      track.nextCheckpointX += interval;
+    }
+  }
+
+  function createTrackGenerator(seed, difficulty) {
+    return {
+      rng: mulberry32(seed || 1),
+      difficulty: typeof difficulty === 'string' ? difficulty : DEFAULT_DIFFICULTY,
+      prevBlock: START_BLOCK,
+      currentY: 0,
+      history: [START_BLOCK.id]
+    };
+  }
+
+  function extendTrack(track, blockCount) {
+    if (!track || !track.generator) {
+      return;
+    }
+    const generator = track.generator;
+    let added = 0;
+    while (added < blockCount) {
+      let nextBlock = pickNextBlock(generator.prevBlock, generator.difficulty, generator.rng, generator.currentY, generator.history);
+      if (!nextBlock) {
+        nextBlock = pickLandingBlock(generator.prevBlock, generator.difficulty, generator.rng, generator.currentY) || START_BLOCK;
+      }
+      if (!nextBlock) {
+        break;
+      }
+      const previousPointCount = track.points.length;
+      const lastPoint = appendBlockPoints(track.points, nextBlock, track.length, generator.currentY, true);
+      if (!lastPoint) {
+        break;
+      }
+      generator.currentY = lastPoint[1];
+      track.length = lastPoint[0];
+      track.usedIds.push(nextBlock.id);
+      generator.history.push(nextBlock.id);
+      if (generator.history.length > 5) {
+        generator.history.shift();
+      }
+      generator.prevBlock = nextBlock;
+      rebuildSegments(track, Math.max(previousPointCount - 1, 0));
+      updateTrackElevation(track, previousPointCount);
+      added += 1;
+    }
+    if (Array.isArray(track.checkpoints)) {
+      ensureTrackCheckpoints(track);
+    }
+  }
+
+  function buildTrack(seed, difficulty) {
+    const generator = createTrackGenerator(seed, difficulty);
     const points = [];
     const usedIds = [];
     let currentX = 0;
     let currentY = 0;
-    let prevBlock = START_BLOCK;
-    const history = [];
     const startEnd = appendBlockPoints(points, START_BLOCK, currentX, currentY, false);
     if (startEnd) {
       currentX = startEnd[0];
       currentY = startEnd[1];
     }
     usedIds.push(START_BLOCK.id);
-    history.push(START_BLOCK.id);
-
-    let safety = 0;
-    const normalizedDifficulty = typeof difficulty === 'string' ? difficulty : DEFAULT_DIFFICULTY;
-    while (currentX < targetLength && safety < 140) {
-      safety += 1;
-      const nextBlock = pickNextBlock(prevBlock, normalizedDifficulty, rng, currentY, history);
-      if (!nextBlock) {
-        break;
-      }
-      const lastPoint = appendBlockPoints(points, nextBlock, currentX, currentY, true);
-      if (!lastPoint) {
-        break;
-      }
-      currentX = lastPoint[0];
-      currentY = lastPoint[1];
-      usedIds.push(nextBlock.id);
-      history.push(nextBlock.id);
-      if (history.length > 5) {
-        history.shift();
-      }
-      prevBlock = nextBlock;
-    }
-
-    const landing = pickLandingBlock(prevBlock, normalizedDifficulty, rng, currentY);
-    if (landing) {
-      const landingEnd = appendBlockPoints(points, landing, currentX, currentY, true);
-      if (landingEnd) {
-        currentX = landingEnd[0];
-        currentY = landingEnd[1];
-      }
-      usedIds.push(landing.id);
-    }
-
-    if (points.length < 2) {
-      return null;
-    }
-
     const segments = createSegments(points);
-    let maxY = -Infinity;
+    let highestY = -Infinity;
     for (let i = 0; i < points.length; i += 1) {
-      if (points[i][1] > maxY) {
-        maxY = points[i][1];
+      if (points[i][1] > highestY) {
+        highestY = points[i][1];
       }
     }
+    const baseHighest = Number.isFinite(highestY) ? highestY : 0;
     const track = {
       points,
       segments,
       length: currentX,
       usedIds,
-      maxY: maxY + FALL_EXTRA_MARGIN
+      highestY: baseHighest,
+      maxY: baseHighest + FALL_EXTRA_MARGIN,
+      generator,
+      seed: seed || 1,
+      difficulty: generator.difficulty,
+      checkpoints: [],
+      checkpointInterval: intervalClamp(CHECKPOINT_INTERVAL),
+      nextCheckpointX: Math.max(40, points.length ? points[0][0] + 40 : 40),
+      lastCheckpointHint: 0
     };
-    const checkpointInterval = intervalClamp(CHECKPOINT_INTERVAL);
-    track.checkpoints = createCheckpoints(track, checkpointInterval);
+    generator.currentY = currentY;
+    if (track.points.length) {
+      const firstCheckpoint = createCheckpoint(track, track.points[0][0] + 10, 0);
+      track.checkpoints.push(firstCheckpoint);
+      track.lastCheckpointHint = firstCheckpoint.segmentIndex;
+      track.nextCheckpointX = Math.max(track.nextCheckpointX, firstCheckpoint.x + track.checkpointInterval);
+    }
+    extendTrack(track, INITIAL_BLOCK_COUNT);
+    if (!track.points || track.points.length < 2) {
+      return null;
+    }
     return track;
+  }
+
+  function ensureTrackAhead() {
+    const { track, bike } = state;
+    if (!track || !track.generator || !bike) {
+      return;
+    }
+    const remaining = track.length - bike.position.x;
+    if (remaining < TRACK_AHEAD_BUFFER) {
+      extendTrack(track, EXTEND_BLOCK_COUNT);
+      state.fallThreshold = track.maxY;
+    }
   }
 
   function intervalClamp(value) {
@@ -727,7 +810,6 @@
     statusState: 'idle',
     lastTimestamp: null,
     accumulator: 0,
-    checkpoints: [],
     currentCheckpoint: 0,
     respawnData: null,
     fallThreshold: 600,
@@ -741,12 +823,9 @@
     }
     return {
       canvas: document.getElementById('motocrossCanvas'),
-      seedInput: document.getElementById('motocrossSeed'),
-      lengthInput: document.getElementById('motocrossLength'),
       difficultySelect: document.getElementById('motocrossDifficulty'),
       generateButton: document.getElementById('motocrossGenerate'),
       speedValue: document.getElementById('motocrossSpeedValue'),
-      blockList: document.getElementById('motocrossBlockList'),
       status: document.getElementById('motocrossStatus')
     };
   }
@@ -757,7 +836,7 @@
       return;
     }
     const fallback = statusKey === 'index.sections.motocross.ui.status.ready'
-      ? 'Appuyez sur « Générer » pour créer une piste.'
+      ? 'Appuyez sur « Générer » pour lancer une piste aléatoire.'
       : '';
     const text = translate(statusKey, fallback, statusParams);
     elements.status.textContent = text;
@@ -769,27 +848,6 @@
     state.statusParams = params || null;
     state.statusState = stateName;
     applyStatus();
-  }
-
-  function updateBlockList(usedIds) {
-    const { elements } = state;
-    if (!elements || !elements.blockList) {
-      return;
-    }
-    const container = elements.blockList;
-    container.textContent = '';
-    if (!Array.isArray(usedIds) || !usedIds.length) {
-      container.textContent = '—';
-      return;
-    }
-    const fragment = document.createDocumentFragment();
-    usedIds.forEach(id => {
-      const chip = document.createElement('span');
-      chip.className = 'motocross__chip';
-      chip.textContent = id;
-      fragment.appendChild(chip);
-    });
-    container.appendChild(fragment);
   }
 
   function updateSpeedDisplay() {
@@ -815,11 +873,6 @@
       canvas.width = width;
       canvas.height = height;
     }
-  }
-
-  function clampLengthValue(value) {
-    const numeric = Number.isFinite(value) ? value : DEFAULT_LENGTH;
-    return clamp(Math.round(numeric), MIN_LENGTH, MAX_LENGTH);
   }
 
   function updateWheelData() {
@@ -1021,9 +1074,10 @@
     }
 
     updateWheelData();
-    const speedMagnitude = Math.hypot(bike.velocity.x, bike.velocity.y);
-    state.speed = speedMagnitude;
+    const horizontalSpeed = Math.abs(bike.velocity.x);
+    state.speed = horizontalSpeed < 0.05 ? 0 : horizontalSpeed;
     updateCheckpointsProgress();
+    ensureTrackAhead();
 
     if (bike.position.y - WHEEL_RADIUS > state.fallThreshold) {
       state.pendingRespawn = true;
@@ -1099,7 +1153,7 @@
     ctx.clearRect(0, 0, width, height);
 
     ctx.save();
-    ctx.translate(-camera.x + width * 0.5, -camera.y + height * 0.65);
+    ctx.translate(-camera.x + width * 0.5, -camera.y + height * CAMERA_VERTICAL_ANCHOR);
     if (track) {
       renderTrack(ctx, track);
     }
@@ -1146,12 +1200,6 @@
     updateSpeedDisplay();
   }
 
-  function parseLengthInput() {
-    const value = state.elements?.lengthInput?.value;
-    const numeric = Number.parseFloat(value);
-    return clampLengthValue(Number.isFinite(numeric) ? numeric : DEFAULT_LENGTH);
-  }
-
   function parseDifficulty() {
     const value = state.elements?.difficultySelect?.value;
     if (value === 'easy' || value === 'hard') {
@@ -1160,47 +1208,31 @@
     return DEFAULT_DIFFICULTY;
   }
 
-  function parseSeed() {
-    const value = state.elements?.seedInput?.value;
-    if (typeof value === 'string' && value.trim()) {
-      return value.trim();
-    }
-    return DEFAULT_SEED;
-  }
-
   function generateTrack(options = {}) {
     const silent = !!(options && options.silent);
-    const seedText = parseSeed();
-    const seedValue = hashSeed(seedText);
-    const lengthValue = parseLengthInput();
     const difficulty = parseDifficulty();
-    const track = buildTrack(seedValue, lengthValue, difficulty);
+    const seedValue = createEntropySeed();
+    const track = buildTrack(seedValue, difficulty);
     if (!track) {
-      updateBlockList([]);
       setStatus(
         'index.sections.motocross.ui.status.failed',
-        'Impossible de générer la piste avec ces paramètres.',
+        'Impossible de générer une nouvelle piste pour le moment.',
         null,
         'error'
       );
       return;
     }
     state.track = track;
-    state.checkpoints = track.checkpoints || [];
     state.currentCheckpoint = 0;
     state.respawnData = computeRespawnData(0);
     state.fallThreshold = track.maxY;
     updateRespawnCheckpoint();
     applyRespawn(false);
     if (!silent) {
-      console.info('[Motocross] Track blocks:', track.usedIds);
-    }
-    updateBlockList(track.usedIds);
-    if (!silent) {
       const params = { count: track.usedIds.length };
       setStatus(
         'index.sections.motocross.ui.status.generated',
-        'Piste générée : {count} blocs.',
+        'Piste prête, bon ride !',
         params,
         'success'
       );

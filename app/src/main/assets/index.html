@@ -1742,31 +1742,6 @@
           aria-label="Paramètres de la piste Motocross"
           data-i18n="aria-label:index.sections.motocross.ui.controls"
         >
-          <div class="motocross__field">
-            <label for="motocrossSeed" class="motocross__label" data-i18n="index.sections.motocross.ui.seed">Graine</label>
-            <input
-              id="motocrossSeed"
-              class="motocross__input"
-              type="text"
-              value="at2u"
-              autocapitalize="none"
-              autocomplete="off"
-              spellcheck="false"
-              inputmode="text"
-            />
-          </div>
-          <div class="motocross__field motocross__field--compact">
-            <label for="motocrossLength" class="motocross__label" data-i18n="index.sections.motocross.ui.length">Longueur</label>
-            <input
-              id="motocrossLength"
-              class="motocross__input"
-              type="number"
-              min="800"
-              max="3200"
-              step="50"
-              value="1800"
-            />
-          </div>
           <div class="motocross__field motocross__field--compact">
             <label for="motocrossDifficulty" class="motocross__label" data-i18n="index.sections.motocross.ui.difficulty">Difficulté</label>
             <select id="motocrossDifficulty" class="motocross__select">
@@ -1788,10 +1763,6 @@
               <span class="motocross__unit" data-i18n="index.sections.motocross.ui.speedUnit">u/s</span>
             </span>
           </div>
-          <div class="motocross__field motocross__field--blocks">
-            <span class="motocross__label" data-i18n="index.sections.motocross.ui.blocks">Blocs utilisés</span>
-            <div class="motocross__blocks-value" id="motocrossBlockList" aria-live="polite">—</div>
-          </div>
         </div>
         <p
           class="motocross__status"
@@ -1800,7 +1771,7 @@
           aria-live="polite"
           data-state="idle"
           data-i18n="index.sections.motocross.ui.status.ready"
-        >Appuyez sur « Générer » pour créer une piste.</p>
+          >Appuyez sur « Générer » pour lancer une piste aléatoire.</p>
         <canvas
           id="motocrossCanvas"
           class="motocross__canvas"

@@ -149,26 +149,6 @@
   background: rgba(18, 58, 36, 0.78);
 }
 
-.motocross__field--blocks {
-  min-width: 200px;
-  max-width: 320px;
-}
-
-.motocross__blocks-value {
-  max-width: 100%;
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: 0.25rem;
-}
-
-.motocross__chip {
-  padding: 0.1rem 0.5rem;
-  border-radius: 999px;
-  background: rgba(96, 165, 250, 0.2);
-  border: 1px solid rgba(96, 165, 250, 0.35);
-  font-size: 0.75rem;
-}
-
 @media (max-width: 960px) {
   .motocross__ui {
     left: 1.25rem;
@@ -187,9 +167,5 @@
 @media (max-width: 600px) {
   .motocross__field {
     min-width: calc(50% - 0.75rem);
-  }
-
-  .motocross__field--blocks {
-    min-width: 100%;
   }
 }

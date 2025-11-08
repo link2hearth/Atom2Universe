@@ -1032,8 +1032,6 @@
         "aria": "Motocross prototype: build a procedural course and ride the bike.",
         "ui": {
           "controls": "Motocross track settings",
-          "seed": "Seed",
-          "length": "Length",
           "difficulty": "Difficulty",
           "difficulties": {
             "easy": "Easy",
@@ -1042,13 +1040,12 @@
           },
           "generate": "Generate",
           "speed": "Speed",
-          "speedUnit": "u/s",
-          "blocks": "Used blocks"
+          "speedUnit": "u/s"
         },
         "status": {
-          "ready": "Press “Generate” to build a new track.",
-          "generated": "Track generated: {count} blocks.",
-          "failed": "Unable to build a track with these settings."
+          "ready": "Press “Generate” to explore a random course.",
+          "generated": "Track ready for a new run!",
+          "failed": "Unable to generate a new track right now."
         }
       },
       "sokoban": {

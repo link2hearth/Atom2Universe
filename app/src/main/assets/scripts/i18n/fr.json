@@ -1032,8 +1032,6 @@
         "aria": "Prototype Motocross procédural : générez une piste et pilotez la moto.",
         "ui": {
           "controls": "Paramètres de la piste Motocross",
-          "seed": "Graine",
-          "length": "Longueur",
           "difficulty": "Difficulté",
           "difficulties": {
             "easy": "Facile",
@@ -1042,13 +1040,12 @@
           },
           "generate": "Générer",
           "speed": "Vitesse",
-          "speedUnit": "u/s",
-          "blocks": "Blocs utilisés"
+          "speedUnit": "u/s"
         },
         "status": {
-          "ready": "Appuyez sur « Générer » pour créer une piste.",
-          "generated": "Piste générée : {count} blocs.",
-          "failed": "Impossible de générer la piste avec ces paramètres."
+          "ready": "Appuyez sur « Générer » pour lancer une piste aléatoire.",
+          "generated": "Piste prête, bon ride !",
+          "failed": "Impossible de générer une nouvelle piste pour le moment."
         }
       },
       "sokoban": {
