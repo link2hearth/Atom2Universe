@@ -141,6 +141,7 @@
     languageHandlerAttached: false,
     languageHandler: null,
     ready: false,
+    eventsAttached: false,
     play: null,
     renderState: {
       playerEntity: null,
@@ -160,6 +161,9 @@
       timers: new Map()
     }
   };
+
+  let initializationPromise = null;
+  let readyCallbacks = null;
 
   function translate(key, fallback, params) {
     if (typeof translateOrDefault === 'function') {
@@ -660,6 +664,16 @@
     };
   }
 
+  function runWhenIdle(callback) {
+    if (typeof window !== 'undefined' && typeof window.requestIdleCallback === 'function') {
+      window.requestIdleCallback(() => {
+        callback();
+      }, { timeout: 1000 });
+      return;
+    }
+    window.setTimeout(callback, 0);
+  }
+
   function getPrefetchSettings() {
     const config = state.config?.prefetch || DEFAULT_CONFIG.prefetch;
     const enabled = config?.enabled !== false;
@@ -731,7 +745,7 @@
       return;
     }
     state.prefetch.generating.add(difficultyKey);
-    window.setTimeout(() => {
+    runWhenIdle(() => {
       let created = false;
       let attempts = 0;
       while (!created && attempts < 3 && buffer.length < effectiveSettings.bufferSize) {
@@ -749,7 +763,7 @@
       if (buffer.length < effectiveSettings.bufferSize) {
         schedulePrefetchForDifficulties([difficultyKey], { delay: effectiveSettings.retryDelayMs });
       }
-    }, 0);
+    });
   }
 
   function schedulePrefetchForDifficulties(difficultyKeys, options = {}) {
@@ -3450,6 +3464,9 @@
     if (!state.elements) {
       return;
     }
+    if (state.eventsAttached) {
+      return;
+    }
     if (state.elements.difficultySelect) {
       state.elements.difficultySelect.addEventListener('change', event => {
         const value = event.target.value;
@@ -3463,6 +3480,7 @@
       });
     }
     attachInputListeners();
+    state.eventsAttached = true;
   }
 
   async function loadConfig() {
@@ -3492,7 +3510,8 @@
   function initialize() {
     state.elements = getElements();
     if (!state.elements) {
-      return;
+      state.ready = false;
+      return Promise.resolve();
     }
     attachEvents();
     attachLanguageListener();
@@ -3500,7 +3519,7 @@
     if (state.elements.difficultySelect) {
       state.elements.difficultySelect.value = initialParams.difficulty;
     }
-    loadConfig()
+    return loadConfig()
       .finally(() => {
         regenerateLevel({
           seed: initialParams.seed,
@@ -3508,6 +3527,16 @@
           preserveSeed: !!initialParams.seed
         });
         state.ready = true;
+        if (Array.isArray(readyCallbacks) && readyCallbacks.length) {
+          readyCallbacks.splice(0).forEach(callback => {
+            try {
+              callback();
+            } catch (error) {
+              console.error('Escape post-init callback failed', error);
+            }
+          });
+        }
+        readyCallbacks = null;
       });
   }
 
@@ -3519,18 +3548,62 @@
     state.tileMap = null;
     state.entityMap = null;
     resetPrefetchState();
+    state.ready = false;
+    if (Array.isArray(readyCallbacks)) {
+      readyCallbacks.length = 0;
+      readyCallbacks = null;
+    }
+    initializationPromise = null;
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initialize, { once: true });
-  } else {
-    initialize();
+  function onReady(callback) {
+    if (state.ready) {
+      callback();
+      return;
+    }
+    if (!Array.isArray(readyCallbacks)) {
+      readyCallbacks = [];
+    }
+    readyCallbacks.push(callback);
   }
 
-    window.escapeArcade = {
-      regenerate(seed, difficulty) {
+  function requestInitialization() {
+    if (initializationPromise) {
+      return initializationPromise;
+    }
+    initializationPromise = new Promise(resolve => {
+      const startInitialization = () => {
+        try {
+          const result = initialize();
+          if (result && typeof result.then === 'function') {
+            result.then(() => resolve()).catch(error => {
+              console.error('Escape initialization failed', error);
+              resolve();
+            });
+            return;
+          }
+        } catch (error) {
+          console.error('Escape initialization failed', error);
+        }
+        resolve();
+      };
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', startInitialization, { once: true });
+      } else {
+        startInitialization();
+      }
+    });
+    return initializationPromise;
+  }
+
+  window.escapeArcade = {
+    initialize: requestInitialization,
+    regenerate(seed, difficulty) {
+      requestInitialization();
+      onReady(() => {
         regenerateLevel({ seed, difficulty, preserveSeed: true });
-      },
-      destroy
-    };
+      });
+    },
+    destroy
+  };
 })();
