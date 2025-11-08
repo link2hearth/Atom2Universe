@@ -6622,10 +6622,16 @@ function ensureGameOfLifeGame() {
 
 function ensureEscapeGame() {
   if (escapeGame && typeof escapeGame === 'object') {
+    if (typeof escapeGame.initialize === 'function') {
+      escapeGame.initialize();
+    }
     return escapeGame;
   }
   if (window.escapeArcade && typeof window.escapeArcade === 'object') {
     escapeGame = window.escapeArcade;
+    if (typeof escapeGame.initialize === 'function') {
+      escapeGame.initialize();
+    }
     return escapeGame;
   }
   return null;
@@ -12800,6 +12806,9 @@ function showPage(pageId) {
   }
   if (pageId === 'quantum2048') {
     ensureQuantum2048Game();
+  }
+  if (pageId === 'escape') {
+    ensureEscapeGame();
   }
   if (pageId === 'starBridges') {
     ensureStarBridgesGame();
