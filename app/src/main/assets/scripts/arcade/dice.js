@@ -632,13 +632,19 @@
       diceValues[i] = newValue;
       const button = diceButtons[i];
       if (button) {
-        const dx = (Math.random() * 160) - 80;
-        const dy = (Math.random() * 120) - 60;
+        const dx = (Math.random() * 220) - 110;
+        const dy = (Math.random() * 160) - 80;
         const rot = (Math.random() * 720) - 360;
+        const tiltX = (Math.random() * 140) - 70;
+        const tiltY = (Math.random() * 140) - 70;
+        const scale = 1 + (Math.random() * 0.16) - 0.08;
         const delay = Math.random() * 0.18;
         button.style.setProperty('--roll-dx', `${dx.toFixed(2)}px`);
         button.style.setProperty('--roll-dy', `${dy.toFixed(2)}px`);
         button.style.setProperty('--roll-rot', `${rot.toFixed(2)}deg`);
+        button.style.setProperty('--roll-tilt-x', `${tiltX.toFixed(2)}deg`);
+        button.style.setProperty('--roll-tilt-y', `${tiltY.toFixed(2)}deg`);
+        button.style.setProperty('--roll-scale', `${scale.toFixed(3)}`);
         button.style.setProperty('--roll-delay', `${delay.toFixed(3)}s`);
         button.classList.remove('dice-die--rolling');
         // Force reflow to restart the animation
