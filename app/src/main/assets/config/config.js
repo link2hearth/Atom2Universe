@@ -10,7 +10,8 @@ const CONFIG_OVERRIDE_STORAGE_PREFIX = 'atom2univers.config.';
 const CONFIG_OVERRIDE_KEYS = Object.freeze({
   devkit: `${CONFIG_OVERRIDE_STORAGE_PREFIX}devkitEnabled`,
   collection: `${CONFIG_OVERRIDE_STORAGE_PREFIX}collectionEnabled`,
-  info: `${CONFIG_OVERRIDE_STORAGE_PREFIX}infoSectionsEnabled`
+  info: `${CONFIG_OVERRIDE_STORAGE_PREFIX}infoSectionsEnabled`,
+  music: `${CONFIG_OVERRIDE_STORAGE_PREFIX}musicEnabled`
 });
 
 /**
@@ -100,6 +101,13 @@ const INFO_SECTIONS_ENABLED = resolveConfigBoolean(
   DEFAULT_INFO_SECTIONS_ENABLED
 );
 
+const DEFAULT_MUSIC_MODULE_ENABLED = false;
+
+const MUSIC_MODULE_ENABLED = resolveConfigBoolean(
+  CONFIG_OVERRIDE_KEYS.music,
+  DEFAULT_MUSIC_MODULE_ENABLED
+);
+
 function toggleDevkitFeatureEnabled() {
   const next = toggleConfigBoolean(CONFIG_OVERRIDE_KEYS.devkit, DEFAULT_DEVKIT_ENABLED);
   if (typeof globalThis !== 'undefined') {
@@ -126,6 +134,17 @@ function toggleInfoSectionsFeatureEnabled() {
   );
   if (typeof globalThis !== 'undefined') {
     globalThis.INFO_SECTIONS_ENABLED = next;
+  }
+  return next;
+}
+
+function toggleMusicModuleEnabled() {
+  const next = toggleConfigBoolean(
+    CONFIG_OVERRIDE_KEYS.music,
+    DEFAULT_MUSIC_MODULE_ENABLED
+  );
+  if (typeof globalThis !== 'undefined') {
+    globalThis.MUSIC_MODULE_ENABLED = next;
   }
   return next;
 }
@@ -1485,9 +1504,11 @@ if (typeof globalThis !== 'undefined') {
   globalThis.DEVKIT_ENABLED = DEVKIT_ENABLED;
   globalThis.COLLECTION_SYSTEM_ENABLED = COLLECTION_SYSTEM_ENABLED;
   globalThis.INFO_SECTIONS_ENABLED = INFO_SECTIONS_ENABLED;
+  globalThis.MUSIC_MODULE_ENABLED = MUSIC_MODULE_ENABLED;
   globalThis.toggleDevkitFeatureEnabled = toggleDevkitFeatureEnabled;
   globalThis.toggleCollectionFeatureEnabled = toggleCollectionFeatureEnabled;
   globalThis.toggleInfoSectionsFeatureEnabled = toggleInfoSectionsFeatureEnabled;
+  globalThis.toggleMusicModuleEnabled = toggleMusicModuleEnabled;
 }
 
 
