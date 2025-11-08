@@ -418,6 +418,12 @@
             "description": "Stack and sort the discs until every column holds a single colour.",
             "cta": "Sort"
           },
+          "motocross": {
+            "aria": "Open the Motocross procedural prototype",
+            "title": "Motocross",
+            "description": "Assemble a block-based track and ride the experimental bike across every jump.",
+            "cta": "Ride"
+          },
           "sokoban": {
             "aria": "Open the Sokoban mini-game",
             "title": "Sokoban",
@@ -1020,6 +1026,29 @@
           "undo": "Move undone.",
           "restored": "Game restored.",
           "move": ""
+        }
+      },
+      "motocross": {
+        "aria": "Motocross prototype: build a procedural course and ride the bike.",
+        "ui": {
+          "controls": "Motocross track settings",
+          "seed": "Seed",
+          "length": "Length",
+          "difficulty": "Difficulty",
+          "difficulties": {
+            "easy": "Easy",
+            "normal": "Normal",
+            "hard": "Hard"
+          },
+          "generate": "Generate",
+          "speed": "Speed",
+          "speedUnit": "u/s",
+          "blocks": "Used blocks"
+        },
+        "status": {
+          "ready": "Press “Generate” to build a new track.",
+          "generated": "Track generated: {count} blocks.",
+          "failed": "Unable to build a track with these settings."
         }
       },
       "sokoban": {

@@ -431,6 +431,46 @@
           class="arcade-hub-card"
           role="button"
           tabindex="0"
+          aria-label="Accéder au mini-jeu Motocross"
+          aria-describedby="arcadeCardDescription-motocross"
+          data-card-id="motocross"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.motocross.aria"
+          data-page-target="motocross"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.motocross.title"
+            >Motocross</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-motocross"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-motocross"
+            data-i18n="index.sections.arcadeHub.cards.motocross.description"
+          >Assemblez une piste procédurale puis domptez-la avec la moto expérimentale.</p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
           aria-label="Accéder au mini-jeu Link"
           aria-describedby="arcadeCardDescription-link"
           data-card-id="link"
@@ -1684,6 +1724,89 @@
             </div>
           </div>
         </div>
+      </div>
+    </section>
+
+    <section
+      id="motocross"
+      class="page page--motocross"
+      data-page-group="arcade"
+      aria-label="Prototype de mini-jeu Motocross"
+      data-i18n="aria-label:index.sections.motocross.aria"
+      hidden
+    >
+      <div class="motocross">
+        <div
+          class="motocross__ui"
+          role="group"
+          aria-label="Paramètres de la piste Motocross"
+          data-i18n="aria-label:index.sections.motocross.ui.controls"
+        >
+          <div class="motocross__field">
+            <label for="motocrossSeed" class="motocross__label" data-i18n="index.sections.motocross.ui.seed">Graine</label>
+            <input
+              id="motocrossSeed"
+              class="motocross__input"
+              type="text"
+              value="at2u"
+              autocapitalize="none"
+              autocomplete="off"
+              spellcheck="false"
+              inputmode="text"
+            />
+          </div>
+          <div class="motocross__field motocross__field--compact">
+            <label for="motocrossLength" class="motocross__label" data-i18n="index.sections.motocross.ui.length">Longueur</label>
+            <input
+              id="motocrossLength"
+              class="motocross__input"
+              type="number"
+              min="800"
+              max="3200"
+              step="50"
+              value="1800"
+            />
+          </div>
+          <div class="motocross__field motocross__field--compact">
+            <label for="motocrossDifficulty" class="motocross__label" data-i18n="index.sections.motocross.ui.difficulty">Difficulté</label>
+            <select id="motocrossDifficulty" class="motocross__select">
+              <option value="easy" data-i18n="index.sections.motocross.ui.difficulties.easy">Facile</option>
+              <option value="normal" selected data-i18n="index.sections.motocross.ui.difficulties.normal">Normal</option>
+              <option value="hard" data-i18n="index.sections.motocross.ui.difficulties.hard">Difficile</option>
+            </select>
+          </div>
+          <button
+            type="button"
+            class="motocross__button"
+            id="motocrossGenerate"
+            data-i18n="index.sections.motocross.ui.generate"
+          >Générer</button>
+          <div class="motocross__field motocross__field--inline motocross__field--compact">
+            <span class="motocross__label" data-i18n="index.sections.motocross.ui.speed">Vitesse</span>
+            <span class="motocross__value">
+              <span id="motocrossSpeedValue">0</span>
+              <span class="motocross__unit" data-i18n="index.sections.motocross.ui.speedUnit">u/s</span>
+            </span>
+          </div>
+          <div class="motocross__field motocross__field--blocks">
+            <span class="motocross__label" data-i18n="index.sections.motocross.ui.blocks">Blocs utilisés</span>
+            <div class="motocross__blocks-value" id="motocrossBlockList" aria-live="polite">—</div>
+          </div>
+        </div>
+        <p
+          class="motocross__status"
+          id="motocrossStatus"
+          role="status"
+          aria-live="polite"
+          data-state="idle"
+          data-i18n="index.sections.motocross.ui.status.ready"
+        >Appuyez sur « Générer » pour créer une piste.</p>
+        <canvas
+          id="motocrossCanvas"
+          class="motocross__canvas"
+          role="presentation"
+          aria-hidden="true"
+        ></canvas>
       </div>
     </section>
 
@@ -6377,6 +6500,7 @@
   <script src="scripts/arcade/pipetap.js"></script>
   <script src="scripts/arcade/color-stack.js"></script>
   <script src="scripts/arcade/stars-war.js"></script>
+  <script src="scripts/arcade/motocross.js"></script>
   <script src="scripts/arcade/sokoban.js"></script>
   <script src="scripts/arcade/escape.js"></script>
   <script src="scripts/arcade/the-line.js"></script>

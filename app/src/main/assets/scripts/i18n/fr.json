@@ -418,6 +418,12 @@
             "description": "Empilez et triez les jetons pour que chaque colonne ne contienne qu’une seule couleur.",
             "cta": "Trier"
           },
+          "motocross": {
+            "aria": "Accéder au prototype Motocross procédural",
+            "title": "Motocross",
+            "description": "Générez une piste par blocs et maîtrisez la moto expérimentale pour franchir chaque obstacle.",
+            "cta": "Piloter"
+          },
           "sokoban": {
             "aria": "Accéder au mini-jeu Sokoban",
             "title": "Sokoban",
@@ -1020,6 +1026,29 @@
           "undo": "Coup annulé.",
           "restored": "Partie restaurée.",
           "move": ""
+        }
+      },
+      "motocross": {
+        "aria": "Prototype Motocross procédural : générez une piste et pilotez la moto.",
+        "ui": {
+          "controls": "Paramètres de la piste Motocross",
+          "seed": "Graine",
+          "length": "Longueur",
+          "difficulty": "Difficulté",
+          "difficulties": {
+            "easy": "Facile",
+            "normal": "Normal",
+            "hard": "Difficile"
+          },
+          "generate": "Générer",
+          "speed": "Vitesse",
+          "speedUnit": "u/s",
+          "blocks": "Blocs utilisés"
+        },
+        "status": {
+          "ready": "Appuyez sur « Générer » pour créer une piste.",
+          "generated": "Piste générée : {count} blocs.",
+          "failed": "Impossible de générer la piste avec ces paramètres."
         }
       },
       "sokoban": {
