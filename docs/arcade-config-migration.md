@@ -11,8 +11,8 @@ L'objectif de cette migration est d'alléger `config/config.js` tout en conserva
 - [x] Hold'em
 - [ ] Dice
 - [ ] Échecs
-- [ ] Balance
-- [ ] Math
+- [x] Balance
+- [x] Math
 - [ ] Solitaire
 - [ ] Particules
 - [ ] Sudoku

@@ -1,0 +1,50 @@
+{
+  "termCountRange": {
+    "min": 4,
+    "max": 5
+  },
+  "baseRange": {
+    "min": 1,
+    "max": 9
+  },
+  "advancedRange": {
+    "min": 2,
+    "max": 12
+  },
+  "expertRange": {
+    "min": 1,
+    "max": 99
+  },
+  "optionsCount": 6,
+  "maxMistakes": 2,
+  "roundTimerSeconds": 30,
+  "thresholds": {
+    "multiply": 3,
+    "divide": 7,
+    "expert": 12
+  },
+  "resultLimits": {
+    "base": 200,
+    "advanced": 800,
+    "expert": 4200
+  },
+  "symbolMode": {
+    "fullSymbolUnlockLevel": 5,
+    "earlySymbols": [
+      "+",
+      "-"
+    ],
+    "fullSymbols": [
+      "+",
+      "-",
+      "*",
+      "/"
+    ]
+  },
+  "rewards": {
+    "gachaTicket": {
+      "amount": 1,
+      "chance": 0.3333333333333333
+    }
+  }
+}
