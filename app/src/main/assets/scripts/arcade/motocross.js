@@ -3,19 +3,17 @@
     return;
   }
 
-  const DEFAULT_SEED = 'at2u';
-  const DEFAULT_LENGTH = 1800;
   const DEFAULT_DIFFICULTY = 'normal';
-  const MIN_LENGTH = 800;
-  const MAX_LENGTH = 3200;
   const CHECKPOINT_INTERVAL = 400;
   const SLOPE_STEP = 0.12;
-  const Y_TOL = 80;
   const ELEVATION_LIMIT = 260;
+  const INITIAL_BLOCK_COUNT = 14;
+  const EXTEND_BLOCK_COUNT = 6;
+  const TRACK_AHEAD_BUFFER = 1400;
 
   const PHYSICS_STEP = 1 / 120;
   const MAX_FRAME_STEP = 1 / 30;
-  const MASS = 120;
+  const MASS = 110;
   const GRAVITY = 1800;
   const CHASSIS_WIDTH = 108;
   const CHASSIS_HEIGHT = 32;
@@ -23,20 +21,21 @@
   const WHEEL_RADIUS = 18;
   const WHEEL_VERTICAL_OFFSET = 20;
   const BIKE_INERTIA = (MASS * (CHASSIS_WIDTH * CHASSIS_WIDTH + CHASSIS_HEIGHT * CHASSIS_HEIGHT)) / 12;
-  const ENGINE_FORCE = 6800;
-  const BRAKE_FORCE = 5200;
+  const ENGINE_FORCE = 11800;
+  const BRAKE_FORCE = 6400;
   const TILT_TORQUE = 22000;
   const SPRING_STIFFNESS = 3600;
   const SPRING_DAMPING = 140;
-  const FRICTION_DAMPING = 34;
-  const FRICTION_COEFFICIENT = 0.85;
-  const LINEAR_DAMPING = 0.12;
+  const FRICTION_DAMPING = 28;
+  const FRICTION_COEFFICIENT = 0.88;
+  const LINEAR_DAMPING = 0.08;
   const ANGULAR_DAMPING = 0.18;
-  const NORMAL_CORRECTION_FACTOR = 0.55;
-  const CAMERA_LOOK_AHEAD = 0.22;
-  const CAMERA_OFFSET_Y = 140;
+  const NORMAL_CORRECTION_FACTOR = 0.7;
+  const CAMERA_LOOK_AHEAD = 0.24;
+  const CAMERA_OFFSET_Y = 120;
   const CAMERA_SMOOTH = 6.5;
   const FALL_EXTRA_MARGIN = 320;
+  const CAMERA_VERTICAL_ANCHOR = 0.55;
 
   const translate = (() => {
     if (typeof window !== 'undefined' && typeof window.t === 'function') {
@@ -97,21 +96,15 @@
     return current + (target - current) * factor;
   }
 
-  function hashSeed(value) {
-    if (typeof value === 'number' && Number.isFinite(value)) {
-      let normalized = value | 0;
-      if (normalized === 0) {
-        normalized = 1;
-      }
-      return normalized >>> 0;
+  function createEntropySeed() {
+    if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+      const buffer = new Uint32Array(1);
+      crypto.getRandomValues(buffer);
+      const value = buffer[0] >>> 0;
+      return value === 0 ? 1 : value;
     }
-    const text = typeof value === 'string' ? value : DEFAULT_SEED;
-    let hash = 2166136261 >>> 0;
-    for (let i = 0; i < text.length; i += 1) {
-      hash ^= text.charCodeAt(i);
-      hash = Math.imul(hash, 16777619);
-    }
-    return hash >>> 0;
+    const fallback = Math.floor(Math.random() * 4294967295) >>> 0;
+    return fallback === 0 ? 1 : fallback;
   }
 
   function mulberry32(seed) {
@@ -176,6 +169,17 @@
     const slopeIn = computeSlope(poly[0], poly[1]);
     const slopeOut = computeSlope(poly[poly.length - 2], end);
     const length = end[0] - start[0];
+    let minY = Infinity;
+    let maxY = -Infinity;
+    for (let i = 0; i < poly.length; i += 1) {
+      const [, y] = poly[i];
+      if (y < minY) {
+        minY = y;
+      }
+      if (y > maxY) {
+        maxY = y;
+      }
+    }
     const [speedMin, speedMax] = Array.isArray(speedRangeOverride)
       ? speedRangeOverride
       : getSpeedRangeForTags(tags);
@@ -189,7 +193,9 @@
       speed_min: speedMin,
       speed_max: speedMax,
       tags: Object.freeze([...tags]),
-      geo: Object.freeze(poly)
+      geo: Object.freeze(poly),
+      minY,
+      maxY
     });
   }
 
@@ -198,79 +204,122 @@
   }
 
   function polySlope(length, dy) {
-    return [[0, 0], [length * 0.4, dy * 0.5], [length, dy]];
+    const lead = Math.min(70, length * 0.28);
+    const tail = Math.min(70, length * 0.28);
+    const midStart = lead + Math.max(20, (length - lead - tail) * 0.35);
+    const midEnd = Math.max(midStart + 10, length - tail);
+    const tailMid = (midEnd + length) / 2;
+    return [
+      [0, 0],
+      [lead * 0.5, dy * 0.04],
+      [lead, dy * 0.12],
+      [midStart, dy * 0.62],
+      [midEnd, dy * 0.88],
+      [tailMid, dy * 0.96],
+      [length, dy]
+    ];
   }
 
   function polyRollers(length, count, amplitude) {
-    const steps = Math.max(2, count * 4);
-    const points = [];
+    const lead = Math.min(60, length * 0.12);
+    const usable = Math.max(length - lead * 2, 40);
+    const steps = Math.max(4, count * 6);
+    const points = [
+      [0, 0],
+      [lead, 0]
+    ];
     for (let i = 0; i <= steps; i += 1) {
       const t = i / steps;
-      const x = length * t;
+      const x = lead + usable * t;
       const y = Math.sin(t * Math.PI * count * 2) * amplitude;
       points.push([x, y]);
     }
+    points.push([length - lead, 0]);
+    points.push([length, 0]);
     return points;
   }
 
   function polyWhoops(length, count, amplitude) {
-    const steps = Math.max(2, count * 3);
-    const points = [];
+    const lead = Math.min(55, length * 0.12);
+    const usable = Math.max(length - lead * 2, 30);
+    const steps = Math.max(4, count * 6);
+    const points = [
+      [0, 0],
+      [lead, 0]
+    ];
     for (let i = 0; i <= steps; i += 1) {
       const t = i / steps;
-      const x = length * t;
-      const y = Math.sin(t * Math.PI * count * 2) * amplitude * Math.pow(Math.sin(t * Math.PI), 0.6);
+      const x = lead + usable * t;
+      const envelope = Math.pow(Math.sin(t * Math.PI), 0.7);
+      const y = Math.sin(t * Math.PI * count * 2) * amplitude * envelope;
       points.push([x, y]);
     }
+    points.push([length - lead, 0]);
+    points.push([length, 0]);
     return points;
   }
 
   function polyTableTop(length, height, tableLen) {
-    const rampLen = Math.max(40, (length - tableLen) / 2);
+    const rampLen = Math.max(60, (length - tableLen) / 2);
+    const lead = Math.min(65, rampLen * 0.5);
+    const exit = length - rampLen;
     return [
       [0, 0],
-      [rampLen * 0.45, -height * 0.5],
+      [lead, -height * 0.08],
+      [rampLen * 0.7, -height * 0.55],
       [rampLen, -height],
       [rampLen + tableLen, -height],
-      [length - rampLen * 0.4, -height * 0.35],
+      [exit + (rampLen - lead) * 0.35, -height * 0.35],
+      [length - lead, -height * 0.08],
       [length, 0]
     ];
   }
 
   function polyGap(length, takeoffAngle, gapLen, landingSlope) {
-    const takeoffLen = Math.max(50, length * 0.3);
-    const landingLen = Math.max(70, length - takeoffLen - gapLen);
+    const takeoffLen = Math.max(60, length * 0.32);
+    const landingLen = Math.max(80, length - takeoffLen - gapLen);
     const takeoffHeight = Math.tan(takeoffAngle) * takeoffLen;
+    const landingHeight = landingSlope * landingLen;
+    const lead = Math.min(60, takeoffLen * 0.45);
+    const landingLead = Math.min(70, landingLen * 0.35);
     return [
       [0, 0],
-      [takeoffLen * 0.5, -takeoffHeight * 0.5],
+      [lead, -takeoffHeight * 0.12],
+      [takeoffLen * 0.75, -takeoffHeight * 0.65],
       [takeoffLen, -takeoffHeight],
-      [takeoffLen + gapLen * 0.6, -takeoffHeight * 0.25],
-      [takeoffLen + gapLen, -takeoffHeight * 0.1],
-      [length - landingLen * 0.4, landingSlope * landingLen * 0.4],
-      [length, landingSlope * landingLen]
+      [takeoffLen + gapLen * 0.55, -takeoffHeight * 0.35],
+      [takeoffLen + gapLen, -takeoffHeight * 0.08],
+      [length - landingLen + landingLead * 0.25, landingHeight * 0.55],
+      [length - landingLead, landingHeight * 0.95],
+      [length, landingHeight]
     ];
   }
 
   function polyStep(length, height, plateau) {
-    const rampLen = Math.max(50, (length - plateau) / 2);
+    const rampLen = Math.max(60, (length - plateau) / 2);
+    const lead = Math.min(60, rampLen * 0.55);
+    const plateauEnd = rampLen + plateau;
     return [
       [0, 0],
-      [rampLen * 0.4, -height * 0.5],
+      [lead, -height * 0.1],
       [rampLen, -height],
-      [rampLen + plateau, -height],
-      [length, -height * 0.35]
+      [plateauEnd, -height],
+      [length - lead, -height * 0.35],
+      [length, -height * 0.1]
     ];
   }
 
   function polyDrop(length, height, plateau) {
-    const rampLen = Math.max(50, (length - plateau) / 2);
+    const rampLen = Math.max(60, (length - plateau) / 2);
+    const lead = Math.min(60, rampLen * 0.55);
+    const plateauEnd = rampLen + plateau;
     return [
       [0, 0],
-      [rampLen * 0.6, height * 0.5],
+      [lead, height * 0.1],
       [rampLen, height],
-      [rampLen + plateau, height],
-      [length, height * 0.3]
+      [plateauEnd, height],
+      [length - lead, height * 0.35],
+      [length, height * 0.1]
     ];
   }
 
@@ -279,39 +328,67 @@
   const BLOCK_LIBRARY = Object.freeze([
     START_BLOCK,
     createBlock('flat/easy/02', ['flat', 'easy'], polyFlat(240)),
+    createBlock('flat/easy/03', ['flat', 'easy'], polyFlat(260)),
     createBlock('flat/normal/01', ['flat', 'normal'], polyFlat(280)),
+    createBlock('flat/normal/02', ['flat', 'normal'], polyFlat(320)),
+    createBlock('flat/normal/03', ['flat', 'normal'], polyFlat(360)),
     createBlock('flat/hard/01', ['flat', 'hard'], polyFlat(220)),
+    createBlock('flat/hard/02', ['flat', 'hard'], polyFlat(280)),
     createBlock('gentle_up/easy/01', ['gentle_up', 'easy'], polySlope(220, -40)),
+    createBlock('gentle_up/easy/02', ['gentle_up', 'easy'], polySlope(260, -48)),
     createBlock('gentle_up/normal/01', ['gentle_up', 'normal'], polySlope(260, -55)),
+    createBlock('gentle_up/normal/02', ['gentle_up', 'normal'], polySlope(300, -60)),
+    createBlock('gentle_up/normal/03', ['gentle_up', 'normal'], polySlope(320, -66)),
     createBlock('gentle_up/hard/01', ['gentle_up', 'hard'], polySlope(240, -70)),
+    createBlock('gentle_up/hard/02', ['gentle_up', 'hard'], polySlope(320, -82)),
     createBlock('gentle_down/easy/01', ['gentle_down', 'easy'], polySlope(220, 36)),
+    createBlock('gentle_down/easy/02', ['gentle_down', 'easy'], polySlope(260, 44)),
     createBlock('gentle_down/normal/01', ['gentle_down', 'normal'], polySlope(280, 48)),
+    createBlock('gentle_down/normal/02', ['gentle_down', 'normal'], polySlope(300, 52)),
     createBlock('gentle_down/hard/01', ['gentle_down', 'hard'], polySlope(260, 64)),
+    createBlock('gentle_down/hard/02', ['gentle_down', 'hard'], polySlope(320, 70)),
     createBlock('roller/easy/01', ['roller', 'easy'], polyRollers(240, 2, 12)),
-    createBlock('roller/normal/01', ['roller', 'normal'], polyRollers(260, 2, 16)),
+    createBlock('roller/easy/02', ['roller', 'easy'], polyRollers(260, 2, 14)),
+    createBlock('roller/normal/01', ['roller', 'normal'], polyRollers(260, 3, 16)),
     createBlock('roller/normal/02', ['roller', 'normal'], polyRollers(300, 3, 18)),
-    createBlock('roller/hard/01', ['roller', 'hard'], polyRollers(300, 3, 22)),
+    createBlock('roller/normal/03', ['roller', 'normal'], polyRollers(320, 4, 20)),
+    createBlock('roller/hard/01', ['roller', 'hard'], polyRollers(300, 4, 22)),
+    createBlock('roller/hard/02', ['roller', 'hard'], polyRollers(340, 4, 24)),
     createBlock('whoops/easy/01', ['whoops', 'easy'], polyWhoops(220, 3, 16)),
+    createBlock('whoops/easy/02', ['whoops', 'easy'], polyWhoops(240, 3, 18)),
     createBlock('whoops/normal/01', ['whoops', 'normal'], polyWhoops(240, 4, 20)),
+    createBlock('whoops/normal/02', ['whoops', 'normal'], polyWhoops(280, 4, 22)),
     createBlock('whoops/hard/01', ['whoops', 'hard'], polyWhoops(280, 5, 26)),
+    createBlock('whoops/hard/02', ['whoops', 'hard'], polyWhoops(320, 5, 30)),
     createBlock('tabletop_jump/easy/01', ['tabletop_jump', 'easy'], polyTableTop(300, 48, 120)),
+    createBlock('tabletop_jump/easy/02', ['tabletop_jump', 'easy'], polyTableTop(320, 52, 130)),
     createBlock('tabletop_jump/normal/01', ['tabletop_jump', 'normal'], polyTableTop(320, 60, 110)),
+    createBlock('tabletop_jump/normal/02', ['tabletop_jump', 'normal'], polyTableTop(340, 64, 120)),
     createBlock('tabletop_jump/hard/01', ['tabletop_jump', 'hard'], polyTableTop(340, 72, 100)),
-    createBlock('gap_jump/normal/01', ['gap_jump', 'normal'], polyGap(340, Math.PI / 9, 70, 0.32)),
-    createBlock('gap_jump/normal/02', ['gap_jump', 'normal'], polyGap(320, Math.PI / 10, 60, 0.28)),
-    createBlock('gap_jump/hard/01', ['gap_jump', 'hard'], polyGap(360, Math.PI / 8, 80, 0.35)),
+    createBlock('tabletop_jump/hard/02', ['tabletop_jump', 'hard'], polyTableTop(360, 80, 110)),
+    createBlock('gap_jump/easy/01', ['gap_jump', 'easy'], polyGap(320, Math.PI / 12, 50, 0.24)),
+    createBlock('gap_jump/normal/01', ['gap_jump', 'normal'], polyGap(340, Math.PI / 10, 60, 0.28)),
+    createBlock('gap_jump/normal/02', ['gap_jump', 'normal'], polyGap(360, Math.PI / 9, 70, 0.3)),
+    createBlock('gap_jump/hard/01', ['gap_jump', 'hard'], polyGap(360, Math.PI / 8.5, 80, 0.34)),
+    createBlock('gap_jump/hard/02', ['gap_jump', 'hard'], polyGap(380, Math.PI / 8, 90, 0.38)),
+    createBlock('step_up/easy/01', ['step_up', 'easy'], polyStep(260, 52, 60)),
     createBlock('step_up/normal/01', ['step_up', 'normal'], polyStep(260, 60, 60)),
     createBlock('step_up/normal/02', ['step_up', 'normal'], polyStep(300, 70, 80)),
     createBlock('step_up/hard/01', ['step_up', 'hard'], polyStep(280, 80, 70)),
+    createBlock('step_up/hard/02', ['step_up', 'hard'], polyStep(320, 90, 80)),
     createBlock('step_down/easy/01', ['step_down', 'easy'], polyDrop(260, 60, 60)),
+    createBlock('step_down/easy/02', ['step_down', 'easy'], polyDrop(280, 70, 70)),
     createBlock('step_down/normal/01', ['step_down', 'normal'], polyDrop(280, 80, 70)),
+    createBlock('step_down/normal/02', ['step_down', 'normal'], polyDrop(320, 88, 80)),
     createBlock('step_down/hard/01', ['step_down', 'hard'], polyDrop(300, 96, 70)),
+    createBlock('step_down/hard/02', ['step_down', 'hard'], polyDrop(340, 108, 90)),
     createBlock('landing_pad/easy/01', ['landing_pad', 'easy'], polySlope(280, 24)),
     createBlock('landing_pad/easy/02', ['landing_pad', 'easy'], polySlope(260, 18)),
+    createBlock('landing_pad/easy/03', ['landing_pad', 'easy'], polySlope(300, 20)),
     createBlock('landing_pad/normal/01', ['landing_pad', 'normal'], polySlope(320, 18)),
+    createBlock('landing_pad/normal/02', ['landing_pad', 'normal'], polySlope(340, 22)),
     createBlock('landing_pad/hard/01', ['landing_pad', 'hard'], polySlope(340, 12)),
-    createBlock('gentle_up/normal/02', ['gentle_up', 'normal'], polySlope(300, -60)),
-    createBlock('gentle_down/normal/02', ['gentle_down', 'normal'], polySlope(300, 52))
+    createBlock('landing_pad/hard/02', ['landing_pad', 'hard'], polySlope(360, 16))
   ]);
 
   const TRACK_BLOCKS = BLOCK_LIBRARY.filter(block => block !== START_BLOCK);
@@ -330,67 +407,112 @@
     return block.tags.includes('normal') || block.tags.includes('easy');
   }
 
-  function pickNextBlock(prevBlock, difficulty, rng, currentY) {
-    const compatible = TRACK_BLOCKS.filter(block => {
-      if (block === prevBlock) {
-        return false;
-      }
-      if (Math.abs(prevBlock.slope_out - block.slope_in) > SLOPE_STEP) {
-        return false;
-      }
-      if (Math.abs(block.y0) > Y_TOL) {
-        return false;
-      }
-      return true;
-    });
-
-    let pool = compatible.filter(block => matchesDifficulty(block, difficulty));
-    if (!pool.length) {
-      pool = compatible.length ? compatible : TRACK_BLOCKS;
+  function blockWithinElevation(block, baseY) {
+    if (!block) {
+      return false;
     }
-
-    if (!pool.length) {
-      return null;
-    }
-
-    if (currentY > ELEVATION_LIMIT * 0.6) {
-      const rising = pool.filter(block => block.y1 <= 10);
-      if (rising.length) {
-        pool = rising;
-      }
-    } else if (currentY < -ELEVATION_LIMIT * 0.6) {
-      const lowering = pool.filter(block => block.y1 >= -10);
-      if (lowering.length) {
-        pool = lowering;
-      }
-    }
-
-    const index = Math.floor(rng() * pool.length) % pool.length;
-    return pool[index];
+    const min = baseY + block.minY;
+    const max = baseY + block.maxY;
+    return min >= -ELEVATION_LIMIT && max <= ELEVATION_LIMIT;
   }
 
-  function pickLandingBlock(prevBlock, difficulty, rng) {
-    const compatible = LANDING_BLOCKS.filter(block => Math.abs(prevBlock.slope_out - block.slope_in) <= SLOPE_STEP);
-    let pool = compatible.filter(block => matchesDifficulty(block, difficulty));
-    if (!pool.length) {
-      pool = compatible.length ? compatible : LANDING_BLOCKS;
+  function pickNextBlock(prevBlock, difficulty, rng, currentY, history) {
+    if (!prevBlock) {
+      return null;
     }
+    const tolerances = [SLOPE_STEP, SLOPE_STEP * 1.5, SLOPE_STEP * 2.5, Infinity];
+    let pool = [];
+    for (let i = 0; i < tolerances.length; i += 1) {
+      const tolerance = tolerances[i];
+      pool = TRACK_BLOCKS.filter(block => {
+        if (!blockWithinElevation(block, currentY)) {
+          return false;
+        }
+        if (tolerance !== Infinity && Math.abs(prevBlock.slope_out - block.slope_in) > tolerance) {
+          return false;
+        }
+        return true;
+      });
+      if (pool.length) {
+        break;
+      }
+    }
+
     if (!pool.length) {
       return null;
     }
-    const index = Math.floor(rng() * pool.length) % pool.length;
-    return pool[index];
+
+    let filtered = pool.filter(block => matchesDifficulty(block, difficulty));
+    if (!filtered.length) {
+      filtered = pool;
+    }
+
+    const recent = Array.isArray(history) ? history : [];
+    const preferred = filtered.filter(block => !recent.includes(block.id));
+    const candidates = preferred.length ? preferred : filtered;
+
+    if (currentY > ELEVATION_LIMIT * 0.5) {
+      const descending = candidates.filter(block => block.y1 <= 0);
+      if (descending.length) {
+        return descending[Math.floor(rng() * descending.length) % descending.length];
+      }
+    } else if (currentY < -ELEVATION_LIMIT * 0.5) {
+      const ascending = candidates.filter(block => block.y1 >= 0);
+      if (ascending.length) {
+        return ascending[Math.floor(rng() * ascending.length) % ascending.length];
+      }
+    }
+
+    const index = Math.floor(rng() * candidates.length) % candidates.length;
+    return candidates[index];
+  }
+
+  function pickLandingBlock(prevBlock, difficulty, rng, currentY) {
+    if (!prevBlock) {
+      return null;
+    }
+    const tolerances = [SLOPE_STEP, SLOPE_STEP * 2, Infinity];
+    let pool = [];
+    for (let i = 0; i < tolerances.length; i += 1) {
+      const tolerance = tolerances[i];
+      pool = LANDING_BLOCKS.filter(block => {
+        if (!blockWithinElevation(block, currentY)) {
+          return false;
+        }
+        if (tolerance !== Infinity && Math.abs(prevBlock.slope_out - block.slope_in) > tolerance) {
+          return false;
+        }
+        return true;
+      });
+      if (pool.length) {
+        break;
+      }
+    }
+
+    if (!pool.length) {
+      return null;
+    }
+
+    let filtered = pool.filter(block => matchesDifficulty(block, difficulty));
+    if (!filtered.length) {
+      filtered = pool;
+    }
+    const index = Math.floor(rng() * filtered.length) % filtered.length;
+    return filtered[index];
   }
 
   function appendBlockPoints(target, block, offsetX, offsetY, skipFirst) {
     const { geo } = block;
+    let lastPoint = null;
     for (let i = 0; i < geo.length; i += 1) {
       if (skipFirst && i === 0) {
         continue;
       }
       const point = geo[i];
-      target.push([offsetX + point[0], offsetY + point[1]]);
+      lastPoint = [offsetX + point[0], offsetY + point[1]];
+      target.push(lastPoint);
     }
+    return lastPoint;
   }
 
   function createSegments(points) {
@@ -482,84 +604,181 @@
     };
   }
 
-  function createCheckpoints(track, interval) {
-    const checkpoints = [];
-    const totalLength = track.points[track.points.length - 1][0];
-    const startX = Math.max(40, track.points[0][0] + 40);
-    let currentX = startX;
-    let hint = 0;
-    checkpoints.push(createCheckpoint(track, track.points[0][0] + 10, 0));
-    while (currentX < totalLength) {
-      const checkpoint = createCheckpoint(track, currentX, hint);
-      checkpoints.push(checkpoint);
-      hint = checkpoint.segmentIndex;
-      currentX += interval;
+  function rebuildSegments(track, startIndex) {
+    if (!track || !Array.isArray(track.points)) {
+      return;
     }
-    checkpoints.push(createCheckpoint(track, totalLength, hint));
-    return checkpoints;
+    const points = track.points;
+    const segments = Array.isArray(track.segments) ? track.segments : [];
+    const begin = clamp(Number.isFinite(startIndex) ? Math.floor(startIndex) : 0, 0, Math.max(0, points.length - 1));
+    if (segments.length > begin) {
+      segments.length = begin;
+    }
+    for (let i = begin; i < points.length - 1; i += 1) {
+      const [x1, y1] = points[i];
+      const [x2, y2] = points[i + 1];
+      const dx = x2 - x1;
+      const dy = y2 - y1;
+      const length = Math.hypot(dx, dy);
+      if (length <= 0.0001) {
+        continue;
+      }
+      const tangent = { x: dx / length, y: dy / length };
+      const normal = { x: tangent.y, y: -tangent.x };
+      segments.push({
+        p0: { x: x1, y: y1 },
+        p1: { x: x2, y: y2 },
+        tangent,
+        normal,
+        length,
+        minX: Math.min(x1, x2),
+        maxX: Math.max(x1, x2)
+      });
+    }
+    track.segments = segments;
   }
 
-  function buildTrack(seed, targetLength, difficulty) {
-    const rng = mulberry32(seed || 1);
+  function updateTrackElevation(track, startIndex) {
+    if (!track || !Array.isArray(track.points)) {
+      return;
+    }
+    const begin = clamp(Number.isFinite(startIndex) ? Math.floor(startIndex) : 0, 0, track.points.length);
+    if (!Number.isFinite(track.highestY)) {
+      track.highestY = -Infinity;
+    }
+    for (let i = begin; i < track.points.length; i += 1) {
+      const [, y] = track.points[i];
+      if (y > track.highestY) {
+        track.highestY = y;
+      }
+    }
+    if (!Number.isFinite(track.highestY)) {
+      track.highestY = 0;
+    }
+    track.maxY = track.highestY + FALL_EXTRA_MARGIN;
+  }
+
+  function ensureTrackCheckpoints(track) {
+    if (!track || !Array.isArray(track.checkpoints)) {
+      return;
+    }
+    const interval = track.checkpointInterval || intervalClamp(CHECKPOINT_INTERVAL);
+    const maxLength = track.length || 0;
+    let hint = track.lastCheckpointHint || 0;
+    while (track.nextCheckpointX <= maxLength) {
+      const checkpoint = createCheckpoint(track, track.nextCheckpointX, hint);
+      track.checkpoints.push(checkpoint);
+      hint = checkpoint.segmentIndex;
+      track.lastCheckpointHint = hint;
+      track.nextCheckpointX += interval;
+    }
+  }
+
+  function createTrackGenerator(seed, difficulty) {
+    return {
+      rng: mulberry32(seed || 1),
+      difficulty: typeof difficulty === 'string' ? difficulty : DEFAULT_DIFFICULTY,
+      prevBlock: START_BLOCK,
+      currentY: 0,
+      history: [START_BLOCK.id]
+    };
+  }
+
+  function extendTrack(track, blockCount) {
+    if (!track || !track.generator) {
+      return;
+    }
+    const generator = track.generator;
+    let added = 0;
+    while (added < blockCount) {
+      let nextBlock = pickNextBlock(generator.prevBlock, generator.difficulty, generator.rng, generator.currentY, generator.history);
+      if (!nextBlock) {
+        nextBlock = pickLandingBlock(generator.prevBlock, generator.difficulty, generator.rng, generator.currentY) || START_BLOCK;
+      }
+      if (!nextBlock) {
+        break;
+      }
+      const previousPointCount = track.points.length;
+      const lastPoint = appendBlockPoints(track.points, nextBlock, track.length, generator.currentY, true);
+      if (!lastPoint) {
+        break;
+      }
+      generator.currentY = lastPoint[1];
+      track.length = lastPoint[0];
+      track.usedIds.push(nextBlock.id);
+      generator.history.push(nextBlock.id);
+      if (generator.history.length > 5) {
+        generator.history.shift();
+      }
+      generator.prevBlock = nextBlock;
+      rebuildSegments(track, Math.max(previousPointCount - 1, 0));
+      updateTrackElevation(track, previousPointCount);
+      added += 1;
+    }
+    if (Array.isArray(track.checkpoints)) {
+      ensureTrackCheckpoints(track);
+    }
+  }
+
+  function buildTrack(seed, difficulty) {
+    const generator = createTrackGenerator(seed, difficulty);
     const points = [];
     const usedIds = [];
     let currentX = 0;
     let currentY = 0;
-    let prevBlock = START_BLOCK;
-    appendBlockPoints(points, START_BLOCK, currentX, currentY, false);
-    currentX += START_BLOCK.length;
-    currentY += START_BLOCK.y1;
+    const startEnd = appendBlockPoints(points, START_BLOCK, currentX, currentY, false);
+    if (startEnd) {
+      currentX = startEnd[0];
+      currentY = startEnd[1];
+    }
     usedIds.push(START_BLOCK.id);
-
-    let safety = 0;
-    const normalizedDifficulty = typeof difficulty === 'string' ? difficulty : DEFAULT_DIFFICULTY;
-    while (currentX < targetLength && safety < 80) {
-      safety += 1;
-      const nextBlock = pickNextBlock(prevBlock, normalizedDifficulty, rng, currentY);
-      if (!nextBlock) {
-        break;
-      }
-      appendBlockPoints(points, nextBlock, currentX, currentY, true);
-      currentX += nextBlock.length;
-      currentY += nextBlock.y1;
-      usedIds.push(nextBlock.id);
-      prevBlock = nextBlock;
-      if (currentY > ELEVATION_LIMIT) {
-        currentY = ELEVATION_LIMIT;
-      } else if (currentY < -ELEVATION_LIMIT) {
-        currentY = -ELEVATION_LIMIT;
-      }
-    }
-
-    const landing = pickLandingBlock(prevBlock, normalizedDifficulty, rng);
-    if (landing) {
-      appendBlockPoints(points, landing, currentX, currentY, true);
-      currentX += landing.length;
-      currentY += landing.y1;
-      usedIds.push(landing.id);
-    }
-
-    if (points.length < 2) {
-      return null;
-    }
-
     const segments = createSegments(points);
-    let maxY = -Infinity;
+    let highestY = -Infinity;
     for (let i = 0; i < points.length; i += 1) {
-      if (points[i][1] > maxY) {
-        maxY = points[i][1];
+      if (points[i][1] > highestY) {
+        highestY = points[i][1];
       }
     }
+    const baseHighest = Number.isFinite(highestY) ? highestY : 0;
     const track = {
       points,
       segments,
       length: currentX,
       usedIds,
-      maxY: maxY + FALL_EXTRA_MARGIN
+      highestY: baseHighest,
+      maxY: baseHighest + FALL_EXTRA_MARGIN,
+      generator,
+      seed: seed || 1,
+      difficulty: generator.difficulty,
+      checkpoints: [],
+      checkpointInterval: intervalClamp(CHECKPOINT_INTERVAL),
+      nextCheckpointX: Math.max(40, points.length ? points[0][0] + 40 : 40),
+      lastCheckpointHint: 0
     };
-    const checkpointInterval = intervalClamp(CHECKPOINT_INTERVAL);
-    track.checkpoints = createCheckpoints(track, checkpointInterval);
+    generator.currentY = currentY;
+    if (track.points.length) {
+      const firstCheckpoint = createCheckpoint(track, track.points[0][0] + 10, 0);
+      track.checkpoints.push(firstCheckpoint);
+      track.lastCheckpointHint = firstCheckpoint.segmentIndex;
+      track.nextCheckpointX = Math.max(track.nextCheckpointX, firstCheckpoint.x + track.checkpointInterval);
+    }
+    extendTrack(track, INITIAL_BLOCK_COUNT);
+    if (!track.points || track.points.length < 2) {
+      return null;
+    }
     return track;
+  }
+
+  function ensureTrackAhead() {
+    const { track, bike } = state;
+    if (!track || !track.generator || !bike) {
+      return;
+    }
+    const remaining = track.length - bike.position.x;
+    if (remaining < TRACK_AHEAD_BUFFER) {
+      extendTrack(track, EXTEND_BLOCK_COUNT);
+      state.fallThreshold = track.maxY;
+    }
   }
 
   function intervalClamp(value) {
@@ -591,7 +810,6 @@
     statusState: 'idle',
     lastTimestamp: null,
     accumulator: 0,
-    checkpoints: [],
     currentCheckpoint: 0,
     respawnData: null,
     fallThreshold: 600,
@@ -605,12 +823,9 @@
     }
     return {
       canvas: document.getElementById('motocrossCanvas'),
-      seedInput: document.getElementById('motocrossSeed'),
-      lengthInput: document.getElementById('motocrossLength'),
       difficultySelect: document.getElementById('motocrossDifficulty'),
       generateButton: document.getElementById('motocrossGenerate'),
       speedValue: document.getElementById('motocrossSpeedValue'),
-      blockList: document.getElementById('motocrossBlockList'),
       status: document.getElementById('motocrossStatus')
     };
   }
@@ -621,7 +836,7 @@
       return;
     }
     const fallback = statusKey === 'index.sections.motocross.ui.status.ready'
-      ? 'Appuyez sur « Générer » pour créer une piste.'
+      ? 'Appuyez sur « Générer » pour lancer une piste aléatoire.'
       : '';
     const text = translate(statusKey, fallback, statusParams);
     elements.status.textContent = text;
@@ -633,27 +848,6 @@
     state.statusParams = params || null;
     state.statusState = stateName;
     applyStatus();
-  }
-
-  function updateBlockList(usedIds) {
-    const { elements } = state;
-    if (!elements || !elements.blockList) {
-      return;
-    }
-    const container = elements.blockList;
-    container.textContent = '';
-    if (!Array.isArray(usedIds) || !usedIds.length) {
-      container.textContent = '—';
-      return;
-    }
-    const fragment = document.createDocumentFragment();
-    usedIds.forEach(id => {
-      const chip = document.createElement('span');
-      chip.className = 'motocross__chip';
-      chip.textContent = id;
-      fragment.appendChild(chip);
-    });
-    container.appendChild(fragment);
   }
 
   function updateSpeedDisplay() {
@@ -679,11 +873,6 @@
       canvas.width = width;
       canvas.height = height;
     }
-  }
-
-  function clampLengthValue(value) {
-    const numeric = Number.isFinite(value) ? value : DEFAULT_LENGTH;
-    return clamp(Math.round(numeric), MIN_LENGTH, MAX_LENGTH);
   }
 
   function updateWheelData() {
@@ -885,9 +1074,10 @@
     }
 
     updateWheelData();
-    const speedMagnitude = Math.hypot(bike.velocity.x, bike.velocity.y);
-    state.speed = speedMagnitude;
+    const horizontalSpeed = Math.abs(bike.velocity.x);
+    state.speed = horizontalSpeed < 0.05 ? 0 : horizontalSpeed;
     updateCheckpointsProgress();
+    ensureTrackAhead();
 
     if (bike.position.y - WHEEL_RADIUS > state.fallThreshold) {
       state.pendingRespawn = true;
@@ -963,7 +1153,7 @@
     ctx.clearRect(0, 0, width, height);
 
     ctx.save();
-    ctx.translate(-camera.x + width * 0.5, -camera.y + height * 0.65);
+    ctx.translate(-camera.x + width * 0.5, -camera.y + height * CAMERA_VERTICAL_ANCHOR);
     if (track) {
       renderTrack(ctx, track);
     }
@@ -1010,12 +1200,6 @@
     updateSpeedDisplay();
   }
 
-  function parseLengthInput() {
-    const value = state.elements?.lengthInput?.value;
-    const numeric = Number.parseFloat(value);
-    return clampLengthValue(Number.isFinite(numeric) ? numeric : DEFAULT_LENGTH);
-  }
-
   function parseDifficulty() {
     const value = state.elements?.difficultySelect?.value;
     if (value === 'easy' || value === 'hard') {
@@ -1024,47 +1208,31 @@
     return DEFAULT_DIFFICULTY;
   }
 
-  function parseSeed() {
-    const value = state.elements?.seedInput?.value;
-    if (typeof value === 'string' && value.trim()) {
-      return value.trim();
-    }
-    return DEFAULT_SEED;
-  }
-
   function generateTrack(options = {}) {
     const silent = !!(options && options.silent);
-    const seedText = parseSeed();
-    const seedValue = hashSeed(seedText);
-    const lengthValue = parseLengthInput();
     const difficulty = parseDifficulty();
-    const track = buildTrack(seedValue, lengthValue, difficulty);
+    const seedValue = createEntropySeed();
+    const track = buildTrack(seedValue, difficulty);
     if (!track) {
-      updateBlockList([]);
       setStatus(
         'index.sections.motocross.ui.status.failed',
-        'Impossible de générer la piste avec ces paramètres.',
+        'Impossible de générer une nouvelle piste pour le moment.',
         null,
         'error'
       );
       return;
     }
     state.track = track;
-    state.checkpoints = track.checkpoints || [];
     state.currentCheckpoint = 0;
     state.respawnData = computeRespawnData(0);
     state.fallThreshold = track.maxY;
     updateRespawnCheckpoint();
     applyRespawn(false);
     if (!silent) {
-      console.info('[Motocross] Track blocks:', track.usedIds);
-    }
-    updateBlockList(track.usedIds);
-    if (!silent) {
       const params = { count: track.usedIds.length };
       setStatus(
         'index.sections.motocross.ui.status.generated',
-        'Piste générée : {count} blocs.',
+        'Piste prête, bon ride !',
         params,
         'success'
       );
