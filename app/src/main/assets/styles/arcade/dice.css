@@ -17,6 +17,8 @@
   --dice-preview-color: rgba(248, 250, 252, 0.7);
   padding: clamp(1rem, 2vw, 2.5rem) clamp(0.75rem, 2vw, 2rem);
   justify-content: center;
+  align-items: center;
+  min-height: clamp(38rem, 90vh, 54rem);
   color: var(--dice-text-color);
 }
 
@@ -46,7 +48,7 @@
   background: var(--dice-felt-background);
   border-radius: clamp(1.25rem, 3vw, 2.4rem);
   border: 1px solid var(--dice-felt-border);
-  padding: clamp(1.1rem, 3vw, 1.9rem);
+  padding: clamp(1.5rem, 3vw, 2.6rem);
   box-shadow: var(--dice-felt-shadow);
   position: relative;
   overflow: hidden;
@@ -54,6 +56,7 @@
   flex-direction: column;
   align-items: center;
   gap: clamp(0.8rem, 2vw, 1.2rem);
+  min-height: clamp(18rem, 52vh, 26rem);
 }
 
 .dice-table__felt::after {
@@ -72,6 +75,7 @@
   align-items: center;
   gap: clamp(0.65rem, 1.6vw, 1.1rem);
   flex-wrap: wrap;
+  perspective: 1200px;
 }
 
 .dice-table__footer {
@@ -99,12 +103,12 @@
 }
 
 .dice-table__new-game {
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: clamp(0.6rem, 1.4vw, 1rem);
+  order: -1;
+  align-self: flex-start;
+  margin: 0 0 clamp(0.75rem, 2vw, 1.25rem);
   display: inline-flex;
   justify-content: center;
-  width: min(100%, 18rem);
+  width: min(100%, 16rem);
 }
 
 .dice-table__status {
@@ -126,6 +130,14 @@
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   isolation: isolate;
+  transform-style: preserve-3d;
+  will-change: transform;
+  --roll-dx: 0px;
+  --roll-dy: 0px;
+  --roll-rot: 0deg;
+  --roll-tilt-x: 0deg;
+  --roll-tilt-y: 0deg;
+  --roll-scale: 1;
 }
 
 .dice-die:focus-visible {
@@ -180,28 +192,37 @@
 }
 
 .dice-die--rolling {
-  animation: dice-roll-bounce 0.7s cubic-bezier(0.25, 0.8, 0.25, 1);
+  animation: dice-roll-bounce 0.85s cubic-bezier(0.25, 0.8, 0.25, 1.05);
   animation-delay: var(--roll-delay, 0s);
 }
 
 @keyframes dice-roll-bounce {
   0% {
-    transform: translate3d(0, 0, 0) rotate(0deg);
+    transform: translate3d(0, 0, 0) rotate(0deg) rotateX(0deg) rotateY(0deg) scale(1);
   }
-  20% {
-    transform: translate3d(var(--roll-dx, 0px), calc(var(--roll-dy, 0px) * 0.8), 0)
-      rotate(calc(var(--roll-rot, 180deg) * 0.6));
+  22% {
+    transform: translate3d(var(--roll-dx, 0px), calc(var(--roll-dy, 0px) * 0.85), 0)
+      rotate(calc(var(--roll-rot, 180deg) * 0.55))
+      rotateX(calc(var(--roll-tilt-x, 0deg) * 0.65))
+      rotateY(calc(var(--roll-tilt-y, 0deg) * 0.65))
+      scale(calc(var(--roll-scale, 1) * 0.95));
   }
   45% {
-    transform: translate3d(calc(var(--roll-dx, 0px) * 0.6), calc(var(--roll-dy, 0px) * -0.3), 0)
-      rotate(calc(var(--roll-rot, 180deg) * -0.25));
+    transform: translate3d(calc(var(--roll-dx, 0px) * 0.55), calc(var(--roll-dy, 0px) * -0.35), 0)
+      rotate(calc(var(--roll-rot, 180deg) * -0.3))
+      rotateX(calc(var(--roll-tilt-x, 0deg) * -0.35))
+      rotateY(calc(var(--roll-tilt-y, 0deg) * -0.4))
+      scale(calc(var(--roll-scale, 1) * 1.05));
   }
-  65% {
-    transform: translate3d(calc(var(--roll-dx, 0px) * 0.25), calc(var(--roll-dy, 0px) * 0.15), 0)
-      rotate(calc(var(--roll-rot, 180deg) * 0.1));
+  68% {
+    transform: translate3d(calc(var(--roll-dx, 0px) * 0.25), calc(var(--roll-dy, 0px) * 0.18), 0)
+      rotate(calc(var(--roll-rot, 180deg) * 0.12))
+      rotateX(calc(var(--roll-tilt-x, 0deg) * 0.18))
+      rotateY(calc(var(--roll-tilt-y, 0deg) * 0.22))
+      scale(calc(var(--roll-scale, 1) * 0.98));
   }
   100% {
-    transform: translate3d(0, 0, 0) rotate(0deg);
+    transform: translate3d(0, 0, 0) rotate(0deg) rotateX(0deg) rotateY(0deg) scale(1);
   }
 }
 
