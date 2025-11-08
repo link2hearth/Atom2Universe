@@ -10,6 +10,7 @@
     'starBridges',
     'pipeTap',
     'colorStack',
+    'motocross',
     'sokoban',
     'bigger',
     'math',
