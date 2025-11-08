@@ -21,6 +21,10 @@ function isInfoSectionsFeatureEnabled() {
   return resolveGlobalBooleanFlag('INFO_SECTIONS_ENABLED', true);
 }
 
+function isMusicModuleEnabled() {
+  return resolveGlobalBooleanFlag('MUSIC_MODULE_ENABLED', true);
+}
+
 function toggleDevkitFeatureAvailability() {
   if (typeof globalThis !== 'undefined' && typeof globalThis.toggleDevkitFeatureEnabled === 'function') {
     return globalThis.toggleDevkitFeatureEnabled();
@@ -56,6 +60,20 @@ function toggleInfoSectionsFeatureAvailability() {
   const next = !isInfoSectionsFeatureEnabled();
   if (typeof globalThis !== 'undefined') {
     globalThis.INFO_SECTIONS_ENABLED = next;
+  }
+  return next;
+}
+
+function toggleMusicModuleAvailability() {
+  if (
+    typeof globalThis !== 'undefined'
+    && typeof globalThis.toggleMusicModuleEnabled === 'function'
+  ) {
+    return globalThis.toggleMusicModuleEnabled();
+  }
+  const next = !isMusicModuleEnabled();
+  if (typeof globalThis !== 'undefined') {
+    globalThis.MUSIC_MODULE_ENABLED = next;
   }
   return next;
 }
@@ -4467,6 +4485,9 @@ function getPageUnlockState() {
 }
 
 function isPageUnlocked(pageId) {
+  if (pageId === 'midi') {
+    return isMusicModuleEnabled();
+  }
   if (pageId === 'collection') {
     if (!isCollectionFeatureEnabled()) {
       return hasOwnedGachaCards() || hasOwnedGachaBonusImages();
@@ -4609,7 +4630,14 @@ function setNavButtonLockState(button, unlocked) {
 
 function ensureActivePageUnlocked() {
   const activePage = document.body?.dataset?.activePage;
-  if (activePage && !isPageUnlocked(activePage) && activePage !== 'game') {
+  if (!activePage) {
+    return;
+  }
+  if (activePage === 'midi' && !isMusicModuleEnabled()) {
+    showPage('options');
+    return;
+  }
+  if (!isPageUnlocked(activePage) && activePage !== 'game') {
     showPage('game');
   }
 }
@@ -4885,6 +4913,7 @@ function evaluateTrophies() {
 }
 
 let elements = {};
+let musicModuleInitRequested = false;
 let holdemBlindListenerAttached = false;
 
 let pageHiddenAt = null;
@@ -5042,6 +5071,13 @@ const RESET_KEYWORD_ACTIONS = Object.freeze({
     enabledFallback: 'Info sections enabled. Changes applied.',
     disabledKey: 'infoDisabled',
     disabledFallback: 'Info sections disabled. Changes applied.'
+  }),
+  MUSIC: Object.freeze({
+    toggle: toggleMusicModuleAvailability,
+    enabledKey: 'musicEnabled',
+    enabledFallback: 'Music module enabled. Changes applied.',
+    disabledKey: 'musicDisabled',
+    disabledFallback: 'Music module disabled. Changes applied.'
   })
 });
 
@@ -5178,6 +5214,9 @@ function handleResetSpecialKeyword(normalizedKeyword) {
   const messageKey = nextValue ? action.enabledKey : action.disabledKey;
   const fallbackMessage = nextValue ? action.enabledFallback : action.disabledFallback;
   showToast(translateResetString(messageKey, fallbackMessage));
+  if (normalizedKeyword === 'MUSIC') {
+    updateMusicModuleVisibility();
+  }
   return true;
 }
 
@@ -5454,15 +5493,15 @@ function collectDomElements() {
     brandPortal: document.getElementById('brandPortal'),
     navMenu: document.querySelector('.nav-menu'),
     navButtons: document.querySelectorAll('.nav-button'),
-  navArcadeButton: document.getElementById('navArcadeButton'),
-  navShopButton: document.querySelector('.nav-button[data-target="shop"]'),
+    navArcadeButton: document.getElementById('navArcadeButton'),
+    navShopButton: document.querySelector('.nav-button[data-target="shop"]'),
     navGachaButton: document.querySelector('.nav-button[data-target="gacha"]'),
     navTableButton: document.querySelector('.nav-button[data-target="tableau"]'),
     navFusionButton: document.querySelector('.nav-button[data-target="fusion"]'),
     navInfoButton: document.querySelector('.nav-button[data-target="info"]'),
     navCollectionButton: document.querySelector('.nav-button[data-target="collection"]'),
     navMidiButton: document.querySelector('.nav-button[data-target="midi"]'),
-  navBigBangButton: document.getElementById('navBigBangButton'),
+    navBigBangButton: document.getElementById('navBigBangButton'),
   bigBangSummary: document.getElementById('bigBangSummary'),
   bigBangBonusInfo: document.getElementById('bigBangBonusInfo'),
   bigBangRequirement: document.getElementById('bigBangRequirement'),
@@ -5472,7 +5511,8 @@ function collectDomElements() {
   bigBangDialogMessage: document.getElementById('bigBangDialogMessage'),
   bigBangDialogConfirm: document.getElementById('bigBangDialogConfirm'),
   bigBangDialogCancel: document.getElementById('bigBangDialogCancel'),
-  pages: document.querySelectorAll('.page'),
+    headerPlaybackButton: document.getElementById('headerPlaybackToggle'),
+    pages: document.querySelectorAll('.page'),
   statusAtomsButton: document.getElementById('statusAtomsButton'),
   statusAtoms: document.getElementById('statusAtoms'),
   statusApc: document.getElementById('statusApc'),
@@ -5636,9 +5676,14 @@ function collectDomElements() {
   musicTrackSelect: document.getElementById('musicTrackSelect'),
   musicTrackStatus: document.getElementById('musicTrackStatus'),
   musicVolumeSlider: document.getElementById('musicVolumeSlider'),
-  optionsWelcomeTitle: document.getElementById('optionsWelcomeTitle'),
-  optionsWelcomeIntro: document.getElementById('optionsWelcomeIntro'),
-  openMidiModuleButton: document.getElementById('openMidiModuleButton'),
+    optionsWelcomeTitle: document.getElementById('optionsWelcomeTitle'),
+    optionsWelcomeIntro: document.getElementById('optionsWelcomeIntro'),
+    musicOptionCard: document.querySelector('.option-card--chiptune-link'),
+    musicOptionRow: document.querySelector('.option-row--midi-link'),
+    openMidiModuleButton: document.getElementById('openMidiModuleButton'),
+    midiPage: document.getElementById('midi'),
+    midiModuleCard: document.querySelector('.midi-page__module'),
+    midiKeyboardArea: document.getElementById('midiKeyboardArea'),
   clickSoundToggleCard: document.getElementById('clickSoundToggleCard'),
   clickSoundToggle: document.getElementById('clickSoundToggle'),
   clickSoundToggleStatus: document.getElementById('clickSoundToggleStatus'),
@@ -7432,6 +7477,7 @@ function updatePrimaryNavigationLocks() {
   updateInfoCardsVisibility();
   updateCollectionImagesVisibility();
   updateCollectionBonusImagesVisibility();
+  updateMusicModuleVisibility();
 
   ensureActivePageUnlocked();
 }
@@ -9050,6 +9096,22 @@ function updateMusicVolumeControl() {
 }
 
 function refreshMusicControls() {
+  if (!isMusicModuleEnabled()) {
+    if (elements.musicTrackSelect) {
+      elements.musicTrackSelect.value = '';
+      elements.musicTrackSelect.disabled = true;
+    }
+    if (elements.musicTrackStatus) {
+      elements.musicTrackStatus.textContent = t('scripts.app.music.disabled');
+    }
+    if (elements.musicVolumeSlider) {
+      elements.musicVolumeSlider.value = '0';
+      elements.musicVolumeSlider.setAttribute('aria-valuenow', '0');
+      elements.musicVolumeSlider.setAttribute('aria-valuetext', '0%');
+      elements.musicVolumeSlider.disabled = true;
+    }
+    return;
+  }
   updateMusicSelectOptions();
   updateMusicStatus();
   updateMusicVolumeControl();
@@ -9080,6 +9142,107 @@ musicPlayer.onChange(event => {
     refreshMusicControls();
   }
 });
+
+function updateMusicModuleVisibility() {
+  const enabled = isMusicModuleEnabled();
+
+  if (enabled && appStartCompleted && !musicModuleInitRequested) {
+    musicModuleInitRequested = true;
+    musicPlayer.init({
+      preferredTrackId: gameState.musicTrackId,
+      autoplay: gameState.musicEnabled !== false,
+      volume: gameState.musicVolume
+    });
+    musicPlayer.ready().then(() => {
+      refreshMusicControls();
+    });
+  }
+
+  if (elements.musicOptionCard) {
+    elements.musicOptionCard.hidden = !enabled;
+    elements.musicOptionCard.setAttribute('aria-hidden', enabled ? 'false' : 'true');
+  }
+
+  if (elements.musicOptionRow) {
+    elements.musicOptionRow.hidden = !enabled;
+    elements.musicOptionRow.setAttribute('aria-hidden', enabled ? 'false' : 'true');
+  }
+
+  if (elements.openMidiModuleButton) {
+    elements.openMidiModuleButton.disabled = !enabled;
+    elements.openMidiModuleButton.setAttribute('aria-disabled', enabled ? 'false' : 'true');
+    if (!enabled) {
+      elements.openMidiModuleButton.setAttribute('tabindex', '-1');
+      if (typeof elements.openMidiModuleButton.blur === 'function') {
+        elements.openMidiModuleButton.blur();
+      }
+    } else {
+      elements.openMidiModuleButton.removeAttribute('tabindex');
+    }
+  }
+
+  setNavButtonLockState(elements.navMidiButton, enabled);
+
+  if (elements.headerPlaybackButton) {
+    elements.headerPlaybackButton.hidden = !enabled;
+    elements.headerPlaybackButton.setAttribute('aria-hidden', enabled ? 'false' : 'true');
+    elements.headerPlaybackButton.setAttribute('aria-disabled', enabled ? 'false' : 'true');
+    elements.headerPlaybackButton.disabled = !enabled;
+    if (!enabled) {
+      elements.headerPlaybackButton.setAttribute('disabled', '');
+    } else {
+      elements.headerPlaybackButton.removeAttribute('disabled');
+    }
+    if (!enabled) {
+      elements.headerPlaybackButton.setAttribute('tabindex', '-1');
+      if (typeof elements.headerPlaybackButton.blur === 'function') {
+        elements.headerPlaybackButton.blur();
+      }
+    } else {
+      elements.headerPlaybackButton.removeAttribute('tabindex');
+    }
+  }
+
+  if (elements.midiPage) {
+    elements.midiPage.setAttribute('data-music-disabled', enabled ? 'false' : 'true');
+    elements.midiPage.setAttribute('aria-hidden', enabled ? 'false' : 'true');
+    if (!enabled && document.body?.dataset?.activePage === 'midi') {
+      showPage('options');
+    }
+  }
+
+  if (elements.midiModuleCard) {
+    elements.midiModuleCard.hidden = !enabled;
+    elements.midiModuleCard.setAttribute('aria-hidden', enabled ? 'false' : 'true');
+  }
+
+  if (elements.midiKeyboardArea) {
+    elements.midiKeyboardArea.hidden = !enabled;
+    elements.midiKeyboardArea.setAttribute('aria-hidden', enabled ? 'false' : 'true');
+  }
+
+  if (!enabled) {
+    if (musicPlayer && typeof musicPlayer.stop === 'function') {
+      const currentTrackId = typeof musicPlayer.getCurrentTrackId === 'function'
+        ? musicPlayer.getCurrentTrackId()
+        : null;
+      if (currentTrackId) {
+        musicPlayer.stop();
+      }
+    }
+    const midiPlayer = typeof globalThis !== 'undefined'
+      ? globalThis.atom2universMidiPlayer
+      : null;
+    if (midiPlayer && typeof midiPlayer.stop === 'function') {
+      midiPlayer.stop(true);
+    }
+    musicModuleInitRequested = false;
+    gameState.musicTrackId = null;
+    gameState.musicEnabled = false;
+  }
+
+  refreshMusicControls();
+}
 
 const DEVKIT_AUTO_LABEL = 'DevKit (APS +)';
 
@@ -12952,6 +13115,12 @@ if (typeof window !== 'undefined' && typeof window.addEventListener === 'functio
 }
 
 function showPage(pageId) {
+  if (pageId === 'midi' && !isMusicModuleEnabled()) {
+    if (document.body?.dataset?.activePage !== 'options') {
+      showPage('options');
+    }
+    return;
+  }
   if (!isPageUnlocked(pageId)) {
     if (pageId !== 'game') {
       showPage('game');
@@ -13601,6 +13770,10 @@ function bindDomEventListeners() {
 
   if (elements.openMidiModuleButton) {
     elements.openMidiModuleButton.addEventListener('click', () => {
+      if (!isMusicModuleEnabled()) {
+        showToast(t('scripts.app.music.disabled'));
+        return;
+      }
       showPage('midi');
     });
   }
@@ -13958,6 +14131,13 @@ function bindDomEventListeners() {
 
   if (elements.musicTrackSelect) {
     elements.musicTrackSelect.addEventListener('change', event => {
+      if (!isMusicModuleEnabled()) {
+        if (typeof event.preventDefault === 'function') {
+          event.preventDefault();
+        }
+        refreshMusicControls();
+        return;
+      }
       const selectedId = event.target.value;
       if (!selectedId) {
         musicPlayer.stop();
@@ -13994,9 +14174,19 @@ function bindDomEventListeners() {
       }
     };
     elements.musicVolumeSlider.addEventListener('input', event => {
+      if (!isMusicModuleEnabled()) {
+        event.preventDefault?.();
+        refreshMusicControls();
+        return;
+      }
       applyVolumeFromSlider(event.target.value);
     });
     elements.musicVolumeSlider.addEventListener('change', event => {
+      if (!isMusicModuleEnabled()) {
+        event.preventDefault?.();
+        refreshMusicControls();
+        return;
+      }
       applyVolumeFromSlider(event.target.value, { announce: true });
     });
   }
@@ -19458,14 +19648,25 @@ window.addEventListener('beforeunload', saveGame);
 
 function startApp() {
   loadGame();
-  musicPlayer.init({
-    preferredTrackId: gameState.musicTrackId,
-    autoplay: gameState.musicEnabled !== false,
-    volume: gameState.musicVolume
-  });
-  musicPlayer.ready().then(() => {
+  if (isMusicModuleEnabled()) {
+    musicPlayer.init({
+      preferredTrackId: gameState.musicTrackId,
+      autoplay: gameState.musicEnabled !== false,
+      volume: gameState.musicVolume
+    });
+    musicModuleInitRequested = true;
+    musicPlayer.ready().then(() => {
+      refreshMusicControls();
+    });
+  } else {
+    if (typeof musicPlayer.stop === 'function') {
+      musicPlayer.stop();
+    }
+    musicModuleInitRequested = false;
+    gameState.musicTrackId = null;
+    gameState.musicEnabled = false;
     refreshMusicControls();
-  });
+  }
   recalcProduction();
   evaluateTrophies();
   renderShop();
@@ -19512,6 +19713,7 @@ function initializeDomBoundModules() {
   updateBigBangVisibility();
   initHeaderBannerToggle();
   bindDomEventListeners();
+  updateMusicModuleVisibility();
   initializeHoldemOptionsUI();
   initUiScaleOption();
   initResponsiveAutoScale();

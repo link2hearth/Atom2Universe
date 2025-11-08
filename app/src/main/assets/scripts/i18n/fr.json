@@ -3029,6 +3029,8 @@
         "collectionDisabled": "Collection désactivée. Changements appliqués.",
         "infoEnabled": "Sections Infos activées. Changements appliqués.",
         "infoDisabled": "Sections Infos désactivées. Changements appliqués.",
+        "musicEnabled": "Module musique activé. Changements appliqués.",
+        "musicDisabled": "Module musique désactivé. Changements appliqués.",
         "toggleFailed": "Impossible de mettre à jour la configuration.",
         "saveFailed": "Impossible de sauvegarder la progression. Modification annulée.",
         "prompt": "Réinitialisation complète du jeu. Tapez \"{keyword}\" pour confirmer.\\nCette action est irréversible."
