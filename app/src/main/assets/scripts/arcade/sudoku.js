@@ -10,136 +10,35 @@
     difficile: Object.freeze({ min: 18, max: 22 })
   });
 
-  const DEFAULT_COMPLETION_REWARD = Object.freeze({
-    enabled: true,
-    timeLimitSeconds: 10 * 60,
-    bonusSeconds: 6 * 60 * 60,
-    multiplier: 1
-  });
-
-  function toPositiveNumber(value) {
-    const numeric = Number(value);
-    if (!Number.isFinite(numeric) || numeric <= 0) {
-      return null;
-    }
-    return numeric;
-  }
-
   function normalizeCompletionReward(raw) {
-    const config = {
-      enabled: DEFAULT_COMPLETION_REWARD.enabled,
-      timeLimitSeconds: DEFAULT_COMPLETION_REWARD.timeLimitSeconds,
-      bonusSeconds: DEFAULT_COMPLETION_REWARD.bonusSeconds,
-      multiplier: DEFAULT_COMPLETION_REWARD.multiplier
-    };
-
     if (raw === false) {
-      config.enabled = false;
-      return config;
+      return { enabled: false, settings: null };
     }
 
     const source = raw && typeof raw === 'object' ? raw : {};
-
-    const timeLimitCandidates = [
-      source.timeLimitSeconds,
-      source.timeLimit,
-      source.limitSeconds,
-      source.limit,
-      source.seconds
-    ];
-    for (let i = 0; i < timeLimitCandidates.length; i += 1) {
-      const candidate = toPositiveNumber(timeLimitCandidates[i]);
-      if (candidate) {
-        config.timeLimitSeconds = candidate;
-        break;
-      }
-    }
-    if (config.timeLimitSeconds === DEFAULT_COMPLETION_REWARD.timeLimitSeconds) {
-      const minuteCandidates = [
-        source.timeLimitMinutes,
-        source.minutes,
-        source.minuteLimit
-      ];
-      for (let i = 0; i < minuteCandidates.length; i += 1) {
-        const candidate = toPositiveNumber(minuteCandidates[i]);
-        if (candidate) {
-          config.timeLimitSeconds = candidate * 60;
-          break;
-        }
-      }
-    }
-    if (config.timeLimitSeconds === DEFAULT_COMPLETION_REWARD.timeLimitSeconds) {
-      const hourCandidates = [source.timeLimitHours, source.hours];
-      for (let i = 0; i < hourCandidates.length; i += 1) {
-        const candidate = toPositiveNumber(hourCandidates[i]);
-        if (candidate) {
-          config.timeLimitSeconds = candidate * 60 * 60;
-          break;
-        }
-      }
-    }
-
-    const bonusCandidates = [
-      source.offlineBonusSeconds,
-      source.bonusSeconds,
-      source.durationSeconds,
-      source.duration,
-      source.secondsBonus
-    ];
-    for (let i = 0; i < bonusCandidates.length; i += 1) {
-      const candidate = toPositiveNumber(bonusCandidates[i]);
-      if (candidate) {
-        config.bonusSeconds = candidate;
-        break;
-      }
-    }
-    if (config.bonusSeconds === DEFAULT_COMPLETION_REWARD.bonusSeconds) {
-      const bonusMinutes = [
-        source.offlineBonusMinutes,
-        source.bonusMinutes,
-        source.durationMinutes
-      ];
-      for (let i = 0; i < bonusMinutes.length; i += 1) {
-        const candidate = toPositiveNumber(bonusMinutes[i]);
-        if (candidate) {
-          config.bonusSeconds = candidate * 60;
-          break;
-        }
-      }
-    }
-    if (config.bonusSeconds === DEFAULT_COMPLETION_REWARD.bonusSeconds) {
-      const bonusHours = [
-        source.offlineBonusHours,
-        source.bonusHours,
-        source.durationHours
-      ];
-      for (let i = 0; i < bonusHours.length; i += 1) {
-        const candidate = toPositiveNumber(bonusHours[i]);
-        if (candidate) {
-          config.bonusSeconds = candidate * 60 * 60;
-          break;
-        }
-      }
-    }
-
-    const multiplierCandidate = toPositiveNumber(
-      source.offlineMultiplier
-        ?? source.multiplier
-        ?? source.value
-    );
-    if (multiplierCandidate) {
-      config.multiplier = multiplierCandidate;
-    }
-
     if (source.enabled === false) {
-      config.enabled = false;
+      return { enabled: false, settings: null };
     }
 
-    if (config.timeLimitSeconds <= 0 || config.bonusSeconds <= 0 || config.multiplier <= 0) {
-      config.enabled = false;
+    const offlineBonus = (() => {
+      if (source.offlineBonus && typeof source.offlineBonus === 'object') {
+        return source.offlineBonus;
+      }
+      if (source.levels && typeof source.levels === 'object') {
+        return source.levels;
+      }
+      if (Object.values(source).every(value => value && typeof value === 'object')) {
+        return source;
+      }
+      return null;
+    })();
+
+    if (!offlineBonus || Object.keys(offlineBonus).length === 0) {
+      return { enabled: false, settings: null };
     }
 
-    return config;
+    const settings = source.offlineBonus ? source : { ...source, offlineBonus };
+    return { enabled: true, settings };
   }
 
   const COMPLETION_REWARD_CONFIG = normalizeCompletionReward(
@@ -147,7 +46,7 @@
     && GLOBAL_CONFIG.arcade
     && GLOBAL_CONFIG.arcade.sudoku
     && GLOBAL_CONFIG.arcade.sudoku.rewards
-    ? GLOBAL_CONFIG.arcade.sudoku.rewards.speedCompletion
+    ? GLOBAL_CONFIG.arcade.sudoku.rewards
     : null
   );
 
@@ -1033,11 +932,11 @@
     }
 
     function triggerCompletionReward(elapsedSeconds) {
-      if (!COMPLETION_REWARD_CONFIG.enabled) {
+      if (!COMPLETION_REWARD_CONFIG.enabled || !COMPLETION_REWARD_CONFIG.settings) {
         return;
       }
       const elapsed = Number(elapsedSeconds);
-      if (!Number.isFinite(elapsed) || elapsed <= 0) {
+      if (!Number.isFinite(elapsed) || elapsed < 0) {
         return;
       }
       const registrar = typeof window !== 'undefined'
@@ -1048,7 +947,11 @@
         return;
       }
       try {
-        registrar({ elapsedSeconds: elapsed, config: COMPLETION_REWARD_CONFIG });
+        registrar({
+          elapsedSeconds: elapsed,
+          config: COMPLETION_REWARD_CONFIG.settings,
+          difficulty: currentLevel
+        });
       } catch (error) {
         console.warn('Sudoku reward registration failed', error);
       }

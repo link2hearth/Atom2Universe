@@ -3226,8 +3226,8 @@
       "arcade": {
         "sudoku": {
           "reward": {
-            "ready": "Bonus Sudoku : prochaine collecte hors ligne à {multiplier} pendant {duration} (résolu en {elapsed}, limite {limit}).",
-            "missed": "Sudoku résolu en {elapsed}, au-delà de la limite ({limit}). Bonus non déclenché.",
+            "ready": "Bonus Sudoku prêt : {duration} à {multiplier}. Actif pendant {valid}.",
+            "missed": "Le bonus Sudoku a expiré avant de pouvoir être utilisé.",
             "applied": "Bonus Sudoku appliqué : {duration} à {multiplier}."
           }
         },
