@@ -14261,6 +14261,77 @@ function recalcProduction() {
   const elementCountsByFamily = new Map();
   const elementGroupSummaries = new Map();
   const familySummaries = new Map();
+  const elementEffectSummaries = new Map();
+  const ensureElementEffectSummary = (elementId, { label, rarityId, lifetimeCount, activeCount }) => {
+    if (!elementEffectSummaries.has(elementId)) {
+      elementEffectSummaries.set(elementId, {
+        type: 'element',
+        elementId,
+        label,
+        rarityId: rarityId || null,
+        copies: Math.max(0, Number(lifetimeCount) || 0),
+        uniques: lifetimeCount > 0 ? 1 : 0,
+        duplicates: Math.max(0, (Number(lifetimeCount) || 0) - (lifetimeCount > 0 ? 1 : 0)),
+        totalUnique: 1,
+        activeCopies: Math.max(0, Number(activeCount) || 0),
+        isComplete: lifetimeCount > 0,
+        clickFlatTotal: 0,
+        autoFlatTotal: 0,
+        critChanceAdd: 0,
+        critMultiplierAdd: 0,
+        activeLabels: [],
+        _labelDetails: new Map()
+      });
+    }
+    const summary = elementEffectSummaries.get(elementId);
+    if (label && typeof label === 'string') {
+      summary.label = label;
+    }
+    if (rarityId && typeof rarityId === 'string') {
+      summary.rarityId = rarityId;
+    }
+    const normalizedLifetime = Math.max(0, Number(lifetimeCount) || 0);
+    summary.copies = normalizedLifetime;
+    summary.uniques = normalizedLifetime > 0 ? 1 : 0;
+    summary.duplicates = Math.max(0, normalizedLifetime - summary.uniques);
+    summary.totalUnique = 1;
+    summary.activeCopies = Math.max(0, Number(activeCount) || 0);
+    summary.isComplete = normalizedLifetime > 0;
+    return summary;
+  };
+  const ensureElementEffectLabelEntry = (summary, labelText) => {
+    const effectiveLabel = typeof labelText === 'string' && labelText.trim()
+      ? labelText.trim()
+      : summary.label;
+    if (!summary._labelDetails.has(effectiveLabel)) {
+      const entry = { label: effectiveLabel, effects: [], notes: [] };
+      summary._labelDetails.set(effectiveLabel, entry);
+      summary.activeLabels.push(entry);
+    }
+    return summary._labelDetails.get(effectiveLabel);
+  };
+  const appendElementLabelEffect = (labelEntry, text) => {
+    if (!text) return;
+    const trimmed = String(text).trim();
+    if (!trimmed) return;
+    if (!Array.isArray(labelEntry.effects)) {
+      labelEntry.effects = [];
+    }
+    if (!labelEntry.effects.includes(trimmed)) {
+      labelEntry.effects.push(trimmed);
+    }
+  };
+  const appendElementLabelNote = (labelEntry, text) => {
+    if (!text) return;
+    const trimmed = String(text).trim();
+    if (!trimmed) return;
+    if (!Array.isArray(labelEntry.notes)) {
+      labelEntry.notes = [];
+    }
+    if (!labelEntry.notes.includes(trimmed)) {
+      labelEntry.notes.push(trimmed);
+    }
+  };
   const mythiqueBonuses = {
     ticketIntervalSeconds: DEFAULT_TICKET_STAR_INTERVAL_SECONDS,
     offlineMultiplier: MYTHIQUE_OFFLINE_BASE,
@@ -14318,6 +14389,110 @@ function recalcProduction() {
       familyCounter.copies += normalizedCount;
       familyCounter.unique += 1;
       familyCounter.active += activeCount;
+    }
+
+    if (Array.isArray(entry.effects) && entry.effects.length) {
+      const displayInfo = definition ? getPeriodicElementDisplay(definition) : null;
+      const elementLabel = (displayInfo?.name && displayInfo.name.trim())
+        ? displayInfo.name.trim()
+        : (typeof definition?.name === 'string' && definition.name.trim()
+          ? definition.name.trim()
+          : (typeof definition?.symbol === 'string' && definition.symbol.trim()
+            ? definition.symbol.trim()
+            : entry.id));
+      const elementSummary = ensureElementEffectSummary(entry.id, {
+        label: elementLabel,
+        rarityId,
+        lifetimeCount: normalizedCount,
+        activeCount
+      });
+      entry.effects.forEach((effect, index) => {
+        if (!effect || typeof effect !== 'object') {
+          return;
+        }
+        const stats = effect.effects && typeof effect.effects === 'object' ? effect.effects : {};
+        if (Object.keys(stats).length === 0) {
+          return;
+        }
+        const requiredLifetime = Math.max(
+          0,
+          Number(effect.minLifetime ?? (effect.trigger === 'firstAcquisition' ? 1 : (effect.trigger === 'always' ? 0 : 1))) || 0
+        );
+        const requiredActive = Math.max(
+          0,
+          Number(effect.minActive ?? (effect.trigger === 'active' ? 1 : 0)) || 0
+        );
+        if (normalizedCount < requiredLifetime) {
+          return;
+        }
+        if (activeCount < requiredActive) {
+          return;
+        }
+        if (effect.trigger === 'firstAcquisition' && normalizedCount <= 0) {
+          return;
+        }
+        if (effect.trigger === 'active' && activeCount <= 0) {
+          return;
+        }
+        const effectId = typeof effect.id === 'string' && effect.id.trim()
+          ? effect.id.trim()
+          : `${entry.id}:effect:${index + 1}`;
+        const effectLabel = typeof effect.label === 'string' && effect.label.trim()
+          ? effect.label.trim()
+          : elementSummary.label;
+        const labelEntry = ensureElementEffectLabelEntry(elementSummary, effectLabel);
+        if (typeof effect.description === 'string' && effect.description.trim()) {
+          const descriptionText = effect.description.trim();
+          if (!labelEntry.description) {
+            labelEntry.description = descriptionText;
+          } else if (!labelEntry.description.includes(descriptionText)) {
+            labelEntry.description = `${labelEntry.description} · ${descriptionText}`;
+          }
+        }
+        if (Array.isArray(effect.notes)) {
+          effect.notes.forEach(note => {
+            if (typeof note === 'string' && note.trim()) {
+              appendElementLabelNote(labelEntry, note.trim());
+            }
+          });
+        }
+        if (stats.clickAdd != null) {
+          const applied = addClickElementFlat(stats.clickAdd, {
+            id: `element:${effectId}:clickAdd`,
+            label: effectLabel,
+            rarityId,
+            source: 'elements'
+          });
+          if (Number.isFinite(applied) && applied !== 0) {
+            elementSummary.clickFlatTotal += applied;
+            const formatted = formatElementFlatBonus(applied);
+            if (formatted) {
+              appendElementLabelEffect(
+                labelEntry,
+                translateCollectionEffect('apcFlat', `APC +${formatted}`, { value: formatted })
+              );
+            }
+          }
+        }
+        if (stats.autoAdd != null) {
+          const applied = addAutoElementFlat(stats.autoAdd, {
+            id: `element:${effectId}:autoAdd`,
+            label: effectLabel,
+            rarityId,
+            source: 'elements'
+          });
+          if (Number.isFinite(applied) && applied !== 0) {
+            elementSummary.autoFlatTotal += applied;
+            const formatted = formatElementFlatBonus(applied);
+            if (formatted) {
+              appendElementLabelEffect(
+                labelEntry,
+                translateCollectionEffect('apsFlat', `APS +${formatted}`, { value: formatted })
+              );
+            }
+          }
+        }
+      });
     }
   });
 
@@ -15299,6 +15474,52 @@ function recalcProduction() {
     });
   }
 
+  elementEffectSummaries.forEach(summary => {
+    if (!summary) {
+      return;
+    }
+    if (Array.isArray(summary.activeLabels)) {
+      summary.activeLabels = summary.activeLabels
+        .map(entry => {
+          if (!entry || typeof entry !== 'object') {
+            return null;
+          }
+          const label = typeof entry.label === 'string' ? entry.label.trim() : '';
+          if (!label) {
+            return null;
+          }
+          const cleaned = { label };
+          if (Array.isArray(entry.effects)) {
+            const effects = entry.effects
+              .map(effect => (typeof effect === 'string' ? effect.trim() : ''))
+              .filter(effect => effect);
+            if (effects.length) {
+              cleaned.effects = effects;
+            }
+          }
+          if (Array.isArray(entry.notes)) {
+            const notes = entry.notes
+              .map(note => (typeof note === 'string' ? note.trim() : ''))
+              .filter(note => note);
+            if (notes.length) {
+              cleaned.notes = notes;
+            }
+          }
+          if (typeof entry.description === 'string' && entry.description.trim()) {
+            cleaned.description = entry.description.trim();
+          }
+          return cleaned;
+        })
+        .filter(entry => entry);
+    } else {
+      summary.activeLabels = [];
+    }
+    if (summary._labelDetails instanceof Map) {
+      summary._labelDetails.clear();
+    }
+    delete summary._labelDetails;
+  });
+
   const intervalChanged = setTicketStarAverageIntervalSeconds(mythiqueBonuses.ticketIntervalSeconds);
   if (intervalChanged && !ticketStarState.active) {
     resetTicketStarState({ reschedule: true });
@@ -15322,6 +15543,23 @@ function recalcProduction() {
     });
     if (Object.keys(familySummaryStore).length > 0) {
       elementBonusSummary.families = familySummaryStore;
+    }
+  }
+  if (elementEffectSummaries.size > 0) {
+    const elementSummaryStore = {};
+    elementEffectSummaries.forEach((value, key) => {
+      if (!value) {
+        return;
+      }
+      elementSummaryStore[key] = {
+        ...value,
+        activeLabels: Array.isArray(value.activeLabels)
+          ? value.activeLabels.map(entry => ({ ...entry }))
+          : []
+      };
+    });
+    if (Object.keys(elementSummaryStore).length > 0) {
+      elementBonusSummary.elements = elementSummaryStore;
     }
   }
   gameState.elementBonusSummary = elementBonusSummary;
@@ -18629,8 +18867,8 @@ function loadGame() {
           count: normalizedCount,
           lifetime: normalizedLifetime,
           rarity: reference.rarity ?? (typeof saved?.rarity === 'string' ? saved.rarity : null),
-          effects: Array.isArray(saved?.effects) ? [...saved.effects] : [],
-          bonuses: Array.isArray(saved?.bonuses) ? [...saved.bonuses] : []
+          effects: Array.isArray(reference?.effects) ? [...reference.effects] : [],
+          bonuses: Array.isArray(reference?.bonuses) ? [...reference.bonuses] : []
         };
       });
     }

@@ -1734,7 +1734,16 @@ function renderElementBonuses() {
     return compareTextLocalized(labelA, labelB);
   });
 
-  const entries = [...rarityEntries, ...familyEntries];
+  const elementEntries = summaryStore.elements && typeof summaryStore.elements === 'object'
+    ? Object.values(summaryStore.elements).map(entry => ({ ...entry, type: entry.type || 'element' }))
+    : [];
+  elementEntries.sort((a, b) => {
+    const labelA = typeof a.label === 'string' ? a.label : '';
+    const labelB = typeof b.label === 'string' ? b.label : '';
+    return compareTextLocalized(labelA, labelB);
+  });
+
+  const entries = [...rarityEntries, ...familyEntries, ...elementEntries];
 
   entries.forEach(summary => {
     const card = document.createElement('article');
@@ -1744,6 +1753,14 @@ function renderElementBonuses() {
     if (summaryType === 'family') {
       card.dataset.familyId = summary.familyId || '';
       card.classList.add('element-bonus-card--family');
+    } else if (summaryType === 'element') {
+      if (summary.elementId) {
+        card.dataset.elementId = summary.elementId;
+      }
+      if (summary.rarityId) {
+        card.dataset.rarityId = summary.rarityId;
+      }
+      card.classList.add('element-bonus-card--element');
     } else if (summary.rarityId) {
       card.dataset.rarityId = summary.rarityId;
     }

@@ -2049,6 +2049,14 @@
         "multiplier": "Artificiels · catalyseur dimensionnel"
       }
     },
+    "elements": {
+      "hydrogene": {
+        "firstAcquisition": {
+          "label": "Hydrogène · Première découverte",
+          "note": "Active après la première obtention."
+        }
+      }
+    },
     "trophies": {
       "presets": {
         "scaleHumanCell": {

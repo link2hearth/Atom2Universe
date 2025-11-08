@@ -2049,6 +2049,14 @@
         "multiplier": "Artificial · Dimensional catalyst"
       }
     },
+    "elements": {
+      "hydrogene": {
+        "firstAcquisition": {
+          "label": "Hydrogen · First discovery",
+          "note": "Activates after the first discovery."
+        }
+      }
+    },
     "trophies": {
       "presets": {
         "scaleHumanCell": {
