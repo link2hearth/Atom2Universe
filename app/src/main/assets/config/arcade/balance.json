@@ -1,0 +1,105 @@
+{
+  "board": {
+    "widthPx": 640,
+    "surfaceHeightPx": 12,
+    "pivotHeightPx": 30,
+    "tolerance": 0.026,
+    "maxTiltDegrees": 18,
+    "maxOffsetForTilt": 0.32,
+    "testDurationMs": 900,
+    "settleDurationMs": 600,
+    "physics": {
+      "gravity": 9.81,
+      "lengthMeters": 8.4,
+      "boardMassKg": 2,
+      "cubeMassPerWeight": 1.6,
+      "pivotFriction": 14,
+      "stiffness": 960,
+      "simulationStepMs": 16,
+      "simulationDurationMs": 1800,
+      "maxAngularVelocity": 5,
+      "settleThresholdVelocity": 0.0025,
+      "settleThresholdTorque": 0.05
+    }
+  },
+  "difficulty": {
+    "defaultMode": "easy",
+    "modes": [
+      {
+        "id": "easy",
+        "labelKey": "scripts.arcade.balance.difficulty.easy",
+        "descriptionKey": "scripts.arcade.balance.difficulty.easyDescription",
+        "toleranceMultiplier": 1
+      },
+      {
+        "id": "hard",
+        "labelKey": "scripts.arcade.balance.difficulty.hard",
+        "descriptionKey": "scripts.arcade.balance.difficulty.hardDescription",
+        "toleranceMultiplier": 0.45
+      }
+    ]
+  },
+  "cubeRules": {
+    "countPerSet": {
+      "min": 4,
+      "max": 8
+    },
+    "widthRatio": 0.18,
+    "widthScaling": {
+      "groupSize": 10,
+      "minMultiplier": 0.5,
+      "maxMultiplier": 2
+    },
+    "inventoryWidthPx": {
+      "min": 64,
+      "max": 112
+    },
+    "weightRange": {
+      "min": 1,
+      "max": 50
+    },
+    "stackOffsetMultiplier": 0.72,
+    "stackGroupingThreshold": 0.08,
+    "randomizeWeights": true,
+    "sliding": {
+      "tiltThreshold": 0.035,
+      "supportRatio": 1.4,
+      "weightRatioThreshold": 1.6,
+      "distanceMultiplier": 0.55
+    }
+  },
+  "cubeSets": [
+    {
+      "id": "equilibrium",
+      "labelKey": "scripts.arcade.balance.sets.equilibrium",
+      "cubeCount": {
+        "min": 4,
+        "max": 8
+      }
+    },
+    {
+      "id": "fractal",
+      "labelKey": "scripts.arcade.balance.sets.fractal",
+      "cubeCount": {
+        "min": 4,
+        "max": 8
+      }
+    },
+    {
+      "id": "binary",
+      "labelKey": "scripts.arcade.balance.sets.binary",
+      "cubeCount": {
+        "min": 4,
+        "max": 8
+      }
+    }
+  ],
+  "defaultSetId": "equilibrium",
+  "rewards": {
+    "perfectBalance": {
+      "maxAttempts": 2,
+      "ticketAmount": 1,
+      "ticketChance": 0.4
+    }
+  }
+}

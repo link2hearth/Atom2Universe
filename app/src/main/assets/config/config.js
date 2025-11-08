@@ -450,6 +450,8 @@ function loadConfigJson(path, fallback) {
 }
 
 const ARCADE_HOLDEM_CONFIG = loadConfigJson('./config/arcade/holdem.json', {});
+const ARCADE_BALANCE_CONFIG = loadConfigJson('./config/arcade/balance.json', {});
+const ARCADE_MATH_CONFIG = loadConfigJson('./config/arcade/math.json', {});
 
 function createShopBuildingDefinitions() {
   const withDefaults = def => ({ maxLevel: SHOP_MAX_PURCHASE_DEFAULT, ...def });
@@ -1226,9 +1228,9 @@ const GAME_CONFIG = {
    * (vitesses, probabilités, textes, etc.) afin de centraliser les réglages.
    */
   arcade: {
-    // Les configurations des mini-jeux Hold’em, Roulette et Pachinko sont définies dans
-    // des fichiers JSON dédiés (`config/arcade/holdem.json`, `config/arcade/roulette.json`
-    // et `config/arcade/pachinko.json`).
+    // Les configurations des mini-jeux Hold’em, Roulette, Pachinko, Balance et Math sont définies dans
+    // des fichiers JSON dédiés (`config/arcade/holdem.json`, `config/arcade/roulette.json`,
+    // `config/arcade/pachinko.json`, `config/arcade/balance.json` et `config/arcade/math.json`).
     /**
      * Paramètres du mini-jeu Hold’em.
      * - blind : montant unique utilisé comme blinde et relance de référence.
@@ -1370,152 +1372,9 @@ const GAME_CONFIG = {
       }
     },
     // Paramètres du mini-jeu Balance (plateforme d'équilibre).
-    balance: {
-      board: {
-        widthPx: 640,
-        surfaceHeightPx: 12,
-        pivotHeightPx: 30,
-        tolerance: 0.026,
-        maxTiltDegrees: 18,
-        maxOffsetForTilt: 0.32,
-        testDurationMs: 900,
-        settleDurationMs: 600,
-        physics: {
-          gravity: 9.81, // Accélération gravitationnelle (m/s²) utilisée pour la simulation.
-          lengthMeters: 8.4, // Longueur approximative de la planche (m) servant de base aux leviers.
-          boardMassKg: 2, // Masse estimée de la planche pour le calcul de l'inertie (kg).
-          cubeMassPerWeight: 1.6, // Masse équivalente (kg) apportée par une unité de poids de bloc.
-          pivotFriction: 14, // Coefficient de frottement du pivot (N·m·s) pour amortir la rotation.
-          stiffness: 960, // Couple de rappel appliqué par radian (N·m/rad) pour stabiliser l'équilibre.
-          simulationStepMs: 16, // Intervalle entre deux itérations de la simulation (ms).
-          simulationDurationMs: 1800, // Durée totale simulée lors d'un test (ms).
-          maxAngularVelocity: 5, // Vitesse angulaire maximale autorisée (rad/s) pour éviter les à-coups.
-          settleThresholdVelocity: 0.0025, // Seuil de vitesse sous lequel la planche est considérée comme stable (rad/s).
-          settleThresholdTorque: 0.05 // Seuil de couple résiduel pour interrompre la simulation (N·m).
-        }
-      },
-      /**
-       * Réglages des modes de difficulté.
-       * - defaultMode : mode sélectionné par défaut à l'ouverture du mini-jeu.
-       * - modes : liste ordonnée des modes disponibles avec leur clé de traduction et
-       *   un multiplicateur appliqué à la tolérance de base. Une valeur plus faible
-       *   demande un équilibrage plus précis.
-       */
-      difficulty: {
-        defaultMode: 'easy',
-        modes: [
-          {
-            id: 'easy',
-            labelKey: 'scripts.arcade.balance.difficulty.easy',
-            descriptionKey: 'scripts.arcade.balance.difficulty.easyDescription',
-            toleranceMultiplier: 1
-          },
-          {
-            id: 'hard',
-            labelKey: 'scripts.arcade.balance.difficulty.hard',
-            descriptionKey: 'scripts.arcade.balance.difficulty.hardDescription',
-            toleranceMultiplier: 0.45
-          }
-        ]
-      },
-      cubeRules: {
-        countPerSet: { min: 4, max: 8 }, // Nombre de blocs générés par série.
-        widthRatio: 0.18, // Largeur de base des blocs par rapport à la planche.
-        widthScaling: { // Multiplicateurs appliqués à la largeur en fonction de la tranche de poids.
-          groupSize: 10,
-          minMultiplier: 0.5,
-          maxMultiplier: 2
-        },
-        inventoryWidthPx: { min: 64, max: 112 }, // Largeur minimale et maximale affichée dans l'inventaire.
-        weightRange: { min: 1, max: 50 }, // Fourchette des poids aléatoires attribués aux blocs.
-        stackOffsetMultiplier: 0.72, // Hauteur relative entre deux blocs empilés.
-        stackGroupingThreshold: 0.08, // Distance horizontale maximale (en proportion de la planche) pour regrouper les blocs.
-        randomizeWeights: true, // Active la génération aléatoire des poids pour chaque série.
-        sliding: { // Paramètres de glissade des blocs en cas de déséquilibre.
-          tiltThreshold: 0.035,
-          supportRatio: 1.4,
-          weightRatioThreshold: 1.6,
-          distanceMultiplier: 0.55
-        }
-      },
-      cubeSets: [
-        {
-          id: 'equilibrium',
-          labelKey: 'scripts.arcade.balance.sets.equilibrium',
-          cubeCount: { min: 4, max: 8 }
-        },
-        {
-          id: 'fractal',
-          labelKey: 'scripts.arcade.balance.sets.fractal',
-          cubeCount: { min: 4, max: 8 }
-        },
-        {
-          id: 'binary',
-          labelKey: 'scripts.arcade.balance.sets.binary',
-          cubeCount: { min: 4, max: 8 }
-        }
-      ],
-      defaultSetId: 'equilibrium',
-      rewards: {
-        /**
-         * Paramètres de la récompense accordée lorsque le joueur équilibre parfaitement la planche.
-         * - maxAttempts : nombre maximal de tests autorisés pour décrocher le bonus (2 = une erreur permise).
-         * - ticketAmount : quantité de tickets Mach3 remis lors de la réussite (0 pour désactiver la récompense).
-         * - ticketChance : probabilité (0–1) qu'un ticket soit accordé après un succès.
-         */
-        perfectBalance: {
-          maxAttempts: 2,
-          ticketAmount: 1,
-          ticketChance: 0.4
-        }
-      }
-    },
+    balance: ARCADE_BALANCE_CONFIG,
     // Paramètres du mini-jeu Math (progression des opérations).
-    math: {
-      termCountRange: { min: 4, max: 5 },
-      baseRange: { min: 1, max: 9 },
-      advancedRange: { min: 2, max: 12 },
-      expertRange: { min: 1, max: 99 },
-      optionsCount: 6,
-      maxMistakes: 2, // Nombre d'erreurs autorisées avant le game over.
-      roundTimerSeconds: 30, // Temps alloué pour répondre (en secondes).
-      thresholds: {
-        multiply: 3,
-        divide: 7,
-        expert: 12
-      },
-      resultLimits: {
-        base: 200,
-        advanced: 800,
-        expert: 4200
-      },
-      symbolMode: {
-        /**
-         * Niveau à partir duquel toutes les opérations (+, -, ×, ÷) sont proposées.
-         * Les niveaux inférieurs n'affichent que les opérations de base (addition/soustraction).
-         */
-        fullSymbolUnlockLevel: 5,
-        /**
-         * Ensemble des symboles proposés avant le palier d'extension.
-         */
-        earlySymbols: ['+', '-'],
-        /**
-         * Ensemble complet des symboles proposés une fois le palier atteint.
-         */
-        fullSymbols: ['+', '-', '*', '/']
-      },
-      /**
-       * Récompenses distribuées lors d'une réponse correcte.
-       * - gachaTicket.amount : nombre de tickets gacha octroyés.
-       * - gachaTicket.chance : probabilité de gain à chaque opération réussie.
-       */
-      rewards: {
-        gachaTicket: {
-          amount: 1,
-          chance: 1 / 3
-        }
-      }
-    },
+    math: ARCADE_MATH_CONFIG,
     // Paramètres du mini-jeu Solitaire (patience classique).
     solitaire: {
       rewards: {
