@@ -31,10 +31,10 @@
     ]),
     difficulties: Object.freeze({
       easy: Object.freeze({
-        columns: 5,
+        columns: 4,
         capacity: 4,
         filledColumns: Object.freeze([0, 1, 2]),
-        emptyColumns: 2,
+        emptyColumns: 1,
         scrambleMoves: 48,
         minMulticoloredColumns: 2,
         minDisplacedRatio: 0.5,

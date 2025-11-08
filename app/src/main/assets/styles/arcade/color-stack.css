@@ -5,27 +5,6 @@
   padding: 1.5rem 1rem 2rem;
 }
 
-.color-stack__header {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  text-align: center;
-}
-
-.color-stack__title {
-  font-size: clamp(1.5rem, 2vw + 1rem, 2.25rem);
-  font-weight: 600;
-  letter-spacing: 0.02em;
-}
-
-.color-stack__subtitle {
-  color: rgba(255, 255, 255, 0.75);
-  font-size: 1rem;
-  line-height: 1.5;
-  margin: 0 auto;
-  max-width: 40rem;
-}
-
 .color-stack__toolbar {
   display: flex;
   flex-wrap: wrap;
@@ -164,19 +143,6 @@
 
 .color-stack__token[aria-hidden="true"] {
   pointer-events: none;
-}
-
-.color-stack__message {
-  text-align: center;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  min-height: 1.5rem;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.color-stack__message--success {
-  color: #7bd88f;
-  font-weight: 600;
 }
 
 @media (max-width: 640px) {
