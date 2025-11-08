@@ -459,6 +459,7 @@ const ARCADE_SUDOKU_CONFIG = loadConfigJson('./config/arcade/sudoku.json', {});
 const ARCADE_SOLITAIRE_CONFIG = loadConfigJson('./config/arcade/solitaire.json', {});
 const ARCADE_QUANTUM2048_CONFIG = loadConfigJson('./config/arcade/quantum2048.json', {});
 const ARCADE_DEMINEUR_CONFIG = loadConfigJson('./config/arcade/demineur.json', {});
+const ARCADE_METAUX_CONFIG = loadConfigJson('./config/arcade/metaux.json', {});
 
 function createShopBuildingDefinitions() {
   const withDefaults = def => ({ maxLevel: SHOP_MAX_PURCHASE_DEFAULT, ...def });
@@ -803,6 +804,32 @@ const RAW_GACHA_BONUS_IMAGE_CONFIG = loadConfigJson(
   './config/gacha/bonus-images.json',
   { images: [] }
 );
+
+const RAW_GACHA_CONFIG = loadConfigJson('./config/systems/gacha.json', {
+  ticketCost: 1,
+  bonusImages: { folder: 'Assets/Image/Gacha' },
+  rarities: [],
+  collectionUnlocks: [],
+  weeklyRarityWeights: {}
+});
+
+const GACHA_SYSTEM_CONFIG = {
+  ticketCost: RAW_GACHA_CONFIG.ticketCost ?? 1,
+  bonusImages: {
+    folder: RAW_GACHA_CONFIG.bonusImages?.folder ?? 'Assets/Image/Gacha',
+    images: Array.isArray(RAW_GACHA_BONUS_IMAGE_CONFIG?.images)
+      ? RAW_GACHA_BONUS_IMAGE_CONFIG.images
+      : []
+  },
+  rarities: Array.isArray(RAW_GACHA_CONFIG.rarities) ? RAW_GACHA_CONFIG.rarities : [],
+  collectionUnlocks: Array.isArray(RAW_GACHA_CONFIG.collectionUnlocks)
+    ? RAW_GACHA_CONFIG.collectionUnlocks
+    : [],
+  weeklyRarityWeights:
+    typeof RAW_GACHA_CONFIG.weeklyRarityWeights === 'object' && RAW_GACHA_CONFIG.weeklyRarityWeights !== null
+      ? RAW_GACHA_CONFIG.weeklyRarityWeights
+      : {}
+};
 
 const GAME_CONFIG = {
   /**
@@ -1164,70 +1191,9 @@ const GAME_CONFIG = {
   },
 
   /**
-   * Réglages du mini-jeu Métaux.
-   * - rows / cols : dimensions de la grille.
-   * - clearDelayMs : délai avant la disparition visuelle d'un alignement.
-   * - refillDelayMs : délai avant la réapparition de nouvelles cases.
-   * - popEffect : animation lors de la disparition, paramétrable.
-   * - maxShuffleAttempts : nombre maximal de tentatives de redistribution.
-   * - tileTypes : définition des métaux disponibles (identifiant, libellé, couleur).
-   * - timer : configuration du chrono (valeur initiale, gains, pénalités, cadence de mise à jour).
+   * Réglages du mini-jeu Métaux chargés depuis `config/arcade/metaux.json`.
    */
-  metaux: {
-    rows: 10,
-    cols: 16,
-    clearDelayMs: 220,
-    refillDelayMs: 120,
-    popEffect: {
-      durationMs: 220,
-      scale: 1.22,
-      glowOpacity: 0.8
-    },
-    maxShuffleAttempts: 120,
-    tileTypes: [
-      {
-        id: 'bronze',
-        label: 'Cu',
-        color: '#F8A436',
-        image: 'Assets/Image/Bronze.png'
-      },
-      {
-        id: 'argent',
-        label: 'Ag',
-        color: '#1C8213',
-        image: 'Assets/Image/Argent.png'
-      },
-      {
-        id: 'or',
-        label: 'Au',
-        color: '#E6C838',
-        image: 'Assets/Image/Or.png'
-      },
-      {
-        id: 'platine',
-        label: 'Pt',
-        color: '#45A9E2',
-        image: 'Assets/Image/Cuivre.png'
-      },
-      {
-        id: 'diamant',
-        label: 'C',
-        color: '#E9F6FD',
-        image: 'Assets/Image/Diamant.png'
-      }
-    ],
-    timer: {
-      initialSeconds: 6,
-      maxSeconds: 6,
-      matchRewardSeconds: 2,
-      penaltyWindowSeconds: 20,
-      penaltyAmountSeconds: 1,
-      minMaxSeconds: 1,
-      decayIntervalSeconds: 120,
-      decayAmountSeconds: 1,
-      tickIntervalMs: 100
-    }
-  },
+  metaux: ARCADE_METAUX_CONFIG,
 
   /**
    * Configuration des mini-jeux d'arcade.
@@ -1509,136 +1475,10 @@ const GAME_CONFIG = {
     }
   ],
 
-  gacha: {
-    ticketCost: 1, // Nombre de tickets requis par tirage
-    bonusImages: {
-      folder: 'Assets/Image/Gacha',
-      images: Array.isArray(RAW_GACHA_BONUS_IMAGE_CONFIG?.images)
-        ? RAW_GACHA_BONUS_IMAGE_CONFIG.images
-        : []
-    },
-    rarities: [
-      {
-        id: 'commun',
-        label: 'Nucléosynthèse primordiale',
-        description: "Premiers éléments créés dans l'univers, juste après le Big Bang.",
-        weight: 35,
-        color: '#1abc9c'
-      },
-      {
-        id: 'essentiel',
-        label: 'Spallation cosmique',
-        description: 'Éléments légers formés par spallation et désintégrations sous l’action des rayons cosmiques.',
-        weight: 25,
-        color: '#3498db'
-      },
-      {
-        id: 'stellaire',
-        label: 'Étoiles simples',
-        description: 'Éléments forgés lentement par fusion au cœur des étoiles de type solaire.',
-        weight: 20,
-        color: '#9b59b6'
-      },
-      {
-        id: 'singulier',
-        label: 'Supernovae',
-        description: 'Éléments lourds créés lors des supernovas et des fusions d’étoiles à neutrons.',
-        weight: 8,
-        color: '#cd6155'
-      },
-      {
-        id: 'mythique',
-        label: 'Étoiles massives',
-        description: 'Éléments produits par fusion dans les cœurs très chauds des étoiles géantes avant leur explosion.',
-        weight: 7,
-        color: '#FFBF66'
-      },
-      {
-        id: 'irreel',
-        label: 'Artificiels',
-        description: 'Éléments instables créés artificiellement par l’homme dans des réacteurs et accélérateurs.',
-        weight: 5,
-        color: '#7f8c8d'
-      }
-    ],
-    /**
-     * Paliers de déblocage progressif des collections disponibles dans le gacha.
-     * - drawThreshold : nombre de tirages cumulés avant d'accéder au palier.
-     * - allowedRarityCount : nombre de collections accessibles (null = toutes).
-     */
-    collectionUnlocks: [
-      {
-        drawThreshold: 0,
-        allowedRarityCount: 2
-      },
-      {
-        drawThreshold: 50,
-        allowedRarityCount: 3
-      },
-      {
-        drawThreshold: 150,
-        allowedRarityCount: null
-      }
-    ],
-    weeklyRarityWeights: {
-      monday: {
-        commun: 80,
-        essentiel: 7,
-        stellaire: 7,
-        singulier: 6,
-        mythique: 0,
-        irreel: 0
-      },
-      tuesday: {
-        commun: 80,
-        essentiel: 7,
-        stellaire: 7,
-        singulier: 0,
-        mythique: 6,
-        irreel: 0
-      },
-      wednesday: {
-        commun: 80,
-        essentiel: 7,
-        stellaire: 7,
-        singulier: 0,
-        mythique: 0,
-        irreel: 6
-      },
-      thursday: {
-        commun: 80,
-        essentiel: 7,
-        stellaire: 7,
-        singulier: 6,
-        mythique: 0,
-        irreel: 0
-      },
-      friday: {
-        commun: 80,
-        essentiel: 7,
-        stellaire: 7,
-        singulier: 0,
-        mythique: 6,
-        irreel: 0
-      },
-      saturday: {
-        commun: 80,
-        essentiel: 7,
-        stellaire: 7,
-        singulier: 0,
-        mythique: 0,
-        irreel: 6
-      },
-      sunday: {
-        commun: 80,
-        essentiel: 7,
-        stellaire: 7,
-        singulier: 2,
-        mythique: 2,
-        irreel: 2
-      }
-    }
-  },
+  /**
+   * Paramètres du gacha chargés depuis `config/systems/gacha.json`.
+   */
+  gacha: GACHA_SYSTEM_CONFIG,
 
   /**
    * Apparition de l'étoile à tickets sur la page principale.
