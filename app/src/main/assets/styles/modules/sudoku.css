@@ -1,10 +1,11 @@
 .page--sudoku {
   --sudoku-scale: var(--ui-control-scale, 1);
+  --sudoku-grid-scale: 1.5;
   --sudoku-base-cell-size: clamp(2.3rem, 5vw, 2.85rem);
-  --sudoku-cell-size: calc(var(--sudoku-base-cell-size) * var(--sudoku-scale, 1));
+  --sudoku-cell-size: calc(var(--sudoku-base-cell-size) * var(--sudoku-grid-scale, 1.5));
   --sudoku-grid-size: calc(var(--sudoku-cell-size) * 9);
-  --sudoku-cell-border: calc(2px * var(--sudoku-scale, 1));
-  --sudoku-subgrid-border: calc(6px * var(--sudoku-scale, 1));
+  --sudoku-cell-border: calc(2px * var(--sudoku-grid-scale, 1.5));
+  --sudoku-subgrid-border: calc(6px * var(--sudoku-grid-scale, 1.5));
   --sudoku-grid-border: var(--sudoku-subgrid-border);
   --sudoku-grid-line-compensation: calc(
     var(--sudoku-cell-border) * 16 + var(--sudoku-subgrid-border) * 2
@@ -458,7 +459,7 @@ body.theme-aurora .page--sudoku {
   display: grid;
   grid-template-columns: repeat(9, var(--sudoku-cell-track-size));
   grid-template-rows: repeat(9, var(--sudoku-cell-track-size));
-  --sudoku-scale: 1.5;
+  --sudoku-scale: var(--sudoku-grid-scale, 1.5);
   border: var(--sudoku-grid-border) solid var(--sudoku-subgrid-color);
   border-radius: calc(18px * var(--sudoku-scale, 1));
   overflow: hidden;
