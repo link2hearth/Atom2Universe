@@ -406,6 +406,13 @@ body.theme-aurora .page--arcade-hub {
   --arcade-hub-card-shadow-hover: 0 30px 56px rgba(18, 82, 108, 0.75);
 }
 
+.arcade-hub-card[data-card-id="colorStack"] {
+  --arcade-hub-card-background: linear-gradient(135deg, #dfc33f, #c8a12a);
+  --arcade-hub-card-border: rgba(223, 195, 63, 0.48);
+  --arcade-hub-card-shadow: 0 22px 38px rgba(148, 116, 16, 0.36);
+  --arcade-hub-card-shadow-hover: 0 30px 56px rgba(120, 90, 12, 0.46);
+}
+
 .arcade-hub-card[data-card-id="starBridges"] {
   --arcade-hub-card-background: linear-gradient(135deg, #1a133c, #473781);
   --arcade-hub-card-border: rgba(120, 100, 210, 0.5);
@@ -462,13 +469,24 @@ body.theme-aurora .page--arcade-hub {
   --arcade-hub-card-border: rgba(186, 100, 210, 0.52);
   --arcade-hub-card-shadow: 0 22px 38px rgba(46, 16, 70, 0.62);
   --arcade-hub-card-shadow-hover: 0 30px 56px rgba(82, 30, 110, 0.78);
-  --arcade-hub-card-description-color: rgba(255, 255, 255, 0.85);
+  --arcade-hub-card-description-color: rgba(255, 255, 255, 0.9);
   color: #ffffff;
 }
 
 .arcade-hub-card[data-card-id="escape"] {
+  --arcade-hub-card-background: linear-gradient(135deg, #4024a4, #2c1a78);
+  --arcade-hub-card-border: rgba(104, 80, 198, 0.52);
+  --arcade-hub-card-shadow: 0 22px 38px rgba(36, 22, 94, 0.62);
+  --arcade-hub-card-shadow-hover: 0 30px 56px rgba(54, 34, 138, 0.78);
   --arcade-hub-card-description-color: rgba(255, 255, 255, 0.85);
   color: #ffffff;
+}
+
+.arcade-hub-card[data-card-id="motocross"] {
+  --arcade-hub-card-background: linear-gradient(135deg, #75df3f, #4ab42b);
+  --arcade-hub-card-border: rgba(117, 223, 63, 0.48);
+  --arcade-hub-card-shadow: 0 22px 38px rgba(58, 130, 30, 0.32);
+  --arcade-hub-card-shadow-hover: 0 30px 56px rgba(46, 108, 22, 0.42);
 }
 
 .arcade-hub-card[data-card-id="gameOfLife"] {
