@@ -7,6 +7,17 @@
   const DEFAULT_DECK_COUNT = 8;
   const DEFAULT_DEALER_HIT_SOFT_17 = false;
   const DEFAULT_BET_AMOUNTS = Object.freeze([10, 20, 50, 100]);
+  const CONFIG_PATH = 'config/arcade/blackjack.json';
+
+  const DEFAULT_CONFIG = Object.freeze({
+    decks: DEFAULT_DECK_COUNT,
+    dealerHitSoft17: DEFAULT_DEALER_HIT_SOFT_17,
+    betOptions: DEFAULT_BET_AMOUNTS
+  });
+
+  const state = {
+    config: resolveInitialConfig()
+  };
 
   const RANKS = [
     { id: 'A', value: 11 },
@@ -83,29 +94,11 @@
     return fallback;
   }
 
-  function getDeckCount() {
-    const configValue = GLOBAL_CONFIG && GLOBAL_CONFIG.arcade && GLOBAL_CONFIG.arcade.blackjack
-      ? GLOBAL_CONFIG.arcade.blackjack.decks
-      : null;
-    const parsed = Number.parseInt(configValue, 10);
-    if (Number.isFinite(parsed) && parsed > 0) {
-      return parsed;
-    }
-    return DEFAULT_DECK_COUNT;
-  }
-
-  function shouldDealerHitSoft17() {
-    const configValue = GLOBAL_CONFIG && GLOBAL_CONFIG.arcade && GLOBAL_CONFIG.arcade.blackjack
-      ? GLOBAL_CONFIG.arcade.blackjack.dealerHitSoft17
-      : null;
-    return Boolean(configValue ?? DEFAULT_DEALER_HIT_SOFT_17);
-  }
-
-  function getBetOptions() {
-    const config = GLOBAL_CONFIG && GLOBAL_CONFIG.arcade && GLOBAL_CONFIG.arcade.blackjack
-      ? GLOBAL_CONFIG.arcade.blackjack.betOptions
-      : null;
-    const source = Array.isArray(config) ? config : DEFAULT_BET_AMOUNTS;
+  function normalizeBetOptions(rawOptions, fallbackOptions) {
+    const fallback = Array.isArray(fallbackOptions) && fallbackOptions.length
+      ? fallbackOptions
+      : DEFAULT_BET_AMOUNTS;
+    const source = Array.isArray(rawOptions) ? rawOptions : fallback;
     const seen = new Set();
     const normalized = [];
     for (let i = 0; i < source.length; i += 1) {
@@ -121,10 +114,86 @@
       normalized.push(value);
     }
     if (!normalized.length) {
-      return [...DEFAULT_BET_AMOUNTS];
+      return fallback.slice();
     }
     normalized.sort((a, b) => a - b);
     return normalized;
+  }
+
+  function normalizeConfig(rawConfig, fallbackConfig) {
+    const fallback = fallbackConfig && typeof fallbackConfig === 'object'
+      ? fallbackConfig
+      : DEFAULT_CONFIG;
+    const source = rawConfig && typeof rawConfig === 'object' ? rawConfig : {};
+    const fallbackDecks = Number.parseInt(fallback.decks, 10);
+    const rawDecks = Number.parseInt(source.decks, 10);
+    const decks = Number.isFinite(rawDecks) && rawDecks > 0
+      ? rawDecks
+      : Number.isFinite(fallbackDecks) && fallbackDecks > 0
+        ? fallbackDecks
+        : DEFAULT_DECK_COUNT;
+    const dealerHitSoft17 = source.dealerHitSoft17 != null
+      ? Boolean(source.dealerHitSoft17)
+      : Boolean(fallback.dealerHitSoft17);
+    const betOptions = normalizeBetOptions(source.betOptions, fallback.betOptions);
+    return Object.freeze({
+      decks,
+      dealerHitSoft17,
+      betOptions: Object.freeze(betOptions)
+    });
+  }
+
+  function resolveInitialConfig() {
+    const globalConfig = GLOBAL_CONFIG && GLOBAL_CONFIG.arcade && GLOBAL_CONFIG.arcade.blackjack
+      ? GLOBAL_CONFIG.arcade.blackjack
+      : null;
+    return normalizeConfig(globalConfig, DEFAULT_CONFIG);
+  }
+
+  function setConfig(nextConfig) {
+    state.config = normalizeConfig(nextConfig, state.config || DEFAULT_CONFIG);
+  }
+
+  function loadRemoteConfig(onLoaded) {
+    if (typeof window === 'undefined' || typeof window.fetch !== 'function') {
+      return;
+    }
+    window.fetch(CONFIG_PATH, { cache: 'no-store' })
+      .then(response => (response.ok ? response.json() : null))
+      .then(data => {
+        if (data && typeof data === 'object') {
+          setConfig(data);
+          if (typeof onLoaded === 'function') {
+            onLoaded(state.config);
+          }
+        }
+      })
+      .catch(error => {
+        console.warn('Blackjack config load error', error);
+      });
+  }
+
+  function getDeckCount() {
+    const config = state.config;
+    const value = config && typeof config.decks === 'number' ? config.decks : null;
+    const parsed = Number.isFinite(value) && value > 0 ? value : DEFAULT_DECK_COUNT;
+    return parsed;
+  }
+
+  function shouldDealerHitSoft17() {
+    const config = state.config;
+    if (config && typeof config === 'object' && Object.prototype.hasOwnProperty.call(config, 'dealerHitSoft17')) {
+      return Boolean(config.dealerHitSoft17);
+    }
+    return DEFAULT_DEALER_HIT_SOFT_17;
+  }
+
+  function getBetOptions() {
+    const config = state.config;
+    const options = config && Array.isArray(config.betOptions) && config.betOptions.length
+      ? config.betOptions
+      : DEFAULT_CONFIG.betOptions;
+    return options.slice();
   }
 
   function createFreshShoe(deckCount) {
@@ -314,11 +383,15 @@
     let dealerCards = [];
     const stats = { wins: 0, losses: 0, pushes: 0 };
     const hiddenCardLabel = translate('index.sections.blackjack.hiddenCard', 'Hidden card');
-    const configuredBetOptions = getBetOptions();
-    const baseBetOptions = configuredBetOptions.length > 1
-      ? configuredBetOptions.slice(1)
-      : configuredBetOptions.slice();
+    function computeBaseBetOptions() {
+      const configuredOptions = getBetOptions();
+      if (configuredOptions.length > 1) {
+        return configuredOptions.slice(1);
+      }
+      return configuredOptions.slice();
+    }
     const betButtons = [];
+    let baseBetOptions = computeBaseBetOptions();
     let betOptions = baseBetOptions.map(value => value);
     let betMultiplier = 1;
     let multiplyButton = null;
@@ -566,6 +639,8 @@
 
     function initializeBetOptions() {
       const previousBaseSelection = selectedBaseBet;
+      baseBetOptions = computeBaseBetOptions();
+      betOptions = baseBetOptions.map(value => value);
       betButtons.length = 0;
       betOptionsElement.innerHTML = '';
       const optionsAria = translate(
@@ -718,6 +793,12 @@
     initializeBetOptions();
     updateBalanceDisplay();
     startBalanceUpdates();
+
+    loadRemoteConfig(() => {
+      initializeBetOptions();
+      updateShoeDisplay();
+      updateBalanceDisplay();
+    });
 
     function ensureShoeReady() {
       const deckCount = getDeckCount();
