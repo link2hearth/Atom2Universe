@@ -60,6 +60,13 @@
       }
     }
   },
+  "prefetch": {
+    "enabled": true,
+    "bufferSize": 2,
+    "warmupDelayMs": 250,
+    "retryDelayMs": 1200,
+    "difficulties": ["medium", "hard"]
+  },
   "difficulties": {
     "easy": {
       "mazeSize": {
