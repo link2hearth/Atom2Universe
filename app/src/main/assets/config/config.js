@@ -1224,58 +1224,8 @@ const GAME_CONFIG = {
    * (vitesses, probabilités, textes, etc.) afin de centraliser les réglages.
    */
   arcade: {
-    /**
-     * Paramètres du mini-jeu Joker Roulette.
-     * - betOptions : mises de base proposées dans l’interface (avant multiplicateur).
-     * - payouts : multiplicateurs de gains pour chaque combinaison gagnante.
-     * - animation : rythme des arrêts de colonnes et cadence de brassage visuel.
-     */
-    roulette: {
-      betOptions: [10, 20, 50],
-      payouts: {
-        suitLine: 5,
-        suitDiagonal: 5,
-        colorLine: 2,
-        colorDiagonal: 2,
-        jokerRowTopBottom: 10,
-        jokerRowMiddle: 25
-      },
-      /**
-       * Pondération des symboles utilisés pour générer les tirages.
-       * Les valeurs représentent le poids relatif de chaque case.
-       */
-      symbolWeights: {
-        hearts: 1,
-        diamonds: 1,
-        clubs: 1,
-        spades: 1,
-        joker: 0.5,
-        void: 2
-      },
-      animation: {
-        initialMs: 2500,
-        columnDelayMs: 1000,
-        shuffleIntervalMs: 100
-      }
-    },
-    pachinko: {
-      betOptions: [10, 20, 50],
-      slotMultipliers: [0, 0.3, 1.5, 2.5, 1.5, 0.3, 0],
-      /**
-       * Bonus multiplicateur ajouté automatiquement aux lancers non rentables
-       * afin d'offrir un léger avantage au joueur (0.3 = +30 % de la mise).
-       */
-      advantageBonus: 0.1,
-      board: {
-        rows: 8,
-        stepMs: 280
-      }
-    },
-    blackjack: {
-      decks: 8,
-      dealerHitSoft17: false,
-      betOptions: [10, 20, 50, 100]
-    },
+    // Les configurations des mini-jeux Roulette et Pachinko sont définies dans
+    // des fichiers JSON dédiés (`config/arcade/roulette.json` et `config/arcade/pachinko.json`).
     /**
      * Paramètres du mini-jeu Hold’em.
      * - blind : montant unique utilisé comme blinde et relance de référence.
