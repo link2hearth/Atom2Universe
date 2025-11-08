@@ -3226,8 +3226,8 @@
       "arcade": {
         "sudoku": {
           "reward": {
-            "ready": "Sudoku bonus ready: next offline gains will be {multiplier} for up to {duration} (solved in {elapsed}, limit {limit}).",
-            "missed": "Sudoku cleared in {elapsed}, slower than the limit ({limit}). Bonus not granted.",
+            "ready": "Sudoku bonus ready: {duration} at {multiplier}. Active for the next {valid}.",
+            "missed": "Sudoku bonus expired before it could be applied.",
             "applied": "Sudoku bonus applied: {duration} at {multiplier}."
           }
         },
