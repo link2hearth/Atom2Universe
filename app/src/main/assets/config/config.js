@@ -449,6 +449,8 @@ function loadConfigJson(path, fallback) {
   return fallback;
 }
 
+const ARCADE_HOLDEM_CONFIG = loadConfigJson('./config/arcade/holdem.json', {});
+
 function createShopBuildingDefinitions() {
   const withDefaults = def => ({ maxLevel: SHOP_MAX_PURCHASE_DEFAULT, ...def });
   return [
@@ -1224,8 +1226,9 @@ const GAME_CONFIG = {
    * (vitesses, probabilités, textes, etc.) afin de centraliser les réglages.
    */
   arcade: {
-    // Les configurations des mini-jeux Roulette et Pachinko sont définies dans
-    // des fichiers JSON dédiés (`config/arcade/roulette.json` et `config/arcade/pachinko.json`).
+    // Les configurations des mini-jeux Hold’em, Roulette et Pachinko sont définies dans
+    // des fichiers JSON dédiés (`config/arcade/holdem.json`, `config/arcade/roulette.json`
+    // et `config/arcade/pachinko.json`).
     /**
      * Paramètres du mini-jeu Hold’em.
      * - blind : montant unique utilisé comme blinde et relance de référence.
@@ -1239,47 +1242,7 @@ const GAME_CONFIG = {
      * - maxRaisesPerRound : nombre maximum de relances autorisées par phase (valeur négative = illimité).
      * - growth : configuration de la montée des enjeux (facteur +10 % et plafond maximum).
      */
-    holdem: {
-      blind: 10,
-      dealerSpeedMs: 650,
-      minRaise: 10,
-      startingStack: 600,
-      aiStack: 1e11,
-      maxRaisesPerRound: 2,
-      raiseGuidance: {
-        potRatio: 0.25,
-        stackRatio: 0.12,
-        openRaiseMultiplier: 2
-      },
-      growth: {
-        usageFactor: 1.1,
-        cap: 99e68
-      },
-      opponentCount: { min: 4, max: 5 },
-      aiProfiles: {
-        peter: {
-          aggression: 0.32,
-          caution: 0.72,
-          bluff: 0.07
-        },
-        wendy: {
-          aggression: 0.5,
-          caution: 0.52,
-          bluff: 0.19
-        },
-        zelda: {
-          aggression: 0.62,
-          caution: 0.4,
-          bluff: 0.24
-        },
-        link: {
-          aggression: 0.78,
-          caution: 0.3,
-          bluff: 0.32
-        }
-      },
-      defaultAiProfile: 'peter'
-    },
+    holdem: ARCADE_HOLDEM_CONFIG,
     /**
      * Paramètres du mini-jeu Dice (Yams).
      * - diceCount : nombre de dés utilisés.
