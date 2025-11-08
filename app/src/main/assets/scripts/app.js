@@ -8004,6 +8004,7 @@ const soundEffects = (() => {
     return {
       pop: createSilentPool(),
       crit: createSilentPool(),
+      coin: createSilentPool(),
       setPopMuted(value) {
         popMuted = !!value;
       },
@@ -8058,10 +8059,38 @@ const soundEffects = (() => {
   };
 
   const POP_SOUND_SRC = 'Assets/Sounds/pop.mp3';
+  const COIN_SOUND_SRC = 'Assets/Sounds/coin.mp3';
+  const COIN_MAX_PLAYS = 10;
+  const COIN_INTERVAL_MS = 250;
   const CRIT_PLAYBACK_RATE = 1.35;
 
   const popPool = createSoundPool(POP_SOUND_SRC, 6);
   const critPool = createSoundPool(POP_SOUND_SRC, 3);
+  const coinPool = createSoundPool(COIN_SOUND_SRC, 4);
+  const coinTimeouts = new Set();
+
+  const scheduleCoinPlayback = times => {
+    coinTimeouts.forEach(timeoutId => {
+      clearTimeout(timeoutId);
+    });
+    coinTimeouts.clear();
+
+    const numericTimes = Number(times);
+    const target = Number.isFinite(numericTimes) ? numericTimes : 0;
+    const repetitions = Math.min(COIN_MAX_PLAYS, Math.max(0, Math.floor(target)));
+
+    if (repetitions <= 0) {
+      return;
+    }
+
+    for (let index = 0; index < repetitions; index += 1) {
+      const timeoutId = setTimeout(() => {
+        coinPool.play(1);
+        coinTimeouts.delete(timeoutId);
+      }, index * COIN_INTERVAL_MS);
+      coinTimeouts.add(timeoutId);
+    }
+  };
 
   const effects = {
     pop: {
@@ -8078,8 +8107,22 @@ const soundEffects = (() => {
         }
       }
     },
+    coin: {
+      play: times => {
+        if (popMuted) {
+          return;
+        }
+        scheduleCoinPlayback(times == null ? 1 : times);
+      }
+    },
     setPopMuted(value) {
       popMuted = !!value;
+      if (popMuted) {
+        coinTimeouts.forEach(timeoutId => {
+          clearTimeout(timeoutId);
+        });
+        coinTimeouts.clear();
+      }
     },
     isPopMuted() {
       return popMuted;

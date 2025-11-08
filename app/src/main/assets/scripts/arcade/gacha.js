@@ -4630,6 +4630,9 @@ function gainGachaTickets(amount = 1, options = {}) {
   const gain = Math.max(1, Math.floor(Number(amount) || 0));
   const current = Math.max(0, Math.floor(Number(gameState.gachaTickets) || 0));
   gameState.gachaTickets = current + gain;
+  if (gain > 0 && soundEffects && soundEffects.coin && typeof soundEffects.coin.play === 'function') {
+    soundEffects.coin.play(gain);
+  }
   if (options && options.unlockTicketStar && gain > 0 && gameState.ticketStarUnlocked !== true) {
     gameState.ticketStarUnlocked = true;
     resetTicketStarState({ reschedule: true });
