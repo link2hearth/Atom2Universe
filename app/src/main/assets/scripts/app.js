@@ -4046,6 +4046,76 @@ if (typeof window !== 'undefined') {
   window.atom2universGameState = gameState;
 }
 
+const gachaTicketIncreaseListeners = new Set();
+let gachaTicketObserverPauseCount = 0;
+let internalGachaTicketValue = sanitizeGachaTicketValue(gameState.gachaTickets);
+
+Object.defineProperty(gameState, 'gachaTickets', {
+  configurable: true,
+  enumerable: true,
+  get() {
+    return internalGachaTicketValue;
+  },
+  set(value) {
+    const nextValue = sanitizeGachaTicketValue(value);
+    const previousValue = internalGachaTicketValue;
+    internalGachaTicketValue = nextValue;
+    if (nextValue > previousValue && gachaTicketObserverPauseCount <= 0) {
+      notifyGachaTicketIncrease(previousValue, nextValue);
+    }
+  }
+});
+
+function sanitizeGachaTicketValue(rawValue) {
+  const numeric = Number(rawValue);
+  if (!Number.isFinite(numeric) || numeric <= 0) {
+    return 0;
+  }
+  return Math.max(0, Math.floor(numeric));
+}
+
+function notifyGachaTicketIncrease(previousValue, currentValue) {
+  if (currentValue <= previousValue) {
+    return;
+  }
+  const delta = currentValue - previousValue;
+  gachaTicketIncreaseListeners.forEach(listener => {
+    try {
+      listener(delta, { previous: previousValue, current: currentValue });
+    } catch (error) {
+      console.error('Gacha ticket increase listener failed', error);
+    }
+  });
+}
+
+function pauseGachaTicketObservers() {
+  gachaTicketObserverPauseCount += 1;
+}
+
+function resumeGachaTicketObservers() {
+  gachaTicketObserverPauseCount = Math.max(0, gachaTicketObserverPauseCount - 1);
+}
+
+function setGachaTicketsSilently(value) {
+  pauseGachaTicketObservers();
+  try {
+    gameState.gachaTickets = value;
+    return gameState.gachaTickets;
+  } finally {
+    resumeGachaTicketObservers();
+  }
+}
+
+function onGachaTicketsIncrease(listener) {
+  if (typeof listener !== 'function') {
+    return () => {};
+  }
+  gachaTicketIncreaseListeners.add(listener);
+  return () => {
+    gachaTicketIncreaseListeners.delete(listener);
+  };
+}
+
 applyFrenzySpawnChanceBonus(gameState.frenzySpawnBonus);
 if (typeof setParticulesBrickSkinPreference === 'function') {
   setParticulesBrickSkinPreference(gameState.arcadeBrickSkin);
@@ -8004,6 +8074,7 @@ const soundEffects = (() => {
     return {
       pop: createSilentPool(),
       crit: createSilentPool(),
+      coin: createSilentPool(),
       setPopMuted(value) {
         popMuted = !!value;
       },
@@ -8058,10 +8129,38 @@ const soundEffects = (() => {
   };
 
   const POP_SOUND_SRC = 'Assets/Sounds/pop.mp3';
+  const COIN_SOUND_SRC = 'Assets/Sounds/coin.mp3';
+  const COIN_MAX_PLAYS = 10;
+  const COIN_INTERVAL_MS = 250;
   const CRIT_PLAYBACK_RATE = 1.35;
 
   const popPool = createSoundPool(POP_SOUND_SRC, 6);
   const critPool = createSoundPool(POP_SOUND_SRC, 3);
+  const coinPool = createSoundPool(COIN_SOUND_SRC, 4);
+  const coinTimeouts = new Set();
+
+  const scheduleCoinPlayback = times => {
+    coinTimeouts.forEach(timeoutId => {
+      clearTimeout(timeoutId);
+    });
+    coinTimeouts.clear();
+
+    const numericTimes = Number(times);
+    const target = Number.isFinite(numericTimes) ? numericTimes : 0;
+    const repetitions = Math.min(COIN_MAX_PLAYS, Math.max(0, Math.floor(target)));
+
+    if (repetitions <= 0) {
+      return;
+    }
+
+    for (let index = 0; index < repetitions; index += 1) {
+      const timeoutId = setTimeout(() => {
+        coinPool.play(1);
+        coinTimeouts.delete(timeoutId);
+      }, index * COIN_INTERVAL_MS);
+      coinTimeouts.add(timeoutId);
+    }
+  };
 
   const effects = {
     pop: {
@@ -8078,8 +8177,22 @@ const soundEffects = (() => {
         }
       }
     },
+    coin: {
+      play: times => {
+        if (popMuted) {
+          return;
+        }
+        scheduleCoinPlayback(times == null ? 1 : times);
+      }
+    },
     setPopMuted(value) {
       popMuted = !!value;
+      if (popMuted) {
+        coinTimeouts.forEach(timeoutId => {
+          clearTimeout(timeoutId);
+        });
+        coinTimeouts.clear();
+      }
     },
     isPopMuted() {
       return popMuted;
@@ -8088,6 +8201,15 @@ const soundEffects = (() => {
 
   return effects;
 })();
+
+onGachaTicketsIncrease(delta => {
+  if (!delta || delta <= 0) {
+    return;
+  }
+  if (soundEffects && soundEffects.coin && typeof soundEffects.coin.play === 'function') {
+    soundEffects.coin.play(delta);
+  }
+});
 
 function readStoredClickSoundMuted() {
   try {
@@ -18457,7 +18579,8 @@ function applySerializedGameState(raw) {
   gameState.perClick = LayeredNumber.fromJSON(data.perClick);
   gameState.perSecond = LayeredNumber.fromJSON(data.perSecond);
   const tickets = Number(data.gachaTickets);
-  gameState.gachaTickets = Number.isFinite(tickets) && tickets > 0 ? Math.floor(tickets) : 0;
+  const storedTickets = Number.isFinite(tickets) && tickets > 0 ? Math.floor(tickets) : 0;
+  setGachaTicketsSilently(storedTickets);
   const bonusTickets = Number(data.bonusParticulesTickets ?? data.bonusTickets);
   gameState.bonusParticulesTickets = Number.isFinite(bonusTickets) && bonusTickets > 0
     ? Math.floor(bonusTickets)
@@ -18909,7 +19032,8 @@ function loadGame() {
     gameState.perClick = LayeredNumber.fromJSON(data.perClick);
     gameState.perSecond = LayeredNumber.fromJSON(data.perSecond);
     const tickets = Number(data.gachaTickets);
-    gameState.gachaTickets = Number.isFinite(tickets) && tickets > 0 ? Math.floor(tickets) : 0;
+    const storedTickets = Number.isFinite(tickets) && tickets > 0 ? Math.floor(tickets) : 0;
+    setGachaTicketsSilently(storedTickets);
     const bonusTickets = Number(data.bonusParticulesTickets ?? data.bonusTickets);
     gameState.bonusParticulesTickets = Number.isFinite(bonusTickets) && bonusTickets > 0
       ? Math.floor(bonusTickets)
@@ -18923,7 +19047,7 @@ function loadGame() {
         || storedTicketStarUnlock === 1
         || storedTicketStarUnlock === '1';
     } else {
-    gameState.ticketStarUnlocked = gameState.gachaTickets > 0;
+      gameState.ticketStarUnlocked = gameState.gachaTickets > 0;
     }
     gameState.arcadeProgress = normalizeArcadeProgress(data.arcadeProgress);
     applyDerivedFeatureUnlockFlags();
