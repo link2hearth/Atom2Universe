@@ -4,6 +4,7 @@
   }
 
   const GLOBAL_CONFIG = typeof globalThis !== 'undefined' ? globalThis.GAME_CONFIG : null;
+  const CONFIG_PATH = 'config/arcade/pachinko.json';
   const DEFAULT_BET_OPTIONS = Object.freeze([10, 20, 50]);
   const DEFAULT_SLOT_LAYOUT = Object.freeze([
     Object.freeze({
@@ -58,9 +59,20 @@
   ]);
   const DEFAULT_ROW_COUNT = 8;
   const DEFAULT_STEP_MS = 280;
-  const DEFAULT_ADVANTAGE_BONUS = 0.3;
+  const DEFAULT_ADVANTAGE_BONUS = 0.1;
   const HISTORY_LIMIT = 8;
   const MOVING_PEG_TRAVEL_MARGIN = 0.04;
+
+  const DEFAULT_CONFIG = Object.freeze({
+    betOptions: DEFAULT_BET_OPTIONS,
+    slotMultipliers: Object.freeze(DEFAULT_SLOT_LAYOUT.map(slot => slot.multiplier)),
+    advantageBonus: DEFAULT_ADVANTAGE_BONUS,
+    board: Object.freeze({ rows: DEFAULT_ROW_COUNT, stepMs: DEFAULT_STEP_MS })
+  });
+
+  const state = {
+    config: resolveInitialConfig()
+  };
 
   function onReady(callback) {
     if (document.readyState === 'loading') {
@@ -103,14 +115,15 @@
     return fallback;
   }
 
-  function sanitizeBetOptions(source) {
-    if (!Array.isArray(source)) {
-      return [...DEFAULT_BET_OPTIONS];
-    }
+  function sanitizeBetOptions(source, fallbackOptions) {
+    const fallback = Array.isArray(fallbackOptions) && fallbackOptions.length
+      ? fallbackOptions
+      : DEFAULT_BET_OPTIONS;
+    const reference = Array.isArray(source) && source.length ? source : fallback;
     const unique = new Set();
     const cleaned = [];
-    for (let i = 0; i < source.length; i += 1) {
-      const value = Number(source[i]);
+    for (let i = 0; i < reference.length; i += 1) {
+      const value = Number(reference[i]);
       if (!Number.isFinite(value)) {
         continue;
       }
@@ -122,40 +135,49 @@
       cleaned.push(normalized);
     }
     if (!cleaned.length) {
-      return [...DEFAULT_BET_OPTIONS];
+      return fallback.slice();
     }
     cleaned.sort((a, b) => a - b);
     return cleaned;
   }
 
-  function sanitizeSlotMultipliers(layout, source) {
-    if (!Array.isArray(source) || !source.length) {
-      return layout.map(slot => slot.multiplier);
-    }
+  function sanitizeSlotMultipliers(layout, source, fallbackMultipliers) {
+    const fallback = Array.isArray(fallbackMultipliers) && fallbackMultipliers.length === layout.length
+      ? fallbackMultipliers
+      : layout.map(slot => slot.multiplier);
+    const reference = Array.isArray(source) && source.length ? source : fallback;
     const normalized = [];
     for (let i = 0; i < layout.length; i += 1) {
-      const fallback = layout[i].multiplier;
-      const value = Number(source[i]);
+      const layoutFallback = layout[i].multiplier;
+      const fallbackValue = Number(fallback[i]);
+      const value = Number(reference[i]);
       if (Number.isFinite(value) && value >= 0) {
         normalized.push(value);
+      } else if (Number.isFinite(fallbackValue) && fallbackValue >= 0) {
+        normalized.push(fallbackValue);
       } else {
-        normalized.push(fallback);
+        normalized.push(layoutFallback);
       }
     }
     return normalized;
   }
 
-  function clampRowCount(value) {
+  function clampRowCount(value, fallback) {
     const numeric = Number(value);
     if (!Number.isFinite(numeric)) {
-      return DEFAULT_ROW_COUNT;
+      const fallbackValue = Number(fallback);
+      return Number.isFinite(fallbackValue) ? Math.max(4, Math.min(12, Math.floor(fallbackValue))) : DEFAULT_ROW_COUNT;
     }
     return Math.max(4, Math.min(12, Math.floor(numeric)));
   }
 
-  function clampStepMs(value) {
+  function clampStepMs(value, fallback) {
     const numeric = Number(value);
     if (!Number.isFinite(numeric)) {
+      const fallbackValue = Number(fallback);
+      if (Number.isFinite(fallbackValue)) {
+        return Math.max(140, Math.min(600, Math.floor(fallbackValue)));
+      }
       return DEFAULT_STEP_MS;
     }
     return Math.max(140, Math.min(600, Math.floor(numeric)));
@@ -172,6 +194,74 @@
       return max;
     }
     return value;
+  }
+
+  function normalizeAdvantageBonus(value, fallbackValue) {
+    const fallback = Number.isFinite(fallbackValue) && fallbackValue >= 0
+      ? fallbackValue
+      : DEFAULT_ADVANTAGE_BONUS;
+    const numeric = Number(value);
+    if (!Number.isFinite(numeric)) {
+      return fallback;
+    }
+    return Math.max(0, numeric);
+  }
+
+  function normalizeBoardConfig(boardConfig, fallbackBoard) {
+    const fallbackRows = clampRowCount(fallbackBoard && fallbackBoard.rows, DEFAULT_ROW_COUNT);
+    const fallbackStep = clampStepMs(fallbackBoard && fallbackBoard.stepMs, DEFAULT_STEP_MS);
+    const rows = clampRowCount(boardConfig && boardConfig.rows, fallbackRows);
+    const stepMs = clampStepMs(boardConfig && boardConfig.stepMs, fallbackStep);
+    return { rows, stepMs };
+  }
+
+  function normalizeConfig(rawConfig, fallbackConfig) {
+    const fallback = fallbackConfig && typeof fallbackConfig === 'object' ? fallbackConfig : DEFAULT_CONFIG;
+    const betOptions = sanitizeBetOptions(rawConfig?.betOptions, fallback.betOptions);
+    const slotMultipliers = sanitizeSlotMultipliers(
+      DEFAULT_SLOT_LAYOUT,
+      rawConfig?.slotMultipliers,
+      fallback.slotMultipliers
+    );
+    const advantageBonus = normalizeAdvantageBonus(rawConfig?.advantageBonus, fallback.advantageBonus);
+    const board = normalizeBoardConfig(rawConfig?.board, fallback.board);
+    return Object.freeze({
+      betOptions: Object.freeze(betOptions.slice()),
+      slotMultipliers: Object.freeze(slotMultipliers.slice()),
+      advantageBonus,
+      board: Object.freeze({ ...board })
+    });
+  }
+
+  function resolveInitialConfig() {
+    const globalConfig = GLOBAL_CONFIG && GLOBAL_CONFIG.arcade && GLOBAL_CONFIG.arcade.pachinko
+      ? GLOBAL_CONFIG.arcade.pachinko
+      : null;
+    return normalizeConfig(globalConfig, DEFAULT_CONFIG);
+  }
+
+  function setConfig(nextConfig) {
+    state.config = normalizeConfig(nextConfig, state.config || DEFAULT_CONFIG);
+    return state.config;
+  }
+
+  function loadRemoteConfig(onLoaded) {
+    if (typeof window === 'undefined' || typeof window.fetch !== 'function') {
+      return;
+    }
+    window.fetch(CONFIG_PATH, { cache: 'no-store' })
+      .then(response => (response.ok ? response.json() : null))
+      .then(data => {
+        if (data && typeof data === 'object') {
+          const updated = setConfig(data);
+          if (typeof onLoaded === 'function') {
+            onLoaded(updated);
+          }
+        }
+      })
+      .catch(error => {
+        console.warn('Pachinko config load error', error);
+      });
   }
 
   function randomOffset(scale) {
@@ -205,18 +295,13 @@
       return;
     }
 
-    const resolvedConfig = GLOBAL_CONFIG && GLOBAL_CONFIG.arcade && GLOBAL_CONFIG.arcade.pachinko
-      ? GLOBAL_CONFIG.arcade.pachinko
-      : null;
-
-    const baseBetOptions = sanitizeBetOptions(resolvedConfig ? resolvedConfig.betOptions : null);
-    const slotLayoutMultipliers = sanitizeSlotMultipliers(DEFAULT_SLOT_LAYOUT, resolvedConfig ? resolvedConfig.slotMultipliers : null);
-    const rowCount = clampRowCount(resolvedConfig && resolvedConfig.board ? resolvedConfig.board.rows : null);
-    const dropStepMs = clampStepMs(resolvedConfig && resolvedConfig.board ? resolvedConfig.board.stepMs : null);
-    const slotCount = DEFAULT_SLOT_LAYOUT.length;
-    const advantageBonusMultiplier = resolvedConfig && typeof resolvedConfig.advantageBonus === 'number'
-      ? Math.max(0, resolvedConfig.advantageBonus)
-      : DEFAULT_ADVANTAGE_BONUS;
+    let currentConfig = state.config;
+    let baseBetOptions = currentConfig.betOptions.slice();
+    let slotMultipliers = currentConfig.slotMultipliers.slice();
+    let rowCount = currentConfig.board.rows;
+    let dropStepMs = currentConfig.board.stepMs;
+    let slotCount = Math.min(DEFAULT_SLOT_LAYOUT.length, slotMultipliers.length);
+    let advantageBonusMultiplier = currentConfig.advantageBonus;
 
     const boardField = {
       left: 0.08,
@@ -231,25 +316,41 @@
     const movingPegStates = [];
     let movingPegAnimationHandle = null;
     let lastDropSpawnRatio = 0.5;
-    const slotTargets = slotLayoutMultipliers.map((_, index) => {
-      if (slotCount <= 1) {
-        return boardField.left + boardField.width / 2;
+    function createSlotDefinitionsFromMultipliers(multipliers) {
+      const definitions = [];
+      for (let i = 0; i < DEFAULT_SLOT_LAYOUT.length; i += 1) {
+        const layout = DEFAULT_SLOT_LAYOUT[i];
+        const multiplier = Number.isFinite(multipliers[i]) ? multipliers[i] : layout.multiplier;
+        definitions.push({
+          id: layout.id,
+          className: layout.className,
+          labelKey: layout.labelKey,
+          fallback: layout.fallback,
+          multiplier
+        });
       }
-      const ratio = index / (slotCount - 1);
-      return boardField.left + ratio * boardField.width;
-    });
+      return definitions;
+    }
+
+    function computeSlotTargetsFromCount(count) {
+      const targets = [];
+      for (let index = 0; index < count; index += 1) {
+        if (count <= 1) {
+          targets.push(boardField.left + boardField.width / 2);
+        } else {
+          const ratio = index / (count - 1);
+          targets.push(boardField.left + ratio * boardField.width);
+        }
+      }
+      return targets;
+    }
+
+    let slotDefinitions = createSlotDefinitionsFromMultipliers(slotMultipliers);
+    let slotTargets = computeSlotTargetsFromCount(slotCount);
     const BALL_RADIUS = 0.014;
     const GRAVITY_FORCE = 0.00118;
     const MAX_SIMULATION_STEPS = 900;
     const PATH_SAMPLE_INTERVAL = 2;
-
-    const slotDefinitions = DEFAULT_SLOT_LAYOUT.map((slot, index) => ({
-      id: slot.id,
-      className: slot.className,
-      labelKey: slot.labelKey,
-      fallback: slot.fallback,
-      multiplier: slotLayoutMultipliers[index] ?? slot.multiplier
-    }));
 
     const numberFormatter = typeof Intl !== 'undefined' && typeof Intl.NumberFormat === 'function'
       ? () => new Intl.NumberFormat(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 0 })
@@ -382,6 +483,35 @@
     let selectedBaseBet = null;
     let activeDropCount = 0;
     let balanceIntervalId = null;
+
+    function applyConfig(nextConfig) {
+      const effective = nextConfig || state.config;
+      currentConfig = effective;
+      baseBetOptions = effective.betOptions.slice();
+      slotMultipliers = effective.slotMultipliers.slice();
+      advantageBonusMultiplier = effective.advantageBonus;
+      rowCount = effective.board.rows;
+      dropStepMs = effective.board.stepMs;
+      slotCount = Math.min(DEFAULT_SLOT_LAYOUT.length, slotMultipliers.length);
+      slotDefinitions = createSlotDefinitionsFromMultipliers(slotMultipliers);
+      slotTargets = computeSlotTargetsFromCount(slotCount);
+      const previousBase = selectedBaseBet;
+      const previousBet = selectedBet;
+      selectedBaseBet = null;
+      selectedBet = null;
+      renderPegLayer();
+      renderSlotDetails();
+      renderBetButtons();
+      if (previousBase != null && baseBetOptions.includes(previousBase)) {
+        setSelectedBet(previousBase * betMultiplier, previousBase);
+      } else if (previousBet != null) {
+        setSelectedBet(previousBet);
+      }
+      ensureSelectedBetAffordable();
+      updateBetButtons();
+      updateMultiplierControls();
+      updateDropButtonState();
+    }
 
     const stats = {
       drops: 0,
@@ -1231,6 +1361,7 @@
     updateStatsDisplay();
     updateBalanceDisplay();
     startBalanceUpdates();
+    loadRemoteConfig(applyConfig);
     setStatus('ready', 'Pick a bet and drop a quantum orb.');
 
     if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {

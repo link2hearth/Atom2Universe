@@ -4,7 +4,8 @@
   }
 
   const GLOBAL_CONFIG = typeof globalThis !== 'undefined' ? globalThis.GAME_CONFIG : null;
-  const DEFAULT_BET_AMOUNTS = Object.freeze([10, 20, 50, 100]);
+  const CONFIG_PATH = 'config/arcade/roulette.json';
+  const DEFAULT_BET_AMOUNTS = Object.freeze([10, 20, 50]);
   const DEFAULT_PAYOUTS = Object.freeze({
     suitLine: 5,
     suitDiagonal: 5,
@@ -13,7 +14,7 @@
     jokerRowTopBottom: 10,
     jokerRowMiddle: 25
   });
-  const DEFAULT_ANIMATION = Object.freeze({ initialMs: 3000, columnDelayMs: 1000, shuffleIntervalMs: 90 });
+  const DEFAULT_ANIMATION = Object.freeze({ initialMs: 2500, columnDelayMs: 1000, shuffleIntervalMs: 100 });
 
   const SYMBOLS = Object.freeze([
     Object.freeze({ id: 'hearts', label: '♥', color: 'red', translationKey: 'scripts.arcade.roulette.symbols.hearts' }),
@@ -38,25 +39,43 @@
     void: 2
   });
 
+  const DEFAULT_CONFIG = Object.freeze({
+    betOptions: DEFAULT_BET_AMOUNTS,
+    payouts: DEFAULT_PAYOUTS,
+    animation: DEFAULT_ANIMATION,
+    symbolWeights: DEFAULT_SYMBOL_WEIGHTS
+  });
+
+  const state = {
+    config: resolveInitialConfig()
+  };
+
   let currentSymbolPicker = null;
 
-  function normalizeSymbolWeights(weights) {
+  function normalizeSymbolWeights(weights, fallbackWeights) {
+    const fallback = fallbackWeights && typeof fallbackWeights === 'object'
+      ? fallbackWeights
+      : DEFAULT_CONFIG.symbolWeights;
     const normalized = {};
     let total = 0;
     const source = weights && typeof weights === 'object' ? weights : null;
     for (let i = 0; i < SYMBOLS.length; i += 1) {
       const symbol = SYMBOLS[i];
-      const fallback = Number(DEFAULT_SYMBOL_WEIGHTS[symbol.id]);
+      const fallbackValue = Number(fallback[symbol.id]);
       const raw = source != null ? Number(source[symbol.id]) : NaN;
-      const value = Number.isFinite(raw) && raw > 0 ? raw : Number.isFinite(fallback) && fallback > 0 ? fallback : 0;
+      const value = Number.isFinite(raw) && raw > 0
+        ? raw
+        : Number.isFinite(fallbackValue) && fallbackValue > 0
+          ? fallbackValue
+          : 0;
       normalized[symbol.id] = value;
       total += value;
     }
     if (total <= 0) {
       for (let i = 0; i < SYMBOLS.length; i += 1) {
         const symbol = SYMBOLS[i];
-        const fallback = Number(DEFAULT_SYMBOL_WEIGHTS[symbol.id]);
-        normalized[symbol.id] = Number.isFinite(fallback) && fallback > 0 ? fallback : 1;
+        const fallbackValue = Number(fallback[symbol.id]);
+        normalized[symbol.id] = Number.isFinite(fallbackValue) && fallbackValue > 0 ? fallbackValue : 1;
       }
     }
     return normalized;
@@ -134,16 +153,11 @@
     return fallback;
   }
 
-  function getArcadeConfig() {
-    if (!GLOBAL_CONFIG || !GLOBAL_CONFIG.arcade || typeof GLOBAL_CONFIG.arcade !== 'object') {
-      return null;
-    }
-    const config = GLOBAL_CONFIG.arcade.roulette;
-    return config && typeof config === 'object' ? config : null;
-  }
-
-  function normalizeBetOptions(options) {
-    const source = Array.isArray(options) ? options : DEFAULT_BET_AMOUNTS;
+  function normalizeBetOptions(options, fallbackOptions) {
+    const fallback = Array.isArray(fallbackOptions) && fallbackOptions.length
+      ? fallbackOptions
+      : DEFAULT_CONFIG.betOptions;
+    const source = Array.isArray(options) && options.length ? options : fallback;
     const normalized = [];
     const seen = new Set();
     for (let i = 0; i < source.length; i += 1) {
@@ -159,35 +173,38 @@
       normalized.push(value);
     }
     if (!normalized.length) {
-      return [...DEFAULT_BET_AMOUNTS];
+      return fallback.slice();
     }
     normalized.sort((a, b) => a - b);
     return normalized;
   }
 
-  function normalizePayouts(payouts) {
+  function normalizePayouts(payouts, fallbackPayouts) {
+    const fallback = fallbackPayouts && typeof fallbackPayouts === 'object'
+      ? fallbackPayouts
+      : DEFAULT_CONFIG.payouts;
     const source = payouts && typeof payouts === 'object' ? payouts : {};
     const sanitize = (value, fallback) => {
       const numeric = Number(value);
       return Number.isFinite(numeric) && numeric > 0 ? numeric : fallback;
     };
-    const suitLine = sanitize(source.suitLine, DEFAULT_PAYOUTS.suitLine);
+    const suitLine = sanitize(source.suitLine, fallback.suitLine);
     const suitDiagonal = sanitize(
       source.suitDiagonal != null ? source.suitDiagonal : source.suitLine,
-      DEFAULT_PAYOUTS.suitDiagonal
+      fallback.suitDiagonal
     );
-    const colorLine = sanitize(source.colorLine, DEFAULT_PAYOUTS.colorLine);
+    const colorLine = sanitize(source.colorLine, fallback.colorLine);
     const colorDiagonal = sanitize(
       source.colorDiagonal != null ? source.colorDiagonal : source.diagonalColor,
-      DEFAULT_PAYOUTS.colorDiagonal
+      fallback.colorDiagonal
     );
     const jokerRowMiddle = sanitize(
       source.jokerRowMiddle != null ? source.jokerRowMiddle : source.jokerRow,
-      DEFAULT_PAYOUTS.jokerRowMiddle
+      fallback.jokerRowMiddle
     );
     const jokerRowTopBottom = sanitize(
       source.jokerRowTopBottom != null ? source.jokerRowTopBottom : source.jokerRow,
-      DEFAULT_PAYOUTS.jokerRowTopBottom
+      fallback.jokerRowTopBottom
     );
     return {
       suitLine,
@@ -199,16 +216,76 @@
     };
   }
 
-  function normalizeAnimation(animation) {
+  function normalizeAnimation(animation, fallbackAnimation) {
+    const fallback = fallbackAnimation && typeof fallbackAnimation === 'object'
+      ? fallbackAnimation
+      : DEFAULT_CONFIG.animation;
     const source = animation && typeof animation === 'object' ? animation : {};
     const initial = Number(source.initialMs);
     const columnDelay = Number(source.columnDelayMs);
     const shuffle = Number(source.shuffleIntervalMs);
     return {
-      initialMs: Number.isFinite(initial) && initial > 0 ? initial : DEFAULT_ANIMATION.initialMs,
-      columnDelayMs: Number.isFinite(columnDelay) && columnDelay >= 0 ? columnDelay : DEFAULT_ANIMATION.columnDelayMs,
-      shuffleIntervalMs: Number.isFinite(shuffle) && shuffle > 0 ? shuffle : DEFAULT_ANIMATION.shuffleIntervalMs
+      initialMs: Number.isFinite(initial) && initial > 0
+        ? initial
+        : Number.isFinite(fallback.initialMs) && fallback.initialMs > 0
+          ? fallback.initialMs
+          : DEFAULT_ANIMATION.initialMs,
+      columnDelayMs: Number.isFinite(columnDelay) && columnDelay >= 0
+        ? columnDelay
+        : Number.isFinite(fallback.columnDelayMs) && fallback.columnDelayMs >= 0
+          ? fallback.columnDelayMs
+          : DEFAULT_ANIMATION.columnDelayMs,
+      shuffleIntervalMs: Number.isFinite(shuffle) && shuffle > 0
+        ? shuffle
+        : Number.isFinite(fallback.shuffleIntervalMs) && fallback.shuffleIntervalMs > 0
+          ? fallback.shuffleIntervalMs
+          : DEFAULT_ANIMATION.shuffleIntervalMs
     };
+  }
+
+  function normalizeConfig(rawConfig, fallbackConfig) {
+    const fallback = fallbackConfig && typeof fallbackConfig === 'object' ? fallbackConfig : DEFAULT_CONFIG;
+    const betOptions = normalizeBetOptions(rawConfig?.betOptions, fallback.betOptions);
+    const payouts = normalizePayouts(rawConfig?.payouts, fallback.payouts);
+    const animation = normalizeAnimation(rawConfig?.animation, fallback.animation);
+    const symbolWeights = normalizeSymbolWeights(rawConfig?.symbolWeights, fallback.symbolWeights);
+    return Object.freeze({
+      betOptions: Object.freeze(betOptions.slice()),
+      payouts: Object.freeze({ ...payouts }),
+      animation: Object.freeze({ ...animation }),
+      symbolWeights: Object.freeze({ ...symbolWeights })
+    });
+  }
+
+  function resolveInitialConfig() {
+    const globalConfig = GLOBAL_CONFIG && GLOBAL_CONFIG.arcade && GLOBAL_CONFIG.arcade.roulette
+      ? GLOBAL_CONFIG.arcade.roulette
+      : null;
+    return normalizeConfig(globalConfig, DEFAULT_CONFIG);
+  }
+
+  function setConfig(nextConfig) {
+    state.config = normalizeConfig(nextConfig, state.config || DEFAULT_CONFIG);
+    return state.config;
+  }
+
+  function loadRemoteConfig(onLoaded) {
+    if (typeof window === 'undefined' || typeof window.fetch !== 'function') {
+      return;
+    }
+    window.fetch(CONFIG_PATH, { cache: 'no-store' })
+      .then(response => (response.ok ? response.json() : null))
+      .then(data => {
+        if (data && typeof data === 'object') {
+          const updated = setConfig(data);
+          if (typeof onLoaded === 'function') {
+            onLoaded(updated);
+          }
+        }
+      })
+      .catch(error => {
+        console.warn('Roulette config load error', error);
+      });
   }
 
   function getGameAtoms() {
@@ -577,11 +654,11 @@
       }
     });
 
-    const arcadeConfig = getArcadeConfig();
-    const baseBetOptions = normalizeBetOptions(arcadeConfig && arcadeConfig.betOptions);
-    const payouts = normalizePayouts(arcadeConfig && arcadeConfig.payouts);
-    const animation = normalizeAnimation(arcadeConfig && arcadeConfig.animation);
-    currentSymbolPicker = createSymbolPicker(arcadeConfig && arcadeConfig.symbolWeights);
+    let currentConfig = state.config;
+    let baseBetOptions = currentConfig.betOptions.slice();
+    let payouts = currentConfig.payouts;
+    let animation = currentConfig.animation;
+    currentSymbolPicker = createSymbolPicker(currentConfig.symbolWeights);
 
     let betMultiplier = 1;
     let betOptions = baseBetOptions.map(value => value);
@@ -596,6 +673,27 @@
     const betButtons = [];
     let multiplyButton = null;
     let divideButton = null;
+
+    function applyConfig(nextConfig) {
+      const effective = nextConfig || state.config;
+      currentConfig = effective;
+      baseBetOptions = effective.betOptions.slice();
+      payouts = effective.payouts;
+      animation = effective.animation;
+      currentSymbolPicker = createSymbolPicker(effective.symbolWeights);
+      const previousBase = selectedBaseBet;
+      const previousBet = selectedBet;
+      betMultiplier = Math.max(1, Math.floor(betMultiplier) || 1);
+      initializeBetOptions();
+      if (previousBase != null && baseBetOptions.includes(previousBase)) {
+        setSelectedBet(previousBase * betMultiplier, previousBase);
+      } else if (previousBet != null) {
+        setSelectedBet(previousBet);
+      }
+      ensureSelectedBetAffordable();
+      updateBetButtons();
+      updateBalanceDisplay();
+    }
 
     function applySymbolToCell(cell, symbol) {
       if (!cell || !symbol) {
@@ -1183,6 +1281,8 @@
     updateMultiplierDisplay(null);
     updateLastWinDisplay(0, 0, 0);
     startBalanceUpdates();
+
+    loadRemoteConfig(applyConfig);
 
     startButton.addEventListener('click', startSpin);
 
