@@ -14297,6 +14297,7 @@ function recalcProduction() {
   const elementGroupSummaries = new Map();
   const familySummaries = new Map();
   const elementEffectSummaries = new Map();
+  const pendingElementFlatEffects = [];
   const ensureElementEffectSummary = (elementId, { label, rarityId, lifetimeCount, activeCount }) => {
     if (!elementEffectSummaries.has(elementId)) {
       elementEffectSummaries.set(elementId, {
@@ -14492,40 +14493,34 @@ function recalcProduction() {
           });
         }
         if (stats.clickAdd != null) {
-          const applied = addClickElementFlat(stats.clickAdd, {
-            id: `element:${effectId}:clickAdd`,
-            label: effectLabel,
-            rarityId,
-            source: 'elements'
+          pendingElementFlatEffects.push({
+            type: 'click',
+            value: stats.clickAdd,
+            meta: {
+              id: `element:${effectId}:clickAdd`,
+              label: effectLabel,
+              rarityId,
+              source: 'elements'
+            },
+            summary: elementSummary,
+            labelEntry,
+            translationKey: 'apcFlat'
           });
-          if (Number.isFinite(applied) && applied !== 0) {
-            elementSummary.clickFlatTotal += applied;
-            const formatted = formatElementFlatBonus(applied);
-            if (formatted) {
-              appendElementLabelEffect(
-                labelEntry,
-                translateCollectionEffect('apcFlat', `APC +${formatted}`, { value: formatted })
-              );
-            }
-          }
         }
         if (stats.autoAdd != null) {
-          const applied = addAutoElementFlat(stats.autoAdd, {
-            id: `element:${effectId}:autoAdd`,
-            label: effectLabel,
-            rarityId,
-            source: 'elements'
+          pendingElementFlatEffects.push({
+            type: 'auto',
+            value: stats.autoAdd,
+            meta: {
+              id: `element:${effectId}:autoAdd`,
+              label: effectLabel,
+              rarityId,
+              source: 'elements'
+            },
+            summary: elementSummary,
+            labelEntry,
+            translationKey: 'apsFlat'
           });
-          if (Number.isFinite(applied) && applied !== 0) {
-            elementSummary.autoFlatTotal += applied;
-            const formatted = formatElementFlatBonus(applied);
-            if (formatted) {
-              appendElementLabelEffect(
-                labelEntry,
-                translateCollectionEffect('apsFlat', `APS +${formatted}`, { value: formatted })
-              );
-            }
-          }
         }
       });
     }
@@ -14572,6 +14567,35 @@ function recalcProduction() {
     });
     return finalValue.toNumber();
   };
+
+  pendingElementFlatEffects.forEach(entry => {
+    const { type, value, meta, summary, labelEntry, translationKey } = entry;
+    const applied = type === 'click'
+      ? addClickElementFlat(value, meta)
+      : addAutoElementFlat(value, meta);
+    if (!Number.isFinite(applied) || applied === 0) {
+      return;
+    }
+    if (summary) {
+      if (type === 'click') {
+        summary.clickFlatTotal += applied;
+      } else {
+        summary.autoFlatTotal += applied;
+      }
+    }
+    if (labelEntry) {
+      const formatted = formatElementFlatBonus(applied);
+      if (formatted) {
+        const fallback = translationKey === 'apcFlat'
+          ? `APC +${formatted}`
+          : `APS +${formatted}`;
+        appendElementLabelEffect(
+          labelEntry,
+          translateCollectionEffect(translationKey, fallback, { value: formatted })
+        );
+      }
+    }
+  });
 
   const updateRarityMultiplierDetail = (details, detailId, label, value) => {
     if (!details) return;
