@@ -454,6 +454,8 @@ const ARCADE_BALANCE_CONFIG = loadConfigJson('./config/arcade/balance.json', {})
 const ARCADE_MATH_CONFIG = loadConfigJson('./config/arcade/math.json', {});
 const ARCADE_DICE_CONFIG = loadConfigJson('./config/arcade/dice.json', {});
 const ARCADE_PARTICULES_CONFIG = loadConfigJson('./config/arcade/particules.json', {});
+const ARCADE_ECHECS_CONFIG = loadConfigJson('./config/arcade/echecs.json', {});
+const ARCADE_SUDOKU_CONFIG = loadConfigJson('./config/arcade/sudoku.json', {});
 
 function createShopBuildingDefinitions() {
   const withDefaults = def => ({ maxLevel: SHOP_MAX_PURCHASE_DEFAULT, ...def });
@@ -1230,10 +1232,11 @@ const GAME_CONFIG = {
    * (vitesses, probabilités, textes, etc.) afin de centraliser les réglages.
    */
   arcade: {
-    // Les configurations des mini-jeux Hold’em, Roulette, Pachinko, Balance, Math, Dice et Particules sont définies dans
-    // des fichiers JSON dédiés (`config/arcade/holdem.json`, `config/arcade/roulette.json`,
-    // `config/arcade/pachinko.json`, `config/arcade/balance.json`, `config/arcade/math.json`,
-    // `config/arcade/dice.json` et `config/arcade/particules.json`).
+    // Les configurations des mini-jeux Hold’em, Roulette, Pachinko, Balance, Math, Dice, Particules,
+    // Échecs et Sudoku sont définies dans des fichiers JSON dédiés (`config/arcade/holdem.json`,
+    // `config/arcade/roulette.json`, `config/arcade/pachinko.json`, `config/arcade/balance.json`,
+    // `config/arcade/math.json`, `config/arcade/dice.json`, `config/arcade/particules.json`,
+    // `config/arcade/echecs.json` et `config/arcade/sudoku.json`).
     /**
      * Paramètres du mini-jeu Hold’em.
      * - blind : montant unique utilisé comme blinde et relance de référence.
@@ -1259,108 +1262,7 @@ const GAME_CONFIG = {
      */
     dice: ARCADE_DICE_CONFIG,
     // Paramètres du mini-jeu Échecs.
-    echecs: {
-      ai: {
-        /**
-         * Profondeur de recherche maximale (en demi-coups) utilisée par l'IA noire.
-         * Une valeur plus élevée augmente la force de jeu mais rallonge le temps de calcul.
-         */
-        searchDepth: 4,
-        /**
-         * Budget de temps autorisé pour un coup de l'IA (en millisecondes).
-         * Si 0, aucun plafond n'est appliqué et seule la profondeur limite le calcul.
-         */
-        timeLimitMs: 3000,
-        /**
-         * Délai (ms) ajouté avant le lancement du calcul afin de laisser l'interface se mettre à jour.
-         */
-        moveDelayMs: 150,
-        /**
-         * Nombre maximum d'entrées conservées dans la table de transposition.
-         */
-        transpositionSize: 4000,
-        /**
-         * Paramètres de créativité : permettent à l'IA de varier ses choix lorsque plusieurs
-         * coups de valeur proche sont disponibles afin d'éviter un style trop répétitif.
-         */
-        creativity: {
-          enabled: true,
-          thresholdCentipawns: 80,
-          variabilityCentipawns: 30,
-          candidateCount: 3,
-          excitementBonus: 0.35
-        },
-        /**
-         * Ajustements dynamiques de réflexion : l'IA peut prolonger sa recherche lorsqu'une
-         * position comporte beaucoup d'échanges ou des échecs possibles.
-         */
-        searchExtensions: {
-          captureDepthBonus: 1,
-          checkDepthBonus: 1,
-          tacticalMoveThreshold: 2,
-          maxDepth: 5,
-          timeBonusMs: 450,
-          branchingThreshold: 26
-        }
-      },
-      /**
-       * Paramétrage des récompenses et de la difficulté.
-       * - difficulty.defaultMode : difficulté sélectionnée par défaut.
-       * - difficulty.modes : liste des modes proposés avec leur étiquette i18n,
-       *   les réglages IA associés et la récompense accordée en cas de victoire
-       *   (tickets gacha + bonus critique temporaire).
-       * - match.moveLimit : nombre maximal de tours complets avant déclaration d'une nulle technique.
-       */
-      difficulty: {
-        defaultMode: 'standard',
-        modes: [
-          {
-            id: 'training',
-            labelKey: 'scripts.arcade.chess.difficulty.training',
-            descriptionKey: 'scripts.arcade.chess.difficulty.trainingDescription',
-            ai: { depth: 2, timeLimitMs: 600 },
-            reward: null
-          },
-          {
-            id: 'standard',
-            labelKey: 'scripts.arcade.chess.difficulty.standard',
-            descriptionKey: 'scripts.arcade.chess.difficulty.standardDescription',
-            ai: { depth: 3, timeLimitMs: 1200 },
-            reward: {
-              gachaTickets: 100,
-              crit: {
-                multiplier: 1000,
-                durationSeconds: 300
-              }
-            }
-          },
-          {
-            id: 'expert',
-            labelKey: 'scripts.arcade.chess.difficulty.expert',
-            descriptionKey: 'scripts.arcade.chess.difficulty.expertDescription',
-            ai: { depth: 4, timeLimitMs: 1800 },
-            reward: {
-              gachaTickets: 100,
-              crit: {
-                multiplier: 1000,
-                durationSeconds: 300
-              }
-            }
-          },
-          {
-            id: 'twoPlayer',
-            labelKey: 'scripts.arcade.chess.difficulty.twoPlayers',
-            descriptionKey: 'scripts.arcade.chess.difficulty.twoPlayersDescription',
-            twoPlayer: true,
-            ai: null,
-            reward: null
-          }
-        ]
-      },
-      match: {
-        moveLimit: 80
-      }
-    },
+    echecs: ARCADE_ECHECS_CONFIG,
     // Paramètres du mini-jeu Balance (plateforme d'équilibre).
     balance: ARCADE_BALANCE_CONFIG,
     // Paramètres du mini-jeu Math (progression des opérations).
@@ -1380,30 +1282,8 @@ const GAME_CONFIG = {
       }
     },
     particules: ARCADE_PARTICULES_CONFIG,
-    sudoku: {
-      /**
-       * Nombre d'indices laissés dans les grilles générées selon la difficulté.
-       * Les valeurs min / max permettent d'introduire de la variété sans éditer le code.
-       */
-      levelClues: {
-        facile: { min: 32, max: 36 },
-        moyen: { min: 24, max: 28 },
-        difficile: { min: 18, max: 22 }
-      },
-      /**
-       * Bonus accordé lorsqu'un Sudoku est résolu rapidement.
-       * - timeLimitMinutes : temps maximal (en minutes) pour déclencher le bonus.
-       * - offlineBonusHours : durée couverte à 100 % pendant la prochaine collecte hors ligne.
-       * - offlineMultiplier : multiplicateur appliqué durant cette fenêtre (1 = 100 % de l’APS).
-       */
-      rewards: {
-        speedCompletion: {
-          timeLimitMinutes: 10,
-          offlineBonusHours: 6,
-          offlineMultiplier: 1.5
-        }
-      }
-    },
+    // Paramètres du mini-jeu Sudoku.
+    sudoku: ARCADE_SUDOKU_CONFIG,
     quantum2048: {
       gridSizes: [3, 4, 5, 6],
       targetValues: [16, 32, 64, 128, 256, 512, 1024, 2048],

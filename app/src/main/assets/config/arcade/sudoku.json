@@ -1,0 +1,14 @@
+{
+  "levelClues": {
+    "facile": { "min": 32, "max": 36 },
+    "moyen": { "min": 24, "max": 28 },
+    "difficile": { "min": 18, "max": 22 }
+  },
+  "rewards": {
+    "speedCompletion": {
+      "timeLimitMinutes": 10,
+      "offlineBonusHours": 6,
+      "offlineMultiplier": 1.5
+    }
+  }
+}

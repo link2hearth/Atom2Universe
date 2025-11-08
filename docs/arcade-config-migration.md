@@ -10,11 +10,11 @@ L'objectif de cette migration est d'alléger `config/config.js` tout en conserva
 - [x] Pachinko
 - [x] Hold'em
 - [x] Dice
-- [ ] Échecs
+- [x] Échecs
 - [x] Balance
 - [x] Math
 - [ ] Solitaire
 - [x] Particules
-- [ ] Sudoku
+- [x] Sudoku
 - [ ] Quantum 2048
 - [ ] Démineur
