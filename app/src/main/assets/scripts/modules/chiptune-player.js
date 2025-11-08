@@ -1,6 +1,13 @@
 (function () {
   'use strict';
 
+  function isMusicModuleFeatureEnabled() {
+    if (typeof globalThis !== 'undefined' && typeof globalThis.MUSIC_MODULE_ENABLED === 'boolean') {
+      return globalThis.MUSIC_MODULE_ENABLED;
+    }
+    return true;
+  }
+
   function formatTemplate(message, params = {}) {
     if (typeof message !== 'string' || !message) {
       return message;
@@ -2321,6 +2328,9 @@
 
       if (this.headerPlaybackButton) {
         this.headerPlaybackButton.addEventListener('click', () => {
+          if (!isMusicModuleFeatureEnabled()) {
+            return;
+          }
           if (this.playing) {
             this.pause();
           } else if (this.canStartAutoRandomPlayback()) {
@@ -4013,14 +4023,22 @@
       }
       if (this.headerPlaybackButton) {
         const headerDisabled = !hasTimeline && !this.canStartAutoRandomPlayback();
-        this.headerPlaybackButton.disabled = false;
-        this.headerPlaybackButton.removeAttribute('disabled');
-        if (headerDisabled) {
+        const musicDisabled = !isMusicModuleFeatureEnabled();
+        if (musicDisabled) {
+          this.headerPlaybackButton.disabled = true;
+          this.headerPlaybackButton.setAttribute('disabled', '');
           this.headerPlaybackButton.setAttribute('aria-disabled', 'true');
           this.headerPlaybackButton.classList.add('is-disabled');
         } else {
-          this.headerPlaybackButton.removeAttribute('aria-disabled');
-          this.headerPlaybackButton.classList.remove('is-disabled');
+          this.headerPlaybackButton.disabled = false;
+          this.headerPlaybackButton.removeAttribute('disabled');
+          if (headerDisabled) {
+            this.headerPlaybackButton.setAttribute('aria-disabled', 'true');
+            this.headerPlaybackButton.classList.add('is-disabled');
+          } else {
+            this.headerPlaybackButton.removeAttribute('aria-disabled');
+            this.headerPlaybackButton.classList.remove('is-disabled');
+          }
         }
       }
       this.updateHeaderPlaybackButton();
@@ -4056,6 +4074,11 @@
 
     updateHeaderPlaybackButton() {
       if (!this.headerPlaybackButton) {
+        return;
+      }
+      if (!isMusicModuleFeatureEnabled()) {
+        this.headerPlaybackButton.setAttribute('aria-pressed', 'false');
+        this.headerPlaybackButton.classList.remove('is-playing');
         return;
       }
       const state = this.playing ? 'pause' : 'play';
