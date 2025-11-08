@@ -1,6 +1,7 @@
 # Migration des configurations arcade
 
 Ce document recense les mini-jeux d'arcade dont les paramètres sont encore définis dans `config/config.js` et qui peuvent être migrés vers un fichier JSON dédié situé dans `config/arcade/`.
+L'objectif de cette migration est d'alléger `config/config.js` tout en conservant un accès simple aux réglages via un JSON spécifique à chaque jeu.
 
 ## Jeux à traiter
 
