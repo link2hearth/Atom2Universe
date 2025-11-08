@@ -92,6 +92,13 @@
         })
       })
     }),
+    prefetch: Object.freeze({
+      enabled: true,
+      bufferSize: 2,
+      warmupDelayMs: 250,
+      retryDelayMs: 1200,
+      difficulties: Object.freeze(['medium', 'hard'])
+    }),
     difficulties: Object.freeze({
       easy: Object.freeze({
         mazeSize: Object.freeze({ min: 10, max: 11 }),
@@ -146,7 +153,12 @@
     visionMap: null,
     inputHandlers: null,
     touchTracking: null,
-    touchSkipClick: false
+    touchSkipClick: false,
+    prefetch: {
+      buffers: new Map(),
+      generating: new Set(),
+      timers: new Map()
+    }
   };
 
   function translate(key, fallback, params) {
@@ -470,6 +482,50 @@
       }
     };
 
+    const prefetchSource = source.prefetch && typeof source.prefetch === 'object' ? source.prefetch : {};
+    const defaultPrefetch = DEFAULT_CONFIG.prefetch;
+    const prefetchBufferSize = clampInteger(
+      prefetchSource.bufferSize,
+      0,
+      6,
+      defaultPrefetch.bufferSize
+    );
+    const prefetchWarmup = clampInteger(
+      prefetchSource.warmupDelayMs,
+      0,
+      60000,
+      defaultPrefetch.warmupDelayMs
+    );
+    const prefetchRetry = clampInteger(
+      prefetchSource.retryDelayMs,
+      50,
+      120000,
+      defaultPrefetch.retryDelayMs
+    );
+    const rawPrefetchDifficulties = Array.isArray(prefetchSource.difficulties) && prefetchSource.difficulties.length
+      ? prefetchSource.difficulties
+      : defaultPrefetch.difficulties;
+    const prefetchDifficultySet = new Set();
+    rawPrefetchDifficulties.forEach(value => {
+      const key = typeof value === 'string' ? value.trim().toLowerCase() : '';
+      if (key && difficulties[key] && !prefetchDifficultySet.has(key)) {
+        prefetchDifficultySet.add(key);
+      }
+    });
+    if (!prefetchDifficultySet.size) {
+      const fallbackKey = defaultDifficulty || Object.keys(difficulties)[0];
+      if (fallbackKey) {
+        prefetchDifficultySet.add(fallbackKey);
+      }
+    }
+    const prefetch = {
+      enabled: prefetchSource.enabled !== false,
+      bufferSize: prefetchBufferSize,
+      warmupDelayMs: prefetchWarmup,
+      retryDelayMs: prefetchRetry,
+      difficulties: Array.from(prefetchDifficultySet)
+    };
+
     const validationSource = source.validation && typeof source.validation === 'object' ? source.validation : {};
     const validation = {
       maxTurns: clampInteger(validationSource.maxTurns, 10, 240, DEFAULT_CONFIG.validation.maxTurns),
@@ -484,7 +540,8 @@
       patrol,
       validation,
       objects,
-      difficulties
+      difficulties,
+      prefetch
     };
   }
 
@@ -586,6 +643,157 @@
       }
     }
     return buffer.join('');
+  }
+
+  function resetPrefetchState() {
+    if (state.prefetch && state.prefetch.timers instanceof Map) {
+      state.prefetch.timers.forEach(timerId => {
+        if (Number.isFinite(timerId)) {
+          window.clearTimeout(timerId);
+        }
+      });
+    }
+    state.prefetch = {
+      buffers: new Map(),
+      generating: new Set(),
+      timers: new Map()
+    };
+  }
+
+  function getPrefetchSettings() {
+    const config = state.config?.prefetch || DEFAULT_CONFIG.prefetch;
+    const enabled = config?.enabled !== false;
+    const bufferSize = clampInteger(config?.bufferSize, 0, 6, DEFAULT_CONFIG.prefetch.bufferSize);
+    const warmupDelayMs = clampInteger(
+      config?.warmupDelayMs,
+      0,
+      60000,
+      DEFAULT_CONFIG.prefetch.warmupDelayMs
+    );
+    const retryDelayMs = clampInteger(
+      config?.retryDelayMs,
+      50,
+      120000,
+      DEFAULT_CONFIG.prefetch.retryDelayMs
+    );
+    const rawDifficulties = Array.isArray(config?.difficulties) && config.difficulties.length
+      ? config.difficulties
+      : DEFAULT_CONFIG.prefetch.difficulties;
+    const sanitized = [];
+    const seen = new Set();
+    rawDifficulties.forEach(value => {
+      const key = typeof value === 'string' ? value.trim().toLowerCase() : '';
+      if (!key || seen.has(key)) {
+        return;
+      }
+      if (state.config?.difficulties?.[key]) {
+        sanitized.push(key);
+        seen.add(key);
+      }
+    });
+    if (!sanitized.length) {
+      const fallback = state.config?.defaultDifficulty
+        || DEFAULT_CONFIG.defaultDifficulty
+        || Object.keys(state.config?.difficulties || {})[0];
+      if (fallback) {
+        sanitized.push(fallback);
+      }
+    }
+    return {
+      enabled,
+      bufferSize,
+      warmupDelayMs,
+      retryDelayMs,
+      difficulties: sanitized
+    };
+  }
+
+  function getPrefetchBuffer(difficultyKey) {
+    if (!state.prefetch || !(state.prefetch.buffers instanceof Map)) {
+      resetPrefetchState();
+    }
+    if (!state.prefetch.buffers.has(difficultyKey)) {
+      state.prefetch.buffers.set(difficultyKey, []);
+    }
+    return state.prefetch.buffers.get(difficultyKey);
+  }
+
+  function ensurePrefetchBufferFilled(difficultyKey, settings) {
+    const effectiveSettings = settings || getPrefetchSettings();
+    if (!effectiveSettings.enabled || effectiveSettings.bufferSize <= 0) {
+      return;
+    }
+    const buffer = getPrefetchBuffer(difficultyKey);
+    if (buffer.length >= effectiveSettings.bufferSize) {
+      return;
+    }
+    if (state.prefetch.generating.has(difficultyKey)) {
+      return;
+    }
+    state.prefetch.generating.add(difficultyKey);
+    window.setTimeout(() => {
+      let created = false;
+      let attempts = 0;
+      while (!created && attempts < 3 && buffer.length < effectiveSettings.bufferSize) {
+        attempts += 1;
+        const seed = generateRandomSeed();
+        try {
+          const level = createLevel(seed, difficultyKey);
+          buffer.push(level);
+          created = true;
+        } catch (error) {
+          console.warn('Escape prefetch generation failed', error);
+        }
+      }
+      state.prefetch.generating.delete(difficultyKey);
+      if (buffer.length < effectiveSettings.bufferSize) {
+        schedulePrefetchForDifficulties([difficultyKey], { delay: effectiveSettings.retryDelayMs });
+      }
+    }, 0);
+  }
+
+  function schedulePrefetchForDifficulties(difficultyKeys, options = {}) {
+    const settings = getPrefetchSettings();
+    if (!settings.enabled || settings.bufferSize <= 0) {
+      return;
+    }
+    const unique = [];
+    const seen = new Set();
+    difficultyKeys.forEach(raw => {
+      const normalized = normalizeDifficultyKey(raw);
+      if (!seen.has(normalized)) {
+        seen.add(normalized);
+        unique.push(normalized);
+      }
+    });
+    const delay = Number.isFinite(options.delay) ? Math.max(0, options.delay) : settings.warmupDelayMs;
+    unique.forEach(difficulty => {
+      const existing = state.prefetch.timers.get(difficulty);
+      if (Number.isFinite(existing)) {
+        window.clearTimeout(existing);
+      }
+      const timerId = window.setTimeout(() => {
+        state.prefetch.timers.delete(difficulty);
+        ensurePrefetchBufferFilled(difficulty, settings);
+      }, delay);
+      state.prefetch.timers.set(difficulty, timerId);
+    });
+  }
+
+  function takePrefetchedLevel(difficultyKey) {
+    const settings = getPrefetchSettings();
+    if (!settings.enabled || settings.bufferSize <= 0) {
+      return null;
+    }
+    const buffer = getPrefetchBuffer(difficultyKey);
+    if (!buffer.length) {
+      return null;
+    }
+    const level = buffer.shift();
+    if (buffer.length < settings.bufferSize) {
+      schedulePrefetchForDifficulties([difficultyKey], { delay: settings.retryDelayMs });
+    }
+    return level;
   }
 
   function normalizeDifficultyKey(rawDifficulty) {
@@ -1959,9 +2167,35 @@
       if (occupied.has(key)) {
         continue;
       }
-      occupied.add(key);
+      const startCell = { row: candidate.row, col: candidate.col };
+      let cycle = buildGuardCycle(level, startCell, rng, forbidden, occupied, {
+        minLength: 3,
+        maxLength: 8
+      });
+      if (!cycle || cycle.length < 2) {
+        const neighbors = getNeighborCells(level.adjacency, startCell.row, startCell.col)
+          .filter(neighbor => {
+            const neighborKey = getCellKey(neighbor.row, neighbor.col);
+            return !forbidden.has(neighborKey) && !occupied.has(neighborKey);
+          });
+        if (neighbors.length) {
+          const neighbor = neighbors[Math.floor(rng() * neighbors.length)];
+          cycle = [startCell, { row: neighbor.row, col: neighbor.col }];
+        }
+      }
+      if (!cycle || cycle.length < 2) {
+        continue;
+      }
+      cycle.forEach(cell => occupied.add(getCellKey(cell.row, cell.col)));
       const guardIndex = result.length;
-      const path = [{ row: candidate.row, col: candidate.col, dir: DIRECTIONS.EAST }];
+      const path = cycle.map((cell, pathIndex) => {
+        const next = cycle[(pathIndex + 1) % cycle.length];
+        return {
+          row: cell.row,
+          col: cell.col,
+          dir: determineDirection(cell, next)
+        };
+      });
       result.push({
         id: `guard-forced-${guardIndex}`,
         path,
@@ -3027,15 +3261,39 @@
     updateUrl(level.seed, level.difficulty);
   }
 
+  function planNextPrefetch(currentDifficulty) {
+    const settings = getPrefetchSettings();
+    if (!settings.enabled || settings.bufferSize <= 0) {
+      return;
+    }
+    const targets = new Set(settings.difficulties);
+    if (currentDifficulty) {
+      targets.add(currentDifficulty);
+    }
+    schedulePrefetchForDifficulties(Array.from(targets));
+  }
+
   function regenerateLevel(options = {}) {
     const normalizedDifficulty = normalizeDifficultyKey(options.difficulty || state.difficulty);
     const sanitizedSeed = sanitizeSeed(options.seed);
     const preserve = options.preserveSeed && !!sanitizedSeed;
-    const finalSeed = preserve ? sanitizedSeed : sanitizedSeed || generateRandomSeed();
+    const useBuffered = !preserve && !sanitizedSeed;
+    let level = null;
+    if (useBuffered) {
+      level = takePrefetchedLevel(normalizedDifficulty);
+    }
+    const finalSeed = level
+      ? level.seed
+      : preserve
+        ? sanitizedSeed
+        : sanitizedSeed || generateRandomSeed();
     try {
-      const level = createLevel(finalSeed, normalizedDifficulty);
+      if (!level) {
+        level = createLevel(finalSeed, normalizedDifficulty);
+      }
       applyLevel(level);
       initializePlayState(level);
+      planNextPrefetch(level.difficulty);
     } catch (error) {
       console.error('Escape generation failed', error);
       setMessage(
@@ -3044,6 +3302,10 @@
         null,
         { warning: true }
       );
+      const settings = getPrefetchSettings();
+      if (settings.enabled && settings.bufferSize > 0) {
+        schedulePrefetchForDifficulties([normalizedDifficulty], { delay: settings.retryDelayMs });
+      }
     }
   }
 
@@ -3209,6 +3471,7 @@
       if (response.ok) {
         const data = await response.json();
         state.config = normalizeConfig(data);
+        resetPrefetchState();
         setMessage('scripts.arcade.escape.messages.ready', 'Configuration chargée.');
         return;
       }
@@ -3217,6 +3480,7 @@
       console.warn('Escape config load failed', error);
     }
     state.config = normalizeConfig(DEFAULT_CONFIG);
+    resetPrefetchState();
     setMessage(
       'scripts.arcade.escape.messages.configError',
       'Configuration par défaut appliquée (chargement impossible).',
@@ -3254,6 +3518,7 @@
     state.play = null;
     state.tileMap = null;
     state.entityMap = null;
+    resetPrefetchState();
   }
 
   if (document.readyState === 'loading') {
