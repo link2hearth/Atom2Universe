@@ -3603,8 +3603,8 @@
             "description": "Déclenchez la triple nucléosynthèse alpha : fusionnez 3 noyaux d’He pour tenter de forger 1 C."
           },
           "oxygen": {
-            "name": "Oxygène (O₂)",
-            "description": "Assemblez 2 atomes d’Oxygène pour produire du dioxygène."
+            "name": "Hélium + Carbone → Oxygène (O)",
+            "description": "Fusionnez 1 He avec 1 C pour tenter de forger 1 O."
           },
           "fluorine": {
             "name": "Fluor (F₂)",
