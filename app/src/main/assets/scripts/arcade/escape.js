@@ -40,7 +40,7 @@
   ]);
 
   const DEFAULT_CONFIG = Object.freeze({
-    defaultDifficulty: 'medium',
+    defaultDifficulty: 'easy',
     seed: Object.freeze({
       randomLength: 8,
       alphabet: 'ABCDEFGHJKMNPQRSTUVWXYZ23456789',
@@ -140,6 +140,8 @@
     messageData: null,
     languageHandlerAttached: false,
     languageHandler: null,
+    advancedDifficultyListenerAttached: false,
+    advancedDifficultyHandler: null,
     ready: false,
     eventsAttached: false,
     play: null,
@@ -197,6 +199,62 @@
     }
     const value = ratio * 100;
     return percentFormatter ? percentFormatter.format(value) : value.toFixed(1);
+  }
+
+  function areAdvancedDifficultiesEnabled() {
+    if (typeof globalThis !== 'undefined' && typeof globalThis.ESCAPE_ADVANCED_DIFFICULTIES_ENABLED === 'boolean') {
+      return globalThis.ESCAPE_ADVANCED_DIFFICULTIES_ENABLED;
+    }
+    return false;
+  }
+
+  function sanitizeDefaultDifficulty(rawDefault, availableDifficulties) {
+    const normalized = typeof rawDefault === 'string' ? rawDefault.trim().toLowerCase() : '';
+    if (normalized && availableDifficulties && availableDifficulties[normalized]) {
+      if (normalized === 'easy' || areAdvancedDifficultiesEnabled()) {
+        return normalized;
+      }
+    }
+    if (availableDifficulties && availableDifficulties.easy) {
+      return 'easy';
+    }
+    const keys = Object.keys(availableDifficulties || {});
+    if (keys.length) {
+      return keys[0];
+    }
+    return DEFAULT_CONFIG.defaultDifficulty;
+  }
+
+  function isDifficultyUnlocked(difficultyKey) {
+    if (typeof difficultyKey !== 'string' || !difficultyKey) {
+      return false;
+    }
+    const key = difficultyKey.trim().toLowerCase();
+    const available = state.config?.difficulties;
+    if (!available || !available[key]) {
+      return false;
+    }
+    return key === 'easy' || areAdvancedDifficultiesEnabled();
+  }
+
+  function getUnlockedDifficultyKeys() {
+    const available = state.config?.difficulties || {};
+    const keys = Object.keys(available);
+    const unlocked = [];
+    keys.forEach(key => {
+      if (isDifficultyUnlocked(key)) {
+        unlocked.push(key);
+      }
+    });
+    if (!unlocked.length && keys.length) {
+      unlocked.push(keys[0]);
+    }
+    return unlocked;
+  }
+
+  function getFallbackDifficultyKey() {
+    const unlocked = getUnlockedDifficultyKeys();
+    return unlocked.length ? unlocked[0] : 'easy';
   }
 
   function clampNumber(value, min, max, fallback) {
@@ -419,9 +477,10 @@
       };
     });
 
-    const defaultDifficulty = typeof source.defaultDifficulty === 'string' && difficulties[source.defaultDifficulty]
+    const rawDefaultDifficulty = typeof source.defaultDifficulty === 'string' && difficulties[source.defaultDifficulty]
       ? source.defaultDifficulty
       : DEFAULT_CONFIG.defaultDifficulty;
+    const defaultDifficulty = sanitizeDefaultDifficulty(rawDefaultDifficulty, difficulties);
 
     const patrolSource = source.patrol && typeof source.patrol === 'object' ? source.patrol : {};
     const patrol = {
@@ -522,12 +581,31 @@
         prefetchDifficultySet.add(fallbackKey);
       }
     }
+    const allowAdvancedDifficulties = areAdvancedDifficultiesEnabled();
+    const prefetchDifficulties = [];
+    const seenPrefetch = new Set();
+    prefetchDifficultySet.forEach(value => {
+      const key = typeof value === 'string' ? value.trim().toLowerCase() : '';
+      if (!key || seenPrefetch.has(key)) {
+        return;
+      }
+      if (key === 'easy' || allowAdvancedDifficulties) {
+        prefetchDifficulties.push(key);
+        seenPrefetch.add(key);
+      }
+    });
+    if (!allowAdvancedDifficulties && difficulties.easy && !seenPrefetch.has('easy')) {
+      prefetchDifficulties.push('easy');
+    }
+    if (!prefetchDifficulties.length && defaultDifficulty) {
+      prefetchDifficulties.push(defaultDifficulty);
+    }
     const prefetch = {
-      enabled: prefetchSource.enabled !== false,
+      enabled: prefetchSource.enabled !== false && prefetchDifficulties.length > 0,
       bufferSize: prefetchBufferSize,
       warmupDelayMs: prefetchWarmup,
       retryDelayMs: prefetchRetry,
-      difficulties: Array.from(prefetchDifficultySet)
+      difficulties: prefetchDifficulties
     };
 
     const validationSource = source.validation && typeof source.validation === 'object' ? source.validation : {};
@@ -559,9 +637,34 @@
       root: section.querySelector('.escape'),
       board: document.getElementById('escapeBoard'),
       message: document.getElementById('escapeMessage'),
+      difficultyField: section.querySelector('[data-role="escape-difficulty-field"]'),
       difficultySelect: document.getElementById('escapeDifficultySelect'),
       generateButton: document.getElementById('escapeGenerateButton')
     };
+  }
+
+  function updateDifficultyControlVisibility() {
+    if (!state.elements) {
+      return;
+    }
+    const advancedEnabled = areAdvancedDifficultiesEnabled();
+    if (state.elements.difficultyField) {
+      state.elements.difficultyField.hidden = !advancedEnabled;
+      state.elements.difficultyField.setAttribute('aria-hidden', advancedEnabled ? 'false' : 'true');
+    }
+    if (state.elements.difficultySelect) {
+      if (advancedEnabled) {
+        state.elements.difficultySelect.disabled = false;
+        state.elements.difficultySelect.removeAttribute('aria-disabled');
+        state.elements.difficultySelect.removeAttribute('tabindex');
+      } else {
+        const fallbackDifficulty = getFallbackDifficultyKey();
+        state.elements.difficultySelect.value = fallbackDifficulty;
+        state.elements.difficultySelect.disabled = true;
+        state.elements.difficultySelect.setAttribute('aria-disabled', 'true');
+        state.elements.difficultySelect.setAttribute('tabindex', '-1');
+      }
+    }
   }
 
   function setMessage(key, fallback, params, options = {}) {
@@ -598,6 +701,37 @@
     state.languageHandler = handler;
   }
 
+  function attachAdvancedDifficultyListener() {
+    if (state.advancedDifficultyListenerAttached || typeof window === 'undefined') {
+      return;
+    }
+    const handler = () => {
+      updateDifficultyControlVisibility();
+      if (!state.ready) {
+        return;
+      }
+      resetPrefetchState();
+      if (!areAdvancedDifficultiesEnabled()) {
+        const fallback = getFallbackDifficultyKey();
+        state.difficulty = fallback;
+        if (state.elements?.difficultySelect) {
+          state.elements.difficultySelect.value = fallback;
+        }
+        if (state.level && state.level.difficulty !== fallback) {
+          regenerateLevel({ difficulty: fallback });
+          return;
+        }
+        planNextPrefetch(fallback);
+        return;
+      }
+      const current = state.level ? state.level.difficulty : getFallbackDifficultyKey();
+      planNextPrefetch(current);
+    };
+    window.addEventListener('escape:advanced-difficulties-changed', handler);
+    state.advancedDifficultyListenerAttached = true;
+    state.advancedDifficultyHandler = handler;
+  }
+
   function removeLanguageListener() {
     if (!state.languageHandlerAttached || !state.languageHandler) {
       return;
@@ -605,6 +739,15 @@
     window.removeEventListener('i18n:languagechange', state.languageHandler);
     state.languageHandlerAttached = false;
     state.languageHandler = null;
+  }
+
+  function removeAdvancedDifficultyListener() {
+    if (!state.advancedDifficultyListenerAttached || !state.advancedDifficultyHandler || typeof window === 'undefined') {
+      return;
+    }
+    window.removeEventListener('escape:advanced-difficulties-changed', state.advancedDifficultyHandler);
+    state.advancedDifficultyListenerAttached = false;
+    state.advancedDifficultyHandler = null;
   }
 
   function sanitizeSeed(value) {
@@ -700,25 +843,27 @@
       if (!key || seen.has(key)) {
         return;
       }
-      if (state.config?.difficulties?.[key]) {
+      if (state.config?.difficulties?.[key] && isDifficultyUnlocked(key)) {
         sanitized.push(key);
         seen.add(key);
       }
     });
     if (!sanitized.length) {
-      const fallback = state.config?.defaultDifficulty
-        || DEFAULT_CONFIG.defaultDifficulty
-        || Object.keys(state.config?.difficulties || {})[0];
+      const fallback = getFallbackDifficultyKey();
       if (fallback) {
         sanitized.push(fallback);
       }
     }
+    const allowed = sanitized.filter(isDifficultyUnlocked);
+    if (!allowed.length) {
+      allowed.push(getFallbackDifficultyKey());
+    }
     return {
-      enabled,
+      enabled: enabled && allowed.length > 0,
       bufferSize,
       warmupDelayMs,
       retryDelayMs,
-      difficulties: sanitized
+      difficulties: allowed
     };
   }
 
@@ -735,6 +880,11 @@
   function ensurePrefetchBufferFilled(difficultyKey, settings) {
     const effectiveSettings = settings || getPrefetchSettings();
     if (!effectiveSettings.enabled || effectiveSettings.bufferSize <= 0) {
+      return;
+    }
+    if (!isDifficultyUnlocked(difficultyKey)) {
+      state.prefetch.generating.delete(difficultyKey);
+      state.prefetch.buffers.delete(difficultyKey);
       return;
     }
     const buffer = getPrefetchBuffer(difficultyKey);
@@ -775,10 +925,11 @@
     const seen = new Set();
     difficultyKeys.forEach(raw => {
       const normalized = normalizeDifficultyKey(raw);
-      if (!seen.has(normalized)) {
-        seen.add(normalized);
-        unique.push(normalized);
+      if (!isDifficultyUnlocked(normalized) || seen.has(normalized)) {
+        return;
       }
+      seen.add(normalized);
+      unique.push(normalized);
     });
     const delay = Number.isFinite(options.delay) ? Math.max(0, options.delay) : settings.warmupDelayMs;
     unique.forEach(difficulty => {
@@ -799,27 +950,30 @@
     if (!settings.enabled || settings.bufferSize <= 0) {
       return null;
     }
-    const buffer = getPrefetchBuffer(difficultyKey);
+    const normalized = normalizeDifficultyKey(difficultyKey);
+    if (!isDifficultyUnlocked(normalized)) {
+      return null;
+    }
+    const buffer = getPrefetchBuffer(normalized);
     if (!buffer.length) {
       return null;
     }
     const level = buffer.shift();
     if (buffer.length < settings.bufferSize) {
-      schedulePrefetchForDifficulties([difficultyKey], { delay: settings.retryDelayMs });
+      schedulePrefetchForDifficulties([normalized], { delay: settings.retryDelayMs });
     }
     return level;
   }
 
   function normalizeDifficultyKey(rawDifficulty) {
     const key = typeof rawDifficulty === 'string' ? rawDifficulty.trim().toLowerCase() : '';
-    if (key && state.config.difficulties[key]) {
+    if (key && state.config.difficulties[key] && isDifficultyUnlocked(key)) {
       return key;
     }
-    if (state.config.difficulties[state.config.defaultDifficulty]) {
+    if (isDifficultyUnlocked(state.config.defaultDifficulty)) {
       return state.config.defaultDifficulty;
     }
-    const [firstKey] = Object.keys(state.config.difficulties);
-    return firstKey || 'medium';
+    return getFallbackDifficultyKey();
   }
 
   function parseQueryParameters() {
@@ -866,9 +1020,10 @@
         url.searchParams.delete(seedParam);
         url.searchParams.delete('escapeSeed');
       }
-      if (difficulty) {
-        url.searchParams.set(difficultyParam, difficulty);
-        url.searchParams.set('escapeDifficulty', difficulty);
+      const normalizedDifficulty = normalizeDifficultyKey(difficulty);
+      if (normalizedDifficulty && isDifficultyUnlocked(normalizedDifficulty)) {
+        url.searchParams.set(difficultyParam, normalizedDifficulty);
+        url.searchParams.set('escapeDifficulty', normalizedDifficulty);
       } else {
         url.searchParams.delete(difficultyParam);
         url.searchParams.delete('escapeDifficulty');
@@ -3192,6 +3347,7 @@
     if (state.elements?.difficultySelect) {
       state.elements.difficultySelect.value = level.difficulty;
     }
+    updateDifficultyControlVisibility();
     updateUrl(level.seed, level.difficulty);
   }
 
@@ -3435,15 +3591,23 @@
     }
     attachEvents();
     attachLanguageListener();
-    const initialParams = parseQueryParameters();
+    attachAdvancedDifficultyListener();
+    updateDifficultyControlVisibility();
+    let initialParams = parseQueryParameters();
     if (state.elements.difficultySelect) {
       state.elements.difficultySelect.value = initialParams.difficulty;
     }
     return loadConfig()
       .finally(() => {
+        updateDifficultyControlVisibility();
+        initialParams = parseQueryParameters();
+        const normalizedDifficulty = normalizeDifficultyKey(initialParams.difficulty);
+        if (state.elements.difficultySelect) {
+          state.elements.difficultySelect.value = normalizedDifficulty;
+        }
         regenerateLevel({
           seed: initialParams.seed,
-          difficulty: initialParams.difficulty,
+          difficulty: normalizedDifficulty,
           preserveSeed: !!initialParams.seed
         });
         state.ready = true;
@@ -3462,6 +3626,7 @@
 
   function destroy() {
     removeLanguageListener();
+    removeAdvancedDifficultyListener();
     detachInputListeners();
     clearRenderedEntities();
     state.play = null;

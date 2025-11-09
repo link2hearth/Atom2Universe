@@ -25,6 +25,10 @@ function isMusicModuleEnabled() {
   return resolveGlobalBooleanFlag('MUSIC_MODULE_ENABLED', true);
 }
 
+function isEscapeAdvancedDifficultiesEnabled() {
+  return resolveGlobalBooleanFlag('ESCAPE_ADVANCED_DIFFICULTIES_ENABLED', false);
+}
+
 function toggleDevkitFeatureAvailability() {
   if (typeof globalThis !== 'undefined' && typeof globalThis.toggleDevkitFeatureEnabled === 'function') {
     return globalThis.toggleDevkitFeatureEnabled();
@@ -74,6 +78,35 @@ function toggleMusicModuleAvailability() {
   const next = !isMusicModuleEnabled();
   if (typeof globalThis !== 'undefined') {
     globalThis.MUSIC_MODULE_ENABLED = next;
+  }
+  return next;
+}
+
+function toggleEscapeAdvancedDifficultiesAvailability() {
+  if (
+    typeof globalThis !== 'undefined'
+    && typeof globalThis.toggleEscapeAdvancedDifficultiesEnabled === 'function'
+  ) {
+    return globalThis.toggleEscapeAdvancedDifficultiesEnabled();
+  }
+  const next = !isEscapeAdvancedDifficultiesEnabled();
+  if (typeof globalThis !== 'undefined') {
+    globalThis.ESCAPE_ADVANCED_DIFFICULTIES_ENABLED = next;
+  }
+  if (typeof window !== 'undefined') {
+    try {
+      const detail = { enabled: next };
+      const eventName = 'escape:advanced-difficulties-changed';
+      if (typeof window.CustomEvent === 'function') {
+        window.dispatchEvent(new CustomEvent(eventName, { detail }));
+      } else if (typeof document !== 'undefined' && typeof document.createEvent === 'function') {
+        const event = document.createEvent('CustomEvent');
+        event.initCustomEvent(eventName, false, false, detail);
+        window.dispatchEvent(event);
+      }
+    } catch (error) {
+      // Ignore dispatch errors in the fallback path.
+    }
   }
   return next;
 }
@@ -5176,6 +5209,13 @@ const RESET_KEYWORD_ACTIONS = Object.freeze({
     enabledFallback: 'Music module enabled. Changes applied.',
     disabledKey: 'musicDisabled',
     disabledFallback: 'Music module disabled. Changes applied.'
+  }),
+  ESCAPE: Object.freeze({
+    toggle: toggleEscapeAdvancedDifficultiesAvailability,
+    enabledKey: 'escapeDifficultiesEnabled',
+    enabledFallback: 'Escape advanced difficulties enabled. Changes applied.',
+    disabledKey: 'escapeDifficultiesDisabled',
+    disabledFallback: 'Escape advanced difficulties disabled. Changes applied.'
   })
 });
 
