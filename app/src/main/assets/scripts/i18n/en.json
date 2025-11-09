@@ -1434,34 +1434,46 @@
         "hiddenCard": "Hidden card"
       },
       "dice": {
-        "aria": "Dice mini-game",
         "title": "Dice",
+        "aria": "Dice mini-game",
         "table": {
-          "title": "Dice table",
-          "aria": "Dice rolling felt"
+          "aria": "Rolling felt",
+          "title": "Rolling felt"
         },
         "controls": {
-          "aria": "Dice controls",
+          "aria": "Roll controls",
           "rollsLabel": "Rolls left:",
           "roll": "Roll dice",
           "clear": "Release dice"
         },
-        "status": {
-          "start": "Roll the dice to begin."
-        },
         "scorecard": {
-          "aria": "Dice scorecard",
-          "title": "Scorecard",
-          "reset": "New game",
-          "upperSection": "Upper section",
-          "lowerSection": "Lower section",
+          "aria": "Score sheet",
+          "title": "Score sheet",
+          "mode": {
+            "label": "Game mode",
+            "hint": "Pick a mode to set up the score sheet.",
+            "summary": "Selected mode: {label}"
+          },
+          "modes": {
+            "solo": "1 player + AI",
+            "twoPlayers": "2 players",
+            "threePlayers": "3 players",
+            "fourPlayers": "4 players"
+          },
+          "headers": {
+            "category": "Category"
+          },
+          "sections": {
+            "upper": "Upper section",
+            "lower": "Lower section"
+          },
           "categories": {
-            "ones": "Ones",
-            "twos": "Twos",
-            "threes": "Threes",
-            "fours": "Fours",
-            "fives": "Fives",
-            "sixes": "Sixes",
+            "ones": "1",
+            "twos": "2",
+            "threes": "3",
+            "fours": "4",
+            "fives": "5",
+            "sixes": "6",
             "threeKind": "Three of a kind",
             "fourKind": "Four of a kind",
             "fullHouse": "Full house",
@@ -1470,13 +1482,70 @@
             "yahtzee": "Yahtzee",
             "chance": "Chance"
           },
-          "totals": {
-            "upperSubtotal": "Upper subtotal",
-            "upperBonus": "Upper bonus",
+          "hints": {
+            "ones": "[sum of 1s]",
+            "twos": "[sum of 2s]",
+            "threes": "[sum of 3s]",
+            "fours": "[sum of 4s]",
+            "fives": "[sum of 5s]",
+            "sixes": "[sum of 6s]",
+            "threeKind": "[3 matching dice]",
+            "fourKind": "[4 matching dice]",
+            "fullHouse": "[pair + three of a kind]",
+            "smallStraight": "[4 consecutive dice]",
+            "largeStraight": "[5 consecutive dice]",
+            "yahtzee": "[5 matching dice]",
+            "chance": "[sum of all dice]"
+          },
+          "computed": {
+            "upperBonus": "Bonus if ≥63 (35)",
             "upperTotal": "Upper total",
             "lowerTotal": "Lower total",
-            "grandTotal": "Grand total"
-          }
+            "grandTotal": "Total"
+          },
+          "placeholders": {
+            "empty": "—"
+          },
+          "actions": {
+            "select": "Save {score} points to {category}.",
+            "locked": "{category} locked with {score} points.",
+            "disabled": "Roll before choosing a category."
+          },
+          "players": {
+            "human": "Player {number}",
+            "ai": "AI"
+          },
+          "reminder": {
+            "title": "Combination reminder:",
+            "threeKind": "Three of a kind: 3 matching dice",
+            "fourKind": "Four of a kind: 4 matching dice",
+            "fullHouse": "Full house: Pair + Three of a kind",
+            "smallStraight": "Small straight: 4 in sequence",
+            "largeStraight": "Large straight: 5 in sequence",
+            "yahtzee": "Yahtzee: 5 matching dice"
+          },
+          "reset": "New game"
+        },
+        "status": {
+          "start": "Choose a mode and roll to get started.",
+          "modeReady": "{mode} ready. {player} goes first.",
+          "turnStart": "{player}'s turn. {rolls} rolls available.",
+          "afterRoll": "Pick a category for {player} or roll again ({rolls} rolls left).",
+          "lastRoll": "No rolls left. Pick a category for {player}.",
+          "needRoll": "Roll at least once before scoring.",
+          "dieHeld": "Die {index} held.",
+          "dieReleased": "Die {index} released.",
+          "holdsCleared": "All dice released.",
+          "waitAi": "{player} (AI) is thinking…",
+          "aiChoice": "{player} scores {score} points in {category}.",
+          "categoryChosen": "{player} records {score} points in {category}.",
+          "gameOverSingle": "Game over! {winner} wins with {score} points.",
+          "gameOverTie": "Game over! {players} tie at {score} points.",
+          "and": "and"
+        },
+        "die": {
+          "available": "Die {index} showing {value}.",
+          "held": "Die {index} showing {value}, held."
         }
       },
       "wave": {
@@ -2276,6 +2345,11 @@
           "empty": "empty square",
           "black": "black disc",
           "white": "white disc"
+        }
+      },
+      "dice": {
+        "rewards": {
+          "vsAiVictory": "Victory against the AI! +{count} gacha ticket{suffix}."
         }
       },
       "balance": {

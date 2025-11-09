@@ -1304,7 +1304,6 @@ const GAME_CONFIG = {
      * - faces : nombre de faces par dé.
      * - rollsPerTurn : lancers disponibles par manche.
      * - fullHouseScore / smallStraightScore / largeStraightScore / yahtzeeScore : valeurs fixes des combinaisons spéciales.
-     * - threeKindBonus / fourKindBonus / twoPairBonus : bonus ajoutés aux figures concernées.
      * - bonusThreshold / bonusValue : palier et valeur du bonus de la section supérieure.
      */
     dice: ARCADE_DICE_CONFIG,

@@ -2278,6 +2278,11 @@
           "white": "pion blanc"
         }
       },
+      "dice": {
+        "rewards": {
+          "vsAiVictory": "Victoire contre l’IA ! +{count} ticket{suffix} gacha."
+        }
+      },
       "balance": {
         "status": {
           "ready": "Disposez les blocs puis appuyez sur la zone de résultat pour lancer le test.",
@@ -2729,29 +2734,119 @@
         "cardLabel": "{rank} de {suit}"
       },
       "dice": {
+        "title": "Dice",
+        "aria": "Mini-jeu Dice",
+        "table": {
+          "aria": "Tapis de lancer",
+          "title": "Tapis de lancer"
+        },
+        "controls": {
+          "aria": "Commandes du lancer",
+          "rollsLabel": "Lancers restants :",
+          "roll": "Lancer les dés",
+          "clear": "Libérer les dés"
+        },
+        "scorecard": {
+          "aria": "Feuille de score",
+          "title": "Feuille de score",
+          "mode": {
+            "label": "Mode de jeu",
+            "hint": "Choisissez un mode pour préparer la feuille de score.",
+            "summary": "Mode sélectionné : {label}"
+          },
+          "modes": {
+            "solo": "1 joueur + IA",
+            "twoPlayers": "2 joueurs",
+            "threePlayers": "3 joueurs",
+            "fourPlayers": "4 joueurs"
+          },
+          "headers": {
+            "category": "Combinaison"
+          },
+          "sections": {
+            "upper": "Section supérieure",
+            "lower": "Section inférieure"
+          },
+          "categories": {
+            "ones": "1",
+            "twos": "2",
+            "threes": "3",
+            "fours": "4",
+            "fives": "5",
+            "sixes": "6",
+            "threeKind": "Brelan",
+            "fourKind": "Carré",
+            "fullHouse": "Full House",
+            "smallStraight": "Petite suite",
+            "largeStraight": "Grande suite",
+            "yahtzee": "Yams",
+            "chance": "Chance"
+          },
+          "hints": {
+            "ones": "[total de 1]",
+            "twos": "[total de 2]",
+            "threes": "[total de 3]",
+            "fours": "[total de 4]",
+            "fives": "[total de 5]",
+            "sixes": "[total de 6]",
+            "threeKind": "[3 dés identiques]",
+            "fourKind": "[4 dés identiques]",
+            "fullHouse": "[Paire + Brelan]",
+            "smallStraight": "[4 dés qui se suivent]",
+            "largeStraight": "[5 dés qui se suivent]",
+            "yahtzee": "[5 dés identiques]",
+            "chance": "[Somme des 5 dés]"
+          },
+          "computed": {
+            "upperBonus": "Bonus si ≥63 (35)",
+            "upperTotal": "Total supérieur",
+            "lowerTotal": "Total inférieur",
+            "grandTotal": "Total"
+          },
+          "placeholders": {
+            "empty": "—"
+          },
+          "actions": {
+            "select": "Valider {score} points dans {category}.",
+            "locked": "{category} verrouillée avec {score} points.",
+            "disabled": "Lancez avant de choisir une combinaison."
+          },
+          "players": {
+            "human": "Joueur {number}",
+            "ai": "IA"
+          },
+          "reminder": {
+            "title": "Rappel des combinaisons :",
+            "threeKind": "Brelan : 3 dés identiques",
+            "fourKind": "Carré : 4 dés identiques",
+            "fullHouse": "Full House : Paire + Brelan",
+            "smallStraight": "Petite suite : 4 dés qui se suivent",
+            "largeStraight": "Grande suite : 5 dés qui se suivent",
+            "yahtzee": "Yams : 5 dés identiques"
+          },
+          "reset": "Nouvelle partie"
+        },
         "status": {
-          "start": "Lancez les dés pour commencer.",
-          "rollsLeft": "Lancers restants : {rolls}. Sélectionnez des dés à garder ou relancez.",
-          "autoScored": "Meilleure option retenue : {category} pour {score} points. Total actuel : {total}.",
-          "noRolls": "Plus de lancers disponibles : calcul du score en cours.",
+          "start": "Choisissez un mode et lancez les dés pour commencer.",
+          "modeReady": "Mode {mode} prêt. {player} commence.",
+          "turnStart": "Au tour de {player}. {rolls} lancers disponibles.",
+          "afterRoll": "Choisissez une combinaison pour {player} ou relancez ({rolls} lancers restants).",
+          "lastRoll": "Plus de lancers restants. Choisissez une combinaison pour {player}.",
+          "needRoll": "Lancez au moins une fois avant de marquer.",
           "dieHeld": "Dé {index} mis de côté.",
           "dieReleased": "Dé {index} relâché.",
           "holdsCleared": "Tous les dés ont été libérés.",
-          "needRoll": "Effectuez au moins un lancer avant de marquer.",
-          "categoryLocked": "Combinaison {category} validée pour {score} points.",
-          "gameComplete": "Partie terminée ! Score final : {score}.",
-          "resume": "Partie reprise. Total actuel : {total}. Lancez les dés pour continuer.",
-          "newGame": "Nouvelle partie prête. Lancez les dés.",
-          "ticketsAwarded": "Score précédent ({score}) converti en {tickets} ticket{suffix} gacha. Nouvelle partie prête.",
-          "ticketsNone": "Score précédent ({score}). Aucun ticket gacha cette fois (il faut {points} points par ticket). Nouvelle partie prête."
+          "waitAi": "{player} (IA) réfléchit…",
+          "aiChoice": "{player} valide {category} pour {score} points.",
+          "categoryChosen": "{player} inscrit {score} points dans {category}.",
+          "gameOverSingle": "Partie terminée ! {winner} l’emporte avec {score} points.",
+          "gameOverTie": "Partie terminée ! Égalité entre {players} ({score} points).",
+          "and": "et"
         },
         "die": {
           "available": "Dé {index} affichant {value}.",
           "held": "Dé {index} affichant {value}, mis de côté."
-        },
-        "categoryAction": "Valider {score} points dans {category}.",
-        "categoryLockedAria": "{category} verrouillée avec {score} points.",
-        "categoryDisabled": "{category} indisponible tant que vous n’avez pas lancé."
+        }
       },
       "holdem": {
         "status": {
