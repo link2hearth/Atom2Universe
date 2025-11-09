@@ -87,6 +87,115 @@
   let autosaveTimer = null;
   let autosaveSuppressed = false;
   let howDialogLastTrigger = null;
+  let boardResizeObserver = null;
+  let pendingBoardSizingFrame = null;
+
+  function parsePixelValue(value) {
+    if (typeof value !== 'string') {
+      return 0;
+    }
+    const parsed = Number.parseFloat(value);
+    return Number.isFinite(parsed) ? parsed : 0;
+  }
+
+  function updateBoardSizing() {
+    if (!elements.board || typeof window === 'undefined') {
+      return;
+    }
+    const columns = Math.max(1, Number(state.size) || 1);
+    const container = elements.board.parentElement instanceof HTMLElement
+      ? elements.board.parentElement
+      : elements.board;
+    const containerWidth = container.getBoundingClientRect().width;
+    if (!Number.isFinite(containerWidth) || containerWidth <= 0) {
+      return;
+    }
+    const targetWidth = containerWidth * 0.95;
+    const computedStyle = window.getComputedStyle(elements.board);
+    const paddingLeft = parsePixelValue(computedStyle.paddingLeft);
+    const paddingRight = parsePixelValue(computedStyle.paddingRight);
+    const borderLeft = parsePixelValue(computedStyle.borderLeftWidth);
+    const borderRight = parsePixelValue(computedStyle.borderRightWidth);
+    const gapValue = parsePixelValue(
+      computedStyle.columnGap || computedStyle.gridColumnGap || computedStyle.gap
+    );
+    const outerSpacing = paddingLeft + paddingRight + borderLeft + borderRight;
+    const gapTotal = gapValue * Math.max(0, columns - 1);
+    const availableContentWidth = targetWidth - outerSpacing;
+    let tileSize = (availableContentWidth - gapTotal) / columns;
+    if (!Number.isFinite(tileSize) || tileSize <= 0) {
+      tileSize = availableContentWidth > 0 ? availableContentWidth / columns : 0;
+    }
+    if (tileSize <= 0) {
+      const fallback = parsePixelValue(
+        elements.board.style.getPropertyValue('--pipetap-tile-size')
+      );
+      tileSize = fallback > 0 ? fallback : 32;
+    }
+    const maxWidth = Math.max(targetWidth, 0);
+    elements.board.style.setProperty('--pipetap-tile-size', `${tileSize}px`);
+    elements.board.style.maxWidth = `${maxWidth}px`;
+  }
+
+  function scheduleBoardSizingUpdate() {
+    if (typeof window === 'undefined') {
+      updateBoardSizing();
+      return;
+    }
+    if (pendingBoardSizingFrame != null) {
+      return;
+    }
+    const run = () => {
+      pendingBoardSizingFrame = null;
+      updateBoardSizing();
+    };
+    if (typeof window.requestAnimationFrame === 'function') {
+      pendingBoardSizingFrame = window.requestAnimationFrame(run);
+    } else {
+      pendingBoardSizingFrame = window.setTimeout(run, 16);
+    }
+  }
+
+  function initBoardResizeObserver() {
+    if (!elements.board || typeof window === 'undefined') {
+      return;
+    }
+    if (typeof window.ResizeObserver !== 'function') {
+      return;
+    }
+    const target = elements.board.parentElement instanceof HTMLElement
+      ? elements.board.parentElement
+      : elements.board;
+    if (!target) {
+      return;
+    }
+    if (boardResizeObserver) {
+      try {
+        boardResizeObserver.disconnect();
+      } catch (error) {
+        // Ignore observer disconnect errors.
+      }
+    }
+    boardResizeObserver = new window.ResizeObserver(() => {
+      scheduleBoardSizingUpdate();
+    });
+    boardResizeObserver.observe(target);
+  }
+
+  function initBoardViewportListeners() {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    const handleViewportResize = () => {
+      scheduleBoardSizingUpdate();
+    };
+    window.addEventListener('resize', handleViewportResize, { passive: true });
+    window.addEventListener('orientationchange', handleViewportResize);
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', handleViewportResize);
+      window.visualViewport.addEventListener('scroll', handleViewportResize);
+    }
+  }
 
   const HOW_DIALOG_FALLBACK_TITLE = 'Comment ça marche ?';
   const HOW_DIALOG_FALLBACK_MESSAGE = 'Faites pivoter chaque tuile pour relier toutes les conduites à partir de la source entourée. La grille est générée depuis un arbre couvrant puis chaque tuile est mélangée, le puzzle reste donc toujours solvable.';
@@ -616,6 +725,7 @@
     elements.board.style.gridTemplateColumns = `repeat(${state.size}, var(--pipetap-tile-size))`;
     elements.board.setAttribute('aria-rowcount', String(state.size));
     elements.board.setAttribute('aria-colcount', String(state.size));
+    scheduleBoardSizingUpdate();
   }
 
   function updateTileButton(button, mask) {
@@ -666,6 +776,7 @@
     }
 
     paintConnectedTiles();
+    updateBoardSizing();
   }
 
   function paintConnectedTiles() {
@@ -1002,11 +1113,14 @@
 
   function init() {
     attachEventListeners();
+    initBoardViewportListeners();
+    initBoardResizeObserver();
     const restored = restoreFromAutosave();
     if (!restored) {
       const initialSize = normalizeSize(elements.sizeSelect?.value);
       startNewGame(elements.seedInput?.value || '', initialSize);
     }
+    scheduleBoardSizingUpdate();
   }
 
   init();
@@ -1036,6 +1150,7 @@
   window.pipeTapArcade = {
     onEnter() {
       resumeTimer();
+      scheduleBoardSizingUpdate();
     },
     onLeave() {
       detachTimer();
