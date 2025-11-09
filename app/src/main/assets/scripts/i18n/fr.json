@@ -195,6 +195,12 @@
             "altitude": "Altitude maximale",
             "altitudeUnit": "m"
           },
+          "starsWar": {
+            "title": "Stars War",
+            "top1": "Top 1",
+            "top2": "Top 2",
+            "top3": "Top 3"
+          },
           "frenzy": {
             "empty": "—",
             "singleValue": "{count} clics",
@@ -3678,6 +3684,24 @@
         },
         "photon": {
           "empty": "—"
+        },
+        "starsWar": {
+          "empty": "Aucun score enregistré",
+          "points": {
+            "one": "{count} point",
+            "other": "{count} points"
+          },
+          "waves": {
+            "one": "{count} vague",
+            "other": "{count} vagues"
+          },
+          "duration": {
+            "minutes": "{count}min",
+            "seconds": "{padded}s",
+            "onlySeconds": "{seconds}",
+            "template": "{minutes}{seconds}"
+          },
+          "entry": "{points}, {waves}, en {duration}"
         }
       },
       "bonuses": {

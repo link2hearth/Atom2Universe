@@ -2248,6 +2248,149 @@ function updatePhotonStats() {
   }
 }
 
+function sanitizeStarsWarRun(raw) {
+  if (!raw || typeof raw !== 'object') {
+    return null;
+  }
+  const toNumber = value => {
+    const numeric = Number(value);
+    return Number.isFinite(numeric) && numeric >= 0 ? numeric : 0;
+  };
+  const score = Math.floor(toNumber(raw.score ?? raw.points ?? raw.bestScore));
+  const waves = Math.floor(toNumber(raw.waves ?? raw.wave ?? raw.maxWave));
+  const duration = Math.floor(toNumber(raw.duration ?? raw.time ?? raw.elapsed ?? raw.seconds));
+  if (score <= 0 && waves <= 0 && duration <= 0) {
+    return null;
+  }
+  return { score, waves, duration };
+}
+
+function getStarsWarTopRuns() {
+  const progress = gameState.arcadeProgress;
+  if (!progress || typeof progress !== 'object') {
+    return [];
+  }
+  const entries = progress.entries && typeof progress.entries === 'object' ? progress.entries : {};
+  const entry = entries.starsWar || null;
+  if (!entry || typeof entry !== 'object') {
+    return [];
+  }
+  const state = entry.state && typeof entry.state === 'object' ? entry.state : entry;
+  if (!state || typeof state !== 'object') {
+    return [];
+  }
+  const rawRuns = Array.isArray(state.topRuns) ? state.topRuns : [];
+  const runs = rawRuns
+    .map(sanitizeStarsWarRun)
+    .filter(Boolean);
+  if (!runs.length) {
+    const fallback = sanitizeStarsWarRun({
+      score: state.bestScore ?? state.score,
+      duration: state.bestTime ?? state.time ?? state.elapsed,
+      waves: state.bestWave ?? state.wave ?? state.maxWave
+    });
+    if (fallback) {
+      runs.push(fallback);
+    }
+  }
+  const comparator = (a, b) => {
+    if (a.score !== b.score) {
+      return b.score - a.score;
+    }
+    if (a.waves !== b.waves) {
+      return b.waves - a.waves;
+    }
+    return b.duration - a.duration;
+  };
+  runs.sort(comparator);
+  return runs.slice(0, 3);
+}
+
+function formatStarsWarDuration(secondsValue) {
+  const totalSeconds = Math.max(0, Math.floor(Number(secondsValue) || 0));
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  const minutesText = minutes > 0
+    ? translateOrDefault(
+      'scripts.info.progress.starsWar.duration.minutes',
+      `${formatIntegerLocalized(minutes)}min`,
+      { count: formatIntegerLocalized(minutes) }
+    )
+    : '';
+  const paddedSeconds = minutes > 0
+    ? seconds.toString().padStart(2, '0')
+    : formatIntegerLocalized(seconds);
+  const secondsText = translateOrDefault(
+    'scripts.info.progress.starsWar.duration.seconds',
+    `${paddedSeconds}s`,
+    { count: formatIntegerLocalized(seconds), padded: paddedSeconds }
+  );
+  if (!minutesText) {
+    return translateOrDefault(
+      'scripts.info.progress.starsWar.duration.onlySeconds',
+      secondsText,
+      { seconds: secondsText }
+    );
+  }
+  return translateOrDefault(
+    'scripts.info.progress.starsWar.duration.template',
+    `${minutesText}${secondsText}`,
+    { minutes: minutesText, seconds: secondsText }
+  );
+}
+
+function formatStarsWarPoints(scoreValue) {
+  const value = Math.max(0, Math.floor(Number(scoreValue) || 0));
+  const formatted = formatIntegerLocalized(value);
+  const key = value === 1
+    ? 'scripts.info.progress.starsWar.points.one'
+    : 'scripts.info.progress.starsWar.points.other';
+  const fallback = value === 1
+    ? `${formatted} point`
+    : `${formatted} points`;
+  return translateOrDefault(key, fallback, { count: formatted });
+}
+
+function formatStarsWarWaves(waveValue) {
+  const value = Math.max(0, Math.floor(Number(waveValue) || 0));
+  const formatted = formatIntegerLocalized(value);
+  const key = value === 1
+    ? 'scripts.info.progress.starsWar.waves.one'
+    : 'scripts.info.progress.starsWar.waves.other';
+  const fallback = value === 1
+    ? `${formatted} wave`
+    : `${formatted} waves`;
+  return translateOrDefault(key, fallback, { count: formatted });
+}
+
+function formatStarsWarEntry(run) {
+  const pointsText = formatStarsWarPoints(run.score);
+  const wavesText = formatStarsWarWaves(run.waves);
+  const durationText = formatStarsWarDuration(run.duration);
+  return translateOrDefault(
+    'scripts.info.progress.starsWar.entry',
+    `${pointsText}, ${wavesText}, in ${durationText}`,
+    { points: pointsText, waves: wavesText, duration: durationText }
+  );
+}
+
+function updateStarsWarTopRuns() {
+  const targets = [
+    elements.infoStarsWarTop1Value,
+    elements.infoStarsWarTop2Value,
+    elements.infoStarsWarTop3Value
+  ];
+  const runs = getStarsWarTopRuns();
+  const emptyValue = translateOrDefault('scripts.info.progress.starsWar.empty', '—');
+  targets.forEach((target, index) => {
+    if (!target) {
+      return;
+    }
+    const run = runs[index];
+    target.textContent = run ? formatStarsWarEntry(run) : emptyValue;
+  });
+}
+
 function updateSessionStats() {
   const session = gameState.stats?.session;
   if (!session) return;
@@ -2327,6 +2470,7 @@ function updateGlobalStats() {
   }
 
   updatePhotonStats();
+  updateStarsWarTopRuns();
 }
 
 function updateInfoPanels() {

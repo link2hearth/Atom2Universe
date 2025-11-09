@@ -1663,7 +1663,8 @@
       bestScore: 0,
       bestTime: 0,
       bestWave: 0,
-      bestDifficulty: 1
+      bestDifficulty: 1,
+      topRuns: []
     },
     lastSeed: '',
     config: DEFAULT_CONFIG,
@@ -1845,6 +1846,99 @@
     return api;
   }
 
+  function compareTopRuns(a, b) {
+    if (a.score !== b.score) {
+      return b.score - a.score;
+    }
+    if (a.waves !== b.waves) {
+      return b.waves - a.waves;
+    }
+    return b.duration - a.duration;
+  }
+
+  function normalizeTopRunEntry(raw) {
+    if (!raw || typeof raw !== 'object') {
+      return null;
+    }
+    const toNumber = value => {
+      const numeric = Number(value);
+      return Number.isFinite(numeric) && numeric >= 0 ? numeric : 0;
+    };
+    const score = Math.floor(toNumber(raw.score ?? raw.points ?? raw.bestScore));
+    const duration = Math.floor(toNumber(raw.duration ?? raw.time ?? raw.elapsed ?? raw.seconds));
+    const waves = Math.floor(toNumber(raw.waves ?? raw.wave ?? raw.maxWave));
+    if (score <= 0 && waves <= 0 && duration <= 0) {
+      return null;
+    }
+    return { score, duration, waves };
+  }
+
+  function sanitizeTopRunsArray(rawRuns) {
+    const list = Array.isArray(rawRuns) ? rawRuns : [];
+    const normalized = [];
+    const seen = new Set();
+    list.forEach(item => {
+      const entry = normalizeTopRunEntry(item);
+      if (!entry) {
+        return;
+      }
+      const key = `${entry.score}|${entry.waves}|${entry.duration}`;
+      if (seen.has(key)) {
+        return;
+      }
+      seen.add(key);
+      normalized.push(entry);
+    });
+    normalized.sort(compareTopRuns);
+    return normalized.slice(0, 3);
+  }
+
+  function topRunsEqual(a, b) {
+    const left = sanitizeTopRunsArray(a);
+    const right = sanitizeTopRunsArray(b);
+    if (left.length !== right.length) {
+      return false;
+    }
+    for (let i = 0; i < left.length; i += 1) {
+      const current = left[i];
+      const other = right[i];
+      if (!other || current.score !== other.score || current.duration !== other.duration || current.waves !== other.waves) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function ensureTopRunsSanitized() {
+    const stored = Array.isArray(state.records.topRuns) ? state.records.topRuns : [];
+    const sanitized = sanitizeTopRunsArray(stored);
+    let changed = stored.length !== sanitized.length;
+    if (!changed) {
+      for (let i = 0; i < sanitized.length; i += 1) {
+        const original = normalizeTopRunEntry(stored[i]);
+        const target = sanitized[i];
+        if (!original || original.score !== target.score || original.duration !== target.duration || original.waves !== target.waves) {
+          changed = true;
+          break;
+        }
+      }
+    }
+    state.records.topRuns = sanitized;
+    return { list: sanitized, changed };
+  }
+
+  function updateTopRunHistory(run) {
+    const { list: current, changed: sanitizedChanged } = ensureTopRunsSanitized();
+    const normalized = normalizeTopRunEntry(run);
+    if (!normalized) {
+      return sanitizedChanged;
+    }
+    const merged = sanitizeTopRunsArray([...current, normalized]);
+    const changed = sanitizedChanged || !topRunsEqual(current, merged);
+    state.records.topRuns = changed ? merged : current;
+    return changed;
+  }
+
   function sanitizeAutosaveData(raw) {
     if (!raw || typeof raw !== 'object') {
       return null;
@@ -1856,14 +1950,30 @@
     const lastSeed = typeof raw.lastSeed === 'string'
       ? raw.lastSeed.trim().slice(0, 32)
       : '';
+    const bestScore = toNumber(raw.bestScore ?? raw.score ?? raw.highScore);
+    const bestTime = toNumber(raw.bestTime ?? raw.bestTimeSeconds ?? raw.time);
+    const bestWave = Math.floor(toNumber(raw.bestWave ?? raw.wave));
+    const bestDifficulty = Number.isFinite(Number(raw.bestDifficulty ?? raw.difficulty))
+      ? Math.max(0, Number(raw.bestDifficulty ?? raw.difficulty))
+      : 0;
+    let topRuns = sanitizeTopRunsArray(raw.topRuns ?? raw.bestRuns ?? raw.history);
+    if (!topRuns.length) {
+      const fallback = normalizeTopRunEntry({
+        score: bestScore,
+        duration: bestTime,
+        waves: bestWave
+      });
+      if (fallback) {
+        topRuns = [fallback];
+      }
+    }
     return {
       lastSeed,
-      bestScore: toNumber(raw.bestScore ?? raw.score ?? raw.highScore),
-      bestTime: toNumber(raw.bestTime ?? raw.bestTimeSeconds ?? raw.time),
-      bestWave: Math.floor(toNumber(raw.bestWave ?? raw.wave)),
-      bestDifficulty: Number.isFinite(Number(raw.bestDifficulty ?? raw.difficulty))
-        ? Math.max(0, Number(raw.bestDifficulty ?? raw.difficulty))
-        : 0
+      bestScore,
+      bestTime,
+      bestWave,
+      bestDifficulty,
+      topRuns: sanitizeTopRunsArray(topRuns)
     };
   }
 
@@ -1876,13 +1986,15 @@
       }
       return Math.max(0, value);
     };
+    const { list: sanitizedRuns } = ensureTopRunsSanitized();
     return {
-      version: 1,
+      version: 2,
       lastSeed: safeSeed,
       bestScore: Math.floor(normalizeNumber(state.records.bestScore)),
       bestTime: normalizeNumber(state.records.bestTime),
       bestWave: Math.floor(normalizeNumber(state.records.bestWave)),
-      bestDifficulty: clampDifficulty(state.records.bestDifficulty)
+      bestDifficulty: clampDifficulty(state.records.bestDifficulty),
+      topRuns: sanitizeTopRunsArray(sanitizedRuns)
     };
   }
 
@@ -1938,6 +2050,7 @@
     state.records.bestTime = data.bestTime;
     state.records.bestWave = Math.max(0, data.bestWave);
     state.records.bestDifficulty = data.bestDifficulty > 0 ? data.bestDifficulty : 1;
+    state.records.topRuns = sanitizeTopRunsArray(data.topRuns);
     state.lastSeed = data.lastSeed;
   }
 
@@ -3412,20 +3525,30 @@
 
   function updateRecords() {
     let updated = false;
-    if (state.score > state.records.bestScore) {
-      state.records.bestScore = state.score;
+    const score = Math.max(0, Math.floor(Number(state.score) || 0));
+    if (score > state.records.bestScore) {
+      state.records.bestScore = score;
       updated = true;
     }
-    if (state.elapsed > state.records.bestTime) {
-      state.records.bestTime = state.elapsed;
+    const elapsedSeconds = Math.max(0, Math.floor(Number(state.elapsed) || 0));
+    if (elapsedSeconds > state.records.bestTime) {
+      state.records.bestTime = elapsedSeconds;
       updated = true;
     }
-    if (state.wave > state.records.bestWave) {
-      state.records.bestWave = state.wave;
+    const wave = Math.max(0, Math.floor(Number(state.wave) || 0));
+    if (wave > state.records.bestWave) {
+      state.records.bestWave = wave;
       updated = true;
     }
     if (state.difficulty > state.records.bestDifficulty) {
       state.records.bestDifficulty = state.difficulty;
+      updated = true;
+    }
+    if (updateTopRunHistory({
+      score,
+      duration: elapsedSeconds,
+      waves: wave
+    })) {
       updated = true;
     }
     if (updated) {
