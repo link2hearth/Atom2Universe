@@ -3915,9 +3915,65 @@
                 aria-live="polite"
                 data-i18n="index.sections.dice.status.start"
               >
-                Lancez les dés pour commencer.
+                Choisissez un mode et lancez les dés pour commencer.
               </p>
             </div>
+          </section>
+          <section
+            id="diceScorecard"
+            class="dice-scorecard"
+            aria-label="Feuille de score"
+            data-i18n="aria-label:index.sections.dice.scorecard.aria"
+          >
+            <header class="dice-scorecard__header">
+              <h2 class="dice-scorecard__title" data-i18n="index.sections.dice.scorecard.title">Feuille de score</h2>
+              <label class="dice-scorecard__mode" for="diceModeSelect">
+                <span data-i18n="index.sections.dice.scorecard.mode.label">Mode de jeu</span>
+                <select id="diceModeSelect" class="dice-scorecard__select">
+                  <option value="solo" data-i18n="index.sections.dice.scorecard.modes.solo">1 joueur + IA</option>
+                  <option value="2" data-i18n="index.sections.dice.scorecard.modes.twoPlayers">2 joueurs</option>
+                  <option value="3" data-i18n="index.sections.dice.scorecard.modes.threePlayers">3 joueurs</option>
+                  <option value="4" data-i18n="index.sections.dice.scorecard.modes.fourPlayers">4 joueurs</option>
+                </select>
+              </label>
+            </header>
+            <p
+              class="dice-scorecard__instructions"
+              id="diceModeHint"
+              data-i18n="index.sections.dice.scorecard.mode.hint"
+            >
+              Choisissez un mode pour préparer la feuille de score.
+            </p>
+            <div class="dice-scorecard__board">
+              <table
+                class="dice-scorecard__table"
+                id="diceScoreTable"
+                aria-describedby="diceModeHint"
+              >
+                <thead>
+                  <tr id="diceScoreHeader">
+                    <th scope="col" data-i18n="index.sections.dice.scorecard.headers.category">Combinaison</th>
+                  </tr>
+                </thead>
+                <tbody id="diceScoreBody"></tbody>
+              </table>
+            </div>
+            <footer class="dice-scorecard__footnote">
+              <h3
+                class="dice-scorecard__footnote-title"
+                data-i18n="index.sections.dice.scorecard.reminder.title"
+              >
+                Rappel des combinaisons :
+              </h3>
+              <ul class="dice-scorecard__footnote-list">
+                <li data-i18n="index.sections.dice.scorecard.reminder.threeKind">Brelan : 3 dés identiques</li>
+                <li data-i18n="index.sections.dice.scorecard.reminder.fourKind">Carré : 4 dés identiques</li>
+                <li data-i18n="index.sections.dice.scorecard.reminder.fullHouse">Full House : Paire + Brelan</li>
+                <li data-i18n="index.sections.dice.scorecard.reminder.smallStraight">Petite suite : 4 dés qui se suivent</li>
+                <li data-i18n="index.sections.dice.scorecard.reminder.largeStraight">Grande suite : 5 dés qui se suivent</li>
+                <li data-i18n="index.sections.dice.scorecard.reminder.yahtzee">Yams : 5 dés identiques</li>
+              </ul>
+            </footer>
           </section>
         </div>
       </div>
