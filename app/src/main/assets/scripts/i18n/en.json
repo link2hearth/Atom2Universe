@@ -147,6 +147,17 @@
           "empty": "No permanent bonus image unlocked yet.",
           "view": "View {card}",
           "count": "×{count}"
+        },
+        "bonus2Images": {
+          "title": "Bonus Images 2",
+          "subtitle": "Your additional bonus images won from the gacha.",
+          "toggle": {
+            "collapse": "Collapse",
+            "expand": "Expand"
+          },
+          "empty": "No bonus 2 image unlocked yet.",
+          "view": "View {card}",
+          "count": "×{count}"
         }
       },
       "info": {
@@ -3309,6 +3320,10 @@
       "bonusImages": {
         "toastNew": "Bonus image unlocked: {card}",
         "toastDuplicate": "Bonus image found again: {card}"
+      },
+      "bonusImages2": {
+        "toastNew": "Bonus image 2 unlocked: {card}",
+        "toastDuplicate": "Bonus image 2 found again: {card}"
       },
       "featured": {
         "today": "Today",
