@@ -14,6 +14,7 @@
     'sokoban',
     'bigger',
     'math',
+    'starsWar',
     'balance',
     'sudoku',
     'minesweeper',
