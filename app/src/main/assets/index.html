@@ -3878,46 +3878,31 @@
                 </button>
               </div>
               <div
-                class="dice-table__footer"
+                class="dice-table__controls"
                 role="group"
                 aria-label="Commandes du lancer"
                 data-i18n="aria-label:index.sections.dice.controls.aria"
               >
+                <button
+                  type="button"
+                  class="dice-button dice-button--primary dice-table__roll-button"
+                  id="diceRollButton"
+                  data-i18n="index.sections.dice.controls.roll"
+                >Lancer les dés</button>
                 <p class="dice-table__rolls">
                   <span data-i18n="index.sections.dice.controls.rollsLabel">Lancers restants&nbsp;:</span>
                   <span id="diceRollsValue">3</span>
                 </p>
-                <div class="dice-table__buttons">
-                  <button
-                    type="button"
-                    class="dice-button"
-                    id="diceRollButton"
-                    data-i18n="index.sections.dice.controls.roll"
-                  >Lancer les dés</button>
-                  <button
-                    type="button"
-                    class="dice-button"
-                    id="diceClearHoldsButton"
-                    data-i18n="index.sections.dice.controls.clear"
-                    disabled
-                  >Libérer les dés</button>
-                </div>
-                <button
-                  type="button"
-                  class="dice-button dice-table__new-game"
-                  id="diceNewGameButton"
-                  data-i18n="index.sections.dice.scorecard.reset"
-                >Nouvelle partie</button>
               </div>
-              <p
-                class="dice-status dice-table__status"
-                id="diceStatus"
-                aria-live="polite"
-                data-i18n="index.sections.dice.status.start"
-              >
-                Choisissez un mode et lancez les dés pour commencer.
-              </p>
             </div>
+            <p
+              class="dice-status visually-hidden"
+              id="diceStatus"
+              aria-live="polite"
+              data-i18n="index.sections.dice.status.start"
+            >
+              Choisissez un mode et lancez les dés pour commencer.
+            </p>
           </section>
           <section
             id="diceScorecard"
@@ -3925,10 +3910,51 @@
             aria-label="Feuille de score"
             data-i18n="aria-label:index.sections.dice.scorecard.aria"
           >
-            <header class="dice-scorecard__header">
-              <h2 class="dice-scorecard__title" data-i18n="index.sections.dice.scorecard.title">Feuille de score</h2>
+            <div class="dice-scorecard__board">
+              <div class="dice-scorecard__columns">
+                <div class="dice-scorecard__column" data-section="upper">
+                  <h3
+                    class="dice-scorecard__column-title"
+                    id="diceScoreSectionUpper"
+                    data-i18n="index.sections.dice.scorecard.sections.upper"
+                  >Section supérieure</h3>
+                  <table
+                    class="dice-scorecard__table"
+                    id="diceScoreTableUpper"
+                    aria-labelledby="diceScoreSectionUpper"
+                  >
+                    <thead>
+                      <tr id="diceScoreHeaderUpper">
+                        <th scope="col" data-i18n="index.sections.dice.scorecard.headers.category">Combinaison</th>
+                      </tr>
+                    </thead>
+                    <tbody id="diceScoreBodyUpper"></tbody>
+                  </table>
+                </div>
+                <div class="dice-scorecard__column" data-section="lower">
+                  <h3
+                    class="dice-scorecard__column-title"
+                    id="diceScoreSectionLower"
+                    data-i18n="index.sections.dice.scorecard.sections.lower"
+                  >Section inférieure</h3>
+                  <table
+                    class="dice-scorecard__table"
+                    id="diceScoreTableLower"
+                    aria-labelledby="diceScoreSectionLower"
+                  >
+                    <thead>
+                      <tr id="diceScoreHeaderLower">
+                        <th scope="col" data-i18n="index.sections.dice.scorecard.headers.category">Combinaison</th>
+                      </tr>
+                    </thead>
+                    <tbody id="diceScoreBodyLower"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="dice-scorecard__controls">
               <label class="dice-scorecard__mode" for="diceModeSelect">
-                <span data-i18n="index.sections.dice.scorecard.mode.label">Mode de jeu</span>
+                <span class="visually-hidden" data-i18n="index.sections.dice.scorecard.mode.label">Mode de jeu</span>
                 <select id="diceModeSelect" class="dice-scorecard__select">
                   <option value="solo" data-i18n="index.sections.dice.scorecard.modes.solo">1 joueur + IA</option>
                   <option value="2" data-i18n="index.sections.dice.scorecard.modes.twoPlayers">2 joueurs</option>
@@ -3936,27 +3962,12 @@
                   <option value="4" data-i18n="index.sections.dice.scorecard.modes.fourPlayers">4 joueurs</option>
                 </select>
               </label>
-            </header>
-            <p
-              class="dice-scorecard__instructions"
-              id="diceModeHint"
-              data-i18n="index.sections.dice.scorecard.mode.hint"
-            >
-              Choisissez un mode pour préparer la feuille de score.
-            </p>
-            <div class="dice-scorecard__board">
-              <table
-                class="dice-scorecard__table"
-                id="diceScoreTable"
-                aria-describedby="diceModeHint"
-              >
-                <thead>
-                  <tr id="diceScoreHeader">
-                    <th scope="col" data-i18n="index.sections.dice.scorecard.headers.category">Combinaison</th>
-                  </tr>
-                </thead>
-                <tbody id="diceScoreBody"></tbody>
-              </table>
+              <button
+                type="button"
+                class="dice-button dice-scorecard__new-game"
+                id="diceNewGameButton"
+                data-i18n="index.sections.dice.scorecard.reset"
+              >Nouvelle partie</button>
             </div>
             <footer class="dice-scorecard__footnote">
               <h3

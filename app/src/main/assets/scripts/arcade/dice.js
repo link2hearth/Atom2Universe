@@ -89,18 +89,29 @@
 
   const elements = {
     rollButton: DICE_SECTION.querySelector('#diceRollButton'),
-    clearButton: DICE_SECTION.querySelector('#diceClearHoldsButton'),
     newGameButton: DICE_SECTION.querySelector('#diceNewGameButton'),
     rollsValue: DICE_SECTION.querySelector('#diceRollsValue'),
     status: DICE_SECTION.querySelector('#diceStatus'),
     modeSelect: DICE_SECTION.querySelector('#diceModeSelect'),
-    scoreHeader: DICE_SECTION.querySelector('#diceScoreHeader'),
-    scoreBody: DICE_SECTION.querySelector('#diceScoreBody'),
-    instructions: DICE_SECTION.querySelector('#diceModeHint'),
+    scoreSections: {
+      upper: {
+        label: DICE_SECTION.querySelector('#diceScoreSectionUpper'),
+        header: DICE_SECTION.querySelector('#diceScoreHeaderUpper'),
+        body: DICE_SECTION.querySelector('#diceScoreBodyUpper')
+      },
+      lower: {
+        label: DICE_SECTION.querySelector('#diceScoreSectionLower'),
+        header: DICE_SECTION.querySelector('#diceScoreHeaderLower'),
+        body: DICE_SECTION.querySelector('#diceScoreBodyLower')
+      }
+    },
     scorecard: DICE_SECTION.querySelector('#diceScorecard')
   };
 
-  if (!elements.rollButton || !elements.clearButton || !elements.newGameButton || !elements.rollsValue || !elements.status || !elements.scoreHeader || !elements.scoreBody) {
+  const scoreSectionEntries = Object.entries(elements.scoreSections || {});
+  const hasMissingScoreSection = scoreSectionEntries.some(([, section]) => !section || !section.header || !section.body);
+
+  if (!elements.rollButton || !elements.newGameButton || !elements.rollsValue || hasMissingScoreSection) {
     return;
   }
 
@@ -199,7 +210,7 @@
   const scoreCells = {
     categories: new Map(),
     computed: new Map(),
-    headerCells: []
+    headerCells: new Map()
   };
 
   const categoryLabels = new Map();
@@ -232,40 +243,58 @@
   function buildScorecardTable() {
     scoreCells.categories.clear();
     scoreCells.computed.clear();
-    scoreCells.headerCells = [];
+    if (scoreCells.headerCells && typeof scoreCells.headerCells.clear === 'function') {
+      scoreCells.headerCells.clear();
+    } else {
+      scoreCells.headerCells = new Map();
+    }
     categoryLabels.clear();
 
-    if (elements.scoreHeader) {
-      elements.scoreHeader.innerHTML = '';
-      const comboHeader = document.createElement('th');
-      comboHeader.scope = 'col';
-      comboHeader.textContent = translate('index.sections.dice.scorecard.headers.category', 'Combinaison');
-      elements.scoreHeader.appendChild(comboHeader);
-      state.players.forEach((player, index) => {
-        const th = document.createElement('th');
-        th.scope = 'col';
-        th.dataset.playerIndex = String(index);
-        th.textContent = player.name;
-        elements.scoreHeader.appendChild(th);
-        scoreCells.headerCells.push(th);
-      });
-    }
+    const sectionEntries = Object.entries(elements.scoreSections || {});
+    const columnHeaderLabel = translate('index.sections.dice.scorecard.headers.category', 'Combinaison');
 
-    if (!elements.scoreBody) {
-      return;
-    }
-
-    elements.scoreBody.innerHTML = '';
+    sectionEntries.forEach(([, section]) => {
+      if (!section) {
+        return;
+      }
+      if (section.label) {
+        section.label.textContent = '';
+      }
+      if (section.header) {
+        section.header.innerHTML = '';
+        const comboHeader = document.createElement('th');
+        comboHeader.scope = 'col';
+        comboHeader.textContent = columnHeaderLabel;
+        section.header.appendChild(comboHeader);
+        state.players.forEach((player, index) => {
+          const th = document.createElement('th');
+          th.scope = 'col';
+          th.dataset.playerIndex = String(index);
+          th.textContent = player.name;
+          section.header.appendChild(th);
+          if (!scoreCells.headerCells.has(index)) {
+            scoreCells.headerCells.set(index, []);
+          }
+          scoreCells.headerCells.get(index).push(th);
+        });
+      }
+      if (section.body) {
+        section.body.innerHTML = '';
+      }
+    });
 
     SCORECARD_LAYOUT.forEach(row => {
       if (row.type === 'section') {
-        const tr = document.createElement('tr');
-        tr.classList.add('dice-scorecard__section-row');
-        const th = document.createElement('th');
-        th.colSpan = state.players.length + 1;
-        th.textContent = translate(row.labelKey, row.fallback);
-        tr.appendChild(th);
-        elements.scoreBody.appendChild(tr);
+        const targetSection = elements.scoreSections ? elements.scoreSections[row.id] : null;
+        if (targetSection && targetSection.label) {
+          targetSection.label.textContent = translate(row.labelKey, row.fallback);
+        }
+        return;
+      }
+
+      const sectionId = row.section;
+      const targetSection = sectionId ? (elements.scoreSections ? elements.scoreSections[sectionId] : null) : null;
+      if (!targetSection || !targetSection.body) {
         return;
       }
 
@@ -320,7 +349,7 @@
         });
 
         scoreCells.categories.set(row.id, cellList);
-        elements.scoreBody.appendChild(tr);
+        targetSection.body.appendChild(tr);
         return;
       }
 
@@ -343,7 +372,7 @@
           cellList.push({ td, value: valueSpan });
         });
         scoreCells.computed.set(row.id, cellList);
-        elements.scoreBody.appendChild(tr);
+        targetSection.body.appendChild(tr);
       }
     });
 
@@ -378,6 +407,20 @@
       button.setAttribute('aria-label', translate(ariaKey, fallback, { index: String(index + 1), value: formatNumber(value) }));
       button.disabled = state.gameOver || state.isAiTurn || !state.hasRolled;
       if (animatedSet && animatedSet.has(index)) {
+        const randomDx = (Math.random() * 24) - 12;
+        const randomDy = (Math.random() * 18) - 9;
+        const randomRot = (Math.random() * 360) - 180;
+        const randomTiltX = (Math.random() * 50) - 25;
+        const randomTiltY = (Math.random() * 50) - 25;
+        const randomScale = 0.94 + Math.random() * 0.12;
+        const randomDelay = Math.random() * 0.12;
+        button.style.setProperty('--roll-dx', `${randomDx.toFixed(2)}px`);
+        button.style.setProperty('--roll-dy', `${randomDy.toFixed(2)}px`);
+        button.style.setProperty('--roll-rot', `${randomRot.toFixed(2)}deg`);
+        button.style.setProperty('--roll-tilt-x', `${randomTiltX.toFixed(2)}deg`);
+        button.style.setProperty('--roll-tilt-y', `${randomTiltY.toFixed(2)}deg`);
+        button.style.setProperty('--roll-scale', randomScale.toFixed(2));
+        button.style.setProperty('--roll-delay', `${randomDelay.toFixed(3)}s`);
         button.classList.add('dice-die--rolling');
         setTimeout(() => {
           button.classList.remove('dice-die--rolling');
@@ -388,9 +431,9 @@
 
   function updateButtonsState() {
     const canRoll = !state.gameOver && !state.isAiTurn && state.rollsLeft > 0;
-    elements.rollButton.disabled = !canRoll;
-    const hasHold = state.heldDice.some(Boolean);
-    elements.clearButton.disabled = state.gameOver || state.isAiTurn || !hasHold;
+    if (elements.rollButton) {
+      elements.rollButton.disabled = !canRoll;
+    }
     diceButtons.forEach((button, index) => {
       if (!button || index >= activeDiceCount) {
         return;
@@ -400,15 +443,20 @@
   }
 
   function setActivePlayerColumn(playerIndex) {
-    scoreCells.headerCells.forEach((cell, index) => {
-      if (!cell) {
+    scoreCells.headerCells.forEach((cellList, index) => {
+      if (!Array.isArray(cellList)) {
         return;
       }
-      if (index === playerIndex && !state.gameOver) {
-        cell.dataset.active = 'true';
-      } else {
-        delete cell.dataset.active;
-      }
+      cellList.forEach(cell => {
+        if (!cell) {
+          return;
+        }
+        if (index === playerIndex && !state.gameOver) {
+          cell.dataset.active = 'true';
+        } else {
+          delete cell.dataset.active;
+        }
+      });
     });
 
     scoreCells.categories.forEach(cellList => {
@@ -1058,9 +1106,6 @@
 
   if (elements.rollButton) {
     elements.rollButton.addEventListener('click', handleRoll);
-  }
-  if (elements.clearButton) {
-    elements.clearButton.addEventListener('click', handleClearHolds);
   }
   if (elements.newGameButton) {
     elements.newGameButton.addEventListener('click', () => {
