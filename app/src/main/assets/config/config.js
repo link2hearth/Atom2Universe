@@ -11,7 +11,8 @@ const CONFIG_OVERRIDE_KEYS = Object.freeze({
   devkit: `${CONFIG_OVERRIDE_STORAGE_PREFIX}devkitEnabled`,
   collection: `${CONFIG_OVERRIDE_STORAGE_PREFIX}collectionEnabled`,
   info: `${CONFIG_OVERRIDE_STORAGE_PREFIX}infoSectionsEnabled`,
-  music: `${CONFIG_OVERRIDE_STORAGE_PREFIX}musicEnabled`
+  music: `${CONFIG_OVERRIDE_STORAGE_PREFIX}musicEnabled`,
+  escapeDifficulties: `${CONFIG_OVERRIDE_STORAGE_PREFIX}escapeAdvancedDifficultiesEnabled`
 });
 
 /**
@@ -108,6 +109,13 @@ const MUSIC_MODULE_ENABLED = resolveConfigBoolean(
   DEFAULT_MUSIC_MODULE_ENABLED
 );
 
+const DEFAULT_ESCAPE_ADVANCED_DIFFICULTIES_ENABLED = false;
+
+const ESCAPE_ADVANCED_DIFFICULTIES_ENABLED = resolveConfigBoolean(
+  CONFIG_OVERRIDE_KEYS.escapeDifficulties,
+  DEFAULT_ESCAPE_ADVANCED_DIFFICULTIES_ENABLED
+);
+
 function toggleDevkitFeatureEnabled() {
   const next = toggleConfigBoolean(CONFIG_OVERRIDE_KEYS.devkit, DEFAULT_DEVKIT_ENABLED);
   if (typeof globalThis !== 'undefined') {
@@ -146,6 +154,37 @@ function toggleMusicModuleEnabled() {
   if (typeof globalThis !== 'undefined') {
     globalThis.MUSIC_MODULE_ENABLED = next;
   }
+  return next;
+}
+
+function dispatchEscapeDifficultyToggleEvent(enabled) {
+  if (typeof window === 'undefined') {
+    return;
+  }
+  try {
+    const detail = { enabled };
+    const eventName = 'escape:advanced-difficulties-changed';
+    if (typeof window.CustomEvent === 'function') {
+      window.dispatchEvent(new CustomEvent(eventName, { detail }));
+      return;
+    }
+    const event = document.createEvent('CustomEvent');
+    event.initCustomEvent(eventName, false, false, detail);
+    window.dispatchEvent(event);
+  } catch (error) {
+    // Ignore dispatch errors to avoid breaking the toggle.
+  }
+}
+
+function toggleEscapeAdvancedDifficultiesEnabled() {
+  const next = toggleConfigBoolean(
+    CONFIG_OVERRIDE_KEYS.escapeDifficulties,
+    DEFAULT_ESCAPE_ADVANCED_DIFFICULTIES_ENABLED
+  );
+  if (typeof globalThis !== 'undefined') {
+    globalThis.ESCAPE_ADVANCED_DIFFICULTIES_ENABLED = next;
+  }
+  dispatchEscapeDifficultyToggleEvent(next);
   return next;
 }
 
@@ -1505,10 +1544,12 @@ if (typeof globalThis !== 'undefined') {
   globalThis.COLLECTION_SYSTEM_ENABLED = COLLECTION_SYSTEM_ENABLED;
   globalThis.INFO_SECTIONS_ENABLED = INFO_SECTIONS_ENABLED;
   globalThis.MUSIC_MODULE_ENABLED = MUSIC_MODULE_ENABLED;
+  globalThis.ESCAPE_ADVANCED_DIFFICULTIES_ENABLED = ESCAPE_ADVANCED_DIFFICULTIES_ENABLED;
   globalThis.toggleDevkitFeatureEnabled = toggleDevkitFeatureEnabled;
   globalThis.toggleCollectionFeatureEnabled = toggleCollectionFeatureEnabled;
   globalThis.toggleInfoSectionsFeatureEnabled = toggleInfoSectionsFeatureEnabled;
   globalThis.toggleMusicModuleEnabled = toggleMusicModuleEnabled;
+  globalThis.toggleEscapeAdvancedDifficultiesEnabled = toggleEscapeAdvancedDifficultiesEnabled;
 }
 
 

@@ -3055,6 +3055,8 @@
         "infoDisabled": "Info sections disabled. Changes applied.",
         "musicEnabled": "Music module enabled. Changes applied.",
         "musicDisabled": "Music module disabled. Changes applied.",
+        "escapeDifficultiesEnabled": "Escape advanced difficulties enabled. Changes applied.",
+        "escapeDifficultiesDisabled": "Escape advanced difficulties disabled. Changes applied.",
         "toggleFailed": "Unable to update configuration.",
         "saveFailed": "Unable to save your progress. Changes cancelled.",
         "prompt": "Full game reset. Type \"{keyword}\" to confirm.\\nThis action cannot be undone."

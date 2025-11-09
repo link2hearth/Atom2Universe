@@ -2983,7 +2983,13 @@
           aria-label="Contrôles de génération Escape"
           data-i18n="aria-label:index.sections.escape.controls.aria"
         >
-          <label class="escape__toolbar-field" for="escapeDifficultySelect">
+          <label
+            class="escape__toolbar-field"
+            for="escapeDifficultySelect"
+            data-role="escape-difficulty-field"
+            hidden
+            aria-hidden="true"
+          >
             <span class="escape__control-label" data-i18n="index.sections.escape.difficulty.label">Difficulté</span>
             <select
               class="escape__select"
