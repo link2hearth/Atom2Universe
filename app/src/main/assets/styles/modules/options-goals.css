@@ -82,6 +82,11 @@ body.theme-aurora {
   gap: 0.8rem;
 }
 
+.option-row--performance {
+  /* Masque temporairement le sélecteur de performances sans retirer la fonctionnalité. */
+  display: none;
+}
+
 .option-card--preferences {
   gap: clamp(1rem, 1.8vw, 1.4rem);
 }
