@@ -55,15 +55,14 @@
   background: var(--dice-felt-background);
   border-radius: clamp(1.25rem, 3vw, 2.4rem);
   border: 1px solid var(--dice-felt-border);
-  padding: clamp(1.5rem, 3vw, 2.6rem);
+  padding: clamp(0.75rem, 2vw, 1.6rem) clamp(1.25rem, 3vw, 2rem);
   box-shadow: var(--dice-felt-shadow);
   position: relative;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(0.8rem, 2vw, 1.2rem);
-  min-height: clamp(18rem, 52vh, 26rem);
+  gap: clamp(0.55rem, 1.6vw, 0.95rem);
 }
 
 .dice-table__felt::after {
