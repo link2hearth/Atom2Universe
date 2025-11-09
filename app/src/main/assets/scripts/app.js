@@ -1606,24 +1606,33 @@ function updateHoldemBlindOption(blind) {
   }
 }
 
-function handleHoldemWipeRequest() {
+function handleHoldemRestartRequest() {
   const bridge = getHoldemBridge();
-  if (!bridge || typeof bridge.wipeOpponents !== 'function') {
-    showToast(t('scripts.app.holdemOptions.wipeFailure', 'Hold’em table unavailable.'));
+  if (!bridge) {
+    showToast(t('scripts.app.holdemOptions.restartFailure', 'Hold’em table unavailable.'));
+    return;
+  }
+  const action = typeof bridge.restart === 'function'
+    ? bridge.restart
+    : typeof bridge.wipeOpponents === 'function'
+      ? bridge.wipeOpponents
+      : null;
+  if (!action) {
+    showToast(t('scripts.app.holdemOptions.restartFailure', 'Hold’em table unavailable.'));
     return;
   }
   try {
-    const result = bridge.wipeOpponents();
+    const result = action();
     if (result && result.success) {
       updateHoldemBlindOption(result.blind);
       const stackLabel = formatHoldemOptionValue(result.stack);
-      showToast(t('scripts.app.holdemOptions.wipeSuccess', { stack: stackLabel }));
+      showToast(t('scripts.app.holdemOptions.restartSuccess', { stack: stackLabel }));
       return;
     }
   } catch (error) {
-    console.error('Unable to wipe Hold’em opponents', error);
+    console.error('Unable to restart Hold’em table', error);
   }
-  showToast(t('scripts.app.holdemOptions.wipeFailure', 'Hold’em table unavailable.'));
+  showToast(t('scripts.app.holdemOptions.restartFailure', 'Hold’em table unavailable.'));
 }
 
 function handleHoldemBlindScaling(factor) {
@@ -1653,7 +1662,7 @@ function initializeHoldemOptionsUI() {
       const detail = event && event.detail ? event.detail.blind : undefined;
       updateHoldemBlindOption(detail);
     });
-    window.addEventListener('holdem:aiWipe', event => {
+    window.addEventListener('holdem:gameRestart', event => {
       const detail = event && event.detail ? event.detail.blind : undefined;
       updateHoldemBlindOption(detail);
     });
@@ -5765,7 +5774,7 @@ function collectDomElements() {
   brickSkinSelect: document.getElementById('brickSkinSelect'),
   brickSkinStatus: document.getElementById('brickSkinStatus'),
   holdemOptionCard: document.getElementById('holdemOptionCard'),
-  holdemWipeButton: document.getElementById('holdemWipeButton'),
+  holdemRestartButton: document.getElementById('holdemRestartButton'),
   holdemBlindValue: document.getElementById('holdemBlindValue'),
   holdemBlindDivideButton: document.getElementById('holdemBlindDivideButton'),
   holdemBlindMultiplyButton: document.getElementById('holdemBlindMultiplyButton'),
@@ -13692,10 +13701,10 @@ function bindDomEventListeners() {
     });
   }
 
-  if (elements.holdemWipeButton) {
-    elements.holdemWipeButton.addEventListener('click', event => {
+  if (elements.holdemRestartButton) {
+    elements.holdemRestartButton.addEventListener('click', event => {
       event.preventDefault();
-      handleHoldemWipeRequest();
+      handleHoldemRestartRequest();
     });
   }
 

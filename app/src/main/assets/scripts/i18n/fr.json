@@ -1755,9 +1755,9 @@
         },
         "holdem": {
           "title": "Table Hold’em",
-          "description": "Relancez les adversaires IA et ajustez la blinde du mini-jeu de poker Hold’em.",
-          "wipeButton": "Wipe — réinitialiser les IA",
-          "wipeAria": "Réinitialiser les réserves des IA Hold’em",
+          "description": "Lancez une nouvelle partie pour le mini-jeu de poker Hold’em et ajustez la blinde.",
+          "restartButton": "Nouvelle partie",
+          "restartAria": "Lancer une nouvelle partie Hold’em",
           "blindLabel": "Blinde actuelle",
           "divideButton": "÷10",
           "divideAria": "Diviser la blinde Hold’em par dix",
@@ -2779,12 +2779,19 @@
           "fold": "Se coucher",
           "allIn": "Tapis ({amount})",
           "raiseTo": "Relancer à {amount}",
-          "raiseAllIn": "Tapis ({amount})"
+          "raiseAllIn": "Tapis ({amount})",
+          "divideBlind": "÷10",
+          "divideBlindAria": "Diviser la blinde par dix",
+          "multiplyBlind": "×10",
+          "multiplyBlindAria": "Multiplier la blinde par dix",
+          "restart": "Restart",
+          "restartAria": "Relancer la partie Hold’em"
         },
         "labels": {
           "stack": "Réserve d’atomes",
           "currentBet": "Mise actuelle",
           "status": "État",
+          "blind": "Blinde",
           "you": "Vous"
         },
         "phase": {
@@ -2913,8 +2920,8 @@
         }
       },
       "holdemOptions": {
-        "wipeSuccess": "Réserve des IA fixée à {stack} atomes.",
-        "wipeFailure": "Table Hold’em indisponible.",
+        "restartSuccess": "Réserve des IA fixée à {stack} atomes.",
+        "restartFailure": "Table Hold’em indisponible.",
         "blindUpdated": "Blinde Hold’em ajustée à {blind}.",
         "blindUnavailable": "Impossible d’ajuster la blinde pour le moment."
       },

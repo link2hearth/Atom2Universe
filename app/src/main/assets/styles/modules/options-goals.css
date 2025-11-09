@@ -111,7 +111,7 @@ body.theme-aurora .option-card--holdem {
   box-shadow: 0 16px 34px rgba(20, 110, 90, 0.2);
 }
 
-.option-card--holdem .option-row--holdem-wipe,
+.option-card--holdem .option-row--holdem-restart,
 .option-card--holdem .option-row--holdem-blind {
   justify-content: flex-start;
 }
