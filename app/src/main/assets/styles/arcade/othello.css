@@ -9,6 +9,22 @@
   --othello-white: #f5f7ff;
   --othello-green: radial-gradient(circle at 30% 20%, rgba(28, 64, 52, 0.92), rgba(12, 34, 28, 0.96));
   --othello-board-scale: 1;
+  --othello-board-padding: clamp(
+    calc(0.95rem * var(--othello-board-scale, 1)),
+    calc(2.7vw * var(--othello-board-scale, 1)),
+    calc(1.5rem * var(--othello-board-scale, 1))
+  );
+  --othello-board-gap: clamp(
+    calc(0.24rem * var(--othello-board-scale, 1)),
+    calc(0.81vw * var(--othello-board-scale, 1)),
+    calc(0.47rem * var(--othello-board-scale, 1))
+  );
+  --othello-cell-size: calc(3.78rem * var(--othello-board-scale, 1));
+  --othello-board-max-width: clamp(
+    calc(24.3rem * var(--othello-board-scale, 1)),
+    calc(81vw * var(--othello-board-scale, 1)),
+    calc(37.8rem * var(--othello-board-scale, 1))
+  );
   padding: clamp(1rem, 4vw, 2.5rem) clamp(0.75rem, 3vw, 2.75rem);
 }
 
@@ -161,35 +177,21 @@
   border: 1px solid var(--othello-border);
   box-shadow: var(--othello-shadow);
   border-radius: clamp(0.6rem, 2vw, 1.1rem);
-  padding: clamp(
-    calc(0.95rem * var(--othello-board-scale, 1)),
-    calc(2.7vw * var(--othello-board-scale, 1)),
-    calc(1.5rem * var(--othello-board-scale, 1))
-  );
+  padding: var(--othello-board-padding);
   display: grid;
-  grid-template-columns: repeat(
-    8,
-    minmax(calc(3.78rem * var(--othello-board-scale, 1)), 1fr)
-  );
-  gap: clamp(
-    calc(0.24rem * var(--othello-board-scale, 1)),
-    calc(0.81vw * var(--othello-board-scale, 1)),
-    calc(0.47rem * var(--othello-board-scale, 1))
-  );
-  width: min(
-    100%,
-    clamp(
-      calc(24.3rem * var(--othello-board-scale, 1)),
-      calc(81vw * var(--othello-board-scale, 1)),
-      calc(37.8rem * var(--othello-board-scale, 1))
-    )
-  );
+  grid-template-columns: repeat(8, var(--othello-cell-size));
+  grid-auto-rows: var(--othello-cell-size);
+  gap: var(--othello-board-gap);
+  width: min(100%, var(--othello-board-max-width));
+  max-width: var(--othello-board-max-width);
   margin-inline: auto;
+  box-sizing: border-box;
 }
 
 .othello__cell {
   position: relative;
-  width: 100%;
+  width: var(--othello-cell-size);
+  height: var(--othello-cell-size);
   aspect-ratio: 1 / 1;
   border: 1px solid var(--othello-cell-border);
   border-radius: clamp(0.35rem, 1.2vw, 0.55rem);
@@ -240,17 +242,14 @@
   transition: opacity 0.2s ease;
 }
 
-@media (max-width: 520px) {
-  .othello__board {
-    grid-template-columns: repeat(
-      8,
-      minmax(calc(3.24rem * var(--othello-board-scale, 1)), 1fr)
-    );
-  }
-}
-
 @media (max-width: 768px) and (orientation: portrait) {
   .page--othello {
     --othello-board-scale: 0.9;
+  }
+}
+
+@media (max-width: 520px) {
+  .page--othello {
+    --othello-board-scale: 0.86;
   }
 }
