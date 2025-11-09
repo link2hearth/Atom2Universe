@@ -3201,7 +3201,7 @@ function buildFusionCard(definition) {
   };
 }
 
-const VISIBLE_FUSION_IDS = new Set(['hydrogen', 'carbon']);
+const VISIBLE_FUSION_IDS = new Set(['hydrogen', 'carbon', 'oxygen']);
 
 function isFusionDefinitionVisible(def) {
   if (!def || !VISIBLE_FUSION_IDS.has(def.id)) {
@@ -3209,6 +3209,9 @@ function isFusionDefinitionVisible(def) {
   }
   if (def.id === 'carbon') {
     return getFusionSuccessCount('hydrogen') >= 10;
+  }
+  if (def.id === 'oxygen') {
+    return getFusionSuccessCount('carbon') >= 50;
   }
   return true;
 }

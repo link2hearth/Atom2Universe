@@ -39,7 +39,41 @@
       "rewards": {
         "apcFlat": 10000,
         "apsFlat": 10000,
-        "growthMultiplier": 1.2
+        "growthMultiplier": 1.2,
+        "elements": [
+          {
+            "elementId": "element-006-carbone",
+            "count": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "oxygen",
+      "name": "Hélium + Carbone → Oxygène (O)",
+      "translationKey": "scripts.gameData.fusions.recipes.oxygen",
+      "description": "Fusionnez 1 He avec 1 C pour tenter de forger 1 O.",
+      "inputs": [
+        {
+          "elementId": "element-002-helium",
+          "count": 1
+        },
+        {
+          "elementId": "element-006-carbone",
+          "count": 1
+        }
+      ],
+      "successChance": 0.1,
+      "rewards": {
+        "apcFlat": 50000,
+        "apsFlat": 50000,
+        "growthMultiplier": 1.1,
+        "elements": [
+          {
+            "elementId": "element-008-oxygene",
+            "count": 1
+          }
+        ]
       }
     },
     {

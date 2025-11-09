@@ -3603,8 +3603,8 @@
             "description": "Drive triple-alpha nucleosynthesis: fuse 3 He nuclei to attempt forging 1 C."
           },
           "oxygen": {
-            "name": "Oxygen (O₂)",
-            "description": "Assemble 2 Oxygen atoms to produce dioxygen."
+            "name": "Helium + Carbon → Oxygen (O)",
+            "description": "Fuse 1 He with 1 C to attempt forging 1 O."
           },
           "fluorine": {
             "name": "Fluorine (F₂)",
