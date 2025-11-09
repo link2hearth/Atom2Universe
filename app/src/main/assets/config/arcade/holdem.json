@@ -3,7 +3,7 @@
   "dealerSpeedMs": 650,
   "minRaise": 10,
   "startingStack": 600,
-  "aiStack": 1e11,
+  "aiStack": 2000,
   "maxRaisesPerRound": 2,
   "raiseGuidance": {
     "potRatio": 0.25,

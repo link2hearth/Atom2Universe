@@ -1755,9 +1755,9 @@
         },
         "holdem": {
           "title": "Hold’em table",
-          "description": "Reset AI opponents and tweak the blind for the Hold’em poker mini-game.",
-          "wipeButton": "Wipe (reset AI stacks)",
-          "wipeAria": "Reset Hold’em AI stacks",
+          "description": "Start a fresh match for the Hold’em poker mini-game and fine-tune the blind.",
+          "restartButton": "New game",
+          "restartAria": "Start a new Hold’em game",
           "blindLabel": "Current blind",
           "divideButton": "÷10",
           "divideAria": "Divide the Hold’em blind by ten",
@@ -2779,12 +2779,19 @@
           "fold": "Fold",
           "allIn": "All-in ({amount})",
           "raiseTo": "Raise to {amount}",
-          "raiseAllIn": "All-in ({amount})"
+          "raiseAllIn": "All-in ({amount})",
+          "divideBlind": "÷10",
+          "divideBlindAria": "Divide the blind by ten",
+          "multiplyBlind": "×10",
+          "multiplyBlindAria": "Multiply the blind by ten",
+          "restart": "Restart",
+          "restartAria": "Restart the Hold’em game"
         },
         "labels": {
           "stack": "Atom reserve",
           "currentBet": "Current bet",
           "status": "Status",
+          "blind": "Blind",
           "you": "You"
         },
         "phase": {
@@ -2913,8 +2920,8 @@
         }
       },
       "holdemOptions": {
-        "wipeSuccess": "Hold’em AI stacks reset to {stack}.",
-        "wipeFailure": "Hold’em table unavailable.",
+        "restartSuccess": "Hold’em AI stacks set to {stack}.",
+        "restartFailure": "Hold’em table unavailable.",
         "blindUpdated": "Hold’em blind adjusted to {blind}.",
         "blindUnavailable": "Unable to adjust the blind right now."
       },

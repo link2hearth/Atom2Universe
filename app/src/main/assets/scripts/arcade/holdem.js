@@ -22,7 +22,7 @@
     dealerSpeedMs: 650,
     minRaise: 10,
     startingStack: 600,
-    aiStack: 1e11,
+    aiStack: 2000,
     maxRaisesPerRound: 2,
     aiThinkingDelayMs: { min: 900, max: 2500 },
     opponentCount: { min: 4, max: 4 },
@@ -38,6 +38,7 @@
   });
 
   const DEFAULT_AI_PROFILE = Object.freeze({ aggression: 0.52, caution: 0.5, bluff: 0.2 });
+  const AI_STACK_FACTOR = 200;
 
   const SUITS = Object.freeze([
     { id: 'spades', symbol: '♠', color: 'black' },
@@ -102,6 +103,19 @@
     return value;
   }
 
+  function computeAiStackFromBlindValue(blindValue) {
+    const numericBlind = Number(blindValue);
+    if (!Number.isFinite(numericBlind) || numericBlind <= 0) {
+      return 0;
+    }
+    const rawProduct = numericBlind * AI_STACK_FACTOR;
+    if (!Number.isFinite(rawProduct)) {
+      return Number.MAX_SAFE_INTEGER;
+    }
+    const floored = Math.max(0, Math.floor(rawProduct));
+    return Math.min(floored, Number.MAX_SAFE_INTEGER);
+  }
+
   function getGrowthConfig() {
     return state.config && state.config.growth ? state.config.growth : DEFAULT_STAKE_GROWTH;
   }
@@ -136,7 +150,8 @@
         state.config.minRaise = clamped;
       }
     }
-    dispatchHoldemEvent('blindChange', { blind: clamped });
+    const stackBaseline = syncAiBaselineWithBlind();
+    dispatchHoldemEvent('blindChange', { blind: clamped, stack: stackBaseline });
   }
 
   function syncMinRaiseBaseline() {
@@ -145,6 +160,18 @@
       return;
     }
     setStakeValue(state.blind);
+  }
+
+  function syncAiBaselineWithBlind() {
+    const currentBlind = Number.isFinite(state.blind) && state.blind > 0
+      ? state.blind
+      : CONFIG.blind;
+    const baseline = computeAiStackFromBlindValue(currentBlind);
+    state.baseAiStack = baseline;
+    if (state.config) {
+      state.config.aiStack = baseline;
+    }
+    return baseline;
   }
 
   function applyStakeGrowth() {
@@ -406,11 +433,8 @@
   }
 
   const CONFIG = getHoldemConfig();
-  const BASE_AI_STACK = Number.isFinite(CONFIG.aiStack)
-    ? CONFIG.aiStack
-    : Number.isFinite(DEFAULT_CONFIG.aiStack)
-      ? DEFAULT_CONFIG.aiStack
-      : 0;
+  const BASE_AI_STACK = computeAiStackFromBlindValue(CONFIG.blind);
+  CONFIG.aiStack = BASE_AI_STACK;
 
   const elements = {
     status: document.getElementById('holdemStatus'),
@@ -426,7 +450,11 @@
     fold: document.getElementById('holdemFold'),
     checkCall: document.getElementById('holdemCheckCall'),
     raise: document.getElementById('holdemRaise'),
-    allIn: document.getElementById('holdemAllIn')
+    allIn: document.getElementById('holdemAllIn'),
+    blindDisplay: document.getElementById('holdemBlindDisplay'),
+    blindDivide: document.getElementById('holdemTableBlindDivideButton'),
+    blindMultiply: document.getElementById('holdemTableBlindMultiplyButton'),
+    restart: document.getElementById('holdemTableRestartButton')
   };
 
   const state = {
@@ -453,6 +481,7 @@
   };
 
   syncMinRaiseBaseline();
+  syncAiBaselineWithBlind();
 
   function getGameState() {
     if (typeof window === 'undefined') {
@@ -1001,19 +1030,7 @@
   }
 
   function enforceBaseAiStack() {
-    const defaultStack = Number.isFinite(DEFAULT_CONFIG.aiStack) && DEFAULT_CONFIG.aiStack > 0
-      ? DEFAULT_CONFIG.aiStack
-      : 0;
-    const baseline = Number.isFinite(state.baseAiStack) && state.baseAiStack > 0
-      ? state.baseAiStack
-      : defaultStack;
-    const current = Number.isFinite(state.config && state.config.aiStack)
-      ? state.config.aiStack
-      : baseline;
-    if (!Number.isFinite(state.config.aiStack) || state.config.aiStack < baseline) {
-      state.config.aiStack = baseline;
-    }
-    return Math.max(baseline, current, defaultStack);
+    return syncAiBaselineWithBlind();
   }
 
   function createAiPlayer(index, options = {}, context = {}) {
@@ -1395,6 +1412,19 @@
       name.textContent = player.name;
       header.appendChild(name);
 
+      const stack = document.createElement('p');
+      stack.className = 'holdem-player__stack';
+      const stackLabel = document.createElement('span');
+      stackLabel.className = 'holdem-player__stack-label';
+      stackLabel.dataset.i18n = 'index.sections.holdem.labels.stack';
+      stackLabel.textContent = translate('index.sections.holdem.labels.stack', 'Stack');
+      const stackValue = document.createElement('span');
+      stackValue.className = 'holdem-player__stack-value';
+      stackValue.textContent = formatAmount(player.stack);
+      stack.appendChild(stackLabel);
+      stack.appendChild(stackValue);
+      header.appendChild(stack);
+
       article.appendChild(header);
 
       const cardList = document.createElement('ul');
@@ -1516,12 +1546,20 @@
     }
   }
 
+  function renderBlindDisplay() {
+    if (!elements.blindDisplay) {
+      return;
+    }
+    elements.blindDisplay.textContent = formatAmount(state.blind);
+  }
+
   function render() {
     renderPot();
     renderCommunity();
     renderPlayerHand();
     renderOpponents();
     renderControls();
+    renderBlindDisplay();
   }
   function evaluateFiveCardHand(cards) {
     const values = cards.map(card => card.value).sort((a, b) => b - a);
@@ -2423,41 +2461,10 @@
   }
 
   function refreshStacksForNewHand() {
-    const hero = getHero();
-    const heroStack = hero ? sanitizeStack(hero.stack, state.config.startingStack) : enforceBaseAiStack();
-    let respawnStack = enforceBaseAiStack();
-    let aiCount = 0;
-    let bustedAiCount = 0;
-
+    const respawnStack = enforceBaseAiStack();
     for (let i = 0; i < state.players.length; i += 1) {
       const player = state.players[i];
-      if (player.id === 'hero') {
-        continue;
-      }
-      aiCount += 1;
-      if (player.stack <= 0) {
-        bustedAiCount += 1;
-      }
-    }
-
-    if (aiCount > 0 && bustedAiCount === aiCount) {
-      let computedStack = heroStack * 100;
-      if (!Number.isFinite(computedStack) || computedStack <= 0) {
-        computedStack = state.config.aiStack;
-      } else if (computedStack > Number.MAX_SAFE_INTEGER) {
-        computedStack = Number.MAX_SAFE_INTEGER;
-      }
-      respawnStack = sanitizeStack(computedStack, state.config.aiStack);
-      if (respawnStack <= 0) {
-        respawnStack = state.config.aiStack;
-      }
-      respawnStack = Math.max(enforceBaseAiStack(), respawnStack);
-      state.config.aiStack = respawnStack;
-    }
-
-    for (let i = 0; i < state.players.length; i += 1) {
-      const player = state.players[i];
-      if (player.id === 'hero') {
+      if (!player || player.id === 'hero') {
         continue;
       }
       if (player.stack <= 0) {
@@ -2725,42 +2732,30 @@
     return applyHoldemBlindFromOptions(baseline * numericFactor);
   }
 
-  function wipeHoldemOpponentsFromOptions() {
+  function restartHoldemTable() {
     ensurePlayers();
     syncHeroStackWithGameState();
-    const hero = getHero();
-    const heroStack = hero ? sanitizeStack(hero.stack, state.config.startingStack) : enforceBaseAiStack();
-    let computedStack = heroStack * 100;
-    if (!Number.isFinite(computedStack) || computedStack <= 0) {
-      computedStack = state.config.aiStack;
-    } else if (computedStack > Number.MAX_SAFE_INTEGER) {
-      computedStack = Number.MAX_SAFE_INTEGER;
-    }
-    let respawnStack = sanitizeStack(computedStack, state.config.aiStack);
-    if (!Number.isFinite(respawnStack) || respawnStack <= 0) {
-      respawnStack = state.config.aiStack;
-    }
-    const baseline = enforceBaseAiStack();
-    respawnStack = Math.max(baseline, respawnStack);
-    state.config.aiStack = respawnStack;
-    state.baseAiStack = respawnStack;
+    const respawnStack = enforceBaseAiStack();
     for (let i = 0; i < state.players.length; i += 1) {
       const player = state.players[i];
-      if (player.id === 'hero') {
+      if (!player || player.id === 'hero') {
         continue;
       }
       player.stack = respawnStack;
       player.folded = false;
       player.allIn = false;
+      player.bet = 0;
+      player.cards = [];
     }
     resetTableState();
     state.phase = 'idle';
     state.awaitingPlayer = false;
     state.activePlayerId = null;
+    state.handCount = 0;
     updateStatus('index.sections.holdem.status.intro', 'Lancez une nouvelle donne pour jouer.');
     render();
     commitAutosave();
-    dispatchHoldemEvent('aiWipe', { stack: respawnStack, blind: state.blind });
+    dispatchHoldemEvent('gameRestart', { stack: respawnStack, blind: state.blind });
     return { success: true, stack: respawnStack, blind: state.blind };
   }
 
@@ -2775,7 +2770,8 @@
       getBlind: () => state.blind,
       setBlind: value => applyHoldemBlindFromOptions(value),
       scaleBlind: factor => scaleHoldemBlindFromOptions(factor),
-      wipeOpponents: () => wipeHoldemOpponentsFromOptions()
+      restart: () => restartHoldemTable(),
+      wipeOpponents: () => restartHoldemTable()
     };
     window.atom2universHoldem = Object.freeze({ ...existing, ...api });
   }
@@ -2809,6 +2805,21 @@
     }
     if (elements.allIn) {
       elements.allIn.addEventListener('click', handlePlayerAllIn);
+    }
+    if (elements.blindMultiply) {
+      elements.blindMultiply.addEventListener('click', () => {
+        scaleHoldemBlindFromOptions(10);
+      });
+    }
+    if (elements.blindDivide) {
+      elements.blindDivide.addEventListener('click', () => {
+        scaleHoldemBlindFromOptions(0.1);
+      });
+    }
+    if (elements.restart) {
+      elements.restart.addEventListener('click', () => {
+        restartHoldemTable();
+      });
     }
   }
 

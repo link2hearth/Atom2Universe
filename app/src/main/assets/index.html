@@ -4091,6 +4091,44 @@
               </aside>
             </div>
           </div>
+          <div class="holdem-footer" id="holdemFooterControls">
+            <div class="holdem-footer__blind">
+              <span class="holdem-footer__label" data-i18n="index.sections.holdem.labels.blind">Blinde</span>
+              <span class="holdem-footer__value" id="holdemBlindDisplay">0</span>
+            </div>
+            <div class="holdem-footer__actions">
+              <button
+                type="button"
+                class="holdem-button holdem-button--compact"
+                id="holdemTableBlindDivideButton"
+                data-i18n="index.sections.holdem.controls.divideBlind"
+                data-i18n-aria-label="index.sections.holdem.controls.divideBlindAria"
+                aria-label="Diviser la blinde Hold’em par dix"
+              >
+                ÷10
+              </button>
+              <button
+                type="button"
+                class="holdem-button holdem-button--compact"
+                id="holdemTableBlindMultiplyButton"
+                data-i18n="index.sections.holdem.controls.multiplyBlind"
+                data-i18n-aria-label="index.sections.holdem.controls.multiplyBlindAria"
+                aria-label="Multiplier la blinde Hold’em par dix"
+              >
+                ×10
+              </button>
+              <button
+                type="button"
+                class="holdem-button holdem-button--accent"
+                id="holdemTableRestartButton"
+                data-i18n="index.sections.holdem.controls.restart"
+                data-i18n-aria-label="index.sections.holdem.controls.restartAria"
+                aria-label="Relancer une partie Hold’em"
+              >
+                Restart
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -5626,18 +5664,18 @@
             <h3 data-i18n="index.sections.options.holdem.title">Table Hold’em</h3>
           </div>
           <p class="option-card__description" data-i18n="index.sections.options.holdem.description">
-            Relancez les adversaires IA et ajustez la blinde du mini-jeu de poker Hold’em.
+            Lancez une nouvelle partie pour le mini-jeu de poker Hold’em et ajustez la blinde.
           </p>
-          <div class="option-row option-row--holdem-wipe">
+          <div class="option-row option-row--holdem-restart">
             <button
               type="button"
               class="option-link-button"
-              id="holdemWipeButton"
-              data-i18n="index.sections.options.holdem.wipeButton"
-              data-i18n-aria-label="index.sections.options.holdem.wipeAria"
-              aria-label="Réinitialiser la table Hold’em"
+              id="holdemRestartButton"
+              data-i18n="index.sections.options.holdem.restartButton"
+              data-i18n-aria-label="index.sections.options.holdem.restartAria"
+              aria-label="Lancer une nouvelle partie Hold’em"
             >
-              Wipe — réinitialiser les IA
+              Nouvelle partie
             </button>
           </div>
           <div class="option-row option-row--holdem-blind">

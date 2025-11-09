@@ -250,6 +250,17 @@
   text-align: center;
 }
 
+.holdem-player__stack {
+  margin: 0;
+  font-size: calc(0.9rem * var(--holdem-scale));
+  color: var(--holdem-muted-color);
+  display: flex;
+  gap: calc(0.35rem * var(--holdem-scale));
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+}
+
 .holdem-player__stack-label,
 .holdem-hand__label {
   text-transform: uppercase;
@@ -270,6 +281,7 @@
 }
 
 .holdem-player__bet-value,
+.holdem-player__stack-value,
 .holdem-hand__value {
   font-size: calc(1.05rem * var(--holdem-scale));
   color: var(--holdem-text-color);
@@ -445,6 +457,48 @@
 .holdem-button--accent:hover:not(:disabled) {
   background: rgba(45, 212, 191, 0.95);
   box-shadow: 0 18px 30px rgba(34, 211, 238, 0.35);
+}
+
+.holdem-footer {
+  margin-top: calc(1.25rem * var(--holdem-base-scale, 1));
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(0.75rem * var(--holdem-base-scale, 1));
+  padding: calc(0.85rem * var(--holdem-base-scale, 1));
+  border-radius: calc(0.9rem * var(--holdem-base-scale, 1));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(8, 18, 32, 0.6);
+}
+
+.holdem-footer__blind {
+  display: flex;
+  flex-direction: column;
+  gap: calc(0.25rem * var(--holdem-base-scale, 1));
+}
+
+.holdem-footer__label {
+  font-size: calc(0.7rem * var(--holdem-base-scale, 1));
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.75;
+}
+
+.holdem-footer__value {
+  font-size: calc(1.1rem * var(--holdem-base-scale, 1));
+  font-variant-numeric: tabular-nums;
+}
+
+.holdem-footer__actions {
+  display: flex;
+  gap: calc(0.5rem * var(--holdem-base-scale, 1));
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.holdem-footer .holdem-button {
+  min-width: clamp(3.25rem, 6vw, 4.5rem);
 }
 
 @media (max-width: 720px) {
