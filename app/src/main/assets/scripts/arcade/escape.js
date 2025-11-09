@@ -1493,25 +1493,9 @@
       doorIndexMin
     );
     const doorCell = pathCells[selectedIndex];
-    const doorCoords = getTileCoords(doorCell.row, doorCell.col);
-    level.grid[doorCoords.tileRow][doorCoords.tileCol] = TILE_TYPES.DOOR;
-    const doorIndex = level.objects.doors.length;
-    const door = {
-      id: `door-${doorIndex}`,
-      index: doorIndex,
-      cellRow: doorCell.row,
-      cellCol: doorCell.col,
-      tileRow: doorCoords.tileRow,
-      tileCol: doorCoords.tileCol,
-      keyId: null,
-      keyIndex: null,
-      plateId: null,
-      timerDuration: 0,
-      timerIndex: null,
-      kind: 'key'
-    };
-    level.objects.doors.push(door);
-
+    if (!doorCell) {
+      return null;
+    }
     const blocked = new Set([getCellKey(doorCell.row, doorCell.col)]);
     const startCoords = normalizeCellPosition(level.start);
     const distancesWithoutDoor = computeDistances(
@@ -1536,7 +1520,7 @@
         if (key === getCellKey(level.exit.cellRow, level.exit.cellCol)) {
           continue;
         }
-        if (key === getCellKey(door.cellRow, door.cellCol)) {
+        if (key === getCellKey(doorCell.row, doorCell.col)) {
           continue;
         }
         const distance = distancesWithoutDoor[row][col];
@@ -1552,12 +1536,6 @@
     }
 
     if (!candidates.length) {
-      level.grid[doorCoords.tileRow][doorCoords.tileCol] = TILE_TYPES.FLOOR;
-      if (level.objects.doors.length > doorIndex) {
-        level.objects.doors.splice(doorIndex, 1);
-      } else {
-        level.objects.doors.pop();
-      }
       return null;
     }
 
@@ -1570,22 +1548,19 @@
     const choiceIndex = Math.min(candidates.length - 1, Math.floor(rng() * Math.min(3, candidates.length)));
     const selected = candidates[choiceIndex];
     const keyCoords = getTileCoords(selected.row, selected.col);
-    level.grid[keyCoords.tileRow][keyCoords.tileCol] = TILE_TYPES.KEY;
-    const keyIndex = level.objects.keys.length;
-    const keyObject = {
-      id: `key-${keyIndex}`,
-      index: keyIndex,
+    level.grid[keyCoords.tileRow][keyCoords.tileCol] = TILE_TYPES.BONUS;
+    const bonusIndex = level.objects.bonuses.length;
+    const orb = {
+      id: `bonus-${bonusIndex}`,
+      index: bonusIndex,
       cellRow: selected.row,
       cellCol: selected.col,
       tileRow: keyCoords.tileRow,
-      tileCol: keyCoords.tileCol,
-      doorId: door.id
+      tileCol: keyCoords.tileCol
     };
-    level.objects.keys.push(keyObject);
-    door.keyId = keyObject.id;
-    door.keyIndex = keyObject.index;
+    level.objects.bonuses.push(orb);
 
-    return { door, key: keyObject, distancesWithoutDoor };
+    return { orb, distancesWithoutDoor };
   }
 
   function placePressurePlate(level, door, plateConfig, difficultyKey, rng, distancesWithoutDoor, options = {}) {
@@ -1790,6 +1765,7 @@
     level.objects.keys.forEach(item => occupied.add(getCellKey(item.cellRow, item.cellCol)));
     level.objects.doors.forEach(item => occupied.add(getCellKey(item.cellRow, item.cellCol)));
     level.objects.plates.forEach(item => occupied.add(getCellKey(item.cellRow, item.cellCol)));
+    level.objects.bonuses.forEach(item => occupied.add(getCellKey(item.cellRow, item.cellCol)));
     occupied.add(getCellKey(level.start.cellRow, level.start.cellCol));
     occupied.add(getCellKey(level.exit.cellRow, level.exit.cellCol));
     const culDepth = Math.max(0, bonusConfig.culDeSacDepth || 0);
@@ -2563,13 +2539,6 @@
         if (plate && Number.isInteger(plate.timerIndex)) {
           timersBefore[plate.timerIndex] = Number.POSITIVE_INFINITY;
         }
-        const keyObject = level.runtime.keyByCell.get(targetKey);
-        if (keyObject) {
-          const bit = 1 << keyObject.index;
-          if ((keysMask & bit) === 0) {
-            keysMask |= bit;
-          }
-        }
         const bonusObject = level.runtime.bonusByCell.get(targetKey);
         if (bonusObject) {
           const bit = Math.pow(2, bonusObject.index);
@@ -2747,9 +2716,6 @@
     clearRenderedEntities();
     board.innerHTML = '';
     board.style.setProperty('--escape-columns', String(level.grid[0]?.length || 0));
-    const guardPathTiles = level.runtime?.guardPathTiles || new Set();
-    const guardStartTiles = level.runtime?.guardStartTiles || new Set();
-    const guardVisionTiles = level.runtime?.guardVisionTiles || new Set();
     const tileMap = new Map();
     const entityMap = new Map();
     const visionIndicatorMap = new Map();
@@ -2779,12 +2745,6 @@
           if (plate && Number.isInteger(plate.pairIndex)) {
             cell.classList.add(`escape__cell--plate-pair-${plate.pairIndex}`);
           }
-        }
-        if (guardPathTiles.has(tileKey)) {
-          cell.classList.add('escape__cell--patrol');
-        }
-        if (guardStartTiles.has(tileKey)) {
-          cell.classList.add('escape__cell--guard');
         }
         const visionIndicator = document.createElement('span');
         visionIndicator.className = 'escape__vision-indicator';
@@ -2907,29 +2867,17 @@
     refreshDoorAndPlateTiles(playState);
   }
 
-  function countBits(value) {
-    let count = 0;
-    let working = value >>> 0;
-    while (working) {
-      count += working & 1;
-      working >>>= 1;
-    }
-    return count;
-  }
-
   function updateGameplayStatus() {
     if (!state.level || !state.play) {
       return;
     }
-    const totalKeys = state.level.objects?.keys?.length || 0;
-    const collectedKeys = countBits(state.play.keysMask || 0);
     const totalBonuses = state.level.objects?.bonuses?.length || 0;
     const collectedBonuses = state.play.bonusesCollected ? state.play.bonusesCollected.size : 0;
     const difficultyLabel = translate(
       `index.sections.escape.difficulty.${state.level.difficulty}`,
       state.level.difficulty
     );
-    const fallback = `Seed ${state.level.seed} — ${difficultyLabel} — Tour ${formatInteger(state.play.turn)} — Clés ${formatInteger(collectedKeys)}/${formatInteger(totalKeys)} · Bonus ${formatInteger(collectedBonuses)}/${formatInteger(totalBonuses)}`;
+    const fallback = `Seed ${state.level.seed} — ${difficultyLabel} — Tour ${formatInteger(state.play.turn)} — Orbes bonus ${formatInteger(collectedBonuses)}/${formatInteger(totalBonuses)}`;
     setMessage(
       'scripts.arcade.escape.messages.turnStatus',
       fallback,
@@ -2937,8 +2885,6 @@
         seed: state.level.seed,
         difficulty: difficultyLabel,
         turn: formatInteger(state.play.turn),
-        keys: formatInteger(collectedKeys),
-        keysTotal: formatInteger(totalKeys),
         bonuses: formatInteger(collectedBonuses),
         bonusesTotal: formatInteger(totalBonuses)
       }
@@ -2960,7 +2906,6 @@
       timers: Array.from({ length: timerCount }, () => 0),
       turn: 0,
       bonusesCollected: new Set(),
-      collectedKeys: new Set(),
       completed: false,
       caught: false
     };
@@ -3032,16 +2977,6 @@
       timersBefore[plate.timerIndex] = Number.POSITIVE_INFINITY;
     }
 
-    let collectedKey = null;
-    const keyObject = level.runtime?.keyByCell.get(targetKey);
-    if (keyObject) {
-      const bit = 1 << keyObject.index;
-      if ((keysMask & bit) === 0) {
-        keysMask |= bit;
-        collectedKey = keyObject;
-      }
-    }
-
     let collectedBonus = null;
     const bonusObject = level.runtime?.bonusByCell.get(targetKey);
     if (bonusObject) {
@@ -3107,7 +3042,6 @@
       keysMask,
       timers: timersAfter,
       turn: playState.turn + 1,
-      collectedKey,
       collectedBonus,
       reachedExit: targetRow === level.exit.cellRow && targetCol === level.exit.cellCol
     };
@@ -3156,20 +3090,6 @@
     state.play.keysMask = result.keysMask;
     state.play.timers = result.timers;
     state.play.turn = result.turn;
-
-    if (result.collectedKey) {
-      const key = result.collectedKey;
-      state.play.collectedKeys.add(key.id);
-      const coords = getTileCoords(key.cellRow, key.cellCol);
-      const tileKey = getTileKey(coords.tileRow, coords.tileCol);
-      const tile = state.tileMap?.get(tileKey);
-      if (tile) {
-        tile.classList.remove('escape__cell--key');
-        tile.classList.add('escape__cell--floor', 'escape__cell--collected');
-      }
-      const cellKey = getCellKey(key.cellRow, key.cellCol);
-      state.level.runtime?.keyByCell.delete(cellKey);
-    }
 
     if (result.collectedBonus) {
       const bonus = result.collectedBonus;
