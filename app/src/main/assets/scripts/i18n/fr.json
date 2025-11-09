@@ -147,6 +147,17 @@
           "empty": "Aucune image bonus permanente débloquée pour le moment.",
           "view": "Afficher {card}",
           "count": "×{count}"
+        },
+        "bonus2Images": {
+          "title": "Images Bonus 2",
+          "subtitle": "Vos images bonus supplémentaires gagnées dans le gacha.",
+          "toggle": {
+            "collapse": "Réduire",
+            "expand": "Développer"
+          },
+          "empty": "Aucune image bonus 2 débloquée pour le moment.",
+          "view": "Afficher {card}",
+          "count": "×{count}"
         }
       },
       "info": {
@@ -3309,6 +3320,10 @@
       "bonusImages": {
         "toastNew": "Image bonus débloquée : {card}",
         "toastDuplicate": "Image bonus obtenue à nouveau : {card}"
+      },
+      "bonusImages2": {
+        "toastNew": "Image bonus 2 débloquée : {card}",
+        "toastDuplicate": "Image bonus 2 obtenue à nouveau : {card}"
       },
       "featured": {
         "today": "Aujourd’hui",

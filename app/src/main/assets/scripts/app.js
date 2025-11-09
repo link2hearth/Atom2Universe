@@ -236,6 +236,7 @@ const INFO_CHARACTERS_COLLAPSED_STORAGE_KEY = 'atom2univers.info.charactersColla
 const INFO_CARDS_COLLAPSED_STORAGE_KEY = 'atom2univers.info.cardsCollapsed';
 const COLLECTION_IMAGES_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.imagesCollapsed';
 const COLLECTION_BONUS_IMAGES_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.bonusImagesCollapsed';
+const COLLECTION_BONUS2_IMAGES_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.bonus2ImagesCollapsed';
 const HEADER_COLLAPSED_STORAGE_KEY = 'atom2univers.ui.headerCollapsed';
 const ARCADE_HUB_CARD_STATE_STORAGE_KEY = 'atom2univers.arcadeHub.cardStates.v1';
 const ARCADE_HUB_CARD_ORDER_STORAGE_KEY = 'atom2univers.arcadeHub.cardOrder.v1';
@@ -4557,6 +4558,23 @@ function hasOwnedGachaBonusImages() {
   });
 }
 
+function hasOwnedGachaBonus2Images() {
+  const collection = gameState.gachaBonusImages && typeof gameState.gachaBonusImages === 'object'
+    ? gameState.gachaBonusImages
+    : {};
+  if (!Array.isArray(GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS)) {
+    return false;
+  }
+  return GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS.some(def => {
+    if (!def || !def.id) {
+      return false;
+    }
+    const entry = collection[def.id];
+    const count = Number(entry?.count ?? entry);
+    return Number.isFinite(count) && count > 0;
+  });
+}
+
 function getPageUnlockState() {
   if (!gameState.pageUnlocks || typeof gameState.pageUnlocks !== 'object') {
     gameState.pageUnlocks = createInitialPageUnlockState();
@@ -5841,6 +5859,11 @@ function collectDomElements() {
   collectionBonusImagesToggle: document.getElementById('collectionBonusImagesToggle'),
   collectionBonusImagesList: document.getElementById('collectionBonusImagesList'),
   collectionBonusImagesEmpty: document.getElementById('collectionBonusImagesEmpty'),
+  collectionBonus2ImagesCard: document.getElementById('collectionBonus2ImagesCard'),
+  collectionBonus2ImagesContent: document.getElementById('collection-bonus2-images-content'),
+  collectionBonus2ImagesToggle: document.getElementById('collectionBonus2ImagesToggle'),
+  collectionBonus2ImagesList: document.getElementById('collectionBonus2ImagesList'),
+  collectionBonus2ImagesEmpty: document.getElementById('collectionBonus2ImagesEmpty'),
   infoCharactersCard: document.querySelector('.info-card--characters'),
   infoCharactersContent: document.getElementById('info-characters-content'),
   infoCharactersToggle: document.getElementById('infoCharactersToggle'),
@@ -6930,6 +6953,15 @@ function updateCollectionBonusImagesVisibility() {
   elements.collectionBonusImagesCard.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
 }
 
+function updateCollectionBonus2ImagesVisibility() {
+  if (!elements.collectionBonus2ImagesCard) {
+    return;
+  }
+  const unlocked = isPageUnlocked('collection') && hasOwnedGachaBonus2Images();
+  elements.collectionBonus2ImagesCard.hidden = !unlocked;
+  elements.collectionBonus2ImagesCard.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
+}
+
 function updateInfoDevkitVisibility() {
   if (!elements.infoDevkitShopCard) {
     return;
@@ -7261,6 +7293,20 @@ function updateCollectionBonusImagesToggleLabel(collapsed) {
   elements.collectionBonusImagesToggle.setAttribute('aria-label', label);
 }
 
+function updateCollectionBonus2ImagesToggleLabel(collapsed) {
+  if (!elements.collectionBonus2ImagesToggle) {
+    return;
+  }
+  const key = collapsed
+    ? 'index.sections.collection.bonus2Images.toggle.expand'
+    : 'index.sections.collection.bonus2Images.toggle.collapse';
+  const fallback = collapsed ? 'Expand' : 'Collapse';
+  const label = translateOrDefault(key, fallback);
+  elements.collectionBonus2ImagesToggle.setAttribute('data-i18n', key);
+  elements.collectionBonus2ImagesToggle.textContent = label;
+  elements.collectionBonus2ImagesToggle.setAttribute('aria-label', label);
+}
+
 function setInfoCharactersCollapsed(collapsed, options = {}) {
   if (!elements.infoCharactersCard || !elements.infoCharactersContent || !elements.infoCharactersToggle) {
     return;
@@ -7365,6 +7411,23 @@ function setCollectionBonusImagesCollapsed(collapsed, options = {}) {
   }
 }
 
+function setCollectionBonus2ImagesCollapsed(collapsed, options = {}) {
+  if (!elements.collectionBonus2ImagesCard
+    || !elements.collectionBonus2ImagesContent
+    || !elements.collectionBonus2ImagesToggle) {
+    return;
+  }
+  const shouldCollapse = !!collapsed;
+  elements.collectionBonus2ImagesCard.classList.toggle('info-card--collapsed', shouldCollapse);
+  elements.collectionBonus2ImagesContent.hidden = shouldCollapse;
+  elements.collectionBonus2ImagesContent.setAttribute('aria-hidden', shouldCollapse ? 'true' : 'false');
+  elements.collectionBonus2ImagesToggle.setAttribute('aria-expanded', shouldCollapse ? 'false' : 'true');
+  updateCollectionBonus2ImagesToggleLabel(shouldCollapse);
+  if (options.persist !== false) {
+    writeStoredInfoCardCollapsed(COLLECTION_BONUS2_IMAGES_COLLAPSED_STORAGE_KEY, shouldCollapse);
+  }
+}
+
 function toggleCollectionImagesCollapsed() {
   if (!elements.collectionImagesCard) {
     return;
@@ -7379,6 +7442,14 @@ function toggleCollectionBonusImagesCollapsed() {
   }
   const currentlyCollapsed = elements.collectionBonusImagesCard.classList.contains('info-card--collapsed');
   setCollectionBonusImagesCollapsed(!currentlyCollapsed);
+}
+
+function toggleCollectionBonus2ImagesCollapsed() {
+  if (!elements.collectionBonus2ImagesCard) {
+    return;
+  }
+  const currentlyCollapsed = elements.collectionBonus2ImagesCard.classList.contains('info-card--collapsed');
+  setCollectionBonus2ImagesCollapsed(!currentlyCollapsed);
 }
 
 function initCollectionImagesCard() {
@@ -7409,6 +7480,23 @@ function initCollectionBonusImagesCard() {
   elements.collectionBonusImagesToggle.addEventListener('click', event => {
     event.preventDefault();
     toggleCollectionBonusImagesCollapsed();
+  });
+}
+
+function initCollectionBonus2ImagesCard() {
+  if (!elements.collectionBonus2ImagesCard
+    || !elements.collectionBonus2ImagesContent
+    || !elements.collectionBonus2ImagesToggle) {
+    return;
+  }
+  const initialCollapsed = readStoredInfoCardCollapsed(
+    COLLECTION_BONUS2_IMAGES_COLLAPSED_STORAGE_KEY,
+    false
+  );
+  setCollectionBonus2ImagesCollapsed(initialCollapsed, { persist: false });
+  elements.collectionBonus2ImagesToggle.addEventListener('click', event => {
+    event.preventDefault();
+    toggleCollectionBonus2ImagesCollapsed();
   });
 }
 
@@ -7514,6 +7602,23 @@ function subscribeCollectionBonusImagesLanguageUpdates() {
   }
 }
 
+function subscribeCollectionBonus2ImagesLanguageUpdates() {
+  const handler = () => {
+    const collapsed = elements.collectionBonus2ImagesCard
+      ? elements.collectionBonus2ImagesCard.classList.contains('info-card--collapsed')
+      : false;
+    updateCollectionBonus2ImagesToggleLabel(collapsed);
+  };
+  const api = getI18nApi();
+  if (api && typeof api.onLanguageChanged === 'function') {
+    api.onLanguageChanged(handler);
+    return;
+  }
+  if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
+    globalThis.addEventListener('i18n:languagechange', handler);
+  }
+}
+
 function subscribeBigBangLanguageUpdates() {
   const handler = () => {
     updateBigBangActionUI();
@@ -7560,6 +7665,7 @@ function updatePrimaryNavigationLocks() {
   updateInfoCardsVisibility();
   updateCollectionImagesVisibility();
   updateCollectionBonusImagesVisibility();
+  updateCollectionBonus2ImagesVisibility();
   updateMusicModuleVisibility();
 
   ensureActivePageUnlocked();
@@ -13562,6 +13668,7 @@ function bindDomEventListeners() {
   initInfoCardsCard();
   initCollectionImagesCard();
   initCollectionBonusImagesCard();
+  initCollectionBonus2ImagesCard();
   if (typeof initSpecialCardOverlay === 'function') {
     initSpecialCardOverlay();
   }
@@ -18015,9 +18122,22 @@ function serializeState() {
         ? gameState.gachaBonusImages
         : {};
       const result = {};
-      const knownIds = Array.isArray(GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS)
-        ? GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS.map(def => def.id)
-        : Object.keys(source);
+      const knownIdSet = new Set();
+      if (Array.isArray(GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS)) {
+        GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS.forEach(def => {
+          if (def && def.id) {
+            knownIdSet.add(def.id);
+          }
+        });
+      }
+      if (Array.isArray(GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS)) {
+        GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS.forEach(def => {
+          if (def && def.id) {
+            knownIdSet.add(def.id);
+          }
+        });
+      }
+      const knownIds = knownIdSet.size > 0 ? Array.from(knownIdSet) : Object.keys(source);
       knownIds.forEach(imageId => {
         if (!imageId) {
           return;
@@ -19826,6 +19946,7 @@ function initializeDomBoundModules() {
   subscribeInfoCardsLanguageUpdates();
   subscribeCollectionImagesLanguageUpdates();
   subscribeCollectionBonusImagesLanguageUpdates();
+  subscribeCollectionBonus2ImagesLanguageUpdates();
   subscribeBigBangLanguageUpdates();
   if (typeof subscribeSpecialCardOverlayLanguageUpdates === 'function') {
     subscribeSpecialCardOverlayLanguageUpdates();
