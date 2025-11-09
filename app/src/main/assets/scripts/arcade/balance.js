@@ -242,7 +242,7 @@
 
     const rawRewards = globalConfig?.rewards;
     const perfectBalanceConfig = rawRewards?.perfectBalance || {};
-    const rawMaxAttempts = Math.floor(Number(perfectBalanceConfig.maxAttempts));
+    const normalizedMaxAttempts = normalizeMaxAttempts(perfectBalanceConfig.maxAttempts);
     const rawTicketAmount = Math.floor(Number(perfectBalanceConfig.ticketAmount));
     const rawTicketChance = Number(perfectBalanceConfig.ticketChance);
     const gachaTickets = normalizeGachaTickets(
@@ -251,9 +251,8 @@
     );
     const rewards = {
       perfectBalance: {
-        maxAttempts: Number.isFinite(rawMaxAttempts) && rawMaxAttempts > 0
-          ? clamp(rawMaxAttempts, 1, 10)
-          : DEFAULT_REWARD_RULES.perfectBalance.maxAttempts,
+        maxAttempts: normalizedMaxAttempts.default,
+        maxAttemptsPerDifficulty: normalizedMaxAttempts.perDifficulty,
         ticketAmount: Number.isFinite(rawTicketAmount)
           ? clamp(rawTicketAmount, 0, 99)
           : DEFAULT_REWARD_RULES.perfectBalance.ticketAmount,
@@ -359,6 +358,77 @@
     enforceBounds('easy');
     enforceBounds('hard');
     return normalized;
+  }
+
+  function normalizeMaxAttempts(rawMaxAttempts) {
+    const fallback = clamp(
+      DEFAULT_REWARD_RULES.perfectBalance.maxAttempts,
+      1,
+      10
+    );
+    const parseAttempts = candidate => {
+      const numeric = Math.floor(Number(candidate));
+      if (!Number.isFinite(numeric) || numeric <= 0) {
+        return null;
+      }
+      return clamp(numeric, 1, 10);
+    };
+    if (
+      rawMaxAttempts
+      && typeof rawMaxAttempts === 'object'
+      && !Array.isArray(rawMaxAttempts)
+    ) {
+      const normalized = {};
+      Object.entries(rawMaxAttempts).forEach(([key, value]) => {
+        const parsed = parseAttempts(value);
+        if (parsed !== null) {
+          normalized[key] = parsed;
+        }
+      });
+      const defaultValue = Object.prototype.hasOwnProperty.call(normalized, 'default')
+        ? normalized.default
+        : parseAttempts(rawMaxAttempts.default);
+      const resolvedDefault = defaultValue ?? fallback;
+      if (!Object.prototype.hasOwnProperty.call(normalized, 'default')) {
+        normalized.default = resolvedDefault;
+      }
+      return {
+        default: resolvedDefault,
+        perDifficulty: normalized
+      };
+    }
+    const parsed = parseAttempts(rawMaxAttempts);
+    return {
+      default: parsed ?? fallback,
+      perDifficulty: null
+    };
+  }
+
+  function resolveMaxAttemptsForMode(rules, difficultyId) {
+    if (!rules) {
+      return 0;
+    }
+    const perDifficulty = rules.maxAttemptsPerDifficulty;
+    if (
+      perDifficulty
+      && typeof perDifficulty === 'object'
+      && difficultyId
+      && Object.prototype.hasOwnProperty.call(perDifficulty, difficultyId)
+    ) {
+      return perDifficulty[difficultyId];
+    }
+    if (
+      perDifficulty
+      && typeof perDifficulty === 'object'
+      && Object.prototype.hasOwnProperty.call(perDifficulty, 'default')
+    ) {
+      return perDifficulty.default;
+    }
+    const numeric = Number(rules.maxAttempts);
+    if (Number.isFinite(numeric) && numeric > 0) {
+      return clamp(Math.floor(numeric), 1, 10);
+    }
+    return 0;
   }
 
   function normalizeBoardPhysics(rawPhysics) {
@@ -1705,7 +1775,9 @@
       if (!rules) {
         return;
       }
-      const maxAttempts = Number(rules.maxAttempts) || 0;
+      const activeMode = this.getDifficultyMode(this.activeDifficultyId);
+      const difficultyId = activeMode?.id;
+      const maxAttempts = resolveMaxAttemptsForMode(rules, difficultyId);
       if (maxAttempts > 0 && this.testsSinceReset > maxAttempts) {
         return;
       }
@@ -1713,8 +1785,6 @@
         return;
       }
       const gachaTicketsConfig = rules.gachaTickets || {};
-      const activeMode = this.getDifficultyMode(this.activeDifficultyId);
-      const difficultyId = activeMode?.id;
       const amountCandidates = [];
       if (difficultyId && Object.prototype.hasOwnProperty.call(gachaTicketsConfig, difficultyId)) {
         amountCandidates.push(gachaTicketsConfig[difficultyId]);

@@ -97,9 +97,18 @@
   "defaultSetId": "equilibrium",
   "rewards": {
     "perfectBalance": {
-      "maxAttempts": 2,
+      "maxAttempts": {
+        "default": 2,
+        "easy": 3,
+        "hard": 2
+      },
       "ticketAmount": 1,
-      "ticketChance": 0.4
+      "ticketChance": 1,
+      "gachaTickets": {
+        "default": 1,
+        "easy": 1,
+        "hard": 3
+      }
     }
   }
 }
