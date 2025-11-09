@@ -47,6 +47,9 @@
 
   const AUTOSAVE_GAME_ID = 'othello';
   let autosaveTimerId = null;
+  let boardResizeObserver = null;
+  let pendingBoardSizingFrame = null;
+  let boardViewportListenersAttached = false;
 
   onReady(() => {
     const elements = getElements();
@@ -55,6 +58,9 @@
     }
     state.elements = elements;
     buildBoard();
+    initBoardViewportListeners();
+    initBoardResizeObserver();
+    scheduleBoardSizingUpdate();
     attachEvents();
     attachLanguageListener();
     if (!restoreAutosave()) {
@@ -128,8 +134,17 @@
   }
 
   function buildBoard() {
+    if (!state.elements || !state.elements.board) {
+      return;
+    }
     const cells = new Array(BOARD_SIZE);
-    state.elements.board.innerHTML = '';
+    const { board } = state.elements;
+    board.innerHTML = '';
+    board.setAttribute('role', 'grid');
+    board.setAttribute('aria-rowcount', String(BOARD_SIZE));
+    board.setAttribute('aria-colcount', String(BOARD_SIZE));
+    board.style.gridTemplateColumns = `repeat(${BOARD_SIZE}, var(--othello-cell-size))`;
+    board.style.gridAutoRows = 'var(--othello-cell-size)';
     for (let row = 0; row < BOARD_SIZE; row += 1) {
       cells[row] = new Array(BOARD_SIZE);
       for (let col = 0; col < BOARD_SIZE; col += 1) {
@@ -141,11 +156,12 @@
         button.setAttribute('role', 'gridcell');
         button.setAttribute('aria-rowindex', String(row + 1));
         button.setAttribute('aria-colindex', String(col + 1));
-        state.elements.board.appendChild(button);
+        board.appendChild(button);
         cells[row][col] = button;
       }
     }
     state.cells = cells;
+    scheduleBoardSizingUpdate();
   }
 
   function handleBoardClick(event) {
@@ -424,6 +440,122 @@
       }
     }
     updateScore();
+    scheduleBoardSizingUpdate();
+  }
+
+  function parsePixelValue(value) {
+    if (typeof value !== 'string') {
+      return 0;
+    }
+    const parsed = Number.parseFloat(value);
+    return Number.isFinite(parsed) ? parsed : 0;
+  }
+
+  function updateBoardSizing() {
+    if (!state.elements || !state.elements.board) {
+      return;
+    }
+    if (typeof window === 'undefined') {
+      return;
+    }
+    const board = state.elements.board;
+    const container = board.parentElement instanceof HTMLElement ? board.parentElement : board;
+    const rect = container.getBoundingClientRect();
+    const containerWidth = rect.width;
+    if (!Number.isFinite(containerWidth) || containerWidth <= 0) {
+      return;
+    }
+    const targetWidth = containerWidth * 0.95;
+    if (!Number.isFinite(targetWidth) || targetWidth <= 0) {
+      return;
+    }
+    const computedStyle = window.getComputedStyle(board);
+    const paddingLeft = parsePixelValue(computedStyle.paddingLeft);
+    const paddingRight = parsePixelValue(computedStyle.paddingRight);
+    const borderLeft = parsePixelValue(computedStyle.borderLeftWidth);
+    const borderRight = parsePixelValue(computedStyle.borderRightWidth);
+    const gapValue = parsePixelValue(
+      computedStyle.columnGap || computedStyle.gridColumnGap || computedStyle.gap
+    );
+    const outerSpacing = paddingLeft + paddingRight + borderLeft + borderRight;
+    const gapTotal = gapValue * Math.max(0, BOARD_SIZE - 1);
+    const maxCellSize = Math.max((targetWidth - outerSpacing - gapTotal) / BOARD_SIZE, 0);
+    let cellSize = maxCellSize;
+    if (!Number.isFinite(cellSize) || cellSize <= 0) {
+      const fallback = parsePixelValue(computedStyle.getPropertyValue('--othello-cell-size'));
+      cellSize = fallback > 0 ? Math.min(fallback, maxCellSize) : maxCellSize;
+    }
+    if (!Number.isFinite(cellSize) || cellSize <= 0) {
+      return;
+    }
+    const contentWidth = cellSize * BOARD_SIZE;
+    const boardWidth = outerSpacing + gapTotal + contentWidth;
+    const boundedWidth = Math.min(boardWidth, targetWidth);
+    board.style.setProperty('--othello-cell-size', `${cellSize}px`);
+    board.style.setProperty('--othello-board-max-width', `${Math.max(boundedWidth, 0)}px`);
+    board.style.gridTemplateColumns = `repeat(${BOARD_SIZE}, var(--othello-cell-size))`;
+    board.style.gridAutoRows = 'var(--othello-cell-size)';
+    board.style.maxWidth = `${Math.max(boundedWidth, 0)}px`;
+  }
+
+  function scheduleBoardSizingUpdate() {
+    if (typeof window === 'undefined') {
+      updateBoardSizing();
+      return;
+    }
+    if (pendingBoardSizingFrame != null) {
+      return;
+    }
+    const run = () => {
+      pendingBoardSizingFrame = null;
+      updateBoardSizing();
+    };
+    if (typeof window.requestAnimationFrame === 'function') {
+      pendingBoardSizingFrame = window.requestAnimationFrame(run);
+    } else {
+      pendingBoardSizingFrame = window.setTimeout(run, 16);
+    }
+  }
+
+  function initBoardResizeObserver() {
+    if (!state.elements || !state.elements.board || typeof window === 'undefined') {
+      return;
+    }
+    if (typeof window.ResizeObserver !== 'function') {
+      return;
+    }
+    const board = state.elements.board;
+    const target = board.parentElement instanceof HTMLElement ? board.parentElement : board;
+    if (!target) {
+      return;
+    }
+    if (boardResizeObserver) {
+      try {
+        boardResizeObserver.disconnect();
+      } catch (error) {
+        // Ignore disconnect errors.
+      }
+    }
+    boardResizeObserver = new window.ResizeObserver(() => {
+      scheduleBoardSizingUpdate();
+    });
+    boardResizeObserver.observe(target);
+  }
+
+  function initBoardViewportListeners() {
+    if (typeof window === 'undefined' || boardViewportListenersAttached) {
+      return;
+    }
+    const handleViewportResize = () => {
+      scheduleBoardSizingUpdate();
+    };
+    window.addEventListener('resize', handleViewportResize, { passive: true });
+    window.addEventListener('orientationchange', handleViewportResize);
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', handleViewportResize);
+      window.visualViewport.addEventListener('scroll', handleViewportResize);
+    }
+    boardViewportListenersAttached = true;
   }
 
   function updateScore() {
@@ -837,5 +969,23 @@
       board[row] = new Array(BOARD_SIZE).fill(0);
     }
     return board;
+  }
+
+  if (typeof window !== 'undefined') {
+    const existingApi = typeof window.othelloArcade === 'object' && window.othelloArcade
+      ? window.othelloArcade
+      : {};
+    const previousOnEnter = typeof existingApi.onEnter === 'function' ? existingApi.onEnter : null;
+    existingApi.onEnter = () => {
+      if (typeof previousOnEnter === 'function') {
+        try {
+          previousOnEnter();
+        } catch (error) {
+          // Ignore errors from previous onEnter handlers to preserve new sizing logic.
+        }
+      }
+      scheduleBoardSizingUpdate();
+    };
+    window.othelloArcade = existingApi;
   }
 })();
