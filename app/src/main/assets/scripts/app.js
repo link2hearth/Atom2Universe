@@ -18020,6 +18020,80 @@ function getAndroidSaveBridge() {
   return null;
 }
 
+function normalizeNativeBridgePayload(raw) {
+  if (typeof raw !== 'string' || !raw) {
+    return raw;
+  }
+  try {
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== 'object') {
+      return raw;
+    }
+    const schema = typeof parsed.schema === 'string' ? parsed.schema.toLowerCase() : '';
+    const version = Number(parsed.version);
+    const hasClicker = parsed.clicker && typeof parsed.clicker === 'object';
+    const isEnvelope = schema === 'atom2univers.save.v2'
+      || (Number.isFinite(version) && version >= 2 && hasClicker);
+    if (!isEnvelope) {
+      return raw;
+    }
+
+    const safeClone = value => {
+      if (!value || typeof value !== 'object') {
+        return undefined;
+      }
+      try {
+        return JSON.parse(JSON.stringify(value));
+      } catch (error) {
+        return undefined;
+      }
+    };
+
+    const result = hasClicker ? safeClone(parsed.clicker) || {} : {};
+
+    if (!result.arcadeProgress && parsed.arcadeProgress && typeof parsed.arcadeProgress === 'object') {
+      const clonedProgress = safeClone(parsed.arcadeProgress);
+      if (clonedProgress) {
+        result.arcadeProgress = clonedProgress;
+      }
+    }
+
+    if (!result.meta && parsed.meta && typeof parsed.meta === 'object') {
+      const clonedMeta = safeClone(parsed.meta);
+      if (clonedMeta) {
+        result.meta = clonedMeta;
+      }
+    }
+
+    if (result.lastSave == null && parsed.lastSave != null) {
+      result.lastSave = parsed.lastSave;
+    }
+
+    if (result.updatedAt == null && parsed.updatedAt != null) {
+      result.updatedAt = parsed.updatedAt;
+    }
+
+    const hasCoreClickerFields = result
+      && typeof result === 'object'
+      && result.atoms != null
+      && result.lifetime != null
+      && result.perClick != null
+      && result.perSecond != null;
+
+    if (!hasCoreClickerFields) {
+      return null;
+    }
+
+    try {
+      return JSON.stringify(result);
+    } catch (error) {
+      return raw;
+    }
+  } catch (error) {
+    return raw;
+  }
+}
+
 function readNativeSaveData() {
   const bridge = getAndroidSaveBridge();
   if (!bridge || typeof bridge.loadData !== 'function') {
@@ -18027,12 +18101,11 @@ function readNativeSaveData() {
   }
   try {
     const raw = bridge.loadData();
-    if (typeof raw === 'string') {
-      return raw;
+    if (raw == null) {
+      return null;
     }
-    if (raw != null) {
-      return String(raw);
-    }
+    const normalized = normalizeNativeBridgePayload(typeof raw === 'string' ? raw : String(raw));
+    return typeof normalized === 'string' ? normalized : null;
   } catch (error) {
     console.error('Unable to read native save data', error);
   }

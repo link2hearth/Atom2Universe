@@ -29,6 +29,61 @@
 
   const clampObject = value => (value && typeof value === 'object' ? value : {});
 
+  const safeClone = value => {
+    if (!value || typeof value !== 'object') {
+      return null;
+    }
+    try {
+      return JSON.parse(JSON.stringify(value));
+    } catch (error) {
+      return null;
+    }
+  };
+
+  const extractArcadeProgressFromNativePayload = payload => {
+    if (!payload || typeof payload !== 'object') {
+      return null;
+    }
+    if (payload.entries && typeof payload.entries === 'object') {
+      const version = Number(payload.version);
+      return {
+        version: Number.isFinite(version) && version > 0 ? version : 1,
+        entries: payload.entries
+      };
+    }
+
+    const candidate = (() => {
+      if (payload.arcadeProgress && typeof payload.arcadeProgress === 'object') {
+        return payload.arcadeProgress;
+      }
+      const clicker = payload.clicker && typeof payload.clicker === 'object'
+        ? payload.clicker
+        : null;
+      if (clicker && clicker.arcadeProgress && typeof clicker.arcadeProgress === 'object') {
+        return clicker.arcadeProgress;
+      }
+      return null;
+    })();
+
+    if (!candidate || typeof candidate !== 'object') {
+      return null;
+    }
+
+    const entries = candidate.entries && typeof candidate.entries === 'object'
+      ? candidate.entries
+      : candidate;
+
+    const versionCandidate = Number(candidate.version);
+    const fallbackVersion = Number(payload.version);
+    const version = Number.isFinite(versionCandidate) && versionCandidate > 0
+      ? versionCandidate
+      : Number.isFinite(fallbackVersion) && fallbackVersion > 0
+        ? fallbackVersion
+        : 1;
+
+    return { version, entries };
+  };
+
   const deepClone = value => {
     if (value == null) {
       return value;
@@ -63,21 +118,37 @@
         if (raw) {
           const parsed = JSON.parse(raw);
           if (parsed && typeof parsed === 'object') {
-            const entries = clampObject(parsed.entries);
-            Object.keys(entries).forEach(key => {
-              const entry = entries[key];
-              if (entry && typeof entry === 'object' && entry.state != null) {
-                const cloned = deepClone(entry.state);
-                if (cloned != null) {
-                  result.entries[key] = {
-                    state: cloned,
-                    updatedAt: Number.isFinite(entry.updatedAt) ? entry.updatedAt : Date.now()
-                  };
+            const progress = extractArcadeProgressFromNativePayload(parsed);
+            if (progress && progress.entries && typeof progress.entries === 'object') {
+              result.version = Number.isFinite(progress.version) && progress.version > 0
+                ? Math.floor(progress.version)
+                : result.version;
+              const entries = clampObject(progress.entries);
+              Object.keys(entries).forEach(key => {
+                const entry = entries[key];
+                if (entry && typeof entry === 'object' && entry.state != null) {
+                  const cloned = deepClone(entry.state);
+                  if (cloned != null) {
+                    result.entries[key] = {
+                      state: cloned,
+                      updatedAt: Number.isFinite(entry.updatedAt) ? entry.updatedAt : Date.now()
+                    };
+                  }
+                } else if (entry && typeof entry === 'object') {
+                  const fallbackState = entry.arcadeState && typeof entry.arcadeState === 'object'
+                    ? safeClone(entry.arcadeState)
+                    : deepClone(entry);
+                  if (fallbackState != null) {
+                    result.entries[key] = {
+                      state: fallbackState,
+                      updatedAt: Number.isFinite(entry.updatedAt) ? entry.updatedAt : Date.now()
+                    };
+                  }
                 }
-              }
-            });
-            // If data is loaded from the bridge, we're done.
-            return result;
+              });
+              // If data is loaded from the bridge, we're done.
+              return result;
+            }
           }
         }
       } catch (error) {
