@@ -4106,7 +4106,38 @@ const gameState = {
 
 if (typeof window !== 'undefined') {
   window.atom2universGameState = gameState;
+  window.atom2universPrimarySaveReady = false;
 }
+
+function setPrimarySaveReadyFlag(value) {
+  const normalized = value === true;
+  if (typeof window !== 'undefined') {
+    window.atom2universPrimarySaveReady = normalized;
+  }
+  if (!gameState || typeof gameState !== 'object') {
+    return;
+  }
+  try {
+    if (!Object.prototype.hasOwnProperty.call(gameState, '__primarySaveReady')) {
+      Object.defineProperty(gameState, '__primarySaveReady', {
+        configurable: true,
+        enumerable: false,
+        writable: true,
+        value: normalized
+      });
+      return;
+    }
+  } catch (error) {
+    // Fallback to direct assignment if defineProperty fails.
+  }
+  try {
+    gameState.__primarySaveReady = normalized;
+  } catch (error) {
+    // Silently ignore if the flag cannot be updated.
+  }
+}
+
+setPrimarySaveReadyFlag(false);
 
 const gachaTicketIncreaseListeners = new Set();
 let gachaTicketObserverPauseCount = 0;
@@ -19395,6 +19426,7 @@ function applySerializedGameState(raw) {
 }
 
 function loadGame() {
+  setPrimarySaveReadyFlag(false);
   try {
     resetFrenzyState({ skipApply: true });
     resetTicketStarState({ reschedule: true });
@@ -19442,6 +19474,7 @@ function loadGame() {
       recalcProduction();
       renderShop();
       updateUI();
+      setPrimarySaveReadyFlag(true);
       return;
     }
     const data = JSON.parse(raw);
@@ -19857,10 +19890,12 @@ function loadGame() {
   } catch (err) {
     console.error('Erreur de chargement', err);
     if (attemptRestoreFromBackup()) {
+      setPrimarySaveReadyFlag(true);
       return;
     }
     resetGame();
   }
+  setPrimarySaveReadyFlag(true);
 }
 
 function attemptRestoreFromBackup() {
@@ -19895,6 +19930,7 @@ function attemptRestoreFromBackup() {
           'Sauvegarde de secours restaurée.'
         );
         showToast(message);
+        setPrimarySaveReadyFlag(true);
         return true;
       } catch (error) {
         console.error('Unable to apply backup save', error);
