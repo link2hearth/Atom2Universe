@@ -1,5 +1,6 @@
 (() => {
   const STORAGE_KEY = 'atom2univers.arcadeSaves.v1';
+  const PRIMARY_SAVE_STORAGE_KEY = 'atom2univers';
   const KNOWN_GAME_IDS = [
     'particules',
     'metaux',
@@ -56,80 +57,113 @@
   const readStoredState = () => {
     const result = { version: 1, entries: {} };
 
-    // Prefer loading from the native bridge
-    if (typeof window !== 'undefined' && window.AndroidSaveBridge && typeof window.AndroidSaveBridge.loadData === 'function') {
+    const applyPayload = payload => {
+      if (!payload || typeof payload !== 'object') {
+        return false;
+      }
+      const entries = clampObject(
+        payload.entries && typeof payload.entries === 'object'
+          ? payload.entries
+          : payload
+      );
+      let found = false;
+      KNOWN_GAME_IDS.forEach(id => {
+        const entry = entries[id];
+        if (entry == null) {
+          return;
+        }
+        const sourceState = entry && typeof entry === 'object' && 'state' in entry
+          ? entry.state
+          : entry;
+        if (sourceState == null) {
+          return;
+        }
+        const cloned = deepClone(sourceState);
+        if (cloned == null) {
+          return;
+        }
+        const updatedAt =
+          entry && typeof entry === 'object' && Number.isFinite(entry.updatedAt)
+            ? entry.updatedAt
+            : Date.now();
+        result.entries[id] = {
+          state: cloned,
+          updatedAt
+        };
+        found = true;
+      });
+      return found;
+    };
+
+    const extractArcadeProgress = data => {
+      if (!data || typeof data !== 'object') {
+        return null;
+      }
+      if (data.arcadeProgress && typeof data.arcadeProgress === 'object') {
+        return data.arcadeProgress;
+      }
+      if (data.entries && typeof data.entries === 'object') {
+        return data;
+      }
+      return null;
+    };
+
+    const tryLoadSerialized = raw => {
+      if (!raw) {
+        return false;
+      }
+      try {
+        const parsed = JSON.parse(raw);
+        const payload = extractArcadeProgress(parsed);
+        return applyPayload(payload);
+      } catch (error) {
+        // Ignore malformed payloads
+        return false;
+      }
+    };
+
+    // Prefer using the in-memory global state if it already exists.
+    const globalState = getGlobalState();
+    if (globalState && applyPayload(globalState.arcadeProgress)) {
+      return result;
+    }
+
+    // Native bridge stores the full primary save on Android.
+    if (
+      typeof window !== 'undefined'
+      && window.AndroidSaveBridge
+      && typeof window.AndroidSaveBridge.loadData === 'function'
+    ) {
       try {
         const raw = window.AndroidSaveBridge.loadData();
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (parsed && typeof parsed === 'object') {
-            const entries = clampObject(parsed.entries);
-            Object.keys(entries).forEach(key => {
-              const entry = entries[key];
-              if (entry && typeof entry === 'object' && entry.state != null) {
-                const cloned = deepClone(entry.state);
-                if (cloned != null) {
-                  result.entries[key] = {
-                    state: cloned,
-                    updatedAt: Number.isFinite(entry.updatedAt) ? entry.updatedAt : Date.now()
-                  };
-                }
-              }
-            });
-            // If data is loaded from the bridge, we're done.
-            return result;
-          }
+        if (tryLoadSerialized(raw)) {
+          return result;
         }
       } catch (error) {
         console.error('[ArcadeAutosave] Error loading data from native bridge', error);
       }
     }
 
-    // Fallback 1: global state (for initialization)
-    const globalState = getGlobalState();
-    const globalProgress = clampObject(globalState && globalState.arcadeProgress);
-    if (globalProgress.entries && typeof globalProgress.entries === 'object') {
-      Object.keys(globalProgress.entries).forEach(key => {
-        const entry = globalProgress.entries[key];
-        if (!entry || typeof entry !== 'object') {
-          return;
-        }
-        const clonedState = deepClone(entry.state);
-        if (clonedState != null) {
-          result.entries[key] = {
-            state: clonedState,
-            updatedAt: Number.isFinite(entry.updatedAt) ? entry.updatedAt : Date.now()
-          };
-        }
-      });
-      return result;
-    }
-
-    // Fallback 2: localStorage (for legacy data)
     if (typeof window !== 'undefined' && window.localStorage) {
+      // Primary save slot in localStorage (web platform).
+      if (tryLoadSerialized(window.localStorage.getItem(PRIMARY_SAVE_STORAGE_KEY))) {
+        return result;
+      }
+
+      // Legacy arcade-only storage for backwards compatibility.
       try {
-        const raw = window.localStorage.getItem(STORAGE_KEY);
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (parsed && typeof parsed === 'object') {
-            const entries = clampObject(parsed.entries);
-            Object.keys(entries).forEach(key => {
-              const entry = entries[key];
-              if (entry && typeof entry === 'object' && entry.state != null) {
-                const cloned = deepClone(entry.state);
-                if (cloned != null) {
-                  result.entries[key] = {
-                    state: cloned,
-                    updatedAt: Number.isFinite(entry.updatedAt) ? entry.updatedAt : Date.now()
-                  };
-                }
-              }
-            });
-          }
+        const legacyRaw = window.localStorage.getItem(STORAGE_KEY);
+        if (tryLoadSerialized(legacyRaw)) {
+          return result;
         }
       } catch (error) {
         // Ignore storage errors (e.g. quota, private browsing)
       }
+    }
+
+    // As a last resort, retry with the global state (it may have been populated meanwhile).
+    if (globalState && applyPayload(globalState.arcadeProgress)) {
+      return result;
     }
 
     return result;
@@ -161,25 +195,38 @@
     return normalized;
   };
 
+  const requestPrimarySave = () => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    const saveFn =
+      typeof window.atom2universSaveGame === 'function'
+        ? window.atom2universSaveGame
+        : typeof window.saveGame === 'function'
+          ? window.saveGame
+          : null;
+    if (!saveFn) {
+      return;
+    }
+    try {
+      saveFn();
+    } catch (error) {
+      console.error('[ArcadeAutosave] Unable to request primary save', error);
+    }
+  };
+
   const persistNow = () => {
     persistScheduled = false;
     persistTimer = null;
-    
+
+    const normalizedEntries = normalizeEntriesForGlobalState(state.entries);
     const payload = {
       version: 1,
-      entries: normalizeEntriesForGlobalState(state.entries)
+      entries: normalizedEntries
     };
     const serializedPayload = JSON.stringify(payload);
 
-    // Prefer saving to the native bridge
-    if (typeof window !== 'undefined' && window.AndroidSaveBridge && typeof window.AndroidSaveBridge.saveData === 'function') {
-      try {
-        window.AndroidSaveBridge.saveData(serializedPayload);
-      } catch (error) {
-        console.error('[ArcadeAutosave] Error saving data to native bridge', error);
-      }
-    } else if (typeof window !== 'undefined' && window.localStorage) {
-      // Fallback to localStorage if bridge is not available
+    if (typeof window !== 'undefined' && window.localStorage) {
       try {
         window.localStorage.setItem(STORAGE_KEY, serializedPayload);
       } catch (error) {
@@ -194,8 +241,10 @@
         globalState.arcadeProgress = { version: 1, entries: {} };
       }
       globalState.arcadeProgress.version = 1;
-      globalState.arcadeProgress.entries = normalizeEntriesForGlobalState(state.entries);
+      globalState.arcadeProgress.entries = normalizedEntries;
     }
+
+    requestPrimarySave();
   };
 
   const schedulePersist = () => {
@@ -279,7 +328,5 @@
 
   if (typeof window !== 'undefined') {
     window.ArcadeAutosave = api;
-    // Expose a global save function for the native app to call
-    window.atom2universSaveGame = persistNow;
   }
 })();
