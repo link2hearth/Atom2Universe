@@ -33,42 +33,57 @@
       callback();
     }
   }
+  
+  function applyTemplateParams(template, params) {
+    if (typeof template !== 'string') {
+      return '';
+    }
+    if (!params) {
+      return template;
+    }
+    return template.replace(/\{(\w+)\}/g, (match, name) => {
+      if (Object.prototype.hasOwnProperty.call(params, name)) {
+        return params[name];
+      }
+      return match;
+    });
+  }
 
   function translate(key, fallback, params) {
-    if (typeof key !== 'string' || !key.trim()) {
-      return typeof fallback === 'string' ? fallback : '';
+    const normalizedKey = typeof key === 'string' ? key.trim() : '';
+    const fallbackText = typeof fallback === 'string'
+      ? fallback
+      : normalizedKey;
+
+    if (!normalizedKey) {
+      return applyTemplateParams(fallbackText, params);
+      
     }
+        let translated = null;
+
     if (typeof translateOrDefault === 'function') {
-      return translateOrDefault(key, fallback, params);
-    }
-    if (typeof window !== 'undefined') {
+      translated = translateOrDefault(normalizedKey, fallbackText, params);
+    } else if (typeof window !== 'undefined') {
       if (typeof window.translateOrDefault === 'function') {
-        return window.translateOrDefault(key, fallback, params);
-      }
-      const api = window.i18n && typeof window.i18n.t === 'function' ? window.i18n.t : null;
-      if (api) {
-        try {
-          const result = api(key, params);
-          if (typeof result === 'string' && result.trim() && result !== key) {
-            return result;
+        translated = window.translateOrDefault(normalizedKey, fallbackText, params);
+      } else {
+        const api = window.i18n && typeof window.i18n.t === 'function' ? window.i18n.t : null;
+        if (api) {
+          try {
+            translated = api(normalizedKey, params);
+          } catch (error) {
+            console.warn('Solitaire translation error for', normalizedKey, error);
+            translated = null;
           }
-        } catch (error) {
-          console.warn('Solitaire translation error for', key, error);
         }
       }
-    }
-    if (typeof fallback === 'string') {
-      if (!params) {
-        return fallback;
+          if (typeof translated === 'string') {
+      const trimmed = translated.trim();
+      if (trimmed && trimmed !== normalizedKey) {
+        return applyTemplateParams(translated, params);
       }
-      return fallback.replace(/\{(\w+)\}/g, (match, name) => {
-        if (Object.prototype.hasOwnProperty.call(params, name)) {
-          return params[name];
-        }
-        return match;
-      });
     }
-    return key;
+    return applyTemplateParams(fallbackText, params);
   }
 
   function formatIntegerLocalized(value) {
