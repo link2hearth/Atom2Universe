@@ -18090,6 +18090,76 @@ function readNativeSaveData() {
   return null;
 }
 
+const NATIVE_SAVE_ENVELOPE_SCHEMA = 'atom2univers.save.v2';
+
+function buildNativeSaveEnvelope(serialized) {
+  if (typeof serialized !== 'string' || !serialized) {
+    return serialized;
+  }
+
+  let payload = null;
+  try {
+    payload = JSON.parse(serialized);
+  } catch (error) {
+    return serialized;
+  }
+
+  if (!payload || typeof payload !== 'object') {
+    return serialized;
+  }
+
+  const now = Date.now();
+  const resolvedLastSave = (() => {
+    const timestamp = Number(
+      payload.lastSave
+        ?? payload.savedAt
+        ?? payload.saved_at
+        ?? payload.timestamp
+    );
+    return Number.isFinite(timestamp) && timestamp > 0 ? timestamp : now;
+  })();
+
+  let existingEnvelope = null;
+  try {
+    const currentRaw = readNativeSaveData();
+    if (typeof currentRaw === 'string' && currentRaw) {
+      const parsed = JSON.parse(currentRaw);
+      if (parsed && typeof parsed === 'object') {
+        existingEnvelope = parsed;
+      }
+    }
+  } catch (error) {
+    existingEnvelope = null;
+  }
+
+  const envelope = existingEnvelope && typeof existingEnvelope === 'object'
+    ? { ...existingEnvelope }
+    : {};
+
+  envelope.schema = NATIVE_SAVE_ENVELOPE_SCHEMA;
+  envelope.version = 2;
+  envelope.updatedAt = now;
+  envelope.lastSave = resolvedLastSave;
+  envelope.clicker = payload;
+
+  if (payload.arcadeProgress && typeof payload.arcadeProgress === 'object') {
+    try {
+      envelope.arcadeProgress = JSON.parse(JSON.stringify(payload.arcadeProgress));
+    } catch (error) {
+      envelope.arcadeProgress = payload.arcadeProgress;
+    }
+  } else if ('arcadeProgress' in envelope) {
+    delete envelope.arcadeProgress;
+  }
+
+  envelope.meta = Object.assign({}, envelope.meta, {
+    lastSave: envelope.lastSave,
+    updatedAt: envelope.updatedAt
+  });
+
+  return JSON.stringify(envelope);
+}
+
 function writeNativeSaveData(serialized) {
   const bridge = getAndroidSaveBridge();
   if (!bridge) {
@@ -18118,7 +18188,8 @@ function writeNativeSaveData(serialized) {
   }
   if (typeof bridge.saveData === 'function') {
     try {
-      bridge.saveData(serialized);
+      const payload = buildNativeSaveEnvelope(serialized);
+      bridge.saveData(payload);
       return true;
     } catch (error) {
       console.error('Unable to write native save data', error);
@@ -18126,6 +18197,111 @@ function writeNativeSaveData(serialized) {
     }
   }
   return false;
+}
+
+const NATIVE_SAVE_RETRY_TIMEOUT_MS = 4000;
+const NATIVE_SAVE_RETRY_INTERVAL_MS = 200;
+let nativeSaveRetryHandle = null;
+
+function hasMeaningfulClickerProgress(state) {
+  if (!state || typeof state !== 'object') {
+    return false;
+  }
+  try {
+    if (state.lifetime instanceof LayeredNumber && state.lifetime.sign > 0 && !state.lifetime.isZero()) {
+      return true;
+    }
+    if (state.atoms instanceof LayeredNumber && state.atoms.sign > 0 && !state.atoms.isZero()) {
+      return true;
+    }
+  } catch (error) {
+    // Ignore layered number inspection errors and continue with other heuristics.
+  }
+  const ticketCount = Number(state.gachaTickets);
+  if (Number.isFinite(ticketCount) && ticketCount > 0) {
+    return true;
+  }
+  const bonusTicketCount = Number(state.bonusParticulesTickets);
+  if (Number.isFinite(bonusTicketCount) && bonusTicketCount > 0) {
+    return true;
+  }
+  if (state.upgrades && typeof state.upgrades === 'object') {
+    const hasUpgrade = Object.keys(state.upgrades).some(key => {
+      const value = Number(state.upgrades[key]);
+      return Number.isFinite(value) && value > 0;
+    });
+    if (hasUpgrade) {
+      return true;
+    }
+  }
+  if (state.shopUnlocks instanceof Set && state.shopUnlocks.size > 0) {
+    return true;
+  }
+  if (Array.isArray(state.shopUnlocks) && state.shopUnlocks.length > 0) {
+    return true;
+  }
+  if (state.trophies instanceof Set && state.trophies.size > 0) {
+    return true;
+  }
+  if (Array.isArray(state.trophies) && state.trophies.length > 0) {
+    return true;
+  }
+  return false;
+}
+
+function scheduleNativeSaveRetry() {
+  if (nativeSaveRetryHandle != null) {
+    return;
+  }
+  const timerTarget = typeof globalThis !== 'undefined'
+    ? globalThis
+    : (typeof window !== 'undefined' ? window : null);
+  if (!timerTarget || typeof timerTarget.setInterval !== 'function') {
+    return;
+  }
+  const clearTimer = () => {
+    if (nativeSaveRetryHandle == null) {
+      return;
+    }
+    if (typeof timerTarget.clearInterval === 'function') {
+      timerTarget.clearInterval(nativeSaveRetryHandle);
+    } else if (typeof clearInterval === 'function') {
+      clearInterval(nativeSaveRetryHandle);
+    }
+    nativeSaveRetryHandle = null;
+  };
+  const startedAt = Date.now();
+  nativeSaveRetryHandle = timerTarget.setInterval(() => {
+    if (Date.now() - startedAt >= NATIVE_SAVE_RETRY_TIMEOUT_MS) {
+      clearTimer();
+      return;
+    }
+    const candidate = extractSerializedSaveCandidate(readNativeSaveData(), 'native');
+    if (!candidate || !candidate.isValid) {
+      return;
+    }
+    if (hasMeaningfulClickerProgress(gameState)) {
+      clearTimer();
+      return;
+    }
+    try {
+      prepareGameStateForLoadAttempt();
+      applySerializedGameState(candidate.raw);
+      if (typeof localStorage !== 'undefined' && localStorage) {
+        try {
+          localStorage.setItem(PRIMARY_SAVE_STORAGE_KEY, candidate.raw);
+        } catch (storageError) {
+          console.warn('Unable to sync delayed native save to local storage', storageError);
+        }
+      }
+      lastSerializedSave = candidate.raw;
+      storeReloadSaveSnapshot(candidate.raw);
+    } catch (error) {
+      console.error('Unable to apply native save after bridge became available', error);
+    } finally {
+      clearTimer();
+    }
+  }, NATIVE_SAVE_RETRY_INTERVAL_MS);
 }
 
 function prepareGameStateForLoadAttempt() {
@@ -18153,23 +18329,146 @@ function isSerializedGameStatePayload(data) {
   return hasAtoms && hasLifetime && (hasPerClick || hasPerSecond);
 }
 
+const NATIVE_ENVELOPE_DIRECT_KEYS = Object.freeze([
+  'clicker',
+  'primary',
+  'game',
+  'state',
+  'payload',
+  'data',
+  'save',
+  'slot',
+  'main'
+]);
+
+const NATIVE_ENVELOPE_CONTAINER_KEYS = Object.freeze([
+  'sections',
+  'slots',
+  'profiles',
+  'saves',
+  'games',
+  'modes',
+  'entries'
+]);
+
+function normalizeEnvelopeTimestamp(candidate) {
+  const value = Number(candidate);
+  return Number.isFinite(value) && value > 0 ? value : 0;
+}
+
+function extractEnvelopeTimestamp(envelope) {
+  if (!envelope || typeof envelope !== 'object') {
+    return 0;
+  }
+  const timestamps = [];
+  const collect = value => {
+    const numeric = normalizeEnvelopeTimestamp(value);
+    if (numeric > 0) {
+      timestamps.push(numeric);
+    }
+  };
+  collect(envelope.lastSave);
+  collect(envelope.savedAt);
+  collect(envelope.saved_at);
+  collect(envelope.timestamp);
+  collect(envelope.updatedAt);
+  if (envelope.meta && typeof envelope.meta === 'object') {
+    collect(envelope.meta.lastSave);
+    collect(envelope.meta.savedAt);
+    collect(envelope.meta.updatedAt);
+  }
+  if (!timestamps.length) {
+    return 0;
+  }
+  return Math.max(...timestamps);
+}
+
+function unwrapClickerSaveEnvelope(envelope, visited = new Set()) {
+  if (!envelope || typeof envelope !== 'object') {
+    return null;
+  }
+
+  if (visited.has(envelope)) {
+    return null;
+  }
+  visited.add(envelope);
+
+  const queue = [];
+  const pushCandidate = value => {
+    if (value == null) {
+      return;
+    }
+    queue.push(value);
+  };
+
+  NATIVE_ENVELOPE_DIRECT_KEYS.forEach(key => {
+    if (Object.prototype.hasOwnProperty.call(envelope, key)) {
+      pushCandidate(envelope[key]);
+    }
+  });
+
+  NATIVE_ENVELOPE_CONTAINER_KEYS.forEach(key => {
+    const container = envelope[key];
+    if (!container) {
+      return;
+    }
+    if (Array.isArray(container)) {
+      container.forEach(entry => pushCandidate(entry));
+      return;
+    }
+    if (typeof container === 'object') {
+      Object.values(container).forEach(entry => pushCandidate(entry));
+    }
+  });
+
+  for (let index = 0; index < queue.length; index += 1) {
+    const entry = queue[index];
+    if (!entry) {
+      continue;
+    }
+    let payload = null;
+    if (typeof entry === 'string') {
+      try {
+        payload = JSON.parse(entry);
+      } catch (error) {
+        continue;
+      }
+    } else if (typeof entry === 'object') {
+      payload = entry;
+    }
+    if (!isSerializedGameStatePayload(payload)) {
+      if (payload && typeof payload === 'object') {
+        const nested = unwrapClickerSaveEnvelope(payload, visited);
+        if (nested) {
+          if (!nested.lastSave) {
+            nested.lastSave = extractEnvelopeTimestamp(envelope);
+          }
+          return nested;
+        }
+      }
+      continue;
+    }
+    const serialized = typeof entry === 'string' ? entry : JSON.stringify(payload);
+    const envelopeTimestamp = extractEnvelopeTimestamp(envelope);
+    return {
+      raw: serialized,
+      data: payload,
+      lastSave: envelopeTimestamp
+    };
+  }
+
+  return null;
+}
+
 function extractSerializedSaveCandidate(raw, source) {
   if (typeof raw !== 'string' || !raw) {
     return null;
   }
   let data = null;
   let lastSave = 0;
+  let normalizedRaw = raw;
   try {
     data = JSON.parse(raw);
-    const timestamp = Number(
-      data?.lastSave
-      ?? data?.savedAt
-      ?? data?.saved_at
-      ?? data?.timestamp
-    );
-    if (Number.isFinite(timestamp) && timestamp > 0) {
-      lastSave = timestamp;
-    }
   } catch (error) {
     const origin = typeof source === 'string' && source ? source : 'unknown';
     console.error(`Unable to parse ${origin} save data`, error);
@@ -18182,13 +18481,46 @@ function extractSerializedSaveCandidate(raw, source) {
       size: raw.length
     };
   }
+
+  if (!isSerializedGameStatePayload(data)) {
+    const unwrapped = unwrapClickerSaveEnvelope(data);
+    if (unwrapped && isSerializedGameStatePayload(unwrapped.data)) {
+      data = unwrapped.data;
+      normalizedRaw = unwrapped.raw;
+      if (Number.isFinite(unwrapped.lastSave) && unwrapped.lastSave > 0) {
+        lastSave = unwrapped.lastSave;
+      }
+    }
+  }
+
+  if (!isSerializedGameStatePayload(data)) {
+    return {
+      source,
+      raw: normalizedRaw,
+      data,
+      lastSave: 0,
+      isValid: false,
+      size: normalizedRaw.length
+    };
+  }
+
+  const timestamp = Number(
+    data?.lastSave
+      ?? data?.savedAt
+      ?? data?.saved_at
+      ?? data?.timestamp
+  );
+  if (Number.isFinite(timestamp) && timestamp > 0) {
+    lastSave = timestamp;
+  }
+
   return {
     source,
-    raw,
+    raw: normalizedRaw,
     data,
     lastSave,
-    isValid: isSerializedGameStatePayload(data),
-    size: raw.length
+    isValid: true,
+    size: normalizedRaw.length
   };
 }
 
@@ -19520,6 +19852,7 @@ function loadGame() {
       recalcProduction();
       renderShop();
       updateUI();
+      scheduleNativeSaveRetry();
       return;
     }
     candidates.sort(compareSerializedSaveCandidates);
@@ -19556,12 +19889,14 @@ function loadGame() {
       return;
     }
     resetGame();
+    scheduleNativeSaveRetry();
   } catch (err) {
     console.error('Erreur de chargement', err);
     if (attemptRestoreFromBackup()) {
       return;
     }
     resetGame();
+    scheduleNativeSaveRetry();
   }
 }
 
