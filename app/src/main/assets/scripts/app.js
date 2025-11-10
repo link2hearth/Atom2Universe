@@ -18128,6 +18128,111 @@ function writeNativeSaveData(serialized) {
   return false;
 }
 
+const NATIVE_SAVE_RETRY_TIMEOUT_MS = 4000;
+const NATIVE_SAVE_RETRY_INTERVAL_MS = 200;
+let nativeSaveRetryHandle = null;
+
+function hasMeaningfulClickerProgress(state) {
+  if (!state || typeof state !== 'object') {
+    return false;
+  }
+  try {
+    if (state.lifetime instanceof LayeredNumber && state.lifetime.sign > 0 && !state.lifetime.isZero()) {
+      return true;
+    }
+    if (state.atoms instanceof LayeredNumber && state.atoms.sign > 0 && !state.atoms.isZero()) {
+      return true;
+    }
+  } catch (error) {
+    // Ignore layered number inspection errors and continue with other heuristics.
+  }
+  const ticketCount = Number(state.gachaTickets);
+  if (Number.isFinite(ticketCount) && ticketCount > 0) {
+    return true;
+  }
+  const bonusTicketCount = Number(state.bonusParticulesTickets);
+  if (Number.isFinite(bonusTicketCount) && bonusTicketCount > 0) {
+    return true;
+  }
+  if (state.upgrades && typeof state.upgrades === 'object') {
+    const hasUpgrade = Object.keys(state.upgrades).some(key => {
+      const value = Number(state.upgrades[key]);
+      return Number.isFinite(value) && value > 0;
+    });
+    if (hasUpgrade) {
+      return true;
+    }
+  }
+  if (state.shopUnlocks instanceof Set && state.shopUnlocks.size > 0) {
+    return true;
+  }
+  if (Array.isArray(state.shopUnlocks) && state.shopUnlocks.length > 0) {
+    return true;
+  }
+  if (state.trophies instanceof Set && state.trophies.size > 0) {
+    return true;
+  }
+  if (Array.isArray(state.trophies) && state.trophies.length > 0) {
+    return true;
+  }
+  return false;
+}
+
+function scheduleNativeSaveRetry() {
+  if (nativeSaveRetryHandle != null) {
+    return;
+  }
+  const timerTarget = typeof globalThis !== 'undefined'
+    ? globalThis
+    : (typeof window !== 'undefined' ? window : null);
+  if (!timerTarget || typeof timerTarget.setInterval !== 'function') {
+    return;
+  }
+  const clearTimer = () => {
+    if (nativeSaveRetryHandle == null) {
+      return;
+    }
+    if (typeof timerTarget.clearInterval === 'function') {
+      timerTarget.clearInterval(nativeSaveRetryHandle);
+    } else if (typeof clearInterval === 'function') {
+      clearInterval(nativeSaveRetryHandle);
+    }
+    nativeSaveRetryHandle = null;
+  };
+  const startedAt = Date.now();
+  nativeSaveRetryHandle = timerTarget.setInterval(() => {
+    if (Date.now() - startedAt >= NATIVE_SAVE_RETRY_TIMEOUT_MS) {
+      clearTimer();
+      return;
+    }
+    const candidate = extractSerializedSaveCandidate(readNativeSaveData(), 'native');
+    if (!candidate || !candidate.isValid) {
+      return;
+    }
+    if (hasMeaningfulClickerProgress(gameState)) {
+      clearTimer();
+      return;
+    }
+    try {
+      prepareGameStateForLoadAttempt();
+      applySerializedGameState(candidate.raw);
+      if (typeof localStorage !== 'undefined' && localStorage) {
+        try {
+          localStorage.setItem(PRIMARY_SAVE_STORAGE_KEY, candidate.raw);
+        } catch (storageError) {
+          console.warn('Unable to sync delayed native save to local storage', storageError);
+        }
+      }
+      lastSerializedSave = candidate.raw;
+      storeReloadSaveSnapshot(candidate.raw);
+    } catch (error) {
+      console.error('Unable to apply native save after bridge became available', error);
+    } finally {
+      clearTimer();
+    }
+  }, NATIVE_SAVE_RETRY_INTERVAL_MS);
+}
+
 function prepareGameStateForLoadAttempt() {
   resetFrenzyState({ skipApply: true });
   resetTicketStarState({ reschedule: true });
@@ -19520,6 +19625,7 @@ function loadGame() {
       recalcProduction();
       renderShop();
       updateUI();
+      scheduleNativeSaveRetry();
       return;
     }
     candidates.sort(compareSerializedSaveCandidates);
@@ -19556,12 +19662,14 @@ function loadGame() {
       return;
     }
     resetGame();
+    scheduleNativeSaveRetry();
   } catch (err) {
     console.error('Erreur de chargement', err);
     if (attemptRestoreFromBackup()) {
       return;
     }
     resetGame();
+    scheduleNativeSaveRetry();
   }
 }
 
