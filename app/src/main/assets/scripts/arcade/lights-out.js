@@ -471,7 +471,7 @@
         }
       })
       .catch(error => {
-        console.warn('Lights Out config load error', error);
+        console.warn('All Off config load error', error);
       });
   }
 
@@ -859,7 +859,7 @@
     }
     const boardLabel = translate(
       'index.sections.lightsOut.board',
-      'Grille Lights Out'
+      'Grille All Off'
     );
     boardElement.setAttribute('aria-label', boardLabel);
   }
@@ -917,7 +917,7 @@
     try {
       gained = awardGacha(tickets, { unlockTicketStar: true });
     } catch (error) {
-      console.warn('Lights Out: unable to grant gacha tickets', error);
+      console.warn('All Off: unable to grant gacha tickets', error);
       gained = 0;
     }
     if (Number.isFinite(gained) && gained > 0 && typeof showToast === 'function') {
@@ -993,7 +993,7 @@
           return result;
         }
       } catch (error) {
-        console.warn('Lights Out translation error for', key, error);
+        console.warn('All Off translation error for', key, error);
       }
     }
     if (typeof fallback === 'string') {
@@ -1015,7 +1015,7 @@
         return formatter.format(Math.floor(Math.abs(numeric)));
       }
     } catch (error) {
-      console.warn('Lights Out number formatting error', error);
+      console.warn('All Off number formatting error', error);
     }
     return String(Math.floor(Math.abs(numeric)));
   }

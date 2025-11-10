@@ -268,7 +268,7 @@ const PERFORMANCE_MODE_DEFINITIONS = Object.freeze([
 ]);
 
 /**
- * Paramètres d'affichage du Démineur.
+ * Paramètres d'affichage de Boom!.
  * `targetCellSize` indique la taille idéale (en pixels) d'une case lorsque c'est possible.
  * `minCellSize` et `maxCellSize` encadrent la taille acceptable d'une case afin de conserver une
  * lisibilité correcte, tandis que `maxRows` et `maxCols` bornent le nombre de lignes/colonnes
@@ -1009,7 +1009,7 @@ const GAME_CONFIG = {
           },
           {
             id: 'demineur',
-            label: 'Arcade Démineur :',
+            label: 'Arcade Boom! :',
             description:
               'Dévoilez toutes les cases sans déclencher les mines quantiques.'
           },

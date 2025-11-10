@@ -911,10 +911,10 @@
       const message = typeof translate === 'function'
         ? translate(
             'scripts.arcade.minesweeper.rewardToast',
-            'Minesweeper reward: {tickets}',
+            'Boom! reward: {tickets}',
             { tickets: ticketLabel }
           )
-        : `Minesweeper reward: ${ticketLabel}`;
+        : `Boom! reward: ${ticketLabel}`;
 
       if (message && typeof showToast === 'function') {
         showToast(message);

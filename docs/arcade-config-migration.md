@@ -17,7 +17,7 @@ L'objectif de cette migration est d'alléger `config/config.js` tout en conserva
 - [x] Particules
 - [x] Sudoku
 - [x] Quantum 2048
-- [x] Démineur
+- [x] Boom! (ancien Démineur)
 - [x] Métaux – configuration déportée dans `config/arcade/metaux.json`
 
 ## Modules à migrer ensuite
