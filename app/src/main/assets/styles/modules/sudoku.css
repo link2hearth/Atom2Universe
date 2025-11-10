@@ -480,19 +480,23 @@ body.theme-aurora .page--sudoku {
 
 .sudoku-grid {
   display: grid;
-  grid-template-columns: repeat(9, var(--sudoku-cell-track-size));
-  grid-template-rows: repeat(9, var(--sudoku-cell-track-size));
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+  grid-template-rows: repeat(9, minmax(0, 1fr));
   --sudoku-scale: var(--sudoku-grid-scale, 1.5);
   border: var(--sudoku-grid-border) solid var(--sudoku-subgrid-color);
   border-radius: calc(18px * var(--sudoku-scale, 1));
   overflow: hidden;
+  aspect-ratio: 1 / 1;
   width: min(
     var(--sudoku-grid-size),
     calc(var(--sudoku-grid-inner-width) + (var(--sudoku-grid-border) * 2)),
     100%
   );
+  box-sizing: border-box;
   flex: 0 0 auto;
   align-self: center;
+  align-content: stretch;
+  justify-content: stretch;
   box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.12);
 }
 
