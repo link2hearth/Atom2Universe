@@ -1,10 +1,20 @@
 .page--sudoku {
+  --page-padding-x: 0px;
   --sudoku-scale: var(--ui-control-scale, 1);
   --sudoku-grid-scale: 1.5;
   --sudoku-base-cell-size: clamp(2.3rem, 5vw, 2.85rem);
+  --sudoku-content-max-width: 860px;
+  --sudoku-content-padding: calc(
+    clamp(1.4rem, 3vw, 2.4rem) * var(--sudoku-scale, 1)
+  );
   --sudoku-grid-max-width: max(
     0px,
-    calc(100vw - (var(--page-padding-x, clamp(1rem, 4vw, 3rem)) * 2))
+    min(
+      calc(var(--sudoku-content-max-width) - (var(--sudoku-content-padding) * 2)),
+      calc(
+        100vw - (var(--page-padding-x, 0px) * 2) - (var(--sudoku-content-padding) * 2)
+      )
+    )
   );
   --sudoku-cell-size-default: calc(var(--sudoku-base-cell-size) * var(--sudoku-grid-scale, 1.5));
   --sudoku-cell-border: calc(2px * var(--sudoku-grid-scale, 1.5));
@@ -98,9 +108,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding:
-    calc(clamp(1.5rem, 3vw, 3rem) * var(--sudoku-scale, 1))
-    var(--page-padding-x, clamp(1rem, 4vw, 3rem));
+  padding-block: calc(clamp(1.5rem, 3vw, 3rem) * var(--sudoku-scale, 1));
+  padding-inline: 0;
 }
 
 .page--sudoku.active {
@@ -285,7 +294,8 @@ body.theme-aurora .page--sudoku {
 }
 
 .sudoku-content {
-  width: min(100%, 860px);
+  width: min(100%, var(--sudoku-content-max-width, 860px));
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -293,7 +303,10 @@ body.theme-aurora .page--sudoku {
   background: var(--sudoku-surface-background, rgba(8, 11, 19, 0.6));
   border: 1px solid var(--sudoku-surface-border, rgba(255, 255, 255, 0.12));
   border-radius: calc(18px * var(--sudoku-scale, 1));
-  padding: calc(clamp(1.4rem, 3vw, 2.4rem) * var(--sudoku-scale, 1));
+  padding: var(
+    --sudoku-content-padding,
+    calc(clamp(1.4rem, 3vw, 2.4rem) * var(--sudoku-scale, 1))
+  );
   box-shadow: var(--sudoku-surface-shadow, 0 24px 60px rgba(5, 12, 38, 0.45));
   backdrop-filter: blur(18px);
   color: var(--sudoku-surface-color, inherit);
