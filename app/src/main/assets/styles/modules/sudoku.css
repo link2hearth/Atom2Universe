@@ -2,14 +2,26 @@
   --sudoku-scale: var(--ui-control-scale, 1);
   --sudoku-grid-scale: 1.5;
   --sudoku-base-cell-size: clamp(2.3rem, 5vw, 2.85rem);
-  --sudoku-cell-size: calc(var(--sudoku-base-cell-size) * var(--sudoku-grid-scale, 1.5));
-  --sudoku-grid-size: calc(var(--sudoku-cell-size) * 9);
+  --sudoku-grid-max-width: max(
+    0px,
+    calc(100vw - (var(--page-padding-x, clamp(1rem, 4vw, 3rem)) * 2))
+  );
+  --sudoku-cell-size-default: calc(var(--sudoku-base-cell-size) * var(--sudoku-grid-scale, 1.5));
   --sudoku-cell-border: calc(2px * var(--sudoku-grid-scale, 1.5));
   --sudoku-subgrid-border: calc(6px * var(--sudoku-grid-scale, 1.5));
   --sudoku-grid-border: var(--sudoku-subgrid-border);
+  --sudoku-grid-inner-width: max(
+    0px,
+    calc(var(--sudoku-grid-max-width) - (var(--sudoku-grid-border) * 2))
+  );
   --sudoku-grid-line-compensation: calc(
     var(--sudoku-cell-border) * 16 + var(--sudoku-subgrid-border) * 2
   );
+  --sudoku-cell-size: min(
+    var(--sudoku-cell-size-default),
+    calc((var(--sudoku-grid-inner-width) + var(--sudoku-grid-line-compensation)) / 9)
+  );
+  --sudoku-grid-size: calc(var(--sudoku-cell-size) * 9);
   --sudoku-cell-track-size: max(
     0px,
     calc(
@@ -463,7 +475,11 @@ body.theme-aurora .page--sudoku {
   border: var(--sudoku-grid-border) solid var(--sudoku-subgrid-color);
   border-radius: calc(18px * var(--sudoku-scale, 1));
   overflow: hidden;
-  width: auto;
+  width: min(
+    var(--sudoku-grid-size),
+    calc(var(--sudoku-grid-inner-width) + (var(--sudoku-grid-border) * 2)),
+    100%
+  );
   flex: 0 0 auto;
   align-self: center;
   box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.12);
