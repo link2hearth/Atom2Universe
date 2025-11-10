@@ -406,8 +406,8 @@
             "cta": "Tracer"
           },
           "lightsOut": {
-            "aria": "Accéder au mini-jeu Lights Out",
-            "title": "Lights Out",
+            "aria": "Accéder au mini-jeu All Off",
+            "title": "All Off",
             "description": "Éteignez toutes les lumières : chaque clic inverse la case visée et ses voisines orthogonales.",
             "cta": "Éteindre"
           },
@@ -448,8 +448,8 @@
             "cta": "Organiser"
           },
           "minesweeper": {
-            "aria": "Accéder au mini-jeu Démineur",
-            "title": "Démineur",
+            "aria": "Accéder au mini-jeu Boom!",
+            "title": "Boom!",
             "description": "Validez une grille pour gagner des tickets de gacha.",
             "cta": "Désarmer"
           },
@@ -466,8 +466,8 @@
             "cta": "Planifier"
           },
           "othello": {
-            "aria": "Accéder au mini-jeu Othello",
-            "title": "Othello",
+            "aria": "Accéder au mini-jeu Reversi",
+            "title": "Reversi",
             "description": "Retournez les pions de votre adversaire en les encerclant sur un plateau 8×8.",
             "cta": "Jouer"
           },
@@ -708,8 +708,8 @@
         "cubeAria": "Bloc de poids {weight}"
       },
       "othello": {
-        "aria": "Mini-jeu Othello",
-        "title": "Othello",
+        "aria": "Mini-jeu Reversi",
+        "title": "Reversi",
         "subtitle": "Encerclez les pions adverses pour les retourner.",
         "reset": "Réinitialiser la partie",
         "mode": {
@@ -717,7 +717,7 @@
           "solo": "Mode : Solo vs IA",
           "duo": "Mode : 2 joueurs"
         },
-        "board": "Plateau d'Othello",
+        "board": "Plateau de Reversi",
         "status": {
           "ready": "L’IA joue les noirs. Préparez-vous à jouer les blancs.",
           "readySolo": "L’IA joue les noirs. Préparez-vous à jouer les blancs.",
@@ -798,8 +798,8 @@
         }
       },
       "lightsOut": {
-        "aria": "Mini-jeu Lights Out : éteignez toutes les lumières.",
-        "title": "Lights Out",
+        "aria": "Mini-jeu All Off : éteignez toutes les lumières.",
+        "title": "All Off",
         "difficulty": {
           "aria": "Choisir la difficulté",
           "label": "Difficulté",
@@ -811,7 +811,7 @@
           "new": "Nouvelle grille",
           "help": "Indice"
         },
-        "board": "Grille Lights Out",
+        "board": "Grille All Off",
         "messages": {
           "intro": "Éteignez toutes les lumières. Chaque clic inverse la case visée et ses voisines orthogonales.",
           "victory": "Grille réussie ! Niveau {{level}} terminé.",
@@ -1117,10 +1117,10 @@
         }
       },
       "minesweeper": {
-        "aria": "Mini-jeu Démineur quantique",
+        "aria": "Mini-jeu Boom! quantique",
         "controls": {
           "difficulty": "Difficulté",
-          "difficultyAria": "Choisir la difficulté du Démineur",
+          "difficultyAria": "Choisir la difficulté de Boom!",
           "reset": "Réinitialiser",
           "options": {
             "facile": "Facile",
@@ -1128,7 +1128,7 @@
             "difficile": "Difficile"
           }
         },
-        "board": "Grille du Démineur",
+        "board": "Grille de Boom!",
         "labels": {
           "hidden": "Case masquée",
           "flagged": "Case marquée",
@@ -1598,7 +1598,7 @@
               "description": "Disposez chaque poids pour garder la planche stable et gagner des essais supplémentaires pour Métaux."
             },
             "lightsOut": {
-              "label": "Mini jeu Lights Out :",
+              "label": "Mini jeu All Off :",
               "description": "Éteignez chaque case d’une grille qui change de taille selon la difficulté choisie en planifiant vos clics."
             },
             "pipeTap": {
@@ -1622,7 +1622,7 @@
               "description": "Tracez un chemin continu qui couvre chaque case sans repasser dessus, même quand les couleurs s’en mêlent."
             },
             "minesweeper": {
-              "label": "Mini jeu Démineur :",
+              "label": "Mini jeu Boom! :",
               "description": "Déduisez l’emplacement des mines et ouvrez toutes les cases sûres pour remporter des tickets."
             },
             "solitaire": {
@@ -1634,7 +1634,7 @@
               "description": "Affrontez une IA adaptable et peaufinez vos ouvertures et tactiques à votre rythme."
             },
             "othello": {
-              "label": "Mini jeu Othello :",
+              "label": "Mini jeu Reversi :",
               "description": "Encerclez les pions adverses pour retourner la majorité du plateau 8×8."
             },
             "gameOfLife": {
@@ -2377,7 +2377,7 @@
                 "description": "Résolvez des grilles générées dynamiquement avec des aides optionnelles."
               },
               "demineur": {
-                "label": "Arcade Démineur :",
+                "label": "Arcade Boom! :",
                 "description": "Dévoilez toutes les cases sans déclencher les mines."
               },
               "solitaire": {
@@ -3358,7 +3358,7 @@
           "rewardToast": "{tickets} gagnés grâce à ObjectX !"
         },
         "minesweeper": {
-          "rewardToast": "Récompense Démineur : {tickets} remportés !"
+          "rewardToast": "Récompense Boom! : {tickets} remportés !"
         },
         "pipeTap": {
           "rewardToast": "PipeTap : +{count} ticket{suffix} gacha !"

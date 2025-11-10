@@ -406,8 +406,8 @@
             "cta": "Draw"
           },
           "lightsOut": {
-            "aria": "Open the Lights Out mini-game",
-            "title": "Lights Out",
+            "aria": "Open the All Off mini-game",
+            "title": "All Off",
             "description": "Switch every light off: each tap flips the selected tile and its orthogonal neighbours.",
             "cta": "Play"
           },
@@ -448,8 +448,8 @@
             "cta": "Organise"
           },
           "minesweeper": {
-            "aria": "Open the Minesweeper mini-game",
-            "title": "Minesweeper",
+            "aria": "Open the Boom! mini-game",
+            "title": "Boom!",
             "description": "Clear a board to earn gacha tickets.",
             "cta": "Disarm"
           },
@@ -466,8 +466,8 @@
             "cta": "Plan"
           },
           "othello": {
-            "aria": "Open the Othello mini-game",
-            "title": "Othello",
+            "aria": "Open the Reversi mini-game",
+            "title": "Reversi",
             "description": "Flip your opponent's discs by surrounding them on an 8×8 board.",
             "cta": "Play"
           },
@@ -708,8 +708,8 @@
         "cubeAria": "Block weighing {weight}"
       },
       "othello": {
-        "aria": "Othello mini-game",
-        "title": "Othello",
+        "aria": "Reversi mini-game",
+        "title": "Reversi",
         "subtitle": "Trap and flip the opposing discs to control the board.",
         "reset": "Reset game",
         "mode": {
@@ -717,7 +717,7 @@
           "solo": "Mode: Solo vs AI",
           "duo": "Mode: Two players"
         },
-        "board": "Othello board",
+        "board": "Reversi board",
         "status": {
           "ready": "The AI plays black. Get ready to play as white.",
           "readySolo": "The AI plays black. Get ready to play as white.",
@@ -798,8 +798,8 @@
         }
       },
       "lightsOut": {
-        "aria": "Lights Out mini-game: switch off every tile.",
-        "title": "Lights Out",
+        "aria": "All Off mini-game: switch off every tile.",
+        "title": "All Off",
         "difficulty": {
           "aria": "Choose the difficulty",
           "label": "Difficulty",
@@ -811,7 +811,7 @@
           "new": "New grid",
           "help": "Hint"
         },
-        "board": "Lights Out grid",
+        "board": "All Off grid",
         "messages": {
           "intro": "Switch every light off. Each tap flips the selected tile and its orthogonal neighbours.",
           "victory": "Grid cleared! Level {{level}} complete.",
@@ -1117,10 +1117,10 @@
         }
       },
       "minesweeper": {
-        "aria": "Quantum Minesweeper mini-game",
+        "aria": "Quantum Boom! mini-game",
         "controls": {
           "difficulty": "Difficulty",
-          "difficultyAria": "Select the Minesweeper difficulty",
+          "difficultyAria": "Select the Boom! difficulty",
           "reset": "Reset",
           "options": {
             "facile": "Easy",
@@ -1128,7 +1128,7 @@
             "difficile": "Hard"
           }
         },
-        "board": "Minesweeper grid",
+        "board": "Boom! grid",
         "labels": {
           "hidden": "Hidden cell",
           "flagged": "Flagged cell",
@@ -1667,7 +1667,7 @@
               "description": "Place every weight to keep the beam level and earn extra Metals attempts."
             },
             "lightsOut": {
-              "label": "Lights Out mini-game:",
+              "label": "All Off mini-game:",
               "description": "Plan each move to switch off every tile on grids that grow with the selected difficulty."
             },
             "pipeTap": {
@@ -1691,7 +1691,7 @@
               "description": "Draw a continuous path that covers every tile without revisiting it, colours included."
             },
             "minesweeper": {
-              "label": "Minesweeper mini-game:",
+              "label": "Boom! mini-game:",
               "description": "Use the numbers to locate every mine and clear the board to win tickets."
             },
             "solitaire": {
@@ -1703,7 +1703,7 @@
               "description": "Challenge an adaptable AI to polish your openings and tactics at your own pace."
             },
             "othello": {
-              "label": "Othello mini-game:",
+              "label": "Reversi mini-game:",
               "description": "Surround your opponent’s discs to flip them and control most of the 8×8 board."
             },
             "gameOfLife": {
@@ -2446,7 +2446,7 @@
                 "description": "Solve dynamically generated grids with optional assists."
               },
               "demineur": {
-                "label": "Arcade Minesweeper:",
+                "label": "Arcade Boom!:",
                 "description": "Reveal every cell without triggering the quantum mines."
               },
               "solitaire": {
@@ -3337,7 +3337,7 @@
           "rewardToast": "{tickets} earned from ObjectX!"
         },
         "minesweeper": {
-          "rewardToast": "Minesweeper reward: {tickets} secured!"
+          "rewardToast": "Boom! reward: {tickets} secured!"
         },
         "pipeTap": {
           "rewardToast": "PipeTap: +{count} gacha ticket{suffix}!"
