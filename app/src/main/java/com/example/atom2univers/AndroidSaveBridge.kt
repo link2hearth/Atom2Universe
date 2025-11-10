@@ -442,10 +442,10 @@ class AndroidSaveBridge(context: Context) {
         val now = System.currentTimeMillis()
         val existingEnvelope = readFromFile()?.let { parseJsonObject(it) }
 
-        val normalized = if (isEnvelopePayload(parsedPayload)) {
-            mergeEnvelope(parsedPayload, existingEnvelope, now)
-        } else {
-            buildEnvelope(parsedPayload, existingEnvelope, now)
+        val normalized = when {
+            isEnvelopePayload(parsedPayload) -> mergeEnvelope(parsedPayload, existingEnvelope, now)
+            isArcadeProgressPayload(parsedPayload) -> mergeArcadeProgressPayload(parsedPayload, existingEnvelope, now)
+            else -> buildEnvelope(parsedPayload, existingEnvelope, now)
         }
 
         return normalized?.toString() ?: payload
@@ -538,6 +538,83 @@ class AndroidSaveBridge(context: Context) {
         envelope.put("meta", mergedMeta)
 
         return envelope
+    }
+
+    private fun mergeArcadeProgressPayload(
+        payload: JSONObject,
+        existing: JSONObject?,
+        now: Long
+    ): JSONObject? {
+        val baseEnvelope = when {
+            existing == null -> null
+            isEnvelopePayload(existing) -> cloneJsonObject(existing)
+            else -> buildEnvelope(existing, null, now)
+        } ?: JSONObject()
+
+        if (!baseEnvelope.has("schema")) {
+            baseEnvelope.put("schema", NATIVE_SAVE_ENVELOPE_SCHEMA)
+        }
+        baseEnvelope.put("version", 2)
+        baseEnvelope.put("updatedAt", now)
+
+        val previousMeta = baseEnvelope.optJSONObject("meta")
+        val normalizedProgress = normalizeArcadeProgressPayload(payload)
+        baseEnvelope.put("arcadeProgress", normalizedProgress)
+
+        val existingLastSave = extractTimestamp(existing, 0)
+        val arcadeLastSave = if (existingLastSave > 0) existingLastSave else extractTimestamp(payload, now)
+        baseEnvelope.put("lastSave", arcadeLastSave)
+
+        val mergedMeta = mergeMetaSection(previousMeta, null, arcadeLastSave, now)
+        baseEnvelope.put("meta", mergedMeta)
+
+        return baseEnvelope
+    }
+
+    private fun normalizeArcadeProgressPayload(payload: JSONObject): JSONObject {
+        val normalized = JSONObject()
+        val version = payload.optInt("version", 1)
+        normalized.put("version", if (version > 0) version else 1)
+
+        val rawEntries = payload.optJSONObject("entries")
+        val entries = when {
+            rawEntries != null -> cloneJsonObject(rawEntries) ?: JSONObject()
+            else -> JSONObject()
+        }
+        normalized.put("entries", entries)
+
+        listOf("updatedAt", "lastSave").forEach { key ->
+            val value = payload.opt(key)
+            if (value != null && value != JSONObject.NULL) {
+                normalized.put(key, value)
+            }
+        }
+
+        return normalized
+    }
+
+    private fun isArcadeProgressPayload(payload: JSONObject): Boolean {
+        if (!payload.has("entries")) {
+            return false
+        }
+        if (payload.has("schema") || payload.has("clicker")) {
+            return false
+        }
+        val entries = payload.opt("entries")
+        if (entries !is JSONObject) {
+            return false
+        }
+
+        val allowedKeys = setOf("version", "entries", "updatedAt", "lastSave")
+        val iterator = payload.keys()
+        while (iterator.hasNext()) {
+            val key = iterator.next()
+            if (!allowedKeys.contains(key)) {
+                return false
+            }
+        }
+
+        return true
     }
 
     private fun mergeEnvelopeSections(target: JSONObject, existing: JSONObject?) {
