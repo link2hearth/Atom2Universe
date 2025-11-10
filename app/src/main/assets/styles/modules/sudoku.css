@@ -25,20 +25,12 @@
     0px,
     calc(var(--sudoku-grid-max-width) - (var(--sudoku-grid-border) * 2))
   );
-  --sudoku-grid-line-compensation: calc(
-    var(--sudoku-cell-border) * 16 + var(--sudoku-subgrid-border) * 2
-  );
   --sudoku-cell-size: min(
     var(--sudoku-cell-size-default),
-    calc((var(--sudoku-grid-inner-width) + var(--sudoku-grid-line-compensation)) / 9)
+    calc(var(--sudoku-grid-inner-width) / 9)
   );
   --sudoku-grid-size: calc(var(--sudoku-cell-size) * 9);
-  --sudoku-cell-track-size: max(
-    0px,
-    calc(
-      var(--sudoku-cell-size) - (var(--sudoku-grid-line-compensation) / 9)
-    )
-  );
+  --sudoku-cell-track-size: var(--sudoku-cell-size);
   --sudoku-surface-background: rgba(8, 11, 19, 0.6);
   --sudoku-surface-border: rgba(255, 255, 255, 0.12);
   --sudoku-surface-shadow: 0 24px 60px rgba(5, 12, 38, 0.45);
@@ -575,6 +567,7 @@ body.theme-aurora .page--sudoku {
   display: flex;
   align-items: stretch;
   justify-content: stretch;
+  box-sizing: border-box;
   border: var(--sudoku-cell-border) solid var(--sudoku-border-color);
   background: var(--sudoku-cell-background, rgba(3, 7, 18, 0.75));
   transition: background 0.2s ease, box-shadow 0.2s ease;
