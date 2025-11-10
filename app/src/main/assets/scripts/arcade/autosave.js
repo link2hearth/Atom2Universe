@@ -105,6 +105,34 @@
       if (data.entries && typeof data.entries === 'object') {
         return data;
       }
+      const candidates = [];
+      const pushCandidate = value => {
+        if (value && typeof value === 'object') {
+          candidates.push(value);
+        }
+      };
+      pushCandidate(data.clicker);
+      pushCandidate(data.primary);
+      pushCandidate(data.game);
+      pushCandidate(data.state);
+      pushCandidate(data.payload);
+      pushCandidate(data.data);
+      pushCandidate(data.save);
+      if (data.sections && typeof data.sections === 'object') {
+        Object.values(data.sections).forEach(pushCandidate);
+      }
+      if (data.slots && typeof data.slots === 'object') {
+        Object.values(data.slots).forEach(pushCandidate);
+      }
+      if (data.profiles && typeof data.profiles === 'object') {
+        Object.values(data.profiles).forEach(pushCandidate);
+      }
+      for (let index = 0; index < candidates.length; index += 1) {
+        const nested = extractArcadeProgress(candidates[index]);
+        if (nested) {
+          return nested;
+        }
+      }
       return null;
     };
 
