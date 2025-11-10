@@ -13,7 +13,8 @@
       calc(var(--sudoku-content-max-width) - (var(--sudoku-content-padding) * 2)),
       calc(
         100vw - (var(--page-padding-x, 0px) * 2) - (var(--sudoku-content-padding) * 2)
-      )
+      ),
+      var(--sudoku-grid-container-width, 100%)
     )
   );
   --sudoku-cell-size-default: calc(var(--sudoku-base-cell-size) * var(--sudoku-grid-scale, 1.5));
@@ -294,6 +295,10 @@ body.theme-aurora .page--sudoku {
 }
 
 .sudoku-content {
+  --sudoku-grid-container-width: max(
+    0px,
+    calc(100% - (var(--sudoku-content-padding, 0px) * 2))
+  );
   width: min(100%, var(--sudoku-content-max-width, 860px));
   box-sizing: border-box;
   display: flex;
@@ -477,6 +482,7 @@ body.theme-aurora .page--sudoku {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  width: 100%;
   gap: calc(clamp(1.2rem, 2.2vw, 2rem) * var(--sudoku-scale, 1));
 }
 
