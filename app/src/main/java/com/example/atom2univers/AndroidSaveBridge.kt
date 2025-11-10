@@ -244,8 +244,8 @@ class AndroidSaveBridge(context: Context) {
                 OutputStreamWriter(outputStream, Charsets.UTF_8).use { writer ->
                     writer.write(payload)
                     writer.flush()
+                    outputStream.fd.sync()
                 }
-                outputStream.fd.sync()
             }
 
             if (saveFile.exists() && !saveFile.delete()) {
