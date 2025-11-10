@@ -11652,6 +11652,10 @@ function renderProductionBreakdown(container, entry, context = null) {
   if (!container) return;
   container.innerHTML = '';
   PRODUCTION_STEP_ORDER.forEach(step => {
+    if (step.id === 'frenzy') {
+      // Le multiplicateur de frénésie reste actif en jeu mais n'est pas affiché dans la décomposition.
+      return;
+    }
     if (
       (context === 'perSecond' || context === 'perClick')
       && step.id === 'baseFlat'
