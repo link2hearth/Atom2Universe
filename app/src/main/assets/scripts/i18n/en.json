@@ -466,8 +466,8 @@
             "cta": "Plan"
           },
           "othello": {
-            "aria": "Open the Othello mini-game",
-            "title": "Othello",
+            "aria": "Open the Reversi mini-game",
+            "title": "Reversi",
             "description": "Flip your opponent's discs by surrounding them on an 8×8 board.",
             "cta": "Play"
           },
@@ -708,8 +708,8 @@
         "cubeAria": "Block weighing {weight}"
       },
       "othello": {
-        "aria": "Othello mini-game",
-        "title": "Othello",
+        "aria": "Reversi mini-game",
+        "title": "Reversi",
         "subtitle": "Trap and flip the opposing discs to control the board.",
         "reset": "Reset game",
         "mode": {
@@ -717,7 +717,7 @@
           "solo": "Mode: Solo vs AI",
           "duo": "Mode: Two players"
         },
-        "board": "Othello board",
+        "board": "Reversi board",
         "status": {
           "ready": "The AI plays black. Get ready to play as white.",
           "readySolo": "The AI plays black. Get ready to play as white.",
@@ -1703,7 +1703,7 @@
               "description": "Challenge an adaptable AI to polish your openings and tactics at your own pace."
             },
             "othello": {
-              "label": "Othello mini-game:",
+              "label": "Reversi mini-game:",
               "description": "Surround your opponent’s discs to flip them and control most of the 8×8 board."
             },
             "gameOfLife": {
