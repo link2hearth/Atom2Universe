@@ -8,12 +8,12 @@ This audit uses the helper script [`tools/checkArcadeAutosave.js`](../tools/chec
 | Math | `app/src/main/assets/scripts/arcade/math.js` | ✅
 | Game of Life | `app/src/main/assets/scripts/arcade/game-of-life.js` | ✅
 | Sudoku | `app/src/main/assets/scripts/arcade/sudoku.js` | ✅
-| Minesweeper | `app/src/main/assets/scripts/arcade/minesweeper.js` | ✅
+| Boom! | `app/src/main/assets/scripts/arcade/minesweeper.js` | ✅
 | Solitaire | `app/src/main/assets/scripts/arcade/solitaire.js` | ✅
 | Échecs | `app/src/main/assets/scripts/arcade/echecs.js` | ✅
-| Othello | `app/src/main/assets/scripts/arcade/othello.js` | ✅
+| Reversi | `app/src/main/assets/scripts/arcade/othello.js` | ✅
 | The Line | `app/src/main/assets/scripts/arcade/the-line.js` | ✅
-| Lights Out | `app/src/main/assets/scripts/arcade/lights-out.js` | ✅
+| All Off | `app/src/main/assets/scripts/arcade/lights-out.js` | ✅
 | PipeTap | `app/src/main/assets/scripts/arcade/pipetap.js` | ✅
 | Sokoban | `app/src/main/assets/scripts/arcade/sokoban.js` | ✅
 | Roulette | `app/src/main/assets/scripts/arcade/roulette.js` | ❌
