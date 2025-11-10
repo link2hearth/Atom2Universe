@@ -466,8 +466,8 @@
             "cta": "Planifier"
           },
           "othello": {
-            "aria": "Accéder au mini-jeu Othello",
-            "title": "Othello",
+            "aria": "Accéder au mini-jeu Reversi",
+            "title": "Reversi",
             "description": "Retournez les pions de votre adversaire en les encerclant sur un plateau 8×8.",
             "cta": "Jouer"
           },
@@ -708,8 +708,8 @@
         "cubeAria": "Bloc de poids {weight}"
       },
       "othello": {
-        "aria": "Mini-jeu Othello",
-        "title": "Othello",
+        "aria": "Mini-jeu Reversi",
+        "title": "Reversi",
         "subtitle": "Encerclez les pions adverses pour les retourner.",
         "reset": "Réinitialiser la partie",
         "mode": {
@@ -717,7 +717,7 @@
           "solo": "Mode : Solo vs IA",
           "duo": "Mode : 2 joueurs"
         },
-        "board": "Plateau d'Othello",
+        "board": "Plateau de Reversi",
         "status": {
           "ready": "L’IA joue les noirs. Préparez-vous à jouer les blancs.",
           "readySolo": "L’IA joue les noirs. Préparez-vous à jouer les blancs.",
@@ -1634,7 +1634,7 @@
               "description": "Affrontez une IA adaptable et peaufinez vos ouvertures et tactiques à votre rythme."
             },
             "othello": {
-              "label": "Mini jeu Othello :",
+              "label": "Mini jeu Reversi :",
               "description": "Encerclez les pions adverses pour retourner la majorité du plateau 8×8."
             },
             "gameOfLife": {
