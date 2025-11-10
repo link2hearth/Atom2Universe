@@ -11,6 +11,7 @@ import java.io.OutputStreamWriter
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import org.json.JSONTokener
 import kotlin.text.Charsets
 
 class AndroidSaveBridge(context: Context) {
@@ -45,11 +46,26 @@ class AndroidSaveBridge(context: Context) {
         synchronized(saveLock) {
             val fileData = readFromFile()
             if (!fileData.isNullOrEmpty()) {
-                return fileData
+                if (isValidSavePayload(fileData)) {
+                    return fileData
+                }
+                Log.w(TAG, "Primary save data is corrupted, attempting recovery")
+                val restored = restoreLatestBackupLocked()
+                if (!restored.isNullOrEmpty()) {
+                    return restored
+                }
+                Log.e(TAG, "No valid backup available, clearing corrupted save data")
+                clearDataInternal()
+                return null
             }
 
             val legacyData = preferences.getString(KEY_SAVE, null)
             if (!legacyData.isNullOrEmpty()) {
+                if (!isValidSavePayload(legacyData)) {
+                    Log.w(TAG, "Ignoring invalid legacy save data")
+                    removeLegacyPreference()
+                    return null
+                }
                 try {
                     writeToFile(legacyData)
                     removeLegacyPreference()
@@ -153,6 +169,32 @@ class AndroidSaveBridge(context: Context) {
         }
     }
 
+    private fun restoreLatestBackupLocked(): String? {
+        if (!backupDirectory.exists()) {
+            return null
+        }
+        val files = backupDirectory.listFiles { file ->
+            file.isFile && file.name.endsWith(".json", ignoreCase = true)
+        } ?: return null
+
+        files.sortedByDescending { it.lastModified() }
+            .forEach { file ->
+                val payload = readBackupPayload(file)
+                if (payload.isNullOrEmpty() || !isValidSavePayload(payload)) {
+                    return@forEach
+                }
+                try {
+                    writeToFile(payload)
+                    Log.i(TAG, "Restored primary save data from backup ${file.name}")
+                    return payload
+                } catch (error: IOException) {
+                    Log.e(TAG, "Unable to restore backup ${file.name}", error)
+                }
+            }
+
+        return null
+    }
+
     private fun readFromFile(): String? {
         if (!saveFile.exists()) {
             return null
@@ -163,6 +205,22 @@ class AndroidSaveBridge(context: Context) {
             }
         } catch (error: IOException) {
             Log.e(TAG, "Unable to read save file", error)
+            null
+        }
+    }
+
+    private fun readBackupPayload(file: File): String? {
+        return try {
+            file.inputStream().bufferedReader(Charsets.UTF_8).use { reader ->
+                val raw = reader.readText()
+                val parsed = JSONObject(raw)
+                parsed.optString("data", null)
+            }
+        } catch (error: IOException) {
+            Log.e(TAG, "Unable to read backup payload from ${file.name}", error)
+            null
+        } catch (error: JSONException) {
+            Log.e(TAG, "Unable to parse backup payload from ${file.name}", error)
             null
         }
     }
@@ -195,6 +253,18 @@ class AndroidSaveBridge(context: Context) {
             if (tempFile.exists() && tempFile != saveFile) {
                 tempFile.delete()
             }
+        }
+    }
+
+    private fun isValidSavePayload(payload: String): Boolean {
+        if (payload.isBlank()) {
+            return false
+        }
+        return try {
+            val token = JSONTokener(payload).nextValue()
+            token is JSONObject || token is JSONArray
+        } catch (error: JSONException) {
+            false
         }
     }
 
