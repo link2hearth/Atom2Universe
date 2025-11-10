@@ -12917,8 +12917,10 @@ const activeTouchIdentifiers = new Map();
 const activePointerTouchIds = new Map();
 const TOUCH_TRACKING_STALE_THRESHOLD_MS = 500;
 const MAX_SCROLL_UNLOCK_FAILURES = 3;
+const SCROLL_LOCK_HEALTH_CHECK_INTERVAL_MS = 1000;
 let pendingScrollUnlockCheckId = null;
 let consecutiveScrollUnlockFailures = 0;
+let scrollLockHealthCheckIntervalId = null;
 
 function getCurrentTimestamp() {
   if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
@@ -13226,6 +13228,42 @@ function applyActivePageScrollBehavior(activePageElement) {
   applyBodyScrollBehavior(resolvePageScrollBehavior(pageElement));
 }
 
+function runScrollLockHealthCheck() {
+  if (typeof document === 'undefined') {
+    return;
+  }
+
+  pruneStaleTouchTracking();
+
+  const hasTrackedTouches = activeTouchIdentifiers.size > 0 || activePointerTouchIds.size > 0;
+  if (hasTrackedTouches) {
+    return;
+  }
+
+  const body = document.body;
+  if (!body) {
+    return;
+  }
+
+  const activePageId = body.dataset?.activePage;
+  const activePageElement = activePageId ? document.getElementById(activePageId) : null;
+  const intendedBehavior = resolvePageScrollBehavior(activePageElement);
+
+  if (intendedBehavior === SCROLL_BEHAVIOR_MODES.LOCK) {
+    return;
+  }
+
+  const bodyStyle = body.style || {};
+  const isBodyLocked = body.classList?.contains?.('touch-scroll-lock')
+    || activeBodyScrollBehavior === SCROLL_BEHAVIOR_MODES.LOCK
+    || bodyStyle.touchAction === 'none'
+    || bodyStyle.overscrollBehavior === 'none';
+
+  if (isBodyLocked) {
+    forceUnlockScrollSafe();
+  }
+}
+
 function handleGlobalTouchStart(event) {
   registerActiveTouches(event?.changedTouches, event?.touches);
 }
@@ -13354,6 +13392,19 @@ if (typeof window !== 'undefined' && typeof window.addEventListener === 'functio
   window.addEventListener('pointercancel', forceUnlockScrollSafe, passiveEventListenerOptions);
   window.addEventListener('blur', forceUnlockScrollSafe);
   window.addEventListener('pagehide', forceUnlockScrollSafe);
+
+  if (scrollLockHealthCheckIntervalId === null && typeof window.setInterval === 'function') {
+    scrollLockHealthCheckIntervalId = window.setInterval(
+      runScrollLockHealthCheck,
+      SCROLL_LOCK_HEALTH_CHECK_INTERVAL_MS
+    );
+  }
+
+  if (typeof window.requestAnimationFrame === 'function') {
+    window.requestAnimationFrame(runScrollLockHealthCheck);
+  } else {
+    runScrollLockHealthCheck();
+  }
 }
 
 function showPage(pageId) {
