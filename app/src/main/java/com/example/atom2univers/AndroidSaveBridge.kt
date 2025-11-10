@@ -32,8 +32,14 @@ class AndroidSaveBridge(context: Context) {
             }
 
             try {
-                createAutoBackupLocked(payload)
-                writeToFile(payload)
+                val normalizedPayload = try {
+                    normalizePayloadLocked(payload)
+                } catch (error: JSONException) {
+                    Log.w(TAG, "Unable to normalize save payload, persisting raw data", error)
+                    payload
+                }
+                createAutoBackupLocked(normalizedPayload)
+                writeToFile(normalizedPayload)
                 removeLegacyPreference()
             } catch (error: IOException) {
                 Log.e(TAG, "Unable to persist save data", error)
@@ -411,5 +417,258 @@ class AndroidSaveBridge(context: Context) {
         private const val SAVE_FILE_NAME = "atom2univers_save.json"
         private const val BACKUP_DIRECTORY_NAME = "atom2univers_backups"
         private const val MAX_BACKUP_COUNT = 8
+        private const val NATIVE_SAVE_ENVELOPE_SCHEMA = "atom2univers.save.v2"
+        private val RESERVED_ENVELOPE_KEYS = setOf(
+            "schema",
+            "version",
+            "updatedAt",
+            "lastSave"
+        )
+        private val ENVELOPE_CLICKER_KEYS = listOf(
+            "clicker",
+            "primary",
+            "game",
+            "state",
+            "payload",
+            "data",
+            "save",
+            "slot",
+            "main"
+        )
+    }
+
+    private fun normalizePayloadLocked(payload: String): String {
+        val parsedPayload = parseJsonObject(payload) ?: return payload
+        val now = System.currentTimeMillis()
+        val existingEnvelope = readFromFile()?.let { parseJsonObject(it) }
+
+        val normalized = if (isEnvelopePayload(parsedPayload)) {
+            mergeEnvelope(parsedPayload, existingEnvelope, now)
+        } else {
+            buildEnvelope(parsedPayload, existingEnvelope, now)
+        }
+
+        return normalized?.toString() ?: payload
+    }
+
+    private fun parseJsonObject(raw: String): JSONObject? {
+        return try {
+            val token = JSONTokener(raw).nextValue()
+            token as? JSONObject
+        } catch (error: JSONException) {
+            null
+        }
+    }
+
+    private fun isEnvelopePayload(payload: JSONObject): Boolean {
+        val schema = payload.optString("schema")
+        if (schema.equals(NATIVE_SAVE_ENVELOPE_SCHEMA, ignoreCase = true)) {
+            return true
+        }
+        val version = payload.optInt("version", -1)
+        if (version >= 2 && payload.has("clicker")) {
+            return true
+        }
+        return false
+    }
+
+    private fun mergeEnvelope(
+        payload: JSONObject,
+        existing: JSONObject?,
+        now: Long
+    ): JSONObject? {
+        val result = cloneJsonObject(payload)
+        if (result == null) {
+            return null
+        }
+
+        result.put("schema", NATIVE_SAVE_ENVELOPE_SCHEMA)
+        result.put("version", 2)
+        result.put("updatedAt", now)
+
+        val clickerState = extractClickerState(result) ?: extractClickerState(existing)
+        if (clickerState != null) {
+            result.put("clicker", cloneJsonValue(clickerState))
+        }
+
+        val resolvedLastSave = extractTimestamp(clickerState ?: result, now)
+        result.put("lastSave", resolvedLastSave)
+
+        mergeEnvelopeSections(result, existing)
+
+        val mergedMeta = mergeMetaSection(
+            existing?.optJSONObject("meta"),
+            result.optJSONObject("meta"),
+            resolvedLastSave,
+            now
+        )
+        result.put("meta", mergedMeta)
+
+        return result
+    }
+
+    private fun buildEnvelope(
+        payload: JSONObject,
+        existing: JSONObject?,
+        now: Long
+    ): JSONObject? {
+        val envelope = JSONObject()
+        envelope.put("schema", NATIVE_SAVE_ENVELOPE_SCHEMA)
+        envelope.put("version", 2)
+
+        val clickerState = cloneJsonObject(payload) ?: return null
+        envelope.put("clicker", clickerState)
+
+        val resolvedLastSave = extractTimestamp(payload, now)
+        envelope.put("lastSave", resolvedLastSave)
+        envelope.put("updatedAt", now)
+
+        if (payload.has("arcadeProgress")) {
+            envelope.put("arcadeProgress", cloneJsonValue(payload.get("arcadeProgress")))
+        }
+
+        mergeEnvelopeSections(envelope, existing)
+
+        val mergedMeta = mergeMetaSection(
+            existing?.optJSONObject("meta"),
+            envelope.optJSONObject("meta"),
+            resolvedLastSave,
+            now
+        )
+        envelope.put("meta", mergedMeta)
+
+        return envelope
+    }
+
+    private fun mergeEnvelopeSections(target: JSONObject, existing: JSONObject?) {
+        if (existing == null) {
+            return
+        }
+        val iterator = existing.keys()
+        while (iterator.hasNext()) {
+            val key = iterator.next()
+            if (RESERVED_ENVELOPE_KEYS.contains(key) || key == "meta" || key == "clicker") {
+                continue
+            }
+            if (!target.has(key)) {
+                target.put(key, cloneJsonValue(existing.get(key)))
+            }
+        }
+    }
+
+    private fun mergeMetaSection(
+        existing: JSONObject?,
+        incoming: JSONObject?,
+        lastSave: Long,
+        updatedAt: Long
+    ): JSONObject {
+        val result = JSONObject()
+        if (existing != null) {
+            val iterator = existing.keys()
+            while (iterator.hasNext()) {
+                val key = iterator.next()
+                result.put(key, cloneJsonValue(existing.get(key)))
+            }
+        }
+        if (incoming != null) {
+            val iterator = incoming.keys()
+            while (iterator.hasNext()) {
+                val key = iterator.next()
+                result.put(key, cloneJsonValue(incoming.get(key)))
+            }
+        }
+        result.put("lastSave", lastSave)
+        result.put("updatedAt", updatedAt)
+        return result
+    }
+
+    private fun extractClickerState(envelope: JSONObject?): JSONObject? {
+        if (envelope == null) {
+            return null
+        }
+        ENVELOPE_CLICKER_KEYS.forEach { key ->
+            val direct = envelope.optJSONObject(key)
+            if (isSerializedClickerState(direct)) {
+                return direct
+            }
+            val raw = envelope.opt(key)
+            if (raw is String) {
+                val parsed = parseJsonObject(raw)
+                if (isSerializedClickerState(parsed)) {
+                    return parsed
+                }
+            } else if (raw is JSONObject && isSerializedClickerState(raw)) {
+                return raw
+            }
+        }
+        return null
+    }
+
+    private fun isSerializedClickerState(candidate: JSONObject?): Boolean {
+        if (candidate == null) {
+            return false
+        }
+        if (!candidate.has("atoms") || !candidate.has("lifetime")) {
+            return false
+        }
+        if (!candidate.has("perClick") && !candidate.has("perSecond")) {
+            return false
+        }
+        return true
+    }
+
+    private fun extractTimestamp(source: JSONObject?, fallback: Long): Long {
+        if (source == null) {
+            return fallback
+        }
+        val candidates = listOf("lastSave", "savedAt", "saved_at", "timestamp", "updatedAt")
+        for (key in candidates) {
+            val value = source.opt(key)
+            val numeric = valueToLong(value)
+            if (numeric != null && numeric > 0) {
+                return numeric
+            }
+        }
+        val meta = source.optJSONObject("meta")
+        if (meta != null) {
+            val nested = extractTimestamp(meta, 0)
+            if (nested > 0) {
+                return nested
+            }
+        }
+        return fallback
+    }
+
+    private fun valueToLong(value: Any?): Long? {
+        return when (value) {
+            null -> null
+            is Number -> value.toLong()
+            is String -> value.toLongOrNull()
+            else -> null
+        }
+    }
+
+    private fun cloneJsonObject(source: JSONObject?): JSONObject? {
+        if (source == null) {
+            return null
+        }
+        return try {
+            JSONObject(source.toString())
+        } catch (error: JSONException) {
+            null
+        }
+    }
+
+    private fun cloneJsonValue(value: Any?): Any? {
+        return when (value) {
+            null -> null
+            is JSONObject -> cloneJsonObject(value)
+            is JSONArray -> try {
+                JSONArray(value.toString())
+            } catch (error: JSONException) {
+                null
+            }
+            else -> value
+        }
     }
 }
