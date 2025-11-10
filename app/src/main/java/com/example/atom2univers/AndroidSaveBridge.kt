@@ -52,6 +52,10 @@ class AndroidSaveBridge(context: Context) {
         synchronized(saveLock) {
             val fileData = readFromFile()
             if (!fileData.isNullOrEmpty()) {
+                val normalizedForClient = unwrapEnvelopeForClientPayload(fileData)
+                if (!normalizedForClient.isNullOrEmpty() && isValidSavePayload(normalizedForClient)) {
+                    return normalizedForClient
+                }
                 if (isValidSavePayload(fileData)) {
                     return fileData
                 }
@@ -199,6 +203,46 @@ class AndroidSaveBridge(context: Context) {
             }
 
         return null
+    }
+
+    private fun unwrapEnvelopeForClientPayload(raw: String): String? {
+        val parsed = parseJsonObject(raw) ?: return null
+        if (!isEnvelopePayload(parsed)) {
+            return null
+        }
+
+        val clickerState = parsed.optJSONObject("clicker")
+        if (clickerState != null) {
+            val restored = cloneJsonObject(clickerState) ?: return null
+            mergeEnvelopeDataIntoClicker(parsed, restored)
+            return restored.toString()
+        }
+
+        return null
+    }
+
+    private fun mergeEnvelopeDataIntoClicker(envelope: JSONObject, target: JSONObject) {
+        if (!target.has("arcadeProgress") && envelope.has("arcadeProgress")) {
+            val progress = cloneJsonValue(envelope.opt("arcadeProgress"))
+            if (progress != null) {
+                target.put("arcadeProgress", progress)
+            }
+        }
+
+        if (!target.has("meta") && envelope.has("meta")) {
+            val meta = cloneJsonObject(envelope.optJSONObject("meta"))
+            if (meta != null) {
+                target.put("meta", meta)
+            }
+        }
+
+        if (!target.has("lastSave") && envelope.has("lastSave")) {
+            target.put("lastSave", envelope.opt("lastSave"))
+        }
+
+        if (!target.has("updatedAt") && envelope.has("updatedAt")) {
+            target.put("updatedAt", envelope.opt("updatedAt"))
+        }
     }
 
     private fun readFromFile(): String? {
