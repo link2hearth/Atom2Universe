@@ -54,6 +54,17 @@
     return null;
   };
 
+  const isPrimarySaveReady = () => {
+    const globalState = getGlobalState();
+    if (globalState && globalState.__primarySaveReady === true) {
+      return true;
+    }
+    return Boolean(
+      typeof window !== 'undefined'
+        && window.atom2universPrimarySaveReady === true
+    );
+  };
+
   const readStoredState = () => {
     const result = { version: 1, entries: {} };
 
@@ -173,6 +184,7 @@
 
   let persistScheduled = false;
   let persistTimer = null;
+  let pendingPrimarySaveRetry = null;
 
   const normalizeEntriesForGlobalState = entries => {
     const normalized = {};
@@ -198,6 +210,19 @@
   const requestPrimarySave = () => {
     if (typeof window === 'undefined') {
       return;
+    }
+    if (!isPrimarySaveReady()) {
+      if (pendingPrimarySaveRetry == null) {
+        pendingPrimarySaveRetry = setTimeout(() => {
+          pendingPrimarySaveRetry = null;
+          requestPrimarySave();
+        }, 500);
+      }
+      return;
+    }
+    if (pendingPrimarySaveRetry != null) {
+      clearTimeout(pendingPrimarySaveRetry);
+      pendingPrimarySaveRetry = null;
     }
     const saveFn =
       typeof window.atom2universSaveGame === 'function'
