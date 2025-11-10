@@ -31,3 +31,9 @@ Thumbs.db
 # Keystore files
 *.jks
 *.keystore
+
+# Fichiers binaires, de musique et de debug
+*.mid
+*.MID
+*.sf2
+*.hprof
