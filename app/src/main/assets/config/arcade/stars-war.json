@@ -1,0 +1,7 @@
+{
+  "maxWaveDurationSeconds": 15,
+  "enemyBulletCap": {
+    "base": 1,
+    "perWave": 1
+  }
+}

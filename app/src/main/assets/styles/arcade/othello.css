@@ -1,0 +1,255 @@
+.page--othello {
+  --othello-surface: linear-gradient(135deg, rgba(18, 26, 44, 0.9), rgba(6, 10, 24, 0.9));
+  --othello-border: rgba(102, 210, 255, 0.28);
+  --othello-shadow: 0 24px 48px rgba(0, 6, 26, 0.55);
+  --othello-cell-border: rgba(18, 30, 52, 0.8);
+  --othello-cell-hover: rgba(120, 210, 255, 0.35);
+  --othello-valid-ring: rgba(102, 210, 255, 0.6);
+  --othello-black: #171c2e;
+  --othello-white: #f5f7ff;
+  --othello-green: radial-gradient(circle at 30% 20%, rgba(28, 64, 52, 0.92), rgba(12, 34, 28, 0.96));
+  --othello-board-scale: 1;
+  --othello-board-padding: clamp(
+    calc(0.95rem * var(--othello-board-scale, 1)),
+    calc(2.7vw * var(--othello-board-scale, 1)),
+    calc(1.5rem * var(--othello-board-scale, 1))
+  );
+  --othello-board-gap: clamp(
+    calc(0.24rem * var(--othello-board-scale, 1)),
+    calc(0.81vw * var(--othello-board-scale, 1)),
+    calc(0.47rem * var(--othello-board-scale, 1))
+  );
+  --othello-cell-size: calc(3.78rem * var(--othello-board-scale, 1));
+  --othello-board-max-width: clamp(
+    calc(24.3rem * var(--othello-board-scale, 1)),
+    calc(81vw * var(--othello-board-scale, 1)),
+    calc(37.8rem * var(--othello-board-scale, 1))
+  );
+  padding: clamp(1rem, 4vw, 2.5rem) clamp(0.75rem, 3vw, 2.75rem);
+}
+
+.othello {
+  max-width: min(980px, 100%);
+  margin: 0 auto;
+  display: grid;
+  gap: clamp(1rem, 2vw, 2rem);
+}
+
+.othello__header {
+  text-align: center;
+  display: grid;
+  gap: clamp(0.35rem, 1vw, 0.65rem);
+}
+
+.othello__title {
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.othello__subtitle {
+  color: rgba(214, 226, 255, 0.78);
+  font-size: clamp(0.95rem, 2.3vw, 1.1rem);
+}
+
+.othello__controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(0.6rem, 1.5vw, 1.1rem);
+}
+
+.othello__mode {
+  display: flex;
+  align-items: center;
+}
+
+.othello__mode-toggle {
+  appearance: none;
+  border: 1px solid rgba(120, 190, 255, 0.35);
+  border-radius: 999px;
+  padding: clamp(0.23rem, 0.65vw, 0.36rem) clamp(0.65rem, 1.56vw, 0.98rem);
+  background: linear-gradient(135deg, rgba(40, 120, 220, 0.32), rgba(150, 90, 255, 0.26));
+  color: rgba(238, 244, 255, 0.9);
+  font-weight: 600;
+  font-size: clamp(0.55rem, 1.43vw, 0.62rem);
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.othello__mode-toggle:hover,
+.othello__mode-toggle:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 28px rgba(16, 26, 60, 0.45);
+  outline: none;
+  filter: brightness(1.05);
+}
+
+.othello__mode-toggle[aria-pressed='true'] {
+  border-color: rgba(160, 230, 140, 0.65);
+  background: linear-gradient(135deg, rgba(70, 200, 150, 0.35), rgba(60, 150, 255, 0.32));
+  color: rgba(250, 252, 255, 0.95);
+}
+
+.othello__reset {
+  appearance: none;
+  border: 1px solid rgba(120, 190, 255, 0.55);
+  border-radius: 999px;
+  padding: clamp(0.29rem, 0.78vw, 0.42rem) clamp(0.78rem, 1.82vw, 1.17rem);
+  background: linear-gradient(135deg, rgba(60, 150, 255, 0.38), rgba(130, 90, 255, 0.32));
+  color: rgba(248, 250, 255, 0.95);
+  font-weight: 600;
+  font-size: clamp(0.59rem, 1.5vw, 0.65rem);
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  box-shadow: 0 16px 32px rgba(10, 18, 46, 0.55);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.othello__reset:hover,
+.othello__reset:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 18px 36px rgba(16, 26, 60, 0.6);
+  outline: none;
+  filter: brightness(1.05);
+}
+
+.othello__status-group {
+  display: none;
+}
+
+.othello__status {
+  font-size: clamp(1rem, 2.4vw, 1.2rem);
+  font-weight: 600;
+  color: rgba(238, 244, 255, 0.92);
+  text-align: center;
+  min-height: 1.4em;
+}
+
+.othello__score {
+  color: rgba(200, 214, 240, 0.82);
+  font-size: clamp(0.9rem, 2.1vw, 1.05rem);
+}
+
+.othello__board-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.8rem, 2.4vw, 1.2rem);
+}
+
+.othello__result {
+  padding: clamp(0.65rem, 2.1vw, 1.15rem) clamp(1.1rem, 4vw, 2.4rem);
+  border-radius: clamp(0.7rem, 2vw, 1.2rem);
+  font-weight: 700;
+  font-size: clamp(0.95rem, 2.4vw, 1.2rem);
+  letter-spacing: 0.02em;
+  text-align: center;
+  color: rgba(240, 248, 255, 0.95);
+  background: linear-gradient(135deg, rgba(32, 64, 92, 0.72), rgba(14, 28, 46, 0.78));
+  box-shadow: 0 18px 36px rgba(0, 6, 24, 0.45);
+  transition: opacity 0.2s ease;
+}
+
+.othello__result[hidden] {
+  display: none;
+}
+
+.othello__result--black {
+  background: linear-gradient(135deg, rgba(23, 28, 46, 0.92), rgba(11, 16, 30, 0.96));
+  box-shadow: 0 20px 44px rgba(0, 4, 18, 0.55);
+}
+
+.othello__result--white {
+  background: linear-gradient(135deg, rgba(246, 248, 255, 0.95), rgba(208, 220, 250, 0.92));
+  color: #111c2f;
+  box-shadow: 0 20px 42px rgba(8, 18, 36, 0.35);
+}
+
+.othello__result--draw {
+  background: linear-gradient(135deg, rgba(42, 64, 78, 0.85), rgba(22, 32, 44, 0.9));
+}
+
+.othello__board {
+  background: var(--othello-green);
+  border: 1px solid var(--othello-border);
+  box-shadow: var(--othello-shadow);
+  border-radius: clamp(0.6rem, 2vw, 1.1rem);
+  padding: var(--othello-board-padding);
+  display: grid;
+  grid-template-columns: repeat(8, var(--othello-cell-size));
+  grid-auto-rows: var(--othello-cell-size);
+  gap: var(--othello-board-gap);
+  width: min(100%, var(--othello-board-max-width));
+  max-width: var(--othello-board-max-width);
+  margin-inline: auto;
+  box-sizing: border-box;
+}
+
+.othello__cell {
+  position: relative;
+  width: var(--othello-cell-size);
+  height: var(--othello-cell-size);
+  aspect-ratio: 1 / 1;
+  border: 1px solid var(--othello-cell-border);
+  border-radius: clamp(0.35rem, 1.2vw, 0.55rem);
+  background: rgba(8, 24, 18, 0.5);
+  cursor: pointer;
+  padding: 0;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.othello__cell:hover,
+.othello__cell:focus-visible {
+  border-color: rgba(140, 220, 255, 0.7);
+  box-shadow: 0 0 0 3px var(--othello-cell-hover);
+  outline: none;
+}
+
+.othello__cell::after {
+  content: '';
+  position: absolute;
+  inset: clamp(0.35rem, 1vw, 0.55rem);
+  border-radius: 999px;
+  background: transparent;
+  box-shadow: none;
+  transition: transform 0.18s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.othello__cell--black::after {
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.28), var(--othello-black));
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0 8px 18px rgba(0, 0, 0, 0.6);
+}
+
+.othello__cell--white::after {
+  background: radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.95), rgba(214, 220, 238, 0.92));
+  box-shadow: inset 0 0 0 1px rgba(40, 60, 120, 0.25), 0 8px 18px rgba(0, 0, 0, 0.35);
+}
+
+.othello__cell--valid::after {
+  box-shadow: 0 0 0 4px var(--othello-valid-ring);
+}
+
+.othello__cell--valid::before {
+  content: '';
+  position: absolute;
+  inset: clamp(0.6rem, 1.6vw, 0.85rem);
+  border-radius: 999px;
+  background: rgba(96, 210, 255, 0.18);
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+@media (max-width: 768px) and (orientation: portrait) {
+  .page--othello {
+    --othello-board-scale: 0.9;
+  }
+}
+
+@media (max-width: 520px) {
+  .page--othello {
+    --othello-board-scale: 0.86;
+  }
+}

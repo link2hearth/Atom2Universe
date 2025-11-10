@@ -1,0 +1,11 @@
+{
+  "diceCount": 5,
+  "faces": 6,
+  "rollsPerTurn": 3,
+  "fullHouseScore": 25,
+  "smallStraightScore": 30,
+  "largeStraightScore": 40,
+  "yahtzeeScore": 50,
+  "bonusThreshold": 63,
+  "bonusValue": 35
+}

@@ -1,0 +1,148 @@
+{
+  "groups": {
+    "commun": {
+      "perCopy": {
+        "clickAdd": 25
+      },
+      "setBonus": {
+        "clickAdd": 500,
+        "requireAllUnique": true
+      },
+      "multiplier": {
+        "every": 100,
+        "increment": 1,
+        "targets": [
+          "perClick",
+          "perSecond"
+        ],
+        "label": "scripts.config.elementBonuses.collectionMultiplier"
+      }
+    },
+    "essentiel": {
+      "perCopy": {
+        "uniqueClickAdd": 50,
+        "duplicateClickAdd": 1000,
+        "label": "scripts.config.elementBonuses.essentiel.perCopy"
+      },
+      "setBonus": [
+        {
+          "clickAdd": 50000,
+          "requireAllUnique": true,
+          "label": "scripts.config.elementBonuses.essentiel.setBonus"
+        }
+      ],
+      "multiplier": {
+        "every": 50,
+        "increment": 1,
+        "targets": [
+          "perClick",
+          "perSecond"
+        ],
+        "label": "scripts.config.elementBonuses.collectionMultiplier"
+      }
+    },
+    "stellaire": {
+      "perCopy": {
+        "uniqueClickAdd": 20000,
+        "duplicateClickAdd": 25000,
+        "label": "scripts.config.elementBonuses.stellaire.perCopy"
+      },
+      "multiplier": {
+        "every": 25,
+        "increment": 1,
+        "targets": [
+          "perClick",
+          "perSecond"
+        ],
+        "label": "scripts.config.elementBonuses.collectionMultiplier"
+      },
+      "setBonus": {
+        "requireAllUnique": true,
+        "label": "scripts.config.elementBonuses.stellaire.setBonus",
+        "rarityFlatMultipliers": {
+          "commun": {
+            "perClick": 2
+          }
+        }
+      },
+      "labels": {
+        "perCopy": "scripts.config.elementBonuses.stellaire.labels.perCopy",
+        "setBonus": "scripts.config.elementBonuses.stellaire.setBonus",
+        "multiplier": "scripts.config.elementBonuses.collectionMultiplier"
+      }
+    },
+    "singulier": {
+      "perCopy": {
+        "uniqueClickAdd": 50000,
+        "uniqueAutoAdd": 50000,
+        "duplicateClickAdd": 100000,
+        "duplicateAutoAdd": 100000,
+        "label": "scripts.config.elementBonuses.singulier.perCopy"
+      },
+      "multiplier": {
+        "every": 10,
+        "increment": 1,
+        "targets": [
+          "perClick",
+          "perSecond"
+        ],
+        "label": "scripts.config.elementBonuses.collectionMultiplier"
+      },
+      "labels": {
+        "perCopy": "scripts.config.elementBonuses.singulier.perCopy",
+        "multiplier": "scripts.config.elementBonuses.collectionMultiplier"
+      }
+    },
+    "mythique": {
+      "labels": {
+        "setBonus": "scripts.config.elementBonuses.mythique.setBonus",
+        "ticketBonus": "scripts.config.elementBonuses.mythique.ticketBonus",
+        "offlineBonus": "scripts.config.elementBonuses.mythique.offlineBonus",
+        "duplicateOverflow": "scripts.config.elementBonuses.mythique.duplicateOverflow",
+        "frenzyBonus": "scripts.config.elementBonuses.mythique.frenzyBonus",
+        "multiplier": "scripts.config.elementBonuses.collectionMultiplier"
+      },
+      "multiplier": {
+        "every": 10,
+        "increment": 1,
+        "targets": [
+          "perClick",
+          "perSecond"
+        ],
+        "label": "scripts.config.elementBonuses.collectionMultiplier"
+      },
+      "ticketBonus": {
+        "uniqueReductionSeconds": 10,
+        "minIntervalSeconds": 30
+      },
+      "offlineBonus": {
+        "baseMultiplier": 0.01,
+        "perDuplicate": 0.01,
+        "cap": 0.5
+      },
+      "duplicateOverflow": {},
+      "frenzyBonus": {
+        "multiplier": 1.5
+      }
+    },
+    "irreel": {
+      "crit": {
+        "perUnique": {
+          "chanceAdd": 0.01
+        },
+        "perDuplicate": {
+          "multiplierAdd": 0.01
+        }
+      },
+      "multiplier": {
+        "every": 10,
+        "increment": 1,
+        "targets": [
+          "perClick",
+          "perSecond"
+        ],
+        "label": "scripts.config.elementBonuses.collectionMultiplier"
+      }
+    }
+  }
+}
