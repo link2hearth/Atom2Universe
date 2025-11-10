@@ -18128,6 +18128,97 @@ function writeNativeSaveData(serialized) {
   return false;
 }
 
+function prepareGameStateForLoadAttempt() {
+  resetFrenzyState({ skipApply: true });
+  resetTicketStarState({ reschedule: true });
+  gameState.baseCrit = createDefaultCritState();
+  gameState.crit = createDefaultCritState();
+  gameState.lastCritical = null;
+}
+
+const SAVE_SOURCE_PRIORITY = Object.freeze({
+  native: 3,
+  local: 2,
+  reload: 1
+});
+
+function isSerializedGameStatePayload(data) {
+  if (!data || typeof data !== 'object') {
+    return false;
+  }
+  const hasAtoms = Object.prototype.hasOwnProperty.call(data, 'atoms') && data.atoms != null;
+  const hasLifetime = Object.prototype.hasOwnProperty.call(data, 'lifetime') && data.lifetime != null;
+  const hasPerClick = Object.prototype.hasOwnProperty.call(data, 'perClick') && data.perClick != null;
+  const hasPerSecond = Object.prototype.hasOwnProperty.call(data, 'perSecond') && data.perSecond != null;
+  return hasAtoms && hasLifetime && (hasPerClick || hasPerSecond);
+}
+
+function extractSerializedSaveCandidate(raw, source) {
+  if (typeof raw !== 'string' || !raw) {
+    return null;
+  }
+  let data = null;
+  let lastSave = 0;
+  try {
+    data = JSON.parse(raw);
+    const timestamp = Number(
+      data?.lastSave
+      ?? data?.savedAt
+      ?? data?.saved_at
+      ?? data?.timestamp
+    );
+    if (Number.isFinite(timestamp) && timestamp > 0) {
+      lastSave = timestamp;
+    }
+  } catch (error) {
+    const origin = typeof source === 'string' && source ? source : 'unknown';
+    console.error(`Unable to parse ${origin} save data`, error);
+    return {
+      source,
+      raw,
+      data: null,
+      lastSave: 0,
+      isValid: false,
+      size: raw.length
+    };
+  }
+  return {
+    source,
+    raw,
+    data,
+    lastSave,
+    isValid: isSerializedGameStatePayload(data),
+    size: raw.length
+  };
+}
+
+function compareSerializedSaveCandidates(a, b) {
+  if (!a && !b) {
+    return 0;
+  }
+  if (!a) {
+    return 1;
+  }
+  if (!b) {
+    return -1;
+  }
+  if (a.isValid !== b.isValid) {
+    return a.isValid ? -1 : 1;
+  }
+  const aTimestamp = Number.isFinite(a.lastSave) ? a.lastSave : 0;
+  const bTimestamp = Number.isFinite(b.lastSave) ? b.lastSave : 0;
+  if (bTimestamp !== aTimestamp) {
+    return bTimestamp - aTimestamp;
+  }
+  const priorityDiff = (SAVE_SOURCE_PRIORITY[b.source] || 0) - (SAVE_SOURCE_PRIORITY[a.source] || 0);
+  if (priorityDiff !== 0) {
+    return priorityDiff;
+  }
+  const aSize = Number.isFinite(a.size) ? a.size : 0;
+  const bSize = Number.isFinite(b.size) ? b.size : 0;
+  return bSize - aSize;
+}
+
 function serializeState() {
   flushPendingPerformanceQueues({ force: true });
   const stats = gameState.stats || createInitialStats();
@@ -19396,44 +19487,31 @@ function applySerializedGameState(raw) {
 
 function loadGame() {
   try {
-    resetFrenzyState({ skipApply: true });
-    resetTicketStarState({ reschedule: true });
-    gameState.baseCrit = createDefaultCritState();
-    gameState.crit = createDefaultCritState();
-    gameState.lastCritical = null;
-    let raw = null;
     const reloadSnapshot = consumeReloadSaveSnapshot();
+    let localRaw = null;
     try {
       if (typeof localStorage !== 'undefined' && localStorage) {
-        raw = localStorage.getItem(PRIMARY_SAVE_STORAGE_KEY);
+        localRaw = localStorage.getItem(PRIMARY_SAVE_STORAGE_KEY);
       }
     } catch (error) {
       console.error('Erreur de lecture de la sauvegarde locale', error);
     }
-    if (!raw) {
-      const nativeRaw = readNativeSaveData();
-      if (nativeRaw) {
-        raw = nativeRaw;
-        try {
-          if (typeof localStorage !== 'undefined' && localStorage) {
-            localStorage.setItem(PRIMARY_SAVE_STORAGE_KEY, nativeRaw);
-          }
-        } catch (syncError) {
-          console.warn('Unable to sync native save with local storage', syncError);
-        }
-      }
+    const nativeRaw = readNativeSaveData();
+    const candidates = [];
+    const localCandidate = extractSerializedSaveCandidate(localRaw, 'local');
+    if (localCandidate) {
+      candidates.push(localCandidate);
     }
-    if (!raw && reloadSnapshot) {
-      raw = reloadSnapshot;
-      try {
-        if (typeof localStorage !== 'undefined' && localStorage) {
-          localStorage.setItem(PRIMARY_SAVE_STORAGE_KEY, reloadSnapshot);
-        }
-      } catch (syncError) {
-        console.warn('Unable to persist reload snapshot to local storage', syncError);
-      }
+    const nativeCandidate = extractSerializedSaveCandidate(nativeRaw, 'native');
+    if (nativeCandidate) {
+      candidates.push(nativeCandidate);
     }
-    if (!raw) {
+    const reloadCandidate = extractSerializedSaveCandidate(reloadSnapshot, 'reload');
+    if (reloadCandidate) {
+      candidates.push(reloadCandidate);
+    }
+    if (candidates.length === 0) {
+      prepareGameStateForLoadAttempt();
       gameState.theme = DEFAULT_THEME_ID;
       gameState.stats = createInitialStats();
       gameState.shopUnlocks = new Set();
@@ -19444,416 +19522,40 @@ function loadGame() {
       updateUI();
       return;
     }
-    const data = JSON.parse(raw);
-    gameState.atoms = LayeredNumber.fromJSON(data.atoms);
-    gameState.lifetime = LayeredNumber.fromJSON(data.lifetime);
-    gameState.perClick = LayeredNumber.fromJSON(data.perClick);
-    gameState.perSecond = LayeredNumber.fromJSON(data.perSecond);
-    const tickets = Number(data.gachaTickets);
-    const storedTickets = Number.isFinite(tickets) && tickets > 0 ? Math.floor(tickets) : 0;
-    setGachaTicketsSilently(storedTickets);
-    const bonusTickets = Number(data.bonusParticulesTickets ?? data.bonusTickets);
-    gameState.bonusParticulesTickets = Number.isFinite(bonusTickets) && bonusTickets > 0
-      ? Math.floor(bonusTickets)
-      : 0;
-    const storedFeatureFlags = data.featureUnlockFlags ?? data.featureFlags ?? null;
-    gameState.featureUnlockFlags = normalizeFeatureUnlockFlags(storedFeatureFlags);
-    const storedTicketStarUnlock = data.ticketStarUnlocked ?? data.ticketStarUnlock;
-    if (storedTicketStarUnlock != null) {
-      gameState.ticketStarUnlocked = storedTicketStarUnlock === true
-        || storedTicketStarUnlock === 'true'
-        || storedTicketStarUnlock === 1
-        || storedTicketStarUnlock === '1';
-    } else {
-      gameState.ticketStarUnlocked = gameState.gachaTickets > 0;
-    }
-    gameState.arcadeProgress = normalizeArcadeProgress(data.arcadeProgress);
-    applyDerivedFeatureUnlockFlags();
-    const storedUpgrades = data.upgrades;
-    if (storedUpgrades && typeof storedUpgrades === 'object') {
-      const normalizedUpgrades = {};
-      Object.entries(storedUpgrades).forEach(([id, value]) => {
-        const numeric = Number(value);
-        if (!Number.isFinite(numeric)) {
-          return;
-        }
-        const sanitized = Math.max(0, Math.floor(numeric));
-        if (sanitized > 0) {
-          normalizedUpgrades[id] = sanitized;
-        }
-      });
-      gameState.upgrades = normalizedUpgrades;
-    } else {
-      gameState.upgrades = {};
-    }
-    const storedShopUnlocks = data.shopUnlocks;
-    if (Array.isArray(storedShopUnlocks)) {
-      gameState.shopUnlocks = new Set(storedShopUnlocks);
-    } else if (storedShopUnlocks && typeof storedShopUnlocks === 'object') {
-      gameState.shopUnlocks = new Set(Object.keys(storedShopUnlocks));
-    } else {
-      gameState.shopUnlocks = new Set();
-    }
-    gameState.stats = parseStats(data.stats);
-    gameState.trophies = new Set(Array.isArray(data.trophies) ? data.trophies : []);
-    const storedPageUnlocks = data.pageUnlocks;
-    if (storedPageUnlocks && typeof storedPageUnlocks === 'object') {
-      const baseUnlocks = createInitialPageUnlockState();
-      Object.keys(baseUnlocks).forEach(key => {
-        const rawValue = storedPageUnlocks[key];
-        baseUnlocks[key] = rawValue === true || rawValue === 'true' || rawValue === 1;
-      });
-      gameState.pageUnlocks = baseUnlocks;
-    } else {
-      gameState.pageUnlocks = createInitialPageUnlockState();
-    }
-    const storedBigBangBonus = Number(
-      data.bigBangLevelBonus
-      ?? data.bigBangBonus
-      ?? data.bigBangLevels
-      ?? data.bigBangLevel
-      ?? 0
-    );
-    setBigBangLevelBonus(storedBigBangBonus);
-    const storedBigBangPreference =
-      data.bigBangButtonVisible ?? data.showBigBangButton ?? data.bigBangVisible ?? null;
-    const wantsBigBang =
-      storedBigBangPreference === true
-      || storedBigBangPreference === 'true'
-      || storedBigBangPreference === 1
-      || storedBigBangPreference === '1';
-    const hasBigBangUnlock = isBigBangUnlocked();
-    gameState.bigBangButtonVisible = wantsBigBang && hasBigBangUnlock;
-    const storedOffline = Number(data.offlineGainMultiplier);
-    if (Number.isFinite(storedOffline) && storedOffline > 0) {
-      gameState.offlineGainMultiplier = Math.min(MYTHIQUE_OFFLINE_CAP, storedOffline);
-    } else {
-      gameState.offlineGainMultiplier = MYTHIQUE_OFFLINE_BASE;
-    }
-    const storedOfflineTickets = data.offlineTickets;
-    if (storedOfflineTickets && typeof storedOfflineTickets === 'object') {
-      const secondsPerTicket = Number(storedOfflineTickets.secondsPerTicket);
-      const normalizedSecondsPerTicket = Number.isFinite(secondsPerTicket) && secondsPerTicket > 0
-        ? secondsPerTicket
-        : OFFLINE_TICKET_CONFIG.secondsPerTicket;
-      const capSeconds = Number(storedOfflineTickets.capSeconds);
-      const normalizedCapSeconds = Number.isFinite(capSeconds) && capSeconds > 0
-        ? Math.max(capSeconds, normalizedSecondsPerTicket)
-        : Math.max(OFFLINE_TICKET_CONFIG.capSeconds, normalizedSecondsPerTicket);
-      const progressSeconds = Number(storedOfflineTickets.progressSeconds);
-      const normalizedProgressSeconds = Number.isFinite(progressSeconds) && progressSeconds > 0
-        ? Math.max(0, Math.min(progressSeconds, normalizedCapSeconds))
-        : 0;
-      gameState.offlineTickets = {
-        secondsPerTicket: normalizedSecondsPerTicket,
-        capSeconds: normalizedCapSeconds,
-        progressSeconds: normalizedProgressSeconds
-      };
-    } else if (typeof storedOfflineTickets === 'number' && storedOfflineTickets > 0) {
-      const interval = Number(storedOfflineTickets);
-      const normalizedSecondsPerTicket = Number.isFinite(interval) && interval > 0
-        ? interval
-        : OFFLINE_TICKET_CONFIG.secondsPerTicket;
-      const normalizedCapSeconds = Math.max(
-        OFFLINE_TICKET_CONFIG.capSeconds,
-        normalizedSecondsPerTicket
-      );
-      gameState.offlineTickets = {
-        secondsPerTicket: normalizedSecondsPerTicket,
-        capSeconds: normalizedCapSeconds,
-        progressSeconds: 0
-      };
-    } else {
-      gameState.offlineTickets = {
-        secondsPerTicket: OFFLINE_TICKET_CONFIG.secondsPerTicket,
-        capSeconds: OFFLINE_TICKET_CONFIG.capSeconds,
-        progressSeconds: 0
-      };
-    }
-    gameState.sudokuOfflineBonus = normalizeSudokuOfflineBonusState(data.sudokuOfflineBonus);
-    const storedInterval = Number(data.ticketStarIntervalSeconds);
-    if (Number.isFinite(storedInterval) && storedInterval > 0) {
-      gameState.ticketStarAverageIntervalSeconds = storedInterval;
-    } else {
-      gameState.ticketStarAverageIntervalSeconds = DEFAULT_TICKET_STAR_INTERVAL_SECONDS;
-    }
-    const storedAutoCollect = data.ticketStarAutoCollect;
-    if (storedAutoCollect && typeof storedAutoCollect === 'object') {
-      const rawDelay = storedAutoCollect.delaySeconds
-        ?? storedAutoCollect.delay
-        ?? storedAutoCollect.seconds
-        ?? storedAutoCollect.value;
-      const delaySeconds = Number(rawDelay);
-      gameState.ticketStarAutoCollect = Number.isFinite(delaySeconds) && delaySeconds >= 0
-        ? { delaySeconds }
-        : null;
-    } else if (storedAutoCollect === true) {
-      gameState.ticketStarAutoCollect = { delaySeconds: 0 };
-    } else if (typeof storedAutoCollect === 'number' && Number.isFinite(storedAutoCollect) && storedAutoCollect >= 0) {
-      gameState.ticketStarAutoCollect = { delaySeconds: storedAutoCollect };
-    } else {
-      gameState.ticketStarAutoCollect = null;
-    }
-    const storedFrenzyBonus = data.frenzySpawnBonus;
-    if (storedFrenzyBonus && typeof storedFrenzyBonus === 'object') {
-      const perClick = Number(storedFrenzyBonus.perClick);
-      const perSecond = Number(storedFrenzyBonus.perSecond);
-      gameState.frenzySpawnBonus = {
-        perClick: Number.isFinite(perClick) && perClick > 0 ? perClick : 1,
-        perSecond: Number.isFinite(perSecond) && perSecond > 0 ? perSecond : 1
-      };
-    } else {
-      gameState.frenzySpawnBonus = { perClick: 1, perSecond: 1 };
-    }
-    applyFrenzySpawnChanceBonus(gameState.frenzySpawnBonus);
-    gameState.apsCrit = normalizeApsCritState(data.apsCrit);
-    const intervalChanged = setTicketStarAverageIntervalSeconds(gameState.ticketStarAverageIntervalSeconds);
-    if (intervalChanged) {
-      resetTicketStarState({ reschedule: true });
-    }
-    const baseCollection = createInitialElementCollection();
-    if (data.elements && typeof data.elements === 'object') {
-      Object.entries(data.elements).forEach(([id, saved]) => {
-        if (!baseCollection[id]) return;
-        const reference = baseCollection[id];
-        const savedCount = Number(saved?.count);
-        const normalizedCount = Number.isFinite(savedCount) && savedCount > 0
-          ? Math.floor(savedCount)
-          : 0;
-        const savedLifetime = Number(saved?.lifetime);
-        let normalizedLifetime = Number.isFinite(savedLifetime) && savedLifetime > 0
-          ? Math.floor(savedLifetime)
-          : 0;
-        if (normalizedLifetime === 0 && (saved?.owned || normalizedCount > 0)) {
-          normalizedLifetime = Math.max(normalizedCount, 1);
-        }
-        if (normalizedLifetime < normalizedCount) {
-          normalizedLifetime = normalizedCount;
-        }
-        baseCollection[id] = {
-          id,
-          gachaId: reference.gachaId,
-          owned: normalizedLifetime > 0,
-          count: normalizedCount,
-          lifetime: normalizedLifetime,
-          rarity: reference.rarity ?? (typeof saved?.rarity === 'string' ? saved.rarity : null),
-          effects: Array.isArray(reference?.effects) ? [...reference.effects] : [],
-          bonuses: Array.isArray(reference?.bonuses) ? [...reference.bonuses] : []
-        };
-      });
-    }
-    gameState.elements = baseCollection;
-    const baseCardCollection = createInitialGachaCardCollection();
-    if (data.gachaCards && typeof data.gachaCards === 'object') {
-      Object.entries(data.gachaCards).forEach(([cardId, stored]) => {
-        if (!baseCardCollection[cardId]) {
-          return;
-        }
-        const rawCount = Number(stored?.count ?? stored);
-        baseCardCollection[cardId].count = Number.isFinite(rawCount) && rawCount > 0
-          ? Math.floor(rawCount)
-          : 0;
-      });
-    }
-    gameState.gachaCards = baseCardCollection;
-    const baseImageCollection = createInitialGachaImageCollection();
-    let inferredImageAcquisitionCounter = 0;
-    if (data.gachaImages && typeof data.gachaImages === 'object') {
-      Object.entries(data.gachaImages).forEach(([imageId, stored]) => {
-        const reference = baseImageCollection[imageId];
-        if (!reference) {
-          return;
-        }
-        const rawCount = Number(stored?.count ?? stored);
-        const normalizedCount = Number.isFinite(rawCount) && rawCount > 0
-          ? Math.floor(rawCount)
-          : 0;
-        reference.count = normalizedCount;
-        if (normalizedCount > 0) {
-          const storedOrder = Number(stored?.acquiredOrder);
-          if (Number.isFinite(storedOrder) && storedOrder > 0) {
-            reference.acquiredOrder = Math.floor(storedOrder);
-            if (reference.acquiredOrder > inferredImageAcquisitionCounter) {
-              inferredImageAcquisitionCounter = reference.acquiredOrder;
-            }
-          }
-          const storedFirstAcquiredAt = Number(stored?.firstAcquiredAt);
-          if (Number.isFinite(storedFirstAcquiredAt) && storedFirstAcquiredAt > 0) {
-            reference.firstAcquiredAt = storedFirstAcquiredAt;
+    candidates.sort(compareSerializedSaveCandidates);
+    let applied = false;
+    for (let index = 0; index < candidates.length; index += 1) {
+      const candidate = candidates[index];
+      if (!candidate || !candidate.isValid || typeof candidate.raw !== 'string' || !candidate.raw) {
+        continue;
+      }
+      prepareGameStateForLoadAttempt();
+      try {
+        applySerializedGameState(candidate.raw);
+        applied = true;
+        if (candidate.source !== 'local' && typeof localStorage !== 'undefined' && localStorage) {
+          try {
+            localStorage.setItem(PRIMARY_SAVE_STORAGE_KEY, candidate.raw);
+          } catch (syncError) {
+            console.warn('Unable to sync selected save with local storage', syncError);
           }
         }
-      });
-    }
-    gameState.gachaImages = baseImageCollection;
-    const storedImageCounter = Number(data.gachaImageAcquisitionCounter);
-    if (Number.isFinite(storedImageCounter) && storedImageCounter > inferredImageAcquisitionCounter) {
-      gameState.gachaImageAcquisitionCounter = Math.floor(storedImageCounter);
-    } else {
-      gameState.gachaImageAcquisitionCounter = inferredImageAcquisitionCounter;
-    }
-    const baseBonusImageCollection = createInitialGachaBonusImageCollection();
-    let inferredBonusImageAcquisitionCounter = 0;
-    if (data.gachaBonusImages && typeof data.gachaBonusImages === 'object') {
-      Object.entries(data.gachaBonusImages).forEach(([imageId, stored]) => {
-        const reference = baseBonusImageCollection[imageId];
-        if (!reference) {
-          return;
+        if (candidate.source !== 'native') {
+          writeNativeSaveData(candidate.raw);
         }
-        const rawCount = Number(stored?.count ?? stored);
-        const normalizedCount = Number.isFinite(rawCount) && rawCount > 0
-          ? Math.floor(rawCount)
-          : 0;
-        reference.count = normalizedCount;
-        if (normalizedCount > 0) {
-          const storedOrder = Number(stored?.acquiredOrder);
-          if (Number.isFinite(storedOrder) && storedOrder > 0) {
-            reference.acquiredOrder = Math.floor(storedOrder);
-            if (reference.acquiredOrder > inferredBonusImageAcquisitionCounter) {
-              inferredBonusImageAcquisitionCounter = reference.acquiredOrder;
-            }
-          }
-          const storedFirstAcquiredAt = Number(stored?.firstAcquiredAt);
-          if (Number.isFinite(storedFirstAcquiredAt) && storedFirstAcquiredAt > 0) {
-            reference.firstAcquiredAt = storedFirstAcquiredAt;
-          }
-        }
-      });
-    }
-    gameState.gachaBonusImages = baseBonusImageCollection;
-    const storedBonusCounter = Number(data.gachaBonusImageAcquisitionCounter);
-    if (Number.isFinite(storedBonusCounter) && storedBonusCounter > inferredBonusImageAcquisitionCounter) {
-      gameState.gachaBonusImageAcquisitionCounter = Math.floor(storedBonusCounter);
-    } else {
-      gameState.gachaBonusImageAcquisitionCounter = inferredBonusImageAcquisitionCounter;
-    }
-    const fusionState = createInitialFusionState();
-    if (data.fusions && typeof data.fusions === 'object') {
-      Object.keys(fusionState).forEach(id => {
-        const stored = data.fusions[id];
-        if (!stored || typeof stored !== 'object') {
-          fusionState[id] = { attempts: 0, successes: 0 };
-          return;
-        }
-        const attemptsRaw = Number(
-          stored.attempts
-            ?? stored.tries
-            ?? stored.tentatives
-            ?? stored.total
-            ?? 0
-        );
-        const successesRaw = Number(
-          stored.successes
-            ?? stored.success
-            ?? stored.victories
-            ?? stored.wins
-            ?? 0
-        );
-        fusionState[id] = {
-          attempts: Number.isFinite(attemptsRaw) && attemptsRaw > 0 ? Math.floor(attemptsRaw) : 0,
-          successes: Number.isFinite(successesRaw) && successesRaw > 0 ? Math.floor(successesRaw) : 0
-        };
-      });
-    }
-    gameState.fusions = fusionState;
-    const fusionBonuses = createInitialFusionBonuses();
-    const storedFusionBonuses = data.fusionBonuses;
-    if (storedFusionBonuses && typeof storedFusionBonuses === 'object') {
-      const apc = Number(
-        storedFusionBonuses.apcFlat
-          ?? storedFusionBonuses.apc
-          ?? storedFusionBonuses.perClick
-          ?? storedFusionBonuses.click
-          ?? 0
-      );
-      const aps = Number(
-        storedFusionBonuses.apsFlat
-          ?? storedFusionBonuses.aps
-          ?? storedFusionBonuses.perSecond
-          ?? storedFusionBonuses.auto
-          ?? 0
-      );
-      fusionBonuses.apcFlat = Number.isFinite(apc) ? apc : 0;
-      fusionBonuses.apsFlat = Number.isFinite(aps) ? aps : 0;
-    }
-    gameState.fusionBonuses = fusionBonuses;
-    gameState.theme = getThemeDefinition(data.theme) ? data.theme : DEFAULT_THEME_ID;
-    const storedBrickSkin = data.arcadeBrickSkin
-      ?? data.particulesBrickSkin
-      ?? data.brickSkin
-      ?? null;
-    gameState.arcadeBrickSkin = normalizeBrickSkinSelection(storedBrickSkin);
-    if (typeof setParticulesBrickSkinPreference === 'function') {
-      setParticulesBrickSkinPreference(gameState.arcadeBrickSkin);
-    }
-    const parseStoredVolume = raw => {
-      const numeric = Number(raw);
-      if (!Number.isFinite(numeric)) {
-        return null;
+        break;
+      } catch (error) {
+        console.error('Erreur de chargement', error);
+        prepareGameStateForLoadAttempt();
       }
-      if (numeric > 1) {
-        return clampMusicVolume(numeric / 100, DEFAULT_MUSIC_VOLUME);
-      }
-      return clampMusicVolume(numeric, DEFAULT_MUSIC_VOLUME);
-    };
-
-    const storedMusic = data.music;
-    if (storedMusic && typeof storedMusic === 'object') {
-      const selected = storedMusic.selectedTrack
-        ?? storedMusic.track
-        ?? storedMusic.id
-        ?? storedMusic.filename;
-      gameState.musicTrackId = typeof selected === 'string' && selected ? selected : null;
-      const storedVolume = parseStoredVolume(storedMusic.volume);
-      if (storedVolume != null) {
-        gameState.musicVolume = storedVolume;
-      } else if (typeof data.musicVolume === 'number') {
-        const fallbackVolume = parseStoredVolume(data.musicVolume);
-        gameState.musicVolume = fallbackVolume != null ? fallbackVolume : DEFAULT_MUSIC_VOLUME;
-      } else {
-        gameState.musicVolume = DEFAULT_MUSIC_VOLUME;
-      }
-      if (typeof storedMusic.enabled === 'boolean') {
-        gameState.musicEnabled = storedMusic.enabled;
-      } else if (typeof data.musicEnabled === 'boolean') {
-        gameState.musicEnabled = data.musicEnabled;
-      } else if (gameState.musicTrackId) {
-        gameState.musicEnabled = true;
-      } else {
-        gameState.musicEnabled = DEFAULT_MUSIC_ENABLED;
-      }
-    } else {
-      if (typeof data.musicTrackId === 'string' && data.musicTrackId) {
-        gameState.musicTrackId = data.musicTrackId;
-      } else if (typeof data.musicTrack === 'string' && data.musicTrack) {
-        gameState.musicTrackId = data.musicTrack;
-      } else {
-        gameState.musicTrackId = null;
-      }
-      if (typeof data.musicEnabled === 'boolean') {
-        gameState.musicEnabled = data.musicEnabled;
-      } else if (gameState.musicTrackId) {
-        gameState.musicEnabled = true;
-      } else {
-        gameState.musicEnabled = DEFAULT_MUSIC_ENABLED;
-      }
-      const fallbackVolume = parseStoredVolume(data.musicVolume);
-      gameState.musicVolume = fallbackVolume != null ? fallbackVolume : DEFAULT_MUSIC_VOLUME;
     }
-    if (gameState.musicEnabled === false) {
-      gameState.musicTrackId = null;
+    if (applied) {
+      return;
     }
-    evaluatePageUnlocks({ save: false, deferUI: true });
-    getShopUnlockSet();
-    invalidateFeatureUnlockCache({ resetArcadeState: true });
-    applyTheme();
-    recalcProduction();
-    renderShop();
-    updateBigBangVisibility();
-    updateUI();
-    if (data.lastSave) {
-      const diff = Math.max(0, (Date.now() - data.lastSave) / 1000);
-      applyOfflineProgress(diff);
+    if (attemptRestoreFromBackup()) {
+      return;
     }
+    resetGame();
   } catch (err) {
     console.error('Erreur de chargement', err);
     if (attemptRestoreFromBackup()) {
