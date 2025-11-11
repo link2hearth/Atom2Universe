@@ -1,36 +1,5 @@
 const DEFAULT_GACHA_TICKET_COST = 1;
 
-const GLOBAL_GAME_CONFIG = typeof globalThis !== 'undefined' && globalThis.GAME_CONFIG
-  ? globalThis.GAME_CONFIG
-  : {};
-
-const RAW_GACHA_SYSTEM_CONFIG = GLOBAL_GAME_CONFIG && typeof GLOBAL_GAME_CONFIG.gacha === 'object'
-  ? GLOBAL_GAME_CONFIG.gacha
-  : {};
-
-const RAW_GACHA_BONUS_IMAGE_CONFIG = RAW_GACHA_SYSTEM_CONFIG
-  && typeof RAW_GACHA_SYSTEM_CONFIG.bonusImages === 'object'
-    ? RAW_GACHA_SYSTEM_CONFIG.bonusImages
-    : {};
-
-function resolveConfiguredChance(value, fallback) {
-  const fallbackNumeric = Number(fallback);
-  const safeFallback = Number.isFinite(fallbackNumeric)
-    ? Math.min(1, Math.max(0, fallbackNumeric))
-    : 0;
-  const numeric = Number(value);
-  if (!Number.isFinite(numeric)) {
-    return safeFallback;
-  }
-  if (numeric <= 0) {
-    return 0;
-  }
-  if (numeric >= 1) {
-    return 1;
-  }
-  return numeric;
-}
-
 function isCollectionSystemActive() {
   if (typeof globalThis !== 'undefined' && typeof globalThis.COLLECTION_SYSTEM_ENABLED === 'boolean') {
     return globalThis.COLLECTION_SYSTEM_ENABLED;
@@ -329,20 +298,9 @@ const SPECIAL_GACHA_CARD_DEFINITION_INDEX = new Map(
     : []
 );
 
-const BONUS_GACHA_IMAGE_CHANCE = resolveConfiguredChance(
-  RAW_GACHA_BONUS_IMAGE_CONFIG.optionalDropRate,
-  1 / 200
-);
-
-const BONUS_GACHA_PERMANENT_IMAGE_CHANCE = resolveConfiguredChance(
-  RAW_GACHA_BONUS_IMAGE_CONFIG.permanentDropRate,
-  1 / 200
-);
-
-const BONUS_GACHA_SECONDARY_PERMANENT_IMAGE_CHANCE = resolveConfiguredChance(
-  RAW_GACHA_BONUS_IMAGE_CONFIG.secondaryDropRate,
-  1 / 200
-);
+const BONUS_GACHA_IMAGE_CHANCE = 0.0;
+const BONUS_GACHA_PERMANENT_IMAGE_CHANCE = 1 / 200;
+const BONUS_GACHA_SECONDARY_PERMANENT_IMAGE_CHANCE = 1 / 200;
 const BONUS_GACHA_IMAGE_AVAILABILITY_BATCH_SIZE = 12;
 
 const BONUS_GACHA_IMAGE_DEFINITION_INDEX = new Map(

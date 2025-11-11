@@ -82,24 +82,6 @@ function toggleConfigBoolean(key, fallback) {
   return next;
 }
 
-function resolveBonusImageDropRate(value, fallback = 0) {
-  const fallbackNumeric = Number(fallback);
-  const safeFallback = Number.isFinite(fallbackNumeric)
-    ? Math.min(1, Math.max(0, fallbackNumeric))
-    : 0;
-  const numeric = Number(value);
-  if (!Number.isFinite(numeric)) {
-    return safeFallback;
-  }
-  if (numeric <= 0) {
-    return 0;
-  }
-  if (numeric >= 1) {
-    return 1;
-  }
-  return numeric;
-}
-
 const DEVKIT_ENABLED = resolveConfigBoolean(CONFIG_OVERRIDE_KEYS.devkit, DEFAULT_DEVKIT_ENABLED);
 
 /**
@@ -889,28 +871,10 @@ const RAW_GACHA_CONFIG = loadConfigJson('./config/systems/gacha.json', {
   weeklyRarityWeights: {}
 });
 
-const GACHA_OPTIONAL_BONUS_IMAGE_DROP_RATE = resolveBonusImageDropRate(
-  RAW_GACHA_CONFIG?.bonusImages?.optionalDropRate,
-  1 / 200
-);
-
-const GACHA_PERMANENT_BONUS_IMAGE_DROP_RATE = resolveBonusImageDropRate(
-  RAW_GACHA_CONFIG?.bonusImages?.permanentDropRate,
-  1 / 200
-);
-
-const GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DROP_RATE = resolveBonusImageDropRate(
-  RAW_GACHA_CONFIG?.bonusImages?.secondaryDropRate,
-  1 / 200
-);
-
 const GACHA_SYSTEM_CONFIG = {
   ticketCost: RAW_GACHA_CONFIG.ticketCost ?? 1,
   bonusImages: {
     folder: RAW_GACHA_CONFIG.bonusImages?.folder ?? 'Assets/Image/Gacha',
-    optionalDropRate: GACHA_OPTIONAL_BONUS_IMAGE_DROP_RATE,
-    permanentDropRate: GACHA_PERMANENT_BONUS_IMAGE_DROP_RATE,
-    secondaryDropRate: GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DROP_RATE,
     images: Array.isArray(RAW_GACHA_BONUS_IMAGE_CONFIG?.images)
       ? RAW_GACHA_BONUS_IMAGE_CONFIG.images
       : []
