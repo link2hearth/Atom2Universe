@@ -4,17 +4,17 @@
     "small": {
       "size": 4,
       "shuffle": { "min": 32, "max": 64 },
-      "gachaTickets": 1
+      "gachaTickets": 5
     },
     "medium": {
       "size": 5,
       "shuffle": { "min": 48, "max": 96 },
-      "gachaTickets": 2
+      "gachaTickets": 10
     },
     "large": {
       "size": 6,
       "shuffle": { "min": 64, "max": 128 },
-      "gachaTickets": 3
+      "gachaTickets": 15
     }
   }
 }
