@@ -960,9 +960,19 @@
       return;
     }
     const measurementElement = boardWrapper || boardFrame || page;
-    const width = measurementElement ? measurementElement.clientWidth : 0;
+    let width = measurementElement ? measurementElement.clientWidth : 0;
     if (!Number.isFinite(width) || width <= 0) {
       return;
+    }
+    const viewportWidth = Math.max(
+      0,
+      Math.min(
+        document.documentElement ? document.documentElement.clientWidth : Number.POSITIVE_INFINITY,
+        window.innerWidth || Number.POSITIVE_INFINITY
+      )
+    );
+    if (viewportWidth > 0) {
+      width = Math.min(width, viewportWidth);
     }
     let availableWidth = width;
     if (boardFrame) {
@@ -992,7 +1002,25 @@
     if (!Number.isFinite(rawCellSize)) {
       return;
     }
-    const cellSize = Math.max(14, rawCellSize);
+    let cellSize = Math.max(14, rawCellSize);
+    if (!Number.isFinite(cellSize)) {
+      return;
+    }
+    const basePadding = Math.min(paddingStart, paddingEnd);
+    const offsetContribution = (BOARD_SIZE - 1) * (cellSize * 0.5 + gap * 0.5);
+    const totalWidth =
+      cellSize * BOARD_SIZE +
+      gapContribution +
+      offsetContribution +
+      basePadding * 2 +
+      borderStart +
+      borderEnd;
+    if (totalWidth > availableWidth) {
+      const scale = availableWidth / totalWidth;
+      if (Number.isFinite(scale) && scale > 0) {
+        cellSize = Math.max(14, cellSize * scale);
+      }
+    }
     page.style.setProperty('--hex-cell-size', `${cellSize}px`);
   }
 
