@@ -47,6 +47,9 @@
     solved: false,
     rewardClaimed: false,
     imageIndex: 1,
+    availableImages: null,
+    imageDetectionPromise: null,
+    pendingNewGame: false,
     active: false
   };
 
@@ -274,13 +277,75 @@
     return tiles;
   }
 
-  function chooseRandomImageIndex() {
-    const count = Math.max(1, clampInteger(state.config.imageCount, 1, 500, DEFAULT_CONFIG.imageCount));
-    return randomInt(1, count);
-  }
-
   function getImageUrl(index) {
     return `Assets/Image/Taquin/taquin (${index}).png`;
+  }
+
+  function detectAvailableImages(maxCount) {
+    if (!Number.isFinite(maxCount) || maxCount <= 0) {
+      return Promise.resolve([]);
+    }
+    if (typeof Image !== 'function') {
+      return Promise.resolve(Array.from({ length: maxCount }, (_, i) => i + 1));
+    }
+    const indices = [];
+    const checks = [];
+    for (let index = 1; index <= maxCount; index += 1) {
+      checks.push(
+        new Promise(resolve => {
+          const image = new Image();
+          const finalize = () => {
+            image.onload = null;
+            image.onerror = null;
+            resolve();
+          };
+          image.onload = () => {
+            indices.push(index);
+            finalize();
+          };
+          image.onerror = finalize;
+          image.src = getImageUrl(index);
+        })
+      );
+    }
+    return Promise.all(checks).then(() => indices.sort((a, b) => a - b));
+  }
+
+  function prepareImagePool() {
+    if (state.imageDetectionPromise) {
+      return state.imageDetectionPromise;
+    }
+    const count = Math.max(1, clampInteger(state.config.imageCount, 1, 500, DEFAULT_CONFIG.imageCount));
+    const detection = detectAvailableImages(count)
+      .then(indices => {
+        state.availableImages = indices;
+        if (!indices.length) {
+          console.warn('Taquin: no available images found in Assets/Image/Taquin.');
+        }
+        return indices;
+      })
+      .catch(error => {
+        console.warn('Taquin: unable to verify available images.', error);
+        state.availableImages = [];
+        return state.availableImages;
+      })
+      .finally(() => {
+        state.imageDetectionPromise = null;
+      });
+    state.imageDetectionPromise = detection;
+    return detection;
+  }
+
+  function chooseRandomImageIndex() {
+    if (Array.isArray(state.availableImages)) {
+      if (state.availableImages.length === 0) {
+        return 0;
+      }
+      const position = Math.floor(Math.random() * state.availableImages.length);
+      return state.availableImages[position];
+    }
+    const count = Math.max(1, clampInteger(state.config.imageCount, 1, 500, DEFAULT_CONFIG.imageCount));
+    return randomInt(1, count);
   }
 
   function updateBoardBackground() {
@@ -600,7 +665,22 @@
     startNewGame();
   }
 
-  function startNewGame() {
+  function startNewGame(options = {}) {
+    const skipImagePreparation = Boolean(options.skipImagePreparation);
+    if (!skipImagePreparation && !Array.isArray(state.availableImages)) {
+      if (!state.pendingNewGame) {
+        state.pendingNewGame = true;
+        prepareImagePool()
+          .catch(() => {
+            // Errors are already logged inside prepareImagePool.
+          })
+          .finally(() => {
+            state.pendingNewGame = false;
+            startNewGame({ skipImagePreparation: true });
+          });
+      }
+      return;
+    }
     const shuffleCount = getShuffleCountForDifficulty(state.difficulty);
     state.tiles = generatePuzzle(state.size, shuffleCount);
     state.initialTiles = state.tiles.slice();
@@ -676,7 +756,6 @@
       .finally(() => {
         const definition = state.config.difficulties[state.difficulty];
         state.size = definition?.size || DEFAULT_CONFIG.difficulties.small.size;
-        updateBoardBackground();
         updateDifficultyButtons();
         startNewGame();
       });
