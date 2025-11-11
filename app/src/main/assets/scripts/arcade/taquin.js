@@ -47,6 +47,9 @@
     solved: false,
     rewardClaimed: false,
     imageIndex: 1,
+    availableImages: null,
+    imageDetectionPromise: null,
+    pendingNewGame: false,
     active: false
   };
 
@@ -274,13 +277,80 @@
     return tiles;
   }
 
-  function chooseRandomImageIndex() {
-    const count = Math.max(1, clampInteger(state.config.imageCount, 1, 500, DEFAULT_CONFIG.imageCount));
-    return randomInt(1, count);
+  function getImageUrl(index) {
+    const safeIndex = clampInteger(index, 1, 500, 1);
+    return encodeURI(`Assets/Image/Taquin/taquin (${safeIndex}).png`);
   }
 
-  function getImageUrl(index) {
-    return `Assets/Image/Taquin/taquin (${index}).png`;
+  function detectAvailableImages(maxCount) {
+    if (!Number.isFinite(maxCount) || maxCount <= 0) {
+      return Promise.resolve([]);
+    }
+    if (typeof Image !== 'function') {
+      return Promise.resolve(Array.from({ length: maxCount }, (_, i) => i + 1));
+    }
+    const indices = [];
+    const checks = [];
+    for (let index = 1; index <= maxCount; index += 1) {
+      checks.push(
+        new Promise(resolve => {
+          const image = new Image();
+          const finalize = () => {
+            image.onload = null;
+            image.onerror = null;
+            resolve();
+          };
+          image.onload = () => {
+            indices.push(index);
+            finalize();
+          };
+          image.onerror = finalize;
+          image.src = getImageUrl(index);
+        })
+      );
+    }
+    return Promise.all(checks).then(() => indices.sort((a, b) => a - b));
+  }
+
+  function prepareImagePool() {
+    if (state.imageDetectionPromise) {
+      return state.imageDetectionPromise;
+    }
+    const count = Math.max(1, clampInteger(state.config.imageCount, 1, 500, DEFAULT_CONFIG.imageCount));
+    const detection = detectAvailableImages(count)
+      .then(indices => {
+        state.availableImages = indices;
+        if (!indices.length) {
+          console.warn('Taquin: no available images found in Assets/Image/Taquin.');
+        }
+        return indices;
+      })
+      .catch(error => {
+        console.warn('Taquin: unable to verify available images.', error);
+        state.availableImages = [];
+        return state.availableImages;
+      })
+      .finally(() => {
+        state.imageDetectionPromise = null;
+      });
+    state.imageDetectionPromise = detection;
+    return detection;
+  }
+
+  function chooseRandomImageIndex() {
+    if (Array.isArray(state.availableImages)) {
+      if (state.availableImages.length === 0) {
+        const fallbackCount = Math.max(
+          1,
+          clampInteger(state.config.imageCount, 1, 500, DEFAULT_CONFIG.imageCount)
+        );
+        return randomInt(1, fallbackCount);
+      }
+      const position = Math.floor(Math.random() * state.availableImages.length);
+      return state.availableImages[position];
+    }
+    const count = Math.max(1, clampInteger(state.config.imageCount, 1, 500, DEFAULT_CONFIG.imageCount));
+    return randomInt(1, count);
   }
 
   function updateBoardBackground() {
@@ -533,7 +603,54 @@
     if (!Number.isInteger(index)) {
       return;
     }
-    tryMoveTile(index);
+    if (tryMoveTile(index) && typeof elements.board?.focus === 'function') {
+      elements.board.focus({ preventScroll: true });
+    }
+  }
+
+  function moveTileInDirection(direction) {
+    if (!Array.isArray(state.tiles) || state.solved) {
+      return false;
+    }
+    const size = state.size;
+    const emptyIndex = state.tiles.indexOf(0);
+    if (emptyIndex === -1) {
+      return false;
+    }
+    let targetIndex = emptyIndex;
+    switch (direction) {
+      case 'up':
+        if (emptyIndex + size < state.tiles.length) {
+          targetIndex = emptyIndex + size;
+        } else {
+          return false;
+        }
+        break;
+      case 'down':
+        if (emptyIndex - size >= 0) {
+          targetIndex = emptyIndex - size;
+        } else {
+          return false;
+        }
+        break;
+      case 'left':
+        if (emptyIndex % size < size - 1) {
+          targetIndex = emptyIndex + 1;
+        } else {
+          return false;
+        }
+        break;
+      case 'right':
+        if (emptyIndex % size > 0) {
+          targetIndex = emptyIndex - 1;
+        } else {
+          return false;
+        }
+        break;
+      default:
+        return false;
+    }
+    return tryMoveTile(targetIndex);
   }
 
   function handleBoardKey(event) {
@@ -541,33 +658,149 @@
       return;
     }
     const key = event.key;
-    if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key)) {
+    const directionMap = {
+      ArrowUp: 'up',
+      ArrowDown: 'down',
+      ArrowLeft: 'left',
+      ArrowRight: 'right'
+    };
+    const direction = directionMap[key];
+    if (!direction) {
       return;
     }
-    if (!Array.isArray(state.tiles) || state.solved) {
-      return;
-    }
-    const size = state.size;
-    const emptyIndex = state.tiles.indexOf(0);
-    if (emptyIndex === -1) {
-      return;
-    }
-    let targetIndex = emptyIndex;
-    if (key === 'ArrowUp' && emptyIndex + size < state.tiles.length) {
-      targetIndex = emptyIndex + size;
-    } else if (key === 'ArrowDown' && emptyIndex - size >= 0) {
-      targetIndex = emptyIndex - size;
-    } else if (key === 'ArrowLeft' && emptyIndex % size > 0) {
-      targetIndex = emptyIndex - 1;
-    } else if (key === 'ArrowRight' && emptyIndex % size < size - 1) {
-      targetIndex = emptyIndex + 1;
-    } else {
+    if (!moveTileInDirection(direction)) {
       return;
     }
     event.preventDefault();
     event.stopPropagation();
-    if (tryMoveTile(targetIndex) && typeof elements.board?.focus === 'function') {
+    if (typeof elements.board?.focus === 'function') {
       elements.board.focus({ preventScroll: true });
+    }
+  }
+
+  function isInteractiveElement(element) {
+    if (!element) {
+      return false;
+    }
+    const tagName = element.tagName;
+    if (!tagName) {
+      return Boolean(element.isContentEditable);
+    }
+    const upperTag = tagName.toUpperCase();
+    return (
+      element.isContentEditable === true ||
+      upperTag === 'INPUT' ||
+      upperTag === 'TEXTAREA' ||
+      upperTag === 'SELECT' ||
+      upperTag === 'BUTTON'
+    );
+  }
+
+  function handleGlobalKey(event) {
+    if (!event || !state.active) {
+      return;
+    }
+    if (event.defaultPrevented) {
+      return;
+    }
+    if (isInteractiveElement(event.target)) {
+      return;
+    }
+    handleBoardKey(event);
+  }
+
+  const swipeState = {
+    pointerId: null,
+    active: false,
+    startX: 0,
+    startY: 0,
+    handled: false
+  };
+
+  function resetSwipeTracking(handled = false) {
+    swipeState.pointerId = null;
+    swipeState.active = false;
+    swipeState.startX = 0;
+    swipeState.startY = 0;
+    swipeState.handled = handled;
+  }
+
+  function handleBoardPointerDown(event) {
+    if (!event || (event.pointerType === 'mouse' && event.button !== 0)) {
+      return;
+    }
+    swipeState.pointerId = event.pointerId;
+    swipeState.active = true;
+    swipeState.startX = event.clientX;
+    swipeState.startY = event.clientY;
+    swipeState.handled = false;
+    if (event.currentTarget && typeof event.currentTarget.setPointerCapture === 'function') {
+      try {
+        event.currentTarget.setPointerCapture(event.pointerId);
+      } catch (error) {
+        // Ignore capture errors (e.g., unsupported browsers).
+      }
+    }
+  }
+
+  function resolveSwipeGesture(event) {
+    if (!event || !swipeState.active || event.pointerId !== swipeState.pointerId) {
+      return;
+    }
+    if (event.currentTarget && typeof event.currentTarget.releasePointerCapture === 'function') {
+      try {
+        event.currentTarget.releasePointerCapture(event.pointerId);
+      } catch (error) {
+        // Ignore release errors.
+      }
+    }
+    const deltaX = event.clientX - swipeState.startX;
+    const deltaY = event.clientY - swipeState.startY;
+    const absX = Math.abs(deltaX);
+    const absY = Math.abs(deltaY);
+    const baseThreshold = 24;
+    const dimension = elements.board
+      ? Math.min(elements.board.clientWidth || 0, elements.board.clientHeight || 0)
+      : 0;
+    const adaptiveThreshold = dimension > 0 ? Math.max(baseThreshold, dimension * 0.08) : baseThreshold;
+    if (absX < adaptiveThreshold && absY < adaptiveThreshold) {
+      resetSwipeTracking(false);
+      return;
+    }
+    const direction = absX > absY ? (deltaX > 0 ? 'right' : 'left') : deltaY > 0 ? 'down' : 'up';
+    const moved = moveTileInDirection(direction);
+    resetSwipeTracking(moved);
+    if (moved && typeof elements.board?.focus === 'function') {
+      elements.board.focus({ preventScroll: true });
+    }
+    if (moved && typeof event.preventDefault === 'function') {
+      event.preventDefault();
+    }
+  }
+
+  function handleBoardPointerUp(event) {
+    resolveSwipeGesture(event);
+  }
+
+  function handleBoardPointerCancel(event) {
+    if (!event || event.pointerId !== swipeState.pointerId) {
+      return;
+    }
+    if (event.currentTarget && typeof event.currentTarget.releasePointerCapture === 'function') {
+      try {
+        event.currentTarget.releasePointerCapture(event.pointerId);
+      } catch (error) {
+        // Ignore release errors.
+      }
+    }
+    resetSwipeTracking(false);
+  }
+
+  function handleBoardClickCapture(event) {
+    if (swipeState.handled) {
+      swipeState.handled = false;
+      event.preventDefault();
+      event.stopPropagation();
     }
   }
 
@@ -600,7 +833,22 @@
     startNewGame();
   }
 
-  function startNewGame() {
+  function startNewGame(options = {}) {
+    const skipImagePreparation = Boolean(options.skipImagePreparation);
+    if (!skipImagePreparation && !Array.isArray(state.availableImages)) {
+      if (!state.pendingNewGame) {
+        state.pendingNewGame = true;
+        prepareImagePool()
+          .catch(() => {
+            // Errors are already logged inside prepareImagePool.
+          })
+          .finally(() => {
+            state.pendingNewGame = false;
+            startNewGame({ skipImagePreparation: true });
+          });
+      }
+      return;
+    }
     const shuffleCount = getShuffleCountForDifficulty(state.difficulty);
     state.tiles = generatePuzzle(state.size, shuffleCount);
     state.initialTiles = state.tiles.slice();
@@ -614,6 +862,9 @@
     hideMessage();
     renderBoard();
     updateStats();
+    if (typeof elements.board?.focus === 'function') {
+      elements.board.focus({ preventScroll: true });
+    }
   }
 
   function restartPuzzle() {
@@ -630,11 +881,18 @@
     hideMessage();
     renderBoard();
     updateStats();
+    if (typeof elements.board?.focus === 'function') {
+      elements.board.focus({ preventScroll: true });
+    }
   }
 
   function bindEvents() {
     if (elements.board) {
       elements.board.addEventListener('keydown', handleBoardKey);
+      elements.board.addEventListener('pointerdown', handleBoardPointerDown);
+      elements.board.addEventListener('pointerup', handleBoardPointerUp);
+      elements.board.addEventListener('pointercancel', handleBoardPointerCancel);
+      elements.board.addEventListener('click', handleBoardClickCapture, true);
     }
     if (Array.isArray(elements.modeButtons)) {
       elements.modeButtons.forEach(button => {
@@ -656,6 +914,13 @@
         restartPuzzle();
       });
     }
+    if (typeof document !== 'undefined') {
+      try {
+        document.addEventListener('keydown', handleGlobalKey, { capture: true });
+      } catch (error) {
+        document.addEventListener('keydown', handleGlobalKey, true);
+      }
+    }
   }
 
   function loadConfig() {
@@ -676,7 +941,6 @@
       .finally(() => {
         const definition = state.config.difficulties[state.difficulty];
         state.size = definition?.size || DEFAULT_CONFIG.difficulties.small.size;
-        updateBoardBackground();
         updateDifficultyButtons();
         startNewGame();
       });
