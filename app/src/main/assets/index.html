@@ -2808,12 +2808,6 @@
       hidden
     >
       <div class="hex">
-        <header class="hex__header">
-          <h2 class="hex__title" data-i18n="index.sections.hex.title">Hex</h2>
-          <p class="hex__subtitle" data-i18n="index.sections.hex.subtitle">
-            Reliez les bords opposés d’une grille 14×14 pour décrocher des tickets gacha bonus.
-          </p>
-        </header>
         <div
           class="hex__controls"
           role="group"
@@ -2858,6 +2852,19 @@
             data-i18n="index.sections.hex.controls.reset"
           >Nouvelle partie</button>
         </div>
+        <div class="hex__board-wrapper">
+          <div class="hex__board-frame">
+            <div
+              class="hex__board"
+              id="hexBoard"
+              role="grid"
+              aria-rowcount="14"
+              aria-colcount="14"
+              aria-label="Plateau Hex 14 par 14"
+              data-i18n="aria-label:index.sections.hex.board"
+            ></div>
+          </div>
+        </div>
         <div class="hex__status-panel">
           <p
             class="hex__status"
@@ -2877,17 +2884,6 @@
             hidden
             data-i18n="index.sections.hex.reward.placeholder"
           >Tickets gacha gagnés : 0</p>
-        </div>
-        <div class="hex__board-wrapper">
-          <div
-            class="hex__board"
-            id="hexBoard"
-            role="grid"
-            aria-rowcount="14"
-            aria-colcount="14"
-            aria-label="Plateau Hex 14 par 14"
-            data-i18n="aria-label:index.sections.hex.board"
-          ></div>
         </div>
       </div>
     </section>
