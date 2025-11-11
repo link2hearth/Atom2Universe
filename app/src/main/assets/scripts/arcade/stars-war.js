@@ -91,6 +91,38 @@
     });
   }
 
+  const backgroundGradientCache = {
+    gradient: null,
+    context: null
+  };
+
+  let numberFormatterInstance = null;
+  let numberFormatterLocale = null;
+
+  function ensureNumberFormatter(locale) {
+    if (typeof Intl === 'undefined' || typeof Intl.NumberFormat !== 'function') {
+      numberFormatterInstance = null;
+      numberFormatterLocale = null;
+      return;
+    }
+    const normalized = typeof locale === 'string' && locale.trim() ? locale.trim() : null;
+    if (numberFormatterInstance && numberFormatterLocale === normalized) {
+      return;
+    }
+    try {
+      numberFormatterInstance = normalized ? new Intl.NumberFormat([normalized]) : new Intl.NumberFormat();
+      numberFormatterLocale = normalized;
+    } catch (error) {
+      try {
+        numberFormatterInstance = new Intl.NumberFormat();
+        numberFormatterLocale = null;
+      } catch (fallbackError) {
+        numberFormatterInstance = null;
+        numberFormatterLocale = null;
+      }
+    }
+  }
+
   const CANVAS_WIDTH = 480;
   const CANVAS_HEIGHT = 720;
   const PLAYER_MAX_HP = 3;
@@ -1593,14 +1625,16 @@
   }
 
   function formatNumber(value) {
-    try {
-      if (typeof Intl !== 'undefined' && Intl.NumberFormat) {
-        return new Intl.NumberFormat().format(Math.floor(value));
+    ensureNumberFormatter(numberFormatterLocale);
+    const numeric = Math.floor(Number(value) || 0);
+    if (numberFormatterInstance) {
+      try {
+        return numberFormatterInstance.format(numeric);
+      } catch (error) {
+        // If formatting fails, fall back to default string conversion below.
       }
-    } catch (error) {
-      // Ignore formatter failures.
     }
-    return Math.floor(value).toString();
+    return numeric.toString();
   }
 
   function createContext(canvas) {
@@ -1681,6 +1715,8 @@
     powerupOrder: [],
     powerupEntries: new Map()
   };
+
+  ensureNumberFormatter(uiState.language);
 
   const player = {
     x: CANVAS_WIDTH / 2,
@@ -3370,6 +3406,7 @@
       uiState.language = normalizedLang;
       uiState.powerupOrder = [];
       uiState.powerupEntries.clear();
+      ensureNumberFormatter(normalizedLang);
     }
     updatePauseButtonState();
     if (elements.scoreValue) {
@@ -3547,10 +3584,14 @@
   }
 
   function renderBackground(ctx) {
-    const gradient = ctx.createLinearGradient(0, 0, 0, CANVAS_HEIGHT);
-    gradient.addColorStop(0, '#050912');
-    gradient.addColorStop(1, '#0b1836');
-    ctx.fillStyle = gradient;
+    if (!backgroundGradientCache.gradient || backgroundGradientCache.context !== ctx) {
+      const gradient = ctx.createLinearGradient(0, 0, 0, CANVAS_HEIGHT);
+      gradient.addColorStop(0, '#050912');
+      gradient.addColorStop(1, '#0b1836');
+      backgroundGradientCache.gradient = gradient;
+      backgroundGradientCache.context = ctx;
+    }
+    ctx.fillStyle = backgroundGradientCache.gradient;
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
   }
 
