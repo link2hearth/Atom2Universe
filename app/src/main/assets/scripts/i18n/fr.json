@@ -851,10 +851,10 @@
         },
         "linkLength": {
           "aria": "Choisir le nombre de cases à relier dans Link",
-          "label": "Liens",
-          "two": "2 liens",
-          "three": "3 liens",
-          "four": "4 liens"
+          "label": "Cases",
+          "two": "2 cases",
+          "three": "3 cases",
+          "four": "4 cases"
         },
         "actions": {
           "undo": "Annuler",

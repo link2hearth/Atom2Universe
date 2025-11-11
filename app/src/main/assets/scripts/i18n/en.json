@@ -851,10 +851,10 @@
         },
         "linkLength": {
           "aria": "Choose how many cells to link per move",
-          "label": "Links",
-          "two": "2 links",
-          "three": "3 links",
-          "four": "4 links"
+          "label": "cells",
+          "two": "2 cells",
+          "three": "3 cells",
+          "four": "4 cells"
         },
         "actions": {
           "undo": "Undo",

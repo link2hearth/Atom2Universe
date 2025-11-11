@@ -316,7 +316,7 @@ body.theme-aurora .page--arcade-hub {
 
 
 /* Fixed color themes for arcade hub tiles */
-.arcade-hub__grid > .arcade-hub-card:nth-child(-n + 21) {
+.arcade-hub__grid > .arcade-hub-card:nth-child(-n + 30) {
   color: #f5f8ff;
   --arcade-hub-card-description-color: rgba(245, 248, 255, 0.84);
   --arcade-hub-card-cta-bg: rgba(255, 255, 255, 0.16);
@@ -326,7 +326,7 @@ body.theme-aurora .page--arcade-hub {
   --arcade-hub-card-outline: rgba(255, 255, 255, 0.5);
 }
 
-.arcade-hub__grid > .arcade-hub-card:nth-child(n + 22) {
+.arcade-hub__grid > .arcade-hub-card:nth-child(n + 31) {
   color: #0f1424;
   --arcade-hub-card-description-color: rgba(14, 22, 44, 0.78);
   --arcade-hub-card-cta-bg: rgba(12, 20, 40, 0.1);
@@ -490,43 +490,43 @@ body.theme-aurora .page--arcade-hub {
 }
 
 .arcade-hub-card[data-card-id="gameOfLife"] {
-  --arcade-hub-card-background: linear-gradient(135deg, #e7fff5, #bdf1dd);
-  --arcade-hub-card-border: rgba(120, 200, 170, 0.45);
-  --arcade-hub-card-shadow: 0 20px 32px rgba(90, 150, 130, 0.28);
-  --arcade-hub-card-shadow-hover: 0 26px 40px rgba(76, 130, 120, 0.36);
+  --arcade-hub-card-background: linear-gradient(135deg, #0d3a2b, #1f6d4a);
+  --arcade-hub-card-border: rgba(90, 210, 160, 0.48);
+  --arcade-hub-card-shadow: 0 22px 38px rgba(10, 42, 32, 0.56);
+  --arcade-hub-card-shadow-hover: 0 30px 56px rgba(20, 70, 52, 0.7);
 }
 
 .arcade-hub-card[data-card-id="roulette"] {
-  --arcade-hub-card-background: linear-gradient(135deg, #ffe8d6, #f4bea6);
-  --arcade-hub-card-border: rgba(232, 160, 120, 0.45);
-  --arcade-hub-card-shadow: 0 20px 32px rgba(200, 140, 110, 0.26);
-  --arcade-hub-card-shadow-hover: 0 26px 40px rgba(184, 120, 96, 0.34);
+  --arcade-hub-card-background: linear-gradient(135deg, #2f1012, #7a2d32);
+  --arcade-hub-card-border: rgba(200, 90, 100, 0.52);
+  --arcade-hub-card-shadow: 0 22px 38px rgba(40, 18, 22, 0.58);
+  --arcade-hub-card-shadow-hover: 0 30px 56px rgba(66, 24, 30, 0.72);
 }
 
 .arcade-hub-card[data-card-id="blackjack"] {
-  --arcade-hub-card-background: linear-gradient(135deg, #e8ffd9, #c8f4a8);
-  --arcade-hub-card-border: rgba(176, 220, 120, 0.45);
-  --arcade-hub-card-shadow: 0 20px 32px rgba(140, 184, 100, 0.26);
-  --arcade-hub-card-shadow-hover: 0 26px 40px rgba(126, 170, 88, 0.34);
+  --arcade-hub-card-background: linear-gradient(135deg, #0f2f1a, #2f6d3b);
+  --arcade-hub-card-border: rgba(90, 200, 130, 0.5);
+  --arcade-hub-card-shadow: 0 22px 38px rgba(14, 46, 28, 0.6);
+  --arcade-hub-card-shadow-hover: 0 30px 56px rgba(24, 72, 40, 0.74);
 }
 
 .arcade-hub-card[data-card-id="holdem"] {
-  --arcade-hub-card-background: linear-gradient(135deg, #e2f2ff, #b8d5ff);
-  --arcade-hub-card-border: rgba(150, 190, 250, 0.45);
-  --arcade-hub-card-shadow: 0 20px 32px rgba(120, 160, 220, 0.28);
-  --arcade-hub-card-shadow-hover: 0 26px 40px rgba(108, 140, 200, 0.36);
+  --arcade-hub-card-background: linear-gradient(135deg, #0e2344, #1f4f8a);
+  --arcade-hub-card-border: rgba(90, 150, 220, 0.52);
+  --arcade-hub-card-shadow: 0 22px 38px rgba(12, 30, 60, 0.6);
+  --arcade-hub-card-shadow-hover: 0 30px 56px rgba(20, 54, 96, 0.74);
 }
 
 .arcade-hub-card[data-card-id="pachinko"] {
-  --arcade-hub-card-background: linear-gradient(135deg, #ffeaff, #f3c7f5);
-  --arcade-hub-card-border: rgba(220, 160, 220, 0.45);
-  --arcade-hub-card-shadow: 0 20px 32px rgba(190, 130, 200, 0.28);
-  --arcade-hub-card-shadow-hover: 0 26px 40px rgba(170, 112, 188, 0.36);
+  --arcade-hub-card-background: linear-gradient(135deg, #321140, #6a2f75);
+  --arcade-hub-card-border: rgba(180, 110, 200, 0.5);
+  --arcade-hub-card-shadow: 0 22px 38px rgba(38, 16, 54, 0.6);
+  --arcade-hub-card-shadow-hover: 0 30px 56px rgba(58, 26, 76, 0.76);
 }
 
 .arcade-hub-card[data-card-id="metaux"] {
-  --arcade-hub-card-background: linear-gradient(135deg, #eef2ff, #c7cff4);
-  --arcade-hub-card-border: rgba(180, 190, 240, 0.45);
-  --arcade-hub-card-shadow: 0 20px 32px rgba(150, 160, 220, 0.28);
-  --arcade-hub-card-shadow-hover: 0 26px 42px rgba(132, 140, 200, 0.36);
+  --arcade-hub-card-background: linear-gradient(135deg, #1a233f, #334b78);
+  --arcade-hub-card-border: rgba(110, 150, 220, 0.5);
+  --arcade-hub-card-shadow: 0 22px 38px rgba(18, 28, 60, 0.6);
+  --arcade-hub-card-shadow-hover: 0 30px 56px rgba(26, 42, 88, 0.76);
 }
