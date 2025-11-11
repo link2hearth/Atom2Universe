@@ -1422,17 +1422,17 @@ const GAME_CONFIG = {
     {
       id: 'frenzyMaster',
       name: 'Tempête tri-phasée',
-      description: 'Déclenchez 1 000 frénésies cumulées.',
+      description: 'Déclenchez 500 frénésies cumulées.',
       condition: {
         type: 'frenzyTotal',
-        amount: 1_000
+        amount: 500
       },
       reward: {
-        frenzyMaxStacks: 3,
+        frenzyMaxStacks: 9,
         multiplier: {
           global: 1.05
         },
-        description: 'Active la triple frénésie et ajoute un bonus global ×1,05.'
+        description: 'Active la multi frénésie et ajoute un bonus global ×1,05.'
       },
       order: 1020
     },
