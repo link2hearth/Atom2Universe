@@ -371,6 +371,7 @@
       return;
     }
     const { tiles, size, solved } = state;
+    const imageUrl = Number(state.imageIndex) > 0 ? getImageUrl(state.imageIndex) : null;
     elements.board.innerHTML = '';
     elements.board.style.setProperty('--taquin-size', String(size));
     elements.board.dataset.taquinSolved = solved ? 'true' : 'false';
@@ -403,11 +404,22 @@
       label.textContent = String(value);
       button.appendChild(label);
 
-      const position = getSolvedPosition(value, size);
-      const denominator = Math.max(1, size - 1);
-      const x = (position.col / denominator) * 100;
-      const y = (position.row / denominator) * 100;
-      button.style.backgroundPosition = `${x}% ${y}%`;
+      if (imageUrl) {
+        button.classList.add('taquin__tile--with-image');
+        const backgroundSize = `${size * 100}% ${size * 100}%`;
+        button.style.backgroundImage = `url("${imageUrl}")`;
+        button.style.backgroundSize = backgroundSize;
+        const position = getSolvedPosition(value, size);
+        const denominator = Math.max(1, size - 1);
+        const x = (position.col / denominator) * 100;
+        const y = (position.row / denominator) * 100;
+        button.style.backgroundPosition = `${x}% ${y}%`;
+      } else {
+        button.classList.remove('taquin__tile--with-image');
+        button.style.removeProperty('backgroundImage');
+        button.style.removeProperty('backgroundSize');
+        button.style.removeProperty('backgroundPosition');
+      }
       button.addEventListener('click', handleTilePointer);
       elements.board.appendChild(button);
     }
