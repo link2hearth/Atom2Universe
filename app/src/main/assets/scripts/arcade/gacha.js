@@ -1555,6 +1555,21 @@ const TICKET_STAR_CONFIG = {
     const seconds = Number.isFinite(raw) && raw > 0 ? raw : 15;
     return seconds * 1000;
   })(),
+  movementMode: (() => {
+    const raw = rawTicketStarConfig.movementMode ?? rawTicketStarConfig.motionMode ?? rawTicketStarConfig.motion;
+    if (typeof raw === 'string') {
+      const normalized = raw.trim().toLowerCase();
+      if (normalized === 'static' || normalized === 'fixe') {
+        return 'static';
+      }
+      if (normalized === 'physics' || normalized === 'dynamic' || normalized === 'dynamique') {
+        return 'physics';
+      }
+    } else if (raw === false) {
+      return 'static';
+    }
+    return 'physics';
+  })(),
   speed: (() => {
     const raw = Number(
       rawTicketStarConfig.speedPixelsPerSecond
@@ -1661,6 +1676,11 @@ const TICKET_STAR_CONFIG = {
 };
 
 const DEFAULT_TICKET_STAR_INTERVAL_SECONDS = TICKET_STAR_CONFIG.averageSpawnIntervalMs / 1000;
+
+function isTicketStarStaticMode() {
+  return TICKET_STAR_CONFIG.movementMode === 'static';
+}
+
 const MYTHIQUE_OFFLINE_BASE = MYTHIQUE_SPECIAL_BONUS_CONFIG.offline.baseMultiplier;
 const MYTHIQUE_OFFLINE_PER_DUPLICATE = MYTHIQUE_SPECIAL_BONUS_CONFIG.offline.perDuplicate;
 const MYTHIQUE_OFFLINE_CAP = MYTHIQUE_SPECIAL_BONUS_CONFIG.offline.cap;
@@ -4988,8 +5008,6 @@ function spawnTicketStar(now = performance.now()) {
   }
   const layerOffsetLeft = layerRect ? layerRect.left : 0;
   const layerOffsetTop = layerRect ? layerRect.top : 0;
-  const fallbackCenterX = layerRect ? layerRect.width / 2 : layerWidth / 2;
-  const fallbackCenterY = layerRect ? layerRect.height / 2 : layerHeight / 2;
 
   const rootElements = typeof elements === 'object' && elements ? elements : null;
   const atomCore = rootElements?.atomButtonCore;
@@ -4998,41 +5016,65 @@ function spawnTicketStar(now = performance.now()) {
     || atomButton?.getBoundingClientRect?.()
     || null;
 
-  let startX = (atomRect
-    ? atomRect.left + atomRect.width / 2 - layerOffsetLeft
-    : fallbackCenterX) - starWidth / 2;
-  let startY = (atomRect
-    ? atomRect.top + atomRect.height / 2 - layerOffsetTop
-    : fallbackCenterY) - starHeight / 2;
+  let startX;
+  let startY;
+  let velocityX = 0;
+  let velocityY = 0;
 
-  startX = Math.min(Math.max(startX, minX), maxX);
-  startY = Math.min(Math.max(startY, minY), maxY);
+  if (isTicketStarStaticMode()) {
+    const safePaddingX = Math.min(padding, interiorMaxX / 2);
+    const safePaddingY = Math.min(padding, interiorMaxY / 2);
+    const minStaticX = safePaddingX;
+    const maxStaticX = Math.max(minStaticX, interiorMaxX - safePaddingX);
+    const minStaticY = safePaddingY;
+    const maxStaticY = Math.max(minStaticY, interiorMaxY - safePaddingY);
+    const rangeX = Math.max(0, maxStaticX - minStaticX);
+    const rangeY = Math.max(0, maxStaticY - minStaticY);
+    startX = minStaticX + (rangeX > 0 ? Math.random() * rangeX : 0);
+    startY = minStaticY + (rangeY > 0 ? Math.random() * rangeY : 0);
+  } else {
+    const fallbackCenterX = layerRect ? layerRect.width / 2 : layerWidth / 2;
+    const fallbackCenterY = layerRect ? layerRect.height / 2 : layerHeight / 2;
 
-  const speedRange = TICKET_STAR_CONFIG.horizontalSpeedRange;
-  const minHorizontal = Math.max(0, speedRange?.min ?? 0);
-  const maxHorizontal = Math.max(minHorizontal, speedRange?.max ?? minHorizontal);
-  let horizontalSpeed = minHorizontal + Math.random() * Math.max(0, maxHorizontal - minHorizontal);
-  const variance = Math.max(0, TICKET_STAR_CONFIG.speedVariance);
-  if (variance > 0 && Number.isFinite(horizontalSpeed) && horizontalSpeed > 0) {
-    const minMultiplier = Math.max(0.1, 1 - variance);
-    const maxMultiplier = 1 + variance;
-    const factor = minMultiplier + Math.random() * (maxMultiplier - minMultiplier);
-    horizontalSpeed *= factor;
-  }
-  if (!Number.isFinite(horizontalSpeed) || horizontalSpeed <= 0) {
-    horizontalSpeed = TICKET_STAR_CONFIG.minHorizontalSpeed;
-  }
-  const direction = Math.random() < 0.5 ? -1 : 1;
-  let velocityX = horizontalSpeed * direction;
-  const minSpeed = TICKET_STAR_CONFIG.minHorizontalSpeed;
-  if (Math.abs(velocityX) < minSpeed) {
-    velocityX = minSpeed * (direction >= 0 ? 1 : -1);
-  }
+    const atomCenterX = atomRect
+      ? atomRect.left + atomRect.width / 2 - layerOffsetLeft
+      : fallbackCenterX;
+    const atomCenterY = atomRect
+      ? atomRect.top + atomRect.height / 2 - layerOffsetTop
+      : fallbackCenterY;
 
-  const baseVertical = TICKET_STAR_CONFIG.launchVerticalSpeed;
-  let velocityY = -(baseVertical * (0.9 + Math.random() * 0.5));
-  if (!Number.isFinite(velocityY)) {
-    velocityY = -baseVertical;
+    startX = atomCenterX - starWidth / 2;
+    startY = atomCenterY - starHeight / 2;
+
+    startX = Math.min(Math.max(startX, minX), maxX);
+    startY = Math.min(Math.max(startY, minY), maxY);
+
+    const speedRange = TICKET_STAR_CONFIG.horizontalSpeedRange;
+    const minHorizontal = Math.max(0, speedRange?.min ?? 0);
+    const maxHorizontal = Math.max(minHorizontal, speedRange?.max ?? minHorizontal);
+    let horizontalSpeed = minHorizontal + Math.random() * Math.max(0, maxHorizontal - minHorizontal);
+    const variance = Math.max(0, TICKET_STAR_CONFIG.speedVariance);
+    if (variance > 0 && Number.isFinite(horizontalSpeed) && horizontalSpeed > 0) {
+      const minMultiplier = Math.max(0.1, 1 - variance);
+      const maxMultiplier = 1 + variance;
+      const factor = minMultiplier + Math.random() * (maxMultiplier - minMultiplier);
+      horizontalSpeed *= factor;
+    }
+    if (!Number.isFinite(horizontalSpeed) || horizontalSpeed <= 0) {
+      horizontalSpeed = TICKET_STAR_CONFIG.minHorizontalSpeed;
+    }
+    const direction = Math.random() < 0.5 ? -1 : 1;
+    velocityX = horizontalSpeed * direction;
+    const minSpeed = TICKET_STAR_CONFIG.minHorizontalSpeed;
+    if (Math.abs(velocityX) < minSpeed) {
+      velocityX = minSpeed * (direction >= 0 ? 1 : -1);
+    }
+
+    const baseVertical = TICKET_STAR_CONFIG.launchVerticalSpeed;
+    velocityY = -(baseVertical * (0.9 + Math.random() * 0.5));
+    if (!Number.isFinite(velocityY)) {
+      velocityY = -baseVertical;
+    }
   }
 
   ticketStarState.element = star;
@@ -5175,6 +5217,18 @@ function updateTicketStar(deltaSeconds, now = performance.now()) {
   const maxY = interiorMaxY + padding;
   const delta = Math.min(Math.max(deltaSeconds, 0), 0.05);
   const gravity = TICKET_STAR_CONFIG.gravity;
+  if (isTicketStarStaticMode()) {
+    const clampedX = Math.min(Math.max(ticketStarState.position.x, 0), interiorMaxX);
+    const clampedY = Math.min(Math.max(ticketStarState.position.y, 0), interiorMaxY);
+    ticketStarState.position.x = clampedX;
+    ticketStarState.position.y = clampedY;
+    ticketStarState.width = starWidth;
+    ticketStarState.height = starHeight;
+    ticketStarState.velocity.x = 0;
+    ticketStarState.velocity.y = 0;
+    star.style.transform = `translate(${clampedX}px, ${clampedY}px)`;
+    return;
+  }
   ticketStarState.velocity.y += gravity * delta;
   let nextX = ticketStarState.position.x + ticketStarState.velocity.x * delta;
   let nextY = ticketStarState.position.y + ticketStarState.velocity.y * delta;
