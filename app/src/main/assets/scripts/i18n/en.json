@@ -2721,6 +2721,11 @@
           "gachaVictory": "Color Stack: +{count} gacha ticket{suffix}!"
         }
       },
+      "twins": {
+        "rewards": {
+          "gachaVictory": "Twins: +{count} gacha ticket{suffix}!"
+        }
+      },
       "link": {
         "rewards": {
           "gachaVictory": "Link puzzle cleared! +{count} gacha ticket{suffix}."
