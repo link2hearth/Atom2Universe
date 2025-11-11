@@ -175,6 +175,7 @@
   box-shadow: var(--taquin-board-shadow);
   position: relative;
   outline: none;
+  touch-action: none;
 }
 
 .taquin__board:focus-visible {
