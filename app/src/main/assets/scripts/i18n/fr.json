@@ -2652,6 +2652,11 @@
           "gachaVictory": "Color Stack : +{count} ticket{suffix} gacha !"
         }
       },
+      "twins": {
+        "rewards": {
+          "gachaVictory": "Twins : +{count} ticket{suffix} gacha !"
+        }
+      },
       "link": {
         "rewards": {
           "gachaVictory": "Link : +{count} ticket{suffix} gacha !"

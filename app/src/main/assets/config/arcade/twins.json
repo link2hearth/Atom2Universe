@@ -1,9 +1,9 @@
 {
   "defaultDifficulty": "easy",
   "difficulties": {
-    "easy": { "pairs": 8, "columns": 4, "rows": 4 },
-    "medium": { "pairs": 12, "columns": 6, "rows": 4 },
-    "hard": { "pairs": 18, "columns": 6, "rows": 6 }
+    "easy": { "pairs": 8, "columns": 4, "rows": 4, "gachaTickets": 1 },
+    "medium": { "pairs": 12, "columns": 6, "rows": 4, "gachaTickets": 2 },
+    "hard": { "pairs": 18, "columns": 6, "rows": 6, "gachaTickets": 3 }
   },
   "mismatchDelayMs": 900,
   "cardAspectRatio": 0.72,

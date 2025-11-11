@@ -106,9 +106,9 @@
     cardAspectRatio: 0.72,
     cardImages: DEFAULT_CARD_IMAGE_NAMES,
     difficulties: Object.freeze({
-      easy: Object.freeze({ pairs: 8, columns: 4, rows: 4 }),
-      medium: Object.freeze({ pairs: 12, columns: 6, rows: 4 }),
-      hard: Object.freeze({ pairs: 18, columns: 6, rows: 6 })
+      easy: Object.freeze({ pairs: 8, columns: 4, rows: 4, gachaTickets: 1 }),
+      medium: Object.freeze({ pairs: 12, columns: 6, rows: 4, gachaTickets: 2 }),
+      hard: Object.freeze({ pairs: 18, columns: 6, rows: 6, gachaTickets: 3 })
     })
   });
 
@@ -139,7 +139,8 @@
     languageHandlerAttached: false,
     languageHandler: null,
     initialized: false,
-    configLoaded: false
+    configLoaded: false,
+    rewardClaimed: false
   };
 
   function translate(key, fallback, params) {
@@ -204,6 +205,76 @@
     return Math.min(Math.max(numeric, min), max);
   }
 
+  function formatTicketCount(value) {
+    if (typeof formatIntegerLocalized === 'function') {
+      try {
+        return formatIntegerLocalized(value);
+      } catch (error) {
+        // Ignore formatting errors and fallback below.
+      }
+    }
+    if (Number.isFinite(value)) {
+      try {
+        return Number(value).toLocaleString();
+      } catch (error) {
+        // Ignore locale formatting errors.
+      }
+    }
+    return String(value);
+  }
+
+  function getVictoryRewardTicketsForDifficulty(difficultyKey) {
+    const difficultyConfig = state.config?.difficulties?.[difficultyKey]
+      || state.config?.difficulties?.easy
+      || DEFAULT_CONFIG.difficulties.easy;
+    const amount = Number(difficultyConfig?.gachaTickets);
+    if (!Number.isFinite(amount) || amount <= 0) {
+      return 0;
+    }
+    return Math.max(0, Math.floor(amount));
+  }
+
+  function awardVictoryTickets() {
+    if (state.rewardClaimed) {
+      return;
+    }
+    const tickets = getVictoryRewardTicketsForDifficulty(state.difficulty);
+    if (tickets <= 0) {
+      state.rewardClaimed = true;
+      return;
+    }
+    const awardGacha = typeof gainGachaTickets === 'function'
+      ? gainGachaTickets
+      : typeof window !== 'undefined' && typeof window.gainGachaTickets === 'function'
+        ? window.gainGachaTickets
+        : null;
+    if (typeof awardGacha !== 'function') {
+      state.rewardClaimed = true;
+      return;
+    }
+    let granted = 0;
+    try {
+      granted = awardGacha(tickets, { unlockTicketStar: true });
+    } catch (error) {
+      console.warn('Twins: unable to grant gacha tickets', error);
+      granted = 0;
+    }
+    state.rewardClaimed = true;
+    if (!Number.isFinite(granted) || granted <= 0) {
+      return;
+    }
+    if (typeof showToast === 'function') {
+      const suffix = granted > 1 ? 's' : '';
+      const formattedCount = formatTicketCount(granted);
+      const message = translate(
+        'scripts.arcade.twins.rewards.gachaVictory',
+        'Twins : +{count} ticket{suffix} gacha !',
+        { count: formattedCount, suffix }
+      );
+      showToast(message);
+    }
+  }
+
   function getCardImagePool() {
     if (Array.isArray(state.cardImages) && state.cardImages.length > 0) {
       return state.cardImages;
@@ -241,7 +312,14 @@
     pairs = Math.max(1, pairs);
     columns = Math.max(2, columns);
     rows = Math.max(2, rows);
-    return Object.freeze({ pairs, columns, rows });
+    const fallbackTickets = clampInteger(
+      fallback?.gachaTickets,
+      DEFAULT_CONFIG.difficulties.easy.gachaTickets,
+      0,
+      99
+    );
+    const gachaTickets = clampInteger(raw?.gachaTickets, fallbackTickets, 0, 99);
+    return Object.freeze({ pairs, columns, rows, gachaTickets });
   }
 
   function applyConfig(rawConfig) {
@@ -591,6 +669,7 @@
       setStatus('index.sections.twins.status.victory', VICTORY_FALLBACK, {
         moves: formatNumber(state.moves)
       });
+      awardVictoryTickets();
     } else {
       setStatus('index.sections.twins.status.inProgress', PROGRESS_FALLBACK, {
         remaining: formatNumber(remaining)
@@ -655,6 +734,7 @@
     state.matches = 0;
     state.moves = 0;
     state.busy = false;
+    state.rewardClaimed = false;
     if (state.elements?.grid) {
       state.elements.grid.innerHTML = '';
     }
