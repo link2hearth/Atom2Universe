@@ -453,6 +453,12 @@
             "description": "Push every crate onto the glowing goals without pulling them in this tactile spin on the classic puzzle.",
             "cta": "Organise"
           },
+          "taquin": {
+            "aria": "Open the Taquin mini-game",
+            "title": "Taquin",
+            "description": "Slide the tiles to reconstruct a cosmic picture tile by tile.",
+            "cta": "Assemble"
+          },
           "minesweeper": {
             "aria": "Open the Boom! mini-game",
             "title": "Boom!",
@@ -1102,6 +1108,26 @@
           "generated": "Track ready for a new run!",
           "failed": "Unable to generate a new track right now."
         }
+      },
+      "taquin": {
+        "aria": "Taquin mini-game: rebuild the picture by sliding tiles.",
+        "title": "Taquin",
+        "mode": {
+          "label": "Mode",
+          "aria": "Choose the grid size",
+          "small": "Small",
+          "medium": "Medium",
+          "large": "Large"
+        },
+        "actions": {
+          "new": "New puzzle",
+          "restart": "Restart"
+        },
+        "stats": {
+          "moves": "Moves",
+          "time": "Time"
+        },
+        "board": "Taquin board"
       },
       "sokoban": {
         "aria": "Sokoban mini-game: push every crate onto its target.",
@@ -3382,6 +3408,15 @@
         },
         "starBridges": {
           "rewardToast": "Star Bridges: +{count} gacha ticket{suffix}!"
+        },
+        "taquin": {
+          "tileLabel": "Tile {value}",
+          "message": {
+            "solved": "Puzzle solved in {moves} moves ({time})."
+          },
+          "rewards": {
+            "gacha": "Taquin complete! +{count} gacha ticket{suffix}."
+          }
         },
         "bigger": {
           "rewardToast": "512 marble forged! {tickets} earned."

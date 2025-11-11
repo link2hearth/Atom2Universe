@@ -179,6 +179,7 @@ const BRICK_SKIN_TOAST_KEYS = Object.freeze({
     motocross: 'arcade.motocross',
     twins: 'arcade.twins',
     sokoban: 'arcade.sokoban',
+    taquin: 'arcade.taquin',
     math: 'arcade.math',
     sudoku: 'arcade.sudoku',
     minesweeper: 'arcade.demineur',
@@ -214,6 +215,7 @@ const OPTIONS_DETAIL_FEATURE_MAP = Object.freeze({
   motocross: 'arcade.motocross',
   twins: 'arcade.twins',
   sokoban: 'arcade.sokoban',
+  taquin: 'arcade.taquin',
   blackjack: 'arcade.blackjack',
   gacha: 'system.gacha',
   tableau: 'system.tableau',
@@ -2459,6 +2461,9 @@ function activateArcadeHubCard(card) {
   if (target === 'sokoban') {
     ensureSokobanGame();
   }
+  if (target === 'taquin') {
+    ensureTaquinGame();
+  }
   if (target === 'link') {
     ensureLinkGame();
   }
@@ -4042,6 +4047,7 @@ const ARCADE_GAME_IDS = Object.freeze([
   'motocross',
   'twins',
   'sokoban',
+  'taquin',
   'balance',
   'sudoku',
   'minesweeper',
@@ -6900,6 +6906,17 @@ function ensureSokobanGame() {
   if (window.sokobanArcade && typeof window.sokobanArcade === 'object') {
     sokobanGame = window.sokobanArcade;
     return sokobanGame;
+  }
+  return null;
+}
+
+function ensureTaquinGame() {
+  if (taquinGame && typeof taquinGame === 'object') {
+    return taquinGame;
+  }
+  if (window.taquinArcade && typeof window.taquinArcade === 'object') {
+    taquinGame = window.taquinArcade;
+    return taquinGame;
   }
   return null;
 }
@@ -11703,6 +11720,7 @@ let waveGame = null;
 let balanceGame = null;
 let quantum2048Game = null;
 let sokobanGame = null;
+let taquinGame = null;
 let linkGame = null;
 let lightsOutGame = null;
 let gameOfLifeGame = null;
@@ -13420,6 +13438,9 @@ function showPage(pageId) {
   if (pageId === 'sokoban') {
     ensureSokobanGame();
   }
+  if (pageId === 'taquin') {
+    ensureTaquinGame();
+  }
   if (pageId === 'link') {
     ensureLinkGame();
   }
@@ -13465,6 +13486,7 @@ function showPage(pageId) {
   document.body.classList.toggle('view-motocross', pageId === 'motocross');
   document.body.classList.toggle('view-twins', pageId === 'twins');
   document.body.classList.toggle('view-sokoban', pageId === 'sokoban');
+  document.body.classList.toggle('view-taquin', pageId === 'taquin');
   document.body.classList.toggle('view-sudoku', pageId === 'sudoku');
   document.body.classList.toggle('view-lights-out', pageId === 'lightsOut');
   document.body.classList.toggle('view-link', pageId === 'link');
@@ -13573,6 +13595,14 @@ function showPage(pageId) {
       sokoban.onLeave?.();
     }
   }
+  const taquin = ensureTaquinGame();
+  if (taquin) {
+    if (pageId === 'taquin') {
+      taquin.onEnter?.();
+    } else {
+      taquin.onLeave?.();
+    }
+  }
   const link = ensureLinkGame();
   if (link) {
     if (pageId === 'link') {
@@ -13635,6 +13665,10 @@ document.addEventListener('visibilitychange', () => {
     const sokoban = ensureSokobanGame();
     if (sokoban && activePage === 'sokoban') {
       sokoban.onLeave?.();
+    }
+    const taquin = ensureTaquinGame();
+    if (taquin && activePage === 'taquin') {
+      taquin.onLeave?.();
     }
     const lightsOut = ensureLightsOutGame();
     if (lightsOut && activePage === 'lightsOut') {
@@ -13731,6 +13765,10 @@ document.addEventListener('visibilitychange', () => {
   if (activePage === 'twins') {
     const twins = ensureTwinsGame();
     twins?.onEnter?.();
+  }
+  if (activePage === 'taquin') {
+    const taquin = ensureTaquinGame();
+    taquin?.onEnter?.();
   }
 });
 

@@ -431,6 +431,48 @@
           class="arcade-hub-card"
           role="button"
           tabindex="0"
+          aria-label="Accéder au mini-jeu Taquin"
+          aria-describedby="arcadeCardDescription-taquin"
+          data-card-id="taquin"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.taquin.aria"
+          data-page-target="taquin"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.taquin.title"
+            >Taquin</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-taquin"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-taquin"
+            data-i18n="index.sections.arcadeHub.cards.taquin.description"
+          >
+            Recomposez une image quantique en glissant chaque tuile dans l’ordre.
+          </p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
           aria-label="Accéder au mini-jeu Motocross"
           aria-describedby="arcadeCardDescription-motocross"
           data-card-id="motocross"
@@ -3501,6 +3543,91 @@
             data-i18n="aria-label:index.sections.colorStack.board"
           ></div>
         </div>
+      </div>
+    </section>
+
+    <section
+      id="taquin"
+      class="page page--taquin"
+      data-page-group="arcade"
+      aria-label="Mini-jeu Taquin : reconstituez l’image en glissant les tuiles."
+      data-i18n="aria-label:index.sections.taquin.aria"
+      hidden
+    >
+      <div class="taquin" data-taquin-root>
+        <h2 class="visually-hidden" data-i18n="index.sections.taquin.title">Taquin</h2>
+        <div class="taquin__header">
+          <div class="taquin__toolbar">
+            <div
+              class="taquin__mode-group"
+              role="group"
+              aria-label="Choisir la taille de la grille"
+              data-i18n="aria-label:index.sections.taquin.mode.aria"
+            >
+              <span class="taquin__mode-label" data-i18n="index.sections.taquin.mode.label">Mode</span>
+              <div class="taquin__toggle-group">
+                <button
+                  type="button"
+                  class="taquin__toggle taquin__toggle--active"
+                  data-taquin-size="small"
+                  aria-pressed="true"
+                  data-i18n="index.sections.taquin.mode.small"
+                >Petit</button>
+                <button
+                  type="button"
+                  class="taquin__toggle"
+                  data-taquin-size="medium"
+                  aria-pressed="false"
+                  data-i18n="index.sections.taquin.mode.medium"
+                >Moyen</button>
+                <button
+                  type="button"
+                  class="taquin__toggle"
+                  data-taquin-size="large"
+                  aria-pressed="false"
+                  data-i18n="index.sections.taquin.mode.large"
+                >Grand</button>
+              </div>
+            </div>
+            <div class="taquin__actions">
+              <button
+                type="button"
+                class="taquin__button"
+                id="taquinNewButton"
+                data-i18n="index.sections.taquin.actions.new"
+              >Nouvelle partie</button>
+              <button
+                type="button"
+                class="taquin__button"
+                id="taquinRestartButton"
+                data-i18n="index.sections.taquin.actions.restart"
+                aria-disabled="true"
+                disabled
+              >Recommencer</button>
+            </div>
+          </div>
+          <div class="taquin__stats">
+            <div class="taquin__stat">
+              <span class="taquin__stat-label" data-i18n="index.sections.taquin.stats.moves">Coups</span>
+              <span class="taquin__stat-value" id="taquinMovesValue">0</span>
+            </div>
+            <div class="taquin__stat">
+              <span class="taquin__stat-label" data-i18n="index.sections.taquin.stats.time">Temps</span>
+              <span class="taquin__stat-value" id="taquinTimeValue">0:00</span>
+            </div>
+          </div>
+        </div>
+        <div class="taquin__board-wrapper">
+          <div
+            class="taquin__board"
+            id="taquinBoard"
+            role="grid"
+            aria-label="Grille du Taquin"
+            data-i18n="aria-label:index.sections.taquin.board"
+            tabindex="0"
+          ></div>
+        </div>
+        <p class="taquin__message" id="taquinMessage" aria-live="polite" hidden></p>
       </div>
     </section>
 
@@ -6706,6 +6833,7 @@
   <script src="scripts/arcade/stars-war.js"></script>
   <script src="scripts/arcade/motocross.js"></script>
   <script src="scripts/arcade/sokoban.js"></script>
+  <script src="scripts/arcade/taquin.js"></script>
   <script src="scripts/arcade/escape.js"></script>
   <script src="scripts/arcade/the-line.js"></script>
   <script src="scripts/i18n/embedded-resources.js"></script>

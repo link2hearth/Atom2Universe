@@ -453,6 +453,12 @@
             "description": "Poussez chaque caisse sur les objectifs lumineux sans jamais tirer, dans une version tactile du classique.",
             "cta": "Organiser"
           },
+          "taquin": {
+            "aria": "Accéder au mini-jeu Taquin",
+            "title": "Taquin",
+            "description": "Recomposez une image quantique en glissant chaque tuile dans l’ordre.",
+            "cta": "Assembler"
+          },
           "minesweeper": {
             "aria": "Accéder au mini-jeu Boom!",
             "title": "Boom!",
@@ -1102,6 +1108,26 @@
           "generated": "Piste prête, bon ride !",
           "failed": "Impossible de générer une nouvelle piste pour le moment."
         }
+      },
+      "taquin": {
+        "aria": "Mini-jeu Taquin : reconstituez l’image en glissant les tuiles.",
+        "title": "Taquin",
+        "mode": {
+          "label": "Mode",
+          "aria": "Choisir la taille de la grille",
+          "small": "Petit",
+          "medium": "Moyen",
+          "large": "Grand"
+        },
+        "actions": {
+          "new": "Nouvelle partie",
+          "restart": "Recommencer"
+        },
+        "stats": {
+          "moves": "Coups",
+          "time": "Temps"
+        },
+        "board": "Grille du Taquin"
       },
       "sokoban": {
         "aria": "Mini-jeu Sokoban : poussez toutes les caisses sur les cibles.",
@@ -3403,6 +3429,15 @@
         },
         "starBridges": {
           "rewardToast": "Ponts Stellaires : +{count} ticket{suffix} gacha !"
+        },
+        "taquin": {
+          "tileLabel": "Tuile {value}",
+          "message": {
+            "solved": "Puzzle résolu en {moves} coups ({time})."
+          },
+          "rewards": {
+            "gacha": "Taquin réussi ! +{count} ticket{suffix} gacha."
+          }
         },
         "bigger": {
           "rewardToast": "Bille 512 forgée ! {tickets} remportés."
