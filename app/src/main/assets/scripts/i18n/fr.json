@@ -3355,7 +3355,7 @@
           }
         },
         "quantum2048": {
-          "rewardToast": "{tickets} gagnés grâce à ObjectX !"
+          "rewardToast": "{reward} gagnés grâce à ObjectX !"
         },
         "minesweeper": {
           "rewardToast": "Récompense Boom! : {tickets} remportés !"
