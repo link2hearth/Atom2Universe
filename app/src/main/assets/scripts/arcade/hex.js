@@ -209,6 +209,7 @@
       const rowElement = document.createElement('div');
       rowElement.className = 'hex__row';
       rowElement.dataset.row = String(row);
+      rowElement.style.setProperty('--hex-row-index', String(row));
       const rowCells = new Array(BOARD_SIZE);
       for (let col = 0; col < BOARD_SIZE; col += 1) {
         const button = document.createElement('button');
