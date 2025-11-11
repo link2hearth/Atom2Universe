@@ -518,6 +518,7 @@ const ARCADE_SOLITAIRE_CONFIG = loadConfigJson('./config/arcade/solitaire.json',
 const ARCADE_QUANTUM2048_CONFIG = loadConfigJson('./config/arcade/quantum2048.json', {});
 const ARCADE_DEMINEUR_CONFIG = loadConfigJson('./config/arcade/demineur.json', {});
 const ARCADE_METAUX_CONFIG = loadConfigJson('./config/arcade/metaux.json', {});
+const ARCADE_GOMOKU_CONFIG = loadConfigJson('./config/arcade/gomoku.json', {});
 
 function createShopBuildingDefinitions() {
   const withDefaults = def => ({ maxLevel: SHOP_MAX_PURCHASE_DEFAULT, ...def });
@@ -1325,6 +1326,7 @@ const GAME_CONFIG = {
     particules: ARCADE_PARTICULES_CONFIG,
     // Paramètres du mini-jeu Sudoku.
     sudoku: ARCADE_SUDOKU_CONFIG,
+    gomoku: ARCADE_GOMOKU_CONFIG,
     quantum2048: ARCADE_QUANTUM2048_CONFIG,
     demineur: ARCADE_DEMINEUR_CONFIG,
   },

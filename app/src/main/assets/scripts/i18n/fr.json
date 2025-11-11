@@ -483,6 +483,12 @@
             "description": "Retournez les pions de votre adversaire en les encerclant sur un plateau 8×8.",
             "cta": "Jouer"
           },
+          "gomoku": {
+            "aria": "Accéder au mini-jeu Gomoku",
+            "title": "Gomoku & Renju",
+            "description": "Affrontez l’IA ou un ami sur un goban 15×15 et relevez des puzzles tactiques en mode Gomoku ou Renju.",
+            "cta": "Aligner"
+          },
           "hex": {
             "aria": "Accéder au mini-jeu Hex",
             "title": "Hex",
@@ -804,6 +810,83 @@
         "players": {
           "black": "noirs",
           "white": "blancs"
+        }
+      },
+      "gomoku": {
+        "aria": "Mini-jeu Gomoku et Renju",
+        "title": "Gomoku et Renju",
+        "board": "Plateau de Gomoku",
+        "controls": {
+          "rules": {
+            "label": "Règles",
+            "aria": "Choisir les règles du plateau",
+            "gomoku": "Gomoku classique",
+            "renju": "Renju (restrictions pour Noir)"
+          },
+          "mode": {
+            "label": "Mode",
+            "aria": "Choisir le mode de jeu",
+            "ai": "Contre l’IA",
+            "local": "2 joueurs",
+            "puzzle": "Puzzles"
+          },
+          "size": {
+            "label": "Taille du plateau",
+            "aria": "Choisir la taille du goban",
+            "small": "13×13",
+            "medium": "15×15",
+            "large": "19×19"
+          },
+          "difficulty": {
+            "label": "Niveau IA",
+            "aria": "Choisir la difficulté de l’IA",
+            "easy": "Facile",
+            "medium": "Moyen",
+            "hard": "Difficile"
+          },
+          "puzzleType": {
+            "label": "Type de puzzle",
+            "aria": "Choisir le type de puzzle",
+            "mateInOne": "Gagnez en 1 coup",
+            "mateInTwo": "Gagnez en 2 coups"
+          }
+        },
+        "actions": {
+          "undo": "Annuler",
+          "restart": "Recommencer",
+          "newPuzzle": "Nouveau puzzle",
+          "hint": "Indice"
+        },
+        "players": {
+          "black": "Noirs",
+          "white": "Blancs"
+        },
+        "puzzle": {
+          "toPlay": "Côté à jouer :",
+          "goal": "Objectif :",
+          "goalMateInOne": "Gagnez en un coup",
+          "goalMateInTwo": "Gagnez en deux coups",
+          "attempts": "Essais :"
+        },
+        "status": {
+          "ready": "Sélectionnez un mode et placez la première pierre noire.",
+          "turnBlack": "À vous de jouer (noirs).",
+          "turnWhite": "Au tour des blancs.",
+          "aiThinking": "L’IA réfléchit…",
+          "winBlack": "Victoire des noirs !",
+          "winWhite": "Victoire des blancs !",
+          "draw": "Égalité : plus aucune case disponible.",
+          "puzzleGenerating": "Génération du puzzle…",
+          "puzzleSolved": "Bravo, puzzle résolu !",
+          "puzzleSecondMoveBlack": "Terminez le puzzle : les noirs doivent trouver le coup final.",
+          "puzzleSecondMoveWhite": "Terminez le puzzle : les blancs doivent trouver le coup final.",
+          "puzzleTurnBlack": "Puzzle : aux noirs de jouer.",
+          "puzzleTurnWhite": "Puzzle : aux blancs de jouer.",
+          "puzzleFailed": "Ce coup ne gagne pas. Réessayez.",
+          "puzzleGenerationFailed": "Aucun puzzle trouvé. Réessayez.",
+          "illegalRenju": "Coup interdit pour Noir (Renju).",
+          "cellOccupied": "Case déjà occupée.",
+          "hint": "Quelques coups prometteurs sont mis en évidence."
         }
       },
       "theLine": {

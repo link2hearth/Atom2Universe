@@ -483,6 +483,12 @@
             "description": "Flip your opponent's discs by surrounding them on an 8×8 board.",
             "cta": "Play"
           },
+          "gomoku": {
+            "aria": "Open the Gomoku mini-game",
+            "title": "Gomoku & Renju",
+            "description": "Challenge the AI or a friend on a 15×15 goban and tackle tactical puzzles in Gomoku or Renju rules.",
+            "cta": "Align"
+          },
           "hex": {
             "aria": "Open the Hex mini-game",
             "title": "Hex",
@@ -804,6 +810,83 @@
         "players": {
           "black": "black",
           "white": "white"
+        }
+      },
+      "gomoku": {
+        "aria": "Gomoku and Renju mini-game",
+        "title": "Gomoku & Renju",
+        "board": "Gomoku board",
+        "controls": {
+          "rules": {
+            "label": "Rules",
+            "aria": "Choose the rule set",
+            "gomoku": "Classic Gomoku",
+            "renju": "Renju (Black fouls enabled)"
+          },
+          "mode": {
+            "label": "Mode",
+            "aria": "Choose the game mode",
+            "ai": "Vs AI",
+            "local": "2 players",
+            "puzzle": "Puzzles"
+          },
+          "size": {
+            "label": "Board size",
+            "aria": "Choose the board size",
+            "small": "13×13",
+            "medium": "15×15",
+            "large": "19×19"
+          },
+          "difficulty": {
+            "label": "AI level",
+            "aria": "Choose the AI difficulty",
+            "easy": "Easy",
+            "medium": "Medium",
+            "hard": "Hard"
+          },
+          "puzzleType": {
+            "label": "Puzzle type",
+            "aria": "Choose the puzzle type",
+            "mateInOne": "Win in 1 move",
+            "mateInTwo": "Win in 2 moves"
+          }
+        },
+        "actions": {
+          "undo": "Undo",
+          "restart": "Restart",
+          "newPuzzle": "New puzzle",
+          "hint": "Hint"
+        },
+        "players": {
+          "black": "Black",
+          "white": "White"
+        },
+        "puzzle": {
+          "toPlay": "Side to move:",
+          "goal": "Goal:",
+          "goalMateInOne": "Win in one move",
+          "goalMateInTwo": "Win in two moves",
+          "attempts": "Attempts:"
+        },
+        "status": {
+          "ready": "Select a mode and play the first black stone.",
+          "turnBlack": "Your turn (black).",
+          "turnWhite": "White to move.",
+          "aiThinking": "The AI is thinking…",
+          "winBlack": "Black wins!",
+          "winWhite": "White wins!",
+          "draw": "Draw: no more empty cells.",
+          "puzzleGenerating": "Generating puzzle…",
+          "puzzleSolved": "Puzzle solved, well done!",
+          "puzzleSecondMoveBlack": "Finish the puzzle: black must find the winning move.",
+          "puzzleSecondMoveWhite": "Finish the puzzle: white must find the winning move.",
+          "puzzleTurnBlack": "Puzzle: black to move.",
+          "puzzleTurnWhite": "Puzzle: white to move.",
+          "puzzleFailed": "That move doesn’t win. Try again.",
+          "puzzleGenerationFailed": "No puzzle found. Try again.",
+          "illegalRenju": "Illegal move for Black in Renju.",
+          "cellOccupied": "Cell already occupied.",
+          "hint": "A few promising moves are highlighted."
         }
       },
       "theLine": {
