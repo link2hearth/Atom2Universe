@@ -1814,6 +1814,14 @@
             "off": "Sans"
           }
         },
+        "frenzyAutoCollect": {
+          "title": "Récolte auto frénésie",
+          "ariaLabel": "Activer ou désactiver la récolte automatique des frénésies",
+          "state": {
+            "on": "Activée",
+            "off": "Désactivée"
+          }
+        },
         "music": {
           "title": "Musique",
           "track": "Piste en lecture",

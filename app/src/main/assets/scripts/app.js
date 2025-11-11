@@ -161,6 +161,23 @@ const BRICK_SKIN_TOAST_KEYS = Object.freeze({
   pastels: 'scripts.app.brickSkins.applied.pastels'
 });
 
+const DEFAULT_FRENZY_AUTO_COLLECT_DELAY_MS = 1000;
+
+const FRENZY_AUTO_COLLECT_DELAY_MS = (() => {
+  const config = GLOBAL_CONFIG?.frenzies?.autoCollect;
+  if (config && typeof config === 'object') {
+    const seconds = Number(config.delaySeconds ?? config.seconds);
+    if (Number.isFinite(seconds) && seconds >= 0) {
+      return Math.floor(seconds * 1000);
+    }
+    const millis = Number(config.delayMs ?? config.milliseconds);
+    if (Number.isFinite(millis) && millis >= 0) {
+      return Math.floor(millis);
+    }
+  }
+  return DEFAULT_FRENZY_AUTO_COLLECT_DELAY_MS;
+})();
+
   const PAGE_FEATURE_MAP = Object.freeze({
     arcadeHub: 'arcade.hub',
     arcade: 'arcade.particules',
@@ -266,6 +283,7 @@ const RELOAD_SAVE_STORAGE_KEY = 'atom2univers.reloadPendingSave';
 const LANGUAGE_STORAGE_KEY = 'atom2univers.language';
 const CLICK_SOUND_STORAGE_KEY = 'atom2univers.options.clickSoundMuted';
 const CRIT_ATOM_VISUALS_STORAGE_KEY = 'atom2univers.options.critAtomVisualsDisabled';
+const FRENZY_AUTO_COLLECT_STORAGE_KEY = 'atom2univers.options.frenzyAutoCollectEnabled';
 const TEXT_FONT_STORAGE_KEY = 'atom2univers.options.textFont';
 const INFO_WELCOME_COLLAPSED_STORAGE_KEY = 'atom2univers.info.welcomeCollapsed';
 const INFO_ACHIEVEMENTS_COLLAPSED_STORAGE_KEY = 'atom2univers.info.achievementsCollapsed';
@@ -3240,7 +3258,9 @@ const frenzyState = {
     frenziesUsedInChain: 0,
     isActive: false,
     visibleUntil: 0,
-    lastDisplayedCount: 0
+    lastDisplayedCount: 0,
+    autoCollectTimeout: null,
+    autoCollectDeadline: 0
   },
   perSecond: {
     token: null,
@@ -3249,10 +3269,74 @@ const frenzyState = {
     currentMultiplier: 1,
     effects: [],
     currentStacks: 0,
-    isActive: false
+    isActive: false,
+    autoCollectTimeout: null,
+    autoCollectDeadline: 0
   },
   spawnAccumulator: 0
 };
+
+function cancelFrenzyAutoCollect(type) {
+  if (!FRENZY_TYPES.includes(type)) return;
+  const entry = frenzyState[type];
+  if (!entry) return;
+  if (entry.autoCollectTimeout != null) {
+    const clearFn = typeof globalThis !== 'undefined' && typeof globalThis.clearTimeout === 'function'
+      ? globalThis.clearTimeout
+      : typeof clearTimeout === 'function'
+        ? clearTimeout
+        : null;
+    if (clearFn) {
+      clearFn(entry.autoCollectTimeout);
+    }
+  }
+  entry.autoCollectTimeout = null;
+  entry.autoCollectDeadline = 0;
+}
+
+function scheduleFrenzyAutoCollect(type, now = (() => {
+  if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+    return performance.now();
+  }
+  return Date.now();
+})()) {
+  if (!FRENZY_TYPES.includes(type)) return;
+  if (!isFrenzyAutoCollectActive()) {
+    cancelFrenzyAutoCollect(type);
+    return;
+  }
+  const entry = frenzyState[type];
+  if (!entry || !entry.token) {
+    cancelFrenzyAutoCollect(type);
+    return;
+  }
+  cancelFrenzyAutoCollect(type);
+  const delay = Math.max(0, Math.floor(Number(FRENZY_AUTO_COLLECT_DELAY_MS) || 0));
+  if (delay <= 0) {
+    collectFrenzy(type, now);
+    return;
+  }
+  const setFn = typeof globalThis !== 'undefined' && typeof globalThis.setTimeout === 'function'
+    ? globalThis.setTimeout
+    : typeof setTimeout === 'function'
+      ? setTimeout
+      : null;
+  if (!setFn) {
+    return;
+  }
+  entry.autoCollectDeadline = now + delay;
+  entry.autoCollectTimeout = setFn(() => {
+    entry.autoCollectTimeout = null;
+    entry.autoCollectDeadline = 0;
+    if (!isFrenzyAutoCollectActive()) {
+      return;
+    }
+    if (!entry.token) {
+      return;
+    }
+    collectFrenzy(type);
+  }, delay);
+}
 
 function getClickerContexts() {
   const contexts = [
@@ -3698,6 +3782,7 @@ function clearFrenzyToken(type, immediate = false) {
   if (!FRENZY_TYPES.includes(type)) return;
   const entry = frenzyState[type];
   if (!entry || !entry.token) return;
+  cancelFrenzyAutoCollect(type);
   const token = entry.token;
   entry.token = null;
   entry.tokenExpire = 0;
@@ -3797,6 +3882,7 @@ function spawnFrenzyToken(type, now = performance.now()) {
   context.frenzyLayer.appendChild(token);
   frenzyState[type].token = token;
   frenzyState[type].tokenExpire = now + FRENZY_CONFIG.displayDurationMs;
+  scheduleFrenzyAutoCollect(type, now);
 }
 
 function attemptFrenzySpawn(type, now = performance.now()) {
@@ -4581,6 +4667,7 @@ const BIG_BANG_LEVEL_BONUS_STEP = (() => {
 const ARCADE_TROPHY_ID = 'millionAtoms';
 const INFO_TROPHY_ID = 'scaleSandGrain';
 const ACHIEVEMENTS_UNLOCK_TROPHY_ID = ARCADE_TROPHY_ID;
+const FRENZY_AUTO_COLLECT_TROPHY_ID = 'frenzyMaster';
 const LOCKABLE_PAGE_IDS = new Set(['gacha', 'tableau', 'fusion', 'info', 'collection']);
 
 function hasOwnedGachaCards() {
@@ -5036,6 +5123,7 @@ function unlockTrophy(def) {
   invalidateFeatureUnlockCache();
   refreshOptionsWelcomeContent();
   updateBrickSkinOption();
+  updateFrenzyAutoCollectOptionVisibility();
   updateBrandPortalState({ animate: def.id === ARCADE_TROPHY_ID });
   updatePrimaryNavigationLocks();
   evaluatePageUnlocks({ save: false });
@@ -5059,6 +5147,8 @@ function evaluateTrophies() {
 let elements = {};
 let musicModuleInitRequested = false;
 let holdemBlindListenerAttached = false;
+let frenzyAutoCollectPreference = false;
+let lastFrenzyAutoCollectUnlockedState = null;
 
 let pageHiddenAt = null;
 let overlayFadeFallbackTimeout = null;
@@ -5841,6 +5931,9 @@ function collectDomElements() {
   critAtomToggleCard: document.getElementById('critAtomToggleCard'),
   critAtomToggle: document.getElementById('critAtomToggle'),
   critAtomToggleStatus: document.getElementById('critAtomToggleStatus'),
+  frenzyAutoCollectCard: document.getElementById('frenzyAutoCollectCard'),
+  frenzyAutoCollectToggle: document.getElementById('frenzyAutoCollectToggle'),
+  frenzyAutoCollectStatus: document.getElementById('frenzyAutoCollectStatus'),
   optionsArcadeDetails: document.getElementById('optionsArcadeDetails'),
   brickSkinOptionCard: document.getElementById('brickSkinOptionCard'),
   brickSkinSelect: document.getElementById('brickSkinSelect'),
@@ -8628,6 +8721,119 @@ function subscribeCritAtomLanguageUpdates() {
   }
   if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
     globalThis.addEventListener('i18n:languagechange', handler);
+  }
+}
+
+function readStoredFrenzyAutoCollectEnabled() {
+  try {
+    const stored = globalThis.localStorage?.getItem(FRENZY_AUTO_COLLECT_STORAGE_KEY);
+    if (stored == null) {
+      return null;
+    }
+    if (stored === '1' || stored === 'true') {
+      return true;
+    }
+    if (stored === '0' || stored === 'false') {
+      return false;
+    }
+  } catch (error) {
+    console.warn('Unable to read frenzy auto-collect preference', error);
+  }
+  return null;
+}
+
+function writeStoredFrenzyAutoCollectEnabled(enabled) {
+  try {
+    const value = enabled ? '1' : '0';
+    globalThis.localStorage?.setItem(FRENZY_AUTO_COLLECT_STORAGE_KEY, value);
+  } catch (error) {
+    console.warn('Unable to persist frenzy auto-collect preference', error);
+  }
+}
+
+function isFrenzyAutoCollectFeatureUnlocked() {
+  return getUnlockedTrophySet().has(FRENZY_AUTO_COLLECT_TROPHY_ID);
+}
+
+function isFrenzyAutoCollectActive() {
+  return frenzyAutoCollectPreference && isFrenzyAutoCollectFeatureUnlocked();
+}
+
+function updateFrenzyAutoCollectStatusLabel(active) {
+  if (!elements.frenzyAutoCollectStatus) {
+    return;
+  }
+  const key = active
+    ? 'index.sections.options.frenzyAutoCollect.state.on'
+    : 'index.sections.options.frenzyAutoCollect.state.off';
+  const fallback = active ? 'Enabled' : 'Disabled';
+  elements.frenzyAutoCollectStatus.setAttribute('data-i18n', key);
+  elements.frenzyAutoCollectStatus.textContent = translateOrDefault(key, fallback);
+}
+
+function applyFrenzyAutoCollectEnabled(enabled, options = {}) {
+  const settings = Object.assign({ persist: true, updateControl: true, updateTimers: true }, options);
+  frenzyAutoCollectPreference = !!enabled;
+  if (settings.updateControl && elements.frenzyAutoCollectToggle) {
+    elements.frenzyAutoCollectToggle.checked = frenzyAutoCollectPreference;
+  }
+  const active = isFrenzyAutoCollectActive();
+  updateFrenzyAutoCollectStatusLabel(active);
+  if (settings.persist) {
+    writeStoredFrenzyAutoCollectEnabled(frenzyAutoCollectPreference);
+  }
+  if (settings.updateTimers !== false) {
+    FRENZY_TYPES.forEach(type => {
+      if (active) {
+        scheduleFrenzyAutoCollect(type);
+      } else {
+        cancelFrenzyAutoCollect(type);
+      }
+    });
+  }
+}
+
+function initFrenzyAutoCollectOption() {
+  const stored = readStoredFrenzyAutoCollectEnabled();
+  const initialPreference = stored === null ? false : stored === true;
+  applyFrenzyAutoCollectEnabled(initialPreference, { persist: false, updateControl: true });
+  if (elements.frenzyAutoCollectToggle) {
+    elements.frenzyAutoCollectToggle.addEventListener('change', () => {
+      const enabled = elements.frenzyAutoCollectToggle.checked;
+      applyFrenzyAutoCollectEnabled(enabled, { persist: true, updateControl: false });
+    });
+  }
+  updateFrenzyAutoCollectOptionVisibility();
+}
+
+function subscribeFrenzyAutoCollectLanguageUpdates() {
+  const handler = () => {
+    updateFrenzyAutoCollectStatusLabel(isFrenzyAutoCollectActive());
+  };
+  const api = getI18nApi();
+  if (api && typeof api.onLanguageChanged === 'function') {
+    api.onLanguageChanged(handler);
+    return;
+  }
+  if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
+    globalThis.addEventListener('i18n:languagechange', handler);
+  }
+}
+
+function updateFrenzyAutoCollectOptionVisibility() {
+  const unlocked = isFrenzyAutoCollectFeatureUnlocked();
+  if (elements.frenzyAutoCollectCard) {
+    elements.frenzyAutoCollectCard.hidden = !unlocked;
+    elements.frenzyAutoCollectCard.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
+  }
+  if (elements.frenzyAutoCollectToggle) {
+    elements.frenzyAutoCollectToggle.disabled = !unlocked;
+  }
+  if (lastFrenzyAutoCollectUnlockedState !== unlocked) {
+    lastFrenzyAutoCollectUnlockedState = unlocked;
+    applyFrenzyAutoCollectEnabled(frenzyAutoCollectPreference, { persist: false, updateControl: true });
+  } else {
+    updateFrenzyAutoCollectStatusLabel(isFrenzyAutoCollectActive());
   }
 }
 
@@ -18592,6 +18798,7 @@ const RESET_LOCAL_STORAGE_KEYS = [
   LANGUAGE_STORAGE_KEY,
   CLICK_SOUND_STORAGE_KEY,
   CRIT_ATOM_VISUALS_STORAGE_KEY,
+  FRENZY_AUTO_COLLECT_STORAGE_KEY,
   TEXT_FONT_STORAGE_KEY,
   DIGIT_FONT_STORAGE_KEY,
   INFO_WELCOME_COLLAPSED_STORAGE_KEY,
@@ -18803,6 +19010,8 @@ function resetGame() {
   recalcProduction();
   renderShop();
   updateUI();
+  applyFrenzyAutoCollectEnabled(false, { persist: false });
+  updateFrenzyAutoCollectOptionVisibility();
   setFusionLog(
     translateOrDefault(
       'scripts.app.fusion.prompt',
@@ -20129,6 +20338,8 @@ function initializeDomBoundModules() {
   subscribeClickSoundLanguageUpdates();
   initCritAtomOption();
   subscribeCritAtomLanguageUpdates();
+  initFrenzyAutoCollectOption();
+  subscribeFrenzyAutoCollectLanguageUpdates();
   subscribeHeaderBannerLanguageUpdates();
   subscribePerformanceModeLanguageUpdates();
   subscribeInfoWelcomeLanguageUpdates();

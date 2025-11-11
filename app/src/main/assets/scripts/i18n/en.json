@@ -1883,6 +1883,14 @@
             "off": "Off"
           }
         },
+        "frenzyAutoCollect": {
+          "title": "Frenzy auto-collect",
+          "ariaLabel": "Enable or disable automatic frenzy collection",
+          "state": {
+            "on": "Enabled",
+            "off": "Disabled"
+          }
+        },
         "music": {
           "title": "Music",
           "track": "Now playing",
