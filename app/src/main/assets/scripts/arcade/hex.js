@@ -119,9 +119,13 @@
     if (!page || !board || !status || !turn || !resetButton || !difficultySelect) {
       return null;
     }
+    const boardFrame = board.closest('.hex__board-frame');
+    const boardWrapper = board.closest('.hex__board-wrapper');
     return {
       page,
       board,
+      boardFrame,
+      boardWrapper,
       status,
       turn,
       reward,
@@ -951,19 +955,44 @@
     if (!state.elements) {
       return;
     }
-    const { page, board } = state.elements;
+    const { page, board, boardFrame, boardWrapper } = state.elements;
     if (!page || !board) {
+      return;
+    }
+    const measurementElement = boardWrapper || boardFrame || page;
+    const width = measurementElement ? measurementElement.clientWidth : 0;
+    if (!Number.isFinite(width) || width <= 0) {
+      return;
+    }
+    let availableWidth = width;
+    if (boardFrame) {
+      const frameStyles = window.getComputedStyle(boardFrame);
+      const framePaddingStart = Number.parseFloat(frameStyles.paddingLeft) || 0;
+      const framePaddingEnd = Number.parseFloat(frameStyles.paddingRight) || 0;
+      availableWidth -= framePaddingStart + framePaddingEnd;
+    }
+    if (!Number.isFinite(availableWidth) || availableWidth <= 0) {
       return;
     }
     const computed = window.getComputedStyle(board);
     const gap = Number.parseFloat(computed.getPropertyValue('--hex-cell-gap')) || 0;
-    const width = board.clientWidth;
-    if (!Number.isFinite(width) || width <= 0) {
-      return;
-    }
+    const paddingStart = Number.parseFloat(computed.paddingLeft) || 0;
+    const paddingEnd = Number.parseFloat(computed.paddingRight) || 0;
+    const basePaddingEnd = Math.min(paddingStart, paddingEnd);
+    const borderStart = Number.parseFloat(computed.borderLeftWidth) || 0;
+    const borderEnd = Number.parseFloat(computed.borderRightWidth) || 0;
     const denominator = BOARD_SIZE + (BOARD_SIZE - 1) * 0.5;
     const gapContribution = (BOARD_SIZE - 1) * gap;
-    const cellSize = Math.max(14, (width - gapContribution) / denominator);
+    const fixedContribution = paddingStart + basePaddingEnd + borderStart + borderEnd;
+    const numerator = availableWidth - fixedContribution - gapContribution * 1.5;
+    if (!Number.isFinite(numerator)) {
+      return;
+    }
+    const rawCellSize = numerator / denominator;
+    if (!Number.isFinite(rawCellSize)) {
+      return;
+    }
+    const cellSize = Math.max(14, rawCellSize);
     page.style.setProperty('--hex-cell-size', `${cellSize}px`);
   }
 
