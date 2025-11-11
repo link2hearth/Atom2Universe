@@ -12,9 +12,9 @@
   const DEFAULT_CONFIG = Object.freeze({
     imageCount: 100,
     difficulties: Object.freeze({
-      small: Object.freeze({ size: 4, shuffle: Object.freeze({ min: 32, max: 64 }), gachaTickets: 5 }),
-      medium: Object.freeze({ size: 5, shuffle: Object.freeze({ min: 48, max: 96 }), gachaTickets: 10 }),
-      large: Object.freeze({ size: 6, shuffle: Object.freeze({ min: 64, max: 128 }), gachaTickets: 15 })
+      small: Object.freeze({ size: 3, shuffle: Object.freeze({ min: 32, max: 64 }), gachaTickets: 5 }),
+      medium: Object.freeze({ size: 4, shuffle: Object.freeze({ min: 48, max: 96 }), gachaTickets: 10 }),
+      large: Object.freeze({ size: 5, shuffle: Object.freeze({ min: 64, max: 128 }), gachaTickets: 15 })
     })
   });
 
