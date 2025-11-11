@@ -1104,7 +1104,8 @@
         const ticketLabel = typeof formatTicketLabel === 'function'
           ? formatTicketLabel(granted)
           : `${formatInteger(granted)} tickets`;
-        const message = translate('scripts.arcade.quantum2048.rewardToast', 'ObjectX reward: {tickets}', {
+        const message = translate('scripts.arcade.quantum2048.rewardToast', 'ObjectX reward: {reward}', {
+          reward: ticketLabel,
           tickets: ticketLabel
         });
         if (typeof showToast === 'function' && message) {
