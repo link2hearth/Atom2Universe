@@ -1,7 +1,10 @@
 {
   "ticketCost": 1,
   "bonusImages": {
-    "folder": "Assets/Image/Gacha"
+    "folder": "Assets/Image/Gacha",
+    "optionalDropRate": 0.01,
+    "permanentDropRate": 0.005,
+    "secondaryDropRate": 0.005
   },
   "rarities": [
     {
