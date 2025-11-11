@@ -1161,7 +1161,13 @@ function applySpecialCardOverlayContent(card) {
   if (!card) {
     return;
   }
-  const overlayType = card.type === 'image' ? 'image' : 'card';
+  const rawDisplayMode = typeof card.displayMode === 'string' ? card.displayMode.toLowerCase() : '';
+  const useFullscreenLayout = card.type === 'image'
+    || rawDisplayMode === 'image'
+    || rawDisplayMode === 'fullscreen';
+  const overlayType = useFullscreenLayout ? 'image' : 'card';
+  const isActualImage = card.type === 'image';
+  const isImageLayout = overlayType === 'image';
   if (elements.gachaCardOverlay) {
     elements.gachaCardOverlay.dataset.overlayType = overlayType;
   }
@@ -1199,31 +1205,42 @@ function applySpecialCardOverlayContent(card) {
     elements.gachaCardOverlayImage.alt = card.label;
   }
   if (elements.gachaCardOverlayTitle) {
-    const isImage = overlayType === 'image';
     const titleKey = card.isNew
-      ? (isImage ? 'scripts.gacha.images.overlay.newTitle' : 'scripts.gacha.cards.overlay.newTitle')
-      : (isImage ? 'scripts.gacha.images.overlay.duplicateTitle' : 'scripts.gacha.cards.overlay.duplicateTitle');
+      ? (isImageLayout
+        ? (isActualImage ? 'scripts.gacha.images.overlay.newTitle' : 'scripts.gacha.cards.overlay.newTitle')
+        : 'scripts.gacha.cards.overlay.newTitle')
+      : (isImageLayout
+        ? (isActualImage ? 'scripts.gacha.images.overlay.duplicateTitle' : 'scripts.gacha.cards.overlay.duplicateTitle')
+        : 'scripts.gacha.cards.overlay.duplicateTitle');
     const fallback = card.isNew
-      ? (isImage ? 'Image bonus obtenue !' : 'Carte spéciale obtenue !')
-      : (isImage ? 'Image bonus retrouvée !' : 'Carte spéciale retrouvée !');
+      ? (isImageLayout
+        ? (isActualImage ? 'Image bonus obtenue !' : 'Carte spéciale obtenue !')
+        : 'Carte spéciale obtenue !')
+      : (isImageLayout
+        ? (isActualImage ? 'Image bonus retrouvée !' : 'Carte spéciale retrouvée !')
+        : 'Carte spéciale retrouvée !');
     elements.gachaCardOverlayTitle.textContent = translateOrDefault(titleKey, fallback, { card: card.label });
-    elements.gachaCardOverlayTitle.hidden = isImage;
-    elements.gachaCardOverlayTitle.setAttribute('aria-hidden', isImage ? 'true' : 'false');
+    elements.gachaCardOverlayTitle.hidden = isImageLayout;
+    elements.gachaCardOverlayTitle.setAttribute('aria-hidden', isImageLayout ? 'true' : 'false');
   }
   if (elements.gachaCardOverlayHint) {
-    const isImage = overlayType === 'image';
-    const hintKey = isImage ? 'scripts.gacha.images.overlay.hint' : 'scripts.gacha.cards.overlay.hint';
-    const hintFallback = isImage
-      ? 'Touchez la croix pour refermer l’image.'
+    const hintKey = isImageLayout
+      ? (isActualImage ? 'scripts.gacha.images.overlay.hint' : 'scripts.gacha.cards.overlay.hint')
+      : 'scripts.gacha.cards.overlay.hint';
+    const hintFallback = isImageLayout
+      ? (isActualImage ? 'Touchez la croix pour refermer l’image.' : 'Touchez la croix pour revenir au jeu.')
       : 'Touchez la croix pour revenir au jeu.';
     elements.gachaCardOverlayHint.textContent = translateOrDefault(hintKey, hintFallback);
-    elements.gachaCardOverlayHint.hidden = isImage;
-    elements.gachaCardOverlayHint.setAttribute('aria-hidden', isImage ? 'true' : 'false');
+    elements.gachaCardOverlayHint.hidden = isImageLayout;
+    elements.gachaCardOverlayHint.setAttribute('aria-hidden', isImageLayout ? 'true' : 'false');
   }
   if (elements.gachaCardOverlayClose) {
-    const isImage = overlayType === 'image';
-    const closeKey = isImage ? 'scripts.gacha.images.overlay.close' : 'scripts.gacha.cards.overlay.close';
-    const closeFallback = isImage ? 'Fermer l’image' : 'Fermer la carte';
+    const closeKey = isImageLayout
+      ? (isActualImage ? 'scripts.gacha.images.overlay.close' : 'scripts.gacha.cards.overlay.close')
+      : 'scripts.gacha.cards.overlay.close';
+    const closeFallback = isImageLayout
+      ? (isActualImage ? 'Fermer l’image' : 'Fermer la carte')
+      : 'Fermer la carte';
     const closeLabel = translateOrDefault(closeKey, closeFallback);
     elements.gachaCardOverlayClose.setAttribute('aria-label', closeLabel);
     elements.gachaCardOverlayClose.setAttribute('title', closeLabel);
@@ -1346,6 +1363,7 @@ function showSpecialCardFromCollection(cardId, type = 'card') {
     return;
   }
   normalized.isNew = false;
+  normalized.displayMode = 'fullscreen';
   specialCardOverlayState.queue = [];
   openSpecialCardOverlay(normalized);
 }
