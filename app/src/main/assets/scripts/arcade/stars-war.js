@@ -1671,6 +1671,17 @@
     scriptedSequence: SCRIPTED_WAVE_SEQUENCE.slice()
   };
 
+  const uiState = {
+    language: (resolveLanguageCode && (resolveLanguageCode() || '')) || '',
+    scoreText: '',
+    timeText: '',
+    waveText: '',
+    difficultyText: '',
+    livesKey: '',
+    powerupOrder: [],
+    powerupEntries: new Map()
+  };
+
   const player = {
     x: CANVAS_WIDTH / 2,
     y: CANVAS_HEIGHT * 0.8,
@@ -1740,10 +1751,18 @@
     'index.sections.starsWar.status.heart': { en: 'Heart recovered!', fr: 'Cœur récupéré !' },
     'index.sections.starsWar.status.shield': { en: 'Shield absorbed the hit.', fr: 'Bouclier absorbé.' },
     'index.sections.starsWar.status.damage': { en: 'Hit! Hull at {hp} HP.', fr: 'Touché ! PV restants : {hp}' },
+    'index.sections.starsWar.status.paused': { en: 'Mission paused.', fr: 'Mission en pause.' },
+    'index.sections.starsWar.status.resumed': { en: 'Mission resumed.', fr: 'Mission reprise.' },
     'index.sections.starsWar.overlay.gameOver.title': { en: 'Mission failed', fr: 'Mission échouée' },
     'index.sections.starsWar.overlay.gameOver.message': { en: 'Time: {time} · Score: {score}', fr: 'Durée : {time} · Score : {score}' },
     'index.sections.starsWar.overlay.gameOver.reward': { en: 'Reward: +{count} gacha ticket{suffix}', fr: 'Récompense : +{count} ticket{suffix} gacha' },
-    'index.sections.starsWar.overlay.retry': { en: 'Retry', fr: 'Rejouer' }
+    'index.sections.starsWar.overlay.retry': { en: 'Retry', fr: 'Rejouer' },
+    'index.sections.starsWar.overlay.pause.title': { en: 'Paused', fr: 'Pause' },
+    'index.sections.starsWar.overlay.pause.message': {
+      en: 'Game paused. Tap resume to continue the mission.',
+      fr: 'Partie en pause. Appuyez sur Reprendre pour continuer la mission.'
+    },
+    'index.sections.starsWar.overlay.pause.action': { en: 'Resume mission', fr: 'Reprendre la mission' }
   });
 
   function resolveLanguageCode() {
@@ -3274,6 +3293,35 @@
     }
   }
 
+  function arraysShallowEqual(a, b) {
+    if (a === b) {
+      return true;
+    }
+    if (!Array.isArray(a) || !Array.isArray(b) || a.length !== b.length) {
+      return false;
+    }
+    for (let i = 0; i < a.length; i += 1) {
+      if (a[i] !== b[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function getPowerupProgress(id, entry) {
+    if (!entry || entry.expiresAt === Infinity) {
+      return 1;
+    }
+    const definition = POWERUP_DEFS[id] || {};
+    const duration = Number(definition.duration) || 0;
+    if (duration <= 0) {
+      return 1;
+    }
+    const remaining = Math.max(0, entry.expiresAt - state.elapsed);
+    const progress = 1 - remaining / duration;
+    return Math.min(1, Math.max(0, progress));
+  }
+
   function updatePauseButtonState() {
     if (!elements.pauseButton) {
       return;
@@ -3308,60 +3356,99 @@
       button.textContent = label || (isPaused ? 'Resume' : 'Pause');
       button.dataset.pauseLang = currentLang || '';
       button.dataset.pauseActiveKey = activeKey || '';
+      const ariaLabel = button.textContent || (isPaused ? 'Resume' : 'Pause');
+      if (ariaLabel) {
+        button.setAttribute('aria-label', ariaLabel);
+      }
     }
   }
 
   function updateUi() {
+    const currentLang = resolveLanguageCode();
+    const normalizedLang = currentLang || '';
+    if (uiState.language !== normalizedLang) {
+      uiState.language = normalizedLang;
+      uiState.powerupOrder = [];
+      uiState.powerupEntries.clear();
+    }
     updatePauseButtonState();
     if (elements.scoreValue) {
-      elements.scoreValue.textContent = formatNumber(state.score);
+      const scoreText = formatNumber(state.score);
+      if (uiState.scoreText !== scoreText) {
+        elements.scoreValue.textContent = scoreText;
+        uiState.scoreText = scoreText;
+      }
     }
     if (elements.timeValue) {
-      elements.timeValue.textContent = formatTime(state.elapsed);
+      const timeText = formatTime(state.elapsed);
+      if (uiState.timeText !== timeText) {
+        elements.timeValue.textContent = timeText;
+        uiState.timeText = timeText;
+      }
     }
     if (elements.waveValue) {
-      elements.waveValue.textContent = state.wave.toString();
+      const waveText = state.wave.toString();
+      if (uiState.waveText !== waveText) {
+        elements.waveValue.textContent = waveText;
+        uiState.waveText = waveText;
+      }
     }
     if (elements.difficultyValue) {
-      elements.difficultyValue.textContent = state.difficulty.toFixed(1);
+      const difficultyText = state.difficulty.toFixed(1);
+      if (uiState.difficultyText !== difficultyText) {
+        elements.difficultyValue.textContent = difficultyText;
+        uiState.difficultyText = difficultyText;
+      }
     }
     if (elements.livesContainer) {
-      const fragments = document.createDocumentFragment();
-      for (let i = 0; i < PLAYER_MAX_HP; i += 1) {
-        const life = document.createElement('span');
-        life.className = 'stars-war__life';
-        life.setAttribute('aria-hidden', 'true');
-        const icon = createPowerupIconElement('heart', 26);
-        if (i < player.hp) {
-          life.classList.add('stars-war__life--full');
-        } else {
-          life.classList.add('stars-war__life--empty');
+      const livesKey = `${player.hp}|${player.shieldCharges}`;
+      if (uiState.livesKey !== livesKey) {
+        uiState.livesKey = livesKey;
+        const fragments = document.createDocumentFragment();
+        for (let i = 0; i < PLAYER_MAX_HP; i += 1) {
+          const life = document.createElement('span');
+          life.className = 'stars-war__life';
+          life.setAttribute('aria-hidden', 'true');
+          const icon = createPowerupIconElement('heart', 26);
+          if (i < player.hp) {
+            life.classList.add('stars-war__life--full');
+          } else {
+            life.classList.add('stars-war__life--empty');
+          }
+          life.appendChild(icon);
+          fragments.appendChild(life);
         }
-        life.appendChild(icon);
-        fragments.appendChild(life);
-      }
-      if (player.shieldCharges > 0) {
-        const shield = document.createElement('span');
-        shield.className = 'stars-war__life stars-war__life--shield';
-        shield.setAttribute('aria-hidden', 'true');
-        const icon = createPowerupIconElement('shield', 28);
-        shield.appendChild(icon);
-        if (player.shieldCharges > 1) {
-          const count = document.createElement('span');
-          count.className = 'stars-war__life-count';
-          count.textContent = `×${player.shieldCharges}`;
-          shield.appendChild(count);
+        if (player.shieldCharges > 0) {
+          const shield = document.createElement('span');
+          shield.className = 'stars-war__life stars-war__life--shield';
+          shield.setAttribute('aria-hidden', 'true');
+          const icon = createPowerupIconElement('shield', 28);
+          shield.appendChild(icon);
+          if (player.shieldCharges > 1) {
+            const count = document.createElement('span');
+            count.className = 'stars-war__life-count';
+            count.textContent = `×${player.shieldCharges}`;
+            shield.appendChild(count);
+          }
+          fragments.appendChild(shield);
         }
-        fragments.appendChild(shield);
+        elements.livesContainer.innerHTML = '';
+        elements.livesContainer.appendChild(fragments);
       }
-      elements.livesContainer.innerHTML = '';
-      elements.livesContainer.appendChild(fragments);
     }
     if (elements.powerupList) {
-      elements.powerupList.innerHTML = '';
-      Object.keys(state.powerups)
-        .filter(id => id !== 'shield')
-        .forEach(id => {
+      const powerupIds = Object.keys(state.powerups)
+        .filter(id => id !== 'shield' && state.powerups[id]);
+      const order = powerupIds.slice();
+      const hasShield = player.shieldCharges > 0;
+      if (hasShield) {
+        order.push('shield');
+      }
+      if (!arraysShallowEqual(uiState.powerupOrder, order)) {
+        elements.powerupList.innerHTML = '';
+        uiState.powerupOrder = order.slice();
+        uiState.powerupEntries.clear();
+        powerupIds.forEach(id => {
           const entry = state.powerups[id];
           if (!entry) {
             return;
@@ -3378,30 +3465,83 @@
           }
           label.textContent = translate(labelKey || id);
           li.appendChild(label);
+          let progressEl = null;
+          let progressValue = 1;
           if (entry.expiresAt !== Infinity) {
-            const remaining = Math.max(0, entry.expiresAt - state.elapsed);
-            const duration = POWERUP_DEFS[id]?.duration || 1;
-            const progress = 1 - remaining / duration;
-            const bar = document.createElement('span');
-            bar.className = 'stars-war__powerup-progress';
-            bar.style.setProperty('--progress', Math.min(1, Math.max(0, progress)).toString());
-            li.appendChild(bar);
+            progressEl = document.createElement('span');
+            progressEl.className = 'stars-war__powerup-progress';
+            progressValue = getPowerupProgress(id, entry);
+            progressEl.style.setProperty('--progress', progressValue.toString());
+            li.appendChild(progressEl);
           }
           elements.powerupList.appendChild(li);
+          uiState.powerupEntries.set(id, {
+            element: li,
+            label,
+            progress: progressEl,
+            progressValue
+          });
         });
-      if (player.shieldCharges > 0) {
-        const li = document.createElement('li');
-        li.className = 'stars-war__powerup-item';
-        const label = document.createElement('span');
-        label.className = 'stars-war__powerup-label';
-        label.dataset.i18n = POWERUP_LABEL_KEYS.shield;
-        label.textContent = translate(POWERUP_LABEL_KEYS.shield);
-        const count = document.createElement('span');
-        count.className = 'stars-war__powerup-count';
-        count.textContent = `×${player.shieldCharges}`;
-        li.appendChild(label);
-        li.appendChild(count);
-        elements.powerupList.appendChild(li);
+        if (hasShield) {
+          const li = document.createElement('li');
+          li.className = 'stars-war__powerup-item';
+          const label = document.createElement('span');
+          label.className = 'stars-war__powerup-label';
+          label.dataset.i18n = POWERUP_LABEL_KEYS.shield;
+          label.textContent = translate(POWERUP_LABEL_KEYS.shield);
+          const count = document.createElement('span');
+          count.className = 'stars-war__powerup-count';
+          const countText = `×${player.shieldCharges}`;
+          count.textContent = countText;
+          li.appendChild(label);
+          li.appendChild(count);
+          elements.powerupList.appendChild(li);
+          uiState.powerupEntries.set('shield', {
+            element: li,
+            label,
+            count,
+            countText
+          });
+        }
+      } else {
+        powerupIds.forEach(id => {
+          const entry = state.powerups[id];
+          const uiEntry = uiState.powerupEntries.get(id);
+          if (!uiEntry) {
+            return;
+          }
+          const labelKey = POWERUP_LABEL_KEYS[id];
+          if (labelKey) {
+            uiEntry.label.dataset.i18n = labelKey;
+          } else {
+            delete uiEntry.label.dataset.i18n;
+          }
+          const labelText = translate(labelKey || id);
+          if (uiEntry.label.textContent !== labelText) {
+            uiEntry.label.textContent = labelText;
+          }
+          if (uiEntry.progress) {
+            const progress = getPowerupProgress(id, entry);
+            if (!Number.isFinite(uiEntry.progressValue) || Math.abs(progress - uiEntry.progressValue) > 0.01) {
+              uiEntry.progress.style.setProperty('--progress', progress.toString());
+              uiEntry.progressValue = progress;
+            }
+          }
+        });
+        if (hasShield) {
+          const uiEntry = uiState.powerupEntries.get('shield');
+          if (uiEntry) {
+            const labelText = translate(POWERUP_LABEL_KEYS.shield);
+            if (uiEntry.label.textContent !== labelText) {
+              uiEntry.label.textContent = labelText;
+            }
+            const nextCount = `×${player.shieldCharges}`;
+            if (uiEntry.countText !== nextCount) {
+              uiEntry.countText = nextCount;
+              uiEntry.count.textContent = nextCount;
+            }
+          }
+        }
       }
     }
   }
@@ -3731,7 +3871,18 @@
     state.paused = true;
     state.overlayMode = 'paused';
     state.lastTimestamp = 0;
+    showOverlay(
+      translate('index.sections.starsWar.overlay.pause.title'),
+      translate('index.sections.starsWar.overlay.pause.message'),
+      translate('index.sections.starsWar.overlay.pause.action'),
+      {
+        titleKey: 'index.sections.starsWar.overlay.pause.title',
+        messageKey: 'index.sections.starsWar.overlay.pause.message',
+        primaryKey: 'index.sections.starsWar.overlay.pause.action'
+      }
+    );
     updatePauseButtonState();
+    announceStatus('index.sections.starsWar.status.paused');
   }
 
   function resumeRun() {
@@ -3739,6 +3890,7 @@
       return;
     }
     startRun();
+    announceStatus('index.sections.starsWar.status.resumed');
   }
 
   function loop(timestamp) {
@@ -3844,6 +3996,8 @@
       elements.overlayButton.addEventListener('click', () => {
         if (state.overlayMode === 'ready' || state.gameOver) {
           restartRun({ preserveSeed: false });
+        } else if (state.overlayMode === 'paused' && state.paused && !state.gameOver) {
+          resumeRun();
         }
       });
     }
