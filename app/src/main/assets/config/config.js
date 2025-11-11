@@ -1265,6 +1265,13 @@ const GAME_CONFIG = {
     spawnChancePerSecond: {
       perClick: 0.01,
       perSecond: 0.01
+    },
+    /**
+     * Récolte automatique des frénésies sur l’écran principal.
+     * - delaySeconds : temps laissé au joueur avant activation automatique.
+     */
+    autoCollect: {
+      delaySeconds: 1
     }
   },
 
