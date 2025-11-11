@@ -1586,6 +1586,11 @@
             "message": "Durée : {time} · Score : {score}",
             "reward": "Récompense : +{count} ticket{suffix} gacha"
           },
+          "pause": {
+            "title": "Pause",
+            "message": "Partie en pause. Appuyez sur « Reprendre » pour continuer la mission.",
+            "action": "Reprendre la mission"
+          },
           "retry": "Rejouer"
         },
         "powerups": {
@@ -1600,7 +1605,9 @@
           "heart": "Cœur récupéré !",
           "powerup": "Bonus activé : {powerup}",
           "shield": "Bouclier absorbé.",
-          "damage": "Touché ! PV restants : {hp}"
+          "damage": "Touché ! PV restants : {hp}",
+          "paused": "Mission en pause.",
+          "resumed": "Mission reprise."
         }
       },
       "metaux": {

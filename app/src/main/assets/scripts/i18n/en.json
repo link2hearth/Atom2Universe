@@ -1655,6 +1655,11 @@
             "message": "Time: {time} · Score: {score}",
             "reward": "Reward: +{count} gacha ticket{suffix}"
           },
+          "pause": {
+            "title": "Paused",
+            "message": "Game paused. Tap resume to continue the mission.",
+            "action": "Resume mission"
+          },
           "retry": "Retry"
         },
         "powerups": {
@@ -1669,7 +1674,9 @@
           "heart": "Heart recovered!",
           "powerup": "Power-up equipped: {powerup}",
           "shield": "Shield absorbed the hit.",
-          "damage": "Hit! Hull at {hp} HP."
+          "damage": "Hit! Hull at {hp} HP.",
+          "paused": "Mission paused.",
+          "resumed": "Mission resumed."
         }
       },
       "metaux": {
