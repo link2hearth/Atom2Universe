@@ -1127,7 +1127,11 @@
           "moves": "Moves",
           "time": "Time"
         },
-        "board": "Taquin board"
+        "board": "Taquin board",
+        "preview": {
+          "title": "Reference image",
+          "imageAlt": "Full picture preview used for the Taquin puzzle"
+        }
       },
       "sokoban": {
         "aria": "Sokoban mini-game: push every crate onto its target.",

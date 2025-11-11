@@ -1127,7 +1127,11 @@
           "moves": "Coups",
           "time": "Temps"
         },
-        "board": "Grille du Taquin"
+        "board": "Grille du Taquin",
+        "preview": {
+          "title": "Image originale",
+          "imageAlt": "Aperçu complet de l’image du Taquin"
+        }
       },
       "sokoban": {
         "aria": "Mini-jeu Sokoban : poussez toutes les caisses sur les cibles.",

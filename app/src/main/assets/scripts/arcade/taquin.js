@@ -25,7 +25,9 @@
     newButton: document.getElementById('taquinNewButton'),
     restartButton: document.getElementById('taquinRestartButton'),
     modeButtons: Array.from(document.querySelectorAll('[data-taquin-size]')),
-    message: document.getElementById('taquinMessage')
+    message: document.getElementById('taquinMessage'),
+    preview: document.getElementById('taquinPreview'),
+    previewImage: document.getElementById('taquinPreviewImage')
   };
 
   if (!elements.board) {
@@ -353,6 +355,25 @@
     return randomInt(1, count);
   }
 
+  function updatePreviewImage(imageUrl) {
+    if (!elements.previewImage) {
+      return;
+    }
+    if (typeof imageUrl !== 'string' || imageUrl.length === 0) {
+      elements.previewImage.removeAttribute('src');
+      if (elements.preview) {
+        elements.preview.hidden = true;
+        elements.preview.setAttribute('aria-hidden', 'true');
+      }
+      return;
+    }
+    elements.previewImage.src = imageUrl;
+    if (elements.preview) {
+      elements.preview.hidden = false;
+      elements.preview.setAttribute('aria-hidden', 'false');
+    }
+  }
+
   function updateBoardBackground() {
     if (!elements.board) {
       return;
@@ -360,10 +381,12 @@
     const index = Number(state.imageIndex) || 0;
     if (!Number.isFinite(index) || index <= 0) {
       elements.board.style.removeProperty('--taquin-image');
+      updatePreviewImage(null);
       return;
     }
     const url = getImageUrl(index);
     elements.board.style.setProperty('--taquin-image', `url("${url}")`);
+    updatePreviewImage(url);
   }
 
   function renderBoard() {
@@ -403,6 +426,13 @@
       label.className = 'taquin__tile-label';
       label.textContent = String(value);
       button.appendChild(label);
+
+      const tileRow = Math.floor(index / size);
+      const tileCol = index % size;
+      const solvedPosition = getSolvedPosition(value, size);
+      const isCorrectPosition = tileRow === solvedPosition.row && tileCol === solvedPosition.col;
+      button.classList.toggle('taquin__tile--correct', isCorrectPosition);
+      button.dataset.taquinCorrect = isCorrectPosition ? 'true' : 'false';
 
       if (imageUrl) {
         button.classList.add('taquin__tile--with-image');
