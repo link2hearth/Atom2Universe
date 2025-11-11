@@ -18,13 +18,7 @@
 
   const GAME_MODES = Object.freeze({
     AI: 'ai',
-    LOCAL: 'local',
-    PUZZLE: 'puzzle'
-  });
-
-  const PUZZLE_TYPES = Object.freeze({
-    MATE_IN_ONE: 'mateInOne',
-    MATE_IN_TWO: 'mateInTwo'
+    LOCAL: 'local'
   });
 
   const PLAYERS = Object.freeze({
@@ -73,13 +67,6 @@
     maxHistory: 256
   });
 
-  const DEFAULT_PUZZLE_CONFIG = Object.freeze({
-    mateInOneSearchDepth: 2,
-    mateInTwoSearchDepth: 4,
-    generationAttempts: 200,
-    simulationMaxMoves: 50
-  });
-
   const MAX_BOARD_SIZE = 19;
   const EMPTY = 0;
 
@@ -104,17 +91,6 @@
     winner: null,
     winningLine: null,
     lastMove: null,
-    puzzle: {
-      active: false,
-      type: PUZZLE_TYPES.MATE_IN_ONE,
-      initialBoard: null,
-      toPlay: PLAYERS.BLACK,
-      solutionMoves: [],
-      stage: 'idle',
-      attempts: 0,
-      hintCells: [],
-      generating: false
-    },
     autosaveTimerId: null,
     languageListenerAttached: false,
     languageHandler: null
@@ -185,17 +161,7 @@
       });
     }
 
-    const puzzle = { ...DEFAULT_PUZZLE_CONFIG };
-    if (raw.puzzle && typeof raw.puzzle === 'object') {
-      Object.keys(puzzle).forEach(key => {
-        const value = Number(raw.puzzle[key]);
-        if (Number.isFinite(value) && value > 0) {
-          puzzle[key] = value;
-        }
-      });
-    }
-
-    return Object.freeze({ board, renju, evaluation, search, puzzle });
+    return Object.freeze({ board, renju, evaluation, search });
   }
 
   function onReady(callback) {
@@ -233,19 +199,12 @@
     const modeSelect = document.getElementById('gomokuModeSelect');
     const sizeSelect = document.getElementById('gomokuSizeSelect');
     const difficultySelect = document.getElementById('gomokuDifficultySelect');
-    const puzzleTypeSelect = document.getElementById('gomokuPuzzleTypeSelect');
     const status = document.getElementById('gomokuStatus');
     const ruleTag = document.getElementById('gomokuRuleTag');
     const modeTag = document.getElementById('gomokuModeTag');
     const difficultyTag = document.getElementById('gomokuDifficultyTag');
     const undoButton = document.getElementById('gomokuUndoButton');
     const restartButton = document.getElementById('gomokuRestartButton');
-    const newPuzzleButton = document.getElementById('gomokuNewPuzzleButton');
-    const hintButton = document.getElementById('gomokuHintButton');
-    const puzzleInfo = document.getElementById('gomokuPuzzleInfo');
-    const puzzleSideLabel = document.getElementById('gomokuPuzzleSideLabel');
-    const puzzleGoalLabel = document.getElementById('gomokuPuzzleGoalLabel');
-    const puzzleAttempts = document.getElementById('gomokuPuzzleAttempts');
     const toast = document.getElementById('gomokuToast');
 
     if (!board || !ruleSelect || !modeSelect || !sizeSelect || !difficultySelect) {
@@ -259,19 +218,12 @@
       modeSelect,
       sizeSelect,
       difficultySelect,
-      puzzleTypeSelect,
       status,
       ruleTag,
       modeTag,
       difficultyTag,
       undoButton,
       restartButton,
-      newPuzzleButton,
-      hintButton,
-      puzzleInfo,
-      puzzleSideLabel,
-      puzzleGoalLabel,
-      puzzleAttempts,
       toast
     };
   }
@@ -284,7 +236,6 @@
       updateControlLabels();
       updateTags();
       updateStatus();
-      updatePuzzleInfo();
     };
     window.addEventListener('i18n:languagechange', handler);
     state.languageListenerAttached = true;
@@ -292,8 +243,8 @@
   }
 
   function attachEvents() {
-    const { ruleSelect, modeSelect, sizeSelect, difficultySelect, puzzleTypeSelect } = state.elements;
-    const { undoButton, restartButton, newPuzzleButton, hintButton, board } = state.elements;
+    const { ruleSelect, modeSelect, sizeSelect, difficultySelect } = state.elements;
+    const { undoButton, restartButton, board } = state.elements;
 
     ruleSelect.addEventListener('change', () => setRuleSet(ruleSelect.value));
     modeSelect.addEventListener('change', () => setMode(modeSelect.value));
@@ -305,21 +256,11 @@
     });
     difficultySelect.addEventListener('change', () => setDifficulty(difficultySelect.value));
 
-    if (puzzleTypeSelect) {
-      puzzleTypeSelect.addEventListener('change', () => setPuzzleType(puzzleTypeSelect.value));
-    }
-
     if (undoButton) {
       undoButton.addEventListener('click', handleUndo);
     }
     if (restartButton) {
       restartButton.addEventListener('click', () => resetGame(false));
-    }
-    if (newPuzzleButton) {
-      newPuzzleButton.addEventListener('click', generatePuzzle);
-    }
-    if (hintButton) {
-      hintButton.addEventListener('click', providePuzzleHint);
     }
 
     board.addEventListener('click', handleBoardClick);
@@ -364,34 +305,17 @@
     state.winner = null;
     state.winningLine = null;
     state.lastMove = null;
-    state.puzzle = {
-      active: state.mode === GAME_MODES.PUZZLE,
-      type: state.puzzle.type || PUZZLE_TYPES.MATE_IN_ONE,
-      initialBoard: null,
-      toPlay: PLAYERS.BLACK,
-      solutionMoves: [],
-      stage: 'idle',
-      attempts: 0,
-      hintCells: [],
-      generating: false
-    };
     renderBoard();
     updateTags();
     updateStatus();
-    updatePuzzleInfo();
     saveSettings();
-    if (!fromInitialization && state.mode === GAME_MODES.PUZZLE) {
-      generatePuzzle();
-    } else {
-      scheduleAutosave();
-    }
+    scheduleAutosave();
   }
 
   function renderEverything() {
     renderBoard();
     updateTags();
     updateStatus();
-    updatePuzzleInfo();
     updateControlsVisibility();
   }
 
@@ -425,19 +349,6 @@
     if (state.winningLine && state.winningLine.some(pos => pos.row === row && pos.col === col)) {
       cellElement.classList.add('gomoku__cell--win');
     }
-    if (state.puzzle && Array.isArray(state.puzzle.hintCells)) {
-      const hinted = state.puzzle.hintCells.some(pos => pos.row === row && pos.col === col);
-      if (hinted) {
-        cellElement.classList.add('gomoku__cell--hint');
-      }
-    }
-  }
-
-  function clearHints() {
-    if (!state.puzzle) {
-      return;
-    }
-    state.puzzle.hintCells = [];
   }
 
   function updateTags() {
@@ -480,33 +391,6 @@
       return;
     }
 
-    if (state.mode === GAME_MODES.PUZZLE) {
-      if (state.puzzle.generating) {
-        status.textContent = translate('index.sections.gomoku.status.puzzleGenerating', 'Génération du puzzle…', null);
-        return;
-      }
-      if (state.puzzle.stage === 'solved') {
-        status.textContent = translate('index.sections.gomoku.status.puzzleSolved', 'Bravo, puzzle résolu !', null);
-        return;
-      }
-      if (state.puzzle.stage === 'awaitingSecondMove') {
-        const key = state.currentPlayer === PLAYERS.BLACK
-          ? 'index.sections.gomoku.status.puzzleSecondMoveBlack'
-          : 'index.sections.gomoku.status.puzzleSecondMoveWhite';
-        const fallback = state.currentPlayer === PLAYERS.BLACK
-          ? 'Terminez le puzzle : les noirs doivent trouver le coup final.'
-          : 'Terminez le puzzle : les blancs doivent trouver le coup final.';
-        status.textContent = translate(key, fallback, null);
-        return;
-      }
-      const key = state.currentPlayer === PLAYERS.BLACK
-        ? 'index.sections.gomoku.status.puzzleTurnBlack'
-        : 'index.sections.gomoku.status.puzzleTurnWhite';
-      const fallback = state.currentPlayer === PLAYERS.BLACK ? 'Puzzle : aux noirs de jouer.' : 'Puzzle : aux blancs de jouer.';
-      status.textContent = translate(key, fallback, null);
-      return;
-    }
-
     if (state.awaitingAI) {
       status.textContent = translate('index.sections.gomoku.status.aiThinking', 'L’IA réfléchit…', null);
       return;
@@ -519,76 +403,19 @@
     status.textContent = translate(key, fallback, null);
   }
 
-  function updatePuzzleInfo() {
-    if (!state.elements || !state.elements.puzzleInfo) {
-      return;
-    }
-    const {
-      puzzleInfo,
-      puzzleSideLabel,
-      puzzleGoalLabel,
-      puzzleAttempts,
-      newPuzzleButton,
-      hintButton,
-      difficultyTag
-    } = state.elements;
-
-    const isPuzzleMode = state.mode === GAME_MODES.PUZZLE;
-    puzzleInfo.hidden = !isPuzzleMode || !state.puzzle || !state.puzzle.initialBoard;
-
-    if (newPuzzleButton) {
-      newPuzzleButton.style.display = isPuzzleMode ? '' : 'none';
-      newPuzzleButton.disabled = isPuzzleMode && state.puzzle ? state.puzzle.generating : false;
-    }
-    if (hintButton) {
-      hintButton.style.display = isPuzzleMode ? '' : 'none';
-      hintButton.disabled = isPuzzleMode && state.puzzle ? state.puzzle.generating : false;
-    }
-    if (difficultyTag) {
-      difficultyTag.hidden = isPuzzleMode || state.mode !== GAME_MODES.AI;
-    }
-
-    if (!isPuzzleMode || !state.puzzle) {
-      return;
-    }
-
-    if (puzzleSideLabel) {
-      puzzleSideLabel.textContent = translate(PLAYER_LABEL_KEY[state.puzzle.toPlay], state.puzzle.toPlay === PLAYERS.BLACK ? 'Noir' : 'Blanc', null);
-    }
-    if (puzzleGoalLabel) {
-      const key = state.puzzle.type === PUZZLE_TYPES.MATE_IN_TWO
-        ? 'index.sections.gomoku.puzzle.goalMateInTwo'
-        : 'index.sections.gomoku.puzzle.goalMateInOne';
-      const fallback = state.puzzle.type === PUZZLE_TYPES.MATE_IN_TWO ? 'Gagnez en deux coups.' : 'Gagnez en un coup.';
-      puzzleGoalLabel.textContent = translate(key, fallback, null);
-    }
-    if (puzzleAttempts) {
-      puzzleAttempts.textContent = String(state.puzzle.attempts);
-    }
-  }
-
   function updateControlsVisibility() {
     if (!state.elements) {
       return;
     }
-    const { difficultySelect, puzzleTypeSelect, newPuzzleButton, hintButton } = state.elements;
+    const { difficultySelect } = state.elements;
     if (difficultySelect) {
       difficultySelect.parentElement.style.display = state.mode === GAME_MODES.AI ? '' : 'none';
-    }
-    if (puzzleTypeSelect) {
-      puzzleTypeSelect.parentElement.style.display = state.mode === GAME_MODES.PUZZLE ? '' : 'none';
-    }
-    if (newPuzzleButton) {
-      newPuzzleButton.style.display = state.mode === GAME_MODES.PUZZLE ? '' : 'none';
-    }
-    if (hintButton) {
-      hintButton.style.display = state.mode === GAME_MODES.PUZZLE ? '' : 'none';
     }
     if (state.elements.difficultyTag) {
       state.elements.difficultyTag.hidden = state.mode !== GAME_MODES.AI;
     }
     if (state.elements.undoButton) {
-      state.elements.undoButton.disabled = state.mode === GAME_MODES.PUZZLE;
+      state.elements.undoButton.disabled = false;
     }
   }
   function handleBoardClick(event) {
@@ -596,9 +423,6 @@
       return;
     }
     if (state.mode === GAME_MODES.AI && state.awaitingAI) {
-      return;
-    }
-    if (state.mode === GAME_MODES.PUZZLE && state.puzzle.generating) {
       return;
     }
     const target = event.target;
@@ -629,10 +453,6 @@
     if (state.mode === GAME_MODES.AI && player !== PLAYERS.BLACK) {
       return;
     }
-    if (state.mode === GAME_MODES.PUZZLE) {
-      performPuzzleMove(row, col);
-      return;
-    }
     const success = executeMove(row, col, player, { isAI: false });
     if (success && state.mode === GAME_MODES.AI && !state.gameOver) {
       scheduleAiMove();
@@ -653,7 +473,6 @@
     state.lastMove = move;
     state.currentPlayer = invertPlayer(player);
     state.winningLine = null;
-    clearHints();
 
     const winnerInfo = determineWinner(nextBoard, move);
     if (winnerInfo) {
@@ -670,7 +489,6 @@
 
     renderBoard();
     updateStatus();
-    updatePuzzleInfo();
     scheduleAutosave();
     return true;
   }
@@ -713,6 +531,14 @@
       illegal: patterns.overline || patterns.openThrees >= 2 || patterns.fours >= 2,
       details: patterns
     };
+  }
+
+  function isLegalMoveForRuleSet(board, move, ruleSet) {
+    if (ruleSet === RULE_SET.RENJU && move.player === PLAYERS.BLACK) {
+      const foul = checkRenjuFoul(board, move);
+      return !(foul && foul.illegal);
+    }
+    return true;
   }
 
   function analyzeRenjuPatterns(board, move) {
@@ -888,93 +714,8 @@
     executeMove(result.move.row, result.move.col, state.currentPlayer, { isAI: true });
   }
 
-  function performPuzzleMove(row, col) {
-    if (!state.puzzle) {
-      return;
-    }
-    const startingBoard = state.puzzle.initialBoard || state.board;
-    const player = state.currentPlayer;
-    const beforeMoveBoard = state.board;
-    const success = executeMove(row, col, player, { isAI: false });
-    if (!success) {
-      return;
-    }
-
-    if (state.gameOver) {
-      state.puzzle.stage = 'solved';
-      updateStatus();
-      updatePuzzleInfo();
-      return;
-    }
-
-    if (state.puzzle.type === PUZZLE_TYPES.MATE_IN_ONE) {
-      if (!state.gameOver) {
-        state.puzzle.attempts += 1;
-        state.board = startingBoard;
-        state.currentPlayer = state.puzzle.toPlay;
-        state.gameOver = false;
-        state.winner = null;
-        state.winningLine = null;
-        state.lastMove = null;
-        clearHints();
-        renderBoard();
-        updateStatus(translate('index.sections.gomoku.status.puzzleFailed', 'Ce coup ne gagne pas. Réessayez.', null));
-        updatePuzzleInfo();
-        scheduleAutosave();
-      }
-      return;
-    }
-
-    if (state.puzzle.stage !== 'awaitingSecondMove') {
-      const opponent = state.currentPlayer;
-      const response = Search.findBestMove(state.board, opponent, {
-        maxDepth: CONFIG.puzzle.mateInTwoSearchDepth,
-        maxTimeMs: Math.min(CONFIG.search.medium.maxTimeMs, 1000),
-        iterative: true,
-        moveOrdering: true
-      }, {
-        ruleSet: state.ruleSet,
-        evaluationWeights: CONFIG.evaluation,
-        exactFiveWhite: CONFIG.renju.exactFiveForWhite,
-        neighborRadius: CONFIG.board.neighborRadius,
-        deadline: nowMs() + CONFIG.search.medium.maxTimeMs,
-        moveOrdering: true,
-        transposition: new Map()
-      });
-      if (response && response.move) {
-        executeMove(response.move.row, response.move.col, opponent, { isAI: true });
-      }
-      state.puzzle.stage = 'awaitingSecondMove';
-      clearHints();
-      updateStatus();
-      updatePuzzleInfo();
-      return;
-    }
-
-    if (state.gameOver) {
-      state.puzzle.stage = 'solved';
-      updateStatus();
-      updatePuzzleInfo();
-      return;
-    }
-
-    state.puzzle.attempts += 1;
-    state.board = startingBoard;
-    state.currentPlayer = state.puzzle.toPlay;
-    state.gameOver = false;
-    state.winner = null;
-    state.winningLine = null;
-    state.lastMove = null;
-    state.puzzle.stage = 'awaitingFirstMove';
-    clearHints();
-    renderBoard();
-    updateStatus(translate('index.sections.gomoku.status.puzzleFailed', 'Ce coup ne gagne pas. Réessayez.', null));
-    updatePuzzleInfo();
-    scheduleAutosave();
-  }
-
   function handleUndo() {
-    if (!state.board || state.mode === GAME_MODES.PUZZLE) {
+    if (!state.board) {
       return;
     }
     if (state.board.moveHistory.length === 0) {
@@ -1008,11 +749,7 @@
     }
     updateTags();
     saveSettings();
-    if (state.mode === GAME_MODES.PUZZLE) {
-      generatePuzzle();
-    } else {
-      resetGame(false);
-    }
+    resetGame(false);
   }
 
   function setMode(value) {
@@ -1028,22 +765,7 @@
     }
     updateControlsVisibility();
     saveSettings();
-    if (value === GAME_MODES.PUZZLE) {
-      state.puzzle = {
-        active: true,
-        type: state.puzzle.type || PUZZLE_TYPES.MATE_IN_ONE,
-        initialBoard: null,
-        toPlay: PLAYERS.BLACK,
-        solutionMoves: [],
-        stage: 'awaitingFirstMove',
-        attempts: 0,
-        hintCells: [],
-        generating: false
-      };
-      generatePuzzle();
-    } else {
-      resetGame(false);
-    }
+    resetGame(false);
   }
 
   function setBoardSize(value) {
@@ -1072,87 +794,6 @@
     saveSettings();
   }
 
-  function setPuzzleType(value) {
-    if (!Object.values(PUZZLE_TYPES).includes(value)) {
-      value = PUZZLE_TYPES.MATE_IN_ONE;
-    }
-    if (state.puzzle) {
-      state.puzzle.type = value;
-    }
-    if (state.elements && state.elements.puzzleTypeSelect) {
-      state.elements.puzzleTypeSelect.value = value;
-    }
-    updatePuzzleInfo();
-    saveSettings();
-    if (state.mode === GAME_MODES.PUZZLE) {
-      generatePuzzle();
-    }
-  }
-
-  function providePuzzleHint() {
-    if (!state.puzzle || !state.puzzle.initialBoard) {
-      return;
-    }
-    const board = state.board;
-    const candidates = generateCandidateMoves(board, state.currentPlayer, CONFIG.board.neighborRadius);
-    const scored = candidates
-      .map(pos => ({
-        row: pos.row,
-        col: pos.col,
-        score: scoreMoveHeuristic(board, pos.row, pos.col, state.currentPlayer, CONFIG.evaluation)
-      }))
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 3);
-    state.puzzle.hintCells = scored;
-    renderBoard();
-    showToast(translate('index.sections.gomoku.status.hint', 'Quelques coups prometteurs sont mis en évidence.', null));
-  }
-
-  function generatePuzzle() {
-    if (!state.puzzle) {
-      return;
-    }
-    state.puzzle.generating = true;
-    state.puzzle.initialBoard = null;
-    state.puzzle.solutionMoves = [];
-    state.puzzle.hintCells = [];
-    state.puzzle.stage = 'awaitingFirstMove';
-    state.puzzle.attempts = 0;
-    clearHints();
-    updateStatus();
-    updatePuzzleInfo();
-
-    window.setTimeout(() => {
-      PuzzleGenerator.generate({
-        boardSize: state.boardSize,
-        ruleSet: state.ruleSet,
-        type: state.puzzle.type,
-        config: CONFIG
-      }).then(puzzle => {
-        if (!puzzle) {
-          state.puzzle.generating = false;
-          updateStatus(translate('index.sections.gomoku.status.puzzleGenerationFailed', 'Aucun puzzle trouvé. Réessayez.', null));
-          return;
-        }
-        state.board = puzzle.board;
-        state.currentPlayer = puzzle.toPlay;
-        state.puzzle.initialBoard = puzzle.board;
-        state.puzzle.solutionMoves = puzzle.solutionMoves;
-        state.puzzle.toPlay = puzzle.toPlay;
-        state.puzzle.stage = puzzle.type === PUZZLE_TYPES.MATE_IN_TWO ? 'awaitingFirstMove' : 'idle';
-        state.puzzle.generating = false;
-        state.gameOver = false;
-        state.winner = null;
-        state.winningLine = null;
-        state.lastMove = null;
-        renderBoard();
-        updateStatus();
-        updatePuzzleInfo();
-        scheduleAutosave();
-      });
-    }, 30);
-  }
-
   function restoreSettings() {
     try {
       const storage = window.localStorage;
@@ -1179,17 +820,11 @@
       if (parsed.difficulty && CONFIG.search[parsed.difficulty]) {
         state.difficulty = parsed.difficulty;
       }
-      if (parsed.puzzleType && Object.values(PUZZLE_TYPES).includes(parsed.puzzleType)) {
-        state.puzzle.type = parsed.puzzleType;
-      }
       if (state.elements) {
         state.elements.ruleSelect.value = state.ruleSet;
         state.elements.modeSelect.value = state.mode;
         state.elements.sizeSelect.value = String(state.boardSize);
         state.elements.difficultySelect.value = state.difficulty;
-        if (state.elements.puzzleTypeSelect) {
-          state.elements.puzzleTypeSelect.value = state.puzzle.type;
-        }
       }
       updateControlsVisibility();
     } catch (error) {
@@ -1207,8 +842,7 @@
         ruleSet: state.ruleSet,
         mode: state.mode,
         boardSize: state.boardSize,
-        difficulty: state.difficulty,
-        puzzleType: state.puzzle ? state.puzzle.type : PUZZLE_TYPES.MATE_IN_ONE
+        difficulty: state.difficulty
       };
       storage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(payload));
     } catch (error) {
@@ -1256,19 +890,7 @@
       ruleSet: state.ruleSet,
       mode: state.mode,
       difficulty: state.difficulty,
-      moveHistory: state.board ? state.board.moveHistory.map(move => ({ row: move.row, col: move.col, player: move.player })) : [],
-      puzzle: state.mode === GAME_MODES.PUZZLE && state.puzzle && state.puzzle.initialBoard
-        ? {
-          type: state.puzzle.type,
-          toPlay: state.puzzle.toPlay,
-          attempts: state.puzzle.attempts,
-          stage: state.puzzle.stage,
-          initialBoard: Array.from(state.puzzle.initialBoard.cells),
-          solutionMoves: state.puzzle.solutionMoves
-            ? state.puzzle.solutionMoves.map(move => ({ row: move.row, col: move.col, player: move.player }))
-            : []
-        }
-        : null
+      moveHistory: state.board ? state.board.moveHistory.map(move => ({ row: move.row, col: move.col, player: move.player })) : []
     };
   }
 
@@ -1297,43 +919,11 @@
       state.winner = null;
       state.winningLine = null;
       state.lastMove = board.moveHistory.length > 0 ? board.moveHistory[board.moveHistory.length - 1] : null;
-      state.puzzle = {
-        active: state.mode === GAME_MODES.PUZZLE,
-        type: PUZZLE_TYPES.MATE_IN_ONE,
-        initialBoard: null,
-        toPlay: PLAYERS.BLACK,
-        solutionMoves: [],
-        stage: 'awaitingFirstMove',
-        attempts: 0,
-        hintCells: [],
-        generating: false
-      };
-      if (payload.puzzle && state.mode === GAME_MODES.PUZZLE) {
-        const puzzleBoard = Board.fromData(size, payload.puzzle.initialBoard, []);
-        if (puzzleBoard) {
-          state.puzzle = {
-            active: true,
-            type: Object.values(PUZZLE_TYPES).includes(payload.puzzle.type) ? payload.puzzle.type : PUZZLE_TYPES.MATE_IN_ONE,
-            initialBoard: puzzleBoard,
-            toPlay: payload.puzzle.toPlay === PLAYERS.WHITE ? PLAYERS.WHITE : PLAYERS.BLACK,
-            solutionMoves: Array.isArray(payload.puzzle.solutionMoves)
-              ? payload.puzzle.solutionMoves.map(move => new Move(move.row, move.col, move.player))
-              : [],
-            stage: typeof payload.puzzle.stage === 'string' ? payload.puzzle.stage : 'awaitingFirstMove',
-            attempts: Number.isInteger(payload.puzzle.attempts) ? payload.puzzle.attempts : 0,
-            hintCells: [],
-            generating: false
-          };
-        }
-      }
       if (state.elements) {
         state.elements.ruleSelect.value = state.ruleSet;
         state.elements.modeSelect.value = state.mode;
         state.elements.sizeSelect.value = String(state.boardSize);
         state.elements.difficultySelect.value = state.difficulty;
-        if (state.elements.puzzleTypeSelect) {
-          state.elements.puzzleTypeSelect.value = state.puzzle.type;
-        }
       }
       buildBoard();
       renderEverything();
@@ -1361,7 +951,6 @@
     }
     updateTags();
     updateStatus();
-    updatePuzzleInfo();
   }
 
   function showToast(message) {
@@ -1408,9 +997,6 @@
   function getModeLabelKey(mode) {
     if (mode === GAME_MODES.LOCAL) {
       return 'index.sections.gomoku.controls.mode.local';
-    }
-    if (mode === GAME_MODES.PUZZLE) {
-      return 'index.sections.gomoku.controls.mode.puzzle';
     }
     return 'index.sections.gomoku.controls.mode.ai';
   }
@@ -1774,9 +1360,69 @@
     }
     return score;
   }
+  function findImmediateWinningMove(board, player, context, candidates) {
+    const ruleSet = context.ruleSet || state.ruleSet;
+    for (let i = 0; i < candidates.length; i += 1) {
+      const pos = candidates[i];
+      const move = new Move(pos.row, pos.col, player);
+      if (!isLegalMoveForRuleSet(board, move, ruleSet)) {
+        continue;
+      }
+      const nextBoard = board.applyMove(move);
+      const winner = determineWinner(nextBoard, move);
+      if (winner && winner.player === player) {
+        return move;
+      }
+    }
+    return null;
+  }
+
+  function findImmediateBlockMove(board, player, context) {
+    const ruleSet = context.ruleSet || state.ruleSet;
+    const opponent = invertPlayer(player);
+    const neighborRadius = context.neighborRadius || CONFIG.board.neighborRadius;
+    const opponentCandidates = generateCandidateMoves(board, opponent, neighborRadius);
+    const weights = context.evaluationWeights || CONFIG.evaluation;
+    let bestMove = null;
+    let bestScore = Number.NEGATIVE_INFINITY;
+    for (let i = 0; i < opponentCandidates.length; i += 1) {
+      const pos = opponentCandidates[i];
+      const opponentMove = new Move(pos.row, pos.col, opponent);
+      if (!isLegalMoveForRuleSet(board, opponentMove, ruleSet)) {
+        continue;
+      }
+      const nextBoard = board.applyMove(opponentMove);
+      const winner = determineWinner(nextBoard, opponentMove);
+      if (!winner || winner.player !== opponent) {
+        continue;
+      }
+      const blockingMove = new Move(pos.row, pos.col, player);
+      if (!isLegalMoveForRuleSet(board, blockingMove, ruleSet)) {
+        continue;
+      }
+      const score = scoreMoveHeuristic(board, pos.row, pos.col, player, weights);
+      if (!bestMove || score > bestScore) {
+        bestMove = blockingMove;
+        bestScore = score;
+      }
+    }
+    return bestMove;
+  }
+
   const Search = {
     findEasyMove(board, player, context) {
-      const candidates = generateCandidateMoves(board, player, context.neighborRadius || CONFIG.board.neighborRadius);
+      const neighborRadius = context.neighborRadius || CONFIG.board.neighborRadius;
+      const candidates = generateCandidateMoves(board, player, neighborRadius);
+      const immediateWin = findImmediateWinningMove(board, player, context, candidates);
+      if (immediateWin) {
+        const resultingBoard = board.applyMove(immediateWin);
+        return { move: immediateWin, value: evaluateBoard(resultingBoard, player, context) };
+      }
+      const urgentBlock = findImmediateBlockMove(board, player, context);
+      if (urgentBlock) {
+        const resultingBoard = board.applyMove(urgentBlock);
+        return { move: urgentBlock, value: evaluateBoard(resultingBoard, player, context) };
+      }
       let bestMove = null;
       let bestScore = Number.NEGATIVE_INFINITY;
       for (let i = 0; i < candidates.length; i += 1) {
@@ -1803,6 +1449,16 @@
       const candidates = generateCandidateMoves(board, player, neighborRadius);
       if (candidates.length === 0) {
         return { move: null, value: 0 };
+      }
+      const immediateWin = findImmediateWinningMove(board, player, context, candidates);
+      if (immediateWin) {
+        return { move: immediateWin, value: Number.POSITIVE_INFINITY, depth: 1 };
+      }
+      const urgentBlock = findImmediateBlockMove(board, player, context);
+      if (urgentBlock) {
+        const resultingBoard = board.applyMove(urgentBlock);
+        const value = evaluateBoard(resultingBoard, player, context);
+        return { move: urgentBlock, value, depth: 1 };
       }
       let bestMove = null;
       let bestValue = Number.NEGATIVE_INFINITY;
@@ -1914,183 +1570,12 @@
 
     return { move: bestMove, value: bestValue };
   }
-  const PuzzleGenerator = {
-    generate(options) {
-      return new Promise(resolve => {
-        const attemptLimit = Math.max(10, CONFIG.puzzle.generationAttempts || 200);
-        const boardSize = clampBoardSize(options.boardSize, CONFIG.board.defaultSize);
-        const ruleSet = options.ruleSet;
-        const type = options.type;
-        const startTime = nowMs();
-        for (let attempt = 0; attempt < attemptLimit; attempt += 1) {
-          const simulation = simulateRandomGame(boardSize, ruleSet, CONFIG.puzzle.simulationMaxMoves || 50);
-          if (!simulation) {
-            continue;
-          }
-          if (type === PUZZLE_TYPES.MATE_IN_TWO) {
-            const puzzle = buildMateInTwoPuzzle(simulation.board, simulation.currentPlayer, ruleSet);
-            if (puzzle) {
-              resolve(puzzle);
-              return;
-            }
-          } else {
-            const puzzle = buildMateInOnePuzzle(simulation.board, simulation.currentPlayer, ruleSet);
-            if (puzzle) {
-              resolve(puzzle);
-              return;
-            }
-          }
-          if (nowMs() - startTime > 800) {
-            break;
-          }
-        }
-        resolve(null);
-      });
-    }
-  };
-
-  function simulateRandomGame(size, ruleSet, maxMoves) {
-    let board = Board.empty(size);
-    let currentPlayer = PLAYERS.BLACK;
-    for (let moveIndex = 0; moveIndex < maxMoves; moveIndex += 1) {
-      const candidates = generateCandidateMoves(board, currentPlayer, CONFIG.board.neighborRadius);
-      if (candidates.length === 0) {
-        break;
-      }
-      const shuffled = shuffleArray(candidates.slice());
-      let played = false;
-      for (let i = 0; i < shuffled.length; i += 1) {
-        const pos = shuffled[i];
-        const move = new Move(pos.row, pos.col, currentPlayer);
-        if (ruleSet === RULE_SET.RENJU && currentPlayer === PLAYERS.BLACK) {
-          const foul = checkRenjuFoul(board, move);
-          if (foul && foul.illegal) {
-            continue;
-          }
-        }
-        board = board.applyMove(move);
-        const winner = determineWinner(board, move);
-        if (winner) {
-          // Roll back winner move to keep position just before win
-          board = board.rewind().board;
-          return { board, currentPlayer, lastMove: null };
-        }
-        currentPlayer = invertPlayer(currentPlayer);
-        played = true;
-        break;
-      }
-      if (!played) {
-        break;
-      }
-    }
-    return { board, currentPlayer, lastMove: null };
-  }
-
-  function buildMateInOnePuzzle(board, player, ruleSet) {
-    const candidates = generateCandidateMoves(board, player, CONFIG.board.neighborRadius);
-    const winningMoves = [];
-    for (let i = 0; i < candidates.length; i += 1) {
-      const pos = candidates[i];
-      const move = new Move(pos.row, pos.col, player);
-      if (ruleSet === RULE_SET.RENJU && player === PLAYERS.BLACK) {
-        const foul = checkRenjuFoul(board, move);
-        if (foul && foul.illegal) {
-          continue;
-        }
-      }
-      const nextBoard = board.applyMove(move);
-      const winner = determineWinner(nextBoard, move);
-      if (winner && winner.player === player) {
-        winningMoves.push(move);
-      }
-    }
-    if (winningMoves.length === 0) {
-      return null;
-    }
-    return {
-      board,
-      toPlay: player,
-      solutionMoves: winningMoves,
-      type: PUZZLE_TYPES.MATE_IN_ONE
-    };
-  }
-
-  function buildMateInTwoPuzzle(board, player, ruleSet) {
-    const candidates = generateCandidateMoves(board, player, CONFIG.board.neighborRadius);
-    const searchSettings = {
-      maxDepth: CONFIG.puzzle.mateInTwoSearchDepth || 4,
-      maxTimeMs: CONFIG.search.medium.maxTimeMs,
-      iterative: true,
-      moveOrdering: true
-    };
-    const contextBase = {
-      ruleSet,
-      evaluationWeights: CONFIG.evaluation,
-      exactFiveWhite: CONFIG.renju.exactFiveForWhite,
-      neighborRadius: CONFIG.board.neighborRadius,
-      moveOrdering: true,
-      transposition: new Map()
-    };
-    for (let i = 0; i < candidates.length; i += 1) {
-      const pos = candidates[i];
-      const firstMove = new Move(pos.row, pos.col, player);
-      if (ruleSet === RULE_SET.RENJU && player === PLAYERS.BLACK) {
-        const foul = checkRenjuFoul(board, firstMove);
-        if (foul && foul.illegal) {
-          continue;
-        }
-      }
-      const afterFirst = board.applyMove(firstMove);
-      const immediateWin = determineWinner(afterFirst, firstMove);
-      if (immediateWin && immediateWin.player === player) {
-        continue;
-      }
-      const opponent = invertPlayer(player);
-      const contextOpponent = {
-        ...contextBase,
-        deadline: nowMs() + 600,
-        transposition: new Map()
-      };
-      const response = Search.findBestMove(afterFirst, opponent, searchSettings, contextOpponent);
-      if (!response || !response.move) {
-        continue;
-      }
-      const afterResponse = afterFirst.applyMove(response.move);
-      const contextPlayer = {
-        ...contextBase,
-        deadline: nowMs() + 600,
-        transposition: new Map()
-      };
-      const winningReply = Search.findBestMove(afterResponse, player, searchSettings, contextPlayer);
-      if (winningReply && winningReply.value === Number.POSITIVE_INFINITY && winningReply.move) {
-        return {
-          board,
-          toPlay: player,
-          solutionMoves: [firstMove, response.move, winningReply.move],
-          type: PUZZLE_TYPES.MATE_IN_TWO
-        };
-      }
-    }
-    return null;
-  }
-
-  function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i -= 1) {
-      const j = Math.floor(Math.random() * (i + 1));
-      const tmp = array[i];
-      array[i] = array[j];
-      array[j] = tmp;
-    }
-    return array;
-  }
-
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
       Board,
       Move,
       evaluateBoard,
-      Search,
-      PuzzleGenerator
+      Search
     };
   }
 })();

@@ -1247,7 +1247,7 @@
             class="arcade-hub-card__description"
             id="arcadeCardDescription-gomoku"
             data-i18n="index.sections.arcadeHub.cards.gomoku.description"
-          >Affrontez l’IA ou un ami autour d’un plateau 15×15 et relevez les puzzles tactiques du Gomoku classique ou du Renju.</p>
+          >Affrontez l’IA ou un ami autour d’un plateau 15×15 avec une IA plus affûtée en mode Gomoku ou Renju.</p>
         </article>
         <article
           class="arcade-hub-card"
@@ -2880,7 +2880,6 @@
             >
               <option value="ai" data-i18n="index.sections.gomoku.controls.mode.ai">Contre l’IA</option>
               <option value="local" data-i18n="index.sections.gomoku.controls.mode.local">2 joueurs</option>
-              <option value="puzzle" data-i18n="index.sections.gomoku.controls.mode.puzzle">Puzzles</option>
             </select>
           </div>
           <div class="gomoku__group">
@@ -2917,22 +2916,6 @@
               <option value="hard" data-i18n="index.sections.gomoku.controls.difficulty.hard">Difficile</option>
             </select>
           </div>
-          <div class="gomoku__group gomoku__group--grow" data-gomoku-mode="puzzle">
-            <label
-              class="gomoku__label"
-              for="gomokuPuzzleTypeSelect"
-              data-i18n="index.sections.gomoku.controls.puzzleType.label"
-            >Type de puzzle</label>
-            <select
-              class="gomoku__select"
-              id="gomokuPuzzleTypeSelect"
-              data-i18n="aria-label:index.sections.gomoku.controls.puzzleType.aria"
-              aria-label="Choisir le type de puzzle"
-            >
-              <option value="mateInOne" data-i18n="index.sections.gomoku.controls.puzzleType.mateInOne">Gagnez en 1 coup</option>
-              <option value="mateInTwo" data-i18n="index.sections.gomoku.controls.puzzleType.mateInTwo">Gagnez en 2 coups</option>
-            </select>
-          </div>
         </header>
         <div class="gomoku__status">
           <p
@@ -2961,28 +2944,6 @@
             id="gomokuRestartButton"
             data-i18n="index.sections.gomoku.actions.restart"
           >Recommencer</button>
-          <button
-            type="button"
-            class="gomoku__button gomoku__button--primary"
-            id="gomokuNewPuzzleButton"
-            data-gomoku-mode="puzzle"
-            data-i18n="index.sections.gomoku.actions.newPuzzle"
-          >Nouveau puzzle</button>
-          <button
-            type="button"
-            class="gomoku__button"
-            id="gomokuHintButton"
-            data-gomoku-mode="puzzle"
-            data-i18n="index.sections.gomoku.actions.hint"
-          >Indice</button>
-        </div>
-        <div class="gomoku__puzzle-info" id="gomokuPuzzleInfo" hidden>
-          <span data-i18n="index.sections.gomoku.puzzle.toPlay">Côté à jouer&nbsp;:</span>
-          <strong id="gomokuPuzzleSideLabel">Noir</strong>
-          <span data-i18n="index.sections.gomoku.puzzle.goal">Objectif&nbsp;:</span>
-          <strong id="gomokuPuzzleGoalLabel">Gagnez en 1 coup</strong>
-          <span data-i18n="index.sections.gomoku.puzzle.attempts">Essais&nbsp;:</span>
-          <strong id="gomokuPuzzleAttempts">0</strong>
         </div>
         <div class="gomoku__board-wrapper">
           <div

@@ -210,28 +210,6 @@
   gap: 0.75rem;
 }
 
-.gomoku__button--primary {
-  background: rgba(255, 214, 0, 0.15);
-  border-color: rgba(255, 214, 0, 0.55);
-  color: #ffe7a0;
-}
-
-.gomoku__button--primary:hover {
-  background: rgba(255, 214, 0, 0.25);
-}
-
-.gomoku__puzzle-info {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem 1rem;
-  font-size: 0.9rem;
-  color: rgba(255, 245, 232, 0.85);
-}
-
-.gomoku__puzzle-info strong {
-  font-weight: 600;
-}
-
 .gomoku__toast {
   position: fixed;
   left: 50%;
