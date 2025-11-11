@@ -431,6 +431,46 @@
           class="arcade-hub-card"
           role="button"
           tabindex="0"
+          aria-label="Accéder au mini-jeu Hex"
+          aria-describedby="arcadeCardDescription-hex"
+          data-card-id="hex"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.hex.aria"
+          data-page-target="hex"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.hex.title"
+            >Hex</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-hex"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-hex"
+            data-i18n="index.sections.arcadeHub.cards.hex.description"
+          >Reliez les bords opposés sur une grille hexagonale 14×14 pour vaincre votre adversaire.</p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
           aria-label="Accéder au mini-jeu Taquin"
           aria-describedby="arcadeCardDescription-taquin"
           data-card-id="taquin"
@@ -2754,6 +2794,99 @@
             aria-colcount="8"
             aria-label="Plateau de Reversi"
             data-i18n="aria-label:index.sections.othello.board"
+          ></div>
+        </div>
+      </div>
+    </section>
+
+    <section
+      id="hex"
+      class="page page--hex"
+      data-page-group="arcade"
+      aria-label="Mini-jeu Hex"
+      data-i18n="aria-label:index.sections.hex.aria"
+      hidden
+    >
+      <div class="hex">
+        <header class="hex__header">
+          <h2 class="hex__title" data-i18n="index.sections.hex.title">Hex</h2>
+          <p class="hex__subtitle" data-i18n="index.sections.hex.subtitle">
+            Reliez les bords opposés d’une grille 14×14 pour décrocher des tickets gacha bonus.
+          </p>
+        </header>
+        <div
+          class="hex__controls"
+          role="group"
+          aria-label="Options de partie pour Hex"
+          data-i18n="aria-label:index.sections.hex.controls.groupAria"
+        >
+          <div class="hex__field">
+            <span class="hex__label" data-i18n="index.sections.hex.controls.mode.label">Mode</span>
+            <div class="hex__modes">
+              <button
+                type="button"
+                class="hex__mode-button"
+                data-mode="solo"
+                data-role="hexModeButton"
+                aria-pressed="true"
+                data-i18n="index.sections.hex.controls.mode.solo"
+              >1 joueur vs IA</button>
+              <button
+                type="button"
+                class="hex__mode-button"
+                data-mode="duo"
+                data-role="hexModeButton"
+                aria-pressed="false"
+                data-i18n="index.sections.hex.controls.mode.duo"
+              >2 joueurs</button>
+            </div>
+          </div>
+          <div class="hex__field">
+            <label class="hex__label" for="hexDifficulty" data-i18n="index.sections.hex.controls.difficulty.label">
+              Difficulté de l’IA
+            </label>
+            <select class="hex__select" id="hexDifficulty">
+              <option value="easy" data-i18n="index.sections.hex.controls.difficulty.easy">Facile</option>
+              <option value="medium" selected data-i18n="index.sections.hex.controls.difficulty.medium">Moyen</option>
+              <option value="hard" data-i18n="index.sections.hex.controls.difficulty.hard">Difficile</option>
+            </select>
+          </div>
+          <button
+            type="button"
+            class="hex__reset"
+            id="hexResetButton"
+            data-i18n="index.sections.hex.controls.reset"
+          >Nouvelle partie</button>
+        </div>
+        <div class="hex__status-panel">
+          <p
+            class="hex__status"
+            id="hexStatus"
+            role="status"
+            aria-live="polite"
+            data-i18n="index.sections.hex.status.readySolo"
+          >Hex : affrontez l’IA rouge.</p>
+          <p
+            class="hex__turn"
+            id="hexTurn"
+            data-i18n="index.sections.hex.turnIndicator"
+          >Prochain joueur : Joueur bleu</p>
+          <p
+            class="hex__reward"
+            id="hexReward"
+            hidden
+            data-i18n="index.sections.hex.reward.placeholder"
+          >Tickets gacha gagnés : 0</p>
+        </div>
+        <div class="hex__board-wrapper">
+          <div
+            class="hex__board"
+            id="hexBoard"
+            role="grid"
+            aria-rowcount="14"
+            aria-colcount="14"
+            aria-label="Plateau Hex 14 par 14"
+            data-i18n="aria-label:index.sections.hex.board"
           ></div>
         </div>
       </div>
@@ -6864,6 +6997,7 @@
   <script src="scripts/arcade/blackjack.js"></script>
   <script src="scripts/arcade/echecs.js"></script>
   <script src="scripts/arcade/othello.js"></script>
+  <script src="scripts/arcade/hex.js"></script>
   <script src="scripts/arcade/game-of-life.js"></script>
   <script src="scripts/arcade/quantum-2048.js"></script>
   <script src="scripts/arcade/lights-out.js"></script>

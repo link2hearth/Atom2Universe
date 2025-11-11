@@ -23,6 +23,7 @@
     'holdem',
     'dice',
     'blackjack',
+    'hex',
     'othello',
     'echecs'
   ];

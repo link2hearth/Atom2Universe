@@ -194,6 +194,7 @@ const FRENZY_AUTO_COLLECT_DELAY_MS = (() => {
     pipeTap: 'arcade.pipeTap',
     colorStack: 'arcade.colorStack',
     motocross: 'arcade.motocross',
+    hex: 'arcade.hex',
     twins: 'arcade.twins',
     sokoban: 'arcade.sokoban',
     taquin: 'arcade.taquin',
@@ -4131,6 +4132,7 @@ const ARCADE_GAME_IDS = Object.freeze([
   'pipeTap',
   'colorStack',
   'motocross',
+  'hex',
   'twins',
   'sokoban',
   'taquin',
@@ -6977,6 +6979,17 @@ function ensureMotocrossGame() {
   if (window.motocrossArcade && typeof window.motocrossArcade === 'object') {
     motocrossGame = window.motocrossArcade;
     return motocrossGame;
+  }
+  return null;
+}
+
+function ensureHexGame() {
+  if (hexGame && typeof hexGame === 'object') {
+    return hexGame;
+  }
+  if (window.hexArcade && typeof window.hexArcade === 'object') {
+    hexGame = window.hexArcade;
+    return hexGame;
   }
   return null;
 }
@@ -11937,6 +11950,7 @@ let pipeTapGame = null;
 let colorStackGame = null;
 let motocrossGame = null;
 let twinsGame = null;
+let hexGame = null;
 let apsCritPulseTimeoutId = null;
 
 const APS_CRIT_TIMER_EPSILON = 1e-3;
@@ -13641,6 +13655,9 @@ function showPage(pageId) {
   if (pageId === 'colorStack') {
     ensureColorStackGame();
   }
+  if (pageId === 'hex') {
+    ensureHexGame();
+  }
   if (pageId === 'sokoban') {
     ensureSokobanGame();
   }
@@ -13690,6 +13707,7 @@ function showPage(pageId) {
   document.body.classList.toggle('view-pipe-tap', pageId === 'pipeTap');
   document.body.classList.toggle('view-color-stack', pageId === 'colorStack');
   document.body.classList.toggle('view-motocross', pageId === 'motocross');
+  document.body.classList.toggle('view-hex', pageId === 'hex');
   document.body.classList.toggle('view-twins', pageId === 'twins');
   document.body.classList.toggle('view-sokoban', pageId === 'sokoban');
   document.body.classList.toggle('view-taquin', pageId === 'taquin');
@@ -13775,6 +13793,14 @@ function showPage(pageId) {
       colorStack.onEnter?.();
     } else {
       colorStack.onLeave?.();
+    }
+  }
+  const hex = ensureHexGame();
+  if (hex) {
+    if (pageId === 'hex') {
+      hex.onEnter?.();
+    } else {
+      hex.onLeave?.();
     }
   }
   const motocross = ensureMotocrossGame();
@@ -13896,6 +13922,10 @@ document.addEventListener('visibilitychange', () => {
     if (colorStack && activePage === 'colorStack') {
       colorStack.onLeave?.();
     }
+    const hex = ensureHexGame();
+    if (hex && activePage === 'hex') {
+      hex.onLeave?.();
+    }
     const motocross = ensureMotocrossGame();
     if (motocross && activePage === 'motocross') {
       motocross.onLeave?.();
@@ -13963,6 +13993,10 @@ document.addEventListener('visibilitychange', () => {
   if (activePage === 'colorStack') {
     const colorStack = ensureColorStackGame();
     colorStack?.onEnter?.();
+  }
+  if (activePage === 'hex') {
+    const hex = ensureHexGame();
+    hex?.onEnter?.();
   }
   if (activePage === 'motocross') {
     const motocross = ensureMotocrossGame();
