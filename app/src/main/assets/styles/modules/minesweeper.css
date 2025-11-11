@@ -34,11 +34,13 @@
   --minesweeper-cell-mine-color: #ff8173;
   --minesweeper-cell-detonated-background: linear-gradient(135deg, rgba(156, 32, 42, 0.92), rgba(232, 76, 64, 0.95));
   --minesweeper-cell-empty-color: rgba(255, 255, 255, 0.72);
-  --page-padding-x: clamp(0.75rem, 2.3vw, 1.35rem);
+  --page-padding-x: clamp(0.5rem, 2vw, 1.3rem);
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: clamp(1.5rem, 3vw, 3rem) var(--page-padding-x, clamp(1rem, 4vw, 3rem));
+  padding-left: max(var(--page-padding-x, 1rem), env(safe-area-inset-left));
+  padding-right: max(var(--page-padding-x, 1rem), env(safe-area-inset-right));
   min-height: 100vh;
   width: 100%;
 }
@@ -162,15 +164,15 @@ body.theme-aurora .page--minesweeper {
 }
 
 .minesweeper {
-  width: min(100%, 70rem);
-  max-width: 100%;
+  width: 100%;
+  max-width: 70rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   flex: 1 1 auto;
   gap: clamp(0.85rem, 2vw, 1.4rem);
-  padding: clamp(1rem, 2.8vw, 1.6rem) clamp(0.75rem, 2.6vw, 1.2rem);
+  padding: clamp(0.9rem, 2.4vw, 1.4rem) clamp(0.5rem, 2.4vw, 1.2rem);
   min-height: 0;
   margin: 0 auto;
   color: var(--minesweeper-surface-color, inherit);
@@ -264,6 +266,10 @@ body.theme-aurora .page--minesweeper {
   --minesweeper-gap: clamp(0.25rem, 0.9vw, 0.45rem);
   --minesweeper-padding: clamp(0.55rem, 1.4vw, 0.9rem);
   display: grid;
+  margin-left: auto;
+  margin-right: auto;
+  align-self: center;
+  justify-self: center;
   grid-template-columns: repeat(var(--minesweeper-columns), var(--minesweeper-cell-size));
   grid-template-rows: repeat(var(--minesweeper-rows), var(--minesweeper-cell-size));
   grid-auto-rows: var(--minesweeper-cell-size);
@@ -272,7 +278,7 @@ body.theme-aurora .page--minesweeper {
   border-radius: 16px;
   padding: var(--minesweeper-padding);
   border: 1px solid var(--minesweeper-board-border, rgba(255, 255, 255, 0.08));
-  width: auto;
+  width: min(100%, var(--minesweeper-board-width, 100%));
   height: auto;
   max-width: 100%;
   max-height: 100%;
@@ -282,6 +288,37 @@ body.theme-aurora .page--minesweeper {
   align-items: stretch;
   flex: 1 1 auto;
   margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .page--minesweeper {
+    --page-padding-x: clamp(0.4rem, 2.4vw, 0.9rem);
+  }
+
+  .minesweeper {
+    padding: clamp(0.75rem, 2.8vw, 1.2rem) clamp(0.35rem, 2.4vw, 0.9rem);
+  }
+
+  .minesweeper__board {
+    --minesweeper-gap: clamp(0.18rem, 1.4vw, 0.35rem);
+    --minesweeper-padding: clamp(0.35rem, 1.6vw, 0.7rem);
+    width: min(100%, var(--minesweeper-board-width, 100%));
+  }
+}
+
+@media (max-width: 480px) {
+  .page--minesweeper {
+    --page-padding-x: clamp(0.3rem, 3vw, 0.6rem);
+  }
+
+  .minesweeper {
+    padding: clamp(0.6rem, 3vw, 1rem) clamp(0.3rem, 3vw, 0.75rem);
+  }
+
+  .minesweeper__board {
+    --minesweeper-gap: clamp(0.14rem, 2.2vw, 0.28rem);
+    --minesweeper-padding: clamp(0.28rem, 2.2vw, 0.55rem);
+  }
 }
 
 .minesweeper__board[data-state='won'] {

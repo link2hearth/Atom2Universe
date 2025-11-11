@@ -9,7 +9,8 @@
     difficile: Object.freeze({ rows: 12, cols: 20, mines: 38 })
   });
 
-  const FIXED_CELL_SIZE = 42;
+  const DEFAULT_CELL_SIZE = 42;
+  const MIN_CELL_SIZE = 24;
 
   const ORIENTATION_MODE = Object.freeze({
     LANDSCAPE: 'landscape',
@@ -101,6 +102,7 @@
     const difficultySelect = document.getElementById('minesweeperDifficulty');
     const resetButton = document.getElementById('minesweeperReset');
     const containerElement = boardElement ? boardElement.closest('.minesweeper') : null;
+    const controlsElement = containerElement ? containerElement.querySelector('.minesweeper__controls') : null;
 
     if (!boardElement || !difficultySelect || !resetButton) {
       return;
@@ -121,7 +123,7 @@
       safeRemaining: 0,
       status: 'ready',
       armed: false,
-      cellSize: FIXED_CELL_SIZE,
+      cellSize: DEFAULT_CELL_SIZE,
       orientation: ORIENTATION_MODE.LANDSCAPE,
       difficultyKey: 'moyen'
     };
@@ -130,6 +132,8 @@
       listenersAttached: false,
       mediaQuery: null
     };
+
+    let resizeObserver = null;
 
     const boundOrientationHandler = () => {
       handleOrientationChange();
@@ -427,6 +431,132 @@
       };
     }
 
+    function parsePixelValue(value) {
+      if (typeof value !== 'string') {
+        return 0;
+      }
+      const numeric = Number.parseFloat(value);
+      if (!Number.isFinite(numeric)) {
+        return 0;
+      }
+      return numeric;
+    }
+
+    function updateResponsiveCellSize() {
+      if (!boardElement) {
+        return;
+      }
+
+      if (typeof window === 'undefined') {
+        gameState.cellSize = DEFAULT_CELL_SIZE;
+        boardElement.style.setProperty('--minesweeper-cell-size', `${gameState.cellSize}px`);
+        return;
+      }
+
+      const layout = getLayoutDimensions();
+      const columns = Math.max(1, Number(layout.columns) || 1);
+      const rows = Math.max(1, Number(layout.rows) || 1);
+
+      const boardStyles = window.getComputedStyle(boardElement);
+      const paddingLeft = parsePixelValue(boardStyles.paddingLeft);
+      const paddingRight = parsePixelValue(boardStyles.paddingRight);
+      const paddingTop = parsePixelValue(boardStyles.paddingTop);
+      const paddingBottom = parsePixelValue(boardStyles.paddingBottom);
+      const columnGap = parsePixelValue(boardStyles.columnGap || boardStyles.gap);
+      const rowGap = parsePixelValue(boardStyles.rowGap || boardStyles.gap);
+
+      let availableWidth = 0;
+      if (containerElement) {
+        availableWidth = containerElement.clientWidth;
+      }
+      if ((!availableWidth || !Number.isFinite(availableWidth)) && boardElement.parentElement) {
+        availableWidth = boardElement.parentElement.clientWidth;
+      }
+      if (window.innerWidth) {
+        availableWidth = Math.min(window.innerWidth, availableWidth || window.innerWidth);
+      }
+      if (!Number.isFinite(availableWidth) || availableWidth <= 0) {
+        availableWidth =
+          columns * DEFAULT_CELL_SIZE + Math.max(0, columns - 1) * columnGap + paddingLeft + paddingRight;
+      }
+
+      const widthBased =
+        (availableWidth - paddingLeft - paddingRight - Math.max(0, columns - 1) * columnGap) / columns;
+
+      let heightBased = Number.POSITIVE_INFINITY;
+      const viewportHeight = window.innerHeight || Number.POSITIVE_INFINITY;
+      if (Number.isFinite(viewportHeight)) {
+        let availableHeight = viewportHeight;
+        if (containerElement) {
+          const containerRect = containerElement.getBoundingClientRect();
+          if (containerRect && Number.isFinite(containerRect.top)) {
+            availableHeight -= containerRect.top;
+          }
+          const containerStyles = window.getComputedStyle(containerElement);
+          availableHeight -= parsePixelValue(containerStyles.paddingTop);
+          availableHeight -= parsePixelValue(containerStyles.paddingBottom);
+        }
+        if (controlsElement) {
+          const controlsRect = controlsElement.getBoundingClientRect();
+          if (controlsRect && Number.isFinite(controlsRect.height)) {
+            availableHeight -= controlsRect.height;
+          }
+          const controlsStyles = window.getComputedStyle(controlsElement);
+          availableHeight -= parsePixelValue(controlsStyles.marginTop);
+          availableHeight -= parsePixelValue(controlsStyles.marginBottom);
+        }
+        availableHeight -= 32;
+        if (availableHeight > 0) {
+          heightBased =
+            (availableHeight - paddingTop - paddingBottom - Math.max(0, rows - 1) * rowGap) / rows;
+        }
+      }
+
+      const candidates = [];
+      if (Number.isFinite(widthBased) && widthBased > 0) {
+        candidates.push(widthBased);
+      }
+      if (Number.isFinite(heightBased) && heightBased > 0) {
+        candidates.push(heightBased);
+      }
+      if (!candidates.length) {
+        candidates.push(DEFAULT_CELL_SIZE);
+      }
+
+      let nextCellSize = Math.min(...candidates);
+      if (!Number.isFinite(nextCellSize) || nextCellSize <= 0) {
+        nextCellSize = DEFAULT_CELL_SIZE;
+      }
+
+      nextCellSize = Math.floor(nextCellSize);
+
+      if (nextCellSize < MIN_CELL_SIZE) {
+        const widthLimit = Number.isFinite(widthBased) && widthBased > 0 ? Math.floor(widthBased) : Number.POSITIVE_INFINITY;
+        const heightLimit =
+          Number.isFinite(heightBased) && heightBased > 0 ? Math.floor(heightBased) : Number.POSITIVE_INFINITY;
+        const safeUpperBound = Math.min(widthLimit, heightLimit);
+        const preferredSize = Math.min(MIN_CELL_SIZE, safeUpperBound);
+        if (Number.isFinite(preferredSize) && preferredSize > 0) {
+          nextCellSize = Math.max(nextCellSize, preferredSize);
+        } else {
+          nextCellSize = MIN_CELL_SIZE;
+        }
+      }
+
+      nextCellSize = Math.max(1, nextCellSize);
+
+      gameState.cellSize = nextCellSize;
+      boardElement.style.setProperty('--minesweeper-cell-size', `${gameState.cellSize}px`);
+      const totalWidth =
+        layout.columns * gameState.cellSize +
+        Math.max(0, layout.columns - 1) * columnGap +
+        paddingLeft +
+        paddingRight;
+      if (Number.isFinite(totalWidth) && totalWidth > 0) {
+        boardElement.style.setProperty('--minesweeper-board-width', `${Math.round(totalWidth)}px`);
+      }
+    }
+
     function updateBoardLayoutMetrics() {
       if (!boardElement) {
         return;
@@ -457,6 +587,7 @@
       if (!boardElement || !gameState.grid.length) {
         return;
       }
+      updateResponsiveCellSize();
       updateBoardLayoutMetrics();
       for (let row = 0; row < gameState.rows; row += 1) {
         for (let col = 0; col < gameState.cols; col += 1) {
@@ -467,7 +598,6 @@
 
     function renderBoard() {
       boardElement.innerHTML = '';
-      boardElement.style.setProperty('--minesweeper-cell-size', `${gameState.cellSize}px`);
       boardElement.style.removeProperty('--minesweeper-board-width');
       boardElement.style.removeProperty('--minesweeper-board-height');
       boardElement.style.removeProperty('width');
@@ -509,7 +639,7 @@
       gameState.safeRemaining = rows * cols - mines;
       gameState.status = 'ready';
       gameState.armed = false;
-      gameState.cellSize = FIXED_CELL_SIZE;
+      gameState.cellSize = DEFAULT_CELL_SIZE;
       gameState.difficultyKey = presetKey;
       renderBoard();
       for (let row = 0; row < gameState.rows; row += 1) {
@@ -545,11 +675,12 @@
 
     function handleOrientationChange({ force = false } = {}) {
       const mode = computeOrientationMode();
-      if (!force && mode === gameState.orientation) {
-        return;
+      if (mode !== gameState.orientation) {
+        gameState.orientation = mode;
+        applyOrientationClass();
+      } else if (force) {
+        applyOrientationClass();
       }
-      gameState.orientation = mode;
-      applyOrientationClass();
       applyOrientationLayout();
     }
 
@@ -580,6 +711,24 @@
       }
       orientationState.listenersAttached = true;
       handleOrientationChange({ force: true });
+    }
+
+    function attachResizeObserver() {
+      if (!containerElement || typeof window === 'undefined') {
+        return;
+      }
+      if (resizeObserver || typeof window.ResizeObserver !== 'function') {
+        return;
+      }
+      try {
+        resizeObserver = new window.ResizeObserver(() => {
+          updateResponsiveCellSize();
+        });
+        resizeObserver.observe(containerElement);
+        updateResponsiveCellSize();
+      } catch (error) {
+        resizeObserver = null;
+      }
     }
 
     function getSafeZone(cell) {
@@ -995,6 +1144,7 @@
         difficultySelect.value = key;
       }
       initializeGrid(key);
+      handleOrientationChange({ force: true });
     }
 
     difficultySelect.addEventListener('change', () => {
@@ -1006,6 +1156,7 @@
     });
 
     attachOrientationListeners();
+    attachResizeObserver();
 
     const restored = restoreFromAutosave();
     if (!restored) {
