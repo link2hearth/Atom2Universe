@@ -483,6 +483,12 @@
             "description": "Flip your opponent's discs by surrounding them on an 8×8 board.",
             "cta": "Play"
           },
+          "hex": {
+            "aria": "Open the Hex mini-game",
+            "title": "Hex",
+            "description": "Connect opposite sides of the 14×14 hex board against the AI or a friend and earn gacha tickets based on the difficulty.",
+            "cta": "Strategize"
+          },
           "gameOfLife": {
             "aria": "Open the Game of Life mini-game",
             "title": "Game of Life",
@@ -718,6 +724,42 @@
           "ready": "Place the blocks, then press the result panel to run the test."
         },
         "cubeAria": "Block weighing {weight}"
+      },
+      "hex": {
+        "aria": "Hex mini-game",
+        "title": "Hex",
+        "subtitle": "Link opposite sides of the 14×14 board to claim bonus gacha tickets.",
+        "controls": {
+          "groupAria": "Game options for Hex",
+          "mode": {
+            "label": "Mode",
+            "solo": "1 player vs AI",
+            "duo": "2 players"
+          },
+          "difficulty": {
+            "label": "AI difficulty",
+            "easy": "Easy",
+            "medium": "Medium",
+            "hard": "Hard"
+          },
+          "reset": "New game"
+        },
+        "status": {
+          "readySolo": "Hex: challenge the red AI.",
+          "readyDuo": "Two-player mode: blue starts.",
+          "turn": "{player} to move.",
+          "aiThinking": "The AI is thinking…",
+          "invalid": "That cell is already occupied.",
+          "playerWin": "Victory! You connected the blue sides.",
+          "aiWin": "Defeat: the AI connected the red sides.",
+          "duoWin": "Victory for the {player}!",
+          "draw": "Board filled: draw."
+        },
+        "turnIndicator": "Next player: {player}",
+        "reward": {
+          "placeholder": "Gacha tickets earned: 0"
+        },
+        "board": "Hex board 14 by 14"
       },
       "othello": {
         "aria": "Reversi mini-game",
@@ -2393,6 +2435,35 @@
           "solved": "Solution found ✔︎",
           "noSolution": "No solution found (or the puzzle is invalid).",
           "cleared": "Grid cleared."
+        }
+      },
+      "hex": {
+        "players": {
+          "blue": "blue side",
+          "red": "red side",
+          "human": "blue player",
+          "ai": "red AI"
+        },
+        "status": {
+          "readySolo": "Hex: challenge the red AI.",
+          "readyDuo": "Two-player mode: blue starts.",
+          "turn": "{player} to move.",
+          "aiThinking": "The AI is thinking…",
+          "invalid": "That cell is already occupied.",
+          "playerWin": "Victory! You connected the blue sides.",
+          "aiWin": "Defeat: the AI connected the red sides.",
+          "duoWin": "Victory for the {player}!",
+          "draw": "Board filled: draw."
+        },
+        "reward": {
+          "gained": "Gacha tickets earned: {count}"
+        },
+        "turnIndicator": "Next player: {player}",
+        "cell": "Row {row}, column {column}: {content}",
+        "cellStates": {
+          "empty": "empty",
+          "blue": "blue piece",
+          "red": "red piece"
         }
       },
       "othello": {

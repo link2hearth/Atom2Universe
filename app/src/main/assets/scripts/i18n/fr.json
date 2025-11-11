@@ -483,6 +483,12 @@
             "description": "Retournez les pions de votre adversaire en les encerclant sur un plateau 8×8.",
             "cta": "Jouer"
           },
+          "hex": {
+            "aria": "Accéder au mini-jeu Hex",
+            "title": "Hex",
+            "description": "Reliez les bords opposés d’une grille hexagonale 14×14 contre l’IA ou un ami, et gagnez des tickets gacha selon la difficulté.",
+            "cta": "Stratégie"
+          },
           "gameOfLife": {
             "aria": "Accéder au mini-jeu Jeu de la vie",
             "title": "Jeu de la vie",
@@ -718,6 +724,42 @@
           "ready": "Disposez les blocs puis appuyez sur la zone de résultat pour lancer le test."
         },
         "cubeAria": "Bloc de poids {weight}"
+      },
+      "hex": {
+        "aria": "Mini-jeu Hex",
+        "title": "Hex",
+        "subtitle": "Reliez les bords opposés d’une grille 14×14 pour décrocher des tickets gacha bonus.",
+        "controls": {
+          "groupAria": "Options de partie pour Hex",
+          "mode": {
+            "label": "Mode",
+            "solo": "1 joueur vs IA",
+            "duo": "2 joueurs"
+          },
+          "difficulty": {
+            "label": "Difficulté de l’IA",
+            "easy": "Facile",
+            "medium": "Moyen",
+            "hard": "Difficile"
+          },
+          "reset": "Nouvelle partie"
+        },
+        "status": {
+          "readySolo": "Hex : affrontez l’IA rouge.",
+          "readyDuo": "Mode 2 joueurs : les bleus commencent.",
+          "turn": "Tour des {player}.",
+          "aiThinking": "L’IA réfléchit…",
+          "invalid": "Cette case est déjà occupée.",
+          "playerWin": "Victoire ! Vous reliez les bords bleus.",
+          "aiWin": "Défaite : l’IA relie les bords rouges.",
+          "duoWin": "Victoire des {player} !",
+          "draw": "Plateau complet : égalité."
+        },
+        "turnIndicator": "Prochain joueur : {player}",
+        "reward": {
+          "placeholder": "Tickets gacha gagnés : 0"
+        },
+        "board": "Plateau Hex 14 par 14"
       },
       "othello": {
         "aria": "Mini-jeu Reversi",
@@ -2324,6 +2366,35 @@
           "solved": "Solution trouvée ✔︎",
           "noSolution": "Pas de solution trouvée (ou puzzle invalide).",
           "cleared": "Grille vidée."
+        }
+      },
+      "hex": {
+        "players": {
+          "blue": "bleus",
+          "red": "rouges",
+          "human": "joueur bleu",
+          "ai": "IA rouge"
+        },
+        "status": {
+          "readySolo": "Hex : affrontez l’IA rouge.",
+          "readyDuo": "Mode 2 joueurs : les bleus commencent.",
+          "turn": "Tour des {player}.",
+          "aiThinking": "L’IA réfléchit…",
+          "invalid": "Cette case est déjà occupée.",
+          "playerWin": "Victoire ! Vous reliez les bords bleus.",
+          "aiWin": "Défaite : l’IA relie les bords rouges.",
+          "duoWin": "Victoire des {player} !",
+          "draw": "Plateau complet : égalité."
+        },
+        "reward": {
+          "gained": "Tickets gacha gagnés : {count}"
+        },
+        "turnIndicator": "Prochain joueur : {player}",
+        "cell": "Case {row}, colonne {column} : {content}",
+        "cellStates": {
+          "empty": "vide",
+          "blue": "pion bleu",
+          "red": "pion rouge"
         }
       },
       "othello": {
