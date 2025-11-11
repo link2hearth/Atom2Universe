@@ -1490,6 +1490,7 @@ const GAME_CONFIG = {
    * - bounceRestitution : restitution verticale lors du rebond au sol (0-1).
    * - wallRestitution : restitution lors du rebond sur les murs/ plafond (0-1).
    * - floorFriction : coefficient de friction appliqué horizontalement lors d'un contact au sol (0-1).
+   * - movementMode : "static" pour une apparition fixe, "physics" pour un déplacement rebondissant.
    * - launchVerticalSpeed : vitesse verticale initiale (en px/s) au moment de l'apparition.
    * - minHorizontalSpeed : vitesse horizontale minimale assurant un déplacement suffisant.
    * - horizontalSpeedMin / horizontalSpeedMax : bornes de la vitesse horizontale générée.
@@ -1499,6 +1500,7 @@ const GAME_CONFIG = {
     minimumSpawnIntervalSeconds: 5,
     clickReductionSeconds: 0.2,
     lifetimeSeconds: 15,
+    movementMode: 'static',
     speedPixelsPerSecond: 90,
     speedVariance: 0.35,
     spawnOffsetPixels: 48,
