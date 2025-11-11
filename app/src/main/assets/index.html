@@ -1213,6 +1213,46 @@
           class="arcade-hub-card"
           role="button"
           tabindex="0"
+          aria-label="Accéder au mini-jeu Gomoku"
+          aria-describedby="arcadeCardDescription-gomoku"
+          data-card-id="gomoku"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.gomoku.aria"
+          data-page-target="gomoku"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.gomoku.title"
+            >Gomoku &amp; Renju</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-gomoku"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-gomoku"
+            data-i18n="index.sections.arcadeHub.cards.gomoku.description"
+          >Affrontez l’IA ou un ami autour d’un plateau 15×15 et relevez les puzzles tactiques du Gomoku classique ou du Renju.</p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
           aria-label="Accéder au mini-jeu Plus gros"
           aria-describedby="arcadeCardDescription-bigger"
           data-card-id="bigger"
@@ -2796,6 +2836,164 @@
             data-i18n="aria-label:index.sections.othello.board"
           ></div>
         </div>
+      </div>
+    </section>
+
+    <section
+      id="gomoku"
+      class="page page--gomoku"
+      data-page-group="arcade"
+      aria-label="Mini-jeu Gomoku et Renju"
+      data-i18n="aria-label:index.sections.gomoku.aria"
+      hidden
+    >
+      <div class="gomoku" data-gomoku-root>
+        <h2 class="visually-hidden" data-i18n="index.sections.gomoku.title">Gomoku et Renju</h2>
+        <header class="gomoku__header">
+          <div class="gomoku__group">
+            <label
+              class="gomoku__label"
+              for="gomokuRuleSelect"
+              data-i18n="index.sections.gomoku.controls.rules.label"
+            >Règles</label>
+            <select
+              class="gomoku__select"
+              id="gomokuRuleSelect"
+              data-i18n="aria-label:index.sections.gomoku.controls.rules.aria"
+              aria-label="Choisir les règles"
+            >
+              <option value="gomoku" data-i18n="index.sections.gomoku.controls.rules.gomoku">Gomoku classique</option>
+              <option value="renju" data-i18n="index.sections.gomoku.controls.rules.renju">Renju (restrictions noir)</option>
+            </select>
+          </div>
+          <div class="gomoku__group">
+            <label
+              class="gomoku__label"
+              for="gomokuModeSelect"
+              data-i18n="index.sections.gomoku.controls.mode.label"
+            >Mode</label>
+            <select
+              class="gomoku__select"
+              id="gomokuModeSelect"
+              data-i18n="aria-label:index.sections.gomoku.controls.mode.aria"
+              aria-label="Choisir le mode de jeu"
+            >
+              <option value="ai" data-i18n="index.sections.gomoku.controls.mode.ai">Contre l’IA</option>
+              <option value="local" data-i18n="index.sections.gomoku.controls.mode.local">2 joueurs</option>
+              <option value="puzzle" data-i18n="index.sections.gomoku.controls.mode.puzzle">Puzzles</option>
+            </select>
+          </div>
+          <div class="gomoku__group">
+            <label
+              class="gomoku__label"
+              for="gomokuSizeSelect"
+              data-i18n="index.sections.gomoku.controls.size.label"
+            >Taille du plateau</label>
+            <select
+              class="gomoku__select"
+              id="gomokuSizeSelect"
+              data-i18n="aria-label:index.sections.gomoku.controls.size.aria"
+              aria-label="Choisir la taille du plateau"
+            >
+              <option value="13" data-i18n="index.sections.gomoku.controls.size.small">13×13</option>
+              <option value="15" selected data-i18n="index.sections.gomoku.controls.size.medium">15×15</option>
+              <option value="19" data-i18n="index.sections.gomoku.controls.size.large">19×19</option>
+            </select>
+          </div>
+          <div class="gomoku__group" data-gomoku-mode="ai">
+            <label
+              class="gomoku__label"
+              for="gomokuDifficultySelect"
+              data-i18n="index.sections.gomoku.controls.difficulty.label"
+            >Niveau IA</label>
+            <select
+              class="gomoku__select"
+              id="gomokuDifficultySelect"
+              data-i18n="aria-label:index.sections.gomoku.controls.difficulty.aria"
+              aria-label="Choisir la difficulté de l’IA"
+            >
+              <option value="easy" data-i18n="index.sections.gomoku.controls.difficulty.easy">Facile</option>
+              <option value="medium" selected data-i18n="index.sections.gomoku.controls.difficulty.medium">Moyen</option>
+              <option value="hard" data-i18n="index.sections.gomoku.controls.difficulty.hard">Difficile</option>
+            </select>
+          </div>
+          <div class="gomoku__group gomoku__group--grow" data-gomoku-mode="puzzle">
+            <label
+              class="gomoku__label"
+              for="gomokuPuzzleTypeSelect"
+              data-i18n="index.sections.gomoku.controls.puzzleType.label"
+            >Type de puzzle</label>
+            <select
+              class="gomoku__select"
+              id="gomokuPuzzleTypeSelect"
+              data-i18n="aria-label:index.sections.gomoku.controls.puzzleType.aria"
+              aria-label="Choisir le type de puzzle"
+            >
+              <option value="mateInOne" data-i18n="index.sections.gomoku.controls.puzzleType.mateInOne">Gagnez en 1 coup</option>
+              <option value="mateInTwo" data-i18n="index.sections.gomoku.controls.puzzleType.mateInTwo">Gagnez en 2 coups</option>
+            </select>
+          </div>
+        </header>
+        <div class="gomoku__status">
+          <p
+            class="gomoku__status-message"
+            id="gomokuStatus"
+            role="status"
+            aria-live="polite"
+            data-i18n="index.sections.gomoku.status.ready"
+          >Sélectionnez un mode et placez la première pierre noire.</p>
+          <div class="gomoku__status-tags">
+            <span class="gomoku__tag" id="gomokuRuleTag">Gomoku</span>
+            <span class="gomoku__tag" id="gomokuModeTag">IA</span>
+            <span class="gomoku__tag" id="gomokuDifficultyTag">Moyen</span>
+          </div>
+        </div>
+        <div class="gomoku__toolbar">
+          <button
+            type="button"
+            class="gomoku__button"
+            id="gomokuUndoButton"
+            data-i18n="index.sections.gomoku.actions.undo"
+          >Annuler</button>
+          <button
+            type="button"
+            class="gomoku__button"
+            id="gomokuRestartButton"
+            data-i18n="index.sections.gomoku.actions.restart"
+          >Recommencer</button>
+          <button
+            type="button"
+            class="gomoku__button gomoku__button--primary"
+            id="gomokuNewPuzzleButton"
+            data-gomoku-mode="puzzle"
+            data-i18n="index.sections.gomoku.actions.newPuzzle"
+          >Nouveau puzzle</button>
+          <button
+            type="button"
+            class="gomoku__button"
+            id="gomokuHintButton"
+            data-gomoku-mode="puzzle"
+            data-i18n="index.sections.gomoku.actions.hint"
+          >Indice</button>
+        </div>
+        <div class="gomoku__puzzle-info" id="gomokuPuzzleInfo" hidden>
+          <span data-i18n="index.sections.gomoku.puzzle.toPlay">Côté à jouer&nbsp;:</span>
+          <strong id="gomokuPuzzleSideLabel">Noir</strong>
+          <span data-i18n="index.sections.gomoku.puzzle.goal">Objectif&nbsp;:</span>
+          <strong id="gomokuPuzzleGoalLabel">Gagnez en 1 coup</strong>
+          <span data-i18n="index.sections.gomoku.puzzle.attempts">Essais&nbsp;:</span>
+          <strong id="gomokuPuzzleAttempts">0</strong>
+        </div>
+        <div class="gomoku__board-wrapper">
+          <div
+            class="gomoku__board"
+            id="gomokuBoard"
+            role="grid"
+            aria-label="Plateau de Gomoku"
+            data-i18n="aria-label:index.sections.gomoku.board"
+          ></div>
+        </div>
+        <div class="gomoku__toast" id="gomokuToast" role="status" aria-live="polite" hidden></div>
       </div>
     </section>
 
@@ -6993,6 +7191,7 @@
   <script src="scripts/arcade/blackjack.js"></script>
   <script src="scripts/arcade/echecs.js"></script>
   <script src="scripts/arcade/othello.js"></script>
+  <script src="scripts/arcade/gomoku.js"></script>
   <script src="scripts/arcade/hex.js"></script>
   <script src="scripts/arcade/game-of-life.js"></script>
   <script src="scripts/arcade/quantum-2048.js"></script>

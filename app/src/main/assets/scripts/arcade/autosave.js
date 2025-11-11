@@ -25,6 +25,7 @@
     'blackjack',
     'hex',
     'othello',
+    'gomoku',
     'echecs'
   ];
 

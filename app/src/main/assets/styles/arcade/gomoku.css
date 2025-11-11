@@ -1,0 +1,276 @@
+.page--gomoku {
+  --gomoku-background: linear-gradient(180deg, rgba(70, 54, 36, 0.4) 0%, rgba(35, 24, 16, 0.85) 100%);
+  --gomoku-grid-color: rgba(0, 0, 0, 0.25);
+  --gomoku-border-color: rgba(0, 0, 0, 0.35);
+  --gomoku-cell-size: clamp(28px, 4vw, 44px);
+  --gomoku-stone-size: calc(var(--gomoku-cell-size) * 0.72);
+  --gomoku-hint-color: rgba(255, 214, 0, 0.45);
+  --gomoku-win-color: rgba(0, 210, 120, 0.55);
+  --gomoku-last-move-color: rgba(255, 255, 255, 0.6);
+  background: var(--gomoku-background);
+  color: #f5ede3;
+}
+
+.gomoku {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.gomoku__header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  align-items: flex-end;
+}
+
+.gomoku__group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 160px;
+}
+
+.gomoku__group--grow {
+  flex: 1 1 220px;
+}
+
+.gomoku__label {
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(255, 245, 232, 0.8);
+}
+
+.gomoku__select,
+.gomoku__button {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.75rem;
+  background: rgba(0, 0, 0, 0.35);
+  color: inherit;
+  padding: 0.55rem 0.9rem;
+  font-size: 0.95rem;
+  line-height: 1.2;
+  transition: background 150ms ease, border-color 150ms ease, transform 150ms ease;
+}
+
+.gomoku__select:focus,
+.gomoku__button:focus {
+  outline: none;
+  border-color: rgba(255, 214, 0, 0.7);
+  box-shadow: 0 0 0 2px rgba(255, 214, 0, 0.25);
+}
+
+.gomoku__button:hover,
+.gomoku__select:hover {
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.gomoku__button:disabled,
+.gomoku__select:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.gomoku__status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  align-items: center;
+}
+
+.gomoku__status-message {
+  font-size: 1.05rem;
+  line-height: 1.4;
+  min-height: 1.4em;
+}
+
+.gomoku__status-tags {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.gomoku__tag {
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.gomoku__board-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.gomoku__board {
+  position: relative;
+  display: grid;
+  gap: 0;
+  border-radius: 1rem;
+  padding: calc(var(--gomoku-cell-size) * 0.5);
+  background:
+    linear-gradient(var(--gomoku-grid-color) 1px, transparent 1px) 0 0 / var(--gomoku-cell-size) var(--gomoku-cell-size),
+    linear-gradient(90deg, var(--gomoku-grid-color) 1px, transparent 1px) 0 0 / var(--gomoku-cell-size) var(--gomoku-cell-size),
+    radial-gradient(circle at center, rgba(255, 199, 102, 0.25), rgba(86, 49, 20, 0.85));
+  border: 1px solid var(--gomoku-border-color);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+.gomoku__board::after {
+  content: '';
+  position: absolute;
+  inset: calc(var(--gomoku-cell-size) * 0.5);
+  border: 2px solid rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+  border-radius: 0.75rem;
+}
+
+.gomoku__cell {
+  position: relative;
+  border: none;
+  background: none;
+  width: var(--gomoku-cell-size);
+  height: var(--gomoku-cell-size);
+  cursor: pointer;
+}
+
+.gomoku__cell::before {
+  content: '';
+  position: absolute;
+  inset: calc(50% - 1px);
+  background: rgba(0, 0, 0, 0.55);
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  opacity: 0.25;
+  transition: opacity 150ms ease;
+}
+
+.gomoku__cell::after {
+  content: '';
+  position: absolute;
+  inset: calc((var(--gomoku-cell-size) - var(--gomoku-stone-size)) / 2);
+  border-radius: 50%;
+  transform: scale(0);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+  box-shadow: none;
+}
+
+.gomoku__cell:hover::before {
+  opacity: 0.55;
+}
+
+.gomoku__cell--black::after,
+.gomoku__cell--white::after {
+  transform: scale(1);
+}
+
+.gomoku__cell--black::after {
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.35), rgba(15, 15, 15, 1));
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.4);
+}
+
+.gomoku__cell--white::after {
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 1), rgba(220, 220, 220, 0.9));
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.35);
+}
+
+.gomoku__cell--last::after {
+  box-shadow: 0 0 0 4px var(--gomoku-last-move-color);
+}
+
+.gomoku__cell--win::after {
+  box-shadow: 0 0 0 6px var(--gomoku-win-color);
+}
+
+.gomoku__cell--hint::after {
+  box-shadow: 0 0 0 6px var(--gomoku-hint-color);
+  transform: scale(0.5);
+  background: transparent;
+}
+
+.gomoku__cell:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 214, 0, 0.45);
+  border-radius: 0.5rem;
+}
+
+.gomoku__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.gomoku__button--primary {
+  background: rgba(255, 214, 0, 0.15);
+  border-color: rgba(255, 214, 0, 0.55);
+  color: #ffe7a0;
+}
+
+.gomoku__button--primary:hover {
+  background: rgba(255, 214, 0, 0.25);
+}
+
+.gomoku__puzzle-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  font-size: 0.9rem;
+  color: rgba(255, 245, 232, 0.85);
+}
+
+.gomoku__puzzle-info strong {
+  font-weight: 600;
+}
+
+.gomoku__toast {
+  position: fixed;
+  left: 50%;
+  bottom: 1.5rem;
+  transform: translateX(-50%) translateY(150%);
+  background: rgba(0, 0, 0, 0.78);
+  border-radius: 0.75rem;
+  padding: 0.65rem 1.2rem;
+  font-size: 0.9rem;
+  border: 1px solid rgba(255, 214, 0, 0.35);
+  color: #ffe7a0;
+  opacity: 0;
+  transition: transform 220ms ease, opacity 220ms ease;
+  pointer-events: none;
+  z-index: 40;
+}
+
+.gomoku__toast--visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+@media (max-width: 768px) {
+  .gomoku {
+    padding: 1rem;
+  }
+
+  .gomoku__header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .gomoku__group,
+  .gomoku__group--grow {
+    width: 100%;
+  }
+
+  .gomoku__status {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
