@@ -177,6 +177,7 @@ const BRICK_SKIN_TOAST_KEYS = Object.freeze({
     pipeTap: 'arcade.pipeTap',
     colorStack: 'arcade.colorStack',
     motocross: 'arcade.motocross',
+    twins: 'arcade.twins',
     sokoban: 'arcade.sokoban',
     math: 'arcade.math',
     sudoku: 'arcade.sudoku',
@@ -211,6 +212,7 @@ const OPTIONS_DETAIL_FEATURE_MAP = Object.freeze({
   pipeTap: 'arcade.pipeTap',
   colorStack: 'arcade.colorStack',
   motocross: 'arcade.motocross',
+  twins: 'arcade.twins',
   sokoban: 'arcade.sokoban',
   blackjack: 'arcade.blackjack',
   gacha: 'system.gacha',
@@ -1808,6 +1810,7 @@ function createDefaultFeatureUnlockDefinitions() {
     'arcade.echecs',
     'arcade.starBridges',
     'arcade.pipeTap',
+    'arcade.twins',
     'arcade.gameOfLife'
   ].forEach(id => {
     defaults.set(id, freezeFeatureUnlockDefinition({ type: 'always' }));
@@ -2467,6 +2470,9 @@ function activateArcadeHubCard(card) {
   }
   if (target === 'motocross') {
     ensureMotocrossGame();
+  }
+  if (target === 'twins') {
+    ensureTwinsGame();
   }
   if (target === 'escape') {
     ensureEscapeGame();
@@ -4034,6 +4040,7 @@ const ARCADE_GAME_IDS = Object.freeze([
   'pipeTap',
   'colorStack',
   'motocross',
+  'twins',
   'sokoban',
   'balance',
   'sudoku',
@@ -6871,6 +6878,17 @@ function ensureMotocrossGame() {
   if (window.motocrossArcade && typeof window.motocrossArcade === 'object') {
     motocrossGame = window.motocrossArcade;
     return motocrossGame;
+  }
+  return null;
+}
+
+function ensureTwinsGame() {
+  if (twinsGame && typeof twinsGame === 'object') {
+    return twinsGame;
+  }
+  if (window.twinsArcade && typeof window.twinsArcade === 'object') {
+    twinsGame = window.twinsArcade;
+    return twinsGame;
   }
   return null;
 }
@@ -11694,6 +11712,7 @@ let starsWarGame = null;
 let pipeTapGame = null;
 let colorStackGame = null;
 let motocrossGame = null;
+let twinsGame = null;
 let apsCritPulseTimeoutId = null;
 
 const APS_CRIT_TIMER_EPSILON = 1e-3;
@@ -13444,6 +13463,7 @@ function showPage(pageId) {
   document.body.classList.toggle('view-pipe-tap', pageId === 'pipeTap');
   document.body.classList.toggle('view-color-stack', pageId === 'colorStack');
   document.body.classList.toggle('view-motocross', pageId === 'motocross');
+  document.body.classList.toggle('view-twins', pageId === 'twins');
   document.body.classList.toggle('view-sokoban', pageId === 'sokoban');
   document.body.classList.toggle('view-sudoku', pageId === 'sudoku');
   document.body.classList.toggle('view-lights-out', pageId === 'lightsOut');
@@ -13535,6 +13555,14 @@ function showPage(pageId) {
       motocross.onEnter?.();
     } else {
       motocross.onLeave?.();
+    }
+  }
+  const twins = ensureTwinsGame();
+  if (twins) {
+    if (pageId === 'twins') {
+      twins.onEnter?.();
+    } else {
+      twins.onLeave?.();
     }
   }
   const sokoban = ensureSokobanGame();
@@ -13632,6 +13660,10 @@ document.addEventListener('visibilitychange', () => {
     if (motocross && activePage === 'motocross') {
       motocross.onLeave?.();
     }
+    const twins = ensureTwinsGame();
+    if (twins && activePage === 'twins') {
+      twins.onLeave?.();
+    }
     saveGame();
     return;
   }
@@ -13695,6 +13727,10 @@ document.addEventListener('visibilitychange', () => {
   if (activePage === 'motocross') {
     const motocross = ensureMotocrossGame();
     motocross?.onEnter?.();
+  }
+  if (activePage === 'twins') {
+    const twins = ensureTwinsGame();
+    twins?.onEnter?.();
   }
 });
 

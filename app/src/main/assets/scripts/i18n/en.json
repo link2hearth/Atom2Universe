@@ -417,6 +417,12 @@
             "description": "Draw a three-cell line or L-shape to align every cell with its target value.",
             "cta": "Link"
           },
+          "twins": {
+            "aria": "Open the Twins memory game",
+            "title": "Twins",
+            "description": "Flip two bonus cards at a time and find every matching pair.",
+            "cta": "Play"
+          },
           "starBridges": {
             "aria": "Open the Star Bridges mini-game",
             "title": "Star Bridges",
@@ -874,6 +880,38 @@
         },
         "cell": {
           "label": "Row {row}, column {column}: {value} (target {target})"
+        }
+      },
+      "twins": {
+        "aria": "Twins memory game: match every pair of bonus cards.",
+        "ui": {
+          "controls": "Twins controls",
+          "difficulty": "Difficulty",
+          "difficultyAria": "Choose the Twins difficulty",
+          "difficulties": {
+            "easy": "Easy — 8 pairs",
+            "medium": "Medium — 12 pairs",
+            "hard": "Hard — 18 pairs"
+          },
+          "start": "Start",
+          "restart": "Restart",
+          "startAria": "Start a Twins game",
+          "restartAria": "Restart the Twins game"
+        },
+        "status": {
+          "ready": "Pick a difficulty and press \"Start\" to flip the cards.",
+          "inProgress": "Pairs remaining: {{remaining}}.",
+          "victory": "Great job! You found every pair in {{moves}} moves."
+        },
+        "stats": {
+          "matches": "Pairs found: {{found}}/{{total}}",
+          "moves": "Moves: {{moves}}"
+        },
+        "board": "Twins card board",
+        "card": {
+          "hidden": "Face-down card",
+          "revealed": "Face-up card",
+          "matched": "Matched pair"
         }
       },
       "escape": {

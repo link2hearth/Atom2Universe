@@ -489,6 +489,13 @@ body.theme-aurora .page--arcade-hub {
   display: none;
 }
 
+.arcade-hub-card[data-card-id="twins"] {
+  --arcade-hub-card-background: linear-gradient(135deg, #202a6c, #4f87ff);
+  --arcade-hub-card-border: rgba(118, 162, 255, 0.5);
+  --arcade-hub-card-shadow: 0 22px 38px rgba(20, 42, 96, 0.46);
+  --arcade-hub-card-shadow-hover: 0 30px 56px rgba(32, 56, 128, 0.6);
+}
+
 .arcade-hub-card[data-card-id="gameOfLife"] {
   --arcade-hub-card-background: linear-gradient(135deg, #0d3a2b, #1f6d4a);
   --arcade-hub-card-border: rgba(90, 210, 160, 0.48);
