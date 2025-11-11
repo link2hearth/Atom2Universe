@@ -164,7 +164,7 @@
 }
 
 .taquin__board {
-  --taquin-size: 4;
+  --taquin-size: 3;
   width: 100%;
   aspect-ratio: 1 / 1;
   display: grid;
