@@ -961,9 +961,15 @@
     if (!Number.isFinite(width) || width <= 0) {
       return;
     }
+    const paddingStart = Number.parseFloat(computed.paddingLeft) || 0;
+    const paddingEnd = Number.parseFloat(computed.paddingRight) || 0;
+    const availableWidth = width - paddingStart - paddingEnd;
+    if (!Number.isFinite(availableWidth) || availableWidth <= 0) {
+      return;
+    }
     const denominator = BOARD_SIZE + (BOARD_SIZE - 1) * 0.5;
     const gapContribution = (BOARD_SIZE - 1) * gap;
-    const cellSize = Math.max(14, (width - gapContribution) / denominator);
+    const cellSize = Math.max(14, (availableWidth - gapContribution) / denominator);
     page.style.setProperty('--hex-cell-size', `${cellSize}px`);
   }
 
