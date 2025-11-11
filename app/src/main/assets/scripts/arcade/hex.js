@@ -959,7 +959,7 @@
     if (!page || !board) {
       return;
     }
-    const measurementElement = boardWrapper || boardFrame || board;
+    const measurementElement = boardWrapper || boardFrame || page;
     const width = measurementElement ? measurementElement.clientWidth : 0;
     if (!Number.isFinite(width) || width <= 0) {
       return;
@@ -978,11 +978,12 @@
     const gap = Number.parseFloat(computed.getPropertyValue('--hex-cell-gap')) || 0;
     const paddingStart = Number.parseFloat(computed.paddingLeft) || 0;
     const paddingEnd = Number.parseFloat(computed.paddingRight) || 0;
+    const basePaddingEnd = Math.min(paddingStart, paddingEnd);
     const borderStart = Number.parseFloat(computed.borderLeftWidth) || 0;
     const borderEnd = Number.parseFloat(computed.borderRightWidth) || 0;
     const denominator = BOARD_SIZE + (BOARD_SIZE - 1) * 0.5;
     const gapContribution = (BOARD_SIZE - 1) * gap;
-    const fixedContribution = paddingStart + paddingEnd + borderStart + borderEnd;
+    const fixedContribution = paddingStart + basePaddingEnd + borderStart + borderEnd;
     const numerator = availableWidth - fixedContribution - gapContribution * 1.5;
     if (!Number.isFinite(numerator)) {
       return;
