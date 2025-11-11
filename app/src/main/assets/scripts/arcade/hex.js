@@ -955,43 +955,16 @@
     if (!page || !board) {
       return;
     }
+    const computed = window.getComputedStyle(board);
+    const gap = Number.parseFloat(computed.getPropertyValue('--hex-cell-gap')) || 0;
     const width = board.clientWidth;
     if (!Number.isFinite(width) || width <= 0) {
       return;
     }
-    const computed = window.getComputedStyle(board);
-    const paddingStart = parseCssPixels(computed.paddingLeft);
-    const paddingEnd = parseCssPixels(computed.paddingRight);
-    const availableWidth = width - paddingStart - paddingEnd;
-    if (!Number.isFinite(availableWidth) || availableWidth <= 0) {
-      return;
-    }
-    const firstRow = board.querySelector('.hex__row');
-    let gap = 0;
-    if (firstRow) {
-      const rowStyle = window.getComputedStyle(firstRow);
-      gap = parseCssPixels(rowStyle.getPropertyValue('column-gap'));
-    }
-    if (!Number.isFinite(gap) || gap < 0) {
-      gap = 0;
-    }
     const denominator = BOARD_SIZE + (BOARD_SIZE - 1) * 0.5;
-    const gapContribution = (BOARD_SIZE - 1) * gap * 1.5;
-    const numerator = availableWidth - gapContribution;
-    if (!Number.isFinite(numerator) || numerator <= 0) {
-      page.style.setProperty('--hex-cell-size', '14px');
-      return;
-    }
-    const cellSize = Math.max(14, numerator / denominator);
+    const gapContribution = (BOARD_SIZE - 1) * gap;
+    const cellSize = Math.max(14, (width - gapContribution) / denominator);
     page.style.setProperty('--hex-cell-size', `${cellSize}px`);
-  }
-
-  function parseCssPixels(value) {
-    if (typeof value !== 'string') {
-      return 0;
-    }
-    const parsed = Number.parseFloat(value);
-    return Number.isFinite(parsed) ? parsed : 0;
   }
 
   function initResizeObserver() {
