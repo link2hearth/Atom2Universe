@@ -9,7 +9,7 @@
     difficile: Object.freeze({ rows: 12, cols: 20, mines: 38 })
   });
 
-  const FIXED_CELL_SIZE = 42;
+  const DEFAULT_CELL_SIZE = 42;
   const MIN_CELL_SIZE = 24;
 
   const ORIENTATION_MODE = Object.freeze({
@@ -123,7 +123,7 @@
       safeRemaining: 0,
       status: 'ready',
       armed: false,
-      cellSize: FIXED_CELL_SIZE,
+      cellSize: DEFAULT_CELL_SIZE,
       orientation: ORIENTATION_MODE.LANDSCAPE,
       difficultyKey: 'moyen'
     };
@@ -448,7 +448,7 @@
       }
 
       if (typeof window === 'undefined') {
-        gameState.cellSize = FIXED_CELL_SIZE;
+        gameState.cellSize = DEFAULT_CELL_SIZE;
         boardElement.style.setProperty('--minesweeper-cell-size', `${gameState.cellSize}px`);
         return;
       }
@@ -476,7 +476,8 @@
         availableWidth = Math.min(window.innerWidth, availableWidth || window.innerWidth);
       }
       if (!Number.isFinite(availableWidth) || availableWidth <= 0) {
-        availableWidth = columns * FIXED_CELL_SIZE + Math.max(0, columns - 1) * columnGap + paddingLeft + paddingRight;
+        availableWidth =
+          columns * DEFAULT_CELL_SIZE + Math.max(0, columns - 1) * columnGap + paddingLeft + paddingRight;
       }
 
       const widthBased =
@@ -518,11 +519,13 @@
       if (Number.isFinite(heightBased) && heightBased > 0) {
         candidates.push(heightBased);
       }
-      candidates.push(FIXED_CELL_SIZE);
+      if (!candidates.length) {
+        candidates.push(DEFAULT_CELL_SIZE);
+      }
 
       let nextCellSize = Math.min(...candidates);
       if (!Number.isFinite(nextCellSize) || nextCellSize <= 0) {
-        nextCellSize = FIXED_CELL_SIZE;
+        nextCellSize = DEFAULT_CELL_SIZE;
       }
 
       nextCellSize = Math.floor(nextCellSize);
@@ -531,10 +534,12 @@
         const widthLimit = Number.isFinite(widthBased) && widthBased > 0 ? Math.floor(widthBased) : Number.POSITIVE_INFINITY;
         const heightLimit =
           Number.isFinite(heightBased) && heightBased > 0 ? Math.floor(heightBased) : Number.POSITIVE_INFINITY;
-        const safeUpperBound = Math.min(widthLimit, heightLimit, FIXED_CELL_SIZE);
+        const safeUpperBound = Math.min(widthLimit, heightLimit);
         const preferredSize = Math.min(MIN_CELL_SIZE, safeUpperBound);
-        if (preferredSize > 0) {
+        if (Number.isFinite(preferredSize) && preferredSize > 0) {
           nextCellSize = Math.max(nextCellSize, preferredSize);
+        } else {
+          nextCellSize = MIN_CELL_SIZE;
         }
       }
 
@@ -542,6 +547,14 @@
 
       gameState.cellSize = nextCellSize;
       boardElement.style.setProperty('--minesweeper-cell-size', `${gameState.cellSize}px`);
+      const totalWidth =
+        layout.columns * gameState.cellSize +
+        Math.max(0, layout.columns - 1) * columnGap +
+        paddingLeft +
+        paddingRight;
+      if (Number.isFinite(totalWidth) && totalWidth > 0) {
+        boardElement.style.setProperty('--minesweeper-board-width', `${Math.round(totalWidth)}px`);
+      }
     }
 
     function updateBoardLayoutMetrics() {
@@ -626,7 +639,7 @@
       gameState.safeRemaining = rows * cols - mines;
       gameState.status = 'ready';
       gameState.armed = false;
-      gameState.cellSize = FIXED_CELL_SIZE;
+      gameState.cellSize = DEFAULT_CELL_SIZE;
       gameState.difficultyKey = presetKey;
       renderBoard();
       for (let row = 0; row < gameState.rows; row += 1) {
