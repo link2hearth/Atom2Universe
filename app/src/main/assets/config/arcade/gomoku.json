@@ -34,11 +34,5 @@
     "closedThree": 80,
     "two": 20,
     "centerBonus": 15
-  },
-  "puzzle": {
-    "mateInOneSearchDepth": 2,
-    "mateInTwoSearchDepth": 4,
-    "generationAttempts": 200,
-    "simulationMaxMoves": 50
   }
 }

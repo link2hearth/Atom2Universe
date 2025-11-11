@@ -486,7 +486,7 @@
           "gomoku": {
             "aria": "Open the Gomoku mini-game",
             "title": "Gomoku & Renju",
-            "description": "Challenge the AI or a friend on a 15×15 goban and tackle tactical puzzles in Gomoku or Renju rules.",
+            "description": "Challenge the AI or a friend on a 15×15 goban with smarter play in Gomoku or Renju rules.",
             "cta": "Align"
           },
           "hex": {
@@ -827,8 +827,7 @@
             "label": "Mode",
             "aria": "Choose the game mode",
             "ai": "Vs AI",
-            "local": "2 players",
-            "puzzle": "Puzzles"
+            "local": "2 players"
           },
           "size": {
             "label": "Board size",
@@ -843,30 +842,15 @@
             "easy": "Easy",
             "medium": "Medium",
             "hard": "Hard"
-          },
-          "puzzleType": {
-            "label": "Puzzle type",
-            "aria": "Choose the puzzle type",
-            "mateInOne": "Win in 1 move",
-            "mateInTwo": "Win in 2 moves"
           }
         },
         "actions": {
           "undo": "Undo",
-          "restart": "Restart",
-          "newPuzzle": "New puzzle",
-          "hint": "Hint"
+          "restart": "Restart"
         },
         "players": {
           "black": "Black",
           "white": "White"
-        },
-        "puzzle": {
-          "toPlay": "Side to move:",
-          "goal": "Goal:",
-          "goalMateInOne": "Win in one move",
-          "goalMateInTwo": "Win in two moves",
-          "attempts": "Attempts:"
         },
         "status": {
           "ready": "Select a mode and play the first black stone.",
@@ -876,17 +860,8 @@
           "winBlack": "Black wins!",
           "winWhite": "White wins!",
           "draw": "Draw: no more empty cells.",
-          "puzzleGenerating": "Generating puzzle…",
-          "puzzleSolved": "Puzzle solved, well done!",
-          "puzzleSecondMoveBlack": "Finish the puzzle: black must find the winning move.",
-          "puzzleSecondMoveWhite": "Finish the puzzle: white must find the winning move.",
-          "puzzleTurnBlack": "Puzzle: black to move.",
-          "puzzleTurnWhite": "Puzzle: white to move.",
-          "puzzleFailed": "That move doesn’t win. Try again.",
-          "puzzleGenerationFailed": "No puzzle found. Try again.",
           "illegalRenju": "Illegal move for Black in Renju.",
-          "cellOccupied": "Cell already occupied.",
-          "hint": "A few promising moves are highlighted."
+          "cellOccupied": "Cell already occupied."
         }
       },
       "theLine": {
