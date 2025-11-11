@@ -511,6 +511,46 @@
           class="arcade-hub-card"
           role="button"
           tabindex="0"
+          aria-label="Accéder au mini-jeu Twins"
+          aria-describedby="arcadeCardDescription-twins"
+          data-card-id="twins"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.twins.aria"
+          data-page-target="twins"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.twins.title"
+            >Twins</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-twins"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-twins"
+            data-i18n="index.sections.arcadeHub.cards.twins.description"
+          >Retournez les cartes bonus deux par deux pour retrouver chaque paire.</p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
           aria-label="Accéder au mini-jeu Sudoku"
           aria-describedby="arcadeCardDescription-sudoku"
           data-card-id="sudoku"
@@ -2965,6 +3005,69 @@
         >
           Reliez exactement trois cases adjacentes orthogonalement pour modifier leurs valeurs et celles de leurs jumelles. Mettez toutes les cases normales à 0 et les cases +1 à 10.
         </p>
+      </div>
+    </section>
+
+    <section
+      id="twins"
+      class="page page--twins"
+      data-page-group="arcade"
+      aria-label="Mini-jeu Twins : associez toutes les paires de cartes bonus."
+      data-i18n="aria-label:index.sections.twins.aria"
+      hidden
+    >
+      <div class="twins" data-twins-root>
+        <header
+          class="twins__toolbar"
+          role="group"
+          aria-label="Contrôles du jeu Twins"
+          data-i18n="aria-label:index.sections.twins.ui.controls"
+        >
+          <label class="twins__label" for="twinsDifficulty" data-i18n="index.sections.twins.ui.difficulty">
+            Difficulté
+          </label>
+          <select
+            class="twins__select"
+            id="twinsDifficulty"
+            data-i18n="aria-label:index.sections.twins.ui.difficultyAria"
+            aria-label="Choisir la difficulté"
+          >
+            <option value="easy" data-i18n="index.sections.twins.ui.difficulties.easy">Facile — 8 paires</option>
+            <option value="medium" data-i18n="index.sections.twins.ui.difficulties.medium">Moyen — 12 paires</option>
+            <option value="hard" data-i18n="index.sections.twins.ui.difficulties.hard">Difficile — 18 paires</option>
+          </select>
+          <button
+            type="button"
+            class="twins__button"
+            id="twinsStartButton"
+            data-i18n="index.sections.twins.ui.start"
+          >Commencer</button>
+        </header>
+        <p
+          class="twins__status"
+          id="twinsStatus"
+          role="status"
+          aria-live="polite"
+          data-i18n="index.sections.twins.status.ready"
+        >
+          Choisissez une difficulté puis appuyez sur « Commencer » pour lancer une partie.
+        </p>
+        <div class="twins__stats" aria-live="polite">
+          <p class="twins__stat" id="twinsMatches" data-i18n="index.sections.twins.stats.matches">
+            Paires trouvées : 0/0
+          </p>
+          <p class="twins__stat" id="twinsMoves" data-i18n="index.sections.twins.stats.moves">
+            Coups : 0
+          </p>
+        </div>
+        <div class="twins__playfield">
+          <div
+            class="twins__grid"
+            id="twinsGrid"
+            aria-label="Plateau de cartes Twins"
+            data-i18n="aria-label:index.sections.twins.board"
+          ></div>
+        </div>
       </div>
     </section>
 
@@ -6596,6 +6699,7 @@
   <script src="scripts/arcade/quantum-2048.js"></script>
   <script src="scripts/arcade/lights-out.js"></script>
   <script src="scripts/arcade/link.js"></script>
+  <script src="scripts/arcade/twins.js"></script>
   <script src="scripts/arcade/star-bridges.js"></script>
   <script src="scripts/arcade/pipetap.js"></script>
   <script src="scripts/arcade/color-stack.js"></script>

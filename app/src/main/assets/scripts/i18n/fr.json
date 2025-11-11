@@ -417,6 +417,12 @@
             "description": "Tracez un motif de trois cases en ligne ou en L pour atteindre toutes les valeurs cibles.",
             "cta": "Relier"
           },
+          "twins": {
+            "aria": "Accéder au mini-jeu Twins",
+            "title": "Twins",
+            "description": "Retournez les cartes bonus deux par deux pour retrouver chaque paire.",
+            "cta": "Jouer"
+          },
           "starBridges": {
             "aria": "Accéder au mini-jeu Ponts Stellaires",
             "title": "Ponts Stellaires",
@@ -874,6 +880,38 @@
         },
         "cell": {
           "label": "Ligne {row}, colonne {column} : {value} (objectif {target})"
+        }
+      },
+      "twins": {
+        "aria": "Mini-jeu Twins : associez toutes les paires de cartes bonus.",
+        "ui": {
+          "controls": "Contrôles du jeu Twins",
+          "difficulty": "Difficulté",
+          "difficultyAria": "Choisir la difficulté de Twins",
+          "difficulties": {
+            "easy": "Facile — 8 paires",
+            "medium": "Moyen — 12 paires",
+            "hard": "Difficile — 18 paires"
+          },
+          "start": "Commencer",
+          "restart": "Rejouer",
+          "startAria": "Démarrer une partie de Twins",
+          "restartAria": "Relancer la partie de Twins"
+        },
+        "status": {
+          "ready": "Choisissez une difficulté puis appuyez sur « Commencer » pour retourner les cartes.",
+          "inProgress": "Paires restantes : {{remaining}}.",
+          "victory": "Bravo ! Toutes les paires sont trouvées en {{moves}} coups."
+        },
+        "stats": {
+          "matches": "Paires trouvées : {{found}}/{{total}}",
+          "moves": "Coups : {{moves}}"
+        },
+        "board": "Plateau de cartes Twins",
+        "card": {
+          "hidden": "Carte face cachée",
+          "revealed": "Carte face visible",
+          "matched": "Paire validée"
         }
       },
       "escape": {
