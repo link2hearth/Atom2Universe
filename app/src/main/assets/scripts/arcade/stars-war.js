@@ -35,6 +35,10 @@
     enemyBulletCap: Object.freeze({
       base: 10,
       perWave: 2
+    }),
+    shipHitboxScale: Object.freeze({
+      player: 0.5,
+      enemy: 0.5
     })
   });
 
@@ -82,11 +86,30 @@
       200,
       DEFAULT_CONFIG.enemyBulletCap.perWave
     );
+    const rawShipHitboxScale = raw.shipHitboxScale && typeof raw.shipHitboxScale === 'object'
+      ? raw.shipHitboxScale
+      : {};
+    const playerHitboxScale = clampNumber(
+      rawShipHitboxScale.player,
+      0.1,
+      2,
+      DEFAULT_CONFIG.shipHitboxScale.player
+    );
+    const enemyHitboxScale = clampNumber(
+      rawShipHitboxScale.enemy,
+      0.1,
+      2,
+      DEFAULT_CONFIG.shipHitboxScale.enemy
+    );
     return Object.freeze({
       maxWaveDurationSeconds: Math.max(5, Math.floor(maxWaveDuration)),
       enemyBulletCap: Object.freeze({
         base: Math.max(0, Math.floor(bulletBase)),
         perWave: Math.max(0, Math.floor(bulletPerWave))
+      }),
+      shipHitboxScale: Object.freeze({
+        player: playerHitboxScale,
+        enemy: enemyHitboxScale
       })
     });
   }
@@ -1748,6 +1771,18 @@
     };
   }
 
+  function getShipHitboxScale(type) {
+    const fallbackConfig = DEFAULT_CONFIG.shipHitboxScale || {};
+    const activeConfig = state.config && state.config.shipHitboxScale
+      ? state.config.shipHitboxScale
+      : fallbackConfig;
+    const fallback = type === 'enemy'
+      ? fallbackConfig.enemy
+      : fallbackConfig.player;
+    const rawScale = activeConfig && typeof activeConfig === 'object' ? activeConfig[type] : undefined;
+    return clampNumber(rawScale, 0.1, 2, fallback != null ? fallback : 0.5);
+  }
+
   const KEY_BINDINGS = Object.freeze({
     ArrowLeft: 'left',
     ArrowRight: 'right',
@@ -2732,11 +2767,26 @@
   }
 
   function getPlayerBounds() {
+    const scale = getShipHitboxScale('player');
+    const halfWidth = (player.width * scale) / 2;
+    const halfHeight = (player.height * scale) / 2;
     return {
-      left: player.x - player.width / 2,
-      right: player.x + player.width / 2,
-      top: player.y - player.height / 2,
-      bottom: player.y + player.height / 2
+      left: player.x - halfWidth,
+      right: player.x + halfWidth,
+      top: player.y - halfHeight,
+      bottom: player.y + halfHeight
+    };
+  }
+
+  function getEnemyCollisionBounds(enemy) {
+    const scale = getShipHitboxScale('enemy');
+    const halfWidth = (enemy.width * scale) / 2;
+    const halfHeight = (enemy.height * scale) / 2;
+    return {
+      left: enemy.x - halfWidth,
+      right: enemy.x + halfWidth,
+      top: enemy.y - halfHeight,
+      bottom: enemy.y + halfHeight
     };
   }
 
@@ -3194,16 +3244,12 @@
     state.enemies.forEach(enemy => {
       moveEnemy(enemy, delta);
       fireEnemyWeapons(enemy, delta);
-      const enemyBounds = {
-        left: enemy.x - enemy.width / 2,
-        right: enemy.x + enemy.width / 2,
-        top: enemy.y - enemy.height / 2,
-        bottom: enemy.y + enemy.height / 2
-      };
-      if (enemyBounds.top > CANVAS_HEIGHT + enemy.height) {
+      const collisionBounds = getEnemyCollisionBounds(enemy);
+      const enemyVisualTop = enemy.y - enemy.height / 2;
+      if (enemyVisualTop > CANVAS_HEIGHT + enemy.height) {
         enemy.remove = true;
       }
-      if (intersects(playerBounds, enemyBounds)) {
+      if (intersects(playerBounds, collisionBounds)) {
         enemy.remove = true;
         addExplosion(enemy.x, enemy.y, 40);
         damagePlayer();
@@ -3227,12 +3273,7 @@
         if (enemy.remove) {
           continue;
         }
-        const enemyBounds = {
-          left: enemy.x - enemy.width / 2,
-          right: enemy.x + enemy.width / 2,
-          top: enemy.y - enemy.height / 2,
-          bottom: enemy.y + enemy.height / 2
-        };
+        const enemyBounds = getEnemyCollisionBounds(enemy);
         if (intersects(bounds, enemyBounds)) {
           bullet.remove = true;
           damageEnemy(enemy);
