@@ -1250,6 +1250,35 @@
           "move": ""
         }
       },
+      "circles": {
+        "aria": "Circles mini-game: realign the coloured rings.",
+        "title": "Circles",
+        "subtitle": "Rotate each ring and line up every colour while keeping track of the linked outer ring.",
+        "controls": {
+          "difficulty": {
+            "label": "Difficulty",
+            "aria": "Select difficulty",
+            "easy": "Easy",
+            "medium": "Medium",
+            "hard": "Hard"
+          },
+          "new": "New puzzle",
+          "restart": "Restart"
+        },
+        "stats": {
+          "seed": "Seed",
+          "moves": "Moves",
+          "reward": "Gacha tickets"
+        },
+        "canvasAria": "Circles puzzle board",
+        "message": "Click a ring to rotate it one step <strong>clockwise</strong>. Hold Shift to reverse the direction. Each rotation drags the adjacent outer ring.",
+        "hint": "Tip: use keys 1 to 6 to rotate the rings from the keyboard.",
+        "win": {
+          "message": "Perfect sync!",
+          "again": "Play again",
+          "next": "Next difficulty"
+        }
+      },
       "motocross": {
         "aria": "Motocross prototype: build a procedural course and ride the bike.",
         "ui": {
@@ -3619,6 +3648,11 @@
         },
         "pipeTap": {
           "rewardToast": "PipeTap: +{count} gacha ticket{suffix}!"
+        },
+        "circles": {
+          "rewardToast": "Circles: +{count} gacha ticket{suffix}!",
+          "winMessage": "Perfect sync in {moves} move{moveSuffix}!",
+          "winReward": "Reward: +{tickets} gacha ticket{ticketSuffix}."
         },
         "starBridges": {
           "rewardToast": "Star Bridges: +{count} gacha ticket{suffix}!"
