@@ -178,6 +178,27 @@
   border: 2px solid rgba(255, 255, 255, 0.05);
 }
 
+.p4__cell--obstacle .p4__token::before,
+.p4__cell--obstacle .p4__token::after {
+  content: '';
+  position: absolute;
+  inset: 20%;
+  margin: auto;
+  width: 12%;
+  height: 60%;
+  background: rgba(200, 200, 200, 0.6);
+  border-radius: 999px;
+  transform-origin: center;
+}
+
+.p4__cell--obstacle .p4__token::before {
+  transform: rotate(45deg);
+}
+
+.p4__cell--obstacle .p4__token::after {
+  transform: rotate(-45deg);
+}
+
 .p4__cell--last-move .p4__token {
   box-shadow: var(--p4-token-highlight);
 }
