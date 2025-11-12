@@ -1285,7 +1285,7 @@
       const endAngle = position ? Math.atan2(position.y, position.x) : pointerGesture.lastAngle;
       const delta = normalizeAngleDelta(endAngle - pointerGesture.startAngle);
       if (Math.abs(delta) >= TOUCH_GESTURE_MIN_ANGLE) {
-        direction = delta > 0 ? 1 : -1;
+        direction = delta > 0 ? -1 : 1;
       }
     }
     resetPointerGestureState();
