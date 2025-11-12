@@ -1721,6 +1721,7 @@
     pendingWaveAdvance: false,
     enemies: [],
     enemyBullets: [],
+    activeEnemyBulletCount: 0,
     playerBullets: [],
     drops: [],
     effects: [],
@@ -2215,6 +2216,7 @@
   function clearState() {
     state.enemies.length = 0;
     state.enemyBullets.length = 0;
+    state.activeEnemyBulletCount = 0;
     state.playerBullets.length = 0;
     state.drops.length = 0;
     state.effects.length = 0;
@@ -2900,7 +2902,7 @@
   }
 
   function spawnEnemyBullet(enemy, angle, speedMultiplier = 1) {
-    if (state.enemyBullets.length >= getEnemyBulletCapForWave()) {
+    if (state.activeEnemyBulletCount >= getEnemyBulletCapForWave()) {
       return;
     }
     const vx = Math.cos(angle);
@@ -2915,6 +2917,7 @@
       velocityY: vy * enemy.type.bulletSpeed * speedMultiplier * slowFactor,
       remove: false
     });
+    state.activeEnemyBulletCount += 1;
   }
 
   function aimAtPlayer(enemy) {
@@ -3310,6 +3313,7 @@
       }
     });
     state.enemyBullets = state.enemyBullets.filter(bullet => !bullet.remove);
+    state.activeEnemyBulletCount = state.enemyBullets.length;
   }
 
   function updateEnemies(delta) {
