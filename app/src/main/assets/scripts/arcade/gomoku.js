@@ -67,6 +67,12 @@
     maxHistory: 256
   });
 
+  const AI_VICTORY_REWARDS = Object.freeze({
+    easy: 1,
+    medium: 2,
+    hard: 3
+  });
+
   const MAX_BOARD_SIZE = 19;
   const EMPTY = 0;
 
@@ -459,9 +465,10 @@
     }
   }
 
-  function executeMove(row, col, player, options) {
+  function executeMove(row, col, player, options = {}) {
     const isRenju = state.ruleSet === RULE_SET.RENJU;
     const move = new Move(row, col, player);
+    const isAiMove = Boolean(options && options.isAI);
     const foul = isRenju && player === PLAYERS.BLACK ? checkRenjuFoul(state.board, move) : null;
     if (foul && foul.illegal) {
       showToast(translate('index.sections.gomoku.status.illegalRenju', 'Coup interdit pour Noir (Renju).', null));
@@ -479,6 +486,9 @@
       state.gameOver = true;
       state.winner = winnerInfo.player;
       state.winningLine = winnerInfo.line;
+      if (!isAiMove && state.mode === GAME_MODES.AI && winnerInfo.player === PLAYERS.BLACK) {
+        grantVsAiVictoryReward();
+      }
     }
 
     if (!state.gameOver && nextBoard.isFull()) {
@@ -491,6 +501,44 @@
     updateStatus();
     scheduleAutosave();
     return true;
+  }
+
+  function grantVsAiVictoryReward() {
+    const tickets = Number(AI_VICTORY_REWARDS[state.difficulty] || 0);
+    if (!Number.isFinite(tickets) || tickets <= 0) {
+      return;
+    }
+
+    const awardFn = typeof gainGachaTickets === 'function'
+      ? gainGachaTickets
+      : typeof window !== 'undefined' && typeof window.gainGachaTickets === 'function'
+        ? window.gainGachaTickets
+        : null;
+
+    let gained = tickets;
+    if (typeof awardFn === 'function') {
+      try {
+        const result = awardFn(tickets, { unlockTicketStar: true });
+        if (Number.isFinite(result) && result > 0) {
+          gained = Math.floor(result);
+        }
+      } catch (error) {
+        console.warn('Gomoku: unable to grant gacha tickets', error);
+        gained = tickets;
+      }
+    }
+
+    if (!Number.isFinite(gained) || gained <= 0) {
+      return;
+    }
+
+    const suffix = gained > 1 ? 's' : '';
+    const message = translate(
+      'scripts.arcade.gomoku.rewards.vsAiVictory',
+      'Victoire contre l’IA ! +{count} ticket{suffix} gacha.',
+      { count: formatNumber(gained), suffix }
+    );
+    showToast(message);
   }
 
   function determineWinner(board, lastMove) {
@@ -974,6 +1022,22 @@
     }
     toast.classList.remove('gomoku__toast--visible');
     toast.hidden = true;
+  }
+
+  function formatNumber(value) {
+    const numeric = Number(value);
+    if (!Number.isFinite(numeric)) {
+      return '';
+    }
+    const rounded = Math.floor(numeric);
+    if (typeof Intl !== 'undefined' && typeof Intl.NumberFormat === 'function') {
+      try {
+        return new Intl.NumberFormat().format(rounded);
+      } catch (error) {
+        return String(rounded);
+      }
+    }
+    return String(rounded);
   }
 
   function nowMs() {

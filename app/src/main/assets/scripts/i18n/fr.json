@@ -2589,6 +2589,11 @@
           "vsAiVictory": "Victoire contre l’IA ! +{count} ticket{suffix} gacha."
         }
       },
+      "gomoku": {
+        "rewards": {
+          "vsAiVictory": "Victoire contre l’IA ! +{count} ticket{suffix} gacha."
+        }
+      },
       "balance": {
         "status": {
           "ready": "Disposez les blocs puis appuyez sur la zone de résultat pour lancer le test.",
