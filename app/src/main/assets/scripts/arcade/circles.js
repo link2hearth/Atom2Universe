@@ -742,18 +742,18 @@
   }
   function applyUserRotation(index, direction) {
     if (state.solved || (state.animation && state.animation.active)) {
-      return;
+      return false;
     }
     const ringIndex = clampInteger(index, 0, state.rotations.length - 1, null);
     if (!Number.isFinite(ringIndex)) {
-      return;
+      return false;
     }
     if (!Array.isArray(state.rotationLinks) || state.rotationLinks.length !== state.ringCount) {
       state.rotationLinks = generateRotationLinks(state.ringCount);
     }
     const affected = applyRotationToArray(state.rotations, ringIndex, direction, state.rotationLinks, state.segments);
     if (!Array.isArray(affected) || affected.length === 0) {
-      return;
+      return false;
     }
     state.moves += 1;
     updateControlsState();
@@ -765,13 +765,40 @@
       state.pendingSolved = false;
     }
     startRotationAnimation(affected, direction);
+    return true;
   }
 
   function checkSolved(rotations) {
-    if (!Array.isArray(rotations)) {
+    if (!Array.isArray(rotations) || !Array.isArray(state.rings) || state.rings.length === 0) {
       return false;
     }
-    return rotations.every(value => normalizeRotationValue(value) === 0);
+    const ringCount = Math.min(state.rings.length, rotations.length);
+    if (ringCount === 0) {
+      return false;
+    }
+    const segments = Math.max(1, state.segments);
+    for (let segmentIndex = 0; segmentIndex < segments; segmentIndex += 1) {
+      let expectedColor = null;
+      for (let ringIndex = 0; ringIndex < ringCount; ringIndex += 1) {
+        const ring = state.rings[ringIndex];
+        if (!ring || !Array.isArray(ring.colors) || ring.colors.length === 0) {
+          return false;
+        }
+        const paletteSize = ring.colors.length;
+        const rotationValue = normalizeRotationValue(rotations[ringIndex] || 0, segments);
+        const colorIndex = ((segmentIndex - rotationValue) % paletteSize + paletteSize) % paletteSize;
+        const color = normalizeColorString(ring.colors[colorIndex]);
+        if (!color) {
+          return false;
+        }
+        if (expectedColor == null) {
+          expectedColor = color;
+        } else if (color !== expectedColor) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
   function handleSolved() {
@@ -933,7 +960,16 @@
       return;
     }
     const rect = elements.canvasWrapper.getBoundingClientRect();
-    const size = Math.max(100, Math.min(rect.width, rect.height));
+    let width = rect.width;
+    let height = rect.height;
+    if (typeof window !== 'undefined' && typeof window.getComputedStyle === 'function') {
+      const styles = window.getComputedStyle(elements.canvasWrapper);
+      const paddingX = (parseFloat(styles.paddingLeft) || 0) + (parseFloat(styles.paddingRight) || 0);
+      const paddingY = (parseFloat(styles.paddingTop) || 0) + (parseFloat(styles.paddingBottom) || 0);
+      width = Math.max(0, width - paddingX);
+      height = Math.max(0, height - paddingY);
+    }
+    const size = Math.max(100, Math.min(width, height));
     const ratio = typeof window !== 'undefined' && Number.isFinite(window.devicePixelRatio)
       ? window.devicePixelRatio
       : 1;
@@ -1257,8 +1293,24 @@
     if (!position) {
       return;
     }
+    const angle = Math.atan2(position.y, position.x);
+    pointerGesture.lastAngle = angle;
+    const delta = normalizeAngleDelta(angle - pointerGesture.startAngle);
+    if (Math.abs(delta) < getTouchRotationThreshold()) {
+      if (!pointerGesture.moved && Math.abs(delta) > 0.01) {
+        pointerGesture.moved = true;
+      }
+      return;
+    }
     pointerGesture.moved = true;
-    pointerGesture.lastAngle = Math.atan2(position.y, position.x);
+    if (state.animation && state.animation.active) {
+      return;
+    }
+    const direction = delta > 0 ? 1 : -1;
+    const rotated = applyUserRotation(pointerGesture.ringIndex, direction);
+    if (rotated) {
+      pointerGesture.startAngle = angle;
+    }
   }
 
   function handleCanvasPointerEnd(event) {
@@ -1279,14 +1331,13 @@
       elements.canvas.releasePointerCapture(event.pointerId);
     }
     const ringIndex = pointerGesture.ringIndex;
+    const position = getCanvasEventPosition(event);
+    const endAngle = position ? Math.atan2(position.y, position.x) : pointerGesture.lastAngle;
+    const delta = normalizeAngleDelta(endAngle - pointerGesture.startAngle);
+    const threshold = getTouchRotationThreshold();
     let direction = 0;
-    if (pointerGesture.moved) {
-      const position = getCanvasEventPosition(event);
-      const endAngle = position ? Math.atan2(position.y, position.x) : pointerGesture.lastAngle;
-      const delta = normalizeAngleDelta(endAngle - pointerGesture.startAngle);
-      if (Math.abs(delta) >= TOUCH_GESTURE_MIN_ANGLE) {
-        direction = delta > 0 ? -1 : 1;
-      }
+    if (Math.abs(delta) >= threshold) {
+      direction = delta > 0 ? 1 : -1;
     }
     resetPointerGestureState();
     if (direction !== 0 && Number.isFinite(ringIndex)) {
@@ -1385,6 +1436,12 @@
     pointerGesture.moved = false;
   }
 
+  function getTouchRotationThreshold() {
+    const segments = Math.max(1, state.segments);
+    const segmentAngle = (Math.PI * 2) / segments;
+    return Math.max(TOUCH_GESTURE_MIN_ANGLE, segmentAngle * 0.45);
+  }
+
   function normalizeAngleDelta(delta) {
     let angle = delta;
     const fullTurn = Math.PI * 2;
@@ -1395,6 +1452,13 @@
       angle -= fullTurn;
     }
     return angle;
+  }
+
+  function normalizeColorString(color) {
+    if (typeof color !== 'string') {
+      return '';
+    }
+    return color.trim().toLowerCase();
   }
 
   function getPointerInputType(event) {
