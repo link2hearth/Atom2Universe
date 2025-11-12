@@ -4142,8 +4142,6 @@
           "empty": "—"
         },
         "starsWar": {
-          "easyTitle": "Mode facile",
-          "hardTitle": "Mode difficile",
           "empty": "Aucun score enregistré",
           "points": {
             "one": "{count} point",
