@@ -343,6 +343,13 @@ body.theme-aurora .page--arcade-hub {
   --arcade-hub-card-shadow-hover: 0 30px 56px rgba(16, 52, 108, 0.68);
 }
 
+.arcade-hub-card[data-card-id="hex"] {
+  --arcade-hub-card-background: linear-gradient(135deg, #2f8d1f, #257517);
+  --arcade-hub-card-border: rgba(37, 117, 23, 0.52);
+  --arcade-hub-card-shadow: 0 22px 38px rgba(14, 44, 10, 0.58);
+  --arcade-hub-card-shadow-hover: 0 30px 56px rgba(22, 66, 16, 0.72);
+}
+
 .arcade-hub-card[data-card-id="sudoku"] {
   --arcade-hub-card-background: linear-gradient(135deg, #0f3838, #1e6b67);
   --arcade-hub-card-border: rgba(58, 160, 148, 0.55);
@@ -383,6 +390,13 @@ body.theme-aurora .page--arcade-hub {
   --arcade-hub-card-border: rgba(170, 80, 190, 0.5);
   --arcade-hub-card-shadow: 0 22px 38px rgba(46, 12, 66, 0.6);
   --arcade-hub-card-shadow-hover: 0 30px 56px rgba(76, 24, 104, 0.74);
+}
+
+.arcade-hub-card[data-card-id="taquin"] {
+  --arcade-hub-card-background: linear-gradient(135deg, #1f4f55, #173b3f);
+  --arcade-hub-card-border: rgba(23, 59, 63, 0.52);
+  --arcade-hub-card-shadow: 0 22px 38px rgba(8, 24, 26, 0.6);
+  --arcade-hub-card-shadow-hover: 0 30px 56px rgba(14, 40, 42, 0.75);
 }
 
 .arcade-hub-card[data-card-id="solitaire"] {
@@ -441,6 +455,13 @@ body.theme-aurora .page--arcade-hub {
   --arcade-hub-card-shadow-hover: 0 30px 56px rgba(20, 86, 70, 0.74);
 }
 
+.arcade-hub-card[data-card-id="gomoku"] {
+  --arcade-hub-card-background: linear-gradient(135deg, #2a6a1a, #1c4c12);
+  --arcade-hub-card-border: rgba(28, 76, 18, 0.5);
+  --arcade-hub-card-shadow: 0 22px 38px rgba(12, 36, 8, 0.6);
+  --arcade-hub-card-shadow-hover: 0 30px 56px rgba(18, 56, 12, 0.75);
+}
+
 .arcade-hub-card[data-card-id="p4"] {
   --arcade-hub-card-background: linear-gradient(135deg, #2b0506, #a11415);
   --arcade-hub-card-border: rgba(212, 62, 72, 0.55);
@@ -494,6 +515,13 @@ body.theme-aurora .page--arcade-hub {
   --arcade-hub-card-shadow-hover: 0 30px 56px rgba(46, 108, 22, 0.42);
   /* Masque temporairement la carte Motocross tout en conservant la configuration du jeu. */
   display: none;
+}
+
+.arcade-hub-card[data-card-id="link"] {
+  --arcade-hub-card-background: linear-gradient(135deg, #241c84, #17115e);
+  --arcade-hub-card-border: rgba(23, 17, 94, 0.52);
+  --arcade-hub-card-shadow: 0 22px 38px rgba(12, 8, 54, 0.6);
+  --arcade-hub-card-shadow-hover: 0 30px 56px rgba(18, 14, 72, 0.75);
 }
 
 .arcade-hub-card[data-card-id="twins"] {
