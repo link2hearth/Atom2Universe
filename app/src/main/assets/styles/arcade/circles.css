@@ -7,6 +7,13 @@
   color: rgba(255, 255, 255, 0.92);
 }
 
+.page--circles.active {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 .circles {
   --circles-ui-scale: 0.3;
   display: flex;
@@ -22,8 +29,11 @@
       calc(4vw * var(--circles-ui-scale)),
       calc(4rem * var(--circles-ui-scale))
     );
-  max-width: 1080px;
+  width: min(100%, 960px);
   margin: 0 auto;
+  align-items: center;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .circles__header {
@@ -135,16 +145,29 @@
   display: grid;
   gap: calc(1.6rem * var(--circles-ui-scale));
   justify-items: center;
+  place-items: center;
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .circles__canvas-wrapper {
   position: relative;
-  width: min(420px, 80vw);
+  --circles-board-max-size: min(560px, 92vmin);
+  --circles-board-viewport-width: max(240px, calc(100vw - 2.4rem));
+  --circles-board-viewport-height: max(240px, calc(100vh - 14rem));
+  width: min(
+    var(--circles-board-max-size),
+    var(--circles-board-viewport-width),
+    var(--circles-board-viewport-height)
+  );
+  max-width: 100%;
   aspect-ratio: 1 / 1;
+  margin-inline: auto;
   border-radius: 50%;
   background: none;
   box-shadow: none;
-  padding: 2.4rem;
+  padding: clamp(1.2rem, 3.6vw, 2.8rem);
 }
 
 .circles__canvas {
@@ -217,6 +240,6 @@
 
 @media (max-width: 480px) {
   .circles__canvas-wrapper {
-    padding: 1.6rem;
+    padding: clamp(0.9rem, 4vw, 1.6rem);
   }
 }
