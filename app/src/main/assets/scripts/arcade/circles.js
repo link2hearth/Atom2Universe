@@ -34,15 +34,15 @@
   }
 
   const AUTOSAVE_GAME_ID = 'circles';
-  const AUTOSAVE_VERSION = 1;
+  const AUTOSAVE_VERSION = 2;
   const AUTOSAVE_DEBOUNCE_MS = 200;
   const DIFFICULTY_ORDER = Object.freeze(['easy', 'medium', 'hard']);
+  const ROTATION_ANIMATION_DURATION = 320;
 
   const DEFAULT_CONFIG = Object.freeze({
     segments: 6,
     colors: Object.freeze(['#e74c3c', '#3498db', '#f1c40f', '#2ecc71', '#9b59b6', '#e67e22']),
     colorOffsets: Object.freeze([0, 3, 2, 5, 1, 4]),
-    autoRotateOuterRing: true,
     maxShuffleAttempts: 32,
     seedLength: 8,
     difficulties: Object.freeze({
@@ -81,14 +81,17 @@
     rings: [],
     rotations: [],
     initialRotations: [],
+    rotationLinks: [],
     ringMetrics: [],
     seed: '',
     moves: 0,
     solved: false,
+    pendingSolved: false,
     rewardClaimed: false,
     autosaveTimer: null,
     autosaveSuppressed: false,
-    resizeObserver: null
+    resizeObserver: null,
+    animation: createAnimationState()
   };
 
   let languageListenerAttached = false;
@@ -99,6 +102,7 @@
     state.rings = createRingDefinitions(state.ringCount);
     state.rotations = new Array(state.ringCount).fill(0);
     state.initialRotations = state.rotations.slice();
+    state.rotationLinks = generateRotationLinks(state.ringCount);
 
     attachEventListeners();
     resizeCanvas();
@@ -185,6 +189,7 @@
       moves: clampInteger(state.moves, 0, 9999, 0),
       rotations: state.rotations.slice(),
       initialRotations: state.initialRotations.slice(),
+      rotationLinks: Array.isArray(state.rotationLinks) ? state.rotationLinks.slice() : [],
       solved: Boolean(state.solved),
       rewardClaimed: Boolean(state.rewardClaimed)
     };
@@ -267,12 +272,19 @@
     const ringCount = clampInteger(payload.ringCount, 2, 12, state.ringCount);
     applyRingCount(ringCount);
 
+    const rotationLinks = sanitizeRotationLinks(payload.rotationLinks, state.ringCount);
+    if (!rotationLinks) {
+      return false;
+    }
+    state.rotationLinks = rotationLinks;
+
     state.seed = typeof payload.seed === 'string' ? payload.seed : '';
     state.moves = clampInteger(payload.moves, 0, 9999, 0);
 
     state.rotations = sanitizeRotationArray(payload.rotations, state.ringCount);
     state.initialRotations = sanitizeRotationArray(payload.initialRotations, state.ringCount, state.rotations);
     state.solved = payload.solved === true && checkSolved(state.rotations);
+    state.pendingSolved = false;
     state.rewardClaimed = payload.rewardClaimed === true;
 
     updateStats();
@@ -301,6 +313,32 @@
     return sanitized;
   }
 
+  function sanitizeRotationLinks(source, expectedLength) {
+    const length = clampInteger(expectedLength, 1, 12, 1);
+    if (!Array.isArray(source) || source.length < length) {
+      return null;
+    }
+    const sanitized = new Array(length);
+    const usedTargets = new Set();
+    for (let i = 0; i < length; i += 1) {
+      const candidate = Number(source[i]);
+      if (
+        Number.isFinite(candidate) &&
+        candidate >= 0 &&
+        candidate < length &&
+        Math.floor(candidate) === candidate &&
+        candidate !== i &&
+        !usedTargets.has(candidate)
+      ) {
+        sanitized[i] = candidate;
+        usedTargets.add(candidate);
+      } else {
+        return null;
+      }
+    }
+    return sanitized;
+  }
+
   function normalizeSettings(raw) {
     const base = DEFAULT_CONFIG;
     const segments = clampInteger(raw && raw.segments, 3, 18, base.segments);
@@ -321,9 +359,6 @@
     );
 
     const colorOffsets = buildColorOffsets(raw && raw.colorOffsets, base.colorOffsets, maxRingCount, segments);
-    const autoRotateOuterRing = raw && typeof raw.autoRotateOuterRing === 'boolean'
-      ? raw.autoRotateOuterRing
-      : base.autoRotateOuterRing;
     const maxShuffleAttempts = clampInteger(raw && raw.maxShuffleAttempts, 4, 200, base.maxShuffleAttempts);
     const seedLength = clampInteger(raw && raw.seedLength, 4, 32, base.seedLength);
 
@@ -331,7 +366,6 @@
       segments,
       colors,
       colorOffsets,
-      autoRotateOuterRing,
       maxShuffleAttempts,
       seedLength,
       difficulties: normalizedDifficulties
@@ -456,6 +490,16 @@
     return modulo;
   }
 
+  function normalizeRotationForDisplay(value, segmentsOverride) {
+    const segments = Number.isFinite(segmentsOverride) ? segmentsOverride : state.segments;
+    const numeric = Number(value);
+    if (!Number.isFinite(numeric) || !Number.isFinite(segments) || segments <= 0) {
+      return 0;
+    }
+    const modulo = ((numeric % segments) + segments) % segments;
+    return modulo;
+  }
+
   function randomInt(min, max) {
     const lower = Number.isFinite(min) ? Math.floor(min) : 0;
     const upper = Number.isFinite(max) ? Math.floor(max) : lower;
@@ -543,6 +587,8 @@
     state.rings = createRingDefinitions(count);
     state.rotations = new Array(count).fill(0);
     state.initialRotations = state.rotations.slice();
+    state.rotationLinks = generateRotationLinks(count);
+    resetAnimationState();
     computeRingMetrics();
   }
 
@@ -570,6 +616,7 @@
     const puzzle = generatePuzzleDefinition(ringCount, difficultyKey);
 
     withAutosaveSuppressed(() => {
+      resetAnimationState();
       applyPuzzleDefinition(puzzle, difficultyKey);
       hideWinOverlay();
       scheduleAutosave();
@@ -582,11 +629,14 @@
     }
     state.difficulty = DIFFICULTY_ORDER.includes(difficultyKey) ? difficultyKey : state.difficulty;
     applyRingCount(definition.ringCount);
+    const links = sanitizeRotationLinks(definition.rotationLinks, state.ringCount);
+    state.rotationLinks = links || generateRotationLinks(state.ringCount);
     state.rotations = sanitizeRotationArray(definition.rotations, state.ringCount);
     state.initialRotations = state.rotations.slice();
     state.seed = typeof definition.seed === 'string' ? definition.seed : generateSeed(state.settings.seedLength);
     state.moves = 0;
     state.solved = checkSolved(state.rotations);
+    state.pendingSolved = false;
     state.rewardClaimed = false;
     updateControlsState();
     updateStats();
@@ -600,9 +650,11 @@
       return;
     }
     withAutosaveSuppressed(() => {
+      resetAnimationState();
       state.rotations = sanitizeRotationArray(state.initialRotations, state.ringCount);
       state.moves = 0;
       state.solved = checkSolved(state.rotations);
+      state.pendingSolved = false;
       state.rewardClaimed = false;
       hideWinOverlay();
       updateControlsState();
@@ -620,65 +672,93 @@
     const attempts = clampInteger(state.settings.maxShuffleAttempts, 4, 200, 32);
 
     for (let attempt = 0; attempt < attempts; attempt += 1) {
+      const rotationLinks = generateRotationLinks(count);
       const rotations = new Array(count).fill(0);
       const moveCount = randomInt(minMoves, maxMoves);
       for (let move = 0; move < moveCount; move += 1) {
         const index = randomInt(0, count - 1);
         const direction = Math.random() < 0.5 ? 1 : -1;
-        applyRotationToArray(rotations, index, direction, state.settings.autoRotateOuterRing, state.segments);
+        applyRotationToArray(rotations, index, direction, rotationLinks, state.segments);
       }
       if (!checkSolved(rotations)) {
         return {
           ringCount: count,
           rotations: rotations.map(value => normalizeRotationValue(value)),
+          rotationLinks,
           seed: generateSeed(state.settings.seedLength)
         };
       }
     }
 
+    const fallbackLinks = generateRotationLinks(count);
     const fallbackRotations = new Array(count).fill(0);
-    fallbackRotations[count - 1] = 1;
-    if (state.settings.autoRotateOuterRing && count > 1) {
-      fallbackRotations[count - 2] = (fallbackRotations[count - 2] || 0) + 1;
+    if (count > 0) {
+      const index = Math.max(0, count - 1);
+      applyRotationToArray(fallbackRotations, index, 1, fallbackLinks, state.segments);
     }
     return {
       ringCount: count,
       rotations: fallbackRotations.map(value => normalizeRotationValue(value)),
+      rotationLinks: fallbackLinks,
       seed: generateSeed(state.settings.seedLength)
     };
   }
 
-  function applyRotationToArray(rotations, index, direction, autoRotateOuterRing, segmentsOverride) {
+  function applyRotationToArray(rotations, index, direction, rotationLinks, segmentsOverride) {
     if (!Array.isArray(rotations)) {
-      return;
+      return [];
     }
-    const ringIndex = clampInteger(index, 0, rotations.length - 1, null);
-    if (!Number.isFinite(ringIndex)) {
-      return;
+    const numericIndex = Number(index);
+    if (!Number.isFinite(numericIndex)) {
+      return [];
     }
+    const ringIndex = Math.min(Math.max(Math.floor(numericIndex), 0), rotations.length - 1);
     const dir = direction > 0 ? 1 : -1;
     rotations[ringIndex] = normalizeRotationValue(rotations[ringIndex] + dir, segmentsOverride);
-    if (autoRotateOuterRing && ringIndex > 0) {
-      rotations[ringIndex - 1] = normalizeRotationValue(rotations[ringIndex - 1] + dir, segmentsOverride);
+    const affected = [ringIndex];
+    if (Array.isArray(rotationLinks) && rotationLinks.length === rotations.length) {
+      const targetCandidate = rotationLinks[ringIndex];
+      const targetIndex = Number(targetCandidate);
+      if (
+        Number.isFinite(targetIndex) &&
+        targetIndex >= 0 &&
+        targetIndex < rotations.length &&
+        Math.floor(targetIndex) === targetIndex &&
+        targetIndex !== ringIndex
+      ) {
+        rotations[targetIndex] = normalizeRotationValue(rotations[targetIndex] + dir, segmentsOverride);
+        if (!affected.includes(targetIndex)) {
+          affected.push(targetIndex);
+        }
+      }
     }
+    return affected;
   }
   function applyUserRotation(index, direction) {
-    if (state.solved) {
+    if (state.solved || (state.animation && state.animation.active)) {
       return;
     }
     const ringIndex = clampInteger(index, 0, state.rotations.length - 1, null);
     if (!Number.isFinite(ringIndex)) {
       return;
     }
-    applyRotationToArray(state.rotations, ringIndex, direction, state.settings.autoRotateOuterRing, state.segments);
+    if (!Array.isArray(state.rotationLinks) || state.rotationLinks.length !== state.ringCount) {
+      state.rotationLinks = generateRotationLinks(state.ringCount);
+    }
+    const affected = applyRotationToArray(state.rotations, ringIndex, direction, state.rotationLinks, state.segments);
+    if (!Array.isArray(affected) || affected.length === 0) {
+      return;
+    }
     state.moves += 1;
     updateControlsState();
     updateStats();
-    draw();
     scheduleAutosave();
-    if (checkSolved(state.rotations)) {
-      handleSolved();
+    const solved = checkSolved(state.rotations);
+    state.pendingSolved = solved;
+    if (!solved) {
+      state.pendingSolved = false;
     }
+    startRotationAnimation(affected, direction);
   }
 
   function checkSolved(rotations) {
@@ -693,6 +773,7 @@
       return;
     }
     state.solved = true;
+    state.pendingSolved = false;
     updateWinMessage();
     showWinOverlay();
     awardCompletionTickets();
@@ -901,7 +982,8 @@
       if (!metrics || !ring) {
         continue;
       }
-      const rotation = normalizeRotationValue(state.rotations[index] || 0) * step;
+      const rotationValue = getDisplayRotationValue(index);
+      const rotation = rotationValue * step;
       for (let i = 0; i < state.segments; i += 1) {
         const startAngle = rotation + i * step;
         const endAngle = startAngle + step;
@@ -912,8 +994,226 @@
         ctx2d.fillStyle = ring.colors[i % ring.colors.length] || '#ffffff';
         ctx2d.fill();
       }
+      if (state.animation && state.animation.active && state.animation.highlight instanceof Set && state.animation.highlight.has(index)) {
+        drawRingHighlight(metrics);
+      }
     }
     ctx2d.restore();
+  }
+
+  function getDisplayRotationValue(index) {
+    const rotationsLength = Array.isArray(state.rotations) ? state.rotations.length : 0;
+    if (index < 0 || index >= rotationsLength) {
+      return 0;
+    }
+    if (state.animation && state.animation.active && state.animation.current instanceof Map && state.animation.current.has(index)) {
+      return normalizeRotationForDisplay(state.animation.current.get(index), state.segments);
+    }
+    return normalizeRotationForDisplay(state.rotations[index] || 0, state.segments);
+  }
+
+  function drawRingHighlight(metrics) {
+    if (!metrics || !state.ctx) {
+      return;
+    }
+    const ctx2d = state.ctx;
+    const inner = Math.max(metrics.inner, 0);
+    const thickness = Math.max(metrics.outer - inner, 0);
+    ctx2d.save();
+    ctx2d.beginPath();
+    ctx2d.arc(0, 0, metrics.outer, 0, Math.PI * 2);
+    ctx2d.arc(0, 0, inner, Math.PI * 2, 0, true);
+    ctx2d.closePath();
+    ctx2d.fillStyle = 'rgba(255, 255, 255, 0.25)';
+    ctx2d.fill();
+    ctx2d.beginPath();
+    ctx2d.arc(0, 0, (metrics.outer + inner) / 2, 0, Math.PI * 2);
+    ctx2d.strokeStyle = 'rgba(94, 213, 255, 0.85)';
+    ctx2d.lineWidth = Math.max(2, thickness * 0.12);
+    ctx2d.shadowColor = 'rgba(94, 213, 255, 0.6)';
+    ctx2d.shadowBlur = Math.max(4, thickness * 0.35);
+    ctx2d.stroke();
+    ctx2d.restore();
+  }
+
+  function createAnimationState() {
+    return {
+      active: false,
+      start: 0,
+      duration: ROTATION_ANIMATION_DURATION,
+      frameRequest: null,
+      from: new Map(),
+      to: new Map(),
+      current: new Map(),
+      highlight: new Set()
+    };
+  }
+
+  function resetAnimationState() {
+    if (state.animation && state.animation.frameRequest != null) {
+      cancelAnimationFrameSafe(state.animation.frameRequest);
+    }
+    state.animation = createAnimationState();
+  }
+
+  function startRotationAnimation(indices, direction) {
+    const dir = direction > 0 ? 1 : -1;
+    const sanitized = Array.isArray(indices)
+      ? Array.from(
+          new Set(
+            indices
+              .map(value => Number(value))
+              .filter(value =>
+                Number.isFinite(value) &&
+                value >= 0 &&
+                Math.floor(value) === value &&
+                value < state.rotations.length
+              )
+          )
+        )
+      : [];
+    if (!sanitized.length) {
+      draw();
+      if (state.pendingSolved) {
+        const shouldHandle = state.pendingSolved;
+        state.pendingSolved = false;
+        if (shouldHandle) {
+          handleSolved();
+        }
+      }
+      return;
+    }
+    resetAnimationState();
+    const animation = state.animation;
+    animation.active = true;
+    animation.start = getTimestamp();
+    sanitized.forEach(index => {
+      const endValue = normalizeRotationForDisplay(state.rotations[index] || 0, state.segments);
+      const startValue = normalizeRotationForDisplay(endValue - dir, state.segments);
+      animation.from.set(index, startValue);
+      animation.to.set(index, endValue);
+      animation.current.set(index, startValue);
+      animation.highlight.add(index);
+    });
+    draw();
+    const step = timestamp => {
+      if (!state.animation || !state.animation.active) {
+        return;
+      }
+      const anim = state.animation;
+      anim.frameRequest = null;
+      const time = Number.isFinite(timestamp) ? timestamp : getTimestamp();
+      const duration = anim.duration > 0 ? anim.duration : ROTATION_ANIMATION_DURATION;
+      const elapsed = time - anim.start;
+      const progress = duration > 0 ? Math.min(Math.max(elapsed / duration, 0), 1) : 1;
+      const eased = easeInOutCubic(progress);
+      anim.from.forEach((startValue, index) => {
+        const endValue = anim.to.get(index);
+        const delta = computeShortestDelta(startValue, endValue, state.segments);
+        anim.current.set(index, startValue + delta * eased);
+      });
+      draw();
+      if (progress < 1) {
+        anim.frameRequest = requestAnimationFrameSafe(step);
+        return;
+      }
+      const shouldHandleSolved = state.pendingSolved;
+      state.pendingSolved = false;
+      resetAnimationState();
+      draw();
+      if (shouldHandleSolved) {
+        handleSolved();
+      }
+    };
+    const handle = requestAnimationFrameSafe(step);
+    if (handle != null && state.animation && state.animation.active) {
+      state.animation.frameRequest = handle;
+    }
+  }
+
+  function requestAnimationFrameSafe(callback) {
+    if (typeof window !== 'undefined') {
+      if (typeof window.requestAnimationFrame === 'function') {
+        return window.requestAnimationFrame(callback);
+      }
+      if (typeof window.setTimeout === 'function') {
+        return window.setTimeout(() => {
+          callback(getTimestamp());
+        }, 16);
+      }
+    }
+    callback(getTimestamp());
+    return null;
+  }
+
+  function cancelAnimationFrameSafe(handle) {
+    if (handle == null) {
+      return;
+    }
+    if (typeof window !== 'undefined') {
+      if (typeof window.cancelAnimationFrame === 'function') {
+        window.cancelAnimationFrame(handle);
+        return;
+      }
+      if (typeof window.clearTimeout === 'function') {
+        window.clearTimeout(handle);
+      }
+    }
+  }
+
+  function getTimestamp() {
+    if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+      return performance.now();
+    }
+    return Date.now();
+  }
+
+  function easeInOutCubic(t) {
+    const clamped = Math.min(Math.max(t, 0), 1);
+    return clamped < 0.5
+      ? 4 * clamped * clamped * clamped
+      : 1 - Math.pow(-2 * clamped + 2, 3) / 2;
+  }
+
+  function computeShortestDelta(start, end, segmentsOverride) {
+    const segments = Number.isFinite(segmentsOverride) ? segmentsOverride : state.segments;
+    if (!Number.isFinite(segments) || segments <= 0) {
+      return 0;
+    }
+    let delta = end - start;
+    const half = segments / 2;
+    if (delta > half) {
+      delta -= segments;
+    } else if (delta < -half) {
+      delta += segments;
+    }
+    return delta;
+  }
+
+  function generateRotationLinks(count) {
+    const length = clampInteger(count, 2, 12, 2);
+    if (length <= 1) {
+      return [0];
+    }
+    const links = new Array(length);
+    for (let i = 0; i < length; i += 1) {
+      links[i] = i;
+    }
+    for (let i = length - 1; i > 0; i -= 1) {
+      const j = randomInt(0, i);
+      const temp = links[i];
+      links[i] = links[j];
+      links[j] = temp;
+    }
+    for (let i = 0; i < length; i += 1) {
+      if (links[i] === i) {
+        const swapIndex = (i + 1) % length;
+        const temp = links[i];
+        links[i] = links[swapIndex];
+        links[swapIndex] = temp;
+      }
+    }
+    return links;
   }
 
   function handleCanvasPointer(event) {
