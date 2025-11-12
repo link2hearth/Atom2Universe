@@ -1830,7 +1830,11 @@
         "controls": {
           "restart": "New Run",
           "pause": "Pause",
-          "resume": "Resume"
+          "resume": "Resume",
+          "difficulty": {
+            "easy": "Easy mode",
+            "hard": "Hard mode"
+          }
         },
         "overlay": {
           "start": {

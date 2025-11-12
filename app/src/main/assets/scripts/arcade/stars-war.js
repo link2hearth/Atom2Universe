@@ -20,6 +20,7 @@
     difficultyValue: document.getElementById('starsWarDifficultyValue'),
     pauseButton: document.getElementById('starsWarPauseButton'),
     restartButton: document.getElementById('starsWarRestartButton'),
+    difficultyButton: document.getElementById('starsWarDifficultyButton'),
     powerupList: document.getElementById('starsWarPowerupList'),
     livesContainer: document.getElementById('starsWarLives'),
     screenReaderStatus: document.getElementById('starsWarStatus')
@@ -41,6 +42,14 @@
       enemy: 0.5
     })
   });
+
+  const DIFFICULTY_MODES = Object.freeze({
+    EASY: 'easy',
+    HARD: 'hard'
+  });
+
+  const EASY_ENEMY_HITBOX_SCALE = 1;
+  const EASY_BULLET_CAP_FACTOR = 0.5;
 
   function toFiniteNumber(value, fallback) {
     const numeric = Number(value);
@@ -1701,6 +1710,7 @@
     uiNeedsSync: true,
     elapsed: 0,
     difficulty: 1,
+    difficultyMode: DIFFICULTY_MODES.HARD,
     wave: 0,
     spawnQueue: [],
     spawnTimer: 0,
@@ -1708,6 +1718,7 @@
     waveTimer: Math.min(INITIAL_WAVE_INTERVAL, DEFAULT_CONFIG.maxWaveDurationSeconds),
     waveElapsed: 0,
     maxOnScreen: 10 + Math.floor(3 * 1),
+    pendingWaveAdvance: false,
     enemies: [],
     enemyBullets: [],
     playerBullets: [],
@@ -1787,7 +1798,11 @@
       ? fallbackConfig.enemy
       : fallbackConfig.player;
     const rawScale = activeConfig && typeof activeConfig === 'object' ? activeConfig[type] : undefined;
-    return clampNumber(rawScale, 0.1, 2, fallback != null ? fallback : 0.5);
+    const scale = clampNumber(rawScale, 0.1, 2, fallback != null ? fallback : 0.5);
+    if (state.difficultyMode === DIFFICULTY_MODES.EASY && type === 'enemy') {
+      return clampNumber(EASY_ENEMY_HITBOX_SCALE, 0.1, 2, scale);
+    }
+    return scale;
   }
 
   const KEY_BINDINGS = Object.freeze({
@@ -1825,6 +1840,8 @@
     'index.sections.starsWar.powerups.heart': { en: 'Extra life', fr: 'Cœur supplémentaire' },
     'index.sections.starsWar.controls.pause': { en: 'Pause', fr: 'Pause' },
     'index.sections.starsWar.controls.resume': { en: 'Resume', fr: 'Reprendre' },
+    'index.sections.starsWar.controls.difficulty.easy': { en: 'Easy mode', fr: 'Mode facile' },
+    'index.sections.starsWar.controls.difficulty.hard': { en: 'Hard mode', fr: 'Mode difficile' },
     'index.sections.starsWar.status.powerup': { en: 'Power-up equipped: {powerup}', fr: 'Bonus activé : {powerup}' },
     'index.sections.starsWar.status.heart': { en: 'Heart recovered!', fr: 'Cœur récupéré !' },
     'index.sections.starsWar.status.shield': { en: 'Shield absorbed the hit.', fr: 'Bouclier absorbé.' },
@@ -2215,6 +2232,7 @@
     state.waveElapsed = 0;
     resetWaveTimer();
     state.maxOnScreen = 10 + Math.floor(3 * state.difficulty);
+    state.pendingWaveAdvance = false;
     state.spawnTimer = 0;
     state.heartPitySeconds = 0;
     state.nextDifficultyTick = 60;
@@ -2231,6 +2249,46 @@
     resetPlayer();
     updateUi(true);
     state.uiNeedsSync = false;
+  }
+
+  function setDifficultyMode(mode) {
+    const normalized = mode === DIFFICULTY_MODES.EASY ? DIFFICULTY_MODES.EASY : DIFFICULTY_MODES.HARD;
+    if (state.difficultyMode === normalized) {
+      return false;
+    }
+    state.difficultyMode = normalized;
+    state.uiNeedsSync = true;
+    return true;
+  }
+
+  function applyDifficultyModeChange() {
+    const wasRunning = state.running && !state.gameOver && state.overlayMode === 'running';
+    const wasPaused = state.paused && !state.gameOver && state.overlayMode === 'paused';
+    const shouldAutoStart = wasRunning || wasPaused;
+    state.running = false;
+    state.paused = false;
+    hideOverlay();
+    flushAutosave();
+    const seedValue = randomSeedString();
+    applySeed(seedValue);
+    state.scriptedSequence = createScriptedSequence();
+    resetGame();
+    scheduleNextWave();
+    if (shouldAutoStart) {
+      startRun();
+    } else {
+      promptForNewRun();
+    }
+  }
+
+  function toggleDifficultyMode() {
+    const nextMode = state.difficultyMode === DIFFICULTY_MODES.EASY
+      ? DIFFICULTY_MODES.HARD
+      : DIFFICULTY_MODES.EASY;
+    if (!setDifficultyMode(nextMode)) {
+      return;
+    }
+    applyDifficultyModeChange();
   }
 
   function randomSeedString() {
@@ -2289,7 +2347,11 @@
     const safeBase = Math.max(0, Math.floor(Number.isFinite(base) ? base : DEFAULT_CONFIG.enemyBulletCap.base));
     const safeIncrement = Math.max(0, Math.floor(Number.isFinite(perWave) ? perWave : DEFAULT_CONFIG.enemyBulletCap.perWave));
     const waveIndex = Math.max(1, Math.floor(state.wave || 1));
-    return safeBase + Math.max(0, waveIndex - 1) * safeIncrement;
+    const cap = safeBase + Math.max(0, waveIndex - 1) * safeIncrement;
+    if (state.difficultyMode === DIFFICULTY_MODES.EASY) {
+      return Math.max(0, Math.floor(cap * EASY_BULLET_CAP_FACTOR));
+    }
+    return cap;
   }
 
   function computeWaveInterval() {
@@ -2339,6 +2401,7 @@
     state.spawnQueue.sort((a, b) => (a.spawnAt || now) - (b.spawnAt || now));
     state.waveElapsed = 0;
     resetWaveTimer();
+    state.pendingWaveAdvance = false;
   }
 
   function createScriptedSequence() {
@@ -3309,11 +3372,18 @@
     if (state.wave <= 0) {
       return;
     }
+    const easyMode = state.difficultyMode === DIFFICULTY_MODES.EASY;
     const waveCleared = !state.spawnQueue.length && !state.enemies.length;
     if (waveCleared && state.lastWaveDifficultyBoost !== state.wave) {
       state.difficulty = Math.min(8, state.difficulty + 0.25);
       state.lastWaveDifficultyBoost = state.wave;
       state.maxOnScreen = 10 + Math.floor(3 * state.difficulty);
+    }
+    if (easyMode) {
+      if (waveCleared && !state.pendingWaveAdvance) {
+        state.pendingWaveAdvance = true;
+      }
+      return;
     }
     const maxDuration = getMaxWaveDuration();
     if ((waveCleared && state.waveTimer > 0) || state.waveElapsed >= maxDuration) {
@@ -3322,6 +3392,13 @@
   }
 
   function updateWaveTimer(delta) {
+    if (state.difficultyMode === DIFFICULTY_MODES.EASY) {
+      if (state.pendingWaveAdvance) {
+        state.pendingWaveAdvance = false;
+        scheduleNextWave();
+      }
+      return;
+    }
     state.waveTimer -= delta;
     while (state.waveTimer <= 0) {
       const overrun = -state.waveTimer;
@@ -3464,6 +3541,38 @@
     }
   }
 
+  function updateDifficultyToggleState(force = false) {
+    if (!elements.difficultyButton) {
+      return;
+    }
+    const button = elements.difficultyButton;
+    const isEasy = state.difficultyMode === DIFFICULTY_MODES.EASY;
+    const pressed = isEasy ? 'true' : 'false';
+    if (button.getAttribute('aria-pressed') !== pressed) {
+      button.setAttribute('aria-pressed', pressed);
+    }
+    const translationKey = isEasy
+      ? 'index.sections.starsWar.controls.difficulty.easy'
+      : 'index.sections.starsWar.controls.difficulty.hard';
+    const currentLang = uiState.language || '';
+    const previousLang = button.dataset.modeLang || '';
+    const previousKey = button.dataset.modeKey || '';
+    if (force || previousLang !== currentLang || previousKey !== translationKey) {
+      const label = getUiTranslation(translationKey) || (isEasy ? 'Easy mode' : 'Hard mode');
+      button.textContent = label;
+      button.dataset.modeLang = currentLang;
+      button.dataset.modeKey = translationKey;
+      if (translationKey) {
+        button.dataset.i18n = translationKey;
+      } else {
+        delete button.dataset.i18n;
+      }
+      if (label) {
+        button.setAttribute('aria-label', label);
+      }
+    }
+  }
+
   function updateUi(force = false) {
     const currentLang = resolveLanguageCode();
     const normalizedLang = currentLang || '';
@@ -3477,6 +3586,7 @@
       effectiveForce = true;
     }
     updatePauseButtonState(effectiveForce);
+    updateDifficultyToggleState(effectiveForce);
     if (elements.scoreValue) {
       const scoreText = formatNumber(state.score);
       if (effectiveForce || uiState.scoreText !== scoreText) {
@@ -4149,6 +4259,11 @@
     if (elements.restartButton) {
       elements.restartButton.addEventListener('click', () => {
         restartRun({ preserveSeed: false });
+      });
+    }
+    if (elements.difficultyButton) {
+      elements.difficultyButton.addEventListener('click', () => {
+        toggleDifficultyMode();
       });
     }
     const initialSeed = randomSeedString();
