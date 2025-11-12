@@ -50,6 +50,30 @@
 
   const EASY_ENEMY_HITBOX_SCALE = 1;
   const EASY_BULLET_CAP_FACTOR = 0.5;
+  const GAME_STATE_ARCADE_ID = 'starsWar';
+  const ARCADE_AUTOSAVE_STORAGE_KEY = 'atom2univers.arcadeSaves.v1';
+  let pendingGameStatePayload = null;
+  let gameStateSyncTimerId = null;
+
+  function createEmptyRecordEntry() {
+    return {
+      bestScore: 0,
+      bestTime: 0,
+      bestWave: 0,
+      bestDifficulty: 1,
+      topRuns: []
+    };
+  }
+
+  function createInitialRecordState() {
+    return {
+      modes: {
+        [DIFFICULTY_MODES.EASY]: createEmptyRecordEntry(),
+        [DIFFICULTY_MODES.HARD]: createEmptyRecordEntry()
+      },
+      lastMode: DIFFICULTY_MODES.HARD
+    };
+  }
 
   function toFiniteNumber(value, fallback) {
     const numeric = Number(value);
@@ -1734,13 +1758,7 @@
     overlayMode: 'ready',
     powerups: {},
     lastWaveDifficultyBoost: 0,
-    records: {
-      bestScore: 0,
-      bestTime: 0,
-      bestWave: 0,
-      bestDifficulty: 1,
-      topRuns: []
-    },
+    records: createInitialRecordState(),
     lastSeed: '',
     config: DEFAULT_CONFIG,
     scriptedSequence: SCRIPTED_WAVE_SEQUENCE.slice()
@@ -1950,6 +1968,172 @@
     return key;
   }
 
+  function safeClone(value) {
+    if (value == null) {
+      return null;
+    }
+    try {
+      return JSON.parse(JSON.stringify(value));
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function getGlobalGameState() {
+    if (typeof window === 'undefined') {
+      return null;
+    }
+    if (window.atom2universGameState && typeof window.atom2universGameState === 'object') {
+      return window.atom2universGameState;
+    }
+    if (window.gameState && typeof window.gameState === 'object') {
+      return window.gameState;
+    }
+    return null;
+  }
+
+  function readArcadeEntryFromGameState() {
+    const gameState = getGlobalGameState();
+    if (!gameState || !gameState.arcadeProgress || typeof gameState.arcadeProgress !== 'object') {
+      return null;
+    }
+    const entries = gameState.arcadeProgress.entries && typeof gameState.arcadeProgress.entries === 'object'
+      ? gameState.arcadeProgress.entries
+      : null;
+    if (!entries) {
+      return null;
+    }
+    const entry = entries[GAME_STATE_ARCADE_ID];
+    if (!entry || typeof entry !== 'object') {
+      return null;
+    }
+    return entry.state && typeof entry.state === 'object' ? entry.state : entry;
+  }
+
+  function schedulePendingGameStateSync() {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    if (gameStateSyncTimerId != null) {
+      window.clearTimeout(gameStateSyncTimerId);
+    }
+    gameStateSyncTimerId = window.setTimeout(() => {
+      gameStateSyncTimerId = null;
+      if (pendingGameStatePayload) {
+        writeArcadeEntryToGameState(pendingGameStatePayload);
+      }
+    }, 200);
+  }
+
+  function writeArcadeEntryToGameState(payload) {
+    const clone = safeClone(payload);
+    if (!clone) {
+      return;
+    }
+    const gameState = getGlobalGameState();
+    if (!gameState) {
+      pendingGameStatePayload = clone;
+      schedulePendingGameStateSync();
+      return;
+    }
+    if (!gameState.arcadeProgress || typeof gameState.arcadeProgress !== 'object') {
+      gameState.arcadeProgress = { version: 1, entries: {} };
+    }
+    if (!gameState.arcadeProgress.entries || typeof gameState.arcadeProgress.entries !== 'object') {
+      gameState.arcadeProgress.entries = {};
+    }
+    gameState.arcadeProgress.entries[GAME_STATE_ARCADE_ID] = {
+      state: clone,
+      updatedAt: Date.now()
+    };
+    pendingGameStatePayload = null;
+  }
+
+  if (typeof window !== 'undefined') {
+    window.addEventListener('load', () => {
+      if (pendingGameStatePayload) {
+        writeArcadeEntryToGameState(pendingGameStatePayload);
+      }
+    });
+  }
+
+  function readArcadeEntryFromNativeSave() {
+    if (typeof window === 'undefined' || !window.AndroidSaveBridge || typeof window.AndroidSaveBridge.loadData !== 'function') {
+      return null;
+    }
+    try {
+      const raw = window.AndroidSaveBridge.loadData();
+      if (!raw) {
+        return null;
+      }
+      const payload = typeof raw === 'string' ? raw : String(raw);
+      const parsed = JSON.parse(payload);
+      if (!parsed || typeof parsed !== 'object') {
+        return null;
+      }
+      const sources = [];
+      if (parsed.clicker && typeof parsed.clicker === 'object') {
+        sources.push(parsed.clicker);
+      }
+      sources.push(parsed);
+      if (parsed.meta && typeof parsed.meta === 'object') {
+        sources.push(parsed.meta);
+      }
+      for (let i = 0; i < sources.length; i += 1) {
+        const container = sources[i];
+        if (!container || typeof container !== 'object') {
+          continue;
+        }
+        const progress = container.arcadeProgress && typeof container.arcadeProgress === 'object'
+          ? container.arcadeProgress
+          : null;
+        if (!progress) {
+          continue;
+        }
+        const entries = progress.entries && typeof progress.entries === 'object'
+          ? progress.entries
+          : progress;
+        if (!entries || typeof entries !== 'object') {
+          continue;
+        }
+        const entry = entries[GAME_STATE_ARCADE_ID];
+        if (entry && typeof entry === 'object') {
+          const state = entry.state && typeof entry.state === 'object' ? entry.state : entry;
+          if (state && typeof state === 'object') {
+            return state;
+          }
+        }
+      }
+    } catch (error) {
+      return null;
+    }
+    return null;
+  }
+
+  function readArcadeEntryFromLegacyStorage() {
+    if (typeof window === 'undefined' || !window.localStorage) {
+      return null;
+    }
+    try {
+      const raw = window.localStorage.getItem(ARCADE_AUTOSAVE_STORAGE_KEY);
+      if (!raw) {
+        return null;
+      }
+      const parsed = JSON.parse(raw);
+      if (!parsed || typeof parsed !== 'object') {
+        return null;
+      }
+      const entries = parsed.entries && typeof parsed.entries === 'object' ? parsed.entries : parsed;
+      const entry = entries[GAME_STATE_ARCADE_ID];
+      if (!entry || typeof entry !== 'object') {
+        return null;
+      }
+      return entry.state && typeof entry.state === 'object' ? entry.state : entry;
+    } catch (error) {
+      return null;
+    }
+  }
+
   function getAutosaveApi() {
     if (typeof window === 'undefined') {
       return null;
@@ -1959,6 +2143,18 @@
       return null;
     }
     return api;
+  }
+
+  function readArcadeEntryFromAutosaveApi() {
+    const api = getAutosaveApi();
+    if (!api) {
+      return null;
+    }
+    try {
+      return api.get(AUTOSAVE_KEY);
+    } catch (error) {
+      return null;
+    }
   }
 
   function compareTopRuns(a, b) {
@@ -2024,104 +2220,230 @@
     return true;
   }
 
-  function ensureTopRunsSanitized() {
-    const stored = Array.isArray(state.records.topRuns) ? state.records.topRuns : [];
+  function sanitizeRecordEntry(raw) {
+    const record = createEmptyRecordEntry();
+    if (!raw || typeof raw !== 'object') {
+      return record;
+    }
+    const toNumber = value => {
+      const numeric = Number(value);
+      return Number.isFinite(numeric) && numeric >= 0 ? numeric : 0;
+    };
+    record.bestScore = Math.max(0, Math.floor(toNumber(raw.bestScore ?? raw.score ?? raw.highScore)));
+    record.bestTime = toNumber(raw.bestTime ?? raw.bestTimeSeconds ?? raw.time ?? raw.duration);
+    record.bestWave = Math.max(0, Math.floor(toNumber(raw.bestWave ?? raw.wave ?? raw.maxWave)));
+    const difficultyCandidate = Number(raw.bestDifficulty ?? raw.difficulty);
+    record.bestDifficulty = Number.isFinite(difficultyCandidate) && difficultyCandidate > 0
+      ? difficultyCandidate
+      : 1;
+    const runsSource = Array.isArray(raw.topRuns)
+      ? raw.topRuns
+      : Array.isArray(raw.bestRuns)
+        ? raw.bestRuns
+        : Array.isArray(raw.history)
+          ? raw.history
+          : [];
+    record.topRuns = sanitizeTopRunsArray(runsSource);
+    if (!record.topRuns.length) {
+      const fallback = normalizeTopRunEntry({
+        score: record.bestScore,
+        duration: record.bestTime,
+        waves: record.bestWave
+      });
+      if (fallback) {
+        record.topRuns = [fallback];
+      }
+    }
+    return record;
+  }
+
+  function aggregateRecords(records) {
+    const aggregate = createEmptyRecordEntry();
+    const runs = [];
+    records.forEach(entry => {
+      if (!entry || typeof entry !== 'object') {
+        return;
+      }
+      const sanitized = sanitizeRecordEntry(entry);
+      aggregate.bestScore = Math.max(aggregate.bestScore, sanitized.bestScore);
+      aggregate.bestTime = Math.max(aggregate.bestTime, sanitized.bestTime);
+      aggregate.bestWave = Math.max(aggregate.bestWave, sanitized.bestWave);
+      aggregate.bestDifficulty = Math.max(aggregate.bestDifficulty, sanitized.bestDifficulty);
+      if (Array.isArray(sanitized.topRuns)) {
+        runs.push(...sanitized.topRuns);
+      }
+    });
+    aggregate.topRuns = sanitizeTopRunsArray(runs);
+    if (!aggregate.topRuns.length) {
+      const fallback = normalizeTopRunEntry({
+        score: aggregate.bestScore,
+        duration: aggregate.bestTime,
+        waves: aggregate.bestWave
+      });
+      if (fallback) {
+        aggregate.topRuns = [fallback];
+      }
+    }
+    return aggregate;
+  }
+
+  function ensureRecordStateInitialized() {
+    if (!state.records || typeof state.records !== 'object') {
+      state.records = createInitialRecordState();
+      return;
+    }
+    if (!state.records.modes || typeof state.records.modes !== 'object') {
+      state.records.modes = {};
+    }
+    Object.values(DIFFICULTY_MODES).forEach(mode => {
+      if (!state.records.modes[mode] || typeof state.records.modes[mode] !== 'object') {
+        state.records.modes[mode] = createEmptyRecordEntry();
+      } else {
+        state.records.modes[mode] = sanitizeRecordEntry(state.records.modes[mode]);
+      }
+    });
+    if (state.records.lastMode !== DIFFICULTY_MODES.EASY && state.records.lastMode !== DIFFICULTY_MODES.HARD) {
+      state.records.lastMode = DIFFICULTY_MODES.HARD;
+    }
+  }
+
+  function getRecordForMode(mode) {
+    ensureRecordStateInitialized();
+    const normalized = mode === DIFFICULTY_MODES.EASY ? DIFFICULTY_MODES.EASY : DIFFICULTY_MODES.HARD;
+    const record = state.records.modes[normalized];
+    if (!record || typeof record !== 'object') {
+      state.records.modes[normalized] = createEmptyRecordEntry();
+      return state.records.modes[normalized];
+    }
+    return record;
+  }
+
+  function getActiveRecord() {
+    return getRecordForMode(state.difficultyMode);
+  }
+
+  function snapshotRecordForMode(mode) {
+    const record = getRecordForMode(mode);
+    const snapshot = sanitizeRecordEntry(record);
+    const { list } = ensureTopRunsSanitized(snapshot);
+    snapshot.topRuns = list;
+    return snapshot;
+  }
+
+  function ensureTopRunsSanitized(record) {
+    const target = record && typeof record === 'object' ? record : createEmptyRecordEntry();
+    const stored = Array.isArray(target.topRuns) ? target.topRuns : [];
     const sanitized = sanitizeTopRunsArray(stored);
     let changed = stored.length !== sanitized.length;
     if (!changed) {
       for (let i = 0; i < sanitized.length; i += 1) {
         const original = normalizeTopRunEntry(stored[i]);
-        const target = sanitized[i];
-        if (!original || original.score !== target.score || original.duration !== target.duration || original.waves !== target.waves) {
+        const next = sanitized[i];
+        if (!original || original.score !== next.score || original.duration !== next.duration || original.waves !== next.waves) {
           changed = true;
           break;
         }
       }
     }
-    state.records.topRuns = sanitized;
+    target.topRuns = sanitized;
     return { list: sanitized, changed };
   }
 
-  function updateTopRunHistory(run) {
-    const { list: current, changed: sanitizedChanged } = ensureTopRunsSanitized();
+  function updateTopRunHistory(record, run) {
+    const { list: current, changed: sanitizedChanged } = ensureTopRunsSanitized(record);
     const normalized = normalizeTopRunEntry(run);
     if (!normalized) {
       return sanitizedChanged;
     }
     const merged = sanitizeTopRunsArray([...current, normalized]);
     const changed = sanitizedChanged || !topRunsEqual(current, merged);
-    state.records.topRuns = changed ? merged : current;
+    if (changed) {
+      record.topRuns = merged;
+    }
     return changed;
+  }
+
+  function loadStoredRecordPayload() {
+    return readArcadeEntryFromGameState()
+      || readArcadeEntryFromNativeSave()
+      || readArcadeEntryFromAutosaveApi()
+      || readArcadeEntryFromLegacyStorage();
   }
 
   function sanitizeAutosaveData(raw) {
     if (!raw || typeof raw !== 'object') {
       return null;
     }
-    const toNumber = value => {
-      const numeric = Number(value);
-      return Number.isFinite(numeric) && numeric >= 0 ? numeric : 0;
-    };
     const lastSeed = typeof raw.lastSeed === 'string'
       ? raw.lastSeed.trim().slice(0, 32)
       : '';
-    const bestScore = toNumber(raw.bestScore ?? raw.score ?? raw.highScore);
-    const bestTime = toNumber(raw.bestTime ?? raw.bestTimeSeconds ?? raw.time);
-    const bestWave = Math.floor(toNumber(raw.bestWave ?? raw.wave));
-    const bestDifficulty = Number.isFinite(Number(raw.bestDifficulty ?? raw.difficulty))
-      ? Math.max(0, Number(raw.bestDifficulty ?? raw.difficulty))
-      : 0;
-    let topRuns = sanitizeTopRunsArray(raw.topRuns ?? raw.bestRuns ?? raw.history);
-    if (!topRuns.length) {
-      const fallback = normalizeTopRunEntry({
-        score: bestScore,
-        duration: bestTime,
-        waves: bestWave
-      });
-      if (fallback) {
-        topRuns = [fallback];
-      }
+    const modes = raw.modes && typeof raw.modes === 'object'
+      ? raw.modes
+      : null;
+    const recordsByMode = {};
+    if (modes) {
+      recordsByMode[DIFFICULTY_MODES.EASY] = sanitizeRecordEntry(modes[DIFFICULTY_MODES.EASY]);
+      recordsByMode[DIFFICULTY_MODES.HARD] = sanitizeRecordEntry(modes[DIFFICULTY_MODES.HARD]);
+    } else {
+      const legacyRecord = sanitizeRecordEntry(raw);
+      const legacyMode = raw.lastMode === DIFFICULTY_MODES.EASY ? DIFFICULTY_MODES.EASY : DIFFICULTY_MODES.HARD;
+      recordsByMode[legacyMode] = legacyRecord;
+      const otherMode = legacyMode === DIFFICULTY_MODES.EASY ? DIFFICULTY_MODES.HARD : DIFFICULTY_MODES.EASY;
+      recordsByMode[otherMode] = createEmptyRecordEntry();
     }
+    if (!recordsByMode[DIFFICULTY_MODES.EASY]) {
+      recordsByMode[DIFFICULTY_MODES.EASY] = createEmptyRecordEntry();
+    }
+    if (!recordsByMode[DIFFICULTY_MODES.HARD]) {
+      recordsByMode[DIFFICULTY_MODES.HARD] = createEmptyRecordEntry();
+    }
+    const lastMode = raw.lastMode === DIFFICULTY_MODES.EASY
+      ? DIFFICULTY_MODES.EASY
+      : raw.lastMode === DIFFICULTY_MODES.HARD
+        ? DIFFICULTY_MODES.HARD
+        : DIFFICULTY_MODES.HARD;
     return {
       lastSeed,
-      bestScore,
-      bestTime,
-      bestWave,
-      bestDifficulty,
-      topRuns: sanitizeTopRunsArray(topRuns)
+      lastMode,
+      recordsByMode
     };
   }
 
   function serializeAutosaveData() {
     const safeSeed = (state.rngSeed || state.lastSeed || '').toString().slice(0, 32);
-    const normalizeNumber = value => (Number.isFinite(value) && value >= 0 ? value : 0);
-    const clampDifficulty = value => {
-      if (!Number.isFinite(value)) {
-        return 0;
-      }
-      return Math.max(0, value);
-    };
-    const { list: sanitizedRuns } = ensureTopRunsSanitized();
+    ensureRecordStateInitialized();
+    const easySnapshot = snapshotRecordForMode(DIFFICULTY_MODES.EASY);
+    const hardSnapshot = snapshotRecordForMode(DIFFICULTY_MODES.HARD);
+    const aggregate = aggregateRecords([easySnapshot, hardSnapshot]);
+    const lastMode = state.records.lastMode === DIFFICULTY_MODES.EASY
+      ? DIFFICULTY_MODES.EASY
+      : DIFFICULTY_MODES.HARD;
     return {
-      version: 2,
+      version: 3,
       lastSeed: safeSeed,
-      bestScore: Math.floor(normalizeNumber(state.records.bestScore)),
-      bestTime: normalizeNumber(state.records.bestTime),
-      bestWave: Math.floor(normalizeNumber(state.records.bestWave)),
-      bestDifficulty: clampDifficulty(state.records.bestDifficulty),
-      topRuns: sanitizeTopRunsArray(sanitizedRuns)
+      lastMode,
+      bestScore: Math.max(0, Math.floor(aggregate.bestScore)),
+      bestTime: Math.max(0, aggregate.bestTime),
+      bestWave: Math.max(0, Math.floor(aggregate.bestWave)),
+      bestDifficulty: Math.max(0, aggregate.bestDifficulty),
+      topRuns: sanitizeTopRunsArray(aggregate.topRuns),
+      modes: {
+        [DIFFICULTY_MODES.EASY]: easySnapshot,
+        [DIFFICULTY_MODES.HARD]: hardSnapshot
+      }
     };
   }
 
   function persistAutosave() {
+    const payload = serializeAutosaveData();
+    writeArcadeEntryToGameState(payload);
     const api = getAutosaveApi();
-    if (!api) {
-      return;
-    }
-    try {
-      api.set(AUTOSAVE_KEY, serializeAutosaveData());
-    } catch (error) {
-      // Ignore autosave persistence errors
+    if (api) {
+      try {
+        api.set(AUTOSAVE_KEY, payload);
+      } catch (error) {
+        // Ignore autosave persistence errors
+      }
     }
   }
 
@@ -2147,26 +2469,20 @@
   }
 
   function loadAutosave() {
-    const api = getAutosaveApi();
-    if (!api) {
-      return;
-    }
-    let raw = null;
-    try {
-      raw = api.get(AUTOSAVE_KEY);
-    } catch (error) {
-      return;
-    }
+    const raw = loadStoredRecordPayload();
     const data = sanitizeAutosaveData(raw);
     if (!data) {
       return;
     }
-    state.records.bestScore = data.bestScore;
-    state.records.bestTime = data.bestTime;
-    state.records.bestWave = Math.max(0, data.bestWave);
-    state.records.bestDifficulty = data.bestDifficulty > 0 ? data.bestDifficulty : 1;
-    state.records.topRuns = sanitizeTopRunsArray(data.topRuns);
+    state.records = createInitialRecordState();
+    state.records.modes[DIFFICULTY_MODES.EASY] = sanitizeRecordEntry(data.recordsByMode[DIFFICULTY_MODES.EASY]);
+    state.records.modes[DIFFICULTY_MODES.HARD] = sanitizeRecordEntry(data.recordsByMode[DIFFICULTY_MODES.HARD]);
+    if (data.lastMode === DIFFICULTY_MODES.EASY || data.lastMode === DIFFICULTY_MODES.HARD) {
+      state.records.lastMode = data.lastMode;
+      state.difficultyMode = data.lastMode;
+    }
     state.lastSeed = data.lastSeed;
+    writeArcadeEntryToGameState(serializeAutosaveData());
   }
 
   function loadConfig() {
@@ -2259,6 +2575,11 @@
       return false;
     }
     state.difficultyMode = normalized;
+    ensureRecordStateInitialized();
+    if (state.records.lastMode !== normalized) {
+      state.records.lastMode = normalized;
+      scheduleAutosave();
+    }
     state.uiNeedsSync = true;
     return true;
   }
@@ -3893,27 +4214,28 @@
   }
 
   function updateRecords() {
+    const record = getActiveRecord();
     let updated = false;
     const score = Math.max(0, Math.floor(Number(state.score) || 0));
-    if (score > state.records.bestScore) {
-      state.records.bestScore = score;
+    if (score > record.bestScore) {
+      record.bestScore = score;
       updated = true;
     }
     const elapsedSeconds = Math.max(0, Math.floor(Number(state.elapsed) || 0));
-    if (elapsedSeconds > state.records.bestTime) {
-      state.records.bestTime = elapsedSeconds;
+    if (elapsedSeconds > record.bestTime) {
+      record.bestTime = elapsedSeconds;
       updated = true;
     }
     const wave = Math.max(0, Math.floor(Number(state.wave) || 0));
-    if (wave > state.records.bestWave) {
-      state.records.bestWave = wave;
+    if (wave > record.bestWave) {
+      record.bestWave = wave;
       updated = true;
     }
-    if (state.difficulty > state.records.bestDifficulty) {
-      state.records.bestDifficulty = state.difficulty;
+    if (state.difficulty > record.bestDifficulty) {
+      record.bestDifficulty = state.difficulty;
       updated = true;
     }
-    if (updateTopRunHistory({
+    if (updateTopRunHistory(record, {
       score,
       duration: elapsedSeconds,
       waves: wave
@@ -4007,6 +4329,7 @@
         primaryKey: 'index.sections.starsWar.overlay.retry'
       }
     );
+    flushAutosave();
   }
 
   function showOverlay(title, message, primaryLabel, options = {}) {
