@@ -4,16 +4,9 @@ Atom → Univers est un idle/clicker cosmique actuellement jouable en français 
 
 ## Sommaire
 1. [Boucle de jeu et ressources](#boucle-de-jeu-et-ressources)
-2. [Boutique scientifique](#boutique-scientifique)
-3. [Collections, gacha et tickets](#collections-gacha-et-tickets)
-4. [Succès, trophées et objectifs](#succès-trophées-et-objectifs)
-5. [Fusion moléculaire](#fusion-moléculaire)
-6. [Mini-jeux d’arcade](#mini-jeux-darcade)
-7. [Infos, DevKit et options](#infos-devkit-et-options)
-8. [Sauvegardes, hors-ligne et grands nombres](#sauvegardes-hors-ligne-et-grands-nombres)
-9. [Internationalisation](#internationalisation)
-10. [Lancer le projet en local](#lancer-le-projet-en-local)
-
+2. [Succès, trophées et objectifs](#succès-trophées-et-objectifs)
+3. [Fusion moléculaire](#fusion-moléculaire)
+4. [Mini-jeux d’arcade](#mini-jeux-darcade)
 ---
 
 ## Boucle de jeu et ressources
