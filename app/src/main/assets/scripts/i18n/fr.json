@@ -424,8 +424,8 @@
             "cta": "Jouer"
           },
           "starBridges": {
-            "aria": "Accéder au mini-jeu Ponts Stellaires",
-            "title": "Ponts Stellaires",
+            "aria": "Accéder au mini-jeu Bridges",
+            "title": "Bridges",
             "description": "Reliez toutes les étoiles avec des ponts horizontaux, verticaux ou diagonaux sans croisement.",
             "cta": "Relier"
           },
@@ -491,7 +491,7 @@
           },
           "gomoku": {
             "aria": "Accéder au mini-jeu Gomoku",
-            "title": "Gomoku & Renju",
+            "title": "Gomoku",
             "description": "Affrontez l’IA ou un ami sur un goban 15×15 avec une IA plus affûtée en mode Gomoku ou Renju.",
             "cta": "Aligner"
           },
@@ -520,8 +520,8 @@
             "cta": "Infiltrer"
           },
           "roulette": {
-            "aria": "Ouvrir le mini-jeu Joker Roulette",
-            "title": "Joker Roulette",
+            "aria": "Ouvrir le mini-jeu Roulette",
+            "title": "Roulette",
             "description": "Faites tourner une machine à sous néon et misez vos atomes sur les couleurs des cartes.",
             "cta": "Tourner"
           },
@@ -538,8 +538,8 @@
             "cta": "Distribuer"
           },
           "dice": {
-            "aria": "Accéder au mini-jeu Dice",
-            "title": "Dice",
+            "aria": "Accéder au mini-jeu Yams",
+            "title": "Yams",
             "description": "Lancez cinq dés sur un tapis néon, gardez vos combinaisons et visez les meilleures figures de yams.",
             "cta": "Jouer"
           },
@@ -825,8 +825,8 @@
         }
       },
       "gomoku": {
-        "aria": "Mini-jeu Gomoku et Renju",
-        "title": "Gomoku et Renju",
+        "aria": "Mini-jeu Gomoku",
+        "title": "Gomoku",
         "board": "Plateau de Gomoku",
         "controls": {
           "rules": {
@@ -1140,8 +1140,8 @@
         }
       },
       "starBridges": {
-        "aria": "Mini-jeu Ponts Stellaires : reliez toutes les étoiles sans croiser les ponts.",
-        "title": "Ponts Stellaires",
+        "aria": "Mini-jeu Bridges : reliez toutes les étoiles sans croiser les ponts.",
+        "title": "Bridges",
         "controls": {
           "seed": {
             "label": "Seed",
@@ -1157,7 +1157,7 @@
           "bridgesLabel": "Ponts",
           "timeLabel": "Temps"
         },
-        "board": "Constellation de Ponts Stellaires",
+        "board": "Constellation de Bridges",
         "messages": {
           "selectSource": "Touchez une étoile pour commencer un pont.",
           "selectTarget": "Sélectionnez une étoile alignée ou diagonale pour prolonger le pont.",
@@ -1580,9 +1580,9 @@
         "helperTrainingHintUnavailable": "Aucun conseil disponible ({{difficulty}})."
       },
       "roulette": {
-        "aria": "Mini-jeu Joker Roulette",
+        "aria": "Mini-jeu Roulette",
         "gridAria": "Grille de la machine à sous",
-        "title": "Joker Roulette",
+        "title": "Roulette",
         "betLabel": "Mise :",
         "balanceLabel": "Solde :",
         "multiplierLabel": "Dernier multiplicateur :",
@@ -1696,8 +1696,8 @@
         "hiddenCard": "Carte cachée"
       },
       "dice": {
-        "aria": "Mini-jeu Dice",
-        "title": "Dice",
+        "aria": "Mini-jeu Yams",
+        "title": "Yams",
         "table": {
           "title": "Tapis de lancer",
           "aria": "Tapis de lancer de dés"
@@ -1712,7 +1712,7 @@
           "start": "Lancez les dés pour commencer."
         },
         "scorecard": {
-          "aria": "Feuille de score de Dice",
+          "aria": "Feuille de score de Yams",
           "title": "Feuille de score",
           "reset": "Nouvelle partie",
           "upperSection": "Section supérieure",
@@ -1915,7 +1915,7 @@
               "description": "Lâchez des orbes prismatiques sur un champ de picots néon pour viser les multiplicateurs cosmiques et gonfler vos atomes."
             },
             "roulette": {
-              "label": "Mini jeu Joker Roulette :",
+              "label": "Mini jeu Roulette :",
               "description": "Misez vos atomes sur la roue néon et choisissez la couleur gagnante pour multiplier vos gains."
             },
             "blackjack": {
@@ -1927,7 +1927,7 @@
               "description": "Affrontez jusqu’à quatre IA en Texas Hold’em et combinez vos cartes avec le tapis pour rafler le pot."
             },
             "dice": {
-              "label": "Mini jeu Dice :",
+              "label": "Mini jeu Yams :",
               "description": "Lancez cinq dés électroniques, verrouillez vos meilleurs jets et chassez les figures façon yams."
             }
           }
@@ -3045,8 +3045,8 @@
         "cardLabel": "{rank} de {suit}"
       },
       "dice": {
-        "title": "Dice",
-        "aria": "Mini-jeu Dice",
+        "title": "Yams",
+        "aria": "Mini-jeu Yams",
         "table": {
           "aria": "Tapis de lancer",
           "title": "Tapis de lancer"
@@ -3680,7 +3680,7 @@
           "winReward": "Récompense : +{tickets} ticket{ticketSuffix} gacha."
         },
         "starBridges": {
-          "rewardToast": "Ponts Stellaires : +{count} ticket{suffix} gacha !"
+          "rewardToast": "Bridges : +{count} ticket{suffix} gacha !"
         },
         "taquin": {
           "tileLabel": "Tuile {value}",
