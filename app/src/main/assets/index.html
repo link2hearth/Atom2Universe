@@ -5684,12 +5684,32 @@
             ></div>
           </section>
         </article>
-                <article class="info-card info-card--stats info-card--calculations" aria-labelledby="info-calculations-title">
-          <header class="info-card__header">
+        <article
+          id="infoCalculationsCard"
+          class="info-card info-card--stats info-card--calculations"
+          aria-labelledby="info-calculations-title"
+        >
+          <header class="info-card__header info-card__header--collapsible">
             <h3 id="info-calculations-title" data-i18n="index.sections.info.calculations.title">Calculs de production</h3>
             <p class="info-card__subtitle" data-i18n="index.sections.info.calculations.subtitle">Décomposition des gains automatiques et manuels.</p>
+            <button
+              type="button"
+              id="infoCalculationsToggle"
+              class="info-card__collapse-button"
+              aria-expanded="true"
+              aria-controls="info-calculations-content"
+              data-i18n="index.sections.info.calculations.toggle.collapse"
+            >
+              Réduire
+            </button>
           </header>
-          <div class="info-progress-grid info-calculations-grid" role="group" aria-labelledby="info-calculations-title">
+          <div
+            id="info-calculations-content"
+            class="info-card__content info-progress-grid info-calculations-grid"
+            role="group"
+            aria-labelledby="info-calculations-title"
+            aria-hidden="false"
+          >
             <section class="info-progress-block info-calculation-block info-calculation-block--aps" aria-labelledby="info-aps-title">
               <header class="info-calculation-block__header">
                 <h4 id="info-aps-title" data-i18n="index.sections.info.aps.title">Production passive (APS)</h4>
@@ -5731,12 +5751,32 @@
           </div>
         </article>
 
-        <article class="info-card info-card--stats info-card--progression" aria-labelledby="info-progress-title">
-          <header class="info-card__header">
+        <article
+          id="infoProgressCard"
+          class="info-card info-card--stats info-card--progression"
+          aria-labelledby="info-progress-title"
+        >
+          <header class="info-card__header info-card__header--collapsible">
             <h3 id="info-progress-title" data-i18n="index.sections.info.progress.title">Progression du joueur</h3>
             <p class="info-card__subtitle" data-i18n="index.sections.info.progress.subtitle">Suivi des performances de la session et de l’historique.</p>
+            <button
+              type="button"
+              id="infoProgressToggle"
+              class="info-card__collapse-button"
+              aria-expanded="true"
+              aria-controls="info-progress-content"
+              data-i18n="index.sections.info.progress.toggle.collapse"
+            >
+              Réduire
+            </button>
           </header>
-          <div class="info-progress-grid" role="group" aria-labelledby="info-progress-title">
+          <div
+            id="info-progress-content"
+            class="info-card__content info-progress-grid"
+            role="group"
+            aria-labelledby="info-progress-title"
+            aria-hidden="false"
+          >
             <section class="info-progress-block info-progress-block--session" aria-labelledby="info-session-title">
               <header class="info-progress-block__header">
                 <h4 id="info-session-title" data-i18n="index.sections.info.progress.session.title">Session en cours</h4>

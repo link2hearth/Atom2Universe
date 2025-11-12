@@ -2445,6 +2445,33 @@
         // Ignore autosave persistence errors
       }
     }
+    if (nativeSaveTimerId != null) {
+      window.clearTimeout(nativeSaveTimerId);
+    }
+    nativeSaveTimerId = window.setTimeout(() => {
+      nativeSaveTimerId = null;
+      if (typeof window !== 'undefined' && typeof window.atom2universSaveGame === 'function') {
+        try {
+          window.atom2universSaveGame();
+        } catch (error) {
+          // Ignore native save errors
+        }
+      }
+    }, NATIVE_SAVE_DEBOUNCE_MS);
+  }
+
+  function persistAutosave() {
+    const payload = serializeAutosaveData();
+    writeArcadeEntryToGameState(payload);
+    const api = getAutosaveApi();
+    if (api) {
+      try {
+        api.set(AUTOSAVE_KEY, payload);
+      } catch (error) {
+        // Ignore autosave persistence errors
+      }
+    }
+    requestNativeSave();
   }
 
   function scheduleAutosave() {
@@ -2466,6 +2493,7 @@
       autosaveTimerId = null;
     }
     persistAutosave();
+    requestNativeSave(true);
   }
 
   function loadAutosave() {
