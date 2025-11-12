@@ -1,6 +1,6 @@
 {
-  "rows": 6,
-  "columns": 7,
+  "rows": 7,
+  "columns": 9,
   "obstacles": {
     "enabledByDefault": true,
     "count": 5,
@@ -17,6 +17,6 @@
     "defeatScore": -100000
   },
   "rewards": {
-    "aiVictoryTickets": 2
+    "humanVictoryTickets": 2
   }
 }
