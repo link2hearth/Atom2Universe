@@ -3,5 +3,9 @@
   "enemyBulletCap": {
     "base": 1,
     "perWave": 1
+  },
+  "shipHitboxScale": {
+    "player": 0.5,
+    "enemy": 0.5
   }
 }
