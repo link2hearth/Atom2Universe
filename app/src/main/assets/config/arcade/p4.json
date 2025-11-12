@@ -1,0 +1,22 @@
+{
+  "rows": 6,
+  "columns": 7,
+  "obstacles": {
+    "enabledByDefault": true,
+    "count": 5,
+    "minRow": 1,
+    "maxRow": 3
+  },
+  "ai": {
+    "searchDepth": 4,
+    "centerWeight": 3,
+    "threeWeight": 120,
+    "twoWeight": 35,
+    "blockThreeWeight": 140,
+    "victoryScore": 100000,
+    "defeatScore": -100000
+  },
+  "rewards": {
+    "aiVictoryTickets": 2
+  }
+}

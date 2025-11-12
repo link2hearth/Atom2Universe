@@ -489,6 +489,12 @@
             "description": "Challenge the AI or a friend on a 15×15 goban with smarter play in Gomoku or Renju rules.",
             "cta": "Align"
           },
+          "p4": {
+            "aria": "Open the P4 mini-game",
+            "title": "P4",
+            "description": "Challenge a friend or the AI in Connect Four with hovering obstacles and ticket rewards.",
+            "cta": "Align"
+          },
           "hex": {
             "aria": "Open the Hex mini-game",
             "title": "Hex",
@@ -863,6 +869,61 @@
           "illegalRenju": "Illegal move for Black in Renju.",
           "cellOccupied": "Cell already occupied."
         }
+      },
+      "p4": {
+        "aria": "P4 mini-game",
+        "title": "P4",
+        "controls": {
+          "mode": {
+            "label": "Mode",
+            "aria": "Choose the play mode",
+            "ai": "Vs AI",
+            "local": "2 players"
+          },
+          "obstacles": {
+            "label": "Obstacles",
+            "aria": "Toggle the floating obstacles",
+            "enabled": "With obstacles",
+            "disabled": "No obstacles"
+          },
+          "columns": "Choose a column to drop a disc",
+          "drop": "Play in column {column}"
+        },
+        "actions": {
+          "label": "Game",
+          "newGame": "New game"
+        },
+        "status": {
+          "ready": "Pick a mode and start playing.",
+          "turnPlayer1": "Your turn (player 1).",
+          "turnPlayer2": "Player 2 to move.",
+          "turnAi": "The AI is thinking…",
+          "columnFull": "That column is full. Try another one.",
+          "winPlayer1": "Player 1 wins!",
+          "winPlayer2": "Player 2 wins!",
+          "winAi": "The AI wins.",
+          "winHumanAi": "Victory! You earn {tickets} gacha tickets.",
+          "draw": "Draw: no more moves are available."
+        },
+        "players": {
+          "player1": "Player 1",
+          "player2": "Player 2",
+          "obstacle": "Obstacle"
+        },
+        "turns": {
+          "player1": "Player 1 starts.",
+          "player2": "Player 2 to move.",
+          "ai": "AI turn.",
+          "victoryPlayer1": "Player 1 wins.",
+          "victoryPlayer2": "Player 2 wins.",
+          "victoryAi": "AI wins.",
+          "draw": "Draw."
+        },
+        "rewards": {
+          "ai": "Win against the AI to earn +{tickets} gacha tickets.",
+          "claimed": "Victory! You earn {tickets} gacha tickets."
+        },
+        "board": "P4 board"
       },
       "theLine": {
         "aria": "The Line mini-game: cover every tile with a single stroke.",

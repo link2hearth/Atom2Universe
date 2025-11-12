@@ -441,6 +441,13 @@ body.theme-aurora .page--arcade-hub {
   --arcade-hub-card-shadow-hover: 0 30px 56px rgba(20, 86, 70, 0.74);
 }
 
+.arcade-hub-card[data-card-id="p4"] {
+  --arcade-hub-card-background: linear-gradient(135deg, #2b0506, #a11415);
+  --arcade-hub-card-border: rgba(212, 62, 72, 0.55);
+  --arcade-hub-card-shadow: 0 22px 38px rgba(32, 5, 8, 0.58);
+  --arcade-hub-card-shadow-hover: 0 30px 56px rgba(58, 10, 16, 0.72);
+}
+
 .arcade-hub-card[data-card-id="bigger"] {
   --arcade-hub-card-background: linear-gradient(135deg, #360f1b, #8a2f53);
   --arcade-hub-card-border: rgba(200, 90, 130, 0.5);
