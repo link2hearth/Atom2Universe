@@ -52,8 +52,31 @@
   const EASY_BULLET_CAP_FACTOR = 0.5;
   const GAME_STATE_ARCADE_ID = 'starsWar';
   const ARCADE_AUTOSAVE_STORAGE_KEY = 'atom2univers.arcadeSaves.v1';
+  const NATIVE_SAVE_DEBOUNCE_MS = 500;
+
+  let nativeSaveTimerId = null;
   let pendingGameStatePayload = null;
   let gameStateSyncTimerId = null;
+
+  function createEmptyRecordEntry() {
+    return {
+      bestScore: 0,
+      bestTime: 0,
+      bestWave: 0,
+      bestDifficulty: 1,
+      topRuns: []
+    };
+  }
+
+  function createInitialRecordState() {
+    return {
+      modes: {
+        [DIFFICULTY_MODES.EASY]: createEmptyRecordEntry(),
+        [DIFFICULTY_MODES.HARD]: createEmptyRecordEntry()
+      },
+      lastMode: DIFFICULTY_MODES.HARD
+    };
+  }
 
   function createEmptyRecordEntry() {
     return {
@@ -2434,16 +2457,23 @@
     };
   }
 
-  function persistAutosave() {
-    const payload = serializeAutosaveData();
-    writeArcadeEntryToGameState(payload);
-    const api = getAutosaveApi();
-    if (api) {
-      try {
-        api.set(AUTOSAVE_KEY, payload);
-      } catch (error) {
-        // Ignore autosave persistence errors
+  function requestNativeSave(immediate = false) {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    if (immediate) {
+      if (nativeSaveTimerId != null) {
+        window.clearTimeout(nativeSaveTimerId);
+        nativeSaveTimerId = null;
       }
+      if (typeof window.atom2universSaveGame === 'function') {
+        try {
+          window.atom2universSaveGame();
+        } catch (error) {
+          // Ignore native save errors
+        }
+      }
+      return;
     }
     if (nativeSaveTimerId != null) {
       window.clearTimeout(nativeSaveTimerId);
