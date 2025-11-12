@@ -2307,35 +2307,31 @@ function sanitizeStarsWarRun(raw) {
   return { score, waves, duration };
 }
 
-function getStarsWarTopRuns() {
-  const progress = gameState.arcadeProgress;
-  if (!progress || typeof progress !== 'object') {
+function getStarsWarRunsFromRecord(record) {
+  if (!record || typeof record !== 'object') {
     return [];
   }
-  const entries = progress.entries && typeof progress.entries === 'object' ? progress.entries : {};
-  const entry = entries.starsWar || null;
-  if (!entry || typeof entry !== 'object') {
-    return [];
-  }
-  const state = entry.state && typeof entry.state === 'object' ? entry.state : entry;
-  if (!state || typeof state !== 'object') {
-    return [];
-  }
-  const rawRuns = Array.isArray(state.topRuns) ? state.topRuns : [];
+  const rawRuns = Array.isArray(record.topRuns)
+    ? record.topRuns
+    : Array.isArray(record.bestRuns)
+      ? record.bestRuns
+      : Array.isArray(record.history)
+        ? record.history
+        : [];
   const runs = rawRuns
     .map(sanitizeStarsWarRun)
     .filter(Boolean);
   if (!runs.length) {
     const fallback = sanitizeStarsWarRun({
-      score: state.bestScore ?? state.score,
-      duration: state.bestTime ?? state.time ?? state.elapsed,
-      waves: state.bestWave ?? state.wave ?? state.maxWave
+      score: record.bestScore ?? record.score,
+      duration: record.bestTime ?? record.time ?? record.elapsed,
+      waves: record.bestWave ?? record.wave ?? record.maxWave
     });
     if (fallback) {
       runs.push(fallback);
     }
   }
-  const comparator = (a, b) => {
+  runs.sort((a, b) => {
     if (a.score !== b.score) {
       return b.score - a.score;
     }
@@ -2343,9 +2339,40 @@ function getStarsWarTopRuns() {
       return b.waves - a.waves;
     }
     return b.duration - a.duration;
-  };
-  runs.sort(comparator);
+  });
   return runs.slice(0, 3);
+}
+
+function getStarsWarRunsByMode() {
+  const progress = gameState.arcadeProgress;
+  if (!progress || typeof progress !== 'object') {
+    return { easy: [], hard: [] };
+  }
+  const entries = progress.entries && typeof progress.entries === 'object' ? progress.entries : {};
+  const entry = entries.starsWar || null;
+  if (!entry || typeof entry !== 'object') {
+    return { easy: [], hard: [] };
+  }
+  const state = entry.state && typeof entry.state === 'object' ? entry.state : entry;
+  if (!state || typeof state !== 'object') {
+    return { easy: [], hard: [] };
+  }
+  const modes = state.modes && typeof state.modes === 'object' ? state.modes : null;
+  if (modes) {
+    const easyRuns = getStarsWarRunsFromRecord(modes.easy);
+    const hardRuns = getStarsWarRunsFromRecord(modes.hard);
+    if (easyRuns.length || hardRuns.length) {
+      return {
+        easy: easyRuns,
+        hard: hardRuns
+      };
+    }
+  }
+  const fallbackRuns = getStarsWarRunsFromRecord(state);
+  if (state.lastMode === 'easy') {
+    return { easy: fallbackRuns, hard: [] };
+  }
+  return { easy: [], hard: fallbackRuns };
 }
 
 function formatStarsWarDuration(secondsValue) {
@@ -2417,19 +2444,29 @@ function formatStarsWarEntry(run) {
 }
 
 function updateStarsWarTopRuns() {
-  const targets = [
-    elements.infoStarsWarTop1Value,
-    elements.infoStarsWarTop2Value,
-    elements.infoStarsWarTop3Value
-  ];
-  const runs = getStarsWarTopRuns();
+  const targetsByMode = {
+    easy: [
+      elements.infoStarsWarEasyTop1Value,
+      elements.infoStarsWarEasyTop2Value,
+      elements.infoStarsWarEasyTop3Value
+    ],
+    hard: [
+      elements.infoStarsWarHardTop1Value,
+      elements.infoStarsWarHardTop2Value,
+      elements.infoStarsWarHardTop3Value
+    ]
+  };
+  const runsByMode = getStarsWarRunsByMode();
   const emptyValue = translateOrDefault('scripts.info.progress.starsWar.empty', '—');
-  targets.forEach((target, index) => {
-    if (!target) {
-      return;
-    }
-    const run = runs[index];
-    target.textContent = run ? formatStarsWarEntry(run) : emptyValue;
+  Object.entries(targetsByMode).forEach(([mode, targets]) => {
+    const runs = runsByMode[mode] || [];
+    targets.forEach((target, index) => {
+      if (!target) {
+        return;
+      }
+      const run = runs[index];
+      target.textContent = run ? formatStarsWarEntry(run) : emptyValue;
+    });
   });
 }
 
