@@ -112,7 +112,10 @@
       params: { count: formatNumber(DEFAULT_LINK_LENGTH) }
     },
     languageHandlerAttached: false,
-    languageHandler: null
+    languageHandler: null,
+    layout: {
+      fontSizeFrameId: null
+    }
   };
 
   function clampNumber(value, min, max, fallback) {
@@ -138,6 +141,67 @@
     const resolvedMin = clampInteger(source ? source.min : undefined, min, max, fallback.min);
     const resolvedMax = clampInteger(source ? source.max : undefined, resolvedMin, max, Math.max(resolvedMin, fallback.max));
     return { min: resolvedMin, max: resolvedMax };
+  }
+
+  function parsePixelValue(value) {
+    if (typeof value !== 'string') {
+      return 0;
+    }
+    const numeric = Number.parseFloat(value);
+    return Number.isFinite(numeric) ? numeric : 0;
+  }
+
+  function cancelScheduledCellFontSizeUpdate() {
+    if (!state.layout) {
+      return;
+    }
+    const frameId = state.layout.fontSizeFrameId;
+    if (frameId !== null && typeof window !== 'undefined' && typeof window.cancelAnimationFrame === 'function') {
+      window.cancelAnimationFrame(frameId);
+    }
+    state.layout.fontSizeFrameId = null;
+  }
+
+  function updateCellFontSize() {
+    if (!state.elements || !state.elements.board || !state.board || !state.board.length) {
+      if (state.elements && state.elements.board) {
+        state.elements.board.style.removeProperty('--link-cell-font-size');
+      }
+      return;
+    }
+    const boardElement = state.elements.board;
+    const size = state.board.length;
+    const computed = window.getComputedStyle(boardElement);
+    const paddingLeft = parsePixelValue(computed.paddingLeft);
+    const paddingRight = parsePixelValue(computed.paddingRight);
+    const gapValue = parsePixelValue(computed.gap || computed.columnGap || computed.gridColumnGap);
+    const availableWidth = boardElement.clientWidth - paddingLeft - paddingRight - gapValue * Math.max(0, size - 1);
+    if (!Number.isFinite(availableWidth) || availableWidth <= 0) {
+      boardElement.style.removeProperty('--link-cell-font-size');
+      return;
+    }
+    const cellSize = availableWidth / size;
+    if (!Number.isFinite(cellSize) || cellSize <= 0) {
+      boardElement.style.removeProperty('--link-cell-font-size');
+      return;
+    }
+    const fontSize = Math.max(14, cellSize * 0.66);
+    boardElement.style.setProperty('--link-cell-font-size', `${fontSize}px`);
+  }
+
+  function scheduleCellFontSizeUpdate() {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    cancelScheduledCellFontSizeUpdate();
+    if (typeof window.requestAnimationFrame === 'function') {
+      state.layout.fontSizeFrameId = window.requestAnimationFrame(() => {
+        state.layout.fontSizeFrameId = null;
+        updateCellFontSize();
+      });
+      return;
+    }
+    updateCellFontSize();
   }
 
   function normalizeShapeKey(points) {
@@ -1348,6 +1412,10 @@
     }
   }
 
+  function handleWindowResize() {
+    scheduleCellFontSizeUpdate();
+  }
+
   function applyHistoryChange(changes, direction) {
     if (!Array.isArray(changes)) {
       return;
@@ -1402,6 +1470,8 @@
 
   function clearBoardElements() {
     if (state.elements && state.elements.board) {
+      cancelScheduledCellFontSizeUpdate();
+      state.elements.board.style.removeProperty('--link-cell-font-size');
       state.elements.board.innerHTML = '';
     }
     state.cellElements = [];
@@ -1452,6 +1522,7 @@
     }
     state.elements.board.appendChild(fragment);
     updateAllCells();
+    scheduleCellFontSizeUpdate();
   }
 
   function generatePairs(size, totalCells, pairCount) {
@@ -1982,6 +2053,7 @@
     window.addEventListener('pointerup', handlePointerUp);
     window.addEventListener('pointercancel', handlePointerCancel);
     window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('resize', handleWindowResize);
     syncDifficultySelect();
     syncGenerationSelect();
     syncLinkLengthSelect();
