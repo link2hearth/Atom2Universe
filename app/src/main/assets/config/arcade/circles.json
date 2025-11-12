@@ -9,7 +9,6 @@
     "#e67e22"
   ],
   "colorOffsets": [0, 3, 2, 5, 1, 4],
-  "autoRotateOuterRing": true,
   "maxShuffleAttempts": 32,
   "seedLength": 8,
   "difficulties": {
