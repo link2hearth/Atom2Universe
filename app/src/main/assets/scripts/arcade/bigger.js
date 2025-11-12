@@ -17,6 +17,7 @@
     }
     return steps;
   })();
+  const BALL_SHAPE_UPDATE_EPSILON = 0.01;
   const PHYSICS_MAX_STEP_MS = 16;
   const PHYSICS_GRAVITY = 1600;
   const PHYSICS_WALL_BOUNCE = 0.55;
@@ -742,6 +743,7 @@
         radius,
         mass,
         invMass: 1 / mass,
+        lastDiameter: diameter,
         x: Number.isFinite(overrides.x) ? overrides.x : radius,
         y: Number.isFinite(overrides.y) ? overrides.y : radius,
         vx: Number.isFinite(overrides.vx) ? overrides.vx : 0,
@@ -758,11 +760,15 @@
       }
       const multiplier = getDiameterMultiplier(ball.value);
       const diameter = Math.max(28, this.cellSize * multiplier);
+      if (typeof ball.lastDiameter === 'number' && Math.abs(ball.lastDiameter - diameter) <= BALL_SHAPE_UPDATE_EPSILON) {
+        return;
+      }
       ball.radius = diameter / 2;
       ball.mass = Math.max(1, ball.radius * ball.radius);
       ball.invMass = 1 / ball.mass;
       ball.element.style.width = `${diameter}px`;
       ball.element.style.height = `${diameter}px`;
+      ball.lastDiameter = diameter;
     }
 
     applyBallPosition(ball) {
