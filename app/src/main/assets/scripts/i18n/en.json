@@ -1271,8 +1271,6 @@
           "reward": "Gacha tickets"
         },
         "canvasAria": "Circles puzzle board",
-        "message": "Click a ring to rotate it one step <strong>clockwise</strong>. Hold Shift to reverse the direction. Each rotation drags the adjacent outer ring.",
-        "hint": "Tip: use keys 1 to 6 to rotate the rings from the keyboard.",
         "win": {
           "message": "Perfect sync!",
           "again": "Play again",

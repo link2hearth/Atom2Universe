@@ -1277,8 +1277,6 @@
           "reward": "Tickets gacha"
         },
         "canvasAria": "Plateau Circles",
-        "message": "Cliquez sur un cercle pour le faire pivoter d’un cran <strong>dans le sens horaire</strong>. Maintenez Maj pour inverser le sens. Chaque rotation entraîne l’anneau extérieur adjacent.",
-        "hint": "Astuce : utilisez les touches 1 à 6 pour manipuler les anneaux depuis le clavier.",
         "win": {
           "message": "Synchronisation parfaite !",
           "again": "Rejouer",

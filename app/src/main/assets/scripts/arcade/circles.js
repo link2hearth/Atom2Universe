@@ -38,6 +38,7 @@
   const AUTOSAVE_DEBOUNCE_MS = 200;
   const DIFFICULTY_ORDER = Object.freeze(['easy', 'medium', 'hard']);
   const ROTATION_ANIMATION_DURATION = 320;
+  const TOUCH_GESTURE_MIN_ANGLE = 0.2;
 
   const DEFAULT_CONFIG = Object.freeze({
     segments: 6,
@@ -94,6 +95,8 @@
     animation: createAnimationState()
   };
 
+  const pointerGesture = createPointerGestureState();
+
   let languageListenerAttached = false;
 
   initialize();
@@ -131,6 +134,9 @@
     }
     if (elements.canvas) {
       elements.canvas.addEventListener('pointerdown', handleCanvasPointer, { passive: false });
+      elements.canvas.addEventListener('pointermove', handleCanvasPointerMove, { passive: false });
+      elements.canvas.addEventListener('pointerup', handleCanvasPointerEnd, { passive: false });
+      elements.canvas.addEventListener('pointercancel', handleCanvasPointerEnd, { passive: false });
       elements.canvas.addEventListener('keydown', handleCanvasKeyDown);
     }
     if (elements.againButton) {
@@ -1230,8 +1236,62 @@
     if (!Number.isFinite(ringIndex)) {
       return;
     }
-    const direction = event.shiftKey ? -1 : 1;
-    applyUserRotation(ringIndex, direction);
+    const pointerType = getPointerInputType(event);
+    if (pointerType === 'mouse') {
+      const direction = event.shiftKey ? -1 : 1;
+      applyUserRotation(ringIndex, direction);
+      return;
+    }
+    startTouchGesture(event, ringIndex, position);
+  }
+
+  function handleCanvasPointerMove(event) {
+    if (!pointerGesture.active || event.pointerId !== pointerGesture.pointerId) {
+      return;
+    }
+    if (getPointerInputType(event) === 'mouse') {
+      return;
+    }
+    event.preventDefault();
+    const position = getCanvasEventPosition(event);
+    if (!position) {
+      return;
+    }
+    pointerGesture.moved = true;
+    pointerGesture.lastAngle = Math.atan2(position.y, position.x);
+  }
+
+  function handleCanvasPointerEnd(event) {
+    if (!pointerGesture.active || event.pointerId !== pointerGesture.pointerId) {
+      return;
+    }
+    if (getPointerInputType(event) === 'mouse') {
+      resetPointerGestureState();
+      return;
+    }
+    event.preventDefault();
+    if (
+      elements.canvas &&
+      typeof elements.canvas.releasePointerCapture === 'function' &&
+      typeof elements.canvas.hasPointerCapture === 'function' &&
+      elements.canvas.hasPointerCapture(event.pointerId)
+    ) {
+      elements.canvas.releasePointerCapture(event.pointerId);
+    }
+    const ringIndex = pointerGesture.ringIndex;
+    let direction = 0;
+    if (pointerGesture.moved) {
+      const position = getCanvasEventPosition(event);
+      const endAngle = position ? Math.atan2(position.y, position.x) : pointerGesture.lastAngle;
+      const delta = normalizeAngleDelta(endAngle - pointerGesture.startAngle);
+      if (Math.abs(delta) >= TOUCH_GESTURE_MIN_ANGLE) {
+        direction = delta > 0 ? 1 : -1;
+      }
+    }
+    resetPointerGestureState();
+    if (direction !== 0 && Number.isFinite(ringIndex)) {
+      applyUserRotation(ringIndex, direction);
+    }
   }
 
   function getCanvasEventPosition(event) {
@@ -1248,6 +1308,20 @@
     const y = (event.clientY - rect.top) * scaleY - elements.canvas.height / 2;
     const distance = Math.sqrt(x * x + y * y);
     return { x, y, distance };
+  }
+
+  function startTouchGesture(event, ringIndex, position) {
+    resetPointerGestureState();
+    pointerGesture.active = true;
+    pointerGesture.pointerId = event.pointerId;
+    pointerGesture.ringIndex = ringIndex;
+    const angle = Math.atan2(position.y, position.x);
+    pointerGesture.startAngle = angle;
+    pointerGesture.lastAngle = angle;
+    pointerGesture.moved = false;
+    if (elements.canvas && typeof elements.canvas.setPointerCapture === 'function') {
+      elements.canvas.setPointerCapture(event.pointerId);
+    }
   }
 
   function findRingIndexForDistance(distance) {
@@ -1300,6 +1374,45 @@
     if (options && options.startPuzzle) {
       startNewPuzzle({ preserveDifficulty: true });
     }
+  }
+
+  function resetPointerGestureState() {
+    pointerGesture.active = false;
+    pointerGesture.pointerId = null;
+    pointerGesture.ringIndex = null;
+    pointerGesture.startAngle = 0;
+    pointerGesture.lastAngle = 0;
+    pointerGesture.moved = false;
+  }
+
+  function normalizeAngleDelta(delta) {
+    let angle = delta;
+    const fullTurn = Math.PI * 2;
+    while (angle <= -Math.PI) {
+      angle += fullTurn;
+    }
+    while (angle > Math.PI) {
+      angle -= fullTurn;
+    }
+    return angle;
+  }
+
+  function getPointerInputType(event) {
+    if (!event || typeof event.pointerType !== 'string' || !event.pointerType) {
+      return 'mouse';
+    }
+    return event.pointerType.toLowerCase();
+  }
+
+  function createPointerGestureState() {
+    return {
+      active: false,
+      pointerId: null,
+      ringIndex: null,
+      startAngle: 0,
+      lastAngle: 0,
+      moved: false
+    };
   }
 
   function handleDifficultyChange(event) {
