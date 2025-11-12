@@ -190,7 +190,7 @@
     return {
       version: AUTOSAVE_VERSION,
       difficulty: state.difficulty,
-      ringCount: clampInteger(state.ringCount, 2, 12, 3),
+      ringCount: clampInteger(state.ringCount, 3, 12, 3),
       seed: typeof state.seed === 'string' ? state.seed : '',
       moves: clampInteger(state.moves, 0, 9999, 0),
       rotations: state.rotations.slice(),
@@ -275,7 +275,7 @@
       : 'easy';
     setDifficulty(difficulty, { updateSelect: true, startPuzzle: false });
 
-    const ringCount = clampInteger(payload.ringCount, 2, 12, state.ringCount);
+    const ringCount = clampInteger(payload.ringCount, 3, 12, state.ringCount);
     applyRingCount(ringCount);
 
     const rotationLinks = sanitizeRotationLinks(payload.rotationLinks, state.ringCount);
@@ -342,6 +342,15 @@
         return null;
       }
     }
+    for (let i = 0; i < length; i += 1) {
+      const target = sanitized[i];
+      if (Number.isFinite(target) && target >= 0 && target < length) {
+        const reciprocal = sanitized[target];
+        if (reciprocal === i) {
+          return null;
+        }
+      }
+    }
     return sanitized;
   }
 
@@ -360,7 +369,7 @@
     });
 
     const maxRingCount = Math.max(
-      2,
+      3,
       ...DIFFICULTY_ORDER.map(key => Math.max(...normalizedDifficulties[key].ringCounts))
     );
 
@@ -390,11 +399,11 @@
         : fallbackRingCounts;
 
     const ringCounts = rawRingCounts
-      .map(value => clampInteger(value, 2, 12, null))
+      .map(value => clampInteger(value, 3, 12, null))
       .filter(value => Number.isFinite(value));
 
     if (!ringCounts.length) {
-      ringCounts.push(clampInteger(fallbackRingCounts[0], 2, 12, 3));
+      ringCounts.push(clampInteger(fallbackRingCounts[0], 3, 12, 3));
     }
 
     const fallbackShuffle = fallbackDefinition.shuffleMoves || { min: 4, max: 12 };
@@ -560,7 +569,7 @@
   }
 
   function createRingDefinitions(ringCount) {
-    const count = clampInteger(ringCount, 2, 12, 3);
+    const count = clampInteger(ringCount, 3, 12, 3);
     const rings = new Array(count);
     for (let i = 0; i < count; i += 1) {
       const offset = state.settings.colorOffsets[i] != null
@@ -583,7 +592,7 @@
     return rotated;
   }
   function applyRingCount(ringCount) {
-    const count = clampInteger(ringCount, 2, 12, state.ringCount || 3);
+    const count = clampInteger(ringCount, 3, 12, Math.max(state.ringCount || 3, 3));
     if (count === state.ringCount && Array.isArray(state.rotations) && state.rotations.length === count) {
       state.rings = createRingDefinitions(count);
       computeRingMetrics();
@@ -609,10 +618,10 @@
       ? settings.ringCounts
       : [state.ringCount];
     if (options.length === 1) {
-      return clampInteger(options[0], 2, 12, state.ringCount);
+      return clampInteger(options[0], 3, 12, state.ringCount);
     }
     const index = randomInt(0, options.length - 1);
-    return clampInteger(options[index], 2, 12, options[0]);
+    return clampInteger(options[index], 3, 12, options[0]);
   }
 
   function startNewPuzzle(options) {
@@ -671,7 +680,7 @@
   }
 
   function generatePuzzleDefinition(ringCount, difficultyKey) {
-    const count = clampInteger(ringCount, 2, 12, state.ringCount || 3);
+    const count = clampInteger(ringCount, 3, 12, Math.max(state.ringCount || 3, 3));
     const settings = getDifficultySettings(difficultyKey);
     const minMoves = clampInteger(settings.shuffleMoves.min, 1, 400, 6);
     const maxMoves = clampInteger(settings.shuffleMoves.max, minMoves, 500, Math.max(minMoves, 12));
@@ -816,7 +825,7 @@
   function getCurrentRewardTickets(ringCountOverride) {
     const ringCount = clampInteger(
       ringCountOverride != null ? ringCountOverride : state.ringCount,
-      2,
+      3,
       12,
       state.ringCount
     );
@@ -1233,27 +1242,25 @@
   }
 
   function generateRotationLinks(count) {
-    const length = clampInteger(count, 2, 12, 2);
+    const length = clampInteger(count, 3, 12, 3);
     if (length <= 1) {
       return [0];
     }
-    const links = new Array(length);
+    const indices = new Array(length);
     for (let i = 0; i < length; i += 1) {
-      links[i] = i;
+      indices[i] = i;
     }
     for (let i = length - 1; i > 0; i -= 1) {
       const j = randomInt(0, i);
-      const temp = links[i];
-      links[i] = links[j];
-      links[j] = temp;
+      const temp = indices[i];
+      indices[i] = indices[j];
+      indices[j] = temp;
     }
+    const links = new Array(length);
     for (let i = 0; i < length; i += 1) {
-      if (links[i] === i) {
-        const swapIndex = (i + 1) % length;
-        const temp = links[i];
-        links[i] = links[swapIndex];
-        links[swapIndex] = temp;
-      }
+      const current = indices[i];
+      const next = indices[(i + 1) % length];
+      links[current] = next;
     }
     return links;
   }
