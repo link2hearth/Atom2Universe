@@ -489,6 +489,12 @@
             "description": "Affrontez l’IA ou un ami sur un goban 15×15 avec une IA plus affûtée en mode Gomoku ou Renju.",
             "cta": "Aligner"
           },
+          "p4": {
+            "aria": "Accéder au mini-jeu P4",
+            "title": "P4",
+            "description": "Affrontez un ami ou l’IA dans un Puissance 4 ponctué d’obstacles en lévitation.",
+            "cta": "Aligner"
+          },
           "hex": {
             "aria": "Accéder au mini-jeu Hex",
             "title": "Hex",
@@ -863,6 +869,61 @@
           "illegalRenju": "Coup interdit pour Noir (Renju).",
           "cellOccupied": "Case déjà occupée."
         }
+      },
+      "p4": {
+        "aria": "Mini-jeu P4",
+        "title": "P4",
+        "controls": {
+          "mode": {
+            "label": "Mode",
+            "aria": "Choisir le mode de jeu",
+            "ai": "Contre l’IA",
+            "local": "2 joueurs"
+          },
+          "obstacles": {
+            "label": "Obstacles",
+            "aria": "Activer ou désactiver les obstacles flottants",
+            "enabled": "Avec obstacles",
+            "disabled": "Sans obstacles"
+          },
+          "columns": "Choisir une colonne pour lâcher un jeton",
+          "drop": "Jouer dans la colonne {column}"
+        },
+        "actions": {
+          "label": "Partie",
+          "newGame": "Nouvelle partie"
+        },
+        "status": {
+          "ready": "Choisissez un mode et lancez la partie.",
+          "turnPlayer1": "À vous de jouer (joueur 1).",
+          "turnPlayer2": "Au tour du joueur 2.",
+          "turnAi": "L’IA réfléchit…",
+          "columnFull": "Cette colonne est pleine. Essayez-en une autre.",
+          "winPlayer1": "Victoire du joueur 1 !",
+          "winPlayer2": "Victoire du joueur 2 !",
+          "winAi": "Victoire de l’IA.",
+          "winHumanAi": "Victoire ! Vous remportez {tickets} tickets gacha.",
+          "draw": "Match nul : plus aucun coup n’est possible."
+        },
+        "players": {
+          "player1": "Joueur 1",
+          "player2": "Joueur 2",
+          "obstacle": "Obstacle"
+        },
+        "turns": {
+          "player1": "Joueur 1 commence.",
+          "player2": "Joueur 2 joue.",
+          "ai": "Tour de l’IA.",
+          "victoryPlayer1": "Victoire du joueur 1.",
+          "victoryPlayer2": "Victoire du joueur 2.",
+          "victoryAi": "Victoire de l’IA.",
+          "draw": "Égalité."
+        },
+        "rewards": {
+          "ai": "Victoire contre l’IA : +{tickets} tickets gacha.",
+          "claimed": "Victoire ! Vous remportez {tickets} tickets gacha."
+        },
+        "board": "Plateau de P4"
       },
       "theLine": {
         "aria": "Mini-jeu The Line : tracez un parcours couvrant toute la grille.",

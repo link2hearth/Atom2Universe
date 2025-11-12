@@ -1253,6 +1253,46 @@
           class="arcade-hub-card"
           role="button"
           tabindex="0"
+          aria-label="Accéder au mini-jeu P4"
+          aria-describedby="arcadeCardDescription-p4"
+          data-card-id="p4"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.p4.aria"
+          data-page-target="p4"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.p4.title"
+            >P4</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-p4"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-p4"
+            data-i18n="index.sections.arcadeHub.cards.p4.description"
+          >Affrontez un ami ou l’IA dans une version de Puissance 4 avec obstacles flottants et tickets à la clé.</p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
           aria-label="Accéder au mini-jeu Plus gros"
           aria-describedby="arcadeCardDescription-bigger"
           data-card-id="bigger"
@@ -2955,6 +2995,119 @@
           ></div>
         </div>
         <div class="gomoku__toast" id="gomokuToast" role="status" aria-live="polite" hidden></div>
+      </div>
+    </section>
+
+    <section
+      id="p4"
+      class="page page--p4"
+      data-page-group="arcade"
+      aria-label="Mini-jeu P4"
+      data-i18n="aria-label:index.sections.p4.aria"
+      hidden
+    >
+      <div class="p4" data-p4-root>
+        <h2 class="visually-hidden" data-i18n="index.sections.p4.title">P4</h2>
+        <header class="p4__header">
+          <div class="p4__group">
+            <label
+              class="p4__label"
+              for="p4ModeSelect"
+              data-i18n="index.sections.p4.controls.mode.label"
+            >Mode</label>
+            <select
+              class="p4__select"
+              id="p4ModeSelect"
+              data-i18n="aria-label:index.sections.p4.controls.mode.aria"
+              aria-label="Choisir le mode de jeu"
+            >
+              <option value="ai" data-i18n="index.sections.p4.controls.mode.ai">Contre l’IA</option>
+              <option value="local" data-i18n="index.sections.p4.controls.mode.local">2 joueurs</option>
+            </select>
+          </div>
+          <div class="p4__group">
+            <label
+              class="p4__label"
+              for="p4ObstacleSelect"
+              data-i18n="index.sections.p4.controls.obstacles.label"
+            >Obstacles</label>
+            <select
+              class="p4__select"
+              id="p4ObstacleSelect"
+              data-i18n="aria-label:index.sections.p4.controls.obstacles.aria"
+              aria-label="Activer ou désactiver les obstacles"
+            >
+              <option value="enabled" data-i18n="index.sections.p4.controls.obstacles.enabled">Avec obstacles</option>
+              <option value="disabled" data-i18n="index.sections.p4.controls.obstacles.disabled">Sans obstacles</option>
+            </select>
+          </div>
+          <div class="p4__group p4__group--grow">
+            <span class="p4__label" data-i18n="index.sections.p4.actions.label">Partie</span>
+            <button
+              class="p4__button"
+              type="button"
+              id="p4NewGameButton"
+              data-i18n="index.sections.p4.actions.newGame"
+            >Nouvelle partie</button>
+          </div>
+        </header>
+        <div
+          class="p4__status"
+          id="p4Status"
+          role="status"
+          aria-live="polite"
+          data-i18n="index.sections.p4.status.ready"
+        >Choisissez un mode et lancez la partie.</div>
+        <div class="p4__board-wrapper">
+          <div
+            class="p4__column-controls"
+            role="group"
+            aria-label="Choisir une colonne"
+            data-i18n="aria-label:index.sections.p4.controls.columns"
+          >
+            <button type="button" class="p4__column-button" data-column="0">1</button>
+            <button type="button" class="p4__column-button" data-column="1">2</button>
+            <button type="button" class="p4__column-button" data-column="2">3</button>
+            <button type="button" class="p4__column-button" data-column="3">4</button>
+            <button type="button" class="p4__column-button" data-column="4">5</button>
+            <button type="button" class="p4__column-button" data-column="5">6</button>
+            <button type="button" class="p4__column-button" data-column="6">7</button>
+          </div>
+          <div
+            class="p4__board"
+            id="p4Board"
+            role="grid"
+            aria-label="Plateau de P4"
+            data-i18n="aria-label:index.sections.p4.board"
+          ></div>
+        </div>
+        <div class="p4__legend">
+          <div class="p4__legend-item">
+            <span class="p4__legend-dot p4__legend-dot--player1" aria-hidden="true"></span>
+            <span data-i18n="index.sections.p4.players.player1">Joueur 1</span>
+          </div>
+          <div class="p4__legend-item">
+            <span class="p4__legend-dot p4__legend-dot--player2" aria-hidden="true"></span>
+            <span data-i18n="index.sections.p4.players.player2">Joueur 2</span>
+          </div>
+          <div class="p4__legend-item">
+            <span class="p4__legend-dot p4__legend-dot--obstacle" aria-hidden="true"></span>
+            <span data-i18n="index.sections.p4.players.obstacle">Obstacle</span>
+          </div>
+        </div>
+        <div class="p4__footer">
+          <div
+            class="p4__turn"
+            id="p4TurnIndicator"
+            data-i18n="index.sections.p4.turns.player1"
+          >Joueur 1 commence.</div>
+          <div
+            class="p4__tickets"
+            id="p4TicketInfo"
+            aria-live="polite"
+            data-i18n="index.sections.p4.rewards.ai"
+          >Victoire contre l’IA : +2 tickets gacha.</div>
+        </div>
       </div>
     </section>
 
@@ -7153,6 +7306,7 @@
   <script src="scripts/arcade/echecs.js"></script>
   <script src="scripts/arcade/othello.js"></script>
   <script src="scripts/arcade/gomoku.js"></script>
+  <script src="scripts/arcade/p4.js"></script>
   <script src="scripts/arcade/hex.js"></script>
   <script src="scripts/arcade/game-of-life.js"></script>
   <script src="scripts/arcade/quantum-2048.js"></script>
