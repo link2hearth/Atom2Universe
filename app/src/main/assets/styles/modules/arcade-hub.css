@@ -316,7 +316,7 @@ body.theme-aurora .page--arcade-hub {
 
 
 /* Fixed color themes for arcade hub tiles */
-.arcade-hub__grid > .arcade-hub-card:nth-child(-n + 30) {
+.arcade-hub__grid > .arcade-hub-card:nth-child(-n + 38) {
   color: #f5f8ff;
   --arcade-hub-card-description-color: rgba(245, 248, 255, 0.84);
   --arcade-hub-card-cta-bg: rgba(255, 255, 255, 0.16);
@@ -326,7 +326,7 @@ body.theme-aurora .page--arcade-hub {
   --arcade-hub-card-outline: rgba(255, 255, 255, 0.5);
 }
 
-.arcade-hub__grid > .arcade-hub-card:nth-child(n + 31) {
+.arcade-hub__grid > .arcade-hub-card:nth-child(n + 39) {
   color: #0f1424;
   --arcade-hub-card-description-color: rgba(14, 22, 44, 0.78);
   --arcade-hub-card-cta-bg: rgba(12, 20, 40, 0.1);
