@@ -175,6 +175,10 @@
         "progress": {
           "title": "Progression",
           "subtitle": "Session & globale",
+          "toggle": {
+            "collapse": "Réduire",
+            "expand": "Dérouler"
+          },
           "session": {
             "title": "Session",
             "atoms": "Atomes gagnés",
@@ -232,7 +236,11 @@
         },
         "calculations": {
           "title": "Calculs de production",
-          "subtitle": "Décomposition des gains automatiques et manuels"
+          "subtitle": "Décomposition des gains automatiques et manuels",
+          "toggle": {
+            "collapse": "Réduire",
+            "expand": "Dérouler"
+          }
         },
         "shop": {
           "title": "Bonus boutique",
