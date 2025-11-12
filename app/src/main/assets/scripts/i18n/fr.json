@@ -1769,8 +1769,8 @@
           "pause": "Pause",
           "resume": "Reprendre",
           "difficulty": {
-            "easy": "Mode facile",
-            "hard": "Mode difficile"
+            "easy": "Easy",
+            "hard": "Hard"
           }
         },
         "overlay": {
