@@ -16,8 +16,8 @@
   const WINDOW_LENGTH = 4;
 
   const DEFAULT_CONFIG = Object.freeze({
-    rows: 6,
-    columns: 7,
+    rows: 7,
+    columns: 9,
     obstacles: Object.freeze({
       enabledByDefault: true,
       count: 5,
@@ -34,7 +34,7 @@
       defeatScore: -100000
     }),
     rewards: Object.freeze({
-      aiVictoryTickets: 2
+      humanVictoryTickets: 2
     })
   });
 
@@ -96,7 +96,7 @@
     aiTimeoutId: null,
     rewardClaimed: false,
     claimedTickets: null,
-    ticketReward: DEFAULT_CONFIG.rewards.aiVictoryTickets,
+    ticketReward: DEFAULT_CONFIG.rewards.humanVictoryTickets,
     status: {
       key: 'index.sections.p4.status.ready',
       fallback: STATUS_FALLBACKS.ready,
@@ -123,8 +123,7 @@
   };
 
   if (!state.elements.board || !state.elements.status || !state.elements.modeSelect || !state.elements.obstacleSelect
-    || !state.elements.newGameButton || !state.elements.turnIndicator || !state.elements.ticketInfo
-    || !state.elements.columnControls) {
+    || !state.elements.newGameButton || !state.elements.turnIndicator || !state.elements.ticketInfo) {
     return;
   }
 
@@ -235,7 +234,12 @@
 
     const rawRewards = rawConfig?.rewards || {};
     const fallbackRewards = fallback.rewards || {};
-    const aiVictoryTickets = clampInteger(rawRewards.aiVictoryTickets, 0, 999, fallbackRewards.aiVictoryTickets || 0);
+    const humanVictoryTickets = clampInteger(
+      rawRewards.humanVictoryTickets,
+      0,
+      999,
+      fallbackRewards.humanVictoryTickets || 0
+    );
 
     return {
       rows,
@@ -256,7 +260,7 @@
         defeatScore
       },
       rewards: {
-        aiVictoryTickets
+        humanVictoryTickets
       }
     };
   }
@@ -284,7 +288,7 @@
     }
     state.config = config;
     state.aiSettings = config.ai;
-    state.ticketReward = Math.max(0, Math.floor(Number(config.rewards.aiVictoryTickets) || 0));
+    state.ticketReward = Math.max(0, Math.floor(Number(config.rewards.humanVictoryTickets) || 0));
 
     const previousRows = state.rows;
     const previousColumns = state.columns;
@@ -403,6 +407,7 @@
       return;
     }
     state.elements.board.style.setProperty('--p4-columns', String(state.columns));
+    state.elements.board.style.setProperty('--p4-rows', String(state.rows));
     state.elements.board.setAttribute('aria-rowcount', String(state.rows));
     state.elements.board.setAttribute('aria-colcount', String(state.columns));
   }
@@ -799,9 +804,13 @@
             tickets: formatNumber(gained)
           });
         } else {
+          state.rewardClaimed = false;
+          state.claimedTickets = null;
           setStatus('index.sections.p4.status.winPlayer1', STATUS_FALLBACKS.winPlayer1);
         }
       } else if (winner === PLAYER_TWO) {
+        state.rewardClaimed = false;
+        state.claimedTickets = null;
         setStatus('index.sections.p4.status.winAi', STATUS_FALLBACKS.winAi);
       }
     } else {
