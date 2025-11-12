@@ -77,6 +77,11 @@
   padding-right: 0.5rem;
 }
 
+.stars-war__stat-button--difficulty {
+  min-width: 0;
+  padding-inline: 0.75rem;
+}
+
 .stars-war__stat-button:hover,
 .stars-war__stat-button:focus-visible {
   transform: translateY(-1px);

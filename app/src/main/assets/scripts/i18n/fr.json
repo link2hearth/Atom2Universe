@@ -1767,7 +1767,11 @@
         "controls": {
           "restart": "Nouveau",
           "pause": "Pause",
-          "resume": "Reprendre"
+          "resume": "Reprendre",
+          "difficulty": {
+            "easy": "Mode facile",
+            "hard": "Mode difficile"
+          }
         },
         "overlay": {
           "start": {
