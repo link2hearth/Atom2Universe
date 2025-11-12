@@ -278,7 +278,7 @@
           return result;
         }
       } catch (error) {
-        console.warn('Star Bridges translation error for', key, error);
+        console.warn('Bridges translation error for', key, error);
       }
     }
     if (typeof fallback === 'string') {
@@ -1233,7 +1233,7 @@
     try {
       gained = awardGacha(tickets, { unlockTicketStar: true });
     } catch (error) {
-      console.warn('Star Bridges: unable to grant gacha tickets', error);
+      console.warn('Bridges: unable to grant gacha tickets', error);
       gained = 0;
     }
     state.rewardClaimed = true;
@@ -1245,7 +1245,7 @@
       const suffix = gained > 1 ? 's' : '';
       const message = translate(
         'scripts.arcade.starBridges.rewardToast',
-        'Ponts Stellaires : +{count} ticket{suffix} gacha !',
+        'Bridges : +{count} ticket{suffix} gacha !',
         {
           count: formatIntegerLocalized(gained),
           suffix

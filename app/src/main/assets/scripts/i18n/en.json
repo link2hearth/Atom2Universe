@@ -424,8 +424,8 @@
             "cta": "Play"
           },
           "starBridges": {
-            "aria": "Open the Star Bridges mini-game",
-            "title": "Star Bridges",
+            "aria": "Open the Bridges mini-game",
+            "title": "Bridges",
             "description": "Connect every star with horizontal, vertical, or diagonal bridges without crossing paths.",
             "cta": "Link"
           },
@@ -485,7 +485,7 @@
           },
           "gomoku": {
             "aria": "Open the Gomoku mini-game",
-            "title": "Gomoku & Renju",
+            "title": "Gomoku",
             "description": "Challenge the AI or a friend on a 15×15 goban with smarter play in Gomoku or Renju rules.",
             "cta": "Align"
           },
@@ -514,8 +514,8 @@
             "cta": "Sneak"
           },
           "roulette": {
-            "aria": "Open the Joker Roulette mini-game",
-            "title": "Joker Roulette",
+            "aria": "Open the Roulette mini-game",
+            "title": "Roulette",
             "description": "Spin a neon slot machine and bet your Atoms on card suits.",
             "cta": "Spin"
           },
@@ -532,8 +532,8 @@
             "cta": "Deal"
           },
           "dice": {
-            "aria": "Open the Dice mini-game",
-            "title": "Dice",
+            "aria": "Open the Yams mini-game",
+            "title": "Yams",
             "description": "Roll five dice on a neon felt, lock the combinations you need, and chase classic Yahtzee hands.",
             "cta": "Play"
           },
@@ -819,8 +819,8 @@
         }
       },
       "gomoku": {
-        "aria": "Gomoku and Renju mini-game",
-        "title": "Gomoku & Renju",
+        "aria": "Gomoku mini-game",
+        "title": "Gomoku",
         "board": "Gomoku board",
         "controls": {
           "rules": {
@@ -1134,8 +1134,8 @@
         }
       },
       "starBridges": {
-        "aria": "Star Bridges mini-game: connect every star without crossing bridges.",
-        "title": "Star Bridges",
+        "aria": "Bridges mini-game: connect every star without crossing bridges.",
+        "title": "Bridges",
         "controls": {
           "seed": {
             "label": "Seed",
@@ -1151,7 +1151,7 @@
           "bridgesLabel": "Bridges",
           "timeLabel": "Time"
         },
-        "board": "Star Bridges constellation",
+        "board": "Bridges constellation",
         "messages": {
           "selectSource": "Tap a star to start a bridge.",
           "selectTarget": "Select an aligned or diagonal star to extend the bridge.",
@@ -1574,9 +1574,9 @@
         "helperTrainingHintUnavailable": "No hint available ({{difficulty}})."
       },
       "roulette": {
-        "aria": "Joker Roulette mini-game",
+        "aria": "Roulette mini-game",
         "gridAria": "Slot machine grid",
-        "title": "Joker Roulette",
+        "title": "Roulette",
         "betLabel": "Bet:",
         "balanceLabel": "Balance:",
         "multiplierLabel": "Last multiplier:",
@@ -1690,8 +1690,8 @@
         "hiddenCard": "Hidden card"
       },
       "dice": {
-        "title": "Dice",
-        "aria": "Dice mini-game",
+        "title": "Yams",
+        "aria": "Yams mini-game",
         "table": {
           "aria": "Rolling felt",
           "title": "Rolling felt"
@@ -1978,7 +1978,7 @@
               "description": "Drop prismatic orbs through a neon forest of pegs to hit cosmic multipliers and grow your atom stash."
             },
             "roulette": {
-              "label": "Joker Roulette mini-game:",
+              "label": "Roulette mini-game:",
               "description": "Wager your atoms on the neon wheel and pick the winning card colour to multiply your stash."
             },
             "blackjack": {
@@ -1990,7 +1990,7 @@
               "description": "Face up to four AIs in Texas Hold’em and build the best five-card hand from the board."
             },
             "dice": {
-              "label": "Dice mini-game:",
+              "label": "Yams mini-game:",
               "description": "Roll five glowing dice, lock your favourites, and chase Yahtzee-style combinations."
             }
           }
@@ -3653,7 +3653,7 @@
           "winReward": "Reward: +{tickets} gacha ticket{ticketSuffix}."
         },
         "starBridges": {
-          "rewardToast": "Star Bridges: +{count} gacha ticket{suffix}!"
+          "rewardToast": "Bridges: +{count} gacha ticket{suffix}!"
         },
         "taquin": {
           "tileLabel": "Tile {value}",

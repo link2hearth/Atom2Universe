@@ -1308,7 +1308,7 @@ const GAME_CONFIG = {
      */
     holdem: ARCADE_HOLDEM_CONFIG,
     /**
-     * Paramètres du mini-jeu Dice (Yams).
+     * Paramètres du mini-jeu Yams.
      * - diceCount : nombre de dés utilisés.
      * - faces : nombre de faces par dé.
      * - rollsPerTurn : lancers disponibles par manche.
