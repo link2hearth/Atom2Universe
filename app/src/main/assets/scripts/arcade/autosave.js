@@ -234,10 +234,32 @@
     return normalized;
   };
 
+  const syncGlobalArcadeProgress = () => {
+    const globalState = getGlobalState();
+    if (!globalState) {
+      return;
+    }
+    if (!globalState.arcadeProgress || typeof globalState.arcadeProgress !== 'object') {
+      globalState.arcadeProgress = { version: 1, entries: {} };
+    }
+    globalState.arcadeProgress.version = 1;
+    globalState.arcadeProgress.entries = normalizeEntriesForGlobalState(state.entries);
+  };
+
+  syncGlobalArcadeProgress();
+  if (typeof window !== 'undefined') {
+    window.setTimeout(syncGlobalArcadeProgress, 0);
+    const handleLoad = () => {
+      syncGlobalArcadeProgress();
+      window.removeEventListener('load', handleLoad);
+    };
+    window.addEventListener('load', handleLoad);
+  }
+
   const persistNow = () => {
     persistScheduled = false;
     persistTimer = null;
-    
+
     const payload = {
       version: 1,
       entries: normalizeEntriesForGlobalState(state.entries)
@@ -261,14 +283,7 @@
     }
 
     // Also update in-memory global state if it exists
-    const globalState = getGlobalState();
-    if (globalState) {
-      if (!globalState.arcadeProgress || typeof globalState.arcadeProgress !== 'object') {
-        globalState.arcadeProgress = { version: 1, entries: {} };
-      }
-      globalState.arcadeProgress.version = 1;
-      globalState.arcadeProgress.entries = normalizeEntriesForGlobalState(state.entries);
-    }
+    syncGlobalArcadeProgress();
   };
 
   const schedulePersist = () => {
