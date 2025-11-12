@@ -185,7 +185,7 @@
       boardElement.style.removeProperty('--link-cell-font-size');
       return;
     }
-    const fontSize = Math.max(14, cellSize * 0.72);
+    const fontSize = Math.max(14, cellSize * 0.66);
     boardElement.style.setProperty('--link-cell-font-size', `${fontSize}px`);
   }
 

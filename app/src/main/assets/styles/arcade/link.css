@@ -170,7 +170,7 @@
 
 .link__board {
   --link-size: 10;
-  --link-cell-font-size: clamp(0.9rem, 1.4vw, 1.35rem);
+  --link-cell-font-size: clamp(0.85rem, 1.25vw, 1.2rem);
   display: grid;
   grid-template-columns: repeat(var(--link-size), minmax(0, 1fr));
   gap: 0.45rem;
