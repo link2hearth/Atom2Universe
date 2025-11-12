@@ -50,6 +50,33 @@
 
   const EASY_ENEMY_HITBOX_SCALE = 1;
   const EASY_BULLET_CAP_FACTOR = 0.5;
+  const GAME_STATE_ARCADE_ID = 'starsWar';
+  const ARCADE_AUTOSAVE_STORAGE_KEY = 'atom2univers.arcadeSaves.v1';
+  const NATIVE_SAVE_DEBOUNCE_MS = 500;
+
+  let nativeSaveTimerId = null;
+  let pendingGameStatePayload = null;
+  let gameStateSyncTimerId = null;
+
+  function createEmptyRecordEntry() {
+    return {
+      bestScore: 0,
+      bestTime: 0,
+      bestWave: 0,
+      bestDifficulty: 1,
+      topRuns: []
+    };
+  }
+
+  function createInitialRecordState() {
+    return {
+      modes: {
+        [DIFFICULTY_MODES.EASY]: createEmptyRecordEntry(),
+        [DIFFICULTY_MODES.HARD]: createEmptyRecordEntry()
+      },
+      lastMode: DIFFICULTY_MODES.HARD
+    };
+  }
 
   function createEmptyRecordEntry() {
     return {
@@ -1964,6 +1991,172 @@
     return key;
   }
 
+  function safeClone(value) {
+    if (value == null) {
+      return null;
+    }
+    try {
+      return JSON.parse(JSON.stringify(value));
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function getGlobalGameState() {
+    if (typeof window === 'undefined') {
+      return null;
+    }
+    if (window.atom2universGameState && typeof window.atom2universGameState === 'object') {
+      return window.atom2universGameState;
+    }
+    if (window.gameState && typeof window.gameState === 'object') {
+      return window.gameState;
+    }
+    return null;
+  }
+
+  function readArcadeEntryFromGameState() {
+    const gameState = getGlobalGameState();
+    if (!gameState || !gameState.arcadeProgress || typeof gameState.arcadeProgress !== 'object') {
+      return null;
+    }
+    const entries = gameState.arcadeProgress.entries && typeof gameState.arcadeProgress.entries === 'object'
+      ? gameState.arcadeProgress.entries
+      : null;
+    if (!entries) {
+      return null;
+    }
+    const entry = entries[GAME_STATE_ARCADE_ID];
+    if (!entry || typeof entry !== 'object') {
+      return null;
+    }
+    return entry.state && typeof entry.state === 'object' ? entry.state : entry;
+  }
+
+  function schedulePendingGameStateSync() {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    if (gameStateSyncTimerId != null) {
+      window.clearTimeout(gameStateSyncTimerId);
+    }
+    gameStateSyncTimerId = window.setTimeout(() => {
+      gameStateSyncTimerId = null;
+      if (pendingGameStatePayload) {
+        writeArcadeEntryToGameState(pendingGameStatePayload);
+      }
+    }, 200);
+  }
+
+  function writeArcadeEntryToGameState(payload) {
+    const clone = safeClone(payload);
+    if (!clone) {
+      return;
+    }
+    const gameState = getGlobalGameState();
+    if (!gameState) {
+      pendingGameStatePayload = clone;
+      schedulePendingGameStateSync();
+      return;
+    }
+    if (!gameState.arcadeProgress || typeof gameState.arcadeProgress !== 'object') {
+      gameState.arcadeProgress = { version: 1, entries: {} };
+    }
+    if (!gameState.arcadeProgress.entries || typeof gameState.arcadeProgress.entries !== 'object') {
+      gameState.arcadeProgress.entries = {};
+    }
+    gameState.arcadeProgress.entries[GAME_STATE_ARCADE_ID] = {
+      state: clone,
+      updatedAt: Date.now()
+    };
+    pendingGameStatePayload = null;
+  }
+
+  if (typeof window !== 'undefined') {
+    window.addEventListener('load', () => {
+      if (pendingGameStatePayload) {
+        writeArcadeEntryToGameState(pendingGameStatePayload);
+      }
+    });
+  }
+
+  function readArcadeEntryFromNativeSave() {
+    if (typeof window === 'undefined' || !window.AndroidSaveBridge || typeof window.AndroidSaveBridge.loadData !== 'function') {
+      return null;
+    }
+    try {
+      const raw = window.AndroidSaveBridge.loadData();
+      if (!raw) {
+        return null;
+      }
+      const payload = typeof raw === 'string' ? raw : String(raw);
+      const parsed = JSON.parse(payload);
+      if (!parsed || typeof parsed !== 'object') {
+        return null;
+      }
+      const sources = [];
+      if (parsed.clicker && typeof parsed.clicker === 'object') {
+        sources.push(parsed.clicker);
+      }
+      sources.push(parsed);
+      if (parsed.meta && typeof parsed.meta === 'object') {
+        sources.push(parsed.meta);
+      }
+      for (let i = 0; i < sources.length; i += 1) {
+        const container = sources[i];
+        if (!container || typeof container !== 'object') {
+          continue;
+        }
+        const progress = container.arcadeProgress && typeof container.arcadeProgress === 'object'
+          ? container.arcadeProgress
+          : null;
+        if (!progress) {
+          continue;
+        }
+        const entries = progress.entries && typeof progress.entries === 'object'
+          ? progress.entries
+          : progress;
+        if (!entries || typeof entries !== 'object') {
+          continue;
+        }
+        const entry = entries[GAME_STATE_ARCADE_ID];
+        if (entry && typeof entry === 'object') {
+          const state = entry.state && typeof entry.state === 'object' ? entry.state : entry;
+          if (state && typeof state === 'object') {
+            return state;
+          }
+        }
+      }
+    } catch (error) {
+      return null;
+    }
+    return null;
+  }
+
+  function readArcadeEntryFromLegacyStorage() {
+    if (typeof window === 'undefined' || !window.localStorage) {
+      return null;
+    }
+    try {
+      const raw = window.localStorage.getItem(ARCADE_AUTOSAVE_STORAGE_KEY);
+      if (!raw) {
+        return null;
+      }
+      const parsed = JSON.parse(raw);
+      if (!parsed || typeof parsed !== 'object') {
+        return null;
+      }
+      const entries = parsed.entries && typeof parsed.entries === 'object' ? parsed.entries : parsed;
+      const entry = entries[GAME_STATE_ARCADE_ID];
+      if (!entry || typeof entry !== 'object') {
+        return null;
+      }
+      return entry.state && typeof entry.state === 'object' ? entry.state : entry;
+    } catch (error) {
+      return null;
+    }
+  }
+
   function getAutosaveApi() {
     if (typeof window === 'undefined') {
       return null;
@@ -1973,6 +2166,18 @@
       return null;
     }
     return api;
+  }
+
+  function readArcadeEntryFromAutosaveApi() {
+    const api = getAutosaveApi();
+    if (!api) {
+      return null;
+    }
+    try {
+      return api.get(AUTOSAVE_KEY);
+    } catch (error) {
+      return null;
+    }
   }
 
   function compareTopRuns(a, b) {
@@ -2181,6 +2386,13 @@
     return changed;
   }
 
+  function loadStoredRecordPayload() {
+    return readArcadeEntryFromGameState()
+      || readArcadeEntryFromNativeSave()
+      || readArcadeEntryFromAutosaveApi()
+      || readArcadeEntryFromLegacyStorage();
+  }
+
   function sanitizeAutosaveData(raw) {
     if (!raw || typeof raw !== 'object') {
       return null;
@@ -2245,16 +2457,51 @@
     };
   }
 
-  function persistAutosave() {
-    const api = getAutosaveApi();
-    if (!api) {
+  function requestNativeSave(immediate = false) {
+    if (typeof window === 'undefined') {
       return;
     }
-    try {
-      api.set(AUTOSAVE_KEY, serializeAutosaveData());
-    } catch (error) {
-      // Ignore autosave persistence errors
+    if (immediate) {
+      if (nativeSaveTimerId != null) {
+        window.clearTimeout(nativeSaveTimerId);
+        nativeSaveTimerId = null;
+      }
+      if (typeof window.atom2universSaveGame === 'function') {
+        try {
+          window.atom2universSaveGame();
+        } catch (error) {
+          // Ignore native save errors
+        }
+      }
+      return;
     }
+    if (nativeSaveTimerId != null) {
+      window.clearTimeout(nativeSaveTimerId);
+    }
+    nativeSaveTimerId = window.setTimeout(() => {
+      nativeSaveTimerId = null;
+      if (typeof window !== 'undefined' && typeof window.atom2universSaveGame === 'function') {
+        try {
+          window.atom2universSaveGame();
+        } catch (error) {
+          // Ignore native save errors
+        }
+      }
+    }, NATIVE_SAVE_DEBOUNCE_MS);
+  }
+
+  function persistAutosave() {
+    const payload = serializeAutosaveData();
+    writeArcadeEntryToGameState(payload);
+    const api = getAutosaveApi();
+    if (api) {
+      try {
+        api.set(AUTOSAVE_KEY, payload);
+      } catch (error) {
+        // Ignore autosave persistence errors
+      }
+    }
+    requestNativeSave();
   }
 
   function scheduleAutosave() {
@@ -2276,26 +2523,11 @@
       autosaveTimerId = null;
     }
     persistAutosave();
-    if (typeof window !== 'undefined' && typeof window.atom2universSaveGame === 'function') {
-      try {
-        window.atom2universSaveGame();
-      } catch (error) {
-        // Ignore native save bridge errors
-      }
-    }
+    requestNativeSave(true);
   }
 
   function loadAutosave() {
-    const api = getAutosaveApi();
-    if (!api) {
-      return;
-    }
-    let raw = null;
-    try {
-      raw = api.get(AUTOSAVE_KEY);
-    } catch (error) {
-      return;
-    }
+    const raw = loadStoredRecordPayload();
     const data = sanitizeAutosaveData(raw);
     if (!data) {
       return;
@@ -2308,6 +2540,7 @@
       state.difficultyMode = data.lastMode;
     }
     state.lastSeed = data.lastSeed;
+    writeArcadeEntryToGameState(serializeAutosaveData());
   }
 
   function loadConfig() {
