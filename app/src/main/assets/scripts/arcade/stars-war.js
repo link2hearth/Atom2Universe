@@ -170,6 +170,10 @@
     multi: 1
   });
 
+  const SIMULATION_STEP = 1 / 30;
+  const MAX_ACCUMULATED_TIME = SIMULATION_STEP * 10;
+  const UI_UPDATE_INTERVAL = 0.1;
+
   const PLAYER_MILESTONES = Object.freeze([
     { time: 120, apply(player) { player.baseMulti = Math.max(player.baseMulti, 2); } },
     { time: 240, apply(player) { player.baseCooldown *= 0.85; } },
@@ -1692,6 +1696,9 @@
     running: false,
     paused: false,
     lastTimestamp: 0,
+    accumulator: 0,
+    uiAccumulator: 0,
+    uiNeedsSync: true,
     elapsed: 0,
     difficulty: 1,
     wave: 0,
@@ -1714,7 +1721,6 @@
     gameOver: false,
     overlayMode: 'ready',
     powerups: {},
-    timeSinceLastUpdate: 0,
     lastWaveDifficultyBoost: 0,
     records: {
       bestScore: 0,
@@ -1736,7 +1742,8 @@
     difficultyText: '',
     livesKey: '',
     powerupOrder: [],
-    powerupEntries: new Map()
+    powerupEntries: new Map(),
+    translationCache: new Map()
   };
 
   ensureNumberFormatter(uiState.language);
@@ -2217,10 +2224,13 @@
     state.gameOver = false;
     state.overlayMode = 'ready';
     state.lastTimestamp = 0;
-    state.timeSinceLastUpdate = 0;
+    state.accumulator = 0;
+    state.uiAccumulator = 0;
+    state.uiNeedsSync = true;
     clearState();
     resetPlayer();
     updateUi(true);
+    state.uiNeedsSync = false;
   }
 
   function randomSeedString() {
@@ -3399,7 +3409,21 @@
     return Math.min(1, Math.max(0, progress));
   }
 
-  function updatePauseButtonState() {
+  function getUiTranslation(key) {
+    if (typeof key !== 'string' || !key) {
+      return '';
+    }
+    const languageKey = uiState.language || '';
+    const cacheKey = `${languageKey}|${key}`;
+    if (uiState.translationCache.has(cacheKey)) {
+      return uiState.translationCache.get(cacheKey) || '';
+    }
+    const value = translate(key);
+    uiState.translationCache.set(cacheKey, value);
+    return value || '';
+  }
+
+  function updatePauseButtonState(force = false) {
     if (!elements.pauseButton) {
       return;
     }
@@ -3428,8 +3452,8 @@
     const currentLang = resolveLanguageCode();
     const previousLang = button.dataset.pauseLang || '';
     const previousKey = button.dataset.pauseActiveKey || '';
-    if (previousLang !== (currentLang || '') || previousKey !== (activeKey || '')) {
-      const label = activeKey ? translate(activeKey) : '';
+    if (force || previousLang !== (currentLang || '') || previousKey !== (activeKey || '')) {
+      const label = activeKey ? getUiTranslation(activeKey) : '';
       button.textContent = label || (isPaused ? 'Resume' : 'Pause');
       button.dataset.pauseLang = currentLang || '';
       button.dataset.pauseActiveKey = activeKey || '';
@@ -3440,47 +3464,50 @@
     }
   }
 
-  function updateUi() {
+  function updateUi(force = false) {
     const currentLang = resolveLanguageCode();
     const normalizedLang = currentLang || '';
+    let effectiveForce = force;
     if (uiState.language !== normalizedLang) {
       uiState.language = normalizedLang;
       uiState.powerupOrder = [];
       uiState.powerupEntries.clear();
+      uiState.translationCache.clear();
       ensureNumberFormatter(normalizedLang);
+      effectiveForce = true;
     }
-    updatePauseButtonState();
+    updatePauseButtonState(effectiveForce);
     if (elements.scoreValue) {
       const scoreText = formatNumber(state.score);
-      if (uiState.scoreText !== scoreText) {
+      if (effectiveForce || uiState.scoreText !== scoreText) {
         elements.scoreValue.textContent = scoreText;
         uiState.scoreText = scoreText;
       }
     }
     if (elements.timeValue) {
       const timeText = formatTime(state.elapsed);
-      if (uiState.timeText !== timeText) {
+      if (effectiveForce || uiState.timeText !== timeText) {
         elements.timeValue.textContent = timeText;
         uiState.timeText = timeText;
       }
     }
     if (elements.waveValue) {
       const waveText = state.wave.toString();
-      if (uiState.waveText !== waveText) {
+      if (effectiveForce || uiState.waveText !== waveText) {
         elements.waveValue.textContent = waveText;
         uiState.waveText = waveText;
       }
     }
     if (elements.difficultyValue) {
       const difficultyText = state.difficulty.toFixed(1);
-      if (uiState.difficultyText !== difficultyText) {
+      if (effectiveForce || uiState.difficultyText !== difficultyText) {
         elements.difficultyValue.textContent = difficultyText;
         uiState.difficultyText = difficultyText;
       }
     }
     if (elements.livesContainer) {
       const livesKey = `${player.hp}|${player.shieldCharges}`;
-      if (uiState.livesKey !== livesKey) {
+      if (effectiveForce || uiState.livesKey !== livesKey) {
         uiState.livesKey = livesKey;
         const fragments = document.createDocumentFragment();
         for (let i = 0; i < PLAYER_MAX_HP; i += 1) {
@@ -3522,7 +3549,7 @@
       if (hasShield) {
         order.push('shield');
       }
-      if (!arraysShallowEqual(uiState.powerupOrder, order)) {
+      if (effectiveForce || !arraysShallowEqual(uiState.powerupOrder, order)) {
         elements.powerupList.innerHTML = '';
         uiState.powerupOrder = order.slice();
         uiState.powerupEntries.clear();
@@ -3541,7 +3568,7 @@
           } else {
             delete label.dataset.i18n;
           }
-          label.textContent = translate(labelKey || id);
+          label.textContent = getUiTranslation(labelKey || id);
           li.appendChild(label);
           let progressEl = null;
           let progressValue = 1;
@@ -3566,7 +3593,7 @@
           const label = document.createElement('span');
           label.className = 'stars-war__powerup-label';
           label.dataset.i18n = POWERUP_LABEL_KEYS.shield;
-          label.textContent = translate(POWERUP_LABEL_KEYS.shield);
+          label.textContent = getUiTranslation(POWERUP_LABEL_KEYS.shield);
           const count = document.createElement('span');
           count.className = 'stars-war__powerup-count';
           const countText = `×${player.shieldCharges}`;
@@ -3594,8 +3621,8 @@
           } else {
             delete uiEntry.label.dataset.i18n;
           }
-          const labelText = translate(labelKey || id);
-          if (uiEntry.label.textContent !== labelText) {
+          const labelText = getUiTranslation(labelKey || id);
+          if (effectiveForce || uiEntry.label.textContent !== labelText) {
             uiEntry.label.textContent = labelText;
           }
           if (uiEntry.progress) {
@@ -3609,8 +3636,8 @@
         if (hasShield) {
           const uiEntry = uiState.powerupEntries.get('shield');
           if (uiEntry) {
-            const labelText = translate(POWERUP_LABEL_KEYS.shield);
-            if (uiEntry.label.textContent !== labelText) {
+            const labelText = getUiTranslation(POWERUP_LABEL_KEYS.shield);
+            if (effectiveForce || uiEntry.label.textContent !== labelText) {
               uiEntry.label.textContent = labelText;
             }
             const nextCount = `×${player.shieldCharges}`;
@@ -3725,7 +3752,7 @@
   function update(delta) {
     state.elapsed += delta;
     state.waveElapsed += delta;
-    state.timeSinceLastUpdate += delta;
+    state.uiAccumulator += delta;
     applyMilestones();
     updateHeartPity(delta);
     updateWaveProgress();
@@ -3741,8 +3768,14 @@
     resolveBulletHits();
     updateEffects(delta);
     updateDifficulty(delta);
-    updateUi();
-    render();
+    if (state.uiNeedsSync) {
+      updateUi(true);
+      state.uiNeedsSync = false;
+      state.uiAccumulator = 0;
+    } else if (state.uiAccumulator >= UI_UPDATE_INTERVAL) {
+      updateUi();
+      state.uiAccumulator %= UI_UPDATE_INTERVAL;
+    }
   }
 
   function updateRecords() {
@@ -3820,9 +3853,12 @@
     state.gameOver = true;
     state.running = false;
     state.paused = false;
+    state.uiNeedsSync = true;
+    state.uiAccumulator = 0;
     updateRecords();
     state.overlayMode = 'gameover';
-    updatePauseButtonState();
+    updateUi(true);
+    state.uiNeedsSync = false;
     const baseMessage = translate('index.sections.starsWar.overlay.gameOver.message', {
       time: formatTime(state.elapsed),
       score: formatNumber(state.score)
@@ -3893,7 +3929,12 @@
     state.gameOver = false;
     state.paused = false;
     state.overlayMode = 'ready';
-    updatePauseButtonState();
+    state.accumulator = 0;
+    state.uiAccumulator = 0;
+    state.uiNeedsSync = true;
+    updatePauseButtonState(true);
+    updateUi(true);
+    state.uiNeedsSync = false;
     showOverlay(
       translate('index.sections.starsWar.overlay.start.title'),
       translate('index.sections.starsWar.overlay.start.message'),
@@ -3926,8 +3967,11 @@
       ? performance.now()
       : Date.now();
     state.lastTimestamp = now;
+    state.accumulator = 0;
+    state.uiAccumulator = 0;
+    state.uiNeedsSync = true;
     hideOverlay();
-    updatePauseButtonState();
+    updatePauseButtonState(true);
     requestAnimationFrame(loop);
   }
 
@@ -3953,6 +3997,9 @@
     state.paused = true;
     state.overlayMode = 'paused';
     state.lastTimestamp = 0;
+    state.accumulator = 0;
+    state.uiAccumulator = 0;
+    state.uiNeedsSync = true;
     showOverlay(
       translate('index.sections.starsWar.overlay.pause.title'),
       translate('index.sections.starsWar.overlay.pause.message'),
@@ -3963,7 +4010,9 @@
         primaryKey: 'index.sections.starsWar.overlay.pause.action'
       }
     );
-    updatePauseButtonState();
+    updatePauseButtonState(true);
+    updateUi(true);
+    state.uiNeedsSync = false;
     announceStatus('index.sections.starsWar.status.paused');
   }
 
@@ -3982,9 +4031,14 @@
     if (!state.lastTimestamp) {
       state.lastTimestamp = timestamp;
     }
-    const delta = Math.min(0.1, (timestamp - state.lastTimestamp) / 1000);
+    const frameDelta = Math.min(MAX_ACCUMULATED_TIME, (timestamp - state.lastTimestamp) / 1000);
     state.lastTimestamp = timestamp;
-    update(delta);
+    state.accumulator = Math.min(state.accumulator + frameDelta, MAX_ACCUMULATED_TIME);
+    while (state.accumulator >= SIMULATION_STEP && state.running) {
+      update(SIMULATION_STEP);
+      state.accumulator -= SIMULATION_STEP;
+    }
+    render();
     if (state.running) {
       requestAnimationFrame(loop);
     }
@@ -4103,7 +4157,7 @@
     resetGame();
     scheduleNextWave();
     promptForNewRun();
-    updatePauseButtonState();
+    updatePauseButtonState(true);
     if (typeof window !== 'undefined') {
       window.addEventListener('beforeunload', flushAutosave);
       window.addEventListener('pagehide', flushAutosave);
@@ -4131,7 +4185,7 @@
     if (state.overlayMode === 'running') {
       hideOverlay();
     }
-    updatePauseButtonState();
+    updatePauseButtonState(true);
     flushAutosave();
   }
 
