@@ -513,6 +513,48 @@
           class="arcade-hub-card"
           role="button"
           tabindex="0"
+          aria-label="Accéder au mini-jeu Circles"
+          aria-describedby="arcadeCardDescription-circles"
+          data-card-id="circles"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.circles.aria"
+          data-page-target="circles"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.circles.title"
+            >Circles</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-circles"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-circles"
+            data-i18n="index.sections.arcadeHub.cards.circles.description"
+          >
+            Faites pivoter les anneaux colorés et réalignez chaque cercle en synchronisant vos mouvements.
+          </p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
           aria-label="Accéder au mini-jeu Motocross"
           aria-describedby="arcadeCardDescription-motocross"
           data-card-id="motocross"
@@ -3974,6 +4016,113 @@
     </section>
 
     <section
+      id="circles"
+      class="page page--circles"
+      data-page-group="arcade"
+      aria-label="Circles : réalignez les anneaux colorés."
+      data-i18n="aria-label:index.sections.circles.aria"
+      hidden
+    >
+      <div class="circles" data-circles-root>
+        <div class="circles__header">
+          <h2 class="visually-hidden" data-i18n="index.sections.circles.title">Circles</h2>
+          <p class="circles__subtitle" data-i18n="index.sections.circles.subtitle">
+            Faites pivoter les anneaux et alignez chaque couleur pour synchroniser toutes les orbites.
+          </p>
+          <div class="circles__controls">
+            <label class="circles__field" for="circlesDifficultySelect">
+              <span class="circles__label" data-i18n="index.sections.circles.controls.difficulty.label">Difficulté</span>
+              <select
+                id="circlesDifficultySelect"
+                class="circles__select"
+                aria-label="Choisir la difficulté"
+                data-i18n="aria-label:index.sections.circles.controls.difficulty.aria"
+              >
+                <option value="easy" data-i18n="index.sections.circles.controls.difficulty.easy">Facile</option>
+                <option value="medium" data-i18n="index.sections.circles.controls.difficulty.medium">Moyen</option>
+                <option value="hard" data-i18n="index.sections.circles.controls.difficulty.hard">Difficile</option>
+              </select>
+            </label>
+            <button
+              type="button"
+              class="circles__button"
+              id="circlesNewButton"
+              data-i18n="index.sections.circles.controls.new"
+            >
+              Nouveau puzzle
+            </button>
+            <button
+              type="button"
+              class="circles__button circles__button--secondary"
+              id="circlesRestartButton"
+              data-i18n="index.sections.circles.controls.restart"
+            >
+              Recommencer
+            </button>
+          </div>
+        </div>
+        <div class="circles__stats">
+          <span class="circles__stat">
+            <span class="circles__stat-label" data-i18n="index.sections.circles.stats.seed">Seed</span>
+            <span class="circles__stat-value" id="circlesSeedValue">—</span>
+          </span>
+          <span class="circles__stat">
+            <span class="circles__stat-label" data-i18n="index.sections.circles.stats.moves">Coups</span>
+            <span class="circles__stat-value" id="circlesMovesValue">0</span>
+          </span>
+          <span class="circles__stat">
+            <span class="circles__stat-label" data-i18n="index.sections.circles.stats.reward">Tickets gacha</span>
+            <span class="circles__stat-value" id="circlesRewardValue">0</span>
+          </span>
+        </div>
+        <div class="circles__stage">
+          <div class="circles__canvas-wrapper">
+            <canvas
+              id="circlesCanvas"
+              class="circles__canvas"
+              width="480"
+              height="480"
+              role="img"
+              tabindex="0"
+              aria-label="Plateau Circles"
+              data-i18n="aria-label:index.sections.circles.canvasAria"
+            ></canvas>
+            <div class="circles__overlay" id="circlesWin" role="status" aria-live="polite" hidden>
+              <p class="circles__overlay-message" id="circlesWinMessage" data-i18n="index.sections.circles.win.message">
+                Synchronisation parfaite !
+              </p>
+              <div class="circles__overlay-actions">
+                <button
+                  type="button"
+                  class="circles__button"
+                  id="circlesAgainButton"
+                  data-i18n="index.sections.circles.win.again"
+                >
+                  Rejouer
+                </button>
+                <button
+                  type="button"
+                  class="circles__button circles__button--secondary"
+                  id="circlesNextButton"
+                  data-i18n="index.sections.circles.win.next"
+                >
+                  Difficulté suivante
+                </button>
+              </div>
+            </div>
+          </div>
+          <p class="circles__message" id="circlesMessage" data-i18n="index.sections.circles.message">
+            Cliquez sur un cercle pour le faire pivoter d’un cran <strong>dans le sens horaire</strong>. Maintenez Maj pour
+            inverser le sens. Chaque rotation entraîne l’anneau extérieur adjacent.
+          </p>
+          <p class="circles__hint" id="circlesHint" data-i18n="index.sections.circles.hint">
+            Astuce : observez les liaisons d’anneaux pour anticiper deux coups à l’avance.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section
       id="taquin"
       class="page page--taquin"
       data-page-group="arcade"
@@ -7302,6 +7451,7 @@
   <script src="scripts/arcade/star-bridges.js"></script>
   <script src="scripts/arcade/pipetap.js"></script>
   <script src="scripts/arcade/color-stack.js"></script>
+  <script src="scripts/arcade/circles.js"></script>
   <script src="scripts/arcade/stars-war.js"></script>
   <script src="scripts/arcade/motocross.js"></script>
   <script src="scripts/arcade/sokoban.js"></script>

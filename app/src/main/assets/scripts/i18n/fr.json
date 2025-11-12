@@ -441,6 +441,12 @@
             "description": "Empilez et triez les jetons pour que chaque colonne ne contienne qu’une seule couleur.",
             "cta": "Trier"
           },
+          "circles": {
+            "aria": "Accéder au mini-jeu Circles",
+            "title": "Circles",
+            "description": "Faites pivoter les anneaux colorés et réalignez chaque orbite sans oublier le lien avec l’anneau extérieur.",
+            "cta": "Aligner"
+          },
           "motocross": {
             "aria": "Accéder au prototype Motocross procédural",
             "title": "Motocross",
@@ -1248,6 +1254,35 @@
           "undo": "Coup annulé.",
           "restored": "Partie restaurée.",
           "move": ""
+        }
+      },
+      "circles": {
+        "aria": "Circles : réalignez les anneaux colorés.",
+        "title": "Circles",
+        "subtitle": "Faites pivoter les anneaux et alignez chaque couleur pour synchroniser toutes les orbites.",
+        "controls": {
+          "difficulty": {
+            "label": "Difficulté",
+            "aria": "Choisir la difficulté",
+            "easy": "Facile",
+            "medium": "Moyen",
+            "hard": "Difficile"
+          },
+          "new": "Nouveau puzzle",
+          "restart": "Recommencer"
+        },
+        "stats": {
+          "seed": "Seed",
+          "moves": "Coups",
+          "reward": "Tickets gacha"
+        },
+        "canvasAria": "Plateau Circles",
+        "message": "Cliquez sur un cercle pour le faire pivoter d’un cran <strong>dans le sens horaire</strong>. Maintenez Maj pour inverser le sens. Chaque rotation entraîne l’anneau extérieur adjacent.",
+        "hint": "Astuce : utilisez les touches 1 à 6 pour manipuler les anneaux depuis le clavier.",
+        "win": {
+          "message": "Synchronisation parfaite !",
+          "again": "Rejouer",
+          "next": "Difficulté suivante"
         }
       },
       "motocross": {
@@ -3640,6 +3675,11 @@
         },
         "pipeTap": {
           "rewardToast": "PipeTap : +{count} ticket{suffix} gacha !"
+        },
+        "circles": {
+          "rewardToast": "Circles : +{count} ticket{suffix} gacha !",
+          "winMessage": "Synchronisation parfaite en {moves} coup{moveSuffix} !",
+          "winReward": "Récompense : +{tickets} ticket{ticketSuffix} gacha."
         },
         "starBridges": {
           "rewardToast": "Ponts Stellaires : +{count} ticket{suffix} gacha !"

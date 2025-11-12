@@ -427,6 +427,13 @@ body.theme-aurora .page--arcade-hub {
   --arcade-hub-card-shadow-hover: 0 30px 56px rgba(120, 90, 12, 0.46);
 }
 
+.arcade-hub-card[data-card-id="circles"] {
+  --arcade-hub-card-background: linear-gradient(135deg, #0d1a3a, #4e2c7f);
+  --arcade-hub-card-border: rgba(120, 104, 210, 0.52);
+  --arcade-hub-card-shadow: 0 22px 38px rgba(8, 18, 54, 0.62);
+  --arcade-hub-card-shadow-hover: 0 30px 56px rgba(22, 34, 92, 0.78);
+}
+
 .arcade-hub-card[data-card-id="starBridges"] {
   --arcade-hub-card-background: linear-gradient(135deg, #1a133c, #473781);
   --arcade-hub-card-border: rgba(120, 100, 210, 0.5);

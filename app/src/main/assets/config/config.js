@@ -519,6 +519,7 @@ const ARCADE_QUANTUM2048_CONFIG = loadConfigJson('./config/arcade/quantum2048.js
 const ARCADE_DEMINEUR_CONFIG = loadConfigJson('./config/arcade/demineur.json', {});
 const ARCADE_METAUX_CONFIG = loadConfigJson('./config/arcade/metaux.json', {});
 const ARCADE_GOMOKU_CONFIG = loadConfigJson('./config/arcade/gomoku.json', {});
+const ARCADE_CIRCLES_CONFIG = loadConfigJson('./config/arcade/circles.json', {});
 
 function createShopBuildingDefinitions() {
   const withDefaults = def => ({ maxLevel: SHOP_MAX_PURCHASE_DEFAULT, ...def });
