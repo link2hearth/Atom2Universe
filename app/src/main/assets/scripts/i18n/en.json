@@ -4105,6 +4105,8 @@
           "empty": "—"
         },
         "starsWar": {
+          "easyTitle": "Easy mode",
+          "hardTitle": "Hard mode",
           "empty": "No runs recorded yet",
           "points": {
             "one": "{count} point",

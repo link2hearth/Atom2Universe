@@ -588,6 +588,32 @@ body.theme-aurora .info-progress-block--photon {
   opacity: 0.78;
 }
 
+.info-progress-block__columns {
+  display: grid;
+  gap: clamp(0.6rem, 1.2vw, 0.9rem);
+  margin-top: clamp(0.4rem, 0.8vw, 0.6rem);
+}
+
+.info-progress-block__column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.info-progress-block__subtitle {
+  margin: 0;
+  font-size: calc(var(--font-scale-factor, 1) * 0.78rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+@media (min-width: 720px) {
+  .info-progress-block__columns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 .info-calculation-block__subtitle {
   margin: 0;
   font-size: calc(var(--font-scale-factor, 1) * 0.78rem);
