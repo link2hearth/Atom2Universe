@@ -78,6 +78,26 @@
     };
   }
 
+  function createEmptyRecordEntry() {
+    return {
+      bestScore: 0,
+      bestTime: 0,
+      bestWave: 0,
+      bestDifficulty: 1,
+      topRuns: []
+    };
+  }
+
+  function createInitialRecordState() {
+    return {
+      modes: {
+        [DIFFICULTY_MODES.EASY]: createEmptyRecordEntry(),
+        [DIFFICULTY_MODES.HARD]: createEmptyRecordEntry()
+      },
+      lastMode: DIFFICULTY_MODES.HARD
+    };
+  }
+
   function toFiniteNumber(value, fallback) {
     const numeric = Number(value);
     return Number.isFinite(numeric) ? numeric : fallback;

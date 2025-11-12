@@ -175,6 +175,10 @@
         "progress": {
           "title": "Progression",
           "subtitle": "Session & globale",
+          "toggle": {
+            "collapse": "Réduire",
+            "expand": "Dérouler"
+          },
           "session": {
             "title": "Session",
             "atoms": "Atomes gagnés",
@@ -208,6 +212,8 @@
           },
           "starsWar": {
             "title": "Stars War",
+            "easyTitle": "Mode facile",
+            "hardTitle": "Mode difficile",
             "top1": "Top 1",
             "top2": "Top 2",
             "top3": "Top 3"
@@ -230,7 +236,11 @@
         },
         "calculations": {
           "title": "Calculs de production",
-          "subtitle": "Décomposition des gains automatiques et manuels"
+          "subtitle": "Décomposition des gains automatiques et manuels",
+          "toggle": {
+            "collapse": "Réduire",
+            "expand": "Dérouler"
+          }
         },
         "shop": {
           "title": "Bonus boutique",

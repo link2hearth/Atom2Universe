@@ -175,6 +175,10 @@
         "progress": {
           "title": "Progress",
           "subtitle": "Session & global",
+          "toggle": {
+            "collapse": "Collapse",
+            "expand": "Expand"
+          },
           "session": {
             "title": "Session",
             "atoms": "Atoms gained",
@@ -208,6 +212,8 @@
           },
           "starsWar": {
             "title": "Stars War",
+            "easyTitle": "Easy mode",
+            "hardTitle": "Hard mode",
             "top1": "Top 1",
             "top2": "Top 2",
             "top3": "Top 3"
@@ -230,7 +236,11 @@
         },
         "calculations": {
           "title": "Production breakdown",
-          "subtitle": "Automatic vs manual gains overview"
+          "subtitle": "Automatic vs manual gains overview",
+          "toggle": {
+            "collapse": "Collapse",
+            "expand": "Expand"
+          }
         },
         "shop": {
           "title": "Shop bonuses",

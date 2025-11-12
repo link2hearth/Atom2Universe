@@ -290,6 +290,8 @@ const INFO_WELCOME_COLLAPSED_STORAGE_KEY = 'atom2univers.info.welcomeCollapsed';
 const INFO_ACHIEVEMENTS_COLLAPSED_STORAGE_KEY = 'atom2univers.info.achievementsCollapsed';
 const INFO_CHARACTERS_COLLAPSED_STORAGE_KEY = 'atom2univers.info.charactersCollapsed';
 const INFO_CARDS_COLLAPSED_STORAGE_KEY = 'atom2univers.info.cardsCollapsed';
+const INFO_CALCULATIONS_COLLAPSED_STORAGE_KEY = 'atom2univers.info.calculationsCollapsed';
+const INFO_PROGRESS_COLLAPSED_STORAGE_KEY = 'atom2univers.info.progressCollapsed';
 const COLLECTION_IMAGES_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.imagesCollapsed';
 const COLLECTION_BONUS_IMAGES_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.bonusImagesCollapsed';
 const COLLECTION_BONUS2_IMAGES_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.bonus2ImagesCollapsed';
@@ -5960,6 +5962,9 @@ function collectDomElements() {
   bigBangOptionToggle: document.getElementById('bigBangNavToggle'),
   infoApsBreakdown: document.getElementById('infoApsBreakdown'),
   infoApcBreakdown: document.getElementById('infoApcBreakdown'),
+  infoCalculationsCard: document.getElementById('infoCalculationsCard'),
+  infoCalculationsContent: document.getElementById('info-calculations-content'),
+  infoCalculationsToggle: document.getElementById('infoCalculationsToggle'),
   infoSessionAtoms: document.getElementById('infoSessionAtoms'),
   infoSessionClicks: document.getElementById('infoSessionClicks'),
   infoSessionApcAtoms: document.getElementById('infoSessionApcAtoms'),
@@ -5976,6 +5981,9 @@ function collectDomElements() {
   infoGlobalDuration: document.getElementById('infoGlobalDuration'),
   infoGlobalFrenzySingle: document.getElementById('infoGlobalFrenzySingle'),
   infoGlobalFrenzyMulti: document.getElementById('infoGlobalFrenzyMulti'),
+  infoProgressCard: document.getElementById('infoProgressCard'),
+  infoProgressContent: document.getElementById('info-progress-content'),
+  infoProgressToggle: document.getElementById('infoProgressToggle'),
   infoPhotonDistanceValue: document.getElementById('infoPhotonDistanceValue'),
   infoPhotonSpeedValue: document.getElementById('infoPhotonSpeedValue'),
   infoPhotonAltitudeValue: document.getElementById('infoPhotonAltitudeValue'),
@@ -7449,6 +7457,34 @@ function updateInfoCardsToggleLabel(collapsed) {
   elements.infoCardsToggle.setAttribute('aria-label', label);
 }
 
+function updateInfoCalculationsToggleLabel(collapsed) {
+  if (!elements.infoCalculationsToggle) {
+    return;
+  }
+  const key = collapsed
+    ? 'index.sections.info.calculations.toggle.expand'
+    : 'index.sections.info.calculations.toggle.collapse';
+  const fallback = collapsed ? 'Expand' : 'Collapse';
+  const label = translateOrDefault(key, fallback);
+  elements.infoCalculationsToggle.setAttribute('data-i18n', key);
+  elements.infoCalculationsToggle.textContent = label;
+  elements.infoCalculationsToggle.setAttribute('aria-label', label);
+}
+
+function updateInfoProgressToggleLabel(collapsed) {
+  if (!elements.infoProgressToggle) {
+    return;
+  }
+  const key = collapsed
+    ? 'index.sections.info.progress.toggle.expand'
+    : 'index.sections.info.progress.toggle.collapse';
+  const fallback = collapsed ? 'Expand' : 'Collapse';
+  const label = translateOrDefault(key, fallback);
+  elements.infoProgressToggle.setAttribute('data-i18n', key);
+  elements.infoProgressToggle.textContent = label;
+  elements.infoProgressToggle.setAttribute('aria-label', label);
+}
+
 function updateCollectionImagesToggleLabel(collapsed) {
   if (!elements.collectionImagesToggle) {
     return;
@@ -7558,6 +7594,84 @@ function initInfoCardsCard() {
   elements.infoCardsToggle.addEventListener('click', event => {
     event.preventDefault();
     toggleInfoCardsCollapsed();
+  });
+}
+
+function setInfoCalculationsCollapsed(collapsed, options = {}) {
+  if (!elements.infoCalculationsCard
+    || !elements.infoCalculationsContent
+    || !elements.infoCalculationsToggle) {
+    return;
+  }
+  const shouldCollapse = !!collapsed;
+  elements.infoCalculationsCard.classList.toggle('info-card--collapsed', shouldCollapse);
+  elements.infoCalculationsContent.hidden = shouldCollapse;
+  elements.infoCalculationsContent.setAttribute('aria-hidden', shouldCollapse ? 'true' : 'false');
+  elements.infoCalculationsToggle.setAttribute('aria-expanded', shouldCollapse ? 'false' : 'true');
+  updateInfoCalculationsToggleLabel(shouldCollapse);
+  if (options.persist !== false) {
+    writeStoredInfoCardCollapsed(INFO_CALCULATIONS_COLLAPSED_STORAGE_KEY, shouldCollapse);
+  }
+}
+
+function toggleInfoCalculationsCollapsed() {
+  if (!elements.infoCalculationsCard) {
+    return;
+  }
+  const currentlyCollapsed = elements.infoCalculationsCard.classList.contains('info-card--collapsed');
+  setInfoCalculationsCollapsed(!currentlyCollapsed);
+}
+
+function initInfoCalculationsCard() {
+  if (!elements.infoCalculationsCard
+    || !elements.infoCalculationsContent
+    || !elements.infoCalculationsToggle) {
+    return;
+  }
+  const initialCollapsed = readStoredInfoCardCollapsed(INFO_CALCULATIONS_COLLAPSED_STORAGE_KEY, false);
+  setInfoCalculationsCollapsed(initialCollapsed, { persist: false });
+  elements.infoCalculationsToggle.addEventListener('click', event => {
+    event.preventDefault();
+    toggleInfoCalculationsCollapsed();
+  });
+}
+
+function setInfoProgressCollapsed(collapsed, options = {}) {
+  if (!elements.infoProgressCard
+    || !elements.infoProgressContent
+    || !elements.infoProgressToggle) {
+    return;
+  }
+  const shouldCollapse = !!collapsed;
+  elements.infoProgressCard.classList.toggle('info-card--collapsed', shouldCollapse);
+  elements.infoProgressContent.hidden = shouldCollapse;
+  elements.infoProgressContent.setAttribute('aria-hidden', shouldCollapse ? 'true' : 'false');
+  elements.infoProgressToggle.setAttribute('aria-expanded', shouldCollapse ? 'false' : 'true');
+  updateInfoProgressToggleLabel(shouldCollapse);
+  if (options.persist !== false) {
+    writeStoredInfoCardCollapsed(INFO_PROGRESS_COLLAPSED_STORAGE_KEY, shouldCollapse);
+  }
+}
+
+function toggleInfoProgressCollapsed() {
+  if (!elements.infoProgressCard) {
+    return;
+  }
+  const currentlyCollapsed = elements.infoProgressCard.classList.contains('info-card--collapsed');
+  setInfoProgressCollapsed(!currentlyCollapsed);
+}
+
+function initInfoProgressCard() {
+  if (!elements.infoProgressCard
+    || !elements.infoProgressContent
+    || !elements.infoProgressToggle) {
+    return;
+  }
+  const initialCollapsed = readStoredInfoCardCollapsed(INFO_PROGRESS_COLLAPSED_STORAGE_KEY, false);
+  setInfoProgressCollapsed(initialCollapsed, { persist: false });
+  elements.infoProgressToggle.addEventListener('click', event => {
+    event.preventDefault();
+    toggleInfoProgressCollapsed();
   });
 }
 
@@ -7741,6 +7855,40 @@ function subscribeInfoCardsLanguageUpdates() {
       ? elements.infoCardsCard.classList.contains('info-card--collapsed')
       : false;
     updateInfoCardsToggleLabel(collapsed);
+  };
+  const api = getI18nApi();
+  if (api && typeof api.onLanguageChanged === 'function') {
+    api.onLanguageChanged(handler);
+    return;
+  }
+  if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
+    globalThis.addEventListener('i18n:languagechange', handler);
+  }
+}
+
+function subscribeInfoCalculationsLanguageUpdates() {
+  const handler = () => {
+    const collapsed = elements.infoCalculationsCard
+      ? elements.infoCalculationsCard.classList.contains('info-card--collapsed')
+      : false;
+    updateInfoCalculationsToggleLabel(collapsed);
+  };
+  const api = getI18nApi();
+  if (api && typeof api.onLanguageChanged === 'function') {
+    api.onLanguageChanged(handler);
+    return;
+  }
+  if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
+    globalThis.addEventListener('i18n:languagechange', handler);
+  }
+}
+
+function subscribeInfoProgressLanguageUpdates() {
+  const handler = () => {
+    const collapsed = elements.infoProgressCard
+      ? elements.infoProgressCard.classList.contains('info-card--collapsed')
+      : false;
+    updateInfoProgressToggleLabel(collapsed);
   };
   const api = getI18nApi();
   if (api && typeof api.onLanguageChanged === 'function') {
@@ -14025,6 +14173,8 @@ function bindDomEventListeners() {
 
   initInfoWelcomeCard();
   initInfoAchievementsCard();
+  initInfoCalculationsCard();
+  initInfoProgressCard();
   initInfoCharactersCard();
   initInfoCardsCard();
   initCollectionImagesCard();
@@ -18841,6 +18991,8 @@ const RESET_LOCAL_STORAGE_KEYS = [
   INFO_WELCOME_COLLAPSED_STORAGE_KEY,
   INFO_CHARACTERS_COLLAPSED_STORAGE_KEY,
   INFO_CARDS_COLLAPSED_STORAGE_KEY,
+  INFO_CALCULATIONS_COLLAPSED_STORAGE_KEY,
+  INFO_PROGRESS_COLLAPSED_STORAGE_KEY,
   COLLECTION_IMAGES_COLLAPSED_STORAGE_KEY,
   COLLECTION_BONUS_IMAGES_COLLAPSED_STORAGE_KEY,
   HEADER_COLLAPSED_STORAGE_KEY,
@@ -20381,6 +20533,8 @@ function initializeDomBoundModules() {
   subscribePerformanceModeLanguageUpdates();
   subscribeInfoWelcomeLanguageUpdates();
   subscribeInfoAchievementsLanguageUpdates();
+  subscribeInfoCalculationsLanguageUpdates();
+  subscribeInfoProgressLanguageUpdates();
   subscribeInfoCharactersLanguageUpdates();
   subscribeInfoCardsLanguageUpdates();
   subscribeCollectionImagesLanguageUpdates();
