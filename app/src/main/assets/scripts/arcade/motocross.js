@@ -29,7 +29,8 @@
   const WHEEL_VERTICAL_OFFSET = 20 * BIKE_SCALE;
   const BIKE_INERTIA = (MASS * (CHASSIS_WIDTH * CHASSIS_WIDTH + CHASSIS_HEIGHT * CHASSIS_HEIGHT)) / 12;
   const ENGINE_FORCE = 24800;
-  const BRAKE_FORCE = 9200;
+  const BRAKE_FORCE = ENGINE_FORCE * 0.9;
+  const GROUND_BRAKE_MULTIPLIER = 1.35;
   const TILT_TORQUE = 31200;
   const SPRING_STIFFNESS = 4200;
   const SPRING_DAMPING = 180;
@@ -38,6 +39,8 @@
   const LINEAR_DAMPING = 0.05;
   const ANGULAR_DAMPING = 0.12;
   const NORMAL_CORRECTION_FACTOR = 0.7;
+  const AIR_ROTATION_MAX_SPEED = Math.PI * 3;
+  const AIR_ROTATION_ACCEL = AIR_ROTATION_MAX_SPEED * 6;
   const CAMERA_LOOK_AHEAD = 0.24;
   const CAMERA_OFFSET_Y = 180;
   const CAMERA_SMOOTH = 6.5;
@@ -1291,7 +1294,12 @@
     const distance = toSurface.x * normal.x + toSurface.y * normal.y;
     const penetration = WHEEL_RADIUS - distance;
     wheel.onGround = penetration > 0;
-    let driveForce = driveInput >= 0 ? driveInput * ENGINE_FORCE : driveInput * BRAKE_FORCE;
+    let driveForce = 0;
+    if (driveInput > 0) {
+      driveForce = driveInput * ENGINE_FORCE;
+    } else if (driveInput < 0) {
+      driveForce = driveInput * BRAKE_FORCE;
+    }
     if (!wheel.onGround) {
       return {
         normalForce: 0,
@@ -1300,6 +1308,9 @@
         normal,
         tangent
       };
+    }
+    if (driveInput < 0) {
+      driveForce *= GROUND_BRAKE_MULTIPLIER;
     }
     if (driveInput > 0) {
       const slopeFactor = clamp(1 + Math.max(0, Math.abs(tangent.y) - 0.2) * 2.4, 1, 3.5);
@@ -1344,6 +1355,16 @@
     const brakeHeld = state.input.brake > 0 ? 1 : 0;
     const controlDelta = accelerateHeld - brakeHeld;
 
+    if (accelerateHeld && brakeHeld) {
+      bike.velocity.x = 0;
+      bike.velocity.y = 0;
+      bike.angularVelocity = 0;
+      updateWheelData();
+      state.speed = 0;
+      updateSpeedDisplay();
+      return;
+    }
+
     const backProbe = computeWheelContact(back, track, 0);
     const frontProbe = computeWheelContact(front, track, 0);
     const airborne = !back.onGround && !front.onGround;
@@ -1357,7 +1378,7 @@
 
     let totalForceX = 0;
     let totalForceY = MASS * GRAVITY;
-    const tiltMultiplier = airborne ? 1 : 0.35;
+    const tiltMultiplier = airborne ? 0 : 0.35;
     let totalTorque = tiltControl * TILT_TORQUE * tiltMultiplier;
     let correctionX = 0;
     let correctionY = 0;
@@ -1383,6 +1404,14 @@
       }
     });
 
+    if (airborne) {
+      const rotationInput = clamp(controlDelta, -1, 1);
+      const targetAngularVelocity = rotationInput * AIR_ROTATION_MAX_SPEED;
+      const maxDelta = AIR_ROTATION_ACCEL * dt;
+      const deltaAngular = clamp(targetAngularVelocity - bike.angularVelocity, -maxDelta, maxDelta);
+      bike.angularVelocity += deltaAngular;
+    }
+
     const accelerationX = totalForceX / MASS;
     const accelerationY = totalForceY / MASS;
     bike.velocity.x += accelerationX * dt;
@@ -1392,6 +1421,10 @@
     bike.velocity.x *= 1 - LINEAR_DAMPING * dt;
     bike.velocity.y *= 1 - LINEAR_DAMPING * dt;
     bike.angularVelocity *= 1 - ANGULAR_DAMPING * dt;
+
+    if (airborne) {
+      bike.angularVelocity = clamp(bike.angularVelocity, -AIR_ROTATION_MAX_SPEED, AIR_ROTATION_MAX_SPEED);
+    }
 
     bike.position.x += bike.velocity.x * dt;
     bike.position.y += bike.velocity.y * dt;
