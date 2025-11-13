@@ -15,9 +15,11 @@
     difficultySelect: document.getElementById('circlesDifficultySelect'),
     newButton: document.getElementById('circlesNewButton'),
     restartButton: document.getElementById('circlesRestartButton'),
+    hintButton: document.getElementById('circlesHintButton'),
     seedValue: document.getElementById('circlesSeedValue'),
     movesValue: document.getElementById('circlesMovesValue'),
     rewardValue: document.getElementById('circlesRewardValue'),
+    hintMessage: document.getElementById('circlesHintMessage'),
     winOverlay: document.getElementById('circlesWin'),
     winMessage: document.getElementById('circlesWinMessage'),
     againButton: document.getElementById('circlesAgainButton'),
@@ -34,7 +36,7 @@
   }
 
   const AUTOSAVE_GAME_ID = 'circles';
-  const AUTOSAVE_VERSION = 2;
+  const AUTOSAVE_VERSION = 3;
   const AUTOSAVE_DEBOUNCE_MS = 200;
   const DIFFICULTY_ORDER = Object.freeze(['easy', 'medium', 'hard']);
   const ROTATION_ANIMATION_DURATION = 320;
@@ -92,7 +94,10 @@
     autosaveTimer: null,
     autosaveSuppressed: false,
     resizeObserver: null,
-    animation: createAnimationState()
+    animation: createAnimationState(),
+    solutionMap: null,
+    hintContext: { type: 'default' },
+    hintHighlight: null
   };
 
   const pointerGesture = createPointerGestureState();
@@ -108,6 +113,7 @@
     state.rotationLinks = generateRotationLinks(state.ringCount);
 
     attachEventListeners();
+    renderHintMessage();
     resizeCanvas();
 
     if (!restoreFromAutosave()) {
@@ -131,6 +137,9 @@
       elements.restartButton.addEventListener('click', () => {
         restartPuzzle();
       });
+    }
+    if (elements.hintButton) {
+      elements.hintButton.addEventListener('click', handleHintButtonClick);
     }
     if (elements.canvas) {
       elements.canvas.addEventListener('pointerdown', handleCanvasPointer, { passive: false });
@@ -171,6 +180,7 @@
   function handleLanguageChange() {
     updateStats();
     updateWinMessage();
+    renderHintMessage();
   }
   function getAutosaveApi() {
     if (typeof window === 'undefined') {
@@ -296,6 +306,10 @@
     updateStats();
     updateWinMessage();
     resizeCanvas();
+
+    recomputeSolutionMap();
+    setHintHighlight(null);
+    setHintContext(state.solved ? { type: 'solved' } : { type: 'default' });
 
     if (state.solved) {
       showWinOverlay();
@@ -582,6 +596,20 @@
     return rings;
   }
 
+  function getSolvedRotations(ringCount, segmentsOverride) {
+    const count = clampInteger(ringCount, 1, 12, 1);
+    const segments = Number.isFinite(segmentsOverride) ? segmentsOverride : state.segments;
+    const offsets = Array.isArray(state.settings.colorOffsets) && state.settings.colorOffsets.length > 0
+      ? state.settings.colorOffsets
+      : [0];
+    const rotations = new Array(count);
+    for (let i = 0; i < count; i += 1) {
+      const offset = offsets[i] != null ? offsets[i] : offsets[i % offsets.length];
+      rotations[i] = normalizeRotationValue(offset, segments);
+    }
+    return rotations;
+  }
+
   function rotateColors(colors, offset) {
     const palette = Array.isArray(colors) && colors.length > 0 ? colors : ['#ffffff'];
     const normalizedOffset = normalizeRotationValue(offset, palette.length);
@@ -653,6 +681,9 @@
     state.solved = checkSolved(state.rotations);
     state.pendingSolved = false;
     state.rewardClaimed = false;
+    recomputeSolutionMap();
+    setHintHighlight(null);
+    setHintContext(state.solved ? { type: 'solved' } : { type: 'default' });
     updateControlsState();
     updateStats();
     updateWinMessage();
@@ -672,6 +703,9 @@
       state.pendingSolved = false;
       state.rewardClaimed = false;
       hideWinOverlay();
+      recomputeSolutionMap();
+      setHintHighlight(null);
+      setHintContext(state.solved ? { type: 'solved' } : { type: 'default' });
       updateControlsState();
       updateStats();
       draw();
@@ -685,38 +719,79 @@
     const minMoves = clampInteger(settings.shuffleMoves.min, 1, 400, 6);
     const maxMoves = clampInteger(settings.shuffleMoves.max, minMoves, 500, Math.max(minMoves, 12));
     const attempts = clampInteger(state.settings.maxShuffleAttempts, 4, 200, 32);
+    const rings = createRingDefinitions(count);
+    const segments = state.segments;
+    const baselineRotations = getSolvedRotations(count, segments);
 
     for (let attempt = 0; attempt < attempts; attempt += 1) {
-      const rotationLinks = generateRotationLinks(count);
-      const rotations = new Array(count).fill(0);
-      const moveCount = randomInt(minMoves, maxMoves);
-      for (let move = 0; move < moveCount; move += 1) {
-        const index = randomInt(0, count - 1);
-        const direction = Math.random() < 0.5 ? 1 : -1;
-        applyRotationToArray(rotations, index, direction, rotationLinks, state.segments);
+      const candidateLinks = sanitizeRotationLinks(generateRotationLinks(count), count);
+      if (!candidateLinks) {
+        continue;
       }
-      if (!checkSolved(rotations)) {
+      const moveCount = randomInt(minMoves, maxMoves);
+      const rotations = createScrambledRotations(
+        count,
+        candidateLinks,
+        moveCount,
+        segments,
+        baselineRotations
+      );
+      if (!rotations) {
+        continue;
+      }
+      if (!isSolvedForRings(rotations, rings, segments)) {
         return {
           ringCount: count,
-          rotations: rotations.map(value => normalizeRotationValue(value)),
-          rotationLinks,
+          rotations,
+          rotationLinks: candidateLinks,
           seed: generateSeed(state.settings.seedLength)
         };
       }
     }
 
-    const fallbackLinks = generateRotationLinks(count);
-    const fallbackRotations = new Array(count).fill(0);
+    const fallbackLinks = sanitizeRotationLinks(generateRotationLinks(count), count) || generateRotationLinks(count);
+    const fallbackRotations = getSolvedRotations(count, segments);
     if (count > 0) {
       const index = Math.max(0, count - 1);
-      applyRotationToArray(fallbackRotations, index, 1, fallbackLinks, state.segments);
+      applyRotationToArray(fallbackRotations, index, 1, fallbackLinks, segments);
     }
     return {
       ringCount: count,
-      rotations: fallbackRotations.map(value => normalizeRotationValue(value)),
+      rotations: fallbackRotations.map(value => normalizeRotationValue(value, segments)),
       rotationLinks: fallbackLinks,
       seed: generateSeed(state.settings.seedLength)
     };
+  }
+
+  function createScrambledRotations(
+    count,
+    rotationLinks,
+    moveCount,
+    segmentsOverride,
+    baselineRotations
+  ) {
+    const length = clampInteger(count, 1, 12, count);
+    if (!Array.isArray(rotationLinks) || rotationLinks.length !== length) {
+      return null;
+    }
+    const moves = clampInteger(moveCount, 0, 2000, 0);
+    const segments = Number.isFinite(segmentsOverride) ? segmentsOverride : state.segments;
+    const startRotations = Array.isArray(baselineRotations) && baselineRotations.length >= length
+      ? baselineRotations.slice(0, length)
+      : getSolvedRotations(length, segments);
+    const rotations = startRotations.slice();
+    if (moves <= 0) {
+      return rotations;
+    }
+    for (let move = 0; move < moves; move += 1) {
+      const index = randomInt(0, length - 1);
+      const direction = Math.random() < 0.5 ? 1 : -1;
+      applyRotationToArray(rotations, index, direction, rotationLinks, segments);
+    }
+    for (let i = 0; i < rotations.length; i += 1) {
+      rotations[i] = normalizeRotationValue(rotations[i], segments);
+    }
+    return rotations;
   }
 
   function applyRotationToArray(rotations, index, direction, rotationLinks, segmentsOverride) {
@@ -764,6 +839,8 @@
     if (!Array.isArray(affected) || affected.length === 0) {
       return false;
     }
+    setHintHighlight(null);
+    setHintContext({ type: 'default' });
     state.moves += 1;
     updateControlsState();
     updateStats();
@@ -778,18 +855,22 @@
   }
 
   function checkSolved(rotations) {
-    if (!Array.isArray(rotations) || !Array.isArray(state.rings) || state.rings.length === 0) {
+    return isSolvedForRings(rotations, state.rings, state.segments);
+  }
+
+  function isSolvedForRings(rotations, rings, segmentsOverride) {
+    if (!Array.isArray(rotations) || !Array.isArray(rings) || rings.length === 0) {
       return false;
     }
-    const ringCount = Math.min(state.rings.length, rotations.length);
+    const ringCount = Math.min(rings.length, rotations.length);
     if (ringCount === 0) {
       return false;
     }
-    const segments = Math.max(1, state.segments);
+    const segments = Math.max(1, Number.isFinite(segmentsOverride) ? segmentsOverride : state.segments);
     for (let segmentIndex = 0; segmentIndex < segments; segmentIndex += 1) {
       let expectedColor = null;
       for (let ringIndex = 0; ringIndex < ringCount; ringIndex += 1) {
-        const ring = state.rings[ringIndex];
+        const ring = rings[ringIndex];
         if (!ring || !Array.isArray(ring.colors) || ring.colors.length === 0) {
           return false;
         }
@@ -816,6 +897,8 @@
     }
     state.solved = true;
     state.pendingSolved = false;
+    setHintHighlight(null);
+    setHintContext({ type: 'solved' });
     updateWinMessage();
     showWinOverlay();
     awardCompletionTickets();
@@ -897,6 +980,224 @@
     if (typeof window !== 'undefined' && typeof window.showToast === 'function') {
       window.showToast(message);
     }
+  }
+
+  function handleHintButtonClick() {
+    if (state.solved) {
+      setHintHighlight(null);
+      setHintContext({ type: 'solved' });
+      return;
+    }
+    if (!(state.solutionMap instanceof Map)) {
+      setHintHighlight(null);
+      setHintContext({ type: 'unavailable' });
+      return;
+    }
+    const key = serializeRotations(state.rotations, state.segments);
+    const entry = key ? state.solutionMap.get(key) : null;
+    if (!entry || !Number.isFinite(entry.distance)) {
+      setHintHighlight(null);
+      setHintContext({ type: 'unavailable' });
+      return;
+    }
+    if (!entry.bestMove || entry.distance <= 0) {
+      setHintHighlight(null);
+      setHintContext({ type: 'solved' });
+      return;
+    }
+    const ringIndex = Number(entry.bestMove.ringIndex);
+    const direction = Number(entry.bestMove.direction);
+    if (!Number.isFinite(ringIndex) || !Number.isFinite(direction)) {
+      setHintHighlight(null);
+      setHintContext({ type: 'unavailable' });
+      return;
+    }
+    const moved = applyUserRotation(ringIndex, direction);
+    if (!moved) {
+      setHintHighlight(null);
+      setHintContext({ type: 'unavailable' });
+      return;
+    }
+    const remaining = Math.max(0, Math.floor(entry.distance - 1));
+    const contextType = remaining > 0 ? 'auto' : 'autoSolved';
+    setHintHighlight(null);
+    setHintContext({
+      type: contextType,
+      ringIndex,
+      direction,
+      remaining
+    });
+  }
+
+  function setHintContext(context) {
+    const fallbackContext = { type: 'default' };
+    const next = context && typeof context === 'object' && typeof context.type === 'string'
+      ? context
+      : fallbackContext;
+    state.hintContext = {
+      type: next.type,
+      ringIndex: Number.isFinite(next.ringIndex) ? next.ringIndex : null,
+      direction: Number.isFinite(next.direction) ? Math.sign(next.direction) || 1 : null,
+      remaining: Number.isFinite(next.remaining) ? Math.max(0, Math.floor(next.remaining)) : null
+    };
+    renderHintMessage();
+  }
+
+  function renderHintMessage() {
+    if (!elements.hintMessage) {
+      return;
+    }
+    const context = state.hintContext && typeof state.hintContext === 'object'
+      ? state.hintContext
+      : { type: 'default' };
+    let message = '';
+    const isMoveContext =
+      (context.type === 'suggestion' || context.type === 'auto' || context.type === 'autoSolved') &&
+      context.ringIndex != null &&
+      context.direction != null &&
+      context.remaining != null;
+    if (isMoveContext) {
+      const ringNumber = formatNumber(context.ringIndex + 1);
+      const directionText = getHintDirectionLabel(context.direction);
+      const moves = Math.max(0, context.remaining);
+      const suffix = moves > 1 ? 's' : '';
+      if (context.type === 'autoSolved' || (context.type === 'auto' && moves === 0)) {
+        message = translateText(
+          'scripts.arcade.circles.hint.autoSolved',
+          'Aide a tourné l’anneau {ring} vers le {direction}. Puzzle résolu !',
+          {
+            ring: ringNumber,
+            direction: directionText
+          }
+        );
+      } else if (context.type === 'auto') {
+        message = translateText(
+          'scripts.arcade.circles.hint.auto',
+          'Aide a tourné l’anneau {ring} vers le {direction}. Il reste {moves} coup{suffix}.',
+          {
+            ring: ringNumber,
+            direction: directionText,
+            moves: formatNumber(moves),
+            suffix
+          }
+        );
+      } else {
+        message = translateText(
+          'scripts.arcade.circles.hint.move',
+          'Tournez l’anneau {ring} vers le {direction}. Il reste {moves} coup{suffix} à jouer.',
+          {
+            ring: ringNumber,
+            direction: directionText,
+            moves: formatNumber(moves),
+            suffix
+          }
+        );
+      }
+    } else if (context.type === 'solved') {
+      message = translateText(
+        'scripts.arcade.circles.hint.solved',
+        'Puzzle déjà résolu ! Lancez un nouveau puzzle pour continuer.'
+      );
+    } else if (context.type === 'unavailable') {
+      message = translateText(
+        'scripts.arcade.circles.hint.unavailable',
+        'Aucun indice disponible pour ce puzzle. Relancez ou réinitialisez.'
+      );
+    } else {
+      message = translateText(
+        'scripts.arcade.circles.hint.default',
+        'Besoin d’un coup de pouce ? Cliquez sur « Aide » pour jouer automatiquement le meilleur coup.'
+      );
+    }
+    elements.hintMessage.textContent = message;
+  }
+
+  function getHintDirectionLabel(direction) {
+    const clockwise = direction > 0;
+    return translateText(
+      clockwise
+        ? 'scripts.arcade.circles.hint.direction.clockwise'
+        : 'scripts.arcade.circles.hint.direction.counterClockwise',
+      clockwise ? 'sens horaire' : 'sens antihoraire'
+    );
+  }
+
+  function setHintHighlight(indices) {
+    if (Array.isArray(indices) && indices.length > 0) {
+      const sanitized = new Set();
+      for (let i = 0; i < indices.length; i += 1) {
+        const value = Number(indices[i]);
+        if (Number.isFinite(value)) {
+          const normalized = Math.floor(value);
+          if (normalized >= 0 && normalized < state.ringCount) {
+            sanitized.add(normalized);
+          }
+        }
+      }
+      state.hintHighlight = sanitized.size > 0 ? sanitized : null;
+    } else {
+      state.hintHighlight = null;
+    }
+    draw();
+  }
+
+  function recomputeSolutionMap() {
+    if (!Array.isArray(state.rotationLinks) || state.rotationLinks.length !== state.ringCount) {
+      state.solutionMap = null;
+      return;
+    }
+    state.solutionMap = buildSolutionMap(state.rotationLinks, state.ringCount, state.segments);
+  }
+
+  function buildSolutionMap(rotationLinks, ringCount, segmentsOverride) {
+    const length = clampInteger(ringCount, 1, 12, ringCount);
+    if (length <= 0) {
+      return null;
+    }
+    const sanitizedLinks = sanitizeRotationLinks(rotationLinks, length);
+    if (!sanitizedLinks) {
+      return null;
+    }
+    const segments = Number.isFinite(segmentsOverride) ? segmentsOverride : state.segments;
+    const start = getSolvedRotations(length, segments);
+    const startKey = serializeRotations(start, segments);
+    const queue = [start];
+    const visited = new Map();
+    visited.set(startKey, { distance: 0, bestMove: null });
+    let index = 0;
+    while (index < queue.length) {
+      const current = queue[index];
+      index += 1;
+      const currentKey = serializeRotations(current, segments);
+      const info = visited.get(currentKey);
+      for (let ringIndex = 0; ringIndex < length; ringIndex += 1) {
+        for (let direction = -1; direction <= 1; direction += 2) {
+          const next = current.slice();
+          applyRotationToArray(next, ringIndex, direction, sanitizedLinks, segments);
+          const key = serializeRotations(next, segments);
+          if (!visited.has(key)) {
+            visited.set(key, {
+              distance: info.distance + 1,
+              bestMove: { ringIndex, direction: direction * -1 }
+            });
+            queue.push(next);
+          }
+        }
+      }
+    }
+    return visited;
+  }
+
+  function serializeRotations(rotations, segmentsOverride) {
+    if (!Array.isArray(rotations)) {
+      return '';
+    }
+    const segments = Number.isFinite(segmentsOverride) ? segmentsOverride : state.segments;
+    const normalized = new Array(rotations.length);
+    for (let i = 0; i < rotations.length; i += 1) {
+      normalized[i] = normalizeRotationValue(rotations[i], segments);
+    }
+    return normalized.join(',');
   }
 
   function updateStats() {
@@ -1045,7 +1346,13 @@
         ctx2d.fillStyle = ring.colors[i % ring.colors.length] || '#ffffff';
         ctx2d.fill();
       }
-      if (state.animation && state.animation.active && state.animation.highlight instanceof Set && state.animation.highlight.has(index)) {
+      const animationHighlighted =
+        state.animation &&
+        state.animation.active &&
+        state.animation.highlight instanceof Set &&
+        state.animation.highlight.has(index);
+      const hintHighlighted = state.hintHighlight instanceof Set && state.hintHighlight.has(index);
+      if (animationHighlighted || hintHighlighted) {
         drawRingHighlight(metrics);
       }
     }

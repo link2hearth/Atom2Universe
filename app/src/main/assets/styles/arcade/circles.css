@@ -110,6 +110,15 @@
   background: rgba(12, 18, 40, 0.72);
 }
 
+.circles__button--ghost {
+  background: rgba(12, 18, 40, 0.42);
+  border-style: dashed;
+}
+
+.circles__button--ghost:hover {
+  background: rgba(20, 30, 60, 0.54);
+}
+
 .circles__stats {
   display: flex;
   flex-wrap: wrap;
@@ -189,6 +198,14 @@
 
 .circles__message strong {
   color: rgba(255, 255, 255, 0.95);
+}
+
+.circles__hint-message {
+  margin: 0;
+  font-size: calc(1.35rem * var(--circles-ui-scale));
+  color: rgba(255, 255, 255, 0.66);
+  text-align: center;
+  max-width: 720px;
 }
 
 .circles__hint {
