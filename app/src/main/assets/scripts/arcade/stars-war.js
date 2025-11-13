@@ -4000,6 +4000,7 @@
     }
     if (updated) {
       scheduleAutosave();
+      flushAutosave();
     }
   }
 
