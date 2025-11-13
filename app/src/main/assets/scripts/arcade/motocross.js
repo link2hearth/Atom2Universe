@@ -56,6 +56,7 @@
   const CAMERA_SMOOTH = 6.5;
   const FALL_EXTRA_MARGIN = 480;
   const CAMERA_VERTICAL_ANCHOR = 0.55;
+  const GROUND_PROXIMITY_THRESHOLD = 10;
 
   const translate = (() => {
     if (typeof window !== 'undefined' && typeof window.t === 'function') {
@@ -87,6 +88,10 @@
     ? new Intl.NumberFormat(undefined, { maximumFractionDigits: 1 })
     : null;
 
+  const distanceFormatter = typeof Intl !== 'undefined' && Intl.NumberFormat
+    ? new Intl.NumberFormat(undefined, { maximumFractionDigits: 0 })
+    : null;
+
   function formatTemplate(template, params) {
     if (!template || typeof template !== 'string') {
       return '';
@@ -106,6 +111,14 @@
       return numberFormatter.format(numeric);
     }
     return numeric.toFixed(1);
+  }
+
+  function formatDistance(value) {
+    const numeric = Number.isFinite(value) ? Math.max(0, value) : 0;
+    if (distanceFormatter) {
+      return distanceFormatter.format(numeric);
+    }
+    return Math.round(numeric).toString();
   }
 
   function clamp(value, min, max) {
@@ -1034,6 +1047,7 @@
       right: new Set()
     },
     statusKey: 'index.sections.motocross.ui.status.ready',
+    statusFallback: 'Appuyez sur « Générer » pour lancer une piste aléatoire.',
     statusParams: null,
     statusState: 'idle',
     lastTimestamp: null,
@@ -1043,6 +1057,11 @@
     fallThreshold: 600,
     pendingRespawn: false,
     speed: 0,
+    gameOver: false,
+    trackStartX: 0,
+    runStartX: 0,
+    maxDistance: 0,
+    lastGeneratedCount: 0,
     background: createBackgroundState(),
     bikeSprite: createBikeSpriteState()
   };
@@ -1177,27 +1196,43 @@
       canvas: document.getElementById('motocrossCanvas'),
       generateButton: document.getElementById('motocrossGenerate'),
       speedValue: document.getElementById('motocrossSpeedValue'),
-      status: document.getElementById('motocrossStatus')
+      status: document.getElementById('motocrossStatus'),
+      restartButton: document.getElementById('motocrossRestart')
     };
   }
 
   function applyStatus() {
-    const { elements, statusKey, statusParams, statusState } = state;
+    const { elements, statusKey, statusFallback, statusParams, statusState, gameOver } = state;
     if (!elements || !elements.status) {
       return;
     }
-    const fallback = statusKey === 'index.sections.motocross.ui.status.ready'
-      ? 'Appuyez sur « Générer » pour lancer une piste aléatoire.'
+    const fallback = typeof statusFallback === 'string'
+      ? formatTemplate(statusFallback, statusParams || {})
       : '';
     const text = translate(statusKey, fallback, statusParams);
     elements.status.textContent = text;
     elements.status.dataset.state = statusState || 'idle';
+    elements.status.setAttribute('data-i18n', statusKey || '');
+    if (elements.restartButton) {
+      const visible = !!gameOver;
+      elements.restartButton.hidden = !visible;
+      elements.restartButton.setAttribute('aria-hidden', visible ? 'false' : 'true');
+    }
   }
 
   function setStatus(key, fallback, params, stateName = 'idle') {
     state.statusKey = key;
+    state.statusFallback = typeof fallback === 'string' ? fallback : '';
     state.statusParams = params || null;
     state.statusState = stateName;
+    if (stateName === 'gameover') {
+      state.gameOver = true;
+      state.active = false;
+      state.pendingRespawn = false;
+      resetInputState();
+    } else {
+      state.gameOver = false;
+    }
     applyStatus();
   }
 
@@ -1327,6 +1362,7 @@
     const distance = toSurface.x * normal.x + toSurface.y * normal.y;
     const penetration = WHEEL_RADIUS - distance;
     wheel.onGround = penetration > 0;
+    wheel.clearance = distance - WHEEL_RADIUS;
     let driveForce = 0;
     if (driveInput > 0) {
       driveForce = driveInput * ENGINE_FORCE;
@@ -1339,7 +1375,8 @@
         tangentForce: driveForce,
         correction: { x: 0, y: 0 },
         normal,
-        tangent
+        tangent,
+        clearance: wheel.clearance
       };
     }
     if (driveInput < 0) {
@@ -1372,7 +1409,8 @@
       tangentForce,
       correction,
       normal,
-      tangent
+      tangent,
+      clearance: wheel.clearance
     };
   }
 
@@ -1401,8 +1439,17 @@
     const backProbe = computeWheelContact(back, track, 0);
     const frontProbe = computeWheelContact(front, track, 0);
     const airborne = !back.onGround && !front.onGround;
+    const backClearance = Number.isFinite(backProbe?.clearance)
+      ? backProbe.clearance
+      : Number.POSITIVE_INFINITY;
+    const frontClearance = Number.isFinite(frontProbe?.clearance)
+      ? frontProbe.clearance
+      : Number.POSITIVE_INFINITY;
+    const wheelsCloseToGround = backClearance < GROUND_PROXIMITY_THRESHOLD
+      && frontClearance < GROUND_PROXIMITY_THRESHOLD;
+    const allowRotationControl = !wheelsCloseToGround;
     const driveControl = airborne ? 0 : controlDelta;
-    const tiltControl = controlDelta;
+    const tiltControl = allowRotationControl ? controlDelta : 0;
 
     const backContact = airborne ? backProbe : computeWheelContact(back, track, driveControl);
     const frontContact = airborne
@@ -1438,7 +1485,7 @@
     });
 
     if (airborne) {
-      const rotationInput = clamp(controlDelta, -1, 1);
+      const rotationInput = allowRotationControl ? clamp(controlDelta, -1, 1) : 0;
       const targetAngularVelocity = rotationInput * AIR_ROTATION_MAX_SPEED;
       const maxDelta = AIR_ROTATION_ACCEL * dt;
       const deltaAngular = clamp(targetAngularVelocity - bike.angularVelocity, -maxDelta, maxDelta);
@@ -1471,11 +1518,33 @@
     updateWheelData();
     const horizontalSpeed = Math.abs(bike.velocity.x);
     state.speed = horizontalSpeed < 0.05 ? 0 : horizontalSpeed;
+
+    const referenceX = Number.isFinite(state.runStartX) ? state.runStartX : 0;
+    const progress = bike.position.x - referenceX;
+    if (Number.isFinite(progress)) {
+      state.maxDistance = Math.max(state.maxDistance, progress);
+    }
+
     updateCheckpointsProgress();
     ensureTrackAhead();
 
     if (bike.position.y - WHEEL_RADIUS > state.fallThreshold) {
       state.pendingRespawn = true;
+    }
+
+    if (!state.gameOver) {
+      const normalizedAngle = Math.atan2(Math.sin(bike.angle), Math.cos(bike.angle));
+      const isUpsideDown = Math.abs(normalizedAngle) > Math.PI * 0.75;
+      const falling = bike.velocity.y > 0;
+      if (isUpsideDown && (falling || !airborne)) {
+        const formattedDistance = formatDistance(state.maxDistance);
+        setStatus(
+          'index.sections.motocross.ui.status.gameOver',
+          'Game over! Distance travelled: {distance} u.',
+          { distance: formattedDistance },
+          'gameover'
+        );
+      }
     }
   }
 
@@ -1670,7 +1739,11 @@
     delta = Math.min(delta, MAX_FRAME_STEP);
 
     if (state.pendingRespawn) {
-      applyRespawn(true);
+      if (!state.gameOver) {
+        applyRespawn(true);
+      } else {
+        state.pendingRespawn = false;
+      }
     }
 
     if (state.active) {
@@ -1836,6 +1909,12 @@
     state.currentCheckpoint = 0;
     state.respawnData = computeRespawnData(0);
     state.fallThreshold = track.maxY;
+    state.trackStartX = Array.isArray(track.points) && track.points.length ? track.points[0][0] : 0;
+    state.runStartX = state.respawnData ? state.respawnData.x : state.trackStartX;
+    state.maxDistance = 0;
+    state.gameOver = false;
+    state.pendingRespawn = false;
+    state.lastGeneratedCount = Array.isArray(track.usedIds) ? track.usedIds.length : 0;
     updateRespawnCheckpoint();
     applyRespawn(false);
     if (!silent) {
@@ -1853,6 +1932,36 @@
 
   function handleGenerate() {
     generateTrack();
+  }
+
+  function handleRestart() {
+    if (!state.track) {
+      generateTrack();
+      return;
+    }
+    state.gameOver = false;
+    state.active = true;
+    state.pendingRespawn = false;
+    state.maxDistance = 0;
+    state.currentCheckpoint = 0;
+    const restartRespawn = computeRespawnData(0);
+    if (restartRespawn) {
+      state.respawnData = restartRespawn;
+      state.runStartX = restartRespawn.x;
+    } else {
+      state.runStartX = state.trackStartX;
+    }
+    updateRespawnCheckpoint();
+    applyRespawn(false);
+    resetInputState();
+    const hasCount = Number.isFinite(state.lastGeneratedCount) && state.lastGeneratedCount > 0;
+    const params = hasCount ? { count: state.lastGeneratedCount } : null;
+    setStatus(
+      'index.sections.motocross.ui.status.generated',
+      'Track ready for a new run!',
+      params,
+      'success'
+    );
   }
 
   function handleResize() {
@@ -1931,6 +2040,7 @@
       return;
     }
     elements.generateButton?.addEventListener('click', handleGenerate);
+    elements.restartButton?.addEventListener('click', handleRestart);
     window.addEventListener('resize', handleResize);
     window.addEventListener('pointerdown', handlePointerDown, { passive: false });
     window.addEventListener('pointermove', handlePointerMove);

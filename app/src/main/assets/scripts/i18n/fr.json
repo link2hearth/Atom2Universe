@@ -1302,13 +1302,15 @@
         "ui": {
           "controls": "Paramètres de la piste Motocross",
           "generate": "Générer",
+          "restart": "Recommencer",
           "speed": "Vitesse",
           "speedUnit": "u/s"
         },
         "status": {
           "ready": "Appuyez sur « Générer » pour lancer une piste aléatoire.",
           "generated": "Piste prête, bon ride !",
-          "failed": "Impossible de générer une nouvelle piste pour le moment."
+          "failed": "Impossible de générer une nouvelle piste pour le moment.",
+          "gameOver": "Fin de partie ! Distance parcourue : {distance} u."
         }
       },
       "taquin": {

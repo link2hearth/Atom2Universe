@@ -1296,13 +1296,15 @@
         "ui": {
           "controls": "Motocross track settings",
           "generate": "Generate",
+          "restart": "Restart",
           "speed": "Speed",
           "speedUnit": "u/s"
         },
         "status": {
           "ready": "Press “Generate” to explore a random course.",
           "generated": "Track ready for a new run!",
-          "failed": "Unable to generate a new track right now."
+          "failed": "Unable to generate a new track right now.",
+          "gameOver": "Game over! Distance travelled: {distance} u."
         }
       },
       "taquin": {
