@@ -1657,7 +1657,7 @@
     if (state.animation && state.animation.active) {
       return;
     }
-    const direction = delta > 0 ? 1 : -1;
+    const direction = delta > 0 ? -1 : 1;
     const rotated = applyUserRotation(pointerGesture.ringIndex, direction);
     if (rotated) {
       pointerGesture.startAngle = angle;
@@ -1688,7 +1688,7 @@
     const threshold = getTouchRotationThreshold();
     let direction = 0;
     if (Math.abs(delta) >= threshold) {
-      direction = delta > 0 ? 1 : -1;
+      direction = delta > 0 ? -1 : 1;
     }
     resetPointerGestureState();
     if (direction !== 0 && Number.isFinite(ringIndex)) {
