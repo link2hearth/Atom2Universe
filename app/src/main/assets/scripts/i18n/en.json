@@ -212,6 +212,8 @@
           },
           "starsWar": {
             "title": "Stars War",
+            "easyTitle": "Stars War — Easy",
+            "hardTitle": "Stars War — Hard",
             "top1": "Top 1",
             "top2": "Top 2",
             "top3": "Top 3"
