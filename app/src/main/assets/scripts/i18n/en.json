@@ -3675,9 +3675,11 @@
           "winMessage": "Perfect sync in {moves} move{moveSuffix}!",
           "winReward": "Reward: +{tickets} gacha ticket{ticketSuffix}.",
           "hint": {
-            "default": "Need a hint? Click \"Help\" to reveal the optimal next move.",
+            "default": "Need a hint? Click \"Help\" to have the game play the optimal move for you.",
             "unavailable": "No hint available for this puzzle. Try generating a new one or restart.",
             "solved": "Puzzle already solved! Start a new challenge to keep playing.",
+            "auto": "Help rotated ring {ring} {direction}. {moves} move{suffix} remaining.",
+            "autoSolved": "Help rotated ring {ring} {direction}. Puzzle solved!",
             "move": "Rotate ring {ring} {direction}. {moves} move{suffix} remaining.",
             "direction": {
               "clockwise": "clockwise",
