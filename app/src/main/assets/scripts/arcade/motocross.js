@@ -17,6 +17,16 @@
   const TRACK_CURVE_SUBDIVISIONS = 8;
   const TRACK_MIN_CURVE_STEP = 4;
 
+  const BACKGROUND_OPTIONS = [
+    'Assets/sprites/city_background_night.png',
+    'Assets/sprites/city_background_sunset.png'
+  ];
+  const BACKGROUND_SCROLL_RATIO = 0.22;
+  const BIKE_SPRITE_SOURCE = 'Assets/sprites/Moto.png';
+  const BIKE_SPRITE_ANCHORS = Object.freeze({
+    backWheel: { x: 0.18, y: 0.82 },
+    frontWheel: { x: 0.82, y: 0.82 }
+  });
   const PHYSICS_STEP = 1 / 120;
   const MAX_FRAME_STEP = 1 / 30;
   const MASS = 20;
@@ -972,6 +982,27 @@
     return clamp(numeric, 600, 1400);
   }
 
+  function createBackgroundState() {
+    return {
+      image: null,
+      url: null,
+      loaded: false,
+      loading: false,
+      width: 0,
+      height: 0
+    };
+  }
+
+  function createBikeSpriteState() {
+    return {
+      image: null,
+      loaded: false,
+      loading: false,
+      width: 0,
+      height: 0
+    };
+  }
+
   const state = {
     initialized: false,
     active: false,
@@ -1011,7 +1042,9 @@
     respawnData: null,
     fallThreshold: 600,
     pendingRespawn: false,
-    speed: 0
+    speed: 0,
+    background: createBackgroundState(),
+    bikeSprite: createBikeSpriteState()
   };
 
   function updateCombinedInput() {
@@ -1481,24 +1514,117 @@
   }
 
   function renderBike(ctx) {
-    const { bike, wheels } = state;
+    const { bike, wheels, bikeSprite } = state;
+    if (!wheels || !bike) {
+      return;
+    }
     const back = wheels.back;
     const front = wheels.front;
-    ctx.fillStyle = '#0f172a';
-    ctx.beginPath();
-    ctx.arc(back.pos.x, back.pos.y, WHEEL_RADIUS, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(front.pos.x, front.pos.y, WHEEL_RADIUS, 0, Math.PI * 2);
-    ctx.fill();
+    if (!back || !front || !back.pos || !front.pos) {
+      return;
+    }
+
+    const sprite = bikeSprite;
+    const spriteImage = sprite?.image;
+    const isImageInstance = typeof Image === 'function' ? spriteImage instanceof Image : !!spriteImage;
+    const spriteReady = sprite
+      && sprite.loaded
+      && isImageInstance
+      && sprite.width > 0
+      && sprite.height > 0;
+
+    if (!spriteReady) {
+      ctx.fillStyle = '#0f172a';
+      ctx.beginPath();
+      ctx.arc(back.pos.x, back.pos.y, WHEEL_RADIUS, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(front.pos.x, front.pos.y, WHEEL_RADIUS, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.save();
+      ctx.translate(bike.position.x, bike.position.y);
+      ctx.rotate(bike.angle);
+      ctx.fillStyle = '#38bdf8';
+      ctx.fillRect(-CHASSIS_WIDTH / 2, -CHASSIS_HEIGHT / 2, CHASSIS_WIDTH, CHASSIS_HEIGHT);
+      ctx.fillStyle = '#bae6fd';
+      ctx.fillRect(-CHASSIS_WIDTH / 4, -CHASSIS_HEIGHT * 0.75, CHASSIS_WIDTH / 2, CHASSIS_HEIGHT / 2);
+      ctx.restore();
+      ensureBikeSprite();
+      return;
+    }
+
+    const image = sprite.image;
+    const width = sprite.width;
+    const height = sprite.height;
+
+    const anchors = BIKE_SPRITE_ANCHORS || {};
+    const safeRatio = (value, fallback) => {
+      const numeric = Number.isFinite(value) ? value : fallback;
+      return clamp(numeric, 0, 1);
+    };
+
+    const backRatioX = safeRatio(anchors.backWheel?.x, 0.2);
+    const backRatioY = safeRatio(anchors.backWheel?.y, 0.82);
+    const frontRatioX = safeRatio(anchors.frontWheel?.x, 0.8);
+    const frontRatioY = safeRatio(anchors.frontWheel?.y, backRatioY);
+
+    const backPixel = {
+      x: backRatioX * width,
+      y: backRatioY * height
+    };
+    const frontPixel = {
+      x: frontRatioX * width,
+      y: frontRatioY * height
+    };
+
+    const pixelDX = frontPixel.x - backPixel.x;
+    const pixelDY = frontPixel.y - backPixel.y;
+    const pixelDistance = Math.hypot(pixelDX, pixelDY);
+
+    let actualDX = front.pos.x - back.pos.x;
+    let actualDY = front.pos.y - back.pos.y;
+    let actualDistance = Math.hypot(actualDX, actualDY);
+
+    if (!(pixelDistance > 0)) {
+      ctx.fillStyle = '#0f172a';
+      ctx.beginPath();
+      ctx.arc(back.pos.x, back.pos.y, WHEEL_RADIUS, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(front.pos.x, front.pos.y, WHEEL_RADIUS, 0, Math.PI * 2);
+      ctx.fill();
+      return;
+    }
+
+    if (!(actualDistance > 0.001)) {
+      actualDistance = WHEEL_BASE;
+      actualDX = Math.cos(bike.angle) * actualDistance;
+      actualDY = Math.sin(bike.angle) * actualDistance;
+    }
+
+    const axisX = {
+      x: actualDX / actualDistance,
+      y: actualDY / actualDistance
+    };
+    const axisY = {
+      x: -axisX.y,
+      y: axisX.x
+    };
+
+    const scale = actualDistance / pixelDistance;
 
     ctx.save();
-    ctx.translate(bike.position.x, bike.position.y);
-    ctx.rotate(bike.angle);
-    ctx.fillStyle = '#38bdf8';
-    ctx.fillRect(-CHASSIS_WIDTH / 2, -CHASSIS_HEIGHT / 2, CHASSIS_WIDTH, CHASSIS_HEIGHT);
-    ctx.fillStyle = '#bae6fd';
-    ctx.fillRect(-CHASSIS_WIDTH / 4, -CHASSIS_HEIGHT * 0.75, CHASSIS_WIDTH / 2, CHASSIS_HEIGHT / 2);
+    ctx.translate(back.pos.x, back.pos.y);
+    ctx.transform(
+      axisX.x * scale,
+      axisX.y * scale,
+      axisY.x * scale,
+      axisY.y * scale,
+      0,
+      0
+    );
+    ctx.drawImage(image, -backPixel.x, -backPixel.y, width, height);
     ctx.restore();
   }
 
@@ -1513,6 +1639,8 @@
 
     ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
     ctx.clearRect(0, 0, width, height);
+
+    renderBackground(ctx, width, height);
 
     ctx.save();
     ctx.translate(-camera.x + width * 0.5, -camera.y + height * CAMERA_VERTICAL_ANCHOR);
@@ -1562,8 +1690,137 @@
     updateSpeedDisplay();
   }
 
+  function pickBackgroundSource(forceNew) {
+    const pool = Array.isArray(BACKGROUND_OPTIONS) ? BACKGROUND_OPTIONS : [];
+    if (pool.length === 0) {
+      return null;
+    }
+    let background = state.background;
+    if (!background || forceNew) {
+      background = createBackgroundState();
+      state.background = background;
+    }
+    const shouldForce = forceNew || !background.loaded;
+    if (!shouldForce && background.loaded && background.image) {
+      return background.url;
+    }
+    let choice = pool[Math.floor(Math.random() * pool.length)];
+    if (shouldForce && pool.length > 1 && choice === background.url) {
+      const alternatives = pool.filter(item => item !== background.url);
+      if (alternatives.length) {
+        choice = alternatives[Math.floor(Math.random() * alternatives.length)];
+      }
+    }
+    background.url = choice;
+    background.loaded = false;
+    background.loading = true;
+    background.width = 0;
+    background.height = 0;
+    const image = new Image();
+    if ('decoding' in image) {
+      image.decoding = 'async';
+    }
+    background.image = image;
+    image.addEventListener('load', () => {
+      if (state.background !== background || background.image !== image) {
+        return;
+      }
+      background.loaded = true;
+      background.loading = false;
+      background.width = image.naturalWidth || image.width || 0;
+      background.height = image.naturalHeight || image.height || 0;
+      renderScene();
+    });
+    image.addEventListener('error', () => {
+      if (state.background !== background || background.image !== image) {
+        return;
+      }
+      background.loaded = false;
+      background.loading = false;
+    });
+    image.src = choice;
+    return choice;
+  }
+
+  function ensureBikeSprite(forceReload = false) {
+    if (!BIKE_SPRITE_SOURCE) {
+      return;
+    }
+    let sprite = state.bikeSprite;
+    if (!sprite) {
+      sprite = createBikeSpriteState();
+      state.bikeSprite = sprite;
+    }
+    if (!forceReload && sprite.loaded && sprite.image) {
+      return;
+    }
+    if (!forceReload && sprite.loading && sprite.image) {
+      return;
+    }
+    sprite.loaded = false;
+    sprite.loading = true;
+    sprite.width = 0;
+    sprite.height = 0;
+    const image = new Image();
+    if ('decoding' in image) {
+      image.decoding = 'async';
+    }
+    sprite.image = image;
+    image.addEventListener('load', () => {
+      if (state.bikeSprite !== sprite || sprite.image !== image) {
+        return;
+      }
+      sprite.loaded = true;
+      sprite.loading = false;
+      sprite.width = image.naturalWidth || image.width || 0;
+      sprite.height = image.naturalHeight || image.height || 0;
+      renderScene();
+    });
+    image.addEventListener('error', () => {
+      if (state.bikeSprite !== sprite || sprite.image !== image) {
+        return;
+      }
+      sprite.loaded = false;
+      sprite.loading = false;
+    });
+    image.src = BIKE_SPRITE_SOURCE;
+  }
+
+  function renderBackground(ctx, width, height) {
+    const background = state.background;
+    const cameraX = state.camera?.x || 0;
+    let drawn = false;
+    if (background && background.loaded && background.image && background.width > 0 && background.height > 0) {
+      const scale = height / background.height;
+      const scaledWidth = background.width * scale;
+      if (scaledWidth > 0 && Number.isFinite(scale)) {
+        const offset = ((cameraX * BACKGROUND_SCROLL_RATIO) % scaledWidth + scaledWidth) % scaledWidth;
+        const startX = -offset;
+        const scaledHeight = height;
+        for (let drawX = startX; drawX < width; drawX += scaledWidth) {
+          ctx.drawImage(background.image, drawX, height - scaledHeight, scaledWidth, scaledHeight);
+        }
+        drawn = true;
+      }
+    }
+    if (!drawn) {
+      const gradient = ctx.createLinearGradient(0, 0, 0, height);
+      gradient.addColorStop(0, '#0b1224');
+      gradient.addColorStop(1, '#050811');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, width, height);
+    }
+    const overlay = ctx.createLinearGradient(0, 0, 0, height);
+    overlay.addColorStop(0, 'rgba(8, 12, 24, 0.35)');
+    overlay.addColorStop(1, 'rgba(5, 8, 18, 0.85)');
+    ctx.fillStyle = overlay;
+    ctx.fillRect(0, 0, width, height);
+  }
+
   function generateTrack(options = {}) {
     const silent = !!(options && options.silent);
+    pickBackgroundSource(!silent);
+    ensureBikeSprite(false);
     const seedValue = createEntropySeed();
     const track = buildTrack(seedValue, DEFAULT_DIFFICULTY);
     if (!track) {
@@ -1700,6 +1957,7 @@
     attachListeners();
     resizeCanvas();
     applyStatus();
+    ensureBikeSprite(false);
     generateTrack({ silent: true });
     window.requestAnimationFrame(tick);
   }
