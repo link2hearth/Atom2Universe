@@ -2295,6 +2295,8 @@ const STARS_WAR_INFO_MODES = Object.freeze({
   hard: 'hard'
 });
 
+const STARS_WAR_AUTOSAVE_KEY = 'starsWar';
+
 function sanitizeStarsWarRun(raw) {
   if (!raw || typeof raw !== 'object') {
     return null;
@@ -2341,33 +2343,57 @@ function collectStarsWarRuns(rawState) {
 }
 
 function getStarsWarTopRunsByMode() {
-  const result = {
+  const aggregate = {
     [STARS_WAR_INFO_MODES.easy]: [],
     [STARS_WAR_INFO_MODES.hard]: []
   };
+
+  const mergeRuns = (mode, runs) => {
+    if (!Array.isArray(runs) || !runs.length) {
+      return;
+    }
+    aggregate[mode].push(...runs);
+  };
+
+  const ingestState = state => {
+    if (!state || typeof state !== 'object') {
+      return;
+    }
+    const modes = state.modes && typeof state.modes === 'object' ? state.modes : null;
+    if (modes) {
+      Object.keys(aggregate).forEach(mode => {
+        mergeRuns(mode, collectStarsWarRuns(modes[mode]));
+      });
+      return;
+    }
+    mergeRuns(STARS_WAR_INFO_MODES.hard, collectStarsWarRuns(state));
+  };
+
   const progress = gameState.arcadeProgress;
-  if (!progress || typeof progress !== 'object') {
-    return result;
+  if (progress && typeof progress === 'object') {
+    const entries = progress.entries && typeof progress.entries === 'object' ? progress.entries : {};
+    const entry = entries.starsWar || progress.starsWar || null;
+    if (entry && typeof entry === 'object') {
+      ingestState(entry.state && typeof entry.state === 'object' ? entry.state : entry);
+    }
   }
-  const entries = progress.entries && typeof progress.entries === 'object' ? progress.entries : {};
-  const entry = entries.starsWar || null;
-  if (!entry || typeof entry !== 'object') {
-    return result;
+
+  if (typeof window !== 'undefined' && window.ArcadeAutosave && typeof window.ArcadeAutosave.get === 'function') {
+    try {
+      const autosaveState = window.ArcadeAutosave.get(STARS_WAR_AUTOSAVE_KEY);
+      ingestState(autosaveState);
+    } catch (error) {
+      // Ignore autosave read errors.
+    }
   }
-  const state = entry.state && typeof entry.state === 'object' ? entry.state : entry;
-  if (!state || typeof state !== 'object') {
-    return result;
-  }
-  const modes = state.modes && typeof state.modes === 'object' ? state.modes : null;
-  if (modes) {
-    Object.keys(result).forEach(mode => {
-      const modeState = modes[mode];
-      result[mode] = collectStarsWarRuns(modeState);
-    });
-  } else {
-    result[STARS_WAR_INFO_MODES.hard] = collectStarsWarRuns(state);
-  }
-  return result;
+
+  return Object.keys(aggregate).reduce((acc, mode) => {
+    acc[mode] = collectStarsWarRuns({ topRuns: aggregate[mode] });
+    return acc;
+  }, {
+    [STARS_WAR_INFO_MODES.easy]: [],
+    [STARS_WAR_INFO_MODES.hard]: []
+  });
 }
 
 function formatStarsWarDuration(secondsValue) {
