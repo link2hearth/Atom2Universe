@@ -29,8 +29,8 @@
   });
   const PHYSICS_STEP = 1 / 120;
   const MAX_FRAME_STEP = 1 / 30;
-  const MASS = 40;
-  const GRAVITY = 1000;
+  const MASS = 60;
+  const GRAVITY = 1200;
   const BIKE_SCALE = 0.6;
   const CHASSIS_WIDTH = 108 * BIKE_SCALE;
   const CHASSIS_HEIGHT = 32 * BIKE_SCALE;
