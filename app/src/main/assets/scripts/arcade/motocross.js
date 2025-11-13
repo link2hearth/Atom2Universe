@@ -3,7 +3,7 @@
     return;
   }
 
-  const DEFAULT_DIFFICULTY = 'normal';
+  const DEFAULT_DIFFICULTY = 'easy';
   const CHECKPOINT_INTERVAL = 960;
   const SLOPE_STEP = 0.12;
   const ELEVATION_LIMIT = 520;
@@ -19,7 +19,7 @@
 
   const PHYSICS_STEP = 1 / 120;
   const MAX_FRAME_STEP = 1 / 30;
-  const MASS = 110;
+  const MASS = 96;
   const GRAVITY = 1800;
   const BIKE_SCALE = 0.8;
   const CHASSIS_WIDTH = 108 * BIKE_SCALE;
@@ -28,15 +28,15 @@
   const WHEEL_RADIUS = 18 * BIKE_SCALE;
   const WHEEL_VERTICAL_OFFSET = 20 * BIKE_SCALE;
   const BIKE_INERTIA = (MASS * (CHASSIS_WIDTH * CHASSIS_WIDTH + CHASSIS_HEIGHT * CHASSIS_HEIGHT)) / 12;
-  const ENGINE_FORCE = 16200;
-  const BRAKE_FORCE = 7800;
-  const TILT_TORQUE = 24800;
-  const SPRING_STIFFNESS = 3600;
-  const SPRING_DAMPING = 140;
-  const FRICTION_DAMPING = 28;
-  const FRICTION_COEFFICIENT = 0.88;
-  const LINEAR_DAMPING = 0.08;
-  const ANGULAR_DAMPING = 0.18;
+  const ENGINE_FORCE = 24800;
+  const BRAKE_FORCE = 9200;
+  const TILT_TORQUE = 31200;
+  const SPRING_STIFFNESS = 4200;
+  const SPRING_DAMPING = 180;
+  const FRICTION_DAMPING = 36;
+  const FRICTION_COEFFICIENT = 1.25;
+  const LINEAR_DAMPING = 0.05;
+  const ANGULAR_DAMPING = 0.12;
   const NORMAL_CORRECTION_FACTOR = 0.7;
   const CAMERA_LOOK_AHEAD = 0.24;
   const CAMERA_OFFSET_Y = 180;
@@ -1139,7 +1139,6 @@
     }
     return {
       canvas: document.getElementById('motocrossCanvas'),
-      difficultySelect: document.getElementById('motocrossDifficulty'),
       generateButton: document.getElementById('motocrossGenerate'),
       speedValue: document.getElementById('motocrossSpeedValue'),
       status: document.getElementById('motocrossStatus')
@@ -1249,7 +1248,7 @@
     bike.position.x = data.x;
     bike.position.y = data.y;
     bike.angle = data.angle;
-    bike.velocity.x = boost ? 80 : 0;
+    bike.velocity.x = boost ? 110 : 0;
     bike.velocity.y = 0;
     bike.angularVelocity = 0;
     wheels.back.segmentIndex = data.segmentIndex;
@@ -1292,7 +1291,7 @@
     const distance = toSurface.x * normal.x + toSurface.y * normal.y;
     const penetration = WHEEL_RADIUS - distance;
     wheel.onGround = penetration > 0;
-    const driveForce = driveInput >= 0 ? driveInput * ENGINE_FORCE : driveInput * BRAKE_FORCE;
+    let driveForce = driveInput >= 0 ? driveInput * ENGINE_FORCE : driveInput * BRAKE_FORCE;
     if (!wheel.onGround) {
       return {
         normalForce: 0,
@@ -1301,6 +1300,10 @@
         normal,
         tangent
       };
+    }
+    if (driveInput > 0) {
+      const slopeFactor = clamp(1 + Math.max(0, Math.abs(tangent.y) - 0.2) * 2.4, 1, 3.5);
+      driveForce *= slopeFactor;
     }
     const pointVelocity = {
       x: state.bike.velocity.x - state.bike.angularVelocity * wheel.r.y,
@@ -1345,16 +1348,17 @@
     const frontProbe = computeWheelContact(front, track, 0);
     const airborne = !back.onGround && !front.onGround;
     const driveControl = airborne ? 0 : controlDelta;
-    const tiltControl = airborne ? controlDelta : 0;
+    const tiltControl = controlDelta;
 
     const backContact = airborne ? backProbe : computeWheelContact(back, track, driveControl);
     const frontContact = airborne
       ? frontProbe
-      : computeWheelContact(front, track, driveControl * 0.6);
+      : computeWheelContact(front, track, driveControl * 0.85);
 
     let totalForceX = 0;
     let totalForceY = MASS * GRAVITY;
-    let totalTorque = tiltControl * TILT_TORQUE;
+    const tiltMultiplier = airborne ? 1 : 0.35;
+    let totalTorque = tiltControl * TILT_TORQUE * tiltMultiplier;
     let correctionX = 0;
     let correctionY = 0;
     let correctionCount = 0;
@@ -1525,19 +1529,10 @@
     updateSpeedDisplay();
   }
 
-  function parseDifficulty() {
-    const value = state.elements?.difficultySelect?.value;
-    if (value === 'easy' || value === 'hard') {
-      return value;
-    }
-    return DEFAULT_DIFFICULTY;
-  }
-
   function generateTrack(options = {}) {
     const silent = !!(options && options.silent);
-    const difficulty = parseDifficulty();
     const seedValue = createEntropySeed();
-    const track = buildTrack(seedValue, difficulty);
+    const track = buildTrack(seedValue, DEFAULT_DIFFICULTY);
     if (!track) {
       setStatus(
         'index.sections.motocross.ui.status.failed',
