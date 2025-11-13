@@ -54,8 +54,15 @@
   const CAMERA_LOOK_AHEAD = 0.24;
   const CAMERA_OFFSET_Y = 180;
   const CAMERA_SMOOTH = 6.5;
+  const CAMERA_ZOOM_SMOOTH = 5.2;
   const FALL_EXTRA_MARGIN = 480;
   const CAMERA_VERTICAL_ANCHOR = 0.55;
+  const CAMERA_ZOOM_MIN = 0.48;
+  const CAMERA_ZOOM_MAX = 1;
+  const CAMERA_TRACK_WINDOW_BEHIND = 420;
+  const CAMERA_TRACK_WINDOW_AHEAD = 960;
+  const CAMERA_TOP_MARGIN = 140;
+  const CAMERA_BOTTOM_MARGIN = 220;
   const GROUND_PROXIMITY_THRESHOLD = 10;
 
   const translate = (() => {
@@ -1033,7 +1040,7 @@
       back: { pos: { x: 0, y: 0 }, r: { x: 0, y: 0 }, segmentIndex: 0, onGround: false },
       front: { pos: { x: 0, y: 0 }, r: { x: 0, y: 0 }, segmentIndex: 0, onGround: false }
     },
-    camera: { x: 0, y: 0 },
+    camera: { x: 0, y: 0, zoom: 1, targetZoom: 1 },
     input: {
       accelerate: 0,
       brake: 0,
@@ -1327,6 +1334,8 @@
     updateWheelData();
     state.camera.x = bike.position.x;
     state.camera.y = bike.position.y - CAMERA_OFFSET_Y;
+    state.camera.zoom = 1;
+    state.camera.targetZoom = 1;
     state.pendingRespawn = false;
   }
 
@@ -1548,6 +1557,106 @@
     }
   }
 
+  function measureTrackWindow(track, centerX) {
+    if (!track || !Number.isFinite(centerX)) {
+      return null;
+    }
+    const minX = centerX - CAMERA_TRACK_WINDOW_BEHIND;
+    const maxX = centerX + CAMERA_TRACK_WINDOW_AHEAD;
+    const segments = Array.isArray(track.segments) ? track.segments : null;
+    let minY = Number.POSITIVE_INFINITY;
+    let maxY = Number.NEGATIVE_INFINITY;
+    let found = false;
+    if (segments && segments.length) {
+      for (let i = 0; i < segments.length; i += 1) {
+        const segment = segments[i];
+        if (!segment) {
+          continue;
+        }
+        if (segment.maxX < minX) {
+          continue;
+        }
+        if (segment.minX > maxX && found) {
+          break;
+        }
+        const p0 = segment.p0;
+        const p1 = segment.p1;
+        if (p0 && Number.isFinite(p0.y)) {
+          minY = Math.min(minY, p0.y);
+          maxY = Math.max(maxY, p0.y);
+          found = true;
+        }
+        if (p1 && Number.isFinite(p1.y)) {
+          minY = Math.min(minY, p1.y);
+          maxY = Math.max(maxY, p1.y);
+          found = true;
+        }
+      }
+    }
+    if (!found && Array.isArray(track.points)) {
+      for (let i = 0; i < track.points.length; i += 1) {
+        const point = track.points[i];
+        if (!Array.isArray(point) || point.length < 2) {
+          continue;
+        }
+        const [x, y] = point;
+        if (x < minX) {
+          continue;
+        }
+        if (x > maxX && found) {
+          break;
+        }
+        if (Number.isFinite(y)) {
+          minY = Math.min(minY, y);
+          maxY = Math.max(maxY, y);
+          found = true;
+        }
+      }
+    }
+    if (!found || !Number.isFinite(minY) || !Number.isFinite(maxY)) {
+      return null;
+    }
+    return { minY, maxY };
+  }
+
+  function computeCameraZoom(targetY) {
+    const { track, ctx, devicePixelRatio, camera } = state;
+    if (!track || !ctx || typeof targetY !== 'number') {
+      return camera?.zoom || 1;
+    }
+    const canvas = ctx.canvas;
+    if (!canvas) {
+      return camera?.zoom || 1;
+    }
+    const height = canvas.height / (devicePixelRatio || 1);
+    if (!Number.isFinite(height) || height <= 0) {
+      return camera?.zoom || 1;
+    }
+    const windowBounds = measureTrackWindow(track, state.bike.position.x);
+    if (!windowBounds) {
+      return camera?.zoom || 1;
+    }
+    let allowedZoom = CAMERA_ZOOM_MAX;
+    const topAvailable = height * CAMERA_VERTICAL_ANCHOR;
+    const bottomAvailable = height * (1 - CAMERA_VERTICAL_ANCHOR);
+    if (topAvailable > 0) {
+      const topDelta = targetY - (windowBounds.minY - CAMERA_TOP_MARGIN);
+      if (topDelta > 0) {
+        allowedZoom = Math.min(allowedZoom, topAvailable / topDelta);
+      }
+    }
+    if (bottomAvailable > 0) {
+      const bottomDelta = (windowBounds.maxY + CAMERA_BOTTOM_MARGIN) - targetY;
+      if (bottomDelta > 0) {
+        allowedZoom = Math.min(allowedZoom, bottomAvailable / bottomDelta);
+      }
+    }
+    if (!Number.isFinite(allowedZoom) || allowedZoom <= 0) {
+      allowedZoom = camera?.zoom || 1;
+    }
+    return clamp(allowedZoom, CAMERA_ZOOM_MIN, CAMERA_ZOOM_MAX);
+  }
+
   function updateCamera(dt) {
     const { camera, bike } = state;
     const lookAhead = clamp(bike.velocity.x * CAMERA_LOOK_AHEAD, -160, 240);
@@ -1556,13 +1665,18 @@
     const smooth = 1 - Math.exp(-CAMERA_SMOOTH * dt);
     camera.x = lerp(camera.x, targetX, smooth);
     camera.y = lerp(camera.y, targetY, smooth);
+    const zoomTarget = computeCameraZoom(targetY);
+    camera.targetZoom = zoomTarget;
+    const zoomSmooth = 1 - Math.exp(-CAMERA_ZOOM_SMOOTH * dt);
+    camera.zoom = lerp(camera.zoom, zoomTarget, zoomSmooth);
   }
 
-  function renderTrack(ctx, track) {
+  function renderTrack(ctx, track, zoom = 1) {
     if (!track || !track.points.length) {
       return;
     }
-    ctx.lineWidth = 4;
+    const strokeWidth = 4 / (zoom || 1);
+    ctx.lineWidth = Math.max(1, strokeWidth);
     ctx.strokeStyle = '#60a5fa';
     ctx.beginPath();
     const [firstX, firstY] = track.points[0];
@@ -1572,7 +1686,7 @@
       ctx.lineTo(x, y);
     }
     ctx.stroke();
-    ctx.lineWidth = 1;
+    ctx.lineWidth = Math.max(0.5, strokeWidth * 0.25);
     ctx.strokeStyle = 'rgba(94, 234, 212, 0.35)';
     track.checkpoints.forEach(checkpoint => {
       ctx.beginPath();
@@ -1711,10 +1825,13 @@
 
     renderBackground(ctx, width, height);
 
+    const zoom = camera && Number.isFinite(camera.zoom) ? camera.zoom : 1;
     ctx.save();
-    ctx.translate(-camera.x + width * 0.5, -camera.y + height * CAMERA_VERTICAL_ANCHOR);
+    ctx.translate(width * 0.5, height * CAMERA_VERTICAL_ANCHOR);
+    ctx.scale(zoom, zoom);
+    ctx.translate(-camera.x, -camera.y);
     if (track) {
-      renderTrack(ctx, track);
+      renderTrack(ctx, track, zoom);
     }
     renderBike(ctx);
     ctx.restore();
