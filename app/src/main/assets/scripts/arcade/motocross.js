@@ -667,6 +667,72 @@
     return block.tags.includes('normal') || block.tags.includes('easy');
   }
 
+  function normalizeDifficulty(value) {
+    if (value === 'easy' || value === 'hard') {
+      return value;
+    }
+    return 'normal';
+  }
+
+  function buildDifficultyOptions(baseDifficulty, blockCount) {
+    const safeCount = Math.max(0, Number.isFinite(blockCount) ? blockCount : 0);
+    const options = [];
+    const pushOption = (level, weight) => {
+      if (weight > 0) {
+        options.push({ level, weight });
+      }
+    };
+
+    if (baseDifficulty === 'hard') {
+      pushOption('hard', 4 + Math.floor(safeCount / 4));
+      pushOption('normal', 3 + Math.floor(safeCount / 6));
+      pushOption('easy', 2);
+      return options;
+    }
+
+    if (baseDifficulty === 'normal') {
+      pushOption('normal', 4 + Math.floor(safeCount / 5));
+      pushOption('easy', 3);
+      if (safeCount >= 3) {
+        pushOption('hard', 1 + Math.floor((safeCount - 2) / 4));
+      }
+      return options;
+    }
+
+    pushOption('easy', 4);
+    if (safeCount >= 2) {
+      pushOption('normal', 3 + Math.floor((safeCount - 1) / 3));
+    }
+    if (safeCount >= 5) {
+      pushOption('hard', 1 + Math.floor((safeCount - 4) / 3));
+    }
+    return options;
+  }
+
+  function pickEffectiveDifficulty(generator) {
+    if (!generator || typeof generator.rng !== 'function') {
+      return 'normal';
+    }
+    const base = normalizeDifficulty(generator.baseDifficulty || generator.difficulty || DEFAULT_DIFFICULTY);
+    const options = buildDifficultyOptions(base, generator.blocksGenerated);
+    if (!options.length) {
+      return base;
+    }
+    const totalWeight = options.reduce((sum, option) => sum + option.weight, 0);
+    if (totalWeight <= 0) {
+      return base;
+    }
+    const roll = generator.rng() * totalWeight;
+    let cumulative = 0;
+    for (let i = 0; i < options.length; i += 1) {
+      cumulative += options[i].weight;
+      if (roll <= cumulative) {
+        return options[i].level;
+      }
+    }
+    return options[options.length - 1].level;
+  }
+
   function blockWithinElevation(block, baseY) {
     if (!block) {
       return false;
@@ -935,12 +1001,16 @@
   }
 
   function createTrackGenerator(seed, difficulty) {
+    const normalized = normalizeDifficulty(typeof difficulty === 'string' ? difficulty : DEFAULT_DIFFICULTY);
     return {
       rng: mulberry32(seed || 1),
-      difficulty: typeof difficulty === 'string' ? difficulty : DEFAULT_DIFFICULTY,
+      difficulty: normalized,
+      baseDifficulty: normalized,
       prevBlock: START_BLOCK,
       currentY: 0,
-      history: [START_BLOCK.id]
+      history: [START_BLOCK.id],
+      blocksGenerated: 0,
+      lastDifficulty: normalized
     };
   }
 
@@ -951,9 +1021,10 @@
     const generator = track.generator;
     let added = 0;
     while (added < blockCount) {
-      let nextBlock = pickNextBlock(generator.prevBlock, generator.difficulty, generator.rng, generator.currentY, generator.history);
+      const effectiveDifficulty = pickEffectiveDifficulty(generator);
+      let nextBlock = pickNextBlock(generator.prevBlock, effectiveDifficulty, generator.rng, generator.currentY, generator.history);
       if (!nextBlock) {
-        nextBlock = pickLandingBlock(generator.prevBlock, generator.difficulty, generator.rng, generator.currentY) || START_BLOCK;
+        nextBlock = pickLandingBlock(generator.prevBlock, effectiveDifficulty, generator.rng, generator.currentY) || START_BLOCK;
       }
       if (!nextBlock) {
         break;
@@ -971,6 +1042,8 @@
         generator.history.shift();
       }
       generator.prevBlock = nextBlock;
+      generator.blocksGenerated += 1;
+      generator.lastDifficulty = effectiveDifficulty;
       rebuildSegments(track, Math.max(previousPointCount - 1, 0));
       updateTrackElevation(track, previousPointCount);
       added += 1;
