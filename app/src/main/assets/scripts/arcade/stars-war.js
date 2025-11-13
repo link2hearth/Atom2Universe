@@ -2176,8 +2176,8 @@
     };
   }
 
-  function persistAutosave() {
-    const api = getAutosaveApi();
+  function persistAutosave(passedApi = null) {
+    const api = passedApi || getAutosaveApi();
     if (!api) {
       return;
     }
@@ -2206,7 +2206,15 @@
       window.clearTimeout(autosaveTimerId);
       autosaveTimerId = null;
     }
-    persistAutosave();
+    const api = getAutosaveApi();
+    persistAutosave(api);
+    if (api && typeof api.flush === 'function') {
+      try {
+        api.flush();
+      } catch (error) {
+        // Ignore autosave flush errors
+      }
+    }
   }
 
   function loadAutosave() {
@@ -3992,6 +4000,7 @@
     }
     if (updated) {
       scheduleAutosave();
+      flushAutosave();
     }
   }
 
