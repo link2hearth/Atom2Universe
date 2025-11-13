@@ -1282,7 +1282,7 @@
           "reward": "Gacha tickets"
         },
         "hint": {
-          "default": "Need a hint? Click \"Help\" to reveal the optimal next move."
+          "default": "Need a hint? Click \"Help\" to reveal the optimal next move. Using Help disables the reward for this puzzle."
         },
         "canvasAria": "Circles puzzle board",
         "win": {
@@ -3672,10 +3672,13 @@
         },
         "circles": {
           "rewardToast": "Circles: +{count} gacha ticket{suffix}!",
+          "rewardDisabledToast": "Circles: reward disabled because Help was used for this puzzle.",
           "winMessage": "Perfect sync in {moves} move{moveSuffix}!",
           "winReward": "Reward: +{tickets} gacha ticket{ticketSuffix}.",
+          "winRewardDisabled": "Reward disabled: Help was used for this puzzle.",
           "hint": {
-            "default": "Need a hint? Click \"Help\" to have the game play the optimal move for you.",
+            "default": "Need a hint? Click \"Help\" to have the game play the optimal move for you. Using Help disables the reward for this puzzle.",
+            "used": "Help was already used on this puzzle. No reward will be granted.",
             "unavailable": "No hint available for this puzzle. Try generating a new one or restart.",
             "solved": "Puzzle already solved! Start a new challenge to keep playing.",
             "auto": "Help rotated ring {ring} {direction}. {moves} move{suffix} remaining.",

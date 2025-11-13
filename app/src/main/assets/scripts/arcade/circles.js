@@ -91,6 +91,7 @@
     solved: false,
     pendingSolved: false,
     rewardClaimed: false,
+    hintUsed: false,
     autosaveTimer: null,
     autosaveSuppressed: false,
     resizeObserver: null,
@@ -207,7 +208,8 @@
       initialRotations: state.initialRotations.slice(),
       rotationLinks: Array.isArray(state.rotationLinks) ? state.rotationLinks.slice() : [],
       solved: Boolean(state.solved),
-      rewardClaimed: Boolean(state.rewardClaimed)
+      rewardClaimed: Boolean(state.rewardClaimed),
+      hintUsed: Boolean(state.hintUsed)
     };
   }
 
@@ -302,6 +304,7 @@
     state.solved = payload.solved === true && checkSolved(state.rotations);
     state.pendingSolved = false;
     state.rewardClaimed = payload.rewardClaimed === true;
+    state.hintUsed = payload.hintUsed === true;
 
     updateStats();
     updateWinMessage();
@@ -681,6 +684,7 @@
     state.solved = checkSolved(state.rotations);
     state.pendingSolved = false;
     state.rewardClaimed = false;
+    state.hintUsed = false;
     recomputeSolutionMap();
     setHintHighlight(null);
     setHintContext(state.solved ? { type: 'solved' } : { type: 'default' });
@@ -702,6 +706,7 @@
       state.solved = checkSolved(state.rotations);
       state.pendingSolved = false;
       state.rewardClaimed = false;
+      state.hintUsed = false;
       hideWinOverlay();
       recomputeSolutionMap();
       setHintHighlight(null);
@@ -905,7 +910,12 @@
     flushAutosave();
   }
 
-  function getCurrentRewardTickets(ringCountOverride) {
+  function getCurrentRewardTickets(ringCountOverride, options) {
+    if (!options || options.ignoreHintPenalty !== true) {
+      if (state.hintUsed) {
+        return 0;
+      }
+    }
     const ringCount = clampInteger(
       ringCountOverride != null ? ringCountOverride : state.ringCount,
       3,
@@ -932,6 +942,16 @@
 
   function awardCompletionTickets() {
     if (state.rewardClaimed) {
+      return;
+    }
+    if (state.hintUsed) {
+      state.rewardClaimed = true;
+      scheduleAutosave();
+      const penaltyMessage = translateText(
+        'scripts.arcade.circles.rewardDisabledToast',
+        'Circles : récompense désactivée car l’aide a été utilisée pour ce puzzle.'
+      );
+      showToastMessage(penaltyMessage);
       return;
     }
     const tickets = getCurrentRewardTickets();
@@ -1018,6 +1038,10 @@
       setHintContext({ type: 'unavailable' });
       return;
     }
+    state.hintUsed = true;
+    updateStats();
+    updateWinMessage();
+    scheduleAutosave();
     const remaining = Math.max(0, Math.floor(entry.distance - 1));
     const contextType = remaining > 0 ? 'auto' : 'autoSolved';
     setHintHighlight(null);
@@ -1104,10 +1128,17 @@
         'Aucun indice disponible pour ce puzzle. Relancez ou réinitialisez.'
       );
     } else {
-      message = translateText(
-        'scripts.arcade.circles.hint.default',
-        'Besoin d’un coup de pouce ? Cliquez sur « Aide » pour jouer automatiquement le meilleur coup.'
-      );
+      if (state.hintUsed) {
+        message = translateText(
+          'scripts.arcade.circles.hint.used',
+          'L’aide a déjà été utilisée pour ce puzzle. Aucune récompense ne sera accordée.'
+        );
+      } else {
+        message = translateText(
+          'scripts.arcade.circles.hint.default',
+          'Besoin d’un coup de pouce ? Cliquez sur « Aide » pour jouer automatiquement le meilleur coup. Attention : utiliser l’aide désactive la récompense de ce puzzle.'
+        );
+      }
     }
     elements.hintMessage.textContent = message;
   }
@@ -1244,13 +1275,19 @@
       'Synchronisation parfaite en {moves} coup{moveSuffix} !',
       { moves, moveSuffix }
     );
-    const rewardPart = tickets > 0
-      ? translateText(
-          'scripts.arcade.circles.winReward',
-          'Récompense : +{tickets} ticket{ticketSuffix} gacha.',
-          { tickets: formatNumber(tickets), ticketSuffix }
-        )
-      : '';
+    let rewardPart = '';
+    if (state.hintUsed) {
+      rewardPart = translateText(
+        'scripts.arcade.circles.winRewardDisabled',
+        'Récompense désactivée : l’aide a été utilisée pour ce puzzle.'
+      );
+    } else if (tickets > 0) {
+      rewardPart = translateText(
+        'scripts.arcade.circles.winReward',
+        'Récompense : +{tickets} ticket{ticketSuffix} gacha.',
+        { tickets: formatNumber(tickets), ticketSuffix }
+      );
+    }
     elements.winMessage.textContent = rewardPart ? `${message} ${rewardPart}` : message;
   }
 
