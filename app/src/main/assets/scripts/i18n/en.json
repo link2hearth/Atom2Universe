@@ -1273,12 +1273,16 @@
             "hard": "Hard"
           },
           "new": "New puzzle",
-          "restart": "Restart"
+          "restart": "Restart",
+          "help": "Help"
         },
         "stats": {
           "seed": "Seed",
           "moves": "Moves",
           "reward": "Gacha tickets"
+        },
+        "hint": {
+          "default": "Need a hint? Click \"Help\" to reveal the optimal next move."
         },
         "canvasAria": "Circles puzzle board",
         "win": {
@@ -3669,7 +3673,17 @@
         "circles": {
           "rewardToast": "Circles: +{count} gacha ticket{suffix}!",
           "winMessage": "Perfect sync in {moves} move{moveSuffix}!",
-          "winReward": "Reward: +{tickets} gacha ticket{ticketSuffix}."
+          "winReward": "Reward: +{tickets} gacha ticket{ticketSuffix}.",
+          "hint": {
+            "default": "Need a hint? Click \"Help\" to reveal the optimal next move.",
+            "unavailable": "No hint available for this puzzle. Try generating a new one or restart.",
+            "solved": "Puzzle already solved! Start a new challenge to keep playing.",
+            "move": "Rotate ring {ring} {direction}. {moves} move{suffix} remaining.",
+            "direction": {
+              "clockwise": "clockwise",
+              "counterClockwise": "counter-clockwise"
+            }
+          }
         },
         "starBridges": {
           "rewardToast": "Bridges: +{count} gacha ticket{suffix}!"

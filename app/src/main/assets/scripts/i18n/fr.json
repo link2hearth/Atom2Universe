@@ -1279,12 +1279,16 @@
             "hard": "Difficile"
           },
           "new": "Nouveau puzzle",
-          "restart": "Recommencer"
+          "restart": "Recommencer",
+          "help": "Aide"
         },
         "stats": {
           "seed": "Seed",
           "moves": "Coups",
           "reward": "Tickets gacha"
+        },
+        "hint": {
+          "default": "Besoin d’un coup de pouce ? Cliquez sur « Aide » pour obtenir le prochain mouvement optimal."
         },
         "canvasAria": "Plateau Circles",
         "win": {
@@ -3696,7 +3700,17 @@
         "circles": {
           "rewardToast": "Circles : +{count} ticket{suffix} gacha !",
           "winMessage": "Synchronisation parfaite en {moves} coup{moveSuffix} !",
-          "winReward": "Récompense : +{tickets} ticket{ticketSuffix} gacha."
+          "winReward": "Récompense : +{tickets} ticket{ticketSuffix} gacha.",
+          "hint": {
+            "default": "Besoin d’un coup de pouce ? Cliquez sur « Aide » pour obtenir le prochain mouvement optimal.",
+            "unavailable": "Aucun indice disponible pour ce puzzle. Relancez ou réinitialisez.",
+            "solved": "Puzzle déjà résolu ! Lancez un nouveau puzzle pour continuer.",
+            "move": "Tournez l’anneau {ring} vers le {direction}. Il reste {moves} coup{suffix} à jouer.",
+            "direction": {
+              "clockwise": "sens horaire",
+              "counterClockwise": "sens antihoraire"
+            }
+          }
         },
         "starBridges": {
           "rewardToast": "Bridges : +{count} ticket{suffix} gacha !"
