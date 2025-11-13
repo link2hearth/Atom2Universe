@@ -2290,6 +2290,11 @@ function updatePhotonStats() {
   }
 }
 
+const STARS_WAR_INFO_MODES = Object.freeze({
+  easy: 'easy',
+  hard: 'hard'
+});
+
 function sanitizeStarsWarRun(raw) {
   if (!raw || typeof raw !== 'object') {
     return null;
@@ -2307,35 +2312,23 @@ function sanitizeStarsWarRun(raw) {
   return { score, waves, duration };
 }
 
-function getStarsWarTopRuns() {
-  const progress = gameState.arcadeProgress;
-  if (!progress || typeof progress !== 'object') {
+function collectStarsWarRuns(rawState) {
+  if (!rawState || typeof rawState !== 'object') {
     return [];
   }
-  const entries = progress.entries && typeof progress.entries === 'object' ? progress.entries : {};
-  const entry = entries.starsWar || null;
-  if (!entry || typeof entry !== 'object') {
-    return [];
-  }
-  const state = entry.state && typeof entry.state === 'object' ? entry.state : entry;
-  if (!state || typeof state !== 'object') {
-    return [];
-  }
-  const rawRuns = Array.isArray(state.topRuns) ? state.topRuns : [];
-  const runs = rawRuns
-    .map(sanitizeStarsWarRun)
-    .filter(Boolean);
+  const rawRuns = Array.isArray(rawState.topRuns) ? rawState.topRuns : [];
+  const runs = rawRuns.map(sanitizeStarsWarRun).filter(Boolean);
   if (!runs.length) {
     const fallback = sanitizeStarsWarRun({
-      score: state.bestScore ?? state.score,
-      duration: state.bestTime ?? state.time ?? state.elapsed,
-      waves: state.bestWave ?? state.wave ?? state.maxWave
+      score: rawState.bestScore ?? rawState.score,
+      duration: rawState.bestTime ?? rawState.time ?? rawState.elapsed,
+      waves: rawState.bestWave ?? rawState.wave ?? rawState.maxWave
     });
     if (fallback) {
       runs.push(fallback);
     }
   }
-  const comparator = (a, b) => {
+  runs.sort((a, b) => {
     if (a.score !== b.score) {
       return b.score - a.score;
     }
@@ -2343,9 +2336,38 @@ function getStarsWarTopRuns() {
       return b.waves - a.waves;
     }
     return b.duration - a.duration;
-  };
-  runs.sort(comparator);
+  });
   return runs.slice(0, 3);
+}
+
+function getStarsWarTopRunsByMode() {
+  const result = {
+    [STARS_WAR_INFO_MODES.easy]: [],
+    [STARS_WAR_INFO_MODES.hard]: []
+  };
+  const progress = gameState.arcadeProgress;
+  if (!progress || typeof progress !== 'object') {
+    return result;
+  }
+  const entries = progress.entries && typeof progress.entries === 'object' ? progress.entries : {};
+  const entry = entries.starsWar || null;
+  if (!entry || typeof entry !== 'object') {
+    return result;
+  }
+  const state = entry.state && typeof entry.state === 'object' ? entry.state : entry;
+  if (!state || typeof state !== 'object') {
+    return result;
+  }
+  const modes = state.modes && typeof state.modes === 'object' ? state.modes : null;
+  if (modes) {
+    Object.keys(result).forEach(mode => {
+      const modeState = modes[mode];
+      result[mode] = collectStarsWarRuns(modeState);
+    });
+  } else {
+    result[STARS_WAR_INFO_MODES.hard] = collectStarsWarRuns(state);
+  }
+  return result;
 }
 
 function formatStarsWarDuration(secondsValue) {
@@ -2417,19 +2439,29 @@ function formatStarsWarEntry(run) {
 }
 
 function updateStarsWarTopRuns() {
-  const targets = [
-    elements.infoStarsWarTop1Value,
-    elements.infoStarsWarTop2Value,
-    elements.infoStarsWarTop3Value
-  ];
-  const runs = getStarsWarTopRuns();
+  const targetMap = {
+    [STARS_WAR_INFO_MODES.easy]: [
+      elements.infoStarsWarEasyTop1Value,
+      elements.infoStarsWarEasyTop2Value,
+      elements.infoStarsWarEasyTop3Value
+    ],
+    [STARS_WAR_INFO_MODES.hard]: [
+      elements.infoStarsWarHardTop1Value,
+      elements.infoStarsWarHardTop2Value,
+      elements.infoStarsWarHardTop3Value
+    ]
+  };
+  const runsByMode = getStarsWarTopRunsByMode();
   const emptyValue = translateOrDefault('scripts.info.progress.starsWar.empty', '—');
-  targets.forEach((target, index) => {
-    if (!target) {
-      return;
-    }
-    const run = runs[index];
-    target.textContent = run ? formatStarsWarEntry(run) : emptyValue;
+  Object.keys(targetMap).forEach(mode => {
+    const runs = runsByMode[mode] || [];
+    targetMap[mode].forEach((target, index) => {
+      if (!target) {
+        return;
+      }
+      const run = runs[index];
+      target.textContent = run ? formatStarsWarEntry(run) : emptyValue;
+    });
   });
 }
 
