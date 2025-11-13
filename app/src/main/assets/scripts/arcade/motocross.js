@@ -41,6 +41,11 @@
   const ENGINE_FORCE = 24800;
   const BRAKE_FORCE = ENGINE_FORCE * 0.9;
   const GROUND_BRAKE_MULTIPLIER = 1.35;
+  const BOOST_BASE_DELAY = 1;
+  const BOOST_STEP_DURATION = 0.1;
+  const BOOST_STEP_RATE = 0.1;
+  const BOOST_MAX_MULTIPLIER = 3;
+  const BOOST_MAX_STEPS = Math.ceil(Math.log(BOOST_MAX_MULTIPLIER) / Math.log(1 + BOOST_STEP_RATE));
   const TILT_TORQUE = 31200;
   const SPRING_STIFFNESS = 4200;
   const SPRING_DAMPING = 180;
@@ -1055,6 +1060,11 @@
       left: new Set(),
       right: new Set()
     },
+    boost: {
+      holdTime: 0,
+      steps: 0,
+      factor: 1
+    },
     statusKey: 'index.sections.motocross.ui.status.ready',
     statusFallback: 'Appuyez sur « Générer » pour lancer une piste aléatoire.',
     statusParams: null,
@@ -1108,6 +1118,38 @@
       touch.brake = leftSet instanceof Set && leftSet.size > 0 ? 1 : 0;
     }
     updateCombinedInput();
+  }
+
+  function updateBoostState(dt, accelerateHeld) {
+    const boost = state.boost;
+    if (!boost) {
+      return 1;
+    }
+    if (accelerateHeld) {
+      boost.holdTime += dt;
+      const maxHoldTime = BOOST_BASE_DELAY + BOOST_STEP_DURATION * BOOST_MAX_STEPS;
+      if (boost.holdTime > maxHoldTime) {
+        boost.holdTime = maxHoldTime;
+      }
+      const extraTime = boost.holdTime - BOOST_BASE_DELAY;
+      if (extraTime >= BOOST_STEP_DURATION) {
+        const newSteps = Math.min(
+          Math.floor(extraTime / BOOST_STEP_DURATION),
+          BOOST_MAX_STEPS
+        );
+        boost.steps = newSteps;
+        const rawFactor = Math.pow(1 + BOOST_STEP_RATE, newSteps);
+        boost.factor = clamp(rawFactor, 1, BOOST_MAX_MULTIPLIER);
+      } else {
+        boost.steps = 0;
+        boost.factor = 1;
+      }
+    } else {
+      boost.holdTime = 0;
+      boost.steps = 0;
+      boost.factor = 1;
+    }
+    return boost.factor;
   }
 
   function setKeyboardInput(action, value) {
@@ -1193,6 +1235,11 @@
       if (state.pointer.right instanceof Set) {
         state.pointer.right.clear();
       }
+    }
+    if (state.boost) {
+      state.boost.holdTime = 0;
+      state.boost.steps = 0;
+      state.boost.factor = 1;
     }
     updateCombinedInput();
   }
@@ -1376,7 +1423,8 @@
     wheel.clearance = distance - WHEEL_RADIUS;
     let driveForce = 0;
     if (driveInput > 0) {
-      driveForce = driveInput * ENGINE_FORCE;
+      const boost = state.boost?.factor || 1;
+      driveForce = driveInput * ENGINE_FORCE * boost;
     } else if (driveInput < 0) {
       driveForce = driveInput * BRAKE_FORCE;
     }
@@ -1426,6 +1474,9 @@
   }
 
   function stepPhysics(dt) {
+    const accelerateHeld = state.input.accelerate > 0 ? 1 : 0;
+    const brakeHeld = state.input.brake > 0 ? 1 : 0;
+    updateBoostState(dt, accelerateHeld);
     const track = state.track;
     if (!track) {
       return;
@@ -1433,8 +1484,6 @@
     const bike = state.bike;
     updateWheelData();
     const { back, front } = state.wheels;
-    const accelerateHeld = state.input.accelerate > 0 ? 1 : 0;
-    const brakeHeld = state.input.brake > 0 ? 1 : 0;
     const controlDelta = accelerateHeld - brakeHeld;
 
     if (accelerateHeld && brakeHeld) {
