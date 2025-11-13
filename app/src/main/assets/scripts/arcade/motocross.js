@@ -358,6 +358,37 @@
     return points;
   }
 
+  function polyLooping(entryLength, radius, exitLength, sampleCount) {
+    const safeEntry = Math.max(Number(entryLength) || 0, 1);
+    const safeRadius = Math.max(Number(radius) || 0, 10);
+    const safeExit = Math.max(Number(exitLength) || 0, 1);
+    const samples = Math.max(12, Math.floor(Number(sampleCount) || 0));
+    const loopWidth = safeRadius * 2.05;
+    const baseOffsetFactor = 0.48;
+    const bottomY = -safeRadius * baseOffsetFactor;
+    const centerY = bottomY - safeRadius;
+    const totalLength = safeEntry + loopWidth + safeExit;
+    const points = [
+      [0, 0],
+      [safeEntry * 0.28, bottomY * 0.18],
+      [safeEntry * 0.56, bottomY * 0.52],
+      [safeEntry * 0.82, bottomY * 0.88],
+      [safeEntry, bottomY]
+    ];
+    for (let i = 1; i <= samples; i += 1) {
+      const t = (i / samples) * Math.PI * 2;
+      const x = safeEntry + (loopWidth * (i / samples));
+      const y = centerY + safeRadius * Math.cos(t);
+      points.push([x, y]);
+    }
+    const exitStartX = safeEntry + loopWidth + safeExit * 0.2;
+    const exitMidX = safeEntry + loopWidth + safeExit * 0.6;
+    points.push([exitStartX, bottomY * 0.58]);
+    points.push([exitMidX, bottomY * 0.24]);
+    points.push([totalLength, 0]);
+    return points;
+  }
+
   function polyWhoops(length, count, amplitude) {
     const lead = Math.min(55, length * 0.12);
     const usable = Math.max(length - lead * 2, 30);
@@ -566,6 +597,11 @@
   });
 
   const START_BLOCK = createBlock('flat/start/01', ['flat', 'easy', 'starter'], polyFlat(200));
+  const LOOP_BLOCK = createBlock(
+    'feature/loop/normal_hard/01',
+    ['feature', 'loop', 'normal', 'hard'],
+    polyLooping(280, 64, 360, 48)
+  );
 
   function createProfileBlock(id, tags, length, templateKey, amplitude, verticalOffset) {
     const template = PROFILE_TEMPLATES[templateKey];
@@ -579,6 +615,7 @@
 
   const BLOCK_LIBRARY = Object.freeze([
     START_BLOCK,
+    LOOP_BLOCK,
     createBlock('flat/easy/02', ['flat', 'easy'], polyFlat(240)),
     createBlock('flat/normal/01', ['flat', 'normal'], polyFlat(300)),
     createBlock('flat/hard/01', ['flat', 'hard'], polyFlat(320)),
