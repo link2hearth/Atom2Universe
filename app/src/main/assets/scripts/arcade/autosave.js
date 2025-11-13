@@ -362,7 +362,15 @@
     set: setEntry,
     clear: clearEntry,
     list: listEntries,
-    knownGames: () => KNOWN_GAME_IDS.slice()
+    knownGames: () => KNOWN_GAME_IDS.slice(),
+    flush() {
+      if (persistTimer != null) {
+        clearTimeout(persistTimer);
+        persistTimer = null;
+        persistScheduled = false;
+      }
+      persistNow();
+    }
   };
 
   if (typeof window !== 'undefined') {
