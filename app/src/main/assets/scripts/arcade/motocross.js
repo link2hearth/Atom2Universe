@@ -1914,6 +1914,8 @@
     state.maxDistance = 0;
     state.gameOver = false;
     state.pendingRespawn = false;
+    state.active = true;
+    resetInputState();
     state.lastGeneratedCount = Array.isArray(track.usedIds) ? track.usedIds.length : 0;
     updateRespawnCheckpoint();
     applyRespawn(false);
