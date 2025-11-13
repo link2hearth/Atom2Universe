@@ -64,6 +64,8 @@
   const CAMERA_TOP_MARGIN = 140;
   const CAMERA_BOTTOM_MARGIN = 220;
   const GROUND_PROXIMITY_THRESHOLD = 10;
+  const UPSIDE_DOWN_WHEEL_CLEARANCE = 64;
+  const UPSIDE_DOWN_CENTER_CLEARANCE = CHASSIS_HEIGHT * 3;
 
   const translate = (() => {
     if (typeof window !== 'undefined' && typeof window.t === 'function') {
@@ -1456,6 +1458,24 @@
       : Number.POSITIVE_INFINITY;
     const wheelsCloseToGround = backClearance < GROUND_PROXIMITY_THRESHOLD
       && frontClearance < GROUND_PROXIMITY_THRESHOLD;
+    const minWheelClearance = Math.min(backClearance, frontClearance);
+    const nearGroundByWheels = Number.isFinite(minWheelClearance)
+      && minWheelClearance < UPSIDE_DOWN_WHEEL_CLEARANCE;
+    let centerClearance = Number.POSITIVE_INFINITY;
+    if (track && back && typeof back.segmentIndex === 'number') {
+      const centerSample = sampleTrack(track, bike.position.x, back.segmentIndex);
+      if (centerSample && centerSample.normal) {
+        const toCenterX = bike.position.x - centerSample.point.x;
+        const toCenterY = bike.position.y - centerSample.point.y;
+        const projected = toCenterX * centerSample.normal.x + toCenterY * centerSample.normal.y;
+        if (Number.isFinite(projected)) {
+          centerClearance = Math.max(0, projected);
+        }
+      }
+    }
+    const nearGroundByCenter = Number.isFinite(centerClearance)
+      && centerClearance < UPSIDE_DOWN_CENTER_CLEARANCE;
+    const nearGroundWhileUpsideDown = nearGroundByWheels || nearGroundByCenter;
     const allowRotationControl = !wheelsCloseToGround;
     const driveControl = airborne ? 0 : controlDelta;
     const tiltControl = allowRotationControl ? controlDelta : 0;
@@ -1545,7 +1565,7 @@
       const normalizedAngle = Math.atan2(Math.sin(bike.angle), Math.cos(bike.angle));
       const isUpsideDown = Math.abs(normalizedAngle) > Math.PI * 0.75;
       const falling = bike.velocity.y > 0;
-      if (isUpsideDown && (falling || !airborne)) {
+      if (isUpsideDown && (!airborne || (falling && nearGroundWhileUpsideDown))) {
         const formattedDistance = formatDistance(state.maxDistance);
         setStatus(
           'index.sections.motocross.ui.status.gameOver',
