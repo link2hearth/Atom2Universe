@@ -22,9 +22,21 @@
     bonusValue: 35
   });
 
+  function formatTemplate(template, params) {
+    if (typeof template !== 'string' || !template.includes('{') || !params) {
+      return template;
+    }
+    return template.replace(/\{(\w+)\}/g, (match, token) => {
+      if (Object.prototype.hasOwnProperty.call(params, token) && params[token] != null) {
+        return String(params[token]);
+      }
+      return match;
+    });
+  }
+
   function translate(key, fallback, params) {
     if (!key || typeof key !== 'string') {
-      return fallback;
+      return formatTemplate(fallback, params);
     }
 
     let translator = null;
@@ -38,22 +50,20 @@
       translator = globalThis.t.bind(globalThis);
     }
 
-    if (!translator) {
-      return fallback;
-    }
-
-    try {
-      const result = translator(key, params);
-      if (typeof result === 'string') {
-        const trimmed = result.trim();
-        if (trimmed && trimmed !== key) {
-          return trimmed;
+    if (translator) {
+      try {
+        const result = translator(key, params);
+        if (typeof result === 'string') {
+          const trimmed = result.trim();
+          if (trimmed && trimmed !== key) {
+            return formatTemplate(trimmed, params);
+          }
         }
+      } catch (error) {
+        console.warn('Dice translation error for key', key, error);
       }
-    } catch (error) {
-      console.warn('Dice translation error for key', key, error);
     }
-    return fallback;
+    return formatTemplate(fallback, params);
   }
 
   function resolveNumericSetting(value, fallback, { min = Number.NEGATIVE_INFINITY, max = Number.POSITIVE_INFINITY } = {}) {
