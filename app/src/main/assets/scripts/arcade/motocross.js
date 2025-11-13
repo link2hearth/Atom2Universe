@@ -29,7 +29,7 @@
   });
   const PHYSICS_STEP = 1 / 120;
   const MAX_FRAME_STEP = 1 / 30;
-  const MASS = 20;
+  const MASS = 40;
   const GRAVITY = 1000;
   const BIKE_SCALE = 0.6;
   const CHASSIS_WIDTH = 108 * BIKE_SCALE;
