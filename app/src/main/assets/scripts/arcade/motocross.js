@@ -19,9 +19,9 @@
 
   const PHYSICS_STEP = 1 / 120;
   const MAX_FRAME_STEP = 1 / 30;
-  const MASS = 96;
-  const GRAVITY = 1800;
-  const BIKE_SCALE = 0.8;
+  const MASS = 20;
+  const GRAVITY = 1000;
+  const BIKE_SCALE = 0.6;
   const CHASSIS_WIDTH = 108 * BIKE_SCALE;
   const CHASSIS_HEIGHT = 32 * BIKE_SCALE;
   const WHEEL_BASE = 92 * BIKE_SCALE;
@@ -39,7 +39,7 @@
   const ANGULAR_DAMPING = 0.12;
   const NORMAL_CORRECTION_FACTOR = 0.7;
   const CAMERA_LOOK_AHEAD = 0.24;
-  const CAMERA_OFFSET_Y = 180;
+  const CAMERA_OFFSET_Y = 250;
   const CAMERA_SMOOTH = 6.5;
   const FALL_EXTRA_MARGIN = 480;
   const CAMERA_VERTICAL_ANCHOR = 0.55;
