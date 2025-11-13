@@ -223,9 +223,6 @@
     if (!Array.isArray(tags)) {
       return 'normal';
     }
-    if (tags.includes('hard')) {
-      return 'hard';
-    }
     if (tags.includes('easy')) {
       return 'easy';
     }
@@ -237,8 +234,6 @@
     switch (difficulty) {
       case 'easy':
         return [5, 55];
-      case 'hard':
-        return [25, 90];
       default:
         return [12, 70];
     }
@@ -599,7 +594,7 @@
   const START_BLOCK = createBlock('flat/start/01', ['flat', 'easy', 'starter'], polyFlat(200));
   const LOOP_BLOCK = createBlock(
     'feature/loop/normal_hard/01',
-    ['feature', 'loop', 'normal', 'hard'],
+    ['feature', 'loop', 'normal'],
     polyLooping(280, 64, 360, 48)
   );
 
@@ -618,37 +613,26 @@
     LOOP_BLOCK,
     createBlock('flat/easy/02', ['flat', 'easy'], polyFlat(240)),
     createBlock('flat/normal/01', ['flat', 'normal'], polyFlat(300)),
-    createBlock('flat/hard/01', ['flat', 'hard'], polyFlat(320)),
     createProfileBlock('flow/double/easy/01', ['flow', 'easy'], 280, 'doubleHill', 28),
     createProfileBlock('flow/double/normal/01', ['flow', 'normal'], 320, 'doubleHill', 42),
-    createProfileBlock('flow/double/hard/01', ['flow', 'hard'], 360, 'doubleHill', 56),
     createProfileBlock('flow/wave/easy/01', ['wave', 'easy'], 260, 'softWave', 22),
     createProfileBlock('flow/wave/normal/01', ['wave', 'normal'], 300, 'softWave', 34),
-    createProfileBlock('flow/wave/hard/01', ['wave', 'hard'], 340, 'softWave', 44),
     createProfileBlock('crest/launch/easy/01', ['crest', 'easy'], 280, 'ridgeDrop', 36),
     createProfileBlock('crest/launch/normal/01', ['crest', 'normal'], 320, 'ridgeDrop', 48),
-    createProfileBlock('crest/launch/hard/01', ['crest', 'hard'], 360, 'ridgeDrop', 62),
     createProfileBlock('rhythm/rolling/easy/01', ['rhythm', 'easy'], 260, 'rolling', 28),
     createProfileBlock('rhythm/rolling/normal/01', ['rhythm', 'normal'], 300, 'rolling', 40),
-    createProfileBlock('rhythm/rolling/hard/01', ['rhythm', 'hard'], 340, 'rolling', 52),
     createProfileBlock('rhythm/mellow/easy/01', ['rhythm', 'easy'], 240, 'mellow', 20),
     createProfileBlock('rhythm/mellow/normal/01', ['rhythm', 'normal'], 280, 'mellow', 30),
-    createProfileBlock('rhythm/mellow/hard/01', ['rhythm', 'hard'], 320, 'mellow', 42),
     createProfileBlock('valley/shallow/easy/01', ['valley', 'easy'], 260, 'shallowValley', 32),
     createProfileBlock('valley/shallow/normal/01', ['valley', 'normal'], 300, 'shallowValley', 44),
-    createProfileBlock('valley/shallow/hard/01', ['valley', 'hard'], 340, 'shallowValley', 56),
     createProfileBlock('valley/deep/easy/01', ['valley', 'easy'], 280, 'deepValley', 38),
     createProfileBlock('valley/deep/normal/01', ['valley', 'normal'], 320, 'deepValley', 54),
-    createProfileBlock('valley/deep/hard/01', ['valley', 'hard'], 360, 'deepValley', 70),
     createProfileBlock('valley/bowl/easy/01', ['valley', 'easy'], 280, 'bowl', 34),
     createProfileBlock('valley/bowl/normal/01', ['valley', 'normal'], 320, 'bowl', 48),
-    createProfileBlock('valley/bowl/hard/01', ['valley', 'hard'], 360, 'bowl', 62),
     createProfileBlock('landing/flow/easy/01', ['landing_pad', 'easy'], 280, 'landingSlope', 26),
     createProfileBlock('landing/flow/normal/01', ['landing_pad', 'normal'], 320, 'landingSlope', 32),
-    createProfileBlock('landing/flow/hard/01', ['landing_pad', 'hard'], 360, 'landingSlope', 36),
     createProfileBlock('closing/rise/easy/01', ['flow', 'easy'], 260, 'closingRise', 26),
-    createProfileBlock('closing/rise/normal/01', ['flow', 'normal'], 300, 'closingRise', 36),
-    createProfileBlock('closing/rise/hard/01', ['flow', 'hard'], 340, 'closingRise', 46)
+    createProfileBlock('closing/rise/normal/01', ['flow', 'normal'], 300, 'closingRise', 36)
   ]);
 
   const TRACK_BLOCKS = BLOCK_LIBRARY.filter(block => block !== START_BLOCK);
@@ -658,9 +642,6 @@
     if (!block || !Array.isArray(block.tags)) {
       return false;
     }
-    if (difficulty === 'hard') {
-      return block.tags.includes('hard');
-    }
     if (difficulty === 'easy') {
       return block.tags.includes('easy');
     }
@@ -668,8 +649,11 @@
   }
 
   function normalizeDifficulty(value) {
-    if (value === 'easy' || value === 'hard') {
-      return value;
+    if (value === 'easy') {
+      return 'easy';
+    }
+    if (value === 'normal' || value === 'hard') {
+      return 'normal';
     }
     return 'normal';
   }
@@ -683,28 +667,15 @@
       }
     };
 
-    if (baseDifficulty === 'hard') {
-      pushOption('hard', 4 + Math.floor(safeCount / 4));
-      pushOption('normal', 3 + Math.floor(safeCount / 6));
-      pushOption('easy', 2);
-      return options;
-    }
-
     if (baseDifficulty === 'normal') {
       pushOption('normal', 4 + Math.floor(safeCount / 5));
       pushOption('easy', 3);
-      if (safeCount >= 3) {
-        pushOption('hard', 1 + Math.floor((safeCount - 2) / 4));
-      }
       return options;
     }
 
     pushOption('easy', 4);
     if (safeCount >= 2) {
       pushOption('normal', 3 + Math.floor((safeCount - 1) / 3));
-    }
-    if (safeCount >= 5) {
-      pushOption('hard', 1 + Math.floor((safeCount - 4) / 3));
     }
     return options;
   }
