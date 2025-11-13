@@ -4,22 +4,29 @@
   }
 
   const DEFAULT_DIFFICULTY = 'normal';
-  const CHECKPOINT_INTERVAL = 400;
+  const CHECKPOINT_INTERVAL = 960;
   const SLOPE_STEP = 0.12;
-  const ELEVATION_LIMIT = 260;
+  const ELEVATION_LIMIT = 520;
   const INITIAL_BLOCK_COUNT = 14;
   const EXTEND_BLOCK_COUNT = 6;
-  const TRACK_AHEAD_BUFFER = 1400;
+  const TRACK_AHEAD_BUFFER = 3600;
+
+  const TRACK_LENGTH_MULTIPLIER = 2.6;
+  const TRACK_HEIGHT_MULTIPLIER = 3;
+  const PROFILE_AMPLITUDE_MULTIPLIER = 1.45;
+  const TRACK_CURVE_SUBDIVISIONS = 8;
+  const TRACK_MIN_CURVE_STEP = 4;
 
   const PHYSICS_STEP = 1 / 120;
   const MAX_FRAME_STEP = 1 / 30;
   const MASS = 110;
   const GRAVITY = 1800;
-  const CHASSIS_WIDTH = 108;
-  const CHASSIS_HEIGHT = 32;
-  const WHEEL_BASE = 92;
-  const WHEEL_RADIUS = 18;
-  const WHEEL_VERTICAL_OFFSET = 20;
+  const BIKE_SCALE = 0.8;
+  const CHASSIS_WIDTH = 108 * BIKE_SCALE;
+  const CHASSIS_HEIGHT = 32 * BIKE_SCALE;
+  const WHEEL_BASE = 92 * BIKE_SCALE;
+  const WHEEL_RADIUS = 18 * BIKE_SCALE;
+  const WHEEL_VERTICAL_OFFSET = 20 * BIKE_SCALE;
   const BIKE_INERTIA = (MASS * (CHASSIS_WIDTH * CHASSIS_WIDTH + CHASSIS_HEIGHT * CHASSIS_HEIGHT)) / 12;
   const ENGINE_FORCE = 16200;
   const BRAKE_FORCE = 7800;
@@ -32,9 +39,9 @@
   const ANGULAR_DAMPING = 0.18;
   const NORMAL_CORRECTION_FACTOR = 0.7;
   const CAMERA_LOOK_AHEAD = 0.24;
-  const CAMERA_OFFSET_Y = 120;
+  const CAMERA_OFFSET_Y = 180;
   const CAMERA_SMOOTH = 6.5;
-  const FALL_EXTRA_MARGIN = 320;
+  const FALL_EXTRA_MARGIN = 480;
   const CAMERA_VERTICAL_ANCHOR = 0.55;
 
   const translate = (() => {
@@ -94,6 +101,61 @@
 
   function lerp(current, target, factor) {
     return current + (target - current) * factor;
+  }
+
+  function catmullRomScalar(p0, p1, p2, p3, t) {
+    const t2 = t * t;
+    const t3 = t2 * t;
+    return 0.5 * (
+      (2 * p1)
+      + (-p0 + p2) * t
+      + (2 * p0 - 5 * p1 + 4 * p2 - p3) * t2
+      + (-p0 + 3 * p1 - 3 * p2 + p3) * t3
+    );
+  }
+
+  function smoothPolyline(points, subdivisions) {
+    if (!Array.isArray(points) || points.length < 2) {
+      return [[0, 0], [200 * TRACK_LENGTH_MULTIPLIER, 0]];
+    }
+    const result = [];
+    const segmentCount = points.length - 1;
+    const steps = Math.max(1, Math.floor(subdivisions));
+    for (let i = 0; i < segmentCount; i += 1) {
+      const p0 = points[Math.max(0, i - 1)];
+      const p1 = points[i];
+      const p2 = points[i + 1];
+      const p3 = points[Math.min(points.length - 1, i + 2)];
+      if (result.length === 0) {
+        result.push([p1[0], p1[1]]);
+      }
+      const samples = steps + 1;
+      for (let s = 1; s <= samples; s += 1) {
+        if (s === samples) {
+          result.push([p2[0], p2[1]]);
+          continue;
+        }
+        const t = s / samples;
+        let x = p1[0] + (p2[0] - p1[0]) * t;
+        const y = catmullRomScalar(p0[1], p1[1], p2[1], p3[1], t);
+        if (result.length) {
+          const prevX = result[result.length - 1][0];
+          if (x <= prevX) {
+            const segmentSpan = Math.abs(p2[0] - p1[0]);
+            const minDelta = Math.max(segmentSpan / (samples + 1), TRACK_MIN_CURVE_STEP * 0.25);
+            x = prevX + minDelta;
+            if (x >= p2[0]) {
+              x = p2[0] - Math.max(minDelta * 0.25, 0.1);
+            }
+            if (x <= prevX) {
+              continue;
+            }
+          }
+        }
+        result.push([x, y]);
+      }
+    }
+    return result;
   }
 
   function createEntropySeed() {
@@ -162,8 +224,25 @@
     return (b[1] - a[1]) / dx;
   }
 
+  function prepareBlockGeometry(geo) {
+    const base = createPolyline(geo);
+    if (!Array.isArray(base) || base.length < 2) {
+      return [[0, 0], [200 * TRACK_LENGTH_MULTIPLIER, 0]];
+    }
+    const scaled = base.map(point => {
+      const x = (Number(point[0]) || 0) * TRACK_LENGTH_MULTIPLIER;
+      const y = (Number(point[1]) || 0) * TRACK_HEIGHT_MULTIPLIER;
+      return [x, y];
+    });
+    return smoothPolyline(scaled, TRACK_CURVE_SUBDIVISIONS);
+  }
+
+  function freezeGeometry(polyline) {
+    return Object.freeze(polyline.map(point => Object.freeze([point[0], point[1]])));
+  }
+
   function createBlock(id, tags, geo, speedRangeOverride) {
-    const poly = createPolyline(geo);
+    const poly = prepareBlockGeometry(geo);
     const start = poly[0];
     const end = poly[poly.length - 1];
     const slopeIn = computeSlope(poly[0], poly[1]);
@@ -193,7 +272,7 @@
       speed_min: speedMin,
       speed_max: speedMax,
       tags: Object.freeze([...tags]),
-      geo: Object.freeze(poly),
+      geo: freezeGeometry(poly),
       minY,
       maxY
     });
@@ -450,7 +529,11 @@
 
   function createProfileBlock(id, tags, length, templateKey, amplitude, verticalOffset) {
     const template = PROFILE_TEMPLATES[templateKey];
-    const geometry = template ? polyProfile(length, template, amplitude, verticalOffset) : polyFlat(length);
+    const scaledAmplitude = Number.isFinite(amplitude) ? amplitude * PROFILE_AMPLITUDE_MULTIPLIER : amplitude;
+    const scaledOffset = Number.isFinite(verticalOffset) ? verticalOffset * PROFILE_AMPLITUDE_MULTIPLIER : verticalOffset;
+    const geometry = template
+      ? polyProfile(length, template, scaledAmplitude, scaledOffset)
+      : polyFlat(length);
     return createBlock(id, tags, geometry);
   }
 
@@ -883,7 +966,7 @@
 
   function intervalClamp(value) {
     const numeric = Number.isFinite(value) ? value : CHECKPOINT_INTERVAL;
-    return clamp(numeric, 200, 600);
+    return clamp(numeric, 600, 1400);
   }
 
   const state = {
