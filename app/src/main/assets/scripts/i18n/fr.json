@@ -1288,7 +1288,7 @@
           "reward": "Tickets gacha"
         },
         "hint": {
-          "default": "Besoin d’un coup de pouce ? Cliquez sur « Aide » pour obtenir le prochain mouvement optimal."
+          "default": "Besoin d’un coup de pouce ? Cliquez sur « Aide » pour obtenir le prochain mouvement optimal. Attention : utiliser l’aide désactive la récompense de ce puzzle."
         },
         "canvasAria": "Plateau Circles",
         "win": {
@@ -3699,10 +3699,13 @@
         },
         "circles": {
           "rewardToast": "Circles : +{count} ticket{suffix} gacha !",
+          "rewardDisabledToast": "Circles : récompense désactivée, l’aide a été utilisée pour ce puzzle.",
           "winMessage": "Synchronisation parfaite en {moves} coup{moveSuffix} !",
           "winReward": "Récompense : +{tickets} ticket{ticketSuffix} gacha.",
+          "winRewardDisabled": "Récompense désactivée : l’aide a été utilisée pour ce puzzle.",
           "hint": {
-            "default": "Besoin d’un coup de pouce ? Cliquez sur « Aide » pour jouer automatiquement le meilleur coup.",
+            "default": "Besoin d’un coup de pouce ? Cliquez sur « Aide » pour jouer automatiquement le meilleur coup. Attention : utiliser l’aide désactive la récompense de ce puzzle.",
+            "used": "L’aide a déjà été utilisée pour ce puzzle. Aucune récompense ne sera accordée.",
             "unavailable": "Aucun indice disponible pour ce puzzle. Relancez ou réinitialisez.",
             "solved": "Puzzle déjà résolu ! Lancez un nouveau puzzle pour continuer.",
             "auto": "Aide a tourné l’anneau {ring} vers le {direction}. Il reste {moves} coup{suffix}.",
