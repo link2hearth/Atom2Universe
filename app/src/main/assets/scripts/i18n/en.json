@@ -1295,12 +1295,6 @@
         "aria": "Motocross prototype: build a procedural course and ride the bike.",
         "ui": {
           "controls": "Motocross track settings",
-          "difficulty": "Difficulty",
-          "difficulties": {
-            "easy": "Easy",
-            "normal": "Normal",
-            "hard": "Hard"
-          },
           "generate": "Generate",
           "speed": "Speed",
           "speedUnit": "u/s"
