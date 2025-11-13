@@ -36,7 +36,7 @@
   }
 
   const AUTOSAVE_GAME_ID = 'circles';
-  const AUTOSAVE_VERSION = 2;
+  const AUTOSAVE_VERSION = 3;
   const AUTOSAVE_DEBOUNCE_MS = 200;
   const DIFFICULTY_ORDER = Object.freeze(['easy', 'medium', 'hard']);
   const ROTATION_ANIMATION_DURATION = 320;
@@ -596,6 +596,20 @@
     return rings;
   }
 
+  function getSolvedRotations(ringCount, segmentsOverride) {
+    const count = clampInteger(ringCount, 1, 12, 1);
+    const segments = Number.isFinite(segmentsOverride) ? segmentsOverride : state.segments;
+    const offsets = Array.isArray(state.settings.colorOffsets) && state.settings.colorOffsets.length > 0
+      ? state.settings.colorOffsets
+      : [0];
+    const rotations = new Array(count);
+    for (let i = 0; i < count; i += 1) {
+      const offset = offsets[i] != null ? offsets[i] : offsets[i % offsets.length];
+      rotations[i] = normalizeRotationValue(offset, segments);
+    }
+    return rotations;
+  }
+
   function rotateColors(colors, offset) {
     const palette = Array.isArray(colors) && colors.length > 0 ? colors : ['#ffffff'];
     const normalizedOffset = normalizeRotationValue(offset, palette.length);
@@ -707,6 +721,7 @@
     const attempts = clampInteger(state.settings.maxShuffleAttempts, 4, 200, 32);
     const rings = createRingDefinitions(count);
     const segments = state.segments;
+    const baselineRotations = getSolvedRotations(count, segments);
 
     for (let attempt = 0; attempt < attempts; attempt += 1) {
       const candidateLinks = sanitizeRotationLinks(generateRotationLinks(count), count);
@@ -714,7 +729,13 @@
         continue;
       }
       const moveCount = randomInt(minMoves, maxMoves);
-      const rotations = createScrambledRotations(count, candidateLinks, moveCount, segments);
+      const rotations = createScrambledRotations(
+        count,
+        candidateLinks,
+        moveCount,
+        segments,
+        baselineRotations
+      );
       if (!rotations) {
         continue;
       }
@@ -729,7 +750,7 @@
     }
 
     const fallbackLinks = sanitizeRotationLinks(generateRotationLinks(count), count) || generateRotationLinks(count);
-    const fallbackRotations = new Array(count).fill(0);
+    const fallbackRotations = getSolvedRotations(count, segments);
     if (count > 0) {
       const index = Math.max(0, count - 1);
       applyRotationToArray(fallbackRotations, index, 1, fallbackLinks, segments);
@@ -742,14 +763,23 @@
     };
   }
 
-  function createScrambledRotations(count, rotationLinks, moveCount, segmentsOverride) {
+  function createScrambledRotations(
+    count,
+    rotationLinks,
+    moveCount,
+    segmentsOverride,
+    baselineRotations
+  ) {
     const length = clampInteger(count, 1, 12, count);
     if (!Array.isArray(rotationLinks) || rotationLinks.length !== length) {
       return null;
     }
     const moves = clampInteger(moveCount, 0, 2000, 0);
     const segments = Number.isFinite(segmentsOverride) ? segmentsOverride : state.segments;
-    const rotations = new Array(length).fill(0);
+    const startRotations = Array.isArray(baselineRotations) && baselineRotations.length >= length
+      ? baselineRotations.slice(0, length)
+      : getSolvedRotations(length, segments);
+    const rotations = startRotations.slice();
     if (moves <= 0) {
       return rotations;
     }
@@ -965,43 +995,38 @@
     }
     const key = serializeRotations(state.rotations, state.segments);
     const entry = key ? state.solutionMap.get(key) : null;
-    if (!entry) {
+    if (!entry || !Number.isFinite(entry.distance)) {
       setHintHighlight(null);
       setHintContext({ type: 'unavailable' });
       return;
     }
-    if (!entry.bestMove || !Number.isFinite(entry.distance) || entry.distance <= 0) {
+    if (!entry.bestMove || entry.distance <= 0) {
       setHintHighlight(null);
       setHintContext({ type: 'solved' });
       return;
     }
-    const ringIndex = entry.bestMove.ringIndex;
-    const direction = entry.bestMove.direction;
-    const remaining = entry.distance;
-    const highlight = getHintHighlightTargets(ringIndex);
-    setHintHighlight(highlight);
+    const ringIndex = Number(entry.bestMove.ringIndex);
+    const direction = Number(entry.bestMove.direction);
+    if (!Number.isFinite(ringIndex) || !Number.isFinite(direction)) {
+      setHintHighlight(null);
+      setHintContext({ type: 'unavailable' });
+      return;
+    }
+    const moved = applyUserRotation(ringIndex, direction);
+    if (!moved) {
+      setHintHighlight(null);
+      setHintContext({ type: 'unavailable' });
+      return;
+    }
+    const remaining = Math.max(0, Math.floor(entry.distance - 1));
+    const contextType = remaining > 0 ? 'auto' : 'autoSolved';
+    setHintHighlight(null);
     setHintContext({
-      type: 'suggestion',
+      type: contextType,
       ringIndex,
       direction,
       remaining
     });
-  }
-
-  function getHintHighlightTargets(ringIndex) {
-    const ringCount = state.ringCount;
-    if (!Number.isFinite(ringIndex) || ringIndex < 0 || ringIndex >= ringCount) {
-      return [];
-    }
-    if (!Array.isArray(state.rotationLinks) || state.rotationLinks.length !== ringCount) {
-      return [ringIndex];
-    }
-    const placeholder = new Array(ringCount).fill(0);
-    const affected = applyRotationToArray(placeholder, ringIndex, 1, state.rotationLinks, state.segments);
-    if (Array.isArray(affected) && affected.length > 0) {
-      return affected;
-    }
-    return [ringIndex];
   }
 
   function setHintContext(context) {
@@ -1026,21 +1051,48 @@
       ? state.hintContext
       : { type: 'default' };
     let message = '';
-    if (context.type === 'suggestion' && context.ringIndex != null && context.direction != null && context.remaining != null) {
+    const isMoveContext =
+      (context.type === 'suggestion' || context.type === 'auto' || context.type === 'autoSolved') &&
+      context.ringIndex != null &&
+      context.direction != null &&
+      context.remaining != null;
+    if (isMoveContext) {
       const ringNumber = formatNumber(context.ringIndex + 1);
       const directionText = getHintDirectionLabel(context.direction);
       const moves = Math.max(0, context.remaining);
       const suffix = moves > 1 ? 's' : '';
-      message = translateText(
-        'scripts.arcade.circles.hint.move',
-        'Tournez l’anneau {ring} vers le {direction}. Il reste {moves} coup{suffix} à jouer.',
-        {
-          ring: ringNumber,
-          direction: directionText,
-          moves: formatNumber(moves),
-          suffix
-        }
-      );
+      if (context.type === 'autoSolved' || (context.type === 'auto' && moves === 0)) {
+        message = translateText(
+          'scripts.arcade.circles.hint.autoSolved',
+          'Aide a tourné l’anneau {ring} vers le {direction}. Puzzle résolu !',
+          {
+            ring: ringNumber,
+            direction: directionText
+          }
+        );
+      } else if (context.type === 'auto') {
+        message = translateText(
+          'scripts.arcade.circles.hint.auto',
+          'Aide a tourné l’anneau {ring} vers le {direction}. Il reste {moves} coup{suffix}.',
+          {
+            ring: ringNumber,
+            direction: directionText,
+            moves: formatNumber(moves),
+            suffix
+          }
+        );
+      } else {
+        message = translateText(
+          'scripts.arcade.circles.hint.move',
+          'Tournez l’anneau {ring} vers le {direction}. Il reste {moves} coup{suffix} à jouer.',
+          {
+            ring: ringNumber,
+            direction: directionText,
+            moves: formatNumber(moves),
+            suffix
+          }
+        );
+      }
     } else if (context.type === 'solved') {
       message = translateText(
         'scripts.arcade.circles.hint.solved',
@@ -1054,7 +1106,7 @@
     } else {
       message = translateText(
         'scripts.arcade.circles.hint.default',
-        'Besoin d’un coup de pouce ? Cliquez sur « Aide » pour obtenir le prochain mouvement optimal.'
+        'Besoin d’un coup de pouce ? Cliquez sur « Aide » pour jouer automatiquement le meilleur coup.'
       );
     }
     elements.hintMessage.textContent = message;
@@ -1107,7 +1159,7 @@
       return null;
     }
     const segments = Number.isFinite(segmentsOverride) ? segmentsOverride : state.segments;
-    const start = new Array(length).fill(0);
+    const start = getSolvedRotations(length, segments);
     const startKey = serializeRotations(start, segments);
     const queue = [start];
     const visited = new Map();
