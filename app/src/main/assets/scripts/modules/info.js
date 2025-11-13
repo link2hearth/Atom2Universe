@@ -2296,6 +2296,182 @@ const STARS_WAR_INFO_MODES = Object.freeze({
 });
 
 const STARS_WAR_AUTOSAVE_KEY = 'starsWar';
+const ARCADE_AUTOSAVE_STORAGE_KEY = 'atom2univers.arcadeSaves.v1';
+
+function safeParseJson(raw) {
+  if (typeof raw !== 'string' || !raw) {
+    return null;
+  }
+  try {
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === 'object' ? parsed : null;
+  } catch (error) {
+    return null;
+  }
+}
+
+function normalizeArcadeProgressEntry(rawEntry) {
+  if (!rawEntry || typeof rawEntry !== 'object') {
+    return null;
+  }
+  if (rawEntry.state && typeof rawEntry.state === 'object') {
+    return rawEntry.state;
+  }
+  if (rawEntry.arcadeState && typeof rawEntry.arcadeState === 'object') {
+    return rawEntry.arcadeState;
+  }
+  return rawEntry;
+}
+
+function extractArcadeProgressEntries(payload) {
+  if (!payload || typeof payload !== 'object') {
+    return null;
+  }
+
+  if (payload.entries && typeof payload.entries === 'object') {
+    return payload.entries;
+  }
+
+  const candidate = (() => {
+    if (payload.arcadeProgress && typeof payload.arcadeProgress === 'object') {
+      return payload.arcadeProgress;
+    }
+    const clicker = payload.clicker && typeof payload.clicker === 'object' ? payload.clicker : null;
+    if (clicker && clicker.arcadeProgress && typeof clicker.arcadeProgress === 'object') {
+      return clicker.arcadeProgress;
+    }
+    return null;
+  })();
+
+  if (!candidate || typeof candidate !== 'object') {
+    return null;
+  }
+
+  const entries = candidate.entries && typeof candidate.entries === 'object'
+    ? candidate.entries
+    : candidate;
+
+  return entries && typeof entries === 'object' ? entries : null;
+}
+
+function readArcadeAutosaveEntriesFromNativeBridge() {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+  const bridge = window.AndroidSaveBridge;
+  if (!bridge || typeof bridge.loadData !== 'function') {
+    return null;
+  }
+  try {
+    const raw = bridge.loadData();
+    const parsed = safeParseJson(raw);
+    return extractArcadeProgressEntries(parsed);
+  } catch (error) {
+    return null;
+  }
+}
+
+function readArcadeAutosaveEntriesFromStorage() {
+  if (typeof window === 'undefined' || !window.localStorage) {
+    return null;
+  }
+  try {
+    const raw = window.localStorage.getItem(ARCADE_AUTOSAVE_STORAGE_KEY);
+    const parsed = safeParseJson(raw);
+    return parsed && parsed.entries && typeof parsed.entries === 'object'
+      ? parsed.entries
+      : null;
+  } catch (error) {
+    return null;
+  }
+}
+
+function collectStarsWarStateCandidates() {
+  const candidates = [];
+  const seen = new Set();
+
+  const pushCandidate = raw => {
+    const state = normalizeArcadeProgressEntry(raw);
+    if (!state || typeof state !== 'object') {
+      return;
+    }
+    try {
+      const fingerprint = JSON.stringify(state);
+      if (fingerprint && !seen.has(fingerprint)) {
+        seen.add(fingerprint);
+        candidates.push(state);
+      }
+    } catch (error) {
+      candidates.push(state);
+    }
+  };
+
+  const progress = gameState.arcadeProgress;
+  if (progress && typeof progress === 'object') {
+    const entries = progress.entries && typeof progress.entries === 'object' ? progress.entries : {};
+    const entry = entries.starsWar || progress.starsWar || null;
+    if (entry) {
+      pushCandidate(entry);
+    }
+  }
+
+  if (typeof window !== 'undefined' && window.ArcadeAutosave) {
+    const autosave = window.ArcadeAutosave;
+    if (autosave && typeof autosave === 'object') {
+      if (typeof autosave.get === 'function') {
+        try {
+          const state = autosave.get(STARS_WAR_AUTOSAVE_KEY);
+          if (state) {
+            pushCandidate(state);
+          }
+        } catch (error) {
+          // Ignore autosave access errors.
+        }
+      }
+      if (typeof autosave.getEntry === 'function') {
+        try {
+          const entry = autosave.getEntry(STARS_WAR_AUTOSAVE_KEY);
+          if (entry) {
+            pushCandidate(entry);
+          }
+        } catch (error) {
+          // Ignore autosave access errors.
+        }
+      }
+      if (typeof autosave.list === 'function') {
+        try {
+          const entries = autosave.list();
+          if (entries && typeof entries === 'object') {
+            const entry = entries[STARS_WAR_AUTOSAVE_KEY];
+            if (entry) {
+              pushCandidate(entry);
+            }
+          }
+        } catch (error) {
+          // Ignore autosave access errors.
+        }
+      }
+    }
+  }
+
+  const nativeEntries = readArcadeAutosaveEntriesFromNativeBridge();
+  if (nativeEntries && typeof nativeEntries === 'object') {
+    const entry = nativeEntries[STARS_WAR_AUTOSAVE_KEY];
+    if (entry) {
+      pushCandidate(entry);
+    }
+  }
+
+  const storedEntries = readArcadeAutosaveEntriesFromStorage();
+  if (storedEntries && typeof storedEntries === 'object') {
+    const entry = storedEntries[STARS_WAR_AUTOSAVE_KEY];
+    if (entry) {
+      pushCandidate(entry);
+    }
+  }
+
+  return candidates;
+}
 
 function sanitizeStarsWarRun(raw) {
   if (!raw || typeof raw !== 'object') {
@@ -2369,23 +2545,7 @@ function getStarsWarTopRunsByMode() {
     mergeRuns(STARS_WAR_INFO_MODES.hard, collectStarsWarRuns(state));
   };
 
-  const progress = gameState.arcadeProgress;
-  if (progress && typeof progress === 'object') {
-    const entries = progress.entries && typeof progress.entries === 'object' ? progress.entries : {};
-    const entry = entries.starsWar || progress.starsWar || null;
-    if (entry && typeof entry === 'object') {
-      ingestState(entry.state && typeof entry.state === 'object' ? entry.state : entry);
-    }
-  }
-
-  if (typeof window !== 'undefined' && window.ArcadeAutosave && typeof window.ArcadeAutosave.get === 'function') {
-    try {
-      const autosaveState = window.ArcadeAutosave.get(STARS_WAR_AUTOSAVE_KEY);
-      ingestState(autosaveState);
-    } catch (error) {
-      // Ignore autosave read errors.
-    }
-  }
+  collectStarsWarStateCandidates().forEach(ingestState);
 
   return Object.keys(aggregate).reduce((acc, mode) => {
     acc[mode] = collectStarsWarRuns({ topRuns: aggregate[mode] });
