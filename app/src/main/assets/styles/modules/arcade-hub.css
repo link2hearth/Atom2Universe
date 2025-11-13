@@ -520,8 +520,6 @@ body.theme-aurora .page--arcade-hub {
   --arcade-hub-card-border: rgba(117, 223, 63, 0.48);
   --arcade-hub-card-shadow: 0 22px 38px rgba(58, 130, 30, 0.32);
   --arcade-hub-card-shadow-hover: 0 30px 56px rgba(46, 108, 22, 0.42);
-  /* Masque temporairement la carte Motocross tout en conservant la configuration du jeu. */
-  display: none;
 }
 
 .arcade-hub-card[data-card-id="link"] {

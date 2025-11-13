@@ -21,9 +21,9 @@
   const WHEEL_RADIUS = 18;
   const WHEEL_VERTICAL_OFFSET = 20;
   const BIKE_INERTIA = (MASS * (CHASSIS_WIDTH * CHASSIS_WIDTH + CHASSIS_HEIGHT * CHASSIS_HEIGHT)) / 12;
-  const ENGINE_FORCE = 11800;
-  const BRAKE_FORCE = 6400;
-  const TILT_TORQUE = 22000;
+  const ENGINE_FORCE = 16200;
+  const BRAKE_FORCE = 7800;
+  const TILT_TORQUE = 24800;
   const SPRING_STIFFNESS = 3600;
   const SPRING_DAMPING = 140;
   const FRICTION_DAMPING = 28;
@@ -323,72 +323,172 @@
     ];
   }
 
+  function polyProfile(length, template, amplitude, verticalOffset = 0) {
+    if (!Array.isArray(template) || template.length < 2) {
+      return polyFlat(length);
+    }
+    const safeLength = Math.max(Number(length) || 0, 1);
+    const safeAmplitude = Number.isFinite(amplitude) ? amplitude : 0;
+    const offset = Number.isFinite(verticalOffset) ? verticalOffset : 0;
+    const points = [[0, offset]];
+    for (let i = 1; i < template.length - 1; i += 1) {
+      const entry = template[i];
+      if (!Array.isArray(entry) || entry.length < 2) {
+        continue;
+      }
+      const t = clamp(Number(entry[0]) || 0, 0, 1);
+      const x = t * safeLength;
+      const y = offset + safeAmplitude * (Number(entry[1]) || 0);
+      points.push([x, y]);
+    }
+    points.push([safeLength, offset]);
+    points.sort((a, b) => a[0] - b[0]);
+    for (let i = 1; i < points.length; i += 1) {
+      if (points[i][0] <= points[i - 1][0]) {
+        const previous = points[i - 1][0];
+        const minimumStep = Math.max(1, safeLength * 0.01);
+        points[i][0] = Math.min(safeLength, previous + minimumStep);
+      }
+    }
+    points[0][0] = 0;
+    points[points.length - 1][0] = safeLength;
+    return points;
+  }
+
+  const PROFILE_TEMPLATES = Object.freeze({
+    doubleHill: Object.freeze([
+      [0, 0],
+      [0.12, -0.45],
+      [0.24, 0.05],
+      [0.44, -0.88],
+      [0.64, -0.18],
+      [0.82, -0.62],
+      [1, 0]
+    ]),
+    softWave: Object.freeze([
+      [0, 0],
+      [0.18, -0.35],
+      [0.36, -0.08],
+      [0.58, 0.32],
+      [0.78, 0.08],
+      [0.92, -0.18],
+      [1, 0]
+    ]),
+    ridgeDrop: Object.freeze([
+      [0, 0],
+      [0.1, -0.22],
+      [0.24, -0.96],
+      [0.36, -1.15],
+      [0.54, -0.42],
+      [0.72, 0.32],
+      [0.88, 0.14],
+      [1, 0]
+    ]),
+    rolling: Object.freeze([
+      [0, 0],
+      [0.12, -0.35],
+      [0.26, 0.32],
+      [0.4, -0.46],
+      [0.56, 0.46],
+      [0.72, -0.3],
+      [0.88, 0.2],
+      [1, 0]
+    ]),
+    mellow: Object.freeze([
+      [0, 0],
+      [0.16, -0.28],
+      [0.34, 0.18],
+      [0.52, 0.3],
+      [0.72, 0.08],
+      [0.9, -0.12],
+      [1, 0]
+    ]),
+    shallowValley: Object.freeze([
+      [0, 0],
+      [0.2, 0.22],
+      [0.4, 0.48],
+      [0.5, 0.6],
+      [0.62, 0.42],
+      [0.82, 0.16],
+      [1, 0]
+    ]),
+    deepValley: Object.freeze([
+      [0, 0],
+      [0.18, 0.32],
+      [0.38, 0.84],
+      [0.5, 1],
+      [0.62, 0.84],
+      [0.82, 0.3],
+      [1, 0]
+    ]),
+    bowl: Object.freeze([
+      [0, 0],
+      [0.14, 0.12],
+      [0.32, 0.42],
+      [0.5, 0.72],
+      [0.68, 0.42],
+      [0.86, 0.12],
+      [1, 0]
+    ]),
+    landingSlope: Object.freeze([
+      [0, 0],
+      [0.26, 0.08],
+      [0.52, -0.18],
+      [0.78, -0.32],
+      [1, 0]
+    ]),
+    closingRise: Object.freeze([
+      [0, 0],
+      [0.24, -0.32],
+      [0.48, -0.58],
+      [0.74, -0.24],
+      [1, 0]
+    ])
+  });
+
   const START_BLOCK = createBlock('flat/start/01', ['flat', 'easy', 'starter'], polyFlat(200));
+
+  function createProfileBlock(id, tags, length, templateKey, amplitude, verticalOffset) {
+    const template = PROFILE_TEMPLATES[templateKey];
+    const geometry = template ? polyProfile(length, template, amplitude, verticalOffset) : polyFlat(length);
+    return createBlock(id, tags, geometry);
+  }
 
   const BLOCK_LIBRARY = Object.freeze([
     START_BLOCK,
     createBlock('flat/easy/02', ['flat', 'easy'], polyFlat(240)),
-    createBlock('flat/easy/03', ['flat', 'easy'], polyFlat(260)),
-    createBlock('flat/normal/01', ['flat', 'normal'], polyFlat(280)),
-    createBlock('flat/normal/02', ['flat', 'normal'], polyFlat(320)),
-    createBlock('flat/normal/03', ['flat', 'normal'], polyFlat(360)),
-    createBlock('flat/hard/01', ['flat', 'hard'], polyFlat(220)),
-    createBlock('flat/hard/02', ['flat', 'hard'], polyFlat(280)),
-    createBlock('gentle_up/easy/01', ['gentle_up', 'easy'], polySlope(220, -40)),
-    createBlock('gentle_up/easy/02', ['gentle_up', 'easy'], polySlope(260, -48)),
-    createBlock('gentle_up/normal/01', ['gentle_up', 'normal'], polySlope(260, -55)),
-    createBlock('gentle_up/normal/02', ['gentle_up', 'normal'], polySlope(300, -60)),
-    createBlock('gentle_up/normal/03', ['gentle_up', 'normal'], polySlope(320, -66)),
-    createBlock('gentle_up/hard/01', ['gentle_up', 'hard'], polySlope(240, -70)),
-    createBlock('gentle_up/hard/02', ['gentle_up', 'hard'], polySlope(320, -82)),
-    createBlock('gentle_down/easy/01', ['gentle_down', 'easy'], polySlope(220, 36)),
-    createBlock('gentle_down/easy/02', ['gentle_down', 'easy'], polySlope(260, 44)),
-    createBlock('gentle_down/normal/01', ['gentle_down', 'normal'], polySlope(280, 48)),
-    createBlock('gentle_down/normal/02', ['gentle_down', 'normal'], polySlope(300, 52)),
-    createBlock('gentle_down/hard/01', ['gentle_down', 'hard'], polySlope(260, 64)),
-    createBlock('gentle_down/hard/02', ['gentle_down', 'hard'], polySlope(320, 70)),
-    createBlock('roller/easy/01', ['roller', 'easy'], polyRollers(240, 2, 12)),
-    createBlock('roller/easy/02', ['roller', 'easy'], polyRollers(260, 2, 14)),
-    createBlock('roller/normal/01', ['roller', 'normal'], polyRollers(260, 3, 16)),
-    createBlock('roller/normal/02', ['roller', 'normal'], polyRollers(300, 3, 18)),
-    createBlock('roller/normal/03', ['roller', 'normal'], polyRollers(320, 4, 20)),
-    createBlock('roller/hard/01', ['roller', 'hard'], polyRollers(300, 4, 22)),
-    createBlock('roller/hard/02', ['roller', 'hard'], polyRollers(340, 4, 24)),
-    createBlock('whoops/easy/01', ['whoops', 'easy'], polyWhoops(220, 3, 16)),
-    createBlock('whoops/easy/02', ['whoops', 'easy'], polyWhoops(240, 3, 18)),
-    createBlock('whoops/normal/01', ['whoops', 'normal'], polyWhoops(240, 4, 20)),
-    createBlock('whoops/normal/02', ['whoops', 'normal'], polyWhoops(280, 4, 22)),
-    createBlock('whoops/hard/01', ['whoops', 'hard'], polyWhoops(280, 5, 26)),
-    createBlock('whoops/hard/02', ['whoops', 'hard'], polyWhoops(320, 5, 30)),
-    createBlock('tabletop_jump/easy/01', ['tabletop_jump', 'easy'], polyTableTop(300, 48, 120)),
-    createBlock('tabletop_jump/easy/02', ['tabletop_jump', 'easy'], polyTableTop(320, 52, 130)),
-    createBlock('tabletop_jump/normal/01', ['tabletop_jump', 'normal'], polyTableTop(320, 60, 110)),
-    createBlock('tabletop_jump/normal/02', ['tabletop_jump', 'normal'], polyTableTop(340, 64, 120)),
-    createBlock('tabletop_jump/hard/01', ['tabletop_jump', 'hard'], polyTableTop(340, 72, 100)),
-    createBlock('tabletop_jump/hard/02', ['tabletop_jump', 'hard'], polyTableTop(360, 80, 110)),
-    createBlock('gap_jump/easy/01', ['gap_jump', 'easy'], polyGap(320, Math.PI / 12, 50, 0.24)),
-    createBlock('gap_jump/normal/01', ['gap_jump', 'normal'], polyGap(340, Math.PI / 10, 60, 0.28)),
-    createBlock('gap_jump/normal/02', ['gap_jump', 'normal'], polyGap(360, Math.PI / 9, 70, 0.3)),
-    createBlock('gap_jump/hard/01', ['gap_jump', 'hard'], polyGap(360, Math.PI / 8.5, 80, 0.34)),
-    createBlock('gap_jump/hard/02', ['gap_jump', 'hard'], polyGap(380, Math.PI / 8, 90, 0.38)),
-    createBlock('step_up/easy/01', ['step_up', 'easy'], polyStep(260, 52, 60)),
-    createBlock('step_up/normal/01', ['step_up', 'normal'], polyStep(260, 60, 60)),
-    createBlock('step_up/normal/02', ['step_up', 'normal'], polyStep(300, 70, 80)),
-    createBlock('step_up/hard/01', ['step_up', 'hard'], polyStep(280, 80, 70)),
-    createBlock('step_up/hard/02', ['step_up', 'hard'], polyStep(320, 90, 80)),
-    createBlock('step_down/easy/01', ['step_down', 'easy'], polyDrop(260, 60, 60)),
-    createBlock('step_down/easy/02', ['step_down', 'easy'], polyDrop(280, 70, 70)),
-    createBlock('step_down/normal/01', ['step_down', 'normal'], polyDrop(280, 80, 70)),
-    createBlock('step_down/normal/02', ['step_down', 'normal'], polyDrop(320, 88, 80)),
-    createBlock('step_down/hard/01', ['step_down', 'hard'], polyDrop(300, 96, 70)),
-    createBlock('step_down/hard/02', ['step_down', 'hard'], polyDrop(340, 108, 90)),
-    createBlock('landing_pad/easy/01', ['landing_pad', 'easy'], polySlope(280, 24)),
-    createBlock('landing_pad/easy/02', ['landing_pad', 'easy'], polySlope(260, 18)),
-    createBlock('landing_pad/easy/03', ['landing_pad', 'easy'], polySlope(300, 20)),
-    createBlock('landing_pad/normal/01', ['landing_pad', 'normal'], polySlope(320, 18)),
-    createBlock('landing_pad/normal/02', ['landing_pad', 'normal'], polySlope(340, 22)),
-    createBlock('landing_pad/hard/01', ['landing_pad', 'hard'], polySlope(340, 12)),
-    createBlock('landing_pad/hard/02', ['landing_pad', 'hard'], polySlope(360, 16))
+    createBlock('flat/normal/01', ['flat', 'normal'], polyFlat(300)),
+    createBlock('flat/hard/01', ['flat', 'hard'], polyFlat(320)),
+    createProfileBlock('flow/double/easy/01', ['flow', 'easy'], 280, 'doubleHill', 28),
+    createProfileBlock('flow/double/normal/01', ['flow', 'normal'], 320, 'doubleHill', 42),
+    createProfileBlock('flow/double/hard/01', ['flow', 'hard'], 360, 'doubleHill', 56),
+    createProfileBlock('flow/wave/easy/01', ['wave', 'easy'], 260, 'softWave', 22),
+    createProfileBlock('flow/wave/normal/01', ['wave', 'normal'], 300, 'softWave', 34),
+    createProfileBlock('flow/wave/hard/01', ['wave', 'hard'], 340, 'softWave', 44),
+    createProfileBlock('crest/launch/easy/01', ['crest', 'easy'], 280, 'ridgeDrop', 36),
+    createProfileBlock('crest/launch/normal/01', ['crest', 'normal'], 320, 'ridgeDrop', 48),
+    createProfileBlock('crest/launch/hard/01', ['crest', 'hard'], 360, 'ridgeDrop', 62),
+    createProfileBlock('rhythm/rolling/easy/01', ['rhythm', 'easy'], 260, 'rolling', 28),
+    createProfileBlock('rhythm/rolling/normal/01', ['rhythm', 'normal'], 300, 'rolling', 40),
+    createProfileBlock('rhythm/rolling/hard/01', ['rhythm', 'hard'], 340, 'rolling', 52),
+    createProfileBlock('rhythm/mellow/easy/01', ['rhythm', 'easy'], 240, 'mellow', 20),
+    createProfileBlock('rhythm/mellow/normal/01', ['rhythm', 'normal'], 280, 'mellow', 30),
+    createProfileBlock('rhythm/mellow/hard/01', ['rhythm', 'hard'], 320, 'mellow', 42),
+    createProfileBlock('valley/shallow/easy/01', ['valley', 'easy'], 260, 'shallowValley', 32),
+    createProfileBlock('valley/shallow/normal/01', ['valley', 'normal'], 300, 'shallowValley', 44),
+    createProfileBlock('valley/shallow/hard/01', ['valley', 'hard'], 340, 'shallowValley', 56),
+    createProfileBlock('valley/deep/easy/01', ['valley', 'easy'], 280, 'deepValley', 38),
+    createProfileBlock('valley/deep/normal/01', ['valley', 'normal'], 320, 'deepValley', 54),
+    createProfileBlock('valley/deep/hard/01', ['valley', 'hard'], 360, 'deepValley', 70),
+    createProfileBlock('valley/bowl/easy/01', ['valley', 'easy'], 280, 'bowl', 34),
+    createProfileBlock('valley/bowl/normal/01', ['valley', 'normal'], 320, 'bowl', 48),
+    createProfileBlock('valley/bowl/hard/01', ['valley', 'hard'], 360, 'bowl', 62),
+    createProfileBlock('landing/flow/easy/01', ['landing_pad', 'easy'], 280, 'landingSlope', 26),
+    createProfileBlock('landing/flow/normal/01', ['landing_pad', 'normal'], 320, 'landingSlope', 32),
+    createProfileBlock('landing/flow/hard/01', ['landing_pad', 'hard'], 360, 'landingSlope', 36),
+    createProfileBlock('closing/rise/easy/01', ['flow', 'easy'], 260, 'closingRise', 26),
+    createProfileBlock('closing/rise/normal/01', ['flow', 'normal'], 300, 'closingRise', 36),
+    createProfileBlock('closing/rise/hard/01', ['flow', 'hard'], 340, 'closingRise', 46)
   ]);
 
   const TRACK_BLOCKS = BLOCK_LIBRARY.filter(block => block !== START_BLOCK);
@@ -804,7 +904,18 @@
       front: { pos: { x: 0, y: 0 }, r: { x: 0, y: 0 }, segmentIndex: 0, onGround: false }
     },
     camera: { x: 0, y: 0 },
-    input: { accelerate: 0, brake: 0, tiltForward: 0, tiltBackward: 0 },
+    input: {
+      accelerate: 0,
+      brake: 0,
+      sources: {
+        keyboard: { accelerate: 0, brake: 0 },
+        touch: { accelerate: 0, brake: 0 }
+      }
+    },
+    pointer: {
+      left: new Set(),
+      right: new Set()
+    },
     statusKey: 'index.sections.motocross.ui.status.ready',
     statusParams: null,
     statusState: 'idle',
@@ -816,6 +927,128 @@
     pendingRespawn: false,
     speed: 0
   };
+
+  function updateCombinedInput() {
+    const input = state.input;
+    if (!input) {
+      return;
+    }
+    const sources = input.sources || {};
+    const keyboard = sources.keyboard || {};
+    const touch = sources.touch || {};
+    const accelerate = Math.max(
+      keyboard.accelerate || 0,
+      touch.accelerate || 0
+    );
+    const brake = Math.max(
+      keyboard.brake || 0,
+      touch.brake || 0
+    );
+    input.accelerate = accelerate ? 1 : 0;
+    input.brake = brake ? 1 : 0;
+  }
+
+  function syncTouchInput() {
+    if (!state.input || !state.input.sources) {
+      updateCombinedInput();
+      return;
+    }
+    const touch = state.input.sources.touch;
+    if (touch) {
+      const rightSet = state.pointer?.right;
+      const leftSet = state.pointer?.left;
+      touch.accelerate = rightSet instanceof Set && rightSet.size > 0 ? 1 : 0;
+      touch.brake = leftSet instanceof Set && leftSet.size > 0 ? 1 : 0;
+    }
+    updateCombinedInput();
+  }
+
+  function setKeyboardInput(action, value) {
+    if (!state.input || !state.input.sources || !state.input.sources.keyboard) {
+      return;
+    }
+    const normalized = value ? 1 : 0;
+    const keyboard = state.input.sources.keyboard;
+    if (action === 'accelerate') {
+      if (keyboard.accelerate === normalized) {
+        return;
+      }
+      keyboard.accelerate = normalized;
+    } else if (action === 'brake') {
+      if (keyboard.brake === normalized) {
+        return;
+      }
+      keyboard.brake = normalized;
+    } else {
+      return;
+    }
+    updateCombinedInput();
+  }
+
+  function updatePointerSide(pointerId, clientX) {
+    if (!state.pointer || typeof clientX !== 'number') {
+      return;
+    }
+    const width = typeof window !== 'undefined' && window.innerWidth ? window.innerWidth : 0;
+    if (width <= 0) {
+      return;
+    }
+    const center = width / 2;
+    const rightSet = state.pointer.right;
+    const leftSet = state.pointer.left;
+    if (!(rightSet instanceof Set) || !(leftSet instanceof Set)) {
+      return;
+    }
+    if (clientX >= center) {
+      leftSet.delete(pointerId);
+      rightSet.add(pointerId);
+    } else {
+      rightSet.delete(pointerId);
+      leftSet.add(pointerId);
+    }
+    syncTouchInput();
+  }
+
+  function releasePointer(pointerId) {
+    if (!state.pointer) {
+      return;
+    }
+    const rightSet = state.pointer.right;
+    const leftSet = state.pointer.left;
+    let changed = false;
+    if (rightSet instanceof Set && rightSet.delete(pointerId)) {
+      changed = true;
+    }
+    if (leftSet instanceof Set && leftSet.delete(pointerId)) {
+      changed = true;
+    }
+    if (changed) {
+      syncTouchInput();
+    }
+  }
+
+  function resetInputState() {
+    if (state.input && state.input.sources) {
+      const { keyboard, touch } = state.input.sources;
+      if (keyboard) {
+        keyboard.accelerate = 0;
+        keyboard.brake = 0;
+      }
+      if (touch) {
+        touch.accelerate = 0;
+        touch.brake = 0;
+      }
+    }
+    if (state.pointer) {
+      if (state.pointer.left instanceof Set) {
+        state.pointer.left.clear();
+      }
+      if (state.pointer.right instanceof Set) {
+        state.pointer.right.clear();
+      }
+    }
+    updateCombinedInput();
+  }
 
   function getElements() {
     if (!document) {
@@ -976,10 +1209,11 @@
     const distance = toSurface.x * normal.x + toSurface.y * normal.y;
     const penetration = WHEEL_RADIUS - distance;
     wheel.onGround = penetration > 0;
+    const driveForce = driveInput >= 0 ? driveInput * ENGINE_FORCE : driveInput * BRAKE_FORCE;
     if (!wheel.onGround) {
       return {
         normalForce: 0,
-        tangentForce: driveInput * ENGINE_FORCE,
+        tangentForce: driveForce,
         correction: { x: 0, y: 0 },
         normal,
         tangent
@@ -995,7 +1229,6 @@
       normalForce = 0;
     }
     const tangentVelocity = pointVelocity.x * tangent.x + pointVelocity.y * tangent.y;
-    const driveForce = driveInput * ENGINE_FORCE;
     const desiredTangentForce = -tangentVelocity * FRICTION_DAMPING + driveForce;
     const maxFriction = normalForce * FRICTION_COEFFICIENT;
     const tangentForce = clamp(desiredTangentForce, -maxFriction, maxFriction);
@@ -1021,15 +1254,24 @@
     const bike = state.bike;
     updateWheelData();
     const { back, front } = state.wheels;
-    const driveInput = state.input.accelerate - state.input.brake;
-    const tiltInput = state.input.tiltForward - state.input.tiltBackward;
+    const accelerateHeld = state.input.accelerate > 0 ? 1 : 0;
+    const brakeHeld = state.input.brake > 0 ? 1 : 0;
+    const controlDelta = accelerateHeld - brakeHeld;
 
-    const backContact = computeWheelContact(back, track, driveInput);
-    const frontContact = computeWheelContact(front, track, driveInput * 0.6);
+    const backProbe = computeWheelContact(back, track, 0);
+    const frontProbe = computeWheelContact(front, track, 0);
+    const airborne = !back.onGround && !front.onGround;
+    const driveControl = airborne ? 0 : controlDelta;
+    const tiltControl = airborne ? controlDelta : 0;
+
+    const backContact = airborne ? backProbe : computeWheelContact(back, track, driveControl);
+    const frontContact = airborne
+      ? frontProbe
+      : computeWheelContact(front, track, driveControl * 0.6);
 
     let totalForceX = 0;
     let totalForceY = MASS * GRAVITY;
-    let totalTorque = tiltInput * TILT_TORQUE;
+    let totalTorque = tiltControl * TILT_TORQUE;
     let correctionX = 0;
     let correctionY = 0;
     let correctionCount = 0;
@@ -1250,6 +1492,30 @@
     renderScene();
   }
 
+  function handlePointerDown(event) {
+    if (!event || event.pointerType !== 'touch') {
+      return;
+    }
+    updatePointerSide(event.pointerId, event.clientX);
+    if (typeof event.preventDefault === 'function') {
+      event.preventDefault();
+    }
+  }
+
+  function handlePointerMove(event) {
+    if (!event || event.pointerType !== 'touch') {
+      return;
+    }
+    updatePointerSide(event.pointerId, event.clientX);
+  }
+
+  function handlePointerUp(event) {
+    if (!event || event.pointerType !== 'touch') {
+      return;
+    }
+    releasePointer(event.pointerId);
+  }
+
   function handleKeyDown(event) {
     if (!event) {
       return;
@@ -1257,18 +1523,12 @@
     const code = event.code;
     switch (code) {
       case 'ArrowRight':
-        state.input.accelerate = 1;
+        setKeyboardInput('accelerate', 1);
         event.preventDefault();
         break;
       case 'ArrowLeft':
-        state.input.brake = 1;
+        setKeyboardInput('brake', 1);
         event.preventDefault();
-        break;
-      case 'KeyA':
-        state.input.tiltBackward = 1;
-        break;
-      case 'KeyD':
-        state.input.tiltForward = 1;
         break;
       case 'KeyR':
         state.pendingRespawn = true;
@@ -1285,18 +1545,12 @@
     const code = event.code;
     switch (code) {
       case 'ArrowRight':
-        state.input.accelerate = 0;
+        setKeyboardInput('accelerate', 0);
         event.preventDefault();
         break;
       case 'ArrowLeft':
-        state.input.brake = 0;
+        setKeyboardInput('brake', 0);
         event.preventDefault();
-        break;
-      case 'KeyA':
-        state.input.tiltBackward = 0;
-        break;
-      case 'KeyD':
-        state.input.tiltForward = 0;
         break;
       default:
         break;
@@ -1310,6 +1564,12 @@
     }
     elements.generateButton?.addEventListener('click', handleGenerate);
     window.addEventListener('resize', handleResize);
+    window.addEventListener('pointerdown', handlePointerDown, { passive: false });
+    window.addEventListener('pointermove', handlePointerMove);
+    window.addEventListener('pointerup', handlePointerUp);
+    window.addEventListener('pointercancel', handlePointerUp);
+    window.addEventListener('pointerleave', handlePointerUp);
+    window.addEventListener('pointerout', handlePointerUp);
     window.addEventListener('keydown', handleKeyDown, { passive: false });
     window.addEventListener('keyup', handleKeyUp);
     window.addEventListener('i18n:languagechange', applyStatus);
@@ -1325,6 +1585,7 @@
     }
     state.ctx = state.elements.canvas.getContext('2d');
     state.initialized = true;
+    resetInputState();
     attachListeners();
     resizeCanvas();
     applyStatus();
@@ -1335,16 +1596,14 @@
   const api = {
     onEnter() {
       initialize();
+      resetInputState();
       state.active = true;
       state.lastTimestamp = null;
       applyStatus();
     },
     onLeave() {
       state.active = false;
-      state.input.accelerate = 0;
-      state.input.brake = 0;
-      state.input.tiltForward = 0;
-      state.input.tiltBackward = 0;
+      resetInputState();
     }
   };
 
