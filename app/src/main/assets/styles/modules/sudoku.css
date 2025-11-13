@@ -30,9 +30,9 @@
     calc(var(--sudoku-grid-inner-width) / 9)
   );
   --sudoku-cell-font-size: clamp(
-    calc(0.85rem * var(--sudoku-scale, 1)),
-    calc(var(--sudoku-cell-size) * 0.80),
-    calc(1.8rem * var(--sudoku-scale, 1))
+    calc(0.95rem * var(--sudoku-scale, 1)),
+    calc(var(--sudoku-cell-size) * 0.6),
+    calc(1.85rem * var(--sudoku-scale, 1))
   );
   --sudoku-grid-size: calc(var(--sudoku-cell-size) * 9);
   --sudoku-cell-track-size: var(--sudoku-cell-size);
