@@ -18,7 +18,6 @@
     preferDifferentColorWeight: 2.5,
     preferSameColorWeight: 1,
     minMovePool: 6,
-    minTokenCoverageRatio: 0.85,
     extraTopSpace: 1,
     palette: Object.freeze([
       Object.freeze({ id: 'ruby', value: '#ff6b6b' }),
@@ -36,7 +35,7 @@
         capacity: 4,
         filledColumns: Object.freeze([0, 1, 2]),
         emptyColumns: 1,
-        scrambleMoves: 150,
+        scrambleMoves: 48,
         minMulticoloredColumns: 2,
         minDisplacedRatio: 0.5,
         gachaTickets: 1
@@ -46,7 +45,7 @@
         capacity: 5,
         filledColumns: Object.freeze([0, 1, 2, 3, 4]),
         emptyColumns: 1,
-        scrambleMoves: 210,
+        scrambleMoves: 72,
         minMulticoloredColumns: 3,
         minDisplacedRatio: 0.6,
         gachaTickets: 2
@@ -56,7 +55,7 @@
         capacity: 6,
         filledColumns: Object.freeze([0, 1, 2, 3, 4, 5, 6]),
         emptyColumns: 1,
-        scrambleMoves: 270,
+        scrambleMoves: 96,
         minMulticoloredColumns: 4,
         minDisplacedRatio: 0.65,
         gachaTickets: 3
@@ -197,14 +196,6 @@
       fallback.preferSameColorWeight
     );
     const minMovePool = Math.max(1, toInteger(rawConfig.minMovePool, fallback.minMovePool));
-    const minTokenCoverageRatio = clampNumber(
-      rawConfig.minTokenCoverageRatio,
-      0,
-      1,
-      typeof fallback.minTokenCoverageRatio === 'number'
-        ? fallback.minTokenCoverageRatio
-        : DEFAULT_CONFIG.minTokenCoverageRatio
-    );
     const extraTopSpace = Math.max(0, toInteger(rawConfig.extraTopSpace, fallback.extraTopSpace || 0));
     const palette = normalizePalette(rawConfig.palette, fallback.palette);
     const difficulties = {};
@@ -216,7 +207,6 @@
       preferDifferentColorWeight,
       preferSameColorWeight,
       minMovePool,
-      minTokenCoverageRatio,
       extraTopSpace,
       palette,
       difficulties
@@ -367,39 +357,6 @@
     return candidates[candidates.length - 1];
   }
 
-  function createScrambleStats(totalTokens) {
-    const moveCounts = new Map();
-    const movedTokens = new Set();
-    return {
-      totalTokens,
-      register(token) {
-        if (!token || !token.id) {
-          return;
-        }
-        movedTokens.add(token.id);
-        moveCounts.set(token.id, (moveCounts.get(token.id) || 0) + 1);
-      },
-      hasMoved(tokenId) {
-        return Boolean(tokenId) && movedTokens.has(tokenId);
-      },
-      getMoveCount(tokenId) {
-        if (!tokenId) {
-          return 0;
-        }
-        return moveCounts.get(tokenId) || 0;
-      },
-      getMovedCount() {
-        return movedTokens.size;
-      },
-      getMovedRatio() {
-        if (!Number.isFinite(totalTokens) || totalTokens <= 0) {
-          return 0;
-        }
-        return movedTokens.size / totalTokens;
-      }
-    };
-  }
-
   function generateSolvedBoard(difficultyConfig, palette) {
     state.nextTokenId = 0;
     const board = [];
@@ -452,7 +409,7 @@
     return Boolean(top) && Boolean(below) && top.colorId === below.colorId;
   }
 
-  function collectScrambleCandidates(board, difficultyConfig, lastMove, stats, recentMoveCounts, lastMovedTokenId) {
+  function collectScrambleCandidates(board, difficultyConfig, lastMove) {
     const candidates = [];
     const capacity = getEffectiveCapacity(difficultyConfig);
     board.forEach((sourceColumn, sourceIndex) => {
@@ -478,31 +435,9 @@
         }
         const destTop = destColumn[destColumn.length - 1] || null;
         const sameColor = destTop && destTop.colorId === movingToken.colorId;
-        let weight = sameColor
+        const weight = sameColor
           ? Math.max(0.1, state.config.preferSameColorWeight)
           : Math.max(0.1, state.config.preferDifferentColorWeight);
-        const moveKey = `${sourceIndex}->${destIndex}`;
-        const repeatCount = recentMoveCounts instanceof Map ? (recentMoveCounts.get(moveKey) || 0) : 0;
-        if (repeatCount > 0) {
-          weight *= 1 / (1 + repeatCount * 1.5);
-          if (repeatCount >= 3) {
-            return;
-          }
-        }
-        if (stats && typeof stats.getMoveCount === 'function') {
-          const previousMoves = stats.getMoveCount(movingToken.id);
-          if (previousMoves === 0) {
-            weight *= 4;
-          } else {
-            weight *= 1 / (1 + previousMoves * 0.6);
-          }
-        }
-        if (stats && typeof stats.hasMoved === 'function' && !stats.hasMoved(movingToken.id)) {
-          weight *= 2;
-        }
-        if (lastMovedTokenId && movingToken.id === lastMovedTokenId) {
-          weight *= 0.25;
-        }
         candidates.push({ from: sourceIndex, to: destIndex, weight });
       });
     });
@@ -516,7 +451,7 @@
     history.push({ from: fromIndex, to: toIndex });
   }
 
-  function performScrambleMove(board, move, history, tracker) {
+  function performScrambleMove(board, move, history) {
     const source = board[move.from];
     const dest = board[move.to];
     if (!source || !dest || source.length === 0) {
@@ -531,9 +466,6 @@
     }
     dest.push(token);
     recordScrambleMove(history, move.from, move.to);
-    if (tracker && typeof tracker.register === 'function') {
-      tracker.register(token);
-    }
     return true;
   }
 
@@ -570,7 +502,7 @@
     return bestIndex;
   }
 
-  function ensureEmptyColumns(board, difficultyConfig, history, tracker) {
+  function ensureEmptyColumns(board, difficultyConfig, history) {
     const required = Math.max(0, Number.isFinite(difficultyConfig.emptyColumns) ? difficultyConfig.emptyColumns : 0);
     if (required === 0) {
       return true;
@@ -610,10 +542,14 @@
         if (!destinationColumn || destinationColumn.length >= capacity) {
           continue;
         }
-        if (performScrambleMove(board, { from: candidateIndex, to: destinationIndex }, history, tracker)) {
-          moved = true;
-          break;
+        const movedToken = sourceColumn.pop();
+        if (!movedToken) {
+          continue;
         }
+        destinationColumn.push(movedToken);
+        recordScrambleMove(history, candidateIndex, destinationIndex);
+        moved = true;
+        break;
       }
       if (!moved) {
         break;
@@ -640,31 +576,13 @@
     const attemptBoard = cloneBoard(solvedBoard);
     const history = [];
     const minMovePool = Math.max(1, state.config.minMovePool);
-    const coverageTarget = clampNumber(
-      state.config.minTokenCoverageRatio,
-      0,
-      1,
-      DEFAULT_CONFIG.minTokenCoverageRatio
-    );
-    const totalTokens = attemptBoard.reduce((sum, column) => sum + column.length, 0);
-    const stats = createScrambleStats(totalTokens);
-    const requiredMoves = Math.max(difficultyConfig.scrambleMoves, minMovePool);
-    const maxMoves = Math.max(difficultyConfig.scrambleMoves * 4, requiredMoves + minMovePool + totalTokens);
-    const recentMoves = [];
-    const recentCounts = new Map();
-    const maxRecentMoves = Math.max(12, attemptBoard.length * 3);
+    const baseRequiredMoves = Math.max(3, Math.floor(difficultyConfig.scrambleMoves * 0.6));
+    const requiredMoves = Math.max(baseRequiredMoves, minMovePool);
+    const maxMoves = Math.max(difficultyConfig.scrambleMoves * 5, requiredMoves + minMovePool);
     let lastMove = null;
-    let lastMovedTokenId = null;
     let performedMoves = 0;
     for (let moveIndex = 0; moveIndex < maxMoves; moveIndex += 1) {
-      const candidates = collectScrambleCandidates(
-        attemptBoard,
-        difficultyConfig,
-        lastMove,
-        stats,
-        recentCounts,
-        lastMovedTokenId
-      );
+      const candidates = collectScrambleCandidates(attemptBoard, difficultyConfig, lastMove);
       if (!candidates.length) {
         if (performedMoves < minMovePool) {
           return null;
@@ -675,49 +593,19 @@
       if (!move) {
         break;
       }
-      const sourceColumn = attemptBoard[move.from];
-      const movingToken = Array.isArray(sourceColumn) && sourceColumn.length > 0
-        ? sourceColumn[sourceColumn.length - 1]
-        : null;
-      const movingTokenId = movingToken?.id || null;
-      if (!performScrambleMove(attemptBoard, move, history, stats)) {
-        continue;
+      if (!performScrambleMove(attemptBoard, move, history)) {
+        break;
       }
       performedMoves += 1;
       lastMove = move;
-      lastMovedTokenId = movingTokenId;
-      const moveKey = `${move.from}->${move.to}`;
-      recentMoves.push(moveKey);
-      recentCounts.set(moveKey, (recentCounts.get(moveKey) || 0) + 1);
-      if (recentMoves.length > maxRecentMoves) {
-        const expired = recentMoves.shift();
-        if (expired) {
-          const existing = recentCounts.get(expired) || 0;
-          if (existing <= 1) {
-            recentCounts.delete(expired);
-          } else {
-            recentCounts.set(expired, existing - 1);
-          }
-        }
-      }
-      if (
-        performedMoves >= difficultyConfig.scrambleMoves
-        && stats.getMovedRatio() >= coverageTarget
-        && meetsScrambleDiversity(attemptBoard, difficultyConfig)
-      ) {
+      if (performedMoves >= difficultyConfig.scrambleMoves && meetsScrambleDiversity(attemptBoard, difficultyConfig)) {
         break;
       }
     }
     if (performedMoves < requiredMoves) {
       return null;
     }
-    if (stats.getMovedRatio() < coverageTarget) {
-      return null;
-    }
-    if (!ensureEmptyColumns(attemptBoard, difficultyConfig, history, stats)) {
-      return null;
-    }
-    if (stats.getMovedRatio() < coverageTarget) {
+    if (!ensureEmptyColumns(attemptBoard, difficultyConfig, history)) {
       return null;
     }
     if (!meetsScrambleDiversity(attemptBoard, difficultyConfig)) {
@@ -887,6 +775,127 @@
       }
     }
     return { board, history };
+  }
+
+  const MAX_SOLVER_STATES = 1000000;
+
+  function isSolverColumnSolved(column, baseCapacity) {
+    if (!Array.isArray(column) || column.length === 0) {
+      return false;
+    }
+    if (column.length !== baseCapacity) {
+      return false;
+    }
+    const color = column[0];
+    return column.every(entry => entry === color);
+  }
+
+  function snapshotBoardForSolver(board) {
+    return board.map(column => {
+      if (!Array.isArray(column)) {
+        return [];
+      }
+      return column
+        .map(token => (token && isNonEmptyString(token.colorId) ? token.colorId : null))
+        .filter(colorId => colorId !== null);
+    });
+  }
+
+  function serializeSolverState(state) {
+    return state.map(column => column.join(',')).join('|');
+  }
+
+  function isSolverStateSolved(state, baseCapacity) {
+    return state.every(column => {
+      if (!Array.isArray(column) || column.length === 0) {
+        return true;
+      }
+      if (column.length !== baseCapacity) {
+        return false;
+      }
+      const color = column[0];
+      return column.every(entry => entry === color);
+    });
+  }
+
+  function isPuzzleSolvableByPlayer(board, difficultyConfig) {
+    if (!Array.isArray(board)) {
+      return false;
+    }
+    const baseCapacity = Math.max(1, toInteger(difficultyConfig?.capacity, 1));
+    const effectiveCapacity = getEffectiveCapacity(difficultyConfig);
+    const initialState = snapshotBoardForSolver(board);
+    const colorCounts = new Map();
+    initialState.forEach(column => {
+      column.forEach(colorId => {
+        colorCounts.set(colorId, (colorCounts.get(colorId) || 0) + 1);
+      });
+    });
+    for (const count of colorCounts.values()) {
+      if (count % baseCapacity !== 0) {
+        return false;
+      }
+    }
+    const initialKey = serializeSolverState(initialState);
+    const queue = [initialState.map(column => column.slice())];
+    const visited = new Set([initialKey]);
+    for (let index = 0; index < queue.length; index += 1) {
+      if (visited.size > MAX_SOLVER_STATES) {
+        return false;
+      }
+      const current = queue[index];
+      if (isSolverStateSolved(current, baseCapacity)) {
+        return true;
+      }
+      const solvedColumns = current.map(column => isSolverColumnSolved(column, baseCapacity));
+      for (let fromIndex = 0; fromIndex < current.length; fromIndex += 1) {
+        const sourceColumn = current[fromIndex];
+        if (!Array.isArray(sourceColumn) || sourceColumn.length === 0) {
+          continue;
+        }
+        if (solvedColumns[fromIndex]) {
+          continue;
+        }
+        const tokenColor = sourceColumn[sourceColumn.length - 1];
+        for (let toIndex = 0; toIndex < current.length; toIndex += 1) {
+          if (fromIndex === toIndex) {
+            continue;
+          }
+          const destColumn = current[toIndex];
+          if (!Array.isArray(destColumn)) {
+            continue;
+          }
+          if (destColumn.length >= effectiveCapacity) {
+            continue;
+          }
+          if (solvedColumns[toIndex] && destColumn.length >= baseCapacity) {
+            continue;
+          }
+          if (destColumn.length > 0) {
+            const destColor = destColumn[destColumn.length - 1];
+            if (destColor !== tokenColor) {
+              continue;
+            }
+          }
+          const nextState = current.map(column => column.slice());
+          const movedColor = nextState[fromIndex].pop();
+          if (!movedColor) {
+            continue;
+          }
+          nextState[toIndex].push(movedColor);
+          const key = serializeSolverState(nextState);
+          if (visited.has(key)) {
+            continue;
+          }
+          visited.add(key);
+          if (visited.size > MAX_SOLVER_STATES) {
+            return false;
+          }
+          queue.push(nextState);
+        }
+      }
+    }
+    return false;
   }
 
   function generatePuzzle(difficultyKey) {
