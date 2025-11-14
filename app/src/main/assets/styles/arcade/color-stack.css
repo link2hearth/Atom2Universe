@@ -145,6 +145,12 @@
   pointer-events: none;
 }
 
+.color-stack--auto-solving .color-stack__column,
+.color-stack--auto-solving .color-stack__button,
+.color-stack--auto-solving .color-stack__select {
+  pointer-events: none;
+}
+
 @media (max-width: 640px) {
   .color-stack {
     padding-inline: 0.5rem;
