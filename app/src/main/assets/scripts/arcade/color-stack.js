@@ -980,6 +980,9 @@
     if (state.elements.difficulty) {
       state.elements.difficulty.disabled = controlsLocked;
     }
+    if (state.elements.autoSolveButton) {
+      state.elements.autoSolveButton.disabled = !canAutoSolve();
+    }
   }
 
   function buildColumnLabel(index, column) {
