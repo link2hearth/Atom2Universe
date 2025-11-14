@@ -777,6 +777,127 @@
     return { board, history };
   }
 
+  const MAX_SOLVER_STATES = 1000000;
+
+  function isSolverColumnSolved(column, baseCapacity) {
+    if (!Array.isArray(column) || column.length === 0) {
+      return false;
+    }
+    if (column.length !== baseCapacity) {
+      return false;
+    }
+    const color = column[0];
+    return column.every(entry => entry === color);
+  }
+
+  function snapshotBoardForSolver(board) {
+    return board.map(column => {
+      if (!Array.isArray(column)) {
+        return [];
+      }
+      return column
+        .map(token => (token && isNonEmptyString(token.colorId) ? token.colorId : null))
+        .filter(colorId => colorId !== null);
+    });
+  }
+
+  function serializeSolverState(state) {
+    return state.map(column => column.join(',')).join('|');
+  }
+
+  function isSolverStateSolved(state, baseCapacity) {
+    return state.every(column => {
+      if (!Array.isArray(column) || column.length === 0) {
+        return true;
+      }
+      if (column.length !== baseCapacity) {
+        return false;
+      }
+      const color = column[0];
+      return column.every(entry => entry === color);
+    });
+  }
+
+  function isPuzzleSolvableByPlayer(board, difficultyConfig) {
+    if (!Array.isArray(board)) {
+      return false;
+    }
+    const baseCapacity = Math.max(1, toInteger(difficultyConfig?.capacity, 1));
+    const effectiveCapacity = getEffectiveCapacity(difficultyConfig);
+    const initialState = snapshotBoardForSolver(board);
+    const colorCounts = new Map();
+    initialState.forEach(column => {
+      column.forEach(colorId => {
+        colorCounts.set(colorId, (colorCounts.get(colorId) || 0) + 1);
+      });
+    });
+    for (const count of colorCounts.values()) {
+      if (count % baseCapacity !== 0) {
+        return false;
+      }
+    }
+    const initialKey = serializeSolverState(initialState);
+    const queue = [initialState.map(column => column.slice())];
+    const visited = new Set([initialKey]);
+    for (let index = 0; index < queue.length; index += 1) {
+      if (visited.size > MAX_SOLVER_STATES) {
+        return false;
+      }
+      const current = queue[index];
+      if (isSolverStateSolved(current, baseCapacity)) {
+        return true;
+      }
+      const solvedColumns = current.map(column => isSolverColumnSolved(column, baseCapacity));
+      for (let fromIndex = 0; fromIndex < current.length; fromIndex += 1) {
+        const sourceColumn = current[fromIndex];
+        if (!Array.isArray(sourceColumn) || sourceColumn.length === 0) {
+          continue;
+        }
+        if (solvedColumns[fromIndex]) {
+          continue;
+        }
+        const tokenColor = sourceColumn[sourceColumn.length - 1];
+        for (let toIndex = 0; toIndex < current.length; toIndex += 1) {
+          if (fromIndex === toIndex) {
+            continue;
+          }
+          const destColumn = current[toIndex];
+          if (!Array.isArray(destColumn)) {
+            continue;
+          }
+          if (destColumn.length >= effectiveCapacity) {
+            continue;
+          }
+          if (solvedColumns[toIndex] && destColumn.length >= baseCapacity) {
+            continue;
+          }
+          if (destColumn.length > 0) {
+            const destColor = destColumn[destColumn.length - 1];
+            if (destColor !== tokenColor) {
+              continue;
+            }
+          }
+          const nextState = current.map(column => column.slice());
+          const movedColor = nextState[fromIndex].pop();
+          if (!movedColor) {
+            continue;
+          }
+          nextState[toIndex].push(movedColor);
+          const key = serializeSolverState(nextState);
+          if (visited.has(key)) {
+            continue;
+          }
+          visited.add(key);
+          if (visited.size > MAX_SOLVER_STATES) {
+            return false;
+          }
+          queue.push(nextState);
+        }
+      }
+    }
+    return false;
+  }
+
   function generatePuzzle(difficultyKey) {
     const config = state.config.difficulties[difficultyKey] || state.config.difficulties.easy;
     const palette = state.config.palette && state.config.palette.length
