@@ -67,7 +67,9 @@
     selectSource: 'Sélectionnez une colonne contenant un jeton.',
     invalidMove: 'Déplacement impossible vers cette colonne.',
     victory: 'Bravo ! Toutes les piles sont triées.',
-    resumed: 'Partie restaurée.'
+    resumed: 'Partie restaurée.',
+    autoSolved: 'Niveau résolu automatiquement.',
+    autoSolveFailed: 'Impossible de résoudre automatiquement ce niveau.'
   });
 
   const DIFFICULTY_ORDER = Object.freeze(['easy', 'medium', 'hard']);
@@ -243,6 +245,7 @@
       newButton: root.querySelector('#colorStackNewButton'),
       restartButton: root.querySelector('#colorStackRestartButton'),
       undoButton: root.querySelector('#colorStackUndoButton'),
+      autoSolveButton: root.querySelector('#colorStackAutoSolveButton'),
       movesValue: root.querySelector('#colorStackMovesValue'),
       completedValue: root.querySelector('#colorStackCompletedValue'),
       message: root.querySelector('#colorStackMessage')
@@ -277,6 +280,120 @@
 
   function serializeBoard(board) {
     return board.map(column => column.map(cloneToken));
+  }
+
+  function boardsAreEqual(a, b) {
+    if (!Array.isArray(a) || !Array.isArray(b) || a.length !== b.length) {
+      return false;
+    }
+    for (let columnIndex = 0; columnIndex < a.length; columnIndex += 1) {
+      const columnA = a[columnIndex] || [];
+      const columnB = b[columnIndex] || [];
+      if (columnA.length !== columnB.length) {
+        return false;
+      }
+      for (let tokenIndex = 0; tokenIndex < columnA.length; tokenIndex += 1) {
+        const tokenA = columnA[tokenIndex];
+        const tokenB = columnB[tokenIndex];
+        if (!tokenA || !tokenB) {
+          return false;
+        }
+        if (tokenA.id !== tokenB.id) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  function canAutoSolve() {
+    if (state.solved) {
+      return false;
+    }
+    if (state.history.length > 0) {
+      return false;
+    }
+    if (!Array.isArray(state.board) || !Array.isArray(state.initialBoard)) {
+      return false;
+    }
+    return boardsAreEqual(state.board, state.initialBoard);
+  }
+
+  function computeSolvedBoardFromInitial(difficultyConfig) {
+    if (!difficultyConfig) {
+      return null;
+    }
+    const capacity = Math.max(1, toInteger(difficultyConfig.capacity, 1));
+    const boardLength = Array.isArray(state.initialBoard) ? state.initialBoard.length : 0;
+    if (boardLength === 0) {
+      return null;
+    }
+    const solved = Array.from({ length: boardLength }, () => []);
+    const buckets = new Map();
+    state.initialBoard.forEach((column, columnIndex) => {
+      if (!Array.isArray(column)) {
+        return;
+      }
+      column.forEach(token => {
+        if (!token) {
+          return;
+        }
+        const originIndex = Number.isInteger(token.origin) ? token.origin : columnIndex;
+        const normalizedIndex = originIndex >= 0 && originIndex < boardLength
+          ? originIndex
+          : ((originIndex % boardLength) + boardLength) % boardLength;
+        if (!buckets.has(normalizedIndex)) {
+          buckets.set(normalizedIndex, []);
+        }
+        buckets.get(normalizedIndex).push(token);
+      });
+    });
+    buckets.forEach((tokens, targetIndex) => {
+      const destination = solved[targetIndex];
+      if (!destination) {
+        return;
+      }
+      tokens.forEach(token => {
+        if (destination.length < capacity) {
+          const clone = cloneToken(token);
+          clone.origin = targetIndex;
+          destination.push(clone);
+        }
+      });
+    });
+    const valid = solved.every(column => column.length === 0 || (column.length === capacity && isUniformColumn(column)));
+    if (!valid) {
+      return null;
+    }
+    return solved;
+  }
+
+  function autoSolveLevel() {
+    if (!canAutoSolve()) {
+      return;
+    }
+    const difficultyConfig = state.config.difficulties[state.difficulty] || state.config.difficulties.easy;
+    const solvedBoard = computeSolvedBoardFromInitial(difficultyConfig);
+    if (!solvedBoard) {
+      setMessage('index.sections.colorStack.messages.autoSolveFailed', FALLBACK_MESSAGES.autoSolveFailed, false);
+      return;
+    }
+    withAutosaveSuppressed(() => {
+      state.board = solvedBoard.map(column => column.map(cloneToken));
+      state.history = [];
+      state.solved = isBoardSolved(state.board, difficultyConfig.capacity);
+      state.rewardClaimed = false;
+      resetSelection();
+      renderBoard();
+      updateStatus();
+      if (state.solved) {
+        awardVictoryTickets();
+        setMessage('index.sections.colorStack.messages.autoSolved', FALLBACK_MESSAGES.autoSolved, true);
+      } else {
+        setMessage('index.sections.colorStack.messages.autoSolveFailed', FALLBACK_MESSAGES.autoSolveFailed, false);
+      }
+    });
+    scheduleAutosave();
   }
 
   function deserializeBoard(serialized) {
@@ -743,6 +860,9 @@
       const hasInitial = state.initialBoard.some(column => column.length);
       state.elements.restartButton.disabled = !hasInitial;
     }
+    if (state.elements.autoSolveButton) {
+      state.elements.autoSolveButton.disabled = !canAutoSolve();
+    }
   }
 
   function buildColumnLabel(index, column) {
@@ -1047,7 +1167,7 @@
   }
 
   function bindEvents() {
-    const { difficulty, newButton, restartButton, undoButton } = state.elements;
+    const { difficulty, newButton, autoSolveButton, restartButton, undoButton } = state.elements;
     if (difficulty) {
       difficulty.addEventListener('change', event => {
         const value = event.target?.value;
@@ -1057,6 +1177,11 @@
     if (newButton) {
       newButton.addEventListener('click', () => {
         startNewGame(state.difficulty);
+      });
+    }
+    if (autoSolveButton) {
+      autoSolveButton.addEventListener('click', () => {
+        autoSolveLevel();
       });
     }
     if (restartButton) {
