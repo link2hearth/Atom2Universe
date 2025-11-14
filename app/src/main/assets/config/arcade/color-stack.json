@@ -3,6 +3,7 @@
   "preferDifferentColorWeight": 2.5,
   "preferSameColorWeight": 1,
   "minMovePool": 6,
+  "minTokenCoverageRatio": 0.85,
   "extraTopSpace": 1,
   "palette": [
     { "id": "ruby", "value": "#ff6b6b" },
@@ -19,7 +20,7 @@
       "capacity": 4,
       "filledColumns": [0, 1, 2],
       "emptyColumns": 1,
-      "scrambleMoves": 48,
+      "scrambleMoves": 150,
       "minMulticoloredColumns": 2,
       "minDisplacedRatio": 0.5,
       "gachaTickets": 1
@@ -29,7 +30,7 @@
       "capacity": 5,
       "filledColumns": [0, 1, 2, 3, 4],
       "emptyColumns": 1,
-      "scrambleMoves": 72,
+      "scrambleMoves": 210,
       "minMulticoloredColumns": 3,
       "minDisplacedRatio": 0.6,
       "gachaTickets": 3
@@ -39,7 +40,7 @@
       "capacity": 6,
       "filledColumns": [0, 1, 2, 3, 4, 5, 6],
       "emptyColumns": 1,
-      "scrambleMoves": 96,
+      "scrambleMoves": 270,
       "minMulticoloredColumns": 4,
       "minDisplacedRatio": 0.65,
       "gachaTickets": 5
