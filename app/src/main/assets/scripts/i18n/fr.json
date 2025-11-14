@@ -1305,7 +1305,7 @@
           "restart": "Recommencer",
           "test": "Tester",
           "speed": "Vitesse",
-          "speedUnit": "km/h",
+          "speedUnit": "KM/H",
           "distance": "Distance",
           "distanceUnit": "m"
         },
