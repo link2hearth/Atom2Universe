@@ -615,11 +615,29 @@
     return board;
   }
 
+  function canTakeTokenForScramble(column) {
+    if (!Array.isArray(column) || column.length === 0) {
+      return false;
+    }
+    if (column.length === 1) {
+      return true;
+    }
+    const top = column[column.length - 1];
+    const below = column[column.length - 2];
+    if (!top) {
+      return false;
+    }
+    if (!below) {
+      return column.length === 1;
+    }
+    return below.colorId === top.colorId;
+  }
+
   function collectScrambleCandidates(board, difficultyConfig, lastMove) {
     const candidates = [];
     const capacity = getEffectiveCapacity(difficultyConfig);
     board.forEach((sourceColumn, sourceIndex) => {
-      if (!sourceColumn || sourceColumn.length === 0) {
+      if (!canTakeTokenForScramble(sourceColumn)) {
         return;
       }
       const movingToken = sourceColumn[sourceColumn.length - 1];
@@ -650,7 +668,7 @@
   function performScrambleMove(board, move, history) {
     const source = board[move.from];
     const dest = board[move.to];
-    if (!source || !dest || source.length === 0) {
+    if (!canTakeTokenForScramble(source) || !dest) {
       return false;
     }
     const token = source.pop();
@@ -719,7 +737,7 @@
       for (let idx = 0; idx < candidates.length; idx += 1) {
         const candidateIndex = candidates[idx].index;
         const sourceColumn = board[candidateIndex];
-        if (!sourceColumn || sourceColumn.length === 0) {
+        if (!canTakeTokenForScramble(sourceColumn)) {
           continue;
         }
         const token = sourceColumn[sourceColumn.length - 1];
@@ -819,7 +837,10 @@
         continue;
       }
       const sourceColumn = scrambled[sourceIndex];
-      const token = sourceColumn?.pop();
+      if (!canTakeTokenForScramble(sourceColumn)) {
+        continue;
+      }
+      const token = sourceColumn.pop();
       if (token) {
         scrambled[targetIndex].push(token);
         history.push({ from: sourceIndex, to: targetIndex });
@@ -828,10 +849,13 @@
     const extraSource = populated.find(entry => entry.column.length > 1)?.index;
     const extraTarget = populated.find(entry => entry.index !== extraSource && entry.column.length > 0)?.index;
     if (extraSource !== undefined && extraTarget !== undefined && extraSource !== extraTarget) {
-      const token = scrambled[extraSource].pop();
-      if (token) {
-        scrambled[extraTarget].push(token);
-        history.push({ from: extraSource, to: extraTarget });
+      const sourceColumn = scrambled[extraSource];
+      if (canTakeTokenForScramble(sourceColumn)) {
+        const token = sourceColumn.pop();
+        if (token) {
+          scrambled[extraTarget].push(token);
+          history.push({ from: extraSource, to: extraTarget });
+        }
       }
     }
     ensureEmptyColumns(scrambled, difficultyConfig, history);
