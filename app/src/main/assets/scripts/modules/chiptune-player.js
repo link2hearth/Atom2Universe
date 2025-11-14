@@ -1481,6 +1481,16 @@
 
       this.masterVolume = 0.8;
       this.maxGain = 0.26;
+      this.polyphonyGain = null;
+      this.polyphonyWeight = 0;
+      this.polyphonyVoiceCount = 0;
+      this.polyphonyHeadroom = 1.28;
+      this.polyphonyMinGain = 0.22;
+      this.polyphonyStackPenalty = 0.14;
+      this.polyphonyMaxContribution = 1.7;
+      this.polyphonyAttackTime = 0.015;
+      this.polyphonyReleaseTime = 0.36;
+      this.polyphonyLastTarget = 1;
       this.waveCache = new Map();
       this.noiseBuffer = null;
       this.reverbBuffer = null;
@@ -2558,6 +2568,144 @@
         }
         this.masterGain.gain.setValueAtTime(clamped, time);
       }
+    }
+
+    computeVoiceMixWeight(metadata = {}) {
+      if (!metadata) {
+        metadata = {};
+      }
+      const {
+        peakGain = 0.3,
+        sustainLevel = 0.6,
+        releaseDuration = 0.25,
+        reverbAmount = 0,
+        type = 'melodic',
+        source = 'playback',
+      } = metadata;
+      const clampedPeak = Math.max(
+        0.04,
+        Math.min(this.polyphonyMaxContribution, Number.isFinite(peakGain) ? peakGain : 0.3),
+      );
+      const sustain = Math.max(0, Math.min(1.6, Number.isFinite(sustainLevel) ? sustainLevel : 0.6));
+      const release = Math.max(0, Math.min(3.5, Number.isFinite(releaseDuration) ? releaseDuration : 0.25));
+      const reverb = Math.max(0, Math.min(1.5, Number.isFinite(reverbAmount) ? reverbAmount : 0));
+      const sustainFactor = 0.85 + (sustain * 0.55);
+      const releaseFactor = 0.9 + Math.min(0.6, release * 0.35);
+      const reverbFactor = 1 + Math.min(0.25, reverb * 0.35);
+      let weight = clampedPeak * sustainFactor * releaseFactor * reverbFactor;
+      if (type === 'soundfont') {
+        weight *= 1.18;
+      } else if (type === 'percussion') {
+        weight *= 1.08;
+      }
+      if (source === 'manual') {
+        weight *= 0.88;
+      }
+      if (!Number.isFinite(weight) || weight <= 0) {
+        return 0;
+      }
+      return Math.min(this.polyphonyMaxContribution, Math.max(0, weight));
+    }
+
+    registerVoiceMixCompensation(voice, metadata = {}) {
+      if (!voice || voice.mixCompensationActive) {
+        return;
+      }
+      if (!this.audioContext || !this.polyphonyGain) {
+        return;
+      }
+      const weight = this.computeVoiceMixWeight(metadata);
+      if (!(weight > 0)) {
+        return;
+      }
+      voice.mixCompensationActive = true;
+      voice.mixCompensationWeight = weight;
+      this.polyphonyWeight = Math.max(0, (this.polyphonyWeight || 0) + weight);
+      this.polyphonyVoiceCount = (this.polyphonyVoiceCount || 0) + 1;
+      this.updatePolyphonyGain(this.audioContext.currentTime);
+    }
+
+    releaseVoiceMixCompensation(voice) {
+      if (!voice || !voice.mixCompensationActive) {
+        return;
+      }
+      voice.mixCompensationActive = false;
+      const weight = Number.isFinite(voice.mixCompensationWeight) ? voice.mixCompensationWeight : 0;
+      this.polyphonyWeight = Math.max(0, (this.polyphonyWeight || 0) - weight);
+      this.polyphonyVoiceCount = Math.max(0, (this.polyphonyVoiceCount || 0) - 1);
+      voice.mixCompensationWeight = 0;
+      if (this.audioContext) {
+        this.updatePolyphonyGain(this.audioContext.currentTime);
+      }
+    }
+
+    getPolyphonyGainTarget() {
+      const voiceCount = Math.max(0, this.polyphonyVoiceCount || 0);
+      if (!voiceCount) {
+        return 1;
+      }
+      const energy = Math.max(0, this.polyphonyWeight || 0);
+      const penalty = Math.max(0, voiceCount - 1) * this.polyphonyStackPenalty;
+      const effective = energy + penalty;
+      const headroom = Math.max(0.2, this.polyphonyHeadroom || 1.28);
+      if (effective <= headroom) {
+        return 1;
+      }
+      const ratio = headroom / (effective + 0.0001);
+      return Math.max(this.polyphonyMinGain, Math.min(1, ratio));
+    }
+
+    updatePolyphonyGain(referenceTime = null) {
+      if (!this.polyphonyGain || !this.audioContext) {
+        return;
+      }
+      const target = this.getPolyphonyGainTarget();
+      const param = this.polyphonyGain.gain;
+      const now = Number.isFinite(referenceTime)
+        ? Math.max(referenceTime, this.audioContext.currentTime)
+        : this.audioContext.currentTime;
+      try {
+        param.cancelScheduledValues(now);
+      } catch (error) {
+        // Ignore cancellation issues when the context is not fully initialized yet
+      }
+      const currentValue = Math.max(
+        this.polyphonyMinGain,
+        Number.isFinite(param.value) ? param.value : (this.polyphonyLastTarget || 1),
+      );
+      const isReducing = target < currentValue - 0.0001;
+      const clampedTarget = isReducing ? Math.max(this.polyphonyMinGain, target) : Math.min(1, target);
+      param.setValueAtTime(currentValue, now);
+      const rampDuration = isReducing ? this.polyphonyAttackTime : this.polyphonyReleaseTime;
+      param.linearRampToValueAtTime(clampedTarget, now + Math.max(0.01, rampDuration));
+      this.polyphonyLastTarget = clampedTarget;
+    }
+
+    resetPolyphonyCompensation(immediate = false) {
+      this.polyphonyWeight = 0;
+      this.polyphonyVoiceCount = 0;
+      this.polyphonyLastTarget = 1;
+      if (!this.polyphonyGain || !this.audioContext) {
+        return;
+      }
+      const now = this.audioContext.currentTime;
+      try {
+        this.polyphonyGain.gain.cancelScheduledValues(now);
+      } catch (error) {
+        // Ignore cancellation issues when tearing down the graph
+      }
+      if (immediate) {
+        this.polyphonyGain.gain.setValueAtTime(1, now);
+        return;
+      }
+      const currentValue = Math.max(
+        this.polyphonyMinGain,
+        Number.isFinite(this.polyphonyGain.gain.value)
+          ? this.polyphonyGain.gain.value
+          : 1,
+      );
+      this.polyphonyGain.gain.setValueAtTime(currentValue, now);
+      this.polyphonyGain.gain.linearRampToValueAtTime(1, now + Math.max(0.05, this.polyphonyReleaseTime));
     }
 
     clampTranspose(value) {
@@ -4114,6 +4262,9 @@
         this.masterGain = this.audioContext.createGain();
         this.masterGain.gain.value = this.masterVolume;
 
+        this.polyphonyGain = this.audioContext.createGain();
+        this.polyphonyGain.gain.value = 1;
+
         this.dryBus = this.audioContext.createGain();
         this.dryBus.gain.value = 1;
 
@@ -4135,6 +4286,7 @@
         }
 
         this.dryBus.connect(this.masterGain);
+        this.masterGain.connect(this.polyphonyGain);
 
         if (typeof this.audioContext.createDynamicsCompressor === 'function') {
           this.masterLimiter = this.audioContext.createDynamicsCompressor();
@@ -4150,15 +4302,16 @@
           this.masterLimiter.ratio.setValueAtTime(ratio, this.audioContext.currentTime);
           this.masterLimiter.attack.setValueAtTime(attack, this.audioContext.currentTime);
           this.masterLimiter.release.setValueAtTime(release, this.audioContext.currentTime);
-          this.masterGain.connect(this.masterLimiter);
+          this.polyphonyGain.connect(this.masterLimiter);
           this.masterLimiter.connect(this.audioContext.destination);
         } else {
           this.masterLimiter = null;
-          this.masterGain.connect(this.audioContext.destination);
+          this.polyphonyGain.connect(this.audioContext.destination);
         }
         this.schedulerInterval = null;
         this.schedulerState = null;
         this.setMasterVolume(this.masterVolume, false);
+        this.resetPolyphonyCompensation(true);
       }
       if (this.audioContext.state === 'suspended') {
         await this.audioContext.resume();
@@ -7548,6 +7701,7 @@
         if (voice.cleaned) {
           return;
         }
+        this.releaseVoiceMixCompensation(voice);
         voice.cleaned = true;
         this.liveVoices.delete(voice);
         for (const node of voice.nodes) {
@@ -7594,6 +7748,15 @@
           }
         }
       };
+
+      this.registerVoiceMixCompensation(voice, {
+        peakGain,
+        sustainLevel,
+        releaseDuration,
+        reverbAmount,
+        type: 'melodic',
+        source,
+      });
 
       if (lfoOscillator && (hasVibrato || hasTremolo)) {
         voice.lfo = lfoOscillator;
@@ -7805,6 +7968,7 @@
         if (voice.cleaned) {
           return;
         }
+        this.releaseVoiceMixCompensation(voice);
         voice.cleaned = true;
         this.liveVoices.delete(voice);
         for (const node of voice.nodes) {
@@ -7818,6 +7982,15 @@
           }
         }
       };
+
+      this.registerVoiceMixCompensation(voice, {
+        peakGain,
+        sustainLevel,
+        releaseDuration,
+        reverbAmount,
+        type: 'soundfont',
+        source,
+      });
 
       return voice;
     }
@@ -7874,6 +8047,7 @@
         if (voice.cleaned) {
           return;
         }
+        this.releaseVoiceMixCompensation(voice);
         voice.cleaned = true;
         this.liveVoices.delete(voice);
         for (const node of voice.nodes) {
@@ -8028,6 +8202,15 @@
       } else {
         dryGain.gain.setValueAtTime(Math.min(1, dryAmount + (reverbAmount * 0.3)), startAt);
       }
+
+      this.registerVoiceMixCompensation(voice, {
+        peakGain,
+        sustainLevel,
+        releaseDuration: release,
+        reverbAmount,
+        type: 'percussion',
+        source: sourceType,
+      });
 
       return voice;
     }
@@ -8244,6 +8427,7 @@
       if (this.audioContext) {
         const now = this.audioContext.currentTime;
         for (const voice of this.liveVoices) {
+          this.releaseVoiceMixCompensation(voice);
           try {
             if (voice.type === 'percussion') {
               const stopAt = now < voice.startTime ? voice.startTime : now + 0.12;
@@ -8319,6 +8503,7 @@
           }
         }
         this.liveVoices.clear();
+        this.resetPolyphonyCompensation();
       }
 
       const wasPlaying = this.playing;

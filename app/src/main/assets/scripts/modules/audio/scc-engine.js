@@ -39,10 +39,20 @@
   const DEFAULT_CHORUS_MIX = Number.isFinite(SCC_ENGINE_CONFIG?.chorusMix)
     ? clamp(SCC_ENGINE_CONFIG.chorusMix, 0, 1)
     : 0.025;
+  const DEFAULT_LIMITER_THRESHOLD = Number.isFinite(SCC_ENGINE_CONFIG?.limiter?.threshold)
+    ? clamp(SCC_ENGINE_CONFIG.limiter.threshold, 0.1, 1)
+    : 0.92;
+  const DEFAULT_LIMITER_ATTACK_MS = Number.isFinite(SCC_ENGINE_CONFIG?.limiter?.attackMs)
+    ? Math.max(0.05, SCC_ENGINE_CONFIG.limiter.attackMs)
+    : 0.6;
+  const DEFAULT_LIMITER_RELEASE_MS = Number.isFinite(SCC_ENGINE_CONFIG?.limiter?.releaseMs)
+    ? Math.max(1, SCC_ENGINE_CONFIG.limiter.releaseMs)
+    : 45;
 
   // Limite supérieure appliquée aux volumes MIDI afin de conserver une marge
   // de sécurité lors du mixage et d'éviter la saturation perceptible.
   const CHANNEL_LEVEL_LIMIT = 1.0;
+  const LIMITER_EPSILON = 1e-12;
 
   const VOL4_TO_GAIN = [
     0.0, 0.035, 0.055, 0.075,
@@ -114,6 +124,47 @@
 
   function clamp(value, min, max) {
     return Math.min(max, Math.max(min, value));
+  }
+
+  function computeSlewCoefficient(milliseconds, sampleRate) {
+    const durationSeconds = Math.max(milliseconds, 0.05) / 1000;
+    return 1 - Math.exp(-1 / (durationSeconds * sampleRate));
+  }
+
+  function createLimiterSettings(sampleRate, options = {}) {
+    const threshold = Number.isFinite(options.threshold)
+      ? clamp(options.threshold, 0.1, 1)
+      : DEFAULT_LIMITER_THRESHOLD;
+    const attackMs = Number.isFinite(options.attackMs)
+      ? Math.max(0.05, options.attackMs)
+      : DEFAULT_LIMITER_ATTACK_MS;
+    const releaseMs = Number.isFinite(options.releaseMs)
+      ? Math.max(1, options.releaseMs)
+      : DEFAULT_LIMITER_RELEASE_MS;
+    return {
+      threshold,
+      attackCoeff: computeSlewCoefficient(attackMs, sampleRate),
+      releaseCoeff: computeSlewCoefficient(releaseMs, sampleRate),
+    };
+  }
+
+  function createLimiterState(settings) {
+    return {
+      gain: 1,
+      threshold: settings.threshold,
+      attackCoeff: settings.attackCoeff,
+      releaseCoeff: settings.releaseCoeff,
+    };
+  }
+
+  function stepLimiter(state, peak) {
+    const effectivePeak = peak > LIMITER_EPSILON ? peak : 0;
+    const target = effectivePeak > state.threshold
+      ? state.threshold / (effectivePeak + LIMITER_EPSILON)
+      : 1;
+    const coeff = target < state.gain ? state.attackCoeff : state.releaseCoeff;
+    state.gain += (target - state.gain) * coeff;
+    return state.gain;
   }
 
   function computeChannelGain(volume, expression) {
@@ -739,6 +790,21 @@
         delayMs: Math.max(1, resolvedChorusDelay),
         mix: clamp(resolvedChorusMix, 0, 1),
       };
+      const limiterOption = typeof options.limiter === 'object' && options.limiter
+        ? options.limiter
+        : {};
+      const directLimiter = {
+        threshold: Number.isFinite(options.limiterThreshold) ? options.limiterThreshold : undefined,
+        attackMs: Number.isFinite(options.limiterAttackMs) ? options.limiterAttackMs : undefined,
+        releaseMs: Number.isFinite(options.limiterReleaseMs) ? options.limiterReleaseMs : undefined,
+      };
+      const mergedLimiter = {
+        ...limiterOption,
+        ...Object.fromEntries(
+          Object.entries(directLimiter).filter(([, value]) => Number.isFinite(value))
+        ),
+      };
+      this.limiterSettings = createLimiterSettings(this.sampleRate, mergedLimiter);
       this.loaded = false;
     }
 
@@ -1025,6 +1091,8 @@
       const events = timeline.events;
       const pitchBendRatios = new Array(16).fill(1);
 
+      const limiterState = createLimiterState(this.limiterSettings);
+
       for (let sample = 0; sample < totalSamples; sample += 1) {
         while (eventIndex < events.length) {
           const event = events[eventIndex];
@@ -1150,8 +1218,10 @@
           mixL += result.left;
           mixR += result.right;
         }
-        left[sample] = mixL * this.masterGain;
-        right[sample] = mixR * this.masterGain;
+        const limiterGain = stepLimiter(limiterState, Math.max(Math.abs(mixL), Math.abs(mixR)));
+        const appliedGain = this.masterGain * limiterGain;
+        left[sample] = mixL * appliedGain;
+        right[sample] = mixR * appliedGain;
       }
 
       applyChorus(left, right, this.sampleRate, this.chorusSettings);
