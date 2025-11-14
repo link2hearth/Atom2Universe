@@ -141,6 +141,14 @@
   transition: transform 0.15s ease;
 }
 
+.color-stack__token--ghost {
+  background: transparent;
+  border-style: dashed;
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: none;
+  opacity: 0.45;
+}
+
 .color-stack__token[aria-hidden="true"] {
   pointer-events: none;
 }
