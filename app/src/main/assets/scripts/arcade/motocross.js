@@ -619,12 +619,6 @@
   const TEST_CAMERA_ZOOM = 0.72;
 
   const START_BLOCK = createBlock('flat/start/01', ['flat', 'easy', 'starter'], polyFlat(200));
-  const LOOP_BLOCK = createBlock(
-    'feature/loop/normal_hard/01',
-    ['feature', 'loop', 'normal'],
-    polyLooping(280, 64, 360, 48)
-  );
-
   function createProfileBlock(id, tags, length, templateKey, amplitude, verticalOffset) {
     const template = PROFILE_TEMPLATES[templateKey];
     const scaledAmplitude = Number.isFinite(amplitude) ? amplitude * PROFILE_AMPLITUDE_MULTIPLIER : amplitude;
@@ -637,7 +631,6 @@
 
   const BLOCK_LIBRARY = Object.freeze([
     START_BLOCK,
-    LOOP_BLOCK,
     createBlock('flat/easy/02', ['flat', 'easy'], polyFlat(240)),
     createBlock('flat/normal/01', ['flat', 'normal'], polyFlat(300)),
     createProfileBlock('flow/double/easy/01', ['flow', 'easy'], 280, 'doubleHill', 28),
