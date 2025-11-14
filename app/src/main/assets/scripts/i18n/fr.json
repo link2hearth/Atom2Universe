@@ -2331,26 +2331,26 @@
         "godFinger": {
           "name": "Doigt créateur",
           "description": "Canalisez un pouvoir divin dans un seul clic.",
-          "effect": "Production manuelle : commence à +1 APC et progresse d’environ +12 % par niveau.",
-          "effectSummary": "Production manuelle évolutive (~+12 % par niveau). Coût en hausse progressive."
+          "effect": "Production manuelle.",
+          "effectSummary": "Production manuelle évolutive. Coût en hausse progressive."
         },
         "starCore": {
           "name": "Cœur d’étoile",
           "description": "Condense une étoile pour alimenter vos récoltes automatiques.",
-          "effect": "Production passive : commence à +1 APS et progresse d’environ +12 % par niveau.",
-          "effectSummary": "Production passive évolutive (~+12 % par niveau). Coût en hausse progressive."
+          "effect": "Production passive.",
+          "effectSummary": "Production passive évolutive. Coût en hausse progressive."
         },
         "gachaTicketBooth": {
           "name": "Guichet gacha",
           "description": "Convertissez vos atomes en tickets de tirage garantis.",
           "effect": "Achetez 1 ticket gacha garanti par niveau. Limite : 200 niveaux (+200 par Big Bang). Chaque achat augmente le coût de 25 000 atomes et le coût de base est multiplié par 4 000 après chaque Big Bang.",
-          "effectSummary": "Achetez des tickets gacha garantis : +1 ticket par niveau, coût +25 000 atomes, limite portée à 200 niveaux (+200 par Big Bang) et coût de base ×4 000 après chaque Big Bang."
+          "effectSummary": "Achetez des tickets gacha garantis."
         },
         "mach3TicketBooth": {
           "name": "Terminal Mach3",
           "description": "Échangez vos tickets gacha contre des crédits Mach3 garantis.",
           "effect": "Convertissez 100 tickets gacha en 1 crédit Mach3 par niveau. Limite : 2 niveaux (+2 par Big Bang).",
-          "effectSummary": "Échangez 100 tickets gacha contre 1 crédit Mach3 par achat. Limite augmentée de +2 par Big Bang."
+          "effectSummary": "Échangez 100 tickets gacha contre 1 crédit Métaux."
         }
       }
     },
