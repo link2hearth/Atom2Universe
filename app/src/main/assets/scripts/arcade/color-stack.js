@@ -1229,6 +1229,21 @@
         ) {
           result = { board, solvedBoard };
         }
+        ensureEmptyColumns(board, config, history);
+        if (meetsScrambleDiversity(board, config) && verifyScrambleHistory(board, history, solvedBoard, config)) {
+          result = { board, solvedBoard };
+        }
+      }
+      if (!result && history.length > 0 && verifyScrambleHistory(board, history, solvedBoard, config)) {
+        result = { board, solvedBoard };
+      }
+    }
+
+    if (!result || !result.board || isBoardSolved(result.board, config.capacity) || !meetsScrambleDiversity(result.board, config)) {
+      const solvedBoard = generateSolvedBoard(config, palette);
+      const manual = buildManualScramble(solvedBoard, config);
+      if (manual && verifyScrambleHistory(manual.board, manual.history, solvedBoard, config)) {
+        result = { board: manual.board, solvedBoard };
       }
     }
 

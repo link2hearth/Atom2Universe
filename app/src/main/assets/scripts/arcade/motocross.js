@@ -72,6 +72,8 @@
   const UPSIDE_DOWN_WHEEL_CLEARANCE = 64;
   const UPSIDE_DOWN_CENTER_CLEARANCE = CHASSIS_HEIGHT * 3;
 
+  const SPEED_DISPLAY_DIVISOR = 5;
+
   const translate = (() => {
     if (typeof window !== 'undefined' && typeof window.t === 'function') {
       const translator = window.t.bind(window);
@@ -107,7 +109,7 @@
     : null;
 
   const distanceFormatter = typeof Intl !== 'undefined' && Intl.NumberFormat
-    ? new Intl.NumberFormat(undefined, { maximumFractionDigits: 1 })
+    ? new Intl.NumberFormat(undefined, { maximumFractionDigits: 0 })
     : null;
 
   function formatTemplate(template, params) {
@@ -125,10 +127,12 @@
 
   function formatSpeed(value) {
     const numeric = Number.isFinite(value) ? Math.max(0, Math.round(value)) : 0;
+    const divisor = SPEED_DISPLAY_DIVISOR > 0 ? SPEED_DISPLAY_DIVISOR : 1;
+    const scaled = Math.max(0, Math.round(numeric / divisor));
     if (numberFormatter) {
-      return numberFormatter.format(numeric);
+      return numberFormatter.format(scaled);
     }
-    return numeric.toString();
+    return scaled.toString();
   }
 
   function formatDistance(value) {
@@ -136,7 +140,7 @@
     if (distanceFormatter) {
       return distanceFormatter.format(numeric);
     }
-    return numeric.toFixed(1);
+    return numeric.toFixed(0);
   }
 
   function formatBlockName(entry) {
