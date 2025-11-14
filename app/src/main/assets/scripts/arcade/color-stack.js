@@ -444,14 +444,7 @@
     return candidates;
   }
 
-  function recordScrambleMove(history, fromIndex, toIndex) {
-    if (!Array.isArray(history)) {
-      return;
-    }
-    history.push({ from: fromIndex, to: toIndex });
-  }
-
-  function performScrambleMove(board, move, history) {
+  function performScrambleMove(board, move) {
     const source = board[move.from];
     const dest = board[move.to];
     if (!source || !dest || source.length === 0) {
@@ -465,7 +458,6 @@
       return false;
     }
     dest.push(token);
-    recordScrambleMove(history, move.from, move.to);
     return true;
   }
 
@@ -502,7 +494,7 @@
     return bestIndex;
   }
 
-  function ensureEmptyColumns(board, difficultyConfig, history) {
+  function ensureEmptyColumns(board, difficultyConfig) {
     const required = Math.max(0, Number.isFinite(difficultyConfig.emptyColumns) ? difficultyConfig.emptyColumns : 0);
     if (required === 0) {
       return true;
@@ -547,7 +539,6 @@
           continue;
         }
         destinationColumn.push(movedToken);
-        recordScrambleMove(history, candidateIndex, destinationIndex);
         moved = true;
         break;
       }
@@ -574,7 +565,6 @@
 
   function scrambleBoard(solvedBoard, difficultyConfig) {
     const attemptBoard = cloneBoard(solvedBoard);
-    const history = [];
     const minMovePool = Math.max(1, state.config.minMovePool);
     const baseRequiredMoves = Math.max(3, Math.floor(difficultyConfig.scrambleMoves * 0.6));
     const requiredMoves = Math.max(baseRequiredMoves, minMovePool);
@@ -593,7 +583,7 @@
       if (!move) {
         break;
       }
-      if (!performScrambleMove(attemptBoard, move, history)) {
+      if (!performScrambleMove(attemptBoard, move)) {
         break;
       }
       performedMoves += 1;
@@ -605,176 +595,13 @@
     if (performedMoves < requiredMoves) {
       return null;
     }
-    if (!ensureEmptyColumns(attemptBoard, difficultyConfig, history)) {
+    if (!ensureEmptyColumns(attemptBoard, difficultyConfig)) {
       return null;
     }
     if (!meetsScrambleDiversity(attemptBoard, difficultyConfig)) {
       return null;
     }
-    return { board: attemptBoard, history };
-  }
-
-  function boardsAreIdentical(boardA, boardB) {
-    if (!Array.isArray(boardA) || !Array.isArray(boardB)) {
-      return false;
-    }
-    if (boardA.length !== boardB.length) {
-      return false;
-    }
-    for (let columnIndex = 0; columnIndex < boardA.length; columnIndex += 1) {
-      const columnA = boardA[columnIndex];
-      const columnB = boardB[columnIndex];
-      if (!Array.isArray(columnA) || !Array.isArray(columnB)) {
-        return false;
-      }
-      if (columnA.length !== columnB.length) {
-        return false;
-      }
-      for (let row = 0; row < columnA.length; row += 1) {
-        const tokenA = columnA[row];
-        const tokenB = columnB[row];
-        if (!tokenA || !tokenB) {
-          return false;
-        }
-        if (tokenA.id !== tokenB.id) {
-          return false;
-        }
-      }
-    }
-    return true;
-  }
-
-  function canPlayerMoveOnBoard(board, fromIndex, toIndex, difficultyConfig) {
-    if (!Number.isInteger(fromIndex) || !Number.isInteger(toIndex)) {
-      return false;
-    }
-    if (fromIndex === toIndex) {
-      return false;
-    }
-    const source = board[fromIndex];
-    const destination = board[toIndex];
-    if (!Array.isArray(source) || !Array.isArray(destination)) {
-      return false;
-    }
-    if (source.length === 0) {
-      return false;
-    }
-    const capacity = getEffectiveCapacity(difficultyConfig);
-    if (destination.length >= capacity) {
-      return false;
-    }
-    const token = source[source.length - 1];
-    if (!token) {
-      return false;
-    }
-    if (destination.length === 0) {
-      return true;
-    }
-    const top = destination[destination.length - 1];
-    return Boolean(top) && top.colorId === token.colorId;
-  }
-
-  function applyPlayerMove(board, fromIndex, toIndex) {
-    const source = board[fromIndex];
-    const destination = board[toIndex];
-    if (!Array.isArray(source) || !Array.isArray(destination)) {
-      return false;
-    }
-    const token = source.pop();
-    if (!token) {
-      return false;
-    }
-    destination.push(token);
-    return true;
-  }
-
-  function verifyScrambleHistory(scrambledBoard, history, solvedBoard, difficultyConfig) {
-    if (!Array.isArray(history) || history.length === 0) {
-      return false;
-    }
-    if (!Array.isArray(scrambledBoard) || !Array.isArray(solvedBoard)) {
-      return false;
-    }
-    const testBoard = cloneBoard(scrambledBoard);
-    for (let index = history.length - 1; index >= 0; index -= 1) {
-      const move = history[index];
-      if (!move) {
-        return false;
-      }
-      const reverseFrom = move.to;
-      const reverseTo = move.from;
-      if (!canPlayerMoveOnBoard(testBoard, reverseFrom, reverseTo, difficultyConfig)) {
-        return false;
-      }
-      if (!applyPlayerMove(testBoard, reverseFrom, reverseTo)) {
-        return false;
-      }
-    }
-    return boardsAreIdentical(testBoard, solvedBoard);
-  }
-
-  function buildManualScramble(solvedBoard, difficultyConfig) {
-    const board = cloneBoard(solvedBoard);
-    const history = [];
-    const capacity = getEffectiveCapacity(difficultyConfig);
-    const populated = board
-      .map((column, index) => ({ column, index }))
-      .filter(entry => Array.isArray(entry.column) && entry.column.length > 0);
-    if (populated.length < 2) {
-      return null;
-    }
-    const emptyIndex = board.findIndex(column => Array.isArray(column) && column.length === 0);
-    if (emptyIndex !== -1) {
-      performScrambleMove(board, { from: populated[0].index, to: emptyIndex }, history);
-    }
-    const cycleLength = Math.min(populated.length, Math.max(2, difficultyConfig.minMulticoloredColumns || 2));
-    for (let idx = 0; idx < cycleLength; idx += 1) {
-      const sourceIndex = populated[idx]?.index;
-      const targetIndex = populated[(idx + 1) % populated.length]?.index;
-      if (sourceIndex === undefined || targetIndex === undefined || sourceIndex === targetIndex) {
-        continue;
-      }
-      performScrambleMove(board, { from: sourceIndex, to: targetIndex }, history);
-    }
-    const extraSource = populated.find(entry => entry.column.length > 1)?.index;
-    const extraTarget = populated.find(entry => entry.index !== extraSource && entry.column.length > 0)?.index;
-    if (extraSource !== undefined && extraTarget !== undefined && extraSource !== extraTarget) {
-      performScrambleMove(board, { from: extraSource, to: extraTarget }, history);
-    }
-    ensureEmptyColumns(board, difficultyConfig, history);
-    if (!meetsScrambleDiversity(board, difficultyConfig)) {
-      const maxExtraMoves = Math.max(4, board.length * Math.max(1, capacity));
-      for (let attempt = 0; attempt < maxExtraMoves && !meetsScrambleDiversity(board, difficultyConfig); attempt += 1) {
-        let moved = false;
-        for (let fromIndex = 0; fromIndex < board.length && !moved; fromIndex += 1) {
-          const sourceColumn = board[fromIndex];
-          if (!Array.isArray(sourceColumn) || !canTakeTokenForScramble(sourceColumn)) {
-            continue;
-          }
-          for (let toIndex = 0; toIndex < board.length; toIndex += 1) {
-            if (toIndex === fromIndex) {
-              continue;
-            }
-            const destColumn = board[toIndex];
-            if (!Array.isArray(destColumn) || destColumn.length >= capacity) {
-              continue;
-            }
-            if (performScrambleMove(board, { from: fromIndex, to: toIndex }, history)) {
-              moved = true;
-              break;
-            }
-          }
-        }
-        if (!moved) {
-          break;
-        }
-        ensureEmptyColumns(board, difficultyConfig, history);
-      }
-      if (!meetsScrambleDiversity(board, difficultyConfig)) {
-        return null;
-      }
-    }
-    return { board, history };
+    return attemptBoard;
   }
 
   const MAX_SOLVER_STATES = 1000000;
@@ -903,140 +730,101 @@
     const palette = state.config.palette && state.config.palette.length
       ? state.config.palette
       : DEFAULT_CONFIG.palette;
-    let result = null;
-
-    for (let attempt = 0; attempt < state.config.maxScrambleAttempts && !result; attempt += 1) {
-      const solvedBoard = generateSolvedBoard(config, palette);
+    let solvedBoard = generateSolvedBoard(config, palette);
+    let scrambled = null;
+    for (let attempt = 0; attempt < state.config.maxScrambleAttempts; attempt += 1) {
+      solvedBoard = generateSolvedBoard(config, palette);
       const candidate = scrambleBoard(solvedBoard, config);
       if (!candidate) {
         continue;
       }
-      if (!verifyScrambleHistory(candidate.board, candidate.history, solvedBoard, config)) {
+      if (!isPuzzleSolvableByPlayer(candidate, config)) {
         continue;
       }
-      result = { board: candidate.board, solvedBoard };
+      scrambled = candidate;
+      break;
     }
-
-    if (!result) {
-      for (let attempt = 0; attempt < state.config.maxScrambleAttempts && !result; attempt += 1) {
-        const solvedBoard = generateSolvedBoard(config, palette);
-        const manual = buildManualScramble(solvedBoard, config);
-        if (!manual) {
+    if (!scrambled) {
+      const capacity = getEffectiveCapacity(config);
+      scrambled = cloneBoard(solvedBoard);
+      const populated = scrambled
+        .map((column, index) => ({ column, index }))
+        .filter(entry => Array.isArray(entry.column) && entry.column.length > 0);
+      const cycleLength = Math.min(populated.length, Math.max(2, config.minMulticoloredColumns || 2));
+      for (let idx = 0; idx < cycleLength; idx += 1) {
+        const sourceIndex = populated[idx]?.index;
+        const targetIndex = populated[(idx + 1) % populated.length]?.index;
+        if (sourceIndex === undefined || targetIndex === undefined || sourceIndex === targetIndex) {
           continue;
         }
-        if (!verifyScrambleHistory(manual.board, manual.history, solvedBoard, config)) {
+        const sourceColumn = scrambled[sourceIndex];
+        const targetColumn = scrambled[targetIndex];
+        if (!Array.isArray(sourceColumn) || !Array.isArray(targetColumn)) {
           continue;
         }
-        result = { board: manual.board, solvedBoard };
+        if (!canTakeTokenForScramble(sourceColumn)) {
+          continue;
+        }
+        if (targetColumn.length >= capacity) {
+          continue;
+        }
+        const movedToken = sourceColumn.pop();
+        if (movedToken) {
+          targetColumn.push(movedToken);
+        }
       }
-    }
-
-    if (!result) {
-      for (let attempt = 0; attempt < state.config.maxScrambleAttempts && !result; attempt += 1) {
-        const solvedBoard = generateSolvedBoard(config, palette);
-        const board = cloneBoard(solvedBoard);
-        const history = [];
-        const emptyIndex = board.findIndex(column => Array.isArray(column) && column.length === 0);
-        const filledIndices = board
-          .map((column, index) => ({ column, index }))
-          .filter(entry => Array.isArray(entry.column) && entry.column.length > 0)
-          .map(entry => entry.index);
-        if (emptyIndex !== -1 && filledIndices.length > 0) {
-          performScrambleMove(board, { from: filledIndices[0], to: emptyIndex }, history);
-          const secondFilled = filledIndices.find(index => index !== filledIndices[0]);
-          if (secondFilled !== undefined) {
-            performScrambleMove(board, { from: secondFilled, to: emptyIndex }, history);
+      const extraSource = populated.find(entry => entry.column.length > 1)?.index;
+      const extraTarget = populated.find(entry => entry.index !== extraSource && entry.column.length > 0)?.index;
+      if (extraSource !== undefined && extraTarget !== undefined && extraSource !== extraTarget) {
+        const sourceColumn = scrambled[extraSource];
+        const targetColumn = scrambled[extraTarget];
+        if (Array.isArray(sourceColumn) && Array.isArray(targetColumn)) {
+          if (canTakeTokenForScramble(sourceColumn) && targetColumn.length < capacity) {
+            const movedToken = sourceColumn.pop();
+            if (movedToken) {
+              targetColumn.push(movedToken);
+            }
           }
         }
-        ensureEmptyColumns(board, config, history);
-        if (history.length === 0) {
-          continue;
-        }
-        const requireDiversity = attempt < Math.floor(state.config.maxScrambleAttempts / 2);
-        if (requireDiversity && !meetsScrambleDiversity(board, config)) {
-          continue;
-        }
-        if (!requireDiversity && isBoardSolved(board, config.capacity)) {
-          continue;
-        }
-        if (!verifyScrambleHistory(board, history, solvedBoard, config)) {
-          continue;
-        }
-        result = { board, solvedBoard };
       }
-    }
-
-    if (!result) {
-      const solvedBoard = generateSolvedBoard(config, palette);
-      const board = cloneBoard(solvedBoard);
-      const history = [];
-      const capacity = getEffectiveCapacity(config);
-      const maxMoves = Math.max(8, board.length * Math.max(1, capacity));
-      for (let moveIndex = 0; moveIndex < maxMoves && !result; moveIndex += 1) {
-        let moved = false;
-        for (let fromIndex = 0; fromIndex < board.length && !moved; fromIndex += 1) {
-          const sourceColumn = board[fromIndex];
-          if (!Array.isArray(sourceColumn) || !canTakeTokenForScramble(sourceColumn)) {
+      ensureEmptyColumns(scrambled, config);
+      const hasDiversity = meetsScrambleDiversity(scrambled, config);
+      const isSolvable = isPuzzleSolvableByPlayer(scrambled, config);
+      if (!hasDiversity || !isSolvable) {
+        let attemptResult = null;
+        for (let retry = 0; retry < state.config.maxScrambleAttempts; retry += 1) {
+          attemptResult = scrambleBoard(solvedBoard, config);
+          if (!attemptResult) {
             continue;
           }
-          for (let toIndex = 0; toIndex < board.length; toIndex += 1) {
-            if (toIndex === fromIndex) {
-              continue;
-            }
-            const destColumn = board[toIndex];
-            if (!Array.isArray(destColumn) || destColumn.length >= capacity) {
-              continue;
-            }
-            if (performScrambleMove(board, { from: fromIndex, to: toIndex }, history)) {
-              moved = true;
-              break;
-            }
+          if (!isPuzzleSolvableByPlayer(attemptResult, config)) {
+            continue;
           }
-        }
-        if (!moved) {
           break;
         }
-        ensureEmptyColumns(board, config, history);
-        if (meetsScrambleDiversity(board, config) && verifyScrambleHistory(board, history, solvedBoard, config)) {
-          result = { board, solvedBoard };
+        if (attemptResult && isPuzzleSolvableByPlayer(attemptResult, config)) {
+          scrambled = attemptResult;
+        } else {
+          const fallbackSolved = generateSolvedBoard(config, palette);
+          let fallbackScramble = scrambleBoard(fallbackSolved, config);
+          if (!fallbackScramble || !isPuzzleSolvableByPlayer(fallbackScramble, config)) {
+            fallbackScramble = cloneBoard(fallbackSolved);
+          }
+          solvedBoard = fallbackSolved;
+          scrambled = fallbackScramble;
         }
       }
-      if (!result && history.length > 0 && verifyScrambleHistory(board, history, solvedBoard, config)) {
-        result = { board, solvedBoard };
-      }
+      ensureEmptyColumns(scrambled, config);
     }
-
-    if (!result || !result.board || isBoardSolved(result.board, config.capacity) || !meetsScrambleDiversity(result.board, config)) {
-      const solvedBoard = generateSolvedBoard(config, palette);
-      const manual = buildManualScramble(solvedBoard, config);
-      if (manual && verifyScrambleHistory(manual.board, manual.history, solvedBoard, config)) {
-        result = { board: manual.board, solvedBoard };
-      }
+    if (!scrambled || !isPuzzleSolvableByPlayer(scrambled, config)) {
+      solvedBoard = generateSolvedBoard(config, palette);
+      scrambled = cloneBoard(solvedBoard);
     }
-
-    if (!result || !result.board) {
-      const solvedBoard = generateSolvedBoard(config, palette);
-      const board = cloneBoard(solvedBoard);
-      const history = [];
-      const emptyIndex = board.findIndex(column => Array.isArray(column) && column.length === 0);
-      const firstFilled = board.findIndex(column => Array.isArray(column) && column.length > 0);
-      if (emptyIndex !== -1 && firstFilled !== -1) {
-        performScrambleMove(board, { from: firstFilled, to: emptyIndex }, history);
-      }
-      ensureEmptyColumns(board, config, history);
-      if (history.length > 0 && verifyScrambleHistory(board, history, solvedBoard, config)) {
-        result = { board, solvedBoard };
-      } else {
-        result = { board, solvedBoard };
-      }
-    }
-
-    ensureEmptyColumns(result.board, config, null);
     return {
-      board: result.board,
-      initial: cloneBoard(result.board),
+      board: scrambled,
+      initial: cloneBoard(scrambled),
       capacity: config.capacity,
-      goalColumns: result.solvedBoard.length
+      goalColumns: solvedBoard.length
     };
   }
 
