@@ -427,6 +427,9 @@
         updateStatus();
         continue;
       }
+      if (!canMoveToken(fromIndex, toIndex)) {
+        throw new Error(`Illegal auto-solve move from ${fromIndex} to ${toIndex}`);
+      }
       const token = source.pop();
       if (!token) {
         state.selectedColumn = null;
@@ -458,14 +461,21 @@
     setAutoSolving(true);
     setMessage('index.sections.colorStack.messages.autoSolving', FALLBACK_MESSAGES.autoSolving, false);
     try {
-      const reverseMoves = Array.isArray(state.autoSolveScript)
+      const moves = Array.isArray(state.autoSolveScript)
         ? state.autoSolveScript
-            .slice()
-            .reverse()
-            .map(move => ({ from: move.to, to: move.from }))
+            .map(move => ({ from: move.from, to: move.to }))
             .filter(move => Number.isInteger(move.from) && Number.isInteger(move.to))
         : [];
-      await playAutoSolveAnimation(reverseMoves);
+      const validation = moves.length
+        ? validateSolutionScript(state.board, moves, difficultyConfig)
+        : null;
+      if (!moves.length && !isBoardSolved(state.board, difficultyConfig.capacity)) {
+        throw new Error('Missing auto-solve script');
+      }
+      if (moves.length && !validation) {
+        throw new Error('Invalid auto-solve script');
+      }
+      await playAutoSolveAnimation(moves);
       state.board = solvedBoard.map(column => column.map(cloneToken));
       state.history = [];
       state.solved = isBoardSolved(state.board, difficultyConfig.capacity);
@@ -795,67 +805,88 @@
     return { board: attemptBoard, history: performedHistory };
   }
 
+  function fallbackScrambleBoard(solvedBoard, difficultyConfig) {
+    const scrambled = cloneBoard(solvedBoard);
+    const history = [];
+    const populated = scrambled
+      .map((column, index) => ({ column, index }))
+      .filter(entry => Array.isArray(entry.column) && entry.column.length > 0);
+    const cycleLength = Math.min(populated.length, Math.max(2, difficultyConfig.minMulticoloredColumns || 2));
+    for (let idx = 0; idx < cycleLength; idx += 1) {
+      const sourceIndex = populated[idx]?.index;
+      const targetIndex = populated[(idx + 1) % populated.length]?.index;
+      if (sourceIndex === undefined || targetIndex === undefined || sourceIndex === targetIndex) {
+        continue;
+      }
+      const sourceColumn = scrambled[sourceIndex];
+      const token = sourceColumn?.pop();
+      if (token) {
+        scrambled[targetIndex].push(token);
+        history.push({ from: sourceIndex, to: targetIndex });
+      }
+    }
+    const extraSource = populated.find(entry => entry.column.length > 1)?.index;
+    const extraTarget = populated.find(entry => entry.index !== extraSource && entry.column.length > 0)?.index;
+    if (extraSource !== undefined && extraTarget !== undefined && extraSource !== extraTarget) {
+      const token = scrambled[extraSource].pop();
+      if (token) {
+        scrambled[extraTarget].push(token);
+        history.push({ from: extraSource, to: extraTarget });
+      }
+    }
+    ensureEmptyColumns(scrambled, difficultyConfig, history);
+    if (!meetsScrambleDiversity(scrambled, difficultyConfig)) {
+      return null;
+    }
+    return { board: scrambled, history };
+  }
+
   function generatePuzzle(difficultyKey) {
     const config = state.config.difficulties[difficultyKey] || state.config.difficulties.easy;
     const palette = state.config.palette && state.config.palette.length
       ? state.config.palette
       : DEFAULT_CONFIG.palette;
-    let solvedBoard = generateSolvedBoard(config, palette);
-    let scrambled = null;
-    let scrambleHistory = [];
-    for (let attempt = 0; attempt < state.config.maxScrambleAttempts; attempt += 1) {
-      solvedBoard = generateSolvedBoard(config, palette);
+    const maxAttempts = Math.max(1, state.config.maxScrambleAttempts);
+    for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+      const solvedBoard = generateSolvedBoard(config, palette);
+      let scrambled = null;
+      let scrambleHistory = [];
       const scrambleResult = scrambleBoard(solvedBoard, config);
       if (scrambleResult) {
         scrambled = scrambleResult.board;
         scrambleHistory = Array.isArray(scrambleResult.history) ? scrambleResult.history : [];
-        break;
+      } else {
+        const fallback = fallbackScrambleBoard(solvedBoard, config);
+        if (fallback) {
+          scrambled = fallback.board;
+          scrambleHistory = fallback.history;
+        }
       }
+      if (!scrambled) {
+        continue;
+      }
+      if (!ensureEmptyColumns(scrambled, config, scrambleHistory)) {
+        continue;
+      }
+      const solutionScript = deriveSolutionFromHistory(scrambled, scrambleHistory, config);
+      if (!solutionScript) {
+        continue;
+      }
+      return {
+        board: scrambled,
+        initial: cloneBoard(scrambled),
+        capacity: config.capacity,
+        goalColumns: solvedBoard.length,
+        autoSolveScript: solutionScript
+      };
     }
-    if (!scrambled) {
-      scrambled = cloneBoard(solvedBoard);
-      const populated = scrambled
-        .map((column, index) => ({ column, index }))
-        .filter(entry => Array.isArray(entry.column) && entry.column.length > 0);
-      const cycleLength = Math.min(populated.length, Math.max(2, config.minMulticoloredColumns || 2));
-      for (let idx = 0; idx < cycleLength; idx += 1) {
-        const sourceIndex = populated[idx]?.index;
-        const targetIndex = populated[(idx + 1) % populated.length]?.index;
-        if (sourceIndex === undefined || targetIndex === undefined || sourceIndex === targetIndex) {
-          continue;
-        }
-        const sourceColumn = scrambled[sourceIndex];
-        const token = sourceColumn?.pop();
-        if (token) {
-          scrambled[targetIndex].push(token);
-          scrambleHistory.push({ from: sourceIndex, to: targetIndex });
-        }
-      }
-      const extraSource = populated.find(entry => entry.column.length > 1)?.index;
-      const extraTarget = populated.find(entry => entry.index !== extraSource && entry.column.length > 0)?.index;
-      if (extraSource !== undefined && extraTarget !== undefined && extraSource !== extraTarget) {
-        const token = scrambled[extraSource].pop();
-        if (token) {
-          scrambled[extraTarget].push(token);
-          scrambleHistory.push({ from: extraSource, to: extraTarget });
-        }
-      }
-      ensureEmptyColumns(scrambled, config, scrambleHistory);
-      if (!meetsScrambleDiversity(scrambled, config)) {
-        const attempt = scrambleBoard(solvedBoard, config);
-        if (attempt) {
-          scrambled = attempt.board;
-          scrambleHistory = Array.isArray(attempt.history) ? attempt.history : [];
-        }
-      }
-      ensureEmptyColumns(scrambled, config, scrambleHistory);
-    }
+    const fallbackSolved = generateSolvedBoard(config, palette);
     return {
-      board: scrambled,
-      initial: cloneBoard(scrambled),
+      board: fallbackSolved,
+      initial: cloneBoard(fallbackSolved),
       capacity: config.capacity,
-      goalColumns: solvedBoard.length,
-      scrambleHistory
+      goalColumns: fallbackSolved.length,
+      autoSolveScript: []
     };
   }
 
@@ -980,9 +1011,6 @@
     if (state.elements.difficulty) {
       state.elements.difficulty.disabled = controlsLocked;
     }
-    if (state.elements.autoSolveButton) {
-      state.elements.autoSolveButton.disabled = !canAutoSolve();
-    }
   }
 
   function buildColumnLabel(index, column) {
@@ -1020,6 +1048,121 @@
       return true;
     }
     return destTop.colorId === movingToken.colorId;
+  }
+
+  function canMoveTokenOnBoard(board, fromIndex, toIndex, capacity) {
+    if (!Array.isArray(board)) {
+      return false;
+    }
+    if (!Number.isInteger(fromIndex) || !Number.isInteger(toIndex)) {
+      return false;
+    }
+    if (fromIndex === toIndex) {
+      return false;
+    }
+    const source = board[fromIndex];
+    const dest = board[toIndex];
+    if (!Array.isArray(source) || !Array.isArray(dest) || source.length === 0) {
+      return false;
+    }
+    if (dest.length >= capacity) {
+      return false;
+    }
+    const movingToken = source[source.length - 1];
+    if (!movingToken) {
+      return false;
+    }
+    const destTop = dest[dest.length - 1];
+    if (!destTop) {
+      return true;
+    }
+    return destTop.colorId === movingToken.colorId;
+  }
+
+  function validateSolutionScript(board, moves, difficultyConfig) {
+    if (!Array.isArray(board) || !Array.isArray(moves)) {
+      return null;
+    }
+    const capacity = getEffectiveCapacity(difficultyConfig);
+    const working = cloneBoard(board);
+    for (let index = 0; index < moves.length; index += 1) {
+      const move = moves[index];
+      const fromIndex = Number.isInteger(move?.from) ? move.from : null;
+      const toIndex = Number.isInteger(move?.to) ? move.to : null;
+      if (fromIndex == null || toIndex == null) {
+        return null;
+      }
+      if (!canMoveTokenOnBoard(working, fromIndex, toIndex, capacity)) {
+        return null;
+      }
+      const source = working[fromIndex];
+      const token = source.pop();
+      if (!token) {
+        return null;
+      }
+      working[toIndex].push(token);
+    }
+    const baseCapacity = Math.max(1, toInteger(difficultyConfig?.capacity, 1));
+    if (!isBoardSolved(working, baseCapacity)) {
+      return null;
+    }
+    return { solvedBoard: working };
+  }
+
+  function convertHistoryToSolution(history) {
+    if (!Array.isArray(history)) {
+      return null;
+    }
+    const solution = [];
+    for (let index = history.length - 1; index >= 0; index -= 1) {
+      const move = history[index];
+      const fromIndex = Number.isInteger(move?.to) ? move.to : null;
+      const toIndex = Number.isInteger(move?.from) ? move.from : null;
+      if (fromIndex == null || toIndex == null) {
+        return null;
+      }
+      solution.push({ from: fromIndex, to: toIndex });
+    }
+    return solution;
+  }
+
+  function deriveSolutionFromHistory(board, history, difficultyConfig) {
+    if (!Array.isArray(board)) {
+      return null;
+    }
+    const candidate = convertHistoryToSolution(history);
+    if (!candidate) {
+      return null;
+    }
+    const validation = validateSolutionScript(board, candidate, difficultyConfig);
+    if (!validation) {
+      return null;
+    }
+    return candidate;
+  }
+
+  function sanitizeAutoSolveScript(board, moves, difficultyConfig) {
+    const normalized = Array.isArray(moves)
+      ? moves
+          .map(move => (Number.isInteger(move?.from) && Number.isInteger(move?.to)
+            ? { from: move.from, to: move.to }
+            : null))
+          .filter(Boolean)
+      : [];
+    if (!normalized.length) {
+      return [];
+    }
+    if (validateSolutionScript(board, normalized, difficultyConfig)) {
+      return normalized;
+    }
+    const reversed = normalized
+      .slice()
+      .reverse()
+      .map(move => ({ from: move.to, to: move.from }));
+    if (validateSolutionScript(board, reversed, difficultyConfig)) {
+      return reversed;
+    }
+    return [];
   }
 
   function getValidTargets(fromIndex) {
@@ -1149,13 +1292,10 @@
       : [];
     state.solved = Boolean(payload.solved);
     state.rewardClaimed = Boolean(payload.rewardClaimed);
-    state.autoSolveScript = Array.isArray(payload.autoSolveScript)
-      ? payload.autoSolveScript
-          .map(move => (Number.isInteger(move?.from) && Number.isInteger(move?.to)
-            ? { from: move.from, to: move.to }
-            : null))
-          .filter(Boolean)
-      : [];
+    const difficultyConfig = state.config?.difficulties?.[state.difficulty]
+      || state.config?.difficulties?.easy
+      || DEFAULT_CONFIG.difficulties.easy;
+    state.autoSolveScript = sanitizeAutoSolveScript(state.board, payload.autoSolveScript, difficultyConfig);
     state.autoSolveUsed = Boolean(payload.autoSolveUsed);
     state.autoSolving = false;
     state.selectedColumn = Number.isInteger(payload.selectedColumn) ? payload.selectedColumn : null;
@@ -1226,7 +1366,7 @@
       state.history = [];
       state.solved = false;
       state.rewardClaimed = false;
-      state.autoSolveScript = Array.isArray(puzzle.scrambleHistory) ? puzzle.scrambleHistory.slice() : [];
+      state.autoSolveScript = Array.isArray(puzzle.autoSolveScript) ? puzzle.autoSolveScript.slice() : [];
       state.autoSolveUsed = false;
       state.autoSolving = false;
       resetSelection();
