@@ -2010,7 +2010,14 @@
             <span class="motocross__label" data-i18n="index.sections.motocross.ui.speed">Vitesse</span>
             <span class="motocross__value">
               <span id="motocrossSpeedValue">0</span>
-              <span class="motocross__unit" data-i18n="index.sections.motocross.ui.speedUnit">u/s</span>
+              <span class="motocross__unit" data-i18n="index.sections.motocross.ui.speedUnit">km/h</span>
+            </span>
+          </div>
+          <div class="motocross__field motocross__field--inline motocross__field--compact">
+            <span class="motocross__label" data-i18n="index.sections.motocross.ui.distance">Distance</span>
+            <span class="motocross__value">
+              <span id="motocrossDistanceValue">0</span>
+              <span class="motocross__unit" data-i18n="index.sections.motocross.ui.distanceUnit">m</span>
             </span>
           </div>
         </div>
@@ -2022,14 +2029,24 @@
           data-state="idle"
           data-i18n="index.sections.motocross.ui.status.ready"
           >Appuyez sur « Générer » pour lancer une piste aléatoire.</p>
-        <button
-          type="button"
-          class="motocross__button motocross__button--restart"
-          id="motocrossRestart"
-          hidden
-          aria-hidden="true"
-          data-i18n="index.sections.motocross.ui.restart"
-        >Recommencer</button>
+        <div class="motocross__actions">
+          <button
+            type="button"
+            class="motocross__button motocross__button--restart"
+            id="motocrossRestart"
+            hidden
+            aria-hidden="true"
+            data-i18n="index.sections.motocross.ui.restart"
+          >Recommencer</button>
+          <button
+            type="button"
+            class="motocross__button motocross__button--test"
+            id="motocrossTest"
+            data-i18n="index.sections.motocross.ui.test"
+            aria-disabled="true"
+            disabled
+          >Tester</button>
+        </div>
         <canvas
           id="motocrossCanvas"
           class="motocross__canvas"

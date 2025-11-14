@@ -1303,14 +1303,22 @@
           "controls": "Paramètres de la piste Motocross",
           "generate": "Générer",
           "restart": "Recommencer",
+          "test": "Tester",
           "speed": "Vitesse",
-          "speedUnit": "u/s"
+          "speedUnit": "km/h",
+          "distance": "Distance",
+          "distanceUnit": "m"
         },
         "status": {
           "ready": "Appuyez sur « Générer » pour lancer une piste aléatoire.",
           "generated": "Piste prête, bon ride !",
           "failed": "Impossible de générer une nouvelle piste pour le moment.",
-          "gameOver": "Fin de partie ! Distance parcourue : {distance} u."
+          "gameOver": "Fin de partie ! Distance parcourue : {distance} m.",
+          "testingStart": "Analyse de la piste en cours…",
+          "testingSegment": "Segment {index}/{total} : {name}",
+          "testingDone": "Analyse terminée. Relancez la piste pour rouler !",
+          "testingUnavailable": "Générez une piste avant de lancer le test.",
+          "testingStopped": "Test interrompu. Relancez le test ou roulez !"
         }
       },
       "taquin": {
