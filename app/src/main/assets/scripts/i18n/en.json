@@ -1299,7 +1299,7 @@
           "restart": "Restart",
           "test": "Test",
           "speed": "Speed",
-          "speedUnit": "km/h",
+          "speedUnit": "KM/H",
           "distance": "Distance",
           "distanceUnit": "m"
         },

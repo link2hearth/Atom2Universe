@@ -99,7 +99,11 @@
   })();
 
   const numberFormatter = typeof Intl !== 'undefined' && Intl.NumberFormat
-    ? new Intl.NumberFormat(undefined, { maximumFractionDigits: 1 })
+    ? new Intl.NumberFormat(undefined, {
+      maximumFractionDigits: 0,
+      minimumFractionDigits: 0,
+      useGrouping: false
+    })
     : null;
 
   const distanceFormatter = typeof Intl !== 'undefined' && Intl.NumberFormat
@@ -120,15 +124,11 @@
   }
 
   function formatSpeed(value) {
-    const numeric = Number.isFinite(value) ? value : 0;
+    const numeric = Number.isFinite(value) ? Math.max(0, Math.round(value)) : 0;
     if (numberFormatter) {
       return numberFormatter.format(numeric);
     }
-    const rounded = Math.round(numeric * 10) / 10;
-    if (Number.isInteger(rounded)) {
-      return rounded.toString();
-    }
-    return rounded.toFixed(1);
+    return numeric.toString();
   }
 
   function formatDistance(value) {
@@ -613,7 +613,6 @@
   });
 
   const UNIT_TO_METERS = 0.1;
-  const UNIT_PER_SECOND_TO_KMH = UNIT_TO_METERS * 3.6;
   const MIN_DISPLAY_SPEED_KMH = 0.15;
   const TEST_STEP_INTERVAL = 2400;
   const TEST_CAMERA_ZOOM = 0.72;
@@ -1198,6 +1197,8 @@
     fallThreshold: 600,
     pendingRespawn: false,
     speed: 0,
+    speedStartX: 0,
+    speedElapsed: 0,
     gameOver: false,
     trackStartX: 0,
     runStartX: 0,
@@ -1425,6 +1426,45 @@
     elements.speedValue.textContent = formatSpeed(speed);
   }
 
+  function setDisplayedSpeed(value) {
+    const normalized = Number.isFinite(value) ? Math.max(0, Math.round(value)) : 0;
+    if (state.speed === normalized) {
+      return;
+    }
+    state.speed = normalized;
+    updateSpeedDisplay();
+  }
+
+  function resetAverageSpeed(referenceX) {
+    const baseX = Number.isFinite(referenceX)
+      ? referenceX
+      : state.bike?.position?.x ?? 0;
+    state.speedStartX = baseX;
+    state.speedElapsed = 0;
+    setDisplayedSpeed(0);
+  }
+
+  function updateAverageSpeed(dt) {
+    if (!Number.isFinite(dt) || dt <= 0 || !state?.bike) {
+      return;
+    }
+    if (!Number.isFinite(state.speedStartX)) {
+      state.speedStartX = state.bike.position.x;
+    }
+    state.speedElapsed += dt;
+    const elapsed = state.speedElapsed;
+    if (!Number.isFinite(elapsed) || elapsed <= 0) {
+      setDisplayedSpeed(0);
+      return;
+    }
+    const baseX = state.speedStartX;
+    const distanceMeters = Math.max(0, (state.bike.position.x - baseX) * UNIT_TO_METERS);
+    const averageSpeedMs = distanceMeters / elapsed;
+    const averageSpeedKmh = averageSpeedMs * 3.6;
+    const displaySpeed = averageSpeedKmh < MIN_DISPLAY_SPEED_KMH ? 0 : averageSpeedKmh;
+    setDisplayedSpeed(displaySpeed);
+  }
+
   function updateDistanceDisplay() {
     const { elements, maxDistance } = state;
     if (!elements || !elements.distanceValue) {
@@ -1434,18 +1474,14 @@
   }
 
   function updateTestButtonAvailability() {
-    const { elements, track, test } = state;
+    const { elements } = state;
     if (!elements || !elements.testButton) {
       return;
     }
-    if (test && test.active) {
-      elements.testButton.disabled = false;
-      elements.testButton.setAttribute('aria-disabled', 'false');
-      return;
-    }
-    const hasTrack = !!(track && Array.isArray(track.blocks) && track.blocks.length > 0);
-    elements.testButton.disabled = !hasTrack;
-    elements.testButton.setAttribute('aria-disabled', hasTrack ? 'false' : 'true');
+    elements.testButton.hidden = true;
+    elements.testButton.setAttribute('aria-hidden', 'true');
+    elements.testButton.disabled = true;
+    elements.testButton.setAttribute('aria-disabled', 'true');
   }
 
   function clearTestTimer() {
@@ -1482,13 +1518,12 @@
     state.wheels.back.segmentIndex = sample.index;
     state.wheels.front.segmentIndex = sample.index;
     updateWheelData();
-    state.speed = 0;
+    resetAverageSpeed(point.x);
     state.camera.x = point.x;
     state.camera.y = point.y - CAMERA_OFFSET_Y;
     state.camera.targetZoom = clamp(TEST_CAMERA_ZOOM, CAMERA_ZOOM_MIN, CAMERA_ZOOM_MAX);
     state.camera.zoom = state.camera.targetZoom;
     renderScene();
-    updateSpeedDisplay();
   }
 
   function stopTrackTest(statusOptions) {
@@ -1684,6 +1719,7 @@
     state.camera.zoom = 1;
     state.camera.targetZoom = 1;
     state.pendingRespawn = false;
+    resetAverageSpeed(data.x);
   }
 
   function updateRespawnCheckpoint() {
@@ -1789,8 +1825,8 @@
       bike.velocity.y = 0;
       bike.angularVelocity = 0;
       updateWheelData();
-      state.speed = 0;
-      updateSpeedDisplay();
+      updateAverageSpeed(dt);
+      setDisplayedSpeed(0);
       return;
     }
 
@@ -1892,9 +1928,7 @@
     }
 
     updateWheelData();
-    const horizontalSpeed = Math.abs(bike.velocity.x);
-    const speedKmh = horizontalSpeed * UNIT_PER_SECOND_TO_KMH;
-    state.speed = speedKmh < MIN_DISPLAY_SPEED_KMH ? 0 : speedKmh;
+    updateAverageSpeed(dt);
 
     const referenceX = Number.isFinite(state.runStartX) ? state.runStartX : 0;
     const progress = bike.position.x - referenceX;
@@ -2246,7 +2280,6 @@
     }
 
     renderScene();
-    updateSpeedDisplay();
     updateDistanceDisplay();
   }
 
@@ -2407,8 +2440,6 @@
     state.lastGeneratedCount = Array.isArray(track.usedIds) ? track.usedIds.length : 0;
     updateRespawnCheckpoint();
     applyRespawn(false);
-    state.speed = 0;
-    updateSpeedDisplay();
     updateDistanceDisplay();
     updateTestButtonAvailability();
     if (!silent) {
@@ -2462,8 +2493,6 @@
     updateRespawnCheckpoint();
     applyRespawn(false);
     resetInputState();
-    state.speed = 0;
-    updateSpeedDisplay();
     updateDistanceDisplay();
     updateTestButtonAvailability();
     const hasCount = Number.isFinite(state.lastGeneratedCount) && state.lastGeneratedCount > 0;
