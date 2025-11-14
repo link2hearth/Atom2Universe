@@ -481,9 +481,6 @@
         let weight = sameColor
           ? Math.max(0.1, state.config.preferSameColorWeight)
           : Math.max(0.1, state.config.preferDifferentColorWeight);
-        if (destColumn.length === 0) {
-          weight *= 1.8;
-        }
         const moveKey = `${sourceIndex}->${destIndex}`;
         const repeatCount = recentMoveCounts instanceof Map ? (recentMoveCounts.get(moveKey) || 0) : 0;
         if (repeatCount > 0) {
@@ -510,109 +507,6 @@
       });
     });
     return candidates;
-  }
-
-  function getTopToken(column) {
-    if (!Array.isArray(column) || column.length === 0) {
-      return null;
-    }
-    return column[column.length - 1];
-  }
-
-  function columnSupportsFollowUp(column) {
-    if (!Array.isArray(column)) {
-      return false;
-    }
-    if (column.length <= 1) {
-      return false;
-    }
-    if (column.length === 2) {
-      return true;
-    }
-    const prospectiveTop = column[column.length - 2];
-    const prospectiveBelow = column[column.length - 3];
-    return Boolean(prospectiveTop)
-      && Boolean(prospectiveBelow)
-      && prospectiveTop.colorId === prospectiveBelow.colorId;
-  }
-
-  function hasAlternateFollowUpSource(board, colorId, excludeIndex) {
-    if (!colorId) {
-      return false;
-    }
-    for (let index = 0; index < board.length; index += 1) {
-      if (index === excludeIndex) {
-        continue;
-      }
-      const column = board[index];
-      if (!canTakeTokenForScramble(column)) {
-        continue;
-      }
-      const top = getTopToken(column);
-      if (top && top.colorId === colorId) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  function selectPendingFollowUpMove(
-    board,
-    pending,
-    difficultyConfig,
-    stats,
-    recentMoveCounts,
-    lastMove,
-    lastMovedTokenId
-  ) {
-    if (!pending || !Number.isInteger(pending.destIndex) || !pending.colorId) {
-      return null;
-    }
-    const capacity = getEffectiveCapacity(difficultyConfig);
-    const destColumn = board[pending.destIndex];
-    if (!Array.isArray(destColumn) || destColumn.length >= capacity) {
-      return null;
-    }
-    const candidates = [];
-    board.forEach((sourceColumn, sourceIndex) => {
-      if (sourceIndex === pending.destIndex) {
-        return;
-      }
-      if (!canTakeTokenForScramble(sourceColumn)) {
-        return;
-      }
-      const token = getTopToken(sourceColumn);
-      if (!token || token.colorId !== pending.colorId) {
-        return;
-      }
-      if (lastMove && lastMove.from === pending.destIndex && lastMove.to === sourceIndex) {
-        return;
-      }
-      if (destColumn.length >= capacity) {
-        return;
-      }
-      let weight = 8;
-      if (stats && typeof stats.getMoveCount === 'function') {
-        const previousMoves = stats.getMoveCount(token.id);
-        weight *= previousMoves === 0 ? 3 : 1 / (1 + previousMoves * 0.4);
-      }
-      if (stats && typeof stats.hasMoved === 'function' && !stats.hasMoved(token.id)) {
-        weight *= 2;
-      }
-      const moveKey = `${sourceIndex}->${pending.destIndex}`;
-      const repeatCount = recentMoveCounts instanceof Map ? (recentMoveCounts.get(moveKey) || 0) : 0;
-      if (repeatCount > 0) {
-        weight *= 1 / (1 + repeatCount);
-      }
-      if (lastMovedTokenId && token.id === lastMovedTokenId) {
-        weight *= 0.25;
-      }
-      candidates.push({ from: sourceIndex, to: pending.destIndex, weight });
-    });
-    if (!candidates.length) {
-      return null;
-    }
-    return chooseWeighted(candidates);
   }
 
   function recordScrambleMove(history, fromIndex, toIndex) {
@@ -759,94 +653,34 @@
     const recentMoves = [];
     const recentCounts = new Map();
     const maxRecentMoves = Math.max(12, attemptBoard.length * 3);
-    const capacity = getEffectiveCapacity(difficultyConfig);
     let lastMove = null;
     let lastMovedTokenId = null;
-    let pendingFollowUp = null;
     let performedMoves = 0;
     for (let moveIndex = 0; moveIndex < maxMoves; moveIndex += 1) {
-      let move = null;
-      if (pendingFollowUp) {
-        move = selectPendingFollowUpMove(
-          attemptBoard,
-          pendingFollowUp,
-          difficultyConfig,
-          stats,
-          recentCounts,
-          lastMove,
-          lastMovedTokenId
-        );
-        if (!move) {
+      const candidates = collectScrambleCandidates(
+        attemptBoard,
+        difficultyConfig,
+        lastMove,
+        stats,
+        recentCounts,
+        lastMovedTokenId
+      );
+      if (!candidates.length) {
+        if (performedMoves < minMovePool) {
           return null;
         }
-      } else {
-        const candidates = collectScrambleCandidates(
-          attemptBoard,
-          difficultyConfig,
-          lastMove,
-          stats,
-          recentCounts,
-          lastMovedTokenId
-        );
-        if (!candidates.length) {
-          if (performedMoves < minMovePool) {
-            return null;
-          }
-          break;
-        }
-        const filtered = [];
-        for (let idx = 0; idx < candidates.length; idx += 1) {
-          const candidate = candidates[idx];
-          const sourceColumn = attemptBoard[candidate.from];
-          const destColumn = attemptBoard[candidate.to];
-          if (!Array.isArray(sourceColumn) || !Array.isArray(destColumn)) {
-            continue;
-          }
-          if (destColumn.length >= capacity) {
-            continue;
-          }
-          const movingToken = getTopToken(sourceColumn);
-          if (!movingToken) {
-            continue;
-          }
-          const destTop = getTopToken(destColumn);
-          if (destTop && destTop.colorId !== movingToken.colorId) {
-            const futureLength = destColumn.length + 1;
-            if (futureLength + 1 > capacity) {
-              continue;
-            }
-            const sourceSupports = columnSupportsFollowUp(sourceColumn);
-            const alternateSupports = hasAlternateFollowUpSource(attemptBoard, movingToken.colorId, candidate.from);
-            if (!sourceSupports && !alternateSupports) {
-              continue;
-            }
-          }
-          filtered.push(candidate);
-        }
-        if (!filtered.length) {
-          if (performedMoves < minMovePool) {
-            return null;
-          }
-          break;
-        }
-        move = chooseWeighted(filtered);
-        if (!move) {
-          break;
-        }
+        break;
+      }
+      const move = chooseWeighted(candidates);
+      if (!move) {
+        break;
       }
       const sourceColumn = attemptBoard[move.from];
       const movingToken = Array.isArray(sourceColumn) && sourceColumn.length > 0
         ? sourceColumn[sourceColumn.length - 1]
         : null;
       const movingTokenId = movingToken?.id || null;
-      const destinationColumn = attemptBoard[move.to];
-      const destinationTopBeforeMove = Array.isArray(destinationColumn) && destinationColumn.length > 0
-        ? destinationColumn[destinationColumn.length - 1]
-        : null;
       if (!performScrambleMove(attemptBoard, move, history, stats)) {
-        if (pendingFollowUp) {
-          return null;
-        }
         continue;
       }
       performedMoves += 1;
@@ -866,19 +700,6 @@
           }
         }
       }
-      if (pendingFollowUp) {
-        if (movingToken && destinationColumn && move.to === pendingFollowUp.destIndex) {
-          if (movingToken.colorId === pendingFollowUp.colorId) {
-            pendingFollowUp = null;
-          }
-        }
-      } else if (
-        destinationTopBeforeMove
-        && movingToken
-        && destinationTopBeforeMove.colorId !== movingToken.colorId
-      ) {
-        pendingFollowUp = { destIndex: move.to, colorId: movingToken.colorId };
-      }
       if (
         performedMoves >= difficultyConfig.scrambleMoves
         && stats.getMovedRatio() >= coverageTarget
@@ -886,9 +707,6 @@
       ) {
         break;
       }
-    }
-    if (pendingFollowUp) {
-      return null;
     }
     if (performedMoves < requiredMoves) {
       return null;
@@ -1188,62 +1006,19 @@
     }
 
     if (!result || !result.board) {
-      for (let attempt = 0; attempt < state.config.maxScrambleAttempts && !result; attempt += 1) {
-        const solvedBoard = generateSolvedBoard(config, palette);
-        const board = cloneBoard(solvedBoard);
-        const history = [];
-        const emptyIndex = board.findIndex(column => Array.isArray(column) && column.length === 0);
-        const filledIndices = board
-          .map((column, index) => ({ column, index }))
-          .filter(entry => Array.isArray(entry.column) && entry.column.length > 0)
-          .map(entry => entry.index);
-        if (emptyIndex === -1 || filledIndices.length < 2) {
-          continue;
-        }
-        const targetPairs = Math.max(1, Math.ceil(Math.max(2, config.minMulticoloredColumns || 2) / 2));
-        const available = filledIndices.slice();
-        let executedPairs = 0;
-        let success = true;
-        while (available.length >= 2 && executedPairs < targetPairs) {
-          const primary = available.shift();
-          const secondary = available.shift();
-          if (
-            !performScrambleMove(board, { from: primary, to: emptyIndex }, history)
-            || !performScrambleMove(board, { from: secondary, to: primary }, history)
-            || !performScrambleMove(board, { from: emptyIndex, to: secondary }, history)
-          ) {
-            success = false;
-            break;
-          }
-          executedPairs += 1;
-        }
-        if (!success) {
-          continue;
-        }
-        ensureEmptyColumns(board, config, history);
-        if (
-          history.length > 0
-          && !isBoardSolved(board, config.capacity)
-          && meetsScrambleDiversity(board, config)
-          && verifyScrambleHistory(board, history, solvedBoard, config)
-        ) {
-          result = { board, solvedBoard };
-        }
-        ensureEmptyColumns(board, config, history);
-        if (meetsScrambleDiversity(board, config) && verifyScrambleHistory(board, history, solvedBoard, config)) {
-          result = { board, solvedBoard };
-        }
-      }
-      if (!result && history.length > 0 && verifyScrambleHistory(board, history, solvedBoard, config)) {
-        result = { board, solvedBoard };
-      }
-    }
-
-    if (!result || !result.board || isBoardSolved(result.board, config.capacity) || !meetsScrambleDiversity(result.board, config)) {
       const solvedBoard = generateSolvedBoard(config, palette);
-      const manual = buildManualScramble(solvedBoard, config);
-      if (manual && verifyScrambleHistory(manual.board, manual.history, solvedBoard, config)) {
-        result = { board: manual.board, solvedBoard };
+      const board = cloneBoard(solvedBoard);
+      const history = [];
+      const emptyIndex = board.findIndex(column => Array.isArray(column) && column.length === 0);
+      const firstFilled = board.findIndex(column => Array.isArray(column) && column.length > 0);
+      if (emptyIndex !== -1 && firstFilled !== -1) {
+        performScrambleMove(board, { from: firstFilled, to: emptyIndex }, history);
+      }
+      ensureEmptyColumns(board, config, history);
+      if (history.length > 0 && verifyScrambleHistory(board, history, solvedBoard, config)) {
+        result = { board, solvedBoard };
+      } else {
+        result = { board, solvedBoard };
       }
     }
 
