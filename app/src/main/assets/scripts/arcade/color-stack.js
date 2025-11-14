@@ -604,7 +604,18 @@
     return attemptBoard;
   }
 
-  const MAX_SOLVER_STATES = 200000;
+  const MAX_SOLVER_STATES = 1000000;
+
+  function isSolverColumnSolved(column, baseCapacity) {
+    if (!Array.isArray(column) || column.length === 0) {
+      return false;
+    }
+    if (column.length !== baseCapacity) {
+      return false;
+    }
+    const color = column[0];
+    return column.every(entry => entry === color);
+  }
 
   function snapshotBoardForSolver(board) {
     return board.map(column => {
@@ -641,6 +652,17 @@
     const baseCapacity = Math.max(1, toInteger(difficultyConfig?.capacity, 1));
     const effectiveCapacity = getEffectiveCapacity(difficultyConfig);
     const initialState = snapshotBoardForSolver(board);
+    const colorCounts = new Map();
+    initialState.forEach(column => {
+      column.forEach(colorId => {
+        colorCounts.set(colorId, (colorCounts.get(colorId) || 0) + 1);
+      });
+    });
+    for (const count of colorCounts.values()) {
+      if (count % baseCapacity !== 0) {
+        return false;
+      }
+    }
     const initialKey = serializeSolverState(initialState);
     const queue = [initialState.map(column => column.slice())];
     const visited = new Set([initialKey]);
@@ -652,9 +674,13 @@
       if (isSolverStateSolved(current, baseCapacity)) {
         return true;
       }
+      const solvedColumns = current.map(column => isSolverColumnSolved(column, baseCapacity));
       for (let fromIndex = 0; fromIndex < current.length; fromIndex += 1) {
         const sourceColumn = current[fromIndex];
         if (!Array.isArray(sourceColumn) || sourceColumn.length === 0) {
+          continue;
+        }
+        if (solvedColumns[fromIndex]) {
           continue;
         }
         const tokenColor = sourceColumn[sourceColumn.length - 1];
@@ -667,6 +693,9 @@
             continue;
           }
           if (destColumn.length >= effectiveCapacity) {
+            continue;
+          }
+          if (solvedColumns[toIndex] && destColumn.length >= baseCapacity) {
             continue;
           }
           if (destColumn.length > 0) {
@@ -960,6 +989,8 @@
       return;
     }
     container.innerHTML = '';
+    const difficultyConfig = state.config.difficulties[state.difficulty] || state.config.difficulties.easy;
+    const visualCapacity = getEffectiveCapacity(difficultyConfig);
     const selection = state.selectedColumn;
     const validTargets = Number.isInteger(selection) ? getValidTargets(selection) : [];
     const targetSet = new Set(validTargets);
@@ -982,6 +1013,13 @@
         tokenElement.setAttribute('aria-hidden', 'true');
         columnButton.appendChild(tokenElement);
       });
+      const ghostCount = Math.max(0, visualCapacity - column.length);
+      for (let ghostIndex = 0; ghostIndex < ghostCount; ghostIndex += 1) {
+        const ghostElement = document.createElement('span');
+        ghostElement.className = 'color-stack__token color-stack__token--ghost';
+        ghostElement.setAttribute('aria-hidden', 'true');
+        columnButton.appendChild(ghostElement);
+      }
       columnButton.addEventListener('click', () => {
         handleColumnClick(columnIndex);
       });
