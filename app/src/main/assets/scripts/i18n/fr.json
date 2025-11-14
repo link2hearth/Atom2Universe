@@ -1246,7 +1246,6 @@
         },
         "actions": {
           "new": "Nouveau mélange",
-          "autoSolve": "Résolution automatique",
           "restart": "Recommencer",
           "undo": "Annuler"
         },
@@ -1264,8 +1263,6 @@
           "new": "Un nouveau mélange est prêt.",
           "undo": "Coup annulé.",
           "restored": "Partie restaurée.",
-          "autoSolved": "Niveau résolu automatiquement.",
-          "autoSolveFailed": "Impossible de résoudre automatiquement ce niveau.",
           "move": ""
         }
       },

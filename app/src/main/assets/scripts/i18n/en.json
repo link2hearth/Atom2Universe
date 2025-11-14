@@ -1240,7 +1240,6 @@
         },
         "actions": {
           "new": "New shuffle",
-          "autoSolve": "Auto-solve",
           "restart": "Restart",
           "undo": "Undo"
         },
@@ -1258,8 +1257,6 @@
           "new": "A fresh shuffle is ready.",
           "undo": "Move undone.",
           "restored": "Game restored.",
-          "autoSolved": "Puzzle solved automatically.",
-          "autoSolveFailed": "Automatic solve failed.",
           "move": ""
         }
       },
