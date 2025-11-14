@@ -99,6 +99,13 @@
   transition: transform 160ms ease, box-shadow 160ms ease;
 }
 
+.motocross__button[disabled] {
+  cursor: not-allowed;
+  opacity: 0.6;
+  box-shadow: none;
+  transform: none;
+}
+
 .motocross__button:focus-visible {
   outline: 2px solid rgba(125, 211, 252, 0.9);
   outline-offset: 2px;
@@ -107,6 +114,23 @@
 .motocross__button:hover {
   transform: translateY(-1px);
   box-shadow: 0 8px 18px rgba(56, 189, 248, 0.35);
+}
+
+.motocross__button[disabled]:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.motocross__actions {
+  display: flex;
+  gap: 0.75rem;
+  align-self: flex-end;
+  justify-content: flex-end;
+  margin: 0 1.5rem 1.5rem;
+}
+
+.motocross__actions .motocross__button {
+  align-self: auto;
 }
 
 .motocross__value {
@@ -162,10 +186,20 @@
     transform: none;
     min-width: auto;
   }
+
+  .motocross__actions {
+    margin: 0 1.25rem 1.25rem;
+  }
 }
 
 @media (max-width: 600px) {
   .motocross__field {
     min-width: calc(50% - 0.75rem);
+  }
+
+  .motocross__actions {
+    width: 100%;
+    justify-content: flex-end;
+    margin: 0 1.25rem 1.25rem;
   }
 }

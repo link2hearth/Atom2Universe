@@ -1297,14 +1297,22 @@
           "controls": "Motocross track settings",
           "generate": "Generate",
           "restart": "Restart",
+          "test": "Test",
           "speed": "Speed",
-          "speedUnit": "u/s"
+          "speedUnit": "km/h",
+          "distance": "Distance",
+          "distanceUnit": "m"
         },
         "status": {
           "ready": "Press “Generate” to explore a random course.",
           "generated": "Track ready for a new run!",
           "failed": "Unable to generate a new track right now.",
-          "gameOver": "Game over! Distance travelled: {distance} u."
+          "gameOver": "Game over! Distance travelled: {distance} m.",
+          "testingStart": "Analyzing track segments…",
+          "testingSegment": "Segment {index}/{total}: {name}",
+          "testingDone": "Analysis complete. Restart the run to ride!",
+          "testingUnavailable": "Generate a track before starting the test.",
+          "testingStopped": "Test stopped. Run it again or start riding!"
         }
       },
       "taquin": {
