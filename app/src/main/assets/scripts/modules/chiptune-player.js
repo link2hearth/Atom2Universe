@@ -1479,17 +1479,17 @@
       this.noteEventCounter = 0;
       this.lastProgramByChannel = new Map();
 
-      this.masterVolume = 0.8;
-      this.maxGain = 0.26;
+      this.masterVolume = 0.9;
+      this.maxGain = 0.28;
       this.polyphonyGain = null;
       this.polyphonyWeight = 0;
       this.polyphonyVoiceCount = 0;
-      this.polyphonyHeadroom = 1.28;
-      this.polyphonyMinGain = 0.22;
-      this.polyphonyStackPenalty = 0.14;
-      this.polyphonyMaxContribution = 1.7;
-      this.polyphonyAttackTime = 0.015;
-      this.polyphonyReleaseTime = 0.36;
+      this.polyphonyHeadroom = 1.34;
+      this.polyphonyMinGain = 0.3;
+      this.polyphonyStackPenalty = 0.11;
+      this.polyphonyMaxContribution = 2.1;
+      this.polyphonyAttackTime = 0.02;
+      this.polyphonyReleaseTime = 0.45;
       this.polyphonyLastTarget = 1;
       this.waveCache = new Map();
       this.noiseBuffer = null;
@@ -2579,6 +2579,9 @@
         sustainLevel = 0.6,
         releaseDuration = 0.25,
         reverbAmount = 0,
+        layers = 1,
+        partials = null,
+        velocity = 0.6,
         type = 'melodic',
         source = 'playback',
       } = metadata;
@@ -2589,17 +2592,28 @@
       const sustain = Math.max(0, Math.min(1.6, Number.isFinite(sustainLevel) ? sustainLevel : 0.6));
       const release = Math.max(0, Math.min(3.5, Number.isFinite(releaseDuration) ? releaseDuration : 0.25));
       const reverb = Math.max(0, Math.min(1.5, Number.isFinite(reverbAmount) ? reverbAmount : 0));
+      const normalizedVelocity = Math.max(0.05, Math.min(1.25, Number.isFinite(velocity) ? velocity : 0.6));
+      const normalizedLayers = Math.max(1, Math.min(8, Number.isFinite(layers) ? layers : 1));
+      const partialEstimate = Number.isFinite(partials) ? Math.max(1, partials) : normalizedLayers;
+      const normalizedPartials = Math.max(normalizedLayers, Math.min(12, partialEstimate));
       const sustainFactor = 0.85 + (sustain * 0.55);
       const releaseFactor = 0.9 + Math.min(0.6, release * 0.35);
       const reverbFactor = 1 + Math.min(0.25, reverb * 0.35);
-      let weight = clampedPeak * sustainFactor * releaseFactor * reverbFactor;
+      const velocityFactor = 0.7 + (Math.pow(normalizedVelocity, 0.65) * 0.75);
+      const layerFactor = 1 + Math.min(0.9, (normalizedPartials - 1) * 0.24);
+      let weight = clampedPeak
+        * sustainFactor
+        * releaseFactor
+        * reverbFactor
+        * velocityFactor
+        * layerFactor;
       if (type === 'soundfont') {
-        weight *= 1.18;
+        weight *= 1.12;
       } else if (type === 'percussion') {
-        weight *= 1.08;
+        weight *= 1.06;
       }
       if (source === 'manual') {
-        weight *= 0.88;
+        weight *= 0.9;
       }
       if (!Number.isFinite(weight) || weight <= 0) {
         return 0;
@@ -2677,7 +2691,8 @@
       const clampedTarget = isReducing ? Math.max(this.polyphonyMinGain, target) : Math.min(1, target);
       param.setValueAtTime(currentValue, now);
       const rampDuration = isReducing ? this.polyphonyAttackTime : this.polyphonyReleaseTime;
-      param.linearRampToValueAtTime(clampedTarget, now + Math.max(0.01, rampDuration));
+      const rampTime = Math.max(0.015, rampDuration);
+      param.linearRampToValueAtTime(clampedTarget, now + rampTime);
       this.polyphonyLastTarget = clampedTarget;
     }
 
@@ -7749,11 +7764,21 @@
         }
       };
 
+      const oscillatorCount = Math.max(
+        1,
+        activeOscillators || (Array.isArray(voice.oscillators) ? voice.oscillators.length : 0),
+      );
+      const normalizedVelocity = Math.max(0.05, Math.min(1.25, Number.isFinite(velocity) ? velocity : 0.5));
+      const partialEstimate = Math.max(oscillatorCount, Array.isArray(layers) ? layers.length : 0);
+
       this.registerVoiceMixCompensation(voice, {
         peakGain,
         sustainLevel,
         releaseDuration,
         reverbAmount,
+        layers: oscillatorCount,
+        partials: partialEstimate,
+        velocity: normalizedVelocity,
         type: 'melodic',
         source,
       });
@@ -7983,11 +8008,21 @@
         }
       };
 
+      const layerCount = Math.max(
+        1,
+        activeSources || (Array.isArray(voice.oscillators) ? voice.oscillators.length : 0),
+      );
+      const normalizedVelocity = Math.max(0.05, Math.min(1.25, Number.isFinite(velocity) ? velocity : 0.5));
+      const partialEstimate = layerCount;
+
       this.registerVoiceMixCompensation(voice, {
         peakGain,
         sustainLevel,
         releaseDuration,
         reverbAmount,
+        layers: layerCount,
+        partials: partialEstimate,
+        velocity: normalizedVelocity,
         type: 'soundfont',
         source,
       });
@@ -8203,11 +8238,20 @@
         dryGain.gain.setValueAtTime(Math.min(1, dryAmount + (reverbAmount * 0.3)), startAt);
       }
 
+      const layerEstimate = Math.max(
+        1,
+        voice.sources.length || activeSources || 0,
+      );
+      const normalizedVelocity = Math.max(0.05, Math.min(1.25, Number.isFinite(velocity) ? velocity : 0.6));
+
       this.registerVoiceMixCompensation(voice, {
         peakGain,
         sustainLevel,
         releaseDuration: release,
         reverbAmount,
+        layers: layerEstimate,
+        partials: layerEstimate,
+        velocity: normalizedVelocity,
         type: 'percussion',
         source: sourceType,
       });
