@@ -12,6 +12,8 @@
   const AUTOSAVE_GAME_ID = 'colorStack';
   const AUTOSAVE_VERSION = 1;
   const AUTOSAVE_DEBOUNCE_MS = 180;
+  const AUTO_SOLVE_SELECT_DELAY_MS = 520;
+  const AUTO_SOLVE_MOVE_DELAY_MS = 780;
 
   const DEFAULT_CONFIG = Object.freeze({
     maxScrambleAttempts: 120,
@@ -68,7 +70,8 @@
     invalidMove: 'Déplacement impossible vers cette colonne.',
     victory: 'Bravo ! Toutes les piles sont triées.',
     resumed: 'Partie restaurée.',
-    autoSolved: 'Niveau résolu automatiquement.',
+    autoSolved: 'Niveau résolu automatiquement (aucune récompense).',
+    autoSolving: 'Résolution automatique en cours…',
     autoSolveFailed: 'Impossible de résoudre automatiquement ce niveau.'
   });
 
@@ -83,6 +86,9 @@
     history: [],
     solved: false,
     rewardClaimed: false,
+    autoSolveScript: [],
+    autoSolveUsed: false,
+    autoSolving: false,
     selectedColumn: null,
     autosaveTimer: null,
     autosaveSuppressed: false,
@@ -310,6 +316,9 @@
     if (state.solved) {
       return false;
     }
+    if (state.autoSolving) {
+      return false;
+    }
     if (state.history.length > 0) {
       return false;
     }
@@ -368,7 +377,72 @@
     return solved;
   }
 
-  function autoSolveLevel() {
+  function waitForMs(duration) {
+    return new Promise(resolve => {
+      if (typeof window === 'undefined' || typeof window.setTimeout !== 'function') {
+        resolve();
+        return;
+      }
+      window.setTimeout(resolve, duration);
+    });
+  }
+
+  function suppressAutosaveAsync() {
+    const previous = state.autosaveSuppressed;
+    state.autosaveSuppressed = true;
+    return () => {
+      state.autosaveSuppressed = previous;
+    };
+  }
+
+  function setAutoSolving(active) {
+    state.autoSolving = Boolean(active);
+    if (root) {
+      root.classList.toggle('color-stack--auto-solving', state.autoSolving);
+    }
+    updateStatus();
+  }
+
+  async function playAutoSolveAnimation(moves) {
+    if (!Array.isArray(moves) || !moves.length) {
+      await waitForMs(AUTO_SOLVE_SELECT_DELAY_MS);
+      return;
+    }
+    for (let index = 0; index < moves.length; index += 1) {
+      const move = moves[index];
+      const fromIndex = Number.isInteger(move?.from) ? move.from : null;
+      const toIndex = Number.isInteger(move?.to) ? move.to : null;
+      if (fromIndex === null || toIndex === null) {
+        continue;
+      }
+      state.selectedColumn = fromIndex;
+      renderBoard();
+      updateStatus();
+      await waitForMs(AUTO_SOLVE_SELECT_DELAY_MS);
+      const source = state.board[fromIndex];
+      const dest = state.board[toIndex];
+      if (!Array.isArray(source) || !Array.isArray(dest) || source.length === 0) {
+        state.selectedColumn = null;
+        renderBoard();
+        updateStatus();
+        continue;
+      }
+      const token = source.pop();
+      if (!token) {
+        state.selectedColumn = null;
+        renderBoard();
+        updateStatus();
+        continue;
+      }
+      dest.push(token);
+      state.selectedColumn = null;
+      renderBoard();
+      updateStatus();
+      await waitForMs(AUTO_SOLVE_MOVE_DELAY_MS);
+    }
+  }
+
+  async function autoSolveLevel() {
     if (!canAutoSolve()) {
       return;
     }
@@ -378,21 +452,38 @@
       setMessage('index.sections.colorStack.messages.autoSolveFailed', FALLBACK_MESSAGES.autoSolveFailed, false);
       return;
     }
-    withAutosaveSuppressed(() => {
+    const restoreAutosave = suppressAutosaveAsync();
+    state.autoSolveUsed = true;
+    state.rewardClaimed = true;
+    setAutoSolving(true);
+    setMessage('index.sections.colorStack.messages.autoSolving', FALLBACK_MESSAGES.autoSolving, false);
+    try {
+      const reverseMoves = Array.isArray(state.autoSolveScript)
+        ? state.autoSolveScript
+            .slice()
+            .reverse()
+            .map(move => ({ from: move.to, to: move.from }))
+            .filter(move => Number.isInteger(move.from) && Number.isInteger(move.to))
+        : [];
+      await playAutoSolveAnimation(reverseMoves);
       state.board = solvedBoard.map(column => column.map(cloneToken));
       state.history = [];
       state.solved = isBoardSolved(state.board, difficultyConfig.capacity);
-      state.rewardClaimed = false;
       resetSelection();
       renderBoard();
       updateStatus();
       if (state.solved) {
-        awardVictoryTickets();
         setMessage('index.sections.colorStack.messages.autoSolved', FALLBACK_MESSAGES.autoSolved, true);
       } else {
         setMessage('index.sections.colorStack.messages.autoSolveFailed', FALLBACK_MESSAGES.autoSolveFailed, false);
       }
-    });
+    } catch (error) {
+      console.warn('Color Stack: auto-solve failed', error);
+      setMessage('index.sections.colorStack.messages.autoSolveFailed', FALLBACK_MESSAGES.autoSolveFailed, false);
+    } finally {
+      restoreAutosave();
+      setAutoSolving(false);
+    }
     scheduleAutosave();
   }
 
@@ -546,7 +637,7 @@
     return candidates;
   }
 
-  function performScrambleMove(board, move) {
+  function performScrambleMove(board, move, history) {
     const source = board[move.from];
     const dest = board[move.to];
     if (!source || !dest || source.length === 0) {
@@ -557,6 +648,9 @@
       return false;
     }
     dest.push(token);
+    if (Array.isArray(history)) {
+      history.push({ from: move.from, to: move.to });
+    }
     return true;
   }
 
@@ -593,7 +687,7 @@
     return bestIndex;
   }
 
-  function ensureEmptyColumns(board, difficultyConfig) {
+  function ensureEmptyColumns(board, difficultyConfig, history) {
     const required = Math.max(0, Number.isFinite(difficultyConfig.emptyColumns) ? difficultyConfig.emptyColumns : 0);
     if (required === 0) {
       return true;
@@ -632,6 +726,9 @@
         }
         sourceColumn.pop();
         destinationColumn.push(token);
+        if (Array.isArray(history)) {
+          history.push({ from: candidateIndex, to: destinationIndex });
+        }
         moved = true;
         break;
       }
@@ -664,6 +761,7 @@
     const maxMoves = Math.max(difficultyConfig.scrambleMoves * 5, requiredMoves + minMovePool);
     let lastMove = null;
     let performedMoves = 0;
+    const performedHistory = [];
     for (let moveIndex = 0; moveIndex < maxMoves; moveIndex += 1) {
       const candidates = collectScrambleCandidates(attemptBoard, difficultyConfig, lastMove);
       if (!candidates.length) {
@@ -676,7 +774,7 @@
       if (!move) {
         break;
       }
-      if (!performScrambleMove(attemptBoard, move)) {
+      if (!performScrambleMove(attemptBoard, move, performedHistory)) {
         break;
       }
       performedMoves += 1;
@@ -688,13 +786,13 @@
     if (performedMoves < requiredMoves) {
       return null;
     }
-    if (!ensureEmptyColumns(attemptBoard, difficultyConfig)) {
+    if (!ensureEmptyColumns(attemptBoard, difficultyConfig, performedHistory)) {
       return null;
     }
     if (!meetsScrambleDiversity(attemptBoard, difficultyConfig)) {
       return null;
     }
-    return attemptBoard;
+    return { board: attemptBoard, history: performedHistory };
   }
 
   function generatePuzzle(difficultyKey) {
@@ -704,10 +802,13 @@
       : DEFAULT_CONFIG.palette;
     let solvedBoard = generateSolvedBoard(config, palette);
     let scrambled = null;
+    let scrambleHistory = [];
     for (let attempt = 0; attempt < state.config.maxScrambleAttempts; attempt += 1) {
       solvedBoard = generateSolvedBoard(config, palette);
-      scrambled = scrambleBoard(solvedBoard, config);
-      if (scrambled) {
+      const scrambleResult = scrambleBoard(solvedBoard, config);
+      if (scrambleResult) {
+        scrambled = scrambleResult.board;
+        scrambleHistory = Array.isArray(scrambleResult.history) ? scrambleResult.history : [];
         break;
       }
     }
@@ -727,6 +828,7 @@
         const token = sourceColumn?.pop();
         if (token) {
           scrambled[targetIndex].push(token);
+          scrambleHistory.push({ from: sourceIndex, to: targetIndex });
         }
       }
       const extraSource = populated.find(entry => entry.column.length > 1)?.index;
@@ -735,22 +837,25 @@
         const token = scrambled[extraSource].pop();
         if (token) {
           scrambled[extraTarget].push(token);
+          scrambleHistory.push({ from: extraSource, to: extraTarget });
         }
       }
-      ensureEmptyColumns(scrambled, config);
+      ensureEmptyColumns(scrambled, config, scrambleHistory);
       if (!meetsScrambleDiversity(scrambled, config)) {
         const attempt = scrambleBoard(solvedBoard, config);
         if (attempt) {
-          scrambled = attempt;
+          scrambled = attempt.board;
+          scrambleHistory = Array.isArray(attempt.history) ? attempt.history : [];
         }
       }
-      ensureEmptyColumns(scrambled, config);
+      ensureEmptyColumns(scrambled, config, scrambleHistory);
     }
     return {
       board: scrambled,
       initial: cloneBoard(scrambled),
       capacity: config.capacity,
-      goalColumns: solvedBoard.length
+      goalColumns: solvedBoard.length,
+      scrambleHistory
     };
   }
 
@@ -785,6 +890,11 @@
 
   function awardVictoryTickets() {
     if (state.rewardClaimed) {
+      return;
+    }
+    if (state.autoSolveUsed) {
+      state.rewardClaimed = true;
+      scheduleAutosave();
       return;
     }
     const tickets = getGachaTicketsForDifficulty(state.difficulty);
@@ -853,12 +963,22 @@
       }, 0);
       completedValue.textContent = `${solvedColumns}/${state.board.length}`;
     }
+    const controlsLocked = state.autoSolving;
     if (state.elements.undoButton) {
-      state.elements.undoButton.disabled = state.history.length === 0;
+      state.elements.undoButton.disabled = controlsLocked || state.history.length === 0;
     }
     if (state.elements.restartButton) {
       const hasInitial = state.initialBoard.some(column => column.length);
-      state.elements.restartButton.disabled = !hasInitial;
+      state.elements.restartButton.disabled = controlsLocked || !hasInitial;
+    }
+    if (state.elements.autoSolveButton) {
+      state.elements.autoSolveButton.disabled = controlsLocked || !canAutoSolve();
+    }
+    if (state.elements.newButton) {
+      state.elements.newButton.disabled = controlsLocked;
+    }
+    if (state.elements.difficulty) {
+      state.elements.difficulty.disabled = controlsLocked;
     }
     if (state.elements.autoSolveButton) {
       state.elements.autoSolveButton.disabled = !canAutoSolve();
@@ -977,7 +1097,11 @@
       history: state.history.slice(),
       solved: Boolean(state.solved),
       rewardClaimed: Boolean(state.rewardClaimed),
-      selectedColumn: state.selectedColumn
+      selectedColumn: state.selectedColumn,
+      autoSolveScript: Array.isArray(state.autoSolveScript)
+        ? state.autoSolveScript.map(move => ({ from: move.from, to: move.to }))
+        : [],
+      autoSolveUsed: Boolean(state.autoSolveUsed)
     };
     try {
       autosave.set(AUTOSAVE_GAME_ID, payload);
@@ -1025,6 +1149,15 @@
       : [];
     state.solved = Boolean(payload.solved);
     state.rewardClaimed = Boolean(payload.rewardClaimed);
+    state.autoSolveScript = Array.isArray(payload.autoSolveScript)
+      ? payload.autoSolveScript
+          .map(move => (Number.isInteger(move?.from) && Number.isInteger(move?.to)
+            ? { from: move.from, to: move.to }
+            : null))
+          .filter(Boolean)
+      : [];
+    state.autoSolveUsed = Boolean(payload.autoSolveUsed);
+    state.autoSolving = false;
     state.selectedColumn = Number.isInteger(payload.selectedColumn) ? payload.selectedColumn : null;
     if (state.solved && !state.rewardClaimed) {
       awardVictoryTickets();
@@ -1063,11 +1196,15 @@
   }
 
   function restartLevel() {
+    if (state.autoSolving) {
+      return;
+    }
     withAutosaveSuppressed(() => {
       state.board = cloneBoard(state.initialBoard);
       state.history = [];
       state.solved = false;
-      state.rewardClaimed = false;
+      state.rewardClaimed = state.autoSolveUsed;
+      state.autoSolving = false;
       resetSelection();
       renderBoard();
       updateStatus();
@@ -1077,6 +1214,9 @@
   }
 
   function startNewGame(difficultyKey) {
+    if (state.autoSolving) {
+      return;
+    }
     const normalizedDifficulty = DIFFICULTY_ORDER.includes(difficultyKey) ? difficultyKey : state.difficulty;
     state.difficulty = normalizedDifficulty;
     const puzzle = generatePuzzle(normalizedDifficulty);
@@ -1086,6 +1226,9 @@
       state.history = [];
       state.solved = false;
       state.rewardClaimed = false;
+      state.autoSolveScript = Array.isArray(puzzle.scrambleHistory) ? puzzle.scrambleHistory.slice() : [];
+      state.autoSolveUsed = false;
+      state.autoSolving = false;
       resetSelection();
       if (state.elements.difficulty) {
         state.elements.difficulty.value = normalizedDifficulty;
@@ -1098,6 +1241,9 @@
   }
 
   function handleColumnClick(columnIndex) {
+    if (state.autoSolving) {
+      return;
+    }
     if (!Number.isInteger(columnIndex) || columnIndex < 0 || columnIndex >= state.board.length) {
       return;
     }
@@ -1141,6 +1287,9 @@
   }
 
   function undoMove() {
+    if (state.autoSolving) {
+      return;
+    }
     if (!state.history.length) {
       return;
     }

@@ -1258,7 +1258,8 @@
           "new": "A fresh shuffle is ready.",
           "undo": "Move undone.",
           "restored": "Game restored.",
-          "autoSolved": "Puzzle solved automatically.",
+          "autoSolved": "Puzzle solved automatically. Rewards disabled for this puzzle.",
+          "autoSolving": "Automatic solve in progress…",
           "autoSolveFailed": "Automatic solve failed.",
           "move": ""
         }

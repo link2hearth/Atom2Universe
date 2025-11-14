@@ -1264,7 +1264,8 @@
           "new": "Un nouveau mélange est prêt.",
           "undo": "Coup annulé.",
           "restored": "Partie restaurée.",
-          "autoSolved": "Niveau résolu automatiquement.",
+          "autoSolved": "Niveau résolu automatiquement (aucune récompense).",
+          "autoSolving": "Résolution automatique en cours…",
           "autoSolveFailed": "Impossible de résoudre automatiquement ce niveau.",
           "move": ""
         }
