@@ -98,7 +98,8 @@
     animation: createAnimationState(),
     solutionMap: null,
     hintContext: { type: 'default' },
-    hintHighlight: null
+    hintHighlight: null,
+    pointerHighlight: new Set()
   };
 
   const pointerGesture = createPointerGestureState();
@@ -312,6 +313,7 @@
 
     recomputeSolutionMap();
     setHintHighlight(null);
+    setPointerHighlight(null);
     setHintContext(state.solved ? { type: 'solved' } : { type: 'default' });
 
     if (state.solved) {
@@ -687,6 +689,7 @@
     state.hintUsed = false;
     recomputeSolutionMap();
     setHintHighlight(null);
+    setPointerHighlight(null);
     setHintContext(state.solved ? { type: 'solved' } : { type: 'default' });
     updateControlsState();
     updateStats();
@@ -710,6 +713,7 @@
       hideWinOverlay();
       recomputeSolutionMap();
       setHintHighlight(null);
+      setPointerHighlight(null);
       setHintContext(state.solved ? { type: 'solved' } : { type: 'default' });
       updateControlsState();
       updateStats();
@@ -1389,7 +1393,9 @@
         state.animation.highlight instanceof Set &&
         state.animation.highlight.has(index);
       const hintHighlighted = state.hintHighlight instanceof Set && state.hintHighlight.has(index);
-      if (animationHighlighted || hintHighlighted) {
+      const pointerHighlighted =
+        state.pointerHighlight instanceof Set && state.pointerHighlight.has(index);
+      if (animationHighlighted || hintHighlighted || pointerHighlighted) {
         drawRingHighlight(metrics);
       }
     }
@@ -1625,8 +1631,10 @@
     }
     const pointerType = getPointerInputType(event);
     if (pointerType === 'mouse') {
+      setPointerHighlight(ringIndex);
       const direction = event.shiftKey ? -1 : 1;
       applyUserRotation(ringIndex, direction);
+      setPointerHighlight(null);
       return;
     }
     startTouchGesture(event, ringIndex, position);
@@ -1721,6 +1729,7 @@
     pointerGesture.startAngle = angle;
     pointerGesture.lastAngle = angle;
     pointerGesture.moved = false;
+    setPointerHighlight(ringIndex);
     if (elements.canvas && typeof elements.canvas.setPointerCapture === 'function') {
       elements.canvas.setPointerCapture(event.pointerId);
     }
@@ -1740,6 +1749,69 @@
       }
     }
     return null;
+  }
+
+  function getPointerHighlightSet() {
+    if (!(state.pointerHighlight instanceof Set)) {
+      state.pointerHighlight = new Set();
+    }
+    return state.pointerHighlight;
+  }
+
+  function getLinkedRingForIndex(index) {
+    if (!Array.isArray(state.rotationLinks) || state.rotationLinks.length !== state.ringCount) {
+      return null;
+    }
+    const candidate = Number(state.rotationLinks[index]);
+    if (!Number.isFinite(candidate)) {
+      return null;
+    }
+    const target = Math.floor(candidate);
+    if (target < 0 || target >= state.ringCount || target === index) {
+      return null;
+    }
+    return target;
+  }
+
+  function setPointerHighlight(index) {
+    const highlight = getPointerHighlightSet();
+    const numeric = Number(index);
+    const normalized =
+      Number.isFinite(numeric) && numeric >= 0 && numeric < state.ringCount ? Math.floor(numeric) : null;
+    if (normalized == null) {
+      if (highlight.size === 0) {
+        return;
+      }
+      highlight.clear();
+      draw();
+      return;
+    }
+
+    const desired = new Set();
+    desired.add(normalized);
+    const linked = getLinkedRingForIndex(normalized);
+    if (linked != null) {
+      desired.add(linked);
+    }
+
+    if (highlight.size === desired.size) {
+      let identical = true;
+      for (const value of desired) {
+        if (!highlight.has(value)) {
+          identical = false;
+          break;
+        }
+      }
+      if (identical) {
+        return;
+      }
+    }
+
+    highlight.clear();
+    for (const value of desired) {
+      highlight.add(value);
+    }
+    draw();
   }
 
   function handleCanvasKeyDown(event) {
@@ -1779,6 +1851,7 @@
   }
 
   function resetPointerGestureState() {
+    setPointerHighlight(null);
     pointerGesture.active = false;
     pointerGesture.pointerId = null;
     pointerGesture.ringIndex = null;
