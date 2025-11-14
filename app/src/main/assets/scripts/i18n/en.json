@@ -2395,25 +2395,25 @@
           "name": "God Finger",
           "description": "Channel divine might into a single click.",
           "effect": "Manual production: starts at +1 APC and grows by roughly +12% per level.",
-          "effectSummary": "Manual production scales by ~+12% per level. Gradually increasing cost."
+          "effectSummary": "Manual production boost. Gradually increasing cost."
         },
         "starCore": {
           "name": "Star Core",
           "description": "Condense a star to power your automated harvests.",
           "effect": "Passive production: starts at +1 APS and grows by roughly +12% per level.",
-          "effectSummary": "Passive production scales by ~+12% per level. Gradually increasing cost."
+          "effectSummary": "Passive production boost. Gradually increasing cost."
         },
         "gachaTicketBooth": {
           "name": "Gacha Booth",
           "description": "Turn atoms into guaranteed draw tickets.",
           "effect": "Buy 1 guaranteed gacha ticket per level. Cap: 200 levels (+200 per Big Bang). Each purchase increases the price by 25,000 atoms and the base cost is multiplied by 4,000 after each Big Bang.",
-          "effectSummary": "Purchase guaranteed gacha tickets: +1 ticket per level, +25,000 atoms added to the cost, a 200-level cap (+200 per Big Bang), and the base cost ×4,000 after each Big Bang."
+          "effectSummary": "Purchase guaranteed gacha tickets."
         },
         "mach3TicketBooth": {
           "name": "Mach3 Terminal",
           "description": "Trade your gacha tickets for guaranteed Mach3 credits.",
           "effect": "Convert 100 gacha tickets into 1 Mach3 credit per level. Cap: 2 levels (+2 per Big Bang).",
-          "effectSummary": "Trade 100 gacha tickets for 1 Mach3 credit per purchase. Cap raised by +2 per Big Bang."
+          "effectSummary": "Trade 100 gacha tickets for 1 Mach3 credit per purchase."
         }
       }
     },
