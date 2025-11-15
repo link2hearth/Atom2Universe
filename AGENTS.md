@@ -22,4 +22,7 @@ Bienvenue dans Atom2Univers ! Voici les consignes à respecter lorsque tu interv
 5. **Ressources binaires**
    - Ne propose pas de fichiers binaires (images, polices, etc.) dans tes contributions. Fournis uniquement des références ou des instructions pour que le propriétaire ajoute lui-même les ressources nécessaires.
 
+6. **Sauvegardes arcade**
+   - Après toute mise à jour du `gameState.arcadeProgress`, déclenche immédiatement `saveGame()` pour garantir la persistance des records.
+
 Merci et bon travail !
