@@ -7409,6 +7409,46 @@ if (typeof globalThis !== 'undefined') {
 }
 
 
+function readStoredCollectionVideosUnlocked(defaultValue = false) {
+  try {
+    const stored = globalThis.localStorage?.getItem(COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY);
+    if (typeof stored === 'string') {
+      const normalized = stored.trim().toLowerCase();
+      if (normalized === 'true') {
+        return true;
+      }
+      if (normalized === 'false') {
+        return false;
+      }
+    }
+  } catch (error) {
+    console.warn('Unable to read collection video unlock state', error);
+  }
+  return !!defaultValue;
+}
+
+function writeStoredCollectionVideosUnlocked(unlocked) {
+  try {
+    if (!globalThis.localStorage) {
+      collectionVideosUnlockedCache = unlocked === true;
+      return;
+    }
+    if (unlocked) {
+      globalThis.localStorage.setItem(COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY, 'true');
+    } else {
+      globalThis.localStorage.removeItem(COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY);
+    }
+    collectionVideosUnlockedCache = unlocked === true;
+  } catch (error) {
+    console.warn('Unable to persist collection video unlock state', error);
+  }
+}
+
+function persistCollectionVideoUnlockState(unlocked) {
+  writeStoredCollectionVideosUnlocked(unlocked === true);
+}
+
+
 function readStoredHeaderCollapsed(defaultValue = false) {
   try {
     const stored = globalThis.localStorage?.getItem(HEADER_COLLAPSED_STORAGE_KEY);
