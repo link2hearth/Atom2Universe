@@ -7,5 +7,6 @@
   "shipHitboxScale": {
     "player": 0.5,
     "enemy": 0.5
-  }
+  },
+  "showScoresPanel": false
 }
