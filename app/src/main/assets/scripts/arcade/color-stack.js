@@ -228,8 +228,12 @@
     return Math.max(0, toInteger(state.config?.extraTopSpace, DEFAULT_CONFIG.extraTopSpace || 0));
   }
 
+  function getBaseCapacity(difficultyConfig) {
+    return Math.max(1, toInteger(difficultyConfig?.capacity, 1));
+  }
+
   function getEffectiveCapacity(difficultyConfig) {
-    const baseCapacity = Math.max(1, toInteger(difficultyConfig?.capacity, 1));
+    const baseCapacity = getBaseCapacity(difficultyConfig);
     const extraSpace = getExtraTopSpace(difficultyConfig);
     return baseCapacity + extraSpace;
   }
@@ -414,7 +418,7 @@
 
   function collectScrambleCandidates(board, difficultyConfig, lastMove) {
     const candidates = [];
-    const capacity = getEffectiveCapacity(difficultyConfig);
+    const capacity = getBaseCapacity(difficultyConfig);
     board.forEach((sourceColumn, sourceIndex) => {
       if (!sourceColumn || sourceColumn.length === 0) {
         return;
@@ -500,7 +504,7 @@
     if (emptyCount >= required) {
       return true;
     }
-    const capacity = getEffectiveCapacity(difficultyConfig);
+    const capacity = getBaseCapacity(difficultyConfig);
     const maxIterations = board.length * Math.max(1, capacity) * 4;
     let iterations = 0;
     while (emptyCount < required && iterations < maxIterations) {
