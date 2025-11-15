@@ -99,7 +99,8 @@
     solutionMap: null,
     hintContext: { type: 'default' },
     hintHighlight: null,
-    pointerHighlight: new Set()
+    pointerHighlight: new Set(),
+    pointerHighlightEnabled: false
   };
 
   const pointerGesture = createPointerGestureState();
@@ -313,7 +314,7 @@
 
     recomputeSolutionMap();
     setHintHighlight(null);
-    setPointerHighlight(null);
+    clearPointerHighlight();
     setHintContext(state.solved ? { type: 'solved' } : { type: 'default' });
 
     if (state.solved) {
@@ -689,7 +690,7 @@
     state.hintUsed = false;
     recomputeSolutionMap();
     setHintHighlight(null);
-    setPointerHighlight(null);
+    clearPointerHighlight();
     setHintContext(state.solved ? { type: 'solved' } : { type: 'default' });
     updateControlsState();
     updateStats();
@@ -713,7 +714,7 @@
       hideWinOverlay();
       recomputeSolutionMap();
       setHintHighlight(null);
-      setPointerHighlight(null);
+      clearPointerHighlight();
       setHintContext(state.solved ? { type: 'solved' } : { type: 'default' });
       updateControlsState();
       updateStats();
@@ -1631,10 +1632,11 @@
     }
     const pointerType = getPointerInputType(event);
     if (pointerType === 'mouse') {
+      state.pointerHighlightEnabled = true;
       setPointerHighlight(ringIndex);
       const direction = event.shiftKey ? -1 : 1;
       applyUserRotation(ringIndex, direction);
-      setPointerHighlight(null);
+      clearPointerHighlight();
       return;
     }
     startTouchGesture(event, ringIndex, position);
@@ -1729,6 +1731,7 @@
     pointerGesture.startAngle = angle;
     pointerGesture.lastAngle = angle;
     pointerGesture.moved = false;
+    state.pointerHighlightEnabled = true;
     setPointerHighlight(ringIndex);
     if (elements.canvas && typeof elements.canvas.setPointerCapture === 'function') {
       elements.canvas.setPointerCapture(event.pointerId);
@@ -1758,6 +1761,16 @@
     return state.pointerHighlight;
   }
 
+  function clearPointerHighlight() {
+    state.pointerHighlightEnabled = false;
+    const highlight = getPointerHighlightSet();
+    if (highlight.size === 0) {
+      return;
+    }
+    highlight.clear();
+    draw();
+  }
+
   function getLinkedRingForIndex(index) {
     if (!Array.isArray(state.rotationLinks) || state.rotationLinks.length !== state.ringCount) {
       return null;
@@ -1779,11 +1792,16 @@
     const normalized =
       Number.isFinite(numeric) && numeric >= 0 && numeric < state.ringCount ? Math.floor(numeric) : null;
     if (normalized == null) {
+      state.pointerHighlightEnabled = false;
       if (highlight.size === 0) {
         return;
       }
       highlight.clear();
       draw();
+      return;
+    }
+
+    if (state.pointerHighlightEnabled !== true) {
       return;
     }
 
@@ -1851,7 +1869,7 @@
   }
 
   function resetPointerGestureState() {
-    setPointerHighlight(null);
+    clearPointerHighlight();
     pointerGesture.active = false;
     pointerGesture.pointerId = null;
     pointerGesture.ringIndex = null;
