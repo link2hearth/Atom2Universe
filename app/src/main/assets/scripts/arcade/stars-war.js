@@ -1996,6 +1996,40 @@
     return api;
   }
 
+  function requestGlobalSave() {
+    const resolveGlobal = () => {
+      if (typeof saveGame === 'function') {
+        return saveGame;
+      }
+      if (typeof globalThis !== 'undefined') {
+        if (typeof globalThis.saveGame === 'function') {
+          return globalThis.saveGame;
+        }
+        if (typeof globalThis.atom2universSaveGame === 'function') {
+          return globalThis.atom2universSaveGame;
+        }
+      }
+      if (typeof window !== 'undefined') {
+        if (typeof window.saveGame === 'function') {
+          return window.saveGame;
+        }
+        if (typeof window.atom2universSaveGame === 'function') {
+          return window.atom2universSaveGame;
+        }
+      }
+      return null;
+    };
+
+    const persist = resolveGlobal();
+    if (typeof persist === 'function') {
+      try {
+        persist();
+      } catch (error) {
+        console.warn('Stars War: unable to persist global save', error);
+      }
+    }
+  }
+
   function compareTopRuns(a, b) {
     if (a.score !== b.score) {
       return b.score - a.score;
@@ -4026,6 +4060,7 @@
     if (updated) {
       scheduleAutosave();
       flushAutosave();
+      requestGlobalSave();
       if (improvedTime) {
         notifyStarsWarInfoUpdate(activeMode, {
           score,
