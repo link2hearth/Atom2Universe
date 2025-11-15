@@ -3,6 +3,18 @@
     return;
   }
 
+  const CONFIG_PATH = 'config/arcade/motocross.json';
+  const DEFAULT_CONFIG = Object.freeze({
+    steepSlopeGrip: Object.freeze({
+      angleThresholdDeg: 30,
+      maxAngleDeg: 60,
+      normalForceBoost: 2800,
+      correctionBoost: 8,
+      torqueAssist: 18000,
+      angularDampingMultiplier: 0.6
+    })
+  });
+
   const DEFAULT_DIFFICULTY = 'easy';
   const CHECKPOINT_INTERVAL = 960;
   const SLOPE_STEP = 0.12;
@@ -166,6 +178,21 @@
 
   function lerp(current, target, factor) {
     return current + (target - current) * factor;
+  }
+
+  function clampNumber(value, min, max, fallback) {
+    const numeric = Number(value);
+    if (Number.isFinite(numeric)) {
+      return clamp(numeric, min, max);
+    }
+    if (Number.isFinite(fallback)) {
+      return clamp(fallback, min, max);
+    }
+    return clamp(min, min, max);
+  }
+
+  function degreesToRadians(degrees) {
+    return (degrees * Math.PI) / 180;
   }
 
   function catmullRomScalar(p0, p1, p2, p3, t) {
@@ -336,6 +363,37 @@
       minY,
       maxY
     });
+  }
+
+  function normalizeSteepSlopeGrip(rawConfig) {
+    const fallback = DEFAULT_CONFIG.steepSlopeGrip;
+    const threshold = clampNumber(rawConfig?.angleThresholdDeg, 0, 80, fallback.angleThresholdDeg);
+    const maxAngleMin = threshold + 1;
+    const maxAngle = clampNumber(rawConfig?.maxAngleDeg, maxAngleMin, 89, fallback.maxAngleDeg);
+    const normalForceBoost = clampNumber(rawConfig?.normalForceBoost, 0, 50000, fallback.normalForceBoost);
+    const correctionBoost = clampNumber(rawConfig?.correctionBoost, 0, 200, fallback.correctionBoost);
+    const torqueAssist = clampNumber(rawConfig?.torqueAssist, 0, 100000, fallback.torqueAssist);
+    const angularDampingMultiplier = clampNumber(
+      rawConfig?.angularDampingMultiplier,
+      0,
+      10,
+      fallback.angularDampingMultiplier
+    );
+    return {
+      angleThresholdDeg: threshold,
+      maxAngleDeg: Math.max(maxAngle, maxAngleMin),
+      normalForceBoost,
+      correctionBoost,
+      torqueAssist,
+      angularDampingMultiplier
+    };
+  }
+
+  function normalizeConfig(rawConfig) {
+    const source = (!rawConfig || typeof rawConfig !== 'object') ? {} : rawConfig;
+    return {
+      steepSlopeGrip: normalizeSteepSlopeGrip(source.steepSlopeGrip)
+    };
   }
 
   function polyFlat(length) {
@@ -1160,6 +1218,7 @@
     active: false,
     elements: null,
     ctx: null,
+    config: normalizeConfig(DEFAULT_CONFIG),
     devicePixelRatio: typeof window !== 'undefined' && window.devicePixelRatio ? window.devicePixelRatio : 1,
     track: null,
     bike: {
@@ -1212,6 +1271,27 @@
     bikeSprite: createBikeSpriteState(),
     test: { active: false, timer: null, index: 0, resumeActive: false }
   };
+
+  function applyConfig(config) {
+    const normalized = normalizeConfig(config);
+    state.config = normalized;
+  }
+
+  function loadConfig() {
+    if (typeof window === 'undefined' || typeof window.fetch !== 'function') {
+      return;
+    }
+    fetch(CONFIG_PATH)
+      .then(response => (response.ok ? response.json() : null))
+      .then(data => {
+        if (data && typeof data === 'object') {
+          applyConfig(data);
+        }
+      })
+      .catch(error => {
+        console.warn('Motocross: unable to load config', error);
+      });
+  }
 
   function updateCombinedInput() {
     const input = state.input;
@@ -1751,6 +1831,7 @@
     wheel.segmentIndex = sample.index;
     const normal = sample.normal;
     const tangent = sample.tangent;
+    const slopeAngle = Math.atan2(tangent.y, tangent.x);
     const toSurface = {
       x: wheel.pos.x - sample.point.x,
       y: wheel.pos.y - sample.point.y
@@ -1792,11 +1873,25 @@
     if (normalForce < 0) {
       normalForce = 0;
     }
+    const steepGripSettings = state.config?.steepSlopeGrip;
+    let steepGripFactor = 0;
+    if (steepGripSettings && tangent.y > 0 && normalForce > 0) {
+      const thresholdRad = degreesToRadians(steepGripSettings.angleThresholdDeg);
+      const maxAngleRad = Math.max(thresholdRad + 0.0001, degreesToRadians(steepGripSettings.maxAngleDeg));
+      if (slopeAngle > thresholdRad) {
+        const normalized = clamp((slopeAngle - thresholdRad) / (maxAngleRad - thresholdRad), 0, 1);
+        steepGripFactor = normalized;
+        normalForce += steepGripSettings.normalForceBoost * normalized;
+      }
+    }
     const tangentVelocity = pointVelocity.x * tangent.x + pointVelocity.y * tangent.y;
     const desiredTangentForce = -tangentVelocity * FRICTION_DAMPING + driveForce;
     const maxFriction = normalForce * FRICTION_COEFFICIENT;
     const tangentForce = clamp(desiredTangentForce, -maxFriction, maxFriction);
-    const correctionScale = penetration * NORMAL_CORRECTION_FACTOR;
+    let correctionScale = penetration * NORMAL_CORRECTION_FACTOR;
+    if (steepGripFactor > 0 && steepGripSettings) {
+      correctionScale += steepGripSettings.correctionBoost * steepGripFactor;
+    }
     const correction = {
       x: normal.x * correctionScale,
       y: normal.y * correctionScale
@@ -1807,7 +1902,9 @@
       correction,
       normal,
       tangent,
-      clearance: wheel.clearance
+      clearance: wheel.clearance,
+      slopeAngle,
+      steepGripFactor
     };
   }
 
@@ -1879,6 +1976,9 @@
     let correctionX = 0;
     let correctionY = 0;
     let correctionCount = 0;
+    const steepGripSettings = state.config?.steepSlopeGrip;
+    let slopeAngularDamping = 0;
+    let frontSteepGrip = 0;
 
     [
       { wheel: back, contact: backContact },
@@ -1898,7 +1998,18 @@
         correctionY += contact.correction.y;
         correctionCount += 1;
       }
+      if (steepGripSettings && contact.steepGripFactor > 0) {
+        const damping = steepGripSettings.angularDampingMultiplier * contact.steepGripFactor;
+        slopeAngularDamping = Math.max(slopeAngularDamping, damping);
+        if (wheel === front) {
+          frontSteepGrip = Math.max(frontSteepGrip, contact.steepGripFactor);
+        }
+      }
     });
+
+    if (steepGripSettings && frontSteepGrip > 0 && totalTorque > 0) {
+      totalTorque -= steepGripSettings.torqueAssist * frontSteepGrip;
+    }
 
     if (airborne) {
       const rotationInput = allowRotationControl ? clamp(controlDelta, -1, 1) : 0;
@@ -1916,7 +2027,9 @@
 
     bike.velocity.x *= 1 - LINEAR_DAMPING * dt;
     bike.velocity.y *= 1 - LINEAR_DAMPING * dt;
-    bike.angularVelocity *= 1 - ANGULAR_DAMPING * dt;
+    const angularDampingBase = ANGULAR_DAMPING + slopeAngularDamping;
+    const angularDampingFactor = clamp(angularDampingBase * dt, 0, 0.95);
+    bike.angularVelocity *= 1 - angularDampingFactor;
 
     if (airborne) {
       bike.angularVelocity = clamp(bike.angularVelocity, -AIR_ROTATION_MAX_SPEED, AIR_ROTATION_MAX_SPEED);
@@ -2636,5 +2749,6 @@
     }
   };
 
+  loadConfig();
   window.motocrossArcade = api;
 })();
