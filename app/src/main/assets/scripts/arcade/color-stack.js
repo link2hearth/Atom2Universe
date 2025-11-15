@@ -18,7 +18,7 @@
     preferDifferentColorWeight: 2.5,
     preferSameColorWeight: 1,
     minMovePool: 6,
-    extraTopSpace: 1,
+    extraTopSpace: 0,
     palette: Object.freeze([
       Object.freeze({ id: 'ruby', value: '#ff6b6b' }),
       Object.freeze({ id: 'azure', value: '#4ab3ff' }),
@@ -813,6 +813,8 @@
       return;
     }
     container.innerHTML = '';
+    const difficultyConfig = state.config.difficulties[state.difficulty] || state.config.difficulties.easy;
+    const extraTopSpace = getExtraTopSpace(difficultyConfig);
     const selection = state.selectedColumn;
     const validTargets = Number.isInteger(selection) ? getValidTargets(selection) : [];
     const targetSet = new Set(validTargets);
@@ -835,6 +837,12 @@
         tokenElement.setAttribute('aria-hidden', 'true');
         columnButton.appendChild(tokenElement);
       });
+      for (let slot = 0; slot < extraTopSpace; slot += 1) {
+        const slotElement = document.createElement('span');
+        slotElement.className = 'color-stack__slot';
+        slotElement.setAttribute('aria-hidden', 'true');
+        columnButton.appendChild(slotElement);
+      }
       columnButton.addEventListener('click', () => {
         handleColumnClick(columnIndex);
       });
