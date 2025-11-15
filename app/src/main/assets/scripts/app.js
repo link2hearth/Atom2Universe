@@ -4734,7 +4734,7 @@ function isPageUnlocked(pageId) {
   }
   if (pageId === 'collection') {
     if (!isCollectionFeatureEnabled()) {
-      return hasOwnedGachaCards() || hasOwnedGachaBonusImages();
+      return hasOwnedGachaCards() || hasOwnedGachaBonusImages() || hasOwnedCollectionVideos();
     }
   }
   const featureId = PAGE_FEATURE_MAP[pageId];
@@ -4831,7 +4831,10 @@ function evaluatePageUnlocks(options = {}) {
   }
 
   if (!unlocks.collection) {
-    if (hasOwnedGachaCards() || hasOwnedGachaImages() || hasOwnedGachaBonusImages()) {
+    if (hasOwnedGachaCards()
+      || hasOwnedGachaImages()
+      || hasOwnedGachaBonusImages()
+      || hasOwnedCollectionVideos()) {
       changed = unlockPage('collection', { save: false, deferUI: true }) || changed;
     }
   }
@@ -7171,7 +7174,8 @@ function updateCollectionVideosVisibility() {
   if (!elements.collectionVideosCard) {
     return;
   }
-  const unlocked = isPageUnlocked('collection') && hasOwnedCollectionVideos();
+  const hasVideos = hasOwnedCollectionVideos();
+  const unlocked = isCollectionFeatureEnabled() && isPageUnlocked('collection') && hasVideos;
   elements.collectionVideosCard.hidden = !unlocked;
   elements.collectionVideosCard.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
 }
