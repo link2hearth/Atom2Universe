@@ -2546,9 +2546,22 @@
     );
     render();
     state.awaitingPlayer = false;
-    resetBetsForNextRound();
-    render();
-    continueHandWithoutHero();
+
+    executeAiResponsesAfterPlayerAction({
+      onComplete(result) {
+        const outcome = result || {};
+        if (outcome.handResolved) {
+          state.phase = 'complete';
+          state.awaitingPlayer = false;
+          render();
+          commitAutosave();
+          return;
+        }
+        resetBetsForNextRound();
+        render();
+        continueHandWithoutHero();
+      }
+    });
   }
 
   function handlePlayerCheckOrCall() {
