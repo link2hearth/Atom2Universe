@@ -7,7 +7,7 @@
   const DEFAULT_CONFIG = Object.freeze({
     steepSlopeGrip: Object.freeze({
       angleThresholdDeg: 30,
-      maxAngleDeg: 60,
+      maxAngleDeg: 80,
       normalForceBoost: 2800,
       correctionBoost: 8,
       torqueAssist: 18000,
