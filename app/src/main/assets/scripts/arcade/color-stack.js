@@ -338,6 +338,13 @@
     return displaced / total;
   }
 
+  function scoreScrambleCandidate(board, difficultyConfig) {
+    const ratio = computeDisplacedRatio(board);
+    const multicolored = countMulticoloredColumns(board);
+    const solvedPenalty = isBoardSolved(board, difficultyConfig.capacity) ? -10 : 0;
+    return ratio * 2 + multicolored + solvedPenalty;
+  }
+
   function generateSolvedBoard(difficultyConfig, palette) {
     state.nextTokenId = 0;
     const board = [];
@@ -391,23 +398,24 @@
   }
 
   function wouldCreateLongStack(column, token) {
-    const preview = column.concat(token);
-    let currentColor = null;
-    let runLength = 0;
-    for (let index = 0; index < preview.length; index += 1) {
-      const entry = preview[index];
-      const color = entry?.colorId || null;
-      if (!color) {
-        currentColor = null;
-        runLength = 0;
-        continue;
+    if (!token || !token.colorId) {
+      return false;
+    }
+    if (!Array.isArray(column) || column.length === 0) {
+      return false;
+    }
+    const tokenColor = token.colorId;
+    const top = column[column.length - 1];
+    if (!top || top.colorId !== tokenColor) {
+      return false;
+    }
+    let runLength = 1; // Include the incoming token.
+    for (let index = column.length - 1; index >= 0; index -= 1) {
+      const entry = column[index];
+      if (!entry || entry.colorId !== tokenColor) {
+        break;
       }
-      if (color === currentColor) {
-        runLength += 1;
-      } else {
-        currentColor = color;
-        runLength = 1;
-      }
+      runLength += 1;
       if (runLength > 2) {
         return true;
       }
@@ -457,7 +465,11 @@
     if (countMulticoloredColumns(board) < difficultyConfig.minMulticoloredColumns) {
       return false;
     }
-    if (computeDisplacedRatio(board) < difficultyConfig.minDisplacedRatio) {
+    const baseRatio = typeof difficultyConfig.minDisplacedRatio === 'number'
+      ? difficultyConfig.minDisplacedRatio
+      : 0.5;
+    const softCap = 0.3;
+    if (computeDisplacedRatio(board) < Math.min(baseRatio, softCap)) {
       return false;
     }
     return true;
@@ -468,14 +480,12 @@
     const board = cloneBoard(solvedBoard);
     const scrambleTarget = Math.max(1, toInteger(difficultyConfig.scrambleMoves, 1));
     const minMovePool = Math.max(1, state.config.minMovePool);
-    const requiredMoves = Math.max(Math.floor(scrambleTarget * 0.6), 3, minMovePool);
-    const maxAttempts = scrambleTarget * Math.max(8, board.length * 4);
-    const requiredEmpty = Math.max(
-      0,
-      Number.isFinite(difficultyConfig.emptyColumns) ? difficultyConfig.emptyColumns : 0
-    );
+    const requiredMoves = Math.max(Math.floor(scrambleTarget * 0.4), 3, minMovePool);
+    const maxAttempts = scrambleTarget * Math.max(10, board.length * 5);
     let performedMoves = 0;
     let attempts = 0;
+    let bestBoard = null;
+    let bestScore = -Infinity;
 
     while (performedMoves < scrambleTarget && attempts < maxAttempts) {
       attempts += 1;
@@ -502,18 +512,25 @@
       sourceColumn.pop();
       destinationColumn.push(movingToken);
       performedMoves += 1;
+      const candidateScore = scoreScrambleCandidate(board, difficultyConfig);
+      if (candidateScore > bestScore) {
+        bestScore = candidateScore;
+        bestBoard = cloneBoard(board);
+      }
+      sourceColumn.pop();
+      destinationColumn.push(movingToken);
+      performedMoves += 1;
     }
 
-    if (performedMoves < requiredMoves) {
-      return null;
+    const finalBoardValid =
+      performedMoves >= requiredMoves && meetsScrambleDiversity(board, difficultyConfig);
+    if (finalBoardValid) {
+      return board;
     }
-    if (requiredEmpty > 0 && countEmptyColumns(board) < requiredEmpty) {
-      return null;
+    if (bestBoard && meetsScrambleDiversity(bestBoard, difficultyConfig)) {
+      return bestBoard;
     }
-    if (!meetsScrambleDiversity(board, difficultyConfig)) {
-      return null;
-    }
-    return board;
+    return null;
   }
 
   function generatePuzzle(difficultyKey) {
