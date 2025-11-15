@@ -1463,6 +1463,7 @@ function applySpecialCardOverlayContent(card) {
   const rawDisplayMode = typeof card.displayMode === 'string' ? card.displayMode.toLowerCase() : '';
   const isActualImage = card.type === 'image';
   const isActualVideo = card.type === 'video';
+  const hasStaticImage = Boolean(!isActualImage && !isActualVideo && card.assetPath);
   const useFullscreenLayout = isActualImage
     || isActualVideo
     || rawDisplayMode === 'image'
@@ -1496,7 +1497,7 @@ function applySpecialCardOverlayContent(card) {
     elements.gachaCardOverlayCount.setAttribute('aria-hidden', hidden ? 'true' : 'false');
   }
   if (elements.gachaCardOverlayImage) {
-    if (isActualImage && card.assetPath) {
+    if ((isActualImage || hasStaticImage) && card.assetPath) {
       elements.gachaCardOverlayImage.src = card.assetPath;
       elements.gachaCardOverlayImage.hidden = false;
     } else {
