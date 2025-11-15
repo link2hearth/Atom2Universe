@@ -39,7 +39,7 @@
         minMulticoloredColumns: 2,
         minDisplacedRatio: 0.5,
         gachaTickets: 1,
-        extraTopSpace: 0
+        extraTopSpace: 1
       }),
       medium: Object.freeze({
         columns: 6,
@@ -50,7 +50,7 @@
         minMulticoloredColumns: 3,
         minDisplacedRatio: 0.6,
         gachaTickets: 2,
-        extraTopSpace: 0
+        extraTopSpace: 1
       }),
       hard: Object.freeze({
         columns: 8,
@@ -61,7 +61,7 @@
         minMulticoloredColumns: 4,
         minDisplacedRatio: 0.65,
         gachaTickets: 3,
-        extraTopSpace: 1
+        extraTopSpace: 2
       })
     })
   });
