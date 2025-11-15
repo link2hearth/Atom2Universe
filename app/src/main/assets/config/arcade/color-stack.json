@@ -23,7 +23,7 @@
       "minMulticoloredColumns": 2,
       "minDisplacedRatio": 0.5,
       "gachaTickets": 1,
-      "extraTopSpace": 1
+      "extraTopSpace": 0
     },
     "medium": {
       "columns": 6,
@@ -34,7 +34,7 @@
       "minMulticoloredColumns": 3,
       "minDisplacedRatio": 0.6,
       "gachaTickets": 3,
-      "extraTopSpace": 1
+      "extraTopSpace": 0
     },
     "hard": {
       "columns": 8,
@@ -45,7 +45,7 @@
       "minMulticoloredColumns": 4,
       "minDisplacedRatio": 0.65,
       "gachaTickets": 5,
-      "extraTopSpace": 2
+      "extraTopSpace": 1
     }
   }
 }
