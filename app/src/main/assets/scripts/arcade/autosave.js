@@ -29,6 +29,29 @@
     'echecs'
   ];
 
+  const normalizeGameId = id => {
+    if (typeof id !== 'string') {
+      return '';
+    }
+    return id.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+  };
+
+  const CANONICAL_GAME_ID_MAP = KNOWN_GAME_IDS.reduce((map, id) => {
+    const normalized = normalizeGameId(id);
+    if (normalized && !map[normalized]) {
+      map[normalized] = id;
+    }
+    return map;
+  }, Object.create(null));
+
+  const resolveKnownGameId = id => {
+    const normalized = normalizeGameId(id);
+    if (!normalized) {
+      return null;
+    }
+    return CANONICAL_GAME_ID_MAP[normalized] || null;
+  };
+
   const clampObject = value => (value && typeof value === 'object' ? value : {});
 
   const safeClone = value => {
@@ -97,6 +120,56 @@
     }
   };
 
+  const cloneEntryRecord = entry => {
+    if (!entry || typeof entry !== 'object') {
+      return null;
+    }
+    const updatedAt = Number.isFinite(entry.updatedAt) ? entry.updatedAt : Date.now();
+    if (entry.state && typeof entry.state === 'object') {
+      const cloned = deepClone(entry.state);
+      if (cloned != null) {
+        return { state: cloned, updatedAt };
+      }
+      return null;
+    }
+    const fallbackState = entry.arcadeState && typeof entry.arcadeState === 'object'
+      ? safeClone(entry.arcadeState)
+      : deepClone(entry);
+    if (fallbackState != null && typeof fallbackState === 'object') {
+      return { state: fallbackState, updatedAt };
+    }
+    return null;
+  };
+
+  const upsertRecord = (target, key, record) => {
+    const canonicalId = resolveKnownGameId(key);
+    if (!canonicalId || !record || typeof record !== 'object') {
+      return;
+    }
+    if (!record.state || typeof record.state !== 'object') {
+      return;
+    }
+    const timestamp = Number.isFinite(record.updatedAt) ? record.updatedAt : Date.now();
+    const existing = target[canonicalId];
+    if (existing && Number.isFinite(existing.updatedAt) && existing.updatedAt > timestamp) {
+      return;
+    }
+    target[canonicalId] = {
+      state: record.state,
+      updatedAt: timestamp
+    };
+  };
+
+  const mergeRawEntry = (target, key, rawEntry) => {
+    if (!rawEntry || typeof rawEntry !== 'object') {
+      return;
+    }
+    const record = cloneEntryRecord(rawEntry);
+    if (record) {
+      upsertRecord(target, key, record);
+    }
+  };
+
   const getGlobalState = () => {
     if (typeof window === 'undefined') {
       return null;
@@ -127,26 +200,7 @@
                 : result.version;
               const entries = clampObject(progress.entries);
               Object.keys(entries).forEach(key => {
-                const entry = entries[key];
-                if (entry && typeof entry === 'object' && entry.state != null) {
-                  const cloned = deepClone(entry.state);
-                  if (cloned != null) {
-                    result.entries[key] = {
-                      state: cloned,
-                      updatedAt: Number.isFinite(entry.updatedAt) ? entry.updatedAt : Date.now()
-                    };
-                  }
-                } else if (entry && typeof entry === 'object') {
-                  const fallbackState = entry.arcadeState && typeof entry.arcadeState === 'object'
-                    ? safeClone(entry.arcadeState)
-                    : deepClone(entry);
-                  if (fallbackState != null) {
-                    result.entries[key] = {
-                      state: fallbackState,
-                      updatedAt: Number.isFinite(entry.updatedAt) ? entry.updatedAt : Date.now()
-                    };
-                  }
-                }
+                mergeRawEntry(result.entries, key, entries[key]);
               });
               // If data is loaded from the bridge, we're done.
               return result;
@@ -163,17 +217,7 @@
     const globalProgress = clampObject(globalState && globalState.arcadeProgress);
     if (globalProgress.entries && typeof globalProgress.entries === 'object') {
       Object.keys(globalProgress.entries).forEach(key => {
-        const entry = globalProgress.entries[key];
-        if (!entry || typeof entry !== 'object') {
-          return;
-        }
-        const clonedState = deepClone(entry.state);
-        if (clonedState != null) {
-          result.entries[key] = {
-            state: clonedState,
-            updatedAt: Number.isFinite(entry.updatedAt) ? entry.updatedAt : Date.now()
-          };
-        }
+        mergeRawEntry(result.entries, key, globalProgress.entries[key]);
       });
       return result;
     }
@@ -187,16 +231,7 @@
           if (parsed && typeof parsed === 'object') {
             const entries = clampObject(parsed.entries);
             Object.keys(entries).forEach(key => {
-              const entry = entries[key];
-              if (entry && typeof entry === 'object' && entry.state != null) {
-                const cloned = deepClone(entry.state);
-                if (cloned != null) {
-                  result.entries[key] = {
-                    state: cloned,
-                    updatedAt: Number.isFinite(entry.updatedAt) ? entry.updatedAt : Date.now()
-                  };
-                }
-              }
+              mergeRawEntry(result.entries, key, entries[key]);
             });
           }
         }
@@ -213,22 +248,36 @@
   let persistScheduled = false;
   let persistTimer = null;
 
+  const findStoredEntryKey = gameId => {
+    const canonicalId = resolveKnownGameId(gameId);
+    if (canonicalId && state.entries[canonicalId]) {
+      return canonicalId;
+    }
+    const normalized = normalizeGameId(gameId);
+    if (!normalized) {
+      return canonicalId;
+    }
+    const fallbackKey = Object.keys(state.entries).find(key => normalizeGameId(key) === normalized);
+    return fallbackKey || canonicalId;
+  };
+
   const normalizeEntriesForGlobalState = entries => {
     const normalized = {};
     KNOWN_GAME_IDS.forEach(id => {
       normalized[id] = null;
     });
     Object.keys(entries).forEach(id => {
-      const entry = entries[id];
-      if (!entry || typeof entry !== 'object') {
+      const record = cloneEntryRecord(entries[id]);
+      if (!record) {
         return;
       }
-      const cloned = deepClone(entry.state);
-      if (cloned != null) {
-        normalized[id] = {
-          state: cloned,
-          updatedAt: Number.isFinite(entry.updatedAt) ? entry.updatedAt : Date.now()
-        };
+      const canonicalId = resolveKnownGameId(id);
+      if (!canonicalId) {
+        return;
+      }
+      const current = normalized[canonicalId];
+      if (!current || !Number.isFinite(current.updatedAt) || record.updatedAt >= current.updatedAt) {
+        normalized[canonicalId] = record;
       }
     });
     return normalized;
@@ -298,7 +347,11 @@
     if (!gameId || typeof gameId !== 'string') {
       return null;
     }
-    const entry = state.entries[gameId];
+    const key = findStoredEntryKey(gameId);
+    if (!key) {
+      return null;
+    }
+    const entry = state.entries[key];
     if (!entry || typeof entry !== 'object') {
       return null;
     }
@@ -316,16 +369,27 @@
     if (!gameId || typeof gameId !== 'string') {
       return;
     }
+    const canonicalId = resolveKnownGameId(gameId);
+    if (!canonicalId) {
+      return;
+    }
     if (gameState == null) {
-      delete state.entries[gameId];
-      schedulePersist();
+      const existingKey = findStoredEntryKey(gameId);
+      if (existingKey && state.entries[existingKey]) {
+        delete state.entries[existingKey];
+        schedulePersist();
+      }
       return;
     }
     const cloned = deepClone(gameState);
     if (cloned == null) {
       return;
     }
-    state.entries[gameId] = {
+    const existingKey = findStoredEntryKey(gameId);
+    if (existingKey && existingKey !== canonicalId) {
+      delete state.entries[existingKey];
+    }
+    state.entries[canonicalId] = {
       state: cloned,
       updatedAt: Date.now()
     };
@@ -336,8 +400,9 @@
     if (!gameId || typeof gameId !== 'string') {
       return;
     }
-    if (state.entries[gameId]) {
-      delete state.entries[gameId];
+    const key = findStoredEntryKey(gameId);
+    if (key && state.entries[key]) {
+      delete state.entries[key];
       schedulePersist();
     }
   };
@@ -345,9 +410,10 @@
   const listEntries = () => {
     const result = {};
     Object.keys(state.entries).forEach(id => {
-      const entry = getEntry(id);
-      if (entry) {
-        result[id] = entry;
+      const canonicalId = resolveKnownGameId(id) || id;
+      const entry = getEntry(canonicalId);
+      if (canonicalId && entry) {
+        result[canonicalId] = entry;
       }
     });
     return result;

@@ -18530,6 +18530,45 @@ function applyTheme(requestedThemeId) {
   return theme.id;
 }
 
+function normalizeArcadeProgressKey(key) {
+  if (typeof key !== 'string') {
+    return '';
+  }
+  return key.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+
+function resolveArcadeProgressEntrySource(entries, id) {
+  if (!entries || typeof entries !== 'object' || !id) {
+    return null;
+  }
+  const direct = entries[id];
+  if (direct && typeof direct === 'object') {
+    return direct;
+  }
+  if (typeof id === 'string') {
+    const lowerId = id.toLowerCase();
+    if (lowerId !== id) {
+      const lowerEntry = entries[lowerId];
+      if (lowerEntry && typeof lowerEntry === 'object') {
+        return lowerEntry;
+      }
+    }
+    const normalizedTarget = normalizeArcadeProgressKey(id);
+    if (normalizedTarget) {
+      const fallbackKey = Object.keys(entries).find(key => {
+        if (typeof key !== 'string' || !entries[key] || typeof entries[key] !== 'object') {
+          return false;
+        }
+        return normalizeArcadeProgressKey(key) === normalizedTarget;
+      });
+      if (fallbackKey && entries[fallbackKey] && typeof entries[fallbackKey] === 'object') {
+        return entries[fallbackKey];
+      }
+    }
+  }
+  return null;
+}
+
 function cloneArcadeProgress(progress) {
   const base = createInitialArcadeProgress();
   if (!progress || typeof progress !== 'object') {
@@ -18542,7 +18581,7 @@ function cloneArcadeProgress(progress) {
     : progress;
 
   ARCADE_GAME_IDS.forEach(id => {
-    const rawEntry = sourceEntries[id];
+    const rawEntry = resolveArcadeProgressEntrySource(sourceEntries, id);
     if (!rawEntry) {
       result.entries[id] = null;
       return;
@@ -19585,7 +19624,7 @@ function normalizeArcadeProgress(raw) {
   const sourceEntries = raw.entries && typeof raw.entries === 'object' ? raw.entries : raw;
 
   ARCADE_GAME_IDS.forEach(id => {
-    const entry = sourceEntries[id];
+    const entry = resolveArcadeProgressEntrySource(sourceEntries, id);
     if (!entry) {
       result.entries[id] = null;
       return;
