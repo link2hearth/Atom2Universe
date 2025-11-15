@@ -18,7 +18,7 @@
     preferDifferentColorWeight: 2.5,
     preferSameColorWeight: 1,
     minMovePool: 6,
-    extraTopSpace: 1,
+    extraTopSpace: 0,
     palette: Object.freeze([
       Object.freeze({ id: 'ruby', value: '#ff6b6b' }),
       Object.freeze({ id: 'azure', value: '#4ab3ff' }),
@@ -38,7 +38,8 @@
         scrambleMoves: 48,
         minMulticoloredColumns: 2,
         minDisplacedRatio: 0.5,
-        gachaTickets: 1
+        gachaTickets: 1,
+        extraTopSpace: 0
       }),
       medium: Object.freeze({
         columns: 6,
@@ -48,7 +49,8 @@
         scrambleMoves: 72,
         minMulticoloredColumns: 3,
         minDisplacedRatio: 0.6,
-        gachaTickets: 2
+        gachaTickets: 2,
+        extraTopSpace: 0
       }),
       hard: Object.freeze({
         columns: 8,
@@ -58,7 +60,8 @@
         scrambleMoves: 96,
         minMulticoloredColumns: 4,
         minDisplacedRatio: 0.65,
-        gachaTickets: 3
+        gachaTickets: 3,
+        extraTopSpace: 1
       })
     })
   });
@@ -163,6 +166,10 @@
       typeof base.minDisplacedRatio === 'number' ? base.minDisplacedRatio : 0.5
     );
     const gachaTickets = Math.max(0, toInteger(entry?.gachaTickets, base.gachaTickets || 0));
+    const baseExtraSpace = Math.max(0, toInteger(base.extraTopSpace, 0));
+    const extraTopSpace = entry && Object.prototype.hasOwnProperty.call(entry, 'extraTopSpace')
+      ? Math.max(0, toInteger(entry.extraTopSpace, baseExtraSpace))
+      : baseExtraSpace;
     const filledColumns = Array.isArray(entry?.filledColumns) && entry.filledColumns.length
       ? entry.filledColumns.map(index => toInteger(index, 0))
       : Array.from({ length: Math.max(0, columns - emptyColumns) }, (_, idx) => idx);
@@ -174,7 +181,8 @@
       minMulticoloredColumns: minMulticolored,
       minDisplacedRatio,
       filledColumns,
-      gachaTickets
+      gachaTickets,
+      extraTopSpace
     };
   }
 
@@ -213,9 +221,16 @@
     };
   }
 
+  function getExtraTopSpace(difficultyConfig) {
+    if (difficultyConfig && Object.prototype.hasOwnProperty.call(difficultyConfig, 'extraTopSpace')) {
+      return Math.max(0, toInteger(difficultyConfig.extraTopSpace, 0));
+    }
+    return Math.max(0, toInteger(state.config?.extraTopSpace, DEFAULT_CONFIG.extraTopSpace || 0));
+  }
+
   function getEffectiveCapacity(difficultyConfig) {
     const baseCapacity = Math.max(1, toInteger(difficultyConfig?.capacity, 1));
-    const extraSpace = Math.max(0, toInteger(state.config?.extraTopSpace, DEFAULT_CONFIG.extraTopSpace));
+    const extraSpace = getExtraTopSpace(difficultyConfig);
     return baseCapacity + extraSpace;
   }
 
@@ -798,6 +813,8 @@
       return;
     }
     container.innerHTML = '';
+    const difficultyConfig = state.config.difficulties[state.difficulty] || state.config.difficulties.easy;
+    const extraTopSpace = getExtraTopSpace(difficultyConfig);
     const selection = state.selectedColumn;
     const validTargets = Number.isInteger(selection) ? getValidTargets(selection) : [];
     const targetSet = new Set(validTargets);
@@ -820,6 +837,12 @@
         tokenElement.setAttribute('aria-hidden', 'true');
         columnButton.appendChild(tokenElement);
       });
+      for (let slot = 0; slot < extraTopSpace; slot += 1) {
+        const slotElement = document.createElement('span');
+        slotElement.className = 'color-stack__slot';
+        slotElement.setAttribute('aria-hidden', 'true');
+        columnButton.appendChild(slotElement);
+      }
       columnButton.addEventListener('click', () => {
         handleColumnClick(columnIndex);
       });
