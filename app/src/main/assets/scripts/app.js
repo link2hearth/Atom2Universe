@@ -298,6 +298,7 @@ const COLLECTION_BONUS_IMAGES_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.b
 const COLLECTION_BONUS2_IMAGES_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.bonus2ImagesCollapsed';
 const COLLECTION_VIDEOS_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.videosCollapsed';
 const COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY = 'atom2univers.collection.videosUnlocked';
+const COLLECTION_VIDEOS_STATE_STORAGE_KEY = 'atom2univers.collection.videosState.v1';
 const HEADER_COLLAPSED_STORAGE_KEY = 'atom2univers.ui.headerCollapsed';
 const ARCADE_HUB_CARD_STATE_STORAGE_KEY = 'atom2univers.arcadeHub.cardStates.v1';
 const ARCADE_HUB_CARD_ORDER_STORAGE_KEY = 'atom2univers.arcadeHub.cardOrder.v1';
@@ -7227,6 +7228,186 @@ function writeStoredInfoCardCollapsed(storageKey, collapsed) {
     console.warn('Unable to persist info card preference', storageKey, error);
   }
 }
+
+function readStoredCollectionVideosUnlocked(defaultValue = false) {
+  try {
+    const stored = globalThis.localStorage?.getItem(COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY);
+    if (typeof stored === 'string') {
+      const normalized = stored.trim().toLowerCase();
+      if (normalized === 'true') {
+        return true;
+      }
+      if (normalized === 'false') {
+        return false;
+      }
+    }
+  } catch (error) {
+    console.warn('Unable to read collection video unlock state', error);
+  }
+  return !!defaultValue;
+}
+
+function writeStoredCollectionVideosUnlocked(unlocked) {
+  try {
+    if (!globalThis.localStorage) {
+      collectionVideosUnlockedCache = unlocked === true;
+      return;
+    }
+    if (unlocked) {
+      globalThis.localStorage.setItem(COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY, 'true');
+    } else {
+      globalThis.localStorage.removeItem(COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY);
+    }
+    collectionVideosUnlockedCache = unlocked === true;
+  } catch (error) {
+    console.warn('Unable to persist collection video unlock state', error);
+  }
+}
+
+function persistCollectionVideoUnlockState(unlocked) {
+  writeStoredCollectionVideosUnlocked(unlocked === true);
+}
+
+function readStoredCollectionVideoSnapshotEntries() {
+  try {
+    const raw = globalThis.localStorage?.getItem(COLLECTION_VIDEOS_STATE_STORAGE_KEY);
+    if (typeof raw !== 'string' || !raw.trim()) {
+      return [];
+    }
+    const parsed = JSON.parse(raw);
+    const sourceEntries = Array.isArray(parsed?.entries) ? parsed.entries : [];
+    return sourceEntries
+      .map(entry => {
+        const id = typeof entry?.id === 'string' && entry.id.trim() ? entry.id.trim() : null;
+        if (!id) {
+          return null;
+        }
+        const acquiredOrder = Number(entry?.acquiredOrder);
+        const firstAcquiredAt = Number(entry?.firstAcquiredAt);
+        return {
+          id,
+          acquiredOrder: Number.isFinite(acquiredOrder) && acquiredOrder > 0
+            ? Math.floor(acquiredOrder)
+            : null,
+          firstAcquiredAt: Number.isFinite(firstAcquiredAt) && firstAcquiredAt > 0
+            ? firstAcquiredAt
+            : null
+        };
+      })
+      .filter(entry => entry);
+  } catch (error) {
+    console.warn('Unable to read collection video snapshot', error);
+  }
+  return [];
+}
+
+function writeStoredCollectionVideoSnapshot(entries) {
+  try {
+    if (!globalThis.localStorage) {
+      return false;
+    }
+    if (!Array.isArray(entries) || entries.length === 0) {
+      globalThis.localStorage.removeItem(COLLECTION_VIDEOS_STATE_STORAGE_KEY);
+      return true;
+    }
+    const payload = {
+      version: 1,
+      entries: entries.map(entry => ({
+        id: entry.id,
+        acquiredOrder: entry.acquiredOrder || null,
+        firstAcquiredAt: entry.firstAcquiredAt || null
+      }))
+    };
+    globalThis.localStorage.setItem(COLLECTION_VIDEOS_STATE_STORAGE_KEY, JSON.stringify(payload));
+    return true;
+  } catch (error) {
+    console.warn('Unable to persist collection video snapshot', error);
+  }
+  return false;
+}
+
+function clearStoredCollectionVideoSnapshot() {
+  writeStoredCollectionVideoSnapshot([]);
+}
+
+function mergeStoredCollectionVideoSnapshot(collection) {
+  const target = collection && typeof collection === 'object' ? collection : null;
+  if (!target) {
+    return false;
+  }
+  const snapshotEntries = readStoredCollectionVideoSnapshotEntries();
+  if (!snapshotEntries.length) {
+    return false;
+  }
+  let merged = false;
+  snapshotEntries.forEach(entry => {
+    if (!entry?.id) {
+      return;
+    }
+    const reference = target[entry.id];
+    if (!reference) {
+      return;
+    }
+    const rawCount = Number(reference?.count ?? reference);
+    if (!Number.isFinite(rawCount) || rawCount <= 0) {
+      reference.count = 1;
+      merged = true;
+    }
+    if (entry.acquiredOrder != null) {
+      const storedOrder = Number(reference?.acquiredOrder);
+      if (!Number.isFinite(storedOrder) || storedOrder <= 0) {
+        reference.acquiredOrder = entry.acquiredOrder;
+        merged = true;
+      }
+    }
+    if (entry.firstAcquiredAt != null) {
+      const storedFirst = Number(reference?.firstAcquiredAt);
+      if (!Number.isFinite(storedFirst) || storedFirst <= 0) {
+        reference.firstAcquiredAt = entry.firstAcquiredAt;
+        merged = true;
+      }
+    }
+  });
+  return merged;
+}
+
+function syncCollectionVideoStateSnapshot(options = {}) {
+  const collection = options.collection && typeof options.collection === 'object'
+    ? options.collection
+    : (gameState.collectionVideos && typeof gameState.collectionVideos === 'object'
+      ? gameState.collectionVideos
+      : null);
+  if (!collection) {
+    clearStoredCollectionVideoSnapshot();
+    return;
+  }
+  const ownedEntries = Object.values(collection)
+    .map(entry => {
+      if (!entry) {
+        return null;
+      }
+      const count = Number(entry?.count ?? entry);
+      if (!Number.isFinite(count) || count <= 0) {
+        return null;
+      }
+      return {
+        id: entry.id,
+        acquiredOrder: Number.isFinite(Number(entry?.acquiredOrder)) && Number(entry?.acquiredOrder) > 0
+          ? Math.floor(Number(entry.acquiredOrder))
+          : null,
+        firstAcquiredAt: Number.isFinite(Number(entry?.firstAcquiredAt)) && Number(entry?.firstAcquiredAt) > 0
+          ? Number(entry.firstAcquiredAt)
+          : null
+      };
+    })
+    .filter(entry => entry && entry.id);
+  writeStoredCollectionVideoSnapshot(ownedEntries);
+}
+
+if (typeof globalThis !== 'undefined') {
+  globalThis.syncCollectionVideoStateSnapshot = syncCollectionVideoStateSnapshot;
+}
+
 
 function readStoredCollectionVideosUnlocked(defaultValue = false) {
   try {
@@ -19218,6 +19399,7 @@ const RESET_LOCAL_STORAGE_KEYS = [
   COLLECTION_IMAGES_COLLAPSED_STORAGE_KEY,
   COLLECTION_BONUS_IMAGES_COLLAPSED_STORAGE_KEY,
   COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY,
+  COLLECTION_VIDEOS_STATE_STORAGE_KEY,
   HEADER_COLLAPSED_STORAGE_KEY,
   PERFORMANCE_MODE_STORAGE_KEY,
   UI_SCALE_STORAGE_KEY,
@@ -19361,6 +19543,7 @@ function resetGame() {
   clearArcadeAutosaveData({ preserveGameIds: ['echecs'] });
   clearLocalStorageForReset();
   persistCollectionVideoUnlockState(false);
+  clearStoredCollectionVideoSnapshot();
   Object.assign(gameState, {
     atoms: LayeredNumber.zero(),
     lifetime: LayeredNumber.zero(),
@@ -19971,8 +20154,10 @@ function applySerializedGameState(raw) {
       }
     });
   }
+  mergeStoredCollectionVideoSnapshot(baseVideoCollection);
   gameState.collectionVideos = baseVideoCollection;
   persistCollectionVideoUnlockState(hasOwnedCollectionVideos());
+  syncCollectionVideoStateSnapshot({ collection: baseVideoCollection });
   const baseBonusImageCollection = createInitialGachaBonusImageCollection();
   let inferredBonusImageAcquisitionCounter = 0;
   if (data.gachaBonusImages && typeof data.gachaBonusImages === 'object') {
@@ -20435,6 +20620,34 @@ function loadGame() {
     } else {
       gameState.gachaImageAcquisitionCounter = inferredImageAcquisitionCounter;
     }
+    const baseVideoCollection = createInitialCollectionVideoCollection();
+    if (data.collectionVideos && typeof data.collectionVideos === 'object') {
+      Object.entries(data.collectionVideos).forEach(([videoId, stored]) => {
+        const reference = baseVideoCollection[videoId];
+        if (!reference) {
+          return;
+        }
+        const rawCount = Number(stored?.count ?? stored);
+        const normalizedCount = Number.isFinite(rawCount) && rawCount > 0
+          ? 1
+          : 0;
+        reference.count = normalizedCount;
+        if (normalizedCount > 0) {
+          const storedOrder = Number(stored?.acquiredOrder);
+          if (Number.isFinite(storedOrder) && storedOrder > 0) {
+            reference.acquiredOrder = Math.floor(storedOrder);
+          }
+          const storedFirstAcquiredAt = Number(stored?.firstAcquiredAt);
+          if (Number.isFinite(storedFirstAcquiredAt) && storedFirstAcquiredAt > 0) {
+            reference.firstAcquiredAt = storedFirstAcquiredAt;
+          }
+        }
+      });
+    }
+    mergeStoredCollectionVideoSnapshot(baseVideoCollection);
+    gameState.collectionVideos = baseVideoCollection;
+    persistCollectionVideoUnlockState(hasOwnedCollectionVideos());
+    syncCollectionVideoStateSnapshot({ collection: baseVideoCollection });
     const baseBonusImageCollection = createInitialGachaBonusImageCollection();
     let inferredBonusImageAcquisitionCounter = 0;
     if (data.gachaBonusImages && typeof data.gachaBonusImages === 'object') {

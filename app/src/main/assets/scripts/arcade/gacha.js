@@ -976,6 +976,18 @@ function awardCollectionVideo(videoId) {
   const autoplay = definition ? definition.autoplay !== false : true;
   const loop = definition ? definition.loop !== false : true;
   const muted = definition ? definition.muted !== false : true;
+  try {
+    if (typeof globalThis !== 'undefined'
+      && typeof globalThis.persistCollectionVideoUnlockState === 'function') {
+      globalThis.persistCollectionVideoUnlockState(true);
+    }
+    if (typeof globalThis !== 'undefined'
+      && typeof globalThis.syncCollectionVideoStateSnapshot === 'function') {
+      globalThis.syncCollectionVideoStateSnapshot();
+    }
+  } catch (error) {
+    console.warn('Unable to persist collection video state', error);
+  }
   return {
     cardId: videoId,
     definition,
