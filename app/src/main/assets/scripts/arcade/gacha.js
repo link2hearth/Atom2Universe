@@ -947,7 +947,10 @@ function awardCollectionVideo(videoId) {
   }
   const entry = collection[videoId];
   const previousCount = Number(entry.count) || 0;
-  const newCount = previousCount + 1;
+  if (previousCount > 0) {
+    return null;
+  }
+  const newCount = 1;
   entry.count = newCount;
   if (previousCount === 0) {
     const now = Date.now();

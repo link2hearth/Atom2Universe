@@ -1091,7 +1091,7 @@ function updateSpecialCardOverlayNavigation(card) {
     return;
   }
 
-  owned.sort(compareCollectionImagesByAcquisition);
+  owned.sort(compareCollectionEntriesByAcquisition);
   const ids = owned.map(entry => entry.id).filter(Boolean);
   const targetId = card.cardId || (card.definition && card.definition.id) || '';
   const currentIndex = ids.indexOf(targetId);
@@ -1878,7 +1878,7 @@ function buildOwnedCollectionEntries(definitions, collection, type) {
     .filter(entry => entry && entry.count > 0);
 }
 
-function compareCollectionImagesByAcquisition(a, b) {
+function compareCollectionEntriesByAcquisition(a, b) {
   if (!a || !b) {
     return 0;
   }
@@ -1933,6 +1933,7 @@ function renderBonusImageCollectionList(options) {
     return;
   }
 
+  container.classList.remove('info-card-list--videos');
   container.classList.add('info-card-list--images');
   container.dataset.collectionType = collectionType || 'image';
   container.innerHTML = '';
@@ -1952,7 +1953,7 @@ function renderBonusImageCollectionList(options) {
     return;
   }
 
-  owned.sort(compareCollectionImagesByAcquisition);
+  owned.sort(compareCollectionEntriesByAcquisition);
 
   owned.forEach(entry => {
     const item = document.createElement('li');
@@ -2017,6 +2018,67 @@ function renderBonusImageCollectionList(options) {
   emptyElement.setAttribute('aria-hidden', 'true');
 }
 
+function renderCollectionVideoList(options) {
+  const {
+    definitions,
+    collection,
+    container,
+    emptyElement,
+    viewKey
+  } = options;
+
+  if (!container || !emptyElement) {
+    return;
+  }
+
+  container.classList.remove('info-card-list--images');
+  container.classList.add('info-card-list--videos');
+  container.dataset.collectionType = 'video';
+  container.innerHTML = '';
+
+  const owned = buildOwnedCollectionEntries(definitions, collection, 'video');
+
+  if (!owned.length) {
+    container.hidden = true;
+    container.setAttribute('aria-hidden', 'true');
+    emptyElement.hidden = false;
+    emptyElement.setAttribute('aria-hidden', 'false');
+    return;
+  }
+
+  owned.sort(compareCollectionEntriesByAcquisition);
+
+  owned.forEach(entry => {
+    const item = document.createElement('li');
+    item.className = 'info-card-list__item info-card-list__item--video';
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'info-card-list__button info-card-list__button--video';
+    button.dataset.cardId = entry.id;
+    button.dataset.cardType = 'video';
+    const viewLabel = translateOrDefault(
+      viewKey,
+      `Afficher ${entry.label}`,
+      { card: entry.label }
+    );
+    button.setAttribute('aria-label', viewLabel);
+    button.title = viewLabel;
+
+    const name = document.createElement('span');
+    name.className = 'info-card-list__name info-card-list__name--video';
+    name.textContent = entry.label;
+
+    button.appendChild(name);
+    item.appendChild(button);
+    container.appendChild(item);
+  });
+
+  container.hidden = false;
+  container.setAttribute('aria-hidden', 'false');
+  emptyElement.hidden = true;
+  emptyElement.setAttribute('aria-hidden', 'true');
+}
+
 function renderCollectionList(options) {
   const {
     definitions,
@@ -2025,10 +2087,21 @@ function renderCollectionList(options) {
     emptyElement,
     type,
     viewKey,
-    countKey
+    countKey = null
   } = options;
 
-  if (type === 'image' || type === 'bonusImage' || type === 'bonusImage2' || type === 'video') {
+  if (type === 'video') {
+    renderCollectionVideoList({
+      definitions,
+      collection,
+      container,
+      emptyElement,
+      viewKey
+    });
+    return;
+  }
+
+  if (type === 'image' || type === 'bonusImage' || type === 'bonusImage2') {
     renderBonusImageCollectionList({
       definitions,
       collection,
@@ -2049,6 +2122,7 @@ function renderCollectionList(options) {
   }
 
   container.classList.remove('info-card-list--images');
+  container.classList.remove('info-card-list--videos');
   container.dataset.collectionType = type || '';
   container.innerHTML = '';
 
@@ -2132,8 +2206,7 @@ function renderSpecialCardCollection() {
     container: elements.collectionVideosList,
     emptyElement: elements.collectionVideosEmpty,
     type: 'video',
-    viewKey: 'index.sections.collection.videos.view',
-    countKey: 'index.sections.collection.videos.count'
+    viewKey: 'index.sections.collection.videos.view'
   });
 
   renderCollectionList({

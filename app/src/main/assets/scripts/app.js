@@ -18843,7 +18843,7 @@ function serializeState() {
         const entry = source[videoId];
         const rawCount = Number(entry?.count ?? entry);
         if (Number.isFinite(rawCount) && rawCount > 0) {
-          const stored = { count: Math.floor(rawCount) };
+          const stored = { count: 1 };
           const acquiredOrder = Number(entry?.acquiredOrder);
           if (Number.isFinite(acquiredOrder) && acquiredOrder > 0) {
             stored.acquiredOrder = Math.floor(acquiredOrder);
@@ -19895,7 +19895,7 @@ function applySerializedGameState(raw) {
       }
       const rawCount = Number(stored?.count ?? stored);
       const normalizedCount = Number.isFinite(rawCount) && rawCount > 0
-        ? Math.floor(rawCount)
+        ? 1
         : 0;
       reference.count = normalizedCount;
       if (normalizedCount > 0) {
