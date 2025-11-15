@@ -2631,6 +2631,7 @@ function syncStarsWarProgressEntry(stats) {
     ? currentEntry.state
     : null;
   const existing = readStarsWarProgressEntry(currentEntry) || {};
+  const existingHasData = hasStarsWarProgressData(existing);
   const merged = {};
   let changed = false;
 
@@ -2644,7 +2645,7 @@ function syncStarsWarProgressEntry(stats) {
     }
   });
 
-  if (!changed && hasStarsWarProgressData(existing)) {
+  if (!changed && existingHasData) {
     return;
   }
 
@@ -2679,6 +2680,17 @@ function syncStarsWarProgressEntry(stats) {
 
   progress.entries.starsWar = entry;
   progress.entries.starswar = entry;
+
+  if (changed || !existingHasData) {
+    const persistSave = typeof saveGame === 'function'
+      ? saveGame
+      : (typeof window !== 'undefined' && typeof window.saveGame === 'function'
+        ? window.saveGame
+        : null);
+    if (typeof persistSave === 'function') {
+      persistSave();
+    }
+  }
 }
 
 function getStarsWarAutosaveStats() {
