@@ -3,7 +3,7 @@
   "preferDifferentColorWeight": 2.5,
   "preferSameColorWeight": 1,
   "minMovePool": 6,
-  "extraTopSpace": 0,
+  "extraTopSpace": 1,
   "palette": [
     { "id": "ruby", "value": "#ff6b6b" },
     { "id": "azure", "value": "#4ab3ff" },
@@ -22,8 +22,7 @@
       "scrambleMoves": 48,
       "minMulticoloredColumns": 2,
       "minDisplacedRatio": 0.5,
-      "gachaTickets": 1,
-      "extraTopSpace": 0
+      "gachaTickets": 1
     },
     "medium": {
       "columns": 6,
@@ -33,8 +32,7 @@
       "scrambleMoves": 72,
       "minMulticoloredColumns": 3,
       "minDisplacedRatio": 0.6,
-      "gachaTickets": 3,
-      "extraTopSpace": 0
+      "gachaTickets": 3
     },
     "hard": {
       "columns": 8,
@@ -44,8 +42,7 @@
       "scrambleMoves": 96,
       "minMulticoloredColumns": 4,
       "minDisplacedRatio": 0.65,
-      "gachaTickets": 5,
-      "extraTopSpace": 1
+      "gachaTickets": 5
     }
   }
 }
