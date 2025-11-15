@@ -3968,24 +3968,49 @@
     }
   }
 
+  function notifyStarsWarInfoUpdate(mode, runStats) {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    const refresher = window.refreshStarsWarInfoStats;
+    if (typeof refresher !== 'function') {
+      return;
+    }
+    if (runStats && Number.isFinite(runStats.time) && runStats.time > 0) {
+      refresher({
+        mode: normalizeDifficultyMode(mode),
+        score: Math.max(0, Math.floor(Number(runStats.score) || 0)),
+        time: Math.max(0, Math.floor(Number(runStats.time) || 0)),
+        waves: Math.max(0, Math.floor(Number(runStats.waves) || 0))
+      });
+    } else {
+      refresher();
+    }
+  }
+
   function updateRecords() {
     let updated = false;
     const activeMode = state.difficultyMode;
     const record = ensureRecordForMode(activeMode);
     const score = Math.max(0, Math.floor(Number(state.score) || 0));
-    if (score > record.bestScore) {
-      record.bestScore = score;
-      updated = true;
-    }
     const elapsedSeconds = Math.max(0, Math.floor(Number(state.elapsed) || 0));
+    const wave = Math.max(0, Math.floor(Number(state.wave) || 0));
+    let improvedTime = false;
     if (elapsedSeconds > record.bestTime) {
       record.bestTime = elapsedSeconds;
-      updated = true;
-    }
-    const wave = Math.max(0, Math.floor(Number(state.wave) || 0));
-    if (wave > record.bestWave) {
+      record.bestScore = score;
       record.bestWave = wave;
+      improvedTime = true;
       updated = true;
+    } else {
+      if (score > record.bestScore) {
+        record.bestScore = score;
+        updated = true;
+      }
+      if (wave > record.bestWave) {
+        record.bestWave = wave;
+        updated = true;
+      }
     }
     if (state.difficulty > state.records.bestDifficulty) {
       state.records.bestDifficulty = state.difficulty;
@@ -4001,6 +4026,15 @@
     if (updated) {
       scheduleAutosave();
       flushAutosave();
+      if (improvedTime) {
+        notifyStarsWarInfoUpdate(activeMode, {
+          score,
+          time: elapsedSeconds,
+          waves: wave
+        });
+      } else {
+        notifyStarsWarInfoUpdate(activeMode);
+      }
     }
   }
 

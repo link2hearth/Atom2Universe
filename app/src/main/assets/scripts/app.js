@@ -5987,6 +5987,8 @@ function collectDomElements() {
   infoPhotonDistanceValue: document.getElementById('infoPhotonDistanceValue'),
   infoPhotonSpeedValue: document.getElementById('infoPhotonSpeedValue'),
   infoPhotonAltitudeValue: document.getElementById('infoPhotonAltitudeValue'),
+  infoStarsWarHardValue: document.getElementById('infoStarsWarHardValue'),
+  infoStarsWarEasyValue: document.getElementById('infoStarsWarEasyValue'),
   infoBonusSubtitle: document.getElementById('infoBonusSubtitle'),
   infoElementBonuses: document.getElementById('infoElementBonuses'),
   infoElementBonusCard: document.getElementById('infoElementBonusCard'),
