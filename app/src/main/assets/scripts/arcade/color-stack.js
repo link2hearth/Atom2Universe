@@ -517,6 +517,9 @@
         bestScore = candidateScore;
         bestBoard = cloneBoard(board);
       }
+      sourceColumn.pop();
+      destinationColumn.push(movingToken);
+      performedMoves += 1;
     }
 
     const finalBoardValid =
