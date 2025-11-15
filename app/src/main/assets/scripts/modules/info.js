@@ -2290,6 +2290,204 @@ function updatePhotonStats() {
   }
 }
 
+const STARS_WAR_DIFFICULTY_MODES = Object.freeze({ hard: 'hard', easy: 'easy' });
+const STARS_WAR_AUTOSAVE_KEY = 'starsWar';
+
+function normalizeStarsWarMode(mode) {
+  if (typeof mode === 'string' && mode.toLowerCase() === STARS_WAR_DIFFICULTY_MODES.easy) {
+    return STARS_WAR_DIFFICULTY_MODES.easy;
+  }
+  return STARS_WAR_DIFFICULTY_MODES.hard;
+}
+
+function normalizeStarsWarRecord(raw) {
+  const result = { score: 0, time: 0, waves: 0 };
+  if (!raw || typeof raw !== 'object') {
+    return result;
+  }
+  const toNumber = value => {
+    const numeric = Number(value);
+    return Number.isFinite(numeric) && numeric >= 0 ? numeric : 0;
+  };
+  result.score = Math.max(0, Math.floor(toNumber(raw.bestScore ?? raw.score ?? raw.highScore ?? raw.points)));
+  result.time = Math.max(0, Math.floor(toNumber(raw.bestTime ?? raw.bestTimeSeconds ?? raw.time ?? raw.duration)));
+  result.waves = Math.max(0, Math.floor(toNumber(raw.bestWave ?? raw.wave ?? raw.maxWave ?? raw.waves)));
+  return result;
+}
+
+function readStarsWarProgressEntry(rawEntry) {
+  if (!rawEntry || typeof rawEntry !== 'object') {
+    return null;
+  }
+  const state = rawEntry.state && typeof rawEntry.state === 'object' ? rawEntry.state : rawEntry;
+  if (!state || typeof state !== 'object') {
+    return null;
+  }
+  const modesSource = state.modes && typeof state.modes === 'object' ? state.modes : null;
+  const result = {};
+  Object.keys(STARS_WAR_DIFFICULTY_MODES).forEach(key => {
+    const modeKey = STARS_WAR_DIFFICULTY_MODES[key];
+    const rawMode = modesSource && typeof modesSource[modeKey] === 'object' ? modesSource[modeKey] : null;
+    result[modeKey] = normalizeStarsWarRecord(rawMode);
+  });
+  if (!modesSource) {
+    const fallback = normalizeStarsWarRecord(state);
+    if (fallback.score > 0 || fallback.time > 0 || fallback.waves > 0) {
+      result[STARS_WAR_DIFFICULTY_MODES.hard] = fallback;
+    }
+  }
+  return result;
+}
+
+function hasStarsWarProgressData(stats) {
+  if (!stats || typeof stats !== 'object') {
+    return false;
+  }
+  return Object.keys(STARS_WAR_DIFFICULTY_MODES).some(key => {
+    const modeKey = STARS_WAR_DIFFICULTY_MODES[key];
+    const record = stats[modeKey];
+    return record && (record.time > 0 || record.score > 0 || record.waves > 0);
+  });
+}
+
+function syncStarsWarProgressEntry(stats) {
+  if (!hasStarsWarProgressData(stats)) {
+    return;
+  }
+  const progress = gameState.arcadeProgress;
+  if (!progress || typeof progress !== 'object') {
+    return;
+  }
+  if (!progress.entries || typeof progress.entries !== 'object') {
+    progress.entries = {};
+  }
+  const currentEntry = progress.entries.starsWar || progress.entries.starswar || null;
+  if (hasStarsWarProgressData(readStarsWarProgressEntry(currentEntry))) {
+    return;
+  }
+  const payload = {
+    version: 3,
+    modes: {}
+  };
+  Object.keys(STARS_WAR_DIFFICULTY_MODES).forEach(key => {
+    const modeKey = STARS_WAR_DIFFICULTY_MODES[key];
+    const record = stats[modeKey] || { score: 0, time: 0, waves: 0 };
+    payload.modes[modeKey] = {
+      bestScore: record.score,
+      bestTime: record.time,
+      bestWave: record.waves,
+      topRuns: []
+    };
+  });
+  progress.entries.starsWar = {
+    state: payload,
+    updatedAt: Date.now()
+  };
+}
+
+function getStarsWarAutosaveStats() {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+  const api = window.ArcadeAutosave;
+  if (!api || typeof api.get !== 'function') {
+    return null;
+  }
+  let raw = null;
+  try {
+    raw = api.get(STARS_WAR_AUTOSAVE_KEY);
+  } catch (error) {
+    return null;
+  }
+  if (!raw || typeof raw !== 'object') {
+    return null;
+  }
+  return readStarsWarProgressEntry(raw);
+}
+
+function getStarsWarProgressStats() {
+  const progress = gameState.arcadeProgress;
+  const entries = progress && typeof progress === 'object' && progress.entries && typeof progress.entries === 'object'
+    ? progress.entries
+    : {};
+  const entry = entries.starsWar || entries.starswar || null;
+  const fromProgress = readStarsWarProgressEntry(entry);
+  if (hasStarsWarProgressData(fromProgress)) {
+    return fromProgress;
+  }
+  const fromAutosave = getStarsWarAutosaveStats();
+  if (hasStarsWarProgressData(fromAutosave)) {
+    syncStarsWarProgressEntry(fromAutosave);
+    return fromAutosave;
+  }
+  return fromProgress || fromAutosave;
+}
+
+function formatStarsWarPoints(value) {
+  const count = toNonNegativeInteger(value);
+  const countText = formatIntegerLocalized(count);
+  const key = count === 1
+    ? 'scripts.info.progress.starsWar.points.one'
+    : 'scripts.info.progress.starsWar.points.other';
+  const fallback = count === 1 ? `${countText} point` : `${countText} points`;
+  return translateOrDefault(key, fallback, { count: countText });
+}
+
+function formatStarsWarWaves(value) {
+  const count = toNonNegativeInteger(value);
+  const countText = formatIntegerLocalized(count);
+  const key = count === 1
+    ? 'scripts.info.progress.starsWar.waves.one'
+    : 'scripts.info.progress.starsWar.waves.other';
+  const fallback = count === 1 ? `${countText} vague` : `${countText} vagues`;
+  return translateOrDefault(key, fallback, { count: countText });
+}
+
+function formatStarsWarEntry(record) {
+  if (!record || record.time <= 0) {
+    return translateOrDefault('scripts.info.progress.starsWar.empty', '—');
+  }
+  const pointsText = formatStarsWarPoints(record.score);
+  const wavesText = formatStarsWarWaves(record.waves);
+  const durationText = formatDuration(record.time * 1000);
+  const fallback = `${pointsText} · ${wavesText} · ${durationText}`;
+  return translateOrDefault('scripts.info.progress.starsWar.entry', fallback, {
+    points: pointsText,
+    waves: wavesText,
+    duration: durationText
+  });
+}
+
+function updateStarsWarStats(override) {
+  const stats = getStarsWarProgressStats() || {};
+  const overrides = {};
+  if (override && typeof override === 'object') {
+    const mode = normalizeStarsWarMode(override.mode);
+    const time = toNonNegativeInteger(override.time);
+    if (time > 0) {
+      overrides[mode] = {
+        score: toNonNegativeInteger(override.score),
+        time,
+        waves: toNonNegativeInteger(override.waves)
+      };
+    }
+  }
+  const emptyValue = translateOrDefault('scripts.info.progress.starsWar.empty', '—');
+
+  const applyValue = (element, modeKey) => {
+    if (!element) {
+      return;
+    }
+    const base = stats[modeKey] || { score: 0, time: 0, waves: 0 };
+    const overrideRecord = overrides[modeKey];
+    const record = overrideRecord && overrideRecord.time > base.time ? overrideRecord : base;
+    element.textContent = record && record.time > 0 ? formatStarsWarEntry(record) : emptyValue;
+  };
+
+  applyValue(elements.infoStarsWarHardValue, STARS_WAR_DIFFICULTY_MODES.hard);
+  applyValue(elements.infoStarsWarEasyValue, STARS_WAR_DIFFICULTY_MODES.easy);
+}
+
 function updateSessionStats() {
   const session = gameState.stats?.session;
   if (!session) return;
@@ -2369,6 +2567,7 @@ function updateGlobalStats() {
   }
 
   updatePhotonStats();
+  updateStarsWarStats();
 }
 
 function updateInfoPanels() {
@@ -2391,5 +2590,6 @@ if (typeof window !== 'undefined') {
   window.enqueueSpecialCardReveal = enqueueSpecialCardReveal;
   window.initSpecialCardOverlay = initSpecialCardOverlay;
   window.subscribeSpecialCardOverlayLanguageUpdates = subscribeSpecialCardOverlayLanguageUpdates;
+  window.refreshStarsWarInfoStats = updateStarsWarStats;
 }
 
