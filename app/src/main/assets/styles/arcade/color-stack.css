@@ -141,6 +141,17 @@
   transition: transform 0.15s ease;
 }
 
+.color-stack__slot {
+  width: clamp(3rem, 5vw + 1.2rem, 4.5rem);
+  height: clamp(1.1rem, 2.1vh + 0.6rem, 1.6rem);
+  border-radius: 0.8rem;
+  border: 1px dashed rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  opacity: 0.7;
+  pointer-events: none;
+}
+
 .color-stack__token[aria-hidden="true"] {
   pointer-events: none;
 }
