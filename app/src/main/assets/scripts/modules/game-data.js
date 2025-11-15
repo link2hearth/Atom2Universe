@@ -210,6 +210,86 @@ function normalizeBonusImageDefinition(entry, folder) {
   };
 }
 
+function normalizeCollectionVideoDefinition(entry, folder) {
+  if (!entry || typeof entry !== 'object') {
+    return null;
+  }
+  const id = typeof entry.id === 'string' ? entry.id.trim() : '';
+  if (!id) {
+    return null;
+  }
+  let assetPath = typeof entry.assetPath === 'string' ? entry.assetPath.trim() : '';
+  if (!assetPath && typeof entry.path === 'string') {
+    assetPath = entry.path.trim();
+  }
+  if (!assetPath && typeof entry.file === 'string') {
+    assetPath = entry.file.trim();
+  }
+  if (!assetPath && typeof entry.fileName === 'string' && entry.fileName.trim()) {
+    const safeFolder = typeof folder === 'string' && folder.trim()
+      ? folder.trim().replace(/\/+$/, '')
+      : '';
+    const sanitized = entry.fileName.trim().replace(/^\/+/, '');
+    assetPath = safeFolder ? `${safeFolder}/${sanitized}` : sanitized;
+  }
+  if (!assetPath && typeof folder === 'string' && folder.trim()) {
+    const safeFolder = folder.trim().replace(/\/+$/, '');
+    assetPath = safeFolder ? `${safeFolder}/${id}.mp4` : `${id}.mp4`;
+  }
+  let labelKey = '';
+  if (typeof entry.labelKey === 'string' && entry.labelKey.trim()) {
+    labelKey = entry.labelKey.trim();
+  }
+  let labelValue = '';
+  if (typeof entry.label === 'string' && entry.label.trim()) {
+    labelValue = entry.label.trim();
+  }
+  const names = {};
+  const rawLabelNames = entry.label && typeof entry.label === 'object' && !Array.isArray(entry.label)
+    ? entry.label
+    : null;
+  const rawNames = entry.names && typeof entry.names === 'object' ? entry.names : null;
+  const sources = [];
+  if (rawLabelNames) {
+    sources.push(rawLabelNames);
+  }
+  if (rawNames) {
+    sources.push(rawNames);
+  }
+  sources.forEach(source => {
+    Object.keys(source).forEach(locale => {
+      const value = source[locale];
+      if (typeof value === 'string' && value.trim()) {
+        names[locale.trim()] = value.trim();
+      }
+    });
+  });
+  const fallbackFromNames = names.fr
+    || names['fr-FR']
+    || names['fr_fr']
+    || names.en
+    || names['en-US']
+    || names['en_us']
+    || '';
+  const labelFallback = labelValue || fallbackFromNames || `Vidéo ${id}`;
+  const rawPosterPath = typeof entry.posterPath === 'string' ? entry.posterPath.trim() : '';
+  const posterPath = rawPosterPath || null;
+  const autoplay = entry.autoplay !== false;
+  const loop = entry.loop !== false;
+  const muted = entry.muted !== false;
+  return {
+    id,
+    assetPath: assetPath || null,
+    labelKey,
+    labelFallback,
+    names,
+    posterPath,
+    autoplay,
+    loop,
+    muted
+  };
+}
+
 const RAW_BONUS_IMAGE_ENTRIES = (() => {
   const config = CONFIG?.gacha?.bonusImages;
   if (!config) {
@@ -239,6 +319,26 @@ const GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS = GACHA_BONUS_IMAGE_DEFINITIONS
 
 const GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS = GACHA_BONUS_IMAGE_DEFINITIONS
   .filter(def => def.collectionType === 'permanent2');
+
+const RAW_COLLECTION_VIDEO_CONFIG = (() => {
+  const config = CONFIG?.collection?.videos;
+  if (!config || typeof config !== 'object') {
+    return { folder: 'Assets/Collection/Videos', videos: [] };
+  }
+  const folder = typeof config.folder === 'string' && config.folder.trim()
+    ? config.folder.trim()
+    : 'Assets/Collection/Videos';
+  const videos = Array.isArray(config.videos) ? config.videos : [];
+  return { folder, videos };
+})();
+
+const COLLECTION_VIDEO_DEFINITIONS = RAW_COLLECTION_VIDEO_CONFIG.videos
+  .map(entry => normalizeCollectionVideoDefinition(entry, RAW_COLLECTION_VIDEO_CONFIG.folder))
+  .filter(def => def && def.id);
+
+const COLLECTION_VIDEO_DEFINITION_MAP = new Map(
+  COLLECTION_VIDEO_DEFINITIONS.map(def => [def.id, def])
+);
 
 const configElements = Array.isArray(CONFIG.elements) ? CONFIG.elements : [];
 
@@ -1954,6 +2054,22 @@ function createInitialGachaBonusImageCollection() {
     definitions.push(...GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS);
   }
   definitions.forEach(def => {
+    if (!def || !def.id) {
+      return;
+    }
+    collection[def.id] = {
+      id: def.id,
+      count: 0,
+      firstAcquiredAt: null,
+      acquiredOrder: null
+    };
+  });
+  return collection;
+}
+
+function createInitialCollectionVideoCollection() {
+  const collection = {};
+  COLLECTION_VIDEO_DEFINITIONS.forEach(def => {
     if (!def || !def.id) {
       return;
     }

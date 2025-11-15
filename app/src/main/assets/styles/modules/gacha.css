@@ -574,6 +574,16 @@ body.has-gacha-card-overlay {
   background: rgba(6, 8, 18, 0.6);
 }
 
+.gacha-card-overlay__video {
+  width: min(320px, 70vw);
+  max-height: min(520px, 70vh);
+  border-radius: 24px;
+  box-shadow: 0 28px 44px rgba(0, 0, 0, 0.48);
+  border: 2px solid rgba(255, 255, 255, 0.28);
+  background: rgba(6, 8, 18, 0.6);
+  display: block;
+}
+
 .gacha-card-overlay__label {
   font-size: calc(var(--font-scale-factor, 1) * 1rem);
   letter-spacing: 0.14em;
@@ -633,7 +643,8 @@ body.theme-aurora .gacha-card-overlay__dialog {
   border-color: rgba(120, 220, 180, 0.36);
 }
 
-.gacha-card-overlay[data-overlay-type="image"] .gacha-card-overlay__dialog {
+.gacha-card-overlay[data-overlay-type="image"] .gacha-card-overlay__dialog,
+.gacha-card-overlay[data-overlay-type="video"] .gacha-card-overlay__dialog {
   max-width: min(92vw, 1200px);
   width: min(92vw, 1200px);
   padding: clamp(0.8rem, 2.4vw, 1.6rem);
@@ -648,16 +659,22 @@ body.theme-aurora .gacha-card-overlay__dialog {
 .gacha-card-overlay[data-overlay-type="image"] .gacha-card-overlay__title,
 .gacha-card-overlay[data-overlay-type="image"] .gacha-card-overlay__label,
 .gacha-card-overlay[data-overlay-type="image"] .gacha-card-overlay__count,
-.gacha-card-overlay[data-overlay-type="image"] .gacha-card-overlay__hint {
+.gacha-card-overlay[data-overlay-type="image"] .gacha-card-overlay__hint,
+.gacha-card-overlay[data-overlay-type="video"] .gacha-card-overlay__title,
+.gacha-card-overlay[data-overlay-type="video"] .gacha-card-overlay__label,
+.gacha-card-overlay[data-overlay-type="video"] .gacha-card-overlay__count,
+.gacha-card-overlay[data-overlay-type="video"] .gacha-card-overlay__hint {
   display: none;
 }
 
-.gacha-card-overlay[data-overlay-type="image"] .gacha-card-overlay__figure {
+.gacha-card-overlay[data-overlay-type="image"] .gacha-card-overlay__figure,
+.gacha-card-overlay[data-overlay-type="video"] .gacha-card-overlay__figure {
   width: 100%;
   height: 100%;
 }
 
-.gacha-card-overlay[data-overlay-type="image"] .gacha-card-overlay__image {
+.gacha-card-overlay[data-overlay-type="image"] .gacha-card-overlay__image,
+.gacha-card-overlay[data-overlay-type="video"] .gacha-card-overlay__video {
   width: 100%;
   height: auto;
   max-height: min(88vh, 960px);
@@ -667,12 +684,14 @@ body.theme-aurora .gacha-card-overlay__dialog {
   background: none;
 }
 
-.gacha-card-overlay[data-overlay-type="image"] .gacha-card-overlay__close {
+.gacha-card-overlay[data-overlay-type="image"] .gacha-card-overlay__close,
+.gacha-card-overlay[data-overlay-type="video"] .gacha-card-overlay__close {
   background: rgba(6, 8, 18, 0.7);
   border-color: rgba(255, 255, 255, 0.6);
 }
 
-body.theme-light .gacha-card-overlay[data-overlay-type="image"] .gacha-card-overlay__dialog {
+body.theme-light .gacha-card-overlay[data-overlay-type="image"] .gacha-card-overlay__dialog,
+body.theme-light .gacha-card-overlay[data-overlay-type="video"] .gacha-card-overlay__dialog {
   background: transparent;
   border: none;
   box-shadow: none;

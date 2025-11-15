@@ -1046,6 +1046,9 @@ function resetSpecialCardOverlayNavigation() {
 }
 
 function getCollectionDefinitionsForNavigation(collectionType) {
+  if (collectionType === 'video') {
+    return getCollectionVideoDefinitions();
+  }
   if (collectionType === 'permanent') {
     return getPermanentBonusImageDefinitions();
   }
@@ -1056,6 +1059,9 @@ function getCollectionDefinitionsForNavigation(collectionType) {
 }
 
 function getCollectionStorageForNavigation(collectionType) {
+  if (collectionType === 'video') {
+    return getCollectionVideoCollection();
+  }
   if (collectionType === 'permanent' || collectionType === 'permanent2') {
     return getPermanentBonusImageCollection();
   }
@@ -1063,7 +1069,7 @@ function getCollectionStorageForNavigation(collectionType) {
 }
 
 function updateSpecialCardOverlayNavigation(card) {
-  if (!card || card.type !== 'image') {
+  if (!card || (card.type !== 'image' && card.type !== 'video')) {
     resetSpecialCardOverlayNavigation();
     return;
   }
@@ -1071,12 +1077,14 @@ function updateSpecialCardOverlayNavigation(card) {
   const rawCollectionType = typeof card.collectionType === 'string'
     ? card.collectionType.toLowerCase()
     : '';
-  const collectionType = rawCollectionType === 'permanent'
-    ? 'permanent'
-    : (rawCollectionType === 'permanent2' ? 'permanent2' : 'optional');
+  const collectionType = card.type === 'video'
+    ? 'video'
+    : (rawCollectionType === 'permanent'
+      ? 'permanent'
+      : (rawCollectionType === 'permanent2' ? 'permanent2' : 'optional'));
   const definitions = getCollectionDefinitionsForNavigation(collectionType);
   const collection = getCollectionStorageForNavigation(collectionType);
-  const owned = buildOwnedCollectionEntries(definitions, collection, 'image');
+  const owned = buildOwnedCollectionEntries(definitions, collection, card.type === 'video' ? 'video' : 'image');
 
   if (!Array.isArray(owned) || owned.length < 2) {
     resetSpecialCardOverlayNavigation();
@@ -1096,7 +1104,8 @@ function updateSpecialCardOverlayNavigation(card) {
   specialCardOverlayState.navigation = {
     ids,
     index: currentIndex,
-    collectionType
+    collectionType,
+    type: card.type === 'video' ? 'video' : 'image'
   };
 }
 
@@ -1116,7 +1125,8 @@ function navigateSpecialCardOverlay(step) {
   const nextId = nav.ids[nextIndex];
   nav.index = nextIndex;
   if (nextId) {
-    showSpecialCardFromCollection(nextId, 'image');
+    const type = nav.type === 'video' ? 'video' : 'image';
+    showSpecialCardFromCollection(nextId, type);
   }
 }
 
@@ -1259,6 +1269,31 @@ function getPermanentBonusImageCollection() {
   return {};
 }
 
+function getCollectionVideoDefinitions() {
+  return Array.isArray(COLLECTION_VIDEO_DEFINITIONS)
+    ? COLLECTION_VIDEO_DEFINITIONS
+    : [];
+}
+
+function getCollectionVideoDefinition(videoId) {
+  if (!videoId) {
+    return null;
+  }
+  if (typeof COLLECTION_VIDEO_DEFINITION_MAP !== 'undefined'
+    && COLLECTION_VIDEO_DEFINITION_MAP instanceof Map
+    && COLLECTION_VIDEO_DEFINITION_MAP.has(videoId)) {
+    return COLLECTION_VIDEO_DEFINITION_MAP.get(videoId);
+  }
+  return getCollectionVideoDefinitions().find(def => def.id === videoId) || null;
+}
+
+function getCollectionVideoCollection() {
+  if (gameState.collectionVideos && typeof gameState.collectionVideos === 'object') {
+    return gameState.collectionVideos;
+  }
+  return {};
+}
+
 function resolveSpecialCardLabel(cardId) {
   if (typeof resolveSpecialGachaCardLabel === 'function') {
     const resolved = resolveSpecialGachaCardLabel(cardId);
@@ -1302,6 +1337,34 @@ function resolveBonusImageLabel(imageId) {
   return translateOrDefault(`scripts.gacha.images.names.${imageId}`, `Image ${imageId}`);
 }
 
+function resolveCollectionVideoLabel(videoId) {
+  const definition = getCollectionVideoDefinition(videoId);
+  if (!definition) {
+    return translateOrDefault(`scripts.collection.videos.names.${videoId}`, `Vidéo ${videoId}`);
+  }
+  const language = getCurrentLanguage();
+  if (definition.names && typeof definition.names === 'object') {
+    const direct = definition.names[language];
+    if (typeof direct === 'string' && direct.trim()) {
+      return direct.trim();
+    }
+    const [base] = language.split('-');
+    if (base && typeof definition.names[base] === 'string' && definition.names[base].trim()) {
+      return definition.names[base].trim();
+    }
+  }
+  if (definition.labelKey) {
+    const translated = translateOrDefault(definition.labelKey, definition.labelFallback);
+    if (translated) {
+      return translated;
+    }
+  }
+  if (definition.labelFallback) {
+    return definition.labelFallback;
+  }
+  return translateOrDefault(`scripts.collection.videos.names.${videoId}`, `Vidéo ${videoId}`);
+}
+
 function normalizeSpecialCardReward(reward) {
   if (!reward) {
     return null;
@@ -1316,27 +1379,34 @@ function normalizeSpecialCardReward(reward) {
   if (!cardId) {
     return null;
   }
-  const rewardType = reward.type === 'image' ? 'image' : 'card';
+  const rawType = typeof reward.type === 'string' ? reward.type.trim().toLowerCase() : '';
+  const rewardType = rawType === 'image' ? 'image' : (rawType === 'video' ? 'video' : 'card');
   const definition = rewardType === 'image'
     ? getBonusImageDefinition(cardId)
-    : (typeof getSpecialGachaCardDefinition === 'function'
+    : (rewardType === 'video'
+      ? getCollectionVideoDefinition(cardId)
+      : (typeof getSpecialGachaCardDefinition === 'function'
         ? getSpecialGachaCardDefinition(cardId)
-        : getSpecialCardDefinitions().find(def => def.id === cardId));
+        : getSpecialCardDefinitions().find(def => def.id === cardId)));
   const collectionType = rewardType === 'image'
     ? (typeof reward.collectionType === 'string'
       ? reward.collectionType.toLowerCase()
       : (definition?.collectionType || 'optional'))
-    : null;
+    : (rewardType === 'video' ? 'video' : null);
   const label = reward.label
     ? reward.label
     : (rewardType === 'image'
         ? resolveBonusImageLabel(cardId)
-        : resolveSpecialCardLabel(cardId));
+        : (rewardType === 'video'
+          ? resolveCollectionVideoLabel(cardId)
+          : resolveSpecialCardLabel(cardId)));
   const collection = rewardType === 'image'
     ? ((collectionType === 'permanent' || collectionType === 'permanent2')
         ? getPermanentBonusImageCollection()
         : getBonusImageCollection())
-    : getSpecialCardCollection();
+    : (rewardType === 'video'
+      ? getCollectionVideoCollection()
+      : getSpecialCardCollection());
   const stored = collection[cardId];
   const storedCount = Number.isFinite(Number(stored?.count ?? stored))
     ? Math.max(0, Math.floor(Number(stored?.count ?? stored)))
@@ -1348,11 +1418,27 @@ function normalizeSpecialCardReward(reward) {
   const assetPath = typeof reward.assetPath === 'string' && reward.assetPath.trim()
     ? reward.assetPath.trim()
     : (definition?.assetPath || null);
+  const posterPath = typeof reward.posterPath === 'string' && reward.posterPath.trim()
+    ? reward.posterPath.trim()
+    : (definition?.posterPath || null);
+  const autoplay = reward.autoplay != null
+    ? reward.autoplay !== false
+    : (definition?.autoplay !== false);
+  const loop = reward.loop != null
+    ? reward.loop !== false
+    : (definition?.loop !== false);
+  const muted = reward.muted != null
+    ? reward.muted !== false
+    : (definition?.muted !== false);
   return {
     cardId,
     label,
     count,
     assetPath,
+    posterPath,
+    autoplay,
+    loop,
+    muted,
     isNew: reward.isNew === true,
     definition: definition || null,
     type: rewardType,
@@ -1375,17 +1461,19 @@ function applySpecialCardOverlayContent(card) {
     return;
   }
   const rawDisplayMode = typeof card.displayMode === 'string' ? card.displayMode.toLowerCase() : '';
-  const useFullscreenLayout = card.type === 'image'
+  const isActualImage = card.type === 'image';
+  const isActualVideo = card.type === 'video';
+  const useFullscreenLayout = isActualImage
+    || isActualVideo
     || rawDisplayMode === 'image'
     || rawDisplayMode === 'fullscreen';
-  const overlayType = useFullscreenLayout ? 'image' : 'card';
-  const isActualImage = card.type === 'image';
-  const isImageLayout = overlayType === 'image';
+  const overlayType = isActualVideo ? 'video' : (useFullscreenLayout ? 'image' : 'card');
+  const isMediaLayout = overlayType === 'image' || overlayType === 'video';
   if (elements.gachaCardOverlay) {
     elements.gachaCardOverlay.dataset.overlayType = overlayType;
   }
   if (elements.gachaCardOverlayDialog) {
-    if (overlayType === 'image') {
+    if (isMediaLayout) {
       elements.gachaCardOverlayDialog.setAttribute('aria-label', card.label);
       elements.gachaCardOverlayDialog.removeAttribute('aria-labelledby');
       elements.gachaCardOverlayDialog.removeAttribute('aria-describedby');
@@ -1397,62 +1485,129 @@ function applySpecialCardOverlayContent(card) {
   }
   if (elements.gachaCardOverlayLabel) {
     elements.gachaCardOverlayLabel.textContent = card.label;
-    const hidden = overlayType === 'image';
+    const hidden = isMediaLayout;
     elements.gachaCardOverlayLabel.hidden = hidden;
     elements.gachaCardOverlayLabel.setAttribute('aria-hidden', hidden ? 'true' : 'false');
   }
   if (elements.gachaCardOverlayCount) {
     elements.gachaCardOverlayCount.textContent = formatSpecialCardCount(card.count, card.type);
-    const hidden = overlayType === 'image';
+    const hidden = isMediaLayout;
     elements.gachaCardOverlayCount.hidden = hidden;
     elements.gachaCardOverlayCount.setAttribute('aria-hidden', hidden ? 'true' : 'false');
   }
   if (elements.gachaCardOverlayImage) {
-    if (card.assetPath) {
+    if (isActualImage && card.assetPath) {
       elements.gachaCardOverlayImage.src = card.assetPath;
       elements.gachaCardOverlayImage.hidden = false;
     } else {
-      elements.gachaCardOverlayImage.removeAttribute('src');
+      if (typeof elements.gachaCardOverlayImage.removeAttribute === 'function') {
+        elements.gachaCardOverlayImage.removeAttribute('src');
+      }
       elements.gachaCardOverlayImage.hidden = true;
     }
     elements.gachaCardOverlayImage.alt = card.label;
   }
+  if (elements.gachaCardOverlayVideo) {
+    if (isActualVideo && card.assetPath) {
+      const shouldAutoplay = card.autoplay !== false;
+      elements.gachaCardOverlayVideo.hidden = false;
+      elements.gachaCardOverlayVideo.loop = card.loop !== false;
+      elements.gachaCardOverlayVideo.muted = card.muted !== false;
+      elements.gachaCardOverlayVideo.autoplay = shouldAutoplay;
+      if (shouldAutoplay) {
+        elements.gachaCardOverlayVideo.setAttribute('autoplay', 'autoplay');
+      } else {
+        elements.gachaCardOverlayVideo.removeAttribute('autoplay');
+      }
+      elements.gachaCardOverlayVideo.playsInline = true;
+      elements.gachaCardOverlayVideo.setAttribute('playsinline', 'true');
+      elements.gachaCardOverlayVideo.controls = false;
+      if (card.posterPath) {
+        elements.gachaCardOverlayVideo.poster = card.posterPath;
+      } else {
+        elements.gachaCardOverlayVideo.removeAttribute('poster');
+      }
+      if (elements.gachaCardOverlayVideo.src !== card.assetPath) {
+        elements.gachaCardOverlayVideo.src = card.assetPath;
+      }
+      if (shouldAutoplay) {
+        try {
+          const playPromise = elements.gachaCardOverlayVideo.play();
+          if (playPromise && typeof playPromise.catch === 'function') {
+            playPromise.catch(() => {});
+          }
+        } catch (error) {
+          // Ignore playback errors to avoid breaking the overlay.
+        }
+      } else if (typeof elements.gachaCardOverlayVideo.pause === 'function') {
+        elements.gachaCardOverlayVideo.pause();
+      }
+    } else {
+      if (typeof elements.gachaCardOverlayVideo.pause === 'function') {
+        elements.gachaCardOverlayVideo.pause();
+      }
+      elements.gachaCardOverlayVideo.autoplay = false;
+      elements.gachaCardOverlayVideo.removeAttribute('autoplay');
+      elements.gachaCardOverlayVideo.removeAttribute('src');
+      elements.gachaCardOverlayVideo.removeAttribute('poster');
+      if (typeof elements.gachaCardOverlayVideo.load === 'function') {
+        elements.gachaCardOverlayVideo.load();
+      }
+      elements.gachaCardOverlayVideo.hidden = true;
+    }
+  }
   if (elements.gachaCardOverlayTitle) {
     const titleKey = card.isNew
-      ? (isImageLayout
-        ? (isActualImage ? 'scripts.gacha.images.overlay.newTitle' : 'scripts.gacha.cards.overlay.newTitle')
+      ? (isMediaLayout
+        ? (isActualImage
+          ? 'scripts.gacha.images.overlay.newTitle'
+          : (isActualVideo ? 'scripts.collection.videos.overlay.newTitle' : 'scripts.gacha.cards.overlay.newTitle'))
         : 'scripts.gacha.cards.overlay.newTitle')
-      : (isImageLayout
-        ? (isActualImage ? 'scripts.gacha.images.overlay.duplicateTitle' : 'scripts.gacha.cards.overlay.duplicateTitle')
+      : (isMediaLayout
+        ? (isActualImage
+          ? 'scripts.gacha.images.overlay.duplicateTitle'
+          : (isActualVideo ? 'scripts.collection.videos.overlay.duplicateTitle' : 'scripts.gacha.cards.overlay.duplicateTitle'))
         : 'scripts.gacha.cards.overlay.duplicateTitle');
     const fallback = card.isNew
-      ? (isImageLayout
-        ? (isActualImage ? 'Image bonus obtenue !' : 'Carte spéciale obtenue !')
+      ? (isMediaLayout
+        ? (isActualImage
+          ? 'Image bonus obtenue !'
+          : (isActualVideo ? 'Vidéo bonus obtenue !' : 'Carte spéciale obtenue !'))
         : 'Carte spéciale obtenue !')
-      : (isImageLayout
-        ? (isActualImage ? 'Image bonus retrouvée !' : 'Carte spéciale retrouvée !')
+      : (isMediaLayout
+        ? (isActualImage
+          ? 'Image bonus retrouvée !'
+          : (isActualVideo ? 'Vidéo bonus retrouvée !' : 'Carte spéciale retrouvée !'))
         : 'Carte spéciale retrouvée !');
     elements.gachaCardOverlayTitle.textContent = translateOrDefault(titleKey, fallback, { card: card.label });
-    elements.gachaCardOverlayTitle.hidden = isImageLayout;
-    elements.gachaCardOverlayTitle.setAttribute('aria-hidden', isImageLayout ? 'true' : 'false');
+    elements.gachaCardOverlayTitle.hidden = isMediaLayout;
+    elements.gachaCardOverlayTitle.setAttribute('aria-hidden', isMediaLayout ? 'true' : 'false');
   }
   if (elements.gachaCardOverlayHint) {
-    const hintKey = isImageLayout
-      ? (isActualImage ? 'scripts.gacha.images.overlay.hint' : 'scripts.gacha.cards.overlay.hint')
+    const hintKey = isMediaLayout
+      ? (isActualImage
+        ? 'scripts.gacha.images.overlay.hint'
+        : (isActualVideo ? 'scripts.collection.videos.overlay.hint' : 'scripts.gacha.cards.overlay.hint'))
       : 'scripts.gacha.cards.overlay.hint';
-    const hintFallback = isImageLayout
-      ? (isActualImage ? 'Touchez la croix pour refermer l’image.' : 'Touchez la croix pour revenir au jeu.')
+    const hintFallback = isMediaLayout
+      ? (isActualImage
+        ? 'Touchez la croix pour refermer l’image.'
+        : (isActualVideo ? 'Touchez la croix pour refermer la vidéo.' : 'Touchez la croix pour revenir au jeu.'))
       : 'Touchez la croix pour revenir au jeu.';
     elements.gachaCardOverlayHint.textContent = translateOrDefault(hintKey, hintFallback);
-    elements.gachaCardOverlayHint.hidden = isImageLayout;
-    elements.gachaCardOverlayHint.setAttribute('aria-hidden', isImageLayout ? 'true' : 'false');
+    elements.gachaCardOverlayHint.hidden = isMediaLayout;
+    elements.gachaCardOverlayHint.setAttribute('aria-hidden', isMediaLayout ? 'true' : 'false');
   }
   if (elements.gachaCardOverlayClose) {
-    const closeKey = isImageLayout
-      ? (isActualImage ? 'scripts.gacha.images.overlay.close' : 'scripts.gacha.cards.overlay.close')
+    const closeKey = isMediaLayout
+      ? (isActualImage
+        ? 'scripts.gacha.images.overlay.close'
+        : (isActualVideo ? 'scripts.collection.videos.overlay.close' : 'scripts.gacha.cards.overlay.close'))
       : 'scripts.gacha.cards.overlay.close';
-    const closeFallback = isImageLayout
-      ? (isActualImage ? 'Fermer l’image' : 'Fermer la carte')
+    const closeFallback = isMediaLayout
+      ? (isActualImage
+        ? 'Fermer l’image'
+        : (isActualVideo ? 'Fermer la vidéo' : 'Fermer la carte'))
       : 'Fermer la carte';
     const closeLabel = translateOrDefault(closeKey, closeFallback);
     elements.gachaCardOverlayClose.setAttribute('aria-label', closeLabel);
@@ -1474,6 +1629,19 @@ function finishHidingSpecialCardOverlay() {
   overlay.classList.remove('is-visible');
   if (elements.gachaCardOverlayImage) {
     elements.gachaCardOverlayImage.removeAttribute('src');
+  }
+  if (elements.gachaCardOverlayVideo) {
+    if (typeof elements.gachaCardOverlayVideo.pause === 'function') {
+      elements.gachaCardOverlayVideo.pause();
+    }
+    elements.gachaCardOverlayVideo.autoplay = false;
+    elements.gachaCardOverlayVideo.removeAttribute('autoplay');
+    elements.gachaCardOverlayVideo.removeAttribute('src');
+    elements.gachaCardOverlayVideo.removeAttribute('poster');
+    if (typeof elements.gachaCardOverlayVideo.load === 'function') {
+      elements.gachaCardOverlayVideo.load();
+    }
+    elements.gachaCardOverlayVideo.hidden = true;
   }
   if (elements.gachaCardOverlayDialog) {
     elements.gachaCardOverlayDialog.removeAttribute('aria-label');
@@ -1598,7 +1766,9 @@ function handleCollectionListClick(event) {
     return;
   }
   const rawType = button.getAttribute('data-card-type') || button.dataset.cardType || '';
-  const normalizedType = rawType === 'card' ? 'card' : 'image';
+  const normalizedType = rawType === 'card'
+    ? 'card'
+    : (rawType === 'video' ? 'video' : 'image');
   showSpecialCardFromCollection(cardId, normalizedType);
 }
 
@@ -1619,6 +1789,9 @@ function initSpecialCardOverlay() {
   }
   if (elements.collectionImagesList) {
     elements.collectionImagesList.addEventListener('click', handleCollectionListClick);
+  }
+  if (elements.collectionVideosList) {
+    elements.collectionVideosList.addEventListener('click', handleCollectionListClick);
   }
   if (elements.collectionBonusImagesList) {
     elements.collectionBonusImagesList.addEventListener('click', handleCollectionListClick);
@@ -1651,7 +1824,13 @@ function initSpecialCardOverlay() {
 }
 
 function resolveCollectionEntryLabel(id, type) {
-  return type === 'image' ? resolveBonusImageLabel(id) : resolveSpecialCardLabel(id);
+  if (type === 'image' || type === 'bonusImage' || type === 'bonusImage2') {
+    return resolveBonusImageLabel(id);
+  }
+  if (type === 'video') {
+    return resolveCollectionVideoLabel(id);
+  }
+  return resolveSpecialCardLabel(id);
 }
 
 function buildOwnedCollectionEntries(definitions, collection, type) {
@@ -1672,6 +1851,9 @@ function buildOwnedCollectionEntries(definitions, collection, type) {
       const assetPath = typeof def.assetPath === 'string' && def.assetPath.trim()
         ? def.assetPath.trim()
         : null;
+      const posterPath = typeof def.posterPath === 'string' && def.posterPath.trim()
+        ? def.posterPath.trim()
+        : null;
       const rawAcquiredOrder = Number(stored?.acquiredOrder);
       const acquiredOrder = Number.isFinite(rawAcquiredOrder) && rawAcquiredOrder > 0
         ? Math.floor(rawAcquiredOrder)
@@ -1685,6 +1867,10 @@ function buildOwnedCollectionEntries(definitions, collection, type) {
         count: rawCount,
         label,
         assetPath,
+        posterPath,
+        autoplay: def.autoplay !== false,
+        loop: def.loop !== false,
+        muted: def.muted !== false,
         acquiredOrder,
         firstAcquiredAt
       };
@@ -1751,7 +1937,12 @@ function renderBonusImageCollectionList(options) {
   container.dataset.collectionType = collectionType || 'image';
   container.innerHTML = '';
 
-  const owned = buildOwnedCollectionEntries(definitions, collection, 'image');
+  const isVideoCollection = collectionType === 'video';
+  const owned = buildOwnedCollectionEntries(
+    definitions,
+    collection,
+    isVideoCollection ? 'video' : 'image'
+  );
 
   if (!owned.length) {
     container.hidden = true;
@@ -1770,7 +1961,7 @@ function renderBonusImageCollectionList(options) {
     button.type = 'button';
     button.className = 'collection-image-button';
     button.dataset.cardId = entry.id;
-    button.dataset.cardType = 'image';
+    button.dataset.cardType = isVideoCollection ? 'video' : 'image';
     const viewLabel = translateOrDefault(
       viewKey,
       `Afficher ${entry.label}`,
@@ -1782,17 +1973,34 @@ function renderBonusImageCollectionList(options) {
     const figure = document.createElement('span');
     figure.className = 'collection-image-button__figure';
 
-    const img = document.createElement('img');
-    img.className = 'collection-image-button__image';
-    img.alt = entry.label;
-    img.loading = 'lazy';
-    img.decoding = 'async';
-    img.draggable = false;
-    if (entry.assetPath) {
-      img.src = entry.assetPath;
+    if (isVideoCollection) {
+      const video = document.createElement('video');
+      video.className = 'collection-image-button__video';
+      video.muted = entry.muted !== false;
+      video.loop = entry.loop !== false;
+      video.autoplay = false;
+      video.playsInline = true;
+      video.preload = 'metadata';
+      video.controls = false;
+      if (entry.posterPath) {
+        video.poster = entry.posterPath;
+      }
+      if (entry.assetPath) {
+        video.src = entry.assetPath;
+      }
+      figure.appendChild(video);
+    } else {
+      const img = document.createElement('img');
+      img.className = 'collection-image-button__image';
+      img.alt = entry.label;
+      img.loading = 'lazy';
+      img.decoding = 'async';
+      img.draggable = false;
+      if (entry.assetPath) {
+        img.src = entry.assetPath;
+      }
+      figure.appendChild(img);
     }
-
-    figure.appendChild(img);
 
     const srLabel = document.createElement('span');
     srLabel.className = 'visually-hidden';
@@ -1820,7 +2028,7 @@ function renderCollectionList(options) {
     countKey
   } = options;
 
-  if (type === 'image' || type === 'bonusImage' || type === 'bonusImage2') {
+  if (type === 'image' || type === 'bonusImage' || type === 'bonusImage2' || type === 'video') {
     renderBonusImageCollectionList({
       definitions,
       collection,
@@ -1829,7 +2037,9 @@ function renderCollectionList(options) {
       viewKey,
       collectionType: type === 'bonusImage'
         ? 'bonusImage'
-        : (type === 'bonusImage2' ? 'bonusImage2' : 'image')
+        : (type === 'bonusImage2'
+          ? 'bonusImage2'
+          : (type === 'video' ? 'video' : 'image'))
     });
     return;
   }
@@ -1914,6 +2124,16 @@ function renderSpecialCardCollection() {
     type: 'image',
     viewKey: 'index.sections.collection.images.view',
     countKey: 'index.sections.collection.images.count'
+  });
+
+  renderCollectionList({
+    definitions: getCollectionVideoDefinitions(),
+    collection: getCollectionVideoCollection(),
+    container: elements.collectionVideosList,
+    emptyElement: elements.collectionVideosEmpty,
+    type: 'video',
+    viewKey: 'index.sections.collection.videos.view',
+    countKey: 'index.sections.collection.videos.count'
   });
 
   renderCollectionList({
