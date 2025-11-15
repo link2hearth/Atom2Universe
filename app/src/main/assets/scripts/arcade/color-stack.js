@@ -764,33 +764,6 @@
     }
   }
 
-  function isRenderableToken(token) {
-    if (!token || !isNonEmptyString(token.colorHex) || !isNonEmptyString(token.colorId)) {
-      return false;
-    }
-    const colorValue = token.colorHex.trim().toLowerCase();
-    if (colorValue === 'null' || colorValue === 'undefined') {
-      return false;
-    }
-    return true;
-  }
-
-  function sanitizeColumnTokens(column) {
-    if (!Array.isArray(column) || column.length === 0) {
-      return Array.isArray(column) ? column : [];
-    }
-    let changed = false;
-    const filtered = [];
-    column.forEach(token => {
-      if (isRenderableToken(token)) {
-        filtered.push(token);
-      } else {
-        changed = true;
-      }
-    });
-    return changed ? filtered : column;
-  }
-
   function buildColumnLabel(index, column) {
     const count = column.length;
     return translate(
@@ -850,10 +823,6 @@
     const validTargets = Number.isInteger(selection) ? getValidTargets(selection) : [];
     const targetSet = new Set(validTargets);
     state.board.forEach((column, columnIndex) => {
-      const sanitizedColumn = sanitizeColumnTokens(column);
-      if (sanitizedColumn !== column) {
-        state.board[columnIndex] = sanitizedColumn;
-      }
       const columnButton = document.createElement('button');
       columnButton.type = 'button';
       columnButton.className = 'color-stack__column';
@@ -864,8 +833,8 @@
         columnButton.classList.add('color-stack__column--targetable');
       }
       columnButton.dataset.columnIndex = String(columnIndex);
-      columnButton.setAttribute('aria-label', buildColumnLabel(columnIndex, sanitizedColumn));
-      sanitizedColumn.forEach(token => {
+      columnButton.setAttribute('aria-label', buildColumnLabel(columnIndex, column));
+      column.forEach(token => {
         const tokenElement = document.createElement('span');
         tokenElement.className = 'color-stack__token';
         tokenElement.style.setProperty('--token-color', token.colorHex);
