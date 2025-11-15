@@ -38,7 +38,8 @@
         scrambleMoves: 48,
         minMulticoloredColumns: 2,
         minDisplacedRatio: 0.5,
-        gachaTickets: 1
+        gachaTickets: 1,
+        extraTopSpace: 1
       }),
       medium: Object.freeze({
         columns: 6,
@@ -48,7 +49,8 @@
         scrambleMoves: 72,
         minMulticoloredColumns: 3,
         minDisplacedRatio: 0.6,
-        gachaTickets: 2
+        gachaTickets: 2,
+        extraTopSpace: 1
       }),
       hard: Object.freeze({
         columns: 8,
@@ -58,7 +60,8 @@
         scrambleMoves: 96,
         minMulticoloredColumns: 4,
         minDisplacedRatio: 0.65,
-        gachaTickets: 3
+        gachaTickets: 3,
+        extraTopSpace: 2
       })
     })
   });
@@ -163,6 +166,11 @@
       typeof base.minDisplacedRatio === 'number' ? base.minDisplacedRatio : 0.5
     );
     const gachaTickets = Math.max(0, toInteger(entry?.gachaTickets, base.gachaTickets || 0));
+    const extraTopSpace = entry?.extraTopSpace !== undefined
+      ? Math.max(0, toInteger(entry.extraTopSpace, base.extraTopSpace !== undefined ? base.extraTopSpace : DEFAULT_CONFIG.extraTopSpace || 0))
+      : base.extraTopSpace !== undefined
+        ? Math.max(0, toInteger(base.extraTopSpace, DEFAULT_CONFIG.extraTopSpace || 0))
+        : undefined;
     const filledColumns = Array.isArray(entry?.filledColumns) && entry.filledColumns.length
       ? entry.filledColumns.map(index => toInteger(index, 0))
       : Array.from({ length: Math.max(0, columns - emptyColumns) }, (_, idx) => idx);
@@ -174,7 +182,8 @@
       minMulticoloredColumns: minMulticolored,
       minDisplacedRatio,
       filledColumns,
-      gachaTickets
+      gachaTickets,
+      extraTopSpace
     };
   }
 
@@ -215,7 +224,10 @@
 
   function getEffectiveCapacity(difficultyConfig) {
     const baseCapacity = Math.max(1, toInteger(difficultyConfig?.capacity, 1));
-    const extraSpace = Math.max(0, toInteger(state.config?.extraTopSpace, DEFAULT_CONFIG.extraTopSpace));
+    const globalExtra = Math.max(0, toInteger(state.config?.extraTopSpace, DEFAULT_CONFIG.extraTopSpace));
+    const extraSpace = difficultyConfig && difficultyConfig.extraTopSpace !== undefined
+      ? Math.max(0, toInteger(difficultyConfig.extraTopSpace, globalExtra))
+      : globalExtra;
     return baseCapacity + extraSpace;
   }
 
