@@ -2514,6 +2514,7 @@ function updatePhotonStats() {
 }
 
 const STARS_WAR_DIFFICULTY_MODES = Object.freeze({ hard: 'hard', easy: 'easy' });
+const STARS_WAR_AUTOSAVE_KEY = 'starsWar';
 
 function normalizeStarsWarMode(mode) {
   if (typeof mode === 'string' && mode.toLowerCase() === STARS_WAR_DIFFICULTY_MODES.easy) {
@@ -2522,35 +2523,127 @@ function normalizeStarsWarMode(mode) {
   return STARS_WAR_DIFFICULTY_MODES.hard;
 }
 
-function getStarsWarProgressStats() {
-  const progress = gameState.arcadeProgress;
-  if (!progress || typeof progress !== 'object') {
+function normalizeStarsWarRecord(raw) {
+  const result = { score: 0, time: 0, waves: 0 };
+  if (!raw || typeof raw !== 'object') {
+    return result;
+  }
+  const toNumber = value => {
+    const numeric = Number(value);
+    return Number.isFinite(numeric) && numeric >= 0 ? numeric : 0;
+  };
+  result.score = Math.max(0, Math.floor(toNumber(raw.bestScore ?? raw.score ?? raw.highScore ?? raw.points)));
+  result.time = Math.max(0, Math.floor(toNumber(raw.bestTime ?? raw.bestTimeSeconds ?? raw.time ?? raw.duration)));
+  result.waves = Math.max(0, Math.floor(toNumber(raw.bestWave ?? raw.wave ?? raw.maxWave ?? raw.waves)));
+  return result;
+}
+
+function readStarsWarProgressEntry(rawEntry) {
+  if (!rawEntry || typeof rawEntry !== 'object') {
     return null;
   }
-  const entries = progress.entries && typeof progress.entries === 'object' ? progress.entries : {};
-  const entry = entries.starsWar || entries.starswar || null;
-  if (!entry || typeof entry !== 'object') {
-    return null;
-  }
-  const state = entry.state && typeof entry.state === 'object' ? entry.state : entry;
+  const state = rawEntry.state && typeof rawEntry.state === 'object' ? rawEntry.state : rawEntry;
   if (!state || typeof state !== 'object') {
     return null;
   }
-  const modes = state.modes && typeof state.modes === 'object' ? state.modes : {};
+  const modesSource = state.modes && typeof state.modes === 'object' ? state.modes : null;
   const result = {};
   Object.keys(STARS_WAR_DIFFICULTY_MODES).forEach(key => {
-    const raw = modes[key];
-    if (raw && typeof raw === 'object') {
-      result[key] = {
-        score: toNonNegativeInteger(raw.bestScore ?? raw.score ?? raw.highScore ?? raw.points),
-        time: toNonNegativeInteger(raw.bestTime ?? raw.bestTimeSeconds ?? raw.time ?? raw.duration),
-        waves: toNonNegativeInteger(raw.bestWave ?? raw.wave ?? raw.maxWave)
-      };
-    } else {
-      result[key] = { score: 0, time: 0, waves: 0 };
-    }
+    const modeKey = STARS_WAR_DIFFICULTY_MODES[key];
+    const rawMode = modesSource && typeof modesSource[modeKey] === 'object' ? modesSource[modeKey] : null;
+    result[modeKey] = normalizeStarsWarRecord(rawMode);
   });
+  if (!modesSource) {
+    const fallback = normalizeStarsWarRecord(state);
+    if (fallback.score > 0 || fallback.time > 0 || fallback.waves > 0) {
+      result[STARS_WAR_DIFFICULTY_MODES.hard] = fallback;
+    }
+  }
   return result;
+}
+
+function hasStarsWarProgressData(stats) {
+  if (!stats || typeof stats !== 'object') {
+    return false;
+  }
+  return Object.keys(STARS_WAR_DIFFICULTY_MODES).some(key => {
+    const modeKey = STARS_WAR_DIFFICULTY_MODES[key];
+    const record = stats[modeKey];
+    return record && (record.time > 0 || record.score > 0 || record.waves > 0);
+  });
+}
+
+function syncStarsWarProgressEntry(stats) {
+  if (!hasStarsWarProgressData(stats)) {
+    return;
+  }
+  const progress = gameState.arcadeProgress;
+  if (!progress || typeof progress !== 'object') {
+    return;
+  }
+  if (!progress.entries || typeof progress.entries !== 'object') {
+    progress.entries = {};
+  }
+  const currentEntry = progress.entries.starsWar || progress.entries.starswar || null;
+  if (hasStarsWarProgressData(readStarsWarProgressEntry(currentEntry))) {
+    return;
+  }
+  const payload = {
+    version: 3,
+    modes: {}
+  };
+  Object.keys(STARS_WAR_DIFFICULTY_MODES).forEach(key => {
+    const modeKey = STARS_WAR_DIFFICULTY_MODES[key];
+    const record = stats[modeKey] || { score: 0, time: 0, waves: 0 };
+    payload.modes[modeKey] = {
+      bestScore: record.score,
+      bestTime: record.time,
+      bestWave: record.waves,
+      topRuns: []
+    };
+  });
+  progress.entries.starsWar = {
+    state: payload,
+    updatedAt: Date.now()
+  };
+}
+
+function getStarsWarAutosaveStats() {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+  const api = window.ArcadeAutosave;
+  if (!api || typeof api.get !== 'function') {
+    return null;
+  }
+  let raw = null;
+  try {
+    raw = api.get(STARS_WAR_AUTOSAVE_KEY);
+  } catch (error) {
+    return null;
+  }
+  if (!raw || typeof raw !== 'object') {
+    return null;
+  }
+  return readStarsWarProgressEntry(raw);
+}
+
+function getStarsWarProgressStats() {
+  const progress = gameState.arcadeProgress;
+  const entries = progress && typeof progress === 'object' && progress.entries && typeof progress.entries === 'object'
+    ? progress.entries
+    : {};
+  const entry = entries.starsWar || entries.starswar || null;
+  const fromProgress = readStarsWarProgressEntry(entry);
+  if (hasStarsWarProgressData(fromProgress)) {
+    return fromProgress;
+  }
+  const fromAutosave = getStarsWarAutosaveStats();
+  if (hasStarsWarProgressData(fromAutosave)) {
+    syncStarsWarProgressEntry(fromAutosave);
+    return fromAutosave;
+  }
+  return fromProgress || fromAutosave;
 }
 
 function formatStarsWarPoints(value) {
