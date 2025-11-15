@@ -137,6 +137,17 @@
           "view": "Afficher {card}",
           "count": "×{count}"
         },
+        "videos": {
+          "title": "Vidéos bonus",
+          "subtitle": "Vos clips MP4 en boucle à revoir en plein écran.",
+          "toggle": {
+            "collapse": "Réduire",
+            "expand": "Développer"
+          },
+          "empty": "Aucune vidéo bonus débloquée pour le moment.",
+          "view": "Afficher {card}",
+          "count": "×{count}"
+        },
         "bonusImages": {
           "title": "Images bonus",
           "subtitle": "Vos images bonus permanentes gagnées dans le gacha.",
@@ -3919,6 +3930,18 @@
         "multiple": "+{count} tickets de tirage !",
         "collectAria": "Collecter un ticket de tirage",
         "imageAlt": "Étoile bonus"
+      }
+    },
+    "collection": {
+      "videos": {
+        "toastNew": "Vidéo bonus obtenue : {card}",
+        "toastDuplicate": "Vidéo bonus retrouvée : {card}",
+        "overlay": {
+          "newTitle": "Vidéo bonus obtenue !",
+          "duplicateTitle": "Vidéo bonus retrouvée !",
+          "hint": "Touchez la croix pour refermer la vidéo.",
+          "close": "Fermer la vidéo"
+        }
       }
     },
     "appData": {

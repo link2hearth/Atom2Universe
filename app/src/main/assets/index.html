@@ -5463,6 +5463,58 @@
         </article>
 
         <article
+          id="collectionVideosCard"
+          class="info-card info-card--cards"
+          aria-labelledby="collection-videos-title"
+          hidden
+        >
+          <header class="info-card__header info-card__header--collapsible">
+            <h3
+              id="collection-videos-title"
+              data-i18n="index.sections.collection.videos.title"
+            >
+              Vidéos bonus
+            </h3>
+            <button
+              type="button"
+              id="collectionVideosToggle"
+              class="info-card__collapse-button"
+              aria-expanded="true"
+              aria-controls="collection-videos-content"
+              data-i18n="index.sections.collection.videos.toggle.collapse"
+            >
+              Réduire
+            </button>
+          </header>
+          <div
+            id="collection-videos-content"
+            class="info-card__content info-card__content--cards"
+            aria-hidden="false"
+          >
+            <p
+              class="info-card__subtitle info-card__subtitle--cards"
+              id="collectionVideosSubtitle"
+              data-i18n="index.sections.collection.videos.subtitle"
+            >
+              Vos vidéos bonus à collectionner et visionner en boucle.
+            </p>
+            <p
+              id="collectionVideosEmpty"
+              class="info-card__empty"
+              data-i18n="index.sections.collection.videos.empty"
+            >
+              Aucune vidéo bonus débloquée pour le moment.
+            </p>
+            <ul
+              id="collectionVideosList"
+              class="info-card-list"
+              role="list"
+              hidden
+            ></ul>
+          </div>
+        </article>
+
+        <article
           id="collectionBonusImagesCard"
           class="info-card info-card--cards"
           aria-labelledby="collection-bonus-images-title"
@@ -7198,6 +7250,14 @@
           alt="Carte spéciale"
           src=""
         />
+        <video
+          id="gachaCardOverlayVideo"
+          class="gacha-card-overlay__video"
+          hidden
+          playsinline
+          muted
+          loop
+        ></video>
         <figcaption
           class="gacha-card-overlay__label"
           id="gachaCardOverlayLabel"

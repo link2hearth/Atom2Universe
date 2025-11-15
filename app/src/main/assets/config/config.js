@@ -911,6 +911,21 @@ const COLLECTION_FAMILIES_CONFIG =
 const RAW_COLLECTION_ELEMENTS = loadConfigJson('./config/collection/elements.json', []);
 const COLLECTION_ELEMENTS = Array.isArray(RAW_COLLECTION_ELEMENTS) ? RAW_COLLECTION_ELEMENTS : [];
 
+const RAW_COLLECTION_VIDEOS_CONFIG = loadConfigJson('./config/collection/videos.json', {
+  folder: 'Assets/Collection/Videos',
+  videos: []
+});
+
+const COLLECTION_VIDEOS_CONFIG = {
+  folder: typeof RAW_COLLECTION_VIDEOS_CONFIG?.folder === 'string'
+      && RAW_COLLECTION_VIDEOS_CONFIG.folder.trim()
+    ? RAW_COLLECTION_VIDEOS_CONFIG.folder.trim()
+    : 'Assets/Collection/Videos',
+  videos: Array.isArray(RAW_COLLECTION_VIDEOS_CONFIG?.videos)
+    ? RAW_COLLECTION_VIDEOS_CONFIG.videos
+    : []
+};
+
 const GAME_CONFIG = {
   /**
    * Paramètres du système de langues.
@@ -1348,6 +1363,14 @@ const GAME_CONFIG = {
       'trophyMultiplier',
       'total'
     ]
+  },
+
+  /**
+   * Référentiel des vidéos bonus affichées dans la Collection.
+   * Les fichiers sont déclarés dans `config/collection/videos.json` pour simplifier les ajouts.
+   */
+  collection: {
+    videos: COLLECTION_VIDEOS_CONFIG
   },
 
   /**

@@ -295,6 +295,7 @@ const INFO_PROGRESS_COLLAPSED_STORAGE_KEY = 'atom2univers.info.progressCollapsed
 const COLLECTION_IMAGES_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.imagesCollapsed';
 const COLLECTION_BONUS_IMAGES_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.bonusImagesCollapsed';
 const COLLECTION_BONUS2_IMAGES_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.bonus2ImagesCollapsed';
+const COLLECTION_VIDEOS_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.videosCollapsed';
 const HEADER_COLLAPSED_STORAGE_KEY = 'atom2univers.ui.headerCollapsed';
 const ARCADE_HUB_CARD_STATE_STORAGE_KEY = 'atom2univers.arcadeHub.cardStates.v1';
 const ARCADE_HUB_CARD_ORDER_STORAGE_KEY = 'atom2univers.arcadeHub.cardOrder.v1';
@@ -4085,6 +4086,7 @@ const DEFAULT_STATE = {
   fusionBonuses: createInitialFusionBonuses(),
   gachaImages: createInitialGachaImageCollection(),
   gachaImageAcquisitionCounter: 0,
+  collectionVideos: createInitialCollectionVideoCollection(),
   gachaBonusImages: createInitialGachaBonusImageCollection(),
   gachaBonusImageAcquisitionCounter: 0,
   pageUnlocks: createInitialPageUnlockState(),
@@ -4707,6 +4709,13 @@ function hasOwnedGachaBonus2Images() {
       return false;
     }
     const entry = collection[def.id];
+    const count = Number(entry?.count ?? entry);
+    return Number.isFinite(count) && count > 0;
+  });
+}
+
+function hasOwnedCollectionVideos() {
+  return Object.values(gameState.collectionVideos || {}).some(entry => {
     const count = Number(entry?.count ?? entry);
     return Number.isFinite(count) && count > 0;
   });
@@ -6009,6 +6018,11 @@ function collectDomElements() {
   collectionImagesToggle: document.getElementById('collectionImagesToggle'),
   collectionImagesList: document.getElementById('collectionImagesList'),
   collectionImagesEmpty: document.getElementById('collectionImagesEmpty'),
+  collectionVideosCard: document.getElementById('collectionVideosCard'),
+  collectionVideosContent: document.getElementById('collection-videos-content'),
+  collectionVideosToggle: document.getElementById('collectionVideosToggle'),
+  collectionVideosList: document.getElementById('collectionVideosList'),
+  collectionVideosEmpty: document.getElementById('collectionVideosEmpty'),
   collectionBonusImagesCard: document.getElementById('collectionBonusImagesCard'),
   collectionBonusImagesContent: document.getElementById('collection-bonus-images-content'),
   collectionBonusImagesToggle: document.getElementById('collectionBonusImagesToggle'),
@@ -6026,6 +6040,7 @@ function collectDomElements() {
   gachaCardOverlayDialog: document.getElementById('gachaCardOverlayDialog'),
   gachaCardOverlayClose: document.getElementById('gachaCardOverlayClose'),
   gachaCardOverlayImage: document.getElementById('gachaCardOverlayImage'),
+  gachaCardOverlayVideo: document.getElementById('gachaCardOverlayVideo'),
   gachaCardOverlayLabel: document.getElementById('gachaCardOverlayLabel'),
   gachaCardOverlayCount: document.getElementById('gachaCardOverlayCount'),
   gachaCardOverlayTitle: document.getElementById('gachaCardOverlayTitle'),
@@ -7150,6 +7165,15 @@ function updateCollectionBonus2ImagesVisibility() {
   elements.collectionBonus2ImagesCard.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
 }
 
+function updateCollectionVideosVisibility() {
+  if (!elements.collectionVideosCard) {
+    return;
+  }
+  const unlocked = isPageUnlocked('collection') && hasOwnedCollectionVideos();
+  elements.collectionVideosCard.hidden = !unlocked;
+  elements.collectionVideosCard.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
+}
+
 function updateInfoDevkitVisibility() {
   if (!elements.infoDevkitShopCard) {
     return;
@@ -7523,6 +7547,20 @@ function updateCollectionBonus2ImagesToggleLabel(collapsed) {
   elements.collectionBonus2ImagesToggle.setAttribute('aria-label', label);
 }
 
+function updateCollectionVideosToggleLabel(collapsed) {
+  if (!elements.collectionVideosToggle) {
+    return;
+  }
+  const key = collapsed
+    ? 'index.sections.collection.videos.toggle.expand'
+    : 'index.sections.collection.videos.toggle.collapse';
+  const fallback = collapsed ? 'Expand' : 'Collapse';
+  const label = translateOrDefault(key, fallback);
+  elements.collectionVideosToggle.setAttribute('data-i18n', key);
+  elements.collectionVideosToggle.textContent = label;
+  elements.collectionVideosToggle.setAttribute('aria-label', label);
+}
+
 function setInfoCharactersCollapsed(collapsed, options = {}) {
   if (!elements.infoCharactersCard || !elements.infoCharactersContent || !elements.infoCharactersToggle) {
     return;
@@ -7722,6 +7760,23 @@ function setCollectionBonus2ImagesCollapsed(collapsed, options = {}) {
   }
 }
 
+function setCollectionVideosCollapsed(collapsed, options = {}) {
+  if (!elements.collectionVideosCard
+    || !elements.collectionVideosContent
+    || !elements.collectionVideosToggle) {
+    return;
+  }
+  const shouldCollapse = !!collapsed;
+  elements.collectionVideosCard.classList.toggle('info-card--collapsed', shouldCollapse);
+  elements.collectionVideosContent.hidden = shouldCollapse;
+  elements.collectionVideosContent.setAttribute('aria-hidden', shouldCollapse ? 'true' : 'false');
+  elements.collectionVideosToggle.setAttribute('aria-expanded', shouldCollapse ? 'false' : 'true');
+  updateCollectionVideosToggleLabel(shouldCollapse);
+  if (options.persist !== false) {
+    writeStoredInfoCardCollapsed(COLLECTION_VIDEOS_COLLAPSED_STORAGE_KEY, shouldCollapse);
+  }
+}
+
 function toggleCollectionImagesCollapsed() {
   if (!elements.collectionImagesCard) {
     return;
@@ -7744,6 +7799,14 @@ function toggleCollectionBonus2ImagesCollapsed() {
   }
   const currentlyCollapsed = elements.collectionBonus2ImagesCard.classList.contains('info-card--collapsed');
   setCollectionBonus2ImagesCollapsed(!currentlyCollapsed);
+}
+
+function toggleCollectionVideosCollapsed() {
+  if (!elements.collectionVideosCard) {
+    return;
+  }
+  const currentlyCollapsed = elements.collectionVideosCard.classList.contains('info-card--collapsed');
+  setCollectionVideosCollapsed(!currentlyCollapsed);
 }
 
 function initCollectionImagesCard() {
@@ -7791,6 +7854,23 @@ function initCollectionBonus2ImagesCard() {
   elements.collectionBonus2ImagesToggle.addEventListener('click', event => {
     event.preventDefault();
     toggleCollectionBonus2ImagesCollapsed();
+  });
+}
+
+function initCollectionVideosCard() {
+  if (!elements.collectionVideosCard
+    || !elements.collectionVideosContent
+    || !elements.collectionVideosToggle) {
+    return;
+  }
+  const initialCollapsed = readStoredInfoCardCollapsed(
+    COLLECTION_VIDEOS_COLLAPSED_STORAGE_KEY,
+    false
+  );
+  setCollectionVideosCollapsed(initialCollapsed, { persist: false });
+  elements.collectionVideosToggle.addEventListener('click', event => {
+    event.preventDefault();
+    toggleCollectionVideosCollapsed();
   });
 }
 
@@ -7947,6 +8027,23 @@ function subscribeCollectionBonus2ImagesLanguageUpdates() {
   }
 }
 
+function subscribeCollectionVideosLanguageUpdates() {
+  const handler = () => {
+    const collapsed = elements.collectionVideosCard
+      ? elements.collectionVideosCard.classList.contains('info-card--collapsed')
+      : false;
+    updateCollectionVideosToggleLabel(collapsed);
+  };
+  const api = getI18nApi();
+  if (api && typeof api.onLanguageChanged === 'function') {
+    api.onLanguageChanged(handler);
+    return;
+  }
+  if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
+    globalThis.addEventListener('i18n:languagechange', handler);
+  }
+}
+
 function subscribeBigBangLanguageUpdates() {
   const handler = () => {
     updateBigBangActionUI();
@@ -7992,6 +8089,7 @@ function updatePrimaryNavigationLocks() {
   updateInfoDevkitVisibility();
   updateInfoCardsVisibility();
   updateCollectionImagesVisibility();
+  updateCollectionVideosVisibility();
   updateCollectionBonusImagesVisibility();
   updateCollectionBonus2ImagesVisibility();
   updateMusicModuleVisibility();
@@ -14174,6 +14272,7 @@ function bindDomEventListeners() {
   initInfoCharactersCard();
   initInfoCardsCard();
   initCollectionImagesCard();
+  initCollectionVideosCard();
   initCollectionBonusImagesCard();
   initCollectionBonus2ImagesCard();
   if (typeof initSpecialCardOverlay === 'function') {
@@ -18690,6 +18789,35 @@ function serializeState() {
       });
       return result;
     })(),
+    collectionVideos: (() => {
+      const source = gameState.collectionVideos && typeof gameState.collectionVideos === 'object'
+        ? gameState.collectionVideos
+        : {};
+      const result = {};
+      const knownIds = Array.isArray(COLLECTION_VIDEO_DEFINITIONS)
+        ? COLLECTION_VIDEO_DEFINITIONS.map(def => def.id)
+        : Object.keys(source);
+      knownIds.forEach(videoId => {
+        if (!videoId) {
+          return;
+        }
+        const entry = source[videoId];
+        const rawCount = Number(entry?.count ?? entry);
+        if (Number.isFinite(rawCount) && rawCount > 0) {
+          const stored = { count: Math.floor(rawCount) };
+          const acquiredOrder = Number(entry?.acquiredOrder);
+          if (Number.isFinite(acquiredOrder) && acquiredOrder > 0) {
+            stored.acquiredOrder = Math.floor(acquiredOrder);
+          }
+          const firstAcquiredAt = Number(entry?.firstAcquiredAt);
+          if (Number.isFinite(firstAcquiredAt) && firstAcquiredAt > 0) {
+            stored.firstAcquiredAt = firstAcquiredAt;
+          }
+          result[videoId] = stored;
+        }
+      });
+      return result;
+    })(),
     gachaImageAcquisitionCounter: (() => {
       const counter = Number(gameState.gachaImageAcquisitionCounter);
       if (!Number.isFinite(counter) || counter <= 0) {
@@ -19719,6 +19847,31 @@ function applySerializedGameState(raw) {
   } else {
     gameState.gachaImageAcquisitionCounter = inferredImageAcquisitionCounter;
   }
+  const baseVideoCollection = createInitialCollectionVideoCollection();
+  if (data.collectionVideos && typeof data.collectionVideos === 'object') {
+    Object.entries(data.collectionVideos).forEach(([videoId, stored]) => {
+      const reference = baseVideoCollection[videoId];
+      if (!reference) {
+        return;
+      }
+      const rawCount = Number(stored?.count ?? stored);
+      const normalizedCount = Number.isFinite(rawCount) && rawCount > 0
+        ? Math.floor(rawCount)
+        : 0;
+      reference.count = normalizedCount;
+      if (normalizedCount > 0) {
+        const storedOrder = Number(stored?.acquiredOrder);
+        if (Number.isFinite(storedOrder) && storedOrder > 0) {
+          reference.acquiredOrder = Math.floor(storedOrder);
+        }
+        const storedFirstAcquiredAt = Number(stored?.firstAcquiredAt);
+        if (Number.isFinite(storedFirstAcquiredAt) && storedFirstAcquiredAt > 0) {
+          reference.firstAcquiredAt = storedFirstAcquiredAt;
+        }
+      }
+    });
+  }
+  gameState.collectionVideos = baseVideoCollection;
   const baseBonusImageCollection = createInitialGachaBonusImageCollection();
   let inferredBonusImageAcquisitionCounter = 0;
   if (data.gachaBonusImages && typeof data.gachaBonusImages === 'object') {
@@ -20534,6 +20687,7 @@ function initializeDomBoundModules() {
   subscribeInfoCharactersLanguageUpdates();
   subscribeInfoCardsLanguageUpdates();
   subscribeCollectionImagesLanguageUpdates();
+  subscribeCollectionVideosLanguageUpdates();
   subscribeCollectionBonusImagesLanguageUpdates();
   subscribeCollectionBonus2ImagesLanguageUpdates();
   subscribeBigBangLanguageUpdates();

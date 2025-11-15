@@ -27,6 +27,15 @@ function isGachaBonusImageCollectionEnabled() {
   return true;
 }
 
+function isCollectionVideoCollectionEnabled() {
+  if (typeof globalThis !== 'undefined'
+    && typeof globalThis.COLLECTION_VIDEOS_ENABLED === 'boolean'
+  ) {
+    return globalThis.COLLECTION_VIDEOS_ENABLED;
+  }
+  return isCollectionSystemActive();
+}
+
 const GACHA_SMOKE_FRAME_COUNT = 91;
 const GACHA_SMOKE_FRAME_RATE = 12;
 const GACHA_SMOKE_FRAME_PAD = 4;
@@ -298,10 +307,21 @@ const SPECIAL_GACHA_CARD_DEFINITION_INDEX = new Map(
     : []
 );
 
+const COLLECTION_VIDEO_GACHA_CHANCE = 0.0005;
 const BONUS_GACHA_IMAGE_CHANCE = 1 / 100;
 const BONUS_GACHA_PERMANENT_IMAGE_CHANCE = 1 / 200;
 const BONUS_GACHA_SECONDARY_PERMANENT_IMAGE_CHANCE = 1 / 200;
 const BONUS_GACHA_IMAGE_AVAILABILITY_BATCH_SIZE = 12;
+
+const COLLECTION_VIDEO_DEFINITION_INDEX = new Map(
+  Array.isArray(COLLECTION_VIDEO_DEFINITIONS)
+    ? COLLECTION_VIDEO_DEFINITIONS.map(def => [def.id, def])
+    : []
+);
+
+const COLLECTION_VIDEO_ALL_IDS = Array.isArray(COLLECTION_VIDEO_DEFINITIONS)
+  ? COLLECTION_VIDEO_DEFINITIONS.map(def => def.id).filter(Boolean)
+  : [];
 
 const BONUS_GACHA_IMAGE_DEFINITION_INDEX = new Map(
   Array.isArray(GACHA_OPTIONAL_BONUS_IMAGE_DEFINITIONS)
@@ -556,6 +576,17 @@ function ensureGachaBonusImageCollection() {
   return gameState.gachaBonusImages;
 }
 
+function ensureCollectionVideoCollection() {
+  if (!gameState.collectionVideos || typeof gameState.collectionVideos !== 'object') {
+    if (typeof createInitialCollectionVideoCollection === 'function') {
+      gameState.collectionVideos = createInitialCollectionVideoCollection();
+    } else {
+      gameState.collectionVideos = {};
+    }
+  }
+  return gameState.collectionVideos;
+}
+
 function getSpecialGachaCardDefinition(cardId) {
   if (!cardId) {
     return null;
@@ -582,6 +613,19 @@ function getBonusGachaImageDefinition(imageId) {
     || BONUS_GACHA_PERMANENT_IMAGE_DEFINITION_INDEX.get(imageId)
     || BONUS_GACHA_SECONDARY_PERMANENT_IMAGE_DEFINITION_INDEX.get(imageId)
     || null;
+}
+
+function getCollectionVideoDefinitionForGacha(videoId) {
+  if (!videoId) {
+    return null;
+  }
+  if (COLLECTION_VIDEO_DEFINITION_INDEX.has(videoId)) {
+    return COLLECTION_VIDEO_DEFINITION_INDEX.get(videoId);
+  }
+  if (Array.isArray(COLLECTION_VIDEO_DEFINITIONS)) {
+    return COLLECTION_VIDEO_DEFINITIONS.find(def => def && def.id === videoId) || null;
+  }
+  return null;
 }
 
 function resolveBonusGachaImageLabel(imageId) {
@@ -615,12 +659,69 @@ function resolveBonusGachaImageLabel(imageId) {
   return definition.labelFallback || `Image ${imageId}`;
 }
 
+function resolveCollectionVideoLabelForGacha(videoId) {
+  if (!videoId) {
+    return '';
+  }
+  const definition = getCollectionVideoDefinitionForGacha(videoId);
+  if (definition) {
+    const api = getI18nApi();
+    const language = api && typeof api.getCurrentLanguage === 'function'
+      ? api.getCurrentLanguage()
+      : null;
+    if (language && definition.names && typeof definition.names === 'object') {
+      const direct = definition.names[language];
+      if (typeof direct === 'string' && direct.trim()) {
+        return direct.trim();
+      }
+      const [base] = language.split('-');
+      if (base && typeof definition.names[base] === 'string' && definition.names[base].trim()) {
+        return definition.names[base].trim();
+      }
+    }
+    if (definition.labelKey) {
+      const translated = translateWithFallback(definition.labelKey, definition.labelFallback);
+      if (translated) {
+        return translated;
+      }
+    }
+    if (definition.labelFallback) {
+      return definition.labelFallback;
+    }
+  }
+  return translateWithFallback(`scripts.collection.videos.names.${videoId}`, `Vidéo ${videoId}`);
+}
+
 function rollForSpecialGachaCard() {
   return Math.random() < SPECIAL_GACHA_CARD_CHANCE;
 }
 
 function rollForBonusGachaImage() {
   return Math.random() < BONUS_GACHA_IMAGE_CHANCE;
+}
+
+function rollForCollectionVideoReward() {
+  return Math.random() < COLLECTION_VIDEO_GACHA_CHANCE;
+}
+
+function getAvailableCollectionVideoIds() {
+  if (!isCollectionVideoCollectionEnabled()) {
+    return [];
+  }
+  if (!COLLECTION_VIDEO_ALL_IDS.length) {
+    return [];
+  }
+  const collection = ensureCollectionVideoCollection();
+  return COLLECTION_VIDEO_ALL_IDS.filter(videoId => {
+    if (!videoId) {
+      return false;
+    }
+    const stored = collection[videoId];
+    const rawCount = Number.isFinite(Number(stored?.count ?? stored))
+      ? Math.max(0, Math.floor(Number(stored?.count ?? stored)))
+      : 0;
+    return rawCount <= 0;
+  });
 }
 
 function getAvailableBonusGachaImageIds() {
@@ -828,6 +929,66 @@ function awardPermanentBonusGachaImage(imageId, options = null) {
   };
 }
 
+function awardCollectionVideo(videoId) {
+  if (!isCollectionVideoCollectionEnabled()) {
+    return null;
+  }
+  if (!videoId) {
+    return null;
+  }
+  const collection = ensureCollectionVideoCollection();
+  if (!collection[videoId]) {
+    collection[videoId] = {
+      id: videoId,
+      count: 0,
+      firstAcquiredAt: null,
+      acquiredOrder: null
+    };
+  }
+  const entry = collection[videoId];
+  const previousCount = Number(entry.count) || 0;
+  const newCount = previousCount + 1;
+  entry.count = newCount;
+  if (previousCount === 0) {
+    const now = Date.now();
+    if (!Number.isFinite(Number(entry.firstAcquiredAt)) || Number(entry.firstAcquiredAt) <= 0) {
+      entry.firstAcquiredAt = now;
+    }
+    if (!Number.isFinite(Number(entry.acquiredOrder)) || Number(entry.acquiredOrder) <= 0) {
+      const existingOrders = Object.values(collection)
+        .map(item => Number(item?.acquiredOrder))
+        .filter(value => Number.isFinite(value) && value > 0);
+      const maxOrder = existingOrders.length ? Math.max(...existingOrders) : 0;
+      entry.acquiredOrder = maxOrder + 1;
+    }
+  }
+  const definition = getCollectionVideoDefinitionForGacha(videoId);
+  const label = resolveCollectionVideoLabelForGacha(videoId);
+  const assetPath = definition && typeof definition.assetPath === 'string' && definition.assetPath.trim()
+    ? definition.assetPath
+    : null;
+  const posterPath = definition && typeof definition.posterPath === 'string' && definition.posterPath.trim()
+    ? definition.posterPath
+    : null;
+  const autoplay = definition ? definition.autoplay !== false : true;
+  const loop = definition ? definition.loop !== false : true;
+  const muted = definition ? definition.muted !== false : true;
+  return {
+    cardId: videoId,
+    definition,
+    label,
+    assetPath,
+    posterPath,
+    autoplay,
+    loop,
+    muted,
+    count: newCount,
+    isNew: previousCount === 0,
+    type: 'video',
+    collectionType: 'video'
+  };
+}
+
 function maybeAwardElementSpecialCard(elementDef) {
   if (!isGachaCardCollectionEnabled()) {
     return null;
@@ -987,6 +1148,25 @@ function maybeAwardSecondaryPermanentBonusGachaImage() {
     markBonusGachaImageMissing(imageId, definition);
   }
   return null;
+}
+
+function maybeAwardCollectionVideo() {
+  if (!isCollectionVideoCollectionEnabled()) {
+    return null;
+  }
+  const availableIds = getAvailableCollectionVideoIds();
+  if (!availableIds.length) {
+    return null;
+  }
+  if (!rollForCollectionVideoReward()) {
+    return null;
+  }
+  const index = Math.floor(Math.random() * availableIds.length);
+  const videoId = availableIds[index];
+  if (!videoId) {
+    return null;
+  }
+  return awardCollectionVideo(videoId);
 }
 
 const DEFAULT_GACHA_RARITIES = [
@@ -3925,7 +4105,8 @@ function performGachaRoll(count = 1) {
   const collectionRewards = [];
   const shouldAwardCollectionRewards = isGachaCardCollectionEnabled()
     || isGachaImageCollectionEnabled()
-    || isGachaBonusImageCollectionEnabled();
+    || isGachaBonusImageCollectionEnabled()
+    || isCollectionVideoCollectionEnabled();
   for (let rollIndex = 0; rollIndex < drawCount; rollIndex += 1) {
     const rarity = pickGachaRarity(initialDrawCount + rollIndex);
     if (!rarity) {
@@ -3985,6 +4166,10 @@ function performGachaRoll(count = 1) {
       if (secondaryPermanentImageReward) {
         collectionRewards.push(secondaryPermanentImageReward);
       }
+      const collectionVideoReward = maybeAwardCollectionVideo();
+      if (collectionVideoReward) {
+        collectionRewards.push(collectionVideoReward);
+      }
     }
 
     const isNew = previousLifetime === 0;
@@ -4005,6 +4190,7 @@ function performGachaRoll(count = 1) {
         return;
       }
       const isImage = reward.type === 'image';
+      const isVideo = reward.type === 'video';
       const imageCollectionType = typeof reward.collectionType === 'string'
         ? reward.collectionType.toLowerCase()
         : '';
@@ -4015,7 +4201,7 @@ function performGachaRoll(count = 1) {
         ? (isSecondaryPermanentImage
           ? 'scripts.gacha.bonusImages2'
           : (isPermanentImage ? 'scripts.gacha.bonusImages' : 'scripts.gacha.images'))
-        : 'scripts.gacha.cards';
+        : (isVideo ? 'scripts.collection.videos' : 'scripts.gacha.cards');
       const toastKey = reward.isNew
         ? `${namespace}.toastNew`
         : `${namespace}.toastDuplicate`;
@@ -4024,12 +4210,16 @@ function performGachaRoll(count = 1) {
             ? (isPermanentImage
                 ? 'Bonus image unlocked: {card}'
                 : 'Gallery image unlocked: {card}')
-            : 'Special card unlocked: {card}')
+            : (isVideo
+              ? 'Bonus video unlocked: {card}'
+              : 'Special card unlocked: {card}'))
         : (isImage
             ? (isPermanentImage
                 ? 'Bonus image found again: {card}'
                 : 'Gallery image found again: {card}')
-            : 'Special card obtained again: {card}');
+            : (isVideo
+              ? 'Bonus video found again: {card}'
+              : 'Special card obtained again: {card}'));
       const message = translateWithFallback(toastKey, fallback, { card: reward.label });
       if (message) {
         showToast(message);

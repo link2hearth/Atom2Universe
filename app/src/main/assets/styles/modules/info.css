@@ -328,6 +328,15 @@ body.theme-aurora .info-card-list__button:hover {
   display: block;
 }
 
+.collection-image-button__video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: inherit;
+}
+
 .collection-image-button:focus-visible,
 .collection-image-button:hover {
   transform: translateY(-2px) scale(1.02);

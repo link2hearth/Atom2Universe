@@ -1,0 +1,405 @@
+{
+  "folder": "Assets/Collection/Videos",
+  "videos": [
+    {
+      "id": "video01",
+      "fileName": "Video (1).mp4",
+      "label": {
+        "fr": "Vidéo bonus 1",
+        "en": "Bonus video 1"
+      }
+    },
+    {
+      "id": "video02",
+      "fileName": "Video (2).mp4",
+      "label": {
+        "fr": "Vidéo bonus 2",
+        "en": "Bonus video 2"
+      }
+    },
+    {
+      "id": "video03",
+      "fileName": "Video (3).mp4",
+      "label": {
+        "fr": "Vidéo bonus 3",
+        "en": "Bonus video 3"
+      }
+    },
+    {
+      "id": "video04",
+      "fileName": "Video (4).mp4",
+      "label": {
+        "fr": "Vidéo bonus 4",
+        "en": "Bonus video 4"
+      }
+    },
+    {
+      "id": "video05",
+      "fileName": "Video (5).mp4",
+      "label": {
+        "fr": "Vidéo bonus 5",
+        "en": "Bonus video 5"
+      }
+    },
+    {
+      "id": "video06",
+      "fileName": "Video (6).mp4",
+      "label": {
+        "fr": "Vidéo bonus 6",
+        "en": "Bonus video 6"
+      }
+    },
+    {
+      "id": "video07",
+      "fileName": "Video (7).mp4",
+      "label": {
+        "fr": "Vidéo bonus 7",
+        "en": "Bonus video 7"
+      }
+    },
+    {
+      "id": "video08",
+      "fileName": "Video (8).mp4",
+      "label": {
+        "fr": "Vidéo bonus 8",
+        "en": "Bonus video 8"
+      }
+    },
+    {
+      "id": "video09",
+      "fileName": "Video (9).mp4",
+      "label": {
+        "fr": "Vidéo bonus 9",
+        "en": "Bonus video 9"
+      }
+    },
+    {
+      "id": "video10",
+      "fileName": "Video (10).mp4",
+      "label": {
+        "fr": "Vidéo bonus 10",
+        "en": "Bonus video 10"
+      }
+    },
+    {
+      "id": "video11",
+      "fileName": "Video (11).mp4",
+      "label": {
+        "fr": "Vidéo bonus 11",
+        "en": "Bonus video 11"
+      }
+    },
+    {
+      "id": "video12",
+      "fileName": "Video (12).mp4",
+      "label": {
+        "fr": "Vidéo bonus 12",
+        "en": "Bonus video 12"
+      }
+    },
+    {
+      "id": "video13",
+      "fileName": "Video (13).mp4",
+      "label": {
+        "fr": "Vidéo bonus 13",
+        "en": "Bonus video 13"
+      }
+    },
+    {
+      "id": "video14",
+      "fileName": "Video (14).mp4",
+      "label": {
+        "fr": "Vidéo bonus 14",
+        "en": "Bonus video 14"
+      }
+    },
+    {
+      "id": "video15",
+      "fileName": "Video (15).mp4",
+      "label": {
+        "fr": "Vidéo bonus 15",
+        "en": "Bonus video 15"
+      }
+    },
+    {
+      "id": "video16",
+      "fileName": "Video (16).mp4",
+      "label": {
+        "fr": "Vidéo bonus 16",
+        "en": "Bonus video 16"
+      }
+    },
+    {
+      "id": "video17",
+      "fileName": "Video (17).mp4",
+      "label": {
+        "fr": "Vidéo bonus 17",
+        "en": "Bonus video 17"
+      }
+    },
+    {
+      "id": "video18",
+      "fileName": "Video (18).mp4",
+      "label": {
+        "fr": "Vidéo bonus 18",
+        "en": "Bonus video 18"
+      }
+    },
+    {
+      "id": "video19",
+      "fileName": "Video (19).mp4",
+      "label": {
+        "fr": "Vidéo bonus 19",
+        "en": "Bonus video 19"
+      }
+    },
+    {
+      "id": "video20",
+      "fileName": "Video (20).mp4",
+      "label": {
+        "fr": "Vidéo bonus 20",
+        "en": "Bonus video 20"
+      }
+    },
+    {
+      "id": "video21",
+      "fileName": "Video (21).mp4",
+      "label": {
+        "fr": "Vidéo bonus 21",
+        "en": "Bonus video 21"
+      }
+    },
+    {
+      "id": "video22",
+      "fileName": "Video (22).mp4",
+      "label": {
+        "fr": "Vidéo bonus 22",
+        "en": "Bonus video 22"
+      }
+    },
+    {
+      "id": "video23",
+      "fileName": "Video (23).mp4",
+      "label": {
+        "fr": "Vidéo bonus 23",
+        "en": "Bonus video 23"
+      }
+    },
+    {
+      "id": "video24",
+      "fileName": "Video (24).mp4",
+      "label": {
+        "fr": "Vidéo bonus 24",
+        "en": "Bonus video 24"
+      }
+    },
+    {
+      "id": "video25",
+      "fileName": "Video (25).mp4",
+      "label": {
+        "fr": "Vidéo bonus 25",
+        "en": "Bonus video 25"
+      }
+    },
+    {
+      "id": "video26",
+      "fileName": "Video (26).mp4",
+      "label": {
+        "fr": "Vidéo bonus 26",
+        "en": "Bonus video 26"
+      }
+    },
+    {
+      "id": "video27",
+      "fileName": "Video (27).mp4",
+      "label": {
+        "fr": "Vidéo bonus 27",
+        "en": "Bonus video 27"
+      }
+    },
+    {
+      "id": "video28",
+      "fileName": "Video (28).mp4",
+      "label": {
+        "fr": "Vidéo bonus 28",
+        "en": "Bonus video 28"
+      }
+    },
+    {
+      "id": "video29",
+      "fileName": "Video (29).mp4",
+      "label": {
+        "fr": "Vidéo bonus 29",
+        "en": "Bonus video 29"
+      }
+    },
+    {
+      "id": "video30",
+      "fileName": "Video (30).mp4",
+      "label": {
+        "fr": "Vidéo bonus 30",
+        "en": "Bonus video 30"
+      }
+    },
+    {
+      "id": "video31",
+      "fileName": "Video (31).mp4",
+      "label": {
+        "fr": "Vidéo bonus 31",
+        "en": "Bonus video 31"
+      }
+    },
+    {
+      "id": "video32",
+      "fileName": "Video (32).mp4",
+      "label": {
+        "fr": "Vidéo bonus 32",
+        "en": "Bonus video 32"
+      }
+    },
+    {
+      "id": "video33",
+      "fileName": "Video (33).mp4",
+      "label": {
+        "fr": "Vidéo bonus 33",
+        "en": "Bonus video 33"
+      }
+    },
+    {
+      "id": "video34",
+      "fileName": "Video (34).mp4",
+      "label": {
+        "fr": "Vidéo bonus 34",
+        "en": "Bonus video 34"
+      }
+    },
+    {
+      "id": "video35",
+      "fileName": "Video (35).mp4",
+      "label": {
+        "fr": "Vidéo bonus 35",
+        "en": "Bonus video 35"
+      }
+    },
+    {
+      "id": "video36",
+      "fileName": "Video (36).mp4",
+      "label": {
+        "fr": "Vidéo bonus 36",
+        "en": "Bonus video 36"
+      }
+    },
+    {
+      "id": "video37",
+      "fileName": "Video (37).mp4",
+      "label": {
+        "fr": "Vidéo bonus 37",
+        "en": "Bonus video 37"
+      }
+    },
+    {
+      "id": "video38",
+      "fileName": "Video (38).mp4",
+      "label": {
+        "fr": "Vidéo bonus 38",
+        "en": "Bonus video 38"
+      }
+    },
+    {
+      "id": "video39",
+      "fileName": "Video (39).mp4",
+      "label": {
+        "fr": "Vidéo bonus 39",
+        "en": "Bonus video 39"
+      }
+    },
+    {
+      "id": "video40",
+      "fileName": "Video (40).mp4",
+      "label": {
+        "fr": "Vidéo bonus 40",
+        "en": "Bonus video 40"
+      }
+    },
+    {
+      "id": "video41",
+      "fileName": "Video (41).mp4",
+      "label": {
+        "fr": "Vidéo bonus 41",
+        "en": "Bonus video 41"
+      }
+    },
+    {
+      "id": "video42",
+      "fileName": "Video (42).mp4",
+      "label": {
+        "fr": "Vidéo bonus 42",
+        "en": "Bonus video 42"
+      }
+    },
+    {
+      "id": "video43",
+      "fileName": "Video (43).mp4",
+      "label": {
+        "fr": "Vidéo bonus 43",
+        "en": "Bonus video 43"
+      }
+    },
+    {
+      "id": "video44",
+      "fileName": "Video (44).mp4",
+      "label": {
+        "fr": "Vidéo bonus 44",
+        "en": "Bonus video 44"
+      }
+    },
+    {
+      "id": "video45",
+      "fileName": "Video (45).mp4",
+      "label": {
+        "fr": "Vidéo bonus 45",
+        "en": "Bonus video 45"
+      }
+    },
+    {
+      "id": "video46",
+      "fileName": "Video (46).mp4",
+      "label": {
+        "fr": "Vidéo bonus 46",
+        "en": "Bonus video 46"
+      }
+    },
+    {
+      "id": "video47",
+      "fileName": "Video (47).mp4",
+      "label": {
+        "fr": "Vidéo bonus 47",
+        "en": "Bonus video 47"
+      }
+    },
+    {
+      "id": "video48",
+      "fileName": "Video (48).mp4",
+      "label": {
+        "fr": "Vidéo bonus 48",
+        "en": "Bonus video 48"
+      }
+    },
+    {
+      "id": "video49",
+      "fileName": "Video (49).mp4",
+      "label": {
+        "fr": "Vidéo bonus 49",
+        "en": "Bonus video 49"
+      }
+    },
+    {
+      "id": "video50",
+      "fileName": "Video (50).mp4",
+      "label": {
+        "fr": "Vidéo bonus 50",
+        "en": "Bonus video 50"
+      }
+    }
+  ]
+}

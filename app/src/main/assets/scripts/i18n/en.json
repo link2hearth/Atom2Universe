@@ -137,6 +137,17 @@
           "view": "View {card}",
           "count": "×{count}"
         },
+        "videos": {
+          "title": "Bonus videos",
+          "subtitle": "Your looping MP4 clips to revisit in fullscreen.",
+          "toggle": {
+            "collapse": "Collapse",
+            "expand": "Expand"
+          },
+          "empty": "No bonus video unlocked yet.",
+          "view": "View {card}",
+          "count": "×{count}"
+        },
         "bonusImages": {
           "title": "Bonus images",
           "subtitle": "Your permanent bonus images won from the gacha.",
@@ -3892,6 +3903,18 @@
         "multiple": "+{count} draw tickets!",
         "collectAria": "Collect a draw ticket",
         "imageAlt": "Bonus star"
+      }
+    },
+    "collection": {
+      "videos": {
+        "toastNew": "Bonus video unlocked: {card}",
+        "toastDuplicate": "Bonus video found again: {card}",
+        "overlay": {
+          "newTitle": "Bonus video unlocked!",
+          "duplicateTitle": "Bonus video found again!",
+          "hint": "Tap the cross to close the video.",
+          "close": "Close video"
+        }
       }
     },
     "appData": {
