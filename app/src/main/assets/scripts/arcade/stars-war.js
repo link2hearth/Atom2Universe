@@ -1048,6 +1048,7 @@
   ]);
   const AUTOSAVE_KEY = 'starsWar';
   let autosaveTimerId = null;
+  let pendingAutosaveListener = null;
 
   function rngMulberry32(a) {
     return function rng() {
@@ -2251,9 +2252,25 @@
     }
   }
 
+  function waitForAutosaveApi() {
+    if (pendingAutosaveListener || typeof window === 'undefined' || typeof window.addEventListener !== 'function') {
+      return;
+    }
+    const handler = () => {
+      if (typeof window !== 'undefined' && typeof window.removeEventListener === 'function') {
+        window.removeEventListener('arcadeAutosaveReady', handler);
+      }
+      pendingAutosaveListener = null;
+      loadAutosave();
+    };
+    pendingAutosaveListener = handler;
+    window.addEventListener('arcadeAutosaveReady', handler);
+  }
+
   function loadAutosave() {
     const api = getAutosaveApi();
     if (!api) {
+      waitForAutosaveApi();
       return;
     }
     let raw = null;
@@ -4426,6 +4443,7 @@
     promptForNewRun();
     updatePauseButtonState(true);
     if (typeof window !== 'undefined') {
+      window.addEventListener('arcadeAutosaveSync', loadAutosave);
       window.addEventListener('beforeunload', flushAutosave);
       window.addEventListener('pagehide', flushAutosave);
     }

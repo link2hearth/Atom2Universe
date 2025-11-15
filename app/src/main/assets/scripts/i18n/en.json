@@ -1864,6 +1864,11 @@
             "hard": "Hard"
           }
         },
+        "records": {
+          "title": "Saved records",
+          "hard": "Hard mode",
+          "easy": "Easy mode"
+        },
         "overlay": {
           "start": {
             "title": "Ready for launch?",

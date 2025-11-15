@@ -243,6 +243,25 @@
     return result;
   };
 
+  const AUTOSAVE_READY_EVENT = 'arcadeAutosaveReady';
+  const AUTOSAVE_SYNC_EVENT = 'arcadeAutosaveSync';
+
+  const dispatchAutosaveEvent = (type, detailBuilder) => {
+    if (typeof window === 'undefined' || typeof window.dispatchEvent !== 'function') {
+      return;
+    }
+    try {
+      const detail = typeof detailBuilder === 'function' ? detailBuilder() : detailBuilder;
+      window.dispatchEvent(new CustomEvent(type, { detail }));
+    } catch (error) {
+      try {
+        window.dispatchEvent(new Event(type));
+      } catch (fallbackError) {
+        // Ignore dispatch issues on platforms without CustomEvent support
+      }
+    }
+  };
+
   const state = readStoredState();
 
   let persistScheduled = false;
@@ -285,21 +304,33 @@
 
   const syncGlobalArcadeProgress = () => {
     const globalState = getGlobalState();
-    if (!globalState) {
-      return;
+    const normalized = normalizeEntriesForGlobalState(state.entries);
+    if (globalState) {
+      if (!globalState.arcadeProgress || typeof globalState.arcadeProgress !== 'object') {
+        globalState.arcadeProgress = { version: 1, entries: {} };
+      }
+      globalState.arcadeProgress.version = 1;
+      globalState.arcadeProgress.entries = normalized;
     }
-    if (!globalState.arcadeProgress || typeof globalState.arcadeProgress !== 'object') {
-      globalState.arcadeProgress = { version: 1, entries: {} };
-    }
-    globalState.arcadeProgress.version = 1;
-    globalState.arcadeProgress.entries = normalizeEntriesForGlobalState(state.entries);
+    return normalized;
   };
 
-  syncGlobalArcadeProgress();
+  const updateGlobalProgress = () => {
+    const entries = syncGlobalArcadeProgress();
+    dispatchAutosaveEvent(AUTOSAVE_SYNC_EVENT, () => {
+      try {
+        return { entries: JSON.parse(JSON.stringify(entries)) };
+      } catch (error) {
+        return { entries: null };
+      }
+    });
+  };
+
+  updateGlobalProgress();
   if (typeof window !== 'undefined') {
-    window.setTimeout(syncGlobalArcadeProgress, 0);
+    window.setTimeout(updateGlobalProgress, 0);
     const handleLoad = () => {
-      syncGlobalArcadeProgress();
+      updateGlobalProgress();
       window.removeEventListener('load', handleLoad);
     };
     window.addEventListener('load', handleLoad);
@@ -332,7 +363,7 @@
     }
 
     // Also update in-memory global state if it exists
-    syncGlobalArcadeProgress();
+    updateGlobalProgress();
   };
 
   const schedulePersist = () => {
@@ -378,6 +409,7 @@
       if (existingKey && state.entries[existingKey]) {
         delete state.entries[existingKey];
         schedulePersist();
+        updateGlobalProgress();
       }
       return;
     }
@@ -394,6 +426,7 @@
       updatedAt: Date.now()
     };
     schedulePersist();
+    updateGlobalProgress();
   };
 
   const clearEntry = gameId => {
@@ -404,6 +437,7 @@
     if (key && state.entries[key]) {
       delete state.entries[key];
       schedulePersist();
+      updateGlobalProgress();
     }
   };
 
@@ -443,5 +477,6 @@
     window.ArcadeAutosave = api;
     // Expose a global save function for the native app to call
     window.atom2universSaveGame = persistNow;
+    dispatchAutosaveEvent(AUTOSAVE_READY_EVENT, () => ({ api }));
   }
 })();

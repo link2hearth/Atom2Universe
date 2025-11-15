@@ -149,6 +149,13 @@
   justify-items: center;
 }
 
+@media (min-width: 60rem) {
+  .stars-war__layout {
+    grid-template-columns: minmax(0, 1fr) minmax(240px, 320px);
+    justify-items: stretch;
+  }
+}
+
 .stars-war__stage {
   position: relative;
   margin-inline: auto;
@@ -187,6 +194,63 @@
 
 .stars-war__life--full .stars-war__life-icon {
   filter: drop-shadow(0 0 6px rgba(255, 120, 160, 0.45));
+}
+
+.stars-war__scores {
+  width: min(100%, 320px);
+  justify-self: center;
+  padding: clamp(1rem, 2.3vw, 1.5rem);
+  border-radius: 1rem;
+  border: 1px solid var(--stars-war-border);
+  background: var(--stars-war-panel);
+  box-shadow: 0 24px 40px rgba(6, 10, 24, 0.35);
+  display: grid;
+  gap: clamp(0.75rem, 1.6vw, 1rem);
+  color: var(--stars-war-text);
+}
+
+@media (min-width: 60rem) {
+  .stars-war__scores {
+    justify-self: stretch;
+  }
+}
+
+.stars-war__scores-title {
+  margin: 0;
+  font-size: clamp(0.9rem, 2.1vw, 1.1rem);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.stars-war__scores-list {
+  display: grid;
+  gap: clamp(0.5rem, 1.4vw, 0.85rem);
+}
+
+.stars-war__scores-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.35rem;
+  border-radius: 0.75rem;
+  background: rgba(12, 18, 32, 0.55);
+  padding: 0.65rem 0.8rem;
+  border: 1px solid rgba(120, 160, 240, 0.22);
+}
+
+.stars-war__scores-label {
+  font-size: clamp(0.65rem, 1.4vw, 0.82rem);
+  font-weight: 500;
+  color: var(--stars-war-muted);
+}
+
+.stars-war__scores-value {
+  margin-left: auto;
+  font-family: var(--font-digits, 'Orbitron', sans-serif);
+  font-size: clamp(0.72rem, 1.6vw, 0.95rem);
+  font-weight: 600;
+  color: var(--stars-war-text);
 }
 
 .stars-war__life--shield {
