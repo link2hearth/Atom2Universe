@@ -26,7 +26,7 @@
       Object.freeze({ id: 'amber', value: '#f6b93b' }),
       Object.freeze({ id: 'violet', value: '#9b59b6' }),
       Object.freeze({ id: 'rose', value: '#ff9ff3' }),
-      Object.freeze({ id: 'teal', value: '#1abc9c' }),
+      Object.freeze({ id: 'teal', value: '#95a5a6' }),
       Object.freeze({ id: 'slate', value: '#95a5a6' })
     ]),
     difficulties: Object.freeze({
