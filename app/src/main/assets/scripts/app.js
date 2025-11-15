@@ -254,6 +254,7 @@ let arcadeHubCardStateCache = null;
 let arcadeHubCardOrderCache = null;
 let activeArcadeHubCardDrag = null;
 let lastBigBangUnlockedState = false;
+let collectionVideosUnlockedCache = null;
 
 const ARCADE_HUB_CARD_COLLAPSE_LABEL_KEY = 'index.sections.arcadeHub.cards.toggle.collapse';
 const ARCADE_HUB_CARD_EXPAND_LABEL_KEY = 'index.sections.arcadeHub.cards.toggle.expand';
@@ -296,6 +297,7 @@ const COLLECTION_IMAGES_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.imagesC
 const COLLECTION_BONUS_IMAGES_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.bonusImagesCollapsed';
 const COLLECTION_BONUS2_IMAGES_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.bonus2ImagesCollapsed';
 const COLLECTION_VIDEOS_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.videosCollapsed';
+const COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY = 'atom2univers.collection.videosUnlocked';
 const HEADER_COLLAPSED_STORAGE_KEY = 'atom2univers.ui.headerCollapsed';
 const ARCADE_HUB_CARD_STATE_STORAGE_KEY = 'atom2univers.arcadeHub.cardStates.v1';
 const ARCADE_HUB_CARD_ORDER_STORAGE_KEY = 'atom2univers.arcadeHub.cardOrder.v1';
@@ -4721,6 +4723,17 @@ function hasOwnedCollectionVideos() {
   });
 }
 
+function hasUnlockedCollectionVideos() {
+  if (hasOwnedCollectionVideos()) {
+    persistCollectionVideoUnlockState(true);
+    return true;
+  }
+  if (collectionVideosUnlockedCache == null) {
+    collectionVideosUnlockedCache = readStoredCollectionVideosUnlocked(false);
+  }
+  return collectionVideosUnlockedCache === true;
+}
+
 function getPageUnlockState() {
   if (!gameState.pageUnlocks || typeof gameState.pageUnlocks !== 'object') {
     gameState.pageUnlocks = createInitialPageUnlockState();
@@ -7174,7 +7187,7 @@ function updateCollectionVideosVisibility() {
   if (!elements.collectionVideosCard) {
     return;
   }
-  const hasVideos = hasOwnedCollectionVideos();
+  const hasVideos = hasUnlockedCollectionVideos();
   const unlocked = isCollectionFeatureEnabled() && isPageUnlocked('collection') && hasVideos;
   elements.collectionVideosCard.hidden = !unlocked;
   elements.collectionVideosCard.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
@@ -7214,6 +7227,46 @@ function writeStoredInfoCardCollapsed(storageKey, collapsed) {
     console.warn('Unable to persist info card preference', storageKey, error);
   }
 }
+
+function readStoredCollectionVideosUnlocked(defaultValue = false) {
+  try {
+    const stored = globalThis.localStorage?.getItem(COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY);
+    if (typeof stored === 'string') {
+      const normalized = stored.trim().toLowerCase();
+      if (normalized === 'true') {
+        return true;
+      }
+      if (normalized === 'false') {
+        return false;
+      }
+    }
+  } catch (error) {
+    console.warn('Unable to read collection video unlock state', error);
+  }
+  return !!defaultValue;
+}
+
+function writeStoredCollectionVideosUnlocked(unlocked) {
+  try {
+    if (!globalThis.localStorage) {
+      collectionVideosUnlockedCache = unlocked === true;
+      return;
+    }
+    if (unlocked) {
+      globalThis.localStorage.setItem(COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY, 'true');
+    } else {
+      globalThis.localStorage.removeItem(COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY);
+    }
+    collectionVideosUnlockedCache = unlocked === true;
+  } catch (error) {
+    console.warn('Unable to persist collection video unlock state', error);
+  }
+}
+
+function persistCollectionVideoUnlockState(unlocked) {
+  writeStoredCollectionVideosUnlocked(unlocked === true);
+}
+
 
 function readStoredHeaderCollapsed(defaultValue = false) {
   try {
@@ -19164,6 +19217,7 @@ const RESET_LOCAL_STORAGE_KEYS = [
   INFO_PROGRESS_COLLAPSED_STORAGE_KEY,
   COLLECTION_IMAGES_COLLAPSED_STORAGE_KEY,
   COLLECTION_BONUS_IMAGES_COLLAPSED_STORAGE_KEY,
+  COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY,
   HEADER_COLLAPSED_STORAGE_KEY,
   PERFORMANCE_MODE_STORAGE_KEY,
   UI_SCALE_STORAGE_KEY,
@@ -19306,6 +19360,7 @@ function clearLocalStorageForReset() {
 function resetGame() {
   clearArcadeAutosaveData({ preserveGameIds: ['echecs'] });
   clearLocalStorageForReset();
+  persistCollectionVideoUnlockState(false);
   Object.assign(gameState, {
     atoms: LayeredNumber.zero(),
     lifetime: LayeredNumber.zero(),
@@ -19917,6 +19972,7 @@ function applySerializedGameState(raw) {
     });
   }
   gameState.collectionVideos = baseVideoCollection;
+  persistCollectionVideoUnlockState(hasOwnedCollectionVideos());
   const baseBonusImageCollection = createInitialGachaBonusImageCollection();
   let inferredBonusImageAcquisitionCounter = 0;
   if (data.gachaBonusImages && typeof data.gachaBonusImages === 'object') {
