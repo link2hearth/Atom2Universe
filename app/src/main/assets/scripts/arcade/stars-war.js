@@ -23,7 +23,8 @@
     difficultyButton: document.getElementById('starsWarDifficultyButton'),
     powerupList: document.getElementById('starsWarPowerupList'),
     livesContainer: document.getElementById('starsWarLives'),
-    screenReaderStatus: document.getElementById('starsWarStatus')
+    screenReaderStatus: document.getElementById('starsWarStatus'),
+    scoresPanel: root.querySelector('.stars-war__scores')
   };
 
   if (!elements.canvas) {
@@ -40,7 +41,8 @@
     shipHitboxScale: Object.freeze({
       player: 0.5,
       enemy: 0.5
-    })
+    }),
+    showScoresPanel: false
   });
 
   const DIFFICULTY_MODES = Object.freeze({
@@ -151,6 +153,9 @@
       2,
       DEFAULT_CONFIG.shipHitboxScale.enemy
     );
+    const showScoresPanel = typeof raw.showScoresPanel === 'boolean'
+      ? raw.showScoresPanel
+      : DEFAULT_CONFIG.showScoresPanel;
     return Object.freeze({
       maxWaveDurationSeconds: Math.max(5, Math.floor(maxWaveDuration)),
       enemyBulletCap: Object.freeze({
@@ -160,7 +165,8 @@
       shipHitboxScale: Object.freeze({
         player: playerHitboxScale,
         enemy: enemyHitboxScale
-      })
+      }),
+      showScoresPanel
     });
   }
 
@@ -2303,15 +2309,37 @@
     fetch(CONFIG_PATH)
       .then(response => (response.ok ? response.json() : null))
       .then(data => {
-        if (!data || typeof data !== 'object') {
-          return;
+        if (data && typeof data === 'object') {
+          state.config = resolveConfig(data);
+          state.waveTimer = Math.min(state.waveTimer, getMaxWaveDuration());
         }
-        state.config = resolveConfig(data);
-        state.waveTimer = Math.min(state.waveTimer, getMaxWaveDuration());
+        applyScoresPanelVisibility();
       })
       .catch(error => {
         console.warn('Stars War config load error', error);
+        applyScoresPanelVisibility();
       });
+  }
+
+  function shouldShowScoresPanel() {
+    const config = state && state.config ? state.config : DEFAULT_CONFIG;
+    if (typeof config.showScoresPanel === 'boolean') {
+      return config.showScoresPanel;
+    }
+    return DEFAULT_CONFIG.showScoresPanel;
+  }
+
+  function applyScoresPanelVisibility() {
+    if (!elements.scoresPanel) {
+      return;
+    }
+    const visible = shouldShowScoresPanel();
+    elements.scoresPanel.hidden = !visible;
+    if (visible) {
+      elements.scoresPanel.removeAttribute('aria-hidden');
+    } else {
+      elements.scoresPanel.setAttribute('aria-hidden', 'true');
+    }
   }
 
   function announceStatus(key, params) {
@@ -4406,6 +4434,7 @@
   function init() {
     attachInputListeners();
     loadAutosave();
+    applyScoresPanelVisibility();
     loadConfig();
     if (elements.overlayButton) {
       elements.overlayButton.addEventListener('click', () => {
