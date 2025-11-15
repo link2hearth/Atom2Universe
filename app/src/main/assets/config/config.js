@@ -579,8 +579,8 @@ function createShopBuildingDefinitions() {
       baseCost: 0,
       gachaTicketCostPerPurchase: 100,
       mach3TicketsPerPurchase: 1,
-      maxLevel: 2,
-      bigBangLevelBonusMultiplier: 0.02,
+      maxLevel: 1,
+      bigBangLevelBonusMultiplier: 0.01,
       // 0,02 = +2 niveaux par Big Bang avec un palier de 100.
       effect: () => ({})
     }
@@ -1161,8 +1161,8 @@ const GAME_CONFIG = {
       options: [
         { id: 'small', factor: 0.75 },
         { id: 'normal', factor: 1 },
-        { id: 'large', factor: 1.25 },
-        { id: 'x2', factor: 1.5 }
+        { id: 'large', factor: 1.2 },
+        { id: 'x2', factor: 1.6 }
       ]
     }
   },
@@ -1260,7 +1260,7 @@ const GAME_CONFIG = {
    * - spawnChancePerSecond : probabilités d'apparition par seconde (APC / APS).
    */
   frenzies: {
-    displayDurationMs: 8000,
+    displayDurationMs: 15000,
     effectDurationMs: 30000,
     multiplier: 2,
     baseMaxStacks: 1,
