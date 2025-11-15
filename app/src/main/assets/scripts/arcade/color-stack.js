@@ -38,7 +38,8 @@
         scrambleMoves: 48,
         minMulticoloredColumns: 2,
         minDisplacedRatio: 0.5,
-        gachaTickets: 1
+        gachaTickets: 1,
+        extraTopSpace: 1
       }),
       medium: Object.freeze({
         columns: 6,
@@ -48,7 +49,8 @@
         scrambleMoves: 72,
         minMulticoloredColumns: 3,
         minDisplacedRatio: 0.6,
-        gachaTickets: 2
+        gachaTickets: 2,
+        extraTopSpace: 1
       }),
       hard: Object.freeze({
         columns: 8,
@@ -58,7 +60,8 @@
         scrambleMoves: 96,
         minMulticoloredColumns: 4,
         minDisplacedRatio: 0.65,
-        gachaTickets: 3
+        gachaTickets: 3,
+        extraTopSpace: 2
       })
     })
   });
@@ -163,6 +166,10 @@
       typeof base.minDisplacedRatio === 'number' ? base.minDisplacedRatio : 0.5
     );
     const gachaTickets = Math.max(0, toInteger(entry?.gachaTickets, base.gachaTickets || 0));
+    const baseExtraSpace = Math.max(0, toInteger(base.extraTopSpace, 0));
+    const extraTopSpace = entry && Object.prototype.hasOwnProperty.call(entry, 'extraTopSpace')
+      ? Math.max(0, toInteger(entry.extraTopSpace, baseExtraSpace))
+      : baseExtraSpace;
     const filledColumns = Array.isArray(entry?.filledColumns) && entry.filledColumns.length
       ? entry.filledColumns.map(index => toInteger(index, 0))
       : Array.from({ length: Math.max(0, columns - emptyColumns) }, (_, idx) => idx);
@@ -174,7 +181,8 @@
       minMulticoloredColumns: minMulticolored,
       minDisplacedRatio,
       filledColumns,
-      gachaTickets
+      gachaTickets,
+      extraTopSpace
     };
   }
 
@@ -213,9 +221,20 @@
     };
   }
 
+  function getExtraTopSpace(difficultyConfig) {
+    if (difficultyConfig && Object.prototype.hasOwnProperty.call(difficultyConfig, 'extraTopSpace')) {
+      return Math.max(0, toInteger(difficultyConfig.extraTopSpace, 0));
+    }
+    return Math.max(0, toInteger(state.config?.extraTopSpace, DEFAULT_CONFIG.extraTopSpace || 0));
+  }
+
+  function getBaseCapacity(difficultyConfig) {
+    return Math.max(1, toInteger(difficultyConfig?.capacity, 1));
+  }
+
   function getEffectiveCapacity(difficultyConfig) {
-    const baseCapacity = Math.max(1, toInteger(difficultyConfig?.capacity, 1));
-    const extraSpace = Math.max(0, toInteger(state.config?.extraTopSpace, DEFAULT_CONFIG.extraTopSpace));
+    const baseCapacity = getBaseCapacity(difficultyConfig);
+    const extraSpace = getExtraTopSpace(difficultyConfig);
     return baseCapacity + extraSpace;
   }
 
@@ -399,7 +418,7 @@
 
   function collectScrambleCandidates(board, difficultyConfig, lastMove) {
     const candidates = [];
-    const capacity = getEffectiveCapacity(difficultyConfig);
+    const capacity = getBaseCapacity(difficultyConfig);
     board.forEach((sourceColumn, sourceIndex) => {
       if (!sourceColumn || sourceColumn.length === 0) {
         return;
@@ -485,7 +504,7 @@
     if (emptyCount >= required) {
       return true;
     }
-    const capacity = getEffectiveCapacity(difficultyConfig);
+    const capacity = getBaseCapacity(difficultyConfig);
     const maxIterations = board.length * Math.max(1, capacity) * 4;
     let iterations = 0;
     while (emptyCount < required && iterations < maxIterations) {
@@ -745,6 +764,33 @@
     }
   }
 
+  function isRenderableToken(token) {
+    if (!token || !isNonEmptyString(token.colorHex) || !isNonEmptyString(token.colorId)) {
+      return false;
+    }
+    const colorValue = token.colorHex.trim().toLowerCase();
+    if (colorValue === 'null' || colorValue === 'undefined') {
+      return false;
+    }
+    return true;
+  }
+
+  function sanitizeColumnTokens(column) {
+    if (!Array.isArray(column) || column.length === 0) {
+      return Array.isArray(column) ? column : [];
+    }
+    let changed = false;
+    const filtered = [];
+    column.forEach(token => {
+      if (isRenderableToken(token)) {
+        filtered.push(token);
+      } else {
+        changed = true;
+      }
+    });
+    return changed ? filtered : column;
+  }
+
   function buildColumnLabel(index, column) {
     const count = column.length;
     return translate(
@@ -802,6 +848,10 @@
     const validTargets = Number.isInteger(selection) ? getValidTargets(selection) : [];
     const targetSet = new Set(validTargets);
     state.board.forEach((column, columnIndex) => {
+      const sanitizedColumn = sanitizeColumnTokens(column);
+      if (sanitizedColumn !== column) {
+        state.board[columnIndex] = sanitizedColumn;
+      }
       const columnButton = document.createElement('button');
       columnButton.type = 'button';
       columnButton.className = 'color-stack__column';
@@ -812,8 +862,8 @@
         columnButton.classList.add('color-stack__column--targetable');
       }
       columnButton.dataset.columnIndex = String(columnIndex);
-      columnButton.setAttribute('aria-label', buildColumnLabel(columnIndex, column));
-      column.forEach(token => {
+      columnButton.setAttribute('aria-label', buildColumnLabel(columnIndex, sanitizedColumn));
+      sanitizedColumn.forEach(token => {
         const tokenElement = document.createElement('span');
         tokenElement.className = 'color-stack__token';
         tokenElement.style.setProperty('--token-color', token.colorHex);
