@@ -145,8 +145,7 @@
             "expand": "Développer"
           },
           "empty": "Aucune vidéo bonus débloquée pour le moment.",
-          "view": "Afficher {card}",
-          "count": "×{count}"
+          "view": "Afficher {card}"
         },
         "bonusImages": {
           "title": "Images bonus",

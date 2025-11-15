@@ -9,6 +9,7 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -26,6 +27,32 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContentView(R.layout.activity_main)
+
+        val backCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (!::webView.isInitialized) {
+                    dispatchSystemBack(this)
+                    return
+                }
+
+                val callback = this
+                try {
+                    webView.evaluateJavascript(OVERLAY_BACK_PRESS_SCRIPT) { value ->
+                        val handled = value?.trim()?.trim('"') == "handled"
+                        if (!handled) {
+                            runOnUiThread {
+                                if (!isFinishing && !isDestroyed) {
+                                    dispatchSystemBack(callback)
+                                }
+                            }
+                        }
+                    }
+                } catch (error: Throwable) {
+                    dispatchSystemBack(this)
+                }
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, backCallback)
 
         val windowInsetsController =
             WindowCompat.getInsetsController(window, window.decorView)
@@ -190,6 +217,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun dispatchSystemBack(callback: OnBackPressedCallback) {
+        callback.isEnabled = false
+        onBackPressedDispatcher.onBackPressed()
+        if (!isFinishing && !isDestroyed) {
+            callback.isEnabled = true
+        }
+    }
+
     private companion object {
         private const val TAG = "Atom2Univers"
         private const val ASSET_URL_PREFIX = "https://appassets.androidplatform.net/assets/"
@@ -202,6 +237,38 @@ class MainActivity : AppCompatActivity() {
               }
             })();
         """
+        private val OVERLAY_BACK_PRESS_SCRIPT = """
+            (function() {
+              try {
+                var overlay = document.getElementById('gachaCardOverlay');
+                if (!overlay) {
+                  return 'ignored';
+                }
+                if (overlay.hidden) {
+                  return 'ignored';
+                }
+                var hiddenAttr = overlay.getAttribute('aria-hidden');
+                if (hiddenAttr === 'true') {
+                  return 'ignored';
+                }
+                var overlayType = overlay.dataset ? overlay.dataset.overlayType : null;
+                if (overlayType && overlayType !== 'video') {
+                  return 'ignored';
+                }
+                var closer = typeof closeSpecialCardOverlay === 'function'
+                  ? closeSpecialCardOverlay
+                  : (typeof window !== 'undefined' && typeof window.closeSpecialCardOverlay === 'function'
+                    ? window.closeSpecialCardOverlay
+                    : null);
+                if (closer) {
+                  closer();
+                  return 'handled';
+                }
+              } catch (error) {
+              }
+              return 'ignored';
+            })();
+        """.trimIndent()
     }
 }
 

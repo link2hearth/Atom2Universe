@@ -294,9 +294,29 @@ body.theme-aurora .info-card-list__button:hover {
   gap: clamp(0.6rem, 1.4vw, 1rem);
 }
 
+.info-card-list--videos {
+  grid-template-columns: 1fr;
+  gap: clamp(0.6rem, 1.4vw, 0.9rem);
+}
+
 .info-card-list__item--image {
   aspect-ratio: 3 / 4;
   min-height: clamp(120px, 24vw, 220px);
+}
+
+.info-card-list__item--video {
+  min-height: 0;
+}
+
+.info-card-list__button--video {
+  justify-content: flex-start;
+  gap: 0.6rem;
+}
+
+.info-card-list__name--video {
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 600;
 }
 
 .collection-image-button {

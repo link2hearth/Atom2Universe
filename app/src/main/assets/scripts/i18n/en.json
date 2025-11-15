@@ -145,8 +145,7 @@
             "expand": "Expand"
           },
           "empty": "No bonus video unlocked yet.",
-          "view": "View {card}",
-          "count": "×{count}"
+          "view": "View {card}"
         },
         "bonusImages": {
           "title": "Bonus images",
