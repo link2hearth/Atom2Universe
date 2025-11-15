@@ -1801,6 +1801,11 @@
             "hard": "Hard"
           }
         },
+        "records": {
+          "title": "Records sauvegardés",
+          "hard": "Mode difficile",
+          "easy": "Mode facile"
+        },
         "overlay": {
           "start": {
             "title": "Prêt au décollage ?",

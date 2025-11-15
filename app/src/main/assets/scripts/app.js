@@ -5998,6 +5998,8 @@ function collectDomElements() {
   infoPhotonAltitudeValue: document.getElementById('infoPhotonAltitudeValue'),
   infoStarsWarHardValue: document.getElementById('infoStarsWarHardValue'),
   infoStarsWarEasyValue: document.getElementById('infoStarsWarEasyValue'),
+  starsWarHighscoreHard: document.getElementById('starsWarHighscoreHard'),
+  starsWarHighscoreEasy: document.getElementById('starsWarHighscoreEasy'),
   infoBonusSubtitle: document.getElementById('infoBonusSubtitle'),
   infoElementBonuses: document.getElementById('infoElementBonuses'),
   infoElementBonusCard: document.getElementById('infoElementBonusCard'),

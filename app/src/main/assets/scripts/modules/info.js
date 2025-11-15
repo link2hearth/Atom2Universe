@@ -3094,6 +3094,8 @@ function updateStarsWarStats(override) {
 
   applyValue(elements.infoStarsWarHardValue, STARS_WAR_DIFFICULTY_MODES.hard);
   applyValue(elements.infoStarsWarEasyValue, STARS_WAR_DIFFICULTY_MODES.easy);
+  applyValue(elements.starsWarHighscoreHard, STARS_WAR_DIFFICULTY_MODES.hard);
+  applyValue(elements.starsWarHighscoreEasy, STARS_WAR_DIFFICULTY_MODES.easy);
 
   syncStarsWarProgressEntry(combined);
 }
@@ -3201,5 +3203,9 @@ if (typeof window !== 'undefined') {
   window.initSpecialCardOverlay = initSpecialCardOverlay;
   window.subscribeSpecialCardOverlayLanguageUpdates = subscribeSpecialCardOverlayLanguageUpdates;
   window.refreshStarsWarInfoStats = updateStarsWarStats;
+  window.addEventListener('arcadeAutosaveSync', () => {
+    updatePhotonStats();
+    updateStarsWarStats();
+  });
 }
 
