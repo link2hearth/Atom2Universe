@@ -984,8 +984,221 @@ const specialCardOverlayState = {
   active: null,
   lastFocus: null,
   hideTimer: null,
-  initialized: false
+  initialized: false,
+  navigation: null,
+  swipe: {
+    active: false,
+    startX: 0,
+    startY: 0,
+    lastX: 0,
+    lastY: 0,
+    hasDirection: false,
+    isHorizontal: false
+  }
 };
+
+const SPECIAL_CARD_SWIPE_THRESHOLD = 60;
+const SPECIAL_CARD_OVERLAY_TOUCH_OPTIONS = (() => {
+  if (typeof window === 'undefined' || typeof window.addEventListener !== 'function') {
+    return false;
+  }
+  let supportsPassive = false;
+  const testListener = () => {};
+  try {
+    const options = Object.defineProperty({}, 'passive', {
+      get() {
+        supportsPassive = true;
+        return false;
+      }
+    });
+    window.addEventListener('test-passive', testListener, options);
+    window.removeEventListener('test-passive', testListener, options);
+  } catch (error) {
+    supportsPassive = false;
+  }
+  return supportsPassive ? { passive: false } : false;
+})();
+
+function resetSpecialCardOverlaySwipeState() {
+  if (!specialCardOverlayState.swipe) {
+    specialCardOverlayState.swipe = {
+      active: false,
+      startX: 0,
+      startY: 0,
+      lastX: 0,
+      lastY: 0,
+      hasDirection: false,
+      isHorizontal: false
+    };
+    return;
+  }
+  specialCardOverlayState.swipe.active = false;
+  specialCardOverlayState.swipe.startX = 0;
+  specialCardOverlayState.swipe.startY = 0;
+  specialCardOverlayState.swipe.lastX = 0;
+  specialCardOverlayState.swipe.lastY = 0;
+  specialCardOverlayState.swipe.hasDirection = false;
+  specialCardOverlayState.swipe.isHorizontal = false;
+}
+
+function resetSpecialCardOverlayNavigation() {
+  specialCardOverlayState.navigation = null;
+}
+
+function getCollectionDefinitionsForNavigation(collectionType) {
+  if (collectionType === 'permanent') {
+    return getPermanentBonusImageDefinitions();
+  }
+  if (collectionType === 'permanent2') {
+    return getSecondaryPermanentBonusImageDefinitions();
+  }
+  return getBonusImageDefinitions();
+}
+
+function getCollectionStorageForNavigation(collectionType) {
+  if (collectionType === 'permanent' || collectionType === 'permanent2') {
+    return getPermanentBonusImageCollection();
+  }
+  return getBonusImageCollection();
+}
+
+function updateSpecialCardOverlayNavigation(card) {
+  if (!card || card.type !== 'image') {
+    resetSpecialCardOverlayNavigation();
+    return;
+  }
+
+  const rawCollectionType = typeof card.collectionType === 'string'
+    ? card.collectionType.toLowerCase()
+    : '';
+  const collectionType = rawCollectionType === 'permanent'
+    ? 'permanent'
+    : (rawCollectionType === 'permanent2' ? 'permanent2' : 'optional');
+  const definitions = getCollectionDefinitionsForNavigation(collectionType);
+  const collection = getCollectionStorageForNavigation(collectionType);
+  const owned = buildOwnedCollectionEntries(definitions, collection, 'image');
+
+  if (!Array.isArray(owned) || owned.length < 2) {
+    resetSpecialCardOverlayNavigation();
+    return;
+  }
+
+  owned.sort(compareCollectionImagesByAcquisition);
+  const ids = owned.map(entry => entry.id).filter(Boolean);
+  const targetId = card.cardId || (card.definition && card.definition.id) || '';
+  const currentIndex = ids.indexOf(targetId);
+
+  if (currentIndex === -1 || ids.length < 2) {
+    resetSpecialCardOverlayNavigation();
+    return;
+  }
+
+  specialCardOverlayState.navigation = {
+    ids,
+    index: currentIndex,
+    collectionType
+  };
+}
+
+function isSpecialCardOverlayNavigationAvailable() {
+  const nav = specialCardOverlayState.navigation;
+  return !!(nav && Array.isArray(nav.ids) && nav.ids.length >= 2);
+}
+
+function navigateSpecialCardOverlay(step) {
+  if (!isSpecialCardOverlayNavigationAvailable()) {
+    return;
+  }
+
+  const nav = specialCardOverlayState.navigation;
+  const total = nav.ids.length;
+  const nextIndex = ((nav.index ?? 0) + step + total) % total;
+  const nextId = nav.ids[nextIndex];
+  nav.index = nextIndex;
+  if (nextId) {
+    showSpecialCardFromCollection(nextId, 'image');
+  }
+}
+
+function handleSpecialCardOverlayTouchStart(event) {
+  if (!isSpecialCardOverlayNavigationAvailable()) {
+    return;
+  }
+  if (event.target && event.target.closest && event.target.closest('.gacha-card-overlay__close')) {
+    return;
+  }
+  if (!event.changedTouches || !event.changedTouches.length) {
+    return;
+  }
+  const touch = event.changedTouches[0];
+  const swipe = specialCardOverlayState.swipe;
+  swipe.active = true;
+  swipe.startX = touch.clientX;
+  swipe.startY = touch.clientY;
+  swipe.lastX = touch.clientX;
+  swipe.lastY = touch.clientY;
+  swipe.hasDirection = false;
+  swipe.isHorizontal = false;
+}
+
+function handleSpecialCardOverlayTouchMove(event) {
+  const swipe = specialCardOverlayState.swipe;
+  if (!swipe || !swipe.active) {
+    return;
+  }
+  if (!event.changedTouches || !event.changedTouches.length) {
+    return;
+  }
+  const touch = event.changedTouches[0];
+  swipe.lastX = touch.clientX;
+  swipe.lastY = touch.clientY;
+  const deltaX = swipe.lastX - swipe.startX;
+  const deltaY = swipe.lastY - swipe.startY;
+  if (!swipe.hasDirection) {
+    const absX = Math.abs(deltaX);
+    const absY = Math.abs(deltaY);
+    if (absX > 8 || absY > 8) {
+      swipe.hasDirection = true;
+      swipe.isHorizontal = absX >= absY;
+    }
+  }
+  if (swipe.isHorizontal) {
+    event.preventDefault();
+  }
+}
+
+function handleSpecialCardOverlayTouchEnd(event) {
+  const swipe = specialCardOverlayState.swipe;
+  if (!swipe || !swipe.active) {
+    return;
+  }
+  if (!event.changedTouches || !event.changedTouches.length) {
+    resetSpecialCardOverlaySwipeState();
+    return;
+  }
+  const touch = event.changedTouches[0];
+  const deltaX = touch.clientX - swipe.startX;
+  const deltaY = touch.clientY - swipe.startY;
+  const absX = Math.abs(deltaX);
+  const absY = Math.abs(deltaY);
+  const isHorizontal = swipe.hasDirection ? swipe.isHorizontal : absX >= absY;
+  resetSpecialCardOverlaySwipeState();
+  if (!isHorizontal || absX < SPECIAL_CARD_SWIPE_THRESHOLD) {
+    return;
+  }
+  if (!isSpecialCardOverlayNavigationAvailable()) {
+    return;
+  }
+  if (deltaX < 0) {
+    navigateSpecialCardOverlay(1);
+  } else {
+    navigateSpecialCardOverlay(-1);
+  }
+}
+
+function handleSpecialCardOverlayTouchCancel() {
+  resetSpecialCardOverlaySwipeState();
+}
 
 function getSpecialCardDefinitions() {
   return Array.isArray(GACHA_SPECIAL_CARD_DEFINITIONS)
@@ -1280,6 +1493,8 @@ function finishHidingSpecialCardOverlay() {
   specialCardOverlayState.lastFocus = null;
   specialCardOverlayState.hideTimer = null;
   specialCardOverlayState.active = null;
+  resetSpecialCardOverlayNavigation();
+  resetSpecialCardOverlaySwipeState();
   processSpecialCardOverlayQueue();
 }
 
@@ -1295,6 +1510,8 @@ function openSpecialCardOverlay(card) {
   const alreadyVisible = !overlay.hidden && overlay.classList.contains('is-visible');
   specialCardOverlayState.active = card;
   applySpecialCardOverlayContent(card);
+  updateSpecialCardOverlayNavigation(card);
+  resetSpecialCardOverlaySwipeState();
   if (!alreadyVisible) {
     overlay.hidden = false;
     overlay.setAttribute('aria-hidden', 'false');
@@ -1327,6 +1544,8 @@ function closeSpecialCardOverlay() {
   overlay.setAttribute('aria-hidden', 'true');
   overlay.classList.remove('is-visible');
   document.removeEventListener('keydown', handleSpecialCardOverlayKeydown);
+  resetSpecialCardOverlayNavigation();
+  resetSpecialCardOverlaySwipeState();
   if (specialCardOverlayState.hideTimer != null) {
     clearTimeout(specialCardOverlayState.hideTimer);
   }
@@ -1417,6 +1636,10 @@ function initSpecialCardOverlay() {
     elements.gachaCardOverlayDialog.addEventListener('click', event => {
       event.stopPropagation();
     });
+    elements.gachaCardOverlayDialog.addEventListener('touchstart', handleSpecialCardOverlayTouchStart, SPECIAL_CARD_OVERLAY_TOUCH_OPTIONS);
+    elements.gachaCardOverlayDialog.addEventListener('touchmove', handleSpecialCardOverlayTouchMove, SPECIAL_CARD_OVERLAY_TOUCH_OPTIONS);
+    elements.gachaCardOverlayDialog.addEventListener('touchend', handleSpecialCardOverlayTouchEnd, SPECIAL_CARD_OVERLAY_TOUCH_OPTIONS);
+    elements.gachaCardOverlayDialog.addEventListener('touchcancel', handleSpecialCardOverlayTouchCancel, SPECIAL_CARD_OVERLAY_TOUCH_OPTIONS);
   }
   if (elements.gachaCardOverlay) {
     elements.gachaCardOverlay.addEventListener('click', event => {
