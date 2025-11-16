@@ -340,6 +340,7 @@ const INFO_CHARACTERS_COLLAPSED_STORAGE_KEY = 'atom2univers.info.charactersColla
 const INFO_CARDS_COLLAPSED_STORAGE_KEY = 'atom2univers.info.cardsCollapsed';
 const INFO_CALCULATIONS_COLLAPSED_STORAGE_KEY = 'atom2univers.info.calculationsCollapsed';
 const INFO_PROGRESS_COLLAPSED_STORAGE_KEY = 'atom2univers.info.progressCollapsed';
+const INFO_SCORES_COLLAPSED_STORAGE_KEY = 'atom2univers.info.scoresCollapsed';
 const COLLECTION_IMAGES_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.imagesCollapsed';
 const COLLECTION_BONUS_IMAGES_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.bonusImagesCollapsed';
 const COLLECTION_BONUS2_IMAGES_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.bonus2ImagesCollapsed';
@@ -6085,6 +6086,9 @@ function collectDomElements() {
   infoProgressCard: document.getElementById('infoProgressCard'),
   infoProgressContent: document.getElementById('info-progress-content'),
   infoProgressToggle: document.getElementById('infoProgressToggle'),
+  infoScoresCard: document.getElementById('infoScoresCard'),
+  infoScoresContent: document.getElementById('info-scores-content'),
+  infoScoresToggle: document.getElementById('infoScoresToggle'),
   infoPhotonDistanceValue: document.getElementById('infoPhotonDistanceValue'),
   infoPhotonSpeedValue: document.getElementById('infoPhotonSpeedValue'),
   infoPhotonAltitudeValue: document.getElementById('infoPhotonAltitudeValue'),
@@ -7820,6 +7824,20 @@ function updateInfoProgressToggleLabel(collapsed) {
   elements.infoProgressToggle.setAttribute('aria-label', label);
 }
 
+function updateInfoScoresToggleLabel(collapsed) {
+  if (!elements.infoScoresToggle) {
+    return;
+  }
+  const key = collapsed
+    ? 'index.sections.info.scores.toggle.expand'
+    : 'index.sections.info.scores.toggle.collapse';
+  const fallback = collapsed ? 'Expand' : 'Collapse';
+  const label = translateOrDefault(key, fallback);
+  elements.infoScoresToggle.setAttribute('data-i18n', key);
+  elements.infoScoresToggle.textContent = label;
+  elements.infoScoresToggle.setAttribute('aria-label', label);
+}
+
 function updateCollectionImagesToggleLabel(collapsed) {
   if (!elements.collectionImagesToggle) {
     return;
@@ -8021,6 +8039,45 @@ function initInfoProgressCard() {
   elements.infoProgressToggle.addEventListener('click', event => {
     event.preventDefault();
     toggleInfoProgressCollapsed();
+  });
+}
+
+function setInfoScoresCollapsed(collapsed, options = {}) {
+  if (!elements.infoScoresCard
+    || !elements.infoScoresContent
+    || !elements.infoScoresToggle) {
+    return;
+  }
+  const shouldCollapse = !!collapsed;
+  elements.infoScoresCard.classList.toggle('info-card--collapsed', shouldCollapse);
+  elements.infoScoresContent.hidden = shouldCollapse;
+  elements.infoScoresContent.setAttribute('aria-hidden', shouldCollapse ? 'true' : 'false');
+  elements.infoScoresToggle.setAttribute('aria-expanded', shouldCollapse ? 'false' : 'true');
+  updateInfoScoresToggleLabel(shouldCollapse);
+  if (options.persist !== false) {
+    writeStoredInfoCardCollapsed(INFO_SCORES_COLLAPSED_STORAGE_KEY, shouldCollapse);
+  }
+}
+
+function toggleInfoScoresCollapsed() {
+  if (!elements.infoScoresCard) {
+    return;
+  }
+  const currentlyCollapsed = elements.infoScoresCard.classList.contains('info-card--collapsed');
+  setInfoScoresCollapsed(!currentlyCollapsed);
+}
+
+function initInfoScoresCard() {
+  if (!elements.infoScoresCard
+    || !elements.infoScoresContent
+    || !elements.infoScoresToggle) {
+    return;
+  }
+  const initialCollapsed = readStoredInfoCardCollapsed(INFO_SCORES_COLLAPSED_STORAGE_KEY, false);
+  setInfoScoresCollapsed(initialCollapsed, { persist: false });
+  elements.infoScoresToggle.addEventListener('click', event => {
+    event.preventDefault();
+    toggleInfoScoresCollapsed();
   });
 }
 
@@ -15144,6 +15201,7 @@ function bindDomEventListeners() {
   initInfoAchievementsCard();
   initInfoCalculationsCard();
   initInfoProgressCard();
+  initInfoScoresCard();
   initInfoCharactersCard();
   initInfoCardsCard();
   initCollectionImagesCard();

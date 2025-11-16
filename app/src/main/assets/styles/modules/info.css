@@ -34,6 +34,13 @@
   gap: clamp(0.8rem, 1.6vw, 1.4rem);
 }
 
+.info-card--calculations,
+.info-card--progression,
+.info-card--achievements,
+.info-card--scores {
+  grid-column: 1 / -1;
+}
+
 .info-card--shop {
   grid-column: 1 / -1;
   background: none;
