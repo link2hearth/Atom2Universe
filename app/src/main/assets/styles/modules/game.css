@@ -128,20 +128,20 @@ body.theme-aurora .crypto-widget {
 .crypto-widget__amount-major {
   color: inherit;
   font-variant-numeric: tabular-nums;
+  transition: color 0.2s ease;
+}
+
+.crypto-widget__amount-major.is-up {
+  color: var(--crypto-widget-up-color, #4ade80);
+}
+
+.crypto-widget__amount-major.is-down {
+  color: var(--crypto-widget-down-color, #f87171);
 }
 
 .crypto-widget__amount-minor {
   color: inherit;
   font-variant-numeric: tabular-nums;
-  transition: color 0.2s ease;
-}
-
-.crypto-widget__amount-minor.is-up {
-  color: var(--crypto-widget-up-color, #4ade80);
-}
-
-.crypto-widget__amount-minor.is-down {
-  color: var(--crypto-widget-down-color, #f87171);
 }
 
 .crypto-widget__currency {
