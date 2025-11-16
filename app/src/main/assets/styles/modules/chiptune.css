@@ -1593,3 +1593,23 @@ body.theme-aurora .midi-page__module .option-row--buttons button {
   border: none;
   box-shadow: 0 16px 30px rgba(12, 70, 50, 0.32);
 }
+
+/*
+ * Midi player display adjustments
+ * (functionality remains available programmatically)
+ */
+.midi-page__module .option-row--import,
+.midi-page__module .option-row--dropzone,
+.midi-page__module .option-row--usage,
+.midi-page__module .option-row--pitch,
+#chiptunePianoOverrideToggle,
+label[for="chiptunePianoOverrideToggle"],
+#chiptunePianoOverrideValue,
+#chiptuneSpeedLabel,
+#chiptuneSpeedSlider,
+#chiptuneSpeedValue,
+#chiptuneSkipButton,
+.midi-page__module .chiptune-usage,
+label[for="midiKeyboardLayoutSelect"] {
+  display: none !important;
+}
