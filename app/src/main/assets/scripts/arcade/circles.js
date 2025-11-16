@@ -52,17 +52,20 @@
       easy: Object.freeze({
         ringCount: 3,
         shuffleMoves: Object.freeze({ min: 6, max: 12 }),
-        gachaTickets: 1
+        gachaTickets: 1,
+        rewardChance: 0.33
       }),
       medium: Object.freeze({
         ringCount: 4,
         shuffleMoves: Object.freeze({ min: 10, max: 18 }),
-        gachaTickets: 2
+        gachaTickets: 1,
+        rewardChance: 0.6
       }),
       hard: Object.freeze({
         ringCounts: Object.freeze([5, 6]),
         shuffleMoves: Object.freeze({ min: 18, max: 32 }),
-        gachaTickets: Object.freeze({ 5: 4, 6: 5 })
+        gachaTickets: Object.freeze({ 5: 4, 6: 5 }),
+        rewardChance: 1
       })
     })
   });
@@ -431,12 +434,20 @@
     const shuffleMin = clampInteger(rawShuffle && rawShuffle.min, 0, 400, fallbackShuffle.min || 0);
     const shuffleMax = clampInteger(rawShuffle && rawShuffle.max, shuffleMin, 500, fallbackShuffle.max || shuffleMin);
 
-    const gachaTickets = normalizeGachaTickets(rawDefinition && rawDefinition.gachaTickets, fallbackDefinition.gachaTickets);
+    const gachaTickets = normalizeGachaTickets(
+      rawDefinition && rawDefinition.gachaTickets,
+      fallbackDefinition.gachaTickets
+    );
+    const rewardChance = normalizeRewardChance(
+      rawDefinition && rawDefinition.rewardChance,
+      fallbackDefinition.rewardChance
+    );
 
     return {
       ringCounts,
       shuffleMoves: { min: shuffleMin, max: Math.max(shuffleMin, shuffleMax) },
-      gachaTickets
+      gachaTickets,
+      rewardChance
     };
   }
 
@@ -472,6 +483,14 @@
       }
     }
     return 0;
+  }
+
+  function normalizeRewardChance(rawChance, fallbackChance) {
+    const fallbackValue = Number.isFinite(fallbackChance) ? clampProbability(fallbackChance) : 1;
+    if (!Number.isFinite(rawChance)) {
+      return fallbackValue;
+    }
+    return clampProbability(rawChance);
   }
 
   function buildColorPalette(rawColors, fallbackColors, segments) {
@@ -513,6 +532,20 @@
       return max;
     }
     return Math.floor(numeric);
+  }
+
+  function clampProbability(value) {
+    const numeric = Number(value);
+    if (!Number.isFinite(numeric)) {
+      return 0;
+    }
+    if (numeric < 0) {
+      return 0;
+    }
+    if (numeric > 1) {
+      return 1;
+    }
+    return numeric;
   }
 
   function normalizeRotationValue(value, segmentsOverride) {
@@ -915,10 +948,10 @@
     flushAutosave();
   }
 
-  function getCurrentRewardTickets(ringCountOverride, options) {
+  function getCurrentRewardInfo(ringCountOverride, options) {
     if (!options || options.ignoreHintPenalty !== true) {
       if (state.hintUsed) {
-        return 0;
+        return { tickets: 0, chance: 0 };
       }
     }
     const ringCount = clampInteger(
@@ -930,19 +963,33 @@
     const settings = getDifficultySettings(state.difficulty);
     const rewardDefinition = settings.gachaTickets;
     if (Number.isFinite(rewardDefinition)) {
-      return Math.max(0, Math.floor(rewardDefinition));
+      return {
+        tickets: Math.max(0, Math.floor(rewardDefinition)),
+        chance: normalizeRewardChance(settings.rewardChance, 1)
+      };
     }
     if (rewardDefinition && typeof rewardDefinition === 'object') {
       const direct = rewardDefinition[String(ringCount)];
       if (Number.isFinite(direct)) {
-        return Math.max(0, Math.floor(direct));
+        return {
+          tickets: Math.max(0, Math.floor(direct)),
+          chance: normalizeRewardChance(settings.rewardChance, 1)
+        };
       }
       const firstValue = Object.values(rewardDefinition).find(value => Number.isFinite(value));
       if (Number.isFinite(firstValue)) {
-        return Math.max(0, Math.floor(firstValue));
+        return {
+          tickets: Math.max(0, Math.floor(firstValue)),
+          chance: normalizeRewardChance(settings.rewardChance, 1)
+        };
       }
     }
-    return 0;
+    return { tickets: 0, chance: normalizeRewardChance(settings.rewardChance, 1) };
+  }
+
+  function getCurrentRewardTickets(ringCountOverride, options) {
+    const reward = getCurrentRewardInfo(ringCountOverride, options);
+    return reward && Number.isFinite(reward.tickets) ? reward.tickets : 0;
   }
 
   function awardCompletionTickets() {
@@ -959,9 +1006,22 @@
       showToastMessage(penaltyMessage);
       return;
     }
-    const tickets = getCurrentRewardTickets();
+    const reward = getCurrentRewardInfo();
+    const tickets = reward.tickets;
     if (!Number.isFinite(tickets) || tickets <= 0) {
       state.rewardClaimed = true;
+      return;
+    }
+    const normalizedChance = normalizeRewardChance(reward.chance, 1);
+    const shouldGrant = normalizedChance >= 1 || Math.random() < normalizedChance;
+    state.rewardClaimed = true;
+    scheduleAutosave();
+    if (!shouldGrant) {
+      const missMessage = translateText(
+        'scripts.arcade.circles.rewardMissToast',
+        'Circles : pas de ticket gacha cette fois-ci.'
+      );
+      showToastMessage(missMessage);
       return;
     }
     const awardFunction = typeof gainGachaTickets === 'function'
@@ -970,7 +1030,6 @@
         ? window.gainGachaTickets
         : null;
     if (typeof awardFunction !== 'function') {
-      state.rewardClaimed = true;
       return;
     }
     let gained = 0;
@@ -980,8 +1039,6 @@
       console.warn('Circles: unable to grant gacha tickets', error);
       gained = tickets;
     }
-    state.rewardClaimed = true;
-    scheduleAutosave();
     const granted = Number.isFinite(gained) && gained > 0 ? Math.floor(gained) : tickets;
     if (granted > 0) {
       const suffix = granted > 1 ? 's' : '';
@@ -1263,8 +1320,8 @@
     if (!elements.rewardValue) {
       return;
     }
-    const tickets = getCurrentRewardTickets();
-    elements.rewardValue.textContent = formatNumber(tickets);
+    const reward = getCurrentRewardInfo();
+    elements.rewardValue.textContent = formatRewardDisplayValue(reward);
   }
 
   function updateWinMessage() {
@@ -1273,8 +1330,10 @@
     }
     const moves = formatNumber(state.moves);
     const moveSuffix = state.moves > 1 ? 's' : '';
-    const tickets = getCurrentRewardTickets();
+    const reward = getCurrentRewardInfo();
+    const tickets = reward.tickets;
     const ticketSuffix = tickets > 1 ? 's' : '';
+    const chancePercent = Math.round(clampProbability(reward.chance) * 100);
     const message = translateText(
       'scripts.arcade.circles.winMessage',
       'Synchronisation parfaite en {moves} coup{moveSuffix} !',
@@ -1287,13 +1346,45 @@
         'Récompense désactivée : l’aide a été utilisée pour ce puzzle.'
       );
     } else if (tickets > 0) {
-      rewardPart = translateText(
-        'scripts.arcade.circles.winReward',
-        'Récompense : +{tickets} ticket{ticketSuffix} gacha.',
-        { tickets: formatNumber(tickets), ticketSuffix }
-      );
+      if (clampProbability(reward.chance) >= 1) {
+        rewardPart = translateText(
+          'scripts.arcade.circles.winReward',
+          'Récompense : +{tickets} ticket{ticketSuffix} gacha.',
+          { tickets: formatNumber(tickets), ticketSuffix }
+        );
+      } else {
+        rewardPart = translateText(
+          'scripts.arcade.circles.winRewardChance',
+          'Récompense : {chance}% de chance de gagner +{tickets} ticket{ticketSuffix} gacha.',
+          {
+            chance: formatNumber(chancePercent),
+            tickets: formatNumber(tickets),
+            ticketSuffix
+          }
+        );
+      }
     }
     elements.winMessage.textContent = rewardPart ? `${message} ${rewardPart}` : message;
+  }
+
+  function formatRewardDisplayValue(reward) {
+    if (!reward || !Number.isFinite(reward.tickets) || reward.tickets <= 0) {
+      return formatNumber(0);
+    }
+    const tickets = formatNumber(reward.tickets);
+    if (clampProbability(reward.chance) >= 1) {
+      return translateText(
+        'scripts.arcade.circles.rewardStatGuaranteed',
+        '+{tickets}',
+        { tickets }
+      );
+    }
+    const chancePercent = Math.round(clampProbability(reward.chance) * 100);
+    return translateText(
+      'scripts.arcade.circles.rewardStatChance',
+      '{chance}% → +{tickets}',
+      { chance: formatNumber(chancePercent), tickets }
+    );
   }
 
   function showWinOverlay() {

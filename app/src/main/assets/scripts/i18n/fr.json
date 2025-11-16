@@ -3750,8 +3750,12 @@
         "circles": {
           "rewardToast": "Circles : +{count} ticket{suffix} gacha !",
           "rewardDisabledToast": "Circles : récompense désactivée, l’aide a été utilisée pour ce puzzle.",
+          "rewardMissToast": "Circles : pas de ticket gacha cette fois-ci.",
+          "rewardStatGuaranteed": "+{tickets}",
+          "rewardStatChance": "{chance} % → +{tickets}",
           "winMessage": "Synchronisation parfaite en {moves} coup{moveSuffix} !",
           "winReward": "Récompense : +{tickets} ticket{ticketSuffix} gacha.",
+          "winRewardChance": "Récompense : {chance} % de chance de gagner +{tickets} ticket{ticketSuffix} gacha.",
           "winRewardDisabled": "Récompense désactivée : l’aide a été utilisée pour ce puzzle.",
           "hint": {
             "default": "Besoin d’un coup de pouce ? Cliquez sur « Aide » pour jouer automatiquement le meilleur coup. Attention : utiliser l’aide désactive la récompense de ce puzzle.",
