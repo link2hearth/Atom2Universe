@@ -243,6 +243,14 @@
             "multiValue": "{count} clicks · {frenzies} frenzies"
           }
         },
+        "scores": {
+          "title": "Scores",
+          "subtitle": "Mini-game highscores at a glance.",
+          "toggle": {
+            "collapse": "Collapse",
+            "expand": "Expand"
+          }
+        },
         "achievements": {
           "title": "Unlocked achievements",
           "subtitle": "Review the trophies you have earned on your journey.",

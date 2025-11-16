@@ -243,6 +243,14 @@
             "multiValue": "{count} clics · {frenzies} frén."
           }
         },
+        "scores": {
+          "title": "Scores",
+          "subtitle": "Records des mini-jeux débloqués.",
+          "toggle": {
+            "collapse": "Réduire",
+            "expand": "Dérouler"
+          }
+        },
         "achievements": {
           "title": "Succès débloqués",
           "subtitle": "Visualisez les trophées obtenus au cours de votre aventure.",
