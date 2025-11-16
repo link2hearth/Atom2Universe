@@ -6,5 +6,11 @@
     "correctionBoost": 8,
     "torqueAssist": 18000,
     "angularDampingMultiplier": 0.6
+  },
+  "rewards": {
+    "gacha": {
+      "intervalMeters": 500,
+      "ticketAmount": 1
+    }
   }
 }

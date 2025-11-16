@@ -12,6 +12,12 @@
       correctionBoost: 8,
       torqueAssist: 18000,
       angularDampingMultiplier: 0.6
+    }),
+    rewards: Object.freeze({
+      gacha: Object.freeze({
+        intervalMeters: 500,
+        ticketAmount: 1
+      })
     })
   });
 
@@ -153,6 +159,14 @@
       return distanceFormatter.format(numeric);
     }
     return numeric.toFixed(0);
+  }
+
+  function formatTicketCount(value) {
+    const numeric = Number.isFinite(value) ? Math.max(0, Math.round(value)) : 0;
+    if (distanceFormatter) {
+      return distanceFormatter.format(numeric);
+    }
+    return numeric.toString();
   }
 
   function formatBlockName(entry) {
@@ -389,10 +403,23 @@
     };
   }
 
+  function normalizeGachaReward(rawConfig) {
+    const fallback = DEFAULT_CONFIG.rewards.gacha;
+    const intervalMeters = clampNumber(rawConfig?.intervalMeters, 50, 100000, fallback.intervalMeters);
+    const ticketAmount = clampNumber(rawConfig?.ticketAmount, 0, 99, fallback.ticketAmount);
+    return {
+      intervalMeters,
+      ticketAmount: Math.max(0, Math.floor(ticketAmount))
+    };
+  }
+
   function normalizeConfig(rawConfig) {
     const source = (!rawConfig || typeof rawConfig !== 'object') ? {} : rawConfig;
     return {
-      steepSlopeGrip: normalizeSteepSlopeGrip(source.steepSlopeGrip)
+      steepSlopeGrip: normalizeSteepSlopeGrip(source.steepSlopeGrip),
+      rewards: {
+        gacha: normalizeGachaReward(source?.rewards?.gacha || source?.rewards)
+      }
     };
   }
 
@@ -674,7 +701,7 @@
     ])
   });
 
-  const UNIT_TO_METERS = 0.1;
+  const UNIT_TO_METERS = 0.1 / 3;
   const MIN_DISPLAY_SPEED_KMH = 0.15;
   const TEST_STEP_INTERVAL = 2400;
   const TEST_CAMERA_ZOOM = 0.72;
@@ -1266,6 +1293,7 @@
     trackStartX: 0,
     runStartX: 0,
     maxDistance: 0,
+    gachaMilestonesClaimed: 0,
     lastGeneratedCount: 0,
     background: createBackgroundState(),
     bikeSprite: createBikeSpriteState(),
@@ -1555,6 +1583,58 @@
       return;
     }
     elements.distanceValue.textContent = formatDistance(maxDistance);
+  }
+
+  function awardDistanceGachaTickets(distanceMeters) {
+    const rewardConfig = state?.config?.rewards?.gacha;
+    if (!rewardConfig) {
+      return;
+    }
+    const interval = Number(rewardConfig.intervalMeters);
+    const ticketAmount = Number(rewardConfig.ticketAmount);
+    if (!Number.isFinite(interval) || interval <= 0 || !Number.isFinite(ticketAmount) || ticketAmount <= 0) {
+      return;
+    }
+    const distance = Math.max(0, Number(distanceMeters) || 0);
+    const reachedMilestones = Math.floor(distance / interval);
+    const claimedMilestones = Math.max(0, Math.floor(Number(state.gachaMilestonesClaimed) || 0));
+    if (reachedMilestones <= claimedMilestones) {
+      return;
+    }
+    const newMilestones = reachedMilestones - claimedMilestones;
+    const ticketsToGrant = newMilestones * ticketAmount;
+    if (ticketsToGrant <= 0) {
+      state.gachaMilestonesClaimed = reachedMilestones;
+      return;
+    }
+    const awardGacha = typeof gainGachaTickets === 'function'
+      ? gainGachaTickets
+      : typeof window !== 'undefined' && typeof window.gainGachaTickets === 'function'
+        ? window.gainGachaTickets
+        : null;
+    if (typeof awardGacha !== 'function') {
+      return;
+    }
+    let granted = 0;
+    try {
+      granted = awardGacha(ticketsToGrant, { unlockTicketStar: true });
+    } catch (error) {
+      console.warn('Motocross: unable to grant gacha tickets', error);
+      granted = 0;
+    }
+    state.gachaMilestonesClaimed = reachedMilestones;
+    if (!Number.isFinite(granted) || granted <= 0) {
+      return;
+    }
+    if (typeof showToast === 'function') {
+      const suffix = granted > 1 ? 's' : '';
+      const message = translate(
+        'scripts.arcade.motocross.rewards.gachaMilestone',
+        'Motocross bonus! +{count} gacha ticket{suffix}.',
+        { count: formatTicketCount(granted), suffix }
+      );
+      showToast(message);
+    }
   }
 
   function updateTestButtonAvailability() {
@@ -2052,6 +2132,7 @@
     if (Number.isFinite(progress)) {
       const progressMeters = progress * UNIT_TO_METERS;
       state.maxDistance = Math.max(state.maxDistance, progressMeters);
+      awardDistanceGachaTickets(state.maxDistance);
     }
 
     updateCheckpointsProgress();
@@ -2550,6 +2631,7 @@
     state.trackStartX = Array.isArray(track.points) && track.points.length ? track.points[0][0] : 0;
     state.runStartX = state.respawnData ? state.respawnData.x : state.trackStartX;
     state.maxDistance = 0;
+    state.gachaMilestonesClaimed = 0;
     state.gameOver = false;
     state.pendingRespawn = false;
     state.active = true;
@@ -2599,6 +2681,7 @@
     state.active = true;
     state.pendingRespawn = false;
     state.maxDistance = 0;
+    state.gachaMilestonesClaimed = 0;
     state.currentCheckpoint = 0;
     const restartRespawn = computeRespawnData(0);
     if (restartRespawn) {

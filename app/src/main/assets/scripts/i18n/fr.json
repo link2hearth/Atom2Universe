@@ -2946,6 +2946,11 @@
           "gachaWin": "{count} ticket{suffix} gacha obtenu !"
         }
       },
+      "motocross": {
+        "rewards": {
+          "gachaMilestone": "Motocross : +{count} ticket{suffix} gacha !"
+        }
+      },
       "colorStack": {
         "rewards": {
           "gachaVictory": "Color Stack : +{count} ticket{suffix} gacha !"
