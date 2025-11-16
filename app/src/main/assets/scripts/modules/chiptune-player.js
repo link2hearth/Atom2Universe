@@ -1495,6 +1495,10 @@
       this.noiseBuffer = null;
       this.reverbBuffer = null;
       this.reverbDefaultSend = 0.12;
+      this.soundFontGainHeadroom = 1.18;
+      this.soundFontMinGainTrim = 0.6;
+      this.soundFontVelocityCompression = 0.18;
+      this.soundFontLayerPressure = 0.45;
       this.sccWaveform = typeof window !== 'undefined' ? window.SccWaveform || null : null;
       this.sccEngineScriptPromise = null;
       this.engineMode = 'hifi';
@@ -7324,6 +7328,33 @@
       return profile;
     }
 
+    estimateSoundFontEnergy(regions = []) {
+      if (!Array.isArray(regions) || !regions.length) {
+        return 0;
+      }
+      let loudest = 0;
+      let sum = 0;
+      for (const region of regions) {
+        const gain = Math.max(0.05, Number.isFinite(region?.gain) ? region.gain : 1);
+        loudest = Math.max(loudest, gain);
+        sum += gain;
+      }
+      return (loudest * 0.65) + (sum * 0.35);
+    }
+
+    computeSoundFontGainTrim(regions = [], velocity = 0.6) {
+      const normalizedVelocity = Math.max(0.05, Math.min(1, Number.isFinite(velocity) ? velocity : 0.6));
+      const baseCompression = 1 - (Math.pow(normalizedVelocity, 1.4) * this.soundFontVelocityCompression);
+      const energy = this.estimateSoundFontEnergy(regions);
+      const velocityPressure = 1 + (Math.pow(normalizedVelocity, 1.25) * this.soundFontLayerPressure);
+      const estimatedPeak = energy * velocityPressure;
+      if (!(estimatedPeak > this.soundFontGainHeadroom)) {
+        return Math.max(this.soundFontMinGainTrim, Math.min(1, baseCompression));
+      }
+      const reduction = this.soundFontGainHeadroom / (estimatedPeak + 0.0001);
+      return Math.max(this.soundFontMinGainTrim, Math.min(1, reduction * baseCompression));
+    }
+
     scheduleNote(note, baseTime, speedParam = this.activePlaybackSpeed || 1, options = {}) {
       if (!this.audioContext || !this.masterGain) {
         return null;
@@ -7836,13 +7867,21 @@
         source = 'playback',
       } = context;
 
+      const normalizedVelocity = Math.max(0.05, Math.min(1, Number.isFinite(velocity) ? velocity : 0.5));
+      const gainTrim = this.computeSoundFontGainTrim(regions, normalizedVelocity);
+      const trimmedPeakGain = Math.max(0.05, Math.min(1, peakGain * gainTrim));
+      const sustainCompensation = 0.85 + (gainTrim * 0.15);
+      const trimmedSustain = Math.max(0.05, Math.min(1, sustainLevel * sustainCompensation));
+      const extendedRelease = Math.max(0.05, releaseDuration + ((1 - gainTrim) * 0.05));
+      const layerTrim = 0.55 + (gainTrim * 0.45);
+
       const voiceInput = this.audioContext.createGain();
       voiceInput.gain.setValueAtTime(1, startAt);
 
       const voice = {
         type: 'melodic',
         startTime: startAt,
-        stopTime: stopAt + releaseDuration,
+        stopTime: stopAt + extendedRelease,
         gainNode: null,
         oscillators: [],
         effectOscillators: [],
@@ -7888,7 +7927,8 @@
 
         const layerGain = this.audioContext.createGain();
         const regionGain = Number.isFinite(region.gain) ? region.gain : 1;
-        layerGain.gain.setValueAtTime(Math.max(0, Math.min(1.5, regionGain)), startAt);
+        const trimmedLayerGain = Math.max(0, Math.min(1.5, regionGain * layerTrim));
+        layerGain.gain.setValueAtTime(trimmedLayerGain, startAt);
         source.connect(layerGain).connect(voiceInput);
 
         activeSources += 1;
@@ -7913,7 +7953,7 @@
         };
 
         source.start(startAt);
-        source.stop(stopAt + releaseDuration + 0.05);
+        source.stop(stopAt + extendedRelease + 0.05);
       }
 
       if (activeSources <= 0) {
@@ -7937,10 +7977,11 @@
 
       envelopeGain.gain.cancelScheduledValues(startAt);
       envelopeGain.gain.setValueAtTime(0.0001, startAt);
-      envelopeGain.gain.linearRampToValueAtTime(peakGain, attackEnd);
-      envelopeGain.gain.linearRampToValueAtTime(Math.max(0.0001, peakGain * sustainLevel), decayEnd);
-      envelopeGain.gain.setValueAtTime(Math.max(0.0001, peakGain * sustainLevel), stopAt);
-      envelopeGain.gain.exponentialRampToValueAtTime(0.0001, stopAt + releaseDuration);
+      envelopeGain.gain.linearRampToValueAtTime(trimmedPeakGain, attackEnd);
+      const sustainGain = Math.max(0.0001, trimmedPeakGain * trimmedSustain);
+      envelopeGain.gain.linearRampToValueAtTime(sustainGain, decayEnd);
+      envelopeGain.gain.setValueAtTime(sustainGain, stopAt);
+      envelopeGain.gain.exponentialRampToValueAtTime(0.0001, stopAt + extendedRelease);
 
       let outputNode = envelopeGain;
       let panNode = null;
@@ -8012,17 +8053,17 @@
         1,
         activeSources || (Array.isArray(voice.oscillators) ? voice.oscillators.length : 0),
       );
-      const normalizedVelocity = Math.max(0.05, Math.min(1.25, Number.isFinite(velocity) ? velocity : 0.5));
+      const metadataVelocity = Math.max(0.05, Math.min(1.25, normalizedVelocity));
       const partialEstimate = layerCount;
 
       this.registerVoiceMixCompensation(voice, {
-        peakGain,
-        sustainLevel,
-        releaseDuration,
+        peakGain: trimmedPeakGain,
+        sustainLevel: trimmedSustain,
+        releaseDuration: extendedRelease,
         reverbAmount,
         layers: layerCount,
         partials: partialEstimate,
-        velocity: normalizedVelocity,
+        velocity: metadataVelocity,
         type: 'soundfont',
         source,
       });
