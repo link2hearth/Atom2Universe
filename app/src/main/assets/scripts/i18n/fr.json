@@ -47,6 +47,15 @@
           "bestSingleRecord": "Record (1 frénésie) : {count} clics",
           "bestMultiRecord": "Record (multi frénésie) : {count} clics ({frenzies} frén.)",
           "bestMultiRecordSingle": "Record (multi frénésie) : {count} clics (1 frénésie)"
+        },
+        "cryptoWidget": {
+          "title": "Marchés crypto",
+          "ariaLabel": "Prix BTC et ETH en direct",
+          "btcLabel": "BTC",
+          "ethLabel": "ETH",
+          "currency": "USD",
+          "loading": "Chargement…",
+          "error": "Impossible de récupérer les prix pour le moment."
         }
       },
       "shop": {
@@ -2051,6 +2060,15 @@
           "state": {
             "on": "Activée",
             "off": "Désactivée"
+          }
+        },
+        "cryptoWidget": {
+          "title": "Widget crypto",
+          "description": "Affiche BTC et ETH sous la bannière principale.",
+          "ariaLabel": "Activer ou désactiver l’affichage du widget crypto sur la page principale",
+          "state": {
+            "on": "Affiché",
+            "off": "Masqué"
           }
         },
         "music": {

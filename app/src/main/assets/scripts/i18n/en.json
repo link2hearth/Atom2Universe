@@ -47,6 +47,15 @@
           "bestSingleRecord": "Record (single frenzy): {count} clicks",
           "bestMultiRecord": "Record (multi frenzy): {count} clicks ({frenzies} frenzies)",
           "bestMultiRecordSingle": "Record (multi frenzy): {count} clicks (1 frenzy)"
+        },
+        "cryptoWidget": {
+          "title": "Crypto markets",
+          "ariaLabel": "Live BTC and ETH prices",
+          "btcLabel": "BTC",
+          "ethLabel": "ETH",
+          "currency": "USD",
+          "loading": "Loading prices…",
+          "error": "Unable to refresh crypto prices right now."
         }
       },
       "shop": {
@@ -2114,6 +2123,15 @@
           "state": {
             "on": "Enabled",
             "off": "Disabled"
+          }
+        },
+        "cryptoWidget": {
+          "title": "Crypto widget",
+          "description": "Show BTC and ETH right under the main banner.",
+          "ariaLabel": "Enable or disable the crypto widget on the home screen",
+          "state": {
+            "on": "Visible",
+            "off": "Hidden"
           }
         },
         "music": {
