@@ -90,6 +90,13 @@
   max-width: 60rem;
 }
 
+.color-stack__board--hard-layout {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(clamp(5rem, 6vw + 1.4rem, 9rem), 1fr));
+  justify-content: center;
+  justify-items: center;
+}
+
 .color-stack__column {
   position: relative;
   display: flex;
@@ -106,6 +113,12 @@
   transition: transform 0.12s ease, border-color 0.2s ease, box-shadow 0.2s ease;
   flex: 1 1 clamp(6rem, 8vw + 2rem, 8.5rem);
   max-width: clamp(7rem, 8vw + 3rem, 9.5rem);
+}
+
+.color-stack__board--hard-layout .color-stack__column {
+  width: 100%;
+  max-width: none;
+  flex: none;
 }
 
 .color-stack__column:focus-visible {
