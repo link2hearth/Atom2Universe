@@ -364,6 +364,13 @@ class MetauxMatch3Game {
     this.gameOver = false;
     this.tileShakeTimeouts = new Map();
     this.lastMessageData = null;
+    this.timerUIState = {
+      valueText: null,
+      valueHidden: null,
+      maxText: null,
+      maxHidden: null,
+      fillRatio: null
+    };
     if (this.messageElement) {
       this.messageElement.textContent = '';
       this.messageElement.hidden = true;
@@ -585,39 +592,64 @@ class MetauxMatch3Game {
     }
     this.applyTilePosition(tile, row, col);
     tile.classList.remove('is-selected', 'is-target', 'is-clearing', 'is-empty');
-    tile.dataset.type = type || '';
+    const normalizedType = type || '';
+    if (tile.dataset.type !== normalizedType) {
+      tile.dataset.type = normalizedType;
+    }
     const labelElement = tile._label || tile.firstElementChild;
+    if (!tile._label && labelElement) {
+      tile._label = labelElement;
+    }
     if (!type) {
       this.clearTileShakeEffect(row, col);
       tile.classList.add('is-empty');
-      tile.style.removeProperty('--tile-color');
-      tile.style.removeProperty('--tile-image');
-      if (labelElement) {
+      if (tile._tileColor) {
+        tile.style.removeProperty('--tile-color');
+        tile._tileColor = null;
+      }
+      if (tile._tileImage) {
+        tile.style.removeProperty('--tile-image');
+        tile.style.removeProperty('background-image');
+        tile._tileImage = null;
+      }
+      if (labelElement && labelElement.textContent !== '') {
         labelElement.textContent = '';
       }
-      tile.setAttribute('aria-label', 'Case vide');
+      if (tile.getAttribute('aria-label') !== 'Case vide') {
+        tile.setAttribute('aria-label', 'Case vide');
+      }
       return;
     }
     const label = this.getTypeLabel(type);
     const color = this.getTypeColor(type);
     const image = this.getTypeImage(type);
-    if (labelElement) {
+    if (labelElement && labelElement.textContent !== label) {
       labelElement.textContent = label;
     }
     if (color) {
-      tile.style.setProperty('--tile-color', color);
-    } else {
+      if (tile._tileColor !== color) {
+        tile.style.setProperty('--tile-color', color);
+        tile._tileColor = color;
+      }
+    } else if (tile._tileColor) {
       tile.style.removeProperty('--tile-color');
+      tile._tileColor = null;
     }
     if (image) {
       const normalized = this.normalizeTileImage(image);
-      tile.style.setProperty('--tile-image', normalized);
-      tile.style.backgroundImage = normalized;
-    } else {
+      if (tile._tileImage !== normalized) {
+        tile.style.setProperty('--tile-image', normalized);
+        tile.style.backgroundImage = normalized;
+        tile._tileImage = normalized;
+      }
+    } else if (tile._tileImage) {
       tile.style.removeProperty('--tile-image');
       tile.style.removeProperty('background-image');
+      tile._tileImage = null;
     }
-    tile.setAttribute('aria-label', label);
+    if (tile.getAttribute('aria-label') !== label) {
+      tile.setAttribute('aria-label', label);
+    }
   }
 
   getTypeLabel(type) {
@@ -1594,26 +1626,54 @@ class MetauxMatch3Game {
   updateTimerUI() {
     const freeMode = this.isFreePlayMode();
     if (this.timerValueElement) {
-      this.timerValueElement.textContent = freeMode
+      const nextValueText = freeMode
         ? t('scripts.metaux.timer.free')
         : this.formatSeconds(this.timerState.current, { decimals: 1 });
+      if (this.timerUIState.valueText !== nextValueText) {
+        this.timerValueElement.textContent = nextValueText;
+        this.timerUIState.valueText = nextValueText;
+      }
+      const shouldHide = freeMode ? 'true' : null;
+      const currentHidden = this.timerValueElement.getAttribute('aria-hidden');
+      if (shouldHide !== currentHidden) {
+        if (shouldHide) {
+          this.timerValueElement.setAttribute('aria-hidden', shouldHide);
+        } else {
+          this.timerValueElement.removeAttribute('aria-hidden');
+        }
+        this.timerUIState.valueHidden = shouldHide;
+      }
     }
     if (this.timerMaxElement) {
       if (freeMode) {
-        this.timerMaxElement.textContent = '';
-        this.timerMaxElement.hidden = true;
+        if (!this.timerMaxElement.hidden) {
+          this.timerMaxElement.textContent = '';
+          this.timerMaxElement.hidden = true;
+          this.timerUIState.maxText = '';
+          this.timerUIState.maxHidden = true;
+        }
       } else {
-        this.timerMaxElement.hidden = false;
-        this.timerMaxElement.textContent = t('scripts.metaux.timer.max', {
+        const nextMaxText = t('scripts.metaux.timer.max', {
           value: this.formatSeconds(this.timerState.max, { decimals: 0 })
         });
+        if (this.timerUIState.maxText !== nextMaxText) {
+          this.timerMaxElement.textContent = nextMaxText;
+          this.timerUIState.maxText = nextMaxText;
+        }
+        if (this.timerMaxElement.hidden) {
+          this.timerMaxElement.hidden = false;
+          this.timerUIState.maxHidden = false;
+        }
       }
     }
     if (this.timerFillElement) {
       const ratio = !freeMode && this.timerState.max > 0 ? this.timerState.current / this.timerState.max : 0;
       const clampedRatio = clamp(ratio, 0, 1);
-      this.timerFillElement.style.transform = `scaleX(${clampedRatio})`;
-      this.timerFillElement.style.width = `${clampedRatio * 100}%`;
+      if (this.timerUIState.fillRatio == null || Math.abs(this.timerUIState.fillRatio - clampedRatio) > 0.005) {
+        this.timerFillElement.style.transform = `scaleX(${clampedRatio})`;
+        this.timerFillElement.style.width = `${clampedRatio * 100}%`;
+        this.timerUIState.fillRatio = clampedRatio;
+      }
     }
   }
 
