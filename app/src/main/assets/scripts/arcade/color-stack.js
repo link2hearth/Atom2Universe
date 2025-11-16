@@ -41,6 +41,7 @@
         minMulticoloredColumns: 2,
         minDisplacedRatio: 0.5,
         gachaTickets: 1,
+        gachaTicketChance: 1 / 3,
         extraTopSpace: 1
       }),
       medium: Object.freeze({
@@ -52,6 +53,7 @@
         minMulticoloredColumns: 3,
         minDisplacedRatio: 0.6,
         gachaTickets: 2,
+        gachaTicketChance: 1,
         extraTopSpace: 1
       }),
       hard: Object.freeze({
@@ -63,6 +65,7 @@
         minMulticoloredColumns: 4,
         minDisplacedRatio: 0.65,
         gachaTickets: 3,
+        gachaTicketChance: 1,
         extraTopSpace: 2
       })
     })
@@ -168,6 +171,12 @@
       typeof base.minDisplacedRatio === 'number' ? base.minDisplacedRatio : 0.5
     );
     const gachaTickets = Math.max(0, toInteger(entry?.gachaTickets, base.gachaTickets || 0));
+    const gachaTicketChance = clampNumber(
+      entry?.gachaTicketChance,
+      0,
+      1,
+      typeof base.gachaTicketChance === 'number' ? base.gachaTicketChance : 1
+    );
     const extraTopSpace = entry?.extraTopSpace !== undefined
       ? Math.max(0, toInteger(entry.extraTopSpace, base.extraTopSpace !== undefined ? base.extraTopSpace : DEFAULT_CONFIG.extraTopSpace || 0))
       : base.extraTopSpace !== undefined
@@ -185,8 +194,27 @@
       minDisplacedRatio,
       filledColumns,
       gachaTickets,
+      gachaTicketChance,
       extraTopSpace
     };
+  }
+
+  function shouldAwardGachaTickets(difficultyConfig) {
+    const chance = clampNumber(
+      typeof difficultyConfig?.gachaTicketChance === 'number'
+        ? difficultyConfig.gachaTicketChance
+        : 1,
+      0,
+      1,
+      1
+    );
+    if (chance <= 0) {
+      return false;
+    }
+    if (chance >= 1) {
+      return true;
+    }
+    return Math.random() < chance;
   }
 
   function normalizeConfig(rawConfig, fallback = DEFAULT_CONFIG) {
@@ -669,10 +697,17 @@
     return String(value);
   }
 
-  function getGachaTicketsForDifficulty(difficultyKey) {
-    const difficultyConfig = state.config?.difficulties?.[difficultyKey]
+  function getDifficultyConfig(difficultyKey) {
+    return state.config?.difficulties?.[difficultyKey]
       || state.config?.difficulties?.easy
       || DEFAULT_CONFIG.difficulties.easy;
+  }
+
+  function getGachaTicketsForDifficulty(difficultyKey) {
+    const difficultyConfig = getDifficultyConfig(difficultyKey);
+    if (!shouldAwardGachaTickets(difficultyConfig)) {
+      return 0;
+    }
     const amount = Number(difficultyConfig?.gachaTickets);
     if (!Number.isFinite(amount) || amount <= 0) {
       return 0;
