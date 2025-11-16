@@ -29,6 +29,19 @@ const SAVE_BACKUP_SETTINGS = Object.freeze({
   maxNativeEntries: 8
 });
 
+/**
+ * Paramètres ajustables du widget crypto (prix BTC/ETH sous la bannière principale).
+ * `enabledByDefault` détermine l'état initial, `refreshIntervalMs` la fréquence des requêtes
+ * et les champs `apiBaseUrl`/`endpoint` permettent de cibler un autre fournisseur.
+ */
+const CRYPTO_WIDGET_SETTINGS = Object.freeze({
+  enabledByDefault: false,
+  refreshIntervalMs: 60 * 1000,
+  apiBaseUrl: 'https://api.binance.com',
+  btcEndpoint: '/api/v3/ticker/price?symbol=BTCUSDT',
+  ethEndpoint: '/api/v3/ticker/price?symbol=ETHUSDT'
+});
+
 function getConfigStorage() {
   if (typeof globalThis === 'undefined' || typeof globalThis.localStorage === 'undefined') {
     return null;

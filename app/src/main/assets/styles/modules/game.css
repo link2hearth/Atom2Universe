@@ -42,6 +42,126 @@ body.theme-aurora .page--void {
   pointer-events: none;
 }
 
+.crypto-widget {
+  position: absolute;
+  top: clamp(0.75rem, 2.4vw, 2rem);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 4;
+  width: min(90vw, 380px);
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: clamp(0.8rem, 2vw, 1.2rem) clamp(1rem, 2.6vw, 1.6rem);
+  background: rgba(6, 10, 22, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 1.2rem;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(18px);
+  color: inherit;
+  --crypto-widget-up-color: #4ade80;
+  --crypto-widget-down-color: #f87171;
+}
+
+body.theme-light .crypto-widget {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(12, 18, 30, 0.14);
+  color: var(--fg-dark);
+  --crypto-widget-up-color: #15803d;
+  --crypto-widget-down-color: #b91c1c;
+}
+
+body.theme-neon .crypto-widget {
+  border-color: rgba(130, 240, 255, 0.35);
+}
+
+body.theme-aurora .crypto-widget {
+  border-color: rgba(140, 255, 215, 0.35);
+}
+
+.crypto-widget__title {
+  margin: 0;
+  font-size: clamp(0.9rem, 2.2vw, 1.05rem);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.crypto-widget__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.crypto-widget__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  font-family: var(--font-digits, 'Orbitron', sans-serif);
+  font-size: clamp(1rem, 2.8vw, 1.35rem);
+}
+
+.crypto-widget__label {
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.crypto-widget__label::after {
+  content: ' :';
+  font-weight: 400;
+  letter-spacing: normal;
+}
+
+.crypto-widget__value {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+}
+
+.crypto-widget__amount {
+  min-width: 4ch;
+  text-align: right;
+}
+
+.crypto-widget__amount-major {
+  color: inherit;
+  font-variant-numeric: tabular-nums;
+}
+
+.crypto-widget__amount-minor {
+  color: inherit;
+  font-variant-numeric: tabular-nums;
+  transition: color 0.2s ease;
+}
+
+.crypto-widget__amount-minor.is-up {
+  color: var(--crypto-widget-up-color, #4ade80);
+}
+
+.crypto-widget__amount-minor.is-down {
+  color: var(--crypto-widget-down-color, #f87171);
+}
+
+.crypto-widget__currency {
+  font-size: clamp(0.78rem, 2vw, 0.95rem);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.75;
+}
+
+.crypto-widget__status {
+  margin: 0.15rem 0 0;
+  font-size: clamp(0.78rem, 2vw, 0.9rem);
+  text-align: center;
+  color: var(--accent, #ffdf6f);
+}
+
+body.theme-light .crypto-widget__status {
+  color: var(--accent, #1c2f6f);
+}
+
 .frenzy-layer {
   position: absolute;
   inset: 0;
