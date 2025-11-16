@@ -61,6 +61,8 @@
     0.595, 0.71, 0.84, 1.0,
   ];
 
+  const ENVELOPE_EPSILON = 1e-5;
+
   const WAVETABLES = {
     PULSE50: Array.from({ length: TABLE_LENGTH }, (_, i) => (i < TABLE_LENGTH / 2 ? 255 : 0)),
     PULSE25: Array.from({ length: TABLE_LENGTH }, (_, i) => (i < TABLE_LENGTH / 4 ? 255 : 0)),
@@ -246,14 +248,12 @@
       this.level = 0;
       this.phase = 'idle';
       this.sampleRate = sampleRate;
-      this.accumulator = 0;
       this.active = false;
     }
 
     trigger() {
       this.phase = 'attack';
       this.level = 0;
-      this.accumulator = 0;
       this.active = true;
     }
 
@@ -262,7 +262,6 @@
         return;
       }
       this.phase = 'release';
-      this.accumulator = 0;
     }
 
     step() {
@@ -272,48 +271,30 @@
 
       if (this.phase === 'attack') {
         const increment = 15 / this.definition.attackSamples;
-        this.accumulator += increment;
-        if (this.accumulator >= 1) {
-          const delta = Math.floor(this.accumulator);
-          this.level = clamp(this.level + delta, 0, 15);
-          this.accumulator -= delta;
-        }
-        if (this.level >= 15) {
+        this.level = clamp(this.level + increment, 0, 15);
+        if (this.level >= 15 - ENVELOPE_EPSILON) {
           this.level = 15;
           this.phase = 'decay';
-          this.accumulator = 0;
         }
       } else if (this.phase === 'decay') {
         const target = this.definition.sustainLevel;
-        if (this.level <= target) {
+        if (this.level <= target + ENVELOPE_EPSILON) {
           this.level = target;
           this.phase = 'sustain';
-          this.accumulator = 0;
         } else {
           const decrement = Math.max(0.00001, (15 - target) / this.definition.decaySamples);
-          this.accumulator += decrement;
-          if (this.accumulator >= 1) {
-            const delta = Math.floor(this.accumulator);
-            this.level = clamp(this.level - delta, target, 15);
-            this.accumulator -= delta;
-          }
-          if (this.level <= target) {
+          this.level = clamp(this.level - decrement, target, 15);
+          if (this.level <= target + ENVELOPE_EPSILON) {
             this.level = target;
             this.phase = 'sustain';
-            this.accumulator = 0;
           }
         }
       } else if (this.phase === 'sustain') {
         this.level = this.definition.sustainLevel;
       } else if (this.phase === 'release') {
         const decrement = 15 / this.definition.releaseSamples;
-        this.accumulator += decrement;
-        if (this.accumulator >= 1) {
-          const delta = Math.floor(this.accumulator);
-          this.level = clamp(this.level - delta, 0, 15);
-          this.accumulator -= delta;
-        }
-        if (this.level <= 0) {
+        this.level = clamp(this.level - decrement, 0, 15);
+        if (this.level <= ENVELOPE_EPSILON) {
           this.level = 0;
           this.phase = 'finished';
           this.active = false;
@@ -325,6 +306,20 @@
 
       return this.level;
     }
+  }
+
+  function envelopeLevelToGain(level) {
+    if (!Number.isFinite(level)) {
+      return 0;
+    }
+    const clamped = clamp(level, 0, VOL4_TO_GAIN.length - 1);
+    const lowerIndex = Math.floor(clamped);
+    const upperIndex = Math.min(lowerIndex + 1, VOL4_TO_GAIN.length - 1);
+    const frac = clamped - lowerIndex;
+    if (upperIndex === lowerIndex || frac <= ENVELOPE_EPSILON) {
+      return VOL4_TO_GAIN[lowerIndex];
+    }
+    return lerp(VOL4_TO_GAIN[lowerIndex], VOL4_TO_GAIN[upperIndex], frac);
   }
 
   function computePanGains(panValue) {
@@ -607,7 +602,7 @@
         this.active = false;
         return { left: 0, right: 0 };
       }
-      const volume = VOL4_TO_GAIN[envelopeLevel] * this.velocity * this.channelGain * this.additionalGain;
+      const volume = envelopeLevelToGain(envelopeLevel) * this.velocity * this.channelGain * this.additionalGain;
       this.currentGain = volume;
       const output = sampleValue * volume;
       return {
