@@ -156,6 +156,11 @@ class MainActivity : AppCompatActivity() {
             "AndroidSaveBridge"
         )
 
+        webView.addJavascriptInterface(
+            AndroidSystemBridge(this, webView),
+            "AndroidSystemBridge"
+        )
+
         webViewSaveScript = """
             (function() {
               try {
