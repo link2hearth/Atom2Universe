@@ -49,7 +49,6 @@
           "bestMultiRecordSingle": "Record (multi frenzy): {count} clicks (1 frenzy)"
         },
         "cryptoWidget": {
-          "title": "Crypto markets",
           "ariaLabel": "Live BTC and ETH prices",
           "btcLabel": "BTC",
           "ethLabel": "ETH",

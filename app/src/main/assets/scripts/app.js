@@ -5228,7 +5228,9 @@ let lastFrenzyAutoCollectUnlockedState = null;
 const cryptoWidgetState = {
   isWidgetEnabled: false,
   btcPriceUsd: null,
+  previousBtcPriceUsd: null,
   ethPriceUsd: null,
+  previousEthPriceUsd: null,
   isLoading: false,
   errorMessage: null,
   errorMessageKey: null,
@@ -9454,13 +9456,114 @@ function formatCryptoWidgetPrice(value) {
   return numeric.toFixed(2);
 }
 
+function getCryptoWidgetFormattedPriceParts(value) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) {
+    return null;
+  }
+  const formatter = getCryptoWidgetNumberFormatter();
+  if (formatter && typeof formatter.formatToParts === 'function') {
+    const majorParts = [];
+    const fractionParts = [];
+    const suffixParts = [];
+    let decimalSeparator = '';
+    formatter.formatToParts(numeric).forEach(part => {
+      switch (part.type) {
+        case 'integer':
+        case 'group':
+        case 'minusSign':
+        case 'plusSign':
+          majorParts.push(part.value);
+          break;
+        case 'decimal':
+          decimalSeparator = part.value;
+          break;
+        case 'fraction':
+          fractionParts.push(part.value);
+          break;
+        default:
+          suffixParts.push(part.value);
+          break;
+      }
+    });
+    return {
+      major: majorParts.join('') || '0',
+      minor: fractionParts.length ? `${decimalSeparator}${fractionParts.join('')}` : '',
+      suffix: suffixParts.join('')
+    };
+  }
+  const fallback = numeric.toFixed(2);
+  const [major, minor] = fallback.split('.');
+  return {
+    major: major || '0',
+    minor: minor ? `.${minor}` : '',
+    suffix: ''
+  };
+}
+
+function getCryptoWidgetTrend(current, previous) {
+  const currentValue = Number(current);
+  const previousValue = Number(previous);
+  if (!Number.isFinite(currentValue) || !Number.isFinite(previousValue)) {
+    return null;
+  }
+  if (currentValue > previousValue) {
+    return 'up';
+  }
+  if (currentValue < previousValue) {
+    return 'down';
+  }
+  return null;
+}
+
+function renderCryptoWidgetAmount(element, value, previousValue) {
+  if (!element) {
+    return;
+  }
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) {
+    element.textContent = CRYPTO_WIDGET_PLACEHOLDER;
+    return;
+  }
+  const parts = getCryptoWidgetFormattedPriceParts(numeric);
+  if (!parts || typeof document === 'undefined' || typeof element.replaceChildren !== 'function') {
+    element.textContent = formatCryptoWidgetPrice(numeric);
+    return;
+  }
+  const fragment = document.createDocumentFragment();
+  const trend = getCryptoWidgetTrend(numeric, previousValue);
+  const majorSpan = document.createElement('span');
+  majorSpan.className = 'crypto-widget__amount-major';
+  if (trend === 'up') {
+    majorSpan.classList.add('is-up');
+  } else if (trend === 'down') {
+    majorSpan.classList.add('is-down');
+  }
+  majorSpan.textContent = parts.major;
+  fragment.append(majorSpan);
+  if (parts.minor) {
+    const minorSpan = document.createElement('span');
+    minorSpan.className = 'crypto-widget__amount-minor';
+    minorSpan.textContent = parts.minor;
+    fragment.append(minorSpan);
+  }
+  if (parts.suffix) {
+    fragment.append(parts.suffix);
+  }
+  element.replaceChildren(fragment);
+}
+
 function updateCryptoWidgetPriceDisplay() {
-  if (elements.cryptoWidgetBtcValue) {
-    elements.cryptoWidgetBtcValue.textContent = formatCryptoWidgetPrice(cryptoWidgetState.btcPriceUsd);
-  }
-  if (elements.cryptoWidgetEthValue) {
-    elements.cryptoWidgetEthValue.textContent = formatCryptoWidgetPrice(cryptoWidgetState.ethPriceUsd);
-  }
+  renderCryptoWidgetAmount(
+    elements.cryptoWidgetBtcValue,
+    cryptoWidgetState.btcPriceUsd,
+    cryptoWidgetState.previousBtcPriceUsd
+  );
+  renderCryptoWidgetAmount(
+    elements.cryptoWidgetEthValue,
+    cryptoWidgetState.ethPriceUsd,
+    cryptoWidgetState.previousEthPriceUsd
+  );
 }
 
 function updateCryptoWidgetVisibility() {
@@ -9587,7 +9690,9 @@ function stopCryptoWidgetRefresh(options = {}) {
   cryptoWidgetState.abortController = null;
   if (settings.resetState) {
     cryptoWidgetState.btcPriceUsd = null;
+    cryptoWidgetState.previousBtcPriceUsd = null;
     cryptoWidgetState.ethPriceUsd = null;
+    cryptoWidgetState.previousEthPriceUsd = null;
     cryptoWidgetState.isLoading = false;
     clearCryptoWidgetError();
     updateCryptoWidgetPriceDisplay();
@@ -9647,7 +9752,13 @@ async function fetchCryptoPrices() {
       fetchCryptoWidgetPrice(CRYPTO_WIDGET_ENDPOINTS.btc, controller),
       fetchCryptoWidgetPrice(CRYPTO_WIDGET_ENDPOINTS.eth, controller)
     ]);
+    cryptoWidgetState.previousBtcPriceUsd = Number.isFinite(cryptoWidgetState.btcPriceUsd)
+      ? cryptoWidgetState.btcPriceUsd
+      : null;
     cryptoWidgetState.btcPriceUsd = btcPrice;
+    cryptoWidgetState.previousEthPriceUsd = Number.isFinite(cryptoWidgetState.ethPriceUsd)
+      ? cryptoWidgetState.ethPriceUsd
+      : null;
     cryptoWidgetState.ethPriceUsd = ethPrice;
     updateCryptoWidgetPriceDisplay();
     clearCryptoWidgetError();

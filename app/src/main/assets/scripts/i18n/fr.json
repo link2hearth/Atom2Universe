@@ -49,7 +49,6 @@
           "bestMultiRecordSingle": "Record (multi frénésie) : {count} clics (1 frénésie)"
         },
         "cryptoWidget": {
-          "title": "Marchés crypto",
           "ariaLabel": "Prix BTC et ETH en direct",
           "btcLabel": "BTC",
           "ethLabel": "ETH",
