@@ -166,6 +166,47 @@
     >
       <div class="starfield" aria-hidden="true"></div>
 
+      <div
+        class="crypto-widget"
+        id="cryptoWidget"
+        hidden
+        aria-hidden="true"
+        aria-label="Widget crypto"
+        data-i18n="aria-label:index.sections.game.cryptoWidget.ariaLabel"
+      >
+        <div class="crypto-widget__header">
+          <p class="crypto-widget__title" data-i18n="index.sections.game.cryptoWidget.title">
+            Marchés crypto
+          </p>
+        </div>
+        <div class="crypto-widget__body">
+          <div class="crypto-widget__row">
+            <span class="crypto-widget__label" data-i18n="index.sections.game.cryptoWidget.btcLabel">BTC</span>
+            <span class="crypto-widget__value">
+              <span class="crypto-widget__amount" id="cryptoWidgetBtcValue">---</span>
+              <span class="crypto-widget__currency" data-i18n="index.sections.game.cryptoWidget.currency">USD</span>
+            </span>
+          </div>
+          <div class="crypto-widget__row">
+            <span class="crypto-widget__label" data-i18n="index.sections.game.cryptoWidget.ethLabel">ETH</span>
+            <span class="crypto-widget__value">
+              <span class="crypto-widget__amount" id="cryptoWidgetEthValue">---</span>
+              <span class="crypto-widget__currency" data-i18n="index.sections.game.cryptoWidget.currency">USD</span>
+            </span>
+          </div>
+          <p
+            class="crypto-widget__status"
+            id="cryptoWidgetStatus"
+            role="status"
+            aria-live="polite"
+            hidden
+            data-i18n="index.sections.game.cryptoWidget.loading"
+          >
+            Chargement…
+          </p>
+        </div>
+      </div>
+
       <button
         class="atom-button"
         id="atomButton"
@@ -6713,6 +6754,41 @@
                     data-i18n="index.sections.options.frenzyAutoCollect.state.off"
                   >
                     Désactivée
+                  </span>
+                </label>
+              </div>
+            </div>
+            <div class="option-toggle-card" id="cryptoWidgetToggleCard">
+              <div class="option-toggle-card__content">
+                <h4
+                  class="option-toggle-card__title"
+                  data-i18n="index.sections.options.cryptoWidget.title"
+                >
+                  Widget crypto
+                </h4>
+                <p
+                  class="option-toggle-card__description"
+                  data-i18n="index.sections.options.cryptoWidget.description"
+                >
+                  Affiche les prix BTC/ETH sous la bannière principale.
+                </p>
+              </div>
+              <div class="option-toggle-card__control">
+                <label class="toggle-switch">
+                  <input
+                    type="checkbox"
+                    id="cryptoWidgetToggle"
+                    aria-label="Activer ou désactiver le widget crypto"
+                    data-i18n="aria-label:index.sections.options.cryptoWidget.ariaLabel"
+                    aria-describedby="cryptoWidgetToggleStatus"
+                  />
+                  <span class="toggle-switch__track" aria-hidden="true"></span>
+                  <span
+                    class="toggle-switch__label"
+                    id="cryptoWidgetToggleStatus"
+                    data-i18n="index.sections.options.cryptoWidget.state.off"
+                  >
+                    Masqué
                   </span>
                 </label>
               </div>
