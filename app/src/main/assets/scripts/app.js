@@ -13860,9 +13860,21 @@ const CRIT_ATOM_IMAGES = (() => {
   return source.map(value => String(value));
 })();
 
+const MAIN_ATOM_IMAGES = (() => {
+  const source = Array.isArray(APP_DATA.MAIN_ATOM_IMAGES) && APP_DATA.MAIN_ATOM_IMAGES.length
+    ? APP_DATA.MAIN_ATOM_IMAGES
+    : Array.isArray(APP_DATA.DEFAULT_MAIN_ATOM_IMAGES) && APP_DATA.DEFAULT_MAIN_ATOM_IMAGES.length
+      ? APP_DATA.DEFAULT_MAIN_ATOM_IMAGES
+      : [];
+  if (!source.length) {
+    return [ATOM_IMAGE_FALLBACK];
+  }
+  return source.map(value => String(value));
+})();
+
 const ATOM_BUTTON_IMAGES = (() => {
   const unique = new Set();
-  CRIT_ATOM_IMAGES.forEach(value => {
+  MAIN_ATOM_IMAGES.forEach(value => {
     if (typeof value === 'string') {
       const normalized = value.trim();
       if (normalized) {

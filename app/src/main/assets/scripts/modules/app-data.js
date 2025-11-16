@@ -511,7 +511,7 @@
     return sanitized;
   }
 
-  const DEFAULT_CRIT_ATOM_IMAGES = Object.freeze([
+  const DEFAULT_MAIN_ATOM_IMAGES = Object.freeze([
     'Assets/Image/Atom.png',
     'Assets/Image/Atom0.png',
     'Assets/Image/Atom1.png',
@@ -527,7 +527,23 @@
     'Assets/Image/Atom11.png'
   ]);
 
-  function sanitizeCritAtomImages(raw) {
+  const DEFAULT_CRIT_ATOM_IMAGES = Object.freeze([
+    'Assets/Image/Atom low/Atom.png',
+    'Assets/Image/Atom low/Atom0.png',
+    'Assets/Image/Atom low/Atom1.png',
+    'Assets/Image/Atom low/Atom2.png',
+    'Assets/Image/Atom low/Atom3.png',
+    'Assets/Image/Atom low/Atom4.png',
+    'Assets/Image/Atom low/Atom5.png',
+    'Assets/Image/Atom low/Atom6.png',
+    'Assets/Image/Atom low/Atom7.png',
+    'Assets/Image/Atom low/Atom8.png',
+    'Assets/Image/Atom low/Atom9.png',
+    'Assets/Image/Atom low/Atom10.png',
+    'Assets/Image/Atom low/Atom11.png'
+  ]);
+
+  function sanitizeAtomImages(raw, fallbackImages) {
     const candidates = Array.isArray(raw) ? raw : [];
     const sanitized = [];
     candidates.forEach(entry => {
@@ -546,7 +562,7 @@
       sanitized.push(normalized);
     });
     if (!sanitized.length) {
-      return [...DEFAULT_CRIT_ATOM_IMAGES];
+      return Array.isArray(fallbackImages) ? [...fallbackImages] : [];
     }
     return sanitized;
   }
@@ -561,7 +577,15 @@
 
   const GLOW_STOPS = sanitizeGlowStops(existingAppData?.GLOW_STOPS ?? global.GLOW_STOPS);
 
-  const CRIT_ATOM_IMAGES = sanitizeCritAtomImages(existingAppData?.CRIT_ATOM_IMAGES ?? global.CRIT_ATOM_IMAGES);
+  const MAIN_ATOM_IMAGES = sanitizeAtomImages(
+    existingAppData?.MAIN_ATOM_IMAGES ?? global.MAIN_ATOM_IMAGES,
+    DEFAULT_MAIN_ATOM_IMAGES
+  );
+
+  const CRIT_ATOM_IMAGES = sanitizeAtomImages(
+    existingAppData?.CRIT_ATOM_IMAGES ?? global.CRIT_ATOM_IMAGES,
+    DEFAULT_CRIT_ATOM_IMAGES
+  );
 
   const appData = existingAppData ? { ...existingAppData } : {};
   appData.DEFAULT_ATOM_SCALE_TROPHY_DATA = DEFAULT_ATOM_SCALE_TROPHY_DATA;
@@ -574,6 +598,8 @@
   appData.MUSIC_FALLBACK_TRACKS = [...MUSIC_FALLBACK_TRACKS];
   appData.DEFAULT_GLOW_STOPS = DEFAULT_GLOW_STOPS.map(entry => ({ stop: entry.stop, color: [...entry.color] }));
   appData.GLOW_STOPS = GLOW_STOPS.map(entry => ({ stop: entry.stop, color: [...entry.color] }));
+  appData.DEFAULT_MAIN_ATOM_IMAGES = [...DEFAULT_MAIN_ATOM_IMAGES];
+  appData.MAIN_ATOM_IMAGES = [...MAIN_ATOM_IMAGES];
   appData.DEFAULT_CRIT_ATOM_IMAGES = [...DEFAULT_CRIT_ATOM_IMAGES];
   appData.CRIT_ATOM_IMAGES = [...CRIT_ATOM_IMAGES];
   global.APP_DATA = appData;
