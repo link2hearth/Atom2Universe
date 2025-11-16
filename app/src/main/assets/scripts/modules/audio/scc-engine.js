@@ -99,10 +99,37 @@
   };
 
   function convertUnsignedToFloat(table) {
-    const result = new Float32Array(table.length);
-    for (let i = 0; i < table.length; i += 1) {
-      result[i] = ((table[i] || 0) - 128) / 128;
+    const length = Number.isFinite(table?.length) ? table.length : 0;
+    const result = new Float32Array(length);
+    if (length === 0) {
+      return result;
     }
+
+    let sum = 0;
+    for (let i = 0; i < length; i += 1) {
+      const value = ((table[i] || 0) - 128) / 128;
+      result[i] = value;
+      sum += value;
+    }
+
+    const dcOffset = sum / length;
+    let peak = 0;
+    for (let i = 0; i < length; i += 1) {
+      const centered = result[i] - dcOffset;
+      result[i] = centered;
+      const absValue = Math.abs(centered);
+      if (absValue > peak) {
+        peak = absValue;
+      }
+    }
+
+    if (peak > 0) {
+      const normalise = 1 / peak;
+      for (let i = 0; i < length; i += 1) {
+        result[i] *= normalise;
+      }
+    }
+
     return result;
   }
 
