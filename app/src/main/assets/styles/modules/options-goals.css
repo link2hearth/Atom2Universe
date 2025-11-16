@@ -789,17 +789,27 @@ select option:focus {
   display: inline-flex;
   align-items: center;
   gap: calc(0.6rem * var(--ui-control-scale, 1));
+  flex: 1 1 calc(15rem * var(--ui-control-scale, 1));
+  min-width: min(calc(13rem * var(--ui-control-scale, 1)), 100%);
 }
 
 .option-toggle-card__content {
-  flex: 0 0 auto;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .option-toggle-card__title {
   margin: 0;
   font-size: calc(0.65rem * var(--ui-control-scale, 1));
   font-weight: 600;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.option-toggle-card__description {
+  margin: calc(0.2rem * var(--ui-control-scale, 1)) 0 0;
+  font-size: calc(0.6rem * var(--ui-control-scale, 1));
+  opacity: 0.8;
 }
 
 .option-toggle-card__control {
