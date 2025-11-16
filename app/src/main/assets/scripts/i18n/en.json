@@ -3009,6 +3009,11 @@
           "gachaWin": "Won {count} gacha ticket{suffix}!"
         }
       },
+      "motocross": {
+        "rewards": {
+          "gachaMilestone": "Motocross reward! +{count} gacha ticket{suffix}."
+        }
+      },
       "colorStack": {
         "rewards": {
           "gachaVictory": "Color Stack: +{count} gacha ticket{suffix}!"
