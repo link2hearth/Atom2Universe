@@ -2116,6 +2116,15 @@
             "off": "Off"
           }
         },
+        "screenWakeLock": {
+          "title": "Keep screen awake",
+          "description": "Prevents Android from turning the screen off automatically.",
+          "ariaLabel": "Prevent Android from putting the screen to sleep automatically",
+          "state": {
+            "on": "Enabled",
+            "off": "Disabled"
+          }
+        },
         "frenzyAutoCollect": {
           "title": "Frenzy auto-collect",
           "ariaLabel": "Enable or disable automatic frenzy collection",

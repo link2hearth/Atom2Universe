@@ -332,6 +332,7 @@ const CLICK_SOUND_STORAGE_KEY = 'atom2univers.options.clickSoundMuted';
 const CRIT_ATOM_VISUALS_STORAGE_KEY = 'atom2univers.options.critAtomVisualsDisabled';
 const FRENZY_AUTO_COLLECT_STORAGE_KEY = 'atom2univers.options.frenzyAutoCollectEnabled';
 const CRYPTO_WIDGET_STORAGE_KEY = 'atom2univers.options.cryptoWidgetEnabled';
+const SCREEN_WAKE_LOCK_STORAGE_KEY = 'atom2univers.options.screenWakeLockEnabled';
 const TEXT_FONT_STORAGE_KEY = 'atom2univers.options.textFont';
 const INFO_WELCOME_COLLAPSED_STORAGE_KEY = 'atom2univers.info.welcomeCollapsed';
 const INFO_ACHIEVEMENTS_COLLAPSED_STORAGE_KEY = 'atom2univers.info.achievementsCollapsed';
@@ -5225,6 +5226,10 @@ let musicModuleInitRequested = false;
 let holdemBlindListenerAttached = false;
 let frenzyAutoCollectPreference = false;
 let lastFrenzyAutoCollectUnlockedState = null;
+const screenWakeLockState = {
+  supported: false,
+  enabled: false
+};
 const cryptoWidgetState = {
   isWidgetEnabled: false,
   btcPriceUsd: null,
@@ -6025,6 +6030,9 @@ function collectDomElements() {
   critAtomToggleCard: document.getElementById('critAtomToggleCard'),
   critAtomToggle: document.getElementById('critAtomToggle'),
   critAtomToggleStatus: document.getElementById('critAtomToggleStatus'),
+  screenWakeLockToggleCard: document.getElementById('screenWakeLockToggleCard'),
+  screenWakeLockToggle: document.getElementById('screenWakeLockToggle'),
+  screenWakeLockToggleStatus: document.getElementById('screenWakeLockToggleStatus'),
   frenzyAutoCollectCard: document.getElementById('frenzyAutoCollectCard'),
   frenzyAutoCollectToggle: document.getElementById('frenzyAutoCollectToggle'),
   frenzyAutoCollectStatus: document.getElementById('frenzyAutoCollectStatus'),
@@ -9163,6 +9171,33 @@ function writeStoredCritAtomVisualsDisabled(disabled) {
   }
 }
 
+function readStoredScreenWakeLockEnabled() {
+  try {
+    const stored = globalThis.localStorage?.getItem(SCREEN_WAKE_LOCK_STORAGE_KEY);
+    if (stored == null) {
+      return null;
+    }
+    if (stored === '1' || stored === 'true') {
+      return true;
+    }
+    if (stored === '0' || stored === 'false') {
+      return false;
+    }
+  } catch (error) {
+    console.warn('Unable to read screen wake lock preference', error);
+  }
+  return null;
+}
+
+function writeStoredScreenWakeLockEnabled(enabled) {
+  try {
+    const value = enabled ? '1' : '0';
+    globalThis.localStorage?.setItem(SCREEN_WAKE_LOCK_STORAGE_KEY, value);
+  } catch (error) {
+    console.warn('Unable to persist screen wake lock preference', error);
+  }
+}
+
 function updateClickSoundStatusLabel(muted) {
   if (!elements.clickSoundToggleStatus) {
     return;
@@ -9209,6 +9244,115 @@ function subscribeClickSoundLanguageUpdates() {
       ? soundEffects.isPopMuted()
       : false;
     updateClickSoundStatusLabel(muted);
+  };
+  const api = getI18nApi();
+  if (api && typeof api.onLanguageChanged === 'function') {
+    api.onLanguageChanged(handler);
+    return;
+  }
+  if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
+    globalThis.addEventListener('i18n:languagechange', handler);
+  }
+}
+
+function detectScreenWakeLockSupport() {
+  const bridge = getAndroidSystemBridge();
+  const supported = Boolean(bridge && typeof bridge.setScreenAwake === 'function');
+  screenWakeLockState.supported = supported;
+  if (!supported) {
+    screenWakeLockState.enabled = false;
+  }
+  if (elements.screenWakeLockToggleCard) {
+    if (supported) {
+      elements.screenWakeLockToggleCard.removeAttribute('hidden');
+      elements.screenWakeLockToggleCard.removeAttribute('aria-hidden');
+    } else {
+      elements.screenWakeLockToggleCard.setAttribute('hidden', '');
+      elements.screenWakeLockToggleCard.setAttribute('aria-hidden', 'true');
+    }
+  }
+  if (elements.screenWakeLockToggle) {
+    elements.screenWakeLockToggle.disabled = !supported;
+  }
+  return supported;
+}
+
+function updateScreenWakeLockStatusLabel(enabled) {
+  if (!elements.screenWakeLockToggleStatus) {
+    return;
+  }
+  const key = enabled
+    ? 'index.sections.options.screenWakeLock.state.on'
+    : 'index.sections.options.screenWakeLock.state.off';
+  const fallback = enabled ? 'Enabled' : 'Disabled';
+  elements.screenWakeLockToggleStatus.setAttribute('data-i18n', key);
+  elements.screenWakeLockToggleStatus.textContent = translateOrDefault(key, fallback);
+}
+
+function setNativeScreenWakeLockEnabled(enabled) {
+  const bridge = getAndroidSystemBridge();
+  if (!bridge || typeof bridge.setScreenAwake !== 'function') {
+    return false;
+  }
+  try {
+    const result = bridge.setScreenAwake(!!enabled);
+    if (typeof result === 'boolean') {
+      return result;
+    }
+    return !!enabled;
+  } catch (error) {
+    console.warn('Unable to update screen wake lock state', error);
+  }
+  return false;
+}
+
+function applyScreenWakeLockEnabled(enabled, options = {}) {
+  const settings = Object.assign({ persist: true, updateControl: true }, options);
+  let applied = false;
+  if (screenWakeLockState.supported) {
+    applied = setNativeScreenWakeLockEnabled(!!enabled);
+  }
+  screenWakeLockState.enabled = applied;
+  if (settings.updateControl && elements.screenWakeLockToggle) {
+    elements.screenWakeLockToggle.checked = applied;
+  }
+  updateScreenWakeLockStatusLabel(applied);
+  if (settings.persist) {
+    writeStoredScreenWakeLockEnabled(applied);
+  }
+  return applied;
+}
+
+function initScreenWakeLockOption() {
+  if (!elements.screenWakeLockToggleCard) {
+    return;
+  }
+  detectScreenWakeLockSupport();
+  updateScreenWakeLockStatusLabel(false);
+  if (!screenWakeLockState.supported) {
+    if (elements.screenWakeLockToggle) {
+      elements.screenWakeLockToggle.checked = false;
+    }
+    return;
+  }
+  const stored = readStoredScreenWakeLockEnabled();
+  const initialEnabled = stored === true;
+  applyScreenWakeLockEnabled(initialEnabled, { persist: false, updateControl: true });
+  if (!elements.screenWakeLockToggle) {
+    return;
+  }
+  elements.screenWakeLockToggle.addEventListener('change', () => {
+    const requested = elements.screenWakeLockToggle.checked;
+    const applied = applyScreenWakeLockEnabled(requested, { persist: true, updateControl: false });
+    if (requested !== applied) {
+      elements.screenWakeLockToggle.checked = applied;
+    }
+  });
+}
+
+function subscribeScreenWakeLockLanguageUpdates() {
+  const handler = () => {
+    updateScreenWakeLockStatusLabel(screenWakeLockState.enabled);
   };
   const api = getI18nApi();
   if (api && typeof api.onLanguageChanged === 'function') {
@@ -19352,6 +19496,21 @@ function getAndroidSaveBridge() {
   return null;
 }
 
+function getAndroidSystemBridge() {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+  const bridge = window.AndroidSystemBridge;
+  if (!bridge) {
+    return null;
+  }
+  const type = typeof bridge;
+  if (type === 'object' || type === 'function') {
+    return bridge;
+  }
+  return null;
+}
+
 function normalizeNativeBridgePayload(raw) {
   if (typeof raw !== 'string' || !raw) {
     return raw;
@@ -21481,6 +21640,8 @@ function initializeDomBoundModules() {
   subscribeClickSoundLanguageUpdates();
   initCritAtomOption();
   subscribeCritAtomLanguageUpdates();
+  initScreenWakeLockOption();
+  subscribeScreenWakeLockLanguageUpdates();
   initFrenzyAutoCollectOption();
   subscribeFrenzyAutoCollectLanguageUpdates();
   initCryptoWidgetOption();

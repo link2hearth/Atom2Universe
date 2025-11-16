@@ -2053,6 +2053,15 @@
             "off": "Sans"
           }
         },
+        "screenWakeLock": {
+          "title": "Écran toujours actif",
+          "description": "Empêche Android de mettre automatiquement l’écran en veille.",
+          "ariaLabel": "Empêcher Android de mettre l’écran en veille automatiquement",
+          "state": {
+            "on": "Actif",
+            "off": "Inactif"
+          }
+        },
         "frenzyAutoCollect": {
           "title": "Récolte auto frénésie",
           "ariaLabel": "Activer ou désactiver la récolte automatique des frénésies",
