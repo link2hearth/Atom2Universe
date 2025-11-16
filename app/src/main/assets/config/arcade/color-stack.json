@@ -23,7 +23,7 @@
       "minMulticoloredColumns": 2,
       "minDisplacedRatio": 0.5,
       "gachaTickets": 1,
-      "gachaTicketChance": 0.3333333333,
+      "gachaTicketChance": 0.3,
       "extraTopSpace": 1
     },
     "medium": {
