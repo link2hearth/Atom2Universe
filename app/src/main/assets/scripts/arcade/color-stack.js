@@ -12,6 +12,8 @@
   const AUTOSAVE_GAME_ID = 'colorStack';
   const AUTOSAVE_VERSION = 1;
   const AUTOSAVE_DEBOUNCE_MS = 180;
+  const AUTOSAVE_READY_EVENT = 'arcadeAutosaveReady';
+  const AUTOSAVE_READY_FALLBACK_MS = 800;
 
   const DEFAULT_CONFIG = Object.freeze({
     maxScrambleAttempts: 120,
@@ -809,6 +811,7 @@
     if (!container) {
       return;
     }
+    container.classList.toggle('color-stack__board--hard-layout', state.difficulty === 'hard');
     container.innerHTML = '';
     const selection = state.selectedColumn;
     const validTargets = Number.isInteger(selection) ? getValidTargets(selection) : [];
@@ -837,6 +840,43 @@
       });
       container.appendChild(columnButton);
     });
+  }
+
+  function waitForAutosaveReady() {
+    if (typeof window === 'undefined' || typeof window.addEventListener !== 'function') {
+      return false;
+    }
+    let resolved = false;
+    let fallbackTimer = null;
+
+    const finalize = callback => {
+      if (resolved) {
+        return;
+      }
+      resolved = true;
+      window.removeEventListener(AUTOSAVE_READY_EVENT, handleReady);
+      if (fallbackTimer != null) {
+        window.clearTimeout(fallbackTimer);
+        fallbackTimer = null;
+      }
+      callback();
+    };
+
+    const handleReady = () => {
+      finalize(() => {
+        if (!restoreFromAutosave()) {
+          startNewGame(state.difficulty);
+        }
+      });
+    };
+
+    window.addEventListener(AUTOSAVE_READY_EVENT, handleReady);
+    fallbackTimer = window.setTimeout(() => {
+      finalize(() => {
+        startNewGame(state.difficulty);
+      });
+    }, AUTOSAVE_READY_FALLBACK_MS);
+    return true;
   }
 
   function scheduleAutosave() {
@@ -1086,7 +1126,11 @@
   bindEvents();
   loadRemoteConfig();
   if (!restoreFromAutosave()) {
-    startNewGame(state.difficulty);
+    if (getAutosaveApi()) {
+      startNewGame(state.difficulty);
+    } else if (!waitForAutosaveReady()) {
+      startNewGame(state.difficulty);
+    }
   }
 
   window.colorStackArcade = {
