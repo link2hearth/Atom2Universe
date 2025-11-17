@@ -12,6 +12,7 @@ const CONFIG_OVERRIDE_KEYS = Object.freeze({
   collection: `${CONFIG_OVERRIDE_STORAGE_PREFIX}collectionEnabled`,
   info: `${CONFIG_OVERRIDE_STORAGE_PREFIX}infoSectionsEnabled`,
   music: `${CONFIG_OVERRIDE_STORAGE_PREFIX}musicEnabled`,
+  atomVariant: `${CONFIG_OVERRIDE_STORAGE_PREFIX}atomVariantEnabled`,
   escapeDifficulties: `${CONFIG_OVERRIDE_STORAGE_PREFIX}escapeAdvancedDifficultiesEnabled`
 });
 
@@ -122,6 +123,13 @@ const MUSIC_MODULE_ENABLED = resolveConfigBoolean(
   DEFAULT_MUSIC_MODULE_ENABLED
 );
 
+const DEFAULT_ATOM_IMAGE_VARIANT_ENABLED = false;
+
+const ATOM_IMAGE_VARIANT_ENABLED = resolveConfigBoolean(
+  CONFIG_OVERRIDE_KEYS.atomVariant,
+  DEFAULT_ATOM_IMAGE_VARIANT_ENABLED
+);
+
 const DEFAULT_ESCAPE_ADVANCED_DIFFICULTIES_ENABLED = false;
 
 const ESCAPE_ADVANCED_DIFFICULTIES_ENABLED = resolveConfigBoolean(
@@ -166,6 +174,17 @@ function toggleMusicModuleEnabled() {
   );
   if (typeof globalThis !== 'undefined') {
     globalThis.MUSIC_MODULE_ENABLED = next;
+  }
+  return next;
+}
+
+function toggleAtomImageVariantEnabled() {
+  const next = toggleConfigBoolean(
+    CONFIG_OVERRIDE_KEYS.atomVariant,
+    DEFAULT_ATOM_IMAGE_VARIANT_ENABLED
+  );
+  if (typeof globalThis !== 'undefined') {
+    globalThis.ATOM_IMAGE_VARIANT_ENABLED = next;
   }
   return next;
 }
@@ -1636,11 +1655,13 @@ if (typeof globalThis !== 'undefined') {
   globalThis.COLLECTION_SYSTEM_ENABLED = COLLECTION_SYSTEM_ENABLED;
   globalThis.INFO_SECTIONS_ENABLED = INFO_SECTIONS_ENABLED;
   globalThis.MUSIC_MODULE_ENABLED = MUSIC_MODULE_ENABLED;
+  globalThis.ATOM_IMAGE_VARIANT_ENABLED = ATOM_IMAGE_VARIANT_ENABLED;
   globalThis.ESCAPE_ADVANCED_DIFFICULTIES_ENABLED = ESCAPE_ADVANCED_DIFFICULTIES_ENABLED;
   globalThis.toggleDevkitFeatureEnabled = toggleDevkitFeatureEnabled;
   globalThis.toggleCollectionFeatureEnabled = toggleCollectionFeatureEnabled;
   globalThis.toggleInfoSectionsFeatureEnabled = toggleInfoSectionsFeatureEnabled;
   globalThis.toggleMusicModuleEnabled = toggleMusicModuleEnabled;
+  globalThis.toggleAtomImageVariantEnabled = toggleAtomImageVariantEnabled;
   globalThis.toggleEscapeAdvancedDifficultiesEnabled = toggleEscapeAdvancedDifficultiesEnabled;
 }
 

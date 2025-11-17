@@ -440,8 +440,13 @@ body:not(.view-game):not(.view-wave) .apc-frenzy-counter {
 .atom-button__core {
   position: relative;
   display: block;
-  width: clamp(110px, 24vw, 180px);
+  --atom-core-size: clamp(110px, 24vw, 180px);
+  width: var(--atom-core-size);
   aspect-ratio: 1 / 1;
+}
+
+body[data-atom-variant='alternate'] .atom-button__core {
+  width: calc(var(--atom-core-size) * 6);
 }
 
 .atom-button__core::before,
