@@ -25,6 +25,6 @@ class AndroidSystemBridge(activity: Activity, webView: GameWebView) {
             }
             webViewRef.get()?.keepScreenOn = keepAwake
         }
-        return true
+        return keepAwake
     }
 }
