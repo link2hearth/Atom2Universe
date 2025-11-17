@@ -437,16 +437,25 @@ body:not(.view-game):not(.view-wave) .apc-frenzy-counter {
   z-index: 2;
 }
 
+body[data-atom-variant='alternate'] .atom-button {
+  width: min(70vw, 70vh);
+  height: min(70vw, 70vh);
+}
+
 .atom-button__core {
   position: relative;
   display: block;
+  flex: 0 0 auto;
   --atom-core-size: clamp(110px, 24vw, 180px);
   width: var(--atom-core-size);
   aspect-ratio: 1 / 1;
 }
 
 body[data-atom-variant='alternate'] .atom-button__core {
-  width: calc(var(--atom-core-size) * 16);
+  width: min(
+    min(70vw, 70vh),
+    max(calc(var(--atom-core-size) * 6), min(50vw, 50vh))
+  );
 }
 
 .atom-button__core::before,
