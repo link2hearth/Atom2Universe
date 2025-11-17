@@ -527,6 +527,37 @@
     'Assets/Image/Atom11.png'
   ]);
 
+  const DEFAULT_ALTERNATE_MAIN_ATOM_IMAGES = Object.freeze([
+    'Assets/Image/Atom2/Atom2 (1).png',
+    'Assets/Image/Atom2/Atom2 (2).png',
+    'Assets/Image/Atom2/Atom2 (3).png',
+    'Assets/Image/Atom2/Atom2 (4).png',
+    'Assets/Image/Atom2/Atom2 (5).png',
+    'Assets/Image/Atom2/Atom2 (6).png',
+    'Assets/Image/Atom2/Atom2 (7).png',
+    'Assets/Image/Atom2/Atom2 (8).png',
+    'Assets/Image/Atom2/Atom2 (9).png',
+    'Assets/Image/Atom2/Atom2 (10).png',
+    'Assets/Image/Atom2/Atom2 (11).png',
+    'Assets/Image/Atom2/Atom2 (12).png',
+    'Assets/Image/Atom2/Atom2 (13).png',
+    'Assets/Image/Atom2/Atom2 (14).png',
+    'Assets/Image/Atom2/Atom2 (15).png',
+    'Assets/Image/Atom2/Atom2 (16).png',
+    'Assets/Image/Atom2/Atom2 (17).png',
+    'Assets/Image/Atom2/Atom2 (18).png',
+    'Assets/Image/Atom2/Atom2 (19).png',
+    'Assets/Image/Atom2/Atom2 (20).png',
+    'Assets/Image/Atom2/Atom2 (21).png',
+    'Assets/Image/Atom2/Atom2 (22).png',
+    'Assets/Image/Atom2/Atom2 (23).png',
+    'Assets/Image/Atom2/Atom2 (24).png',
+    'Assets/Image/Atom2/Atom2 (25).png',
+    'Assets/Image/Atom2/Atom2 (26).png',
+    'Assets/Image/Atom2/Atom2 (27).png',
+    'Assets/Image/Atom2/Atom2 (28).png'
+  ]);
+
   const DEFAULT_CRIT_ATOM_IMAGES = Object.freeze([
     'Assets/Image/Atom low/Atom.png',
     'Assets/Image/Atom low/Atom0.png',
@@ -582,6 +613,11 @@
     DEFAULT_MAIN_ATOM_IMAGES
   );
 
+  const ALTERNATE_MAIN_ATOM_IMAGES = sanitizeAtomImages(
+    existingAppData?.ALTERNATE_MAIN_ATOM_IMAGES ?? global.ALTERNATE_MAIN_ATOM_IMAGES,
+    DEFAULT_ALTERNATE_MAIN_ATOM_IMAGES
+  );
+
   const CRIT_ATOM_IMAGES = sanitizeAtomImages(
     existingAppData?.CRIT_ATOM_IMAGES ?? global.CRIT_ATOM_IMAGES,
     DEFAULT_CRIT_ATOM_IMAGES
@@ -600,6 +636,8 @@
   appData.GLOW_STOPS = GLOW_STOPS.map(entry => ({ stop: entry.stop, color: [...entry.color] }));
   appData.DEFAULT_MAIN_ATOM_IMAGES = [...DEFAULT_MAIN_ATOM_IMAGES];
   appData.MAIN_ATOM_IMAGES = [...MAIN_ATOM_IMAGES];
+  appData.DEFAULT_ALTERNATE_MAIN_ATOM_IMAGES = [...DEFAULT_ALTERNATE_MAIN_ATOM_IMAGES];
+  appData.ALTERNATE_MAIN_ATOM_IMAGES = [...ALTERNATE_MAIN_ATOM_IMAGES];
   appData.DEFAULT_CRIT_ATOM_IMAGES = [...DEFAULT_CRIT_ATOM_IMAGES];
   appData.CRIT_ATOM_IMAGES = [...CRIT_ATOM_IMAGES];
   global.APP_DATA = appData;
