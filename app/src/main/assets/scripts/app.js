@@ -29,6 +29,10 @@ function isEscapeAdvancedDifficultiesEnabled() {
   return resolveGlobalBooleanFlag('ESCAPE_ADVANCED_DIFFICULTIES_ENABLED', false);
 }
 
+function isAtomImageVariantEnabled() {
+  return resolveGlobalBooleanFlag('ATOM_IMAGE_VARIANT_ENABLED', false);
+}
+
 function toggleDevkitFeatureAvailability() {
   if (typeof globalThis !== 'undefined' && typeof globalThis.toggleDevkitFeatureEnabled === 'function') {
     return globalThis.toggleDevkitFeatureEnabled();
@@ -78,6 +82,20 @@ function toggleMusicModuleAvailability() {
   const next = !isMusicModuleEnabled();
   if (typeof globalThis !== 'undefined') {
     globalThis.MUSIC_MODULE_ENABLED = next;
+  }
+  return next;
+}
+
+function toggleAtomImageVariantAvailability() {
+  if (
+    typeof globalThis !== 'undefined'
+    && typeof globalThis.toggleAtomImageVariantEnabled === 'function'
+  ) {
+    return globalThis.toggleAtomImageVariantEnabled();
+  }
+  const next = !isAtomImageVariantEnabled();
+  if (typeof globalThis !== 'undefined') {
+    globalThis.ATOM_IMAGE_VARIANT_ENABLED = next;
   }
   return next;
 }
@@ -5544,6 +5562,13 @@ const RESET_KEYWORD_ACTIONS = Object.freeze({
     disabledKey: 'musicDisabled',
     disabledFallback: 'Music module disabled. Changes applied.'
   }),
+  ATOM: Object.freeze({
+    toggle: toggleAtomImageVariantAvailability,
+    enabledKey: 'atomVariantEnabled',
+    enabledFallback: 'Alternate atom visuals enabled. Changes applied.',
+    disabledKey: 'atomVariantDisabled',
+    disabledFallback: 'Alternate atom visuals disabled. Changes applied.'
+  }),
   ESCAPE: Object.freeze({
     toggle: toggleEscapeAdvancedDifficultiesAvailability,
     enabledKey: 'escapeDifficultiesEnabled',
@@ -5688,6 +5713,8 @@ function handleResetSpecialKeyword(normalizedKeyword) {
   showToast(translateResetString(messageKey, fallbackMessage));
   if (normalizedKeyword === 'MUSIC') {
     updateMusicModuleVisibility();
+  } else if (normalizedKeyword === 'ATOM') {
+    randomizeAtomButtonImage();
   }
   return true;
 }
@@ -14007,23 +14034,49 @@ const MAIN_ATOM_IMAGES = (() => {
   return source.map(value => String(value));
 })();
 
-const ATOM_BUTTON_IMAGES = (() => {
+const ALTERNATE_MAIN_ATOM_IMAGES = (() => {
+  const source = Array.isArray(APP_DATA.ALTERNATE_MAIN_ATOM_IMAGES)
+    && APP_DATA.ALTERNATE_MAIN_ATOM_IMAGES.length
+      ? APP_DATA.ALTERNATE_MAIN_ATOM_IMAGES
+      : Array.isArray(APP_DATA.DEFAULT_ALTERNATE_MAIN_ATOM_IMAGES)
+        && APP_DATA.DEFAULT_ALTERNATE_MAIN_ATOM_IMAGES.length
+        ? APP_DATA.DEFAULT_ALTERNATE_MAIN_ATOM_IMAGES
+        : [];
+  if (!source.length) {
+    return [];
+  }
+  return source.map(value => String(value));
+})();
+
+function buildAtomButtonImagePool(sourceImages) {
   const unique = new Set();
-  MAIN_ATOM_IMAGES.forEach(value => {
-    if (typeof value === 'string') {
-      const normalized = value.trim();
-      if (normalized) {
-        unique.add(normalized);
+  if (Array.isArray(sourceImages)) {
+    sourceImages.forEach(value => {
+      if (typeof value === 'string') {
+        const normalized = value.trim();
+        if (normalized) {
+          unique.add(normalized);
+        }
       }
-    }
-  });
+    });
+  }
   if (!unique.size) {
     unique.add(ATOM_IMAGE_FALLBACK);
   } else if (!unique.has(ATOM_IMAGE_FALLBACK)) {
     unique.add(ATOM_IMAGE_FALLBACK);
   }
   return Array.from(unique);
-})();
+}
+
+const DEFAULT_ATOM_BUTTON_IMAGES = buildAtomButtonImagePool(MAIN_ATOM_IMAGES);
+const ALTERNATE_ATOM_BUTTON_IMAGES = buildAtomButtonImagePool(ALTERNATE_MAIN_ATOM_IMAGES);
+
+function getAtomButtonImagePool() {
+  const pool = isAtomImageVariantEnabled()
+    ? ALTERNATE_ATOM_BUTTON_IMAGES
+    : DEFAULT_ATOM_BUTTON_IMAGES;
+  return Array.isArray(pool) && pool.length ? pool : [ATOM_IMAGE_FALLBACK];
+}
 
 const CRIT_ATOM_LIFETIME_MS = 6000;
 const CRIT_ATOM_FADE_MS = 600;
@@ -14052,12 +14105,13 @@ function randomizeAtomButtonImage() {
   if (!image) {
     return;
   }
+  const pool = getAtomButtonImagePool();
   const current = image.dataset.atomImage || image.getAttribute('src') || ATOM_IMAGE_FALLBACK;
-  let next = pickRandom(ATOM_BUTTON_IMAGES) || ATOM_IMAGE_FALLBACK;
-  if (ATOM_BUTTON_IMAGES.length > 1) {
+  let next = pickRandom(pool) || ATOM_IMAGE_FALLBACK;
+  if (pool.length > 1) {
     let attempts = 0;
     while (next === current && attempts < 4) {
-      next = pickRandom(ATOM_BUTTON_IMAGES) || ATOM_IMAGE_FALLBACK;
+      next = pickRandom(pool) || ATOM_IMAGE_FALLBACK;
       attempts += 1;
     }
   }
