@@ -9735,10 +9735,23 @@ function applyCritAtomVisualsDisabled(disabled, options = {}) {
 }
 
 function initCritAtomOption() {
-  const stored = readStoredCritAtomVisualsDisabled();
-  const initialDisabled = stored === null ? false : stored === true;
+  const storedCritPreference = readStoredCritAtomVisualsDisabled();
+  const storedAtomPreference = readStoredAtomAnimationsEnabled();
+  let animationsEnabled = true;
+  if (storedCritPreference === true) {
+    animationsEnabled = false;
+  } else if (storedAtomPreference !== null) {
+    animationsEnabled = storedAtomPreference === true;
+  } else if (storedCritPreference === false) {
+    animationsEnabled = true;
+  }
+  const initialDisabled = !animationsEnabled;
+  applyAtomAnimationPreference(animationsEnabled, {
+    persist: true,
+    updateControl: false
+  });
   applyCritAtomVisualsDisabled(initialDisabled, {
-    persist: false,
+    persist: true,
     updateControl: Boolean(elements.critAtomToggle)
   });
   if (!elements.critAtomToggle) {
@@ -9747,6 +9760,7 @@ function initCritAtomOption() {
   elements.critAtomToggle.addEventListener('change', () => {
     const disabled = !elements.critAtomToggle.checked;
     applyCritAtomVisualsDisabled(disabled, { persist: true, updateControl: false });
+    applyAtomAnimationPreference(!disabled, { persist: true, updateControl: false });
   });
 }
 
