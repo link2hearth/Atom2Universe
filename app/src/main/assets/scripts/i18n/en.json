@@ -3526,6 +3526,8 @@
         "infoDisabled": "Info sections disabled. Changes applied.",
         "musicEnabled": "Music module enabled. Changes applied.",
         "musicDisabled": "Music module disabled. Changes applied.",
+        "atomVariantEnabled": "Alternate atom visuals enabled. Changes applied.",
+        "atomVariantDisabled": "Alternate atom visuals disabled. Changes applied.",
         "escapeDifficultiesEnabled": "Escape advanced difficulties enabled. Changes applied.",
         "escapeDifficultiesDisabled": "Escape advanced difficulties disabled. Changes applied.",
         "toggleFailed": "Unable to update configuration.",
