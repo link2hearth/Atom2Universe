@@ -4163,7 +4163,7 @@ const DEFAULT_STATE = {
   ticketStarAutoCollect: null,
   ticketStarAverageIntervalSeconds: DEFAULT_TICKET_STAR_INTERVAL_SECONDS,
   ticketStarUnlocked: false,
-  frenzySpawnBonus: { perClick: 1, perSecond: 1 },
+  frenzySpawnBonus: { perClick: 1, perSecond: 1, addPerClick: 0, addPerSecond: 0 },
   musicTrackId: null,
   musicVolume: DEFAULT_MUSIC_VOLUME,
   musicEnabled: DEFAULT_MUSIC_ENABLED,
@@ -4250,7 +4250,7 @@ const gameState = {
   ticketStarAutoCollect: null,
   ticketStarAverageIntervalSeconds: DEFAULT_TICKET_STAR_INTERVAL_SECONDS,
   ticketStarUnlocked: false,
-  frenzySpawnBonus: { perClick: 1, perSecond: 1 },
+  frenzySpawnBonus: { perClick: 1, perSecond: 1, addPerClick: 0, addPerSecond: 0 },
   musicTrackId: null,
   musicVolume: DEFAULT_MUSIC_VOLUME,
   musicEnabled: DEFAULT_MUSIC_ENABLED,
@@ -4746,6 +4746,141 @@ function hasOwnedGachaBonusImages() {
     const count = Number(entry?.count ?? entry);
     return Number.isFinite(count) && count > 0;
   });
+}
+
+function getSpecialGachaCardName(cardId) {
+  if (typeof cardId !== 'string' || !cardId) {
+    return '';
+  }
+  const definition = Array.isArray(GACHA_SPECIAL_CARD_DEFINITIONS)
+    ? GACHA_SPECIAL_CARD_DEFINITIONS.find(entry => entry?.id === cardId)
+    : null;
+  if (!definition) {
+    return cardId;
+  }
+  const fallback = typeof definition.labelFallback === 'string' && definition.labelFallback.trim()
+    ? definition.labelFallback.trim()
+    : cardId;
+  return translateOrDefault(definition.labelKey, fallback);
+}
+
+function getDuplicateCardCostInfo(costDefinition, quantity = 1) {
+  if (!costDefinition || typeof costDefinition !== 'object') {
+    return {
+      required: 0,
+      available: 0,
+      entries: [],
+      retain: 0,
+      cardIds: [],
+      hasEligibleCards: false
+    };
+  }
+  const cardIds = Array.isArray(costDefinition.cardIds)
+    ? costDefinition.cardIds.filter(id => typeof id === 'string' && id)
+    : [];
+  const retain = Math.max(0, Math.floor(Number(costDefinition.retain ?? 0)));
+  const perPurchase = Math.max(0, Math.floor(Number(costDefinition.amount ?? 1)));
+  const normalizedQuantity = Math.max(1, Math.floor(Number(quantity) || 0));
+  const required = Math.max(0, perPurchase * normalizedQuantity);
+  const entries = cardIds.map(cardId => {
+    const stored = gameState.gachaCards?.[cardId];
+    const total = Number.isFinite(Number(stored?.count ?? stored))
+      ? Math.max(0, Math.floor(Number(stored?.count ?? stored)))
+      : 0;
+    const spendable = Math.max(0, total - retain);
+    return { cardId, total, spendable };
+  });
+  const available = entries.reduce((sum, entry) => sum + entry.spendable, 0);
+  const hasEligibleCards = entries.some(entry => entry.spendable > 0);
+  return { required, available, entries, retain, cardIds, hasEligibleCards };
+}
+
+function hasDuplicateCardResources(costDefinition, quantity = 1) {
+  const info = getDuplicateCardCostInfo(costDefinition, quantity);
+  if (info.required <= 0) {
+    return true;
+  }
+  return info.available >= info.required;
+}
+
+function spendDuplicateCardCost(costDefinition, quantity = 1) {
+  const info = getDuplicateCardCostInfo(costDefinition, quantity);
+  if (info.required <= 0) {
+    return [];
+  }
+  let remaining = info.required;
+  const consumed = [];
+  info.entries.forEach(entry => {
+    if (remaining <= 0 || entry.spendable <= 0) {
+      return;
+    }
+    const amount = Math.min(entry.spendable, remaining);
+    const cardEntry = gameState.gachaCards?.[entry.cardId];
+    if (cardEntry && amount > 0) {
+      const currentCount = Number.isFinite(Number(cardEntry.count))
+        ? Math.max(0, Math.floor(Number(cardEntry.count)))
+        : 0;
+      const nextCount = Math.max(info.retain, currentCount - amount);
+      cardEntry.count = nextCount;
+      consumed.push({ cardId: entry.cardId, amount });
+      remaining -= amount;
+    }
+  });
+  return consumed;
+}
+
+function formatDuplicateCostText(info) {
+  if (!info) {
+    return '';
+  }
+  const required = formatIntegerLocalized(Math.max(0, Number(info.required) || 0));
+  const available = formatIntegerLocalized(Math.max(0, Number(info.available) || 0));
+  return translateOrDefault(
+    'scripts.app.shop.rareDuplicatePrice',
+    `Doublons rares : ${required}/${available}`,
+    { required, available }
+  );
+}
+
+function formatDuplicateSpendToast(consumedEntries) {
+  if (!Array.isArray(consumedEntries)) {
+    return '';
+  }
+  const parts = consumedEntries
+    .filter(entry => entry && entry.amount > 0)
+    .map(entry => {
+      const label = getSpecialGachaCardName(entry.cardId) || entry.cardId || '';
+      if (!label) {
+        return '';
+      }
+      if (entry.amount > 1) {
+        const amountText = formatIntegerLocalized(entry.amount);
+        return `${label} ×${amountText}`;
+      }
+      return label;
+    })
+    .filter(text => text);
+  return parts.join(', ');
+}
+
+function normalizeFrenzyChanceAdd(raw) {
+  if (raw == null) {
+    return { perClick: 0, perSecond: 0 };
+  }
+  if (typeof raw === 'number') {
+    const numeric = Number(raw);
+    const value = Number.isFinite(numeric) && numeric > 0 ? numeric : 0;
+    return { perClick: value, perSecond: value };
+  }
+  if (typeof raw === 'object') {
+    const perClick = Number(raw.perClick ?? raw.click ?? raw.apc);
+    const perSecond = Number(raw.perSecond ?? raw.auto ?? raw.aps);
+    return {
+      perClick: Number.isFinite(perClick) && perClick > 0 ? perClick : 0,
+      perSecond: Number.isFinite(perSecond) && perSecond > 0 ? perSecond : 0
+    };
+  }
+  return { perClick: 0, perSecond: 0 };
 }
 
 function hasOwnedGachaBonus2Images() {
@@ -16380,6 +16515,25 @@ function formatShopCost({ atomCost, gachaTicketCost }) {
   });
 }
 
+function formatShopCombinedCost(parts) {
+  if (!Array.isArray(parts)) {
+    return '';
+  }
+  const filtered = parts
+    .map(part => (typeof part === 'string' ? part.trim() : ''))
+    .filter(part => part);
+  if (!filtered.length) {
+    return '';
+  }
+  if (filtered.length === 1) {
+    return filtered[0];
+  }
+  const [first, ...rest] = filtered;
+  const second = rest.join(' + ');
+  const fallback = `${first} + ${second}`;
+  return translateOrDefault('scripts.app.shop.combinedCost', fallback, { first, second });
+}
+
 function recalcProduction() {
   const clickBase = normalizeProductionUnit(BASE_PER_CLICK);
   const autoBase = normalizeProductionUnit(BASE_PER_SECOND);
@@ -16398,6 +16552,7 @@ function recalcProduction() {
   let autoElementAddition = LayeredNumber.zero();
   let clickFusionAddition = LayeredNumber.zero();
   let autoFusionAddition = LayeredNumber.zero();
+  const frenzyChanceAdd = { perClick: 0, perSecond: 0 };
   const critAccumulator = createCritAccumulator();
 
   let clickShopMultiplier = LayeredNumber.one();
@@ -17700,7 +17855,9 @@ function recalcProduction() {
   gameState.offlineGainMultiplier = mythiqueBonuses.offlineMultiplier;
   const frenzyBonus = {
     perClick: mythiqueBonuses.frenzyChanceMultiplier,
-    perSecond: mythiqueBonuses.frenzyChanceMultiplier
+    perSecond: mythiqueBonuses.frenzyChanceMultiplier,
+    addPerClick: Math.max(0, frenzyChanceAdd.perClick || 0),
+    addPerSecond: Math.max(0, frenzyChanceAdd.perSecond || 0)
   };
   gameState.frenzySpawnBonus = frenzyBonus;
   applyFrenzySpawnChanceBonus(frenzyBonus);
@@ -17757,6 +17914,14 @@ function recalcProduction() {
     if (!level) return;
     const effects = def.effect(level, gameState.upgrades);
     const displayName = getLocalizedUpgradeName(def);
+
+    const frenzyAdd = normalizeFrenzyChanceAdd(effects.frenzyChanceAdd);
+    if (frenzyAdd.perClick > 0) {
+      frenzyChanceAdd.perClick += frenzyAdd.perClick;
+    }
+    if (frenzyAdd.perSecond > 0) {
+      frenzyChanceAdd.perSecond += frenzyAdd.perSecond;
+    }
 
     if (effects.clickAdd != null) {
       const value = normalizeProductionUnit(effects.clickAdd);
@@ -18078,6 +18243,13 @@ function formatShopAriaLabel({ state, action, name, quantity, limitNote, costVal
       params
     );
   }
+  if (state === 'insufficientCards') {
+    return translateOrDefault(
+      'scripts.app.shop.ariaActionInsufficientCards',
+      `${params.action} ${params.name} ${fallbackQuantity} (cartes rares insuffisantes)`,
+      params
+    );
+  }
   return translateOrDefault(
     'scripts.app.shop.ariaActionInsufficient',
     `${params.action} ${params.name} ${fallbackQuantity} (atomes insuffisants)`,
@@ -18191,6 +18363,14 @@ function getLocalizedUpgradeName(def) {
   return getShopBuildingTexts(def).name;
 }
 
+function getShopMaxPurchasePerAction(definition) {
+  const raw = Number(definition?.maxQuantityPerPurchase);
+  if (!Number.isFinite(raw) || raw <= 0) {
+    return Infinity;
+  }
+  return Math.max(1, Math.floor(raw));
+}
+
 function buildShopItem(def) {
   const item = document.createElement('article');
   item.className = 'shop-item';
@@ -18292,19 +18472,29 @@ function updateShopVisibility() {
     visibleLimit = UPGRADE_DEFS.length - 1;
   }
 
+  let highestVisibleIndex = -1;
+
   UPGRADE_DEFS.forEach((def, index) => {
     const row = shopRows.get(def.id);
     if (!row) return;
 
     const shouldReveal = index <= visibleLimit;
-    row.root.hidden = !shouldReveal;
-    row.root.classList.toggle('shop-item--locked', !shouldReveal);
-    if (shouldReveal) {
+    const requiresDuplicates = Array.isArray(def?.duplicateCardCost?.cardIds)
+      && def.duplicateCardCost.cardIds.length > 0;
+    const hasRequiredCards = !requiresDuplicates
+      || hasDuplicateCardResources(def.duplicateCardCost, 1);
+    const reveal = shouldReveal && hasRequiredCards;
+    row.root.hidden = !reveal;
+    row.root.classList.toggle('shop-item--locked', !reveal);
+    if (reveal) {
       unlocks.add(def.id);
+      if (index > highestVisibleIndex) {
+        highestVisibleIndex = index;
+      }
     }
   });
 
-  lastVisibleShopIndex = visibleLimit;
+  lastVisibleShopIndex = highestVisibleIndex >= 0 ? highestVisibleIndex : visibleLimit;
   updateShopUnlockHint();
 }
 
@@ -18355,23 +18545,39 @@ function updateShopAffordability() {
       return;
     }
 
-    const effectiveQuantity = Number.isFinite(remainingLevels)
+    let effectiveQuantity = Number.isFinite(remainingLevels)
       ? Math.min(baseQuantity, remainingLevels)
       : baseQuantity;
-    const limited = Number.isFinite(remainingLevels) && effectiveQuantity !== baseQuantity;
+    let limited = Number.isFinite(remainingLevels) && effectiveQuantity !== baseQuantity;
+    const perPurchaseLimit = getShopMaxPurchasePerAction(def);
+    if (Number.isFinite(perPurchaseLimit) && perPurchaseLimit > 0 && effectiveQuantity > perPurchaseLimit) {
+      effectiveQuantity = perPurchaseLimit;
+      limited = true;
+    }
 
     const cost = computeUpgradeCost(def, effectiveQuantity);
     const gachaCost = computeShopGachaTicketCost(def, effectiveQuantity);
     const ticketsAvailable = Math.max(0, Math.floor(Number(gameState.gachaTickets) || 0));
     const ticketAffordable = gachaCost <= 0 || ticketsAvailable >= gachaCost;
     const atomAffordable = gameState.atoms.compare(cost) >= 0;
-    const affordable = shopFree || (atomAffordable && ticketAffordable);
+    const duplicateInfo = def.duplicateCardCost
+      ? getDuplicateCardCostInfo(def.duplicateCardCost, effectiveQuantity)
+      : null;
+    const duplicateAffordable = !duplicateInfo || duplicateInfo.available >= duplicateInfo.required;
+    const duplicateLabel = duplicateInfo ? formatDuplicateCostText(duplicateInfo) : '';
+    const affordable = shopFree || (atomAffordable && ticketAffordable && duplicateAffordable);
     const costDisplay = formatShopCost({ atomCost: cost, gachaTicketCost: gachaCost });
+    const normalizedCostDisplay = costDisplay === '0' && duplicateLabel ? '' : costDisplay;
+    const combinedPrice = formatShopCombinedCost([duplicateLabel, normalizedCostDisplay]);
+    const priceText = combinedPrice
+      || normalizedCostDisplay
+      || duplicateLabel
+      || costDisplay;
     entry.price.textContent = formatShopPriceText({
       isFree: shopFree,
       limitedQuantity: limited,
       quantity: limited ? effectiveQuantity : baseQuantity,
-      priceText: costDisplay
+      priceText: priceText || costDisplay
     });
     const enabled = affordable && effectiveQuantity > 0;
     entry.button.disabled = !enabled;
@@ -18385,6 +18591,8 @@ function updateShopAffordability() {
     if (!enabled && !shopFree) {
       if (!ticketAffordable) {
         ariaState = 'insufficientTickets';
+      } else if (!duplicateAffordable) {
+        ariaState = 'insufficientCards';
       } else if (!atomAffordable) {
         ariaState = 'insufficient';
       }
@@ -18395,7 +18603,7 @@ function updateShopAffordability() {
       name: displayName,
       quantity: displayQuantity,
       limitNote,
-      costValue: costDisplay
+      costValue: priceText || costDisplay
     });
     entry.button.setAttribute('aria-label', ariaLabel);
     entry.button.title = ariaLabel;
@@ -18650,16 +18858,31 @@ function attemptPurchase(def, quantity = 1) {
     showToast(t('scripts.app.shop.maxLevel'));
     return;
   }
-  const cost = computeUpgradeCost(def, finalAmount);
+  const perPurchaseLimit = getShopMaxPurchasePerAction(def);
+  const purchaseAmount = Number.isFinite(perPurchaseLimit) && perPurchaseLimit > 0
+    ? Math.min(finalAmount, perPurchaseLimit)
+    : finalAmount;
+  if (!Number.isFinite(purchaseAmount) || purchaseAmount <= 0) {
+    showToast(t('scripts.app.shop.maxLevel'));
+    return;
+  }
+  const cost = computeUpgradeCost(def, purchaseAmount);
   const shopFree = isDevKitShopFree();
-  const gachaCost = computeShopGachaTicketCost(def, finalAmount);
+  const gachaCost = computeShopGachaTicketCost(def, purchaseAmount);
   const availableTickets = Math.max(0, Math.floor(Number(gameState.gachaTickets) || 0));
+  const duplicateInfo = def.duplicateCardCost
+    ? getDuplicateCardCostInfo(def.duplicateCardCost, purchaseAmount)
+    : null;
   if (!shopFree && gameState.atoms.compare(cost) < 0) {
     showToast(t('scripts.app.shop.notEnoughAtoms'));
     return;
   }
   if (!shopFree && gachaCost > availableTickets) {
     showToast(t('scripts.app.shop.notEnoughGachaTickets'));
+    return;
+  }
+  if (!shopFree && duplicateInfo && duplicateInfo.available < duplicateInfo.required) {
+    showToast(t('scripts.app.shop.notEnoughRareCards'));
     return;
   }
   if (!shopFree) {
@@ -18674,27 +18897,34 @@ function attemptPurchase(def, quantity = 1) {
         }
       }
     }
+    if (duplicateInfo && duplicateInfo.required > 0) {
+      const consumed = spendDuplicateCardCost(def.duplicateCardCost, purchaseAmount);
+      const summary = formatDuplicateSpendToast(consumed);
+      if (summary) {
+        showToast(t('scripts.app.shop.rareDuplicateSpent', { cards: summary }));
+      }
+    }
   }
   const currentLevel = Number(gameState.upgrades[def.id]);
   const normalizedLevel = Number.isFinite(currentLevel) && currentLevel > 0
     ? Math.floor(currentLevel)
     : 0;
-  gameState.upgrades[def.id] = normalizedLevel + finalAmount;
-  const ticketsAwarded = grantShopGachaTickets(def, finalAmount);
-  const mach3TicketsAwarded = grantShopMach3Tickets(def, finalAmount);
+  gameState.upgrades[def.id] = normalizedLevel + purchaseAmount;
+  const ticketsAwarded = grantShopGachaTickets(def, purchaseAmount);
+  const mach3TicketsAwarded = grantShopMach3Tickets(def, purchaseAmount);
   recalcProduction();
   updateUI();
-  const limitSuffix = finalAmount < buyAmount ? getShopLimitSuffix(true) : '';
+  const limitSuffix = purchaseAmount < buyAmount ? getShopLimitSuffix(true) : '';
   const displayName = getLocalizedUpgradeName(def);
   showToast(shopFree
     ? t('scripts.app.shop.devkitFreePurchase', {
       name: displayName,
-      quantity: finalAmount,
+      quantity: purchaseAmount,
       suffix: limitSuffix
     })
     : t('scripts.app.shop.purchase', {
       name: displayName,
-      quantity: finalAmount,
+      quantity: purchaseAmount,
       suffix: limitSuffix
     }));
   if (ticketsAwarded > 0) {
@@ -20017,7 +20247,15 @@ function serializeState() {
       perSecond: Number.isFinite(Number(gameState.frenzySpawnBonus?.perSecond))
         && Number(gameState.frenzySpawnBonus.perSecond) > 0
         ? Number(gameState.frenzySpawnBonus.perSecond)
-        : 1
+        : 1,
+      addPerClick: Number.isFinite(Number(gameState.frenzySpawnBonus?.addPerClick))
+        && Number(gameState.frenzySpawnBonus.addPerClick) > 0
+        ? Number(gameState.frenzySpawnBonus.addPerClick)
+        : 0,
+      addPerSecond: Number.isFinite(Number(gameState.frenzySpawnBonus?.addPerSecond))
+        && Number(gameState.frenzySpawnBonus.addPerSecond) > 0
+        ? Number(gameState.frenzySpawnBonus.addPerSecond)
+        : 0
     },
     apsCrit: (() => {
       const state = ensureApsCritState();
@@ -20303,7 +20541,7 @@ function resetGame() {
     ticketStarAutoCollect: null,
     ticketStarAverageIntervalSeconds: DEFAULT_TICKET_STAR_INTERVAL_SECONDS,
     ticketStarUnlocked: false,
-    frenzySpawnBonus: { perClick: 1, perSecond: 1 },
+    frenzySpawnBonus: { perClick: 1, perSecond: 1, addPerClick: 0, addPerSecond: 0 },
     musicTrackId: null,
     musicVolume: DEFAULT_MUSIC_VOLUME,
     musicEnabled: DEFAULT_MUSIC_ENABLED,
@@ -20766,12 +21004,16 @@ function applySerializedGameState(raw) {
   if (storedFrenzyBonus && typeof storedFrenzyBonus === 'object') {
     const perClick = Number(storedFrenzyBonus.perClick);
     const perSecond = Number(storedFrenzyBonus.perSecond);
+    const addPerClick = Number(storedFrenzyBonus.addPerClick ?? storedFrenzyBonus.perClickAdd);
+    const addPerSecond = Number(storedFrenzyBonus.addPerSecond ?? storedFrenzyBonus.perSecondAdd);
     gameState.frenzySpawnBonus = {
       perClick: Number.isFinite(perClick) && perClick > 0 ? perClick : 1,
-      perSecond: Number.isFinite(perSecond) && perSecond > 0 ? perSecond : 1
+      perSecond: Number.isFinite(perSecond) && perSecond > 0 ? perSecond : 1,
+      addPerClick: Number.isFinite(addPerClick) && addPerClick > 0 ? addPerClick : 0,
+      addPerSecond: Number.isFinite(addPerSecond) && addPerSecond > 0 ? addPerSecond : 0
     };
   } else {
-    gameState.frenzySpawnBonus = { perClick: 1, perSecond: 1 };
+    gameState.frenzySpawnBonus = { perClick: 1, perSecond: 1, addPerClick: 0, addPerSecond: 0 };
   }
   applyFrenzySpawnChanceBonus(gameState.frenzySpawnBonus);
   gameState.apsCrit = normalizeApsCritState(data.apsCrit);
@@ -21247,12 +21489,16 @@ function loadGame() {
     if (storedFrenzyBonus && typeof storedFrenzyBonus === 'object') {
       const perClick = Number(storedFrenzyBonus.perClick);
       const perSecond = Number(storedFrenzyBonus.perSecond);
+      const addPerClick = Number(storedFrenzyBonus.addPerClick ?? storedFrenzyBonus.perClickAdd);
+      const addPerSecond = Number(storedFrenzyBonus.addPerSecond ?? storedFrenzyBonus.perSecondAdd);
       gameState.frenzySpawnBonus = {
         perClick: Number.isFinite(perClick) && perClick > 0 ? perClick : 1,
-        perSecond: Number.isFinite(perSecond) && perSecond > 0 ? perSecond : 1
+        perSecond: Number.isFinite(perSecond) && perSecond > 0 ? perSecond : 1,
+        addPerClick: Number.isFinite(addPerClick) && addPerClick > 0 ? addPerClick : 0,
+        addPerSecond: Number.isFinite(addPerSecond) && addPerSecond > 0 ? addPerSecond : 0
       };
     } else {
-      gameState.frenzySpawnBonus = { perClick: 1, perSecond: 1 };
+      gameState.frenzySpawnBonus = { perClick: 1, perSecond: 1, addPerClick: 0, addPerSecond: 0 };
     }
     applyFrenzySpawnChanceBonus(gameState.frenzySpawnBonus);
     gameState.apsCrit = normalizeApsCritState(data.apsCrit);

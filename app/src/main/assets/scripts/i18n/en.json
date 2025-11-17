@@ -2471,6 +2471,12 @@
           "description": "Trade your gacha tickets for guaranteed Mach3 credits.",
           "effect": "Convert 100 gacha tickets into 1 Mach3 credit per level. Cap: 2 levels (+2 per Big Bang).",
           "effectSummary": "Trade 100 gacha tickets for 1 Mach3 credit per purchase."
+        },
+        "frenzyDuplicateExchange": {
+          "name": "Frenzy Catalyst",
+          "description": "Trade rare duplicate cards for a permanent frenzy boost.",
+          "effect": "+0.5% APC/APS frenzy spawn chance per purchase (capped at 18).",
+          "effectSummary": "Converts rare duplicates into additional frenzy spawn chances."
         }
       }
     },
@@ -3458,15 +3464,20 @@
         "ariaActionCost": "{action} {name} ×{quantity}{limitNote} (cost {cost})",
         "ariaActionInsufficient": "{action} {name} ×{quantity}{limitNote} (not enough atoms)",
         "ariaActionInsufficientTickets": "{action} {name} ×{quantity}{limitNote} (not enough gacha tickets)",
+        "ariaActionInsufficientCards": "{action} {name} ×{quantity}{limitNote} (not enough rare cards)",
         "priceLimited": "Limited to x{quantity} — {price}",
         "limitSuffix": " (limited to remaining levels)",
         "maxLevel": "Maximum level reached.",
         "notEnoughAtoms": "Not enough atoms.",
         "notEnoughGachaTickets": "Not enough gacha tickets.",
+        "notEnoughRareCards": "Not enough rare cards in duplicate.",
         "devkitFreePurchase": "DevKit: \"{name}\" ×{quantity} unlocked for free!{suffix}",
         "purchase": "Upgrade \"{name}\" ×{quantity} purchased!{suffix}",
         "milestoneHint": "Keep exploring ever larger orders of magnitude!",
         "costLabel": "{value}",
+        "combinedCost": "{first} + {second}",
+        "rareDuplicatePrice": "Rare duplicates: {required}/{available}",
+        "rareDuplicateSpent": "Cards converted: {cards}",
         "gachaTicketCost": "{count} {unit}",
         "ticketUnit": {
           "single": "gacha ticket",

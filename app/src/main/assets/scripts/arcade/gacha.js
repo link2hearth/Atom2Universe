@@ -2391,12 +2391,17 @@ const FRENZY_TYPE_INFO = {
 const FRENZY_TYPES = ['perClick', 'perSecond'];
 
 const frenzySpawnChanceBonus = { perClick: 1, perSecond: 1 };
+const frenzySpawnChanceBonusAdd = { perClick: 0, perSecond: 0 };
 
 function applyFrenzySpawnChanceBonus(bonus) {
   const perClick = Number(bonus?.perClick);
   const perSecond = Number(bonus?.perSecond);
   frenzySpawnChanceBonus.perClick = Number.isFinite(perClick) && perClick > 0 ? perClick : 1;
   frenzySpawnChanceBonus.perSecond = Number.isFinite(perSecond) && perSecond > 0 ? perSecond : 1;
+  const addPerClick = Number(bonus?.addPerClick ?? bonus?.perClickAdd);
+  const addPerSecond = Number(bonus?.addPerSecond ?? bonus?.perSecondAdd);
+  frenzySpawnChanceBonusAdd.perClick = Number.isFinite(addPerClick) && addPerClick > 0 ? addPerClick : 0;
+  frenzySpawnChanceBonusAdd.perSecond = Number.isFinite(addPerSecond) && addPerSecond > 0 ? addPerSecond : 0;
 }
 
 function getEffectiveFrenzySpawnChance(type) {
@@ -2407,7 +2412,10 @@ function getEffectiveFrenzySpawnChance(type) {
   const modifier = type === 'perClick'
     ? frenzySpawnChanceBonus.perClick
     : (type === 'perSecond' ? frenzySpawnChanceBonus.perSecond : 1);
-  const total = base * modifier;
+  const additive = type === 'perClick'
+    ? frenzySpawnChanceBonusAdd.perClick
+    : (type === 'perSecond' ? frenzySpawnChanceBonusAdd.perSecond : 0);
+  const total = base * modifier + (Number.isFinite(additive) && additive > 0 ? additive : 0);
   if (!Number.isFinite(total) || total <= 0) {
     return 0;
   }

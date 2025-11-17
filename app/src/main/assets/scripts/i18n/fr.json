@@ -2408,6 +2408,12 @@
           "description": "Échangez vos tickets gacha contre des crédits Mach3 garantis.",
           "effect": "Convertissez 100 tickets gacha en 1 crédit Mach3 par niveau. Limite : 2 niveaux (+2 par Big Bang).",
           "effectSummary": "Échangez 100 tickets gacha contre 1 crédit Métaux."
+        },
+        "frenzyDuplicateExchange": {
+          "name": "Catalyseur de frénésie",
+          "description": "Échangez des cartes rares en double contre un bonus permanent.",
+          "effect": "+0,5 % de chance d’apparition des frénésies APC/APS par achat (limité à 18).",
+          "effectSummary": "Convertit les doublons de cartes rares en chances de frénésie supplémentaires."
         }
       }
     },
@@ -3485,15 +3491,20 @@
         "ariaActionCost": "{action} {name} ×{quantity}{limitNote} (coût {cost})",
         "ariaActionInsufficient": "{action} {name} ×{quantity}{limitNote} (atomes insuffisants)",
         "ariaActionInsufficientTickets": "{action} {name} ×{quantity}{limitNote} (tickets gacha insuffisants)",
+        "ariaActionInsufficientCards": "{action} {name} ×{quantity}{limitNote} (cartes rares insuffisantes)",
         "priceLimited": "Limité à x{quantity} — {price}",
         "limitSuffix": " (limité aux niveaux restants)",
         "maxLevel": "Niveau maximum atteint.",
         "notEnoughAtoms": "Pas assez d’atomes.",
         "notEnoughGachaTickets": "Pas assez de tickets gacha.",
+        "notEnoughRareCards": "Pas assez de cartes rares en double.",
         "devkitFreePurchase": "DevKit : \"{name}\" ×{quantity} débloqué gratuitement !{suffix}",
         "purchase": "Amélioration \"{name}\" ×{quantity} achetée !{suffix}",
         "milestoneHint": "Continuez à explorer des ordres de grandeur toujours plus vastes !",
         "costLabel": "{value}",
+        "combinedCost": "{first} + {second}",
+        "rareDuplicatePrice": "Doublons rares : {required}/{available}",
+        "rareDuplicateSpent": "Cartes converties : {cards}",
         "gachaTicketCost": "{count} {unit}",
         "ticketUnit": {
           "single": "ticket gacha",
