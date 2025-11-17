@@ -271,7 +271,7 @@ function formatElementTicketInterval(seconds) {
   if (!Number.isFinite(numeric) || numeric <= 0) {
     return null;
   }
-  const duration = formatDuration(numeric * 1000);
+  const duration = formatDuration(numeric);
   if (!duration) {
     return null;
   }
