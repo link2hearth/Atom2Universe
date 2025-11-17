@@ -2891,6 +2891,9 @@ let isRenderingFusionList = false;
 const FUSION_ATTEMPT_OPTIONS = [1, 10];
 let fusionAttemptMultiplier = FUSION_ATTEMPT_OPTIONS[0];
 let fusionModeControlInitialized = false;
+const HYDROGEN_FUSION_ID = 'hydrogen';
+const CARBON_FUSION_ID = 'carbon';
+const FUSION_MULTIPLIER_INCREMENT = 1;
 
 function normalizeFusionAttemptMultiplier(value) {
   const numeric = Math.max(1, Math.floor(Number(value) || 0));
@@ -3053,9 +3056,49 @@ function getFusionBonusState() {
   const bonuses = gameState.fusionBonuses;
   const apc = Number(bonuses.apcFlat);
   const aps = Number(bonuses.apsFlat);
+  let apcBase = Number(bonuses.apcHydrogenBase);
+  let apsBase = Number(bonuses.apsHydrogenBase);
+  const multiplier = Number(bonuses.fusionMultiplier);
   bonuses.apcFlat = Number.isFinite(apc) ? apc : 0;
   bonuses.apsFlat = Number.isFinite(aps) ? aps : 0;
+  apcBase = Number.isFinite(apcBase) ? apcBase : 0;
+  apsBase = Number.isFinite(apsBase) ? apsBase : 0;
+  if (apcBase === 0) {
+    const reconstructedApc = reconstructHydrogenBase('apcFlat');
+    if (reconstructedApc > 0) {
+      apcBase = reconstructedApc;
+    }
+  }
+  if (apsBase === 0) {
+    const reconstructedAps = reconstructHydrogenBase('apsFlat');
+    if (reconstructedAps > 0) {
+      apsBase = reconstructedAps;
+    }
+  }
+  bonuses.apcHydrogenBase = apcBase;
+  bonuses.apsHydrogenBase = apsBase;
+  bonuses.fusionMultiplier = Number.isFinite(multiplier) && multiplier > 0 ? multiplier : 1;
   return bonuses;
+}
+
+function reconstructHydrogenBase(rewardKey) {
+  if (!rewardKey) {
+    return 0;
+  }
+  const definition = FUSION_DEFINITION_MAP?.get(HYDROGEN_FUSION_ID);
+  if (!definition) {
+    return 0;
+  }
+  const rewardValue = Number(definition.rewards?.[rewardKey]);
+  if (!Number.isFinite(rewardValue) || rewardValue === 0) {
+    return 0;
+  }
+  const state = getFusionStateById(HYDROGEN_FUSION_ID);
+  const successes = state?.successes ?? 0;
+  if (!successes) {
+    return 0;
+  }
+  return computeFusionRewardSum(definition, rewardValue, successes);
 }
 
 function setFusionLog(message, status = null) {
@@ -3179,72 +3222,176 @@ function formatFusionRewardValue(value) {
   return formatNumberLocalized(0, { maximumFractionDigits: 0, minimumFractionDigits: 0 });
 }
 
-function applyFusionRewards(rewards, multiplier = 1) {
+function applyFusionRewards(rewards, multiplier = 1, options = {}) {
   if (!rewards || typeof rewards !== 'object') {
     return [];
   }
+  const { skipApcAps = false, skipElements = false } = options || {};
   const bonuses = getFusionBonusState();
   const summaries = [];
   let awardedElements = false;
   const appliedMultiplier = Number.isFinite(Number(multiplier)) ? Number(multiplier) : 1;
-  const apcIncrement = Number(rewards.apcFlat);
-  if (Number.isFinite(apcIncrement) && apcIncrement !== 0 && appliedMultiplier !== 0) {
-    const apcGain = apcIncrement * appliedMultiplier;
-    bonuses.apcFlat += apcGain;
-    const formatted = formatFusionRewardValue(apcGain);
-    summaries.push(`+${formatted} APC`);
+  if (!skipApcAps) {
+    const apcIncrement = Number(rewards.apcFlat);
+    if (Number.isFinite(apcIncrement) && apcIncrement !== 0 && appliedMultiplier !== 0) {
+      const apcGain = apcIncrement * appliedMultiplier;
+      bonuses.apcFlat += apcGain;
+      const formatted = formatFusionRewardValue(apcGain);
+      summaries.push(t('scripts.gacha.fusion.apcBonus', { value: formatted }));
+    }
+    const apsIncrement = Number(rewards.apsFlat);
+    if (Number.isFinite(apsIncrement) && apsIncrement !== 0 && appliedMultiplier !== 0) {
+      const apsGain = apsIncrement * appliedMultiplier;
+      bonuses.apsFlat += apsGain;
+      const formatted = formatFusionRewardValue(apsGain);
+      summaries.push(t('scripts.gacha.fusion.apsBonus', { value: formatted }));
+    }
   }
-  const apsIncrement = Number(rewards.apsFlat);
-  if (Number.isFinite(apsIncrement) && apsIncrement !== 0 && appliedMultiplier !== 0) {
-    const apsGain = apsIncrement * appliedMultiplier;
-    bonuses.apsFlat += apsGain;
-    const formatted = formatFusionRewardValue(apsGain);
-    summaries.push(`+${formatted} APS`);
-  }
-  const elementRewards = Array.isArray(rewards.elements) ? rewards.elements : [];
-  elementRewards.forEach(reward => {
-    const increment = Number(reward?.count ?? reward?.quantity ?? reward?.amount ?? 0);
-    if (!Number.isFinite(increment) || increment <= 0) {
-      return;
+  if (!skipElements) {
+    const elementRewards = Array.isArray(rewards.elements) ? rewards.elements : [];
+    elementRewards.forEach(reward => {
+      const increment = Number(reward?.count ?? reward?.quantity ?? reward?.amount ?? 0);
+      if (!Number.isFinite(increment) || increment <= 0) {
+        return;
+      }
+      if (!gameState.elements || typeof gameState.elements !== 'object') {
+        gameState.elements = {};
+      }
+      const elementId = typeof reward.elementId === 'string' ? reward.elementId : '';
+      if (!elementId) {
+        return;
+      }
+      let entry = gameState.elements[elementId];
+      if (!entry) {
+        entry = {
+          id: elementId,
+          gachaId: reward.elementDef?.gachaId ?? elementId,
+          owned: false,
+          count: 0,
+          lifetime: 0,
+          rarity: reward.elementDef?.rarity ?? null,
+          effects: [],
+          bonuses: []
+        };
+        gameState.elements[elementId] = entry;
+      }
+      const previousCount = getElementCurrentCount(entry);
+      const previousLifetime = getElementLifetimeCount(entry);
+      entry.count = previousCount + increment;
+      entry.lifetime = previousLifetime + increment;
+      if (!entry.gachaId) {
+        entry.gachaId = reward.elementDef?.gachaId ?? elementId;
+      }
+      entry.owned = entry.lifetime > 0;
+      const formattedCount = formatNumberLocalized(increment, { maximumFractionDigits: 0 });
+      const label = formatFusionElementLabel(reward);
+      summaries.push(t('scripts.gacha.fusion.elementBonus', { count: formattedCount, element: label }));
+      awardedElements = true;
+    });
+    if (awardedElements && typeof evaluatePageUnlocks === 'function') {
+      evaluatePageUnlocks({ save: false, deferUI: true });
     }
-    if (!gameState.elements || typeof gameState.elements !== 'object') {
-      gameState.elements = {};
-    }
-    const elementId = typeof reward.elementId === 'string' ? reward.elementId : '';
-    if (!elementId) {
-      return;
-    }
-    let entry = gameState.elements[elementId];
-    if (!entry) {
-      entry = {
-        id: elementId,
-        gachaId: reward.elementDef?.gachaId ?? elementId,
-        owned: false,
-        count: 0,
-        lifetime: 0,
-        rarity: reward.elementDef?.rarity ?? null,
-        effects: [],
-        bonuses: []
-      };
-      gameState.elements[elementId] = entry;
-    }
-    const previousCount = getElementCurrentCount(entry);
-    const previousLifetime = getElementLifetimeCount(entry);
-    entry.count = previousCount + increment;
-    entry.lifetime = previousLifetime + increment;
-    if (!entry.gachaId) {
-      entry.gachaId = reward.elementDef?.gachaId ?? elementId;
-    }
-    entry.owned = entry.lifetime > 0;
-    const formattedCount = formatNumberLocalized(increment, { maximumFractionDigits: 0 });
-    const label = formatFusionElementLabel(reward);
-    summaries.push(t('scripts.gacha.fusion.elementBonus', { count: formattedCount, element: label }));
-    awardedElements = true;
-  });
-  if (awardedElements && typeof evaluatePageUnlocks === 'function') {
-    evaluatePageUnlocks({ save: false, deferUI: true });
   }
   return summaries;
+}
+
+function getFusionMultiplierValue() {
+  const bonuses = getFusionBonusState();
+  return Number(bonuses.fusionMultiplier) || 1;
+}
+
+function applyHydrogenBaseGain(bonuses, baseKey, totalKey, baseGain) {
+  const appliedBaseGain = Number(baseGain);
+  if (!Number.isFinite(appliedBaseGain) || appliedBaseGain === 0) {
+    return 0;
+  }
+  const multiplier = Number(bonuses.fusionMultiplier) || 1;
+  const previousBase = Number(bonuses[baseKey]) || 0;
+  const previousContribution = previousBase * multiplier;
+  const nextBase = previousBase + appliedBaseGain;
+  bonuses[baseKey] = nextBase;
+  const nextContribution = nextBase * multiplier;
+  const delta = nextContribution - previousContribution;
+  bonuses[totalKey] += delta;
+  return delta;
+}
+
+function applyHydrogenFusionRewards(definition, rewardMultiplier = 1) {
+  const rewards = definition?.rewards || {};
+  const bonuses = getFusionBonusState();
+  const summaries = [];
+  const appliedMultiplier = Number.isFinite(Number(rewardMultiplier)) ? Number(rewardMultiplier) : 1;
+  if (appliedMultiplier !== 0) {
+    const apcIncrement = Number(rewards.apcFlat);
+    if (Number.isFinite(apcIncrement) && apcIncrement !== 0) {
+      const baseGain = apcIncrement * appliedMultiplier;
+      const apcDelta = applyHydrogenBaseGain(bonuses, 'apcHydrogenBase', 'apcFlat', baseGain);
+      if (apcDelta !== 0) {
+        summaries.push(t('scripts.gacha.fusion.apcBonus', { value: formatFusionRewardValue(apcDelta) }));
+      }
+    }
+    const apsIncrement = Number(rewards.apsFlat);
+    if (Number.isFinite(apsIncrement) && apsIncrement !== 0) {
+      const baseGain = apsIncrement * appliedMultiplier;
+      const apsDelta = applyHydrogenBaseGain(bonuses, 'apsHydrogenBase', 'apsFlat', baseGain);
+      if (apsDelta !== 0) {
+        summaries.push(t('scripts.gacha.fusion.apsBonus', { value: formatFusionRewardValue(apsDelta) }));
+      }
+    }
+  }
+  const elementSummaries = applyFusionRewards(rewards, rewardMultiplier, { skipApcAps: true });
+  return summaries.concat(elementSummaries);
+}
+
+function incrementFusionMultiplier(bonuses, increment = FUSION_MULTIPLIER_INCREMENT) {
+  const normalizedIncrement = Math.max(0, Number(increment) || 0);
+  if (normalizedIncrement <= 0) {
+    return null;
+  }
+  const previousMultiplier = Number(bonuses.fusionMultiplier) || 1;
+  const nextMultiplier = previousMultiplier + normalizedIncrement;
+  const apcBase = Number(bonuses.apcHydrogenBase) || 0;
+  const apsBase = Number(bonuses.apsHydrogenBase) || 0;
+  const multiplierDelta = nextMultiplier - previousMultiplier;
+  const apcDelta = apcBase * multiplierDelta;
+  const apsDelta = apsBase * multiplierDelta;
+  bonuses.apcFlat += apcDelta;
+  bonuses.apsFlat += apsDelta;
+  bonuses.fusionMultiplier = nextMultiplier;
+  return {
+    increment: normalizedIncrement,
+    newMultiplier: nextMultiplier,
+    apcDelta,
+    apsDelta
+  };
+}
+
+function applyCarbonFusionRewards(definition, rewardMultiplier = 1) {
+  const rewards = definition?.rewards || {};
+  const bonuses = getFusionBonusState();
+  const summaries = [];
+  const incrementValue = Number(rewards.fusionMultiplier) || FUSION_MULTIPLIER_INCREMENT;
+  const result = incrementFusionMultiplier(bonuses, incrementValue);
+  if (result && result.increment > 0) {
+    const formattedIncrement = formatNumberLocalized(result.increment, { maximumFractionDigits: 0 });
+    const formattedTotal = formatNumberLocalized(result.newMultiplier, { maximumFractionDigits: 0 });
+    summaries.push(t('scripts.gacha.fusion.multiplierBonus', { value: formattedIncrement, total: formattedTotal }));
+  }
+  const elementSummaries = applyFusionRewards(rewards, rewardMultiplier, { skipApcAps: true });
+  return summaries.concat(elementSummaries);
+}
+
+function applyFusionRewardsForDefinition(definition, rewardMultiplier = 1) {
+  if (!definition) {
+    return [];
+  }
+  if (definition.id === HYDROGEN_FUSION_ID) {
+    return applyHydrogenFusionRewards(definition, rewardMultiplier);
+  }
+  if (definition.id === CARBON_FUSION_ID) {
+    return applyCarbonFusionRewards(definition, rewardMultiplier);
+  }
+  return applyFusionRewards(definition.rewards, rewardMultiplier);
 }
 
 function getFusionBatchRewardSummary(definition, successCount, previousSuccessCount = 0) {
@@ -3253,8 +3400,13 @@ function getFusionBatchRewardSummary(definition, successCount, previousSuccessCo
   }
   const rewards = definition.rewards || {};
   const summary = [];
+  const fusionMultiplier = getFusionMultiplierValue();
+  const isHydrogen = definition.id === HYDROGEN_FUSION_ID;
   if (rewards.apcFlat) {
-    const totalApc = computeFusionRewardSum(definition, rewards.apcFlat, successCount, previousSuccessCount);
+    let totalApc = computeFusionRewardSum(definition, rewards.apcFlat, successCount, previousSuccessCount);
+    if (isHydrogen) {
+      totalApc *= fusionMultiplier;
+    }
     if (totalApc) {
       summary.push(t('scripts.gacha.fusion.apcBonus', {
         value: formatFusionRewardValue(totalApc)
@@ -3262,11 +3414,22 @@ function getFusionBatchRewardSummary(definition, successCount, previousSuccessCo
     }
   }
   if (rewards.apsFlat) {
-    const totalAps = computeFusionRewardSum(definition, rewards.apsFlat, successCount, previousSuccessCount);
+    let totalAps = computeFusionRewardSum(definition, rewards.apsFlat, successCount, previousSuccessCount);
+    if (isHydrogen) {
+      totalAps *= fusionMultiplier;
+    }
     if (totalAps) {
       summary.push(t('scripts.gacha.fusion.apsBonus', {
         value: formatFusionRewardValue(totalAps)
       }));
+    }
+  }
+  if (rewards.fusionMultiplier && !isHydrogen) {
+    const totalIncrement = rewards.fusionMultiplier * successCount;
+    if (totalIncrement > 0) {
+      const formattedIncrement = formatNumberLocalized(totalIncrement, { maximumFractionDigits: 0 });
+      const formattedTotal = formatNumberLocalized(fusionMultiplier, { maximumFractionDigits: 0 });
+      summary.push(t('scripts.gacha.fusion.multiplierBonus', { value: formattedIncrement, total: formattedTotal }));
     }
   }
   if (Array.isArray(rewards.elements)) {
@@ -3380,6 +3543,7 @@ function buildFusionCard(definition) {
   stats.textContent = t('scripts.gacha.fusion.stats', { attempts: 0, successes: 0 });
 
   const bonusParts = [];
+  const isHydrogen = definition.id === HYDROGEN_FUSION_ID;
   if (definition.rewards.apcFlat) {
     bonusParts.push(t('scripts.gacha.fusion.apcBonus', {
       value: formatNumberLocalized(definition.rewards.apcFlat)
@@ -3400,6 +3564,14 @@ function buildFusionCard(definition) {
       const label = formatFusionElementLabel(reward);
       bonusParts.push(t('scripts.gacha.fusion.elementBonus', { count: formattedCount, element: label }));
     });
+  }
+  if (definition.rewards.fusionMultiplier) {
+    bonusParts.push(t('scripts.gacha.fusion.multiplierReward', {
+      value: formatNumberLocalized(definition.rewards.fusionMultiplier, { maximumFractionDigits: 0 })
+    }));
+  }
+  if (isHydrogen) {
+    bonusParts.push(t('scripts.gacha.fusion.multiplierNote'));
   }
   const bonus = document.createElement('p');
   bonus.className = 'fusion-card__bonus';
@@ -3540,14 +3712,22 @@ function updateFusionUI() {
       ? t('scripts.gacha.fusion.statusReady')
       : t('scripts.gacha.fusion.statusMissing');
     const totalParts = [];
+    const isHydrogen = def.id === HYDROGEN_FUSION_ID;
+    const fusionMultiplier = getFusionMultiplierValue();
     if (def.rewards.apcFlat) {
-      const totalApc = computeFusionRewardSum(def, def.rewards.apcFlat, state.successes);
+      let totalApc = computeFusionRewardSum(def, def.rewards.apcFlat, state.successes);
+      if (isHydrogen) {
+        totalApc *= fusionMultiplier;
+      }
       totalParts.push(t('scripts.gacha.fusion.apcTotal', {
         value: formatFusionRewardValue(totalApc)
       }));
     }
     if (def.rewards.apsFlat) {
-      const totalAps = computeFusionRewardSum(def, def.rewards.apsFlat, state.successes);
+      let totalAps = computeFusionRewardSum(def, def.rewards.apsFlat, state.successes);
+      if (isHydrogen) {
+        totalAps *= fusionMultiplier;
+      }
       totalParts.push(t('scripts.gacha.fusion.apsTotal', {
         value: formatFusionRewardValue(totalAps)
       }));
@@ -3566,6 +3746,20 @@ function updateFusionUI() {
         const label = formatFusionElementLabel(reward);
         totalParts.push(t('scripts.gacha.fusion.elementTotal', { count: formattedTotal, element: label }));
       });
+    }
+    if (def.rewards.fusionMultiplier) {
+      if (def.id === CARBON_FUSION_ID) {
+        totalParts.push(t('scripts.gacha.fusion.multiplierTotal', {
+          value: formatNumberLocalized(fusionMultiplier, { maximumFractionDigits: 0 })
+        }));
+      } else {
+        const totalIncrement = def.rewards.fusionMultiplier * state.successes;
+        if (totalIncrement > 0) {
+          totalParts.push(t('scripts.gacha.fusion.multiplierReward', {
+            value: formatNumberLocalized(totalIncrement, { maximumFractionDigits: 0 })
+          }));
+        }
+      }
     }
     card.totalBonus.textContent = t('scripts.gacha.fusion.totalBonus', {
       bonus: totalParts.length ? totalParts.join(' · ') : '—'
@@ -3604,7 +3798,7 @@ function handleFusionAttempt(fusionId, attemptCount = getFusionAttemptMultiplier
       successCount += 1;
       state.successes += 1;
       const rewardMultiplier = getFusionRewardMultiplier(definition, state.successes);
-      applyFusionRewards(definition.rewards, rewardMultiplier);
+      applyFusionRewardsForDefinition(definition, rewardMultiplier);
     }
   }
 

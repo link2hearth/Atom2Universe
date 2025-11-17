@@ -28,7 +28,7 @@
       "id": "carbon",
       "name": "Hélium → Carbone (C)",
       "translationKey": "scripts.gameData.fusions.recipes.carbon",
-      "description": "Déclenchez la triple nucléosynthèse alpha : fusionnez 3 noyaux d’He pour tenter de forger 1 C.",
+      "description": "Déclenchez la triple nucléosynthèse alpha : fusionnez 3 noyaux d’He pour tenter de forger 1 C et renforcer votre multiplicateur de fusion.",
       "inputs": [
         {
           "elementId": "element-002-helium",
@@ -37,8 +37,7 @@
       ],
       "successChance": 0.2,
       "rewards": {
-        "apcFlat": 10000,
-        "apsFlat": 10000,
+        "fusionMultiplier": 1,
         "growthMultiplier": 1.2,
         "elements": [
           {

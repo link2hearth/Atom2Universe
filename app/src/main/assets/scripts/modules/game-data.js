@@ -477,6 +477,15 @@ function normalizeFusionDefinition(entry, index = 0) {
   const rewardGrowthMultiplier = Number.isFinite(rawGrowthMultiplier) && rawGrowthMultiplier > 1
     ? rawGrowthMultiplier
     : 1;
+  const rawFusionMultiplierBonus = Number(
+    rewardsRaw.fusionMultiplier
+      ?? rewardsRaw.fusionMulti
+      ?? rewardsRaw.multiplierBonus
+      ?? 0
+  );
+  const fusionMultiplierBonus = Number.isFinite(rawFusionMultiplierBonus) && rawFusionMultiplierBonus > 0
+    ? rawFusionMultiplierBonus
+    : 0;
   const rewardElementSource = rewardsRaw.elements ?? rewardsRaw.items ?? rewardsRaw.element ?? [];
   const elementRewards = normalizeFusionElementList(rewardElementSource);
   return {
@@ -488,7 +497,8 @@ function normalizeFusionDefinition(entry, index = 0) {
     rewards: {
       apcFlat,
       apsFlat,
-      elements: elementRewards
+      elements: elementRewards,
+      fusionMultiplier: fusionMultiplierBonus
     },
     rewardGrowthMultiplier,
     localization: {
@@ -2092,7 +2102,13 @@ function createInitialFusionState() {
 }
 
 function createInitialFusionBonuses() {
-  return { apcFlat: 0, apsFlat: 0 };
+  return {
+    apcFlat: 0,
+    apsFlat: 0,
+    apcHydrogenBase: 0,
+    apsHydrogenBase: 0,
+    fusionMultiplier: 1
+  };
 }
 
 function createInitialPageUnlockState() {

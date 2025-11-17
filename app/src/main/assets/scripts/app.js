@@ -21499,8 +21499,29 @@ function applySerializedGameState(raw) {
         ?? storedFusionBonuses.auto
         ?? 0
     );
+    const apcHydrogenBase = Number(
+      storedFusionBonuses.apcHydrogenBase
+        ?? storedFusionBonuses.hydrogenApc
+        ?? 0
+    );
+    const apsHydrogenBase = Number(
+      storedFusionBonuses.apsHydrogenBase
+        ?? storedFusionBonuses.hydrogenAps
+        ?? 0
+    );
+    const storedMultiplier = Number(
+      storedFusionBonuses.fusionMultiplier
+        ?? storedFusionBonuses.multiplier
+        ?? storedFusionBonuses.multi
+        ?? 1
+    );
     fusionBonuses.apcFlat = Number.isFinite(apc) ? apc : 0;
     fusionBonuses.apsFlat = Number.isFinite(aps) ? aps : 0;
+    fusionBonuses.apcHydrogenBase = Number.isFinite(apcHydrogenBase) ? apcHydrogenBase : 0;
+    fusionBonuses.apsHydrogenBase = Number.isFinite(apsHydrogenBase) ? apsHydrogenBase : 0;
+    fusionBonuses.fusionMultiplier = Number.isFinite(storedMultiplier) && storedMultiplier > 0
+      ? storedMultiplier
+      : 1;
   }
   gameState.fusionBonuses = fusionBonuses;
   gameState.theme = getThemeDefinition(data.theme) ? data.theme : DEFAULT_THEME_ID;
@@ -21993,8 +22014,29 @@ function loadGame() {
           ?? storedFusionBonuses.auto
           ?? 0
       );
+      const apcHydrogenBase = Number(
+        storedFusionBonuses.apcHydrogenBase
+          ?? storedFusionBonuses.hydrogenApc
+          ?? 0
+      );
+      const apsHydrogenBase = Number(
+        storedFusionBonuses.apsHydrogenBase
+          ?? storedFusionBonuses.hydrogenAps
+          ?? 0
+      );
+      const storedMultiplier = Number(
+        storedFusionBonuses.fusionMultiplier
+          ?? storedFusionBonuses.multiplier
+          ?? storedFusionBonuses.multi
+          ?? 1
+      );
       fusionBonuses.apcFlat = Number.isFinite(apc) ? apc : 0;
       fusionBonuses.apsFlat = Number.isFinite(aps) ? aps : 0;
+      fusionBonuses.apcHydrogenBase = Number.isFinite(apcHydrogenBase) ? apcHydrogenBase : 0;
+      fusionBonuses.apsHydrogenBase = Number.isFinite(apsHydrogenBase) ? apsHydrogenBase : 0;
+      fusionBonuses.fusionMultiplier = Number.isFinite(storedMultiplier) && storedMultiplier > 0
+        ? storedMultiplier
+        : 1;
     }
     gameState.fusionBonuses = fusionBonuses;
     gameState.theme = getThemeDefinition(data.theme) ? data.theme : DEFAULT_THEME_ID;
