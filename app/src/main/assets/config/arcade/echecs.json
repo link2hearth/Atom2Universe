@@ -36,9 +36,9 @@
         "descriptionKey": "scripts.arcade.chess.difficulty.standardDescription",
         "ai": { "depth": 3, "timeLimitMs": 1200 },
         "reward": {
-          "gachaTickets": 100,
+          "gachaTickets": 50,
           "crit": {
-            "multiplier": 1000,
+            "multiplier": 100,
             "durationSeconds": 300
           }
         }
@@ -51,8 +51,8 @@
         "reward": {
           "gachaTickets": 100,
           "crit": {
-            "multiplier": 1000,
-            "durationSeconds": 300
+            "multiplier": 100,
+            "durationSeconds": 600
           }
         }
       },
