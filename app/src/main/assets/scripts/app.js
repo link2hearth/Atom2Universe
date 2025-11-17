@@ -5714,6 +5714,7 @@ function handleResetSpecialKeyword(normalizedKeyword) {
   if (normalizedKeyword === 'MUSIC') {
     updateMusicModuleVisibility();
   } else if (normalizedKeyword === 'ATOM') {
+    applyAtomVariantVisualState();
     randomizeAtomButtonImage();
   }
   return true;
@@ -14078,6 +14079,13 @@ function getAtomButtonImagePool() {
   return Array.isArray(pool) && pool.length ? pool : [ATOM_IMAGE_FALLBACK];
 }
 
+function applyAtomVariantVisualState() {
+  if (typeof document === 'undefined' || !document.body) {
+    return;
+  }
+  document.body.dataset.atomVariant = isAtomImageVariantEnabled() ? 'alternate' : 'default';
+}
+
 const CRIT_ATOM_LIFETIME_MS = 6000;
 const CRIT_ATOM_FADE_MS = 600;
 
@@ -22022,6 +22030,7 @@ function startApp() {
   renderShop();
   renderGoals();
   updateUI();
+  applyAtomVariantVisualState();
   randomizeAtomButtonImage();
   initStarfield();
   scheduleAutoUiScaleUpdate({ immediate: true });
@@ -22109,6 +22118,7 @@ function initializeDomBoundModules() {
 function initializeApp() {
   applyStoredArcadeHubCardOrder();
   elements = collectDomElements();
+  applyAtomVariantVisualState();
   applyStartupOverlayDuration();
   scheduleStartupOverlayFailsafe();
   if (!visibilityChangeListenerAttached) {
