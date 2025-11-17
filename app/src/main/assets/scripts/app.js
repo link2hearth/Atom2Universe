@@ -348,6 +348,7 @@ const RELOAD_SAVE_STORAGE_KEY = 'atom2univers.reloadPendingSave';
 const LANGUAGE_STORAGE_KEY = 'atom2univers.language';
 const CLICK_SOUND_STORAGE_KEY = 'atom2univers.options.clickSoundMuted';
 const CRIT_ATOM_VISUALS_STORAGE_KEY = 'atom2univers.options.critAtomVisualsDisabled';
+const ATOM_ANIMATION_PREFERENCE_STORAGE_KEY = 'atom2univers.options.atomAnimationsEnabled';
 const FRENZY_AUTO_COLLECT_STORAGE_KEY = 'atom2univers.options.frenzyAutoCollectEnabled';
 const CRYPTO_WIDGET_STORAGE_KEY = 'atom2univers.options.cryptoWidgetEnabled';
 const SCREEN_WAKE_LOCK_STORAGE_KEY = 'atom2univers.options.screenWakeLockEnabled';
@@ -1047,6 +1048,7 @@ const AUTO_UI_SCALE_VERTICAL_PADDING = 32;
 const AUTO_UI_SCALE_HEIGHT_TOLERANCE = 32;
 
 let critAtomVisualsDisabled = false;
+let atomAnimationsEnabled = true;
 const AVAILABLE_LANGUAGE_CODES = (() => {
   const i18n = globalThis.i18n;
   if (i18n && typeof i18n.getAvailableLanguages === 'function') {
@@ -6191,6 +6193,9 @@ function collectDomElements() {
   clickSoundToggleCard: document.getElementById('clickSoundToggleCard'),
   clickSoundToggle: document.getElementById('clickSoundToggle'),
   clickSoundToggleStatus: document.getElementById('clickSoundToggleStatus'),
+  atomAnimationToggleCard: document.getElementById('atomAnimationToggleCard'),
+  atomAnimationToggle: document.getElementById('atomAnimationToggle'),
+  atomAnimationToggleStatus: document.getElementById('atomAnimationToggleStatus'),
   critAtomToggleCard: document.getElementById('critAtomToggleCard'),
   critAtomToggle: document.getElementById('critAtomToggle'),
   critAtomToggleStatus: document.getElementById('critAtomToggleStatus'),
@@ -9464,6 +9469,112 @@ function subscribeClickSoundLanguageUpdates() {
       ? soundEffects.isPopMuted()
       : false;
     updateClickSoundStatusLabel(muted);
+  };
+  const api = getI18nApi();
+  if (api && typeof api.onLanguageChanged === 'function') {
+    api.onLanguageChanged(handler);
+    return;
+  }
+  if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
+    globalThis.addEventListener('i18n:languagechange', handler);
+  }
+}
+
+function readStoredAtomAnimationsEnabled() {
+  try {
+    const stored = globalThis.localStorage?.getItem(ATOM_ANIMATION_PREFERENCE_STORAGE_KEY);
+    if (stored == null) {
+      return null;
+    }
+    if (stored === '1' || stored === 'true') {
+      return true;
+    }
+    if (stored === '0' || stored === 'false') {
+      return false;
+    }
+  } catch (error) {
+    console.warn('Unable to read atom animation preference', error);
+  }
+  return null;
+}
+
+function writeStoredAtomAnimationsEnabled(enabled) {
+  try {
+    const value = enabled ? '1' : '0';
+    globalThis.localStorage?.setItem(ATOM_ANIMATION_PREFERENCE_STORAGE_KEY, value);
+  } catch (error) {
+    console.warn('Unable to persist atom animation preference', error);
+  }
+}
+
+function areAtomAnimationsEnabled() {
+  return atomAnimationsEnabled !== false;
+}
+
+function isAtomAnimationSuppressed() {
+  return !areAtomAnimationsEnabled();
+}
+
+function updateAtomAnimationStatusLabel(enabled) {
+  if (!elements.atomAnimationToggleStatus) {
+    return;
+  }
+  const key = enabled
+    ? 'index.sections.options.atomAnimation.state.on'
+    : 'index.sections.options.atomAnimation.state.off';
+  const fallback = enabled ? 'Animations enabled' : 'Animations minimized';
+  elements.atomAnimationToggleStatus.setAttribute('data-i18n', key);
+  elements.atomAnimationToggleStatus.textContent = translateOrDefault(key, fallback);
+}
+
+function syncAtomAnimationPreferenceEffects() {
+  clickHistory.length = 0;
+  targetClickStrength = 0;
+  displayedClickStrength = 0;
+  cancelMinimalAtomShakeCue();
+  resetAtomSpringStyles();
+  resetAtomAnimationState();
+  resetGlowEffects();
+}
+
+function applyAtomAnimationPreference(enabled, options = {}) {
+  const previousValue = areAtomAnimationsEnabled();
+  const settings = Object.assign({ persist: true, updateControl: true, force: false }, options);
+  const nextValue = enabled !== false;
+  atomAnimationsEnabled = nextValue;
+  if (settings.updateControl && elements.atomAnimationToggle) {
+    elements.atomAnimationToggle.checked = nextValue;
+  }
+  updateAtomAnimationStatusLabel(nextValue);
+  if (settings.force || nextValue !== previousValue) {
+    syncAtomAnimationPreferenceEffects();
+  }
+  if (settings.persist) {
+    writeStoredAtomAnimationsEnabled(nextValue);
+  }
+  return nextValue;
+}
+
+function initAtomAnimationOption() {
+  const stored = readStoredAtomAnimationsEnabled();
+  const initialEnabled = stored === null ? true : stored === true;
+  applyAtomAnimationPreference(initialEnabled, {
+    persist: false,
+    updateControl: Boolean(elements.atomAnimationToggle),
+    force: true
+  });
+  if (!elements.atomAnimationToggle) {
+    return;
+  }
+  elements.atomAnimationToggle.addEventListener('change', () => {
+    const enabled = elements.atomAnimationToggle.checked;
+    applyAtomAnimationPreference(enabled, { persist: true, updateControl: false });
+  });
+}
+
+function subscribeAtomAnimationLanguageUpdates() {
+  const handler = () => {
+    updateAtomAnimationStatusLabel(areAtomAnimationsEnabled());
   };
   const api = getI18nApi();
   if (api && typeof api.onLanguageChanged === 'function') {
@@ -13492,11 +13603,19 @@ function resetGlowEffects() {
 }
 
 let ecoClickFeedbackTimeoutId = null;
+let minimalAtomShakeTimeoutId = null;
 
 function clearEcoClickFeedbackTimeout() {
   if (ecoClickFeedbackTimeoutId != null) {
     clearTimeout(ecoClickFeedbackTimeoutId);
     ecoClickFeedbackTimeoutId = null;
+  }
+}
+
+function cancelMinimalAtomShakeCue() {
+  if (minimalAtomShakeTimeoutId != null) {
+    clearTimeout(minimalAtomShakeTimeoutId);
+    minimalAtomShakeTimeoutId = null;
   }
 }
 
@@ -13528,6 +13647,31 @@ function triggerEcoClickFeedbackPulse(duration = 140) {
 function resetEcoClickFeedback() {
   clearEcoClickFeedbackTimeout();
   setEcoClickFeedbackActive(false);
+}
+
+function triggerMinimalAtomClickCue() {
+  if (!isAtomAnimationSuppressed()) {
+    return;
+  }
+  const visual = getAtomVisualElement();
+  if (!visual) {
+    return;
+  }
+  const magnitude = 1.4;
+  const angle = Math.random() * Math.PI * 2;
+  const offsetX = Math.cos(angle) * magnitude;
+  const offsetY = Math.sin(angle) * (magnitude * 0.6);
+  const rotation = Math.sin(angle * 1.35) * 1.2;
+  visual.style.setProperty('--shake-x', `${offsetX.toFixed(2)}px`);
+  visual.style.setProperty('--shake-y', `${offsetY.toFixed(2)}px`);
+  visual.style.setProperty('--shake-rot', `${rotation.toFixed(2)}deg`);
+  visual.style.setProperty('--shake-scale-x', '1');
+  visual.style.setProperty('--shake-scale-y', '1');
+  cancelMinimalAtomShakeCue();
+  minimalAtomShakeTimeoutId = setTimeout(() => {
+    minimalAtomShakeTimeoutId = null;
+    resetAtomSpringStyles();
+  }, 90);
 }
 
 function syncAtomVisualForPerformanceMode(modeId = performanceModeState?.id) {
@@ -13817,6 +13961,13 @@ function updateAtomSpring(now = performance.now(), drive = 0) {
 }
 
 function updateClickVisuals(now = performance.now()) {
+  if (isAtomAnimationSuppressed()) {
+    clickHistory.length = 0;
+    targetClickStrength = 0;
+    displayedClickStrength = 0;
+    resetGlowEffects();
+    return;
+  }
   updateClickHistory(now);
   displayedClickStrength += (targetClickStrength - displayedClickStrength) * 0.28;
   if (Math.abs(targetClickStrength - displayedClickStrength) < 0.0003) {
@@ -13828,10 +13979,16 @@ function updateClickVisuals(now = performance.now()) {
 
 function registerManualClick() {
   const now = performance.now();
-  clickHistory.push(now);
+  if (areAtomAnimationsEnabled()) {
+    clickHistory.push(now);
+  }
   updateClickVisuals(now);
   triggerEcoClickFeedbackPulse();
-  injectAtomImpulse(now);
+  if (isAtomAnimationSuppressed()) {
+    triggerMinimalAtomClickCue();
+  } else {
+    injectAtomImpulse(now);
+  }
   if (
     typeof globalThis !== 'undefined'
     && typeof globalThis.registerTicketStarClickReduction === 'function'
@@ -20471,6 +20628,7 @@ const RESET_LOCAL_STORAGE_KEYS = [
   PRIMARY_SAVE_STORAGE_KEY,
   LANGUAGE_STORAGE_KEY,
   CLICK_SOUND_STORAGE_KEY,
+  ATOM_ANIMATION_PREFERENCE_STORAGE_KEY,
   CRIT_ATOM_VISUALS_STORAGE_KEY,
   FRENZY_AUTO_COLLECT_STORAGE_KEY,
   TEXT_FONT_STORAGE_KEY,
@@ -22081,6 +22239,8 @@ function initializeDomBoundModules() {
   initPerformanceModeOption();
   initClickSoundOption();
   subscribeClickSoundLanguageUpdates();
+  initAtomAnimationOption();
+  subscribeAtomAnimationLanguageUpdates();
   initCritAtomOption();
   subscribeCritAtomLanguageUpdates();
   initScreenWakeLockOption();

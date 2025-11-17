@@ -2116,6 +2116,15 @@
             "off": "Off"
           }
         },
+        "atomAnimation": {
+          "title": "Main atom animation",
+          "description": "Tone down the big atom's motion to disable gameplay zooms and effects.",
+          "ariaLabel": "Enable or disable the main atom animation",
+          "state": {
+            "on": "Animations on",
+            "off": "Animations reduced"
+          }
+        },
         "critAtoms": {
           "title": "Animations",
           "ariaLabel": "Toggle the critical hit atom bursts",
