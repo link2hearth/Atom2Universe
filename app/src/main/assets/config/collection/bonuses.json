@@ -1,13 +1,6 @@
 {
   "groups": {
     "commun": {
-      "perCopy": {
-        "clickAdd": 25
-      },
-      "setBonus": {
-        "clickAdd": 500,
-        "requireAllUnique": true
-      },
       "multiplier": {
         "every": 100,
         "increment": 1,
@@ -19,18 +12,6 @@
       }
     },
     "essentiel": {
-      "perCopy": {
-        "uniqueClickAdd": 50,
-        "duplicateClickAdd": 1000,
-        "label": "scripts.config.elementBonuses.essentiel.perCopy"
-      },
-      "setBonus": [
-        {
-          "clickAdd": 50000,
-          "requireAllUnique": true,
-          "label": "scripts.config.elementBonuses.essentiel.setBonus"
-        }
-      ],
       "multiplier": {
         "every": 50,
         "increment": 1,
@@ -42,11 +23,6 @@
       }
     },
     "stellaire": {
-      "perCopy": {
-        "uniqueClickAdd": 20000,
-        "duplicateClickAdd": 25000,
-        "label": "scripts.config.elementBonuses.stellaire.perCopy"
-      },
       "multiplier": {
         "every": 25,
         "increment": 1,
@@ -56,29 +32,11 @@
         ],
         "label": "scripts.config.elementBonuses.collectionMultiplier"
       },
-      "setBonus": {
-        "requireAllUnique": true,
-        "label": "scripts.config.elementBonuses.stellaire.setBonus",
-        "rarityFlatMultipliers": {
-          "commun": {
-            "perClick": 2
-          }
-        }
-      },
       "labels": {
-        "perCopy": "scripts.config.elementBonuses.stellaire.labels.perCopy",
-        "setBonus": "scripts.config.elementBonuses.stellaire.setBonus",
         "multiplier": "scripts.config.elementBonuses.collectionMultiplier"
       }
     },
     "singulier": {
-      "perCopy": {
-        "uniqueClickAdd": 50000,
-        "uniqueAutoAdd": 50000,
-        "duplicateClickAdd": 100000,
-        "duplicateAutoAdd": 100000,
-        "label": "scripts.config.elementBonuses.singulier.perCopy"
-      },
       "multiplier": {
         "every": 10,
         "increment": 1,
@@ -89,7 +47,6 @@
         "label": "scripts.config.elementBonuses.collectionMultiplier"
       },
       "labels": {
-        "perCopy": "scripts.config.elementBonuses.singulier.perCopy",
         "multiplier": "scripts.config.elementBonuses.collectionMultiplier"
       }
     },
