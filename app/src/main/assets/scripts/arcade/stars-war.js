@@ -1311,17 +1311,39 @@
       return { x, y, rotation };
     },
 
-    idle(params, t) {
-      const { x = CANVAS_WIDTH / 2, y = CANVAS_HEIGHT / 3, jitter = 0, jitterFreq = 1 } = params;
-      if (!jitter) {
-        return { x, y, rotation: 0 };
+    idle(params, t, state = {}) {
+      const {
+        x = CANVAS_WIDTH / 2,
+        y = CANVAS_HEIGHT / 3,
+        jitter = 0,
+        jitterFreq = 1,
+        settleDuration = 0.45
+      } = params;
+
+      const transitionPose = state?.transitionPose || null;
+      const settleTime = transitionPose ? Math.max(0.12, Number(settleDuration) || 0) : 0;
+      const originX = transitionPose ? transitionPose.x : x;
+      const originY = transitionPose ? transitionPose.y : y;
+
+      const settleProgress = settleTime > 0 ? clamp(t / settleTime, 0, 1) : 1;
+      const easedProgress = settleProgress < 1 ? 1 - Math.pow(1 - settleProgress, 3) : 1;
+      let baseX = originX + (x - originX) * easedProgress;
+      let baseY = originY + (y - originY) * easedProgress;
+
+      if (jitter > 0) {
+        const jitterDelay = settleTime * 0.6;
+        const jitterClock = Math.max(0, t - jitterDelay);
+        const oscillation = 2 * Math.PI * jitterFreq * jitterClock;
+        let amplitude = jitter;
+        if (transitionPose && settleTime > 0) {
+          const ramp = Math.min(1, jitterClock / Math.max(0.001, settleTime * 0.5));
+          amplitude = jitter * ramp;
+        }
+        baseX += Math.sin(oscillation) * amplitude;
+        baseY += Math.cos(oscillation) * amplitude;
       }
-      const oscillation = 2 * Math.PI * jitterFreq * t;
-      return {
-        x: x + Math.sin(oscillation) * jitter,
-        y: y + Math.cos(oscillation) * jitter,
-        rotation: 0
-      };
+
+      return { x: baseX, y: baseY, rotation: 0 };
     }
   });
 
@@ -1347,26 +1369,37 @@
       this.previousPose = null;
       this.lastPose = null;
       this.totalTime = 0;
+      this.transitionPose = null;
     }
 
     advance(delta, runtimeState) {
       const dt = Math.max(0, delta);
       this.totalTime += dt;
       this.patternTime += dt;
-      if (this.secondary && this.activeDef === this.primary && this.switchAt != null && this.patternTime >= this.switchAt) {
+      const shouldSwitch = this.secondary && this.activeDef === this.primary && this.switchAt != null && this.patternTime >= this.switchAt;
+      if (shouldSwitch) {
         const overflow = this.patternTime - this.switchAt;
         this.activeDef = this.secondary;
         this.patternTime = overflow;
         this.previousPose = this.lastPose;
+        this.transitionPose = this.lastPose;
       }
-      const pose = positionFromPattern(this.activeDef, this.patternTime, runtimeState, this.previousPose);
+      const runtime = runtimeState ? { ...runtimeState } : {};
+      if (this.transitionPose) {
+        runtime.transitionPose = this.transitionPose;
+      }
+      const pose = positionFromPattern(this.activeDef, this.patternTime, runtime, this.previousPose);
       this.previousPose = pose;
       this.lastPose = pose;
       return this.withOffset(pose);
     }
 
     snapshot(runtimeState) {
-      const pose = positionFromPattern(this.activeDef, this.patternTime, runtimeState, this.previousPose);
+      const runtime = runtimeState ? { ...runtimeState } : {};
+      if (this.transitionPose) {
+        runtime.transitionPose = this.transitionPose;
+      }
+      const pose = positionFromPattern(this.activeDef, this.patternTime, runtime, this.previousPose);
       this.previousPose = pose;
       this.lastPose = pose;
       return this.withOffset(pose);
