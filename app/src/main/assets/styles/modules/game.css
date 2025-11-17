@@ -446,7 +446,7 @@ body:not(.view-game):not(.view-wave) .apc-frenzy-counter {
 }
 
 body[data-atom-variant='alternate'] .atom-button__core {
-  width: calc(var(--atom-core-size) * 10);
+  width: calc(var(--atom-core-size) * 6);
 }
 
 .atom-button__core::before,
