@@ -208,6 +208,24 @@ function toggleEscapeAdvancedDifficultiesEnabled() {
  */
 const SHOP_MAX_PURCHASE_DEFAULT = 100;
 
+const SHOP_FRENZY_DUPLICATE_EXCHANGE_CONFIG = Object.freeze({
+  cardIds: [
+    'hydrogene',
+    'helium',
+    'carbone',
+    'azote',
+    'oxygene',
+    'fer',
+    'or',
+    'argent',
+    'cuivre',
+    'plutonium'
+  ],
+  chanceIncrement: 0.005,
+  maxPurchases: 18,
+  retain: 1
+});
+
 /**
  * Durée (en millisecondes) de l’animation de fondu appliquée au démarrage.
  */
@@ -596,6 +614,33 @@ function createShopBuildingDefinitions() {
       bigBangLevelBonusMultiplier: 0.01,
       // 0,02 = +2 niveaux par Big Bang avec un palier de 100.
       effect: () => ({})
+    },
+    {
+      id: 'frenzyDuplicateExchange',
+      name: 'Catalyseur de frénésie',
+      description: 'Convertissez des doublons de cartes rares en chances de frénésie.',
+      effectSummary:
+        'Chaque achat consomme 1 carte rare en double pour ajouter +0,5 % de chance de frénésie (APC et APS). Limité à 18 achats.',
+      category: 'special',
+      baseCost: 0,
+      costScale: 1,
+      maxLevel: SHOP_FRENZY_DUPLICATE_EXCHANGE_CONFIG.maxPurchases,
+      maxQuantityPerPurchase: 1,
+      duplicateCardCost: {
+        cardIds: SHOP_FRENZY_DUPLICATE_EXCHANGE_CONFIG.cardIds,
+        amount: 1,
+        retain: SHOP_FRENZY_DUPLICATE_EXCHANGE_CONFIG.retain
+      },
+      effect: (level = 0) => {
+        const normalizedLevel = Math.max(0, Math.floor(level));
+        const bonus = normalizedLevel * SHOP_FRENZY_DUPLICATE_EXCHANGE_CONFIG.chanceIncrement;
+        return {
+          frenzyChanceAdd: {
+            perClick: bonus,
+            perSecond: bonus
+          }
+        };
+      }
     }
   ].map(withDefaults);
 }
