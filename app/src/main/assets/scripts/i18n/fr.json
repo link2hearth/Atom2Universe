@@ -2053,6 +2053,15 @@
             "off": "Sans"
           }
         },
+        "atomAnimation": {
+          "title": "Animations du bouton principal",
+          "description": "Réduit le mouvement du gros atome pour bloquer les zooms et effets de gameplay.",
+          "ariaLabel": "Activer ou désactiver les animations du bouton principal",
+          "state": {
+            "on": "Animations actives",
+            "off": "Animations réduites"
+          }
+        },
         "critAtoms": {
           "title": "Animations",
           "ariaLabel": "Activer ou couper les atomes animés lors des critiques",
