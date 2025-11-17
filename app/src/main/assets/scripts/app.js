@@ -305,6 +305,33 @@ const OPTIONS_DETAIL_FEATURE_MAP = Object.freeze({
 });
 
 const METAL_FEATURE_ID = 'arcade.metaux';
+const METAUX_CONFIG =
+  GLOBAL_CONFIG && typeof GLOBAL_CONFIG === 'object' && typeof GLOBAL_CONFIG.metaux === 'object'
+    ? GLOBAL_CONFIG.metaux
+    : {};
+const METAUX_CRIT_BONUS_CONFIG =
+  METAUX_CONFIG && typeof METAUX_CONFIG.critBonus === 'object' ? METAUX_CONFIG.critBonus : null;
+const DEFAULT_METAUX_CRIT_MAX_MULTIPLIER = 100;
+const METAUX_CRIT_MAX_MULTIPLIER = (() => {
+  const raw = METAUX_CRIT_BONUS_CONFIG
+    ? METAUX_CRIT_BONUS_CONFIG.maxMultiplier
+        ?? METAUX_CRIT_BONUS_CONFIG.max
+        ?? METAUX_CRIT_BONUS_CONFIG.cap
+    : null;
+  const rawValue = Number(raw);
+  if (Number.isFinite(rawValue) && rawValue >= 1) {
+    return rawValue;
+  }
+  const fallback = METAUX_CONFIG && typeof METAUX_CONFIG === 'object'
+    ? METAUX_CONFIG.critBonusMaxMultiplier ?? METAUX_CONFIG.critBonusCap
+    : null;
+  const fallbackValue = Number(fallback);
+  if (Number.isFinite(fallbackValue) && fallbackValue >= 1) {
+    return fallbackValue;
+  }
+  return DEFAULT_METAUX_CRIT_MAX_MULTIPLIER;
+})();
+const METAUX_CRIT_MAX_BONUS = Math.max(0, METAUX_CRIT_MAX_MULTIPLIER - 1);
 
 const FEATURE_UNLOCK_DEFINITIONS = buildFeatureUnlockDefinitions(
   GLOBAL_CONFIG?.progression?.featureUnlocks
@@ -15784,21 +15811,27 @@ function bindDomEventListeners() {
     const currentRemaining = getApsCritRemainingSeconds(apsCrit);
     let chronoAdded = 0;
     let effectAdded = false;
+    const currentBonus = Math.max(0, previousMultiplier - 1);
+    const availableBonus = Math.max(0, METAUX_CRIT_MAX_BONUS - currentBonus);
+    const matchesToGrant = Math.min(matchesEarned, availableBonus);
+    let matchesGranted = 0;
     if (!hadEffects) {
-      if (secondsEarned > 0 && matchesEarned > 0) {
+      if (secondsEarned > 0 && matchesToGrant > 0) {
         apsCrit.effects.push({
-          multiplierAdd: matchesEarned,
+          multiplierAdd: matchesToGrant,
           remainingSeconds: secondsEarned
         });
         chronoAdded = secondsEarned;
         effectAdded = true;
+        matchesGranted = matchesToGrant;
       }
-    } else if (matchesEarned > 0 && currentRemaining > 0) {
+    } else if (matchesToGrant > 0 && currentRemaining > 0) {
       apsCrit.effects.push({
-        multiplierAdd: matchesEarned,
+        multiplierAdd: matchesToGrant,
         remainingSeconds: currentRemaining
       });
       effectAdded = true;
+      matchesGranted = matchesToGrant;
     }
     if (!effectAdded) {
       return;
@@ -15823,9 +15856,9 @@ function bindDomEventListeners() {
         value: formatIntegerLocalized(chronoAdded)
       }));
     }
-    if (matchesEarned > 0) {
+    if (matchesGranted > 0) {
       messageParts.push(t('scripts.app.metaux.multiBonus', {
-        value: formatIntegerLocalized(matchesEarned)
+        value: formatIntegerLocalized(matchesGranted)
       }));
     }
     if (messageParts.length) {

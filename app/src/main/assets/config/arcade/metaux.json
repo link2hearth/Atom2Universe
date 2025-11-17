@@ -51,5 +51,8 @@
     "decayIntervalSeconds": 120,
     "decayAmountSeconds": 1,
     "tickIntervalMs": 100
+  },
+  "critBonus": {
+    "maxMultiplier": 100
   }
 }
