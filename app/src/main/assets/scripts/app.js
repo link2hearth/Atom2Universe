@@ -19553,6 +19553,48 @@ function formatApsCritChrono(seconds) {
   return `${formatIntegerLocalized(totalSeconds)} s`;
 }
 
+const uiTextContentCache = new WeakMap();
+const uiAttributeCache = new WeakMap();
+
+function setTextContentIfChanged(element, nextValue) {
+  if (!element) {
+    return false;
+  }
+  const normalized = nextValue == null ? '' : String(nextValue);
+  const previous = uiTextContentCache.get(element);
+  if (previous === normalized) {
+    return false;
+  }
+  element.textContent = normalized;
+  uiTextContentCache.set(element, normalized);
+  return true;
+}
+
+function setAttributeIfChanged(element, name, value) {
+  if (!element || !name) {
+    return false;
+  }
+  const normalizedName = String(name);
+  const normalizedValue = value == null ? null : String(value);
+  let attributeState = uiAttributeCache.get(element);
+  if (!attributeState) {
+    attributeState = new Map();
+    uiAttributeCache.set(element, attributeState);
+  }
+  const previousValue = attributeState.get(normalizedName) ?? null;
+  if (previousValue === normalizedValue) {
+    return false;
+  }
+  if (normalizedValue === null) {
+    element.removeAttribute(normalizedName);
+    attributeState.delete(normalizedName);
+  } else {
+    element.setAttribute(normalizedName, normalizedValue);
+    attributeState.set(normalizedName, normalizedValue);
+  }
+  return true;
+}
+
 function updateApsCritDisplay() {
   const panel = elements.statusApsCrit;
   if (!panel) {
@@ -19562,31 +19604,50 @@ function updateApsCritDisplay() {
   const remainingSeconds = getApsCritRemainingSeconds(state);
   const multiplierValue = getApsCritMultiplier(state);
   const isActive = remainingSeconds > APS_CRIT_TIMER_EPSILON && multiplierValue > 1;
-  panel.hidden = !isActive;
-  panel.style.display = isActive ? '' : 'none';
+  const hidden = !isActive;
+  if (panel.hidden !== hidden) {
+    panel.hidden = hidden;
+  }
+  const displayValue = isActive ? '' : 'none';
+  if (panel.style.display !== displayValue) {
+    panel.style.display = displayValue;
+  }
   panel.classList.toggle('is-active', isActive);
-  panel.setAttribute('aria-hidden', String(!isActive));
+  setAttributeIfChanged(panel, 'aria-hidden', String(hidden));
   const container = panel.closest('.status-item--crit-aps');
   if (container) {
-    container.hidden = !isActive;
-    container.style.display = isActive ? '' : 'none';
-    container.setAttribute('aria-hidden', String(!isActive));
+    if (container.hidden !== hidden) {
+      container.hidden = hidden;
+    }
+    if (container.style.display !== displayValue) {
+      container.style.display = displayValue;
+    }
+    setAttributeIfChanged(container, 'aria-hidden', String(hidden));
   }
   if (elements.statusApsCritSeparator) {
-    elements.statusApsCritSeparator.hidden = !isActive;
+    const separatorHidden = !isActive;
+    if (elements.statusApsCritSeparator.hidden !== separatorHidden) {
+      elements.statusApsCritSeparator.hidden = separatorHidden;
+    }
   }
   const chronoText = isActive ? formatApsCritChrono(remainingSeconds) : '';
   if (elements.statusApsCritChrono) {
-    elements.statusApsCritChrono.textContent = chronoText;
-    elements.statusApsCritChrono.hidden = !isActive;
-    elements.statusApsCritChrono.setAttribute('aria-hidden', String(!isActive));
+    setTextContentIfChanged(elements.statusApsCritChrono, chronoText);
+    const chronoHidden = !isActive;
+    if (elements.statusApsCritChrono.hidden !== chronoHidden) {
+      elements.statusApsCritChrono.hidden = chronoHidden;
+    }
+    setAttributeIfChanged(elements.statusApsCritChrono, 'aria-hidden', String(chronoHidden));
   }
   const multiplierText = `×${formatNumberLocalized(multiplierValue)}`;
   const multiplierDisplayText = isActive ? multiplierText : '';
   if (elements.statusApsCritMultiplier) {
-    elements.statusApsCritMultiplier.textContent = multiplierDisplayText;
-    elements.statusApsCritMultiplier.hidden = !isActive;
-    elements.statusApsCritMultiplier.setAttribute('aria-hidden', String(!isActive));
+    setTextContentIfChanged(elements.statusApsCritMultiplier, multiplierDisplayText);
+    const multiplierHidden = !isActive;
+    if (elements.statusApsCritMultiplier.hidden !== multiplierHidden) {
+      elements.statusApsCritMultiplier.hidden = multiplierHidden;
+    }
+    setAttributeIfChanged(elements.statusApsCritMultiplier, 'aria-hidden', String(multiplierHidden));
   }
   const activeAriaLabel = translateOrDefault(
     'scripts.app.metaux.critAriaActive',
@@ -19597,7 +19658,7 @@ function updateApsCritDisplay() {
     'scripts.app.metaux.critAriaInactive',
     'Compteur critique APC/APS inactif.'
   );
-  panel.setAttribute('aria-label', isActive ? activeAriaLabel : inactiveAriaLabel);
+  setAttributeIfChanged(panel, 'aria-label', isActive ? activeAriaLabel : inactiveAriaLabel);
 }
 
 function pulseApsCritPanel() {
@@ -19640,13 +19701,16 @@ function updateUI() {
   updateBrandPortalState();
   updateMetauxCreditsUI();
   if (elements.statusAtoms) {
-    elements.statusAtoms.textContent = gameState.atoms.toString();
+    const atomsText = gameState.atoms.toString();
+    setTextContentIfChanged(elements.statusAtoms, atomsText);
   }
   if (elements.statusApc) {
-    elements.statusApc.textContent = gameState.perClick.toString();
+    const apcText = gameState.perClick.toString();
+    setTextContentIfChanged(elements.statusApc, apcText);
   }
   if (elements.statusAps) {
-    elements.statusAps.textContent = gameState.perSecond.toString();
+    const apsText = gameState.perSecond.toString();
+    setTextContentIfChanged(elements.statusAps, apsText);
   }
   updateApsCritDisplay();
   updateFrenzyIndicators();
