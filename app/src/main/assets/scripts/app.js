@@ -20735,6 +20735,95 @@ function writeNativeSaveData(serialized) {
   return false;
 }
 
+function serializeFusionBonusesForSave() {
+  const bonuses = getFusionBonusState() || {};
+  const serialized = createInitialFusionBonuses();
+  const numericOrZero = value => (Number.isFinite(Number(value)) ? Number(value) : 0);
+  serialized.apcFlat = numericOrZero(bonuses.apcFlat);
+  serialized.apsFlat = numericOrZero(bonuses.apsFlat);
+  serialized.apcHydrogenBase = numericOrZero(bonuses.apcHydrogenBase);
+  serialized.apsHydrogenBase = numericOrZero(bonuses.apsHydrogenBase);
+  serialized.apcBaseBoost = numericOrZero(bonuses.apcBaseBoost);
+  serialized.apsBaseBoost = numericOrZero(bonuses.apsBaseBoost);
+  const apcFrenzySeconds = numericOrZero(bonuses.apcFrenzyDurationSeconds);
+  const apsFrenzySeconds = numericOrZero(bonuses.apsFrenzyDurationSeconds);
+  serialized.apcFrenzyDurationSeconds = Math.max(0, apcFrenzySeconds);
+  serialized.apsFrenzyDurationSeconds = Math.max(0, apsFrenzySeconds);
+  const multiplier = Number.isFinite(Number(bonuses.fusionMultiplier))
+    && Number(bonuses.fusionMultiplier) > 0
+      ? Number(bonuses.fusionMultiplier)
+      : 1;
+  serialized.fusionMultiplier = multiplier;
+  return serialized;
+}
+
+function normalizeStoredFusionBonuses(storedFusionBonuses) {
+  const normalized = createInitialFusionBonuses();
+  if (!storedFusionBonuses || typeof storedFusionBonuses !== 'object') {
+    return normalized;
+  }
+  const apc = Number(
+    storedFusionBonuses.apcFlat
+      ?? storedFusionBonuses.apc
+      ?? storedFusionBonuses.perClick
+      ?? storedFusionBonuses.click
+      ?? 0
+  );
+  const aps = Number(
+    storedFusionBonuses.apsFlat
+      ?? storedFusionBonuses.aps
+      ?? storedFusionBonuses.perSecond
+      ?? storedFusionBonuses.auto
+      ?? 0
+  );
+  const apcHydrogenBase = Number(
+    storedFusionBonuses.apcHydrogenBase
+      ?? storedFusionBonuses.hydrogenApc
+      ?? 0
+  );
+  const apsHydrogenBase = Number(
+    storedFusionBonuses.apsHydrogenBase
+      ?? storedFusionBonuses.hydrogenAps
+      ?? 0
+  );
+  const apcBaseBoost = Number(storedFusionBonuses.apcBaseBoost);
+  const apsBaseBoost = Number(storedFusionBonuses.apsBaseBoost);
+  const apcFrenzySeconds = Number(
+    storedFusionBonuses.apcFrenzyDurationSeconds
+      ?? storedFusionBonuses.apcFrenzySeconds
+      ?? storedFusionBonuses.apcFrenzy
+      ?? 0
+  );
+  const apsFrenzySeconds = Number(
+    storedFusionBonuses.apsFrenzyDurationSeconds
+      ?? storedFusionBonuses.apsFrenzySeconds
+      ?? storedFusionBonuses.apsFrenzy
+      ?? 0
+  );
+  const storedMultiplier = Number(
+    storedFusionBonuses.fusionMultiplier
+      ?? storedFusionBonuses.multiplier
+      ?? storedFusionBonuses.multi
+      ?? 1
+  );
+  normalized.apcFlat = Number.isFinite(apc) ? apc : 0;
+  normalized.apsFlat = Number.isFinite(aps) ? aps : 0;
+  normalized.apcHydrogenBase = Number.isFinite(apcHydrogenBase) ? apcHydrogenBase : 0;
+  normalized.apsHydrogenBase = Number.isFinite(apsHydrogenBase) ? apsHydrogenBase : 0;
+  normalized.apcBaseBoost = Number.isFinite(apcBaseBoost) ? apcBaseBoost : 0;
+  normalized.apsBaseBoost = Number.isFinite(apsBaseBoost) ? apsBaseBoost : 0;
+  normalized.apcFrenzyDurationSeconds = Number.isFinite(apcFrenzySeconds)
+    ? Math.max(0, apcFrenzySeconds)
+    : 0;
+  normalized.apsFrenzyDurationSeconds = Number.isFinite(apsFrenzySeconds)
+    ? Math.max(0, apsFrenzySeconds)
+    : 0;
+  normalized.fusionMultiplier = Number.isFinite(storedMultiplier) && storedMultiplier > 0
+    ? storedMultiplier
+    : 1;
+  return normalized;
+}
+
 function serializeState() {
   flushPendingPerformanceQueues({ force: true });
   const stats = gameState.stats || createInitialStats();
@@ -20924,13 +21013,7 @@ function serializeState() {
         collection: unlocks?.collection === true
       };
     })(),
-    fusionBonuses: (() => {
-      const bonuses = getFusionBonusState();
-      return {
-        apcFlat: Number.isFinite(Number(bonuses.apcFlat)) ? Number(bonuses.apcFlat) : 0,
-        apsFlat: Number.isFinite(Number(bonuses.apsFlat)) ? Number(bonuses.apsFlat) : 0
-      };
-    })(),
+    fusionBonuses: serializeFusionBonusesForSave(),
     theme: gameState.theme,
     arcadeBrickSkin: normalizeBrickSkinSelection(gameState.arcadeBrickSkin),
     stats: {
@@ -21979,70 +22062,7 @@ function applySerializedGameState(raw) {
     });
   }
   gameState.fusions = fusionState;
-  const fusionBonuses = createInitialFusionBonuses();
-  const storedFusionBonuses = data.fusionBonuses;
-  if (storedFusionBonuses && typeof storedFusionBonuses === 'object') {
-    const apc = Number(
-      storedFusionBonuses.apcFlat
-        ?? storedFusionBonuses.apc
-        ?? storedFusionBonuses.perClick
-        ?? storedFusionBonuses.click
-        ?? 0
-    );
-    const aps = Number(
-      storedFusionBonuses.apsFlat
-        ?? storedFusionBonuses.aps
-        ?? storedFusionBonuses.perSecond
-        ?? storedFusionBonuses.auto
-        ?? 0
-    );
-    const apcHydrogenBase = Number(
-      storedFusionBonuses.apcHydrogenBase
-        ?? storedFusionBonuses.hydrogenApc
-        ?? 0
-    );
-    const apsHydrogenBase = Number(
-      storedFusionBonuses.apsHydrogenBase
-        ?? storedFusionBonuses.hydrogenAps
-        ?? 0
-    );
-    const apcBaseBoost = Number(storedFusionBonuses.apcBaseBoost);
-    const apsBaseBoost = Number(storedFusionBonuses.apsBaseBoost);
-    const apcFrenzySeconds = Number(
-      storedFusionBonuses.apcFrenzyDurationSeconds
-        ?? storedFusionBonuses.apcFrenzySeconds
-        ?? storedFusionBonuses.apcFrenzy
-        ?? 0
-    );
-    const apsFrenzySeconds = Number(
-      storedFusionBonuses.apsFrenzyDurationSeconds
-        ?? storedFusionBonuses.apsFrenzySeconds
-        ?? storedFusionBonuses.apsFrenzy
-        ?? 0
-    );
-    const storedMultiplier = Number(
-      storedFusionBonuses.fusionMultiplier
-        ?? storedFusionBonuses.multiplier
-        ?? storedFusionBonuses.multi
-        ?? 1
-    );
-    fusionBonuses.apcFlat = Number.isFinite(apc) ? apc : 0;
-    fusionBonuses.apsFlat = Number.isFinite(aps) ? aps : 0;
-    fusionBonuses.apcHydrogenBase = Number.isFinite(apcHydrogenBase) ? apcHydrogenBase : 0;
-    fusionBonuses.apsHydrogenBase = Number.isFinite(apsHydrogenBase) ? apsHydrogenBase : 0;
-    fusionBonuses.apcBaseBoost = Number.isFinite(apcBaseBoost) ? apcBaseBoost : 0;
-    fusionBonuses.apsBaseBoost = Number.isFinite(apsBaseBoost) ? apsBaseBoost : 0;
-    fusionBonuses.apcFrenzyDurationSeconds = Number.isFinite(apcFrenzySeconds)
-      ? Math.max(0, apcFrenzySeconds)
-      : 0;
-    fusionBonuses.apsFrenzyDurationSeconds = Number.isFinite(apsFrenzySeconds)
-      ? Math.max(0, apsFrenzySeconds)
-      : 0;
-    fusionBonuses.fusionMultiplier = Number.isFinite(storedMultiplier) && storedMultiplier > 0
-      ? storedMultiplier
-      : 1;
-  }
-  gameState.fusionBonuses = fusionBonuses;
+  gameState.fusionBonuses = normalizeStoredFusionBonuses(data.fusionBonuses);
   gameState.theme = getThemeDefinition(data.theme) ? data.theme : DEFAULT_THEME_ID;
   const storedBrickSkin = data.arcadeBrickSkin
     ?? data.particulesBrickSkin
@@ -22517,70 +22537,7 @@ function loadGame() {
       });
     }
     gameState.fusions = fusionState;
-    const fusionBonuses = createInitialFusionBonuses();
-    const storedFusionBonuses = data.fusionBonuses;
-    if (storedFusionBonuses && typeof storedFusionBonuses === 'object') {
-      const apc = Number(
-        storedFusionBonuses.apcFlat
-          ?? storedFusionBonuses.apc
-          ?? storedFusionBonuses.perClick
-          ?? storedFusionBonuses.click
-          ?? 0
-      );
-      const aps = Number(
-        storedFusionBonuses.apsFlat
-          ?? storedFusionBonuses.aps
-          ?? storedFusionBonuses.perSecond
-          ?? storedFusionBonuses.auto
-          ?? 0
-      );
-      const apcHydrogenBase = Number(
-        storedFusionBonuses.apcHydrogenBase
-          ?? storedFusionBonuses.hydrogenApc
-          ?? 0
-      );
-      const apsHydrogenBase = Number(
-        storedFusionBonuses.apsHydrogenBase
-          ?? storedFusionBonuses.hydrogenAps
-          ?? 0
-      );
-      const apcBaseBoost = Number(storedFusionBonuses.apcBaseBoost);
-      const apsBaseBoost = Number(storedFusionBonuses.apsBaseBoost);
-      const apcFrenzySeconds = Number(
-        storedFusionBonuses.apcFrenzyDurationSeconds
-          ?? storedFusionBonuses.apcFrenzySeconds
-          ?? storedFusionBonuses.apcFrenzy
-          ?? 0
-      );
-      const apsFrenzySeconds = Number(
-        storedFusionBonuses.apsFrenzyDurationSeconds
-          ?? storedFusionBonuses.apsFrenzySeconds
-          ?? storedFusionBonuses.apsFrenzy
-          ?? 0
-      );
-      const storedMultiplier = Number(
-        storedFusionBonuses.fusionMultiplier
-          ?? storedFusionBonuses.multiplier
-          ?? storedFusionBonuses.multi
-          ?? 1
-      );
-      fusionBonuses.apcFlat = Number.isFinite(apc) ? apc : 0;
-      fusionBonuses.apsFlat = Number.isFinite(aps) ? aps : 0;
-      fusionBonuses.apcHydrogenBase = Number.isFinite(apcHydrogenBase) ? apcHydrogenBase : 0;
-      fusionBonuses.apsHydrogenBase = Number.isFinite(apsHydrogenBase) ? apsHydrogenBase : 0;
-      fusionBonuses.apcBaseBoost = Number.isFinite(apcBaseBoost) ? apcBaseBoost : 0;
-      fusionBonuses.apsBaseBoost = Number.isFinite(apsBaseBoost) ? apsBaseBoost : 0;
-      fusionBonuses.apcFrenzyDurationSeconds = Number.isFinite(apcFrenzySeconds)
-        ? Math.max(0, apcFrenzySeconds)
-        : 0;
-      fusionBonuses.apsFrenzyDurationSeconds = Number.isFinite(apsFrenzySeconds)
-        ? Math.max(0, apsFrenzySeconds)
-        : 0;
-      fusionBonuses.fusionMultiplier = Number.isFinite(storedMultiplier) && storedMultiplier > 0
-        ? storedMultiplier
-        : 1;
-    }
-    gameState.fusionBonuses = fusionBonuses;
+    gameState.fusionBonuses = normalizeStoredFusionBonuses(data.fusionBonuses);
     gameState.theme = getThemeDefinition(data.theme) ? data.theme : DEFAULT_THEME_ID;
     const storedBrickSkin = data.arcadeBrickSkin
       ?? data.particulesBrickSkin
