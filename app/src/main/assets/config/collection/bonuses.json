@@ -2,7 +2,7 @@
   "groups": {
     "commun": {
       "multiplier": {
-        "every": 100,
+        "every": 75,
         "increment": 1,
         "targets": [
           "perClick",
