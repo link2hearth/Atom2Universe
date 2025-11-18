@@ -74,8 +74,8 @@
       }
     },
     {
-      "id": "hydroperoxyl",
-      "name": "Molécule d’eau frénétique (H₂O)",
+      "id": "Water",
+      "name": "Molécule d’eau (H₂O)",
       "translationKey": "scripts.gameData.fusions.recipes.hydroperoxyl",
       "description": "Combinez 2 H avec 1 O pour tenter d’obtenir une molécule d’eau et étendre vos frénésies APS.",
       "inputs": [
@@ -88,49 +88,9 @@
           "count": 1
         }
       ],
-      "successChance": 0.1,
+      "successChance": 0.2,
       "rewards": {
         "apsFrenzyDurationSeconds": 1
-      }
-    },
-    {
-      "id": "water",
-      "name": "Molécule d’eau (H₂O)",
-      "translationKey": "scripts.gameData.fusions.recipes.water",
-      "description": "Combinez 2 Hydrogènes et 1 Oxygène pour tenter de former de l’eau.",
-      "inputs": [
-        {
-          "elementId": "element-001-hydrogene",
-          "count": 2
-        },
-        {
-          "elementId": "element-008-oxygene",
-          "count": 1
-        }
-      ],
-      "successChance": 0.5,
-      "rewards": {
-        "apcFlat": 100
-      }
-    },
-    {
-      "id": "sodiumChloride",
-      "name": "Chlorure de sodium (NaCl)",
-      "translationKey": "scripts.gameData.fusions.recipes.sodiumChloride",
-      "description": "Combinez Sodium et Chlore pour cristalliser du sel.",
-      "inputs": [
-        {
-          "elementId": "element-011-sodium",
-          "count": 1
-        },
-        {
-          "elementId": "element-017-chlore",
-          "count": 1
-        }
-      ],
-      "successChance": 0.5,
-      "rewards": {
-        "apcFlat": 100
       }
     },
     {
