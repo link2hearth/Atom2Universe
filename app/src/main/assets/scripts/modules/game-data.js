@@ -470,6 +470,24 @@ function normalizeFusionDefinition(entry, index = 0) {
   const apcBaseBoost = Number.isFinite(rawApcBaseBoost) ? rawApcBaseBoost : 0;
   const rawApsBaseBoost = Number(rewardsRaw.apsBaseBoost ?? rewardsRaw.apsBase ?? rewardsRaw.baseAps ?? 0);
   const apsBaseBoost = Number.isFinite(rawApsBaseBoost) ? rawApsBaseBoost : 0;
+  const rawApcFrenzySeconds = Number(
+    rewardsRaw.apcFrenzyDurationSeconds
+      ?? rewardsRaw.apcFrenzySeconds
+      ?? rewardsRaw.apcFrenzyDuration
+      ?? rewardsRaw.apcFrenzy
+      ?? rewardsRaw.frenzyApcSeconds
+      ?? 0
+  );
+  const apcFrenzyDurationSeconds = Number.isFinite(rawApcFrenzySeconds) ? rawApcFrenzySeconds : 0;
+  const rawApsFrenzySeconds = Number(
+    rewardsRaw.apsFrenzyDurationSeconds
+      ?? rewardsRaw.apsFrenzySeconds
+      ?? rewardsRaw.apsFrenzyDuration
+      ?? rewardsRaw.apsFrenzy
+      ?? rewardsRaw.frenzyApsSeconds
+      ?? 0
+  );
+  const apsFrenzyDurationSeconds = Number.isFinite(rawApsFrenzySeconds) ? rawApsFrenzySeconds : 0;
   const rawGrowthMultiplier = Number(
     rewardsRaw.growthMultiplier
     ?? rewardsRaw.rewardGrowth
@@ -503,6 +521,8 @@ function normalizeFusionDefinition(entry, index = 0) {
       apsFlat,
       apcBaseBoost,
       apsBaseBoost,
+      apcFrenzyDurationSeconds,
+      apsFrenzyDurationSeconds,
       elements: elementRewards,
       fusionMultiplier: fusionMultiplierBonus
     },
@@ -2115,7 +2135,9 @@ function createInitialFusionBonuses() {
     apsHydrogenBase: 0,
     fusionMultiplier: 1,
     apcBaseBoost: 0,
-    apsBaseBoost: 0
+    apsBaseBoost: 0,
+    apcFrenzyDurationSeconds: 0,
+    apsFrenzyDurationSeconds: 0
   };
 }
 

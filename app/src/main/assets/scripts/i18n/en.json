@@ -3918,11 +3918,15 @@
         "apsBonus": "+{value} APS",
         "apcBaseBonus": "+{value} base APC",
         "apsBaseBonus": "+{value} base APS",
+        "apcFrenzyBonus": "+{value} s APC frenzy",
+        "apsFrenzyBonus": "+{value} s APS frenzy",
         "elementBonus": "+{count} {element}",
         "apcTotal": "+{value} APC total",
         "apsTotal": "+{value} APS total",
         "apcBaseTotal": "+{value} base APC total",
         "apsBaseTotal": "+{value} base APS total",
+        "apcFrenzyTotal": "+{value} total APC frenzy seconds",
+        "apsFrenzyTotal": "+{value} total APS frenzy seconds",
         "elementTotal": "+{count} {element} total",
         "multiplierReward": "+{value} fusion multiplier",
         "multiplierBonus": "+{value} fusion multiplier (now ×{total})",
@@ -4176,7 +4180,11 @@
           },
           "oxygen": {
             "name": "Helium + Carbon → Oxygen (O)",
-            "description": "Fuse 1 He with 1 C to attempt forging 1 O and permanently boost your base APC/APS by +1."
+            "description": "Fuse 1 He with 1 C to attempt forging 1 O and extend APC frenzies by +1 s."
+          },
+          "hydroperoxyl": {
+            "name": "HO₂ radical",
+            "description": "Combine 2 O and 1 H to stabilize an HO₂ radical and extend APS frenzies by +1 s."
           },
           "fluorine": {
             "name": "Fluorine (F₂)",
