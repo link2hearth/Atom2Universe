@@ -52,11 +52,9 @@
     },
     "mythique": {
       "labels": {
-        "setBonus": "scripts.config.elementBonuses.mythique.setBonus",
         "ticketBonus": "scripts.config.elementBonuses.mythique.ticketBonus",
         "offlineBonus": "scripts.config.elementBonuses.mythique.offlineBonus",
         "duplicateOverflow": "scripts.config.elementBonuses.mythique.duplicateOverflow",
-        "frenzyBonus": "scripts.config.elementBonuses.mythique.frenzyBonus",
         "multiplier": "scripts.config.elementBonuses.collectionMultiplier"
       },
       "multiplier": {
@@ -77,10 +75,7 @@
         "perDuplicate": 0.01,
         "cap": 0.5
       },
-      "duplicateOverflow": {},
-      "frenzyBonus": {
-        "multiplier": 1.5
-      }
+      "duplicateOverflow": {}
     },
     "irreel": {
       "crit": {
