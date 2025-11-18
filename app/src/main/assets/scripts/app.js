@@ -305,25 +305,27 @@ const OPTIONS_DETAIL_FEATURE_MAP = Object.freeze({
 });
 
 const METAL_FEATURE_ID = 'arcade.metaux';
-const METAUX_CONFIG =
+const METAUX_GLOBAL_CONFIG =
   GLOBAL_CONFIG && typeof GLOBAL_CONFIG === 'object' && typeof GLOBAL_CONFIG.metaux === 'object'
     ? GLOBAL_CONFIG.metaux
     : {};
-const METAUX_CRIT_BONUS_CONFIG =
-  METAUX_CONFIG && typeof METAUX_CONFIG.critBonus === 'object' ? METAUX_CONFIG.critBonus : null;
+const METAUX_GLOBAL_CRIT_BONUS_CONFIG =
+  METAUX_GLOBAL_CONFIG && typeof METAUX_GLOBAL_CONFIG.critBonus === 'object'
+    ? METAUX_GLOBAL_CONFIG.critBonus
+    : null;
 const DEFAULT_METAUX_CRIT_MAX_MULTIPLIER = 100;
 const METAUX_CRIT_MAX_MULTIPLIER = (() => {
-  const raw = METAUX_CRIT_BONUS_CONFIG
-    ? METAUX_CRIT_BONUS_CONFIG.maxMultiplier
-        ?? METAUX_CRIT_BONUS_CONFIG.max
-        ?? METAUX_CRIT_BONUS_CONFIG.cap
+  const raw = METAUX_GLOBAL_CRIT_BONUS_CONFIG
+    ? METAUX_GLOBAL_CRIT_BONUS_CONFIG.maxMultiplier
+        ?? METAUX_GLOBAL_CRIT_BONUS_CONFIG.max
+        ?? METAUX_GLOBAL_CRIT_BONUS_CONFIG.cap
     : null;
   const rawValue = Number(raw);
   if (Number.isFinite(rawValue) && rawValue >= 1) {
     return rawValue;
   }
-  const fallback = METAUX_CONFIG && typeof METAUX_CONFIG === 'object'
-    ? METAUX_CONFIG.critBonusMaxMultiplier ?? METAUX_CONFIG.critBonusCap
+  const fallback = METAUX_GLOBAL_CONFIG && typeof METAUX_GLOBAL_CONFIG === 'object'
+    ? METAUX_GLOBAL_CONFIG.critBonusMaxMultiplier ?? METAUX_GLOBAL_CONFIG.critBonusCap
     : null;
   const fallbackValue = Number(fallback);
   if (Number.isFinite(fallbackValue) && fallbackValue >= 1) {
