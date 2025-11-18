@@ -51,7 +51,7 @@
       "id": "oxygen",
       "name": "Hélium + Carbone → Oxygène (O)",
       "translationKey": "scripts.gameData.fusions.recipes.oxygen",
-      "description": "Fusionnez 1 He avec 1 C pour tenter de forger 1 O.",
+      "description": "Fusionnez 1 He avec 1 C pour tenter de forger 1 O et renforcer vos APC/APS de base.",
       "inputs": [
         {
           "elementId": "element-002-helium",
@@ -64,9 +64,8 @@
       ],
       "successChance": 0.1,
       "rewards": {
-        "apcFlat": 50000,
-        "apsFlat": 50000,
-        "growthMultiplier": 1.1,
+        "apcBaseBoost": 1,
+        "apsBaseBoost": 1,
         "elements": [
           {
             "elementId": "element-008-oxygene",

@@ -3908,9 +3908,13 @@
         "noRewardSummary": "Aucun bonus.",
         "apcBonus": "+{value} APC",
         "apsBonus": "+{value} APS",
+        "apcBaseBonus": "+{value} APC de base",
+        "apsBaseBonus": "+{value} APS de base",
         "elementBonus": "+{count} {element}",
         "apcTotal": "+{value} APC cumulés",
         "apsTotal": "+{value} APS cumulés",
+        "apcBaseTotal": "+{value} APC de base cumulés",
+        "apsBaseTotal": "+{value} APS de base cumulés",
         "elementTotal": "+{count} {element} cumulés",
         "multiplierReward": "+{value} multiplicateur de fusion",
         "multiplierBonus": "+{value} multiplicateur de fusion (désormais ×{total})",
@@ -4164,7 +4168,7 @@
           },
           "oxygen": {
             "name": "Hélium + Carbone → Oxygène (O)",
-            "description": "Fusionnez 1 He avec 1 C pour tenter de forger 1 O."
+            "description": "Fusionnez 1 He avec 1 C pour tenter de forger 1 O et renforcer vos APC/APS de base de +1."
           },
           "fluorine": {
             "name": "Fluor (F₂)",

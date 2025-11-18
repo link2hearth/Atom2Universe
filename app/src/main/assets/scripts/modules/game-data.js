@@ -466,6 +466,10 @@ function normalizeFusionDefinition(entry, index = 0) {
   const rawAps = Number(rewardsRaw.apsFlat ?? rewardsRaw.aps ?? rewardsRaw.perSecond ?? rewardsRaw.auto ?? 0);
   const apcFlat = Number.isFinite(rawApc) ? rawApc : 0;
   const apsFlat = Number.isFinite(rawAps) ? rawAps : 0;
+  const rawApcBaseBoost = Number(rewardsRaw.apcBaseBoost ?? rewardsRaw.apcBase ?? rewardsRaw.baseApc ?? 0);
+  const apcBaseBoost = Number.isFinite(rawApcBaseBoost) ? rawApcBaseBoost : 0;
+  const rawApsBaseBoost = Number(rewardsRaw.apsBaseBoost ?? rewardsRaw.apsBase ?? rewardsRaw.baseAps ?? 0);
+  const apsBaseBoost = Number.isFinite(rawApsBaseBoost) ? rawApsBaseBoost : 0;
   const rawGrowthMultiplier = Number(
     rewardsRaw.growthMultiplier
     ?? rewardsRaw.rewardGrowth
@@ -497,6 +501,8 @@ function normalizeFusionDefinition(entry, index = 0) {
     rewards: {
       apcFlat,
       apsFlat,
+      apcBaseBoost,
+      apsBaseBoost,
       elements: elementRewards,
       fusionMultiplier: fusionMultiplierBonus
     },
@@ -2107,7 +2113,9 @@ function createInitialFusionBonuses() {
     apsFlat: 0,
     apcHydrogenBase: 0,
     apsHydrogenBase: 0,
-    fusionMultiplier: 1
+    fusionMultiplier: 1,
+    apcBaseBoost: 0,
+    apsBaseBoost: 0
   };
 }
 
