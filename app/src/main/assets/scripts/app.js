@@ -16801,8 +16801,21 @@ function formatShopCombinedCost(parts) {
 }
 
 function recalcProduction() {
-  const clickBase = normalizeProductionUnit(BASE_PER_CLICK);
-  const autoBase = normalizeProductionUnit(BASE_PER_SECOND);
+  let clickBase = normalizeProductionUnit(BASE_PER_CLICK);
+  let autoBase = normalizeProductionUnit(BASE_PER_SECOND);
+  const hasFusionSystem = FUSION_DEFS.length > 0;
+  let fusionBonusState = null;
+  if (hasFusionSystem) {
+    fusionBonusState = getFusionBonusState();
+    const baseApcBoost = Number(fusionBonusState.apcBaseBoost);
+    if (Number.isFinite(baseApcBoost) && baseApcBoost !== 0) {
+      clickBase = clickBase.add(new LayeredNumber(baseApcBoost));
+    }
+    const baseApsBoost = Number(fusionBonusState.apsBaseBoost);
+    if (Number.isFinite(baseApsBoost) && baseApsBoost !== 0) {
+      autoBase = autoBase.add(new LayeredNumber(baseApsBoost));
+    }
+  }
 
   const clickDetails = createEmptyProductionEntry();
   const autoDetails = createEmptyProductionEntry();
@@ -18235,8 +18248,7 @@ function recalcProduction() {
     applyCritModifiersFromEffect(critAccumulator, effects);
   });
 
-  if (FUSION_DEFS.length) {
-    const fusionBonusState = getFusionBonusState();
+  if (hasFusionSystem && fusionBonusState) {
     const fusionLabel = translateOrDefault(
       'scripts.app.fusion.bonusLabel',
       'Fusions moléculaires'
@@ -21542,6 +21554,8 @@ function applySerializedGameState(raw) {
         ?? storedFusionBonuses.hydrogenAps
         ?? 0
     );
+    const apcBaseBoost = Number(storedFusionBonuses.apcBaseBoost);
+    const apsBaseBoost = Number(storedFusionBonuses.apsBaseBoost);
     const storedMultiplier = Number(
       storedFusionBonuses.fusionMultiplier
         ?? storedFusionBonuses.multiplier
@@ -21552,6 +21566,8 @@ function applySerializedGameState(raw) {
     fusionBonuses.apsFlat = Number.isFinite(aps) ? aps : 0;
     fusionBonuses.apcHydrogenBase = Number.isFinite(apcHydrogenBase) ? apcHydrogenBase : 0;
     fusionBonuses.apsHydrogenBase = Number.isFinite(apsHydrogenBase) ? apsHydrogenBase : 0;
+    fusionBonuses.apcBaseBoost = Number.isFinite(apcBaseBoost) ? apcBaseBoost : 0;
+    fusionBonuses.apsBaseBoost = Number.isFinite(apsBaseBoost) ? apsBaseBoost : 0;
     fusionBonuses.fusionMultiplier = Number.isFinite(storedMultiplier) && storedMultiplier > 0
       ? storedMultiplier
       : 1;
@@ -22057,6 +22073,8 @@ function loadGame() {
           ?? storedFusionBonuses.hydrogenAps
           ?? 0
       );
+      const apcBaseBoost = Number(storedFusionBonuses.apcBaseBoost);
+      const apsBaseBoost = Number(storedFusionBonuses.apsBaseBoost);
       const storedMultiplier = Number(
         storedFusionBonuses.fusionMultiplier
           ?? storedFusionBonuses.multiplier
@@ -22067,6 +22085,8 @@ function loadGame() {
       fusionBonuses.apsFlat = Number.isFinite(aps) ? aps : 0;
       fusionBonuses.apcHydrogenBase = Number.isFinite(apcHydrogenBase) ? apcHydrogenBase : 0;
       fusionBonuses.apsHydrogenBase = Number.isFinite(apsHydrogenBase) ? apsHydrogenBase : 0;
+      fusionBonuses.apcBaseBoost = Number.isFinite(apcBaseBoost) ? apcBaseBoost : 0;
+      fusionBonuses.apsBaseBoost = Number.isFinite(apsBaseBoost) ? apsBaseBoost : 0;
       fusionBonuses.fusionMultiplier = Number.isFinite(storedMultiplier) && storedMultiplier > 0
         ? storedMultiplier
         : 1;
