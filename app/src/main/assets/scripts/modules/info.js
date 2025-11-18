@@ -2807,6 +2807,64 @@ function updatePhotonStats() {
   }
 }
 
+function findMotocrossProgressEntry(entries) {
+  if (!entries || typeof entries !== 'object') {
+    return null;
+  }
+  if (entries.motocross && typeof entries.motocross === 'object') {
+    return entries.motocross;
+  }
+  const fallbackKey = Object.keys(entries).find(key => (
+    typeof key === 'string' && key.toLowerCase() === 'motocross'
+  ));
+  if (fallbackKey && entries[fallbackKey] && typeof entries[fallbackKey] === 'object') {
+    return entries[fallbackKey];
+  }
+  return null;
+}
+
+function getMotocrossProgressStats() {
+  const progress = gameState.arcadeProgress;
+  if (!progress || typeof progress !== 'object') {
+    return null;
+  }
+  const entries = progress.entries && typeof progress.entries === 'object'
+    ? progress.entries
+    : null;
+  if (!entries) {
+    return null;
+  }
+  const entry = findMotocrossProgressEntry(entries);
+  if (!entry || typeof entry !== 'object') {
+    return null;
+  }
+  const state = entry.state && typeof entry.state === 'object' ? entry.state : entry;
+  const bestDistance = toNonNegativeInteger(
+    state.bestDistance ?? state.maxDistance ?? state.distance ?? 0
+  );
+  const bestSpeed = toNonNegativeInteger(
+    state.bestSpeed ?? state.topSpeed ?? state.speed ?? 0
+  );
+  return { bestDistance, bestSpeed };
+}
+
+function updateMotocrossStats() {
+  const stats = getMotocrossProgressStats();
+  const emptyValue = translateOrDefault('scripts.info.progress.motocross.empty', '—');
+  if (elements.infoMotocrossDistanceValue) {
+    const text = stats && stats.bestDistance > 0
+      ? formatIntegerLocalized(stats.bestDistance)
+      : emptyValue;
+    elements.infoMotocrossDistanceValue.textContent = text;
+  }
+  if (elements.infoMotocrossSpeedValue) {
+    const text = stats && stats.bestSpeed > 0
+      ? formatIntegerLocalized(stats.bestSpeed)
+      : emptyValue;
+    elements.infoMotocrossSpeedValue.textContent = text;
+  }
+}
+
 const STARS_WAR_DIFFICULTY_MODES = Object.freeze({ hard: 'hard', easy: 'easy' });
 const STARS_WAR_AUTOSAVE_KEY = 'starsWar';
 
@@ -3158,6 +3216,7 @@ function updateGlobalStats() {
   }
 
   updatePhotonStats();
+  updateMotocrossStats();
   updateStarsWarStats();
   updateFrenzyHighscores(global);
 }
@@ -3202,6 +3261,7 @@ if (typeof window !== 'undefined') {
   window.addEventListener('arcadeAutosaveSync', () => {
     updatePhotonStats();
     updateStarsWarStats();
+    updateMotocrossStats();
   });
 }
 
