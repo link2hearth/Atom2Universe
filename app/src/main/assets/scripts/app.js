@@ -6581,6 +6581,54 @@ function decodeBase64ToUtf8(base64) {
   return null;
 }
 
+function buildManualBackupEnvelope(serialized) {
+  if (typeof serialized !== 'string' || !serialized) {
+    return null;
+  }
+  try {
+    const payload = {
+      version: 1,
+      savedAt: Date.now(),
+      source: 'manual',
+      data: serialized
+    };
+    return JSON.stringify(payload);
+  } catch (error) {
+    return null;
+  }
+}
+
+function extractSerializedBackupPayload(raw) {
+  if (typeof raw !== 'string' || !raw) {
+    return null;
+  }
+  const trimmed = raw.trim();
+  if (!trimmed) {
+    return null;
+  }
+  try {
+    const parsed = JSON.parse(trimmed);
+    if (parsed && typeof parsed === 'object') {
+      const wrappedData = typeof parsed.data === 'string' ? parsed.data.trim() : null;
+      if (wrappedData) {
+        return wrappedData;
+      }
+      const hasCoreFields = parsed
+        && typeof parsed === 'object'
+        && parsed.atoms != null
+        && parsed.lifetime != null
+        && parsed.perClick != null
+        && parsed.perSecond != null;
+      if (hasCoreFields) {
+        return trimmed;
+      }
+    }
+  } catch (error) {
+    return trimmed;
+  }
+  return trimmed;
+}
+
 function handleManualBackupSaveComplete(success, reason) {
   const normalizedReason = typeof reason === 'string' && reason ? reason : 'error';
   setManualBackupBusy(false);
@@ -6672,7 +6720,8 @@ if (typeof window !== 'undefined') {
     try {
       const payload = serializeState();
       const serialized = JSON.stringify(payload);
-      const base64Data = encodeUtf8ToBase64(serialized);
+      const envelope = buildManualBackupEnvelope(serialized) || serialized;
+      const base64Data = encodeUtf8ToBase64(envelope);
       if (!base64Data) {
         handleManualBackupSaveComplete(false, 'encoding');
         return false;
@@ -6700,7 +6749,12 @@ if (typeof window !== 'undefined') {
       handleManualBackupLoadComplete(false, 'decode');
       return;
     }
-    const serialized = decodeBase64ToUtf8(base64Data);
+    const payload = decodeBase64ToUtf8(base64Data);
+    if (typeof payload !== 'string' || !payload) {
+      handleManualBackupLoadComplete(false, 'decode');
+      return;
+    }
+    const serialized = extractSerializedBackupPayload(payload);
     if (typeof serialized !== 'string' || !serialized) {
       handleManualBackupLoadComplete(false, 'decode');
       return;
