@@ -3,6 +3,7 @@ package com.example.atom2univers
 import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import android.view.MotionEvent
 import android.webkit.WebResourceRequest
@@ -10,17 +11,50 @@ import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.webkit.WebViewAssetLoader
+import org.json.JSONObject
+import java.io.IOException
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var webView: GameWebView
     private var webViewSaveScript: String? = null
     private var cssRecoveryAttempted = false
+    private var pendingBackupUri: Uri? = null
+
+    private val openBackupFileLauncher =
+        registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
+            if (uri == null) {
+                notifyBackupLoadFailed("cancelled")
+                return@registerForActivityResult
+            }
+            try {
+                contentResolver.openInputStream(uri)?.use { inputStream ->
+                    val bytes = inputStream.readBytes()
+                    val base64 = Base64.encodeToString(bytes, Base64.NO_WRAP)
+                    deliverBackupPayloadToJs(base64)
+                } ?: notifyBackupLoadFailed("error")
+            } catch (error: Exception) {
+                Log.e(TAG, "Unable to read manual backup file", error)
+                notifyBackupLoadFailed("error")
+            }
+        }
+
+    private val createBackupFileLauncher =
+        registerForActivityResult(ActivityResultContracts.CreateDocument("application/octet-stream")) { uri: Uri? ->
+            if (uri == null) {
+                pendingBackupUri = null
+                notifyBackupSaved(false, "cancelled")
+                return@registerForActivityResult
+            }
+            pendingBackupUri = uri
+            requestBackupDataFromJs()
+        }
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -161,6 +195,11 @@ class MainActivity : AppCompatActivity() {
             "AndroidSystemBridge"
         )
 
+        webView.addJavascriptInterface(
+            WebAppBridge(this),
+            "AndroidBridge"
+        )
+
         webViewSaveScript = """
             (function() {
               try {
@@ -212,6 +251,77 @@ class MainActivity : AppCompatActivity() {
         super.onStop()
     }
 
+    fun startOpenBackup() {
+        openBackupFileLauncher.launch(arrayOf("*/*"))
+    }
+
+    fun startCreateBackup() {
+        createBackupFileLauncher.launch(BACKUP_FILE_NAME)
+    }
+
+    fun writeBackupFromJs(base64Data: String?) {
+        val destination = pendingBackupUri
+        if (destination == null) {
+            notifyBackupSaved(false, "missingDestination")
+            return
+        }
+        if (base64Data.isNullOrEmpty()) {
+            pendingBackupUri = null
+            notifyBackupSaved(false, "invalidData")
+            return
+        }
+        try {
+            val bytes = Base64.decode(base64Data, Base64.DEFAULT)
+            contentResolver.openOutputStream(destination)?.use { output ->
+                output.write(bytes)
+                output.flush()
+            } ?: throw IOException("Unable to open output stream for $destination")
+            notifyBackupSaved(true, null)
+        } catch (error: Exception) {
+            Log.e(TAG, "Unable to write manual backup data", error)
+            notifyBackupSaved(false, "error")
+        } finally {
+            pendingBackupUri = null
+        }
+    }
+
+    private fun requestBackupDataFromJs() {
+        if (!::webView.isInitialized) {
+            pendingBackupUri = null
+            notifyBackupSaved(false, "webviewUnavailable")
+            return
+        }
+        webView.post {
+            webView.evaluateJavascript("window.getBackupData && window.getBackupData();", null)
+        }
+    }
+
+    private fun deliverBackupPayloadToJs(base64Data: String) {
+        val script = "window.onBackupLoaded && window.onBackupLoaded(${JSONObject.quote(base64Data)});"
+        postJavascript(script)
+    }
+
+    private fun notifyBackupLoadFailed(reason: String) {
+        val safeReason = if (reason.isNotBlank()) reason else "error"
+        val script = "window.onBackupLoadFailed && window.onBackupLoadFailed(${JSONObject.quote(safeReason)});"
+        postJavascript(script)
+    }
+
+    private fun notifyBackupSaved(success: Boolean, reason: String?) {
+        val reasonArg = reason?.takeIf { it.isNotBlank() }?.let { JSONObject.quote(it) } ?: "null"
+        val script = "window.onBackupSaved && window.onBackupSaved(${if (success) "true" else "false"}, $reasonArg);"
+        postJavascript(script)
+    }
+
+    private fun postJavascript(script: String) {
+        if (!::webView.isInitialized) {
+            return
+        }
+        webView.post {
+            webView.evaluateJavascript(script, null)
+        }
+    }
+
     private fun requestWebViewSave() {
         if (!::webView.isInitialized) {
             return
@@ -233,6 +343,7 @@ class MainActivity : AppCompatActivity() {
     private companion object {
         private const val TAG = "Atom2Univers"
         private const val ASSET_URL_PREFIX = "https://appassets.androidplatform.net/assets/"
+        private const val BACKUP_FILE_NAME = "atom2univers-backup.json"
         private const val CSS_PRESENCE_CHECK = """
             (function() {
               try {
