@@ -903,8 +903,9 @@ function formatAtomScaleBonus(value) {
 }
 
 function createAtomScaleTrophies() {
-  const bonusPerTrophy = 2;
+  const bonusIncrement = 2;
   return RESOLVED_ATOM_SCALE_TROPHY_PRESETS.map((entry, index) => {
+    const bonusPerTrophy = bonusIncrement * (index + 1);
     const displayBonus = formatAtomScaleBonus(bonusPerTrophy);
     const displayTotal = formatAtomScaleBonus(1 + bonusPerTrophy);
     const descriptionFallback = `Atteignez ${entry.targetText} atomes cumulés, ${entry.flavor}.`;
