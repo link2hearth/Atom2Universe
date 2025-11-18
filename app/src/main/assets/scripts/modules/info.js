@@ -3105,8 +3105,6 @@ function updateSessionStats() {
   const session = gameState.stats?.session;
   if (!session) return;
 
-  const frenzyStats = getNormalizedApcFrenzyStats(session);
-
   if (elements.infoSessionAtoms) {
     const atoms = session.atomsGained instanceof LayeredNumber
       ? session.atomsGained
@@ -3131,22 +3129,11 @@ function updateSessionStats() {
   if (elements.infoSessionDuration) {
     elements.infoSessionDuration.textContent = formatDuration(session.onlineTimeMs);
   }
-  if (elements.infoSessionFrenzySingle) {
-    elements.infoSessionFrenzySingle.textContent = formatFrenzySingleRecordValue(frenzyStats.bestSingle?.clicks);
-  }
-  if (elements.infoSessionFrenzyMulti) {
-    elements.infoSessionFrenzyMulti.textContent = formatFrenzyMultiRecordValue(
-      frenzyStats.best?.clicks,
-      frenzyStats.best?.frenziesUsed
-    );
-  }
 }
 
 function updateGlobalStats() {
   const global = gameState.stats?.global;
   if (!global) return;
-
-  const frenzyStats = getNormalizedApcFrenzyStats(global);
 
   if (elements.infoGlobalAtoms) {
     elements.infoGlobalAtoms.textContent = gameState.lifetime.toString();
@@ -3169,18 +3156,26 @@ function updateGlobalStats() {
   if (elements.infoGlobalDuration) {
     elements.infoGlobalDuration.textContent = formatDuration(global.playTimeMs);
   }
-  if (elements.infoGlobalFrenzySingle) {
-    elements.infoGlobalFrenzySingle.textContent = formatFrenzySingleRecordValue(frenzyStats.bestSingle?.clicks);
-  }
-  if (elements.infoGlobalFrenzyMulti) {
-    elements.infoGlobalFrenzyMulti.textContent = formatFrenzyMultiRecordValue(
-      frenzyStats.best?.clicks,
-      frenzyStats.best?.frenziesUsed
-    );
-  }
 
   updatePhotonStats();
   updateStarsWarStats();
+  updateFrenzyHighscores(global);
+}
+
+function updateFrenzyHighscores(globalStats) {
+  const stats = globalStats && typeof globalStats === 'object'
+    ? getNormalizedApcFrenzyStats(globalStats)
+    : createFallbackApcFrenzyStats();
+
+  if (elements.infoFrenzyHighscoreSingle) {
+    elements.infoFrenzyHighscoreSingle.textContent = formatFrenzySingleRecordValue(stats.bestSingle?.clicks);
+  }
+  if (elements.infoFrenzyHighscoreMulti) {
+    elements.infoFrenzyHighscoreMulti.textContent = formatFrenzyMultiRecordValue(
+      stats.best?.clicks,
+      stats.best?.frenziesUsed
+    );
+  }
 }
 
 function updateInfoPanels() {

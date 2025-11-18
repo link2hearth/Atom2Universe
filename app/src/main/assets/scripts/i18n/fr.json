@@ -204,9 +204,7 @@
             "apc": "Atomes via APC",
             "aps": "Atomes via APS",
             "offline": "Atomes hors ligne",
-            "duration": "Durée en ligne",
-            "frenzySingle": "Record frénésie (30 s)",
-            "frenzyMulti": "Record frénésie (chaîne)"
+            "duration": "Durée en ligne"
           },
           "global": {
             "title": "Globale",
@@ -215,9 +213,7 @@
             "apc": "Atomes via APC",
             "aps": "Atomes via APS",
             "offline": "Atomes hors ligne",
-            "duration": "Durée de jeu",
-            "frenzySingle": "Record frénésie (30 s)",
-            "frenzyMulti": "Record frénésie (chaîne)"
+            "duration": "Durée de jeu"
           },
           "photon": {
             "title": "Photon",
@@ -237,6 +233,9 @@
             "top3": "Top 3"
           },
           "frenzy": {
+            "title": "Frénésie",
+            "single": "Record frénésie",
+            "multi": "Record frénésie (chaîne)",
             "empty": "—",
             "singleValue": "{count} clics",
             "multiValueSingle": "{count} clics · {frenzies} frén.",
