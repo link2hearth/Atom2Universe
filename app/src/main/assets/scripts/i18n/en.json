@@ -4183,8 +4183,8 @@
             "description": "Fuse 1 He with 1 C to attempt forging 1 O and extend APC frenzies by +1 s."
           },
           "hydroperoxyl": {
-            "name": "HO₂ radical",
-            "description": "Combine 2 O and 1 H to stabilize an HO₂ radical and extend APS frenzies by +1 s."
+            "name": "Frenzied water molecule (H₂O)",
+            "description": "Combine 2 H and 1 O to obtain a water molecule and extend APS frenzies by +1 s."
           },
           "fluorine": {
             "name": "Fluorine (F₂)",

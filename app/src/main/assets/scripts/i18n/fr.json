@@ -4210,8 +4210,8 @@
             "description": "Fusionnez 1 He avec 1 C pour tenter de forger 1 O et prolonger vos frénésies APC de +1 s."
           },
           "hydroperoxyl": {
-            "name": "Radical HO₂",
-            "description": "Combinez 2 O et 1 H pour stabiliser un radical HO₂ et étendre vos frénésies APS de +1 s."
+            "name": "Molécule d’eau frénétique (H₂O)",
+            "description": "Combinez 2 H et 1 O pour tenter d’obtenir une molécule d’eau et étendre vos frénésies APS de +1 s."
           },
           "fluorine": {
             "name": "Fluor (F₂)",

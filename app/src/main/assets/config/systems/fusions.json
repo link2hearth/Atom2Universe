@@ -75,16 +75,16 @@
     },
     {
       "id": "hydroperoxyl",
-      "name": "Radical HO₂",
+      "name": "Molécule d’eau frénétique (H₂O)",
       "translationKey": "scripts.gameData.fusions.recipes.hydroperoxyl",
-      "description": "Combinez 2 O avec 1 H pour tenter de stabiliser un radical HO₂ et étendre vos frénésies APS.",
+      "description": "Combinez 2 H avec 1 O pour tenter d’obtenir une molécule d’eau et étendre vos frénésies APS.",
       "inputs": [
         {
-          "elementId": "element-008-oxygene",
+          "elementId": "element-001-hydrogene",
           "count": 2
         },
         {
-          "elementId": "element-001-hydrogene",
+          "elementId": "element-008-oxygene",
           "count": 1
         }
       ],
