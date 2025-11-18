@@ -74,7 +74,7 @@
       }
     },
     {
-      "id": "Water",
+      "id": "hydroperoxyl",
       "name": "Molécule d’eau (H₂O)",
       "translationKey": "scripts.gameData.fusions.recipes.hydroperoxyl",
       "description": "Combinez 2 H avec 1 O pour tenter d’obtenir une molécule d’eau et étendre vos frénésies APS.",
