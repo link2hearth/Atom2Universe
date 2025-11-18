@@ -1943,6 +1943,23 @@
         "preferences": {
           "title": "Interface preferences"
         },
+        "backups": {
+          "title": "Manage saves",
+          "description": "Export or import your progress with an external file.",
+          "actions": {
+            "save": "Save",
+            "load": "Load"
+          },
+          "status": {
+            "idle": "Choose an action to manage your saves.",
+            "saving": "Preparing the backup…",
+            "loading": "Loading the selected backup…",
+            "saveSuccess": "Backup exported on your device.",
+            "loadSuccess": "Backup imported successfully.",
+            "error": "Something went wrong. Please try again.",
+            "unsupported": "Feature available only in the Android app."
+          }
+        },
         "welcome": {
           "title": "Welcome",
           "intro": {
@@ -3409,6 +3426,24 @@
       "options": {
         "brickSkin": {
           "unlocked": "Choose the appearance of Particles bricks."
+        }
+      },
+      "backups": {
+        "export": {
+          "start": "Preparing your backup…",
+          "success": "Backup saved on your device.",
+          "failed": "Unable to write the backup file.",
+          "cancelled": "Export cancelled.",
+          "encodeError": "Unable to prepare the backup.",
+          "unsupported": "This feature is available on Android only."
+        },
+        "import": {
+          "start": "Select a backup file to restore.",
+          "success": "Backup imported.",
+          "failed": "Unable to load that backup.",
+          "cancelled": "Import cancelled.",
+          "decodeError": "Invalid backup file.",
+          "applyError": "An error occurred while applying the backup."
         }
       },
       "holdemOptions": {
