@@ -20928,7 +20928,29 @@ function serializeState() {
       const bonuses = getFusionBonusState();
       return {
         apcFlat: Number.isFinite(Number(bonuses.apcFlat)) ? Number(bonuses.apcFlat) : 0,
-        apsFlat: Number.isFinite(Number(bonuses.apsFlat)) ? Number(bonuses.apsFlat) : 0
+        apsFlat: Number.isFinite(Number(bonuses.apsFlat)) ? Number(bonuses.apsFlat) : 0,
+        apcHydrogenBase: Number.isFinite(Number(bonuses.apcHydrogenBase))
+          ? Number(bonuses.apcHydrogenBase)
+          : 0,
+        apsHydrogenBase: Number.isFinite(Number(bonuses.apsHydrogenBase))
+          ? Number(bonuses.apsHydrogenBase)
+          : 0,
+        apcBaseBoost: Number.isFinite(Number(bonuses.apcBaseBoost))
+          ? Number(bonuses.apcBaseBoost)
+          : 0,
+        apsBaseBoost: Number.isFinite(Number(bonuses.apsBaseBoost))
+          ? Number(bonuses.apsBaseBoost)
+          : 0,
+        apcFrenzyDurationSeconds: Number.isFinite(Number(bonuses.apcFrenzyDurationSeconds))
+          ? Math.max(0, Number(bonuses.apcFrenzyDurationSeconds))
+          : 0,
+        apsFrenzyDurationSeconds: Number.isFinite(Number(bonuses.apsFrenzyDurationSeconds))
+          ? Math.max(0, Number(bonuses.apsFrenzyDurationSeconds))
+          : 0,
+        fusionMultiplier: Number.isFinite(Number(bonuses.fusionMultiplier))
+          && Number(bonuses.fusionMultiplier) > 0
+          ? Number(bonuses.fusionMultiplier)
+          : 1
       };
     })(),
     theme: gameState.theme,
