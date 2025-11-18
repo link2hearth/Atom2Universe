@@ -3061,6 +3061,8 @@ function getFusionBonusState() {
   let apcBaseBoost = Number(bonuses.apcBaseBoost);
   let apsBaseBoost = Number(bonuses.apsBaseBoost);
   const multiplier = Number(bonuses.fusionMultiplier);
+  let apcFrenzyDurationSeconds = Number(bonuses.apcFrenzyDurationSeconds);
+  let apsFrenzyDurationSeconds = Number(bonuses.apsFrenzyDurationSeconds);
   bonuses.apcFlat = Number.isFinite(apc) ? apc : 0;
   bonuses.apsFlat = Number.isFinite(aps) ? aps : 0;
   apcBase = Number.isFinite(apcBase) ? apcBase : 0;
@@ -3083,6 +3085,14 @@ function getFusionBonusState() {
   apsBaseBoost = Number.isFinite(apsBaseBoost) ? apsBaseBoost : 0;
   bonuses.apcBaseBoost = apcBaseBoost;
   bonuses.apsBaseBoost = apsBaseBoost;
+  apcFrenzyDurationSeconds = Number.isFinite(apcFrenzyDurationSeconds)
+    ? Math.max(0, apcFrenzyDurationSeconds)
+    : 0;
+  apsFrenzyDurationSeconds = Number.isFinite(apsFrenzyDurationSeconds)
+    ? Math.max(0, apsFrenzyDurationSeconds)
+    : 0;
+  bonuses.apcFrenzyDurationSeconds = apcFrenzyDurationSeconds;
+  bonuses.apsFrenzyDurationSeconds = apsFrenzyDurationSeconds;
   bonuses.fusionMultiplier = Number.isFinite(multiplier) && multiplier > 0 ? multiplier : 1;
   return bonuses;
 }
@@ -3269,6 +3279,22 @@ function applyFusionRewards(rewards, multiplier = 1, options = {}) {
       bonuses.apsBaseBoost = previousApsBoost + apsBaseGain;
       const formatted = formatFusionRewardValue(apsBaseGain);
       summaries.push(t('scripts.gacha.fusion.apsBaseBonus', { value: formatted }));
+    }
+    const apcFrenzyIncrement = Number(rewards.apcFrenzyDurationSeconds);
+    if (Number.isFinite(apcFrenzyIncrement) && apcFrenzyIncrement !== 0) {
+      const apcFrenzyGain = apcFrenzyIncrement * appliedMultiplier;
+      const previousApcFrenzy = Number(bonuses.apcFrenzyDurationSeconds) || 0;
+      bonuses.apcFrenzyDurationSeconds = previousApcFrenzy + apcFrenzyGain;
+      const formatted = formatFusionRewardValue(apcFrenzyGain);
+      summaries.push(t('scripts.gacha.fusion.apcFrenzyBonus', { value: formatted }));
+    }
+    const apsFrenzyIncrement = Number(rewards.apsFrenzyDurationSeconds);
+    if (Number.isFinite(apsFrenzyIncrement) && apsFrenzyIncrement !== 0) {
+      const apsFrenzyGain = apsFrenzyIncrement * appliedMultiplier;
+      const previousApsFrenzy = Number(bonuses.apsFrenzyDurationSeconds) || 0;
+      bonuses.apsFrenzyDurationSeconds = previousApsFrenzy + apsFrenzyGain;
+      const formatted = formatFusionRewardValue(apsFrenzyGain);
+      summaries.push(t('scripts.gacha.fusion.apsFrenzyBonus', { value: formatted }));
     }
   }
   if (!skipElements) {
@@ -3474,6 +3500,32 @@ function getFusionBatchRewardSummary(definition, successCount, previousSuccessCo
       }));
     }
   }
+  if (rewards.apcFrenzyDurationSeconds) {
+    const totalApcFrenzy = computeFusionRewardSum(
+      definition,
+      rewards.apcFrenzyDurationSeconds,
+      successCount,
+      previousSuccessCount
+    );
+    if (totalApcFrenzy) {
+      summary.push(t('scripts.gacha.fusion.apcFrenzyBonus', {
+        value: formatFusionRewardValue(totalApcFrenzy)
+      }));
+    }
+  }
+  if (rewards.apsFrenzyDurationSeconds) {
+    const totalApsFrenzy = computeFusionRewardSum(
+      definition,
+      rewards.apsFrenzyDurationSeconds,
+      successCount,
+      previousSuccessCount
+    );
+    if (totalApsFrenzy) {
+      summary.push(t('scripts.gacha.fusion.apsFrenzyBonus', {
+        value: formatFusionRewardValue(totalApsFrenzy)
+      }));
+    }
+  }
   if (rewards.fusionMultiplier && !isHydrogen) {
     const totalIncrement = rewards.fusionMultiplier * successCount;
     if (totalIncrement > 0) {
@@ -3614,6 +3666,16 @@ function buildFusionCard(definition) {
       value: formatNumberLocalized(definition.rewards.apsBaseBoost)
     }));
   }
+  if (definition.rewards.apcFrenzyDurationSeconds) {
+    bonusParts.push(t('scripts.gacha.fusion.apcFrenzyBonus', {
+      value: formatNumberLocalized(definition.rewards.apcFrenzyDurationSeconds)
+    }));
+  }
+  if (definition.rewards.apsFrenzyDurationSeconds) {
+    bonusParts.push(t('scripts.gacha.fusion.apsFrenzyBonus', {
+      value: formatNumberLocalized(definition.rewards.apsFrenzyDurationSeconds)
+    }));
+  }
   if (Array.isArray(definition.rewards.elements)) {
     definition.rewards.elements.forEach(reward => {
       const count = Number(reward?.count ?? reward?.quantity ?? reward?.amount ?? 0);
@@ -3656,7 +3718,7 @@ function buildFusionCard(definition) {
   };
 }
 
-const VISIBLE_FUSION_IDS = new Set(['hydrogen', 'carbon', 'oxygen']);
+const VISIBLE_FUSION_IDS = new Set(['hydrogen', 'carbon', 'oxygen', 'hydroperoxyl']);
 
 function isFusionDefinitionVisible(def) {
   if (!def || !VISIBLE_FUSION_IDS.has(def.id)) {
@@ -3665,7 +3727,7 @@ function isFusionDefinitionVisible(def) {
   if (def.id === 'carbon') {
     return getFusionSuccessCount('hydrogen') >= 10;
   }
-  if (def.id === 'oxygen') {
+  if (def.id === 'oxygen' || def.id === 'hydroperoxyl') {
     return getFusionSuccessCount('carbon') >= 50;
   }
   return true;
@@ -3805,6 +3867,22 @@ function updateFusionUI() {
       if (totalBaseAps) {
         totalParts.push(t('scripts.gacha.fusion.apsBaseTotal', {
           value: formatFusionRewardValue(totalBaseAps)
+        }));
+      }
+    }
+    if (def.rewards.apcFrenzyDurationSeconds) {
+      const totalApcFrenzy = computeFusionRewardSum(def, def.rewards.apcFrenzyDurationSeconds, state.successes);
+      if (totalApcFrenzy) {
+        totalParts.push(t('scripts.gacha.fusion.apcFrenzyTotal', {
+          value: formatFusionRewardValue(totalApcFrenzy)
+        }));
+      }
+    }
+    if (def.rewards.apsFrenzyDurationSeconds) {
+      const totalApsFrenzy = computeFusionRewardSum(def, def.rewards.apsFrenzyDurationSeconds, state.successes);
+      if (totalApsFrenzy) {
+        totalParts.push(t('scripts.gacha.fusion.apsFrenzyTotal', {
+          value: formatFusionRewardValue(totalApsFrenzy)
         }));
       }
     }

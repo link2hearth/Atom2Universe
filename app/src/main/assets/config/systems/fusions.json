@@ -51,7 +51,7 @@
       "id": "oxygen",
       "name": "Hélium + Carbone → Oxygène (O)",
       "translationKey": "scripts.gameData.fusions.recipes.oxygen",
-      "description": "Fusionnez 1 He avec 1 C pour tenter de forger 1 O et renforcer vos APC/APS de base.",
+      "description": "Fusionnez 1 He avec 1 C pour tenter de forger 1 O et prolonger vos frénésies APC.",
       "inputs": [
         {
           "elementId": "element-002-helium",
@@ -64,14 +64,33 @@
       ],
       "successChance": 0.1,
       "rewards": {
-        "apcBaseBoost": 10,
-        "apsBaseBoost": 10,
+        "apcFrenzyDurationSeconds": 1,
         "elements": [
           {
             "elementId": "element-008-oxygene",
             "count": 1
           }
         ]
+      }
+    },
+    {
+      "id": "hydroperoxyl",
+      "name": "Molécule d’eau frénétique (H₂O)",
+      "translationKey": "scripts.gameData.fusions.recipes.hydroperoxyl",
+      "description": "Combinez 2 H avec 1 O pour tenter d’obtenir une molécule d’eau et étendre vos frénésies APS.",
+      "inputs": [
+        {
+          "elementId": "element-001-hydrogene",
+          "count": 2
+        },
+        {
+          "elementId": "element-008-oxygene",
+          "count": 1
+        }
+      ],
+      "successChance": 0.1,
+      "rewards": {
+        "apsFrenzyDurationSeconds": 1
       }
     },
     {

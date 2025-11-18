@@ -4003,6 +4003,32 @@ function attemptFrenzySpawn(type, now = performance.now()) {
   spawnFrenzyToken(type, now);
 }
 
+function getFusionFrenzyDurationSeconds(type) {
+  if (!FUSION_DEFS.length) {
+    return 0;
+  }
+  const bonuses = getFusionBonusState();
+  if (!bonuses) {
+    return 0;
+  }
+  if (type === 'perClick') {
+    const seconds = Number(bonuses.apcFrenzyDurationSeconds);
+    return Number.isFinite(seconds) ? Math.max(0, seconds) : 0;
+  }
+  if (type === 'perSecond') {
+    const seconds = Number(bonuses.apsFrenzyDurationSeconds);
+    return Number.isFinite(seconds) ? Math.max(0, seconds) : 0;
+  }
+  return 0;
+}
+
+function getFrenzyEffectDurationMs(type) {
+  const base = FRENZY_CONFIG.effectDurationMs;
+  const bonusSeconds = getFusionFrenzyDurationSeconds(type);
+  const bonusMs = Number.isFinite(bonusSeconds) ? Math.max(0, bonusSeconds) * 1000 : 0;
+  return Math.max(0, base + bonusMs);
+}
+
 function collectFrenzy(type, now = performance.now()) {
   const info = FRENZY_TYPE_INFO[type];
   if (!info) return;
@@ -4016,7 +4042,7 @@ function collectFrenzy(type, now = performance.now()) {
     entry.effects = [];
   }
   const wasActive = entry.effects.length > 0;
-  const duration = FRENZY_CONFIG.effectDurationMs;
+  const duration = getFrenzyEffectDurationMs(type);
   const expireAt = now + duration;
   const maxStacks = getTrophyFrenzyCap();
   if (entry.effects.length >= maxStacks && entry.effects.length > 0) {
@@ -4038,7 +4064,7 @@ function collectFrenzy(type, now = performance.now()) {
     handleApcFrenzyActivated(wasActive, now);
   }
 
-  const rawSeconds = FRENZY_CONFIG.effectDurationMs / 1000;
+  const rawSeconds = duration / 1000;
   let durationText;
   if (rawSeconds >= 1) {
     if (Number.isInteger(rawSeconds)) {
@@ -21982,6 +22008,18 @@ function applySerializedGameState(raw) {
     );
     const apcBaseBoost = Number(storedFusionBonuses.apcBaseBoost);
     const apsBaseBoost = Number(storedFusionBonuses.apsBaseBoost);
+    const apcFrenzySeconds = Number(
+      storedFusionBonuses.apcFrenzyDurationSeconds
+        ?? storedFusionBonuses.apcFrenzySeconds
+        ?? storedFusionBonuses.apcFrenzy
+        ?? 0
+    );
+    const apsFrenzySeconds = Number(
+      storedFusionBonuses.apsFrenzyDurationSeconds
+        ?? storedFusionBonuses.apsFrenzySeconds
+        ?? storedFusionBonuses.apsFrenzy
+        ?? 0
+    );
     const storedMultiplier = Number(
       storedFusionBonuses.fusionMultiplier
         ?? storedFusionBonuses.multiplier
@@ -21994,6 +22032,12 @@ function applySerializedGameState(raw) {
     fusionBonuses.apsHydrogenBase = Number.isFinite(apsHydrogenBase) ? apsHydrogenBase : 0;
     fusionBonuses.apcBaseBoost = Number.isFinite(apcBaseBoost) ? apcBaseBoost : 0;
     fusionBonuses.apsBaseBoost = Number.isFinite(apsBaseBoost) ? apsBaseBoost : 0;
+    fusionBonuses.apcFrenzyDurationSeconds = Number.isFinite(apcFrenzySeconds)
+      ? Math.max(0, apcFrenzySeconds)
+      : 0;
+    fusionBonuses.apsFrenzyDurationSeconds = Number.isFinite(apsFrenzySeconds)
+      ? Math.max(0, apsFrenzySeconds)
+      : 0;
     fusionBonuses.fusionMultiplier = Number.isFinite(storedMultiplier) && storedMultiplier > 0
       ? storedMultiplier
       : 1;
@@ -22502,6 +22546,18 @@ function loadGame() {
       );
       const apcBaseBoost = Number(storedFusionBonuses.apcBaseBoost);
       const apsBaseBoost = Number(storedFusionBonuses.apsBaseBoost);
+      const apcFrenzySeconds = Number(
+        storedFusionBonuses.apcFrenzyDurationSeconds
+          ?? storedFusionBonuses.apcFrenzySeconds
+          ?? storedFusionBonuses.apcFrenzy
+          ?? 0
+      );
+      const apsFrenzySeconds = Number(
+        storedFusionBonuses.apsFrenzyDurationSeconds
+          ?? storedFusionBonuses.apsFrenzySeconds
+          ?? storedFusionBonuses.apsFrenzy
+          ?? 0
+      );
       const storedMultiplier = Number(
         storedFusionBonuses.fusionMultiplier
           ?? storedFusionBonuses.multiplier
@@ -22514,6 +22570,12 @@ function loadGame() {
       fusionBonuses.apsHydrogenBase = Number.isFinite(apsHydrogenBase) ? apsHydrogenBase : 0;
       fusionBonuses.apcBaseBoost = Number.isFinite(apcBaseBoost) ? apcBaseBoost : 0;
       fusionBonuses.apsBaseBoost = Number.isFinite(apsBaseBoost) ? apsBaseBoost : 0;
+      fusionBonuses.apcFrenzyDurationSeconds = Number.isFinite(apcFrenzySeconds)
+        ? Math.max(0, apcFrenzySeconds)
+        : 0;
+      fusionBonuses.apsFrenzyDurationSeconds = Number.isFinite(apsFrenzySeconds)
+        ? Math.max(0, apsFrenzySeconds)
+        : 0;
       fusionBonuses.fusionMultiplier = Number.isFinite(storedMultiplier) && storedMultiplier > 0
         ? storedMultiplier
         : 1;
