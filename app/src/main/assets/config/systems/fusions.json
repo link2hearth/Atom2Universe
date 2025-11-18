@@ -64,8 +64,8 @@
       ],
       "successChance": 0.1,
       "rewards": {
-        "apcBaseBoost": 1,
-        "apsBaseBoost": 1,
+        "apcBaseBoost": 10,
+        "apsBaseBoost": 10,
         "elements": [
           {
             "elementId": "element-008-oxygene",
