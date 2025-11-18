@@ -3945,11 +3945,15 @@
         "apsBonus": "+{value} APS",
         "apcBaseBonus": "+{value} APC de base",
         "apsBaseBonus": "+{value} APS de base",
+        "apcFrenzyBonus": "+{value} s frénésie APC",
+        "apsFrenzyBonus": "+{value} s frénésie APS",
         "elementBonus": "+{count} {element}",
         "apcTotal": "+{value} APC cumulés",
         "apsTotal": "+{value} APS cumulés",
         "apcBaseTotal": "+{value} APC de base cumulés",
         "apsBaseTotal": "+{value} APS de base cumulés",
+        "apcFrenzyTotal": "+{value} s frénésie APC cumulées",
+        "apsFrenzyTotal": "+{value} s frénésie APS cumulées",
         "elementTotal": "+{count} {element} cumulés",
         "multiplierReward": "+{value} multiplicateur de fusion",
         "multiplierBonus": "+{value} multiplicateur de fusion (désormais ×{total})",
@@ -4203,7 +4207,11 @@
           },
           "oxygen": {
             "name": "Hélium + Carbone → Oxygène (O)",
-            "description": "Fusionnez 1 He avec 1 C pour tenter de forger 1 O et renforcer vos APC/APS de base de +1."
+            "description": "Fusionnez 1 He avec 1 C pour tenter de forger 1 O et prolonger vos frénésies APC de +1 s."
+          },
+          "hydroperoxyl": {
+            "name": "Radical HO₂",
+            "description": "Combinez 2 O et 1 H pour stabiliser un radical HO₂ et étendre vos frénésies APS de +1 s."
           },
           "fluorine": {
             "name": "Fluor (F₂)",
