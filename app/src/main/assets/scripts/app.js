@@ -22068,6 +22068,7 @@ function applySerializedGameState(raw) {
   renderShop();
   updateBigBangVisibility();
   updateUI();
+  updateFrenzyAutoCollectOptionVisibility();
   if (data.lastSave) {
     const diff = Math.max(0, (Date.now() - data.lastSave) / 1000);
     applyOfflineProgress(diff);
@@ -22587,6 +22588,7 @@ function loadGame() {
     renderShop();
     updateBigBangVisibility();
     updateUI();
+    updateFrenzyAutoCollectOptionVisibility();
     if (data.lastSave) {
       const diff = Math.max(0, (Date.now() - data.lastSave) / 1000);
       applyOfflineProgress(diff);
