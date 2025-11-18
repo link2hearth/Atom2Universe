@@ -19179,12 +19179,15 @@ function updateShopVisibility() {
     const row = shopRows.get(def.id);
     if (!row) return;
 
-    const shouldReveal = index <= visibleLimit;
+    const sequentiallyUnlocked = index <= visibleLimit;
     const requiresDuplicates = Array.isArray(def?.duplicateCardCost?.cardIds)
       && def.duplicateCardCost.cardIds.length > 0;
     const hasRequiredCards = !requiresDuplicates
       || hasDuplicateCardResources(def.duplicateCardCost, 1);
-    const reveal = shouldReveal && hasRequiredCards;
+    const bypassSequentialLock = requiresDuplicates && hasRequiredCards;
+    // Les offres basées sur les doublons peuvent apparaître dès que les cartes nécessaires sont disponibles,
+    // même si la progression séquentielle habituelle du magasin n'a pas encore été atteinte.
+    const reveal = hasRequiredCards && (sequentiallyUnlocked || bypassSequentialLock);
     row.root.hidden = !reveal;
     row.root.classList.toggle('shop-item--locked', !reveal);
     if (reveal) {
