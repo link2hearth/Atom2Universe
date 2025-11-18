@@ -6316,6 +6316,8 @@ function collectDomElements() {
   infoPhotonAltitudeValue: document.getElementById('infoPhotonAltitudeValue'),
   infoStarsWarHardValue: document.getElementById('infoStarsWarHardValue'),
   infoStarsWarEasyValue: document.getElementById('infoStarsWarEasyValue'),
+  infoMotocrossDistanceValue: document.getElementById('infoMotocrossDistanceValue'),
+  infoMotocrossSpeedValue: document.getElementById('infoMotocrossSpeedValue'),
   infoFrenzyHighscoreSingle: document.getElementById('infoFrenzyHighscoreSingle'),
   infoFrenzyHighscoreMulti: document.getElementById('infoFrenzyHighscoreMulti'),
   starsWarHighscoreHard: document.getElementById('starsWarHighscoreHard'),
