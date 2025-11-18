@@ -204,9 +204,7 @@
             "apc": "Atoms via APC",
             "aps": "Atoms via APS",
             "offline": "Offline atoms",
-            "duration": "Time online",
-            "frenzySingle": "Frenzy record (30 s)",
-            "frenzyMulti": "Frenzy record (chain)"
+            "duration": "Time online"
           },
           "global": {
             "title": "Global",
@@ -215,9 +213,7 @@
             "apc": "Atoms via APC",
             "aps": "Atoms via APS",
             "offline": "Offline atoms",
-            "duration": "Play time",
-            "frenzySingle": "Frenzy record (30 s)",
-            "frenzyMulti": "Frenzy record (chain)"
+            "duration": "Play time"
           },
           "photon": {
             "title": "Photon",
@@ -237,6 +233,9 @@
             "top3": "Top 3"
           },
           "frenzy": {
+            "title": "Frenzy",
+            "single": "Frenzy high score",
+            "multi": "Frenzy chain high score",
             "empty": "—",
             "singleValue": "{count} clicks",
             "multiValueSingle": "{count} clicks · {frenzies} frenzy",
