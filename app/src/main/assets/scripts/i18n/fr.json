@@ -192,7 +192,6 @@
         },
         "progress": {
           "title": "Progression",
-          "subtitle": "Session & globale",
           "toggle": {
             "collapse": "Réduire",
             "expand": "Dérouler"
@@ -251,7 +250,6 @@
         },
         "scores": {
           "title": "Scores",
-          "subtitle": "Records des mini-jeux débloqués.",
           "toggle": {
             "collapse": "Réduire",
             "expand": "Dérouler"
@@ -268,7 +266,6 @@
         },
         "calculations": {
           "title": "Calculs de production",
-          "subtitle": "Décomposition des gains automatiques et manuels",
           "toggle": {
             "collapse": "Réduire",
             "expand": "Dérouler"
@@ -300,7 +297,7 @@
           "view": "Afficher {card}"
         },
         "characters": {
-          "title": "Qui sont les personnages ?",
+          "title": "Personnages",
           "subtitle": "Les esprits brillants qui accompagnent votre aventure.",
           "toggle": {
             "collapse": "Réduire",
