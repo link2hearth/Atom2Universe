@@ -13,19 +13,19 @@
       easy: Object.freeze({
         size: Object.freeze({ min: 4, max: 6 }),
         plusCells: Object.freeze({ min: 0, max: 2 }),
-        twinPairs: Object.freeze({ min: 0, max: 2 }),
+        twinPairs: Object.freeze({ min: 1, max: 3 }),
         scrambleMoves: Object.freeze({ min: 10, max: 15 })
       }),
       medium: Object.freeze({
         size: Object.freeze({ min: 7, max: 9 }),
         plusCells: Object.freeze({ min: 2, max: 5 }),
-        twinPairs: Object.freeze({ min: 1, max: 3 }),
+        twinPairs: Object.freeze({ min: 4, max: 8 }),
         scrambleMoves: Object.freeze({ min: 15, max: 25 })
       }),
       hard: Object.freeze({
         size: Object.freeze({ min: 10, max: 12 }),
         plusCells: Object.freeze({ min: 5, max: 10 }),
-        twinPairs: Object.freeze({ min: 3, max: 5 }),
+        twinPairs: Object.freeze({ min: 8, max: 16 }),
         scrambleMoves: Object.freeze({ min: 30, max: 50 })
       })
     }),
@@ -39,18 +39,22 @@
   });
 
   const PAIR_COLORS = Object.freeze([
-    '#8f3fff',
-    '#34c759',
-    '#111111',
-    '#ff2d20',
-    '#ff9500',
-    '#ffcc00',
-    '#ff6f61',
-    '#c51162',
-    '#6d28d9',
-    '#2ba84a',
-    '#fa4eab',
-    '#ff4f00'
+    '#D32F2F', // Rouge profond
+    '#C2185B', // Rose magenta foncé
+    '#7B1FA2', // Violet intense
+    '#512DA8', // Indigo foncé
+    '#303F9F', // Bleu royal foncé
+    '#1976D2', // Bleu saturé
+    '#0288D1', // Bleu cyan foncé
+    '#00796B', // Vert sarcelle foncé
+    '#388E3C', // Vert soutenu
+    '#689F38', // Vert chartreuse foncé
+    '#AFB42B', // Olive jaunâtre
+    '#F9A825', // Jaune doré foncé
+    '#F57F17', // Orange soutenu
+    '#E64A19', // Orange brûlé
+    '#5D4037', // Brun chocolat
+    '#455A64' // Bleu-gris foncé
   ]);
 
   const MAX_HISTORY_ENTRIES = 200;
